@@ -1,92 +1,136 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [85.215.255.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4CF5313E3B
-	for <regressions@lists.linux.dev>; Tue, 11 Nov 2025 15:01:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762873294; cv=none; b=M4swLk76pn62Ox+9arSFosbIgwENARBcxuPoYtl2ySDU05LpphcVaLbWdiDIzHPE4QzNMkJTHZIbulBJ+u5Plqzs1WwpxY19bBpqrVtY4oInbh0+kftZPxb9nK/AFO4xCp/FW3MnOvMX+FST9MIaycbbCfQzA2COaVNTWH7E7mc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762873294; c=relaxed/simple;
-	bh=Atma+SuGiIwaloIeDvh2EpI0e1M+lNq+g58nlek+bS0=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=tKfqkgTig91V8QZ6x37g0+S9WjHWSCE1q8197VLQJTKE+I+r1aCyMsJUu9ZHMf4UHxzMPLG4G66MtoAb0HMjVflksU1DLHu6dDq1EO+cARoQcb06aYXWgP7ypY/XuKninnUC05oXe31i4E7l9emJ+wxrgAS852p3n3kPCH8ZIOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=w70jRv/p; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57C48186294
+	for <regressions@lists.linux.dev>; Wed, 12 Nov 2025 03:41:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.52
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1762918888; cv=pass; b=GBYxFYHTil+8TGtjHRQPecZDpy0SA6At23b9bkg87SmNRWzEyaAEyTrVEX9Q7pqaWEy9tPzJOqBf3+T+A09UlOYsnUgcBp2K0gBin/Bmg7C54n/4xQrSt0FPIr1t9ru2n/v+TA72P87TCWLmi+QGMr32f6jYXzh/e0snFGtuL68=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1762918888; c=relaxed/simple;
+	bh=t7rkG3lT9ZzvS7cQEKmxC841oIHj5JrAW+87CHBUqtE=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=YD+vOio8L4AO2kMw8+NWK7LiPGk3/i5mUC8xp9T0ZZDToIiM2XCzicYuUjxFOF4mB1tfSnAZQXWg+OWK+TAk6i8C9j6jOoVGC1uH6ytsFRHrNPATH4nmQNGOliHB6rqTrmX2IZLhu6XBJftPc+jd9/fWcteBBHxsbkDgsNs06vo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xenosoft.de; spf=none smtp.mailfrom=xenosoft.de; dkim=pass (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b=D+OuScvD; dkim=permerror (0-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b=UbEXx0xc; arc=pass smtp.client-ip=85.215.255.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xenosoft.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=xenosoft.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="w70jRv/p"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=Atma+SuGiIwaloIeDvh2EpI0e1M+lNq+g58nlek+bS0=; t=1762873292;
-	x=1763305292; b=w70jRv/pRmQMisxB3AQtKs+RFFeDtBFSPR+zyPSkgvjQJBKXccapzNmCMRmbS
-	PwmO0ODY8R2ElkcWMhv2OnYKt/DffQGw3xnm0k9ZWbAfLsONaQiBuJ8SliAxPiRQ3f45MLHH48J8u
-	Ipn4c8J4D3uAhJRnQ+V/k6zqkGx0apOFJxvAQ/4RzYanthzXGGDI18ZJW6IGJzub/51GEaADR8Hot
-	ecQW79cJHBKwIaDe6ZyOgCHnE6Ujl9RbIvHDTwaAbEfwpkRZzRSrA0tSfnoLNO+d74vpkrkm+Tvsh
-	ARtpyOOg+965LsU9ZUfS9gUba36xk5cX34GjAIkyV46tWAIF0Q==;
-Received: from [2a02:8108:8984:1d00:a0cf:1912:4be:477f]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128)
-	id 1vIpsA-004LVr-2j;
-	Tue, 11 Nov 2025 16:01:30 +0100
-Message-ID: <02a3e68c-743e-4193-b210-b06f1a9b9f3f@leemhuis.info>
-Date: Tue, 11 Nov 2025 16:01:30 +0100
+	dkim=pass (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b="D+OuScvD";
+	dkim=permerror (0-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b="UbEXx0xc"
+ARC-Seal: i=1; a=rsa-sha256; t=1762918834; cv=none;
+    d=strato.com; s=strato-dkim-0002;
+    b=eS5Lzl9fspGwjk/nXmyeVtzr8EGd3IJdwfIH14lyxKNUWt0q9JbIj+5oaCm7pZ+oV+
+    ppxOuWEVhJnhAHeAgQrI4l0tz7k1T4bLDChBfvCkppDE7kD7/VMl+t63xPNFtfDNWeUq
+    VFFfxFX9TLU72ZgfJzO9p81jQbptAhFDa41vgJNX25nxkLQsRnyuIBFReF+D0tE/iIqx
+    BFpiHTCHsphnI1pSYFkpvLFFMA+zPWCkO2V2p4sSZxmpnh3rZwvvz81KgI8wi+Ev5k4V
+    va60Ckw9rIKP9z8oHnRmXYfB669W9mswdhSSCRIbf7XBXn0fjr3KB2b3das8tt8IZrZW
+    eayg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1762918834;
+    s=strato-dkim-0002; d=strato.com;
+    h=In-Reply-To:Date:Message-ID:From:References:Cc:To:Subject:Cc:Date:
+    From:Subject:Sender;
+    bh=ZQePqx4mWAl3Z1zpzCfWWnyfUVkvM3CdO85q2oQ087c=;
+    b=FHz9IYLYjHziMZYne7lCvYR02d5a9Snf3G4JVh5F/udneWSwq5icFZUkKy3SJK4Zrl
+    T6gmZK7S28w2Qm53UOIiZvK/VlClSmudqLM7vcOxhJxz+SFBwHzW0+zow0TG5K57LHxx
+    b8KVrALQBMEyw444ZFhDYTiVGRAtjyz8v9VuTAunNfXWsmBxlqYy+ojAXe0KftxpyjWr
+    6nJAL538MSdTFv1OzYzOiAMMooye12E5nMZmiV/mVXFJCyxJ+jw7qU54L9jF/wy6oQSS
+    44vpOUOI1r9sKVfUzq1m9Ef63YOqSgFbj1MF60ZRc2Gbo7VUJxxgCkVtpR+hiilnhgpd
+    RLqQ==
+ARC-Authentication-Results: i=1; strato.com;
+    arc=none;
+    dkim=none
+X-RZG-CLASS-ID: mo01
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1762918834;
+    s=strato-dkim-0002; d=xenosoft.de;
+    h=In-Reply-To:Date:Message-ID:From:References:Cc:To:Subject:Cc:Date:
+    From:Subject:Sender;
+    bh=ZQePqx4mWAl3Z1zpzCfWWnyfUVkvM3CdO85q2oQ087c=;
+    b=D+OuScvDFbJDSsvrcE9IcF1gPA2DwMTGaFWZMvwTCDXdagWHuQTc5wv2o5NjZMp/8l
+    PFyzQk2ED4GlmJ2/HC1JfArXbUnhCJ+ugAOnhpsfMu3LtSPUj034oIBs4SmdjCkGtJ7Z
+    jdZzbOVju5Uc0WYOzTJdJaSMMoFj4iQUn73ggTmcN7J0z+YXn5cUcdF5b0v8Xbo9CFqn
+    yFglpCvCiZlcoCI4nxcONGcwOkdgDHwwIKgJNIQqG8RTInwmUvxzj+V8/CLvWBivFeBP
+    OJo7U6wU3Ae6CoK2jro6uJWDybTYkmBkxiZIqLoLDr+nTQUWhkOJRJeXeBZ0NouZjFsG
+    Of7Q==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1762918834;
+    s=strato-dkim-0003; d=xenosoft.de;
+    h=In-Reply-To:Date:Message-ID:From:References:Cc:To:Subject:Cc:Date:
+    From:Subject:Sender;
+    bh=ZQePqx4mWAl3Z1zpzCfWWnyfUVkvM3CdO85q2oQ087c=;
+    b=UbEXx0xcmZ8s9zBKzkeis4LCG0d1siHusvvL9P+inPfwxXx/AYjaBSb0noTC4VUqc7
+    YzFs+jEn7qPx1dz/K/BQ==
+X-RZG-AUTH: ":L2QefEenb+UdBJSdRCXu93KJ1bmSGnhMdmOod1DhGN0rBVhd9dFr4thIFiqT9BURIC+l6x7g"
+Received: from void-ppc.a-eon.tld
+    by smtp.strato.de (RZmta 54.0.0 DYNA|AUTH)
+    with ESMTPSA id ed69d81AC3eWIrv
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+	(Client did not present a certificate);
+    Wed, 12 Nov 2025 04:40:32 +0100 (CET)
+Subject: Re: [PPC] Boot problems after the pci-v6.18-changes
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Manivannan Sadhasivam <mani@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+ mad skateman <madskateman@gmail.com>, "R.T.Dickinson" <rtd2@xtra.co.nz>,
+ Christian Zigotzky <info@xenosoft.de>,
+ linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, hypexed@yahoo.com.au,
+ Darren Stevens <darren@stevens-zone.net>, debian-powerpc@lists.debian.org,
+ John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+ Lukas Wunner <lukas@wunner.de>, regressions@lists.linux.dev,
+ luigi burdo <intermediadc@hotmail.com>, Al <al@datazap.net>
+References: <20251111122001.GA2168158@bhelgaas>
+From: Christian Zigotzky <chzigotzky@xenosoft.de>
+Organization: A-EON Open Source
+Message-ID: <f4331d1c-8695-19c3-608b-210b3242aaf0@xenosoft.de>
+Date: Wed, 12 Nov 2025 04:40:18 +0100
+X-Mailer: BrassMonkey/33.9.1
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1762873292;c115fbac;
-X-HE-SMSGID: 1vIpsA-004LVr-2j
+In-Reply-To: <20251111122001.GA2168158@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
 
+On 11/11/2025 01:20 PM, Bjorn Helgaas wrote:
+ > On Tue, Nov 11, 2025 at 06:15:20AM +0100, Christian Zigotzky wrote:
+ >> On 11/07/2025 06:06 AM, Christian Zigotzky wrote:
+ >>> On 11/05/2025 11:09 PM, Bjorn Helgaas wrote:
+ >>>>> I tested your patch with the RC4 of kernel 6.18 today. Unfortunately
+ >>> it
+ >>>>> doesn't solve the boot issue.
+ >>>>
+ >>>> Thanks for testing that.  I see now why that approach doesn't work:
+ >>>> quirk_disable_aspm_l0s_l1() calls pci_disable_link_state(), which
+ >>>> updates the permissible ASPM link states, but pci_disable_link_state()
+ >>>> only works for devices at the downstream end of a link.  It doesn't
+ >>>> work at all for Root Ports, which are at the upstream end of a link.
+ >>>>
+ >>>> Christian, you originally reported that both X5000 and X1000 were
+ >>>> broken.  I suspect X1000 may have been fixed in v6.18-rc3 by
+ >>>> df5192d9bb0e ("PCI/ASPM: Enable only L0s and L1 for devicetree
+ >>>> platforms"), but I would love to have confirmation of that.
+ >>>
+ >>> Hello Bjorn,
+ >>>
+ >>> I will enable CONFIG_PCIEASPM and CONFIG_PCIEASPM_DEFAULT for the 
+RC5 of
+ >>> kernel 6.18 and test it with the X1000.
+ >>
+ >> I tested the RC5 of kernel 6.18 with CONFIG_PCIEASPM and
+ >> CONFIG_PCIEASPM_DEFAULT enabled on my X1000 today. Unfortunately the 
+boot
+ >> problems are still present.
+ >
+ > Thanks.  Can you post a dmesg somewhere so I can see what the relevant
+ > device IDs are?  Can be with any kernel, doesn't have to be v6.18.  We
+ > need the Vendor and Device IDs to add a quirk.
+ >
 
-On 3/9/24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
+X1000 kernel 6.18.0-rc5 dmesg: 
+https://github.com/user-attachments/files/23491291/dmesg_x1000.txt
 
-#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=220109
-#regzbot fix: ALSA: hda/realtek: Audio disappears on HP 15-fc000 after
-warm boot again
+-- 
+Sent with BrassMonkey 33.9.1 (https://github.com/chzigotzky/Web-Browsers-and-Suites-for-Linux-PPC/releases/tag/BrassMonkey_33.9.1)
 
-
-
-#regzbot report:
-https://lore.kernel.org/lkml/3d7f77d2-b1f8-4d49-b36a-927a943efc2f@heusel.eu/
-#regzbot fix: 3471c1400ad1
-
-That is not the real fix, just the last in a series resolving the problem)"
-
-#regzbot report:
-https://lore.kernel.org/all/g3scb7mfjbsohdszieqkappslj6m7qu3ou766nckt2remg3ide@izgvehzcdbsu/
-#regzbot introduced: 794b679a28bb59
-#regzbot summary: MIPS: mm: tlb-r4k: boot hang on Indy R4400SC
-#regzbot dup:
-https://lore.kernel.org/all/e4ed75c7-b108-437f-b44b-69a9b340c085@app.fastmail.com/
-
-#regzbot report:
-https://lore.kernel.org/all/bhkn6hley4xrol5o3ytn343h4unkwsr26p6s6ltcwexnrsjsdx@mgkdf6ztow42/
-#regzbot summary: drm: bridge: ti-sn65dsi83: DSI display stopped working
-
-#regzbot report:
-https://lore.kernel.org/lkml/4b392af8847cc19720ffcd53865f60ab3edc56b3.camel@sapience.com/
-#regzbot fix: e433110eb5bf
-
-#regzbot report:
-https://lore.kernel.org/linux-pci/8d6887a5-60bc-423c-8f7a-87b4ab739f6a@hartkopp.net/
-#regzbot fix: e433110eb5bf
