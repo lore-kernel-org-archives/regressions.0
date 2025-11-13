@@ -1,117 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF813188596;
-	Thu, 13 Nov 2025 00:44:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 523AB303CAF
+	for <regressions@lists.linux.dev>; Thu, 13 Nov 2025 05:59:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762994690; cv=none; b=pbOBevy+33gKgxV7DUey3rj2ZPqEg3Pn+BjCFyijm6zi/rW+GKBkLRcFdgV3G/X33SbiOxkJdz8ld/HvFezI99cHLm40RHCcCArk3m8zrQPWiAP/7lgoz3AUTFldb7+zBXlZ2zKMaR8rWF+s2HQpR6gFeUQyrzZmN1jHEfP38To=
+	t=1763013548; cv=none; b=O0CjYaWFXCCqFI6gS149+RHxU8LhgkuKoMTOy31kb7NSucXiGWiIxD594z14lGy5/qgzHLybizQUT93oTg5g9bviutsnr28PiOeCfQEmifm6QluPzKtOUpB8AuCDEw7ttWllxf1667Urw3vYhOfTAY9AKYCnOdQcX81uo3UoYYI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762994690; c=relaxed/simple;
-	bh=57ae9P0/hhPWmajdru2W+nfLg3XVRIoY0iNOydVXYn4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=krCvtwmfB9CMSHUocrtVXBB5MFykyeXQSsfj3N3gwdulja4lU5ptqQEZW+b7rev66aPneuGv7XUHBQqvIdjl4S5yBnhPyqOGI4F8ttkzjJlr0PpPo18OXfTOSwoZ0gC32Q60vY9kWQsZwDCVoZqlI2VZx9TYFyZkI773C8lsXX0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o0VRMzbx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1763013548; c=relaxed/simple;
+	bh=wza4S8wUZt6+VKRKMSHQSY/xmDb6KgTRMG4CN4bMjk8=;
+	h=Content-Type:MIME-Version:Subject:From:To:Cc:Date:Message-ID; b=SNIYr0QH51LOGtLH6bmCMkEKqmkdRaV4U39+2lzcWkD7srU1QanX/bOvbeVK/M7kdyJRvaYo7gCj7HG0Mg0pq1pqNLoctAjbtqN3ICX8CKe+QF5I590r3T+Kx9GZjv3BSpy+63Se9i09kcz2SrZTLJPkkeWJhwH0g9NH98emcSk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org; spf=none smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b=Lw4N/JyN; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=kernelci.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o0VRMzbx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22EBCC16AAE;
-	Thu, 13 Nov 2025 00:44:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762994690;
-	bh=57ae9P0/hhPWmajdru2W+nfLg3XVRIoY0iNOydVXYn4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=o0VRMzbxfOdJ0k1X0t5Em0PgWLCWr3i/rM9WQcSQt9kJFNb2oWS5gVBVdgG7g39JX
-	 kZlFpNmIptAr9SEP1VGZStCJVUH7E/0KKLMdQIS7tswdVSjj2kzHGOuKpYe/AJY9ms
-	 8PxC6ObQ7IL8uEB8FrdyApoSnGQtMmu3iwv6Ua46RjGTkUwnlo8fF2/ldbT7euyJrs
-	 pTQaihVFnTbk8ok+d4MEo0PEfPe5VaOkwN5E6Z2zugPqos50/MjYQh2gkZJhRbYijr
-	 QS+Uv+Gu7nw/lIPHs84aFKTeECQ+fP8BUu9KVn6NR3XGjvz5lodc1QIwnjk8VQdWRl
-	 /TtwB3dFoBqHQ==
-Date: Wed, 12 Nov 2025 18:44:48 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Christian Zigotzky <chzigotzky@xenosoft.de>
-Cc: Manivannan Sadhasivam <mani@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-	mad skateman <madskateman@gmail.com>,
-	"R.T.Dickinson" <rtd2@xtra.co.nz>,
-	Christian Zigotzky <info@xenosoft.de>,
-	linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, hypexed@yahoo.com.au,
-	Darren Stevens <darren@stevens-zone.net>,
-	debian-powerpc@lists.debian.org,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Lukas Wunner <lukas@wunner.de>, regressions@lists.linux.dev,
-	luigi burdo <intermediadc@hotmail.com>, Al <al@datazap.net>
-Subject: Re: [PPC] Boot problems after the pci-v6.18-changes
-Message-ID: <20251113004448.GA2251273@bhelgaas>
+	dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b="Lw4N/JyN"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-7b80fed1505so334235b3a.3
+        for <regressions@lists.linux.dev>; Wed, 12 Nov 2025 21:59:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20230601.gappssmtp.com; s=20230601; t=1763013544; x=1763618344; darn=lists.linux.dev;
+        h=message-id:date:reply-to:cc:to:from:subject
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HXSAnbgxS7ZiviPCEiGua91bfUo0Z8jsM3ZVvQWxZtA=;
+        b=Lw4N/JyNssZAOEyYqePp/JQfDd2AcqDmnfYm1aQyW0RVGjDxk8WVuBuy/FkKQxF9To
+         nICoDu97K24Hr9GrwFf+eHKaqSPT4mFUjhrOYLjbM3qFY9TDWZT2AtVD2g+dNPq9wB17
+         oMta0f84BaLmP+N+cO+2gdVXRybLiB+HVNdUCTfIrWg1MgSzpPHroNcqFum7D5eH7QPU
+         UhS32ZA980LlLbDXRuNJznYfmEjvl1xTv68YjopzqzgGcLigFXi/8/PNv6onTWzNU3HF
+         kW2xxpNLk5uMbV2HbUzh7QsKh2Ql+K6qjdO1UX2XrwQveO6KeYFKBOiOJqEv3LkQGDG/
+         sZYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763013544; x=1763618344;
+        h=message-id:date:reply-to:cc:to:from:subject
+         :content-transfer-encoding:mime-version:x-gm-gg:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=HXSAnbgxS7ZiviPCEiGua91bfUo0Z8jsM3ZVvQWxZtA=;
+        b=E7YqSyCRFq6v9vXzW/51qsz+fjPR9zB/oGmxWUmUhI2sN2w3p63UG1eLpSJvR8i64z
+         p/SSsOreTWPp/LPxx0Tcqmzye3KisSVbknEuw+wxUGEZkACSoCQ/zJGkLPnifU2+KTLT
+         7igkXf14tGQqht5rpeVIsqrQJbODatwOZt6i9vIYlyS55tDBACqaIZ76ZqTDvPkui63v
+         SzhbtgbVpe4/YUZ89CnDSCaTnYvoe+CsVpUqzahN50m2gsh+ObU30SWhma0AiYDFZZTf
+         tAH26FYCoI7j7uoXYYNdqUpTxvTOZ6yDQbCCYZeEO/DlkHwrdz9n57BY1ppcOZ/01PgQ
+         6Azw==
+X-Gm-Message-State: AOJu0Yx4hLlOLq/j9liNtOv+q1IJ5uqqVgRiGtJLtkqHnEwCepeLH326
+	dG2tbNV/4SPbvIqxfED+0w6zV+pXftckPYJM4CIU3oScfxEa6NY/Hi4acDCrZkptUuY=
+X-Gm-Gg: ASbGnctWq5tt3RM2E114cF+rO6cO21L3ukFGrlyFkD3rm+Nuvm+UYQCa4fTwNaL8Y9m
+	/acXfJucvOtueEv6V0X6/VVf6AK/XVuclaDm4jKlm2vjoAzEk0M6/L3fYm85sChVIcf0I8ehUfW
+	4ViyrdoHAv4PksmFvqkjHZQEMWxfO3VkrqjX0f21bk11/+zb3RfLPE+6lsozOslL0mCvAuKH8gQ
+	mG8opQDbTLQc78OmzOUgzP2aeO4YEBLDkWCGBGwx/UeX+RndiSaxFFz5wz7LVnWG0J47L5BLh38
+	kg8wufIrwGJdKnIZ2YCn2fNnYpjujZDb7Fuq9sFhF9q1nuB/+tsl9tvPa2oQ7kgCew4vh6QsfRS
+	HhCg6km4cTZUhZkX149s8Qed+1xmYULxEeix0e5ZEpi2cjXNi+xLvKIvoP38YC9bSR8zxBQ==
+X-Google-Smtp-Source: AGHT+IGAIGDGmRN+0TT3QqnmDki4IPkE/y/D1cfLRgVfuQUwWxfz2NefKHZpQqW5WR8HDWw/jdnx1g==
+X-Received: by 2002:aa7:9f4a:0:b0:7b8:383d:8706 with SMTP id d2e1a72fcca58-7b8383d9ceemr4408363b3a.18.1763013544510;
+        Wed, 12 Nov 2025 21:59:04 -0800 (PST)
+Received: from efdf33580483 ([20.38.40.137])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7b92772e7f2sm932938b3a.57.2025.11.12.21.59.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Nov 2025 21:59:03 -0800 (PST)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <f4331d1c-8695-19c3-608b-210b3242aaf0@xenosoft.de>
+Content-Transfer-Encoding: 7bit
+Subject: [REGRESSION] mainline/master: (build) in ynl.o (Makefile:27)
+ [logspec:kbuild,kbuild.compiler]
+From: KernelCI bot <bot@kernelci.org>
+To: kernelci-results@groups.io
+Cc: regressions@lists.linux.dev, gus@collabora.com, laura.nao@collabora.com,
+ shreeya.patel@collabora.com, broonie@kernel.org
+Reply-To: kernelci@lists.linux.dev
+Date: Thu, 13 Nov 2025 05:59:03 -0000
+Message-ID: <176301354315.447.16290763427581345433@efdf33580483>
 
-On Wed, Nov 12, 2025 at 04:40:18AM +0100, Christian Zigotzky wrote:
-> On 11/11/2025 01:20 PM, Bjorn Helgaas wrote:
-> > On Tue, Nov 11, 2025 at 06:15:20AM +0100, Christian Zigotzky wrote:
-> >> On 11/07/2025 06:06 AM, Christian Zigotzky wrote:
-> >>> On 11/05/2025 11:09 PM, Bjorn Helgaas wrote:
-> >>>>> I tested your patch with the RC4 of kernel 6.18 today. Unfortunately
-> >>> it
-> >>>>> doesn't solve the boot issue.
-> >>>>
-> >>>> Thanks for testing that.  I see now why that approach doesn't work:
-> >>>> quirk_disable_aspm_l0s_l1() calls pci_disable_link_state(), which
-> >>>> updates the permissible ASPM link states, but pci_disable_link_state()
-> >>>> only works for devices at the downstream end of a link.  It doesn't
-> >>>> work at all for Root Ports, which are at the upstream end of a link.
-> >>>>
-> >>>> Christian, you originally reported that both X5000 and X1000 were
-> >>>> broken.  I suspect X1000 may have been fixed in v6.18-rc3 by
-> >>>> df5192d9bb0e ("PCI/ASPM: Enable only L0s and L1 for devicetree
-> >>>> platforms"), but I would love to have confirmation of that.
-> >>>
-> >>> Hello Bjorn,
-> >>>
-> >>> I will enable CONFIG_PCIEASPM and CONFIG_PCIEASPM_DEFAULT for the RC5 of
-> >>> kernel 6.18 and test it with the X1000.
-> >>
-> >> I tested the RC5 of kernel 6.18 with CONFIG_PCIEASPM and
-> >> CONFIG_PCIEASPM_DEFAULT enabled on my X1000 today. Unfortunately the boot
-> >> problems are still present.
-> >
-> > Thanks.  Can you post a dmesg somewhere so I can see what the relevant
-> > device IDs are?  Can be with any kernel, doesn't have to be v6.18.  We
-> > need the Vendor and Device IDs to add a quirk.
-> 
-> X1000 kernel 6.18.0-rc5 dmesg:
-> https://github.com/user-attachments/files/23491291/dmesg_x1000.txt
 
-Thanks!  This shows all the Root Ports are [1959:a002]:
 
-  pci 0000:00:10.0: [1959:a002] type 01 class 0x060400 PCIe Root Port
-  pci 0000:00:10.0: PCI bridge to [bus 01]
-  pci 0000:01:00.0: [1002:6898] type 00 class 0x030000 PCIe Legacy Endpoint
 
-I'm confused because Hypexed's 6.18.0-a7-dmesg.log from
-https://github.com/chzigotzky/kernels/issues/17#issuecomment-3400419966
-shows the same Root Ports, and apparently it booted fine even though
-we enabled *everything*: 
 
-  pci 0000:00:10.0: [1959:a002] type 01 class 0x060400 PCIe Root Port
-  pci 0000:00:10.0: PCI bridge to [bus 01]
-  pci 0000:01:00.0: [1002:6610] type 00 class 0x030000 PCIe Legacy Endpoint
-  pci 0000:01:00.0: ASPM: DT platform, enabling L0s-up L0s-dw L1 ASPM-L1.1 ASPM-L1.2 PCI-PM-L1.1 PCI-PM-L1.2
+Hello,
 
-It's *possible* that ASPM doesn't work on your endpoint (AMD Cypress
-XT [Radeon HD 5870]) but does work on Hypexed's endpoint (AMD Oland XT
-[Radeon HD 8670 / R5 340X OEM / R7 250/350/350X OEM]), but that seems
-unlikely to me.
+New build issue found on mainline/master:
 
-Maybe we just give up on ASPM on the [1959:a002] device.  A web search
-doesn't show many users of it, so I don't know how many people would
-care.
+---
+ in ynl.o (Makefile:27) [logspec:kbuild,kbuild.compiler]
+---
 
-Bjorn
+- dashboard: https://d.kernelci.org/i/maestro:cec1901dfbc548e17188aa1ee1d09a9b64810be0
+- giturl: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+- commit HEAD:  6fa9041b7177f6771817b95e83f6df17b147c8c6
+
+
+
+Log excerpt:
+=====================================================
+gcc -std=gnu11 -O2 -W -Wall -Wextra -Wno-unused-parameter -Wshadow   -c -MMD -c -o ynl.o ynl.c
+make[5]: gcc: No such file or directory
+
+=====================================================
+
+
+# Builds where the incident occurred:
+
+## defconfig+allmodconfig+CONFIG_FRAME_WARN=2048 on (arm):
+- compiler: clang-17
+- config: https://files.kernelci.org/kbuild-clang-17-arm-allmodconfig-69154d6e2fd2377ea99add3e/.config
+- dashboard: https://d.kernelci.org/build/maestro:69154d6e2fd2377ea99add3e
+
+
+#kernelci issue maestro:cec1901dfbc548e17188aa1ee1d09a9b64810be0
+
+Reported-by: kernelci.org bot <bot@kernelci.org>
+
+--
+This is an experimental report format. Please send feedback in!
+Talk to us at kernelci@lists.linux.dev
+
+Made with love by the KernelCI team - https://kernelci.org
