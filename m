@@ -1,145 +1,117 @@
-Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5711334C140
-	for <regressions@lists.linux.dev>; Wed, 12 Nov 2025 19:03:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF813188596;
+	Thu, 13 Nov 2025 00:44:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762974219; cv=none; b=eTCuFTlBmm+dJktXw5mUcbuS4fpvI4ERhVtxwS4Hd4e+5OfA5S7ntj3bi9vft4LznX1VxU0WpBM9c7cgRu5r2WeSszbAIYjR7OutCLEB9+rUTOQpWOFQGl5/38/2JDOp+fAhbY8q/0tEQ9HiAS8titwT00QMi4fmM49mJjnDZYg=
+	t=1762994690; cv=none; b=pbOBevy+33gKgxV7DUey3rj2ZPqEg3Pn+BjCFyijm6zi/rW+GKBkLRcFdgV3G/X33SbiOxkJdz8ld/HvFezI99cHLm40RHCcCArk3m8zrQPWiAP/7lgoz3AUTFldb7+zBXlZ2zKMaR8rWF+s2HQpR6gFeUQyrzZmN1jHEfP38To=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762974219; c=relaxed/simple;
-	bh=+6kRPrLe7w4uo70mpA9CgCdWXvd2+fUGoAWuD4YTfmw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LZQYm3+/EtvJjePdOSyUO/XofQnqo6hu+k8XQYv8qcVyCMYtioNGxlJuhVJyAyJJcGefHQeEHpHs6qmeULoXPD0Zarmew+7vBEAYPzOpjEylALfvXb1sQpNEK+Ec3dmnY/bBXKkT1IjVTNzdmbRkb6CvPD+hXrjp4g34F1qMhaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U4plT0Pd; arc=none smtp.client-ip=209.85.222.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1762994690; c=relaxed/simple;
+	bh=57ae9P0/hhPWmajdru2W+nfLg3XVRIoY0iNOydVXYn4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=krCvtwmfB9CMSHUocrtVXBB5MFykyeXQSsfj3N3gwdulja4lU5ptqQEZW+b7rev66aPneuGv7XUHBQqvIdjl4S5yBnhPyqOGI4F8ttkzjJlr0PpPo18OXfTOSwoZ0gC32Q60vY9kWQsZwDCVoZqlI2VZx9TYFyZkI773C8lsXX0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o0VRMzbx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U4plT0Pd"
-Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-8b25e273a8dso744785a.3
-        for <regressions@lists.linux.dev>; Wed, 12 Nov 2025 11:03:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1762974217; x=1763579017; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YdjhcZLRvFus+kcjwsBa3teGlxV32hqHWcTKIUAqd7c=;
-        b=U4plT0PdV8urXMztLGwPFglNImXskfdS0ewyDfOtUnb1XggXvo7Z6lW3f5UbL2bgPE
-         oUr3TNkCY3P2RZ7DO7B32KyykbfP5aie5gDSYU0DC1Sbyn1YyYNmE9YurXFGoV2H1vJr
-         2A6cyGwts0dG+ga8L/W8Sebg02/IDqATyhPTB/Z5SF5nCYGjYzqtigVcw7bevuI2ItD7
-         IQjh5TqkH0Q6KVp1d8wJfzZ+ohbDGvRu3tyuCHwyACwjyvJJ0QKfC7udvNeCF0B6rD+m
-         6csyRMRUZL7dfdVoDz/IA3ZwOuQlFjiLSxX9ibhPFi0Qbu2GZnBZy4wC3aWOG9n3f9xy
-         RQ4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762974217; x=1763579017;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=YdjhcZLRvFus+kcjwsBa3teGlxV32hqHWcTKIUAqd7c=;
-        b=BGCo4J91qdVzq5K3cTYm760qtfcOv5wSnMkkkuYSlW+gy0x19byF8xlD9uRBE3Hxiw
-         3n8BcUo82l9anA+CNItBFLguHEh9uGBLAGXAUYQkv+5+6Oi0S/uE/G+QGa/1W0rwEFNG
-         YLG6CnpO23rorv9cnjPgjuav5Y8E165NJQJTLSeBCUFaMIFVtQE7qnRfPSmCnU+sO/U9
-         P0IAMKwHZHve9UDO2F8brGABoCcz5BBWbu9j+tLP1WLLWFSR0TS0UbBRvAejm2tljPjY
-         hbW3zE5yYCD5/9utxKvlOG8cq6pQMV4YKcgr0+7DRFyWkwjV0L+vhxfSfz5jVE3h1d++
-         /O1Q==
-X-Gm-Message-State: AOJu0Yz/uoqHD9l5/CswASwPVjoXnjN+QaT5qi5smvlVgfo+SH7VM1q2
-	xu3v7pQPfTmdGmypziJ3ktXKkm2w/LZBPCd3CEoy5fmlP2Uc+9irarOrdZOQccCBCJIE0/kZBXx
-	JLyzee7qLBXPpK4GC2LibqdmueWeK+Zw=
-X-Gm-Gg: ASbGncv03CoqwIEO5xgTzD540nZwfIP+/Gv1PTqojfeM7L0lGcB48/DmlXnzgmHnxUu
-	gIwL+TlqHjmeYwD7IDtiXH9nv+NX2Iy07OHsfdsF0Bd25VMVmA6SELyQCWP3WZ5PR/GHAXj3UJ0
-	9rfKHBHmM2mLf1ft5P1NY+whvZOGK0ppUpIW2Jtl30zDE2QMIM5ucuTfne2OWY9ljzK5/A8LIIU
-	HSg4QDJ1+50vlENALVjeWYFqNYxUuP+cnAPS06uwcqzqO22rFruyb80wi8=
-X-Google-Smtp-Source: AGHT+IGokqy+s9sdXB1vkT1NwnctHIiNTEtlMQdfLOcfMoghrommH2x1kux2g4jmvJk7WXhy7UIP7NSb+sidZtHX8mU=
-X-Received: by 2002:a05:622a:1455:b0:4e8:ad19:99c3 with SMTP id
- d75a77b69052e-4eddbe1c835mr51464741cf.77.1762974217025; Wed, 12 Nov 2025
- 11:03:37 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o0VRMzbx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22EBCC16AAE;
+	Thu, 13 Nov 2025 00:44:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762994690;
+	bh=57ae9P0/hhPWmajdru2W+nfLg3XVRIoY0iNOydVXYn4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=o0VRMzbxfOdJ0k1X0t5Em0PgWLCWr3i/rM9WQcSQt9kJFNb2oWS5gVBVdgG7g39JX
+	 kZlFpNmIptAr9SEP1VGZStCJVUH7E/0KKLMdQIS7tswdVSjj2kzHGOuKpYe/AJY9ms
+	 8PxC6ObQ7IL8uEB8FrdyApoSnGQtMmu3iwv6Ua46RjGTkUwnlo8fF2/ldbT7euyJrs
+	 pTQaihVFnTbk8ok+d4MEo0PEfPe5VaOkwN5E6Z2zugPqos50/MjYQh2gkZJhRbYijr
+	 QS+Uv+Gu7nw/lIPHs84aFKTeECQ+fP8BUu9KVn6NR3XGjvz5lodc1QIwnjk8VQdWRl
+	 /TtwB3dFoBqHQ==
+Date: Wed, 12 Nov 2025 18:44:48 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Christian Zigotzky <chzigotzky@xenosoft.de>
+Cc: Manivannan Sadhasivam <mani@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	mad skateman <madskateman@gmail.com>,
+	"R.T.Dickinson" <rtd2@xtra.co.nz>,
+	Christian Zigotzky <info@xenosoft.de>,
+	linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, hypexed@yahoo.com.au,
+	Darren Stevens <darren@stevens-zone.net>,
+	debian-powerpc@lists.debian.org,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Lukas Wunner <lukas@wunner.de>, regressions@lists.linux.dev,
+	luigi burdo <intermediadc@hotmail.com>, Al <al@datazap.net>
+Subject: Re: [PPC] Boot problems after the pci-v6.18-changes
+Message-ID: <20251113004448.GA2251273@bhelgaas>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <mwBOip3XK77dn-UJtlk-uQ1N6i3nwsKticZyQdPYzQcsk0dsjXl4oOAh-Neoxv-0TlpKnt_FEJwx8ses5VJglGLJUW-bIG8KWchtoDwCnnA=@protonmail.com>
- <CAJnrk1ZDEszGbyP4cRh7+mEPu9BLmPrY9Xb-Q3HZnxXZOV7Eag@mail.gmail.com>
-In-Reply-To: <CAJnrk1ZDEszGbyP4cRh7+mEPu9BLmPrY9Xb-Q3HZnxXZOV7Eag@mail.gmail.com>
-From: Joanne Koong <joannelkoong@gmail.com>
-Date: Wed, 12 Nov 2025 11:03:25 -0800
-X-Gm-Features: AWmQ_blCyNTuehKYgW4fLviBklXPYbgTO5FW9yTn_zy4KZ44PWLv7H8yBWpXKX4
-Message-ID: <CAJnrk1aepU0y55FNG3zDHhK4iPo80MtD+tE_PT+ExhD9SDUS_Q@mail.gmail.com>
-Subject: Re: [REGRESSION] System hangs on suspend after using distrobox container
-To: Athul Krishna <athul.krishna.kr@protonmail.com>
-Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>, "miklos@szeredi.hu" <miklos@szeredi.hu>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <f4331d1c-8695-19c3-608b-210b3242aaf0@xenosoft.de>
 
-On Wed, Nov 12, 2025 at 10:50=E2=80=AFAM Joanne Koong <joannelkoong@gmail.c=
-om> wrote:
->
-> On Wed, Oct 29, 2025 at 10:47=E2=80=AFAM Athul Krishna
-> <athul.krishna.kr@protonmail.com> wrote:
+On Wed, Nov 12, 2025 at 04:40:18AM +0100, Christian Zigotzky wrote:
+> On 11/11/2025 01:20 PM, Bjorn Helgaas wrote:
+> > On Tue, Nov 11, 2025 at 06:15:20AM +0100, Christian Zigotzky wrote:
+> >> On 11/07/2025 06:06 AM, Christian Zigotzky wrote:
+> >>> On 11/05/2025 11:09 PM, Bjorn Helgaas wrote:
+> >>>>> I tested your patch with the RC4 of kernel 6.18 today. Unfortunately
+> >>> it
+> >>>>> doesn't solve the boot issue.
+> >>>>
+> >>>> Thanks for testing that.  I see now why that approach doesn't work:
+> >>>> quirk_disable_aspm_l0s_l1() calls pci_disable_link_state(), which
+> >>>> updates the permissible ASPM link states, but pci_disable_link_state()
+> >>>> only works for devices at the downstream end of a link.  It doesn't
+> >>>> work at all for Root Ports, which are at the upstream end of a link.
+> >>>>
+> >>>> Christian, you originally reported that both X5000 and X1000 were
+> >>>> broken.  I suspect X1000 may have been fixed in v6.18-rc3 by
+> >>>> df5192d9bb0e ("PCI/ASPM: Enable only L0s and L1 for devicetree
+> >>>> platforms"), but I would love to have confirmation of that.
+> >>>
+> >>> Hello Bjorn,
+> >>>
+> >>> I will enable CONFIG_PCIEASPM and CONFIG_PCIEASPM_DEFAULT for the RC5 of
+> >>> kernel 6.18 and test it with the X1000.
+> >>
+> >> I tested the RC5 of kernel 6.18 with CONFIG_PCIEASPM and
+> >> CONFIG_PCIEASPM_DEFAULT enabled on my X1000 today. Unfortunately the boot
+> >> problems are still present.
 > >
-> > Device: Asus Zephyrus GA402RJ
-> > Distro: Arch Linux
-> > Kernel: 6.17.6
-> >
-> > Noticed this issue after upgrading to 6.16, systems hangs when closing =
-the lid of my laptop. The issue is triggered by using a distrobox container=
-.
-> >
-> > Steps to replicate:
-> > 1. distrobox create --pull -i docker.io/library/archlinux:latest --name=
- test-container --home ~/Containers/test-container --additional-packages "s=
-ystemd" --init
-> > 2. distrobox enter test-container
-> > 3. Suspend the system
-> >
-> > Bisected to commit:
-> >     commit 0c58a97f919c24fe4245015f4375a39ff05665b6
-> >     Author: Joanne Koong <joannelkoong@gmail.com>
-> >     Date:   Mon Apr 14 15:22:10 2025 -0700
-> >
-> >         fuse: remove tmp folio for writebacks and internal rb tree
-> >
-> > I was able to temporarily fix the issue on 6.16 by reverting 0c58a97f a=
-nd 7d0f0f06. Unfortunately reverting 0c58a97f on 6.17 causes huge conflicts=
-.
-> > Attached systemd journal logs.
->
-> I missed this in my inbox until I saw Miklos's reply a few hours ago.
-> Sorry about that.
->
-> I'll try to get this set up on my VM and see if I can repro it. Does
-> that distrobox command you wrote out in step 1) automatically run the
-> fuse servers on the container as well? And for step 3) are you
-> suspending the system with 'systemctl suspend' or are you doing it
-> some other way?
->
-> From the logs, it looks like it's stuck waiting on folio writeback. Is
-> there a stuck fuse server somewhere that's not completing the
-> writeback request?
->
+> > Thanks.  Can you post a dmesg somewhere so I can see what the relevant
+> > device IDs are?  Can be with any kernel, doesn't have to be v6.18.  We
+> > need the Vendor and Device IDs to add a quirk.
+> 
+> X1000 kernel 6.18.0-rc5 dmesg:
+> https://github.com/user-attachments/files/23491291/dmesg_x1000.txt
 
-Athul, would you be able to test if this patch fixes it?:
+Thanks!  This shows all the Root Ports are [1959:a002]:
 
---- a/fs/fs-writeback.c
-+++ b/fs/fs-writeback.c
-@@ -2694,6 +2694,9 @@ static void wait_sb_inodes(struct super_block *sb)
-                if (!mapping_tagged(mapping, PAGECACHE_TAG_WRITEBACK))
-                        continue;
+  pci 0000:00:10.0: [1959:a002] type 01 class 0x060400 PCIe Root Port
+  pci 0000:00:10.0: PCI bridge to [bus 01]
+  pci 0000:01:00.0: [1002:6898] type 00 class 0x030000 PCIe Legacy Endpoint
 
-+               if (mapping_writeback_may_deadlock_on_reclaim(mapping))
-+                       continue;
-+
-                spin_unlock_irq(&sb->s_inode_wblist_lock);
+I'm confused because Hypexed's 6.18.0-a7-dmesg.log from
+https://github.com/chzigotzky/kernels/issues/17#issuecomment-3400419966
+shows the same Root Ports, and apparently it booted fine even though
+we enabled *everything*: 
 
-from [1] https://lore.kernel.org/linux-fsdevel/20241122232359.429647-4-joan=
-nelkoong@gmail.com/
+  pci 0000:00:10.0: [1959:a002] type 01 class 0x060400 PCIe Root Port
+  pci 0000:00:10.0: PCI bridge to [bus 01]
+  pci 0000:01:00.0: [1002:6610] type 00 class 0x030000 PCIe Legacy Endpoint
+  pci 0000:01:00.0: ASPM: DT platform, enabling L0s-up L0s-dw L1 ASPM-L1.1 ASPM-L1.2 PCI-PM-L1.1 PCI-PM-L1.2
 
-Thanks,
-Joanne
+It's *possible* that ASPM doesn't work on your endpoint (AMD Cypress
+XT [Radeon HD 5870]) but does work on Hypexed's endpoint (AMD Oland XT
+[Radeon HD 8670 / R5 340X OEM / R7 250/350/350X OEM]), but that seems
+unlikely to me.
 
-> Thanks,
-> Joanne
-> >
-> > Regards,
-> > Athul
+Maybe we just give up on ASPM on the [1959:a002] device.  A web search
+doesn't show many users of it, so I don't know how many people would
+care.
+
+Bjorn
