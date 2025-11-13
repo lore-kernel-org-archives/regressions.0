@@ -1,133 +1,131 @@
-Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-08.mail-europe.com (mail-08.mail-europe.com [57.129.93.249])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F64A28C00D
-	for <regressions@lists.linux.dev>; Thu, 13 Nov 2025 09:19:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BFD63451B4
+	for <regressions@lists.linux.dev>; Thu, 13 Nov 2025 18:16:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.129.93.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763025567; cv=none; b=K+1BIjxiiUk9bmlIeXQGiSmQ5nh6xLoG8h25nQLLvdlMNajl+EX5ANtpwy/kw1//BeXObfcg1cTZzSs5nBq1s6nMCJistdJz3AdoV20OAedGTZwCSG9Su7h1R1duG58hzGo3aWolvT6wB+RXbvUtxEIgRQxE6OXePVclNhJz1dQ=
+	t=1763057816; cv=none; b=NCJiI9PpbM4j4KV/9maRtbU9bvMOSpCojWXcUOWqN1NEmjeZPvyIC9pp21DjOEzRijdMy5n9RojcuZsVN0Ob89Ce+hOEE5S6fye333gJXtra66+x3UExEtbcPoECC6T6z/wGeOtmRf0jgPRLrdvWoN77CE/v2QxFrlzsErCfyqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763025567; c=relaxed/simple;
-	bh=8T+Vlo9lPT5az9h3+Xkrh1Vrop5dlx1WECtZFo+T5dc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ga+LbmSCijVxNPi0DTbxSVxiNC+PjwExhGZziLuHj4ccH3rdKcOMBiNzKy8m8GbcsSWG0aOe5a2QBq8gVGRHCN4KbvP/AaLnXfW61o3A6Yfqz1c+v3ZGXqxfqA/18megR9hT+QIX3lVji6lJUGOPiK3qAR97PPzZnTQGNj9/ofs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=QaTcbIYf; arc=none smtp.client-ip=217.194.8.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
+	s=arc-20240116; t=1763057816; c=relaxed/simple;
+	bh=eQmaxXbDI6T55GkvselmhN1Mv7EkmD7uxsIDTUdUiBg=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Vk3i2HgDmQ8zdLA3BSOwehwid/xMsHEcQRtftJATJD2h0GeB5EJuHxohNrA48wiL0tNwvJag49wq3qd6Evd4/hU7O7SHKpRk6YhVZB6h0a1cK7h71Htq1wbSoYoo0DHHiAGp46MZcUGYKOSeqnOJA0RD6DEdasyR/i62/qoYabU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=B+EQxAJU; arc=none smtp.client-ip=57.129.93.249
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="QaTcbIYf"
-Received: from francesco-nb (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
-	by mail11.truemail.it (Postfix) with ESMTPA id 1B1271FAFB;
-	Thu, 13 Nov 2025 10:19:14 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
-	s=default; t=1763025554;
-	bh=pHnnYYkSyfYO1qmzrJ98WQdoEtzPFRlm+L8Z3t85uAk=; h=From:To:Subject;
-	b=QaTcbIYfzO9FToC8CB+mUnU4N2N8a4LBayWtthtCeD+JPSgxQ3eMfIETur+YuFZWk
-	 zsiqsgr+XDwxRyt9DZLQX5HdYfGnJ1Ap+ebaA4NHjQ0cDVMGGJe8sfFPco8eHj1EEg
-	 KSlBNcvh7PGv/GXa8V7MkkAGiGTtxSQQAVMddkb9FztMaCS1SMcGZ0cPrnJWAoJOLe
-	 9xQpDAaa8eOXXzKs39B0mOMiKRPeE7LT/ByFUBZ+17FT3WaANmr/u441Xj4De/UlZW
-	 IAK2lMM00sNIgZ2+sekBpJ1ApIzrSqenIqg0kj67xOI5IJy6WrllcuadIesuVoOhF1
-	 PZ4vkWmVT7/Cw==
-Date: Thu, 13 Nov 2025 10:19:10 +0100
-From: Francesco Dolcini <francesco@dolcini.it>
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: =?iso-8859-1?Q?Jo=E3o_Paulo_Gon=E7alves?= <jpaulo.silvagoncalves@gmail.com>,
-	Andrzej Hajda <andrzej.hajda@intel.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Robert Foss <rfoss@kernel.org>,
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-	Jonas Karlman <jonas@kwiboo.se>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	=?iso-8859-1?Q?Jo=E3o_Paulo_Gon=E7alves?= <joao.goncalves@toradex.com>,
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: [REGRESSION] TI SN65DSI83 is being reset making display to blink
- On/Off
-Message-ID: <20251113091910.GA15538@francesco-nb>
-References: <bhkn6hley4xrol5o3ytn343h4unkwsr26p6s6ltcwexnrsjsdx@mgkdf6ztow42>
- <20251113084950.44a09e8e@bootlin.com>
+	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="B+EQxAJU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+	s=protonmail3; t=1763057804; x=1763317004;
+	bh=eQmaxXbDI6T55GkvselmhN1Mv7EkmD7uxsIDTUdUiBg=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=B+EQxAJUMDAy0sHmJyfuKZ7GZXmr72UO1VL6z7/Sp16TghtsTTuFqXErxn+dQii31
+	 wBFuQPUGpqTedE4CPFMbvokVi6OLEsNQKYlK/SxG950y6IFQAi93xTdPZSevKYA9ac
+	 6kky/YjN816tsndarmuMhMsGrzm3LOL5+VnyjxCXr1RoPfsZl5fR3dYpyIdKw4KgF8
+	 lOzAbyOOPsWsdPPfWuhHiQsu+04o8NEKEcRp6eFnxrAPMpOSGLvMGrAIVSL54TpHZe
+	 uZRzDyb/9lKQZ0R948wqSZY5KRkWPuzTPNIiHi/DAh7Z7+tRKd9gac6co3UjFfXLs1
+	 lPFEVsFG9EEFg==
+Date: Thu, 13 Nov 2025 18:16:42 +0000
+To: Joanne Koong <joannelkoong@gmail.com>
+From: Athul Krishna <athul.krishna.kr@protonmail.com>
+Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>, "miklos@szeredi.hu" <miklos@szeredi.hu>
+Subject: Re: [REGRESSION] System hangs on suspend after using distrobox container
+Message-ID: <_Gt41eQ_dnFbfGcMH4LkwSqmCYBdQGfnPdQfBlAWwkohIUfDUwtdvpQa61Pk2FMD4B-ov2uVIG9FUCJu_GT67Qkde7e2oZdnnRMopuglZHA=@protonmail.com>
+In-Reply-To: <CAJnrk1aepU0y55FNG3zDHhK4iPo80MtD+tE_PT+ExhD9SDUS_Q@mail.gmail.com>
+References: <mwBOip3XK77dn-UJtlk-uQ1N6i3nwsKticZyQdPYzQcsk0dsjXl4oOAh-Neoxv-0TlpKnt_FEJwx8ses5VJglGLJUW-bIG8KWchtoDwCnnA=@protonmail.com> <CAJnrk1ZDEszGbyP4cRh7+mEPu9BLmPrY9Xb-Q3HZnxXZOV7Eag@mail.gmail.com> <CAJnrk1aepU0y55FNG3zDHhK4iPo80MtD+tE_PT+ExhD9SDUS_Q@mail.gmail.com>
+Feedback-ID: 97021173:user:proton
+X-Pm-Message-ID: 95d4e6af75153028aee937d35abee29c11c8ab3f
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20251113084950.44a09e8e@bootlin.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Nov 13, 2025 at 08:49:50AM +0100, Herve Codina wrote:
-> On Mon, 10 Nov 2025 16:03:51 -0300
-> João Paulo Gonçalves <jpaulo.silvagoncalves@gmail.com> wrote:
-> > After commit ad5c6ecef27e ("drm: bridge: ti-sn65dsi83: Add error
-> > recovery mechanism"), our DSI display stopped working correctly. The
-> > display internally uses a TI SN65DSI83 to convert DSI-to-LVDS, and with
-> > the change, it keeps blinking on and off because the bridge is being
-> > reset by the error recovery mechanism.
-> > 
-> > Even before the change, it was possible to see the message below from
-> > the driver indicating that the bridge's internal PLL was not locked
-> > (register 0xE5, bit 0 in [1]):
-> > 
-> > [ 11.198616] sn65dsi83 2-002c: Unexpected link status 0x01
-> > 
-> > However, it was working. After the change, it stopped working. Masking
-> > the PLL error makes it work again:
-> > 
-> > diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi83.c b/drivers/gpu/drm/bridge/ti-sn65dsi83.c
-> > index 033c44326552..89a0a2ab45b1 100644
-> > --- a/drivers/gpu/drm/bridge/ti-sn65dsi83.c
-> > +++ b/drivers/gpu/drm/bridge/ti-sn65dsi83.c
-> > @@ -429,7 +429,7 @@ static void sn65dsi83_handle_errors(struct sn65dsi83 *ctx)
-> >          */
-> > 
-> >         ret = regmap_read(ctx->regmap, REG_IRQ_STAT, &irq_stat);
-> > -       if (ret || irq_stat) {
-> > +       if (ret || (irq_stat & ~REG_IRQ_STAT_CHA_PLL_UNLOCK)) {
-> >                 /*
-> >                  * IRQ acknowledged is not always possible (the bridge can be in
-> >                  * a state where it doesn't answer anymore). To prevent an
-> > 
-> > Any suggestions on how to proceed here?
-> > 
-> > #regzbot introduced: ad5c6ecef27e
-> > 
-> > [1] https://www.ti.com/lit/ds/symlink/sn65dsi83.pdf
-> > 
-> 
-> The PLL should be locked.
-> 
-> Also in the datasheet, in 'Table 7-2. Initialization Sequence', the status
-> is checked at the end of the initialization sequence and the sequence has to
-> be done again when the status register value is not 0x00.
-> 
-> Even before monitoring (irq or polling method), you have an issue with your PLL
-> mentioned with the "sn65dsi83 2-002c: Unexpected link status 0x01" message.
-> 
-> I don't understand even how your panel can be correctly driven with the bridge
-> PLL unlock.
+On Thursday, November 13th, 2025 at 12:33 AM, Joanne Koong <joannelkoong@gm=
+ail.com> wrote:
 
-We'll try to figure out the reason and see what's the best path forward.
+> On Wed, Nov 12, 2025 at 10:50=E2=80=AFAM Joanne Koong joannelkoong@gmail.=
+com wrote:
+>=20
+> > On Wed, Oct 29, 2025 at 10:47=E2=80=AFAM Athul Krishna
+> > athul.krishna.kr@protonmail.com wrote:
+> >=20
+> > > Device: Asus Zephyrus GA402RJ
+> > > Distro: Arch Linux
+> > > Kernel: 6.17.6
+> > >=20
+> > > Noticed this issue after upgrading to 6.16, systems hangs when closin=
+g the lid of my laptop. The issue is triggered by using a distrobox contain=
+er.
+> > >=20
+> > > Steps to replicate:
+> > > 1. distrobox create --pull -i docker.io/library/archlinux:latest --na=
+me test-container --home ~/Containers/test-container --additional-packages =
+"systemd" --init
+> > > 2. distrobox enter test-container
+> > > 3. Suspend the system
+> > >=20
+> > > Bisected to commit:
+> > > commit 0c58a97f919c24fe4245015f4375a39ff05665b6
+> > > Author: Joanne Koong joannelkoong@gmail.com
+> > > Date: Mon Apr 14 15:22:10 2025 -0700
+> > >=20
+> > > fuse: remove tmp folio for writebacks and internal rb tree
+> > >=20
+> > > I was able to temporarily fix the issue on 6.16 by reverting 0c58a97f=
+ and 7d0f0f06. Unfortunately reverting 0c58a97f on 6.17 causes huge conflic=
+ts.
+> > > Attached systemd journal logs.
+> >=20
+> > I missed this in my inbox until I saw Miklos's reply a few hours ago.
+> > Sorry about that.
+> >=20
+> > I'll try to get this set up on my VM and see if I can repro it. Does
+> > that distrobox command you wrote out in step 1) automatically run the
+> > fuse servers on the container as well? And for step 3) are you
+> > suspending the system with 'systemctl suspend' or are you doing it
+> > some other way?
+System hangs on either normal lid close or 'systemctl suspend'.
 
-Whatever was the reason it was working before, and it should stay
-working
+> >=20
+> > From the logs, it looks like it's stuck waiting on folio writeback. Is
+> > there a stuck fuse server somewhere that's not completing the
+> > writeback request?
+>=20
+>=20
+> Athul, would you be able to test if this patch fixes it?:
+>=20
+> --- a/fs/fs-writeback.c
+> +++ b/fs/fs-writeback.c
+> @@ -2694,6 +2694,9 @@ static void wait_sb_inodes(struct super_block *sb)
+> if (!mapping_tagged(mapping, PAGECACHE_TAG_WRITEBACK))
+> continue;
+>=20
+> + if (mapping_writeback_may_deadlock_on_reclaim(mapping))
+> + continue;
+> +
+> spin_unlock_irq(&sb->s_inode_wblist_lock);
+>=20
+Yeah, this solves it.=20
 
-> I don't think that masking the error would be the correct solution.
-> The root cause has to be identified. The "sn65dsi83 2-002c: Unexpected link
-> status 0x01" should not appear.
-> 
-> Can you check your clocks ?
-> Does your hardware use the REFCLK external clock ?
+>=20
+> from [1] https://lore.kernel.org/linux-fsdevel/20241122232359.429647-4-jo=
+annelkoong@gmail.com/
+>=20
+> Thanks,
+> Joanne
+>=20
+> > Thanks,
+> > Joanne
+> >=20
+> > > Regards,
+> > > Athul
 
-No, REFCLK is tied to GND.
-
-> The driver expects the clock from the MIPI D-PHY channel A HS continuous (bit 0
-> in 0x0A register).
-
-Francesco
-
+Regards,
+Athul
