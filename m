@@ -1,119 +1,135 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 523AB303CAF
-	for <regressions@lists.linux.dev>; Thu, 13 Nov 2025 05:59:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 986262DCBEB
+	for <regressions@lists.linux.dev>; Thu, 13 Nov 2025 07:49:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.171.202.116
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763013548; cv=none; b=O0CjYaWFXCCqFI6gS149+RHxU8LhgkuKoMTOy31kb7NSucXiGWiIxD594z14lGy5/qgzHLybizQUT93oTg5g9bviutsnr28PiOeCfQEmifm6QluPzKtOUpB8AuCDEw7ttWllxf1667Urw3vYhOfTAY9AKYCnOdQcX81uo3UoYYI=
+	t=1763020204; cv=none; b=VBNMhJDG6a8p1kvdg5BDn9wFBAxGEmc+RbtOvibsEVbTHuTiL7Tvc9v7c2hBt/5wJ/xg+BTvzy5WlVCBIrIlDaPajj8gkzdc2b+2EOvautyrHxAZMd1SCHWn5SV202zD+TpbY16MMsAGS0X1SWMJt1Gaf4cAR9VnCMubW8pWJk8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763013548; c=relaxed/simple;
-	bh=wza4S8wUZt6+VKRKMSHQSY/xmDb6KgTRMG4CN4bMjk8=;
-	h=Content-Type:MIME-Version:Subject:From:To:Cc:Date:Message-ID; b=SNIYr0QH51LOGtLH6bmCMkEKqmkdRaV4U39+2lzcWkD7srU1QanX/bOvbeVK/M7kdyJRvaYo7gCj7HG0Mg0pq1pqNLoctAjbtqN3ICX8CKe+QF5I590r3T+Kx9GZjv3BSpy+63Se9i09kcz2SrZTLJPkkeWJhwH0g9NH98emcSk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org; spf=none smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b=Lw4N/JyN; arc=none smtp.client-ip=209.85.210.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=kernelci.org
+	s=arc-20240116; t=1763020204; c=relaxed/simple;
+	bh=CYUxaRVdnkO8INxjVez/NqLTT9qn9nO8JWbhwLdLjS0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=dfQHUozppZXTPruuOWcjfYWy5NqU+74ukio70u47YUzYrtrUtDnVVGzU+Wa3R5WFJDB0bIz1NKvxwDTRuvxF1WJ6eT15hb5ZZStIiek9e0fDaCOttjSB9hx35xVVbmL4BM+nCG708mSYL7zIcXpIehjgWP8adG7iLGznvKcmWlA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Fs46xumC; arc=none smtp.client-ip=185.171.202.116
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b="Lw4N/JyN"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-7b80fed1505so334235b3a.3
-        for <regressions@lists.linux.dev>; Wed, 12 Nov 2025 21:59:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20230601.gappssmtp.com; s=20230601; t=1763013544; x=1763618344; darn=lists.linux.dev;
-        h=message-id:date:reply-to:cc:to:from:subject
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HXSAnbgxS7ZiviPCEiGua91bfUo0Z8jsM3ZVvQWxZtA=;
-        b=Lw4N/JyNssZAOEyYqePp/JQfDd2AcqDmnfYm1aQyW0RVGjDxk8WVuBuy/FkKQxF9To
-         nICoDu97K24Hr9GrwFf+eHKaqSPT4mFUjhrOYLjbM3qFY9TDWZT2AtVD2g+dNPq9wB17
-         oMta0f84BaLmP+N+cO+2gdVXRybLiB+HVNdUCTfIrWg1MgSzpPHroNcqFum7D5eH7QPU
-         UhS32ZA980LlLbDXRuNJznYfmEjvl1xTv68YjopzqzgGcLigFXi/8/PNv6onTWzNU3HF
-         kW2xxpNLk5uMbV2HbUzh7QsKh2Ql+K6qjdO1UX2XrwQveO6KeYFKBOiOJqEv3LkQGDG/
-         sZYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763013544; x=1763618344;
-        h=message-id:date:reply-to:cc:to:from:subject
-         :content-transfer-encoding:mime-version:x-gm-gg:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=HXSAnbgxS7ZiviPCEiGua91bfUo0Z8jsM3ZVvQWxZtA=;
-        b=E7YqSyCRFq6v9vXzW/51qsz+fjPR9zB/oGmxWUmUhI2sN2w3p63UG1eLpSJvR8i64z
-         p/SSsOreTWPp/LPxx0Tcqmzye3KisSVbknEuw+wxUGEZkACSoCQ/zJGkLPnifU2+KTLT
-         7igkXf14tGQqht5rpeVIsqrQJbODatwOZt6i9vIYlyS55tDBACqaIZ76ZqTDvPkui63v
-         SzhbtgbVpe4/YUZ89CnDSCaTnYvoe+CsVpUqzahN50m2gsh+ObU30SWhma0AiYDFZZTf
-         tAH26FYCoI7j7uoXYYNdqUpTxvTOZ6yDQbCCYZeEO/DlkHwrdz9n57BY1ppcOZ/01PgQ
-         6Azw==
-X-Gm-Message-State: AOJu0Yx4hLlOLq/j9liNtOv+q1IJ5uqqVgRiGtJLtkqHnEwCepeLH326
-	dG2tbNV/4SPbvIqxfED+0w6zV+pXftckPYJM4CIU3oScfxEa6NY/Hi4acDCrZkptUuY=
-X-Gm-Gg: ASbGnctWq5tt3RM2E114cF+rO6cO21L3ukFGrlyFkD3rm+Nuvm+UYQCa4fTwNaL8Y9m
-	/acXfJucvOtueEv6V0X6/VVf6AK/XVuclaDm4jKlm2vjoAzEk0M6/L3fYm85sChVIcf0I8ehUfW
-	4ViyrdoHAv4PksmFvqkjHZQEMWxfO3VkrqjX0f21bk11/+zb3RfLPE+6lsozOslL0mCvAuKH8gQ
-	mG8opQDbTLQc78OmzOUgzP2aeO4YEBLDkWCGBGwx/UeX+RndiSaxFFz5wz7LVnWG0J47L5BLh38
-	kg8wufIrwGJdKnIZ2YCn2fNnYpjujZDb7Fuq9sFhF9q1nuB/+tsl9tvPa2oQ7kgCew4vh6QsfRS
-	HhCg6km4cTZUhZkX149s8Qed+1xmYULxEeix0e5ZEpi2cjXNi+xLvKIvoP38YC9bSR8zxBQ==
-X-Google-Smtp-Source: AGHT+IGAIGDGmRN+0TT3QqnmDki4IPkE/y/D1cfLRgVfuQUwWxfz2NefKHZpQqW5WR8HDWw/jdnx1g==
-X-Received: by 2002:aa7:9f4a:0:b0:7b8:383d:8706 with SMTP id d2e1a72fcca58-7b8383d9ceemr4408363b3a.18.1763013544510;
-        Wed, 12 Nov 2025 21:59:04 -0800 (PST)
-Received: from efdf33580483 ([20.38.40.137])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7b92772e7f2sm932938b3a.57.2025.11.12.21.59.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Nov 2025 21:59:03 -0800 (PST)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Fs46xumC"
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-04.galae.net (Postfix) with ESMTPS id 01D32C0F56D;
+	Thu, 13 Nov 2025 07:49:36 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 9EB986068C;
+	Thu, 13 Nov 2025 07:49:57 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 5A522102F182C;
+	Thu, 13 Nov 2025 08:49:51 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1763020196; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=09Mb+D15S2RcxtFci5mixnzc0SY2qTDKvhXPP64yilY=;
+	b=Fs46xumC4ZEDToBHMg6mg0OPZqWRZAmd9zvldAPBvUTz43MO9GtMdL5dJxBViBkw4KtS7i
+	evYsG0CpsuMizfmOHty4UAWYT5kB91RcWk+JlD2tgJs/Abj+6wMl3vxdWUXFtdZOY3rdfX
+	vCYR+ID+eiPmsenNo4aJ39xOz9fUOK/MMQRC9kQflZzRsMCtEqFd4G6vfczCObUKAX3nWm
+	LRGBO+UeFHGXlZMN95IbUhUQYwxaHKXEo0TjiCPAzuCepl1w9y9oJn8cuyqdxQLX0YzQMV
+	KvW040fwSeF0MVJZJy53v6x+Dup8szK6kgNhZynKmvfyg1xS3t2cjrnxKQcRXg==
+Date: Thu, 13 Nov 2025 08:49:50 +0100
+From: Herve Codina <herve.codina@bootlin.com>
+To: =?UTF-8?B?Sm/Do28=?= Paulo =?UTF-8?B?R29uw6dhbHZlcw==?=
+ <jpaulo.silvagoncalves@gmail.com>
+Cc: Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong
+ <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, Laurent
+ Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman
+ <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, Maarten
+ Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+ <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
+ <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Tomi Valkeinen
+ <tomi.valkeinen@ideasonboard.com>, =?UTF-8?B?Sm/Do28=?= Paulo
+ =?UTF-8?B?R29uw6dhbHZlcw==?= <joao.goncalves@toradex.com>,
+ linux-kernel@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: [REGRESSION] TI SN65DSI83 is being reset making display to
+ blink On/Off
+Message-ID: <20251113084950.44a09e8e@bootlin.com>
+In-Reply-To: <bhkn6hley4xrol5o3ytn343h4unkwsr26p6s6ltcwexnrsjsdx@mgkdf6ztow42>
+References: <bhkn6hley4xrol5o3ytn343h4unkwsr26p6s6ltcwexnrsjsdx@mgkdf6ztow42>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [REGRESSION] mainline/master: (build) in ynl.o (Makefile:27)
- [logspec:kbuild,kbuild.compiler]
-From: KernelCI bot <bot@kernelci.org>
-To: kernelci-results@groups.io
-Cc: regressions@lists.linux.dev, gus@collabora.com, laura.nao@collabora.com,
- shreeya.patel@collabora.com, broonie@kernel.org
-Reply-To: kernelci@lists.linux.dev
-Date: Thu, 13 Nov 2025 05:59:03 -0000
-Message-ID: <176301354315.447.16290763427581345433@efdf33580483>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
 
+Hi João
 
+On Mon, 10 Nov 2025 16:03:51 -0300
+João Paulo Gonçalves <jpaulo.silvagoncalves@gmail.com> wrote:
 
+> Hello,
+> 
+> After commit ad5c6ecef27e ("drm: bridge: ti-sn65dsi83: Add error
+> recovery mechanism"), our DSI display stopped working correctly. The
+> display internally uses a TI SN65DSI83 to convert DSI-to-LVDS, and with
+> the change, it keeps blinking on and off because the bridge is being
+> reset by the error recovery mechanism.
+> 
+> Even before the change, it was possible to see the message below from
+> the driver indicating that the bridge's internal PLL was not locked
+> (register 0xE5, bit 0 in [1]):
+> 
+> [ 11.198616] sn65dsi83 2-002c: Unexpected link status 0x01
+> 
+> However, it was working. After the change, it stopped working. Masking
+> the PLL error makes it work again:
+> 
+> diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi83.c b/drivers/gpu/drm/bridge/ti-sn65dsi83.c
+> index 033c44326552..89a0a2ab45b1 100644
+> --- a/drivers/gpu/drm/bridge/ti-sn65dsi83.c
+> +++ b/drivers/gpu/drm/bridge/ti-sn65dsi83.c
+> @@ -429,7 +429,7 @@ static void sn65dsi83_handle_errors(struct sn65dsi83 *ctx)
+>          */
+> 
+>         ret = regmap_read(ctx->regmap, REG_IRQ_STAT, &irq_stat);
+> -       if (ret || irq_stat) {
+> +       if (ret || (irq_stat & ~REG_IRQ_STAT_CHA_PLL_UNLOCK)) {
+>                 /*
+>                  * IRQ acknowledged is not always possible (the bridge can be in
+>                  * a state where it doesn't answer anymore). To prevent an
+> 
+> Any suggestions on how to proceed here?
+> 
+> #regzbot introduced: ad5c6ecef27e
+> 
+> [1] https://www.ti.com/lit/ds/symlink/sn65dsi83.pdf
+> 
 
+The PLL should be locked.
 
-Hello,
+Also in the datasheet, in 'Table 7-2. Initialization Sequence', the status
+is checked at the end of the initialization sequence and the sequence has to
+be done again when the status register value is not 0x00.
 
-New build issue found on mainline/master:
+Even before monitoring (irq or polling method), you have an issue with your PLL
+mentioned with the "sn65dsi83 2-002c: Unexpected link status 0x01" message.
 
----
- in ynl.o (Makefile:27) [logspec:kbuild,kbuild.compiler]
----
+I don't understand even how your panel can be correctly driven with the bridge
+PLL unlock.
 
-- dashboard: https://d.kernelci.org/i/maestro:cec1901dfbc548e17188aa1ee1d09a9b64810be0
-- giturl: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-- commit HEAD:  6fa9041b7177f6771817b95e83f6df17b147c8c6
+I don't think that masking the error would be the correct solution.
+The root cause has to be identified. The "sn65dsi83 2-002c: Unexpected link
+status 0x01" should not appear.
 
+Can you check your clocks ?
+Does your hardware use the REFCLK external clock ?
 
+The driver expects the clock from the MIPI D-PHY channel A HS continuous (bit 0
+in 0x0A register).
 
-Log excerpt:
-=====================================================
-gcc -std=gnu11 -O2 -W -Wall -Wextra -Wno-unused-parameter -Wshadow   -c -MMD -c -o ynl.o ynl.c
-make[5]: gcc: No such file or directory
+Best regards,
+Hervé
 
-=====================================================
-
-
-# Builds where the incident occurred:
-
-## defconfig+allmodconfig+CONFIG_FRAME_WARN=2048 on (arm):
-- compiler: clang-17
-- config: https://files.kernelci.org/kbuild-clang-17-arm-allmodconfig-69154d6e2fd2377ea99add3e/.config
-- dashboard: https://d.kernelci.org/build/maestro:69154d6e2fd2377ea99add3e
-
-
-#kernelci issue maestro:cec1901dfbc548e17188aa1ee1d09a9b64810be0
-
-Reported-by: kernelci.org bot <bot@kernelci.org>
-
---
-This is an experimental report format. Please send feedback in!
-Talk to us at kernelci@lists.linux.dev
-
-Made with love by the KernelCI team - https://kernelci.org
+clock
