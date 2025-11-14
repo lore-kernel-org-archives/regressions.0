@@ -1,286 +1,424 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF3982DC34E
-	for <regressions@lists.linux.dev>; Fri, 14 Nov 2025 06:03:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49B0A30E0D0
+	for <regressions@lists.linux.dev>; Fri, 14 Nov 2025 11:49:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763100234; cv=none; b=SpLKNqpZ2qXfVUvt8BA0JKNHY/hR2suPChnkMlLL5k5PioozDszTFfBu3QzKQW1n4zBCu5aESyPYuhBz5bLFDuTAbvh60UYsCD2NzWlyxcK5AZ+XJ27bYriBkwodVQOFigJ+K4P++j0b/sGgQUJfyCY79EW7Win2tMhdrxH/rm8=
+	t=1763120976; cv=none; b=WRNJy4r5dCfE40IBUevYt1ZkgnXoctrJt1nTJ3nKbP6ViCL9j30JCNLFLDDszLO+M8quRaVyunWAXSJlxIjQL8rUHED1YFQ43jJgNnw6wIAeH6OhaDN1mUemj/gdHdJvYnUuH1M5oacvlCGbqMm1qjIU8IYVaGuJXXZmZx2tDKI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763100234; c=relaxed/simple;
-	bh=O4uiiIpAydyY7Vc6U2+eMpL65iQUfjhhkVbZHJEA3H8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PzMh/FH+Z+J71hkxf+u6lUGBmKkh/8Or20vJ5C/kPZVJ8H1hh9xHrgjmoY7H3AdWmyeljV9pqM/m9Tfs+Fcxv2G15yUnOkM/evzZ6J5t5X/mvcagDd95SLroFHO7d+o28G9xsWo8UCXDLQjMnUrFFigQMgB6LA/QcAMcxzsNUXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=bIgPAMGJ; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1763120976; c=relaxed/simple;
+	bh=vwahUSp5YQTJyYca3f9QlLDPSMAEJf7JQP6DChDyn/c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bOVG6FCm+h5XZQewdUhifrzeYXU3Y9b7LmqzEJmrqKYe9FS+/LSNxRw/0+Hwy3a8I8Ku9XqW1MKhNg/ijNSqN/vbkBfTN+P/XuQq9wglxARiIQISpIy2Y1wiuy5vWrsQd2A2+KwddEsOy3Mk1I/RyYRPmbX/N1KgHmZIF1MgQ9s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ed9uSJNp; arc=none smtp.client-ip=209.85.128.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="bIgPAMGJ"
-Received: from [10.95.76.239] (unknown [167.220.238.207])
-	by linux.microsoft.com (Postfix) with ESMTPSA id CA6B6201AE49;
-	Thu, 13 Nov 2025 22:03:47 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com CA6B6201AE49
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1763100231;
-	bh=O4uiiIpAydyY7Vc6U2+eMpL65iQUfjhhkVbZHJEA3H8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=bIgPAMGJ1EapWd3QYgfFzn8BJ2wvA2+BvvhXipstsGxOdOD2qKo09lyyttmx5V8bq
-	 CpM6JBMaemFhMvJkB58Nf6jBXUXugmVssx2LyvlwoeNtGEGymdryHMq2au7bkaESPm
-	 idCHiQALdNrxuxhB3SVOH6OxrfFVr3YB8raxr/C0=
-Message-ID: <7a38c04d-4e54-4f1a-96fd-43f0f11ab97b@linux.microsoft.com>
-Date: Fri, 14 Nov 2025 11:33:45 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ed9uSJNp"
+Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-789314f0920so3079177b3.1
+        for <regressions@lists.linux.dev>; Fri, 14 Nov 2025 03:49:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1763120973; x=1763725773; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KCP0fq9NrHtq04u5AKlbZ6NekY0qgPfss4jXoTspXHc=;
+        b=ed9uSJNpiDUDHz9B2UmCTdMMZwlGDxl6JUbHFw187UCi5sjrdYFUFpwj6uufw0yNq9
+         uM18OH+WKDgxSi/qyVyPFNXwagfUC6R0goxw0owR7GJs0PER8YeLXp9mnyjOJrJWK1yp
+         UtHsVrb13UD+qbF1A1qmhOWPcOOGFQ3jganE3FxAW0QLkQfOzKxgebdhPWE9C1ddyTWK
+         gLSk6cFLMC6C+9itAwUWq90PHqqiTfKEr2VcOVxr14/wC3OvutpbwsIqyKb8ygbf9SQX
+         uSkQEPQfUnnFzC1fkNRNmqMz31SbwwdjHquuthQK0jGGqfPbWYc2jLdDcukbHc1uI3UF
+         SJBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763120973; x=1763725773;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=KCP0fq9NrHtq04u5AKlbZ6NekY0qgPfss4jXoTspXHc=;
+        b=h80/sbNYZ3ZrJzY1FcR0Blm0TC7poZ+y5bFhXz1JdY6are988QL6EPN1RvLlRLqerZ
+         NMjWnPdLqm3zGYykZ2h6wTh+G2XxJCb2iPV4tkyQny3DK4SvwRUid3AepOyHyL0SJ++g
+         HC5zOSJZVldQ4fOpxJdzIewdOOR8LeZ4sRFfkhFzI4MqxEIeiKNtzMGzu5IOwLyY4KQY
+         Y5DyMqaZ2F5QTrh7c2PseSsg5CtidfSqzzGHbRBkMCaWGqiNWvhZGBXuiFx6dJVja/6J
+         n1kl9dTLSmGW9pWGS1PtZA2Rr2AFh2ugQVoVFoPb30+Z/f7KyOczz4Pi4eI7k2GgRAHT
+         YY8g==
+X-Forwarded-Encrypted: i=1; AJvYcCVo5xl12m7R4Urf00CsVZBgzd7Lx966ba8pHWEx6qsmPHJvmeZocNzY8j4ZqZ2TF2VSi09/tZjlIhUoiw==@lists.linux.dev
+X-Gm-Message-State: AOJu0YyqzJRVTHtEXvCyVuhJgGOoCu7O0F9i0XsKUqJ1qisUgyL9MVEg
+	qZFCri293r9kqSnpuE/yQaKM7abs42Nm1ItV3hUvkZs5fTMPtUdR5ysL+I9kjIZvUWFXjq/A6DD
+	If7eTivND83DY7jZa7ZM0ggSySCUKpAI=
+X-Gm-Gg: ASbGncv3nS1Y80pWzb6egc66ueTOXRFY9XpwePQm0DIVJqV5VNYAfbQGdJsTk+YUZ7I
+	i9WF1RQ1RnRFmpP27O6C3drZ9Qf4sp6VHpgdrgfMxjOGwbeH5yhwkbMxrrcWeqot3DoY68el+kD
+	yNgmVg7/GVaQsewKKnVUAaNSh/22G7b11b/phBnvyr36naG0KZeW2eoNatNtif28NW5nTk0FEl6
+	0L/so+JiuecuaTsfNNK1YL0sPPFNDSQga1I2aUWmxQteHHwte30Le5NdaMU+tiaiAmlrfNztKdo
+	o3DT6PErGXcIYMU3NUHOaNYb4NDSb2/GVxOgPxg=
+X-Google-Smtp-Source: AGHT+IGgY0RCMrdDYWEgvk991hUiHklUkEjuB1nLEaSEWhi7uSWGUVc3JHjOAg1leKscNYyi/kK07roSx2cyp7IpsMI=
+X-Received: by 2002:a05:690c:7342:b0:786:57f5:b49a with SMTP id
+ 00721157ae682-78929e5341emr24663787b3.29.1763120973150; Fri, 14 Nov 2025
+ 03:49:33 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
+References: <aRYjk4JBqHvVl-wN@eldamar.lan> <7a38c04d-4e54-4f1a-96fd-43f0f11ab97b@linux.microsoft.com>
+In-Reply-To: <7a38c04d-4e54-4f1a-96fd-43f0f11ab97b@linux.microsoft.com>
+From: Peter Morrow <pdmorrow@gmail.com>
+Date: Fri, 14 Nov 2025 11:49:22 +0000
+X-Gm-Features: AWmQ_bl0SBJOFSgqRHSj1LuxiEDat2xdPPqrhSzSzQnn92HbNlDYJQ1byHb3M2M
+Message-ID: <CAFcZKTwQgd9hrTaXnThML=+WG82TH3DK90FT1-WWsBSoRj7dRw@mail.gmail.com>
 Subject: Re: [REGRESSION 6.12.y] hyper-v: BUG: kernel NULL pointer
- dereference, address: 00000000000000a0: RIP: 0010:hv_uio_channel_cb+0xd/0x20
- [uio_hv_generic]
-To: Salvatore Bonaccorso <carnil@debian.org>,
- Peter Morrow <pdmorrow@gmail.com>, Long Li <longli@microsoft.com>
-Cc: 1120602@bugs.debian.org, linux-hyperv@vger.kernel.org,
- linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
- stable@vger.kernel.org, John Starks <jostarks@microsoft.com>,
- Michael Kelley <mhklinux@outlook.com>, Long Li <longli@microsoft.com>,
- Tianyu Lan <tiala@microsoft.com>, "K. Y. Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-References: <aRYjk4JBqHvVl-wN@eldamar.lan>
-Content-Language: en-US
-From: Naman Jain <namjain@linux.microsoft.com>
-In-Reply-To: <aRYjk4JBqHvVl-wN@eldamar.lan>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+ dereference, address: 00000000000000a0: RIP: 0010:hv_uio_channel_cb+0xd/0x20 [uio_hv_generic]
+To: Naman Jain <namjain@linux.microsoft.com>
+Cc: Salvatore Bonaccorso <carnil@debian.org>, Long Li <longli@microsoft.com>, 1120602@bugs.debian.org, 
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	regressions@lists.linux.dev, stable@vger.kernel.org, 
+	John Starks <jostarks@microsoft.com>, Michael Kelley <mhklinux@outlook.com>, 
+	Tianyu Lan <tiala@microsoft.com>, "K. Y. Srinivasan" <kys@microsoft.com>, 
+	Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
+	Dexuan Cui <decui@microsoft.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-DQoNCk9uIDExLzEzLzIwMjUgMTE6NTkgUE0sIFNhbHZhdG9yZSBCb25hY2NvcnNvIHdyb3Rl
-Og0KPiBQZXRlciBNb3Jyb3cgcmVwb3J0ZWQgaW4gRGViaWFuIGEgcmVncmVzc2lvbiwgcmVw
-b3J0ZWQgaW4NCj4gaHR0cHM6Ly9idWdzLmRlYmlhbi5vcmcvMTEyMDYwMiAuIFRoZSByZWdy
-ZXNzaW9uIHdhcyBzZWVuIGFmdGVyDQo+IHVwZGF0aW5nLCB0byA2LjEyLjU3LTEgaW4gRGVi
-aWFuLCBidXQgZGV0YWlscyBvbiB0aGUgb2ZmZW5kaW5nIGNvbW1pdA0KPiBmb2xsb3dzLg0K
-PiANCj4gSGlzIHJlcG9ydCB3YXMgYXMgZm9sbG93czoNCj4gDQo+PiBEZWFyIE1haW50YWlu
-ZXIsDQo+Pg0KPj4gSSdtIHNlZWluZyBhIGtlcm5lbCBjcmFzaCBxdWl0ZSBzb29uIGFmdGVy
-IGJvb3Qgb24gYSBkZWJpYW4gdHJpeGllIGJhc2VkDQo+PiBzeXN0ZW0gcnVubmluZyA2LjEy
-LjU3K2RlYjEzLWFtZDY0LCB1bmZvcnR1bmF0ZWx5IHRoZSBrZXJuZWwgcGFuaWNzIGJlZm9y
-ZQ0KPj4gSSBjYW4gYWNjZXNzIHRoZSBzeXN0ZW0gdG8gZ2F0aGVyIG1vcmUgaW5mb3JtYXRp
-b24uIFRodXMgSSdsbCBwcm92aWRlIGRldGFpbHMNCj4+IG9mIHRoZSBzeXN0ZW0gdXNpbmcg
-YSBwcmV2aW91c2x5IGtub3duIGdvb2QgdmVyc2lvbi4gVGhlIHBhbmljIGlzIGhhcHBlbmlu
-Zw0KPj4gMTAwJSBvZiB0aGUgdGltZSB1bmZvcnR1bmF0ZWx5LiBJIGhhdmUgYWNjZXNzIHRv
-IHRoZSBzZXJpYWwgY29uc29sZSBob3dldmVyDQo+PiBzbyBjYW4gZW5hYmxlIGFueSByZXF1
-aXJlZCB2ZXJib3NlIGxvZ2dpbmcgZHVyaW5nIGJvb3QgaWYgbmVjZXNzYXJ5Lg0KPj4NCj4+
-IENydWNpYWxseSB0aGUgY3Jhc2ggaXMgbm90IHNlZW4gd2l0aCBrZXJuZWwgdmVyc2lvbiA2
-LjEyLjQxK2RlYjEzLWFtZDY0IHdpdGggdGhlDQo+PiBzYW1lIHVzZXJzcGFjZS4gV2UgaGFk
-IHBpbm5lZCB0byB0aGF0IHZlcnNpb24gdW50aWwgdmVyeSByZWNlbnRseSB0byBpbiBvcmRl
-cg0KPj4gdG8gd29yayBhcm91bmQgaHR0cHM6Ly9idWdzLmRlYmlhbi5vcmcvY2dpLWJpbi9i
-dWdyZXBvcnQuY2dpP2J1Zz0xMTA5Njc2DQo+Pg0KPj4gSSdtIHJ1bm5pbmcgYSBkcGRrIGFw
-cGxpY2F0aW9uIGhlcmUgKFZQUCkgb24gQXp1cmUsIFZNIGZvcm0gZmFjdG9yIGlzIGENCj4+
-ICJTdGFuZGFyZCBEUzMgdjIgKDQgdmNwdXMsIDE0IEdpQiBtZW1vcnkpIi4NCj4+DQo+PiBU
-aGUgb25seSByZWxldmFudCB1cHN0cmVhbSBjb21taXQgaW4gdGhpcyBhcmVhIChhcyBmYXIg
-YXMgSSBjYW4gc2VlKSBpczoNCj4+DQo+PiBodHRwczovL2xvcmUua2VybmVsLm9yZy9saW51
-eC1oeXBlcnYvMWJiNTk5ZWUtZmUyOC00MDlkLWI0MzAtMmZjMDg2MjY4OTM2QGxpbnV4Lm1p
-Y3Jvc29mdC5jb20vDQo+Pg0KPj4gVGhlIGNvbW1lbnQgcmVnYXJkaW5nIGF2b2lkaW5nIHJh
-Y2VzIGF0IHN0YXJ0IGFkZHMgYSBiaXQgbW9yZSB3ZWlnaHQgYmVoaW5kIHRoaXMNCj4+IGh1
-bmNoLCB0aG91Z2ggaXQncyBvbmx5IGEgaHVuY2ggYXMgSSBhbSBtb3N0IGRlZmluaXRlbHkg
-bm93aGVyZSBuZWFyIGFuIGV4cGVydA0KPj4gaW4gdGhpcyBhcmVhLg0KPj4NCj4+IC0tIFBh
-Y2thZ2Utc3BlY2lmaWMgaW5mbzoNCj4+DQo+PiBbICAgMTkuNjI1NTM1XSBCVUc6IGtlcm5l
-bCBOVUxMIHBvaW50ZXIgZGVyZWZlcmVuY2UsIGFkZHJlc3M6IDAwMDAwMDAwMDAwMDAwYTAN
-Cj4+IFsgICAxOS42Mjg4NzRdICNQRjogc3VwZXJ2aXNvciByZWFkIGFjY2VzcyBpbiBrZXJu
-ZWwgbW9kZQ0KPj4gWyAgIDE5LjYzMDg0MV0gI1BGOiBlcnJvcl9jb2RlKDB4MDAwMCkgLSBu
-b3QtcHJlc2VudCBwYWdlDQo+PiBbICAgMTkuNjMyNzg4XSBQR0QgMCBQNEQgMA0KPj4gWyAg
-IDE5LjYzMzkwNV0gT29wczogT29wczogMDAwMCBbIzFdIFBSRUVNUFQgU01QIFBUSQ0KPj4g
-WyAgIDE5LjYzNTU4Nl0gQ1BVOiAzIFVJRDogMCBQSUQ6IDAgQ29tbTogc3dhcHBlci8zIE5v
-dCB0YWludGVkIDYuMTIuNTcrZGViMTMtYW1kNjQgIzEgIERlYmlhbiA2LjEyLjU3LTENCj4+
-IFsgICAxOS42NDAyMTZdIEhhcmR3YXJlIG5hbWU6IE1pY3Jvc29mdCBDb3Jwb3JhdGlvbiBW
-aXJ0dWFsIE1hY2hpbmUvVmlydHVhbCBNYWNoaW5lLCBCSU9TIEh5cGVyLVYgVUVGSSBSZWxl
-YXNlIHY0LjEgMDkvMjgvMjAyNA0KPj4gWyAgIDE5LjY0NDUxNF0gUklQOiAwMDEwOmh2X3Vp
-b19jaGFubmVsX2NiKzB4ZC8weDIwIFt1aW9faHZfZ2VuZXJpY10NCj4+IFsgICAxOS42NDY5
-OTRdIENvZGU6IDAyIDAwIDAwIDViIDVkIGU5IDUzIDk4IDY5IGU5IDBmIDFmIDAwIDkwIDkw
-IDkwIDkwIDkwIDkwIDkwIDkwIDkwIDkwIDkwIDkwIDkwIDkwIDkwIDkwIGYzIDBmIDFlIGZh
-IDBmIDFmIDQ0IDAwIDAwIDQ4IDhiIDQ3IDEwIDw0OD4gOGIgYjggYTAgMDAgMDAgMDAgZjAg
-ODMgNDQgMjQgZmMgMDAgZTkgNTEgNmYgZmEgZmYgOTAgOTAgOTAgOTANCj4+IFsgICAxOS42
-NTQzNzddIFJTUDogMDAxODpmZmZmYjE1YWMwMWE0ZmE4IEVGTEFHUzogMDAwMTAwNDYNCj4+
-IFsgICAxOS42NTYzODVdIFJBWDogMDAwMDAwMDAwMDAwMDAwMCBSQlg6IDAwMDAwMDAwMDAw
-MDAwMTUgUkNYOiAwMDAwMDAwMDAwMDAwMDE1DQo+PiBbICAgMTkuNjU5MjQwXSBSRFg6IDAw
-MDAwMDAwMDAwMDAwMDEgUlNJOiBmZmZmZmZmZmZmZmZmZmZmIFJESTogZmZmZjhmZjY5Yzc1
-OTQwMA0KPj4gWyAgIDE5LjY2MjE2OF0gUkJQOiBmZmZmOGZmNTQ4NzkwMjAwIFIwODogZmZm
-ZjhmZjU0ODc5MDIwMCBSMDk6IDAwZmNhNzUxNTBiMDgwZTkNCj4+IFsgICAxOS42NjUyMzld
-IFIxMDogMDAwMDAwMDAwMDAwMDAwMCBSMTE6IGZmZmZiMTVhYzAxYTRmZjggUjEyOiBmZmZm
-OGZmODcxZGMxNDgwDQo+PiBbICAgMTkuNjY4MTkzXSBSMTM6IGZmZmY4ZmY2OWM3NTk0MDAg
-UjE0OiBmZmZmOGZmNjljNzU5NmEwIFIxNTogZmZmZmZmZmZjMTA2ZTE2MA0KPj4gWyAgIDE5
-LjY3MTEwNl0gRlM6ICAwMDAwMDAwMDAwMDAwMDAwKDAwMDApIEdTOmZmZmY4ZmY4NzFkODAw
-MDAoMDAwMCkga25sR1M6MDAwMDAwMDAwMDAwMDAwMA0KPj4gWyAgIDE5LjY3NDI4MV0gQ1M6
-ICAwMDEwIERTOiAwMDAwIEVTOiAwMDAwIENSMDogMDAwMDAwMDA4MDA1MDAzMw0KPj4gWyAg
-IDE5LjY3NjUzM10gQ1IyOiAwMDAwMDAwMDAwMDAwMGEwIENSMzogMDAwMDAwMDEwMGJhNjAw
-MyBDUjQ6IDAwMDAwMDAwMDAzNzA2ZjANCj4+IFsgICAxOS42NzkzODVdIENhbGwgVHJhY2U6
-DQo+PiBbICAgMTkuNjgwMzYxXSAgPElSUT4NCj4+IFsgICAxOS42ODExODFdICB2bWJ1c19p
-c3IrMHgxYTUvMHgyMTAgW2h2X3ZtYnVzXQ0KPj4gWyAgIDE5LjY4MjkxNl0gIF9fc3lzdmVj
-X2h5cGVydl9jYWxsYmFjaysweDMyLzB4NjANCj4+IFsgICAxOS42ODQ5OTFdICBzeXN2ZWNf
-aHlwZXJ2X2NhbGxiYWNrKzB4NmMvMHg5MA0KPj4gWyAgIDE5LjY4NjY2NV0gIDwvSVJRPg0K
-Pj4gWyAgIDE5LjY4NzUwOV0gIDxUQVNLPg0KPj4gWyAgIDE5LjY4ODM2Nl0gIGFzbV9zeXN2
-ZWNfaHlwZXJ2X2NhbGxiYWNrKzB4MWEvMHgyMA0KPj4gWyAgIDE5LjY5MDI2Ml0gUklQOiAw
-MDEwOnB2X25hdGl2ZV9zYWZlX2hhbHQrMHhmLzB4MjANCj4+IFsgICAxOS42OTIwNjddIENv
-ZGU6IDA5IGU5IGM1IDA4IDAxIDAwIDBmIDFmIDQ0IDAwIDAwIDkwIDkwIDkwIDkwIDkwIDkw
-IDkwIDkwIDkwIDkwIDkwIDkwIDkwIDkwIDkwIDkwIGYzIDBmIDFlIGZhIDY2IDkwIDBmIDAw
-IDJkIGU1IDNiIDMxIDAwIGZiIGY0IDxjMz4gY2MgY2MgY2MgY2MgNjYgNjYgMmUgMGYgMWYg
-ODQgMDAgMDAgMDAgMDAgMDAgOTAgOTAgOTAgOTAgOTAgOTANCj4+IFsgICAxOS42OTkxMTld
-IFJTUDogMDAxODpmZmZmYjE1YWMwMTAzZWQ4IEVGTEFHUzogMDAwMDAyNDYNCj4+IFsgICAx
-OS43MDE0MTJdIFJBWDogMDAwMDAwMDAwMDAwMDAwMyBSQlg6IGZmZmY4ZmY1NDAzYjFmYzAg
-UkNYOiBmZmZmOGZmNTRjNjRjZTMwDQo+PiBbICAgMTkuNzA0MzI4XSBSRFg6IDAwMDAwMDAw
-MDAwMDAwMDAgUlNJOiAwMDAwMDAwMDAwMDAwMDAzIFJESTogMDAwMDAwMDAwMDAxZjg5NA0K
-Pj4gWyAgIDE5LjcwNjkxMF0gUkJQOiAwMDAwMDAwMDAwMDAwMDAzIFIwODogMDAwMDAwMDAw
-YmI3NjBkOSBSMDk6IDAwZmNhNzUxNTBiMDgwZTkNCj4+IFsgICAxOS43MDk3NjJdIFIxMDog
-MDAwMDAwMDAwMDAwMDAwMyBSMTE6IDAwMDAwMDAwMDAwMDAwMDEgUjEyOiAwMDAwMDAwMDAw
-MDAwMDAwDQo+PiBbICAgMTkuNzEyNTEwXSBSMTM6IDAwMDAwMDAwMDAwMDAwMDAgUjE0OiAw
-MDAwMDAwMDAwMDAwMDAwIFIxNTogMDAwMDAwMDAwMDAwMDAwMA0KPj4gWyAgIDE5LjcxNTE3
-M10gIGRlZmF1bHRfaWRsZSsweDkvMHgyMA0KPj4gWyAgIDE5LjcxNjg0Nl0gIGRlZmF1bHRf
-aWRsZV9jYWxsKzB4MjkvMHgxMDANCj4+IFsgICAxOS43MTg2MjNdICBkb19pZGxlKzB4MWZl
-LzB4MjQwDQo+PiBbICAgMTkuNzIwMDQ1XSAgY3B1X3N0YXJ0dXBfZW50cnkrMHgyOS8weDMw
-DQo+PiBbICAgMTkuNzIxNTk1XSAgc3RhcnRfc2Vjb25kYXJ5KzB4MTFlLzB4MTQwDQo+PiBb
-ICAgMTkuNzIzMDgwXSAgY29tbW9uX3N0YXJ0dXBfNjQrMHgxM2UvMHgxNDENCj4+IFsgICAx
-OS43MjUyMjJdICA8L1RBU0s+DQo+PiBbICAgMTkuNzI2Mzg3XSBNb2R1bGVzIGxpbmtlZCBp
-bjogaXNvZnMgY2Ryb20gdWlvX2h2X2dlbmVyaWMgdWlvIGJpbmZtdF9taXNjIGludGVsX3Jh
-cGxfbXNyIGludGVsX3JhcGxfY29tbW9uIGludGVsX3VuY29yZV9mcmVxdWVuY3lfY29tbW9u
-IGlzc3RfaWZfbWJveF9tc3IgaXNzdF9pZl9jb21tb24gcnBjcmRtYSBza3hfZWRhY19jb21t
-b24gbmZpdCBzdW5ycGMgbGlibnZkaW1tIGNyY3QxMGRpZl9wY2xtdWwgZ2hhc2hfY2xtdWxu
-aV9pbnRlbCBzaGE1MTJfc3NzZTMgc2hhMjU2X3Nzc2UzIHJkbWFfdWNtIGliX2lzZXIgc2hh
-MV9zc3NlMyByZG1hX2NtIGFlc25pX2ludGVsIGl3X2NtIGdmMTI4bXVsIGNyeXB0b19zaW1k
-IGxpYmlzY3NpIGNyeXB0ZCBpYl91bWFkIGliX2lwb2liIHNjc2lfdHJhbnNwb3J0X2lzY3Np
-IGliX2NtIHJhcGwgc2cgaHZfdXRpbHMgaHZfYmFsbG9vbiBldmRldiBwY3Nwa3Igam95ZGV2
-IG1wbHNfcm91dGVyIGlwX3R1bm5lbCByYW1vb3BzIGNvbmZpZ2ZzIHBzdG9yZV9ibGsgZWZp
-X3BzdG9yZSBwc3RvcmVfem9uZSBuZm5ldGxpbmsgdnNvY2tfbG9vcGJhY2sgdm13X3Zzb2Nr
-X3ZpcnRpb190cmFuc3BvcnRfY29tbW9uIGh2X3NvY2sgdm13X3Zzb2NrX3ZtY2lfdHJhbnNw
-b3J0IHZzb2NrIHZtd192bWNpIGVmaXZhcmZzIGlwX3RhYmxlcyB4X3RhYmxlcyBhdXRvZnM0
-IG92ZXJsYXkgc3F1YXNoZnMgZG1fdmVyaXR5IGRtX2J1ZmlvIHJlZWRfc29sb21vbiBkbV9t
-b2QgbG9vcCBleHQ0IGNyYzE2IG1iY2FjaGUgamJkMiBjcmMzMmNfZ2VuZXJpYyBtbHg1X2li
-IGliX3V2ZXJicyBpYl9jb3JlIG1seDVfY29yZSBtbHhmdyBwY2lfaHlwZXJ2IHBjaV9oeXBl
-cnZfaW50ZiBoeXBlcnZfZHJtIGRybV9zaG1lbV9oZWxwZXIgc2RfbW9kIGRybV9rbXNfaGVs
-cGVyIGh2X3N0b3J2c2Mgc2NzaV90cmFuc3BvcnRfZmMgZHJtIHNjc2lfbW9kIGhpZF9nZW5l
-cmljIGhpZF9oeXBlcnYgaGlkIHNlcmlvX3JhdyBodl9uZXR2c2MgaHlwZXJ2X2tleWJvYXJk
-IHNjc2lfY29tbW9uIGh2X3ZtYnVzDQo+PiBbICAgMTkuNzI2NDY2XSAgY3JjMzJfcGNsbXVs
-IGNyYzMyY19pbnRlbA0KPj4gWyAgIDE5Ljc2NTc3MV0gQ1IyOiAwMDAwMDAwMDAwMDAwMGEw
-DQo+PiBbICAgMTkuNzY3NTI0XSAtLS1bIGVuZCB0cmFjZSAwMDAwMDAwMDAwMDAwMDAwIF0t
-LS0NCj4+IFsgICAxOS44MDA0MzNdIFJJUDogMDAxMDpodl91aW9fY2hhbm5lbF9jYisweGQv
-MHgyMCBbdWlvX2h2X2dlbmVyaWNdDQo+PiBbICAgMTkuODAzMTcwXSBDb2RlOiAwMiAwMCAw
-MCA1YiA1ZCBlOSA1MyA5OCA2OSBlOSAwZiAxZiAwMCA5MCA5MCA5MCA5MCA5MCA5MCA5MCA5
-MCA5MCA5MCA5MCA5MCA5MCA5MCA5MCA5MCBmMyAwZiAxZSBmYSAwZiAxZiA0NCAwMCAwMCA0
-OCA4YiA0NyAxMCA8NDg+IDhiIGI4IGEwIDAwIDAwIDAwIGYwIDgzIDQ0IDI0IGZjIDAwIGU5
-IDUxIDZmIGZhIGZmIDkwIDkwIDkwIDkwDQo+PiBbICAgMTkuODExMDQxXSBSU1A6IDAwMTg6
-ZmZmZmIxNWFjMDFhNGZhOCBFRkxBR1M6IDAwMDEwMDQ2DQo+PiBbICAgMTkuODEzNDY2XSBS
-QVg6IDAwMDAwMDAwMDAwMDAwMDAgUkJYOiAwMDAwMDAwMDAwMDAwMDE1IFJDWDogMDAwMDAw
-MDAwMDAwMDAxNQ0KPj4gWyAgIDE5LjgxNjUwNF0gUkRYOiAwMDAwMDAwMDAwMDAwMDAxIFJT
-STogZmZmZmZmZmZmZmZmZmZmZiBSREk6IGZmZmY4ZmY2OWM3NTk0MDANCj4+IFsgICAxOS44
-MTk0ODRdIFJCUDogZmZmZjhmZjU0ODc5MDIwMCBSMDg6IGZmZmY4ZmY1NDg3OTAyMDAgUjA5
-OiAwMGZjYTc1MTUwYjA4MGU5DQo+PiBbICAgMTkuODIyNjI1XSBSMTA6IDAwMDAwMDAwMDAw
-MDAwMDAgUjExOiBmZmZmYjE1YWMwMWE0ZmY4IFIxMjogZmZmZjhmZjg3MWRjMTQ4MA0KPj4g
-WyAgIDE5LjgyNTU2OV0gUjEzOiBmZmZmOGZmNjljNzU5NDAwIFIxNDogZmZmZjhmZjY5Yzc1
-OTZhMCBSMTU6IGZmZmZmZmZmYzEwNmUxNjANCj4+IFsgICAxOS44Mjg4MDRdIEZTOiAgMDAw
-MDAwMDAwMDAwMDAwMCgwMDAwKSBHUzpmZmZmOGZmODcxZDgwMDAwKDAwMDApIGtubEdTOjAw
-MDAwMDAwMDAwMDAwMDANCj4+IFsgICAxOS44MzIyMTRdIENTOiAgMDAxMCBEUzogMDAwMCBF
-UzogMDAwMCBDUjA6IDAwMDAwMDAwODAwNTAwMzMNCj4+IFsgICAxOS44MzQ3MDldIENSMjog
-MDAwMDAwMDAwMDAwMDBhMCBDUjM6IDAwMDAwMDAxMDBiYTYwMDMgQ1I0OiAwMDAwMDAwMDAw
-MzcwNmYwDQo+PiBbICAgMTkuODM3OTc2XSBLZXJuZWwgcGFuaWMgLSBub3Qgc3luY2luZzog
-RmF0YWwgZXhjZXB0aW9uIGluIGludGVycnVwdA0KPj4gWyAgIDE5Ljg0MTgyNV0gS2VybmVs
-IE9mZnNldDogMHgyOGEwMDAwMCBmcm9tIDB4ZmZmZmZmZmY4MTAwMDAwMCAocmVsb2NhdGlv
-biByYW5nZTogMHhmZmZmZmZmZjgwMDAwMDAwLTB4ZmZmZmZmZmZiZmZmZmZmZikNCj4+IFsg
-ICAxOS44OTY2MjBdIC0tLVsgZW5kIEtlcm5lbCBwYW5pYyAtIG5vdCBzeW5jaW5nOiBGYXRh
-bCBleGNlcHRpb24gaW4gaW50ZXJydXB0IF0tLS0NCj4+DQoNCjxzbmlwPg0KDQo+IFRoZSBv
-ZmZlbmRpbmcgY29tbWl0IGFwcGVycyB0byBiZSB0aGUgYmFja3BvcnQgb2YgYjE1YjdkMmEx
-YjA5DQo+ICgidWlvX2h2X2dlbmVyaWM6IExldCB1c2Vyc3BhY2UgdGFrZSBjYXJlIG9mIGlu
-dGVycnVwdCBtYXNrIikgZm9yDQo+IDYuMTIueS4NCj4gDQo+IFBldGVyIGNvbmZpcm1lZCB0
-aGF0IHJldmVydGluZyB0aGlzIGNvbW1pdCBvbiB0b3Agb2YgNi4xMi41Ny0xIGFzDQo+IHBh
-Y2thZ2VkIGluIERlYmlhbiByZXNvbHZlcyBpbmRlZWQgdGhlIGlzc3VlLiBJbnRlcmVzdGlu
-Z2x5IHRoZSBpc3N1ZQ0KPiBpcyAqbm90KiBzZWVuIHdpdGggNi4xNy43IGJhc2VkIGtlcm5l
-bCBpbiBEZWJpYW4uDQo+IA0KPiAjcmVnemJvdCBpbnRyb2R1Y2VkOiAzN2JkOTFmMjI3OTRk
-YzA1NDM2MTMwZDY5ODMzMDJjYjkwZWNmZTdlDQo+ICNyZWd6Ym90IG1vbml0b3I6IGh0dHBz
-Oi8vYnVncy5kZWJpYW4ub3JnLzExMjA2MDINCj4gDQo+IFRoYW5rIHlvdSBhbHJlYWR5IQ0K
-PiANCj4gUmVnYXJkcywNCj4gU2FsdmF0b3JlDQoNCkhpIFBldGVyLCBTYWx2YXRvcmUsDQpU
-aGFua3MgZm9yIHJlcG9ydGluZyB0aGlzIGNyYXNoLCBhbmQgc29ycnkgZm9yIHRoZSB0cm91
-YmxlLiBIZXJlIGlzIG15IA0KYW5hbHlzaXMuDQoNCk9uIDYuMTcuNywgd2hlcmUgY29tbWl0
-IGQwNjI0NjNlZGYxNyAoInVpb19odl9nZW5lcmljOiBTZXQgZXZlbnQgZm9yIGFsbCANCmNo
-YW5uZWxzIG9uIHRoZSBkZXZpY2UiKSBpcyBwcmVzZW50LCBodl91aW9faXJxY29udHJvbCgp
-IHN1cHBvcnRzIA0Kc2V0dGluZyBvZiBpbnRlcnJ1cHQgbWFzayBmcm9tIHVzZXJzcGFjZSBm
-b3Igc3ViLWNoYW5uZWxzIGFzIHdlbGwuDQoNClRoaXMgYWxpZ25zIHdpdGggY29tbWl0IGUy
-OTU4N2MwNzUzNyAoInVpb19odl9nZW5lcmljOiBMZXQgdXNlcnNwYWNlIA0KdGFrZSBjYXJl
-IG9mIGludGVycnVwdCBtYXNrIikgd2hpY2ggcmVsaWVzIG9uIHVzZXJzcGFjZSB0byBtYW5h
-Z2UgDQppbnRlcnJ1cHQgbWFzaywgc28gaXQgc2FmZWx5IHJlbW92ZXMgdGhlIGludGVycnVw
-dCBtYXNrIG1hbmFnZW1lbnQgbG9naWMgDQppbiB0aGUgZHJpdmVyLg0KDQpIb3dldmVyLCBp
-biA2LjEyLjU3LCB0aGUgZmlyc3QgY29tbWl0IGlzIG5vdCBwcmVzZW50LCBidXQgdGhlIHNl
-Y29uZCBvbmUgDQppcywgc28gdGhlcmUgaXMgbm8gd2F5IHRvIGRpc2FibGUgaW50ZXJydXB0
-IG1hc2sgZm9yIHN1Yi1jaGFubmVscyBhbmQgDQppbnRlcnJ1cHRfbWFzayBzdGF5cyAwLCB3
-aGljaCBtZWFucyBpbnRlcnJ1cHRzIGFyZSBub3QgbWFza2VkLiBTbyB3ZSBtYXkgDQpiZSBo
-YXZpbmcgYW4gaW50ZXJydXB0IGNhbGxiYWNrIGJlaW5nIGhhbmRsZWQgZm9yIGEgc3ViLWNo
-YW5uZWwsIHdoZXJlIA0Kd2UgZG8gbm90IGV4cGVjdCBpdCB0byBjb21lLiBUaGlzIG1heSBi
-ZSBjYXVzaW5nIHRoaXMgaXNzdWUuDQoNClRoaXMgd291bGQgaGF2ZSBsZWQgdG8gYSBjcmFz
-aCBpbiBodl91aW9fY2hhbm5lbF9jYigpIGZvciBzdWItY2hhbm5lbHM6DQpzdHJ1Y3QgaHZf
-ZGV2aWNlICpodl9kZXYgPSBjaGFuLT5kZXZpY2Vfb2JqOw0KDQoNCkkgaGF2ZSBwb3J0ZWQg
-Y29tbWl0IGQwNjI0NjNlZGYxNyAoInVpb19odl9nZW5lcmljOiBTZXQgZXZlbnQgZm9yIGFs
-bCANCmNoYW5uZWxzIG9uIHRoZSBkZXZpY2UiKSBvbiA2LjEyLjU3LCBhbmQgcmVzb2x2ZWQg
-c29tZSBtZXJnZSBjb25mbGljdHMuIA0KQ291bGQgeW91IHBsZWFzZSBoZWxwIHdpdGggdGVz
-dGluZyB0aGlzLCBpZiBpdCB3b3JrcyBmb3IgeW91Lg0KDQpIaSBMb25nLA0KSWYgdGhpcyB3
-b3JrcywgZG8geW91IHNlZSBhbnkgY29uY2VybnMgaWYgSSBiYWNrLXBvcnQgeW91ciBwYXRj
-aCBvbiANCm9sZGVyIGtlcm5lbHMgKDYuMTIgYW5kIHByaW9yKT8NCg0KUmVnYXJkcywNCk5h
-bWFuDQoNCi0tLS0tLS0tLS0tLS0tDQpQYXRjaDoNCg0KIEZyb20gMmYxNGQ0OGQyYmRlM2Y4
-NmIxNTNiOWY3NTZhOWNkNjg4Y2RhMzQ1MyBNb24gU2VwIDE3IDAwOjAwOjAwIDIwMDENCkZy
-b206IExvbmcgTGkgPGxvbmdsaUBtaWNyb3NvZnQuY29tPg0KRGF0ZTogTW9uLCAxMCBNYXIg
-MjAyNSAxNToxMjowMSAtMDcwMA0KU3ViamVjdDogW1BBVENIXSB1aW9faHZfZ2VuZXJpYzog
-U2V0IGV2ZW50IGZvciBhbGwgY2hhbm5lbHMgb24gdGhlIGRldmljZQ0KDQpIeXBlci1WIG1h
-eSBvZmZlciBhIG5vbiBsYXRlbmN5IHNlbnNpdGl2ZSBkZXZpY2Ugd2l0aCBzdWJjaGFubmVs
-cyB3aXRob3V0DQptb25pdG9yIGJpdCBlbmFibGVkLiBUaGUgZGVjaXNpb24gaXMgZW50aXJl
-bHkgb24gdGhlIEh5cGVyLVYgaG9zdCBub3QNCmNvbmZpZ3VyYWJsZSB3aXRoaW4gZ3Vlc3Qu
-DQoNCldoZW4gYSBkZXZpY2UgaGFzIHN1YmNoYW5uZWxzLCBhbHNvIHNpZ25hbCBldmVudHMg
-Zm9yIHRoZSBzdWJjaGFubmVsDQppZiBpdHMgbW9uaXRvciBiaXQgaXMgZGlzYWJsZWQuDQoN
-ClRoaXMgcGF0Y2ggYWxzbyByZW1vdmVzIHRoZSBtZW1vcnkgYmFycmllciB3aGVuIG1vbml0
-b3IgYml0IGlzIGVuYWJsZWQNCmFzIGl0IGlzIG5vdCBuZWNlc3NhcnkuIFRoZSBtZW1vcnkg
-YmFycmllciBpcyBvbmx5IG5lZWRlZCBiZXR3ZWVuDQpzZXR0aW5nIHVwIGludGVycnVwdCBt
-YXNrIGFuZCBjYWxsaW5nIHZtYnVzX3NldF9ldmVudCgpIHdoZW4gbW9uaXRvcg0KYml0IGlz
-IGRpc2FibGVkLg0KDQpTaWduZWQtb2ZmLWJ5OiBMb25nIExpIDxsb25nbGlAbWljcm9zb2Z0
-LmNvbT4NClJldmlld2VkLWJ5OiBNaWNoYWVsIEtlbGxleSA8bWhrbGludXhAb3V0bG9vay5j
-b20+DQpSZXZpZXdlZC1ieTogU2F1cmFiaCBTZW5nYXIgPHNzZW5nYXJAbGludXgubWljcm9z
-b2Z0LmNvbT4NClNpZ25lZC1vZmYtYnk6IE5hbWFuIEphaW4gPG5hbWphaW5AbGludXgubWlj
-cm9zb2Z0LmNvbT4NCi0tLQ0KICBkcml2ZXJzL3Vpby91aW9faHZfZ2VuZXJpYy5jIHwgMzIg
-KysrKysrKysrKysrKysrKysrKysrKysrKystLS0tLS0NCiAgMSBmaWxlIGNoYW5nZWQsIDI2
-IGluc2VydGlvbnMoKyksIDYgZGVsZXRpb25zKC0pDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJz
-L3Vpby91aW9faHZfZ2VuZXJpYy5jIGIvZHJpdmVycy91aW8vdWlvX2h2X2dlbmVyaWMuYw0K
-aW5kZXggMGI0MTRkMTE2OGRkLi45ZjNiMTI0YTVlMDkgMTAwNjQ0DQotLS0gYS9kcml2ZXJz
-L3Vpby91aW9faHZfZ2VuZXJpYy5jDQorKysgYi9kcml2ZXJzL3Vpby91aW9faHZfZ2VuZXJp
-Yy5jDQpAQCAtNjUsNiArNjUsMTYgQEAgc3RydWN0IGh2X3Vpb19wcml2YXRlX2RhdGEgew0K
-ICAgICAgICAgY2hhciAgICBzZW5kX25hbWVbMzJdOw0KICB9Ow0KDQorc3RhdGljIHZvaWQg
-c2V0X2V2ZW50KHN0cnVjdCB2bWJ1c19jaGFubmVsICpjaGFubmVsLCBzMzIgaXJxX3N0YXRl
-KQ0KK3sNCisgICAgICAgY2hhbm5lbC0+aW5ib3VuZC5yaW5nX2J1ZmZlci0+aW50ZXJydXB0
-X21hc2sgPSAhaXJxX3N0YXRlOw0KKyAgICAgICBpZiAoIWNoYW5uZWwtPm9mZmVybXNnLm1v
-bml0b3JfYWxsb2NhdGVkICYmIGlycV9zdGF0ZSkgew0KKyAgICAgICAgICAgICAgIC8qIE1C
-IGlzIG5lZWRlZCBmb3IgaG9zdCB0byBzZWUgdGhlIGludGVycnVwdCBtYXNrIGZpcnN0ICov
-DQorICAgICAgICAgICAgICAgdmlydF9tYigpOw0KKyAgICAgICAgICAgICAgIHZtYnVzX3Nl
-dF9ldmVudChjaGFubmVsKTsNCisgICAgICAgfQ0KK30NCisNCiAgLyoNCiAgICogVGhpcyBp
-cyB0aGUgaXJxY29udHJvbCBjYWxsYmFjayB0byBiZSByZWdpc3RlcmVkIHRvIHVpb19pbmZv
-Lg0KICAgKiBJdCBjYW4gYmUgdXNlZCB0byBkaXNhYmxlL2VuYWJsZSBpbnRlcnJ1cHQgZnJv
-bSB1c2VyIHNwYWNlIHByb2Nlc3Nlcy4NCkBAIC03OSwxMiArODksMTUgQEAgaHZfdWlvX2ly
-cWNvbnRyb2woc3RydWN0IHVpb19pbmZvICppbmZvLCBzMzIgaXJxX3N0YXRlKQ0KICB7DQog
-ICAgICAgICBzdHJ1Y3QgaHZfdWlvX3ByaXZhdGVfZGF0YSAqcGRhdGEgPSBpbmZvLT5wcml2
-Ow0KICAgICAgICAgc3RydWN0IGh2X2RldmljZSAqZGV2ID0gcGRhdGEtPmRldmljZTsNCisg
-ICAgICAgc3RydWN0IHZtYnVzX2NoYW5uZWwgKnByaW1hcnksICpzYzsNCg0KLSAgICAgICBk
-ZXYtPmNoYW5uZWwtPmluYm91bmQucmluZ19idWZmZXItPmludGVycnVwdF9tYXNrID0gIWly
-cV9zdGF0ZTsNCi0gICAgICAgdmlydF9tYigpOw0KKyAgICAgICBwcmltYXJ5ID0gZGV2LT5j
-aGFubmVsOw0KKyAgICAgICBzZXRfZXZlbnQocHJpbWFyeSwgaXJxX3N0YXRlKTsNCg0KLSAg
-ICAgICBpZiAoIWRldi0+Y2hhbm5lbC0+b2ZmZXJtc2cubW9uaXRvcl9hbGxvY2F0ZWQgJiYg
-aXJxX3N0YXRlKQ0KLSAgICAgICAgICAgICAgIHZtYnVzX3NldGV2ZW50KGRldi0+Y2hhbm5l
-bCk7DQorICAgICAgIG11dGV4X2xvY2soJnZtYnVzX2Nvbm5lY3Rpb24uY2hhbm5lbF9tdXRl
-eCk7DQorICAgICAgIGxpc3RfZm9yX2VhY2hfZW50cnkoc2MsICZwcmltYXJ5LT5zY19saXN0
-LCBzY19saXN0KQ0KKyAgICAgICAgICAgICAgIHNldF9ldmVudChzYywgaXJxX3N0YXRlKTsN
-CisgICAgICAgbXV0ZXhfdW5sb2NrKCZ2bWJ1c19jb25uZWN0aW9uLmNoYW5uZWxfbXV0ZXgp
-Ow0KDQogICAgICAgICByZXR1cm4gMDsNCiAgfQ0KQEAgLTk1LDExICsxMDgsMTggQEAgaHZf
-dWlvX2lycWNvbnRyb2woc3RydWN0IHVpb19pbmZvICppbmZvLCBzMzIgaXJxX3N0YXRlKQ0K
-ICBzdGF0aWMgdm9pZCBodl91aW9fY2hhbm5lbF9jYih2b2lkICpjb250ZXh0KQ0KICB7DQog
-ICAgICAgICBzdHJ1Y3Qgdm1idXNfY2hhbm5lbCAqY2hhbiA9IGNvbnRleHQ7DQotICAgICAg
-IHN0cnVjdCBodl9kZXZpY2UgKmh2X2RldiA9IGNoYW4tPmRldmljZV9vYmo7DQotICAgICAg
-IHN0cnVjdCBodl91aW9fcHJpdmF0ZV9kYXRhICpwZGF0YSA9IGh2X2dldF9kcnZkYXRhKGh2
-X2Rldik7DQorICAgICAgIHN0cnVjdCBodl9kZXZpY2UgKmh2X2RldjsNCisgICAgICAgc3Ry
-dWN0IGh2X3Vpb19wcml2YXRlX2RhdGEgKnBkYXRhOw0KDQogICAgICAgICB2aXJ0X21iKCk7
-DQoNCisgICAgICAgLyoNCisgICAgICAgKiBUaGUgY2FsbGJhY2sgbWF5IGNvbWUgZnJvbSBh
-IHN1YmNoYW5uZWwsIGluIHdoaWNoIGNhc2UgbG9vaw0KKyAgICAgICAqIGZvciB0aGUgaHYg
-ZGV2aWNlIGluIHRoZSBwcmltYXJ5IGNoYW5uZWwNCisgICAgICAgKi8NCisgICAgICAgaHZf
-ZGV2ID0gY2hhbi0+cHJpbWFyeV9jaGFubmVsID8NCisgICAgICAgY2hhbi0+cHJpbWFyeV9j
-aGFubmVsLT5kZXZpY2Vfb2JqIDogY2hhbi0+ZGV2aWNlX29iajsNCisgICAgICAgcGRhdGEg
-PSBodl9nZXRfZHJ2ZGF0YShodl9kZXYpOw0KICAgICAgICAgdWlvX2V2ZW50X25vdGlmeSgm
-cGRhdGEtPmluZm8pOw0KICB9DQoNCi0tDQoyLjQzLjANCg==
+Hi Naman,
+
+On Fri, 14 Nov 2025 at 06:03, Naman Jain <namjain@linux.microsoft.com> wrot=
+e:
+>
+>
+>
+> On 11/13/2025 11:59 PM, Salvatore Bonaccorso wrote:
+> > Peter Morrow reported in Debian a regression, reported in
+> > https://bugs.debian.org/1120602 . The regression was seen after
+> > updating, to 6.12.57-1 in Debian, but details on the offending commit
+> > follows.
+> >
+> > His report was as follows:
+> >
+> >> Dear Maintainer,
+> >>
+> >> I'm seeing a kernel crash quite soon after boot on a debian trixie bas=
+ed
+> >> system running 6.12.57+deb13-amd64, unfortunately the kernel panics be=
+fore
+> >> I can access the system to gather more information. Thus I'll provide =
+details
+> >> of the system using a previously known good version. The panic is happ=
+ening
+> >> 100% of the time unfortunately. I have access to the serial console ho=
+wever
+> >> so can enable any required verbose logging during boot if necessary.
+> >>
+> >> Crucially the crash is not seen with kernel version 6.12.41+deb13-amd6=
+4 with the
+> >> same userspace. We had pinned to that version until very recently to i=
+n order
+> >> to work around https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=3D110=
+9676
+> >>
+> >> I'm running a dpdk application here (VPP) on Azure, VM form factor is =
+a
+> >> "Standard DS3 v2 (4 vcpus, 14 GiB memory)".
+> >>
+> >> The only relevant upstream commit in this area (as far as I can see) i=
+s:
+> >>
+> >> https://lore.kernel.org/linux-hyperv/1bb599ee-fe28-409d-b430-2fc086268=
+936@linux.microsoft.com/
+> >>
+> >> The comment regarding avoiding races at start adds a bit more weight b=
+ehind this
+> >> hunch, though it's only a hunch as I am most definitely nowhere near a=
+n expert
+> >> in this area.
+> >>
+> >> -- Package-specific info:
+> >>
+> >> [   19.625535] BUG: kernel NULL pointer dereference, address: 00000000=
+000000a0
+> >> [   19.628874] #PF: supervisor read access in kernel mode
+> >> [   19.630841] #PF: error_code(0x0000) - not-present page
+> >> [   19.632788] PGD 0 P4D 0
+> >> [   19.633905] Oops: Oops: 0000 [#1] PREEMPT SMP PTI
+> >> [   19.635586] CPU: 3 UID: 0 PID: 0 Comm: swapper/3 Not tainted 6.12.5=
+7+deb13-amd64 #1  Debian 6.12.57-1
+> >> [   19.640216] Hardware name: Microsoft Corporation Virtual Machine/Vi=
+rtual Machine, BIOS Hyper-V UEFI Release v4.1 09/28/2024
+> >> [   19.644514] RIP: 0010:hv_uio_channel_cb+0xd/0x20 [uio_hv_generic]
+> >> [   19.646994] Code: 02 00 00 5b 5d e9 53 98 69 e9 0f 1f 00 90 90 90 9=
+0 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 0f 1f 44 00 00 48 8b 47 1=
+0 <48> 8b b8 a0 00 00 00 f0 83 44 24 fc 00 e9 51 6f fa ff 90 90 90 90
+> >> [   19.654377] RSP: 0018:ffffb15ac01a4fa8 EFLAGS: 00010046
+> >> [   19.656385] RAX: 0000000000000000 RBX: 0000000000000015 RCX: 000000=
+0000000015
+> >> [   19.659240] RDX: 0000000000000001 RSI: ffffffffffffffff RDI: ffff8f=
+f69c759400
+> >> [   19.662168] RBP: ffff8ff548790200 R08: ffff8ff548790200 R09: 00fca7=
+5150b080e9
+> >> [   19.665239] R10: 0000000000000000 R11: ffffb15ac01a4ff8 R12: ffff8f=
+f871dc1480
+> >> [   19.668193] R13: ffff8ff69c759400 R14: ffff8ff69c7596a0 R15: ffffff=
+ffc106e160
+> >> [   19.671106] FS:  0000000000000000(0000) GS:ffff8ff871d80000(0000) k=
+nlGS:0000000000000000
+> >> [   19.674281] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> >> [   19.676533] CR2: 00000000000000a0 CR3: 0000000100ba6003 CR4: 000000=
+00003706f0
+> >> [   19.679385] Call Trace:
+> >> [   19.680361]  <IRQ>
+> >> [   19.681181]  vmbus_isr+0x1a5/0x210 [hv_vmbus]
+> >> [   19.682916]  __sysvec_hyperv_callback+0x32/0x60
+> >> [   19.684991]  sysvec_hyperv_callback+0x6c/0x90
+> >> [   19.686665]  </IRQ>
+> >> [   19.687509]  <TASK>
+> >> [   19.688366]  asm_sysvec_hyperv_callback+0x1a/0x20
+> >> [   19.690262] RIP: 0010:pv_native_safe_halt+0xf/0x20
+> >> [   19.692067] Code: 09 e9 c5 08 01 00 0f 1f 44 00 00 90 90 90 90 90 9=
+0 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 66 90 0f 00 2d e5 3b 31 00 fb f=
+4 <c3> cc cc cc cc 66 66 2e 0f 1f 84 00 00 00 00 00 90 90 90 90 90 90
+> >> [   19.699119] RSP: 0018:ffffb15ac0103ed8 EFLAGS: 00000246
+> >> [   19.701412] RAX: 0000000000000003 RBX: ffff8ff5403b1fc0 RCX: ffff8f=
+f54c64ce30
+> >> [   19.704328] RDX: 0000000000000000 RSI: 0000000000000003 RDI: 000000=
+000001f894
+> >> [   19.706910] RBP: 0000000000000003 R08: 000000000bb760d9 R09: 00fca7=
+5150b080e9
+> >> [   19.709762] R10: 0000000000000003 R11: 0000000000000001 R12: 000000=
+0000000000
+> >> [   19.712510] R13: 0000000000000000 R14: 0000000000000000 R15: 000000=
+0000000000
+> >> [   19.715173]  default_idle+0x9/0x20
+> >> [   19.716846]  default_idle_call+0x29/0x100
+> >> [   19.718623]  do_idle+0x1fe/0x240
+> >> [   19.720045]  cpu_startup_entry+0x29/0x30
+> >> [   19.721595]  start_secondary+0x11e/0x140
+> >> [   19.723080]  common_startup_64+0x13e/0x141
+> >> [   19.725222]  </TASK>
+> >> [   19.726387] Modules linked in: isofs cdrom uio_hv_generic uio binfm=
+t_misc intel_rapl_msr intel_rapl_common intel_uncore_frequency_common isst_=
+if_mbox_msr isst_if_common rpcrdma skx_edac_common nfit sunrpc libnvdimm cr=
+ct10dif_pclmul ghash_clmulni_intel sha512_ssse3 sha256_ssse3 rdma_ucm ib_is=
+er sha1_ssse3 rdma_cm aesni_intel iw_cm gf128mul crypto_simd libiscsi crypt=
+d ib_umad ib_ipoib scsi_transport_iscsi ib_cm rapl sg hv_utils hv_balloon e=
+vdev pcspkr joydev mpls_router ip_tunnel ramoops configfs pstore_blk efi_ps=
+tore pstore_zone nfnetlink vsock_loopback vmw_vsock_virtio_transport_common=
+ hv_sock vmw_vsock_vmci_transport vsock vmw_vmci efivarfs ip_tables x_table=
+s autofs4 overlay squashfs dm_verity dm_bufio reed_solomon dm_mod loop ext4=
+ crc16 mbcache jbd2 crc32c_generic mlx5_ib ib_uverbs ib_core mlx5_core mlxf=
+w pci_hyperv pci_hyperv_intf hyperv_drm drm_shmem_helper sd_mod drm_kms_hel=
+per hv_storvsc scsi_transport_fc drm scsi_mod hid_generic hid_hyperv hid se=
+rio_raw hv_netvsc hyperv_keyboard scsi_common hv_vmbus
+> >> [   19.726466]  crc32_pclmul crc32c_intel
+> >> [   19.765771] CR2: 00000000000000a0
+> >> [   19.767524] ---[ end trace 0000000000000000 ]---
+> >> [   19.800433] RIP: 0010:hv_uio_channel_cb+0xd/0x20 [uio_hv_generic]
+> >> [   19.803170] Code: 02 00 00 5b 5d e9 53 98 69 e9 0f 1f 00 90 90 90 9=
+0 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 0f 1f 44 00 00 48 8b 47 1=
+0 <48> 8b b8 a0 00 00 00 f0 83 44 24 fc 00 e9 51 6f fa ff 90 90 90 90
+> >> [   19.811041] RSP: 0018:ffffb15ac01a4fa8 EFLAGS: 00010046
+> >> [   19.813466] RAX: 0000000000000000 RBX: 0000000000000015 RCX: 000000=
+0000000015
+> >> [   19.816504] RDX: 0000000000000001 RSI: ffffffffffffffff RDI: ffff8f=
+f69c759400
+> >> [   19.819484] RBP: ffff8ff548790200 R08: ffff8ff548790200 R09: 00fca7=
+5150b080e9
+> >> [   19.822625] R10: 0000000000000000 R11: ffffb15ac01a4ff8 R12: ffff8f=
+f871dc1480
+> >> [   19.825569] R13: ffff8ff69c759400 R14: ffff8ff69c7596a0 R15: ffffff=
+ffc106e160
+> >> [   19.828804] FS:  0000000000000000(0000) GS:ffff8ff871d80000(0000) k=
+nlGS:0000000000000000
+> >> [   19.832214] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> >> [   19.834709] CR2: 00000000000000a0 CR3: 0000000100ba6003 CR4: 000000=
+00003706f0
+> >> [   19.837976] Kernel panic - not syncing: Fatal exception in interrup=
+t
+> >> [   19.841825] Kernel Offset: 0x28a00000 from 0xffffffff81000000 (relo=
+cation range: 0xffffffff80000000-0xffffffffbfffffff)
+> >> [   19.896620] ---[ end Kernel panic - not syncing: Fatal exception in=
+ interrupt ]---
+> >>
+>
+> <snip>
+>
+> > The offending commit appers to be the backport of b15b7d2a1b09
+> > ("uio_hv_generic: Let userspace take care of interrupt mask") for
+> > 6.12.y.
+> >
+> > Peter confirmed that reverting this commit on top of 6.12.57-1 as
+> > packaged in Debian resolves indeed the issue. Interestingly the issue
+> > is *not* seen with 6.17.7 based kernel in Debian.
+> >
+> > #regzbot introduced: 37bd91f22794dc05436130d6983302cb90ecfe7e
+> > #regzbot monitor: https://bugs.debian.org/1120602
+> >
+> > Thank you already!
+> >
+> > Regards,
+> > Salvatore
+>
+> Hi Peter, Salvatore,
+> Thanks for reporting this crash, and sorry for the trouble. Here is my
+> analysis.
+>
+> On 6.17.7, where commit d062463edf17 ("uio_hv_generic: Set event for all
+> channels on the device") is present, hv_uio_irqcontrol() supports
+> setting of interrupt mask from userspace for sub-channels as well.
+>
+> This aligns with commit e29587c07537 ("uio_hv_generic: Let userspace
+> take care of interrupt mask") which relies on userspace to manage
+> interrupt mask, so it safely removes the interrupt mask management logic
+> in the driver.
+>
+> However, in 6.12.57, the first commit is not present, but the second one
+> is, so there is no way to disable interrupt mask for sub-channels and
+> interrupt_mask stays 0, which means interrupts are not masked. So we may
+> be having an interrupt callback being handled for a sub-channel, where
+> we do not expect it to come. This may be causing this issue.
+>
+> This would have led to a crash in hv_uio_channel_cb() for sub-channels:
+> struct hv_device *hv_dev =3D chan->device_obj;
+>
+>
+> I have ported commit d062463edf17 ("uio_hv_generic: Set event for all
+> channels on the device") on 6.12.57, and resolved some merge conflicts.
+> Could you please help with testing this, if it works for you.
+
+Applying the patch against the debian 6.12.57 kernel worked, I am no
+longer seeing that panic on boot:
+
+gnos@vEdge:~$ uname -a
+Linux vEdge 6.12+unreleased-amd64 #1 SMP PREEMPT_DYNAMIC Debian
+6.12.57-1a~test (2025-11-14) x86_64 GNU/Linux
+gnos@vEdge:~$ uptime
+ 11:46:33 up 4 min,  1 user,  load average: 3.31, 2.07, 0.89
+gnos@vEdge:~$ sudo dmidecode -t system
+# dmidecode 3.6
+Getting SMBIOS data from sysfs.
+SMBIOS 3.1.0 present.
+
+Handle 0x0001, DMI type 1, 27 bytes
+System Information
+        Manufacturer: Microsoft Corporation
+        Product Name: Virtual Machine
+        Version: Hyper-V UEFI Release v4.1
+        Serial Number: 0000-0002-8036-1108-7588-3134-50
+        UUID: 26e86d6e-140c-496a-862c-a3b3bbcd16ad
+        Wake-up Type: Power Switch
+        SKU Number: None
+        Family: Virtual Machine
+
+Handle 0x0010, DMI type 32, 11 bytes
+System Boot Information
+        Status: No errors detected
+
+gnos@vEdge:~$
+
+Thanks a lot for the quick analysis!
+
+Peter.
+
+>
+> Hi Long,
+> If this works, do you see any concerns if I back-port your patch on
+> older kernels (6.12 and prior)?
+>
+> Regards,
+> Naman
+>
+> --------------
+> Patch:
+>
+>  From 2f14d48d2bde3f86b153b9f756a9cd688cda3453 Mon Sep 17 00:00:00 2001
+> From: Long Li <longli@microsoft.com>
+> Date: Mon, 10 Mar 2025 15:12:01 -0700
+> Subject: [PATCH] uio_hv_generic: Set event for all channels on the device
+>
+> Hyper-V may offer a non latency sensitive device with subchannels without
+> monitor bit enabled. The decision is entirely on the Hyper-V host not
+> configurable within guest.
+>
+> When a device has subchannels, also signal events for the subchannel
+> if its monitor bit is disabled.
+>
+> This patch also removes the memory barrier when monitor bit is enabled
+> as it is not necessary. The memory barrier is only needed between
+> setting up interrupt mask and calling vmbus_set_event() when monitor
+> bit is disabled.
+>
+> Signed-off-by: Long Li <longli@microsoft.com>
+> Reviewed-by: Michael Kelley <mhklinux@outlook.com>
+> Reviewed-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+> Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
+> ---
+>   drivers/uio/uio_hv_generic.c | 32 ++++++++++++++++++++++++++------
+>   1 file changed, 26 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/uio/uio_hv_generic.c b/drivers/uio/uio_hv_generic.c
+> index 0b414d1168dd..9f3b124a5e09 100644
+> --- a/drivers/uio/uio_hv_generic.c
+> +++ b/drivers/uio/uio_hv_generic.c
+> @@ -65,6 +65,16 @@ struct hv_uio_private_data {
+>          char    send_name[32];
+>   };
+>
+> +static void set_event(struct vmbus_channel *channel, s32 irq_state)
+> +{
+> +       channel->inbound.ring_buffer->interrupt_mask =3D !irq_state;
+> +       if (!channel->offermsg.monitor_allocated && irq_state) {
+> +               /* MB is needed for host to see the interrupt mask first =
+*/
+> +               virt_mb();
+> +               vmbus_set_event(channel);
+> +       }
+> +}
+> +
+>   /*
+>    * This is the irqcontrol callback to be registered to uio_info.
+>    * It can be used to disable/enable interrupt from user space processes=
+.
+> @@ -79,12 +89,15 @@ hv_uio_irqcontrol(struct uio_info *info, s32 irq_stat=
+e)
+>   {
+>          struct hv_uio_private_data *pdata =3D info->priv;
+>          struct hv_device *dev =3D pdata->device;
+> +       struct vmbus_channel *primary, *sc;
+>
+> -       dev->channel->inbound.ring_buffer->interrupt_mask =3D !irq_state;
+> -       virt_mb();
+> +       primary =3D dev->channel;
+> +       set_event(primary, irq_state);
+>
+> -       if (!dev->channel->offermsg.monitor_allocated && irq_state)
+> -               vmbus_setevent(dev->channel);
+> +       mutex_lock(&vmbus_connection.channel_mutex);
+> +       list_for_each_entry(sc, &primary->sc_list, sc_list)
+> +               set_event(sc, irq_state);
+> +       mutex_unlock(&vmbus_connection.channel_mutex);
+>
+>          return 0;
+>   }
+> @@ -95,11 +108,18 @@ hv_uio_irqcontrol(struct uio_info *info, s32 irq_sta=
+te)
+>   static void hv_uio_channel_cb(void *context)
+>   {
+>          struct vmbus_channel *chan =3D context;
+> -       struct hv_device *hv_dev =3D chan->device_obj;
+> -       struct hv_uio_private_data *pdata =3D hv_get_drvdata(hv_dev);
+> +       struct hv_device *hv_dev;
+> +       struct hv_uio_private_data *pdata;
+>
+>          virt_mb();
+>
+> +       /*
+> +       * The callback may come from a subchannel, in which case look
+> +       * for the hv device in the primary channel
+> +       */
+> +       hv_dev =3D chan->primary_channel ?
+> +       chan->primary_channel->device_obj : chan->device_obj;
+> +       pdata =3D hv_get_drvdata(hv_dev);
+>          uio_event_notify(&pdata->info);
+>   }
+>
+> --
+> 2.43.0
