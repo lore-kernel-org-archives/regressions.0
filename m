@@ -1,560 +1,286 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1BF42FB0AD
-	for <regressions@lists.linux.dev>; Thu, 13 Nov 2025 18:29:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF3982DC34E
+	for <regressions@lists.linux.dev>; Fri, 14 Nov 2025 06:03:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763058585; cv=none; b=Cjc9FamrTQ/3ba9hpXl7ZJ/h010QgBpQaGVpO4TMZJhvzUAdSeoUqeyIcbpdntaJtuxgfIPDL1XeCI4CuX3vuMnuA4iI7S0Nr51xBW10PzusYqC6b6VksrQyFpqTqL00tvCTnzNem+aBURAMiANTX1EPmfdNFtSAO4R0C+ncwd0=
+	t=1763100234; cv=none; b=SpLKNqpZ2qXfVUvt8BA0JKNHY/hR2suPChnkMlLL5k5PioozDszTFfBu3QzKQW1n4zBCu5aESyPYuhBz5bLFDuTAbvh60UYsCD2NzWlyxcK5AZ+XJ27bYriBkwodVQOFigJ+K4P++j0b/sGgQUJfyCY79EW7Win2tMhdrxH/rm8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763058585; c=relaxed/simple;
-	bh=gxVTe6wapHcxHJzeMHGKcV+8LlGzGQhS2ogjCiOnqdk=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=dz89X39tZvWt2srdDLlGn/aSShUz+lcAR0u72kBqIWFPbSJKMyoqs6Vnwkrs302EL4AN3NT7KfuTGfdcjVzb49W15zaJkqKbZR5j5u2ZTq3IDHUWzEuP8+XSel/JVTf5aulWrnhl2VH5oLni0cCSroTYFsl42gzE/KGmEtMgvko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ToGPmqXF; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1763100234; c=relaxed/simple;
+	bh=O4uiiIpAydyY7Vc6U2+eMpL65iQUfjhhkVbZHJEA3H8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PzMh/FH+Z+J71hkxf+u6lUGBmKkh/8Or20vJ5C/kPZVJ8H1hh9xHrgjmoY7H3AdWmyeljV9pqM/m9Tfs+Fcxv2G15yUnOkM/evzZ6J5t5X/mvcagDd95SLroFHO7d+o28G9xsWo8UCXDLQjMnUrFFigQMgB6LA/QcAMcxzsNUXk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=bIgPAMGJ; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ToGPmqXF"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-47775fb6c56so13153955e9.1
-        for <regressions@lists.linux.dev>; Thu, 13 Nov 2025 10:29:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1763058582; x=1763663382; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-disposition:mime-version
-         :message-id:subject:cc:to:from:date:sender:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/k263nSEDRDxaQiDUHQpujaUVS40wxd9xH4PYYY29fE=;
-        b=ToGPmqXFMQztLuJ7YTvaOMKS4dyhgT11bALHubdZDxO06PLFB+ym2wSBJiNUs9cQJM
-         +/icsVjZ1AEM6JrnMzJxLhJhKFjDpyuS94A3LoNFIXh2rq5u4/7hdVixUJPQDMtJ+tIc
-         DQ+to0tAqnUhD/17+GrPcPxiRMtWTi9ck50RY2z6Vh00E1hU6HSPicpIjPUP1iwWRczH
-         wBWyaHfsPMNJ+d5Cp76fAP6IW4sSPWjAfvCvwSusfy531c4th/kRjAmC49kQxnm9cZW3
-         sITR15qzkmQ7u7IAVpkSN/uUUmNEWCV9AMJ7DvHRAZmp+80cE/q6EyAomv0GyiGWFBOw
-         3U5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763058582; x=1763663382;
-        h=content-transfer-encoding:content-disposition:mime-version
-         :message-id:subject:cc:to:from:date:sender:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/k263nSEDRDxaQiDUHQpujaUVS40wxd9xH4PYYY29fE=;
-        b=uVMwl1aDBeRG35XMuS7VhHtawLYXlaFKGEYUnvWlLieSh4fVNGSOPNsDayXDc2IEaZ
-         zQx3zTe7D9+fnUSpt1D5W5YB6Eob4E1VQuKWKj6gMXrNUcEIEWajcYUDGaYLtHJTYSuQ
-         IWg7MCxLMnWr1yZJT0aVWftkt/jLnLesqQ5TOEjBdlc3HipPvP9V+j0tfpmlfwdHEKUF
-         0E68nXJO0cf5gPgSxR+a1FWmalftJGHvuVv17Po4UdypT8Xbn0a60vDnpz4jDqxNS7mH
-         BQmxzcE3L1tgkJKuOMacKzwVTS/USBxi1Fjv3a3spLhl3IO/6/Kis5tQE0iSRcUmk8xf
-         6K8Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWdAGaDG8+Ob8WqhhPKfLuSWIVXnadwGmoKNJOI3KzeOAhRnrrzqB37ka25CtahTAPgDhy64ED7bVkYNA==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yxz1EAzhBbmZ8T1SGQ6N9iM5vep0Bsqtc4oZYiRz6Npd3ddob1/
-	9sb6g3Z5J7/Z/Duyu8nE84J0l6LdWUwywOOic5M2IzOGkx+dJRaMQ9Qr
-X-Gm-Gg: ASbGncsvpb8zmAkeXdLChqF8EAPyDXpdTSdKZ0/qpZey09qEakzXwj7p2saRltIdt6/
-	ERzdXIAgGEh/DpD9E5CAqrxSGHfC4d1iBUFYFnhegHTggRtEeO7Z/Z3EG7SKuY1C20YHLhka22+
-	9wRUX/Xe1Ef9b94w+MiNiub7fHn3ClB23aRaXlVRkjmyOlNf7KQFWMFIZuQvvnyCZGMSIPnNPh3
-	UBOnzT0yRruRRMIwoTDj77gMmRo7UVMeMFYgg6g/G/+7i6+PfADn1Bx2vCB3V/Qo3rf6iUy3UFs
-	oBWbxIaVznQCTuVbxNKziauswy9HmSMq5nq+qo9lrX5YkVOtctGJJY42bl5+uwHN4mUV3egp8B6
-	73L/IcPKntBK/VPfLcrO02iiJCjhUhOgCfFIX24snj4YqT1/iPbiQgxguQA4rk/DVo6+pG5EK+m
-	gYqo+c7jU1bg+ypZKT0+evf4CntJk9VnlrO1kHfqWwG8Im
-X-Google-Smtp-Source: AGHT+IGWOwXLsXQM1cc3iFMhaERJhkH8upgtiuuKhWlUX4ZQDdGrcpVEqb9GKAEnSS+TE2dDORFYuQ==
-X-Received: by 2002:a05:600c:c493:b0:477:7b9a:bb07 with SMTP id 5b1f17b1804b1-4778feabc40mr5134955e9.35.1763058581750;
-        Thu, 13 Nov 2025 10:29:41 -0800 (PST)
-Received: from eldamar.lan (c-82-192-244-13.customer.ggaweb.ch. [82.192.244.13])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4778c88c068sm47292975e9.9.2025.11.13.10.29.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Nov 2025 10:29:40 -0800 (PST)
-Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
-Received: by eldamar.lan (Postfix, from userid 1000)
-	id 93E03BE2EE7; Thu, 13 Nov 2025 19:29:39 +0100 (CET)
-Date: Thu, 13 Nov 2025 19:29:39 +0100
-From: Salvatore Bonaccorso <carnil@debian.org>
-To: Naman Jain <namjain@linux.microsoft.com>,
-	John Starks <jostarks@microsoft.com>,
-	Michael Kelley <mhklinux@outlook.com>,
-	Long Li <longli@microsoft.com>, Tianyu Lan <tiala@microsoft.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Peter Morrow <pdmorrow@gmail.com>
-Cc: 1120602@bugs.debian.org, linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
-	stable@vger.kernel.org
-Subject: [REGRESSION 6.12.y] hyper-v: BUG: kernel NULL pointer dereference,
- address: 00000000000000a0: RIP: 0010:hv_uio_channel_cb+0xd/0x20
- [uio_hv_generic]
-Message-ID: <aRYjk4JBqHvVl-wN@eldamar.lan>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="bIgPAMGJ"
+Received: from [10.95.76.239] (unknown [167.220.238.207])
+	by linux.microsoft.com (Postfix) with ESMTPSA id CA6B6201AE49;
+	Thu, 13 Nov 2025 22:03:47 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com CA6B6201AE49
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1763100231;
+	bh=O4uiiIpAydyY7Vc6U2+eMpL65iQUfjhhkVbZHJEA3H8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=bIgPAMGJ1EapWd3QYgfFzn8BJ2wvA2+BvvhXipstsGxOdOD2qKo09lyyttmx5V8bq
+	 CpM6JBMaemFhMvJkB58Nf6jBXUXugmVssx2LyvlwoeNtGEGymdryHMq2au7bkaESPm
+	 idCHiQALdNrxuxhB3SVOH6OxrfFVr3YB8raxr/C0=
+Message-ID: <7a38c04d-4e54-4f1a-96fd-43f0f11ab97b@linux.microsoft.com>
+Date: Fri, 14 Nov 2025 11:33:45 +0530
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION 6.12.y] hyper-v: BUG: kernel NULL pointer
+ dereference, address: 00000000000000a0: RIP: 0010:hv_uio_channel_cb+0xd/0x20
+ [uio_hv_generic]
+To: Salvatore Bonaccorso <carnil@debian.org>,
+ Peter Morrow <pdmorrow@gmail.com>, Long Li <longli@microsoft.com>
+Cc: 1120602@bugs.debian.org, linux-hyperv@vger.kernel.org,
+ linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
+ stable@vger.kernel.org, John Starks <jostarks@microsoft.com>,
+ Michael Kelley <mhklinux@outlook.com>, Long Li <longli@microsoft.com>,
+ Tianyu Lan <tiala@microsoft.com>, "K. Y. Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <aRYjk4JBqHvVl-wN@eldamar.lan>
+Content-Language: en-US
+From: Naman Jain <namjain@linux.microsoft.com>
+In-Reply-To: <aRYjk4JBqHvVl-wN@eldamar.lan>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
 
-Peter Morrow reported in Debian a regression, reported in
-https://bugs.debian.org/1120602 . The regression was seen after
-updating, to 6.12.57-1 in Debian, but details on the offending commit
-follows.
-
-His report was as follows:
-
-> Dear Maintainer,
->=20
-> I'm seeing a kernel crash quite soon after boot on a debian trixie based
-> system running 6.12.57+deb13-amd64, unfortunately the kernel panics before
-> I can access the system to gather more information. Thus I'll provide det=
-ails
-> of the system using a previously known good version. The panic is happeni=
-ng
-> 100% of the time unfortunately. I have access to the serial console howev=
-er
-> so can enable any required verbose logging during boot if necessary.
->=20
-> Crucially the crash is not seen with kernel version 6.12.41+deb13-amd64 w=
-ith the
-> same userspace. We had pinned to that version until very recently to in o=
-rder
-> to work around https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=3D1109676
->=20
-> I'm running a dpdk application here (VPP) on Azure, VM form factor is a
-> "Standard DS3 v2 (4 vcpus, 14 GiB memory)".
->=20
-> The only relevant upstream commit in this area (as far as I can see) is:
->=20
-> https://lore.kernel.org/linux-hyperv/1bb599ee-fe28-409d-b430-2fc086268936=
-@linux.microsoft.com/
->=20
-> The comment regarding avoiding races at start adds a bit more weight behi=
-nd this
-> hunch, though it's only a hunch as I am most definitely nowhere near an e=
-xpert
-> in this area.
->=20
-> -- Package-specific info:
->=20
-> [   19.625535] BUG: kernel NULL pointer dereference, address: 00000000000=
-000a0
-> [   19.628874] #PF: supervisor read access in kernel mode
-> [   19.630841] #PF: error_code(0x0000) - not-present page
-> [   19.632788] PGD 0 P4D 0=20
-> [   19.633905] Oops: Oops: 0000 [#1] PREEMPT SMP PTI
-> [   19.635586] CPU: 3 UID: 0 PID: 0 Comm: swapper/3 Not tainted 6.12.57+d=
-eb13-amd64 #1  Debian 6.12.57-1
-> [   19.640216] Hardware name: Microsoft Corporation Virtual Machine/Virtu=
-al Machine, BIOS Hyper-V UEFI Release v4.1 09/28/2024
-> [   19.644514] RIP: 0010:hv_uio_channel_cb+0xd/0x20 [uio_hv_generic]
-> [   19.646994] Code: 02 00 00 5b 5d e9 53 98 69 e9 0f 1f 00 90 90 90 90 9=
-0 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 0f 1f 44 00 00 48 8b 47 10 <=
-48> 8b b8 a0 00 00 00 f0 83 44 24 fc 00 e9 51 6f fa ff 90 90 90 90
-> [   19.654377] RSP: 0018:ffffb15ac01a4fa8 EFLAGS: 00010046
-> [   19.656385] RAX: 0000000000000000 RBX: 0000000000000015 RCX: 000000000=
-0000015
-> [   19.659240] RDX: 0000000000000001 RSI: ffffffffffffffff RDI: ffff8ff69=
-c759400
-> [   19.662168] RBP: ffff8ff548790200 R08: ffff8ff548790200 R09: 00fca7515=
-0b080e9
-> [   19.665239] R10: 0000000000000000 R11: ffffb15ac01a4ff8 R12: ffff8ff87=
-1dc1480
-> [   19.668193] R13: ffff8ff69c759400 R14: ffff8ff69c7596a0 R15: ffffffffc=
-106e160
-> [   19.671106] FS:  0000000000000000(0000) GS:ffff8ff871d80000(0000) knlG=
-S:0000000000000000
-> [   19.674281] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [   19.676533] CR2: 00000000000000a0 CR3: 0000000100ba6003 CR4: 000000000=
-03706f0
-> [   19.679385] Call Trace:
-> [   19.680361]  <IRQ>
-> [   19.681181]  vmbus_isr+0x1a5/0x210 [hv_vmbus]
-> [   19.682916]  __sysvec_hyperv_callback+0x32/0x60
-> [   19.684991]  sysvec_hyperv_callback+0x6c/0x90
-> [   19.686665]  </IRQ>
-> [   19.687509]  <TASK>
-> [   19.688366]  asm_sysvec_hyperv_callback+0x1a/0x20
-> [   19.690262] RIP: 0010:pv_native_safe_halt+0xf/0x20
-> [   19.692067] Code: 09 e9 c5 08 01 00 0f 1f 44 00 00 90 90 90 90 90 90 9=
-0 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 66 90 0f 00 2d e5 3b 31 00 fb f4 <=
-c3> cc cc cc cc 66 66 2e 0f 1f 84 00 00 00 00 00 90 90 90 90 90 90
-> [   19.699119] RSP: 0018:ffffb15ac0103ed8 EFLAGS: 00000246
-> [   19.701412] RAX: 0000000000000003 RBX: ffff8ff5403b1fc0 RCX: ffff8ff54=
-c64ce30
-> [   19.704328] RDX: 0000000000000000 RSI: 0000000000000003 RDI: 000000000=
-001f894
-> [   19.706910] RBP: 0000000000000003 R08: 000000000bb760d9 R09: 00fca7515=
-0b080e9
-> [   19.709762] R10: 0000000000000003 R11: 0000000000000001 R12: 000000000=
-0000000
-> [   19.712510] R13: 0000000000000000 R14: 0000000000000000 R15: 000000000=
-0000000
-> [   19.715173]  default_idle+0x9/0x20
-> [   19.716846]  default_idle_call+0x29/0x100
-> [   19.718623]  do_idle+0x1fe/0x240
-> [   19.720045]  cpu_startup_entry+0x29/0x30
-> [   19.721595]  start_secondary+0x11e/0x140
-> [   19.723080]  common_startup_64+0x13e/0x141
-> [   19.725222]  </TASK>
-> [   19.726387] Modules linked in: isofs cdrom uio_hv_generic uio binfmt_m=
-isc intel_rapl_msr intel_rapl_common intel_uncore_frequency_common isst_if_=
-mbox_msr isst_if_common rpcrdma skx_edac_common nfit sunrpc libnvdimm crct1=
-0dif_pclmul ghash_clmulni_intel sha512_ssse3 sha256_ssse3 rdma_ucm ib_iser =
-sha1_ssse3 rdma_cm aesni_intel iw_cm gf128mul crypto_simd libiscsi cryptd i=
-b_umad ib_ipoib scsi_transport_iscsi ib_cm rapl sg hv_utils hv_balloon evde=
-v pcspkr joydev mpls_router ip_tunnel ramoops configfs pstore_blk efi_pstor=
-e pstore_zone nfnetlink vsock_loopback vmw_vsock_virtio_transport_common hv=
-_sock vmw_vsock_vmci_transport vsock vmw_vmci efivarfs ip_tables x_tables a=
-utofs4 overlay squashfs dm_verity dm_bufio reed_solomon dm_mod loop ext4 cr=
-c16 mbcache jbd2 crc32c_generic mlx5_ib ib_uverbs ib_core mlx5_core mlxfw p=
-ci_hyperv pci_hyperv_intf hyperv_drm drm_shmem_helper sd_mod drm_kms_helper=
- hv_storvsc scsi_transport_fc drm scsi_mod hid_generic hid_hyperv hid serio=
-_raw hv_netvsc hyperv_keyboard scsi_common hv_vmbus
-> [   19.726466]  crc32_pclmul crc32c_intel
-> [   19.765771] CR2: 00000000000000a0
-> [   19.767524] ---[ end trace 0000000000000000 ]---
-> [   19.800433] RIP: 0010:hv_uio_channel_cb+0xd/0x20 [uio_hv_generic]
-> [   19.803170] Code: 02 00 00 5b 5d e9 53 98 69 e9 0f 1f 00 90 90 90 90 9=
-0 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 0f 1f 44 00 00 48 8b 47 10 <=
-48> 8b b8 a0 00 00 00 f0 83 44 24 fc 00 e9 51 6f fa ff 90 90 90 90
-> [   19.811041] RSP: 0018:ffffb15ac01a4fa8 EFLAGS: 00010046
-> [   19.813466] RAX: 0000000000000000 RBX: 0000000000000015 RCX: 000000000=
-0000015
-> [   19.816504] RDX: 0000000000000001 RSI: ffffffffffffffff RDI: ffff8ff69=
-c759400
-> [   19.819484] RBP: ffff8ff548790200 R08: ffff8ff548790200 R09: 00fca7515=
-0b080e9
-> [   19.822625] R10: 0000000000000000 R11: ffffb15ac01a4ff8 R12: ffff8ff87=
-1dc1480
-> [   19.825569] R13: ffff8ff69c759400 R14: ffff8ff69c7596a0 R15: ffffffffc=
-106e160
-> [   19.828804] FS:  0000000000000000(0000) GS:ffff8ff871d80000(0000) knlG=
-S:0000000000000000
-> [   19.832214] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [   19.834709] CR2: 00000000000000a0 CR3: 0000000100ba6003 CR4: 000000000=
-03706f0
-> [   19.837976] Kernel panic - not syncing: Fatal exception in interrupt
-> [   19.841825] Kernel Offset: 0x28a00000 from 0xffffffff81000000 (relocat=
-ion range: 0xffffffff80000000-0xffffffffbfffffff)
-> [   19.896620] ---[ end Kernel panic - not syncing: Fatal exception in in=
-terrupt ]---
->=20
->=20
-> lspci output:
->=20
-> Collected from a system that is not crashing (6.12.41+deb13-amd64 #1 SMP =
-PREEMPT_DYNAMIC Debian 6.12.41-1 (2025-08-12) x86_64 GNU/Linux)...
->=20
-> $ sudo lspci -v
-> 2f22:00:02.0 Ethernet controller: Mellanox Technologies MT27710 Family [C=
-onnectX-4 Lx Virtual Function] (rev 80)
->         Subsystem: Mellanox Technologies Device 0190
->         Physical Slot: 3
->         Flags: bus master, fast devsel, latency 0, NUMA node 0
->         Memory at fe0100000 (64-bit, prefetchable) [size=3D1M]
->         Capabilities: [60] Express Endpoint, IntMsgNum 0
->         Capabilities: [9c] MSI-X: Enable+ Count=3D8 Masked-
->         Kernel driver in use: mlx5_core
->         Kernel modules: mlx5_core
->=20
-> 52f7:00:02.0 Ethernet controller: Mellanox Technologies MT27710 Family [C=
-onnectX-4 Lx Virtual Function] (rev 80)
->         Subsystem: Mellanox Technologies Device 0190
->         Physical Slot: 2
->         Flags: bus master, fast devsel, latency 0, NUMA node 0
->         Memory at fe0000000 (64-bit, prefetchable) [size=3D1M]
->         Capabilities: [60] Express Endpoint, IntMsgNum 0
->         Capabilities: [9c] MSI-X: Enable+ Count=3D8 Masked-
->         Kernel driver in use: mlx5_core
->         Kernel modules: mlx5_core
->=20
-> 7852:00:02.0 Ethernet controller: Mellanox Technologies MT27710 Family [C=
-onnectX-4 Lx Virtual Function] (rev 80)
->         Subsystem: Mellanox Technologies Device 0190
->         Physical Slot: 4
->         Flags: bus master, fast devsel, latency 0, NUMA node 0
->         Memory at fe0200000 (64-bit, prefetchable) [size=3D1M]
->         Capabilities: [60] Express Endpoint, IntMsgNum 0
->         Capabilities: [9c] MSI-X: Enable+ Count=3D8 Masked-
->         Kernel driver in use: mlx5_core
->         Kernel modules: mlx5_core
->=20
-> dmidecode output:
->=20
-> $ sudo dmidecode=20
-> # dmidecode 3.6
-> Getting SMBIOS data from sysfs.
-> SMBIOS 3.1.0 present.
-> Table at 0x3FF82000.
->=20
-> Handle 0x0000, DMI type 0, 26 bytes
-> BIOS Information
->         Vendor: Microsoft Corporation
->         Version: Hyper-V UEFI Release v4.1
->         Release Date: 05/13/2024
->         ROM Size: 64 kB
->         Characteristics:
->                 BIOS characteristics not supported
->                 ACPI is supported
->                 Targeted content distribution is supported
->                 UEFI is supported
->                 System is a virtual machine
->         BIOS Revision: 4.1
->=20
-> Handle 0x0001, DMI type 1, 27 bytes
-> System Information
->         Manufacturer: Microsoft Corporation
->         Product Name: Virtual Machine
->         Version: Hyper-V UEFI Release v4.1
->         Serial Number: 0000-0010-5437-9499-5225-4477-46
->         UUID: 925315af-4af4-4d42-915a-1516b5a1fe5c
->         Wake-up Type: Power Switch
->         SKU Number: None
->         Family: Virtual Machine
->=20
-> Handle 0x0002, DMI type 3, 24 bytes
-> Chassis Information
->         Manufacturer: Microsoft Corporation
->         Type: Desktop
->         Lock: Not Present
->         Version: Hyper-V UEFI Release v4.1
->         Serial Number: 2466-9316-1078-9783-6078-7718-80
->         Asset Tag: 7783-7084-3265-9085-8269-3286-77
->         Boot-up State: Safe
->         Power Supply State: Safe
->         Thermal State: Safe
->         Security Status: Unknown
->         OEM Information: 0x00000000
->         Height: Unspecified
->         Number Of Power Cords: Unspecified
->         Contained Elements: 0
->         SKU Number: Virtual Machine
->=20
-> Handle 0x0003, DMI type 2, 17 bytes
-> Base Board Information
->         Manufacturer: Microsoft Corporation
->         Product Name: Virtual Machine
->         Version: Hyper-V UEFI Release v4.1
->         Serial Number: 0000-0010-4737-0707-0684-2660-76
->         Asset Tag: None
->         Features:
->                 Board is a hosting board
->         Location In Chassis: Virtual Machine
->         Chassis Handle: 0x0002
->         Type: Motherboard
->         Contained Object Handles: 0
->=20
-> Handle 0x0004, DMI type 4, 48 bytes
-> Processor Information
->         Socket Designation: None
->         Type: Central Processor
->         Family: Unknown
->         Manufacturer: None
->         ID: 00 00 00 00 00 00 00 00
->         Version: None
->         Voltage: Unknown
->         External Clock: Unknown
->         Max Speed: Unknown
->         Current Speed: Unknown
->         Status: Unpopulated
->         Upgrade: Other
->         L1 Cache Handle: Not Provided
->         L2 Cache Handle: Not Provided
->         L3 Cache Handle: Not Provided
->         Serial Number: None
->         Asset Tag: None
->         Part Number: None
->         Core Count: 4
->         Core Enabled: 4
->         Thread Count: 1
->         Characteristics: None
->=20
-> Handle 0x0005, DMI type 11, 5 bytes
-> OEM Strings
->         String 1: [MS_VM_CERT/SHA1/9b80ca0d5dd061ec9da4e494f4c3fd1196270c=
-22]
->         String 2: None
->         String 3: To be filled by OEM
->=20
-> Handle 0x0006, DMI type 16, 23 bytes
-> Physical Memory Array
->         Location: System Board Or Motherboard
->         Use: System Memory
->         Error Correction Type: None
->         Maximum Capacity: 0 bytes
->         Error Information Handle: Not Provided
->         Number Of Devices: 3
->=20
-> Handle 0x0007, DMI type 17, 92 bytes
-> Memory Device
->         Array Handle: 0x0006
->         Error Information Handle: Not Provided
->         Total Width: Unknown
->         Data Width: Unknown
->         Size: 26 MB
->         Form Factor: Unknown
->         Set: None
->         Locator: M0001
->         Bank Locator: None
->         Type: Unknown
->         Type Detail: Unknown
->         Speed: Unknown
->         Manufacturer: Microsoft Corporation
->         Serial Number: None
->         Asset Tag: None
->         Part Number: None
->         Rank: Unknown
->         Configured Memory Speed: Unknown
->         Minimum Voltage: Unknown
->         Maximum Voltage: Unknown
->         Configured Voltage: Unknown
->         Memory Technology: <OUT OF SPEC>
->         Memory Operating Mode Capability: None
->         Firmware Version: Not Specified
->         Module Manufacturer ID: Unknown
->         Module Product ID: Unknown
->         Memory Subsystem Controller Manufacturer ID: Unknown
->         Memory Subsystem Controller Product ID: Unknown
->         Non-Volatile Size: None
->         Volatile Size: None
->         Cache Size: None
->         Logical Size: None
->=20
-> Handle 0x0008, DMI type 19, 31 bytes
-> Memory Array Mapped Address
->         Starting Address: 0x00000000000
->         Ending Address: 0x00001A003FF
->         Range Size: 26625 kB
->         Physical Array Handle: 0x0006
->         Partition Width: 0
->=20
-> Handle 0x0009, DMI type 20, 35 bytes
-> Memory Device Mapped Address
->         Starting Address: 0x00000000000
->         Ending Address: 0x00001A003FF
->         Range Size: 26625 kB
->         Physical Device Handle: 0x0007
->         Memory Array Mapped Address Handle: 0x0008
->         Partition Row Position: Unknown
->=20
-> Handle 0x000A, DMI type 17, 92 bytes
-> Memory Device
->         Array Handle: 0x0006
->         Error Information Handle: Not Provided
->         Total Width: Unknown
->         Data Width: Unknown
->         Size: 948 MB
->         Form Factor: Unknown
->         Set: None
->         Locator: M0002
->         Bank Locator: None
->         Type: Unknown
->         Type Detail: Unknown
->         Speed: Unknown
->         Manufacturer: Microsoft Corporation
->         Serial Number: None
->         Asset Tag: None
->         Part Number: None
->         Rank: Unknown
->         Configured Memory Speed: Unknown
->         Minimum Voltage: Unknown
->         Maximum Voltage: Unknown
->         Configured Voltage: Unknown
->         Memory Technology: <OUT OF SPEC>
->         Memory Operating Mode Capability: None
->         Firmware Version: Not Specified
->         Module Manufacturer ID: Unknown
->         Module Product ID: Unknown
->         Memory Subsystem Controller Manufacturer ID: Unknown
->         Memory Subsystem Controller Product ID: Unknown
->         Non-Volatile Size: None
->         Volatile Size: None
->         Cache Size: None
->         Logical Size: None
->=20
-> Handle 0x000B, DMI type 19, 31 bytes
-> Memory Array Mapped Address
->         Starting Address: 0x00004C00000
->         Ending Address: 0x000400003FF
->         Range Size: 970753 kB
->         Physical Array Handle: 0x0006
->         Partition Width: 0
->=20
-> Handle 0x000C, DMI type 20, 35 bytes
-> Memory Device Mapped Address
->         Starting Address: 0x00004C00000
->         Ending Address: 0x000400003FF
->         Range Size: 970753 kB
->         Physical Device Handle: 0x000A
->         Memory Array Mapped Address Handle: 0x000B
->         Partition Row Position: Unknown
->=20
-> Handle 0x000D, DMI type 17, 92 bytes
-> Memory Device
->         Array Handle: 0x0006
->         Error Information Handle: Not Provided
->         Total Width: Unknown
->         Data Width: Unknown
->         Size: 13 GB
->         Form Factor: Unknown
->         Set: None
->         Locator: M0003
->         Bank Locator: None
->         Type: Unknown
->         Type Detail: Unknown
->         Speed: Unknown
->         Manufacturer: Microsoft Corporation
->         Serial Number: None
->         Asset Tag: None
->         Part Number: None
->         Rank: Unknown
->         Configured Memory Speed: Unknown
->         Minimum Voltage: Unknown
->         Maximum Voltage: Unknown
->         Configured Voltage: Unknown
->         Memory Technology: <OUT OF SPEC>
->         Memory Operating Mode Capability: None
->         Firmware Version: Not Specified
->         Module Manufacturer ID: Unknown
->         Module Product ID: Unknown
->         Memory Subsystem Controller Manufacturer ID: Unknown
->         Memory Subsystem Controller Product ID: Unknown
->         Non-Volatile Size: None
->         Volatile Size: None
->         Cache Size: None
->         Logical Size: None
->=20
-> Handle 0x000E, DMI type 19, 31 bytes
-> Memory Array Mapped Address
->         Starting Address: 0x00100000000
->         Ending Address: 0x004400003FF
->         Range Size: 13 GB
->         Physical Array Handle: 0x0006
->         Partition Width: 0
->=20
-> Handle 0x000F, DMI type 20, 35 bytes
-> Memory Device Mapped Address
->         Starting Address: 0x00100000000
->         Ending Address: 0x004400003FF
->         Range Size: 13 GB
->         Physical Device Handle: 0x000D
->         Memory Array Mapped Address Handle: 0x000E
->         Partition Row Position: Unknown
->=20
-> Handle 0x0010, DMI type 32, 11 bytes
-> System Boot Information
->         Status: No errors detected
->=20
-> Handle 0xFEFF, DMI type 127, 4 bytes
-> End Of Table
-
-The offending commit appers to be the backport of b15b7d2a1b09
-("uio_hv_generic: Let userspace take care of interrupt mask") for
-6.12.y.
-
-Peter confirmed that reverting this commit on top of 6.12.57-1 as
-packaged in Debian resolves indeed the issue. Interestingly the issue
-is *not* seen with 6.17.7 based kernel in Debian.
-
-#regzbot introduced: 37bd91f22794dc05436130d6983302cb90ecfe7e
-#regzbot monitor: https://bugs.debian.org/1120602
-
-Thank you already!
-
-Regards,
-Salvatore
+DQoNCk9uIDExLzEzLzIwMjUgMTE6NTkgUE0sIFNhbHZhdG9yZSBCb25hY2NvcnNvIHdyb3Rl
+Og0KPiBQZXRlciBNb3Jyb3cgcmVwb3J0ZWQgaW4gRGViaWFuIGEgcmVncmVzc2lvbiwgcmVw
+b3J0ZWQgaW4NCj4gaHR0cHM6Ly9idWdzLmRlYmlhbi5vcmcvMTEyMDYwMiAuIFRoZSByZWdy
+ZXNzaW9uIHdhcyBzZWVuIGFmdGVyDQo+IHVwZGF0aW5nLCB0byA2LjEyLjU3LTEgaW4gRGVi
+aWFuLCBidXQgZGV0YWlscyBvbiB0aGUgb2ZmZW5kaW5nIGNvbW1pdA0KPiBmb2xsb3dzLg0K
+PiANCj4gSGlzIHJlcG9ydCB3YXMgYXMgZm9sbG93czoNCj4gDQo+PiBEZWFyIE1haW50YWlu
+ZXIsDQo+Pg0KPj4gSSdtIHNlZWluZyBhIGtlcm5lbCBjcmFzaCBxdWl0ZSBzb29uIGFmdGVy
+IGJvb3Qgb24gYSBkZWJpYW4gdHJpeGllIGJhc2VkDQo+PiBzeXN0ZW0gcnVubmluZyA2LjEy
+LjU3K2RlYjEzLWFtZDY0LCB1bmZvcnR1bmF0ZWx5IHRoZSBrZXJuZWwgcGFuaWNzIGJlZm9y
+ZQ0KPj4gSSBjYW4gYWNjZXNzIHRoZSBzeXN0ZW0gdG8gZ2F0aGVyIG1vcmUgaW5mb3JtYXRp
+b24uIFRodXMgSSdsbCBwcm92aWRlIGRldGFpbHMNCj4+IG9mIHRoZSBzeXN0ZW0gdXNpbmcg
+YSBwcmV2aW91c2x5IGtub3duIGdvb2QgdmVyc2lvbi4gVGhlIHBhbmljIGlzIGhhcHBlbmlu
+Zw0KPj4gMTAwJSBvZiB0aGUgdGltZSB1bmZvcnR1bmF0ZWx5LiBJIGhhdmUgYWNjZXNzIHRv
+IHRoZSBzZXJpYWwgY29uc29sZSBob3dldmVyDQo+PiBzbyBjYW4gZW5hYmxlIGFueSByZXF1
+aXJlZCB2ZXJib3NlIGxvZ2dpbmcgZHVyaW5nIGJvb3QgaWYgbmVjZXNzYXJ5Lg0KPj4NCj4+
+IENydWNpYWxseSB0aGUgY3Jhc2ggaXMgbm90IHNlZW4gd2l0aCBrZXJuZWwgdmVyc2lvbiA2
+LjEyLjQxK2RlYjEzLWFtZDY0IHdpdGggdGhlDQo+PiBzYW1lIHVzZXJzcGFjZS4gV2UgaGFk
+IHBpbm5lZCB0byB0aGF0IHZlcnNpb24gdW50aWwgdmVyeSByZWNlbnRseSB0byBpbiBvcmRl
+cg0KPj4gdG8gd29yayBhcm91bmQgaHR0cHM6Ly9idWdzLmRlYmlhbi5vcmcvY2dpLWJpbi9i
+dWdyZXBvcnQuY2dpP2J1Zz0xMTA5Njc2DQo+Pg0KPj4gSSdtIHJ1bm5pbmcgYSBkcGRrIGFw
+cGxpY2F0aW9uIGhlcmUgKFZQUCkgb24gQXp1cmUsIFZNIGZvcm0gZmFjdG9yIGlzIGENCj4+
+ICJTdGFuZGFyZCBEUzMgdjIgKDQgdmNwdXMsIDE0IEdpQiBtZW1vcnkpIi4NCj4+DQo+PiBU
+aGUgb25seSByZWxldmFudCB1cHN0cmVhbSBjb21taXQgaW4gdGhpcyBhcmVhIChhcyBmYXIg
+YXMgSSBjYW4gc2VlKSBpczoNCj4+DQo+PiBodHRwczovL2xvcmUua2VybmVsLm9yZy9saW51
+eC1oeXBlcnYvMWJiNTk5ZWUtZmUyOC00MDlkLWI0MzAtMmZjMDg2MjY4OTM2QGxpbnV4Lm1p
+Y3Jvc29mdC5jb20vDQo+Pg0KPj4gVGhlIGNvbW1lbnQgcmVnYXJkaW5nIGF2b2lkaW5nIHJh
+Y2VzIGF0IHN0YXJ0IGFkZHMgYSBiaXQgbW9yZSB3ZWlnaHQgYmVoaW5kIHRoaXMNCj4+IGh1
+bmNoLCB0aG91Z2ggaXQncyBvbmx5IGEgaHVuY2ggYXMgSSBhbSBtb3N0IGRlZmluaXRlbHkg
+bm93aGVyZSBuZWFyIGFuIGV4cGVydA0KPj4gaW4gdGhpcyBhcmVhLg0KPj4NCj4+IC0tIFBh
+Y2thZ2Utc3BlY2lmaWMgaW5mbzoNCj4+DQo+PiBbICAgMTkuNjI1NTM1XSBCVUc6IGtlcm5l
+bCBOVUxMIHBvaW50ZXIgZGVyZWZlcmVuY2UsIGFkZHJlc3M6IDAwMDAwMDAwMDAwMDAwYTAN
+Cj4+IFsgICAxOS42Mjg4NzRdICNQRjogc3VwZXJ2aXNvciByZWFkIGFjY2VzcyBpbiBrZXJu
+ZWwgbW9kZQ0KPj4gWyAgIDE5LjYzMDg0MV0gI1BGOiBlcnJvcl9jb2RlKDB4MDAwMCkgLSBu
+b3QtcHJlc2VudCBwYWdlDQo+PiBbICAgMTkuNjMyNzg4XSBQR0QgMCBQNEQgMA0KPj4gWyAg
+IDE5LjYzMzkwNV0gT29wczogT29wczogMDAwMCBbIzFdIFBSRUVNUFQgU01QIFBUSQ0KPj4g
+WyAgIDE5LjYzNTU4Nl0gQ1BVOiAzIFVJRDogMCBQSUQ6IDAgQ29tbTogc3dhcHBlci8zIE5v
+dCB0YWludGVkIDYuMTIuNTcrZGViMTMtYW1kNjQgIzEgIERlYmlhbiA2LjEyLjU3LTENCj4+
+IFsgICAxOS42NDAyMTZdIEhhcmR3YXJlIG5hbWU6IE1pY3Jvc29mdCBDb3Jwb3JhdGlvbiBW
+aXJ0dWFsIE1hY2hpbmUvVmlydHVhbCBNYWNoaW5lLCBCSU9TIEh5cGVyLVYgVUVGSSBSZWxl
+YXNlIHY0LjEgMDkvMjgvMjAyNA0KPj4gWyAgIDE5LjY0NDUxNF0gUklQOiAwMDEwOmh2X3Vp
+b19jaGFubmVsX2NiKzB4ZC8weDIwIFt1aW9faHZfZ2VuZXJpY10NCj4+IFsgICAxOS42NDY5
+OTRdIENvZGU6IDAyIDAwIDAwIDViIDVkIGU5IDUzIDk4IDY5IGU5IDBmIDFmIDAwIDkwIDkw
+IDkwIDkwIDkwIDkwIDkwIDkwIDkwIDkwIDkwIDkwIDkwIDkwIDkwIDkwIGYzIDBmIDFlIGZh
+IDBmIDFmIDQ0IDAwIDAwIDQ4IDhiIDQ3IDEwIDw0OD4gOGIgYjggYTAgMDAgMDAgMDAgZjAg
+ODMgNDQgMjQgZmMgMDAgZTkgNTEgNmYgZmEgZmYgOTAgOTAgOTAgOTANCj4+IFsgICAxOS42
+NTQzNzddIFJTUDogMDAxODpmZmZmYjE1YWMwMWE0ZmE4IEVGTEFHUzogMDAwMTAwNDYNCj4+
+IFsgICAxOS42NTYzODVdIFJBWDogMDAwMDAwMDAwMDAwMDAwMCBSQlg6IDAwMDAwMDAwMDAw
+MDAwMTUgUkNYOiAwMDAwMDAwMDAwMDAwMDE1DQo+PiBbICAgMTkuNjU5MjQwXSBSRFg6IDAw
+MDAwMDAwMDAwMDAwMDEgUlNJOiBmZmZmZmZmZmZmZmZmZmZmIFJESTogZmZmZjhmZjY5Yzc1
+OTQwMA0KPj4gWyAgIDE5LjY2MjE2OF0gUkJQOiBmZmZmOGZmNTQ4NzkwMjAwIFIwODogZmZm
+ZjhmZjU0ODc5MDIwMCBSMDk6IDAwZmNhNzUxNTBiMDgwZTkNCj4+IFsgICAxOS42NjUyMzld
+IFIxMDogMDAwMDAwMDAwMDAwMDAwMCBSMTE6IGZmZmZiMTVhYzAxYTRmZjggUjEyOiBmZmZm
+OGZmODcxZGMxNDgwDQo+PiBbICAgMTkuNjY4MTkzXSBSMTM6IGZmZmY4ZmY2OWM3NTk0MDAg
+UjE0OiBmZmZmOGZmNjljNzU5NmEwIFIxNTogZmZmZmZmZmZjMTA2ZTE2MA0KPj4gWyAgIDE5
+LjY3MTEwNl0gRlM6ICAwMDAwMDAwMDAwMDAwMDAwKDAwMDApIEdTOmZmZmY4ZmY4NzFkODAw
+MDAoMDAwMCkga25sR1M6MDAwMDAwMDAwMDAwMDAwMA0KPj4gWyAgIDE5LjY3NDI4MV0gQ1M6
+ICAwMDEwIERTOiAwMDAwIEVTOiAwMDAwIENSMDogMDAwMDAwMDA4MDA1MDAzMw0KPj4gWyAg
+IDE5LjY3NjUzM10gQ1IyOiAwMDAwMDAwMDAwMDAwMGEwIENSMzogMDAwMDAwMDEwMGJhNjAw
+MyBDUjQ6IDAwMDAwMDAwMDAzNzA2ZjANCj4+IFsgICAxOS42NzkzODVdIENhbGwgVHJhY2U6
+DQo+PiBbICAgMTkuNjgwMzYxXSAgPElSUT4NCj4+IFsgICAxOS42ODExODFdICB2bWJ1c19p
+c3IrMHgxYTUvMHgyMTAgW2h2X3ZtYnVzXQ0KPj4gWyAgIDE5LjY4MjkxNl0gIF9fc3lzdmVj
+X2h5cGVydl9jYWxsYmFjaysweDMyLzB4NjANCj4+IFsgICAxOS42ODQ5OTFdICBzeXN2ZWNf
+aHlwZXJ2X2NhbGxiYWNrKzB4NmMvMHg5MA0KPj4gWyAgIDE5LjY4NjY2NV0gIDwvSVJRPg0K
+Pj4gWyAgIDE5LjY4NzUwOV0gIDxUQVNLPg0KPj4gWyAgIDE5LjY4ODM2Nl0gIGFzbV9zeXN2
+ZWNfaHlwZXJ2X2NhbGxiYWNrKzB4MWEvMHgyMA0KPj4gWyAgIDE5LjY5MDI2Ml0gUklQOiAw
+MDEwOnB2X25hdGl2ZV9zYWZlX2hhbHQrMHhmLzB4MjANCj4+IFsgICAxOS42OTIwNjddIENv
+ZGU6IDA5IGU5IGM1IDA4IDAxIDAwIDBmIDFmIDQ0IDAwIDAwIDkwIDkwIDkwIDkwIDkwIDkw
+IDkwIDkwIDkwIDkwIDkwIDkwIDkwIDkwIDkwIDkwIGYzIDBmIDFlIGZhIDY2IDkwIDBmIDAw
+IDJkIGU1IDNiIDMxIDAwIGZiIGY0IDxjMz4gY2MgY2MgY2MgY2MgNjYgNjYgMmUgMGYgMWYg
+ODQgMDAgMDAgMDAgMDAgMDAgOTAgOTAgOTAgOTAgOTAgOTANCj4+IFsgICAxOS42OTkxMTld
+IFJTUDogMDAxODpmZmZmYjE1YWMwMTAzZWQ4IEVGTEFHUzogMDAwMDAyNDYNCj4+IFsgICAx
+OS43MDE0MTJdIFJBWDogMDAwMDAwMDAwMDAwMDAwMyBSQlg6IGZmZmY4ZmY1NDAzYjFmYzAg
+UkNYOiBmZmZmOGZmNTRjNjRjZTMwDQo+PiBbICAgMTkuNzA0MzI4XSBSRFg6IDAwMDAwMDAw
+MDAwMDAwMDAgUlNJOiAwMDAwMDAwMDAwMDAwMDAzIFJESTogMDAwMDAwMDAwMDAxZjg5NA0K
+Pj4gWyAgIDE5LjcwNjkxMF0gUkJQOiAwMDAwMDAwMDAwMDAwMDAzIFIwODogMDAwMDAwMDAw
+YmI3NjBkOSBSMDk6IDAwZmNhNzUxNTBiMDgwZTkNCj4+IFsgICAxOS43MDk3NjJdIFIxMDog
+MDAwMDAwMDAwMDAwMDAwMyBSMTE6IDAwMDAwMDAwMDAwMDAwMDEgUjEyOiAwMDAwMDAwMDAw
+MDAwMDAwDQo+PiBbICAgMTkuNzEyNTEwXSBSMTM6IDAwMDAwMDAwMDAwMDAwMDAgUjE0OiAw
+MDAwMDAwMDAwMDAwMDAwIFIxNTogMDAwMDAwMDAwMDAwMDAwMA0KPj4gWyAgIDE5LjcxNTE3
+M10gIGRlZmF1bHRfaWRsZSsweDkvMHgyMA0KPj4gWyAgIDE5LjcxNjg0Nl0gIGRlZmF1bHRf
+aWRsZV9jYWxsKzB4MjkvMHgxMDANCj4+IFsgICAxOS43MTg2MjNdICBkb19pZGxlKzB4MWZl
+LzB4MjQwDQo+PiBbICAgMTkuNzIwMDQ1XSAgY3B1X3N0YXJ0dXBfZW50cnkrMHgyOS8weDMw
+DQo+PiBbICAgMTkuNzIxNTk1XSAgc3RhcnRfc2Vjb25kYXJ5KzB4MTFlLzB4MTQwDQo+PiBb
+ICAgMTkuNzIzMDgwXSAgY29tbW9uX3N0YXJ0dXBfNjQrMHgxM2UvMHgxNDENCj4+IFsgICAx
+OS43MjUyMjJdICA8L1RBU0s+DQo+PiBbICAgMTkuNzI2Mzg3XSBNb2R1bGVzIGxpbmtlZCBp
+bjogaXNvZnMgY2Ryb20gdWlvX2h2X2dlbmVyaWMgdWlvIGJpbmZtdF9taXNjIGludGVsX3Jh
+cGxfbXNyIGludGVsX3JhcGxfY29tbW9uIGludGVsX3VuY29yZV9mcmVxdWVuY3lfY29tbW9u
+IGlzc3RfaWZfbWJveF9tc3IgaXNzdF9pZl9jb21tb24gcnBjcmRtYSBza3hfZWRhY19jb21t
+b24gbmZpdCBzdW5ycGMgbGlibnZkaW1tIGNyY3QxMGRpZl9wY2xtdWwgZ2hhc2hfY2xtdWxu
+aV9pbnRlbCBzaGE1MTJfc3NzZTMgc2hhMjU2X3Nzc2UzIHJkbWFfdWNtIGliX2lzZXIgc2hh
+MV9zc3NlMyByZG1hX2NtIGFlc25pX2ludGVsIGl3X2NtIGdmMTI4bXVsIGNyeXB0b19zaW1k
+IGxpYmlzY3NpIGNyeXB0ZCBpYl91bWFkIGliX2lwb2liIHNjc2lfdHJhbnNwb3J0X2lzY3Np
+IGliX2NtIHJhcGwgc2cgaHZfdXRpbHMgaHZfYmFsbG9vbiBldmRldiBwY3Nwa3Igam95ZGV2
+IG1wbHNfcm91dGVyIGlwX3R1bm5lbCByYW1vb3BzIGNvbmZpZ2ZzIHBzdG9yZV9ibGsgZWZp
+X3BzdG9yZSBwc3RvcmVfem9uZSBuZm5ldGxpbmsgdnNvY2tfbG9vcGJhY2sgdm13X3Zzb2Nr
+X3ZpcnRpb190cmFuc3BvcnRfY29tbW9uIGh2X3NvY2sgdm13X3Zzb2NrX3ZtY2lfdHJhbnNw
+b3J0IHZzb2NrIHZtd192bWNpIGVmaXZhcmZzIGlwX3RhYmxlcyB4X3RhYmxlcyBhdXRvZnM0
+IG92ZXJsYXkgc3F1YXNoZnMgZG1fdmVyaXR5IGRtX2J1ZmlvIHJlZWRfc29sb21vbiBkbV9t
+b2QgbG9vcCBleHQ0IGNyYzE2IG1iY2FjaGUgamJkMiBjcmMzMmNfZ2VuZXJpYyBtbHg1X2li
+IGliX3V2ZXJicyBpYl9jb3JlIG1seDVfY29yZSBtbHhmdyBwY2lfaHlwZXJ2IHBjaV9oeXBl
+cnZfaW50ZiBoeXBlcnZfZHJtIGRybV9zaG1lbV9oZWxwZXIgc2RfbW9kIGRybV9rbXNfaGVs
+cGVyIGh2X3N0b3J2c2Mgc2NzaV90cmFuc3BvcnRfZmMgZHJtIHNjc2lfbW9kIGhpZF9nZW5l
+cmljIGhpZF9oeXBlcnYgaGlkIHNlcmlvX3JhdyBodl9uZXR2c2MgaHlwZXJ2X2tleWJvYXJk
+IHNjc2lfY29tbW9uIGh2X3ZtYnVzDQo+PiBbICAgMTkuNzI2NDY2XSAgY3JjMzJfcGNsbXVs
+IGNyYzMyY19pbnRlbA0KPj4gWyAgIDE5Ljc2NTc3MV0gQ1IyOiAwMDAwMDAwMDAwMDAwMGEw
+DQo+PiBbICAgMTkuNzY3NTI0XSAtLS1bIGVuZCB0cmFjZSAwMDAwMDAwMDAwMDAwMDAwIF0t
+LS0NCj4+IFsgICAxOS44MDA0MzNdIFJJUDogMDAxMDpodl91aW9fY2hhbm5lbF9jYisweGQv
+MHgyMCBbdWlvX2h2X2dlbmVyaWNdDQo+PiBbICAgMTkuODAzMTcwXSBDb2RlOiAwMiAwMCAw
+MCA1YiA1ZCBlOSA1MyA5OCA2OSBlOSAwZiAxZiAwMCA5MCA5MCA5MCA5MCA5MCA5MCA5MCA5
+MCA5MCA5MCA5MCA5MCA5MCA5MCA5MCA5MCBmMyAwZiAxZSBmYSAwZiAxZiA0NCAwMCAwMCA0
+OCA4YiA0NyAxMCA8NDg+IDhiIGI4IGEwIDAwIDAwIDAwIGYwIDgzIDQ0IDI0IGZjIDAwIGU5
+IDUxIDZmIGZhIGZmIDkwIDkwIDkwIDkwDQo+PiBbICAgMTkuODExMDQxXSBSU1A6IDAwMTg6
+ZmZmZmIxNWFjMDFhNGZhOCBFRkxBR1M6IDAwMDEwMDQ2DQo+PiBbICAgMTkuODEzNDY2XSBS
+QVg6IDAwMDAwMDAwMDAwMDAwMDAgUkJYOiAwMDAwMDAwMDAwMDAwMDE1IFJDWDogMDAwMDAw
+MDAwMDAwMDAxNQ0KPj4gWyAgIDE5LjgxNjUwNF0gUkRYOiAwMDAwMDAwMDAwMDAwMDAxIFJT
+STogZmZmZmZmZmZmZmZmZmZmZiBSREk6IGZmZmY4ZmY2OWM3NTk0MDANCj4+IFsgICAxOS44
+MTk0ODRdIFJCUDogZmZmZjhmZjU0ODc5MDIwMCBSMDg6IGZmZmY4ZmY1NDg3OTAyMDAgUjA5
+OiAwMGZjYTc1MTUwYjA4MGU5DQo+PiBbICAgMTkuODIyNjI1XSBSMTA6IDAwMDAwMDAwMDAw
+MDAwMDAgUjExOiBmZmZmYjE1YWMwMWE0ZmY4IFIxMjogZmZmZjhmZjg3MWRjMTQ4MA0KPj4g
+WyAgIDE5LjgyNTU2OV0gUjEzOiBmZmZmOGZmNjljNzU5NDAwIFIxNDogZmZmZjhmZjY5Yzc1
+OTZhMCBSMTU6IGZmZmZmZmZmYzEwNmUxNjANCj4+IFsgICAxOS44Mjg4MDRdIEZTOiAgMDAw
+MDAwMDAwMDAwMDAwMCgwMDAwKSBHUzpmZmZmOGZmODcxZDgwMDAwKDAwMDApIGtubEdTOjAw
+MDAwMDAwMDAwMDAwMDANCj4+IFsgICAxOS44MzIyMTRdIENTOiAgMDAxMCBEUzogMDAwMCBF
+UzogMDAwMCBDUjA6IDAwMDAwMDAwODAwNTAwMzMNCj4+IFsgICAxOS44MzQ3MDldIENSMjog
+MDAwMDAwMDAwMDAwMDBhMCBDUjM6IDAwMDAwMDAxMDBiYTYwMDMgQ1I0OiAwMDAwMDAwMDAw
+MzcwNmYwDQo+PiBbICAgMTkuODM3OTc2XSBLZXJuZWwgcGFuaWMgLSBub3Qgc3luY2luZzog
+RmF0YWwgZXhjZXB0aW9uIGluIGludGVycnVwdA0KPj4gWyAgIDE5Ljg0MTgyNV0gS2VybmVs
+IE9mZnNldDogMHgyOGEwMDAwMCBmcm9tIDB4ZmZmZmZmZmY4MTAwMDAwMCAocmVsb2NhdGlv
+biByYW5nZTogMHhmZmZmZmZmZjgwMDAwMDAwLTB4ZmZmZmZmZmZiZmZmZmZmZikNCj4+IFsg
+ICAxOS44OTY2MjBdIC0tLVsgZW5kIEtlcm5lbCBwYW5pYyAtIG5vdCBzeW5jaW5nOiBGYXRh
+bCBleGNlcHRpb24gaW4gaW50ZXJydXB0IF0tLS0NCj4+DQoNCjxzbmlwPg0KDQo+IFRoZSBv
+ZmZlbmRpbmcgY29tbWl0IGFwcGVycyB0byBiZSB0aGUgYmFja3BvcnQgb2YgYjE1YjdkMmEx
+YjA5DQo+ICgidWlvX2h2X2dlbmVyaWM6IExldCB1c2Vyc3BhY2UgdGFrZSBjYXJlIG9mIGlu
+dGVycnVwdCBtYXNrIikgZm9yDQo+IDYuMTIueS4NCj4gDQo+IFBldGVyIGNvbmZpcm1lZCB0
+aGF0IHJldmVydGluZyB0aGlzIGNvbW1pdCBvbiB0b3Agb2YgNi4xMi41Ny0xIGFzDQo+IHBh
+Y2thZ2VkIGluIERlYmlhbiByZXNvbHZlcyBpbmRlZWQgdGhlIGlzc3VlLiBJbnRlcmVzdGlu
+Z2x5IHRoZSBpc3N1ZQ0KPiBpcyAqbm90KiBzZWVuIHdpdGggNi4xNy43IGJhc2VkIGtlcm5l
+bCBpbiBEZWJpYW4uDQo+IA0KPiAjcmVnemJvdCBpbnRyb2R1Y2VkOiAzN2JkOTFmMjI3OTRk
+YzA1NDM2MTMwZDY5ODMzMDJjYjkwZWNmZTdlDQo+ICNyZWd6Ym90IG1vbml0b3I6IGh0dHBz
+Oi8vYnVncy5kZWJpYW4ub3JnLzExMjA2MDINCj4gDQo+IFRoYW5rIHlvdSBhbHJlYWR5IQ0K
+PiANCj4gUmVnYXJkcywNCj4gU2FsdmF0b3JlDQoNCkhpIFBldGVyLCBTYWx2YXRvcmUsDQpU
+aGFua3MgZm9yIHJlcG9ydGluZyB0aGlzIGNyYXNoLCBhbmQgc29ycnkgZm9yIHRoZSB0cm91
+YmxlLiBIZXJlIGlzIG15IA0KYW5hbHlzaXMuDQoNCk9uIDYuMTcuNywgd2hlcmUgY29tbWl0
+IGQwNjI0NjNlZGYxNyAoInVpb19odl9nZW5lcmljOiBTZXQgZXZlbnQgZm9yIGFsbCANCmNo
+YW5uZWxzIG9uIHRoZSBkZXZpY2UiKSBpcyBwcmVzZW50LCBodl91aW9faXJxY29udHJvbCgp
+IHN1cHBvcnRzIA0Kc2V0dGluZyBvZiBpbnRlcnJ1cHQgbWFzayBmcm9tIHVzZXJzcGFjZSBm
+b3Igc3ViLWNoYW5uZWxzIGFzIHdlbGwuDQoNClRoaXMgYWxpZ25zIHdpdGggY29tbWl0IGUy
+OTU4N2MwNzUzNyAoInVpb19odl9nZW5lcmljOiBMZXQgdXNlcnNwYWNlIA0KdGFrZSBjYXJl
+IG9mIGludGVycnVwdCBtYXNrIikgd2hpY2ggcmVsaWVzIG9uIHVzZXJzcGFjZSB0byBtYW5h
+Z2UgDQppbnRlcnJ1cHQgbWFzaywgc28gaXQgc2FmZWx5IHJlbW92ZXMgdGhlIGludGVycnVw
+dCBtYXNrIG1hbmFnZW1lbnQgbG9naWMgDQppbiB0aGUgZHJpdmVyLg0KDQpIb3dldmVyLCBp
+biA2LjEyLjU3LCB0aGUgZmlyc3QgY29tbWl0IGlzIG5vdCBwcmVzZW50LCBidXQgdGhlIHNl
+Y29uZCBvbmUgDQppcywgc28gdGhlcmUgaXMgbm8gd2F5IHRvIGRpc2FibGUgaW50ZXJydXB0
+IG1hc2sgZm9yIHN1Yi1jaGFubmVscyBhbmQgDQppbnRlcnJ1cHRfbWFzayBzdGF5cyAwLCB3
+aGljaCBtZWFucyBpbnRlcnJ1cHRzIGFyZSBub3QgbWFza2VkLiBTbyB3ZSBtYXkgDQpiZSBo
+YXZpbmcgYW4gaW50ZXJydXB0IGNhbGxiYWNrIGJlaW5nIGhhbmRsZWQgZm9yIGEgc3ViLWNo
+YW5uZWwsIHdoZXJlIA0Kd2UgZG8gbm90IGV4cGVjdCBpdCB0byBjb21lLiBUaGlzIG1heSBi
+ZSBjYXVzaW5nIHRoaXMgaXNzdWUuDQoNClRoaXMgd291bGQgaGF2ZSBsZWQgdG8gYSBjcmFz
+aCBpbiBodl91aW9fY2hhbm5lbF9jYigpIGZvciBzdWItY2hhbm5lbHM6DQpzdHJ1Y3QgaHZf
+ZGV2aWNlICpodl9kZXYgPSBjaGFuLT5kZXZpY2Vfb2JqOw0KDQoNCkkgaGF2ZSBwb3J0ZWQg
+Y29tbWl0IGQwNjI0NjNlZGYxNyAoInVpb19odl9nZW5lcmljOiBTZXQgZXZlbnQgZm9yIGFs
+bCANCmNoYW5uZWxzIG9uIHRoZSBkZXZpY2UiKSBvbiA2LjEyLjU3LCBhbmQgcmVzb2x2ZWQg
+c29tZSBtZXJnZSBjb25mbGljdHMuIA0KQ291bGQgeW91IHBsZWFzZSBoZWxwIHdpdGggdGVz
+dGluZyB0aGlzLCBpZiBpdCB3b3JrcyBmb3IgeW91Lg0KDQpIaSBMb25nLA0KSWYgdGhpcyB3
+b3JrcywgZG8geW91IHNlZSBhbnkgY29uY2VybnMgaWYgSSBiYWNrLXBvcnQgeW91ciBwYXRj
+aCBvbiANCm9sZGVyIGtlcm5lbHMgKDYuMTIgYW5kIHByaW9yKT8NCg0KUmVnYXJkcywNCk5h
+bWFuDQoNCi0tLS0tLS0tLS0tLS0tDQpQYXRjaDoNCg0KIEZyb20gMmYxNGQ0OGQyYmRlM2Y4
+NmIxNTNiOWY3NTZhOWNkNjg4Y2RhMzQ1MyBNb24gU2VwIDE3IDAwOjAwOjAwIDIwMDENCkZy
+b206IExvbmcgTGkgPGxvbmdsaUBtaWNyb3NvZnQuY29tPg0KRGF0ZTogTW9uLCAxMCBNYXIg
+MjAyNSAxNToxMjowMSAtMDcwMA0KU3ViamVjdDogW1BBVENIXSB1aW9faHZfZ2VuZXJpYzog
+U2V0IGV2ZW50IGZvciBhbGwgY2hhbm5lbHMgb24gdGhlIGRldmljZQ0KDQpIeXBlci1WIG1h
+eSBvZmZlciBhIG5vbiBsYXRlbmN5IHNlbnNpdGl2ZSBkZXZpY2Ugd2l0aCBzdWJjaGFubmVs
+cyB3aXRob3V0DQptb25pdG9yIGJpdCBlbmFibGVkLiBUaGUgZGVjaXNpb24gaXMgZW50aXJl
+bHkgb24gdGhlIEh5cGVyLVYgaG9zdCBub3QNCmNvbmZpZ3VyYWJsZSB3aXRoaW4gZ3Vlc3Qu
+DQoNCldoZW4gYSBkZXZpY2UgaGFzIHN1YmNoYW5uZWxzLCBhbHNvIHNpZ25hbCBldmVudHMg
+Zm9yIHRoZSBzdWJjaGFubmVsDQppZiBpdHMgbW9uaXRvciBiaXQgaXMgZGlzYWJsZWQuDQoN
+ClRoaXMgcGF0Y2ggYWxzbyByZW1vdmVzIHRoZSBtZW1vcnkgYmFycmllciB3aGVuIG1vbml0
+b3IgYml0IGlzIGVuYWJsZWQNCmFzIGl0IGlzIG5vdCBuZWNlc3NhcnkuIFRoZSBtZW1vcnkg
+YmFycmllciBpcyBvbmx5IG5lZWRlZCBiZXR3ZWVuDQpzZXR0aW5nIHVwIGludGVycnVwdCBt
+YXNrIGFuZCBjYWxsaW5nIHZtYnVzX3NldF9ldmVudCgpIHdoZW4gbW9uaXRvcg0KYml0IGlz
+IGRpc2FibGVkLg0KDQpTaWduZWQtb2ZmLWJ5OiBMb25nIExpIDxsb25nbGlAbWljcm9zb2Z0
+LmNvbT4NClJldmlld2VkLWJ5OiBNaWNoYWVsIEtlbGxleSA8bWhrbGludXhAb3V0bG9vay5j
+b20+DQpSZXZpZXdlZC1ieTogU2F1cmFiaCBTZW5nYXIgPHNzZW5nYXJAbGludXgubWljcm9z
+b2Z0LmNvbT4NClNpZ25lZC1vZmYtYnk6IE5hbWFuIEphaW4gPG5hbWphaW5AbGludXgubWlj
+cm9zb2Z0LmNvbT4NCi0tLQ0KICBkcml2ZXJzL3Vpby91aW9faHZfZ2VuZXJpYy5jIHwgMzIg
+KysrKysrKysrKysrKysrKysrKysrKysrKystLS0tLS0NCiAgMSBmaWxlIGNoYW5nZWQsIDI2
+IGluc2VydGlvbnMoKyksIDYgZGVsZXRpb25zKC0pDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJz
+L3Vpby91aW9faHZfZ2VuZXJpYy5jIGIvZHJpdmVycy91aW8vdWlvX2h2X2dlbmVyaWMuYw0K
+aW5kZXggMGI0MTRkMTE2OGRkLi45ZjNiMTI0YTVlMDkgMTAwNjQ0DQotLS0gYS9kcml2ZXJz
+L3Vpby91aW9faHZfZ2VuZXJpYy5jDQorKysgYi9kcml2ZXJzL3Vpby91aW9faHZfZ2VuZXJp
+Yy5jDQpAQCAtNjUsNiArNjUsMTYgQEAgc3RydWN0IGh2X3Vpb19wcml2YXRlX2RhdGEgew0K
+ICAgICAgICAgY2hhciAgICBzZW5kX25hbWVbMzJdOw0KICB9Ow0KDQorc3RhdGljIHZvaWQg
+c2V0X2V2ZW50KHN0cnVjdCB2bWJ1c19jaGFubmVsICpjaGFubmVsLCBzMzIgaXJxX3N0YXRl
+KQ0KK3sNCisgICAgICAgY2hhbm5lbC0+aW5ib3VuZC5yaW5nX2J1ZmZlci0+aW50ZXJydXB0
+X21hc2sgPSAhaXJxX3N0YXRlOw0KKyAgICAgICBpZiAoIWNoYW5uZWwtPm9mZmVybXNnLm1v
+bml0b3JfYWxsb2NhdGVkICYmIGlycV9zdGF0ZSkgew0KKyAgICAgICAgICAgICAgIC8qIE1C
+IGlzIG5lZWRlZCBmb3IgaG9zdCB0byBzZWUgdGhlIGludGVycnVwdCBtYXNrIGZpcnN0ICov
+DQorICAgICAgICAgICAgICAgdmlydF9tYigpOw0KKyAgICAgICAgICAgICAgIHZtYnVzX3Nl
+dF9ldmVudChjaGFubmVsKTsNCisgICAgICAgfQ0KK30NCisNCiAgLyoNCiAgICogVGhpcyBp
+cyB0aGUgaXJxY29udHJvbCBjYWxsYmFjayB0byBiZSByZWdpc3RlcmVkIHRvIHVpb19pbmZv
+Lg0KICAgKiBJdCBjYW4gYmUgdXNlZCB0byBkaXNhYmxlL2VuYWJsZSBpbnRlcnJ1cHQgZnJv
+bSB1c2VyIHNwYWNlIHByb2Nlc3Nlcy4NCkBAIC03OSwxMiArODksMTUgQEAgaHZfdWlvX2ly
+cWNvbnRyb2woc3RydWN0IHVpb19pbmZvICppbmZvLCBzMzIgaXJxX3N0YXRlKQ0KICB7DQog
+ICAgICAgICBzdHJ1Y3QgaHZfdWlvX3ByaXZhdGVfZGF0YSAqcGRhdGEgPSBpbmZvLT5wcml2
+Ow0KICAgICAgICAgc3RydWN0IGh2X2RldmljZSAqZGV2ID0gcGRhdGEtPmRldmljZTsNCisg
+ICAgICAgc3RydWN0IHZtYnVzX2NoYW5uZWwgKnByaW1hcnksICpzYzsNCg0KLSAgICAgICBk
+ZXYtPmNoYW5uZWwtPmluYm91bmQucmluZ19idWZmZXItPmludGVycnVwdF9tYXNrID0gIWly
+cV9zdGF0ZTsNCi0gICAgICAgdmlydF9tYigpOw0KKyAgICAgICBwcmltYXJ5ID0gZGV2LT5j
+aGFubmVsOw0KKyAgICAgICBzZXRfZXZlbnQocHJpbWFyeSwgaXJxX3N0YXRlKTsNCg0KLSAg
+ICAgICBpZiAoIWRldi0+Y2hhbm5lbC0+b2ZmZXJtc2cubW9uaXRvcl9hbGxvY2F0ZWQgJiYg
+aXJxX3N0YXRlKQ0KLSAgICAgICAgICAgICAgIHZtYnVzX3NldGV2ZW50KGRldi0+Y2hhbm5l
+bCk7DQorICAgICAgIG11dGV4X2xvY2soJnZtYnVzX2Nvbm5lY3Rpb24uY2hhbm5lbF9tdXRl
+eCk7DQorICAgICAgIGxpc3RfZm9yX2VhY2hfZW50cnkoc2MsICZwcmltYXJ5LT5zY19saXN0
+LCBzY19saXN0KQ0KKyAgICAgICAgICAgICAgIHNldF9ldmVudChzYywgaXJxX3N0YXRlKTsN
+CisgICAgICAgbXV0ZXhfdW5sb2NrKCZ2bWJ1c19jb25uZWN0aW9uLmNoYW5uZWxfbXV0ZXgp
+Ow0KDQogICAgICAgICByZXR1cm4gMDsNCiAgfQ0KQEAgLTk1LDExICsxMDgsMTggQEAgaHZf
+dWlvX2lycWNvbnRyb2woc3RydWN0IHVpb19pbmZvICppbmZvLCBzMzIgaXJxX3N0YXRlKQ0K
+ICBzdGF0aWMgdm9pZCBodl91aW9fY2hhbm5lbF9jYih2b2lkICpjb250ZXh0KQ0KICB7DQog
+ICAgICAgICBzdHJ1Y3Qgdm1idXNfY2hhbm5lbCAqY2hhbiA9IGNvbnRleHQ7DQotICAgICAg
+IHN0cnVjdCBodl9kZXZpY2UgKmh2X2RldiA9IGNoYW4tPmRldmljZV9vYmo7DQotICAgICAg
+IHN0cnVjdCBodl91aW9fcHJpdmF0ZV9kYXRhICpwZGF0YSA9IGh2X2dldF9kcnZkYXRhKGh2
+X2Rldik7DQorICAgICAgIHN0cnVjdCBodl9kZXZpY2UgKmh2X2RldjsNCisgICAgICAgc3Ry
+dWN0IGh2X3Vpb19wcml2YXRlX2RhdGEgKnBkYXRhOw0KDQogICAgICAgICB2aXJ0X21iKCk7
+DQoNCisgICAgICAgLyoNCisgICAgICAgKiBUaGUgY2FsbGJhY2sgbWF5IGNvbWUgZnJvbSBh
+IHN1YmNoYW5uZWwsIGluIHdoaWNoIGNhc2UgbG9vaw0KKyAgICAgICAqIGZvciB0aGUgaHYg
+ZGV2aWNlIGluIHRoZSBwcmltYXJ5IGNoYW5uZWwNCisgICAgICAgKi8NCisgICAgICAgaHZf
+ZGV2ID0gY2hhbi0+cHJpbWFyeV9jaGFubmVsID8NCisgICAgICAgY2hhbi0+cHJpbWFyeV9j
+aGFubmVsLT5kZXZpY2Vfb2JqIDogY2hhbi0+ZGV2aWNlX29iajsNCisgICAgICAgcGRhdGEg
+PSBodl9nZXRfZHJ2ZGF0YShodl9kZXYpOw0KICAgICAgICAgdWlvX2V2ZW50X25vdGlmeSgm
+cGRhdGEtPmluZm8pOw0KICB9DQoNCi0tDQoyLjQzLjANCg==
