@@ -1,281 +1,328 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0B031DF73C
-	for <regressions@lists.linux.dev>; Sat, 15 Nov 2025 09:04:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mout.web.de (mout.web.de [212.227.15.3])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D81F6266B56;
+	Sun, 16 Nov 2025 21:09:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763197447; cv=none; b=J8GZcVR9P4fe12wRx0c2TblKF6E2wND2vU8PF5ICa36ltpglnpUozsZya7KwkUXsX8JEtfJenXWc2PKiE/nF9eRObcsXRDd1gLA+j7SPy/HWUkXYJiDa7JoT5zwHoXJ+kb2iM/oYs/Dxq5gEmNeNRL799I1mRGG2hfe+Vtf8mZE=
+	t=1763327355; cv=none; b=CCRlfMb1u3lEx+UWXhVjPuh8FI4DLqWXCMribEKgXpxldSqgiVi1a4BFzWI7PoiERtMw7XorNv8rqD3CHHVzI+pyUKunuIWYhjTzUo5eTRKMc3g+8nNTrcYrb8a+ndaV2HV2d1juWCRdy0IjGwLs9fudWcQSsnDKhbii/uQz5ig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763197447; c=relaxed/simple;
-	bh=j3Vdi/Y8ZHuq8HSVKOrQ5EpcDksisxKdCAYOZrDqsLE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LHRBhQq8VbBz2ZT1vqv4Xs0BoVmba6pAt+3otJiDEak3/cSxl4hjp3GCufIKDAjABbFWpRQr5iFpHe/R5+1xAHLmpfAHF7UMDUPWF7URm/AuIu75atwpnRuNeGC4S6/I+AoFcgKloOFYtr3MigDKv63WlZQUT72FCu0zLOKNOZ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=m54iLm2H; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1763327355; c=relaxed/simple;
+	bh=hDbzqfWxD3g3Yjt2W/La7aCBsFh6EBwI3gv4abUoYrs=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=AjKG0H7Bs6fEMm4vApLto2GEkK8DS0lkdb/hzF+WxWrc2ohqoXxbPxW1ycC9RQQMCn6hjwbp85cgLApglizMZ+FerVVOAXX0bB4BrWCBgWGk/xM2YqhD8RVmf9pQgDTff3THFDf9zfPyLFpRyBVF8Kb5Sr9pF/DOKHspYZndY0U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b=TqPLhN/E; arc=none smtp.client-ip=212.227.15.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="m54iLm2H"
-Received: from [100.79.96.58] (unknown [4.194.122.144])
-	by linux.microsoft.com (Postfix) with ESMTPSA id AD3E1201337F;
-	Sat, 15 Nov 2025 01:03:59 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com AD3E1201337F
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1763197444;
-	bh=j3Vdi/Y8ZHuq8HSVKOrQ5EpcDksisxKdCAYOZrDqsLE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=m54iLm2H7psh/ltEkj4NSbQym0W10ewgu7uRug+o6hl3vwUpIAOMDMaItVpbBcS2V
-	 8vq3ai0KAb3HVh4+GOw6jxpt1Sty9syppwMJ4IOX6u2Yhgj7eOA74m3VMtI/lfJQlW
-	 jylq60XRPhABFcLNFE8cWYKJUsxpBrZj35/55DZI=
-Message-ID: <25aff5ca-b5e1-4907-bd12-6571f8454146@linux.microsoft.com>
-Date: Sat, 15 Nov 2025 14:33:54 +0530
+	dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b="TqPLhN/E"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1763327336; x=1763932136; i=spasswolf@web.de;
+	bh=H34mB2us/ARTGeJI9/zWf+TinG8f+xy61EW5M3DNobQ=;
+	h=X-UI-Sender-Class:Message-ID:Subject:From:To:Cc:Date:In-Reply-To:
+	 References:Content-Type:MIME-Version:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=TqPLhN/Ex9Qya+ja+vKONU4PnhUh0FC1WdKYy2zHE8wGRcSz26PpzchRlKRA6/hF
+	 NbF39nGmUpckxaifKbSmJ8TNDmDF8ceqznE1gP1JrUXarI515Ud/9M0EeMpp9rhJ2
+	 S5VksJF8XZDRb5GwmSzFcxB+fRWnwTOrfv8q1iPR7XM0kqc1iF/AUa+i0PBHmHjYj
+	 vXliov0aqphWk0PEDsPfwjxMIiDicgrFuRZO4NYnw4rLPFfQ13HfonStumRR2/TIN
+	 YQ751XlBW5Avs0WIS+UE0PudFKSPnQsyK+/AB4mC8ZUGRFhpJw801KVBmtyNqnR53
+	 TTcueGCBjhoD4htExA==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.0.101] ([95.223.134.88]) by smtp.web.de (mrweb005
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1N4621-1wKman0DqL-011qDw; Sun, 16
+ Nov 2025 22:08:56 +0100
+Message-ID: <3f790ee59129e5e49dd875526cb308cc4d97b99d.camel@web.de>
+Subject: Re: Crash during resume of pcie bridge due to infinite loop in
+ ACPICA
+From: Bert Karwatzki <spasswolf@web.de>
+To: Christian =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>, "Mario
+ Limonciello (AMD) (kernel.org)"
+	 <superm1@kernel.org>, linux-kernel@vger.kernel.org
+Cc: linux-next@vger.kernel.org, regressions@lists.linux.dev, 
+	linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org, "Rafael J . Wysocki"
+	 <rafael.j.wysocki@intel.com>, spasswolf@web.de,
+ acpica-devel@lists.linux.dev,  Robert Moore <robert.moore@intel.com>
+Date: Sun, 16 Nov 2025 22:08:54 +0100
+In-Reply-To: <0719d985-1c09-4039-84c1-8736a1ca5e2d@amd.com>
+References: <20251006120944.7880-1-spasswolf@web.de>
+	 <8edcc464-c467-4e83-a93b-19b92a2cf193@kernel.org>
+	 <4903e7c36adf377bcca289dbd3528055dc6cfb32.camel@web.de>
+	 <4a8302a0-209f-446a-9825-36cb267c1718@kernel.org>
+	 <25f36fa7-d1d6-4b81-a42f-64c445d6f065@amd.com>
+	 <1853e2af7f70cf726df278137b6d2d89d9d9dc82.camel@web.de>
+	 <f18bafacbd8316c9623658e2935f8fc3b276af64.camel@web.de>
+	 <26bf82303f661cdd34e4e8c16997e33eb21d1ee4.camel@web.de>
+	 <635b6cb19b5969bed7432dfd1cd651124e63aebb.camel@web.de>
+	 <18e472a0489ee5337465d5dc26685cebaf7c4f8d.camel@web.de>
+	 <3772b8f5-6d1a-403e-ad27-99a711e78902@kernel.org>
+	 <0cb75fae3a9cdb8dd82ca82348f4df919d34844d.camel@web.de>
+	 <ab51bd58919a31107caf8f8753804cb2dbfa791d.camel@web.de>
+	 <0719d985-1c09-4039-84c1-8736a1ca5e2d@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.56.1-1+deb13u1 
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Bug#1120602: [REGRESSION 6.12.y] hyper-v: BUG: kernel NULL
- pointer dereference, address: 00000000000000a0: RIP:
- 0010:hv_uio_channel_cb+0xd/0x20 [uio_hv_generic]
-To: Salvatore Bonaccorso <carnil@debian.org>, 1120602@bugs.debian.org
-Cc: Peter Morrow <pdmorrow@gmail.com>, Long Li <longli@microsoft.com>,
- linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
- regressions@lists.linux.dev, stable@vger.kernel.org,
- John Starks <jostarks@microsoft.com>, Michael Kelley <mhklinux@outlook.com>,
- Tianyu Lan <tiala@microsoft.com>, "K. Y. Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-References: <aRYjk4JBqHvVl-wN@eldamar.lan>
- <7a38c04d-4e54-4f1a-96fd-43f0f11ab97b@linux.microsoft.com>
- <CAFcZKTwQgd9hrTaXnThML=+WG82TH3DK90FT1-WWsBSoRj7dRw@mail.gmail.com>
- <176298819854.487825.11724175116974643582.reportbug@p15v.lan>
- <18bcf829-04f9-46ec-a874-7c2b9338cf3d@linux.microsoft.com>
- <aRei1DGOWy13GqvE@eldamar.lan>
-Content-Language: en-US
-From: Naman Jain <namjain@linux.microsoft.com>
-In-Reply-To: <aRei1DGOWy13GqvE@eldamar.lan>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:5jb8xiLJso85XyLQcTc4dt4y5Sq7bFIMRmt4LVPzD9SK4tg3L5n
+ /XEyvRoMEqK5xr0VbUIM6H0IR/9xorOfvZj+FiM+eCf+gQr7MGKp7KVLVF9i2B1nUoyT6J6
+ c5JMHg+IuBBJZFDXkrW6p/n9zYUWBAYyLscq5WV93S6WEplCM2SKscUOD29HvnZMicx0mUb
+ D4dqfL6S7l0lYICNoSZoA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:lQREV7KdzKc=;qxsGyEUsWcBl2G4dSvsgqJGuuK0
+ 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
+ IrHiDGPesjfh/8zK2rmbLAvJe1iC7
 
-DQoNCk9uIDExLzE1LzIwMjUgMzoxNCBBTSwgU2FsdmF0b3JlIEJvbmFjY29yc28gd3JvdGU6
-DQo+IEhpLA0KPiANCj4gT24gRnJpLCBOb3YgMTQsIDIwMjUgYXQgMDg6MDU6NTVQTSArMDUz
-MCwgTmFtYW4gSmFpbiB3cm90ZToNCj4+DQo+Pg0KPj4gT24gMTEvMTQvMjAyNSA1OjE5IFBN
-LCBQZXRlciBNb3Jyb3cgd3JvdGU6DQo+Pj4gSGkgTmFtYW4sDQo+Pj4NCj4+PiBPbiBGcmks
-IDE0IE5vdiAyMDI1IGF0IDA2OjAzLCBOYW1hbiBKYWluIDxuYW1qYWluQGxpbnV4Lm1pY3Jv
-c29mdC5jb20+IHdyb3RlOg0KPj4+Pg0KPj4+Pg0KPj4+Pg0KPj4+PiBPbiAxMS8xMy8yMDI1
-IDExOjU5IFBNLCBTYWx2YXRvcmUgQm9uYWNjb3JzbyB3cm90ZToNCj4+Pj4+IFBldGVyIE1v
-cnJvdyByZXBvcnRlZCBpbiBEZWJpYW4gYSByZWdyZXNzaW9uLCByZXBvcnRlZCBpbg0KPj4+
-Pj4gaHR0cHM6Ly9idWdzLmRlYmlhbi5vcmcvMTEyMDYwMiAuIFRoZSByZWdyZXNzaW9uIHdh
-cyBzZWVuIGFmdGVyDQo+Pj4+PiB1cGRhdGluZywgdG8gNi4xMi41Ny0xIGluIERlYmlhbiwg
-YnV0IGRldGFpbHMgb24gdGhlIG9mZmVuZGluZyBjb21taXQNCj4+Pj4+IGZvbGxvd3MuDQo+
-Pj4+Pg0KPj4+Pj4gSGlzIHJlcG9ydCB3YXMgYXMgZm9sbG93czoNCj4+Pj4+DQo+Pj4+Pj4g
-RGVhciBNYWludGFpbmVyLA0KPj4+Pj4+DQo+Pj4+Pj4gSSdtIHNlZWluZyBhIGtlcm5lbCBj
-cmFzaCBxdWl0ZSBzb29uIGFmdGVyIGJvb3Qgb24gYSBkZWJpYW4gdHJpeGllIGJhc2VkDQo+
-Pj4+Pj4gc3lzdGVtIHJ1bm5pbmcgNi4xMi41NytkZWIxMy1hbWQ2NCwgdW5mb3J0dW5hdGVs
-eSB0aGUga2VybmVsIHBhbmljcyBiZWZvcmUNCj4+Pj4+PiBJIGNhbiBhY2Nlc3MgdGhlIHN5
-c3RlbSB0byBnYXRoZXIgbW9yZSBpbmZvcm1hdGlvbi4gVGh1cyBJJ2xsIHByb3ZpZGUgZGV0
-YWlscw0KPj4+Pj4+IG9mIHRoZSBzeXN0ZW0gdXNpbmcgYSBwcmV2aW91c2x5IGtub3duIGdv
-b2QgdmVyc2lvbi4gVGhlIHBhbmljIGlzIGhhcHBlbmluZw0KPj4+Pj4+IDEwMCUgb2YgdGhl
-IHRpbWUgdW5mb3J0dW5hdGVseS4gSSBoYXZlIGFjY2VzcyB0byB0aGUgc2VyaWFsIGNvbnNv
-bGUgaG93ZXZlcg0KPj4+Pj4+IHNvIGNhbiBlbmFibGUgYW55IHJlcXVpcmVkIHZlcmJvc2Ug
-bG9nZ2luZyBkdXJpbmcgYm9vdCBpZiBuZWNlc3NhcnkuDQo+Pj4+Pj4NCj4+Pj4+PiBDcnVj
-aWFsbHkgdGhlIGNyYXNoIGlzIG5vdCBzZWVuIHdpdGgga2VybmVsIHZlcnNpb24gNi4xMi40
-MStkZWIxMy1hbWQ2NCB3aXRoIHRoZQ0KPj4+Pj4+IHNhbWUgdXNlcnNwYWNlLiBXZSBoYWQg
-cGlubmVkIHRvIHRoYXQgdmVyc2lvbiB1bnRpbCB2ZXJ5IHJlY2VudGx5IHRvIGluIG9yZGVy
-DQo+Pj4+Pj4gdG8gd29yayBhcm91bmQgaHR0cHM6Ly9idWdzLmRlYmlhbi5vcmcvY2dpLWJp
-bi9idWdyZXBvcnQuY2dpP2J1Zz0xMTA5Njc2DQo+Pj4+Pj4NCj4+Pj4+PiBJJ20gcnVubmlu
-ZyBhIGRwZGsgYXBwbGljYXRpb24gaGVyZSAoVlBQKSBvbiBBenVyZSwgVk0gZm9ybSBmYWN0
-b3IgaXMgYQ0KPj4+Pj4+ICJTdGFuZGFyZCBEUzMgdjIgKDQgdmNwdXMsIDE0IEdpQiBtZW1v
-cnkpIi4NCj4+Pj4+Pg0KPj4+Pj4+IFRoZSBvbmx5IHJlbGV2YW50IHVwc3RyZWFtIGNvbW1p
-dCBpbiB0aGlzIGFyZWEgKGFzIGZhciBhcyBJIGNhbiBzZWUpIGlzOg0KPj4+Pj4+DQo+Pj4+
-Pj4gaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvbGludXgtaHlwZXJ2LzFiYjU5OWVlLWZlMjgt
-NDA5ZC1iNDMwLTJmYzA4NjI2ODkzNkBsaW51eC5taWNyb3NvZnQuY29tLw0KPj4+Pj4+DQo+
-Pj4+Pj4gVGhlIGNvbW1lbnQgcmVnYXJkaW5nIGF2b2lkaW5nIHJhY2VzIGF0IHN0YXJ0IGFk
-ZHMgYSBiaXQgbW9yZSB3ZWlnaHQgYmVoaW5kIHRoaXMNCj4+Pj4+PiBodW5jaCwgdGhvdWdo
-IGl0J3Mgb25seSBhIGh1bmNoIGFzIEkgYW0gbW9zdCBkZWZpbml0ZWx5IG5vd2hlcmUgbmVh
-ciBhbiBleHBlcnQNCj4+Pj4+PiBpbiB0aGlzIGFyZWEuDQo+Pj4+Pj4NCj4+Pj4+PiAtLSBQ
-YWNrYWdlLXNwZWNpZmljIGluZm86DQo+Pj4+Pj4NCj4+Pj4+PiBbICAgMTkuNjI1NTM1XSBC
-VUc6IGtlcm5lbCBOVUxMIHBvaW50ZXIgZGVyZWZlcmVuY2UsIGFkZHJlc3M6IDAwMDAwMDAw
-MDAwMDAwYTANCj4+Pj4+PiBbICAgMTkuNjI4ODc0XSAjUEY6IHN1cGVydmlzb3IgcmVhZCBh
-Y2Nlc3MgaW4ga2VybmVsIG1vZGUNCj4+Pj4+PiBbICAgMTkuNjMwODQxXSAjUEY6IGVycm9y
-X2NvZGUoMHgwMDAwKSAtIG5vdC1wcmVzZW50IHBhZ2UNCj4+Pj4+PiBbICAgMTkuNjMyNzg4
-XSBQR0QgMCBQNEQgMA0KPj4+Pj4+IFsgICAxOS42MzM5MDVdIE9vcHM6IE9vcHM6IDAwMDAg
-WyMxXSBQUkVFTVBUIFNNUCBQVEkNCj4+Pj4+PiBbICAgMTkuNjM1NTg2XSBDUFU6IDMgVUlE
-OiAwIFBJRDogMCBDb21tOiBzd2FwcGVyLzMgTm90IHRhaW50ZWQgNi4xMi41NytkZWIxMy1h
-bWQ2NCAjMSAgRGViaWFuIDYuMTIuNTctMQ0KPj4+Pj4+IFsgICAxOS42NDAyMTZdIEhhcmR3
-YXJlIG5hbWU6IE1pY3Jvc29mdCBDb3Jwb3JhdGlvbiBWaXJ0dWFsIE1hY2hpbmUvVmlydHVh
-bCBNYWNoaW5lLCBCSU9TIEh5cGVyLVYgVUVGSSBSZWxlYXNlIHY0LjEgMDkvMjgvMjAyNA0K
-Pj4+Pj4+IFsgICAxOS42NDQ1MTRdIFJJUDogMDAxMDpodl91aW9fY2hhbm5lbF9jYisweGQv
-MHgyMCBbdWlvX2h2X2dlbmVyaWNdDQo+Pj4+Pj4gWyAgIDE5LjY0Njk5NF0gQ29kZTogMDIg
-MDAgMDAgNWIgNWQgZTkgNTMgOTggNjkgZTkgMGYgMWYgMDAgOTAgOTAgOTAgOTAgOTAgOTAg
-OTAgOTAgOTAgOTAgOTAgOTAgOTAgOTAgOTAgOTAgZjMgMGYgMWUgZmEgMGYgMWYgNDQgMDAg
-MDAgNDggOGIgNDcgMTAgPDQ4PiA4YiBiOCBhMCAwMCAwMCAwMCBmMCA4MyA0NCAyNCBmYyAw
-MCBlOSA1MSA2ZiBmYSBmZiA5MCA5MCA5MCA5MA0KPj4+Pj4+IFsgICAxOS42NTQzNzddIFJT
-UDogMDAxODpmZmZmYjE1YWMwMWE0ZmE4IEVGTEFHUzogMDAwMTAwNDYNCj4+Pj4+PiBbICAg
-MTkuNjU2Mzg1XSBSQVg6IDAwMDAwMDAwMDAwMDAwMDAgUkJYOiAwMDAwMDAwMDAwMDAwMDE1
-IFJDWDogMDAwMDAwMDAwMDAwMDAxNQ0KPj4+Pj4+IFsgICAxOS42NTkyNDBdIFJEWDogMDAw
-MDAwMDAwMDAwMDAwMSBSU0k6IGZmZmZmZmZmZmZmZmZmZmYgUkRJOiBmZmZmOGZmNjljNzU5
-NDAwDQo+Pj4+Pj4gWyAgIDE5LjY2MjE2OF0gUkJQOiBmZmZmOGZmNTQ4NzkwMjAwIFIwODog
-ZmZmZjhmZjU0ODc5MDIwMCBSMDk6IDAwZmNhNzUxNTBiMDgwZTkNCj4+Pj4+PiBbICAgMTku
-NjY1MjM5XSBSMTA6IDAwMDAwMDAwMDAwMDAwMDAgUjExOiBmZmZmYjE1YWMwMWE0ZmY4IFIx
-MjogZmZmZjhmZjg3MWRjMTQ4MA0KPj4+Pj4+IFsgICAxOS42NjgxOTNdIFIxMzogZmZmZjhm
-ZjY5Yzc1OTQwMCBSMTQ6IGZmZmY4ZmY2OWM3NTk2YTAgUjE1OiBmZmZmZmZmZmMxMDZlMTYw
-DQo+Pj4+Pj4gWyAgIDE5LjY3MTEwNl0gRlM6ICAwMDAwMDAwMDAwMDAwMDAwKDAwMDApIEdT
-OmZmZmY4ZmY4NzFkODAwMDAoMDAwMCkga25sR1M6MDAwMDAwMDAwMDAwMDAwMA0KPj4+Pj4+
-IFsgICAxOS42NzQyODFdIENTOiAgMDAxMCBEUzogMDAwMCBFUzogMDAwMCBDUjA6IDAwMDAw
-MDAwODAwNTAwMzMNCj4+Pj4+PiBbICAgMTkuNjc2NTMzXSBDUjI6IDAwMDAwMDAwMDAwMDAw
-YTAgQ1IzOiAwMDAwMDAwMTAwYmE2MDAzIENSNDogMDAwMDAwMDAwMDM3MDZmMA0KPj4+Pj4+
-IFsgICAxOS42NzkzODVdIENhbGwgVHJhY2U6DQo+Pj4+Pj4gWyAgIDE5LjY4MDM2MV0gIDxJ
-UlE+DQo+Pj4+Pj4gWyAgIDE5LjY4MTE4MV0gIHZtYnVzX2lzcisweDFhNS8weDIxMCBbaHZf
-dm1idXNdDQo+Pj4+Pj4gWyAgIDE5LjY4MjkxNl0gIF9fc3lzdmVjX2h5cGVydl9jYWxsYmFj
-aysweDMyLzB4NjANCj4+Pj4+PiBbICAgMTkuNjg0OTkxXSAgc3lzdmVjX2h5cGVydl9jYWxs
-YmFjaysweDZjLzB4OTANCj4+Pj4+PiBbICAgMTkuNjg2NjY1XSAgPC9JUlE+DQo+Pj4+Pj4g
-WyAgIDE5LjY4NzUwOV0gIDxUQVNLPg0KPj4+Pj4+IFsgICAxOS42ODgzNjZdICBhc21fc3lz
-dmVjX2h5cGVydl9jYWxsYmFjaysweDFhLzB4MjANCj4+Pj4+PiBbICAgMTkuNjkwMjYyXSBS
-SVA6IDAwMTA6cHZfbmF0aXZlX3NhZmVfaGFsdCsweGYvMHgyMA0KPj4+Pj4+IFsgICAxOS42
-OTIwNjddIENvZGU6IDA5IGU5IGM1IDA4IDAxIDAwIDBmIDFmIDQ0IDAwIDAwIDkwIDkwIDkw
-IDkwIDkwIDkwIDkwIDkwIDkwIDkwIDkwIDkwIDkwIDkwIDkwIDkwIGYzIDBmIDFlIGZhIDY2
-IDkwIDBmIDAwIDJkIGU1IDNiIDMxIDAwIGZiIGY0IDxjMz4gY2MgY2MgY2MgY2MgNjYgNjYg
-MmUgMGYgMWYgODQgMDAgMDAgMDAgMDAgMDAgOTAgOTAgOTAgOTAgOTAgOTANCj4+Pj4+PiBb
-ICAgMTkuNjk5MTE5XSBSU1A6IDAwMTg6ZmZmZmIxNWFjMDEwM2VkOCBFRkxBR1M6IDAwMDAw
-MjQ2DQo+Pj4+Pj4gWyAgIDE5LjcwMTQxMl0gUkFYOiAwMDAwMDAwMDAwMDAwMDAzIFJCWDog
-ZmZmZjhmZjU0MDNiMWZjMCBSQ1g6IGZmZmY4ZmY1NGM2NGNlMzANCj4+Pj4+PiBbICAgMTku
-NzA0MzI4XSBSRFg6IDAwMDAwMDAwMDAwMDAwMDAgUlNJOiAwMDAwMDAwMDAwMDAwMDAzIFJE
-STogMDAwMDAwMDAwMDAxZjg5NA0KPj4+Pj4+IFsgICAxOS43MDY5MTBdIFJCUDogMDAwMDAw
-MDAwMDAwMDAwMyBSMDg6IDAwMDAwMDAwMGJiNzYwZDkgUjA5OiAwMGZjYTc1MTUwYjA4MGU5
-DQo+Pj4+Pj4gWyAgIDE5LjcwOTc2Ml0gUjEwOiAwMDAwMDAwMDAwMDAwMDAzIFIxMTogMDAw
-MDAwMDAwMDAwMDAwMSBSMTI6IDAwMDAwMDAwMDAwMDAwMDANCj4+Pj4+PiBbICAgMTkuNzEy
-NTEwXSBSMTM6IDAwMDAwMDAwMDAwMDAwMDAgUjE0OiAwMDAwMDAwMDAwMDAwMDAwIFIxNTog
-MDAwMDAwMDAwMDAwMDAwMA0KPj4+Pj4+IFsgICAxOS43MTUxNzNdICBkZWZhdWx0X2lkbGUr
-MHg5LzB4MjANCj4+Pj4+PiBbICAgMTkuNzE2ODQ2XSAgZGVmYXVsdF9pZGxlX2NhbGwrMHgy
-OS8weDEwMA0KPj4+Pj4+IFsgICAxOS43MTg2MjNdICBkb19pZGxlKzB4MWZlLzB4MjQwDQo+
-Pj4+Pj4gWyAgIDE5LjcyMDA0NV0gIGNwdV9zdGFydHVwX2VudHJ5KzB4MjkvMHgzMA0KPj4+
-Pj4+IFsgICAxOS43MjE1OTVdICBzdGFydF9zZWNvbmRhcnkrMHgxMWUvMHgxNDANCj4+Pj4+
-PiBbICAgMTkuNzIzMDgwXSAgY29tbW9uX3N0YXJ0dXBfNjQrMHgxM2UvMHgxNDENCj4+Pj4+
-PiBbICAgMTkuNzI1MjIyXSAgPC9UQVNLPg0KPj4+Pj4+IFsgICAxOS43MjYzODddIE1vZHVs
-ZXMgbGlua2VkIGluOiBpc29mcyBjZHJvbSB1aW9faHZfZ2VuZXJpYyB1aW8gYmluZm10X21p
-c2MgaW50ZWxfcmFwbF9tc3IgaW50ZWxfcmFwbF9jb21tb24gaW50ZWxfdW5jb3JlX2ZyZXF1
-ZW5jeV9jb21tb24gaXNzdF9pZl9tYm94X21zciBpc3N0X2lmX2NvbW1vbiBycGNyZG1hIHNr
-eF9lZGFjX2NvbW1vbiBuZml0IHN1bnJwYyBsaWJudmRpbW0gY3JjdDEwZGlmX3BjbG11bCBn
-aGFzaF9jbG11bG5pX2ludGVsIHNoYTUxMl9zc3NlMyBzaGEyNTZfc3NzZTMgcmRtYV91Y20g
-aWJfaXNlciBzaGExX3Nzc2UzIHJkbWFfY20gYWVzbmlfaW50ZWwgaXdfY20gZ2YxMjhtdWwg
-Y3J5cHRvX3NpbWQgbGliaXNjc2kgY3J5cHRkIGliX3VtYWQgaWJfaXBvaWIgc2NzaV90cmFu
-c3BvcnRfaXNjc2kgaWJfY20gcmFwbCBzZyBodl91dGlscyBodl9iYWxsb29uIGV2ZGV2IHBj
-c3BrciBqb3lkZXYgbXBsc19yb3V0ZXIgaXBfdHVubmVsIHJhbW9vcHMgY29uZmlnZnMgcHN0
-b3JlX2JsayBlZmlfcHN0b3JlIHBzdG9yZV96b25lIG5mbmV0bGluayB2c29ja19sb29wYmFj
-ayB2bXdfdnNvY2tfdmlydGlvX3RyYW5zcG9ydF9jb21tb24gaHZfc29jayB2bXdfdnNvY2tf
-dm1jaV90cmFuc3BvcnQgdnNvY2sgdm13X3ZtY2kgZWZpdmFyZnMgaXBfdGFibGVzIHhfdGFi
-bGVzIGF1dG9mczQgb3ZlcmxheSBzcXVhc2hmcyBkbV92ZXJpdHkgZG1fYnVmaW8gcmVlZF9z
-b2xvbW9uIGRtX21vZCBsb29wIGV4dDQgY3JjMTYgbWJjYWNoZSBqYmQyIGNyYzMyY19nZW5l
-cmljIG1seDVfaWIgaWJfdXZlcmJzIGliX2NvcmUgbWx4NV9jb3JlIG1seGZ3IHBjaV9oeXBl
-cnYgcGNpX2h5cGVydl9pbnRmIGh5cGVydl9kcm0gZHJtX3NobWVtX2hlbHBlciBzZF9tb2Qg
-ZHJtX2ttc19oZWxwZXIgaHZfc3RvcnZzYyBzY3NpX3RyYW5zcG9ydF9mYyBkcm0gc2NzaV9t
-b2QgaGlkX2dlbmVyaWMgaGlkX2h5cGVydiBoaWQgc2VyaW9fcmF3IGh2X25ldHZzYyBoeXBl
-cnZfa2V5Ym9hcmQgc2NzaV9jb21tb24gaHZfdm1idXMNCj4+Pj4+PiBbICAgMTkuNzI2NDY2
-XSAgY3JjMzJfcGNsbXVsIGNyYzMyY19pbnRlbA0KPj4+Pj4+IFsgICAxOS43NjU3NzFdIENS
-MjogMDAwMDAwMDAwMDAwMDBhMA0KPj4+Pj4+IFsgICAxOS43Njc1MjRdIC0tLVsgZW5kIHRy
-YWNlIDAwMDAwMDAwMDAwMDAwMDAgXS0tLQ0KPj4+Pj4+IFsgICAxOS44MDA0MzNdIFJJUDog
-MDAxMDpodl91aW9fY2hhbm5lbF9jYisweGQvMHgyMCBbdWlvX2h2X2dlbmVyaWNdDQo+Pj4+
-Pj4gWyAgIDE5LjgwMzE3MF0gQ29kZTogMDIgMDAgMDAgNWIgNWQgZTkgNTMgOTggNjkgZTkg
-MGYgMWYgMDAgOTAgOTAgOTAgOTAgOTAgOTAgOTAgOTAgOTAgOTAgOTAgOTAgOTAgOTAgOTAg
-OTAgZjMgMGYgMWUgZmEgMGYgMWYgNDQgMDAgMDAgNDggOGIgNDcgMTAgPDQ4PiA4YiBiOCBh
-MCAwMCAwMCAwMCBmMCA4MyA0NCAyNCBmYyAwMCBlOSA1MSA2ZiBmYSBmZiA5MCA5MCA5MCA5
-MA0KPj4+Pj4+IFsgICAxOS44MTEwNDFdIFJTUDogMDAxODpmZmZmYjE1YWMwMWE0ZmE4IEVG
-TEFHUzogMDAwMTAwNDYNCj4+Pj4+PiBbICAgMTkuODEzNDY2XSBSQVg6IDAwMDAwMDAwMDAw
-MDAwMDAgUkJYOiAwMDAwMDAwMDAwMDAwMDE1IFJDWDogMDAwMDAwMDAwMDAwMDAxNQ0KPj4+
-Pj4+IFsgICAxOS44MTY1MDRdIFJEWDogMDAwMDAwMDAwMDAwMDAwMSBSU0k6IGZmZmZmZmZm
-ZmZmZmZmZmYgUkRJOiBmZmZmOGZmNjljNzU5NDAwDQo+Pj4+Pj4gWyAgIDE5LjgxOTQ4NF0g
-UkJQOiBmZmZmOGZmNTQ4NzkwMjAwIFIwODogZmZmZjhmZjU0ODc5MDIwMCBSMDk6IDAwZmNh
-NzUxNTBiMDgwZTkNCj4+Pj4+PiBbICAgMTkuODIyNjI1XSBSMTA6IDAwMDAwMDAwMDAwMDAw
-MDAgUjExOiBmZmZmYjE1YWMwMWE0ZmY4IFIxMjogZmZmZjhmZjg3MWRjMTQ4MA0KPj4+Pj4+
-IFsgICAxOS44MjU1NjldIFIxMzogZmZmZjhmZjY5Yzc1OTQwMCBSMTQ6IGZmZmY4ZmY2OWM3
-NTk2YTAgUjE1OiBmZmZmZmZmZmMxMDZlMTYwDQo+Pj4+Pj4gWyAgIDE5LjgyODgwNF0gRlM6
-ICAwMDAwMDAwMDAwMDAwMDAwKDAwMDApIEdTOmZmZmY4ZmY4NzFkODAwMDAoMDAwMCkga25s
-R1M6MDAwMDAwMDAwMDAwMDAwMA0KPj4+Pj4+IFsgICAxOS44MzIyMTRdIENTOiAgMDAxMCBE
-UzogMDAwMCBFUzogMDAwMCBDUjA6IDAwMDAwMDAwODAwNTAwMzMNCj4+Pj4+PiBbICAgMTku
-ODM0NzA5XSBDUjI6IDAwMDAwMDAwMDAwMDAwYTAgQ1IzOiAwMDAwMDAwMTAwYmE2MDAzIENS
-NDogMDAwMDAwMDAwMDM3MDZmMA0KPj4+Pj4+IFsgICAxOS44Mzc5NzZdIEtlcm5lbCBwYW5p
-YyAtIG5vdCBzeW5jaW5nOiBGYXRhbCBleGNlcHRpb24gaW4gaW50ZXJydXB0DQo+Pj4+Pj4g
-WyAgIDE5Ljg0MTgyNV0gS2VybmVsIE9mZnNldDogMHgyOGEwMDAwMCBmcm9tIDB4ZmZmZmZm
-ZmY4MTAwMDAwMCAocmVsb2NhdGlvbiByYW5nZTogMHhmZmZmZmZmZjgwMDAwMDAwLTB4ZmZm
-ZmZmZmZiZmZmZmZmZikNCj4+Pj4+PiBbICAgMTkuODk2NjIwXSAtLS1bIGVuZCBLZXJuZWwg
-cGFuaWMgLSBub3Qgc3luY2luZzogRmF0YWwgZXhjZXB0aW9uIGluIGludGVycnVwdCBdLS0t
-DQo+Pj4+Pj4NCj4+Pj4NCj4+Pj4gPHNuaXA+DQo+Pj4+DQo+Pj4+PiBUaGUgb2ZmZW5kaW5n
-IGNvbW1pdCBhcHBlcnMgdG8gYmUgdGhlIGJhY2twb3J0IG9mIGIxNWI3ZDJhMWIwOQ0KPj4+
-Pj4gKCJ1aW9faHZfZ2VuZXJpYzogTGV0IHVzZXJzcGFjZSB0YWtlIGNhcmUgb2YgaW50ZXJy
-dXB0IG1hc2siKSBmb3INCj4+Pj4+IDYuMTIueS4NCj4+Pj4+DQo+Pj4+PiBQZXRlciBjb25m
-aXJtZWQgdGhhdCByZXZlcnRpbmcgdGhpcyBjb21taXQgb24gdG9wIG9mIDYuMTIuNTctMSBh
-cw0KPj4+Pj4gcGFja2FnZWQgaW4gRGViaWFuIHJlc29sdmVzIGluZGVlZCB0aGUgaXNzdWUu
-IEludGVyZXN0aW5nbHkgdGhlIGlzc3VlDQo+Pj4+PiBpcyAqbm90KiBzZWVuIHdpdGggNi4x
-Ny43IGJhc2VkIGtlcm5lbCBpbiBEZWJpYW4uDQo+Pj4+Pg0KPj4+Pj4gI3JlZ3pib3QgaW50
-cm9kdWNlZDogMzdiZDkxZjIyNzk0ZGMwNTQzNjEzMGQ2OTgzMzAyY2I5MGVjZmU3ZQ0KPj4+
-Pj4gI3JlZ3pib3QgbW9uaXRvcjogaHR0cHM6Ly9idWdzLmRlYmlhbi5vcmcvMTEyMDYwMg0K
-Pj4+Pj4NCj4+Pj4+IFRoYW5rIHlvdSBhbHJlYWR5IQ0KPj4+Pj4NCj4+Pj4+IFJlZ2FyZHMs
-DQo+Pj4+PiBTYWx2YXRvcmUNCj4+Pj4NCj4+Pj4gSGkgUGV0ZXIsIFNhbHZhdG9yZSwNCj4+
-Pj4gVGhhbmtzIGZvciByZXBvcnRpbmcgdGhpcyBjcmFzaCwgYW5kIHNvcnJ5IGZvciB0aGUg
-dHJvdWJsZS4gSGVyZSBpcyBteQ0KPj4+PiBhbmFseXNpcy4NCj4+Pj4NCj4+Pj4gT24gNi4x
-Ny43LCB3aGVyZSBjb21taXQgZDA2MjQ2M2VkZjE3ICgidWlvX2h2X2dlbmVyaWM6IFNldCBl
-dmVudCBmb3IgYWxsDQo+Pj4+IGNoYW5uZWxzIG9uIHRoZSBkZXZpY2UiKSBpcyBwcmVzZW50
-LCBodl91aW9faXJxY29udHJvbCgpIHN1cHBvcnRzDQo+Pj4+IHNldHRpbmcgb2YgaW50ZXJy
-dXB0IG1hc2sgZnJvbSB1c2Vyc3BhY2UgZm9yIHN1Yi1jaGFubmVscyBhcyB3ZWxsLg0KPj4+
-Pg0KPj4+PiBUaGlzIGFsaWducyB3aXRoIGNvbW1pdCBlMjk1ODdjMDc1MzcgKCJ1aW9faHZf
-Z2VuZXJpYzogTGV0IHVzZXJzcGFjZQ0KPj4+PiB0YWtlIGNhcmUgb2YgaW50ZXJydXB0IG1h
-c2siKSB3aGljaCByZWxpZXMgb24gdXNlcnNwYWNlIHRvIG1hbmFnZQ0KPj4+PiBpbnRlcnJ1
-cHQgbWFzaywgc28gaXQgc2FmZWx5IHJlbW92ZXMgdGhlIGludGVycnVwdCBtYXNrIG1hbmFn
-ZW1lbnQgbG9naWMNCj4+Pj4gaW4gdGhlIGRyaXZlci4NCj4+Pj4NCj4+Pj4gSG93ZXZlciwg
-aW4gNi4xMi41NywgdGhlIGZpcnN0IGNvbW1pdCBpcyBub3QgcHJlc2VudCwgYnV0IHRoZSBz
-ZWNvbmQgb25lDQo+Pj4+IGlzLCBzbyB0aGVyZSBpcyBubyB3YXkgdG8gZGlzYWJsZSBpbnRl
-cnJ1cHQgbWFzayBmb3Igc3ViLWNoYW5uZWxzIGFuZA0KPj4+PiBpbnRlcnJ1cHRfbWFzayBz
-dGF5cyAwLCB3aGljaCBtZWFucyBpbnRlcnJ1cHRzIGFyZSBub3QgbWFza2VkLiBTbyB3ZSBt
-YXkNCj4+Pj4gYmUgaGF2aW5nIGFuIGludGVycnVwdCBjYWxsYmFjayBiZWluZyBoYW5kbGVk
-IGZvciBhIHN1Yi1jaGFubmVsLCB3aGVyZQ0KPj4+PiB3ZSBkbyBub3QgZXhwZWN0IGl0IHRv
-IGNvbWUuIFRoaXMgbWF5IGJlIGNhdXNpbmcgdGhpcyBpc3N1ZS4NCj4+Pj4NCj4+Pj4gVGhp
-cyB3b3VsZCBoYXZlIGxlZCB0byBhIGNyYXNoIGluIGh2X3Vpb19jaGFubmVsX2NiKCkgZm9y
-IHN1Yi1jaGFubmVsczoNCj4+Pj4gc3RydWN0IGh2X2RldmljZSAqaHZfZGV2ID0gY2hhbi0+
-ZGV2aWNlX29iajsNCj4+Pj4NCj4+Pj4NCj4+Pj4gSSBoYXZlIHBvcnRlZCBjb21taXQgZDA2
-MjQ2M2VkZjE3ICgidWlvX2h2X2dlbmVyaWM6IFNldCBldmVudCBmb3IgYWxsDQo+Pj4+IGNo
-YW5uZWxzIG9uIHRoZSBkZXZpY2UiKSBvbiA2LjEyLjU3LCBhbmQgcmVzb2x2ZWQgc29tZSBt
-ZXJnZSBjb25mbGljdHMuDQo+Pj4+IENvdWxkIHlvdSBwbGVhc2UgaGVscCB3aXRoIHRlc3Rp
-bmcgdGhpcywgaWYgaXQgd29ya3MgZm9yIHlvdS4NCj4+Pg0KPj4+IEFwcGx5aW5nIHRoZSBw
-YXRjaCBhZ2FpbnN0IHRoZSBkZWJpYW4gNi4xMi41NyBrZXJuZWwgd29ya2VkLCBJIGFtIG5v
-DQo+Pj4gbG9uZ2VyIHNlZWluZyB0aGF0IHBhbmljIG9uIGJvb3Q6DQo+Pj4NCj4+PiBnbm9z
-QHZFZGdlOn4kIHVuYW1lIC1hDQo+Pj4gTGludXggdkVkZ2UgNi4xMit1bnJlbGVhc2VkLWFt
-ZDY0ICMxIFNNUCBQUkVFTVBUX0RZTkFNSUMgRGViaWFuDQo+Pj4gNi4xMi41Ny0xYX50ZXN0
-ICgyMDI1LTExLTE0KSB4ODZfNjQgR05VL0xpbnV4DQo+Pj4gZ25vc0B2RWRnZTp+JCB1cHRp
-bWUNCj4+PiAgICAxMTo0NjozMyB1cCA0IG1pbiwgIDEgdXNlciwgIGxvYWQgYXZlcmFnZTog
-My4zMSwgMi4wNywgMC44OQ0KPj4+IGdub3NAdkVkZ2U6fiQgc3VkbyBkbWlkZWNvZGUgLXQg
-c3lzdGVtDQo+Pj4gIyBkbWlkZWNvZGUgMy42DQo+Pj4gR2V0dGluZyBTTUJJT1MgZGF0YSBm
-cm9tIHN5c2ZzLg0KPj4+IFNNQklPUyAzLjEuMCBwcmVzZW50Lg0KPj4+DQo+Pj4gSGFuZGxl
-IDB4MDAwMSwgRE1JIHR5cGUgMSwgMjcgYnl0ZXMNCj4+PiBTeXN0ZW0gSW5mb3JtYXRpb24N
-Cj4+PiAgICAgICAgICAgTWFudWZhY3R1cmVyOiBNaWNyb3NvZnQgQ29ycG9yYXRpb24NCj4+
-PiAgICAgICAgICAgUHJvZHVjdCBOYW1lOiBWaXJ0dWFsIE1hY2hpbmUNCj4+PiAgICAgICAg
-ICAgVmVyc2lvbjogSHlwZXItViBVRUZJIFJlbGVhc2UgdjQuMQ0KPj4+ICAgICAgICAgICBT
-ZXJpYWwgTnVtYmVyOiAwMDAwLTAwMDItODAzNi0xMTA4LTc1ODgtMzEzNC01MA0KPj4+ICAg
-ICAgICAgICBVVUlEOiAyNmU4NmQ2ZS0xNDBjLTQ5NmEtODYyYy1hM2IzYmJjZDE2YWQNCj4+
-PiAgICAgICAgICAgV2FrZS11cCBUeXBlOiBQb3dlciBTd2l0Y2gNCj4+PiAgICAgICAgICAg
-U0tVIE51bWJlcjogTm9uZQ0KPj4+ICAgICAgICAgICBGYW1pbHk6IFZpcnR1YWwgTWFjaGlu
-ZQ0KPj4+DQo+Pj4gSGFuZGxlIDB4MDAxMCwgRE1JIHR5cGUgMzIsIDExIGJ5dGVzDQo+Pj4g
-U3lzdGVtIEJvb3QgSW5mb3JtYXRpb24NCj4+PiAgICAgICAgICAgU3RhdHVzOiBObyBlcnJv
-cnMgZGV0ZWN0ZWQNCj4+Pg0KPj4+IGdub3NAdkVkZ2U6fiQNCj4+Pg0KPj4+IFRoYW5rcyBh
-IGxvdCBmb3IgdGhlIHF1aWNrIGFuYWx5c2lzIQ0KPj4+DQo+Pj4gUGV0ZXIuDQo+Pg0KPj4g
-SGkgUGV0ZXIsDQo+Pg0KPj4gVGhhbmtzIGZvciBjb25maXJtaW5nLiBJIGFtIGRpc2N1c3Np
-bmcgdGhpcyB3aXRoIExvbmcgTGksIHRvIGhlYXIgaGlzDQo+PiB0aG91Z2h0cyBvbiB0aGlz
-LCBhbmQgaGF2ZSBrZXB0IHRoZSBwYXRjaCByZWFkeS4NCj4+IFBvcnRpbmcgdGhlIHNhbWUg
-b24gNi42IGFuZCBvbGRlciBrZXJuZWxzIHdvdWxkIGJlIGEgbGl0dGxlIGRpZmZlcmVudCBz
-aW5jZQ0KPj4gd2UgZG9uJ3QgaGF2ZSBjb21taXQgNTQ3ZmE0ZmZkNzk5ICgidWlvX2h2X2dl
-bmVyaWM6IEVuYWJsZSBpbnRlcnJ1cHQgZm9yIGxvdw0KPj4gc3BlZWQgVk1CdXMgZGV2aWNl
-cyIpIG9uIHRoZXNlIGtlcm5lbHMgYW5kIHRoaXMgd291bGQgbGVhZCB0byBtZXJnZQ0KPj4g
-Y29uZmxpY3RzLCB3aGljaCBuZWVkcyB0byBiZSBoYW5kbGVkIHNlcGFyYXRlbHkuDQo+Pg0K
-Pj4gTWVhbndoaWxlLCBpZiBJIHNob3VsZCBiZSBpbmNsdWRpbmcgYW55IHRhZ3MgaW4gdGhl
-IGZpeCBwYXRjaCBmb3IgZGViaWFuDQo+PiBidWcsIHBsZWFzZSBsZXQgbWUga25vdy4NCj4g
-DQo+IFRoYW5rIHlvdSB2ZXJ5IG11Y2ggZm9yIHRoZSBxdWljayBhbmFseXNpcyBhbmQgZml4
-Lg0KPiANCj4gSWYgeW91IGNhbiBhZGQgYSBDbG9zZXM6IGh0dHBzOi8vYnVncy5kZWJpYW4u
-b3JnLzExMjA2MDIgdGhhdCB3b3VsZA0KPiBtYWtlIG91ciB0cmFja2luZyBmb3IgdGhlIGZp
-eGVzIGVhc2llci4gQnV0IG5vdCBzdXJlIGlmIHRoaXMgaXMNCj4gYWxsb3dlZCBmb3IgcHJv
-cG9zaW5nIHRoZSBiYWNrcG9ydCBmb3IgYSBzdGFibGUgc2VyaWVzLCBhcyBpdCBkaWQgbm90
-DQo+IGFmZmVjdCB0aGUgdXBwZXIgcmVsZWFzZXMuDQo+IA0KPiBJbiBhbnkgY2FzZSB5b3Vy
-IHdvcmsgaXMgbXVjaCBhcHByZWNpYXRlZCENCj4gDQo+IFJlZ2FyZHMsDQo+IFNhbHZhdG9y
-ZQ0KDQpIaSwNCkkgaGF2ZSBzZW50IHRoZSBwYXRjaGVzIG5vdyB0byB0aGUgbGlzdC4gUGxl
-YXNlIGNvbnNpZGVyIGFkZGluZyB5b3VyIA0KdGVzdGVkLWJ5IGlmIHlvdSBmaW5kIGl0IGFs
-cmlnaHQuDQoNClRoYW5rcy4NCg0KUmVnYXJkcywNCk5hbWFuDQo=
+Am Montag, dem 10.11.2025 um 14:33 +0100 schrieb Christian K=C3=B6nig:
+> Hi Bert,
+>=20
+> well sorry to say that but from your dumps it looks more and more like y=
+ou just have faulty HW.
+>=20
+> An SMU response of 0xFFFFFFFF means that the device has spontaneously fa=
+llen of the bus while trying to resume it.
+>=20
+> My educated guess is that this is caused by a faulty power management, b=
+ut basically it could be anything.
+>=20
+> Regards,
+> Christian.
+
+I think there may be more than one error here. The loss of the GPU (with S=
+MU respone log message) may be caused
+by faulty hardware but does not cause "the" crash (i.e. the crash which sh=
+owed no log messages and was so hard
+one of my nvme devices was missing temporarily afterward, and which caused=
+ me to investigate this in the first place ...).
+
+As bisection of the crash is impossible I went back to inserting printk()s=
+ into acpi_power_transition() and the
+functions called by it. To reduce log spam I created _debug suffixed copie=
+s of the original functions.
+The code is found here in branch amdgpu_suspend_resume:
+https://gitlab.freedesktop.org/spasswolf/linux-stable/-/commits/amdgpu_sus=
+pend_resume?ref_type=3Dheads
+(Should I post the debug patches to the list?)
+
+The last two commits finally cleared up what happens (but I've yet to find=
+ out why this happens).
+
+6.14.0-debug-00014-g2e933c56f3b6	booted 20:17, 15.11.2025 crashed 0:50, 16=
+.11.2025
+					(~4.5h, 518 GPP0 events, 393 GPU resumes)
+
+The interesting part of the instrumented code is this:
+
+acpi_status acpi_ps_parse_aml_debug(struct acpi_walk_state *walk_state)
+{
+	[...]
+	printk(KERN_INFO "%s: before walk loop\n", __func__);
+	while (walk_state) {
+		if (ACPI_SUCCESS(status)) {
+			/*
+			 * The parse_loop executes AML until the method terminates
+			 * or calls another method.
+			 */
+			status =3D acpi_ps_parse_loop(walk_state);
+		}
+	[...]
+	}
+	printk(KERN_INFO "%s: after walk loop\n", __func__);
+	[...]
+}
+
+This gives the following message in netconsole
+1. No crash:
+2025-11-16T00:50:35.634745+01:00 10.0.0.1 6,21514,16419759755,-,caller=3DT=
+59901;acpi_ps_execute_method_debug 329
+2025-11-16T00:50:35.634745+01:00 10.0.0.1 6,21515,16419759781,-,caller=3DT=
+59901;acpi_ps_parse_aml_debug: before walk loop
+2025-11-16T00:50:35.921210+01:00 10.0.0.1 6,21516,16420046219,-,caller=3DT=
+59901;acpi_ps_parse_aml_debug: after walk loop
+2025-11-16T00:50:35.921210+01:00 10.0.0.1 6,21517,16420046231,-,caller=3DT=
+59901;acpi_ps_execute_method_debug 331
+2025-11-16T00:50:35.921210+01:00 10.0.0.1 6,21518,16420046235,-,caller=3DT=
+59901;acpi_ns_evaluate_debug 475 METHOD
+2025-11-16T00:50:35.921210+01:00 10.0.0.1 6,21519,16420046240,-,caller=3DT=
+59901;acpi_evaluate_object_debug 255
+2025-11-16T00:50:35.921210+01:00 10.0.0.1 6,21520,16420046244,-,caller=3DT=
+59901;__acpi_power_on_debug 369
+2025-11-16T00:50:35.921210+01:00 10.0.0.1 6,21521,16420046248,-,caller=3DT=
+59901;acpi_power_on_unlocked_debug 446
+2025-11-16T00:50:35.921210+01:00 10.0.0.1 6,21522,16420046251,-,caller=3DT=
+59901;acpi_power_on_debug 471
+2025-11-16T00:50:35.921210+01:00 10.0.0.1 6,21523,16420046255,-,caller=3DT=
+59901;acpi_power_on_list_debug 642: result =3D 0
+Resume successful, normal messages from resuming GPU follow.
+
+2. Crash:
+2025-11-16T00:50:46.483555+01:00 10.0.0.1 6,21566,16430609060,-,caller=3DT=
+59702;acpi_ps_execute_method_debug 329
+2025-11-16T00:50:46.483555+01:00 10.0.0.1 6,21567,16430609083,-,caller=3DT=
+59702;acpi_ps_parse_aml_debug: before walk loop
+No more messages via netconsole due to crash.
+
+So here we can already say that the main loop in acpi_ps_parse_aml_debug()=
+ is not finishing properly.
+
+The next step is to put monitoring inside the loop:
+
+6.14.0-debug-00015-gc09fd8dd0492	booted 12:09, 16.11.2025 crashed 19:55, 1=
+6.11.2025=20
+					(~8h, 1539 GPP0 events, 587 GPU resumes) "infinite" walk loop
+
+The interesting part of the instrumented code is this:
+
+acpi_status acpi_ps_parse_aml_debug(struct acpi_walk_state *walk_state)
+{
+	[...]
+	printk(KERN_INFO "%s: before walk loop\n", __func__);
+	while (walk_state) {
+		if (ACPI_SUCCESS(status)) {
+			/*
+			 * The parse_loop executes AML until the method terminates
+			 * or calls another method.
+			 */
+			printk(KERN_INFO "%s: before parse loop\n", __func__);
+			status =3D acpi_ps_parse_loop(walk_state);
+			printk(KERN_INFO "%s: after parse loop\n", __func__);
+		}
+	[...]
+	}
+	printk(KERN_INFO "%s: after walk loop\n", __func__);
+	[...]
+}
+
+This gives the following message in netconsole
+1. No crash:
+2025-11-16T19:55:54.203765+01:00 localhost 6,5479352,28054924877,-,caller=
+=3DT5967;acpi_ps_execute_method_debug 329
+2025-11-16T19:55:54.203765+01:00 localhost 6,5479353,28054924889,-,caller=
+=3DT5967;acpi_ps_parse_aml_debug: before walk loop
+The next two lines are repeated 1500-1700 times (it varies a little ...):
+2025-11-16T19:55:54.203765+01:00 localhost 6,5479354,28054924894,-,caller=
+=3DT5967;acpi_ps_parse_aml_debug: before parse loop
+2025-11-16T19:55:54.203765+01:00 localhost 6,5479355,28054924908,-,caller=
+=3DT5967;acpi_ps_parse_aml_debug: after parse loop
+
+2025-11-16T19:55:54.498216+01:00 localhost 6,5482288,28055219778,-,caller=
+=3DT5967;acpi_ps_parse_aml_debug: after walk loop
+2025-11-16T19:55:54.498216+01:00 localhost 6,5482289,28055219782,-,caller=
+=3DT5967;acpi_ps_execute_method_debug 331
+2025-11-16T19:55:54.498233+01:00 localhost 6,5482290,28055219786,-,caller=
+=3DT5967;acpi_ns_evaluate_debug 475 METHOD
+2025-11-16T19:55:54.498233+01:00 localhost 6,5482291,28055219791,-,caller=
+=3DT5967;acpi_evaluate_object_debug 255
+2025-11-16T19:55:54.498233+01:00 localhost 6,5482292,28055219795,-,caller=
+=3DT5967;__acpi_power_on_debug 369
+2025-11-16T19:55:54.498247+01:00 localhost 6,5482293,28055219799,-,caller=
+=3DT5967;acpi_power_on_unlocked_debug 446
+2025-11-16T19:55:54.498247+01:00 localhost 6,5482294,28055219802,-,caller=
+=3DT5967;acpi_power_on_debug 471
+2025-11-16T19:55:54.498247+01:00 localhost 6,5482295,28055219806,-,caller=
+=3DT5967;acpi_power_on_list_debug 642: result =3D 0
+Resume successful, normal messages from resuming GPU follow.
+
+2. Crash:
+2025-11-16T19:56:24.213495+01:00 localhost 6,5483042,28084932950,-,caller=
+=3DT5967;acpi_ps_execute_method_debug 329
+2025-11-16T19:56:24.213495+01:00 localhost 6,5483043,28084932965,-,caller=
+=3DT5967;acpi_ps_parse_aml_debug: before walk loop
+The next two lines are repeated more than 30000 times, then the transmitio=
+n stops due to the crash:
+2025-11-16T19:56:24.213495+01:00 localhost 6,5483044,28084932971,-,caller=
+=3DT5967;acpi_ps_parse_aml_debug: before parse loop
+2025-11-16T19:56:24.213495+01:00 localhost 6,5483045,28084932991,-,caller=
+=3DT5967;acpi_ps_parse_aml_debug: after parse loop
+No more messages via netconsole due to crash.
+
+So there is some kind of infinite recursion happening inside the loop in a=
+cpi_ps_parse_aml(). Even if there is some kind
+of error in the hardware this shouldn't happen, I think.
+
+This bug is present in every kernel version I've tested so far, that is 6.=
+12.x, 6.13.x, 6.14.x,
+6.15.x, 6.16.x, 6.17.x (here I only tested the release candidates). 6.18 h=
+as not been tested, yet.
+
+To get to this result took several months of 24/7 test runs, I hope resolv=
+ing this will
+be faster.
+
+Bert Karwatzki
