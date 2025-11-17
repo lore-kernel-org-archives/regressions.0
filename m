@@ -1,150 +1,162 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC6D127F727;
-	Mon, 17 Nov 2025 10:55:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F8F32459E5
+	for <regressions@lists.linux.dev>; Mon, 17 Nov 2025 15:27:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.84.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763376910; cv=none; b=mMnv9Inn7MR4TRKZmY7dl3jRvvKoX/XY94Drs5TMEHo7uRhIaA7fFUfyTaOVyUXxlPQ4/A3w7Aj2coVn1uINgkzUuwDjHnkNfDJqDaIDzR8QwM5/FwtG0n/+vnDsrL6V/4iFn3eM/J1JToSa816TgfqOkOC/myAMOAFe8b4kCco=
+	t=1763393259; cv=none; b=lqvU7AZSBXBRPGtEHBA0Lrkj4C+MJoEWg7iRLrFUTW5pwMVlKEYe9yGqjciJCdx2rVxsD3aaXEUZTgoP/dYbk5iwwpv4sScEiXiSQd0NwwrWGNcCjS4N0BYXimG3uCl341rWfCBIdDWpWvBqMN2taCkdfWGE6tXAsFUEw8qhQeU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763376910; c=relaxed/simple;
-	bh=2M0VkDnbNmQIejDbk40Ml2CazfkhW08KtcbopHNqyRw=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=Ru7tpAUuJ9wh09ue9QTO841x/rp3z/ocqH/6pSiFmVNr9+3hqIMNYUNgZu9IRlpmj88rt1YhKHaaQlT+/YJGRQIXXxgnXET4MRZAGGJn5+lM7DEkq+6B3rP3j+gwb2uCjoaV7fjCHcSlxX82zfjSZOwV7Gg7bccqT+xa0xemrl0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=wavMCK8O; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1763393259; c=relaxed/simple;
+	bh=yChAV3bLel1GwytrsC+IHbIIM2M1SlkMv3zbZl14Px4=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
+	 References:In-Reply-To; b=c8FHIiCxBkvcdVNVnT/LI+itW0OWvBNNCrj9Vd6ft4/WUWAW6AAd0IIlxbq88YhPThd0ZibfEBdgbLy6PBuKpo7wUt9xik7nz81XbdtgA9vQ7XmLFwJk7wSMR1IMbTDhDv/GdpK40P27HZ+bxYXffWk3qqWgn7irgBjFxBDRhjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=0jhgLIOz; arc=none smtp.client-ip=185.246.84.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="wavMCK8O"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:References:Cc:To:From:Subject:MIME-Version:Date:Message-ID:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=Gl5RJ+7Dhd6fFyeukfLeCRYTOZJp99ZMSn6T+FzFquQ=; t=1763376908;
-	x=1763808908; b=wavMCK8OExNT1H0ZcGVJ286EFT8BVBCqOH4cziCUSjcmS1/iJF5Qc0iWJxV0k
-	cM8wfGO0P4ILb8wcrTil1VcMhUwoQK+Zpl09BpGjP1Q6urAE5xW8WXwhZVbDz3B57IGiu4/+rgA8R
-	DattGFjYf3ruO1QUfPrcmLQc9JI1mxzAiuUUD68vmUWi+YM90VUUKU28Ka4ahb1ztQukDBDj36jHJ
-	jk2bSHsABpDm5mbbR/si/wm8Ot1oxo6e2VizdOuG+tCdeTG/wLWuwkAF908yl9NqLvL3ebdvya2GU
-	tikXkrOssVNuasZNaxe9cMzQjuSIn/8Lu83wa3TJPkkn+DxMOQ==;
-Received: from [2a02:8108:8984:1d00:a0cf:1912:4be:477f]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128)
-	id 1vKwsw-005RES-2v;
-	Mon, 17 Nov 2025 11:55:02 +0100
-Message-ID: <a03739b9-3a54-4ecb-b55f-6aaa69da3fc6@leemhuis.info>
-Date: Mon, 17 Nov 2025 11:55:01 +0100
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="0jhgLIOz"
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-02.galae.net (Postfix) with ESMTPS id 238311A1B76;
+	Mon, 17 Nov 2025 15:27:35 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id EAEC2606B9;
+	Mon, 17 Nov 2025 15:27:34 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 4D86E10371CC2;
+	Mon, 17 Nov 2025 16:27:28 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1763393253; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=Qza+sSnR16rEwDN4TZWSsp4tVqYbXvmlssiq0pPiU0E=;
+	b=0jhgLIOzE2EQRz/BAhDap8Brk+vUxlvBy9aybvl1wSw4XI/P48bbzL2oKoKnosE9ytT/90
+	/nyU233GSt/x+A/DBwGhPgHQKDJ8FvyX5WrQntv2wSfL5yCtbIg5/FHwqkj6yeaYNkN1mx
+	QGO8oZLR+v5Fozw84GpuCXvbENnEeNXxeiHlCB3y+cjOqTKsnxS64f5qgQoyMDFNqrM2zX
+	KoypUJf2/NnTYfWV23NHDxen/OW7pSelXfXV86/BwldZwLwunZ1iGAhPr2HfYgnl5BHazj
+	LTPeTPOxSYeBtMwabsyfaKj7D1BQa+93aDe69+IwS0m+5looOvbWMSQupJszqQ==
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] Bluetooth adapter provided by `btusb` not recognized
- since v6.13.2
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: incogcyberpunk@proton.me, "stable@vger.kernel.org"
- <stable@vger.kernel.org>
-Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- "marcel@holtmann.org" <marcel@holtmann.org>,
- "luiz.dentz@gmail.com" <luiz.dentz@gmail.com>,
- "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
- "johan.hedberg@gmail.com" <johan.hedberg@gmail.com>,
- "sean.wang@mediatek.com" <sean.wang@mediatek.com>
-References: <jOB6zqCC3xjlPPJXwPYPb4MxHJOhxVgp380ayP7lYq-aT2iA5D8YCdMeCvq5Cp_ICZmqjpfgX8o9siQdlPu9DY4qgnL_zCjgqP23fXc-P4U=@proton.me>
- <1b59d3c2-1ed0-40df-a3ba-cca2316e866b@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <1b59d3c2-1ed0-40df-a3ba-cca2316e866b@leemhuis.info>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1763376908;58f027ff;
-X-HE-SMSGID: 1vKwsw-005RES-2v
+Date: Mon, 17 Nov 2025 16:27:28 +0100
+Message-Id: <DEB2QIR2RB1C.3IQC9WYGAUVZC@bootlin.com>
+Subject: Re: [REGRESSION] TI SN65DSI83 is being reset making display to
+ blink On/Off
+Cc: =?utf-8?q?Jo=C3=A3o_Paulo_Gon=C3=A7alves?=
+ <jpaulo.silvagoncalves@gmail.com>, "Andrzej Hajda"
+ <andrzej.hajda@intel.com>, "Neil Armstrong" <neil.armstrong@linaro.org>,
+ "Robert Foss" <rfoss@kernel.org>, "Laurent Pinchart"
+ <Laurent.pinchart@ideasonboard.com>, "Jonas Karlman" <jonas@kwiboo.se>,
+ "Jernej Skrabec" <jernej.skrabec@gmail.com>, "Maarten Lankhorst"
+ <maarten.lankhorst@linux.intel.com>, "Maxime Ripard" <mripard@kernel.org>,
+ "Thomas Zimmermann" <tzimmermann@suse.de>, "David Airlie"
+ <airlied@gmail.com>, "Simona Vetter" <simona@ffwll.ch>, "Tomi Valkeinen"
+ <tomi.valkeinen@ideasonboard.com>,
+ =?utf-8?q?Jo=C3=A3o_Paulo_Gon=C3=A7alves?= <joao.goncalves@toradex.com>,
+ <linux-kernel@vger.kernel.org>, <regressions@lists.linux.dev>,
+ <thomas.petazzoni@bootlin.com>
+To: "Francesco Dolcini" <francesco@dolcini.it>, "Herve Codina"
+ <herve.codina@bootlin.com>
+From: "Luca Ceresoli" <luca.ceresoli@bootlin.com>
+X-Mailer: aerc 0.20.1
+References: <bhkn6hley4xrol5o3ytn343h4unkwsr26p6s6ltcwexnrsjsdx@mgkdf6ztow42> <20251113084950.44a09e8e@bootlin.com> <20251113091910.GA15538@francesco-nb>
+In-Reply-To: <20251113091910.GA15538@francesco-nb>
+X-Last-TLS-Session-Version: TLSv1.3
 
-On 11/17/25 10:42, Thorsten Leemhuis wrote:
-> On 11/17/25 02:30, incogcyberpunk@proton.me wrote:
->>
->> #regzbot introduced: v6.13.1..v6.13.2
->>
->> Distro: Arch Linux 
->> Kernel: since v6.13.2
-> 
-> Lo! Thx for the report. It's unlikely that any developer will look into
-> this report[1] as 6.13.y is ancient by kernel development standards and
-> EOL for quite a while.
-> 
-> Please check if the latest stable version is still affected; if it is,
-> ideally try latest mainline (6.18-rc6), too. If that is as well, it
-> would be great if you could bisect between 6.13.1 and 6.13.2.
+Hello Jo=C3=A3o, Francesco,
 
-TWIMC, IncogCyberpunk replied in private to me and wrote:
+On Thu Nov 13, 2025 at 10:19 AM CET, Francesco Dolcini wrote:
+> On Thu, Nov 13, 2025 at 08:49:50AM +0100, Herve Codina wrote:
+>> On Mon, 10 Nov 2025 16:03:51 -0300
+>> Jo=C3=A3o Paulo Gon=C3=A7alves <jpaulo.silvagoncalves@gmail.com> wrote:
+>> > After commit ad5c6ecef27e ("drm: bridge: ti-sn65dsi83: Add error
+>> > recovery mechanism"), our DSI display stopped working correctly. The
+>> > display internally uses a TI SN65DSI83 to convert DSI-to-LVDS, and wit=
+h
+>> > the change, it keeps blinking on and off because the bridge is being
+>> > reset by the error recovery mechanism.
+>> >
+>> > Even before the change, it was possible to see the message below from
+>> > the driver indicating that the bridge's internal PLL was not locked
+>> > (register 0xE5, bit 0 in [1]):
+>> >
+>> > [ 11.198616] sn65dsi83 2-002c: Unexpected link status 0x01
+>> >
+>> > However, it was working. After the change, it stopped working. Masking
+>> > the PLL error makes it work again:
+>> >
+>> > diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi83.c b/drivers/gpu/drm/b=
+ridge/ti-sn65dsi83.c
+>> > index 033c44326552..89a0a2ab45b1 100644
+>> > --- a/drivers/gpu/drm/bridge/ti-sn65dsi83.c
+>> > +++ b/drivers/gpu/drm/bridge/ti-sn65dsi83.c
+>> > @@ -429,7 +429,7 @@ static void sn65dsi83_handle_errors(struct sn65dsi=
+83 *ctx)
+>> >          */
+>> >
+>> >         ret =3D regmap_read(ctx->regmap, REG_IRQ_STAT, &irq_stat);
+>> > -       if (ret || irq_stat) {
+>> > +       if (ret || (irq_stat & ~REG_IRQ_STAT_CHA_PLL_UNLOCK)) {
+>> >                 /*
+>> >                  * IRQ acknowledged is not always possible (the bridge=
+ can be in
+>> >                  * a state where it doesn't answer anymore). To preven=
+t an
+>> >
+>> > Any suggestions on how to proceed here?
+>> >
+>> > #regzbot introduced: ad5c6ecef27e
+>> >
+>> > [1] https://www.ti.com/lit/ds/symlink/sn65dsi83.pdf
+>> >
+>>
+>> The PLL should be locked.
+>>
+>> Also in the datasheet, in 'Table 7-2. Initialization Sequence', the stat=
+us
+>> is checked at the end of the initialization sequence and the sequence ha=
+s to
+>> be done again when the status register value is not 0x00.
+>>
+>> Even before monitoring (irq or polling method), you have an issue with y=
+our PLL
+>> mentioned with the "sn65dsi83 2-002c: Unexpected link status 0x01" messa=
+ge.
+>>
+>> I don't understand even how your panel can be correctly driven with the =
+bridge
+>> PLL unlock.
+>
+> We'll try to figure out the reason and see what's the best path forward.
+>
+> Whatever was the reason it was working before, and it should stay
+> working
 
-"""
-Sorry, if I was not clear but, the problem persists in both the stable
-(v6.17.8) and the latest mainline (v6.18-rc6) linux kernels as of Nov 2025
-"""
+I agree with Herv=C3=A9 that using the chip with an unlocked PLL looks dang=
+erous
+and totally out of spec. So I encourage you to investigate what is going on
+in the hardware looking for the root cause, checking whether the PLL is
+really unlocked and how to get it working properly.
 
-Please reply in public next time. And no problem, but quite a few people
-write "since v6.13.2" and only mean later 6.13 versions, that's why I asked.
+The driver should be definitely be written focusing on the nominal case and
+handle out-of-spec cases as an exception, not the other way around.
 
-You might want to provide the logs from 6.18-rc6. Then feel free to wait
-two or three days to see if a developer replies. If not, please bisect
-the problem between 6.13.1 and 6.13.2 – and then try if reverting the
-culprit in mainline fixes the problem (if it's possible to revert it
-there easily). For details, see:
-https://docs.kernel.org/admin-guide/verify-bugs-and-bisect-regressions.html
+I also agree your hardware should not stop working when upgrading to a new
+kernel, so this investigation would ideally nail down tha root cause and
+point to a solution in a very short time.
 
-HTH, ciao, Thorsten
+Herv=C3=A9 has matured quite some experience on SN65DSI84 error management,
+leading to his error recovery patch, and I also have a board with that chip
+on my desk. So we may be helpful in discussion, as well as reviewing and
+testing patches.
 
->> The bluetooth adapter would be recognized and the bluetooth worked
->> flawlessly till v6.13.1 , but since the v6.13.2 , the bluetooth adapter
->> doesn't get recognized by the bluetooth service and therefore the
->> bluetooth functionality doesn't work . 
->>
->> I suspect the bluetooth's driver failing to load at the kernel-level. 
->>
->>   * The output of |bluetoothctl|​ :
->>
->> $: bluetoothctl
->> Agent registered
->> [bluetoothctl]> list
->> [bluetoothctl]> devices
->> No default controller available
->> [bluetoothctl]>
->>
->>   * The output of |systemctl status bluetooth.service|​ :
->>
->> ● bluetooth.service - Bluetooth service
->>      Loaded: loaded (/usr/lib/systemd/system/bluetooth.service; enabled;
->> preset: disabled)
->>      Active: active (running) since Sat 2025-11-15 22:57:00 +0545; 1 day
->> 8h ago
->>  Invocation: bddf190655fd4a4290d41cde594f2efa
->>        Docs: man:bluetoothd(8)
->>    Main PID: 617 (bluetoothd)
->>      Status: "Running"
->>       Tasks: 1 (limit: 18701)
->>      Memory: 2.8M (peak: 3.8M)
->>         CPU: 38ms
->>      CGroup: /system.slice/bluetooth.service
->>              └─617 /usr/lib/bluetooth/bluetoothd
->>
->> Nov 15 22:57:00 Incog systemd[1]: Starting Bluetooth service...
->> Nov 15 22:57:00 Incog bluetoothd[617]: Bluetooth daemon 5.84
->> Nov 15 22:57:00 Incog systemd[1]: Started Bluetooth service.
->> Nov 15 22:57:00 Incog bluetoothd[617]: Starting SDP server
->> Nov 15 22:57:00 Incog bluetoothd[617]: Bluetooth management interface
->> 1.23 initialized
->>
->>   * The output of |lspci|​ is attached below . 
->>
->>   * The logs for |journalctl -b|​ for both v6.13.1 and v6.13.2 are
->>     attached below. 
->>
->>
->> Regards,
->> IncogCyberpunk
->>
-> 
-> 
-> 
+Best regards,
+Luca
 
+--
+Luca Ceresoli, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
