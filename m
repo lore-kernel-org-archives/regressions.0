@@ -1,38 +1,38 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8927326D51;
-	Mon, 17 Nov 2025 09:42:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC6D127F727;
+	Mon, 17 Nov 2025 10:55:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763372537; cv=none; b=RBiX2OmaPp0w1y/WiSOhgzLtqGq3G3hTPv4In0iZZ58+xz1OuRcIB/AT4kBYtY5hvqIAoGCV4U+Tpiqprdwk3TolOOor8odqpjtHuReGtHCb6DjNZRhfc2zSFuhF45hSxCet0phq15wB1qKyDPyl7G2VI5Wi4gZw7x1y4CuMVI8=
+	t=1763376910; cv=none; b=mMnv9Inn7MR4TRKZmY7dl3jRvvKoX/XY94Drs5TMEHo7uRhIaA7fFUfyTaOVyUXxlPQ4/A3w7Aj2coVn1uINgkzUuwDjHnkNfDJqDaIDzR8QwM5/FwtG0n/+vnDsrL6V/4iFn3eM/J1JToSa816TgfqOkOC/myAMOAFe8b4kCco=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763372537; c=relaxed/simple;
-	bh=+lDX5repbVwAgSSpxEPe8Ggrw67h+ua6KeXvVwqhAvA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KH1tx5K7KVoguyWAnL0sledbZrLkGaON1XiRI1pRzn/1xgVvt79DPS/vJ2AtkDn1VROJzc+qRh7eqPWyrndU6KVX9wzMtRMb9fpbpmBNQQ7243fRJ31OnPHnAoxT7XpZBrVwZIn8OCIxA6hkAP7morLQLNavbHT/76+mFoZp86A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=z9YWdbBP; arc=none smtp.client-ip=80.237.130.52
+	s=arc-20240116; t=1763376910; c=relaxed/simple;
+	bh=2M0VkDnbNmQIejDbk40Ml2CazfkhW08KtcbopHNqyRw=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=Ru7tpAUuJ9wh09ue9QTO841x/rp3z/ocqH/6pSiFmVNr9+3hqIMNYUNgZu9IRlpmj88rt1YhKHaaQlT+/YJGRQIXXxgnXET4MRZAGGJn5+lM7DEkq+6B3rP3j+gwb2uCjoaV7fjCHcSlxX82zfjSZOwV7Gg7bccqT+xa0xemrl0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=wavMCK8O; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="z9YWdbBP"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="wavMCK8O"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
+	In-Reply-To:References:Cc:To:From:Subject:MIME-Version:Date:Message-ID:From:
 	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
 	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=5FRGOs0emlTmc51RdE5KM9BmjBcn2zfRmynLjSXyid8=; t=1763372535;
-	x=1763804535; b=z9YWdbBPsUG40dPREbc9ZGK05KxKpl3FiicJ/d3rtuvj9HY4II4FtovqWZ1FV
-	VSHJ2FYYfLCqkJmlzEZlorPL3DpN3c6/SPZchvS2zVM3Ajgi+IyISeQYPZ7yfuxBw7vpReW/CtekP
-	lRx/lrjrqG03d7JDqF87fCRzlD/fNJIe0L6lwXk2MKGN9m+egD4DJSLsHLWg4gucyjJV1YvemeMUN
-	FAwZKhWfnbYmcXAEAgHj1/1yp+Iao7DSwovW4bCmRj3ThMzeM8eEgWe9KMVKXm2AVPvPWTc6nAG+R
-	3bCD4eVo3RMyOUt/HyZm7D/h+vLIouG00SJ5wmMnFyugfV/r6A==;
+	References; bh=Gl5RJ+7Dhd6fFyeukfLeCRYTOZJp99ZMSn6T+FzFquQ=; t=1763376908;
+	x=1763808908; b=wavMCK8OExNT1H0ZcGVJ286EFT8BVBCqOH4cziCUSjcmS1/iJF5Qc0iWJxV0k
+	cM8wfGO0P4ILb8wcrTil1VcMhUwoQK+Zpl09BpGjP1Q6urAE5xW8WXwhZVbDz3B57IGiu4/+rgA8R
+	DattGFjYf3ruO1QUfPrcmLQc9JI1mxzAiuUUD68vmUWi+YM90VUUKU28Ka4ahb1ztQukDBDj36jHJ
+	jk2bSHsABpDm5mbbR/si/wm8Ot1oxo6e2VizdOuG+tCdeTG/wLWuwkAF908yl9NqLvL3ebdvya2GU
+	tikXkrOssVNuasZNaxe9cMzQjuSIn/8Lu83wa3TJPkkn+DxMOQ==;
 Received: from [2a02:8108:8984:1d00:a0cf:1912:4be:477f]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128)
-	id 1vKvkM-005HvH-0f;
-	Mon, 17 Nov 2025 10:42:06 +0100
-Message-ID: <1b59d3c2-1ed0-40df-a3ba-cca2316e866b@leemhuis.info>
-Date: Mon, 17 Nov 2025 10:42:05 +0100
+	id 1vKwsw-005RES-2v;
+	Mon, 17 Nov 2025 11:55:02 +0100
+Message-ID: <a03739b9-3a54-4ecb-b55f-6aaa69da3fc6@leemhuis.info>
+Date: Mon, 17 Nov 2025 11:55:01 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -42,6 +42,7 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [REGRESSION] Bluetooth adapter provided by `btusb` not recognized
  since v6.13.2
+From: Thorsten Leemhuis <regressions@leemhuis.info>
 To: incogcyberpunk@proton.me, "stable@vger.kernel.org"
  <stable@vger.kernel.org>
 Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
@@ -51,81 +52,99 @@ Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
  "johan.hedberg@gmail.com" <johan.hedberg@gmail.com>,
  "sean.wang@mediatek.com" <sean.wang@mediatek.com>
 References: <jOB6zqCC3xjlPPJXwPYPb4MxHJOhxVgp380ayP7lYq-aT2iA5D8YCdMeCvq5Cp_ICZmqjpfgX8o9siQdlPu9DY4qgnL_zCjgqP23fXc-P4U=@proton.me>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
+ <1b59d3c2-1ed0-40df-a3ba-cca2316e866b@leemhuis.info>
 Content-Language: de-DE, en-US
-In-Reply-To: <jOB6zqCC3xjlPPJXwPYPb4MxHJOhxVgp380ayP7lYq-aT2iA5D8YCdMeCvq5Cp_ICZmqjpfgX8o9siQdlPu9DY4qgnL_zCjgqP23fXc-P4U=@proton.me>
+In-Reply-To: <1b59d3c2-1ed0-40df-a3ba-cca2316e866b@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1763372535;dec64b74;
-X-HE-SMSGID: 1vKvkM-005HvH-0f
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1763376908;58f027ff;
+X-HE-SMSGID: 1vKwsw-005RES-2v
 
-On 11/17/25 02:30, incogcyberpunk@proton.me wrote:
+On 11/17/25 10:42, Thorsten Leemhuis wrote:
+> On 11/17/25 02:30, incogcyberpunk@proton.me wrote:
+>>
+>> #regzbot introduced: v6.13.1..v6.13.2
+>>
+>> Distro: Arch Linux 
+>> Kernel: since v6.13.2
 > 
-> #regzbot introduced: v6.13.1..v6.13.2
+> Lo! Thx for the report. It's unlikely that any developer will look into
+> this report[1] as 6.13.y is ancient by kernel development standards and
+> EOL for quite a while.
 > 
-> Distro: Arch Linux 
-> Kernel: since v6.13.2
+> Please check if the latest stable version is still affected; if it is,
+> ideally try latest mainline (6.18-rc6), too. If that is as well, it
+> would be great if you could bisect between 6.13.1 and 6.13.2.
 
-Lo! Thx for the report. It's unlikely that any developer will look into
-this report[1] as 6.13.y is ancient by kernel development standards and
-EOL for quite a while.
+TWIMC, IncogCyberpunk replied in private to me and wrote:
 
-Please check if the latest stable version is still affected; if it is,
-ideally try latest mainline (6.18-rc6), too. If that is as well, it
-would be great if you could bisect between 6.13.1 and 6.13.2.
+"""
+Sorry, if I was not clear but, the problem persists in both the stable
+(v6.17.8) and the latest mainline (v6.18-rc6) linux kernels as of Nov 2025
+"""
 
-Ciao, Thorsten
+Please reply in public next time. And no problem, but quite a few people
+write "since v6.13.2" and only mean later 6.13 versions, that's why I asked.
 
-[1] see also:
-https://linux-regtracking.leemhuis.info/post/frequent-reasons-why-linux-kernel-bug-reports-are-ignored/
+You might want to provide the logs from 6.18-rc6. Then feel free to wait
+two or three days to see if a developer replies. If not, please bisect
+the problem between 6.13.1 and 6.13.2 – and then try if reverting the
+culprit in mainline fixes the problem (if it's possible to revert it
+there easily). For details, see:
+https://docs.kernel.org/admin-guide/verify-bugs-and-bisect-regressions.html
 
-> The bluetooth adapter would be recognized and the bluetooth worked
-> flawlessly till v6.13.1 , but since the v6.13.2 , the bluetooth adapter
-> doesn't get recognized by the bluetooth service and therefore the
-> bluetooth functionality doesn't work . 
+HTH, ciao, Thorsten
+
+>> The bluetooth adapter would be recognized and the bluetooth worked
+>> flawlessly till v6.13.1 , but since the v6.13.2 , the bluetooth adapter
+>> doesn't get recognized by the bluetooth service and therefore the
+>> bluetooth functionality doesn't work . 
+>>
+>> I suspect the bluetooth's driver failing to load at the kernel-level. 
+>>
+>>   * The output of |bluetoothctl|​ :
+>>
+>> $: bluetoothctl
+>> Agent registered
+>> [bluetoothctl]> list
+>> [bluetoothctl]> devices
+>> No default controller available
+>> [bluetoothctl]>
+>>
+>>   * The output of |systemctl status bluetooth.service|​ :
+>>
+>> ● bluetooth.service - Bluetooth service
+>>      Loaded: loaded (/usr/lib/systemd/system/bluetooth.service; enabled;
+>> preset: disabled)
+>>      Active: active (running) since Sat 2025-11-15 22:57:00 +0545; 1 day
+>> 8h ago
+>>  Invocation: bddf190655fd4a4290d41cde594f2efa
+>>        Docs: man:bluetoothd(8)
+>>    Main PID: 617 (bluetoothd)
+>>      Status: "Running"
+>>       Tasks: 1 (limit: 18701)
+>>      Memory: 2.8M (peak: 3.8M)
+>>         CPU: 38ms
+>>      CGroup: /system.slice/bluetooth.service
+>>              └─617 /usr/lib/bluetooth/bluetoothd
+>>
+>> Nov 15 22:57:00 Incog systemd[1]: Starting Bluetooth service...
+>> Nov 15 22:57:00 Incog bluetoothd[617]: Bluetooth daemon 5.84
+>> Nov 15 22:57:00 Incog systemd[1]: Started Bluetooth service.
+>> Nov 15 22:57:00 Incog bluetoothd[617]: Starting SDP server
+>> Nov 15 22:57:00 Incog bluetoothd[617]: Bluetooth management interface
+>> 1.23 initialized
+>>
+>>   * The output of |lspci|​ is attached below . 
+>>
+>>   * The logs for |journalctl -b|​ for both v6.13.1 and v6.13.2 are
+>>     attached below. 
+>>
+>>
+>> Regards,
+>> IncogCyberpunk
+>>
 > 
-> I suspect the bluetooth's driver failing to load at the kernel-level. 
 > 
->   * The output of |bluetoothctl|​ :
-> 
-> $: bluetoothctl
-> Agent registered
-> [bluetoothctl]> list
-> [bluetoothctl]> devices
-> No default controller available
-> [bluetoothctl]>
-> 
->   * The output of |systemctl status bluetooth.service|​ :
-> 
-> ● bluetooth.service - Bluetooth service
->      Loaded: loaded (/usr/lib/systemd/system/bluetooth.service; enabled;
-> preset: disabled)
->      Active: active (running) since Sat 2025-11-15 22:57:00 +0545; 1 day
-> 8h ago
->  Invocation: bddf190655fd4a4290d41cde594f2efa
->        Docs: man:bluetoothd(8)
->    Main PID: 617 (bluetoothd)
->      Status: "Running"
->       Tasks: 1 (limit: 18701)
->      Memory: 2.8M (peak: 3.8M)
->         CPU: 38ms
->      CGroup: /system.slice/bluetooth.service
->              └─617 /usr/lib/bluetooth/bluetoothd
-> 
-> Nov 15 22:57:00 Incog systemd[1]: Starting Bluetooth service...
-> Nov 15 22:57:00 Incog bluetoothd[617]: Bluetooth daemon 5.84
-> Nov 15 22:57:00 Incog systemd[1]: Started Bluetooth service.
-> Nov 15 22:57:00 Incog bluetoothd[617]: Starting SDP server
-> Nov 15 22:57:00 Incog bluetoothd[617]: Bluetooth management interface
-> 1.23 initialized
-> 
->   * The output of |lspci|​ is attached below . 
-> 
->   * The logs for |journalctl -b|​ for both v6.13.1 and v6.13.2 are
->     attached below. 
-> 
-> 
-> Regards,
-> IncogCyberpunk
 > 
 
