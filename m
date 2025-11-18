@@ -1,207 +1,178 @@
-Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0023035CB7E
-	for <regressions@lists.linux.dev>; Tue, 18 Nov 2025 14:45:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 742103002C6;
+	Tue, 18 Nov 2025 16:56:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763477112; cv=none; b=BnxWhSaJh11HIVlI7eOrHXQKWt/MBoNaAmnYs7+cdNQBf7Ba27kUZ7Ex/v1l2qS5ATSv2/3/0vFx7Jv6bCoxKpcACZErNgZdvK4xLKSIKte/CSD02MV6dh2qP4hcWYfkbcKzmCoLIrN/N1D3cJS+iAAVJdTzyTrP6qAdNeR0RIw=
+	t=1763485000; cv=none; b=fNfVRNv1JjQ6BGPoSWds2YW6dHgx+ct1YXnCW+PukI1JIfNL9Hp8/MQWZGlC1NLp8tX9re4650P3w8/x2HOutEUsNiP1MNLPSb4jNdVEOatudaiR4h62WyhNcj+Z7mlEmUTdDRePUXQYQkWjbv4n9gWXovR2QV10RTXo78+XyvY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763477112; c=relaxed/simple;
-	bh=WenJVCogUnM3pGpFcwziW6Fp+9yd6t1dV2fU7Xi6Alc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PoMGU/UEtFN3WMlL6+vwabqub6MTNqxjVBcbj1xK0nVEJD9E+KZc9j2dgDWXPPCQV+1fnKqAQhNKu9J74hIpi4q4ZXwyXeMSVZCtpW/jtZKjvKJEbPeyDP+BK3vPxuYxeoFM8YjK3QtQjtJOvGAQGFS4jMTzGTRyz8kigSobUuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zwxYCcQr; arc=none smtp.client-ip=209.85.128.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1763485000; c=relaxed/simple;
+	bh=4bYrk0fKHuPAC9DQBHqEmy6WuLAOGRDc+x8PORappSY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=H3jo66v/Fia6QJuu3CkPLhWO2yl5QX1qK7bpCXAJ9DpSnZqKJlRBV1u6M5WD4FFIKC8ulFLAhDbfLVRhdWo8Ym0MxV2Ytbf8J+cfOyFze/wBroJEoHIXzMfbN4KawUKnUhB0er7x6fOms7MG1OARZ+HQwNKg4X4NV5UioMSepgA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pe5HUy7x; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zwxYCcQr"
-Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-787c9f90eccso59540627b3.3
-        for <regressions@lists.linux.dev>; Tue, 18 Nov 2025 06:45:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1763477109; x=1764081909; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=dxv4h7ofkzean2g/SBkB1c70TV7EMeFgRSSskiCZXY8=;
-        b=zwxYCcQrfYg9aNKf83bO3WV03YJ75QXIw01xNzhyxUdVCGHdoe6UqZFiTsZhuRI62w
-         alReGw6DAuEYKe42Jjq1sli467RMCOaBYF/JYt9MrOEkDjmQArtPkXUtwNrJM321hNw+
-         tIlBVJl3RTK6pUhXJ/4Cn02XEJ18wDWrDe3ECY15mCSDHmNyno0QRll494VX/mXbpXyH
-         NTClUAmSVXNeylupTSeTywqaagrRRzoF4S8Rn4+cRxtBmUJgJvd66si0/QpH4dRzMH/4
-         PifsbpAagN0UJ4UaDZairQf0aAne/fLl7g1ZcaKhVMVrUR1Cktit2+zMoGB6/kERwLM7
-         WqiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763477109; x=1764081909;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dxv4h7ofkzean2g/SBkB1c70TV7EMeFgRSSskiCZXY8=;
-        b=lHdw9u9IxKCefNkIANBJps4KiGrxzbT4iBjfC0Ez9wgxNeDyf8sRHYFqUWGXq6CHeS
-         9P8l4LxkVcGjx3ldmRiwr0tex4vr6LRShNYPD+W/dipxJNzWXmvy4gOTb7y9Q1gi3yJa
-         hMq7UFobX0g1ArqzAGqMWcs6wtRyGchhqkS9ahQgqB+H/6XBm1H1h7n8ySGeDE53M3bq
-         H7FaVf/gEbvneyjv57fW83TkfJaTuPjuggDw9gqMxC08h4HK3qDlqM+EJ3A2BW2iSfS4
-         5ulnxF/5tBWIazxL7BDVtd8Qoi0x2HLcqXkhQQMPuE9+qobYGwFgbN+6cNyGVoeKO0mh
-         v0xQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVBBIV6x+yx6b1BGV5BYuYmCcOMP/UAgeD1GjnvgvzuQrmh1OrGi4Z+B/vky3M+IzaHQq7KiImqiQwxJA==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzImauDJvXZTu8SfA3zTCVf9HnDM2nIyg4PDmoHlDzycRiDx0py
-	l6BWyK31Pzb0mE3I5f9Oc7RTo+EBzOFX7kax5KSZnIvjNiYPZfCxwJA2CZRWTsIINxYvHx8H8AW
-	8MyX+KfJo1bcuFSP3WGoG4DQbTRFQvU4jv4WpQb/wQA==
-X-Gm-Gg: ASbGncv+EOzuqjObufFzGtWacd44xwkH3xlV/tL8CORjRS8Vvq12+MKqscsx2DdS8jY
-	IdTghLEHokuPhPZAsyrLAvk+6KlepmKSfFzzMheZeg9JlN0splqRsVVTo+kG1sxd9Rbk88zpu4N
-	C7WBwyXM7vnQ4WuvuwQmKsp79RxYg7hS0ip1pIE0t6PQI6omxavG9WA+GbNbRYAAZLLRBuQ+qQ7
-	KP8RAMQQtUw2SUlNjMIQfAXWqpjQbTO4Hrk9wKYMf0ClPUP7zGHt976UcALpF1Em9XHnVky
-X-Google-Smtp-Source: AGHT+IF7dxRUgvG46HM4+Rwc//gSMA7288zU/dLypnRqJ7Ti0QMfdRIpamc5xKZmVlaZsx7Wbl3epvjvS9InQfkzXCM=
-X-Received: by 2002:a05:690c:3802:b0:787:cad1:bdbf with SMTP id
- 00721157ae682-78929eef73amr146762497b3.53.1763477108864; Tue, 18 Nov 2025
- 06:45:08 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pe5HUy7x"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F366C2BCB7;
+	Tue, 18 Nov 2025 16:56:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763484999;
+	bh=4bYrk0fKHuPAC9DQBHqEmy6WuLAOGRDc+x8PORappSY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pe5HUy7xrcmExH5rBGlW9ZkYWw1UupVX9qK0Ve/8ZrWBH1pFuvCkz1wi6iGe3TwlO
+	 Zg59GfuAYPU8IWU/E3YkoSEnycVM7TnkaJSUnDLU5Xpy8FDyThJzt285P77M9PPx4J
+	 zuUg4jj3lmIXYXTa2hqzpxZyc0CQYDO/zC+shVuLRdaF65tJ6DFXND96r9kL44bbnw
+	 +goLIH34tLwe2iMdRjdcAcI6YlvXPSorfkjK3qDWUV3pB6vMsRZobR+6iihpLGce/u
+	 2hvTJRSWRZjArGLASXAg3g8cryEslmNbCts4B0czcFOIoTEbJA5d5VeWC32gzhViw1
+	 E30thvItgAtug==
+Date: Tue, 18 Nov 2025 17:56:36 +0100
+From: Maxime Ripard <mripard@kernel.org>
+To: Luca Ceresoli <luca.ceresoli@bootlin.com>
+Cc: Francesco Dolcini <francesco@dolcini.it>, 
+	Herve Codina <herve.codina@bootlin.com>, 
+	=?utf-8?Q?Jo=C3=A3o_Paulo_Gon=C3=A7alves?= <jpaulo.silvagoncalves@gmail.com>, Andrzej Hajda <andrzej.hajda@intel.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, 
+	=?utf-8?Q?Jo=C3=A3o_Paulo_Gon=C3=A7alves?= <joao.goncalves@toradex.com>, linux-kernel@vger.kernel.org, regressions@lists.linux.dev, 
+	thomas.petazzoni@bootlin.com
+Subject: Re: [REGRESSION] TI SN65DSI83 is being reset making display to blink
+ On/Off
+Message-ID: <nkiu23g4esqjsuri3it6eo3lrpvvbqkmx3wijsehc6ov4tb6ui@c5qvcydwpxmn>
+References: <bhkn6hley4xrol5o3ytn343h4unkwsr26p6s6ltcwexnrsjsdx@mgkdf6ztow42>
+ <20251113084950.44a09e8e@bootlin.com>
+ <20251113091910.GA15538@francesco-nb>
+ <DEB2QIR2RB1C.3IQC9WYGAUVZC@bootlin.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <70b25dca6f8c2756d78f076f4a7dee7edaaffc33.camel@mediatek.com>
- <CAJZ5v0iTMhWoBfbrPabdo7TkNuOwtC=-6acSe9tbDmyzZEoXwg@mail.gmail.com>
- <5941318.DvuYhMxLoT@rafael.j.wysocki> <12784270.O9o76ZdvQC@rafael.j.wysocki>
-In-Reply-To: <12784270.O9o76ZdvQC@rafael.j.wysocki>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Tue, 18 Nov 2025 15:44:32 +0100
-X-Gm-Features: AWmQ_bn6eOA_VKuMFyefgoEE9Geca2TO4X2U23GfUd5Xp4xmmVMzfrrokKx24cc
-Message-ID: <CAPDyKFqByMzQruYZTBL0T47Ww2KTF1Py91K-wrQ9GuTeW3fx9A@mail.gmail.com>
-Subject: Re: [PATCH v4] PM: sleep: core: Fix runtime PM enabling in device_resume_early()
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Rose Wu <ya-jou.wu@mediatek.com>, linux-pm@vger.kernel.org, 
-	rafael.j.wysocki@intel.com, regressions@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, wsd_upstream <wsd_upstream@mediatek.com>, 
-	linux-mediatek@lists.infradead.org, "artis. chiu" <artis.chiu@mediatek.com>, 
-	"Johnny-cc. Kao" <Johnny-cc.Kao@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha384;
+	protocol="application/pgp-signature"; boundary="5jz2m4a6gohk4arl"
+Content-Disposition: inline
+In-Reply-To: <DEB2QIR2RB1C.3IQC9WYGAUVZC@bootlin.com>
 
-On Tue, 18 Nov 2025 at 15:16, Rafael J. Wysocki <rafael@kernel.org> wrote:
->
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->
-> Runtime PM should only be enabled in device_resume_early() if it has
-> been disabled for the given device by device_suspend_late().  Otherwise,
-> it may cause runtime PM callbacks to run prematurely in some cases
-> which leads to further functional issues.
->
-> Make two changes to address this problem.
->
-> First, reorder device_suspend_late() to only disable runtime PM for a
-> device when it is going to look for the device's callback or if the
-> device is a "syscore" one.  In all of the other cases, disabling runtime
-> PM for the device is not in fact necessary.  However, if the device's
-> callback returns an error and the power.is_late_suspended flag is not
-> going to be set, enable runtime PM so it only remains disabled when
-> power.is_late_suspended is set.
->
-> Second, make device_resume_early() only enable runtime PM for the
-> devices with the power.is_late_suspended flag set.
->
-> Fixes: 443046d1ad66 ("PM: sleep: Make suspend of devices more asynchronous")
-> Reported-by: Rose Wu <ya-jou.wu@mediatek.com>
-> Closes: https://lore.kernel.org/linux-pm/70b25dca6f8c2756d78f076f4a7dee7edaaffc33.camel@mediatek.com/
-> Cc: 6.16+ <stable@vger.kernel.org> # 6.16+
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+--5jz2m4a6gohk4arl
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [REGRESSION] TI SN65DSI83 is being reset making display to blink
+ On/Off
+MIME-Version: 1.0
 
-Kind regards
-Uffe
+On Mon, Nov 17, 2025 at 04:27:28PM +0100, Luca Ceresoli wrote:
+> On Thu Nov 13, 2025 at 10:19 AM CET, Francesco Dolcini wrote:
+> > On Thu, Nov 13, 2025 at 08:49:50AM +0100, Herve Codina wrote:
+> >> On Mon, 10 Nov 2025 16:03:51 -0300
+> >> Jo=E3o Paulo Gon=E7alves <jpaulo.silvagoncalves@gmail.com> wrote:
+> >> > After commit ad5c6ecef27e ("drm: bridge: ti-sn65dsi83: Add error
+> >> > recovery mechanism"), our DSI display stopped working correctly. The
+> >> > display internally uses a TI SN65DSI83 to convert DSI-to-LVDS, and w=
+ith
+> >> > the change, it keeps blinking on and off because the bridge is being
+> >> > reset by the error recovery mechanism.
+> >> >
+> >> > Even before the change, it was possible to see the message below from
+> >> > the driver indicating that the bridge's internal PLL was not locked
+> >> > (register 0xE5, bit 0 in [1]):
+> >> >
+> >> > [ 11.198616] sn65dsi83 2-002c: Unexpected link status 0x01
+> >> >
+> >> > However, it was working. After the change, it stopped working. Maski=
+ng
+> >> > the PLL error makes it work again:
+> >> >
+> >> > diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi83.c b/drivers/gpu/drm=
+/bridge/ti-sn65dsi83.c
+> >> > index 033c44326552..89a0a2ab45b1 100644
+> >> > --- a/drivers/gpu/drm/bridge/ti-sn65dsi83.c
+> >> > +++ b/drivers/gpu/drm/bridge/ti-sn65dsi83.c
+> >> > @@ -429,7 +429,7 @@ static void sn65dsi83_handle_errors(struct sn65d=
+si83 *ctx)
+> >> >          */
+> >> >
+> >> >         ret =3D regmap_read(ctx->regmap, REG_IRQ_STAT, &irq_stat);
+> >> > -       if (ret || irq_stat) {
+> >> > +       if (ret || (irq_stat & ~REG_IRQ_STAT_CHA_PLL_UNLOCK)) {
+> >> >                 /*
+> >> >                  * IRQ acknowledged is not always possible (the brid=
+ge can be in
+> >> >                  * a state where it doesn't answer anymore). To prev=
+ent an
+> >> >
+> >> > Any suggestions on how to proceed here?
+> >> >
+> >> > #regzbot introduced: ad5c6ecef27e
+> >> >
+> >> > [1] https://www.ti.com/lit/ds/symlink/sn65dsi83.pdf
+> >> >
+> >>
+> >> The PLL should be locked.
+> >>
+> >> Also in the datasheet, in 'Table 7-2. Initialization Sequence', the st=
+atus
+> >> is checked at the end of the initialization sequence and the sequence =
+has to
+> >> be done again when the status register value is not 0x00.
+> >>
+> >> Even before monitoring (irq or polling method), you have an issue with=
+ your PLL
+> >> mentioned with the "sn65dsi83 2-002c: Unexpected link status 0x01" mes=
+sage.
+> >>
+> >> I don't understand even how your panel can be correctly driven with th=
+e bridge
+> >> PLL unlock.
+> >
+> > We'll try to figure out the reason and see what's the best path forward.
+> >
+> > Whatever was the reason it was working before, and it should stay
+> > working
+>=20
+> I agree with Herv=E9 that using the chip with an unlocked PLL looks dange=
+rous
+> and totally out of spec. So I encourage you to investigate what is going =
+on
+> in the hardware looking for the root cause, checking whether the PLL is
+> really unlocked and how to get it working properly.
+>=20
+> The driver should be definitely be written focusing on the nominal case a=
+nd
+> handle out-of-spec cases as an exception, not the other way around.
+>=20
+> I also agree your hardware should not stop working when upgrading to a new
+> kernel, so this investigation would ideally nail down tha root cause and
+> point to a solution in a very short time.
+>=20
+> Herv=E9 has matured quite some experience on SN65DSI84 error management,
+> leading to his error recovery patch, and I also have a board with that ch=
+ip
+> on my desk. So we may be helpful in discussion, as well as reviewing and
+> testing patches.
 
-> ---
->
-> v3 -> v4:
->    * Reorder the syscore check in device_resume_early() after the
->      is_late_suspended check (Ulf)
->    * Update the changelog to reflect the above.
->
-> v2 -> v3:
->    * Also set is_late_suspended for syscore devices to avoid skipping runtime PM
->      disabling for them (Ulf).
->    * Update the changelog to reflect the above.
->
-> v1 -> v2:
->    * Add pm_runtime_enable() to device_suspend_late() error path (Rose).
->    * Update the changelog to reflect the above.
->
-> ---
->  drivers/base/power/main.c |   25 ++++++++++++++++---------
->  1 file changed, 16 insertions(+), 9 deletions(-)
->
-> --- a/drivers/base/power/main.c
-> +++ b/drivers/base/power/main.c
-> @@ -903,12 +903,15 @@ static void device_resume_early(struct d
->         TRACE_DEVICE(dev);
->         TRACE_RESUME(0);
->
-> -       if (dev->power.syscore || dev->power.direct_complete)
-> +       if (dev->power.direct_complete)
->                 goto Out;
->
->         if (!dev->power.is_late_suspended)
->                 goto Out;
->
-> +       if (dev->power.syscore)
-> +               goto Skip;
-> +
->         if (!dpm_wait_for_superior(dev, async))
->                 goto Out;
->
-> @@ -941,11 +944,11 @@ Run:
->
->  Skip:
->         dev->power.is_late_suspended = false;
-> +       pm_runtime_enable(dev);
->
->  Out:
->         TRACE_RESUME(error);
->
-> -       pm_runtime_enable(dev);
->         complete_all(&dev->power.completion);
->
->         if (error) {
-> @@ -1630,12 +1633,6 @@ static void device_suspend_late(struct d
->         TRACE_DEVICE(dev);
->         TRACE_SUSPEND(0);
->
-> -       /*
-> -        * Disable runtime PM for the device without checking if there is a
-> -        * pending resume request for it.
-> -        */
-> -       __pm_runtime_disable(dev, false);
-> -
->         dpm_wait_for_subordinate(dev, async);
->
->         if (READ_ONCE(async_error))
-> @@ -1646,9 +1643,18 @@ static void device_suspend_late(struct d
->                 goto Complete;
->         }
->
-> -       if (dev->power.syscore || dev->power.direct_complete)
-> +       if (dev->power.direct_complete)
->                 goto Complete;
->
-> +       /*
-> +        * Disable runtime PM for the device without checking if there is a
-> +        * pending resume request for it.
-> +        */
-> +       __pm_runtime_disable(dev, false);
-> +
-> +       if (dev->power.syscore)
-> +               goto Skip;
-> +
->         if (dev->pm_domain) {
->                 info = "late power domain ";
->                 callback = pm_late_early_op(&dev->pm_domain->ops, state);
-> @@ -1679,6 +1685,7 @@ Run:
->                 WRITE_ONCE(async_error, error);
->                 dpm_save_failed_dev(dev_name(dev));
->                 pm_dev_err(dev, state, async ? " async late" : " late", error);
-> +               pm_runtime_enable(dev);
->                 goto Complete;
->         }
->         dpm_propagate_wakeup_to_parent(dev);
->
->
->
+I'd say we should do it the other way around. If that patch breaks
+systems that were working fine so far without a clear reason, we should
+revert the offending commit, and *then* work towards a solution to
+support error recovery that doesn't break that system.
+
+Maxime
+
+--5jz2m4a6gohk4arl
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaRylRAAKCRAnX84Zoj2+
+dthxAYC3jD5RMElxc8zdq29XKGHYYzHZFWLv7ao0jtg2F00aRi/bZsUFvcSx6zQq
+7MdBAHMBf1GKJiUqpwj2VHHaI13Bg2sfODbKRfRqnklECkP77verQfRlGTSAgr89
+tnEmo2/mag==
+=kE9c
+-----END PGP SIGNATURE-----
+
+--5jz2m4a6gohk4arl--
