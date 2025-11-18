@@ -1,94 +1,163 @@
-Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40A9F335567
-	for <regressions@lists.linux.dev>; Tue, 18 Nov 2025 11:14:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51D02286A7;
+	Tue, 18 Nov 2025 11:48:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763464459; cv=none; b=NlDNjRQ/tPcsaOt4r11i+QAq7M4+cEyYWxzC9KP0REJDHvnWK0lNgyqW3ZXvhywddmxmzUnAApnARRsd+CRXlMQZLZ4arKgFcn9+V9Jw13dUwv7yZNLaiwtmQQ6VoGA1qcYjCjTxE24TJGJvg14IJI/7L11l1q7RSTDLaJAHZ1c=
+	t=1763466519; cv=none; b=tX9EI5uEslf5fGprttcxsATIqdNDedqVSM/hPHh7Etu9TsvtG47niWZq/kDvbWoPQ3zQUJm+uJAHfrCNBFxuRH+xAsnmizCTMQ83JRlvADXQbpf0KmB4JVAGnvHipt3jF13WXs1yxKhsCRmi4OBRT+7iROmNDvK/mqFDqu716aU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763464459; c=relaxed/simple;
-	bh=gG1FbeW5+OEWqmHXLxGf5HeKtxyfdhB+HR6dfyZtLR4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cAiIOd8wp6MHoSOxoHlzryjPq01ifsgxoi8bsiUM8RrOmgIRN8TQraqirMInr1iz5JqOIm7K49AeE1coGX7PbmyZY2cBfbLyf16rOCGNiIDFmbYi00oDccqFRv0hj6YHfgD7p9qYG4W4MNEMAfn1ulfpc2RMbJoYWPk7/NbzPFY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=XQ9b9AMG; arc=none smtp.client-ip=209.85.219.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
+	s=arc-20240116; t=1763466519; c=relaxed/simple;
+	bh=mqdgX7lJfVqbFxnFMo4tSkPbeZ0S9+QjGLI2020JtGg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qxyBmEim0cJiFJdgJdNtSm/vAtIfVNoIMd0svFnfgufPCOl7P74xEQ8LQ+kWuhPziSDWxjBS3Buq8MHVW1XOjrY55sn6uSKJmoufnDxV/qoc/Qooy0pOrrScUts0rFTtcpgdu6PXwYdBJc+FRpHVfZNnCsEnj4uiTZu5GAp9chk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g0uCf6H0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="XQ9b9AMG"
-Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-88246676008so60838556d6.3
-        for <regressions@lists.linux.dev>; Tue, 18 Nov 2025 03:14:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google; t=1763464455; x=1764069255; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=eNChZUVPn/cW4SQ7AGa5/zB9gn37VAtjKhRDFWpUR4E=;
-        b=XQ9b9AMG/vOj68GWT4i1bpanUseLDUaNpr7wB86wWeXCzFeyVTlOatH2hr1Byy/o2s
-         2jvI1eqMPa0EHLe1XtmcvwsdFtM+Ao6YMtmpZD5w6fmYMkpOWoVgvlR20t+HUcQlVkEY
-         SF6LY1iFmDzWXj6EDaSFhnvQsvMM4vVJEM2vg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763464455; x=1764069255;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eNChZUVPn/cW4SQ7AGa5/zB9gn37VAtjKhRDFWpUR4E=;
-        b=OHf3D/VhE3zMtBVZ3R3MNUNZKay+Aiqg2kf338cIoWSZbDRT6ttNdy7qthkBh1jFmf
-         L9dBXyHDjuhtMrqhHP1gqk8FAjK/8DDT2IQpr7s25Qd5QnaHFknsjQ8jmBlPYB1wAaY/
-         f9MU6UzRyufF4eIx4D4DN3auKL4sii0A8uXHiuut0wfK1TNTH82M0rZ8upBMWhaJfA9q
-         Gl44zJi7Hbzrt4IDDrJv+OQV6os43b/dmIpPI/WxXeQ9BlTDpAjF+u+QarxVvGrCrc8B
-         hmg/QnQlSx/9aIPs20+fk+c3Dz7N1/kWQeGDEAdihAEAvRBry0tTVfzq63knOsuqU6/N
-         owOw==
-X-Forwarded-Encrypted: i=1; AJvYcCXIbqQmZtNpbrJ+/mzZSAw6AWb+QBCr1qM67nAo8lq4t0LaeCpYvH5rZGo6E0SaCz+vU+3N6ZqxUJxTvA==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxMSMDiUcGFWkxkcStZXdDC7B7i30K3H63Whfnb7jzwcq4fY9+2
-	+6Y/ID3aiUzX9crS8ozXeo3eoO7zDCt7fl77qabDBzD6JXmH0Id1/gQOzWhM/xYOuQNpgkJTzM3
-	AArBBXk89geUJJ8nu51eqJWI9dM3KgqvuUEbAnmkfrw==
-X-Gm-Gg: ASbGnctWpDCbBCEARFC1vjcSJet2TMUBV3E2tLCS3nADu6bc0Ds2VEESl6e0ZgkcUIV
-	MbKRiM32UEfm9hwaJip99zSruol5pCuiDJgcnfBplyQAi0j6qozmH4ggYcWncZdDxoQLkJSEO1B
-	5wh7sIYzMzjPulTrgotcRHkMzfsfzHpWtlR6kmJ+eGQ2189NGXx8iYSgKDf/treULjdV7fLkwCQ
-	PRzLw/H3ry2n5DlJwYHcN7J1J3BhGKldJvMwG+NI4dsVWrZG+3FJSVrv9h72nqW5waixJ8=
-X-Google-Smtp-Source: AGHT+IF0vAvRC3v4QI+HG+O1mGSzyxBAfAe3pbg7/c8kxZDknthzVlBk6ZIioo6+FPPOiU9/dAexIFAxys6LV/5084w=
-X-Received: by 2002:a05:6214:21c1:b0:880:580e:b3e7 with SMTP id
- 6a1803df08f44-8829267b4abmr221641226d6.37.1763464455033; Tue, 18 Nov 2025
- 03:14:15 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g0uCf6H0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFEC4C2BCB1;
+	Tue, 18 Nov 2025 11:48:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1763466518;
+	bh=mqdgX7lJfVqbFxnFMo4tSkPbeZ0S9+QjGLI2020JtGg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=g0uCf6H0TkgvTCbn+sCpssaxRcAwWCtWpPQvaPGG31bLussleIBhUUMrXvBHqERU+
+	 jm1WbRTZeC0qfJjrmej20BbSLTktdTk5Y3vfGtM0TKtNeiYb3tSkB48hbPeMagbKxP
+	 o2t+DUaAGHvP+gKetTjZkBVWoUt3sI1LLspD1mEWWwMVUo7gOorOgnVLdfLBoW5SLM
+	 bJetwa6EpJ/Ce/rbtoZFTVDUCYkSq63o8EKgUlyyyW7VwFBUb9qzMx4xWQUr1k4YCg
+	 ulmMtT85F6xakLnl7Dp0q365X52GxHpSSJrqrmQvYMwKRbiw4EpUimR3VUomI0WttH
+	 aIgDQW5nhkcgA==
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+To: linux-pm@vger.kernel.org, Rose Wu <ya-jou.wu@mediatek.com>
+Cc: rafael.j.wysocki@intel.com, regressions@lists.linux.dev,
+ linux-kernel@vger.kernel.org, wsd_upstream <wsd_upstream@mediatek.com>,
+ linux-mediatek@lists.infradead.org, "artis. chiu" <artis.chiu@mediatek.com>,
+ "Johnny-cc. Kao" <Johnny-cc.Kao@mediatek.com>,
+ Ulf Hansson <ulf.hansson@linaro.org>
+Subject:
+ [PATCH v2] PM: sleep: core: Fix runtime PM enabling in device_resume_early()
+Date: Tue, 18 Nov 2025 12:48:32 +0100
+Message-ID: <12782716.O9o76ZdvQC@rafael.j.wysocki>
+Organization: Linux Kernel Development
+In-Reply-To: <119e2410ca32a0d55fa6febf93c7a3164b391db0.camel@mediatek.com>
+References:
+ <70b25dca6f8c2756d78f076f4a7dee7edaaffc33.camel@mediatek.com>
+ <5940388.DvuYhMxLoT@rafael.j.wysocki>
+ <119e2410ca32a0d55fa6febf93c7a3164b391db0.camel@mediatek.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <mwBOip3XK77dn-UJtlk-uQ1N6i3nwsKticZyQdPYzQcsk0dsjXl4oOAh-Neoxv-0TlpKnt_FEJwx8ses5VJglGLJUW-bIG8KWchtoDwCnnA=@protonmail.com>
- <CAJnrk1ZDEszGbyP4cRh7+mEPu9BLmPrY9Xb-Q3HZnxXZOV7Eag@mail.gmail.com>
- <CAJnrk1aepU0y55FNG3zDHhK4iPo80MtD+tE_PT+ExhD9SDUS_Q@mail.gmail.com>
- <_Gt41eQ_dnFbfGcMH4LkwSqmCYBdQGfnPdQfBlAWwkohIUfDUwtdvpQa61Pk2FMD4B-ov2uVIG9FUCJu_GT67Qkde7e2oZdnnRMopuglZHA=@protonmail.com>
- <CAJnrk1YhZN9=M92dK6EtTTkuhQW_qco_ikwFHmVE0cgiiUnF8g@mail.gmail.com>
-In-Reply-To: <CAJnrk1YhZN9=M92dK6EtTTkuhQW_qco_ikwFHmVE0cgiiUnF8g@mail.gmail.com>
-From: Miklos Szeredi <miklos@szeredi.hu>
-Date: Tue, 18 Nov 2025 12:14:03 +0100
-X-Gm-Features: AWmQ_blrKN0f_3ReHo4Jsd5Q_sFv0SUHiM-Es1B-B3e3LJ8UDFKZwAMp19Cf_jU
-Message-ID: <CAJfpegtzmMFtrg4G5N+M+0GG6QdBrSZStWN2RNO8ut-Uz7LdiA@mail.gmail.com>
-Subject: Re: [REGRESSION] System hangs on suspend after using distrobox container
-To: Joanne Koong <joannelkoong@gmail.com>
-Cc: Athul Krishna <athul.krishna.kr@protonmail.com>, 
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="UTF-8"
 
-On Mon, 17 Nov 2025 at 20:00, Joanne Koong <joannelkoong@gmail.com> wrote:
+On Tuesday, November 18, 2025 9:31:08 AM CET Rose Wu wrote:
+> Hi,
+> 
+> On Mon, 2025-11-17 at 19:57 +0100, Rafael J. Wysocki wrote:
+> > 
+> > Make two changes to address this problem.
+> > 
+> > First, reorder device_suspend_late() to only disable runtime PM for a
+> > device if the power.is_late_suspended flag is going to be set for it.
+> > In all of the other cases, disabling runtime PM for the device is not
+> > in fact necessary.
+> > 
+> > Second, make device_resume_early() only enable runtime PM for the
+> > devices with the power.is_late_suspended flag set.
+> > 
+> 
+> My concern is with the error path in device_suspend_late().
+> If a device fails its dpm_run_callback(), it appears that its
+> power.is_late_suspended flag is not set, potentially leaving its runtime
+> PM disabled during the resume sequence.
 
-> Ok, then that means there is a buggy/stuck fuse server somewhere on
-> the system that is not completing a writeback request. If we look at
-> /sys/fs/fuse/connections/*/waiting  and see "waiting" stuck at a
-> non-zero value, then that should tell us which server is stuck.
+Right, pm_runtime_enable() is missing in the error path after calling
+dpm_run_callback().
 
-SysRq-t might also tell us where the server got stuck.
+---
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-> Hmm, I don't think this is a regression because the bug is in
-> userspace and for a functioning fuse server, the new behavior is more
+Runtime PM should only be enabled in device_resume_early() if it has
+been disabled for the given device by device_suspend_late().  Otherwise,
+it may cause runtime PM callbacks to run prematurely in some cases
+which leads to further functional issues.
 
-Userspace acting strangely is not an excuse for counting something as
-a regression.   The rule is:  if a practical use case  worked on
-kernel version X and didn't work on X + 1, then it's a regression and
-must be fixed.   And the report does look like a real life use case,
-not something made up.
+Make two changes to address this problem.
 
-Thanks,
-Miklos
+First, reorder device_suspend_late() to only disable runtime PM for a
+device when it is going to look for the device's callback.  In all of
+the other cases, disabling runtime PM for the device is not in fact
+necessary.  However, if the device's callback returns an error and the
+power.is_late_suspended flag is not going to be set, enable runtime
+PM so it only remains disabled when power.is_late_suspended is set.
+
+Second, make device_resume_early() only enable runtime PM for the
+devices with the power.is_late_suspended flag set.
+
+Fixes: 443046d1ad66 ("PM: sleep: Make suspend of devices more asynchronous")
+Reported-by: Rose Wu <ya-jou.wu@mediatek.com>
+Closes: https://lore.kernel.org/linux-pm/70b25dca6f8c2756d78f076f4a7dee7edaaffc33.camel@mediatek.com/
+Cc: 6.16+ <stable@vger.kernel.org> # 6.16+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+
+v1 -> v2: Add pm_runtime_enable() to device_suspend_late() error path (Rose).
+
+---
+ drivers/base/power/main.c |   15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
+
+--- a/drivers/base/power/main.c
++++ b/drivers/base/power/main.c
+@@ -941,11 +941,11 @@ Run:
+ 
+ Skip:
+ 	dev->power.is_late_suspended = false;
++	pm_runtime_enable(dev);
+ 
+ Out:
+ 	TRACE_RESUME(error);
+ 
+-	pm_runtime_enable(dev);
+ 	complete_all(&dev->power.completion);
+ 
+ 	if (error) {
+@@ -1630,12 +1630,6 @@ static void device_suspend_late(struct d
+ 	TRACE_DEVICE(dev);
+ 	TRACE_SUSPEND(0);
+ 
+-	/*
+-	 * Disable runtime PM for the device without checking if there is a
+-	 * pending resume request for it.
+-	 */
+-	__pm_runtime_disable(dev, false);
+-
+ 	dpm_wait_for_subordinate(dev, async);
+ 
+ 	if (READ_ONCE(async_error))
+@@ -1649,6 +1643,12 @@ static void device_suspend_late(struct d
+ 	if (dev->power.syscore || dev->power.direct_complete)
+ 		goto Complete;
+ 
++	/*
++	 * Disable runtime PM for the device without checking if there is a
++	 * pending resume request for it.
++	 */
++	__pm_runtime_disable(dev, false);
++
+ 	if (dev->pm_domain) {
+ 		info = "late power domain ";
+ 		callback = pm_late_early_op(&dev->pm_domain->ops, state);
+@@ -1679,6 +1679,7 @@ Run:
+ 		WRITE_ONCE(async_error, error);
+ 		dpm_save_failed_dev(dev_name(dev));
+ 		pm_dev_err(dev, state, async ? " async late" : " late", error);
++		pm_runtime_enable(dev);
+ 		goto Complete;
+ 	}
+ 	dpm_propagate_wakeup_to_parent(dev);
+
+
+
