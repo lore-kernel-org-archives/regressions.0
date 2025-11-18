@@ -1,178 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 742103002C6;
-	Tue, 18 Nov 2025 16:56:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCB9D2E0902
+	for <regressions@lists.linux.dev>; Tue, 18 Nov 2025 18:55:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763485000; cv=none; b=fNfVRNv1JjQ6BGPoSWds2YW6dHgx+ct1YXnCW+PukI1JIfNL9Hp8/MQWZGlC1NLp8tX9re4650P3w8/x2HOutEUsNiP1MNLPSb4jNdVEOatudaiR4h62WyhNcj+Z7mlEmUTdDRePUXQYQkWjbv4n9gWXovR2QV10RTXo78+XyvY=
+	t=1763492125; cv=none; b=RZqy+ygrJk0U340hIXZe4zLPhKnHk+zN0fnhsZGO5k/85xNTsGN9okY52vYvpEWu/qAutFH7iXwXfmd0/LyoxMsh3mV5sb8CUC2iGGsXBDTX1vzeiIq6mbaG+oWNoFLz+u7wQ0qktYUmBVqCT9xYiEN7JfxsDSRvJweRwsqUiZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763485000; c=relaxed/simple;
-	bh=4bYrk0fKHuPAC9DQBHqEmy6WuLAOGRDc+x8PORappSY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H3jo66v/Fia6QJuu3CkPLhWO2yl5QX1qK7bpCXAJ9DpSnZqKJlRBV1u6M5WD4FFIKC8ulFLAhDbfLVRhdWo8Ym0MxV2Ytbf8J+cfOyFze/wBroJEoHIXzMfbN4KawUKnUhB0er7x6fOms7MG1OARZ+HQwNKg4X4NV5UioMSepgA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pe5HUy7x; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1763492125; c=relaxed/simple;
+	bh=swc+u65AxmeylOSbwlHhzh74lz0gJSgdT3+WrROhmSw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IId+VGd+4y2Qq1qqFqRr6TzkjrneEOdcD+zjCYSY1XEYOZCWervdvSFRK1H2+Uv7jm9+davzNdr1tSceErvhjVBMSDJAI7NyfpCqFpXbEE0qhUeu4PiS2AXDx+NMgRD1atCDncjIv5604Wkzxsbcl8aGksGmmdL2gBGC7o9T8XQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PAmRST15; arc=none smtp.client-ip=209.85.160.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pe5HUy7x"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F366C2BCB7;
-	Tue, 18 Nov 2025 16:56:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763484999;
-	bh=4bYrk0fKHuPAC9DQBHqEmy6WuLAOGRDc+x8PORappSY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pe5HUy7xrcmExH5rBGlW9ZkYWw1UupVX9qK0Ve/8ZrWBH1pFuvCkz1wi6iGe3TwlO
-	 Zg59GfuAYPU8IWU/E3YkoSEnycVM7TnkaJSUnDLU5Xpy8FDyThJzt285P77M9PPx4J
-	 zuUg4jj3lmIXYXTa2hqzpxZyc0CQYDO/zC+shVuLRdaF65tJ6DFXND96r9kL44bbnw
-	 +goLIH34tLwe2iMdRjdcAcI6YlvXPSorfkjK3qDWUV3pB6vMsRZobR+6iihpLGce/u
-	 2hvTJRSWRZjArGLASXAg3g8cryEslmNbCts4B0czcFOIoTEbJA5d5VeWC32gzhViw1
-	 E30thvItgAtug==
-Date: Tue, 18 Nov 2025 17:56:36 +0100
-From: Maxime Ripard <mripard@kernel.org>
-To: Luca Ceresoli <luca.ceresoli@bootlin.com>
-Cc: Francesco Dolcini <francesco@dolcini.it>, 
-	Herve Codina <herve.codina@bootlin.com>, 
-	=?utf-8?Q?Jo=C3=A3o_Paulo_Gon=C3=A7alves?= <jpaulo.silvagoncalves@gmail.com>, Andrzej Hajda <andrzej.hajda@intel.com>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, 
-	=?utf-8?Q?Jo=C3=A3o_Paulo_Gon=C3=A7alves?= <joao.goncalves@toradex.com>, linux-kernel@vger.kernel.org, regressions@lists.linux.dev, 
-	thomas.petazzoni@bootlin.com
-Subject: Re: [REGRESSION] TI SN65DSI83 is being reset making display to blink
- On/Off
-Message-ID: <nkiu23g4esqjsuri3it6eo3lrpvvbqkmx3wijsehc6ov4tb6ui@c5qvcydwpxmn>
-References: <bhkn6hley4xrol5o3ytn343h4unkwsr26p6s6ltcwexnrsjsdx@mgkdf6ztow42>
- <20251113084950.44a09e8e@bootlin.com>
- <20251113091910.GA15538@francesco-nb>
- <DEB2QIR2RB1C.3IQC9WYGAUVZC@bootlin.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PAmRST15"
+Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-4ee04609ffaso15358341cf.3
+        for <regressions@lists.linux.dev>; Tue, 18 Nov 2025 10:55:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1763492123; x=1764096923; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cpPzcKSViMmBsZGl5AdFLD4CH7+zRq/ooWlhgXCBZRU=;
+        b=PAmRST15Tl7Q117g1nRJWwrYV1PbbapFj9RrlXaoKorIeRz3PhVyOdfg+Z793Q5aIW
+         +LGJMkoRDg2w1pJa7nsTIgza6Cid2xDWcS/tXA0gmZo94svf6OMaZR57CJWdRCSqkWA6
+         JTHOctC3e3Ovva3F1znE+CBYLzBSEHD9nJuo0mKrxpCeHZ0e0J+GcdohwuQ84iBarqL5
+         Gj8PDMuH7+PbWrWcICxYLQGvi2pEpr+ZGVUVZxJW5aiGzHiMwZHV9PzSx55UyQtUNuTR
+         KT9pICRHRPwvYqoYWStgdpi5R27Atga6u9Mm0KMeQhvRT+uw/OOqkTt7WIH61LLMXZ+L
+         8AAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763492123; x=1764096923;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=cpPzcKSViMmBsZGl5AdFLD4CH7+zRq/ooWlhgXCBZRU=;
+        b=R1vqN/3gtiT3Tg7AwgFcy3lND++DphK2SsaGbbLzrPYM7ZHfpDg61SzSLcqoWV+h5o
+         ec6QaPcqv25ASzQW3bceKDVskz+hLmq5dkilY8lpwdmDLPqUx/Ug148+9oQYgMCd9nqL
+         KMk7q6qSqxD0FH9k2lo4M74hd3dfVGLaCEYU456oA8iL9TZXtLXw6QZkhu6U/e3sYCvp
+         l7ySvfPl5M1xwDLsJMfiu8haQIroMfXbQ3W7p2DntGOGSgkr9WjPQnhnlVtZx/mPU++5
+         CWU09fLNBNJkGhQefBY8voPrboCyZ+oxbSMNlQEoGzHHWuUCdfMDLTdUhr1lNZr6dXGL
+         QRPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXBSXfLzPxSxd7sd2IKXAJPpE/ASzUl1uC2GVs2R/8EYfsH/zOhPuzGBocKPc/i8DSx036ifr3DdYP6sg==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwpxzOHgHb6ZsOgJYTeLPSjFUz74amAyqtZ1c0Ttd7sG0DRU2vx
+	GM27J9v8Kdhv0Qhz6VdBznfH4f86ovW/aC9A4tFNdi3ToOoQUjxPaZpPKQWVmG78A0lEpqYfvvK
+	y8gg30dBchQFaL/vrZx6/K35hcWQq9QjdYPZ9cEk=
+X-Gm-Gg: ASbGncs7vJOEXaO3KAaWDdOslbFPSQ1Vrlzx2MhhDHPeo53CA1kbZHot5EgzyklS9+Z
+	ppIuQlnONQ8az8M1qU0jZGAlXABFkVllrOvdKwkQzW5HF/70SWKB+K8OeNPhlaXe4JBFqnrqWes
+	DP+jKquMw6hOnyKCiZES6FdwQxf11on3VHRla/43UMHk8Bv5+QmQkSc4fY7mI0QIdTCpjVsPzcO
+	le1UiCxcUS8P4iw4HD2daSfw/z8MPCCN0oorqp4MlFCJxEUHi9AQ1RvwyTNUYYdqsPOYRkGd08E
+	F+qt
+X-Google-Smtp-Source: AGHT+IE/KIWXtXnTqa03JqSEPf0aonmEUWdZ6XIWlR4bKGRRdCOYlp6jyEWCs0t2SNsniodNAcLCoiwjzD4Spp5KtLU=
+X-Received: by 2002:ac8:5e06:0:b0:4ed:8264:91ba with SMTP id
+ d75a77b69052e-4edf2117c72mr211327301cf.58.1763492122654; Tue, 18 Nov 2025
+ 10:55:22 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha384;
-	protocol="application/pgp-signature"; boundary="5jz2m4a6gohk4arl"
-Content-Disposition: inline
-In-Reply-To: <DEB2QIR2RB1C.3IQC9WYGAUVZC@bootlin.com>
-
-
---5jz2m4a6gohk4arl
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
+References: <mwBOip3XK77dn-UJtlk-uQ1N6i3nwsKticZyQdPYzQcsk0dsjXl4oOAh-Neoxv-0TlpKnt_FEJwx8ses5VJglGLJUW-bIG8KWchtoDwCnnA=@protonmail.com>
+ <CAJnrk1ZDEszGbyP4cRh7+mEPu9BLmPrY9Xb-Q3HZnxXZOV7Eag@mail.gmail.com>
+ <CAJnrk1aepU0y55FNG3zDHhK4iPo80MtD+tE_PT+ExhD9SDUS_Q@mail.gmail.com>
+ <_Gt41eQ_dnFbfGcMH4LkwSqmCYBdQGfnPdQfBlAWwkohIUfDUwtdvpQa61Pk2FMD4B-ov2uVIG9FUCJu_GT67Qkde7e2oZdnnRMopuglZHA=@protonmail.com>
+ <CAJnrk1YhZN9=M92dK6EtTTkuhQW_qco_ikwFHmVE0cgiiUnF8g@mail.gmail.com> <CAJfpegtzmMFtrg4G5N+M+0GG6QdBrSZStWN2RNO8ut-Uz7LdiA@mail.gmail.com>
+In-Reply-To: <CAJfpegtzmMFtrg4G5N+M+0GG6QdBrSZStWN2RNO8ut-Uz7LdiA@mail.gmail.com>
+From: Joanne Koong <joannelkoong@gmail.com>
+Date: Tue, 18 Nov 2025 10:55:11 -0800
+X-Gm-Features: AWmQ_bmhY6rB358nuNNCp6RiYfQHoKXOYq4oIUagyf7E8td6bmg6jEQDzeXDqCs
+Message-ID: <CAJnrk1ZjQ8W8NzojsvJPRXiv9TuYPNdj8Ye7=Cgkj=iV_i8EaA@mail.gmail.com>
+Subject: Re: [REGRESSION] System hangs on suspend after using distrobox container
+To: Miklos Szeredi <miklos@szeredi.hu>
+Cc: Athul Krishna <athul.krishna.kr@protonmail.com>, 
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [REGRESSION] TI SN65DSI83 is being reset making display to blink
- On/Off
-MIME-Version: 1.0
 
-On Mon, Nov 17, 2025 at 04:27:28PM +0100, Luca Ceresoli wrote:
-> On Thu Nov 13, 2025 at 10:19 AM CET, Francesco Dolcini wrote:
-> > On Thu, Nov 13, 2025 at 08:49:50AM +0100, Herve Codina wrote:
-> >> On Mon, 10 Nov 2025 16:03:51 -0300
-> >> Jo=E3o Paulo Gon=E7alves <jpaulo.silvagoncalves@gmail.com> wrote:
-> >> > After commit ad5c6ecef27e ("drm: bridge: ti-sn65dsi83: Add error
-> >> > recovery mechanism"), our DSI display stopped working correctly. The
-> >> > display internally uses a TI SN65DSI83 to convert DSI-to-LVDS, and w=
-ith
-> >> > the change, it keeps blinking on and off because the bridge is being
-> >> > reset by the error recovery mechanism.
-> >> >
-> >> > Even before the change, it was possible to see the message below from
-> >> > the driver indicating that the bridge's internal PLL was not locked
-> >> > (register 0xE5, bit 0 in [1]):
-> >> >
-> >> > [ 11.198616] sn65dsi83 2-002c: Unexpected link status 0x01
-> >> >
-> >> > However, it was working. After the change, it stopped working. Maski=
-ng
-> >> > the PLL error makes it work again:
-> >> >
-> >> > diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi83.c b/drivers/gpu/drm=
-/bridge/ti-sn65dsi83.c
-> >> > index 033c44326552..89a0a2ab45b1 100644
-> >> > --- a/drivers/gpu/drm/bridge/ti-sn65dsi83.c
-> >> > +++ b/drivers/gpu/drm/bridge/ti-sn65dsi83.c
-> >> > @@ -429,7 +429,7 @@ static void sn65dsi83_handle_errors(struct sn65d=
-si83 *ctx)
-> >> >          */
-> >> >
-> >> >         ret =3D regmap_read(ctx->regmap, REG_IRQ_STAT, &irq_stat);
-> >> > -       if (ret || irq_stat) {
-> >> > +       if (ret || (irq_stat & ~REG_IRQ_STAT_CHA_PLL_UNLOCK)) {
-> >> >                 /*
-> >> >                  * IRQ acknowledged is not always possible (the brid=
-ge can be in
-> >> >                  * a state where it doesn't answer anymore). To prev=
-ent an
-> >> >
-> >> > Any suggestions on how to proceed here?
-> >> >
-> >> > #regzbot introduced: ad5c6ecef27e
-> >> >
-> >> > [1] https://www.ti.com/lit/ds/symlink/sn65dsi83.pdf
-> >> >
-> >>
-> >> The PLL should be locked.
-> >>
-> >> Also in the datasheet, in 'Table 7-2. Initialization Sequence', the st=
-atus
-> >> is checked at the end of the initialization sequence and the sequence =
-has to
-> >> be done again when the status register value is not 0x00.
-> >>
-> >> Even before monitoring (irq or polling method), you have an issue with=
- your PLL
-> >> mentioned with the "sn65dsi83 2-002c: Unexpected link status 0x01" mes=
-sage.
-> >>
-> >> I don't understand even how your panel can be correctly driven with th=
-e bridge
-> >> PLL unlock.
-> >
-> > We'll try to figure out the reason and see what's the best path forward.
-> >
-> > Whatever was the reason it was working before, and it should stay
-> > working
->=20
-> I agree with Herv=E9 that using the chip with an unlocked PLL looks dange=
-rous
-> and totally out of spec. So I encourage you to investigate what is going =
-on
-> in the hardware looking for the root cause, checking whether the PLL is
-> really unlocked and how to get it working properly.
->=20
-> The driver should be definitely be written focusing on the nominal case a=
-nd
-> handle out-of-spec cases as an exception, not the other way around.
->=20
-> I also agree your hardware should not stop working when upgrading to a new
-> kernel, so this investigation would ideally nail down tha root cause and
-> point to a solution in a very short time.
->=20
-> Herv=E9 has matured quite some experience on SN65DSI84 error management,
-> leading to his error recovery patch, and I also have a board with that ch=
-ip
-> on my desk. So we may be helpful in discussion, as well as reviewing and
-> testing patches.
+On Tue, Nov 18, 2025 at 3:14=E2=80=AFAM Miklos Szeredi <miklos@szeredi.hu> =
+wrote:
+>
+> On Mon, 17 Nov 2025 at 20:00, Joanne Koong <joannelkoong@gmail.com> wrote=
+:
+>
+> > Ok, then that means there is a buggy/stuck fuse server somewhere on
+> > the system that is not completing a writeback request. If we look at
+> > /sys/fs/fuse/connections/*/waiting  and see "waiting" stuck at a
+> > non-zero value, then that should tell us which server is stuck.
+>
+> SysRq-t might also tell us where the server got stuck.
+>
+> > Hmm, I don't think this is a regression because the bug is in
+> > userspace and for a functioning fuse server, the new behavior is more
+>
+> Userspace acting strangely is not an excuse for counting something as
+> a regression.   The rule is:  if a practical use case  worked on
+> kernel version X and didn't work on X + 1, then it's a regression and
+> must be fixed.   And the report does look like a real life use case,
+> not something made up.
 
-I'd say we should do it the other way around. If that patch breaks
-systems that were working fine so far without a clear reason, we should
-revert the offending commit, and *then* work towards a solution to
-support error recovery that doesn't break that system.
+Okay, I'll resuscitate that patch in [1] and get that sent out
+sometime this week.
 
-Maxime
+Thanks,
+Joanne
 
---5jz2m4a6gohk4arl
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaRylRAAKCRAnX84Zoj2+
-dthxAYC3jD5RMElxc8zdq29XKGHYYzHZFWLv7ao0jtg2F00aRi/bZsUFvcSx6zQq
-7MdBAHMBf1GKJiUqpwj2VHHaI13Bg2sfODbKRfRqnklECkP77verQfRlGTSAgr89
-tnEmo2/mag==
-=kE9c
------END PGP SIGNATURE-----
-
---5jz2m4a6gohk4arl--
+[1] https://lore.kernel.org/linux-fsdevel/20241122232359.429647-4-joannelko=
+ong@gmail.com/
+>
+> Thanks,
+> Miklos
