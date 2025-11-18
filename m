@@ -1,117 +1,94 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67DAE329375
-	for <regressions@lists.linux.dev>; Tue, 18 Nov 2025 09:59:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40A9F335567
+	for <regressions@lists.linux.dev>; Tue, 18 Nov 2025 11:14:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763459991; cv=none; b=OevoK46J4wr4pMHyfFBh+ExpBJVjgqXGE8vGxeYEip4vmGoFksk/xkQmYXaJ8MTXLREEYIyd/FkKK5TDONLDhUeo+I4OKRYwsuJ3sLdqG6HOB3DxK2vcSlxKFA9vlN0MXo5W8NIIV9mdxa60lqphksSqzuoFVhnbsBvo3ToRykw=
+	t=1763464459; cv=none; b=NlDNjRQ/tPcsaOt4r11i+QAq7M4+cEyYWxzC9KP0REJDHvnWK0lNgyqW3ZXvhywddmxmzUnAApnARRsd+CRXlMQZLZ4arKgFcn9+V9Jw13dUwv7yZNLaiwtmQQ6VoGA1qcYjCjTxE24TJGJvg14IJI/7L11l1q7RSTDLaJAHZ1c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763459991; c=relaxed/simple;
-	bh=3OTjsyF8jzv5/5B8GX+VKvfXggixdgyd2+Q102JeQ8o=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=aBNDSDdNsxF2EbhugiRPH0qOi89Epq3ix4N1B2dzA+cVuQ+lRzliDGATVLghxGZyrmRomCm7xZrYDEU9CKI8Umfi2kftksVo4TO2P+xJS3UImbuDCidbh0IYOeT76IrhMqRsldQvqB8Nhf9j5ZvhDMd06FijmFMLJPdoiUo/vcM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gDXBF9Gs; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1763464459; c=relaxed/simple;
+	bh=gG1FbeW5+OEWqmHXLxGf5HeKtxyfdhB+HR6dfyZtLR4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cAiIOd8wp6MHoSOxoHlzryjPq01ifsgxoi8bsiUM8RrOmgIRN8TQraqirMInr1iz5JqOIm7K49AeE1coGX7PbmyZY2cBfbLyf16rOCGNiIDFmbYi00oDccqFRv0hj6YHfgD7p9qYG4W4MNEMAfn1ulfpc2RMbJoYWPk7/NbzPFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=XQ9b9AMG; arc=none smtp.client-ip=209.85.219.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gDXBF9Gs"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-640a503fbe8so9188515a12.1
-        for <regressions@lists.linux.dev>; Tue, 18 Nov 2025 01:59:49 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="XQ9b9AMG"
+Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-88246676008so60838556d6.3
+        for <regressions@lists.linux.dev>; Tue, 18 Nov 2025 03:14:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1763459988; x=1764064788; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5ZYnCm/sXxbVHIqtj0TWym4GM93F9lRgfmerGHcbL1Y=;
-        b=gDXBF9GsJojO+fB4C7iiY+fdzaa01VS3PHCeL8cbUu4q0MtqnSj4Oy2OU24ybYkJeZ
-         lEiLIWNTg2dNCKiY+eVJgZqj6QreRTkl9PAAaTRq6ON50YPkhG5za2RsMIL+ccbniBJX
-         nO//L+dowhxE3XtAMltPb7b3T7S385xsDhZ6XVGFvYg8MWYUcnoHnFlxnFBBIWjmOlfh
-         9/GHkXKHekMMkfM6ffZTbeSLelowBe4GjkUp+MpL/uTmypQEF9Zhtqoozl6LzuBDS6DW
-         PthuRoAAKUUQOali3DC818skH3j+NJuTUvehYa6HrmM8KNpGh+8385PCewl1GM41b1ih
-         YD/Q==
+        d=szeredi.hu; s=google; t=1763464455; x=1764069255; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=eNChZUVPn/cW4SQ7AGa5/zB9gn37VAtjKhRDFWpUR4E=;
+        b=XQ9b9AMG/vOj68GWT4i1bpanUseLDUaNpr7wB86wWeXCzFeyVTlOatH2hr1Byy/o2s
+         2jvI1eqMPa0EHLe1XtmcvwsdFtM+Ao6YMtmpZD5w6fmYMkpOWoVgvlR20t+HUcQlVkEY
+         SF6LY1iFmDzWXj6EDaSFhnvQsvMM4vVJEM2vg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763459988; x=1764064788;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=5ZYnCm/sXxbVHIqtj0TWym4GM93F9lRgfmerGHcbL1Y=;
-        b=KDGc5OMoIjVT75NcmbBz+4LoWGTwWa190ybbNk/xtrTUpbZpRnihZ1bwvFgwp9avjA
-         X25qRZPw6qL4wHUhHpaGpl43KOA+OoIhqP0fFaPYOZFOtTxeVal4Zxq3BeA/NZeka9Eo
-         J3p3A86g91QWkNeGidUlKTfD0J6stq59E9oZgqEhah9Cnt/QjhcZQcpvnaJKorMbhxd+
-         M6AFj6F+eDE6ljiM0TenPj6tMLgnV7StE2XZzu1/qSCQnL/ZCHHuPK0ybSkDkV8dV0ms
-         j1fDeflJ0SQZPlMdMML6SugivKuV1tjpNNpsuIjAlkE5Fnj4zN/MggcBVwFXtX5+vtrf
-         gehQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXMnNiPq/iNpxGbWKzUeimQdYbEpzMUnivlDvlcfhnfraNTZtOv0bqsA/JfCXiyU7NEBPCsx6IWdtAq8w==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yw3iNG5fYVHqAanwUC0Wd/Kw84/OgRb9/tzCgXWdU4ed/wXfHb7
-	KYre6JpXChpa7z0lGOWnLCpmLk4ICoXLbVGuXh0uEeIHrS9uEdAt0xiR
-X-Gm-Gg: ASbGncsHvn65S0iVrKRebNBBDalxAA8d6qToibz9zqeqmBlOr5TVMo5S26WTwTkut/i
-	uj13yrRWGtGIhJnZG3UxAUQ0wRPF8AkAn0a1MLnw+mhF1B2vDHJpcDk1F4vAMAcuOwfJdhxtDfI
-	w13lGqpm4e0/vkcsb+1LVp0CumzJLmdupIzr2DvkKWyiMXSUfmhkWooWHusaQVNGC+LDoQXifeK
-	h+AQS++3rx83q4xEEuTQ++7B8xLJZGGcXSwAqBiV31KZe3J8QB4KuiapT40lPbnHMCNlczzE/8T
-	HoQXLSt2CZaoee81I4xhATVx/WvtNHJJtT3wLpBverq8QXntKSn1F96B/H9OEHieytsYMOak7I6
-	Yzn5lCBQdm1dM+KoFH4+5q1ZdxDNsXyVGuVvNG5GxCZzBHnXzK0gsXAtc6RW943v7XU4yjdrwh7
-	wrPlNYyLzUbJiNqJIabxk3p4o=
-X-Google-Smtp-Source: AGHT+IH27uoFNutlapD0gNjviVN2jZZutdx/ofuInMm4gjmLoJom6smGVoJQwrQi+8LFI4RuRsaYlA==
-X-Received: by 2002:a17:907:94ca:b0:b73:709e:a20a with SMTP id a640c23a62f3a-b73709ea300mr1368869066b.47.1763459987333;
-        Tue, 18 Nov 2025 01:59:47 -0800 (PST)
-Received: from foxbook (bhd138.neoplus.adsl.tpnet.pl. [83.28.93.138])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b734fd80a06sm1299820966b.38.2025.11.18.01.59.46
-        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
-        Tue, 18 Nov 2025 01:59:46 -0800 (PST)
-Date: Tue, 18 Nov 2025 10:59:29 +0100
-From: Michal Pecio <michal.pecio@gmail.com>
-To: Forest <forestix@gaga.casa>
-Cc: Mathias Nyman <mathias.nyman@linux.intel.com>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, Alan Stern <stern@rowland.harvard.edu>,
- Heikki Krogerus <heikki.krogerus@linux.intel.com>, Stefan Eichenberger
- <stefan.eichenberger@toradex.com>, Pawel Laszczak <pawell@cadence.com>,
- linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
- regressions@lists.linux.dev
-Subject: Re: [REGRESSION][BISECTED] usb: hub: total system freeze after
- running adb
-Message-ID: <20251118105929.330f0042.michal.pecio@gmail.com>
-In-Reply-To: <qc0nhk9c6l0a08bkfeplrm3qjssgrjkvkp@sonic.net>
-References: <qc0nhk9c6l0a08bkfeplrm3qjssgrjkvkp@sonic.net>
+        d=1e100.net; s=20230601; t=1763464455; x=1764069255;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eNChZUVPn/cW4SQ7AGa5/zB9gn37VAtjKhRDFWpUR4E=;
+        b=OHf3D/VhE3zMtBVZ3R3MNUNZKay+Aiqg2kf338cIoWSZbDRT6ttNdy7qthkBh1jFmf
+         L9dBXyHDjuhtMrqhHP1gqk8FAjK/8DDT2IQpr7s25Qd5QnaHFknsjQ8jmBlPYB1wAaY/
+         f9MU6UzRyufF4eIx4D4DN3auKL4sii0A8uXHiuut0wfK1TNTH82M0rZ8upBMWhaJfA9q
+         Gl44zJi7Hbzrt4IDDrJv+OQV6os43b/dmIpPI/WxXeQ9BlTDpAjF+u+QarxVvGrCrc8B
+         hmg/QnQlSx/9aIPs20+fk+c3Dz7N1/kWQeGDEAdihAEAvRBry0tTVfzq63knOsuqU6/N
+         owOw==
+X-Forwarded-Encrypted: i=1; AJvYcCXIbqQmZtNpbrJ+/mzZSAw6AWb+QBCr1qM67nAo8lq4t0LaeCpYvH5rZGo6E0SaCz+vU+3N6ZqxUJxTvA==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxMSMDiUcGFWkxkcStZXdDC7B7i30K3H63Whfnb7jzwcq4fY9+2
+	+6Y/ID3aiUzX9crS8ozXeo3eoO7zDCt7fl77qabDBzD6JXmH0Id1/gQOzWhM/xYOuQNpgkJTzM3
+	AArBBXk89geUJJ8nu51eqJWI9dM3KgqvuUEbAnmkfrw==
+X-Gm-Gg: ASbGnctWpDCbBCEARFC1vjcSJet2TMUBV3E2tLCS3nADu6bc0Ds2VEESl6e0ZgkcUIV
+	MbKRiM32UEfm9hwaJip99zSruol5pCuiDJgcnfBplyQAi0j6qozmH4ggYcWncZdDxoQLkJSEO1B
+	5wh7sIYzMzjPulTrgotcRHkMzfsfzHpWtlR6kmJ+eGQ2189NGXx8iYSgKDf/treULjdV7fLkwCQ
+	PRzLw/H3ry2n5DlJwYHcN7J1J3BhGKldJvMwG+NI4dsVWrZG+3FJSVrv9h72nqW5waixJ8=
+X-Google-Smtp-Source: AGHT+IF0vAvRC3v4QI+HG+O1mGSzyxBAfAe3pbg7/c8kxZDknthzVlBk6ZIioo6+FPPOiU9/dAexIFAxys6LV/5084w=
+X-Received: by 2002:a05:6214:21c1:b0:880:580e:b3e7 with SMTP id
+ 6a1803df08f44-8829267b4abmr221641226d6.37.1763464455033; Tue, 18 Nov 2025
+ 03:14:15 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <mwBOip3XK77dn-UJtlk-uQ1N6i3nwsKticZyQdPYzQcsk0dsjXl4oOAh-Neoxv-0TlpKnt_FEJwx8ses5VJglGLJUW-bIG8KWchtoDwCnnA=@protonmail.com>
+ <CAJnrk1ZDEszGbyP4cRh7+mEPu9BLmPrY9Xb-Q3HZnxXZOV7Eag@mail.gmail.com>
+ <CAJnrk1aepU0y55FNG3zDHhK4iPo80MtD+tE_PT+ExhD9SDUS_Q@mail.gmail.com>
+ <_Gt41eQ_dnFbfGcMH4LkwSqmCYBdQGfnPdQfBlAWwkohIUfDUwtdvpQa61Pk2FMD4B-ov2uVIG9FUCJu_GT67Qkde7e2oZdnnRMopuglZHA=@protonmail.com>
+ <CAJnrk1YhZN9=M92dK6EtTTkuhQW_qco_ikwFHmVE0cgiiUnF8g@mail.gmail.com>
+In-Reply-To: <CAJnrk1YhZN9=M92dK6EtTTkuhQW_qco_ikwFHmVE0cgiiUnF8g@mail.gmail.com>
+From: Miklos Szeredi <miklos@szeredi.hu>
+Date: Tue, 18 Nov 2025 12:14:03 +0100
+X-Gm-Features: AWmQ_blrKN0f_3ReHo4Jsd5Q_sFv0SUHiM-Es1B-B3e3LJ8UDFKZwAMp19Cf_jU
+Message-ID: <CAJfpegtzmMFtrg4G5N+M+0GG6QdBrSZStWN2RNO8ut-Uz7LdiA@mail.gmail.com>
+Subject: Re: [REGRESSION] System hangs on suspend after using distrobox container
+To: Joanne Koong <joannelkoong@gmail.com>
+Cc: Athul Krishna <athul.krishna.kr@protonmail.com>, 
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, 17 Nov 2025 12:18:54 -0800, Forest wrote:
-> #regzbot introduced 8f5b7e2bec1c
-> 
-> Running adb (android debug bridge) commands causes the entire system to
-> freeze some time later.
-> 
-> The freeze usually occurs within two hours of running adb, but not always.
-> Stopping adb's persistent background process with `adb kill-server` seems to
-> avoid the freeze. (However, this is not always possible, since the system
-> sometimes freezes just a few seconds after adb is launched.)
-> 
-> It occurs even when no android devices are connected to the system.
+On Mon, 17 Nov 2025 at 20:00, Joanne Koong <joannelkoong@gmail.com> wrote:
 
-Hi,
+> Ok, then that means there is a buggy/stuck fuse server somewhere on
+> the system that is not completing a writeback request. If we look at
+> /sys/fs/fuse/connections/*/waiting  and see "waiting" stuck at a
+> non-zero value, then that should tell us which server is stuck.
 
-If this is caused by running some demon without much hardware connected
-(besides hubs, I guess), I wonder if it might be useful to run strace on
-that thing to see what it is even doing to trigger this crash.
+SysRq-t might also tell us where the server got stuck.
 
-> - No messages are written to dmesg or syslog.
-> - Virtual console switching no longer works.
-> - SysRq key commands no longer work, as far as I can tell.
-> - Whatever was on the display remains intact.
-> - Any already-playing audio enters a short loop, as though the
->   motherboard's sound device is playing from a ring buffer that
->   no longer gets updated.
+> Hmm, I don't think this is a regression because the bug is in
+> userspace and for a functioning fuse server, the new behavior is more
 
-How can you know nothing is logged if the machine becomes unresponsive?
-For such occasions I keep a PCIe card with a serial port to get logs.
-Maybe xHCI debug capability could work too (?), but I've never tried.
+Userspace acting strangely is not an excuse for counting something as
+a regression.   The rule is:  if a practical use case  worked on
+kernel version X and didn't work on X + 1, then it's a regression and
+must be fixed.   And the report does look like a real life use case,
+not something made up.
 
-Regards,
-Michal
+Thanks,
+Miklos
