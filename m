@@ -1,274 +1,175 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B0B32D9EFF
-	for <regressions@lists.linux.dev>; Tue, 18 Nov 2025 13:01:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ECA02D47EE;
+	Tue, 18 Nov 2025 14:16:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763470917; cv=none; b=Vp/eOU17sdzSkRFtZI4JjGvu7HexNk9wYzLbVng70u20e3HSQZ3w6IMWWQ8Tz1nXgcgqvj5YvWYmPWWbj1FleX9Veg3JuBwombObncz6z+njDhpYy4VhHvaRzSWBx2440z7jZQz8OtCHyfxCjIz09MT6xcfq4ekVIyU3kjQwXuQ=
+	t=1763475369; cv=none; b=se8H3Y5ws1FJU7jLi2xzDs3o4Lzsur5EJGW+ZIB+frvALMccifRunAETVVhbCXK51GHdqK0DYOjnCJHYnKTm0xK2WDHN/JtQKQz2nSE1rxqwtnCKE/+MhQSUg63T8YZo0fKYB+V6IbypREWYlG9GpHQ1kIejrNdegFnIFY3MyTk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763470917; c=relaxed/simple;
-	bh=YjtLQBMeP0xt7VJYYWG7rgttKkl7y8Fqq8/Sa5rW9P4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JyN3z8Tndfpw6i+ZPnKnUWqpyOgLPqs0PcBXfmcHsmKeg3QWN5VwTIvjrVAA4JFVbp+pTdedVp4OvZWTeAzS8iQWEhV13YiTlcZCIkm/zBotQSWF1iZ9V0stTRGP3OXH7eHZ1NNIiKS5CLLIaBYUHZ3WGEiQWN1E0pZWYmVF9UI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JFWT0byV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1763475369; c=relaxed/simple;
+	bh=doH4USYe9Q+qpSG9yro8+usxqPz+JrPIod4tnHcThus=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qs6OOHjGzqpAXc7erW9+tG0gnCaCY/77bksXqzIuyj6xVzihM83N873TLE3Dv9eBg92zv3AzBCZfXeICmLdb9HFqLYjCP+DPf+XnRuh3UNdd7s9PW5uaM/+idfT0uWBapXNK8s1OhpwIhmjzhllxorb5fTavu1SUFYlWoV/JXBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GdPPED9I; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JFWT0byV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C8A6C4CEF1
-	for <regressions@lists.linux.dev>; Tue, 18 Nov 2025 13:01:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GdPPED9I"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF761C2BC86;
+	Tue, 18 Nov 2025 14:16:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763470916;
-	bh=YjtLQBMeP0xt7VJYYWG7rgttKkl7y8Fqq8/Sa5rW9P4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=JFWT0byV3j0SjrmiriXWTVsgZK0IslKidYzXjsRrERAxNdu4DV3ThFdf33cGErfhJ
-	 FvPI94uw0Qr8qTf96oMjloJbMK4bDuFi4voF3qWW9JTZxO+PxnNm2/V3vuIzh6WyXG
-	 itI9UlPT8c+Dxosd4uV1h4tQpWsHFBUgcLOGsIbfFnGZMWD7rakybnGjlIf+cP4V1l
-	 0rlMcvMgZQBAXlkZH2mgajPUd1grPESefq4v/VZL9RSEusZpDf7BBMxjy07IRcuARm
-	 lwhyP8bv3bHLYO88hCQjDpW8qCE/mTE9iQP9zsW4gnMbAkOw9REhqytIcW42ibM4d/
-	 jVbLfp27QDCXg==
-Received: by mail-ot1-f53.google.com with SMTP id 46e09a7af769-7c6ce4f65f7so4313531a34.0
-        for <regressions@lists.linux.dev>; Tue, 18 Nov 2025 05:01:56 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVg8dZ6jomwF+MbxiUT1Rx21tZKhdjVDcndpNEKD4A6eoi4bv93RwehpySKTa5qT3O+4j/R3X2/uCwZTg==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwMVEYzvopDQRwhCztZUqFJj9BPv1cbjfkIrVYpbAY7E9vjhWsy
-	KXKYx+d5Y1Q7V0WS5CeKzyC0SACSybKk0O2aGywtjvAeZuAxz+HreaEai+NpF2vmBWwODpxisqJ
-	sYbhZjHvfuz5ljar2OPGRVEcZh/MlHgQ=
-X-Google-Smtp-Source: AGHT+IHXS37uQTmeIx0p25jXSTTQG/CVFr3Vmtg9OyQqsn0MkmXDXyyv1d6qJBfWbiQozCzHQk/UEuxEZE8AqR27gL4=
-X-Received: by 2002:a05:6830:4389:b0:7c7:5d72:567b with SMTP id
- 46e09a7af769-7c75d7272b4mr5643963a34.23.1763470914397; Tue, 18 Nov 2025
- 05:01:54 -0800 (PST)
+	s=k20201202; t=1763475369;
+	bh=doH4USYe9Q+qpSG9yro8+usxqPz+JrPIod4tnHcThus=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=GdPPED9IVVCrQkvzc3jodIPXLI/7vANiYOAKITb1dQBkATo/wQYg/rz6xYnbhP6X9
+	 0tGX//40TjuYWc3y5FKKk8zIOf8jjjRgX2sQ36ERqoUpDFNzaU0OPF/Gtd5v2mm9Bc
+	 A945cr/p/j7NL/13Q6DSJ0MhbT2Dd5FBTi3lPxtxn4IPKY77ZTUTe16Y6ROrMM6Rf0
+	 EODL9Ec+5c63l6vBjm7JedVYF69aWo2uoLD3Qa2Hj18yw+y/SU7QWHpdZzw5qwpD8v
+	 HgCStIzXpoXrpKYsExBTZe93YMkxPy0Pu5Aq82Py7vbyl3hqkcZ0vjPts53jOQqhn6
+	 O7JQitX24C0xQ==
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+To: Ulf Hansson <ulf.hansson@linaro.org>, Rose Wu <ya-jou.wu@mediatek.com>,
+ linux-pm@vger.kernel.org
+Cc: rafael.j.wysocki@intel.com, regressions@lists.linux.dev,
+ linux-kernel@vger.kernel.org, wsd_upstream <wsd_upstream@mediatek.com>,
+ linux-mediatek@lists.infradead.org, "artis. chiu" <artis.chiu@mediatek.com>,
+ "Johnny-cc. Kao" <Johnny-cc.Kao@mediatek.com>
+Subject:
+ [PATCH v4] PM: sleep: core: Fix runtime PM enabling in device_resume_early()
+Date: Tue, 18 Nov 2025 15:16:04 +0100
+Message-ID: <12784270.O9o76ZdvQC@rafael.j.wysocki>
+Organization: Linux Kernel Development
+In-Reply-To: <5941318.DvuYhMxLoT@rafael.j.wysocki>
+References:
+ <70b25dca6f8c2756d78f076f4a7dee7edaaffc33.camel@mediatek.com>
+ <CAJZ5v0iTMhWoBfbrPabdo7TkNuOwtC=-6acSe9tbDmyzZEoXwg@mail.gmail.com>
+ <5941318.DvuYhMxLoT@rafael.j.wysocki>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <70b25dca6f8c2756d78f076f4a7dee7edaaffc33.camel@mediatek.com>
- <CAPDyKFqzt70rkHaRP62zErkMi2kFC1iY-NHPWjK0FWZSjZ00jA@mail.gmail.com>
- <CAJZ5v0iTMhWoBfbrPabdo7TkNuOwtC=-6acSe9tbDmyzZEoXwg@mail.gmail.com>
- <5941318.DvuYhMxLoT@rafael.j.wysocki> <CAPDyKFq9boy3xTZ0Zy55QMgNu9MFH50FQeJp8buu4q7WowgFLg@mail.gmail.com>
-In-Reply-To: <CAPDyKFq9boy3xTZ0Zy55QMgNu9MFH50FQeJp8buu4q7WowgFLg@mail.gmail.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Tue, 18 Nov 2025 14:01:43 +0100
-X-Gmail-Original-Message-ID: <CAJZ5v0gMEjBfsLse4FmG_XeXE3Yd4wktq57OwqcytQN4h1+t5w@mail.gmail.com>
-X-Gm-Features: AWmQ_bnsDSjSopji_sFnDz22MaQHn5-fmwPMCMp2aNM-hUEOI8CJfT9twykNx5g
-Message-ID: <CAJZ5v0gMEjBfsLse4FmG_XeXE3Yd4wktq57OwqcytQN4h1+t5w@mail.gmail.com>
-Subject: Re: [PATCH v3] PM: sleep: core: Fix runtime PM enabling in device_resume_early()
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Rose Wu <ya-jou.wu@mediatek.com>, linux-pm@vger.kernel.org, 
-	rafael.j.wysocki@intel.com, regressions@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, wsd_upstream <wsd_upstream@mediatek.com>, 
-	linux-mediatek@lists.infradead.org, "artis. chiu" <artis.chiu@mediatek.com>, 
-	"Johnny-cc. Kao" <Johnny-cc.Kao@mediatek.com>
+Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Nov 18, 2025 at 1:58=E2=80=AFPM Ulf Hansson <ulf.hansson@linaro.org=
-> wrote:
->
-> On Tue, 18 Nov 2025 at 13:45, Rafael J. Wysocki <rafael@kernel.org> wrote=
-:
-> >
-> > On Tuesday, November 18, 2025 1:26:06 PM CET Rafael J. Wysocki wrote:
-> > > On Tue, Nov 18, 2025 at 1:18=E2=80=AFPM Ulf Hansson <ulf.hansson@lina=
-ro.org> wrote:
-> > > >
-> > > > On Tue, 18 Nov 2025 at 12:48, Rafael J. Wysocki <rafael@kernel.org>=
- wrote:
-> > > > >
-> > > > > On Tuesday, November 18, 2025 9:31:08 AM CET Rose Wu wrote:
-> > > > > > Hi,
-> > > > > >
-> > > > > > On Mon, 2025-11-17 at 19:57 +0100, Rafael J. Wysocki wrote:
-> > > > > > >
-> > > > > > > Make two changes to address this problem.
-> > > > > > >
-> > > > > > > First, reorder device_suspend_late() to only disable runtime =
-PM for a
-> > > > > > > device if the power.is_late_suspended flag is going to be set=
- for it.
-> > > > > > > In all of the other cases, disabling runtime PM for the devic=
-e is not
-> > > > > > > in fact necessary.
-> > > > > > >
-> > > > > > > Second, make device_resume_early() only enable runtime PM for=
- the
-> > > > > > > devices with the power.is_late_suspended flag set.
-> > > > > > >
-> > > > > >
-> > > > > > My concern is with the error path in device_suspend_late().
-> > > > > > If a device fails its dpm_run_callback(), it appears that its
-> > > > > > power.is_late_suspended flag is not set, potentially leaving it=
-s runtime
-> > > > > > PM disabled during the resume sequence.
-> > > > >
-> > > > > Right, pm_runtime_enable() is missing in the error path after cal=
-ling
-> > > > > dpm_run_callback().
-> > > > >
-> > > > > ---
-> > > > > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > > >
-> > > > > Runtime PM should only be enabled in device_resume_early() if it =
-has
-> > > > > been disabled for the given device by device_suspend_late().  Oth=
-erwise,
-> > > > > it may cause runtime PM callbacks to run prematurely in some case=
-s
-> > > > > which leads to further functional issues.
-> > > > >
-> > > > > Make two changes to address this problem.
-> > > > >
-> > > > > First, reorder device_suspend_late() to only disable runtime PM f=
-or a
-> > > > > device when it is going to look for the device's callback.  In al=
-l of
-> > > > > the other cases, disabling runtime PM for the device is not in fa=
-ct
-> > > > > necessary.  However, if the device's callback returns an error an=
-d the
-> > > > > power.is_late_suspended flag is not going to be set, enable runti=
-me
-> > > > > PM so it only remains disabled when power.is_late_suspended is se=
-t.
-> > > > >
-> > > > > Second, make device_resume_early() only enable runtime PM for the
-> > > > > devices with the power.is_late_suspended flag set.
-> > > > >
-> > > > > Fixes: 443046d1ad66 ("PM: sleep: Make suspend of devices more asy=
-nchronous")
-> > > > > Reported-by: Rose Wu <ya-jou.wu@mediatek.com>
-> > > > > Closes: https://lore.kernel.org/linux-pm/70b25dca6f8c2756d78f076f=
-4a7dee7edaaffc33.camel@mediatek.com/
-> > > > > Cc: 6.16+ <stable@vger.kernel.org> # 6.16+
-> > > > > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > > > ---
-> > > > >
-> > > > > v1 -> v2: Add pm_runtime_enable() to device_suspend_late() error =
-path (Rose).
-> > > > >
-> > > > > ---
-> > > > >  drivers/base/power/main.c |   15 ++++++++-------
-> > > > >  1 file changed, 8 insertions(+), 7 deletions(-)
-> > > > >
-> > > > > --- a/drivers/base/power/main.c
-> > > > > +++ b/drivers/base/power/main.c
-> > > > > @@ -941,11 +941,11 @@ Run:
-> > > > >
-> > > > >  Skip:
-> > > > >         dev->power.is_late_suspended =3D false;
-> > > > > +       pm_runtime_enable(dev);
-> > > > >
-> > > > >  Out:
-> > > > >         TRACE_RESUME(error);
-> > > > >
-> > > > > -       pm_runtime_enable(dev);
-> > > > >         complete_all(&dev->power.completion);
-> > > > >
-> > > > >         if (error) {
-> > > > > @@ -1630,12 +1630,6 @@ static void device_suspend_late(struct d
-> > > > >         TRACE_DEVICE(dev);
-> > > > >         TRACE_SUSPEND(0);
-> > > > >
-> > > > > -       /*
-> > > > > -        * Disable runtime PM for the device without checking if =
-there is a
-> > > > > -        * pending resume request for it.
-> > > > > -        */
-> > > > > -       __pm_runtime_disable(dev, false);
-> > > > > -
-> > > > >         dpm_wait_for_subordinate(dev, async);
-> > > > >
-> > > > >         if (READ_ONCE(async_error))
-> > > > > @@ -1649,6 +1643,12 @@ static void device_suspend_late(struct d
-> > > > >         if (dev->power.syscore || dev->power.direct_complete)
-> > > > >                 goto Complete;
-> > > > >
-> > > > > +       /*
-> > > > > +        * Disable runtime PM for the device without checking if =
-there is a
-> > > > > +        * pending resume request for it.
-> > > > > +        */
-> > > > > +       __pm_runtime_disable(dev, false);
-> > > > > +
-> > > >
-> > > > Moving this here means we are going to keep runtime pm enabled for
-> > > > syscore devices during system wide suspend/resume. That's quite a
-> > > > change in behaviour for a fix for a regression, I think. Not saying
-> > > > that it can't work though.
-> > >
-> > > syscore devices can be a special case, but I thought it wouldn't be
-> > > necessary to special-case them.
-> > >
-> > > Do you actually know about any of them needing special casing?
-> >
-> > In any case, below is a v3 that special-cases syscore devices.  Fortuna=
-tely,
-> > it is not much more complicated than the v2.
-> >
-> > Thanks!
-> >
-> > ---
-> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> >
-> > Runtime PM should only be enabled in device_resume_early() if it has
-> > been disabled for the given device by device_suspend_late().  Otherwise=
-,
-> > it may cause runtime PM callbacks to run prematurely in some cases
-> > which leads to further functional issues.
-> >
-> > Make two changes to address this problem.
-> >
-> > First, reorder device_suspend_late() to only disable runtime PM for a
-> > device when it is going to look for the device's callback or if the
-> > device is a "syscore" one.  In all of the other cases, disabling runtim=
-e
-> > PM for the device is not in fact necessary.  However, if the device's
-> > callback returns an error and the power.is_late_suspended flag is not
-> > going to be set, enable runtime PM so it only remains disabled when
-> > power.is_late_suspended is set.
-> >
-> > Second, make device_resume_early() only enable runtime PM for the
-> > devices with the power.is_late_suspended flag set.
-> >
-> > Fixes: 443046d1ad66 ("PM: sleep: Make suspend of devices more asynchron=
-ous")
-> > Reported-by: Rose Wu <ya-jou.wu@mediatek.com>
-> > Closes: https://lore.kernel.org/linux-pm/70b25dca6f8c2756d78f076f4a7dee=
-7edaaffc33.camel@mediatek.com/
-> > Cc: 6.16+ <stable@vger.kernel.org> # 6.16+
-> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > ---
-> >
-> > v2 -> v1:
-> >    * Also set is_late_suspended for syscore devices to avoid skipping r=
-untime PM
-> >      disabling for them (Ulf).
-> >    * Update the changelog to reflect the above.
-> >
-> > v1 -> v2:
-> >    * Add pm_runtime_enable() to device_suspend_late() error path (Rose)=
-.
-> >    * Update the changelog to reflect the above.
-> >
-> > ---
-> >  drivers/base/power/main.c |   25 ++++++++++++++++---------
-> >  1 file changed, 16 insertions(+), 9 deletions(-)
-> >
-> > --- a/drivers/base/power/main.c
-> > +++ b/drivers/base/power/main.c
-> > @@ -903,7 +903,10 @@ static void device_resume_early(struct d
-> >         TRACE_DEVICE(dev);
-> >         TRACE_RESUME(0);
-> >
-> > -       if (dev->power.syscore || dev->power.direct_complete)
-> > +       if (dev->power.syscore)
-> > +               goto Skip;
->
-> This will enable runtime PM for a syscore device, even if it wasn't
-> disabled when device_suspend_late() wasn't called for it.
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Yeah, I need to reorder this after the power.is_late_suspended check.
+Runtime PM should only be enabled in device_resume_early() if it has
+been disabled for the given device by device_suspend_late().  Otherwise,
+it may cause runtime PM callbacks to run prematurely in some cases
+which leads to further functional issues.
 
-I'll send a v4 later today.
+Make two changes to address this problem.
 
-Thanks!
+First, reorder device_suspend_late() to only disable runtime PM for a
+device when it is going to look for the device's callback or if the
+device is a "syscore" one.  In all of the other cases, disabling runtime
+PM for the device is not in fact necessary.  However, if the device's
+callback returns an error and the power.is_late_suspended flag is not
+going to be set, enable runtime PM so it only remains disabled when
+power.is_late_suspended is set.
+
+Second, make device_resume_early() only enable runtime PM for the
+devices with the power.is_late_suspended flag set.
+
+Fixes: 443046d1ad66 ("PM: sleep: Make suspend of devices more asynchronous")
+Reported-by: Rose Wu <ya-jou.wu@mediatek.com>
+Closes: https://lore.kernel.org/linux-pm/70b25dca6f8c2756d78f076f4a7dee7edaaffc33.camel@mediatek.com/
+Cc: 6.16+ <stable@vger.kernel.org> # 6.16+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+
+v3 -> v4:
+   * Reorder the syscore check in device_resume_early() after the
+     is_late_suspended check (Ulf)
+   * Update the changelog to reflect the above.
+
+v2 -> v3:
+   * Also set is_late_suspended for syscore devices to avoid skipping runtime PM
+     disabling for them (Ulf).
+   * Update the changelog to reflect the above.
+
+v1 -> v2:
+   * Add pm_runtime_enable() to device_suspend_late() error path (Rose).
+   * Update the changelog to reflect the above.
+
+---
+ drivers/base/power/main.c |   25 ++++++++++++++++---------
+ 1 file changed, 16 insertions(+), 9 deletions(-)
+
+--- a/drivers/base/power/main.c
++++ b/drivers/base/power/main.c
+@@ -903,12 +903,15 @@ static void device_resume_early(struct d
+ 	TRACE_DEVICE(dev);
+ 	TRACE_RESUME(0);
+ 
+-	if (dev->power.syscore || dev->power.direct_complete)
++	if (dev->power.direct_complete)
+ 		goto Out;
+ 
+ 	if (!dev->power.is_late_suspended)
+ 		goto Out;
+ 
++	if (dev->power.syscore)
++		goto Skip;
++
+ 	if (!dpm_wait_for_superior(dev, async))
+ 		goto Out;
+ 
+@@ -941,11 +944,11 @@ Run:
+ 
+ Skip:
+ 	dev->power.is_late_suspended = false;
++	pm_runtime_enable(dev);
+ 
+ Out:
+ 	TRACE_RESUME(error);
+ 
+-	pm_runtime_enable(dev);
+ 	complete_all(&dev->power.completion);
+ 
+ 	if (error) {
+@@ -1630,12 +1633,6 @@ static void device_suspend_late(struct d
+ 	TRACE_DEVICE(dev);
+ 	TRACE_SUSPEND(0);
+ 
+-	/*
+-	 * Disable runtime PM for the device without checking if there is a
+-	 * pending resume request for it.
+-	 */
+-	__pm_runtime_disable(dev, false);
+-
+ 	dpm_wait_for_subordinate(dev, async);
+ 
+ 	if (READ_ONCE(async_error))
+@@ -1646,9 +1643,18 @@ static void device_suspend_late(struct d
+ 		goto Complete;
+ 	}
+ 
+-	if (dev->power.syscore || dev->power.direct_complete)
++	if (dev->power.direct_complete)
+ 		goto Complete;
+ 
++	/*
++	 * Disable runtime PM for the device without checking if there is a
++	 * pending resume request for it.
++	 */
++	__pm_runtime_disable(dev, false);
++
++	if (dev->power.syscore)
++		goto Skip;
++
+ 	if (dev->pm_domain) {
+ 		info = "late power domain ";
+ 		callback = pm_late_early_op(&dev->pm_domain->ops, state);
+@@ -1679,6 +1685,7 @@ Run:
+ 		WRITE_ONCE(async_error, error);
+ 		dpm_save_failed_dev(dev_name(dev));
+ 		pm_dev_err(dev, state, async ? " async late" : " late", error);
++		pm_runtime_enable(dev);
+ 		goto Complete;
+ 	}
+ 	dpm_propagate_wakeup_to_parent(dev);
+
+
+
