@@ -1,225 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 983D227A93C;
-	Wed, 19 Nov 2025 08:40:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD3D32F5A22;
+	Wed, 19 Nov 2025 08:48:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.133.4.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763541616; cv=none; b=OR9Dl1CU/1s3+DdoavEUY2gPIX3xgUIsvVB1p88ML1CShMdmULneToHHLh7rJX4Y5Qfj3Odvs25122gIHROkzvDrWI99XmEwyQauKED8mqeMDG8IYXQUADJQ8lKAfroxIftvbzh9NS+ryFlrwtVL/fOb23kxzA5pSfegc3AvksU=
+	t=1763542121; cv=none; b=UIhGxSsXSddWnOiH+kHLW6HK75fd1X/An2U4og3RtIMda8tJ+CikDeMZwKI0IG6F4uxQ7AiOqfq0ICO4FhqMEyYdVwOlNeR2cVubzWmBRnniIy6E97JYkQdP8VRhFxtKm50gHRdspq4ucLmPIjK5+1CLU6lgQJydLLlQbkN/8nY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763541616; c=relaxed/simple;
-	bh=Sd8Jjly/d6UqxBbCor2GN3sPodijqt4VgG+HC4byw0s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GmJ2Jk30TgjLq7l6SzeecUW4MzGP+cjseZHPTbtxB1Tx1sWiCMTf9ZWB0jei7p9wjUWEL/dErtaefeR29GkLzi+P6Iwlplhp4CKt/BGuk+NNz5wwgO4GSrPWL7/27q+98VUFR41w8ovlXvKiCTaUvJbCzZY1CnGXqTnROU5z2DQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uKUK1snt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1763542121; c=relaxed/simple;
+	bh=ZXDJCTG0a3wVBGkMR+gySyKqlObDwQn/SbGAsOSvlsc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=aijpIE+vbn8DeUn0fO2WOr1zDmz+VdWb7S9YWx2WEXkSZU3s+LjPcYBJM5vTTwSsCrj1V84kGy89XgvjA1xMUJHOkgOhu5GLrVRGyoSR/SEcgAcyUG+Ih8zMSrEY4roh+JvVQPmDy3+W7Mx4ofzEA7OHqonnhcmXiL6O5BW9X9o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de; spf=pass smtp.mailfrom=zedat.fu-berlin.de; dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b=n05BBwMM; arc=none smtp.client-ip=130.133.4.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zedat.fu-berlin.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uKUK1snt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8118CC4CEF5;
-	Wed, 19 Nov 2025 08:40:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763541615;
-	bh=Sd8Jjly/d6UqxBbCor2GN3sPodijqt4VgG+HC4byw0s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uKUK1sntb/7yhpzB6erpq31C+zZQq3I43MzwxE6STuqqof5W8Bjam/xRWNezTau5V
-	 XEMqosoidnBVrHBaZ4XPaFp2u/+dUZKJNEX3aWKHnQ12fp8t7Bio28VvShZJsnQLid
-	 YsOHDVEHw9frztab96oA9uyMxddbFwVmqwSkpuTaDwYArhU0jyjhf/3Bo5d4CDGC7q
-	 9R/tVhu+2h8WyRLivdpHyu5lZh2JQtrx21AZXPbV8x+9sT8DnOJ+yp1iNU2zb6CpMi
-	 Gxk8al9Kur6TLBt6+x5PLc77JQxFn4esfwbmH7B8TJgwKdMuiejSqq3x1BwSw86sLZ
-	 +DmymY6iFb+sw==
-Date: Wed, 19 Nov 2025 09:40:11 +0100
-From: Maxime Ripard <mripard@kernel.org>
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Luca Ceresoli <luca.ceresoli@bootlin.com>, 
-	Francesco Dolcini <francesco@dolcini.it>, 
-	=?utf-8?Q?Jo=C3=A3o_Paulo_Gon=C3=A7alves?= <jpaulo.silvagoncalves@gmail.com>, Andrzej Hajda <andrzej.hajda@intel.com>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, 
-	=?utf-8?Q?Jo=C3=A3o_Paulo_Gon=C3=A7alves?= <joao.goncalves@toradex.com>, linux-kernel@vger.kernel.org, regressions@lists.linux.dev, 
-	thomas.petazzoni@bootlin.com
-Subject: Re: [REGRESSION] TI SN65DSI83 is being reset making display to blink
- On/Off
-Message-ID: <gw635fewdxe7falrxz44gxstiuzjpmeh45rwe5bglto524faaz@hj4z2vh22p5n>
-References: <bhkn6hley4xrol5o3ytn343h4unkwsr26p6s6ltcwexnrsjsdx@mgkdf6ztow42>
- <20251113084950.44a09e8e@bootlin.com>
- <20251113091910.GA15538@francesco-nb>
- <DEB2QIR2RB1C.3IQC9WYGAUVZC@bootlin.com>
- <nkiu23g4esqjsuri3it6eo3lrpvvbqkmx3wijsehc6ov4tb6ui@c5qvcydwpxmn>
- <20251119085127.6e3e429e@bootlin.com>
+	dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b="n05BBwMM"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=fu-berlin.de; s=fub01; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:From:
+	Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=ufP6pvj4SMFKi7WHnDZB+3cQCZeOtNt9XW3iW+AYQSI=; t=1763542117;
+	x=1764146917; b=n05BBwMMMbOTne81dp8UlC7tW1JMMbcP/04eVh9MvUkxm6KU7zdd9gllxvhmu
+	Yo3Ut6DARy2s7gxViPpfHuG964QEOo4LeXN2iuSjQTFIF6tiwG3Pm1bXq8afEJBavc6EBV0Er/bPC
+	LXBtreCutjZBT9SAbDjTe/8ZSm9qTpEduHSyEp9q5NpJWJcpUzLjuLTBsipq7KFxqtyTCNqFiPeKF
+	uIugfEGEkWrq3kbHZ7Nsjzlf+8pSjDohbkapmIcgVhL0u2SlUcldd6rVnbI/GVA69V9UadUxRonko
+	E86ZcCQ4LdtembBwZuegzCkWT4ztblb/mhQr6E8Jgb6I0pUxeg==;
+Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
+          by outpost.zedat.fu-berlin.de (Exim 4.98)
+          with esmtps (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@zedat.fu-berlin.de>)
+          id 1vLdrY-00000001IS2-2p4x; Wed, 19 Nov 2025 09:48:28 +0100
+Received: from tmo-084-142.customers.d1-online.com ([80.187.84.142] helo=[172.20.10.2])
+          by inpost2.zedat.fu-berlin.de (Exim 4.98)
+          with esmtpsa (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@physik.fu-berlin.de>)
+          id 1vLdrY-00000001YKa-1o91; Wed, 19 Nov 2025 09:48:28 +0100
+Message-ID: <bb9b0a6720b8bba08981fb0d0d0de5e61b0cbb2d.camel@physik.fu-berlin.de>
+Subject: Re: PROBLEM: errors mounting /dev/fd0 on sparc64 (regression)
+From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+To: Nick Bowler <nbowler@draconx.ca>, linux-block@vger.kernel.org, 
+	sparclinux@vger.kernel.org
+Cc: Christoph Hellwig <hch@lst.de>, regressions@lists.linux.dev
+Date: Wed, 19 Nov 2025 09:48:24 +0100
+In-Reply-To: <u3aaz4bx7xwlboyppeg4y3eixzgxbcodlmw7cwqloskmg6oqw2@j437p47sfww6>
+References: 
+	<u3aaz4bx7xwlboyppeg4y3eixzgxbcodlmw7cwqloskmg6oqw2@j437p47sfww6>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.58.1 
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha384;
-	protocol="application/pgp-signature"; boundary="ect62by5g34finla"
-Content-Disposition: inline
-In-Reply-To: <20251119085127.6e3e429e@bootlin.com>
+X-Original-Sender: glaubitz@physik.fu-berlin.de
+X-ZEDAT-Hint: PO
 
+Hi Nick,
 
---ect62by5g34finla
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [REGRESSION] TI SN65DSI83 is being reset making display to blink
- On/Off
-MIME-Version: 1.0
-
-On Wed, Nov 19, 2025 at 08:51:27AM +0100, Herve Codina wrote:
-> Hi Maxime,
+On Wed, 2025-11-19 at 03:04 -0500, Nick Bowler wrote:
+> With current kernels on my sparc64 system, I can no longer mount floppy
+> disks via /dev/fd0.  Mounting the specific-format device /dev/fd0u1440
+> works ok, and if I do that once then /dev/fd0 works afterwards.
 >=20
-> On Tue, 18 Nov 2025 17:56:36 +0100
-> Maxime Ripard <mripard@kernel.org> wrote:
+>   # mount -t vfat /dev/fd0 /mnt
+>   mount: mounting /dev/fd0 on /mnt failed: No such device or address
 >=20
-> > On Mon, Nov 17, 2025 at 04:27:28PM +0100, Luca Ceresoli wrote:
-> > > On Thu Nov 13, 2025 at 10:19 AM CET, Francesco Dolcini wrote: =20
-> > > > On Thu, Nov 13, 2025 at 08:49:50AM +0100, Herve Codina wrote: =20
-> > > >> On Mon, 10 Nov 2025 16:03:51 -0300
-> > > >> Jo=E3o Paulo Gon=E7alves <jpaulo.silvagoncalves@gmail.com> wrote: =
-=20
-> > > >> > After commit ad5c6ecef27e ("drm: bridge: ti-sn65dsi83: Add error
-> > > >> > recovery mechanism"), our DSI display stopped working correctly.=
- The
-> > > >> > display internally uses a TI SN65DSI83 to convert DSI-to-LVDS, a=
-nd with
-> > > >> > the change, it keeps blinking on and off because the bridge is b=
-eing
-> > > >> > reset by the error recovery mechanism.
-> > > >> >
-> > > >> > Even before the change, it was possible to see the message below=
- from
-> > > >> > the driver indicating that the bridge's internal PLL was not loc=
-ked
-> > > >> > (register 0xE5, bit 0 in [1]):
-> > > >> >
-> > > >> > [ 11.198616] sn65dsi83 2-002c: Unexpected link status 0x01
-> > > >> >
-> > > >> > However, it was working. After the change, it stopped working. M=
-asking
-> > > >> > the PLL error makes it work again:
-> > > >> >
-> > > >> > diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi83.c b/drivers/gpu=
-/drm/bridge/ti-sn65dsi83.c
-> > > >> > index 033c44326552..89a0a2ab45b1 100644
-> > > >> > --- a/drivers/gpu/drm/bridge/ti-sn65dsi83.c
-> > > >> > +++ b/drivers/gpu/drm/bridge/ti-sn65dsi83.c
-> > > >> > @@ -429,7 +429,7 @@ static void sn65dsi83_handle_errors(struct s=
-n65dsi83 *ctx)
-> > > >> >          */
-> > > >> >
-> > > >> >         ret =3D regmap_read(ctx->regmap, REG_IRQ_STAT, &irq_stat=
-);
-> > > >> > -       if (ret || irq_stat) {
-> > > >> > +       if (ret || (irq_stat & ~REG_IRQ_STAT_CHA_PLL_UNLOCK)) {
-> > > >> >                 /*
-> > > >> >                  * IRQ acknowledged is not always possible (the =
-bridge can be in
-> > > >> >                  * a state where it doesn't answer anymore). To =
-prevent an
-> > > >> >
-> > > >> > Any suggestions on how to proceed here?
-> > > >> >
-> > > >> > #regzbot introduced: ad5c6ecef27e
-> > > >> >
-> > > >> > [1] https://www.ti.com/lit/ds/symlink/sn65dsi83.pdf
-> > > >> > =20
-> > > >>
-> > > >> The PLL should be locked.
-> > > >>
-> > > >> Also in the datasheet, in 'Table 7-2. Initialization Sequence', th=
-e status
-> > > >> is checked at the end of the initialization sequence and the seque=
-nce has to
-> > > >> be done again when the status register value is not 0x00.
-> > > >>
-> > > >> Even before monitoring (irq or polling method), you have an issue =
-with your PLL
-> > > >> mentioned with the "sn65dsi83 2-002c: Unexpected link status 0x01"=
- message.
-> > > >>
-> > > >> I don't understand even how your panel can be correctly driven wit=
-h the bridge
-> > > >> PLL unlock. =20
-> > > >
-> > > > We'll try to figure out the reason and see what's the best path for=
-ward.
-> > > >
-> > > > Whatever was the reason it was working before, and it should stay
-> > > > working =20
-> > >=20
-> > > I agree with Herv=E9 that using the chip with an unlocked PLL looks d=
-angerous
-> > > and totally out of spec. So I encourage you to investigate what is go=
-ing on
-> > > in the hardware looking for the root cause, checking whether the PLL =
+>   # dmesg
+>   [...]
+>   mount: attempt to access beyond end of device
+>   fd0: rw=3D0, sector=3D0, nr_sectors =3D 16 limit=3D8
+>   floppy: error 10 while reading block 0
+>   /dev/fd0: Can't open blockdev
+>=20
+>   # mount -t vfat /dev/fd0u1440 /mnt
+>   [works]
+>=20
+>   # umount /mnt
+>   # mount -t vfat /dev/fd0 /mnt
+>   [works]
+>=20
+> I bisected the failure to this old commit:
+>=20
+>   commit 74d46992e0d9dee7f1f376de0d56d31614c8a17a
+>   Author: Christoph Hellwig <hch@lst.de>
+>   Date:   Wed Aug 23 19:10:32 2017 +0200
+>  =20
+>       block: replace bi_bdev with a gendisk pointer and partitions index
+>=20
+> And digging in a bit further, prior to this commit the maxsector value
+> in bio_check_eod (which prints this error) was calculated as 0, which
+> would seem to effectively disable the check, but now it is 8.  This 8
+> is coming from the set_capacity call in floppy_open, which in turn
+> comes from the entry in the floppy_sizes table which is initially
+> set to MAX_DISK_SIZE*2 (a constant 8).
+>=20
+> Using the latest 6.18-rc6, if I change the definition of MAX_DISK_SIZE
+> in floppy.c from 4 to 8, then mounting /dev/fd0 works again, but I'm
+> unsure if this is a proper fix.
+
+This is a known problem and documented here [1] in the sparclinux issue tra=
+cker.
+
+The problem is basically that the floppy driver assumes that the page size =
 is
-> > > really unlocked and how to get it working properly.
-> > >=20
-> > > The driver should be definitely be written focusing on the nominal ca=
-se and
-> > > handle out-of-spec cases as an exception, not the other way around.
-> > >=20
-> > > I also agree your hardware should not stop working when upgrading to =
-a new
-> > > kernel, so this investigation would ideally nail down tha root cause =
-and
-> > > point to a solution in a very short time.
-> > >=20
-> > > Herv=E9 has matured quite some experience on SN65DSI84 error manageme=
-nt,
-> > > leading to his error recovery patch, and I also have a board with tha=
-t chip
-> > > on my desk. So we may be helpful in discussion, as well as reviewing =
-and
-> > > testing patches. =20
-> >=20
-> > I'd say we should do it the other way around. If that patch breaks
-> > systems that were working fine so far without a clear reason, we should
-> > revert the offending commit, and *then* work towards a solution to
-> > support error recovery that doesn't break that system.
-> >=20
->=20
-> I have the feeling that the broken system has an issue from the beginning.
-> Why its PLL has been unlocked ?
->=20
-> I would like to understand what happens but, of course, I don't have the
-> hardware to investigate.
->=20
-> Could the issue been on a component before the SN65DSI83 bridge?
-> I mean the component in charge of generating the DSI clock can be a culpr=
-it.
+always 4k which fails on any target using larger page sizes such as SPARC w=
+here
+the default page size is 8k.
 
-I understand what you're saying, but it's not the right way to think about =
-it.
+Adrian
 
-Let's change perspective.
+> [1] https://github.com/sparclinux/issues/issues/18
 
-Your work laptop just got a kernel upgrade, and its display doesn't work
-anymore. Would you be happy with the answer "it was broken all along, we
-might be able to help you fix it, maybe not, who knows when we'll have a
-fix"?
-
-It's frustrating, you might not even be able to debug it in the first
-place, and most importantly, broken or not, it used to work just fine.
-
-If it used to work for years, how can you possibly argue that it was
-broken all along?
-
-Maxime
-
---ect62by5g34finla
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaR2CZgAKCRAnX84Zoj2+
-djviAYCSTEtOOI1zpb2UiYR1Hde5nbhZRSMEy6QAYVRcoBEq7xRg2BvEWEeZrUfn
-mxO5dxkBfR2fjekadC06TDY5ARtH4GYFXTqrHhdsatvcxz0P+l10gfQdXXbY7MYk
-JRBlbgwA3g==
-=B8eM
------END PGP SIGNATURE-----
-
---ect62by5g34finla--
+--=20
+ .''`.  John Paul Adrian Glaubitz
+: :' :  Debian Developer
+`. `'   Physicist
+  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
