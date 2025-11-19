@@ -1,134 +1,136 @@
-Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18DB02F83A1
-	for <regressions@lists.linux.dev>; Wed, 19 Nov 2025 17:27:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.171.202.116
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5103530DD0A
+	for <regressions@lists.linux.dev>; Wed, 19 Nov 2025 17:30:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763573272; cv=none; b=CB01BCBqTTczDa8eVaaapeuk6px8lYtEpCieDLMdihbAp+BlG5EWpWrQNCnpEa9faNdM52+FJYP7Z2q2XiZ6HAe1S5TZXo/ISpY9g/fWF9cBFcS9s+6Ww2VTeNq9lCgzjUJ5rzH7t5plI3p/RnlptB7dJ72zHxuj5K4GE49a3yQ=
+	t=1763573432; cv=none; b=BSnq7MER49l50DObptn3oqEyoDjeU63PlyJoZQXbavdnqRxgJt/+pZUJi43iVCZ8NHMxNBugiNJkN6sH6Gbd+RSl4B5L9YquJzHkxRvN8xlAEXbI6SHXryqovQct7ej7O7K7OgTdBs65RNZsfF4hsEFTrz871HvleqjE++YScaw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763573272; c=relaxed/simple;
-	bh=eXSv6t3QQV8zRN0ums+zu7zZm/i5lNKi/WW00EAyWXU=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:To:From:Subject:
-	 References:In-Reply-To; b=mvglwwuuW46qnxCj5l9bdTWTVTBKqslLEDb3AAGdfGuraXF+OyzZdrOREltQAgZxyhz9Vh/wGNKdOe0urDr82/N0preH781BweVBzdowJAwj2uWQ8TZK3g6v1Z/WYi+4KlM4MjCtFfrcrqoaoYKF5gf+AuYfks/lhLEJ7sDVNME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=kkuPfBh0; arc=none smtp.client-ip=185.171.202.116
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1763573432; c=relaxed/simple;
+	bh=DulPoKHD+kYa5guw7XEkGvzu8pnfnuu0PPM1s5kskN4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uYJEW/ClKVf/NkRD3kjM+YmQ0uRdG293KNspTmTM3LAsuliQAyDp5io/y3bpDJrBOfKnaAOv0YA1wbsXVmSD68WiHdDq67mtyhNXKbfwfcv2HK/ZhZnLtiV9NlD9IrEnG+OFUeSruN5xwQJTtAFu/r2oGxlCyVI7TZKo6aa01Wg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=QJafdsmd; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="kkuPfBh0"
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-04.galae.net (Postfix) with ESMTPS id B5672C1118E;
-	Wed, 19 Nov 2025 17:27:22 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id E026360699;
-	Wed, 19 Nov 2025 17:27:44 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 3F86B10371742;
-	Wed, 19 Nov 2025 18:27:38 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1763573263; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=eXSv6t3QQV8zRN0ums+zu7zZm/i5lNKi/WW00EAyWXU=;
-	b=kkuPfBh0ufdpV7R+zWbUttiaRdp+4BY0V2xfaFcGwI+X/oWuTkGDjJ0G1JD8dtmJbZheLl
-	Q0qQvDGRYxdWgnFKwhiHzbqXXs1hZnVDBtguGKForO9GX4gi0Y06PhrLNtERaPUs2N6w8A
-	BiFCiwRhlH1yLrZSuzzhRLIt0fYWYHDuSz8UQQNqBUhGmi9qpOvXzft7pfmjXUAzGVTReY
-	Jw592ReCdP15yC3+rkfA7DzlNpcgE8SJhD/R8C9nfQExzx6+2lJnxVtFkiXU+vlPHPurOg
-	JZfhs8ua51CGIxYgR9ld24PDxQd7oWol2z5Rm/qlZqS1618bvCP9ZUfSgnFDVg==
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QJafdsmd"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-7a435a3fc57so6762852b3a.1
+        for <regressions@lists.linux.dev>; Wed, 19 Nov 2025 09:30:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1763573428; x=1764178228; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=TMBoUXycCoalUx2IdYMe60O4++ie5VkCIVBelZSQqfI=;
+        b=QJafdsmd7cyDmuBi9ibZgIoyDKEZ7sTOhg0WJ2xoKPYMsN+ysDXlNaaaY8iJT/WaBF
+         5wBswEoLg0H89lnU7NU0VFtWLLmIeqN2SDo1gCc2gKENwKmMYiktt/145y/SieCshUVd
+         TwPY+OYeS7hkZh+UGeP9Znc009ETpYl042XqQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763573428; x=1764178228;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TMBoUXycCoalUx2IdYMe60O4++ie5VkCIVBelZSQqfI=;
+        b=QIjPkBY81TEt7rXwhXszLpDfyR/5sCHlz+ibmKpN8fzsJlsDVaRoF8fCzM3sGxWzTE
+         pl2bfqhHPIci7nJYJqCGvPdrvRv1SybI8FmkKLrd4l/N9+7gTJu5RP/sHgSFoCFj4fIv
+         V3fhseWM8p7YUOD0EY0ClHYxA/MQ0LrW2a+XDpM4DLYBr/E7J41ClDKBti0UZPB9d1sV
+         dGihDCSWKinql+LFdtGvCqPQZyPVkb1jS1KqmJYAYiPPpQPzBOnD6r8qnvDg5dEVXWh2
+         AlpekCbGiZSI+B8ouX+Uqiu2XpDTinxdjO4h8qIzTCSZaK0xujfcRrTrRBIP+56jN84i
+         eEIg==
+X-Forwarded-Encrypted: i=1; AJvYcCXDD6yI/1VA2qvxvVSOYt3BaPq0g1Bi+lSes3tPGM2ffJj12Wvf+RDZQajnFROf4TA2Oi95AVurMfkwtA==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxNoUh0HvxNvkpLfyYvW3FKPPOIo2AmKlc7LSIykIui1M2tYGas
+	mY7Dz2uOlBEUYPj+qlFmJMDdrZYuCXocS4t4ziKoNnbJRLziMlBtAzBLTkh4buuebQ==
+X-Gm-Gg: ASbGncsozCwyVAU+OI0Hd1d5pSqM8US56Ow2+ILfEmO+efJ1UdRuAhrBdK6z4/x8h8r
+	EYa+8ytoqwVhu3PKvV3fukJwknS2oxpylrOO1YeyGduCDAmPYaNZGLB/Gn3ZNUrrKGmjox4/jpL
+	6gMYnlvCxjnSLHgaqtBQGps21/bJGte3KiV2nawl+ksTw3PJ2JqQrQzUQfvQZBPEtqJ1Vb9xVBN
+	1CUjcHZNRnIEqqTa0GVaDK10/d5cEzudkC33wgGfbFO9I6s8qFFoHP/ZiEV1g2KInq9ymSQnNqQ
+	PKAewrKNIAj5AaLkOf0OgZuKqZFvKHqQ2SfSiK599WZ5Pkkfc18kSoxoPO4+P4gPW7WyBmeHcU7
+	UzkgULE8CDEmkVOdB1YnPDakQw4GvT0juhqDL04s0XHFwrqPmXp5ZZ8cltS4OZrwQEYec5mlfhm
+	1u8SlZNph22a3gs2vRDdmtCT2JzCCn73Io8NDLDcR4zMe0lmk1iUEaFkJx/b+eTfaAhxuEnpE=
+X-Google-Smtp-Source: AGHT+IFB2YSTkbyEbeQu8O7Mtor+aeK/rpWG1+Is+9xqP/zrbkSWBMOGAREHyl95i2ctzd/T2DJJ7Q==
+X-Received: by 2002:aa7:88c9:0:b0:7b8:d12f:90ae with SMTP id d2e1a72fcca58-7c29de3b6f2mr4341114b3a.21.1763573427806;
+        Wed, 19 Nov 2025 09:30:27 -0800 (PST)
+Received: from dianders.sjc.corp.google.com ([2a00:79e0:2e7c:8:cf0b:c8dd:8f4c:d649])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7b92772e713sm19839792b3a.54.2025.11.19.09.30.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Nov 2025 09:30:27 -0800 (PST)
+From: Douglas Anderson <dianders@chromium.org>
+To: Marcel Holtmann <marcel@holtmann.org>,
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: incogcyberpunk@proton.me,
+	regressions@lists.linux.dev,
+	Thorsten Leemhuis <regressions@leemhuis.info>,
+	johan.hedberg@gmail.com,
+	sean.wang@mediatek.com,
+	Douglas Anderson <dianders@chromium.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-bluetooth@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mediatek@lists.infradead.org
+Subject: [PATCH v2] Bluetooth: btusb: mediatek: Avoid btusb_mtk_claim_iso_intf() NULL deref
+Date: Wed, 19 Nov 2025 09:26:42 -0800
+Message-ID: <20251119092641.v2.1.I1ae7aebc967e52c7c4be7aa65fbd81736649568a@changeid>
+X-Mailer: git-send-email 2.52.0.rc1.455.g30608eb744-goog
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 19 Nov 2025 18:27:38 +0100
-Message-Id: <DECUJMA1JWIC.2PYDSYBID4I94@bootlin.com>
-Cc: "Herve Codina" <herve.codina@bootlin.com>, "Maxime Ripard"
- <mripard@kernel.org>, =?utf-8?q?Jo=C3=A3o_Paulo_Gon=C3=A7alves?=
- <jpaulo.silvagoncalves@gmail.com>, "Andrzej Hajda"
- <andrzej.hajda@intel.com>, "Neil Armstrong" <neil.armstrong@linaro.org>,
- "Robert Foss" <rfoss@kernel.org>, "Laurent Pinchart"
- <Laurent.pinchart@ideasonboard.com>, "Jonas Karlman" <jonas@kwiboo.se>,
- "Jernej Skrabec" <jernej.skrabec@gmail.com>, "Maarten Lankhorst"
- <maarten.lankhorst@linux.intel.com>, "Thomas Zimmermann"
- <tzimmermann@suse.de>, "David Airlie" <airlied@gmail.com>, "Simona Vetter"
- <simona@ffwll.ch>, =?utf-8?q?Jo=C3=A3o_Paulo_Gon=C3=A7alves?=
- <joao.goncalves@toradex.com>, <linux-kernel@vger.kernel.org>,
- <regressions@lists.linux.dev>, <thomas.petazzoni@bootlin.com>
-To: "Francesco Dolcini" <francesco@dolcini.it>, "Tomi Valkeinen"
- <tomi.valkeinen@ideasonboard.com>
-From: "Luca Ceresoli" <luca.ceresoli@bootlin.com>
-Subject: Re: [REGRESSION] TI SN65DSI83 is being reset making display to
- blink On/Off
-X-Mailer: aerc 0.20.1
-References: <bhkn6hley4xrol5o3ytn343h4unkwsr26p6s6ltcwexnrsjsdx@mgkdf6ztow42> <20251113084950.44a09e8e@bootlin.com> <20251113091910.GA15538@francesco-nb> <DEB2QIR2RB1C.3IQC9WYGAUVZC@bootlin.com> <nkiu23g4esqjsuri3it6eo3lrpvvbqkmx3wijsehc6ov4tb6ui@c5qvcydwpxmn> <20251119085127.6e3e429e@bootlin.com> <gw635fewdxe7falrxz44gxstiuzjpmeh45rwe5bglto524faaz@hj4z2vh22p5n> <DECL7AZNNMX5.MC2QTENKZTWE@bootlin.com> <20251119111221.GA18602@francesco-nb> <593e90d9-cf04-45a2-8172-98c441ec79f5@ideasonboard.com> <20251119122443.GA29208@francesco-nb>
-In-Reply-To: <20251119122443.GA29208@francesco-nb>
-X-Last-TLS-Session-Version: TLSv1.3
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Hello,
+In btusb_mtk_setup(), we set `btmtk_data->isopkt_intf` to:
+  usb_ifnum_to_if(data->udev, MTK_ISO_IFNUM)
 
-On Wed Nov 19, 2025 at 1:24 PM CET, Francesco Dolcini wrote:
-...
->> I might be mistaken, but I don't think the PLL will work if unlocked...
->> But maybe the case is that it unlocks and lock again right afterwards.
->> >> Jo=C3=A3o, Francesco, on what hardware do you observe the problem? Wh=
-ich SoC?
->> >> Which encoder, any previous bridges?
->> >
->> > Verdin AM62, TI AM62 SOC, arch/arm64/boot/dts/ti/k3-am62-verdin.dtsi
->> >
->> > There is a DPI to DSI bridge in the module, tc358778, it has a 25MHz
->> > reference clock.
->> >
->> > TI AM62 DPI -> Toshiba TC358768 DSI -> TI SN65DSI83 -> Display
->> >
->> > From a preliminary investigation this is a HW limitation, we are not
->> > able to generate a "good enough" DSI clock, see tc358768_calc_pll() fo=
-r
+That function can return NULL in some cases. Even when it returns
+NULL, though, we still go on to call btusb_mtk_claim_iso_intf().
 
-Thanks Francesco for the feedback!
+As of commit e9087e828827 ("Bluetooth: btusb: mediatek: Add locks for
+usb_driver_claim_interface()"), calling btusb_mtk_claim_iso_intf()
+when `btmtk_data->isopkt_intf` is NULL will cause a crash because
+we'll end up passing a bad pointer to device_lock(). Prior to that
+commit we'd pass the NULL pointer directly to
+usb_driver_claim_interface() which would detect it and return an
+error, which was handled.
 
-I'm not sure I completely understand the issue described, but if the TI
-bridge requires a clock that cannot be provided by the hardware, then this
-actually looks like "a HW limitation" as you wrote, due to a HW integration
-limitation/bug/issue/whatever. In case this is confirmed, I think quirks
-are an appropriate tool to handle HW integration issues.
+Resolve the crash in btusb_mtk_claim_iso_intf() by adding a NULL check
+at the start of the function. This makes the code handle a NULL
+`btmtk_data->isopkt_intf` the same way it did before the problematic
+commit (just with a slight change to the error message printed).
 
->> I haven't studied the docs or done any testing, but I would think that
->> it doesn't matter for the PLL even if the incoming DSI clock is a bit
->> off, as long as it's continuous and stable.
->>
->> My first thought was that the DSI is using non-continuous clock, but at
->> least the driver has code to drop the MIPI_DSI_CLOCK_NON_CONTINUOUS flag=
-.
->>
->> > the actual code implementation of it, I believe that the datasheet is
->> > not available without NDA.
->> >
->> > Maybe the ugly hack "works-without-pll" is the way to work? It will
->> > require a DT change, but this seems doable.
->>
->> Revert is easier than adding new hacky DT properties... At least until
->> the problem is understood.
->>
->> > Please note that this is the outcome of a short investigation done
->> > yesterday afternoon, so maybe I am overlooking something, unfortunatel=
-y
->> > I do not have the bandwidth to work on it more this week.
->> >
->> >> Which clock rates?
->> > 71100000
->> It would be a good test to try out with a few different clocks.
->
-> 50 MHz works, for example.
->
-> It seems that the issue exists when the actual display clock is different
-> from the dsi clock. And this can happen for the reason I explained
-> before (the DSI clock is computed starting from this 25MHz reference
-> clock).
+Reported-by: IncogCyberpunk <incogcyberpunk@proton.me>
+Closes: http://lore.kernel.org/r/a380d061-479e-4713-bddd-1d6571ca7e86@leemhuis.info
+Fixes: e9087e828827 ("Bluetooth: btusb: mediatek: Add locks for usb_driver_claim_interface()")
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
+I have no way to test this commit myself other than to compile it. It
+looks fairly straightforward, though, so I'm hopeful it will fix the
+problem.
 
+Changes in v2:
+- Rebase atop commit 529ac8e706c3 ("Bluetooth: ... mtk iso interface")
 
---
-Luca Ceresoli, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+ drivers/bluetooth/btusb.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
+index fcc62e2fb641..683ac02e964b 100644
+--- a/drivers/bluetooth/btusb.c
++++ b/drivers/bluetooth/btusb.c
+@@ -2751,6 +2751,11 @@ static void btusb_mtk_claim_iso_intf(struct btusb_data *data)
+ 	if (!btmtk_data)
+ 		return;
+ 
++	if (!btmtk_data->isopkt_intf) {
++		bt_dev_err(data->hdev, "Can't claim NULL iso interface");
++		return;
++	}
++
+ 	/*
+ 	 * The function usb_driver_claim_interface() is documented to need
+ 	 * locks held if it's not called from a probe routine. The code here
+-- 
+2.52.0.rc1.455.g30608eb744-goog
+
