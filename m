@@ -1,254 +1,212 @@
-Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68B19358D14
-	for <regressions@lists.linux.dev>; Wed, 19 Nov 2025 12:25:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3D8B30BBA6;
+	Wed, 19 Nov 2025 12:43:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763555107; cv=none; b=sRd/YmM+pRqOfByAHMuo/W8TcglEu8giBlKuqcRduG0VmKxdtfM+O4a+m2nZsEnFFGXpQkCJIkOLJ1SF32/i2jFAoyTY5dWDy26lOQyEjr53Wa+Iv4R+jjFbP/J7mSvDmsIz4PKucv6KIHzsj3XNyLzKE7bpMlKGjcOvXxHQHhI=
+	t=1763556233; cv=none; b=WbjClS1VbWIFxVSZ8RcsoQub9DDeknP0gGFTgpMZK72G8eyVqbFbcWMu7bK+2ENHTGv+RhcJGgvQSoWYu07/I8Z8yy3UcypamnK4S7NwHJg6uiCNieC24oytQPl8ITSXyw+TkN3rAXEC9MlJ3EeIBJcu9U7CLnAd2AMllCjE+ag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763555107; c=relaxed/simple;
-	bh=04AHvJmDyRrjdMEPyj9xeI/8fcb8/vRW69QlM1XZQw8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VO/+mkIV/m8KkIaSaTA1VQ7RtLsP19NXQ0lp0yQ768h4/zGsdyY+htiQCNKYxmzP37iRkDtHNDMumgYM21378YJHlp+HwR0Vr/vtl2+DPiQ5yySWdcJsdTDBydRj6rhewFywTzEIDXIpwRYI8mUwzncf4wYTZY9OdzgKHIaUacs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=dTtCuE0a; arc=none smtp.client-ip=217.194.8.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
+	s=arc-20240116; t=1763556233; c=relaxed/simple;
+	bh=MayKp5+eHRdfu2fO7egFUne0TKfl1IZ9Rxo3gkN0D50=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=rARiSz/jOYuGp8ZP+opssHUWrLZi9jqRLj1x8FMQR7ySxnnwxaZNtmlVSAi1wDUT8wcz7Wu/yOzfPQdfEmRi02sKWP6ec+hIRDJEZ64DU77WBrH8udQp4c0EhaCRJ6YIi4Af1U7WHmC8sXqeHWrrViJ5x2kRsuiTFV2d79SfXhc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=iByY91DR; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="dTtCuE0a"
-Received: from francesco-nb (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
-	by mail11.truemail.it (Postfix) with ESMTPA id 63EBC2001A;
-	Wed, 19 Nov 2025 13:25:01 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
-	s=default; t=1763555101;
-	bh=LEX/D9k7xoFl8HfXIufSUzJTPk4jv4OFjOsNLKegCS0=; h=From:To:Subject;
-	b=dTtCuE0avsyaF9Q1oLlMXuBGH8RmAVzAxyjWBI6xda4blN0Hgs86P7M2nOyhLHiG0
-	 exwz51LJQQdBZJHBYgY0vTD/5WqpVkIhyfX3ttFSe0zNNjFxP7aEmtAgSKW/cFq7Rp
-	 9ty//MNYPCwpUYm6qkWoQngFisA5tWTbJQQkd2SZLSBK4XwVXdab4hasuf080QZ/48
-	 hWJ95mHS/b7kZ3cg5Op5pbqfqFwfMt1WVH8taUo7uWdD/z6p1QvuADwXIE+NJJJmHq
-	 VlQQkJpiSGIC95T7NQ0CLYWqLP0D9Ka/KmD166F2A/Baf91tGDIKwoqeakG56Ab1EF
-	 BlKG6iQ1lgSVw==
-Date: Wed, 19 Nov 2025 13:24:57 +0100
-From: Francesco Dolcini <francesco@dolcini.it>
-To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Cc: Francesco Dolcini <francesco@dolcini.it>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	=?iso-8859-1?Q?Jo=E3o_Paulo_Gon=E7alves?= <jpaulo.silvagoncalves@gmail.com>,
-	Andrzej Hajda <andrzej.hajda@intel.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Robert Foss <rfoss@kernel.org>,
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-	Jonas Karlman <jonas@kwiboo.se>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	=?iso-8859-1?Q?Jo=E3o_Paulo_Gon=E7alves?= <joao.goncalves@toradex.com>,
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
-	thomas.petazzoni@bootlin.com
-Subject: Re: [REGRESSION] TI SN65DSI83 is being reset making display to blink
- On/Off
-Message-ID: <20251119122443.GA29208@francesco-nb>
-References: <bhkn6hley4xrol5o3ytn343h4unkwsr26p6s6ltcwexnrsjsdx@mgkdf6ztow42>
- <20251113084950.44a09e8e@bootlin.com>
- <20251113091910.GA15538@francesco-nb>
- <DEB2QIR2RB1C.3IQC9WYGAUVZC@bootlin.com>
- <nkiu23g4esqjsuri3it6eo3lrpvvbqkmx3wijsehc6ov4tb6ui@c5qvcydwpxmn>
- <20251119085127.6e3e429e@bootlin.com>
- <gw635fewdxe7falrxz44gxstiuzjpmeh45rwe5bglto524faaz@hj4z2vh22p5n>
- <DECL7AZNNMX5.MC2QTENKZTWE@bootlin.com>
- <20251119111221.GA18602@francesco-nb>
- <593e90d9-cf04-45a2-8172-98c441ec79f5@ideasonboard.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="iByY91DR"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5AJ8ODKw028819;
+	Wed, 19 Nov 2025 12:43:27 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=uatKSU
+	Vl/x45CPqU09/sirSD1yd4MjxDIBN8T5/c1eM=; b=iByY91DRLWOrBPDwg2R01T
+	z5QoTmO05Y5rhi0fAdSglKidRkD6uI04EMvlLATvJTN3EXmmV+I4zZH8Qcyd16mb
+	Pf/hgbHq+TQa57IHzfl5blHJoaOOd5LHQZpB6VrE4nDQ4weV3VexBH24bUPBGboK
+	l1gRUtZa9XSf6NeIVd9JMKD3A4dt3f9LCbZjY/qQHeIIDEaSehuUWji3ToO1qrR2
+	zaVW1wda277Th4qCBGEHfpZ6yPz1lqcHc+q8i31yLHxsi+0WuaSQZQYKvh4HRgLk
+	t6ZLwCRsVWEi50rKnGRhrmnOlvN3x7nqOyqUZBV4oyUERZa71kp82Wv416G3v00w
+	==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4aejmsqnkg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 19 Nov 2025 12:43:26 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5AJB3iE3030837;
+	Wed, 19 Nov 2025 12:43:26 GMT
+Received: from smtprelay02.wdc07v.mail.ibm.com ([172.16.1.69])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4af47y0ref-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 19 Nov 2025 12:43:26 +0000
+Received: from smtpav05.wdc07v.mail.ibm.com (smtpav05.wdc07v.mail.ibm.com [10.39.53.232])
+	by smtprelay02.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5AJChOKO19858160
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 19 Nov 2025 12:43:25 GMT
+Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id DA1F05805D;
+	Wed, 19 Nov 2025 12:43:24 +0000 (GMT)
+Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 154A758043;
+	Wed, 19 Nov 2025 12:43:22 +0000 (GMT)
+Received: from [9.111.50.182] (unknown [9.111.50.182])
+	by smtpav05.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 19 Nov 2025 12:43:21 +0000 (GMT)
+Message-ID: <440934261b39a033b20063d6a598d06bb343caad.camel@linux.ibm.com>
+Subject: Re: [PATCH v2 0/2] PCI/IOV: Fix deadlock when removing PF with
+ enabled SR-IOV
+From: Niklas Schnelle <schnelle@linux.ibm.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Lukas Wunner <lukas@wunner.de>, Keith Busch <kbusch@kernel.org>,
+        Gerd
+ Bayer	 <gbayer@linux.ibm.com>,
+        Matthew Rosato <mjrosato@linux.ibm.com>,
+        Benjamin Block	 <bblock@linux.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>, Farhan Ali	 <alifm@linux.ibm.com>,
+        Julian Ruess <julianr@linux.ibm.com>,
+        Heiko Carstens	 <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev	 <agordeev@linux.ibm.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        regressions <regressions@lists.linux.dev>
+Date: Wed, 19 Nov 2025 13:43:21 +0100
+In-Reply-To: <20251119-revert_sriov_lock-v2-0-ea50eb1e8f96@linux.ibm.com>
+References: <20251119-revert_sriov_lock-v2-0-ea50eb1e8f96@linux.ibm.com>
+Autocrypt: addr=schnelle@linux.ibm.com; prefer-encrypt=mutual;
+ keydata=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
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.58.1 (3.58.1-1.fc43) 
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <593e90d9-cf04-45a2-8172-98c441ec79f5@ideasonboard.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: KrbGUF3L_wBztBdNddO69z87ua36D-Np
+X-Authority-Analysis: v=2.4 cv=Rv3I7SmK c=1 sm=1 tr=0 ts=691dbb6e cx=c_pps
+ a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
+ a=IkcTkHD0fZMA:10 a=6UeiqGixMTsA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8 a=eTQjpDOuu0DvYVNBffgA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: KrbGUF3L_wBztBdNddO69z87ua36D-Np
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTE1MDAzMiBTYWx0ZWRfX4wCULyPnPJMD
+ td9x9F/EStABXsL24fZ32x+eYk2fhJEoq9tfWy556ZijFCrjIt0u99+1KDzsQ71v2VPnsUENyN8
+ XUJqMk2Uz40BorhpyMJ9LHZfCuLfRtgAFjBw+NPn0elxWhEAi2k3YX7Z6EKayC47L4fxRGIUcb5
+ 9ilz1YuRVbVMWcQUv71oNnK7rxC6RoEeOjFpD8aA8Nn68HHTMMEvb1d50xNPyoP030GkGAbdTn0
+ bK/hJHneS8rK+g5+P6rKU+TEAHdJj11GKGcj7Z1eUEHRug8LhN8sexIeQVWAENhWU9seLVJjSxT
+ /4ARRooLiEKTrMgmi1ei1VbG0Qu27AF+1xqyqecsiDKEMJqrhu9TIZw3Gm34bP8Fv39WO4OU+T/
+ D1lAtaNLf90+0V4Mc7D+R2bUWAwHhg==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
+ definitions=2025-11-19_03,2025-11-18_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 suspectscore=0 clxscore=1011 phishscore=0 priorityscore=1501
+ spamscore=0 lowpriorityscore=0 impostorscore=0 adultscore=0 bulkscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2510240000 definitions=main-2511150032
 
-On Wed, Nov 19, 2025 at 02:09:04PM +0200, Tomi Valkeinen wrote:
-> On 19/11/2025 13:12, Francesco Dolcini wrote:
-> > On Wed, Nov 19, 2025 at 11:08:23AM +0100, Luca Ceresoli wrote:
-> >>
-> >> On Wed Nov 19, 2025 at 9:40 AM CET, Maxime Ripard wrote:
-> >>> On Wed, Nov 19, 2025 at 08:51:27AM +0100, Herve Codina wrote:
-> >>>> On Tue, 18 Nov 2025 17:56:36 +0100
-> >>>> Maxime Ripard <mripard@kernel.org> wrote:
-> >>>>> On Mon, Nov 17, 2025 at 04:27:28PM +0100, Luca Ceresoli wrote:
-> >>>>>> On Thu Nov 13, 2025 at 10:19 AM CET, Francesco Dolcini wrote:
-> >>>>>>> On Thu, Nov 13, 2025 at 08:49:50AM +0100, Herve Codina wrote:
-> >>>>>>>> On Mon, 10 Nov 2025 16:03:51 -0300
-> >>>>>>>> João Paulo Gonçalves <jpaulo.silvagoncalves@gmail.com> wrote:
-> >>>>>>>>> After commit ad5c6ecef27e ("drm: bridge: ti-sn65dsi83: Add error
-> >>>>>>>>> recovery mechanism"), our DSI display stopped working correctly. The
-> >>>>>>>>> display internally uses a TI SN65DSI83 to convert DSI-to-LVDS, and with
-> >>>>>>>>> the change, it keeps blinking on and off because the bridge is being
-> >>>>>>>>> reset by the error recovery mechanism.
-> >>>>>>>>>
-> >>>>>>>>> Even before the change, it was possible to see the message below from
-> >>>>>>>>> the driver indicating that the bridge's internal PLL was not locked
-> >>>>>>>>> (register 0xE5, bit 0 in [1]):
-> >>>>>>>>>
-> >>>>>>>>> [ 11.198616] sn65dsi83 2-002c: Unexpected link status 0x01
-> >>>>>>>>>
-> >>>>>>>>> However, it was working. After the change, it stopped working. Masking
-> >>>>>>>>> the PLL error makes it work again:
-> >>>>>>>>>
-> >>>>>>>>> diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi83.c b/drivers/gpu/drm/bridge/ti-sn65dsi83.c
-> >>>>>>>>> index 033c44326552..89a0a2ab45b1 100644
-> >>>>>>>>> --- a/drivers/gpu/drm/bridge/ti-sn65dsi83.c
-> >>>>>>>>> +++ b/drivers/gpu/drm/bridge/ti-sn65dsi83.c
-> >>>>>>>>> @@ -429,7 +429,7 @@ static void sn65dsi83_handle_errors(struct sn65dsi83 *ctx)
-> >>>>>>>>>          */
-> >>>>>>>>>
-> >>>>>>>>>         ret = regmap_read(ctx->regmap, REG_IRQ_STAT, &irq_stat);
-> >>>>>>>>> -       if (ret || irq_stat) {
-> >>>>>>>>> +       if (ret || (irq_stat & ~REG_IRQ_STAT_CHA_PLL_UNLOCK)) {
-> >>>>>>>>>                 /*
-> >>>>>>>>>                  * IRQ acknowledged is not always possible (the bridge can be in
-> >>>>>>>>>                  * a state where it doesn't answer anymore). To prevent an
-> >>>>>>>>>
-> >>>>>>>>> Any suggestions on how to proceed here?
-> >>>>>>>>>
-> >>>>>>>>> #regzbot introduced: ad5c6ecef27e
-> >>>>>>>>>
-> >>>>>>>>> [1] https://www.ti.com/lit/ds/symlink/sn65dsi83.pdf
-> >>>>>>>>>
-> >>>>>>>>
-> >>>>>>>> The PLL should be locked.
-> >>>>>>>>
-> >>>>>>>> Also in the datasheet, in 'Table 7-2. Initialization Sequence', the status
-> >>>>>>>> is checked at the end of the initialization sequence and the sequence has to
-> >>>>>>>> be done again when the status register value is not 0x00.
-> >>>>>>>>
-> >>>>>>>> Even before monitoring (irq or polling method), you have an issue with your PLL
-> >>>>>>>> mentioned with the "sn65dsi83 2-002c: Unexpected link status 0x01" message.
-> >>>>>>>>
-> >>>>>>>> I don't understand even how your panel can be correctly driven with the bridge
-> >>>>>>>> PLL unlock.
-> >>>>>>>
-> >>>>>>> We'll try to figure out the reason and see what's the best path forward.
-> >>>>>>>
-> >>>>>>> Whatever was the reason it was working before, and it should stay
-> >>>>>>> working
-> >>>>>>
-> >>>>>> I agree with Hervé that using the chip with an unlocked PLL looks dangerous
-> >>>>>> and totally out of spec. So I encourage you to investigate what is going on
-> >>>>>> in the hardware looking for the root cause, checking whether the PLL is
-> >>>>>> really unlocked and how to get it working properly.
-> >>>>>>
-> >>>>>> The driver should be definitely be written focusing on the nominal case and
-> >>>>>> handle out-of-spec cases as an exception, not the other way around.
-> >>>>>>
-> >>>>>> I also agree your hardware should not stop working when upgrading to a new
-> >>>>>> kernel, so this investigation would ideally nail down tha root cause and
-> >>>>>> point to a solution in a very short time.
-> >>>>>>
-> >>>>>> Hervé has matured quite some experience on SN65DSI84 error management,
-> >>>>>> leading to his error recovery patch, and I also have a board with that chip
-> >>>>>> on my desk. So we may be helpful in discussion, as well as reviewing and
-> >>>>>> testing patches.
-> >>>>>
-> >>>>> I'd say we should do it the other way around. If that patch breaks
-> >>>>> systems that were working fine so far without a clear reason, we should
-> >>>>> revert the offending commit, and *then* work towards a solution to
-> >>>>> support error recovery that doesn't break that system.
-> >>>>>
-> >>>>
-> >>>> I have the feeling that the broken system has an issue from the beginning.
-> >>>> Why its PLL has been unlocked ?
-> >>>>
-> >>>> I would like to understand what happens but, of course, I don't have the
-> >>>> hardware to investigate.
-> >>>>
-> >>>> Could the issue been on a component before the SN65DSI83 bridge?
-> >>>> I mean the component in charge of generating the DSI clock can be a culprit.
-> >>>
-> >>> I understand what you're saying, but it's not the right way to think about it.
-> >>>
-> >>> Let's change perspective.
-> >>>
-> >>> Your work laptop just got a kernel upgrade, and its display doesn't work
-> >>> anymore. Would you be happy with the answer "it was broken all along, we
-> >>> might be able to help you fix it, maybe not, who knows when we'll have a
-> >>> fix"?
-> >>>
-> >>> It's frustrating, you might not even be able to debug it in the first
-> >>> place, and most importantly, broken or not, it used to work just fine.
-> >>>
-> >>> If it used to work for years, how can you possibly argue that it was
-> >>> broken all along?
-> >>
-> >> Fully understood, and we fully agree on the principle.
-> >>
-> >> My hope is that João/Francesco can investigate and find the root cause, and
-> >> we can find a solution that works for both cases in a short time (say, this
-> >> week).
-> > 
-> > This week it will not happen, unfortunately :-(. I have no time to look
-> > into it and João has no longer access to the hardware.
-> > 
-> >> Without that we'd of course need to revert, but the next minute we'd still
-> >> need to find a solution to make error management work in the nominal case,
-> >> and I suspect we may end up with an ugly "works-without-pll" quirk and keep
-> >> it forever.
-> > 
-> > So, it seems that the actual DSI clock is the root cause, and from some
-> > check yesterday it's not possible to fix it (limitation on the clock
-> > generation). In practice the display is working fine with the PLL not
-> > locked (quite some people is using it without any issue).
-> 
-> I might be mistaken, but I don't think the PLL will work if unlocked...
-> But maybe the case is that it unlocks and lock again right afterwards.
-> >> João, Francesco, on what hardware do you observe the problem? Which SoC?
-> >> Which encoder, any previous bridges?
-> > 
-> > Verdin AM62, TI AM62 SOC, arch/arm64/boot/dts/ti/k3-am62-verdin.dtsi
-> > 
-> > There is a DPI to DSI bridge in the module, tc358778, it has a 25MHz
-> > reference clock.
-> > 
-> > TI AM62 DPI -> Toshiba TC358768 DSI -> TI SN65DSI83 -> Display
-> > 
-> > From a preliminary investigation this is a HW limitation, we are not
-> > able to generate a "good enough" DSI clock, see tc358768_calc_pll() for
-> 
-> I haven't studied the docs or done any testing, but I would think that
-> it doesn't matter for the PLL even if the incoming DSI clock is a bit
-> off, as long as it's continuous and stable.
-> 
-> My first thought was that the DSI is using non-continuous clock, but at
-> least the driver has code to drop the MIPI_DSI_CLOCK_NON_CONTINUOUS flag.
-> 
-> > the actual code implementation of it, I believe that the datasheet is
-> > not available without NDA.
-> > 
-> > Maybe the ugly hack "works-without-pll" is the way to work? It will
-> > require a DT change, but this seems doable.
-> 
-> Revert is easier than adding new hacky DT properties... At least until
-> the problem is understood.
-> 
-> > Please note that this is the outcome of a short investigation done
-> > yesterday afternoon, so maybe I am overlooking something, unfortunately
-> > I do not have the bandwidth to work on it more this week.
-> > 
-> >> Which clock rates?
-> > 71100000
-> It would be a good test to try out with a few different clocks.
+On Wed, 2025-11-19 at 13:34 +0100, Niklas Schnelle wrote:
+> Hi Bjorn,
+>=20
+> Doing additional testing for a distribution backport of commit
+> 05703271c3cd ("PCI/IOV: Add PCI rescan-remove locking when
+> enabling/disabling SR-IOV") Benjamin found a hang with s390's
+> recover attribute. Further investigation showed this to be a deadlock by
+> recursively trying to take pci_rescan_remove lock when removing a PF
+> with enabled SR-IOV.
+>=20
+> The issue can be reproduced on both s390 and x86_64 with:
+>=20
+>     $ echo <NUM> > /sys/bus/pci/devices/<pf>/sriov_numvfs
+>     $ echo 1 > /sys/bus/pci/devices/<pf>/remove
+>=20
+> As this seems worse than the original, hard to hit, race fixed by the
+> cited commit I think we first want to revert the broken fix.
+>=20
+> Following that patch 2 attempts to fix the original issue by taking the
+> PCI rescan/remove lock directly before calling into the driver's
+> sriov_configure() callback enforcing the rule that this should only
+> be called with the pci_rescan_remove_lock held.
+>=20
+> Thanks,
+> Niklas
+>=20
+> Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
+> ---
+> Changes in v2:
+> - Collected R-b from Benjamin
+> - Link to v1: https://lore.kernel.org/r/20251030-revert_sriov_lock-v1-0-7=
+0f82ade426f@linux.ibm.com
+>=20
+> ---
+> Niklas Schnelle (2):
+>       Revert "PCI/IOV: Add PCI rescan-remove locking when enabling/disabl=
+ing SR-IOV"
+>       PCI/IOV: Fix race between SR-IOV enable/disable and hotplug
+>=20
+>  drivers/pci/iov.c | 9 ++++-----
+>  1 file changed, 4 insertions(+), 5 deletions(-)
+> ---
+> base-commit: dcb6fa37fd7bc9c3d2b066329b0d27dedf8becaa
+> change-id: 20251029-revert_sriov_lock-aef4557f360f
+>=20
+> Best regards,
 
-50 MHz works, for example.
+Since this is really a regression without a separate report, yet this
+has a description and reproducer I'm just adding this here:
 
-It seems that the issue exists when the actual display clock is different
-from the dsi clock. And this can happen for the reason I explained
-before (the DSI clock is computed starting from this 25MHz reference
-clock).
-
-Francesco
-
+#regzbot ^introduced: 05703271c3cd
