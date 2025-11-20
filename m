@@ -1,67 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06CE533A031;
-	Thu, 20 Nov 2025 16:43:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E31A36E558
+	for <regressions@lists.linux.dev>; Thu, 20 Nov 2025 17:12:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763657005; cv=none; b=E7B8VmxRL+1MEFWDiZv0xuOlznE/GRfF2I/D/K8V0z3Ljq2dTZ60PhxYo6elGbnGJXHuF86JmPpYG+Q/IsC/sW0NAHec9kXCdJh6D8xUaFkB6CuakTSpUW90kbbNsOuBv7n0uZRnpiHWWSZIFzz3okoyaXV/BlcmnH0gcnKsRQI=
+	t=1763658736; cv=none; b=F2oFPIMj/KOS6AxmQo0IQtLZ3SPUNFNCbUJQ8mPf0jr6rZD+giSaDkspayXAT0I4dNVZFpwJpfme/ksEkohtLuKlTJV0/T4wo2Ldve7+xEQq++a9b+4w1VXjZCYAFWp6Gyx3Y+kAUH3FCSs6+TxPm1/Qjp0C7JPFnUISSENRKo8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763657005; c=relaxed/simple;
-	bh=dUIhrJg6evgAmwLYcdnUYtg1zhKvMCqiLE1HJR0Bnr0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kWTedJJZR0z/pcmgAqeRmaCExYE6gABy16cC+mFfXdKoV8T+dFg9zg0RQRWy52x7nXC+qMQ+Vcu2wp7i9xttkwV2wyNjeMd5cmiEE1ElrHbaNLm/gC1K5O6w3h9PwIVZcShrYqVxQyE6glqqrlAIAPlpJTeXTl/mGS/Ac70B7XQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=v/mbh+tv; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="v/mbh+tv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E7B0C4CEF1;
-	Thu, 20 Nov 2025 16:43:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1763657004;
-	bh=dUIhrJg6evgAmwLYcdnUYtg1zhKvMCqiLE1HJR0Bnr0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=v/mbh+tvB1KHelE1be9Z1/VEYxRSHACo9IxEASdHb3KE0sdGip0SRtZ/nrsQ3s43a
-	 wzRPKSiS9wI05OiqkCN6i+qGXrTmC0DnuybsHOBiO0f5YQF+x83ctOIY1MtZpjSSmm
-	 44yfUg8qlDLRdQhoDq8AT89dUiG9RFPbyBQd5qpY=
-Date: Thu, 20 Nov 2025 17:43:21 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: incogcyberpunk@proton.me
-Cc: Doug Anderson <dianders@chromium.org>,
-	Thorsten Leemhuis <regressions@leemhuis.info>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-	"marcel@holtmann.org" <marcel@holtmann.org>,
-	"luiz.dentz@gmail.com" <luiz.dentz@gmail.com>,
-	"linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
-	"johan.hedberg@gmail.com" <johan.hedberg@gmail.com>,
-	"sean.wang@mediatek.com" <sean.wang@mediatek.com>,
-	LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [REGRESSION] Bluetooth adapter provided by `btusb` not
- recognized since v6.13.2
-Message-ID: <2025112001-omen-idealness-19d4@gregkh>
-References: <jOB6zqCC3xjlPPJXwPYPb4MxHJOhxVgp380ayP7lYq-aT2iA5D8YCdMeCvq5Cp_ICZmqjpfgX8o9siQdlPu9DY4qgnL_zCjgqP23fXc-P4U=@proton.me>
- <T4YKnjuw-ZdA4uQjGVxQh-vqahAK_69kn20zfC_8R45iOxbdjo_tlIDwP5rTUyjn3NVUHYhG09VO2ryFtfLtgptBBhfXggFNAD2CVAwPcjU=@proton.me>
- <CAD=FV=WDx-WcosBWf2yd3sLx5pEyjOgbs_Y5RBF=+b=0q3dBww@mail.gmail.com>
- <5rFwJreAVujrYXDGZZxW32PHa6HZ29PEP4R5-dqS9dbU3FI__qe3zIUx31TIHO_LjuURCSwaGucSFBPeXAjf00XzAxTzXbmf1AaY6neyQ3Q=@proton.me>
- <CAD=FV=UCnt3nUktRyzUDp1agDFp3ZJo=t+xBbLCD6W7Jd0aF7Q@mail.gmail.com>
- <5vLxmZlxKXfznaWPi2ndxyj90dJN1FML_fINz027uaJP2rZK_nQu_41m7WA7Gnc1yy_XLw8KMWF18Y_keW-qKjHy0BBOQl0A92QiY7Kg004=@proton.me>
- <CAD=FV=WRYYYB+G4-7y7uVR8QCEEMp2iRfmtsAa29UfyNCVD=4Q@mail.gmail.com>
- <YrzH4CVQLf1BjCQDuWEnQ5oxWGrsTge_CHmEViJEDklOFwbMEylpl2KnmeiG1EgCm62OKNFG1JRu_b2bOVUbZZOZQwcSNHbUO1gR1GiN1rI=@proton.me>
- <CAD=FV=XUFEMAuLiFUR7pvPsWJP=_A=6=UGrFX9mobTV1M0gN=w@mail.gmail.com>
- <dA269ZfA6vvmePZBF3DBULVIDsK_zAWujzWKpPy44BQ0QGB6t6pG5JVTt8lwsArauLABj3oMiZVMEzM8GzjJKgx1iqQNwkICiGq9cNtaZak=@proton.me>
+	s=arc-20240116; t=1763658736; c=relaxed/simple;
+	bh=zOzBlVRGWjXj/eLJL63dPaCE0EqtsPjRY+ol2qCqdbk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=onBvOpJHf4QMnIAlix7KAhmR7WWmYL0wFBnL0PbDwVkfW1C7MxjalVdO5caiYfIzSqZrFiyIOduZ/JDlmatdtQdzLGOpP4pRmffmAzADiwE8c+k8fUSbCUPGTNrBNQ/lxQMlcGPi7LdGAjpTaYukPOy7cuKoJtM9tJiWkAjNwCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
+Received: from [141.14.220.42] (g42.guest.molgen.mpg.de [141.14.220.42])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id CF5FF61CC3FE1;
+	Thu, 20 Nov 2025 18:04:36 +0100 (CET)
+Message-ID: <be1cbae6-f868-4939-a1c1-fd66e2c6b23e@molgen.mpg.de>
+Date: Thu, 20 Nov 2025 18:04:32 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <dA269ZfA6vvmePZBF3DBULVIDsK_zAWujzWKpPy44BQ0QGB6t6pG5JVTt8lwsArauLABj3oMiZVMEzM8GzjJKgx1iqQNwkICiGq9cNtaZak=@proton.me>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] Bluetooth: btusb: mediatek: Avoid
+ btusb_mtk_claim_iso_intf() NULL deref
+To: Douglas Anderson <dianders@chromium.org>
+Cc: Marcel Holtmann <marcel@holtmann.org>,
+ Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Thorsten Leemhuis <regressions@leemhuis.info>, regressions@lists.linux.dev,
+ incogcyberpunk@proton.me, johan.hedberg@gmail.com, sean.wang@mediatek.com,
+ stable@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-mediatek@lists.infradead.org
+References: <20251120081227.v3.1.I1ae7aebc967e52c7c4be7aa65fbd81736649568a@changeid>
+Content-Language: en-US
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+In-Reply-To: <20251120081227.v3.1.I1ae7aebc967e52c7c4be7aa65fbd81736649568a@changeid>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Nov 20, 2025 at 04:35:27PM +0000, incogcyberpunk@proton.me wrote:
-> So, now does this patch for the regression gets merged upstream for the next mainline and stable releases ? 
+Dear Douglas,
 
-Please read:
-    https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
 
-for how this happens.
+Thank you for your patch.
+
+Am 20.11.25 um 17:12 schrieb Douglas Anderson:
+> In btusb_mtk_setup(), we set `btmtk_data->isopkt_intf` to:
+>    usb_ifnum_to_if(data->udev, MTK_ISO_IFNUM)
+> 
+> That function can return NULL in some cases. Even when it returns
+> NULL, though, we still go on to call btusb_mtk_claim_iso_intf().
+> 
+> As of commit e9087e828827 ("Bluetooth: btusb: mediatek: Add locks for
+> usb_driver_claim_interface()"), calling btusb_mtk_claim_iso_intf()
+> when `btmtk_data->isopkt_intf` is NULL will cause a crash because
+> we'll end up passing a bad pointer to device_lock(). Prior to that
+> commit we'd pass the NULL pointer directly to
+> usb_driver_claim_interface() which would detect it and return an
+> error, which was handled.
+> 
+> Resolve the crash in btusb_mtk_claim_iso_intf() by adding a NULL check
+> at the start of the function. This makes the code handle a NULL
+> `btmtk_data->isopkt_intf` the same way it did before the problematic
+> commit (just with a slight change to the error message printed).
+> 
+> Reported-by: IncogCyberpunk <incogcyberpunk@proton.me>
+> Closes: http://lore.kernel.org/r/a380d061-479e-4713-bddd-1d6571ca7e86@leemhuis.info
+> Fixes: e9087e828827 ("Bluetooth: btusb: mediatek: Add locks for usb_driver_claim_interface()")
+> Cc: stable@vger.kernel.org
+> Tested-by: IncogCyberpunk <incogcyberpunk@proton.me>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+> 
+> Changes in v3:
+> - Added Cc to stable.
+> - Added IncogCyberpunk Tested-by tag.
+> - v2: https://patch.msgid.link/20251119092641.v2.1.I1ae7aebc967e52c7c4be7aa65fbd81736649568a@changeid
+> 
+> Changes in v2:
+> - Rebase atop commit 529ac8e706c3 ("Bluetooth: ... mtk iso interface")
+> - v1: https://patch.msgid.link/20251119085354.1.I1ae7aebc967e52c7c4be7aa65fbd81736649568a@changeid
+> 
+>   drivers/bluetooth/btusb.c | 5 +++++
+>   1 file changed, 5 insertions(+)
+> 
+> diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
+> index fcc62e2fb641..683ac02e964b 100644
+> --- a/drivers/bluetooth/btusb.c
+> +++ b/drivers/bluetooth/btusb.c
+> @@ -2751,6 +2751,11 @@ static void btusb_mtk_claim_iso_intf(struct btusb_data *data)
+>   	if (!btmtk_data)
+>   		return;
+>   
+> +	if (!btmtk_data->isopkt_intf) {
+> +		bt_dev_err(data->hdev, "Can't claim NULL iso interface");
+
+As an error is printed now, what should be done about? Do drivers need 
+fixing? Is it broken hardware?
+
+> +		return;
+> +	}
+> +
+>   	/*
+>   	 * The function usb_driver_claim_interface() is documented to need
+>   	 * locks held if it's not called from a probe routine. The code here
+
+Reviewed-by: Paul Menzel <pmenzel@molgen.mpg.de>
+
+
+Kind regards,
+
+Paul
