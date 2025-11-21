@@ -1,397 +1,226 @@
-Received: from mail-yx1-f41.google.com (mail-yx1-f41.google.com [74.125.224.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from iad-out-009.esa.us-east-1.outbound.mail-perimeter.amazon.com (iad-out-009.esa.us-east-1.outbound.mail-perimeter.amazon.com [34.198.94.229])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 491CC3016EF
-	for <regressions@lists.linux.dev>; Fri, 21 Nov 2025 10:05:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.41
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763719504; cv=none; b=WKJpHS2NflDr60tY6RL01NDREseRQX7XdRLZCaxf8ya/RBToyV8cf0PxlQ8WUeb3V8r538DgwSg4vXNwGooYv60BrfIy3XbLUVPpTQBVy8WxCmv0lixaRWIEwMpfMDfpKjuzPQw9SFthCNTyW89oapsCtL9rBje++22bKwwZ4T4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763719504; c=relaxed/simple;
-	bh=7Si22rh4Tf/bQ7/t0HrnYRavSCVnpqFDwfmCrQawGc8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pDkXGuYtGtdMmmTHUhwDZIuJaQ2hDZKbKgobtsHCxMuPq62FtJkQRcvJIqemvGJV/Dk7KoX25GeaY0IdCKGUe7vSM+IpvumEc7u6wg4OoFZBeRO3vUim4dsGNT9ULYHICTqe0vQsUFOX5zgEdLenV6eLeN/t6ZL35OPc1V7bTZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bvOB0G6T; arc=none smtp.client-ip=74.125.224.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5377D2FC87E
+	for <regressions@lists.linux.dev>; Fri, 21 Nov 2025 18:56:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=34.198.94.229
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1763751398; cv=fail; b=gRzds8w/5vuCgP3gR1i7hgoYXd1MnIRVJ6Vha1MTLNkl4mjkOGtf3W6onFoYde6wYgLDPApUvrmtPGb8HW+HFnjl+JM6fVoLslF8RNBiz6ADA3majkNLbLHR9IDpX9zFLOGZSZhTs4zCHVrpBpRpYez+4/cJMq/Brcj3QWaWqL8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1763751398; c=relaxed/simple;
+	bh=fRWzpQ1okcJAuh/cUOmi/2lDDCE5NpSKtiizvGh2s2g=;
+	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=mKi5JSo1dE1QNS6tU1S8tf8Pzr1CJD0H/ZShkVPjkAOqxaqVb/FYpBXNrAiRAr2TqZ5o2DUevZZVeRWBPFeqStjGb6+7NJ7J8eYA3kecFECgBcBQTEFm62O/vcbfkIWDAMPZbmzR0Wd15ZMoexBO6U/oTNqEeK0UKASkGIiTGzc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b=HKg4m7UB; arc=fail smtp.client-ip=34.198.94.229
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bvOB0G6T"
-Received: by mail-yx1-f41.google.com with SMTP id 956f58d0204a3-63f96d5038dso1587524d50.1
-        for <regressions@lists.linux.dev>; Fri, 21 Nov 2025 02:05:00 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b="HKg4m7UB"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1763719499; x=1764324299; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OIIgIkxfHCz92I+68s+r+O0mgnsfZxyTvtLxRq9jr8w=;
-        b=bvOB0G6TZUwYs5ROS+qJnzX8lg+csiUlaPyH6zYCB7qBL1HMyY9mldi1wLN68GcII/
-         cIHjHZaAb+ohA0eeoCXhGyKChC0CAbpKNV2cqoDy3Cq8/tLNrh2JwXbwamesngLmMwyG
-         kUDD7LNk3UaEG7QPud8OBxXLdwGr6erd3LIwOOawmqSF4B7SxbcBacfHSvO1mIyaEDva
-         0/X8yNjiwpAEKS/k7/bAA+eLBn30o16E3KTVEv30zfMcPKwyTCRfWEr9j8q+dB7f21oK
-         gSFeDYtQ7TBCFc5nS6XnFtoDdZa+dHt9r3wAJKohfkpJJnuGjeGj7Q60M5KOlnxc9Gyt
-         T8dw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763719499; x=1764324299;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=OIIgIkxfHCz92I+68s+r+O0mgnsfZxyTvtLxRq9jr8w=;
-        b=FqHSLav0Z2d681Pfma1wouJNVOJfr+D0Td25oOaQPUKwG676K/m/uMIp58VdYr9oEU
-         Wib0KMLGeHUCc08OOuBBJsyzzREqE39ayXsfI8/JgT7aOMEiIoowavnb1qqrHKvosBT+
-         8k0xeR3RbHddVN33471kn+oCUiZ83tDIEgQaAsJ6TUmgCkL8iXLc/TVDv+S8eLNbB0/i
-         iPbt1WORV38qJL/aI9hwhFnrS4V6VRc3wtIHxAVPN0E9qpd2Hf/VOfk9lfZDTAdcfbGQ
-         TZ4/5orhb7t3+7SdRwaWwzhNk/qc1CiEmk/yZy+zj/b/t7wRTA850fku+1Z4MwRk2QVZ
-         1jVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWTFmC4mj1khftSLjLQmQo9lvtK7EvmgyBg2z3Ve9dEcw8sG0dldpV4qveeGr6cEKRiR16VMG1D3bhIxA==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yy6/1Gviawbo9DN7J/wyQZDc0rJphJLdYSkOA3caCSTcLPYGGV1
-	WKJ0aqHWGnSZTjIHls+YIAnh8DxORO2AVLr2Bd2JsbRwGtnF6bX5ifUOmZ5dXTpf529T+34CwMX
-	NBUV4fx/mNPSct+eZ4MbztW1GnNiFCQs=
-X-Gm-Gg: ASbGncsk9MKJRU7MpWQBwQvPk5TjGVzkLLcO+S04weXXOwLvutZ37naom9h/yZ5xx+q
-	FMYOmKRpRJolUy6y/IqB8mS5yRD6hulQKOaebOUT2lT3tQKr7C3tGo9GpTK2FtJ9xJA0L4FNcDK
-	8Le0SaGW6w0BP5igpB5P9iE/MrGD4KqDMiQhUNnMdezND8A8qCIA831MWE2UYQhRrnx1AsafVLV
-	moDwXWWjWufPxfwh4VQgdExKcH3jAviIUNOgMqzcZi5Y2aiDv+ruH5miAOX9xOrd/UqQYs5wFqK
-	55KpIQm0geZ+tLE0IliY2ifoKcd7Vu4+KAGhym4553DEgykrkg==
-X-Google-Smtp-Source: AGHT+IGajTqx5ininoheMFSj0eIdsKKhAPp8owIB8VPS/3Gx5x92AgXKkrsibqg1KttLu2r8aPJHrFxvdzJj68SXp80=
-X-Received: by 2002:a05:690e:1442:b0:642:2cf:f9fb with SMTP id
- 956f58d0204a3-64302a2eaadmr1092911d50.4.1763719499250; Fri, 21 Nov 2025
- 02:04:59 -0800 (PST)
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
+  t=1763751396; x=1795287396;
+  h=from:to:cc:subject:date:message-id:content-id:
+   content-transfer-encoding:mime-version;
+  bh=fRWzpQ1okcJAuh/cUOmi/2lDDCE5NpSKtiizvGh2s2g=;
+  b=HKg4m7UBie8Qkmcyz/uzGmS5U9yJAGXfJ2sCTvhJTDHegScak+r+SuK7
+   gyCElDSBveSiUlyi1iGZfNURtcSTVQG0J8b+PDY4y5vttiC3ktotqFIgQ
+   zcPFfE1PhbUZjfAeDWZ3bX/GOXby0FawUiXCmNHpSGAdKAyZjA+vbntQH
+   6A4k3Gs/RXNFjN/lQqTBPY+udCczkor7Hzg4ocI+c2QDQICk43J4vQ49r
+   uIKENP86PewhYsWSmCTA2DPg3i+sZ0nYNqDh2lOsoiTKhg4jYJC3SANiS
+   AY+iWULpU55d+Aru1MHjlBjByauI5jAZUKucNsE6wWu12OjJ0IQcd/oXd
+   A==;
+X-CSE-ConnectionGUID: F6BRLAzIQCuNqNFVFueU1A==
+X-CSE-MsgGUID: +bkrDHSHQW2UDQxj4/KKgw==
+X-IronPort-AV: E=Sophos;i="6.20,216,1758585600"; 
+   d="scan'208";a="6855679"
+Received: from ip-10-4-7-229.ec2.internal (HELO smtpout.naws.us-east-1.prod.farcaster.email.amazon.dev) ([10.4.7.229])
+  by internal-iad-out-009.esa.us-east-1.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Nov 2025 18:56:35 +0000
+Received: from EX19MTAUEA002.ant.amazon.com [72.21.196.65:25586]
+ by smtpin.naws.us-east-1.prod.farcaster.email.amazon.dev [10.0.18.7:2525] with esmtp (Farcaster)
+ id 549f9155-5817-41cf-bf6b-4ac611a35fa6; Fri, 21 Nov 2025 18:56:35 +0000 (UTC)
+X-Farcaster-Flow-ID: 549f9155-5817-41cf-bf6b-4ac611a35fa6
+Received: from EX19EXOUEC002.ant.amazon.com (10.252.135.179) by
+ EX19MTAUEA002.ant.amazon.com (10.252.134.9) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.29;
+ Fri, 21 Nov 2025 18:56:34 +0000
+Received: from EX19EXOUEC002.ant.amazon.com (10.252.135.179) by
+ EX19EXOUEC002.ant.amazon.com (10.252.135.179) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.29;
+ Fri, 21 Nov 2025 18:56:34 +0000
+Received: from DM5PR08CU004.outbound.protection.outlook.com (10.252.135.42) by
+ EX19EXOUEC002.ant.amazon.com (10.252.135.179) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.29
+ via Frontend Transport; Fri, 21 Nov 2025 18:56:34 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=AQ7D5Twtvn6rvhCzOON/Qwj7rF87JD2T1+pvgv2p5RThmoYmdkIQTl2SenHXVQ1HKSnM+Mt2fCr3nlQxDoMWgaheuWf+An3VIaORzSMtz0AnEpgvc+elsXc15i80Mwyim1iREQ67tkrxnPG9dwuzp3SqmrvEs/Qp6IfdXSthDKcYmTZM5VlkdZnwBjmQvQ3ieKCKHOmCtgQMbs8siwuSFAQaPFAlqoKH2DAGZiqXv+DQ4Xzg96IPachpw5RuCwXxrR3TPgX75aeb5cQYLH0Q7N3YsF8ENqPQcifprXDI9koXkPga7XFENkjKwzi/qBxfaJR6KbJhbCg24M2tGkrewA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=fRWzpQ1okcJAuh/cUOmi/2lDDCE5NpSKtiizvGh2s2g=;
+ b=Brirqs1lP/lDBB3D4hRCpZybnO/PMpej/ghz6S4xaCrR3i51VnW9j2Uteej4b3XNzvbP4shaLgaX/hXxm9UUQ88v7bWZEnfxIl+pkxG5mytVZY8GHFH6DgLs9Po4N2xrbgv9PyvtAQ7icS28lsBliHuGJ95nfA46Z/wphmVn+ls5IjtVF2hd0oO5NMHyq8hTsKAKaf7NAkDqrOdtwLbyxytwgGhWUASdLcfrHe4t/ATGSqSS0MikhjWhZ2Aax4Mkxtwnl9Tk1WY6qNNaiG15wO/BrUkIXjEl4LopVrREf0oDslc7eGUhM9AowXbm1xJPMuPEu/zaxg4z8a3WeDzkcQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amazon.com; dmarc=pass action=none header.from=amazon.com;
+ dkim=pass header.d=amazon.com; arc=none
+Received: from SA1PR18MB4728.namprd18.prod.outlook.com (2603:10b6:806:1db::15)
+ by DM3PPF1A9A8EC9E.namprd18.prod.outlook.com (2603:10b6:f:fc00::690) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9343.11; Fri, 21 Nov
+ 2025 18:56:31 +0000
+Received: from SA1PR18MB4728.namprd18.prod.outlook.com
+ ([fe80::9a58:c0fb:e29:3050]) by SA1PR18MB4728.namprd18.prod.outlook.com
+ ([fe80::9a58:c0fb:e29:3050%4]) with mapi id 15.20.9343.011; Fri, 21 Nov 2025
+ 18:56:31 +0000
+From: "Ahmed, Aaron" <aarnahmd@amazon.com>
+To: "stable@vger.kernel.org" <stable@vger.kernel.org>
+CC: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+	"trondmy@kernel.org" <trondmy@kernel.org>, "linux-nfs@vger.kernel.org"
+	<linux-nfs@vger.kernel.org>, "sashal@kernel.org" <sashal@kernel.org>,
+	"gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+Subject: [REGRESSION] nfs: Large amounts of GETATTR calls after file renaming
+ on v5.10.241
+Thread-Topic: [REGRESSION] nfs: Large amounts of GETATTR calls after file
+ renaming on v5.10.241
+Thread-Index: AQHcWxiMmeo0LJQemkqaW9Epcy8Gnw==
+Date: Fri, 21 Nov 2025 18:56:31 +0000
+Message-ID: <F84F6626-B709-4083-9512-5F48FE370977@amazon.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels: MSIP_Label_19e68092-05df-4271-8e3e-b2a4c82ba797_Enabled=true;MSIP_Label_19e68092-05df-4271-8e3e-b2a4c82ba797_SetDate=2025-11-21T17:54:40Z;MSIP_Label_19e68092-05df-4271-8e3e-b2a4c82ba797_ContentBits=0;MSIP_Label_19e68092-05df-4271-8e3e-b2a4c82ba797_Enabled=true;MSIP_Label_19e68092-05df-4271-8e3e-b2a4c82ba797_Tag=50,
+ 3, 0,
+ 1;MSIP_Label_19e68092-05df-4271-8e3e-b2a4c82ba797_Name=Confidential;MSIP_Label_19e68092-05df-4271-8e3e-b2a4c82ba797_ActionId=a8fed289-f643-4c26-983a-abca054f4de4;MSIP_Label_19e68092-05df-4271-8e3e-b2a4c82ba797_SiteId=5280104a-472d-4538-9ccf-1e1d0efe8b1b;MSIP_Label_19e68092-05df-4271-8e3e-b2a4c82ba797_Method=Standard;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amazon.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SA1PR18MB4728:EE_|DM3PPF1A9A8EC9E:EE_
+x-ms-office365-filtering-correlation-id: 2da28c0d-adfd-41f4-bb4c-08de292faf72
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|366016|1800799024|376014|38070700021;
+x-microsoft-antispam-message-info: =?utf-8?B?aTZiVUFNYjFLLy9CQ1BKWk5FcVRINCtqVXdldzg0NkFTYjRncFNwTWFSS21y?=
+ =?utf-8?B?OG85aFcreXRKalVDVHhIa3pxSkt1by9seGxBNHIrVEVCb2g4N1FxT1V5VFE2?=
+ =?utf-8?B?bjk5SmVrc2ZSZzMxSDZ3Y2hVTVFEcFE4WjJpeFp4N01sRlJKVExIOTEwYU9F?=
+ =?utf-8?B?cjM2R0hpelNJVVNnQlNvVGtjbHk1a1RWSkxtOXJjckpCU2ovcEhFaTcrci9D?=
+ =?utf-8?B?VS9zUG41OUVQRVdHOFNNWFVzMS9VTW5aTHFabDl2YTJ0Tk1GT1lKamVBeHlv?=
+ =?utf-8?B?ODUzaHhWSGthMDhkMWUrNThENEQ1dVRXMnZSclBpbkpJdktsTWx6QmlRNDN1?=
+ =?utf-8?B?bmtXWk10azlPbTJ3QTY1ZlFseU54RzJRcGpXdkw1V2s2MGN3V0IwZjFjZnll?=
+ =?utf-8?B?Z0g1RTFTdHN3Y2pibUxNRmUvZ1BTTEhvZlNjaEc3SkNiSkFBbzloUzM4OS8r?=
+ =?utf-8?B?WU9PclpOaC84U0pOcEdYdUlJT3lwR0h5RENlckZoajNxTE9CWFRZclVVNzUw?=
+ =?utf-8?B?QmtpMzloTktwWGFWZ3hxeWtnNmxzbDB2eHRWSW9ZYStZZjhmMk1GbHBVMi9L?=
+ =?utf-8?B?Vm9qdUg5MFFLdkg0VWg4KzgzOTBiL0V4UlQvdDU0aEtheWxvWVNpQWVYbHZJ?=
+ =?utf-8?B?MHBMSGR2RXRWeWNOYVZPeGxId2lPODZJc3ZPTnNJb2hwdUsxVGhUMmxuQmIx?=
+ =?utf-8?B?bi9FTE1jazRYMkx1SGhYRXNnendUL1k0d2VWdHpRRHNUVG9NTHlnY2dMQkNp?=
+ =?utf-8?B?OVlHanNBVUFBdE9HQjIzT2NFZEY1RU00NXl3Skg5cmtLRUQvV0NnZHl2VU5M?=
+ =?utf-8?B?U2xvZitNd1BBNTBuUFVKa3FWUVp6dG0zT3ZXZlh3Y2F6Yno4dEU1dlRBYWVN?=
+ =?utf-8?B?bk52Mk1OeHNoTUFpUlg3MkFlRStSMytrRlNheTNDM0FjbkpuZGw3dTh2UC9v?=
+ =?utf-8?B?OHQ0RGhQZnJGd3VPUDhVSzJHcjQ5QXNjSmtubmlrVkxONTBncDc2NEozSzVR?=
+ =?utf-8?B?Yk9WU3lURkw5OWtqWnVQZWVNR2o0VnRLWE93a25xVU1DRVNmbFh4a0FCeFdj?=
+ =?utf-8?B?ZDArMEE2TWgrU2FyVWVxRUxrQzlQckR2ci9QWHFpMjBrUDdDeldzNVJmMUJ1?=
+ =?utf-8?B?eGIxYlc1eVJpTjJSNzJHMEtKZXZ3TkVLNVFjMUV4NEd3b0FUS3VDS0VMVmh5?=
+ =?utf-8?B?eFhsTldDY2pjTHRDUXRiL09ZaWQ3cnorbi9rM2VmaEdsdU9Qd3NQbUxEN3ZV?=
+ =?utf-8?B?RnZHbmFvblJvUmtaMTZjTDdBY3ZVemNSQWJOSE5Sa0ZIWTdtVEpYMW9ydkc2?=
+ =?utf-8?B?MVJQWFZJcS81SkF2b0RaNFRCOHZJVHFMRTM0dXJmbHhXajhuYzhtTEdEbXV6?=
+ =?utf-8?B?MHdKb08wNzhCY2xFMUhwOVFuRUZVd0hOaFAzaXNGUjV1RG5ud2NGRUxaU3dY?=
+ =?utf-8?B?TitoRXg2TG9sNWR5Zk1sR2Uvc2UzQ0tDbzBIWlRJbmgvQXVoTk1DdTB4ekdj?=
+ =?utf-8?B?SDU2WDhTQkQ1aFNZVWFHMWJLU1BiMlFYTHVDZ3BpS20vYVlqZlFpVW1Zb1pn?=
+ =?utf-8?B?VlBWUVJnckg2dW43L045MGYySFlJdWdjc3ZCS0hCQnJGVmsxZG9FaW0wUE5j?=
+ =?utf-8?B?ZEpYMVhhRkJmdzVOWFQ0QzVTcEpEaVg3cm1NMDNZWGcySDNKeDZaUGJlTWY1?=
+ =?utf-8?B?UHlYUGtaWll5K3JMY0dJN3pPU0xSTUJqVjJGMGR5c01jNlRNK0c1UTJ1eWVz?=
+ =?utf-8?B?NXhqNlNtWGZzTkhCS05UN0FGT0NlNXJOaW5xMHZLSU5XMXF2ckIrY2R6eDdE?=
+ =?utf-8?B?bGc2UFBFVW5qL0VqZnYzRms2UXRaYUo3V1I2VENFbDhicUZ5bDMwalB4T0NQ?=
+ =?utf-8?B?cEFuWjNQREExS3dmdWduSnYxOVlxUDVMMnlBQkZDZjFOS29SeTI2dTZhTWRu?=
+ =?utf-8?B?SkFrK2ZSMFJYaVFKRzFyVEdGQXgwRHgzdDFIbnVqcmorTFV1NGlXN3VONnV0?=
+ =?utf-8?B?a3Blek1Odytkbi9YWU52cjdJN0liVWRsOFA0L2duWndQbkZScXJVdGcwNHZn?=
+ =?utf-8?Q?nVVHvg?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR18MB4728.namprd18.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(38070700021);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?MWg1R3hKZW9WcmVJcnh1anU0MHZYY2lYcWQycGtDYVVNa1NGNlZkUmhrZ1FW?=
+ =?utf-8?B?aGdKTkNOaHRGNW14YjRZY3Y5SE9xdlRmb3RjTmVMOTl2WklEOGkzTnZXMmRL?=
+ =?utf-8?B?ZFJBWnhRS2RKanZ6YUV4c3JPSHBsYXlTWHhIbk5xWG9CamJHeVRQRUtEUGM4?=
+ =?utf-8?B?ZmhQR0UvNUNXelNDcXNtc1ZrMnVzT1Jobnh3T1dmZFBUZWs1c05oSURUUHZk?=
+ =?utf-8?B?bmlTN25BeEZlZGY2M3RRMXRiOHppUjBPMTkrOXdqMFI5SXZLM0lUVmRXRDlR?=
+ =?utf-8?B?bUliS3VVakNxNXlQY3VqTUw2NFg3MHdqVW02Ri8yOTNoeXBaMWQxMEhpVmU5?=
+ =?utf-8?B?NlU0OTlGTFE0TDd5T3cxeDR4dFo1VEtKSS93QTIyOU05QWJFeW9HK2lXVjNs?=
+ =?utf-8?B?WjNVRjZSckVxcGhWeENHTnlwbE8zQm5TNHlqc3lsVFlhYWh6U0NuWWtvTU9n?=
+ =?utf-8?B?ZFh1empKS0l6U0VvZXZnWGlXaE1pMUUrWkU0ZDBFUzlNRWlIRFVnSnlsZGpU?=
+ =?utf-8?B?TlI0bG1lSnhIM0JBQm4rTkxza2hDL0Y0YVVVcXIySDNyTmpEUmkvYjlYZXFZ?=
+ =?utf-8?B?bDJwTjl4b3gvMDNOc1I5QnFrcjhEYW5ML2xxMWlreXFSM1pBeVJZVlNOcWRp?=
+ =?utf-8?B?eXBIMVpJS2ZUb1dGUDhiR3hORjRramEwVmxuWE1FTkFOdlMrZlZqVCt5M0Ez?=
+ =?utf-8?B?N2xjT1ZiOW5BL1ZOaDNUMkpNNVZsVmVnVDNlcDkzRGRpQ3hQMi9rWFRiVHFV?=
+ =?utf-8?B?NGJxT05ka2tua0RJbXl6UE5MRFI1akF2d1gwcldzQTIwVnhoL0FPL0dXVkNX?=
+ =?utf-8?B?VFhKVUtsRW1YQ1k0bUNHdlFSc252UTNRT2tWWnN3Z2FPNFZtSmYrQjVXV2ZS?=
+ =?utf-8?B?YXk0TlQwODZOU1JyUUNhVGFhbE01MitCSWhZbmFHcnhHQ0IxZjRvSnFFVUU1?=
+ =?utf-8?B?d3l2a2ZEZkdkRFVvOGgvd3U5cEVEc050Mngwb2ZQbW56RWdBWFZ6bFdRdkts?=
+ =?utf-8?B?cHhXajZ0M1hxZUdoR1ZKbDhXVU13aE5KUlNKQkxwZmFCa1l5eE9FcHVJd2hH?=
+ =?utf-8?B?b0ZaenB2OUtUQW5mOGQ0WWtHclVFOVhwVmowNU9yODd6bVZFa2VuanhuQlpV?=
+ =?utf-8?B?a3J4UmczeFd1Q3FqRngrRnNQMEYxY0dvZVErZkVuSmk0S3A2MjA5RDBNclNK?=
+ =?utf-8?B?OTJ5MmlqeGM2WGh5SmNIY2wyZFZJVjN5djUya29UMXZRTTlIaWI5dHZyR2VH?=
+ =?utf-8?B?a1lIM1YxMW9VRlYrWUVKcXQyTkNNVms2UHF1OFJsVHpQcklYMzJIbnFlZlNi?=
+ =?utf-8?B?ckZaSDBqUU5RNDBvdFlZSkhzcVFFQzlDVHJZdlEzRXFseWZDYWJkZGdTTmZo?=
+ =?utf-8?B?SGMvQk5kRHBmMWhlUGp0cThXbnNWMUhPQUE2RzJtbVlNdmJZRWt4TGQvRklI?=
+ =?utf-8?B?N1dXVnN2NkdZbTNBN2dLZldRZ1dvQ1ordW9sdDI2NE1wSlgyZFJtNWdDSDE4?=
+ =?utf-8?B?TFhncjduVFRxWm40Z3BxLzFUa2tOMHlmeGNIL3plUHYyTlJ2N2Z6UG9ObVcr?=
+ =?utf-8?B?djBRYjlVY0ZHaUdJWnRGOS96YWd0VndZSEFpM2F1YU9ZeU4xOHYzWmF2T2Nl?=
+ =?utf-8?B?dXBZYnFUVkNoOHVnV2x4Y2pMc3kxMi9LM01OZkJtbzRnQ0ZJejFtZVBNYm8r?=
+ =?utf-8?B?V1cyODhPU2Nnd1BDQlZCakd3VFR2c1dDVTYyRnZ5b0dFZEI1S0hKNEh5UGE0?=
+ =?utf-8?B?a3pJQVVpMzMzMjNoc2JZdzlrdjEzSG80blZhbmZUTGRmQURXN1lKb0tIV0w3?=
+ =?utf-8?B?cDcyQVFJUG15YlR2MVlEdmNpNGxYTVpYNWZSSm9xRFFNS3hyUEU2WWF2NXg2?=
+ =?utf-8?B?ejgrR2dhOGNCRlp3ODZaSGJZQjNlTGJUZE4vaCtsbmoyK1lrWFJqRnRrSDln?=
+ =?utf-8?B?ZG12Wng3ZVlBWHM0RnNpMHFVeXJaczFRLzJJdEdtdVNHdFYvRjBaem1sV3Rs?=
+ =?utf-8?B?WG1rY01mTUJPUDc5SmMxSGU2d01kdDluTzR2SFhKQ1FOZVpwNThoYXgvTUgv?=
+ =?utf-8?B?WXd4ZVpNSnhPUkpMOExIWkZyQUR1cW1EUlRmWWV3cnJvTGJkdDFXTnJiVmJK?=
+ =?utf-8?Q?Wr3qvZXy2wmOdKcLKE6AhcdH1?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <A28223FAC1DF734B8F614C67024AFD7C@namprd18.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <aRYjk4JBqHvVl-wN@eldamar.lan> <7a38c04d-4e54-4f1a-96fd-43f0f11ab97b@linux.microsoft.com>
- <CAFcZKTwQgd9hrTaXnThML=+WG82TH3DK90FT1-WWsBSoRj7dRw@mail.gmail.com>
- <176298819854.487825.11724175116974643582.reportbug@p15v.lan>
- <18bcf829-04f9-46ec-a874-7c2b9338cf3d@linux.microsoft.com>
- <aRei1DGOWy13GqvE@eldamar.lan> <25aff5ca-b5e1-4907-bd12-6571f8454146@linux.microsoft.com>
-In-Reply-To: <25aff5ca-b5e1-4907-bd12-6571f8454146@linux.microsoft.com>
-From: Peter Morrow <pdmorrow@gmail.com>
-Date: Fri, 21 Nov 2025 10:04:48 +0000
-X-Gm-Features: AWmQ_bml56ba4FPvLQfXiG7sOJrkgfM8uYLy9yqvr1L2535PTJhYrBej5B9nsTw
-Message-ID: <CAFcZKTyOcDqDJRB4sgN7Q-dabBU0eg7KKs=yBJhB=CNDyy7scQ@mail.gmail.com>
-Subject: Re: Bug#1120602: [REGRESSION 6.12.y] hyper-v: BUG: kernel NULL
- pointer dereference, address: 00000000000000a0: RIP: 0010:hv_uio_channel_cb+0xd/0x20
- [uio_hv_generic]
-To: Naman Jain <namjain@linux.microsoft.com>
-Cc: Salvatore Bonaccorso <carnil@debian.org>, 1120602@bugs.debian.org, 
-	Long Li <longli@microsoft.com>, linux-hyperv@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev, 
-	stable@vger.kernel.org, John Starks <jostarks@microsoft.com>, 
-	Michael Kelley <mhklinux@outlook.com>, Tianyu Lan <tiala@microsoft.com>, 
-	"K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
-	Dexuan Cui <decui@microsoft.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR18MB4728.namprd18.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2da28c0d-adfd-41f4-bb4c-08de292faf72
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Nov 2025 18:56:31.6457
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 5280104a-472d-4538-9ccf-1e1d0efe8b1b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 5muWHabH9gCRKmaG8W91sLUbmX8OQMLxQ5vRq+J9ztFPoi9aU0ZGmk5trYLkAZs5gjVvYDrx/BNCYaeczT3/4g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3PPF1A9A8EC9E
+X-OriginatorOrg: amazon.com
 
-Hi Naman/Salvatore,
-
-Is it possible to get this fixed in the 6.1 LTS series too? I just ran
-into this crash when moving from bookworm based Debian kernel
-6.1.153-1 to 6.1.158-1. I saw that "uio_hv_generic: Let userspace take
-care of interrupt mask" appeared in 6.1.156.
-
-Thanks,
-Peter.
-
-On Sat, 15 Nov 2025 at 09:04, Naman Jain <namjain@linux.microsoft.com> wrot=
-e:
->
->
->
-> On 11/15/2025 3:14 AM, Salvatore Bonaccorso wrote:
-> > Hi,
-> >
-> > On Fri, Nov 14, 2025 at 08:05:55PM +0530, Naman Jain wrote:
-> >>
-> >>
-> >> On 11/14/2025 5:19 PM, Peter Morrow wrote:
-> >>> Hi Naman,
-> >>>
-> >>> On Fri, 14 Nov 2025 at 06:03, Naman Jain <namjain@linux.microsoft.com=
-> wrote:
-> >>>>
-> >>>>
-> >>>>
-> >>>> On 11/13/2025 11:59 PM, Salvatore Bonaccorso wrote:
-> >>>>> Peter Morrow reported in Debian a regression, reported in
-> >>>>> https://bugs.debian.org/1120602 . The regression was seen after
-> >>>>> updating, to 6.12.57-1 in Debian, but details on the offending comm=
-it
-> >>>>> follows.
-> >>>>>
-> >>>>> His report was as follows:
-> >>>>>
-> >>>>>> Dear Maintainer,
-> >>>>>>
-> >>>>>> I'm seeing a kernel crash quite soon after boot on a debian trixie=
- based
-> >>>>>> system running 6.12.57+deb13-amd64, unfortunately the kernel panic=
-s before
-> >>>>>> I can access the system to gather more information. Thus I'll prov=
-ide details
-> >>>>>> of the system using a previously known good version. The panic is =
-happening
-> >>>>>> 100% of the time unfortunately. I have access to the serial consol=
-e however
-> >>>>>> so can enable any required verbose logging during boot if necessar=
-y.
-> >>>>>>
-> >>>>>> Crucially the crash is not seen with kernel version 6.12.41+deb13-=
-amd64 with the
-> >>>>>> same userspace. We had pinned to that version until very recently =
-to in order
-> >>>>>> to work around https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=
-=3D1109676
-> >>>>>>
-> >>>>>> I'm running a dpdk application here (VPP) on Azure, VM form factor=
- is a
-> >>>>>> "Standard DS3 v2 (4 vcpus, 14 GiB memory)".
-> >>>>>>
-> >>>>>> The only relevant upstream commit in this area (as far as I can se=
-e) is:
-> >>>>>>
-> >>>>>> https://lore.kernel.org/linux-hyperv/1bb599ee-fe28-409d-b430-2fc08=
-6268936@linux.microsoft.com/
-> >>>>>>
-> >>>>>> The comment regarding avoiding races at start adds a bit more weig=
-ht behind this
-> >>>>>> hunch, though it's only a hunch as I am most definitely nowhere ne=
-ar an expert
-> >>>>>> in this area.
-> >>>>>>
-> >>>>>> -- Package-specific info:
-> >>>>>>
-> >>>>>> [   19.625535] BUG: kernel NULL pointer dereference, address: 0000=
-0000000000a0
-> >>>>>> [   19.628874] #PF: supervisor read access in kernel mode
-> >>>>>> [   19.630841] #PF: error_code(0x0000) - not-present page
-> >>>>>> [   19.632788] PGD 0 P4D 0
-> >>>>>> [   19.633905] Oops: Oops: 0000 [#1] PREEMPT SMP PTI
-> >>>>>> [   19.635586] CPU: 3 UID: 0 PID: 0 Comm: swapper/3 Not tainted 6.=
-12.57+deb13-amd64 #1  Debian 6.12.57-1
-> >>>>>> [   19.640216] Hardware name: Microsoft Corporation Virtual Machin=
-e/Virtual Machine, BIOS Hyper-V UEFI Release v4.1 09/28/2024
-> >>>>>> [   19.644514] RIP: 0010:hv_uio_channel_cb+0xd/0x20 [uio_hv_generi=
-c]
-> >>>>>> [   19.646994] Code: 02 00 00 5b 5d e9 53 98 69 e9 0f 1f 00 90 90 =
-90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 0f 1f 44 00 00 48 8b =
-47 10 <48> 8b b8 a0 00 00 00 f0 83 44 24 fc 00 e9 51 6f fa ff 90 90 90 90
-> >>>>>> [   19.654377] RSP: 0018:ffffb15ac01a4fa8 EFLAGS: 00010046
-> >>>>>> [   19.656385] RAX: 0000000000000000 RBX: 0000000000000015 RCX: 00=
-00000000000015
-> >>>>>> [   19.659240] RDX: 0000000000000001 RSI: ffffffffffffffff RDI: ff=
-ff8ff69c759400
-> >>>>>> [   19.662168] RBP: ffff8ff548790200 R08: ffff8ff548790200 R09: 00=
-fca75150b080e9
-> >>>>>> [   19.665239] R10: 0000000000000000 R11: ffffb15ac01a4ff8 R12: ff=
-ff8ff871dc1480
-> >>>>>> [   19.668193] R13: ffff8ff69c759400 R14: ffff8ff69c7596a0 R15: ff=
-ffffffc106e160
-> >>>>>> [   19.671106] FS:  0000000000000000(0000) GS:ffff8ff871d80000(000=
-0) knlGS:0000000000000000
-> >>>>>> [   19.674281] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> >>>>>> [   19.676533] CR2: 00000000000000a0 CR3: 0000000100ba6003 CR4: 00=
-000000003706f0
-> >>>>>> [   19.679385] Call Trace:
-> >>>>>> [   19.680361]  <IRQ>
-> >>>>>> [   19.681181]  vmbus_isr+0x1a5/0x210 [hv_vmbus]
-> >>>>>> [   19.682916]  __sysvec_hyperv_callback+0x32/0x60
-> >>>>>> [   19.684991]  sysvec_hyperv_callback+0x6c/0x90
-> >>>>>> [   19.686665]  </IRQ>
-> >>>>>> [   19.687509]  <TASK>
-> >>>>>> [   19.688366]  asm_sysvec_hyperv_callback+0x1a/0x20
-> >>>>>> [   19.690262] RIP: 0010:pv_native_safe_halt+0xf/0x20
-> >>>>>> [   19.692067] Code: 09 e9 c5 08 01 00 0f 1f 44 00 00 90 90 90 90 =
-90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 66 90 0f 00 2d e5 3b 31 00 =
-fb f4 <c3> cc cc cc cc 66 66 2e 0f 1f 84 00 00 00 00 00 90 90 90 90 90 90
-> >>>>>> [   19.699119] RSP: 0018:ffffb15ac0103ed8 EFLAGS: 00000246
-> >>>>>> [   19.701412] RAX: 0000000000000003 RBX: ffff8ff5403b1fc0 RCX: ff=
-ff8ff54c64ce30
-> >>>>>> [   19.704328] RDX: 0000000000000000 RSI: 0000000000000003 RDI: 00=
-0000000001f894
-> >>>>>> [   19.706910] RBP: 0000000000000003 R08: 000000000bb760d9 R09: 00=
-fca75150b080e9
-> >>>>>> [   19.709762] R10: 0000000000000003 R11: 0000000000000001 R12: 00=
-00000000000000
-> >>>>>> [   19.712510] R13: 0000000000000000 R14: 0000000000000000 R15: 00=
-00000000000000
-> >>>>>> [   19.715173]  default_idle+0x9/0x20
-> >>>>>> [   19.716846]  default_idle_call+0x29/0x100
-> >>>>>> [   19.718623]  do_idle+0x1fe/0x240
-> >>>>>> [   19.720045]  cpu_startup_entry+0x29/0x30
-> >>>>>> [   19.721595]  start_secondary+0x11e/0x140
-> >>>>>> [   19.723080]  common_startup_64+0x13e/0x141
-> >>>>>> [   19.725222]  </TASK>
-> >>>>>> [   19.726387] Modules linked in: isofs cdrom uio_hv_generic uio b=
-infmt_misc intel_rapl_msr intel_rapl_common intel_uncore_frequency_common i=
-sst_if_mbox_msr isst_if_common rpcrdma skx_edac_common nfit sunrpc libnvdim=
-m crct10dif_pclmul ghash_clmulni_intel sha512_ssse3 sha256_ssse3 rdma_ucm i=
-b_iser sha1_ssse3 rdma_cm aesni_intel iw_cm gf128mul crypto_simd libiscsi c=
-ryptd ib_umad ib_ipoib scsi_transport_iscsi ib_cm rapl sg hv_utils hv_ballo=
-on evdev pcspkr joydev mpls_router ip_tunnel ramoops configfs pstore_blk ef=
-i_pstore pstore_zone nfnetlink vsock_loopback vmw_vsock_virtio_transport_co=
-mmon hv_sock vmw_vsock_vmci_transport vsock vmw_vmci efivarfs ip_tables x_t=
-ables autofs4 overlay squashfs dm_verity dm_bufio reed_solomon dm_mod loop =
-ext4 crc16 mbcache jbd2 crc32c_generic mlx5_ib ib_uverbs ib_core mlx5_core =
-mlxfw pci_hyperv pci_hyperv_intf hyperv_drm drm_shmem_helper sd_mod drm_kms=
-_helper hv_storvsc scsi_transport_fc drm scsi_mod hid_generic hid_hyperv hi=
-d serio_raw hv_netvsc hyperv_keyboard scsi_common hv_vmbus
-> >>>>>> [   19.726466]  crc32_pclmul crc32c_intel
-> >>>>>> [   19.765771] CR2: 00000000000000a0
-> >>>>>> [   19.767524] ---[ end trace 0000000000000000 ]---
-> >>>>>> [   19.800433] RIP: 0010:hv_uio_channel_cb+0xd/0x20 [uio_hv_generi=
-c]
-> >>>>>> [   19.803170] Code: 02 00 00 5b 5d e9 53 98 69 e9 0f 1f 00 90 90 =
-90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 0f 1f 44 00 00 48 8b =
-47 10 <48> 8b b8 a0 00 00 00 f0 83 44 24 fc 00 e9 51 6f fa ff 90 90 90 90
-> >>>>>> [   19.811041] RSP: 0018:ffffb15ac01a4fa8 EFLAGS: 00010046
-> >>>>>> [   19.813466] RAX: 0000000000000000 RBX: 0000000000000015 RCX: 00=
-00000000000015
-> >>>>>> [   19.816504] RDX: 0000000000000001 RSI: ffffffffffffffff RDI: ff=
-ff8ff69c759400
-> >>>>>> [   19.819484] RBP: ffff8ff548790200 R08: ffff8ff548790200 R09: 00=
-fca75150b080e9
-> >>>>>> [   19.822625] R10: 0000000000000000 R11: ffffb15ac01a4ff8 R12: ff=
-ff8ff871dc1480
-> >>>>>> [   19.825569] R13: ffff8ff69c759400 R14: ffff8ff69c7596a0 R15: ff=
-ffffffc106e160
-> >>>>>> [   19.828804] FS:  0000000000000000(0000) GS:ffff8ff871d80000(000=
-0) knlGS:0000000000000000
-> >>>>>> [   19.832214] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> >>>>>> [   19.834709] CR2: 00000000000000a0 CR3: 0000000100ba6003 CR4: 00=
-000000003706f0
-> >>>>>> [   19.837976] Kernel panic - not syncing: Fatal exception in inte=
-rrupt
-> >>>>>> [   19.841825] Kernel Offset: 0x28a00000 from 0xffffffff81000000 (=
-relocation range: 0xffffffff80000000-0xffffffffbfffffff)
-> >>>>>> [   19.896620] ---[ end Kernel panic - not syncing: Fatal exceptio=
-n in interrupt ]---
-> >>>>>>
-> >>>>
-> >>>> <snip>
-> >>>>
-> >>>>> The offending commit appers to be the backport of b15b7d2a1b09
-> >>>>> ("uio_hv_generic: Let userspace take care of interrupt mask") for
-> >>>>> 6.12.y.
-> >>>>>
-> >>>>> Peter confirmed that reverting this commit on top of 6.12.57-1 as
-> >>>>> packaged in Debian resolves indeed the issue. Interestingly the iss=
-ue
-> >>>>> is *not* seen with 6.17.7 based kernel in Debian.
-> >>>>>
-> >>>>> #regzbot introduced: 37bd91f22794dc05436130d6983302cb90ecfe7e
-> >>>>> #regzbot monitor: https://bugs.debian.org/1120602
-> >>>>>
-> >>>>> Thank you already!
-> >>>>>
-> >>>>> Regards,
-> >>>>> Salvatore
-> >>>>
-> >>>> Hi Peter, Salvatore,
-> >>>> Thanks for reporting this crash, and sorry for the trouble. Here is =
-my
-> >>>> analysis.
-> >>>>
-> >>>> On 6.17.7, where commit d062463edf17 ("uio_hv_generic: Set event for=
- all
-> >>>> channels on the device") is present, hv_uio_irqcontrol() supports
-> >>>> setting of interrupt mask from userspace for sub-channels as well.
-> >>>>
-> >>>> This aligns with commit e29587c07537 ("uio_hv_generic: Let userspace
-> >>>> take care of interrupt mask") which relies on userspace to manage
-> >>>> interrupt mask, so it safely removes the interrupt mask management l=
-ogic
-> >>>> in the driver.
-> >>>>
-> >>>> However, in 6.12.57, the first commit is not present, but the second=
- one
-> >>>> is, so there is no way to disable interrupt mask for sub-channels an=
-d
-> >>>> interrupt_mask stays 0, which means interrupts are not masked. So we=
- may
-> >>>> be having an interrupt callback being handled for a sub-channel, whe=
-re
-> >>>> we do not expect it to come. This may be causing this issue.
-> >>>>
-> >>>> This would have led to a crash in hv_uio_channel_cb() for sub-channe=
-ls:
-> >>>> struct hv_device *hv_dev =3D chan->device_obj;
-> >>>>
-> >>>>
-> >>>> I have ported commit d062463edf17 ("uio_hv_generic: Set event for al=
-l
-> >>>> channels on the device") on 6.12.57, and resolved some merge conflic=
-ts.
-> >>>> Could you please help with testing this, if it works for you.
-> >>>
-> >>> Applying the patch against the debian 6.12.57 kernel worked, I am no
-> >>> longer seeing that panic on boot:
-> >>>
-> >>> gnos@vEdge:~$ uname -a
-> >>> Linux vEdge 6.12+unreleased-amd64 #1 SMP PREEMPT_DYNAMIC Debian
-> >>> 6.12.57-1a~test (2025-11-14) x86_64 GNU/Linux
-> >>> gnos@vEdge:~$ uptime
-> >>>    11:46:33 up 4 min,  1 user,  load average: 3.31, 2.07, 0.89
-> >>> gnos@vEdge:~$ sudo dmidecode -t system
-> >>> # dmidecode 3.6
-> >>> Getting SMBIOS data from sysfs.
-> >>> SMBIOS 3.1.0 present.
-> >>>
-> >>> Handle 0x0001, DMI type 1, 27 bytes
-> >>> System Information
-> >>>           Manufacturer: Microsoft Corporation
-> >>>           Product Name: Virtual Machine
-> >>>           Version: Hyper-V UEFI Release v4.1
-> >>>           Serial Number: 0000-0002-8036-1108-7588-3134-50
-> >>>           UUID: 26e86d6e-140c-496a-862c-a3b3bbcd16ad
-> >>>           Wake-up Type: Power Switch
-> >>>           SKU Number: None
-> >>>           Family: Virtual Machine
-> >>>
-> >>> Handle 0x0010, DMI type 32, 11 bytes
-> >>> System Boot Information
-> >>>           Status: No errors detected
-> >>>
-> >>> gnos@vEdge:~$
-> >>>
-> >>> Thanks a lot for the quick analysis!
-> >>>
-> >>> Peter.
-> >>
-> >> Hi Peter,
-> >>
-> >> Thanks for confirming. I am discussing this with Long Li, to hear his
-> >> thoughts on this, and have kept the patch ready.
-> >> Porting the same on 6.6 and older kernels would be a little different =
-since
-> >> we don't have commit 547fa4ffd799 ("uio_hv_generic: Enable interrupt f=
-or low
-> >> speed VMBus devices") on these kernels and this would lead to merge
-> >> conflicts, which needs to be handled separately.
-> >>
-> >> Meanwhile, if I should be including any tags in the fix patch for debi=
-an
-> >> bug, please let me know.
-> >
-> > Thank you very much for the quick analysis and fix.
-> >
-> > If you can add a Closes: https://bugs.debian.org/1120602 that would
-> > make our tracking for the fixes easier. But not sure if this is
-> > allowed for proposing the backport for a stable series, as it did not
-> > affect the upper releases.
-> >
-> > In any case your work is much appreciated!
-> >
-> > Regards,
-> > Salvatore
->
-> Hi,
-> I have sent the patches now to the list. Please consider adding your
-> tested-by if you find it alright.
->
-> Thanks.
->
-> Regards,
-> Naman
+SGksDQoNCldlIGhhdmUgaGFkIGN1c3RvbWVycyByZXBvcnQgYSByZWdyZXNzaW9uIG9uIGtlcm5l
+bHMgdmVyc2lvbnMgNS4xMC4yNDEgYW5kIGFib3ZlIGluIHdoaWNoIGZpbGUgcmVuYW1pbmcgY2F1
+c2VzIGxhcmdlIGFtb3VudHMgb2YgR0VUQVRUUiBjYWxscyB0byBtYWRlIGR1ZSB0byBpbm9kZSBy
+ZXZhbGlkYXRpb24uIFRoaXMgcmVncmVzc2lvbiB3YXMgcGlucG9pbnRlZCB2aWEgYmlzZWN0ZWQg
+dG8gY29tbWl0IDczNzhjN2FkZjMxZCAoIk5GUzogRG9uJ3Qgc2V0IE5GU19JTk9fUkVWQUxfUEFH
+RUNBQ0hFIGluIHRoZSBpbm9kZSBjYWNoZSB2YWxpZGl0eSIpIHdoaWNoIGlzIGEgYmFja3BvcnQg
+b2YgMzZhOTM0NmMyMjUyICjigJxORlM6IERvbid0IHNldCBORlNfSU5PX1JFVkFMX1BBR0VDQUNI
+RSBpbiB0aGUgaW5vZGUgY2FjaGUgdmFsaWRpdHnigJ0pLiANCg0KV2Ugd2VyZSBhYmxlIHRvIHJl
+cHJvZHVjZSBJdCB3aXRoIHRoaXMgc2NyaXB0Og0KUkVQUk9fUEFUSD0vbW50L2Vmcy9yZXBybw0K
+ZG9fcmVhZCgpDQp7DQrCoMKgwqAgZm9yIHggaW4gezEuLjUwfQ0KwqDCoMKgIGRvDQrCoMKgwqDC
+oMKgwqDCoCBjYXQgJDEgPiAvZGV2L251bGwNCsKgwqDCoCBkb25lDQrCoMKgwqAgZ3JlcCBHRVRB
+VFRSIC9wcm9jL3NlbGYvbW91bnRzdGF0cw0KfQ0KDQplY2hvIGZvbyA+ICRSRVBST19QQVRIL2Jh
+cg0KZWNobyAiQWZ0ZXIgY3JlYXRlLCBiZWZvcmUgcmVhZDoiDQpncmVwIEdFVEFUVFIgL3Byb2Mv
+c2VsZi9tb3VudHN0YXRzDQoNCmVjaG8gIkZpcnN0IHJlYWQ6Ig0KZG9fcmVhZCAkUkVQUk9fUEFU
+SC9iYXINCg0KZWNobyAiU2xlZXBpbmcgNXMsIHJlYWRpbmcgYWdhaW4gKHNob3VsZCBsb29rIHRo
+ZSBzYW1lKToiDQpzbGVlcCA1DQpkb19yZWFkICRSRVBST19QQVRIL2Jhcg0KDQptdiAkUkVQUk9f
+UEFUSC9iYXIgJFJFUFJPX1BBVEgvYmF6DQplY2hvICJNb3ZlZCBmaWxlLCByZWFkaW5nIGFnYWlu
+OiINCmRvX3JlYWQgJFJFUFJPX1BBVEgvYmF6DQoNCmVjaG8gIkltbWVkaWF0ZWx5IHBlcmZvcm1p
+bmcgYW5vdGhlciBzZXQgb2YgcmVhZHM6Ig0KZG9fcmVhZCAkUkVQUk9fUEFUSC9iYXoNCg0KZWNo
+byAiQ2xlYW51cCwgcmVtb3ZpbmcgdGVzdCBmaWxlIg0Kcm0gJFJFUFJPX1BBVEgvYmF6DQp3aGlj
+aCBwZXJmb3JtcyBhIGZldyByZWFkL3dyaXRlcy4gT24ga2VybmVscyB3aXRob3V0IHRoZSByZWdy
+ZXNzaW9uIHRoZSBudW1iZXIgb2YgR0VUQVRUUiBjYWxscyByZW1haW5zIHRoZSBzYW1lIHdoaWxl
+IG9uIGFmZmVjdGVkIGtlcm5lbHMgdGhlIGFtb3VudCBpbmNyZWFzZXMgYWZ0ZXIgcmVhZGluZyBy
+ZW5hbWVkIGZpbGUuIA0KDQpUaGlzIG9yaWdpbmFsIGNvbW1pdCBjb21lcyBmcm9tIGEgc2VyaWVz
+IG9mIHBhdGNoZXMgcHJvdmlkaW5nIGF0dHJpYnV0ZSByZXZhbGlkYXRpb24gdXBkYXRlcyBbMV0u
+IMKgSG93ZXZlciwgbWFueSBvZiB0aGVzZSBwYXRjaGVzIGFyZSBtaXNzaW5nIGluIHYuNS4xMC4y
+NDErLiBTcGVjaWZpY2FsbHksIDEzYzBiMDgyYjZhOSAo4oCcTkZTOiBSZXBsYWNlIHVzZSBvZiBO
+RlNfSU5PX1JFVkFMX1BBR0VDQUNIRSB3aGVuIGNoZWNraW5nIGNhY2hlIHZhbGlkaXR54oCdKSBz
+ZWVtcyBsaWtlIGEgcHJlcmVxdWlzaXRlIHBhdGNoIGFuZCB3b3VsZCBoZWxwIHJlbWVkeSB0aGUg
+cmVncmVzc2lvbi4NCg0KI3JlZ3pib3QgaW50cm9kdWNlZDogNzM3OGM3YWRmMzFkDQoNClRoYW5r
+cywNCkFhcm9uIEFobWVkDQoNClsxXcKgIGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2FsbC8yMDIx
+MDQxNDEzNDM1My4xMTg2MC0xLXRyb25kbXlAa2VybmVsLm9yZy8NCg0KU2lnbmVkLW9mZi1ieTog
+QWFyb24gQWhtZWQgPGFhcm5oYWhtZEBhbWF6b24uY29tPg0KDQoNCg==
