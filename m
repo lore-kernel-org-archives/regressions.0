@@ -1,208 +1,397 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yx1-f41.google.com (mail-yx1-f41.google.com [74.125.224.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C084341ADF;
-	Fri, 21 Nov 2025 09:58:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 491CC3016EF
+	for <regressions@lists.linux.dev>; Fri, 21 Nov 2025 10:05:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763719127; cv=none; b=vEwfKnGU8P85HFvu2wdVpAE6swUrDuB5Qsnoj9ZoGw7x/FMhPMNbGTh7f426SI8Iugw34A5Ds+u0YhVPtecASUgVvb+iE00uYl/zXnu/hQJ4qGZFJLgyDkollw38OkhMACGgWBL6gCdAjbiNGd3X+ryoLgLNJxWN1c9NfO7KLSw=
+	t=1763719504; cv=none; b=WKJpHS2NflDr60tY6RL01NDREseRQX7XdRLZCaxf8ya/RBToyV8cf0PxlQ8WUeb3V8r538DgwSg4vXNwGooYv60BrfIy3XbLUVPpTQBVy8WxCmv0lixaRWIEwMpfMDfpKjuzPQw9SFthCNTyW89oapsCtL9rBje++22bKwwZ4T4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763719127; c=relaxed/simple;
-	bh=yNxL0vCWDrgF1vx5yfsvWLdJzNFIrr6uyvLsVMjGX5I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LrrslHoRsadOlgr3PLmFxqOg8p5i3NV1CvPwNEBSHYV+YcETJNHpEzYKFCxO4yGAFt+QQjny//sjw3gvao+jhBVKZaTf386E9aMwekNzdMCBfxpCex5UsUxoccgEP73wipXFOu/U7hZSzeMxY/B5JVNPzSTFZQkVm1ghW9L3Dxw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nl+IxW1o; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1763719504; c=relaxed/simple;
+	bh=7Si22rh4Tf/bQ7/t0HrnYRavSCVnpqFDwfmCrQawGc8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pDkXGuYtGtdMmmTHUhwDZIuJaQ2hDZKbKgobtsHCxMuPq62FtJkQRcvJIqemvGJV/Dk7KoX25GeaY0IdCKGUe7vSM+IpvumEc7u6wg4OoFZBeRO3vUim4dsGNT9ULYHICTqe0vQsUFOX5zgEdLenV6eLeN/t6ZL35OPc1V7bTZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bvOB0G6T; arc=none smtp.client-ip=74.125.224.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nl+IxW1o"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84FF8C4CEF1;
-	Fri, 21 Nov 2025 09:58:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763719126;
-	bh=yNxL0vCWDrgF1vx5yfsvWLdJzNFIrr6uyvLsVMjGX5I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Nl+IxW1oE8U4ENcZTweJF2ffsVicwdyTSUBeqiqLuSIiCvuYh10P/LWapPvtH2WU/
-	 6M8RsUYarVeG3WMRHfEjI0OyG5S4Hr58NQL6UBPTf7h44aLCs1RNi9i8tHE3aIbE5P
-	 rhCunvallYvYTWEG3t+IvYBsKfa2umHNStTtti1pRT2Q+oXIlO3nXC2qOR8bCvMSmP
-	 ACKnzoId4WjikjN5cTPDHLC+Sd0KY+tk19B99wiI7tpvDRrKXT6yQrYe53rbFf3buZ
-	 1+AomtNrHfJuVsg3I83D50MBoXcJTnv0o+Z53pPoQMFvu2YbWd5M9sac8nrBkaIHzh
-	 XIoJoa2QpJONg==
-Date: Fri, 21 Nov 2025 10:58:44 +0100
-From: Maxime Ripard <mripard@kernel.org>
-To: Philippe Schenker <philippe.schenker@impulsing.ch>
-Cc: Herve Codina <herve.codina@bootlin.com>, 
-	Luca Ceresoli <luca.ceresoli@bootlin.com>, Francesco Dolcini <francesco@dolcini.it>, 
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, 
-	=?utf-8?Q?Jo=C3=A3o_Paulo_Gon=C3=A7alves?= <jpaulo.silvagoncalves@gmail.com>, Andrzej Hajda <andrzej.hajda@intel.com>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, 
-	=?utf-8?Q?Jo=C3=A3o_Paulo_Gon=C3=A7alves?= <joao.goncalves@toradex.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>, "thomas.petazzoni@bootlin.com" <thomas.petazzoni@bootlin.com>
-Subject: Re: [REGRESSION] TI SN65DSI83 is being reset making display to blink
- On/Off
-Message-ID: <ko2ghflyddv2igj43wkwsaaoneg2jwpdxldlfsix4cllzspdbj@w4fhabuwm5wy>
-References: <nkiu23g4esqjsuri3it6eo3lrpvvbqkmx3wijsehc6ov4tb6ui@c5qvcydwpxmn>
- <20251119085127.6e3e429e@bootlin.com>
- <gw635fewdxe7falrxz44gxstiuzjpmeh45rwe5bglto524faaz@hj4z2vh22p5n>
- <DECL7AZNNMX5.MC2QTENKZTWE@bootlin.com>
- <20251119111221.GA18602@francesco-nb>
- <593e90d9-cf04-45a2-8172-98c441ec79f5@ideasonboard.com>
- <20251119122443.GA29208@francesco-nb>
- <DECUJMA1JWIC.2PYDSYBID4I94@bootlin.com>
- <20251119194023.6239d397@bootlin.com>
- <4e25291266d46777e84f22295b8f1094d8f682cc.camel@impulsing.ch>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bvOB0G6T"
+Received: by mail-yx1-f41.google.com with SMTP id 956f58d0204a3-63f96d5038dso1587524d50.1
+        for <regressions@lists.linux.dev>; Fri, 21 Nov 2025 02:05:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1763719499; x=1764324299; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OIIgIkxfHCz92I+68s+r+O0mgnsfZxyTvtLxRq9jr8w=;
+        b=bvOB0G6TZUwYs5ROS+qJnzX8lg+csiUlaPyH6zYCB7qBL1HMyY9mldi1wLN68GcII/
+         cIHjHZaAb+ohA0eeoCXhGyKChC0CAbpKNV2cqoDy3Cq8/tLNrh2JwXbwamesngLmMwyG
+         kUDD7LNk3UaEG7QPud8OBxXLdwGr6erd3LIwOOawmqSF4B7SxbcBacfHSvO1mIyaEDva
+         0/X8yNjiwpAEKS/k7/bAA+eLBn30o16E3KTVEv30zfMcPKwyTCRfWEr9j8q+dB7f21oK
+         gSFeDYtQ7TBCFc5nS6XnFtoDdZa+dHt9r3wAJKohfkpJJnuGjeGj7Q60M5KOlnxc9Gyt
+         T8dw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763719499; x=1764324299;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=OIIgIkxfHCz92I+68s+r+O0mgnsfZxyTvtLxRq9jr8w=;
+        b=FqHSLav0Z2d681Pfma1wouJNVOJfr+D0Td25oOaQPUKwG676K/m/uMIp58VdYr9oEU
+         Wib0KMLGeHUCc08OOuBBJsyzzREqE39ayXsfI8/JgT7aOMEiIoowavnb1qqrHKvosBT+
+         8k0xeR3RbHddVN33471kn+oCUiZ83tDIEgQaAsJ6TUmgCkL8iXLc/TVDv+S8eLNbB0/i
+         iPbt1WORV38qJL/aI9hwhFnrS4V6VRc3wtIHxAVPN0E9qpd2Hf/VOfk9lfZDTAdcfbGQ
+         TZ4/5orhb7t3+7SdRwaWwzhNk/qc1CiEmk/yZy+zj/b/t7wRTA850fku+1Z4MwRk2QVZ
+         1jVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWTFmC4mj1khftSLjLQmQo9lvtK7EvmgyBg2z3Ve9dEcw8sG0dldpV4qveeGr6cEKRiR16VMG1D3bhIxA==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yy6/1Gviawbo9DN7J/wyQZDc0rJphJLdYSkOA3caCSTcLPYGGV1
+	WKJ0aqHWGnSZTjIHls+YIAnh8DxORO2AVLr2Bd2JsbRwGtnF6bX5ifUOmZ5dXTpf529T+34CwMX
+	NBUV4fx/mNPSct+eZ4MbztW1GnNiFCQs=
+X-Gm-Gg: ASbGncsk9MKJRU7MpWQBwQvPk5TjGVzkLLcO+S04weXXOwLvutZ37naom9h/yZ5xx+q
+	FMYOmKRpRJolUy6y/IqB8mS5yRD6hulQKOaebOUT2lT3tQKr7C3tGo9GpTK2FtJ9xJA0L4FNcDK
+	8Le0SaGW6w0BP5igpB5P9iE/MrGD4KqDMiQhUNnMdezND8A8qCIA831MWE2UYQhRrnx1AsafVLV
+	moDwXWWjWufPxfwh4VQgdExKcH3jAviIUNOgMqzcZi5Y2aiDv+ruH5miAOX9xOrd/UqQYs5wFqK
+	55KpIQm0geZ+tLE0IliY2ifoKcd7Vu4+KAGhym4553DEgykrkg==
+X-Google-Smtp-Source: AGHT+IGajTqx5ininoheMFSj0eIdsKKhAPp8owIB8VPS/3Gx5x92AgXKkrsibqg1KttLu2r8aPJHrFxvdzJj68SXp80=
+X-Received: by 2002:a05:690e:1442:b0:642:2cf:f9fb with SMTP id
+ 956f58d0204a3-64302a2eaadmr1092911d50.4.1763719499250; Fri, 21 Nov 2025
+ 02:04:59 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha384;
-	protocol="application/pgp-signature"; boundary="d5qf3kc4ayyj44zp"
-Content-Disposition: inline
-In-Reply-To: <4e25291266d46777e84f22295b8f1094d8f682cc.camel@impulsing.ch>
-
-
---d5qf3kc4ayyj44zp
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
+References: <aRYjk4JBqHvVl-wN@eldamar.lan> <7a38c04d-4e54-4f1a-96fd-43f0f11ab97b@linux.microsoft.com>
+ <CAFcZKTwQgd9hrTaXnThML=+WG82TH3DK90FT1-WWsBSoRj7dRw@mail.gmail.com>
+ <176298819854.487825.11724175116974643582.reportbug@p15v.lan>
+ <18bcf829-04f9-46ec-a874-7c2b9338cf3d@linux.microsoft.com>
+ <aRei1DGOWy13GqvE@eldamar.lan> <25aff5ca-b5e1-4907-bd12-6571f8454146@linux.microsoft.com>
+In-Reply-To: <25aff5ca-b5e1-4907-bd12-6571f8454146@linux.microsoft.com>
+From: Peter Morrow <pdmorrow@gmail.com>
+Date: Fri, 21 Nov 2025 10:04:48 +0000
+X-Gm-Features: AWmQ_bml56ba4FPvLQfXiG7sOJrkgfM8uYLy9yqvr1L2535PTJhYrBej5B9nsTw
+Message-ID: <CAFcZKTyOcDqDJRB4sgN7Q-dabBU0eg7KKs=yBJhB=CNDyy7scQ@mail.gmail.com>
+Subject: Re: Bug#1120602: [REGRESSION 6.12.y] hyper-v: BUG: kernel NULL
+ pointer dereference, address: 00000000000000a0: RIP: 0010:hv_uio_channel_cb+0xd/0x20
+ [uio_hv_generic]
+To: Naman Jain <namjain@linux.microsoft.com>
+Cc: Salvatore Bonaccorso <carnil@debian.org>, 1120602@bugs.debian.org, 
+	Long Li <longli@microsoft.com>, linux-hyperv@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev, 
+	stable@vger.kernel.org, John Starks <jostarks@microsoft.com>, 
+	Michael Kelley <mhklinux@outlook.com>, Tianyu Lan <tiala@microsoft.com>, 
+	"K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
+	Dexuan Cui <decui@microsoft.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [REGRESSION] TI SN65DSI83 is being reset making display to blink
- On/Off
-MIME-Version: 1.0
 
-On Thu, Nov 20, 2025 at 09:50:27AM +0000, Philippe Schenker wrote:
->=20
->=20
-> On Wed, 2025-11-19 at 19:40 +0100, Herve Codina wrote:
-> > Hi Luca, Francesco, others
-> >=20
-> > On Wed, 19 Nov 2025 18:27:38 +0100
-> > "Luca Ceresoli" <luca.ceresoli@bootlin.com> wrote:
-> >=20
-> > > Hello,
-> > >=20
-> > > On Wed Nov 19, 2025 at 1:24 PM CET, Francesco Dolcini wrote:
-> > > ...
-> > > > > I might be mistaken, but I don't think the PLL will work if
-> > > > > unlocked...
-> > > > > But maybe the case is that it unlocks and lock again right
-> > > > > afterwards.=A0=20
-> > > > > > > Jo=E3o, Francesco, on what hardware do you observe the
-> > > > > > > problem? Which SoC?
-> > > > > > > Which encoder, any previous bridges?=A0=20
-> > > > > >=20
-> > > > > > Verdin AM62, TI AM62 SOC, arch/arm64/boot/dts/ti/k3-am62-
-> > > > > > verdin.dtsi
-> > > > > >=20
-> > > > > > There is a DPI to DSI bridge in the module, tc358778, it has
-> > > > > > a 25MHz
-> > > > > > reference clock.
-> > > > > >=20
-> > > > > > TI AM62 DPI -> Toshiba TC358768 DSI -> TI SN65DSI83 ->
-> > > > > > Display
-> > > > > >=20
-> > > > > > From a preliminary investigation this is a HW limitation, we
-> > > > > > are not
-> > > > > > able to generate a "good enough" DSI clock, see
-> > > > > > tc358768_calc_pll() for=A0=20
-> > >=20
-> > > Thanks Francesco for the feedback!
-> > >=20
-> > > I'm not sure I completely understand the issue described, but if
-> > > the TI
-> > > bridge requires a clock that cannot be provided by the hardware,
-> > > then this
-> > > actually looks like "a HW limitation" as you wrote, due to a HW
-> > > integration
-> > > limitation/bug/issue/whatever. In case this is confirmed, I think
-> > > quirks
-> > > are an appropriate tool to handle HW integration issues.
-> > >=20
-> > > > > I haven't studied the docs or done any testing, but I would
-> > > > > think that
-> > > > > it doesn't matter for the PLL even if the incoming DSI clock is
-> > > > > a bit
-> > > > > off, as long as it's continuous and stable.
-> > > > >=20
-> > > > > My first thought was that the DSI is using non-continuous
-> > > > > clock, but at
-> > > > > least the driver has code to drop the
-> > > > > MIPI_DSI_CLOCK_NON_CONTINUOUS flag.
-> > > > > =A0
-> > > > > > the actual code implementation of it, I believe that the
-> > > > > > datasheet is
-> > > > > > not available without NDA.
-> > > > > >=20
-> > > > > > Maybe the ugly hack "works-without-pll" is the way to work?
-> > > > > > It will
-> > > > > > require a DT change, but this seems doable.=A0=20
-> > > > >=20
-> > > > > Revert is easier than adding new hacky DT properties... At
-> > > > > least until
-> > > > > the problem is understood.
-> > > > > =A0
-> > > > > > Please note that this is the outcome of a short investigation
-> > > > > > done
-> > > > > > yesterday afternoon, so maybe I am overlooking something,
-> > > > > > unfortunately
-> > > > > > I do not have the bandwidth to work on it more this week.
-> > > > > > =A0
-> > > > > > > Which clock rates?=A0=20
-> > > > > > 71100000=A0=20
-> > > > > It would be a good test to try out with a few different
-> > > > > clocks.=A0=20
-> > > >=20
-> > > > 50 MHz works, for example.
-> > > >=20
-> > > > It seems that the issue exists when the actual display clock is
-> > > > different
-> > > > from the dsi clock. And this can happen for the reason I
-> > > > explained
-> > > > before (the DSI clock is computed starting from this 25MHz
-> > > > reference
-> > > > clock).=A0=20
-> > >=20
-> >=20
-> > If there is no way to set a correct clock, I agree with Luca a quirk
-> > should
-> > be the best solution.
-> >=20
-> > For instance, in the dts:
-> > =A0 ti,pll_may_unlock_quirk;
->=20
-> I followed the discussion only loosely. But I once worked on bringing
-> up the SN65DSI83 and from what I can remember is that there was a
-> frequency range of the input clock where the PLL of SN65DSI83 just did
-> not lock at all.
->=20
-> I couldn't explain what was happening since the clock I fed was within
-> the limits of the documentation I had.
->=20
-> What I ultimately did was to just choose a clock that works. Given that
-> experience I'm not sure about adding quirks on TI side.
->=20
-> But anyway I'm not very familiar with the topic and it's a long time
-> since I worked on it. Just wanted to point out this experience I had,
-> maybe it helps.
+Hi Naman/Salvatore,
 
-If the frequency is predictable, can we disable the error recovery if we
-know we programmed the bridge in (one of) the affected range?
+Is it possible to get this fixed in the 6.1 LTS series too? I just ran
+into this crash when moving from bookworm based Debian kernel
+6.1.153-1 to 6.1.158-1. I saw that "uio_hv_generic: Let userspace take
+care of interrupt mask" appeared in 6.1.156.
 
-Maxime
+Thanks,
+Peter.
 
---d5qf3kc4ayyj44zp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaSA30wAKCRAnX84Zoj2+
-dpDOAX94l5pWCObA31Ctxssi1QzrE7WktR2Vv5kquSj0n7BpOkc8ZOm8zXIKkPyk
-KPIhZ3YBgOQj3/9emlt2Q40VcSygHCKQCdfNi6VhD3c1OQb7f6NikRatL2z/kQ0+
-Eu483bwVQQ==
-=qCR+
------END PGP SIGNATURE-----
-
---d5qf3kc4ayyj44zp--
+On Sat, 15 Nov 2025 at 09:04, Naman Jain <namjain@linux.microsoft.com> wrot=
+e:
+>
+>
+>
+> On 11/15/2025 3:14 AM, Salvatore Bonaccorso wrote:
+> > Hi,
+> >
+> > On Fri, Nov 14, 2025 at 08:05:55PM +0530, Naman Jain wrote:
+> >>
+> >>
+> >> On 11/14/2025 5:19 PM, Peter Morrow wrote:
+> >>> Hi Naman,
+> >>>
+> >>> On Fri, 14 Nov 2025 at 06:03, Naman Jain <namjain@linux.microsoft.com=
+> wrote:
+> >>>>
+> >>>>
+> >>>>
+> >>>> On 11/13/2025 11:59 PM, Salvatore Bonaccorso wrote:
+> >>>>> Peter Morrow reported in Debian a regression, reported in
+> >>>>> https://bugs.debian.org/1120602 . The regression was seen after
+> >>>>> updating, to 6.12.57-1 in Debian, but details on the offending comm=
+it
+> >>>>> follows.
+> >>>>>
+> >>>>> His report was as follows:
+> >>>>>
+> >>>>>> Dear Maintainer,
+> >>>>>>
+> >>>>>> I'm seeing a kernel crash quite soon after boot on a debian trixie=
+ based
+> >>>>>> system running 6.12.57+deb13-amd64, unfortunately the kernel panic=
+s before
+> >>>>>> I can access the system to gather more information. Thus I'll prov=
+ide details
+> >>>>>> of the system using a previously known good version. The panic is =
+happening
+> >>>>>> 100% of the time unfortunately. I have access to the serial consol=
+e however
+> >>>>>> so can enable any required verbose logging during boot if necessar=
+y.
+> >>>>>>
+> >>>>>> Crucially the crash is not seen with kernel version 6.12.41+deb13-=
+amd64 with the
+> >>>>>> same userspace. We had pinned to that version until very recently =
+to in order
+> >>>>>> to work around https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=
+=3D1109676
+> >>>>>>
+> >>>>>> I'm running a dpdk application here (VPP) on Azure, VM form factor=
+ is a
+> >>>>>> "Standard DS3 v2 (4 vcpus, 14 GiB memory)".
+> >>>>>>
+> >>>>>> The only relevant upstream commit in this area (as far as I can se=
+e) is:
+> >>>>>>
+> >>>>>> https://lore.kernel.org/linux-hyperv/1bb599ee-fe28-409d-b430-2fc08=
+6268936@linux.microsoft.com/
+> >>>>>>
+> >>>>>> The comment regarding avoiding races at start adds a bit more weig=
+ht behind this
+> >>>>>> hunch, though it's only a hunch as I am most definitely nowhere ne=
+ar an expert
+> >>>>>> in this area.
+> >>>>>>
+> >>>>>> -- Package-specific info:
+> >>>>>>
+> >>>>>> [   19.625535] BUG: kernel NULL pointer dereference, address: 0000=
+0000000000a0
+> >>>>>> [   19.628874] #PF: supervisor read access in kernel mode
+> >>>>>> [   19.630841] #PF: error_code(0x0000) - not-present page
+> >>>>>> [   19.632788] PGD 0 P4D 0
+> >>>>>> [   19.633905] Oops: Oops: 0000 [#1] PREEMPT SMP PTI
+> >>>>>> [   19.635586] CPU: 3 UID: 0 PID: 0 Comm: swapper/3 Not tainted 6.=
+12.57+deb13-amd64 #1  Debian 6.12.57-1
+> >>>>>> [   19.640216] Hardware name: Microsoft Corporation Virtual Machin=
+e/Virtual Machine, BIOS Hyper-V UEFI Release v4.1 09/28/2024
+> >>>>>> [   19.644514] RIP: 0010:hv_uio_channel_cb+0xd/0x20 [uio_hv_generi=
+c]
+> >>>>>> [   19.646994] Code: 02 00 00 5b 5d e9 53 98 69 e9 0f 1f 00 90 90 =
+90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 0f 1f 44 00 00 48 8b =
+47 10 <48> 8b b8 a0 00 00 00 f0 83 44 24 fc 00 e9 51 6f fa ff 90 90 90 90
+> >>>>>> [   19.654377] RSP: 0018:ffffb15ac01a4fa8 EFLAGS: 00010046
+> >>>>>> [   19.656385] RAX: 0000000000000000 RBX: 0000000000000015 RCX: 00=
+00000000000015
+> >>>>>> [   19.659240] RDX: 0000000000000001 RSI: ffffffffffffffff RDI: ff=
+ff8ff69c759400
+> >>>>>> [   19.662168] RBP: ffff8ff548790200 R08: ffff8ff548790200 R09: 00=
+fca75150b080e9
+> >>>>>> [   19.665239] R10: 0000000000000000 R11: ffffb15ac01a4ff8 R12: ff=
+ff8ff871dc1480
+> >>>>>> [   19.668193] R13: ffff8ff69c759400 R14: ffff8ff69c7596a0 R15: ff=
+ffffffc106e160
+> >>>>>> [   19.671106] FS:  0000000000000000(0000) GS:ffff8ff871d80000(000=
+0) knlGS:0000000000000000
+> >>>>>> [   19.674281] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> >>>>>> [   19.676533] CR2: 00000000000000a0 CR3: 0000000100ba6003 CR4: 00=
+000000003706f0
+> >>>>>> [   19.679385] Call Trace:
+> >>>>>> [   19.680361]  <IRQ>
+> >>>>>> [   19.681181]  vmbus_isr+0x1a5/0x210 [hv_vmbus]
+> >>>>>> [   19.682916]  __sysvec_hyperv_callback+0x32/0x60
+> >>>>>> [   19.684991]  sysvec_hyperv_callback+0x6c/0x90
+> >>>>>> [   19.686665]  </IRQ>
+> >>>>>> [   19.687509]  <TASK>
+> >>>>>> [   19.688366]  asm_sysvec_hyperv_callback+0x1a/0x20
+> >>>>>> [   19.690262] RIP: 0010:pv_native_safe_halt+0xf/0x20
+> >>>>>> [   19.692067] Code: 09 e9 c5 08 01 00 0f 1f 44 00 00 90 90 90 90 =
+90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 66 90 0f 00 2d e5 3b 31 00 =
+fb f4 <c3> cc cc cc cc 66 66 2e 0f 1f 84 00 00 00 00 00 90 90 90 90 90 90
+> >>>>>> [   19.699119] RSP: 0018:ffffb15ac0103ed8 EFLAGS: 00000246
+> >>>>>> [   19.701412] RAX: 0000000000000003 RBX: ffff8ff5403b1fc0 RCX: ff=
+ff8ff54c64ce30
+> >>>>>> [   19.704328] RDX: 0000000000000000 RSI: 0000000000000003 RDI: 00=
+0000000001f894
+> >>>>>> [   19.706910] RBP: 0000000000000003 R08: 000000000bb760d9 R09: 00=
+fca75150b080e9
+> >>>>>> [   19.709762] R10: 0000000000000003 R11: 0000000000000001 R12: 00=
+00000000000000
+> >>>>>> [   19.712510] R13: 0000000000000000 R14: 0000000000000000 R15: 00=
+00000000000000
+> >>>>>> [   19.715173]  default_idle+0x9/0x20
+> >>>>>> [   19.716846]  default_idle_call+0x29/0x100
+> >>>>>> [   19.718623]  do_idle+0x1fe/0x240
+> >>>>>> [   19.720045]  cpu_startup_entry+0x29/0x30
+> >>>>>> [   19.721595]  start_secondary+0x11e/0x140
+> >>>>>> [   19.723080]  common_startup_64+0x13e/0x141
+> >>>>>> [   19.725222]  </TASK>
+> >>>>>> [   19.726387] Modules linked in: isofs cdrom uio_hv_generic uio b=
+infmt_misc intel_rapl_msr intel_rapl_common intel_uncore_frequency_common i=
+sst_if_mbox_msr isst_if_common rpcrdma skx_edac_common nfit sunrpc libnvdim=
+m crct10dif_pclmul ghash_clmulni_intel sha512_ssse3 sha256_ssse3 rdma_ucm i=
+b_iser sha1_ssse3 rdma_cm aesni_intel iw_cm gf128mul crypto_simd libiscsi c=
+ryptd ib_umad ib_ipoib scsi_transport_iscsi ib_cm rapl sg hv_utils hv_ballo=
+on evdev pcspkr joydev mpls_router ip_tunnel ramoops configfs pstore_blk ef=
+i_pstore pstore_zone nfnetlink vsock_loopback vmw_vsock_virtio_transport_co=
+mmon hv_sock vmw_vsock_vmci_transport vsock vmw_vmci efivarfs ip_tables x_t=
+ables autofs4 overlay squashfs dm_verity dm_bufio reed_solomon dm_mod loop =
+ext4 crc16 mbcache jbd2 crc32c_generic mlx5_ib ib_uverbs ib_core mlx5_core =
+mlxfw pci_hyperv pci_hyperv_intf hyperv_drm drm_shmem_helper sd_mod drm_kms=
+_helper hv_storvsc scsi_transport_fc drm scsi_mod hid_generic hid_hyperv hi=
+d serio_raw hv_netvsc hyperv_keyboard scsi_common hv_vmbus
+> >>>>>> [   19.726466]  crc32_pclmul crc32c_intel
+> >>>>>> [   19.765771] CR2: 00000000000000a0
+> >>>>>> [   19.767524] ---[ end trace 0000000000000000 ]---
+> >>>>>> [   19.800433] RIP: 0010:hv_uio_channel_cb+0xd/0x20 [uio_hv_generi=
+c]
+> >>>>>> [   19.803170] Code: 02 00 00 5b 5d e9 53 98 69 e9 0f 1f 00 90 90 =
+90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 0f 1f 44 00 00 48 8b =
+47 10 <48> 8b b8 a0 00 00 00 f0 83 44 24 fc 00 e9 51 6f fa ff 90 90 90 90
+> >>>>>> [   19.811041] RSP: 0018:ffffb15ac01a4fa8 EFLAGS: 00010046
+> >>>>>> [   19.813466] RAX: 0000000000000000 RBX: 0000000000000015 RCX: 00=
+00000000000015
+> >>>>>> [   19.816504] RDX: 0000000000000001 RSI: ffffffffffffffff RDI: ff=
+ff8ff69c759400
+> >>>>>> [   19.819484] RBP: ffff8ff548790200 R08: ffff8ff548790200 R09: 00=
+fca75150b080e9
+> >>>>>> [   19.822625] R10: 0000000000000000 R11: ffffb15ac01a4ff8 R12: ff=
+ff8ff871dc1480
+> >>>>>> [   19.825569] R13: ffff8ff69c759400 R14: ffff8ff69c7596a0 R15: ff=
+ffffffc106e160
+> >>>>>> [   19.828804] FS:  0000000000000000(0000) GS:ffff8ff871d80000(000=
+0) knlGS:0000000000000000
+> >>>>>> [   19.832214] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> >>>>>> [   19.834709] CR2: 00000000000000a0 CR3: 0000000100ba6003 CR4: 00=
+000000003706f0
+> >>>>>> [   19.837976] Kernel panic - not syncing: Fatal exception in inte=
+rrupt
+> >>>>>> [   19.841825] Kernel Offset: 0x28a00000 from 0xffffffff81000000 (=
+relocation range: 0xffffffff80000000-0xffffffffbfffffff)
+> >>>>>> [   19.896620] ---[ end Kernel panic - not syncing: Fatal exceptio=
+n in interrupt ]---
+> >>>>>>
+> >>>>
+> >>>> <snip>
+> >>>>
+> >>>>> The offending commit appers to be the backport of b15b7d2a1b09
+> >>>>> ("uio_hv_generic: Let userspace take care of interrupt mask") for
+> >>>>> 6.12.y.
+> >>>>>
+> >>>>> Peter confirmed that reverting this commit on top of 6.12.57-1 as
+> >>>>> packaged in Debian resolves indeed the issue. Interestingly the iss=
+ue
+> >>>>> is *not* seen with 6.17.7 based kernel in Debian.
+> >>>>>
+> >>>>> #regzbot introduced: 37bd91f22794dc05436130d6983302cb90ecfe7e
+> >>>>> #regzbot monitor: https://bugs.debian.org/1120602
+> >>>>>
+> >>>>> Thank you already!
+> >>>>>
+> >>>>> Regards,
+> >>>>> Salvatore
+> >>>>
+> >>>> Hi Peter, Salvatore,
+> >>>> Thanks for reporting this crash, and sorry for the trouble. Here is =
+my
+> >>>> analysis.
+> >>>>
+> >>>> On 6.17.7, where commit d062463edf17 ("uio_hv_generic: Set event for=
+ all
+> >>>> channels on the device") is present, hv_uio_irqcontrol() supports
+> >>>> setting of interrupt mask from userspace for sub-channels as well.
+> >>>>
+> >>>> This aligns with commit e29587c07537 ("uio_hv_generic: Let userspace
+> >>>> take care of interrupt mask") which relies on userspace to manage
+> >>>> interrupt mask, so it safely removes the interrupt mask management l=
+ogic
+> >>>> in the driver.
+> >>>>
+> >>>> However, in 6.12.57, the first commit is not present, but the second=
+ one
+> >>>> is, so there is no way to disable interrupt mask for sub-channels an=
+d
+> >>>> interrupt_mask stays 0, which means interrupts are not masked. So we=
+ may
+> >>>> be having an interrupt callback being handled for a sub-channel, whe=
+re
+> >>>> we do not expect it to come. This may be causing this issue.
+> >>>>
+> >>>> This would have led to a crash in hv_uio_channel_cb() for sub-channe=
+ls:
+> >>>> struct hv_device *hv_dev =3D chan->device_obj;
+> >>>>
+> >>>>
+> >>>> I have ported commit d062463edf17 ("uio_hv_generic: Set event for al=
+l
+> >>>> channels on the device") on 6.12.57, and resolved some merge conflic=
+ts.
+> >>>> Could you please help with testing this, if it works for you.
+> >>>
+> >>> Applying the patch against the debian 6.12.57 kernel worked, I am no
+> >>> longer seeing that panic on boot:
+> >>>
+> >>> gnos@vEdge:~$ uname -a
+> >>> Linux vEdge 6.12+unreleased-amd64 #1 SMP PREEMPT_DYNAMIC Debian
+> >>> 6.12.57-1a~test (2025-11-14) x86_64 GNU/Linux
+> >>> gnos@vEdge:~$ uptime
+> >>>    11:46:33 up 4 min,  1 user,  load average: 3.31, 2.07, 0.89
+> >>> gnos@vEdge:~$ sudo dmidecode -t system
+> >>> # dmidecode 3.6
+> >>> Getting SMBIOS data from sysfs.
+> >>> SMBIOS 3.1.0 present.
+> >>>
+> >>> Handle 0x0001, DMI type 1, 27 bytes
+> >>> System Information
+> >>>           Manufacturer: Microsoft Corporation
+> >>>           Product Name: Virtual Machine
+> >>>           Version: Hyper-V UEFI Release v4.1
+> >>>           Serial Number: 0000-0002-8036-1108-7588-3134-50
+> >>>           UUID: 26e86d6e-140c-496a-862c-a3b3bbcd16ad
+> >>>           Wake-up Type: Power Switch
+> >>>           SKU Number: None
+> >>>           Family: Virtual Machine
+> >>>
+> >>> Handle 0x0010, DMI type 32, 11 bytes
+> >>> System Boot Information
+> >>>           Status: No errors detected
+> >>>
+> >>> gnos@vEdge:~$
+> >>>
+> >>> Thanks a lot for the quick analysis!
+> >>>
+> >>> Peter.
+> >>
+> >> Hi Peter,
+> >>
+> >> Thanks for confirming. I am discussing this with Long Li, to hear his
+> >> thoughts on this, and have kept the patch ready.
+> >> Porting the same on 6.6 and older kernels would be a little different =
+since
+> >> we don't have commit 547fa4ffd799 ("uio_hv_generic: Enable interrupt f=
+or low
+> >> speed VMBus devices") on these kernels and this would lead to merge
+> >> conflicts, which needs to be handled separately.
+> >>
+> >> Meanwhile, if I should be including any tags in the fix patch for debi=
+an
+> >> bug, please let me know.
+> >
+> > Thank you very much for the quick analysis and fix.
+> >
+> > If you can add a Closes: https://bugs.debian.org/1120602 that would
+> > make our tracking for the fixes easier. But not sure if this is
+> > allowed for proposing the backport for a stable series, as it did not
+> > affect the upper releases.
+> >
+> > In any case your work is much appreciated!
+> >
+> > Regards,
+> > Salvatore
+>
+> Hi,
+> I have sent the patches now to the list. Please consider adding your
+> tested-by if you find it alright.
+>
+> Thanks.
+>
+> Regards,
+> Naman
