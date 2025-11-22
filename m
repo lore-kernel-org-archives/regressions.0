@@ -1,137 +1,153 @@
-Received: from CWXP265CU009.outbound.protection.outlook.com (mail-ukwestazolkn19011039.outbound.protection.outlook.com [52.103.38.39])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA0D720DD51
-	for <regressions@lists.linux.dev>; Sat, 22 Nov 2025 16:53:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.38.39
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763830428; cv=fail; b=Jhmn9p2i4TcWsyBm+sKw+1Im+l8M2kGwSin0dt7ASFTA11TASmEPrWCJiSglvm5lwdPfnmtEFWEvOoEj6uSiplON1AvpI1jY/rB6qxt+CHDvWiH5cP1Ayf2ahi/CbMcmHNYKVY2NmnieRswVV87juBaBlz7jikspKp+XtE6/ov8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763830428; c=relaxed/simple;
-	bh=UniMayHs8AwAgdOqOVbkChGdYFbb5WDv70oBAVb943w=;
-	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version; b=qK1CUbs8eeLLtitx2fWYoN74A+45d8Bjy35PCNOv7N5DSCg0CvriySrZNLvUcvNAs9jyC4F0wHNcQmwfWPocDUi9J0mcDbDiNTPeLJcWkH4J/yI8TvRCJ9WRXmV1fBnEpXpeCKaYwrlJxXWpCE9oA3OGv0DnOHrU6ksgNtEb3Us=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hotmail.com; spf=pass smtp.mailfrom=hotmail.com; dkim=pass (2048-bit key) header.d=hotmail.com header.i=@hotmail.com header.b=sz+pkzPn; arc=fail smtp.client-ip=52.103.38.39
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hotmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CCEC27B359
+	for <regressions@lists.linux.dev>; Sat, 22 Nov 2025 16:57:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1763830666; cv=none; b=COqBlwsnUgONBK8KbEl+0fLUkZzIoSPgLmVuMebt17mtjM0o5oLhcs1mTAOe0j7zFovHD2pPE19DyY4BxkkoEMVGufQA5yYAsP/mYItoO0uASAt9Dxg8JNUA7aheLlni/zHkhJECuLg/nEMnmKlI5MOvgJH3MumHBCwhZ8EVlHw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1763830666; c=relaxed/simple;
+	bh=fs2lYtrZNV3KZp6UxTLBsAy379d9ku/fF4PuWVPTvRg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=C+UpR+ZucftwLhY6vWoFwH8CEJ4w2THHOeNaGawUcY9gVMezPcuVfDXk/5h918vT3hXi/PdcGOJctkhTD59wUuiYtWlQTAjoQ8ICfhBp951bJABS5KrcvSlw7PPnq972aengFSUq25+Qd0tFmpEes/9QMCAuPDDghH4XxyfOdAY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G94wuRM/; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hotmail.com header.i=@hotmail.com header.b="sz+pkzPn"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=KksScm2BtHEkGbgzhVAA4JwDKXf4ri7l7wkXxkzXMzmuzmQJmGZ429LketPsNxAEcPRG92Z7kEbPx5eXmvzF+Dzj0hsGCtxNgdXTWIVmsOGTRVV9AT10ADkZy9qm+dFjS3/elAubVhTcUmZWQu0m4YCgJPyTo3nw40eWGSE2Uz9su8HT/D/eb41Xvy8KVgB3TwlD+JxXjhykZ0yfJqt2po3LdkdPL7yXModlmhqLQC+dBaweTEN0w5oejtIHpWbizJ1E95plIT7m3rk2rk5c8SkkopQQouLsrwK7vc6hYtdYG5x1KUU2DLkC7GAEcJtAUGvmAGQKjUJW5g1ZQpeNTQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=UniMayHs8AwAgdOqOVbkChGdYFbb5WDv70oBAVb943w=;
- b=tHw2w42zxI/WSvzd/b06qcBkiQ+/W28u82nLv6gTBS3dDRV4W/5BvA7vzq510zpotsnDjTHUNY6VpsBrcspzQVfy+89LFYfTs8h5YHq0LUbi4D0he/PLJIOaqM6jpXVnBkh/3AjlXuJwm3XBnwPLhTLwj4jAAre0frMK/svTAiy6ZSikcj2AxDmUI/6T7a33jZx6vKp6RX8w32WPcwHhc2OdGG9sKaqgTkdsUsMB3XZDMZQW6U1Ei2H+LJK0dXTJ/OHfpzoRxG2/FomZWTnSTTBUxa/wMw8lBxJJlOR2mkiuDhsbHi5O4L9cbHqzh0sbTsa5wokz6G/6kv3EsWUzwA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hotmail.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UniMayHs8AwAgdOqOVbkChGdYFbb5WDv70oBAVb943w=;
- b=sz+pkzPnWYAFR9Bxtmn5tgLijrxYjwqDGkRncOVwb7OsW9sACnvieGevsRWfZRV9npqUauCwOxDtNrBngJbWBA58hn3oyAb9Zbzs6w73zmp3MX7pIYrJY3lA75aTZ26ybHIMnkqgE7mCGJE6TKXxbaGDLP10cNdnwlJTFEypSbaRFouYMapWGErnccMq46xELl0tj7gLixj2Wr9mbeM6cOvENh8BT1KJyVYJRi4It1FVBUlQj0Jos6eTm59WAgwfavy3jaNRVmZZvG3GXgoZznqHWfwL2vTSA3gUbNZXFkp8xw8O50gPjm7Teo4amu2OzydV/y6NCi0SU7XfE0v70A==
-Received: from LOBP302MB2291.GBRP302.PROD.OUTLOOK.COM (2603:10a6:600:447::14)
- by LO7P302MB2349.GBRP302.PROD.OUTLOOK.COM (2603:10a6:600:461::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9343.15; Sat, 22 Nov
- 2025 16:53:44 +0000
-Received: from LOBP302MB2291.GBRP302.PROD.OUTLOOK.COM
- ([fe80::404f:b5ed:5fe9:9a75]) by LOBP302MB2291.GBRP302.PROD.OUTLOOK.COM
- ([fe80::404f:b5ed:5fe9:9a75%4]) with mapi id 15.20.9343.011; Sat, 22 Nov 2025
- 16:53:44 +0000
-From: Dave Morgan <d_a_morgan@hotmail.com>
-To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: Regression in how user space handles the Widevine Content Decryption
- Module (firefox and maybe others)
-Thread-Topic: Regression in how user space handles the Widevine Content
- Decryption Module (firefox and maybe others)
-Thread-Index: AQHcW9BzpDtT6mOpekWXkaihzHmtdQ==
-Date: Sat, 22 Nov 2025 16:53:44 +0000
-Message-ID:
- <LOBP302MB229140293C531C0E0A93E20CD2D2A@LOBP302MB2291.GBRP302.PROD.OUTLOOK.COM>
-Accept-Language: en-GB, en-US
-Content-Language: en-GB
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: LOBP302MB2291:EE_|LO7P302MB2349:EE_
-x-ms-office365-filtering-correlation-id: 55a8e3a1-02c4-443c-bb5e-08de29e7b27f
-x-microsoft-antispam:
- BCL:0;ARA:14566002|51005399006|31061999003|461199028|8062599012|15030799006|15080799012|8060799015|19110799012|440099028|3412199025|40105399003|102099032;
-x-microsoft-antispam-message-info:
- =?iso-8859-1?Q?PK7pkosspkJJMvb1EFPgYnrrQDXA+03bUgkm2G5068gR7PPYYRNWYaSBln?=
- =?iso-8859-1?Q?EhGkBzksGh4PCPkbwTyXDnk3FFz9SCQAHuWIviPyq6PoDlsKNj9sshugc8?=
- =?iso-8859-1?Q?TbPbz/mFwOhc1HkoMIhUpbZgH/4flepkoVchPcCTSEcbJjiw+gH9uP69yl?=
- =?iso-8859-1?Q?sU4l6JM4rTax2K2M0VunUq5FRgwGIr1kQtAct8E38KebWTFwv85mK/S70+?=
- =?iso-8859-1?Q?2Mypc98jBDvwuTvmRARlNTKpz4xYMHv8KMJXR9YFuPQjKZG+JA1fhqcw8f?=
- =?iso-8859-1?Q?aqCEiKrw+sFpRcF001mxS/5gNMyI6QMbSCsJOwRM+JDh6AHPU9f9ZbXDf6?=
- =?iso-8859-1?Q?Wnf4bvvy2azrSQFFY4lfXvipdvpnCFz4Ajdzo86S2q4SzeKoramB92wrBH?=
- =?iso-8859-1?Q?mBtNx+CWEm7LDQz2fLkbBQP/0U8mtKwN0C7tuj/FNg/ZW7hEdrMsNXb78R?=
- =?iso-8859-1?Q?okVKx4l/g1/9qcb0yBxq5vu2CjwCjuM3BqZXaITAlpHWMDPZ5R/pgfEbBb?=
- =?iso-8859-1?Q?9Wq77DzUBUWoRmShpSAIhyV/2gqj6eGja/l7QKUfJd7xJ7gUr0rctClK/8?=
- =?iso-8859-1?Q?avsYW0pXa5yqG//8e/8vSMECQxd3TX8zeqKFBHwlKjNhz1AaQT/fqZtxnt?=
- =?iso-8859-1?Q?CUhTGy9sHDBVLkQqs6yt40XuN9+oa0SKH68zCijgIdoixuSJX3ST2+On0g?=
- =?iso-8859-1?Q?Ymo9RR6d0u7cCmPKDMb4U4pKYNjDGDzyYl5FnTju/hfPi1FaPkeOT/yAUE?=
- =?iso-8859-1?Q?RRGjobfYcCT9Z8vQWnkg9DDLwMTRpN/6VcQzSr7EifVF2Jee7PLlemCtOH?=
- =?iso-8859-1?Q?CjTwDAsBhU/U3MiMC2RNIYJzgk87rpxP2J0WBVnuDhjN36W/peRq3bNw3Z?=
- =?iso-8859-1?Q?MZ2YKoDGG1ih4/6DJWxNGZcxN2oKQhSdSlPGjbYX4RpUX3D89aI699Zana?=
- =?iso-8859-1?Q?T5L7QfRhTCxx/fVeTPe93Zbc1SaMLA24baQHLQ4C8UQFic/RkED2yGmShG?=
- =?iso-8859-1?Q?mlvd+BL3wH/Sj1wBYPGAC1X2IARD2d33yHkIlkjgYRImABKBwgHbVNOaWW?=
- =?iso-8859-1?Q?dih+xa7aLJ8JKkcEAw1NfaM7dS8SlH0Me4Dm2qevbfZ1ntPhZkeZy2KACU?=
- =?iso-8859-1?Q?Tl749OqUIrLbt4AJ5cNROzjEe7ldbgTMGvYfgSdWdEar8nm5p7Y3xZqydv?=
- =?iso-8859-1?Q?IQ3OM/ryGmLS8mhgGX/XMbeZeRD5dEtlY/59nNyGGfmB9vT1vZz6jGTMUE?=
- =?iso-8859-1?Q?wR11PMyDx9pvuFD53UsQ=3D=3D?=
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-1?Q?9uSPS3XKFq5wdJMLOVeuFXLn0sF0ZJTzCXFZnmGCoq5Z89k89+9e90j6jm?=
- =?iso-8859-1?Q?prpAFoemWcO2Wuc0Y/QQpQ84tePEWMfuG8idll28nEuFhoT7xd5wqUdsiM?=
- =?iso-8859-1?Q?u6YT3EV4Y9bYmOy9Ep2XfdKlpQUmw1TIHBPVsDeZHN5ArV9X6/Tkh/ukzF?=
- =?iso-8859-1?Q?p4WxS/e6xpHR/G2vxzVkKjIGegeTXCdOzS7DjzBXabBVuAbMBMhdR5HMD8?=
- =?iso-8859-1?Q?/0NB22AnuSshVdTScNP+4F8A4Uy+22TEaKK23k6q0bAItBXBCdP3VKh499?=
- =?iso-8859-1?Q?wmbtqtTCG5wMQQBhF4/uAt8uDCe63mjjcFmCf3081jXe9HxATTqNC8mSjM?=
- =?iso-8859-1?Q?+CtMalLmDUxcZqxqsQBHIobdQDoeOadajDig+zZxrQlT+A6MroaT6YUImT?=
- =?iso-8859-1?Q?MpOybR+5zQwLteGRbGngRwSEJkunQ4E9BSU+A8hIrcwUlJGAth34VtJNxt?=
- =?iso-8859-1?Q?AR6kVwYlxcQe2zNGvSeOCYZzC8+g+sFTEbjXPv+wO5BuPZ2tXA1o9G1fZQ?=
- =?iso-8859-1?Q?Dqeian4/91dCtj6yv6c17SCXsNCh9JvnqgzSd/z/9DZ+LKg22a4iotj0Hb?=
- =?iso-8859-1?Q?MVvS/hLGbOC7EO97AdKOhRyLdlR+SWuzy4ZYSHfQ9rgpdfmvy0zb2w4B1j?=
- =?iso-8859-1?Q?BZtUhQcb+WNov8URytvLB6xp/n8nITRfCt6kL4UBfAcHtnNasrr9lRQL2y?=
- =?iso-8859-1?Q?ZqWcq5s9PzRAsbPD+5K/r1iIbMnNckKHLEX4uGGfslS+C1lgQ7dUGBwPdC?=
- =?iso-8859-1?Q?tTCyqr+WP/7PaaBFMRybreNqR/n4DyhZ+Q+6X/rg07/1Uuu7GyiM5RY/uh?=
- =?iso-8859-1?Q?BE4GmXk6GAvgHotqwnlaOerI10xD/2gixVn9azSm9RhW19IOk/uQJRv3Ak?=
- =?iso-8859-1?Q?16uX4RKJqdQ6O0AOy0Wm3sWbJZeOOY0YBgzpCiA8R1rgcJ4mgG05LshGCc?=
- =?iso-8859-1?Q?DnZJzWrDAc/OydeMyvcq+gsiA72lJa8myb/rEMdX4SNrDIPJ/wXzaVYSt3?=
- =?iso-8859-1?Q?INCtJZrQ73xwK/r9ACvTLz4fk0/REy+BJ701h/aVr4OAWekuzYlNahT7Ns?=
- =?iso-8859-1?Q?AOQJIVPN4uB5B7aLD5V0uMZ1b1LrHA23Ikh/fjyzq+WCUSEeaahmZalpYf?=
- =?iso-8859-1?Q?roTOZ/TBsOQtfL118of+U0DbYY4vKZXVWOHi7Mr4blsVRgJltRIbS2/eSF?=
- =?iso-8859-1?Q?dvJXjSxz7/lAdHeVBaSGxeHnIz7pqv86tBDXctWLqrPYVDXt00n1p5ScgE?=
- =?iso-8859-1?Q?nn3tyw3NTuoWwlHot4guhkqi5AqobjPa9z2poN7jDc9+vEvOu9MFnq2tO5?=
- =?iso-8859-1?Q?bAkZCPJQbNkw2W0/0uLJ8QwgZA=3D=3D?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G94wuRM/"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-640860f97b5so4305026a12.2
+        for <regressions@lists.linux.dev>; Sat, 22 Nov 2025 08:57:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1763830663; x=1764435463; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+OUGVg+qzpVBZ5O3rUCAbdonkufD8EHD+NzO79QMHoU=;
+        b=G94wuRM/0W6aXnsCi95BLthnr2WLIWleAyC13IYHS20dyUlop9dGvkWeZiUpQRELRo
+         ux+LlT5+2AjLbbKl3jgbfoxrdEnjwJ3lb9aID8IB2P+FXiml6k1fchGfPybcdMFw30IC
+         OjrsqbO2AbPl4lnSUcb7NRr+H0AC04PTbrxKTRtim1ETr8zUPCBkFN8HaLTxkv6y21rE
+         DjEew9nJEFcYyvNen+Y19/ADj+jb+uDt7cnc4bMY0wg4EbvvtbZ4ZWMl7xMOViYPeAJh
+         KsYVcAJSeuGRBZ9IRiP18y7u986E31JDwKOdtQuOoZRJcNLJdjH58NRRLmWgptTPuncr
+         hVow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763830663; x=1764435463;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+OUGVg+qzpVBZ5O3rUCAbdonkufD8EHD+NzO79QMHoU=;
+        b=Z3ItZ3wJdfiWI97woAI4YDzriiX03PV5eZhFwEh9AyFhqXuhad3gFGfEUCJf42k5wh
+         vnfFL0FouziHI2uwkfKiIfpJgcYg5gtVXV+TA8+PJwbhsMI81gKF1rLZrvHS36z4BYVr
+         kYBBOD4aVIWNZ9gRh/eKhlKoSknOmlQiCyL7KigiTqPIvCUYrgI+6BA8VMekzER0V9cU
+         tlt5GaWvrPDZZRw9xPlFc4bLABXxnsEOoEPkRjYBANXPFGbw8rwp90kolgVrSnKDbifa
+         Nvlsbe6MsySAplK97TihDF4pu1TZFH2V9BTG9Y+li0A+oY7AaXi541RdA5Eq0oJEUy6T
+         yECQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXdSGojTOnTWZfv4kEHlklCiy9Zy98tM9N1MUWE+TqygEdmBgl+TpluPNZvEYjEQPtl1RT9I+rSA2scXg==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxRpkotGmGffN2yFOgtbxMv1yu+0lzLwgk5APT8l8mRQIdhv8/k
+	7NzB+TgqA21O7n/FwbaPRyW0jbsiSYeLfScQEdMUdV2qROmeO+/hstjO
+X-Gm-Gg: ASbGncuIVHYvGGzzwxYbu0+dRfjRdxCaCBe5YlF8Ee+cBriWxYTUwClLaVtF0aaOH2M
+	Rz+RbhQmdEDqgUe3nTD245hYxbZrtX0oGU5jTEC0PLjsCUOkWM4E8MU7rCxIM0ayVe8JI+l1tmQ
+	KXRHVkpoWtx6ivptXpDp7p7tZt3Ni89ArU3MdfjJAE6SU831b46F2vp4MBO3ibkcVRAHAKm2F91
+	P7ws7A67ZOOYrnqtYyj70ZjcdqqsOVGrzU5UupZH61XiPq77gmCkx/hSuxR+dvYq8RSkSRG7b5s
+	FsaAdj94FFm077hP6k6qlKWQForTWZ1nSglYf7HL0ynXBkPVKVZbvlCka7HBr8Ws/Gt/9zPJcvE
+	qjy1+J3JLWqS0Y/w/7ZNzoOAO3dJuJuDY5a4esww+THdZ8kKvWU5z6ME9un92IugpIkk7ArFWnn
+	/dFs/R9twgx0gfe8dR
+X-Google-Smtp-Source: AGHT+IGQR2K+8oB9rl4LdszDdgZ1zAbDRGTLWKw8HJ6tmpfxZcxiuNPJ2kqkhKPL+e7MCjq3lfauqA==
+X-Received: by 2002:a17:906:f58f:b0:b76:26bc:f95f with SMTP id a640c23a62f3a-b7671244c1amr573051266b.0.1763830662444;
+        Sat, 22 Nov 2025 08:57:42 -0800 (PST)
+Received: from localhost ([94.19.228.143])
+        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-b7654ff3987sm782530866b.48.2025.11.22.08.57.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 22 Nov 2025 08:57:41 -0800 (PST)
+Date: Sat, 22 Nov 2025 19:57:41 +0300
+From: Andrey Skvortsov <andrej.skvortzov@gmail.com>
+To: Ping-Ke Shih <pkshih@realtek.com>
+Cc: linux-wireless@vger.kernel.org, piotr.oniszczuk@gmail.com,
+	rtl8821cerfe2@gmail.com, stable@vger.kernel.org,
+	regressions@lists.linux.dev,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH rtw-next] wifi: rtw88: sdio: use indirect IO for device
+ registers before power-on
+Message-ID: <aSHrhbt29k6GJB8e@skv.local>
+Mail-Followup-To: Andrey Skvortsov <andrej.skvortzov@gmail.com>,
+	Ping-Ke Shih <pkshih@realtek.com>, linux-wireless@vger.kernel.org,
+	piotr.oniszczuk@gmail.com, rtl8821cerfe2@gmail.com,
+	stable@vger.kernel.org, regressions@lists.linux.dev,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+References: <20250724004815.7043-1-pkshih@realtek.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-OriginatorOrg: sct-15-20-9052-0-msonline-outlook-a2833.templateTenant
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: LOBP302MB2291.GBRP302.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 55a8e3a1-02c4-443c-bb5e-08de29e7b27f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Nov 2025 16:53:44.1771
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LO7P302MB2349
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250724004815.7043-1-pkshih@realtek.com>
 
-Userspace handles decryption fine up to linux-6.17.8, but fails in decrypti=
-ng Netflix content using firefox for all rc versions for linux-6.18.0-rcX.=
-=0A=
-=0A=
-Thanks for looking into this, and my appreciation to you all for your work.=
-=0A=
-=0A=
-Dave=
+Hi,
+
+This patch was recently backported to stable kernels (v6.12.58) and it broke
+wlan on PinePhone, that uses 8723cs SDIO chip. The same problem
+appears of course on latest 6.18-rc6. Reverting this change resolves
+the problem.
+
+```
+$ sudo dmesg | grep -i rtw88
+[   24.940551] rtw88_8723cs mmc1:0001:1: WOW Firmware version 11.0.0, H2C version 0
+[   24.953085] rtw88_8723cs mmc1:0001:1: Firmware version 11.0.0, H2C version 0
+[   24.955892] rtw88_8723cs mmc1:0001:1: sdio read32 failed (0xf0): -110
+[   24.973135] rtw88_8723cs mmc1:0001:1: sdio write8 failed (0x1c): -110
+[   24.980673] rtw88_8723cs mmc1:0001:1: sdio read32 failed (0xf0): -110
+...
+[   25.446691] rtw88_8723cs mmc1:0001:1: sdio read8 failed (0x100): -110
+[   25.453569] rtw88_8723cs mmc1:0001:1: mac power on failed
+[   25.459077] rtw88_8723cs mmc1:0001:1: failed to power on mac
+[   25.464841] rtw88_8723cs mmc1:0001:1: failed to setup chip efuse info
+[   25.464856] rtw88_8723cs mmc1:0001:1: failed to setup chip information
+[   25.478341] rtw88_8723cs mmc1:0001:1: probe with driver rtw88_8723cs failed with error -114
+```
+
+On 25-07-24 08:48, Ping-Ke Shih wrote:
+> The register REG_SYS_CFG1 is used to determine chip basic information
+> as arguments of following flows, such as download firmware and load PHY
+> parameters, so driver read the value early (before power-on).
+> 
+> However, the direct IO is disallowed before power-on, or it causes wrong
+> values, which driver recognizes a chip as a wrong type RF_1T1R, but
+> actually RF_2T2R, causing driver warns:
+> 
+>   rtw88_8822cs mmc1:0001:1: unsupported rf path (1)
+> 
+> Fix it by using indirect IO before power-on.
+> 
+> Reported-by: Piotr Oniszczuk <piotr.oniszczuk@gmail.com>
+> Closes: https://lore.kernel.org/linux-wireless/699C22B4-A3E3-4206-97D0-22AB3348EBF6@gmail.com/T/#t
+> Suggested-by: Bitterblue Smith <rtl8821cerfe2@gmail.com>
+> Signed-off-by: Ping-Ke Shih <pkshih@realtek.com>
+> ---
+>  drivers/net/wireless/realtek/rtw88/sdio.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/drivers/net/wireless/realtek/rtw88/sdio.c b/drivers/net/wireless/realtek/rtw88/sdio.c
+> index cc2d4fef3587..99d7c629eac6 100644
+> --- a/drivers/net/wireless/realtek/rtw88/sdio.c
+> +++ b/drivers/net/wireless/realtek/rtw88/sdio.c
+> @@ -144,6 +144,10 @@ static u32 rtw_sdio_to_io_address(struct rtw_dev *rtwdev, u32 addr,
+>  
+>  static bool rtw_sdio_use_direct_io(struct rtw_dev *rtwdev, u32 addr)
+>  {
+> +	if (!test_bit(RTW_FLAG_POWERON, rtwdev->flags) &&
+> +	    !rtw_sdio_is_bus_addr(addr))
+> +		return false;
+> +
+>  	return !rtw_sdio_is_sdio30_supported(rtwdev) ||
+>  		rtw_sdio_is_bus_addr(addr);
+>  }
+> -- 
+> 2.25.1
+> 
+
+-- 
+Best regards,
+Andrey Skvortsov
