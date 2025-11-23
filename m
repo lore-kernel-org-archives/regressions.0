@@ -1,80 +1,42 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CCEC27B359
-	for <regressions@lists.linux.dev>; Sat, 22 Nov 2025 16:57:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 197BB23EA8C;
+	Sun, 23 Nov 2025 06:23:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763830666; cv=none; b=COqBlwsnUgONBK8KbEl+0fLUkZzIoSPgLmVuMebt17mtjM0o5oLhcs1mTAOe0j7zFovHD2pPE19DyY4BxkkoEMVGufQA5yYAsP/mYItoO0uASAt9Dxg8JNUA7aheLlni/zHkhJECuLg/nEMnmKlI5MOvgJH3MumHBCwhZ8EVlHw=
+	t=1763879040; cv=none; b=t9OgQKfsfItfBIa9cCDWS5rpcSlteqKEVfqMaJCaAvY5SUIOKLMzcZPEr23zCo3Tfrto9/4y9AJVPBy2aZUX0E8ixyK2WC54aA4bmmPI1n9ylUQyUI4n9anhxcngAsOAKv2dafl1T1RfMufzT9ttSun6EQQsH1+jD/KLlHS4dGo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763830666; c=relaxed/simple;
-	bh=fs2lYtrZNV3KZp6UxTLBsAy379d9ku/fF4PuWVPTvRg=;
+	s=arc-20240116; t=1763879040; c=relaxed/simple;
+	bh=SzyBMBGL41l+GRT3PKbQK6wE8+pXjCJM7j+1yPO5XGo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C+UpR+ZucftwLhY6vWoFwH8CEJ4w2THHOeNaGawUcY9gVMezPcuVfDXk/5h918vT3hXi/PdcGOJctkhTD59wUuiYtWlQTAjoQ8ICfhBp951bJABS5KrcvSlw7PPnq972aengFSUq25+Qd0tFmpEes/9QMCAuPDDghH4XxyfOdAY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G94wuRM/; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=XYMySInXkxUBUY14j1Na9NPG/sfK/NgPxlIIs3PbcAW12Q/JWoEq6o6wq1wNr4BzRNQYBzZykDSORh8R4KjW0jUv5o1e7IdspLDtbwUzcpEx/ca+F1aAq+cRiTPaoclVwFUAo+M9oigJgs7pMP8X7swVo4W9Tnxlz7VGQAj15/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=RQIzNNcG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G94wuRM/"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-640860f97b5so4305026a12.2
-        for <regressions@lists.linux.dev>; Sat, 22 Nov 2025 08:57:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1763830663; x=1764435463; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+OUGVg+qzpVBZ5O3rUCAbdonkufD8EHD+NzO79QMHoU=;
-        b=G94wuRM/0W6aXnsCi95BLthnr2WLIWleAyC13IYHS20dyUlop9dGvkWeZiUpQRELRo
-         ux+LlT5+2AjLbbKl3jgbfoxrdEnjwJ3lb9aID8IB2P+FXiml6k1fchGfPybcdMFw30IC
-         OjrsqbO2AbPl4lnSUcb7NRr+H0AC04PTbrxKTRtim1ETr8zUPCBkFN8HaLTxkv6y21rE
-         DjEew9nJEFcYyvNen+Y19/ADj+jb+uDt7cnc4bMY0wg4EbvvtbZ4ZWMl7xMOViYPeAJh
-         KsYVcAJSeuGRBZ9IRiP18y7u986E31JDwKOdtQuOoZRJcNLJdjH58NRRLmWgptTPuncr
-         hVow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763830663; x=1764435463;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+OUGVg+qzpVBZ5O3rUCAbdonkufD8EHD+NzO79QMHoU=;
-        b=Z3ItZ3wJdfiWI97woAI4YDzriiX03PV5eZhFwEh9AyFhqXuhad3gFGfEUCJf42k5wh
-         vnfFL0FouziHI2uwkfKiIfpJgcYg5gtVXV+TA8+PJwbhsMI81gKF1rLZrvHS36z4BYVr
-         kYBBOD4aVIWNZ9gRh/eKhlKoSknOmlQiCyL7KigiTqPIvCUYrgI+6BA8VMekzER0V9cU
-         tlt5GaWvrPDZZRw9xPlFc4bLABXxnsEOoEPkRjYBANXPFGbw8rwp90kolgVrSnKDbifa
-         Nvlsbe6MsySAplK97TihDF4pu1TZFH2V9BTG9Y+li0A+oY7AaXi541RdA5Eq0oJEUy6T
-         yECQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXdSGojTOnTWZfv4kEHlklCiy9Zy98tM9N1MUWE+TqygEdmBgl+TpluPNZvEYjEQPtl1RT9I+rSA2scXg==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxRpkotGmGffN2yFOgtbxMv1yu+0lzLwgk5APT8l8mRQIdhv8/k
-	7NzB+TgqA21O7n/FwbaPRyW0jbsiSYeLfScQEdMUdV2qROmeO+/hstjO
-X-Gm-Gg: ASbGncuIVHYvGGzzwxYbu0+dRfjRdxCaCBe5YlF8Ee+cBriWxYTUwClLaVtF0aaOH2M
-	Rz+RbhQmdEDqgUe3nTD245hYxbZrtX0oGU5jTEC0PLjsCUOkWM4E8MU7rCxIM0ayVe8JI+l1tmQ
-	KXRHVkpoWtx6ivptXpDp7p7tZt3Ni89ArU3MdfjJAE6SU831b46F2vp4MBO3ibkcVRAHAKm2F91
-	P7ws7A67ZOOYrnqtYyj70ZjcdqqsOVGrzU5UupZH61XiPq77gmCkx/hSuxR+dvYq8RSkSRG7b5s
-	FsaAdj94FFm077hP6k6qlKWQForTWZ1nSglYf7HL0ynXBkPVKVZbvlCka7HBr8Ws/Gt/9zPJcvE
-	qjy1+J3JLWqS0Y/w/7ZNzoOAO3dJuJuDY5a4esww+THdZ8kKvWU5z6ME9un92IugpIkk7ArFWnn
-	/dFs/R9twgx0gfe8dR
-X-Google-Smtp-Source: AGHT+IGQR2K+8oB9rl4LdszDdgZ1zAbDRGTLWKw8HJ6tmpfxZcxiuNPJ2kqkhKPL+e7MCjq3lfauqA==
-X-Received: by 2002:a17:906:f58f:b0:b76:26bc:f95f with SMTP id a640c23a62f3a-b7671244c1amr573051266b.0.1763830662444;
-        Sat, 22 Nov 2025 08:57:42 -0800 (PST)
-Received: from localhost ([94.19.228.143])
-        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-b7654ff3987sm782530866b.48.2025.11.22.08.57.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 22 Nov 2025 08:57:41 -0800 (PST)
-Date: Sat, 22 Nov 2025 19:57:41 +0300
-From: Andrey Skvortsov <andrej.skvortzov@gmail.com>
-To: Ping-Ke Shih <pkshih@realtek.com>
-Cc: linux-wireless@vger.kernel.org, piotr.oniszczuk@gmail.com,
-	rtl8821cerfe2@gmail.com, stable@vger.kernel.org,
-	regressions@lists.linux.dev,
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [PATCH rtw-next] wifi: rtw88: sdio: use indirect IO for device
- registers before power-on
-Message-ID: <aSHrhbt29k6GJB8e@skv.local>
-Mail-Followup-To: Andrey Skvortsov <andrej.skvortzov@gmail.com>,
-	Ping-Ke Shih <pkshih@realtek.com>, linux-wireless@vger.kernel.org,
-	piotr.oniszczuk@gmail.com, rtl8821cerfe2@gmail.com,
-	stable@vger.kernel.org, regressions@lists.linux.dev,
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-References: <20250724004815.7043-1-pkshih@realtek.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="RQIzNNcG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E143C116B1;
+	Sun, 23 Nov 2025 06:23:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1763879039;
+	bh=SzyBMBGL41l+GRT3PKbQK6wE8+pXjCJM7j+1yPO5XGo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=RQIzNNcGiJcBugzj3bgJKApwiyWQ5oxgr6jFwUqKK4RnJuFQ4l5HFGluXKiUbncT8
+	 m4V8kvjyUw/j4RGbUQ3bs4fr8NHRNaev8+kAtuD4+a+PrNeZBTS/09qoQ7b4coeU3k
+	 D4guSkruoRfeIbAHW9mN6s1FDoEhh+XknjHWRXxQ=
+Date: Sun, 23 Nov 2025 07:23:55 +0100
+From: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+To: Trond Myklebust <trondmy@kernel.org>
+Cc: "Ahmed, Aaron" <aarnahmd@amazon.com>,
+	"stable@vger.kernel.org" <stable@vger.kernel.org>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+	"linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+	"sashal@kernel.org" <sashal@kernel.org>
+Subject: Re: [REGRESSION] nfs: Large amounts of GETATTR calls after file
+ renaming on v5.10.241
+Message-ID: <2025112346-overbuilt-upscale-b43a@gregkh>
+References: <F84F6626-B709-4083-9512-5F48FE370977@amazon.com>
+ <2025112203-paddle-unweave-c0a2@gregkh>
+ <8090316eab1a1b973ab81a8f3c088caa7052d89d.camel@kernel.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -83,71 +45,89 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250724004815.7043-1-pkshih@realtek.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <8090316eab1a1b973ab81a8f3c088caa7052d89d.camel@kernel.org>
 
-Hi,
+On Sat, Nov 22, 2025 at 10:43:29AM -0500, Trond Myklebust wrote:
+> On Sat, 2025-11-22 at 07:56 +0100, gregkh@linuxfoundation.org wrote:
+> > On Fri, Nov 21, 2025 at 06:56:31PM +0000, Ahmed, Aaron wrote:
+> > > Hi,
+> > > 
+> > > We have had customers report a regression on kernels versions
+> > > 5.10.241 and above in which file renaming causes large amounts of
+> > > GETATTR calls to made due to inode revalidation. This regression
+> > > was pinpointed via bisected to commit 7378c7adf31d ("NFS: Don't set
+> > > NFS_INO_REVAL_PAGECACHE in the inode cache validity") which is a
+> > > backport of 36a9346c2252 (“NFS: Don't set NFS_INO_REVAL_PAGECACHE
+> > > in the inode cache validity”). 
+> > > 
+> > > We were able to reproduce It with this script:
+> > > REPRO_PATH=/mnt/efs/repro
+> > > do_read()
+> > > {
+> > >     for x in {1..50}
+> > >     do
+> > >         cat $1 > /dev/null
+> > >     done
+> > >     grep GETATTR /proc/self/mountstats
+> > > }
+> > > 
+> > > echo foo > $REPRO_PATH/bar
+> > > echo "After create, before read:"
+> > > grep GETATTR /proc/self/mountstats
+> > > 
+> > > echo "First read:"
+> > > do_read $REPRO_PATH/bar
+> > > 
+> > > echo "Sleeping 5s, reading again (should look the same):"
+> > > sleep 5
+> > > do_read $REPRO_PATH/bar
+> > > 
+> > > mv $REPRO_PATH/bar $REPRO_PATH/baz
+> > > echo "Moved file, reading again:"
+> > > do_read $REPRO_PATH/baz
+> > > 
+> > > echo "Immediately performing another set of reads:"
+> > > do_read $REPRO_PATH/baz
+> > > 
+> > > echo "Cleanup, removing test file"
+> > > rm $REPRO_PATH/baz
+> > > which performs a few read/writes. On kernels without the regression
+> > > the number of GETATTR calls remains the same while on affected
+> > > kernels the amount increases after reading renamed file. 
+> > > 
+> > > This original commit comes from a series of patches providing
+> > > attribute revalidation updates [1].  However, many of these patches
+> > > are missing in v.5.10.241+. Specifically, 13c0b082b6a9 (“NFS:
+> > > Replace use of NFS_INO_REVAL_PAGECACHE when checking cache
+> > > validity”) seems like a prerequisite patch and would help remedy
+> > > the regression.
+> > 
+> > Can you please send the needed backports to resolve this issue as you
+> > can test and verify that this resolves the problem?
+> > 
+> > thanks,
+> > 
+> > greg k-h
+> 
+> Ah... If I'm correctly reading the changelog
+> in https://cdn.kernel.org/pub/linux/kernel/v5.x/ChangeLog-5.10.241, it
+> looks as if commit 36a9346c2252 got pulled in by the stable patch
+> automation as a dependency for commit b01f21cacde9 ("NFS: Fix the
+> setting of capabilities when automounting a new filesystem").
+> 
+> I do agree with Aaron's assessment that patch does depend on the rest
+> of the series that was merged into Linux 5.13. It cannot be cherry-
+> picked on its own.
+> 
+> However what exactly was the dependency that caused it to be pulled
+> into 5.10.241 in the first place? Was that logged anywhere?
+> I just checked out v5.10.241 and applied "git revert --signoff
+> 36a9346c2252", and that appears to work just fine, and I don't see any
+> other obvious code dependency there, so I'm curious about what
+> happened.
 
-This patch was recently backported to stable kernels (v6.12.58) and it broke
-wlan on PinePhone, that uses 8723cs SDIO chip. The same problem
-appears of course on latest 6.18-rc6. Reverting this change resolves
-the problem.
+As the commit says:
+	Stable-dep-of: b01f21cacde9 ("NFS: Fix the setting of capabilities when automounting a new filesystem")
 
-```
-$ sudo dmesg | grep -i rtw88
-[   24.940551] rtw88_8723cs mmc1:0001:1: WOW Firmware version 11.0.0, H2C version 0
-[   24.953085] rtw88_8723cs mmc1:0001:1: Firmware version 11.0.0, H2C version 0
-[   24.955892] rtw88_8723cs mmc1:0001:1: sdio read32 failed (0xf0): -110
-[   24.973135] rtw88_8723cs mmc1:0001:1: sdio write8 failed (0x1c): -110
-[   24.980673] rtw88_8723cs mmc1:0001:1: sdio read32 failed (0xf0): -110
-...
-[   25.446691] rtw88_8723cs mmc1:0001:1: sdio read8 failed (0x100): -110
-[   25.453569] rtw88_8723cs mmc1:0001:1: mac power on failed
-[   25.459077] rtw88_8723cs mmc1:0001:1: failed to power on mac
-[   25.464841] rtw88_8723cs mmc1:0001:1: failed to setup chip efuse info
-[   25.464856] rtw88_8723cs mmc1:0001:1: failed to setup chip information
-[   25.478341] rtw88_8723cs mmc1:0001:1: probe with driver rtw88_8723cs failed with error -114
-```
 
-On 25-07-24 08:48, Ping-Ke Shih wrote:
-> The register REG_SYS_CFG1 is used to determine chip basic information
-> as arguments of following flows, such as download firmware and load PHY
-> parameters, so driver read the value early (before power-on).
-> 
-> However, the direct IO is disallowed before power-on, or it causes wrong
-> values, which driver recognizes a chip as a wrong type RF_1T1R, but
-> actually RF_2T2R, causing driver warns:
-> 
->   rtw88_8822cs mmc1:0001:1: unsupported rf path (1)
-> 
-> Fix it by using indirect IO before power-on.
-> 
-> Reported-by: Piotr Oniszczuk <piotr.oniszczuk@gmail.com>
-> Closes: https://lore.kernel.org/linux-wireless/699C22B4-A3E3-4206-97D0-22AB3348EBF6@gmail.com/T/#t
-> Suggested-by: Bitterblue Smith <rtl8821cerfe2@gmail.com>
-> Signed-off-by: Ping-Ke Shih <pkshih@realtek.com>
-> ---
->  drivers/net/wireless/realtek/rtw88/sdio.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/net/wireless/realtek/rtw88/sdio.c b/drivers/net/wireless/realtek/rtw88/sdio.c
-> index cc2d4fef3587..99d7c629eac6 100644
-> --- a/drivers/net/wireless/realtek/rtw88/sdio.c
-> +++ b/drivers/net/wireless/realtek/rtw88/sdio.c
-> @@ -144,6 +144,10 @@ static u32 rtw_sdio_to_io_address(struct rtw_dev *rtwdev, u32 addr,
->  
->  static bool rtw_sdio_use_direct_io(struct rtw_dev *rtwdev, u32 addr)
->  {
-> +	if (!test_bit(RTW_FLAG_POWERON, rtwdev->flags) &&
-> +	    !rtw_sdio_is_bus_addr(addr))
-> +		return false;
-> +
->  	return !rtw_sdio_is_sdio30_supported(rtwdev) ||
->  		rtw_sdio_is_bus_addr(addr);
->  }
-> -- 
-> 2.25.1
-> 
-
--- 
-Best regards,
-Andrey Skvortsov
