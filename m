@@ -1,253 +1,191 @@
-Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
+Received: from mout.web.de (mout.web.de [212.227.17.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF8E1274FFD
-	for <regressions@lists.linux.dev>; Mon, 24 Nov 2025 17:01:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.171.202.116
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 484D13446A9;
+	Mon, 24 Nov 2025 22:34:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764003670; cv=none; b=uW4m4hBiIGfAipyPVMBnVxrQSUWaSxYR3HCNPEbIMh6dE46D1Skk/yTT0TFUohygOC1PUD2H1Sx9mfnrtSuqrZBAwgq9koiVt/DvNLsAMOYed+zHhWwOqRch08DxBVqPK4Y5VvT74I6JyNourvjES1ilm3Oq5ma7j8Q/QQu2WCk=
+	t=1764023695; cv=none; b=tIInUah6UVTe1VVHM7eK3N4HPacmB8v8JuCIIt7UTOuKmDh5FVmuGmzjHQiaWcQgJmO79E7wMv1KIT/AP6T9g8isL3qaFN7R3cni+rrsPuUh6ZYQuKumC7ho/55xEfqd+yKif7nqztGu82yYGEUmJMIfVWmsaaEDuZuxlGy4ps0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764003670; c=relaxed/simple;
-	bh=n0Y0iAEe+wI0We+mem+OHGRPDFuds7En7zISq7Sa0sE=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
-	 References:In-Reply-To; b=evoN4VNjwnE6HKZBqrusOoVy9cSqOJhgCB3O4CXSltvDwTu/UyEpeNRa4LfgfpcG6b2MCjjQppxzkwLWALDLA8fZCEdQz6KwKNOUp8wTRwr21C0nkfThteKMB3Hzt9+zUSdtfh89aproCev270lvoZ79PLN1vVa2CWOMNkYUHvk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=M2s5VLNZ; arc=none smtp.client-ip=185.171.202.116
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1764023695; c=relaxed/simple;
+	bh=5JpKmTiEKDSXyIugOXFybELiowoSicEntJ8pGkk+Hsw=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=C8P+2hd3Bs2ksE/meTcTFlMSMvnGBtlpkQXX6vzIWsVzKljd1UP2vzMJ1dPSAJjBtrJaiyKIOFwSxMVYlml4gdwKyk87v0Dm++fDEtu5c330qZl0ZgumlwtHbrcneizRyruNIa6ozOjcrtQtDm5XZ7YJDtPcKGwp6IItL6WVCPI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b=E9i1SJfs; arc=none smtp.client-ip=212.227.17.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="M2s5VLNZ"
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-04.galae.net (Postfix) with ESMTPS id 51ACAC139B2;
-	Mon, 24 Nov 2025 17:00:42 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id DE3BD606FC;
-	Mon, 24 Nov 2025 17:01:04 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 502D410371A65;
-	Mon, 24 Nov 2025 18:00:58 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1764003663; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=kCTy3rNf9WeORBktz4/UGAUknpiYBvo2py/SgcQ7D6g=;
-	b=M2s5VLNZ427/TwAskwVQ+VdBr5yxg71CXnuFxInngcxweZStgde3uDLhCQ6B1YifZ/AL/K
-	wrCpErzXCuY49BQE1WdRao62svsuUtw5+dJMJP42sj4Tjc+bg9fBv+Kon3gnJV7e5sAncx
-	Jrl6sqpZjZ0Axqpwa5SsBfrl+SbVUEdz1J599zZ0a3TJgRJ49wHbEevL61F0Tvd+rZ7tVc
-	Nj3nlF9mps+3hwnDYALY2W66e2nP/l9LSyINSEgpZWMzFrQ3/GC5xxBdYBfKcG/6ajtrkV
-	ukPZweiWlJUlO+I5BnBQdP09YSI/UGA5ab5RL5DX0ZDl2RlIc9y1CPjXw2cegQ==
+	dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b="E9i1SJfs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1764023679; x=1764628479; i=spasswolf@web.de;
+	bh=5JpKmTiEKDSXyIugOXFybELiowoSicEntJ8pGkk+Hsw=;
+	h=X-UI-Sender-Class:Message-ID:Subject:From:To:Cc:Date:In-Reply-To:
+	 References:Content-Type:MIME-Version:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=E9i1SJfsMEGXCfZCp66aYBjHVXmB2DtJTapEeLbzQ1MAn/bHGqZH0DV7FoJhx70G
+	 +g4urcM0Y0iJ/Co2lh/LXj28QjrTBiTDd6y61BAQZBKnFtCqPVL73oWi1wk70+Ang
+	 thGFYQ1V2sOnyL8px23LjmwdZc4dwT1OavpNYFCmKfyfuuXCsEBMsFcmcZUT8JYdX
+	 7RsKFiRp6+9ybgObadOkuw878DItEoRS0gSNjcErSaNVqEkcOjRzwadCRyLoaEnLe
+	 HgTxxfY4LNpzsnEp2KY/uKrLh0+moBE/PEZUiJBT996e7JpMPvccTHw092bgqDqIT
+	 J6VP0UT3UfjnBsME8w==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.0.101] ([95.223.134.88]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MZB07-1vb5FG3EDh-00S6L1; Mon, 24
+ Nov 2025 23:34:39 +0100
+Message-ID: <b1fadb15d1869bde81315be7488c50dbbc9f7dbd.camel@web.de>
+Subject: Re: Crash during resume of pcie bridge due to infinite loop in
+ ACPICA
+From: Bert Karwatzki <spasswolf@web.de>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Christian =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>, "Mario
+ Limonciello (AMD) (kernel.org)"	 <superm1@kernel.org>,
+ linux-kernel@vger.kernel.org, linux-next@vger.kernel.org, 
+	regressions@lists.linux.dev, linux-pci@vger.kernel.org, 
+	linux-acpi@vger.kernel.org, "Rafael J . Wysocki"
+ <rafael.j.wysocki@intel.com>, 	acpica-devel@lists.linux.dev, Robert Moore
+ <robert.moore@intel.com>, Saket Dumbre <saket.dumbre@intel.com>,
+ spasswolf@web.de
+Date: Mon, 24 Nov 2025 23:34:37 +0100
+In-Reply-To: <CAJZ5v0iRaYBU+1S4rqYR7D6XC+rfQ2+0hgbodweV5JsFr8EEnQ@mail.gmail.com>
+References: <20251006120944.7880-1-spasswolf@web.de>
+	 <8edcc464-c467-4e83-a93b-19b92a2cf193@kernel.org>
+	 <4903e7c36adf377bcca289dbd3528055dc6cfb32.camel@web.de>
+	 <4a8302a0-209f-446a-9825-36cb267c1718@kernel.org>
+	 <25f36fa7-d1d6-4b81-a42f-64c445d6f065@amd.com>
+	 <1853e2af7f70cf726df278137b6d2d89d9d9dc82.camel@web.de>
+	 <f18bafacbd8316c9623658e2935f8fc3b276af64.camel@web.de>
+	 <26bf82303f661cdd34e4e8c16997e33eb21d1ee4.camel@web.de>
+	 <635b6cb19b5969bed7432dfd1cd651124e63aebb.camel@web.de>
+	 <18e472a0489ee5337465d5dc26685cebaf7c4f8d.camel@web.de>
+	 <3772b8f5-6d1a-403e-ad27-99a711e78902@kernel.org>
+	 <0cb75fae3a9cdb8dd82ca82348f4df919d34844d.camel@web.de>
+	 <ab51bd58919a31107caf8f8753804cb2dbfa791d.camel@web.de>
+	 <0719d985-1c09-4039-84c1-8736a1ca5e2d@amd.com>
+	 <3f790ee59129e5e49dd875526cb308cc4d97b99d.camel@web.de>
+	 <CAJZ5v0iRaYBU+1S4rqYR7D6XC+rfQ2+0hgbodweV5JsFr8EEnQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.56.1-1+deb13u1 
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 24 Nov 2025 18:00:57 +0100
-Message-Id: <DEH33WWQKCOS.1MPPXB090YH3H@bootlin.com>
-Subject: Re: [REGRESSION] TI SN65DSI83 is being reset making display to
- blink On/Off
-Cc: "Philippe Schenker" <philippe.schenker@impulsing.ch>, "Herve Codina"
- <herve.codina@bootlin.com>, "Francesco Dolcini" <francesco@dolcini.it>,
- "Tomi Valkeinen" <tomi.valkeinen@ideasonboard.com>,
- =?utf-8?q?Jo=C3=A3o_Paulo_Gon=C3=A7alves?=
- <jpaulo.silvagoncalves@gmail.com>, "Andrzej Hajda"
- <andrzej.hajda@intel.com>, "Neil Armstrong" <neil.armstrong@linaro.org>,
- "Robert Foss" <rfoss@kernel.org>, "Laurent Pinchart"
- <Laurent.pinchart@ideasonboard.com>, "Jonas Karlman" <jonas@kwiboo.se>,
- "Jernej Skrabec" <jernej.skrabec@gmail.com>, "Maarten Lankhorst"
- <maarten.lankhorst@linux.intel.com>, "Thomas Zimmermann"
- <tzimmermann@suse.de>, "David Airlie" <airlied@gmail.com>, "Simona Vetter"
- <simona@ffwll.ch>, =?utf-8?q?Jo=C3=A3o_Paulo_Gon=C3=A7alves?=
- <joao.goncalves@toradex.com>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, "regressions@lists.linux.dev"
- <regressions@lists.linux.dev>, "thomas.petazzoni@bootlin.com"
- <thomas.petazzoni@bootlin.com>, "Emanuele Ghidoli"
- <ghidoliemanuele@gmail.com>
-To: "Maxime Ripard" <mripard@kernel.org>
-From: "Luca Ceresoli" <luca.ceresoli@bootlin.com>
-X-Mailer: aerc 0.20.1
-References: <gw635fewdxe7falrxz44gxstiuzjpmeh45rwe5bglto524faaz@hj4z2vh22p5n> <DECL7AZNNMX5.MC2QTENKZTWE@bootlin.com> <20251119111221.GA18602@francesco-nb> <593e90d9-cf04-45a2-8172-98c441ec79f5@ideasonboard.com> <20251119122443.GA29208@francesco-nb> <DECUJMA1JWIC.2PYDSYBID4I94@bootlin.com> <20251119194023.6239d397@bootlin.com> <4e25291266d46777e84f22295b8f1094d8f682cc.camel@impulsing.ch> <ko2ghflyddv2igj43wkwsaaoneg2jwpdxldlfsix4cllzspdbj@w4fhabuwm5wy> <DEGWZDNYFV6X.22R0E53VDWHNA@bootlin.com> <jakr7ccumjo5jqzqlnbxur34itbspip25iicx5oq2bm3hoj23j@w3qllbfu4xnm>
-In-Reply-To: <jakr7ccumjo5jqzqlnbxur34itbspip25iicx5oq2bm3hoj23j@w3qllbfu4xnm>
-X-Last-TLS-Session-Version: TLSv1.3
+X-Provags-ID: V03:K1:by/LTxf5+y5On/Iz04FuP/kGdj1rdIi/1LUNrFVYLRAHXIb5Xzg
+ k+tKcJ7JcpnwuMCXI4gileIAzN5fFTTm08SoFHR2p8KxIbrjZmPXPkK4JV4bi7H754vEBfk
+ xdiJshvCxq5AwkG/NwxznFjPhPeK3sc+FFsM/Fb6wgYHmuT7+WT7FBLuwZOwlX516rgXEqy
+ kZVZDwHCHrcYUDjFMPRZQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:El3AJWqswxE=;3pIY8KKrr73UIWBzV/FoiUVw+MU
+ zo+Jt7KtfexvTg8Pi6SPP9DeKfvlGkmiAxMfIcoph0DfZrvmRrk1D0OZz7TF7oDjgVpDeqySU
+ dRuqmcuTt3eIfX2/qj71CBDi3Dhsb0HGj5POS6EY9aGiew0LPSHUT7o9ihfMboWpHDjzD3SxH
+ prE33tV0hyOROn0iHQE00WNv+YxdCZtmLJQS6YBhz+myGTYDmvb37nHqy2ZRWR3pXxQcRAT/B
+ BjiFrOtE/Zd8aDizTgW02PSiDijnw9ZwNQ10FRYFe3l3QyofR3eeinKxlCz9B9hw9FiZLPrQS
+ j6qw7Fmp7EGAebFjR6MYoKDzus4XqJsq9PXlCRVlgYf9csQodOfSDSPZLUMNaceu/VtANc5Ms
+ KtFVjkWs5Ll8eCCKSPXsWt5M//+vuyx1X5q87r8JARuzDOrgFB2dIEQWpiKjUCRvbGp6KJ5BS
+ CqmPsCuicSZRklPxvSiwYCilvNL5xa6JUzV0KWEnyQ/VbZfdxBSbjyhHDDqTcfC3MOouTiSdh
+ hSWoevYkB5hmXUslzA9VYmXndIlCfia8MwstAwyM9vjpFZbEfY5K32yRHndeOKsw75kk4NW/h
+ zcX2H1KXk2ucDEmCzHKDZADfrp13xw1rmCnKXtXAZdJiONXNgvQWEluCt8l/QtgUnjwGWUNOb
+ bzIWlaCMX5IMbUA8QX4S5TMD/3pTXXGmYzNPFGG13h9TAcrQHJ0FiilNiUC2FDrdqw4+AnVIJ
+ 1JwrK5CUchmGRuxip+BAbEctZiT97vUIFzO4ICUFqHedfRfJttFHdX6Z7MUkkxkgoCElYee5c
+ pCZl9mBFFwZQvdue8rr/nZ+ZLZQt13rMElCDbrAM3t5EFvkiYStTmDOQJbcBb2gp+5VOrqcRg
+ kvYjduLh7MfzYAnJR9U++I9kpePPL73iL4S/oDLXirOKXYPoRmX8NJICMoYkdVjbo4jdPLMtd
+ 6Ivq4cqpQSqp9Go1zJd70rPdMddhNSFql0WtHzBDgNzNY2lZtxBFLas1zf+LjncvGW4qqWTyR
+ mmw1kCpNBdHwK5HmdmSTg10vFpfiQbkIr+KYm3mPMtWDrS18PTNytYNRJShGyCmpEE9ZlHAro
+ 06UeIvnlq3ucr0nkO/RqPeoW0Rmq7u8xcXxJsgB1nrngB6CEXlzWq23xtVyb2SqamPPwGG0GL
+ adbuT0TaNnKXVjC5Ksg3qQv4bK5o20YrD3fp6OU7hHvapj5ihP9qVqH0L/qSZdxOcXTJ03cql
+ MHB0ArSSdMM3GlykcQ2DBnPxYEeYSVQictmgH77pVRvIxoKdNtpcK3tP5TJSvImzuUiYPeR2G
+ mkPnP/faV1ZYOhOeuW+j98cAPpL6Ujx0UDaBvSYQsNxu+jbokGXSH/p1St9t16iT9VhFZLU+7
+ vHcysty7bUNjJlSPdvUG2p1C6MaKVDhZAXkc8EwSGw3yXCsNHLwr8TwkwpmSuK5m8T4l/cTD5
+ 80hS5tdE7sTl7qPiEwBSF+PruDRU4qtaMpC6mmaHeAfXtYLA1jyDZuZtTuScsvX7M+FCJgRF8
+ kwVnTvW6Et1SyCtLJ7X9nleV+pPkjMnzYXIypFQXrYeqDREkcsm05tVvdZKWkUnbpjR2PgM4K
+ SZ4rOHkjkFhe0khrCIsCHpON80j3epIW3if8CN7HO+bW6j/6fhq6hihBf2UI/XMWchxOFlVON
+ QbidjzDsd7a21fXmCIalZn0Gckp9/dwd+BUml0DH6Hwsw01+9k/37fo7GjWqh0oOz2g2Xe8ik
+ YSKgKQKEKjhCm4Fj+ekinlb+m+jSweA0sfxapOE5Yo6pnBPtusG3rKq7Zq/ICotRrz7oQzw9e
+ sBvmiluSQ+tTmQ7UmW+dvCO0B1Fpb3dI+YLy84BVCb+ef10ADOW4ohOvTS7B759jyYdn/9SC1
+ NKb+9dT1275Sh5UmkmZTgi1xx7/lNb7i8oo7UROrtMVyy5ORIOloCbs+yq5CLQUKr122Togxo
+ rg0MWj9P/p/hYdBY+y/NlYJXYun/4d8OF+umM5FtN7UYTgfQKxmuHFkdKcwX8pph39K4krIM5
+ 6ITaFbEoWPBlMmym6z2ooxOqnJzO3ai5aUGl4V/Ry5o8/HCTx4TjKuXfE5iqnAlR41XMfdGhP
+ Y4dCQCB/yI+kuUn3aEkHEGs1hKqqnkLqxaIjhExQGhYVEy+WGwd1DSA9q7O5diV5TfgolSeFR
+ 8m2lxSJxPKWibm94g7r5wvVVK9DCuOMobHopao+rZgsbQwkPaUr10pLZIYzSA99yRQE/qHEfh
+ l83JA03GTVgryRIFN7xzZxqifFWYbYdEDy2pED7kQW8MpwB9a2iCRJMZ3bC07Fwy94U84H6lH
+ En56p+0oXcMUPCDe6mqWU89OlHeNrb3n9eOU4wy1S+dpPsDiHXNfGhOQE4Pff+e+xhmfTwZ36
+ JxXhapVqXqgzCt9B5vJ7gYvALionkCx3YTg509Zr3BZC/25wJZgWRJMF4H6QILLG+qpNa3sGa
+ Jldg5M6tQ0U4U7Wc+A8a+0iYuz6ttSzTbLhdzhn50oJbwR2IcmM80N2ImQlgDferyU8zHvlqG
+ PBkZ7JSqnMvW+XQIHDIeZDij5Ww8RFvA4VACo8VuaMlMvz97oFRk+Q5pPZ8TQ3bijmMW1QdF1
+ vRHoq9ZMMJ3QxgRr7QWWYFFAUik3MQDq9OKKnpMn3CdcycVaOtXcZ1H5vxOn+sAI4RYpkfdg2
+ z9WZA3EkJBKVTcjhOg+ywWsU68Vj5TmqRxWMXTOhX305/z6StC+3zFXU8PyCHoA8b5fcLHFxg
+ QIRZuzIMjrwN/gFf00WLuk9cz4mY615lynbkp9Cfy4kFhR1RqrR5b16zB8t4IgtuP0NyY+4k9
+ hgQg8tW8Vl2NWHooIqvdpPMQsO65Ka9VUMcHRRt6kqKge+2rfKXreY9sUTfGWgWrgIBNcL8Pe
+ J5999a7JtND0I8wzJ19p7HEBObvIbH9OU+SXX+LulLVXbtjQmDx1hUtk4i7kQw8Xz2Z2U1f4Q
+ 8Fdu4kbgosCi0Ec+uhdaL3rFkGUVrgxFnciCbieqU6C5Oyro4+CfAGjgnIihxIpX2mMVpLvuJ
+ IKvDw+MeQMiHgJUoYkTmiba+gKayGKV+9lF9ic6OXEAxPvQFU6KQMqPrAuc4jzeWvvp9HIoRC
+ VH6vdjMm/FY2h6jTEl8cCJDCjfx802FEDAMnlqZQxXyoNRxkDSivYimAgO6mSnTmWFgje0jFa
+ v+uEhiS7l2b7sgxDNrnrZO+IvcaUbUWubHi1sZ/BzZtSrQwXzDB7dzcxgGvggENGM0EWO05Nw
+ VfrVPUfd8Qj7tVp52SZF5sHX8QGVVdnBp53WscVxx4+C4h1Q4UYRri1StAOgHgVUL8p+hjXQT
+ D3Eloxdc1QoKD4QhS/U7JUN9sBMZXyPlmOQ08DOnGgKj2IYw8BRxXWz9zgB5DxVsDTZ+LdQ0z
+ AAFt/IuBJSsGMYpaYOLmODLZ3GqdgoVahOJWBENDkWsq6IkMfmBN4ZvwiM4UvdwW5Plg4CSW0
+ a4+7ZP9ymhyGBrq6voKoFTy7+aJi7iqwuq8KLMwq+iv3QrVgaVJIi4yvZXyQ1gO012N2ubpqx
+ Cl+8jd1YX9EsLEh4g4sy8dPLpWweXKmqcufZSTBz0vR+CG00XI0iTxmGE8JSIER1cDjpELvPn
+ ci/RlRbMRJ8Cc0XnwP1SvP8f9WPqhxC86/ysNkUYaQNmLXFioB8ETEK5PLHoGROnYraCDF9Sj
+ jy4FZ9IE2efI4ex/0QQ0Y7yvepe86rS8uX22rFxT0vOMYI0zQRLnWEqr4gsn/yMbuC/We+X++
+ mFtzwRq29Nq0F1NuMefTl72bONiuTVn+ajX+sE/JwnnLUwLbcrQxsnZLKdfq65dcGuis/vECV
+ LkpLn3+4mnIBdveOfDaerOcmFAashtNIIgweJ4m0tRFjeE+9Sc4+vk4MfrepQ1RPZJBw/OCkI
+ qoKppFv0SyPMtbnhT5Qg9YdK8BCsIrlJxOwPhmqqRTkCmG7jruSOyn03ir7IMdlhp6YzgYMAS
+ wpf+BgB682kOCYmGVluAn06iZ12jUlj4JhcsKa86WPHUkQ09203Mc/FjxLwwFKoH/AqBnWPT1
+ tNcf80HrZ9/lMNPHo8lmSd3P6oKfKH25BqE9oSlBjiuH668KQ8PfjkEpXmBze+y52azCY1KjY
+ 6cd6yh8uS7WQT/J9Ls6Q3yECy132Xg4PNW5/1E9C2CD1rwrdOl5VWlEQU/5pYDIk/0R4149Wo
+ QJdRQro/q4XO2o96pgJH2JVjdrQWY4OlkZdwNR+tn57MhgEAc3yozUkBalFCMGoqfOIsLbiUQ
+ DsD8RY5Rozv3iPWU3nXss+OcooYq1N95aUr5U4ZZCdpci7dapuBfK2ps9kitAck1eT4z5Em2K
+ 6ldOPC5QUYKwhq0HwwvoC5p9A8yfXu9441lLm76WxqTTvmyQ+gGS3DOdp/vjUN8o9IymUbSvV
+ n4ne8V5K30OluRhJPvHxkwcEOW4XpkxPksHmw3/Qn9GP5Hb+cYKA9Kq55ExtrnIuoUMvdzTgP
+ OFHyPzkFwZcEYGHs3d/nbBm9V+lHHAqY93VA5gAeEn76+1ma4BSmft+2V36V+5GqTEnkSEF8e
+ bgRBvr9UqlGPFTEDlQx6aMtWvVpj9zj3oN1mipfElcZSbiceX/0Gglo67UAP5OUiTIMO9w4ji
+ YLvF+ttleXAcVXtJFcMoyau1FbdNT+6aT4YS3PpolGNciksNqUU0D2IgNXiqEr/jAyYptYayr
+ ALn5Hdpm5a6yGh7QAPnhqxhyepZ+DXRGefZnWESEdN/YRUzWQAhxeWIxRjXwYvOhOegxGajBb
+ SEAzPYXNCkWLiszzBGg1QkTSpxzBCleRoc+bH1ry6+O4n2kblctkh2i2GgK0Gz9Wpzpa4mCUl
+ UYdd7gZXnexGLj1xt/fss2ho06xya0g+9tUoilvKheS2TwGYIsOhMlnB0YW9szWdVF4saZnIM
+ /DEJbBDvfrikbVLmPMi7Yrd38s9MiofS/l/Zt0t4vKMKSmWgJCIoYOM9RvnoUcVJMNrP9s7XU
+ Bdch9zA8ZzK8v/31HMKetZ3/N/Hc4ml4wPvR0WgjZxju0HWCQMqk6kv/GqkmG+sAE7vK+QroK
+ +g0/PehUm0C/r8zrLxU3Tq7+Y4b0PYgJLQtw4Nb4GKzAKdOV/awewOCR1rdUoJfmP1d6M6khl
+ vqBvaJcrYdCqfCCas=
 
-On Mon Nov 24, 2025 at 4:55 PM CET, Maxime Ripard wrote:
-> On Mon, Nov 24, 2025 at 01:12:55PM +0100, Luca Ceresoli wrote:
->> Hello Jo=C3=A3o, Francesco, Maxime, Herv=C3=A9,
->>
->> On Fri Nov 21, 2025 at 10:58 AM CET, Maxime Ripard wrote:
->> > On Thu, Nov 20, 2025 at 09:50:27AM +0000, Philippe Schenker wrote:
->> >>
->> >>
->> >> On Wed, 2025-11-19 at 19:40 +0100, Herve Codina wrote:
->> >> > Hi Luca, Francesco, others
->> >> >
->> >> > On Wed, 19 Nov 2025 18:27:38 +0100
->> >> > "Luca Ceresoli" <luca.ceresoli@bootlin.com> wrote:
->> >> >
->> >> > > Hello,
->> >> > >
->> >> > > On Wed Nov 19, 2025 at 1:24 PM CET, Francesco Dolcini wrote:
->> >> > > ...
->> >> > > > > I might be mistaken, but I don't think the PLL will work if
->> >> > > > > unlocked...
->> >> > > > > But maybe the case is that it unlocks and lock again right
->> >> > > > > afterwards.
->> >> > > > > > > Jo=C3=A3o, Francesco, on what hardware do you observe the
->> >> > > > > > > problem? Which SoC?
->> >> > > > > > > Which encoder, any previous bridges?
->> >> > > > > >
->> >> > > > > > Verdin AM62, TI AM62 SOC, arch/arm64/boot/dts/ti/k3-am62-
->> >> > > > > > verdin.dtsi
->> >> > > > > >
->> >> > > > > > There is a DPI to DSI bridge in the module, tc358778, it ha=
-s
->> >> > > > > > a 25MHz
->> >> > > > > > reference clock.
->> >> > > > > >
->> >> > > > > > TI AM62 DPI -> Toshiba TC358768 DSI -> TI SN65DSI83 ->
->> >> > > > > > Display
->> >> > > > > >
->> >> > > > > > From a preliminary investigation this is a HW limitation, w=
-e
->> >> > > > > > are not
->> >> > > > > > able to generate a "good enough" DSI clock, see
->> >> > > > > > tc358768_calc_pll() for
->> >> > >
->> >> > > Thanks Francesco for the feedback!
->> >> > >
->> >> > > I'm not sure I completely understand the issue described, but if
->> >> > > the TI
->> >> > > bridge requires a clock that cannot be provided by the hardware,
->> >> > > then this
->> >> > > actually looks like "a HW limitation" as you wrote, due to a HW
->> >> > > integration
->> >> > > limitation/bug/issue/whatever. In case this is confirmed, I think
->> >> > > quirks
->> >> > > are an appropriate tool to handle HW integration issues.
->> >> > >
->> >> > > > > I haven't studied the docs or done any testing, but I would
->> >> > > > > think that
->> >> > > > > it doesn't matter for the PLL even if the incoming DSI clock =
-is
->> >> > > > > a bit
->> >> > > > > off, as long as it's continuous and stable.
->> >> > > > >
->> >> > > > > My first thought was that the DSI is using non-continuous
->> >> > > > > clock, but at
->> >> > > > > least the driver has code to drop the
->> >> > > > > MIPI_DSI_CLOCK_NON_CONTINUOUS flag.
->> >> > > > >
->> >> > > > > > the actual code implementation of it, I believe that the
->> >> > > > > > datasheet is
->> >> > > > > > not available without NDA.
->> >> > > > > >
->> >> > > > > > Maybe the ugly hack "works-without-pll" is the way to work?
->> >> > > > > > It will
->> >> > > > > > require a DT change, but this seems doable.
->> >> > > > >
->> >> > > > > Revert is easier than adding new hacky DT properties... At
->> >> > > > > least until
->> >> > > > > the problem is understood.
->> >> > > > >
->> >> > > > > > Please note that this is the outcome of a short investigati=
-on
->> >> > > > > > done
->> >> > > > > > yesterday afternoon, so maybe I am overlooking something,
->> >> > > > > > unfortunately
->> >> > > > > > I do not have the bandwidth to work on it more this week.
->> >> > > > > >
->> >> > > > > > > Which clock rates?
->> >> > > > > > 71100000
->> >> > > > > It would be a good test to try out with a few different
->> >> > > > > clocks.
->> >> > > >
->> >> > > > 50 MHz works, for example.
->> >> > > >
->> >> > > > It seems that the issue exists when the actual display clock is
->> >> > > > different
->> >> > > > from the dsi clock. And this can happen for the reason I
->> >> > > > explained
->> >> > > > before (the DSI clock is computed starting from this 25MHz
->> >> > > > reference
->> >> > > > clock).
->> >> > >
->> >> >
->> >> > If there is no way to set a correct clock, I agree with Luca a quir=
-k
->> >> > should
->> >> > be the best solution.
->> >> >
->> >> > For instance, in the dts:
->> >> > =C2=A0 ti,pll_may_unlock_quirk;
->> >>
->> >> I followed the discussion only loosely. But I once worked on bringing
->> >> up the SN65DSI83 and from what I can remember is that there was a
->> >> frequency range of the input clock where the PLL of SN65DSI83 just di=
-d
->> >> not lock at all.
->> >>
->> >> I couldn't explain what was happening since the clock I fed was withi=
-n
->> >> the limits of the documentation I had.
->> >>
->> >> What I ultimately did was to just choose a clock that works. Given th=
-at
->> >> experience I'm not sure about adding quirks on TI side.
->> >>
->> >> But anyway I'm not very familiar with the topic and it's a long time
->> >> since I worked on it. Just wanted to point out this experience I had,
->> >> maybe it helps.
->> >
->> > If the frequency is predictable, can we disable the error recovery if =
-we
->> > know we programmed the bridge in (one of) the affected range?
->>
->> This looks like the best solution in principle. However I'm not sure the
->> ti-sn65dsi83 driver knows the exact clock it will receive, I suspect it =
-is
->> only known to the DSI host and there is an API for the DSI device to obt=
-ain
->> it from the DSI host.
->>
->> I'd be happy to be proven wrong though, and that the above idea can work=
-.
->>
->> In case it doesn't we should reconsider the quirk. But as Maxime pointed
->> out in another reply the quirk property in DT is not doable for backward=
-s
->> compatibility. Other options that have come to mind to use the quirk:
->>
->>  * quirk based on the machine: ti-sn65dsi83 driver enabled the quirk
->>    if (of_machine_is_compatible("toradex,..."))
->
-> There's nothing in that machine that is very specific if it's driven by
-> the relationship between the clock the DSI controller can match and the
-> panel connected to it. So it won't just affect a single board.
->
->>  * opt-out quirk instead of opt-in: ti-sn65dsi83 driver enabled the quir=
-k
->>    if a DT property is absent, e.g. 'ti,pll-locking-capable' or similar =
-to
->>    say "this hardware is able to provide a correct clock"
->
-> And similarly, if this depends on the resolution, and the rate the DSI
-> driver is able to provide, it's not something the DT can express
-> properly. Some panels can support multiple resolutions for example. What
-> happens if one can lock and the other cannot?
->
-> Either way, it's not something that will be solved overnight. Please
-> send a revert.
+Am Montag, dem 17.11.2025 um 17:40 +0100 schrieb Rafael J. Wysocki:
+>=20
+> Well, what you have found appears to be an issue in the AML bytecode
+> interpreter which may be one of two things: (1) a bug in the
+> interpreter itself or (2) a bytecode issue that causes the interpreter
+> to crash (eventually) and the latter is quite a bit more likely.
+>=20
+> I'd suggest opening a new issue at
+> https://github.com/acpica/acpica/issues and attaching the acpidump
+> output from the affected system, to start with.
 
-I think the best thing (and what I was kind of expecting) is that
-Francesco/Emanuele/Jo=C3=A3o send a revert patch adding to the commit messa=
-ge
-all the relevant info they are collecting. They definitely understand the
-issue much better than others right now.
+I've reported the bug to ACPICA github:
+https://github.com/acpica/acpica/issues/1060
 
-If that's not OK, I can do it.
+There's no "infinite" loop, but a loop running for 5051 (0x13BB) iteration=
+ until its timeout
+counter reaches Zero (most likely because the hardware is unresponsive). S=
+oon (only a
+handfull of iterations in the walk loop in acpi_ps_parse_aml()) the crash =
+happens. I think
+the crash actually occurs inside acpi_ps_parse_loop(), so I wouldn't rule =
+out an interpreter
+bug just yet.
+ The crash also always happens (if it happens ...) in the 30592th iteratio=
+n of the walk loop,
+so I'm now monitoring the internal of acpi_ps_parse_loop() only in this it=
+eration of the walk
+loop. (I've tried to monitor the parse loop before, but that only led to e=
+xcessive memory
+consumption and an activated OOM killer). The debugging code can be found =
+here:
+https://gitlab.freedesktop.org/spasswolf/linux-stable/-/commits/amdgpu_sus=
+pend_resume?ref_type=3Dheads
 
-Luca
+So far I've had no crash with this.
 
---
-Luca Ceresoli, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Bert Karwatzki
