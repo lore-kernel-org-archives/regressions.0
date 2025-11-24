@@ -1,191 +1,154 @@
-Received: from mout.web.de (mout.web.de [212.227.17.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 484D13446A9;
-	Mon, 24 Nov 2025 22:34:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B9E12F5321
+	for <regressions@lists.linux.dev>; Mon, 24 Nov 2025 23:08:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764023695; cv=none; b=tIInUah6UVTe1VVHM7eK3N4HPacmB8v8JuCIIt7UTOuKmDh5FVmuGmzjHQiaWcQgJmO79E7wMv1KIT/AP6T9g8isL3qaFN7R3cni+rrsPuUh6ZYQuKumC7ho/55xEfqd+yKif7nqztGu82yYGEUmJMIfVWmsaaEDuZuxlGy4ps0=
+	t=1764025717; cv=none; b=rJWc9D5rSr9OR6iyhoTxz4hbMfN+Sj7Kmhi8Hdov6Im8+r7L5Rr2l+QBf3uBen755sADUSbhcq4uLODpeHnQoXbfcgyVOfIlVF6ObuFuIEeorid8n0f75asBmdlPtTSgXsieO78izRA8VnqqTlEB+RDpIj6tBYTiVLy3AJ8rp98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764023695; c=relaxed/simple;
-	bh=5JpKmTiEKDSXyIugOXFybELiowoSicEntJ8pGkk+Hsw=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=C8P+2hd3Bs2ksE/meTcTFlMSMvnGBtlpkQXX6vzIWsVzKljd1UP2vzMJ1dPSAJjBtrJaiyKIOFwSxMVYlml4gdwKyk87v0Dm++fDEtu5c330qZl0ZgumlwtHbrcneizRyruNIa6ozOjcrtQtDm5XZ7YJDtPcKGwp6IItL6WVCPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b=E9i1SJfs; arc=none smtp.client-ip=212.227.17.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1764025717; c=relaxed/simple;
+	bh=bka4Ok+xY/vHf8rj5t8CVxoP4nJIrCSCQdt2nklsCog=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QI12LTIihIIC0U/QTE6KKdQGNGmCF/6VDrUQ4qgt8AVB6009ULB55EUy4uzSozs0s6jwSmwiArg3nLLFKWpcVGc8xvhOmrlrDr/S0Hjlcdltv6JLKX3iT2OyoQIpP/dkzTACFVGbS8diQGm0lRco4rzhPK9Kx0Q4AxQH7TKabDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Pw6D5PTO; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b="E9i1SJfs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1764023679; x=1764628479; i=spasswolf@web.de;
-	bh=5JpKmTiEKDSXyIugOXFybELiowoSicEntJ8pGkk+Hsw=;
-	h=X-UI-Sender-Class:Message-ID:Subject:From:To:Cc:Date:In-Reply-To:
-	 References:Content-Type:MIME-Version:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=E9i1SJfsMEGXCfZCp66aYBjHVXmB2DtJTapEeLbzQ1MAn/bHGqZH0DV7FoJhx70G
-	 +g4urcM0Y0iJ/Co2lh/LXj28QjrTBiTDd6y61BAQZBKnFtCqPVL73oWi1wk70+Ang
-	 thGFYQ1V2sOnyL8px23LjmwdZc4dwT1OavpNYFCmKfyfuuXCsEBMsFcmcZUT8JYdX
-	 7RsKFiRp6+9ybgObadOkuw878DItEoRS0gSNjcErSaNVqEkcOjRzwadCRyLoaEnLe
-	 HgTxxfY4LNpzsnEp2KY/uKrLh0+moBE/PEZUiJBT996e7JpMPvccTHw092bgqDqIT
-	 J6VP0UT3UfjnBsME8w==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.0.101] ([95.223.134.88]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MZB07-1vb5FG3EDh-00S6L1; Mon, 24
- Nov 2025 23:34:39 +0100
-Message-ID: <b1fadb15d1869bde81315be7488c50dbbc9f7dbd.camel@web.de>
-Subject: Re: Crash during resume of pcie bridge due to infinite loop in
- ACPICA
-From: Bert Karwatzki <spasswolf@web.de>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Christian =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>, "Mario
- Limonciello (AMD) (kernel.org)"	 <superm1@kernel.org>,
- linux-kernel@vger.kernel.org, linux-next@vger.kernel.org, 
-	regressions@lists.linux.dev, linux-pci@vger.kernel.org, 
-	linux-acpi@vger.kernel.org, "Rafael J . Wysocki"
- <rafael.j.wysocki@intel.com>, 	acpica-devel@lists.linux.dev, Robert Moore
- <robert.moore@intel.com>, Saket Dumbre <saket.dumbre@intel.com>,
- spasswolf@web.de
-Date: Mon, 24 Nov 2025 23:34:37 +0100
-In-Reply-To: <CAJZ5v0iRaYBU+1S4rqYR7D6XC+rfQ2+0hgbodweV5JsFr8EEnQ@mail.gmail.com>
-References: <20251006120944.7880-1-spasswolf@web.de>
-	 <8edcc464-c467-4e83-a93b-19b92a2cf193@kernel.org>
-	 <4903e7c36adf377bcca289dbd3528055dc6cfb32.camel@web.de>
-	 <4a8302a0-209f-446a-9825-36cb267c1718@kernel.org>
-	 <25f36fa7-d1d6-4b81-a42f-64c445d6f065@amd.com>
-	 <1853e2af7f70cf726df278137b6d2d89d9d9dc82.camel@web.de>
-	 <f18bafacbd8316c9623658e2935f8fc3b276af64.camel@web.de>
-	 <26bf82303f661cdd34e4e8c16997e33eb21d1ee4.camel@web.de>
-	 <635b6cb19b5969bed7432dfd1cd651124e63aebb.camel@web.de>
-	 <18e472a0489ee5337465d5dc26685cebaf7c4f8d.camel@web.de>
-	 <3772b8f5-6d1a-403e-ad27-99a711e78902@kernel.org>
-	 <0cb75fae3a9cdb8dd82ca82348f4df919d34844d.camel@web.de>
-	 <ab51bd58919a31107caf8f8753804cb2dbfa791d.camel@web.de>
-	 <0719d985-1c09-4039-84c1-8736a1ca5e2d@amd.com>
-	 <3f790ee59129e5e49dd875526cb308cc4d97b99d.camel@web.de>
-	 <CAJZ5v0iRaYBU+1S4rqYR7D6XC+rfQ2+0hgbodweV5JsFr8EEnQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.56.1-1+deb13u1 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pw6D5PTO"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-6419aaced59so6714470a12.0
+        for <regressions@lists.linux.dev>; Mon, 24 Nov 2025 15:08:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1764025713; x=1764630513; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=u/WHGJKwl1pNV1oMFP/7W/iGcAIvgG1g+5RGn0OeZ18=;
+        b=Pw6D5PTOaHpJbitRLAsfmWOrcvcRnb8o+EWhfuYgrpZSVonqim7lW+LTr9YJL9B89H
+         UBP25+Ocoa1PZ14FS1qMlcI2i31flwlYYjbXI0chzaMt7jd5Ni6qVjsQhl1a8wworV0P
+         GboDppJt+z3s9Nvk641aT4kJhsUFZ0YZ/QCVCVE4ou9fhpjLQTKXLHtmaShn8QSr9rNF
+         pqCUMpvJQMWU6bJ0nB8LDaCVLYKBqJdy1gF0JhxmG+NEUJn/qS9ScQPZxj02Pwr1ALdm
+         z3psMphMyditTV8n4gtRgASJzR7UGFQT6KeyUPnp6wgt5klcVQ7ViByMUKl9s5qWT16w
+         SC4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764025713; x=1764630513;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=u/WHGJKwl1pNV1oMFP/7W/iGcAIvgG1g+5RGn0OeZ18=;
+        b=e3wKtKAoNgjHwB1dXSNLpBAarJPC9h6CUjWCnK74LHVF+fknmcjV0CglXniBn5WIXM
+         kTz8OrpcVkcen/uv7uB/cKQeb5SpPrfY1RvX1nJSXDYqP2iL++MDAxUJbqAfVKa8M1hg
+         5QOV1zl0gzWawfE5VYut8NUAAVD/DiyYmk9a8scGtJsaKqISgJOfJwoMuojRZDEqkQpx
+         YGTiBWQ/lMU3JXxIDQmCiVzzGa+6PnFMZeyqy/x0z8RHGEyKs0/IUxOmh4BgNyNrwNG/
+         TshiCTfln0G0DIYT7yEEAFauHEOGVmRWUwdLU4tgfwzPo8syeD4Z7+pU+R6pnKdyUpze
+         Jt9A==
+X-Forwarded-Encrypted: i=1; AJvYcCXVI1Jj3eiLSsnHhkArJn7F2r+2aOKZEL2/RJ7J9Qq+gRU/gvy7XVfT9UJ8KOC1d42Pfa9y5TQTA8m/wA==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwioZ/eNxjiy9mG83fy+7qg3TKTAleXWehW5Eq0rc4zSgX6BlmS
+	aYGieHVKzCB8hsd1VZ/dPVYfcvHqDWKoYkLjVLr9cqRduOkfTUNPCAy+uqwanA==
+X-Gm-Gg: ASbGncuxk5hAqjwC2Ftfv2J6tbQoRebS0bDP8FiXJvdkWGsufGsxRKFpZegI/WN2q1T
+	mIMUrkOAGmc/KbYNF9yV0tYnaptHHc1/Kk2sEcliR4MTVLntj6Xd8FUVahKSxMnj7/BYYlIovLO
+	L0OjLg2K+TdgM6dtPiReu2UHXOgV2NC6a8gifI3i07CIJXEYpHSKg9fS5u+RaM3fl8re1Tpgc64
+	Gbjj6H/oh5DiIdgGF+AmMLYQKtH2OJM5IQWGTuevgMUea4QSQVIfPDl/UZOEV8VxDR+piIzejp0
+	dxFZ7cgsa7fpg6bdZFRzoOAR9d/SXIGS66T1/GAoP7xcJiWYf2OqlVUmcWI488/fYgEKfH233Tf
+	nIEwgaBcUXOcZlVkU9jTxaez29iKJdwAW2CEQUlBExgzoLnt5kQ8ncvpUb6WuodOhPatEt53PXn
+	/bjZ24c8mQLcnJ36me
+X-Google-Smtp-Source: AGHT+IGGQZRvEPE+V692/ByODBIStowiEq4wuN3gXmgZ+FT8xM6RPK+LS1vzrQ+0Ru/xT8SeNfVF0w==
+X-Received: by 2002:a05:6402:51c7:b0:643:c8b:8d30 with SMTP id 4fb4d7f45d1cf-645546a3a94mr12871488a12.30.1764025712967;
+        Mon, 24 Nov 2025 15:08:32 -0800 (PST)
+Received: from localhost ([94.19.228.143])
+        by smtp.gmail.com with UTF8SMTPSA id 4fb4d7f45d1cf-645363c56a4sm13295513a12.15.2025.11.24.15.08.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Nov 2025 15:08:32 -0800 (PST)
+Date: Tue, 25 Nov 2025 02:08:31 +0300
+From: Andrey Skvortsov <andrej.skvortzov@gmail.com>
+To: Ping-Ke Shih <pkshih@realtek.com>
+Cc: "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+	"piotr.oniszczuk@gmail.com" <piotr.oniszczuk@gmail.com>,
+	"rtl8821cerfe2@gmail.com" <rtl8821cerfe2@gmail.com>,
+	"stable@vger.kernel.org" <stable@vger.kernel.org>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH rtw-next] wifi: rtw88: sdio: use indirect IO for device
+ registers before power-on
+Message-ID: <aSTlb1TEwNaFbdFf@skv.local>
+Mail-Followup-To: Andrey Skvortsov <andrej.skvortzov@gmail.com>,
+	Ping-Ke Shih <pkshih@realtek.com>,
+	"linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+	"piotr.oniszczuk@gmail.com" <piotr.oniszczuk@gmail.com>,
+	"rtl8821cerfe2@gmail.com" <rtl8821cerfe2@gmail.com>,
+	"stable@vger.kernel.org" <stable@vger.kernel.org>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+References: <20250724004815.7043-1-pkshih@realtek.com>
+ <aSHrhbt29k6GJB8e@skv.local>
+ <4562797ed9514344b562f7a8e58e6988@realtek.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:by/LTxf5+y5On/Iz04FuP/kGdj1rdIi/1LUNrFVYLRAHXIb5Xzg
- k+tKcJ7JcpnwuMCXI4gileIAzN5fFTTm08SoFHR2p8KxIbrjZmPXPkK4JV4bi7H754vEBfk
- xdiJshvCxq5AwkG/NwxznFjPhPeK3sc+FFsM/Fb6wgYHmuT7+WT7FBLuwZOwlX516rgXEqy
- kZVZDwHCHrcYUDjFMPRZQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:El3AJWqswxE=;3pIY8KKrr73UIWBzV/FoiUVw+MU
- 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
- vqBvaJcrYdCqfCCas=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <4562797ed9514344b562f7a8e58e6988@realtek.com>
 
-Am Montag, dem 17.11.2025 um 17:40 +0100 schrieb Rafael J. Wysocki:
->=20
-> Well, what you have found appears to be an issue in the AML bytecode
-> interpreter which may be one of two things: (1) a bug in the
-> interpreter itself or (2) a bytecode issue that causes the interpreter
-> to crash (eventually) and the latter is quite a bit more likely.
->=20
-> I'd suggest opening a new issue at
-> https://github.com/acpica/acpica/issues and attaching the acpidump
-> output from the affected system, to start with.
+On 25-11-24 08:16, Ping-Ke Shih wrote:
+> Andrey Skvortsov <andrej.skvortzov@gmail.com> wrote:
+> > Hi,
+> > 
+> > This patch was recently backported to stable kernels (v6.12.58) and it broke
+> > wlan on PinePhone, that uses 8723cs SDIO chip. The same problem
+> > appears of course on latest 6.18-rc6. Reverting this change resolves
+> > the problem.
+> > 
+> > ```
+> > $ sudo dmesg | grep -i rtw88
+> > [   24.940551] rtw88_8723cs mmc1:0001:1: WOW Firmware version 11.0.0, H2C version 0
+> > [   24.953085] rtw88_8723cs mmc1:0001:1: Firmware version 11.0.0, H2C version 0
+> > [   24.955892] rtw88_8723cs mmc1:0001:1: sdio read32 failed (0xf0): -110
+I see it fails with timeout on the first operation to read chip version.
 
-I've reported the bug to ACPICA github:
-https://github.com/acpica/acpica/issues/1060
+> > [   24.973135] rtw88_8723cs mmc1:0001:1: sdio write8 failed (0x1c): -110
+> > [   24.980673] rtw88_8723cs mmc1:0001:1: sdio read32 failed (0xf0): -110
+> > ...
+> > [   25.446691] rtw88_8723cs mmc1:0001:1: sdio read8 failed (0x100): -110
+> > [   25.453569] rtw88_8723cs mmc1:0001:1: mac power on failed
+> > [   25.459077] rtw88_8723cs mmc1:0001:1: failed to power on mac
+> > [   25.464841] rtw88_8723cs mmc1:0001:1: failed to setup chip efuse info
+> > [   25.464856] rtw88_8723cs mmc1:0001:1: failed to setup chip information
+> > [   25.478341] rtw88_8723cs mmc1:0001:1: probe with driver rtw88_8723cs failed with error -114
+> > ```
+> > 
+> 
+> Check original link of this patch [1] that 8822cs read incorrect from 0xf0
+> resulting in "rtw88_8822cs mmc1:0001:1: unsupported rf path (1)".
+Sorry, I haven't meant, that this patch should be reverted. I see,
+that it solves real problem. I've meant, that patch caused this
+regression was identified and it was confirmed by reverting it.
 
-There's no "infinite" loop, but a loop running for 5051 (0x13BB) iteration=
- until its timeout
-counter reaches Zero (most likely because the hardware is unresponsive). S=
-oon (only a
-handfull of iterations in the walk loop in acpi_ps_parse_aml()) the crash =
-happens. I think
-the crash actually occurs inside acpi_ps_parse_loop(), so I wouldn't rule =
-out an interpreter
-bug just yet.
- The crash also always happens (if it happens ...) in the 30592th iteratio=
-n of the walk loop,
-so I'm now monitoring the internal of acpi_ps_parse_loop() only in this it=
-eration of the walk
-loop. (I've tried to monitor the parse loop before, but that only led to e=
-xcessive memory
-consumption and an activated OOM killer). The debugging code can be found =
-here:
-https://gitlab.freedesktop.org/spasswolf/linux-stable/-/commits/amdgpu_sus=
-pend_resume?ref_type=3Dheads
+> I wonder if we can add additional checking rule of chip ID, like:
 
-So far I've had no crash with this.
+I've tried suggested change and wlan is recognized again.
 
-Bert Karwatzki
+> 
+> --- a/drivers/net/wireless/realtek/rtw88/sdio.c
+> +++ b/drivers/net/wireless/realtek/rtw88/sdio.c
+> @@ -144,8 +144,10 @@ static u32 rtw_sdio_to_io_address(struct rtw_dev *rtwdev, u32 addr,
+> 
+>  static bool rtw_sdio_use_direct_io(struct rtw_dev *rtwdev, u32 addr)
+>  {
+> +       bool might_indirect_under_power_off = rtwdev->chip->id != RTW_CHIP_TYPE_8703B;
+> +
+>         if (!test_bit(RTW_FLAG_POWERON, rtwdev->flags) &&
+> -           !rtw_sdio_is_bus_addr(addr))
+> +           !rtw_sdio_is_bus_addr(addr) && might_indirect_under_power_off)
+>                 return false;
+> 
+>         return !rtw_sdio_is_sdio30_supported(rtwdev) ||
+> 
+> [1] https://lore.kernel.org/linux-wireless/699C22B4-A3E3-4206-97D0-22AB3348EBF6@gmail.com/T/#t
+> 
+
+-- 
+Best regards,
+Andrey Skvortsov
