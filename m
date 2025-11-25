@@ -1,80 +1,119 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E41E2147E5
-	for <regressions@lists.linux.dev>; Tue, 25 Nov 2025 16:03:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5737528B3E7
+	for <regressions@lists.linux.dev>; Tue, 25 Nov 2025 19:46:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764086605; cv=none; b=P/NTRI1WgkuuZKRwhwCp4CJnYFNeUpU5kMAt7Site9am3pDOqwVSaFCDj8qebzdvWivrLa0xISBhPl+cuWGTZZFeYFnvcBnQ3ianVEAne04thob/YmBY8rhmPd+j5PLMePF4fsDlyVD8Q00dAw0PjDBHHd3jyosOynz3HYJt2wU=
+	t=1764100008; cv=none; b=bH362QBoBixLZoqjTG7/3SZkam0IZik/4UKIyF3D+9QZ0Y6pOnXMvtsHZW98jWYf6wv2ACGZKe5K5Y50+WmR4F6H6GmHK2rhNpl6cKcxZ171NxPT8jd/FsO3O7DuWTgvDIAkgCupWyvwgIMiMdo87BeV/IiVqFaRfcJuDzrh3tQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764086605; c=relaxed/simple;
-	bh=7Nd7EYRqrXtzC3yN4iiu97MFk+wkxsxOhBNXKnjbLMA=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=TdX8wfNa6qYOCw/iB933auTkFU7NvhOM6bFBgiWI5OGrapB13V8DM8M0qVmCl6caDXryYhYENVxd0YS4wdBfrya1ZFKVVkQeExIc4MhCknMhCmLI0m2w+VQ61AFfuKSrPjGbfzzCSbMycSLYLHBRQWdseoJALVF/ZsdUGsxG0Gc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=CAwMOz1y; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1764100008; c=relaxed/simple;
+	bh=yvrl0wOjR+XSH5uRR3LWNSF0SaBkf3JIyH+0olitB1Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KFx84hh7fLKbd8S38QbI/qdgZfYpDyjTAf1hBH6pMuPPpwJD7lPSr4uqWDtNY05q/VHOXl9iAT5I3z2INFa2CiH+ehz6Cr3fVblQ9Xf560FAmAE4hFEPB61cpxaacMB7QS/Vpydkj15q1qC5Vjfyt5k+xIQPoq/mxaGvKe8FOHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gx7b6fVI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="CAwMOz1y"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=7Nd7EYRqrXtzC3yN4iiu97MFk+wkxsxOhBNXKnjbLMA=; t=1764086603;
-	x=1764518603; b=CAwMOz1yIQORvCOPuhmYDVR17lAZOKfDldQC7RqgM0iwTflTnbNJ8uIXmLgQ4
-	YcCB1pfh85haN97JdXRN7PrSTRa1pvmEeX+3oOCdg9ADimTaiyFkbCjuNQ3hbOI5V8b1WsnB+yMc+
-	rdDVYEjN+IfL7yaklt16tFWY04GNTREkj3hRABykadSXNc9o0a21nE+JbFztcBJTDUSh40/GSNgr+
-	U9kciwiSqzF/oWFuQMeizHdsEhp3EbPEN5CRPlDxSi4J6UQpmph1rgV7yw+Zse2UaMVR9ie8rYLKZ
-	/EiRfPNk4MagTI6a3vEYbIC7QA+FHQ+cSNG42oUJ5ggZupgNHA==;
-Received: from [2a02:8108:8984:1d00:a0cf:1912:4be:477f]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128)
-	id 1vNvVb-00EiUv-22;
-	Tue, 25 Nov 2025 17:03:15 +0100
-Message-ID: <e4983719-0870-4858-80b8-983a3e865d78@leemhuis.info>
-Date: Tue, 25 Nov 2025 17:03:15 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gx7b6fVI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17CCFC2BC86
+	for <regressions@lists.linux.dev>; Tue, 25 Nov 2025 19:46:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1764100008;
+	bh=yvrl0wOjR+XSH5uRR3LWNSF0SaBkf3JIyH+0olitB1Q=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Gx7b6fVIqOl4LtYkUHQfgWaRe3aaZTA/qrAlds132jXu590WaSwd4CWT+XoaKmYah
+	 BJV1g6TgMaCNdqZ5WlqDZQsoGT2lobf1Wr/nacgWPXX4xJWGuVHVEZWx5HtpDhf6cU
+	 aHMBURi2qnZVQ6mk5/NXLPbd52K4ZbORQJg85yOd0QP1O1f2ukOwgw52OuT6/zGtIG
+	 eqd8DsC7k7bYIbIIXmhJ/OKzUK7KhoQUj3vMe4I0809E2j8/2AWXpXW9KPFAjK11/4
+	 RY17sDV9GNjitBDBsaVWZeppeyrpkWBJ9B1V5ja3VWMyzMn3y6yuxnytboqZ6vRXkm
+	 kIivrQSB2rjbg==
+Received: by mail-ot1-f46.google.com with SMTP id 46e09a7af769-7c75387bb27so1771918a34.1
+        for <regressions@lists.linux.dev>; Tue, 25 Nov 2025 11:46:48 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCX2U3ZIdKCQ8WRW1lXJ7OmUdkr1OdH2ryJqAyx2tA79eWtemCBKR327vuwHi3hoWjdemyMOg4nVcKXOOQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0Ywn0dmOP/1yMxXXVr1XXCIcsbV69zw4RVtaXDFG7tU1uXYtGX18
+	zVMMrtdStEoeqqsNxR9lbu9iHDKTkCHQa4GKmX5xjVsXzvYvbB6aBHOi0m7ZUdxJCjS9Fs2JEAO
+	W8WOgDSKeVQKYznyIExUcflGKoHzqDJA=
+X-Google-Smtp-Source: AGHT+IFGMFIfq2+kvnTPZJazL4Yeg+8WQgSO/dFZk40t4JEEBh6K8WyxoehpLBTypvtAqzSsfFAhpjmr/CS3BpOKo/A=
+X-Received: by 2002:a05:6830:4424:b0:7c7:6348:594a with SMTP id
+ 46e09a7af769-7c798ac9963mr8031111a34.7.1764100007330; Tue, 25 Nov 2025
+ 11:46:47 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1764086603;01b36b11;
-X-HE-SMSGID: 1vNvVb-00EiUv-22
+References: <20251006120944.7880-1-spasswolf@web.de> <8edcc464-c467-4e83-a93b-19b92a2cf193@kernel.org>
+ <4903e7c36adf377bcca289dbd3528055dc6cfb32.camel@web.de> <4a8302a0-209f-446a-9825-36cb267c1718@kernel.org>
+ <25f36fa7-d1d6-4b81-a42f-64c445d6f065@amd.com> <1853e2af7f70cf726df278137b6d2d89d9d9dc82.camel@web.de>
+ <f18bafacbd8316c9623658e2935f8fc3b276af64.camel@web.de> <26bf82303f661cdd34e4e8c16997e33eb21d1ee4.camel@web.de>
+ <635b6cb19b5969bed7432dfd1cd651124e63aebb.camel@web.de> <18e472a0489ee5337465d5dc26685cebaf7c4f8d.camel@web.de>
+ <3772b8f5-6d1a-403e-ad27-99a711e78902@kernel.org> <0cb75fae3a9cdb8dd82ca82348f4df919d34844d.camel@web.de>
+ <ab51bd58919a31107caf8f8753804cb2dbfa791d.camel@web.de> <0719d985-1c09-4039-84c1-8736a1ca5e2d@amd.com>
+ <3f790ee59129e5e49dd875526cb308cc4d97b99d.camel@web.de> <CAJZ5v0iRaYBU+1S4rqYR7D6XC+rfQ2+0hgbodweV5JsFr8EEnQ@mail.gmail.com>
+ <b1fadb15d1869bde81315be7488c50dbbc9f7dbd.camel@web.de>
+In-Reply-To: <b1fadb15d1869bde81315be7488c50dbbc9f7dbd.camel@web.de>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Tue, 25 Nov 2025 20:46:36 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0iAJN4eTdp9S=CKbMnVn78R7UnBKbLjBTdRhHebE0i7dA@mail.gmail.com>
+X-Gm-Features: AWmQ_bmiY3C3Fd0jUd8YOkwb-S7v2_w9pN95wDBnISKEEEKCJJwUosvxEK3SrZI
+Message-ID: <CAJZ5v0iAJN4eTdp9S=CKbMnVn78R7UnBKbLjBTdRhHebE0i7dA@mail.gmail.com>
+Subject: Re: Crash during resume of pcie bridge due to infinite loop in ACPICA
+To: Bert Karwatzki <spasswolf@web.de>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	"Mario Limonciello (AMD) (kernel.org)" <superm1@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-next@vger.kernel.org, regressions@lists.linux.dev, 
+	linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, acpica-devel@lists.linux.dev, 
+	Robert Moore <robert.moore@intel.com>, Saket Dumbre <saket.dumbre@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, Nov 24, 2025 at 11:34=E2=80=AFPM Bert Karwatzki <spasswolf@web.de> =
+wrote:
+>
+> Am Montag, dem 17.11.2025 um 17:40 +0100 schrieb Rafael J. Wysocki:
+> >
+> > Well, what you have found appears to be an issue in the AML bytecode
+> > interpreter which may be one of two things: (1) a bug in the
+> > interpreter itself or (2) a bytecode issue that causes the interpreter
+> > to crash (eventually) and the latter is quite a bit more likely.
+> >
+> > I'd suggest opening a new issue at
+> > https://github.com/acpica/acpica/issues and attaching the acpidump
+> > output from the affected system, to start with.
+>
+> I've reported the bug to ACPICA github:
+> https://github.com/acpica/acpica/issues/1060
 
+I've seen your report, thanks for filing it.
 
-On 3/9/24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
+> There's no "infinite" loop, but a loop running for 5051 (0x13BB) iteratio=
+n until its timeout
+> counter reaches Zero (most likely because the hardware is unresponsive). =
+Soon (only a
+> handfull of iterations in the walk loop in acpi_ps_parse_aml()) the crash=
+ happens. I think
+> the crash actually occurs inside acpi_ps_parse_loop(), so I wouldn't rule=
+ out an interpreter
+> bug just yet.
+>  The crash also always happens (if it happens ...) in the 30592th iterati=
+on of the walk loop,
+> so I'm now monitoring the internal of acpi_ps_parse_loop() only in this i=
+teration of the walk
+> loop. (I've tried to monitor the parse loop before, but that only led to =
+excessive memory
+> consumption and an activated OOM killer). The debugging code can be found=
+ here:
+> https://gitlab.freedesktop.org/spasswolf/linux-stable/-/commits/amdgpu_su=
+spend_resume?ref_type=3Dheads
+>
+> So far I've had no crash with this.
 
-#regzbot report:
-https://lore.kernel.org/stable/jOB6zqCC3xjlPPJXwPYPb4MxHJOhxVgp380ayP7lYq-aT2iA5D8YCdMeCvq5Cp_ICZmqjpfgX8o9siQdlPu9DY4qgnL_zCjgqP23fXc-P4U=@proton.me/
-#regzbot fix: Bluetooth: btusb: mediatek: Avoid
-btusb_mtk_claim_iso_intf() NULL deref
+What may be happening, but this is just a theory, is that the
+interpreter aborts the evaluation of a method due to an internal
+timeout, essentially the control_state->control.loop_timeout check in
+acpi_ds_exec_end_control_op() and that leads to a subsequent hard
+failure like a deadlock.
 
-#regzbot report:
-https://lore.kernel.org/lkml/g3scb7mfjbsohdszieqkappslj6m7qu3ou766nckt2remg3ide@izgvehzcdbsu/
-#regzbot fix: MIPS: mm: Prevent a TLB shutdown on initial uniquification
-
-#regzbot report: https://lore.kernel.org/lkml/aRYjk4JBqHvVl-wN@eldamar.lan/
-#regzbot fix: uio_hv_generic: Set event for all channels on the device
-
-#regzbot report:
-https://lore.kernel.org/stable/F84F6626-B709-4083-9512-5F48FE370977@amazon.com/
-#regzbot fix: Revert "NFS: Don't set NFS_INO_REVAL_PAGECACHE in the
-inode cache validity"
-
-
+This may be tested by increasing the ACPI_MAX_LOOP_TIMEOUT value, but
+I'm not sure it's practical to try that.
