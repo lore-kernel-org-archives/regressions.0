@@ -1,63 +1,112 @@
-Received: from mail-106104.protonmail.ch (mail-106104.protonmail.ch [79.135.106.104])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA68E30B505
-	for <regressions@lists.linux.dev>; Wed, 26 Nov 2025 03:19:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.104
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74F0430DD36
+	for <regressions@lists.linux.dev>; Wed, 26 Nov 2025 03:29:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764127144; cv=none; b=cIcwAVVAQIkkYkovefx6v6MqZ1S4l/hglyviaxcgYiLiwWRnlbzTfegR+4r08ifoKV/YMUKloFSiSgakzYtaFX9zDwFze4cATMlbMRQliwE2ZDthOh88LtBZK5XZCaJ3qA2qRhrDIM1ZvyQWBm1TZiTy/v2jeZsDvAs8Ig6evRw=
+	t=1764127763; cv=none; b=Al9kgkLapUO1sBjWD+iVNtKceZSPy8kQeFZeBvf/LywHELcNQsSSis3ZaQnjHkWDJbFN8900yB3rbbyOEKeKNcvJ6JsHfZxr538IPmrhNXE9qla8yO3WhRY7uJcSUSRGtV5KyvcQE54SIAA1yMJ7nYfIKx3zwip+eoTffGEsbsg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764127144; c=relaxed/simple;
-	bh=J7o8+a1I25gyMr2nCGcTd+8YhviSg5xpSP1kY5jJpYc=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ceZpsbYo7HS/1h0dShl8iBexFl6qiMm4+U9yeDbE3oFgnN8b7Jl+I8WtI5BQhY09j2eU+elm/9NzCve6Udnhk/zF/TliJgJG/rtXr4JcJjor+IdUpc4hpu1F8LIZZLbxi+Dq867PaUhUJagiTGwe2UX/tOgpK57mu23Mbs52K4o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=DRh5rBXf; arc=none smtp.client-ip=79.135.106.104
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	s=arc-20240116; t=1764127763; c=relaxed/simple;
+	bh=66TuTBZPQ5vsv3Iv0COl1blnafpP7gUF+2AzcPsJnME=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dJY859lt8dUMDeNmrdu98OVrKrr/fQcpnXwEgHmtZIxZooEhs+G1HNTGlP4Rdz8nEKIdpENg4xbIYCjE+r+/95Ep7Hd+HLizb8v8chtFtQpusvcYzUN8n5j2ry2NUHY0UX0ytCjPrWB3uRjJ/obPBKPOLlshRxTqTq0697G837s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ep686m1w; arc=none smtp.client-ip=209.85.208.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="DRh5rBXf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1764127134; x=1764386334;
-	bh=J7o8+a1I25gyMr2nCGcTd+8YhviSg5xpSP1kY5jJpYc=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=DRh5rBXfGFjvsGmNuNwefNFSRj0debIygHyCCwP8j8/TottpJs2+lxRgPJfQyzaX0
-	 XdTOtqjzG/afpZWYvYb3U515HXvTiYkVU2w+yvZ2sGgN3cYdg/2PsHn4OC+UaK9TBE
-	 dKR6Cr/92W4jsn+Z5d75c6kMtQQCSkH9JX2kW/dhAwJsgNHSerXXDBS8HiZY4KnCUR
-	 uRBXEnli8GCWoKpeVp0hTfaBKCDs2WhxDOEaQfJytO8tI7nlJD4P8vD9gYLz8z5yfh
-	 FYH2qhH8tZh+xgor54M4bqFJJ76GulDq9GuiyDpsYUTohK0le+1o0fnyTk3yDDfoHx
-	 EhCR7VJB0iANQ==
-Date: Wed, 26 Nov 2025 03:18:48 +0000
-To: patchwork-bot+bluetooth@kernel.org
-From: incogcyberpunk@proton.me
-Cc: Doug Anderson <dianders@chromium.org>, marcel@holtmann.org, luiz.dentz@gmail.com, matthias.bgg@gmail.com, angelogioacchino.delregno@collabora.com, regressions@leemhuis.info, regressions@lists.linux.dev, johan.hedberg@gmail.com, sean.wang@mediatek.com, stable@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH v3] Bluetooth: btusb: mediatek: Avoid btusb_mtk_claim_iso_intf() NULL deref
-Message-ID: <fcMPe6V9vMYxkXRMnKXiaeTnOwAMBNRTmF1mgLePTpz3Q4hPqpb0WVQ5aXZljqkOtZ2W_47PVL1Q4lnf7kZJhFS4aGwP8_4QiqJl2ScKSi4=@proton.me>
-In-Reply-To: <176366460701.1748676.511972373877694762.git-patchwork-notify@kernel.org>
-References: <20251120081227.v3.1.I1ae7aebc967e52c7c4be7aa65fbd81736649568a@changeid> <176366460701.1748676.511972373877694762.git-patchwork-notify@kernel.org>
-Feedback-ID: 139104781:user:proton
-X-Pm-Message-ID: f6d82a3f4af4a0c9485cbb7610dd235edea26b50
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ep686m1w"
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-37a2dcc52aeso59858251fa.0
+        for <regressions@lists.linux.dev>; Tue, 25 Nov 2025 19:29:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1764127759; x=1764732559; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=66TuTBZPQ5vsv3Iv0COl1blnafpP7gUF+2AzcPsJnME=;
+        b=ep686m1wKWr5cdzxvhcE66+PLzg+NWpOrVGZOj1jZn+Zaq1hi3ykrDPtY4AvEE4VcB
+         +YkTf8vN9Z8U1tx0afrKH6oSxCtrLSRvkv9Hhd3Qw+KoL3fBtR2xfdxWSU+7V5JrhFX4
+         zN7XFl5GuyrYLCljix2Eg20jXyG8bxriqvdys8MuD8Y1kUpHBERgpKHTcGGLcz03Y9hv
+         Q1IAwSU7RgZyywJXOFpR56BIMlJfZOnaxCYwbNuj0GQlj2bcSH7sNCCAKugJ2rgz6eQy
+         7kblZSJRQNwDuXgb3nMIBQ82zK1KrnY4WOTnBpqLR07j9Qxy1BIqkCQre0nEUjf6o/sc
+         VAcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764127759; x=1764732559;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=66TuTBZPQ5vsv3Iv0COl1blnafpP7gUF+2AzcPsJnME=;
+        b=Az8QvbknPDEjUTPRGMApvBh8Vif4A6wcYkS+PMAnYy6M74K8+kve0FFAm4RAA4bGsa
+         CjTaOXaz/ZlMg5FuAGQ30TpiEXAijl4w7i/NU9OREigx0zsvvIsiSgHTml8QgLj6oyxx
+         RTs+9gyReuk46Cas0OdvqymkP9np6G3DAWyEXMsRNIC3uLE8m0jA0A76347WkKUvvJIG
+         AAm3U1tPadHxaycyo7tvlXXad6inDzBhLiwMdKS4c2zysq6QMvuPHn9guUcp0nzfJLAs
+         JdCkcOsL98udOc1jIjFAJkgin+ET+qg2StexQyBq61lFagx52NZIUNrrrWmHnYUwp0iK
+         ePew==
+X-Forwarded-Encrypted: i=1; AJvYcCU1WJMML1OjJb6044aDzOYBHpkNBtkiaScafKjSJionf4S9sF88NVXu7Q6tBnLKY9DrXKeq7efWTa/YxQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwnnunPBJiJPWlkiXR5wEx19q+2FRj+0UKcWXFsRtutfegALDSi
+	oj7f7pBvVWp8IMs+oaMuZETMkfMCeuhu7+PgkFfe5ZNN7WC7mY/z7yAWcay6haAfkNkGRvNBx7m
+	xm5kwdC8b4g2sMffp7XzTQUjELYe3/+c=
+X-Gm-Gg: ASbGncsZRS0ihqmSBaZ6DzjKVmdZqTf4dw8ej7s1ad6GSBuFJ950ra/Hhq0C+nC52qE
+	KiZMi1PcX1pvK/uuUGJLorsea8ydiW+jWZIxR8GBZlRfBd6kacb4UXEZ8UbA1lg0BppRml30ndN
+	u0Ig7Z+sXbnRi33PBHWj9zql0vH/ByaYtTQy+K8POSnvb+tLoXnpyOp4KFIc2E1MftopFoFryoJ
+	kUe1NPEY9VECvtxBinem87md3kyBQTpslqxJwJC6lcQ99Iot/sk8xFT8aWJfNmFK3Natg==
+X-Google-Smtp-Source: AGHT+IFXNDNWfBE/jdt0Dz9W+S2FZLkrdTl/cEteRJj+bVHvSnDXE5eODbEtCrm2sfh2BeISb+8B1VHSywmIxbn2U6I=
+X-Received: by 2002:a05:651c:43d8:20b0:37a:432f:8ecc with SMTP id
+ 38308e7fff4ca-37d07953a3emr15608421fa.33.1764127759248; Tue, 25 Nov 2025
+ 19:29:19 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+References: <20251120081227.v3.1.I1ae7aebc967e52c7c4be7aa65fbd81736649568a@changeid>
+ <176366460701.1748676.511972373877694762.git-patchwork-notify@kernel.org> <fcMPe6V9vMYxkXRMnKXiaeTnOwAMBNRTmF1mgLePTpz3Q4hPqpb0WVQ5aXZljqkOtZ2W_47PVL1Q4lnf7kZJhFS4aGwP8_4QiqJl2ScKSi4=@proton.me>
+In-Reply-To: <fcMPe6V9vMYxkXRMnKXiaeTnOwAMBNRTmF1mgLePTpz3Q4hPqpb0WVQ5aXZljqkOtZ2W_47PVL1Q4lnf7kZJhFS4aGwP8_4QiqJl2ScKSi4=@proton.me>
+From: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+Date: Tue, 25 Nov 2025 22:29:06 -0500
+X-Gm-Features: AWmQ_bm2zfUBQgnJooefgPcNZ-tIRrataC9j9VnWGhDa0KJzloTqrrroBYDFEXM
+Message-ID: <CABBYNZ+LrMOr-Bb-Sfk--FAHjMWxzeUCdDoGLuRqhF99xaGE3A@mail.gmail.com>
+Subject: Re: [PATCH v3] Bluetooth: btusb: mediatek: Avoid btusb_mtk_claim_iso_intf()
+ NULL deref
+To: incogcyberpunk@proton.me
+Cc: patchwork-bot+bluetooth@kernel.org, Doug Anderson <dianders@chromium.org>, 
+	marcel@holtmann.org, matthias.bgg@gmail.com, 
+	angelogioacchino.delregno@collabora.com, regressions@leemhuis.info, 
+	regressions@lists.linux.dev, johan.hedberg@gmail.com, sean.wang@mediatek.com, 
+	stable@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hey,
+Hi,
 
-It's been almost a week since the regression was reported and an patch was =
-provided to fix the issue, which has now been accepted in the linux-next tr=
-ee; but I see that despite being a patch for regression, a merge/pull reque=
-st was not made upstream for the latest -rc mainline release.=20
+On Tue, Nov 25, 2025 at 10:18=E2=80=AFPM <incogcyberpunk@proton.me> wrote:
+>
+> Hey,
+>
+> It's been almost a week since the regression was reported and an patch wa=
+s provided to fix the issue, which has now been accepted in the linux-next =
+tree; but I see that despite being a patch for regression, a merge/pull req=
+uest was not made upstream for the latest -rc mainline release.
+>
+> Is there any way that I can track the updates for this patch to be onto t=
+he mainline release?
+>
+> Sorry, if I am missing anything.
 
-Is there any way that I can track the updates for this patch to be onto the=
- mainline release?=20
+This was merged into net tree a few days ago:
 
-Sorry, if I am missing anything.=20
+https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git/commit/?id=
+=3D8a4dfa8fa6b5
 
-Regards,=20
-IncogCyberpunk
+So it should get into Linus tree in the next few days.
+
+> Regards,
+> IncogCyberpunk
+
+
+
+--=20
+Luiz Augusto von Dentz
