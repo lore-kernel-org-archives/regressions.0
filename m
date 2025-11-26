@@ -1,64 +1,88 @@
-Received: from mail-24428.protonmail.ch (mail-24428.protonmail.ch [109.224.244.28])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EF7825782D
-	for <regressions@lists.linux.dev>; Wed, 26 Nov 2025 05:14:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.28
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DCB0F2673B7
+	for <regressions@lists.linux.dev>; Wed, 26 Nov 2025 06:15:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764134068; cv=none; b=s724fuN8HuXpb8J8NCzBVlgeddTKzt+SkWcAPNTuNkTniFq98qS4RJNbnH93fDGcCn83vDjlBAFNZehnLZThpCcXp/GpjHRYpF1mcdOd39fWJ7pWuFTAvyUs6qJiZqY3vVYZH+c7+tiLl7b9PVNDdjPagllsotwpK6HEGasO9OA=
+	t=1764137717; cv=none; b=G0WHt5btEyx86hTerFotBnprK4OWpYFMCEJw8a34yqsMXsfb9TMjgPcL/nEYfDstAj0org9qeDVb2Fh/FIsaa+iiElsecwmfgu/ZUlksua+8XLPasAm8oKrXgRins/kQdR4ZO2am1QNoaBl9b62tuxtUMHQRyMcOvePRtdzU1T4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764134068; c=relaxed/simple;
-	bh=a2ZEkZkLcZWDJmXzkPVhby0HbdUzvMAwmQ7gl/YYfW4=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jyel0BIxta8w3i1zu7vpaSfx1cIkLa9yA6UWUTQ6twimYBJoMx2e2D7mfG1kptCr4U2t5Np9zSxj/Ay5rUheMjyhaX8tUw86n03Yd87Z8eUHNLOLOCPGI/+HDF/WIHZDcBWRy4St53+2dzbedNvq/wWQsOdQXqOP4fJgfgP9pO0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=IOB8bPAV; arc=none smtp.client-ip=109.224.244.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	s=arc-20240116; t=1764137717; c=relaxed/simple;
+	bh=bdrLy/roSIjZ9hNJOVMpdv6owYEML9awCGFhifYXlJY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KBI04WAhB114DwykO2QYQkVQKi69W1xnAaln9ocL6sqnR5cXk0gXZaMbw1S9h2Eb3xqspWZvgxegnMr06DC5NfmuHnHD3Dpn242n47/INDFmepKgKHda18G5ZOm9/g4QzuJyK4nn7Q+4w7MkHlXfa3CSj71WP5rZd+78nM0LM2Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=EEjcqSNw; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="IOB8bPAV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1764134058; x=1764393258;
-	bh=lqPBiub9YnM5ZlppPyyaW8AmCwAqg7HdGEp6h/Th4xk=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=IOB8bPAVEdHLY+mCRPcHNt5ZrI4GM+JpjLj4LajdqXqOSFUUxb9QrqCGRPN5ZysAY
-	 szekhG9E1L8K9HuQpM9F3wZs2w36Xkzm7Xsys1lAbbbMHjX6imZtdUAO6L6PsEE9H7
-	 9Iii8bVUv3LMf6l7CRqOFSOSriIi0hWeKhRYINz2GHRA5rfUgTXjb6lNhnSsEzkW00
-	 Dhw0V+T1irb9OJIxMEVrn0L72Zf+grBDNwAzHXxfPa1+R/VA8ZCBcL4E0eoxt51jYF
-	 7xtmhQKtVVMXfr6p69QH8TLhI4v7PwWri5YihPcQp9Y4NAXRz73+hTsaafB4/qMydO
-	 rrkcEl5f4uC/g==
-Date: Wed, 26 Nov 2025 05:14:15 +0000
-To: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-From: incogcyberpunk@proton.me
-Cc: patchwork-bot+bluetooth@kernel.org, Doug Anderson <dianders@chromium.org>, marcel@holtmann.org, matthias.bgg@gmail.com, angelogioacchino.delregno@collabora.com, regressions@leemhuis.info, regressions@lists.linux.dev, johan.hedberg@gmail.com, sean.wang@mediatek.com, stable@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH v3] Bluetooth: btusb: mediatek: Avoid btusb_mtk_claim_iso_intf() NULL deref
-Message-ID: <GFrqLPSzlfDdtFVUTPC7SJgyvzo5-3iiu9t3nN0uxRe4hDjFtHvYlYolo4Y3uqGlcOgyj3xT8hCch66lBLVmiG-li3rzC8G0xvqqSRTeJbo=@proton.me>
-In-Reply-To: <CABBYNZ+LrMOr-Bb-Sfk--FAHjMWxzeUCdDoGLuRqhF99xaGE3A@mail.gmail.com>
-References: <20251120081227.v3.1.I1ae7aebc967e52c7c4be7aa65fbd81736649568a@changeid> <176366460701.1748676.511972373877694762.git-patchwork-notify@kernel.org> <fcMPe6V9vMYxkXRMnKXiaeTnOwAMBNRTmF1mgLePTpz3Q4hPqpb0WVQ5aXZljqkOtZ2W_47PVL1Q4lnf7kZJhFS4aGwP8_4QiqJl2ScKSi4=@proton.me> <CABBYNZ+LrMOr-Bb-Sfk--FAHjMWxzeUCdDoGLuRqhF99xaGE3A@mail.gmail.com>
-Feedback-ID: 139104781:user:proton
-X-Pm-Message-ID: 59420ca908e796d525920d09c3f8d014648bb468
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="EEjcqSNw"
+Received: from [10.95.66.235] (unknown [167.220.238.139])
+	by linux.microsoft.com (Postfix) with ESMTPSA id A95212120EAD;
+	Tue, 25 Nov 2025 22:15:07 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A95212120EAD
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1764137711;
+	bh=Bc4hdbhO9YOVvNp4UyeZiT+DiaSSmhbUeWedsGko6NU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=EEjcqSNwBdZmCZCHYQAJypX7uA5A89diI6v3IuVYWMDVxu8hmKBC0cL3v0TiQfGaN
+	 3JI8F7jnNGfpDM6vzdSmN9U5gYZEizZ4sjFvHMF69BS8xJE6bOusdP/XHSrq80maLA
+	 nmM0fVEHgnx06GxDN9dqhQkWXgi+BIhjknHWCcPY=
+Message-ID: <d3f83ff0-2c4d-4698-a71d-1530b8a2bde7@linux.microsoft.com>
+Date: Wed, 26 Nov 2025 11:45:05 +0530
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: Bug#1120602: [REGRESSION 6.12.y] hyper-v: BUG: kernel NULL
+ pointer dereference, address: 00000000000000a0: RIP:
+ 0010:hv_uio_channel_cb+0xd/0x20 [uio_hv_generic]
+To: Peter Morrow <pdmorrow@gmail.com>
+Cc: Salvatore Bonaccorso <carnil@debian.org>, 1120602@bugs.debian.org,
+ Long Li <longli@microsoft.com>, linux-hyperv@vger.kernel.org,
+ linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
+ stable@vger.kernel.org, John Starks <jostarks@microsoft.com>,
+ Michael Kelley <mhklinux@outlook.com>, Tianyu Lan <tiala@microsoft.com>,
+ "K. Y. Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <aRYjk4JBqHvVl-wN@eldamar.lan>
+ <7a38c04d-4e54-4f1a-96fd-43f0f11ab97b@linux.microsoft.com>
+ <CAFcZKTwQgd9hrTaXnThML=+WG82TH3DK90FT1-WWsBSoRj7dRw@mail.gmail.com>
+ <176298819854.487825.11724175116974643582.reportbug@p15v.lan>
+ <18bcf829-04f9-46ec-a874-7c2b9338cf3d@linux.microsoft.com>
+ <aRei1DGOWy13GqvE@eldamar.lan>
+ <25aff5ca-b5e1-4907-bd12-6571f8454146@linux.microsoft.com>
+ <CAFcZKTyOcDqDJRB4sgN7Q-dabBU0eg7KKs=yBJhB=CNDyy7scQ@mail.gmail.com>
+Content-Language: en-US
+From: Naman Jain <namjain@linux.microsoft.com>
+In-Reply-To: <CAFcZKTyOcDqDJRB4sgN7Q-dabBU0eg7KKs=yBJhB=CNDyy7scQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi,=20
 
-Don't want to add trouble, just out of curiosity.
 
-What is normally the route for patches to get into the mainline kernel?=20
+On 11/21/2025 3:34 PM, Peter Morrow wrote:
+> Hi Naman/Salvatore,
+> 
+> Is it possible to get this fixed in the 6.1 LTS series too? I just ran
+> into this crash when moving from bookworm based Debian kernel
+> 6.1.153-1 to 6.1.158-1. I saw that "uio_hv_generic: Let userspace take
+> care of interrupt mask" appeared in 6.1.156.
+> 
+> Thanks,
+> Peter.
+> 
 
-Isn't it as follows , as suggested in the documentations ?=20
-subsystem -> -next -> mainline -> stable ?=20
 
-What's this net tree , and how are the patches cherrypicked onto the  mainl=
-ine kernel? is there a certain process?=20
+Hi Peter,
+Yes, I have sent a patch for older kernel versions as well.
+I am working to fix the review comments and send new revisions.
 
-Regards,=20
-IncogCyberpunk
- 
+Here is the link:
+https://lore.kernel.org/all/20251115085937.2237-1-namjain@linux.microsoft.com/
+
+
+Regards,
+Naman
