@@ -1,88 +1,126 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DCB0F2673B7
-	for <regressions@lists.linux.dev>; Wed, 26 Nov 2025 06:15:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57A263090C6;
+	Wed, 26 Nov 2025 09:46:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.133.4.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764137717; cv=none; b=G0WHt5btEyx86hTerFotBnprK4OWpYFMCEJw8a34yqsMXsfb9TMjgPcL/nEYfDstAj0org9qeDVb2Fh/FIsaa+iiElsecwmfgu/ZUlksua+8XLPasAm8oKrXgRins/kQdR4ZO2am1QNoaBl9b62tuxtUMHQRyMcOvePRtdzU1T4=
+	t=1764150403; cv=none; b=hxgaWZGKw3imXznNSBBhxKnE/tE4iVZCpyotGO2U/TmjcrenBs5CqmK9I3yEqHuqOLPkETTxyCnlv5FPurR4l7vIDhiDUyiCJAGBylryQ49qnFkFQWlvEjTcg/2IU3S0qgVTkgF2MCPNSESNW5eJlG473I5AxaO8vZcureQ5W9A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764137717; c=relaxed/simple;
-	bh=bdrLy/roSIjZ9hNJOVMpdv6owYEML9awCGFhifYXlJY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KBI04WAhB114DwykO2QYQkVQKi69W1xnAaln9ocL6sqnR5cXk0gXZaMbw1S9h2Eb3xqspWZvgxegnMr06DC5NfmuHnHD3Dpn242n47/INDFmepKgKHda18G5ZOm9/g4QzuJyK4nn7Q+4w7MkHlXfa3CSj71WP5rZd+78nM0LM2Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=EEjcqSNw; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1764150403; c=relaxed/simple;
+	bh=AfDBkPaSHEH12W0txSPu3aX4L9071oFXlQtzgNtVWQE=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=NlcVi9bsfhdpzU1oRJwchpaL8u5lXHCEt2qOFa8sZQiAhbcIQzkm+9Uvl47QAlLP1nN5VntFNhHQtxLBKRUL6zXxzsu/KTM/dfrFIB7Zaos/La+lqBSsWtnxluZUswH1ZkDilryzK5feAw2jbw6pcLMFQt9XRq8F2yNggvFq1qs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de; spf=pass smtp.mailfrom=zedat.fu-berlin.de; dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b=LCChGlIo; arc=none smtp.client-ip=130.133.4.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zedat.fu-berlin.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="EEjcqSNw"
-Received: from [10.95.66.235] (unknown [167.220.238.139])
-	by linux.microsoft.com (Postfix) with ESMTPSA id A95212120EAD;
-	Tue, 25 Nov 2025 22:15:07 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A95212120EAD
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1764137711;
-	bh=Bc4hdbhO9YOVvNp4UyeZiT+DiaSSmhbUeWedsGko6NU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=EEjcqSNwBdZmCZCHYQAJypX7uA5A89diI6v3IuVYWMDVxu8hmKBC0cL3v0TiQfGaN
-	 3JI8F7jnNGfpDM6vzdSmN9U5gYZEizZ4sjFvHMF69BS8xJE6bOusdP/XHSrq80maLA
-	 nmM0fVEHgnx06GxDN9dqhQkWXgi+BIhjknHWCcPY=
-Message-ID: <d3f83ff0-2c4d-4698-a71d-1530b8a2bde7@linux.microsoft.com>
-Date: Wed, 26 Nov 2025 11:45:05 +0530
+	dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b="LCChGlIo"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=fu-berlin.de; s=fub01; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:From:
+	Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=kX18TokZJrRxzuxjDzOD7jkR62kfpAqVIr+hp9PYCqU=; t=1764150400;
+	x=1764755200; b=LCChGlIokez1125S1qRl5f/gDC6NKvnh84wv7gm0onfv9mKftyBilrprjiDzJ
+	Q7yC0L5cGUQu9aRCGBYFXJVhSZ4ICijWmrIkeYnoFbIDO7IgSrlZXvR8ejOxrfsPp7xyNy7+kasZ1
+	LdZaswV1Hh71jU1cpzrwkVtknnkwi1ZnF8YFD+crtUnKngF2vX20erJ++osxKrnrIaACTrsdDHbPw
+	9+IfIaMqNzjtF2L+nO7BGVgcpduXUUyobOWo4wLbBr4HUWxFzP5j/Urn80aO6SvcpaopBrMulpeaO
+	ugb6/licB78BSIdzNxEe9UFOHd48MLGmmT0isJShHZkc/CooKQ==;
+Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
+          by outpost.zedat.fu-berlin.de (Exim 4.99)
+          with esmtps (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@zedat.fu-berlin.de>)
+          id 1vOC6g-00000003j2F-1Bur; Wed, 26 Nov 2025 10:46:38 +0100
+Received: from p5b13aa34.dip0.t-ipconnect.de ([91.19.170.52] helo=[192.168.178.61])
+          by inpost2.zedat.fu-berlin.de (Exim 4.99)
+          with esmtpsa (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@physik.fu-berlin.de>)
+          id 1vOC6g-00000001zCX-0BlY; Wed, 26 Nov 2025 10:46:38 +0100
+Message-ID: <f60b787529422eb2b3655b92aa8a7377b838baf4.camel@physik.fu-berlin.de>
+Subject: Re: PROBLEM: hwclock busted w/ M48T59 RTC (regression)
+From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+To: Nick Bowler <nbowler@draconx.ca>, linux-kernel@vger.kernel.org, 
+	regressions@lists.linux.dev, linux-rtc@vger.kernel.org
+Cc: Esben Haabendal <esben@geanix.com>, stable@vger.kernel.org, 
+	sparclinux@vger.kernel.org, regressions <regressions@lists.linux.dev>
+Date: Wed, 26 Nov 2025 10:46:37 +0100
+In-Reply-To: <gfwdg244bcmkv7l44fknfi4osd2b23unwaos7rnlirkdy2rrrt@yovd2vewdviv>
+References: 
+	<krmiwpwogrvpehlqdrugb5glcmsu54qpw3mteonqeqymrvzz37@dzt7mes7qgxt>
+	 <gfwdg244bcmkv7l44fknfi4osd2b23unwaos7rnlirkdy2rrrt@yovd2vewdviv>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.58.1 
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Bug#1120602: [REGRESSION 6.12.y] hyper-v: BUG: kernel NULL
- pointer dereference, address: 00000000000000a0: RIP:
- 0010:hv_uio_channel_cb+0xd/0x20 [uio_hv_generic]
-To: Peter Morrow <pdmorrow@gmail.com>
-Cc: Salvatore Bonaccorso <carnil@debian.org>, 1120602@bugs.debian.org,
- Long Li <longli@microsoft.com>, linux-hyperv@vger.kernel.org,
- linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
- stable@vger.kernel.org, John Starks <jostarks@microsoft.com>,
- Michael Kelley <mhklinux@outlook.com>, Tianyu Lan <tiala@microsoft.com>,
- "K. Y. Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-References: <aRYjk4JBqHvVl-wN@eldamar.lan>
- <7a38c04d-4e54-4f1a-96fd-43f0f11ab97b@linux.microsoft.com>
- <CAFcZKTwQgd9hrTaXnThML=+WG82TH3DK90FT1-WWsBSoRj7dRw@mail.gmail.com>
- <176298819854.487825.11724175116974643582.reportbug@p15v.lan>
- <18bcf829-04f9-46ec-a874-7c2b9338cf3d@linux.microsoft.com>
- <aRei1DGOWy13GqvE@eldamar.lan>
- <25aff5ca-b5e1-4907-bd12-6571f8454146@linux.microsoft.com>
- <CAFcZKTyOcDqDJRB4sgN7Q-dabBU0eg7KKs=yBJhB=CNDyy7scQ@mail.gmail.com>
-Content-Language: en-US
-From: Naman Jain <namjain@linux.microsoft.com>
-In-Reply-To: <CAFcZKTyOcDqDJRB4sgN7Q-dabBU0eg7KKs=yBJhB=CNDyy7scQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-Original-Sender: glaubitz@physik.fu-berlin.de
+X-ZEDAT-Hint: PO
 
+Hi Nick,
 
+I have not used the regression tracker before, so let's give it a try:
 
-On 11/21/2025 3:34 PM, Peter Morrow wrote:
-> Hi Naman/Salvatore,
-> 
-> Is it possible to get this fixed in the 6.1 LTS series too? I just ran
-> into this crash when moving from bookworm based Debian kernel
-> 6.1.153-1 to 6.1.158-1. I saw that "uio_hv_generic: Let userspace take
-> care of interrupt mask" appeared in 6.1.156.
-> 
+#regzbot ^introduced: 795cda8338eab036013314dbc0b04aae728880ab
+
+Adrian
+
+On Tue, 2025-11-25 at 22:18 -0500, Nick Bowler wrote:
+> Any thoughts?
+>=20
+> The problem is still present in 6.18-rc7 and reverting the commit
+> indicated below still fixes it.
+>=20
+> I am also seeing the same failure on a totally different system with
+> Dallas DS1286 RTC, which is also fixed by reverting this commit.
+>=20
+> Since the initial report this regression has been further backported
+> to all the remaining longterm kernel series.
+>=20
 > Thanks,
-> Peter.
-> 
+>   Nick
+>=20
+> On Thu, Oct 23, 2025 at 12:45:13AM -0400, Nick Bowler wrote:
+> > Hi,
+> >=20
+> > After a stable kernel update, the hwclock command seems no longer
+> > functional on my SPARC system with an ST M48T59Y-70PC1 RTC:
+> >=20
+> >   # hwclock
+> >   [...long delay...]
+> >   hwclock: select() to /dev/rtc0 to wait for clock tick timed out
+> >=20
+> > On prior kernels, there is no problem:
+> >=20
+> >   # hwclock
+> >   2025-10-22 22:21:04.806992-04:00
+> >=20
+> > I reproduced the same failure on 6.18-rc2 and bisected to this commit:
+> >=20
+> >   commit 795cda8338eab036013314dbc0b04aae728880ab
+> >   Author: Esben Haabendal <esben@geanix.com>
+> >   Date:   Fri May 16 09:23:35 2025 +0200
+> >  =20
+> >       rtc: interface: Fix long-standing race when setting alarm
+> >=20
+> > This commit was backported to all current 6.x stable branches,
+> > as well as 5.15.x, so they all have the same regression.
+> >=20
+> > Reverting this commit on top of 6.18-rc2 corrects the problem.
+> >=20
+> > Let me know if you need any more info!
+> >=20
+> > Thanks,
+> >   Nick
 
-
-Hi Peter,
-Yes, I have sent a patch for older kernel versions as well.
-I am working to fix the review comments and send new revisions.
-
-Here is the link:
-https://lore.kernel.org/all/20251115085937.2237-1-namjain@linux.microsoft.com/
-
-
-Regards,
-Naman
+--=20
+ .''`.  John Paul Adrian Glaubitz
+: :' :  Debian Developer
+`. `'   Physicist
+  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
