@@ -1,112 +1,64 @@
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-24428.protonmail.ch (mail-24428.protonmail.ch [109.224.244.28])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74F0430DD36
-	for <regressions@lists.linux.dev>; Wed, 26 Nov 2025 03:29:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EF7825782D
+	for <regressions@lists.linux.dev>; Wed, 26 Nov 2025 05:14:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764127763; cv=none; b=Al9kgkLapUO1sBjWD+iVNtKceZSPy8kQeFZeBvf/LywHELcNQsSSis3ZaQnjHkWDJbFN8900yB3rbbyOEKeKNcvJ6JsHfZxr538IPmrhNXE9qla8yO3WhRY7uJcSUSRGtV5KyvcQE54SIAA1yMJ7nYfIKx3zwip+eoTffGEsbsg=
+	t=1764134068; cv=none; b=s724fuN8HuXpb8J8NCzBVlgeddTKzt+SkWcAPNTuNkTniFq98qS4RJNbnH93fDGcCn83vDjlBAFNZehnLZThpCcXp/GpjHRYpF1mcdOd39fWJ7pWuFTAvyUs6qJiZqY3vVYZH+c7+tiLl7b9PVNDdjPagllsotwpK6HEGasO9OA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764127763; c=relaxed/simple;
-	bh=66TuTBZPQ5vsv3Iv0COl1blnafpP7gUF+2AzcPsJnME=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dJY859lt8dUMDeNmrdu98OVrKrr/fQcpnXwEgHmtZIxZooEhs+G1HNTGlP4Rdz8nEKIdpENg4xbIYCjE+r+/95Ep7Hd+HLizb8v8chtFtQpusvcYzUN8n5j2ry2NUHY0UX0ytCjPrWB3uRjJ/obPBKPOLlshRxTqTq0697G837s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ep686m1w; arc=none smtp.client-ip=209.85.208.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1764134068; c=relaxed/simple;
+	bh=a2ZEkZkLcZWDJmXzkPVhby0HbdUzvMAwmQ7gl/YYfW4=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jyel0BIxta8w3i1zu7vpaSfx1cIkLa9yA6UWUTQ6twimYBJoMx2e2D7mfG1kptCr4U2t5Np9zSxj/Ay5rUheMjyhaX8tUw86n03Yd87Z8eUHNLOLOCPGI/+HDF/WIHZDcBWRy4St53+2dzbedNvq/wWQsOdQXqOP4fJgfgP9pO0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=IOB8bPAV; arc=none smtp.client-ip=109.224.244.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ep686m1w"
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-37a2dcc52aeso59858251fa.0
-        for <regressions@lists.linux.dev>; Tue, 25 Nov 2025 19:29:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1764127759; x=1764732559; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=66TuTBZPQ5vsv3Iv0COl1blnafpP7gUF+2AzcPsJnME=;
-        b=ep686m1wKWr5cdzxvhcE66+PLzg+NWpOrVGZOj1jZn+Zaq1hi3ykrDPtY4AvEE4VcB
-         +YkTf8vN9Z8U1tx0afrKH6oSxCtrLSRvkv9Hhd3Qw+KoL3fBtR2xfdxWSU+7V5JrhFX4
-         zN7XFl5GuyrYLCljix2Eg20jXyG8bxriqvdys8MuD8Y1kUpHBERgpKHTcGGLcz03Y9hv
-         Q1IAwSU7RgZyywJXOFpR56BIMlJfZOnaxCYwbNuj0GQlj2bcSH7sNCCAKugJ2rgz6eQy
-         7kblZSJRQNwDuXgb3nMIBQ82zK1KrnY4WOTnBpqLR07j9Qxy1BIqkCQre0nEUjf6o/sc
-         VAcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764127759; x=1764732559;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=66TuTBZPQ5vsv3Iv0COl1blnafpP7gUF+2AzcPsJnME=;
-        b=Az8QvbknPDEjUTPRGMApvBh8Vif4A6wcYkS+PMAnYy6M74K8+kve0FFAm4RAA4bGsa
-         CjTaOXaz/ZlMg5FuAGQ30TpiEXAijl4w7i/NU9OREigx0zsvvIsiSgHTml8QgLj6oyxx
-         RTs+9gyReuk46Cas0OdvqymkP9np6G3DAWyEXMsRNIC3uLE8m0jA0A76347WkKUvvJIG
-         AAm3U1tPadHxaycyo7tvlXXad6inDzBhLiwMdKS4c2zysq6QMvuPHn9guUcp0nzfJLAs
-         JdCkcOsL98udOc1jIjFAJkgin+ET+qg2StexQyBq61lFagx52NZIUNrrrWmHnYUwp0iK
-         ePew==
-X-Forwarded-Encrypted: i=1; AJvYcCU1WJMML1OjJb6044aDzOYBHpkNBtkiaScafKjSJionf4S9sF88NVXu7Q6tBnLKY9DrXKeq7efWTa/YxQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwnnunPBJiJPWlkiXR5wEx19q+2FRj+0UKcWXFsRtutfegALDSi
-	oj7f7pBvVWp8IMs+oaMuZETMkfMCeuhu7+PgkFfe5ZNN7WC7mY/z7yAWcay6haAfkNkGRvNBx7m
-	xm5kwdC8b4g2sMffp7XzTQUjELYe3/+c=
-X-Gm-Gg: ASbGncsZRS0ihqmSBaZ6DzjKVmdZqTf4dw8ej7s1ad6GSBuFJ950ra/Hhq0C+nC52qE
-	KiZMi1PcX1pvK/uuUGJLorsea8ydiW+jWZIxR8GBZlRfBd6kacb4UXEZ8UbA1lg0BppRml30ndN
-	u0Ig7Z+sXbnRi33PBHWj9zql0vH/ByaYtTQy+K8POSnvb+tLoXnpyOp4KFIc2E1MftopFoFryoJ
-	kUe1NPEY9VECvtxBinem87md3kyBQTpslqxJwJC6lcQ99Iot/sk8xFT8aWJfNmFK3Natg==
-X-Google-Smtp-Source: AGHT+IFXNDNWfBE/jdt0Dz9W+S2FZLkrdTl/cEteRJj+bVHvSnDXE5eODbEtCrm2sfh2BeISb+8B1VHSywmIxbn2U6I=
-X-Received: by 2002:a05:651c:43d8:20b0:37a:432f:8ecc with SMTP id
- 38308e7fff4ca-37d07953a3emr15608421fa.33.1764127759248; Tue, 25 Nov 2025
- 19:29:19 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="IOB8bPAV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1764134058; x=1764393258;
+	bh=lqPBiub9YnM5ZlppPyyaW8AmCwAqg7HdGEp6h/Th4xk=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=IOB8bPAVEdHLY+mCRPcHNt5ZrI4GM+JpjLj4LajdqXqOSFUUxb9QrqCGRPN5ZysAY
+	 szekhG9E1L8K9HuQpM9F3wZs2w36Xkzm7Xsys1lAbbbMHjX6imZtdUAO6L6PsEE9H7
+	 9Iii8bVUv3LMf6l7CRqOFSOSriIi0hWeKhRYINz2GHRA5rfUgTXjb6lNhnSsEzkW00
+	 Dhw0V+T1irb9OJIxMEVrn0L72Zf+grBDNwAzHXxfPa1+R/VA8ZCBcL4E0eoxt51jYF
+	 7xtmhQKtVVMXfr6p69QH8TLhI4v7PwWri5YihPcQp9Y4NAXRz73+hTsaafB4/qMydO
+	 rrkcEl5f4uC/g==
+Date: Wed, 26 Nov 2025 05:14:15 +0000
+To: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+From: incogcyberpunk@proton.me
+Cc: patchwork-bot+bluetooth@kernel.org, Doug Anderson <dianders@chromium.org>, marcel@holtmann.org, matthias.bgg@gmail.com, angelogioacchino.delregno@collabora.com, regressions@leemhuis.info, regressions@lists.linux.dev, johan.hedberg@gmail.com, sean.wang@mediatek.com, stable@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH v3] Bluetooth: btusb: mediatek: Avoid btusb_mtk_claim_iso_intf() NULL deref
+Message-ID: <GFrqLPSzlfDdtFVUTPC7SJgyvzo5-3iiu9t3nN0uxRe4hDjFtHvYlYolo4Y3uqGlcOgyj3xT8hCch66lBLVmiG-li3rzC8G0xvqqSRTeJbo=@proton.me>
+In-Reply-To: <CABBYNZ+LrMOr-Bb-Sfk--FAHjMWxzeUCdDoGLuRqhF99xaGE3A@mail.gmail.com>
+References: <20251120081227.v3.1.I1ae7aebc967e52c7c4be7aa65fbd81736649568a@changeid> <176366460701.1748676.511972373877694762.git-patchwork-notify@kernel.org> <fcMPe6V9vMYxkXRMnKXiaeTnOwAMBNRTmF1mgLePTpz3Q4hPqpb0WVQ5aXZljqkOtZ2W_47PVL1Q4lnf7kZJhFS4aGwP8_4QiqJl2ScKSi4=@proton.me> <CABBYNZ+LrMOr-Bb-Sfk--FAHjMWxzeUCdDoGLuRqhF99xaGE3A@mail.gmail.com>
+Feedback-ID: 139104781:user:proton
+X-Pm-Message-ID: 59420ca908e796d525920d09c3f8d014648bb468
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20251120081227.v3.1.I1ae7aebc967e52c7c4be7aa65fbd81736649568a@changeid>
- <176366460701.1748676.511972373877694762.git-patchwork-notify@kernel.org> <fcMPe6V9vMYxkXRMnKXiaeTnOwAMBNRTmF1mgLePTpz3Q4hPqpb0WVQ5aXZljqkOtZ2W_47PVL1Q4lnf7kZJhFS4aGwP8_4QiqJl2ScKSi4=@proton.me>
-In-Reply-To: <fcMPe6V9vMYxkXRMnKXiaeTnOwAMBNRTmF1mgLePTpz3Q4hPqpb0WVQ5aXZljqkOtZ2W_47PVL1Q4lnf7kZJhFS4aGwP8_4QiqJl2ScKSi4=@proton.me>
-From: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Date: Tue, 25 Nov 2025 22:29:06 -0500
-X-Gm-Features: AWmQ_bm2zfUBQgnJooefgPcNZ-tIRrataC9j9VnWGhDa0KJzloTqrrroBYDFEXM
-Message-ID: <CABBYNZ+LrMOr-Bb-Sfk--FAHjMWxzeUCdDoGLuRqhF99xaGE3A@mail.gmail.com>
-Subject: Re: [PATCH v3] Bluetooth: btusb: mediatek: Avoid btusb_mtk_claim_iso_intf()
- NULL deref
-To: incogcyberpunk@proton.me
-Cc: patchwork-bot+bluetooth@kernel.org, Doug Anderson <dianders@chromium.org>, 
-	marcel@holtmann.org, matthias.bgg@gmail.com, 
-	angelogioacchino.delregno@collabora.com, regressions@leemhuis.info, 
-	regressions@lists.linux.dev, johan.hedberg@gmail.com, sean.wang@mediatek.com, 
-	stable@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-mediatek@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Hi,=20
 
-On Tue, Nov 25, 2025 at 10:18=E2=80=AFPM <incogcyberpunk@proton.me> wrote:
->
-> Hey,
->
-> It's been almost a week since the regression was reported and an patch wa=
-s provided to fix the issue, which has now been accepted in the linux-next =
-tree; but I see that despite being a patch for regression, a merge/pull req=
-uest was not made upstream for the latest -rc mainline release.
->
-> Is there any way that I can track the updates for this patch to be onto t=
-he mainline release?
->
-> Sorry, if I am missing anything.
+Don't want to add trouble, just out of curiosity.
 
-This was merged into net tree a few days ago:
+What is normally the route for patches to get into the mainline kernel?=20
 
-https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git/commit/?id=
-=3D8a4dfa8fa6b5
+Isn't it as follows , as suggested in the documentations ?=20
+subsystem -> -next -> mainline -> stable ?=20
 
-So it should get into Linus tree in the next few days.
+What's this net tree , and how are the patches cherrypicked onto the  mainl=
+ine kernel? is there a certain process?=20
 
-> Regards,
-> IncogCyberpunk
-
-
-
---=20
-Luiz Augusto von Dentz
+Regards,=20
+IncogCyberpunk
+ 
