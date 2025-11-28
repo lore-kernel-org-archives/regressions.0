@@ -1,91 +1,155 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0A2922A7E6
-	for <regressions@lists.linux.dev>; Thu, 27 Nov 2025 13:02:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5142A285CA4
+	for <regressions@lists.linux.dev>; Fri, 28 Nov 2025 03:00:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764248568; cv=none; b=Rji0HbzlNhUZimzadFtJl7ttSkVge3OgTr0HLlTH3sNwbCHIDWty/mtNnnyrWXQN/ftKpFibpDGSStnyLdx5gSlQ4sGKeLIavlE20LMZH/s9JTkduEMFPcML+s6vRqn2XFX7liL1IcUl1hc9cLKKQF1W28NMakbsJV5efqPpy+o=
+	t=1764298805; cv=none; b=ptvLCHiMHxuXxHStAvUfWRGB1LusflhS5ETKdIxMpClWYHPvAsspai/JzUnQtTsWKbuPd331dyC9txeqd1FUaeDOCeDnIRciv4Y+sd0sWrFStAJfXG7c/wmyx3J2aVvCgtNNXGYuzf/hsOI3ENgLOGVf6U/+wM4MD5Y1iM7SYqM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764248568; c=relaxed/simple;
-	bh=TWnBamyatpX5Wm4Si3Pw4KH/18jBLNasjONqwMRmbEs=;
+	s=arc-20240116; t=1764298805; c=relaxed/simple;
+	bh=TYppZNzZQzp6ondQ2xQLSLhP3N66douY6DbnuOZeqYg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=R5uZ8+c5kCnGyqNwN3PpiDCoYVbrZCqQb2yvowxjJxP0DRpWfFT2pL1kpNrqmo3i4srJxFWFNOq1vTbJb+l6WNF8AUpjAcss2DtKic5Tf6lClazCkVcZTRQzaxdmqzvoMq82MmlIDSIflJhrJG2QZ9PczkHxnS9gFRMXQMuiGKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e9rG5FCz; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=Xd3ji/BKrSf6U250yxVsWdmMuvGnq1igoB24RaDGXkEqA4WpOWjVs/oiPhuKcvOi7AyWEGqaXSbmDXjkfjXjTXB1+k7c7AV2dh5hkDkytKEahh/t2QsUCnL7FIq1zC/cILz5PSJlO7ItK6iQZZmdngiSP2VPvL/oU7PSMUtl3o8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bqRQ/2Ds; arc=none smtp.client-ip=209.85.167.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e9rG5FCz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C1FDC4CEFB
-	for <regressions@lists.linux.dev>; Thu, 27 Nov 2025 13:02:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764248568;
-	bh=TWnBamyatpX5Wm4Si3Pw4KH/18jBLNasjONqwMRmbEs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=e9rG5FCz0iQPqCdN7QK+GlKOL5Q1EJfYtArB6Lser82tbh7ORLZ2xgNk2HvupFdmU
-	 pedOTvkpvl5LYAQiNsyG0EW2RV64vyqk8co4ymmLzdW+CQfGArouOXlx4G419zz03X
-	 NthhEHTYibZ2hMMmfU/gEHNbOEaolXTZP717OoQJ6Op6kJmOcjdhbBaj+1Zv75DCXM
-	 LFQLt5CzNnToWEPgQkzNklmQ0gW0jqrN7gWte8ahEHTTXSJnwaKWyRaD36ObUxzD72
-	 DWzc8Mj/LBxn2Y4wupWwHJ5OUrfxxC6We/f5oX/Ry4Rma8+y0BDA5kegrz8I2YyDbI
-	 QqCTcZJMCVxsw==
-Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-6574de1cda1so323111eaf.3
-        for <regressions@lists.linux.dev>; Thu, 27 Nov 2025 05:02:48 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCV1SZ7HjWrRMMsPDWM/ffLb+loop72S4kLoViTyYfKWwz6UwcdddQgkcz7UIWO4odhOW5kO7y+xhpo++A==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yytj2fFtO3lco3wqHcISuv7uK8LbtksPEEl3e5HewDxeIImSIse
-	cbte7UrR0cWehofrVceih1b8ui4rRwM7Hrajz2xMU9gpaDJHbyzzBcqpSx8xtuwn+1loATeYnC1
-	+RlUhbfCiCcG8ucJRl7XI2LfEG/kr4Bc=
-X-Google-Smtp-Source: AGHT+IF0w8otX0piRWgtFUFTOXoFjGj4D4MrWIyFNoPn3zzu9Fi9GBR6iCbgBOJGxJT9TxwBRjX6B6nUfkBdUXdfRHg=
-X-Received: by 2002:a05:6820:2005:b0:657:71ec:5450 with SMTP id
- 006d021491bc7-657bdab6274mr3608090eaf.2.1764248567718; Thu, 27 Nov 2025
- 05:02:47 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bqRQ/2Ds"
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-596a055b1b8so1564295e87.0
+        for <regressions@lists.linux.dev>; Thu, 27 Nov 2025 19:00:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1764298801; x=1764903601; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cJq+1B1sI6yzhGchPzVcdD4BSJn3WDAPIGOauWfX+bk=;
+        b=bqRQ/2DswpvgA/httYJjd2/b/9BrDkUduuAxOBdyyHFiDr4w0qMcgiNy7i64iSxrT4
+         49gqzk8afIfWrzKnuYtorb6l0wcgpBiyN34Qshy2JbTEuQWMHkJAo3vets7fOfv5pRPf
+         ShEB7DvuDSW85V3ccegCfZmQVQirgfpF8g2fj5jw1SpD1EgCMF48JVxnoqEyPSwc+28B
+         dGuhv/qZHOOrqFv5QN9+WRYKIXorwVTVceAzlsVAKeRreia5Za8ZfJn1zy4XtpPKmc9d
+         RHxGIEfPnWUiG6VAQ7aHLmw27pHQM4soKTfbHVE1W/brAU78f/PBE4Ma/ZAUJff+uzsy
+         2h5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764298801; x=1764903601;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=cJq+1B1sI6yzhGchPzVcdD4BSJn3WDAPIGOauWfX+bk=;
+        b=YKjfWyvgHxfd4PKDtyJiIrsYikv9d2CUoNy20JeuqZQxAbp1GUmvNMmRWsHuIwV9yE
+         3BfvHBIxlhHUSoapZA0L/OK2rCsAFTrsuk2wnC6AgGsVZxS77WUVyX/lZI5WjVtic7FY
+         NMwCk5IsBog3nQWTM2R2knxepaRDABNGqsm1y8ph+de4ItNW227hp/qD7HZys8MlCPIu
+         T3jsa20GptvAhI+s5mOjNq5uXRAtJw09HeyvmgWb6OZ+WzaiNdSDApYaTWve1Zq9olmG
+         UN6zmNyPyQHxO3KZuuvFRT4sT5F5YCoANH0YJIcaa2RYTnwvw+0qZxupfjrF6wOFAyu7
+         tXDQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWjWFkug6J0HW9I3w5CLgDFZGqXXgZpzL2lUVa2I7gBCet/Qoqikuswuyg5zMvRHzU/eqarSOLLx2Kwfw==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yw+AJNNSVHXz/bkyVhJd5sSG2iuuYNenkswqRUJKXvZBhB3mS3m
+	Yj8K2S+zRQG/I4ijXQsSZOqqUGHXuqCOod8Cyf97oLUGesmfEilNtOBDBR3CvSZAoYMKMhSskBO
+	Tjdfcn6L41gDVqRQd/iuk9C6qupCIF3o=
+X-Gm-Gg: ASbGnctOegkw1gkJyROsLACgXV+P4t07Cbhq45n+QPN3u4QlzRBKIOA3Op3FeoosqbZ
+	dEtmdCylTyj+TOV6OnW8/Pl9eIVK6efjU+Pi6pMeELCbozyLqAH7oFAhKjD8gljEB0s8JUg4/I1
+	YaI4i9pyOsSRX0cz65r+9OsFh7mX17dd3ZxEkYgVe5TkTnRO+J7hz7qpqyAniR6rDTeLwi3b28d
+	gD5RDew2VuTe1eq9p3CS+gaUt0dIG8H0Rh6moLXibuNfjAucjGtajPwSbeqew6+vqRvEzQ=
+X-Google-Smtp-Source: AGHT+IGvOWy7yyiK7f98nc3EO/ukeFU1q3BB62MfykeDDvhHqxD5/kjVdAl0bSZqgV7901NqJCOH/MYwkjyE5oYiH3c=
+X-Received: by 2002:a05:6512:b1d:b0:595:7a6c:7db4 with SMTP id
+ 2adb3069b0e04-596a3eb59afmr8509799e87.4.1764298801222; Thu, 27 Nov 2025
+ 19:00:01 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20251006120944.7880-1-spasswolf@web.de> <8edcc464-c467-4e83-a93b-19b92a2cf193@kernel.org>
- <4903e7c36adf377bcca289dbd3528055dc6cfb32.camel@web.de> <4a8302a0-209f-446a-9825-36cb267c1718@kernel.org>
- <25f36fa7-d1d6-4b81-a42f-64c445d6f065@amd.com> <1853e2af7f70cf726df278137b6d2d89d9d9dc82.camel@web.de>
- <f18bafacbd8316c9623658e2935f8fc3b276af64.camel@web.de> <26bf82303f661cdd34e4e8c16997e33eb21d1ee4.camel@web.de>
- <635b6cb19b5969bed7432dfd1cd651124e63aebb.camel@web.de> <18e472a0489ee5337465d5dc26685cebaf7c4f8d.camel@web.de>
- <3772b8f5-6d1a-403e-ad27-99a711e78902@kernel.org> <0cb75fae3a9cdb8dd82ca82348f4df919d34844d.camel@web.de>
- <ab51bd58919a31107caf8f8753804cb2dbfa791d.camel@web.de> <0719d985-1c09-4039-84c1-8736a1ca5e2d@amd.com>
- <3f790ee59129e5e49dd875526cb308cc4d97b99d.camel@web.de> <CAJZ5v0iRaYBU+1S4rqYR7D6XC+rfQ2+0hgbodweV5JsFr8EEnQ@mail.gmail.com>
- <b1fadb15d1869bde81315be7488c50dbbc9f7dbd.camel@web.de> <CAJZ5v0iAJN4eTdp9S=CKbMnVn78R7UnBKbLjBTdRhHebE0i7dA@mail.gmail.com>
- <8273a7755f90a3e41782f1d820dd9f0c22be78b7.camel@web.de>
-In-Reply-To: <8273a7755f90a3e41782f1d820dd9f0c22be78b7.camel@web.de>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 27 Nov 2025 14:02:36 +0100
-X-Gmail-Original-Message-ID: <CAJZ5v0i2T7HpV4jN6NJk=ruBvjecPRU2PyuYf0_TSPQU6FZ5rg@mail.gmail.com>
-X-Gm-Features: AWmQ_blFrD4CZdWtZD3fIxcPns9D2aAYhSHAPFzKpLN-7_95YhHfLdxhVqKxrFk
-Message-ID: <CAJZ5v0i2T7HpV4jN6NJk=ruBvjecPRU2PyuYf0_TSPQU6FZ5rg@mail.gmail.com>
-Subject: Re: Crash during resume of pcie bridge due to infinite loop in ACPICA
-To: Bert Karwatzki <spasswolf@web.de>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	"Mario Limonciello (AMD) (kernel.org)" <superm1@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-next@vger.kernel.org, regressions@lists.linux.dev, 
-	linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org, 
-	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, acpica-devel@lists.linux.dev, 
-	Robert Moore <robert.moore@intel.com>, Saket Dumbre <saket.dumbre@intel.com>
+References: <CAAq5pW8q6V7x6qpYnE3xB99nVwE363keGiu+Jax0_zqPjogULw@mail.gmail.com>
+ <CAAq5pW_saBZ+52zz2FYTt9SuWXj2KwX2Ld7AggVKAzca2m0Oow@mail.gmail.com> <CAAq5pW9o3itC0G16LnJO7KMAQ_XoqXUpB=cuJ_7e3-H11zKd5Q@mail.gmail.com>
+In-Reply-To: <CAAq5pW9o3itC0G16LnJO7KMAQ_XoqXUpB=cuJ_7e3-H11zKd5Q@mail.gmail.com>
+From: Evans Jahja <evansjahja13@gmail.com>
+Date: Fri, 28 Nov 2025 11:59:49 +0900
+X-Gm-Features: AWmQ_bljV87U_YaWy2CItZO_-S-4IuG82a7APaAjJ3ItWl_P2M7yJwtTlwlAyac
+Message-ID: <CAAq5pW8-j6UzruT=SU05QgJ1AjLXeUwASLJ3O3SVKttaMbdTXQ@mail.gmail.com>
+Subject: [REGRESSION] mt8183-kukui: dts: changes in dts caused display to no
+ longer initialize - Was: Re: mt8183-kukui: drm/mediatek: dts: Invalid display
+ hw pipeline when probing mediatek-drm
+To: "angelogioacchino.delregno@collabora.com" <angelogioacchino.delregno@collabora.com>
+Cc: linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	matthias.bgg@gmail.com, regressions@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Nov 27, 2025 at 1:08=E2=80=AFAM Bert Karwatzki <spasswolf@web.de> w=
-rote:
->
-> Am Dienstag, dem 25.11.2025 um 20:46 +0100 schrieb Rafael J. Wysocki:
-> >
-> >
-> > What may be happening, but this is just a theory, is that the
-> > interpreter aborts the evaluation of a method due to an internal
-> > timeout, essentially the control_state->control.loop_timeout check in
-> > acpi_ds_exec_end_control_op() and that leads to a subsequent hard
-> > failure like a deadlock.
-> >
-> > This may be tested by increasing the ACPI_MAX_LOOP_TIMEOUT value, but
-> > I'm not sure it's practical to try that.
->
-> I don't think this the case here because ACPI_MAX_LOOP_TIMEOUT defaults t=
-o
-> 30s and the walk loop until the crash only lasts ~2s.
+#regzbot ^introduced: e72d63fa0563f8a6e98c10fed3a9ce74dc0536e6
+#regzbot monitor: https://bugzilla.kernel.org/attachment.cgi?id=3D308962
+Hi,
 
-I see, thanks!
+There has been a regression in the dts for my system
+mt8183-kukui-krane, where changes in dts/mediatek/mt8183.dtsi broke my
+machine.
+
+The display works under v6.17.9 but is broken in v6.18-rc7. I was able
+to replicate / fix the issue just by using the dts from the other
+version.
+
+> On Wed, Nov 26, 2025 at 3:01=E2=80=AFAM Evans Jahja <evansjahja13@gmail.c=
+om> wrote:
+> >
+> > Hi,
+> >
+> > I have a Lenovo IdeaPad Duet Chromebook CT-X636F, detected as Mediatek
+> > krane sku176 board. (mt8183-kukui-krane)
+> >
+> > The display failed to initialize on the mainline kernel (linux
+> > 6.18-rc7). Using the same config, on stable (linux 6.17.9) the display
+> > works fine.
+> >
+> > config: https://bugzilla.kernel.org/show_bug.cgi?id=3D220803
+> >
+> > With the system on mainline kernel, I was able to check the serial
+> > console, the error on dmesg looks like this:
+> >
+> > [    6.513400] mediatek-drm mediatek-drm.18.auto: Building display
+> > pipeline for MMSYS 0
+> > [    6.514983] mediatek-drm mediatek-drm.18.auto: Display HW Pipeline
+> > built with 9 components.
+> > [    6.515009] mediatek-drm mediatek-drm.18.auto: Invalid display hw
+> > pipeline. Last component: 38 (ret=3D-2)
+> > [    6.524422] mediatek-drm mediatek-drm.18.auto: probe with driver
+> > mediatek-drm failed with error -22
+> >
+> > Temporarily modifying mtk_drm_drv.c by commenting calls to
+> > mtk_drm_of_ddp_path_build_one CRTC_EXT and CRTC_THIRD allows the
+> > display to function even on mainline. I was also able to add some
+> > logging and determine that building the HW pipeline for CRTC_MAIN
+> > works, but because building CRTC_EXT fails, the entire display would
+> > not initialize.
+> >
+
+I think this is the issue:
+https://lkml.org/lkml/2025/9/12/1242
+
+On Wed, Nov 26, 2025 at 2:06=E2=80=AFPM Evans Jahja <evansjahja13@gmail.com=
+> wrote:
+>
+> Hi Angelo, I was able to isolate the problem further to the dts. After
+> bisecting the arch/arm64/boot/dts/mediatek/ and building the dts, it
+> seems like this is the first commit that introduced the issue on my
+> device.
+>
+> commit e72d63fa0563f8a6e98c10fed3a9ce74dc0536e6 (HEAD)
+> Author: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.c=
+om>
+> Date:   Thu Jul 24 10:39:08 2025 +0200
+>
+>     arm64: dts: mediatek: mt8183: Migrate to display controller OF graph
+>
+> I am linking my full bisect log here:
+>
+> https://bugzilla.kernel.org/attachment.cgi?id=3D308962&action=3Dedit
+
+where we're unconditionally adding mmsys_ep_ext.
+
+The issue seems to be caused by the recent addition of CRTC_EXT on the
+base mt8183
+
+Please kindly take a look. Apologies for any mistake, this is my first issu=
+e.
+
+Evans Jahja
