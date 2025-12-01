@@ -1,79 +1,127 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF1091F4262
-	for <regressions@lists.linux.dev>; Sun, 30 Nov 2025 06:19:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FC6F4C79
+	for <regressions@lists.linux.dev>; Mon,  1 Dec 2025 04:59:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764483595; cv=none; b=XgNRR4jRIa9R3SxoZBc199LT7Q0zkA246S4CB8xFbdq9tVC3/9bdSj5Ixpeci2M9n7AlxvrINNRtisSy7xp8t3/9RDKzdtcPgH/SYhMCRx932IiKf9vY2+SqOKHcNJ4WnhfyB1BW3fOctykZ/kWKrkVdwAtl05bOO2GkcysuZuE=
+	t=1764565147; cv=none; b=nzZyR0hUddko92I8aMcCmFjwaNQMtLKv6Iv3mhI8Od97n/L12SJl3S97w7EhBO/xcPio/3T3SGHzkO2BoABI35o8/vjLQY2YPZ7i9Li50kRWryU0OVXWhkLQJzp5mWdiMeTwSEWXUDi8rhhPs4o3IWcTfKRpsxXFatFiKd+uO2g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764483595; c=relaxed/simple;
-	bh=sGhdmqu2vDJdYvpv29T3Uwo4nDJRMdKfogH8RLeMRKM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MAcATpgci0J293yE93jp8rhIFLQhgwdy1WHmxs9KUrLDOowZNmT9iI5ZB2PLgrZqCcb7YHZCo4SuKYuyR/AhYGTwqwD4wutwf5g+jWolSwFZa25UwhngVwSe6XhNjtrVB/97MiSMjvQ/syfRsky3/72XLqV5OZzzf8KrOLdEhAg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lcjD+K3V; arc=none smtp.client-ip=209.85.167.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1764565147; c=relaxed/simple;
+	bh=+EIwlpBUqsyYbLwByq9NCXfVAaiAP0qKb8xqjgpZl4U=;
+	h=Content-Type:MIME-Version:Subject:From:To:Cc:Date:Message-ID; b=O8wUsYM4eATEU8tfdAcnTaNBLXixRlEKQ+VG3cAubaaljcaNb42MkY50uHf2Pq//C/STM0J0lDUL+aU0nVlW4TfhYLp8LWponMQ5NFWzGwwJg1BIG0TuHLMfNBrg7WLaOtd8SFTBi6mf5Bzfvj4eloT57fuagZUBoh6acapUKrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org; spf=none smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b=v3Ehb1+o; arc=none smtp.client-ip=209.85.215.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=kernelci.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lcjD+K3V"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-5958232f806so3572151e87.0
-        for <regressions@lists.linux.dev>; Sat, 29 Nov 2025 22:19:53 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b="v3Ehb1+o"
+Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-bc8198fbaf8so3312166a12.1
+        for <regressions@lists.linux.dev>; Sun, 30 Nov 2025 20:59:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1764483592; x=1765088392; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=sGhdmqu2vDJdYvpv29T3Uwo4nDJRMdKfogH8RLeMRKM=;
-        b=lcjD+K3VQIuOzXyW8dhvsftO2ZZr4kflA1snsWRjrNSIB4F/zUC1oSHENwfTEy8mhC
-         mrsHXbg0NqALxWDAMDN3uaBvPGLoC9sMQFVnnvpL2PsO2bDylGWnw8lLZ4t+m2Ucx5Bb
-         3Xo4jFTwvCtF/jIWG2bBXGBhJ3WFYMNF574u6ji2M6j2TWSHIfdM1eOQW3rEQxMc5Nx1
-         bGkgS7yJRF74tFhobBrflH+LfAF12Un6KynwP9fKgpAB12letbPJMuHZmV3sX2djC5lW
-         b164YW0SySEiPf/68HctvIKMc9mweqSBTPE1ATNU5W38ZFgGeyPjGfS4Z6DYTFDE7Sef
-         Oyjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764483592; x=1765088392;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=kernelci-org.20230601.gappssmtp.com; s=20230601; t=1764565145; x=1765169945; darn=lists.linux.dev;
+        h=message-id:date:reply-to:cc:to:from:subject
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=sGhdmqu2vDJdYvpv29T3Uwo4nDJRMdKfogH8RLeMRKM=;
-        b=r2YLyAIVtnRab06Rx+jIscuwdKa4mCKTiDdYOyZq+CbJgCQGU2dhnkf7oNx3i3B36q
-         +3yaRD92EPvoSaY8E6THCBNZsRaBQWtjrEEUP3+hcO8nqJNIVhSOCRoSjwETg/GI2m59
-         8It0IRTzT49sdybs/A8tEH69Ki2VcZ5OOVXDiXCJJoBI+dX1uF36UuK7iSDAgieUs6Zb
-         uL0APi4oqQ/d8egagi3isXQuOxeLDLCf6pekzzININ7l2DuMGnJPfAgdmo2Xr0xkxE68
-         22PdoiaXQesGMUDJN7ota193tBOrNZtppN4hxhftf3hBSLOZ7cG0Q275Pm8Tf7DRXpMi
-         TxOw==
-X-Forwarded-Encrypted: i=1; AJvYcCWOiWAcqNDMTrGr2KAOvzXDtDBGTW2OFnxDd5RkOlwDm9FthOI4c3fmAQRPDLd5fFgnaP6qNjxdTaURgA==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yyn8+xvXRWwqFk/wCL2ISkkmr1tun4PxRGJcFGyKPAIqiQUAr3C
-	dMkSmGXFKV+gmdr7hjHAEIjaXzX/tGKHy0Yh1JpQLLRNulRJf3T8FXEm/zvDh+lPcA33qx2B/R2
-	bs7NYW3J/WKnEs1Zcudmpzd2TKOsidsI=
-X-Gm-Gg: ASbGncv2/ikLXkfsb+B7b6NXOkmfQTUx6qCCnHnhM019kLX+sm91WThm2Z9ZckLxJej
-	3PRdt6Rgh/eQce9chUWl8N9puWDwAlV75Ck2T6tIGcvOKHsKI+zJOHF9hNXzd7hmdfgEXKCkz6E
-	u2u5cdfMj57Zkvfs+laEuj8b2dBAVoIKpXnOzO8YuvVrHax2u11IKoHySqUtfOc3hGItLqxML9o
-	RvbYjfUyjEcD1yJPSfrosPtbGxSH569f9Lf03n9Uftkak7TpRgaXNpoQRufWWJ9DdGhZuA=
-X-Google-Smtp-Source: AGHT+IH2MO88uScxHMDf4tuCIJ0inMzI8LHCRFJ99as4ydVsVd0gxL3pNkpLASlnUmvk3UX5aKHdaBU5Ofumb8OBKCU=
-X-Received: by 2002:a05:6512:2353:b0:592:f115:292d with SMTP id
- 2adb3069b0e04-596a3e9fc81mr12809517e87.6.1764483591650; Sat, 29 Nov 2025
- 22:19:51 -0800 (PST)
+        bh=6pAnWnIu5S46aH9KnsXkcZMO4/jxhslu/gl8KYWhSqM=;
+        b=v3Ehb1+o7R3cS9c9PDUtofh6INAPnD7WWkQhmzezZNSylOLMVvet10HaUiS7J5DirB
+         SC9fG92q0MGjnvbttSDoS2qfwJ3yFmuFK2l9/CK2lE3wjWieUqUDgF0eEyd4TTzCVR0p
+         35nGlJ9OQkzFBorqz4YqdwB8w4s3hpf926jyDFH5E5qSP8v68eYG30Dk1xFSZE2WG4u/
+         u46DW5vbvuqbiEJzM2qSxt/yaWXFWbc7HSBvk7pBMdou4vRy7D1HNY9HAyMwIF6GBqun
+         PsuXYlf1HolAKB5T09pSZhnlDKu8P10XMppLGJrLe2I/HMNtgIgyuyBzMBh2lGFooSRs
+         HbsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764565145; x=1765169945;
+        h=message-id:date:reply-to:cc:to:from:subject
+         :content-transfer-encoding:mime-version:x-gm-gg:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=6pAnWnIu5S46aH9KnsXkcZMO4/jxhslu/gl8KYWhSqM=;
+        b=fCJcus3WN15YO5FIh0+5y2C9+wvP1zjciWD8IWHp4HYTdVb/8MK2kAZ4ujAw4YYvEw
+         onRSg3SslYOb9LfIdl8965j4g8HZ/5K4IVW0GruvExPgVOiRlTPSXJGPCp9DYoj2n0BN
+         lJc7SiNFu7dJuiFJgXiUAhqnYZfTa5CVipwCcDw64rAkl0qMZdzGw9ttmV0ENJo0OBEj
+         jd1o4J5jXFJ2juUt9aOpe5OCfxDF69OdRZAczJkifqizIt9BgNw2aVtxefnEZWMTkHRH
+         YkPpIjLEj5NiNRCYBSxuZsUIjE7CM/VEJkNgXhKGOSYzs04jXNA7FpZAMTlVDgKrhnMu
+         udGw==
+X-Gm-Message-State: AOJu0Yztleu4PBw5vAPekRekPzJqLpsS6BU61nWdpQkhmfikR/m6SfX7
+	9+uGHzhCNmrkV2oN5r9yiECc6w2K5Y7mbl0C1eLiRRTwriJUWYfY4rbc/1BfU3D4DgU=
+X-Gm-Gg: ASbGnctIATcK4e0KP6tkqmE83hXZcT5OwE3XaHjOQN4XZrkGk7ZShGPCA16j3c7XQap
+	F4oLITfuhHJs3pPsbU5jjWhTZhTGtXmBzsINSfktigc80BpS8QTSPvXHH7sKrN1+JVNcDi7UHIk
+	jCP/yLBY81uUoYmeXEYREm0+fGAdSJEsuuzlNOMFCcaCC86gwohWNpnGlJH4dXdrvS3ReEOV68R
+	Qi2pyydVFulaFQrZWtwjkpvEGqIArmwSHbEaEXpvPwvGts3S3EOgdq4i+KP9TXm08A3n7EveRmQ
+	dfE83mP+Wq8j9MUCBTSGvVetuztDXX7PyBmrTWlxCMzbK8jmDTWh+NcsZRxRukavN+g2ErmXloU
+	ILvm7KmtVYpoHZ/ChABs5nJ+KO1cgqHyG/0aNJvbbpl2aI7s8h3ZXz3SuNhxsHhI+FQ4WIf5vW+
+	3gO0gx
+X-Google-Smtp-Source: AGHT+IGmjx8PrX6KPsHurYpPBqeLlRTCXu1OJva+hUdPeGLMwD0iZbQ70UsIEmmYQmRQk/j61QZqZA==
+X-Received: by 2002:a05:7300:5a1d:b0:2a4:3593:969b with SMTP id 5a478bee46e88-2a71927a5a0mr18575760eec.24.1764565144618;
+        Sun, 30 Nov 2025 20:59:04 -0800 (PST)
+Received: from 1ece3ece63ba ([20.38.40.137])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2a9655ceb04sm40157011eec.1.2025.11.30.20.59.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 30 Nov 2025 20:59:03 -0800 (PST)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAAq5pW8q6V7x6qpYnE3xB99nVwE363keGiu+Jax0_zqPjogULw@mail.gmail.com>
- <CAAq5pW_saBZ+52zz2FYTt9SuWXj2KwX2Ld7AggVKAzca2m0Oow@mail.gmail.com>
- <CAAq5pW9o3itC0G16LnJO7KMAQ_XoqXUpB=cuJ_7e3-H11zKd5Q@mail.gmail.com> <CAAq5pW8-j6UzruT=SU05QgJ1AjLXeUwASLJ3O3SVKttaMbdTXQ@mail.gmail.com>
-In-Reply-To: <CAAq5pW8-j6UzruT=SU05QgJ1AjLXeUwASLJ3O3SVKttaMbdTXQ@mail.gmail.com>
-From: Evans Jahja <evansjahja13@gmail.com>
-Date: Sun, 30 Nov 2025 15:19:40 +0900
-X-Gm-Features: AWmQ_blI2ZZ1miUiA1xU7_l8uXC2UgmK51gDMeqlxRs8s6ycdOTn1lyROifxPJw
-Message-ID: <CAAq5pW-PLFuUVa9t_gmzhcrMsNRTruh7cD5-i5OPHp0zYfdFHw@mail.gmail.com>
-Subject: Re: [REGRESSION] mt8183-kukui: dts: changes in dts caused display to
- no longer initialize - Was: Re: mt8183-kukui: drm/mediatek: dts: Invalid
- display hw pipeline when probing mediatek-drm
-To: "angelogioacchino.delregno@collabora.com" <angelogioacchino.delregno@collabora.com>
-Cc: linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	matthias.bgg@gmail.com, regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Subject: 
+ =?utf-8?b?W1JFR1JFU1NJT05dIG5leHQvbWFzdGVyOiAoYnVpbGQpIOKAmHNldl90aW9fcHJl?=
+ =?utf-8?b?c2VudOKAmSBkZWZpbmVkIGJ1dCBub3QgdXNlZCBbLVdlcnJvcj11bnVzZWQtZnVu?=
+ =?utf-8?b?Y3Rpb25dIGkuLi4=?=
+From: KernelCI bot <bot@kernelci.org>
+To: kernelci-results@groups.io
+Cc: regressions@lists.linux.dev, gus@collabora.com, linux-next@vger.kernel.org
+Reply-To: kernelci@lists.linux.dev
+Date: Mon, 01 Dec 2025 04:59:03 -0000
+Message-ID: <176456514339.2642.17409010068566138864@1ece3ece63ba>
 
-#regzbot introduced: v6.17..e72d63fa0563
-#regzbot monitor: https://bugzilla.kernel.org/attachment.cgi?id=308962
+
+
+
+
+Hello,
+
+New build issue found on next/master:
+
+---
+ ‘sev_tio_present’ defined but not used [-Werror=unused-function] in drivers/crypto/ccp/sev-dev.o (drivers/crypto/ccp/sev-dev.c) [logspec:kbuild,kbuild.compiler.error]
+---
+
+- dashboard: https://d.kernelci.org/i/maestro:ce1c65862af14252fd16691d2f1397e0a5827d32
+- giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+- commit HEAD:  95cb2fd6ce0ad61af54191fe5ef271d7177f9c3a
+- tags: next-20251201
+
+Please include the KernelCI tag when submitting a fix:
+
+Reported-by: kernelci.org bot <bot@kernelci.org>
+
+
+Log excerpt:
+=====================================================
+drivers/crypto/ccp/sev-dev.c:1361:13: error: ‘sev_tio_present’ defined but not used [-Werror=unused-function]
+ 1361 | static bool sev_tio_present(struct sev_device *sev)
+      |             ^~~~~~~~~~~~~~~
+cc1: all warnings being treated as errors
+  AR      drivers/firmware/psci/built-in.a
+  CC      drivers/crypto/ccp/tee-dev.o
+
+=====================================================
+
+
+# Builds where the incident occurred:
+
+## cros://chromeos-6.12/x86_64/chromeos-amd-stoneyridge.flavour.config+lab-setup+x86-board+CONFIG_MODULE_COMPRESS=n+CONFIG_MODULE_COMPRESS_NONE=y on (x86_64):
+- compiler: gcc-14
+- config: https://files.kernelci.org/kbuild-gcc-14-x86-chromeos-amd-692d0f81f5b8743b1f6e0fde/.config
+- dashboard: https://d.kernelci.org/build/maestro:692d0f81f5b8743b1f6e0fde
+
+
+#kernelci issue maestro:ce1c65862af14252fd16691d2f1397e0a5827d32
+
+--
+This is an experimental report format. Please send feedback in!
+Talk to us at kernelci@lists.linux.dev
+
+Made with love by the KernelCI team - https://kernelci.org
