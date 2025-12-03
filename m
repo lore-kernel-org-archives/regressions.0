@@ -1,612 +1,70 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36F6A2E9EDD
-	for <regressions@lists.linux.dev>; Wed,  3 Dec 2025 09:42:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2238C279DAD
+	for <regressions@lists.linux.dev>; Wed,  3 Dec 2025 09:46:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764754965; cv=none; b=AVuqFZQiARkb6Dsf9ZslhhllReyWUlQSwx56u8ua3Y5QwIIBP4nNDublYg9OMBEKvFNHWNwBXpZPzcMwhFkn1bo0wLZ/avOMlG4pX1laQ12fBdwDd5BHMoFZuqrMViq/ahdYIiCSUI+my9TYbRymHrBEiRfTBnt6UTxPAxAkHh4=
+	t=1764755207; cv=none; b=lrjTtAeqYC9bEyK4aHPBKkHDyAcKIyTRo9uWrAsRFzNyt89lIh58+/YOVmMzwhv68VjEociUWM4yNb8nlq7ggDPKHWnJufmAKwkTfafHeXRoqbrCQTuKBrH536jD8f5zzWuYI5gkjYvtECXkCfh9Dn/8GAF17KmxooQubsnwh58=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764754965; c=relaxed/simple;
-	bh=5bJLhwgaOOB+7MmQE1kCaxy6HNMhSVJjcOeSIxsJ1JE=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uTdyelm0phbIK/VTC7VX31GZDUwpEzu6DiYIRQH6I+xlcWulchftefp5UEqR30urB6fm7cwTnYmA8CyR9Pd2wmECQJU9c2/uGUmWVXh3DH/WxUiJCbvKr1nUoBXh4Jaz/78cDikKMxATHND6pldBSqKzL/3jpEqmr5ql8BehWyk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=v0sbM61b; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=YBK4IXcl; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=v0sbM61b; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=YBK4IXcl; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1764755207; c=relaxed/simple;
+	bh=B7Bmcx9+cV7WL1CgP0dTzmyUWWerFQkGTPV4UozMr4s=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=aNU+xnsI1bg4YseooqvCtaB8STIrT/DQAQmXpI+PGnKs0C6p9sNY57/Yz2lX9urHA07AKmdc+ZS5wP7o0q/akYgiBVYC/fq365Vy1DVY2HqkzzbV0JVEr+MHYVerTGT2WlOdHRrS6pe73jMnvf0BFr9IUzQS5wgOZBHVtCGBh/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=S8WDqjC1; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="v0sbM61b";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="YBK4IXcl";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="v0sbM61b";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="YBK4IXcl"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 3D9D2336E1;
-	Wed,  3 Dec 2025 09:42:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1764754961; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pyf3805CYxZp0YJgzZsk8ik4AtAhgcf2o9QEYLt9/dM=;
-	b=v0sbM61b8YbsG5FuAgf1Tci6WvCgmqPjNfMnXAcnx4hBoUF7RxiLwfEWLoNYcl0NDDE/q0
-	zcse8eBxlhREgoSLWP87isffMgnSeCR5O30rw00r51UHHO90INGxX8yvHzc3ccf9V0yDZj
-	Ee5ULseJFistaZnD64UO0EqaRfOgkyE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1764754961;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pyf3805CYxZp0YJgzZsk8ik4AtAhgcf2o9QEYLt9/dM=;
-	b=YBK4IXclr9/PKXf4DkKFh0o9coRY2epeRTuZHpqQsOYnhnyrBgH7H6fAGlzOLkYymYv+lx
-	Qmzt6so1coooe6Cw==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1764754961; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pyf3805CYxZp0YJgzZsk8ik4AtAhgcf2o9QEYLt9/dM=;
-	b=v0sbM61b8YbsG5FuAgf1Tci6WvCgmqPjNfMnXAcnx4hBoUF7RxiLwfEWLoNYcl0NDDE/q0
-	zcse8eBxlhREgoSLWP87isffMgnSeCR5O30rw00r51UHHO90INGxX8yvHzc3ccf9V0yDZj
-	Ee5ULseJFistaZnD64UO0EqaRfOgkyE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1764754961;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pyf3805CYxZp0YJgzZsk8ik4AtAhgcf2o9QEYLt9/dM=;
-	b=YBK4IXclr9/PKXf4DkKFh0o9coRY2epeRTuZHpqQsOYnhnyrBgH7H6fAGlzOLkYymYv+lx
-	Qmzt6so1coooe6Cw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id AF1DB3EA63;
-	Wed,  3 Dec 2025 09:42:40 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 17WWKRAGMGn1GgAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Wed, 03 Dec 2025 09:42:40 +0000
-Date: Wed, 03 Dec 2025 10:42:40 +0100
-Message-ID: <871plbucj3.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Askar Safin <safinaskar@gmail.com>
-Cc: Takashi Iwai <tiwai@suse.de>,	Dell.Client.Kernel@dell.com,
-	amadeuszx.slawinski@linux.intel.com,	baojun.xu@ti.com,
-	bo.liu@senarytech.com,	cezary.rojewski@intel.com,
-	kai.vehmanen@linux.intel.com,	kailang@realtek.com,
-	linux-sound@vger.kernel.org,	patches@opensource.cirrus.com,
-	regressions@lists.linux.dev,	rf@opensource.cirrus.com,	Nicolas Schier
- <nsc@kernel.org>,	linux-kbuild@vger.kernel.org,	Masahiro Yamada
- <masahiroy@kernel.org>,	Nathan Chancellor <nathan@kernel.org>,
-	miguel.ojeda.sandonis@gmail.com,	ojeda@kernel.org,	sam@gentoo.org,	Thomas
- =?ISO-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,	Daniel Xu
- <dxu@dxuuu.xyz>
-Subject: Re: [REGRESSION][BISECTED] My audio broke (was: [PATCH 05/27] ALSA: hda: Move controller drivers into sound/hda/controllers directory)
-In-Reply-To: <CAPnZJGAxrVJooo9CdgExd+uR+s=W9Na2dZzyjKZc=xYZv_kvmA@mail.gmail.com>
-References: <87o6q8l68r.wl-tiwai@suse.de>
-	<20251015145749.2572-1-safinaskar@gmail.com>
-	<878qhckxc5.wl-tiwai@suse.de>
-	<CAPnZJGDeCkqqUpEh0SBfwvsxfMp9ZDXqvhrC1s9zRp6jX+Fvnw@mail.gmail.com>
-	<875xcgkvnw.wl-tiwai@suse.de>
-	<CAPnZJGDmCnKPz2eygwDjQGXZWVctGyJxV+OeFSLLeZPOCEvvbA@mail.gmail.com>
-	<CAPnZJGBdqPhmNOes4-BRu8C-0d3yco8H93WhdORxm7MRBSw7CQ@mail.gmail.com>
-	<CAPnZJGCqY9j-33piRBpkurSDsOfAqV6+ODGtToGDsgNQd-g9cQ@mail.gmail.com>
-	<87bjm78978.wl-tiwai@suse.de>
-	<CAPnZJGAxrVJooo9CdgExd+uR+s=W9Na2dZzyjKZc=xYZv_kvmA@mail.gmail.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/30.1 Mule/6.0
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="S8WDqjC1"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=B7Bmcx9+cV7WL1CgP0dTzmyUWWerFQkGTPV4UozMr4s=; t=1764755204;
+	x=1765187204; b=S8WDqjC1EpVdFSk4NPYqJdWu48Oju6NUw4oBZ1irrDMvMsD3ZcNdpOCIlvGs7
+	L4QyfNzul69vHzY2Tna34++6m0Fr4EfLyl2gH4Mm2bu8Cnh8JSDw3QViLSp7FKjZ4A49gF3lukqoA
+	oWdJoPix0/9u5hb2qSYTM+xDVZX13T6LL7vfPEcW78zpyF7nx8ymqDjk6tSsrw5dDzBRvmG3ykYcK
+	kiMnk3xo6Mspfy4l7ZqUq3hZwVzeN0MAlKlossS6L9MqxO6J0bITM6yGk5T58vZzC/ygOli03V5Ih
+	Z2DrQda38SgpkIJFj6Q6rSMqOJvgtAYxy58ijzB+GSJCpEP+ag==;
+Received: from [2a02:8108:8984:1d00:a0cf:1912:4be:477f]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128)
+	id 1vQj7N-004v9t-0B;
+	Wed, 03 Dec 2025 10:25:49 +0100
+Message-ID: <dfa83ff8-5243-42c9-bfa7-34c66e13f142@leemhuis.info>
+Date: Wed, 3 Dec 2025 10:25:48 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-1.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_TLS_ALL(0.00)[];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[22];
-	TAGGED_RCPT(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[suse.de,dell.com,linux.intel.com,ti.com,senarytech.com,intel.com,realtek.com,vger.kernel.org,opensource.cirrus.com,lists.linux.dev,kernel.org,gmail.com,gentoo.org,linutronix.de,dxuuu.xyz];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:mid,suse.de:email]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: -1.80
-
-On Tue, 02 Dec 2025 20:21:45 +0100,
-Askar Safin wrote:
-> 
-> On Thu, Oct 16, 2025 at 12:52 PM Takashi Iwai <tiwai@suse.de> wrote:
-> > Could you try to just enable CONFIG_SND_SOC_SOF_ALDERLAKE=m on top of
-> > the broken config?  If my guess is right, this should make the audio
-> > working again.
-> 
-> I did this. And the audio indeed works now.
-> 
-> Here are detailed logs:
-> 
-> - Here is Debian config for 6.18-rc7: [config-6.18-amd64]
-> - I downloaded vanilla Linux 6.18-rc7 from kernel.org
-> - I copied that Debian config (see above) as .config to Linux sources
-> - I did "LOCALVERSION=-first make --silent -j32 < /dev/null" ("<
-> /dev/null", because I don't want to answer any questions)
-> - This is output: [attachment first-out]
-> - Then I booted into it
-> - Audio works
-> - Here is config of this kernel: [config-6.18.0-rc7-first]
-> - Here is "find /lib/modules/6.18.0-rc7-first": [find-6.18.0-rc7-first]
-> - Here is alsa-info: [attachment alsa-info-first]
-> - Here is lsmod: [attachment first-lsmod]
-> - Then I "cd" into kernel source (note that ".config" remained since last time)
-> - I typed "make localmodconfig < /dev/null"
-> - Here is output: [attachment localmodconfig-out]
-> - I did "LOCALVERSION=-second make --silent -j32"
-> - This command didn't produce any output and didn't ask any questions
-> - Then I booted into new kernel
-> - Audio doesn't work
-> - Here is config of this kernel: [config-6.18.0-rc7-second]
-> - Here is "find /lib/modules/6.18.0-rc7-second": [find-6.18.0-rc7-second]
-> - Here is alsa-info: [attachment alsa-info-second]
-> - Here is lsmod: [attachment second-lsmod]
-> - I enabled CONFIG_SND_SOC_SOF_ALDERLAKE=m
-> - Then I booted into new kernel
-> - Audio works (!!!)
-> - Here is config: [config-6.18.0-rc7-third]
-> - Here is alsa-info: [alsa-info-third]
-> 
-> I used default Debian initramfs generator during all these tests.
-
-Then the problem is that snd-intel-dspcfg assigns
-SND_INTEL_DSP_DRIVER_ANY because no corresponding entry matches to
-your device without CONFIG_SND_SOC_SOF_ALDERLAKE.  This leads to let
-AVS probing it, then failing.
-
-A rather hackish fix would be something like below.  Instead of
-dropping the SOF-only entries via ifdef, make them dumb entries
-instead, so that the legacy driver are assigned for those when the
-kconfigs aren't set.
-
-The below patch is to the latest Linus tree, and for older kernels,
-you might need to adjust it, but you see what to be done there.
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1764755204;b645f92b;
+X-HE-SMSGID: 1vQj7N-004v9t-0B
 
 
-thanks,
 
-Takashi
+On 3/9/24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
--- 8< --
-diff --git a/sound/hda/core/intel-dsp-config.c b/sound/hda/core/intel-dsp-config.c
-index c401c0658421..818d8e502731 100644
---- a/sound/hda/core/intel-dsp-config.c
-+++ b/sound/hda/core/intel-dsp-config.c
-@@ -29,6 +29,9 @@ MODULE_PARM_DESC(dsp_driver, "Force the DSP driver for Intel DSP (0=auto, 1=lega
- #define FLAG_SOF_ONLY_IF_DMIC_OR_SOUNDWIRE (FLAG_SOF_ONLY_IF_DMIC | \
- 					    FLAG_SOF_ONLY_IF_SOUNDWIRE)
- 
-+/* Enable SOF only the given kconfig is enabled, otherwise fallback to legacy */
-+#define FLAG_SOF_DEP(cfg)	(IS_ENABLED(cfg) ? FLAG_SOF : 0)
-+
- struct config_entry {
- 	u32 flags;
- 	u16 device;
-@@ -209,11 +212,13 @@ static const struct config_entry config_table[] = {
- 		.device = PCI_DEVICE_ID_INTEL_HDA_CNL_LP,
- 		.codec_hid =  &essx_83x6,
- 	},
-+#endif
- 	{
--		.flags = FLAG_SOF | FLAG_SOF_ONLY_IF_DMIC_OR_SOUNDWIRE,
-+		.flags = FLAG_SOF_DEP(CONFIG_SND_SOC_SOF_CANNONLAKE) | \
-+			FLAG_SOF_ONLY_IF_DMIC_OR_SOUNDWIRE,
- 		.device = PCI_DEVICE_ID_INTEL_HDA_CNL_LP,
- 	},
--#endif
-+
- 
- /* Coffelake */
- #if IS_ENABLED(CONFIG_SND_SOC_SOF_COFFEELAKE)
-@@ -230,11 +235,12 @@ static const struct config_entry config_table[] = {
- 			{}
- 		}
- 	},
-+#endif
- 	{
--		.flags = FLAG_SOF | FLAG_SOF_ONLY_IF_DMIC_OR_SOUNDWIRE,
-+		.flags = FLAG_SOF_DEP(CONFIG_SND_SOC_SOF_COFFEELAKE) |\
-+			FLAG_SOF_ONLY_IF_DMIC_OR_SOUNDWIRE,
- 		.device = PCI_DEVICE_ID_INTEL_HDA_CNL_H,
- 	},
--#endif
- 
- #if IS_ENABLED(CONFIG_SND_SOC_SOF_COMETLAKE)
- /* Cometlake-LP */
-@@ -269,10 +275,6 @@ static const struct config_entry config_table[] = {
- 		.device = PCI_DEVICE_ID_INTEL_HDA_CML_LP,
- 		.codec_hid =  &essx_83x6,
- 	},
--	{
--		.flags = FLAG_SOF | FLAG_SOF_ONLY_IF_DMIC_OR_SOUNDWIRE,
--		.device = PCI_DEVICE_ID_INTEL_HDA_CML_LP,
--	},
- /* Cometlake-H */
- 	{
- 		.flags = FLAG_SOF,
-@@ -298,11 +300,17 @@ static const struct config_entry config_table[] = {
- 		.device = PCI_DEVICE_ID_INTEL_HDA_CML_H,
- 		.codec_hid =  &essx_83x6,
- 	},
-+#endif
- 	{
--		.flags = FLAG_SOF | FLAG_SOF_ONLY_IF_DMIC_OR_SOUNDWIRE,
-+		.flags = FLAG_SOF_DEP(CONFIG_SND_SOC_SOF_COMETLAKE) | \
-+			FLAG_SOF_ONLY_IF_DMIC_OR_SOUNDWIRE,
- 		.device = PCI_DEVICE_ID_INTEL_HDA_CML_H,
- 	},
--#endif
-+	{
-+		.flags = FLAG_SOF_DEP(CONFIG_SND_SOC_SOF_COMETLAKE) | \
-+			FLAG_SOF_ONLY_IF_DMIC_OR_SOUNDWIRE,
-+		.device = PCI_DEVICE_ID_INTEL_HDA_CML_LP,
-+	},
- 
- /* Icelake */
- #if IS_ENABLED(CONFIG_SND_SOC_SOF_ICELAKE)
-@@ -324,11 +332,12 @@ static const struct config_entry config_table[] = {
- 		.device = PCI_DEVICE_ID_INTEL_HDA_ICL_LP,
- 		.codec_hid =  &essx_83x6,
- 	},
-+#endif
- 	{
--		.flags = FLAG_SOF | FLAG_SOF_ONLY_IF_DMIC_OR_SOUNDWIRE,
-+		.flags = FLAG_SOF_DEP(CONFIG_SND_SOC_SOF_ICELAKE) | \
-+			FLAG_SOF_ONLY_IF_DMIC_OR_SOUNDWIRE,
- 		.device = PCI_DEVICE_ID_INTEL_HDA_ICL_LP,
- 	},
--#endif
- 
- /* Jasper Lake */
- #if IS_ENABLED(CONFIG_SND_SOC_SOF_JASPERLAKE)
-@@ -356,11 +365,12 @@ static const struct config_entry config_table[] = {
- 		.device = PCI_DEVICE_ID_INTEL_HDA_JSL_N,
- 		.codec_hid =  &essx_83x6,
- 	},
-+#endif
- 	{
--		.flags = FLAG_SOF | FLAG_SOF_ONLY_IF_DMIC,
-+		.flags = FLAG_SOF_DEP(CONFIG_SND_SOC_SOF_JASPERLAKE) | \
-+			FLAG_SOF_ONLY_IF_DMIC,
- 		.device = PCI_DEVICE_ID_INTEL_HDA_JSL_N,
- 	},
--#endif
- 
- /* Tigerlake */
- #if IS_ENABLED(CONFIG_SND_SOC_SOF_TIGERLAKE)
-@@ -388,137 +398,150 @@ static const struct config_entry config_table[] = {
- 		.device = PCI_DEVICE_ID_INTEL_HDA_TGL_LP,
- 		.codec_hid =  &essx_83x6,
- 	},
-+#endif
- 	{
--		.flags = FLAG_SOF | FLAG_SOF_ONLY_IF_DMIC_OR_SOUNDWIRE,
-+		.flags = FLAG_SOF_DEP(CONFIG_SND_SOC_SOF_TIGERLAKE) | \
-+			FLAG_SOF_ONLY_IF_DMIC_OR_SOUNDWIRE,
- 		.device = PCI_DEVICE_ID_INTEL_HDA_TGL_LP,
- 	},
- 	{
--		.flags = FLAG_SOF | FLAG_SOF_ONLY_IF_DMIC_OR_SOUNDWIRE,
-+		.flags = FLAG_SOF_DEP(CONFIG_SND_SOC_SOF_TIGERLAKE) | \
-+			FLAG_SOF_ONLY_IF_DMIC_OR_SOUNDWIRE,
- 		.device = PCI_DEVICE_ID_INTEL_HDA_TGL_H,
- 	},
--#endif
- 
- /* Elkhart Lake */
--#if IS_ENABLED(CONFIG_SND_SOC_SOF_ELKHARTLAKE)
- 	{
--		.flags = FLAG_SOF | FLAG_SOF_ONLY_IF_DMIC,
-+		.flags = FLAG_SOF_DEP(CONFIG_SND_SOC_SOF_ELKHARTLAKE) | \
-+			FLAG_SOF_ONLY_IF_DMIC,
- 		.device = PCI_DEVICE_ID_INTEL_HDA_EHL_0,
- 	},
- 	{
--		.flags = FLAG_SOF | FLAG_SOF_ONLY_IF_DMIC,
-+		.flags = FLAG_SOF_DEP(CONFIG_SND_SOC_SOF_ELKHARTLAKE) | \
-+			FLAG_SOF_ONLY_IF_DMIC,
- 		.device = PCI_DEVICE_ID_INTEL_HDA_EHL_3,
- 	},
--#endif
- 
- /* Alder Lake / Raptor Lake */
- #if IS_ENABLED(CONFIG_SND_SOC_SOF_ALDERLAKE)
- 	{
--		.flags = FLAG_SOF | FLAG_SOF_ONLY_IF_DMIC_OR_SOUNDWIRE,
-+		.flags = FLAG_SOF,
-+		.device = PCI_DEVICE_ID_INTEL_HDA_ADL_P,
-+		.dmi_table = (const struct dmi_system_id []) {
-+			{
-+				.ident = "Google Chromebooks",
-+				.matches = {
-+					DMI_MATCH(DMI_SYS_VENDOR, "Google"),
-+				}
-+			},
-+			{}
-+		}
-+	},
-+	{
-+		.flags = FLAG_SOF,
-+		.device = PCI_DEVICE_ID_INTEL_HDA_ADL_P,
-+		.codec_hid =  &essx_83x6,
-+	},
-+	{
-+		.flags = FLAG_SOF,
-+		.device = PCI_DEVICE_ID_INTEL_HDA_ADL_PS,
-+		.codec_hid =  &essx_83x6,
-+	},
-+	{
-+		.flags = FLAG_SOF,
-+		.device = PCI_DEVICE_ID_INTEL_HDA_ADL_N,
-+		.dmi_table = (const struct dmi_system_id []) {
-+			{
-+				.ident = "Google Chromebooks",
-+				.matches = {
-+					DMI_MATCH(DMI_SYS_VENDOR, "Google"),
-+				}
-+			},
-+			{}
-+		}
-+	},
-+	{
-+		.flags = FLAG_SOF,
-+		.device = PCI_DEVICE_ID_INTEL_HDA_RPL_P_0,
-+		.dmi_table = (const struct dmi_system_id []) {
-+			{
-+				.ident = "Google Chromebooks",
-+				.matches = {
-+					DMI_MATCH(DMI_SYS_VENDOR, "Google"),
-+				}
-+			},
-+			{}
-+		}
-+	},
-+	{
-+		.flags = FLAG_SOF,
-+		.device = PCI_DEVICE_ID_INTEL_HDA_RPL_P_1,
-+		.dmi_table = (const struct dmi_system_id []) {
-+			{
-+				.ident = "Google Chromebooks",
-+				.matches = {
-+					DMI_MATCH(DMI_SYS_VENDOR, "Google"),
-+				}
-+			},
-+			{}
-+		}
-+	},
-+#endif
-+	{
-+		.flags = FLAG_SOF_DEP(CONFIG_SND_SOC_SOF_ALDERLAKE) | \
-+			FLAG_SOF_ONLY_IF_DMIC_OR_SOUNDWIRE,
- 		.device = PCI_DEVICE_ID_INTEL_HDA_ADL_S,
- 	},
- 	{
--		.flags = FLAG_SOF | FLAG_SOF_ONLY_IF_DMIC_OR_SOUNDWIRE,
-+		.flags = FLAG_SOF_DEP(CONFIG_SND_SOC_SOF_ALDERLAKE) | \
-+			FLAG_SOF_ONLY_IF_DMIC_OR_SOUNDWIRE,
- 		.device = PCI_DEVICE_ID_INTEL_HDA_RPL_S,
- 	},
- 	{
--		.flags = FLAG_SOF,
--		.device = PCI_DEVICE_ID_INTEL_HDA_ADL_P,
--		.dmi_table = (const struct dmi_system_id []) {
--			{
--				.ident = "Google Chromebooks",
--				.matches = {
--					DMI_MATCH(DMI_SYS_VENDOR, "Google"),
--				}
--			},
--			{}
--		}
--	},
--	{
--		.flags = FLAG_SOF,
--		.device = PCI_DEVICE_ID_INTEL_HDA_ADL_P,
--		.codec_hid =  &essx_83x6,
--	},
--	{
--		.flags = FLAG_SOF | FLAG_SOF_ONLY_IF_DMIC_OR_SOUNDWIRE,
-+		.flags = FLAG_SOF_DEP(CONFIG_SND_SOC_SOF_ALDERLAKE) | \
-+			FLAG_SOF_ONLY_IF_DMIC_OR_SOUNDWIRE,
- 		.device = PCI_DEVICE_ID_INTEL_HDA_ADL_P,
- 	},
- 	{
--		.flags = FLAG_SOF | FLAG_SOF_ONLY_IF_DMIC_OR_SOUNDWIRE,
-+		.flags = FLAG_SOF_DEP(CONFIG_SND_SOC_SOF_ALDERLAKE) | \
-+			FLAG_SOF_ONLY_IF_DMIC_OR_SOUNDWIRE,
- 		.device = PCI_DEVICE_ID_INTEL_HDA_ADL_PX,
- 	},
- 	{
--		.flags = FLAG_SOF,
--		.device = PCI_DEVICE_ID_INTEL_HDA_ADL_PS,
--		.codec_hid =  &essx_83x6,
--	},
--	{
--		.flags = FLAG_SOF | FLAG_SOF_ONLY_IF_DMIC_OR_SOUNDWIRE,
-+		.flags = FLAG_SOF_DEP(CONFIG_SND_SOC_SOF_ALDERLAKE) | \
-+			FLAG_SOF_ONLY_IF_DMIC_OR_SOUNDWIRE,
- 		.device = PCI_DEVICE_ID_INTEL_HDA_ADL_PS,
- 	},
- 	{
--		.flags = FLAG_SOF | FLAG_SOF_ONLY_IF_DMIC_OR_SOUNDWIRE,
-+		.flags = FLAG_SOF_DEP(CONFIG_SND_SOC_SOF_ALDERLAKE) | \
-+			FLAG_SOF_ONLY_IF_DMIC_OR_SOUNDWIRE,
- 		.device = PCI_DEVICE_ID_INTEL_HDA_ADL_M,
- 	},
- 	{
--		.flags = FLAG_SOF,
--		.device = PCI_DEVICE_ID_INTEL_HDA_ADL_N,
--		.dmi_table = (const struct dmi_system_id []) {
--			{
--				.ident = "Google Chromebooks",
--				.matches = {
--					DMI_MATCH(DMI_SYS_VENDOR, "Google"),
--				}
--			},
--			{}
--		}
--	},
--	{
--		.flags = FLAG_SOF | FLAG_SOF_ONLY_IF_DMIC_OR_SOUNDWIRE,
-+		.flags = FLAG_SOF_DEP(CONFIG_SND_SOC_SOF_ALDERLAKE) | \
-+			FLAG_SOF_ONLY_IF_DMIC_OR_SOUNDWIRE,
- 		.device = PCI_DEVICE_ID_INTEL_HDA_ADL_N,
- 	},
- 	{
--		.flags = FLAG_SOF,
--		.device = PCI_DEVICE_ID_INTEL_HDA_RPL_P_0,
--		.dmi_table = (const struct dmi_system_id []) {
--			{
--				.ident = "Google Chromebooks",
--				.matches = {
--					DMI_MATCH(DMI_SYS_VENDOR, "Google"),
--				}
--			},
--			{}
--		}
--	},
--	{
--		.flags = FLAG_SOF | FLAG_SOF_ONLY_IF_DMIC_OR_SOUNDWIRE,
-+		.flags = FLAG_SOF_DEP(CONFIG_SND_SOC_SOF_ALDERLAKE) | \
-+			FLAG_SOF_ONLY_IF_DMIC_OR_SOUNDWIRE,
- 		.device = PCI_DEVICE_ID_INTEL_HDA_RPL_P_0,
- 	},
- 	{
--		.flags = FLAG_SOF,
--		.device = PCI_DEVICE_ID_INTEL_HDA_RPL_P_1,
--		.dmi_table = (const struct dmi_system_id []) {
--			{
--				.ident = "Google Chromebooks",
--				.matches = {
--					DMI_MATCH(DMI_SYS_VENDOR, "Google"),
--				}
--			},
--			{}
--		}
--	},
--	{
--		.flags = FLAG_SOF | FLAG_SOF_ONLY_IF_DMIC_OR_SOUNDWIRE,
-+		.flags = FLAG_SOF_DEP(CONFIG_SND_SOC_SOF_ALDERLAKE) | \
-+			FLAG_SOF_ONLY_IF_DMIC_OR_SOUNDWIRE,
- 		.device = PCI_DEVICE_ID_INTEL_HDA_RPL_P_1,
- 	},
- 	{
--		.flags = FLAG_SOF | FLAG_SOF_ONLY_IF_DMIC_OR_SOUNDWIRE,
-+		.flags = FLAG_SOF_DEP(CONFIG_SND_SOC_SOF_ALDERLAKE) | \
-+			FLAG_SOF_ONLY_IF_DMIC_OR_SOUNDWIRE,
- 		.device = PCI_DEVICE_ID_INTEL_HDA_RPL_M,
- 	},
- 	{
--		.flags = FLAG_SOF | FLAG_SOF_ONLY_IF_DMIC_OR_SOUNDWIRE,
-+		.flags = FLAG_SOF_DEP(CONFIG_SND_SOC_SOF_ALDERLAKE) | \
-+			FLAG_SOF_ONLY_IF_DMIC_OR_SOUNDWIRE,
- 		.device = PCI_DEVICE_ID_INTEL_HDA_RPL_PX,
- 	},
--#endif
- 
- /* Meteor Lake */
- #if IS_ENABLED(CONFIG_SND_SOC_SOF_METEORLAKE)
-@@ -536,55 +559,56 @@ static const struct config_entry config_table[] = {
- 			{}
- 		}
- 	},
-+#endif
- 	{
--		.flags = FLAG_SOF | FLAG_SOF_ONLY_IF_DMIC_OR_SOUNDWIRE,
-+		.flags = FLAG_SOF_DEP(CONFIG_SND_SOC_SOF_METEORLAKE) | \
-+			FLAG_SOF_ONLY_IF_DMIC_OR_SOUNDWIRE,
- 		.device = PCI_DEVICE_ID_INTEL_HDA_MTL,
- 	},
- 	/* ArrowLake-S */
- 	{
--		.flags = FLAG_SOF | FLAG_SOF_ONLY_IF_DMIC_OR_SOUNDWIRE,
-+		.flags = FLAG_SOF_DEP(CONFIG_SND_SOC_SOF_METEORLAKE) | \
-+			FLAG_SOF_ONLY_IF_DMIC_OR_SOUNDWIRE,
- 		.device = PCI_DEVICE_ID_INTEL_HDA_ARL_S,
- 	},
- 	/* ArrowLake */
- 	{
--		.flags = FLAG_SOF | FLAG_SOF_ONLY_IF_DMIC_OR_SOUNDWIRE,
-+		.flags = FLAG_SOF_DEP(CONFIG_SND_SOC_SOF_METEORLAKE) | \
-+			FLAG_SOF_ONLY_IF_DMIC_OR_SOUNDWIRE,
- 		.device = PCI_DEVICE_ID_INTEL_HDA_ARL,
- 	},
--#endif
- 
- /* Lunar Lake */
--#if IS_ENABLED(CONFIG_SND_SOC_SOF_LUNARLAKE)
- 	/* Lunarlake-P */
- 	{
--		.flags = FLAG_SOF | FLAG_SOF_ONLY_IF_DMIC_OR_SOUNDWIRE,
-+		.flags = FLAG_SOF_DEP(CONFIG_SND_SOC_SOF_LUNARLAKE) | \
-+			FLAG_SOF_ONLY_IF_DMIC_OR_SOUNDWIRE,
- 		.device = PCI_DEVICE_ID_INTEL_HDA_LNL_P,
- 	},
--#endif
- 
- 	/* Panther Lake, Wildcat Lake */
--#if IS_ENABLED(CONFIG_SND_SOC_SOF_PANTHERLAKE)
- 	{
--		.flags = FLAG_SOF | FLAG_SOF_ONLY_IF_DMIC_OR_SOUNDWIRE,
-+		.flags = FLAG_SOF_DEP(CONFIG_SND_SOC_SOF_PANTHERLAKE) | \
-+			FLAG_SOF_ONLY_IF_DMIC_OR_SOUNDWIRE,
- 		.device = PCI_DEVICE_ID_INTEL_HDA_PTL,
- 	},
- 	{
--		.flags = FLAG_SOF | FLAG_SOF_ONLY_IF_DMIC_OR_SOUNDWIRE,
-+		.flags = FLAG_SOF_DEP(CONFIG_SND_SOC_SOF_PANTHERLAKE) | \
-+			FLAG_SOF_ONLY_IF_DMIC_OR_SOUNDWIRE,
- 		.device = PCI_DEVICE_ID_INTEL_HDA_PTL_H,
- 	},
- 	{
--		.flags = FLAG_SOF | FLAG_SOF_ONLY_IF_DMIC_OR_SOUNDWIRE,
-+		.flags = FLAG_SOF_DEP(CONFIG_SND_SOC_SOF_PANTHERLAKE) | \
-+			FLAG_SOF_ONLY_IF_DMIC_OR_SOUNDWIRE,
- 		.device = PCI_DEVICE_ID_INTEL_HDA_WCL,
- 	},
- 
--#endif
--
- 	/* Nova Lake */
--#if IS_ENABLED(CONFIG_SND_SOC_SOF_NOVALAKE)
- 	{
--		.flags = FLAG_SOF | FLAG_SOF_ONLY_IF_DMIC_OR_SOUNDWIRE,
-+		.flags = FLAG_SOF_DEP(CONFIG_SND_SOC_SOF_NOVALAKE) |\
-+			FLAG_SOF_ONLY_IF_DMIC_OR_SOUNDWIRE,
- 		.device = PCI_DEVICE_ID_INTEL_HDA_NVL_S,
- 	},
--#endif
- 
- };
- 
+#regzbot report:
+https://lore.kernel.org/lkml/CAAq5pW_saBZ+52zz2FYTt9SuWXj2KwX2Ld7AggVKAzca2m0Oow@mail.gmail.com/
+#regzbot introduced: e72d63fa0563f8a6e98c10fed3a
+#regzbot title: drm/mediatek: dts: display fails to initialize
+#regzbot dup: https://bugzilla.kernel.org/show_bug.cgi?id=220803
+
+
+
