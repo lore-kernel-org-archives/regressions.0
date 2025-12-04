@@ -1,38 +1,38 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9BB1335070;
-	Thu,  4 Dec 2025 11:53:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB4C923EABD;
+	Thu,  4 Dec 2025 14:44:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764849196; cv=none; b=toWfzZDtsFg9P2lwTKYpW28nnSCCELBH2EPXbHOt1Abftukjs22r8j7qqu5eTRMdZ4MmeYopUSHiSGQOU4EGk7JwSkY8lkqP4hQ8Zc21xxEzEYzw/zX+iFhjk1GrwaVzlkrOIEKcjoUeCVroDzWyfB9jMlv1vL3tOr7dQZt80rE=
+	t=1764859501; cv=none; b=NMDMmMD32zwKX7iAukcRfOOm909K3dGWLncQD+F3ULXP9VZwGi+dtlaRzrut9Af7A0QXP/wm4zWayG+2a9JzwGaxFzRB4V5VFtIg4PKcHixQxE53S/uEgnbcxqH+PqP8DjiueyfUwpjFcH7r/d8qJ0GHdrOYGDp+TjgL6mUbw5Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764849196; c=relaxed/simple;
-	bh=Mfjbfpp/0gwfxAfbud+u2b4E/dP61WOnt2PhVBGLoGA=;
-	h=Message-ID:Date:MIME-Version:Subject:References:From:Cc:To:
-	 In-Reply-To:Content-Type; b=OFk5k6J1ybCE/fjNJrOXZI2zaJpg1eeQIa8RwI+d23olkq57Iw4nIpQaNMw+WUWhyb2M1qd+6J76UDF+SIL8FjyHJkKrckGIblaWxe+goAbVlWmYSHGI7EbKcYsqhg+bjwxUrlqpWeEQxVKbXyYwWdIMl8nvJvAAwp0XZ6DMLuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=yezYnQPh; arc=none smtp.client-ip=80.237.130.52
+	s=arc-20240116; t=1764859501; c=relaxed/simple;
+	bh=BZEUPbQh8vHGgGUpk/lznqtideTsMIdugh5uEjpNAIQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VjZvC/u4rxZVIHbafEAYLWRG+pVgwRY2rZOmsxPclWZ6UAcZeT9nlzJ6oROkeOjWigfC3T66Gpvt4jHAkrkYfz6c2Cliwt9Ql0XlSnUGheUJ1G9mY49iphL2qd+4Nr2Xt/KrHnT7UbOmMPfrkpRYSNsm9kwdgT6OQ26oBRtrMSg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=tE7JZB0x; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="yezYnQPh"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="tE7JZB0x"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:To:Cc:From:References:Subject:MIME-Version:Date:Message-ID:From:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
 	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
 	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=iX3gKN6EvUH85dcLjdOxFvt2aveGDYYKGTRSu9FxyfA=; t=1764849194;
-	x=1765281194; b=yezYnQPh29trVrSItYo7gZBKTZWOFho4bSHR1YGyCiwIdj+XxDVJUO7Jgaitu
-	KAuXa16u4isNWm4FuQwDrxlq+ojgbSxwN1551WuTxKUP7qLRfdYdqs0KU2yUHdHDvxOUcBJiYdZLJ
-	Rp9pU4I36/opkIQbyi55tT/HDJ9yPK+Kf+T3Togb9uDI1YG06e23zPI5lhd8wEdSJXMvL4nciwys0
-	FElPn5ngQiKERJxrkHvWD+ksKEshGST2X6R5IWYivnJ8p3Sp0KBswg0Wl/31TzVVABZBY88dDhmQV
-	WcoaQioGcj2GRrSLXms8QQOV/zUFMbQkPR1D+M/k2+drHru8ig==;
+	References; bh=WsDtMRP6iyLXex45E7C5K6DghytfCjr+yYUzlpKqZ6s=; t=1764859499;
+	x=1765291499; b=tE7JZB0xFHNp+SpqaujxV0pRU2ERyjtBQmV/yyVV068GvDKlSzxYzy3xmEBbT
+	kZCqZ8lO9CTL7BIj3bdgpZDhm++dNGMFqi5vexVRsrsfGeLahMr9y3QGw/Ns3y0+QKj9lC5to35rz
+	EcUcNnNRUzU6h1skp7VzIY6CAY+8/Mdq7mSMrMlhYrB2YHZ51ZiKL0bK2HvY4fS9w+sDgcQQ4izBb
+	sYVOvfS0v7GeRM066OrEZMYFxYoQIcxmlpAtaLDw+jURI/rcaz+1LJpAy+TB52CCtpCzHslcOBlHY
+	L4ZfwWGIQpbZ/4zWzAvOUjidwIxG19WeEk6IXvCE3Xv9Dg9z9Q==;
 Received: from [2a02:8108:8984:1d00:a0cf:1912:4be:477f]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128)
-	id 1vR7tS-008nsc-2j;
-	Thu, 04 Dec 2025 12:53:06 +0100
-Message-ID: <418484c3-e65b-414d-ad2c-71e832ae7af2@leemhuis.info>
-Date: Thu, 4 Dec 2025 12:53:06 +0100
+	id 1vRAZk-009Fkr-0b;
+	Thu, 04 Dec 2025 15:44:56 +0100
+Message-ID: <f0595a07-c722-4eec-88b3-a7a60142e449@leemhuis.info>
+Date: Thu, 4 Dec 2025 15:44:55 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -40,42 +40,111 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION]: mlx5_core does not autoload in Linux 6.18
-References: <a939e5fc-c5ea-4a9e-8566-54dfa54bb0da@gmail.com>
+Subject: Re: [REGRESSION] mt8183-kukui: dts: changes in dts caused display to
+ no longer initialize - Was: Re: mt8183-kukui: drm/mediatek: dts: Invalid
+ display hw pipeline when probing mediatek-drm
+To: "angelogioacchino.delregno@collabora.com"
+ <angelogioacchino.delregno@collabora.com>,
+ Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Evans Jahja <evansjahja13@gmail.com>, linux-mediatek@lists.infradead.org,
+ linux-kernel@vger.kernel.org, regressions@lists.linux.dev
+References: <CAAq5pW8q6V7x6qpYnE3xB99nVwE363keGiu+Jax0_zqPjogULw@mail.gmail.com>
+ <CAAq5pW_saBZ+52zz2FYTt9SuWXj2KwX2Ld7AggVKAzca2m0Oow@mail.gmail.com>
+ <CAAq5pW9o3itC0G16LnJO7KMAQ_XoqXUpB=cuJ_7e3-H11zKd5Q@mail.gmail.com>
+ <CAAq5pW8-j6UzruT=SU05QgJ1AjLXeUwASLJ3O3SVKttaMbdTXQ@mail.gmail.com>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
 Content-Language: de-DE, en-US
-Cc: regressions@lists.linux.dev, Demi Marie Obenour <demiobenour@gmail.com>
-To: Saeed Mahameed <saeedm@nvidia.com>, Tariq Toukan <tariqt@nvidia.com>,
- Mark Bloch <mbloch@nvidia.com>, netdev <netdev@vger.kernel.org>
-In-Reply-To: <a939e5fc-c5ea-4a9e-8566-54dfa54bb0da@gmail.com>
+In-Reply-To: <CAAq5pW8-j6UzruT=SU05QgJ1AjLXeUwASLJ3O3SVKttaMbdTXQ@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1764849194;ad24a402;
-X-HE-SMSGID: 1vR7tS-008nsc-2j
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1764859499;8e4e9122;
+X-HE-SMSGID: 1vRAZk-009Fkr-0b
 
-Lo! Thx for the report.
+Lo!
 
-Let me CC the maintainers of said driver, maybe they have an idea or
-even head about the problem already. If not, you might need to bisect this.
+Matthias, AngeloGioacchino, have you maybe looked into regression that
+seems to be caused by 72d63fa0563f8 ("arm64: dts: mediatek: mt8183:
+Migrate to display controller OF graph")?
 
-On 12/4/25 08:54, Demi Marie Obenour wrote:
-> In Linux 6.18, mlx5_core does not load automatically.  This causes
-> my server to not be accessible from the network.  Manually loading
-> the module in the initramfs fixes the problem.  Everything worked
-> with Linux 6.17.x.
-> 
-> I'm using the linuxPackages_latest package from Nixpkgs.
-
-Mentioning it like that might scare kernel developers, as they have no
-idea what this is and thus might suspect that it's a vendor kernel with
-lots of patches applied. Is that the case? Or is that vanilla or at
-least close to vanilla?
-
->  The server is a RISE-7 OVH dedicated server with an AMD Epyc 7402 CPU.
+Evans Jahja, just to be sure: I suppose it still happens with 6.18
+final? And have you tried if reverting the change fixes this ("fix the
+issue just by using the dts from the other version" might have changed
+other things as well, that's why I'm asking)
 
 Ciao, Thorsten
 
-#regzbot ^introduced: v6.17..v6.18
-#regzbot title: net: mlx5_core: module does not autoload anymore Linux 6.18
-
+On 11/28/25 03:59, Evans Jahja wrote:
+> Hi,
+> 
+> There has been a regression in the dts for my system
+> mt8183-kukui-krane, where changes in dts/mediatek/mt8183.dtsi broke my
+> machine.
+> 
+> The display works under v6.17.9 but is broken in v6.18-rc7. I was able
+> to replicate / fix the issue just by using the dts from the other
+> version.
+> 
+>> On Wed, Nov 26, 2025 at 3:01 AM Evans Jahja <evansjahja13@gmail.com> wrote:
+>>>
+>>> Hi,
+>>>
+>>> I have a Lenovo IdeaPad Duet Chromebook CT-X636F, detected as Mediatek
+>>> krane sku176 board. (mt8183-kukui-krane)
+>>>
+>>> The display failed to initialize on the mainline kernel (linux
+>>> 6.18-rc7). Using the same config, on stable (linux 6.17.9) the display
+>>> works fine.
+>>>
+>>> config: https://bugzilla.kernel.org/show_bug.cgi?id=220803
+>>>
+>>> With the system on mainline kernel, I was able to check the serial
+>>> console, the error on dmesg looks like this:
+>>>
+>>> [    6.513400] mediatek-drm mediatek-drm.18.auto: Building display
+>>> pipeline for MMSYS 0
+>>> [    6.514983] mediatek-drm mediatek-drm.18.auto: Display HW Pipeline
+>>> built with 9 components.
+>>> [    6.515009] mediatek-drm mediatek-drm.18.auto: Invalid display hw
+>>> pipeline. Last component: 38 (ret=-2)
+>>> [    6.524422] mediatek-drm mediatek-drm.18.auto: probe with driver
+>>> mediatek-drm failed with error -22
+>>>
+>>> Temporarily modifying mtk_drm_drv.c by commenting calls to
+>>> mtk_drm_of_ddp_path_build_one CRTC_EXT and CRTC_THIRD allows the
+>>> display to function even on mainline. I was also able to add some
+>>> logging and determine that building the HW pipeline for CRTC_MAIN
+>>> works, but because building CRTC_EXT fails, the entire display would
+>>> not initialize.
+>>>
+> 
+> I think this is the issue:
+> https://lkml.org/lkml/2025/9/12/1242
+> 
+> On Wed, Nov 26, 2025 at 2:06 PM Evans Jahja <evansjahja13@gmail.com> wrote:
+>>
+>> Hi Angelo, I was able to isolate the problem further to the dts. After
+>> bisecting the arch/arm64/boot/dts/mediatek/ and building the dts, it
+>> seems like this is the first commit that introduced the issue on my
+>> device.
+>>
+>> commit e72d63fa0563f8a6e98c10fed3a9ce74dc0536e6 (HEAD)
+>> Author: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+>> Date:   Thu Jul 24 10:39:08 2025 +0200
+>>
+>>     arm64: dts: mediatek: mt8183: Migrate to display controller OF graph
+>>
+>> I am linking my full bisect log here:
+>>
+>> https://bugzilla.kernel.org/attachment.cgi?id=308962&action=edit
+> 
+> where we're unconditionally adding mmsys_ep_ext.
+> 
+> The issue seems to be caused by the recent addition of CRTC_EXT on the
+> base mt8183
+> 
+> Please kindly take a look. Apologies for any mistake, this is my first issue.
+> 
+> Evans Jahja
+> 
+> 
 
