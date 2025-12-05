@@ -1,107 +1,104 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE0D432ED51
-	for <regressions@lists.linux.dev>; Fri,  5 Dec 2025 13:56:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DF6D29DB64
+	for <regressions@lists.linux.dev>; Fri,  5 Dec 2025 14:57:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764942969; cv=none; b=lpalJQQqSy1907HO06KnUxSfeSSJpLdTI2XEuKX0QH5eL2Lu5hhf9AIN+vzsitccmJiGMdQkQbXdGdn/MinIhySa4AN7JzRqA4986pyFuIhZdTWhkVxaznR4mGtntcNhGVLY4zqHI50HvN/VyrxWbw7it3gMuyedLPO/xtrYp/Y=
+	t=1764946681; cv=none; b=BEabOwNhDYHpc4M9pZKbwr70G+E91sdNxjRtKE3NuRwhPAil9eqPY8kBpvQ2OWmi8d66UFUf3hB4zxxdysvFv5MDZO2+3qBSF4mfrP27b9nev8wTgNTyLrNJ4122nCL7RM8FnrxzuekwgYqL4J5OvYrzIweJOfnfgm38NZHziDI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764942969; c=relaxed/simple;
-	bh=n/BIBT2TQ6QLo2HPDq8SQzsjDi1TV37C1BbUNQ906YI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AIn6wdUCovch9lR7aO5FOV9Of72wTpPVph1fX0x7cGzskTj7OSNsUFN/xv0+rOwOzpX0XTKGF9ZBdby0ivRhWmG+shoRP8wIJYqbetyVuY/9j7EUfonLbRb3yH5GVtWKIwX0PBBg8Vnnwl4r6R5AxRpJFibMpmrPYB0WvZBPPl0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QG32UTFw; arc=none smtp.client-ip=192.198.163.10
+	s=arc-20240116; t=1764946681; c=relaxed/simple;
+	bh=nLhQ+6puMkQt1v1zxy7NeuDc0Bm0+2SoBcV2k6IPUns=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=m3XYoi0y2q0PkYRlAR3EQf03XJmoW74SlOo9C4yXVVsNgaGrzltxZ3BBYWcw13SDAJYetKizfkDcR82gVN326FCMsmMUy7fTWEHILlA9uywKTKkSaShw19gHwe9+PjLnIlml5ZdT4q2YAYq0iigFtlRWBgiXKQOSJ8wblGKDh6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ddXmvV47; arc=none smtp.client-ip=192.198.163.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QG32UTFw"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ddXmvV47"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1764942967; x=1796478967;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=n/BIBT2TQ6QLo2HPDq8SQzsjDi1TV37C1BbUNQ906YI=;
-  b=QG32UTFwhRMgMl/2SRE1ooZOELVEGwwTiYshWw7kdeU+Qz4V7718dP9T
-   ur7TroFUWY34Eg78G/RXEsyWlNvcdXAE5uLyGy/GK8/w2ioAHCWSyUp6A
-   qlihmJsaHHJGfue1CB4/9jfYfk/VK5/YYLcHzScWOfCYSZ6EWagJIn6ZZ
-   5v6qq7OqPguetJexg+GDX9DgjCEP5XZTcs1Ae0FOMWcBmahoV6P+t78ET
-   kusyv6Rh/GDeBz/GCCWza/enxcrTSuGIjoyWA5jC4I/qEWZPTusc5sLJp
-   eNDrkBKe1B9IZuOGWx71Fl6og/NVbYYyvXp2gCDJ50QX32bHpdx5X38JI
-   Q==;
-X-CSE-ConnectionGUID: C6UkVUWsRH6EoG3+Y930hg==
-X-CSE-MsgGUID: Nap2q2TuQymoGQ2EfnasXw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11632"; a="78326741"
+  t=1764946677; x=1796482677;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=nLhQ+6puMkQt1v1zxy7NeuDc0Bm0+2SoBcV2k6IPUns=;
+  b=ddXmvV47JSnfOwrb1T0nXKSKgxJusXOZMyGX7S6JWMcPXtMpkmZkMEop
+   brkaf8DE6ru3asNAoF8omo7f6Di40kFs9lI3Yu9pHBRMjaGdcP1NO9Zp5
+   3Qj2oBtV0hUmrvTiwLsGZFfeeIHoFzcC91jdT1xUqU9jB1LUiwfbdP/9G
+   m6QGYBhjWvQFElfBVdWBMVxui3dS+b/+szdDPlsUfYmdMFAETZGORbYXQ
+   9vczRZGvIA1/9SRLhLYSuL3U7gvamMEmutPl4zS1DKwK8Z0AYjMhb2aMU
+   r7wa1waumHIi7Z0J8JIf+RnoZGGKROe9ZSen9Aidy8T1WwhFaJPJONnhQ
+   g==;
+X-CSE-ConnectionGUID: qRO9X6rQSb+YlclOiKUm/Q==
+X-CSE-MsgGUID: WFEhyqYnTxKdoDVqF7M7Jw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11633"; a="67056153"
 X-IronPort-AV: E=Sophos;i="6.20,252,1758610800"; 
-   d="scan'208";a="78326741"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2025 05:56:03 -0800
-X-CSE-ConnectionGUID: lQVfrKF8SEGtxxPxGSHIpw==
-X-CSE-MsgGUID: bi/wNcI6RlWASQ7eoOqxCw==
+   d="scan'208";a="67056153"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2025 06:57:55 -0800
+X-CSE-ConnectionGUID: IlvSvx9PQQGL3wjLdvECjQ==
+X-CSE-MsgGUID: ZF8nmjC9RbiuHY8YTnpetg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.20,252,1758610800"; 
-   d="scan'208";a="195326665"
-Received: from pgcooper-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.244.83])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2025 05:56:00 -0800
-Date: Fri, 5 Dec 2025 15:55:58 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Askar Safin <safinaskar@gmail.com>
-Cc: Dell.Client.Kernel@dell.com, bartosz.golaszewski@linaro.org,
-	benjamin.tissoires@redhat.com, dmitry.torokhov@gmail.com,
-	linux-acpi@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-i2c@vger.kernel.org, regressions@lists.linux.dev,
-	rrangel@chromium.org, superm1@kernel.org, wse@tuxedocomputers.com
-Subject: Re: [REGRESSION][BISECTED] Dell Precision 7780 wakes up on its own
- from suspend
-Message-ID: <aTLkbgwNFOJT_X1H@smile.fi.intel.com>
-References: <aRDml95nMPeknmUM@smile.fi.intel.com>
- <20251205021616.1570442-1-safinaskar@gmail.com>
+   d="scan'208";a="195130953"
+Received: from amilburn-desk.amilburn-desk (HELO [10.245.244.111]) ([10.245.244.111])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2025 06:57:52 -0800
+Message-ID: <7a6dfc17-12cc-4972-88d8-acf86e4fca45@linux.intel.com>
+Date: Fri, 5 Dec 2025 16:57:45 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251205021616.1570442-1-safinaskar@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION][BISECTED] usb: hub: total system freeze after
+ running adb
+To: Forest <forestix@gaga.casa>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Alan Stern <stern@rowland.harvard.edu>,
+ Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+ Stefan Eichenberger <stefan.eichenberger@toradex.com>,
+ Pawel Laszczak <pawell@cadence.com>, linux-usb@vger.kernel.org,
+ linux-kernel@vger.kernel.org, regressions@lists.linux.dev
+References: <qc0nhk9c6l0a08bkfeplrm3qjssgrjkvkp@sonic.net>
+ <cc788286-c327-4b1f-adb4-8494c0145d74@linux.intel.com>
+ <bu3vhk5i8pttoi6t8fan58lpe7l2eb12ib@sonic.net>
+ <f8ee4a2f-6b95-4f91-9ffc-b7df45464d46@linux.intel.com>
+ <fod4jk1tp199qsvqqlspl45nf29i5k3c0i@sonic.net>
+Content-Language: en-US
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
+In-Reply-To: <fod4jk1tp199qsvqqlspl45nf29i5k3c0i@sonic.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Dec 05, 2025 at 05:16:16AM +0300, Askar Safin wrote:
-> Andy Shevchenko <andriy.shevchenko@linux.intel.com>:
-> > > Sounds like it comes via GPIO, but it's not handled as touchpad IRQ. You may
-> > > try to add a quirk to prevent touchpad IRQ from waking the system. That should
-> > > help I believe.
-> > > Something like "ignore_wake=INTC1085:00@355" in the kernel command line.
-> > > If it helps, update drivers/gpio/gpiolib-acpi-quirks.c accordingly.
-> > 
-> > It might be actually the touchpad controller name (as I see in the quirk table):
-> > 
-> > 	ignore_wake=VEN_0488:00@355
+On 12/5/25 03:56, Forest wrote:
+> On Thu, 4 Dec 2025 01:41:37 +0200, Mathias Nyman wrote:
 > 
-> It worked!
-
-Glad to hear this!
-
-> First, there is no option "ignore_wake". Correct option name is "gpiolib_acpi.ignore_wake".
-
-Sure, sorry for mistake on my part, I never remember the whole names of the
-kernel command line parameters.
-
-> I tried "gpiolib_acpi.ignore_wake=INTC1085:00@355", and it didn't help.
+>> If possible, could you try with the same usb debugging enabled as last time,
+>> and add HUNG_TASK debugging entries in kernel config:
+>>
+>> CONFIG_DETECT_HUNG_TASK=y
+>> CONFIG_DEFAULT_HUNG_TASK_TIMEOUT=30
+>> CONFIG_DETECT_HUNG_TASK_BLOCKER=y
+>>
+>> And add the following patch to hub driver:
 > 
-> I tried "gpiolib_acpi.ignore_wake=VEN_0488:00@355", and it did help!
+> That patch failed to apply, due to tab/space differences. I guess Thunderbird
+> might have taken liberties when you sent it. It was easy enough to make those
+> edits by hand, though.
 > 
-> Please, somebody (maybe Mario?) author a patch.
+> The result was again bursts of dmesg output roughly once per second, this time
+> 107 lines each. I compared the last three bursts that made it to my redirected
+> output file, and they were again the same except for timestamps and a few lines
+> being reordered.
+> 
+> A screen photo once again shows newer timestamps than the file. I did not
+> read every line in the photo to compare it with the log file, but the last
+> dozen lines look the same. I suppose I can send you the photo if you like.
+> 
 
-You can do it yourself, we may help and I dare to say for Mario and myself
-that we even will be glad to help you to produce and submit patch on your own.
-The expertise in contribution to Linux kernel is valuable thing, and I truly
-believe it will help you in the future.
+Yes please, small differences, ordering, and timing matter in this case
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Thanks
+Mathias
