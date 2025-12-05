@@ -1,141 +1,179 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpfallback03.a1.net (smtpfallback03.a1.net [194.48.128.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19340284690
-	for <regressions@lists.linux.dev>; Fri,  5 Dec 2025 07:59:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0CA8335BD5
+	for <regressions@lists.linux.dev>; Fri,  5 Dec 2025 08:03:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.48.128.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764921566; cv=none; b=MCnVoCGzp4jCy9khmdqER5GcE4xnk2EyAuj7D+p0kaOPxT5oFtiMs6mzuBb5pToOSQeFGsQfxyr5qpuFKhgCZy3KG8Lr99/JisZ1tNTjx0H4L6TR+D1+RVkfx0RnsfjtafSfdgt//0EHspf4o5UVx1HI2mdEo8KaULR+8DH97kw=
+	t=1764921819; cv=none; b=bjNkbCaWOJZQTc5t7Q9PtBocAh2bilyj46hwL/RNVwHJ2yylIsHSLPrXW0icFHha1vS28378PSa4zCq/XH5Is8W3oY9nife5ujXJBUYX+iTuauEUkyDwEUkkJAuGDITLpqbxCFYa803CnpYP+RE8ht16lvYC3WV4segBzK2/rEw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764921566; c=relaxed/simple;
-	bh=PFvLdGw5VtaDch1yuEfH4676a7Y+dW028dNOz9N16EU=;
-	h=Content-Type:MIME-Version:Subject:From:To:Cc:Date:Message-ID; b=XY70e4c0/ODvESBbAvmcjhJWy4Ufz6Cw8mLxIi3bTkXDmGfH/6PIe2UmButtWWUnxIcSd9d2U8EeMW+v7NfiJBG+msuevN2SG0HDYfZbtUjk79GsK6196W4Y5037vdciskWB0ILOJ01FYytt1RE57oPB1VEGT2nzIls8CnbHK9w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org; spf=none smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b=IUuAAxzs; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=kernelci.org
+	s=arc-20240116; t=1764921819; c=relaxed/simple;
+	bh=bzrSIiK1BB2smhU9mULi9rvULw5WTpDBnZNcdF4ZsjQ=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=Q+AuVYs0oWwipMcwaZO/END6+2e4jyEXd8flUVU35hc6EAen9dUBod1PFeLJBO2OX3qb/WCoeaAXi+IhyX+po+LhLkSij2GiKL5NIUuM4bOpQHz1MDxmLYTe/Y4yjLi8OOmQfqA2YsnJJJfaie6+mvXsk/XRNnaSdWOfDiS62cE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=a1.net; spf=pass smtp.mailfrom=a1.net; dkim=pass (4096-bit key) header.d=a1.net header.i=@a1.net header.b=BFuvLn75; arc=none smtp.client-ip=194.48.128.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=a1.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=a1.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b="IUuAAxzs"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-7a9c64dfa8aso1504980b3a.3
-        for <regressions@lists.linux.dev>; Thu, 04 Dec 2025 23:59:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20230601.gappssmtp.com; s=20230601; t=1764921544; x=1765526344; darn=lists.linux.dev;
-        h=message-id:date:reply-to:cc:to:from:subject
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EJl6A3Vih4/JRBAb2Lh8exZgeiU9LqSo4q6v9J9ORQE=;
-        b=IUuAAxzstWDYjkmnNVebx9N8DxEACHCzZbUaI7KQmyHlxzO198v7nu6cqJ+VQwJln6
-         6eZcRqQu9mdfrpkdTNiZVnaCkPTad7DjF6XMKL8zy7iw8XR7sKsuS6CHd15iLbTCGQSv
-         Zu3FO9v/uX3IoEbWfMgQdou0ueOR4fLQJBf0coGQaJOP6Q1l2yT/bVCRasB3zrFrXaXs
-         dy9QlujkhT4itiIe6ay2bi0Kf/LYwaiggPT/8CulMKloElL6c4nV0gv0aQXwKXRwVUsx
-         epaOZCVWoup+AvNMVO9MZeTliiRRO5lOATxO4YPSE6abYMLhM+SJ8er10KrDHUFxEyoH
-         hKEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764921544; x=1765526344;
-        h=message-id:date:reply-to:cc:to:from:subject
-         :content-transfer-encoding:mime-version:x-gm-gg:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=EJl6A3Vih4/JRBAb2Lh8exZgeiU9LqSo4q6v9J9ORQE=;
-        b=buh2FI7PLqde+UrUr6nS/AA77gETcdRtKs+9Wddcq+l50yyBUzSo4t3ULFvdkH/YAU
-         HAENYRxpZR2ubWMS2xYUoAMob+8VLNGYLd/25AfMzkCBN+kNwvuelXxHRzgelTMcwXcZ
-         qFP0xXzdBdn5uFt462/2KOfKL9fMHVJY5y14C3LD/bL4jG35nal3RD+dX/7qtfXd2z+m
-         nXttWAfTvIkC7VQPysFoasJWBzTZW22NCGA/0VI7qNvVIc74GE0lGP63PK10XOTnyVUT
-         t2Hw4OgO51HS0S8FUeHm29AjC4nd85plElfgjo+wq/zI+bQpr9wy330/XZgayC5lyPU0
-         J0dw==
-X-Gm-Message-State: AOJu0Yzrv7qsC1+PohrOP/++sk/P3w9YFNHJU8Dzfd710qP1f7NhVbRJ
-	9z/8eQlEXxyBQJwirKwKeRK/N4Znw0RNcYZ+eSG5d5fS4oEK60PPApJ33mIgoX1X4Yk=
-X-Gm-Gg: ASbGncvmfaCEg7dkVJM/f3eFj9zflzRh4b7HxVXakV5Amj8mTUBGDJQPSPW9KOtPouk
-	ljb9hNckMPfPUdYhGlShoOZTSghu+Z9/gBYMeJGonFTfOjQkUeegsWW+hrNR7cWco2eCccraKDJ
-	q6lJZ5DFYzSiP0nm+RmH7NFVOBlfzGj2Dvv8jhE7JlBEvYp84ml8ZXamVXwLZDV+KBdynbC6tfd
-	A/3KwcIOzXCDXJg3y9cZTN8YL5/3+V77EnkRp5A0quu9phPvaa0BliDMgmQ+oFCR/VC04e7z6jw
-	PNF6ocQ3msjP8dczbeHhwXx3ESVoqwVNG/aLa/Mjfpajt0tK6XnDD6qYPX4kgFHwdxJVWAlzy4G
-	hBLOEOkM5DxDNa/dcNBwF2Rw5x2b5VEHG28FnEb6MGMTWeuJVIh3KKEZKL/EnySAy1Q9Uewk238
-	1F6V1D
-X-Google-Smtp-Source: AGHT+IGmDEUgbjjQyJixvvNUID8T3M2Z5SjQAmtBxXJNuHPhKcRjw5C8gz9lVor80zAvOAWYcBQmNw==
-X-Received: by 2002:a05:7022:6187:b0:119:e55a:9c08 with SMTP id a92af1059eb24-11dfde4b888mr599421c88.36.1764921544359;
-        Thu, 04 Dec 2025 23:59:04 -0800 (PST)
-Received: from 1ece3ece63ba ([20.38.40.137])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-11df7573508sm11794391c88.3.2025.12.04.23.59.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Dec 2025 23:59:03 -0800 (PST)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (4096-bit key) header.d=a1.net header.i=@a1.net header.b="BFuvLn75"
+Received: from smtpout20.a1.net (unknown [10.247.84.23])
+	by smtpfallback03.a1.net (Postfix) with ESMTPS id 4dN3Y83QwhzYkm9m
+	for <regressions@lists.linux.dev>; Fri,  5 Dec 2025 08:54:04 +0100 (CET)
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	by smtpout20.a1.net (Postfix) with ESMTPSA id 4dN3Xx6XR3zGrqns
+	for <regressions@lists.linux.dev>; Fri,  5 Dec 2025 08:53:53 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=a1.net; s=resmail1;
+	t=1764921233;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=bzrSIiK1BB2smhU9mULi9rvULw5WTpDBnZNcdF4ZsjQ=;
+	b=BFuvLn75kl8R5rypnkLON78CX/Sjqs3dSIafA1J4C0EJxkXr69+d+o5dHvKrihtAQ7koVn
+	eRRaBoHU8vRD2r9af6zGEzIjM2CDfBQ8V/Fj6e+DA6eQonVQcinuC8ko7vq5iKNwbETVtn
+	H2r8zA9Zy4fYswsCw/8FXplpvfGDEye4WrtmfoudVXxIRYonxj7geTqimJxebh3JVv+jan
+	AMnBEHmVQyLuoWdsP5yJ7JMtDyaPmtQdruL/+9J9WaDN2TLx48lToKXrdh2zfM3SBi+NbW
+	tlpjNiWyG5UgXOj7d3AgGYtFp8TQ5QRbzEa4d5z47m0hjDHE44KRN9iLqUT2bT/H7uEsjV
+	Tro/fATQD/ewRavX12LDDpiqkRkkaXDljl4UtND29O0wHeIwni45O6eA1DtOQ3E4NfghAl
+	+g3r9CDjGmQ+4vr8WtF7PlRtJUkWin4xx2tirbNMrCBi7k3Mj9ymR5qDr3NMngsxdkqDVa
+	GjO62xEOmY4pJ7ZPLRn4POOWl87ZYUvfyGVq4I4vnqmDStakEt+vrCOaVlIqy7JodX87oJ
+	dqRtGdIJzmpdkxvNX7iWpkR4aQ8Ladjoy+ekWkVv6z1rOB6VCCHzPMjvKB7ONUzSVncFS4
+	tyiHVOiKZm8bv+Ip7kjj//Y/iw3CqM+r3ofi2vDbKFuGkP6NOeSz0=
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-64080ccf749so2973194a12.2
+        for <regressions@lists.linux.dev>; Thu, 04 Dec 2025 23:53:53 -0800 (PST)
+X-Gm-Message-State: AOJu0YzxbQuoPEft/e7tk6Xeh0695DeiTK2Xt6suBHEXQVc0nnB79v0H
+	8gsCph8s9E7XrXgCizhU1/Vs7j2lmtGIwwimFWL0E5UaDv5ieHO4LfuOyWywZLw4OyVPg7fEfWq
+	7TWSuIWFtf7gD5A5drh5i1g+6y29RsWM=
+X-Google-Smtp-Source: AGHT+IHoK7V0lg8D3HbLI9Vn3mw0EcBCkqAFC9znciOdXLSY03oXntBa8lBM451+ZBQwLY4e25DHvdAx4eY2fZYGCak=
+X-Received: by 2002:a05:6402:46c6:b0:647:a570:b75f with SMTP id
+ 4fb4d7f45d1cf-647a570ba30mr6146735a12.16.1764921233389; Thu, 04 Dec 2025
+ 23:53:53 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [REGRESSION] mainline/master: (build) variable 'n2_max' is
- uninitialized when
- used here [-Werror,-Wunini...
-From: KernelCI bot <bot@kernelci.org>
-To: kernelci-results@groups.io
-Cc: regressions@lists.linux.dev, gus@collabora.com, laura.nao@collabora.com,
- shreeya.patel@collabora.com, broonie@kernel.org
-Reply-To: kernelci@lists.linux.dev
-Date: Fri, 05 Dec 2025 07:59:03 -0000
-Message-ID: <176492154301.4738.6647175702618264062@1ece3ece63ba>
+From: Neil Gammie <mkpyc9@a1.net>
+Date: Fri, 5 Dec 2025 08:53:42 +0100
+X-Gmail-Original-Message-ID: <CAFNokafrb+OaqZcPjCdzkLiR7rFoZXjhY9ifdqTNoLhDRmooFA@mail.gmail.com>
+X-Gm-Features: AQt7F2ruGh0IQc05mo3e8PidGMnsdytyWm8sn-DYQsCbREEwUGymfYPcrkilrTo
+Message-ID: <CAFNokafrb+OaqZcPjCdzkLiR7rFoZXjhY9ifdqTNoLhDRmooFA@mail.gmail.com>
+Subject: 6.17.9 / 6.18 AMDGPU DMCUB Error
+To: stable@vger.kernel.org
+Cc: regressions@lists.linux.dev, 
+	"alexander.deucher@amd.com" <alexander.deucher@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Level: 
 
+Hello all,
 
+please forgive me if this issue is already known, but I couldn't find
+any reference to it with regard to the 6.17.9 kernel. Anyway, when
+updating from 6.17.8 to 6.17.9, the following error is raised on every
+boot:
 
+Dec 04 14:44:20 P14s kernel: amdgpu: Topology: Add dGPU node [0x1638:0x1002=
+]
+Dec 04 14:44:20 P14s kernel: kfd kfd: amdgpu: added device 1002:1638
+Dec 04 14:44:20 P14s kernel: amdgpu 0000:07:00.0: amdgpu: SE 1, SH per
+SE 1, CU per SH 8, active_cu_number 8
+Dec 04 14:44:20 P14s kernel: amdgpu 0000:07:00.0: amdgpu: ring gfx
+uses VM inv eng 0 on hub 0
+Dec 04 14:44:20 P14s kernel: amdgpu 0000:07:00.0: amdgpu: ring
+comp_1.0.0 uses VM inv eng 1 on hub 0
+Dec 04 14:44:20 P14s kernel: amdgpu 0000:07:00.0: amdgpu: ring
+comp_1.1.0 uses VM inv eng 4 on hub 0
 
+Dec 04 14:44:20 P14s kernel: amdgpu 0000:07:00.0: amdgpu: ring
+comp_1.2.0 uses VM inv eng 5 on hub 0
+Dec 04 14:44:20 P14s kernel: amdgpu 0000:07:00.0: amdgpu: ring
+comp_1.3.0 uses VM inv eng 6 on hub 0
+Dec 04 14:44:20 P14s kernel: amdgpu 0000:07:00.0: amdgpu: ring
+comp_1.0.1 uses VM inv eng 7 on hub 0
+Dec 04 14:44:20 P14s kernel: amdgpu 0000:07:00.0: amdgpu: ring
+comp_1.1.1 uses VM inv eng 8 on hub 0
+Dec 04 14:44:20 P14s kernel: amdgpu 0000:07:00.0: amdgpu: ring
+comp_1.2.1 uses VM inv eng 9 on hub 0
+Dec 04 14:44:20 P14s kernel: amdgpu 0000:07:00.0: amdgpu: ring
+comp_1.3.1 uses VM inv eng 10 on hub 0
+Dec 04 14:44:20 P14s kernel: amdgpu 0000:07:00.0: amdgpu: ring
+kiq_0.2.1.0 uses VM inv eng 11 on hub 0
+Dec 04 14:44:20 P14s kernel: amdgpu 0000:07:00.0: amdgpu: ring sdma0
+uses VM inv eng 0 on hub 8
+Dec 04 14:44:20 P14s kernel: amdgpu 0000:07:00.0: amdgpu: ring vcn_dec
+uses VM inv eng 1 on hub 8
+Dec 04 14:44:20 P14s kernel: amdgpu 0000:07:00.0: amdgpu: ring
+vcn_enc0 uses VM inv eng 4 on hub 8
+Dec 04 14:44:20 P14s kernel: amdgpu 0000:07:00.0: amdgpu: ring
+vcn_enc1 uses VM inv eng 5 on hub 8
+Dec 04 14:44:20 P14s kernel: amdgpu 0000:07:00.0: amdgpu: ring
+jpeg_dec uses VM inv eng 6 on hub 8
+Dec 04 14:44:20 P14s kernel: amdgpu 0000:07:00.0: amdgpu: Runtime PM
+not available
+Dec 04 14:44:20 P14s kernel: amdgpu 0000:07:00.0: amdgpu: [drm] Using
+custom brightness curve
+Dec 04 14:44:20 P14s kernel: amdgpu 0000:07:00.0: [drm] Registered 4
+planes with drm panic
+Dec 04 14:44:20 P14s kernel: [drm] Initialized amdgpu 3.64.0 for
+0000:07:00.0 on minor 1
+Dec 04 14:44:20 P14s kernel: fbcon: amdgpudrmfb (fb0) is primary device
+Dec 04 14:44:20 P14s kernel: amdgpu 0000:07:00.0: [drm] *ERROR*
+dc_dmub_srv_log_diagnostic_data: DMCUB error - collecting diagnostic
+data
+Dec 04 14:44:21 P14s kernel: amdgpu 0000:07:00.0: [drm] fb0:
+amdgpudrmfb frame buffer device
 
-Hello,
+Setup is as follows:
 
-New build issue found on mainline/master:
+Hardware: ThinkPad P14s Gen 2 AMD
+Processor: AMD Ryzen=E2=84=A2 7 PRO 5850U
+OS: Arch Linux
+AMD Firmware: linux-firmware-amdgpu 20251125
 
----
- variable 'n2_max' is uninitialized when used here [-Werror,-Wuninitialized] in sound/soc/codecs/nau8325.o (sound/soc/codecs/nau8325.c) [logspec:kbuild,kbuild.compiler.error]
----
+Running a bisection gives the following:
 
-- dashboard: https://d.kernelci.org/i/maestro:6781e33529bd277afaf2b3ab6c3c339ef1458b0f
-- giturl: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-- commit HEAD:  2aa680df68062e4e0c356ec2aa7100c13654907b
+git bisect start
+# status: waiting for both good and bad commits
+# good: [8ac42a63c561a8b4cccfe84ed8b97bb057e6ffae] Linux 6.17.8
+git bisect good 8ac42a63c561a8b4cccfe84ed8b97bb057e6ffae
+# status: waiting for bad commit, 1 good commit known
+# bad: [1bfd0faa78d09eb41b81b002e0292db0f3e75de0] Linux 6.17.9
+git bisect bad 1bfd0faa78d09eb41b81b002e0292db0f3e75de0
+# bad: [92ef36a75fbb56a02a16b141fe684f64fb2b1cb9] lib/crypto:
+arm/curve25519: Disable on CPU_BIG_ENDIAN
+git bisect bad 92ef36a75fbb56a02a16b141fe684f64fb2b1cb9
+# bad: [aaba523dd7b6106526c24b1fd9b5fc35e5aaa88d] sctp: prevent
+possible shift-out-of-bounds in sctp_transport_update_rto
+git bisect bad aaba523dd7b6106526c24b1fd9b5fc35e5aaa88d
+# bad: [b3b288206a1ea7e21472f8d1c7834ebface9bb33] drm/amdkfd: fix
+suspend/resume all calls in mes based eviction path
+git bisect bad b3b288206a1ea7e21472f8d1c7834ebface9bb33
+# good: [ac486718d6cc96e07bc67094221e682ba5ea6f76] drm/amd/pm: Use
+pm_display_cfg in legacy DPM (v2)
+git bisect good ac486718d6cc96e07bc67094221e682ba5ea6f76
+# bad: [1009f007b3afba93082599e263b3807d05177d53] RISC-V: clear
+hot-unplugged cores from all task mm_cpumasks to avoid rfence errors
+git bisect bad 1009f007b3afba93082599e263b3807d05177d53
+# bad: [ccd8af579101ca68f1fba8c9e055554202381cab] drm/amd: Disable ASPM on =
+SI
+git bisect bad ccd8af579101ca68f1fba8c9e055554202381cab
+# bad: [e95425b6df29cc88fac7d0d77aa38a5a131dbf45] drm/amd/pm: Disable
+MCLK switching on SI at high pixel clocks
+git bisect bad e95425b6df29cc88fac7d0d77aa38a5a131dbf45
+# bad: [5ee434b55134c24df7ad426d40fe28c6542fab4d] drm/amd/display:
+Disable fastboot on DCE 6 too
+git bisect bad 5ee434b55134c24df7ad426d40fe28c6542fab4d
+# first bad commit: [5ee434b55134c24df7ad426d40fe28c6542fab4d]
+drm/amd/display: Disable fastboot on DCE 6 too
 
+The error still occurs in 6.18, but reverting the above bad commit removes =
+it.
 
-Please include the KernelCI tag when submitting a fix:
+Although an error is reported, the system still boots to the graphical
+interface and appears to function normally, although I have neither
+benchmarked graphics performance or used the system for an extended
+period after the error has been flagged.
 
-Reported-by: kernelci.org bot <bot@kernelci.org>
+Yours faithfully,
 
-
-Log excerpt:
-=====================================================
-sound/soc/codecs/nau8325.c:430:13: error: variable 'n2_max' is uninitialized when used here [-Werror,-Wuninitialized]
-  430 |                 *n2_sel = n2_max;
-      |                           ^~~~~~
-sound/soc/codecs/nau8325.c:389:52: note: initialize the variable 'n2_max' to silence this warning
-  389 |         int i, j, mclk, mclk_max, ratio, ratio_sel, n2_max;
-      |                                                           ^
-      |                                                            = 0
-sound/soc/codecs/nau8325.c:431:11: error: variable 'ratio_sel' is uninitialized when used here [-Werror,-Wuninitialized]
-  431 |                 ratio = ratio_sel;
-      |                         ^~~~~~~~~
-sound/soc/codecs/nau8325.c:389:44: note: initialize the variable 'ratio_sel' to silence this warning
-  389 |         int i, j, mclk, mclk_max, ratio, ratio_sel, n2_max;
-      |                                                   ^
-      |                                                    = 0
-2 errors generated.
-
-=====================================================
-
-
-# Builds where the incident occurred:
-
-## defconfig+allmodconfig on (arm64):
-- compiler: clang-21
-- config: https://files.kernelci.org/kbuild-clang-21-arm64-allmodconfig-6931e5dc1ca5bf9d0fcc2f66/.config
-- dashboard: https://d.kernelci.org/build/maestro:6931e5dc1ca5bf9d0fcc2f66
-
-## defconfig+allmodconfig+CONFIG_FRAME_WARN=2048 on (arm):
-- compiler: clang-21
-- config: https://files.kernelci.org/kbuild-clang-21-arm-allmodconfig-69325bf21ca5bf9d0fce15e0/.config
-- dashboard: https://d.kernelci.org/build/maestro:69325bf21ca5bf9d0fce15e0
-
-
-#kernelci issue maestro:6781e33529bd277afaf2b3ab6c3c339ef1458b0f
-
---
-This is an experimental report format. Please send feedback in!
-Talk to us at kernelci@lists.linux.dev
-
-Made with love by the KernelCI team - https://kernelci.org
+Neil Gammie
