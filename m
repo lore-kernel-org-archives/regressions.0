@@ -1,128 +1,107 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CCC728750C
-	for <regressions@lists.linux.dev>; Sun,  7 Dec 2025 10:18:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF7D87083C
+	for <regressions@lists.linux.dev>; Sun,  7 Dec 2025 16:46:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765102706; cv=none; b=OxCsfVQCv7QZ3lPzVB/whOaXe8USMU/K/pMzA/l+idSCGm6KSGKcNHxdqLh70YKPOugl9bYgQMe7lYIgg+ZeQ2ugJdsR/N7D7h+F9GnoZ0e/vWGdJEYPHyNCrE/ZHla8OiRqdSdkQH1/Dm4eqW4pHLKwc+eX8xxctVZIQMcnBU4=
+	t=1765125968; cv=none; b=cC4ROpLu/qbb0d+wEMgkT5UN5noPgKgwKzjsjky6kjw80PlE71W0B19G1ZzGk7N/5lVFSOswcUXrGbSfT7bSdR8jvFBHONyoEcRs9RTCP/KI+yQ3Gy4xEnI5cvfHvyZZl1aa+f0S5xt0dpG+we+IEAXfSWr80l2er4apMOonDes=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765102706; c=relaxed/simple;
-	bh=ohfUErXnHDL7zLjEi2IBpBa840o0gRbi4RyrVEjUPio=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XxJ2IYBOriJGTy8RPrBUumk/xpIeb8eGEykQuquv1QitMRwDFznINoizuXQrL7eSgZkexitbAFTPP23/909H8oEtxphpJ/EyBGtdlrA21oY6oerNZak7Vup8JkJfFprnZ0nPsT6bufj5t+Gj61sMVFWvy1VBp0K4B4Aady5PTis=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CLeJ2876; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1765125968; c=relaxed/simple;
+	bh=I9Qx9n4Q79mBOZR4LXGGw10jVvLQ+xkac3lc1hwUVxg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EZUgWXcrJoPDZgqruYVJAQzhoOAvqkVXqOx/Nqq9UOwqGaWoeskAi7p3uUG5oC06crfZzLirK8SIT/BPmVmc81HBSHjSrKwaTMe1LRwe6ATmf19/NXH0dNUyBU6r2LNcyyJgmGJYbPYQMwa30NTwg79eOyxzfgIfeBxAQFwvnts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N4+jbXHP; arc=none smtp.client-ip=209.85.128.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CLeJ2876"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1765102704; x=1796638704;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ohfUErXnHDL7zLjEi2IBpBa840o0gRbi4RyrVEjUPio=;
-  b=CLeJ2876qoKFL9M9b6bsWagenUb14UfMjaVSWPQYRqu+WWb+xQOhLsua
-   P2R3D+qMyqi8gUQ6O5ArbmiTibaKB+QVARJ/jiztgwdOnansmPmXkNHoU
-   M84ZC9fuG8hVu60mrU2tVNvGqpkRRJyroc2mSLH/FxD614bw+TqyededF
-   guGxlRf1PNGI+kZFPhngGnyjRdbhW192N4bZ3B+/9iCjQy9g0SiP2X6ql
-   qPaF20TQuw8CnSB6e7z69a6vSBHt2sUAwklswsaCTUHoBUZyMlRzxnVXh
-   cI5FO3MBz0VWf0iN84pqt/YM74We3KwgT8mmvY0i/bWmsgAeo6h2esPNO
-   Q==;
-X-CSE-ConnectionGUID: j4+b1kvJSeyqmhoixoFoRA==
-X-CSE-MsgGUID: GxKQpdu6Td+wTaZQJ8rjuQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11634"; a="66070471"
-X-IronPort-AV: E=Sophos;i="6.20,256,1758610800"; 
-   d="scan'208";a="66070471"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2025 02:18:23 -0800
-X-CSE-ConnectionGUID: 5adE1stOSp6Ymx8Pbuf02g==
-X-CSE-MsgGUID: 5L41niC1QV+mmANoYj789w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.20,256,1758610800"; 
-   d="scan'208";a="194734567"
-Received: from abityuts-desk.ger.corp.intel.com (HELO localhost) ([10.245.244.218])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2025 02:18:21 -0800
-Date: Sun, 7 Dec 2025 12:18:18 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Askar Safin <safinaskar@gmail.com>
-Cc: Dell.Client.Kernel@dell.com, bartosz.golaszewski@linaro.org,
-	benjamin.tissoires@redhat.com, dmitry.torokhov@gmail.com,
-	linux-acpi@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-i2c@vger.kernel.org, regressions@lists.linux.dev,
-	rrangel@chromium.org, superm1@kernel.org, wse@tuxedocomputers.com
-Subject: Re: [REGRESSION][BISECTED] Dell Precision 7780 wakes up on its own
- from suspend
-Message-ID: <aTVUakljrd-sysxP@smile.fi.intel.com>
-References: <aTLjgEVfLCot0cSm@smile.fi.intel.com>
- <20251207040459.3581966-1-safinaskar@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N4+jbXHP"
+Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-786635a8ce4so28744617b3.2
+        for <regressions@lists.linux.dev>; Sun, 07 Dec 2025 08:46:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1765125965; x=1765730765; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=I9Qx9n4Q79mBOZR4LXGGw10jVvLQ+xkac3lc1hwUVxg=;
+        b=N4+jbXHPOhWQoNKXs9NJuvHezTqroS30esJdfalyRgmYSyKNRvniNW9AmrGc8s752T
+         ggvVgV7zAPPM/9W8QfTYLjSX8iq0RPYUNFuNnSrv4vs9EeP4hM36XG4MdMSj2Mi2ihDc
+         EW/imPZiNzpnPAL7QVhdTqu2eNCPnoWiPj/AKYQ76BfrEy8t5RpKoFDXwB1P9XxclIFY
+         PJ039FbB6jHk5flDWy1N2ap33xH6umoEekJjOxCNw+52sVmYqljvLwruJ+80XHFeMy0P
+         XAPCN5KNgc1yNe7BlmqWIMi2v/p+wEYf5zFR0KVBl+NNNivc4hnJK2RWhbZwogegKCjD
+         1SsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1765125965; x=1765730765;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=I9Qx9n4Q79mBOZR4LXGGw10jVvLQ+xkac3lc1hwUVxg=;
+        b=tPcQhZxswCIRB8ctWz5s2gtmE3gzstJ6yZeUGhqEYg+6nfAfz/mCgy8zku2vYgbqzG
+         6VAtJ77Nmwrk9vUMVNe7oBD6NaASMT5FMdjYHhNq5PWGGpzGc/d97pHsrDtYgV68GZTh
+         1XEUGAYdOhLvYFaupSBTbOQld4betomZIoFMYXGU2+MAyX5+yGKsPN/iTPmTKqSO2ODn
+         4b0+djdT+zIzepsdod52+IswuyT3G6/XNtiZfbaMA82uANBnBW8wfoimIuI1mJ/9xY8Q
+         W5K4b6OqS4q69YgAGU+cbPFZxATPSbmnPkCx+M2np7+AI6Yw1oTrEqKo+3Q8BMYg5b2b
+         IjNg==
+X-Forwarded-Encrypted: i=1; AJvYcCU7yVuTQO53paHBx45V2tGzDYzmJPe6DaD7z8QWRbqnJn+Xat7yIa2hfVNXJpPOBJppf7CtsWq+C9D+wQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0Ywy0/2hJ+6Q/HiW+jKF7/6hGAWYgA8qyezEFNj7PM7jir+YSZJ0
+	ykzqEIW4s0lFtC1IyKGkjUQBgVPb/vgAIx1jkFy6dF73BKpXJ2i6mgPZIMarYLca/KKwrOpSuxT
+	yI6HSfy4F20xubExHBnCQrYnv7O+w+08=
+X-Gm-Gg: ASbGncvNXncNkB21ct2nsBWOxKN3y8ROcFf0VoHdabqj7QyNT4S6g/BKUHAT1jJNHkt
+	dwFBo5VsuMY7TeeG2DnL8C+8A/jq/OcVnZKh2/VLl/5J/q8dnI0AQfGcgPNoV1RVyUcHBcCHnkI
+	0gLBqHqgMaTW1lclUl9VUMmJP+W7FLHJvaEu1v5Cqcitfhdc9U6u5u/Z+c/P3VinGJY3kUX08V3
+	mXzlHTQ/duWK30ATqEFHtmKs/NYvL98tbyt1Vv09+1UtkJ98tJxiCn8+bw6ETp92/Ygbwrt
+X-Google-Smtp-Source: AGHT+IFojsrwzBu58xmxqNiWONYhG9kxExBjgU7MJi2fTygt5IzjBHutS+yPKMllDxNSv0iDWafdsrpjLRVd2Us7NKw=
+X-Received: by 2002:a05:690c:d91:b0:788:bda:47e0 with SMTP id
+ 00721157ae682-78c33b13875mr51874287b3.1.1765125964673; Sun, 07 Dec 2025
+ 08:46:04 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251207040459.3581966-1-safinaskar@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+References: <aTLjgEVfLCot0cSm@smile.fi.intel.com> <20251207040459.3581966-1-safinaskar@gmail.com>
+ <aTVUakljrd-sysxP@smile.fi.intel.com>
+In-Reply-To: <aTVUakljrd-sysxP@smile.fi.intel.com>
+From: Askar Safin <safinaskar@gmail.com>
+Date: Sun, 7 Dec 2025 19:45:28 +0300
+X-Gm-Features: AQt7F2qzPmg7UQ_bISru9-YSQqKjGJESrT0FY3SlqV8KJLp0EpCcDQigL4yk178
+Message-ID: <CAPnZJGAxhXNOw1V5FTPK2Mrvu0YAPwm0Ph4UHd2aZv=kgx1qWg@mail.gmail.com>
+Subject: Re: [REGRESSION][BISECTED] Dell Precision 7780 wakes up on its own
+ from suspend
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Dell.Client.Kernel@dell.com, bartosz.golaszewski@linaro.org, 
+	benjamin.tissoires@redhat.com, dmitry.torokhov@gmail.com, 
+	linux-acpi@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-i2c@vger.kernel.org, regressions@lists.linux.dev, rrangel@chromium.org, 
+	superm1@kernel.org, wse@tuxedocomputers.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, Dec 07, 2025 at 07:04:59AM +0300, Askar Safin wrote:
-> Andy, Mario and others.
-> 
-> During these months I found zillions of suspend and hibernation related bugs.
-> 
-> It seems hibernation is not well supported.
-> 
-> For example, it seems hibernation is not supported on Chromebooks [1].
-> 
-> And Fedora intentionally disables it by default. [2]
-> 
-> Other operating systems do similar thing. Hibernation is hard-to-enable
-> in Windows [3]. macOS on Apple Silicon hibernate in very limited scenarios [4].
-> 
-> But I still use hibernation.
-> 
-> So, I have an idea. Maybe we should remove as many as possible hibernation-related
-> code from kernel to make sure that remaining code is easy to support?
+On Sun, Dec 7, 2025 at 1:18=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+> I think nothing. It's better to try to actually fix the non-working scena=
+rios
+> rather than remove the feature completely.
 
-Maybe not.
+OK.
 
-> I. e. maybe we should remove some even-more-obscure-than-hibernation features,
-> such as hybrid sleep mode, to make normal hibernation easier to maintain?
+> P.S.
+> I'm sorry, but why are you so eager to remove something? While in many ca=
+ses
+> removal of (potentially dead or unused) code is considered a good thing, =
+it's
+> not always the case.
 
-Hibernation is not only for workstations. And I believe it works in Linux to
-some extent. You need to discuss this in Linux PM mailing list.
+Removing code is easier than writing new code. :)
 
-> If you like this idea, then I will happily write patches for removing
-> some hibernation-related features, such as hybrid sleep mode.
-> 
-> Other ideas:
-> - Remove uswsusp (i. e. kernel/power/user.c ) in favor of normal hibernation
-> (or vice versa, i. e. remove normal hibernation and keep uswsusp only)
-> - Remove hibernation to swap partition and keep hibernation to swapfile only
-> (or vice versa)
-> - Decouple hibernation from swap completely (i. e. hibernate not to swap
-> partition, but to special designated partition or file)
-> 
-> In short, just tell me what should be removed, and I will happily remove it.
+Speaking of initrd, I tried to understand Linux init code a long time
+ago (out of curiosity),
+and so I wanted to remove initrd (to help me understand the code).
+Also I saw initrd
+deprecation notice back in 2020, and I decided to send a patch for its
+removal back then.
+But I got time for this only now.
 
-I think nothing. It's better to try to actually fix the non-working scenarios
-rather than remove the feature completely.
-
-> [1] https://www.reddit.com/r/chromeos/comments/y5pol9/anyone_know_what_the_status_of_hiberman_hibernate/
-> [2] https://pagure.io/fedora-workstation/blob/master/f/notes/hibernationstatus.md
-> [3] https://www.groovypost.com/howto/enable-hibernate-mode-windows-10/
-> [4] https://www.reddit.com/r/chromeos/comments/y5pol9/comment/ism352k/
-
-P.S.
-I'm sorry, but why are you so eager to remove something? While in many cases
-removal of (potentially dead or unused) code is considered a good thing, it's
-not always the case.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+--=20
+Askar Safin
