@@ -1,129 +1,80 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF9D8280CE0
-	for <regressions@lists.linux.dev>; Sun,  7 Dec 2025 04:05:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81B69DF49
+	for <regressions@lists.linux.dev>; Sun,  7 Dec 2025 07:12:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765080346; cv=none; b=mYaFOtmw15K2K3/qRnm3YJlscL15Fp+xNgJCK82I2SD9FTHGwqVYnfJV3uP5N/DLk5xu1QqTSZCfb6mNpqJpNW6x2kFdEU/6Epi+KMHZDRD9TW1qeurFUJrYey3ahwW45KV9o1sR53+KjhJrM1MdwzwrHHZGYnhUJ/q/vGY4oYk=
+	t=1765091546; cv=none; b=RIhoi/cMTj7bdNcxcZrfBfA4Ac4D3vvxSHGns7Y7zIj5SvuGsyYOegzpn79Bku36lVFz2M3eKQ1s73nba2nR/WQmiYC5CDysSUel9W1RtrTXQbgKKasXjpxghznbbzfAE3FujSf3sNxGqa1Q8j+c5IIGscpF5D0ZrOiv8poC+GU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765080346; c=relaxed/simple;
-	bh=PWZ147u1Ppf7yNYMcL7wpdf1sLLMlRa3CTb2HAu1DTA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QEpzNEIxIMZb95p9vRd/7+nmmqeZKVxNkjY+pc1AglE5ClS4uTMjmXtvTXeVuBU8PjrEDHw0Li7Cq4sMxCkkpIe82SUYZc3pYsgwyBFcMqO5dG/FuV+ULlh/PjbWYOZqXETdz+lc7JPlckkx1Vp50rA306XHCAif3PGotXLoj18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WOfKCWoG; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1765091546; c=relaxed/simple;
+	bh=K6FeuAm/mO+v9ibQ+qp/z1st3bgFBU83eGp0V676s0Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TiQ3h9G0BXfKetHzRsISrlbt8sOINE62JG55qNq/AfNhAQtw0ntauQzbQp21yB8iJp/qpVVa52LYzhxDhmbTWZcU22TgguEOv35aR5E1e8Ph4FYNfev7P3yH3+vvH+38rORxsNSTB+Iy+pl8X1Y3fIhopCiRo+v1uOg7zZQ7GXM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ex4NWSYE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WOfKCWoG"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-5957e017378so4428560e87.3
-        for <regressions@lists.linux.dev>; Sat, 06 Dec 2025 20:05:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1765080343; x=1765685143; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ex2lzVAczuwvkjLV+fgi87Xz5EH5RAk0RHJHjHXLtww=;
-        b=WOfKCWoGpNcBqKeDO5ZMN7wZJnIMXInfCnr8tP9bD8VwaNmT4YAqk1uGQUfISiqo8E
-         +XXoemthNIyfJbvkc7jXY2fPU0x+RxDhx+VV0acNcD+sePSaqUmsyCNGrxeBMBw/014G
-         /srB2qRWFSrD2ZGkjI1dEeijyzVzp7md7DWTNgKBHmO5MwpviIf+CBbxkWkzSSy6HEyr
-         MUsaFSLhgd7iRw7/fYXBhnpHx1meUnhtEM62WP72QIV8ssLizoYiR6r7CJpmkYsleb3Q
-         NgzvConGoDWM7ldSDBWmt4ZUjkcH+UHM0FlP3n5bYBrasjdKDuoSsn53tEZMjz5rh3B+
-         lETQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765080343; x=1765685143;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=ex2lzVAczuwvkjLV+fgi87Xz5EH5RAk0RHJHjHXLtww=;
-        b=PiINHIOu+AIr97AxAVO9ycmF2Q4bp1sBURVCZbJT7IxJJbVH5F/Sk1ew3vbC3ORas1
-         z5617x8j1pM5r3x+0pQGRCFXoVP2DsTZtCRuQocCwHHzBX+5q94ZhncfIspoTUbxuuVe
-         K3x9lEz3UG0/Qv237dLKFZqHQ6F04LitTK6Iylxw6ReRuMZhrfNDqhcURzlNcGxxChxm
-         MWxD9giVaIXFYnzepMp9qWMdnv+0Ep+NM4OzE50BILonEaowT2bxDsUDhfJYXSLGbIRK
-         E2ohZntwaQhdkQIWmLo96dq8JispSN1jnAT5ld70yKinGy1OWW68gBhq99lhTV7PLoqh
-         KGpA==
-X-Forwarded-Encrypted: i=1; AJvYcCVLi3Qy5coGrwjGS+p2LlNn6DSQf+NBNJ+LmvMiIzO/pxsHcbTypLrO9K3/IZevNekiROhaCXXBpQTUiA==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwxVgxnKFeODMd8H4ibAlbhX0cigBvycFdKJeSFFva5BsMbXuc0
-	D1nHhdWycaYG8jdK59VoQihTP2nyxnMAO4XfxDbxc6CTgn1FY7MXmVbA
-X-Gm-Gg: ASbGnct5S+VM8pmXCzQQtEppzt09qibC6oQYkyNnE/SS55rZvgtQer7iex13ck9b5EC
-	ijCDf+v6TnNPZqgt+dwpK9cZSWEcepHCOTpOY9QgEep7o1SLIJTsQwHFpa33U2DDvb8juJzoxZ3
-	hJgwOLlcGVJHK+yrgvvI3Pd766mxN4tPyVFwHc4YW8YOxTLMEcKhwti9KX3eJ9dJJ+CsblXMZk7
-	tIjfeKL2X8LqsIswQTMTc+plRP42F+TikWhBqOAzcTWcRymfimn8lfT2jWdg5D8KbL2kNMrr4NI
-	LFzWP9LzIl7aAngfrKfinqP8mLQehktVG9424MMMaXNH5sl9SB60cI0LTH8N97WS12i1NWD5DBE
-	nUi/nos3PfxyFHk5xSRxhJUrBfFQsRKUBByZl2ZLZS4JKJ5ki2BCBpXfEj6+nXMMxULtG1zl3cq
-	69tYx8SFb/
-X-Google-Smtp-Source: AGHT+IH8mx3P/9V/pAGu8lz10DNuwJ7kxmYDCtybY5oUGluuyAcyWcsd4RN6gkh3q7lmDuDfA7g2qg==
-X-Received: by 2002:a05:6512:31c6:b0:595:80d0:b68c with SMTP id 2adb3069b0e04-5987e8bf711mr934848e87.25.1765080342615;
-        Sat, 06 Dec 2025 20:05:42 -0800 (PST)
-Received: from localhost ([194.190.17.114])
-        by smtp.gmail.com with UTF8SMTPSA id 2adb3069b0e04-597d7c270f1sm2912765e87.72.2025.12.06.20.05.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 06 Dec 2025 20:05:42 -0800 (PST)
-From: Askar Safin <safinaskar@gmail.com>
-To: andriy.shevchenko@linux.intel.com
-Cc: Dell.Client.Kernel@dell.com,
-	bartosz.golaszewski@linaro.org,
-	benjamin.tissoires@redhat.com,
-	dmitry.torokhov@gmail.com,
-	linux-acpi@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-i2c@vger.kernel.org,
-	regressions@lists.linux.dev,
-	rrangel@chromium.org,
-	safinaskar@gmail.com,
-	superm1@kernel.org,
-	wse@tuxedocomputers.com
-Subject: Re: [REGRESSION][BISECTED] Dell Precision 7780 wakes up on its own from suspend
-Date: Sun,  7 Dec 2025 07:04:59 +0300
-Message-ID: <20251207040459.3581966-1-safinaskar@gmail.com>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <aTLjgEVfLCot0cSm@smile.fi.intel.com>
-References: <aTLjgEVfLCot0cSm@smile.fi.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ex4NWSYE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33ACCC19422
+	for <regressions@lists.linux.dev>; Sun,  7 Dec 2025 07:12:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1765091546;
+	bh=K6FeuAm/mO+v9ibQ+qp/z1st3bgFBU83eGp0V676s0Y=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=ex4NWSYEnHhMsq6r8TidPeVwAPE0XKrkaYSrJGtp/tZZJDKgcEPzghYkczDR3BR/x
+	 KnqXa7f1mAHiGZocfq7YQAGhzkjYTWi8wxh7O0Rq+jTaVhqSvdKNoHy6+UFa209OAs
+	 7PKMhIYCF7uEw8Zh6gpbpmp6qFbvBIm7USXBpFWhH5ipMJjGisTKasLWZRyC3VAETJ
+	 pBIzeMzVP2+62Kseo6/LICseqcAuuGUvs16QglOY++zqSjgWkPOGqgj/bWIm90duSP
+	 gD5kys07tqIy9qNoCXLiZe/2ajE2kGx22RFH463FxwpCCAwPrpr2bMPXMvlapshjaI
+	 ZHUSGNtpmScSA==
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-597c83bb5c2so2669205e87.3
+        for <regressions@lists.linux.dev>; Sat, 06 Dec 2025 23:12:26 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWCI3z2TgwFURPnMVZkya8f7E3+9ICp4z524XxBowXq2vFvaGtX81ay+s+YSxjBHu8d0sgwKeWrMgELDA==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwTTp5IQc4dAqGfitU64uZSu93BW8ulZ50ZBnGCgJBQ5/hIe4GS
+	ZH/flYKPaNq4nTcVqZYr8fknhK6yaMjTDni6scT8AzXPL+7Cnbi5D+keaditRkeyAgXiimKxlm7
+	JL8jgLlOXiWk/A4imUNlBdDVr8WTcVji1TPGWBh5Cvw==
+X-Google-Smtp-Source: AGHT+IHUttufN04TX+XB2v0nOmX+t22Dxwuaj+k3gvEz9+koC25RuVv5nOSo4819NIVrwVOSN2atPSMlelCVlQoOaAY=
+X-Received: by 2002:a05:6512:3e0a:b0:595:9152:b90e with SMTP id
+ 2adb3069b0e04-598853ddf93mr1339182e87.44.1765091544827; Sat, 06 Dec 2025
+ 23:12:24 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20251206180414.3183334-1-safinaskar@gmail.com>
+ <20251206180414.3183334-2-safinaskar@gmail.com> <aTSlgoK0PcE937l1@smile.fi.intel.com>
+In-Reply-To: <aTSlgoK0PcE937l1@smile.fi.intel.com>
+From: Bartosz Golaszewski <brgl@kernel.org>
+Date: Sun, 7 Dec 2025 08:12:13 +0100
+X-Gmail-Original-Message-ID: <CAMRc=Mca8oi7JpEiNajP+CbHhBhSb9fS4NqFz-aojcX1qmEzcA@mail.gmail.com>
+X-Gm-Features: AQt7F2qf48qgC5abnj9AO2dJG-JdHRcmEsnizopJoLSVxgbYQ23fiVmZ1lHXbrI
+Message-ID: <CAMRc=Mca8oi7JpEiNajP+CbHhBhSb9fS4NqFz-aojcX1qmEzcA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] gpiolib: acpi: Add quirk for Dell Precision 7780
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Askar Safin <safinaskar@gmail.com>, Mika Westerberg <westeri@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	regressions@lists.linux.dev, Dell.Client.Kernel@dell.com, 
+	Mario Limonciello <superm1@kernel.org>, patches@lists.linux.dev, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Andy, Mario and others.
+On Sat, Dec 6, 2025 at 10:52=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Sat, Dec 06, 2025 at 06:04:13PM +0000, Askar Safin wrote:
+> > Dell Precision 7780 often wakes up on its own from suspend. Sometimes
+> > wake up happens immediately (i. e. within 7 seconds), sometimes it happ=
+ens
+> > after, say, 30 minutes.
+>
+> Bart, up to you, if you want to take this. But I can do with a usual rout=
+e via
+> my tree.
+>
 
-During these months I found zillions of suspend and hibernation related bugs.
+I already have a bunch of fixes queued for next week so I guess it'll
+be less hassle and the fastest option if I take it.
 
-It seems hibernation is not well supported.
-
-For example, it seems hibernation is not supported on Chromebooks [1].
-
-And Fedora intentionally disables it by default. [2]
-
-Other operating systems do similar thing. Hibernation is hard-to-enable
-in Windows [3]. macOS on Apple Silicon hibernate in very limited scenarios [4].
-
-But I still use hibernation.
-
-So, I have an idea. Maybe we should remove as many as possible hibernation-related
-code from kernel to make sure that remaining code is easy to support? I. e.
-maybe we should remove some even-more-obscure-than-hibernation features,
-such as hybrid sleep mode, to make normal hibernation easier to maintain?
-
-If you like this idea, then I will happily write patches for removing
-some hibernation-related features, such as hybrid sleep mode.
-
-Other ideas:
-- Remove uswsusp (i. e. kernel/power/user.c ) in favor of normal hibernation
-(or vice versa, i. e. remove normal hibernation and keep uswsusp only)
-- Remove hibernation to swap partition and keep hibernation to swapfile only
-(or vice versa)
-- Decouple hibernation from swap completely (i. e. hibernate not to swap
-partition, but to special designated partition or file)
-
-In short, just tell me what should be removed, and I will happily remove it.
-
-[1] https://www.reddit.com/r/chromeos/comments/y5pol9/anyone_know_what_the_status_of_hiberman_hibernate/
-[2] https://pagure.io/fedora-workstation/blob/master/f/notes/hibernationstatus.md
-[3] https://www.groovypost.com/howto/enable-hibernate-mode-windows-10/
-[4] https://www.reddit.com/r/chromeos/comments/y5pol9/comment/ism352k/
-
--- 
-Askar Safin
+Bartosz
