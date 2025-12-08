@@ -1,38 +1,38 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44A861C84D7
-	for <regressions@lists.linux.dev>; Mon,  8 Dec 2025 14:00:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C68CF325498
+	for <regressions@lists.linux.dev>; Mon,  8 Dec 2025 14:26:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765202427; cv=none; b=gcpLFraKvRdAoplFBydvKm7lyior73pJAlG3CSQ09Rm/VU24ATH3UYy/AlRXV2UamlmsuPj6mkiXRK9nMNGBKVNsqqV7DlF5k42szZMUJV/1Z/fpcTYqomY932ARlBcFhAPEOa5H/gyMNt8+7givNl5Ye+xi35xPPBExbJvRNNc=
+	t=1765203985; cv=none; b=fvpwDUHS+Euve2UUYV6FBeAyGWpvZJqPOQKkCwFTxdKz7f0Fdm5r2+McKziZu0CaHv2E8P2dQ+MB2PmiyFE1yaDTtaxeFcdFuHz05Dg3Kwfo+maK4PKGgsrkLFDnl9RXt8Lr1T/N6gvNoMYYv7cYjg6czE83Bk+LlU1qu4DeP/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765202427; c=relaxed/simple;
-	bh=bxuqJ28I/B8SLXe8L1n/sywUzU2JnloOZwMPqPsidbo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
-	 In-Reply-To:Content-Type; b=SJS/UVCAmGpdaGSYiZNNsWJqIPpOB5CPqBPXfzoPuUW/bjUP43Oer8q1db4m8V7KC49LCIBnCDP+R7gw7BezHVKqv/tVKZ5d5fMDaEHFSSAIrsjjYSn4RD8Gl8yVaMPCZhrFD4S8suaVTFQoFoci8ySkCvXMgrKDHUUMr1mcwac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=P1AciFf4; arc=none smtp.client-ip=80.237.130.52
+	s=arc-20240116; t=1765203985; c=relaxed/simple;
+	bh=nyK/xKWHRHTJWXdtfamVawLNlScVHTeLwUizHH79n0U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qXYLB6DVzJGywTrB+QUYMuOG7vxrVlsxgVyBErUsByVnAM02WqDBsHjg9uCN4b6gUol/E21mnOCcaHaBD9tZBgWFB/v4dqj01GZeyRAthT+MWcT3BfjwDrxJNLQg4BcIfKcDvwQyYSz8MqZmvd9mtotMu9PRoEyrK3n5Wv8tZeY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=hmtrRO+S; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="P1AciFf4"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="hmtrRO+S"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Cc:From:References:To:Subject:MIME-Version:Date:Message-ID:From:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
 	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
 	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=dmnjpWrO9kSNnBaL0EvH+ob4B1yZU4VzG/XzuYR+q50=; t=1765202426;
-	x=1765634426; b=P1AciFf45ld+KWwr2t29WKQhleZ2w5e6u+wZvr3CXHN8sno50j9F+kQBhBjdm
-	j53u9FzjXgXXu6BDYG/sQQrkBT2uTYEpLYdaoLeX8tkAqBKM4uX8hFtc5QrjCCCHFaOpFO1aw+xkZ
-	rYik0UtrFY2iErw9WcZX4McuIE2C7VeVFaz1XEj9Sa1zLrCyjwRBLBS/qbjlY0O6jE/oaLpSc4ORa
-	Ry5CyOLjwcy8+Ye4OJWm5+b7SVmeyEF+ZuFyltlkqboH/UMkCd1ZqFcUATPCFn38FupKQXLtgbinO
-	H1PvtzqeRqRTdC/buHmCLhTJNpyCj0l+mWOS1W1eLWcPrFseEQ==;
+	References; bh=RsK+IJCNumVJ5861ZIVsf9EH4J2y+xty7CYVakdSvMc=; t=1765203983;
+	x=1765635983; b=hmtrRO+Sr1Bw7zKlAATKFntpvTCchb3jlGpt3Fs49slhLSQKbJZ98musCrb0U
+	Q05QdECHk92NlSYrEP7R3E7xaRdxcXAz0RvikeTCExL5JTSd056odfTOlJ0jzymobM5ymjApLDqNa
+	eKsLegCia+2zPJUXmt6l3xDAMh7ReCHNStTBcNgJqmGp8d/2xgjcaM/gnWQLV5XUC/mdv5/QGhRsp
+	XQe9lIjYKtiV6rMypeZ+saUFZoCH19WSWfFU9033u0c+NuNEsJTDyjXDHxzTN/bVE1Nl4egBkjfUa
+	ssSA86Mb7Bv5DeRev/Gv0L9DNOvCaD1UpjdVl6tsJS+KIZm+NQ==;
 Received: from [2a02:8108:8984:1d00:a0cf:1912:4be:477f]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128)
-	id 1vSbmq-004Q14-1O;
-	Mon, 08 Dec 2025 15:00:24 +0100
-Message-ID: <04cabb57-04aa-4945-8f65-593377bd3b95@leemhuis.info>
-Date: Mon, 8 Dec 2025 15:00:23 +0100
+	id 1vScBw-004T4W-2a;
+	Mon, 08 Dec 2025 15:26:20 +0100
+Message-ID: <f08fc7da-0d2d-4d7d-a1dc-8ed90493dac8@leemhuis.info>
+Date: Mon, 8 Dec 2025 15:26:20 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -40,30 +40,73 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Regression in how user space handles the Widevine Content
- Decryption Module (firefox and maybe others)
-To: Dave Morgan <d_a_morgan@hotmail.com>
-References: <LOBP302MB229140293C531C0E0A93E20CD2D2A@LOBP302MB2291.GBRP302.PROD.OUTLOOK.COM>
+Subject: Re: [REGRESSION] Display signal loss (blink) on input at >100Hz since
+ v6.1 with AMD Graphics Card
+To: Yash Anand <yashanands112@gmail.com>
+Cc: regressions@lists.linux.dev, amd-gfx@lists.freedesktop.org
+References: <CAKpMnw3=GYLxggX1cJMG99XbfxNg4vC5Qb+-VNzEhgFAxEoYRA@mail.gmail.com>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
 Content-Language: de-DE, en-US
-Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-In-Reply-To: <LOBP302MB229140293C531C0E0A93E20CD2D2A@LOBP302MB2291.GBRP302.PROD.OUTLOOK.COM>
+In-Reply-To: <CAKpMnw3=GYLxggX1cJMG99XbfxNg4vC5Qb+-VNzEhgFAxEoYRA@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1765202426;3a050230;
-X-HE-SMSGID: 1vSbmq-004Q14-1O
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1765203983;0f19e077;
+X-HE-SMSGID: 1vScBw-004T4W-2a
 
-On 11/22/25 17:53, Dave Morgan wrote:
-> Userspace handles decryption fine up to linux-6.17.8, but fails in decrypting Netflix content using firefox for all rc versions for linux-6.18.0-rcX.
-> 
-> Thanks for looking into this, and my appreciation to you all for your work.
+Hi!
 
-Hi! Thx for the report and I apologize for the late reply.
+On 11/27/25 08:43, Yash Anand wrote:
+> Hi, I'm Yash. I would like to report a regression I'm facing with my AMD
+> graphics card (RX 6500XT) and its driver amdgpu. This is happening to me
+> in ALL the kernel versions above 6.1, i.e, linux 6.1 is the last kernel
+> tested by me in which I'm not facing this issue.
 
-Is 6.18 final also affected? And when you say "up to linux-6.17.8", does
-that mean that 6.17.9 is affected? And what kernel GPU driver do you use?
+Thx for the report.
 
-Note, 6.17.y is EOL in a few days, so the issue is unlikely to get fixed
-there.
+The problem is quite old and maybe nobody will take a closer look,
+unless you find the change that broke things using a bisection – and
+even then there is no guarantee that it will be fixed due to how long it
+exists already.
+
+Developers of the driver in question also expect bugs to be reported to
+https://gitlab.freedesktop.org/drm/amd/-/issues , which might be why
+nobody replied here yet.
+
+So it's likely best if you report the problem there and ask for advice
+first before investing time in a bisection.
 
 Ciao, Thorsten
+
+
+> The Issue:- Whenever the refresh rate is set above 100hz (the max
+> refresh rate my monitor supports is 120hz), the screen /flickers/, or /
+> blinks,/ i.e, it turns off for around 2s and turns back on whenever I
+> click on things like- new tab button in firefox, type things in the
+> terminal, press the super key, change the theme from appearance, etc. 
+> 
+> The system is responsive, but the display /flickers/ or /blinks /while
+> doing normal tasks in my system. This doesn't happen at 100hz, or lower,
+> like 60hz etc.
+> 
+> System Specifications:
+> GPU: Powercolor AMD Radeon RX 6500XT 8gb
+> CPU: Intel i3-9100f
+> Monitor: Acer EK240Y G0 23.8 Inch IPS Full HD. I am using it at 1080p at
+> 120hz. Connected through HDMI
+> Distro: Manjaro with XFCE. Also tested with fedora, linux mint, and some
+> more.
+> 
+> Last Working Kernel Version by my testing: Linux 6.1.153-1 LTS
+> First Bad Kernel Version by my testing: Linux 6.6.107-1 LTS
+> Also facing issues on the latest Linux 6.17.1-0
+> 
+> Please let me know if you need any specific logs and also the command to
+> fetch it (I'm a beginner in terminal and its commands)
+> 
+> Thanks, 
+> 
+> Yash.
+> #regzbot ^introduced: v6.1..v6.6
+> 
+> 
+
