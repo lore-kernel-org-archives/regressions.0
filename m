@@ -1,122 +1,120 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0F821EA84;
-	Mon,  8 Dec 2025 14:35:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E94901FBCA7
+	for <regressions@lists.linux.dev>; Tue,  9 Dec 2025 06:03:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765204546; cv=none; b=CliW7j+2fWJyKKsr0/2DEzyPmGN0tMF50oz4MJrJ57plNN/Kwem8UeO9vYn3+/2HjBoL82MJMM2o1HuUjNB6XsfY5uDZoxP8EbrmjgKdgpccUu/uNlxC3qAx6N3H5yJcaz/vD9duZAT52Zi5Wsddz3RJX0zBo+i3tg2T9HiL5hw=
+	t=1765260217; cv=none; b=Y78g9c28H6bdmxayG/uOWdlabQQ7tgS5X8bodX+tWbM7WwBzP0tMdrMl4FAV8gGe5uM8r69yzRBOYP60RxRMdH6dtZyuYoTrVZMnmxY+ZF91ZLkaav22O+QW+vXJWvWkMPCIAEWfurFQn5Y/6EAaleKv1X5xxXEpJSaPhJLCcTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765204546; c=relaxed/simple;
-	bh=xO8dU7UTBPxQOjnMZaRCLB/JI4X0kHsARttn4ZBj7MM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ot+h6EqAudLKUZGplTsGZyRdvOf7n+tBbJCd8R2NLMcZENPDD2+f+3fWjyX51u+SuPm6HC38ZLqAPPvLR8pQIHSM7T/kiz9YeSoU/Ejza2sY5nhg6Fv+Y0o96zmb4YCaLQ9Q+e62Atu2ftCOqxS4g6RcI3CvLRE2Lga1N1QfRe0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=hXmRSfSs; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1765260217; c=relaxed/simple;
+	bh=oBTZ2Ya3LFBT5ZFu+p8mzczZGzmeB6TLslS1Fe8miAw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=aFyPlwpuvbssxbXdBYVvj0wEv9ylXtmEBri4xnQOkjXnDHw6+6YY7vI700wGoO+pHiJKArbemXerCIsvUB0f2d4pby37Ih2I5H9qb4ISEW0uYyX96LKlCERwZtCU7cQE6zTQ1buhurrUX04g8a8q+4mcAj+9uCHPQahkhRuYnV4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MV3PsBzO; arc=none smtp.client-ip=209.85.128.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="hXmRSfSs"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=Ba46iqGvPVxQZaXq9WNEuTq1PH6XqEj/ZP2zxUaVvwI=; t=1765204545;
-	x=1765636545; b=hXmRSfSs4IQmLAgk0mXKuMmkey7EYvODbZWFEVfOx6Cm+aRbBnsrmElemaMMK
-	iNhY9538uwbcSCNlBV9PWbP27VyMFQ/BtubDVM522jRZOJi0yjPF9N8jddt0dSUTEbu66F9B87w5n
-	orp86R6GV+rqExAnPYnm/TJv2t8Qgm53HNGyABBfUZxevsvERTdjNsywLeEeuRZ91rHReyAozCQsA
-	6Hw59mXs+pKudA69g/DsKLN46k+Ufi5QCshzHN8Vb64hgeBoKMB5UIF6dQi6W9Bew42GVLjhVaIV0
-	+DzVc8s+/riXkhkun0aQRxjZcWbcDa5roLHwdaVRLBcdP6v+Iw==;
-Received: from [2a02:8108:8984:1d00:a0cf:1912:4be:477f]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128)
-	id 1vScL0-004U9y-37;
-	Mon, 08 Dec 2025 15:35:43 +0100
-Message-ID: <48db01b1-f4e5-4687-8ffb-472981d153ed@leemhuis.info>
-Date: Mon, 8 Dec 2025 15:35:42 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MV3PsBzO"
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-787ff3f462bso63352147b3.0
+        for <regressions@lists.linux.dev>; Mon, 08 Dec 2025 22:03:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1765260215; x=1765865015; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oBTZ2Ya3LFBT5ZFu+p8mzczZGzmeB6TLslS1Fe8miAw=;
+        b=MV3PsBzOaYmB+UOwpKbe4b+qw9K08uX6Bt1m+nfmm96aEZQiL8D9nH4h86kSuMGOU/
+         8SjOa7SOgSFfVb5/tK2AnXkk6i3i4eCn87ruYf2Iq+YIB+Ju6O87hLCMTMxWBvEO90KL
+         ShiScg7ZjOZDUxDixfJhOBbacDdcryVkzh8nGPcUV5mgLNLEioMmmcxw+h18qU/vttQn
+         5nsOojUIpNMk2iYyDIlWKtSGcNnUs7E/vuZ/dcL10Ec57ZC+J1o6KkV/8yjzrpdyKsp2
+         7kIgPgTSOT9Qw6vpS2kkEiMJmP98OwqH4tjXX916ExJrednZ2QgUd4C2DtUNn46fGRdb
+         NTTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1765260215; x=1765865015;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=oBTZ2Ya3LFBT5ZFu+p8mzczZGzmeB6TLslS1Fe8miAw=;
+        b=aYbQD4hRCYT53Qq/IHgUoS2b3A1EdaohCF8YLNWCwScZekgiY+EeTCQVkh97JLHzIc
+         15JmK+IS0arRt0beQ6qAMveLq+F7vh5BXIJrkANfu3yEsBL++dwlwW9jchX0HF+5MM/b
+         1Azqk/iutCZnjal+LRjIPLnj180hudf0ZGdyeOzivSxyRmWA+yA69hlTNoybrJWB7nX5
+         WGW1WFLCWjgApHuTQbYoMzbfJDF0Y9i3y2iVmwU6SLKocOuRZXAjlb5KoxLZYSiHYJsX
+         y7YhPtr4PXBv342I1m7h0SM/MBtjmhgJFy2m7Ynce3/hEea+toDYER5jgefhSj8IbtHC
+         7pvQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXk9TxDQEzIznF9SMGtIif4JH+kcyzCGCDjLu8xrSLyle7lq/bFuAEvUqTMcZG6VldDpFfNAtvdNWUI0w==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzgfvceyV4UOW7chz2ECVbbwibu2h4DXYqy0aOcyR43HAPPR+kV
+	CUDdEcoMotAyNdJOf/HeID+CanShHim9KbHGYGtXpbRzgDLtv71EHZDOVoiHUouLqT5akavtGZ6
+	h5g3MpDqZlWi0npMJkhWNDDzXyL2ch9M=
+X-Gm-Gg: AY/fxX43lzNmq8xwJi1i0HNDeo10k5//Q9/5iFc84f7DEaYd+2fothjd9DMhyiH+FDl
+	lM9OqITp2X7NHmItOclkzKw2O2OhHlvFTaayNOdVle+sDu8e+tUYQwGDqxNknVCsN4y2WSVc6QJ
+	bk84VmJCdgvtFoXZpYLa4WRJBqS8RJXU1shO8PPQfVCITXSv841A72fT5RuHtxyWV5sSgtojvUt
+	rjGqEVtsGk0uYJisBYJtd5aUsMM/+/s4SWzcbY3bsdxF+W/+eRAKEXsXXthLwSoiR/nYtQiZOJR
+	NEx+DxQ=
+X-Google-Smtp-Source: AGHT+IFWSk+Gx5Hu+GxhdC19MWzg6caPjziHbN4HkRYzRB5k+1atfCOQ1Mi8C0lPsAyjisE59nr9CN3RG++h3+fh6BU=
+X-Received: by 2002:a05:690e:b86:b0:644:60d9:865f with SMTP id
+ 956f58d0204a3-64467a685ccmr282456d50.43.1765260214852; Mon, 08 Dec 2025
+ 22:03:34 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: PROBLEM: hwclock busted w/ M48T59 RTC (regression)
-To: Nick Bowler <nbowler@draconx.ca>, linux-kernel@vger.kernel.org,
- regressions@lists.linux.dev, linux-rtc@vger.kernel.org
-Cc: Esben Haabendal <esben@geanix.com>, stable@vger.kernel.org,
- sparclinux@vger.kernel.org
-References: <krmiwpwogrvpehlqdrugb5glcmsu54qpw3mteonqeqymrvzz37@dzt7mes7qgxt>
- <gfwdg244bcmkv7l44fknfi4osd2b23unwaos7rnlirkdy2rrrt@yovd2vewdviv>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <gfwdg244bcmkv7l44fknfi4osd2b23unwaos7rnlirkdy2rrrt@yovd2vewdviv>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1765204545;f93b2119;
-X-HE-SMSGID: 1vScL0-004U9y-37
+References: <20231213083251.186935-1-chris.feng@mediatek.com>
+ <20251021125446.4384-1-safinaskar@gmail.com> <e27d0392-11c4-4b9e-8ada-9db73f47dddb@amd.com>
+In-Reply-To: <e27d0392-11c4-4b9e-8ada-9db73f47dddb@amd.com>
+From: Askar Safin <safinaskar@gmail.com>
+Date: Tue, 9 Dec 2025 09:02:59 +0300
+X-Gm-Features: AQt7F2pBg8sUS-refhzV6U8KXOpDLQr9gIhi7WDltdVoC5E1oBVor853-rHhgg4
+Message-ID: <CAPnZJGB2YAx03piGMLE=wLOQU9-gCpSdFZhBE5iECkDxwzYCFQ@mail.gmail.com>
+Subject: Re: [REGRESSION][BISECTED] "Wakeup event detected during hibernation"
+ on Dell Precision 7780 (was "[PATCH v4] PM: hibernate: Avoid missing wakeup
+ events during hibernation")
+To: Mario Limonciello <mario.limonciello@amd.com>
+Cc: chris.feng@mediatek.com, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, chetan.kumar@mediatek.com, 
+	hua.yang@mediatek.com, len.brown@intel.com, liang.lu@mediatek.com, 
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, pavel@ucw.cz, 
+	rafael@kernel.org, stable@kernel.org, ting.wang@mediatek.com, 
+	regressions <regressions@lists.linux.dev>, 
+	DellClientKernel <Dell.Client.Kernel@dell.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Lo!
+On Tue, Oct 21, 2025 at 5:29=E2=80=AFPM Mario Limonciello
+<mario.limonciello@amd.com> wrote:
+> To me it sounds like it's potentially the same root cause for the early
+> suspend wakeup as well as the hibernate wakeup.
 
-On 11/26/25 04:18, Nick Bowler wrote:
-> Any thoughts?
+Adding "gpiolib_acpi.ignore_wake=3DVEN_0488:00@355" or
+"gpiolib_acpi.ignore_wake=3DINTC1085:00@355"
+doesn't fix this bug.
 
-Not really, just a vague idea (and reminder, this is not my area or
-expertise, I'm just tracking regressions):
+> Are you closing the lid
+> and putting the laptop in a bag or putting anything on top of it?
 
-Two fixes were proposed for the culprit, see:
+No. I just click "Hibernate" button using touchpad in GUI, and hibernate fa=
+ils.
 
-https://lore.kernel.org/all/BN0PR08MB69510928028C933749F4139383D1A@BN0PR08MB6951.namprd08.prod.outlook.com/
-https://lore.kernel.org/all/BN0PR08MB6951415A751F236375A2945683D1A@BN0PR08MB6951.namprd08.prod.outlook.com/
+I just did some printf-debugging. Results:
 
-Wondering if they might help. Esben might have an idea, but in case
-Esben does not reply maybe just give them a spin if you have a minute.
+We call
+https://elixir.bootlin.com/linux/v6.18/source/kernel/power/hibernate.c#L870=
+ ,
+it calls
+https://elixir.bootlin.com/linux/v6.18/source/kernel/power/hibernate.c#L723=
+ ,
+it calls
+https://elixir.bootlin.com/linux/v6.18/source/kernel/power/hibernate.c#L636=
+ ,
+it calls dpm_suspend
+https://elixir.bootlin.com/linux/v6.18/source/drivers/base/power/main.c#L22=
+65 ,
+that dpm_suspend returns error, and this error leads to
+"Wakeup event detected during hibernation" message.
 
-Ciao, Thorsten
+Any further pointers? How to debug?
 
-> The problem is still present in 6.18-rc7 and reverting the commit
-> indicated below still fixes it.
-> 
-> I am also seeing the same failure on a totally different system with
-> Dallas DS1286 RTC, which is also fixed by reverting this commit.
-> 
-> Since the initial report this regression has been further backported
-> to all the remaining longterm kernel series.
-> 
-> Thanks,
->   Nick
-> 
-> On Thu, Oct 23, 2025 at 12:45:13AM -0400, Nick Bowler wrote:
->> Hi,
->>
->> After a stable kernel update, the hwclock command seems no longer
->> functional on my SPARC system with an ST M48T59Y-70PC1 RTC:
->>
->>   # hwclock
->>   [...long delay...]
->>   hwclock: select() to /dev/rtc0 to wait for clock tick timed out
->>
->> On prior kernels, there is no problem:
->>
->>   # hwclock
->>   2025-10-22 22:21:04.806992-04:00
->>
->> I reproduced the same failure on 6.18-rc2 and bisected to this commit:
->>
->>   commit 795cda8338eab036013314dbc0b04aae728880ab
->>   Author: Esben Haabendal <esben@geanix.com>
->>   Date:   Fri May 16 09:23:35 2025 +0200
->>   
->>       rtc: interface: Fix long-standing race when setting alarm
->>
->> This commit was backported to all current 6.x stable branches,
->> as well as 5.15.x, so they all have the same regression.
->>
->> Reverting this commit on top of 6.18-rc2 corrects the problem.
->>
->> Let me know if you need any more info!
->>
->> Thanks,
->>   Nick
-> 
-> 
-
+--=20
+Askar Safin
