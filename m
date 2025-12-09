@@ -1,120 +1,176 @@
-Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E94901FBCA7
-	for <regressions@lists.linux.dev>; Tue,  9 Dec 2025 06:03:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0323722DFA4
+	for <regressions@lists.linux.dev>; Tue,  9 Dec 2025 07:57:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765260217; cv=none; b=Y78g9c28H6bdmxayG/uOWdlabQQ7tgS5X8bodX+tWbM7WwBzP0tMdrMl4FAV8gGe5uM8r69yzRBOYP60RxRMdH6dtZyuYoTrVZMnmxY+ZF91ZLkaav22O+QW+vXJWvWkMPCIAEWfurFQn5Y/6EAaleKv1X5xxXEpJSaPhJLCcTM=
+	t=1765267070; cv=none; b=DpxU61lwcUXvNqAJGTzb+b3Ml0GJpZwHRYArYvIfHtJ4jv85Rp/rhdJ/iPOPrXOAxMPGG3K7HzMhgUpNhYHLi75j3gvlPTHShSr9NnmsarsZcaF6N4EWq+h8T9Nujl463XHZSLOG5eOeequaW6GRXT30BQNEb6HoDtS3SJNY/jk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765260217; c=relaxed/simple;
-	bh=oBTZ2Ya3LFBT5ZFu+p8mzczZGzmeB6TLslS1Fe8miAw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aFyPlwpuvbssxbXdBYVvj0wEv9ylXtmEBri4xnQOkjXnDHw6+6YY7vI700wGoO+pHiJKArbemXerCIsvUB0f2d4pby37Ih2I5H9qb4ISEW0uYyX96LKlCERwZtCU7cQE6zTQ1buhurrUX04g8a8q+4mcAj+9uCHPQahkhRuYnV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MV3PsBzO; arc=none smtp.client-ip=209.85.128.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1765267070; c=relaxed/simple;
+	bh=nz87QrQLYiSwa0c/YpdP/GTj8UJPE4nba5/2QW7IP4g=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BnQzwTlsVnJEsjB2bd7q27XgjwBH+4FdjuXBM/+fmxqGdZRvBxYShq80l1BLD1bTT+V2m1f6Pdcuim5ikrPvzNTW/9vTwOUTRHlGq13HNUVW8Aq+EHUGHS2TmxnrJde/9HJ5hR7+GYbYkJMmHRk/GyOiSu1aRi9y/n5aKkYG+48=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=HsPDtfrG; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=TYOIuoFd; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=HsPDtfrG; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=TYOIuoFd; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MV3PsBzO"
-Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-787ff3f462bso63352147b3.0
-        for <regressions@lists.linux.dev>; Mon, 08 Dec 2025 22:03:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1765260215; x=1765865015; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oBTZ2Ya3LFBT5ZFu+p8mzczZGzmeB6TLslS1Fe8miAw=;
-        b=MV3PsBzOaYmB+UOwpKbe4b+qw9K08uX6Bt1m+nfmm96aEZQiL8D9nH4h86kSuMGOU/
-         8SjOa7SOgSFfVb5/tK2AnXkk6i3i4eCn87ruYf2Iq+YIB+Ju6O87hLCMTMxWBvEO90KL
-         ShiScg7ZjOZDUxDixfJhOBbacDdcryVkzh8nGPcUV5mgLNLEioMmmcxw+h18qU/vttQn
-         5nsOojUIpNMk2iYyDIlWKtSGcNnUs7E/vuZ/dcL10Ec57ZC+J1o6KkV/8yjzrpdyKsp2
-         7kIgPgTSOT9Qw6vpS2kkEiMJmP98OwqH4tjXX916ExJrednZ2QgUd4C2DtUNn46fGRdb
-         NTTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765260215; x=1765865015;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=oBTZ2Ya3LFBT5ZFu+p8mzczZGzmeB6TLslS1Fe8miAw=;
-        b=aYbQD4hRCYT53Qq/IHgUoS2b3A1EdaohCF8YLNWCwScZekgiY+EeTCQVkh97JLHzIc
-         15JmK+IS0arRt0beQ6qAMveLq+F7vh5BXIJrkANfu3yEsBL++dwlwW9jchX0HF+5MM/b
-         1Azqk/iutCZnjal+LRjIPLnj180hudf0ZGdyeOzivSxyRmWA+yA69hlTNoybrJWB7nX5
-         WGW1WFLCWjgApHuTQbYoMzbfJDF0Y9i3y2iVmwU6SLKocOuRZXAjlb5KoxLZYSiHYJsX
-         y7YhPtr4PXBv342I1m7h0SM/MBtjmhgJFy2m7Ynce3/hEea+toDYER5jgefhSj8IbtHC
-         7pvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXk9TxDQEzIznF9SMGtIif4JH+kcyzCGCDjLu8xrSLyle7lq/bFuAEvUqTMcZG6VldDpFfNAtvdNWUI0w==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzgfvceyV4UOW7chz2ECVbbwibu2h4DXYqy0aOcyR43HAPPR+kV
-	CUDdEcoMotAyNdJOf/HeID+CanShHim9KbHGYGtXpbRzgDLtv71EHZDOVoiHUouLqT5akavtGZ6
-	h5g3MpDqZlWi0npMJkhWNDDzXyL2ch9M=
-X-Gm-Gg: AY/fxX43lzNmq8xwJi1i0HNDeo10k5//Q9/5iFc84f7DEaYd+2fothjd9DMhyiH+FDl
-	lM9OqITp2X7NHmItOclkzKw2O2OhHlvFTaayNOdVle+sDu8e+tUYQwGDqxNknVCsN4y2WSVc6QJ
-	bk84VmJCdgvtFoXZpYLa4WRJBqS8RJXU1shO8PPQfVCITXSv841A72fT5RuHtxyWV5sSgtojvUt
-	rjGqEVtsGk0uYJisBYJtd5aUsMM/+/s4SWzcbY3bsdxF+W/+eRAKEXsXXthLwSoiR/nYtQiZOJR
-	NEx+DxQ=
-X-Google-Smtp-Source: AGHT+IFWSk+Gx5Hu+GxhdC19MWzg6caPjziHbN4HkRYzRB5k+1atfCOQ1Mi8C0lPsAyjisE59nr9CN3RG++h3+fh6BU=
-X-Received: by 2002:a05:690e:b86:b0:644:60d9:865f with SMTP id
- 956f58d0204a3-64467a685ccmr282456d50.43.1765260214852; Mon, 08 Dec 2025
- 22:03:34 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="HsPDtfrG";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="TYOIuoFd";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="HsPDtfrG";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="TYOIuoFd"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 1F2D0337A2;
+	Tue,  9 Dec 2025 07:57:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1765267067; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KO3VcMy+bgqoVvLQfOtoJbYm6o/l+2PFoYM8zvqmlfc=;
+	b=HsPDtfrG0BiNJkejAKo9Qdrl25YPIeSiLhFAFE0NLNGSX5NDSIq4AfnQ7kdaFm59QA+mim
+	CL0pwE0yuTIpYYXmyWLDHFuYav3eEdK3el1QjtvS/N2Z5jTDviWwanGcj8IhghNfsz8RwI
+	NFcumvQYkN2OUXbZ6OAzb94NwsoIUrs=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1765267067;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KO3VcMy+bgqoVvLQfOtoJbYm6o/l+2PFoYM8zvqmlfc=;
+	b=TYOIuoFdOg859/7mJSrj5aS+f4V8M2rBUBLv8iOd04TDKIRzy0DAKn1j2J1qYDHH4Z+DZv
+	fG58+fCBpob08cDg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1765267067; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KO3VcMy+bgqoVvLQfOtoJbYm6o/l+2PFoYM8zvqmlfc=;
+	b=HsPDtfrG0BiNJkejAKo9Qdrl25YPIeSiLhFAFE0NLNGSX5NDSIq4AfnQ7kdaFm59QA+mim
+	CL0pwE0yuTIpYYXmyWLDHFuYav3eEdK3el1QjtvS/N2Z5jTDviWwanGcj8IhghNfsz8RwI
+	NFcumvQYkN2OUXbZ6OAzb94NwsoIUrs=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1765267067;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KO3VcMy+bgqoVvLQfOtoJbYm6o/l+2PFoYM8zvqmlfc=;
+	b=TYOIuoFdOg859/7mJSrj5aS+f4V8M2rBUBLv8iOd04TDKIRzy0DAKn1j2J1qYDHH4Z+DZv
+	fG58+fCBpob08cDg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 91FB73EA63;
+	Tue,  9 Dec 2025 07:57:46 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 7+T2IXrWN2nYZAAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Tue, 09 Dec 2025 07:57:46 +0000
+Date: Tue, 09 Dec 2025 08:57:46 +0100
+Message-ID: <875xagt7d1.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Askar Safin <safinaskar@gmail.com>
+Cc: Takashi Iwai <tiwai@suse.de>,	Dell.Client.Kernel@dell.com,
+	amadeuszx.slawinski@linux.intel.com,	baojun.xu@ti.com,
+	bo.liu@senarytech.com,	cezary.rojewski@intel.com,
+	kai.vehmanen@linux.intel.com,	kailang@realtek.com,
+	linux-sound@vger.kernel.org,	patches@opensource.cirrus.com,
+	regressions@lists.linux.dev,	rf@opensource.cirrus.com,	Nicolas Schier
+ <nsc@kernel.org>,	linux-kbuild@vger.kernel.org,	Masahiro Yamada
+ <masahiroy@kernel.org>,	Nathan Chancellor <nathan@kernel.org>,
+	miguel.ojeda.sandonis@gmail.com,	ojeda@kernel.org,	sam@gentoo.org,	Thomas
+ =?ISO-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,	Daniel Xu
+ <dxu@dxuuu.xyz>
+Subject: Re: [REGRESSION][BISECTED] My audio broke (was: [PATCH 05/27] ALSA: hda: Move controller drivers into sound/hda/controllers directory)
+In-Reply-To: <CAPnZJGBq=q2iW9gMEv9U9LCKJ6f6Uu7Z3QrDCw6SdRGL0sAKVQ@mail.gmail.com>
+References: <87o6q8l68r.wl-tiwai@suse.de>
+	<20251015145749.2572-1-safinaskar@gmail.com>
+	<878qhckxc5.wl-tiwai@suse.de>
+	<CAPnZJGDeCkqqUpEh0SBfwvsxfMp9ZDXqvhrC1s9zRp6jX+Fvnw@mail.gmail.com>
+	<875xcgkvnw.wl-tiwai@suse.de>
+	<CAPnZJGDmCnKPz2eygwDjQGXZWVctGyJxV+OeFSLLeZPOCEvvbA@mail.gmail.com>
+	<CAPnZJGBdqPhmNOes4-BRu8C-0d3yco8H93WhdORxm7MRBSw7CQ@mail.gmail.com>
+	<CAPnZJGCqY9j-33piRBpkurSDsOfAqV6+ODGtToGDsgNQd-g9cQ@mail.gmail.com>
+	<87bjm78978.wl-tiwai@suse.de>
+	<CAPnZJGAxrVJooo9CdgExd+uR+s=W9Na2dZzyjKZc=xYZv_kvmA@mail.gmail.com>
+	<871plbucj3.wl-tiwai@suse.de>
+	<CAPnZJGBq=q2iW9gMEv9U9LCKJ6f6Uu7Z3QrDCw6SdRGL0sAKVQ@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/30.1 Mule/6.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-References: <20231213083251.186935-1-chris.feng@mediatek.com>
- <20251021125446.4384-1-safinaskar@gmail.com> <e27d0392-11c4-4b9e-8ada-9db73f47dddb@amd.com>
-In-Reply-To: <e27d0392-11c4-4b9e-8ada-9db73f47dddb@amd.com>
-From: Askar Safin <safinaskar@gmail.com>
-Date: Tue, 9 Dec 2025 09:02:59 +0300
-X-Gm-Features: AQt7F2pBg8sUS-refhzV6U8KXOpDLQr9gIhi7WDltdVoC5E1oBVor853-rHhgg4
-Message-ID: <CAPnZJGB2YAx03piGMLE=wLOQU9-gCpSdFZhBE5iECkDxwzYCFQ@mail.gmail.com>
-Subject: Re: [REGRESSION][BISECTED] "Wakeup event detected during hibernation"
- on Dell Precision 7780 (was "[PATCH v4] PM: hibernate: Avoid missing wakeup
- events during hibernation")
-To: Mario Limonciello <mario.limonciello@amd.com>
-Cc: chris.feng@mediatek.com, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, chetan.kumar@mediatek.com, 
-	hua.yang@mediatek.com, len.brown@intel.com, liang.lu@mediatek.com, 
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, pavel@ucw.cz, 
-	rafael@kernel.org, stable@kernel.org, ting.wang@mediatek.com, 
-	regressions <regressions@lists.linux.dev>, 
-	DellClientKernel <Dell.Client.Kernel@dell.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spamd-Result: default: False [-1.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.999];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_TLS_ALL(0.00)[];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[22];
+	TAGGED_RCPT(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[suse.de,dell.com,linux.intel.com,ti.com,senarytech.com,intel.com,realtek.com,vger.kernel.org,opensource.cirrus.com,lists.linux.dev,kernel.org,gmail.com,gentoo.org,linutronix.de,dxuuu.xyz];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,suse.de:email,imap1.dmz-prg2.suse.org:helo]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: -1.80
 
-On Tue, Oct 21, 2025 at 5:29=E2=80=AFPM Mario Limonciello
-<mario.limonciello@amd.com> wrote:
-> To me it sounds like it's potentially the same root cause for the early
-> suspend wakeup as well as the hibernate wakeup.
+On Sat, 06 Dec 2025 22:39:52 +0100,
+Askar Safin wrote:
+> 
+> On Wed, Dec 3, 2025 at 12:42 PM Takashi Iwai <tiwai@suse.de> wrote:
+> > A rather hackish fix would be something like below.  Instead of
+> 
+> I tested. This patch works. Thank you!
+> Tested-by: Askar Safin <safinaskar@gmail.com>
 
-Adding "gpiolib_acpi.ignore_wake=3DVEN_0488:00@355" or
-"gpiolib_acpi.ignore_wake=3DINTC1085:00@355"
-doesn't fix this bug.
+Thanks for testing!
 
-> Are you closing the lid
-> and putting the laptop in a bag or putting anything on top of it?
+On the second thought, a better fix would be just to change the
+default fallback from ANY to LEGACY, so a oneliner change like below.
+Could you test it instead of the previous one?
 
-No. I just click "Hibernate" button using touchpad in GUI, and hibernate fa=
-ils.
+It was set to ANY as we assumed that all drivers should cover the
+devices generally, but in the end, SOF or AVS need specific firmware
+files, hence it doesn't make sense to bind to them if specific kconfig
+is enabled.
 
-I just did some printf-debugging. Results:
 
-We call
-https://elixir.bootlin.com/linux/v6.18/source/kernel/power/hibernate.c#L870=
- ,
-it calls
-https://elixir.bootlin.com/linux/v6.18/source/kernel/power/hibernate.c#L723=
- ,
-it calls
-https://elixir.bootlin.com/linux/v6.18/source/kernel/power/hibernate.c#L636=
- ,
-it calls dpm_suspend
-https://elixir.bootlin.com/linux/v6.18/source/drivers/base/power/main.c#L22=
-65 ,
-that dpm_suspend returns error, and this error leads to
-"Wakeup event detected during hibernation" message.
+Takashi
 
-Any further pointers? How to debug?
-
---=20
-Askar Safin
+-- 8< --
+--- a/sound/hda/core/intel-dsp-config.c
++++ b/sound/hda/core/intel-dsp-config.c
+@@ -718,7 +718,7 @@ int snd_intel_dsp_driver_probe(struct pci_dev *pci)
+ 	/* find the configuration for the specific device */
+ 	cfg = snd_intel_dsp_find_config(pci, config_table, ARRAY_SIZE(config_table));
+ 	if (!cfg)
+-		return SND_INTEL_DSP_DRIVER_ANY;
++		return SND_INTEL_DSP_DRIVER_LEGACY;
+ 
+ 	if (cfg->flags & FLAG_SOF) {
+ 		if (cfg->flags & FLAG_SOF_ONLY_IF_SOUNDWIRE &&
