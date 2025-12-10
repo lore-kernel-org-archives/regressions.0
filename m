@@ -1,97 +1,172 @@
-Received: from meesny.iki.fi (meesny.iki.fi [195.140.195.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FB143246F1
-	for <regressions@lists.linux.dev>; Wed, 10 Dec 2025 12:36:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=195.140.195.201
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765370192; cv=pass; b=UX3NouOVS6CIJUDoPF2ap8GEa6Q8Z9355YTHCBhWS0tOtGdMR95kJgSBKe1x0MPAyo3vM5SVln6twCCOV+1L9EdFtOEwWukvOahnFHdS7hOoCh04Vlv5hG4R835q/kDykPP9gBrhHq4YD3dBEjcPACSsiz63r7s6prOpgkgZ5MM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765370192; c=relaxed/simple;
-	bh=Fuc2GoHwCJq96l90crplLT80Ent3ZY/qTt10j6NqniM=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Iy2W8JIo178yIivqec4+rVQj178A/qKcJii3vNHmm5TgK4prd39YtRfqt/4enbkSrq5ywjd1YW8n767OVT45SP8t5yRN6/fLiBCnNIV1S592kUZWDV3+/dV9lUPqf3fHw4ja4XXrf6kqayVuQZI5bHQFAZEq/exnoP1oiiR2C3k=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iki.fi; spf=pass smtp.mailfrom=iki.fi; dkim=pass (1024-bit key) header.d=iki.fi header.i=@iki.fi header.b=DzELVdZc; arc=pass smtp.client-ip=195.140.195.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iki.fi
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iki.fi
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8962D322C67
+	for <regressions@lists.linux.dev>; Wed, 10 Dec 2025 13:00:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1765371620; cv=none; b=Nj7UjVSZ1LcAbh68lG7fo3uGRD7bP3FxNG/2dx2WTCCvvF/9b25VD0BZeQh4zk42aRO84k7VkUTikiH1qIwHwp4EEw/kExUMG+LIQr/XjLwnFIee8/9p7Q5HRlerQzwGYCYHTQTK0O8Dzts40w+dqGNGUS7Kkhw5ktKxNqUv1Ig=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1765371620; c=relaxed/simple;
+	bh=BvG0f+3pb6UXk3oEc0t8bVct1Hm1/AfQHYk6hcWsJJA=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=C1sAnuXE3YuYD2f7ZvRNcdcf54PUXDZoaKT7BnBc9wL9PXh7pv/kfsCXHcaCVhPxpltC3Kzj+oZpN/atqfxOiinzmZcn8m6EN1qV0IAtCnkdzDjFN5sY0mCbvQkXOuitYKasRp9rArz83i8ojBocBpBojarVzLcV1ypse4MssVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=iDerOiDm; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=XOZF7BXQ; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=iDerOiDm; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=XOZF7BXQ; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=iki.fi header.i=@iki.fi header.b="DzELVdZc"
-Received: from mail.home (212-90-86-103.bb.dnainternet.fi [212.90.86.103])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="iDerOiDm";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="XOZF7BXQ";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="iDerOiDm";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="XOZF7BXQ"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	(Authenticated sender: timo.lindfors)
-	by meesny.iki.fi (Postfix) with ESMTPSA id 4dRFZb5ybZzyQH;
-	Wed, 10 Dec 2025 14:36:23 +0200 (EET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=iki.fi; s=meesny;
-	t=1765370185;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 8AC025BE1B;
+	Wed, 10 Dec 2025 13:00:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1765371616; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=SM4/DYpAoX2OHJKWTtMBgck5YzGO83IGE2Ol5R7rY+g=;
-	b=DzELVdZcX2l8aUIYnxx+Le/a4bUhw/ZM0PWgIJF/b4/lgYXRgmodJ+Fj2B81UYKoQVUNOe
-	iP5NohO9Wt8euj3W1Gz0bCRQWyy8Ozu2aTLYwumtPE3aX8JZJcJlWS8JX5ls1CFD5q82Un
-	pKa2fSmYsYTCU6Y63dvUBqHZXf45oAU=
-ARC-Seal: i=1; a=rsa-sha256; d=iki.fi; s=meesny; cv=none; t=1765370185;
-	b=JYNpq39zyemGiMb1t7ad5v6kCUrhRJzfMJZkWIMDzFhpK08X080Ea8aZAB+SR/6hdfHsB2
-	K7zx6cXmTNOSxzB7qF2E4UdnRtfhzWyrt6/Lv0xO7sQC8blbUkeJrLZgY68VVQ8KHe2nMr
-	HCGeS9GLpS5u0vL+jte+1saB2KMP5cs=
-ARC-Authentication-Results: i=1;
-	ORIGINATING;
-	auth=pass smtp.auth=timo.lindfors smtp.mailfrom=timo.lindfors@iki.fi
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=iki.fi;
-	s=meesny; t=1765370185;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	bh=DEEwBH4w055u9qQZV6Fx9H1v+Ra+sFStO9RxZy3Ks5g=;
+	b=iDerOiDmNjwgF8FF37NuxOoWEfAC1C0qxMprUofuTciQCdUOomWL1/icZ+HkiMEMPq8d9H
+	hPysQD4Xnu7eemonkqfIh4YU1SGuJ5gCdWpBzd9+vxDSFO7xuH2YaLe9zhGjurYblPs0zC
+	p8quvPvzhrFU56ShXMBUfR1TCgkaq0A=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1765371616;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=SM4/DYpAoX2OHJKWTtMBgck5YzGO83IGE2Ol5R7rY+g=;
-	b=CLDOKjX7Cu32PfV0NVCiO1qUclJ1F6tK4v16U3a9oSydenaUzfUUZqTQD+9YPTLprRkVFQ
-	QlCrC6XnFz11Jkq5qqX/Q+Qa0DkK5bNFbspliqLnKTZ0jP1OhVlRlgJtU6YigyUm1cqj3M
-	OgbiywM7mMlrI+xI9lYNmDBRrjHD/eA=
-Received: from localhost ([127.0.0.1])
-	by mail.home with esmtp (Exim 4.89)
-	(envelope-from <timo.lindfors@iki.fi>)
-	id 1vTJQd-0006HY-DS; Wed, 10 Dec 2025 14:36:23 +0200
-Date: Wed, 10 Dec 2025 14:36:23 +0200 (EET)
-From: Timo Lindfors <timo.lindfors@iki.fi>
-To: Salvatore Bonaccorso <carnil@debian.org>
-cc: Matt Marjanovic <maddog@mir.com>, 1054514@bugs.debian.org, 
-    Maxime Ripard <mripard@kernel.org>, 
-    Alex Constantino <dreaming.about.electric.sheep@gmail.com>, 
-    airlied@redhat.com, daniel@ffwll.ch, dri-devel@lists.freedesktop.org, 
-    kraxel@redhat.com, linux-kernel@vger.kernel.org, 
-    maarten.lankhorst@linux.intel.com, regressions@lists.linux.dev, 
-    spice-devel@lists.freedesktop.org, timo.lindfors@iki.fi, 
-    tzimmermann@suse.de, virtualization@lists.linux-foundation.org
-Subject: Re: Bug#1054514: linux-image-6.1.0-13-amd64: Debian VM with qxl
- graphics freezes frequently
-In-Reply-To: <aTiTnENWsCoTbT3U@eldamar.lan>
-Message-ID: <alpine.DEB.2.20.2512101433240.24105@mail.home>
-References: <alpine.DEB.2.20.2310242308150.28457@mail.home> <b8b1497f-789e-4bb7-be17-9d3ebb30c143@mir.com> <aTiTnENWsCoTbT3U@eldamar.lan>
-User-Agent: Alpine 2.20 (DEB 67 2015-01-07)
+	bh=DEEwBH4w055u9qQZV6Fx9H1v+Ra+sFStO9RxZy3Ks5g=;
+	b=XOZF7BXQz/60V7h1M5MdkJYvwXJI0eic328GiP+PfA3/YvoiFdYbNR4Zmy/BFmUdXvvDK+
+	fc/wSWGOR5FHNWAw==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=iDerOiDm;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=XOZF7BXQ
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1765371616; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DEEwBH4w055u9qQZV6Fx9H1v+Ra+sFStO9RxZy3Ks5g=;
+	b=iDerOiDmNjwgF8FF37NuxOoWEfAC1C0qxMprUofuTciQCdUOomWL1/icZ+HkiMEMPq8d9H
+	hPysQD4Xnu7eemonkqfIh4YU1SGuJ5gCdWpBzd9+vxDSFO7xuH2YaLe9zhGjurYblPs0zC
+	p8quvPvzhrFU56ShXMBUfR1TCgkaq0A=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1765371616;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DEEwBH4w055u9qQZV6Fx9H1v+Ra+sFStO9RxZy3Ks5g=;
+	b=XOZF7BXQz/60V7h1M5MdkJYvwXJI0eic328GiP+PfA3/YvoiFdYbNR4Zmy/BFmUdXvvDK+
+	fc/wSWGOR5FHNWAw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8B0533EA63;
+	Wed, 10 Dec 2025 13:00:14 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id lvSaHN5uOWnTFAAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Wed, 10 Dec 2025 13:00:14 +0000
+Date: Wed, 10 Dec 2025 14:00:13 +0100
+Message-ID: <87345iebky.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Askar Safin <safinaskar@gmail.com>
+Cc: Takashi Iwai <tiwai@suse.de>,	Dell.Client.Kernel@dell.com,
+	amadeuszx.slawinski@linux.intel.com,	baojun.xu@ti.com,
+	bo.liu@senarytech.com,	cezary.rojewski@intel.com,
+	kai.vehmanen@linux.intel.com,	kailang@realtek.com,
+	linux-sound@vger.kernel.org,	patches@opensource.cirrus.com,
+	regressions@lists.linux.dev,	rf@opensource.cirrus.com,	Nicolas Schier
+ <nsc@kernel.org>,	linux-kbuild@vger.kernel.org,	Masahiro Yamada
+ <masahiroy@kernel.org>,	Nathan Chancellor <nathan@kernel.org>,
+	miguel.ojeda.sandonis@gmail.com,	ojeda@kernel.org,	sam@gentoo.org,	Thomas
+ =?ISO-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,	Daniel Xu
+ <dxu@dxuuu.xyz>
+Subject: Re: [REGRESSION][BISECTED] My audio broke (was: [PATCH 05/27] ALSA: hda: Move controller drivers into sound/hda/controllers directory)
+In-Reply-To: <CAPnZJGCknqB3XjNY5zhD7i84pz+uL+v4OUgw04ADxR-W=CAeGA@mail.gmail.com>
+References: <87o6q8l68r.wl-tiwai@suse.de>
+	<20251015145749.2572-1-safinaskar@gmail.com>
+	<878qhckxc5.wl-tiwai@suse.de>
+	<CAPnZJGDeCkqqUpEh0SBfwvsxfMp9ZDXqvhrC1s9zRp6jX+Fvnw@mail.gmail.com>
+	<875xcgkvnw.wl-tiwai@suse.de>
+	<CAPnZJGDmCnKPz2eygwDjQGXZWVctGyJxV+OeFSLLeZPOCEvvbA@mail.gmail.com>
+	<CAPnZJGBdqPhmNOes4-BRu8C-0d3yco8H93WhdORxm7MRBSw7CQ@mail.gmail.com>
+	<CAPnZJGCqY9j-33piRBpkurSDsOfAqV6+ODGtToGDsgNQd-g9cQ@mail.gmail.com>
+	<87bjm78978.wl-tiwai@suse.de>
+	<CAPnZJGAxrVJooo9CdgExd+uR+s=W9Na2dZzyjKZc=xYZv_kvmA@mail.gmail.com>
+	<871plbucj3.wl-tiwai@suse.de>
+	<CAPnZJGBq=q2iW9gMEv9U9LCKJ6f6Uu7Z3QrDCw6SdRGL0sAKVQ@mail.gmail.com>
+	<875xagt7d1.wl-tiwai@suse.de>
+	<87y0ncrons.wl-tiwai@suse.de>
+	<CAPnZJGCknqB3XjNY5zhD7i84pz+uL+v4OUgw04ADxR-W=CAeGA@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/30.1 Mule/6.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Flag: NO
+X-Spam-Score: -2.01
+X-Rspamd-Queue-Id: 8AC025BE1B
+X-Spamd-Result: default: False [-2.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FREEMAIL_TO(0.00)[gmail.com];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[22];
+	MIME_TRACE(0.00)[0:+];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	FREEMAIL_CC(0.00)[suse.de,dell.com,linux.intel.com,ti.com,senarytech.com,intel.com,realtek.com,vger.kernel.org,opensource.cirrus.com,lists.linux.dev,kernel.org,gmail.com,gentoo.org,linutronix.de,dxuuu.xyz];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,suse.de:dkim,suse.de:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Level: 
 
-On Tue, 9 Dec 2025, Salvatore Bonaccorso wrote:
->> This is back in trixie --- unsurprisingly, because the kernel commit which
+On Wed, 10 Dec 2025 02:45:55 +0100,
+Askar Safin wrote:
+> 
+> On Tue, Dec 9, 2025 at 12:27 PM Takashi Iwai <tiwai@suse.de> wrote:
+> > The below one is a revised fix, just to be safer in case the legacy
+> > driver is disabled, too.  Give it a try.
+> 
+> I just tested both patches (this and previous). Both work.
+> 
+> Also, please, add this for regzbot:
+> > Fixes: 2d9223d2d64c ("ALSA: hda: Move controller drivers into sound/hda/controllers directory")
 
-Indeed. The reverst of the problematic commit was reverted in mainline 
-kernel. I have spent several days trying to understand the problem but 
-unfortunately I don't have enough time to troubleshoot this more.
+Actually this tag isn't really right.  This commit casually surfaced
+the issue in your particular case, but the bug itself was introduced
+from the very beginning, and it could hit earlier.
 
-I tried switching to virtio but for my use case of remote Linux desktops 
-it is not usable. If I scroll a fullscreen web page I can see how the 
-whole screen is redrawn every time,
 
-Meanwhile I've switched from SPICE to RDP. GNOME in trixie supports 
-headless RDP sessions that make this very convenient. Client support is 
-also much better for RDP. I solved the authentication problem by isolating 
-each VM from each other on network level and then deployed rdpgw 
-(https://github.com/bolkedebruin/rdpgw) in front of everything with OpenID 
-authentication.
+thanks,
 
--Timo
+Takashi
