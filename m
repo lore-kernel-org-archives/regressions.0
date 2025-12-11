@@ -1,84 +1,108 @@
-Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yx1-f46.google.com (mail-yx1-f46.google.com [74.125.224.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D201421770B
-	for <regressions@lists.linux.dev>; Thu, 11 Dec 2025 03:04:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF1EE311C16
+	for <regressions@lists.linux.dev>; Thu, 11 Dec 2025 18:11:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765422295; cv=none; b=SDiz9gVoDBnNDKQd7EPBIf7L4LHrI+fuQtAqDP5k3jBx7oD+jFMvyYvhjfvTphEz0UheG0QqMD92cTDw1yG8f70xaPEhFFHGkrpAlh6UGoUN29/2hBeSWwHY+edo7MKDQE+52ypaKSCLbWlaW0YOT/RnCcDay0vO2KTGpm3dsgw=
+	t=1765476714; cv=none; b=uOzP5NDX/P6+5XJSsfzJlODpUhjBPZagKK+iz2FkMmJoKaskuWgIXy91hkP64dmvTpoAcvdu6xChh8EqTzZKxEHjBahDq8pC9MsiCtO5Esu08tR30uhJB3ITV02im6yUzp2cFhUBVN8cutiaFjwY76iqgjMSElK9f0FmUvPYVQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765422295; c=relaxed/simple;
-	bh=mReH8dZIUa+WTkWCx4VXEstqghzVty9l/g48TmrVojI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XJa/jZ/frFgDXCycU42cGiReoItBGEXR+BPbDjHH0j3nQdPBr1S93frY+yvsshou4TdaGwBXY/YsdEo1AgjbIhpG5FKH8BT26c2iYGhgvlmM3aWPHSRGdQ5i6LUYZpvFV40ipR2Q/uDciYWaMSTLRfea/meFFw5DJ339tNguBl8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b=F8UxsWMY; arc=none smtp.client-ip=18.9.28.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
+	s=arc-20240116; t=1765476714; c=relaxed/simple;
+	bh=ohNRR8mRdaddagF55e/ewnAj0hfyCt/6ndE4X2UBo0M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DAuJrPOZyQlGhJ6gStTdyMepPwf68fgtE/K+SsN4uHXgXmbOD7+/GMQfR3Ejlt97fHkRrJ4KyXKHx1eS7QBCo7H+ypM4g3HpFmaxQsCa6poPbjv/woNX49QlABYEOYoSzIbrHV8KE/tgTf8lcY8y63GU/tGHltx4SqJMgjiuzUs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Qk0wEU6i; arc=none smtp.client-ip=74.125.224.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b="F8UxsWMY"
-Received: from macsyma.thunk.org (fs98a57d9c.tkyc007.ap.nuro.jp [152.165.125.156])
-	(authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 5BB34NIk028683
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 10 Dec 2025 22:04:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
-	t=1765422268; bh=mIQCA6hzriQxhu9ibbIRTKlmkOBqLieFccUpRx8dDl0=;
-	h=Date:From:Subject:Message-ID:MIME-Version:Content-Type;
-	b=F8UxsWMYSx3pNutbpljqoS30JNsMXfwS5/BWQVIC0gvWqwfJZaWUp2vrrRGIYRLsG
-	 zCHq6cIJqO/d4j2Rq0Atm8IEX+h9QLfl8Ed+n31XB3bVPjMW0tEe2DtKDUgTSQtzsU
-	 E7GnelYmEkV+1WDvGIC5N1bSeqY8gua2thpk62G+Dq2PwpU+KEGc6icxgBFeFQQGCQ
-	 cEFd6/h8LvEwixnm0dgONBpoC5wHg46A/ec7LOdlWa/D2qcSPPi93wr46dZYrAOVb/
-	 d4NvYcvBK9/I057mnJs9ClcHS/J0V9bLeEtfZtGJF+opWAP30mZPJqIfB/4r4rNIrQ
-	 0Yl+ilLOf0UAw==
-Received: by macsyma.thunk.org (Postfix, from userid 15806)
-	id DFB524F94E73; Thu, 11 Dec 2025 12:04:22 +0900 (JST)
-Date: Thu, 11 Dec 2025 12:04:22 +0900
-From: "Theodore Tso" <tytso@mit.edu>
-To: Thorsten Leemhuis <linux@leemhuis.info>
-Cc: Konstantin Ryabitsev <konstantin@linuxfoundation.org>, users@kernel.org,
-        ksummit@lists.linux.dev,
-        Linux kernel regressions list <regressions@lists.linux.dev>
-Subject: Re: kernel.org tooling update
-Message-ID: <20251211030422.GF42106@macsyma.local>
-References: <20251209-roaring-hidden-alligator-068eea@lemur>
- <f1bb8d04-9949-417d-9726-64787994d40e@leemhuis.info>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qk0wEU6i"
+Received: by mail-yx1-f46.google.com with SMTP id 956f58d0204a3-6447743ce59so402911d50.0
+        for <regressions@lists.linux.dev>; Thu, 11 Dec 2025 10:11:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1765476712; x=1766081512; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SDp1RXcJwC2kzIqG/Erv9zF7oztqaR2rGAAgD3AO8Fk=;
+        b=Qk0wEU6iu6EuHjZUCGQg38hYWWq+tuUG5tyJ3v59KMZcoAPz5SIAtrzx3DFmgcxSoE
+         v8WS3YxBeOLCShr1GAcJy3gMG9rKf6FC/jrfU19n5pu+xgEXsaUQpA8ejtdXN0h8Zlfw
+         1Fdz+vYrhEBZZPntoRws1KeJvj/gUZjUgHJ8fxSoVwxnh/3HL3KB5CQY/fa7LW5VT5jr
+         NeMp7JC42m/WevWAeelrZMeXdSd4JffM7RPN8SRWSnZ5p1p6euW94y8XluR9Kgo3WY3U
+         ZuwySX+6bkcg0Tn3AI18kFy/3F2CeBrQ2/Uj0W/WZpQwo86Usj11ihj1XgVkmVsJRG96
+         QsSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1765476712; x=1766081512;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=SDp1RXcJwC2kzIqG/Erv9zF7oztqaR2rGAAgD3AO8Fk=;
+        b=M/NM8r1/f8OEm5B7bnRW+1TuoCh+g9pyUgTigxQJLewJHL+zFqmhNMShz8QWH3WieP
+         M1A3D1W6YX6weSdQQD6fuw+Z9zn1+VvmF72zikLyoaCDsEb6liUj2dt1zVUEpHpdiSQw
+         NQ9D5lCvSYJNFQsZN15GG3XapC9JJ0/yIk2h7iEQICrrhdjk6qKDyXDP9gEpYi0kaahs
+         8CQdc+wfTkD7USUs+P7jdr78KmWD27FZJf9YJo7gB3NJrX2RQ6Wm87jKoKNV3u0cwoG+
+         kkRFexTg9jWwEe4xSvQ+DEoZreNmIwkDo+bHjJGy30D3mB6nLQwQn/2iQfErWdes7URY
+         fNoA==
+X-Forwarded-Encrypted: i=1; AJvYcCWRLMNZHexkgBpK7Ivw1rEFL/kWV1sVAigBK83GEITp4uGz1vQ+j64mly//rnZwQhgRlz713RklBY4WAg==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yxv1nkJqWEowDKqdkqHc5hIi8pckCu2w38e6GXCjeDvS1uxCEms
+	JTEGXsG0vjVqaoS/gHYFhPWYDYfzEZYtZxaGYmsmfpr9kqEuZtZZKc0YPX1JBifwlDclRhSaJRb
+	FaZDgBz8UOzeTJ9IxS/xBH73r1dLBdOc=
+X-Gm-Gg: AY/fxX4vnv+2MoCzeryR8oY5WgVelwLGbzgEegMG0GJtqbeqYtFdED9t0todnz/p6XS
+	xhobd/a/RTMJgl4mWOXJaLV1TrsDnAuT6e5bhwz94B7Wip0e0VJW4UGMFxZhmfshrZv9BofoZaK
+	kNFcTcbxxaQnZYS/85qP0AbtcUAkU4EJNzPTmCyasC+o38U1gK3QKSKGAht2ILuBDMqivkble5b
+	0gOetmVIoknkhScQf1rLMd34kB/aYxnp/tcZPLRle3cTXPjH2zLklRf/Qb5JNUYB3XRDrUD
+X-Google-Smtp-Source: AGHT+IFRzgGjcYxIbLMExA6spsMBuwax3EGl9r6dtOafMGycs0N9+jMTSH/Ac+W+oS1JYN3ndc0s25a9u/TA2UWi42U=
+X-Received: by 2002:a53:d003:0:b0:63f:b1d4:f9e3 with SMTP id
+ 956f58d0204a3-6446e948acamr4367472d50.9.1765476711525; Thu, 11 Dec 2025
+ 10:11:51 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f1bb8d04-9949-417d-9726-64787994d40e@leemhuis.info>
+References: <87o6q8l68r.wl-tiwai@suse.de> <20251015145749.2572-1-safinaskar@gmail.com>
+ <878qhckxc5.wl-tiwai@suse.de> <CAPnZJGDeCkqqUpEh0SBfwvsxfMp9ZDXqvhrC1s9zRp6jX+Fvnw@mail.gmail.com>
+ <875xcgkvnw.wl-tiwai@suse.de> <CAPnZJGDmCnKPz2eygwDjQGXZWVctGyJxV+OeFSLLeZPOCEvvbA@mail.gmail.com>
+ <CAPnZJGBdqPhmNOes4-BRu8C-0d3yco8H93WhdORxm7MRBSw7CQ@mail.gmail.com>
+ <CAPnZJGCqY9j-33piRBpkurSDsOfAqV6+ODGtToGDsgNQd-g9cQ@mail.gmail.com>
+ <87bjm78978.wl-tiwai@suse.de> <CAPnZJGAxrVJooo9CdgExd+uR+s=W9Na2dZzyjKZc=xYZv_kvmA@mail.gmail.com>
+ <871plbucj3.wl-tiwai@suse.de> <CAPnZJGBq=q2iW9gMEv9U9LCKJ6f6Uu7Z3QrDCw6SdRGL0sAKVQ@mail.gmail.com>
+ <875xagt7d1.wl-tiwai@suse.de> <87y0ncrons.wl-tiwai@suse.de>
+ <CAPnZJGCknqB3XjNY5zhD7i84pz+uL+v4OUgw04ADxR-W=CAeGA@mail.gmail.com> <87345iebky.wl-tiwai@suse.de>
+In-Reply-To: <87345iebky.wl-tiwai@suse.de>
+From: Askar Safin <safinaskar@gmail.com>
+Date: Thu, 11 Dec 2025 21:11:15 +0300
+X-Gm-Features: AQt7F2q_yl_QsO8lNkmidwy3ZCDdGlJk7jGsZGeMqFXZskur9LDYPeAhNm2kr9w
+Message-ID: <CAPnZJGANGeXuD56sfNMN4D4gVQD=4eZ4bA2bTP3yuBJhatXeow@mail.gmail.com>
+Subject: Re: [REGRESSION][BISECTED] My audio broke (was: [PATCH 05/27] ALSA:
+ hda: Move controller drivers into sound/hda/controllers directory)
+To: Takashi Iwai <tiwai@suse.de>
+Cc: Dell.Client.Kernel@dell.com, amadeuszx.slawinski@linux.intel.com, 
+	baojun.xu@ti.com, bo.liu@senarytech.com, cezary.rojewski@intel.com, 
+	kai.vehmanen@linux.intel.com, kailang@realtek.com, 
+	linux-sound@vger.kernel.org, patches@opensource.cirrus.com, 
+	regressions@lists.linux.dev, rf@opensource.cirrus.com, 
+	Nicolas Schier <nsc@kernel.org>, linux-kbuild@vger.kernel.org, 
+	Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	miguel.ojeda.sandonis@gmail.com, ojeda@kernel.org, sam@gentoo.org, 
+	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
+	Daniel Xu <dxu@dxuuu.xyz>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Dec 10, 2025 at 02:30:37PM +0100, Thorsten Leemhuis wrote:
-> * How many kernel subsystems have a strong interest in a bug tracking
-> solution at all[2]? And how many of those might be happy by using some
-> external issue tracker, like those in github (like Rust for Linux,
-> thesofproject, and a few others do), gitlab (either directly, like
-> apparmor, or self-hosted, like the DRM subsystem)?
+On Wed, Dec 10, 2025 at 4:00=E2=80=AFPM Takashi Iwai <tiwai@suse.de> wrote:
+> Actually this tag isn't really right.  This commit casually surfaced
+> the issue in your particular case, but the bug itself was introduced
+> from the very beginning, and it could hit earlier.
 
-One of the discussions we had (both during and after Konstantin's
-tools session) was that all we really need is some kind of way of
-associating state with a set of URL's to lore --- this could be used
-to indicate "this is a bug report" and a set of flags "this bug has
-been resolved / needs more information / needs triaging, etc".  A
-different set of states is also what we would need as a replacement
-for patchwork --- this patch series is a not applicable for a
-subsystem, has been applied, has been rejected, etc.
+Then, please, add this:
+> Fixes: 82d9d54a6c0e ("ALSA: hda: add Intel DSP configuration / probe code=
+")
+> Cc: <stable@vger.kernel.org>
 
-This is quite similar to what you've done with your regzbot dashboard,
-actually.
+82d9d54a6c0e is commit, which introduced "intel-dsp-config.c"
+(the file was renamed since then, but I think stable devs will able to
+figure this out)
 
-> FWIW, development of my regression tracker (regzbot) and me using it to
-> track regressions nearly stalled but is slowly restarting. Would be good
-> if we could work together here, as there is some overlap -- and
-> regression tracking afaics is something that a lot of people want and
-> consider important. And regzbot is already capable of monitoring reports
-> in various places (lore, gitlab, github, bugzilla); so if we decide that
-> we don't need a tracker for the kernel as a whole, it might already do
-> nearly everything for the bugs where tracking really helps a lot.
-
-  	 	    	    	       		- Ted
+--=20
+Askar Safin
