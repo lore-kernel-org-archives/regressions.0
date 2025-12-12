@@ -1,192 +1,133 @@
-Received: from DM5PR21CU001.outbound.protection.outlook.com (mail-centralusazon11011003.outbound.protection.outlook.com [52.101.62.3])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40C3D252292;
-	Fri, 12 Dec 2025 13:49:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.62.3
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765547391; cv=fail; b=oW7VJEumYqjyyNjdvgr8R9jCJfimHMZj3BIMhRQhIHARmRkerEaG4Ik1Yu0FmX7QwKuyeTErYIvVUg4TPR1Fxle/SrlCidV4mU3wsiNyBvzMhqmYdE6JYg4YfZBiPoDWNzBccT+4TIO0U30taYp8IDZSyBbqpTdm5+w3BQr58Ek=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765547391; c=relaxed/simple;
-	bh=AyeDymIX1to9hTQa0ZbU0YfZNgDTb/Jdvqol/Cii2bw=;
-	h=Message-ID:Date:Subject:To:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=ACu46XyMDY5zn05SIsi8ZAucsWfb6RGW6x90slwY8mUoqym1AdbmVp3ewdGqPKzanV2gJZgNHzISHasDQT9XivDtXCB8y8rdhOz+ZY5WHccAQHHorQYmNaIbA1Y4DpeIfAlUFREUgsE692ilgy+o7ZfwyvOKEBQ2XAtd+W0hr4g=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=YAQXDCcV; arc=fail smtp.client-ip=52.101.62.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3731C1D5CC6
+	for <regressions@lists.linux.dev>; Fri, 12 Dec 2025 23:48:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1765583316; cv=none; b=lbR6N3vkbDuHiUg28P8djV4HbN8A+lPC5O+m3NXxpz5QN5O1Msh+Cbps+12vswIjxIyAI17xZhSEwDESss9XTLpFGQ/iEIFmLQPK2A2sJGmcOPGwlO5qWpoz4mMvUvAP9eIFIquyJXRXNZrBKF3jmdoISGcsgkRMjY6TpY5mj2A=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1765583316; c=relaxed/simple;
+	bh=s/tBHiYOy2eC7/UIVWnocuiWDk5Z9I2ep7hg/uuwhFM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Sd13yBWpM+ct5QrX8Z38Mv6r9+HUPWVBABqTpuSYnxB8C9YGZzRx+D4NaMe5J67aDAowKKtuGbneGfNZEyqxjkQd0StIK2Jv+lvhsqao27KjSIvZDpyU/fQ1nJFDNA70ZzJyxrJXFkivMYulrsLGBCAM7Z0CkdSpX2yAHAMlWz4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=networkplumber.org; spf=pass smtp.mailfrom=networkplumber.org; dkim=pass (2048-bit key) header.d=networkplumber-org.20230601.gappssmtp.com header.i=@networkplumber-org.20230601.gappssmtp.com header.b=vdOCz8lN; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=networkplumber.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=networkplumber.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="YAQXDCcV"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=GgwY+SRlQ57uC0m4hB7A39XJwdyP1hL50iOS0Rof7uTjxxP8z4xvH5mgp0+gDgWxMrqh2Y/Wl8r85bljhFWXMmAIRQMgIrYFNfSqAZmm+G+skCKFZd5bdKrnD1XC78szmZIiI4cPYsk20B5JCcRZHQdxltwkZvGTdsd48vv2saa3+N+aPL1Ul8uTdtbaFbpuVxb+jzBiV0H+rOsv11G9YGcWf6SiZO3RIcSae9U4wRms6DF1PqPtSszeUI+/DfkTKzROEcLdRLd7PYK0vtwxxLCqAlzsBVYd2SR2TO/xNL1TGWFM6y3l3za3uGeg01Mmr5H4KbzX1Dw3gDO5ulvW1w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=KpihtI10wLJ/gOWM7CHtf39YueKE9ACSiBhMhXOlfSk=;
- b=O4x5tPxydM01ZgunGeCUCvkNKEb0kLMenelt+wpRT4hSk6Uxak0dJldCriGTuAb3smCAt83N4J6dEHXqgZjtqqwD3bmPnNfNTBjqcnFjoddFHNO1XMBKOCFptd1ak/sm3n5KdCA1OnDVLCkE0UE8t92BvW2kOs9PGVjVU2IBu7YX5BMzuAvGglAMMIHxzLKkt2htI5yOYsoPARscnxBc52BZgogICzM25IAPJNw9zXjlJxzofCdyn3M2qpBGE6xBGMwcKVs24z3ekO377JHTAL33x+yNvdTTVqGWXvCWX/rYgwQrkHIENFnxRUhRj6gozZjWW2n4e1Zu/jQ54njKZQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KpihtI10wLJ/gOWM7CHtf39YueKE9ACSiBhMhXOlfSk=;
- b=YAQXDCcVIdaDhbyfH0KEEuuO0Bzeb61IOnwnOTIYx/QvIaeCnBs4j1jqQHXVEhJDkza+HCGZglMTxaxzPIyXXMIz0gRxj7fTRfbZtHmuYRlzdgdETQosWV72MdvVgNtP9cl5mw0fjgCLRTxQPU0KldPzI13E/of6c4ovo1zZv8o=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by SA3PR12MB8804.namprd12.prod.outlook.com (2603:10b6:806:31f::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9412.9; Fri, 12 Dec
- 2025 13:49:46 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca%7]) with mapi id 15.20.9412.005; Fri, 12 Dec 2025
- 13:49:45 +0000
-Message-ID: <24e5cb3b-73dd-43d3-9d35-b29d1d18340a@amd.com>
-Date: Fri, 12 Dec 2025 07:49:39 -0600
-User-Agent: Mozilla Thunderbird
-Subject: Re: [6.12.61 lts] [amdgpu]: regression: broken multi-monitor USB4
- dock on Ryzen 7840U
-To: Thorsten Leemhuis <regressions@leemhuis.info>,
- =?UTF-8?Q?P=C3=A9ter_Bohner?= <peter.bohner@student.kit.edu>,
- Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
- amd-gfx@lists.freedesktop.org, stable@vger.kernel.org,
- regressions@lists.linux.dev, bugs@lists.linux.dev, Jerry.Zuo@amd.com,
- aurabindo.pillai@amd.com, ivan.lipski@amd.com, daniel.wheeler@amd.com,
- alexander.deucher@amd.com, gregkh@linuxfoundation.org
-References: <9444c2d3-2aaf-4982-9f75-23dc814c3885@student.kit.edu>
- <ea735f1a-04c3-42dc-9e4c-4dc26659834f@oracle.com>
- <b1b8fc3b-6e80-403b-a1a0-726cc935fd2e@student.kit.edu>
- <bfb82a48-ebe3-4dc0-97e2-7cbf9d1e84ed@oracle.com>
- <7817ae7c-72d3-470d-b043-51bcfbee31b1@student.kit.edu>
- <d5664e24-71a1-4d46-96ad-979b15f97df9@student.kit.edu>
- <ee6e0b89-c3d0-4579-9c26-a9a980775e55@leemhuis.info>
-Content-Language: en-US
-From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <ee6e0b89-c3d0-4579-9c26-a9a980775e55@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SN6PR2101CA0019.namprd21.prod.outlook.com
- (2603:10b6:805:106::29) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+	dkim=pass (2048-bit key) header.d=networkplumber-org.20230601.gappssmtp.com header.i=@networkplumber-org.20230601.gappssmtp.com header.b="vdOCz8lN"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-29f30233d8aso10882545ad.0
+        for <regressions@lists.linux.dev>; Fri, 12 Dec 2025 15:48:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=networkplumber-org.20230601.gappssmtp.com; s=20230601; t=1765583313; x=1766188113; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wWP8BFs1bgT8Z4A6IjuNlfDRtFMEro3mFLBqE6tL2Ps=;
+        b=vdOCz8lNFCnCA57aE5iI3MyYxghahdJi5dfU8Ahi3BJsX2TpDwFCjzSgOBFvTo+d0a
+         9dezzQfyoAfi/xhLDFtTFMp+hhf9/R9olAfLod1qelCPs6tsfbpM+QrbJrP9YpOx+91C
+         e2WeJtAAFR8yaH8/4BaqFGj28RoGUZ2kk/YJ8L5BURzSjjfisHqB0X55PIBjGw/fPmz9
+         qMb7KcSNrT3jKcZRm4QRSP6/wPeYpeg7q2hTSu+1JH5AT6I3NjnKk0PZcubgW69uz6Na
+         Wv/8hHhoK8sTypBigItd3dLJpEyQKH1oPyxUa7KRsWKjd+aFikXcIVRkmuuK8rLU/B1Y
+         dZlg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1765583313; x=1766188113;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=wWP8BFs1bgT8Z4A6IjuNlfDRtFMEro3mFLBqE6tL2Ps=;
+        b=JbzO+78kZL6BbQ6QUDH5WjTfUa9oPpnU+HbvJ1ADAnyN6gLiWC5sbpkl/ftiRXEpl/
+         Xc6P4zFo8GxeQIej7r/dz18tFjxDBCIhJzqvSKpolZCxX/TA1S9jJOWt5wG9aFlyB6Qv
+         WVwLSQbRCMec9w+YndVKf7V1FuR1tNm2gU9MjnIkgm2nwVbDAZyS59VFGbrfA4De4+JS
+         TIQbwFnmyklxwaEYtM4uz/fPMjL3vnarXiNFQPoPrXh6Vj5f2dd9llhNkBZyTrdQ1HRI
+         jDOtzlrvbmIB6bu1XjFIfMpSAKMUKphCIQrqF9ebC7N+Ei4vByw6OFaBPFQ+bOPcu0fM
+         UxPw==
+X-Forwarded-Encrypted: i=1; AJvYcCWi0+BCa/6GMkQgU5wBULgOHiTvTLadecux1kVXsCzEb59QTgrUPCf0XZl74zfSm2ZBIaii/bl6aBqljw==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwKs1XCaZ7kRmvbXmh5h18oROEH1V2GmnPDtWQijSBNayNL53vK
+	N28x0FHLOIEngSyhwfK0473qzI//RuW1TdFq335xWWw/KSjH2zhLl5eqIafpGs8LNmAnJmOH+ih
+	krvFg1vw=
+X-Gm-Gg: AY/fxX7ChZeoqWI+jLeABeNZ+IHMzB0ZAjzRiHC1Evi0Ahu5ViWAtEJxWMmRrnR5/zj
+	6X3142exFdtp3DORUjUzYLlmo+XPZsU0XhVTGpTM47LGy/P6vgnvkwJ6Am+G0rpoU4sdBLTBsnb
+	XzbcIYBtB/dro4c9Ov3G16F+GxDTsuSc2g4r6wS80Y2PjBMB/ImwC1O957MV8kfdIhrInAgUmeS
+	+jR5kBlJgvzA36BX9tZ1QNSb+CN2Sk7r1WxrIDezAsm+2Ui2Cvnqawx/2ICPIy9hG5Vzp/Bvh4e
+	Cb624/uiNFxbva5HdomYjH/vLdJuTj/0FVIbdBqlzvfns7XIZCE6Lenj/AW48mRJD7oRW2g6yX1
+	gSyxGa5yiuDo+qdKk5iiPssjGMZ/zdHhAGzMuFc3/+FuFgB0rQu6AxYSrGvWKPT0y7bMngaZVh7
+	zQFECvAcY2U/KMEL9+BJB+gefflrhYcQBfEgkjHHhHOrEckCRva3RpBrYhT7g=
+X-Google-Smtp-Source: AGHT+IH5DZZVRCULf6txAGDp1FIo3v39FvSWX2YSJi9J8wYZkjZxPxwUqn5V5CjP/NoiB+w3TzKOrQ==
+X-Received: by 2002:a17:903:11d0:b0:295:557e:747e with SMTP id d9443c01a7336-29f23caff8amr38947595ad.40.1765583313480;
+        Fri, 12 Dec 2025 15:48:33 -0800 (PST)
+Received: from stephen-xps.local (p99250-ipoefx.ipoe.ocn.ne.jp. [153.246.134.249])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29ee9d38ae7sm65484845ad.35.2025.12.12.15.48.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Dec 2025 15:48:33 -0800 (PST)
+Date: Sat, 13 Dec 2025 08:48:27 +0900
+From: Stephen Hemminger <stephen@networkplumber.org>
+To: Thorsten Leemhuis <linux@leemhuis.info>
+Cc: Konstantin Ryabitsev <konstantin@linuxfoundation.org>, users@kernel.org,
+ ksummit@lists.linux.dev, Linux kernel regressions list
+ <regressions@lists.linux.dev>
+Subject: Re: kernel.org tooling update
+Message-ID: <20251213084827.634cb60f@stephen-xps.local>
+In-Reply-To: <f1bb8d04-9949-417d-9726-64787994d40e@leemhuis.info>
+References: <20251209-roaring-hidden-alligator-068eea@lemur>
+	<f1bb8d04-9949-417d-9726-64787994d40e@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|SA3PR12MB8804:EE_
-X-MS-Office365-Filtering-Correlation-Id: cfbb62bc-be4f-48cc-29a3-08de39854f37
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?TnhmaWdyUTFoR2hUQXBiVUhNbHdjc1RmMXQrQXZoZXlTQkZPcHFSdTkzeFM5?=
- =?utf-8?B?amRIQUtKRWpwYnFub1lJMGlwZkFGM0R5QmlmTUhlN21jQzM3aGJZNGpDZ3hR?=
- =?utf-8?B?MEFQRGI2Q0xNTzVmM25sbjE5d21Wcm9rRmdNcllXdDVTMVVOMXBwWEgra0pq?=
- =?utf-8?B?TE9BU0pQNy96bHhpbEIzNGtOYTY3bXQ1MDBBbXdaY0QrY1Y0WFlKdVZsZllz?=
- =?utf-8?B?TVdqdlZPMlpHRVh1cVlQZnhlV1B6TVZqb3JGVmlvVFZyNnFMRWdQb2FEY0Fz?=
- =?utf-8?B?Wk1SUUlrTVlVZklYZXRaQ1RrWDNFYjlPK3g3SlZrNXIzNm1Pc0pwOUY2dU9B?=
- =?utf-8?B?VHdBVHk0WjF6bHVWSWRlRjJKYWpiQWpGVFJhcnV5TXJLcVVTVkZROGZqdmJR?=
- =?utf-8?B?TG1VNUEvRlZlanZ6c1pEalcveDlsTGsybGpnWUt4S1NNajBBNGVMVFh4R1pU?=
- =?utf-8?B?dlUyT09ieERuMjFKNEwrSmYvNytraFRJZXhVYUhWc2xMaTV0L3RaaHpoNGZu?=
- =?utf-8?B?NFlHaWxDZWJRMWJNN0V1cnM3Y2JZeTEvcHdWVG9wZng2SGhUSTdYaFcvVmhJ?=
- =?utf-8?B?dVp3UE5LOEpuendUVS9aazNmQlB3U3ZRbytMc2hHMytEWVdENzVTUFRYb2V5?=
- =?utf-8?B?ZHBpRDcxbzFQRk1RZXZpWm5LTis1eVVicnllVFdrWnRZU3doQnVzYUo5Qkgz?=
- =?utf-8?B?WXRKdGtxUHM3WkNxQmE3U3lKNTlienRJQm1VSkVIVFp2SnliTnJLSk9LUFU1?=
- =?utf-8?B?SmFaWmJOM1VUTEppV1VFazEzYzFQeEtkUzBra29GcXRCMjZScUZEaTd3aEg1?=
- =?utf-8?B?QXVNUTNoVUx2ZzdtVVRsMkhnTUVJWUl3Y3BjUkhnanVyM2VRN0s4VDV5Q3BN?=
- =?utf-8?B?VkMwdHl3VnNkVE0wQ1RGRDBZTXIrckV0aVBVdEhlQ2lJNE1lQnJsb2RWaFdU?=
- =?utf-8?B?ODczdVhwT2NoWm1FRm43SitxbEN6cktMNXVhNWxGaDVFdTh3Z0xIUUxwZUMy?=
- =?utf-8?B?T1RLZVdCMGdBdmZ3UEl4Mk5sV3F3WEU3bG1hRmhoR294TXRzQ0FnK3l6WEQw?=
- =?utf-8?B?SVlaRWZCL09iN2tlYjErOEVHbFdGdDN0Ky9HY1JMcitQdm9WU0g4S0hUVWxQ?=
- =?utf-8?B?ZEpRdXIza2U3MTlzQVJrTThWY2lVek14TlFuMTVHYWF0STZJNVplVjRFb3lP?=
- =?utf-8?B?WG5oNDQ1Vy9jK0VsMkxWd2c4V3Y3M084S2tVdjd4blA2ZUtDbzB5WE83Q2ta?=
- =?utf-8?B?NTRnNjlBUlJ3bVdzMm43aDVaZDlObHEya3IyRHFZVE04dFh0amhDU2QrVit2?=
- =?utf-8?B?QUpCM29lWE1UZmtrSmNkR1dUNHNHV3lpS2x1OTlZRUdRUE9nWU4zTVlXRTdn?=
- =?utf-8?B?ZTlYOXcyNXdMVzB2cVBxdERCM2tSWnE1c0dVS2xOTDBTMGYrcEg2Z1V6am1R?=
- =?utf-8?B?VTNRSTA2Wis1NlNHYThQMVVFVG90UmozNEhFYWVrRDJvUkJlUHB5NllsY2VG?=
- =?utf-8?B?bENQUzVveThuV2tBdHhRVlM0WnhDeDFIODNjSjZJOG4raEpUaTZQVHljZjdl?=
- =?utf-8?B?SVJhRmlsMVJ5dGM4QzdFMmg2Z2pyR0NLZ1lOVHdXNG9jZGREV2YwbGVUS3Nv?=
- =?utf-8?B?QnVoa1hRbWkyWE9aaWVpRTZlcmxHWStVbjJGTHpDd1pqSXlhcHpWRTZZNUJL?=
- =?utf-8?B?U3pMOXdLUFQxbzkyVWJLcDFZY0I2alNpeVErclhkZDNJcnRJczN1azlJS1NO?=
- =?utf-8?B?QUJXOGltemhGbGVFaFg4SkZ4RnFDbkNOcEc5M1ZTZTg2U2E4aVRBRzlVb29P?=
- =?utf-8?B?WlBjREhNc0xUQUo1NThuVFh2bUFVU1k4V1ZCeU42Skttc0s0TkR2MGZCSU5V?=
- =?utf-8?B?bE1WRXJtZXNhLzF6K2pDMjhsM3IrK1pObFREeTVJRUJjcGp3RVI1NUd0clRs?=
- =?utf-8?B?bGs2SWZydVlZOGJVU1k1aE1ZZEJsR2hnczRQM0ZEQy9WSDRUZUd6MUY2eUVs?=
- =?utf-8?B?eVdUcHhmVWpaVGQ1ZkQzam1jMDRQUUFsUVpPUU8zM3VNamlTamFENE9BOHlm?=
- =?utf-8?Q?cogUBp?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?aXNVL0NDalpvVy8xaU1oK1BkR2lXMGxmSEdMZTZRMnc3UTRHaFZWWEhNY0hj?=
- =?utf-8?B?dlNDdW4rWmVBa1RrMlNmTkdvOHk2MDUwZGM2TUZTeU1CSnNKVGhyTnZZdFJa?=
- =?utf-8?B?UEhGZkRCQ2FUcnRrY0JqY1czTkkrVHRua1UxOFJWK21xQ08vSVJnNWRzS2lM?=
- =?utf-8?B?UWFLcjV5bHhJQ0JwckJHdmpFTFlocVRNeEJ2cWJmNkdBNHB0Rnd5Zlp2N1ZS?=
- =?utf-8?B?VFhzN2hnWnRWUVFzYzM5bnAvLzdLZTYyTmw5SStDZHMwWUMrTmhXU1k3dVhG?=
- =?utf-8?B?S2RPai9vUDJEQ3g2cmZubEg2bHBQeWZFQ2liQzd0L3RyeXdkbXUwTU92Z0p1?=
- =?utf-8?B?SDdqUlQ4WTI3eG5lQnc2NStZWjYzRWxUcHBFVE9MWlJOWDJTRTNYaVlYOS81?=
- =?utf-8?B?K2U4WmY2eUY0TmFFVk1IUkVsaEcvWE1NYUFXT2dRNFRmK1pxTkw0cDVrOWVZ?=
- =?utf-8?B?YlRZVlluOEMza1ovZEdVU0tyUkYycVVOSUFFVjRHN2JQWHNKVXU0aFhuVGJi?=
- =?utf-8?B?K2tpSWxTVEFsNnA3RkRtN2t4TnJoWkdZSFVoTUp3dFFWVkQydStTelBGMFJF?=
- =?utf-8?B?cjgxY0d3ZnBXRk1QbURMQVJWUC9nU1gzQVNaRXc2dVBSM2hSRllPbXpYeU0x?=
- =?utf-8?B?WDkxRTdtdXp0R1FZMXk0TTM2VjFXUkVHMzBwMDlFTGV6TjdnUVo5a2ZmMXBM?=
- =?utf-8?B?SWJoeHJtZ0VIa2drdHVnVVc3cnR1amNKK1lZcVZOQzI2Nml2VEFBVDIrQjN4?=
- =?utf-8?B?QkdtYUJ2Q1JVWTBSVzdvZ01jNHpnSU8rcXNoZnJ6ZEV6ak5iQ3RIWkcxNWxh?=
- =?utf-8?B?OTNxY2FiWlArdDhlKzZ5TTJGVjQ4dTBON2h1amZGR25FVDRMNmxwSXZtNWVm?=
- =?utf-8?B?WjkxMDN2eG1aOFN3SWZCZGZ4Z2NEc1Zoekphd2tFalI3dlVzMDBhV2NOS3Zz?=
- =?utf-8?B?d2JkQzFNSnJNUTREc1JpMmloVXFldnJQZ1NRWjNFeHlxRWtEUGN4TnR1Q0Jj?=
- =?utf-8?B?SFRYUEI1R3VMNFdDZUVlUUhUc2tDNTNacTU3TG5Bc1dDejM1c2RSWFBYSXh2?=
- =?utf-8?B?WVdsMWpISFNYSGU0N0k1bjNGSWd2SU5LSlNWME9RdUV6SVE3M1lpVTVBb0p6?=
- =?utf-8?B?RS9IWkp2Ty9zN0NFeE5Vc1lEWEdSdW83ajNGQWtlM2J5YlpCeVZGaUdaRGcz?=
- =?utf-8?B?ck5DWG41U1NIbDhpQTkrOGpDQTJvYjhBRmZCM1l4dWlUQzJjbytrVm5FSnB5?=
- =?utf-8?B?YmQ5ei9UYkVOVUN2UFNsSHVRWjFQTEIyQ2d4Ni9mZzJ0S0prOVFObE9sQjJh?=
- =?utf-8?B?T2NCbVRhSWhKdExrdWlOTWdFM3lmdWFRM05PNTMvVWRnOGxSejJVdTNWdHZE?=
- =?utf-8?B?MUpkamtvejZsdGdRSVNjQll4Um1MYTVwWnB1RzZGL2dWN3A4TTQvdEwrd0Vu?=
- =?utf-8?B?RjA0T2ZraXVjZzBuNVF1MjlkbmZPRGlwK25kMEE4RW5YTDd4RDZnVXBCR3dx?=
- =?utf-8?B?TFg2cjRZeEJtT3I0WEZoMC8vVzVIVGs2RlloU1hqNHNCZHNxVGRBdURtTytI?=
- =?utf-8?B?WHcvM0k0QkQrSTA2QVUwbUxjdk1VeE5tOHRyYy9iZjYxVUtZTm1ML0lkMXl2?=
- =?utf-8?B?NXJhZGxsRVExUHFFY0c0RHNZWlV0Y0VHUXdnaXhRYXFYSjJHRGlGS0N0eDV5?=
- =?utf-8?B?Wnc2RU9pMVpnRnJCc1lZRG8vQ29HOW1nS0w2REVHNk5lMmcwa0QyQ0E1dUw0?=
- =?utf-8?B?NW1LY1NoRStBMHAzVnZpNURRdzRSQ3preU13ajZJS0hRTUZYeDJDalFEUUNu?=
- =?utf-8?B?RWNNVm1tVHR2M2R3UndiNVlrK2hWdkQ4K3B2T0hUc00zS0h1WnhLN3NuV0ZI?=
- =?utf-8?B?RXhBV3NrV1NvdWVVTmhXTERma1phbXYvZkdRNDdkUENnbjZsUTljaUdtTGpG?=
- =?utf-8?B?Z0hNR1JzbmtqMVNUam5hRlJrQWY5U25ZYWt3UkVmVnlGQW1vOGZNeW1pVm5n?=
- =?utf-8?B?UnVtQ1pYU3lRNjlDQUx3bU90MExNeGRpa3JwRzQzVDJnZGIzL3lQYXkraEZP?=
- =?utf-8?B?azlYYk05SnlXQ2dYbkgyTVJ2YUY0MnYrU0t5KytrdHAyYUtzanh5NERzTXdN?=
- =?utf-8?Q?7sGVollUiwW3GOlzXiyR3Obdw?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cfbb62bc-be4f-48cc-29a3-08de39854f37
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Dec 2025 13:49:45.7677
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ivJGSAjm62eajVIfhlCl4FgqjMQrPHZKZMEv/VnOxCk1JRPc+F6HGFkIMd0aFRMvy6ejhSM2zkoZh1BPunOYsg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB8804
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 12/12/25 7:19 AM, Thorsten Leemhuis wrote:
-> On 12/9/25 16:50, Péter Bohner wrote:
->> note: reverting ded77c1209169bd40996caf5c5dfe1a228a587ab fixes the issue
->> on the latest 6.12.y (6.12.61) tag.
-> 
-> That is 1788ef30725da5 ("drm/amd/display: Fix pbn to kbps Conversion")
-> [v6.18-rc7, v6.17.10, v6.12.60 (ded77c1209169b)] – and Mario (now among
-> the recipients) submitted a patch to revert in in mainline:
-> 
-> [PATCH] Revert "drm/amd/display: Fix pbn to kbps Conversion"
-> https://lore.kernel.org/all/20251209171810.2514240-1-mario.limonciello@amd.com/
-> 
-> But it has "Cc: stable@vger.kernel.org # 6.17+", so that revert won't
-> make it to 6.12.y; I wonder if that is just an accident or if there is
-> some good reason for that.
-> 
-> Ciao, Thorsten
+On Wed, 10 Dec 2025 14:30:37 +0100
+Thorsten Leemhuis <linux@leemhuis.info> wrote:
 
-It is just I didn't realize that it backported to 6.12.y.
+> he update, much appreciated!
+> 
+> On 12/10/25 05:48, Konstantin Ryabitsev wrote:
+> 
+> > ### Bugzilla
+> > 
+> > It may be time to kill bugzilla:  
+> 
+> Thx for bringing this up, as I a few months ago again looked somewhat
+> closer at the state of how well our bugzilla is working for the core
+> kernel. I didn't post the analysis in the end, but to me it looked like
+> the state of things was round the same as it was three years ago -- when
+> it wasn't working well, which was among the reasons why we came close to
+> abandoning bugzilla for kernel bugs[1].
+> 
+> [1] for those that don't remember, see https://lwn.net/Articles/910740/
+> and
+> https://lore.kernel.org/all/aa876027-1038-3e4a-b16a-c144f674c0b0@leemhuis.info/
+> 
+> 
+> 
+> >     - despite periodic "we're not dead yet" emails, it doesn't appear very
+> >       active
+> >     - the upgrade path to 6.0 is broken for us due to bugzilla abandoning the
+> >       5.2 development branch and continuing with 5.1
+> >     - question remains with what to replace bugzilla,  
+> 
+> To me it looks like most subsystems don't care much or at all about
+> bugzilla.kernel.org. This made me wonder (and maybe you could gather
+> some opinions on this in Tokyo):
+> 
+> * How many kernel subsystems have a strong interest in a bug tracking
+> solution at all[2]? And how many of those might be happy by using some
+> external issue tracker, like those in github (like Rust for Linux,
+> thesofproject, and a few others do), gitlab (either directly, like
+> apparmor, or self-hosted, like the DRM subsystem)?
+> 
+> * Does the kernel as a whole need a bug tracking solution at all to
+> receive reports? We for now require email for patches, so why not for
+> bugs as well, unless a subsystem really wants something (see above)?
 
-So after this lands can you manually apply it there too?
+I am the default target for all networking bugzilla submissions.
+Would be very happy to just see bugzilla die.
+Right now, all I do is do a quick scan and respond to the junk submissions
+and forward the rest to the netdev mailing list with a note on the bug
+to go there in the future.
 
+Issue tracking is not in the workflow for the community.
