@@ -1,37 +1,65 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86C1228151C;
-	Fri, 12 Dec 2025 23:54:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 409A430E85B
+	for <regressions@lists.linux.dev>; Sat, 13 Dec 2025 23:54:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765583679; cv=none; b=e5n2g92A9aezqkSTLYZJtyiYTV/Ck0aJlyohBRIAZVGg5G8ivY+JSP6BQWbgTX0CAbFxxTMc43PnRBNm++nSdCU1OCutjRtkV7vTC9iaxtNpdlCsW8CJsnumc3G25ZG6DrwrQ2k/KIEPUef4wY9f+3EbpSgcYnQvPlsUJvR1Ohs=
+	t=1765670050; cv=none; b=IioBbskgOUrDPvDmOrS8e2Id/bup5e0KUM46iiydut+fQXS7ApXRL0UIaZVKeooj2k/heyz99DpJeGIvGW6XC0E7K9dgEkY4sAso9OFTd1Ah6Em3sDGl91BeXwqKgHDtScR5qoOnszjAP8Jw10sgjVoEXf5OZO+U5kuN3piU6Yg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765583679; c=relaxed/simple;
-	bh=rbFoYYCdm5OZyPr+ipmbWLuXMT7EHks1Ycrt+Vp0BKs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qtUWpz44qsw+oEtZqhqDiqLF8VVyKUHGblr4S6N/6xUbt5FN1n8j8Ij4Ck/4e5OalvcLac6kffxV1Vq9NSgA0KFS2NpIjklR2qUwB7KSkdLjiiLJLlSPVDlx8k3vq4CstfZLnnZyqRbkqtyS48QZwVBVKkgRyM27PPTfqI4tBTg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=kK7+ySjc; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1765670050; c=relaxed/simple;
+	bh=dMvsk4TMnTyWR5/Ns04LifXAo7hjvc9/eJzEhni+uvA=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=VUaeYZtnsdLpgbuCIfXA/Uz5js4OnIFX236kBwSGv127CTjIXfmJEVXO5vfFZPWqZckvKj1XPPwGXyy4wtMYIsQs62bq10VCCgKQeS8077ZGAgn3LStPR71kHf7AyPtFOMxiEBX4I7aSt9AEPkcUYoFym4qZhgHcE79pP9JEQ0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lB1rhmvA; arc=none smtp.client-ip=209.85.215.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kK7+ySjc"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=6EXaQZLb5YPDccfLB5ViaWu5r+6IQcYByRuH+vk2IWU=; b=kK7+ySjc99sV87p8feqZj73z5q
-	CQp3FU2IYmMM46GDMfUef9fvoB6tg3uWOhGb5Pbve1MYLsyeq5KzhxYtAiNBa2Pk9UmJI/PJDso29
-	35O3rs5hrLiQImOv5DWj4Rcw4VckSCKdJGeJ7aA8sZhX3tml1Z8cvIv1FDvpr01BuydYIlxGMqGHO
-	o5RtUOcuI+2ojqwvyOqUXINuuzic3vK7LWQ99yvbPfJrSl1KyJ1H3sw9eD6mRYLivAMfp3TEwgb+B
-	0ptFDke1fu/mFk06wOszZocVenvBRMjk19gMgI5fT+CDji08yCADsiELUkV7tpTAsrGqqDwWnyeMj
-	PIgeJ1ZA==;
-Received: from [50.53.43.113] (helo=[192.168.254.34])
-	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vUCy2-00000001E75-1YUV;
-	Fri, 12 Dec 2025 23:54:34 +0000
-Message-ID: <0b68a5a4-2f05-43a2-8de2-3efbe8a8b7e4@infradead.org>
-Date: Fri, 12 Dec 2025 15:54:25 -0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lB1rhmvA"
+Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-c0ec27cad8cso1198604a12.1
+        for <regressions@lists.linux.dev>; Sat, 13 Dec 2025 15:54:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1765670047; x=1766274847; darn=lists.linux.dev;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XYN/3SFl60V2M0Q1BmnbULjYHcf9XcZ8oKvOquVNi9o=;
+        b=lB1rhmvA6KUqgJmId7KOtzu50UDt2NS4QnI1bW8pSjB4KWflFgc110VLz+IgKBrrRL
+         6VheZh81924nsnsBZhXoZzm56Dk7Jn70B5oqHMfZD2vnqgWUwijYMoCjwvtM+O67twZU
+         w8l13oQXOHwwab8hZvdSwzvAtXZ1KWN9awtNArVuy/cdYGhZgAyjXDUyk6AfgeKl0AXt
+         Z1W+be2Y4n6T0b5VoPcPPYvNe2YQnPzBP4tsCk49ukkj5jvS7BW1tI0+BVWTlV+9nsGX
+         pib9MT1x94fyyYTI1WQ9DVaaktRDrqDNbi178hcDz3WcXBi58t3yeN53XotrBYOdx1MB
+         pEPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1765670047; x=1766274847;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-gg:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=XYN/3SFl60V2M0Q1BmnbULjYHcf9XcZ8oKvOquVNi9o=;
+        b=nN442vaz32IYnxqFa15fvpefrJLfeNBzdbW0c9vZx3CrsTnJ1lXB54pP9kgT12mhKW
+         8sIJ8GDvLzBW1BZqomMvl1xPYmfWztw0wriUb0Ly6ywnr6pbaA/JVqy/TAyyUVOqY+25
+         oeZjpnAUtVFss1nQGHlK7tw+N09XzeMjoVtZfBEMv4JocJ+nnUsvOvK8V0yPp0HnHiXC
+         4WZFcZ5EGlTu+OHn/LSq1XinKHlPu2/OazZzIIZOs8OcSQ+r1VOrX4XT3DbCPNkQjV0k
+         W2PuqjEqGzt813+fkdrNIym3KgsS6jx9yrBaRJ/BxqON9n8jEbU4WSngt2UQQ2Kb6INx
+         Q7qA==
+X-Forwarded-Encrypted: i=1; AJvYcCX8PkiP2JEILyorFpNjJs52KcL1+3iUMPZnS0jqBkxSQbnj5Eo6n43+43gU2UqN2XzV7HiYX17sXL/QWg==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxInf9NC5cbnBMaq6ck74AwIrZuWZC8xaSnp39+K67ucWjH3tUZ
+	FujRyJ4ZrT7YaN41FdYjUCtS4cWq5y1tvlZ/AQyXF/4jrR6HSrC/BSfC
+X-Gm-Gg: AY/fxX6oVqivKyMMAJ3HdhBiUX5mIAVAG1kndcB0cgJ9IBKp3szC4RwDjHEIZyxnkNp
+	4OebxOyxvPkj142ED4QkSo5jJ/XVKDuAbS8Iy2nfkUrnoPepN1qqNOe7NHnuiIrSqlnu0jxKb6C
+	mBd+gb6yN1CA63ikvk2/1e1F5ZliUFZS1q07elnP8WNbw6WrdcFRrVHt+SLW92djvXxKlsI+Urp
+	dPHll6OgkPf6ye6kJGH+bjU9kyn1TCEh/u/+FyjJV08kzOmsMRqRxRAhZpCELojKvPm5BlCupC8
+	XR/ve0IvXxt+fRm3xhlaCM2EwInz+LKXa1EDnsHYQDsvUnOMsmuBKP/4xCb7dFWOiSHQdvnX2VO
+	arxmC6MzsfKl5vqOWd4PRad21oMdCIhk5jaItpSKx8nGOHQfwT6VHLWM2y9YrKuBrJ3MuAZvnNh
+	4q2evrLYVnVnFi+ArEvVDLEIaotV+jpHSiSOBc03tgz3WY5pA0S3zPnamBOERw48v/5w==
+X-Google-Smtp-Source: AGHT+IGDoWXmCM9OrPKNNZApGm50I1zqnlGU64Afsrvgz02JemgL7gneo2W2ox30974U77jX1cNJlw==
+X-Received: by 2002:a05:7022:ea49:b0:119:e56b:98b0 with SMTP id a92af1059eb24-11f34c02b7dmr3531294c88.23.1765670047330;
+        Sat, 13 Dec 2025 15:54:07 -0800 (PST)
+Received: from [192.168.68.65] (104-12-136-65.lightspeed.irvnca.sbcglobal.net. [104.12.136.65])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-11f2e2b4867sm31845185c88.6.2025.12.13.15.54.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 13 Dec 2025 15:54:07 -0800 (PST)
+Message-ID: <1286af8e-f908-45db-af7c-d9c5d592abfd@gmail.com>
+Date: Sat, 13 Dec 2025 15:54:05 -0800
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -39,82 +67,48 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: kernel.org tooling update
-To: Stephen Hemminger <stephen@networkplumber.org>,
- Thorsten Leemhuis <linux@leemhuis.info>
-Cc: Konstantin Ryabitsev <konstantin@linuxfoundation.org>, users@kernel.org,
- ksummit@lists.linux.dev,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <20251209-roaring-hidden-alligator-068eea@lemur>
- <f1bb8d04-9949-417d-9726-64787994d40e@leemhuis.info>
- <20251213084827.634cb60f@stephen-xps.local>
 Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20251213084827.634cb60f@stephen-xps.local>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+To: stable@vger.kernel.org, regressions@lists.linux.dev,
+ rust-for-linux@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>
+Cc: =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>,
+ Gary Guo <gary@garyguo.net>, Andreas Hindborg <a.hindborg@kernel.org>,
+ Alice Ryhl <aliceryhl@google.com>, Danilo Krummrich <dakr@kernel.org>,
+ Trevor Gross <tmgross@umich.edu>, Benno Lossin <lossin@kernel.org>
+From: Rudraksha Gupta <guptarud@gmail.com>
+Subject: ARMv7 Linux + Rust doesn't boot when compiling with only LLVM=1
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+
+Hello all,
 
 
+I have the following problem: 
+https://gitlab.postmarketos.org/postmarketOS/pmbootstrap/-/issues/2635
 
-On 12/12/25 3:48 PM, Stephen Hemminger wrote:
-> On Wed, 10 Dec 2025 14:30:37 +0100
-> Thorsten Leemhuis <linux@leemhuis.info> wrote:
-> 
->> he update, much appreciated!
->>
->> On 12/10/25 05:48, Konstantin Ryabitsev wrote:
->>
->>> ### Bugzilla
->>>
->>> It may be time to kill bugzilla:  
->>
->> Thx for bringing this up, as I a few months ago again looked somewhat
->> closer at the state of how well our bugzilla is working for the core
->> kernel. I didn't post the analysis in the end, but to me it looked like
->> the state of things was round the same as it was three years ago -- when
->> it wasn't working well, which was among the reasons why we came close to
->> abandoning bugzilla for kernel bugs[1].
->>
->> [1] for those that don't remember, see https://lwn.net/Articles/910740/
->> and
->> https://lore.kernel.org/all/aa876027-1038-3e4a-b16a-c144f674c0b0@leemhuis.info/
->>
->>
->>
->>>     - despite periodic "we're not dead yet" emails, it doesn't appear very
->>>       active
->>>     - the upgrade path to 6.0 is broken for us due to bugzilla abandoning the
->>>       5.2 development branch and continuing with 5.1
->>>     - question remains with what to replace bugzilla,  
->>
->> To me it looks like most subsystems don't care much or at all about
->> bugzilla.kernel.org. This made me wonder (and maybe you could gather
->> some opinions on this in Tokyo):
->>
->> * How many kernel subsystems have a strong interest in a bug tracking
->> solution at all[2]? And how many of those might be happy by using some
->> external issue tracker, like those in github (like Rust for Linux,
->> thesofproject, and a few others do), gitlab (either directly, like
->> apparmor, or self-hosted, like the DRM subsystem)?
->>
->> * Does the kernel as a whole need a bug tracking solution at all to
->> receive reports? We for now require email for patches, so why not for
->> bugs as well, unless a subsystem really wants something (see above)?
-> 
-> I am the default target for all networking bugzilla submissions.
-> Would be very happy to just see bugzilla die.
-> Right now, all I do is do a quick scan and respond to the junk submissions
-> and forward the rest to the netdev mailing list with a note on the bug
-> to go there in the future.
-> 
-> Issue tracking is not in the workflow for the community.
 
-which can be observed by the number of Categories/Components that don't
-have an assignee -- even a mailing list.  Which should be "fixed" IMO.
-I.e., we are actively helping bugzilla entries to be ignored.
+In short, what is happening is the following:
 
-I don't think it's the tool itself. More likely something else...
 
--- 
-~Randy
+- The kernel boots and outputs via UART when I build the kernel with the 
+following:
+
+make LLVM=1 ARCH="$arm" CC="${CC:-gcc}"
+
+
+- The kernel doesn't boot and there is no output via UART when I build 
+the kernel with the following:
+
+make LLVM=1 ARCH="$arm"
+
+
+The only difference being: CC="${CC:-gcc}". Is this expected? I think 
+this was present in the Linux kernel ever since Rust was enabled for 
+ARMv7, and I never encountered it because postmarketOS was originally 
+building the first way.
+
+
+Thanks,
+
+Rudraksha
 
