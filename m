@@ -1,214 +1,105 @@
-Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 586A1239085;
-	Sun, 14 Dec 2025 14:40:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2068229BD94
+	for <regressions@lists.linux.dev>; Sun, 14 Dec 2025 22:04:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765723260; cv=none; b=YVWY+gcrQRE5bCGq0DSPjg8RzlayT3ob0gvJpM4BctDIq/E3g1PSk3+OvcUO/j5SJBkvv5s/A3n6FQK/db3bDIae+DKAgmqWOYPyj/1AuSkTTK9f5oegMva3TmP1BxNQt/Xpx1CVoo85kvVWSUawEFOmX5LYqYZuxcwIHcDgB+E=
+	t=1765749885; cv=none; b=J/AIZRHyDX5LXBCyDoqVRCx46XowwcDra6ae6j0TK/Krr0TjvbOvpyDQ61N31uWMDWsHRD4Ispv9QsCYrEqI1c+vomSV4ngBGiowpNtcmbEzCuR/Me7JXuMa76EG7jEZewuZ9lle6wmEKoumvsLswk2efG8BbJpe04buJeYNV6Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765723260; c=relaxed/simple;
-	bh=146KBGCg7o3/dc/tflI3pPdn0VUNBeI4RTnRKhfkP2Q=;
+	s=arc-20240116; t=1765749885; c=relaxed/simple;
+	bh=OsZtNvC57Q0MTvQ0L0dGnqvyWUsxJxn5my2UaWA/0e0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eaeDrf1fFqjg7AFGESZurQOfHGWWJkAMQsQQZG/c9mKRPrgUUrAc8R6HolGk2ZuJToA/YB2JLJ6f/IfCGng7tUjISOb+KMOvVMG/um7Jjf9pMYUes2/wq96dmQ51g7Kt1LWbdY9MPnqwr5LFgiMv0zXiCSa7IWcZ3Qd1RSiNZDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=none smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=XSpmqRRn; arc=none smtp.client-ip=82.195.75.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=debian.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=qAZxX5zrupV/bRsSirUNmIFv2N/38pTyxkS7ldr5e3nECe6yy0WTdSZLo5wRZkU1YN282DKMzZttvCXgBJ73tKGPjKgsbecCeK318jYx3KNo1d9DikRXnuYkvdsTk0G6MfmOmO4Sx53aaZ7bW8AXmFhm0sVOJxOc6eSfE1w+6nU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=draconx.ca; spf=none smtp.mailfrom=draconx.ca; dkim=pass (2048-bit key) header.d=draconx-ca.20230601.gappssmtp.com header.i=@draconx-ca.20230601.gappssmtp.com header.b=IDP3n/Qr; arc=none smtp.client-ip=209.85.219.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=draconx.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=draconx.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="XSpmqRRn"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Reply-To:Content-ID:Content-Description;
-	bh=XKAespUOYboTSfbngcUd09WwtT+EjDuDc++HUrhPKVc=; b=XSpmqRRnm5Tt26iwkoZn47CYXN
-	AIa5Z0g0hM26XwJqDHYF3x8SQwM4bI8Iyj+lXlybcSVkNfwwvvcTVx1SKzS04NTYMyaOglD4bn1eE
-	k/tmD5dD6TY4d5XnRj/IQs5mwKE5FStrmugYDXesP5Sp0xrUNkZ9umxY1Uj0XDb4iX2QkCKpb1Jwe
-	37WVFbr2Sa7UcU3cxfVWEvcKACxsUefrmRNbWUJZWR+uUmCCGFG5Tx3P/fwm179hxqmF/6RUWHJMN
-	yDzA22kvijLb2EfROXxQvWaS/V8jM0ic4BLR1ecSjKYLaNt4d5HyIG5Ot4RqQJbBYYfU5kNjBKhuc
-	2UhAawmQ==;
-Received: from authenticated user
-	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.94.2)
-	(envelope-from <carnil@debian.org>)
-	id 1vUn4B-00BFJn-2y; Sun, 14 Dec 2025 14:27:19 +0000
-Received: by eldamar.lan (Postfix, from userid 1000)
-	id 190F6BE2EE7; Sun, 14 Dec 2025 15:27:18 +0100 (CET)
-Date: Sun, 14 Dec 2025 15:27:18 +0100
-From: Salvatore Bonaccorso <carnil@debian.org>
-To: =?iso-8859-1?Q?J=2E_Neusch=E4fer?= <j.neuschaefer@gmx.net>,
-	1120058@bugs.debian.org, Joanne Koong <joannelkoong@gmail.com>
-Cc: Jingbo Xu <jefflexu@linux.alibaba.com>,
-	Jeff Layton <jlayton@kernel.org>,
-	Miklos Szeredi <mszeredi@redhat.com>, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-Subject: [regression] 0c58a97f919c ("fuse: remove tmp folio for writebacks
- and internal rb tree") results in suspend-to-RAM hang on AMD Ryzen 5 5625U
- on test scenario involving podman containers, x2go and openjdk workload
-Message-ID: <aT7JRqhUvZvfUQlV@eldamar.lan>
-References: <176227232774.2636.13973205036417925311.reportbug@probook>
- <aQrcFyO7tlFF0TyD@lorien.valinor.li>
- <176227232774.2636.13973205036417925311.reportbug@probook>
- <aSl-iAefeJJfjPJB@probook>
- <aSoBsX5MZXYCq2qZ@eldamar.lan>
- <176227232774.2636.13973205036417925311.reportbug@probook>
- <aSxCcapas1biHwBk@probook>
+	dkim=pass (2048-bit key) header.d=draconx-ca.20230601.gappssmtp.com header.i=@draconx-ca.20230601.gappssmtp.com header.b="IDP3n/Qr"
+Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-88a35a00502so3737146d6.0
+        for <regressions@lists.linux.dev>; Sun, 14 Dec 2025 14:04:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=draconx-ca.20230601.gappssmtp.com; s=20230601; t=1765749883; x=1766354683; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=/cTj72ha+a5XJMJvRmgDZDY2gaP3p8aX5U73ylQ5QC8=;
+        b=IDP3n/Qruo8QWhMYfQM4tSeGjPKlCa82S56T2/ebW04mn6umST4yiP98qiutU1Sj3S
+         /8Hyjez6QbuLr1QAIXcrrOfRZYsS7Prk/8CsDj29QUtCveQn/i40kYwH1xfHulBT6+gf
+         /IQajBJwqEJhHMNBpUxOaJUT8pqDZwZ16apTra2FOS7Ent5ZAYEah1OWtebGs1WyZDl8
+         C/RTtnTr0WcGhvgSKpPvKh6B7UhFWGBMmVZvhywu5TR1NB1Em1zByF/FmT7YfERLDo22
+         Ln+MQEDL58bGfUNshWhQjsp0wblRRivEX8sVkU6ME2XCQ+BCEWotuTr+ijL4oEphdTJV
+         XWhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1765749883; x=1766354683;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/cTj72ha+a5XJMJvRmgDZDY2gaP3p8aX5U73ylQ5QC8=;
+        b=G1cRejjMU8wKtpnjtmHhoPVKxX4gr0Tk1UqCpZ1M8GfkN0dO5/cRdZdP/Mwm8xsF+E
+         1O5Ag/L2NpN/EGb92ztWlTZZmKlXQN/yWB7GruHAi+iT4i/UlNGrqjjKBmckmHjp4pJH
+         QsZ6XK+1Jvr9isM2lDSZ7TelAS4W108SkYky3iJMK7WEnuc04Wud+269Z2p0y4eNVU6a
+         t3vW+TITCXH4dSN9QksZA19DMpo+a7uK4LmaecgcTa3/IVNQ2UeibKaM8YFpwVsym+hb
+         F1MdPL/MTC89I82CWmNGcj4FcfOIX71TZcZ9H8UFHPs6Aag+9j3Ld+SzlB8TbfZYSjTH
+         r0Vw==
+X-Forwarded-Encrypted: i=1; AJvYcCWvjshhRiPsfhDztJcH73YEPmM45J98+BRVvTnB79wegiGWrdKkui+zyLqBhVf+NooArEiijrWFZTzedg==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwuDcxUPbqCZvX9joOzCgZ72IJym+Cs7lO1iQMpvhfdmlz+wKG1
+	HoPc4z0Sqt+Mt1/lBVC3Wirsl+7QeSe/7w/j3WtiH2vKoCEXjA+Wvhiw/mSAzXnnKuw=
+X-Gm-Gg: AY/fxX7w1p9OSFvlcdJ5CY4smj1bVBbsTwwQlRwh5t5BS8IzqSG4xwCh1O0+W6Ii/bI
+	rmVq8/ZgWzhCNdspgEhYsdT92uQKRvrdkVcoda4kawIiO21a/vzeAwQdpHdnPb1Xk3o/t4Y3lrs
+	DnEFRp0IK6z7A940ErwfQGil2H8c67qxpjOMnjUenseFbYyg8IYDV2tQU3MZ8YcierTaHdysSSM
+	EBlZ/39rmXXSCJWmD15dLZZXaWjUYDA6qYV2QXJsGeBVAgBwKDDVFoy4vriucLahCBmHCebWb2q
+	CWGM5XeeYpxWy3O9jgcothRj5vD+bIrS9AQHLEYXQnvIZtbvsmyjzRo3e1PPPhymjNMC7W/mWtp
+	/kwn/Nl9PjWX+R+g5oWDOh+R7QUODnKw90hVaM2QEjmXsOYXLppfh+ogvQV+DRLA69vXybCyeMp
+	fuXV8/Flami1pWhEgLjdtNTtZuQk8F8wlu4ForqcV2
+X-Google-Smtp-Source: AGHT+IEDFcxqfAIv8Lzvd0GjECj/WpfJVYeBMCOAIQ4Nzc4ZxKDvXtd5bV1zeaqceaQ7pMz4WHhP1g==
+X-Received: by 2002:ad4:5c48:0:b0:880:5cc1:692c with SMTP id 6a1803df08f44-8887e1957ccmr128935286d6.17.1765749882988;
+        Sun, 14 Dec 2025 14:04:42 -0800 (PST)
+Received: from localhost (ip-24-156-181-135.user.start.ca. [24.156.181.135])
+        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-88993b597f7sm39205576d6.14.2025.12.14.14.04.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 14 Dec 2025 14:04:42 -0800 (PST)
+Date: Sun, 14 Dec 2025 17:04:41 -0500
+From: Nick Bowler <nbowler@draconx.ca>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: linux-kernel@vger.kernel.org, regressions@lists.linux.dev, 
+	linux-rtc@vger.kernel.org, Esben Haabendal <esben@geanix.com>, stable@vger.kernel.org, 
+	sparclinux@vger.kernel.org
+Subject: Re: PROBLEM: hwclock busted w/ M48T59 RTC (regression)
+Message-ID: <2t6bhs4udbu55ctbemkhlluchz2exrwown7kmu2gss6zukaxdm@ughygemahmem>
+References: <krmiwpwogrvpehlqdrugb5glcmsu54qpw3mteonqeqymrvzz37@dzt7mes7qgxt>
+ <gfwdg244bcmkv7l44fknfi4osd2b23unwaos7rnlirkdy2rrrt@yovd2vewdviv>
+ <48db01b1-f4e5-4687-8ffb-472981d153ed@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aSxCcapas1biHwBk@probook>
-X-Debian-User: carnil
+In-Reply-To: <48db01b1-f4e5-4687-8ffb-472981d153ed@leemhuis.info>
 
-Hi Joanne,
+On Mon, Dec 08, 2025 at 03:35:42PM +0100, Thorsten Leemhuis wrote:
+> Lo!
+> 
+> On 11/26/25 04:18, Nick Bowler wrote:
+> > Any thoughts?
+> 
+> Not really, just a vague idea (and reminder, this is not my area or
+> expertise, I'm just tracking regressions):
+> 
+> Two fixes were proposed for the culprit, see:
+> 
+> https://lore.kernel.org/all/BN0PR08MB69510928028C933749F4139383D1A@BN0PR08MB6951.namprd08.prod.outlook.com/
+> https://lore.kernel.org/all/BN0PR08MB6951415A751F236375A2945683D1A@BN0PR08MB6951.namprd08.prod.outlook.com/
 
-In Debian J. Neuschäfer reported an issue where after 0c58a97f919c
-("fuse: remove tmp folio for writebacks and internal rb tree") a
-specific, but admittely not very minimal workload, involving podman
-contains, x2goserver and a openjdk application restults in
-suspend-to-ram hang.
+The first link is a patch for a totally different driver, as far as I
+know not relevant to any system I have, but I guess that makes at least
+3 different systems which have regressed...
 
-The report is at https://bugs.debian.org/1120058 and information on
-bisection and the test setup follows:
+I can't figure out how to turn the second link into a correctly-
+formatted patch file, but since it is a one-line change I just manually
+applied it on top of 6.19-rc1.  This appears to fix the problem.
 
-On Sun, Nov 30, 2025 at 02:11:13PM +0100, J. Neuschäfer wrote:
-> On Fri, Nov 28, 2025 at 09:10:25PM +0100, Salvatore Bonaccorso wrote:
-> > Control: found -1 6.17.8-1
-> > 
-> > Hi,
-> > 
-> > On Fri, Nov 28, 2025 at 11:50:48AM +0100, J. Neuschäfer wrote:
-> > > On Wed, Nov 05, 2025 at 06:09:43AM +0100, Salvatore Bonaccorso wrote:
-> [...]
-> > > I can reproduce the bug fairly reliably on 6.16/17 by running a specific
-> > > podman container plus x2go (not entirely sure which parts of this is
-> > > necessary).
-> > 
-> > Okay if you have a very reliable way to reproduce it, would you be
-> > open to make "your hands bit dirty" and do some bisecting on the
-> > issue?
-> 
-> Thank you for your detailed instructions! I've already started and completed
-> the git bisect run in the meantime. I had to restart a few times due to
-> mistakes, but I was able to identify the following upstream commit as the
-> commit that introduced the issue:
-> 
-> https://git.kernel.org/linus/0c58a97f919c24fe4245015f4375a39ff05665b6
-> 
->     fuse: remove tmp folio for writebacks and internal rb tree
-> 
-> The relevant commit history is as follows:
-> 
->   *   2619a6d413f4c3 Merge tag 'fuse-update-6.16' of git://git.kernel.org/pub/scm/linux/kernel/git/mszeredi/fuse  <-- bad
->   |\  
->   | * dabb9039102879 fuse: increase readdir buffer size
->   | * 467e245d47e666 readdir: supply dir_context.count as readdir buffer size hint
->   | * c31f91c6af96a5 fuse: don't allow signals to interrupt getdents copying
->   | * f3cb8bd908c72e fuse: support large folios for writeback
->   | * 906354c87f4917 fuse: support large folios for readahead
->   | * ff7c3ee4842d87 fuse: support large folios for queued writes
->   | * c91440c89fbd9d fuse: support large folios for stores
->   | * cacc0645bcad3e fuse: support large folios for symlinks
->   | * 351a24eb48209b fuse: support large folios for folio reads
->   | * d60a6015e1a284 fuse: support large folios for writethrough writes
->   | * 63c69ad3d18a80 fuse: refactor fuse_fill_write_pages()
->   | * 3568a956932621 fuse: support large folios for retrieves
->   | * 394244b24fdd09 fuse: support copying large folios
->   | * f09222980d7751 fs: fuse: add dev id to /dev/fuse fdinfo
->   | * 18ee43c398af0b docs: filesystems: add fuse-passthrough.rst
->   | * 767c4b82715ad3 MAINTAINERS: update filter of FUSE documentation
->   | * 69efbff69f89c9 fuse: fix race between concurrent setattrs from multiple nodes
->   | * 0c58a97f919c24 fuse: remove tmp folio for writebacks and internal rb tree              <-- first bad commit
->   | * 0c4f8ed498cea1 mm: skip folio reclaim in legacy memcg contexts for deadlockable mappings
->   | * 4fea593e625cd5 fuse: optimize over-io-uring request expiration check
->   | * 03a3617f92c2a7 fuse: use boolean bit-fields in struct fuse_copy_state
->   | * a5c4983bb90759 fuse: Convert 'write' to a bit-field in struct fuse_copy_state
->   | * 2396356a945bb0 fuse: add more control over cache invalidation behaviour
->   | * faa794dd2e17e7 fuse: Move prefaulting out of hot write path
->   | * 0486b1832dc386 fuse: change 'unsigned' to 'unsigned int'
->   *   0fb34422b5c223 Merge tag 'vfs-6.16-rc1.netfs' of git://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs   <-- good
-> 
-> The first and last commits shown are merge commits done by Linus Torvalds. The
-> fuse-update branch was based on v6.15-rc1, under which I can't run my test due
-> to an unrelated bug, so I ended up merging in 0fb34422b5c223 to test the
-> commits within the fuse-update branch. e.g.:
-> 
->   git reset --hard 394244b24fdd09 && git merge 0fb34422b5c223 && make clean && make
-> 
-> 
-> I have also verified that the issue still happens on v6.18-rc7 but I wasn't
-> able to revert 0c58a97f919 on top of this release, because a trivial revert
-> is not possible.
-> 
-> My test case consists of a few parts:
-> 
->  - A podman container based on the "debian:13" image (which points to
->    docker.io/library/debian via /etc/containers/registries.conf.d/shortnames.conf),
->    where I installed x2goserver and a openjdk-21-based application; It runs the
->    OpenSSH server and port 22 is exposed as localhost:2001
->  - x2goclient to start a desktop session in the container
-> 
-> Source code: https://codeberg.org/neuschaefer/re-workspace
-> 
-> I suspect, but haven't verified, that the X server in the container somehow
-> uses the FUSE-emulated filesystem in the container to create a file that is
-> used with mmap (perhaps to create shared pages as frame buffers).
-> 
-> 
-> Raw bisect notes:
-> 
-> good:
-> - v6.12.48+deb13-amd64
-> - v6.12.59
-> - v6.12
-> - v6.14
-> - v6.15-1304-g14418ddcc2c205
-> - v6.15-10380-gec71f661a572
-> - v6.15-10888-gb509c16e1d7cba
-> - v6.15-rc7-357-g8e86e73626527e
-> - v6.15-10933-g4c3b7df7844340
-> - v6.15-10954-gd00a83477e7a8f
-> - v6.15-rc7-366-g438e22801b1958 (CONFIG_X86_5LEVEL=y)
-> - v6.15-rc4-126-g07212d16adc7a0
-> - v6.15-10958-gdf7b9b4f6bfeb1    <-- first parent, 5LEVEL doesn't exist
-> - v6.15-rc4-00127-g4d62121ce9b5
-> - v6.15-rc7-375-g61374cc145f4a5  <-- second parent, `X86_5LEVEL=y`
-> - v6.15-rc7-375-g61374cc145f4a5  <-- second parent, `X86_5LEVEL=n`
-> - v6.15-11061-g7f9039c524a351: "first bad", actually good. merge of df7b9b4f6bfeb1 61374cc145f4a5
-> - v6.15-11093-g0fb34422b5c223
-> - v6.15-rc1-7-g0c4f8ed498cea1 + merge = v6.15-11101-gaec20ffad33068
-> 
-> testing:
-> - v6.18-rc7 + revert: doesn't apply
-> 
-> weird (ssh doesn't work):
-> - v6.15-rc1-1-g0486b1832dc386
-> - v6.15-rc1-10-g767c4b82715ad3
-> - v6.15-rc1-13-g394244b24fdd09: folio stuff
-> - v6.15-rc1-22-gf3cb8bd908c72e
-> - v6.15-rc1-23-gc31f91c6af96a5
-> - next-20251128
-> 
-> bad:
-> - v6.15-rc1-8-g0c58a97f919c24 + merge = v6.15-11102-gdfc4869c8ef1f0  first bad commit
-> - v6.15-rc1-9-g69efbff69f89c9 + merge = v6.15-11103-ga7b103c57680ce
-> - v6.15-rc1-11-g18ee43c398af0b + merge = v6.15-11105-g4ad0d4fa61974c
-> - v6.15-rc1-13-g394244b24fdd09 + merge = v6.15-11107-g37da056b3b873b
-> - v6.15-11119-g2619a6d413f4c3: merge of 0fb34422b5c223 (last good) dabb9039102879 (fuse branch)
-> - v6.15-11165-gfd1f8473503e5b: confirmed bad
-> - v6.15-11401-g69352bd52b2667
-> - v6.15-12422-g2c7e4a2663a1ab
-> - regulator-fix-v6.16-rc2-372-g5c00eca95a9a20
-> - v6.16.12
-> - v6.16.12 again
-> - v6.16.12+deb14+1-amd64
-> - v6.18-rc7
-
-Would that ring some bells to you which make this tackable?
-
-Regards,
-Salvatore
+Thanks,
+  Nick
