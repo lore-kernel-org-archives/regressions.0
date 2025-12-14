@@ -1,155 +1,214 @@
-Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF1CE27E07E
-	for <regressions@lists.linux.dev>; Sun, 14 Dec 2025 07:34:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 586A1239085;
+	Sun, 14 Dec 2025 14:40:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765697675; cv=none; b=IVzzFkAxfR1IMhRyGPMvA6ergdUA9Lb0t+YGBTKchd9lzYSHvdLnfNQVT7lvJy8pBvq1XdLejpoBW4Iaue9ROEfvJ17ZZ7Mbn2xVl5TLo5soLSXClXgBOGsYcFO5vSfkBTaz31Up3/SqGnd5w/pg0sd6LEc1dNI92Y1zQWbnUO8=
+	t=1765723260; cv=none; b=YVWY+gcrQRE5bCGq0DSPjg8RzlayT3ob0gvJpM4BctDIq/E3g1PSk3+OvcUO/j5SJBkvv5s/A3n6FQK/db3bDIae+DKAgmqWOYPyj/1AuSkTTK9f5oegMva3TmP1BxNQt/Xpx1CVoo85kvVWSUawEFOmX5LYqYZuxcwIHcDgB+E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765697675; c=relaxed/simple;
-	bh=FVxIlAKuTuRT11DwsMiqIbBYGhbAiF+XA+LYL1zo2gk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Q4JJoOJ91F99r2i80W3/N9yluT0yMkd8rQFML3PQXoDnAfjrQyBrMbNCYiGYn9zLwxOShSeEdsXVwh8kap+lfoGcgq+Vnu/O5HdekxbaxT398zGqq7P4wCqHBvK4qFL6sC14CEiNjTaQdKgN1Rx1c476nShhgYBNnB26j3tMAOg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YJlexOnU; arc=none smtp.client-ip=209.85.215.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1765723260; c=relaxed/simple;
+	bh=146KBGCg7o3/dc/tflI3pPdn0VUNBeI4RTnRKhfkP2Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eaeDrf1fFqjg7AFGESZurQOfHGWWJkAMQsQQZG/c9mKRPrgUUrAc8R6HolGk2ZuJToA/YB2JLJ6f/IfCGng7tUjISOb+KMOvVMG/um7Jjf9pMYUes2/wq96dmQ51g7Kt1LWbdY9MPnqwr5LFgiMv0zXiCSa7IWcZ3Qd1RSiNZDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=none smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=XSpmqRRn; arc=none smtp.client-ip=82.195.75.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=debian.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YJlexOnU"
-Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-bd1ce1b35e7so1735966a12.0
-        for <regressions@lists.linux.dev>; Sat, 13 Dec 2025 23:34:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1765697673; x=1766302473; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=iRn1RbbVVYNiiCpJThw73EOp5BTjJZAt0+REstZc+hw=;
-        b=YJlexOnUpKulvqke9pljcOObx8BdVOMKcajOldCfqn60wIxRnewJRHVfDDyptP3ryw
-         b4nQtCu0wBXZLpROeKjEGcW8RAy0Tygvyzp+LOieK2QQxDI/ubAd6URNAEBqXmlu1Qk2
-         Mz8wKPWPcdkQkqrz1KUikd8sR3Oom5UBvIBrYkDU2HK81qOj3BX1q+J4uta6KGUSnZIO
-         47fziOMKEisQSBf2XpqtO+S8PfzNtAK09aYDk7ZriVTqZ4KCDGAWgGPXEgQBt6g5+xJw
-         dYZWd8kFHAi44FQpNHNG5Epdt/9iEDxNnO0ZiVerirKMLOtyW9/R2a3mKQPgt84F1Q9X
-         c49w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765697673; x=1766302473;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=iRn1RbbVVYNiiCpJThw73EOp5BTjJZAt0+REstZc+hw=;
-        b=irDiTV0ry1pM6EL3X9Y7mVgRDvJQV7ogy/KOwQyhUXVpuy+0qVVEoxKo7Dd1s0iS/X
-         XlvH1f4//n31JVElcieOWOuPfzdbOeCwOeOvdkFKGorj9uWWm+qWi90nynBWZIgZV7E7
-         gaOkQ1S9TiEasNIe8/jFRdtNW8nmt+aLd4zuaPm3IwjjC1amH7QHjqJ5+zppx7MWjnTo
-         Sm6H+bQl1qAAjuNPAc0KGmycIjdSsqfRhb2JEgZEwZAS9xmSpcj0fbfjkZPIOQuUlGwm
-         t7cSqabFhs7U31Yk8RanyQA6EbtpKOkwEMGTLjk4bUs0kT6xkM+EDcqLqZdDmk7pO7iB
-         yFFQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWSk60Z8Cs9OS2tAut9B7ArlfRl6FUb+znAu/P2mbO0iXVyvgq2dFMHxawSMN6UEAvGRhMGz39Via4g8g==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yw26QDhuiuRO33I5CtNprCD37ICsAi41hFQ5fS2BplDUVea7qDg
-	1DHJ+ukzImzQmsJVQXnS43DpU/+Z/7dLZ1F/8kJOGQDVeWt9OW6bcnyx
-X-Gm-Gg: AY/fxX4C7qZySFgX2HiBjNf/54CI8t5GqU/0l07Sfgkw2L0Gzxx6NyNEzIMhwm28OAK
-	AvCypej6mLdzmz12OO58Q1C4lOu4wGXmIvdNTObU/rX8dzoPn9lCHidAxIApO7elcPicDjxnAsC
-	1rWVpFLTif4MJulsRViO6/42Xp/YH3gAoUepXGoiZ4akAWua4zHWVg692HuCgW66JhzwbNxOGXB
-	iV/m9CJd585Ul+a+s1pdOfYW3O8S/KUkdgTYJMksYlr6FlMxDPRHyEgPvsZHfl5FcS35g6YEDe0
-	MSBZ+cXPMuew7J9YZ8TjHTLQFydQTcmS7M1aoUSlF767lo0gBsrmpl3hTva0fI2DVVyGh7GdnAH
-	srf6t4zi/mDOLZQdsxCjX3sxkj6NGbQgnhR0nKF4UKZmUH/oqeKuErOkCJ0CyjB1AxLtbu/l351
-	kMxh1RU5aQp7kkX3W+Uzzl7bhJvVV5UqEX1FaRIZsTWeMlkHjRlXAc7Wcn8eV60TE3ig==
-X-Google-Smtp-Source: AGHT+IHAPA/EnNsgzP0HIlYsXfOj/q3Xg73QhloxXAO45aDmZUzS7OcDiFy9ELh/3UzA7ijVRiMldg==
-X-Received: by 2002:a05:701b:2704:b0:11a:61ef:8491 with SMTP id a92af1059eb24-11f34ac1593mr4017789c88.3.1765697673068;
-        Sat, 13 Dec 2025 23:34:33 -0800 (PST)
-Received: from [192.168.68.65] (104-12-136-65.lightspeed.irvnca.sbcglobal.net. [104.12.136.65])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-11f2e1bb2f4sm32890480c88.3.2025.12.13.23.34.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 13 Dec 2025 23:34:32 -0800 (PST)
-Message-ID: <66cba90e-c9b1-4356-a021-e8beeff0b88d@gmail.com>
-Date: Sat, 13 Dec 2025 23:34:31 -0800
+	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="XSpmqRRn"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Reply-To:Content-ID:Content-Description;
+	bh=XKAespUOYboTSfbngcUd09WwtT+EjDuDc++HUrhPKVc=; b=XSpmqRRnm5Tt26iwkoZn47CYXN
+	AIa5Z0g0hM26XwJqDHYF3x8SQwM4bI8Iyj+lXlybcSVkNfwwvvcTVx1SKzS04NTYMyaOglD4bn1eE
+	k/tmD5dD6TY4d5XnRj/IQs5mwKE5FStrmugYDXesP5Sp0xrUNkZ9umxY1Uj0XDb4iX2QkCKpb1Jwe
+	37WVFbr2Sa7UcU3cxfVWEvcKACxsUefrmRNbWUJZWR+uUmCCGFG5Tx3P/fwm179hxqmF/6RUWHJMN
+	yDzA22kvijLb2EfROXxQvWaS/V8jM0ic4BLR1ecSjKYLaNt4d5HyIG5Ot4RqQJbBYYfU5kNjBKhuc
+	2UhAawmQ==;
+Received: from authenticated user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.94.2)
+	(envelope-from <carnil@debian.org>)
+	id 1vUn4B-00BFJn-2y; Sun, 14 Dec 2025 14:27:19 +0000
+Received: by eldamar.lan (Postfix, from userid 1000)
+	id 190F6BE2EE7; Sun, 14 Dec 2025 15:27:18 +0100 (CET)
+Date: Sun, 14 Dec 2025 15:27:18 +0100
+From: Salvatore Bonaccorso <carnil@debian.org>
+To: =?iso-8859-1?Q?J=2E_Neusch=E4fer?= <j.neuschaefer@gmx.net>,
+	1120058@bugs.debian.org, Joanne Koong <joannelkoong@gmail.com>
+Cc: Jingbo Xu <jefflexu@linux.alibaba.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	Miklos Szeredi <mszeredi@redhat.com>, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
+Subject: [regression] 0c58a97f919c ("fuse: remove tmp folio for writebacks
+ and internal rb tree") results in suspend-to-RAM hang on AMD Ryzen 5 5625U
+ on test scenario involving podman containers, x2go and openjdk workload
+Message-ID: <aT7JRqhUvZvfUQlV@eldamar.lan>
+References: <176227232774.2636.13973205036417925311.reportbug@probook>
+ <aQrcFyO7tlFF0TyD@lorien.valinor.li>
+ <176227232774.2636.13973205036417925311.reportbug@probook>
+ <aSl-iAefeJJfjPJB@probook>
+ <aSoBsX5MZXYCq2qZ@eldamar.lan>
+ <176227232774.2636.13973205036417925311.reportbug@probook>
+ <aSxCcapas1biHwBk@probook>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: ARMv7 Linux + Rust doesn't boot when compiling with only LLVM=1
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
- Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nsc@kernel.org>
-Cc: stable@vger.kernel.org, regressions@lists.linux.dev,
- rust-for-linux@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>,
- =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>, Andreas Hindborg <a.hindborg@kernel.org>,
- Alice Ryhl <aliceryhl@google.com>, Danilo Krummrich <dakr@kernel.org>,
- Trevor Gross <tmgross@umich.edu>, Benno Lossin <lossin@kernel.org>,
- Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-References: <1286af8e-f908-45db-af7c-d9c5d592abfd@gmail.com>
- <CANiq72kYjNrvyjVs0FOFvrzUf7QYe8i+NpBS6bMEzX8uJbwB+w@mail.gmail.com>
-Content-Language: en-US
-From: Rudraksha Gupta <guptarud@gmail.com>
-In-Reply-To: <CANiq72kYjNrvyjVs0FOFvrzUf7QYe8i+NpBS6bMEzX8uJbwB+w@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <aSxCcapas1biHwBk@probook>
+X-Debian-User: carnil
 
-On 12/13/25 22:06, Miguel Ojeda wrote:
-> On Sun, Dec 14, 2025 at 12:54â€¯AM Rudraksha Gupta <guptarud@gmail.com> wrote:
->> - The kernel boots and outputs via UART when I build the kernel with the
->> following:
->>
->> make LLVM=1 ARCH="$arm" CC="${CC:-gcc}"
->>
->> - The kernel doesn't boot and there is no output via UART when I build
->> the kernel with the following:
->>
->> make LLVM=1 ARCH="$arm"
->>
->> The only difference being: CC="${CC:-gcc}". Is this expected?
-> It depends on what that resolves to, i.e. your environment etc., i.e.
-> that is resolved before Kbuild is called.
+Hi Joanne,
 
-Sorry about that, I should've specified in the original email. The CC 
-resolves to armv7-alpine-linux-musleabihf-gcc.
+In Debian J. Neuschäfer reported an issue where after 0c58a97f919c
+("fuse: remove tmp folio for writebacks and internal rb tree") a
+specific, but admittely not very minimal workload, involving podman
+contains, x2goserver and a openjdk application restults in
+suspend-to-ram hang.
 
-When both LLVM=1 and the CC=gcc are used, I can insmod the sample rust 
-modules just fine. However, if I only use LLVM=1, my phone doesn't 
-output anything over UART, and I assume that it fails to boot. 
-Interestingly enough, if I just specify LLVM=1 (with no CC=gcc), and 
-remove the rust related configs from the pmos.config fragment, then my 
-phone boots and I can see logs over UART.
+The report is at https://bugs.debian.org/1120058 and information on
+bisection and the test setup follows:
 
+On Sun, Nov 30, 2025 at 02:11:13PM +0100, J. Neuschäfer wrote:
+> On Fri, Nov 28, 2025 at 09:10:25PM +0100, Salvatore Bonaccorso wrote:
+> > Control: found -1 6.17.8-1
+> > 
+> > Hi,
+> > 
+> > On Fri, Nov 28, 2025 at 11:50:48AM +0100, J. Neuschäfer wrote:
+> > > On Wed, Nov 05, 2025 at 06:09:43AM +0100, Salvatore Bonaccorso wrote:
+> [...]
+> > > I can reproduce the bug fairly reliably on 6.16/17 by running a specific
+> > > podman container plus x2go (not entirely sure which parts of this is
+> > > necessary).
+> > 
+> > Okay if you have a very reliable way to reproduce it, would you be
+> > open to make "your hands bit dirty" and do some bisecting on the
+> > issue?
+> 
+> Thank you for your detailed instructions! I've already started and completed
+> the git bisect run in the meantime. I had to restart a few times due to
+> mistakes, but I was able to identify the following upstream commit as the
+> commit that introduced the issue:
+> 
+> https://git.kernel.org/linus/0c58a97f919c24fe4245015f4375a39ff05665b6
+> 
+>     fuse: remove tmp folio for writebacks and internal rb tree
+> 
+> The relevant commit history is as follows:
+> 
+>   *   2619a6d413f4c3 Merge tag 'fuse-update-6.16' of git://git.kernel.org/pub/scm/linux/kernel/git/mszeredi/fuse  <-- bad
+>   |\  
+>   | * dabb9039102879 fuse: increase readdir buffer size
+>   | * 467e245d47e666 readdir: supply dir_context.count as readdir buffer size hint
+>   | * c31f91c6af96a5 fuse: don't allow signals to interrupt getdents copying
+>   | * f3cb8bd908c72e fuse: support large folios for writeback
+>   | * 906354c87f4917 fuse: support large folios for readahead
+>   | * ff7c3ee4842d87 fuse: support large folios for queued writes
+>   | * c91440c89fbd9d fuse: support large folios for stores
+>   | * cacc0645bcad3e fuse: support large folios for symlinks
+>   | * 351a24eb48209b fuse: support large folios for folio reads
+>   | * d60a6015e1a284 fuse: support large folios for writethrough writes
+>   | * 63c69ad3d18a80 fuse: refactor fuse_fill_write_pages()
+>   | * 3568a956932621 fuse: support large folios for retrieves
+>   | * 394244b24fdd09 fuse: support copying large folios
+>   | * f09222980d7751 fs: fuse: add dev id to /dev/fuse fdinfo
+>   | * 18ee43c398af0b docs: filesystems: add fuse-passthrough.rst
+>   | * 767c4b82715ad3 MAINTAINERS: update filter of FUSE documentation
+>   | * 69efbff69f89c9 fuse: fix race between concurrent setattrs from multiple nodes
+>   | * 0c58a97f919c24 fuse: remove tmp folio for writebacks and internal rb tree              <-- first bad commit
+>   | * 0c4f8ed498cea1 mm: skip folio reclaim in legacy memcg contexts for deadlockable mappings
+>   | * 4fea593e625cd5 fuse: optimize over-io-uring request expiration check
+>   | * 03a3617f92c2a7 fuse: use boolean bit-fields in struct fuse_copy_state
+>   | * a5c4983bb90759 fuse: Convert 'write' to a bit-field in struct fuse_copy_state
+>   | * 2396356a945bb0 fuse: add more control over cache invalidation behaviour
+>   | * faa794dd2e17e7 fuse: Move prefaulting out of hot write path
+>   | * 0486b1832dc386 fuse: change 'unsigned' to 'unsigned int'
+>   *   0fb34422b5c223 Merge tag 'vfs-6.16-rc1.netfs' of git://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs   <-- good
+> 
+> The first and last commits shown are merge commits done by Linus Torvalds. The
+> fuse-update branch was based on v6.15-rc1, under which I can't run my test due
+> to an unrelated bug, so I ended up merging in 0fb34422b5c223 to test the
+> commits within the fuse-update branch. e.g.:
+> 
+>   git reset --hard 394244b24fdd09 && git merge 0fb34422b5c223 && make clean && make
+> 
+> 
+> I have also verified that the issue still happens on v6.18-rc7 but I wasn't
+> able to revert 0c58a97f919 on top of this release, because a trivial revert
+> is not possible.
+> 
+> My test case consists of a few parts:
+> 
+>  - A podman container based on the "debian:13" image (which points to
+>    docker.io/library/debian via /etc/containers/registries.conf.d/shortnames.conf),
+>    where I installed x2goserver and a openjdk-21-based application; It runs the
+>    OpenSSH server and port 22 is exposed as localhost:2001
+>  - x2goclient to start a desktop session in the container
+> 
+> Source code: https://codeberg.org/neuschaefer/re-workspace
+> 
+> I suspect, but haven't verified, that the X server in the container somehow
+> uses the FUSE-emulated filesystem in the container to create a file that is
+> used with mmap (perhaps to create shared pages as frame buffers).
+> 
+> 
+> Raw bisect notes:
+> 
+> good:
+> - v6.12.48+deb13-amd64
+> - v6.12.59
+> - v6.12
+> - v6.14
+> - v6.15-1304-g14418ddcc2c205
+> - v6.15-10380-gec71f661a572
+> - v6.15-10888-gb509c16e1d7cba
+> - v6.15-rc7-357-g8e86e73626527e
+> - v6.15-10933-g4c3b7df7844340
+> - v6.15-10954-gd00a83477e7a8f
+> - v6.15-rc7-366-g438e22801b1958 (CONFIG_X86_5LEVEL=y)
+> - v6.15-rc4-126-g07212d16adc7a0
+> - v6.15-10958-gdf7b9b4f6bfeb1    <-- first parent, 5LEVEL doesn't exist
+> - v6.15-rc4-00127-g4d62121ce9b5
+> - v6.15-rc7-375-g61374cc145f4a5  <-- second parent, `X86_5LEVEL=y`
+> - v6.15-rc7-375-g61374cc145f4a5  <-- second parent, `X86_5LEVEL=n`
+> - v6.15-11061-g7f9039c524a351: "first bad", actually good. merge of df7b9b4f6bfeb1 61374cc145f4a5
+> - v6.15-11093-g0fb34422b5c223
+> - v6.15-rc1-7-g0c4f8ed498cea1 + merge = v6.15-11101-gaec20ffad33068
+> 
+> testing:
+> - v6.18-rc7 + revert: doesn't apply
+> 
+> weird (ssh doesn't work):
+> - v6.15-rc1-1-g0486b1832dc386
+> - v6.15-rc1-10-g767c4b82715ad3
+> - v6.15-rc1-13-g394244b24fdd09: folio stuff
+> - v6.15-rc1-22-gf3cb8bd908c72e
+> - v6.15-rc1-23-gc31f91c6af96a5
+> - next-20251128
+> 
+> bad:
+> - v6.15-rc1-8-g0c58a97f919c24 + merge = v6.15-11102-gdfc4869c8ef1f0  first bad commit
+> - v6.15-rc1-9-g69efbff69f89c9 + merge = v6.15-11103-ga7b103c57680ce
+> - v6.15-rc1-11-g18ee43c398af0b + merge = v6.15-11105-g4ad0d4fa61974c
+> - v6.15-rc1-13-g394244b24fdd09 + merge = v6.15-11107-g37da056b3b873b
+> - v6.15-11119-g2619a6d413f4c3: merge of 0fb34422b5c223 (last good) dabb9039102879 (fuse branch)
+> - v6.15-11165-gfd1f8473503e5b: confirmed bad
+> - v6.15-11401-g69352bd52b2667
+> - v6.15-12422-g2c7e4a2663a1ab
+> - regulator-fix-v6.16-rc2-372-g5c00eca95a9a20
+> - v6.16.12
+> - v6.16.12 again
+> - v6.16.12+deb14+1-amd64
+> - v6.18-rc7
 
-> The normal way of calling would be the latter anyway -- with the
-> former you are setting a custom `CC` (either whatever you have there
-> or the `gcc` default). By default, `LLVM=1` means `CC=clang`.
->
-> So it could be that you are using a completely different compiler
-> (even Clang vs. GCC, or different versions, and so on). Hard to say.
-> And depending on that, you may end up with a very different kernel
-> image. Even substantial Kconfig options may get changed etc.
->
-> I would suggest comparing the kernel configuration of those two ways
-> (attaching them here could also be nice to see what compilers you are
-> using and so on).
+Would that ring some bells to you which make this tackable?
 
-postmarketOS uses kernel config fragments and tracks the latest linux-next:
-
-- 
-https://gitlab.postmarketos.org/postmarketOS/pmaports/-/blob/master/device/testing/linux-next/devices.config
-
-- 
-https://gitlab.postmarketos.org/postmarketOS/pmaports/-/blob/master/device/testing/linux-next/pmos.config
-
-- build recipe: 
-https://gitlab.postmarketos.org/postmarketOS/pmaports/-/blob/master/device/testing/linux-next/APKBUILD
-
-
-The only thing that changed was whether CC=gcc was specified or not:
-
-https://gitlab.postmarketos.org/postmarketOS/pmaports/-/commit/b9102ac5718b8d18acb6801a62e1cd4cc7edc0cb
-
-> Cc'ing Kbuild too so that they are in the loop.
->
-> I hope that helps.
-
-Thanks for your help! Always appreciate your presence. :)
-
-
-> Cheers,
-> Miguel
+Regards,
+Salvatore
