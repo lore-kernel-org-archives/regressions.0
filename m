@@ -1,121 +1,155 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 446652222B6
-	for <regressions@lists.linux.dev>; Sun, 14 Dec 2025 06:07:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF1CE27E07E
+	for <regressions@lists.linux.dev>; Sun, 14 Dec 2025 07:34:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765692433; cv=none; b=IVXp3ffIBgXPItykQwlR7uqmcDxP+Ax9YpGqrSKlPEDB3SV7maYYGPtECZJrq0I6K4ncWCVkhvWMfwTCKzyUEZ6y0qTqpdUD/o4qcew4NOKFnW9XOKdfMHCSpiAOORmKKRUrjaE4y+aVEN5xMmJtmTPk2ILYjk7L2fzC7NdALlE=
+	t=1765697675; cv=none; b=IVzzFkAxfR1IMhRyGPMvA6ergdUA9Lb0t+YGBTKchd9lzYSHvdLnfNQVT7lvJy8pBvq1XdLejpoBW4Iaue9ROEfvJ17ZZ7Mbn2xVl5TLo5soLSXClXgBOGsYcFO5vSfkBTaz31Up3/SqGnd5w/pg0sd6LEc1dNI92Y1zQWbnUO8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765692433; c=relaxed/simple;
-	bh=r92Q2V8e+U0OW5eFV0h+0q8zFYT95BWs+m4he6KpbxM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=P/1Obs9StN5sDjZ6SKzgJj8BsDY4Xkc0X+RE3fK2WRSNp8KLfPKHnZsFktAuCXt4/b2EQ/p37BWKMUZ45AnzbY+uwaUOVaCW221ouHkct4J7lrVVJfYDCi8xHzHXfPSJ4wKBPoVH5hX5HggUPrM/BNmZvwfOfdaWRoBx3pM1O60=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JR6is/6E; arc=none smtp.client-ip=209.85.214.170
+	s=arc-20240116; t=1765697675; c=relaxed/simple;
+	bh=FVxIlAKuTuRT11DwsMiqIbBYGhbAiF+XA+LYL1zo2gk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Q4JJoOJ91F99r2i80W3/N9yluT0yMkd8rQFML3PQXoDnAfjrQyBrMbNCYiGYn9zLwxOShSeEdsXVwh8kap+lfoGcgq+Vnu/O5HdekxbaxT398zGqq7P4wCqHBvK4qFL6sC14CEiNjTaQdKgN1Rx1c476nShhgYBNnB26j3tMAOg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YJlexOnU; arc=none smtp.client-ip=209.85.215.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JR6is/6E"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2a0abca9769so1246775ad.1
-        for <regressions@lists.linux.dev>; Sat, 13 Dec 2025 22:07:12 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YJlexOnU"
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-bd1ce1b35e7so1735966a12.0
+        for <regressions@lists.linux.dev>; Sat, 13 Dec 2025 23:34:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1765692431; x=1766297231; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=r92Q2V8e+U0OW5eFV0h+0q8zFYT95BWs+m4he6KpbxM=;
-        b=JR6is/6EXmxKa4WMhhsku2ZqQ+PqxdUBSloTk3fXr3Mq6kNNoiQfQ+nzzhh4fFdGA0
-         EEHG1sAtIww56x8Pj+VmZdZIxzD7j4zHHrYhPAHbXt/R5s5Ie0ST2g/1MPvv9Z6ZT3E1
-         Q7wlWHGEVaTAM7/TSymTa10owjiFCs9ujbEQHwCtLswyebtvFobcZ2BSGpEAIp1I99dw
-         qm82wBIH0m1wl/DpQHF/qHKf9niPrRF8KariE082BOkPWNA394BF1ofePLKPM+D1HBkJ
-         fjGGZbnsCvwynbRSlQPWLn1zWmZiYUsLaSnvABNeKoBaApU6KvrtLyOznTANcqnfTUSj
-         L3JA==
+        d=gmail.com; s=20230601; t=1765697673; x=1766302473; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=iRn1RbbVVYNiiCpJThw73EOp5BTjJZAt0+REstZc+hw=;
+        b=YJlexOnUpKulvqke9pljcOObx8BdVOMKcajOldCfqn60wIxRnewJRHVfDDyptP3ryw
+         b4nQtCu0wBXZLpROeKjEGcW8RAy0Tygvyzp+LOieK2QQxDI/ubAd6URNAEBqXmlu1Qk2
+         Mz8wKPWPcdkQkqrz1KUikd8sR3Oom5UBvIBrYkDU2HK81qOj3BX1q+J4uta6KGUSnZIO
+         47fziOMKEisQSBf2XpqtO+S8PfzNtAK09aYDk7ZriVTqZ4KCDGAWgGPXEgQBt6g5+xJw
+         dYZWd8kFHAi44FQpNHNG5Epdt/9iEDxNnO0ZiVerirKMLOtyW9/R2a3mKQPgt84F1Q9X
+         c49w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765692431; x=1766297231;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=r92Q2V8e+U0OW5eFV0h+0q8zFYT95BWs+m4he6KpbxM=;
-        b=wa3S6E2LFbF9WXNQ6DJZOoH9ekg/FarbsQlsugwLXyxsVIwXnsPhzpFi0INLanYjfA
-         XBTGRhrS1cwNu/nycppw0XoyFoIRMKIMaQubI3yCE6maXTOF85N2qM3lURSY3CK9A2VL
-         JewUgYfZUeNXWBNzskQXpmr07dpP2IcWzLkCy/i85FsaZJVc/2g7s5noBs2VIgbGo+lX
-         HTT5BHwMxlgDR6y3yK3m1l9DHEdWs7cx+QMadmvOLLjKXgRp6L6d4a32ePiFDa7vxnxj
-         kF2c1xBTQPLP63KfB7QefiQVGToa569dKK03jt0Fwj/yWUKFXvK8LGgGrRBJT7hv6dod
-         +Mig==
-X-Forwarded-Encrypted: i=1; AJvYcCVhWQcaDotlFLdMmZv1CeQDpjBf8vWeWcdTNRKO2NxOZYOLKwndSwfneo3cWVBLDh4DlN0aZt7Wck+iFg==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwleYhlcFcRCUxczGrKqhjzwZlWYLJtga0I98GYXXn3fQerE8GO
-	VWLhXMBp0q5twbF93+uNuTSt/2pdlFjHKvoobgVO7H5ZyVNlxk+Xu/8WST7qyDpAUC/gTChIZrx
-	TEJpLNg+hKjj0mMGbORS/nCnQdLiJfYA=
-X-Gm-Gg: AY/fxX4lLUjCKf2f8Yn4vp9UkcOP4fEtF36heOp36liN7MhqKWwGTwNXxLn8r07L/zI
-	8qqCaj+YABVUJjXoQwgwLShY+nVuhD672jJEHgTe8/tzOsgNWFa1Y/AW+F6v65e0FtkEMaMBXZU
-	THB4iXgQZL127rg9oo4p0PXer0MQMlIPVEBF/hrqURr22wbvnah3dWVf2L+QlGAnJ6r++W2wi7B
-	/DSlcRACmlFczXuoo9xKUB3KcGHsfFw68Yxk1+A42bpePPR1J3P4sN4HbZMWtW95eG6be7jsOjy
-	UGJCixNQfwc2jfDnkvXTtyN6lpU2GzC8/LeafUdtjxHbTHB7Oj40XhXnfeBSZf8BbgLLNNLQ3f6
-	rxds7GHRA/AxdWIdTIBkpvyI=
-X-Google-Smtp-Source: AGHT+IEjx4XmV7+QKdE4whfVgNEnoL/VMyWdZXt9WX2oOApywhA5AcUs+0KOuqeEhQKcom99245S1CriwR+pNcC4S4A=
-X-Received: by 2002:a05:7300:2405:b0:2a4:3593:2c0a with SMTP id
- 5a478bee46e88-2ac30185d3cmr2189860eec.3.1765692431485; Sat, 13 Dec 2025
- 22:07:11 -0800 (PST)
+        d=1e100.net; s=20230601; t=1765697673; x=1766302473;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=iRn1RbbVVYNiiCpJThw73EOp5BTjJZAt0+REstZc+hw=;
+        b=irDiTV0ry1pM6EL3X9Y7mVgRDvJQV7ogy/KOwQyhUXVpuy+0qVVEoxKo7Dd1s0iS/X
+         XlvH1f4//n31JVElcieOWOuPfzdbOeCwOeOvdkFKGorj9uWWm+qWi90nynBWZIgZV7E7
+         gaOkQ1S9TiEasNIe8/jFRdtNW8nmt+aLd4zuaPm3IwjjC1amH7QHjqJ5+zppx7MWjnTo
+         Sm6H+bQl1qAAjuNPAc0KGmycIjdSsqfRhb2JEgZEwZAS9xmSpcj0fbfjkZPIOQuUlGwm
+         t7cSqabFhs7U31Yk8RanyQA6EbtpKOkwEMGTLjk4bUs0kT6xkM+EDcqLqZdDmk7pO7iB
+         yFFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWSk60Z8Cs9OS2tAut9B7ArlfRl6FUb+znAu/P2mbO0iXVyvgq2dFMHxawSMN6UEAvGRhMGz39Via4g8g==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yw26QDhuiuRO33I5CtNprCD37ICsAi41hFQ5fS2BplDUVea7qDg
+	1DHJ+ukzImzQmsJVQXnS43DpU/+Z/7dLZ1F/8kJOGQDVeWt9OW6bcnyx
+X-Gm-Gg: AY/fxX4C7qZySFgX2HiBjNf/54CI8t5GqU/0l07Sfgkw2L0Gzxx6NyNEzIMhwm28OAK
+	AvCypej6mLdzmz12OO58Q1C4lOu4wGXmIvdNTObU/rX8dzoPn9lCHidAxIApO7elcPicDjxnAsC
+	1rWVpFLTif4MJulsRViO6/42Xp/YH3gAoUepXGoiZ4akAWua4zHWVg692HuCgW66JhzwbNxOGXB
+	iV/m9CJd585Ul+a+s1pdOfYW3O8S/KUkdgTYJMksYlr6FlMxDPRHyEgPvsZHfl5FcS35g6YEDe0
+	MSBZ+cXPMuew7J9YZ8TjHTLQFydQTcmS7M1aoUSlF767lo0gBsrmpl3hTva0fI2DVVyGh7GdnAH
+	srf6t4zi/mDOLZQdsxCjX3sxkj6NGbQgnhR0nKF4UKZmUH/oqeKuErOkCJ0CyjB1AxLtbu/l351
+	kMxh1RU5aQp7kkX3W+Uzzl7bhJvVV5UqEX1FaRIZsTWeMlkHjRlXAc7Wcn8eV60TE3ig==
+X-Google-Smtp-Source: AGHT+IHAPA/EnNsgzP0HIlYsXfOj/q3Xg73QhloxXAO45aDmZUzS7OcDiFy9ELh/3UzA7ijVRiMldg==
+X-Received: by 2002:a05:701b:2704:b0:11a:61ef:8491 with SMTP id a92af1059eb24-11f34ac1593mr4017789c88.3.1765697673068;
+        Sat, 13 Dec 2025 23:34:33 -0800 (PST)
+Received: from [192.168.68.65] (104-12-136-65.lightspeed.irvnca.sbcglobal.net. [104.12.136.65])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-11f2e1bb2f4sm32890480c88.3.2025.12.13.23.34.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 13 Dec 2025 23:34:32 -0800 (PST)
+Message-ID: <66cba90e-c9b1-4356-a021-e8beeff0b88d@gmail.com>
+Date: Sat, 13 Dec 2025 23:34:31 -0800
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <1286af8e-f908-45db-af7c-d9c5d592abfd@gmail.com>
-In-Reply-To: <1286af8e-f908-45db-af7c-d9c5d592abfd@gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Sun, 14 Dec 2025 07:06:58 +0100
-X-Gm-Features: AQt7F2qEeevNyJki3CDaXjdPegHadD6h80UJghjzYTaUz_sRuaFZb1Mi4GUBj6c
-Message-ID: <CANiq72kYjNrvyjVs0FOFvrzUf7QYe8i+NpBS6bMEzX8uJbwB+w@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
 Subject: Re: ARMv7 Linux + Rust doesn't boot when compiling with only LLVM=1
-To: Rudraksha Gupta <guptarud@gmail.com>, Nathan Chancellor <nathan@kernel.org>, 
-	Nicolas Schier <nsc@kernel.org>
-Cc: stable@vger.kernel.org, regressions@lists.linux.dev, 
-	rust-for-linux@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Danilo Krummrich <dakr@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
-	Benno Lossin <lossin@kernel.org>, 
-	Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+ Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nsc@kernel.org>
+Cc: stable@vger.kernel.org, regressions@lists.linux.dev,
+ rust-for-linux@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>,
+ =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>,
+ Gary Guo <gary@garyguo.net>, Andreas Hindborg <a.hindborg@kernel.org>,
+ Alice Ryhl <aliceryhl@google.com>, Danilo Krummrich <dakr@kernel.org>,
+ Trevor Gross <tmgross@umich.edu>, Benno Lossin <lossin@kernel.org>,
+ Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+References: <1286af8e-f908-45db-af7c-d9c5d592abfd@gmail.com>
+ <CANiq72kYjNrvyjVs0FOFvrzUf7QYe8i+NpBS6bMEzX8uJbwB+w@mail.gmail.com>
+Content-Language: en-US
+From: Rudraksha Gupta <guptarud@gmail.com>
+In-Reply-To: <CANiq72kYjNrvyjVs0FOFvrzUf7QYe8i+NpBS6bMEzX8uJbwB+w@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Sun, Dec 14, 2025 at 12:54=E2=80=AFAM Rudraksha Gupta <guptarud@gmail.co=
-m> wrote:
+On 12/13/25 22:06, Miguel Ojeda wrote:
+> On Sun, Dec 14, 2025 at 12:54 AM Rudraksha Gupta <guptarud@gmail.com> wrote:
+>> - The kernel boots and outputs via UART when I build the kernel with the
+>> following:
+>>
+>> make LLVM=1 ARCH="$arm" CC="${CC:-gcc}"
+>>
+>> - The kernel doesn't boot and there is no output via UART when I build
+>> the kernel with the following:
+>>
+>> make LLVM=1 ARCH="$arm"
+>>
+>> The only difference being: CC="${CC:-gcc}". Is this expected?
+> It depends on what that resolves to, i.e. your environment etc., i.e.
+> that is resolved before Kbuild is called.
+
+Sorry about that, I should've specified in the original email. The CC 
+resolves to armv7-alpine-linux-musleabihf-gcc.
+
+When both LLVM=1 and the CC=gcc are used, I can insmod the sample rust 
+modules just fine. However, if I only use LLVM=1, my phone doesn't 
+output anything over UART, and I assume that it fails to boot. 
+Interestingly enough, if I just specify LLVM=1 (with no CC=gcc), and 
+remove the rust related configs from the pmos.config fragment, then my 
+phone boots and I can see logs over UART.
+
+
+> The normal way of calling would be the latter anyway -- with the
+> former you are setting a custom `CC` (either whatever you have there
+> or the `gcc` default). By default, `LLVM=1` means `CC=clang`.
 >
-> - The kernel boots and outputs via UART when I build the kernel with the
-> following:
+> So it could be that you are using a completely different compiler
+> (even Clang vs. GCC, or different versions, and so on). Hard to say.
+> And depending on that, you may end up with a very different kernel
+> image. Even substantial Kconfig options may get changed etc.
 >
-> make LLVM=3D1 ARCH=3D"$arm" CC=3D"${CC:-gcc}"
+> I would suggest comparing the kernel configuration of those two ways
+> (attaching them here could also be nice to see what compilers you are
+> using and so on).
+
+postmarketOS uses kernel config fragments and tracks the latest linux-next:
+
+- 
+https://gitlab.postmarketos.org/postmarketOS/pmaports/-/blob/master/device/testing/linux-next/devices.config
+
+- 
+https://gitlab.postmarketos.org/postmarketOS/pmaports/-/blob/master/device/testing/linux-next/pmos.config
+
+- build recipe: 
+https://gitlab.postmarketos.org/postmarketOS/pmaports/-/blob/master/device/testing/linux-next/APKBUILD
+
+
+The only thing that changed was whether CC=gcc was specified or not:
+
+https://gitlab.postmarketos.org/postmarketOS/pmaports/-/commit/b9102ac5718b8d18acb6801a62e1cd4cc7edc0cb
+
+> Cc'ing Kbuild too so that they are in the loop.
 >
-> - The kernel doesn't boot and there is no output via UART when I build
-> the kernel with the following:
->
-> make LLVM=3D1 ARCH=3D"$arm"
->
-> The only difference being: CC=3D"${CC:-gcc}". Is this expected?
+> I hope that helps.
 
-It depends on what that resolves to, i.e. your environment etc., i.e.
-that is resolved before Kbuild is called.
+Thanks for your help! Always appreciate your presence. :)
 
-The normal way of calling would be the latter anyway -- with the
-former you are setting a custom `CC` (either whatever you have there
-or the `gcc` default). By default, `LLVM=3D1` means `CC=3Dclang`.
 
-So it could be that you are using a completely different compiler
-(even Clang vs. GCC, or different versions, and so on). Hard to say.
-And depending on that, you may end up with a very different kernel
-image. Even substantial Kconfig options may get changed etc.
-
-I would suggest comparing the kernel configuration of those two ways
-(attaching them here could also be nice to see what compilers you are
-using and so on).
-
-Cc'ing Kbuild too so that they are in the loop.
-
-I hope that helps.
-
-Cheers,
-Miguel
+> Cheers,
+> Miguel
