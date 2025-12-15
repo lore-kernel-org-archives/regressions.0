@@ -1,62 +1,62 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF9B632D0CC
-	for <regressions@lists.linux.dev>; Mon, 15 Dec 2025 23:59:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B12A29ACF6
+	for <regressions@lists.linux.dev>; Mon, 15 Dec 2025 23:59:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765843146; cv=none; b=D5KnlBHYcgPxpExniLKkC0ujgmhatXMnbXeCPB5XVNttCrqS/JVRkVcHCzyWFlJrZPNZ1WQFJekRM9rxzUPZtYkwKDFMWZ3AJKqCvtoxyQ8hU5PeTQiC8+LX8NkqB3CFCYdLpwO+uE0/Z120RawyI4ZoYLLU0Avw1daVtHpDvBE=
+	t=1765843147; cv=none; b=seKuD/cAxHEftezCH8re6MfQh2OnIRHi9+hfHwIFRAeuVh8GlANmueyGLnYRv9kZmQgivBLymSJNVmoQsv4JZNh+iBsAzMJqIjBdZe5o4PYFnWvxabrrVSVCk17Iy3KvKGQpHjbdQ9itUWu30hmEibNd8wBcfLWJYSIMHCHodow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765843146; c=relaxed/simple;
-	bh=2ET3KuZ6rFu/kJsctJVg1vQrfoym60yOnRCX2c1aPm0=;
-	h=Content-Type:MIME-Version:Subject:From:To:Cc:Date:Message-ID; b=eAsLsf0+XkfjukhXE3cEVtTXOi1N4OVmFUQ1aw8S5jKorCXTlgPVh+tVqjNubxVuDaPk4epIvxZ+h/PXIgKyUrNwleeG7IMPJ4UWdEuM7yPx7ldzHUrfIoqL2XPFgvsjMYJprrWZS8GKr4kilPdaCoDQvgkzc11u322qr/vlAK0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org; spf=none smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b=z4zv6uNl; arc=none smtp.client-ip=209.85.214.173
+	s=arc-20240116; t=1765843147; c=relaxed/simple;
+	bh=aUUqaYm/em1vfd4H8MXlLWDsJWRcYiIvgnLSp4zmUgg=;
+	h=Content-Type:MIME-Version:Subject:From:To:Cc:Date:Message-ID; b=IUrXMVaoFYkap/vRg61fT9V/PwYAYVXhfGTTGa5nlF22b7uYZc+u+GqFMnIa5gBJzXFgd9qqeBy+UPKWVZ9nsGTRV1hjbbzclg3ceHEh9yFA0R6jtnl6D1IFI1YQq0RcMp6SHARJ3DfdD43yG02tn6BPDp0OZsjA6/ZT/ErvQUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org; spf=none smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b=uiTRAGCE; arc=none smtp.client-ip=209.85.215.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=kernelci.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b="z4zv6uNl"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2a0c20ee83dso23097335ad.2
-        for <regressions@lists.linux.dev>; Mon, 15 Dec 2025 15:59:04 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b="uiTRAGCE"
+Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-bc0d7255434so2604270a12.0
+        for <regressions@lists.linux.dev>; Mon, 15 Dec 2025 15:59:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20230601.gappssmtp.com; s=20230601; t=1765843144; x=1766447944; darn=lists.linux.dev;
+        d=kernelci-org.20230601.gappssmtp.com; s=20230601; t=1765843145; x=1766447945; darn=lists.linux.dev;
         h=message-id:date:reply-to:cc:to:from:subject
          :content-transfer-encoding:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=KmfAdh2fh0N8FmAqG7oVO1gG6isOT3BiqzvgRJn/wsY=;
-        b=z4zv6uNlVJvgh0kM1gAnrX/q8hc4rXtDEr715lMIUBU0h9WK9UR7L1m1s1elPgWkbl
-         ggMGXG55ZJrj0fn+Dbtn1ELP2tkRKVZvBP7Wm+eAk+atH0NgN+/RBQl99F2TITeIIuT9
-         Xv+NViiRDQqNujEkDJVrhELIuSPZRUp4U6yYHkyzmGuHnDLvFcIKiVv11miP0M9w4qGP
-         GSX1ah7Dc4EjDCZ1UHymGpZnlGvAND13HgzCVH4S9OZlzojx1V6JRbcu1J+utdfS3chJ
-         k7h6EMcgoiIrKItH7UP7YI1WSfFiqRymY4zaqlZi5A/jn7BHMcYMp88RBeezuXTpCufu
-         2UVg==
+        bh=XhJoYwe/PCXYwVu0tT+tOeoeCxiWwbIjyVtrV3UZN5A=;
+        b=uiTRAGCEmNKtWg/8+j+4BSazOEGnrDBquMMA+1hOCkzyoeLJGWRMd6WNpMeJOixn77
+         OBTsPuEE1Dm0HamSletLkrx9hmwkwn1NjbrOQ2gS02+zB2yyVSG7quTVjk8zSbD/aWxZ
+         XaH7lSzsnHjYMrpNY4e97tYg3FJEbflyBXHnrfsE7Bm+5SWQrbt1bhNdyfh+hBGGkXQp
+         SPVc0Bld2ZFn5x6byil4o94Hw4ytX42D54xyHu0EDRh+AYIvHeEqZAwLFKTTcH2oXIPI
+         7NFmeL3isViUySLU7K/8i1GOCVDNI2UbQWJLRa85pp+FpRELOywvqWbN8DvswD3Bq4Jm
+         RCAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765843144; x=1766447944;
+        d=1e100.net; s=20230601; t=1765843145; x=1766447945;
         h=message-id:date:reply-to:cc:to:from:subject
          :content-transfer-encoding:mime-version:x-gm-gg:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=KmfAdh2fh0N8FmAqG7oVO1gG6isOT3BiqzvgRJn/wsY=;
-        b=GmWOX3XMgIG684k9On1toaV5AuYruimdXfh050lwjmmwqc4CgFy6FnemGQGSOdUI0G
-         paxr2yes7lhKw0dsFd1DHgGLuay8Z6MmR/WejhlUVkpCm8Zo2ZNfeT66ktSr6758BVEd
-         t7Zyfq6EoTWB8TdgEbZvt9O8z38MeX3H3uqJhMlZCHAblvbQL++7d0Gmf7ic3kMxmXh5
-         mKMB6vqvEy/K1c4pN5DyFapTQ3gJ0tGdtveHpxVyxMFIH9+dm9/jo89vE/cTeNdNSI26
-         UrxvAIKbcF+rMS/a43XPVx1SaCyD53yyawWHp9UFYtVXRS0xOw+Mcc/QxFoVpPYNDG5w
-         MV8w==
-X-Gm-Message-State: AOJu0Yy5cS+KNeSap+MvaZXY3zZduZExJNAEi5vNMfecbD1ErlNbwk/4
-	hrdJ4tMjx1UTzHQzXnO6pu2rB4+ydovyTEgYt053JiQ1z+vwVEFWR8+Z0lQPNq/iRxk=
-X-Gm-Gg: AY/fxX6ON0G55HgMsqhgIJ/R6qW2TRQLCV0fWQef6ArI5rghSaVN34joj1cwMP0Vsxr
-	/44mcHcWsadCnj+TjVtbGKdSjGzgXQQrEaosSuDSZcB4mXKO6pcTXbs4FNbYbyFF5zfFcBGe/9o
-	hut533NVNF/QXPjEjqFA2Av2a/v9js3DR+P/J/fiEnQtdIrsoq06EtPI3fbDYrI7w1lHcO5q+Zd
-	lwH1me4qdzx5M1CTBnU0Oy1SWROjbanu9Mt04zIf5BxVzKyb4p1qIDKyq5+LYvJ9dDMv7/sCTEV
-	79r+YnC7yePRY/2MZMbLmcJIbAzD+kIVchpVqfMeiRf7cZrao2wULESvixvlTv4Axd8kbRi3eb0
-	2/5giYxbgEBP3p+PDSEK9FKELw26zpYto+pDOg7oENXk+PXMe15wpvpm/l/7hMFFL0G6LDt0CZU
-	dR4+cP
-X-Google-Smtp-Source: AGHT+IFqv5CDUbEPLsvtcfoqXFR8jX2ihixN26s3jK6NE/gUSHLjb+2D7z6Y5KmSBlrBYwrFpmuzLQ==
-X-Received: by 2002:a05:701b:2808:b0:119:e56c:189f with SMTP id a92af1059eb24-11f34ac184emr9255293c88.7.1765843144002;
-        Mon, 15 Dec 2025 15:59:04 -0800 (PST)
+        bh=XhJoYwe/PCXYwVu0tT+tOeoeCxiWwbIjyVtrV3UZN5A=;
+        b=D1Bc/zNYLNDkSkNpABAJa95FIY1d1W4kIFEAypK3hi0IhE6o/Xkz+C/HJw83mou/QN
+         76RuI28RwCHOJmQJ0yfCj1if9rlncSRUYmiMI6sndcT5vpGPCAD0hAzc8OxV6y+cStsA
+         zbtfuoXmYmiDOITtXjPXdmxL51oc3UAwKGwXQRmKkfk2Cc/H/iJbkLqNEIpBdZakzviO
+         nlsK2oomCvrHW2n72KAwbRoKZBpKY95yZx2k6tkgy4I3sJYePXEGbh8p09MYNTFUBXFa
+         7Ydi4ctf1gua16i3Y4vmKdynkm8EUmcSDQRSDSdXF0qLQjZ3rPm1YMg9nhyECP/5TiVd
+         AZ0A==
+X-Gm-Message-State: AOJu0Yy3w8QahR98PrbDsPsv70TMJyUVk4oc/JY/OkNaF/Vh6xrd61kh
+	yvrIL9bPiSeks3cQ5qsPZrzyVwV9LuSrfxHlIt23HRYRTxmz/50/bv2HOyqFCAOV1bc=
+X-Gm-Gg: AY/fxX4l4pvp9utpOsWDNxBfcERZ3wj9AFz+PFz4luwwZbVcZP61DWxP3cq+Dkrawu9
+	Pju6Lu2wBDC38iWen4cxeMlF+KR4zkNiraOrQyunEiTkGlbScsjo/TWLdqixx7B8gYWcXrFFBLK
+	WGG/gBJppVKnBYFaktCxx57An1fnvNFDpXYLOzLSTxl34YicHGlqaW5TaVO5eki38Y+p2OU849K
+	R0ttBVirhvKH2+55CJGHjQU8tRpVWLrdMmHjUedFzq7M0db1Q0PFEBdsZxYWGqKNDLA6x7JUDyW
+	TRzL0dCx0JSxba6KUzYciJjE0LRAxzY/BDyiG6Fa6AJ8bA+WH/BkevWbeeTq81We/N1Kr2Zkc7G
+	/eNJICTAiA59NScHPc5Q/l0wWtJ44/gGMlD4b4MT3iiPiHPS1sEzrqvI9hXDSUXEs1aSDIxCMKN
+	oHzpgY
+X-Google-Smtp-Source: AGHT+IEqhN1ubWSuDskzmKUIzAWT6acagrsS0UulZfFDX0DFIKjAjc0DJL4MefNQrAh+wtGqeexThg==
+X-Received: by 2002:a05:7300:cd86:b0:2a4:3593:468a with SMTP id 5a478bee46e88-2ac303f26a3mr8104130eec.38.1765843145335;
+        Mon, 15 Dec 2025 15:59:05 -0800 (PST)
 Received: from 77bfb67944a2 ([20.38.40.137])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-11f2e153e7esm39590559c88.0.2025.12.15.15.59.03
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2ae4f05463dsm63520eec.32.2025.12.15.15.59.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Dec 2025 15:59:03 -0800 (PST)
+        Mon, 15 Dec 2025 15:59:04 -0800 (PST)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
@@ -72,8 +72,8 @@ From: KernelCI bot <bot@kernelci.org>
 To: kernelci-results@groups.io
 Cc: regressions@lists.linux.dev, gus@collabora.com, linux-next@vger.kernel.org
 Reply-To: kernelci@lists.linux.dev
-Date: Mon, 15 Dec 2025 23:59:03 -0000
-Message-ID: <176584314280.2550.10885082269394184097@77bfb67944a2>
+Date: Mon, 15 Dec 2025 23:59:04 -0000
+Message-ID: <176584314421.2550.17138936004167130394@77bfb67944a2>
 
 
 
@@ -84,10 +84,10 @@ Hello,
 New build issue found on next/pending-fixes:
 
 ---
- error: unknown warning option '-Wno-suggest-attribute=format'; did you mean '-Wno-property-attribute-mismatch'? [-Werror,-Wunknown-warning-option] in kernel/bpf/helpers.o (scripts/Makefile.build:287) [logspec:kbuild,kbuild.compiler.error]
+ error: unknown warning option '-Wno-suggest-attribute=format'; did you mean '-Wno-property-attribute-mismatch'? [-Werror,-Wunknown-warning-option] in kernel/trace/bpf_trace.o (scripts/Makefile.build:287) [logspec:kbuild,kbuild.compiler.error]
 ---
 
-- dashboard: https://d.kernelci.org/i/maestro:32e32983183c2c586f588a4a3a7cda83311d5be9
+- dashboard: https://d.kernelci.org/i/maestro:5264eacd00c08c60a249ef82374e5e5418baeed5
 - giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
 - commit HEAD:  326785a1dd4cea4065390fb99b0249781c9912bf
 
@@ -99,7 +99,7 @@ Reported-by: kernelci.org bot <bot@kernelci.org>
 
 Log excerpt:
 =====================================================
-  CC      kernel/bpf/helpers.o
+  CC      kernel/trace/bpf_trace.o
 error: unknown warning option '-Wno-suggest-attribute=format'; did you mean '-Wno-property-attribute-mismatch'? [-Werror,-Wunknown-warning-option]
 
 =====================================================
@@ -107,13 +107,13 @@ error: unknown warning option '-Wno-suggest-attribute=format'; did you mean '-Wn
 
 # Builds where the incident occurred:
 
-## defconfig on (arm64):
+## aspeed_g5_defconfig on (arm):
 - compiler: clang-21
-- config: https://files.kernelci.org/kbuild-clang-21-arm64-mainline-694097d2cbfd84c3cdba292d/.config
-- dashboard: https://d.kernelci.org/build/maestro:694097d2cbfd84c3cdba292d
+- config: https://files.kernelci.org/kbuild-clang-21-arm-mainline-aspeed_g5-694097e2cbfd84c3cdba2939/.config
+- dashboard: https://d.kernelci.org/build/maestro:694097e2cbfd84c3cdba2939
 
 
-#kernelci issue maestro:32e32983183c2c586f588a4a3a7cda83311d5be9
+#kernelci issue maestro:5264eacd00c08c60a249ef82374e5e5418baeed5
 
 --
 This is an experimental report format. Please send feedback in!
