@@ -1,124 +1,103 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E28133C197
-	for <regressions@lists.linux.dev>; Tue, 16 Dec 2025 14:41:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC2DB330655
+	for <regressions@lists.linux.dev>; Tue, 16 Dec 2025 15:09:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765896118; cv=none; b=qe8b50b6EB+AiYiNp+SxQg9FZuWQdMOw9ukEmSsc+KxJs8NFx/ynequ8rPukxBol54lAr3vmqtxz7k2S4kYK2G0fWCI2iKT+nbn0kCx2r0Jq8tqFrWQxDilPn9EK2CrKL6MHOsa8jlm7e4cENb5u/RRLqOjsXha+MaJtpx9agZA=
+	t=1765897756; cv=none; b=g8FaFZo/MQaXZVeqSWH2T4ZciHL11t98Oyota64St02vjsd7zDfamH45Sm4MXgXWmFYTK+eNyzlAdBkM6gi6aPbljvL+XVaE+3itfX0PCOJVKoif2D1PeIGLQRWNzijLqhenjYkk9n5/qsYOGO1einskXekvfrrw3ynERSYN6is=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765896118; c=relaxed/simple;
-	bh=GcmsVh81EPRglScizk3u6c6zc0imNsEO8zBP3X7zTI8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pWkfrlxgw2AcPhODXHlVgMHS3nUwzFeJAnkHMuV9gt4lqNO1fTxhDWrpT2UyxaPlKPCEhfd2SLQnIB9Dsm6EywctLi/I5l/rrYXtZrkljDS8F2Ae4CeFDvtGAfYPlrCCjpISp5+uGzFYR8lmJ7vN8EEpHlzrQCUyL5FeHaIAmUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hwRQVC1A; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1765897756; c=relaxed/simple;
+	bh=P5EatezNq4BgJDiRy+qSnDLhBpsRdk6obTP3oqH4CHU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JHvmCxpnFjz0inFEU74YEwrSE3wq+UosGs1EfJF1tdXWX2+/++gz9tW1jpHOjALPyP/Ojx2KOzAvyKIgSWj6jhJamyJwYLyWsrZpw4R/I1laX35bjEaa5ZI+5kfYXlbzAs4E72Rk4RIiQWT941ExwUN7PHLX0IL1x0SHTinxBNA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=draconx.ca; spf=none smtp.mailfrom=draconx.ca; dkim=pass (2048-bit key) header.d=draconx-ca.20230601.gappssmtp.com header.i=@draconx-ca.20230601.gappssmtp.com header.b=3Qp1iAIV; arc=none smtp.client-ip=209.85.219.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=draconx.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=draconx.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hwRQVC1A"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-b7355f6ef12so905547166b.3
-        for <regressions@lists.linux.dev>; Tue, 16 Dec 2025 06:41:56 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=draconx-ca.20230601.gappssmtp.com header.i=@draconx-ca.20230601.gappssmtp.com header.b="3Qp1iAIV"
+Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-88a367a1db0so34974466d6.3
+        for <regressions@lists.linux.dev>; Tue, 16 Dec 2025 07:09:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1765896115; x=1766500915; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=aKhhZCZ5BMNvuKBSscW4xFg80GIsuJjSxZdB89waxC8=;
-        b=hwRQVC1AX7Gmfv3PvV8ZwvzO3Xot5xcpVHWb4K6lox8jxn1Z3TiaRuKxR3R8Pl/7iW
-         JyZwqv3wVmdHniPkk/GqqaUtny93ZUyF3PreWDJeJ8VdixWFyZ64ydq20WZ/JimaGpd5
-         cW6q4xQypy0a+hYNqCgdWrrX9sHNS3Su3VTWsqxYyPkWydQP2VNv/btWvDZMpVnqlllU
-         vz3RJp4sNC0/7Jp5q3htD62Qg1F9xfitLafiPWGZZhCBmwSgO9XIppMkdtLpGSBdGh5U
-         eDWEY6Eg8wH+eIiQMvwaKsJc+hnqNuHtFjekSa0Q01loJPWR2Fah2USZMW52Bz1Uhcbt
-         GbjQ==
+        d=draconx-ca.20230601.gappssmtp.com; s=20230601; t=1765897753; x=1766502553; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=jrMcbVCU0QysEyyCI8MUU0ym/IVFglQ8rabaf9/So5I=;
+        b=3Qp1iAIVGEz8lD/IiCbaWTVWM3479/sBZSFdsB9zGwQjLNSO9PdIVLUP+TSPIM81gI
+         l0L9x7FnfX/tXENuRFEKbGogqEJUDWjGA3oLlhOChAjqncyi7wV3TX/BqmrplDHA5xy4
+         FYvP/G8att984TAismrO1G56ODyZcUGCGBwZlqKcrcNv518KQkQ6pILgOjRq1r0qLMzN
+         yNBszDoJepSQ9MbMKr/vziccU18dqAb4S3EAd0JYnUse137aXqGIwiOQI8Wv3H2Fn22n
+         LUnRCB0Mp6eGMtoQ7zzqIicMLNMJ6JqaG2F7pKVR4zG8xm/aC8vNvYldP/bIobWDEqJK
+         NURg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765896115; x=1766500915;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=aKhhZCZ5BMNvuKBSscW4xFg80GIsuJjSxZdB89waxC8=;
-        b=eUnq7vfKMHIweZMv7txB1bXCPNzoBkmYh/7xLMepLvBIy9Vdmi5Hmd8v+2MWFLhaoO
-         QH0gDV9hrfAzxP1p2en2dtu7vDqWRJYATWNwqpeYwVN9IdolefOWSI4OAwip6ybEWMc6
-         iWmSeQalW7PW2YAbrImRSYaicnFg1cjqgs+5ZSyY7rL6QJTnNAYOPMWtIJQ+sTMfy2cT
-         t7mqkrWr8CPq8gCK4tujpJ5Bk+TsyIYdyTGV8IUo2D4suiGd5NrfM0l2twBZyWQ39R39
-         HUkWr8dtABrQ3+s4teIrojl/zjDUuDMUI219jS7norXFTYpQjKh8Lj1iZRKg9lstiTF6
-         43cQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWxGp6I5f/4J48R58aGX7sfBLZjA3rKSQXOm2kKNjVLoTsZqW6CUtRz5OLtjKNtxL1CALyvlvxQuRgYGA==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yz2nlmJEvbHG60PLRZZHr6v5oiuBD4uKlsP2NmOq0CW65II3rkI
-	k329gsSvFxFbQ2tUnDfCgdaF2kmeCcRgVMUaKRx2/V7ac46ESLyjBnoe
-X-Gm-Gg: AY/fxX7tlD8v59xApejRrqq/eJN4HI3gMrnC9AuwbtCO4d9g20GfDN42TQiUCHmyuUI
-	XuyU1B3ruRhWtgZeVeN+F2o5CFa8nlRuAPbEodlYpPE+zD6Lt2dXLLPfzoE6dK7qSWWJ/vHUOR1
-	fHpRc4+BfQ4l7mOLIzL4a6vHG6s93RE2oEHKEpHmZfU80Kqr85P++vrA7JUIpBiZPg3Q5sPjCLs
-	sSm05xH9JnQ1hx3NwrrNWsoas0Adb6/CI1gQHPxis+nQ3VMj2HJ8VtG8DK3SzQb7ajl0K4P235/
-	NgDTwzzng0TnYm0IJwgnav0nke13GBoXxERrwy4RfVtpX55WPbjLyKpR1wsSUBByKfswrswFxo0
-	IsMHxlDhhfImGsWwRZeJ4V/MZgGAKT/J65JyRZI8onknUMeE6rzmBQcUB+nF83Yw2SCOOQelBs0
-	cRbxJDagNN7LxqmvXl+G+Y7kk=
-X-Google-Smtp-Source: AGHT+IG2eeJsem6ZFRGiTw+NwisDAZ+3SHIeXNcmnaxykLecsCuhc1aufmqpuqSo8Y4ftNwLIvjHPA==
-X-Received: by 2002:a17:906:4fc8:b0:b79:f984:1557 with SMTP id a640c23a62f3a-b7d23c5bf6fmr1614360966b.46.1765896114506;
-        Tue, 16 Dec 2025 06:41:54 -0800 (PST)
-Received: from [10.27.99.142] ([193.170.124.198])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b7cfa2ebaebsm1717413666b.21.2025.12.16.06.41.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 16 Dec 2025 06:41:54 -0800 (PST)
-Message-ID: <0705db10-3cbb-4958-a116-112457f9af6c@gmail.com>
-Date: Tue, 16 Dec 2025 15:41:52 +0100
+        d=1e100.net; s=20230601; t=1765897753; x=1766502553;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jrMcbVCU0QysEyyCI8MUU0ym/IVFglQ8rabaf9/So5I=;
+        b=al0XUl3a2B00AyzJxu15mfMujv4etHR1ni4ggk7JyHxPj4UxrCnBIjQNMZTVz08MeX
+         W18BM/dDR/1yd5sPKkiIC0WV8RaOtjkSBnz50lZIYtwaQDz5nw5EDO2Wr8YDDNNcR1l4
+         iasFDlsZtqkebd/kgs8X3YXAxlyzBiC5x7cyi4s5Yo5z2iDQd1jgOX7QLsxL3yGsB28T
+         JhATBS8JY7NYTd+qkIJHHDMQkqvKhlMwzTBVvv5G0H1KMC7t3xxtaUSF8kuORTIRytUO
+         WHbfBahThLJLByqLPlsiqkvhmMgeNPzfZyl0UOptVWNUSK69gwP8D/WTvMf2nQ9Nf4M1
+         RZGA==
+X-Forwarded-Encrypted: i=1; AJvYcCXM+XhKjlzmjO+YsXR3MTJwCRmYI3lxY0iStXIMPkXVNCruuAAQt4B6PXYtX5z26sJFy0KqwySVLnqSUg==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzzRGp22McU+bpSp3/zMvTn2MUXkd+akFdbwjP7Y57TscIW7v4W
+	kMImskxAb3mfWVtqC+wqtONBX7xibWtvNsA4toIvTYzadZnx5s+hnqU3u9yMLt+5xik=
+X-Gm-Gg: AY/fxX4GBJdLq+prdFHgdcEr8isAc2YOFhEyEAlfBGz5hu9EXUP0RCydKkz3ondKs6b
+	tBZuTjpJsLnkDhlGJoJkg9nhvSfLA2B9CqPsaOMfqG1BbktyU5vLDrPmwqiBCed5ZsDNZZHHyEs
+	hLL5SFUb5fwMh470w7i1buWSmsRpeYKS1Zt/nx7LQevq+q0bXjD//dejuKWsyjcDY5//6pO2StW
+	F8wIyY2zFc8RAlnXSQ44pS/ke4AbA3YRBozwf4TbKk6uM2snoWPLxOjxZopVSB/jSwZxdfSsxtI
+	U4Js6mGXYJAqDedYHjOwBX2xNCDEi6m/kpHoYgbvDFT7Z4f/9tLVi8OFZcKDVS3UwF3xW/E5Skl
+	rkQGSrBa5dXItvQkHwtZkHEabDjwyE0+mKjhalmxNeIV8XkkXalWXEZqpR9jjH9LtICAN3qIn8p
+	Cy/FbH/5YAFI42/ca/M5+RQ2zWre/Iw/BLYCwm9zzk
+X-Google-Smtp-Source: AGHT+IEW3ea/jO7lBPSQ+CsTkd0hRgRRgaNgvTaIJoUUggk99zhFWx2fuRHPwk2sKowsnvyuNmOmPA==
+X-Received: by 2002:a05:622a:581b:b0:4e8:a0bf:f5b5 with SMTP id d75a77b69052e-4f1d062a6bfmr207842641cf.73.1765897753249;
+        Tue, 16 Dec 2025 07:09:13 -0800 (PST)
+Received: from localhost (ip-24-156-181-135.user.start.ca. [24.156.181.135])
+        by smtp.gmail.com with UTF8SMTPSA id d75a77b69052e-4f345c2e0f7sm15891281cf.21.2025.12.16.07.09.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Dec 2025 07:09:12 -0800 (PST)
+Date: Tue, 16 Dec 2025 10:09:11 -0500
+From: Nick Bowler <nbowler@draconx.ca>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: "Anthony Pighin (Nokia)" <anthony.pighin@nokia.com>, 
+	"linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, 
+	Esben Haabendal <esben@geanix.com>, Linux kernel regressions list <regressions@lists.linux.dev>
+Subject: Re: [PATCH] rtc: interface: Alarm race handling should not discard
+ preceding error
+Message-ID: <g3phtogna3a55vzah6olpxekdcmi322q5lzzwxwq5za4oi4plr@js34hr72bemi>
+References: <BN0PR08MB6951415A751F236375A2945683D1A@BN0PR08MB6951.namprd08.prod.outlook.com>
+ <80e7450d-d842-49ca-8219-a995c8ce8bfe@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: ARMv7 Linux + Rust doesn't boot when compiling with only LLVM=1
-To: Rudraksha Gupta <guptarud@gmail.com>, stable@vger.kernel.org,
- regressions@lists.linux.dev, rust-for-linux@vger.kernel.org,
- Miguel Ojeda <ojeda@kernel.org>, llvm@lists.linux.dev,
- Linux ARM <linux-arm-kernel@lists.infradead.org>
-Cc: =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>, Andreas Hindborg <a.hindborg@kernel.org>,
- Alice Ryhl <aliceryhl@google.com>, Danilo Krummrich <dakr@kernel.org>,
- Trevor Gross <tmgross@umich.edu>, Benno Lossin <lossin@kernel.org>
-References: <1286af8e-f908-45db-af7c-d9c5d592abfd@gmail.com>
-Content-Language: en-US, de-DE
-From: Christian Schrefl <chrisi.schrefl@gmail.com>
-In-Reply-To: <1286af8e-f908-45db-af7c-d9c5d592abfd@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <80e7450d-d842-49ca-8219-a995c8ce8bfe@leemhuis.info>
 
-On 12/14/25 12:54 AM, Rudraksha Gupta wrote:
-> Hello all,
+On Tue, Dec 16, 2025 at 11:51:30AM +0100, Thorsten Leemhuis wrote:
+> Lo! FWIW, Nick Bowler (now CCed) reported that below patch fixes a
+> regression for him caused by the commit from Esben (now also CCed) the
+> Fixes: tag mentions. See "hwclock busted w/ M48T59 RTC (regression)" for
+> details:
+> https://lore.kernel.org/all/2t6bhs4udbu55ctbemkhlluchz2exrwown7kmu2gss6zukaxdm@ughygemahmem/
+> and
 > 
+> Nick, could you maybe provide a tested-by tag here? Maybe that would
+> motivate someone to get this en route to mainline.
 > 
-> I have the following problem: https://gitlab.postmarketos.org/postmarketOS/pmbootstrap/-/issues/2635
-> 
-> 
-> In short, what is happening is the following:
-> 
-> 
-> - The kernel boots and outputs via UART when I build the kernel with the following:
-> 
-> make LLVM=1 ARCH="$arm" CC="${CC:-gcc}"
-> 
-> 
-> - The kernel doesn't boot and there is no output via UART when I build the kernel with the following:
-> 
-> make LLVM=1 ARCH="$arm"
-> 
-> 
-> The only difference being: CC="${CC:-gcc}". Is this expected? I think this was present in the Linux kernel ever since Rust was enabled for ARMv7, and I never encountered it because postmarketOS was originally building the first way.
+> Adding a "Cc: <stable@vger.kernel.org>" would be great, too, as Nick
+> encountered this on earlier series, as it was backported all the way to
+> 5.15.y
 
+It was backported to 5.10.y and 5.4.y too, but only after I had reported
+this regression back in October (and I guess 5.4.y is EOL now).
 
-I've managed to the get the build setup for qemu-armv7. For some reason
-I could not get past the initrd even on kernels that are supposed to work,
-but I think that is unrelated (and not a kernel issue).
-On the linux-next kernel I didn't get any output on the console from qemu so I
-think I've reproduced the issue. Changing CONFIG_RUST=n did not change the behavior.
+Tested-by: Nick Bowler <nbowler@draconx.ca>
 
-So I this is almost certainly a LLVM/clang issue and not a Rust issue. I'll try to
-do a bit more digging, but I'm not sure how much I'll get done.
-
-Adding the LLVM and ARM lists to this conversation.
-
-Cheers,
-Christian
+Thanks,
+  Nick
