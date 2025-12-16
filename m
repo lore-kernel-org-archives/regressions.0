@@ -1,38 +1,67 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1438C3659F7;
-	Tue, 16 Dec 2025 12:13:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E28133C197
+	for <regressions@lists.linux.dev>; Tue, 16 Dec 2025 14:41:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765887192; cv=none; b=tDi1QTpqyO2mz3GMFpjylNlw05TSWKi17Yk+vtDf84u6CAUROBc5jtLyeIQp0FoyTsSvkMzPKi9kRz04TZBnGfG42yX1k7xN8nF/E6RNz5ZCk87KTyxzXvTzLBdTbURVTy39ZwuI4g2Xm+ETtAzSzgO3p4wD5eIaWWRndIVvvnQ=
+	t=1765896118; cv=none; b=qe8b50b6EB+AiYiNp+SxQg9FZuWQdMOw9ukEmSsc+KxJs8NFx/ynequ8rPukxBol54lAr3vmqtxz7k2S4kYK2G0fWCI2iKT+nbn0kCx2r0Jq8tqFrWQxDilPn9EK2CrKL6MHOsa8jlm7e4cENb5u/RRLqOjsXha+MaJtpx9agZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765887192; c=relaxed/simple;
-	bh=eRtrAkWDDzyg9MX2RQbjh1UPinq9/Qs3DdeMz9Ux/1A=;
+	s=arc-20240116; t=1765896118; c=relaxed/simple;
+	bh=GcmsVh81EPRglScizk3u6c6zc0imNsEO8zBP3X7zTI8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RHYmtDlnU19aUrWbY8ckZsAlgOFEk/PLcQ8J4VIO6qyJkfxt0Iu8NNt1mLOiKNTSAE9XBcKh6HXXP6M6wNW+wpru/xvfHVEyEsY/swcw+dGAnIVNaUW3DDUAnvHL+/+eh3TvQundsoi/yAH+v0qM6m6rmEcKXxP74O5TNyTO8f8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=A644u/Tu; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	 In-Reply-To:Content-Type; b=pWkfrlxgw2AcPhODXHlVgMHS3nUwzFeJAnkHMuV9gt4lqNO1fTxhDWrpT2UyxaPlKPCEhfd2SLQnIB9Dsm6EywctLi/I5l/rrYXtZrkljDS8F2Ae4CeFDvtGAfYPlrCCjpISp5+uGzFYR8lmJ7vN8EEpHlzrQCUyL5FeHaIAmUw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hwRQVC1A; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="A644u/Tu"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=AoHSZ1W8XNV5k5WWj7uw0/zG01vzUDAKJRs+epp2RNY=; t=1765887190;
-	x=1766319190; b=A644u/TuaRwtET0XKm/jntOPCPoyPo9nPMvxw9MuDbBDZ06AG8ESdeJhFSJOM
-	r9eT4c48BiDA2FCRauMYZCmAGXh19RjUO315vSwIhdsufKCLch/iszlZ149wF0WOPE0WHiUznAfBf
-	QrM9HM1ImOAhaHkvESDAXdBdS1GAq/oD1/7xHkAivDISH2Aq3r7jw2aPiSsstF9SzYdDqKUXZmzls
-	RYEdjBvOOo41my9Lg+nKBuUafcC+txIjVsiCW3+eGwp1yZzuH6WeevfFY5V7MHzFuTE0MmZQiIKzN
-	I2KPHv7PT874aLQDqf/qP+8d6cT+WbTFrJPTev9ni5oHv782hQ==;
-Received: from [2a02:8108:8984:1d00:a0cf:1912:4be:477f]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128)
-	id 1vVTvQ-00CD2R-0N;
-	Tue, 16 Dec 2025 13:13:08 +0100
-Message-ID: <f50ce449-e3ae-40eb-a99f-3e8704ebae12@leemhuis.info>
-Date: Tue, 16 Dec 2025 13:13:07 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hwRQVC1A"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-b7355f6ef12so905547166b.3
+        for <regressions@lists.linux.dev>; Tue, 16 Dec 2025 06:41:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1765896115; x=1766500915; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=aKhhZCZ5BMNvuKBSscW4xFg80GIsuJjSxZdB89waxC8=;
+        b=hwRQVC1AX7Gmfv3PvV8ZwvzO3Xot5xcpVHWb4K6lox8jxn1Z3TiaRuKxR3R8Pl/7iW
+         JyZwqv3wVmdHniPkk/GqqaUtny93ZUyF3PreWDJeJ8VdixWFyZ64ydq20WZ/JimaGpd5
+         cW6q4xQypy0a+hYNqCgdWrrX9sHNS3Su3VTWsqxYyPkWydQP2VNv/btWvDZMpVnqlllU
+         vz3RJp4sNC0/7Jp5q3htD62Qg1F9xfitLafiPWGZZhCBmwSgO9XIppMkdtLpGSBdGh5U
+         eDWEY6Eg8wH+eIiQMvwaKsJc+hnqNuHtFjekSa0Q01loJPWR2Fah2USZMW52Bz1Uhcbt
+         GbjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1765896115; x=1766500915;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=aKhhZCZ5BMNvuKBSscW4xFg80GIsuJjSxZdB89waxC8=;
+        b=eUnq7vfKMHIweZMv7txB1bXCPNzoBkmYh/7xLMepLvBIy9Vdmi5Hmd8v+2MWFLhaoO
+         QH0gDV9hrfAzxP1p2en2dtu7vDqWRJYATWNwqpeYwVN9IdolefOWSI4OAwip6ybEWMc6
+         iWmSeQalW7PW2YAbrImRSYaicnFg1cjqgs+5ZSyY7rL6QJTnNAYOPMWtIJQ+sTMfy2cT
+         t7mqkrWr8CPq8gCK4tujpJ5Bk+TsyIYdyTGV8IUo2D4suiGd5NrfM0l2twBZyWQ39R39
+         HUkWr8dtABrQ3+s4teIrojl/zjDUuDMUI219jS7norXFTYpQjKh8Lj1iZRKg9lstiTF6
+         43cQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWxGp6I5f/4J48R58aGX7sfBLZjA3rKSQXOm2kKNjVLoTsZqW6CUtRz5OLtjKNtxL1CALyvlvxQuRgYGA==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yz2nlmJEvbHG60PLRZZHr6v5oiuBD4uKlsP2NmOq0CW65II3rkI
+	k329gsSvFxFbQ2tUnDfCgdaF2kmeCcRgVMUaKRx2/V7ac46ESLyjBnoe
+X-Gm-Gg: AY/fxX7tlD8v59xApejRrqq/eJN4HI3gMrnC9AuwbtCO4d9g20GfDN42TQiUCHmyuUI
+	XuyU1B3ruRhWtgZeVeN+F2o5CFa8nlRuAPbEodlYpPE+zD6Lt2dXLLPfzoE6dK7qSWWJ/vHUOR1
+	fHpRc4+BfQ4l7mOLIzL4a6vHG6s93RE2oEHKEpHmZfU80Kqr85P++vrA7JUIpBiZPg3Q5sPjCLs
+	sSm05xH9JnQ1hx3NwrrNWsoas0Adb6/CI1gQHPxis+nQ3VMj2HJ8VtG8DK3SzQb7ajl0K4P235/
+	NgDTwzzng0TnYm0IJwgnav0nke13GBoXxERrwy4RfVtpX55WPbjLyKpR1wsSUBByKfswrswFxo0
+	IsMHxlDhhfImGsWwRZeJ4V/MZgGAKT/J65JyRZI8onknUMeE6rzmBQcUB+nF83Yw2SCOOQelBs0
+	cRbxJDagNN7LxqmvXl+G+Y7kk=
+X-Google-Smtp-Source: AGHT+IG2eeJsem6ZFRGiTw+NwisDAZ+3SHIeXNcmnaxykLecsCuhc1aufmqpuqSo8Y4ftNwLIvjHPA==
+X-Received: by 2002:a17:906:4fc8:b0:b79:f984:1557 with SMTP id a640c23a62f3a-b7d23c5bf6fmr1614360966b.46.1765896114506;
+        Tue, 16 Dec 2025 06:41:54 -0800 (PST)
+Received: from [10.27.99.142] ([193.170.124.198])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b7cfa2ebaebsm1717413666b.21.2025.12.16.06.41.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 16 Dec 2025 06:41:54 -0800 (PST)
+Message-ID: <0705db10-3cbb-4958-a116-112457f9af6c@gmail.com>
+Date: Tue, 16 Dec 2025 15:41:52 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -40,135 +69,56 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: 6.17.9 / 6.18 AMDGPU DMCUB Error
-To: Neil Gammie <mkpyc9@a1.net>, stable@vger.kernel.org
-Cc: regressions@lists.linux.dev,
- "alexander.deucher@amd.com" <alexander.deucher@amd.com>
-References: <CAFNokafrb+OaqZcPjCdzkLiR7rFoZXjhY9ifdqTNoLhDRmooFA@mail.gmail.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <CAFNokafrb+OaqZcPjCdzkLiR7rFoZXjhY9ifdqTNoLhDRmooFA@mail.gmail.com>
+Subject: Re: ARMv7 Linux + Rust doesn't boot when compiling with only LLVM=1
+To: Rudraksha Gupta <guptarud@gmail.com>, stable@vger.kernel.org,
+ regressions@lists.linux.dev, rust-for-linux@vger.kernel.org,
+ Miguel Ojeda <ojeda@kernel.org>, llvm@lists.linux.dev,
+ Linux ARM <linux-arm-kernel@lists.infradead.org>
+Cc: =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>,
+ Gary Guo <gary@garyguo.net>, Andreas Hindborg <a.hindborg@kernel.org>,
+ Alice Ryhl <aliceryhl@google.com>, Danilo Krummrich <dakr@kernel.org>,
+ Trevor Gross <tmgross@umich.edu>, Benno Lossin <lossin@kernel.org>
+References: <1286af8e-f908-45db-af7c-d9c5d592abfd@gmail.com>
+Content-Language: en-US, de-DE
+From: Christian Schrefl <chrisi.schrefl@gmail.com>
+In-Reply-To: <1286af8e-f908-45db-af7c-d9c5d592abfd@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1765887190;c0d33935;
-X-HE-SMSGID: 1vVTvQ-00CD2R-0N
 
-On 12/5/25 08:53, Neil Gammie wrote:
+On 12/14/25 12:54 AM, Rudraksha Gupta wrote:
+> Hello all,
 > 
-> please forgive me if this issue is already known, but I couldn't find
-> any reference to it with regard to the 6.17.9 kernel. Anyway, when
-> updating from 6.17.8 to 6.17.9, the following error is raised on every
-> boot:
+> 
+> I have the following problem: https://gitlab.postmarketos.org/postmarketOS/pmbootstrap/-/issues/2635
+> 
+> 
+> In short, what is happening is the following:
+> 
+> 
+> - The kernel boots and outputs via UART when I build the kernel with the following:
+> 
+> make LLVM=1 ARCH="$arm" CC="${CC:-gcc}"
+> 
+> 
+> - The kernel doesn't boot and there is no output via UART when I build the kernel with the following:
+> 
+> make LLVM=1 ARCH="$arm"
+> 
+> 
+> The only difference being: CC="${CC:-gcc}". Is this expected? I think this was present in the Linux kernel ever since Rust was enabled for ARMv7, and I never encountered it because postmarketOS was originally building the first way.
 
-Not my area of expertise, but the error is not yet known afaics. As
-everything seems to work, it might be something you can just ignore.
-Alex might know, but I guess in the end you likely want to report it
-here to get feedback: https://gitlab.freedesktop.org/drm/amd/-/issues
 
-HTH, Ciao, Thorsten
+I've managed to the get the build setup for qemu-armv7. For some reason
+I could not get past the initrd even on kernels that are supposed to work,
+but I think that is unrelated (and not a kernel issue).
+On the linux-next kernel I didn't get any output on the console from qemu so I
+think I've reproduced the issue. Changing CONFIG_RUST=n did not change the behavior.
 
-> Dec 04 14:44:20 P14s kernel: amdgpu: Topology: Add dGPU node [0x1638:0x1002]
-> Dec 04 14:44:20 P14s kernel: kfd kfd: amdgpu: added device 1002:1638
-> Dec 04 14:44:20 P14s kernel: amdgpu 0000:07:00.0: amdgpu: SE 1, SH per
-> SE 1, CU per SH 8, active_cu_number 8
-> Dec 04 14:44:20 P14s kernel: amdgpu 0000:07:00.0: amdgpu: ring gfx
-> uses VM inv eng 0 on hub 0
-> Dec 04 14:44:20 P14s kernel: amdgpu 0000:07:00.0: amdgpu: ring
-> comp_1.0.0 uses VM inv eng 1 on hub 0
-> Dec 04 14:44:20 P14s kernel: amdgpu 0000:07:00.0: amdgpu: ring
-> comp_1.1.0 uses VM inv eng 4 on hub 0
-> 
-> Dec 04 14:44:20 P14s kernel: amdgpu 0000:07:00.0: amdgpu: ring
-> comp_1.2.0 uses VM inv eng 5 on hub 0
-> Dec 04 14:44:20 P14s kernel: amdgpu 0000:07:00.0: amdgpu: ring
-> comp_1.3.0 uses VM inv eng 6 on hub 0
-> Dec 04 14:44:20 P14s kernel: amdgpu 0000:07:00.0: amdgpu: ring
-> comp_1.0.1 uses VM inv eng 7 on hub 0
-> Dec 04 14:44:20 P14s kernel: amdgpu 0000:07:00.0: amdgpu: ring
-> comp_1.1.1 uses VM inv eng 8 on hub 0
-> Dec 04 14:44:20 P14s kernel: amdgpu 0000:07:00.0: amdgpu: ring
-> comp_1.2.1 uses VM inv eng 9 on hub 0
-> Dec 04 14:44:20 P14s kernel: amdgpu 0000:07:00.0: amdgpu: ring
-> comp_1.3.1 uses VM inv eng 10 on hub 0
-> Dec 04 14:44:20 P14s kernel: amdgpu 0000:07:00.0: amdgpu: ring
-> kiq_0.2.1.0 uses VM inv eng 11 on hub 0
-> Dec 04 14:44:20 P14s kernel: amdgpu 0000:07:00.0: amdgpu: ring sdma0
-> uses VM inv eng 0 on hub 8
-> Dec 04 14:44:20 P14s kernel: amdgpu 0000:07:00.0: amdgpu: ring vcn_dec
-> uses VM inv eng 1 on hub 8
-> Dec 04 14:44:20 P14s kernel: amdgpu 0000:07:00.0: amdgpu: ring
-> vcn_enc0 uses VM inv eng 4 on hub 8
-> Dec 04 14:44:20 P14s kernel: amdgpu 0000:07:00.0: amdgpu: ring
-> vcn_enc1 uses VM inv eng 5 on hub 8
-> Dec 04 14:44:20 P14s kernel: amdgpu 0000:07:00.0: amdgpu: ring
-> jpeg_dec uses VM inv eng 6 on hub 8
-> Dec 04 14:44:20 P14s kernel: amdgpu 0000:07:00.0: amdgpu: Runtime PM
-> not available
-> Dec 04 14:44:20 P14s kernel: amdgpu 0000:07:00.0: amdgpu: [drm] Using
-> custom brightness curve
-> Dec 04 14:44:20 P14s kernel: amdgpu 0000:07:00.0: [drm] Registered 4
-> planes with drm panic
-> Dec 04 14:44:20 P14s kernel: [drm] Initialized amdgpu 3.64.0 for
-> 0000:07:00.0 on minor 1
-> Dec 04 14:44:20 P14s kernel: fbcon: amdgpudrmfb (fb0) is primary device
-> Dec 04 14:44:20 P14s kernel: amdgpu 0000:07:00.0: [drm] *ERROR*
-> dc_dmub_srv_log_diagnostic_data: DMCUB error - collecting diagnostic
-> data
-> Dec 04 14:44:21 P14s kernel: amdgpu 0000:07:00.0: [drm] fb0:
-> amdgpudrmfb frame buffer device
-> 
-> Setup is as follows:
-> 
-> Hardware: ThinkPad P14s Gen 2 AMD
-> Processor: AMD Ryzen™ 7 PRO 5850U
-> OS: Arch Linux
-> AMD Firmware: linux-firmware-amdgpu 20251125
-> 
-> Running a bisection gives the following:
-> 
-> git bisect start
-> # status: waiting for both good and bad commits
-> # good: [8ac42a63c561a8b4cccfe84ed8b97bb057e6ffae] Linux 6.17.8
-> git bisect good 8ac42a63c561a8b4cccfe84ed8b97bb057e6ffae
-> # status: waiting for bad commit, 1 good commit known
-> # bad: [1bfd0faa78d09eb41b81b002e0292db0f3e75de0] Linux 6.17.9
-> git bisect bad 1bfd0faa78d09eb41b81b002e0292db0f3e75de0
-> # bad: [92ef36a75fbb56a02a16b141fe684f64fb2b1cb9] lib/crypto:
-> arm/curve25519: Disable on CPU_BIG_ENDIAN
-> git bisect bad 92ef36a75fbb56a02a16b141fe684f64fb2b1cb9
-> # bad: [aaba523dd7b6106526c24b1fd9b5fc35e5aaa88d] sctp: prevent
-> possible shift-out-of-bounds in sctp_transport_update_rto
-> git bisect bad aaba523dd7b6106526c24b1fd9b5fc35e5aaa88d
-> # bad: [b3b288206a1ea7e21472f8d1c7834ebface9bb33] drm/amdkfd: fix
-> suspend/resume all calls in mes based eviction path
-> git bisect bad b3b288206a1ea7e21472f8d1c7834ebface9bb33
-> # good: [ac486718d6cc96e07bc67094221e682ba5ea6f76] drm/amd/pm: Use
-> pm_display_cfg in legacy DPM (v2)
-> git bisect good ac486718d6cc96e07bc67094221e682ba5ea6f76
-> # bad: [1009f007b3afba93082599e263b3807d05177d53] RISC-V: clear
-> hot-unplugged cores from all task mm_cpumasks to avoid rfence errors
-> git bisect bad 1009f007b3afba93082599e263b3807d05177d53
-> # bad: [ccd8af579101ca68f1fba8c9e055554202381cab] drm/amd: Disable ASPM on SI
-> git bisect bad ccd8af579101ca68f1fba8c9e055554202381cab
-> # bad: [e95425b6df29cc88fac7d0d77aa38a5a131dbf45] drm/amd/pm: Disable
-> MCLK switching on SI at high pixel clocks
-> git bisect bad e95425b6df29cc88fac7d0d77aa38a5a131dbf45
-> # bad: [5ee434b55134c24df7ad426d40fe28c6542fab4d] drm/amd/display:
-> Disable fastboot on DCE 6 too
-> git bisect bad 5ee434b55134c24df7ad426d40fe28c6542fab4d
-> # first bad commit: [5ee434b55134c24df7ad426d40fe28c6542fab4d]
-> drm/amd/display: Disable fastboot on DCE 6 too
-> 
-> The error still occurs in 6.18, but reverting the above bad commit removes it.
-> 
-> Although an error is reported, the system still boots to the graphical
-> interface and appears to function normally, although I have neither
-> benchmarked graphics performance or used the system for an extended
-> period after the error has been flagged.
-> 
-> Yours faithfully,
-> 
-> Neil Gammie
-> 
-> 
+So I this is almost certainly a LLVM/clang issue and not a Rust issue. I'll try to
+do a bit more digging, but I'm not sure how much I'll get done.
 
+Adding the LLVM and ARM lists to this conversation.
+
+Cheers,
+Christian
