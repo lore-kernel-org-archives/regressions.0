@@ -1,37 +1,38 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7D13145355;
-	Tue, 16 Dec 2025 03:30:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E27645948;
+	Tue, 16 Dec 2025 10:51:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765855840; cv=none; b=ZK4JB4dBSL9TuFDnPtKZGlMMfbwYjSLsF+ARCyB1nu4YxcmGa9NaVJUH0J+4d19M3yuIjJWlrs+PjHB8F0MuNIcrWtCD6qiAbFFIu6+ZC7+08s7e27qkSZkOTIudGR9B+FIw1+tGY2sGLvfjtr52PF9LiW+AeSOIRGz3Va9s5hw=
+	t=1765882295; cv=none; b=YfmqH84CrZr6zf9pZUZFCmfVI69pF1tj75P73zvUtZnOTeQB/V2Fwe86kiF6mba0LUcee61JM5PZEwkjvv4CxXYhOJUNqlNdg33gnGIt1d+ZTU5tq370ipyj1BbniMnRLJN+t7ksk6Pxd1T+O/EpxqMu3hPuMixT3kuS6y5Ufvk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765855840; c=relaxed/simple;
-	bh=a9W0P1FX7hMioeIeSAos2x+QeddyZewc9WH1qdXzCnE=;
+	s=arc-20240116; t=1765882295; c=relaxed/simple;
+	bh=u8ksKZ5EyjUtTXiyhvIGHmJc42ntOt8GzlmAhzorWB0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TNApOqcka8LcKbG/0/PB98HpRtK3WbunHdfRXWNdDxNMIyoVUWCefXAy9X119VqplUEA2eSljv2LCG69IFL+/Tqz9YfFOsia7ylKec/XwK2LqUuMEFoyh0jswwSGl7IUqMxWo611+d4Vq9P9w2lk5frspQBn0/e2lcIhT8E1tXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=MQgAx45H; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 In-Reply-To:Content-Type; b=Ovy1HHTmlmmS/OGowjJtqxPNiJFgTdqTShfb4Y75ByfN8jV1WWq9R1K6eRUymHfv5j4BGUUqSycdSJeFM8cbyRlfzwsCAGlpA2l6Z8Co2ZIYy/VtMEJ2memRgH+E5uWJ07KWjHe8ZP/N0g3VCoi8n7kA9iLe68OtF/al+M4zexo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=XcM2/l/h; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MQgAx45H"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="XcM2/l/h"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=x0DvH37r5lGUm/fVTg3+jyvE2C62/Xl0l7QUOpUzdKk=; b=MQgAx45HhkO/Ef+uV58/GHcCDn
-	crPOUM4xXMS8cNeOyuoOP/aGSJ/KD9wLiUhNOx/3bwmOCv4BvjPG00hR5w/JBRNJDJpYC9sAteqMb
-	PWIy3tv/Zydg/oyS6g0yLYhTmY5VXtcyBnsC/BIedeH45XHZu4Q2LmVFnlNucVpiIRP6w1j7HL5tU
-	wz0HtgVaEk9MsZq2imvL40mbJGaocqke4UGIae8CeCQCtx3Ho5dYntqLJagn45ijqmH0MMl0PYKCV
-	c/bZfmGbGXN+X1Rsd/CU1bAII5Y6NIeUvg7B6ZVLvdy5m2CWbvW7XtjFN4+n1OzDjg/l2jSDzLFMe
-	35W83XKQ==;
-Received: from [50.53.43.113] (helo=[192.168.254.34])
-	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vVLlk-00000004cz6-2zCn;
-	Tue, 16 Dec 2025 03:30:36 +0000
-Message-ID: <5f36adcb-9f5e-4366-88eb-9afd001fa981@infradead.org>
-Date: Mon, 15 Dec 2025 19:30:36 -0800
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=yLdtDyF9YwP7ISvcRawhi0NSmBjSBSf03ccAR2RwNco=; t=1765882293;
+	x=1766314293; b=XcM2/l/hE8+OwkiwN6BtB4bapqwK4rXnqiiJLQYahmPTZj59Ip3OZTaZQ3H9D
+	HYn3t6b/G0lMJOsNH18UEV1spOCdKDk/QPKDnCGy1sWb5VjYKJJTm85U9P4cQVy/Yf4yYhqRMwIX7
+	vrQazCLQhvxByf/4oDJXTY1NpKjHnT1OA4EIBYy6StABcEZ27f4fZJYtVXtnKYqPtODBIF72VadVL
+	1N7yo4pGSBqAtK4msYHzw2yeqQwOkhYJDYJw5gKuhZBEs6jLDluDnod7eRP8MXdTaBR2/plTbefQF
+	bkDeXLoV8Ig+0sq6V+QyOknkIHo2GRFV8fkZ4FVIAcRAa0PdpA==;
+Received: from [2a02:8108:8984:1d00:a0cf:1912:4be:477f]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128)
+	id 1vVSeR-00C3S8-0t;
+	Tue, 16 Dec 2025 11:51:31 +0100
+Message-ID: <80e7450d-d842-49ca-8219-a995c8ce8bfe@leemhuis.info>
+Date: Tue, 16 Dec 2025 11:51:30 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -39,82 +40,118 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: =?UTF-8?Q?Re=3A_=5BREGRESSION=5D_next/master=3A_=28build=29_in_expa?=
- =?UTF-8?Q?nsion_of_macro_=E2=80=98min=E2=80=99_in_fs/fuse/file=2Eo_=28fs/fu?=
- =?UTF-8?B?c2UvZmlsZS5jKSBbbG8uLi4=?=
-To: kernelci@lists.linux.dev, kernelci-results@groups.io
-Cc: regressions@lists.linux.dev, gus@collabora.com, linux-next@vger.kernel.org
-References: <176585394290.2610.8656861889938723251@77bfb67944a2>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <176585394290.2610.8656861889938723251@77bfb67944a2>
+Subject: Re: [PATCH] rtc: interface: Alarm race handling should not discard
+ preceding error
+To: "Anthony Pighin (Nokia)" <anthony.pighin@nokia.com>,
+ "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>
+Cc: "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+ Nick Bowler <nbowler@draconx.ca>, Esben Haabendal <esben@geanix.com>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <BN0PR08MB6951415A751F236375A2945683D1A@BN0PR08MB6951.namprd08.prod.outlook.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+X-Enigmail-Draft-Status: N11222
+Autocrypt: addr=linux@leemhuis.info; keydata=
+ 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 MEK4
+In-Reply-To: <BN0PR08MB6951415A751F236375A2945683D1A@BN0PR08MB6951.namprd08.prod.outlook.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1765882293;779aca84;
+X-HE-SMSGID: 1vVSeR-00C3S8-0t
 
-Hi,
+Lo! FWIW, Nick Bowler (now CCed) reported that below patch fixes a
+regression for him caused by the commit from Esben (now also CCed) the
+Fixes: tag mentions. See "hwclock busted w/ M48T59 RTC (regression)" for
+details:
+https://lore.kernel.org/all/2t6bhs4udbu55ctbemkhlluchz2exrwown7kmu2gss6zukaxdm@ughygemahmem/
+and
 
-On 12/15/25 6:59 PM, KernelCI bot wrote:
+Nick, could you maybe provide a tested-by tag here? Maybe that would
+motivate someone to get this en route to mainline.
+
+Adding a "Cc: <stable@vger.kernel.org>" would be great, too, as Nick
+encountered this on earlier series, as it was backported all the way to
+5.15.y
+
+Ciao, Thorsten
+
+On 11/25/25 18:35, Anthony Pighin (Nokia) wrote:
+> Commit 795cda8338ea ("rtc: interface: Fix long-standing race when setting
+> alarm") should not discard any errors from the preceding validations.
 > 
+> Prior to that commit, if the alarm feature was disabled, or the
+> set_alarm failed, a meaningful error code would be returned to the
+> caller for further action.
 > 
+> After, more often than not, the __rtc_read_time will cause a success
+> return code instead, misleading the caller.
 > 
+> An example of this is when timer_enqueue is called for a rtc-abx080x
+> device. Since that driver does not clear the alarm feature bit, but
+> instead relies on the set_alarm operation to return invalid, the discard
+> of the return code causes very different behaviour; i.e.
+>     hwclock: select() to /dev/rtc0 to wait for clock tick timed out
 > 
-> Hello,
-> 
-> New build issue found on next/master:
-> 
+> Fixes: 795cda8338ea ("rtc: interface: Fix long-standing race when setting alarm")
+> Signed-off-by: Anthony Pighin <anthony.pighin@nokia.com>
 > ---
->  in expansion of macro ‘min’ in fs/fuse/file.o (fs/fuse/file.c) [logspec:kbuild,kbuild.compiler.note]
-> ---
-
-Please include the complete [compiler] error/warning message in your emails.
-There is no error/warning message here.
-
-[/me looks on dashboard]
-
-Still difficult to see an error/warning message.
-Something under Misc Data + logspec says:
-
-{"error":{"script":"scripts/Makefile.build:287","target":"fs/fuse/file.o","line_no":"1326","position":"16","src_file":"fs/fuse/file.c","error_type":"kbuild.compiler.note","log_excerpt":"fs/fuse/file.c:1326:16: note: in expansion of macro ‘min’\n 1326 |         return min(((pos + len - 1) >> PAGE_SHIFT) - (pos >> PAGE_SHIFT) + 1,\n      |                ^~~\n","error_summary":"in expansion of macro ‘min’","signature_loc":"4a58a6a015a10073943adaad7c190fcd06e14dd4","signature_fields":{"target":"fs/fuse/file.o","line_no":"1326","position":"16","src_file":"fs/fuse/file.c","error_type":"kbuild.compiler.note","error_summary":"in expansion of macro ‘min’"}},"parser":"kbuild","version":"1.0.0"}
-
-That's not good for a build error report.
-
+>  drivers/rtc/interface.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> - dashboard: https://d.kernelci.org/i/maestro:efd5e2937b906561246dc835406f3fd74dd15d9d
-> - giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-> - commit HEAD:  563c8dd425b59e44470e28519107b1efc99f4c7b
-> - tags: next-20251216
-> 
-> Please include the KernelCI tag when submitting a fix:
-> 
-> Reported-by: kernelci.org bot <bot@kernelci.org>
-> 
-> 
-> Log excerpt:
-> =====================================================
-> fs/fuse/file.c:1326:16: note: in expansion of macro ‘min’
->  1326 |         return min(((pos + len - 1) >> PAGE_SHIFT) - (pos >> PAGE_SHIFT) + 1,
->       |                ^~~
-> 
-> =====================================================
-> 
-> 
-> # Builds where the incident occurred:
-> 
-> ## 32r2el_defconfig on (mips):
-> - compiler: gcc-14
-> - config: https://files.kernelci.org/kbuild-gcc-14-mips-32r2el_defconfig-6940c4b8cbfd84c3cdba9ce1/.config
-> - dashboard: https://d.kernelci.org/build/maestro:6940c4b8cbfd84c3cdba9ce1
-> 
-> 
-> #kernelci issue maestro:efd5e2937b906561246dc835406f3fd74dd15d9d
-> 
+> diff --git a/drivers/rtc/interface.c b/drivers/rtc/interface.c
+> index b8b298efd9a9..1906f4884a83 100644
+> --- a/drivers/rtc/interface.c
+> +++ b/drivers/rtc/interface.c
+> @@ -457,7 +457,7 @@ static int __rtc_set_alarm(struct rtc_device *rtc, struct rtc_wkalrm *alarm)
+>          * are in, we can return -ETIME to signal that the timer has already
+>          * expired, which is true in both cases.
+>          */
+> -       if ((scheduled - now) <= 1) {
+> +       if (!err && (scheduled - now) <= 1) {
+>                 err = __rtc_read_time(rtc, &tm);
+>                 if (err)
+>                         return err;
 > --
-> This is an experimental report format. Please send feedback in!
-> Talk to us at kernelci@lists.linux.dev
-> 
-> Made with love by the KernelCI team - https://kernelci.org
-> 
-
--- 
-~Randy
+> 2.43.0
 
