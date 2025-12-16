@@ -1,122 +1,146 @@
-Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B12A29ACF6
-	for <regressions@lists.linux.dev>; Mon, 15 Dec 2025 23:59:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F94826E708;
+	Tue, 16 Dec 2025 01:25:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765843147; cv=none; b=seKuD/cAxHEftezCH8re6MfQh2OnIRHi9+hfHwIFRAeuVh8GlANmueyGLnYRv9kZmQgivBLymSJNVmoQsv4JZNh+iBsAzMJqIjBdZe5o4PYFnWvxabrrVSVCk17Iy3KvKGQpHjbdQ9itUWu30hmEibNd8wBcfLWJYSIMHCHodow=
+	t=1765848324; cv=none; b=h2VHwBHs47H+GZlHvxg/bvHVeXFyyFH5CoT7f9Yy4772NIhMiGdz8dPU5UeJP8V3pT8x42nggCQiR3kJZnjwl10JjLzINkAPKpetBL+iiVZpq0bk6l0RgvJp/Z1yYGB9MRHxOozjK6LI5DZZt+ixovmU3H4e9Q1eRZlmXjOJZp0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765843147; c=relaxed/simple;
-	bh=aUUqaYm/em1vfd4H8MXlLWDsJWRcYiIvgnLSp4zmUgg=;
-	h=Content-Type:MIME-Version:Subject:From:To:Cc:Date:Message-ID; b=IUrXMVaoFYkap/vRg61fT9V/PwYAYVXhfGTTGa5nlF22b7uYZc+u+GqFMnIa5gBJzXFgd9qqeBy+UPKWVZ9nsGTRV1hjbbzclg3ceHEh9yFA0R6jtnl6D1IFI1YQq0RcMp6SHARJ3DfdD43yG02tn6BPDp0OZsjA6/ZT/ErvQUc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org; spf=none smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b=uiTRAGCE; arc=none smtp.client-ip=209.85.215.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=kernelci.org
+	s=arc-20240116; t=1765848324; c=relaxed/simple;
+	bh=3zSPmz/NCkE7wWGBlwPS2JqQRbZqsgUd+xF3nDaHKA0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Zba6KeQsLOEmrhUNB+fzda7luUcCG5j2fmMaEZD/Hd4SmL7Kua7WVn4GgM6f5S7YtHiA/3ynhBxlnS5VSn2DN9k4oJAKySWixJDZmBvnAKnb/srgxyhyui/8H2NsKkn68I1GSABu1yHidisvlDHJ9tfChdRyLR8v7qJQvtRZYcA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=jMPVFjfr; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b="uiTRAGCE"
-Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-bc0d7255434so2604270a12.0
-        for <regressions@lists.linux.dev>; Mon, 15 Dec 2025 15:59:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20230601.gappssmtp.com; s=20230601; t=1765843145; x=1766447945; darn=lists.linux.dev;
-        h=message-id:date:reply-to:cc:to:from:subject
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XhJoYwe/PCXYwVu0tT+tOeoeCxiWwbIjyVtrV3UZN5A=;
-        b=uiTRAGCEmNKtWg/8+j+4BSazOEGnrDBquMMA+1hOCkzyoeLJGWRMd6WNpMeJOixn77
-         OBTsPuEE1Dm0HamSletLkrx9hmwkwn1NjbrOQ2gS02+zB2yyVSG7quTVjk8zSbD/aWxZ
-         XaH7lSzsnHjYMrpNY4e97tYg3FJEbflyBXHnrfsE7Bm+5SWQrbt1bhNdyfh+hBGGkXQp
-         SPVc0Bld2ZFn5x6byil4o94Hw4ytX42D54xyHu0EDRh+AYIvHeEqZAwLFKTTcH2oXIPI
-         7NFmeL3isViUySLU7K/8i1GOCVDNI2UbQWJLRa85pp+FpRELOywvqWbN8DvswD3Bq4Jm
-         RCAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765843145; x=1766447945;
-        h=message-id:date:reply-to:cc:to:from:subject
-         :content-transfer-encoding:mime-version:x-gm-gg:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=XhJoYwe/PCXYwVu0tT+tOeoeCxiWwbIjyVtrV3UZN5A=;
-        b=D1Bc/zNYLNDkSkNpABAJa95FIY1d1W4kIFEAypK3hi0IhE6o/Xkz+C/HJw83mou/QN
-         76RuI28RwCHOJmQJ0yfCj1if9rlncSRUYmiMI6sndcT5vpGPCAD0hAzc8OxV6y+cStsA
-         zbtfuoXmYmiDOITtXjPXdmxL51oc3UAwKGwXQRmKkfk2Cc/H/iJbkLqNEIpBdZakzviO
-         nlsK2oomCvrHW2n72KAwbRoKZBpKY95yZx2k6tkgy4I3sJYePXEGbh8p09MYNTFUBXFa
-         7Ydi4ctf1gua16i3Y4vmKdynkm8EUmcSDQRSDSdXF0qLQjZ3rPm1YMg9nhyECP/5TiVd
-         AZ0A==
-X-Gm-Message-State: AOJu0Yy3w8QahR98PrbDsPsv70TMJyUVk4oc/JY/OkNaF/Vh6xrd61kh
-	yvrIL9bPiSeks3cQ5qsPZrzyVwV9LuSrfxHlIt23HRYRTxmz/50/bv2HOyqFCAOV1bc=
-X-Gm-Gg: AY/fxX4l4pvp9utpOsWDNxBfcERZ3wj9AFz+PFz4luwwZbVcZP61DWxP3cq+Dkrawu9
-	Pju6Lu2wBDC38iWen4cxeMlF+KR4zkNiraOrQyunEiTkGlbScsjo/TWLdqixx7B8gYWcXrFFBLK
-	WGG/gBJppVKnBYFaktCxx57An1fnvNFDpXYLOzLSTxl34YicHGlqaW5TaVO5eki38Y+p2OU849K
-	R0ttBVirhvKH2+55CJGHjQU8tRpVWLrdMmHjUedFzq7M0db1Q0PFEBdsZxYWGqKNDLA6x7JUDyW
-	TRzL0dCx0JSxba6KUzYciJjE0LRAxzY/BDyiG6Fa6AJ8bA+WH/BkevWbeeTq81We/N1Kr2Zkc7G
-	/eNJICTAiA59NScHPc5Q/l0wWtJ44/gGMlD4b4MT3iiPiHPS1sEzrqvI9hXDSUXEs1aSDIxCMKN
-	oHzpgY
-X-Google-Smtp-Source: AGHT+IEqhN1ubWSuDskzmKUIzAWT6acagrsS0UulZfFDX0DFIKjAjc0DJL4MefNQrAh+wtGqeexThg==
-X-Received: by 2002:a05:7300:cd86:b0:2a4:3593:468a with SMTP id 5a478bee46e88-2ac303f26a3mr8104130eec.38.1765843145335;
-        Mon, 15 Dec 2025 15:59:05 -0800 (PST)
-Received: from 77bfb67944a2 ([20.38.40.137])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2ae4f05463dsm63520eec.32.2025.12.15.15.59.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Dec 2025 15:59:04 -0800 (PST)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="jMPVFjfr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1765848317;
+	bh=0plY8aRXrmAzEnRYdeWviS9sqQo6p5zP5wPOiczpzbE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=jMPVFjfrFR+MtukDfHy7Qw4juRI0EqSXNyoaQ/soObaLLCnEbK679LqGLWFCUB8Ub
+	 587xYIhje4IAUflSFydVt6rDw13De8l4Mo4L+vtfHSVFSdhQFFaLkR4/QAoTMIbkFm
+	 2OzHdJ7cBz2xLJDN1jJJZ480L+CjmKLvZgkCB3v3OSNRuuU+5LOAtScOc+x70z1GQO
+	 enF4kIHe8IFkzbBs7K7IoPdY1cuj4Gv6XsK50j9BSNIbwCXXTOGEVfoqyNQVW0s9Gd
+	 FSXz7Vbl1/Cj7i+Hdja9PyhNDgLXnssFrUapfOswQ3mnZ1K1ebhdytgWlzIdoW2SxN
+	 pfpKyDVcDaQzQ==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange secp256r1 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4dVfPR2z5Kz4wCm;
+	Tue, 16 Dec 2025 12:25:15 +1100 (AEDT)
+Date: Tue, 16 Dec 2025 12:25:14 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Daniel Borkmann <daniel@iogearbox.net>, Alexei Starovoitov
+ <ast@kernel.org>, Andrii Nakryiko <andrii@kernel.org>
+Cc: KernelCI bot <bot@kernelci.org>, kernelci@lists.linux.dev,
+ kernelci-results@groups.io, regressions@lists.linux.dev, gus@collabora.com,
+ linux-next@vger.kernel.org, bpf <bpf@vger.kernel.org>, Networking
+ <netdev@vger.kernel.org>, Andy Shevchenko
+ <andriy.shevchenko@linux.intel.com>
+Subject: Re: [REGRESSION] next/pending-fixes: (build) error: unknown warning
+ option '-Wno-suggest-attribute=format'; did...
+Message-ID: <20251216122514.7ee70d5f@canb.auug.org.au>
+In-Reply-To: <176584314280.2550.10885082269394184097@77bfb67944a2>
+References: <176584314280.2550.10885082269394184097@77bfb67944a2>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [REGRESSION] next/pending-fixes: (build) error: unknown warning
- option
- '-Wno-suggest-attribute=format'; did...
-From: KernelCI bot <bot@kernelci.org>
-To: kernelci-results@groups.io
-Cc: regressions@lists.linux.dev, gus@collabora.com, linux-next@vger.kernel.org
-Reply-To: kernelci@lists.linux.dev
-Date: Mon, 15 Dec 2025 23:59:04 -0000
-Message-ID: <176584314421.2550.17138936004167130394@77bfb67944a2>
+Content-Type: multipart/signed; boundary="Sig_/69et5i_lNvN.91T_ot13ewr";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
+--Sig_/69et5i_lNvN.91T_ot13ewr
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
+On Mon, 15 Dec 2025 23:59:03 -0000 KernelCI bot <bot@kernelci.org> wrote:
+>
+> Hello,
+>=20
+> New build issue found on next/pending-fixes:
+>=20
+> ---
+>  error: unknown warning option '-Wno-suggest-attribute=3Dformat'; did you=
+ mean '-Wno-property-attribute-mismatch'? [-Werror,-Wunknown-warning-option=
+] in kernel/bpf/helpers.o (scripts/Makefile.build:287) [logspec:kbuild,kbui=
+ld.compiler.error]
+> ---
+>=20
+> - dashboard: https://d.kernelci.org/i/maestro:32e32983183c2c586f588a4a3a7=
+cda83311d5be9
+> - giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next=
+.git
+> - commit HEAD:  326785a1dd4cea4065390fb99b0249781c9912bf
+>=20
+>=20
+> Please include the KernelCI tag when submitting a fix:
+>=20
+> Reported-by: kernelci.org bot <bot@kernelci.org>
+>=20
+>=20
+> Log excerpt:
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D
+>   CC      kernel/bpf/helpers.o
+> error: unknown warning option '-Wno-suggest-attribute=3Dformat'; did you =
+mean '-Wno-property-attribute-mismatch'? [-Werror,-Wunknown-warning-option]
+>=20
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D
+>=20
+>=20
+> # Builds where the incident occurred:
+>=20
+> ## defconfig on (arm64):
+> - compiler: clang-21
+> - config: https://files.kernelci.org/kbuild-clang-21-arm64-mainline-69409=
+7d2cbfd84c3cdba292d/.config
+> - dashboard: https://d.kernelci.org/build/maestro:694097d2cbfd84c3cdba292d
+>=20
+>=20
+> #kernelci issue maestro:32e32983183c2c586f588a4a3a7cda83311d5be9
+>=20
+> --
+> This is an experimental report format. Please send feedback in!
+> Talk to us at kernelci@lists.linux.dev
+>=20
+> Made with love by the KernelCI team - https://kernelci.org
+>=20
 
+Presumably caused by commit
 
-Hello,
+ ba34388912b5 ("bpf: Disable false positive -Wsuggest-attribute=3Dformat wa=
+rning")
 
-New build issue found on next/pending-fixes:
+in the bpf tree.
+--=20
+Cheers,
+Stephen Rothwell
 
----
- error: unknown warning option '-Wno-suggest-attribute=format'; did you mean '-Wno-property-attribute-mismatch'? [-Werror,-Wunknown-warning-option] in kernel/trace/bpf_trace.o (scripts/Makefile.build:287) [logspec:kbuild,kbuild.compiler.error]
----
+--Sig_/69et5i_lNvN.91T_ot13ewr
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-- dashboard: https://d.kernelci.org/i/maestro:5264eacd00c08c60a249ef82374e5e5418baeed5
-- giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-- commit HEAD:  326785a1dd4cea4065390fb99b0249781c9912bf
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmlAtPoACgkQAVBC80lX
+0Gwnlwf/c8kn9K6aG0sl1X13gll7DqASHge6iKGaTEZHx/RSIDn/b4V+PGysnXHe
+MAymJ9jhvWXmxAsbQ7Jz9wS1D17NALYYSWinxetr8gxKKqd4q4+pL4R56r0yqqQz
+u7PGLi0RUPSvX7rlHtT0Fs2PECd0i18O3z7omnRfITxLTKhJXF7th1GE5XBEHdSI
+JQPfqDKe7zwencS4pZSksdkCAmOE68IQDvODSiXwe1C5v3+owbGde2XF0u39Q0q3
+yuBB6D1/s7T9uy1n1N547bPs+QK3HWGrTigsrYUTuuoYs0ZF9xJKahyWG76+MDfo
+rrwxXS9dFO/HcmRmV7LpwhzWzwZcWg==
+=OyqN
+-----END PGP SIGNATURE-----
 
-Please include the KernelCI tag when submitting a fix:
-
-Reported-by: kernelci.org bot <bot@kernelci.org>
-
-
-Log excerpt:
-=====================================================
-  CC      kernel/trace/bpf_trace.o
-error: unknown warning option '-Wno-suggest-attribute=format'; did you mean '-Wno-property-attribute-mismatch'? [-Werror,-Wunknown-warning-option]
-
-=====================================================
-
-
-# Builds where the incident occurred:
-
-## aspeed_g5_defconfig on (arm):
-- compiler: clang-21
-- config: https://files.kernelci.org/kbuild-clang-21-arm-mainline-aspeed_g5-694097e2cbfd84c3cdba2939/.config
-- dashboard: https://d.kernelci.org/build/maestro:694097e2cbfd84c3cdba2939
-
-
-#kernelci issue maestro:5264eacd00c08c60a249ef82374e5e5418baeed5
-
---
-This is an experimental report format. Please send feedback in!
-Talk to us at kernelci@lists.linux.dev
-
-Made with love by the KernelCI team - https://kernelci.org
+--Sig_/69et5i_lNvN.91T_ot13ewr--
