@@ -1,119 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sg-1-11.ptr.blmpb.com (sg-1-11.ptr.blmpb.com [118.26.132.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E6C615B971;
-	Wed, 17 Dec 2025 08:32:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A479284B2F
+	for <regressions@lists.linux.dev>; Wed, 17 Dec 2025 08:33:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=118.26.132.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765960328; cv=none; b=a9HNF4hFNJKuE8dMmSrSbBo3IESsXzJ2W2ID9xrlpOzvbhuG8Ja3YxeWTf+FmFoKehJAcV68a9Q8dJ9fzQm5hmXDh+wWlpDrJ5WfVSUFCTSXGnlyuboTdJ5jzPC9dUk/vKmtEKDYTo0dLslmtSO0IazLDzZFAXW+wfkqsCfVigM=
+	t=1765960409; cv=none; b=aWm8+im/X6XrWc+bWAFmddIRfH62JBdGqjhwf1KhZWW1fEbwMp19IX3PxE6XC/si+tWkSQuyoBL0g0wKuJEhMFI1EY4MWOZvFM5tvAXgfcFPPtWJZZxhD7Aj1QcN7xmt0l6pZjTieHVUG8bmR6uQ9RdEbksjQnBvb2GQu5jYEhg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765960328; c=relaxed/simple;
-	bh=1xN0KXofvYvsOordnySdzaBKIAhJzwiBadQIF97UaLA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MHJoiSQKgtWuf6NLqiWyGjC8YDi7RHS1Oz3gswDnyMknEGoMzu2JxwNz0p0WWPAIgt/m7cCrJauRywasdZAtonP8ULCIYfp8RBPdjLrnd3DmfynqDFIaH8W6SCfdPxnIsoH1i/MFMiFBQaQTIiOQYUYcb0ksdybFC7c5GH3OczY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UBCuDEIX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1765960409; c=relaxed/simple;
+	bh=cEhqQF+oEye5LxtG32jLoz/HcM6kT9fPsW1x6b/48t4=;
+	h=Subject:References:Message-Id:Content-Type:In-Reply-To:From:Date:
+	 To:Cc:Mime-Version; b=bqDmayrMMf3vTRnqBboSG9+9EUBSrn8vZ4jFf3y/VulCtPflSx1k+xxUlhObOZ9HjZXvFnfTEOvYXo0aTI+T0G5L+XiUUOrtoDROPKztSj6TERDN89CkN5JtLW8eZWpaidS3qE4WsgUPCGqbMr2Ic17Rhc/JP+4inqmNiKfPUwg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fnnas.com; spf=pass smtp.mailfrom=fnnas.com; dkim=pass (2048-bit key) header.d=fnnas-com.20200927.dkim.feishu.cn header.i=@fnnas-com.20200927.dkim.feishu.cn header.b=h/tBQ9H5; arc=none smtp.client-ip=118.26.132.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fnnas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fnnas.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UBCuDEIX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9EA38C4CEF5;
-	Wed, 17 Dec 2025 08:32:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765960327;
-	bh=1xN0KXofvYvsOordnySdzaBKIAhJzwiBadQIF97UaLA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UBCuDEIXlnKrz9CPy/D6+QPAsoXqYuiQ9aLoBp6nXmhurJicpDQWAe4YZzgKwlpVv
-	 6hHBZ/oUEZxpzR3O07YfOztM/FB3IUZJQg8c0yPHHavoOk2WepBmeViwFe94BOEYXa
-	 xVifcdnfmD6H5Ht1DOG9j7ztF5sF3Oai4JyW62mNHDgFkpCARGnUooqB9FexMCB+6j
-	 CnMsqmvVlR/NsfKICTtkwwkH7TpHgUVzzZBvwU8GJesB69YxE6FV+W2pK4uWKRxcZ2
-	 TGSreTMU3XbW+K6Tnjy0MXVFKdeYlKqw+/CXH7M6ZoDTJyboBP2iK1qrpKEuX3meRo
-	 xLGpZqKbXGeUQ==
-Date: Wed, 17 Dec 2025 17:32:02 +0900
-From: Nathan Chancellor <nathan@kernel.org>
-To: Dmitry Vyukov <dvyukov@google.com>
-Cc: Nicolas Schier <nsc@kernel.org>, patso@likewhatevs.io,
-	Justin Stitt <justinstitt@google.com>, eddyz87@gmail.com,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: Re: [GIT PULL] kbuild changes for v6.19
-Message-ID: <20251217083202.GA2118121@ax162>
-References: <aS22QhwdrHN24ToD@levanger>
- <CACT4Y+Z8aCz0XcoJx9XXPHZSZHxGF8Kx9iUbFarhpTSEPDhMfg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=fnnas-com.20200927.dkim.feishu.cn header.i=@fnnas-com.20200927.dkim.feishu.cn header.b="h/tBQ9H5"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ s=s1; d=fnnas-com.20200927.dkim.feishu.cn; t=1765960399;
+  h=from:subject:mime-version:from:date:message-id:subject:to:cc:
+ reply-to:content-type:mime-version:in-reply-to:message-id;
+ bh=XFicmXaUPXJZtX7J0cd76Tgy9ZjX5dYeS4C5ywpYBA0=;
+ b=h/tBQ9H5fkl3G3/fxEKuyTtBJwjMd0YyDuB4ZkX1frcjXSHs7axt6qEEOu2PYzxVA3zmse
+ w2jewKwzPfC4/sJFTFWXR7RUrah+c+rNJPrEc+cqWVI/eYJGuD9TGF1OQav+G4gD8CgUjH
+ 9+pguXpIJ4uVAYBmpJahYU5vkcVRAKxN3OsZrGPqd1MzT+Eci2h6FFzYYND+WHkyw6e03M
+ ozw/UKUSOG2MnLW6FptUwpoAya4BjnQC64O8E0jkt+v3l9se9lABu48W5xLgFg4Chrc6Mm
+ 50kRsL42ID/351ZfHqSwkMl3gWXekfXY7aja4Sik9Xu1X+N2uE6vi8xfLLL1Jg==
+Subject: Re: Issues with md raid 1 on kernel 6.18 after booting kernel 6.19-rc1 once
+X-Lms-Return-Path: <lba+269426acd+814c45+lists.linux.dev+yukuai@fnnas.com>
+X-Original-From: Yu Kuai <yukuai@fnnas.com>
+References: <b3e941b0-38d1-4809-a386-34659a20415e@gmail.com> <8fd97a33-eb5a-4c88-ac8a-bfa1dd2ced61@fnnas.com> <619a9b00-43dd-4897-8bb0-9ff29a760f52@gmail.com> <f20c3a92-d562-4ac2-98b6-39ff4f3e3bbf@fnnas.com> <7cff4b89-eeff-4048-8af3-ef9d76bdedf8@molgen.mpg.de> <edbb5ba0-454a-4929-84a0-2e5b40d3ec25@fnnas.com> <2339e7f8-2369-4d77-a2fc-57b72dff6c94@thelounge.net>
+Message-Id: <e8ed6876-7a27-4ef4-a4ea-841cf251f656@fnnas.com>
+Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <2339e7f8-2369-4d77-a2fc-57b72dff6c94@thelounge.net>
+Reply-To: yukuai@fnnas.com
+From: "Yu Kuai" <yukuai@fnnas.com>
+Date: Wed, 17 Dec 2025 16:33:14 +0800
+Received: from [192.168.1.104] ([39.182.0.136]) by smtp.feishu.cn with ESMTPS; Wed, 17 Dec 2025 16:33:15 +0800
+To: "Reindl Harald" <h.reindl@thelounge.net>, 
+	"Paul Menzel" <pmenzel@molgen.mpg.de>
+Cc: <bugreports61@gmail.com>, <linux-raid@vger.kernel.org>, 
+	<linan122@huawei.com>, <xni@redhat.com>, <regressions@lists.linux.dev>, 
+	"Linus Torvalds" <torvalds@linux-foundation.org>, <yukuai@fnnas.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACT4Y+Z8aCz0XcoJx9XXPHZSZHxGF8Kx9iUbFarhpTSEPDhMfg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Language: en-US
+User-Agent: Mozilla Thunderbird
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Dec 17, 2025 at 05:16:02PM +0900, Dmitry Vyukov wrote:
-> On Mon, 1 Dec 2025 at 16:38, Nicolas Schier <nsc@kernel.org> wrote:
-> > Pat Somaru (1):
-> >       scripts/clang-tools: Handle included .c files in gen_compile_commands
-> 
-> /\/\/\/\/\/\/\
-> 
-> This commit breaks invocation of clang tools for me.
-> 
-> For example I now have this fake entry for mock_uncore.c which
-> pretends to produce intel_uncore.o (along with 2 other commands which
-> produce the same object file):
-...
-> An attempt to invoke a clang tool using this database legitimately
-> fails with the following errors (the file is not supposed and can't
-> compile on its own):
-> 
-> clang-tool: drivers/gpu/drm/i915/selftests/mock_uncore.c: exit status 1
-> drivers/gpu/drm/i915/selftests/mock_uncore.c:47:2: error: call to
-> undeclared function 'ASSIGN_RAW_WRITE_MMIO_VFUNCS'; ISO C99 and later
-> do not support implicit function declarations
-> [-Wimplicit-function-declaration]
->    47 |         ASSIGN_RAW_WRITE_MMIO_VFUNCS(uncore, nop);
->       |         ^
-> drivers/gpu/drm/i915/selftests/mock_uncore.c:47:39: error: use of
-> undeclared identifier 'nop'; did you mean 'nopv'?
->    47 |         ASSIGN_RAW_WRITE_MMIO_VFUNCS(uncore, nop);
->       |                                              ^~~
->       |                                              nopv
-> /arch/x86/include/asm/hypervisor.h:71:13: note: 'nopv' declared here
->    71 | extern bool nopv;
->       |             ^
-> drivers/gpu/drm/i915/selftests/mock_uncore.c:48:2: error: call to
-> undeclared function 'ASSIGN_RAW_READ_MMIO_VFUNCS'; ISO C99 and later
-> do not support implicit function declarations
-> [-Wimplicit-function-declaration]
->    48 |         ASSIGN_RAW_READ_MMIO_VFUNCS(uncore, nop);
->       |         ^
-> drivers/gpu/drm/i915/selftests/mock_uncore.c:48:38: error: use of
-> undeclared identifier 'nop'; did you mean 'nopv'?
->    48 |         ASSIGN_RAW_READ_MMIO_VFUNCS(uncore, nop);
->       |                                             ^~~
->       |                                             nopv
-> /arch/x86/include/asm/hypervisor.h:71:13: note: 'nopv' declared here
->    71 | extern bool nopv;
->       |             ^
-> 4 errors generated.
-> Error while processing /drivers/gpu/drm/i915/selftests/mock_uncore.c.
-> 
-> 
-> What am I doing wrong?
+Hi,
 
-Nothing. As you note, ASSIGN_RAW_WRITE_MMIO_VFUNCS is defined in
-drivers/gpu/drm/i915/intel_uncore.c but it is used in
-drivers/gpu/drm/i915/selftests/mock_uncore.c, which is not designed to
-be built standalone. We could potentially move
-ASSIGN_RAW_WRITE_MMIO_VFUNCS into a common header to avoid this but I
-think I would rather just revert 9362d34acf91, as I already figured that
-this was going to be fragile:
+=E5=9C=A8 2025/12/17 16:02, Reindl Harald =E5=86=99=E9=81=93:
+>
+>
+> Am 17.12.25 um 08:41 schrieb Yu Kuai:
+>>>>> We'll have to backport following patch into old kernels to make
+>>>>> new arrays to assemble in old kernels. ....
+>>>>>
+>>>>> The md array which i am talking about was not created with kernel
+>>>>> 6.19, it was created sometime in 2024.
+>>>>>
+>>>>> It was just used in kernel 6.19 and that broke compatibility with
+>>>>> my 6.18 kernel.
+>>>>
+>>>> I know, I mean any array that is created or assembled in new kernels
+>>>> will now have lsb field stored in metadata. This field is not
+>>>> defined in old kernels and that's why array can't assembled in old
+>>>> kernels, due to unknown metadata.
+>>>>
+>>>> This is what we have to do for new features, and we're planning to
+>>>> avoid the forward compatibility issue with the above patch that I
+>>>> mentioned.
+>>> Is there really no way around it? Just testing a new kernel and being
+>>> able to go back must be supported in my opinion, at least between one
+>>> or two LTS versions.
+>>
+>> As I said, following patch should be backported to LTS kernels to=20
+>> avoid the problem.
+>> https://lore.kernel.org/linux-raid/20251103125757.1405796-5-linan666@hua=
+weicloud.com=20
+>>
+>
+> that's nothing you can rely on - yo can write as many pachtes as you=20
+> will but if and when they are included in random binary kernels is not=20
+> controllable
+>
+> the current situation is somebody tests a new kernel and after that=20
+> his RAID got unrevertable changed and can't be used with the previous=20
+> kernel
+>
+> that's not expectable nor acceptable
 
-  https://lore.kernel.org/20251007163338.GA547361@ax162/
+I'll explain a bit more about the lbs.
 
-I would rather discourage including .c files if folks want clangd to
-work properly since this seems fundamentally unsolvable if developers
-have written .c files in this manner. I am open to other thoughts
-though.
+There is a long long term problem from day one, and reported several times,=
+ that array data
+can be broken when:
+  - user add a new disk to the array;
+  - some member disks are failed;
 
-Cheers,
-Nathan
+lbs in metadata is used to fix this problem. However, mdraid is designed to=
+ refuse new metadata
+fields, this doesn't make sense but that's the fact.
+
+Any array that is assembled or created in new kernels will have lbs filed s=
+tored in metadata, to
+prevent the data loss problem. I know we're not expecting forward compatibi=
+lity issue, but I don't
+think this is not acceptable. We'll provide a solution but we can't guarant=
+ee for any binary
+kernels.
+
+--=20
+Thansk,
+Kuai
