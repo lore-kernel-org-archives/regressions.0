@@ -1,109 +1,80 @@
-Received: from mail.thelounge.net (mail.thelounge.net [91.118.73.15])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA857368267
-	for <regressions@lists.linux.dev>; Wed, 17 Dec 2025 13:50:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.118.73.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B70E430E83F;
+	Wed, 17 Dec 2025 17:31:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765979459; cv=none; b=YWruuHH3qt+EInVpgqMcEwgYavKmv++Rgjf3NWVfseUQyu/1QgEEVa1gxbyqKYnRh4O3E+MvXh2HGsvFLq3413bRjuBwyanc4hDBp+u9KopBe4d3T2I4ZzM8jz5CnnPY4AnogGwfTKl14NPTWGB3TTWlLwpX+f6CBpX+Lf5hUVA=
+	t=1765992674; cv=none; b=eTD5Is39EKlqwP0s1SZK+3Uzpg3MosTOMNIIidmKQJEXd3cEaQyj2WqJx8xHsfovRowIXfp+EDW1uULOPa3IJcr/qJudOw2CdO+aGphAEzseBCdYIwdgY51+Q4kNjvloH45zVPNTe8KEO2Ni1EjzIJWlGAAluMIh2nS8bQnv+XQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765979459; c=relaxed/simple;
-	bh=UxM+jeaAtYvJIbTcsVY3pqIJ5BQq1iteXIDmCywQiZY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iHnOuqwTJ3vDDp44vQgadPdA7qn+6VJa213cjCd6ppj+K2oWiNyxVEgBLXJvnNJRC8/YuKwRLllsIJ/Sjx3hI4Y3L0uIJIX75dU8C1Lqq0mgjtsnRBwfyx3Tcxl+6Jp2njkeB5yb5uJKbrA84f6vv41eB7rWp9+Yo43IYKXzeU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=thelounge.net; spf=pass smtp.mailfrom=thelounge.net; arc=none smtp.client-ip=91.118.73.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=thelounge.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=thelounge.net
-Received: from [10.10.10.2] (rh.vpn.thelounge.net [10.10.10.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature ECDSA (prime256v1) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: h.reindl@thelounge.net)
-	by mail.thelounge.net (THELOUNGE MTA) with ESMTPSA id 4dWZvG2t8qzXlL;
-	Wed, 17 Dec 2025 14:50:50 +0100 (CET)
-Message-ID: <98e0403a-806e-44a2-9420-e19092bb5206@thelounge.net>
-Date: Wed, 17 Dec 2025 14:50:50 +0100
+	s=arc-20240116; t=1765992674; c=relaxed/simple;
+	bh=hQsYAIqDrRXg0r8g4XwZdF1T2e2CQF4iC1hiQjxadf0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=h87Y38iR1r/gHu/55eHBwcAkUP7gco0dDD5ZpEGkpNkviAcROcbMIRBjf9MMTlCzgaxa9sNGK2EDyMHN11zTYVXdDsXshf4ZSWSiFyyJGuJtk9DO9/hEeCgJxkg5Hcf9AqOCkGxrJJ/w6YQ1gF1PtC//6bDNE4COtP7YitXicpE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=RFV61cwy; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qWWjo1wJ; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="RFV61cwy";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qWWjo1wJ"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1765992671;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PqeMNGjJyPXkpcP70Kvy/xsxscAUTTtTXVs7cAEpLtU=;
+	b=RFV61cwybx5GgFTsxF68RkL4jlucFNo6yj5wFmxAaw7ZTzp12j1WR4tMSlleXnmQgt18vF
+	Xn863h9abC6EPXJJeIYHkiT+GUjG2XoGxtgzwP5m7KzuxgJ/GBgypgGpMIT9wUOG7Pgg/t
+	+fAOxCaETIv/pwjq2NfGDm3dM6JtwfVAnqKY1keBcbFTfpgjOJllq5mvEUGV29MZgWBAuC
+	S2+1H393TH1FKj5a18JPg/lJb2doiuhSUmC6iNTXOW8KQCVS6tVk105cy8NeBRtQxDs27+
+	eaAUodmwlmhES5eEzC1mkWfRzB3cMg4s6uPzrn7jiFqk1Vl7VCyWRyr1YyB39Q==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1765992671;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PqeMNGjJyPXkpcP70Kvy/xsxscAUTTtTXVs7cAEpLtU=;
+	b=qWWjo1wJN2ulua4vHced8Jns5JZrKjwiHl/gU+Ih7LCqrnmA4BXnuyT3qgUDT6rO0fDjEi
+	CBXlhytb3Sa0ZQCg==
+To: Stephen Rothwell <sfr@canb.auug.org.au>, Ingo Molnar <mingo@kernel.org>,
+ "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>
+Cc: KernelCI bot <bot@kernelci.org>, kernelci@lists.linux.dev,
+ kernelci-results@groups.io, regressions@lists.linux.dev,
+ gus@collabora.com, linux-next@vger.kernel.org, Nick Hu
+ <nick.hu@sifive.com>
+Subject: Re: [REGRESSION] next/master: (build) initialization of
+ =?utf-8?Q?=E2=80=98int?=
+ (*)(void =?utf-8?Q?*=29=E2=80=99?= from incompatible pointer type...
+In-Reply-To: <20251217164346.37b36bea@canb.auug.org.au>
+References: <176594754327.3108.9546235188357594114@77bfb67944a2>
+ <20251217164346.37b36bea@canb.auug.org.au>
+Date: Wed, 17 Dec 2025 18:31:09 +0100
+Message-ID: <878qf1c8wy.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Issues with md raid 1 on kernel 6.18 after booting kernel
- 6.19-rc1 once
-To: yukuai@fnnas.com, Thorsten Leemhuis <regressions@leemhuis.info>,
- Jens Axboe <axboe@kernel.dk>
-Cc: bugreports61@gmail.com, linux-raid@vger.kernel.org, linan122@huawei.com,
- xni@redhat.com, regressions@lists.linux.dev,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Paul Menzel <pmenzel@molgen.mpg.de>, Song Liu <song@kernel.org>
-References: <b3e941b0-38d1-4809-a386-34659a20415e@gmail.com>
- <8fd97a33-eb5a-4c88-ac8a-bfa1dd2ced61@fnnas.com>
- <619a9b00-43dd-4897-8bb0-9ff29a760f52@gmail.com>
- <f20c3a92-d562-4ac2-98b6-39ff4f3e3bbf@fnnas.com>
- <7cff4b89-eeff-4048-8af3-ef9d76bdedf8@molgen.mpg.de>
- <edbb5ba0-454a-4929-84a0-2e5b40d3ec25@fnnas.com>
- <2339e7f8-2369-4d77-a2fc-57b72dff6c94@thelounge.net>
- <e8ed6876-7a27-4ef4-a4ea-841cf251f656@fnnas.com>
- <d29e8783-84a8-4e90-9251-c63189b71630@leemhuis.info>
- <0f44559f-7732-4506-922f-04a244d54c35@fnnas.com>
-Content-Language: en-US
-From: Reindl Harald <h.reindl@thelounge.net>
-Autocrypt: addr=h.reindl@thelounge.net; keydata=
- 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
- K4rYsjPimkSIVdrNM//wVKdCTbO+
-Organization: the lounge interactive design
-In-Reply-To: <0f44559f-7732-4506-922f-04a244d54c35@fnnas.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
+On Wed, Dec 17 2025 at 16:43, Stephen Rothwell wrote:
+> Caused by commit
+>
+>   1c546bb43361 ("irqchip/riscv-aplic: Preserve APLIC states across suspend/resume")
+>
+> From the tip tree
+> (https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git#master).
+>
+> The call back arguments and the registration method changed in
+> v6.19-rc1 in commit
+>
+>   a97fbc3ee3e2 ("syscore: Pass context data to callbacks")
 
+Right. Geert pointed that out already and it's fixed in the offending
+commit.
 
-Am 17.12.25 um 14:45 schrieb Yu Kuai:
-> AFAIK, possible options:
-> 1) always set lbs for arrays for new kernel, and backport the patch for
-> old kernels so that users can still assemble the array.(current option)
-> 2) only set lbs by default for new array, for assembling the array still
-> left the lbs field unset, in this case the data loss problem is not fixed,
-> we should also print a warning and guide users to set lbs to fix the problem,
-> with the notification the array will not be assembled in old kernels.
-> 3) revert the new feature to set lbs for mdraids
-option 2 including the guide so that everybody can decide "i am fine now 
-never boot a older kernel" and activate it
+Thanks,
 
-how it's done now you burn possible testers of new kernels in the future 
-when bitten once
-
-
+        tglx
