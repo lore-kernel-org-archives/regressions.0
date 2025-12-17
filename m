@@ -1,166 +1,134 @@
-Received: from fout-b8-smtp.messagingengine.com (fout-b8-smtp.messagingengine.com [202.12.124.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f196.google.com (mail-pl1-f196.google.com [209.85.214.196])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B15E73BB40
-	for <regressions@lists.linux.dev>; Tue, 16 Dec 2025 17:58:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 554B12222AC
+	for <regressions@lists.linux.dev>; Wed, 17 Dec 2025 04:59:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765907913; cv=none; b=tlkoMJzDrhmou7atPsRB3v2ejZGk2aT/euAodI3+bN2U1qJ6X5YdqIlGQUAwLRuKjBxiQIEeEvSpSLJFOLjU2WAynp3fvnxjmHKvVc8qpwK0wSNPDndhvpYNTypJR4dWyMavEpnIMCRi7ff7/n/j+qT670dzxkYqosMumpJwRTA=
+	t=1765947546; cv=none; b=EY2/WWIOOMNPHMdKSPtzQgmQc4H+zrbxi2aDe8rdGTwRh57UadT+4nF5hn4fNEk9UAPO6FrdV8ZPDyaaHmn6j4VaXhG0MKiDX9qjK854vSACi8WMMLu2A+vDMQEBOAnnV6aSVyz0jhK4IwuQ91YcffDodc8KZ9nsSq7IXHv3nb8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765907913; c=relaxed/simple;
-	bh=FTZm5H2pp7/YddDCMhn75MotIM4tMbejx2v0J55fwTk=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:Subject:Content-Type; b=MOViIXr8d3bxZKi56rsbZdP7p/owetrpnFWV/ryZ/rarKaa5ggAB6X1Xenx0Z3Je1j1For3poejQN4cmRexObquIw1Skd+jyLqEB5KrVH3Hj+XXV7xX20elCdiI18+dZsEVXLpp6z+ekSr2y61tRIfzGWdz9ri+EZyFx6Ca9FSo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sent.com; spf=pass smtp.mailfrom=sent.com; dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b=xQrFLy0l; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=aJPD8cNz; arc=none smtp.client-ip=202.12.124.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sent.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sent.com
+	s=arc-20240116; t=1765947546; c=relaxed/simple;
+	bh=TvVUk9RU3wMPojtGz9gI2F6Exdynrzhm5cNgKtmnXfU=;
+	h=Content-Type:MIME-Version:Subject:From:To:Cc:Date:Message-ID; b=Icv1LqTJSQiUokeuxAgOWje7dhv/qtzcCV4juKEs93VPLx5tuEtGuBe6vaPpndGrG4xUvbJTWk/anaeBNZdxMsf0etaJykjAg/2nvw/AQ8YJXmMs12MfcCxIteqoYL5J0DeowOAol/X4BQgymmMtwHhLGKQKOrD6kkHnI36cXLg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org; spf=none smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b=L/ZScDw7; arc=none smtp.client-ip=209.85.214.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=kernelci.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b="xQrFLy0l";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="aJPD8cNz"
-Received: from phl-compute-03.internal (phl-compute-03.internal [10.202.2.43])
-	by mailfout.stl.internal (Postfix) with ESMTP id 0DFED1D000E5;
-	Tue, 16 Dec 2025 12:58:31 -0500 (EST)
-Received: from phl-imap-04 ([10.202.2.82])
-  by phl-compute-03.internal (MEProxy); Tue, 16 Dec 2025 12:58:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sent.com; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:message-id:mime-version:reply-to
-	:subject:subject:to:to; s=fm1; t=1765907910; x=1765994310; bh=Uo
-	W6XIts9qg19Db5JXv+AP96XMApapnpsKKmhGNVpco=; b=xQrFLy0lcPhT00/sCX
-	5MdEYEZMl9nbaPBUm9ta5vDi59rfEDxKzi+eFF+eXg24kJ6MpdYvkoIRoXyIVXie
-	EdLYdY3+0GjSId/V25S+QSJXikKjuPrpYIHSageyfvuUOp+ZbCnnJ7xiGmeaNiLK
-	6x+FBmzAKP/3llNM9+FdVK/CbIAr8uYlJg6x5T+acyQt9LaBmA/7p8R6R5E7NgET
-	INwY9tF41wWwbxNareY/I2wFCHwydLjP1zd0ShgupdgH4ra4VGHNsD33NBhmwo1A
-	z0kwgnaHViyGfO9dr+rSiaGTGpLzAaueZ619i38XZu0H6NdgKWgHP71cJUqBzOs9
-	4Jsg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:message-id:mime-version:reply-to:subject
-	:subject:to:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm1; t=1765907910; x=1765994310; bh=UoW6XIts9qg19Db5JXv+AP96XMAp
-	apnpsKKmhGNVpco=; b=aJPD8cNzbdWGHv5cuqaT6KN3m55LtuAfDrrLumIcFt1w
-	r+4UThTHkvar82jxBqi0FXc7l6PakIunzJvtY4iiSxg0s86IsInzEA3iC6pduvBX
-	+2iRzt7iLTOHz4HomOGrrENbDb7yYfrRuAh1XNC4LhcdKUfRxu1w/beZiyPieKaf
-	fuhbH4dMZYM/gXqRQrpFFi5MuZ8KW9g1zX5s1StF0mUHSMqbTei7lT/hMSYfJklP
-	GYS09Sd/Hqr1FBESz4SyE6e5RVvnf/DkD0vCPNJTClDj3av5IyyowRoAyFsrQQpN
-	NkTEb7+FvfrP3uHYOVhpkntuHZQK/9hiwBkgHTSP2w==
-X-ME-Sender: <xms:xp1BaQa9Z1hB8HJTQtixKOkB1u6YgJy0k9nktJvIL2uNyd432V1Bew>
-    <xme:xp1BaWOzFSk63d7_xv3h-WGJhdj0aJNIFKoz32Up9nzJCownhOqcLdzFwbC0KFxa-
-    HuOknR_Mv_6zaoa3mS7z6zCcbqa_6bN33pOFtaYDRiWXL_QMuTo_iE>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdegtdefgecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecunecujfgurhepofggfffhvfevkffutgfgsehtjeertdertd
-    dtnecuhfhrohhmpegtohhrrhgvtghtmhhoshhtuceotghmlhhishhtshesshgvnhhtrdgt
-    ohhmqeenucggtffrrghtthgvrhhnpeeltedttdeljeejhfetffffvdeghfefgedulefhje
-    ekveegfeettdelfedtiedvgeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhep
-    mhgrihhlfhhrohhmpegtmhhlihhsthhssehsvghnthdrtghomhdpnhgspghrtghpthhtoh
-    ephedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepvhhkohhulheskhgvrhhnvghl
-    rdhorhhgpdhrtghpthhtoheprghnughrihihrdhshhgvvhgthhgvnhhkoheslhhinhhugi
-    drihhnthgvlhdrtghomhdprhgtphhtthhopehrvghgrhgvshhsihhonhhssehlihhsthhs
-    rdhlihhnuhigrdguvghvpdhrtghpthhtohepughmrggvnhhgihhnvgesvhhgvghrrdhkvg
-    hrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhivdgtsehvghgvrhdrkhgvrhhn
-    vghlrdhorhhg
-X-ME-Proxy: <xmx:xp1BaYEX9fFn_sXIV3VR-fisLN3tCcZ0DLJyKRyeghll1nRDtsV6OQ>
-    <xmx:xp1BaapXUqXvnvdd0ZO_tzn1qQum8V6DDFZmVOoXOmBEFLPB4AjDmg>
-    <xmx:xp1BaZbe_wFzlUrtn_uFvrvRBi5hBE-wK6GJbV34n2X0x2WWB-fUVQ>
-    <xmx:xp1BabWoZJG8wYkd459FWgXb7Dn4TmEA6YduF6gEyi8kLjIIiYEc_g>
-    <xmx:xp1BafO8lKG7UF141lq8-oNqsANmj6qZv0goWqvqxbfE3gUk5gCmZ3FE>
-Feedback-ID: i87314915:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 0B8DEB6006F; Tue, 16 Dec 2025 12:58:30 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b="L/ZScDw7"
+Received: by mail-pl1-f196.google.com with SMTP id d9443c01a7336-2a0a33d0585so34882385ad.1
+        for <regressions@lists.linux.dev>; Tue, 16 Dec 2025 20:59:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20230601.gappssmtp.com; s=20230601; t=1765947544; x=1766552344; darn=lists.linux.dev;
+        h=message-id:date:reply-to:cc:to:from:subject
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9c0+Re7+nmzL123Nd/18b1ozs1pAde1wA4JRu7yvR10=;
+        b=L/ZScDw7wLHrB6k14SPjY63JKdKAUT+p8AY2PZkGT2xlmLDHF1eH6C9tSPbzMw06tD
+         ROTdnSHMJg2J8NPyq3dy5WEqopWlX2muGAYZUNMQJCO5k1XlyOGnrjUylytORMdjawMb
+         zRa/3iFiVcJRCEResKt0lNym6LV37lxOz/tajvtzzhng3ZUPRsGckwfK6LxOfFP5Q6Wf
+         UUsW50zxFRcJHOyi3Ch4Yp1escdHANg2l+QgSx/fXGu+/ExeF2wh3fPltc+5QU/wX6Ry
+         xYaKUpsfe3uPuY55c9tKEfq/kpDpxub4mwxODMHV2UrFNWw9bRgR1KQrMyjsphFFaTvL
+         +Fog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1765947544; x=1766552344;
+        h=message-id:date:reply-to:cc:to:from:subject
+         :content-transfer-encoding:mime-version:x-gm-gg:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=9c0+Re7+nmzL123Nd/18b1ozs1pAde1wA4JRu7yvR10=;
+        b=EhEIk0kDIwGSSknUOy4Eq9xlhrLRN8xDpA7oahbs5lcYs1RKly1AGrIPg1XDfaO9Ow
+         J0KrLCi5/HSyDDp3OYmdwt4jX/zUae4W5egrf2sqj+4rk6KC0+FMJ9sFDTvMo1x6AKD8
+         dAkwCfJ/pYOJelB3QneVPYAvBHSsr+TLdTtowaUn40kp5fmusJff57FCyRuF2ymx54Az
+         XB5yKhuxF8XJ5AFmnOMWhb5F6D5YHm35EB+TwgpnST+6vztQ/XXx3sewA4FPP6j/dMHX
+         xrtmP90l1IZ7Ktaw0NZ89cNkGYRGTxBQvhiRaDnW8vy6xb3jcfCAxxqUZGDAEi+W+Jql
+         FP2w==
+X-Gm-Message-State: AOJu0YxN3deopPevpPggRTWzdTJyAeFLJBKS3oTpSi+zzDZuRjne94Vw
+	+0uWA56afHXNB4tP8wNffGQQ9h1g6Prmo8+RCS2haHa03Js6q19O42zH2AOzL2u1jrY=
+X-Gm-Gg: AY/fxX5i5kTHeYJzHqSPGkVEnJW6T8XgdvzhjYa9wbzlJ3O4UQ4j6yhiOpTZONyb5jI
+	D51JhX60L7CQR9/vlq3XP5ZTLwZO/j1qHKuPBt/w/++47ShKH2CTsMStnZX2vhZTJlpeOy3FHQo
+	oPQU8Zib0CL2lwXIrWpxg4fgnl6z1t2jFKmcLQkdtwA91a/a5cGDRTJXOSpPybzSNZhmBYfQQwp
+	opn5EtZbwwUUYOv4Nh83cAmGMcEeNJSPkdnFsfcROrCBRE/jvAUbUneYosyiSq0A3/FnbybmgS1
+	GBxlhRJ6RACNDfSPkgwG4x0cRlh+XSpEeDoCmxZNDDunHSdxDwj/WTlf585FE+POdvfi1m01MDl
+	f+HIsFf2WJDeQ8iOF2F9KlbS60kPMZs0R/S4Fo09qzljnT0+MjmSIsafww1Q1iLVdrjwNYP4mbA
+	wNC0K9
+X-Google-Smtp-Source: AGHT+IH6VpFR/3Ntxcu6zNLF5hnaIJrCbf60OJ1jAgAjbnlyPmiP2yoJyGrEoCH3ka/KRdf6FkN4jA==
+X-Received: by 2002:a05:701a:ca07:b0:11b:95fe:beed with SMTP id a92af1059eb24-11f34c10dd6mr11842918c88.38.1765947544454;
+        Tue, 16 Dec 2025 20:59:04 -0800 (PST)
+Received: from 77bfb67944a2 ([20.38.40.137])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-11f2e30b799sm58102698c88.17.2025.12.16.20.59.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Dec 2025 20:59:03 -0800 (PST)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Date: Tue, 16 Dec 2025 12:57:10 -0500
-From: correctmost <cmlists@sent.com>
-To: dmaengine@vger.kernel.org
-Cc: regressions@lists.linux.dev, vkoul@kernel.org,
- andriy.shevchenko@linux.intel.com, linux-i2c@vger.kernel.org
-Message-Id: <51388859-bf5f-484c-9937-8f6883393b4d@app.fastmail.com>
-Subject: [REGRESSION][BISECTED] Lenovo IdeaPad touchpad does not work when idma64 is
- present in initramfs
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Subject: 
+ =?utf-8?q?=5BREGRESSION=5D_next/master=3A_=28build=29_initialization_of_?=
+ =?utf-8?q?=E2=80=98int_=28*=29=28void_*=29=E2=80=99_from_incompatible_point?=
+ =?utf-8?q?er_type=2E=2E=2E?=
+From: KernelCI bot <bot@kernelci.org>
+To: kernelci-results@groups.io
+Cc: regressions@lists.linux.dev, gus@collabora.com, linux-next@vger.kernel.org
+Reply-To: kernelci@lists.linux.dev
+Date: Wed, 17 Dec 2025 04:59:03 -0000
+Message-ID: <176594754327.3108.9546235188357594114@77bfb67944a2>
 
-Hi,
 
-The following commit causes my Lenovo IdeaPad touchpad not to work when kernel/drivers/dma/idma64.ko.zst is present in the initramfs image:
 
-#regzbot introduced: 9140ce47872bfd89fca888c2f992faa51d20c2bc
 
-"idma64: Don't try to serve interrupts when device is powered off"
 
-Here are the related logs:
+Hello,
 
----
-
-irq 27: nobody cared (try booting with the "irqpoll" option)
-CPU: 0 UID: 0 PID: 0 Comm: swapper/0 Not tainted 6.12.60-1-lts #1 9b11292f14ae477e878a6bb6a5b5efc27ccf021d
-Hardware name: LENOVO 83FW/LNVNB161216, BIOS PFCN14WW 09/20/2024
-Call Trace:
- <IRQ>
- dump_stack_lvl+0x5d/0x80
- __report_bad_irq+0x35/0xa7
- note_interrupt.cold+0x21/0x68
- handle_irq_event+0x72/0x90
- handle_fasteoi_irq+0x7a/0x220
- __common_interrupt+0x3e/0xa0
- common_interrupt+0x80/0xa0
- </IRQ>
- <TASK>
- asm_common_interrupt+0x26/0x40
-RIP: 0010:cpuidle_enter_state+0xbb/0x410
-Code: 00 00 e8 88 bf 25 ff e8 83 f1 ff ff 48 89 c5 0f 1f 44 00 00 31 ff e8 24 4e 24 ff 45 84 ff 0f 85 a6 01 00 00 fb 0f 1f 44 00 00 <45> 85 f6 0f 88 7c 01 00 00 49 6>
-RSP: 0018:ffffffffa2003e18 EFLAGS: 00000246
-RAX: ffff89c01f600000 RBX: 0000000000000001 RCX: 0000000000000000
-RDX: 00000000a04a55ab RSI: fffffffe2798aa89 RDI: 0000000000000000
-RBP: 00000000a04a55ab R08: 0000000000000000 R09: 000000000001f018
-R10: 0000000000000008 R11: ffff89c01f63520c R12: ffff89c01f641570
-R13: ffffffffa21bd2e0 R14: 0000000000000001 R15: 0000000000000000
- ? cpuidle_enter_state+0xac/0x410
- cpuidle_enter+0x31/0x50
- do_idle+0x1b6/0x210
- cpu_startup_entry+0x29/0x30
- rest_init+0xcc/0xd0
- start_kernel+0x9d3/0x9e0
- x86_64_start_reservations+0x24/0x30
- x86_64_start_kernel+0x98/0xa0
- common_startup_64+0x13e/0x141
- </TASK>
-handlers:
-[<00000000104a7621>] idma64_irq [idma64]
-[<00000000bd8d08e9>] i2c_dw_isr
-Disabling IRQ #27
-
-[...snip...]
-
-i2c_designware i2c_designware.0: controller timed out
-hid (null): reading report descriptor failed
-i2c_hid_acpi i2c-ELAN06FA:00: can't add hid device: -110
-i2c_hid_acpi i2c-ELAN06FA:00: probe with driver i2c_hid_acpi failed with error -110
+New build issue found on next/master:
 
 ---
+ initialization of ‘int (*)(void *)’ from incompatible pointer type ‘int (*)(void)’ [-Wincompatible-pointer-types] in drivers/irqchip/irq-riscv-aplic-main.o (drivers/irqchip/irq-riscv-aplic-main.c) [logspec:kbuild,kbuild.compiler.error]
+---
 
-Hardware info:
-- Lenovo 16" IdeaPad Slim 5 - 16IRU9
-  - Hardware name: LENOVO 83FW/LNVNB161216, BIOS PFCN14WW 09/20/2024
-  - ELAN06FA:00 04F3:327E Touchpad
+- dashboard: https://d.kernelci.org/i/maestro:c537d0d22aa608b88bb407d6e02b6a733d3f78cf
+- giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+- commit HEAD:  12b95d29eb979e5c4f4f31bb05817bc935c52050
+- tags: next-20251217
 
-Steps to reproduce:
-- Cold boot the laptop on Arch Linux
+Please include the KernelCI tag when submitting a fix:
 
-The bug is still present with the 6.19.0-rc1-1-git kernel.
+Reported-by: kernelci.org bot <bot@kernelci.org>
 
 
-The bisected commit is from March 2024, but I only recently noticed the issue because the initramfs images on Arch Linux now include these additional drivers (as of November 2025):
-- kernel/drivers/dma/idma64.ko.zst
-- kernel/drivers/mfd/intel-lpss-pci.ko.zst
-- kernel/drivers/mfd/intel-lpss.ko.zst
+Log excerpt:
+=====================================================
+drivers/irqchip/irq-riscv-aplic-main.c:111:20: error: initialization of ‘int (*)(void *)’ from incompatible pointer type ‘int (*)(void)’ [-Wincompatible-pointer-types]
+  111 |         .suspend = aplic_syscore_suspend,
+      |                    ^~~~~~~~~~~~~~~~~~~~~
+drivers/irqchip/irq-riscv-aplic-main.c:111:20: note: (near initialization for ‘aplic_syscore_ops.suspend’)
+drivers/irqchip/irq-riscv-aplic-main.c:112:19: error: initialization of ‘void (*)(void *)’ from incompatible pointer type ‘void (*)(void)’ [-Wincompatible-pointer-types]
+  112 |         .resume = aplic_syscore_resume,
+      |                   ^~~~~~~~~~~~~~~~~~~~
+drivers/irqchip/irq-riscv-aplic-main.c:112:19: note: (near initialization for ‘aplic_syscore_ops.resume’)
+drivers/irqchip/irq-riscv-aplic-main.c: In function ‘aplic_probe’:
+drivers/irqchip/irq-riscv-aplic-main.c:375:17: error: implicit declaration of function ‘register_syscore_ops’; did you mean ‘register_syscore’? [-Wimplicit-function-declaration]
+  375 |                 register_syscore_ops(&aplic_syscore_ops);
+      |                 ^~~~~~~~~~~~~~~~~~~~
+      |                 register_syscore
 
-Two other users have reported the issue on the Arch Linux and CachyOS forums, so I don't think this is a hardware issue with my individual laptop.
+=====================================================
 
-Thanks!
+
+# Builds where the incident occurred:
+
+## defconfig on (riscv):
+- compiler: gcc-14
+- config: https://files.kernelci.org/kbuild-gcc-14-riscv-build-only-69422a0bcbfd84c3cdbdaaa0/.config
+- dashboard: https://d.kernelci.org/build/maestro:69422a0bcbfd84c3cdbdaaa0
+
+
+#kernelci issue maestro:c537d0d22aa608b88bb407d6e02b6a733d3f78cf
+
+--
+This is an experimental report format. Please send feedback in!
+Talk to us at kernelci@lists.linux.dev
+
+Made with love by the KernelCI team - https://kernelci.org
