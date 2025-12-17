@@ -1,171 +1,162 @@
-Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA246254B19
-	for <regressions@lists.linux.dev>; Wed, 17 Dec 2025 10:10:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ABF53612F9
+	for <regressions@lists.linux.dev>; Wed, 17 Dec 2025 10:16:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765966243; cv=none; b=Z2HoAXaOTFnDI+hS/gf509o3Tcv1cHHWcRBp5zIkbEZPIIPsofLbJ6U+HcP+dze0ORvo8BgUh8WdMXpma5yLn31aoqUTGi/9KYMV6sYORLo14Q74GLkALrOCD08uh0bc/I7yb8OgU+ST0XoCLMIgFAW5vYgtRQL2IBls1gfURcw=
+	t=1765966613; cv=none; b=LbBcfghk3JCwps+M4ADJW8mh2artQsrClTt0nprBGyYAU0bYZDL0mGFdKC8Bh5LYkETJ4CEvt+UihnLizcH8kFmdipCcbU+Ibr1ol2zK6lGG53/MhDJixzwpE3Jxv0+/Ohk2+Q9uESpKaHt162bMBSA5zL/APjgRV5jERedC4TE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765966243; c=relaxed/simple;
-	bh=SMvRzUudMwE9gh+QI3p78IKx2rZRmC3QOeEAGSMOXbE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FENFYHb56gfg7cAHrstWHCbfFX0+dnrxw9w7eokbiwStKjqBfSfnRimzZND+2LvvnlCzUuCi9jxMM3pYJOk8hMvSMSIOk/Qe66ae/gAV6YxIpLIA99h3k4zWULpU8/OhLteJ5sVuqZmfAA7rZ+J4Guczjbol+WAlwP2jetqEJaE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MyYljlBZ; arc=none smtp.client-ip=209.85.215.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1765966613; c=relaxed/simple;
+	bh=jl5K/60YwsctV6B18Z2lwG/kMWijrh2vuVAL7fW7AFc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YZZfLo5sppsljJHrVx7wD6w3WNn4K2oxQiSK8H/+BSNpQerjctzCSl6/Z7Iy8jjRIg0IrtAgAhZM63e6F1/t/ktnM20Ji5bRVGZmhM5ECepNyTSLPG2mNUbvoR7LUYyaYApPH4JIC7FdofsD90bH0VYcXRH6wmzpy4vfzONT73Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vpUsK7qq; arc=none smtp.client-ip=209.85.208.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MyYljlBZ"
-Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-bf1b402fa3cso5251213a12.3
-        for <regressions@lists.linux.dev>; Wed, 17 Dec 2025 02:10:41 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vpUsK7qq"
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-37b495ce059so38426861fa.0
+        for <regressions@lists.linux.dev>; Wed, 17 Dec 2025 02:16:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1765966241; x=1766571041; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=xO3E6v+EYJi4XiIbsXeHvys7mPWX18qJ6xl10KMPnZ8=;
-        b=MyYljlBZH8nZ3N80DCQVZITD91ESzUQM0Ajjksq6fNNDyH9vtnOyDiAK5vA6ILB5sb
-         bcGeLs/Ef6UIY1EKf2vEUAlHG9lX3+FNa/caUluTuKXMMDQCSeQc2BYIsOaIP4KMjEo8
-         a7PxE3EQHWvp0qJvBmv6H4nXn1hz/SC8QpVXRZcLF75ZecV+uj9xYFdoR1DUUfMi8+QU
-         QvPYo+rZD/CwHYQee2hnxvPD6w06m/zyB713FoZhEXfq50Y9CtQckXpMlPAR2Anu+im4
-         L3vlCsXxslcfpjlGznBEovaduq7+ynzk7fiO/SX5EGAy025OnPOG1bPdyoDEzRR3792g
-         bMKA==
+        d=google.com; s=20230601; t=1765966610; x=1766571410; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=UHO2CeadBH4/2oGsKOmkBLgKzqGu3lvRzYfeQSpKSBQ=;
+        b=vpUsK7qqCOBsIu2pz9ObxmdqujSjnHVqy/eeOzWsk3nz1Ee1MxY0YVoc9attjN+i2f
+         5SYlSf9S5k8r3oZlyVS5ydUPosGMVqkEYdcDN7pr54rF9K0o11z0WyfX0hLJn/ZzBHN3
+         jWvaFNJ0KvClF8nsAQNmFm/V4b/w/jApowHNXN+p/zqUwBBkEArHzh0305KlBq/hDI5Y
+         OGbM8SoeNZcsB0zP4093CFmmQZiysV2fv8HCfQHNQ1QIYcXtEPjlqRL2DLBbtNj0+aYv
+         v/7HcIAeabGJGy6JvkcW2xea6/EGSF6qPE+HK1KkRrCXBTDRYmDW1J02lOrmnZMz6CXK
+         8YpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1765966241; x=1766571041;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=xO3E6v+EYJi4XiIbsXeHvys7mPWX18qJ6xl10KMPnZ8=;
-        b=CuTlpy4J9FwEoXRNhIWZD/hfm23ETNAHgffcSPTj4mHJrj1BHrsxkGvyp1N/NZEkbE
-         kNW3yCYRf6spNc9p5/3aE1/sFDfnFST5+aXGhh5hG/0NVJC69Fx6HYbX9W8Dj6MZ4KJq
-         OiAUSUF5mOWwWXXORAZZINJG4jCAdy0xT/KYB9JCdBTvn5w5DSH8dBoGmfP6VA10Hy1o
-         R0D8MIJrCE1pA/+lbbFdb4m/XUrmGRGNncjGEd2chBm2ZeInjfxPfC6zegGRx6INdhXt
-         GpZk+WbGw25hOsXJD+yA74Bs/LjYXVbpT13fZSi1FVplqb+UpqTXuO7vDNMhmUEW9/Y/
-         r60g==
-X-Forwarded-Encrypted: i=1; AJvYcCXaSqYbRNZ/Bqnuv5JgHz3RLLbcX55z9ItqBrUjgCvoiw05n4e3dUz3OfvG6H60WO1Njk/bxDCC9qODoQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwE1OheUYPEbNoMxjtdbKJvEr7G3vxFoWwXsVHwVhy+53PiCU5h
-	VOP2IFEKgHXOH1UiMMWE85Kpw3rIla1NaNtsT9YGb0Gb3OZUJI5/SI08A2ffMKEv
-X-Gm-Gg: AY/fxX4uyMbn8dS/B+ibkpRjHzOYwp6WZiEN8b91apfuUhc8IbIgJi988nmwG+YdeRI
-	SLtMIex7V9OoARgvcUlgeYMoJ+7dPml+92N6PjyqnWg9qlz2YbYophEqLyp1fKUN3PPAeNB2d3y
-	b08sdgbwk6ms+gyOaEGoo1GTlTN/HZM4oi3B09kls3mTIqm8L2RTsXRaVx6Ku1P7TDh1m04yklN
-	Doj07sVPR+CmBKHe062/Cmp4NMwHmPs/wF492DSLL9lzpUn3oKKVS+tCMWrAkwo2+YWmiLdCnaC
-	b9Uqd1a5xBYWPA1FxJ+wrbmj6tATV0M8P4kFq6z+gq4MiIH6lIno5mvtacud+sfHjUFlGk/FI9Q
-	E7R6aOMd8NahkZiytSKl3xkqPSQeHYYDz9r/A3hwq+luoMoUr4a5sNvplrJgxXJJeN9R/Sv3L0W
-	q5X/UgjN8PxD7i7HXRTk+19CVBicZMCwNNpBQAfd6+QhM8fuhEiNSq0p9qI2K+bOVyiys3+4Geg
-	WJP
-X-Google-Smtp-Source: AGHT+IEG8JLieGR++365pLcyjXKBpPQ05/7enLWig8JfwMbvY/InVaunD5JLpgX83zIDArSrsMhjGA==
-X-Received: by 2002:a05:7022:6191:b0:119:e56c:189d with SMTP id a92af1059eb24-11f34ac157bmr15819602c88.5.1765966240957;
-        Wed, 17 Dec 2025 02:10:40 -0800 (PST)
-Received: from [192.168.68.65] (104-12-136-65.lightspeed.irvnca.sbcglobal.net. [104.12.136.65])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-11f43288340sm26393130c88.6.2025.12.17.02.10.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 Dec 2025 02:10:40 -0800 (PST)
-Message-ID: <bbc421e4-76f7-4dba-8228-23488b1b1310@gmail.com>
-Date: Wed, 17 Dec 2025 02:10:39 -0800
+        d=1e100.net; s=20230601; t=1765966610; x=1766571410;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UHO2CeadBH4/2oGsKOmkBLgKzqGu3lvRzYfeQSpKSBQ=;
+        b=pSA8+zVLOjuSga6jtP1P+WBPCUEWBwU+0I2Zll3MrIL6AZI7K0pXbshjnH8cRI8Fma
+         dlq6ZNBzL/Ql8atmVTMQe7kAsDKCSlwRqnAv6pWb9xZMkZUsFXCrlmWMDt7lQUbDHvCT
+         fl/5UGR+Lm2WXewB+oFFXRmWPBIhUfdKLcUei4Ekjb2SnLvUQlMQaPlGvJoAfrfFHt8+
+         AloIKgLPBQbUvPZI3O3xegiBuOEKaTiblNZI4KUxOhnXY9nNG/dqmJLLvOXAAfsAPeZo
+         alqFdAqPOrJD3JBiCie0xXI86qe+4B+CKVI+tfYSjoH37tahnjJLmidDZsVC8DR1Qqj3
+         C3LQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXd6YXAvekuoonzxUsON0w+f3glQNy36hR1IcZ3J4g8AnEaUpCMlEcl7pylJsWxBju2m4QsK1D2sH6qmw==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzqHQeBj7mg+WfepluoMrzQf5NdBUwlrmqf6iLPkzxjXq5hlNoB
+	AzOmolgDKLp5TJi+Phl6daKgFNP9MeDv7VEeBOaSiIOAbSeCTQwpbVGY51JG+U5Bg0Xc+ukOstr
+	vU7Uv8dzSbc+TZH7qRi0NFO5Wwn49PERyOJnmz3zl
+X-Gm-Gg: AY/fxX4CykPXXBQh4rKRg7qs69C851f6ZHRmGKJ1FmFfAfF4TrxX2Ax9kcsh+nZLpFy
+	Qwtq+S/ifJONVLaWBUuComgKAqQFXZffV034LhZFhjr002+R+R2f1m/Ny5UEKhdj9uNSTMySYsD
+	SJ41/v0oRQRRYrlkoIgknIMcgdWEDSFdm57juXpJFJliRCDr5hsg+sPCZIqY5VMR28UWxfTVRdA
+	/sBJ4DQ0EVnnD5bJrHlaZim7Ka17BzADHwCbX0WMIATr4CQT727r/XdULYz/4hWOrk9Uwz0vhcx
+	OISJ01dRLTaF4I99/Wo1v0Hpow==
+X-Google-Smtp-Source: AGHT+IF5sj69WaGzrfPHoTGEZY7LaGmmXWDuRatReIDQ/gzW5K84rrZxwpJwxQr0ZW1d0ZtFMElgAdK6zydOy6gfBAA=
+X-Received: by 2002:a05:651c:221f:b0:37f:bca3:bd7b with SMTP id
+ 38308e7fff4ca-37fd08c08b8mr43341361fa.37.1765966609045; Wed, 17 Dec 2025
+ 02:16:49 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: ARMv7 Linux + Rust doesn't boot when compiling with only LLVM=1
-To: Christian Schrefl <chrisi.schrefl@gmail.com>,
- Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
- Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nsc@kernel.org>
-Cc: stable@vger.kernel.org, regressions@lists.linux.dev,
- rust-for-linux@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>,
- =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>, Andreas Hindborg <a.hindborg@kernel.org>,
- Alice Ryhl <aliceryhl@google.com>, Danilo Krummrich <dakr@kernel.org>,
- Trevor Gross <tmgross@umich.edu>, Benno Lossin <lossin@kernel.org>,
- Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-References: <1286af8e-f908-45db-af7c-d9c5d592abfd@gmail.com>
- <CANiq72kYjNrvyjVs0FOFvrzUf7QYe8i+NpBS6bMEzX8uJbwB+w@mail.gmail.com>
- <66cba90e-c9b1-4356-a021-e8beeff0b88d@gmail.com>
- <6eaa65a1-e7dd-404c-b716-d4f7a0ce7f5c@gmail.com>
-Content-Language: en-US
-From: Rudraksha Gupta <guptarud@gmail.com>
-In-Reply-To: <6eaa65a1-e7dd-404c-b716-d4f7a0ce7f5c@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <aS22QhwdrHN24ToD@levanger> <CACT4Y+Z8aCz0XcoJx9XXPHZSZHxGF8Kx9iUbFarhpTSEPDhMfg@mail.gmail.com>
+ <20251217083202.GA2118121@ax162> <CACT4Y+bsiPfmL-yV99mLCA4n7ukYwS-6E7kTcLg1EOxOQ_cZjg@mail.gmail.com>
+In-Reply-To: <CACT4Y+bsiPfmL-yV99mLCA4n7ukYwS-6E7kTcLg1EOxOQ_cZjg@mail.gmail.com>
+From: Dmitry Vyukov <dvyukov@google.com>
+Date: Wed, 17 Dec 2025 11:16:37 +0100
+X-Gm-Features: AQt7F2qIsTB-mv5gVbaBjUWiSBtHF5HVVZVDVoQFHiCgMULygaXG1kXeigg1BSU
+Message-ID: <CACT4Y+aFSLS95qtpWQ0UjVU3wZ+svi2igLh_SoOqQec_Zwg7Mw@mail.gmail.com>
+Subject: Re: [GIT PULL] kbuild changes for v6.19
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: Nicolas Schier <nsc@kernel.org>, patso@likewhatevs.io, 
+	Justin Stitt <justinstitt@google.com>, eddyz87@gmail.com, 
+	Linus Torvalds <torvalds@linux-foundation.org>, linux-kbuild@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-On 12/15/25 04:17, Christian Schrefl wrote:
-> On 12/14/25 8:34 AM, Rudraksha Gupta wrote:
->> On 12/13/25 22:06, Miguel Ojeda wrote:
->>> On Sun, Dec 14, 2025 at 12:54 AM Rudraksha Gupta <guptarud@gmail.com> wrote:
->>>> - The kernel boots and outputs via UART when I build the kernel with the
->>>> following:
->>>>
->>>> make LLVM=1 ARCH="$arm" CC="${CC:-gcc}"
->>>>
->>>> - The kernel doesn't boot and there is no output via UART when I build
->>>> the kernel with the following:
->>>>
->>>> make LLVM=1 ARCH="$arm"
->>>>
->>>> The only difference being: CC="${CC:-gcc}". Is this expected?
->>> It depends on what that resolves to, i.e. your environment etc., i.e.
->>> that is resolved before Kbuild is called.
->> Sorry about that, I should've specified in the original email. The CC resolves to armv7-alpine-linux-musleabihf-gcc.
->>
->> When both LLVM=1 and the CC=gcc are used, I can insmod the sample rust modules just fine. However, if I only use LLVM=1, my phone doesn't output anything over UART, and I assume that it fails to boot. Interestingly enough, if I just specify LLVM=1 (with no CC=gcc), and remove the rust related configs from the pmos.config fragment, then my phone boots and I can see logs over UART.
-> Did you try other architectures / devices as well (especially can you reproduce it on qemu-arm)?
+On Wed, 17 Dec 2025 at 09:39, Dmitry Vyukov <dvyukov@google.com> wrote:
+> > > > Pat Somaru (1):
+> > > >       scripts/clang-tools: Handle included .c files in gen_compile_commands
+> > >
+> > > /\/\/\/\/\/\/\
+> > >
+> > > This commit breaks invocation of clang tools for me.
+> > >
+> > > For example I now have this fake entry for mock_uncore.c which
+> > > pretends to produce intel_uncore.o (along with 2 other commands which
+> > > produce the same object file):
+> > ...
+> > > An attempt to invoke a clang tool using this database legitimately
+> > > fails with the following errors (the file is not supposed and can't
+> > > compile on its own):
+> > >
+> > > clang-tool: drivers/gpu/drm/i915/selftests/mock_uncore.c: exit status 1
+> > > drivers/gpu/drm/i915/selftests/mock_uncore.c:47:2: error: call to
+> > > undeclared function 'ASSIGN_RAW_WRITE_MMIO_VFUNCS'; ISO C99 and later
+> > > do not support implicit function declarations
+> > > [-Wimplicit-function-declaration]
+> > >    47 |         ASSIGN_RAW_WRITE_MMIO_VFUNCS(uncore, nop);
+> > >       |         ^
+> > > drivers/gpu/drm/i915/selftests/mock_uncore.c:47:39: error: use of
+> > > undeclared identifier 'nop'; did you mean 'nopv'?
+> > >    47 |         ASSIGN_RAW_WRITE_MMIO_VFUNCS(uncore, nop);
+> > >       |                                              ^~~
+> > >       |                                              nopv
+> > > /arch/x86/include/asm/hypervisor.h:71:13: note: 'nopv' declared here
+> > >    71 | extern bool nopv;
+> > >       |             ^
+> > > drivers/gpu/drm/i915/selftests/mock_uncore.c:48:2: error: call to
+> > > undeclared function 'ASSIGN_RAW_READ_MMIO_VFUNCS'; ISO C99 and later
+> > > do not support implicit function declarations
+> > > [-Wimplicit-function-declaration]
+> > >    48 |         ASSIGN_RAW_READ_MMIO_VFUNCS(uncore, nop);
+> > >       |         ^
+> > > drivers/gpu/drm/i915/selftests/mock_uncore.c:48:38: error: use of
+> > > undeclared identifier 'nop'; did you mean 'nopv'?
+> > >    48 |         ASSIGN_RAW_READ_MMIO_VFUNCS(uncore, nop);
+> > >       |                                             ^~~
+> > >       |                                             nopv
+> > > /arch/x86/include/asm/hypervisor.h:71:13: note: 'nopv' declared here
+> > >    71 | extern bool nopv;
+> > >       |             ^
+> > > 4 errors generated.
+> > > Error while processing /drivers/gpu/drm/i915/selftests/mock_uncore.c.
+> > >
+> > >
+> > > What am I doing wrong?
+> >
+> > Nothing. As you note, ASSIGN_RAW_WRITE_MMIO_VFUNCS is defined in
+> > drivers/gpu/drm/i915/intel_uncore.c but it is used in
+> > drivers/gpu/drm/i915/selftests/mock_uncore.c, which is not designed to
+> > be built standalone. We could potentially move
+> > ASSIGN_RAW_WRITE_MMIO_VFUNCS into a common header to avoid this but I
+> > think I would rather just revert 9362d34acf91, as I already figured that
+> > this was going to be fragile:
+> >
+> >   https://lore.kernel.org/20251007163338.GA547361@ax162/
+> >
+> > I would rather discourage including .c files if folks want clangd to
+> > work properly since this seems fundamentally unsolvable if developers
+> > have written .c files in this manner. I am open to other thoughts
+> > though.
 >
-> Did you try a LLVM=1 build without rust enabled?
+> I am not sure what other clang tools are doing, and why they need
+> this. But FWIW my clang tools don't need it at all. They would index
+> all files, get source files from AST (which would include included .c
+> files as well), and work with that index. So they natively "see" and
+> understand all included .c files.
 
-Seems like you've found the preliminary qemu-arm patches I posted, but 
-for completeness sake for others, this is reproducible on qemu-arm:
+Yikes! I am trying to workaround this, but this is PITA.
+Entries are not in order, + there are now multiple entries for the
+same source file (yes, files include themselves). This is plain
+broken, and hard to workaround. Even if I find the entry that is
+correct, I can't really tell about it to a clang tool since it accepts
+just the source file name, and there are multiple entries for the same
+file name.
 
-https://gitlab.postmarketos.org/postmarketOS/pmbootstrap/-/issues/2635#note_521740
+Does anybody see a reasonable way to undo what this commit is doing?
 
-
-As Christian mentioned, and I also now seem to conclude, it seems to be 
-a clang issue.
-
-
->>> The normal way of calling would be the latter anyway -- with the
->>> former you are setting a custom `CC` (either whatever you have there
->>> or the `gcc` default). By default, `LLVM=1` means `CC=clang`.
->>>
->>> So it could be that you are using a completely different compiler
->>> (even Clang vs. GCC, or different versions, and so on). Hard to say.
->>> And depending on that, you may end up with a very different kernel
->>> image. Even substantial Kconfig options may get changed etc.
->>>
->>> I would suggest comparing the kernel configuration of those two ways
->>> (attaching them here could also be nice to see what compilers you are
->>> using and so on).
->> postmarketOS uses kernel config fragments and tracks the latest linux-next:
->>
->> - https://gitlab.postmarketos.org/postmarketOS/pmaports/-/blob/master/device/testing/linux-next/devices.config
->>
->> - https://gitlab.postmarketos.org/postmarketOS/pmaports/-/blob/master/device/testing/linux-next/pmos.config
->>
->> - build recipe: https://gitlab.postmarketos.org/postmarketOS/pmaports/-/blob/master/device/testing/linux-next/APKBUILD
->>
->>
->> The only thing that changed was whether CC=gcc was specified or not:
->>
->> https://gitlab.postmarketos.org/postmarketOS/pmaports/-/commit/b9102ac5718b8d18acb6801a62e1cd4cc7edc0cb
->>
-> I'm not familiar with pmbootstrap, what is required to reproduce this?
-> Do I just need to use the edge channel with linux-next or is something special required?
->
-> I might habe time to look into trying to reproduce it this week, but I'm not sure.
-> I have a armv7 based asus-flo device to try it out. Its not very well supported, but
-> It should be sufficient for this.
-
-asus-flo would probably also encounter this. Currently it's a bit broken 
-in pmbootstrap, but I've provided a general guide here on how to go 
-about fixing it:
-
-https://postmarketos.org/edge/2025/11/17/apq8064-kernel-removed/
-
-
-Would love to help you setup the asus-flo, since it also seems that 
-upstream's IOMMU is broken and likely other things as well. If you'd 
-like to drop by in the Matrix chat, we'd love to help you there if needed.
-
+Thinking about this: I think included source files should be treated
+as include files by anything, rather than added to the database. They
+_are_ include files, and systems should handle include files already.
