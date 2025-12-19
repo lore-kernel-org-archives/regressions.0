@@ -1,276 +1,151 @@
-Received: from vhrz1173.hrz.uni-marburg.de (vhrz1173.HRZ.Uni-Marburg.DE [137.248.1.43])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF7F13064B3
-	for <regressions@lists.linux.dev>; Fri, 19 Dec 2025 17:20:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=137.248.1.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E227F33DED1;
+	Fri, 19 Dec 2025 21:11:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766164836; cv=none; b=J2ISdgz0/mqGpdeUThKH+5lDm4ebTDg1mVOn19Eei7ovG5sv2DqM/T9EMGmZ4S/8cRQeL92CjFqMgKBpfRkod2je5+KIpLALs+KmEgl/CSjcTKFWZabL19X7y2PJ6tDG7UZdeccR5Fv9ihlLG+wjLMuaNo0DLsdDCaxx3gdWRQ8=
+	t=1766178714; cv=none; b=JKX0Uin9AWIhk7k9CH3Vfd+ygyGyb+QaeCdpElxP6EkE6H2Dq8/8DhExxlBIus5dxNDdH/WvE+fBZVz+0+LBYZ3hbixQrRYVGjq0C4wkIr5u3QTvCDKTaOSslhZYVifJ9DdUu9F6ifCpbD0VkyJQ1dg3R2KzylbjuYIxSAOAekw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766164836; c=relaxed/simple;
-	bh=cPBEh00fgKNw/ntamUaTH96OVCc3mCrdtjHLoxeLylo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
-	 In-Reply-To:Content-Type; b=FLnfZXXQDkidRU1BKVIVCVNeOdzF5LeXebPpYKyxOk3RPKJQ1yrw7Kp/KoUKORPnYK/IZSoBqIcaLVjAMx1w0YAUSdRivStzT7svhz2/3svfgh/aLd47soCAlNAerFaL3QrNB9NA/QxlyLvUyOrCsYzmf7kMyiih0SXcwWS4DNU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mathematik.uni-marburg.de; spf=pass smtp.mailfrom=mathematik.uni-marburg.de; dkim=pass (1024-bit key) header.d=mathematik.uni-marburg.de header.i=@mathematik.uni-marburg.de header.b=x0vTNqam; arc=none smtp.client-ip=137.248.1.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mathematik.uni-marburg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mathematik.uni-marburg.de
+	s=arc-20240116; t=1766178714; c=relaxed/simple;
+	bh=ASdLTBHxfVhR+QLvDMriea/AWjGZgarCbTh+dIQY7FQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=brBqfEqQAmL9QNPEsFonZzb2K8+y0f77j8G9KhKTAqhUqN0hJsPBzwNlclwl/5JlkqqoPuUbztxEmB9JP0qscj7mVq2sr71KQ60ZNQg6oNHu01vj7BEuN6bw17RKu19rJ01JJQfF9R2tlc6p7WFwlAjJlypZdbkQi0gNq8MIAS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fWIJJN6k; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mathematik.uni-marburg.de header.i=@mathematik.uni-marburg.de header.b="x0vTNqam"
-Received: from vhrz1173.hrz.uni-marburg.de (vhrz1173.HRZ.Uni-Marburg.DE [137.248.1.43])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
-	(No client certificate requested)
-	by vhrz1865.HRZ.Uni-Marburg.DE (Postfix) with ESMTPS id 4dXvKV5Kl6zyg3;
-	Fri, 19 Dec 2025 18:14:38 +0100 (CET)
-Authentication-Results: smtpd-out;
-	dkim=pass header.d=mathematik.uni-marburg.de header.s=default header.b=x0vTNqam;
-	spf=pass (smtpd-out: domain of rschwarzkopf@mathematik.uni-marburg.de designates 137.248.1.43 as permitted sender) smtp.mailfrom=rschwarzkopf@mathematik.uni-marburg.de
-Received: from pc12216.mathematik.uni-marburg.de (pc12216.Mathematik.Uni-Marburg.DE [137.248.123.123])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by vhrz1865.HRZ.Uni-Marburg.DE (Postfix) with ESMTPS id 4dXvKH5K7HzyhT;
-	Fri, 19 Dec 2025 18:14:27 +0100 (CET)
-Received: from [137.248.109.88] (mvpn2188.VPN.Uni-Marburg.DE [137.248.109.88])
-	(authenticated bits=0)
-	by pc12216.mathematik.uni-marburg.de (8.14.4/8.14.4) with ESMTP id 5BJHEOEn088785
-	(version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
-	Fri, 19 Dec 2025 18:14:25 +0100
-DKIM-Filter: OpenDKIM Filter v2.11.0 pc12216.mathematik.uni-marburg.de 5BJHEOEn088785
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=mathematik.uni-marburg.de; s=default; t=1766164467;
-	bh=2ymR/MBpNuFIRThwX8ZYZ+U/ecsF7BfXRXD3pwLbnvY=;
-	h=Date:Subject:To:References:From:Cc:In-Reply-To:From;
-	b=x0vTNqamgS5LpOw2laVYBjb+zWIsr6IFahCEBdCni/kDz5a341gNeosp8E5UUG40k
-	 UuTKfTOqlSetWtzqRNi3u4TWRWcF1FPZNq4YlIWe68ig6ZQMjrWyGuSXT4fvisIG0V
-	 fwMnBQhmrfi0Y80T4c/oDgrqvH6Qq1jHL+XKCxaU=
-Message-ID: <10af99d0-9a52-4ae0-9ee9-a02b5370f034@mathematik.uni-marburg.de>
-Date: Fri, 19 Dec 2025 18:14:24 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fWIJJN6k"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A98AC4CEF1;
+	Fri, 19 Dec 2025 21:11:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1766178713;
+	bh=ASdLTBHxfVhR+QLvDMriea/AWjGZgarCbTh+dIQY7FQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fWIJJN6kykX4+qu0rIPmop1UUvYrEVR87Y49ASr7DkkQqNWPTjXxYKgVp4M67DgLb
+	 GWUXcPBYrax9EaDfSCGvc+6xjRRMk9c+mEJRCDISXIuO8xdbVjKxWK5mZfGQ1WBH3d
+	 z1ca2ItL9ML6XVHFMMlxlWGgReXJ6Z2yxsSKjBoKUupGENydLu0wWUM4aO9a9A5H27
+	 QMtk6U1VaACvwVDF+NrcthzSVakeFgRQfCBS3iZ5xvneK0nD4UAf+36mfZyNNvFr98
+	 ddbsq3rZVGW1I2xqpfYShpUXBuFlQh7pyWlxmJJAcmHMVEJENnJTRtcZbg3bxX74aI
+	 Ez+pV8UTCdabQ==
+Date: Fri, 19 Dec 2025 14:11:47 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Rudraksha Gupta <guptarud@gmail.com>
+Cc: Christian Schrefl <chrisi.schrefl@gmail.com>, stable@vger.kernel.org,
+	regressions@lists.linux.dev, rust-for-linux@vger.kernel.org,
+	Miguel Ojeda <ojeda@kernel.org>, llvm@lists.linux.dev,
+	Linux ARM <linux-arm-kernel@lists.infradead.org>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Trevor Gross <tmgross@umich.edu>, Benno Lossin <lossin@kernel.org>
+Subject: Re: ARMv7 Linux + Rust doesn't boot when compiling with only LLVM=1
+Message-ID: <20251219211147.GA1407372@ax162>
+References: <1286af8e-f908-45db-af7c-d9c5d592abfd@gmail.com>
+ <0705db10-3cbb-4958-a116-112457f9af6c@gmail.com>
+ <1910f4b6-db74-4c86-9010-28ab4462c5a7@gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [regression 5.10.y] Libvirt can no longer delete macvtap devices
- after backport of a6cec0bcd342 ("net: rtnetlink: add bulk delete support
- flag") to 5.10.y series (Debian 11)
-To: Salvatore Bonaccorso <carnil@debian.org>,
-        Nikolay Aleksandrov <razor@blackwall.org>,
-        David Ahern <dsahern@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-References: <0b06eb09-b1a9-41f9-8655-67397be72b22@mathematik.uni-marburg.de>
- <aUMEVm1vb7bdhlcK@eldamar.lan>
- <e8bcfe99-5522-4430-9826-ed013f529403@mathematik.uni-marburg.de>
- <176608738558.457059.16166844651150713799@eldamar.lan>
-Content-Language: en-US
-From: Roland Schwarzkopf <rschwarzkopf@mathematik.uni-marburg.de>
-Cc: debian-kernel@lists.debian.org, Ben Hutchings <benh@debian.org>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, regressions@lists.linux.dev
-In-Reply-To: <176608738558.457059.16166844651150713799@eldamar.lan>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Score: -6.23 / 12.00 / 15.00
-X-Rspamd-Queue-Id: 4dXvKV5Kl6zyg3
+In-Reply-To: <1910f4b6-db74-4c86-9010-28ab4462c5a7@gmail.com>
 
-Hi all,
+Hi Rudraksha,
 
-On 12/18/25 20:50, Salvatore Bonaccorso wrote:
-> Hi all,
->
-> Roland Schwarzkopf reported to the Debian mailing list a problem which
-> he encountered once updating in Debian from 5.10.244 to 5.10.247. The
-> report is quoted below and found in
-> https://lists.debian.org/debian-kernel/2025/12/msg00223.html
->
-> Roland did bisect the changes between 5.10.244 to 5.10.247 and found
-> that the issue is introduced with 1550f3673972 ("net: rtnetlink: add
-> bulk delete support flag") which is the backport to the 5.10.y series.
->
-> On Thu, Dec 18, 2025 at 02:59:55PM +0100, Roland Schwarzkopf wrote:
->> Hi Salvatore,
->>
->> On 12/17/25 20:28, Salvatore Bonaccorso wrote:
->>> Hi Roland,
->>>
->>> I'm CC'ing Ben Hutchings directly as well as he takes care of the
->>> Debian LTS kernel updates. Idellly we make this as well a proper bug
->>> for easier tracking.
->>>
->>> On Wed, Dec 17, 2025 at 01:35:54PM +0100, Roland Schwarzkopf wrote:
->>>> Hi there,
->>>>
->>>> after upgrading to the latest kernel on Debian 11
->>>> (linux-image-5.10.0-37-amd64) I have an issue using libvirt with qemu/kvm
->>>> virtual machines and macvtap networking. When a machine is shut down,
->>>> libvirt can not delete the corresponding macvtap device. Thus, starting the
->>>> machine again is not possible. After manually removing the macvtap device
->>>> using `ip link delete` the vm can be started again.
->>>>
->>>> In the journal the following message is shown:
->>>>
->>>> Dec 17 13:19:27 iblis libvirtd[535]: error destroying network device macvtap0: Operation not supported
->>>>
->>>> After downgrading the kernel to linux-image-5.10.0-36-amd64, the problem
->>>> disappears. I tested this on a fresh minimal install of Debian 11 - to
->>>> exclude that anything else on my production machines is causing this issue.
->>>>
->>>> Since the older kernel does not have this issue, I assume this is related to
->>>> the kernel and not to libvirt?
->>>>
->>>> I tried to check for bug reports of the kernel package, but the bug tracker
->>>> finds no reports and even states that the package does not exist (I used the
->>>> "Bug reports" link on
->>>> https://packages.debian.org/bullseye/linux-image-5.10.0-37-amd64). This left
->>>> me a bit puzzled. Since I don't have experience with the debian bug
->>>> reporting process, I had no other idea than writing to this list.
->>> You would need to search for inhttps://bugs.debian.org/src:linux ,
->>> but that said I'm not aware of any bug reports in that direction.
->>>
->>> Would you be in the position of bisecting the problem as you can say
->>> that 5.10.244 is good and 5.10.247 is bad and regressed? If you can do
->>> that that would involve compiling a couple of kernels to narrow down
->>> where the problem is introduced:
->>>
->>>       git clone --single-branch -b linux-5.10.yhttps://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git
->>>       cd linux-stable
->>>       git checkout v5.10.244
->>>       cp /boot/config-$(uname -r) .config
->>>       yes '' | make localmodconfig
->>>       make savedefconfig
->>>       mv defconfig arch/x86/configs/my_defconfig
->>>
->>>       # test 5.10.244 to ensure this is "good"
->>>       make my_defconfig
->>>       make -j $(nproc) bindeb-pkg
->>>       ... install the resulting .deb package and confirm it successfully boots / problem does not exist
->>>
->>>       # test 5.10.247 to ensure this is "bad"
->>>       git checkout v5.10.247
->>>       make my_defconfig
->>>       make -j $(nproc) bindeb-pkg
->>>       ... install the resulting .deb package and confirm it fails to boot / problem exists
->>>
->>> With that confirmed, the bisection can start:
->>>
->>>       git bisect start
->>>       git bisect good v5.10.244
->>>       git bisect bad v5.10.247
->>>
->>> In each bisection step git checks out a state between the oldest
->>> known-bad and the newest known-good commit. In each step test using:
->>>
->>>       make my_defconfig
->>>       make -j $(nproc) bindeb-pkg
->>>       ... install, try to boot / verify if problem exists
->>>
->>> and if the problem is hit run:
->>>
->>>       git bisect bad
->>>
->>> and if the problem doesn't trigger run:
->>>
->>>       git bisect good
->>>
->>> . Please pay attention to always select the just built kernel for
->>> booting, it won't always be the default kernel picked up by grub.
->>>
->>> Iterate until git announces to have identified the first bad commit.
->>>
->>> Then provide the output of
->>>
->>>       git bisect log
->>>
->>> In the course of the bisection you might have to uninstall previous
->>> kernels again to not exhaust the disk space in /boot. Also in the end
->>> uninstall all self-built kernels again.
->> I just did my first bisection \o/ (sorry)
->>
->> Here are the results:
->>
->> git bisect start
->> # bad: [f964b940099f9982d723d4c77988d4b0dda9c165] Linux 5.10.247
->> git bisect bad f964b940099f9982d723d4c77988d4b0dda9c165
->> # good: [863b76df7d1e327979946a2d3893479c3275bfa4] Linux 5.10.244
->> git bisect good f52ee6ea810273e527a5d319e5f400be8c8424c1
->> # good: [dc9fdb7586b90e33c766eac52b6f3d1c9ec365a1] net: usb: lan78xx: Add error handling to lan78xx_init_mac_address
->> git bisect good dc9fdb7586b90e33c766eac52b6f3d1c9ec365a1
->> # bad: [2272d5757ce5d3fb416d9f2497b015678eb85c0d] phy: cadence: cdns-dphy: Enable lower resolutions in dphy
->> git bisect bad 2272d5757ce5d3fb416d9f2497b015678eb85c0d
->> # bad: [547539f08b9e3629ce68479889813e58c8087e70] ALSA: usb-audio: fix control pipe direction
->> git bisect bad 547539f08b9e3629ce68479889813e58c8087e70
->> # bad: [3509c748e79435d09e730673c8c100b7f0ebc87c] most: usb: hdm_probe: Fix calling put_device() before device initialization
->> git bisect bad 3509c748e79435d09e730673c8c100b7f0ebc87c
->> # bad: [a6ebcafc2f5ff7f0d1ce0c6dc38ac09a16a56ec0] net: add ndo_fdb_del_bulk
->> git bisect bad a6ebcafc2f5ff7f0d1ce0c6dc38ac09a16a56ec0
->> # good: [b8a72692aa42b7dcd179a96b90bc2763ac74576a] hfsplus: fix KMSAN uninit-value issue in __hfsplus_ext_cache_extent()
->> git bisect good b8a72692aa42b7dcd179a96b90bc2763ac74576a
->> # good: [2b42a595863556b394bd702d46f4a9d0d2985aaa] m68k: bitops: Fix find_*_bit() signatures
->> git bisect good 2b42a595863556b394bd702d46f4a9d0d2985aaa
->> # good: [9d9f7d71d46cff3491a443a3cf452cecf87d51ef] net: rtnetlink: use BIT for flag values
->> git bisect good 9d9f7d71d46cff3491a443a3cf452cecf87d51ef
->> # bad: [1550f3673972c5cfba714135f8bf26784e6f2b0f] net: rtnetlink: add bulk delete support flag
->> git bisect bad 1550f3673972c5cfba714135f8bf26784e6f2b0f
->> # good: [c8879afa24169e504f78c9ca43a4d0d7397049eb] net: netlink: add NLM_F_BULK delete request modifier
->> git bisect good c8879afa24169e504f78c9ca43a4d0d7397049eb
->> # first bad commit: [1550f3673972c5cfba714135f8bf26784e6f2b0f] net: rtnetlink: add bulk delete support flag
->>
->> Is there anything else I can do to help?
-> Is there soemthing missing?
->
-> Roland I think it would be helpful if you can test as well more recent
-> stable series versions to confirm if the issue is present there as
-> well or not, which might indicate a 5.10.y specific backporting
-> problem.
+On Wed, Dec 17, 2025 at 02:21:11AM -0800, Rudraksha Gupta wrote:
+> On 12/16/25 06:41, Christian Schrefl wrote:
+> > On 12/14/25 12:54 AM, Rudraksha Gupta wrote:
+> > > Hello all,
+> > > 
+> > > 
+> > > I have the following problem: https://gitlab.postmarketos.org/postmarketOS/pmbootstrap/-/issues/2635
+> > > 
+> > > 
+> > > In short, what is happening is the following:
+> > > 
+> > > 
+> > > - The kernel boots and outputs via UART when I build the kernel with the following:
+> > > 
+> > > make LLVM=1 ARCH="$arm" CC="${CC:-gcc}"
+> > > 
+> > > 
+> > > - The kernel doesn't boot and there is no output via UART when I build the kernel with the following:
+> > > 
+> > > make LLVM=1 ARCH="$arm"
+> > > 
+> > > 
+> > > The only difference being:�CC="${CC:-gcc}". Is this expected? I think this was present in the Linux kernel ever since Rust was enabled for ARMv7, and I never encountered it because postmarketOS was originally building the first way.
+> > 
+> > I've managed to the get the build setup for qemu-armv7. For some reason
+> > I could not get past the initrd even on kernels that are supposed to work,
+> > but I think that is unrelated (and not a kernel issue).
+> 
+> Yep, I just got qemu-arm working to drop into a debug shell for now. I have
+> to look into why other things aren't behaving nicely (but that's a problem
+> for later me :P). For now, it seems to demonstrate the problem nicely:
+> 
+> https://gitlab.postmarketos.org/postmarketOS/pmbootstrap/-/issues/2635#note_521740
+> 
+> 
+> > On the linux-next kernel I didn't get any output on the console from qemu so I
+> > think I've reproduced the issue. Changing CONFIG_RUST=n did not change the behavior.
+> > 
+> > So I this is almost certainly a LLVM/clang issue and not a Rust issue. I'll try to
+> > do a bit more digging, but I'm not sure how much I'll get done.
+> 
+> Did a little more testing in addition to the testing in the gitlab issue
+> mentioned above:
+> 
+> - Removed Rust configs from linux-next/pmos.config -> didn't boot on
+> qemu-arm and my phone
+> 
+> - Then I removed Rust dependencies from linux-next/APKBUILD -> didn't boot
+> on qemu-arm and my phone
+> 
+> - used linux-stable instead of linux-next -> booted on qemu-arm to a debug
+> shell
+> 
+> linux-stable is built via gcc:
+> https://gitlab.alpinelinux.org/alpine/aports/-/blob/master/community/linux-stable/APKBUILD#L179
+> 
+> linux-next is built via clang:
+> https://gitlab.postmarketos.org/postmarketOS/pmaports/-/blob/master/device/testing/linux-next/APKBUILD#L68
 
-I tested this on some newer kernel versions: stable 6.18.2 and 6.17.13 
-as well as mainline 6.19-rc1. With all three kernel versions, a 
-different problem occurs: I can't even start the virtual machine.
+It certainly seems like LLVM / clang is a factor here based on the fact
+that LLVM binutils were being used with GCC based on the original report
+using 'LLVM=1 CC=gcc'. A few additional ideas for narrowing this down:
 
-The relevant journal entry is:
+  * Does this reproduce with GNU binutils + clang (i.e.,
+    CROSS_COMPILE=... CC=clang)? This would further confirm that clang
+    is the cuplrit since GNU binutils and GCC are confirmed working with
+    linux-stable, correct?
 
-Dec 19 17:25:41 iblis libvirtd[438]: error creating macvtap interface 
-macvtap0@eno1 (08:00:27:25:16:0c): Operation not supported
+  * Does this reproduce when linux-stable is built with clang / LLVM=1?
+    This would rule out a -next specific regression as well as allow
+    diffing the linux-stable GCC configuration with the clang
+    configuration to see if there are any configurations that get
+    enabled only with clang, which could be another reason no issue is
+    seen with GCC.
 
-I then searched in the commit log for the upstream commit of the one I 
-found when bisecting the issue. It is a6cec0bcd342, which git describe 
-says is v5.18-rc1-423-ga6cec0bcd342. Therefore I decided to also test 
-the two longterm versions before and after that commit was introduced: 
-5.15.197 and 6.1.159. With both kernel versions I found the same 
-behavior as with the stable and mainline versions.
+  * Our continuous integration boot tests several ARM configurations in
+    QEMU, including Alpine Linux's:
 
-So on all newer kernel versions I tested behave identical, but different 
-than the latest release in the 5.10.y branch.
+    https://github.com/ClangBuiltLinux/continuous-integration2/actions/runs/20379046102/job/58575229973
 
-I'm not sure if I caused this behaviour by making a mistake during 
-building the kernels - I don't have much experience in that area. I used 
-the same steps Salvatore gave me for bisecting the issue for the 
-different versions, i.e.,
+    So it is possible that a postmarketOS configuration option
+    introduces this?
 
-      cp /boot/config-$(uname -r) .config
-      yes '' | make localmodconfig
-      make savedefconfig
-      mv defconfig arch/x86/configs/my_defconfig
-      make my_defconfig
-      make -j $(nproc) bindeb-pkg
+The results of that testing might give us a more obvious direction to go
+for troubleshooting, especially since this appears to reproduce in QEMU,
+which should make debugging in gdb possible.
 
-Best regards,
+Also, what version of clang is this?
 
-Roland
-
->
-> #regzbot introduced: 1550f3673972c5cfba714135f8bf26784e6f2b0f
->
-> Regards,
-> Salvatore
-
--- 
-Dr. Roland Schwarzkopf <rschwarzkopf@mathematik.uni-marburg.de>
-Dept. of Mathematics and Computer Science, IT Solutions
-University of Marburg, Hans-Meerwein-Str. 6, D-35032 Marburg, Germany
-Tel: +4964212821523, Fax: +4964212821573
-
+Cheers,
+Nathan
