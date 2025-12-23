@@ -1,162 +1,213 @@
-Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6043D21CC49
-	for <regressions@lists.linux.dev>; Mon, 22 Dec 2025 00:00:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766361636; cv=none; b=ud84QijJw4aI1+vZu3MOqP+AslGRmfRBrZFWm8fHnAzuFmlUMHTccDPe1x81dGwdBTD2vqcQc64wN65OlPevG7E11/nMYK2HspV7njHLluHlpVd0i2TgkA6cj4iuqBAumc97Ub1gAWdUICkM4IDXg1CnNU97lqEDHWdlcKipAho=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766361636; c=relaxed/simple;
-	bh=U/EAyuONJ8CIVnN7Iyst3zvFlXpCRkIF1q3en+mKzaQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=m7gN58rSLsOQqhOG4sX3AKTK9wwi+o6FXgQekK/5klSGbM8tA5i1fZnQ+yGprDuVuoJIyfHwLDHMaEKQJ7HPTxPnM1FIitLoHOffZ+UpUefnPUpgpS7vGQ5g2w1+f0JIyDZankTL1TH/Hym0MoL/uHoPWW44c3hRlQTzqJwGQH0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nbtR2VBJ; arc=none smtp.client-ip=209.85.215.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD996286897
+	for <regressions@lists.linux.dev>; Tue, 23 Dec 2025 21:09:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1766524144; cv=pass; b=OVaT78JbRKLPb10BGxpcQzChAI9uEGZyvw3JksP6TMGiiKnpJ66DZ90JCNG+2+b1IrQIXPwD2LOd3C6TaimaB3PDTgqRFd7CSjyhn5JMDehIsP3GJYKEyXPRihKYz5EPynMb/JFjIQEC//2QvftURr16e9EgKyszqrHB6GHRAhg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1766524144; c=relaxed/simple;
+	bh=VXWNJbjeW+XfWfdP+JpgsxNRHGEP7GNhC0twpJ1rQp8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gwucXWfY4MNy4ovBt8W7XHvQ93EV7o/42u1HgTMs07o18o4ZOdPpR4TdQ6UxmDhG9wqbTEaslZ7a9tttUVD0ge7W6n04WPM1pX/KDDFlTUFBPozQpEJ4SB9oXZO1rOWOFAptBiiUas/VuRQONeetNaC9UdXYWAk85gojNzsvX5Y=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b=iwtqE6lq; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nbtR2VBJ"
-Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-bde0f62464cso3340674a12.2
-        for <regressions@lists.linux.dev>; Sun, 21 Dec 2025 16:00:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1766361632; x=1766966432; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=MM7RV4MA6+k2V8r5oWFH+eAF8D28f9bxG2QTbSEjJLk=;
-        b=nbtR2VBJvDL7WHvksLR81w3nfvtCu8Zve4tKVXcNIeEhY0YIn/OnAXRU0E8uGJo272
-         JHrotP5k4kzAoGT1vIz/oquEEPak8eSIwXkBYhGvQnkY9kiBBowtIASPY+RImatiKtMW
-         UFkd+xRCEPKGRHb5HSnsn7u8mE5oIhXZLFyPgzc+YWczfuXSflUiO+/lPlZuiX8nFr0D
-         ftwYT99nr5gTb2f14uQ+WBxWVdIaAIjhKvUQV16Zvw7a/6fICYOGSTOwXirthXqaGAhd
-         QqNkMxphKegvfAl3rVtY9qPI6nCZW7OJDKS/O32eNF+S22LMRWxv/riAwDmEjCtfUAcv
-         rEhg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766361632; x=1766966432;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=MM7RV4MA6+k2V8r5oWFH+eAF8D28f9bxG2QTbSEjJLk=;
-        b=O+nvPMxLiYem4Tr0A1biZfNcerCfv/znnyNUNvyBYUedg5JDHO+3HksN/fBbxvvuhg
-         5+VVetYM89rNziE8/1iUozd34iRTzympOWUOLPMSq/Us9fBnkJdSZVG8bPM276/RaHKa
-         bkEUDLccBzn2wzDruwp4GV5G++JbstnGV8t2Djj1B/8Qc5zPYhQvENEWIjSnkXoqUsm4
-         DeY46EEt0bOyd3ayFZ3sZlZw3HVe86j79bSN6NdyuBBayxzWMn8b/mYzdbLroE0knOju
-         IbAMoO9AnIaFOdxHPQfbQp2adYVgUzNMw9V9h5RL79pwJE9+etKGC06GFb5RmVRR9w6X
-         rvig==
-X-Forwarded-Encrypted: i=1; AJvYcCUXl+Mi2UlJEMrH5SEMdcKjgwQ/p455CysaMGy/89ILrhNd308RDinq7okuTfeTK0CLIfkMpVbGv13BiA==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yw1OhovqXV3Cl6sQgnZFOzhWBMK2PxD2oe9+y264c87Ay6QMaRy
-	rpW+QrZfd21fJWraPEz0GNvO2AKbIrolAvSjDsKMVhcpgpVgBzK4bF1W
-X-Gm-Gg: AY/fxX4eRFG9hfqW88Vwz7AOXZtBf/i6hmmKXZOBbP1kLGsyQA3xXLJP1Qo7ExWriyk
-	joW30kJ0EcaVgv/NN1EjFkkgSrbNB8BjtSCVUTTS4WxDe74TuKT2EbUZtYL9p7Rr+TINBHCGFfB
-	p6Z6fJcx2Imv6ASOtfEOEMXrboY4C8mM091PkHsApoNZkpoUjEp06G6R/tTE7yrrJpfiZQ479A0
-	nbY4mr5/07vv9wjbsPDVZw6hqNr8O6HK9p9OEoEBtseoLHr3Z6GGxnZqPpPMkugFE5hYZi83Odn
-	baUULxDRMIrt3t6hzU/Yo9f6IxHqMe7G6swmWalPAakEhIm3vp5ekAdpvAS7aVOoPz1d8dK1mQY
-	HGaG0ryQioQObwT+CUEQk2Mr/Cni3ZTdNcQleaTlUOlqRLe5yVVXpIgt8L87HKpJW3Etxwchp64
-	go++pXiuNQmu7WoG43qYiln4DfKBHRzFGUcfP4ABB28jJSNkNmUHuac/Wz4qpwpmtlOg==
-X-Google-Smtp-Source: AGHT+IHWxQn5FbGuPZ3qckSgTAqf30C61kqhNqlZJurZtR2onEq7xRmHaWycfSAgCm0Rr0YlSZPrjQ==
-X-Received: by 2002:a05:7300:ac90:b0:2b0:310c:529 with SMTP id 5a478bee46e88-2b05ec050d0mr9843513eec.14.1766361632052;
-        Sun, 21 Dec 2025 16:00:32 -0800 (PST)
-Received: from [192.168.68.65] (104-12-136-65.lightspeed.irvnca.sbcglobal.net. [104.12.136.65])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2b05fe99410sm25703154eec.2.2025.12.21.16.00.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 21 Dec 2025 16:00:31 -0800 (PST)
-Message-ID: <aa453636-dcbc-4ac1-8733-d9d992de82ce@gmail.com>
-Date: Sun, 21 Dec 2025 16:00:30 -0800
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b="iwtqE6lq"
+ARC-Seal: i=1; a=rsa-sha256; t=1766524141; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=ep2yqpwPQgA6IwrCtoFQ2hC0GxvjsB9L5JOziCiJYLxsnrkiVWOtUoeni1Wn2uvDlIjasrq+7PIUM1k8UF903fzcyWgwnrUXgcMQZIswAItAvdfC9wkKw1zc+0iLU+dCAe+boGIM878J8Bf8H+BSd5ALool6tIIxrku9SkEA8Mk=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1766524141; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=s8NAUT9bQs7qbFSasLydr/oelzy5DvyIfqkHKjJGVGI=; 
+	b=Ne3L1koMO7S1Hp8R07idwRkW03ZzUxDyMnSb5k0RvqIJei4NiREZmWNZPGvTXdr7JVz0JdNlCWK3yKEAInP0351bnBaU2y+MDXhkVjccaYLB4C/HiagOMWP2IAWp1nKCRtstBmMSpkd8WsvFt1VueoEk5uqprrATNjft3rXhZqM=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=sebastian.reichel@collabora.com;
+	dmarc=pass header.from=<sebastian.reichel@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1766524141;
+	s=zohomail; d=collabora.com; i=sebastian.reichel@collabora.com;
+	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
+	bh=s8NAUT9bQs7qbFSasLydr/oelzy5DvyIfqkHKjJGVGI=;
+	b=iwtqE6lq4CdFM+EPyvIlThYfrkEAr+jJapENLUeODZR+czZs6+rlcD6tyya2Rh8n
+	qrNSgLhPcmk02RWyF+WLrJY5FcQ2GxYuaItEwWJGfAMVMDI18mQeGWth3iwFeLvLsvI
+	SZV6obOXl/vp1HmofsZqqmdiHOhCEsTLiFKH8xFc=
+Received: by mx.zohomail.com with SMTPS id 1766524138042730.0153141909041;
+	Tue, 23 Dec 2025 13:08:58 -0800 (PST)
+Received: by venus (Postfix, from userid 1000)
+	id E3BEE18197C; Tue, 23 Dec 2025 22:08:54 +0100 (CET)
+Date: Tue, 23 Dec 2025 22:08:54 +0100
+From: Sebastian Reichel <sebastian.reichel@collabora.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Riwen Lu <luriwen@kylinos.cn>, pavel@kernel.org, lenb@kernel.org, 
+	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, xiongxin <xiongxin@kylinos.cn>, 
+	regressions@lists.linux.dev
+Subject: [REGRESSION] Re: [PATCH v3] PM: suspend: Make pm_test delay
+ interruptible by wakeup events
+Message-ID: <aUsAk0k1N9hw8IkY@venus>
+References: <20251113012638.1362013-1-luriwen@kylinos.cn>
+ <CAJZ5v0hwhVO6J2nS2-byU0+Lm8QbzdBzv4-X4eLNNUpTg+41Kg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: ARMv7 Linux + Rust doesn't boot when compiling with only LLVM=1
-To: Christian Schrefl <chrisi.schrefl@gmail.com>,
- Nathan Chancellor <nathan@kernel.org>
-Cc: stable@vger.kernel.org, regressions@lists.linux.dev,
- rust-for-linux@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>,
- llvm@lists.linux.dev, Linux ARM <linux-arm-kernel@lists.infradead.org>,
- =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>, Andreas Hindborg <a.hindborg@kernel.org>,
- Alice Ryhl <aliceryhl@google.com>, Danilo Krummrich <dakr@kernel.org>,
- Trevor Gross <tmgross@umich.edu>, Benno Lossin <lossin@kernel.org>
-References: <1286af8e-f908-45db-af7c-d9c5d592abfd@gmail.com>
- <0705db10-3cbb-4958-a116-112457f9af6c@gmail.com>
- <1910f4b6-db74-4c86-9010-28ab4462c5a7@gmail.com>
- <20251219211147.GA1407372@ax162>
- <0169d4f7-1a31-4ec6-a456-a6dfe2d99886@gmail.com>
-Content-Language: en-US
-From: Rudraksha Gupta <guptarud@gmail.com>
-In-Reply-To: <0169d4f7-1a31-4ec6-a456-a6dfe2d99886@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-
-Hi all,
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="6lymdjenuo2frg5f"
+Content-Disposition: inline
+In-Reply-To: <CAJZ5v0hwhVO6J2nS2-byU0+Lm8QbzdBzv4-X4eLNNUpTg+41Kg@mail.gmail.com>
+X-Zoho-Virus-Status: 1
+X-Zoho-Virus-Status: 1
+X-Zoho-AV-Stamp: zmail-av-1.5.1/266.517.63
+X-ZohoMailClient: External
 
 
-So it seems that the boot.img size was getting too large for lk2nd (the 
-bootloader) to handle and was giving these errors as described. Seems 
-like lk2nd can't handle ~21 MB boot.img.
+--6lymdjenuo2frg5f
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: [REGRESSION] Re: [PATCH v3] PM: suspend: Make pm_test delay
+ interruptible by wakeup events
+MIME-Version: 1.0
 
+Hi,
 
-After removing networking from the Linux kernel (as it was the simplest 
-way to massively reduce the Linux kernel size) as well as building the 
-rust modules into the kernel itself, it seems to boot fine now:
+On Fri, Nov 14, 2025 at 05:11:16PM +0100, Rafael J. Wysocki wrote:
+> On Thu, Nov 13, 2025 at 2:26=E2=80=AFAM Riwen Lu <luriwen@kylinos.cn> wro=
+te:
+> >
+> > Modify the suspend_test() function to make the test delay can be
+> > interrupted by wakeup events.
+> >
+> > This improves the responsiveness of the system during suspend testing
+> > when wakeup events occur, allowing the suspend process to proceed
+> > without waiting for the full test delay to complete when wakeup events
+> > are detected.
+> >
+> > Additionally, using msleep() instead of mdelay() avoids potential soft
+> > lockup "CPU stuck" issues when long test delays are configured.
+> >
+> > Co-developed-by: xiongxin <xiongxin@kylinos.cn>
+> > Signed-off-by: xiongxin <xiongxin@kylinos.cn>
+> > Signed-off-by: Riwen Lu <luriwen@kylinos.cn>
+> > ---
+> >  kernel/power/suspend.c | 6 +++++-
+> >  1 file changed, 5 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/kernel/power/suspend.c b/kernel/power/suspend.c
+> > index b4ca17c2fecf..1c2f777da367 100644
+> > --- a/kernel/power/suspend.c
+> > +++ b/kernel/power/suspend.c
+> > @@ -344,10 +344,14 @@ MODULE_PARM_DESC(pm_test_delay,
+> >  static int suspend_test(int level)
+> >  {
+> >  #ifdef CONFIG_PM_DEBUG
+> > +       int i;
+> > +
+> >         if (pm_test_level =3D=3D level) {
+> >                 pr_info("suspend debug: Waiting for %d second(s).\n",
+> >                                 pm_test_delay);
+> > -               mdelay(pm_test_delay * 1000);
+> > +               for (i =3D 0; i < pm_test_delay && !pm_wakeup_pending()=
+; i++)
+> > +                       msleep(1000);
+> > +
+> >                 return 1;
+> >         }
+> >  #endif /* !CONFIG_PM_DEBUG */
+> > --
+>=20
+> Applied as 6.19 material, thanks!
 
-[    0.000000] Booting Linux on physical CPU 0x0
-[    0.000000] Linux version 6.18.0 (root@9e6cbc09906e) (Alpine clang 
-version 20.1.8, LLD 20.1.8) #4 SMP PREEMPT Sun Dec 21 23:44:57 UTC 2025
-[    0.000000] CPU: ARMv7 Processor [511f04d4] revision 4 (ARMv7), 
-cr=10c5787d
-[    0.000000] CPU: div instructions available: patching division code
-[    0.000000] CPU: PIPT / VIPT nonaliasing data cache, PIPT instruction 
-cache
-[    0.000000] OF: fdt: Machine model: Samsung Galaxy Express SGH-I437
+This is now upstream as a10ad1b10402 ("PM: suspend: Make pm_test delay inte=
+rruptible by wakeup events").
+When doing the following PM debugging test on ROCK 4D on v6.19-rc2
 
-[ ... ]
+echo N > /sys/module/printk/parameters/console_suspend
+echo 1 > /sys/power/pm_print_times
+echo 1 > /sys/power/pm_debug_messages
+echo core > /sys/power/pm_test
+echo mem > /sys/power/state
 
+I see the following error triggered reliably, which did not happen on 6.18
+and no longer appears after reverting this patch:
 
-[    1.487035] rust_minimal: Rust minimal sample (init)
-[    1.487297] rust_minimal: Am I built-in? true
-[    1.492632] rust_print: Rust printing macros sample (init)
-[    1.496873] rust_print: Emergency message (level 0) without args
-[    1.502244] rust_print: Alert message (level 1) without args
-[    1.508439] rust_print: Critical message (level 2) without args
-[    1.514025] rust_print: Error message (level 3) without args
-[    1.519702] rust_print: Warning message (level 4) without args
-[    1.525592] rust_print: Notice message (level 5) without args
-[    1.531239] rust_print: Info message (level 6) without args
-[    1.537037] rust_print: A line that is continued without args
-[    1.542440] rust_print: Emergency message (level 0) with args
-[    1.548348] rust_print: Alert message (level 1) with args
-[    1.554069] rust_print: Critical message (level 2) with args
-[    1.559470] rust_print: Error message (level 3) with args
-[    1.565177] rust_print: Warning message (level 4) with args
-[    1.570458] rust_print: Notice message (level 5) with args
-[    1.575829] rust_print: Info message (level 6) with args
-[    1.581444] rust_print: A line that is continued with args
-[    1.586893] rust_print: 1
-[    1.586925] rust_print: "hello, world"
-[    1.592188] rust_print: [../samples/rust/rust_print_main.rs:35:5] c = 
-"hello, world"
-[    1.598511] rust_print: Arc<dyn Display> says 42
-[    1.598542] rust_print: Arc<dyn Display> says hello, world
-[    1.606445] rust_print: "hello, world"
+[   49.647656] ------------[ cut here ]------------
+[   49.647656] WARNING: kernel/time/timekeeping.c:821 at ktime_get+0xb8/0xd=
+8, CPU#0: swapper/0/0
+[   49.647656] Modules linked in: sha256 cfg80211 binfmt_misc fuse ipv6 snd=
+_soc_hdmi_codec rk805_pwrkey rockchip_saradc dwmac_rk stmmac_platform rtc_h=
+ym8563 snd_soc_es8328_i2c phy_rockchip_usbdp rockchipdrm stmmac snd_soc_es8=
+328 dw_hdmi_qp industrialio_triggered_buffer analogix_dp typec phy_rockchip=
+_samsung_hdptx kfifo_buf dw_dp rockchip_thermal dw_mipi_dsi spi_rockchip_sf=
+c phy_rockchip_naneng_combphy pcs_xpcs panfrost drm_shmem_helper gpu_sched =
+snd_soc_rockchip_sai snd_soc_simple_card drm_dp_aux_bus dw_hdmi snd_soc_sim=
+ple_card_utils rfkill_gpio rfkill snd_soc_core drm_display_helper snd_compr=
+ess cec drm_client_lib drm_dma_helper display_connector snd_pcm_dmaengine d=
+rm_kms_helper snd_pcm drm snd_timer snd backlight soundcore adc_keys
+[   49.647656] CPU: 0 UID: 0 PID: 0 Comm: swapper/0 Not tainted 6.19.0-rc2-=
+g7211b2cf9c08 #1 PREEMPT
+[   49.647656] Hardware name: Radxa ROCK 4D (DT)
+[   49.647656] pstate: 800000c5 (Nzcv daIF -PAN -UAO -TCO -DIT -SSBS BTYPE=
+=3D--)
+[   49.647656] pc : ktime_get+0xb8/0xd8
+[   49.647656] lr : tick_nohz_idle_enter+0x50/0x90
+[   49.647656] sp : ffffc1a17b573d50
+[   49.647656] x29: ffffc1a17b573d50 x28: 00000000fdf57ec0 x27: ffffc1a17b5=
+7b260
+[   49.647656] x26: ffffc1a17b57e000 x25: 0000000000000000 x24: 00000000000=
+000ea
+[   49.647656] x23: ffffc1a17a470000 x22: ffffc1a17b57ad00 x21: ffff3e6282a=
+25000
+[   49.647656] x20: ffff0003fdead5d8 x19: ffffc1a17b4885d8 x18: 00000000000=
+0000a
+[   49.647656] x17: ffff3e6282a25000 x16: ffff800080000000 x15: 00700ea231d=
+1d404
+[   49.647656] x14: 0000000000000396 x13: 0000000000000001 x12: 00000000000=
+00001
+[   49.647656] x11: 00000000000000c0 x10: 0000000000000aa0 x9 : ffffc1a17b5=
+73d00
+[   49.647656] x8 : ffffc1a17b586680 x7 : 0000000000000000 x6 : 00000000000=
+00000
+[   49.647656] x5 : 0000000000000004 x4 : ffffc1a17b57eb68 x3 : 00000000000=
+00000
+[   49.647656] x2 : ffffc1a17b48ec40 x1 : 0000000000000000 x0 : 00000000000=
+00001
+[   49.647656] Call trace:
+[   49.647656]  ktime_get+0xb8/0xd8 (P)
+[   49.647656]  tick_nohz_idle_enter+0x50/0x90
+[   49.647656]  do_idle+0x38/0x260
+[   49.647656]  cpu_startup_entry+0x38/0x40
+[   49.647656]  rest_init+0xd8/0xe0
+[   49.647656]  console_on_rootfs+0x0/0x6c
+[   49.647656]  __primary_switched+0x88/0x90
+[   49.647656] ---[ end trace 0000000000000000 ]---
 
+Greetings,
 
-[ ... ]
+-- Sebastian
 
-Welcome to postmarketOS
-Kernel 6.18.0 on an armv7l (/dev/ttyMSM0)
-samsung-expressatt login: user
-Password:
-login: can't set groups: Function not implemented
+--6lymdjenuo2frg5f
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
-Sorry for wasting everyone's time. I appreciate the helpful responses :)
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmlLBOIACgkQ2O7X88g7
++pozrhAApMMmy8xT4ahq3B0jtFJzrxLWqU867KlUv7R/8cLH6sl1Fota9BneSLun
+twK+/tqSQAdYZWw9eCKzfUNqkDcpQC7Uv2zST01Ee2WJ9iHqWza/ggvCU5kB1iuR
+UqmTwwXix3DgrgMjWwRN3HdcsUyelPBDESOZe6kJ2qOLLJspit/bcriVSTtKl0Mp
+X9RhreEDSBBJ0zuFyaA0Uli7vII9MIs5pK5ymR4Wy9rIYCWEcqPZezgpRcT7XZma
+3Vz4VMI+W6QwBCH2mpR7Gzz3yjgLmL1DIZg+GUWAYzqyoDeafPCN6Oj5++UkT4M6
+dGdnapJwA21jgbjNd3UOEi0kZpRAr53M4hGZ4uiofXTXm6iGgSk1d0+v4J8GVMrD
+SAP8DdR4e8brVx5Koc5Fyq/+XAiR0/ZBLRSHdnvWP3xh5e7Um5Gt74Hx82mKhXZz
+g6ml6bdM/5BXQ79Ywh4ASqgDJ4Hypq+QMvIbJ2FZLfYy0Vva50HLoQI1pBRmaD08
+l+TRAu4dPbQlSeAl4QZR4vcg/m3Q3216rwRR067hGp0rbCvFf0wXQ9Fq63pFZr+X
+bbC18uim5R04oUmkco0+5mB3OkCZ1K1Ug/H6SCfMq7grLqyu/nQwJISJgekFxlsU
+Ec4lPFWFTuUTkOXoe4tacLLAIzKO973eMUeEGHLHnH7ZgkcyRyM=
+=u5y6
+-----END PGP SIGNATURE-----
 
-
-Thanks,
-
-Rudraksha
-
+--6lymdjenuo2frg5f--
