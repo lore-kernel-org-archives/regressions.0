@@ -1,173 +1,186 @@
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7745E320A04
-	for <regressions@lists.linux.dev>; Wed, 24 Dec 2025 06:41:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98B0531AAA8
+	for <regressions@lists.linux.dev>; Wed, 24 Dec 2025 11:45:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766558501; cv=none; b=GKk7T0kHLY1BT0SWTm58gfWnIrgVVNOypj5PD7noos5PoLfbK1mXeY1CLBjy6kADb0cToBfNBsPgD190Y/PY3UbHto9ats/82U/Ket6GaDBypRX60LUZ9FWTnWX/jJGWuzIuqZ8gERW26kP1Rg7Xn+dyH+W6COFHDRI5bvicb78=
+	t=1766576708; cv=none; b=kMkuFvLGpD3CU5vb3V9bDQkM1ol9fV8xYEqYkj55rltw8DzdZS2J6jJWQzdpH7mE4pOpdSdngKr2hvhvXO/Jii649Kg+0paaxQ4FRi0d9FaJYOORQEPa5X7DnrGjvHmVLHgxV/DtogVw5tPvYwbJUuoxoLwM4OlvNpIxt1ThWkY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766558501; c=relaxed/simple;
-	bh=bq+vufCo8wRGet2ZSxB+C5P+sd2ZOC5WrglH1AMUSBc=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=tMubc6q6a63g+Uc097bbkiQUVAZMCbu+NPR6HGrN1QIZtexPK474pMGD67xfshKiwhPR96w+8eGVwoI+4awisN3sdn694mPo1AOjzTF9jdHNN7jac6VYvCN2iVQVovUOpRiL5oAkA4jt9bqQzuXhFQshHYLCgRpj0MAmXxAFMA0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Tt91CWRQ; arc=none smtp.client-ip=209.85.216.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1766576708; c=relaxed/simple;
+	bh=3BV0jKjx1on246YjKv71sRz1ldolo7+vNMC9Adftz7E=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FsrwbVb08eMNYV/TcB27wZPrb60rfVnZPE/gABJ/KrjE8lEq3WDVXJsVaIMTt7lL+GKKa4GZuiluU0lL2Eg1uPqPYWdMjGwHKVJNKFtC3sUooCX9bVcLm+yskQc8ZgtiVXm9qsCPFet/4wjf3kTWHul9CbxYnbMCdMfUkY8l2u8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hP9aJI8e; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tt91CWRQ"
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-34c21417781so5628192a91.3
-        for <regressions@lists.linux.dev>; Tue, 23 Dec 2025 22:41:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1766558500; x=1767163300; darn=lists.linux.dev;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=bq+vufCo8wRGet2ZSxB+C5P+sd2ZOC5WrglH1AMUSBc=;
-        b=Tt91CWRQgkxiEafDlNeO9uVhfrt5SVC3SnYKsk1Kmib4it2fz4aFqoKPwXvo+1xwrr
-         KkZ7zac4B/atFcFhiUQCETL3MFXVPsaGZqhvBaWx82ca/ynpMq5Kh5FBtWQ4xkV/MC4x
-         RMpXm4nKbdTe9kVlzm3XUTutfNWMBM0oUNvfPZtqsb5fdJqpFn3Wd0TtXbVJzuhYxuVq
-         g27NU/1PuSUa9yMNK7cT4ogFcQOoH+mkhW9UCrFOzmCjbf1nqDHj+EY33McZJ+m7OhHe
-         QcaDjc8RYG9XmsUKQ5MitAvseM9muLMwn8bPGmc5PZjSalGer7RMISbqANSSmfhgVUn4
-         ZQyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766558500; x=1767163300;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=bq+vufCo8wRGet2ZSxB+C5P+sd2ZOC5WrglH1AMUSBc=;
-        b=CPQKOnCFjWpo553fWO08xQk8hSxd+/9+a/bRdd8sodpRTB4GGfnwuPGJzyCrDm/f8u
-         laW0PQtSkjwxPDHOJmXwCeo2GIsDO4BBYO9KUw7kxaIxQa3bWHJE3v05nF813nT2OI1V
-         AbVJavLGRhjd/og+6Cb4cT1xriShLkV2rM7TLGFjSi8dlACr2fdq8J22V0xPEUZsEcSJ
-         siSteRY4EA8JVZVbpB6Zb0H2+MIZsPwdGOS3LEZFANsCf1g7egKmg+LOa/iW9ka9aRTQ
-         F3qNzGvey+cG5Roe4hbooynwOdHH4VSQICeS/ypD0KjmIS3mGkWySIOz5r6XZyCnz6/2
-         BJQw==
-X-Forwarded-Encrypted: i=1; AJvYcCVqc11HqtJRDJLIa4K/B82+cgzQutOcBhfIvL8NMu9BeCl9AhJ70MLZzztenrEGErGOxs1G66aYHz8EKQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0YyOOBFgIS4NZ7Rm8/lE5yZPJmTx4s87tMdzPp09fKiKSIOGfP77
-	t5z1Okny2FPsAw5SUjN8bbGZ9aZKQ7snD/hBPnxCy2g9eadh895VA74q
-X-Gm-Gg: AY/fxX4AzjxuMVjX5CvYYsMqjxtzOmFwKXZCL15dfkDkeeZ+CwM/Z6jglYI5h4QJp2l
-	OXJFvBQWadqIHBIawdPaa/wL+Pa5N4WCbeDNWh3ObHRGFTApJq5Aa/V+49Ejzyiyf89GtkXJENi
-	b4nTnltjooJZuXyABbykiEqhWahwETl46c9L5cz6WWwxQI7WK1BDhdc/utXx9m/jMTXDBRUyiye
-	LzB2UENAxqGuwdLvyiR081oUeMxhAI59XVGwSlzqQt74tmAd/GWej+Aa5yX3mP0ZoJgyU+uOMS0
-	ns3rK9wDpjhyPzs+TNa0Q9W1iYswc56BKwlC8c6NExAoLnOwIqDSwMoN4uPBJFJsBpzDoHfRKg2
-	7NXr/p4vCMFerDzqtvyvq3wdvzEBZbNYYpEDuQ/oTMVe2OTpH67C+V1JaDm9n5FPGaC3qhirwbk
-	MHKkkBYQa+928=
-X-Google-Smtp-Source: AGHT+IEgCZoyx2O75kxoEMfoJk/QK1exkq2h58uTDwsgQiSgm5wW6qFv0Xa6ZtRpSo46krMU5VkaMg==
-X-Received: by 2002:a17:90b:6c7:b0:34c:a29d:992a with SMTP id 98e67ed59e1d1-34e921d6cbamr13205903a91.34.1766558499526;
-        Tue, 23 Dec 2025 22:41:39 -0800 (PST)
-Received: from archie.me ([210.87.74.117])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-34e9223adf5sm14661068a91.14.2025.12.23.22.41.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Dec 2025 22:41:38 -0800 (PST)
-Received: by archie.me (Postfix, from userid 1000)
-	id ECD6A420A81F; Wed, 24 Dec 2025 13:41:35 +0700 (WIB)
-Date: Wed, 24 Dec 2025 13:41:35 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Documentation <linux-doc@vger.kernel.org>,
-	Linux Regressions <regressions@lists.linux.dev>
-Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Jonathan Corbet <corbet@lwn.net>
-Subject: [REGRESSION] Unexpected section title false positive warnings on
- DOC: directive
-Message-ID: <aUuLHzk5jdyBAxD7@archie.me>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hP9aJI8e"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04A88C4AF0B
+	for <regressions@lists.linux.dev>; Wed, 24 Dec 2025 11:45:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1766576708;
+	bh=3BV0jKjx1on246YjKv71sRz1ldolo7+vNMC9Adftz7E=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=hP9aJI8esHY/lGvIuAxzNfQNXyBKRRdiXjxf1ZVUEqj3FHzbhEkUWqKQ9l3Jl7zPf
+	 PKDpqHzty6UQX9+ck92Yjoqufq7OpdcN/W/6hIWEwZzgWv9bWnuKXDDj/3FnlKshDs
+	 xQuvGvE1DpwwsIXrjNyKTOqF3NC5ZNP1FIdf6yT86JPPac9CdE6sp5giE4eg4vPAiT
+	 OWda/6ak2JHPPag+r07p++gWvBKvYD73il60Qp1kYGlDWiBXC2VrrILBtwx27/MJzG
+	 yWw84cvHqdcs4shIfpJen61qSSs+Y7cZdLeTHip9J1k4nMYKFhsogBcTzHa10hUh0o
+	 IHKymG/yxeYGQ==
+Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-3ec46e3c65bso4551784fac.0
+        for <regressions@lists.linux.dev>; Wed, 24 Dec 2025 03:45:07 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCV1IAXZi9Ad+tynOJyt9KCSJd4VbRCosPiSe0Yy8KcQJ9gRaIxGIEjgTnFb+loFtWJIeMKFqesTYRE2pA==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzRhq62mZhH/b357t55wKQxHE0c38pKMVBNxPESaPBOp+V+io0y
+	YeyxaYAvX6aon0Bh3a0oDS3yhHhnlNz1SnDxdHuSJDdGPDKp9BYm6bmzKl0lMQg2+tczyW2Ijrx
+	S4sxKDmSuIQvaPGdg9+rVuVdBKh7znH0=
+X-Google-Smtp-Source: AGHT+IH8bs0hnvwab8a8QE4izhwJUAnePBHPRnVYLnQWXJxry4ZCwizRGyWMTQYslki3UIz+IKX5+SpJmw4xSp96s7E=
+X-Received: by 2002:a05:6820:1501:b0:659:9a49:8f94 with SMTP id
+ 006d021491bc7-65d0e9fdfc8mr5714162eaf.13.1766576707003; Wed, 24 Dec 2025
+ 03:45:07 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="8ZYU0AtWDRBkFeIb"
-Content-Disposition: inline
-
-
---8ZYU0AtWDRBkFeIb
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+References: <20251113012638.1362013-1-luriwen@kylinos.cn> <CAJZ5v0hwhVO6J2nS2-byU0+Lm8QbzdBzv4-X4eLNNUpTg+41Kg@mail.gmail.com>
+ <aUsAk0k1N9hw8IkY@venus>
+In-Reply-To: <aUsAk0k1N9hw8IkY@venus>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 24 Dec 2025 12:44:53 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0jha1VEHGfqYfu1G9WCwPEM=kDa-_c1LqchnkxAWbCBiw@mail.gmail.com>
+X-Gm-Features: AQt7F2ooQZ3bsUw0m64FunF4PQllQzkZZcoMIET_xTHQws74R8oxowivBi_Jq5k
+Message-ID: <CAJZ5v0jha1VEHGfqYfu1G9WCwPEM=kDa-_c1LqchnkxAWbCBiw@mail.gmail.com>
+Subject: Re: [REGRESSION] Re: [PATCH v3] PM: suspend: Make pm_test delay
+ interruptible by wakeup events
+To: Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Riwen Lu <luriwen@kylinos.cn>, pavel@kernel.org, 
+	lenb@kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	xiongxin <xiongxin@kylinos.cn>, regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Tue, Dec 23, 2025 at 10:09=E2=80=AFPM Sebastian Reichel
+<sebastian.reichel@collabora.com> wrote:
+>
+> Hi,
+>
+> On Fri, Nov 14, 2025 at 05:11:16PM +0100, Rafael J. Wysocki wrote:
+> > On Thu, Nov 13, 2025 at 2:26=E2=80=AFAM Riwen Lu <luriwen@kylinos.cn> w=
+rote:
+> > >
+> > > Modify the suspend_test() function to make the test delay can be
+> > > interrupted by wakeup events.
+> > >
+> > > This improves the responsiveness of the system during suspend testing
+> > > when wakeup events occur, allowing the suspend process to proceed
+> > > without waiting for the full test delay to complete when wakeup event=
+s
+> > > are detected.
+> > >
+> > > Additionally, using msleep() instead of mdelay() avoids potential sof=
+t
+> > > lockup "CPU stuck" issues when long test delays are configured.
+> > >
+> > > Co-developed-by: xiongxin <xiongxin@kylinos.cn>
+> > > Signed-off-by: xiongxin <xiongxin@kylinos.cn>
+> > > Signed-off-by: Riwen Lu <luriwen@kylinos.cn>
+> > > ---
+> > >  kernel/power/suspend.c | 6 +++++-
+> > >  1 file changed, 5 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/kernel/power/suspend.c b/kernel/power/suspend.c
+> > > index b4ca17c2fecf..1c2f777da367 100644
+> > > --- a/kernel/power/suspend.c
+> > > +++ b/kernel/power/suspend.c
+> > > @@ -344,10 +344,14 @@ MODULE_PARM_DESC(pm_test_delay,
+> > >  static int suspend_test(int level)
+> > >  {
+> > >  #ifdef CONFIG_PM_DEBUG
+> > > +       int i;
+> > > +
+> > >         if (pm_test_level =3D=3D level) {
+> > >                 pr_info("suspend debug: Waiting for %d second(s).\n",
+> > >                                 pm_test_delay);
+> > > -               mdelay(pm_test_delay * 1000);
+> > > +               for (i =3D 0; i < pm_test_delay && !pm_wakeup_pending=
+(); i++)
+> > > +                       msleep(1000);
+> > > +
+> > >                 return 1;
+> > >         }
+> > >  #endif /* !CONFIG_PM_DEBUG */
+> > > --
+> >
+> > Applied as 6.19 material, thanks!
+>
+> This is now upstream as a10ad1b10402 ("PM: suspend: Make pm_test delay in=
+terruptible by wakeup events").
+> When doing the following PM debugging test on ROCK 4D on v6.19-rc2
+>
+> echo N > /sys/module/printk/parameters/console_suspend
+> echo 1 > /sys/power/pm_print_times
+> echo 1 > /sys/power/pm_debug_messages
+> echo core > /sys/power/pm_test
+> echo mem > /sys/power/state
+>
+> I see the following error triggered reliably, which did not happen on 6.1=
+8
+> and no longer appears after reverting this patch:
+>
+> [   49.647656] ------------[ cut here ]------------
+> [   49.647656] WARNING: kernel/time/timekeeping.c:821 at ktime_get+0xb8/0=
+xd8, CPU#0: swapper/0/0
+> [   49.647656] Modules linked in: sha256 cfg80211 binfmt_misc fuse ipv6 s=
+nd_soc_hdmi_codec rk805_pwrkey rockchip_saradc dwmac_rk stmmac_platform rtc=
+_hym8563 snd_soc_es8328_i2c phy_rockchip_usbdp rockchipdrm stmmac snd_soc_e=
+s8328 dw_hdmi_qp industrialio_triggered_buffer analogix_dp typec phy_rockch=
+ip_samsung_hdptx kfifo_buf dw_dp rockchip_thermal dw_mipi_dsi spi_rockchip_=
+sfc phy_rockchip_naneng_combphy pcs_xpcs panfrost drm_shmem_helper gpu_sche=
+d snd_soc_rockchip_sai snd_soc_simple_card drm_dp_aux_bus dw_hdmi snd_soc_s=
+imple_card_utils rfkill_gpio rfkill snd_soc_core drm_display_helper snd_com=
+press cec drm_client_lib drm_dma_helper display_connector snd_pcm_dmaengine=
+ drm_kms_helper snd_pcm drm snd_timer snd backlight soundcore adc_keys
+> [   49.647656] CPU: 0 UID: 0 PID: 0 Comm: swapper/0 Not tainted 6.19.0-rc=
+2-g7211b2cf9c08 #1 PREEMPT
+> [   49.647656] Hardware name: Radxa ROCK 4D (DT)
+> [   49.647656] pstate: 800000c5 (Nzcv daIF -PAN -UAO -TCO -DIT -SSBS BTYP=
+E=3D--)
+> [   49.647656] pc : ktime_get+0xb8/0xd8
+> [   49.647656] lr : tick_nohz_idle_enter+0x50/0x90
+> [   49.647656] sp : ffffc1a17b573d50
+> [   49.647656] x29: ffffc1a17b573d50 x28: 00000000fdf57ec0 x27: ffffc1a17=
+b57b260
+> [   49.647656] x26: ffffc1a17b57e000 x25: 0000000000000000 x24: 000000000=
+00000ea
+> [   49.647656] x23: ffffc1a17a470000 x22: ffffc1a17b57ad00 x21: ffff3e628=
+2a25000
+> [   49.647656] x20: ffff0003fdead5d8 x19: ffffc1a17b4885d8 x18: 000000000=
+000000a
+> [   49.647656] x17: ffff3e6282a25000 x16: ffff800080000000 x15: 00700ea23=
+1d1d404
+> [   49.647656] x14: 0000000000000396 x13: 0000000000000001 x12: 000000000=
+0000001
+> [   49.647656] x11: 00000000000000c0 x10: 0000000000000aa0 x9 : ffffc1a17=
+b573d00
+> [   49.647656] x8 : ffffc1a17b586680 x7 : 0000000000000000 x6 : 000000000=
+0000000
+> [   49.647656] x5 : 0000000000000004 x4 : ffffc1a17b57eb68 x3 : 000000000=
+0000000
+> [   49.647656] x2 : ffffc1a17b48ec40 x1 : 0000000000000000 x0 : 000000000=
+0000001
+> [   49.647656] Call trace:
+> [   49.647656]  ktime_get+0xb8/0xd8 (P)
+> [   49.647656]  tick_nohz_idle_enter+0x50/0x90
+> [   49.647656]  do_idle+0x38/0x260
+> [   49.647656]  cpu_startup_entry+0x38/0x40
+> [   49.647656]  rest_init+0xd8/0xe0
+> [   49.647656]  console_on_rootfs+0x0/0x6c
+> [   49.647656]  __primary_switched+0x88/0x90
+> [   49.647656] ---[ end trace 0000000000000000 ]---
 
-Building htmldocs on docs-next currenly produces about 50 new warnings; whi=
-ch
-all of them are unexpected section title on DOC: kernel-doc directive, like:
+msleep() is not suitable for the "core" level testing.
 
-/home/bagas/repo/linux-kernel/Documentation/driver-api/target:25: ./drivers=
-/target/target_core_user.c:35: CRITICAL: Unexpected section title.
+Change msleep() in suspend_test() back to mdelay() and the backtrace
+should go away.
 
-Userspace I/O
-------------- [docutils]
-WARNING: kernel-doc 'scripts/kernel-doc.py -rst -enable-lineno -function 'U=
-serspace I/O' ./drivers/target/target_core_user.c' processing failed with: =
-SystemMessage('/home/bagas/repo/linux-kernel/Documentation/driver-api/targe=
-t:25: ./drivers/target/target_core_user.c:35: (SEVERE/4) Unexpected section=
- title.\n\nUserspace I/O\n-------------')
-/home/bagas/repo/linux-kernel/Documentation/driver-api/target:28: ./include=
-/uapi/linux/target_core_user.h:14: CRITICAL: Unexpected section title.
-
-Ring Design
------------ [docutils]
-WARNING: kernel-doc 'scripts/kernel-doc.py -rst -enable-lineno -function 'R=
-ing Design' ./include/uapi/linux/target_core_user.h' processing failed with=
-: SystemMessage('/home/bagas/repo/linux-kernel/Documentation/driver-api/tar=
-get:28: ./include/uapi/linux/target_core_user.h:14: (SEVERE/4) Unexpected s=
-ection title.\n\nRing Design\n-----------')
-
-These turns out to be false-positive as touching the source file in question
-(e.g. drivers/target/target_core_user.c) and making htmldocs again makes the
-regression go away for the corresponding docs.
-
-Bisection (with git-bisect(1)) points to bea467aa5da1f5 ("docs: media:
-v4l2-ioctl.h: document two global variables") as the first bad commit, even
-though that I suspect that bdd1cf87847ff6 ("kernel-doc: add support to hand=
-le
-DEFINE_ variables") may be the actual culprit (regressor).
-
-The full bisection log:
-
-git bisect start
-# status: waiting for both good and bad commits
-# bad: [7f3c3a0a9103dc92c823f27db3284ac2914e7558] MAINTAINERS: Add doc file=
-s on real-time support to Real-time Linux
-git bisect bad 7f3c3a0a9103dc92c823f27db3284ac2914e7558
-# status: waiting for good commit(s), bad commit known
-# good: [9448598b22c50c8a5bb77a9103e2d49f134c9578] Linux 6.19-rc2
-git bisect good 9448598b22c50c8a5bb77a9103e2d49f134c9578
-# bad: [5188f6bd408f937d81c0c37eb59ddc1035cd912c] docs: admin: devices: /de=
-v/sr<N> for SCSI CD-ROM
-git bisect bad 5188f6bd408f937d81c0c37eb59ddc1035cd912c
-# bad: [bea467aa5da1f51834501da3ac3c40204027a221] docs: media: v4l2-ioctl.h=
-: document two global variables
-git bisect bad bea467aa5da1f51834501da3ac3c40204027a221
-# good: [82e87387f6e2af9f69a7528733e953fd22e815aa] Documentation: kernel-ha=
-cking: Remove comma
-git bisect good 82e87387f6e2af9f69a7528733e953fd22e815aa
-# good: [bdd1cf87847ff6aaadd53a185209d2bb2db72165] kernel-doc: add support =
-to handle DEFINE_ variables
-git bisect good bdd1cf87847ff6aaadd53a185209d2bb2db72165
-# first bad commit: [bea467aa5da1f51834501da3ac3c40204027a221] docs: media:=
- v4l2-ioctl.h: document two global variables
-
-Mauro: Since you're the author of regressor, can you please take a look on =
-it?
-
-Thanks.
-
-#regzbot introduced: bea467aa5da1f5
-
---=20
-An old man doll... just what I always wanted! - Clara
-
---8ZYU0AtWDRBkFeIb
-Content-Type: application/pgp-signature; name=signature.asc
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaUuLFgAKCRD2uYlJVVFO
-o83XAQCJcTXukZzv0/X0PWBYI57OBqNpUtvshGIWlzzmT8UfxQD+Ip7xjplmoYLi
-6BbKfNq/aBq8OqXAEbKfzatPtLOg+gU=
-=AUip
------END PGP SIGNATURE-----
-
---8ZYU0AtWDRBkFeIb--
+I'll send a patch for that later this week unless someone beats me to it.
