@@ -1,54 +1,76 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD996286897
-	for <regressions@lists.linux.dev>; Tue, 23 Dec 2025 21:09:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766524144; cv=pass; b=OVaT78JbRKLPb10BGxpcQzChAI9uEGZyvw3JksP6TMGiiKnpJ66DZ90JCNG+2+b1IrQIXPwD2LOd3C6TaimaB3PDTgqRFd7CSjyhn5JMDehIsP3GJYKEyXPRihKYz5EPynMb/JFjIQEC//2QvftURr16e9EgKyszqrHB6GHRAhg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766524144; c=relaxed/simple;
-	bh=VXWNJbjeW+XfWfdP+JpgsxNRHGEP7GNhC0twpJ1rQp8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gwucXWfY4MNy4ovBt8W7XHvQ93EV7o/42u1HgTMs07o18o4ZOdPpR4TdQ6UxmDhG9wqbTEaslZ7a9tttUVD0ge7W6n04WPM1pX/KDDFlTUFBPozQpEJ4SB9oXZO1rOWOFAptBiiUas/VuRQONeetNaC9UdXYWAk85gojNzsvX5Y=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b=iwtqE6lq; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7745E320A04
+	for <regressions@lists.linux.dev>; Wed, 24 Dec 2025 06:41:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1766558501; cv=none; b=GKk7T0kHLY1BT0SWTm58gfWnIrgVVNOypj5PD7noos5PoLfbK1mXeY1CLBjy6kADb0cToBfNBsPgD190Y/PY3UbHto9ats/82U/Ket6GaDBypRX60LUZ9FWTnWX/jJGWuzIuqZ8gERW26kP1Rg7Xn+dyH+W6COFHDRI5bvicb78=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1766558501; c=relaxed/simple;
+	bh=bq+vufCo8wRGet2ZSxB+C5P+sd2ZOC5WrglH1AMUSBc=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=tMubc6q6a63g+Uc097bbkiQUVAZMCbu+NPR6HGrN1QIZtexPK474pMGD67xfshKiwhPR96w+8eGVwoI+4awisN3sdn694mPo1AOjzTF9jdHNN7jac6VYvCN2iVQVovUOpRiL5oAkA4jt9bqQzuXhFQshHYLCgRpj0MAmXxAFMA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Tt91CWRQ; arc=none smtp.client-ip=209.85.216.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b="iwtqE6lq"
-ARC-Seal: i=1; a=rsa-sha256; t=1766524141; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=ep2yqpwPQgA6IwrCtoFQ2hC0GxvjsB9L5JOziCiJYLxsnrkiVWOtUoeni1Wn2uvDlIjasrq+7PIUM1k8UF903fzcyWgwnrUXgcMQZIswAItAvdfC9wkKw1zc+0iLU+dCAe+boGIM878J8Bf8H+BSd5ALool6tIIxrku9SkEA8Mk=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1766524141; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=s8NAUT9bQs7qbFSasLydr/oelzy5DvyIfqkHKjJGVGI=; 
-	b=Ne3L1koMO7S1Hp8R07idwRkW03ZzUxDyMnSb5k0RvqIJei4NiREZmWNZPGvTXdr7JVz0JdNlCWK3yKEAInP0351bnBaU2y+MDXhkVjccaYLB4C/HiagOMWP2IAWp1nKCRtstBmMSpkd8WsvFt1VueoEk5uqprrATNjft3rXhZqM=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=sebastian.reichel@collabora.com;
-	dmarc=pass header.from=<sebastian.reichel@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1766524141;
-	s=zohomail; d=collabora.com; i=sebastian.reichel@collabora.com;
-	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
-	bh=s8NAUT9bQs7qbFSasLydr/oelzy5DvyIfqkHKjJGVGI=;
-	b=iwtqE6lq4CdFM+EPyvIlThYfrkEAr+jJapENLUeODZR+czZs6+rlcD6tyya2Rh8n
-	qrNSgLhPcmk02RWyF+WLrJY5FcQ2GxYuaItEwWJGfAMVMDI18mQeGWth3iwFeLvLsvI
-	SZV6obOXl/vp1HmofsZqqmdiHOhCEsTLiFKH8xFc=
-Received: by mx.zohomail.com with SMTPS id 1766524138042730.0153141909041;
-	Tue, 23 Dec 2025 13:08:58 -0800 (PST)
-Received: by venus (Postfix, from userid 1000)
-	id E3BEE18197C; Tue, 23 Dec 2025 22:08:54 +0100 (CET)
-Date: Tue, 23 Dec 2025 22:08:54 +0100
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Riwen Lu <luriwen@kylinos.cn>, pavel@kernel.org, lenb@kernel.org, 
-	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, xiongxin <xiongxin@kylinos.cn>, 
-	regressions@lists.linux.dev
-Subject: [REGRESSION] Re: [PATCH v3] PM: suspend: Make pm_test delay
- interruptible by wakeup events
-Message-ID: <aUsAk0k1N9hw8IkY@venus>
-References: <20251113012638.1362013-1-luriwen@kylinos.cn>
- <CAJZ5v0hwhVO6J2nS2-byU0+Lm8QbzdBzv4-X4eLNNUpTg+41Kg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tt91CWRQ"
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-34c21417781so5628192a91.3
+        for <regressions@lists.linux.dev>; Tue, 23 Dec 2025 22:41:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1766558500; x=1767163300; darn=lists.linux.dev;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=bq+vufCo8wRGet2ZSxB+C5P+sd2ZOC5WrglH1AMUSBc=;
+        b=Tt91CWRQgkxiEafDlNeO9uVhfrt5SVC3SnYKsk1Kmib4it2fz4aFqoKPwXvo+1xwrr
+         KkZ7zac4B/atFcFhiUQCETL3MFXVPsaGZqhvBaWx82ca/ynpMq5Kh5FBtWQ4xkV/MC4x
+         RMpXm4nKbdTe9kVlzm3XUTutfNWMBM0oUNvfPZtqsb5fdJqpFn3Wd0TtXbVJzuhYxuVq
+         g27NU/1PuSUa9yMNK7cT4ogFcQOoH+mkhW9UCrFOzmCjbf1nqDHj+EY33McZJ+m7OhHe
+         QcaDjc8RYG9XmsUKQ5MitAvseM9muLMwn8bPGmc5PZjSalGer7RMISbqANSSmfhgVUn4
+         ZQyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1766558500; x=1767163300;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=bq+vufCo8wRGet2ZSxB+C5P+sd2ZOC5WrglH1AMUSBc=;
+        b=CPQKOnCFjWpo553fWO08xQk8hSxd+/9+a/bRdd8sodpRTB4GGfnwuPGJzyCrDm/f8u
+         laW0PQtSkjwxPDHOJmXwCeo2GIsDO4BBYO9KUw7kxaIxQa3bWHJE3v05nF813nT2OI1V
+         AbVJavLGRhjd/og+6Cb4cT1xriShLkV2rM7TLGFjSi8dlACr2fdq8J22V0xPEUZsEcSJ
+         siSteRY4EA8JVZVbpB6Zb0H2+MIZsPwdGOS3LEZFANsCf1g7egKmg+LOa/iW9ka9aRTQ
+         F3qNzGvey+cG5Roe4hbooynwOdHH4VSQICeS/ypD0KjmIS3mGkWySIOz5r6XZyCnz6/2
+         BJQw==
+X-Forwarded-Encrypted: i=1; AJvYcCVqc11HqtJRDJLIa4K/B82+cgzQutOcBhfIvL8NMu9BeCl9AhJ70MLZzztenrEGErGOxs1G66aYHz8EKQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0YyOOBFgIS4NZ7Rm8/lE5yZPJmTx4s87tMdzPp09fKiKSIOGfP77
+	t5z1Okny2FPsAw5SUjN8bbGZ9aZKQ7snD/hBPnxCy2g9eadh895VA74q
+X-Gm-Gg: AY/fxX4AzjxuMVjX5CvYYsMqjxtzOmFwKXZCL15dfkDkeeZ+CwM/Z6jglYI5h4QJp2l
+	OXJFvBQWadqIHBIawdPaa/wL+Pa5N4WCbeDNWh3ObHRGFTApJq5Aa/V+49Ejzyiyf89GtkXJENi
+	b4nTnltjooJZuXyABbykiEqhWahwETl46c9L5cz6WWwxQI7WK1BDhdc/utXx9m/jMTXDBRUyiye
+	LzB2UENAxqGuwdLvyiR081oUeMxhAI59XVGwSlzqQt74tmAd/GWej+Aa5yX3mP0ZoJgyU+uOMS0
+	ns3rK9wDpjhyPzs+TNa0Q9W1iYswc56BKwlC8c6NExAoLnOwIqDSwMoN4uPBJFJsBpzDoHfRKg2
+	7NXr/p4vCMFerDzqtvyvq3wdvzEBZbNYYpEDuQ/oTMVe2OTpH67C+V1JaDm9n5FPGaC3qhirwbk
+	MHKkkBYQa+928=
+X-Google-Smtp-Source: AGHT+IEgCZoyx2O75kxoEMfoJk/QK1exkq2h58uTDwsgQiSgm5wW6qFv0Xa6ZtRpSo46krMU5VkaMg==
+X-Received: by 2002:a17:90b:6c7:b0:34c:a29d:992a with SMTP id 98e67ed59e1d1-34e921d6cbamr13205903a91.34.1766558499526;
+        Tue, 23 Dec 2025 22:41:39 -0800 (PST)
+Received: from archie.me ([210.87.74.117])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-34e9223adf5sm14661068a91.14.2025.12.23.22.41.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Dec 2025 22:41:38 -0800 (PST)
+Received: by archie.me (Postfix, from userid 1000)
+	id ECD6A420A81F; Wed, 24 Dec 2025 13:41:35 +0700 (WIB)
+Date: Wed, 24 Dec 2025 13:41:35 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Documentation <linux-doc@vger.kernel.org>,
+	Linux Regressions <regressions@lists.linux.dev>
+Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Jonathan Corbet <corbet@lwn.net>
+Subject: [REGRESSION] Unexpected section title false positive warnings on
+ DOC: directive
+Message-ID: <aUuLHzk5jdyBAxD7@archie.me>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -56,158 +78,96 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="6lymdjenuo2frg5f"
+	protocol="application/pgp-signature"; boundary="8ZYU0AtWDRBkFeIb"
 Content-Disposition: inline
-In-Reply-To: <CAJZ5v0hwhVO6J2nS2-byU0+Lm8QbzdBzv4-X4eLNNUpTg+41Kg@mail.gmail.com>
-X-Zoho-Virus-Status: 1
-X-Zoho-Virus-Status: 1
-X-Zoho-AV-Stamp: zmail-av-1.5.1/266.517.63
-X-ZohoMailClient: External
 
 
---6lymdjenuo2frg5f
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
+--8ZYU0AtWDRBkFeIb
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Subject: [REGRESSION] Re: [PATCH v3] PM: suspend: Make pm_test delay
- interruptible by wakeup events
-MIME-Version: 1.0
 
 Hi,
 
-On Fri, Nov 14, 2025 at 05:11:16PM +0100, Rafael J. Wysocki wrote:
-> On Thu, Nov 13, 2025 at 2:26=E2=80=AFAM Riwen Lu <luriwen@kylinos.cn> wro=
-te:
-> >
-> > Modify the suspend_test() function to make the test delay can be
-> > interrupted by wakeup events.
-> >
-> > This improves the responsiveness of the system during suspend testing
-> > when wakeup events occur, allowing the suspend process to proceed
-> > without waiting for the full test delay to complete when wakeup events
-> > are detected.
-> >
-> > Additionally, using msleep() instead of mdelay() avoids potential soft
-> > lockup "CPU stuck" issues when long test delays are configured.
-> >
-> > Co-developed-by: xiongxin <xiongxin@kylinos.cn>
-> > Signed-off-by: xiongxin <xiongxin@kylinos.cn>
-> > Signed-off-by: Riwen Lu <luriwen@kylinos.cn>
-> > ---
-> >  kernel/power/suspend.c | 6 +++++-
-> >  1 file changed, 5 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/kernel/power/suspend.c b/kernel/power/suspend.c
-> > index b4ca17c2fecf..1c2f777da367 100644
-> > --- a/kernel/power/suspend.c
-> > +++ b/kernel/power/suspend.c
-> > @@ -344,10 +344,14 @@ MODULE_PARM_DESC(pm_test_delay,
-> >  static int suspend_test(int level)
-> >  {
-> >  #ifdef CONFIG_PM_DEBUG
-> > +       int i;
-> > +
-> >         if (pm_test_level =3D=3D level) {
-> >                 pr_info("suspend debug: Waiting for %d second(s).\n",
-> >                                 pm_test_delay);
-> > -               mdelay(pm_test_delay * 1000);
-> > +               for (i =3D 0; i < pm_test_delay && !pm_wakeup_pending()=
-; i++)
-> > +                       msleep(1000);
-> > +
-> >                 return 1;
-> >         }
-> >  #endif /* !CONFIG_PM_DEBUG */
-> > --
->=20
-> Applied as 6.19 material, thanks!
+Building htmldocs on docs-next currenly produces about 50 new warnings; whi=
+ch
+all of them are unexpected section title on DOC: kernel-doc directive, like:
 
-This is now upstream as a10ad1b10402 ("PM: suspend: Make pm_test delay inte=
-rruptible by wakeup events").
-When doing the following PM debugging test on ROCK 4D on v6.19-rc2
+/home/bagas/repo/linux-kernel/Documentation/driver-api/target:25: ./drivers=
+/target/target_core_user.c:35: CRITICAL: Unexpected section title.
 
-echo N > /sys/module/printk/parameters/console_suspend
-echo 1 > /sys/power/pm_print_times
-echo 1 > /sys/power/pm_debug_messages
-echo core > /sys/power/pm_test
-echo mem > /sys/power/state
+Userspace I/O
+------------- [docutils]
+WARNING: kernel-doc 'scripts/kernel-doc.py -rst -enable-lineno -function 'U=
+serspace I/O' ./drivers/target/target_core_user.c' processing failed with: =
+SystemMessage('/home/bagas/repo/linux-kernel/Documentation/driver-api/targe=
+t:25: ./drivers/target/target_core_user.c:35: (SEVERE/4) Unexpected section=
+ title.\n\nUserspace I/O\n-------------')
+/home/bagas/repo/linux-kernel/Documentation/driver-api/target:28: ./include=
+/uapi/linux/target_core_user.h:14: CRITICAL: Unexpected section title.
 
-I see the following error triggered reliably, which did not happen on 6.18
-and no longer appears after reverting this patch:
+Ring Design
+----------- [docutils]
+WARNING: kernel-doc 'scripts/kernel-doc.py -rst -enable-lineno -function 'R=
+ing Design' ./include/uapi/linux/target_core_user.h' processing failed with=
+: SystemMessage('/home/bagas/repo/linux-kernel/Documentation/driver-api/tar=
+get:28: ./include/uapi/linux/target_core_user.h:14: (SEVERE/4) Unexpected s=
+ection title.\n\nRing Design\n-----------')
 
-[   49.647656] ------------[ cut here ]------------
-[   49.647656] WARNING: kernel/time/timekeeping.c:821 at ktime_get+0xb8/0xd=
-8, CPU#0: swapper/0/0
-[   49.647656] Modules linked in: sha256 cfg80211 binfmt_misc fuse ipv6 snd=
-_soc_hdmi_codec rk805_pwrkey rockchip_saradc dwmac_rk stmmac_platform rtc_h=
-ym8563 snd_soc_es8328_i2c phy_rockchip_usbdp rockchipdrm stmmac snd_soc_es8=
-328 dw_hdmi_qp industrialio_triggered_buffer analogix_dp typec phy_rockchip=
-_samsung_hdptx kfifo_buf dw_dp rockchip_thermal dw_mipi_dsi spi_rockchip_sf=
-c phy_rockchip_naneng_combphy pcs_xpcs panfrost drm_shmem_helper gpu_sched =
-snd_soc_rockchip_sai snd_soc_simple_card drm_dp_aux_bus dw_hdmi snd_soc_sim=
-ple_card_utils rfkill_gpio rfkill snd_soc_core drm_display_helper snd_compr=
-ess cec drm_client_lib drm_dma_helper display_connector snd_pcm_dmaengine d=
-rm_kms_helper snd_pcm drm snd_timer snd backlight soundcore adc_keys
-[   49.647656] CPU: 0 UID: 0 PID: 0 Comm: swapper/0 Not tainted 6.19.0-rc2-=
-g7211b2cf9c08 #1 PREEMPT
-[   49.647656] Hardware name: Radxa ROCK 4D (DT)
-[   49.647656] pstate: 800000c5 (Nzcv daIF -PAN -UAO -TCO -DIT -SSBS BTYPE=
-=3D--)
-[   49.647656] pc : ktime_get+0xb8/0xd8
-[   49.647656] lr : tick_nohz_idle_enter+0x50/0x90
-[   49.647656] sp : ffffc1a17b573d50
-[   49.647656] x29: ffffc1a17b573d50 x28: 00000000fdf57ec0 x27: ffffc1a17b5=
-7b260
-[   49.647656] x26: ffffc1a17b57e000 x25: 0000000000000000 x24: 00000000000=
-000ea
-[   49.647656] x23: ffffc1a17a470000 x22: ffffc1a17b57ad00 x21: ffff3e6282a=
-25000
-[   49.647656] x20: ffff0003fdead5d8 x19: ffffc1a17b4885d8 x18: 00000000000=
-0000a
-[   49.647656] x17: ffff3e6282a25000 x16: ffff800080000000 x15: 00700ea231d=
-1d404
-[   49.647656] x14: 0000000000000396 x13: 0000000000000001 x12: 00000000000=
-00001
-[   49.647656] x11: 00000000000000c0 x10: 0000000000000aa0 x9 : ffffc1a17b5=
-73d00
-[   49.647656] x8 : ffffc1a17b586680 x7 : 0000000000000000 x6 : 00000000000=
-00000
-[   49.647656] x5 : 0000000000000004 x4 : ffffc1a17b57eb68 x3 : 00000000000=
-00000
-[   49.647656] x2 : ffffc1a17b48ec40 x1 : 0000000000000000 x0 : 00000000000=
-00001
-[   49.647656] Call trace:
-[   49.647656]  ktime_get+0xb8/0xd8 (P)
-[   49.647656]  tick_nohz_idle_enter+0x50/0x90
-[   49.647656]  do_idle+0x38/0x260
-[   49.647656]  cpu_startup_entry+0x38/0x40
-[   49.647656]  rest_init+0xd8/0xe0
-[   49.647656]  console_on_rootfs+0x0/0x6c
-[   49.647656]  __primary_switched+0x88/0x90
-[   49.647656] ---[ end trace 0000000000000000 ]---
+These turns out to be false-positive as touching the source file in question
+(e.g. drivers/target/target_core_user.c) and making htmldocs again makes the
+regression go away for the corresponding docs.
 
-Greetings,
+Bisection (with git-bisect(1)) points to bea467aa5da1f5 ("docs: media:
+v4l2-ioctl.h: document two global variables") as the first bad commit, even
+though that I suspect that bdd1cf87847ff6 ("kernel-doc: add support to hand=
+le
+DEFINE_ variables") may be the actual culprit (regressor).
 
--- Sebastian
+The full bisection log:
 
---6lymdjenuo2frg5f
-Content-Type: application/pgp-signature; name="signature.asc"
+git bisect start
+# status: waiting for both good and bad commits
+# bad: [7f3c3a0a9103dc92c823f27db3284ac2914e7558] MAINTAINERS: Add doc file=
+s on real-time support to Real-time Linux
+git bisect bad 7f3c3a0a9103dc92c823f27db3284ac2914e7558
+# status: waiting for good commit(s), bad commit known
+# good: [9448598b22c50c8a5bb77a9103e2d49f134c9578] Linux 6.19-rc2
+git bisect good 9448598b22c50c8a5bb77a9103e2d49f134c9578
+# bad: [5188f6bd408f937d81c0c37eb59ddc1035cd912c] docs: admin: devices: /de=
+v/sr<N> for SCSI CD-ROM
+git bisect bad 5188f6bd408f937d81c0c37eb59ddc1035cd912c
+# bad: [bea467aa5da1f51834501da3ac3c40204027a221] docs: media: v4l2-ioctl.h=
+: document two global variables
+git bisect bad bea467aa5da1f51834501da3ac3c40204027a221
+# good: [82e87387f6e2af9f69a7528733e953fd22e815aa] Documentation: kernel-ha=
+cking: Remove comma
+git bisect good 82e87387f6e2af9f69a7528733e953fd22e815aa
+# good: [bdd1cf87847ff6aaadd53a185209d2bb2db72165] kernel-doc: add support =
+to handle DEFINE_ variables
+git bisect good bdd1cf87847ff6aaadd53a185209d2bb2db72165
+# first bad commit: [bea467aa5da1f51834501da3ac3c40204027a221] docs: media:=
+ v4l2-ioctl.h: document two global variables
+
+Mauro: Since you're the author of regressor, can you please take a look on =
+it?
+
+Thanks.
+
+#regzbot introduced: bea467aa5da1f5
+
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--8ZYU0AtWDRBkFeIb
+Content-Type: application/pgp-signature; name=signature.asc
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmlLBOIACgkQ2O7X88g7
-+pozrhAApMMmy8xT4ahq3B0jtFJzrxLWqU867KlUv7R/8cLH6sl1Fota9BneSLun
-twK+/tqSQAdYZWw9eCKzfUNqkDcpQC7Uv2zST01Ee2WJ9iHqWza/ggvCU5kB1iuR
-UqmTwwXix3DgrgMjWwRN3HdcsUyelPBDESOZe6kJ2qOLLJspit/bcriVSTtKl0Mp
-X9RhreEDSBBJ0zuFyaA0Uli7vII9MIs5pK5ymR4Wy9rIYCWEcqPZezgpRcT7XZma
-3Vz4VMI+W6QwBCH2mpR7Gzz3yjgLmL1DIZg+GUWAYzqyoDeafPCN6Oj5++UkT4M6
-dGdnapJwA21jgbjNd3UOEi0kZpRAr53M4hGZ4uiofXTXm6iGgSk1d0+v4J8GVMrD
-SAP8DdR4e8brVx5Koc5Fyq/+XAiR0/ZBLRSHdnvWP3xh5e7Um5Gt74Hx82mKhXZz
-g6ml6bdM/5BXQ79Ywh4ASqgDJ4Hypq+QMvIbJ2FZLfYy0Vva50HLoQI1pBRmaD08
-l+TRAu4dPbQlSeAl4QZR4vcg/m3Q3216rwRR067hGp0rbCvFf0wXQ9Fq63pFZr+X
-bbC18uim5R04oUmkco0+5mB3OkCZ1K1Ug/H6SCfMq7grLqyu/nQwJISJgekFxlsU
-Ec4lPFWFTuUTkOXoe4tacLLAIzKO973eMUeEGHLHnH7ZgkcyRyM=
-=u5y6
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaUuLFgAKCRD2uYlJVVFO
+o83XAQCJcTXukZzv0/X0PWBYI57OBqNpUtvshGIWlzzmT8UfxQD+Ip7xjplmoYLi
+6BbKfNq/aBq8OqXAEbKfzatPtLOg+gU=
+=AUip
 -----END PGP SIGNATURE-----
 
---6lymdjenuo2frg5f--
+--8ZYU0AtWDRBkFeIb--
