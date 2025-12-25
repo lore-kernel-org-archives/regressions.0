@@ -1,158 +1,159 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BF9123DEB6
-	for <regressions@lists.linux.dev>; Thu, 25 Dec 2025 09:33:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+Received: from vmicros1.altlinux.org (vmicros1.altlinux.org [194.107.17.57])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A46674BE1
+	for <regressions@lists.linux.dev>; Thu, 25 Dec 2025 22:38:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.107.17.57
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766655227; cv=none; b=b4EFt+dVpy2NDt3L2SNaYxOTAQaaI1EtSXGz4slRspIoDt0CJTxDhKakRP3zlGT29t4p1SDgMpzn8WtnRy1c/us5gXllb/giBFd8IKIaidru1PHC3g958Y7mzHMNe/m970ucqJkjb4i+05HoSP2qdFwXQnmwNNaltHwrg3aGxRI=
+	t=1766702338; cv=none; b=YP9LRtVCJc/rbNzE/vOA2eOWqljcsE3IyabTlAJnmlVZPOsQ1ABqnjOxAPSnmF9hDnaN4f6FPX6VzfW8z9gQ8j348cq+oM0HkwZhBYM0wcrKEDZAMNEnMtrdofQHAja2NU6iJ4+4GO6qBmSlRbbnOtX83pnYLxD7eK0hG6stfck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766655227; c=relaxed/simple;
-	bh=w1xapEhESvrRXoIIo2QFizy4DiFHNCF+imb/w+yvE0I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=g/e6M7dyldwDd/RSMbFdmCVP9ODIwNyyjBTGIt2v23cOf1W0qFOq2URW4vNKyI0gnae18jfPMptyhy+mr7JyoL4qwBV+ZWJoOOjfki65/lkAJr2uimO6aBUMWT3Z6Rqw0cEUlEkGjZJMl4NAFAWO1bVWiMifVfJXOQvXXT/59mg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: c8f91a62e17411f0a38c85956e01ac42-20251225
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.6,REQID:61cee32f-9124-4909-8761-4e06d1000f00,IP:0,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
-	elease,TS:0
-X-CID-META: VersionHash:a9d874c,CLOUDID:19a89b60e5c5e2880c988ccd0e7200f1,BulkI
-	D:nil,BulkQuantity:0,Recheck:0,SF:80|81|82|83|102|898,TC:nil,Content:0|15|
-	52,EDM:-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0
-	,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 2,SSN|SDN
-X-CID-BAS: 2,SSN|SDN,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: c8f91a62e17411f0a38c85956e01ac42-20251225
-X-User: luriwen@kylinos.cn
-Received: from [10.42.13.61] [(10.44.16.150)] by mailgw.kylinos.cn
-	(envelope-from <luriwen@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_128_GCM_SHA256 128/128)
-	with ESMTP id 562864616; Thu, 25 Dec 2025 17:33:35 +0800
-Message-ID: <227b6cdc-2abb-47d4-8a92-ff4fad2f2d9e@kylinos.cn>
-Date: Thu, 25 Dec 2025 17:33:32 +0800
+	s=arc-20240116; t=1766702338; c=relaxed/simple;
+	bh=RTMVmwwt7+fBDHrbiJYj7gmoXhgCmVjePNzqaRuSsWk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rZd9c25AOIKApSU60aioLzhkuSHnUqfJA4tMXISP7aIYvYi/A5Omf7FfWmVptSY7NcIsBlJgCGT+v29S98YzxGV0KVC9X5q9k8xbErI73LiFU6GNNCyRa/TWso6tShnyDeHyYRSzdBXvVW2fOn9TO3yesyQ4G34f6f3RWmRqbqA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=altlinux.org; spf=pass smtp.mailfrom=altlinux.org; arc=none smtp.client-ip=194.107.17.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=altlinux.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altlinux.org
+Received: from imap.altlinux.org (imap.altlinux.org [194.107.17.38])
+	by vmicros1.altlinux.org (Postfix) with ESMTP id E80E172C8CC;
+	Fri, 26 Dec 2025 01:29:13 +0300 (MSK)
+Received: from pony.office.basealt.ru (unknown [193.43.10.9])
+	by imap.altlinux.org (Postfix) with ESMTPSA id DD5DC36D00D1;
+	Fri, 26 Dec 2025 01:29:13 +0300 (MSK)
+Received: by pony.office.basealt.ru (Postfix, from userid 500)
+	id A8082360D63C; Fri, 26 Dec 2025 01:29:13 +0300 (MSK)
+Date: Fri, 26 Dec 2025 01:29:13 +0300
+From: Vitaly Chikunov <vt@altlinux.org>
+To: Junjie Cao <junjie.cao@intel.com>
+Cc: Thomas Zimmermann <tzimmermann@suse.de>, 
+	Simona Vetter <simona@ffwll.ch>, Helge Deller <deller@gmx.de>, Zsolt Kajtar <soci@c64.rulez.org>, 
+	Albin Babu Varghese <albinbabuvarghese20@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: [PATCH v2] fbdev: bitblit: bound-check glyph index in bit_putcs*
+Message-ID: <aU23brU4lZqIkw4Z@altlinux.org>
+References: <20251020134701.84082-1-junjie.cao@intel.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] Re: [PATCH v3] PM: suspend: Make pm_test delay
- interruptible by wakeup events
-To: "Rafael J. Wysocki" <rafael@kernel.org>,
- Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc: pavel@kernel.org, lenb@kernel.org, linux-pm@vger.kernel.org,
- linux-kernel@vger.kernel.org, xiongxin <xiongxin@kylinos.cn>,
- regressions@lists.linux.dev
-References: <20251113012638.1362013-1-luriwen@kylinos.cn>
- <CAJZ5v0hwhVO6J2nS2-byU0+Lm8QbzdBzv4-X4eLNNUpTg+41Kg@mail.gmail.com>
- <aUsAk0k1N9hw8IkY@venus>
- <CAJZ5v0jha1VEHGfqYfu1G9WCwPEM=kDa-_c1LqchnkxAWbCBiw@mail.gmail.com>
-Content-Language: en-US
-From: luriwen <luriwen@kylinos.cn>
-In-Reply-To: <CAJZ5v0jha1VEHGfqYfu1G9WCwPEM=kDa-_c1LqchnkxAWbCBiw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20251020134701.84082-1-junjie.cao@intel.com>
 
-在 2025/12/24 19:44, Rafael J. Wysocki 写道:
-> On Tue, Dec 23, 2025 at 10:09 PM Sebastian Reichel
-> <sebastian.reichel@collabora.com> wrote:
->> Hi,
->>
->> On Fri, Nov 14, 2025 at 05:11:16PM +0100, Rafael J. Wysocki wrote:
->>> On Thu, Nov 13, 2025 at 2:26 AM Riwen Lu <luriwen@kylinos.cn> wrote:
->>>> Modify the suspend_test() function to make the test delay can be
->>>> interrupted by wakeup events.
->>>>
->>>> This improves the responsiveness of the system during suspend testing
->>>> when wakeup events occur, allowing the suspend process to proceed
->>>> without waiting for the full test delay to complete when wakeup events
->>>> are detected.
->>>>
->>>> Additionally, using msleep() instead of mdelay() avoids potential soft
->>>> lockup "CPU stuck" issues when long test delays are configured.
->>>>
->>>> Co-developed-by: xiongxin <xiongxin@kylinos.cn>
->>>> Signed-off-by: xiongxin <xiongxin@kylinos.cn>
->>>> Signed-off-by: Riwen Lu <luriwen@kylinos.cn>
->>>> ---
->>>>   kernel/power/suspend.c | 6 +++++-
->>>>   1 file changed, 5 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/kernel/power/suspend.c b/kernel/power/suspend.c
->>>> index b4ca17c2fecf..1c2f777da367 100644
->>>> --- a/kernel/power/suspend.c
->>>> +++ b/kernel/power/suspend.c
->>>> @@ -344,10 +344,14 @@ MODULE_PARM_DESC(pm_test_delay,
->>>>   static int suspend_test(int level)
->>>>   {
->>>>   #ifdef CONFIG_PM_DEBUG
->>>> +       int i;
->>>> +
->>>>          if (pm_test_level == level) {
->>>>                  pr_info("suspend debug: Waiting for %d second(s).\n",
->>>>                                  pm_test_delay);
->>>> -               mdelay(pm_test_delay * 1000);
->>>> +               for (i = 0; i < pm_test_delay && !pm_wakeup_pending(); i++)
->>>> +                       msleep(1000);
->>>> +
->>>>                  return 1;
->>>>          }
->>>>   #endif /* !CONFIG_PM_DEBUG */
->>>> --
->>> Applied as 6.19 material, thanks!
->> This is now upstream as a10ad1b10402 ("PM: suspend: Make pm_test delay interruptible by wakeup events").
->> When doing the following PM debugging test on ROCK 4D on v6.19-rc2
->>
->> echo N > /sys/module/printk/parameters/console_suspend
->> echo 1 > /sys/power/pm_print_times
->> echo 1 > /sys/power/pm_debug_messages
->> echo core > /sys/power/pm_test
->> echo mem > /sys/power/state
->>
->> I see the following error triggered reliably, which did not happen on 6.18
->> and no longer appears after reverting this patch:
->>
->> [   49.647656] ------------[ cut here ]------------
->> [   49.647656] WARNING: kernel/time/timekeeping.c:821 at ktime_get+0xb8/0xd8, CPU#0: swapper/0/0
->> [   49.647656] Modules linked in: sha256 cfg80211 binfmt_misc fuse ipv6 snd_soc_hdmi_codec rk805_pwrkey rockchip_saradc dwmac_rk stmmac_platform rtc_hym8563 snd_soc_es8328_i2c phy_rockchip_usbdp rockchipdrm stmmac snd_soc_es8328 dw_hdmi_qp industrialio_triggered_buffer analogix_dp typec phy_rockchip_samsung_hdptx kfifo_buf dw_dp rockchip_thermal dw_mipi_dsi spi_rockchip_sfc phy_rockchip_naneng_combphy pcs_xpcs panfrost drm_shmem_helper gpu_sched snd_soc_rockchip_sai snd_soc_simple_card drm_dp_aux_bus dw_hdmi snd_soc_simple_card_utils rfkill_gpio rfkill snd_soc_core drm_display_helper snd_compress cec drm_client_lib drm_dma_helper display_connector snd_pcm_dmaengine drm_kms_helper snd_pcm drm snd_timer snd backlight soundcore adc_keys
->> [   49.647656] CPU: 0 UID: 0 PID: 0 Comm: swapper/0 Not tainted 6.19.0-rc2-g7211b2cf9c08 #1 PREEMPT
->> [   49.647656] Hardware name: Radxa ROCK 4D (DT)
->> [   49.647656] pstate: 800000c5 (Nzcv daIF -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
->> [   49.647656] pc : ktime_get+0xb8/0xd8
->> [   49.647656] lr : tick_nohz_idle_enter+0x50/0x90
->> [   49.647656] sp : ffffc1a17b573d50
->> [   49.647656] x29: ffffc1a17b573d50 x28: 00000000fdf57ec0 x27: ffffc1a17b57b260
->> [   49.647656] x26: ffffc1a17b57e000 x25: 0000000000000000 x24: 00000000000000ea
->> [   49.647656] x23: ffffc1a17a470000 x22: ffffc1a17b57ad00 x21: ffff3e6282a25000
->> [   49.647656] x20: ffff0003fdead5d8 x19: ffffc1a17b4885d8 x18: 000000000000000a
->> [   49.647656] x17: ffff3e6282a25000 x16: ffff800080000000 x15: 00700ea231d1d404
->> [   49.647656] x14: 0000000000000396 x13: 0000000000000001 x12: 0000000000000001
->> [   49.647656] x11: 00000000000000c0 x10: 0000000000000aa0 x9 : ffffc1a17b573d00
->> [   49.647656] x8 : ffffc1a17b586680 x7 : 0000000000000000 x6 : 0000000000000000
->> [   49.647656] x5 : 0000000000000004 x4 : ffffc1a17b57eb68 x3 : 0000000000000000
->> [   49.647656] x2 : ffffc1a17b48ec40 x1 : 0000000000000000 x0 : 0000000000000001
->> [   49.647656] Call trace:
->> [   49.647656]  ktime_get+0xb8/0xd8 (P)
->> [   49.647656]  tick_nohz_idle_enter+0x50/0x90
->> [   49.647656]  do_idle+0x38/0x260
->> [   49.647656]  cpu_startup_entry+0x38/0x40
->> [   49.647656]  rest_init+0xd8/0xe0
->> [   49.647656]  console_on_rootfs+0x0/0x6c
->> [   49.647656]  __primary_switched+0x88/0x90
->> [   49.647656] ---[ end trace 0000000000000000 ]---
-> msleep() is not suitable for the "core" level testing.
->
-> Change msleep() in suspend_test() back to mdelay() and the backtrace
-> should go away.
->
-> I'll send a patch for that later this week unless someone beats me to it.
+Dear linux-fbdev, stable,
 
-Maybe usingmdelay() only forTEST_CORE while keepingmsleep() for other 
-test levels ?
+On Mon, Oct 20, 2025 at 09:47:01PM +0800, Junjie Cao wrote:
+> bit_putcs_aligned()/unaligned() derived the glyph pointer from the
+> character value masked by 0xff/0x1ff, which may exceed the actual font's
+> glyph count and read past the end of the built-in font array.
+> Clamp the index to the actual glyph count before computing the address.
+> 
+> This fixes a global out-of-bounds read reported by syzbot.
+> 
+> Reported-by: syzbot+793cf822d213be1a74f2@syzkaller.appspotmail.com
+> Closes: https://syzkaller.appspot.com/bug?extid=793cf822d213be1a74f2
+> Tested-by: syzbot+793cf822d213be1a74f2@syzkaller.appspotmail.com
+> Signed-off-by: Junjie Cao <junjie.cao@intel.com>
 
+This commit is applied to v5.10.247 and causes a regression: when
+switching VT with ctrl-alt-f2 the screen is blank or completely filled
+with angle characters, then new text is not appearing (or not visible).
+
+This commit is found with git bisect from v5.10.246 to v5.10.247:
+
+  0998a6cb232674408a03e8561dc15aa266b2f53b is the first bad commit
+  commit 0998a6cb232674408a03e8561dc15aa266b2f53b
+  Author:     Junjie Cao <junjie.cao@intel.com>
+  AuthorDate: 2025-10-20 21:47:01 +0800
+  Commit:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+  CommitDate: 2025-12-07 06:08:07 +0900
+
+      fbdev: bitblit: bound-check glyph index in bit_putcs*
+
+      commit 18c4ef4e765a798b47980555ed665d78b71aeadf upstream.
+
+      bit_putcs_aligned()/unaligned() derived the glyph pointer from the
+      character value masked by 0xff/0x1ff, which may exceed the actual font's
+      glyph count and read past the end of the built-in font array.
+      Clamp the index to the actual glyph count before computing the address.
+
+      This fixes a global out-of-bounds read reported by syzbot.
+
+      Reported-by: syzbot+793cf822d213be1a74f2@syzkaller.appspotmail.com
+      Closes: https://syzkaller.appspot.com/bug?extid=793cf822d213be1a74f2
+      Tested-by: syzbot+793cf822d213be1a74f2@syzkaller.appspotmail.com
+      Signed-off-by: Junjie Cao <junjie.cao@intel.com>
+      Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
+      Signed-off-by: Helge Deller <deller@gmx.de>
+      Cc: stable@vger.kernel.org
+      Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+   drivers/video/fbdev/core/bitblit.c | 16 ++++++++++++----
+   1 file changed, 12 insertions(+), 4 deletions(-)
+
+The minimal reproducer in cli, after kernel is booted:
+
+  date >/dev/tty2; chvt 2
+
+and the date does not appear.
+
+Thanks,
+
+#regzbot introduced: 0998a6cb232674408a03e8561dc15aa266b2f53b
+
+> ---
+> v1: https://lore.kernel.org/linux-fbdev/5d237d1a-a528-4205-a4d8-71709134f1e1@suse.de/
+> v1 -> v2:
+>  - Fix indentation and add blank line after declarations with the .pl helper
+>  - No functional changes
+> 
+>  drivers/video/fbdev/core/bitblit.c | 16 ++++++++++++----
+>  1 file changed, 12 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/video/fbdev/core/bitblit.c b/drivers/video/fbdev/core/bitblit.c
+> index 9d2e59796c3e..085ffb44c51a 100644
+> --- a/drivers/video/fbdev/core/bitblit.c
+> +++ b/drivers/video/fbdev/core/bitblit.c
+> @@ -79,12 +79,16 @@ static inline void bit_putcs_aligned(struct vc_data *vc, struct fb_info *info,
+>  				     struct fb_image *image, u8 *buf, u8 *dst)
+>  {
+>  	u16 charmask = vc->vc_hi_font_mask ? 0x1ff : 0xff;
+> +	unsigned int charcnt = vc->vc_font.charcount;
+>  	u32 idx = vc->vc_font.width >> 3;
+>  	u8 *src;
+>  
+>  	while (cnt--) {
+> -		src = vc->vc_font.data + (scr_readw(s++)&
+> -					  charmask)*cellsize;
+> +		u16 ch = scr_readw(s++) & charmask;
+> +
+> +		if (ch >= charcnt)
+> +			ch = 0;
+> +		src = vc->vc_font.data + (unsigned int)ch * cellsize;
+>  
+>  		if (attr) {
+>  			update_attr(buf, src, attr, vc);
+> @@ -112,14 +116,18 @@ static inline void bit_putcs_unaligned(struct vc_data *vc,
+>  				       u8 *dst)
+>  {
+>  	u16 charmask = vc->vc_hi_font_mask ? 0x1ff : 0xff;
+> +	unsigned int charcnt = vc->vc_font.charcount;
+>  	u32 shift_low = 0, mod = vc->vc_font.width % 8;
+>  	u32 shift_high = 8;
+>  	u32 idx = vc->vc_font.width >> 3;
+>  	u8 *src;
+>  
+>  	while (cnt--) {
+> -		src = vc->vc_font.data + (scr_readw(s++)&
+> -					  charmask)*cellsize;
+> +		u16 ch = scr_readw(s++) & charmask;
+> +
+> +		if (ch >= charcnt)
+> +			ch = 0;
+> +		src = vc->vc_font.data + (unsigned int)ch * cellsize;
+>  
+>  		if (attr) {
+>  			update_attr(buf, src, attr, vc);
+> -- 
+> 2.48.1
+> 
