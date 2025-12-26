@@ -1,100 +1,175 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 497B21DFDB8
-	for <regressions@lists.linux.dev>; Fri, 26 Dec 2025 05:37:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+Received: from vmicros1.altlinux.org (vmicros1.altlinux.org [194.107.17.57])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86054280312
+	for <regressions@lists.linux.dev>; Fri, 26 Dec 2025 12:21:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.107.17.57
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766727472; cv=none; b=hhtzKDqAKVSV7FcxIimjBgvIOoOi8x/7Ee9hB5MXAW4AF4v8wV58TgbCzftSi9JIUr0/naSlqrZGBKCX8QY30zslGb1PoSJvGCr+RS0qb9zZ9mVzg9ZOTIByITquGtwLvc70IKBT49dnmv19pnuj0jgYwfnpuaLvynS2/8pZyCQ=
+	t=1766751677; cv=none; b=hiqT5vcF0jZbdtshsZPT3CC4y0L/6DfHijuoVHS0ef4O43qKnFPpRgy8GxtNETx4bcM7xN91kKVCUMsDf15iPsBuBaIWAf6KqO4evcpBlM62JoXLSJqxuUUU3FMfHSPY9f+wHZBAZZlDuscW8i+6AaR9N/9VCnkzkr9ueW5qgws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766727472; c=relaxed/simple;
-	bh=CNfjI1T1+B23dZV3+u5LqFMovbJwrjQnRfDKEwasWwU=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=WxZI+KroqnCFpmK4Ub1ifkIiV1Nosq4W+Ru906YX03phUnbuvSBzHFuebzc+zavQ3f7ElVI858ngn2s2KXW6J6wN6HZIoYh0kZEU5F9PlNe8seMX72ujiioXTE0UhGoOaY90dQLNkrl+yP3PggJAXfrx7DvNVwMEaZUTYzJcR9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ULW9avMo; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ULW9avMo"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2a110548cdeso97267425ad.0
-        for <regressions@lists.linux.dev>; Thu, 25 Dec 2025 21:37:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1766727469; x=1767332269; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:reply-to:mime-version:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CNfjI1T1+B23dZV3+u5LqFMovbJwrjQnRfDKEwasWwU=;
-        b=ULW9avMoOSi4FqnFuWILpSB9PXkQzHn2RJUoaP3zb8kLlCFeS37KnGS2v0NXeMMY0z
-         ESnLxzkuozMLZ7FpcZczv2T08ezS6T6CgD4X2L8cv5WiXru4a4cuMneLQZ9yvdejcvB1
-         NwhWofs2vQLa68Duwc+3wQAgNnFnQ7PcO59la8uE4Grv1+nBG1MaMG9OMSnFS7cNM9ZK
-         jgsX9bQi+DlAxef6P3eJpq41dPki52aMUZfdtDZc8jEb7GaPV9Ck5QxGaRjyOIIse+WH
-         XYW0I1JfP2ZlhZeZD22e2qR5r+NDPucJKltEtz7NyB/YQ/vsriKMCGStHoSSok5gQi/Z
-         7Xvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766727469; x=1767332269;
-        h=cc:to:subject:message-id:date:from:reply-to:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CNfjI1T1+B23dZV3+u5LqFMovbJwrjQnRfDKEwasWwU=;
-        b=pI2fr2OD7fAGp362Voc8jBAKtgnR8NKh4oX4f9dMVtw6Su6H45JRj8iRlaR9l/zRs3
-         XpZ0YS+6yrTEt9KRVrb6HM3tAYDXLW9qXeT/y755IdRYoF6yiP1yHFO/DUqrAzsPtEMK
-         ocA9h7s5nGXlR/mplla1qQKXAlFv5SXtheYzG9xD4vNylerrsxA4Tqs+HgCL7b+PtNKx
-         oYc328fcGb/abY8NTKdQD5U3a0lu3rPGKpNfapF+3rUnJVeQCpRZwrzqv/QKcmyC8jIK
-         /tJQWPkQN9VJRzH8s5d+YRwSxIHr84WZvWs8CncZPRXiOp8Rd/ZBbj8mOsZjNy1n5FTZ
-         t7+g==
-X-Forwarded-Encrypted: i=1; AJvYcCUllKkiUVBhq6ISD4QX7kuywCYeFJYvnCUIqZAmJTm2tDpGf1ccL85dwlM16A9azaNZgJu4igosurQtQg==@lists.linux.dev
-X-Gm-Message-State: AOJu0YyRJJs3coWvPigdWeHzx/+7b82SmjIEslYFxGjV28O9M8o05cUS
-	jhLpa/kY5snDcbWZMuJVBFnw65vupUFADx636402SdDokdpOvxcVGct6acfd4OHCgCz28B0M7Eb
-	H818xZ1sCDSYfmDYHkokJiURxPNxdgwQ=
-X-Gm-Gg: AY/fxX5pibed8y3VG0RrALNKZspNdvKhvAYaEdnXr0sWsBY3VjpEE1k70mjzFO1F/8p
-	kL7jsfa4RWsiomqpAq00h9f4aqgtbdM9+QJ94Bjpf3xpkrReCXBlUxlvf+tTeZKryZi9Ee+lFGH
-	4oC49EfoQnlhhkPO5N6ZOUxd7n03I8OKGRDZ7br0MrQ6ZqjUOIqjCmuZ0ZhBiNwNoObvOB5c3Bs
-	DZzE9j21t/KARja/HLH6LVK5zd8LU7ag0YDHl9ghnfBv0toVbJ6cdKmYUeCSh41+3oMDSOwjsVE
-	YF4JkXy7iNyvNZ2+3Bc=
-X-Google-Smtp-Source: AGHT+IFHmB3KAtgnAFZEBLxVZw8dua5doOOkhyb8dga0r6/LbV83FGc+6ZMMGYXDisl2Q9jYYm/7PROAUjWhG9ZCnvo=
-X-Received: by 2002:a17:903:18b:b0:295:fc0:5a32 with SMTP id
- d9443c01a7336-2a2f221284fmr227033725ad.3.1766727469576; Thu, 25 Dec 2025
- 21:37:49 -0800 (PST)
+	s=arc-20240116; t=1766751677; c=relaxed/simple;
+	bh=XfD4oBld84hGa0frYTJY3dTeUChuqIrn5kecni3QS+w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fCAVAhElRe4Rh9hD7FnlrU572z6i/DhLEkKq7SuGZ9K2mzZyet2UoG4Ypi2KZd2hqVwxaI5Ce+YSRpCQ+2H16u1fbejZlzBOqkjk5tQs6ABc/gp5k3yZfGvMho5TerppZ5Ztkc9P9MtgD0E4Q/fM554y9jrNUTZ6UnnGSrctea8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=altlinux.org; spf=pass smtp.mailfrom=altlinux.org; arc=none smtp.client-ip=194.107.17.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=altlinux.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altlinux.org
+Received: from imap.altlinux.org (imap.altlinux.org [194.107.17.38])
+	by vmicros1.altlinux.org (Postfix) with ESMTP id E0FF172C8CC;
+	Fri, 26 Dec 2025 15:21:12 +0300 (MSK)
+Received: from pony.office.basealt.ru (unknown [193.43.10.9])
+	by imap.altlinux.org (Postfix) with ESMTPSA id CC2F636D00D1;
+	Fri, 26 Dec 2025 15:21:12 +0300 (MSK)
+Received: by pony.office.basealt.ru (Postfix, from userid 500)
+	id A1B95360D63C; Fri, 26 Dec 2025 15:21:12 +0300 (MSK)
+Date: Fri, 26 Dec 2025 15:21:12 +0300
+From: Vitaly Chikunov <vt@altlinux.org>
+To: Junjie Cao <junjie.cao@intel.com>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Peilin Ye <yepeilin.cs@gmail.com>, 
+	Daniel Vetter <daniel.vetter@ffwll.ch>, Shigeru Yoshida <syoshida@redhat.com>, 
+	Simona Vetter <simona@ffwll.ch>, Helge Deller <deller@gmx.de>, Zsolt Kajtar <soci@c64.rulez.org>, 
+	Albin Babu Varghese <albinbabuvarghese20@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: [PATCH v2] fbdev: bitblit: bound-check glyph index in bit_putcs*
+Message-ID: <aU58SeZZPxScVPad@altlinux.org>
+References: <20251020134701.84082-1-junjie.cao@intel.com>
+ <aU23brU4lZqIkw4Z@altlinux.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Reply-To: micro6947@gmail.com
-From: Xingjing Deng <micro6947@gmail.com>
-Date: Fri, 26 Dec 2025 13:37:38 +0800
-X-Gm-Features: AQt7F2pMD-yyutgxIcP81xrEnfriCzQVdNO_izI04YscekyKSdJbpbOdUCutT6k
-Message-ID: <CAK+ZN9qttsFDu6h1FoqGadXjMx1QXqPMoYQ=6O9RY4SxVTvKng@mail.gmail.com>
-Subject: [BUG] net/sunrpc/auth_gss: Memory leak in gssx_dec_status/gssx_dec_buffer
-To: stable@vger.kernel.org
-Cc: linux-nfs@vger.kernel.org, regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aU23brU4lZqIkw4Z@altlinux.org>
 
-A potential memory leak exists in the gssx_dec_status function (in
-net/sunrpc/auth_gss/gss_rpc_xdr.c) and its dependent gssx_dec_buffer
-function. The leak occurs when gssx_dec_buffer allocates memory via
-kmemdup for gssx_buffer fields, but the allocated memory is not freed
-in error paths of the chained decoding process in gssx_dec_status.
+Dear linux-fbdev, stable,
 
-The gssx_dec_buffer function allocates memory using kmemdup when
-buf->data is NULL (to store decoded XDR buffer data). This allocation
-is not paired with a release mechanism in case of subsequent decoding
-failures.
-gssx_dec_status sequentially decodes multiple gssx_buffer fields
-(e.g., mech, major_status_string, minor_status_string, server_ctx) by
-calling gssx_dec_buffer. If a later decoding step fails (e.g.,
-gssx_dec_buffer returns -ENOSPC or -ENOMEM), the function immediately
-returns the error without freeing the memory allocated for earlier
-gssx_buffer fields. This results in persistent kernel memory leaks.
+On Fri, Dec 26, 2025 at 01:29:13AM +0300, Vitaly Chikunov wrote:
+> 
+> On Mon, Oct 20, 2025 at 09:47:01PM +0800, Junjie Cao wrote:
+> > bit_putcs_aligned()/unaligned() derived the glyph pointer from the
+> > character value masked by 0xff/0x1ff, which may exceed the actual font's
+> > glyph count and read past the end of the built-in font array.
+> > Clamp the index to the actual glyph count before computing the address.
+> > 
+> > This fixes a global out-of-bounds read reported by syzbot.
+> > 
+> > Reported-by: syzbot+793cf822d213be1a74f2@syzkaller.appspotmail.com
+> > Closes: https://syzkaller.appspot.com/bug?extid=793cf822d213be1a74f2
+> > Tested-by: syzbot+793cf822d213be1a74f2@syzkaller.appspotmail.com
+> > Signed-off-by: Junjie Cao <junjie.cao@intel.com>
+> 
+> This commit is applied to v5.10.247 and causes a regression: when
+> switching VT with ctrl-alt-f2 the screen is blank or completely filled
+> with angle characters, then new text is not appearing (or not visible).
+> 
+> This commit is found with git bisect from v5.10.246 to v5.10.247:
+> 
+>   0998a6cb232674408a03e8561dc15aa266b2f53b is the first bad commit
+>   commit 0998a6cb232674408a03e8561dc15aa266b2f53b
+>   Author:     Junjie Cao <junjie.cao@intel.com>
+>   AuthorDate: 2025-10-20 21:47:01 +0800
+>   Commit:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>   CommitDate: 2025-12-07 06:08:07 +0900
+> 
+>       fbdev: bitblit: bound-check glyph index in bit_putcs*
+> 
+>       commit 18c4ef4e765a798b47980555ed665d78b71aeadf upstream.
+> 
+>       bit_putcs_aligned()/unaligned() derived the glyph pointer from the
+>       character value masked by 0xff/0x1ff, which may exceed the actual font's
+>       glyph count and read past the end of the built-in font array.
+>       Clamp the index to the actual glyph count before computing the address.
+> 
+>       This fixes a global out-of-bounds read reported by syzbot.
+> 
+>       Reported-by: syzbot+793cf822d213be1a74f2@syzkaller.appspotmail.com
+>       Closes: https://syzkaller.appspot.com/bug?extid=793cf822d213be1a74f2
+>       Tested-by: syzbot+793cf822d213be1a74f2@syzkaller.appspotmail.com
+>       Signed-off-by: Junjie Cao <junjie.cao@intel.com>
+>       Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
+>       Signed-off-by: Helge Deller <deller@gmx.de>
+>       Cc: stable@vger.kernel.org
+>       Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> 
+>    drivers/video/fbdev/core/bitblit.c | 16 ++++++++++++----
+>    1 file changed, 12 insertions(+), 4 deletions(-)
+> 
+> The minimal reproducer in cli, after kernel is booted:
+> 
+>   date >/dev/tty2; chvt 2
+> 
+> and the date does not appear.
+> 
+> Thanks,
+> 
+> #regzbot introduced: 0998a6cb232674408a03e8561dc15aa266b2f53b
+> 
+> > ---
+> > v1: https://lore.kernel.org/linux-fbdev/5d237d1a-a528-4205-a4d8-71709134f1e1@suse.de/
+> > v1 -> v2:
+> >  - Fix indentation and add blank line after declarations with the .pl helper
+> >  - No functional changes
+> > 
+> >  drivers/video/fbdev/core/bitblit.c | 16 ++++++++++++----
+> >  1 file changed, 12 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/drivers/video/fbdev/core/bitblit.c b/drivers/video/fbdev/core/bitblit.c
+> > index 9d2e59796c3e..085ffb44c51a 100644
+> > --- a/drivers/video/fbdev/core/bitblit.c
+> > +++ b/drivers/video/fbdev/core/bitblit.c
+> > @@ -79,12 +79,16 @@ static inline void bit_putcs_aligned(struct vc_data *vc, struct fb_info *info,
+> >  				     struct fb_image *image, u8 *buf, u8 *dst)
+> >  {
+> >  	u16 charmask = vc->vc_hi_font_mask ? 0x1ff : 0xff;
+> > +	unsigned int charcnt = vc->vc_font.charcount;
 
-This memory allocation is conditional. I traced upward through the
-callers gssx_dec_status and found that it is ultimately invoked by the
-interface gssx_dec_accept_sec_context. Although I have not identified
-the specific code execution path that triggers this memory leak, I
-believe this coding pattern is highly prone to causing confusion
-between callers and callees, which in turn leads to memory leaks.
+Perhaps, vc->vc_font.charcount (which is relied upon in the following
+comparison) is not always set correctly in v5.10.247. At least two
+commits that set vc_font.charcount are missing from v5.10.247:
 
-Relevant code links:
-https://github.com/torvalds/linux/blob/ccd1cdca5cd433c8a5dff78b69a79b31d9b77ee1/net/sunrpc/auth_gss/gss_rpc_xdr.c#L84-L92
-https://github.com/torvalds/linux/blob/ccd1cdca5cd433c8a5dff78b69a79b31d9b77ee1/net/sunrpc/auth_gss/gss_rpc_xdr.c#L304-L347
+  a1ac250a82a5 ("fbcon: Avoid using FNTCHARCNT() and hard-coded built-in font charcount")
+  a5a923038d70 ("fbdev: fbcon: Properly revert changes when vc_resize() failed")
 
-I have searched Bugzilla, lore.kernel.org, and client.linux-nfs.org,
-but no related issues were found.
+Thanks,
+
+
+> >  	u32 idx = vc->vc_font.width >> 3;
+> >  	u8 *src;
+> >  
+> >  	while (cnt--) {
+> > -		src = vc->vc_font.data + (scr_readw(s++)&
+> > -					  charmask)*cellsize;
+> > +		u16 ch = scr_readw(s++) & charmask;
+> > +
+> > +		if (ch >= charcnt)
+> > +			ch = 0;
+> > +		src = vc->vc_font.data + (unsigned int)ch * cellsize;
+> >  
+> >  		if (attr) {
+> >  			update_attr(buf, src, attr, vc);
+> > @@ -112,14 +116,18 @@ static inline void bit_putcs_unaligned(struct vc_data *vc,
+> >  				       u8 *dst)
+> >  {
+> >  	u16 charmask = vc->vc_hi_font_mask ? 0x1ff : 0xff;
+> > +	unsigned int charcnt = vc->vc_font.charcount;
+> >  	u32 shift_low = 0, mod = vc->vc_font.width % 8;
+> >  	u32 shift_high = 8;
+> >  	u32 idx = vc->vc_font.width >> 3;
+> >  	u8 *src;
+> >  
+> >  	while (cnt--) {
+> > -		src = vc->vc_font.data + (scr_readw(s++)&
+> > -					  charmask)*cellsize;
+> > +		u16 ch = scr_readw(s++) & charmask;
+> > +
+> > +		if (ch >= charcnt)
+> > +			ch = 0;
+> > +		src = vc->vc_font.data + (unsigned int)ch * cellsize;
+> >  
+> >  		if (attr) {
+> >  			update_attr(buf, src, attr, vc);
+> > -- 
+> > 2.48.1
+> > 
