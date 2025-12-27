@@ -1,226 +1,260 @@
-Received: from fout-b8-smtp.messagingengine.com (fout-b8-smtp.messagingengine.com [202.12.124.151])
+Received: from fout-b3-smtp.messagingengine.com (fout-b3-smtp.messagingengine.com [202.12.124.146])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0BE72F85B
-	for <regressions@lists.linux.dev>; Sat, 27 Dec 2025 02:04:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39E6A1A285
+	for <regressions@lists.linux.dev>; Sat, 27 Dec 2025 20:31:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.146
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766801053; cv=none; b=nnquK4V7fiOq7QVZtoOHC7gJarBycuJ4wtIYdn/ISfoPVkbheDI51SfqXt/U+Y5rDrt8FIfFolEy9kJjsI6iaVTzyuRUWvoyDFnANYj0aPh4zvrGN6rqUKEgmWWNefRHN85oBRrlU8QhCPRzg4DMhSurSjAnRA/IoscuZESd2R8=
+	t=1766867483; cv=none; b=VlR+C1SdsIWtx1LDny1RCty9aAk1Cj5KWyZ5yj2O3Z5LpJSSVprSu8Zh7YuRLmK08TrhTljUDXmcONwaQnukYC+Ocs7CG35pyu9WSzPrFav8oSf7BNbEPL5Hb0ihXShD24Vc5m1QXX4PETx/e+u3mWLPmGwmXHjfF7l32DrRFXE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766801053; c=relaxed/simple;
-	bh=R34hptTilVjqYivm8Twp3MP8oufSAgTrT+H9Naoc0Wg=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=PyO4FoP9XS9otYD4ykGcA0bIwJTnmjxdwUhSKdLIr3ZrSOM72hLx3dBD3Looap6DlgdSJWLBhOaSzCIyPlVI+LiK4kX0ALlhVmP42/tXKZst4qkRxDUWvtjFXD8qqWyIR9KxxW6QCF6e80udzErP/XPNTh9Q0ZZdN6a51vxUGlo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=pobox.com; spf=pass smtp.mailfrom=pobox.com; dkim=pass (2048-bit key) header.d=pobox.com header.i=@pobox.com header.b=Zg0+jlGm; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Q8StG5Kj; arc=none smtp.client-ip=202.12.124.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=pobox.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pobox.com
+	s=arc-20240116; t=1766867483; c=relaxed/simple;
+	bh=HsLVbIGiC5COYSdHyVKr67FWtl3faeZSO7jB7E8rj0g=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=p5g7rLqwxsnDMgeSQboI41hPF60marC18T6WmdEZPt5GsfmJpg4ZAS4EnGbiAE8o6HIrULC1UyEv2v+JOdT7splMwm+pBQ98n8S5m5Y11f2VIwwnsjtVX0q0EXKX7rpYSV0nNhI9lu/rt96qn/GBZVEUBdb+bmbY7lJStZTBGzw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invisiblethingslab.com; spf=pass smtp.mailfrom=invisiblethingslab.com; dkim=pass (2048-bit key) header.d=invisiblethingslab.com header.i=@invisiblethingslab.com header.b=nxeGKV5l; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=TgGICxCw; arc=none smtp.client-ip=202.12.124.146
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invisiblethingslab.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=invisiblethingslab.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pobox.com header.i=@pobox.com header.b="Zg0+jlGm";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Q8StG5Kj"
-Received: from phl-compute-07.internal (phl-compute-07.internal [10.202.2.47])
-	by mailfout.stl.internal (Postfix) with ESMTP id AF7651D0008B;
-	Fri, 26 Dec 2025 21:04:08 -0500 (EST)
-Received: from phl-frontend-01 ([10.202.2.160])
-  by phl-compute-07.internal (MEProxy); Fri, 26 Dec 2025 21:04:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pobox.com; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1766801048;
-	 x=1766887448; bh=tgzq7aqIelvxwGVA4/Ncej1leWSQ/WYlMocARO/cjnY=; b=
-	Zg0+jlGmb+IivWheP1XggnMrWvlMxgVYjmVwTJxjEYLxN1qHliHaZe4kYu8uXc6s
-	7A800l+/hJ4Zl27mW3PjpPLlETrtl/tCUO7XCx2/W71Rxl6Sj1GyHvxfA6r9D5dR
-	LQtdiMBgb1haaa9eeQjnbZpH+IAYBeIyzyP1toyxDtnFS9+f/04aJ2o0hTRGf1q7
-	BIKZ9ju/OYntxAvkX+vWzNQmc0dDmGIJEUl4Lo4H7huAu1sN0ItYN5po+FhiMls/
-	bCv0K31EY7NCsUbTHJWgHX7NMm4WsrU+LV53MkNuI2KxzK+8d7aMXLY/rkRTLbKO
-	mYPpS7F0Ttlg8N9zi9ZEhw==
+	dkim=pass (2048-bit key) header.d=invisiblethingslab.com header.i=@invisiblethingslab.com header.b="nxeGKV5l";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="TgGICxCw"
+Received: from phl-compute-03.internal (phl-compute-03.internal [10.202.2.43])
+	by mailfout.stl.internal (Postfix) with ESMTP id 5C9011D00041;
+	Sat, 27 Dec 2025 15:31:20 -0500 (EST)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-03.internal (MEProxy); Sat, 27 Dec 2025 15:31:20 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1766801048; x=
-	1766887448; bh=tgzq7aqIelvxwGVA4/Ncej1leWSQ/WYlMocARO/cjnY=; b=Q
-	8StG5Kj3CgKGHEktXv9WnwH1O6E8T5r7pfhplXpQUL+dl6d0/BEqjfRnakExfZOs
-	J2aQpZKKO2pzGR3lJYEGeu/v0M+qU0bH1d22A7PIjERBrU0OcIC8mXhJW8JP9cYV
-	DNyWrur6PT5cvgc+T8g5Ask7r69LqkpS9SyndhZCia9Otgq6h7oloP6V8eC5Qwfq
-	1xwYB5JO0ytv3Wz75m7KVxBlB2mw7W3CL9PkscOp2vehVVp3V8aDQZ+3Ghz/WnkD
-	dSBJ1vJBHoKhZ1xdwQoGXZCgPHXsHKT+wgEW9NOgHbpX+xqESeXMMKSOpnv8IWJI
-	vPsseHDnDpyl5iqzTMbcA==
-X-ME-Sender: <xms:lj5PaaTU0rNbH1iIaF3f9KWZV19w_Vutlu3aAbQFej_mBtmQtvuf5A>
-    <xme:lj5PaQtgOHdi4nIb6_GIXA0E-xmZy34xq9ym0jofFDOtV6HKCUJQYkksGYg1Qtuhg
-    yRFZTpSa_mlctqQ1x12TJPunbtgnfG7sH2qsubOl_9r0LHkaafyqKw>
-X-ME-Received: <xmr:lj5PaYLMG1w9LyDDjeNebN71_D76T-sx3KH9O5Y_u7zxwiG5KLy5VFQPx_Fbe3TCLivGMOaTwF7swYsvz4-DkKs-KgTsVpP3>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdejtddtlecutefuodetggdotefrod
+	invisiblethingslab.com; h=cc:cc:content-type:content-type:date
+	:date:from:from:in-reply-to:message-id:mime-version:reply-to
+	:subject:subject:to:to; s=fm1; t=1766867480; x=1766953880; bh=tC
+	5qnG5bwx7xRT8QR4/3Ue9TlCbetNJuPNBQQ7OHiB8=; b=nxeGKV5lLyIDxBrIRk
+	LKDyyBonvhZ763M+TLAkLkXJQdV6hUdtZURiYU2Z4cWdHEDm6vZFgwiBf378gS47
+	tzKvuwiCiVIUeELNNcwotQ6OM+6ZErJA+Y89k+MqAYjPbz9EbaM4vGn253vIVB54
+	m7gub7TGvUmNd/d5jw6XuybuWjE0NY8Mt/O5Q24qGSxCTmBvCFeP51Nk6FNbyK8L
+	yUR4Sc2CJci8JJoBrxPqx+HcxG5PQT07Vlwx4Smv0YAkLc3p+bAcKTjumSVvwU1a
+	aqHdLO4fmoH7p6+SN3nUC8oRxVHUSDwZZUO2KOKh/4bLtggCvIRJVXRZPb8dY8xA
+	SKbA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:message-id
+	:mime-version:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1766867480; x=
+	1766953880; bh=tC5qnG5bwx7xRT8QR4/3Ue9TlCbetNJuPNBQQ7OHiB8=; b=T
+	gGICxCwwHsRsRiWDZwwKGXZzrgI3jiKpkvFHfLrs+YD5qp6G2CtXStWifJ6E821Z
+	PvvMekIciOPrZt+v2vqsqEUqF21rb4qYG03WssaiLw4yuzAybhgS0MulWkLnfkZx
+	lci3dFJsUHWMO4ifocxmhFASVDic5mF1/MIH94Lfc85mQuefGvNuZFqHFbK2mBAA
+	NTcYLNr96u+ouxccSkB/XGGqbu7YcWWfCA90ZAdOE7s8WCz1zWlUZ0LXwAsYA9aL
+	2mvB+zxV9aPMLXF4xBkb4eEwdgj19h7yr3b4kSaAbao6GfYALjSdumCmEgfDLAnZ
+	BKbftt4vdzPcBb1ra56mw==
+X-ME-Sender: <xms:F0JQaeA3lsAZwf9d7q-03Qcu7A3eCUP88uj7xqetKC25k6hRjOZuXA>
+    <xme:F0JQaUgIYZnQxnrz_8802QrQuullLG5dRD-RWeHaU38CMP1fnnKY9jbtUu5eBGl0-
+    lBa_DXl1-HsdGdjor307EFM2cBEm0Fi471qyvuo1liaigR2ug>
+X-ME-Received: <xmr:F0JQaTyH5BCK1eekDZ89zwLI85QPnZS1OGddIgF11qnXHULwfn6VFiYQUA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdejvdefgecutefuodetggdotefrod
     ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
     ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpefkffggfgfhuffvvehfjggtgfesthejredttddvjeenucfhrhhomhepfdeurghrrhih
-    ucfmrdcupfgrthhhrghnfdcuoegsrghrrhihnhesphhosghogidrtghomheqnecuggftrf
-    grthhtvghrnhepjeehveeitdevteeujeekjeffudeifeffledttdejudetieejudefleei
-    uedtheejnecuffhomhgrihhnpehshiiikhgrlhhlvghrrdgrphhpshhpohhtrdgtohhmpd
-    hkvghrnhgvlhdrohhrghdpvdegjedrrghtnecuvehluhhsthgvrhfuihiivgeptdenucfr
-    rghrrghmpehmrghilhhfrhhomhepsggrrhhrhihnsehpohgsohigrdgtohhmpdhnsggprh
-    gtphhtthhopeduiedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepvhhtsegrlhht
-    lhhinhhugidrohhrghdprhgtphhtthhopehjuhhnjhhivgdrtggrohesihhnthgvlhdrtg
-    homhdprhgtphhtthhopehtiihimhhmvghrmhgrnhhnsehsuhhsvgdruggvpdhrtghpthht
-    ohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoh
-    ephigvphgvihhlihhnrdgtshesghhmrghilhdrtghomhdprhgtphhtthhopegurghnihgv
-    lhdrvhgvthhtvghrsehffhiflhhlrdgthhdprhgtphhtthhopehshihoshhhihgurgesrh
-    gvughhrghtrdgtohhmpdhrtghpthhtohepshhimhhonhgrsehffhiflhhlrdgthhdprhgt
-    phhtthhopeguvghllhgvrhesghhmgidruggv
-X-ME-Proxy: <xmx:lj5PaUep7CLwjJ_LPx_zSW8J5idb52cIHVaXuaQahgqRh1ZNvzoPbQ>
-    <xmx:lj5PaaV_Q9hbxhSGyiFWk6mZMBI9FVVSAz1Urys5NQX5vv8BjAu9JQ>
-    <xmx:lj5PaShWzMS41iQaD1n8gir5HiMgkA5s5BVMoXoMIBqPaMVZ_v0WCA>
-    <xmx:lj5PaUg7KkBD5lwcmjP8Bh_21WER4eCSnNccdNFanbWxug4_6RTwyA>
-    <xmx:mD5PaYQbvyaLqNGZLULMgroHBRYQlHvYCd2nIONj2Vwr4eLnNV9N_O65>
-Feedback-ID: i6289494f:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 26 Dec 2025 21:04:05 -0500 (EST)
-Message-ID: <ccbbf777-cf4e-4c66-856e-282dd9d61970@pobox.com>
-Date: Fri, 26 Dec 2025 18:04:04 -0800
+    hrpeffhffvvefukfggtggusehgtderredttdejnecuhfhrohhmpeforghrvghkucforghr
+    tgiihihkohifshhkihdqifpkrhgvtghkihcuoehmrghrmhgrrhgvkhesihhnvhhishhisg
+    hlvghthhhinhhgshhlrggsrdgtohhmqeenucggtffrrghtthgvrhhnpedugffgieelueeu
+    kedthfffledvhfejfeefheeuieekhfeludeljeejleegjeduffenucevlhhushhtvghruf
+    hiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmrghrmhgrrhgvkhesihhnvhhi
+    shhisghlvghthhhinhhgshhlrggsrdgtohhmpdhnsggprhgtphhtthhopeekpdhmohguvg
+    epshhmthhpohhuthdprhgtphhtthhopehnsggusehnsggurdhnrghmvgdprhgtphhtthho
+    pehlohhrvghniihosehkvghrnhgvlhdrohhrghdprhgtphhtthhopehrhiguvghrrdhlvg
+    gvsehmvgguihgrthgvkhdrtghomhdprhgtphhtthhopehshhgrhihnvgdrtghhvghnsehm
+    vgguihgrthgvkhdrtghomhdprhgtphhtthhopehsvggrnhdrfigrnhhgsehmvgguihgrth
+    gvkhdrtghomhdprhgtphhtthhopehlihhnuhigqdifihhrvghlvghsshesvhhgvghrrdhk
+    vghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhmvgguihgrthgvkheslhhish
+    htshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehrvghgrhgvshhsihhonhhs
+    sehlihhsthhsrdhlihhnuhigrdguvghv
+X-ME-Proxy: <xmx:F0JQad1c0Wg6SgHd8wfnlCq5-31mhK1R4b9UMqQJmm5FZzZTd0xvlg>
+    <xmx:F0JQaQ_tbIPhsH7DPIcIGiYzx-jmqC2_tTG47Dg0kjAVZKMKYJ1ogw>
+    <xmx:F0JQadoevWtgBRngZ3OgIrocdgcIGVKgJTyLeJJnzv02cJpt2Q5q4w>
+    <xmx:F0JQaaQutse9s2rgz3EX08yteLtKLSbKtZR1cV8uNT-HoA5XhN9S5A>
+    <xmx:GEJQaUvZWApJy5aib52YpU6r6F8HJn4n8jzNQ1bSd6D1-3GC9-HGgWmM>
+Feedback-ID: i1568416f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
+ 27 Dec 2025 15:31:18 -0500 (EST)
+Date: Sat, 27 Dec 2025 21:31:15 +0100
+From: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
+To: Felix Fietkau <nbd@nbd.name>, Lorenzo Bianconi <lorenzo@kernel.org>,
+	Ryder Lee <ryder.lee@mediatek.com>,
+	Shayne Chen <shayne.chen@mediatek.com>,
+	Sean Wang <sean.wang@mediatek.com>
+Cc: "open list:MEDIATEK MT76 WIRELESS LAN DRIVER" <linux-wireless@vger.kernel.org>,
+	"moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>,
+	regressions@lists.linux.dev
+Subject: strnlen buffer overflow in mt76_connac2_load_patch - 6.19-rc2
+Message-ID: <aVBCFKub6vCFsFVB@mail-itl>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: "Barry K. Nathan" <barryn@pobox.com>
-Subject: Re: [PATCH v2] fbdev: bitblit: bound-check glyph index in bit_putcs*
-To: Vitaly Chikunov <vt@altlinux.org>, Junjie Cao <junjie.cao@intel.com>,
- Thomas Zimmermann <tzimmermann@suse.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Peilin Ye <yepeilin.cs@gmail.com>, Daniel Vetter
- <daniel.vetter@ffwll.ch>, Shigeru Yoshida <syoshida@redhat.com>,
- Simona Vetter <simona@ffwll.ch>, Helge Deller <deller@gmx.de>,
- Zsolt Kajtar <soci@c64.rulez.org>,
- Albin Babu Varghese <albinbabuvarghese20@gmail.com>,
- linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org,
- regressions@lists.linux.dev
-References: <20251020134701.84082-1-junjie.cao@intel.com>
- <aU23brU4lZqIkw4Z@altlinux.org> <aU58SeZZPxScVPad@altlinux.org>
-Content-Language: en-US
-In-Reply-To: <aU58SeZZPxScVPad@altlinux.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="T9kD5aMDlTiT6Mn3"
+Content-Disposition: inline
 
-On 12/26/25 4:21 AM, Vitaly Chikunov wrote:
-> Dear linux-fbdev, stable,
-> 
-> On Fri, Dec 26, 2025 at 01:29:13AM +0300, Vitaly Chikunov wrote:
->>
->> On Mon, Oct 20, 2025 at 09:47:01PM +0800, Junjie Cao wrote:
->>> bit_putcs_aligned()/unaligned() derived the glyph pointer from the
->>> character value masked by 0xff/0x1ff, which may exceed the actual font's
->>> glyph count and read past the end of the built-in font array.
->>> Clamp the index to the actual glyph count before computing the address.
->>>
->>> This fixes a global out-of-bounds read reported by syzbot.
->>>
->>> Reported-by: syzbot+793cf822d213be1a74f2@syzkaller.appspotmail.com
->>> Closes: https://syzkaller.appspot.com/bug?extid=793cf822d213be1a74f2
->>> Tested-by: syzbot+793cf822d213be1a74f2@syzkaller.appspotmail.com
->>> Signed-off-by: Junjie Cao <junjie.cao@intel.com>
->>
->> This commit is applied to v5.10.247 and causes a regression: when
->> switching VT with ctrl-alt-f2 the screen is blank or completely filled
->> with angle characters, then new text is not appearing (or not visible).
->>
->> This commit is found with git bisect from v5.10.246 to v5.10.247:
->>
->>    0998a6cb232674408a03e8561dc15aa266b2f53b is the first bad commit
->>    commit 0998a6cb232674408a03e8561dc15aa266b2f53b
->>    Author:     Junjie Cao <junjie.cao@intel.com>
->>    AuthorDate: 2025-10-20 21:47:01 +0800
->>    Commit:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->>    CommitDate: 2025-12-07 06:08:07 +0900
->>
->>        fbdev: bitblit: bound-check glyph index in bit_putcs*
->>
->>        commit 18c4ef4e765a798b47980555ed665d78b71aeadf upstream.
->>
->>        bit_putcs_aligned()/unaligned() derived the glyph pointer from the
->>        character value masked by 0xff/0x1ff, which may exceed the actual font's
->>        glyph count and read past the end of the built-in font array.
->>        Clamp the index to the actual glyph count before computing the address.
->>
->>        This fixes a global out-of-bounds read reported by syzbot.
->>
->>        Reported-by: syzbot+793cf822d213be1a74f2@syzkaller.appspotmail.com
->>        Closes: https://syzkaller.appspot.com/bug?extid=793cf822d213be1a74f2
->>        Tested-by: syzbot+793cf822d213be1a74f2@syzkaller.appspotmail.com
->>        Signed-off-by: Junjie Cao <junjie.cao@intel.com>
->>        Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
->>        Signed-off-by: Helge Deller <deller@gmx.de>
->>        Cc: stable@vger.kernel.org
->>        Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->>
->>     drivers/video/fbdev/core/bitblit.c | 16 ++++++++++++----
->>     1 file changed, 12 insertions(+), 4 deletions(-)
->>
->> The minimal reproducer in cli, after kernel is booted:
->>
->>    date >/dev/tty2; chvt 2
->>
->> and the date does not appear.
->>
->> Thanks,
->>
->> #regzbot introduced: 0998a6cb232674408a03e8561dc15aa266b2f53b
->>
->>> ---
->>> v1: https://lore.kernel.org/linux-fbdev/5d237d1a-a528-4205-a4d8-71709134f1e1@suse.de/
->>> v1 -> v2:
->>>   - Fix indentation and add blank line after declarations with the .pl helper
->>>   - No functional changes
->>>
->>>   drivers/video/fbdev/core/bitblit.c | 16 ++++++++++++----
->>>   1 file changed, 12 insertions(+), 4 deletions(-)
->>>
->>> diff --git a/drivers/video/fbdev/core/bitblit.c b/drivers/video/fbdev/core/bitblit.c
->>> index 9d2e59796c3e..085ffb44c51a 100644
->>> --- a/drivers/video/fbdev/core/bitblit.c
->>> +++ b/drivers/video/fbdev/core/bitblit.c
->>> @@ -79,12 +79,16 @@ static inline void bit_putcs_aligned(struct vc_data *vc, struct fb_info *info,
->>>   				     struct fb_image *image, u8 *buf, u8 *dst)
->>>   {
->>>   	u16 charmask = vc->vc_hi_font_mask ? 0x1ff : 0xff;
->>> +	unsigned int charcnt = vc->vc_font.charcount;
-> 
-> Perhaps, vc->vc_font.charcount (which is relied upon in the following
-> comparison) is not always set correctly in v5.10.247. At least two
-> commits that set vc_font.charcount are missing from v5.10.247:
-> 
->    a1ac250a82a5 ("fbcon: Avoid using FNTCHARCNT() and hard-coded built-in font charcount")
->    a5a923038d70 ("fbdev: fbcon: Properly revert changes when vc_resize() failed")
-> 
-> Thanks,
 
-I was just about to report this.
+--T9kD5aMDlTiT6Mn3
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Date: Sat, 27 Dec 2025 21:31:15 +0100
+From: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
+To: Felix Fietkau <nbd@nbd.name>, Lorenzo Bianconi <lorenzo@kernel.org>,
+	Ryder Lee <ryder.lee@mediatek.com>,
+	Shayne Chen <shayne.chen@mediatek.com>,
+	Sean Wang <sean.wang@mediatek.com>
+Cc: "open list:MEDIATEK MT76 WIRELESS LAN DRIVER" <linux-wireless@vger.kernel.org>,
+	"moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>,
+	regressions@lists.linux.dev
+Subject: strnlen buffer overflow in mt76_connac2_load_patch - 6.19-rc2
 
-I found two ways to fix this bug. One is to revert this patch; the other 
-is to apply the following 3 patches, which are already present in 5.11 
-and later:
+Hi,
 
-7a089ec7d77fe7d50f6bb7b178fa25eec9fd822b
-     console: Delete unused con_font_copy() callback implementations
+After updating to 6.19-rc2 I'm hitting the following panic on boot. It
+worked in 6.18.2. It is a Xen HVM domU with PCI device attached, this
+one specifically:
 
-4ee573086bd88ff3060dda07873bf755d332e9ba
-     Fonts: Add charcount field to font_desc
+02:00.0 Network controller [0280]: MEDIATEK Corp. MT7921K (RZ608) Wi-Fi 6E =
+80MHz [14c3:0608]
 
-a1ac250a82a5e97db71f14101ff7468291a6aaef
-     fbcon: Avoid using FNTCHARCNT() and hard-coded built-in font
-     charcount
+And the crash is:
 
-(Oh, by the way, this same regression also affects 5.4.302, and the same 
-3 patches fix the regression on 5.4 as well, once you manually fix merge 
-conflicts. Maybe it would be better to backport other additional commits 
-instead of fixing the merge conflicts manually, but since 5.4 is now EOL 
-I didn't dig that deep.)
+    ------------[ cut here ]------------
+    strnlen: detected buffer overflow: 17 byte read of buffer size 16
+    WARNING: lib/string_helpers.c:1035 at __fortify_report+0x4f/0x90, CPU#1=
+: kworker/1:1/51
+    Modules linked in: mt7921e mt7921_common mt792x_lib mt76_connac_lib mt7=
+6 intel_rapl_msr intel_rapl_common mac80211 ghash_clmulni_intel cfg80211 rf=
+kill ehci_pci libarc4 pcspkr ehci_hcd igc ata_generic i2c_piix4 pata_acpi i=
+2c_smbus serio_raw xen_scsiback target_core_mod xen_netback xen_privcmd xen=
+_gntdev xen_gntalloc xen_blkback xen_evtchn i2c_dev fuse loop nfnetlink ove=
+rlay xen_blkfront
+    CPU: 1 UID: 0 PID: 51 Comm: kworker/1:1 Not tainted 6.19.0-0.rc2.1.qube=
+s.1001.fc41.x86_64 #1 PREEMPT(full)=20
+    Hardware name: Xen HVM domU, BIOS 4.19.4 12/21/2025
+    Workqueue: events mt7921_init_work [mt7921_common]
+    RIP: 0010:__fortify_report+0x4f/0x90
+    Code: 48 83 fb 11 73 34 40 84 ed 48 c7 c0 02 62 d4 86 48 c7 c1 0c 62 d4=
+ 86 48 8b 34 dd 40 3d 54 86 48 0f 44 c8 48 8d 3d e1 af a5 01 <67> 48 0f b9 =
+3a 48 83 c4 10 5b 5d e9 1c fb 4d ff 48 89 34 24 48 c7
+    RSP: 0018:ffffd1b3801bbd38 EFLAGS: 00010246
+    RAX: ffffffff86d46202 RBX: 0000000000000001 RCX: ffffffff86d46202
+    RDX: 0000000000000011 RSI: ffffffff86d15c86 RDI: ffffffff8747f5c0
+    RBP: 0000000000000000 R08: 0000000000000010 R09: ffffd1b380389000
+    R10: ffffd1b3801bbc40 R11: 00000000ffffffff R12: 0000000000000000
+    R13: ffffd1b380389000 R14: 0000000000001000 R15: 0000000000000000
+    FS:  0000000000000000(0000) GS:ffff8d0ac8c52000(0000) knlGS:00000000000=
+00000
+    CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+    CR2: 000076de8e89f001 CR3: 000000000f4bb000 CR4: 0000000000750ef0
+    PKRU: 55555554
+    Call Trace:
+     <TASK>
+     ? request_firmware+0x3e/0x50
+     __fortify_panic+0xd/0xf
+     mt76_connac2_load_patch.cold+0x2b/0xe4 [mt76_connac_lib]
+     mt792x_load_firmware+0x36/0x150 [mt792x_lib]
+     mt7921_run_firmware+0x23/0xd0 [mt7921_common]
+     mt7921e_mcu_init+0x4c/0x7a [mt7921e]
+     mt7921_init_work+0x51/0x190 [mt7921_common]
+     process_one_work+0x18d/0x340
+     worker_thread+0x256/0x3a0
+     ? __pfx_worker_thread+0x10/0x10
+     kthread+0xfc/0x240
+     ? __pfx_kthread+0x10/0x10
+     ? __pfx_kthread+0x10/0x10
+     ret_from_fork+0x126/0x190
+     ? __pfx_kthread+0x10/0x10
+     ret_from_fork_asm+0x1a/0x30
+     </TASK>
+    ---[ end trace 0000000000000000 ]---
+    ------------[ cut here ]------------
+    kernel BUG at lib/string_helpers.c:1043!
+    Oops: invalid opcode: 0000 [#1] SMP NOPTI
+    CPU: 1 UID: 0 PID: 51 Comm: kworker/1:1 Tainted: G        W           6=
+=2E19.0-0.rc2.1.qubes.1001.fc41.x86_64 #1 PREEMPT(full)=20
+    Tainted: [W]=3DWARN
+    Hardware name: Xen HVM domU, BIOS 4.19.4 12/21/2025
+    Workqueue: events mt7921_init_work [mt7921_common]
+    RIP: 0010:__fortify_panic+0xd/0xf
+    Code: 44 8b 14 24 e9 12 dc 9c 00 0f 1f 40 00 90 90 90 90 90 90 90 90 90=
+ 90 90 90 90 90 90 90 f3 0f 1e fa 40 0f b6 ff e8 e3 f3 9c 00 <0f> 0b 48 8b =
+54 24 10 48 8b 74 24 08 4c 89 e9 48 c7 c7 16 5d d1 86
+    RSP: 0018:ffffd1b3801bbd60 EFLAGS: 00010286
+    RAX: ffffffff86d46202 RBX: 0000000000000000 RCX: ffffffff86d46202
+    RDX: 0000000000000011 RSI: ffffffff86d15c86 RDI: ffffffff8747f5c0
+    RBP: ffff8d0a4b752060 R08: 0000000000000010 R09: ffffd1b380389000
+    R10: ffffd1b3801bbc40 R11: 00000000ffffffff R12: 0000000000000000
+    R13: ffffd1b380389000 R14: 0000000000001000 R15: 0000000000000000
+    FS:  0000000000000000(0000) GS:ffff8d0ac8c52000(0000) knlGS:00000000000=
+00000
+    CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+    CR2: 000076de8e89f001 CR3: 000000000f4bb000 CR4: 0000000000750ef0
+    PKRU: 55555554
+    Call Trace:
+     <TASK>
+     mt76_connac2_load_patch.cold+0x2b/0xe4 [mt76_connac_lib]
+     mt792x_load_firmware+0x36/0x150 [mt792x_lib]
+     mt7921_run_firmware+0x23/0xd0 [mt7921_common]
+     mt7921e_mcu_init+0x4c/0x7a [mt7921e]
+     mt7921_init_work+0x51/0x190 [mt7921_common]
+     process_one_work+0x18d/0x340
+     worker_thread+0x256/0x3a0
+     ? __pfx_worker_thread+0x10/0x10
+     kthread+0xfc/0x240
+     ? __pfx_kthread+0x10/0x10
+     ? __pfx_kthread+0x10/0x10
+     ret_from_fork+0x126/0x190
+     ? __pfx_kthread+0x10/0x10
+     ret_from_fork_asm+0x1a/0x30
+     </TASK>
+    Modules linked in: mt7921e mt7921_common mt792x_lib mt76_connac_lib mt7=
+6 intel_rapl_msr intel_rapl_common mac80211 ghash_clmulni_intel cfg80211 rf=
+kill ehci_pci libarc4 pcspkr ehci_hcd igc ata_generic i2c_piix4 pata_acpi i=
+2c_smbus serio_raw xen_scsiback target_core_mod xen_netback xen_privcmd xen=
+_gntdev xen_gntalloc xen_blkback xen_evtchn i2c_dev fuse loop nfnetlink ove=
+rlay xen_blkfront
+    ---[ end trace 0000000000000000 ]---
+    RIP: 0010:__fortify_panic+0xd/0xf
+    Code: 44 8b 14 24 e9 12 dc 9c 00 0f 1f 40 00 90 90 90 90 90 90 90 90 90=
+ 90 90 90 90 90 90 90 f3 0f 1e fa 40 0f b6 ff e8 e3 f3 9c 00 <0f> 0b 48 8b =
+54 24 10 48 8b 74 24 08 4c 89 e9 48 c7 c7 16 5d d1 86
+    RSP: 0018:ffffd1b3801bbd60 EFLAGS: 00010286
+    RAX: ffffffff86d46202 RBX: 0000000000000000 RCX: ffffffff86d46202
+    RDX: 0000000000000011 RSI: ffffffff86d15c86 RDI: ffffffff8747f5c0
+    RBP: ffff8d0a4b752060 R08: 0000000000000010 R09: ffffd1b380389000
+    R10: ffffd1b3801bbc40 R11: 00000000ffffffff R12: 0000000000000000
+    R13: ffffd1b380389000 R14: 0000000000001000 R15: 0000000000000000
+    FS:  0000000000000000(0000) GS:ffff8d0ac8c52000(0000) knlGS:00000000000=
+00000
+    CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+    CR2: 00006225eb492548 CR3: 000000000e1b3000 CR4: 0000000000750ef0
+    PKRU: 55555554
+    Kernel panic - not syncing: Fatal exception
+    Kernel Offset: 0x4c00000 from 0xffffffff80200000 (relocation range: 0xf=
+fffffff80000000-0xffffffffbfffffff)
 
-Once these 3 patches are applied, I wonder if a5a923038d70 now becomes 
-necessary for 5.10.y. For what it's worth, it applies fine and the 
-resulting kernel seems to run OK in brief testing.
+--=20
+Best Regards,
+Marek Marczykowski-G=C3=B3recki
+Invisible Things Lab
 
--- 
--Barry K. Nathan  <barryn@pobox.com>
+--T9kD5aMDlTiT6Mn3
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhrpukzGPukRmQqkK24/THMrX1ywFAmlQQhQACgkQ24/THMrX
+1yyRfggAi22IXEhZpHNdJsYVfhyVs6aZSnIWhmKlFaTjWmpY/0+5NO7Cwz6L8GzG
+HMFyLvHv/FFtUyL7gZ+iECR4bc1Wyc+0Jt5JZ8BtMInQ5QKyF508Cx0O1+0VS28W
+gVcA7KPKg1rfZSMpwbacbWIpvV832PZ9l0Z16RYmDLItSZPy9SrkPwh99Qlr4bdX
+Dg/cvLA7bLzFwL4m2JyUXjvNkejjw62XdomtEG07gaAok4ArOIdT3lT+1ccZlZt5
+zHQmpaoouIL8QJGquqiEiawpNqXqeEr6PEYK8w5hLmiRskIrkUjYNatJ1xX7WoZ4
+uZ/rzRyWYh265rmqYyi1gK3WeckzvQ==
+=OC2x
+-----END PGP SIGNATURE-----
+
+--T9kD5aMDlTiT6Mn3--
