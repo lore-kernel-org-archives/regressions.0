@@ -1,72 +1,59 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39DB8329396;
-	Mon, 29 Dec 2025 15:40:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2BED22173D
+	for <regressions@lists.linux.dev>; Wed, 31 Dec 2025 06:11:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767022827; cv=none; b=jwhRYzz86vHS20NDMQbT0ct7vbQJCqM+ugJ8Xw0+cZvG8Glwp7sK1ybg2oWNb5J9mrOQ6pbX1s3I/Ebk/Z/7y28qKJamIX9N4kJg+xUJynDkat5n55Sv2XGjMZ2Xj1eiTz1Uu8BM2CaKP1oiVCA42iHZsipICh3UFSWONts/ppA=
+	t=1767161505; cv=none; b=gTVAm7pJX3Ag5ioeMXQsqhHAwECnB17wOca461Aidr8Kmj0bleADvT+HAj2lwjguyz3Fm+/0CfBR2XcpKPP9JQUH1mglhO4927dVHY5hwmvcRAGoEnRWZvgHXdyjpwhyH6+g+BidxAQwy91QeKnLm6gZ2LgYc7VzKLQiDyvfEmE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767022827; c=relaxed/simple;
-	bh=3Z8D+V4bPrmjRWPUc4/T1IQEppsi7x5xJn5ti8fdgl8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cL3b6eEWI92P3LYxSr/cKjFda6/VOqH993EudWv+KE6/0iTeMNV0Joi0ukO+d6D3g8XtCj+I87rYIfZzBT33RHDn2virZpn3dHDxoGfqTzqbySleMn6Ci21rPukIwsI0+rkAV9HO8bnuO+f8SgZl/7NifwAGQrVF0HTm7SYnDt8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=GZCacrrh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1767161505; c=relaxed/simple;
+	bh=t83rPWMegJooiy6QhbDdixiRaG5GgGAywkBRGaUjGgw=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=TwZvEh5R6Z1nplJ3mBCcIy6CMnDwAEUkbiNrWpZD9NGBUw7CPYpwppPRTAL0Din35dLcTjsdyz5po1UJacM0lvWiUKlr+7Qa7NbcrpVEYowyrZP8x+0QahioNcEoMyjAEg8Ht4r+BbDsahoZbJELxmqu/kqDTTR0c79YIc9K1Po=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=LCRTwwVd; arc=none smtp.client-ip=95.215.58.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="GZCacrrh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17530C16AAE;
-	Mon, 29 Dec 2025 15:40:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1767022826;
-	bh=3Z8D+V4bPrmjRWPUc4/T1IQEppsi7x5xJn5ti8fdgl8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GZCacrrhB9ZrtVqsp0fEzkyOnBtbzWRuk3bIfJCuy4ov0KB0u3oW8d+gN0V7FgJdr
-	 sl/qX1LQA758vQlCxGowQmh5f5AQEmK+WVMIgD0j/uIoUalM0RS2aGS6gN4Y6yZGm3
-	 Bess4oeXRYbcZyzNRG/9qQW32wZdWooJTNoJDG9Y=
-Date: Mon, 29 Dec 2025 16:40:24 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: stable@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-	alexander.deucher@amd.com, ivan.lipski@amd.com, Jerry.Zuo@amd.com,
-	bugs@lists.linux.dev, regressions@lists.linux.dev,
-	daniel.wheeler@amd.com,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	=?iso-8859-1?Q?P=E9ter?= Bohner <peter.bohner@student.kit.edu>,
-	Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
-	aurabindo.pillai@amd.com
-Subject: Re: [6.12.61 lts] [amdgpu]: regression: broken multi-monitor USB4
- dock on Ryzen 7840U
-Message-ID: <2025122914-province-vividly-fea1@gregkh>
-References: <9444c2d3-2aaf-4982-9f75-23dc814c3885@student.kit.edu>
- <ea735f1a-04c3-42dc-9e4c-4dc26659834f@oracle.com>
- <b1b8fc3b-6e80-403b-a1a0-726cc935fd2e@student.kit.edu>
- <bfb82a48-ebe3-4dc0-97e2-7cbf9d1e84ed@oracle.com>
- <7817ae7c-72d3-470d-b043-51bcfbee31b1@student.kit.edu>
- <d5664e24-71a1-4d46-96ad-979b15f97df9@student.kit.edu>
- <ee6e0b89-c3d0-4579-9c26-a9a980775e55@leemhuis.info>
- <24e5cb3b-73dd-43d3-9d35-b29d1d18340a@amd.com>
- <c7bec14b-ee8b-448f-a7ad-a741ff974ea9@leemhuis.info>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="LCRTwwVd"
+Message-ID: <59736756-d81b-41bb-84ba-a1b51057cdd4@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1767161500;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=z64DZs+w89x8AC/nna2gxUPH589poWq3I+QyEvTvhfM=;
+	b=LCRTwwVdR4yj1tB08o9pZeHt1Fum5bvDmLdKMuLInfbyBZNXGThoxR1ceSCzlbYvdsTVSM
+	AUkZHGpqnqjIme8hdkCmBi/zBVt0jRKFv4L/EE8GbWHZe8IYeNYy6+UTMNt7nDfgUofDYZ
+	IngeS+KaYn4GpogGxJ6y600nYBHU3uE=
+Date: Tue, 30 Dec 2025 22:11:34 -0800
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c7bec14b-ee8b-448f-a7ad-a741ff974ea9@leemhuis.info>
+Content-Language: en-US
+To: Lyude Paul <lyude@redhat.com>, dakr@kernel.org,
+ Timur Tabi <ttabi@nvidia.com>
+Cc: regressions@lists.linux.dev, nouveau@lists.freedesktop.org,
+ "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Matthew Schwartz <matthew.schwartz@linux.dev>
+Subject: [REGRESSION][BISECTED] Freeze when nouveau loads GSP firmware during
+ boot on Blackwell
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, Dec 16, 2025 at 12:14:23PM +0100, Thorsten Leemhuis wrote:
-> Greg, Sasha, could you please pick up 72e24456a54fe0 ("Revert
-> "drm/amd/display: Fix pbn to kbps Conversion"") [v6.19-rc1] for 6.12.y
-> and 6.17.y (if there is another 6.17.y version), as it fixes a a
-> regression there? See below for details.
-> 
-> Note, the mentioned patch contains "Cc:stable@vger.kernel.org # 6.17+",
-> but needs to go to 6.12.y, too: the culprit was backported there and
-> causes problems there, too.
+Hello,
 
+On the 6.19-rc kernel series with linux-firmware 20251125, I have been unable to boot into the kernel while using nouveau on my RTX 5090 rig. 
 
-Now queued up, thanks.
+It appears to freeze right after "nouveau 0000:01:00.0: gsp: RM version: 570.144" appears in my dmesg, and it locks up at this point. It works fine if I blacklist nouveau or use nomodeset.
 
-greg k-h
+After bisecting, the first bad commit is da67179e5538 ("drm/nouveau/gsp: Allocate fwsec-sb at boot"). As it's a Blackwell card, I cannot test with GSP disabled.
+
+Still trying to figure out the best way to provide complete logs of the freeze, as it's too early to go into my journal and sysrq keys don't work when it freezes... 
+
+Thanks,
+Matt
