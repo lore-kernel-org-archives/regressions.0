@@ -1,59 +1,161 @@
-Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
+Received: from fout-a7-smtp.messagingengine.com (fout-a7-smtp.messagingengine.com [103.168.172.150])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2BED22173D
-	for <regressions@lists.linux.dev>; Wed, 31 Dec 2025 06:11:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CB943A1E82
+	for <regressions@lists.linux.dev>; Wed, 31 Dec 2025 08:17:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.150
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767161505; cv=none; b=gTVAm7pJX3Ag5ioeMXQsqhHAwECnB17wOca461Aidr8Kmj0bleADvT+HAj2lwjguyz3Fm+/0CfBR2XcpKPP9JQUH1mglhO4927dVHY5hwmvcRAGoEnRWZvgHXdyjpwhyH6+g+BidxAQwy91QeKnLm6gZ2LgYc7VzKLQiDyvfEmE=
+	t=1767169060; cv=none; b=kbtZr4fsfOCNKxtaYYKwVHV1chyQTl9WxF7VbRyP4nofRQRNmS5rwlH87RkoRPN+o3iMQnysWF32KarLSYrXIaxii09ziLcWT4J+gwklkujg+W9i+dyJo/D43nrVdM0TfP9cP7AyK7OM6/ZwvyuyqmHIa6q2+3tMFT4aG7Ot3t4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767161505; c=relaxed/simple;
-	bh=t83rPWMegJooiy6QhbDdixiRaG5GgGAywkBRGaUjGgw=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=TwZvEh5R6Z1nplJ3mBCcIy6CMnDwAEUkbiNrWpZD9NGBUw7CPYpwppPRTAL0Din35dLcTjsdyz5po1UJacM0lvWiUKlr+7Qa7NbcrpVEYowyrZP8x+0QahioNcEoMyjAEg8Ht4r+BbDsahoZbJELxmqu/kqDTTR0c79YIc9K1Po=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=LCRTwwVd; arc=none smtp.client-ip=95.215.58.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1767169060; c=relaxed/simple;
+	bh=vfxorXJXtroycbRN6IUJ+dzctWvz+cPTc2VwPUJGtvM=;
+	h=From:To:Cc:Subject:Message-ID:Date:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XK0LTp7LgfzLGgAAuqb0ykIzvPcrXSC8o+b0smzOYYX7LQETB7GFZGsN4NjyD/paEpY3dz0fbTTJvCpBqLb5N1VImKqSXdC46R8S8FoEFtxtdrI3uLSOCW/VQcA/dqbrVw9ARcyqyLY5JVu42v/fFRuBd11bm66IMokaNf1/e3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kode54.net; spf=pass smtp.mailfrom=kode54.net; dkim=pass (2048-bit key) header.d=kode54.net header.i=@kode54.net header.b=28SGkhZI; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=iIA3royF; arc=none smtp.client-ip=103.168.172.150
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kode54.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kode54.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="LCRTwwVd"
-Message-ID: <59736756-d81b-41bb-84ba-a1b51057cdd4@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1767161500;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=z64DZs+w89x8AC/nna2gxUPH589poWq3I+QyEvTvhfM=;
-	b=LCRTwwVdR4yj1tB08o9pZeHt1Fum5bvDmLdKMuLInfbyBZNXGThoxR1ceSCzlbYvdsTVSM
-	AUkZHGpqnqjIme8hdkCmBi/zBVt0jRKFv4L/EE8GbWHZe8IYeNYy6+UTMNt7nDfgUofDYZ
-	IngeS+KaYn4GpogGxJ6y600nYBHU3uE=
-Date: Tue, 30 Dec 2025 22:11:34 -0800
+	dkim=pass (2048-bit key) header.d=kode54.net header.i=@kode54.net header.b="28SGkhZI";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="iIA3royF"
+Received: from phl-compute-06.internal (phl-compute-06.internal [10.202.2.46])
+	by mailfout.phl.internal (Postfix) with ESMTP id 4831BEC0199;
+	Wed, 31 Dec 2025 03:17:37 -0500 (EST)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-06.internal (MEProxy); Wed, 31 Dec 2025 03:17:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kode54.net; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm1; t=1767169057; x=1767255457; bh=vfxorXJXtr
+	oycbRN6IUJ+dzctWvz+cPTc2VwPUJGtvM=; b=28SGkhZIJahUk5flwTZxZVs3mn
+	Zzz/35ATuhrE6dgj+9UKjGtHEfR+GUv1nt/EI6Ad5SO3wyHeIy6Nm/RTVaFb64hF
+	XpXPsvBU+p2XWx9gt+wpJoTnQTVP9wbU+I1Uu7fJjPiQX7wssdOW7wZiGbyHGf5I
+	OkStmdWlK6xpvQboAzfcmoTWBCcjcSTrzpCXANG7swrjsbnsI3t/Vqbxu95NnGli
+	tMpqfFo54JtRL0vzm2pJJR2N3Q8X/dRJwk1HZnOitL/WTQjDFgjWyrqrNPGP5Vdz
+	wP6RAbNWpduhMD44AuTUhwnhFW2kxVZgfrXbCTzAeg7dXvDKstdv1m2z6NUQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
+	1767169057; x=1767255457; bh=vfxorXJXtroycbRN6IUJ+dzctWvz+cPTc2V
+	wPUJGtvM=; b=iIA3royFLYu7Hf4vbGqsM+ALVZcBD94ALeuiW0UP4RcXTc+pcpr
+	1JSrmW0pVfvLw5CZVfy8fqlg6kP1M2w5MrtiFvm8i4TH0ppOnK3BfE/pqgVx+DwX
+	oFtCvkFuBb5G2OLuanqO0u9MulKJfTX6SmD9gqBDB7qlKiSZkjvbWHsWoMMjLb4H
+	hCfmJRLXEKZyOIYShztwvZLuY+qbZqFePz12FE42uXo9sMCpmY7TyMKx0a4uljfD
+	rsJZV4Q7nzRXWs8i3UlSiEuY4qo/ulS8TJBUodeLhmsLMIDlxmbh9Vq36ElAfC26
+	830rihbz2ll1ir2MQvX6eIzd8TtIHd65AQQ==
+X-ME-Sender: <xms:IdxUaXTqxCqgCz9of-Qko-BHbpLgnVUt3KbXjOzKqbxC3-hKhnE-Dg>
+    <xme:IdxUaS1ruS0h9VIKPG-FxQRPnps1ULSfrsI3yGsNQLU_JgeGqTFyucO2tYD9uQsNv
+    F1YmT0H5zRDTBLI51QYmzn-ideHFZEgTRkFCW1ztC7n-d4jQhnrlKo>
+X-ME-Received: <xmr:IdxUactrk1VnxVyWZFQjc5IMUyUNMPBN2XhwiEVJcsPpIvgOtvP7ELOPCZ0>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdekvdegtdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpefhvfevuffkfgffjghfgggtsehgtderredtreejnecuhfhrohhmpeevhhhrihhsthho
+    phhhvghrucfunhhofihhihhllhcuoegthhhrihhssehkohguvgehgedrnhgvtheqnecugg
+    ftrfgrthhtvghrnhepvdeuffffvdekudeludeukeevudetiedvtefgffeivdeuieekkeel
+    ueejteeuhfehnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghruf
+    hiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegthhhrihhssehkohguvgehgedr
+    nhgvthdpnhgspghrtghpthhtohepjedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoh
+    epmhgrthhthhgvfidrshgthhifrghrthiisehlihhnuhigrdguvghvpdhrtghpthhtohep
+    lhihuhguvgesrhgvughhrghtrdgtohhmpdhrtghpthhtohepuggrkhhrsehkvghrnhgvlh
+    drohhrghdprhgtphhtthhopehtthgrsghisehnvhhiughirgdrtghomhdprhgtphhtthho
+    pehrvghgrhgvshhsihhonhhssehlihhsthhsrdhlihhnuhigrdguvghvpdhrtghpthhtoh
+    epnhhouhhvvggruheslhhishhtshdrfhhrvggvuggvshhkthhophdrohhrghdprhgtphht
+    thhopegurhhiqdguvghvvghlsehlihhsthhsrdhfrhgvvgguvghskhhtohhprdhorhhg
+X-ME-Proxy: <xmx:IdxUaYhCKtpDdHC8CyKtpt5LZf13xpYNFazda4PILxu5jbCievySLg>
+    <xmx:IdxUad9BsbQQ_67XzYPTR5sAeRN1dMm_sJaSUOKMUDT1w0V3l8hZZA>
+    <xmx:IdxUabuDJMGGJYh3hl4rRCGJSZPeC_DlFoqjiL9MnrUHYvcUMid9Dw>
+    <xmx:IdxUaRqniM1AbSNqyfHxH0wTzZzW9wxTvnOWGkF3KPVPAToKxsnyhA>
+    <xmx:IdxUaYVB1wU8cwFzMky4UkhYDZfJvl7t8G1xBRYMOV6XVlQ3_DbX4jY4>
+Feedback-ID: i9ec6488d:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 31 Dec 2025 03:17:36 -0500 (EST)
+From: Christopher Snowhill <chris@kode54.net>
+To: Matthew Schwartz <matthew.schwartz@linux.dev>
+Cc: Lyude Paul <lyude@redhat.com>, dakr@kernel.org,
+ Timur Tabi <ttabi@nvidia.com>, regressions@lists.linux.dev,
+ nouveau@lists.freedesktop.org,
+ "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
+Subject: RE: [REGRESSION][BISECTED] Freeze when nouveau loads GSP firmware
+ during boot on Blackwell
+Message-ID: <176716905502.167194.1676368663909086723@copycat>
+User-Agent: Dodo
+Date: Wed, 31 Dec 2025 00:17:35 -0800
+In-Reply-To: <59736756-d81b-41bb-84ba-a1b51057cdd4@linux.dev>
+References: <59736756-d81b-41bb-84ba-a1b51057cdd4@linux.dev>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Language: en-US
-To: Lyude Paul <lyude@redhat.com>, dakr@kernel.org,
- Timur Tabi <ttabi@nvidia.com>
-Cc: regressions@lists.linux.dev, nouveau@lists.freedesktop.org,
- "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Matthew Schwartz <matthew.schwartz@linux.dev>
-Subject: [REGRESSION][BISECTED] Freeze when nouveau loads GSP firmware during
- boot on Blackwell
-Content-Type: text/plain; charset=UTF-8
+Content-Type: multipart/signed; protocol="application/pgp-signature";
+ micalg="pgp-sha512"; boundary="===============5313257699487410381=="
+
+--===============5313257699487410381==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+
+
+On Tue 30 Dec 2025 10:11:34 PM , Matthew Schwartz wrote:
+> Hello,
+>=20
+> On the 6.19-rc kernel series with linux-firmware 20251125, I have been unab=
+le to boot into the kernel while using nouveau on my RTX 5090 rig.=20
+>=20
+> It appears to freeze right after "nouveau 0000:01:00.0: gsp: RM version: 57=
+0.144" appears in my dmesg, and it locks up at this point. It works fine if I=
+ blacklist nouveau or use nomodeset.
+>=20
+> After bisecting, the first bad commit is da67179e5538 ("drm/nouveau/gsp: Al=
+locate fwsec-sb at boot"). As it's a Blackwell card, I cannot test with GSP d=
+isabled.
+>=20
+> Still trying to figure out the best way to provide complete logs of the fre=
+eze, as it's too early to go into my journal and sysrq keys don't work when i=
+t freezes...=20
+>=20
+> Thanks,
+> Matt
+
+I encountered the same bug possibly, except in my case, it resulted in
+an OOPS, and the total failure of video output. However, I was able to
+log into LUKS and pull some kernel logs:
+
+https://lore.kernel.org/all/176698808133.6372.2408917375327107249@copycat/
+
+The commonality here seems to be crashing dereferencing offset 0xCC in a
+structure from bit_entry(struct nvkm_bios *bios, u8 id, struct bit_entry *bit)
+
+Nearest I can guess without doing further proper examination is that
+it's dereferencing a NULL nvkm_bios pointer right at the top of the
+function. Maybe something isn't initializing the BIOS member before this
+ctor is called on Blackwell? Race conditions are really fun to deal
+with.
+
+--===============5313257699487410381==
+Content-Type: application/pgp-signature
 Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Disposition: attachment; filename="signature.asc"
+MIME-Version: 1.0
 
-Hello,
+-----BEGIN PGP SIGNATURE-----
 
-On the 6.19-rc kernel series with linux-firmware 20251125, I have been unable to boot into the kernel while using nouveau on my RTX 5090 rig. 
+iQIzBAABCgAdFiEEdiLr51NrDwQ29PFjjWyYR59K3nEFAmlU3B8ACgkQjWyYR59K
+3nG3hRAAoVDhI3L0HPj+JQ24NB4gR2CEHw/LCnWByyiNKBDfGGNl5MCm8rDQl630
+SiznK6Zk0VRbqIenPxODjl2v57n9uLOH8HGM/OPYmPTXvnemV4LpQpwHAsJYDJ2d
+K9/otPRSHQvi3NHrJnyorHLAgZ8yqDEukKTvxj9TsSiFSy7jbubAoCGDP76oisPP
+PrNVTb8xkdbAL7yrFkGJh4tRBsfZOFJAPTKnS4QwHF6VHCqRhSEY3Dv3xU9pm1FC
+w0kGk9ZfuJt+CQw1QiIQIAP6qiUx2lRyGd1IvK8qdEW3slZjkSZaSqmm0tTW9ZJz
+Dgd80n5wqKS/fJPm35dAhcm73JNFtcZQb0K8oD0twGUwyIGtfj9/WmDcobCs7tlf
+LYCsjf682YY/QqlLGdxY3slpwfy9eRoEriIRT4b6NxnP/Ze6ryVwXL/0Sql3xQp9
+cxJu9Ipv4lHt0m9zT2u1zRPYG9HMgCjWnL2do7iT3kYtvqDmGJymEolU3NBYU7V5
+v9Uq1+ZnMwVShTPF/qFRzz0636O8ckqWZqIlRLeMtouDKU8ave8HZvzF9j5EqIfC
+D+ikDB2c/UbJGKYg0VdY+qPIKF0ZIKKQ+UsrmlTLiR0NnlX6SXVb3CT7yHjL9GG5
+bG7tPGFXTGQhSW7VTFyZ5QO9koh0tmVj63hhhIV3TMyFpWwCbbI=
+=EZjI
+-----END PGP SIGNATURE-----
 
-It appears to freeze right after "nouveau 0000:01:00.0: gsp: RM version: 570.144" appears in my dmesg, and it locks up at this point. It works fine if I blacklist nouveau or use nomodeset.
-
-After bisecting, the first bad commit is da67179e5538 ("drm/nouveau/gsp: Allocate fwsec-sb at boot"). As it's a Blackwell card, I cannot test with GSP disabled.
-
-Still trying to figure out the best way to provide complete logs of the freeze, as it's too early to go into my journal and sysrq keys don't work when it freezes... 
-
-Thanks,
-Matt
+--===============5313257699487410381==--
