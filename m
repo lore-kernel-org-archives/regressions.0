@@ -1,161 +1,157 @@
-Received: from fout-a7-smtp.messagingengine.com (fout-a7-smtp.messagingengine.com [103.168.172.150])
+Received: from smtpbguseast1.qq.com (smtpbguseast1.qq.com [54.204.34.129])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CB943A1E82
-	for <regressions@lists.linux.dev>; Wed, 31 Dec 2025 08:17:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.150
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B62A30F545
+	for <regressions@lists.linux.dev>; Fri,  2 Jan 2026 12:18:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.204.34.129
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767169060; cv=none; b=kbtZr4fsfOCNKxtaYYKwVHV1chyQTl9WxF7VbRyP4nofRQRNmS5rwlH87RkoRPN+o3iMQnysWF32KarLSYrXIaxii09ziLcWT4J+gwklkujg+W9i+dyJo/D43nrVdM0TfP9cP7AyK7OM6/ZwvyuyqmHIa6q2+3tMFT4aG7Ot3t4=
+	t=1767356341; cv=none; b=VQpySI1QVMM5EKb1xAUzU+QvGF8jKCrMS+sbBsCH4EHxYlYEdjYdLQta8s9Zbuws6iDomb1VjC9NEjqtbTO7HgYeqghV4gjio0j3blydGskGHBYxJdYWA/41wnF3+/YQ1H2Re8HRLihvrANG6fdvfAxhNfW8zWxtHdly9v/796A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767169060; c=relaxed/simple;
-	bh=vfxorXJXtroycbRN6IUJ+dzctWvz+cPTc2VwPUJGtvM=;
-	h=From:To:Cc:Subject:Message-ID:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XK0LTp7LgfzLGgAAuqb0ykIzvPcrXSC8o+b0smzOYYX7LQETB7GFZGsN4NjyD/paEpY3dz0fbTTJvCpBqLb5N1VImKqSXdC46R8S8FoEFtxtdrI3uLSOCW/VQcA/dqbrVw9ARcyqyLY5JVu42v/fFRuBd11bm66IMokaNf1/e3k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kode54.net; spf=pass smtp.mailfrom=kode54.net; dkim=pass (2048-bit key) header.d=kode54.net header.i=@kode54.net header.b=28SGkhZI; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=iIA3royF; arc=none smtp.client-ip=103.168.172.150
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kode54.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kode54.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kode54.net header.i=@kode54.net header.b="28SGkhZI";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="iIA3royF"
-Received: from phl-compute-06.internal (phl-compute-06.internal [10.202.2.46])
-	by mailfout.phl.internal (Postfix) with ESMTP id 4831BEC0199;
-	Wed, 31 Dec 2025 03:17:37 -0500 (EST)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-06.internal (MEProxy); Wed, 31 Dec 2025 03:17:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kode54.net; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm1; t=1767169057; x=1767255457; bh=vfxorXJXtr
-	oycbRN6IUJ+dzctWvz+cPTc2VwPUJGtvM=; b=28SGkhZIJahUk5flwTZxZVs3mn
-	Zzz/35ATuhrE6dgj+9UKjGtHEfR+GUv1nt/EI6Ad5SO3wyHeIy6Nm/RTVaFb64hF
-	XpXPsvBU+p2XWx9gt+wpJoTnQTVP9wbU+I1Uu7fJjPiQX7wssdOW7wZiGbyHGf5I
-	OkStmdWlK6xpvQboAzfcmoTWBCcjcSTrzpCXANG7swrjsbnsI3t/Vqbxu95NnGli
-	tMpqfFo54JtRL0vzm2pJJR2N3Q8X/dRJwk1HZnOitL/WTQjDFgjWyrqrNPGP5Vdz
-	wP6RAbNWpduhMD44AuTUhwnhFW2kxVZgfrXbCTzAeg7dXvDKstdv1m2z6NUQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
-	1767169057; x=1767255457; bh=vfxorXJXtroycbRN6IUJ+dzctWvz+cPTc2V
-	wPUJGtvM=; b=iIA3royFLYu7Hf4vbGqsM+ALVZcBD94ALeuiW0UP4RcXTc+pcpr
-	1JSrmW0pVfvLw5CZVfy8fqlg6kP1M2w5MrtiFvm8i4TH0ppOnK3BfE/pqgVx+DwX
-	oFtCvkFuBb5G2OLuanqO0u9MulKJfTX6SmD9gqBDB7qlKiSZkjvbWHsWoMMjLb4H
-	hCfmJRLXEKZyOIYShztwvZLuY+qbZqFePz12FE42uXo9sMCpmY7TyMKx0a4uljfD
-	rsJZV4Q7nzRXWs8i3UlSiEuY4qo/ulS8TJBUodeLhmsLMIDlxmbh9Vq36ElAfC26
-	830rihbz2ll1ir2MQvX6eIzd8TtIHd65AQQ==
-X-ME-Sender: <xms:IdxUaXTqxCqgCz9of-Qko-BHbpLgnVUt3KbXjOzKqbxC3-hKhnE-Dg>
-    <xme:IdxUaS1ruS0h9VIKPG-FxQRPnps1ULSfrsI3yGsNQLU_JgeGqTFyucO2tYD9uQsNv
-    F1YmT0H5zRDTBLI51QYmzn-ideHFZEgTRkFCW1ztC7n-d4jQhnrlKo>
-X-ME-Received: <xmr:IdxUactrk1VnxVyWZFQjc5IMUyUNMPBN2XhwiEVJcsPpIvgOtvP7ELOPCZ0>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdekvdegtdcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpefhvfevuffkfgffjghfgggtsehgtderredtreejnecuhfhrohhmpeevhhhrihhsthho
-    phhhvghrucfunhhofihhihhllhcuoegthhhrihhssehkohguvgehgedrnhgvtheqnecugg
-    ftrfgrthhtvghrnhepvdeuffffvdekudeludeukeevudetiedvtefgffeivdeuieekkeel
-    ueejteeuhfehnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghruf
-    hiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegthhhrihhssehkohguvgehgedr
-    nhgvthdpnhgspghrtghpthhtohepjedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoh
-    epmhgrthhthhgvfidrshgthhifrghrthiisehlihhnuhigrdguvghvpdhrtghpthhtohep
-    lhihuhguvgesrhgvughhrghtrdgtohhmpdhrtghpthhtohepuggrkhhrsehkvghrnhgvlh
-    drohhrghdprhgtphhtthhopehtthgrsghisehnvhhiughirgdrtghomhdprhgtphhtthho
-    pehrvghgrhgvshhsihhonhhssehlihhsthhsrdhlihhnuhigrdguvghvpdhrtghpthhtoh
-    epnhhouhhvvggruheslhhishhtshdrfhhrvggvuggvshhkthhophdrohhrghdprhgtphht
-    thhopegurhhiqdguvghvvghlsehlihhsthhsrdhfrhgvvgguvghskhhtohhprdhorhhg
-X-ME-Proxy: <xmx:IdxUaYhCKtpDdHC8CyKtpt5LZf13xpYNFazda4PILxu5jbCievySLg>
-    <xmx:IdxUad9BsbQQ_67XzYPTR5sAeRN1dMm_sJaSUOKMUDT1w0V3l8hZZA>
-    <xmx:IdxUabuDJMGGJYh3hl4rRCGJSZPeC_DlFoqjiL9MnrUHYvcUMid9Dw>
-    <xmx:IdxUaRqniM1AbSNqyfHxH0wTzZzW9wxTvnOWGkF3KPVPAToKxsnyhA>
-    <xmx:IdxUaYVB1wU8cwFzMky4UkhYDZfJvl7t8G1xBRYMOV6XVlQ3_DbX4jY4>
-Feedback-ID: i9ec6488d:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 31 Dec 2025 03:17:36 -0500 (EST)
-From: Christopher Snowhill <chris@kode54.net>
-To: Matthew Schwartz <matthew.schwartz@linux.dev>
-Cc: Lyude Paul <lyude@redhat.com>, dakr@kernel.org,
- Timur Tabi <ttabi@nvidia.com>, regressions@lists.linux.dev,
- nouveau@lists.freedesktop.org,
- "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
-Subject: RE: [REGRESSION][BISECTED] Freeze when nouveau loads GSP firmware
- during boot on Blackwell
-Message-ID: <176716905502.167194.1676368663909086723@copycat>
-User-Agent: Dodo
-Date: Wed, 31 Dec 2025 00:17:35 -0800
-In-Reply-To: <59736756-d81b-41bb-84ba-a1b51057cdd4@linux.dev>
-References: <59736756-d81b-41bb-84ba-a1b51057cdd4@linux.dev>
+	s=arc-20240116; t=1767356341; c=relaxed/simple;
+	bh=eRWe2SHSutFLGWTgcPHuSWidsONEj26vUllLjANnkv0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=q8siT7VLtyfqgWixS6L7QpetBFbRffc787u/Dkh5Gr/hhsf5SStxVL3SnXMpC9BRVVjxwlMV26g4TZ+FF5gQIOXzSLtbQQKJISoEOCO3uhRxnufjTVw1fQibNVRwNNiqi+l5LFtD4172ZWzq6ev5GtXwOBZZ0b2z0QpbJZMh+AE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=radxa.com; spf=pass smtp.mailfrom=radxa.com; arc=none smtp.client-ip=54.204.34.129
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=radxa.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=radxa.com
+X-QQ-mid: zesmtpsz2t1767356272t8ce57337
+X-QQ-Originating-IP: 5updBiJ6j1JD1MnXiSXA33aFX2J4IACcm/jbI5OFIJA=
+Received: from [192.168.254.128] ( [106.150.157.243])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Fri, 02 Jan 2026 20:17:50 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 13118132810811575579
+Message-ID: <ADED015D50C33884+c789fd7c-c5fd-4947-8497-033d2938ac34@radxa.com>
+Date: Fri, 2 Jan 2026 21:17:50 +0900
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; protocol="application/pgp-signature";
- micalg="pgp-sha512"; boundary="===============5313257699487410381=="
-
---===============5313257699487410381==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-
-
-
-On Tue 30 Dec 2025 10:11:34 PM , Matthew Schwartz wrote:
-> Hello,
->=20
-> On the 6.19-rc kernel series with linux-firmware 20251125, I have been unab=
-le to boot into the kernel while using nouveau on my RTX 5090 rig.=20
->=20
-> It appears to freeze right after "nouveau 0000:01:00.0: gsp: RM version: 57=
-0.144" appears in my dmesg, and it locks up at this point. It works fine if I=
- blacklist nouveau or use nomodeset.
->=20
-> After bisecting, the first bad commit is da67179e5538 ("drm/nouveau/gsp: Al=
-locate fwsec-sb at boot"). As it's a Blackwell card, I cannot test with GSP d=
-isabled.
->=20
-> Still trying to figure out the best way to provide complete logs of the fre=
-eze, as it's too early to go into my journal and sysrq keys don't work when i=
-t freezes...=20
->=20
-> Thanks,
-> Matt
-
-I encountered the same bug possibly, except in my case, it resulted in
-an OOPS, and the total failure of video output. However, I was able to
-log into LUKS and pull some kernel logs:
-
-https://lore.kernel.org/all/176698808133.6372.2408917375327107249@copycat/
-
-The commonality here seems to be crashing dereferencing offset 0xCC in a
-structure from bit_entry(struct nvkm_bios *bios, u8 id, struct bit_entry *bit)
-
-Nearest I can guess without doing further proper examination is that
-it's dereferencing a NULL nvkm_bios pointer right at the top of the
-function. Maybe something isn't initializing the BIOS member before this
-ctor is called on Blackwell? Race conditions are really fun to deal
-with.
-
---===============5313257699487410381==
-Content-Type: application/pgp-signature
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION][BISECTED] wifi broken on pinebook pro
+To: Jan Palus <jpalus@fastmail.com>, Peter Robinson <pbrobinson@gmail.com>
+Cc: linux-rockchip@lists.infradead.org, Heiko Stuebner <heiko@sntech.de>,
+ regressions@lists.linux.dev
+References: <aUKOlj-RvTYlrpiS@rock.grzadka>
+ <CALeDE9OzCzbhKmc61Kgbmzr67oJnjZMjsO6yYbkXujzA-OuO+A@mail.gmail.com>
+ <aVJutYTmhA14rwPY@rock.grzadka>
+Content-Language: en-US
+From: FUKAUMI Naoki <naoki@radxa.com>
+In-Reply-To: <aVJutYTmhA14rwPY@rock.grzadka>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment; filename="signature.asc"
-MIME-Version: 1.0
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpsz:radxa.com:qybglogicsvrsz:qybglogicsvrsz4b-0
+X-QQ-XMAILINFO: M75I2DDAzREFOT+jt4RYYkNGiDtapIzh8tg/oLJaOL5w3vlVnhrczGMO
+	ufxdNrYMdlEFzQgQfs9I2ryhhnqKE05Hs887T7Awtd6b5Dk/K8t2dovrSq4WgcUksyKeWO+
+	i/4kG8OVaCG6bVO2KQDVsPe7T3FYYWimYXm2bzambJoiPUTuqbbcUm9UeiIsGfP9LHtRCbG
+	45sOKo4lkwa3rFU5gO/pMA2BP86JBpZBY3LZZfFfk+YGu0dziuEAmNuh/Tjrur4yM5iSUAQ
+	27RSHwAsGyFQDVdxSRGsL+At8htrvOLttn+jTxNoaiV/8BawJH02EEDde5Dnf7EgE+3iJ7o
+	LMjdXVhomx7wBDT+eyZ8F4SU8tGQFPRKdrFpvh796x99An1Ch4jJ7agQjbxn75LwiPI1FaF
+	GPP1vgosB3nZVXBUedNVtwQ2oezkRmLviY9bLnWHo7hFmYEihOy2TtpiLPgw3AHOd8hAWzX
+	PmxSPDXOjfXTZexs89vSdgm03V132wbLXwEK8Dq4zq/8JAeC8eErqwJ3F7TJGf69Rde9pbl
+	GhAqtfWcvFTv2sPSQoS+71p7Dz6TH7XFlQThcNCk3NdgFDI7tJslJwgia7Q7aavdvpS4eJy
+	G2tBYlUnT+F5KRbc4qqhwQ2/5BoiD98qSaOpNVX1CYipTQwEZ4JzA7roxY59hlmj4lb/QRv
+	eVBpLzsU02L+3f4qliIgqn/CD6RpqRbHNhDX4ocmKI0pTLEYfjv7glzhdQuDKPpSJCnKsWP
+	58e/2QtKMiffAKHr2wQk5d7/Lq6SbUsuRBBpO7rQWtdxWJ7TKCUHsA1X993e1RW4oqzsvPl
+	1AXqF8CGDDFtk6e2ZXNT6hSHMp2HTvkuqkBcsKKBkD9940n7i+nV2AuMS2y48IAq86XdAs+
+	N/j3E0cyPB/eVbaI2L5+TbvnmPpsmch9L7RKzxGLtzPE/LiB2+BVOtr+rKFIyWVGCuEpm0V
+	wUmbj9cSsQ/aUDjLkX2LQXIqSrBGlMDMHQ7Xo2f/jl81J5w==
+X-QQ-XMRINFO: MSVp+SPm3vtSI1QTLgDHQqIV1w2oNKDqfg==
+X-QQ-RECHKSPAM: 0
 
------BEGIN PGP SIGNATURE-----
+Hi Jan,
 
-iQIzBAABCgAdFiEEdiLr51NrDwQ29PFjjWyYR59K3nEFAmlU3B8ACgkQjWyYR59K
-3nG3hRAAoVDhI3L0HPj+JQ24NB4gR2CEHw/LCnWByyiNKBDfGGNl5MCm8rDQl630
-SiznK6Zk0VRbqIenPxODjl2v57n9uLOH8HGM/OPYmPTXvnemV4LpQpwHAsJYDJ2d
-K9/otPRSHQvi3NHrJnyorHLAgZ8yqDEukKTvxj9TsSiFSy7jbubAoCGDP76oisPP
-PrNVTb8xkdbAL7yrFkGJh4tRBsfZOFJAPTKnS4QwHF6VHCqRhSEY3Dv3xU9pm1FC
-w0kGk9ZfuJt+CQw1QiIQIAP6qiUx2lRyGd1IvK8qdEW3slZjkSZaSqmm0tTW9ZJz
-Dgd80n5wqKS/fJPm35dAhcm73JNFtcZQb0K8oD0twGUwyIGtfj9/WmDcobCs7tlf
-LYCsjf682YY/QqlLGdxY3slpwfy9eRoEriIRT4b6NxnP/Ze6ryVwXL/0Sql3xQp9
-cxJu9Ipv4lHt0m9zT2u1zRPYG9HMgCjWnL2do7iT3kYtvqDmGJymEolU3NBYU7V5
-v9Uq1+ZnMwVShTPF/qFRzz0636O8ckqWZqIlRLeMtouDKU8ave8HZvzF9j5EqIfC
-D+ikDB2c/UbJGKYg0VdY+qPIKF0ZIKKQ+UsrmlTLiR0NnlX6SXVb3CT7yHjL9GG5
-bG7tPGFXTGQhSW7VTFyZ5QO9koh0tmVj63hhhIV3TMyFpWwCbbI=
-=EZjI
------END PGP SIGNATURE-----
+Just FYI,
 
---===============5313257699487410381==--
+On 12/29/25 21:18, Jan Palus wrote:
+> On 29.12.2025 06:23, Peter Robinson wrote:
+>> On Wed, 17 Dec 2025 at 11:26, Jan Palus <jpalus@fastmail.com> wrote:
+>>>
+>>> WiFi no longer works on Pinebook Pro after upgrade to kernel 6.18. It
+>>> appears firmware fails to load:
+>>>
+>>> ...
+>>> mmc_host mmc0: card is non-removable.
+>>> mmc_host mmc0: Bus speed (slot 0) = 400000Hz (slot req 400000Hz, actual 400000HZ div = 0)
+>>> Bluetooth: hci0: BCM: features 0x0f
+>>> Bluetooth: hci0: BCM4345C5 Ampak_CL1 UART 37.4 MHz BT 5.0 [Version: Version: 0039.0089]
+>>> Bluetooth: hci0: BCM4345C5 (003.006.006) build 0089
+>>> mmc_host mmc0: Bus speed (slot 0) = 148500000Hz (slot req 150000000Hz, actual 148500000HZ div = 0)
+>>> dwmmc_rockchip fe310000.mmc: Successfully tuned phase to 55
+>>> mmc0: new UHS-I speed SDR104 SDIO card at address 0001
+>>> brcmfmac: brcmf_fw_alloc_request: using brcm/brcmfmac43456-sdio for chip BCM4345/9
+>>> usbcore: registered new interface driver brcmfmac
+>>> brcmfmac mmc0:0001:1: Direct firmware load for brcm/brcmfmac43456-sdio.pine64,pinebook-pro.bin failed with error -2
+>>> brcmfmac: brcmf_sdio_bus_rxctl: resumed on timeout
+>>> ieee80211 phy0: brcmf_bus_started: failed: -110
+>>> ieee80211 phy0: brcmf_attach: dongle is not responding: err=-110
+>>> brcmfmac: brcmf_sdio_firmware_callback: brcmf_attach failed
+>>>
+>>> compared to 6.17 instead of last 4 lines with errors there's single one
+>>> with info about loaded firmware:
+>>>
+>>> brcmfmac: brcmf_c_preinit_dcmds: Firmware: BCM4345/9 wl0: May 14 2020 17:26:08 version 7.84.17.1 (r871554) FWID 01-3d9e1d87
+>>>
+>>> Bisected to:
+>>>
+>>> 6d54d935062e2d4a7d3f779ceb9eeff108d0535d is the first new commit
+>>> commit 6d54d935062e2d4a7d3f779ceb9eeff108d0535d (HEAD)
+>>> Author: Peter Robinson <pbrobinson@gmail.com>
+>>> Date:   Wed Aug 27 16:30:37 2025
+>>>
+>>>      arm64: dts: rockchip: Further describe the WiFi for the Pinebook Pro
+>>>
+>>>      Update the wake-up pin and associated interupt details for the
+>>>      Pinebook Pro WiFi module.
+>>>
+>>>      Signed-off-by: Peter Robinson <pbrobinson@gmail.com>
+>>>      Link: https://lore.kernel.org/r/20250827143040.1644867-1-pbrobinson@gmail.com
+>>>      Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+>>>
+>>>   arch/arm64/boot/dts/rockchip/rk3399-pinebook-pro.dts | 18 ++++++++++++++++++
+>>>   1 file changed, 18 insertions(+)
+>>>
+>>>
+>>> With this commit reverted on top of 6.18.1 wireless connection works
+>>> fine.
+>>>
+>>> Not sure what could be relevant but:
+>>> - it's an early model, I think second batch, delivered end of 2019
+>>
+>> Is it the Synoptics or the Cypress/Infineon module? What firmware are you using?
+> 
+> Judging by the fact acquisition by Synaptics happened sometime late
+> 2020/early 2021 I guess it must be Cypress? I'm not really familiar with
+> BCM43456 chip history. Firmware files used are
+> brcm/brcmfmac43456-sdio.{bin,clm_blob,txt} exactly those found at:
+> 
+> https://github.com/RPi-Distro/firmware-nonfree/tree/trixie/debian/config/brcm80211/brcm
+
+I'm using the same firmware for the Radxa CM3J equipped with the 
+AP6745(BCM43456) and experiencing the same error(brcmf_sdio_bus_rxctl: 
+resumed on timeout) when the interrupt is enabled.
+
+  https://lore.kernel.org/linux-rockchip/A7ADEB12E25ED346+00048ee9-c4d6-442d-a02c-cefbdc6be353@radxa.com/
+
+Best regards,
+
+--
+FUKAUMI Naoki
+Radxa Computer (Shenzhen) Co., Ltd.
+
+>>
+>>> - mainline uboot 2025.10 is used
+>>>
+>>>
+>>> #regzbot introduced: 6d54d93506
+> 
+> _______________________________________________
+> Linux-rockchip mailing list
+> Linux-rockchip@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
+> 
+
