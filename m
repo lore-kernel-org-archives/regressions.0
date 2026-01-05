@@ -1,178 +1,135 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8E06290F
-	for <regressions@lists.linux.dev>; Sat,  3 Jan 2026 11:33:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45DD6346A02;
+	Mon,  5 Jan 2026 12:46:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767440033; cv=none; b=nIk1bNgEiVpSne7lJZOFL7vxDdufEtZ/3oVXwhvTi252Kj1Bj9Hh8JMWFIWAjlPVg2fk3uJHvq1TGirzsXm43FxHKte2gxu8Ek+vudDs8OgVOUDeqMdWdVWLTjotfhrfHcJRiGWsrVa5Kk0j/tqfeIT7TK8GEn4yuhMa8Kx9ZFw=
+	t=1767617219; cv=none; b=LRvDduoK+8QdjpIBLiJt9w0x3JgVlD3rWg2A6EVdJYa5Bs+XTxsNamQ3vGKFyG67ahSfgH6G/Ji2SRJwf1bp88aUtT6UGiJKVJcm7tIiEm5kbi9VG1KVSkt7zqhSoVgPJdzWRqOATY5J7OUqrKW0CnqQmGaDQ1UeefV4I0fcxyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767440033; c=relaxed/simple;
-	bh=R29kdBhr4Ys/fp6QB97hNwawADUCldVF5jOA/zcRW9c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UCTTJCFVkwVkPBk6YE29NkzoD9CAUs6tsJDifDAK5EEjA95IXN7p6ftBlfZRPTCfd2SCO78lNvz2ufo+V2uWeHLGjrIJ6FtYio3NoNSS04PPBeQkY8jOJjM50eBHMxaMgp58Q020a4EJH7lor8eqB86U2MwXWPvvphag5xcxMKE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cWZTdBIr; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1767617219; c=relaxed/simple;
+	bh=321yEr8YVsmjW3bML0bGo3Vdw9hbGBArRwRU7u8cNo4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tE5H+5z7aLZHZ2jVlbgOaXwiHjFRbCu5NlvtmsCy47DrdbgdNVqv/31VRVoSmg9w87h2gIONFavsCAvHxtjG3jLK28i+BVuvefH/cd9cLl8QMAlB97c0Eyt6IoW5xMy1EBRVwSVPRWyE1qWOQlJqdqCqpzYNxSaUIJvkm7r9BXM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=PLzJYIml; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cWZTdBIr"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-47797676c62so12114015e9.1
-        for <regressions@lists.linux.dev>; Sat, 03 Jan 2026 03:33:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1767440030; x=1768044830; darn=lists.linux.dev;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ufcefJVsovNbptadQDCIANuVGLP5nh4jVV/94BHGrao=;
-        b=cWZTdBIrGIM2TpsixlSNW6CBvLfgj/T7sG6fDR3+Uc8H0O1e5pu5wSaF2t8wH+sZlr
-         d4Y9PGIVrJje9NuL7HzFWXgjs14LlVcIMiF66UQ5xHkJHnqffi9dj7aIimcjq8U3zIKi
-         bixMaS3YZcFj+Fvsd1SWmXUwAXBKaQODNqoLYQI9TFzj6l81itCvbASFT/99Krpp9NKx
-         mFyR85IWp2yl/iScBvvQ4enkD/NJrZOUqNfPaz4lRxHo5Pf5xDkShcFCKYB+Kyj2iayR
-         T+sLCR7b7MgYFucIHupFT93RbHjC20P4wZ2ZlBRSGz5z73MdhKplkpyoszQD5EzWsRPG
-         /TfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767440030; x=1768044830;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ufcefJVsovNbptadQDCIANuVGLP5nh4jVV/94BHGrao=;
-        b=VFzU8Q0rOyW4qPdBjDofP0pIPjnh4WWt5V5byi0qLWrkmcdtPY4AJDj4jyv9s/O/jm
-         DKOWxN1BGU0H/DR56HCqJRn4GFoTOKFHkJ3fvsw37sTYZLJjgPcZ+/dj++eSZDNIafSG
-         GnxAG6xGh51dfTMKZ6qQPtbVDDcwrKbfuLzb1u/xipZK++mqInNe5mce6HKvRYwtpo6I
-         fevXAnw7oN1S2HpzfSP2445w2hLihWcOp16vLae5tsEcHKic8EErKsR5FvBShXWlzQmM
-         jZd1I+kgIk+U+rOROcRiTyqIT4MbTzsAvuD1kHakY+2HYpX9qrXSGg4jEuq3PQTr0gRn
-         Zn0g==
-X-Forwarded-Encrypted: i=1; AJvYcCWkHZS0Tsg2bs7AqLCeYHYPOt7xa11n/PBJe1LmstR2GRi2klIRdSpGC5q/RL9ErjG9QWlzLFWwzm6Thg==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzCuuelLo4nnebX23Af0x4fRu17asi+va7+SU1PNJmlFOeG+jpM
-	bZO636pMXL3Qlylxw0mmNY4iM4uSreIVOJr/Z1vdJYc+7OU3qU4LMq5N
-X-Gm-Gg: AY/fxX7issWbuVHv3yV97F5eEntNAGSQuvHGdTfvTOCIng1XNt7RgroXOzBR5NMEonW
-	UPw9Kh53dr5mLM1wJDop38TnuzlxFnjJ3ePl/nVRmHyJDO1tUkdQdOshInGRB7VQVpub/SPrGUk
-	PiXZFBEJJ1REV08DTJu3cJdwn6m9yltEEWT/QfzCbZw9ZztdFxlUfOEzimsaZwLq+8N/nV8wWYz
-	Qu/LHTsFGXKSbB6FKlV2SpzV83EhYgMY569f8DA7wJ5o/ixoCdM1dm0FaBJwAxea5sJM16b5Qjz
-	IDjPX/Wn0mKnuctsGRp++3RTE/fyrc4nvbMr6I5t6sJBn/SYPFJy5/CbN80sNZG6sWWC7Cn3V+g
-	9G3RqnIsd7qyW8JYqXRk3nP5Kg4fpk8t+ENMolNZMTLYn7oAkEtPmKT5XkB+3V/Y6yM6fEcjoIu
-	SwjMYJmFCJWtqW3cR+07ytHQ==
-X-Google-Smtp-Source: AGHT+IH3pBngYGrXfax3dXFTdYtopPEIucZI6Xy95b+JVFKyiDopAVgfxaAI2m507ZcWZ3YvIO71Ow==
-X-Received: by 2002:a05:6000:4020:b0:429:bde0:1da8 with SMTP id ffacd0b85a97d-4324e70cadcmr33580502f8f.7.1767440029849;
-        Sat, 03 Jan 2026 03:33:49 -0800 (PST)
-Received: from debian ([88.97.178.141])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4324eab2a94sm89501609f8f.43.2026.01.03.03.33.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 03 Jan 2026 03:33:49 -0800 (PST)
-Date: Sat, 3 Jan 2026 11:33:47 +0000
-From: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-To: Paul Menzel <pmenzel@molgen.mpg.de>,
-	Salvatore Bonaccorso <carnil@debian.org>
-Cc: Sudip Mukherjee <sudip.mukherjee@codethink.co.uk>,
-	linux-kernel@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-	regressions@lists.linux.dev, Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	Hans de Goede <hansg@kernel.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: Re: BUG: kernel NULL pointer dereference, address: 0000000000000000
-Message-ID: <aVj-mz8vaw53TWtX@debian>
-References: <6ba903ad-9897-42bb-8c2d-337385cc3746@molgen.mpg.de>
- <db387081-345f-423a-a0ff-e13f3bec2d51@molgen.mpg.de>
- <CADVatmM_mRnkDX=hpUjbyKkZnGynxJfRSujGxm2LaWWMEL_2ew@mail.gmail.com>
- <ef9223ee-0a4e-468c-bfd0-0cf190d262f1@molgen.mpg.de>
- <aVgjpWaIRkerdgCa@eldamar.lan>
- <49cdd663-bcbd-48b4-ac38-77ce94ef0c8d@molgen.mpg.de>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="PLzJYIml"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=Dvm+kvJHyY1KKCJtfQp8EPX7C/3KH3OKeCdRxBCMWeY=; t=1767617217;
+	x=1768049217; b=PLzJYImlfCTEI7mQXQ7prJGSMDoN8oXs1p+C9EDUvpXeMC3VmPdent9PtEwwZ
+	MQ75cDikmkQ2l0V1ykYP67PlQQ8/P7h694uhBfPPwF3RXz2rnr/zE3vLa7xhrWnaatNbSaXJs7CHc
+	ysdF8WU6f9694OvVFm7Rj9WmhR/Kz/gi2dpQHTL2lvc8CMw1+0PzNg56wrnTLVi8EWg1J3EMMRTE9
+	CrDLSA5l1i+k7j10w+kny5yplPt7x/BazTGVygX1N2xIucT5RuGXfwqdj7X1Ob2Z9kbMC5MnFM1+c
+	hHGPxQB8S3/Z+uRQcbVTde3pKwfXvpozoYWH6lLyElxZOHC6Vw==;
+Received: from [2a02:8108:8984:1d00:a0cf:1912:4be:477f]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128)
+	id 1vcjjg-001TXb-2m;
+	Mon, 05 Jan 2026 13:31:00 +0100
+Message-ID: <6498cffd-5bf9-490a-910d-f64ab9b7f330@leemhuis.info>
+Date: Mon, 5 Jan 2026 13:30:59 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [regression 5.10.y] Libvirt can no longer delete macvtap devices
+ after backport of a6cec0bcd342 ("net: rtnetlink: add bulk delete support
+ flag") to 5.10.y series (Debian 11)
+To: Ben Hutchings <benh@debian.org>,
+ Roland Schwarzkopf <rschwarzkopf@mathematik.uni-marburg.de>,
+ Nikolay Aleksandrov <razor@blackwall.org>, David Ahern <dsahern@kernel.org>,
+ "David S. Miller" <davem@davemloft.net>, Sasha Levin <sashal@kernel.org>,
+ debian-kernel@lists.debian.org, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Simon Horman <horms@kernel.org>, Greg KH <gregkh@linuxfoundation.org>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org, regressions@lists.linux.dev, 1124549@bugs.debian.org
+References: <0b06eb09-b1a9-41f9-8655-67397be72b22@mathematik.uni-marburg.de>
+ <aUMEVm1vb7bdhlcK@eldamar.lan>
+ <e8bcfe99-5522-4430-9826-ed013f529403@mathematik.uni-marburg.de>
+ <176608738558.457059.16166844651150713799@eldamar.lan>
+ <d4b4a22e-c0cb-4e1f-8125-11e7a4f44562@leemhuis.info>
+ <27c249d80c346a258cfbf32f1d131ad4fe64e77c.camel@debian.org>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <27c249d80c346a258cfbf32f1d131ad4fe64e77c.camel@debian.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <49cdd663-bcbd-48b4-ac38-77ce94ef0c8d@molgen.mpg.de>
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1767617217;2151dd91;
+X-HE-SMSGID: 1vcjjg-001TXb-2m
 
-On Sat, Jan 03, 2026 at 12:01:19PM +0600, Paul Menzel wrote:
-> Dear Salvatore,
-> 
-> 
-> Thank you for the follow-up.
-> 
-> Am 03.01.26 um 01:59 schrieb Salvatore Bonaccorso:
-> 
-> > On Mon, Dec 01, 2025 at 05:05:59PM +0100, Paul Menzel wrote:
-> 
-> > > Am 01.12.25 um 14:25 schrieb Sudip Mukherjee:
-> > > > On Thu, 27 Nov 2025 at 22:55, Paul Menzel wrote:
-> > > 
-> > > > > Am 27.11.25 um 19:51 schrieb Paul Menzel:
-> > > > > 
-> > > > > > Unfortunately, not reproducible, but starting with Linux 6.18-rc7, I got
-> > > > > > the oops below *once*:
+@stable team and/or @net maintainers: this imho needs a judgement call
+from your side. See below for details.
 
-<snip>
-
-> > 
-> > https://bugs.debian.org/1124075
+On 1/2/26 21:18, Ben Hutchings wrote:
+> On Fri, 2025-12-19 at 10:19 +0100, Thorsten Leemhuis wrote:
+>> On 12/18/25 20:50, Salvatore Bonaccorso wrote:
+>>>
+>>> Is there soemthing missing?
+>>>
+>>> Roland I think it would be helpful if you can test as well more recent
+>>> stable series versions to confirm if the issue is present there as
+>>> well or not, which might indicate a 5.10.y specific backporting
+>>> problem.
+>>
+>> FWIW, it (as usual) would be very important to know if this happens with
+>> mainline as well, as that determines if it's a general problem or a
+>> backporting problem
+> [...]
 > 
-> This is
+> The bug is this:
 > 
-> AMD AM5 ASUS ROG STRIX B650-A GAMING WIFI, BIOS 3067 12/10/2024
+> - libvirtd wrongly used to use NLM_F_CREATE (0x400) and NLM_F_EXCL
+>   (0x200) flags on an RTM_DELLINK operation.  These flags are only
+>   semantically valid for NEW-type operations.
 > 
-> > https://bugs.debian.org/1124463
+> - rtnetlink is rather lax about checking the flags on operations, so
+>   these unsupported flags had no effect.
 > 
-> This is
+> - rtnetlink can now support NLM_F_BULK (0x200) on some DEL-type
+>   operations.  If the flag is used but is not valid for the specific
+>   operation then the operation now fails with EOPNOTSUPP.  Since
+>   NLM_F_EXCL == NLM_F_BULK and RTM_DELLINK does not support bulk
+>   operations, libvirtd now hits this error case.
 > 
-> Dell Latitude E5470/0VHKV0, BIOS 1.34.3 11/20/2022
+> I have not tested with mainline, but in principle the same issue should
+> occur with any other kernel version that has commit a6cec0bcd342 "net:
+> rtnetlink: add bulk delete support flag"
+
+FWIW, merged for v5.19-rc1 and backported to v5.10.246 as 1550f3673972c5
+End of October 2025 in parallel with 5b22f62724a0a0 ("net: rtnetlink:
+fix module reference count leak issue in rtnetlink_rcv_msg") [v6.0-rc2],
+which is a fix for the former.
+
+> together with an older version of libvirt.
 > 
-> > Does it make a difference to cold-boot or reboot into the system?
+> This was fixed in libvirt commit 1334002340b, which appears to have gone
+> into version 7.1.0,
+
+Could not find that commit when looking briefly, but that version was
+released 2021-03-01.
+
+> but Debian 11 "bullseye" has 7.0.0.
 > 
-> I only did cold boots, and I am not able to reproduce it anymore, and wrote
-> it off to some hardware issue – despite the system working fine otherwise.
-> 
-> I am adding the x86 folks, and regression lists.
+> We can certainly fix the libvirt side of this in Debian, but this also
+> sounds like a case where the kernel should work around known buggy user-
+> space.  On the other hand, this has been upstream for over 3 years so
+> maybe it doesn't make sense now.
 
-Thanks Salvatore for the Debian bug links.
+Yeah, I tend to the latter as well (the @net maintainers can speak up if
+the disagree). But we have one more middle-ground option here maybe the
+@stable team could do: revert the backports of 1550f3673972c5 and
+5b22f62724a0a0 from 5.10.y, unless they are strongly needed there.
 
-I had been trying to reproduce this but have not seen it on my machine so far.
+> Please let me know whether I (or anyone) should try to implement a
+> workaround for this in the kernel.
 
-But looking at the traces from the Debian bugs and the trace from Paul, my best
-guess is that its happening because the low level driver, parport_pc in these
-cases, has not completed setting up the hardware.
-
-When 'lp' starts registering, parport driver will check if there is any port,
-if no ports are found then it will try to load the low level module.
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/parport/share.c?h=v6.19-rc3#n198
-
-As mentioned in the comment request_module() is not trying to load a real module
-and it depends on the alias. Also, mentioned in the Documentation.
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/admin-guide/parport.rst?h=v6.19-rc3#n45
-
-I am not sure why the problem is seen now, but is it possible to test the
-below diff please and see if that fixes the issue.
-
-diff --git a/drivers/parport/share.c b/drivers/parport/share.c
-index 427abdf3c4c4a..8f45daf7b3825 100644
---- a/drivers/parport/share.c
-+++ b/drivers/parport/share.c
-@@ -287,8 +287,16 @@ int __parport_register_driver(struct parport_driver *drv, struct module *owner,
-         */
-        ret = bus_for_each_dev(&parport_bus_type, NULL, NULL,
-                               port_detect);
--       if (!ret)
-+
-+       /* Return if no port has been found. The driver has been
-+        * registered, so whenever a new port registers
-+        * attach_driver_chain() will be called which will then check
-+        * all registered drivers.
-+        */
-+       if (!ret) {
-                get_lowlevel_driver();
-+               return 0;
-+       }
- 
-        mutex_lock(&registration_lock);
-        if (drv->match_port)
-
-
--- 
-Regards
-Sudip
+Ciao, Thorsten
