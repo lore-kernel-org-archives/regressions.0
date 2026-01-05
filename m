@@ -1,47 +1,43 @@
-Received: from r-passerv.ralfj.de (r-passerv.ralfj.de [109.230.236.95])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF51730B50D
-	for <regressions@lists.linux.dev>; Mon,  5 Jan 2026 15:43:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.230.236.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E2CC2D877C
+	for <regressions@lists.linux.dev>; Mon,  5 Jan 2026 18:00:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767627823; cv=none; b=m2E9jbcYDKKgUy6E06nofOzOVKd1NtG2iPPoZkf/aMQ8/vKtoX/joY6ULVL5wOb5tNO4jo16vypSOPEKmkRCz0/QIV/wpZ/ln1Ve/FbHr+j9Je57vP+BjDo1hXutrUrkLHMEk3reMDRb27Ax8n6oa3mjYoG4VkpXgjoEGwe49zI=
+	t=1767636056; cv=none; b=JnUGt5Qxzp288ZGA+p+d1vUW2Sjwfr9p7kExlPFz4qL97q6QT4+6sDSFd1H5b0KfOiTRZwJ/2OECrfW+3c3BV2sT9wBYzAmqkXxKFfb7jAk8s+zZW9egEnRzsUvheHQSsXXOMXCn2vqWJ8w4u4yP5CpGDaZB3pEYbNro6pb8w8E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767627823; c=relaxed/simple;
-	bh=aKTG7CDSCYFVA//Qy4W50BjRXCEdB/SIworKV5sfRQQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ozO5uE2XVsGKQdug0yVoG4ynnoU5lsfenYZOxZX4dPf0HgmUHvWNBWO+E+dO6k+EHhmKwDI5D6464ySAP7cQzfRSVJP8wFNg11QUvAYNZvDGjxE4TMashhbExBOY44T2YyKfJXOKI4YrlHLjf5QqGwZqEi8mKpFeZtPDY7zailE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ralfj.de; spf=pass smtp.mailfrom=ralfj.de; dkim=pass (1024-bit key) header.d=ralfj.de header.i=@ralfj.de header.b=CjDgjmwJ; arc=none smtp.client-ip=109.230.236.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ralfj.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ralfj.de
+	s=arc-20240116; t=1767636056; c=relaxed/simple;
+	bh=Efalw4yPnFi6tZ4mGM6uyoosUWtV4UQOt3KF4dgKgNY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ompPs1WB9JFmxMDMH9Kl10bjhOFlc2DvoiTkkRVKPm90gkrcuJGJrPYBTU7wdi7QozkdJqGHVAWLEK0i5ZHUHUi3aKwCF6zRydLZPTuhiuaPRvVZ0EPmk+NH+QXZF0lsNZZ49sF1Vc6zUpsyguRvaVXOfFYjt/PGTQAIfcOFuKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=mAvWOkj+; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ralfj.de header.i=@ralfj.de header.b="CjDgjmwJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=ralfj.de; s=mail;
-	t=1767627813; bh=aKTG7CDSCYFVA//Qy4W50BjRXCEdB/SIworKV5sfRQQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=CjDgjmwJpvj3hU+TxroSGnFtY7bXM5OX5o/QngwHXLowaCBL4tKhhux1ZvRfJ6X/w
-	 Wn/BS9GTVdmweV8fMVf/MExkucxzo1j7GRGJjTSP7t0iY/DOFFCxIYIqt/zLMsoNXv
-	 G4eGOYAnkOadY2VF9kdeCr9IginIFN7RbfqOS714=
-Received: from [IPV6:2001:67c:10ec:5784:8000::143] (2001-67c-10ec-5784-8000--143.net6.ethz.ch [IPv6:2001:67c:10ec:5784:8000::143])
-	by r-passerv.ralfj.de (Postfix) with ESMTPSA id 5CD702053392;
-	Mon,  5 Jan 2026 16:43:33 +0100 (CET)
-Message-ID: <70471ef9-9faf-4303-b983-63234ea469b7@ralfj.de>
-Date: Mon, 5 Jan 2026 16:43:26 +0100
-Precedence: bulk
-X-Mailing-List: regressions@lists.linux.dev
-List-Id: <regressions.lists.linux.dev>
-List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
-List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Bug#1121718: linux-image-6.17.8+deb14-amd64: Logitech C920 HD Pro
- Webcam shows flickering artifacts (sometimes)
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="mAvWOkj+"
+Received: from pendragon.ideasonboard.com (81-175-209-152.bb.dnainternet.fi [81.175.209.152])
+	by perceval.ideasonboard.com (Postfix) with UTF8SMTPSA id 2794D14C7;
+	Mon,  5 Jan 2026 19:00:31 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1767636032;
+	bh=Efalw4yPnFi6tZ4mGM6uyoosUWtV4UQOt3KF4dgKgNY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mAvWOkj+6xl5yUZQQ6y43cGp+BFBjCl6H0BTGS39XgIDYrSBVJGE7WmaKYfWcbSAA
+	 wYn7JGZPjJIimIGkBQuQ4Wl6AgqpeWh4rjd6V4p2BpUVqkSSHvpIoNGXEA0LgZdVTS
+	 tWmNr59fF3NHpA+t7t6iHcPmRgq9xeq2tTqroFYY=
+Date: Mon, 5 Jan 2026 20:00:33 +0200
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 To: Ricardo Ribalda <ribalda@chromium.org>
-Cc: Salvatore Bonaccorso <carnil@debian.org>, 1121718@bugs.debian.org,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
- linux-media@vger.kernel.org, regressions@lists.linux.dev,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Hans de Goede
- <hansg@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Ralf Jung <post@ralfj.de>, Salvatore Bonaccorso <carnil@debian.org>,
+	1121718@bugs.debian.org,
+	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
+	linux-media@vger.kernel.org, regressions@lists.linux.dev,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Hans de Goede <hansg@kernel.org>
+Subject: Re: Bug#1121718: linux-image-6.17.8+deb14-amd64: Logitech C920 HD
+ Pro Webcam shows flickering artifacts (sometimes)
+Message-ID: <20260105180033.GE10026@pendragon.ideasonboard.com>
 References: <aS8YBLEPwF0-NtJO@eldamar.lan>
  <ba9a132e-6296-451f-8351-4045c0b72d6c@ralfj.de>
  <4rnbopkefvp6h3dwttj4h7cexehqtbuzzz4gatnebdnjzdy2li@bupytpnlk2xh>
@@ -52,49 +48,33 @@ References: <aS8YBLEPwF0-NtJO@eldamar.lan>
  <aVfPmZ8rUm3Vf7pT@eldamar.lan>
  <58a7c628-63dc-48f7-8a46-357ca2d7d500@ralfj.de>
  <CANiDSCtX-RJrmfiK_rOqi870CK06_ONvnsvqWRZczBXY38eg0w@mail.gmail.com>
-From: Ralf Jung <post@ralfj.de>
-Content-Language: en-US, de-DE
+Precedence: bulk
+X-Mailing-List: regressions@lists.linux.dev
+List-Id: <regressions.lists.linux.dev>
+List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
+List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 In-Reply-To: <CANiDSCtX-RJrmfiK_rOqi870CK06_ONvnsvqWRZczBXY38eg0w@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
 
-Hi Ricardo,
-
+On Mon, Jan 05, 2026 at 04:29:24PM +0100, Ricardo Ribalda wrote:
+> Hi Ralf
+> 
 > Thanks for the bisect and the report.
-
-Thanks for taking a look. :)
-
+> 
+> 
 > The patch to remove noprod parameter has been queued for 6.20 :S so we
 > should look into a more permanent fix soon.
-
-Ah, the days of my work-around are counted then -- good to know.
-
+> 
 > When you say zoom, do you mean the desktop version of zoom (
 > https://zoom.us/download?os=linux ) or the web version
 > I would assume that it is the zoom app, that is ignoring the "error"
 > flag from the frames and showing them to the users. Can you confirm
 > that? Hopefully we can reach zoom and they can fix it.
 
-Yes, I mean the Zoom app (specifically, the flatpak version: 
-https://flathub.org/en/apps/us.zoom.Zoom). I have no idea how the protocol stack 
-works here (how frames go from the camera to zoom and which layer is responsible 
-to do what along the way); while I am a developer, I am entirely a user when it 
-comes to webcam things. :D
+Should we revert the nodrop removal in the meantime ?
 
-I have not seen the error occur in Firefox -- but I am also not sure if Firefox 
-ever puts the camera into the other "mode" the way Zoom does (when someone joins 
-the call, the field of view of the camera slightly increases, so there are now 
-things visible on the side of the frame that were previously cut off -- and then 
-a few seconds later, the artifacts start to appear).
-
-I will try the tracing flags you mention later when I have access to the camera 
-again.
-
-Kind regards,
-Ralf
-
-> 
-> 
 > Now about the error flag. I have given a fast look at your usb trace
 > and have only seen 4 frames with "error bits" [1]. Can you add more
 > tracing?
@@ -112,3 +92,7 @@ Ralf
 > usb.iso.data[1]!=0x0c && usb.iso.data[1]!=0x0f &&
 > usb.iso.data[1]!=0x0e && usb.addr == "3.34.1"
 
+-- 
+Regards,
+
+Laurent Pinchart
