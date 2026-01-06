@@ -1,100 +1,73 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 440B11DE2AD
-	for <regressions@lists.linux.dev>; Tue,  6 Jan 2026 14:16:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B11F22A1D5
+	for <regressions@lists.linux.dev>; Tue,  6 Jan 2026 21:58:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767708999; cv=none; b=qQB4qV0wdEQVQJ4JbnCbn2OkHxOeM5Pxlsf3I6y5UjmfnnnUbZNnKkDlcjYSDbyTSYy90RfVxvSupfY9dAkU3ecLwa6t7AsS6ZVzbMQEweH0ZxBF3az/Tlb5QNkjwl/IJw4QBKX9lOoMGzTYNpWV696p6pjf2iPk3yCdEC5N6CI=
+	t=1767736726; cv=none; b=NG8HqQ3KZ+Qq9J2PFOFAs3e5Zdyev5wY2IJOWkCH/6t7QDRR3rnqxGxfd9kaUr8HEYCGdYh/xx4DXq/30mcrbAQkjjduObFOevUhoIFi2OphOSb76hO60tq3AqZEqhEQT5UY5QGodfhMsP6PiNqMtzgq89Nuz4sEN/TAeKXKnzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767708999; c=relaxed/simple;
-	bh=QJxp9o1SrLQ4m8999BrW4rPSoqufrExrKIUHLoOpVKM=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=Civx94/OM8TQcIv1i10JoymHVyhQoEYu7pA6SEGHPNV+9wNpx6IN2yOSlqOsSF2/4hW+RjcQjlxBFPuxsgg4TnqWZf029qqXdk+NfmyKQ3m7LgbCbBueDPAoD1sBdHT9RViv956jFtjHv+hTGIa9qB4nSKTZQwlYIQMnysxfIes=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=HPmzT4To; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1767736726; c=relaxed/simple;
+	bh=PA4T1FuOGJPe0gmg0jgpE0xszhW9EnikPFkQe+1akVk=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=pHcCzwb8SR3zt/IuMc6GS3psVPHXg6MfWpJHMBaf/G0/gtuu0dj2jmENrLyMzOEKAPpRT3+aQRubfnwYNFmw90qNAAOxykjGKLkVnP/7VzioAEaI1AyKBixfNWUuM+Gi7HGkSW1z1Bm0bYZ+P9qScEFgHTPkDdy3KOBsL6Sj/OI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=LYZknSwR; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="HPmzT4To"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=QJxp9o1SrLQ4m8999BrW4rPSoqufrExrKIUHLoOpVKM=; t=1767708997;
-	x=1768140997; b=HPmzT4ToOMgD7sS0xjX24g5NPcOzUkkivhI2VI6q3gyQFrULWxwO/ReVdPPNq
-	MmpiZzwNEGsk/n7coCFvjQ2wSnTlLCnZU/6LKoNDZWaoRySqErgl03iKWraa7mo2NfqdmCltDF5fw
-	LYCq/jWrocym98nMWBvdqQQMANJvJHs6QMRrJ/fwmPI1YgvHJymjWDqEhCePAVPD0MdWFps6L9ctF
-	ARCMbkPtM+dDaOAOj551BbSFnFk92jzcge46wbuWP3imYjr/UyJDcLeAS7TzVZ30eb7SV1trqFeu9
-	yC9IwzYkeiSJ/oNdqIewAxhnm7QTDfMIEAqbFQyRhGifwSusEg==;
-Received: from [2a02:8108:8984:1d00:a0cf:1912:4be:477f]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128)
-	id 1vd7rP-004qcv-1v;
-	Tue, 06 Jan 2026 15:16:35 +0100
-Message-ID: <d9b2d2e0-18b7-4f4f-b6ea-e0f626cb8b2c@leemhuis.info>
-Date: Tue, 6 Jan 2026 15:16:35 +0100
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="LYZknSwR"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 5D06A40C7D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1767736724; bh=PA4T1FuOGJPe0gmg0jgpE0xszhW9EnikPFkQe+1akVk=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=LYZknSwRNBX9oy9gedH0FK7TUDckr/WSMVHiowpHpA4pJ0UX8yLuLG/ZbWRdsccBD
+	 iDFHOvchjCIxB38TyEVGA4uJ8folFSFBj9wYzbJv+BxX50GIX80fnsQoOMxuYyEcbS
+	 54R3r2gCZyyFkEPmwMa7kuqaIqC1YCgGbnOrKwe/EGRSRn4U3dbK0UpoK37tEU1D/N
+	 DQ1BCGG/cVa+rqR2Zz6nl2m/x8sQF7j4SeWRnt7zvkQdobHpRjvXthJYETbD2xXG7L
+	 A/vig+49F1I0srmRuyrQPzZAEE4lhRBbtriouhj1J21UGBerzSB3HJIRYUBzAurN4Q
+	 N7bsTKiAJS/wQ==
+Received: from localhost (c-71-229-227-126.hsd1.co.comcast.net [71.229.227.126])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature ECDSA (prime256v1) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id 5D06A40C7D;
+	Tue,  6 Jan 2026 21:58:44 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: Bagas Sanjaya <bagasdotme@gmail.com>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Documentation
+ <linux-doc@vger.kernel.org>, Linux Regressions
+ <regressions@lists.linux.dev>
+Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, Randy Dunlap
+ <rdunlap@infradead.org>
+Subject: Re: [REGRESSION] Unexpected section title false positive warnings
+ on DOC: directive
+In-Reply-To: <aUuLHzk5jdyBAxD7@archie.me>
+References: <aUuLHzk5jdyBAxD7@archie.me>
+Date: Tue, 06 Jan 2026 14:58:43 -0700
+Message-ID: <87ikdecsj0.fsf@trenco.lwn.net>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1767708997;c467ab82;
-X-HE-SMSGID: 1vd7rP-004qcv-1v
+Content-Type: text/plain
 
+Bagas Sanjaya <bagasdotme@gmail.com> writes:
 
+> Hi,
+>
+> Building htmldocs on docs-next currenly produces about 50 new warnings; which
+> all of them are unexpected section title on DOC: kernel-doc directive, like:
+>
+> /home/bagas/repo/linux-kernel/Documentation/driver-api/target:25: ./drivers/target/target_core_user.c:35: CRITICAL: Unexpected section title.
+>
+> Userspace I/O
+> ------------- [docutils]
+> WARNING: kernel-doc 'scripts/kernel-doc.py -rst -enable-lineno -function 'Userspace I/O' ./drivers/target/target_core_user.c' processing failed with: SystemMessage('/home/bagas/repo/linux-kernel/Documentation/driver-api/target:25: ./drivers/target/target_core_user.c:35: (SEVERE/4) Unexpected section title.\n\nUserspace I/O\n-------------')
+> /home/bagas/repo/linux-kernel/Documentation/driver-api/target:28: ./include/uapi/linux/target_core_user.h:14: CRITICAL: Unexpected section title.
 
-On 3/9/24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
+So I did not, and do not, see any of these errors; are you doing
+something special to get them?
 
-#regzbot report:
-https://lore.kernel.org/linux-pci/20251112194441.GA2238830@bhelgaas/
-#regzbot duplicate: https://bugzilla.kernel.org/show_bug.cgi?id=220775
-#regzbot introduced: 3a8660878839
-#regzbot fix: PCI: Rewrite bridge window head alignment function
-
-#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=220803
-#regzbot fix: arm64: dts: mediatek: mt8183: Add missing endpoint IDs to
-display graph
-#regzbot monitor:
-https://lore.kernel.org/all/20260106-mt8183-display-graph-v2-1-e7e56054eef5@abscue.de/
-
-#regzbot report:
-https://lore.kernel.org/lkml/20251216-revert_sriov_lock-v3-0-dac4925a7621@linux.ibm.com/
-#regzbot fix: PCI/IOV: Fix race between SR-IOV enable/disable and hotplug
-#regzbot monitor:
-https://lore.kernel.org/lkml/20251216-revert_sriov_lock-v3-0-dac4925a7621@linux.ibm.com/
-
-#regzbot report: https://lore.kernel.org/lkml/aO07Gt9ZtECKuGkJ@eldamar.lan/
-#regzbot fix: 927069c4ac2cd
-
-#regzbot report:
-https://lore.kernel.org/linux-pci/owewi3sswao4jt5qn3ntm533lvxe3jlovhjbdufq3uedbuztxt@76nft22vboxv/
-#regzbot dup: https://bugzilla.kernel.org/show_bug.cgi?id=220705#c6
-
-#regzbot report:
-https://lore.kernel.org/linux-iommu/hnwgn7glub4klmkzabzcm76eldaa3xm5ua72eldwzesblveo2a@4xq2bxhmbsyq/
-#regzbot fix: of: reserved_mem: Allow reserved_mem framework detect
-"cma=" kernel param
-#regzbot monitor:
-https://lore.kernel.org/linux-iommu/20251210002027.1171519-1-oreoluwa.babatunde@oss.qualcomm.com/
-
-#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=220774
-#regzbot introduced: ec8e0e3d7adef940
-
-
-
-
+jon
