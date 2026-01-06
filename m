@@ -1,218 +1,100 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB167326D51
-	for <regressions@lists.linux.dev>; Tue,  6 Jan 2026 13:16:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 440B11DE2AD
+	for <regressions@lists.linux.dev>; Tue,  6 Jan 2026 14:16:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767705388; cv=none; b=QYbQjpKTJJKbFVfZNy2pgXThqMcXpCXDOtUlaqDI1I7fW4rdjUQODHt3PYwl0MB4oTbGwP0MVCaw4nPkO1D9f4FZ72hYiGEAWpMmI5ENSADIUHezSnDkK9FhOYYg62VK4EnPD3rG8FS8THmqvy8DHrFELF/5a8pcx8x37jlbfIg=
+	t=1767708999; cv=none; b=qQB4qV0wdEQVQJ4JbnCbn2OkHxOeM5Pxlsf3I6y5UjmfnnnUbZNnKkDlcjYSDbyTSYy90RfVxvSupfY9dAkU3ecLwa6t7AsS6ZVzbMQEweH0ZxBF3az/Tlb5QNkjwl/IJw4QBKX9lOoMGzTYNpWV696p6pjf2iPk3yCdEC5N6CI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767705388; c=relaxed/simple;
-	bh=9MxuVCcj7YLjBQwvIW48dSzL8CNL+DLkDjYTYETRCQk=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=f4R9+BOJJUqGpYab5ElOJY5JFOeHp+6begUuX94IJcErpcjNAwOo+18J3KXAkiBbj3HI29/n5hxyvz/BTwWEH8bTvrUNzA8xyG7vh3OuSQH4fK2jCySAf5DPfF3SchbMJ15j8RrG7h1oFo6YclEQXM3GDAf+R898nvFgm3sNPLU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ePep8Pxs; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1767708999; c=relaxed/simple;
+	bh=QJxp9o1SrLQ4m8999BrW4rPSoqufrExrKIUHLoOpVKM=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=Civx94/OM8TQcIv1i10JoymHVyhQoEYu7pA6SEGHPNV+9wNpx6IN2yOSlqOsSF2/4hW+RjcQjlxBFPuxsgg4TnqWZf029qqXdk+NfmyKQ3m7LgbCbBueDPAoD1sBdHT9RViv956jFtjHv+hTGIa9qB4nSKTZQwlYIQMnysxfIes=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=HPmzT4To; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ePep8Pxs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1767705383; x=1799241383;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=9MxuVCcj7YLjBQwvIW48dSzL8CNL+DLkDjYTYETRCQk=;
-  b=ePep8PxsZUS4KcjUDyXZEmMjB7RjtLd+4ipYlxUEbsxPQqSTXRSvy9Tq
-   ACGQqFgJG9R0CPW6sVwLe9sYAZbavv26Y35QZm8jea98LTXuh7k7TIse2
-   jMFiPHCbPhsiK8iN0TTe+v1S2Bppc/ugEZLuQmGXmgMeL4I1h08OlMJRg
-   YZABmQF39bUsSzY5dZpr6VWwb9LGvVivPgK9bV8g77JEz/0RBnug/Q37r
-   LB6sWEMK8aQvmpSZNOkMNbhviKVOGTfxqCsCErYvPtfxD6MpDmZUO5O0J
-   YAktB4bQCHoxJmyAQSlD8ylZ0wcKIs5zIv48JzRDr/8o9Y/lUUfU0Lus8
-   Q==;
-X-CSE-ConnectionGUID: CntqFlPYRfujs/dsj+BDzA==
-X-CSE-MsgGUID: nBszD1P6SYCnBfqYzfXYGg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11663"; a="69142271"
-X-IronPort-AV: E=Sophos;i="6.21,204,1763452800"; 
-   d="scan'208";a="69142271"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2026 05:16:22 -0800
-X-CSE-ConnectionGUID: 21qYsJG7TOiPuaEzvFRk0A==
-X-CSE-MsgGUID: dPudM4RlQXirZE88u7g92g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,204,1763452800"; 
-   d="scan'208";a="207207097"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.6])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2026 05:16:19 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 6 Jan 2026 15:16:15 +0200 (EET)
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-cc: Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org, 
-    "David S. Miller" <davem@davemloft.net>, 
-    Andreas Larsson <andreas@gaisler.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-    sparclinux@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    Nathaniel Roach <nroach44@gmail.com>
-Subject: Re: [PATCH RESEND 1/1] SPARC/PCI: Correct 64-bit non-pref -> pref
- BAR resources
-In-Reply-To: <6d788abe-3176-426a-a640-e30c03d25972@leemhuis.info>
-Message-ID: <7d1d0133-da17-9ba6-e34f-f09b85393e92@linux.intel.com>
-References: <20251124170411.3709-1-ilpo.jarvinen@linux.intel.com> <6d788abe-3176-426a-a640-e30c03d25972@leemhuis.info>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="HPmzT4To"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:References:To:From:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=QJxp9o1SrLQ4m8999BrW4rPSoqufrExrKIUHLoOpVKM=; t=1767708997;
+	x=1768140997; b=HPmzT4ToOMgD7sS0xjX24g5NPcOzUkkivhI2VI6q3gyQFrULWxwO/ReVdPPNq
+	MmpiZzwNEGsk/n7coCFvjQ2wSnTlLCnZU/6LKoNDZWaoRySqErgl03iKWraa7mo2NfqdmCltDF5fw
+	LYCq/jWrocym98nMWBvdqQQMANJvJHs6QMRrJ/fwmPI1YgvHJymjWDqEhCePAVPD0MdWFps6L9ctF
+	ARCMbkPtM+dDaOAOj551BbSFnFk92jzcge46wbuWP3imYjr/UyJDcLeAS7TzVZ30eb7SV1trqFeu9
+	yC9IwzYkeiSJ/oNdqIewAxhnm7QTDfMIEAqbFQyRhGifwSusEg==;
+Received: from [2a02:8108:8984:1d00:a0cf:1912:4be:477f]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128)
+	id 1vd7rP-004qcv-1v;
+	Tue, 06 Jan 2026 15:16:35 +0100
+Message-ID: <d9b2d2e0-18b7-4f4f-b6ea-e0f626cb8b2c@leemhuis.info>
+Date: Tue, 6 Jan 2026 15:16:35 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-395248168-1767705304=:1051"
-Content-ID: <e46bda39-d881-0955-9f0a-887921232004@linux.intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1767708997;c467ab82;
+X-HE-SMSGID: 1vd7rP-004qcv-1v
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
 
---8323328-395248168-1767705304=:1051
-Content-Type: text/plain; CHARSET=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <72109ff8-49de-8a0a-26b2-2d97b798f59b@linux.intel.com>
 
-On Tue, 6 Jan 2026, Linux regression tracking (Thorsten Leemhuis) wrote:
+On 3/9/24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-> [top-posting to facilitate processing]
->=20
-> The issue fixed by below patch is still on my list of tracked
-> regression, which got me wondering what's up here. Did it fall through
-> the cracks? Is there some good reason why this approach was dropped? Or
-> Was the regression maybe fixed already and I just missed it?
+#regzbot report:
+https://lore.kernel.org/linux-pci/20251112194441.GA2238830@bhelgaas/
+#regzbot duplicate: https://bugzilla.kernel.org/show_bug.cgi?id=220775
+#regzbot introduced: 3a8660878839
+#regzbot fix: PCI: Rewrite bridge window head alignment function
 
-Hi Thorsten,
+#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=220803
+#regzbot fix: arm64: dts: mediatek: mt8183: Add missing endpoint IDs to
+display graph
+#regzbot monitor:
+https://lore.kernel.org/all/20260106-mt8183-display-graph-v2-1-e7e56054eef5@abscue.de/
 
-There isn't other solution to this AFAIK so you've not missed anything.
+#regzbot report:
+https://lore.kernel.org/lkml/20251216-revert_sriov_lock-v3-0-dac4925a7621@linux.ibm.com/
+#regzbot fix: PCI/IOV: Fix race between SR-IOV enable/disable and hotplug
+#regzbot monitor:
+https://lore.kernel.org/lkml/20251216-revert_sriov_lock-v3-0-dac4925a7621@linux.ibm.com/
 
-I'm used to PCI related changes often taking long time to handle so I'm=20
-just patiently waiting. :-)
+#regzbot report: https://lore.kernel.org/lkml/aO07Gt9ZtECKuGkJ@eldamar.lan/
+#regzbot fix: 927069c4ac2cd
 
---
- i.
+#regzbot report:
+https://lore.kernel.org/linux-pci/owewi3sswao4jt5qn3ntm533lvxe3jlovhjbdufq3uedbuztxt@76nft22vboxv/
+#regzbot dup: https://bugzilla.kernel.org/show_bug.cgi?id=220705#c6
 
-> Ciao, Thorsten
->=20
-> On 11/24/25 18:04, Ilpo J=C3=A4rvinen wrote:
-> > SPARC T5-2 dts describes some PCI BARs as 64-bit resources without
-> > pref(etchable) bit (0x83... vs 0xc3... in assigned-addresses) for
-> > address ranges above the 4G threshold. Such resources cannot be placed
-> > into a non-prefetchable PCI bridge window that is capable only to
-> > 32-bit addressing. As such, it looks the platform is improperly
-> > describe by dts.
-> >=20
-> > Kernel detect this problem (see the IORESOURCE_PREFETCH check in
-> > pci_find_parent_resource()) and fails to assign these BAR resources to
-> > the resource tree due to lack of a compatible bridge window.
-> >=20
-> > Prior to the commit 754babaaf333 ("sparc/PCI: Remove
-> > pcibios_enable_device() as they do nothing extra") SPARC arch code did
-> > not test whether device resources were successfully in the resource
-> > tree when enabling a device, effectively hiding the problem. After
-> > removing the arch specific enable code, PCI core's
-> > pci_enable_resources() refuses to enable the device when it finds not
-> > all mem resources are assigned, and therefore mpt3sas can't be enabled:
-> >=20
-> > pci 0001:04:00.0: reg 0x14: [mem 0x801110000000-0x80111000ffff 64bit]
-> > pci 0001:04:00.0: reg 0x1c: [mem 0x801110040000-0x80111007ffff 64bit]
-> > pci 0001:04:00.0: BAR 1 [mem 0x801110000000-0x80111000ffff 64bit]: can'=
-t claim; no compatible bridge window
-> > pci 0001:04:00.0: BAR 3 [mem 0x801110040000-0x80111007ffff 64bit]: can'=
-t claim; no compatible bridge window
-> > mpt3sas 0001:04:00.0: BAR 1 [mem size 0x00010000 64bit]: not assigned; =
-can't enable device
-> >=20
-> > For clarity, this filtered log only shows failures for one mpt3sas
-> > device but other devices fail similarly. In the reported case, the end
-> > result with all the failures is an unbootable system.
-> >=20
-> > Things appeared to "work" before the commit 754babaaf333 ("sparc/PCI:
-> > Remove pcibios_enable_device() as they do nothing extra") because the
-> > resource tree is agnostic to whether PCI BAR resources are properly in
-> > the tree or not. So as long as there was a parent resource (e.g. a root
-> > bus resource) that contains the address range, the resource tree code
-> > just places resource request underneath it without any consideration to
-> > the intermediate BAR resource. While it worked, it's incorrect setup
-> > still.
-> >=20
-> > Add of fixup to set IORESOURCE_PREFETCH flag for a 64-bit PCI resource
-> > that has the end address above 4G requiring placement into the
-> > prefetchable window. Also log the issue.
-> >=20
-> > Fixes: 754babaaf333 ("sparc/PCI: Remove pcibios_enable_device() as they=
- do nothing extra")
-> > Reported-by: Nathaniel Roach <nroach44@gmail.com>
-> > Tested-by: Nathaniel Roach <nroach44@gmail.com>
-> > Closes: https://github.com/sparclinux/issues/issues/22
-> > Signed-off-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
-> > ---
-> >=20
-> > Resending with linux-pci@ ML.
-> >=20
-> > Any comments on the approach are welcome. E.g., is the fixup done at a
-> > correct level? Should it be targeted specifically to the known failures
-> > (how?) to avoid hiding more platform description problems?
-> >=20
-> > It seems VF BARs still have 64-bit non-pref despite this change, AFAICT=
-,
-> > those are read directly from the device's config space so would require
-> > ordinary quirks. None of them result in device enable failing though so=
- the
-> > issue is orthogonal to the one being fixed here.
-> >=20
-> > If suggesting a different approach, please do realize my knowledge
-> > about OF code is generally very limited (and I'm not sure how directly
-> > the fixup code in other archs, mainly ppc, can be used as an example
-> > how to do fixups with sparc).
-> > ---
-> >  arch/sparc/kernel/pci.c | 23 +++++++++++++++++++++++
-> >  1 file changed, 23 insertions(+)
-> >=20
-> > diff --git a/arch/sparc/kernel/pci.c b/arch/sparc/kernel/pci.c
-> > index a9448088e762..b290107170e9 100644
-> > --- a/arch/sparc/kernel/pci.c
-> > +++ b/arch/sparc/kernel/pci.c
-> > @@ -181,6 +181,28 @@ static int __init ofpci_debug(char *str)
-> > =20
-> >  __setup("ofpci_debug=3D", ofpci_debug);
-> > =20
-> > +static void of_fixup_pci_pref(struct pci_dev *dev, int index,
-> > +=09=09=09      struct resource *res)
-> > +{
-> > +=09struct pci_bus_region region;
-> > +
-> > +=09if (!(res->flags & IORESOURCE_MEM_64))
-> > +=09=09return;
-> > +
-> > +=09if (!resource_size(res))
-> > +=09=09return;
-> > +
-> > +=09pcibios_resource_to_bus(dev->bus, &region, res);
-> > +=09if (region.end <=3D ~((u32)0))
-> > +=09=09return;
-> > +
-> > +=09if (!(res->flags & IORESOURCE_PREFETCH)) {
-> > +=09=09res->flags |=3D IORESOURCE_PREFETCH;
-> > +=09=09pci_info(dev, "reg 0x%x: fixup: pref added to 64-bit resource\n"=
-,
-> > +=09=09=09 index);
-> > +=09}
-> > +}
-> > +
-> >  static unsigned long pci_parse_of_flags(u32 addr0)
-> >  {
-> >  =09unsigned long flags =3D 0;
-> > @@ -244,6 +266,7 @@ static void pci_parse_of_addrs(struct platform_devi=
-ce *op,
-> >  =09=09res->end =3D op_res->end;
-> >  =09=09res->flags =3D flags;
-> >  =09=09res->name =3D pci_name(dev);
-> > +=09=09of_fixup_pci_pref(dev, i, res);
-> > =20
-> >  =09=09pci_info(dev, "reg 0x%x: %pR\n", i, res);
-> >  =09}
-> >=20
-> > base-commit: 3a8660878839faadb4f1a6dd72c3179c1df56787
->=20
---8323328-395248168-1767705304=:1051--
+#regzbot report:
+https://lore.kernel.org/linux-iommu/hnwgn7glub4klmkzabzcm76eldaa3xm5ua72eldwzesblveo2a@4xq2bxhmbsyq/
+#regzbot fix: of: reserved_mem: Allow reserved_mem framework detect
+"cma=" kernel param
+#regzbot monitor:
+https://lore.kernel.org/linux-iommu/20251210002027.1171519-1-oreoluwa.babatunde@oss.qualcomm.com/
+
+#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=220774
+#regzbot introduced: ec8e0e3d7adef940
+
+
+
+
