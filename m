@@ -1,185 +1,153 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [217.72.192.75])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f196.google.com (mail-yw1-f196.google.com [209.85.128.196])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE65331AAA3
-	for <regressions@lists.linux.dev>; Wed,  7 Jan 2026 13:21:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.75
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 577AA346AE7
+	for <regressions@lists.linux.dev>; Wed,  7 Jan 2026 17:45:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767792093; cv=none; b=aqk0zrddJjW8SlZMYh6Yn9qUY1EvQfXot3NS68D0SVAf/XTuQMvU53yHUI8ERTRzTFbO/XTEh8m7acj6nbV5ntbV2DCgTxQeoOGxHLhK7b92EEPbU88KQ5i60SHtSvNlbNmZBcb/3iYlygcIJDgK5KnuBBD6Xkx5InCZzTV8COw=
+	t=1767807967; cv=none; b=CH8UDTCpkQOY5kX6kUO3SDBl5LHKJZJtCTp8G7BBq954kd5wnQUSka8qdTidlmCtqixPo6zL1Td7dJkMh6QKw+gTysdV41vIhjdd9nvrR8zmTKNXYclT0j8E7SaNaBfZ/BK/U6E+udeEtrhwCNQXW8PNi1OXzgAAAaevXExzlRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767792093; c=relaxed/simple;
-	bh=g2bpzg0N58vFRxyxOe0ZX8/2xpmR86fmVDqw+8tf3Ng=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KPq6ikAXfA31Dcl3e7TamL7WOCDENHH88TOxeEgan0b32hH6OkHDwmnqeY7XfYH1fyO6afJlEM+O2xRHyqvoAkqkCF6KNmcvEMVGOXvtJwtbfEz0do+5+idkpzlCjSYF2TBMNOQY5KigkDozi+CDCUBdyzH/s6ziBob8RuJISHc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu; spf=pass smtp.mailfrom=heusel.eu; dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b=znYN+6sd; arc=none smtp.client-ip=217.72.192.75
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
+	s=arc-20240116; t=1767807967; c=relaxed/simple;
+	bh=qileGSf2c7ijmYzCuIc/EYVYDbMSNUHL9+gNmFw/7Bc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=mQWGgffx4k4gieZbaLrws127fFnW4AK5xc8JVBxMVv97Obh4LVDD31KBGBgWrmUObWYDe3ipKofBvg1Zf1diZrU3yRjHMTHXnCBL2+i4PdASV+KKS05dapG7zkPcJlRen35hYADwOML13noF3TDaQd//cPjX07pSiGQSV32oUWQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kOMk029x; arc=none smtp.client-ip=209.85.128.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b="znYN+6sd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=heusel.eu;
-	s=s1-ionos; t=1767792089; x=1768396889; i=christian@heusel.eu;
-	bh=g2bpzg0N58vFRxyxOe0ZX8/2xpmR86fmVDqw+8tf3Ng=;
-	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:References:
-	 MIME-Version:Content-Type:In-Reply-To:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=znYN+6sdtIEfb0H6iZbLhHQJqXXiuEtuy7qq8HFynbw0kbDxp80wMJKyE//1mJPP
-	 Ewy9kr4KJ0zdhmhQMgLRsz+GbOcoZqJn4Jx5BZuIcAt6xiZ2gUe6ue5e+W4EH/4Bn
-	 OIQDM/kG8dNLAgDchQTuyCE30jnJidiDvSNG/wlrHJqcv6d5FWYWLuAT5OdtnT7H5
-	 PPNyC+ZjCzQYnLmaGt7U2uxYFaZ96mrEopPZfuCoroldg2CuHanl7ZidZOysDEkfu
-	 zPB38Iu69/tW8OhbvbUq+/5d8g0YrXIDZuEgJfL4O/0LuPpXgs/xeCLoFYekA/Exq
-	 9YO9ZoNQeLcV4OsD8A==
-X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
-Received: from localhost ([94.31.75.239]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MZT2u-1vOZRp3lO2-00YL9t; Wed, 07 Jan 2026 14:16:00 +0100
-Date: Wed, 7 Jan 2026 14:15:56 +0100
-From: Christian Heusel <christian@heusel.eu>
-To: Leo Martins <loemra.dev@gmail.com>
-Cc: Gideon Farrell <gideon@solnickfarrell.co.uk>, 
-	linux-btrfs@vger.kernel.org, regressions@lists.linux.dev, arch-devops@lists.archlinux.org
-Subject: Re: refcount_warn_saturate in __btrfs_release_delayed_node for
- 6.18.2-arch2-1
-Message-ID: <584c770b-8e59-457c-a8a4-0f9630ec9635@heusel.eu>
-References: <DFHUFTKLUCB5.11QUC5R2L77DO@solnickfarrell.co.uk>
- <20260107011054.2694891-1-loemra.dev@gmail.com>
- <46fba8b4-c694-48d8-b20b-6d0fdd18bf8b@heusel.eu>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kOMk029x"
+Received: by mail-yw1-f196.google.com with SMTP id 00721157ae682-78fc174ada4so22291777b3.2
+        for <regressions@lists.linux.dev>; Wed, 07 Jan 2026 09:45:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1767807951; x=1768412751; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=07ypZOUFUGEXXmt2EssDaX9DCT/Cq3jKiLjKniS0MwA=;
+        b=kOMk029xY8xoCmwWMycJxZrUuzZDbW/yC0+K+KGbY0UIMqCpu4XupIC0j1kublVWQ7
+         kdgSu54Jf817oEiEnyXth4r/KsqdrrgOubvakgzTaXchC4rN3kMJ8Pr+XeSwSy4auXi/
+         C/0VsRmLUrtLfyZosC8tHDPfBiCZYTz1k4ZqxiF8oZwq+LXp7/3g3JY0B5D2Ujqt5NzF
+         6mpLDNkoquE1i7B6JQHusAbusZ6ertg8MfzY01hxn5bvPx4hiDsMm472a4/LFXLYWBrZ
+         LB8diw9CfByjMmwPaKkDIoAzSXhcvST232VDjd8qW1kMpq4ih0gS3M1VgU9Hxs6Sd5iy
+         5kvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767807951; x=1768412751;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=07ypZOUFUGEXXmt2EssDaX9DCT/Cq3jKiLjKniS0MwA=;
+        b=ivrr85exUbyh2hcm3VaTcmN7vb2lf6JQgpAu0uiTjVaAbprRMagnq1hWFLQ7J6s/sO
+         13YLwFz2F+a0rcMT766gu8RvDhuvHc590TqMFGA5S62xajpmtoeyTavcA5dYPJ0UImcQ
+         A4SbM9JIawMr/4cuXaeXd1mAC5QCwngA098ukf0llXwD+A7hUBxKXTSikAOVNhgk8xwi
+         qtXPYXAlDkviNwti7N3EiijW2Y7HEf/nqL05dR2kNZJKtrkKiJ207K6Ah+RAFBmJY1hH
+         /BbZuYuhZCaZF6wFjB1c3ek+iyfYy4g2aTwqJ6WLdi8W8l3kTbTmrVtuwLIKP+9Zh0GX
+         /tNw==
+X-Forwarded-Encrypted: i=1; AJvYcCV+vKjCCJypkQNHiNaFFq6H+W8EnhBPc/jixIhcCivM4A3JegrjAj6/X+dc15iZjS+Xvz5reNIB59itdw==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxJljBvjeRZPZll0t72zDZAChQw3Z+tNxfyFSyA4gJvvDBvhLhD
+	RBWxtxKNjt8GuA7IDOglwiPgj/Cxdyj+mrVS4jvUmM7+8p8qm2aFwns0njCjSYex
+X-Gm-Gg: AY/fxX7SmvNLHg/v+Ozl3shUTTFmyYIUD0WUDTTCEJwVps9AckzZCeWqw6NLbu+guXI
+	1ifCX7K/UDPq6CQP6FQHAKcZI7mjWek58ifunUiFpL/D8YNxRwra0fFQ+6PuQTOOqBdImS64zzh
+	mgz/JnYw5bB2s3UBLVBXlW3k3uHDKwXXcQZD568oEWfX5nqGBHhGwgx81kkclwQfiT8/wC6x4R5
+	IVLGIT9K8qY5rquuVvXBdXmIYyCVQpjYKTuSi2rqjUOGZnCu7t2zwxqwUeZiV/qGVaX3y+WUVA/
+	uF2z1DHs16IY3ZbPFeiPqi9MNHD04boGXKN8SGywyjR8mvlNQtq2SsPPEp2YDQePmHufB6iffR+
+	Fc9R0VYJvZQu/Clfc8qVzB3AxVLvkHTw5v9irBcGv4kLTiQoJUJunbYPVm0HuMnaJg84AJIGQVr
+	+Dqa+eQzW4RxieB8+v5w==
+X-Google-Smtp-Source: AGHT+IGe8EGyArCaPl6GeiH6SavSmbbiVzVu/Bk+lLN8nQq1AiFyxt9JzdYvdO+sL6LB5P6YV/OBpw==
+X-Received: by 2002:a05:690e:58a:b0:63f:9448:e81 with SMTP id 956f58d0204a3-64716baea7fmr2229980d50.39.1767807950666;
+        Wed, 07 Jan 2026 09:45:50 -0800 (PST)
+Received: from localhost ([2a03:2880:25ff:44::])
+        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-6470d89d4fasm2292246d50.15.2026.01.07.09.45.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 Jan 2026 09:45:50 -0800 (PST)
+From: Leo Martins <loemra.dev@gmail.com>
+To: Christian Heusel <christian@heusel.eu>
+Cc: Gideon Farrell <gideon@solnickfarrell.co.uk>,
+	linux-btrfs@vger.kernel.org,
+	regressions@lists.linux.dev,
+	arch-devops@lists.archlinux.org
+Subject: Re: refcount_warn_saturate in __btrfs_release_delayed_node for 6.18.2-arch2-1
+Date: Wed,  7 Jan 2026 09:45:38 -0800
+Message-ID: <20260107174547.3875297-1-loemra.dev@gmail.com>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <584c770b-8e59-457c-a8a4-0f9630ec9635@heusel.eu>
+References: 
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="xbscq4523oipo3tj"
-Content-Disposition: inline
-In-Reply-To: <46fba8b4-c694-48d8-b20b-6d0fdd18bf8b@heusel.eu>
-X-Provags-ID: V03:K1:QJh7KtLRMXZEOaSP4it1VKyXyLYjPvkSwz/kkxtZQ0SdAgUr/B8
- CDErthotMgPojfSfNAKbJKhzqOd7u4O6HS4aSMI3REPmvswDzeNT0WJbxT5o6Q3u/VffKJd
- 2Y82T7U0yv4sj8b9hUiaQ/id+aM6bDINxrryYW9+EzAr8HAIhrDHU/lTmX0GAjlrevpoVKw
- 7fTPTOpb3SX1Kt34jD9Ow==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:SXnaPXqL/8c=;bujtpPpEap+1GIm7c5ysqHCceRA
- ETZ1kULNNTO5YzVBNQ9gUcIPQ0KLPj7QYmVojVyZbOXhSYI8Yfael+HXNM6s1l6wgqfXJ7XJ5
- K7xL5f16S6/CeRTBzsWRRmGnwyICYN50LUnt16gDXUyhotr7Y0qWPMmtR6mm3Xt4SwIJHP1YM
- uyo5N0/kGk6KDBSmZOglVwlrnuqXdtb+k8P0A6Pz/VuJ8A7dZqjPPpPIH8cr+cwKBy6jGFONN
- ZWh0ABfWdBC9DOdeftiEOp6kmdct4P3gu+WgIxyIOUFCxm4vaYF3bI13/GJavbCK7BpXgEiB6
- yvA4V0nuegd0jqywJ+UJoq8euXCB/SRQX8idZmOiGr4RkRfa5j0eJ+FWUtBpR+s21kEax6jV0
- pzNCx77Gj/h8ZvUXXy0OnZezhpfuSTb/cjmGugYzBLPT3zUbY6s0NfXRWXJri58dN+AwXDlV8
- 4P8rOWuwoin0UbXgZmY9TcAZebDJKozYQjr/UAmj+M+qL0S6wP/iGKez9YKzzIvRs71yaLhiH
- 4U0m7PJNz+Lzft16mbyh2JvpE7JYH0+tIkBQTnMCXbR0wRB1Av4dSUfIHD3wwk6wV3wGaWtS8
- Du7nWGTvmA9hyBvxnOVqDsjXCJIlQgtjDRQ994Ndf8FDug6kHlBFZzIXg7/F2yDgJDQCLQ+jz
- WqPN4P3YtpIQlABftAimXZdqTj8SOorprXwsaqK9hDgaal1INCIjCviUva2vw0dhh422HJ9hq
- ieBqjohsdw/m9nLuuxvMypkRSDLHnP4etAKYiLsZu074N+pJUC2UPqCuxufWJ9ntwBCez7FTb
- NiA3AUPzJJ1zlfc+4cG/qsOUqAPNDvp3KVY17PPmTSBcQAUyfg7T8rQmQsJsAi9esY/WCMPh+
- 37aBe04bRyTF/UKonzG/SSR7yXuWFaRFeJuE+lC+tjY4JpMk1GA7cIGwaPwIOCt4rNoa3qtLs
- 5anKj7Vvm6E1vIBKB/DC9bSKBJwYt907EPbQ0fc15cF5DBn5ElhSqWbWwMKLEQ8SqyhxcwdcA
- repg9HnV38b+FQnGr5YzQk0Fesem9RHJ3Ibt0mRwNkX1k0B+DshQWjBv2cmV+VbvzEB8oc48c
- DacNXzx9/9cjkJTsQWi1ONZJiJeToTf28RwLHKnMvTZP6z5KaICxt7di62AI09gVquNa4X+T0
- 5RGX5zplVFpXXsnGtUfna+4O6LqWZ6SFe5mhfuTykOtCRJaLzZaGLyeRu5MC8+a0Umia6eqA9
- 7oRZQLGDk0yCb494ONGGyulYupjW3TA6TzEitlqq00QTJXS5gaWoTS9Ca8KGRQtSuE2I0iLo4
- s44YtFbnoYveQ0jz80LBvltgS8xkOMQeebBipEZumKZFr/J/9vQppV3tXNA8BfipS+a2SuT61
- RmViR8A/dpCH8iXk/1PAknIrBvzAxdNo2hB7GBbK4RqS5YmudikW8HYGU1pMQyZkYKCmxQv5W
- w1Mb6xA+MjKjCWPaWYqZL5KdqoKKg4oPsQQD+Us74MFu0iSvt3nWZxcpj2jhq3xuIBkMMUZXp
- JnyBzVkA3rcL/n+I+fW945xPPAKlSID6N091b3dJF83M3IJx07P5f1auUB5kvQwpdC9sdUPO2
- t6f0aYQxvC1k3OW0YRBeUYNB/EOGxG5ifwPOeOSLG3oLWoyoQBNzTTJZ+JTjk2kr6aSn7IxaL
- nTfwnTXKXc2AfWNv9aBCXMAX5tVFF/nnk8oRWMWUqkDgvVmrEOxU1Hl7OKpaApuMAYiAmErfA
- ZZp0TOjS/TKvK8yyEdVVOa4CQx5rOrh7muk4cDhza/NigMhYajD83TH2Avpym/nBSD/oIZWGJ
- 7uG6
+Content-Transfer-Encoding: 8bit
 
+On Wed, 7 Jan 2026 14:15:56 +0100 Christian Heusel <christian@heusel.eu> wrote:
 
---xbscq4523oipo3tj
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: refcount_warn_saturate in __btrfs_release_delayed_node for
- 6.18.2-arch2-1
-MIME-Version: 1.0
+> On 26/01/07 02:52AM, Christian Heusel wrote:
+> > On 26/01/06 05:10PM, Leo Martins wrote:
+> > > On Tue, 06 Jan 2026 22:01:58 +0000 "Gideon Farrell" <gideon@solnickfarrell.co.uk> wrote:
+> > > 
+> > > > Hi there,
+> > > > 
+> > > > I recently experienced a type of crash I haven't seen before on this system which seems to originate in __btrfs_release_delayed_node on Kernel 6.18.2-arch2-1.
+> > > 
+> > > Hey, thanks for the report. This looks very similar to a different
+> > > report that has been fixed in 6.19-rc5.
+> > > Report: https://lore.kernel.org/oe-lkp/202511262228.6dda231e-lkp@intel.com/
+> > 
+> > I think this is the issue we have been seeing on the Arch Linux
+> > infrastructure aswell, see this issue for reference:
+> > 
+> > https://gitlab.archlinux.org/archlinux/infrastructure/-/issues/788#note_385420
+> > 
+> > This has caused us to downgrade the kernel on all hosts in our
+> > infrastructure due to the crashes caused by this.
+> > 
+> > > Fix: https://lore.kernel.org/linux-btrfs/7c89417ac3352ce3cb0a6373a1746155c1e2754d.1765588168.git.loemra.dev@gmail.com/
+> > > 
+> > > Please let me know if this fixes your issue.
+> > 
+> > So far we have not found a good lab-setting to reproduce the issue
+> > outside of the production machines workloads (but we have also not
+> > looked into the issue a lot).
+> > 
+> > Do you have a good reproducer already that we could use to verify the
+> > fix?
 
-On 26/01/07 02:52AM, Christian Heusel wrote:
-> On 26/01/06 05:10PM, Leo Martins wrote:
-> > On Tue, 06 Jan 2026 22:01:58 +0000 "Gideon Farrell" <gideon@solnickfarr=
-ell.co.uk> wrote:
-> >=20
-> > > Hi there,
-> > >=20
-> > > I recently experienced a type of crash I haven't seen before on this =
-system which seems to originate in __btrfs_release_delayed_node on Kernel 6=
-=2E18.2-arch2-1.
-> >=20
-> > Hey, thanks for the report. This looks very similar to a different
-> > report that has been fixed in 6.19-rc5.
-> > Report: https://lore.kernel.org/oe-lkp/202511262228.6dda231e-lkp@intel.=
-com/
->=20
-> I think this is the issue we have been seeing on the Arch Linux
-> infrastructure aswell, see this issue for reference:
->=20
-> https://gitlab.archlinux.org/archlinux/infrastructure/-/issues/788#note_3=
-85420
->=20
-> This has caused us to downgrade the kernel on all hosts in our
-> infrastructure due to the crashes caused by this.
->=20
-> > Fix: https://lore.kernel.org/linux-btrfs/7c89417ac3352ce3cb0a6373a17461=
-55c1e2754d.1765588168.git.loemra.dev@gmail.com/
-> >=20
-> > Please let me know if this fixes your issue.
->=20
-> So far we have not found a good lab-setting to reproduce the issue
-> outside of the production machines workloads (but we have also not
-> looked into the issue a lot).
->=20
-> Do you have a good reproducer already that we could use to verify the
-> fix?
->=20
-> Also the fix is not yet even scheduled for inclusion in the stable
-> trees, since it is still not in linus tree right?
+I believe the lkp-test from the original report is able to consistently
+reproduce this.
 
-Sorry, I messed up here! I got fooled by the output of `git log --grep`
-and therefore missed the commit! As pointed out by heftig on gitlab the
-commit already is present in 6.18.3 which I'll try to roll out to our
-systems shortly! :)
+> > 
+> > Also the fix is not yet even scheduled for inclusion in the stable
+> > trees, since it is still not in linus tree right?
+> 
+> Sorry, I messed up here! I got fooled by the output of `git log --grep`
+> and therefore missed the commit! As pointed out by heftig on gitlab the
+> commit already is present in 6.18.3 which I'll try to roll out to our
+> systems shortly! :)
 
->=20
-> >=20
-> > >=20
-> > > Here's the stack trace:
-> > >=20
-> > > ```
-> >=20
-> > Are these the first refcount_t: warnings in your dmesg? I would
-> > expect an earlier warning that looks like
-> > refcount_t: addition on 0; use-after-free.
-> >=20
->=20
-> This is what our stacktrace looks like:
->=20
-> [...]
->=20
-> Cheers,
-> Chris
+Let me know if you're still seeing any issues after rolling out the fix.
 
+Thanks,
+Leo Martins.
 
-
---xbscq4523oipo3tj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEb3ea3iR6a4oPcswTwEfU8yi1JYUFAmleXIwACgkQwEfU8yi1
-JYVgrw/+JaeFMDKO81WKxdImmgz+4Wc4Ucnj8IjVtaPS65Vav/75VTLuRMPfqZ9y
-YAoh+dXUcRdR+LYT3pYp3bycd4e8e7CORsJvMV8cm9eiebKBXU1LeZamCQhi4MzZ
-EVvZPMXR51CJgkZ/ruME9alzbnIFj2UGMVvUfZL8htvZTTi2R6oWn4otucxxFrKd
-OuLO0lXE+48LQs5RCqg4VdxQpHSG6eCcMJHLGczdLEQD3WrMOdUrulHC+xWU73xY
-N1+BgYAtHz6iGTptA3+fWcNybuDln9926bzI83g39HY4OYUxHj/PkUh8E2s9wftD
-Zo36g+fhf7sHkMPNBku7RyuUzkoNUTKY/G5gF91JLYJ/iAuKAFZ4tH9UgI3XiByv
-vnPFG3NPruR7LUeHFRETgovzQNgZ/nmNUQravsejdl8tTgjzPxrWPcxVNoacdfjW
-lUj48cIKXiTeIZaGckrk5YOP36zkPQ9d+9i+qPkQhaiM3/w/TuHx8RW49u6Z4Pgo
-pPvfX4UpNYZXagWm5A6JMYhM/J890UYnuy7tTPccF1iurw3JZtoeFdJI1TbADFzw
-QXJ6f9iSuRwnlVzKyGuwTlw2ZGmjnYcQe/TXkjTj2Pm7exrlxTW/XIRiSxJuBltY
-kBBod5gV4xGpiMJZvrSY17PJGTap/Q5G5WDlMdhaROm7iL+9AsM=
-=TXE9
------END PGP SIGNATURE-----
-
---xbscq4523oipo3tj--
+> 
+> > 
+> > > 
+> > > > 
+> > > > Here's the stack trace:
+> > > > 
+> > > > ```
+> > > 
+> > > Are these the first refcount_t: warnings in your dmesg? I would
+> > > expect an earlier warning that looks like
+> > > refcount_t: addition on 0; use-after-free.
+> > > 
+> > 
+> > This is what our stacktrace looks like:
+> > 
+> > [...]
+> > 
+> > Cheers,
+> > Chris
+> 
+> 
+> 
