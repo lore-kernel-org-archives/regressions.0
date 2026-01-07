@@ -1,352 +1,159 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [217.72.192.74])
+Received: from fhigh-b3-smtp.messagingengine.com (fhigh-b3-smtp.messagingengine.com [202.12.124.154])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8576E1339A4
-	for <regressions@lists.linux.dev>; Wed,  7 Jan 2026 01:58:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 449BD3A1CD
+	for <regressions@lists.linux.dev>; Wed,  7 Jan 2026 02:57:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767751096; cv=none; b=Zc4X5JKDerbA/O1Z6Ny4VSd7kwZFRnbxxFu0HHxUeEnzPaA4NmCKb2xpPPifB6C5Wu1GYt0/QUeUGwXOyBFm1LLRI440uwRQDI87NbhqrkstDXogu2juMDuNZs5Zb//5EZy+jYKnWN9Jhj1rBeZCBSQOBIISqk3l+3ng6c85XPc=
+	t=1767754653; cv=none; b=f5oZVfgv0GyauVIUKBkeANpFZ+zfWVN8HuYz1RLFqpNffwjreUDk67GJ+IscA0w8Rk4qPXc88OqEZlDpTL/6aDfYXiDc0I4uk6rJ8pRjnaD0FVpTt5T4LAUWwc+1K0fNVBpxE1hYqZorPwFJ/SGuS4vTDjUi2JxesqOe3RzCui0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767751096; c=relaxed/simple;
-	bh=QzDXoie6jW/LQnBhrpAu+qLMAjHImKIAvjOUAOaEPDM=;
+	s=arc-20240116; t=1767754653; c=relaxed/simple;
+	bh=6IC0KqfjL6DuGVRuhP8dTyUTfDwMrkHlEAOYovDMF9Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S/Hj5tRvCWuuiWC5Nfj9Pj0TpjvLpVe9mjZAJH+1r1b+gpVwGYLiVXhSA0HiU0fADS1tzgIfcYJSd1/toZyKTozFZFTt94mokSebFz9+8HyOuLcU5nk0pjOgSGFGDHmTLWU6oHmn1xZENC2D7p2mwLO5hQvhoJeltl9VTEty7hA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu; spf=pass smtp.mailfrom=heusel.eu; dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b=PXodGcmT; arc=none smtp.client-ip=217.72.192.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
+	 Content-Type:Content-Disposition:In-Reply-To; b=PLAhaqIQKeeT7/VBnAHgSE0N8qk4BL//71CSk2pBUYtVimlAwmLdurD9SDys0f1yQrUhNT8q4srxFjxPiXMx8LXmgZHqmDlcHKGLaDJeLVu/r7F/psHyzmcmxyE1sHMwRQoWneeeOrDNQsr8rlg6G17hDsWlHXITq29fWcyn8qc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invisiblethingslab.com; spf=pass smtp.mailfrom=invisiblethingslab.com; dkim=pass (2048-bit key) header.d=invisiblethingslab.com header.i=@invisiblethingslab.com header.b=klStt1cb; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=nBKDCPsv; arc=none smtp.client-ip=202.12.124.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invisiblethingslab.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=invisiblethingslab.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b="PXodGcmT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=heusel.eu;
-	s=s1-ionos; t=1767751091; x=1768355891; i=christian@heusel.eu;
-	bh=s9vjfyj5ssftHbLT6wOkFbXmbtqOOMAqh0ejhILZzxI=;
-	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:References:
-	 MIME-Version:Content-Type:In-Reply-To:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=PXodGcmTq4B46vJMjaLZaYD+JGuPfdzA+pDodxEgAu/Qv7dzl/5UqyMR6Y7iiP5B
-	 txMEw5bEdRcnWOK2gFYW3Q9PglPbYiqpC6gDRu/eXH+RygBIv0+T+OT4zlfIKu7KM
-	 PkRap4jPSae7uLUfRUAWeKhfA+lvnerfap6J5e5nR7ceWD5KP5m6SdUyezUW8eaBU
-	 B/HKWuu//fitQZMr2EJxXz25nKNrZTGyxtNTHGhcMQhUC237czezlBGx0QB9lW+U3
-	 QJOYknANR+Xg1X/QGwee9oeOApNtigyNWPmXwtqIMD3SrFidF1Nbpk0pBFWUJjL3r
-	 Iy4+tkYw1xju2ZbBow==
-X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
-Received: from localhost ([94.31.75.239]) by mrelayeu.kundenserver.de
- (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1M4JiJ-1vd1k726zp-001IQr; Wed, 07 Jan 2026 02:52:38 +0100
-Date: Wed, 7 Jan 2026 02:52:37 +0100
-From: Christian Heusel <christian@heusel.eu>
-To: Leo Martins <loemra.dev@gmail.com>
-Cc: Gideon Farrell <gideon@solnickfarrell.co.uk>, 
-	linux-btrfs@vger.kernel.org, regressions@lists.linux.dev, arch-devops@lists.archlinux.org
-Subject: Re: refcount_warn_saturate in __btrfs_release_delayed_node for
- 6.18.2-arch2-1
-Message-ID: <46fba8b4-c694-48d8-b20b-6d0fdd18bf8b@heusel.eu>
-References: <DFHUFTKLUCB5.11QUC5R2L77DO@solnickfarrell.co.uk>
- <20260107011054.2694891-1-loemra.dev@gmail.com>
+	dkim=pass (2048-bit key) header.d=invisiblethingslab.com header.i=@invisiblethingslab.com header.b="klStt1cb";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="nBKDCPsv"
+Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 73D657A00D0;
+	Tue,  6 Jan 2026 21:57:30 -0500 (EST)
+Received: from phl-frontend-03 ([10.202.2.162])
+  by phl-compute-01.internal (MEProxy); Tue, 06 Jan 2026 21:57:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	invisiblethingslab.com; h=cc:cc:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1767754650;
+	 x=1767841050; bh=wYIkvz3pRlHzabcujWopBL2r96dnBGp9F8c9D5faYQw=; b=
+	klStt1cbL9GHKvu9olF/78L3svkJ/pIzkb7OCL8RTTfFynJ+K0UqKq9svbbovl35
+	uxkZCpWKJzGGLwr59KSFSEicoMhtG/jZAhB3Q540QpVmzazJ9owTvXu/Vdi/WHm6
+	4x5FjvBtljWPFKd69ia/lfxHgPsFlPhMTbMvnWhjrNf2QI1WZEvGAkAi6fAfGHGD
+	3o6dNr1cuPeCVrjl0DYbIr68Q/Em1H+oUHBKnydzzCO90m20TpXStoG2ML/FsPy2
+	J3XjeeNaUfWZjE2wgHI7Dt4/ZaZ78O/YyRGwCSwiVY0hSwiINZNlunaRJzw0Y4vI
+	pC5bFzOeLFuhfG+xi6w1zw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
+	1767754650; x=1767841050; bh=wYIkvz3pRlHzabcujWopBL2r96dnBGp9F8c
+	9D5faYQw=; b=nBKDCPsvKyPEDySV1A2QqBDwRk+dhDKGl74TXrpzpjiA1pgtJGh
+	MMM5Zjh0//v9qpPNrpqwqBuCH1OXdJ08fV635xLVZIL4M1U+zceZu1qYrqHzT5Ht
+	RaYLu5sZD9SC0PG47zZcQaXUEJmy56Tr8zpFRtgaMezPsd1MG85DdpAd263hrlww
+	6Ze1Zp6lRy+UTIbuSlqvyVdTNX75J5D3Kr61arsDSSzZvlBxa3FViylzn5HULkFU
+	+dQQ+SeZ/9Kyx6ZRLY53Jp4plAwl7fppopR0vW05VDd654ptsUzJClb5Jryfw2vA
+	JOsivpevuixEAmzjuHlBdHbAypkRa7Nl2xA==
+X-ME-Sender: <xms:mctdaQXFMVbiT2HofQVBccYhXMvJzQFbWF7p098qH1hS2wGNywbsTg>
+    <xme:mctdaVAXcXJcQ-RDkBChU7M2dMkUoE3fkXRWF5GyTSGZf9EqfG6yma9YpbaCFmkDG
+    ZPx6TjtVngiOliQDAsjKJ8DdWQwjdrz4YCvNxxIaKhTLGAY>
+X-ME-Received: <xmr:mctdaVHJ3_txXorwGkYJyb1eP372Z3vmJjfXdv3biGjsuuHg0wxdpA6JTXbtqnEqYjoJPFkrQJ3Dw0MKPQb8sT2mR7SVQCzjWuc>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddutdduleefucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepfffhvfevuffkfhggtggujgesghdtreertddtjeenucfhrhhomhepofgrrhgvkhcu
+    ofgrrhgtiiihkhhofihskhhiqdfikphrvggtkhhiuceomhgrrhhmrghrvghksehinhhvih
+    hsihgslhgvthhhihhnghhslhgrsgdrtghomheqnecuggftrfgrthhtvghrnhepgfduleet
+    feevhfefheeiteeliefhjefhleduveetteekveettddvgeeuteefjedunecuvehluhhsth
+    gvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhgrrhhmrghrvghksehi
+    nhhvihhsihgslhgvthhhihhnghhslhgrsgdrtghomhdpnhgspghrtghpthhtohepledpmh
+    houggvpehsmhhtphhouhhtpdhrtghpthhtoheprhgvghhrvghsshhiohhnsheslhgvvghm
+    hhhuihhsrdhinhhfohdprhgtphhtthhopehnsggusehnsggurdhnrghmvgdprhgtphhtth
+    hopehlohhrvghniihosehkvghrnhgvlhdrohhrghdprhgtphhtthhopehrhiguvghrrdhl
+    vggvsehmvgguihgrthgvkhdrtghomhdprhgtphhtthhopehshhgrhihnvgdrtghhvghnse
+    hmvgguihgrthgvkhdrtghomhdprhgtphhtthhopehsvggrnhdrfigrnhhgsehmvgguihgr
+    thgvkhdrtghomhdprhgtphhtthhopehlihhnuhigqdifihhrvghlvghsshesvhhgvghrrd
+    hkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhmvgguihgrthgvkheslhhi
+    shhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehrvghgrhgvshhsihhonh
+    hssehlihhsthhsrdhlihhnuhigrdguvghv
+X-ME-Proxy: <xmx:mctdaW5kn5nxiLZNMQ44XBUgfZ_TWzEr2OuFvveY1HdBJtqxiiJyjw>
+    <xmx:mctdabnPJgqiD-PWQ4BMl0vIdqzv0wJVVj3IsPzTz-fDCwDwzR66fw>
+    <xmx:mctdaR6pJ07kZ4P4adPCWqE_niV1tfkXW7Phcp21usDQChe1wN8Ctw>
+    <xmx:mctdacTNmTCaC5htjVIrE2PWw1-CwdB3CUr6VIAN5cG2IS72mOhzEg>
+    <xmx:mstdaeLInjIDnLMWkDfLU8-lPszkrmwqe9B0aXkRLPw-A8ad78YfN1CP>
+Feedback-ID: i1568416f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 6 Jan 2026 21:57:28 -0500 (EST)
+Date: Wed, 7 Jan 2026 03:57:26 +0100
+From: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Felix Fietkau <nbd@nbd.name>, Lorenzo Bianconi <lorenzo@kernel.org>,
+	Ryder Lee <ryder.lee@mediatek.com>,
+	Shayne Chen <shayne.chen@mediatek.com>,
+	Sean Wang <sean.wang@mediatek.com>,
+	"open list:MEDIATEK MT76 WIRELESS LAN DRIVER" <linux-wireless@vger.kernel.org>,
+	"moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>,
+	regressions@lists.linux.dev
+Subject: Re: strnlen buffer overflow in mt76_connac2_load_patch - 6.19-rc2
+Message-ID: <aV3LlrckZUqdvJMG@mail-itl>
+References: <aVBCFKub6vCFsFVB@mail-itl>
+ <6beab0bb-ed51-491a-bd64-15f3455ea628@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ig2grltrgyicork3"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="tCMpHQ2JrlxTEmeZ"
 Content-Disposition: inline
-In-Reply-To: <20260107011054.2694891-1-loemra.dev@gmail.com>
-X-Provags-ID: V03:K1:zhEH7xgSBahBSYNuzTwV4mb29g9E8cMCP6M1YtJGirGegdLkYiM
- jySCp9h/I5s2KtUnwBL/x0vPUzBpQt2foTevA3xgukOmZc7GRescD7x0pmfCWbZ+LLaYEBg
- 1cUyafmc3he1z/kyLn8utF9RnjvxSa3NYiGPWRAgrg/vvqxEhAqv3RNohVi7uvdzPYdLvRS
- Q5lAvuvlxsuBmealHh/KQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:CpojJjz+JI8=;iTd97HK9Y4/ggcBDQfXVHolnSgn
- Q7RoFUC40C+CJHr5WqjHu+xSFNWM/DZX6knSkattG6kXLnOIPoy7yjQ++UNr6QF8UsQlUroMT
- wMfJCWMGIKfYFDYBAKpFQLNUzrpwusxpqi6JU51n/NgfAXuguMXydlHbDuu9G7eldIGlpch5j
- 0vph8iKDpEt+4wLpoLfri4JkI8ehubKiHqYR/4kB/b+udQJdmaN1+J3ytt6ojfU9hvpnHuKDc
- hw77Q9slM+5yDehMGr8h351TS0jShx51M1i1MtMyfoiB2SDGeRgrTa0st9I7hpIVW3GJANRsi
- HBDvKbhOvRDBz5FJeoYZXFjSG1WEyV0si2hEIKzG7sBsXpou0DmUl5GPCYH6B+0KxPukbkrIq
- EYgS8Miso+3+toPdL9WPvWafW82r484KJs8ka5Lr0UX2EB7paDEAcGDLdpsF0tJTJw7jdo2w/
- /BiHpdJ+bRYoq1rvSZAJu/zxEDXHf8kF03eWrWRmfCqs3sBtHZtGJzaNJc0R7X5ti+6FCjOIU
- Hnv5QQE1Nk6wHKohydBXGmqGUaKspPojTZPG3hL9cQZFW6LgyP8RT/XjjTlEzR7Oa0ygJ7UfL
- ukEBtcFnt3fxHXRgFKojCnlu4/u4bZ5yRt4r1r/DiGApJlSlBnWSPmf64Hjl42LT5qMXBbQZZ
- bsD3zTEM/wxppakQtzdhPTUqauas9aANAQnOgdYL6hARFxtXpkd7zf/aBWYMhT6dopJquJhoO
- G3q6r7zu2pEdp2I8zujCCOzYsUP3ABuYwao8i5rPi2kfroSd29zJJ70AdeRsEyEJ0Xd6RvA5y
- cXD5tUgXYvvnkhG6mOKJFLXmiqsGoYDt9Jsgwv+DDJs84uIf3rrr4mObh6GAzJi/upFG4w3oU
- 4rBI/a1brVemslKbJ7R1YN5a8RgkQUkemliderbrrhr8moEJZfUmuPjnmkTErA5T5KPmXJS1b
- F3ZfihCNnVYbblq/ZoI/K77wZRoqt4j4JXt26xyiQAhRRYNfXpFRiot9EWeWhZoNnWTnUFqgt
- 6cv6cF2dxdH3KIyWv4pExn1WbmyNPOq9g/Cr4fzPDwSQnAr+IA7+fd8zgf66VKK4NUARf4Ywn
- KXMflaDt0n9wBsaQc6bd8FeGhW70gp14UUEEBysbN5t9aysQ3pgWGLV2wvuFv4xSUfQ3VM1b6
- astckzz8DyqRwXkB7OCf8Ox8ET9QgexhQl2gx4IGhK7txrV2lGU+K6fU/TcsjKDtFYY1clHqG
- bLWiZ0fgeA3N0w9ZSDyhlewzYryi/4N7IaODFzyV383mxFj6R9QlWtfiIkujREA24XS7HJ90e
- wOWgWN10NLQ3u+yY1AdA+ltwsIcea/HS7CuL+PHf8WiM8RgVbGmGjZkVFVizOqw6+isfQ4FHL
- VOqgdN/klJuxw8fj26yaX/RDlICPCWiM298mU18c54dt/xjIaWexCJVwPQBDRAWbPud8JCVWr
- gYW/ANGGvIwIUgHzfUbycsEvjdv7Kf8k14sVhP27BZH7GPDeu9kLn0nlyXFJLjjPqkrhvjMVS
- Mp+HDUEawXjfQYNs4L/kyJ0nC9kBSZwUduITVgBi9/2jHqVguZTPjKRcFp4bkasVQtnoGq0ol
- mDPLo1MTy9hBTrfWb1Ey2MLnFG2ovPymdsNIsJqTq7EYcIXf0ot0rlTMlICDk3NdyMr2X/UxC
- JNiGlKOvsQRixzbOQ+VkjNNqkk/gQW1T9Cig0o5CG0ybZlVPaGXxpL75P2a/vB23GgHe5kZkL
- I8pkQseEoC7JTLH5Cx5ecDohkEB2FpEfSlsPd6HcOZXOJi0MNxyc+PhT/riypbCXH7kdgc2gY
- hXUR
+In-Reply-To: <6beab0bb-ed51-491a-bd64-15f3455ea628@leemhuis.info>
 
 
---ig2grltrgyicork3
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+--tCMpHQ2JrlxTEmeZ
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: refcount_warn_saturate in __btrfs_release_delayed_node for
- 6.18.2-arch2-1
-MIME-Version: 1.0
+Date: Wed, 7 Jan 2026 03:57:26 +0100
+From: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Felix Fietkau <nbd@nbd.name>, Lorenzo Bianconi <lorenzo@kernel.org>,
+	Ryder Lee <ryder.lee@mediatek.com>,
+	Shayne Chen <shayne.chen@mediatek.com>,
+	Sean Wang <sean.wang@mediatek.com>,
+	"open list:MEDIATEK MT76 WIRELESS LAN DRIVER" <linux-wireless@vger.kernel.org>,
+	"moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>,
+	regressions@lists.linux.dev
+Subject: Re: strnlen buffer overflow in mt76_connac2_load_patch - 6.19-rc2
 
-On 26/01/06 05:10PM, Leo Martins wrote:
-> On Tue, 06 Jan 2026 22:01:58 +0000 "Gideon Farrell" <gideon@solnickfarrel=
-l.co.uk> wrote:
->=20
-> > Hi there,
+On Mon, Jan 05, 2026 at 02:44:28PM +0100, Thorsten Leemhuis wrote:
+> On 12/27/25 21:31, Marek Marczykowski-G=C3=B3recki wrote:
+> > Hi,
 > >=20
-> > I recently experienced a type of crash I haven't seen before on this sy=
-stem which seems to originate in __btrfs_release_delayed_node on Kernel 6.1=
-8.2-arch2-1.
->=20
-> Hey, thanks for the report. This looks very similar to a different
-> report that has been fixed in 6.19-rc5.
-> Report: https://lore.kernel.org/oe-lkp/202511262228.6dda231e-lkp@intel.co=
-m/
-
-I think this is the issue we have been seeing on the Arch Linux
-infrastructure aswell, see this issue for reference:
-
-https://gitlab.archlinux.org/archlinux/infrastructure/-/issues/788#note_385=
-420
-
-This has caused us to downgrade the kernel on all hosts in our
-infrastructure due to the crashes caused by this.
-
-> Fix: https://lore.kernel.org/linux-btrfs/7c89417ac3352ce3cb0a6373a1746155=
-c1e2754d.1765588168.git.loemra.dev@gmail.com/
->=20
-> Please let me know if this fixes your issue.
-
-So far we have not found a good lab-setting to reproduce the issue
-outside of the production machines workloads (but we have also not
-looked into the issue a lot).
-
-Do you have a good reproducer already that we could use to verify the
-fix?
-
-Also the fix is not yet even scheduled for inclusion in the stable
-trees, since it is still not in linus tree right?
-
->=20
+> > After updating to 6.19-rc2 I'm hitting the following panic on boot. It
+> > worked in 6.18.2. It is a Xen HVM domU with PCI device attached, this
+> > one specifically:
 > >=20
-> > Here's the stack trace:
-> >=20
-> > ```
+> > 02:00.0 Network controller [0280]: MEDIATEK Corp. MT7921K (RZ608) Wi-Fi=
+ 6E 80MHz [14c3:0608]
+> >
+> > And the crash is:
 >=20
-> Are these the first refcount_t: warnings in your dmesg? I would
-> expect an earlier warning that looks like
-> refcount_t: addition on 0; use-after-free.
->=20
+> This looks somewhat similar to a report from Shuah Khan and likely was
+> fixed with af7809f037e6e5 ("Revert "wifi: mt76: Strip whitespace from
+> build ddate"") in v6.19-rc4. Please let us known if that is not the case.
 
-This is what our stacktrace looks like:
+Thanks, I confirm it's fixed in 6.19-rc4.
 
-[231923.304874] hrtimer: interrupt took 3785426 ns
-[472012.335914] ------------[ cut here ]------------
-[472012.335919] refcount_t: addition on 0; use-after-free.
-[472012.335953] WARNING: CPU: 0 PID: 378191 at lib/refcount.c:25 refcount_w=
-arn_saturate+0xe5/0x110
-[472012.335978] Modules linked in: wireguard libcurve25519 ip6_udp_tunnel u=
-dp_tunnel cfg80211 rfkill nft_fib_inet nft_fib_ipv4 nft_fib_ipv6 nft_fib nf=
-t_reject_inet nf_reject_ipv4 nf_reject_ipv6 nft_reject nft_ct nft_chain_nat=
- ip6table_nat ip6table_mangle ip6table_raw ip6table_security iptable_nat nf=
-_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 iptable_mangle iptable_raw =
-iptable_security nf_tables ip6table_filter ip6_tables iptable_filter ip_tab=
-les x_tables intel_rapl_msr intel_rapl_common intel_uncore_frequency_common=
- isst_if_mbox_msr isst_if_common skx_edac_common nfit libnvdimm encrypted_k=
-eys trusted asn1_encoder tee polyval_clmulni ghash_clmulni_intel aesni_inte=
-l rapl i2c_i801 i2c_smbus psmouse pcspkr i2c_mux joydev iTCO_wdt intel_pmc_=
-bxt mousedev iTCO_vendor_support mac_hid tun nfnetlink vsock_loopback vmw_v=
-sock_virtio_transport_common zram vmw_vsock_vmci_transport 842_decompress 8=
-42_compress vsock lz4hc_compress lz4_compress vmw_vmci qemu_fw_cfg virtio_n=
-et sr_mod net_failover cdrom virtio_scsi lpc_ich failover
-[472012.336187]  intel_agp virtio_balloon virtio_gpu intel_gtt virtio_dma_b=
-uf serio_raw virtio_rng
-[472012.336217] CPU: 0 UID: 0 PID: 378191 Comm: kworker/u8:7 Not tainted 6.=
-18.2-arch2-1 #1 PREEMPT(full)  e9d53cde2ee9d1bdaa4464d2214ad0f22bd43723
-[472012.336226] Hardware name: Hetzner vServer/Standard PC (Q35 + ICH9, 200=
-9), BIOS 20171111 11/11/2017
-[472012.336233] Workqueue: btrfs-delalloc btrfs_work_helper
-[472012.336243] RIP: 0010:refcount_warn_saturate+0xe5/0x110
-[472012.336249] Code: 7c 7b ff 0f 0b c3 cc cc cc cc 80 3d 27 ce ae 01 00 0f=
- 85 5e ff ff ff 48 c7 c7 88 4a 1d 9a c6 05 13 ce ae 01 01 e8 bb 7c 7b ff <0=
-f> 0b e9 14 70 83 00 48 c7 c7 e0 4a 1d 9a c6 05 f7 cd ae 01 01 e8
-[472012.336251] RSP: 0018:ffffd0da0550bb68 EFLAGS: 00010246
-[472012.336257] RAX: 0000000000000000 RBX: ffff8f5461439618 RCX: 0000000000=
-000027
-[472012.336259] RDX: ffff8f55b5c1d008 RSI: 0000000000000001 RDI: ffff8f55b5=
-c1d000
-[472012.336261] RBP: ffff8f5546bee368 R08: 0000000000000000 R09: 00000000ff=
-ffefff
-[472012.336263] R10: ffffffff9aa613c0 R11: ffffd0da0550ba00 R12: ffff8f5459=
-b7b310
-[472012.336265] R13: 00000000071412e0 R14: ffff8f54869aec00 R15: ffff8f5546=
-bee000
-[472012.336267] FS:  0000000000000000(0000) GS:ffff8f561a4f2000(0000) knlGS=
-:0000000000000000
-[472012.336269] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[472012.336271] CR2: 00007f1662c2d000 CR3: 00000000011d0001 CR4: 0000000000=
-7706f0
-[472012.336276] PKRU: 55555554
-[472012.336277] Call Trace:
-[472012.336280]  <TASK>
-[472012.336282]  btrfs_get_delayed_node.isra.0+0xda/0x1b0
-[472012.336302]  btrfs_get_or_create_delayed_node.isra.0+0x134/0x1b0
-[472012.336306]  btrfs_delayed_update_inode+0x28/0x1e0
-[472012.336310]  ? btrfs_update_root_times+0x75/0xa0
-[472012.336314]  btrfs_update_inode+0x59/0xc0
-[472012.336319]  __cow_file_range_inline+0x16c/0x3f0
-[472012.336325]  cow_file_range_inline.constprop.0+0xd7/0x140
-[472012.336357]  compress_file_range+0x3d6/0x5c0
-[472012.336368]  ? __pfx_submit_compressed_extents+0x10/0x10
-[472012.336372]  btrfs_work_helper+0xe1/0x380
-[472012.336376]  process_one_work+0x193/0x350
-[472012.336382]  worker_thread+0x2d7/0x410
-[472012.336387]  ? __pfx_worker_thread+0x10/0x10
-[472012.336391]  kthread+0xfc/0x240
-[472012.336394]  ? __pfx_kthread+0x10/0x10
-[472012.336397]  ? __pfx_kthread+0x10/0x10
-[472012.336400]  ret_from_fork+0x1c2/0x1f0
-[472012.336405]  ? __pfx_kthread+0x10/0x10
-[472012.336407]  ret_from_fork_asm+0x1a/0x30
-[472012.336415]  </TASK>
-[472012.336416] ---[ end trace 0000000000000000 ]---
-[514764.706607] clocksource: timekeeping watchdog on CPU1: Marking clocksou=
-rce 'tsc' as unstable because the skew is too large:
-[514764.706619] clocksource:                       'kvm-clock' wd_nsec: 503=
-967155 wd_now: 15063bc7c98819 wd_last: 15063ba9bf9a66 mask: ffffffffffffffff
-[514764.706623] clocksource:                       'tsc' cs_nsec: 504385576=
- cs_now: 43249c5a1bef6 cs_last: 4324980a5e4ee mask: ffffffffffffffff
-[514764.706626] clocksource:                       Clocksource 'tsc' skewed=
- 418421 ns (0 ms) over watchdog 'kvm-clock' interval of 503967155 ns (503 m=
-s)
-[514764.706629] clocksource:                       'kvm-clock' (not 'tsc') =
-is current clocksource.
-[514764.706631] tsc: Marking TSC unstable due to clocksource watchdog
-[565801.098513] BTRFS critical (device sda2): failed to delete reference to=
- index, root 5 inode 119459904 parent 4158694
-[565801.098639] ------------[ cut here ]------------
-[565801.098643] BTRFS: Transaction aborted (error -2)
-[565801.098718] WARNING: CPU: 1 PID: 3731148 at fs/btrfs/inode.c:4297 __btr=
-fs_unlink_inode+0x41f/0x440
-[565801.098772] Modules linked in: wireguard libcurve25519 ip6_udp_tunnel u=
-dp_tunnel cfg80211 rfkill nft_fib_inet nft_fib_ipv4 nft_fib_ipv6 nft_fib nf=
-t_reject_inet nf_reject_ipv4 nf_reject_ipv6 nft_reject nft_ct nft_chain_nat=
- ip6table_nat ip6table_mangle ip6table_raw ip6table_security iptable_nat nf=
-_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 iptable_mangle iptable_raw =
-iptable_security nf_tables ip6table_filter ip6_tables iptable_filter ip_tab=
-les x_tables intel_rapl_msr intel_rapl_common intel_uncore_frequency_common=
- isst_if_mbox_msr isst_if_common skx_edac_common nfit libnvdimm encrypted_k=
-eys trusted asn1_encoder tee polyval_clmulni ghash_clmulni_intel aesni_inte=
-l rapl i2c_i801 i2c_smbus psmouse pcspkr i2c_mux joydev iTCO_wdt intel_pmc_=
-bxt mousedev iTCO_vendor_support mac_hid tun nfnetlink vsock_loopback vmw_v=
-sock_virtio_transport_common zram vmw_vsock_vmci_transport 842_decompress 8=
-42_compress vsock lz4hc_compress lz4_compress vmw_vmci qemu_fw_cfg virtio_n=
-et sr_mod net_failover cdrom virtio_scsi lpc_ich failover
-[565801.099194]  intel_agp virtio_balloon virtio_gpu intel_gtt virtio_dma_b=
-uf serio_raw virtio_rng
-[565801.099264] CPU: 1 UID: 967 PID: 3731148 Comm: git Tainted: G        W =
-          6.18.2-arch2-1 #1 PREEMPT(full)  e9d53cde2ee9d1bdaa4464d2214ad0f2=
-2bd43723
-[565801.099294] Tainted: [W]=3DWARN
-[565801.099304] Hardware name: Hetzner vServer/Standard PC (Q35 + ICH9, 200=
-9), BIOS 20171111 11/11/2017
-[565801.099320] RIP: 0010:__btrfs_unlink_inode+0x41f/0x440
-[565801.099339] Code: 9a 89 04 24 e8 82 35 a3 ff 0f 0b 8b 04 24 41 b8 01 00=
- 00 00 e9 ee 6e 91 ff 89 c6 48 c7 c7 08 b6 1b 9a 89 04 24 e8 61 35 a3 ff <0=
-f> 0b 8b 04 24 41 b8 01 00 00 00 e9 f5 6e 91 ff b8 f4 ff ff ff e9
-[565801.099347] RSP: 0018:ffffd0da05fc3ae0 EFLAGS: 00010246
-[565801.099363] RAX: 0000000000000000 RBX: ffff8f54514cf400 RCX: 0000000000=
-000027
-[565801.099369] RDX: ffff8f55b5d1d008 RSI: 0000000000000001 RDI: ffff8f55b5=
-d1d000
-[565801.099374] RBP: ffff8f554f875800 R08: 0000000000000000 R09: 00000000ff=
-ffefff
-[565801.099379] R10: ffffffff9aa613c0 R11: ffffd0da05fc3978 R12: ffff8f5447=
-173770
-[565801.099383] R13: ffff8f554059c930 R14: ffff8f5546bee000 R15: ffffd0da05=
-fc3bf0
-[565801.099388] FS:  00007fce22144740(0000) GS:ffff8f561a5f2000(0000) knlGS=
-:0000000000000000
-[565801.099395] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[565801.099402] CR2: 0000561bbb192000 CR3: 000000000fc4a001 CR4: 0000000000=
-7706f0
-[565801.099415] PKRU: 55555554
-[565801.099419] Call Trace:
-[565801.099424]  <TASK>
-[565801.099438]  btrfs_rename+0x3d2/0xd10
-[565801.099475]  btrfs_rename2+0x28/0x60
-[565801.099484]  vfs_rename+0x7f3/0xd90
-[565801.099500]  do_renameat2+0x40e/0x580
-[565801.099515]  __x64_sys_rename+0x7a/0xc0
-[565801.099521]  do_syscall_64+0x81/0x7f0
-[565801.099531]  ? do_user_addr_fault+0x21a/0x690
-[565801.099542]  ? clear_bhb_loop+0x50/0xa0
-[565801.099549]  ? clear_bhb_loop+0x50/0xa0
-[565801.099555]  ? clear_bhb_loop+0x50/0xa0
-[565801.099561]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
-[565801.099568] RIP: 0033:0x7fce21e60adb
-[565801.099665] Code: c0 48 8b 5d f8 c9 c3 0f 1f 84 00 00 00 00 00 b8 ff ff=
- ff ff eb eb 66 0f 1f 84 00 00 00 00 00 f3 0f 1e fa b8 52 00 00 00 0f 05 <4=
-8> 3d 00 f0 ff ff 77 05 c3 0f 1f 40 00 48 8b 15 01 72 1a 00 f7 d8
-[565801.099670] RSP: 002b:00007ffc913073b8 EFLAGS: 00000246 ORIG_RAX: 00000=
-00000000052
-[565801.099677] RAX: ffffffffffffffda RBX: 0000561bbb167650 RCX: 00007fce21=
-e60adb
-[565801.099681] RDX: 00000000ffffffff RSI: 0000561bbb16b020 RDI: 0000561bbb=
-16a700
-[565801.099685] RBP: 00007ffc913073e0 R08: 0000000000000000 R09: 0000000000=
-000034
-[565801.099689] R10: 0000000000000000 R11: 0000000000000246 R12: 0000561bbb=
-16b020
-[565801.099693] R13: 00007ffc91307530 R14: 0000000000000000 R15: 0000000000=
-000000
-[565801.099716]  </TASK>
-[565801.099719] ---[ end trace 0000000000000000 ]---
-[565801.099736] BTRFS: error (device sda2 state A) in __btrfs_unlink_inode:=
-4297: errno=3D-2 No such entry
-[565801.099779] BTRFS info (device sda2 state EA): forced readonly
-[565801.099929] BTRFS: error (device sda2 state EA) in btrfs_rename:8588: e=
-rrno=3D-2 No such entry
-[565843.595829] systemd-journald[382]: /var/log/journal/7c70006779c84e4289a=
-748b91a60ece7/system.journal: Journal file corrupted, rotating.
-[565843.596029] systemd-journald[382]: Failed to rotate /var/log/journal/7c=
-70006779c84e4289a748b91a60ece7/system.journal: Read-only file system
-[565843.637938] systemd-journald[382]: Failed to write entry to /var/log/jo=
-urnal/7c70006779c84e4289a748b91a60ece7/system.journal (24 items, 790 bytes)=
- despite vacuuming, ignoring: Bad message
-[565875.550945] systemd-journald[382]: /var/log/journal/7c70006779c84e4289a=
-748b91a60ece7/system.journal: Journal file corrupted, rotating.
-[565875.551005] systemd-journald[382]: Failed to rotate /var/log/journal/7c=
-70006779c84e4289a748b91a60ece7/system.journal: Read-only file system
+--=20
+Best Regards,
+Marek Marczykowski-G=C3=B3recki
+Invisible Things Lab
 
-Cheers,
-Chris
-
---ig2grltrgyicork3
-Content-Type: application/pgp-signature; name="signature.asc"
+--tCMpHQ2JrlxTEmeZ
+Content-Type: application/pgp-signature; name=signature.asc
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEEb3ea3iR6a4oPcswTwEfU8yi1JYUFAmldvGUACgkQwEfU8yi1
-JYVL6Q/9FvRlmhfnQF9dxaz2TRTpkIkSfDqjo7YCNI2UobA4Egeg7dhKVswpOH7p
-RVjNn7pUurrZK1krDkdwQ4rkGC4OhyLYb+JFHUs8KqulV9iVIN870TjYyxAE1ssm
-zJE2CoR5cfExuhVr8+QbeHbo3LO636I4uVqdpL1GvEboD/YKSAyLS6FvKRiYSp+W
-5s2/2vquwpLWzbbFSres5r+8rGqAiRrULmLVTSQsooYCqutNeWFq9c3LPeAR4YuG
-rN6/61hyfb5FIz4Yi2c7aHB4O3jLlFcAgPZOSnqX+V+gBUTkmZmLfdkT/U3uVPUV
-7L/fPj0l9/SNYittm2TS+wmdHjO45j2cFky3IQUuis11bBcD8lCAFLEV3l3SIO0e
-Buw/f7at4koJ7lwtBhMkV81OUCvY4b6zBiN3i0aHaTK4Ma2bp9TOYuMsiXycd6mx
-mTdDfkNJbGxn9uuc4KZ4X/k+Tl6KIJuCXXiM+GE/Kv1Nx9mdxDOHjNOY/+qedHSu
-vWpIGjcemTatNfQIDf9sups8178hRYnnuOHhS5VHTUIK3Ge+3c6GoDLgloSol7ys
-Clk4PcHGwdvPKW3RkHZXodtbWPvSwQKZnkxmlswXlYcPq7NB0HPNzZs1DJCNSl20
-WaGsqkGsiNPzqaknIQuzD3kMDGCQ+rMWbXwddE2+3DqXwAfgLgE=
-=8m5x
+iQEzBAEBCAAdFiEEhrpukzGPukRmQqkK24/THMrX1ywFAmldy5YACgkQ24/THMrX
+1yy43gf+N+KfA0eFcvyuCW6TxxHbai0PBuoloCzovpmVTs2+cVf382Rxcz3alc4J
+NBZQKQYz+Vir7vg5l+lV2hjOPJ1B2JsUrMcIwg8LvBNy8NnhIEOPBJUiNxlbA3kd
+0jCSo/A8OSVkgKKLbgMl9LcLssSCAxdDhooCq/kUermusiaROIVNq68wxCEH7NUW
+Tvi2q0WXhJN8NSu/tW18kjh+O5b3U92E8SYkBP5ZJjEP7+5M1Qs+LZQ/CTnHahRK
+IakrRWZpBUmJpdglbepWVLi+6/zJDJEYTWUBUonQCiSmRDNM81iltJ0gLht+GFkI
+mG13MaqJI304QAVi76WhharbXrKEiQ==
+=UUKT
 -----END PGP SIGNATURE-----
 
---ig2grltrgyicork3--
+--tCMpHQ2JrlxTEmeZ--
