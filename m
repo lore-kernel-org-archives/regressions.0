@@ -1,159 +1,59 @@
-Received: from fhigh-b3-smtp.messagingengine.com (fhigh-b3-smtp.messagingengine.com [202.12.124.154])
+Received: from natrix.sarinay.com (natrix.sarinay.com [159.100.251.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 449BD3A1CD
-	for <regressions@lists.linux.dev>; Wed,  7 Jan 2026 02:57:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 832B13054D8
+	for <regressions@lists.linux.dev>; Wed,  7 Jan 2026 09:51:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.100.251.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767754653; cv=none; b=f5oZVfgv0GyauVIUKBkeANpFZ+zfWVN8HuYz1RLFqpNffwjreUDk67GJ+IscA0w8Rk4qPXc88OqEZlDpTL/6aDfYXiDc0I4uk6rJ8pRjnaD0FVpTt5T4LAUWwc+1K0fNVBpxE1hYqZorPwFJ/SGuS4vTDjUi2JxesqOe3RzCui0=
+	t=1767779511; cv=none; b=NZaCfyzdIS9xjXW4YedUxwqocMyWaIEyrPCnfQ+L8W1zXFynXJQbTMhqCwqQ6jSSJFmccW8dM/X1m1EOLFQo0DTrs5Fxi4IaYpFZi2XhSx75SOohcwnwc9B4PGSSfGJs/BgiTFiXxQ0TXYqaWplGK2Xw+aEcEeSKYsF7pQfnnxE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767754653; c=relaxed/simple;
-	bh=6IC0KqfjL6DuGVRuhP8dTyUTfDwMrkHlEAOYovDMF9Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PLAhaqIQKeeT7/VBnAHgSE0N8qk4BL//71CSk2pBUYtVimlAwmLdurD9SDys0f1yQrUhNT8q4srxFjxPiXMx8LXmgZHqmDlcHKGLaDJeLVu/r7F/psHyzmcmxyE1sHMwRQoWneeeOrDNQsr8rlg6G17hDsWlHXITq29fWcyn8qc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invisiblethingslab.com; spf=pass smtp.mailfrom=invisiblethingslab.com; dkim=pass (2048-bit key) header.d=invisiblethingslab.com header.i=@invisiblethingslab.com header.b=klStt1cb; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=nBKDCPsv; arc=none smtp.client-ip=202.12.124.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invisiblethingslab.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=invisiblethingslab.com
+	s=arc-20240116; t=1767779511; c=relaxed/simple;
+	bh=nE5xqdgsLdwjSBCDkh9NrAinC8GAJWzhSEOF62kybxc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=cKJdewlMGtGpJTl/6o/6qHQP8deXiUT0bKlhIt7CMMYCgt4EYcEuzVdCE/58BGPJ4+auVOxaGJ1hZ14QfRsKL/1FNiqkL6jTZbFFUMBZ5baKELuSfeTi4/ujIxwCEYnA3giyd5M3MfB4V6PwRm9N6KeYPXklfnsw6/Kgj+rKJkY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sarinay.com; spf=pass smtp.mailfrom=sarinay.com; dkim=pass (2048-bit key) header.d=sarinay.com header.i=@sarinay.com header.b=k5MAatyg; arc=none smtp.client-ip=159.100.251.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sarinay.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sarinay.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=invisiblethingslab.com header.i=@invisiblethingslab.com header.b="klStt1cb";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="nBKDCPsv"
-Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 73D657A00D0;
-	Tue,  6 Jan 2026 21:57:30 -0500 (EST)
-Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-01.internal (MEProxy); Tue, 06 Jan 2026 21:57:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	invisiblethingslab.com; h=cc:cc:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1767754650;
-	 x=1767841050; bh=wYIkvz3pRlHzabcujWopBL2r96dnBGp9F8c9D5faYQw=; b=
-	klStt1cbL9GHKvu9olF/78L3svkJ/pIzkb7OCL8RTTfFynJ+K0UqKq9svbbovl35
-	uxkZCpWKJzGGLwr59KSFSEicoMhtG/jZAhB3Q540QpVmzazJ9owTvXu/Vdi/WHm6
-	4x5FjvBtljWPFKd69ia/lfxHgPsFlPhMTbMvnWhjrNf2QI1WZEvGAkAi6fAfGHGD
-	3o6dNr1cuPeCVrjl0DYbIr68Q/Em1H+oUHBKnydzzCO90m20TpXStoG2ML/FsPy2
-	J3XjeeNaUfWZjE2wgHI7Dt4/ZaZ78O/YyRGwCSwiVY0hSwiINZNlunaRJzw0Y4vI
-	pC5bFzOeLFuhfG+xi6w1zw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
-	1767754650; x=1767841050; bh=wYIkvz3pRlHzabcujWopBL2r96dnBGp9F8c
-	9D5faYQw=; b=nBKDCPsvKyPEDySV1A2QqBDwRk+dhDKGl74TXrpzpjiA1pgtJGh
-	MMM5Zjh0//v9qpPNrpqwqBuCH1OXdJ08fV635xLVZIL4M1U+zceZu1qYrqHzT5Ht
-	RaYLu5sZD9SC0PG47zZcQaXUEJmy56Tr8zpFRtgaMezPsd1MG85DdpAd263hrlww
-	6Ze1Zp6lRy+UTIbuSlqvyVdTNX75J5D3Kr61arsDSSzZvlBxa3FViylzn5HULkFU
-	+dQQ+SeZ/9Kyx6ZRLY53Jp4plAwl7fppopR0vW05VDd654ptsUzJClb5Jryfw2vA
-	JOsivpevuixEAmzjuHlBdHbAypkRa7Nl2xA==
-X-ME-Sender: <xms:mctdaQXFMVbiT2HofQVBccYhXMvJzQFbWF7p098qH1hS2wGNywbsTg>
-    <xme:mctdaVAXcXJcQ-RDkBChU7M2dMkUoE3fkXRWF5GyTSGZf9EqfG6yma9YpbaCFmkDG
-    ZPx6TjtVngiOliQDAsjKJ8DdWQwjdrz4YCvNxxIaKhTLGAY>
-X-ME-Received: <xmr:mctdaVHJ3_txXorwGkYJyb1eP372Z3vmJjfXdv3biGjsuuHg0wxdpA6JTXbtqnEqYjoJPFkrQJ3Dw0MKPQb8sT2mR7SVQCzjWuc>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddutdduleefucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepfffhvfevuffkfhggtggujgesghdtreertddtjeenucfhrhhomhepofgrrhgvkhcu
-    ofgrrhgtiiihkhhofihskhhiqdfikphrvggtkhhiuceomhgrrhhmrghrvghksehinhhvih
-    hsihgslhgvthhhihhnghhslhgrsgdrtghomheqnecuggftrfgrthhtvghrnhepgfduleet
-    feevhfefheeiteeliefhjefhleduveetteekveettddvgeeuteefjedunecuvehluhhsth
-    gvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhgrrhhmrghrvghksehi
-    nhhvihhsihgslhgvthhhihhnghhslhgrsgdrtghomhdpnhgspghrtghpthhtohepledpmh
-    houggvpehsmhhtphhouhhtpdhrtghpthhtoheprhgvghhrvghsshhiohhnsheslhgvvghm
-    hhhuihhsrdhinhhfohdprhgtphhtthhopehnsggusehnsggurdhnrghmvgdprhgtphhtth
-    hopehlohhrvghniihosehkvghrnhgvlhdrohhrghdprhgtphhtthhopehrhiguvghrrdhl
-    vggvsehmvgguihgrthgvkhdrtghomhdprhgtphhtthhopehshhgrhihnvgdrtghhvghnse
-    hmvgguihgrthgvkhdrtghomhdprhgtphhtthhopehsvggrnhdrfigrnhhgsehmvgguihgr
-    thgvkhdrtghomhdprhgtphhtthhopehlihhnuhigqdifihhrvghlvghsshesvhhgvghrrd
-    hkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhmvgguihgrthgvkheslhhi
-    shhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehrvghgrhgvshhsihhonh
-    hssehlihhsthhsrdhlihhnuhigrdguvghv
-X-ME-Proxy: <xmx:mctdaW5kn5nxiLZNMQ44XBUgfZ_TWzEr2OuFvveY1HdBJtqxiiJyjw>
-    <xmx:mctdabnPJgqiD-PWQ4BMl0vIdqzv0wJVVj3IsPzTz-fDCwDwzR66fw>
-    <xmx:mctdaR6pJ07kZ4P4adPCWqE_niV1tfkXW7Phcp21usDQChe1wN8Ctw>
-    <xmx:mctdacTNmTCaC5htjVIrE2PWw1-CwdB3CUr6VIAN5cG2IS72mOhzEg>
-    <xmx:mstdaeLInjIDnLMWkDfLU8-lPszkrmwqe9B0aXkRLPw-A8ad78YfN1CP>
-Feedback-ID: i1568416f:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 6 Jan 2026 21:57:28 -0500 (EST)
-Date: Wed, 7 Jan 2026 03:57:26 +0100
-From: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Felix Fietkau <nbd@nbd.name>, Lorenzo Bianconi <lorenzo@kernel.org>,
-	Ryder Lee <ryder.lee@mediatek.com>,
-	Shayne Chen <shayne.chen@mediatek.com>,
-	Sean Wang <sean.wang@mediatek.com>,
-	"open list:MEDIATEK MT76 WIRELESS LAN DRIVER" <linux-wireless@vger.kernel.org>,
-	"moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>,
-	regressions@lists.linux.dev
-Subject: Re: strnlen buffer overflow in mt76_connac2_load_patch - 6.19-rc2
-Message-ID: <aV3LlrckZUqdvJMG@mail-itl>
-References: <aVBCFKub6vCFsFVB@mail-itl>
- <6beab0bb-ed51-491a-bd64-15f3455ea628@leemhuis.info>
+	dkim=pass (2048-bit key) header.d=sarinay.com header.i=@sarinay.com header.b="k5MAatyg"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=sarinay.com; s=2023;
+	t=1767778890; bh=nE5xqdgsLdwjSBCDkh9NrAinC8GAJWzhSEOF62kybxc=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=k5MAatygne1vwEa/WKKs0N+JGqvIvXzEvORvNM00jNfhVl74wJ0SWirCSb0cCsHkX
+	 zD9QGd2ko9Y9LqU5QBm6MlxZoh5vYC+Ozg+oofm7Y+DISvfxcTll0/8PCO4nE8KozQ
+	 r3nSt2FB5dKhEFE8kHS7EFc3IY4zIErAI+LhT1UBH10ybLWeaFkYNfaMw40shQDH6J
+	 dDhpOeAYvHvrRgpPq35FCVLOkTwlCulE3pZGzosomAKGrFm20VSTP7hJhfI726TMKK
+	 J2akg5PUN4aw5Lj3n758k6S/L5JOJfuh2Wejcp9Toy86dQiGw97wTj7moAWU3liPgB
+	 V/YnqNzr5zL+Q==
+Message-ID: <4ece65a62bac434de260896d208fcd9067185b4c.camel@sarinay.com>
+Subject: Re: [PATCH net v4] net: nfc: nci: Fix parameter validation for
+ packet data
+From: Juraj =?UTF-8?Q?=C5=A0arinay?= <juraj@sarinay.com>
+To: Michael Thalmeier <michael.thalmeier@hale.at>, Deepak Sharma	
+ <deepak.sharma.472935@gmail.com>, Krzysztof Kozlowski <krzk@kernel.org>, 
+ Vadim Fedorenko <vadim.fedorenko@linux.dev>, Simon Horman
+ <horms@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, Michael Thalmeier	
+ <michael@thalmeier.at>, stable@vger.kernel.org, regressions@lists.linux.dev
+Date: Wed, 07 Jan 2026 10:41:30 +0100
+In-Reply-To: <20251223072552.297922-1-michael.thalmeier@hale.at>
+References: <20251223072552.297922-1-michael.thalmeier@hale.at>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="tCMpHQ2JrlxTEmeZ"
-Content-Disposition: inline
-In-Reply-To: <6beab0bb-ed51-491a-bd64-15f3455ea628@leemhuis.info>
+
+On Tue, 2025-12-23 at 08:25 +0100, Michael Thalmeier wrote:
+> Since commit 9c328f54741b ("net: nfc: nci: Add parameter validation for
+> packet data") communication with nci nfc chips is not working any more.
+
+The commit broke existing user workflows, should therefore be handled
+as a regression. Please consider reverting it until more refined
+validation code has been thoroughly tested.
 
 
---tCMpHQ2JrlxTEmeZ
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 7 Jan 2026 03:57:26 +0100
-From: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Felix Fietkau <nbd@nbd.name>, Lorenzo Bianconi <lorenzo@kernel.org>,
-	Ryder Lee <ryder.lee@mediatek.com>,
-	Shayne Chen <shayne.chen@mediatek.com>,
-	Sean Wang <sean.wang@mediatek.com>,
-	"open list:MEDIATEK MT76 WIRELESS LAN DRIVER" <linux-wireless@vger.kernel.org>,
-	"moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>,
-	regressions@lists.linux.dev
-Subject: Re: strnlen buffer overflow in mt76_connac2_load_patch - 6.19-rc2
-
-On Mon, Jan 05, 2026 at 02:44:28PM +0100, Thorsten Leemhuis wrote:
-> On 12/27/25 21:31, Marek Marczykowski-G=C3=B3recki wrote:
-> > Hi,
-> >=20
-> > After updating to 6.19-rc2 I'm hitting the following panic on boot. It
-> > worked in 6.18.2. It is a Xen HVM domU with PCI device attached, this
-> > one specifically:
-> >=20
-> > 02:00.0 Network controller [0280]: MEDIATEK Corp. MT7921K (RZ608) Wi-Fi=
- 6E 80MHz [14c3:0608]
-> >
-> > And the crash is:
->=20
-> This looks somewhat similar to a report from Shuah Khan and likely was
-> fixed with af7809f037e6e5 ("Revert "wifi: mt76: Strip whitespace from
-> build ddate"") in v6.19-rc4. Please let us known if that is not the case.
-
-Thanks, I confirm it's fixed in 6.19-rc4.
-
---=20
-Best Regards,
-Marek Marczykowski-G=C3=B3recki
-Invisible Things Lab
-
---tCMpHQ2JrlxTEmeZ
-Content-Type: application/pgp-signature; name=signature.asc
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEhrpukzGPukRmQqkK24/THMrX1ywFAmldy5YACgkQ24/THMrX
-1yy43gf+N+KfA0eFcvyuCW6TxxHbai0PBuoloCzovpmVTs2+cVf382Rxcz3alc4J
-NBZQKQYz+Vir7vg5l+lV2hjOPJ1B2JsUrMcIwg8LvBNy8NnhIEOPBJUiNxlbA3kd
-0jCSo/A8OSVkgKKLbgMl9LcLssSCAxdDhooCq/kUermusiaROIVNq68wxCEH7NUW
-Tvi2q0WXhJN8NSu/tW18kjh+O5b3U92E8SYkBP5ZJjEP7+5M1Qs+LZQ/CTnHahRK
-IakrRWZpBUmJpdglbepWVLi+6/zJDJEYTWUBUonQCiSmRDNM81iltJ0gLht+GFkI
-mG13MaqJI304QAVi76WhharbXrKEiQ==
-=UUKT
------END PGP SIGNATURE-----
-
---tCMpHQ2JrlxTEmeZ--
+#regzbot introduced: 9c328f54741bd5465ca1dc717c84c04242fac2e1
