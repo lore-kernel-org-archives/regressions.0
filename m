@@ -1,80 +1,66 @@
-Received: from fout-a6-smtp.messagingengine.com (fout-a6-smtp.messagingengine.com [103.168.172.149])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BBA830BB80
-	for <regressions@lists.linux.dev>; Sun, 11 Jan 2026 15:32:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.149
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A80521E7660
+	for <regressions@lists.linux.dev>; Sun, 11 Jan 2026 20:43:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768145547; cv=none; b=snAxJeyzhQnVy5pYwIiWazBMcIFlBa9CUxkDoHixJLvhJS1zIblxUbgYpynMYghR+24lgh1MpJ719roQS7h7zZCeFaECX++N+efW9axpd8+l0B+Y9DSKCaGQtGPvspGovtFYfWhLa2fiuoMNIXGxIrtgxxVk8DS3AKLCcPWCctQ=
+	t=1768164190; cv=none; b=OWHeDadK7wjxw8lMsMpUFAP5vWM/9ffz+JmZ2pInWFDd1zeXdCP9rW5FMacPkPBibB+r/N4ZeR7Jkq0tJnEzkrfmq/PEWSARA0LrmglfCbfTQBcv4PmrCoIGXgflPsEnqZ4/XqnrivNVQk2nji7ng3bMmni1PfmdrLhtCEssiD4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768145547; c=relaxed/simple;
-	bh=L3JOnxL6G0ryHsbILnAIAJYBz0cO3yGOi8X1CtSHXu8=;
+	s=arc-20240116; t=1768164190; c=relaxed/simple;
+	bh=osqFqgw8Q0siQVzzKG+YfRRHkEzH9EYHuDYziNyQIOQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=S2HZsiZu89y2OuQaoCs8mkOmxaqcMKRNoqlezTbXkcionTO2La21rRt49iktmCID1Q3qEugauHBYvq4+7vsurFcvEpL52SXdLXqLLoIRA0lGkW51e+9icYYyBFo8mo6O4T5ZKxrWOrxVoSmT/CNeJ5pfpEF9t+oTOQMHtNxSYV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bsbernd.com; spf=pass smtp.mailfrom=bsbernd.com; dkim=pass (2048-bit key) header.d=bsbernd.com header.i=@bsbernd.com header.b=tQgHsCa9; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=l7VrpYmm; arc=none smtp.client-ip=103.168.172.149
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bsbernd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bsbernd.com
+	 In-Reply-To:Content-Type; b=KWVo1Sjrb/OsOlum9S39QkQL4KQ4WjlLueeA/6kN7NKDRypBpCOgddGoR/p6oZcOEyuAxPwm6smNSedcLY5iNYOFxJ0/sRUJmQlbE9NjaQM9kSouQzrVKW1CXx9OjGbR11kLRV6VI3VI28y0mB1wQ9Kwq4JU+f41k0w9RYC4qXo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=SwrMSuY9; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bsbernd.com header.i=@bsbernd.com header.b="tQgHsCa9";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="l7VrpYmm"
-Received: from phl-compute-03.internal (phl-compute-03.internal [10.202.2.43])
-	by mailfout.phl.internal (Postfix) with ESMTP id BD2F3EC00C1;
-	Sun, 11 Jan 2026 10:32:23 -0500 (EST)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-03.internal (MEProxy); Sun, 11 Jan 2026 10:32:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bsbernd.com; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1768145543;
-	 x=1768231943; bh=bHh/pIWfzoQnVQxk1CCKxTEbT/E9Z/M8dSasu7RI1n4=; b=
-	tQgHsCa9xivtREZ0MR2gATeWQQpXq5KjhucY5czOIaYconJGXCz8yIuupo7MhNhb
-	Yb6CuCCrDZyown4PEdLF06AHbMFA11AXp5RMwv4cTKCRtKhkdxftLGUJq4+6VDjy
-	NIomH3sLbmFQTEVow9yXX8Fq2GqVYGkHxx947Vec3LTpcHmacBolqu1t2kvn29MO
-	DA9MGTOA+t2JkKXndUciPUk+LhCa/TDjo2k0civVPmRp6l5OF1ciUA0oYsqp+oB0
-	e724usvmhj4a4uo7ihhZjmcSkIQZpGtEUjrVNI8UBhxT0yfDfX1tym+opJKC3crn
-	XJNgpsjyKSiK4lJSeaXzLg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1768145543; x=
-	1768231943; bh=bHh/pIWfzoQnVQxk1CCKxTEbT/E9Z/M8dSasu7RI1n4=; b=l
-	7VrpYmmwJF3ds+OU+biDmiguOm9GRdnJSPg28pBj74tfNfUUh81UTPv6HwMPjRJb
-	ADV4QcFbzGgIiVwmXr4BW+4VLHksKKaulFe2ZlGCRUt3HmXxVEJeveda5g2C7F7S
-	8B4P7HyxJP2Bfi8yKDnw2HqBEpVijG5wy98a8P5SVUPaQVhMEAWpNMDCynreoWKE
-	uF5uezF1/iLPaT6ygq2TGvP5870kI9gVBRy6m+ZpNzaML9k997fKp82tGErvUbxw
-	/E0ed50wixGPDn+Zlq5ZHOa/CPSEFKbrZ+HIY2fXEi34PFdQBAJmVTNmLtGMwcVL
-	sfCPCrP3B0CvGvztdeDPQ==
-X-ME-Sender: <xms:h8JjaQQugdvYEYlOt35hr7R1Kgj5FdfpcQAV3qD3Rv2vQyk53_KhkA>
-    <xme:h8JjaX2PVbuFEtDRpzEoUPRStHYKw5Z2qIkpGhlIjr0z1pWXU4qdywynK7okEPAcU
-    wIY2NAQEveWxDbxrZdZBGdbOxy7dLatGygwlLBeiOAXi44bRzd4>
-X-ME-Received: <xmr:h8JjadvBbsPb2tKAB_HGaHYueIXYFORycNYDl1OSasL9Hb1MEmpPginSnos_E9pz8ChRgHBenpqWPsiGWKVh3EQVaahmZy5l6ITU421-e7ocmwC7IQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdduudegleegucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepkfffgggfuffvvehfhfgjtgfgsehtjeertddtvdejnecuhfhrohhmpeeuvghrnhgu
-    ucfutghhuhgsvghrthcuoegsvghrnhgusegsshgsvghrnhgurdgtohhmqeenucggtffrrg
-    htthgvrhhnpeehhfejueejleehtdehteefvdfgtdelffeuudejhfehgedufedvhfehueev
-    udeugeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
-    gsvghrnhgusegsshgsvghrnhgurdgtohhmpdhnsggprhgtphhtthhopeejpdhmohguvgep
-    shhmthhpohhuthdprhgtphhtthhopehlihhnuhigsehlvggvmhhhuhhishdrihhnfhhopd
-    hrtghpthhtohepmhhikhhlohhssehsiigvrhgvughirdhhuhdprhgtphhtthhopehrvghg
-    rhgvshhsihhonhhssehlihhsthhsrdhlihhnuhigrdguvghvpdhrtghpthhtoheplhhinh
-    hugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhi
-    nhhugidqfhhsuggvvhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhope
-    hnvghilhessghrohifnhdrnhgrmhgvpdhrtghpthhtohepsghrrghunhgvrheskhgvrhhn
-    vghlrdhorhhg
-X-ME-Proxy: <xmx:h8JjaVhHoOYdUXPjKXYDFch_LoCRp6dBOd36hCUR2QWdtSaWRCGJQw>
-    <xmx:h8JjaW8uBNvR3fz5KXnpwvZhb80Ye6rI8V1pDKzCZXeH4EhoTRO-ZQ>
-    <xmx:h8JjaQudvIeQ8rFMJPdzHM-ShxuUHOTViQPmbw7yK5cdI67EQSk_CA>
-    <xmx:h8JjaSpOybiyNKEx5svWJNvaDM536GIJ--ZEqC_nspt85vKNteqZgg>
-    <xmx:h8JjaT-pRbu3yKhISeKw-eUhUxwLXpse6MY_EcW1K6VRSUPFRuqoyf-B>
-Feedback-ID: i5c2e48a5:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
- 11 Jan 2026 10:32:22 -0500 (EST)
-Message-ID: <ff46166e-6795-4cab-bfef-d0724200bc62@bsbernd.com>
-Date: Sun, 11 Jan 2026 16:32:20 +0100
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="SwrMSuY9"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-477a2ab455fso52653805e9.3
+        for <regressions@lists.linux.dev>; Sun, 11 Jan 2026 12:43:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1768164187; x=1768768987; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=53oN1TSK/l4MFeOdB7XYlHhixizXzSPzzFcTia74Pdk=;
+        b=SwrMSuY9llX/NDfSDTx7VENvAT3ArJiilZzd+AgwHoNgPdezlp8somLQEE2AMRC/k7
+         Ip0wxf+deM8T4K6pEQ2IOJjzdCvTef99fOsNSPqFKgYF3pvj96IB3MeRHMwqoo9uSN38
+         tlfT0XBBe2OHq6zKOX+TzNKFoladphBvK67HLz0j106gje154LO1qaMAA9zlKggEu/K/
+         Kkk0wdGmWkRFmhwx+lVXVhefjzWN/wcDuQMWSTzvZF718gQkNLhBC/r9NSe9FlcIQph2
+         lKQbj3GgVZIUbCweDyUyeV6UBo7SWI88ueinnZlcRx4yka0a2JmhjiW2rPrgjr9/b+PX
+         y6Hg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768164187; x=1768768987;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=53oN1TSK/l4MFeOdB7XYlHhixizXzSPzzFcTia74Pdk=;
+        b=VKWZolKWd4ni23c8ZmSn8yj5rwyTVm7rfPatmtEFWiCIVm4cCDFlT1GhkXZHiiF3Wm
+         4TU2m1bVMJsa/CBFbtw8tRAc2WieN6axvkV7jpcXoDM69tMnWsL9D/T/BiikQ04B72DR
+         4ArzUWESufegPlK6rGiqQT39T/2a6JpvvCc4Unjb0LPXpl81yehyaqZeEK5wjbt/X7it
+         QC/0ODQBtBrbqYTp8XbrpcbBJKe65s+GtmlkA8dlWEp1pkgUbm+HZewm5Sxy/GBz60Ng
+         ZUYfU+Fg3X7Re9v4tkek8KfrYWcY2zU5PWDGTYAnH3vHe/9dMaa++05IyuYMvGqAfOdp
+         K40w==
+X-Gm-Message-State: AOJu0Yx3ipDm5nTfSVOok01O6K2d4jL23YdDy2sY15Nkx9G9umJVSWRS
+	Ta0MsERZm3o7DuVvuBKZYKQ7dmMCJrR55fWCJMzmQjDhfErtzBGSCTmuEmlD2+Yz08k=
+X-Gm-Gg: AY/fxX6CWtoARuMF7eMdKpDV887yayN16qqCdLHEXqQ5QxYxCC55j2qh2rDMhZxhRFF
+	J+cnMD1mZK1kvkX7LjM9j/4nAFsijiwm0WUy2xvt6WKeFg+mtlEQuNOD9RUBkUypEtP0/RoMsOA
+	PvYGIKNlcMdf+yh1aT1nQmvxRbAtNqRhkdailK/IwcHidnKlZ2yc0gcgaBgvR3RTIiLZJPwkFYQ
+	w6MPwSqdeCz3EE7cPJjsmDDqmmTfQLMVVppuZK52Va/st7K2bep6uN28J4zzIlSHPNnLpaQjnyd
+	Jrsbh7hk2PMBg5WmMEe658WG8EI0CUNzDNSswmE3G+hEjLiZEO8MbeiJpKpTkBRbmaqJMu1HwuX
+	UcC3bvxz18DrC5GQI1thSW/KhQ8CqjaXzZvE2OVsIVWFr/TTzLCenzxR3EzIKik65pv4WLdj4DK
+	T2vFs39kE8ph70axOOKKTSEawaAx7NJelGYfFKcjE=
+X-Google-Smtp-Source: AGHT+IFLrYD5J37aa0mNOK3B75I/XOy07IbjSUvf1/RlxWmhgYC55jTWw72ygkcm6bXLdLD8Ohf8Ig==
+X-Received: by 2002:a05:600c:8b58:b0:47a:975b:e3e6 with SMTP id 5b1f17b1804b1-47d84b34764mr146630855e9.18.1768164186936;
+        Sun, 11 Jan 2026 12:43:06 -0800 (PST)
+Received: from ?IPV6:2403:580d:fda1::299? (2403-580d-fda1--299.ip6.aussiebb.net. [2403:580d:fda1::299])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2a3e3c3a204sm153389895ad.1.2026.01.11.12.43.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 11 Jan 2026 12:43:06 -0800 (PST)
+Message-ID: <20c3ba51-fbf1-4de2-b88f-5edf817a24d6@suse.com>
+Date: Mon, 12 Jan 2026 07:12:59 +1030
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -82,142 +68,152 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] fuse: xdg-document-portal gets stuck and causes
- suspend to fail in mainline
-To: Thorsten Leemhuis <linux@leemhuis.info>,
- Miklos Szeredi <miklos@szeredi.hu>
-Cc: Linux kernel regressions list <regressions@lists.linux.dev>,
- LKML <linux-kernel@vger.kernel.org>,
- Linux-fsdevel <linux-fsdevel@vger.kernel.org>, NeilBrown <neil@brown.name>,
- Christian Brauner <brauner@kernel.org>
-References: <7d4ac21f-491f-4f0a-bc50-7601cd1140ca@leemhuis.info>
-From: Bernd Schubert <bernd@bsbernd.com>
-Content-Language: en-US, de-DE, fr
-In-Reply-To: <7d4ac21f-491f-4f0a-bc50-7601cd1140ca@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Subject: Re: [REGRESSION] VirtualBox VM crashes (BSOD) during Windows
+ installation on btrfs with kernels 6.18+ (works on 6.12 LTS)
+To: jollycar <jollycar@proton.me>
+Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <sT06uA3Gtv1kgeL80ZRMshbw6whJNUom-UxnS06H6eVrB4AqGWuzo0P23AhwOn3WsnAq9QfhFYciSAWK3eBeGaKjNJG1oSQLyclv4d2E0L4=@proton.me>
+ <5b466d2f-80ad-4b45-a643-ab64bf2b252d@suse.com>
+ <LCM3zm3y1s51pkWBZg6NU-4R6f89SVYSAxtNqq0gM5IlDFZfFjwSqvl-8yAvYcl7VizHjXIENm1vf6b7z2e25YQce7IQCr3Ms-w6vKkOKfY=@proton.me>
+Content-Language: en-US
+From: Qu Wenruo <wqu@suse.com>
+Autocrypt: addr=wqu@suse.com; keydata=
+ xsBNBFnVga8BCACyhFP3ExcTIuB73jDIBA/vSoYcTyysFQzPvez64TUSCv1SgXEByR7fju3o
+ 8RfaWuHCnkkea5luuTZMqfgTXrun2dqNVYDNOV6RIVrc4YuG20yhC1epnV55fJCThqij0MRL
+ 1NxPKXIlEdHvN0Kov3CtWA+R1iNN0RCeVun7rmOrrjBK573aWC5sgP7YsBOLK79H3tmUtz6b
+ 9Imuj0ZyEsa76Xg9PX9Hn2myKj1hfWGS+5og9Va4hrwQC8ipjXik6NKR5GDV+hOZkktU81G5
+ gkQtGB9jOAYRs86QG/b7PtIlbd3+pppT0gaS+wvwMs8cuNG+Pu6KO1oC4jgdseFLu7NpABEB
+ AAHNGFF1IFdlbnJ1byA8d3F1QHN1c2UuY29tPsLAlAQTAQgAPgIbAwULCQgHAgYVCAkKCwIE
+ FgIDAQIeAQIXgBYhBC3fcuWlpVuonapC4cI9kfOhJf6oBQJnEXVgBQkQ/lqxAAoJEMI9kfOh
+ Jf6o+jIH/2KhFmyOw4XWAYbnnijuYqb/obGae8HhcJO2KIGcxbsinK+KQFTSZnkFxnbsQ+VY
+ fvtWBHGt8WfHcNmfjdejmy9si2jyy8smQV2jiB60a8iqQXGmsrkuR+AM2V360oEbMF3gVvim
+ 2VSX2IiW9KERuhifjseNV1HLk0SHw5NnXiWh1THTqtvFFY+CwnLN2GqiMaSLF6gATW05/sEd
+ V17MdI1z4+WSk7D57FlLjp50F3ow2WJtXwG8yG8d6S40dytZpH9iFuk12Sbg7lrtQxPPOIEU
+ rpmZLfCNJJoZj603613w/M8EiZw6MohzikTWcFc55RLYJPBWQ+9puZtx1DopW2jOwE0EWdWB
+ rwEIAKpT62HgSzL9zwGe+WIUCMB+nOEjXAfvoUPUwk+YCEDcOdfkkM5FyBoJs8TCEuPXGXBO
+ Cl5P5B8OYYnkHkGWutAVlUTV8KESOIm/KJIA7jJA+Ss9VhMjtePfgWexw+P8itFRSRrrwyUf
+ E+0WcAevblUi45LjWWZgpg3A80tHP0iToOZ5MbdYk7YFBE29cDSleskfV80ZKxFv6koQocq0
+ vXzTfHvXNDELAuH7Ms/WJcdUzmPyBf3Oq6mKBBH8J6XZc9LjjNZwNbyvsHSrV5bgmu/THX2n
+ g/3be+iqf6OggCiy3I1NSMJ5KtR0q2H2Nx2Vqb1fYPOID8McMV9Ll6rh8S8AEQEAAcLAfAQY
+ AQgAJgIbDBYhBC3fcuWlpVuonapC4cI9kfOhJf6oBQJnEXWBBQkQ/lrSAAoJEMI9kfOhJf6o
+ cakH+QHwDszsoYvmrNq36MFGgvAHRjdlrHRBa4A1V1kzd4kOUokongcrOOgHY9yfglcvZqlJ
+ qfa4l+1oxs1BvCi29psteQTtw+memmcGruKi+YHD7793zNCMtAtYidDmQ2pWaLfqSaryjlzR
+ /3tBWMyvIeWZKURnZbBzWRREB7iWxEbZ014B3gICqZPDRwwitHpH8Om3eZr7ygZck6bBa4MU
+ o1XgbZcspyCGqu1xF/bMAY2iCDcq6ULKQceuKkbeQ8qxvt9hVxJC2W3lHq8dlK1pkHPDg9wO
+ JoAXek8MF37R8gpLoGWl41FIUb3hFiu3zhDDvslYM4BmzI18QgQTQnotJH8=
+In-Reply-To: <LCM3zm3y1s51pkWBZg6NU-4R6f89SVYSAxtNqq0gM5IlDFZfFjwSqvl-8yAvYcl7VizHjXIENm1vf6b7z2e25YQce7IQCr3Ms-w6vKkOKfY=@proton.me>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
 
 
-On 1/11/26 12:37, Thorsten Leemhuis wrote:
-> Lo! I can reliably get xdg-document-portal stuck on latest -mainline
-> (and -next, too; 6.18.4. works fine) trough the Signal flatpak, which
-> then causes suspend to fail:
+在 2026/1/11 21:39, jollycar 写道:
+> Storage configuration details:
 > 
-> """
->> [  194.439381] PM: suspend entry (s2idle)
->> [  194.454708] Filesystems sync: 0.015 seconds
->> [  194.696767] Freezing user space processes
->> [  214.700978] Freezing user space processes failed after 20.004 seconds (1 tasks refusing to freeze, wq_busy=0):
->> [  214.701143] task:xdg-document-po state:D stack:0     pid:2651  tgid:2651  ppid:1939   task_flags:0x400000 flags:0x00080002
->> [  214.701151] Call Trace:
->> [  214.701154]  <TASK>
->> [  214.701167]  __schedule+0x2b8/0x5e0
->> [  214.701181]  schedule+0x27/0x80
->> [  214.701188]  request_wait_answer+0xce/0x260 [fuse]
->> [  214.701202]  ? __pfx_autoremove_wake_function+0x10/0x10
->> [  214.701212]  __fuse_simple_request+0x120/0x340 [fuse]
->> [  214.701219]  fuse_lookup_name+0xc3/0x210 [fuse]
->> [  214.701235]  fuse_lookup+0x99/0x1c0 [fuse]
->> [  214.701242]  ? srso_alias_return_thunk+0x5/0xfbef5
->> [  214.701247]  ? fuse_dentry_init+0x23/0x50 [fuse]
->> [  214.701257]  lookup_one_qstr_excl+0xa8/0xf0
+> Storage format: VDI (VirtualBox Disk Image)
+> Storage location: /data/virtual-os/ (btrfs subvolume with COW disabled, verified with lsattr)
 
-Introduced by c9ba789dad15 ("VFS: introduce start_creating_noperm() and
-start_removing_noperm()")?
+OK, this means it's not related to the direct IO changes in newer kernels.
 
-Why is the new code doing a lookup on an entry that is about to be
-invalidated?
+When COW is disabled, data checksum is also disables, thus direct IO is 
+still doing the true zero-copy behavior.
 
+This ruled out the btrfs direct io change, but this means I have no clue 
+what is going wrong at all now.
 
-In order to handle this at least one fuse server process needs to be
-available, but for this specific case the lookup still doesn't make sense.
-
-We could do something like this
-
-diff --git a/fs/fuse/dir.c b/fs/fuse/dir.c
-index 4b6b3d2758ff..7edbace7eddc 100644
---- a/fs/fuse/dir.c
-+++ b/fs/fuse/dir.c
-@@ -1599,6 +1599,15 @@ int fuse_reverse_inval_entry(struct fuse_conn
-*fc, u64 parent_nodeid,
-        if (!dir)
-                goto put_parent;
-
-+       /* Check dcache first - if not cached, nothing to invalidate */
-+       name->hash = full_name_hash(dir, name->name, name->len);
-+       entry = d_lookup(dir, name);
-+       if (!entry) {
-+               err = 0;
-+               dput(dir);
-+               goto put_parent;
-+       }
-+
-        entry = start_removing_noperm(dir, name);
-        dput(dir);
-        if (IS_ERR(entry))
-
-
-But let's assume the dentry exists - start_removing_noperm() will now
-trigger a revalidate and get the same issue. From my point of view the
-above commit should be reverted for fuse.
-
-
->> [  214.701264]  start_removing_noperm+0x59/0x80
->> [  214.701268]  ? d_find_alias+0x82/0xd0
->> [  214.701273]  fuse_reverse_inval_entry+0x7d/0x1f0 [fuse]
->> [  214.701280]  ? fuse_copy_do+0x5f/0xa0 [fuse]
->> [  214.701287]  fuse_notify+0x4a1/0x750 [fuse]
->> [  214.701295]  ? iov_iter_get_pages2+0x1d/0x40
->> [  214.701301]  ? srso_alias_return_thunk+0x5/0xfbef5
->> [  214.701305]  fuse_dev_do_write+0x2e4/0x440 [fuse]
->> [  214.701313]  fuse_dev_write+0x6b/0xa0 [fuse]
->> [  214.701320]  do_iter_readv_writev+0x161/0x260
->> [  214.701327]  vfs_writev+0x168/0x3c0
->> [  214.701334]  ? ksys_write+0xcd/0xf0
->> [  214.701338]  ? do_writev+0x7f/0x110
->> [  214.701341]  do_writev+0x7f/0x110
->> [  214.701344]  do_syscall_64+0x7e/0x6b0
->> [  214.701350]  ? srso_alias_return_thunk+0x5/0xfbef5
->> [  214.701352]  ? __handle_mm_fault+0x445/0x690
->> [  214.701359]  ? srso_alias_return_thunk+0x5/0xfbef5
->> [  214.701363]  ? srso_alias_return_thunk+0x5/0xfbef5
->> [  214.701365]  ? count_memcg_events+0xd6/0x210
->> [  214.701371]  ? srso_alias_return_thunk+0x5/0xfbef5
->> [  214.701373]  ? handle_mm_fault+0x212/0x340
->> [  214.701377]  ? srso_alias_return_thunk+0x5/0xfbef5
->> [  214.701379]  ? do_user_addr_fault+0x2b4/0x7b0
->> [  214.701387]  ? srso_alias_return_thunk+0x5/0xfbef5
->> [  214.701389]  ? irqentry_exit+0x6d/0x540
->> [  214.701393]  ? srso_alias_return_thunk+0x5/0xfbef5
->> [  214.701395]  ? exc_page_fault+0x7e/0x1a0
->> [  214.701398]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
->> [  214.701402] RIP: 0033:0x7f3c144f9982
->> [  214.701467] RSP: 002b:00007fff80e2f388 EFLAGS: 00000246 ORIG_RAX: 0000000000000014
->> [  214.701470] RAX: ffffffffffffffda RBX: 00007f3bec000cf0 RCX: 00007f3c144f9982
->> [  214.701472] RDX: 0000000000000003 RSI: 00007fff80e2f460 RDI: 0000000000000007
->> [  214.701474] RBP: 00007fff80e2f3b0 R08: 0000000000000000 R09: 0000000000000000
->> [  214.701475] R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
->> [  214.701477] R13: 00007f3bec000cf0 R14: 00007f3c14bb8280 R15: 00007f3be8001200
->> [  214.701481]  </TASK>
-> """
+> Controller: IntelAhci (SATA)
+> Default configuration: hostiocache on, mtype normal
 > 
-> Killing the mentioned process using "kill -9" doesn't help. I can
-> reliably trigger this in -mainline and -next using the Signal flatpak on
-> Fedora 43 by trying to send a picture (which gets xdg-document-portal
-> involved). It works the first time, but trying again won't and will
-> cause Signal to get stuck for a few seconds. Works fine in 6.18.4.
+> Cache and media type testing on kernel 6.18.3:
+> - Default (hostiocache on, mtype normal): BSOD within 1 minute during installation
+> - mtype writethrough: Gets much further, BSOD occurs on first VM reboot
+> - hostiocache off (mtype normal): Gets much further, BSOD occurs on first VM reboot
 > 
-> Is this maybe known already or does anybody have an idea what's wrong?
-> If not I guess I'll have to bisect this.
+> None of the configurations provide a working solution - they only delay the crash.
 > 
-> Ciao, Thorsten
+> On kernel 6.12.63 with default settings (hostiocache on, mtype normal), Windows installation completes successfully without any crashes.
 > 
-> #regzbot introduced: v6.18..
-> #regzbot title: fuse: xdg-document-portal gets stuck and causes suspend
-> to fail
-> 
-> 
+> I have not yet tested with qemu/libvirt. Should I proceed with that test?
+
+Yes please. Libvirt/qemu is a more common solution among developers.
+If you can reproduce it using libvirt/qemu, more btrfs developers can 
+try to reproduce it and look into it.
+
+And if not, the cause may shift towards vbox other than btrfs.
 
 Thanks,
-Bernd
+Qu
+
+> 
+> 
+> On Sunday, January 11th, 2026 at 10:15 AM, Qu Wenruo <wqu@suse.com> wrote:
+> 
+>>
+>>
+>>
+>>
+>> 在 2026/1/11 20:33, jollycar 写道:
+>>
+>>> #regzbot introduced: v6.12..v6.18
+>>>
+>>> [1.] One line summary of the problem:
+>>> VirtualBox VM crashes with BSOD during Windows installation on kernels 6.18+ (works fine on 6.12 LTS)
+>>>
+>>> [2.] Full description of the problem:
+>>> Windows 10 and Windows 11 installation inside VirtualBox consistently crashes with BSOD within 1-3 minutes on Linux kernels 6.18.3 and 6.19-rc3. The same VirtualBox configuration and VM image work perfectly on kernel 6.12 LTS. The BSOD errors vary each time (most recent: 0x80070470 - "file may be corrupt or missing"). The host system remains completely stable with no logged errors.
+>>>
+>>> [3] Kernel & Hardware:
+>>> - Kernel versions tested:
+>>> * Working: 6.12.63-1
+>>> * Broken: 6.18.3-2, 6.19.0-rc3-1
+>>> - Distribution: Manjaro Linux
+>>> - Architecture: x86_64
+>>> - VirtualBox: 7.2.4 r170995 (vboxdrv vermagic: 6.18.3-2-MANJARO SMP preempt mod_unload)
+>>>
+>>> [4.] Filesystem and storage:
+>>> - Root filesystem: btrfs on LUKS encryption
+>>> - Mount options: zstd compression level 3, SSD optimizations, async discard, free space tree
+>>> - VM storage: separate btrfs subvolume
+>>
+>>
+>> What's the storage file configuration? Like what's the cache mode setting?
+>> I don't know VBox at all, but there may be something similar to
+>> libvirt's cache mode (none/unsafe/writethrough etc).
+>>
+>> More importantly, will tweaking the cache mode change fix the broken
+>> kernels?
+>> If so it may point to direct IO related behavior changes.
+>>
+>>
+>> And what's the storage file format? QCOW2? RAW? Or whatever format
+>> provided by Vbox?
+>>
+>>
+>> And one final question, have you tried qemu (or libvirt + qemu) and can
+>> it still be reproduced with qemu?
+>> As I'm wondering if the direct IO related change will even affects qemu
+>>
+>> Thanks,
+>> Qu
+>>
+>>> - btrfs device stats: all zeros (no errors)
+>>>
+>>> [5.] Reproduction:
+>>> - Boot kernel 6.18.3-2 or 6.19.0-rc3
+>>> - Start VirtualBox 7.2.4 r170995
+>>> - Create new Windows 10 or Windows 11 VM
+>>> - Begin OS installation
+>>> - BSOD occurs within 1-3 minutes with varying errors (latest: 0x80070470)
+>>> - Issue is 100% reproducible on 6.18+, never occurs on 6.12
+>>>
+>>> Additional context:
+>>> - Host system remains completely stable during VM crashes
+>>> - No btrfs errors in dmesg or device stats (all zero)
+>>> - Issue persists across multiple 6.18/6.19 releases over one month
+>>> - VirtualBox 7.2.4 modules load successfully on all kernel versions
+>>>
+>>> Regards,
+>>> Jollycar
+
