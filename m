@@ -1,246 +1,166 @@
-Received: from fhigh-a1-smtp.messagingengine.com (fhigh-a1-smtp.messagingengine.com [103.168.172.152])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B35B30C602
-	for <regressions@lists.linux.dev>; Mon, 12 Jan 2026 10:40:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F0AA2BE033
+	for <regressions@lists.linux.dev>; Mon, 12 Jan 2026 14:35:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768214410; cv=none; b=IIE4ANiaAVjJEHGqNfUaRpgeddzEqp0OHMrvd9s3NoWkWaKzfh5TfZ4vVjiLgMVdcpeXI7QkQwE1NoKMQauQAZq88GLOwfgPIrWBnlpVMl06Ym74G7aRcQZWN7Matu3Nh+s4zzvXPeozsGzGWBiDdTZ85ymf6mqGzEK+c5YyGz0=
+	t=1768228510; cv=none; b=o16BB+eHfdZAbyg/RNXtbhqIr/enaWO9aPj3K4YSjkAiXHvgi9RVkfH7KBTMx57y8WtKEO4Nd0Xfw2k0E7ZFBXqPMXUbOBEY3069XCj+2EqFWuPV9V0ldPWYS/mosXEfjy/nwgI8ZlO52jNQh0NF8PxlCcg2HrFpveNJ5lq4yWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768214410; c=relaxed/simple;
-	bh=n1ZqfUYKc67w6gTDwbMfLkZmAMlNvxbs/YD6x5yAjzE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VWDutNNlTmRBGRHthEHbXaZ+iT1sl1g+ElWT00Zsw1SwbfrscCX4TcoAzzCUoDYAsYOB9sNiYbIIa5sfGaTU/uwVuNjEJ8HkPrSMHhthgqgMId7Ve3TpbvuDPoFLpGQcWeeSzLSqOF/B6uhr774yB6eN7fuqEmjtOHFk5qXQwpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bsbernd.com; spf=pass smtp.mailfrom=bsbernd.com; dkim=pass (2048-bit key) header.d=bsbernd.com header.i=@bsbernd.com header.b=iy39d/aD; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=om4QsQ5h; arc=none smtp.client-ip=103.168.172.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bsbernd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bsbernd.com
+	s=arc-20240116; t=1768228510; c=relaxed/simple;
+	bh=CcKwT1f6+g65+WAdcan+bOmjmZsRnEsccq0m+MJx7sg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=i/8XFlD1DxoqkvATvsSd/IaFbdZ49aOeuE/e/4NDf0hEAO8Ip4UltIUbtIEbidouorImA5DR7VxWkoAmMbn9mhNivVg+EQZEGH50Q1gNobDuj4JA92Yr/ORnKUt3KmAHdsAObXWxi98DYBmdSuaRiXyNKD9LxYnNYl/HkOj2BDQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f3GAvpEG; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bsbernd.com header.i=@bsbernd.com header.b="iy39d/aD";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="om4QsQ5h"
-Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 8F4C614000E7;
-	Mon, 12 Jan 2026 05:40:07 -0500 (EST)
-Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-02.internal (MEProxy); Mon, 12 Jan 2026 05:40:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bsbernd.com; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1768214407;
-	 x=1768300807; bh=lAmqMjPqgUrXMj9eO05lH7ah7ZIONYrhBPq/mk7Xnwk=; b=
-	iy39d/aDDdGVLfvmUGqUiYCUCDm1rhx3qhV3lH6S+j9va8WSNbyWlGdxZRrTRwi1
-	W5FrPQ0xSkLLBr/VuuNhXizSWIpNI5GpWU+xadNyzDGiY/A7nUFqLDEAF5XkPAmi
-	Z1Jwny/T4GxJtsf2wM0lTmPeQcc0t6qKMOOGmkyuPi8c6oQqkQXhAZ7GOsNxGjxi
-	u3zmA+zAkxz/2XDddyJhXskqLOAwGIvTOUZM75MTMzSECQUt/hc91usDDmIrGReV
-	cH0jtTzuxvz7QYdpSur1xqdP07vsPtk51XO2yCLWCkipiwFdhumSnYa3OamfwzKB
-	ttKM24DGV4UW0WKGGTKV2A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1768214407; x=
-	1768300807; bh=lAmqMjPqgUrXMj9eO05lH7ah7ZIONYrhBPq/mk7Xnwk=; b=o
-	m4QsQ5hscbvTEQ8dRlfznNJWWm3LvVnmJx1ETNpE0fCEXgmb8Qr8pLYbScrLtesq
-	eY+qsvF+Q1axubTJ8mOLrqmW2tEn2SZYKQh72eMmfffxeBxEB3YZDyP8OOn4hQt3
-	YiovBIek9n16ODVGAb/ev5C92dHw5Kzd3s6wq7R8oXMz+BzgWg/UV9yiu1vsFkK8
-	Y0LyR9xBbHQDyQOG/CEM3JrTj2YBiuUfR9c+8wze9FNWMgY8zt2uXN65I0MbV+Fp
-	gefMRF8IvPfI1xfyocQJhDsGcQSPXTyBfzp/FB4qpTBlG/oHZQmyM7ape0vufCf3
-	cKP1jejk8fsRI4M0/JazA==
-X-ME-Sender: <xms:h89kaRt8XjGUD8lifdsinBnlLXAGoiqV1LQ4MxEq04mO159G1GvQiw>
-    <xme:h89kaUh57A3q_Tw_f6LyqkAjKBsP17wNSN0OZKJeFA1VGDrJuiLtGC8RpM_b9OjxT
-    y_waTUnP9SOdbRyWaj07G346Y2heh7diZjZiFGE03vq2Qj33TQ3>
-X-ME-Received: <xmr:h89kaUqv4BSg9RTUds44Yhc0LSJEoRydONKx2vN8mNaRg2MRrtmBtNkHaINP8g1Lg-riSEh_IUz_ISp6dG71V6Z4FI69v5eoyi1LbQ_7fNlUl3gkbg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdduudejvdefucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepkfffgggfuffvvehfhfgjtgfgsehtjeertddtvdejnecuhfhrohhmpeeuvghrnhgu
-    ucfutghhuhgsvghrthcuoegsvghrnhgusegsshgsvghrnhgurdgtohhmqeenucggtffrrg
-    htthgvrhhnpeejgfeljeeuffehhfeukedvudfhteethedtheefjefhveduteehhfdttedv
-    keekveenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivg
-    eptdenucfrrghrrghmpehmrghilhhfrhhomhepsggvrhhnugessghssggvrhhnugdrtgho
-    mhdpnhgspghrtghpthhtohepjedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepnh
-    gvihhlsegsrhhofihnrdhnrghmvgdprhgtphhtthhopehlihhnuhigsehlvggvmhhhuhhi
-    shdrihhnfhhopdhrtghpthhtohepmhhikhhlohhssehsiigvrhgvughirdhhuhdprhgtph
-    htthhopehrvghgrhgvshhsihhonhhssehlihhsthhsrdhlihhnuhigrdguvghvpdhrtghp
-    thhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtg
-    hpthhtoheplhhinhhugidqfhhsuggvvhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdp
-    rhgtphhtthhopegsrhgruhhnvghrsehkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:h89kaZsZyBMEpZwwBGssVYG_QmnOK4fQj3PobihNVsu9ZrUzdKVRNA>
-    <xmx:h89kafbmpMu7lr96fO8MUEw9SSFrCw_ypLZhWqTNGpQXHA-fKyHaMQ>
-    <xmx:h89kaYZ4aJBbQULGEtKNieAYc20Y-vcgnLOrDQ79mDGwy-rCCgm-HQ>
-    <xmx:h89kaYlDitCL8l9mucysORTpEYDACAOtzdKNCLnQb-1yJBgwp-8q0w>
-    <xmx:h89kaVqCARovQ6t40rLZnrl2Vxh-TXLkRD6mHYsVFLLQy-ZF05AlwGZ4>
-Feedback-ID: i5c2e48a5:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 12 Jan 2026 05:40:06 -0500 (EST)
-Message-ID: <787edd09-6f86-406c-a466-083366967723@bsbernd.com>
-Date: Mon, 12 Jan 2026 11:40:04 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f3GAvpEG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1768228509; x=1799764509;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=CcKwT1f6+g65+WAdcan+bOmjmZsRnEsccq0m+MJx7sg=;
+  b=f3GAvpEGO53XIaiyx96fxf3BPPG44maIGQebHWlWOnKTLF9ASC1U2h6k
+   j82EXntFhoOhRmIwT8OW5KieXGCl5m84jyuWszmeOs8iP/H63+S+exk73
+   +YaeIFgEwnHUHH/CsjQnjYKGnCFgfWYy8yQ0/TlMz+trj2W9yE0xJuDD6
+   uQZPzjTcJ0kQrtoF1RZMKOb+bOPGX/IImQmox7rpgcXUnRgUWA1mO9i7m
+   uFGGlSuO7OvTEQdLezjii6Qsw1gJn9OycUch979lxhEHhkG+Z4Bw6IhOi
+   FjxHQR5if4ekjVQptuC2yQ/4J+fLGC8vUZTyHmBvfXFZ6Wwy1apNMeV1Y
+   Q==;
+X-CSE-ConnectionGUID: MafEVV07Q361R5BkDhHwqA==
+X-CSE-MsgGUID: ZV2ltX8SQ1GSgwcHFmMgBw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11669"; a="80868965"
+X-IronPort-AV: E=Sophos;i="6.21,221,1763452800"; 
+   d="scan'208";a="80868965"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2026 06:35:08 -0800
+X-CSE-ConnectionGUID: PPHZO89MQD6AJhca5prrwA==
+X-CSE-MsgGUID: 02R4gdQERmeLuuKV6vgePw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,221,1763452800"; 
+   d="scan'208";a="204009002"
+Received: from dhhellew-desk2.ger.corp.intel.com (HELO localhost) ([10.245.245.37])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2026 06:35:07 -0800
+Date: Mon, 12 Jan 2026 16:35:05 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: correctmost <cmlists@sent.com>
+Cc: dmaengine@vger.kernel.org, regressions@lists.linux.dev,
+	vkoul@kernel.org, linux-i2c@vger.kernel.org
+Subject: Re: [REGRESSION][BISECTED] Lenovo IdeaPad touchpad does not work
+ when idma64 is present in initramfs
+Message-ID: <aWUGmfcjWpFJs3-X@smile.fi.intel.com>
+References: <51388859-bf5f-484c-9937-8f6883393b4d@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] fuse: xdg-document-portal gets stuck and causes
- suspend to fail in mainline
-To: NeilBrown <neil@brown.name>
-Cc: Thorsten Leemhuis <linux@leemhuis.info>,
- Miklos Szeredi <miklos@szeredi.hu>,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- LKML <linux-kernel@vger.kernel.org>,
- Linux-fsdevel <linux-fsdevel@vger.kernel.org>,
- Christian Brauner <brauner@kernel.org>
-References: <7d4ac21f-491f-4f0a-bc50-7601cd1140ca@leemhuis.info>
- <ff46166e-6795-4cab-bfef-d0724200bc62@bsbernd.com>
- <176819030053.16766.15730807505551833487@noble.neil.brown.name>
-From: Bernd Schubert <bernd@bsbernd.com>
-Content-Language: en-US, de-DE, fr
-In-Reply-To: <176819030053.16766.15730807505551833487@noble.neil.brown.name>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <51388859-bf5f-484c-9937-8f6883393b4d@app.fastmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
+On Tue, Dec 16, 2025 at 12:57:10PM -0500, correctmost wrote:
 
+> The following commit
 
-On 1/12/26 04:58, NeilBrown wrote:
-> On Mon, 12 Jan 2026, Bernd Schubert wrote:
->>
->> On 1/11/26 12:37, Thorsten Leemhuis wrote:
->>> Lo! I can reliably get xdg-document-portal stuck on latest -mainline
->>> (and -next, too; 6.18.4. works fine) trough the Signal flatpak, which
->>> then causes suspend to fail:
->>>
->>> """
->>>> [  194.439381] PM: suspend entry (s2idle)
->>>> [  194.454708] Filesystems sync: 0.015 seconds
->>>> [  194.696767] Freezing user space processes
->>>> [  214.700978] Freezing user space processes failed after 20.004 seconds (1 tasks refusing to freeze, wq_busy=0):
->>>> [  214.701143] task:xdg-document-po state:D stack:0     pid:2651  tgid:2651  ppid:1939   task_flags:0x400000 flags:0x00080002
->>>> [  214.701151] Call Trace:
->>>> [  214.701154]  <TASK>
->>>> [  214.701167]  __schedule+0x2b8/0x5e0
->>>> [  214.701181]  schedule+0x27/0x80
->>>> [  214.701188]  request_wait_answer+0xce/0x260 [fuse]
->>>> [  214.701202]  ? __pfx_autoremove_wake_function+0x10/0x10
->>>> [  214.701212]  __fuse_simple_request+0x120/0x340 [fuse]
->>>> [  214.701219]  fuse_lookup_name+0xc3/0x210 [fuse]
->>>> [  214.701235]  fuse_lookup+0x99/0x1c0 [fuse]
->>>> [  214.701242]  ? srso_alias_return_thunk+0x5/0xfbef5
->>>> [  214.701247]  ? fuse_dentry_init+0x23/0x50 [fuse]
->>>> [  214.701257]  lookup_one_qstr_excl+0xa8/0xf0
->>
->> Introduced by c9ba789dad15 ("VFS: introduce start_creating_noperm() and
->> start_removing_noperm()")?
->>
->> Why is the new code doing a lookup on an entry that is about to be
->> invalidated?
->>
->>
->> In order to handle this at least one fuse server process needs to be
->> available, but for this specific case the lookup still doesn't make sense.
->>
->> We could do something like this
->>
->> diff --git a/fs/fuse/dir.c b/fs/fuse/dir.c
->> index 4b6b3d2758ff..7edbace7eddc 100644
->> --- a/fs/fuse/dir.c
->> +++ b/fs/fuse/dir.c
->> @@ -1599,6 +1599,15 @@ int fuse_reverse_inval_entry(struct fuse_conn
->> *fc, u64 parent_nodeid,
->>         if (!dir)
->>                 goto put_parent;
->>
->> +       /* Check dcache first - if not cached, nothing to invalidate */
->> +       name->hash = full_name_hash(dir, name->name, name->len);
->> +       entry = d_lookup(dir, name);
->> +       if (!entry) {
->> +               err = 0;
->> +               dput(dir);
->> +               goto put_parent;
->> +       }
->> +
->>         entry = start_removing_noperm(dir, name);
->>         dput(dir);
->>         if (IS_ERR(entry))
->>
->>
->> But let's assume the dentry exists - start_removing_noperm() will now
->> trigger a revalidate and get the same issue. From my point of view the
->> above commit should be reverted for fuse.
->>
->>
->>>> [  214.701264]  start_removing_noperm+0x59/0x80
->>>> [  214.701268]  ? d_find_alias+0x82/0xd0
->>>> [  214.701273]  fuse_reverse_inval_entry+0x7d/0x1f0 [fuse]
->>>> [  214.701280]  ? fuse_copy_do+0x5f/0xa0 [fuse]
->>>> [  214.701287]  fuse_notify+0x4a1/0x750 [fuse]
->>>> [  214.701295]  ? iov_iter_get_pages2+0x1d/0x40
->>>> [  214.701301]  ? srso_alias_return_thunk+0x5/0xfbef5
->>>> [  214.701305]  fuse_dev_do_write+0x2e4/0x440 [fuse]
->>>> [  214.701313]  fuse_dev_write+0x6b/0xa0 [fuse]
->>>> [  214.701320]  do_iter_readv_writev+0x161/0x260
->>>> [  214.701327]  vfs_writev+0x168/0x3c0
->>>> [  214.701334]  ? ksys_write+0xcd/0xf0
->>>> [  214.701338]  ? do_writev+0x7f/0x110
->>>> [  214.701341]  do_writev+0x7f/0x110
->>>> [  214.701344]  do_syscall_64+0x7e/0x6b0
->>>> [  214.701350]  ? srso_alias_return_thunk+0x5/0xfbef5
->>>> [  214.701352]  ? __handle_mm_fault+0x445/0x690
->>>> [  214.701359]  ? srso_alias_return_thunk+0x5/0xfbef5
->>>> [  214.701363]  ? srso_alias_return_thunk+0x5/0xfbef5
->>>> [  214.701365]  ? count_memcg_events+0xd6/0x210
->>>> [  214.701371]  ? srso_alias_return_thunk+0x5/0xfbef5
->>>> [  214.701373]  ? handle_mm_fault+0x212/0x340
->>>> [  214.701377]  ? srso_alias_return_thunk+0x5/0xfbef5
->>>> [  214.701379]  ? do_user_addr_fault+0x2b4/0x7b0
->>>> [  214.701387]  ? srso_alias_return_thunk+0x5/0xfbef5
->>>> [  214.701389]  ? irqentry_exit+0x6d/0x540
->>>> [  214.701393]  ? srso_alias_return_thunk+0x5/0xfbef5
->>>> [  214.701395]  ? exc_page_fault+0x7e/0x1a0
->>>> [  214.701398]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
->>>> [  214.701402] RIP: 0033:0x7f3c144f9982
->>>> [  214.701467] RSP: 002b:00007fff80e2f388 EFLAGS: 00000246 ORIG_RAX: 0000000000000014
->>>> [  214.701470] RAX: ffffffffffffffda RBX: 00007f3bec000cf0 RCX: 00007f3c144f9982
->>>> [  214.701472] RDX: 0000000000000003 RSI: 00007fff80e2f460 RDI: 0000000000000007
->>>> [  214.701474] RBP: 00007fff80e2f3b0 R08: 0000000000000000 R09: 0000000000000000
->>>> [  214.701475] R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
->>>> [  214.701477] R13: 00007f3bec000cf0 R14: 00007f3c14bb8280 R15: 00007f3be8001200
->>>> [  214.701481]  </TASK>
->>> """
->>>
->>> Killing the mentioned process using "kill -9" doesn't help. I can
->>> reliably trigger this in -mainline and -next using the Signal flatpak on
->>> Fedora 43 by trying to send a picture (which gets xdg-document-portal
->>> involved). It works the first time, but trying again won't and will
->>> cause Signal to get stuck for a few seconds. Works fine in 6.18.4.
->>>
->>> Is this maybe known already or does anybody have an idea what's wrong?
->>> If not I guess I'll have to bisect this.
->>>
->>> Ciao, Thorsten
->>>
->>> #regzbot introduced: v6.18..
->>> #regzbot title: fuse: xdg-document-portal gets stuck and causes suspend
->>> to fail
->>>
->>>
->>
->> Thanks,
->> Bernd
->>
+No, it's false positive. The reality is that something else is going on
+there on this and other similar laptops.
+
+> causes my Lenovo IdeaPad touchpad not to work when
+> kernel/drivers/dma/idma64.ko.zst is present in the initramfs image:
 > 
-> I post a fix
+> #regzbot introduced: 9140ce47872bfd89fca888c2f992faa51d20c2bc
 > 
->   https://lore.kernel.org/all/176454037897.634289.3566631742434963788@noble.neil.brown.name/
-> 
-> a while ago.  There was some talk in that thread of reverting the
-> breaking change instead.  I seems nothing happened.
-> 
-> Christian: should I resend my patch?
+> "idma64: Don't try to serve interrupts when device is powered off"
 
-This didn't go to linux-fsdevel and I'm not subscribed to the other
-lists. Might be the same for others. The patch looks good to me
+So, the touchpad is an I²C device, which is connected to an Intel SoC.
+The I²C host controller is Synopsys DesignWare. On Intel SoCs the above
+mentioned IP is generated with private DMA engine, that's called Intel
+iDMA 64-bit. Basically it's two devices under a single PCI hood.
+The problem here is that when PCI device is in D3, both devices are
+powered off, but something sends an interrupt and it's not recognized
+being the one, send by a device (touchpad).
 
-Reviewed-by: Bernd Schubert <bschubert@ddn.com>
+There is one of the following potential issues (or their combinations):
+
+- the I²C host controller hardware got off too early
+- the line is shared with something else that generates interrupt storm
+- the BIOS does weird (wrong) things at a boot time, like not properly
+  shutting down and disabling interrupt sources; also may have wrong
+  pin control settings
+- the touchpad is operating on higher frequency like 400kHz (because
+  BIOS told to use that one instead of 100kHz) than the HW is designed
+  for and hence unreliable with all possible side effects
+- the touchpad firmware behaves wrongly on some sequences (see also
+  note about the bus speed above), try to upgrade touchpad FW
+
+With my experience with the case of the above mentioned commit that it
+may be BIOS thingy. Also consider the bus speed, there are quirks in
+the kernel for that.
+
+> Here are the related logs:
+> 
+> ---
+> 
+> irq 27: nobody cared (try booting with the "irqpoll" option)
+
+Almost all below is not so interesting.
+
+...
+
+> handlers:
+> [<00000000104a7621>] idma64_irq [idma64]
+> [<00000000bd8d08e9>] i2c_dw_isr
+> Disabling IRQ #27
+
+Yes, this line at least shared between those two and might be more.
+
+...
+
+> i2c_designware i2c_designware.0: controller timed out
+> hid (null): reading report descriptor failed
+> i2c_hid_acpi i2c-ELAN06FA:00: can't add hid device: -110
+> i2c_hid_acpi i2c-ELAN06FA:00: probe with driver i2c_hid_acpi failed with error -110
+
+Yes, sounds familiar with the speed settings. Try to down it to 100kHz in case
+it's confirmed to be 400kHz.
+
+> ---
+> 
+> Hardware info:
+> - Lenovo 16" IdeaPad Slim 5 - 16IRU9
+>   - Hardware name: LENOVO 83FW/LNVNB161216, BIOS PFCN14WW 09/20/2024
+>   - ELAN06FA:00 04F3:327E Touchpad
+> 
+> Steps to reproduce:
+> - Cold boot the laptop on Arch Linux
+> 
+> The bug is still present with the 6.19.0-rc1-1-git kernel.
+> 
+> The bisected commit is from March 2024, but I only recently noticed the issue
+> because the initramfs images on Arch Linux now include these additional
+> drivers (as of November 2025):
+> - kernel/drivers/dma/idma64.ko.zst
+> - kernel/drivers/mfd/intel-lpss-pci.ko.zst
+> - kernel/drivers/mfd/intel-lpss.ko.zst
+> 
+> Two other users have reported the issue on the Arch Linux and CachyOS forums,
+
+Any pointers to that thread, please?
+
+> so I don't think this is a hardware issue with my individual laptop.
+
+I don't know how this conclusion is came here. You mean HW as laptop model?
+But are the involved components the same (I²C host controller + touchpad)?
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
