@@ -1,166 +1,201 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from mail-05.mail-europe.com (mail-05.mail-europe.com [85.9.206.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F0AA2BE033
-	for <regressions@lists.linux.dev>; Mon, 12 Jan 2026 14:35:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5515435FF5D
+	for <regressions@lists.linux.dev>; Mon, 12 Jan 2026 15:33:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.9.206.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768228510; cv=none; b=o16BB+eHfdZAbyg/RNXtbhqIr/enaWO9aPj3K4YSjkAiXHvgi9RVkfH7KBTMx57y8WtKEO4Nd0Xfw2k0E7ZFBXqPMXUbOBEY3069XCj+2EqFWuPV9V0ldPWYS/mosXEfjy/nwgI8ZlO52jNQh0NF8PxlCcg2HrFpveNJ5lq4yWw=
+	t=1768232021; cv=none; b=IYcNhl3urw/b7HSaYG/3H61ymK8ZUckf9374Vc7rgED4vKgbPrzkDXSobwZRjBk7uTWK1XF5RVpdJgcLnotOx+8Ab8QaBER4wfK+EXdOB5qRV7agQSH+A9wlSSSnOw9rNZvKcEHykU3YJ0o5AZO8tCxG2Rwl0GQw5oUMHQ2K4e0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768228510; c=relaxed/simple;
-	bh=CcKwT1f6+g65+WAdcan+bOmjmZsRnEsccq0m+MJx7sg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i/8XFlD1DxoqkvATvsSd/IaFbdZ49aOeuE/e/4NDf0hEAO8Ip4UltIUbtIEbidouorImA5DR7VxWkoAmMbn9mhNivVg+EQZEGH50Q1gNobDuj4JA92Yr/ORnKUt3KmAHdsAObXWxi98DYBmdSuaRiXyNKD9LxYnNYl/HkOj2BDQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f3GAvpEG; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1768232021; c=relaxed/simple;
+	bh=UC2rjDugE9v89Gc9Zvti3z5Rgit0aFf8ZfVdenpunNg=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WBWQFhP0HPYFe53raMAFvTklt9yI/KIOHwJYJZEaVHfCl9t4o71Yuq+ERGzHJUoegdFzbbWjI7tBPD/7/BNIvoJ9wdbqIkNRmwe/LJNM4Y4Z8Dz7UmzyMdbgOGa0uPxQgYhildKXQq05RBO7C4ouIfAOqJLOvWtyQTiKfSDbaL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=OeVg+8UV; arc=none smtp.client-ip=85.9.206.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f3GAvpEG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1768228509; x=1799764509;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=CcKwT1f6+g65+WAdcan+bOmjmZsRnEsccq0m+MJx7sg=;
-  b=f3GAvpEGO53XIaiyx96fxf3BPPG44maIGQebHWlWOnKTLF9ASC1U2h6k
-   j82EXntFhoOhRmIwT8OW5KieXGCl5m84jyuWszmeOs8iP/H63+S+exk73
-   +YaeIFgEwnHUHH/CsjQnjYKGnCFgfWYy8yQ0/TlMz+trj2W9yE0xJuDD6
-   uQZPzjTcJ0kQrtoF1RZMKOb+bOPGX/IImQmox7rpgcXUnRgUWA1mO9i7m
-   uFGGlSuO7OvTEQdLezjii6Qsw1gJn9OycUch979lxhEHhkG+Z4Bw6IhOi
-   FjxHQR5if4ekjVQptuC2yQ/4J+fLGC8vUZTyHmBvfXFZ6Wwy1apNMeV1Y
-   Q==;
-X-CSE-ConnectionGUID: MafEVV07Q361R5BkDhHwqA==
-X-CSE-MsgGUID: ZV2ltX8SQ1GSgwcHFmMgBw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11669"; a="80868965"
-X-IronPort-AV: E=Sophos;i="6.21,221,1763452800"; 
-   d="scan'208";a="80868965"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2026 06:35:08 -0800
-X-CSE-ConnectionGUID: PPHZO89MQD6AJhca5prrwA==
-X-CSE-MsgGUID: 02R4gdQERmeLuuKV6vgePw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,221,1763452800"; 
-   d="scan'208";a="204009002"
-Received: from dhhellew-desk2.ger.corp.intel.com (HELO localhost) ([10.245.245.37])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2026 06:35:07 -0800
-Date: Mon, 12 Jan 2026 16:35:05 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: correctmost <cmlists@sent.com>
-Cc: dmaengine@vger.kernel.org, regressions@lists.linux.dev,
-	vkoul@kernel.org, linux-i2c@vger.kernel.org
-Subject: Re: [REGRESSION][BISECTED] Lenovo IdeaPad touchpad does not work
- when idma64 is present in initramfs
-Message-ID: <aWUGmfcjWpFJs3-X@smile.fi.intel.com>
-References: <51388859-bf5f-484c-9937-8f6883393b4d@app.fastmail.com>
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="OeVg+8UV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=mbnpruwjbverxciloz7mu3lcqq.protonmail; t=1768231999; x=1768491199;
+	bh=UC2rjDugE9v89Gc9Zvti3z5Rgit0aFf8ZfVdenpunNg=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=OeVg+8UVM3D3e1TOvMdbwEUX2/Zu2h7LP5Kp4z2F6+XJ74KCj9a0O3Laj1wnVVnvW
+	 npVcuIdIj60lCwUITlTN1JsYeyEFLtyOfgPLe4i1bh1no6jULCgjGpFQCEV18sWc6R
+	 lh/fUQ/NU/ToZBsjtWxeb8YTYzG+2MH2KoVXucZ6cpdtgilZwedy6jL/PmobniSvGU
+	 UyvqOHu8Uk71N3c/Dtq7MBecGK2F/x6Dc0eSUMJMTIAhv+Y+jQp11JR6eUYlX9oj/j
+	 zc1eV85bgJbmaBx4QuzMx8bi8rEB/AJ2fbVJaiwGFYLYw81e8TwR+YIepuDG5AlDVr
+	 xHgvkvh5ruFvQ==
+Date: Mon, 12 Jan 2026 15:33:14 +0000
+To: Qu Wenruo <wqu@suse.com>
+From: jollycar <jollycar@proton.me>
+Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>, "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [REGRESSION] VirtualBox VM crashes (BSOD) during Windows installation on btrfs with kernels 6.18+ (works on 6.12 LTS)
+Message-ID: <FmCqd98aDZ5GTLc-1FUc4NRHRhDEDUDy1ylzO4rrFy_mV1zgC2tnmht5ov8px3ME3pBa6dioALVRD_tDKC3FhdUd4alND6G5g2bx8N7R154=@proton.me>
+In-Reply-To: <20c3ba51-fbf1-4de2-b88f-5edf817a24d6@suse.com>
+References: <sT06uA3Gtv1kgeL80ZRMshbw6whJNUom-UxnS06H6eVrB4AqGWuzo0P23AhwOn3WsnAq9QfhFYciSAWK3eBeGaKjNJG1oSQLyclv4d2E0L4=@proton.me> <5b466d2f-80ad-4b45-a643-ab64bf2b252d@suse.com> <LCM3zm3y1s51pkWBZg6NU-4R6f89SVYSAxtNqq0gM5IlDFZfFjwSqvl-8yAvYcl7VizHjXIENm1vf6b7z2e25YQce7IQCr3Ms-w6vKkOKfY=@proton.me> <20c3ba51-fbf1-4de2-b88f-5edf817a24d6@suse.com>
+Feedback-ID: 175904438:user:proton
+X-Pm-Message-ID: c832a120c01de0670311cc664a540bd406d036ec
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <51388859-bf5f-484c-9937-8f6883393b4d@app.fastmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Dec 16, 2025 at 12:57:10PM -0500, correctmost wrote:
+Qemu/libvirt test results on kernel 6.18.3:
 
-> The following commit
+Setup:
+- Virtualization: qemu via libvirt (virt-manager)
+- Disk format: qcow2
+- Disk location: /data/virtual-os/win10-qemu-test.qcow2 (same btrfs subvolu=
+me as VirtualBox VMs)
+- COW disabled on disk image (chattr +C)
+- ISO: Same Windows 10 ISO used in VirtualBox tests
+- Guest: Windows 10
 
-No, it's false positive. The reality is that something else is going on
-there on this and other similar laptops.
+Result:
+Windows 10 installation completed successfully without any crashes. Install=
+ation proceeded through all phases including multiple reboots and reached t=
+he desktop without issues.
 
-> causes my Lenovo IdeaPad touchpad not to work when
-> kernel/drivers/dma/idma64.ko.zst is present in the initramfs image:
-> 
-> #regzbot introduced: 9140ce47872bfd89fca888c2f992faa51d20c2bc
-> 
-> "idma64: Don't try to serve interrupts when device is powered off"
+Summary of all tests on kernel 6.18.3:
+- VirtualBox 7.2.4: Crashes during installation (all cache/mtype configurat=
+ions tested)
+- Qemu via libvirt: No crashes, installation completes successfully
 
-So, the touchpad is an I²C device, which is connected to an Intel SoC.
-The I²C host controller is Synopsys DesignWare. On Intel SoCs the above
-mentioned IP is generated with private DMA engine, that's called Intel
-iDMA 64-bit. Basically it's two devices under a single PCI hood.
-The problem here is that when PCI device is in D3, both devices are
-powered off, but something sends an interrupt and it's not recognized
-being the one, send by a device (touchpad).
-
-There is one of the following potential issues (or their combinations):
-
-- the I²C host controller hardware got off too early
-- the line is shared with something else that generates interrupt storm
-- the BIOS does weird (wrong) things at a boot time, like not properly
-  shutting down and disabling interrupt sources; also may have wrong
-  pin control settings
-- the touchpad is operating on higher frequency like 400kHz (because
-  BIOS told to use that one instead of 100kHz) than the HW is designed
-  for and hence unreliable with all possible side effects
-- the touchpad firmware behaves wrongly on some sequences (see also
-  note about the bus speed above), try to upgrade touchpad FW
-
-With my experience with the case of the above mentioned commit that it
-may be BIOS thingy. Also consider the bus speed, there are quirks in
-the kernel for that.
-
-> Here are the related logs:
-> 
-> ---
-> 
-> irq 27: nobody cared (try booting with the "irqpoll" option)
-
-Almost all below is not so interesting.
-
-...
-
-> handlers:
-> [<00000000104a7621>] idma64_irq [idma64]
-> [<00000000bd8d08e9>] i2c_dw_isr
-> Disabling IRQ #27
-
-Yes, this line at least shared between those two and might be more.
-
-...
-
-> i2c_designware i2c_designware.0: controller timed out
-> hid (null): reading report descriptor failed
-> i2c_hid_acpi i2c-ELAN06FA:00: can't add hid device: -110
-> i2c_hid_acpi i2c-ELAN06FA:00: probe with driver i2c_hid_acpi failed with error -110
-
-Yes, sounds familiar with the speed settings. Try to down it to 100kHz in case
-it's confirmed to be 400kHz.
-
-> ---
-> 
-> Hardware info:
-> - Lenovo 16" IdeaPad Slim 5 - 16IRU9
->   - Hardware name: LENOVO 83FW/LNVNB161216, BIOS PFCN14WW 09/20/2024
->   - ELAN06FA:00 04F3:327E Touchpad
-> 
-> Steps to reproduce:
-> - Cold boot the laptop on Arch Linux
-> 
-> The bug is still present with the 6.19.0-rc1-1-git kernel.
-> 
-> The bisected commit is from March 2024, but I only recently noticed the issue
-> because the initramfs images on Arch Linux now include these additional
-> drivers (as of November 2025):
-> - kernel/drivers/dma/idma64.ko.zst
-> - kernel/drivers/mfd/intel-lpss-pci.ko.zst
-> - kernel/drivers/mfd/intel-lpss.ko.zst
-> 
-> Two other users have reported the issue on the Arch Linux and CachyOS forums,
-
-Any pointers to that thread, please?
-
-> so I don't think this is a hardware issue with my individual laptop.
-
-I don't know how this conclusion is came here. You mean HW as laptop model?
-But are the involved components the same (I²C host controller + touchpad)?
-
--- 
-With Best Regards,
-Andy Shevchenko
+Both using the same btrfs filesystem, same subvolume location, same Windows=
+ ISO, and COW disabled.
 
 
+On Sunday, January 11th, 2026 at 8:43 PM, Qu Wenruo <wqu@suse.com> wrote:
+
+>=20
+>=20
+>=20
+>=20
+> =E5=9C=A8 2026/1/11 21:39, jollycar =E5=86=99=E9=81=93:
+>=20
+> > Storage configuration details:
+> >=20
+> > Storage format: VDI (VirtualBox Disk Image)
+> > Storage location: /data/virtual-os/ (btrfs subvolume with COW disabled,=
+ verified with lsattr)
+>=20
+>=20
+> OK, this means it's not related to the direct IO changes in newer kernels=
+.
+>=20
+> When COW is disabled, data checksum is also disables, thus direct IO is
+> still doing the true zero-copy behavior.
+>=20
+> This ruled out the btrfs direct io change, but this means I have no clue
+> what is going wrong at all now.
+>=20
+> > Controller: IntelAhci (SATA)
+> > Default configuration: hostiocache on, mtype normal
+> >=20
+> > Cache and media type testing on kernel 6.18.3:
+> > - Default (hostiocache on, mtype normal): BSOD within 1 minute during i=
+nstallation
+> > - mtype writethrough: Gets much further, BSOD occurs on first VM reboot
+> > - hostiocache off (mtype normal): Gets much further, BSOD occurs on fir=
+st VM reboot
+> >=20
+> > None of the configurations provide a working solution - they only delay=
+ the crash.
+> >=20
+> > On kernel 6.12.63 with default settings (hostiocache on, mtype normal),=
+ Windows installation completes successfully without any crashes.
+> >=20
+> > I have not yet tested with qemu/libvirt. Should I proceed with that tes=
+t?
+>=20
+>=20
+> Yes please. Libvirt/qemu is a more common solution among developers.
+> If you can reproduce it using libvirt/qemu, more btrfs developers can
+> try to reproduce it and look into it.
+>=20
+> And if not, the cause may shift towards vbox other than btrfs.
+>=20
+> Thanks,
+> Qu
+>=20
+> > On Sunday, January 11th, 2026 at 10:15 AM, Qu Wenruo wqu@suse.com wrote=
+:
+> >=20
+> > > =E5=9C=A8 2026/1/11 20:33, jollycar =E5=86=99=E9=81=93:
+> > >=20
+> > > > #regzbot introduced: v6.12..v6.18
+> > > >=20
+> > > > [1.] One line summary of the problem:
+> > > > VirtualBox VM crashes with BSOD during Windows installation on kern=
+els 6.18+ (works fine on 6.12 LTS)
+> > > >=20
+> > > > [2.] Full description of the problem:
+> > > > Windows 10 and Windows 11 installation inside VirtualBox consistent=
+ly crashes with BSOD within 1-3 minutes on Linux kernels 6.18.3 and 6.19-rc=
+3. The same VirtualBox configuration and VM image work perfectly on kernel =
+6.12 LTS. The BSOD errors vary each time (most recent: 0x80070470 - "file m=
+ay be corrupt or missing"). The host system remains completely stable with =
+no logged errors.
+> > > >=20
+> > > > [3] Kernel & Hardware:
+> > > > - Kernel versions tested:
+> > > > * Working: 6.12.63-1
+> > > > * Broken: 6.18.3-2, 6.19.0-rc3-1
+> > > > - Distribution: Manjaro Linux
+> > > > - Architecture: x86_64
+> > > > - VirtualBox: 7.2.4 r170995 (vboxdrv vermagic: 6.18.3-2-MANJARO SMP=
+ preempt mod_unload)
+> > > >=20
+> > > > [4.] Filesystem and storage:
+> > > > - Root filesystem: btrfs on LUKS encryption
+> > > > - Mount options: zstd compression level 3, SSD optimizations, async=
+ discard, free space tree
+> > > > - VM storage: separate btrfs subvolume
+> > >=20
+> > > What's the storage file configuration? Like what's the cache mode set=
+ting?
+> > > I don't know VBox at all, but there may be something similar to
+> > > libvirt's cache mode (none/unsafe/writethrough etc).
+> > >=20
+> > > More importantly, will tweaking the cache mode change fix the broken
+> > > kernels?
+> > > If so it may point to direct IO related behavior changes.
+> > >=20
+> > > And what's the storage file format? QCOW2? RAW? Or whatever format
+> > > provided by Vbox?
+> > >=20
+> > > And one final question, have you tried qemu (or libvirt + qemu) and c=
+an
+> > > it still be reproduced with qemu?
+> > > As I'm wondering if the direct IO related change will even affects qe=
+mu
+> > >=20
+> > > Thanks,
+> > > Qu
+> > >=20
+> > > > - btrfs device stats: all zeros (no errors)
+> > > >=20
+> > > > [5.] Reproduction:
+> > > > - Boot kernel 6.18.3-2 or 6.19.0-rc3
+> > > > - Start VirtualBox 7.2.4 r170995
+> > > > - Create new Windows 10 or Windows 11 VM
+> > > > - Begin OS installation
+> > > > - BSOD occurs within 1-3 minutes with varying errors (latest: 0x800=
+70470)
+> > > > - Issue is 100% reproducible on 6.18+, never occurs on 6.12
+> > > >=20
+> > > > Additional context:
+> > > > - Host system remains completely stable during VM crashes
+> > > > - No btrfs errors in dmesg or device stats (all zero)
+> > > > - Issue persists across multiple 6.18/6.19 releases over one month
+> > > > - VirtualBox 7.2.4 modules load successfully on all kernel versions
+> > > >=20
+> > > > Regards,
+> > > > Jollycar
