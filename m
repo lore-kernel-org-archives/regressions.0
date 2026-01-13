@@ -1,133 +1,158 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D18636BCD1
-	for <regressions@lists.linux.dev>; Tue, 13 Jan 2026 16:04:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF24B182B7;
+	Tue, 13 Jan 2026 16:07:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768320299; cv=none; b=RQrAa5LScnJIPa8d7+lIDmQV9zD2MZGLMDwJfoEAwqzzgvEgkcLZ396jMeoibf3d9X+rtYOpFCAcrM9D/BWWslRGhU9xKh4X7tp8UsiX2apVVrCqEtixSDiIRqPG6L2nmpkG2YWLQ+TsJL3MVHBGxcZMc2xlILGroWcdS9BEjTg=
+	t=1768320458; cv=none; b=UcUPoLA6MOTzKuAH9LFgwzu2ZbherbzgGxQIk5pxAlu7z5cnfeahZ6HHRnu+ZBku18PGxqOgSnwl39lxi3eUT/Mh9mAibez05rgF2JBeawF2+AduLKTY2yvRWSZ10ukhjXlRPFcvGigf1NdyzUTnt6DJbRNu0spkXgSnzmvD+pk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768320299; c=relaxed/simple;
-	bh=rSj+33Ka1A3ryeFu6FTIEAoPeWaVJuhSuOrGIljygMw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EiWBMGYT0/bQF6FoSONP1/l7JncjhZhn0466LrIamagZNJi8BB2KvGc14g7q/fY1lkGPtKyPJPdb8nGBKrLV39ajlSwff3DVc6pMPfmjY9HDspJvEnzHKImNfL2wwqlakfsEFlIz0PPdz03mXNdrDT8UXaRt8ICsaLJPTzwQRng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=PszcNDDp; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1768320458; c=relaxed/simple;
+	bh=zg0ft9cqjmRzYW+X3fu1ewNm7MEFWIpOC9I7fuZGvp8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=r0qCxhuFtCWw1hxwaAwPIQgcfxNl7C64IzkrDlyoPoCfzYFC2e40BFTbz/nRfLsRvcMB9jW12DmsiPkz1oWZF+qv00Eiu02EE5pOawYYE6SgfcTXK2fs4zgk1RzHLc3jtkqEJ48iCh4oshR7HUp5ib9pSOqPHhqvyNnlNbHhCwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=Cjf3p+/n; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="PszcNDDp"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id A93A440E0194;
-	Tue, 13 Jan 2026 16:04:54 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id Kma9SYS0mRFa; Tue, 13 Jan 2026 16:04:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1768320290; bh=hoRUVOQfoYHp89NAwvgiW4eRZmSu3/ifdhe3eXoxCtQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PszcNDDpZOXGEYdBWzv7Xwp9l3fef+RiWwHvnadceseBpHGTSIKDLEcKnFVPCaQT4
-	 6ry6Mh2VWCylpwEkabul0iGnTu8qtImij12WvK2WvEEWUUzXSPvXFgasfSApXPYz18
-	 GwNnWdCCA2QyJnSpqrhLAduUAtNib8B06X4QVhRzGojHThUgm071ANV2Q8aRQXHFga
-	 2LXDxKSjaANYuvRaosMn6tR59PO7vZdxup2FoXUYjy/eL7KkNRT/mynS6PvSZ5COIH
-	 /cyQih+YubOBAXhSYCxdSXBZZ6PsESmws4xf2H7/iyUzuUNcIEFKJ8UwXEII1EczKK
-	 JEajo9etCqOFIwKmnxQrTGuBlXlpuywehsyBAwsVBjJjYPJjMlqoINos6iD76WkH2w
-	 7SwjFh5EXWnIJw1cUWnyD/BQbV8NA5gwjAzBcTCEtss7LUBhBPNL/7CEKyMdnAvQKK
-	 DQAr00ozLvMPlZjeQlMNW9MapQyhb86CWaIZGrayIHne6zTM0bcEzzFt7JYpksgjGk
-	 FrvGMccOFykNl3CmvZEs/MJYnSNKME4AljTvHYWSCnhCHw3FOIPF6f/AQQ+Pv/ELMO
-	 hjJ0Mz2J+l7gSKvS5sD5S9ZOj98RHiaR+X9nHPQYzIiUD551NsP+eC1NMG2wSpePeO
-	 PxnaHvHCsrYB18xzakn4wCk8=
-Received: from zn.tnic (pd953023b.dip0.t-ipconnect.de [217.83.2.59])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with UTF8SMTPSA id 71BA640E01A9;
-	Tue, 13 Jan 2026 16:04:44 +0000 (UTC)
-Date: Tue, 13 Jan 2026 17:04:36 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Mario Limonciello <mario.limonciello@amd.com>
-Cc: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>,
-	Yazen Ghannam <yazen.ghannam@amd.com>,
-	"maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-	"open list:AMD NODE DRIVER" <linux-kernel@vger.kernel.org>,
-	regressions@lists.linux.dev
-Subject: Re: kernel NULL pointer dereference in
- quirk_clear_strap_no_soft_reset_dev2_f0 -> amd_smn_read
-Message-ID: <20260113160436.GMaWZtFMWnrjERYYQH@fat_crate.local>
-References: <aWWZb3eRfQdB4OsI@mail-itl>
- <68d86871-12f2-4de1-81aa-dbc9e12b6f91@amd.com>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="Cjf3p+/n"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=r06C6AWdFEQD76hIS2J6dGSm+E9B95HsJIQN08cNVHQ=; t=1768320456;
+	x=1768752456; b=Cjf3p+/nJYfWguPUBDrkiD47zd9roRA+eA7Un1DxWtW8JKdAyCh9oWM48pxu4
+	yMtVEbxt9sgcqY0l9HxX2pARTAnIwDTkhIo8SBc0cD348iWuHvsmz+qSWnd9CwXOV3pm7XcJtN1oj
+	S0cPehwkcDyxmpkvstDSbau/XgYR3fVhU7RxCiqEshom11zK5VbUV6m4lheY2L4zUr4n2zmYMwOMU
+	DtLzM1iexONuB26h1ENWuVCU/U8rx70sRL0Lb4yE0hUGkxCtCikOrz2sX3m9o4z9fVuWISL9HXUMW
+	DUl5J5QpW8r9DQGWXGY0pnfexVpXWGzilwrdnhjfz02SlkVAlg==;
+Received: from [2a02:8108:8984:1d00:a0cf:1912:4be:477f]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128)
+	id 1vfgve-00959d-1C;
+	Tue, 13 Jan 2026 17:07:34 +0100
+Message-ID: <ae9a3fec-4872-4cb7-9e9f-dbeafb4daab7@leemhuis.info>
+Date: Tue, 13 Jan 2026 17:07:33 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <68d86871-12f2-4de1-81aa-dbc9e12b6f91@amd.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 05/30] docs: reporting-issues: outline why reporting is
+ complicated
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: workflows@vger.kernel.org, linux-doc@vger.kernel.org,
+ regressions@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <cover.1761481839.git.linux@leemhuis.info>
+ <a6704ef5b3a8dcbaf645ddb5407e8f13553502b0.1761481839.git.linux@leemhuis.info>
+ <87ecqonsse.fsf@trenco.lwn.net>
+From: Thorsten Leemhuis <linux@leemhuis.info>
+Content-Language: de-DE, en-US
+Autocrypt: addr=linux@leemhuis.info; keydata=
+ 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 MEK4
+In-Reply-To: <87ecqonsse.fsf@trenco.lwn.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1768320456;27a130ca;
+X-HE-SMSGID: 1vfgve-00959d-1C
 
-On Mon, Jan 12, 2026 at 08:47:50PM -0600, Mario Limonciello wrote:
-> Is this perhaps a case that only the USB controller was passed through but
-> that the root controller wasn't?  That would lead to a case that
-> amd_smn_init() was never called and thus amd_roots was not initialized
-> properly.
+On 10/27/25 18:44, Jonathan Corbet wrote:
+> Thorsten Leemhuis <linux@leemhuis.info> writes:
 > 
-> So it would be a NULL pointer deref.
+>> Replace the closing words with a section that describes why reporting
+>> Linux kernel bugs is more complicated than in other FLOSS projects.
+>>
+>> Signed-off-by: Thorsten Leemhuis <linux@leemhuis.info>
+>> ---
+>>  .../admin-guide/reporting-issues.rst          | 67 ++++++++++++++++---
+>>  1 file changed, 59 insertions(+), 8 deletions(-)
+> 
+> So the text is OK but ... this is now the second section that is
+> essentially a long apology for the kernel process being so difficult.
+> It seems redundant with the other text, and I'm not convinced we need
+> it.
+> 
+> Again, length is an impediment to getting people to actually read this
+> stuff; we should be trying to be as concise as we can.  Do we really
+> need this?
 
-Yah, looks like a NULL ptr:
+I thought about this for a while, but in the end I this section and the
+one from 4/30 are worth it. Let me explain my line of thought:
 
-   0:   05 bd 44 b8 01          add    $0x1b844bd,%eax
-   5:   66 0f af 05 2d 44 b8    imul   0x1b8442d(%rip),%ax        # 0x1b8443a
-   c:   01 
-   d:   41 57                   push   %r15
-   f:   41 56                   push   %r14
-  11:   41 55                   push   %r13
-  13:   41 54                   push   %r12
-  15:   55                      push   %rbp
-  16:   53                      push   %rbx
+* Yes, they make the document a longer, but it's in an appendix, which
+makes it relatively obvious that these are optional background details
+you don't have to read.
 
+* You in your reply to 3/30 asked to "Consider also soliciting patches
+to improve it" -- something I in the context had found obvious and not
+worth mentioning, as I thought, "everybody that knows how to send
+patches will do so without us mentioning it here". But for these two
+sections it's different: is stuff that is obvious for us, but not
+obvious for many non-developers (at least from what I see when
+processing bugs/regressions reports= and relevant for them. That's
+because the kernel IMHO is not "an open-source program like any other",
+as you mentioned in a reply to 4/30:
 
-  17:   66 39 c2                cmp    %ax,%dx
-  1a:   0f 83 c0 00 00 00       jae    0xe0
+- Other FLOSS software is relatively independent, but the kernel is
+mostly drivers -- so without the right hardware, there sometimes is
+nothing that developers can do in case of bugs. We also normally don't
+remove orphaned code due to the "no regressions" rule, unless it's
+getting really old and/or in the way, so there is nothing anybody will
+do about a bug report -- which is unusual. The stuff in 4/30 explains
+such aspects.
 
-That's 
+- The kernel development model is different in some important aspects,
+which can be even confusing for people familiar with FLOSS practices.
+Like the "mainline developers might not care about bugs in
+stable/longterm kernels, while the stable team will leave things to the
+mainline developers if the problem happens there, too". This is rare and
+IMHO needs to be explained somewhere, as then we can point people to
+this explanation that otherwise will just feel pushed around and become
+annoyed by the kernel (some obviously will nevertheless feel that, but
+that way we can get at least some people to understand things and/or on
+our side).
 
-        if (node >= amd_num_nodes())
-                return err;
-
-
-  20:   48 8b 05 c3 61 d7 02    mov    0x2d761c3(%rip),%rax        # 0x2d761ea
-
-That's fetching amd_roots. Which is 0, see RAX below.
-
-  27:   0f b7 d2                movzwl %dx,%edx
-
-Zero-extending the "node" var.
-
-  2a:*  4c 8b 34 d0             mov    (%rax,%rdx,8),%r14               <-- trapping instruction
-
-Get the root ptr.
-
-Boom.
-
-> >      [    0.302571] pci 0000:00:08.0: quirk_usb_early_handoff+0x0/0x180 took 16590 usecs
-> >      [    0.303172] BUG: kernel NULL pointer dereference, address: 0000000000000000
-> >      [    0.303189] #PF: supervisor read access in kernel mode
-> >      [    0.303202] #PF: error_code(0x0000) - not-present page
-> >      [    0.303216] PGD 0 P4D 0
-> >      [    0.303225] Oops: Oops: 0000 [#1] SMP NOPTI
-> >      [    0.303236] CPU: 0 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.17.9-1.qubes.fc41.x86_64 #1 PREEMPT(full)
-> >      [    0.303258] Hardware name: Xen HVM domU, BIOS 4.19.3 08/26/2025
-> >      [    0.303273] RIP: 0010:__amd_smn_rw+0x30/0x100
-> >      [    0.303288] Code: 05 bd 44 b8 01 66 0f af 05 2d 44 b8 01 41 57 41 56 41 55 41 54 55 53 66 39 c2 0f 83 c0 00 00 00 48 8b 05 c3 61 d7 02 0f b7 d2 <4c> 8b 34 d0 4d 85 f6 0f 84 a9 00 00 00 80 3d a4 61 d7 02 00 0f 84
-> >      [    0.303327] RSP: 0018:ffffcdd30001fd68 EFLAGS: 00010297
-> >      [    0.303341] RAX: 0000000000000000 RBX: ffffcdd30001fdb4 RCX: 0000000010136008
-> >      [    0.303359] RDX: 0000000000000000 RSI: 0000000000000064 RDI: 0000000000000060
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Ciao, Thorsten
