@@ -1,38 +1,38 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E15B729E11A;
-	Tue, 13 Jan 2026 14:33:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60C4922F16E;
+	Tue, 13 Jan 2026 14:38:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768314836; cv=none; b=K+icW7Kg91ew2INKXfqQjT7Tn/nmUnDAVPBlobtd2aS6dQzcBx5fNfCZEO3xgnvH2sNHPNGdEX0X6rSJ7jz1KA4DsLob8EyohLG91RzchDhIwVKdhhDqeq8jvuXwpZ8jOMgMOGg1yen7DAaUjMbKGGr1iOwzcC0DpUYsnbLM5FU=
+	t=1768315105; cv=none; b=HFlTPvbGT9NHuDbDkYRvon7Xi7jROGs+hyiv+TmIUBEv6gcgoeeSBmB9d43o81rgRwAXn5jv499ZsmV9y+YFSGwsDqtbRVXw8EYG5gVrSZxyxaSwSR/iWRujjHZ1sVOphKbNmXC0MC3zZISTkxQJ6vAjfX9fxSHmUJj0jpWsCBQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768314836; c=relaxed/simple;
-	bh=6E69w48pjYijo87lnVWTVXGwb4idQHlmEHOV8mCxVPY=;
+	s=arc-20240116; t=1768315105; c=relaxed/simple;
+	bh=D6fmYTiohBvvcDr3uwOiQ4rlkF6/xLhCAPmmLS3QOFY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GzM9F0RGUU9/Rcf1LTpDB0WRZU0GWHq0ejrhQjyi3nsh2e2LJprMzVuTHe4f8E44uJy+KUHLqCvnBItr57KUSLrxtH/TxImvz/tbupZZMKKzI6RA1ZmoqH0VEC2ivXoWeiv4H78//S8lOWTgMKgYaDtCzirkrFJjKLkVqdO2ies=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=MvqhCKMf; arc=none smtp.client-ip=80.237.130.52
+	 In-Reply-To:Content-Type; b=d+YEmP+k7dlJWpx/H9oV0Dq6dlAZcZlDC+aWfzysp/zwsm12uaU9v+JALm1bJCkxXqP0TwQOpREw8743hUtlCE7AhVltho6jvppv5Hoc4bMboJcI1HnX7OLShWTObIGyg4RCI90j7relG+f+Fj/s4pcs3Q7lSLrqiF/rovpKErw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=M96e82c0; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="MvqhCKMf"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="M96e82c0"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
 	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
 	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
 	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=eKRbO2pc5qRndF/tgMcLLq9NmxhVQprM5Zct/qPxLc8=; t=1768314834;
-	x=1768746834; b=MvqhCKMfVEo3fJ+cEUuvkaQiLlK5yH4uOxdHNB6uo5Dcq7lS6HbIzYAE0qOaJ
-	5UKNMKqQHA/lpRbl7WOCw7cWCToOKvPA3pRO3JsBSwDjCp9UUjDuuUGH3g8gDtwoxxjfwQkEkhclD
-	ghLIhB/sywv7MLeLtqwrw+To8Kgob+JdOB6/zQi2Z4MRe5xIif790OisuEezBRPr6u9H+pOfvH0NH
-	GcOywM54cj6pyy44/ZVs0i24lz+YFMVhqZUlUvqo7KUDePdRIxmqPedBU5R59X9H5SMapiAhDvxzM
-	b/Gv1YTiG1qsIJZmuuGj+QD1+UuhY7P72gDP4DrB4mmHLahuVg==;
+	References; bh=E7anJLR19LGOEB6Vqxykqbe4fW8vnG0RHNUBRR3xXKE=; t=1768315104;
+	x=1768747104; b=M96e82c0P/6ygxBePHo4jGGXzPgFje9fnDp2TDuILwR9BXnsaEv8tkQs5r0Ey
+	whqI02njMNP3Eh191MVM+ItPoGme59lfwQ9cAqNEp0aUI6/M2OyFkWOiVn1tOetNEGyxHBDCoDD7C
+	PcnUh6DJKYPILG4cWG7oKao4Cg8ztKcrf7lnPcXPJt6dtyqphI58295j7Tgtk+b86AXtU/iQpPafE
+	iJ5Obu0n2+UdyHB9m/QnCFO9yt23w+4TZNNSh2S0iByEYKxizO18XaqFbp4oQPK+MkfPV1HACI2YM
+	/C2dvznSpFNjm2zdCo3nIpoTjGjKew2SzunQ1SILMfs0vfA6YQ==;
 Received: from [2a02:8108:8984:1d00:a0cf:1912:4be:477f]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128)
-	id 1vffSx-008uj0-2y;
-	Tue, 13 Jan 2026 15:33:51 +0100
-Message-ID: <b891fb8e-4e37-4492-a173-dcbb540f7eed@leemhuis.info>
-Date: Tue, 13 Jan 2026 15:33:51 +0100
+	id 1vffXK-008v94-1C;
+	Tue, 13 Jan 2026 15:38:22 +0100
+Message-ID: <419c402e-abd8-4f00-b549-cfd3ec1e2e03@leemhuis.info>
+Date: Tue, 13 Jan 2026 15:38:21 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -40,14 +40,13 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 03/30] docs: reporting-issues: add conclusion to the
- step-by-step guide
+Subject: Re: [PATCH v1 04/30] docs: reporting-issues: add proper appendix
 To: Jonathan Corbet <corbet@lwn.net>
 Cc: workflows@vger.kernel.org, linux-doc@vger.kernel.org,
  regressions@lists.linux.dev, linux-kernel@vger.kernel.org
 References: <cover.1761481839.git.linux@leemhuis.info>
- <9a8d7b58f482cf0669bc5028dd0e01301f7f526e.1761481839.git.linux@leemhuis.info>
- <87ms5cntho.fsf@trenco.lwn.net>
+ <c3d92d4e74557bfff3627d8ceb6a9911612af52a.1761481839.git.linux@leemhuis.info>
+ <87ikg0nt2s.fsf@trenco.lwn.net>
 From: Thorsten Leemhuis <linux@leemhuis.info>
 Content-Language: de-DE, en-US
 Autocrypt: addr=linux@leemhuis.info; keydata=
@@ -93,33 +92,28 @@ Autocrypt: addr=linux@leemhuis.info; keydata=
  8zG721N4hWyyLALtGUKIVWZvBVKQIGQRPtNC7s9NVeLIMqoH7qeDfkf10XL9tvSSDY6KVl1n
  K0gzPCKcBaJ2pA1xd4pQTjf4jAHHM4diztaXqnh4OFsu3HOTAJh1ZtLvYVj5y9GFCq2azqTD
  pPI3FGMkRipwxdKGAO7tJVzM7u+/+83RyUjgAbkkkD1doWIl+iGZ4s/Jxejw1yRH0R5/uTaB MEK4
-In-Reply-To: <87ms5cntho.fsf@trenco.lwn.net>
+In-Reply-To: <87ikg0nt2s.fsf@trenco.lwn.net>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1768314834;fceca4a9;
-X-HE-SMSGID: 1vffSx-008uj0-2y
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1768315104;906d34d0;
+X-HE-SMSGID: 1vffXK-008v94-1C
 
-On 10/27/25 18:29, Jonathan Corbet wrote:
+On 10/27/25 18:38, Jonathan Corbet wrote:
 > Thorsten Leemhuis <linux@leemhuis.info> writes:
-[...]
->> +If any of that applies, please take a moment and let the primary author of this
->> +text, Thorsten Leemhuis <linux@leemhuis.info>, know by email while ideally CCing
->> +the public Linux docs mailing list <linux-doc@vger.kernel.org>. Such feedback is
->> +vital to improve this text further, which is in everybody's interest, as it will
->> +enable more people to master the task described here.
->> +
 > 
-> Consider also soliciting patches to improve it - one can always hope we
-> can bring in some help...
+>> Turn the "Why some bugs remain unfixed and some report are ignored"
+>> section into a proper appendix while improving it slightly.
+>>
+>> Signed-off-by: Thorsten Leemhuis <linux@leemhuis.info>
+>> ---
+>>  .../admin-guide/reporting-issues.rst          | 102 +++++++++---------
+>>  1 file changed, 54 insertions(+), 48 deletions(-)
+> 
+> Some comments below, 
 
-Yeah, valid point, will use this:
+Many thx, will all be addressed in the next version.
 
-If any of that applies, please let the developers know by
-sending a short note or a patch to Thorsten Leemhuis
-<linux@leemhuis.info> while ideally CCing the public Linux docs mailing
-list <linux-doc@vger.kernel.org>.
-
-And include a patch in the next submission that updates two other places
-in the docs that use nearly the identical text.
+> but I have to ask: do we really need this section at all? 
+Will answer that in a reply to 5/30, which asked the same.
 
 Ciao, Thorsten
