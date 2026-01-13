@@ -1,254 +1,291 @@
-Received: from mout.web.de (mout.web.de [212.227.15.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0BF5352C53;
-	Tue, 13 Jan 2026 22:20:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F413F2DA755
+	for <regressions@lists.linux.dev>; Tue, 13 Jan 2026 23:03:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768342823; cv=none; b=UksmIgBkHlrrUAR1R2Psuqlz4wKkztuPNuNrKS88HP5ql2bUY3gvwLdnz7EjEwuiHAVFQikeZ+49sLLn1hpi7GY6g/n9rr/iguTMRwmBqjwbwKhPB9nqNRwW7Q8TNBAw/oRbOqaYOFBtbYc6OyzOIZFQGaoSABTcZ4r/bLNmwIc=
+	t=1768345412; cv=none; b=UrRFOlynKWBIwlfswKtSUI7bvXdTJ6y5DO+CLGx1O/rH2S4S+thoKmZGiiXCwwoaZ3PBLPld9A37Pyj+KP1IlR8S0cIMafb7nH4ldLobDKyUVaKPxKB16k3GLzHl2iwQckKRNGGxQxhwy2exi9oJZ+XopinBtzUsLFaJZfrzxWE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768342823; c=relaxed/simple;
-	bh=WYhN3zVo5gDJhDidN7wy254wIzbZOO7AN1+sV+pWZlA=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=SR2GIRtsMBjnAl/FmUF91PQQLc5yU9GudQ1lZZvTODG2c81tMmnNZGbg3QCJuB6gPZQEGdq4zxDX6UDarycebwXqaaXYirDeLlXrBMrjYh+Ny2xcbcKdbblxyK2JplcEUIivgIwPbQmYRNoacjKhuS3zQzZO7YDNJo3OJFD8wI0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b=WS28GEqT; arc=none smtp.client-ip=212.227.15.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1768345412; c=relaxed/simple;
+	bh=EUk4HqJuA6yWB2Mw24E9u/ZENP3x2WsUxIf5ImlrH28=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=M0KsBXHV++DCzLPnQC5pFwjf5it4c3R9RAB+HTqJ/U6JJ++IjGWuLLMJUzZOIbsAa60HG6TfOGVEUwsDgc8xKmqAVxwG5sZFnjc6JOYgwRDROIeT6T+wMK+bWIlMIY9sb/JACoBmaz09QAUiBN/Z+30AZov5M/oiGhLIUgGrDq8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=UqPcIaVA; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b="WS28GEqT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1768342779; x=1768947579; i=spasswolf@web.de;
-	bh=ViocbYXnpPhckKciY+v6ul/mpk6ZAETgKmZBKuvqAko=;
-	h=X-UI-Sender-Class:Message-ID:Subject:From:To:Cc:Date:In-Reply-To:
-	 References:Content-Type:MIME-Version:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=WS28GEqTedh1nOr4/AqLYuu1ap//KAL14PY6Ub3B4y5TYdX7pO+wDskB1P4N332W
-	 0p0iVSstxZUmzABBNmQVt1iaV3X10WQcXrqDT2EZe3R+83p4xKXMixjl6jFHl5IIl
-	 Jgu5GBSvKqwsdVsnKEzFbUQqLyiZrgf91fPlVUUNmg9kbUiPtus7JZDxl31o8/bKG
-	 6Gc34IW2ZV0xYIpGd7z7ewxO9snnLPzLY3/c5zwuo1uQqetLGPWx3zVh0hgi6Ngq0
-	 Ue21kaKgpNn8Vew2YxqGSGDFxwhcjjf17Iq6Cp6dTNZgQwQ96Ke7pdR5q3ZOpk/w0
-	 72BOw+p1ZBrk5XyE6A==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.0.101] ([95.223.134.88]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MxHYK-1w3nnP1LdQ-010E0L; Tue, 13
- Jan 2026 23:19:39 +0100
-Message-ID: <99f1aaba32030d2b9285dbd983fdf8518a181a8d.camel@web.de>
-Subject: Re: NMI stack overflow during resume of PCIe bridge with
- CONFIG_HARDLOCKUP_DETECTOR=y
-From: Bert Karwatzki <spasswolf@web.de>
-To: Thomas Gleixner <tglx@kernel.org>, linux-kernel@vger.kernel.org
-Cc: spasswolf@web.de, linux-next@vger.kernel.org, Mario Limonciello	
- <mario.limonciello@amd.com>, Sebastian Andrzej Siewior
- <bigeasy@linutronix.de>,  Clark Williams <clrkwllms@kernel.org>, Steven
- Rostedt <rostedt@goodmis.org>, Christian =?ISO-8859-1?Q?K=F6nig?=	
- <christian.koenig@amd.com>, regressions@lists.linux.dev, 
-	linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org, "Rafael J . Wysocki"
-	 <rafael.j.wysocki@intel.com>, acpica-devel@lists.linux.dev, Robert Moore	
- <robert.moore@intel.com>, Saket Dumbre <saket.dumbre@intel.com>, Bjorn
- Helgaas	 <bhelgaas@google.com>, Clemens Ladisch <clemens@ladisch.de>,
- Jinchao Wang	 <wangjinchao600@gmail.com>, Yury Norov
- <yury.norov@gmail.com>, Anna Schumaker	 <anna.schumaker@oracle.com>,
- Baoquan He <bhe@redhat.com>, "Darrick J. Wong"	 <djwong@kernel.org>, Dave
- Young <dyoung@redhat.com>, Doug Anderson	 <dianders@chromium.org>,
- "Guilherme G. Piccoli" <gpiccoli@igalia.com>, Helge Deller <deller@gmx.de>,
- Ingo Molnar <mingo@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>,  Joanthan
- Cameron <Jonathan.Cameron@huawei.com>, Joel Granados
- <joel.granados@kernel.org>, John Ogness	 <john.ogness@linutronix.de>, Kees
- Cook <kees@kernel.org>, Li Huafei	 <lihuafei1@huawei.com>, "Luck, Tony"
- <tony.luck@intel.com>, Luo Gengkun	 <luogengkun@huaweicloud.com>, Max
- Kellermann <max.kellermann@ionos.com>, Nam Cao <namcao@linutronix.de>,
- oushixiong <oushixiong@kylinos.cn>, Petr Mladek	 <pmladek@suse.com>,
- Qianqiang Liu <qianqiang.liu@163.com>, Sergey Senozhatsky	
- <senozhatsky@chromium.org>, Sohil Mehta <sohil.mehta@intel.com>, Tejun Heo	
- <tj@kernel.org>, Thomas Zimemrmann <tzimmermann@suse.de>, Thorsten Blum	
- <thorsten.blum@linux.dev>, Ville Syrjala <ville.syrjala@linux.intel.com>, 
- Vivek Goyal <vgoyal@redhat.com>, Yunhui Cui <cuiyunhui@bytedance.com>,
- Andrew Morton	 <akpm@linux-foundation.org>, W_Armin@gmx.de
-Date: Tue, 13 Jan 2026 23:19:30 +0100
-In-Reply-To: <87v7h5ia3d.ffs@tglx>
-References: <20260113094129.3357-1-spasswolf@web.de> <87h5spk01t.ffs@tglx>
-	 <bc20529d7520e7db7de2022bf9c96a1bc3a2f0df.camel@web.de>
-	 <87v7h5ia3d.ffs@tglx>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.56.2-0+deb13u1 
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="UqPcIaVA"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-47ee3da7447so749155e9.0
+        for <regressions@lists.linux.dev>; Tue, 13 Jan 2026 15:03:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1768345409; x=1768950209; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=Bq5wl1SBv1bhyHtHJiAH6muoj6ldBxbhdBSJyhqU46o=;
+        b=UqPcIaVAtg63usfCXkNcYYWBn1d007mXyXMn06RlkkWeZ198U21ZIXM+g0tuS1noLF
+         m35qdxi+fMbK04pXDCBd3W6RQ5UHMdS4yDzDa/o2hxU71jtgaZn2HMmepX8zyX/cALOu
+         HShGWBydEy9d32Zp6HJLGbXBsAopIt69RAPHF6upZ5pbvhXwt+vM/GiglDHNC/BUHDHR
+         xVNoxuOr2lV1ja/nLh8I5AM3rS+2BvXlwHzYUr6yOdXJPP4ayTM/vQHjC0POp9bTYLcR
+         xaFmPDeDdYIuq7hHsdHSRn+1GbTUcJlHnQoTpSgElW1htKr3NUPo8A5W11G7170Mi+Xt
+         /JJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768345409; x=1768950209;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Bq5wl1SBv1bhyHtHJiAH6muoj6ldBxbhdBSJyhqU46o=;
+        b=T1ojhrdja2IdGCNZr16ZF+HMc6izZj2C7MAxGmTd2MUwz3I7oqLKIWBBZjrHYB8X71
+         Z0d7N+YZPUYEMSzJPfRvqEwGJWbCJEL2ed0mS3Tc/+KKQvPqvMXfx2TdPc6QbIJZ1Uzq
+         PzgQ+f+od9UE/PZDt0Q9eSxLxkwXBxZr7174MjjsgYw7BwPgdy/SEo/0vPZfwD4wo9bH
+         hmNoz80UHL2qL7HjrxY0yKlU2gBZYksbArj7aBfk7aQ55jGQstXQyKcMgSSMj3c/tngw
+         DCC0T/AqW9Mr9Z3gS3LrNMysJSZPhujCfQXsfmsdvtklYxqoF2XK2HKKZKWyy2iFVbLf
+         LNsA==
+X-Gm-Message-State: AOJu0YymiPtAHtfyoOX//fD9NVnJjdETiIMeq5CycFJpFSk5V/u9CAKB
+	dbagfFVYM6P3s08HQGpppDCunYBIIXDZosGuyo3gNfj+Xejc9OE+tBNPeRZ8jEA7gcs=
+X-Gm-Gg: AY/fxX6ZcI/Pxy/gcIWq89VLWQeudSOolHTElRF1iV5dpXagUsjQijOrB4ofeISntiL
+	p7MSucwMWSmc/PHhrLMdWarFUpePL7azh6HsEyT19dyEWWcTKFJrxnJix7MFi3+Y441lCzp/Byt
+	gm91Knw9MK5j0uKiIs3sj92OS0pH2MEussSf//AyFrIcSmghvr8uqYXUFrInmgQ4UZcDpL0RwXS
+	5uKCwv9b5Ht+1o6yaQX0GNbQi0fw+QjZVDxWapN4bMOp9XBLbwgy9BTF8qsnrhpsHCesnleNk+G
+	YhVEHmsb1pJbX/skUResg8v1UzPxgrwq6WLPxqBsHGZ3JLjevIiAaeP7R9rEYo7Igm1y4nwYsOb
+	J2JFM1YCtyA1+mqepox+7SOxX2u4aSmdycH2nR9WSWbALBZ1+EMx2fwc7FYvz7VVBRbhtAARKyK
+	aXEAFNtYAJQrsdOK6wpd8TynYPK8acWQHKUtewlsM=
+X-Received: by 2002:a05:600c:a088:b0:47b:da85:b9ef with SMTP id 5b1f17b1804b1-47ee47d3988mr2405425e9.16.1768345409217;
+        Tue, 13 Jan 2026 15:03:29 -0800 (PST)
+Received: from ?IPV6:2403:580d:fda1::299? (2403-580d-fda1--299.ip6.aussiebb.net. [2403:580d:fda1::299])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c4cbfc2f476sm7028868a12.8.2026.01.13.15.03.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 13 Jan 2026 15:03:28 -0800 (PST)
+Message-ID: <5a643fd6-1b1c-45ad-86a0-5d53f074d6f7@suse.com>
+Date: Wed, 14 Jan 2026 09:33:23 +1030
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:LppR69MnC15AfVNPjVetIGXteEXzL4GPbGOwMYJbG209YGnxwa3
- TGRqZ5IfstTQVstWDV9hgwiaa9lWnCXm87PwpF8dYuBFKrPKWzuz9arNS+zhJ2i1PED3Plv
- blnB/sNPkHTjtysxvgkrg/B2FOaof1jecj+F4XGEviVhvPBeCpE9415JWjHSyS8S1QqK1/N
- KK6TF0+BXMdYuWyFucxDg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:BIKblzywJ3g=;I9+oETfIpdaAu61bNhbJuNwKF0U
- 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
- 759SRgtuFsr7AgHOMr0alLxpu0Abt2zt0VxvUv
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] VirtualBox VM crashes (BSOD) during Windows
+ installation on btrfs with kernels 6.18+ (works on 6.12 LTS)
+To: jollycar <jollycar@proton.me>, Qu Wenruo <wqu@suse.com>
+Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <sT06uA3Gtv1kgeL80ZRMshbw6whJNUom-UxnS06H6eVrB4AqGWuzo0P23AhwOn3WsnAq9QfhFYciSAWK3eBeGaKjNJG1oSQLyclv4d2E0L4=@proton.me>
+ <5b466d2f-80ad-4b45-a643-ab64bf2b252d@suse.com>
+ <LCM3zm3y1s51pkWBZg6NU-4R6f89SVYSAxtNqq0gM5IlDFZfFjwSqvl-8yAvYcl7VizHjXIENm1vf6b7z2e25YQce7IQCr3Ms-w6vKkOKfY=@proton.me>
+ <20c3ba51-fbf1-4de2-b88f-5edf817a24d6@suse.com>
+ <FmCqd98aDZ5GTLc-1FUc4NRHRhDEDUDy1ylzO4rrFy_mV1zgC2tnmht5ov8px3ME3pBa6dioALVRD_tDKC3FhdUd4alND6G5g2bx8N7R154=@proton.me>
+ <07600bff-a6dc-4b86-9dd6-aa5077ca8b09@suse.com>
+ <ScE5lMhg6rlV47ttw0oUEWA5IsyxChuvN1pTOoj_KNj5rUpineEqR3GsPjNZl61xtXG4QS4v9v3ur4Ac0zI5GvdGEW_gWFJBD_FazYLcd_E=@proton.me>
+Content-Language: en-US
+From: Qu Wenruo <wqu@suse.com>
+Autocrypt: addr=wqu@suse.com; keydata=
+ xsBNBFnVga8BCACyhFP3ExcTIuB73jDIBA/vSoYcTyysFQzPvez64TUSCv1SgXEByR7fju3o
+ 8RfaWuHCnkkea5luuTZMqfgTXrun2dqNVYDNOV6RIVrc4YuG20yhC1epnV55fJCThqij0MRL
+ 1NxPKXIlEdHvN0Kov3CtWA+R1iNN0RCeVun7rmOrrjBK573aWC5sgP7YsBOLK79H3tmUtz6b
+ 9Imuj0ZyEsa76Xg9PX9Hn2myKj1hfWGS+5og9Va4hrwQC8ipjXik6NKR5GDV+hOZkktU81G5
+ gkQtGB9jOAYRs86QG/b7PtIlbd3+pppT0gaS+wvwMs8cuNG+Pu6KO1oC4jgdseFLu7NpABEB
+ AAHNGFF1IFdlbnJ1byA8d3F1QHN1c2UuY29tPsLAlAQTAQgAPgIbAwULCQgHAgYVCAkKCwIE
+ FgIDAQIeAQIXgBYhBC3fcuWlpVuonapC4cI9kfOhJf6oBQJnEXVgBQkQ/lqxAAoJEMI9kfOh
+ Jf6o+jIH/2KhFmyOw4XWAYbnnijuYqb/obGae8HhcJO2KIGcxbsinK+KQFTSZnkFxnbsQ+VY
+ fvtWBHGt8WfHcNmfjdejmy9si2jyy8smQV2jiB60a8iqQXGmsrkuR+AM2V360oEbMF3gVvim
+ 2VSX2IiW9KERuhifjseNV1HLk0SHw5NnXiWh1THTqtvFFY+CwnLN2GqiMaSLF6gATW05/sEd
+ V17MdI1z4+WSk7D57FlLjp50F3ow2WJtXwG8yG8d6S40dytZpH9iFuk12Sbg7lrtQxPPOIEU
+ rpmZLfCNJJoZj603613w/M8EiZw6MohzikTWcFc55RLYJPBWQ+9puZtx1DopW2jOwE0EWdWB
+ rwEIAKpT62HgSzL9zwGe+WIUCMB+nOEjXAfvoUPUwk+YCEDcOdfkkM5FyBoJs8TCEuPXGXBO
+ Cl5P5B8OYYnkHkGWutAVlUTV8KESOIm/KJIA7jJA+Ss9VhMjtePfgWexw+P8itFRSRrrwyUf
+ E+0WcAevblUi45LjWWZgpg3A80tHP0iToOZ5MbdYk7YFBE29cDSleskfV80ZKxFv6koQocq0
+ vXzTfHvXNDELAuH7Ms/WJcdUzmPyBf3Oq6mKBBH8J6XZc9LjjNZwNbyvsHSrV5bgmu/THX2n
+ g/3be+iqf6OggCiy3I1NSMJ5KtR0q2H2Nx2Vqb1fYPOID8McMV9Ll6rh8S8AEQEAAcLAfAQY
+ AQgAJgIbDBYhBC3fcuWlpVuonapC4cI9kfOhJf6oBQJnEXWBBQkQ/lrSAAoJEMI9kfOhJf6o
+ cakH+QHwDszsoYvmrNq36MFGgvAHRjdlrHRBa4A1V1kzd4kOUokongcrOOgHY9yfglcvZqlJ
+ qfa4l+1oxs1BvCi29psteQTtw+memmcGruKi+YHD7793zNCMtAtYidDmQ2pWaLfqSaryjlzR
+ /3tBWMyvIeWZKURnZbBzWRREB7iWxEbZ014B3gICqZPDRwwitHpH8Om3eZr7ygZck6bBa4MU
+ o1XgbZcspyCGqu1xF/bMAY2iCDcq6ULKQceuKkbeQ8qxvt9hVxJC2W3lHq8dlK1pkHPDg9wO
+ JoAXek8MF37R8gpLoGWl41FIUb3hFiu3zhDDvslYM4BmzI18QgQTQnotJH8=
+In-Reply-To: <ScE5lMhg6rlV47ttw0oUEWA5IsyxChuvN1pTOoj_KNj5rUpineEqR3GsPjNZl61xtXG4QS4v9v3ur4Ac0zI5GvdGEW_gWFJBD_FazYLcd_E=@proton.me>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Am Dienstag, dem 13.01.2026 um 20:30 +0100 schrieb Thomas Gleixner:
-> On Tue, Jan 13 2026 at 18:50, Bert Karwatzki wrote:
-> > Am Dienstag, dem 13.01.2026 um 16:24 +0100 schrieb Thomas Gleixner:
-> >=20
-> > >  What's more likely is that after a while _ALL_ CPUs are hung up in
-> > > the NMI handler after they tripped over the HPET read.
-> >=20
-> > I'm not sure about that, my latest testrun (with v6.18) crashed with
-> > only one message from exc_nmi().
->=20
-> What means crashed? Did it actually crash and output something or does
-> the machine just go dead? I assume the latter as you have no output.
->=20
-Crashed means, rebooting and trying to reboot into the new kernel, which f=
-ails
-(i.e. drops to rescue mode)
-because one of my 2 nvme devices (not the root fs) is missing from the PCI=
- bus
-(the missing device reappears after a shutdown).
-When sound is running while such a crash occurs the sound loops for about =
-~2s,
-before such a reboot occurs (a behaviour I've seen during an unrelated NUL=
-L ptr deref in an
-interrupt handler once). There's no additional error message output when s=
-uch
-a crash occurs, only my printk()s.
 
-> > > along with the full output of /proc/iomem
-> >=20
-> > The physical address is 0xf0100000
-> >=20
-> > $ cat /proc/iomem
-> > f0000000-fcffffff : PCI Bus 0000:00
-> >   f0000000-f7ffffff : PCI ECAM 0000 [bus 00-7f]
-> >     f0000000-f7ffffff : pnp 00:00
->=20
-> That's the memory mapped PCI config space and this tries to access:
->=20
->    MMIO_START			0xf0000000
->    BUSNUM	0x01 << 20      0x00100000
->    SLOT/FN	0x00 << 12      0x00000000
->    OFFSET	0x00 <<  0      0x00000000
->                                -----------
->                                 0xf0100000
->=20
-> Offset 0 is vendor/device ID IIRC.
->=20
-> Anyway if that access does not complete because of a hardware issue,
-> then any subsequent access to the MMIO mapped HPET goes stale as well.
->=20
-> As the HPET is the active clocksource on your machine, this obviously
-> does not only affect the NMI watchdog readout, it affects the regular
-> timekeeper accesses too and all other MMIO accesses all over the place.
-> So gradually your machine just stalls on outstanding MMIO transactions
-> w/o further notice... The NMI is just a red herring.
->=20
-I've already tried different clocsources, with mixed results. tsc does not
-work on my system as it is unstable, while acpi_pm also crashed. With jiff=
-ies
-I had mixed results. It might have avoided one crash, but crashed on anoth=
-er
-testrun in the same situation.
 
-> You need to figure out why that MMIO access to that device's
-> configuration space stalls as anything else is just subsequent
-> damage.
->=20
-> There is not much what can be done about that unless the PCI bus raises
-> a failure interrupt and some magic reset sequence aborts the outstanding
-> stalled transactions.
->=20
-> Whether that's feasible or not, I don't know. The failure mechanism
-> might run into the same stall scenario when accessing the PCI muck for
-> reset...
+在 2026/1/14 05:38, jollycar 写道:
+> Thanks for the response.
+> 
+> Module installation: DKMS via the virtualbox-host-dkms package. The dkms status output confirms vboxhost/7.2.4_OSE is compiled for each kernel including the broken ones (6.18.3, 6.18.5 (tkg), 6.19.0-rc3).
+> 
+> Regarding CPU type specification:
+> 
+> VirtualBox doesn't have qemu-style CPU model selection. The --cpu-profile option only supports "host" (full passthrough) or ancient CPUs (8086/80286/80386) which don't meet Windows 10 requirements.
+> 
+> Additional testing: I recently upgraded my desktop pc from Ryzen 9 5900X to 9950X3D (reusing same disks and linux install) and the regression occurred identically on both CPUs. Also tested custom compiled TKG kernels (6.12/6.18 with bore scheduler). The behavior matches the Manjaro kernels exactly (6.12 works, 6.18 breaks).
 
-In the two testruns without CONFIG_HARDLOCKUP_DETECTOR I simply lost the d=
-iscrete
-GPU without a crash, i.e. after 4 and 8.5h the GPU would not resume any mo=
-re, and
-accessing the GPU with DRI_PRIME=3D1 glxinfo just gives a (user) segfault.=
- But I need
-more testruns to see if this behaviour is consistent.
+Thanks for the extra info, I guess the last thing we can verify is, try 
+to run the same VBox setup, using disk images from an EXT4/XFS.
 
->=20
-> Sorry for not being helpful.
->=20
-> Thanks,
->=20
->         tglx
->=20
+And if that still failed, we're sure it's fs independent but more likely 
+VBox dependent.
 
-Thanks you
+Thanks,
+Qu
 
-Bert Karwatzki
+> 
+> Regards,
+> Jollycar
+> 
+> On Monday, January 12th, 2026 at 8:48 PM, Qu Wenruo <wqu@suse.com> wrote:
+> 
+>>
+>>
+>>
+>>
+>> 在 2026/1/13 02:03, jollycar 写道:
+>>
+>>> Qemu/libvirt test results on kernel 6.18.3:
+>>>
+>>> Setup:
+>>> - Virtualization: qemu via libvirt (virt-manager)
+>>> - Disk format: qcow2
+>>> - Disk location: /data/virtual-os/win10-qemu-test.qcow2 (same btrfs subvolume as VirtualBox VMs)
+>>> - COW disabled on disk image (chattr +C)
+>>> - ISO: Same Windows 10 ISO used in VirtualBox tests
+>>> - Guest: Windows 10
+>>>
+>>> Result:
+>>> Windows 10 installation completed successfully without any crashes. Installation proceeded through all phases including multiple reboots and reached the desktop without issues.
+>>>
+>>> Summary of all tests on kernel 6.18.3:
+>>> - VirtualBox 7.2.4: Crashes during installation (all cache/mtype configurations tested)
+>>> - Qemu via libvirt: No crashes, installation completes successfully
+>>>
+>>> Both using the same btrfs filesystem, same subvolume location, same Windows ISO, and COW disabled.
+>>
+>>
+>> Thanks a lot, this looks like there is something wrong related to the
+>> VBox out-of-tree kernel module.
+>> In that case, the btrfs community is not going to help much unfortunately.
+>>
+>> Mind to share how is the out-of-tree kernel module installed?
+>> The pre-compiled one from the distro? The DKMS one or something else?
+>>
+>>
+>> And just some guesses, can VBox specify what type of CPU (and extensions
+>> like SSE/AVX) it uses?
+>> If so (like qemu), mind to check if you can specify some CPU types
+>> without some newer extensions while still meets the minimal CPU
+>> requirement of Windows 10?
+>>
+>> I'm wondering if it's some extension handling not done properly, which
+>> is commonly utilized by checksums.
+>> Thus triggers the checksum mismatch errors inside Windows.
+>>
+>> Thanks,
+>> Qu
+>>
+>>
+>>> On Sunday, January 11th, 2026 at 8:43 PM, Qu Wenruo wqu@suse.com wrote:
+>>>
+>>>> 在 2026/1/11 21:39, jollycar 写道:
+>>>>
+>>>>> Storage configuration details:
+>>>>>
+>>>>> Storage format: VDI (VirtualBox Disk Image)
+>>>>> Storage location: /data/virtual-os/ (btrfs subvolume with COW disabled, verified with lsattr)
+>>>>
+>>>> OK, this means it's not related to the direct IO changes in newer kernels.
+>>>>
+>>>> When COW is disabled, data checksum is also disables, thus direct IO is
+>>>> still doing the true zero-copy behavior.
+>>>>
+>>>> This ruled out the btrfs direct io change, but this means I have no clue
+>>>> what is going wrong at all now.
+>>>>
+>>>>> Controller: IntelAhci (SATA)
+>>>>> Default configuration: hostiocache on, mtype normal
+>>>>>
+>>>>> Cache and media type testing on kernel 6.18.3:
+>>>>> - Default (hostiocache on, mtype normal): BSOD within 1 minute during installation
+>>>>> - mtype writethrough: Gets much further, BSOD occurs on first VM reboot
+>>>>> - hostiocache off (mtype normal): Gets much further, BSOD occurs on first VM reboot
+>>>>>
+>>>>> None of the configurations provide a working solution - they only delay the crash.
+>>>>>
+>>>>> On kernel 6.12.63 with default settings (hostiocache on, mtype normal), Windows installation completes successfully without any crashes.
+>>>>>
+>>>>> I have not yet tested with qemu/libvirt. Should I proceed with that test?
+>>>>
+>>>> Yes please. Libvirt/qemu is a more common solution among developers.
+>>>> If you can reproduce it using libvirt/qemu, more btrfs developers can
+>>>> try to reproduce it and look into it.
+>>>>
+>>>> And if not, the cause may shift towards vbox other than btrfs.
+>>>>
+>>>> Thanks,
+>>>> Qu
+>>>>
+>>>>> On Sunday, January 11th, 2026 at 10:15 AM, Qu Wenruo wqu@suse.com wrote:
+>>>>>
+>>>>>> 在 2026/1/11 20:33, jollycar 写道:
+>>>>>>
+>>>>>>> #regzbot introduced: v6.12..v6.18
+>>>>>>>
+>>>>>>> [1.] One line summary of the problem:
+>>>>>>> VirtualBox VM crashes with BSOD during Windows installation on kernels 6.18+ (works fine on 6.12 LTS)
+>>>>>>>
+>>>>>>> [2.] Full description of the problem:
+>>>>>>> Windows 10 and Windows 11 installation inside VirtualBox consistently crashes with BSOD within 1-3 minutes on Linux kernels 6.18.3 and 6.19-rc3. The same VirtualBox configuration and VM image work perfectly on kernel 6.12 LTS. The BSOD errors vary each time (most recent: 0x80070470 - "file may be corrupt or missing"). The host system remains completely stable with no logged errors.
+>>>>>>>
+>>>>>>> [3] Kernel & Hardware:
+>>>>>>> - Kernel versions tested:
+>>>>>>> * Working: 6.12.63-1
+>>>>>>> * Broken: 6.18.3-2, 6.19.0-rc3-1
+>>>>>>> - Distribution: Manjaro Linux
+>>>>>>> - Architecture: x86_64
+>>>>>>> - VirtualBox: 7.2.4 r170995 (vboxdrv vermagic: 6.18.3-2-MANJARO SMP preempt mod_unload)
+>>>>>>>
+>>>>>>> [4.] Filesystem and storage:
+>>>>>>> - Root filesystem: btrfs on LUKS encryption
+>>>>>>> - Mount options: zstd compression level 3, SSD optimizations, async discard, free space tree
+>>>>>>> - VM storage: separate btrfs subvolume
+>>>>>>
+>>>>>> What's the storage file configuration? Like what's the cache mode setting?
+>>>>>> I don't know VBox at all, but there may be something similar to
+>>>>>> libvirt's cache mode (none/unsafe/writethrough etc).
+>>>>>>
+>>>>>> More importantly, will tweaking the cache mode change fix the broken
+>>>>>> kernels?
+>>>>>> If so it may point to direct IO related behavior changes.
+>>>>>>
+>>>>>> And what's the storage file format? QCOW2? RAW? Or whatever format
+>>>>>> provided by Vbox?
+>>>>>>
+>>>>>> And one final question, have you tried qemu (or libvirt + qemu) and can
+>>>>>> it still be reproduced with qemu?
+>>>>>> As I'm wondering if the direct IO related change will even affects qemu
+>>>>>>
+>>>>>> Thanks,
+>>>>>> Qu
+>>>>>>
+>>>>>>> - btrfs device stats: all zeros (no errors)
+>>>>>>>
+>>>>>>> [5.] Reproduction:
+>>>>>>> - Boot kernel 6.18.3-2 or 6.19.0-rc3
+>>>>>>> - Start VirtualBox 7.2.4 r170995
+>>>>>>> - Create new Windows 10 or Windows 11 VM
+>>>>>>> - Begin OS installation
+>>>>>>> - BSOD occurs within 1-3 minutes with varying errors (latest: 0x80070470)
+>>>>>>> - Issue is 100% reproducible on 6.18+, never occurs on 6.12
+>>>>>>>
+>>>>>>> Additional context:
+>>>>>>> - Host system remains completely stable during VM crashes
+>>>>>>> - No btrfs errors in dmesg or device stats (all zero)
+>>>>>>> - Issue persists across multiple 6.18/6.19 releases over one month
+>>>>>>> - VirtualBox 7.2.4 modules load successfully on all kernel versions
+>>>>>>>
+>>>>>>> Regards,
+>>>>>>> Jollycar
+> 
+
