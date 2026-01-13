@@ -1,209 +1,133 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A00A70830;
-	Tue, 13 Jan 2026 15:24:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D18636BCD1
+	for <regressions@lists.linux.dev>; Tue, 13 Jan 2026 16:04:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768317890; cv=none; b=XdegkTWPinoSs4zuGe3Wp8HwcJjHo6L4MZaD22vdtzqkw0YY8umok1101Z+xwxVBxQLp+Wzk9ygeaFtZT+0hXbrJWGyI570T2Nlu/6uBIV2WtW99kighKwH6ce0b4lTIIOaudjxw6dtQ3kvFcopwXwGILaf2NXwrWitYadXssuw=
+	t=1768320299; cv=none; b=RQrAa5LScnJIPa8d7+lIDmQV9zD2MZGLMDwJfoEAwqzzgvEgkcLZ396jMeoibf3d9X+rtYOpFCAcrM9D/BWWslRGhU9xKh4X7tp8UsiX2apVVrCqEtixSDiIRqPG6L2nmpkG2YWLQ+TsJL3MVHBGxcZMc2xlILGroWcdS9BEjTg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768317890; c=relaxed/simple;
-	bh=taak2UygMZbdacgSedIXzlFkiSjhrP80UZpBg3+A9T4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=uKXTvmE5KTGkqPCVLoOGTPkma+MkZEPTRbdD2om7mf9QskYtaoc0d7f4ICyUmbcgMPwF4/nEgpSpUuR56u4sq8avld39mnCnmW0ZV3XKfB2A7R3m8D9YQh1fepebnWItR0z07A8mVoKv0476oS4Ipa0TETk11QbKO8rX/h4UuBM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AhP/y80K; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1768320299; c=relaxed/simple;
+	bh=rSj+33Ka1A3ryeFu6FTIEAoPeWaVJuhSuOrGIljygMw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EiWBMGYT0/bQF6FoSONP1/l7JncjhZhn0466LrIamagZNJi8BB2KvGc14g7q/fY1lkGPtKyPJPdb8nGBKrLV39ajlSwff3DVc6pMPfmjY9HDspJvEnzHKImNfL2wwqlakfsEFlIz0PPdz03mXNdrDT8UXaRt8ICsaLJPTzwQRng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=PszcNDDp; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AhP/y80K"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22D46C116C6;
-	Tue, 13 Jan 2026 15:24:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768317889;
-	bh=taak2UygMZbdacgSedIXzlFkiSjhrP80UZpBg3+A9T4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=AhP/y80KVpZcmRV1+NMKLTI7A3S3B1azBgUpQ1DJUoaoH/TdnGwIdSpNdf4iOtRl5
-	 VMjPXhRqRohFjpEbWulvcJ9JjRwozK8fucaQwQiM8u0Gja1ik0Q3sTcW/6IIEq+3d5
-	 hHD4PWcpVpfgVDOn0SV7bboOAc09bk7OwyDufmZublxhYqPbm49WVLbdvElM/VF8he
-	 HvtLSZJ2jXKm2fI/o+QkcMPrelVltHLBYAFKn1iSoIrObiMteKseVxFxZCfeELV8Ah
-	 IWAlUHyqaY0szCLSQBji+FnqKNi/kZEfK8gaMPepsMkMAyl1jzdeApqJdvxGLgQf5K
-	 W731h5A9eUm3w==
-From: Thomas Gleixner <tglx@kernel.org>
-To: Bert Karwatzki <spasswolf@web.de>, linux-kernel@vger.kernel.org
-Cc: Bert Karwatzki <spasswolf@web.de>, linux-next@vger.kernel.org, Mario
- Limonciello <mario.limonciello@amd.com>, Sebastian Andrzej Siewior
- <bigeasy@linutronix.de>, Clark Williams <clrkwllms@kernel.org>, Steven
- Rostedt <rostedt@goodmis.org>, Christian =?utf-8?Q?K=C3=B6nig?=
- <christian.koenig@amd.com>,
- regressions@lists.linux.dev, linux-pci@vger.kernel.org,
- linux-acpi@vger.kernel.org, "Rafael J . Wysocki"
- <rafael.j.wysocki@intel.com>, acpica-devel@lists.linux.dev, Robert Moore
- <robert.moore@intel.com>, Saket Dumbre <saket.dumbre@intel.com>, Bjorn
- Helgaas <bhelgaas@google.com>, Clemens Ladisch <clemens@ladisch.de>,
- Jinchao Wang <wangjinchao600@gmail.com>, Yury Norov
- <yury.norov@gmail.com>, Anna Schumaker <anna.schumaker@oracle.com>,
- Baoquan He <bhe@redhat.com>, "Darrick J. Wong" <djwong@kernel.org>, Dave
- Young <dyoung@redhat.com>, Doug Anderson <dianders@chromium.org>,
- "Guilherme G. Piccoli" <gpiccoli@igalia.com>, Helge Deller
- <deller@gmx.de>, Ingo Molnar <mingo@kernel.org>, Jason Gunthorpe
- <jgg@ziepe.ca>, Joanthan Cameron <Jonathan.Cameron@huawei.com>, Joel
- Granados <joel.granados@kernel.org>, John Ogness
- <john.ogness@linutronix.de>, Kees Cook <kees@kernel.org>, Li Huafei
- <lihuafei1@huawei.com>, "Luck, Tony" <tony.luck@intel.com>, Luo Gengkun
- <luogengkun@huaweicloud.com>, Max Kellermann <max.kellermann@ionos.com>,
- Nam Cao <namcao@linutronix.de>, oushixiong <oushixiong@kylinos.cn>, Petr
- Mladek <pmladek@suse.com>, Qianqiang Liu <qianqiang.liu@163.com>, Sergey
- Senozhatsky <senozhatsky@chromium.org>, Sohil Mehta
- <sohil.mehta@intel.com>, Tejun Heo <tj@kernel.org>, Thomas Zimemrmann
- <tzimmermann@suse.de>, Thorsten Blum <thorsten.blum@linux.dev>, Ville
- Syrjala <ville.syrjala@linux.intel.com>, Vivek Goyal <vgoyal@redhat.com>,
- Yicong Yang <yangyicong@hisilicon.com>, Yunhui Cui
- <cuiyunhui@bytedance.com>, Andrew Morton <akpm@linux-foundation.org>,
- W_Armin@gmx.de
-Subject: Re: NMI stack overflow during resume of PCIe bridge with
- CONFIG_HARDLOCKUP_DETECTOR=y
-In-Reply-To: <20260113094129.3357-1-spasswolf@web.de>
-References: <20260113094129.3357-1-spasswolf@web.de>
-Date: Tue, 13 Jan 2026 16:24:46 +0100
-Message-ID: <87h5spk01t.ffs@tglx>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="PszcNDDp"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id A93A440E0194;
+	Tue, 13 Jan 2026 16:04:54 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id Kma9SYS0mRFa; Tue, 13 Jan 2026 16:04:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1768320290; bh=hoRUVOQfoYHp89NAwvgiW4eRZmSu3/ifdhe3eXoxCtQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PszcNDDpZOXGEYdBWzv7Xwp9l3fef+RiWwHvnadceseBpHGTSIKDLEcKnFVPCaQT4
+	 6ry6Mh2VWCylpwEkabul0iGnTu8qtImij12WvK2WvEEWUUzXSPvXFgasfSApXPYz18
+	 GwNnWdCCA2QyJnSpqrhLAduUAtNib8B06X4QVhRzGojHThUgm071ANV2Q8aRQXHFga
+	 2LXDxKSjaANYuvRaosMn6tR59PO7vZdxup2FoXUYjy/eL7KkNRT/mynS6PvSZ5COIH
+	 /cyQih+YubOBAXhSYCxdSXBZZ6PsESmws4xf2H7/iyUzuUNcIEFKJ8UwXEII1EczKK
+	 JEajo9etCqOFIwKmnxQrTGuBlXlpuywehsyBAwsVBjJjYPJjMlqoINos6iD76WkH2w
+	 7SwjFh5EXWnIJw1cUWnyD/BQbV8NA5gwjAzBcTCEtss7LUBhBPNL/7CEKyMdnAvQKK
+	 DQAr00ozLvMPlZjeQlMNW9MapQyhb86CWaIZGrayIHne6zTM0bcEzzFt7JYpksgjGk
+	 FrvGMccOFykNl3CmvZEs/MJYnSNKME4AljTvHYWSCnhCHw3FOIPF6f/AQQ+Pv/ELMO
+	 hjJ0Mz2J+l7gSKvS5sD5S9ZOj98RHiaR+X9nHPQYzIiUD551NsP+eC1NMG2wSpePeO
+	 PxnaHvHCsrYB18xzakn4wCk8=
+Received: from zn.tnic (pd953023b.dip0.t-ipconnect.de [217.83.2.59])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with UTF8SMTPSA id 71BA640E01A9;
+	Tue, 13 Jan 2026 16:04:44 +0000 (UTC)
+Date: Tue, 13 Jan 2026 17:04:36 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Mario Limonciello <mario.limonciello@amd.com>
+Cc: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>,
+	Yazen Ghannam <yazen.ghannam@amd.com>,
+	"maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+	"open list:AMD NODE DRIVER" <linux-kernel@vger.kernel.org>,
+	regressions@lists.linux.dev
+Subject: Re: kernel NULL pointer dereference in
+ quirk_clear_strap_no_soft_reset_dev2_f0 -> amd_smn_read
+Message-ID: <20260113160436.GMaWZtFMWnrjERYYQH@fat_crate.local>
+References: <aWWZb3eRfQdB4OsI@mail-itl>
+ <68d86871-12f2-4de1-81aa-dbc9e12b6f91@amd.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <68d86871-12f2-4de1-81aa-dbc9e12b6f91@amd.com>
 
-On Tue, Jan 13 2026 at 10:41, Bert Karwatzki wrote:
-> Here's the result in case of the crash:
-> 2026-01-12T04:24:36.809904+01:00 T1510;acpi_ex_system_memory_space_handler 255: logical_addr_ptr = ffffc066977b3000
-> 2026-01-12T04:24:36.846170+01:00 C14;exc_nmi: 0
+On Mon, Jan 12, 2026 at 08:47:50PM -0600, Mario Limonciello wrote:
+> Is this perhaps a case that only the USB controller was passed through but
+> that the root controller wasn't?  That would lead to a case that
+> amd_smn_init() was never called and thus amd_roots was not initialized
+> properly.
+> 
+> So it would be a NULL pointer deref.
 
-Here the NMI triggers in non-task context on CPU14
+Yah, looks like a NULL ptr:
 
-> 2026-01-12T04:24:36.960760+01:00 C14;exc_nmi: 10.3
-> 2026-01-12T04:24:36.960760+01:00 C14;default_do_nmi 
-> 2026-01-12T04:24:36.960760+01:00 C14;nmi_handle: type=0x0
-> 2026-01-12T04:24:36.960760+01:00 C14;nmi_handle: a=0xffffffffa1612de0
-> 2026-01-12T04:24:36.960760+01:00 C14;nmi_handle: a->handler=perf_event_nmi_handler+0x0/0xa6
-> 2026-01-12T04:24:36.960760+01:00 C14;perf_event_nmi_handler: 0
-> 2026-01-12T04:24:36.960760+01:00 C14;perf_event_nmi_handler: 1
-> 2026-01-12T04:24:36.960760+01:00 C14;perf_event_nmi_handler: 2
-> 2026-01-12T04:24:36.960760+01:00 C14;x86_pmu_handle_irq: 2
-> 2026-01-12T04:24:36.960760+01:00 C14;x86_pmu_handle_irq: 2.6
-> 2026-01-12T04:24:36.960760+01:00 C14;__perf_event_overflow: 0
-> 2026-01-12T04:24:36.960760+01:00 C14;__perf_event_overflow: 6.99: overflow_handler=watchdog_overflow_callback+0x0/0x10d
-> 2026-01-12T04:24:36.960760+01:00 C14;watchdog_overflow_callback: 0
-> 2026-01-12T04:24:36.960760+01:00 C14;__ktime_get_fast_ns_debug: 0.1
-> 2026-01-12T04:24:36.960760+01:00 C14;tk_clock_read_debug: read=read_hpet+0x0/0xf0
-> 2026-01-12T04:24:36.960760+01:00 C14;read_hpet: 0
-> 2026-01-12T04:24:36.960760+01:00 C14;read_hpet: 0.1
-
-> 2026-01-12T04:24:36.960760+01:00 T0;exc_nmi: 0
-
-This one triggers in task context of PID0, aka idle task, but it's not
-clear on which CPU that happens. It's probably CPU13 as that continues
-with the expected 10.3 output, but that's almost ~1.71 seconds later.
-
-> 2026-01-12T04:24:38.674625+01:00 C13;exc_nmi: 10.3
-> 2026-01-12T04:24:38.674625+01:00 C13;default_do_nmi 
-> 2026-01-12T04:24:38.674625+01:00 C13;nmi_handle: type=0x0
-> 2026-01-12T04:24:38.674625+01:00 C13;nmi_handle: a=0xffffffffa1612de0
-> 2026-01-12T04:24:38.674625+01:00 C13;nmi_handle: a->handler=perf_event_nmi_handler+0x0/0xa6
-> 2026-01-12T04:24:38.674625+01:00 C13;perf_event_nmi_handler: 0
-> 2026-01-12T04:24:38.674625+01:00 C13;perf_event_nmi_handler: 1
-> 2026-01-12T04:24:38.674625+01:00 C13;perf_event_nmi_handler: 2
-> 2026-01-12T04:24:38.674625+01:00 C13;x86_pmu_handle_irq: 2
-> 2026-01-12T04:24:38.674625+01:00 C13;x86_pmu_handle_irq: 2.6
-> 2026-01-12T04:24:38.674625+01:00 C13;__perf_event_overflow: 0
-> 2026-01-12T04:24:38.674625+01:00 C13;__perf_event_overflow: 6.99: overflow_handler=watchdog_overflow_callback+0x0/0x10d
-> 2026-01-12T04:24:38.674625+01:00 C13;watchdog_overflow_callback: 0
-> 2026-01-12T04:24:38.674625+01:00 C13;__ktime_get_fast_ns_debug: 0.1
-> 2026-01-12T04:24:38.674625+01:00 C13;tk_clock_read_debug: read=read_hpet+0x0/0xf0
-> 2026-01-12T04:24:38.674625+01:00 C13;read_hpet: 0
-> 2026-01-12T04:24:38.674625+01:00 C13;read_hpet: 0.1
-
-> 2026-01-12T04:24:38.674625+01:00 T0;exc_nmi: 0
-
-Same picture as above, but this time on CPU2 with a delay of 0.68
-seconds
-
-> 2026-01-12T04:24:39.355101+01:00 C2;exc_nmi: 10.3
-> 2026-01-12T04:24:39.355101+01:00 C2;default_do_nmi 
-> 2026-01-12T04:24:39.355101+01:00 C2;nmi_handle: type=0x0
-> 2026-01-12T04:24:39.355101+01:00 C2;nmi_handle: a=0xffffffffa1612de0
-> 2026-01-12T04:24:39.355101+01:00 C2;nmi_handle: a->handler=perf_event_nmi_handler+0x0/0xa6
-> 2026-01-12T04:24:39.355101+01:00 C2;perf_event_nmi_handler: 0
-> 2026-01-12T04:24:39.355101+01:00 C2;perf_event_nmi_handler: 1
-> 2026-01-12T04:24:39.355101+01:00 C2;perf_event_nmi_handler: 2
-> 2026-01-12T04:24:39.355101+01:00 C2;x86_pmu_handle_irq: 2
-> 2026-01-12T04:24:39.355101+01:00 C2;x86_pmu_handle_irq: 2.6
-> 2026-01-12T04:24:39.355101+01:00 C2;__perf_event_overflow: 0
-> 2026-01-12T04:24:39.355101+01:00 C2;__perf_event_overflow: 6.99: overflow_handler=watchdog_overflow_callback+0x0/0x10d
-> 2026-01-12T04:24:39.355101+01:00 C2;watchdog_overflow_callback: 0
-> 2026-01-12T04:24:39.355101+01:00 C2;__ktime_get_fast_ns_debug: 0.1
-> 2026-01-12T04:24:39.355101+01:00 C2;tk_clock_read_debug: read=read_hpet+0x0/0xf0
-> 2026-01-12T04:24:39.355101+01:00 C2;read_hpet: 0
-> 2026-01-12T04:24:39.355101+01:00 C2;read_hpet: 0.1
-
-> 2026-01-12T04:24:39.355101+01:00 T0;exc_nmi: 0
-
-Again on CPU0 with a delay of 0.06 seconds
-
-> 2026-01-12T04:24:39.410207+01:00 C0;exc_nmi: 10.3
-> 2026-01-12T04:24:39.410207+01:00 C0;default_do_nmi 
-> 2026-01-12T04:24:39.410207+01:00 C0;nmi_handle: type=0x0
-> 2026-01-12T04:24:39.410207+01:00 C0;nmi_handle: a=0xffffffffa1612de0
-> 2026-01-12T04:24:39.410207+01:00 C0;nmi_handle: a->handler=perf_event_nmi_handler+0x0/0xa6
-> 2026-01-12T04:24:39.410207+01:00 C0;perf_event_nmi_handler: 0
-> 2026-01-12T04:24:39.410207+01:00 C0;perf_event_nmi_handler: 1
-> 2026-01-12T04:24:39.410207+01:00 C0;perf_event_nmi_handler: 2
-> 2026-01-12T04:24:39.410207+01:00 C0;x86_pmu_handle_irq: 2
-> 2026-01-12T04:24:39.410207+01:00 C0;x86_pmu_handle_irq: 2.6
-> 2026-01-12T04:24:39.410207+01:00 C0;__perf_event_overflow: 0
-> 2026-01-12T04:24:39.410207+01:00 C0;__perf_event_overflow: 6.99: overflow_handler=watchdog_overflow_callback+0x0/0x10d
-> 2026-01-12T04:24:39.410207+01:00 C0;watchdog_overflow_callback: 0
-> 2026-01-12T04:24:39.410207+01:00 C0;__ktime_get_fast_ns_debug: 0.1
-> 2026-01-12T04:24:39.410207+01:00 C0;tk_clock_read_debug: read=read_hpet+0x0/0xf0
-> 2026-01-12T04:24:39.410207+01:00 C0;read_hpet: 0
-> 2026-01-12T04:24:39.410207+01:00 C0;read_hpet: 0.1
-
-> 2026-01-12T04:24:39.410207+01:00 T0;exc_nmi: 0
-
-....
-
-> In the case of the crash the interrupt handler never returns because when accessing
-> the HPET another NMI is triggered. This goes on until a crash happens, probably because
-> of stack overflow.
-
-No. NMI nesting is only one level deep and immediately returns:
-
-        if (this_cpu_read(nmi_state) != NMI_NOT_RUNNING) {
-		this_cpu_write(nmi_state, NMI_LATCHED);
-		return;
-	}
+   0:   05 bd 44 b8 01          add    $0x1b844bd,%eax
+   5:   66 0f af 05 2d 44 b8    imul   0x1b8442d(%rip),%ax        # 0x1b8443a
+   c:   01 
+   d:   41 57                   push   %r15
+   f:   41 56                   push   %r14
+  11:   41 55                   push   %r13
+  13:   41 54                   push   %r12
+  15:   55                      push   %rbp
+  16:   53                      push   %rbx
 
 
-So it's not a stack overflow. What's more likely is that after a while
-_ALL_ CPUs are hung up in the NMI handler after they tripped over the
-HPET read.
+  17:   66 39 c2                cmp    %ax,%dx
+  1a:   0f 83 c0 00 00 00       jae    0xe0
 
-> The behaviour described here seems to be similar to the bug that commit
-> 3d5f4f15b778 ("watchdog: skip checks when panic is in progress") is fixing, but
-> this is actually a different bug as kernel 6.18 (which contains 3d5f4f15b778)
-> is also affected (I've conducted 5 tests with 6.18 so far and got 4 crashes (crashes occured
-> after (0.5h, 1h, 4.5h, 1.5h) of testing)). 
-> Nevertheless these look similar enough to CC the involved people.
+That's 
 
-There is nothing similar.
+        if (node >= amd_num_nodes())
+                return err;
 
-Your problem originates from a screwed up hardware state which in turn
-causes the HPET to go haywire for unknown reasons.
 
-What is the physical address of this ACPI handler access:
+  20:   48 8b 05 c3 61 d7 02    mov    0x2d761c3(%rip),%rax        # 0x2d761ea
 
-       logical_addr_ptr = ffffc066977b3000
+That's fetching amd_roots. Which is 0, see RAX below.
 
-along with the full output of /proc/iomem
+  27:   0f b7 d2                movzwl %dx,%edx
 
-Thanks,
+Zero-extending the "node" var.
 
-        tglx
+  2a:*  4c 8b 34 d0             mov    (%rax,%rdx,8),%r14               <-- trapping instruction
+
+Get the root ptr.
+
+Boom.
+
+> >      [    0.302571] pci 0000:00:08.0: quirk_usb_early_handoff+0x0/0x180 took 16590 usecs
+> >      [    0.303172] BUG: kernel NULL pointer dereference, address: 0000000000000000
+> >      [    0.303189] #PF: supervisor read access in kernel mode
+> >      [    0.303202] #PF: error_code(0x0000) - not-present page
+> >      [    0.303216] PGD 0 P4D 0
+> >      [    0.303225] Oops: Oops: 0000 [#1] SMP NOPTI
+> >      [    0.303236] CPU: 0 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.17.9-1.qubes.fc41.x86_64 #1 PREEMPT(full)
+> >      [    0.303258] Hardware name: Xen HVM domU, BIOS 4.19.3 08/26/2025
+> >      [    0.303273] RIP: 0010:__amd_smn_rw+0x30/0x100
+> >      [    0.303288] Code: 05 bd 44 b8 01 66 0f af 05 2d 44 b8 01 41 57 41 56 41 55 41 54 55 53 66 39 c2 0f 83 c0 00 00 00 48 8b 05 c3 61 d7 02 0f b7 d2 <4c> 8b 34 d0 4d 85 f6 0f 84 a9 00 00 00 80 3d a4 61 d7 02 00 0f 84
+> >      [    0.303327] RSP: 0018:ffffcdd30001fd68 EFLAGS: 00010297
+> >      [    0.303341] RAX: 0000000000000000 RBX: ffffcdd30001fdb4 RCX: 0000000010136008
+> >      [    0.303359] RDX: 0000000000000000 RSI: 0000000000000064 RDI: 0000000000000060
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
