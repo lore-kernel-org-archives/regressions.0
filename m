@@ -1,38 +1,38 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E730D259C9C;
-	Tue, 13 Jan 2026 14:30:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E15B729E11A;
+	Tue, 13 Jan 2026 14:33:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768314641; cv=none; b=PxUTX6+YXSru76l/w2tWzlBd2xMBEYIRf5IHEvIhy/AjNE/JiOyHaDgnFCMCtRSCPPvmQSRc/8jA8zPfF8iCLGV92x0vdg142ekr7i6LY/sseSKH4mVfWsVexpyWdymqxNXNc8uDhm61JKg3Le4opPQmtQfI6vxyvLD/fPnwbYY=
+	t=1768314836; cv=none; b=K+icW7Kg91ew2INKXfqQjT7Tn/nmUnDAVPBlobtd2aS6dQzcBx5fNfCZEO3xgnvH2sNHPNGdEX0X6rSJ7jz1KA4DsLob8EyohLG91RzchDhIwVKdhhDqeq8jvuXwpZ8jOMgMOGg1yen7DAaUjMbKGGr1iOwzcC0DpUYsnbLM5FU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768314641; c=relaxed/simple;
-	bh=j52PdzIENv2XLxvMWCdJ+c3e62adqHWubgUdVFqyWPM=;
+	s=arc-20240116; t=1768314836; c=relaxed/simple;
+	bh=6E69w48pjYijo87lnVWTVXGwb4idQHlmEHOV8mCxVPY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DGRZOOB674cTVRQ3OImtGybs2zuV1xwO5t5fHgJ3iasGTtrMcyLPSq1L+3vs+ylZmW+sYl007DpzUh76Q3gRSJ5++/FnJ0djEnrKrHOmmJwNQoOHkqqCpnFjCfCKw9K2VZIau29UR+9GhjGvKzQZrwactsBZtDZEX7xaBtUQ/XI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=TNvMx1NT; arc=none smtp.client-ip=80.237.130.52
+	 In-Reply-To:Content-Type; b=GzM9F0RGUU9/Rcf1LTpDB0WRZU0GWHq0ejrhQjyi3nsh2e2LJprMzVuTHe4f8E44uJy+KUHLqCvnBItr57KUSLrxtH/TxImvz/tbupZZMKKzI6RA1ZmoqH0VEC2ivXoWeiv4H78//S8lOWTgMKgYaDtCzirkrFJjKLkVqdO2ies=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=MvqhCKMf; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="TNvMx1NT"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="MvqhCKMf"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
 	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
 	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
 	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=YD/1Io+arbRJx4PEdND+flImAcKUeEptkUACRUXcVZQ=; t=1768314640;
-	x=1768746640; b=TNvMx1NTmx9enK7w7yKUlkcfGm+aKZxymVaHkq73kuyW3DGXupyiQKFOgFouM
-	qHP3nMZGdRPA1KjjCknQeCYurPU0FaXeJ5beSIZf1NMgczDrIk5voDxmWjjV9+AcnVFjrYKu0Z01a
-	Z9TrufNBnzvO+/BYm11zeRzdp/PWlW84jWESsrGaC0EX6IeXG9gm1cDi8bpHavzn500tELBQdC/9e
-	PFiaRJrCFjg8Akdy12SjX+F+g41QN+SM92ta2tnJWFe+CAOrf16lGGwl50XNinc/OtjyIdxLS8blZ
-	nNesz2FEWu8SAvbUZ6L5ApDoP0kOvHo4qLZbsgRdsmaaIERSlA==;
+	References; bh=eKRbO2pc5qRndF/tgMcLLq9NmxhVQprM5Zct/qPxLc8=; t=1768314834;
+	x=1768746834; b=MvqhCKMfVEo3fJ+cEUuvkaQiLlK5yH4uOxdHNB6uo5Dcq7lS6HbIzYAE0qOaJ
+	5UKNMKqQHA/lpRbl7WOCw7cWCToOKvPA3pRO3JsBSwDjCp9UUjDuuUGH3g8gDtwoxxjfwQkEkhclD
+	ghLIhB/sywv7MLeLtqwrw+To8Kgob+JdOB6/zQi2Z4MRe5xIif790OisuEezBRPr6u9H+pOfvH0NH
+	GcOywM54cj6pyy44/ZVs0i24lz+YFMVhqZUlUvqo7KUDePdRIxmqPedBU5R59X9H5SMapiAhDvxzM
+	b/Gv1YTiG1qsIJZmuuGj+QD1+UuhY7P72gDP4DrB4mmHLahuVg==;
 Received: from [2a02:8108:8984:1d00:a0cf:1912:4be:477f]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128)
-	id 1vffPp-008uOy-25;
-	Tue, 13 Jan 2026 15:30:37 +0100
-Message-ID: <acf27b9d-fe11-4650-b525-4a91d1271e25@leemhuis.info>
-Date: Tue, 13 Jan 2026 15:30:37 +0100
+	id 1vffSx-008uj0-2y;
+	Tue, 13 Jan 2026 15:33:51 +0100
+Message-ID: <b891fb8e-4e37-4492-a173-dcbb540f7eed@leemhuis.info>
+Date: Tue, 13 Jan 2026 15:33:51 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -40,14 +40,14 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 02/30] docs: reporting-issues: tweak the reference
- section intro
+Subject: Re: [PATCH v1 03/30] docs: reporting-issues: add conclusion to the
+ step-by-step guide
 To: Jonathan Corbet <corbet@lwn.net>
 Cc: workflows@vger.kernel.org, linux-doc@vger.kernel.org,
  regressions@lists.linux.dev, linux-kernel@vger.kernel.org
 References: <cover.1761481839.git.linux@leemhuis.info>
- <d94aa32d4a1ed5ef9d0f768d05e64987f4a1ae69.1761481839.git.linux@leemhuis.info>
- <87qzuontlj.fsf@trenco.lwn.net>
+ <9a8d7b58f482cf0669bc5028dd0e01301f7f526e.1761481839.git.linux@leemhuis.info>
+ <87ms5cntho.fsf@trenco.lwn.net>
 From: Thorsten Leemhuis <linux@leemhuis.info>
 Content-Language: de-DE, en-US
 Autocrypt: addr=linux@leemhuis.info; keydata=
@@ -93,82 +93,33 @@ Autocrypt: addr=linux@leemhuis.info; keydata=
  8zG721N4hWyyLALtGUKIVWZvBVKQIGQRPtNC7s9NVeLIMqoH7qeDfkf10XL9tvSSDY6KVl1n
  K0gzPCKcBaJ2pA1xd4pQTjf4jAHHM4diztaXqnh4OFsu3HOTAJh1ZtLvYVj5y9GFCq2azqTD
  pPI3FGMkRipwxdKGAO7tJVzM7u+/+83RyUjgAbkkkD1doWIl+iGZ4s/Jxejw1yRH0R5/uTaB MEK4
-In-Reply-To: <87qzuontlj.fsf@trenco.lwn.net>
+In-Reply-To: <87ms5cntho.fsf@trenco.lwn.net>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1768314640;5d949aba;
-X-HE-SMSGID: 1vffPp-008uOy-25
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1768314834;fceca4a9;
+X-HE-SMSGID: 1vffSx-008uj0-2y
 
-On 10/27/25 18:27, Jonathan Corbet wrote:
+On 10/27/25 18:29, Jonathan Corbet wrote:
 > Thorsten Leemhuis <linux@leemhuis.info> writes:
-> 
->> Small improvements to the intro of the reference section.
-> 
-> That's a bit uninformative ... what is the purpose of these
-> improvements?  That information would be especially helpful in a patch
-> that simply replaces that section altogether.
-
-Sorry, yes, of course, changes that to
-
-"""
-Fine tuning to the intro of the reference section:
-
- * Call the step-by-step guide what it is.
- * Reorder the links to the guides on bug reporting to first mention the
-  most modern one.
- * Many small changes to streamline the text and slightly shorten it
-"""
-
->> Signed-off-by: Thorsten Leemhuis <linux@leemhuis.info>
->> ---
->>  .../admin-guide/reporting-issues.rst          | 67 +++++++++----------
->>  1 file changed, 31 insertions(+), 36 deletions(-)
->>
->> diff --git a/Documentation/admin-guide/reporting-issues.rst b/Documentation/admin-guide/reporting-issues.rst
->> index 3bc47afaf85ea0..90b50c27c0d2b6 100644
->> --- a/Documentation/admin-guide/reporting-issues.rst
->> +++ b/Documentation/admin-guide/reporting-issues.rst
->> @@ -244,42 +244,37 @@ The reference section below explains each of these steps in more detail.
-> 
-> [...]
-> 
->> +The step-by-step guide above outlines all the major steps in brief fashion,
->> +which usually covers everything required. But even experienced users will
->> +sometimes wonder how to actually realize some of those steps or why they are
->> +needed; there are also corner cases the guide ignores for readability. That is
->> +what the entries in this reference section are for, which provide additional
->> +information for each of the steps in the detailed guide.
+[...]
+>> +If any of that applies, please take a moment and let the primary author of this
+>> +text, Thorsten Leemhuis <linux@leemhuis.info>, know by email while ideally CCing
+>> +the public Linux docs mailing list <linux-doc@vger.kernel.org>. Such feedback is
+>> +vital to improve this text further, which is in everybody's interest, as it will
+>> +enable more people to master the task described here.
 >> +
->> +A few words of general advice:
->> +
->> +* The Linux kernel developers are well aware that reporting bugs to them is
->> +  more complicated and demanding than in other FLOSS projects. Quite a few
->> +  would love to make it simpler. But that would require convincing a lot of
->> +  developers to change their habits; it, furthermore, would require improvements
->> +  on several technical fronts and people that constantly take care of various
->> +  things. Nobody has stepped up to do or fund that work.
 > 
-> This paragraph ... essentially says "we're making it hard on you because
-> kernel developers can't be bothered to work on GitHub".
+> Consider also soliciting patches to improve it - one can always hope we
+> can bring in some help...
 
-/me looks puzzled
-/me noticed that Jonathan is right
-/me looks puzzled in a different way
+Yeah, valid point, will use this:
 
-> I'm not sure this paragraph is needed at all but, if
-> you're going to keep it, have it at least reflect that the complexity of
-> problem reporting has a lot to do with the complexity of the problem
-> domain rather than developers who are stuck in their habits.
+If any of that applies, please let the developers know by
+sending a short note or a patch to Thorsten Leemhuis
+<linux@leemhuis.info> while ideally CCing the public Linux docs mailing
+list <linux-doc@vger.kernel.org>.
 
-Considered dropping it, but in the end decided that I think it's wort it
-and changed it to:
-
-* The Linux developers are well aware that reporting bugs to them is
-more complicated and demanding than in other FLOSS projects. Some of it
-is because the kernel is different, among others due to its mail-driven
-development process and because it consists mostly of drivers. Some of
-it is because improving things would require work in several technical
-areas and people triaging bugs –– and nobody has stepped up to do or
-fund that work.
+And include a patch in the next submission that updates two other places
+in the docs that use nearly the identical text.
 
 Ciao, Thorsten
