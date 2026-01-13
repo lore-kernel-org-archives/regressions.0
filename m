@@ -1,38 +1,38 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59AE728CF49;
-	Tue, 13 Jan 2026 14:18:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E730D259C9C;
+	Tue, 13 Jan 2026 14:30:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768313929; cv=none; b=XRUmsHOUDmVCYPIVFS7zouP6JWzlvEKxfCVUcZixR+bjKz/07bn7WXGuLE2r7FUpK8ZLktqyFA3misuGt8iPbRqQPQmZcM2nT5ye8SRU01oJFMBcGiVj+dQKaCbXvzgGxQINSZK3COwJXE4anUEtFF9aD5+8Nehv3iE6C5zZs9c=
+	t=1768314641; cv=none; b=PxUTX6+YXSru76l/w2tWzlBd2xMBEYIRf5IHEvIhy/AjNE/JiOyHaDgnFCMCtRSCPPvmQSRc/8jA8zPfF8iCLGV92x0vdg142ekr7i6LY/sseSKH4mVfWsVexpyWdymqxNXNc8uDhm61JKg3Le4opPQmtQfI6vxyvLD/fPnwbYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768313929; c=relaxed/simple;
-	bh=mobEhUGH2r6mkJstpg7ygzBzGIXwjaBmuTXhdl2LIsU=;
+	s=arc-20240116; t=1768314641; c=relaxed/simple;
+	bh=j52PdzIENv2XLxvMWCdJ+c3e62adqHWubgUdVFqyWPM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gCEOcYyFCe7yx69VD6yrA4RxwkcIWYSdKKHtK6Es7LEHXXxaExgh8o6VjZwL00go+KZ6AZuRK04lablPUZBPpeLiQHuIPSKipQlMi1pyKNAPGlHigyrAxtujGTMfax9bFPpYW8qpQjRpKuXAOuMS+UgQqe9bk0Inm1i2o190MAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=ibNUyaKE; arc=none smtp.client-ip=80.237.130.52
+	 In-Reply-To:Content-Type; b=DGRZOOB674cTVRQ3OImtGybs2zuV1xwO5t5fHgJ3iasGTtrMcyLPSq1L+3vs+ylZmW+sYl007DpzUh76Q3gRSJ5++/FnJ0djEnrKrHOmmJwNQoOHkqqCpnFjCfCKw9K2VZIau29UR+9GhjGvKzQZrwactsBZtDZEX7xaBtUQ/XI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=TNvMx1NT; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="ibNUyaKE"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="TNvMx1NT"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
 	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
 	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
 	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=syuVbPUnk2UpXWNXQp7bp8vUkZXcNA+HgfbYjPbu/UE=; t=1768313928;
-	x=1768745928; b=ibNUyaKEi1iQyxcqrWtMp0NCsndleE9PZjmApZicoNdzEt9pQ5Hl92OUaE/qS
-	H6tWmA2UkAyK8LISD0pGLIPyWUDLoDPkVJ8HokJkgmPLnzUuEwvVROLIJ2SmJq3TTJUJwmkrscwrp
-	hD+9G9VCPnDkMNVkG7RW3KkjgTGlk6v82HbHEpyAQ2jRv+IcCJdjoCKgb/KEj/QuE41EWTZey86Ez
-	AVSBT0UpZWbxN7Y88V+UYrXq8zB8nPoTx4BljoRTfzZov7NE7Okhc8NHSPD+hfWplAYzENNIMQkES
-	R/SBK4IrHxu/P6ZNoGyM05IuwTlXOoOsEUKi1AyJyCx4/1KcnA==;
+	References; bh=YD/1Io+arbRJx4PEdND+flImAcKUeEptkUACRUXcVZQ=; t=1768314640;
+	x=1768746640; b=TNvMx1NTmx9enK7w7yKUlkcfGm+aKZxymVaHkq73kuyW3DGXupyiQKFOgFouM
+	qHP3nMZGdRPA1KjjCknQeCYurPU0FaXeJ5beSIZf1NMgczDrIk5voDxmWjjV9+AcnVFjrYKu0Z01a
+	Z9TrufNBnzvO+/BYm11zeRzdp/PWlW84jWESsrGaC0EX6IeXG9gm1cDi8bpHavzn500tELBQdC/9e
+	PFiaRJrCFjg8Akdy12SjX+F+g41QN+SM92ta2tnJWFe+CAOrf16lGGwl50XNinc/OtjyIdxLS8blZ
+	nNesz2FEWu8SAvbUZ6L5ApDoP0kOvHo4qLZbsgRdsmaaIERSlA==;
 Received: from [2a02:8108:8984:1d00:a0cf:1912:4be:477f]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128)
-	id 1vffEK-008t11-2I;
-	Tue, 13 Jan 2026 15:18:44 +0100
-Message-ID: <347e0757-3adb-4f81-a5ad-cd034de08912@leemhuis.info>
-Date: Tue, 13 Jan 2026 15:18:44 +0100
+	id 1vffPp-008uOy-25;
+	Tue, 13 Jan 2026 15:30:37 +0100
+Message-ID: <acf27b9d-fe11-4650-b525-4a91d1271e25@leemhuis.info>
+Date: Tue, 13 Jan 2026 15:30:37 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -40,15 +40,14 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 01/30] docs: reporting-issues: mention text is best
- viewed rendered
+Subject: Re: [PATCH v1 02/30] docs: reporting-issues: tweak the reference
+ section intro
 To: Jonathan Corbet <corbet@lwn.net>
 Cc: workflows@vger.kernel.org, linux-doc@vger.kernel.org,
- regressions@lists.linux.dev, linux-kernel@vger.kernel.org,
- Randy Dunlap <rdunlap@infradead.org>
+ regressions@lists.linux.dev, linux-kernel@vger.kernel.org
 References: <cover.1761481839.git.linux@leemhuis.info>
- <4f7e2de2a2336c52e55cc49dcda627a4e86b8793.1761481839.git.linux@leemhuis.info>
- <87v7k0ntzj.fsf@trenco.lwn.net>
+ <d94aa32d4a1ed5ef9d0f768d05e64987f4a1ae69.1761481839.git.linux@leemhuis.info>
+ <87qzuontlj.fsf@trenco.lwn.net>
 From: Thorsten Leemhuis <linux@leemhuis.info>
 Content-Language: de-DE, en-US
 Autocrypt: addr=linux@leemhuis.info; keydata=
@@ -94,38 +93,82 @@ Autocrypt: addr=linux@leemhuis.info; keydata=
  8zG721N4hWyyLALtGUKIVWZvBVKQIGQRPtNC7s9NVeLIMqoH7qeDfkf10XL9tvSSDY6KVl1n
  K0gzPCKcBaJ2pA1xd4pQTjf4jAHHM4diztaXqnh4OFsu3HOTAJh1ZtLvYVj5y9GFCq2azqTD
  pPI3FGMkRipwxdKGAO7tJVzM7u+/+83RyUjgAbkkkD1doWIl+iGZ4s/Jxejw1yRH0R5/uTaB MEK4
-In-Reply-To: <87v7k0ntzj.fsf@trenco.lwn.net>
+In-Reply-To: <87qzuontlj.fsf@trenco.lwn.net>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1768313928;50223e8b;
-X-HE-SMSGID: 1vffEK-008t11-2I
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1768314640;5d949aba;
+X-HE-SMSGID: 1vffPp-008uOy-25
 
-
-
-On 10/27/25 18:18, Jonathan Corbet wrote:
+On 10/27/25 18:27, Jonathan Corbet wrote:
 > Thorsten Leemhuis <linux@leemhuis.info> writes:
 > 
->> Add a comment before the step-by-step guide explaining that the document
->> is best viewed in the rendered form, as there the internal links will
->> work that later patches will add.
->>
->> While at it change the double quotes in the license hint at the end of
->> the document into single quotes, which is the preferred style.
+>> Small improvements to the intro of the reference section.
 > 
-> That is the classic marker of an independent change, of course.
+> That's a bit uninformative ... what is the purpose of these
+> improvements?  That information would be especially helpful in a patch
+> that simply replaces that section altogether.
 
-Yeah, I tried to not split things up too much. But that doesn't matter
-now anyway:
+Sorry, yes, of course, changes that to
 
->  But
-> more significantly ... "preferred" by who?  Double quotes are the normal
-> English style that folks like me learned many years ago...
+"""
+Fine tuning to the intro of the reference section:
 
-I removed those changes after that comment and Randy's NAK; I think I
-miss-interpreted or miss-remembered a comment in a review a while ago.
+ * Call the step-by-step guide what it is.
+ * Reorder the links to the guides on bug reporting to first mention the
+  most modern one.
+ * Many small changes to streamline the text and slightly shorten it
+"""
 
-> Otherwise seems OK.
+>> Signed-off-by: Thorsten Leemhuis <linux@leemhuis.info>
+>> ---
+>>  .../admin-guide/reporting-issues.rst          | 67 +++++++++----------
+>>  1 file changed, 31 insertions(+), 36 deletions(-)
+>>
+>> diff --git a/Documentation/admin-guide/reporting-issues.rst b/Documentation/admin-guide/reporting-issues.rst
+>> index 3bc47afaf85ea0..90b50c27c0d2b6 100644
+>> --- a/Documentation/admin-guide/reporting-issues.rst
+>> +++ b/Documentation/admin-guide/reporting-issues.rst
+>> @@ -244,42 +244,37 @@ The reference section below explains each of these steps in more detail.
+> 
+> [...]
+> 
+>> +The step-by-step guide above outlines all the major steps in brief fashion,
+>> +which usually covers everything required. But even experienced users will
+>> +sometimes wonder how to actually realize some of those steps or why they are
+>> +needed; there are also corner cases the guide ignores for readability. That is
+>> +what the entries in this reference section are for, which provide additional
+>> +information for each of the steps in the detailed guide.
+>> +
+>> +A few words of general advice:
+>> +
+>> +* The Linux kernel developers are well aware that reporting bugs to them is
+>> +  more complicated and demanding than in other FLOSS projects. Quite a few
+>> +  would love to make it simpler. But that would require convincing a lot of
+>> +  developers to change their habits; it, furthermore, would require improvements
+>> +  on several technical fronts and people that constantly take care of various
+>> +  things. Nobody has stepped up to do or fund that work.
+> 
+> This paragraph ... essentially says "we're making it hard on you because
+> kernel developers can't be bothered to work on GitHub".
 
-Thx!
+/me looks puzzled
+/me noticed that Jonathan is right
+/me looks puzzled in a different way
+
+> I'm not sure this paragraph is needed at all but, if
+> you're going to keep it, have it at least reflect that the complexity of
+> problem reporting has a lot to do with the complexity of the problem
+> domain rather than developers who are stuck in their habits.
+
+Considered dropping it, but in the end decided that I think it's wort it
+and changed it to:
+
+* The Linux developers are well aware that reporting bugs to them is
+more complicated and demanding than in other FLOSS projects. Some of it
+is because the kernel is different, among others due to its mail-driven
+development process and because it consists mostly of drivers. Some of
+it is because improving things would require work in several technical
+areas and people triaging bugs –– and nobody has stepped up to do or
+fund that work.
 
 Ciao, Thorsten
