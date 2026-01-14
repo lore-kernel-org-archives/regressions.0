@@ -1,115 +1,75 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03A061BC08F
-	for <regressions@lists.linux.dev>; Wed, 14 Jan 2026 03:03:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EAC217BED0;
+	Wed, 14 Jan 2026 04:55:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768359807; cv=none; b=aJq20ng8mXKpW/xmdemPRRtuB1XiglY0/l89ditBzU7fs4/sAR320kRz5xGj6xETjnMC2TjxkzKehDPtWtUtxLRu4Mb/3aKZpOtcgG3MgWcJAJUuSFppcQuie5XeM+z+OB0QIwpyT2nyeLIwnOVVMQXC5AwnbSp/BC8x2c0zWJw=
+	t=1768366540; cv=none; b=BI/mvxb/xHV31Maid++XxEx/Qyob1Frg1vWTlUC3ZdVBaB5heCvKCqUAj+RYHxcV61MP4RB8swWE6AlRVkj/cOTkZPKR6JQ0LtyKgAw3RUJH8bN8gm99dJ00RroaOgF+1gUXi0NJT9pdwIUaB10qTwZ7nvILIBEPU0qCmpjSOVA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768359807; c=relaxed/simple;
-	bh=/86G10alNluaILsBZIVi2R5tCLcoFOd0FRhcRELVDLM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pYB3g9XjALj44GlK8PYMEcg0mTkVMw09xSYSt2Nu4VSIAH+trV3i5T6HbuCMibrV/GG9xx3uefEldQ4BNZRiC4Ly8WBpnGhZWFom6yylqFNtx5KzFtwVgsyg8J/OGJ/Z0yWITxe2LoBqYYOlh+RJ41r70UUV2hdHZnlss4+peEM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=itRto4SR; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1768366540; c=relaxed/simple;
+	bh=6bNoNhfGSawoIKXS0GSRGO73y2CDDuS0JxbIvtmRn4Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RU2j6pmjonYU0ff8yar+z10oYTqHYYtNHCNW2Rfj24NO8EaPQGfj7UP5ft4yUQkEZd+SDkuRE2UhQ9MKM8jqXw4/x9y9+/i9qE+Bhz2ZAck7+6aCShcUfxt3XUkJdnANtz2iRuHTdUF6KwfEvJBwa4cfVpztmSco7XOT/p4+66A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=UNu7wGro; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="itRto4SR"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2a0c20ee83dso73052855ad.2
-        for <regressions@lists.linux.dev>; Tue, 13 Jan 2026 19:03:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1768359805; x=1768964605; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=/86G10alNluaILsBZIVi2R5tCLcoFOd0FRhcRELVDLM=;
-        b=itRto4SRPBMtIzaWE+D8DN0NUHPaspBE3E9xfyN60iP2r/373PEg6uC8l39td1mIuc
-         E0kSlThIC/uxADWNfFycBOUsejc4kIJjcFzuHe2l+895TZUjBeYEW/G3CHSqpZodB2vD
-         MvO74vdtnPJr+GQv8lXIffoBM6YusglsSAE10eGbs26JIgYjgHh92ku2uhy268fQhI2/
-         w+6DF12mmjBauAhgEEGdlk+TaQyWY3lOw83kfZ2ZNBnB/D5nnakKxNFuCOwNvhFKLP8w
-         xWz7ZKWlxCsYSKUZfifIZyu7uwIGlX3ysDHHRH+41qyEls81BCLkbauDoEWhnsoraRvx
-         wrTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768359805; x=1768964605;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/86G10alNluaILsBZIVi2R5tCLcoFOd0FRhcRELVDLM=;
-        b=Cu7tyDZ7oPgD7lC0CIw2TZsogulFG0bvnDoXKVahXzaE0qFbUP3/p0KdtyE5LAtfl+
-         TMF8csH52OSjteC5zIrUAphMA9xOtGH9aOYeUzRvwYXsPi9nLcdMMRjJ1Bt4kXAzd4IG
-         XxjBdkRAoLLlabyv59WFU90a+dE+/fv5qncYFYmHqF+wP0CoDur2/x0gD6mh6bmIeu3H
-         MszHZwkQLtNFAd8iiM5GzASVRbyTiR8CbrmKm+LXX6GCfaNOIMZjjKhYHpD0XHKqiGPC
-         kWZWZ7OWeTdqTaV5BW4x4fgn6zjvU3ddUgcLzZ462bvtgH75o5gKULHOIqM7RYLcPujk
-         YN8A==
-X-Forwarded-Encrypted: i=1; AJvYcCUIJFojkbpI4uM+xv1StwKcaLhYIBY31Y/Ov3g+En0qYY+7sc/DgUiFZVNmGK12GMO//XQjMeE8kHIgOg==@lists.linux.dev
-X-Gm-Message-State: AOJu0YyVZ31JZRILzQSdzu53cPyw9UE3SYl+fHfRtpnZGUw+fBVK4lsm
-	GlFztNCYFfUQaqx0ew3ZDbUo4d2hpomaCXzk1bzSdPEir9Eg1trRPooA
-X-Gm-Gg: AY/fxX6XgE8IWc99RJuDNCTHSq+EOtZGReFxIiekT7aU4bg12sBsw4rWpTU/2oDysgU
-	KEGGBeyNaoVSKBLIz0uJqTdZlAXlVIqxkHEKZFkolcundiVEV6Y00/Ew6AfkTbhRU9QWjeduF4N
-	8005IdT8bUsK4rphhTM3SU8UC3rznAmvH/i4fNGR0Nacai4Q0/6H2nXtmFCdI8o+F10+TR5jNoJ
-	tWfEKTtH5N97wW8WsU1XctvN9fHBVAArPtPmjtaUScVDoL9nlq+xyTJZRYlNJG5MNACGtWJa7zv
-	HX2qvQkmjDIncD7MUExSSQ/JcfiIZ+7jTWuHElW5bwBgm2DjV6oLpWoulRc7PyfxvMHsw4X3Ytj
-	L7iPcP2cU5LW5HY54hB0lKnYx9p6k02MO7Tizm/lm2XHGEMGMCC8FHRwONo18gXyRKhoUbxQsB4
-	0RI6X33gg=
-X-Received: by 2002:a17:903:11c4:b0:2a0:9835:c162 with SMTP id d9443c01a7336-2a59bb75480mr5784705ad.22.1768359805240;
-        Tue, 13 Jan 2026 19:03:25 -0800 (PST)
-Received: from archie.me ([210.87.74.117])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2a3e3cb2f8asm215237495ad.57.2026.01.13.19.03.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Jan 2026 19:03:23 -0800 (PST)
-Received: by archie.me (Postfix, from userid 1000)
-	id 4B6D242BEE9B; Wed, 14 Jan 2026 10:03:21 +0700 (WIB)
-Date: Wed, 14 Jan 2026 10:03:20 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Randy Dunlap <rdunlap@infradead.org>, Jonathan Corbet <corbet@lwn.net>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Documentation <linux-doc@vger.kernel.org>,
-	Linux Regressions <regressions@lists.linux.dev>
-Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: Re: [REGRESSION] Unexpected section title false positive warnings on
- DOC: directive
-Message-ID: <aWcHeGPUfS6nE2sC@archie.me>
-References: <aUuLHzk5jdyBAxD7@archie.me>
- <87ikdecsj0.fsf@trenco.lwn.net>
- <aV5a6PCVrkRHwqt3@archie.me>
- <966fffa3-a91b-425e-b915-891299832e36@infradead.org>
- <aV7wTFqQQkGf4efF@archie.me>
- <863b3969-71eb-4bf1-9e32-895e53d8bf8e@infradead.org>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UNu7wGro"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=qu6FVIzdAduCducxkqgiM7xxeKYjyI46yVkhQYKvzVk=; b=UNu7wGroxpAGSENIcX7Qjab27w
+	qC+kDF8lWCs/xdzaEtQYkj1gMqX+74ICvCeqDyZ4jJDF32u/XB5szyP1+5IYs6Ejq0gjmcNJkLtwX
+	hCl+vzpKxtDnG80fNwnXIBpNOZyG8pgXcgcqmOEL9934N7GVJEfp8SkglWq+1QO2ziHQw2mUcV9Jz
+	MlCqzhWdFkeu697572EJnL3tuftJ4ZtHFq/8zad0JNXGNDV/9/esM+QJf3nV5nn9Cn+nYollhDafY
+	nYZVGPJJnPWoawvQVNKUEfqw6vjeZ739+VZw/v0XPyVjd3KsinxtiaNVaHTGOZ1zKwe6Aa0nCphAf
+	kMSzbKZg==;
+Received: from [50.53.43.113] (helo=[192.168.254.34])
+	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vfsug-000000084St-1dj1;
+	Wed, 14 Jan 2026 04:55:22 +0000
+Message-ID: <d82c0b7a-b568-4085-b1a8-0eb21bacdd79@infradead.org>
+Date: Tue, 13 Jan 2026 20:55:21 -0800
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="2vKEEDcQdj8x5oXs"
-Content-Disposition: inline
-In-Reply-To: <863b3969-71eb-4bf1-9e32-895e53d8bf8e@infradead.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] Unexpected section title false positive warnings on
+ DOC: directive
+To: Bagas Sanjaya <bagasdotme@gmail.com>, Jonathan Corbet <corbet@lwn.net>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Documentation <linux-doc@vger.kernel.org>,
+ Linux Regressions <regressions@lists.linux.dev>
+Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+References: <aUuLHzk5jdyBAxD7@archie.me> <87ikdecsj0.fsf@trenco.lwn.net>
+ <aV5a6PCVrkRHwqt3@archie.me>
+ <966fffa3-a91b-425e-b915-891299832e36@infradead.org>
+ <aV7wTFqQQkGf4efF@archie.me>
+ <863b3969-71eb-4bf1-9e32-895e53d8bf8e@infradead.org>
+ <aWcHeGPUfS6nE2sC@archie.me>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <aWcHeGPUfS6nE2sC@archie.me>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
---2vKEEDcQdj8x5oXs
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jan 07, 2026 at 04:21:40PM -0800, Randy Dunlap wrote:
-> I'm using docutils-3.13 (Docutils 0.22.3, Python 3.13.11, on linux)
-> and I don't see these warnings.
+On 1/13/26 7:03 PM, Bagas Sanjaya wrote:
+> On Wed, Jan 07, 2026 at 04:21:40PM -0800, Randy Dunlap wrote:
+>> I'm using docutils-3.13 (Docutils 0.22.3, Python 3.13.11, on linux)
+>> and I don't see these warnings.
+> 
+> What Sphinx version? Mine is 9.1.0.
+> 
 
-What Sphinx version? Mine is 9.1.0.
+I'm using 8.2.3.
 
---=20
-An old man doll... just what I always wanted! - Clara
+-- 
+~Randy
 
---2vKEEDcQdj8x5oXs
-Content-Type: application/pgp-signature; name=signature.asc
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaWcHdAAKCRD2uYlJVVFO
-oyhDAQDcGjOTWaDOU8Vur6ZivEcg/g6GixiW14r6sgwKCmBrAgD8Dinx9IblwjYP
-PvVnp9Rn+sIEUl/Rae7KeIA5jA48CgM=
-=h6Tb
------END PGP SIGNATURE-----
-
---2vKEEDcQdj8x5oXs--
