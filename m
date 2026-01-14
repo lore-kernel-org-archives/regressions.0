@@ -1,77 +1,84 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0962139447C
-	for <regressions@lists.linux.dev>; Wed, 14 Jan 2026 13:42:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 813B52DC328;
+	Wed, 14 Jan 2026 14:17:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768398164; cv=none; b=qcGHWhbo67PXXlXi3f/CNXDGNQFOH4pJoRNXhIFePO3YhHG9ffpQx7Lmng6U7hPCXxGF3wXTdDS0V9p+6z6h2rd1moajwiFh3GPDGw6fT3Tb5OBEqqzXkFlr6CNqL33Kkx3Soist4Bu35mO9jJjZVb21pJ8xBpUZDhmNKyDwxT8=
+	t=1768400270; cv=none; b=NytnAxEGxPJ4a9kO5hxX4I+aXRAWlGZies6JWw/ZNq6AF3PT1oSV34jEOcuRe/X3L4B9B84jBpEnVWgWUrY5/VNyor7U5zRhTT/JZEMDw31MYsnHRjCK6uWmyaXFxLyN/xdkG0B6BI/oc+00NNdZ8aH8REDzJxuRS/o/qOjpWU0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768398164; c=relaxed/simple;
-	bh=C+v31SsN02yi3dOjN77T4qf5EOA0MypYLCHSo54qSGU=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:References:
-	 In-Reply-To:Content-Type; b=KmGXyOLIZNrzcWqkUxB9lxw2l6o+iZ2dZJ7c9NtrxnsBqX2n1P8PTIUUfLBROwhAbUWiExPoG3X9r+gzIeu+gzRX+o8rRpdMvYq2UyKewC8ZPg/3TkRUD28FFirrQvjVxBbuQC9PNKDZ+xRuRKtr6EaUEyZ/2N/otu8o89GVYI0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=U4S+7BVJ; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1768400270; c=relaxed/simple;
+	bh=FhhEG9/ujbm4GR2q9EIOwLbYrd9vR9jJMCVNgoKqQ98=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Oe9mAqZEX2YjuusnFgm/LARgWSumpr3DzSwnV6NxoXMAECAwgWZNNNCDXlGYIwtPG12wFoklsle6bxJ1rAq1EN9N3fB8Y80MojU/TLqxo3aJWWaMYsbrCu4kwxYu6F6iPmrtlry9HA/GUTiye0uRcTHziEbWhWysmxw2AaobHH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eIMveaD2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="U4S+7BVJ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:References:To:Subject:From:MIME-Version:Date:Message-ID:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=C+v31SsN02yi3dOjN77T4qf5EOA0MypYLCHSo54qSGU=; t=1768398163;
-	x=1768830163; b=U4S+7BVJ4yt84TWY8r6SBZveek4u8IJ04YEsosPoiVQuNs1gCEcGomCJg+l+r
-	UTZF0R95Lk81/rNV9MKov2h6z4Ax+Xa1SZVzXYlLBUIXKJAs6Tvg5M7BEBbD7UPD3dv4JW9JR1b3N
-	jLocytewIGiwoCTW0IcyJInMzVWyP6CqjDRQafoOP5n+cj7gBoxLZxphtXi+fQE1+ad/X95bkY7Cd
-	yaZkQOBxUXqSco875CEHv4KmjwBP3oua4ECCCKS79FMEzxLjSTeUnBj+dAPnxtBk1Bt8wYHOskvqr
-	+XNZ3EmjK1pAsPnhL6BqEQfBNA96Y0KuVwEEi1eWsOjLc4v5Qw==;
-Received: from [2a02:8108:8984:1d00:a0cf:1912:4be:477f]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128)
-	id 1vg18y-00C4xk-2U;
-	Wed, 14 Jan 2026 14:42:40 +0100
-Message-ID: <85254a5f-96f5-4d28-b127-7b2e461bc355@leemhuis.info>
-Date: Wed, 14 Jan 2026 14:42:40 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eIMveaD2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93A4FC16AAE;
+	Wed, 14 Jan 2026 14:17:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768400270;
+	bh=FhhEG9/ujbm4GR2q9EIOwLbYrd9vR9jJMCVNgoKqQ98=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=eIMveaD2pXO28a6VXVUq4Q8/L00siyXZJfN1GANwUX9+iOK/cLA1N5e8X5lpjpTAS
+	 xtJ/0N3W9b11v8tEaLSbderGSWVxBEf4nzP0ksdAcRmAnX9go2O+QFyJcB8ljSe9kW
+	 bTyxJIlTuIsOCj7Rv+54bPBla+/0IOeNAMjNaLRYWL1hn2XddI0045L988bF7eMZLP
+	 DwkoZsiu/F4kgOrj0rChgpSV9YnxlCauija0NxrRREzlDkT5U+VeesD0Tlr/C5xAqP
+	 qaQw5FaJiU6Y33zAGWYvQ5EsIps8LGamwDxcAncSMhFKkKHxDiaEVcLetma7SM7Jsh
+	 0TriW904aCRIA==
+Date: Wed, 14 Jan 2026 15:17:41 +0100
+From: Niklas Cassel <cassel@kernel.org>
+To: Salvatore Bonaccorso <carnil@debian.org>
+Cc: Damien Le Moal <dlemoal@kernel.org>,
+	"Martin K . Petersen" <martin.petersen@oracle.com>,
+	Christoph Hellwig <hch@lst.de>,
+	John Garry <john.g.garry@oracle.com>,
+	Johannes Thumshirn <johannes.thumshirn@wdc.com>,
+	Hannes Reinecke <hare@suse.de>, Jens Axboe <axboe@kernel.dk>,
+	linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org,
+	1120831@bugs.debian.org, snow.wolf.29@proton.me,
+	stable@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: [regression] failed command: READ FPDMA QUEUED after boot for
+ INTEL SSDSC2KG480G8, XCV10120 after 9b8b84879d4a ("block: Increase
+ BLK_DEF_MAX_SECTORS_CAP")
+Message-ID: <aWelaQYNJyulLBVc@ryzen>
+References: <176839089913.2398366.61500945766820256@eldamar.lan>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1768398163;63fa9953;
-X-HE-SMSGID: 1vg18y-00C4xk-2U
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <176839089913.2398366.61500945766820256@eldamar.lan>
+
+Hello Salvatore,
+
+On Wed, Jan 14, 2026 at 12:47:45PM +0100, Salvatore Bonaccorso wrote:
+> A user reported a regression affecting his devices after 9b8b84879d4a
+> ("block: Increase BLK_DEF_MAX_SECTORS_CAP") which maybe needs a
+> similar quirk like 2e9832713631 ("ata: libata-core: Quirk DELLBOSS VD
+> max_sectors").
+
+The drive:
+> Dec 10 18:56:03 kernel: ata1.00: Model 'INTEL SSDSC2KG480G8', rev 'XCV10120', applying quirks: zeroaftertrim
+> Dec 10 18:56:03 kernel: ata1.00: ATA-10: INTEL SSDSC2KG480G8, XCV10120, max UDMA/133
+
+The SATA controller:
+00:17.0 SATA controller [0106]: Intel Corporation Cannon Lake Mobile PCH SATA AHCI Controller [8086:a353] (rev 10) (prog-if 01 [AHCI 1.0])
+	DeviceName: Onboard - SATA
+	Subsystem: Dell Device [1028:0924]
 
 
+Perhaps the user could run:
+https://github.com/floatious/max-sectors-quirk/blob/master/find-max-sectors.sh
 
-On 3/9/24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
-
-#regzbot report:
-https://lore.kernel.org/all/7d4ac21f-491f-4f0a-bc50-7601cd1140ca@leemhuis.info/
-#regzbot introduced: c9ba789dad15
-#regzbot fix: cab01237512230
-
-#regzbot report:
-https://lore.kernel.org/lkml/4ece65a62bac434de260896d208fcd9067185b4c.camel@sarinay.com/
-#regzbot dup:
-https://lore.kernel.org/lkml/20251209132103.3736761-1-michael.thalmeier@hale.at/
-#regzbot fix: net: nfc: nci: Fix parameter validation for packet data
-#regzbot monitor:
-https://lore.kernel.org/all/20260112124819.171028-1-michael.thalmeier@hale.at/
+So we could find which max sectors value we should quirk the device with,
+since while the drive obviously chokes on a command of size 4 MiB / 8192
+sectors, it might be able to handle something larger than 1280 KiB / 2560
+sectors.
 
 
-
+Kind regard,
+Niklas
