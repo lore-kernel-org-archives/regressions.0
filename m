@@ -1,128 +1,285 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-106101.protonmail.ch (mail-106101.protonmail.ch [79.135.106.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73DFC273D81
-	for <regressions@lists.linux.dev>; Thu, 15 Jan 2026 07:33:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E4E92C08AB
+	for <regressions@lists.linux.dev>; Thu, 15 Jan 2026 21:12:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768462397; cv=none; b=KVgrNUVkW8alSSvyEX8ADYkdjFWP7yApKDAZkbU5r7NbRap4zPyQGrV9oiZrPycLlcE0UO4q6SC3B0q1Zd7/dyQV9qnLGjZ357WIM/DbZImjAxkdMli6PfMxEhvtll32uD1GjLFN/43e58ey/mHHpK3DNC/sIVMhX7fmLi2mrBg=
+	t=1768511552; cv=none; b=uWZDxcjFxQp5SohQHj0GQ9J3+vC4Ca104LWL6y2dUr4CIyxgHRM9uLZ5sCOYYWnaC73CZFLos8LtBjikTqIbHT6ka2IElvHj8bLTRGSnybKpLnOLVCgLa+IIfRGdyctFIAPQEIjmkFdvzedarOykrJB2MizzuDmKhWfAnVLHr18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768462397; c=relaxed/simple;
-	bh=zZ9nZeKleRhO1OpqtxMMsikzalzUBACMmA41lHCi1Ec=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dg5kyQ9PeblUsLRZ6Z2NBrblZaX/0pVd7ffGdNLI1SgTZhVodVxRjwGgR5hbRPLAcrcessNuk4HplGItiWvvEbPM1KVk1gPAwKCgGTU+J5JkihPJs9snMaOU1XuYrhuUTKwZoufbVNTH28yYRMigpdT88J+JTJTbM+vL0K1cDJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=KzTKLcLf; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1768511552; c=relaxed/simple;
+	bh=gxVB9VK7JuTCkZWV7fjG76pSGm5Aw0wUvqebF3/fm6o=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=gVuhz1ZbRv5tAkY7xg65y/SY34WLnzGDelEZucBTfQ9f7Ms+Fo7eKQlw/Zfw22hfy80E9Oa+eL5RRZwNE3Q2xR4Y2MW2A6sf2Ii9YXiYW92NFQYidrrUs4OG8tVoNlsupm3PMHi18ZwG2Pxn4zmrT9pFSMNtkQsCQn3IzcgKaz4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=BnxneM77; arc=none smtp.client-ip=79.135.106.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KzTKLcLf"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-59b685d2b79so589622e87.3
-        for <regressions@lists.linux.dev>; Wed, 14 Jan 2026 23:33:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1768462393; x=1769067193; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=foTicU0G5xwJc7vFiv3smWvaGv8Ym4yg/e6HWX0Af+I=;
-        b=KzTKLcLffVhZKDmO986S9gn+b5oA1EBaVsFXyvFsvlsNgZ9h14ItvPMsTjflrTjakS
-         xv93QkSgbaecrxNQKwkNl5Yo7KyQjV9y8pwdK94yqD9aqHAY+h2WSBKPRE0MStGcwQjk
-         iZ7Mkq1WvZ/m8ufFo85f9MwTSA98/T/E72LEs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768462393; x=1769067193;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=foTicU0G5xwJc7vFiv3smWvaGv8Ym4yg/e6HWX0Af+I=;
-        b=UmV75BtBUuv/8BixmL6L9OLRZ48OV35RPrU5qhXIVA3Sexc+Pc9Onp5JybKYHn00N/
-         kAz69he16EoeurT1t4tut3pBgOKSsDueJ17AamvYfWxjr1KRkXl3MI/dW4pNfi0nBEBP
-         PGweDR/TGprLGLrNGzHvJfKZTile5Qtowzuf2NHTSH6XU/OG/JQH+g0M4tjEBy78hv3x
-         P6j38U3rUfj5JqO5K0Y1xwiqbOMeUHXer8iBLBm5cR3X2FO+6KvqkIDoR95+t96VvffY
-         TS2bKUNVIQNU2w7wbhwmI/lcHJtrMF4Rc1Bg6Krla+FOrn/13wxjQDGYbBoQz6Zl1QsP
-         xSRg==
-X-Forwarded-Encrypted: i=1; AJvYcCVqcPaKbqQuReh8/YeizzEu+Ln8JotQMFKzrZ6WhRxOODC4VV+zDUvZPkmDfjVa6+10feSeGBnyHHaXjg==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxKFfgvqoqb0OHYUhO1vGXF6NxHP5Iq+gbDolsR5iqPdXygwbnq
-	7rzn5B5kjJSSviMBdE7Bb4SaU9FG0L1i39KTT0vrQKpYZxn2ZJwhQzGE5DzgnrLhAKVrbs7Bi1C
-	nPOJj+A==
-X-Gm-Gg: AY/fxX6CjwVhQsDFlvekVlhwmdi63tq/6GFWVKss8TDmRFrJNYigw5GQEpatP66UhWq
-	PQHyGuE06gc+pvOvxud1/YwQ10zsA15gsAxyOwxSb9U9Li+D/y808FqBOS28EaZbPQ4KW+ft9HF
-	Hcrdy4cXoF09NXbWsS00MhfzDX05pMDyy5lGjXrdxwvaUtRnd5+AfHp7KhGNJjU3TwPwdIVzv8k
-	I23QzvoU3uxrZokGaEXnM96bU7soG4+TtExJAzpWoW0BJ8NHGoZq9X+ApfXOXAnuKTNw9hX2ERF
-	C8HFdYJcCctB8CVI5Q5lWqQSkuM+LB27Lq0niAbTm98ODm6bQOvOl2XWmdo3bsEEeo4GOBv/SZ0
-	GaNdHx0/AvDRuhDkVLn1u6b79z/UONg2I9YpnpysXfw5bnGr221WPFlBOkJnZEyTPH/oGsuOqkz
-	YkNA/lv1OgU1dKWqy1LUOFqcdkl6sn1T34yYHaxtmg3Uruwt84
-X-Received: by 2002:a05:6512:10ca:b0:59b:70ff:200b with SMTP id 2adb3069b0e04-59ba0fa7606mr1574669e87.53.1768462392973;
-        Wed, 14 Jan 2026 23:33:12 -0800 (PST)
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com. [209.85.167.42])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-59ba10412fasm1447060e87.58.2026.01.14.23.33.11
-        for <regressions@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 14 Jan 2026 23:33:11 -0800 (PST)
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-59b685d2b79so589599e87.3
-        for <regressions@lists.linux.dev>; Wed, 14 Jan 2026 23:33:11 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVIqy1iTu6v3IDS89Yh2l5EAaasnCFQNONHLxhPKN33LVygphgjImCMwj0wTTkgolji9DQnegU/Hq9+uw==@lists.linux.dev
-X-Received: by 2002:a05:6512:3a8b:b0:59b:9acd:5e7b with SMTP id
- 2adb3069b0e04-59ba0f76889mr1697650e87.12.1768462391007; Wed, 14 Jan 2026
- 23:33:11 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="BnxneM77"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1768511541; x=1768770741;
+	bh=gxVB9VK7JuTCkZWV7fjG76pSGm5Aw0wUvqebF3/fm6o=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=BnxneM77zTrEOVzH41hKUigphV51shCjN3OFaUUKZ62DgbzwbBIeGG1V9q42v15l4
+	 3aYwD4hyeEd/4kjc0kRFy3naCr6lXzDTIQdmyjIPv8CuwCNvD4SKVluOVDAkr/0AHh
+	 mf3qY4jBXkruvYzsuyYZ6bfp+/G0SAVEdEG+NxIqKve3Fd5ymkOo8hU1542JPZUk06
+	 ID1RaeWi9t4z6rlY4wM8iA116gFj8TShlD6rMDk83ttTlLeLUbS+W8dgxe4XThBa1K
+	 tm8nEjDdsT5YMxW6doRglUW/SBaeY9N2xSp1W7ubnyx5xb/8VBz18mYEcGJCIqJcbz
+	 zW74j2qTYyAMg==
+Date: Thu, 15 Jan 2026 21:12:17 +0000
+To: Qu Wenruo <wqu@suse.com>
+From: jollycar <jollycar@proton.me>
+Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>, "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [REGRESSION] VirtualBox VM crashes (BSOD) during Windows installation on btrfs with kernels 6.18+ (works on 6.12 LTS)
+Message-ID: <X0lfIuRtAucC_QSQqThoEcvj3TAfGqQ8Cr--HLo4NpjJPtayej6Tjehlylu2EV2lANMvacCb9xRRfynobNO8DAsMTTrQXhzt6WpTOvjGFOA=@proton.me>
+In-Reply-To: <5a643fd6-1b1c-45ad-86a0-5d53f074d6f7@suse.com>
+References: <sT06uA3Gtv1kgeL80ZRMshbw6whJNUom-UxnS06H6eVrB4AqGWuzo0P23AhwOn3WsnAq9QfhFYciSAWK3eBeGaKjNJG1oSQLyclv4d2E0L4=@proton.me> <5b466d2f-80ad-4b45-a643-ab64bf2b252d@suse.com> <LCM3zm3y1s51pkWBZg6NU-4R6f89SVYSAxtNqq0gM5IlDFZfFjwSqvl-8yAvYcl7VizHjXIENm1vf6b7z2e25YQce7IQCr3Ms-w6vKkOKfY=@proton.me> <20c3ba51-fbf1-4de2-b88f-5edf817a24d6@suse.com> <FmCqd98aDZ5GTLc-1FUc4NRHRhDEDUDy1ylzO4rrFy_mV1zgC2tnmht5ov8px3ME3pBa6dioALVRD_tDKC3FhdUd4alND6G5g2bx8N7R154=@proton.me> <07600bff-a6dc-4b86-9dd6-aa5077ca8b09@suse.com> <ScE5lMhg6rlV47ttw0oUEWA5IsyxChuvN1pTOoj_KNj5rUpineEqR3GsPjNZl61xtXG4QS4v9v3ur4Ac0zI5GvdGEW_gWFJBD_FazYLcd_E=@proton.me> <5a643fd6-1b1c-45ad-86a0-5d53f074d6f7@suse.com>
+Feedback-ID: 175904438:user:proton
+X-Pm-Message-ID: 170360ba42beea8594cb848b66efd1055325c575
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <aS8YBLEPwF0-NtJO@eldamar.lan> <ba9a132e-6296-451f-8351-4045c0b72d6c@ralfj.de>
- <4rnbopkefvp6h3dwttj4h7cexehqtbuzzz4gatnebdnjzdy2li@bupytpnlk2xh>
- <2ed13f74-8de3-4caf-8972-26dd5a31e9fc@ralfj.de> <uboug5ectzm4s32yfgopjbcxq2uhsoc4kluaby7a4b7nzfjave@boco7oocnftr>
- <176458169204.346596.13968096833088921213.reportbug@r-ethtop>
- <0490a39a-28d9-4925-a162-5e4d498be257@ralfj.de> <aVfPmZ8rUm3Vf7pT@eldamar.lan>
- <58a7c628-63dc-48f7-8a46-357ca2d7d500@ralfj.de> <CANiDSCtX-RJrmfiK_rOqi870CK06_ONvnsvqWRZczBXY38eg0w@mail.gmail.com>
- <dc4c95e6-d19d-414a-a7ae-401dacbaebfd@ralfj.de>
-In-Reply-To: <dc4c95e6-d19d-414a-a7ae-401dacbaebfd@ralfj.de>
-From: Ricardo Ribalda <ribalda@chromium.org>
-Date: Thu, 15 Jan 2026 08:32:57 +0100
-X-Gmail-Original-Message-ID: <CANiDSCuse+=+MrDUFc_Sd1zXvtY9TDrX0GF6bs2_w34b03Djkw@mail.gmail.com>
-X-Gm-Features: AZwV_QiNASIHUOqkWA-quujMc5WRU5pvD3mkmZGB7mRSknAOSGs3Ql0x7z_N39s
-Message-ID: <CANiDSCuse+=+MrDUFc_Sd1zXvtY9TDrX0GF6bs2_w34b03Djkw@mail.gmail.com>
-Subject: Re: Bug#1121718: linux-image-6.17.8+deb14-amd64: Logitech C920 HD Pro
- Webcam shows flickering artifacts (sometimes)
-To: Ralf Jung <post@ralfj.de>
-Cc: Salvatore Bonaccorso <carnil@debian.org>, 1121718@bugs.debian.org, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@baylibre.com>, 
-	linux-media@vger.kernel.org, regressions@lists.linux.dev, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, Hans de Goede <hansg@kernel.org>, 
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Some updates.
+Tested VirtualBox setup on ext4:
 
-- We have delayed removing the nodrop parameter, so the mitigation
-will work for some more months.
-- Zoom has confirmed that they have managed to repro the issue and
-they plan to fit is for version 7.0.0 of their application.
+- Created new ext4 partition on different physical disk
+- Cloned VM instance to ext4 location
+- Copied Windows 10 ISO to ext4 partition
+- Started fresh Windows 10 installation
 
-Regards
+Result: BSOD still occurs during installation on kernel 6.18.5.
 
-On Mon, 5 Jan 2026 at 20:27, Ralf Jung <post@ralfj.de> wrote:
->
-> Hi Ricardo,
->
-> > Now about the error flag. I have given a fast look at your usb trace
-> > and have only seen 4 frames with "error bits" [1]. Can you add more
-> > tracing?
-> > Do something like:
-> > rmmod uvcvideo
-> > modprobe uvcvideo trace=0xffffffff
-> >
-> > Then start zoom, trigger the error and share the content of your
-> > dmesg. It should contain an explanation of why the driver thinks that
-> > the frames are invalid.
->
-> I have attached the log from when I started zoom until I closed it. All I can
-> see there is "Marking buffer as bad (error bit set)" but I assume all of the
-> other things there will mean a lot more to you. :)
->
-> Kind regards,
-> Ralf
+Regards,
+Jollycar
 
 
 
--- 
-Ricardo Ribalda
+On Tuesday, January 13th, 2026 at 11:03 PM, Qu Wenruo <wqu@suse.com> wrote:
+
+>=20
+>=20
+>=20
+>=20
+> =E5=9C=A8 2026/1/14 05:38, jollycar =E5=86=99=E9=81=93:
+>=20
+> > Thanks for the response.
+> >=20
+> > Module installation: DKMS via the virtualbox-host-dkms package. The dkm=
+s status output confirms vboxhost/7.2.4_OSE is compiled for each kernel inc=
+luding the broken ones (6.18.3, 6.18.5 (tkg), 6.19.0-rc3).
+> >=20
+> > Regarding CPU type specification:
+> >=20
+> > VirtualBox doesn't have qemu-style CPU model selection. The --cpu-profi=
+le option only supports "host" (full passthrough) or ancient CPUs (8086/802=
+86/80386) which don't meet Windows 10 requirements.
+> >=20
+> > Additional testing: I recently upgraded my desktop pc from Ryzen 9 5900=
+X to 9950X3D (reusing same disks and linux install) and the regression occu=
+rred identically on both CPUs. Also tested custom compiled TKG kernels (6.1=
+2/6.18 with bore scheduler). The behavior matches the Manjaro kernels exact=
+ly (6.12 works, 6.18 breaks).
+>=20
+>=20
+> Thanks for the extra info, I guess the last thing we can verify is, try
+> to run the same VBox setup, using disk images from an EXT4/XFS.
+>=20
+> And if that still failed, we're sure it's fs independent but more likely
+> VBox dependent.
+>=20
+> Thanks,
+> Qu
+>=20
+> > Regards,
+> > Jollycar
+> >=20
+> > On Monday, January 12th, 2026 at 8:48 PM, Qu Wenruo wqu@suse.com wrote:
+> >=20
+> > > =E5=9C=A8 2026/1/13 02:03, jollycar =E5=86=99=E9=81=93:
+> > >=20
+> > > > Qemu/libvirt test results on kernel 6.18.3:
+> > > >=20
+> > > > Setup:
+> > > > - Virtualization: qemu via libvirt (virt-manager)
+> > > > - Disk format: qcow2
+> > > > - Disk location: /data/virtual-os/win10-qemu-test.qcow2 (same btrfs=
+ subvolume as VirtualBox VMs)
+> > > > - COW disabled on disk image (chattr +C)
+> > > > - ISO: Same Windows 10 ISO used in VirtualBox tests
+> > > > - Guest: Windows 10
+> > > >=20
+> > > > Result:
+> > > > Windows 10 installation completed successfully without any crashes.=
+ Installation proceeded through all phases including multiple reboots and r=
+eached the desktop without issues.
+> > > >=20
+> > > > Summary of all tests on kernel 6.18.3:
+> > > > - VirtualBox 7.2.4: Crashes during installation (all cache/mtype co=
+nfigurations tested)
+> > > > - Qemu via libvirt: No crashes, installation completes successfully
+> > > >=20
+> > > > Both using the same btrfs filesystem, same subvolume location, same=
+ Windows ISO, and COW disabled.
+> > >=20
+> > > Thanks a lot, this looks like there is something wrong related to the
+> > > VBox out-of-tree kernel module.
+> > > In that case, the btrfs community is not going to help much unfortuna=
+tely.
+> > >=20
+> > > Mind to share how is the out-of-tree kernel module installed?
+> > > The pre-compiled one from the distro? The DKMS one or something else?
+> > >=20
+> > > And just some guesses, can VBox specify what type of CPU (and extensi=
+ons
+> > > like SSE/AVX) it uses?
+> > > If so (like qemu), mind to check if you can specify some CPU types
+> > > without some newer extensions while still meets the minimal CPU
+> > > requirement of Windows 10?
+> > >=20
+> > > I'm wondering if it's some extension handling not done properly, whic=
+h
+> > > is commonly utilized by checksums.
+> > > Thus triggers the checksum mismatch errors inside Windows.
+> > >=20
+> > > Thanks,
+> > > Qu
+> > >=20
+> > > > On Sunday, January 11th, 2026 at 8:43 PM, Qu Wenruo wqu@suse.com wr=
+ote:
+> > > >=20
+> > > > > =E5=9C=A8 2026/1/11 21:39, jollycar =E5=86=99=E9=81=93:
+> > > > >=20
+> > > > > > Storage configuration details:
+> > > > > >=20
+> > > > > > Storage format: VDI (VirtualBox Disk Image)
+> > > > > > Storage location: /data/virtual-os/ (btrfs subvolume with COW d=
+isabled, verified with lsattr)
+> > > > >=20
+> > > > > OK, this means it's not related to the direct IO changes in newer=
+ kernels.
+> > > > >=20
+> > > > > When COW is disabled, data checksum is also disables, thus direct=
+ IO is
+> > > > > still doing the true zero-copy behavior.
+> > > > >=20
+> > > > > This ruled out the btrfs direct io change, but this means I have =
+no clue
+> > > > > what is going wrong at all now.
+> > > > >=20
+> > > > > > Controller: IntelAhci (SATA)
+> > > > > > Default configuration: hostiocache on, mtype normal
+> > > > > >=20
+> > > > > > Cache and media type testing on kernel 6.18.3:
+> > > > > > - Default (hostiocache on, mtype normal): BSOD within 1 minute =
+during installation
+> > > > > > - mtype writethrough: Gets much further, BSOD occurs on first V=
+M reboot
+> > > > > > - hostiocache off (mtype normal): Gets much further, BSOD occur=
+s on first VM reboot
+> > > > > >=20
+> > > > > > None of the configurations provide a working solution - they on=
+ly delay the crash.
+> > > > > >=20
+> > > > > > On kernel 6.12.63 with default settings (hostiocache on, mtype =
+normal), Windows installation completes successfully without any crashes.
+> > > > > >=20
+> > > > > > I have not yet tested with qemu/libvirt. Should I proceed with =
+that test?
+> > > > >=20
+> > > > > Yes please. Libvirt/qemu is a more common solution among develope=
+rs.
+> > > > > If you can reproduce it using libvirt/qemu, more btrfs developers=
+ can
+> > > > > try to reproduce it and look into it.
+> > > > >=20
+> > > > > And if not, the cause may shift towards vbox other than btrfs.
+> > > > >=20
+> > > > > Thanks,
+> > > > > Qu
+> > > > >=20
+> > > > > > On Sunday, January 11th, 2026 at 10:15 AM, Qu Wenruo wqu@suse.c=
+om wrote:
+> > > > > >=20
+> > > > > > > =E5=9C=A8 2026/1/11 20:33, jollycar =E5=86=99=E9=81=93:
+> > > > > > >=20
+> > > > > > > > #regzbot introduced: v6.12..v6.18
+> > > > > > > >=20
+> > > > > > > > [1.] One line summary of the problem:
+> > > > > > > > VirtualBox VM crashes with BSOD during Windows installation=
+ on kernels 6.18+ (works fine on 6.12 LTS)
+> > > > > > > >=20
+> > > > > > > > [2.] Full description of the problem:
+> > > > > > > > Windows 10 and Windows 11 installation inside VirtualBox co=
+nsistently crashes with BSOD within 1-3 minutes on Linux kernels 6.18.3 and=
+ 6.19-rc3. The same VirtualBox configuration and VM image work perfectly on=
+ kernel 6.12 LTS. The BSOD errors vary each time (most recent: 0x80070470 -=
+ "file may be corrupt or missing"). The host system remains completely stab=
+le with no logged errors.
+> > > > > > > >=20
+> > > > > > > > [3] Kernel & Hardware:
+> > > > > > > > - Kernel versions tested:
+> > > > > > > > * Working: 6.12.63-1
+> > > > > > > > * Broken: 6.18.3-2, 6.19.0-rc3-1
+> > > > > > > > - Distribution: Manjaro Linux
+> > > > > > > > - Architecture: x86_64
+> > > > > > > > - VirtualBox: 7.2.4 r170995 (vboxdrv vermagic: 6.18.3-2-MAN=
+JARO SMP preempt mod_unload)
+> > > > > > > >=20
+> > > > > > > > [4.] Filesystem and storage:
+> > > > > > > > - Root filesystem: btrfs on LUKS encryption
+> > > > > > > > - Mount options: zstd compression level 3, SSD optimization=
+s, async discard, free space tree
+> > > > > > > > - VM storage: separate btrfs subvolume
+> > > > > > >=20
+> > > > > > > What's the storage file configuration? Like what's the cache =
+mode setting?
+> > > > > > > I don't know VBox at all, but there may be something similar =
+to
+> > > > > > > libvirt's cache mode (none/unsafe/writethrough etc).
+> > > > > > >=20
+> > > > > > > More importantly, will tweaking the cache mode change fix the=
+ broken
+> > > > > > > kernels?
+> > > > > > > If so it may point to direct IO related behavior changes.
+> > > > > > >=20
+> > > > > > > And what's the storage file format? QCOW2? RAW? Or whatever f=
+ormat
+> > > > > > > provided by Vbox?
+> > > > > > >=20
+> > > > > > > And one final question, have you tried qemu (or libvirt + qem=
+u) and can
+> > > > > > > it still be reproduced with qemu?
+> > > > > > > As I'm wondering if the direct IO related change will even af=
+fects qemu
+> > > > > > >=20
+> > > > > > > Thanks,
+> > > > > > > Qu
+> > > > > > >=20
+> > > > > > > > - btrfs device stats: all zeros (no errors)
+> > > > > > > >=20
+> > > > > > > > [5.] Reproduction:
+> > > > > > > > - Boot kernel 6.18.3-2 or 6.19.0-rc3
+> > > > > > > > - Start VirtualBox 7.2.4 r170995
+> > > > > > > > - Create new Windows 10 or Windows 11 VM
+> > > > > > > > - Begin OS installation
+> > > > > > > > - BSOD occurs within 1-3 minutes with varying errors (lates=
+t: 0x80070470)
+> > > > > > > > - Issue is 100% reproducible on 6.18+, never occurs on 6.12
+> > > > > > > >=20
+> > > > > > > > Additional context:
+> > > > > > > > - Host system remains completely stable during VM crashes
+> > > > > > > > - No btrfs errors in dmesg or device stats (all zero)
+> > > > > > > > - Issue persists across multiple 6.18/6.19 releases over on=
+e month
+> > > > > > > > - VirtualBox 7.2.4 modules load successfully on all kernel =
+versions
+> > > > > > > >=20
+> > > > > > > > Regards,
+> > > > > > > > Jollycar
