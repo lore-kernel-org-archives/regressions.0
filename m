@@ -1,320 +1,259 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-b5-smtp.messagingengine.com (fhigh-b5-smtp.messagingengine.com [202.12.124.156])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEF8927815D
-	for <regressions@lists.linux.dev>; Thu, 15 Jan 2026 21:18:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58C4C215055
+	for <regressions@lists.linux.dev>; Thu, 15 Jan 2026 22:51:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.156
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768511890; cv=none; b=YTVTcXLJdhjo4RKQebixI1i/UsnSgesbqLbtrOyjWBWYadnVuAHHqYV6sPd6unkJ/eCceIsbcADYYi9caHfqE12gBRLpmfbG6WVF9YT8zwlfoppPj3g5m9tK+jNUsVyHgN7oI5Z3gbSC3ZGpuBM+KYVvtssN1oEtImJlXLRvWVw=
+	t=1768517515; cv=none; b=UHNIRDdh2WdsIR0dLAdmumCsrZwj3kg0MgHXms1gsAnmCdvufn4BCdAL5b2/p/yzvbJOlB+i9b7ecGjbrUfKPwRwDnLNfEU6kVIKou1vN3XojhFlA3XOWXLf0Kv16ELo0YK0wHZIeF5MnKu57VcUec0++UsH0PlO1YeQae8cltk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768511890; c=relaxed/simple;
-	bh=72/i5WP0HAMKLm1gG6OMXgvJ1W4VsoWIoVmJhOceIXA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YXEC6y954jAPvrpSAITDZcv43rfvBn5dbZsJS1FmaLgvFk5MHvaRLz5mV4CyW5BfTtGE9trzBVhIAQWevrWuXuSGPgK+KnTuQgcfPPMvYJ/2QKH3KcmZbhVzwUKg7v6+JaJUgI52S6IZ5UCx11hwDHVyutbbYpy99VwhOMDgyCo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=No7GCRjM; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1768517515; c=relaxed/simple;
+	bh=34p0CLte03VuRGXx1ynlYDW2x+harK8obYHW15AMM70=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=h1X94GPqSuwCTs7f/5V1GMYKreIe6ywHVvLm75rTgYaHM2XwIBfD8vKe3HtBnOEZMeWek151e+6O8YLHUsw69QVrqKOAi/sY0NuEk4ukXjAnyhYy7HxRFKkn4Q5i4VI9MpPr1Eg8i+Zb0dwQbBVet+iOYXLrWWAg1c121QYOObY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sent.com; spf=pass smtp.mailfrom=sent.com; dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b=we8qD9Mr; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ori+gwR3; arc=none smtp.client-ip=202.12.124.156
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sent.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sent.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="No7GCRjM"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4801d24d91bso6012975e9.2
-        for <regressions@lists.linux.dev>; Thu, 15 Jan 2026 13:18:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1768511887; x=1769116687; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=G+OOis8Hz2lcnoTNlOZmtKSZTmkhAd3YSa9lrrdClLQ=;
-        b=No7GCRjMKnVSDnWkhuOZHfghgKQLQl/uIYaqO3Qrx7TjuA5rrHn09e7TyNN98P8vBr
-         P+BmOjlL+sInIXDPtKOIpxPVGz3uuwM1Npw2MSD0stmwp7oenqTztPFhgYPgbxM8DLmf
-         zpZfSLmcJvg8T05B4HzTPvUv2ROxDulk9T+60k4DxNSNEmC4U9fe3hohlZNlKSnZMgVT
-         dbQl//0Cid2yoEsbgGaw5vvbutb8HxxGODyjG3ymmZoD8EA48hXKiA0kaHVPjg8wPSQ3
-         jBUFPFolQN9kmijEarTmrLpulnH3IirzpOGzYt9ZCo2O7psnlvrCkEOudsUnnTOlS7jS
-         Vbaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768511887; x=1769116687;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=G+OOis8Hz2lcnoTNlOZmtKSZTmkhAd3YSa9lrrdClLQ=;
-        b=jV/2rwigekITei9cWe4N127artcqVbYPfbhTYAOINNnkKCxcPvSzFil7SCrxcQiSi5
-         zbN14X4XBbj1TMP+xkXMTsaEt6HTLFai9e0PLFTcb5mWqW912niNHVNpQ3Nhovl7Y2DV
-         ShRqApQO8Xai0lEWfWrzcy7ri0gCFSfZ7eGUVvzLctFsm1reFi7inMOXL8DQA7IkiSJ7
-         suemoy0ibMCLuutn8iaHE8Nq9TPsqvDzFQi06c/vAHrNhwAFCpiJZGxj4SRDkUnQYSuW
-         VuuaV3EmiIBCA6zak5tHOSkGb3/Dd27r+qRM024F07qzdBlqDo3YiFWZ3ERkN57pa8io
-         71xA==
-X-Gm-Message-State: AOJu0YxVCI5zgSpl3151UHsLLCeVS2mbCQgPKRZ3NuPK5HXJ454HshQL
-	Uqu0je0ktvIosUAN7rO2Shd7uJ/wekX3DvCunEHS5Na3TmRZIqm3uhmwszICXSmmL9A=
-X-Gm-Gg: AY/fxX7KSxOtFA3o1vGTIX2ZbPtxQQCRxDbEO9fVOpKSQyrJeYW2wcKPgXSy0ZdqcsG
-	m0diWkRX0YT97fYEy0xivrZ++zWx5nt/Thq4c+eFzOxYHHv5DxvoFDQgCZUtWLo0iBzdOJ32Btc
-	YpljbZWmvTV6PVEOzAGoAIq5h2MGF3hTzMYBj7i1TPjacl/smeZwlH9gV/zTusi8scU1Pz6PSUT
-	ORfboclTay7CP4lzE3Y8ms3TEHMggHlLWeAyERH0YcgvvWoVwCvR9PjgKz6V8vZtXDim9gR6sL5
-	VOdB5h8TkxlobvTfdUvKUflF81W2FLcF7MRTXUPatowQFh8dB8dsC085clLrcgU5/0SdkvdM50l
-	CS3h1ZdHm9GmpRyxNSqOutmvEnV6bltz0V474CGPmeHOYDptes3Na3++Av9MO4S9zAOuqIcuxgy
-	Ckv0XOYwWGtOH7kvD3BYd5dp4Zvn6HkBR3d0IcvRcHk3CrVW1Hqg==
-X-Received: by 2002:a05:600c:1909:b0:477:54cd:2030 with SMTP id 5b1f17b1804b1-4801e33c23cmr13985355e9.21.1768511886962;
-        Thu, 15 Jan 2026 13:18:06 -0800 (PST)
-Received: from ?IPV6:2403:580d:fda1::299? (2403-580d-fda1--299.ip6.aussiebb.net. [2403:580d:fda1::299])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-81fa10c5502sm271661b3a.24.2026.01.15.13.18.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 15 Jan 2026 13:18:06 -0800 (PST)
-Message-ID: <93db0013-9301-4839-b0c6-fea1847b8f44@suse.com>
-Date: Fri, 16 Jan 2026 07:48:02 +1030
+	dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b="we8qD9Mr";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ori+gwR3"
+Received: from phl-compute-03.internal (phl-compute-03.internal [10.202.2.43])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 875DF7A007A;
+	Thu, 15 Jan 2026 17:51:52 -0500 (EST)
+Received: from phl-imap-04 ([10.202.2.82])
+  by phl-compute-03.internal (MEProxy); Thu, 15 Jan 2026 17:51:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sent.com; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1768517512;
+	 x=1768603912; bh=tFQBUcSKtb4ViYkQMTkiZRPnWAeej+sfaSTO7aEIQ1I=; b=
+	we8qD9MrKzwHL8IFj0dr+jaANCCajyKj1KQCc+y+59dTcwKLeONMhI7/zprXdTJd
+	1K6SZp1KxEdD13FUW272NQxBji1hBBA6q8P5RMDk9fQR4SsjpfvGUhN8uFsDP9cH
+	pB5DFx2RDhDYE26ZOMxpB4NzHGVxxOSkY7ZSFqeTKVdzymEtCtrQKCMFdGL0F0jC
+	2s/P60t128CPj04TOuQsAynXgFY51lhoHFeQQA/haTTW82Ht5BmmY3DmBjMwUY1z
+	JQuBDk+RzIdtbjO/0vp+juZLSzfVqdL3LTyzjBKl4vfHfvlNuX+mcgovKIrFIe2q
+	xvrwYgw4U4HDvFoOP8EoUA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1768517512; x=
+	1768603912; bh=tFQBUcSKtb4ViYkQMTkiZRPnWAeej+sfaSTO7aEIQ1I=; b=o
+	ri+gwR34h9L4uMV3DgZpNr+4C4/cOcLXYHOSKlGTXY+p9Tl80a4tTB1ZSI40Ccwx
+	FaKUHo2pTJjA6EG23jPIYlP1phS6hb/TZJ9Bsl6FwpcFcth3QhGdvh1LqiFt4CFe
+	yySQLCAkOg3uxKsAJX3I9ccj3y3PleVzM3aAdIMp8tQtnC6bOY36HLK/ryNPh2jG
+	XeWImov5BVdyo8V+AxLUQOhNDJdJAK7YBDC7bnHXfq3idgg8nInWA+7WhlQo8tWH
+	agE8PXFstnZfmjJkKkBYfxXOXkM2+O+EzlzRimvNL+DoUIKUk4PpY9BfNXswqIfL
+	YE7V/ix3TXkvmOczxn3XQ==
+X-ME-Sender: <xms:h29paXv8fmmaFwTYr9W00TUyAIL9GMlkX5-Bd2E3pvMvYSh-5VfCeg>
+    <xme:h29paTTW2kjhAiAKnZdNYh0SG1YHE_cnlrhhSSBtCz36YPASTSRNbWktDFDR6leRy
+    fOBALqlkiRfy1HXkGgTIX-bk4eXjCMJSvQucELnfAdjfbJovfZlF1g>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgdduvdejfedtucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepofggfffhvfevkfgjfhfutgfgsehtqhertdertdejnecuhfhrohhmpegtohhrrhgv
+    tghtmhhoshhtuceotghmlhhishhtshesshgvnhhtrdgtohhmqeenucggtffrrghtthgvrh
+    hnpeejgfdvteelffdvveeuffegtdehtddvjeekfeeukeduleekheekheekleeuheeiveen
+    ucffohhmrghinhepmhgrnhhjrghrohdrohhrghdptggrtghhhihoshdrohhrghdprghrtg
+    hhlhhinhhugidrohhrghdpkhgvrhhnvghlrdhorhhgpdgrlhhtlhhinhhugidrohhrghen
+    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegtmhhlih
+    hsthhssehsvghnthdrtghomhdpnhgspghrtghpthhtohepiedpmhhouggvpehsmhhtphho
+    uhhtpdhrtghpthhtohepvhhkohhulheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprg
+    hnughrihihrdhshhgvvhgthhgvnhhkoheslhhinhhugidrihhnthgvlhdrtghomhdprhgt
+    phhtthhopehmihhkrgdrfigvshhtvghrsggvrhhgsehlihhnuhigrdhinhhtvghlrdgtoh
+    hmpdhrtghpthhtoheprhgvghhrvghsshhiohhnsheslhhishhtshdrlhhinhhugidruggv
+    vhdprhgtphhtthhopegumhgrvghnghhinhgvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpd
+    hrtghpthhtoheplhhinhhugidqihdvtgesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:h29paRUN9_Scnl2PhQqzvONrLQw7jz3TI-k4a2Rfy3So5457YbFvpA>
+    <xmx:h29pabrPmtquPDx7paje-mgM4PfJVxCB7Nnp19kQ89QGcq50UzLaQw>
+    <xmx:h29padTp3WkVJ04QdAye7nZcV3jCJoq4rcOprMYpTLO7E35IlsLVXw>
+    <xmx:h29paV0CammP3GOlfcA76AiQ1OBBX58ztslGypBg_Bg_UDjSEphQLA>
+    <xmx:iG9paXHKEJVtwuDFXF-eZxV6AdyvD7Enm5aL1jVUbQ-0O6TqHo3bntyO>
+Feedback-ID: i87314915:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id C4C2CB6006E; Thu, 15 Jan 2026 17:51:51 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] VirtualBox VM crashes (BSOD) during Windows
- installation on btrfs with kernels 6.18+ (works on 6.12 LTS)
-To: jollycar <jollycar@proton.me>
-Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <sT06uA3Gtv1kgeL80ZRMshbw6whJNUom-UxnS06H6eVrB4AqGWuzo0P23AhwOn3WsnAq9QfhFYciSAWK3eBeGaKjNJG1oSQLyclv4d2E0L4=@proton.me>
- <5b466d2f-80ad-4b45-a643-ab64bf2b252d@suse.com>
- <LCM3zm3y1s51pkWBZg6NU-4R6f89SVYSAxtNqq0gM5IlDFZfFjwSqvl-8yAvYcl7VizHjXIENm1vf6b7z2e25YQce7IQCr3Ms-w6vKkOKfY=@proton.me>
- <20c3ba51-fbf1-4de2-b88f-5edf817a24d6@suse.com>
- <FmCqd98aDZ5GTLc-1FUc4NRHRhDEDUDy1ylzO4rrFy_mV1zgC2tnmht5ov8px3ME3pBa6dioALVRD_tDKC3FhdUd4alND6G5g2bx8N7R154=@proton.me>
- <07600bff-a6dc-4b86-9dd6-aa5077ca8b09@suse.com>
- <ScE5lMhg6rlV47ttw0oUEWA5IsyxChuvN1pTOoj_KNj5rUpineEqR3GsPjNZl61xtXG4QS4v9v3ur4Ac0zI5GvdGEW_gWFJBD_FazYLcd_E=@proton.me>
- <5a643fd6-1b1c-45ad-86a0-5d53f074d6f7@suse.com>
- <X0lfIuRtAucC_QSQqThoEcvj3TAfGqQ8Cr--HLo4NpjJPtayej6Tjehlylu2EV2lANMvacCb9xRRfynobNO8DAsMTTrQXhzt6WpTOvjGFOA=@proton.me>
-Content-Language: en-US
-From: Qu Wenruo <wqu@suse.com>
-Autocrypt: addr=wqu@suse.com; keydata=
- xsBNBFnVga8BCACyhFP3ExcTIuB73jDIBA/vSoYcTyysFQzPvez64TUSCv1SgXEByR7fju3o
- 8RfaWuHCnkkea5luuTZMqfgTXrun2dqNVYDNOV6RIVrc4YuG20yhC1epnV55fJCThqij0MRL
- 1NxPKXIlEdHvN0Kov3CtWA+R1iNN0RCeVun7rmOrrjBK573aWC5sgP7YsBOLK79H3tmUtz6b
- 9Imuj0ZyEsa76Xg9PX9Hn2myKj1hfWGS+5og9Va4hrwQC8ipjXik6NKR5GDV+hOZkktU81G5
- gkQtGB9jOAYRs86QG/b7PtIlbd3+pppT0gaS+wvwMs8cuNG+Pu6KO1oC4jgdseFLu7NpABEB
- AAHNGFF1IFdlbnJ1byA8d3F1QHN1c2UuY29tPsLAlAQTAQgAPgIbAwULCQgHAgYVCAkKCwIE
- FgIDAQIeAQIXgBYhBC3fcuWlpVuonapC4cI9kfOhJf6oBQJnEXVgBQkQ/lqxAAoJEMI9kfOh
- Jf6o+jIH/2KhFmyOw4XWAYbnnijuYqb/obGae8HhcJO2KIGcxbsinK+KQFTSZnkFxnbsQ+VY
- fvtWBHGt8WfHcNmfjdejmy9si2jyy8smQV2jiB60a8iqQXGmsrkuR+AM2V360oEbMF3gVvim
- 2VSX2IiW9KERuhifjseNV1HLk0SHw5NnXiWh1THTqtvFFY+CwnLN2GqiMaSLF6gATW05/sEd
- V17MdI1z4+WSk7D57FlLjp50F3ow2WJtXwG8yG8d6S40dytZpH9iFuk12Sbg7lrtQxPPOIEU
- rpmZLfCNJJoZj603613w/M8EiZw6MohzikTWcFc55RLYJPBWQ+9puZtx1DopW2jOwE0EWdWB
- rwEIAKpT62HgSzL9zwGe+WIUCMB+nOEjXAfvoUPUwk+YCEDcOdfkkM5FyBoJs8TCEuPXGXBO
- Cl5P5B8OYYnkHkGWutAVlUTV8KESOIm/KJIA7jJA+Ss9VhMjtePfgWexw+P8itFRSRrrwyUf
- E+0WcAevblUi45LjWWZgpg3A80tHP0iToOZ5MbdYk7YFBE29cDSleskfV80ZKxFv6koQocq0
- vXzTfHvXNDELAuH7Ms/WJcdUzmPyBf3Oq6mKBBH8J6XZc9LjjNZwNbyvsHSrV5bgmu/THX2n
- g/3be+iqf6OggCiy3I1NSMJ5KtR0q2H2Nx2Vqb1fYPOID8McMV9Ll6rh8S8AEQEAAcLAfAQY
- AQgAJgIbDBYhBC3fcuWlpVuonapC4cI9kfOhJf6oBQJnEXWBBQkQ/lrSAAoJEMI9kfOhJf6o
- cakH+QHwDszsoYvmrNq36MFGgvAHRjdlrHRBa4A1V1kzd4kOUokongcrOOgHY9yfglcvZqlJ
- qfa4l+1oxs1BvCi29psteQTtw+memmcGruKi+YHD7793zNCMtAtYidDmQ2pWaLfqSaryjlzR
- /3tBWMyvIeWZKURnZbBzWRREB7iWxEbZ014B3gICqZPDRwwitHpH8Om3eZr7ygZck6bBa4MU
- o1XgbZcspyCGqu1xF/bMAY2iCDcq6ULKQceuKkbeQ8qxvt9hVxJC2W3lHq8dlK1pkHPDg9wO
- JoAXek8MF37R8gpLoGWl41FIUb3hFiu3zhDDvslYM4BmzI18QgQTQnotJH8=
-In-Reply-To: <X0lfIuRtAucC_QSQqThoEcvj3TAfGqQ8Cr--HLo4NpjJPtayej6Tjehlylu2EV2lANMvacCb9xRRfynobNO8DAsMTTrQXhzt6WpTOvjGFOA=@proton.me>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-ThreadId: AwebR64VcaZc
+Date: Thu, 15 Jan 2026 17:50:36 -0500
+From: correctmost <cmlists@sent.com>
+To: "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>
+Cc: dmaengine@vger.kernel.org, regressions@lists.linux.dev, vkoul@kernel.org,
+ linux-i2c@vger.kernel.org, mika.westerberg@linux.intel.com
+Message-Id: <69f5dea3-17b0-4d3a-9de7-eb54f8f0f5cd@app.fastmail.com>
+In-Reply-To: <aWUGmfcjWpFJs3-X@smile.fi.intel.com>
+References: <51388859-bf5f-484c-9937-8f6883393b4d@app.fastmail.com>
+ <aWUGmfcjWpFJs3-X@smile.fi.intel.com>
+Subject: Re: [REGRESSION][BISECTED] Lenovo IdeaPad touchpad does not work when idma64
+ is present in initramfs
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, Jan 12, 2026, at 9:35 AM, Andy Shevchenko wrote:
+> On Tue, Dec 16, 2025 at 12:57:10PM -0500, correctmost wrote:
+>
+>> The following commit
+>
+> No, it's false positive. The reality is that something else is going on
+> there on this and other similar laptops.
+>
+>> causes my Lenovo IdeaPad touchpad not to work when
+>> kernel/drivers/dma/idma64.ko.zst is present in the initramfs image:
+>>=20
+>> #regzbot introduced: 9140ce47872bfd89fca888c2f992faa51d20c2bc
+>>=20
+>> "idma64: Don't try to serve interrupts when device is powered off"
+>
+> So, the touchpad is an I=C2=B2C device, which is connected to an Intel=
+ SoC.
+> The I=C2=B2C host controller is Synopsys DesignWare. On Intel SoCs the=
+ above
+> mentioned IP is generated with private DMA engine, that's called Intel
+> iDMA 64-bit. Basically it's two devices under a single PCI hood.
+> The problem here is that when PCI device is in D3, both devices are
+> powered off, but something sends an interrupt and it's not recognized
+> being the one, send by a device (touchpad).
+>
+> There is one of the following potential issues (or their combinations):
+>
+> - the I=C2=B2C host controller hardware got off too early
+> - the line is shared with something else that generates interrupt storm
+> - the BIOS does weird (wrong) things at a boot time, like not properly
+>   shutting down and disabling interrupt sources; also may have wrong
+>   pin control settings
+> - the touchpad is operating on higher frequency like 400kHz (because
+>   BIOS told to use that one instead of 100kHz) than the HW is designed
+>   for and hence unreliable with all possible side effects
+> - the touchpad firmware behaves wrongly on some sequences (see also
+>   note about the bus speed above), try to upgrade touchpad FW
+>
+> With my experience with the case of the above mentioned commit that it
+> may be BIOS thingy. Also consider the bus speed, there are quirks in
+> the kernel for that.
 
+Thank you for the detailed notes.  I will see if I can update my BIOS an=
+d experiment with different quirks values, though I won't be able to do =
+that until late next week.
 
-在 2026/1/16 07:42, jollycar 写道:
-> Tested VirtualBox setup on ext4:
-> 
-> - Created new ext4 partition on different physical disk
-> - Cloned VM instance to ext4 location
-> - Copied Windows 10 ISO to ext4 partition
-> - Started fresh Windows 10 installation
-> 
-> Result: BSOD still occurs during installation on kernel 6.18.5.
+>
+>> Here are the related logs:
+>>=20
+>> ---
+>>=20
+>> irq 27: nobody cared (try booting with the "irqpoll" option)
+>
+> Almost all below is not so interesting.
+>
+> ...
+>
+>> handlers:
+>> [<00000000104a7621>] idma64_irq [idma64]
+>> [<00000000bd8d08e9>] i2c_dw_isr
+>> Disabling IRQ #27
+>
+> Yes, this line at least shared between those two and might be more.
+>
+> ...
+>
+>> i2c_designware i2c_designware.0: controller timed out
+>> hid (null): reading report descriptor failed
+>> i2c_hid_acpi i2c-ELAN06FA:00: can't add hid device: -110
+>> i2c_hid_acpi i2c-ELAN06FA:00: probe with driver i2c_hid_acpi failed w=
+ith error -110
+>
+> Yes, sounds familiar with the speed settings. Try to down it to 100kHz=
+ in case
+> it's confirmed to be 400kHz.
+>
+>> ---
+>>=20
+>> Hardware info:
+>> - Lenovo 16" IdeaPad Slim 5 - 16IRU9
+>>   - Hardware name: LENOVO 83FW/LNVNB161216, BIOS PFCN14WW 09/20/2024
+>>   - ELAN06FA:00 04F3:327E Touchpad
+>>=20
+>> Steps to reproduce:
+>> - Cold boot the laptop on Arch Linux
+>>=20
+>> The bug is still present with the 6.19.0-rc1-1-git kernel.
+>>=20
+>> The bisected commit is from March 2024, but I only recently noticed t=
+he issue
+>> because the initramfs images on Arch Linux now include these addition=
+al
+>> drivers (as of November 2025):
+>> - kernel/drivers/dma/idma64.ko.zst
+>> - kernel/drivers/mfd/intel-lpss-pci.ko.zst
+>> - kernel/drivers/mfd/intel-lpss.ko.zst
+>>=20
+>> Two other users have reported the issue on the Arch Linux and CachyOS=
+ forums,
+>
+> Any pointers to that thread, please?
+>
 
-So it's definitely something wrong with the VBox module now.
+The following threads have users who were able to restore touchpad funct=
+ionality by undoing the idma64 change in initramfs:
 
-It's out of our understanding, so not much help can be provided.
-You may want to report the error to upstream vbox:
-https://github.com/VirtualBox/virtualbox/issues
+- https://forum.manjaro.org/t/lenovo-thinkbook-14-g4-iap-touchpad-not-wo=
+rking/184156
+  - Lenovo Thinkbook 14 G4 IAP
+  - i2c-SYNA2BA6:00
 
-(And that's why most developers are using libvirt/qemu, where KVM has 
-upstream support)
+- https://discuss.cachyos.org/t/syna3602-touchpad-completely-undetected-=
+after-update/20461
+  - AVITA AM15A2IN
+  - SYNA3602
 
-Thanks,
-Qu
+- https://bbs.archlinux.org/viewtopic.php?pid=3D2277786#p2277786
+  - MSI Modern 15 F13MG-074IT
 
-> 
-> Regards,
-> Jollycar
-> 
-> 
-> 
-> On Tuesday, January 13th, 2026 at 11:03 PM, Qu Wenruo <wqu@suse.com> wrote:
-> 
->>
->>
->>
->>
->> 在 2026/1/14 05:38, jollycar 写道:
->>
->>> Thanks for the response.
->>>
->>> Module installation: DKMS via the virtualbox-host-dkms package. The dkms status output confirms vboxhost/7.2.4_OSE is compiled for each kernel including the broken ones (6.18.3, 6.18.5 (tkg), 6.19.0-rc3).
->>>
->>> Regarding CPU type specification:
->>>
->>> VirtualBox doesn't have qemu-style CPU model selection. The --cpu-profile option only supports "host" (full passthrough) or ancient CPUs (8086/80286/80386) which don't meet Windows 10 requirements.
->>>
->>> Additional testing: I recently upgraded my desktop pc from Ryzen 9 5900X to 9950X3D (reusing same disks and linux install) and the regression occurred identically on both CPUs. Also tested custom compiled TKG kernels (6.12/6.18 with bore scheduler). The behavior matches the Manjaro kernels exactly (6.12 works, 6.18 breaks).
->>
->>
->> Thanks for the extra info, I guess the last thing we can verify is, try
->> to run the same VBox setup, using disk images from an EXT4/XFS.
->>
->> And if that still failed, we're sure it's fs independent but more likely
->> VBox dependent.
->>
->> Thanks,
->> Qu
->>
->>> Regards,
->>> Jollycar
->>>
->>> On Monday, January 12th, 2026 at 8:48 PM, Qu Wenruo wqu@suse.com wrote:
->>>
->>>> 在 2026/1/13 02:03, jollycar 写道:
->>>>
->>>>> Qemu/libvirt test results on kernel 6.18.3:
->>>>>
->>>>> Setup:
->>>>> - Virtualization: qemu via libvirt (virt-manager)
->>>>> - Disk format: qcow2
->>>>> - Disk location: /data/virtual-os/win10-qemu-test.qcow2 (same btrfs subvolume as VirtualBox VMs)
->>>>> - COW disabled on disk image (chattr +C)
->>>>> - ISO: Same Windows 10 ISO used in VirtualBox tests
->>>>> - Guest: Windows 10
->>>>>
->>>>> Result:
->>>>> Windows 10 installation completed successfully without any crashes. Installation proceeded through all phases including multiple reboots and reached the desktop without issues.
->>>>>
->>>>> Summary of all tests on kernel 6.18.3:
->>>>> - VirtualBox 7.2.4: Crashes during installation (all cache/mtype configurations tested)
->>>>> - Qemu via libvirt: No crashes, installation completes successfully
->>>>>
->>>>> Both using the same btrfs filesystem, same subvolume location, same Windows ISO, and COW disabled.
->>>>
->>>> Thanks a lot, this looks like there is something wrong related to the
->>>> VBox out-of-tree kernel module.
->>>> In that case, the btrfs community is not going to help much unfortunately.
->>>>
->>>> Mind to share how is the out-of-tree kernel module installed?
->>>> The pre-compiled one from the distro? The DKMS one or something else?
->>>>
->>>> And just some guesses, can VBox specify what type of CPU (and extensions
->>>> like SSE/AVX) it uses?
->>>> If so (like qemu), mind to check if you can specify some CPU types
->>>> without some newer extensions while still meets the minimal CPU
->>>> requirement of Windows 10?
->>>>
->>>> I'm wondering if it's some extension handling not done properly, which
->>>> is commonly utilized by checksums.
->>>> Thus triggers the checksum mismatch errors inside Windows.
->>>>
->>>> Thanks,
->>>> Qu
->>>>
->>>>> On Sunday, January 11th, 2026 at 8:43 PM, Qu Wenruo wqu@suse.com wrote:
->>>>>
->>>>>> 在 2026/1/11 21:39, jollycar 写道:
->>>>>>
->>>>>>> Storage configuration details:
->>>>>>>
->>>>>>> Storage format: VDI (VirtualBox Disk Image)
->>>>>>> Storage location: /data/virtual-os/ (btrfs subvolume with COW disabled, verified with lsattr)
->>>>>>
->>>>>> OK, this means it's not related to the direct IO changes in newer kernels.
->>>>>>
->>>>>> When COW is disabled, data checksum is also disables, thus direct IO is
->>>>>> still doing the true zero-copy behavior.
->>>>>>
->>>>>> This ruled out the btrfs direct io change, but this means I have no clue
->>>>>> what is going wrong at all now.
->>>>>>
->>>>>>> Controller: IntelAhci (SATA)
->>>>>>> Default configuration: hostiocache on, mtype normal
->>>>>>>
->>>>>>> Cache and media type testing on kernel 6.18.3:
->>>>>>> - Default (hostiocache on, mtype normal): BSOD within 1 minute during installation
->>>>>>> - mtype writethrough: Gets much further, BSOD occurs on first VM reboot
->>>>>>> - hostiocache off (mtype normal): Gets much further, BSOD occurs on first VM reboot
->>>>>>>
->>>>>>> None of the configurations provide a working solution - they only delay the crash.
->>>>>>>
->>>>>>> On kernel 6.12.63 with default settings (hostiocache on, mtype normal), Windows installation completes successfully without any crashes.
->>>>>>>
->>>>>>> I have not yet tested with qemu/libvirt. Should I proceed with that test?
->>>>>>
->>>>>> Yes please. Libvirt/qemu is a more common solution among developers.
->>>>>> If you can reproduce it using libvirt/qemu, more btrfs developers can
->>>>>> try to reproduce it and look into it.
->>>>>>
->>>>>> And if not, the cause may shift towards vbox other than btrfs.
->>>>>>
->>>>>> Thanks,
->>>>>> Qu
->>>>>>
->>>>>>> On Sunday, January 11th, 2026 at 10:15 AM, Qu Wenruo wqu@suse.com wrote:
->>>>>>>
->>>>>>>> 在 2026/1/11 20:33, jollycar 写道:
->>>>>>>>
->>>>>>>>> #regzbot introduced: v6.12..v6.18
->>>>>>>>>
->>>>>>>>> [1.] One line summary of the problem:
->>>>>>>>> VirtualBox VM crashes with BSOD during Windows installation on kernels 6.18+ (works fine on 6.12 LTS)
->>>>>>>>>
->>>>>>>>> [2.] Full description of the problem:
->>>>>>>>> Windows 10 and Windows 11 installation inside VirtualBox consistently crashes with BSOD within 1-3 minutes on Linux kernels 6.18.3 and 6.19-rc3. The same VirtualBox configuration and VM image work perfectly on kernel 6.12 LTS. The BSOD errors vary each time (most recent: 0x80070470 - "file may be corrupt or missing"). The host system remains completely stable with no logged errors.
->>>>>>>>>
->>>>>>>>> [3] Kernel & Hardware:
->>>>>>>>> - Kernel versions tested:
->>>>>>>>> * Working: 6.12.63-1
->>>>>>>>> * Broken: 6.18.3-2, 6.19.0-rc3-1
->>>>>>>>> - Distribution: Manjaro Linux
->>>>>>>>> - Architecture: x86_64
->>>>>>>>> - VirtualBox: 7.2.4 r170995 (vboxdrv vermagic: 6.18.3-2-MANJARO SMP preempt mod_unload)
->>>>>>>>>
->>>>>>>>> [4.] Filesystem and storage:
->>>>>>>>> - Root filesystem: btrfs on LUKS encryption
->>>>>>>>> - Mount options: zstd compression level 3, SSD optimizations, async discard, free space tree
->>>>>>>>> - VM storage: separate btrfs subvolume
->>>>>>>>
->>>>>>>> What's the storage file configuration? Like what's the cache mode setting?
->>>>>>>> I don't know VBox at all, but there may be something similar to
->>>>>>>> libvirt's cache mode (none/unsafe/writethrough etc).
->>>>>>>>
->>>>>>>> More importantly, will tweaking the cache mode change fix the broken
->>>>>>>> kernels?
->>>>>>>> If so it may point to direct IO related behavior changes.
->>>>>>>>
->>>>>>>> And what's the storage file format? QCOW2? RAW? Or whatever format
->>>>>>>> provided by Vbox?
->>>>>>>>
->>>>>>>> And one final question, have you tried qemu (or libvirt + qemu) and can
->>>>>>>> it still be reproduced with qemu?
->>>>>>>> As I'm wondering if the direct IO related change will even affects qemu
->>>>>>>>
->>>>>>>> Thanks,
->>>>>>>> Qu
->>>>>>>>
->>>>>>>>> - btrfs device stats: all zeros (no errors)
->>>>>>>>>
->>>>>>>>> [5.] Reproduction:
->>>>>>>>> - Boot kernel 6.18.3-2 or 6.19.0-rc3
->>>>>>>>> - Start VirtualBox 7.2.4 r170995
->>>>>>>>> - Create new Windows 10 or Windows 11 VM
->>>>>>>>> - Begin OS installation
->>>>>>>>> - BSOD occurs within 1-3 minutes with varying errors (latest: 0x80070470)
->>>>>>>>> - Issue is 100% reproducible on 6.18+, never occurs on 6.12
->>>>>>>>>
->>>>>>>>> Additional context:
->>>>>>>>> - Host system remains completely stable during VM crashes
->>>>>>>>> - No btrfs errors in dmesg or device stats (all zero)
->>>>>>>>> - Issue persists across multiple 6.18/6.19 releases over one month
->>>>>>>>> - VirtualBox 7.2.4 modules load successfully on all kernel versions
->>>>>>>>>
->>>>>>>>> Regards,
->>>>>>>>> Jollycar
+- https://bbs.archlinux.org/viewtopic.php?id=3D310946
+  - Lenovo IdeaPad Slim 5i
 
+- https://discuss.cachyos.org/t/touchpad-not-working-after-linux-6-16-7-=
+update/18348/6
+  - Unspecified laptop model
+
+The following bug reports also seem related because they mention the "pr=
+obe with driver i2c_hid_acpi failed with error -110" message:
+
+- https://bugzilla.kernel.org/show_bug.cgi?id=3D220783
+  - Casper Nirvana C650
+  - SYNA3602:00 093A:0255
+
+- https://lore.kernel.org/regressions/2c8d4baa-679f-4af7-a78d-41774410e9=
+a6@leemhuis.info/T/
+  - Infinix Y4 Max
+  - SYNA3602:00 093A:35ED (I2C HID)
+
+Lastly, I saw another bug report that mentions the "probe with driver i2=
+c_hid_acpi failed with error -110" error.  It seems to state that the er=
+ror only occurs when a power cable is connected during boot:
+
+- https://bugzilla.altlinux.org/57094
+  - Huawei Matebook D15 BOD-WXX9-PCB-B4
+  - i2c-GXTP7863:00
+
+>> so I don't think this is a hardware issue with my individual laptop.
+>
+> I don't know how this conclusion is came here. You mean HW as laptop m=
+odel?
+> But are the involved components the same (I=C2=B2C host controller + t=
+ouchpad)?
+
+Sorry for the confusion.  I meant the individual machine in my possessio=
+n and not the laptop model as a whole.
+
+>
+> --=20
+> With Best Regards,
+> Andy Shevchenko
+
+Thank you!
