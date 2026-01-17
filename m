@@ -1,121 +1,86 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C37FB302767;
-	Sat, 17 Jan 2026 11:08:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D25C950094B;
+	Sat, 17 Jan 2026 15:39:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768648132; cv=none; b=G/GJXbwuVA/Wv9mrEIXi5IgihYTEk0O6y2UINQXM433LXQMnTnKwdyePqZKCy3eI7UFiCsfX6VXcNWL7Bkc0rgx/U21pOk8cxjH1MdDoD8qhleQQfbcz6MXtJaJBp9a8hyBPfsfGLP7R3rLEMU50KHsRUJz4yXFzoXUiDJ4mnx8=
+	t=1768664354; cv=none; b=n1HhxQJzX9+fsF4OVUdioiIe7pMX5b1UZT77snRbOcmP+P8SVBBQCAWkWcAsSVwJinoD1M0bzhZUlXGnBSwY5MrZ1M+K8Dtwv/HBOUKpuWEFN9T9iYSzCC6VbkoEkoLk1nMjlRtTsyYvItZL2j6QDXqKSZbWD+Bss9xpjf51mcU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768648132; c=relaxed/simple;
-	bh=+xBLSIUx2N5KxfA2VeFB//he0XAsrbIf0+B/O+Yz9Jc=;
+	s=arc-20240116; t=1768664354; c=relaxed/simple;
+	bh=T9nfEgfo/woxFjM1RdWlQzdkbfhIfvI92oxrGZNeIhM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ojdO4yz+jwUwRnbBnOVthzJne3J5Pv8gbDivBadv57admL4ODKuYbO/jgmcbzszX8JHd0tHY9ZmVRevvyFlMmYOnhxRPqOeKP5D1lrgmsHBahZrH8W+G8DOXozChUYGEKcMxfYmjD2nJlxqTo4tW/c8siHwiPsbNcGFXXWxiFLk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=S/J2s2LJ; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=B0uu+dVCPSQirzXx5OticMKRnnlhYSUTbo8s7Apzb3B6l8F1HlrDMcDXhK7wAT726EIvcUcF8UiqkZ+YPKTrdOXzVBRIlrPeUtslfpRpfzFl/GQtTSrXV3lEJtWqH9iyQ+3+4lN77Wq6Xs31SyAeovLCuKuws/c6UU2szc3k4Uw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=qzthwW3f; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="S/J2s2LJ"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 549E340E00DE;
-	Sat, 17 Jan 2026 11:08:46 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id dnQvOZ78Pixd; Sat, 17 Jan 2026 11:08:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1768648119; bh=/A+0bk7B40xIPt0aGnnJOZFvRXKoh6vVmNLjdynIbEI=;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="qzthwW3f"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE0C4C4CEF7;
+	Sat, 17 Jan 2026 15:39:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1768664354;
+	bh=T9nfEgfo/woxFjM1RdWlQzdkbfhIfvI92oxrGZNeIhM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=S/J2s2LJHctqwlE0CtnLqOtSoI0/kwSFlCjfgzW9ohr6XUK6scjyDjYSYeZP2vLWn
-	 iEQF03TwH8JJELhwItr3de8rHFBfeZTdV4t7g7KLD2oeH0KnLcFvm3QsyF9q87PfZl
-	 CJA0L5xNmMoPNqBu/q0p9r8dHvjzzN1TCW6t4Jft3ZnAb4cfCsB0AcClAiECwBgpAz
-	 MUaM4I5Bc35q9QV9EZQTwd4PuwAGUIn/4kG+u/4YG2UJYbJwmMaPwNWVmc7CYPiUmg
-	 23TR6JWA+t8z8pISYWVqrxSS85chTH6orToXtCuauij7K9W/DMVru0jawAO7VKY6Py
-	 iMBnkvgLOv7jkqW2+q9m/shl852bevU7nNMxbYS3UuOkaugUHTkPn4XVl3z+JtG1/2
-	 3m3KNPMtaOl+hoI86M+5nEKodJZsuQKTSSTVLYeEfTfrWFevDm2YvBmduCW8lsjj/R
-	 je9Nu807YnHV57be3lVQqJ3rujkUuwRha0a4j+iDiOj2q7RMiezRYKukaIxPKOsKfO
-	 mnGQf1FfBiwrxppsR72uAOhpxk/APaCJtnto2nYZbMoAeumgNblyJw41yFzdMEgG1s
-	 DyvlZahH5YFpLxyHI1R0T2jCenLtkoBPwtSQ2tQWlXU0f+3X0DpNeWz2ZZiZhgIS8j
-	 zTTrXMAV4yCmjqoWlhcka3pE=
-Received: from zn.tnic (pd953023b.dip0.t-ipconnect.de [217.83.2.59])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with UTF8SMTPSA id 7521940E00DA;
-	Sat, 17 Jan 2026 11:08:17 +0000 (UTC)
-Date: Sat, 17 Jan 2026 12:08:09 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Bala-Vignesh-Reddy <reddybalavignesh9979@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>
-Cc: naresh.kamboju@linaro.org, broonie@kernel.org, anders.roxell@linaro.org,
-	arnd@arndb.de, benjamin.copeland@linaro.org,
-	dan.carpenter@linaro.org, dave.hansen@linux.intel.com,
-	hpa@zytor.com, linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, lkft-triage@lists.linaro.org,
-	mingo@redhat.com, regressions@lists.linux.dev,
-	richard.weiyang@gmail.com, shuah@kernel.org, surenb@google.com,
-	tglx@linutronix.de, x86@kernel.org,
-	linux-kernel-mentees@lists.linux.dev,
-	Linux Kernel Functional Testing <lkft@linaro.org>
-Subject: Re: [PATCH] selftests/x86: Add selftests include path for
- kselftest.h after centralization
-Message-ID: <20260117110809.GAaWttmUvKQddPgw07@fat_crate.local>
-References: <CA+G9fYvKjQcCBMfXA-z2YuL2L+3Qd-pJjEUDX8PDdz2-EEQd=Q@mail.gmail.com>
- <20251022062948.162852-1-reddybalavignesh9979@gmail.com>
+	b=qzthwW3fD2eApjb3RbOdq3gXAwcxinZwX20jH8Uk6//jyZRUgLV4RAgs8jZZCwR0h
+	 JEeaBzUEccFKh4tBwgwqYj055ABK7Gj02DX0skESl1e4fnGkPVdZu9Lx+JDpiWogXh
+	 iGqR1V7394nnt//ZmC+b+6NVz1wxirHmYl7IWklU=
+Date: Sat, 17 Jan 2026 16:39:11 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Salvatore Bonaccorso <carnil@debian.org>
+Cc: stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+	Sasha Levin <sashal@kernel.org>,
+	Aboorva Devarajan <aboorvad@linux.ibm.com>, ritesh.list@gmail.com,
+	hbathini@linux.ibm.com, mpe@ellerman.id.au,
+	regressions@lists.linux.dev, benh@debian.org
+Subject: Re: [regression 6.1.y] Backport of 353d7a84c214f18
+ ("powerpc/64s/radix/kfence: map __kfence_pool at page granularity") to
+ stable versions 6.1 causes build failure
+Message-ID: <2026011705-turbulent-scheme-71ef@gregkh>
+References: <aWqmDHdHVLs5M3HQ@eldamar.lan>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251022062948.162852-1-reddybalavignesh9979@gmail.com>
+In-Reply-To: <aWqmDHdHVLs5M3HQ@eldamar.lan>
 
-On Wed, Oct 22, 2025 at 11:59:48AM +0530, Bala-Vignesh-Reddy wrote:
-> The previous change centralizing kselftest.h include path in lib.mk
-> caused x86 selftests to fail, as x86 Makefile overwrites CFLAGS using
-> ":=", dropping the include path added in lib.mk. Therefore, helpers.h
-> could not find kselftest.h during compilation.
+On Fri, Jan 16, 2026 at 09:56:44PM +0100, Salvatore Bonaccorso wrote:
+> Hi,
 > 
-> Fix this by adding the tools/testing/sefltest to CFLAGS in x86 Makefile.
+> In v6.1.160 353d7a84c214f18 ("powerpc/64s/radix/kfence: map
+> __kfence_pool at page granularity") was backported. But this now
+> causes a build failure:
 > 
-> Fixes: 4d89827dfb27 ("selftests: complete kselftest include centralization")
-
-This should be:
-
-e6fbd1759c9e ("selftests: complete kselftest include centralization")
-
-@akpm: I see you took the above commit - I'll take this fix through tip.
-
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> Closes: https://lore.kernel.org/lkml/CA+G9fYvKjQcCBMfXA-z2YuL2L+3Qd-pJjEUDX8PDdz2-EEQd=Q@mail.gmail.com/T/#m83fd330231287fc9d6c921155bee16c591db7360
+> make KERNELRELEASE=6.1.159+ ARCH=powerpc        KBUILD_BUILD_VERSION=3 -f ./Makefile
+>   CALL    scripts/checksyscalls.sh
+>   UPD     init/utsversion-tmp.h
+>   CC      init/version.o
+>   AR      init/built-in.a
+>   CC      arch/powerpc/mm/book3s64/radix_pgtable.o
+> In file included from arch/powerpc/mm/book3s64/radix_pgtable.c:35:
+> ./arch/powerpc/include/asm/kfence.h: In function 'kfence_protect_page':
+> ./arch/powerpc/include/asm/kfence.h:37:9: error: implicit declaration of function '__kernel_map_pages'; did you mean 'hash__kernel_map_pages'? [-Werror=implicit-function-declaration]
+>    37 |         __kernel_map_pages(page, 1, !protect);
+>       |         ^~~~~~~~~~~~~~~~~~
+>       |         hash__kernel_map_pages
+> cc1: some warnings being treated as errors
+> make[7]: *** [scripts/Makefile.build:250: arch/powerpc/mm/book3s64/radix_pgtable.o] Error 1
+> make[6]: *** [scripts/Makefile.build:503: arch/powerpc/mm/book3s64] Error 2
 > 
-> Signed-off-by: Bala-Vignesh-Reddy <reddybalavignesh9979@gmail.com>
-> ---
->  tools/testing/selftests/x86/Makefile | 1 +
->  1 file changed, 1 insertion(+)
+> This is because 8f14a96386b2 ("mm: page_poison: always declare
+> __kernel_map_pages() function") is missing from 6.1.y (it was only
+> included in 6.5-rc1).
 > 
-> diff --git a/tools/testing/selftests/x86/Makefile b/tools/testing/selftests/x86/Makefile
-> index 83148875a12c..434065215d12 100644
-> --- a/tools/testing/selftests/x86/Makefile
-> +++ b/tools/testing/selftests/x86/Makefile
-> @@ -36,6 +36,7 @@ BINARIES_32 := $(patsubst %,$(OUTPUT)/%,$(BINARIES_32))
->  BINARIES_64 := $(patsubst %,$(OUTPUT)/%,$(BINARIES_64))
->  
->  CFLAGS := -O2 -g -std=gnu99 -pthread -Wall $(KHDR_INCLUDES)
-> +CFLAGS += -I $(top_srcdir)/tools/testing/selftests/
->  
->  # call32_from_64 in thunks.S uses absolute addresses.
->  ifeq ($(CAN_BUILD_WITH_NOPIE),1)
-> -- 
+> Cherry-picking 8f14a96386b2 fixes the build failure on powerpc.
+> 
+> #regzbot introduced 36c1dc122eb3b917cd2c343029ff60a366a00539
+> 
+> Marking as regression for 36c1dc122eb3 ("powerpc/64s/radix/kfence: map
+> __kfence_pool at page granularity"), for the 6.1.y specific commit
+> causing the regression.
 
-Thx.
+Now queued up, thanks.
 
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+greg k-h
