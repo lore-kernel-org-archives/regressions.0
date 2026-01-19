@@ -1,86 +1,217 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D25C950094B;
-	Sat, 17 Jan 2026 15:39:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 053BC2DB79F
+	for <regressions@lists.linux.dev>; Mon, 19 Jan 2026 10:39:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768664354; cv=none; b=n1HhxQJzX9+fsF4OVUdioiIe7pMX5b1UZT77snRbOcmP+P8SVBBQCAWkWcAsSVwJinoD1M0bzhZUlXGnBSwY5MrZ1M+K8Dtwv/HBOUKpuWEFN9T9iYSzCC6VbkoEkoLk1nMjlRtTsyYvItZL2j6QDXqKSZbWD+Bss9xpjf51mcU=
+	t=1768819183; cv=none; b=FIAA1xg0yyyryeBX/BwAAYfXk1AmdjOI0NKafX3fkmmMHJm0xKS+LzZ223OZSyvccz4Kf3KiEH9fqaXmebFJebSOuJpgxF6bj/T8LdQu7jEW2BKUSLfHh+OwTZfgg/6jUKQ/KTCpuNhJL5+xxo/slJVWQmW6kDo+i9XAvct1byw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768664354; c=relaxed/simple;
-	bh=T9nfEgfo/woxFjM1RdWlQzdkbfhIfvI92oxrGZNeIhM=;
+	s=arc-20240116; t=1768819183; c=relaxed/simple;
+	bh=eprWXNXC246ylcHLZ5eehw/miq4yVhNE3reMGcwwzhk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B0uu+dVCPSQirzXx5OticMKRnnlhYSUTbo8s7Apzb3B6l8F1HlrDMcDXhK7wAT726EIvcUcF8UiqkZ+YPKTrdOXzVBRIlrPeUtslfpRpfzFl/GQtTSrXV3lEJtWqH9iyQ+3+4lN77Wq6Xs31SyAeovLCuKuws/c6UU2szc3k4Uw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=qzthwW3f; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=LlEjNn6t5L0HvQPrFAqfmefHGXJXxtnq7meq/50ckMB7T+TxLMPKnkfZrMiUAqIgTn2JCweJHSaSc2jeChIgfPxT4vZNFxJ5NMFF7Awt5OQMLX5Yb1XhpIpPdn1iGCwL8Gexnrv7owmsFqr0p8fSHvp8z6LsRUH0cS/JzdhEUj8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=J0XJUS3N; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="qzthwW3f"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE0C4C4CEF7;
-	Sat, 17 Jan 2026 15:39:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1768664354;
-	bh=T9nfEgfo/woxFjM1RdWlQzdkbfhIfvI92oxrGZNeIhM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qzthwW3fD2eApjb3RbOdq3gXAwcxinZwX20jH8Uk6//jyZRUgLV4RAgs8jZZCwR0h
-	 JEeaBzUEccFKh4tBwgwqYj055ABK7Gj02DX0skESl1e4fnGkPVdZu9Lx+JDpiWogXh
-	 iGqR1V7394nnt//ZmC+b+6NVz1wxirHmYl7IWklU=
-Date: Sat, 17 Jan 2026 16:39:11 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Salvatore Bonaccorso <carnil@debian.org>
-Cc: stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-	Sasha Levin <sashal@kernel.org>,
-	Aboorva Devarajan <aboorvad@linux.ibm.com>, ritesh.list@gmail.com,
-	hbathini@linux.ibm.com, mpe@ellerman.id.au,
-	regressions@lists.linux.dev, benh@debian.org
-Subject: Re: [regression 6.1.y] Backport of 353d7a84c214f18
- ("powerpc/64s/radix/kfence: map __kfence_pool at page granularity") to
- stable versions 6.1 causes build failure
-Message-ID: <2026011705-turbulent-scheme-71ef@gregkh>
-References: <aWqmDHdHVLs5M3HQ@eldamar.lan>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="J0XJUS3N"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1768819182; x=1800355182;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=eprWXNXC246ylcHLZ5eehw/miq4yVhNE3reMGcwwzhk=;
+  b=J0XJUS3ND0s+uZzHYQkWpA37Hb9EYuxQ/31fD6AuIm6HCllTnmSMKg0s
+   yz81h6Q4T95wKdTbtQ3vnekYNg2EHsUgiPk2TJnTuF5GzC1UMlgB9y6lM
+   +lP/9J2PMz05O+UZelybzevDahrZRBapaL4hpd6ScoqiQEzM+PwaQQnHz
+   Pje+TAE/bc/V2kyyZkTJwELo8ezMBqH2lPQ7EPDoaLPi69MuSRuOjVbbg
+   CRhClOCfedznFHi5xasx6TnDW4M0ZMjDjP6EXazz6MBbqlP55dgOWcAYC
+   Vw6P8nzocgmJAJcXc8i9tDJ1hRFnfT49VrjxK68Jj+aMz2Re17Tw+PKMz
+   Q==;
+X-CSE-ConnectionGUID: mPctG6IcSM21tXuNXYI3SA==
+X-CSE-MsgGUID: WbVsNyASRPSRbOdDlvW12Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11675"; a="70076609"
+X-IronPort-AV: E=Sophos;i="6.21,238,1763452800"; 
+   d="scan'208";a="70076609"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jan 2026 02:39:41 -0800
+X-CSE-ConnectionGUID: 5OxLWRJOQCGEpMfw20JcCQ==
+X-CSE-MsgGUID: 2ubpp6Q7TvCYgRtKJyd+9g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,238,1763452800"; 
+   d="scan'208";a="236515698"
+Received: from egrumbac-mobl6.ger.corp.intel.com (HELO localhost) ([10.245.244.37])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jan 2026 02:39:39 -0800
+Date: Mon, 19 Jan 2026 12:39:37 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: correctmost <cmlists@sent.com>
+Cc: dmaengine@vger.kernel.org, regressions@lists.linux.dev,
+	vkoul@kernel.org, linux-i2c@vger.kernel.org,
+	mika.westerberg@linux.intel.com
+Subject: Re: [REGRESSION][BISECTED] Lenovo IdeaPad touchpad does not work
+ when idma64 is present in initramfs
+Message-ID: <aW4J6bmHn2dLuOxo@smile.fi.intel.com>
+References: <51388859-bf5f-484c-9937-8f6883393b4d@app.fastmail.com>
+ <aWUGmfcjWpFJs3-X@smile.fi.intel.com>
+ <69f5dea3-17b0-4d3a-9de7-eb54f8f0f5cd@app.fastmail.com>
+ <aWoM3JibLSBdGHeH@smile.fi.intel.com>
+ <aWoUc_GJuZ8SuYCM@smile.fi.intel.com>
+ <e5ee42bd-0d17-44e7-a306-61d19f1d24b2@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <aWqmDHdHVLs5M3HQ@eldamar.lan>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <e5ee42bd-0d17-44e7-a306-61d19f1d24b2@app.fastmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Fri, Jan 16, 2026 at 09:56:44PM +0100, Salvatore Bonaccorso wrote:
-> Hi,
+On Fri, Jan 16, 2026 at 07:25:54PM -0500, correctmost wrote:
+> On Fri, Jan 16, 2026, at 5:35 AM, Andy Shevchenko wrote:
+> > On Fri, Jan 16, 2026 at 12:03:12PM +0200, Andy Shevchenko wrote:
+> >> On Thu, Jan 15, 2026 at 05:50:36PM -0500, correctmost wrote:
+> >> > On Mon, Jan 12, 2026, at 9:35 AM, Andy Shevchenko wrote:
+> >> > > On Tue, Dec 16, 2025 at 12:57:10PM -0500, correctmost wrote:
+> >> > >
+> >> > >> The following commit
+> >> > >
+> >> > > No, it's false positive. The reality is that something else is going on
+> >> > > there on this and other similar laptops.
+> >> > >
+> >> > >> causes my Lenovo IdeaPad touchpad not to work when
+> >> > >> kernel/drivers/dma/idma64.ko.zst is present in the initramfs image:
+> >> > >> 
+> >> > >> #regzbot introduced: 9140ce47872bfd89fca888c2f992faa51d20c2bc
+> >> > >> 
+> >> > >> "idma64: Don't try to serve interrupts when device is powered off"
+> >> > >
+> >> > > So, the touchpad is an I²C device, which is connected to an Intel SoC.
+> >> > > The I²C host controller is Synopsys DesignWare. On Intel SoCs the above
+> >> > > mentioned IP is generated with private DMA engine, that's called Intel
+> >> > > iDMA 64-bit. Basically it's two devices under a single PCI hood.
+> >> > > The problem here is that when PCI device is in D3, both devices are
+> >> > > powered off, but something sends an interrupt and it's not recognized
+> >> > > being the one, send by a device (touchpad).
+> >> > >
+> >> > > There is one of the following potential issues (or their combinations):
+> >> > >
+> >> > > - the I²C host controller hardware got off too early
+> >> > > - the line is shared with something else that generates interrupt storm
+> >> > > - the BIOS does weird (wrong) things at a boot time, like not properly
+> >> > >   shutting down and disabling interrupt sources; also may have wrong
+> >> > >   pin control settings
+> >> > > - the touchpad is operating on higher frequency like 400kHz (because
+> >> > >   BIOS told to use that one instead of 100kHz) than the HW is designed
+> >> > >   for and hence unreliable with all possible side effects
+> >> > > - the touchpad firmware behaves wrongly on some sequences (see also
+> >> > >   note about the bus speed above), try to upgrade touchpad FW
+> >> > >
+> >> > > With my experience with the case of the above mentioned commit that it
+> >> > > may be BIOS thingy. Also consider the bus speed, there are quirks in
+> >> > > the kernel for that.
+> >> > 
+> >> > Thank you for the detailed notes.  I will see if I can update my BIOS and
+> >> > experiment with different quirks values, though I won't be able to do that
+> >> > until late next week.
+> >> 
+> >> You're welcome!
+> >> 
+> >> > >> Here are the related logs:
+> >> > >> 
+> >> > >> ---
+> >> > >> 
+> >> > >> irq 27: nobody cared (try booting with the "irqpoll" option)
+> >> > >
+> >> > > Almost all below is not so interesting.
+> >> > >
+> >> > > ...
+> >> > >
+> >> > >> handlers:
+> >> > >> [<00000000104a7621>] idma64_irq [idma64]
+> >> > >> [<00000000bd8d08e9>] i2c_dw_isr
+> >> > >> Disabling IRQ #27
+> >> > >
+> >> > > Yes, this line at least shared between those two and might be more.
+> >> > >
+> >> > > ...
+> >> > >
+> >> > >> i2c_designware i2c_designware.0: controller timed out
+> >> > >> hid (null): reading report descriptor failed
+> >> > >> i2c_hid_acpi i2c-ELAN06FA:00: can't add hid device: -110
+> >> > >> i2c_hid_acpi i2c-ELAN06FA:00: probe with driver i2c_hid_acpi failed with error -110
+> >> > >
+> >> > > Yes, sounds familiar with the speed settings. Try to down it to 100kHz in case
+> >> > > it's confirmed to be 400kHz.
+> >> > >
+> >> > >> ---
+> >> > >
+> >> > > Any pointers to that thread, please?
+> >> > 
+> >> > The following threads have users who were able to restore touchpad
+> >> > functionality by undoing the idma64 change in initramfs:
+> >> 
+> >> Yes, = "they have hidden the existing problem". No value in that, sorry.
+> >> What is the exact link that refer to the thread you previously mentioned?
+> >> 
+> >> ...
+> >> 
+> >> > Lastly, I saw another bug report that mentions the "probe with driver
+> >> > i2c_hid_acpi failed with error -110" error.  It seems to state that the error
+> >> > only occurs when a power cable is connected during boot:
+> >> > 
+> >> > - https://bugzilla.altlinux.org/57094
+> >> >   - Huawei Matebook D15 BOD-WXX9-PCB-B4
+> >> >   - i2c-GXTP7863:00
+> >> > 
+> >> > >> so I don't think this is a hardware issue with my individual laptop.
+> >> > >
+> >> > > I don't know how this conclusion is came here. You mean HW as laptop model?
+> >> > > But are the involved components the same (I²C host controller + touchpad)?
+> >> > 
+> >> > Sorry for the confusion.  I meant the individual machine in my possession and
+> >> > not the laptop model as a whole.
+> >> 
+> >> Yeah, something here is common and I can't say for sure this all about Synaptic
+> >> touchpads...
+> >
+> > So, what I think I need to understand this more is the following
+> > (all information should be gathered under root user) for working
+> > and non-working cases:
+> >
+> > - `cat /proc/interrupts`
+> > - `dmesg`
+> >    # with `initcall_debug ignore_loglevel` added to the kernel command line
+> > - `cat /sys/kernel/debug/pinctrl/.../pins`
+> >    # ... should be something like INTC1234:00
+> >
+> > And just once these:
+> > - `acpidump -o tables.dat` # the tables.dat file
+> > - `grep -H 15 /sys/bus/acpi/devices/*/status`
+> > - `lspci -nk -vv`
 > 
-> In v6.1.160 353d7a84c214f18 ("powerpc/64s/radix/kfence: map
-> __kfence_pool at page granularity") was backported. But this now
-> causes a build failure:
-> 
-> make KERNELRELEASE=6.1.159+ ARCH=powerpc        KBUILD_BUILD_VERSION=3 -f ./Makefile
->   CALL    scripts/checksyscalls.sh
->   UPD     init/utsversion-tmp.h
->   CC      init/version.o
->   AR      init/built-in.a
->   CC      arch/powerpc/mm/book3s64/radix_pgtable.o
-> In file included from arch/powerpc/mm/book3s64/radix_pgtable.c:35:
-> ./arch/powerpc/include/asm/kfence.h: In function 'kfence_protect_page':
-> ./arch/powerpc/include/asm/kfence.h:37:9: error: implicit declaration of function '__kernel_map_pages'; did you mean 'hash__kernel_map_pages'? [-Werror=implicit-function-declaration]
->    37 |         __kernel_map_pages(page, 1, !protect);
->       |         ^~~~~~~~~~~~~~~~~~
->       |         hash__kernel_map_pages
-> cc1: some warnings being treated as errors
-> make[7]: *** [scripts/Makefile.build:250: arch/powerpc/mm/book3s64/radix_pgtable.o] Error 1
-> make[6]: *** [scripts/Makefile.build:503: arch/powerpc/mm/book3s64] Error 2
-> 
-> This is because 8f14a96386b2 ("mm: page_poison: always declare
-> __kernel_map_pages() function") is missing from 6.1.y (it was only
-> included in 6.5-rc1).
-> 
-> Cherry-picking 8f14a96386b2 fixes the build failure on powerpc.
-> 
-> #regzbot introduced 36c1dc122eb3b917cd2c343029ff60a366a00539
-> 
-> Marking as regression for 36c1dc122eb3 ("powerpc/64s/radix/kfence: map
-> __kfence_pool at page granularity"), for the 6.1.y specific commit
-> causing the regression.
+> The tables.dat file and the dmesg logs seemed too big to post inline, so I
+> ended up zipping all of the files (attached).
 
-Now queued up, thanks.
+Thanks for the files. The same suspicion as in the original report
+https://lore.kernel.org/all/e3f2debf-c762-48d9-876e-bcb60841f909@gmail.com/
 
-greg k-h
+Have you read it in full?
+
+My understanding that the pin 3 on GPIO might be wrongly configured
+by BIOS.  The difference with the original case is that your GPIO device
+is locked against modifications and until you unlock it (usually
+it's done in BIOS in some debug menu) it may not be fixable without OEM
+fixing the issue themselves. In any case you can try the workaround
+(see https://lore.kernel.org/all/ZftTcSA5dn13eAmr@smile.fi.intel.com/).
+But I am skeptical about it.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
