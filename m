@@ -1,248 +1,101 @@
-Received: from mout.web.de (mout.web.de [217.72.192.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDB1E3ECBEE;
-	Tue, 20 Jan 2026 10:28:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C22CF34A764
+	for <regressions@lists.linux.dev>; Tue, 20 Jan 2026 13:47:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768904926; cv=none; b=WEuqgKe5BOTjCWNpjr4QgdYfoIYsZoxgCMYeG7ri98jePsX6dJWbmelZD1PFF9o1e/RA4hQ8raSX9rjx2owAQ14RoZ2C8WfhNudzcpj6PJGhW9OcT4pgV5yV0i9ixU39+CaU5AzxFpgkl+OISH0evBy/MOkEoPDRC7niPbodmQQ=
+	t=1768916833; cv=none; b=S82DVvyhHSN4LY5esqpmnEgxXbngYpsj/otJ4YEVmZNHEi8kn+eVBz2g0x2xW39uPXR1m+R4N3CaqWvCPtqh+N6Qosn070ACUmgz6dM8lTAgcS+k2fbsV+2HXqWQT801Uzfknf0iFusOtogSIh2usRbmff1YXu4G2WUcEsRaVsI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768904926; c=relaxed/simple;
-	bh=o2YEmidTzHei1Gch3ATR/a8V9bGaTg6F2uv6s1c518I=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ZYEPi1jYtr9FrLpM2P/vpc66qzbJfzRst5d3OBwflTCtcbM51OLMD0zSiQIaa5GU7+cuj6PJpGO05XT4kOBEQEdCPQQ7T4xpljNpPa18CZz0YyRDmfqVN9yHtDoEzfwoCUQHZ0KVjvY2Bjk4W4ixt+SqTlPjnT/oaRqMp/RdJUs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b=dzsgeInW; arc=none smtp.client-ip=217.72.192.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1768916833; c=relaxed/simple;
+	bh=WPYbjVjLawIbah5O6LiY/VJ2RpFkbC5QbU6UUNHbYIE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=moHUY7mehnoHXFmxqw/rRBoBwexsEfpGaxDnwyl+MbsECQOBS9YX9sLanp4ouPAC1nCLLNVog2CUM7/C6HbmJy5sihtXdVcA9lLh523+0hq6dCQnewV6Qsma9mTngfbJsgbT+yGMJGztsToxyZVU3xDU9UYhX10Mnw7MdrueqT4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=ZivBMS17; arc=none smtp.client-ip=209.85.208.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b="dzsgeInW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1768904828; x=1769509628; i=spasswolf@web.de;
-	bh=CyHSeQ3UJv8sOqLdcbVinP5LB8wxqbnzWWo7pzqgzmk=;
-	h=X-UI-Sender-Class:Message-ID:Subject:From:To:Cc:Date:In-Reply-To:
-	 References:Content-Type:MIME-Version:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=dzsgeInWbuZNx/dGDZRWvJVtdut+8pIUTjmGXehCiN9H6Qkya9gPC2pD9+h6b8K3
-	 sf2+PjceXwZZ1suiw30QnttMyXVCA+rWHUtIcHQfdrlmSaWcHwIbu5ojHoNaRMpOa
-	 W2CLLOAWM7YMOrQ7oSqYiwQ99oi/dGBd1YZkyNsc+gFld4bDKOE7U7/HnQ+mAvHlX
-	 ExEQPuDXlI4AGnD+9Oz6QkN0x390Oqs6D42x/6z7xE/pHxx+1cinHXhJdtYt4PtFc
-	 z3rVNmxnqTs0KMNjNkRxzrxgaxtoIGsasLIUxssOfFZdo29dokhXEIzOBVd9h923b
-	 Z4oqbGhV8kBLMPCTpg==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.0.101] ([95.223.134.88]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1M8TBS-1vmWfD3elc-00D6gh; Tue, 20
- Jan 2026 11:27:08 +0100
-Message-ID: <82b4d69a5b943aa5e8aa7cc33fcc00bce02e557c.camel@web.de>
-Subject: Re: crash during resume of PCIe bridge in v5.17 (v5.16 works)
-From: Bert Karwatzki <spasswolf@web.de>
-To: Thomas Gleixner <tglx@kernel.org>, linux-kernel@vger.kernel.org
-Cc: linux-next@vger.kernel.org, spasswolf@web.de, Mario Limonciello	
- <mario.limonciello@amd.com>, Sebastian Andrzej Siewior
- <bigeasy@linutronix.de>,  Clark Williams <clrkwllms@kernel.org>, Steven
- Rostedt <rostedt@goodmis.org>, Christian =?ISO-8859-1?Q?K=F6nig?=	
- <christian.koenig@amd.com>, regressions@lists.linux.dev, 
-	linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org, "Rafael J . Wysocki"
-	 <rafael.j.wysocki@intel.com>, acpica-devel@lists.linux.dev, Robert Moore	
- <robert.moore@intel.com>, Saket Dumbre <saket.dumbre@intel.com>, Bjorn
- Helgaas	 <bhelgaas@google.com>, Clemens Ladisch <clemens@ladisch.de>,
- Jinchao Wang	 <wangjinchao600@gmail.com>, Yury Norov
- <yury.norov@gmail.com>, Anna Schumaker	 <anna.schumaker@oracle.com>,
- Baoquan He <bhe@redhat.com>, "Darrick J. Wong"	 <djwong@kernel.org>, Dave
- Young <dyoung@redhat.com>, Doug Anderson	 <dianders@chromium.org>,
- "Guilherme G. Piccoli" <gpiccoli@igalia.com>, Helge Deller <deller@gmx.de>,
- Ingo Molnar <mingo@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>,  Joanthan
- Cameron <Jonathan.Cameron@huawei.com>, Joel Granados
- <joel.granados@kernel.org>, John Ogness	 <john.ogness@linutronix.de>, Kees
- Cook <kees@kernel.org>, Li Huafei	 <lihuafei1@huawei.com>, "Luck, Tony"
- <tony.luck@intel.com>, Luo Gengkun	 <luogengkun@huaweicloud.com>, Max
- Kellermann <max.kellermann@ionos.com>, Nam Cao <namcao@linutronix.de>,
- oushixiong <oushixiong@kylinos.cn>, Petr Mladek	 <pmladek@suse.com>,
- Qianqiang Liu <qianqiang.liu@163.com>, Sergey Senozhatsky	
- <senozhatsky@chromium.org>, Sohil Mehta <sohil.mehta@intel.com>, Tejun Heo	
- <tj@kernel.org>, Thomas Zimemrmann <tzimmermann@suse.de>, Thorsten Blum	
- <thorsten.blum@linux.dev>, Ville Syrjala <ville.syrjala@linux.intel.com>, 
- Vivek Goyal <vgoyal@redhat.com>, Yunhui Cui <cuiyunhui@bytedance.com>,
- Andrew Morton	 <akpm@linux-foundation.org>, W_Armin@gmx.de
-Date: Tue, 20 Jan 2026 11:27:00 +0100
-In-Reply-To: <99f1aaba32030d2b9285dbd983fdf8518a181a8d.camel@web.de>
-References: <20260113094129.3357-1-spasswolf@web.de> <87h5spk01t.ffs@tglx>
-		 <bc20529d7520e7db7de2022bf9c96a1bc3a2f0df.camel@web.de>
-		 <87v7h5ia3d.ffs@tglx>
-	 <99f1aaba32030d2b9285dbd983fdf8518a181a8d.camel@web.de>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.56.2-0+deb13u1 
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZivBMS17"
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-38307233c98so451991fa.2
+        for <regressions@lists.linux.dev>; Tue, 20 Jan 2026 05:47:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1768916829; x=1769521629; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=WPYbjVjLawIbah5O6LiY/VJ2RpFkbC5QbU6UUNHbYIE=;
+        b=ZivBMS17OuMtrbItEyllbZnu1oXqsfzrtDaYqGgp/8Fl0iY8aescLZuSaz8VGV0hnL
+         +2D0isKABMtRPKf1njhN7E9orDGBTcvWEVrQDzZkhCIEFT2H4F9J+e2XJ2nzKGZCUFVj
+         UI699vpq2hid0fGLZ9/odwwvjgeoHni78Vx7c=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768916829; x=1769521629;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WPYbjVjLawIbah5O6LiY/VJ2RpFkbC5QbU6UUNHbYIE=;
+        b=SiQSkvTORli//6V08x2NKGxhlooCLBj5py2gskh8rGNUPaOk4mzgzWwpfLP05F9Rnk
+         keqa+I7FvfJcT5pbbkDm1IGlnIAAEa+77U/k9yH9GZEG8vP37XVF1z7ON/li5PopaVpg
+         mKDb+jP50rob35wL4gQQ7oA0aBRy9HWKaaGJAP+j+objDN4AEYmPRnmhEzgM/vqH16E3
+         FFBjRp9jr9+1Ff6AF8a+Tpe0m4kkV9WsQqGXJpwK2uEN6lGsiwcrAUoHaE/bTQT5xjGz
+         j5raglFm2xS20sLmf0oMDu6oTjDK1iEXtvBftBI8vX7odyvq77lNMBKaudZ72qDvt5jv
+         ZVOg==
+X-Forwarded-Encrypted: i=1; AJvYcCVO3SBbqswv362eTwSpeI9VnarEoWIpjUv1/Dny7BfjM7u99R+s86kCX4ULU7/AuaZuNHSVsX8FgfclRQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yy6LyugB1C/c19coDNxbcMjd6jV3PG/ynOIwtVqP/suKaWye3cg
+	7BsAnmD7+ggBja61HBIPfIh3D1MHF7R3w0lvOF3rkaJwUpnwr1efy7CheDpbM74GnkSsQ/zlusx
+	1nrg=
+X-Gm-Gg: AZuq6aKMHWyfoX34ipNKEBEfo2hvfdGGDFKXCrm33g66TE53gQVC4BobA/MiINNLAEu
+	M/jchfJvwfm9aTn2qAetLGm8fOkT4iOHzOgxzY0Sm7tqrT1lBTjFeqzE4ADTkvB2SD8TjGaQvuy
+	5z3xUonfn7qDXOnbcZsvTjHPqBoYqLSF/Y0hhFusQVn/Z83s3EHCFVX1w4TlSP3JdNhEx07ffij
+	vjmScdOAgBdt4SGLtjy+QQdE82SCvAzrLyxFIUQyMxYOS2Vum6sn+2x+ScDBlQqToEITjzpBr6q
+	QVpSO3GBf/+AYHtDxnRta99pqZhgEs7Spgiw5ZKbT99uQ9l+SfeY3FfOo+bS6FDyxG2GOrJQkgn
+	c9yNAXjL0wBEDV/fzMALhqlz63YLOInizRUKphGbhCy6jeOfCAtA2O5Zmo8YSBqgy225Zb8g9dF
+	Ig3xCvKsGJOLcDVEIjtJUTzpGT4ySriPTqu0X1QTo+37S5+1qk
+X-Received: by 2002:a05:6512:3ca7:b0:59b:83fb:45df with SMTP id 2adb3069b0e04-59baeeec7bamr5079036e87.47.1768916829368;
+        Tue, 20 Jan 2026 05:47:09 -0800 (PST)
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com. [209.85.167.42])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-59baf34f2b2sm4178745e87.34.2026.01.20.05.47.08
+        for <regressions@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 20 Jan 2026 05:47:08 -0800 (PST)
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-59b7073f61dso6617594e87.2
+        for <regressions@lists.linux.dev>; Tue, 20 Jan 2026 05:47:08 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUNLJvTUDJ2B4adm1PC6axzOIU+MpVKNE7CFS96dVYqeExLZS5rCi9RV+gSV2yAJBwIXbGK3mmnwYoWzQ==@lists.linux.dev
+X-Received: by 2002:ac2:5b5a:0:b0:59b:b039:963 with SMTP id
+ 2adb3069b0e04-59bb03909bcmr3524309e87.0.1768916827368; Tue, 20 Jan 2026
+ 05:47:07 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:AMDbhLUWL5uuhXDdpMs4FD7yyH9DuhuguVKE3b9hux84CaHgoxh
- FDlZuudUAzc62+WF+PS65clDkdyylrG9S9EbY/zaSd5JHSiG8ksbGN3FMyaSCoxovcwtVF4
- 0wLxfW6ayTIvW2v+IfMZDh2ed/EPbky2krTwgxJi5p7NImlOz0drfO9yk7mngELFErL5ZEm
- 56r7D7FtCwzI+23dTbwCg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:cAJtVuTQ8/k=;VCLD6sMgAgJ0VhQqVyNcoZurWmg
- hFJbbtMalXMkFKFVsdiE5mpsdh7BnFCwuHjFF/aVH/E4WNU1j94lUI9AjkMJZQnbv/IkQgt7m
- tbWzZzdZIDnNVBrXkYi2WwntJU8Ep3pN19R6N2PXe465KyXzXJGdnyXWZPgPjW/Onj71/Zy/5
- WmnnlorsYMMrkaHzmrsNqljzjLHmLUJ2oxbFtP1WBVJWJ/tHUxZn/np4GzzbiC2urpgn9jDjg
- 2i5mzOWcCBUwLf9wSp9GScSBXB02nD+CB3I+YtvUXYBCYyWWTltBlkl143gKBFd9mMyI9uHjq
- ab8Ix2EMYy29wKSF81AMnDIXxObuL2hMACLUx+gFsMbx8qfBOOuu9q8i1YkzDC1qzrWD0z1+1
- xegHxGLK8XGDKY2DwuVJiK4aJwTJROVFiT25mUVlhJ3lTmEwDkc2zkdc0QFlltcrfTTk/sEkz
- Sl8IulukF+fumiso2Z46ODRuKJdRa2rcKIw8Ep9BCayPcu08x7h1d1wBfFu+0StKyaDOb8/PK
- t9eC9VJqYyvjv3B/o+WzDKCzsLzFglnwrj5L+f6UmYKkzrmgcyd5PEnXmd+UZYNrJgD8IixrG
- LdwKQGHAf1+tTQjJrloy3J5Sel6nu/PjqLPyNWm7SsOrC1fkKoc/gdy64tGcrVhcdZGaI6tJl
- ZzMJ8n5hqJUdqJw3Gz63xvBRNYkofmNW4031CDQPgBhnDs+Ee97WeDP1Zr2HIh2xrd7III9YE
- 4ZMv4ftx0H+5Yk0UbpQ4ZekpPxLCMvNjX7WxF0vM9/5AMV+nSTKd74IHrPOS1doPL+5XmPMhq
- DP+8iD2+93viefMfti+E0z+x8+t9qgMNuyvSMqELceRBnO7mmCp6rZTS3tqszmEhcYN9y/vXc
- pfPk5y8ZswkvbdyxsbBMmDdvmXEbkQFKKPFXeCY/sTXzpBcC3BZxrFwHAsEAhCYoJscbxa51X
- 5br8EQQ/OSbrJeJVEUxR/z5il+LXFZr9UxCXVHl/rzIfNzVUClgcxCCnCQnNY3asrS8FCajG6
- pKYEFdyZVjYpxVmaceurVpcbPYn0QVGpCD3gnIYbT8o83J14buzSwOpXelZuv0m4pWLr+nQfR
- pVcPUsZ5fPlynXIMbkS1Imd1QTq0yna8CSi0TD552q5BWAdpciyI58yegrKWBoowgCN8yo4M5
- T+JoMw3uPUr6/FdCD+4gii9mvTtSErdtBdYytMNXNbkBGQstIWvgX32nebXl2yV7JwKb1MI7t
- W+mvSeyvci274Mn0SGR7m11Z4MNnlR0Hxag4ayB7nZEks0wwshzLnQhOixEnvU08It0CBVGq9
- kSFD9AbVT6HP/PckGroo6P4RDXuqZl0SO8aITPw+PHkqYO9DIC2EAU+kfOYQ5Woy2xITLOWtb
- 2u+tNrJnMfHvjpHbfMBbRWEz4jE035ujimbmqpgCkPN0gNc1GMEM1TSDmK1Jw+gCm3aRJLsru
- 0wwwqgZSG5pNrQ2PCyP447bvLlot9S725JFJtpj+W+Gqmh6U/d6qqsMlqz8nvLLd5a+9QdJOU
- 3PI8nhCK/m6GhZQx1CuFxRaMrnpL3as4dwD/c42og0YnhPmJ1yBx5O2taBGEv75Zp7qUAzAJR
- xKoYc2vDL5sGfvV+LkfBRSqzphatwix332FFcKDW69SV9jZ2vrydban28ODH35AvMGKscsf2c
- t71i01u0lFXJnNYsw3X7LSDQpwgeZMRSBJ4nhi0iY8MmAQEBxr/yczWun/KnYP3gazOCSh/oj
- La6POoy4rpcu3cGD9wCaoOE9qit1e99bdxsF7RWPbD+4ClAUPnvd3l4wNYPaDUNFtXa5KzFCD
- rsbZ7o42CVFnpPLp3tPqfxkAYT/irQ8oaRwSK4F356SWfU6TNlDjCfxFxCTHu4o5YmbnWCZq/
- iZhQtRVS7J0dx68WfHZq2lpvCxaK67noJd321LI+XuIiP8hIMVmcrefEjaJWNYsTkJxUIbuzz
- NQeCSbN+mWh+11yuM8i+ED7cpdJJyFDYtLIt8uHy+tmtV0LsU5fMQCr6enp8rx7AQYIbgLj8J
- jBY54VXSURZXz2J1tEsrQLUqVTnubqRlTEwyiUFGIhG/kDFUx6XuiOksA3H5MNApf63V03R33
- eMiV5yDbaOGU06dQFLEwWVKnd6sc5iUDsoAQwf6NzpTYdoHnU6aR+KxuYsb9Qmk192PQgRZWu
- pgVZbkosyjxk5TZXUE9ACVNxAS6ikvXkZthYsuLcV97zV6yXLTUCTE4G2gajIVhyTnucGw9oh
- qVCSL6wHT12qCpSmI4e/LsLexpDCLkJlycpuQAci/DHgwvtrwt4bNz/wmS3Qz7+kPHgGwb406
- HqR4qu0kG78q4w7xkkqJEcJ1TXY7p0j3IRpeZGv6E+3jAfnYmdmGYrkV7vasC/UgXM6TsPT78
- g5s+6Ukw9lUSN1o7DrbtNVP1VpclD1dbVwBIyw0PGTTBRN5lliDNtP0gkVmYJSOXW0TCfwof6
- zoDAN4DBKFf/Q27/yo7OY5Bi53IuC5B3RMJSNaKtjMbuyVlE1J+Z9fdTxleh+4JGUM2wUwbsz
- piOheYkPSUvvmVLaUvdrU5ae829Z/W4Tpbc9dp16/OR9JgdtEfRFfVAZMoo9W8Ehk7rBTsIcX
- cF2VbNhdtvByfbJ9225ujJpkNDGFmgZJ+2JR0X2fECdytNobGZ7gRvgf6kuzpDixLQUA4r9FI
- 825rKAa9TeuRKXG1lzCIk/c/BhXfhmrH4kRTYDUGnl/4qRWlYuDhsGxiOPpWTQ1nI4aQS5sRl
- 1+Cov8NDTmhxS6ZMTeROpr3OBx+EKrp+DBKtE1pyzLyOGSYI+tYeo4LWeHJsXdXhas21wgyDG
- SZw8ZZb436fkL8yEgLog0YY+uBqSLkGNLoZBpbq6qFzAn3leAhHscaW8TizPuuWR1PQAp/qVh
- bag+TrNcrqfiU+Q/4dzzyAnCktz6BG+nNmC+1Ec7j9kkWHoEk0ge+z8FILnKynuo9749ooKFH
- 61Q4jIPfmt2QYxGoNdBTyMrAiyxh1rgUHbyzMLdcuHRH2EG6XTR+ryCUc32T59KusEFYX7fcg
- uPNUJNtKX1frzXhJhi8T+kGZifNkQ+aA8aqHc0nl8wZWXDMAAoXXiF8vQXTNxZaJWx1qy4zLZ
- yl1qcDogDrYzZpyb2+UTee6Zc8yB7YHZlH3FuHJIR2gMR3rsR5PZneHyAmagcUMVaXCapMxLn
- dCv1eC8m0s3KAYT5yLRweYlPjfBLsDGIf3vOQyb7RXRFW19l2GaKro0aP+rJ41RYpvby1u/CU
- +VZ8vILocDDKpEhpic6FCpiUtt4QG25fyi+hoWizpUlFnNHVE+PUnt+pCp5Ortv9m29466EHu
- DhTCI8SUu22jh8OwbJiXgc1bmScP0i42+iDWvXtJDzYaTzOTiC88HsY6ztTaVSy7LHmX0lEBC
- FftMuljzMPCl0loXD34SWbY0ueQiGJv3nEPyD5LUTEpASo8MLcwcYwzM2QFoUtM5ztdaRgmfb
- VMv4J8/zzeXC1bgkQd1wufnRHLzC3cLktXiGdPEgY3iEUo6qbHquS/AS/ndmJ/OE4GrrHtYyS
- K85Tb+gya9L+3XzbqbQfFYQjRLuvrSLgD4vIEgYfaInXCPDLOCbReKaucdqsCsZsJaOQprqtb
- GJUA3ZOK1vS0S4SEwloavQ2j9yVewr+jaLYkfyB1jmxi0A3ZGslrGaDc+rH6bsqRwlAxgShXU
- ogRr10I6Sy3E2SeXutJNYxqyevZp+UU/O3scydTx0qgqP9KwGr2AByhVBl+sx6Mzc301OEGsH
- Swt1RJOt7fcjG0MoYsYBW3D0VsFzD6Q/xgtj+pSMdzmYavPF5BrFIwe3TANCYln+jwJFEQszT
- c6jsPGnlRaFxXHyfFaMlgn9wzHKxOQSiqOlXPnjdhofF3pfcxUsby5lcCN5fg/dr7zmsJjD8v
- 3xdCrPPGVkPI/NdT3P8fpWUh7z28jezjYjv3TmDyMT4DGFD2KZ54pORZUcItGlTqZKheatD53
- UzNgJBF9k4OSD2XdOBNNJjT97ESTJmMgjYSt4cTkE36D4pFN2r0DiOX+22jcadXFbAip/uNve
- jtnbPL9aS4WxVtEUbUtufx48aRbFcUhmles1xe1dMfNJ7bH+atgUk6UYu0bVylTtLbdDYQWZa
- LHQ9nbT8Pw/DMyKvNm3VCqI6fbNTJunAWc90A7MGrA/Ov+h2eKCbHyaQqYaGVSBWxpGnfoN4t
- p9RFTeM6D6dtx6sbhZSkvJg7wH8gM8SXMx8jGSXrxRsbik2ypc6+jxdoHQvuNWLk+mxbtjxFp
- qnS5zyXY3W/9nO77k9gAkKR01sDWRAMdRfan81+21Ic7skAaAFCC7KnlkbhwpiffGJi52PCzS
- 2N1wP1FIs5RgAHmyx1CFxq2Y4go0JYdM1CRrvtk3oWqNs9ZcRP2Jx5x9WXIRHnrPzf7MMojJw
- uFzZr367Ywe7VfKk1aysLO+jjcJmuDCuQqNNPs8mtBMTvsMrdigB8xBqYNqTlJejALFsM9IDq
- swIxpF8gD7yzvfgXZb3v1ySN6fVZ5w2fG8p+Zge9m43cr2dQ01dSF7rm5I7Cv3ijGrxuldymA
- h43oQcvphBLF49jl6fexFfg/ypw5YyOznCu12jDCA6U++uYfOJzb/aOl3fp9Lp7Boi19vgcTm
- ZTVX9JCGpbd/VyrHrho0YUDdAsQrP6852WVLRpR5D22RkVmFHtttG+ze3PYeTj2qdoBOqyHEF
- fzYvEkQnV98gQa7X3KZy2gOaxFXs2wx/h96JZ1aDq8kJYtxBRL5pVz7rsB2FqjD4wnxp0PokS
- K0/tfvLCi0C6ZQWhP1DLwveInT2qUE56Hc10+Wn21fOfRdxSWmP13QdhvL2Ikly6cvXOpPT77
- HAlNWHG8AtItYvaY5U3rg783AMMK2v/HU0eW16+C3an2LNVXU0BR1QTFczEqfpUY/d9K0sP/M
- o0cDL4fi0hxg2o6RFYEyi3KfgUZeB9vqywZanBTCw4uU/lV0YiL1tcND93UNa6CHzyFDWwp20
- zP9Ms7wgaIO5frew9FhHDIb1JrKoMv/bpcEtSL0mU9RUsO3oKCYNTuX8S8enpfWepkFwTWOi2
- JTPwcyZOjXuXmudZcQMaznJZxsDHvhsXxsUZ07C14RqzS0m2cjUM7V3Epoq+PgbNa9/5m2wFR
- Ct6EFqNY0thFu+H3p6gfiFzpy03D5f8TEIWPN0FW/NtSOvhppiuEkg1JR7KMU88WRD5io1Mcx
- /1hApXIQ=
+References: <aS8YBLEPwF0-NtJO@eldamar.lan> <ba9a132e-6296-451f-8351-4045c0b72d6c@ralfj.de>
+ <4rnbopkefvp6h3dwttj4h7cexehqtbuzzz4gatnebdnjzdy2li@bupytpnlk2xh>
+ <2ed13f74-8de3-4caf-8972-26dd5a31e9fc@ralfj.de> <uboug5ectzm4s32yfgopjbcxq2uhsoc4kluaby7a4b7nzfjave@boco7oocnftr>
+ <176458169204.346596.13968096833088921213.reportbug@r-ethtop>
+ <0490a39a-28d9-4925-a162-5e4d498be257@ralfj.de> <aVfPmZ8rUm3Vf7pT@eldamar.lan>
+ <58a7c628-63dc-48f7-8a46-357ca2d7d500@ralfj.de> <CANiDSCtX-RJrmfiK_rOqi870CK06_ONvnsvqWRZczBXY38eg0w@mail.gmail.com>
+ <dc4c95e6-d19d-414a-a7ae-401dacbaebfd@ralfj.de> <CANiDSCuse+=+MrDUFc_Sd1zXvtY9TDrX0GF6bs2_w34b03Djkw@mail.gmail.com>
+In-Reply-To: <CANiDSCuse+=+MrDUFc_Sd1zXvtY9TDrX0GF6bs2_w34b03Djkw@mail.gmail.com>
+From: Ricardo Ribalda <ribalda@chromium.org>
+Date: Tue, 20 Jan 2026 14:46:54 +0100
+X-Gmail-Original-Message-ID: <CANiDSCt8KFH7d6cc4zTpf10F4G=O6vmZiSj5pPC0q+_e90Cjpw@mail.gmail.com>
+X-Gm-Features: AZwV_QhcJhsYEtASQyqTvxfiHpPRR1t_hSZ4owuCB13wEH8SWQ5tKj9_SmrJt0I
+Message-ID: <CANiDSCt8KFH7d6cc4zTpf10F4G=O6vmZiSj5pPC0q+_e90Cjpw@mail.gmail.com>
+Subject: Re: Bug#1121718: linux-image-6.17.8+deb14-amd64: Logitech C920 HD Pro
+ Webcam shows flickering artifacts (sometimes)
+To: Ralf Jung <post@ralfj.de>
+Cc: Salvatore Bonaccorso <carnil@debian.org>, 1121718@bugs.debian.org, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@baylibre.com>, 
+	linux-media@vger.kernel.org, regressions@lists.linux.dev, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>, Hans de Goede <hansg@kernel.org>, 
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Content-Type: text/plain; charset="UTF-8"
 
-There are exitining news here:
-I tested older linux versions with this script
+Another update
 
-#!/bin/bash
-for i in {0..20000}
-do
-	echo $i
-	evolution &
-	sleep 5
-	killall evolution
-	sleep 5
-done
+Zoom has notified that they plan to land this even earlier. In 6.7.5
 
-with the following results:
-Version v5.17, v6.1 and v6.8 show more or less the same
-behaviour as v6.12+, i.e. repreated resumes crash after a=20
-while (sometimes the discrete GPU is lost without a crash)
+Ralf, if you could confirm that it works/doesn't when zoom is released
+I will be very grateful.
 
-Version v5.15 shows a different behaviour:
-5.15.0-stable-dirty			booted 14:28, 16.1.2026 error 14:52 (25min, 142 resu=
-mes)
-[ 1453.515962] [  T18093] amdgpu 0000:03:00.0: amdgpu: Failed to setup smc=
- hw!
-[ 1453.515978] [  T18093] [drm:amdgpu_device_ip_resume_phase2 [amdgpu]] *E=
-RROR* resume of IP block <smu> failed -62
-[ 1453.516046] [  T18093] amdgpu 0000:03:00.0: amdgpu: amdgpu_device_ip_re=
-sume failed (-62). (-ETIME!)
-5.15.0-stable-dirty			booted 17:09, 16.1.2026 error 20:18 (3h, 1102 resume=
-s)
-[11337.547257] [ T157373] amdgpu 0000:03:00.0: amdgpu: Failed to setup smc=
- hw!
-[11337.547273] [ T157373] [drm:amdgpu_device_ip_resume_phase2 [amdgpu]] *E=
-RROR* resume of IP block <smu> failed -62
-[11337.547358] [ T157373] amdgpu 0000:03:00.0: amdgpu: amdgpu_device_ip_re=
-sume failed (-62).
-5.15.0-stable-dirty			booted 20:51, 16.1.2026 error 21:20 (30min, 164 resu=
-mes)
-[ 1698.065653] [  T22129] amdgpu 0000:03:00.0: amdgpu: Failed to setup smc=
- hw!
-[ 1698.065665] [  T22129] [drm:amdgpu_device_ip_resume_phase2 [amdgpu]] *E=
-RROR* resume of IP block <smu> failed -62
-[ 1698.065734] [  T22129] amdgpu 0000:03:00.0: amdgpu: amdgpu_device_ip_re=
-sume failed (-62).
-5.15.0-stable-dirty			booted 21:25, 16.1.2026 error 21:41 (10min, 91 resum=
-es)
-[  965.908197] [   T3843] amdgpu 0000:03:00.0: amdgpu: Failed to setup smc=
- hw!
-[  965.908212] [   T3843] [drm:amdgpu_device_ip_resume_phase2 [amdgpu]] *E=
-RROR* resume of IP block <smu> failed -62
-[  965.908284] [   T3843] amdgpu 0000:03:00.0: amdgpu: amdgpu_device_ip_re=
-sume failed (-62).
-5.15.0-stable-dirty			booted 21:46, 16.1.2026 error 1:43 17.1.2026 (4h, 14=
-11 resumes)
-[14220.044577] [ T203585] amdgpu 0000:03:00.0: amdgpu: Failed to setup smc=
- hw!
-[14220.044593] [ T203585] [drm:amdgpu_device_ip_resume_phase2 [amdgpu]] *E=
-RROR* resume of IP block <smu> failed -62
-[14220.044662] [ T203585] amdgpu 0000:03:00.0: amdgpu: amdgpu_device_ip_re=
-sume failed (-62).
-
-In all 5 tests the resume failed, but with an error message not seen befor=
-e, also no crash occured.
-
-And most importantly v5.16 did not crash at all, and also did not show any=
- GPU suspend/resume related error
-despite being tested for 36h and 11644 resumes:
-Testing (dirty because of -Wno-error=3Duse-after-free and -Wno-error=3Dfor=
-mat-truncation compile fix)
-5.16.0-stable-dirty			booted 2:09, 17.1.2026 14:20, 18.1.2026 no error (ne=
-ither crash or loss of device)
-					(36h, 11644 resumes)
-
-So the whole issue seems to be a pure software issue after all (not just a=
-n issue related to
-probably broken hardware). I'm currently bisecting this between v5.16 and =
-v5.17, but getting a
-result can take 2 weeks given the length of the testruns.
-
-The first step of the bisection is already finished and GOOD:
-Testing (dirty because of -Wno-error=3Duse-after-free and -Wno-error=3Dfor=
-mat-truncation compile fix)
-5.16.0-bisect-07203-g22ef12195e13-dirty booted 14:27, 18.1.2026 no error 1=
-:57 (35.5h, 12508 resumes)
-
-Bert Karwatzki
-
-
+Thanks :)
