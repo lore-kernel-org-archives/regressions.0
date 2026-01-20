@@ -1,232 +1,187 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B18223D522B
-	for <regressions@lists.linux.dev>; Tue, 20 Jan 2026 09:33:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75E9F3EDABD;
+	Tue, 20 Jan 2026 10:28:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768901586; cv=none; b=TQNM0AqPg74cfZ9aDcn+pAervFgkGCs7m2doYlp86L8N+s+A0NTyXuqNsARmI9mXzaK/Mly35hubbFQ2Svk9w3u1MQVgESVGE3bRekJt0uBRVJQfzcJtRy3gvjB6DK+dZdaNcT3WRUz6JknvhZ5QU156HB/FMQsNzJqbd9OOI54=
+	t=1768904918; cv=none; b=CBdpA4R4IlV/jPIQPGS43/Mw7+3yLgALMZh6ZhEpsZfOMysIvEJNMTvrb9iS3ti0lbUPzctxQXClUNEAzcCEpb0VphGoLtzGdrmjs0xppuIWCoq1CWHCv8XMuPfAMFwstaL8KQhRInRAaaGsMPRWhjd+w9JGYm3w8DwKil2LxIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768901586; c=relaxed/simple;
-	bh=qsJ+9HSE/FVfk7sc+DoEC7vqHjHmibKBwHR30pNYUes=;
+	s=arc-20240116; t=1768904918; c=relaxed/simple;
+	bh=gMtToEHU3bdyf63Jm1PYqaPKqZJdyqzoVHghJG7Uqv4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IiZdHywlPBYt5CnsHuIDuq78BA9C3jBdE1mrZyeHvXlMxXtADt74fUuXbKGw+6XbRwPv581BbE95qA3TQQVujlD/G//5TsDpwA2zypYekHPa4nWRhUH+0vxkVZmXDGyJLYKXtoZ99dcXKaQtoJ+1l8MxUG+HmmWPsPVsCsVm72I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ls33aKIc; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=gzo+4oVZbN6qrwdK8lyy94L6QGTXBu+mXztwD4P/CjlYF8DbrmU13wfT0NaVAAub0Fe7nqXfTbSy/NWsQ5cM1DwK1PGpDTR3MYdqPoRW6LlIeGWPC1GhkPXtd2AVvnB8SSl02sb9bRj+ZpddnEt6lZ2oEWyPk/T8Hd/KMkHTdKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=XRL9jEuP; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ls33aKIc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1768901585; x=1800437585;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=qsJ+9HSE/FVfk7sc+DoEC7vqHjHmibKBwHR30pNYUes=;
-  b=Ls33aKIc66q1biKSVbeq7yBaHt0rRDloUyuFjPmaasJIculS4CnBF7zK
-   z/6cR+6FRYcT+fnorVAcUZh7VeRzqMhVAS4FK7wF3cm3JlLwC/dlQfE+D
-   9LkWRZ3DjNU7/rMMScho9GwDy4TQjDgo+32E2Q8fBd6GYrya0w/WLhr4r
-   Iv3PgHd03QfNWAeoP5vsDuD72dVClLafZxHulyNL9GnpPNSzWWTbix97S
-   3jGqtUnPtwtr+u+27J3oWEDDpDLE31Pc0jBbsjOcoABs2FOT+za7BZwK3
-   pS+xA1GrkRjQWMVaLDWJeMzo0UjeVRTSXkOg432pr79QJemGk3XCKMA3f
-   Q==;
-X-CSE-ConnectionGUID: sE678m4iT5C5YF/dVP3j2Q==
-X-CSE-MsgGUID: Z2Yv/KB7QyGoqFz/nR4WXw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11676"; a="81214704"
-X-IronPort-AV: E=Sophos;i="6.21,240,1763452800"; 
-   d="scan'208";a="81214704"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jan 2026 01:33:04 -0800
-X-CSE-ConnectionGUID: nSFDWnAmTJ2CkibDoXdUYg==
-X-CSE-MsgGUID: XL23t75OQrW6P15MHNJRhw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,240,1763452800"; 
-   d="scan'208";a="205325840"
-Received: from dalessan-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.244.179])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jan 2026 01:33:03 -0800
-Date: Tue, 20 Jan 2026 11:33:00 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: correctmost <cmlists@sent.com>
-Cc: dmaengine@vger.kernel.org, regressions@lists.linux.dev,
-	vkoul@kernel.org, linux-i2c@vger.kernel.org,
-	mika.westerberg@linux.intel.com
-Subject: Re: [REGRESSION][BISECTED] Lenovo IdeaPad touchpad does not work
- when idma64 is present in initramfs
-Message-ID: <aW9LzBIOIePu59zV@smile.fi.intel.com>
-References: <51388859-bf5f-484c-9937-8f6883393b4d@app.fastmail.com>
- <aWUGmfcjWpFJs3-X@smile.fi.intel.com>
- <69f5dea3-17b0-4d3a-9de7-eb54f8f0f5cd@app.fastmail.com>
- <aWoM3JibLSBdGHeH@smile.fi.intel.com>
- <aWoUc_GJuZ8SuYCM@smile.fi.intel.com>
- <e5ee42bd-0d17-44e7-a306-61d19f1d24b2@app.fastmail.com>
- <aW4J6bmHn2dLuOxo@smile.fi.intel.com>
- <aW4MUisgI6d2Efbr@smile.fi.intel.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XRL9jEuP"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=dXVE8AxTKVAG9SkN9IHhazI1Ltr4PeMiulhfYU7pT+U=; b=XRL9jEuPu+c5u+26ByHsV4z5To
+	EDilTqXo4GWfiPsyPaOwXmrGxLzKu5eTTjLUQtLAQuNzbj3x/0UB5wwY+MErhK2s5CkCXOpH+Xn/P
+	3EExOnC32Vg/GgzY1ZqDT1bEs1bcufLLT8LDgX1M3zAMHQBzM0Z6KeJ5rrhD4HDtCoThapXEZ3Sv7
+	vOyZgtz8RtiLGSkcApUSrVCRRxxyS724IyYxWlHYqnM12VZ8boqGvqMgm1FJQ9pJX5WM42negfWKK
+	yRoK0gytxT0baI/xyRFnH3HtfVD7fO9X3+Ewn8YD00/QT67GepFWdlmJbaxQMvbYdBQZTbso2EG10
+	K916HiSg==;
+Received: from 2001-1c00-8d85-5700-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d85:5700:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vi8yP-0000000Do4g-1GGP;
+	Tue, 20 Jan 2026 10:28:33 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 2A0AB303045; Tue, 20 Jan 2026 11:28:32 +0100 (CET)
+Date: Tue, 20 Jan 2026 11:28:32 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Josh Poimboeuf <jpoimboe@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Sasha Levin <sashal@kernel.org>,
+	the arch/x86 maintainers <x86@kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux regressions mailing list <regressions@lists.linux.dev>,
+	irogers@google.com
+Subject: Re: [Regression in 6.19-rc6] Build breakage after commit 436326bc525d
+Message-ID: <20260120102832.GJ1890602@noisy.programming.kicks-ass.net>
+References: <CAJZ5v0gkhSxWZ9wTY+2AGDCtZgSKmOwpg7Np9OVDMJptqnntUQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aW4MUisgI6d2Efbr@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+In-Reply-To: <CAJZ5v0gkhSxWZ9wTY+2AGDCtZgSKmOwpg7Np9OVDMJptqnntUQ@mail.gmail.com>
 
-On Mon, Jan 19, 2026 at 12:49:59PM +0200, Andy Shevchenko wrote:
-> On Mon, Jan 19, 2026 at 12:39:41PM +0200, Andy Shevchenko wrote:
-> > On Fri, Jan 16, 2026 at 07:25:54PM -0500, correctmost wrote:
-> > > On Fri, Jan 16, 2026, at 5:35 AM, Andy Shevchenko wrote:
-> > > > On Fri, Jan 16, 2026 at 12:03:12PM +0200, Andy Shevchenko wrote:
-> > > >> On Thu, Jan 15, 2026 at 05:50:36PM -0500, correctmost wrote:
-> > > >> > On Mon, Jan 12, 2026, at 9:35 AM, Andy Shevchenko wrote:
-> > > >> > > On Tue, Dec 16, 2025 at 12:57:10PM -0500, correctmost wrote:
-> > > >> > >
-> > > >> > >> The following commit
-> > > >> > >
-> > > >> > > No, it's false positive. The reality is that something else is going on
-> > > >> > > there on this and other similar laptops.
-> > > >> > >
-> > > >> > >> causes my Lenovo IdeaPad touchpad not to work when
-> > > >> > >> kernel/drivers/dma/idma64.ko.zst is present in the initramfs image:
-> > > >> > >> 
-> > > >> > >> #regzbot introduced: 9140ce47872bfd89fca888c2f992faa51d20c2bc
-> > > >> > >> 
-> > > >> > >> "idma64: Don't try to serve interrupts when device is powered off"
-> > > >> > >
-> > > >> > > So, the touchpad is an I²C device, which is connected to an Intel SoC.
-> > > >> > > The I²C host controller is Synopsys DesignWare. On Intel SoCs the above
-> > > >> > > mentioned IP is generated with private DMA engine, that's called Intel
-> > > >> > > iDMA 64-bit. Basically it's two devices under a single PCI hood.
-> > > >> > > The problem here is that when PCI device is in D3, both devices are
-> > > >> > > powered off, but something sends an interrupt and it's not recognized
-> > > >> > > being the one, send by a device (touchpad).
-> > > >> > >
-> > > >> > > There is one of the following potential issues (or their combinations):
-> > > >> > >
-> > > >> > > - the I²C host controller hardware got off too early
-> > > >> > > - the line is shared with something else that generates interrupt storm
-> > > >> > > - the BIOS does weird (wrong) things at a boot time, like not properly
-> > > >> > >   shutting down and disabling interrupt sources; also may have wrong
-> > > >> > >   pin control settings
-> > > >> > > - the touchpad is operating on higher frequency like 400kHz (because
-> > > >> > >   BIOS told to use that one instead of 100kHz) than the HW is designed
-> > > >> > >   for and hence unreliable with all possible side effects
-> > > >> > > - the touchpad firmware behaves wrongly on some sequences (see also
-> > > >> > >   note about the bus speed above), try to upgrade touchpad FW
-> > > >> > >
-> > > >> > > With my experience with the case of the above mentioned commit that it
-> > > >> > > may be BIOS thingy. Also consider the bus speed, there are quirks in
-> > > >> > > the kernel for that.
-> > > >> > 
-> > > >> > Thank you for the detailed notes.  I will see if I can update my BIOS and
-> > > >> > experiment with different quirks values, though I won't be able to do that
-> > > >> > until late next week.
-> > > >> 
-> > > >> You're welcome!
-> > > >> 
-> > > >> > >> Here are the related logs:
-> > > >> > >> 
-> > > >> > >> ---
-> > > >> > >> 
-> > > >> > >> irq 27: nobody cared (try booting with the "irqpoll" option)
-> > > >> > >
-> > > >> > > Almost all below is not so interesting.
-> > > >> > >
-> > > >> > > ...
-> > > >> > >
-> > > >> > >> handlers:
-> > > >> > >> [<00000000104a7621>] idma64_irq [idma64]
-> > > >> > >> [<00000000bd8d08e9>] i2c_dw_isr
-> > > >> > >> Disabling IRQ #27
-> > > >> > >
-> > > >> > > Yes, this line at least shared between those two and might be more.
-> > > >> > >
-> > > >> > > ...
-> > > >> > >
-> > > >> > >> i2c_designware i2c_designware.0: controller timed out
-> > > >> > >> hid (null): reading report descriptor failed
-> > > >> > >> i2c_hid_acpi i2c-ELAN06FA:00: can't add hid device: -110
-> > > >> > >> i2c_hid_acpi i2c-ELAN06FA:00: probe with driver i2c_hid_acpi failed with error -110
-> > > >> > >
-> > > >> > > Yes, sounds familiar with the speed settings. Try to down it to 100kHz in case
-> > > >> > > it's confirmed to be 400kHz.
-> > > >> > >
-> > > >> > >> ---
-> > > >> > >
-> > > >> > > Any pointers to that thread, please?
-> > > >> > 
-> > > >> > The following threads have users who were able to restore touchpad
-> > > >> > functionality by undoing the idma64 change in initramfs:
-> > > >> 
-> > > >> Yes, = "they have hidden the existing problem". No value in that, sorry.
-> > > >> What is the exact link that refer to the thread you previously mentioned?
-> > > >> 
-> > > >> ...
-> > > >> 
-> > > >> > Lastly, I saw another bug report that mentions the "probe with driver
-> > > >> > i2c_hid_acpi failed with error -110" error.  It seems to state that the error
-> > > >> > only occurs when a power cable is connected during boot:
-> > > >> > 
-> > > >> > - https://bugzilla.altlinux.org/57094
-> > > >> >   - Huawei Matebook D15 BOD-WXX9-PCB-B4
-> > > >> >   - i2c-GXTP7863:00
-> > > >> > 
-> > > >> > >> so I don't think this is a hardware issue with my individual laptop.
-> > > >> > >
-> > > >> > > I don't know how this conclusion is came here. You mean HW as laptop model?
-> > > >> > > But are the involved components the same (I²C host controller + touchpad)?
-> > > >> > 
-> > > >> > Sorry for the confusion.  I meant the individual machine in my possession and
-> > > >> > not the laptop model as a whole.
-> > > >> 
-> > > >> Yeah, something here is common and I can't say for sure this all about Synaptic
-> > > >> touchpads...
-> > > >
-> > > > So, what I think I need to understand this more is the following
-> > > > (all information should be gathered under root user) for working
-> > > > and non-working cases:
-> > > >
-> > > > - `cat /proc/interrupts`
-> > > > - `dmesg`
-> > > >    # with `initcall_debug ignore_loglevel` added to the kernel command line
-> > > > - `cat /sys/kernel/debug/pinctrl/.../pins`
-> > > >    # ... should be something like INTC1234:00
-> > > >
-> > > > And just once these:
-> > > > - `acpidump -o tables.dat` # the tables.dat file
-> > > > - `grep -H 15 /sys/bus/acpi/devices/*/status`
-> > > > - `lspci -nk -vv`
-> > > 
-> > > The tables.dat file and the dmesg logs seemed too big to post inline, so I
-> > > ended up zipping all of the files (attached).
-> > 
-> > Thanks for the files. The same suspicion as in the original report
-> > https://lore.kernel.org/all/e3f2debf-c762-48d9-876e-bcb60841f909@gmail.com/
-> > 
-> > Have you read it in full?
-> > 
-> > My understanding that the pin 3 on GPIO might be wrongly configured
-> > by BIOS.  The difference with the original case is that your GPIO device
-> > is locked against modifications and until you unlock it (usually
-> > it's done in BIOS in some debug menu) it may not be fixable without OEM
-> > fixing the issue themselves. In any case you can try the workaround
-> > (see https://lore.kernel.org/all/ZftTcSA5dn13eAmr@smile.fi.intel.com/).
-> > But I am skeptical about it.
+On Mon, Jan 19, 2026 at 09:19:31PM +0100, Rafael J. Wysocki wrote:
+> Hi Sasha,
 > 
-> Just in case, this https://hansdegoede.dreamwidth.org/25589.html might be
-> also useful.
+> Commit 436326bc525d ("objtool: fix build failure due to missing
+> libopcodes check") breaks kernel build for me.
+> 
+> Here's what I get when I try to build the kernel after that commit:
+> 
+>   LD      /scratch/rafael/work/build/xps13/tools/objtool/objtool-in.o
+>   LINK    /scratch/rafael/work/build/xps13/tools/objtool/objtool
+> /usr/lib64/gcc/x86_64-suse-linux/15/../../../../x86_64-suse-linux/bin/ld:
+> /usr/lib64/gcc/x86_64-suse-linux/15/../../../../lib64/libopcodes.a(aarch64-dis.o):
+> in function `print_operands':
+> /home/abuild/rpmbuild/BUILD/binutils-2.45/build-dir/opcodes/../../opcodes/aarch64-dis.c:3945:(.text+0x6317):
+> undefined reference to `xmalloc'
+> /usr/lib64/gcc/x86_64-suse-linux/15/../../../../x86_64-suse-linux/bin/ld:
+> /home/abuild/rpmbuild/BUILD/binutils-2.45/build-dir/opcodes/../../opcodes/aarch64-dis.c:3992:(.text+0x6723):
+> undefined reference to `_sch_istable'
+> /usr/lib64/gcc/x86_64-suse-linux/15/../../../../x86_64-suse-linux/bin/ld:
+> /usr/lib64/gcc/x86_64-suse-linux/15/../../../../lib64/libopcodes.a(aarch64-dis.o):
+> in function `print_insn_aarch64':
+> /home/abuild/rpmbuild/BUILD/binutils-2.45/build-dir/opcodes/../../opcodes/aarch64-dis.c:4559:(.text+0x6b1e):
+> undefined reference to `bfd_get_bits'
+> /usr/lib64/gcc/x86_64-suse-linux/15/../../../../x86_64-suse-linux/bin/ld:
+> /usr/lib64/gcc/x86_64-suse-linux/15/../../../../lib64/libopcodes.a(aarch64-dis.o):
+> in function `parse_aarch64_dis_option':
+> /home/abuild/rpmbuild/BUILD/binutils-2.45/build-dir/opcodes/../../opcodes/aarch64-dis.c:103:(.text+0x6dea):
+> undefined reference to `_bfd_error_handler'
+> /usr/lib64/gcc/x86_64-suse-linux/15/../../../../x86_64-suse-linux/bin/ld:
+> /usr/lib64/gcc/x86_64-suse-linux/15/../../../../lib64/libopcodes.a(aarch64-opc.o):
+> in function `init_insn_sequence':
+> /home/abuild/rpmbuild/BUILD/binutils-2.45/build-dir/opcodes/../../opcodes/aarch64-opc.c:5561:(.text+0x5c06):
+> undefined reference to `xcalloc'
+> /usr/lib64/gcc/x86_64-suse-linux/15/../../../../x86_64-suse-linux/bin/ld:
+> /usr/lib64/gcc/x86_64-suse-linux/15/../../../../lib64/libopcodes.a(disassemble.o):
+> in function `remove_whitespace_and_extra_commas':
+> /home/abuild/rpmbuild/BUILD/binutils-2.45/build-dir/opcodes/../../opcodes/disassemble.c:801:(.text+0x346):
+> undefined reference to `_sch_istable'
+> ...
+> 
+> (many more similar messages skipped).
+> 
+> Reverting commit 436326bc525d makes the problem go away.
 
-FWIW, seems familiar:
-https://bugzilla.kernel.org/show_bug.cgi?id=219799
+Bah, I hate makefiles.
 
-Have you tried similar steps described there? (Id est turning PM off and
-see if it affects the case. In your case it might be needed to comment out
-the dev_pm_ops assignment in the LPSS driver drivers/mfd/intel-lpss*.c and
-recompile the kernel / modules).
+Anyway, the below is that revert + adding an explicit libbfd-opcodes
+feature test.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Did I do this right? Josh, Arnaldo, could you comment on that CC vs
+HOSTCC issue that Sasha mentioned?
 
-
+---
+diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
+index 362cf8f4a0a0..4d93375a6474 100644
+--- a/tools/build/Makefile.feature
++++ b/tools/build/Makefile.feature
+@@ -117,6 +117,7 @@ FEATURE_TESTS_EXTRA :=                  \
+          libcapstone                    \
+          libbfd-liberty                 \
+          libbfd-liberty-z               \
++         libbfd-opcodes                 \
+          libopencsd                     \
+          libperl                        \
+          cxx                            \
+diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
+index 0d5a15654b17..4a9fc7a1b2ed 100644
+--- a/tools/build/feature/Makefile
++++ b/tools/build/feature/Makefile
+@@ -19,6 +19,7 @@ FILES=                                          \
+          test-reallocarray.bin			\
+          test-libbfd-liberty.bin                \
+          test-libbfd-liberty-z.bin              \
++         test-libbfd-opcodes.bin                \
+          test-cplus-demangle.bin                \
+          test-cxa-demangle.bin                  \
+          test-libcap.bin			\
+@@ -288,6 +289,9 @@ endif
+ $(OUTPUT)test-libbfd-liberty-z.bin:
+ 	$(CC) $(CFLAGS) -Wall -Werror -o $@ test-libbfd.c -DPACKAGE='"perf"' $(LDFLAGS) -lbfd -ldl -liberty -lz
+ 
++$(OUTPUT)test-libbfd-opcodes.bin:
++	$(CC) $(CFLAGS) -Wall -Werror -o $@ test-libbfd.c $(LDFLAGS) -lbfd -ldl -lopcodes
++
+ $(OUTPUT)test-cplus-demangle.bin:
+ 	$(BUILD) -liberty
+ 
+diff --git a/tools/objtool/Makefile b/tools/objtool/Makefile
+index 9b4503113ce5..5b85652cbfd7 100644
+--- a/tools/objtool/Makefile
++++ b/tools/objtool/Makefile
+@@ -72,27 +72,23 @@ HOST_OVERRIDES := CC="$(HOSTCC)" LD="$(HOSTLD)" AR="$(HOSTAR)"
+ 
+ #
+ # To support disassembly, objtool needs libopcodes which is provided
+-# with libbfd (binutils-dev or binutils-devel package).
++# with libbdf (binutils-dev or binutils-devel package).
+ #
+-# We check using HOSTCC directly rather than the shared feature framework
+-# because objtool is a host tool that links against host libraries.
+-#
+-HAVE_LIBOPCODES := $(shell echo 'int main(void) { return 0; }' | \
+-			$(HOSTCC) -xc - -o /dev/null -lopcodes 2>/dev/null && echo y)
++FEATURE_USER = .objtool
++FEATURE_TESTS = libbfd-opcodes disassembler-init-styled
++FEATURE_DISPLAY =
++include $(srctree)/tools/build/Makefile.feature
+ 
+-# Styled disassembler support requires binutils >= 2.39
+-HAVE_DISASM_STYLED := $(shell echo '$(pound)include <dis-asm.h>' | \
+-			$(HOSTCC) -E -xc - 2>/dev/null | grep -q disassembler_style && echo y)
++ifeq ($(feature-disassembler-init-styled), 1)
++	OBJTOOL_CFLAGS += -DDISASM_INIT_STYLED
++endif
+ 
+ BUILD_DISAS := n
+ 
+-ifeq ($(HAVE_LIBOPCODES),y)
++ifeq ($(feature-libbfd-opcodes),1)
+ 	BUILD_DISAS := y
+-	OBJTOOL_CFLAGS += -DDISAS -DPACKAGE='"objtool"'
++	OBJTOOL_CFLAGS += -DDISAS -DPACKAGE="objtool"
+ 	OBJTOOL_LDFLAGS += -lopcodes
+-ifeq ($(HAVE_DISASM_STYLED),y)
+-	OBJTOOL_CFLAGS += -DDISASM_INIT_STYLED
+-endif
+ endif
+ 
+ export BUILD_DISAS
