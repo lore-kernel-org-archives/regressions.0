@@ -1,194 +1,377 @@
-Received: from DM5PR21CU001.outbound.protection.outlook.com (mail-centralusazon11011026.outbound.protection.outlook.com [52.101.62.26])
+Received: from fhigh-b4-smtp.messagingengine.com (fhigh-b4-smtp.messagingengine.com [202.12.124.155])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC6E931A813;
-	Wed, 21 Jan 2026 02:08:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.62.26
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768961322; cv=fail; b=rIMg3bpkl6NVdFqr9hPuLePJs9GlsHxp2JhK15zd0HRSVmO/ALV833JhRz4AEi3swTEdmVUsZR63JRi53VOwCF6tXolAffgNpqdefX1TmXWbwbi4tPUhsTJDEktcBVwvXbvjL6llYy+YKznoNWkY77AXX5T7X2x3rmk6TStdR6o=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768961322; c=relaxed/simple;
-	bh=jddJwwzEaBDDpawtdYHHgyiKiWts92bHcf98HQPLDOc=;
-	h=Message-ID:Date:To:Cc:From:Subject:Content-Type:MIME-Version; b=kwWj5XxBZAdZoOYu7t4gfMdl037mlpAZKMDmGPOrvrJrDbBa9wKeOcidqN70E9+H2EG9QdhaGjvVh1AoCVwA0PlAP18oUI6AWf3GyjGP61DlB4VpfdZkGai/NnXdonmob+4XQhPmZvDX7pZZFZX2APSJ3u2fO32Ujf9bKy4H724=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=zlo5++Du; arc=fail smtp.client-ip=52.101.62.26
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE5703D3017
+	for <regressions@lists.linux.dev>; Wed, 21 Jan 2026 04:56:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.155
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1768971400; cv=none; b=pmJcWmUYxLxbDh2Ije+Fs00mt8mSpAfTSRT75MgQPudpZ3Kp6RU8UgPKPsWu0EE81C9LMgSU2wgxlTAAGLbKQ8H9BihZzQNRTPGluoecm9iVB8ldzTkZygqkqG3HbEDv12m1a7RAF7oU1PqseRy7jMXD4pxOi4LLfnvDDygsDtY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1768971400; c=relaxed/simple;
+	bh=M9FBsQ8l2dM7sBIZmQ71XB6s8o7HJUNuRx6O1OsCoXE=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=M9R8OZ7nvNfC99HU4i7tCQPSOcGox05GwK5hx38OGra5+OiLnmJY3hQmSZ+bIEvacSHNgn51jbibN5qXC7I1i0v7kYo1KPr1H0KzsuHZlklOSx02iy4RvvjnJfHbLMI1ZG3NiJ0eq62qa1TvBRkogcEdj2lGS5vcMq+W7tLrkbk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sent.com; spf=pass smtp.mailfrom=sent.com; dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b=sfef7a/z; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=E710ZbFk; arc=none smtp.client-ip=202.12.124.155
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sent.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sent.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="zlo5++Du"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=DvMKUpPuOXtZWgMXnLUY8ZF4+afbo2Dgon/OW2FVK3B5qdS+MLtqWsPmvBRx0I4u2sivkN72skQjAKQLhysba3wRUFTTXp/bN3N2ulj2zKBoJF67915NNVEkl7NKoMFHO7OvjPtJqWmtWI5fyapSMWlq5LPaoI73LeGN/ojKIfG+M1/kiEcOHzTkasINt2r+iZcqwK5Zp+AX5YBR7Pw4VFeATy+GJKCb9iFA3kfwRXR6GLrHMuE00vkUbS9JmP9FKtpGQjxfisKBuH0RJ/1rQs/Ru4XLrupeCabjOqjeScYjVQmuxJlbreO05lQMafkzM2mGqolfOvinnt4mois4Rg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qqVc7rhZkS2Nh/tJjJIQcoXmOJtVLftiqLNOMlgFud4=;
- b=sDHjwhDskJtpcHQyZFmT2kzREzk2CwslYy3BPtGB0oyje8U4iFMYlNBgu47kUMB04lk5nKSm9S+bHfmsxBa+6LlMlrXGxZhhmDQ12BPrOdoGSQTkvsD7drrz0fNh2Q+x7BrWMytKnLgiq+bavdQCWF2O1WmL/8f3teR2Nl1/8QLgPXLeb20/Jrbw+SC3Qw/qUu96Ea7XZ7Y5K9VElQuXndBnfILALPsDxPhvIJU+Ryh09K87oiHq2xLeLezb3wP++qzoVd2f5W+8LwvdDqT5tzHrjTN9AgY7XrqZWnyw4LHXrZy9PDaBhqIhdOUZ4P/EZNaEJK0JW+H6g4P3j276Qw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qqVc7rhZkS2Nh/tJjJIQcoXmOJtVLftiqLNOMlgFud4=;
- b=zlo5++Du9+gLqF2Y3KKfy5o1bAMvW3ER05prHaViwvFJdxbLG1ZrOJdtWfrYZ2vuuxE5RFnMsKzomljTaZ1RQjhpNqgzX5zliPaxr+axvucQmCp4MZ2fhLkQGQQy/o+oVqBrV7UGRAAq8z5o7DVuuhpImETNH/JvFcM0jn3re4I=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by CH3PR12MB7691.namprd12.prod.outlook.com (2603:10b6:610:151::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9520.10; Wed, 21 Jan
- 2026 02:08:35 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::94eb:4bdb:4466:27ce]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::94eb:4bdb:4466:27ce%4]) with mapi id 15.20.9520.011; Wed, 21 Jan 2026
- 02:08:35 +0000
-Message-ID: <870872aa-28e9-412a-bac6-8020bf560e4f@amd.com>
-Date: Tue, 20 Jan 2026 20:08:33 -0600
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: regressions <regressions@lists.linux.dev>, stable@vger.kernel.org
-Cc: iommu@lists.linux.dev, "Hegde, Vasant" <Vasant.Hegde@amd.com>,
- "Hou, Lizhi" <lizhi.hou@amd.com>
-From: Mario Limonciello <mario.limonciello@amd.com>
-Subject: IOMMU regression in linux-6.18.y
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA9PR13CA0005.namprd13.prod.outlook.com
- (2603:10b6:806:21::10) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+	dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b="sfef7a/z";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="E710ZbFk"
+Received: from phl-compute-03.internal (phl-compute-03.internal [10.202.2.43])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id F146E7A0070;
+	Tue, 20 Jan 2026 23:56:35 -0500 (EST)
+Received: from phl-imap-04 ([10.202.2.82])
+  by phl-compute-03.internal (MEProxy); Tue, 20 Jan 2026 23:56:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sent.com; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1768971395;
+	 x=1769057795; bh=4E5ZHa5hNScS1Mn2F8/jCr3XAYcZwqjxjNyXaz6s2eE=; b=
+	sfef7a/zm65eTDqKORq1H3agFdQy8dY4wZF73JBJmhftcE1AiZgm1Re1FSuxGTR5
+	LQDWSlt4/GnhqxjT00T20BGNuvVMrbFYOtGYI7xbyMMrXMM8fePfutyLk2/iyEYr
+	9fe+KBxrd/elcfvG7puGCNt/B/kADZXWRXxW0SSpCByOCQBBRcYf+qvyh8c9EarR
+	tuCr6PTpG40FHRgZkxsbWquE8j30HcYBu53BQ4TEwygnk3TMgDVwcSyjEwg8r2Ka
+	GyykniE3R5T4dqa30zHA9dqvCwdCVWVGgXIUN04RG6eWy63Bm5HwlJE9+yYvsTC0
+	bonjjmR0DrMu+n64j/qjhQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1768971395; x=
+	1769057795; bh=4E5ZHa5hNScS1Mn2F8/jCr3XAYcZwqjxjNyXaz6s2eE=; b=E
+	710ZbFkvmnTJz7IpW7Ff/EwGVjNf4pRBJ2zrDBwx/+mtAL38Vb2/OMmbmEsQ8B08
+	kN7/ZN50PYp4rf/O33/8TuaJJvryxqdQc/fRou9npb8N+U5FTlwinm2oAmMFT2IE
+	o05TIlqbZfE77MBsowSFr2ae1zD8SoP901/8AQhpua+JiRtE6MT5OuersMx5inPY
+	w9gv2EKocC0NP4Cp44vMh+jKNJWgIeZcPKZ7+69TxV+qYXZui1jsKAXrvVHbxa5Q
+	j8k6Sil/W1JWOYle/oZB1JvdN2MmuN7EmDlzi8bnuiFyXY2cb4ndbrVJgqDRtUd/
+	LRLWf189C2KoFMAUFXj1Q==
+X-ME-Sender: <xms:g1xwae6jMSFEOVcp0vrMR0_VbxGlsCY7kfUOzoTyaywR_49scYqFaA>
+    <xme:g1xwaSt0YRrJA2Y39u2l3-D5x1dL6G8nEXteX5GeZLhRYMiIoLqEc738d4JkuxPPv
+    lx9n1LBKUuaSd6eOrHZ4AAMx7SgfMwJC3XUozK55ZSZe20UJ_DXnA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddugedvfeejucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepofggfffhvfevkfgjfhfutgfgsehtqhertdertdejnecuhfhrohhmpegtohhrrhgv
+    tghtmhhoshhtuceotghmlhhishhtshesshgvnhhtrdgtohhmqeenucggtffrrghtthgvrh
+    hnpeejuedtvdehteeigeffveehhffhieevuddugfefgfekveetfeeguefhueetffduteen
+    ucffohhmrghinheprghlthhlihhnuhigrdhorhhgpdhkvghrnhgvlhdrohhrghdpughrvg
+    grmhifihguthhhrdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehm
+    rghilhhfrhhomheptghmlhhishhtshesshgvnhhtrdgtohhmpdhnsggprhgtphhtthhope
+    eipdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehvkhhouhhlsehkvghrnhgvlhdr
+    ohhrghdprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehlihhnuhigrd
+    hinhhtvghlrdgtohhmpdhrtghpthhtohepmhhikhgrrdifvghsthgvrhgsvghrgheslhhi
+    nhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehrvghgrhgvshhsihhonhhssehlih
+    hsthhsrdhlihhnuhigrdguvghvpdhrtghpthhtohepughmrggvnhhgihhnvgesvhhgvghr
+    rdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhivdgtsehvghgvrhdrkh
+    gvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:g1xwaciM9gWsn3N5hs_mMv1WM1XU2uWoux3mE_9rebe2VQISTFuo8g>
+    <xmx:g1xwafEAI5ePHcj6NTOsxuLhOzzTITX9LxfKNJPOiEj0HiiUPyEEzA>
+    <xmx:g1xwaT9IxhyUfa0ql6vfjZeR_Zz4u07uOFmgVDZDIERvipGi2bYA1w>
+    <xmx:g1xwaexX0i8TYePrs2Agq15NH-kFKxdDxCUacvNh1n4Mw1y74EEWGw>
+    <xmx:g1xwaUIlGiRG_bMLAf7mVOxgVBLrjyZoKNztojf4DhxfpypUtlueLeyy>
+Feedback-ID: i87314915:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 9F934B6006E; Tue, 20 Jan 2026 23:56:35 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|CH3PR12MB7691:EE_
-X-MS-Office365-Filtering-Correlation-Id: 00c0cb2b-7361-45fc-5d02-08de5891fbb0
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?akl5WVdTRUhwS2U1azdrb3Nya205aDlQY0xuNmdCSkM1M20rYTcxRlU2M2o3?=
- =?utf-8?B?WDlzM0NuKzh3UkFpZXp3SGp2WHRjbDFBbE1YYWhXd2FXTmNUL0dmTFNjNUdk?=
- =?utf-8?B?Mk0vRm1Dd09RMllkU01RWGdlaWF1b1RQbWlzM3hnc1pzM3RHUjJoa1gyS3hN?=
- =?utf-8?B?MlNkL0t2U2hRVEpTamhQdm5tbVZqa2E5bVNEUnA5cWpnNzZzeDRMdlVrNEVV?=
- =?utf-8?B?ODdGQlVSSGQ2TCtYUUhwNmZxYnkrYU96bXMrRHVHQ1dOZEJnbGI1a2tHV2NP?=
- =?utf-8?B?eitjTGlEMTc0N2NlSzBNUW82cTUvQjUwb2dkTTVsWVlNaU90UUF5N0xhbTZN?=
- =?utf-8?B?OEV5RW1wanZPNG11dFF6NVFRNzR5VGFidFVONC8ycXRlWTgxL04zZVQzazR2?=
- =?utf-8?B?Yk1JUTMxT2pVMHZ6aDNrNnBJaDVxQVFmY1gvQXdmQWp5d1dtZmEzWVV0SVIr?=
- =?utf-8?B?aFp1S1hDVVZRTmNhNys3MDNnZ2VadVNaeUJWWTlRWlpuZHpJT1R0VXBvbENm?=
- =?utf-8?B?RGtIQTVOYlA1NDUvaUNzdXpxeVhITTNISXR0RkQ3cHBDMTVDRnRBVDBCRjhr?=
- =?utf-8?B?WVN2QnpuNmd5SDlMZmJlbE9SVlJIYlZoTTJjSWlhR2lZeXBUSlRUUGVUOGZK?=
- =?utf-8?B?UElqN1VZbDQ2a3FVclNlR2tLZHl2OGVFUHBIc3VkUjQrRis5aUxXQ3l3SURH?=
- =?utf-8?B?UjhhTkEwS1FQVXI1Qm1wUlNGS1duZVBWMkFMMnlKOVBxanYvN2dUV1JNMGRw?=
- =?utf-8?B?WkpMYTFtWGllQlhBTHZSN0tpMUNDQjUrMUoybzdOblcwZUtwU05tWnZXZm5m?=
- =?utf-8?B?aHNCYjJCL3VtRmRlZHRmSnVHc1czcmpXRVBuSVZVcTFhSDJCV1NjZk1NRk1y?=
- =?utf-8?B?SGhsV3pnb3VlSHZwUEI4YTgvZFY4M2dFZUtTQjhaam5WdmFXb1lpaUxrdk1I?=
- =?utf-8?B?NjhVdFlyS2NYaUhpNGRLR1A3MThGVmNHbmhiRGUzRjVhcW5lWkN4UjVnb0xH?=
- =?utf-8?B?UlMwQkNVa3pEWW8vaEdZL090V0lXRXc3RkJkcm1DbUhKUUl1U2FBZ09rc3Z0?=
- =?utf-8?B?ZndJc09HdHBESlNYZjRLSlR3OTF0WWRhcHFwS2R6bVZSRFA2eFFFb2UyMlQ1?=
- =?utf-8?B?NDRIeFpkSzhTWm9Na3VhVjdHbXRGL29pSEpSRTVHNDVnZ0hZdXVHVnI1eXVi?=
- =?utf-8?B?MUs3V1Jjem9ZL2pyaVdSTndPVWk3enN2eDZ4cEN6dG1Vb0lQVlEyS0ZOVFR6?=
- =?utf-8?B?L042a3RHUW5sTHNZUU9saGVwbWI5L0p2ZjlCTElJU25laEhqM05xREFPcCtq?=
- =?utf-8?B?MDB2UUZXNGFmZXZNZElwQkJLMnV3a2kwNU1SL09wZjBGM1Rjd0RlV1FhZDBQ?=
- =?utf-8?B?SDFVVHZucDB2Qk96Q2NMdVdhclNLNCtnclBEUDEvZ2hMQnF0MEdsKzd0b3oy?=
- =?utf-8?B?OVlDWmh2S0ZpNkh3SHZzRFYwNDZxc28zbkkzbHhqNmJUbVBVY0kySmRjUUZp?=
- =?utf-8?B?OG5maVlMS3kwU2RGQU5QQ1JlWEQvdEt5MFlFcnRPcUovRnJ6U2lYWUl1ajdm?=
- =?utf-8?B?VXV5K1h3YUxlRWEyQ0pkK2U4WWxtdDlMRXlRdEsyUmNvZ2N0M1BFWU9aMm94?=
- =?utf-8?B?eFJPRGpUNHU4cjNTMjR0MWdhWWpxKzlnYzBvcGIweUF6aVJYWGc3S2lQbUJ1?=
- =?utf-8?B?dVUzVlMyTE1STVJkN091MVdZSFNLTjZhMytBRlI3U0pMczlBSEVnNFc2TkpK?=
- =?utf-8?B?QlRHTEwwcnkzck5BN3ovVm1POXc0dXR6NUlqWHBLMk54eU1PR2k3MTdaejJ3?=
- =?utf-8?B?UnRhM1p1d3B4ejd1YlBaYWxpVmN3eHp5MnNPampjVFUzWHMzL2d5S2pteWpW?=
- =?utf-8?B?YWJJRXRhYTVlQkp4KzZLQVVpWkVLOHI3eVZCSHVrQWhpQTJWVk5hMmxVOU1M?=
- =?utf-8?B?djJPZlBSOW5hTlQ3cFRleVRHbUJpbmFpZzNjdFNLd0VvN3RrdkdkUVBNdUI5?=
- =?utf-8?B?UWl6QTF6NElDRmQ2ZURBZHZaSDk2UlRtN0dtcll1TWpnVWdLSjd6SC9LSGw4?=
- =?utf-8?B?T0I0WUtsbzN4aUNIVDVQazhUMTVES2xXZWczNTkzOTh3QTF6dldYRHk2OEtH?=
- =?utf-8?Q?GFFUl+hXXSuo6xiqAbCrqqtjj?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?WjlIM1BQYldCeU1PYXVOSk5iaVdDU0IydEdtd3N3a0kyamNKdUR2UXYxcDYz?=
- =?utf-8?B?bWZXN3JqdCtqckw3VWR1cy94U1JYQmlVc3RTRmNCcnlBR3M0aWlZNGR4MTVZ?=
- =?utf-8?B?eWFsQVRod2hMbHN1ZndyNjE1dTBTZUZ1UWVYbHBIdXd0b2Jqc3pHaGhiTW8x?=
- =?utf-8?B?NldaanFNcHFsL0FOT0FxR0djZHF4LzNCL2lqR0FXTGdMVGxONkg0YnFlWkt1?=
- =?utf-8?B?TThxNjdYQTN3SUFzR1VRVWg2aVZBMlRQODdYQXZrMDArRjZYU2orbkpPY1lj?=
- =?utf-8?B?MzJlVjgwSU1EeTFzOW5IejBRK0lpbTl5MklvVVIzWEc4R2pzQ1lEc1RUalFH?=
- =?utf-8?B?UVU2eUxueUg3bjQ3VEVIK2t5OHVid1ltbXppZE5nKzg0aS9Md3pkbG1jdmZx?=
- =?utf-8?B?cGJEQWI2S3Y3S3draFlYSW1DUGUzaDhUSGFRanNVWUFYelNCOXRIYUFnVHJ0?=
- =?utf-8?B?SC9JTUlRT2NXNTdFd0FUWkhkd3pUcnBoY0IyOW9rbDQyNGdjWEtTWWRJMUNl?=
- =?utf-8?B?M240Z1pVblhvUG05cUExZGhCNzR3OFU2SGdYcXJ0RGw0RTQ0NWF2TnJXR1E4?=
- =?utf-8?B?RmNmYVltQVVGbWd4amc3K1FmVmNueGdwVytzUmMzTmNZWmdGc2pRMURqQmJJ?=
- =?utf-8?B?OFVwNXkrR3lNL3dia2YxVGR2WGJhekhQMyt0K2xjYXl3MVU3VzdDZ2huNVNx?=
- =?utf-8?B?RGdWcGMzaUJsWFZtZGVzay95TWtvb2NLbEJ4R09VMmREc05nbVRMTEthUkcx?=
- =?utf-8?B?SExQY1VjaVg2SC9QK3lGVjBiRjE5b280N3Vmb0JvNGRLVmE2R1JyU0pQWGJn?=
- =?utf-8?B?NUVnQ1hKQW15NytBOVMxRzNvT0pNV2d4MjhuNk5wMVpSMjQxQ2ppWDRnZkdG?=
- =?utf-8?B?b3NxK2cvVmJPQjJ2aTd2RmlyNEczR3Vyd3p0bHNzWVZQVVlRamp1b0VVSE1t?=
- =?utf-8?B?MjNHbzBONkVJNmROS09MMktLb0VHSGVaTHhUNlhIUytXMnN1dmszc1hyNjNQ?=
- =?utf-8?B?YVZuMlV6bEZOT2g4Z0RDK0NXSDJOZldNVHZaQXZrejNYbUE3b0Zsc1ZEWTQ0?=
- =?utf-8?B?eGMwQytnODBsSmZDcUUxQ2JZRWRTazlOR1ZmNlVwaVp5ei9KY01EbUlHcS9X?=
- =?utf-8?B?K0xRV1gwNTQ2UXBXMkp6cEFXNjVLOXVGY05LUTVrVzZzc0NZQVJkSWlDSXhx?=
- =?utf-8?B?T2thc1B3OUE5d3VkeVh0djAydjcyTkVYVXRMK2g0SU5EMnJZa1gzZnR4Wmc4?=
- =?utf-8?B?SE03UTdCVFIwTnJuS3JqOXVETnkvOFlUUGJSN0trdjd6YkhJSmxQYWRVY1ZJ?=
- =?utf-8?B?M2IwRDdibk5BNm1pM0YvVDE4M2JoTkY5Ylc5eitBa3ZZZDJHMmorcDY1Y2xY?=
- =?utf-8?B?KzQ3RXFjUjU4bWliU1hudXdJWGhtaGxXcThLWVl0MnRzaXQvVFYvekZSUjVx?=
- =?utf-8?B?azF5azJLUkwveEQyRVJybFhQS1hwS1l1SXNuZTBLdmRqTDFpa0hKM0NBYjZS?=
- =?utf-8?B?aDlGRndBbUw0a0o0eEdxM0k1Zy9lQmppL0p1V0R0WmdyaEFCdTBZUkdsTGV6?=
- =?utf-8?B?UVVpSTR3cUd5UDZDSEJDZkZ3QVFxZHNkNEVyUG5JNzVuMHlUeXZkM1BidnJN?=
- =?utf-8?B?VHhzVWowbk16dDRNR2xORXNYTXdqVWtNVUZSYi9walVlNHVLcGdOR1JyT1ZX?=
- =?utf-8?B?TVh0aXhNVTFPOGdLdWRZdGEvMGFIR2ZNUFZ3SW9FSHFCaXcrL2UzWVBDSVkz?=
- =?utf-8?B?RG44YjNJY3FZRmFZMDJNSm5WNk9QZVNRbDRNNFpaWkJRekgzMTZTdmJLdXhK?=
- =?utf-8?B?UnNtRXZORG9ZSzJoNTg3MVdCQXJ4ZEV1YTVQbEtscklyd05DRWw0WXd4a1Bo?=
- =?utf-8?B?Vkx1QlRxYlczbUo1V25kTTd4YzltbE5QTkdNNkorOEhLNkM5NUkvZkhFWXJ5?=
- =?utf-8?B?NDdCUk5jSGtuSXBCMmdLdHozdisxV0duY0hyOUh4eEc4RHQ0ZGNLeXlTK29n?=
- =?utf-8?B?QlhNdkZUdzVzanNtKzllSnluSDVBbVJ1dUtLK0VTb0JDbzdESytoSkxyY1hH?=
- =?utf-8?B?cTY2UmhBWmNSbGgrcDRRU0VpcTUvWXBmY0RCelhhNnlRbnFicHdRYlkzOGhZ?=
- =?utf-8?B?eXlmT3ZaOGFKbzVFcDhUdkVrVytXSkhTdkRwMUZ1SlJzL05lRUtJL0dyNWhl?=
- =?utf-8?B?YUwrSlJaZCtSRHpuMXFqcTdEUGlIczlhQlB2dEF2ckNPb1FlYzVaaGFwVXdz?=
- =?utf-8?B?aWg3N2tXd2pKSmhNbExXRDNCRlgwS1RaSGZ5dmlzS3YyMTRBYlUrZ0o0M29S?=
- =?utf-8?B?NVZtUFBpRk5nVlFOSjdaUXpLVk14bEsydXhWOXI2d1ZsWFN4MlZxUT09?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 00c0cb2b-7361-45fc-5d02-08de5891fbb0
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jan 2026 02:08:35.1445
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 7nS7o4/r28PKZhF+NDO5sozqD3+944kuui5Fe2Q1yuq93YSN7ol9JxokM5S51bZmQokaw4O4230no9jSPZckQA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB7691
+X-ThreadId: AwebR64VcaZc
+Date: Tue, 20 Jan 2026 23:56:15 -0500
+From: correctmost <cmlists@sent.com>
+To: "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>
+Cc: dmaengine@vger.kernel.org, regressions@lists.linux.dev, vkoul@kernel.org,
+ linux-i2c@vger.kernel.org, mika.westerberg@linux.intel.com
+Message-Id: <d7627ea0-0965-4469-83c2-e2a15edd58a9@app.fastmail.com>
+In-Reply-To: <aW9LzBIOIePu59zV@smile.fi.intel.com>
+References: <51388859-bf5f-484c-9937-8f6883393b4d@app.fastmail.com>
+ <aWUGmfcjWpFJs3-X@smile.fi.intel.com>
+ <69f5dea3-17b0-4d3a-9de7-eb54f8f0f5cd@app.fastmail.com>
+ <aWoM3JibLSBdGHeH@smile.fi.intel.com> <aWoUc_GJuZ8SuYCM@smile.fi.intel.com>
+ <e5ee42bd-0d17-44e7-a306-61d19f1d24b2@app.fastmail.com>
+ <aW4J6bmHn2dLuOxo@smile.fi.intel.com> <aW4MUisgI6d2Efbr@smile.fi.intel.com>
+ <aW9LzBIOIePu59zV@smile.fi.intel.com>
+Subject: Re: [REGRESSION][BISECTED] Lenovo IdeaPad touchpad does not work when idma64
+ is present in initramfs
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Tue, Jan 20, 2026, at 4:33 AM, Andy Shevchenko wrote:
+> On Mon, Jan 19, 2026 at 12:49:59PM +0200, Andy Shevchenko wrote:
+>> On Mon, Jan 19, 2026 at 12:39:41PM +0200, Andy Shevchenko wrote:
+>> > On Fri, Jan 16, 2026 at 07:25:54PM -0500, correctmost wrote:
+>> > > On Fri, Jan 16, 2026, at 5:35 AM, Andy Shevchenko wrote:
+>> > > > On Fri, Jan 16, 2026 at 12:03:12PM +0200, Andy Shevchenko wrote:
+>> > > >> On Thu, Jan 15, 2026 at 05:50:36PM -0500, correctmost wrote:
+>> > > >> > On Mon, Jan 12, 2026, at 9:35 AM, Andy Shevchenko wrote:
+>> > > >> > > On Tue, Dec 16, 2025 at 12:57:10PM -0500, correctmost wrot=
+e:
+>> > > >> > >
+>> > > >> > >> The following commit
+>> > > >> > >
+>> > > >> > > No, it's false positive. The reality is that something els=
+e is going on
+>> > > >> > > there on this and other similar laptops.
+>> > > >> > >
+>> > > >> > >> causes my Lenovo IdeaPad touchpad not to work when
+>> > > >> > >> kernel/drivers/dma/idma64.ko.zst is present in the initra=
+mfs image:
+>> > > >> > >>=20
+>> > > >> > >> #regzbot introduced: 9140ce47872bfd89fca888c2f992faa51d20=
+c2bc
+>> > > >> > >>=20
+>> > > >> > >> "idma64: Don't try to serve interrupts when device is pow=
+ered off"
+>> > > >> > >
+>> > > >> > > So, the touchpad is an I=C2=B2C device, which is connected=
+ to an Intel SoC.
+>> > > >> > > The I=C2=B2C host controller is Synopsys DesignWare. On In=
+tel SoCs the above
+>> > > >> > > mentioned IP is generated with private DMA engine, that's =
+called Intel
+>> > > >> > > iDMA 64-bit. Basically it's two devices under a single PCI=
+ hood.
+>> > > >> > > The problem here is that when PCI device is in D3, both de=
+vices are
+>> > > >> > > powered off, but something sends an interrupt and it's not=
+ recognized
+>> > > >> > > being the one, send by a device (touchpad).
+>> > > >> > >
+>> > > >> > > There is one of the following potential issues (or their c=
+ombinations):
+>> > > >> > >
+>> > > >> > > - the I=C2=B2C host controller hardware got off too early
+>> > > >> > > - the line is shared with something else that generates in=
+terrupt storm
+>> > > >> > > - the BIOS does weird (wrong) things at a boot time, like =
+not properly
+>> > > >> > >   shutting down and disabling interrupt sources; also may =
+have wrong
+>> > > >> > >   pin control settings
+>> > > >> > > - the touchpad is operating on higher frequency like 400kH=
+z (because
+>> > > >> > >   BIOS told to use that one instead of 100kHz) than the HW=
+ is designed
+>> > > >> > >   for and hence unreliable with all possible side effects
+>> > > >> > > - the touchpad firmware behaves wrongly on some sequences =
+(see also
+>> > > >> > >   note about the bus speed above), try to upgrade touchpad=
+ FW
+>> > > >> > >
+>> > > >> > > With my experience with the case of the above mentioned co=
+mmit that it
+>> > > >> > > may be BIOS thingy. Also consider the bus speed, there are=
+ quirks in
+>> > > >> > > the kernel for that.
+>> > > >> >=20
+>> > > >> > Thank you for the detailed notes.  I will see if I can updat=
+e my BIOS and
+>> > > >> > experiment with different quirks values, though I won't be a=
+ble to do that
+>> > > >> > until late next week.
+>> > > >>=20
+>> > > >> You're welcome!
+>> > > >>=20
+>> > > >> > >> Here are the related logs:
+>> > > >> > >>=20
+>> > > >> > >> ---
+>> > > >> > >>=20
+>> > > >> > >> irq 27: nobody cared (try booting with the "irqpoll" opti=
+on)
+>> > > >> > >
+>> > > >> > > Almost all below is not so interesting.
+>> > > >> > >
+>> > > >> > > ...
+>> > > >> > >
+>> > > >> > >> handlers:
+>> > > >> > >> [<00000000104a7621>] idma64_irq [idma64]
+>> > > >> > >> [<00000000bd8d08e9>] i2c_dw_isr
+>> > > >> > >> Disabling IRQ #27
+>> > > >> > >
+>> > > >> > > Yes, this line at least shared between those two and might=
+ be more.
+>> > > >> > >
+>> > > >> > > ...
+>> > > >> > >
+>> > > >> > >> i2c_designware i2c_designware.0: controller timed out
+>> > > >> > >> hid (null): reading report descriptor failed
+>> > > >> > >> i2c_hid_acpi i2c-ELAN06FA:00: can't add hid device: -110
+>> > > >> > >> i2c_hid_acpi i2c-ELAN06FA:00: probe with driver i2c_hid_a=
+cpi failed with error -110
+>> > > >> > >
+>> > > >> > > Yes, sounds familiar with the speed settings. Try to down =
+it to 100kHz in case
+>> > > >> > > it's confirmed to be 400kHz.
+>> > > >> > >
+>> > > >> > >> ---
+>> > > >> > >
+>> > > >> > > Any pointers to that thread, please?
+>> > > >> >=20
+>> > > >> > The following threads have users who were able to restore to=
+uchpad
+>> > > >> > functionality by undoing the idma64 change in initramfs:
+>> > > >>=20
+>> > > >> Yes, =3D "they have hidden the existing problem". No value in =
+that, sorry.
+>> > > >> What is the exact link that refer to the thread you previously=
+ mentioned?
+>> > > >>=20
+>> > > >> ...
+>> > > >>=20
+>> > > >> > Lastly, I saw another bug report that mentions the "probe wi=
+th driver
+>> > > >> > i2c_hid_acpi failed with error -110" error.  It seems to sta=
+te that the error
+>> > > >> > only occurs when a power cable is connected during boot:
+>> > > >> >=20
+>> > > >> > - https://bugzilla.altlinux.org/57094
+>> > > >> >   - Huawei Matebook D15 BOD-WXX9-PCB-B4
+>> > > >> >   - i2c-GXTP7863:00
+>> > > >> >=20
+>> > > >> > >> so I don't think this is a hardware issue with my individ=
+ual laptop.
+>> > > >> > >
+>> > > >> > > I don't know how this conclusion is came here. You mean HW=
+ as laptop model?
+>> > > >> > > But are the involved components the same (I=C2=B2C host co=
+ntroller + touchpad)?
+>> > > >> >=20
+>> > > >> > Sorry for the confusion.  I meant the individual machine in =
+my possession and
+>> > > >> > not the laptop model as a whole.
+>> > > >>=20
+>> > > >> Yeah, something here is common and I can't say for sure this a=
+ll about Synaptic
+>> > > >> touchpads...
+>> > > >
+>> > > > So, what I think I need to understand this more is the following
+>> > > > (all information should be gathered under root user) for working
+>> > > > and non-working cases:
+>> > > >
+>> > > > - `cat /proc/interrupts`
+>> > > > - `dmesg`
+>> > > >    # with `initcall_debug ignore_loglevel` added to the kernel =
+command line
+>> > > > - `cat /sys/kernel/debug/pinctrl/.../pins`
+>> > > >    # ... should be something like INTC1234:00
+>> > > >
+>> > > > And just once these:
+>> > > > - `acpidump -o tables.dat` # the tables.dat file
+>> > > > - `grep -H 15 /sys/bus/acpi/devices/*/status`
+>> > > > - `lspci -nk -vv`
+>> > >=20
+>> > > The tables.dat file and the dmesg logs seemed too big to post inl=
+ine, so I
+>> > > ended up zipping all of the files (attached).
+>> >=20
+>> > Thanks for the files. The same suspicion as in the original report
+>> > https://lore.kernel.org/all/e3f2debf-c762-48d9-876e-bcb60841f909@gm=
+ail.com/
+>> >=20
+>> > Have you read it in full?
+>> >=20
+>> > My understanding that the pin 3 on GPIO might be wrongly configured
+>> > by BIOS.  The difference with the original case is that your GPIO d=
+evice
+>> > is locked against modifications and until you unlock it (usually
+>> > it's done in BIOS in some debug menu) it may not be fixable without=
+ OEM
+>> > fixing the issue themselves. In any case you can try the workaround
+>> > (see https://lore.kernel.org/all/ZftTcSA5dn13eAmr@smile.fi.intel.co=
+m/).
+>> > But I am skeptical about it.
 
-Recently I found out that amdxdna stopped working in linux-6.18.4.  This 
-is because of this commit in linux-6.18.y:
+I tested commit c03e9c42ae8 with the following patch and still saw the "=
+probe with driver i2c_hid_acpi failed" error:
 
-commit c341dee80b5d ("iommu: disable SVA when CONFIG_X86 is set")
+diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/int=
+el/pinctrl-intel.c
+index cf9db8ac0f42..738a9f91dafd 100644
+--- a/drivers/pinctrl/intel/pinctrl-intel.c
++++ b/drivers/pinctrl/intel/pinctrl-intel.c
+@@ -1681,6 +1681,19 @@ int intel_pinctrl_probe(struct platform_device *p=
+dev,
+=20
+ 	platform_set_drvdata(pdev, pctrl);
+=20
++	{
++		void __iomem *padcfg0;
++	        u32 value;
++
++		padcfg0 =3D intel_get_padcfg(pctrl, 3, PADCFG0);
++
++		guard(raw_spinlock_irqsave)(&pctrl->lock);
++		value =3D readl(padcfg0);
++		value |=3D PADCFG0_GPIOTXDIS;
++		value |=3D PADCFG0_GPIORXDIS;
++		writel(value, padcfg0);
++	}
++
+ 	return 0;
+ }
+ EXPORT_SYMBOL_NS_GPL(intel_pinctrl_probe, "PINCTRL_INTEL");
 
-That was originally backported from upstream:
+>>=20
+>> Just in case, this https://hansdegoede.dreamwidth.org/25589.html migh=
+t be
+>> also useful.
 
-commit 72f98ef9a4be ("iommu: disable SVA when CONFIG_X86 is set")
+Thanks, I will try to find out if my laptop allows access to advanced BI=
+OS options.
 
----
+The Lenovo support site lists some BIOS updates for my laptop, though th=
+e release notes do not mention any touchpad fixes.  The updates are not =
+available via fwupd, so I probably won't be able to update anytime soon.
 
-SVA support is a requirement for amdxdna.
+>
+> FWIW, seems familiar:
+> https://bugzilla.kernel.org/show_bug.cgi?id=3D219799
+>
+> Have you tried similar steps described there? (Id est turning PM off a=
+nd
+> see if it affects the case. In your case it might be needed to comment=
+ out
+> the dev_pm_ops assignment in the LPSS driver drivers/mfd/intel-lpss*.c=
+ and
+> recompile the kernel / modules).
 
-The series that this commit came from was part of a larger 8 patch 
-series, but this was the only commit that was CC'ed to stable.
+I tested commit c03e9c42ae8 with the following changes and still saw the=
+ "probe with driver i2c_hid_acpi failed" error:
 
-As a result this is not broken in 6.19-rc, but it is broken in 
-linux-6.18.y (and presumably any older stable kernels still around that 
-picked it up).
+diff --git a/drivers/mfd/intel-lpss-acpi.c b/drivers/mfd/intel-lpss-acpi=
+.c
+index 63406026d809..4e6fdb872655 100644
+--- a/drivers/mfd/intel-lpss-acpi.c
++++ b/drivers/mfd/intel-lpss-acpi.c
+@@ -212,7 +212,7 @@ static struct platform_driver intel_lpss_acpi_driver=
+ =3D {
+ 	.driver =3D {
+ 		.name =3D "intel-lpss",
+ 		.acpi_match_table =3D intel_lpss_acpi_ids,
+-		.pm =3D pm_ptr(&intel_lpss_pm_ops),
++		// .pm =3D pm_ptr(&intel_lpss_pm_ops),
+ 	},
+ };
+=20
+diff --git a/drivers/mfd/intel-lpss-pci.c b/drivers/mfd/intel-lpss-pci.c
+index 8d92c895d3ae..7d96bf1bc808 100644
+--- a/drivers/mfd/intel-lpss-pci.c
++++ b/drivers/mfd/intel-lpss-pci.c
+@@ -656,7 +656,7 @@ static struct pci_driver intel_lpss_pci_driver =3D {
+ 	.probe =3D intel_lpss_pci_probe,
+ 	.remove =3D intel_lpss_pci_remove,
+ 	.driver =3D {
+-		.pm =3D pm_ptr(&intel_lpss_pm_ops),
++		// .pm =3D pm_ptr(&intel_lpss_pm_ops),
+ 	},
+ };
 
-So there are two options I see:
+I also tried booting Arch's 6.18.5 kernel with the power cord unplugged =
+to see if that helped, but I still saw the "i2c_hid_acpi failed" error.
 
-1) Revert c341dee80b5d in linux-6.18.y (and any other stable kernel that 
-picked it up but has amdxdna)
-
-2) Bring the entire 8 patch series to linux-6.18.y.
-
-This is the entire series (I didn't look up the hashes from mainline, 
-but they should have all landed):
-https://lore.kernel.org/linux-iommu/20251022082635.2462433-1-baolu.lu@linux.intel.com/
-
-What should we do?
+It seems like the next step is to try to enable GPIO unlocking in the BI=
+OS.
