@@ -1,132 +1,117 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C5F04A2E18
-	for <regressions@lists.linux.dev>; Wed, 21 Jan 2026 15:19:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DED113002D6;
+	Wed, 21 Jan 2026 16:25:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769008763; cv=none; b=RwWWdLU+Ei5Ae2Alk3Gu3jhAa4jO8erIYTtqLhAQ7dtdlmBiS6kuRDNr/GWT8Te/kIco63djseQV8xjJfxMXkNBymSKoQqdEvbU8x3R7IML/miJn2wxJ8OBhv3wwIOI9OLmmJttCH8ak4QF4gcmd16zFUqQfcQkLtG5AN+wvAf0=
+	t=1769012745; cv=none; b=hS5Q1uBn5G/jSdq9PVexKSosQlg4UTtoLSsyPUPhptYFkRCKNqf0byQS8WDoIWFfYqOjAnlZqAPu5M5wmkgILz3JkbGrZdgzOr7ebszXPKlEqTU36CFeRyzf1I0t7ixT3fby7vaJ2MInzTI9chR1DCrI5qgWdGMu2+SPkes/iqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769008763; c=relaxed/simple;
-	bh=1+YSusSEMkMAiteRU+8FWU3WXTOqPIoC9SA8+ckckPE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aOmyo66PO7krr3eIgy7YjLrhlJeHBMgV2UHSO34sGqTK5FwEqIM+VzN54LRyCpramBrZTJWsRxDV/u6VyAy6a8hTYfXKhdn6bmjN7xsFrrYWjuxJOBOnvLZGQr/rpU3MH7G1PWQxXgPY8oyCJi7AO+RogHyqQfHxg6KMDxn7J04=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=db1fv9Sv; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1769012745; c=relaxed/simple;
+	bh=Whc/kcX3hnhTeIAYH8SPMeuh2COtMk+lnyySuY2yQP8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=aU97jfN/pbdZcqZpOK+QwJXz/FiQOIUBahrURJGhdZLW3bNwNxHqJm28pBv0GCkx5dtH6LXc5rZQkWbp7dh4qURsgFqL3ydtIxG3/7Rn3uBX7KcYC/AUduX/dxZYXoQeOA1vVEKzXDkRAaFiTsv1HGfUIyGJd5cM8pOPNUdPqTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tjLywE63; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="db1fv9Sv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1769008761; x=1800544761;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=1+YSusSEMkMAiteRU+8FWU3WXTOqPIoC9SA8+ckckPE=;
-  b=db1fv9SvDRze8zmO6vEMUtfatje6yVBeVhu58uZ7+bgAOgEx3T9OuV/E
-   DKgVPpw65pCVlUZOy61TeEkwvyf3O7G50qAwrGfhlysK2kJKW6CE/Xj02
-   b4F/Io4UIkEp9M9JZxwdYFBxQvFVplQHfCMfEKpFpdrvZel7hGUaP7ABr
-   oCqep96B3TJtBtWHqXYvlvgy+FVNsal5f0jTLr+ABxLSzJHvwHBwZ4DoG
-   8UhUSYeKr3KPDfSkPe3EgmaZdQg4cpAFIWCIzkzATkRfL6aNK54PwvSbo
-   95igVpOnYiVFansa8qNTbKe+h6O3x7hYX4TvK+WaKmrdtszAe6rdFXmMI
-   g==;
-X-CSE-ConnectionGUID: 6yi+1XSwQMCQ3pHSQCp4qA==
-X-CSE-MsgGUID: uQg9MThcRI6ekXO6Znt9kA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11678"; a="74090985"
-X-IronPort-AV: E=Sophos;i="6.21,242,1763452800"; 
-   d="scan'208";a="74090985"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jan 2026 07:19:20 -0800
-X-CSE-ConnectionGUID: g0jgJXSxRPGgyjpSQGDc/w==
-X-CSE-MsgGUID: pH4uvPkMSuK1JGNxQzZGQQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,242,1763452800"; 
-   d="scan'208";a="244047150"
-Received: from pgcooper-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.245.73])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jan 2026 07:19:20 -0800
-Date: Wed, 21 Jan 2026 17:19:17 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: correctmost <cmlists@sent.com>, dmaengine@vger.kernel.org,
-	regressions@lists.linux.dev, vkoul@kernel.org,
-	linux-i2c@vger.kernel.org
-Subject: Re: [REGRESSION][BISECTED] Lenovo IdeaPad touchpad does not work
- when idma64 is present in initramfs
-Message-ID: <aXDuddwBCelAVouQ@smile.fi.intel.com>
-References: <aWoUc_GJuZ8SuYCM@smile.fi.intel.com>
- <e5ee42bd-0d17-44e7-a306-61d19f1d24b2@app.fastmail.com>
- <aW4J6bmHn2dLuOxo@smile.fi.intel.com>
- <aW4MUisgI6d2Efbr@smile.fi.intel.com>
- <aW9LzBIOIePu59zV@smile.fi.intel.com>
- <d7627ea0-0965-4469-83c2-e2a15edd58a9@app.fastmail.com>
- <aXCYwBMTwkHZPYsi@smile.fi.intel.com>
- <20260121135803.GM2275908@black.igk.intel.com>
- <aXDos20kksml8wdU@smile.fi.intel.com>
- <20260121150256.GN2275908@black.igk.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tjLywE63"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76C7EC4CEF1;
+	Wed, 21 Jan 2026 16:25:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1769012744;
+	bh=Whc/kcX3hnhTeIAYH8SPMeuh2COtMk+lnyySuY2yQP8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=tjLywE63y3ZCblxUPwIDykhVcWRaCX+762m9SOnZdqM3dkgl8PPeMfOfoWWzHo8qA
+	 gN0pQ+hvF189L2fkwVsAQoQAwAbBnDZQftlBLmx6TpvUGDD2Tofo/kxsoHsz40YcYd
+	 RdA8JaIA6giBpLRYS+lHJkn7sxE63Ajjo5fY7U8W0MzxN/bGt3RXMeshKNZ2xI4k9c
+	 6FrKiE1ry7naYQ4WF2rXSfeegl8Nu3bX319lLOOkSlEm7KIgwI2DXdA0IWr3oUV4Sq
+	 Gus/LBfZnVL2V/jyWu0wxTETr7zPj8vli0QR/RfHL2pS7jLAFRpitSq/q7B8HCG0sY
+	 B8AaPHsq7jiWw==
+From: Sasha Levin <sashal@kernel.org>
+To: sashal@kernel.org
+Cc: acme@kernel.org,
+	irogers@google.com,
+	jpoimboe@kernel.org,
+	linux-kernel@vger.kernel.org,
+	peterz@infradead.org,
+	rafael@kernel.org,
+	regressions@lists.linux.dev,
+	torvalds@linux-foundation.org,
+	x86@kernel.org
+Subject: [PATCH] objtool: fix libopcodes linking with static libraries
+Date: Wed, 21 Jan 2026 11:25:32 -0500
+Message-ID: <20260121162532.1596238-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <aXDBRPmk1N5m6Jr-@laps>
+References: <aXDBRPmk1N5m6Jr-@laps>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260121150256.GN2275908@black.igk.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Wed, Jan 21, 2026 at 04:02:56PM +0100, Mika Westerberg wrote:
-> On Wed, Jan 21, 2026 at 04:54:43PM +0200, Andy Shevchenko wrote:
-> > > My understanding is that some models touchpad does not work if the idma64
-> > > driver is loaded but they do work if it is not. Also there is some sort of
-> > > interrupt flood coming from somewhere?
-> > > 
-> > > When idma64 is not present the toucpad works flawlessly?
-> > 
-> > On *old* kernels where idma64 blindly acknowledges all the interrupts.
-> > Fixed idma64 doesn't affect the IRQ storm because it's just a given
-> > fact on these laptops.
-> > 
-> > > Does it works in Windows?
-> > > 
-> > > I mean if it works in Windows and we also know it works in Linux without
-> > > idma64 then we can go with some sort of quirk (or better yet figure out
-> > > what is going on) to keep users touchpads working. I think this is much
-> > > better option than asking BIOS update from vendor which there is close to
-> > > zero possibility to happen in reality.
-> > 
-> > What kind of a quirk? Just to create a module that will request the same IRQ
-> > and always acknowledges it? Sounds to me like a heavily papering over solution
-> > TBH. (Yes, I assume it may be used only on DMI based enumeration only on the
-> > affected models, but still...)
-> 
-> Well I mean if touchpads actually worked prior this idma64 commit and now
-> they don't isn't that a regression?
+Commit 436326bc525d ("objtool: fix build failure due to missing libopcodes
+check") tests for libopcodes using an empty main(), which passes even when
+static libraries lack their dependencies. This causes undefined reference
+errors (xmalloc, bfd_get_bits, etc.) when linking against static libopcodes
+without its required libbfd and libiberty.
 
-I don't think so, because commit did the right thing and just revealed an issue
-that was rather hidden. Reverting is not an option.
+Fix by testing with an actual libopcodes symbol and trying increasingly
+complete library combinations until one succeeds.
 
-> After that one commit touchpads don't
-> work anymore. I would much rather make sure users devices keep functional
-> even if it turns out to be hack of some sort.
+Fixes: 436326bc525d ("objtool: fix build failure due to missing libopcodes check")
+Reported-by: Rafael J. Wysocki <rafael@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
 
-It's one of the ugliest hacks I ever seen. I really don't want to go this way.
-In any case, the problem is with interrupts coming from I²C controller. You can
-consider adding that hack into there which sounds at least much better place
-than idma64.c which has nothing to do with all this.
+Rafael, I'd appreciate if you could test this patch without the .so symlink
+workaround. Thanks :)
 
-> For example could be blacklist idma64? Does that help?
+ tools/objtool/Makefile | 21 +++++++++++++++++----
+ 1 file changed, 17 insertions(+), 4 deletions(-)
 
-No, it won't.
-
-> Yes the interrupt flood still happens but if that does not affect the
-> toucpad then that's still better than non-functional touchpad IMO.
-
-So, the only "best" option I see is to add a quirk module (somewhere in PDx86
-area) that just registers an interrupt handler to acknowledge it. Very weird.
-
+diff --git a/tools/objtool/Makefile b/tools/objtool/Makefile
+index 9b4503113ce5f..a40f302329291 100644
+--- a/tools/objtool/Makefile
++++ b/tools/objtool/Makefile
+@@ -77,8 +77,21 @@ HOST_OVERRIDES := CC="$(HOSTCC)" LD="$(HOSTLD)" AR="$(HOSTAR)"
+ # We check using HOSTCC directly rather than the shared feature framework
+ # because objtool is a host tool that links against host libraries.
+ #
+-HAVE_LIBOPCODES := $(shell echo 'int main(void) { return 0; }' | \
+-			$(HOSTCC) -xc - -o /dev/null -lopcodes 2>/dev/null && echo y)
++# When using shared libraries, -lopcodes is sufficient as dependencies are
++# resolved automatically. With static libraries, we must explicitly link
++# against libopcodes' dependencies: libbfd, libiberty, and sometimes libz.
++# Try each combination and use the first one that succeeds.
++#
++LIBOPCODES_LIBS := $(shell \
++	for libs in "-lopcodes" \
++		    "-lopcodes -lbfd" \
++		    "-lopcodes -lbfd -liberty" \
++		    "-lopcodes -lbfd -liberty -lz"; do \
++		echo 'extern void disassemble_init_for_target(void *);' \
++		     'int main(void) { disassemble_init_for_target(0); return 0; }' | \
++			$(HOSTCC) -xc - -o /dev/null $$libs 2>/dev/null && \
++			echo "$$libs" && break; \
++	done)
+ 
+ # Styled disassembler support requires binutils >= 2.39
+ HAVE_DISASM_STYLED := $(shell echo '$(pound)include <dis-asm.h>' | \
+@@ -86,10 +99,10 @@ HAVE_DISASM_STYLED := $(shell echo '$(pound)include <dis-asm.h>' | \
+ 
+ BUILD_DISAS := n
+ 
+-ifeq ($(HAVE_LIBOPCODES),y)
++ifneq ($(LIBOPCODES_LIBS),)
+ 	BUILD_DISAS := y
+ 	OBJTOOL_CFLAGS += -DDISAS -DPACKAGE='"objtool"'
+-	OBJTOOL_LDFLAGS += -lopcodes
++	OBJTOOL_LDFLAGS += $(LIBOPCODES_LIBS)
+ ifeq ($(HAVE_DISASM_STYLED),y)
+ 	OBJTOOL_CFLAGS += -DDISASM_INIT_STYLED
+ endif
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.51.0
 
