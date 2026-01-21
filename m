@@ -1,142 +1,82 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 470F8EADC
-	for <regressions@lists.linux.dev>; Wed, 21 Jan 2026 19:09:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3960A34CFBB;
+	Wed, 21 Jan 2026 19:25:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769022545; cv=none; b=OUURTNrDRI6YNW8wkAevTg6yn5lVE99/Yg01U8+KE8lL5F05UUy60/hzUwG7JQ4PINdUr5wl46hZwWUA72O19f5Imti+Lb/VvkJwdJ+wFWxF9aO4IqUXjnlcSHzjRxX1EaaQzVdj0qJseO/OTYawMPiN11/lpxllLodiQixkj2g=
+	t=1769023539; cv=none; b=qZWh9sl3oYfry2Khxwb7I1Uhz64EoS+dyLk7e5iDi8VDEPFuM6Nxw7dsRjPWHAhmmMFD+8hdLUeBdEoKjhxlWJcF1DMtSK9nnIldcHyFCIXlh4S9XDMi0CMnTO7rvinapjMptfI5xtuik5FN0i0rHzyu3ltcdkUR6KOKt7czdRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769022545; c=relaxed/simple;
-	bh=W58klCYAYA5BeFetF34tB9xivYNNX5uNHOHICRiJiXk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=c9P4kNn0s/p5CNK+AcCPdu+QaUIyAY8pEIPsUCgyK8hBBuk5g5Ol9AYQSjhirBHJ3/Y643Q8ILSnZzE4pHEXvO0j7C8RgMl1vVpOkWy/WJ5elqu25uk/HnZC9sCx03rUDZVXr6EZ0CLGNhqBdabOuC4MzKE058h3y53/ALozW9Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u2Rur4H4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1769023539; c=relaxed/simple;
+	bh=dRKRlvmamvbk5CfvKmylO1/PDKEuaBe2CUSfId099lI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sWk8foHIyYwiPLtpXPjS9YnrF3Hh6pjkzOaWediAG2sbD++E7XaGkkdrfTjljHDCudoEcR5FD9C9RqAuhCorZG6RBkTLeACo+EbOXMw66AA4mQiTfbAQV6p4Ksdo42oWeTpqn5ytc7xv5mmWEcDT+JwibohVE8JFlw+t7D1WDZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Qp+aohaC; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u2Rur4H4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A48A8C4CEF1
-	for <regressions@lists.linux.dev>; Wed, 21 Jan 2026 19:09:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769022544;
-	bh=W58klCYAYA5BeFetF34tB9xivYNNX5uNHOHICRiJiXk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=u2Rur4H4j2GpljpN+k7PLMqJGIKw8MR/UzdDRikPVZzGH+DROfMSXhEPuGv9hv/bp
-	 eFhkreT7xWy5XHIIDfYl0PSNjjnzmqkJXMuTbWWxIroLBRJXYnCMkvuwX3KKQJV+I3
-	 PmYBGNyg1Pmj3QJhvh5ZW+trqTHEQYwk+CW/PeafFkIWT8HzxbrKmZqKzIaEqh+rRY
-	 wVYSBNyA5ZTieu2dK+LpGC+2RA5UUNny+PdyiGjlhPAGIyW/crbfMsSAz86pqzDCbn
-	 CO/aNWZKXRezktWZzjw5ATwz9ngmOQOeMCFNWx/8h87GJIA7Y+IqvZIfHvArq8UWjM
-	 r9UkjT0cnuV2Q==
-Received: by mail-oo1-f47.google.com with SMTP id 006d021491bc7-66106a2f8d1so75325eaf.1
-        for <regressions@lists.linux.dev>; Wed, 21 Jan 2026 11:09:04 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUPPckuQYzAbZ+s4OIQ93rhplcVkBAgP7BHbENX0NvPphrXEtq8V+Ob2YGKeR5Pkj8UZzHwnNB2h/eEzA==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxSs4vgRzyysXMEbCRyiCyIJGnlBkOUYkpA7qk1gbBpS910cvAL
-	nHedtaTv1uYPHoN9OQveChRcEgk59n8gA9LZbrRwpayzA4R0dUkfpdOqDgAPbRJeY/HlNUwdDro
-	1INrQP3Igpu7eop46ZdQuaxJWdrm2U8c=
-X-Received: by 2002:a05:6820:1989:b0:65f:564f:34b1 with SMTP id
- 006d021491bc7-662affb8367mr2453637eaf.16.1769022543782; Wed, 21 Jan 2026
- 11:09:03 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Qp+aohaC"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=KlUFIeazWU5NpNAl+nwft1NjY/qSqAbZt6eAH6zEH3U=; b=Qp+aohaCHK0Mjs1Xb5Z5OU54aJ
+	WN36B2jh32WF9pUrn0f1VYyyCLL5TDUeH3AZiAwrquTJxuBKPslIlL50rCwFpGKdiukK/m5fvS4Iu
+	6EqtVKIcBa63jUdUnEE+BWyljDoJtaNZ/X0153IAKWTjeQuyTG8C5C0WrE8Vj42RdzhRHYVRiIC9Q
+	JAEGB9poiNDmzxG30zeP/coCjpqOJ80nFrmo93pfuHLg31qwWhr+IFZaY279CEgBxZyz2/gVR7Ja8
+	VPewLy8F+CKFxZGhfyUynD2n2P3XwSTbcQMRXgfBoF0c3GLHmHzgi9kGMmiLrV/3KhgzfxJisRjtW
+	+AYKrSvA==;
+Received: from 2001-1c00-8d85-5700-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d85:5700:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vidpb-0000000Ggpo-3p1V;
+	Wed, 21 Jan 2026 19:25:32 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 0BE06300328; Wed, 21 Jan 2026 20:25:31 +0100 (CET)
+Date: Wed, 21 Jan 2026 20:25:31 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Sasha Levin <sashal@kernel.org>, acme@kernel.org, irogers@google.com,
+	jpoimboe@kernel.org, linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev, torvalds@linux-foundation.org,
+	x86@kernel.org
+Subject: Re: [PATCH] objtool: fix libopcodes linking with static libraries
+Message-ID: <20260121192531.GN166857@noisy.programming.kicks-ass.net>
+References: <aXDBRPmk1N5m6Jr-@laps>
+ <20260121162532.1596238-1-sashal@kernel.org>
+ <CAJZ5v0jRxwuVgody9TbUqhyj6Ajr+NjchUSo2m6Uzs3PrNoJHw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <aXDBRPmk1N5m6Jr-@laps> <20260121162532.1596238-1-sashal@kernel.org>
-In-Reply-To: <20260121162532.1596238-1-sashal@kernel.org>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 21 Jan 2026 20:08:51 +0100
-X-Gmail-Original-Message-ID: <CAJZ5v0jRxwuVgody9TbUqhyj6Ajr+NjchUSo2m6Uzs3PrNoJHw@mail.gmail.com>
-X-Gm-Features: AZwV_QggtSdVZ5tgHyiSe47PiUm1mNxPbRfHwfaOezxFdNcqwv1p-ddq__g5QKQ
-Message-ID: <CAJZ5v0jRxwuVgody9TbUqhyj6Ajr+NjchUSo2m6Uzs3PrNoJHw@mail.gmail.com>
-Subject: Re: [PATCH] objtool: fix libopcodes linking with static libraries
-To: Sasha Levin <sashal@kernel.org>
-Cc: acme@kernel.org, irogers@google.com, jpoimboe@kernel.org, 
-	linux-kernel@vger.kernel.org, peterz@infradead.org, rafael@kernel.org, 
-	regressions@lists.linux.dev, torvalds@linux-foundation.org, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJZ5v0jRxwuVgody9TbUqhyj6Ajr+NjchUSo2m6Uzs3PrNoJHw@mail.gmail.com>
 
-On Wed, Jan 21, 2026 at 5:25=E2=80=AFPM Sasha Levin <sashal@kernel.org> wro=
-te:
->
-> Commit 436326bc525d ("objtool: fix build failure due to missing libopcode=
-s
-> check") tests for libopcodes using an empty main(), which passes even whe=
-n
-> static libraries lack their dependencies. This causes undefined reference
-> errors (xmalloc, bfd_get_bits, etc.) when linking against static libopcod=
-es
-> without its required libbfd and libiberty.
->
-> Fix by testing with an actual libopcodes symbol and trying increasingly
-> complete library combinations until one succeeds.
->
-> Fixes: 436326bc525d ("objtool: fix build failure due to missing libopcode=
-s check")
-> Reported-by: Rafael J. Wysocki <rafael@kernel.org>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->
-> Rafael, I'd appreciate if you could test this patch without the .so symli=
-nk
-> workaround. Thanks :)
+On Wed, Jan 21, 2026 at 08:08:51PM +0100, Rafael J. Wysocki wrote:
+> On Wed, Jan 21, 2026 at 5:25 PM Sasha Levin <sashal@kernel.org> wrote:
+> >
+> > Commit 436326bc525d ("objtool: fix build failure due to missing libopcodes
+> > check") tests for libopcodes using an empty main(), which passes even when
+> > static libraries lack their dependencies. This causes undefined reference
+> > errors (xmalloc, bfd_get_bits, etc.) when linking against static libopcodes
+> > without its required libbfd and libiberty.
+> >
+> > Fix by testing with an actual libopcodes symbol and trying increasingly
+> > complete library combinations until one succeeds.
+> >
+> > Fixes: 436326bc525d ("objtool: fix build failure due to missing libopcodes check")
+> > Reported-by: Rafael J. Wysocki <rafael@kernel.org>
+> > Signed-off-by: Sasha Levin <sashal@kernel.org>
+> > ---
+> >
+> > Rafael, I'd appreciate if you could test this patch without the .so symlink
+> > workaround. Thanks :)
+> 
+> Works here, so
+> 
+> Tested-by: Rafael J. Wysocki (Intel) <rafael@kernel.org>
 
-Works here, so
-
-Tested-by: Rafael J. Wysocki (Intel) <rafael@kernel.org>
-
->  tools/objtool/Makefile | 21 +++++++++++++++++----
->  1 file changed, 17 insertions(+), 4 deletions(-)
->
-> diff --git a/tools/objtool/Makefile b/tools/objtool/Makefile
-> index 9b4503113ce5f..a40f302329291 100644
-> --- a/tools/objtool/Makefile
-> +++ b/tools/objtool/Makefile
-> @@ -77,8 +77,21 @@ HOST_OVERRIDES :=3D CC=3D"$(HOSTCC)" LD=3D"$(HOSTLD)" =
-AR=3D"$(HOSTAR)"
->  # We check using HOSTCC directly rather than the shared feature framewor=
-k
->  # because objtool is a host tool that links against host libraries.
->  #
-> -HAVE_LIBOPCODES :=3D $(shell echo 'int main(void) { return 0; }' | \
-> -                       $(HOSTCC) -xc - -o /dev/null -lopcodes 2>/dev/nul=
-l && echo y)
-> +# When using shared libraries, -lopcodes is sufficient as dependencies a=
-re
-> +# resolved automatically. With static libraries, we must explicitly link
-> +# against libopcodes' dependencies: libbfd, libiberty, and sometimes lib=
-z.
-> +# Try each combination and use the first one that succeeds.
-> +#
-> +LIBOPCODES_LIBS :=3D $(shell \
-> +       for libs in "-lopcodes" \
-> +                   "-lopcodes -lbfd" \
-> +                   "-lopcodes -lbfd -liberty" \
-> +                   "-lopcodes -lbfd -liberty -lz"; do \
-> +               echo 'extern void disassemble_init_for_target(void *);' \
-> +                    'int main(void) { disassemble_init_for_target(0); re=
-turn 0; }' | \
-> +                       $(HOSTCC) -xc - -o /dev/null $$libs 2>/dev/null &=
-& \
-> +                       echo "$$libs" && break; \
-> +       done)
->
->  # Styled disassembler support requires binutils >=3D 2.39
->  HAVE_DISASM_STYLED :=3D $(shell echo '$(pound)include <dis-asm.h>' | \
-> @@ -86,10 +99,10 @@ HAVE_DISASM_STYLED :=3D $(shell echo '$(pound)include=
- <dis-asm.h>' | \
->
->  BUILD_DISAS :=3D n
->
-> -ifeq ($(HAVE_LIBOPCODES),y)
-> +ifneq ($(LIBOPCODES_LIBS),)
->         BUILD_DISAS :=3D y
->         OBJTOOL_CFLAGS +=3D -DDISAS -DPACKAGE=3D'"objtool"'
-> -       OBJTOOL_LDFLAGS +=3D -lopcodes
-> +       OBJTOOL_LDFLAGS +=3D $(LIBOPCODES_LIBS)
->  ifeq ($(HAVE_DISASM_STYLED),y)
->         OBJTOOL_CFLAGS +=3D -DDISASM_INIT_STYLED
->  endif
-> --
-> 2.51.0
->
+Excellent, thanks all!
