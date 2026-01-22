@@ -1,61 +1,61 @@
-Received: from mail-dl1-f65.google.com (mail-dl1-f65.google.com [74.125.82.65])
+Received: from mail-dl1-f67.google.com (mail-dl1-f67.google.com [74.125.82.67])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7CEB33E373
-	for <regressions@lists.linux.dev>; Thu, 22 Jan 2026 18:59:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDCE226980F
+	for <regressions@lists.linux.dev>; Thu, 22 Jan 2026 19:59:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.67
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769108362; cv=none; b=kzYmL8e9ZcKWzjh3j7KKkqdJNVBB9bSJAnN5aYMaZ2NVYgdb8vD49eyO/6Zc0VRweiSla5DlVTSMZi2xHDm3kcqz41kTApEfKgKi+csna/9KcOprpSWR3Ev+idJWjTlv8GuvhnkwKXKGRKeOQQoFa7fWwjvvlzqHaZIEGb9bFO0=
+	t=1769111947; cv=none; b=NCCbxl5a6R4pYHnGf4VfCybILb3rbvt8RYY1xgFVC8BsR/v9YEmEz0Dy++JQfgAHWxJ0O4v4CIDnnX4zLEMfOIF3goIzZX7OCoqUy7k1vLqi9MCNt52URJRPFV1sBEJndEFt+shxyljcaxSno/mYZEaW763GGiYhctp4T5BwO3A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769108362; c=relaxed/simple;
-	bh=4hu1g6v6fa86edOO4CtgsbDn0dI/VTmtx7rVd9sxHOk=;
-	h=Content-Type:MIME-Version:Subject:From:To:Cc:Date:Message-ID; b=PcXrfgay8sDWQk6/t9D6bKyY8OfLaR1ihN81Zg9eJyPeBUus4c41Zpdg0nXb4dG95U2InlIA300/J69XMCJArt4lz+g3qBjM7983q/IIg0Z7Oc6epTsq6SF2msYoIw1HjNEOXQiXUeAgVOIzACLzhEeIOfFkq31d3NtRO6mlgCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org; spf=none smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b=YmKM6GC4; arc=none smtp.client-ip=74.125.82.65
+	s=arc-20240116; t=1769111947; c=relaxed/simple;
+	bh=2t8E3MkhKABmyAjVd0Ef3V6oirxpLfRfIzmzGHTHGGQ=;
+	h=Content-Type:MIME-Version:Subject:From:To:Cc:Date:Message-ID; b=nple0Ifo5ubwVTCeM0Wri+TQBsi5COVh8/8kbmXOVMWQCf8nK67+Az4kPytY9ViP2pxSyEF8ge4tX4d44ubZ7pQbirgjdoLpbjZSLDXYpQMRXp/Ax6cfXe0BVJB6AhdIfuOYm8Ann1M8eQ13+2qzriyKb9qXPZRcmKYRTtbqhUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org; spf=none smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b=YI/BC6c0; arc=none smtp.client-ip=74.125.82.67
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=kernelci.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b="YmKM6GC4"
-Received: by mail-dl1-f65.google.com with SMTP id a92af1059eb24-12331482b8fso1256226c88.1
-        for <regressions@lists.linux.dev>; Thu, 22 Jan 2026 10:59:08 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b="YI/BC6c0"
+Received: by mail-dl1-f67.google.com with SMTP id a92af1059eb24-1233702afd3so2209280c88.0
+        for <regressions@lists.linux.dev>; Thu, 22 Jan 2026 11:59:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20230601.gappssmtp.com; s=20230601; t=1769108346; x=1769713146; darn=lists.linux.dev;
+        d=kernelci-org.20230601.gappssmtp.com; s=20230601; t=1769111945; x=1769716745; darn=lists.linux.dev;
         h=message-id:date:reply-to:cc:to:from:subject
          :content-transfer-encoding:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=hrIzk2/xJmwFk/zbADXcPOxmFVVXMdsJP8L/1g75haU=;
-        b=YmKM6GC4sBNUhkavmMtUIDQc8LQQG7682VTTvnc2C7+b/C6w0ZYmn/a854GzttjQuM
-         6AFqcIhwa8YIiYKRNroAC9l3MIZPGKY08E+znHbQIjZ13ynHWfMNBh67ECdlhX6UoH7t
-         tWvDTjaTqg3f2SuKhDtot81I1aFpWlphRd6eKuEJTV9tzVE4rubd0hB+as1XmZcpHLs7
-         njuTjgoNIrJS8vvIQ3LDBTLW7WaUZqDJg95rEX+dTugIUKn2vNrgfBLiZOnArB0xx3vE
-         PmVcGULczHqpSjIEUBSSxh6RuzZOBBKfQ57wbdvFRYEPNHhDkf+l0XHGfARmxTh3rnZM
-         Pdzw==
+        bh=KU9C5wBf3Lxzx7WFsDTDEcyUVyGJTPYy46OajzXqiaE=;
+        b=YI/BC6c0/QuKhdWA9A3hAM4TvqHzTUcaZWxXfi7Nk1ezdKWvKQm2DkrdXRTSTTm2Px
+         2jk3k4k3s1W85KTozQUn723M3rfG3Zdgib7GuqBY6E5AvuQg3+8gPOgKdqT5m9E2qRQI
+         Et/W3bMNF5FmDH4WLuFvvOqz9eZ/NO5V7WVyY9lobI6Flx9Zt74fTXJ3O4X23k+T999C
+         ufnEXXa4ERlYFczw9yAY4lQP6bpxII8JqiXfHfNO8Z/c/LDeHozmlHH6zNiQXenkny0+
+         CkIMtFSb0HxQYEqyBg0rgkOD/bOsR6uI7utCjsSSQxbSmPgwSgY1AMjK7nHEePdxqDDb
+         OIvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769108346; x=1769713146;
+        d=1e100.net; s=20230601; t=1769111945; x=1769716745;
         h=message-id:date:reply-to:cc:to:from:subject
          :content-transfer-encoding:mime-version:x-gm-gg:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=hrIzk2/xJmwFk/zbADXcPOxmFVVXMdsJP8L/1g75haU=;
-        b=hd7MvSyGaNQJR0W4q2uxNS0bJiGBfm7lXCxNb23kp0B06yIm3MrT/cJNZSDd3zqv0B
-         4DXrZmEoNNnlaXQxw9PM8gEY+l1gmbvwnaBJjAdZMelgRh3p8DRj5D8/29OSqtJ+gWZG
-         JItS0pqurgPDM32GTzKD+RwjVnywySmFMqwl8e6PdOsiCH9w6NdYGki1KEDGjTB2/F2D
-         5gtv60+3f39Zy6HzEHdT63JaK0cejSIc718rjwe6Q41JHAysCYZ3PiWAym38GliY0tPO
-         cJbW7QR1fd2RbG1czb3UpITK/nOQUVzFOGIPB1KWSE7Erc/Fsgy3oWxUv3ya2qSwra/H
-         Zm8w==
-X-Gm-Message-State: AOJu0YwOOgdhtYHv/LfjYGDJFlfH/4QgbX6Mh+CrAqIHdA9dy1i/+gvE
-	vOq93QgKnbKXP3XXN3Cqm+ID74phEDepHFG5uJFxSwvpBAE3xDZCVc72Mm+nFskwDCQ=
-X-Gm-Gg: AZuq6aIggvFLB55r3kqC5R6rcAElLnJEMnvQnNlgoN/yXMiuGpzwEYRdFaS94e1AXjJ
-	3XgSVJB3vwRfzsW4bVgdj1yo47+TVGM+49tBixMIWOCjs9r/DQ4XcRUEgMAtclGR8XSVzytPsjk
-	1fU/oxeMvCuk13w0PREwq1sSdIA7QQhzVw8mVsx1TaH4uttxETgOopdGJb5Lsj+pFi/owOglsN/
-	5CCGVp28O1mDHO/zMcAQbBJ0zDaMOH07GhnD30BgBmhXJV73iBMLV0mLwfeeWOwW8xKYN6ga0ZM
-	9Tm82J76dKsMYU1Y4LeMiZsTqJ54qOopIeJ9M0EeERMegwQoRl4eusZAzYXsqWLiWt5Dwmj45/X
-	QaVxryM8GMOsRm/8TBJriIeYZkQEyOsuZB+K+hdfkYj83FtPuqo6ILQhJEXf/OZtZYrhKFMLxYC
-	vvVUWN
-X-Received: by 2002:a05:7022:e1d:b0:11b:9386:8260 with SMTP id a92af1059eb24-1247dc161d9mr172847c88.45.1769108345973;
-        Thu, 22 Jan 2026 10:59:05 -0800 (PST)
+        bh=KU9C5wBf3Lxzx7WFsDTDEcyUVyGJTPYy46OajzXqiaE=;
+        b=PN6Hz+nEsDZQYjXbuNweRZD6wAWKza7OJlRFbFLGblErRGzwxsYp8nXeoCWZULTWdo
+         uGuBqD7XpD208mLHonqGH5DO2KODYLe249FTttP4lGkaHdfxlSkOluV2lAbGzpx1t6aK
+         GTOKoK1XfggUat48CsFV1+UKpeOqmylgGL8FE5pvO9PcqZ/vzdZXyGXmQDypt4P5//gD
+         G8mGVDZpfEAub2hFxZgxmdxIN+TnB8HY1yVCUU9yCHxyMHALZyRfH3I6dIkCtbToX0nd
+         h3B4Ic0VCSjUbk6rK49lcsmjWj2L8Jo7zVo3TczXVQc4kj2QZ7b0BmdpSIBcNdsbmgDN
+         KLaA==
+X-Gm-Message-State: AOJu0Yw1kJihHT/+DB6ZbaiQ4hFDPbGSiFejNnq/rwzmdWuGdQpcqrnL
+	g29N6h9l1uOTW92y/IE7KAbUjHmU9+W7L8qLPBToVGQXmYJcVkTUe7gp8PB4bAbd6vY=
+X-Gm-Gg: AZuq6aL14Nt6hy4lRHuFWLzYLhWfVUxh4+pErXelXBoR+n8gse99uM06k9uvq9EEikn
+	43E7urF1ztWGtBW1Z56EUIOsz/CjUI7/tgPnSd4a4eZQvGZCxToWr25IiYKyb2zIKa6eKjn8nfX
+	sCzIpWpxuXm+dV+B+rw8vnb72GeZ2HDSqwsIhwqDrVJlJMH//7iuPVwnMsTLSA1Vwats5o2JEmE
+	OvEmz0cXBqKQerhNuzJ1SPuFe91J4OM5iOYbWX0FbrSTrDW8hzRQGWcXkIsU8YgzUDhy2zBDji+
+	64nfM8Xmff4pioqlJSlzjuQK2+zkiBKMRLG3l9vygqlKx4661XthRCvZ+GsQGeljvcAimaoIUpL
+	X7CkmqaEwVq6djx65FH9LxPOqRmZRoF9c+avw+J0bYw28snfkXHezOni1yStOLXUWWWNXUjIPR+
+	DXsTD6
+X-Received: by 2002:a05:7022:e10:b0:119:e55a:9beb with SMTP id a92af1059eb24-1247dbae7e6mr245500c88.7.1769111944983;
+        Thu, 22 Jan 2026 11:59:04 -0800 (PST)
 Received: from 22d5995788c3 ([20.38.40.137])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1247d90ce0dsm484390c88.4.2026.01.22.10.59.05
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1247d9a4275sm760985c88.15.2026.01.22.11.59.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Jan 2026 10:59:05 -0800 (PST)
+        Thu, 22 Jan 2026 11:59:04 -0800 (PST)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
@@ -65,14 +65,14 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Subject: [REGRESSION] next/master: (build)
- ./include/trace/define_trace.h:118:42: fatal
- error: ./panthor_trac...
+ ./include/trace/define_trace.h:118:10: fatal
+ error: './panthor_tra...
 From: KernelCI bot <bot@kernelci.org>
 To: kernelci-results@groups.io
 Cc: regressions@lists.linux.dev, gus@collabora.com, linux-next@vger.kernel.org
 Reply-To: kernelci@lists.linux.dev
-Date: Thu, 22 Jan 2026 18:59:05 -0000
-Message-ID: <176910834460.1005.16968493744924197735@22d5995788c3>
+Date: Thu, 22 Jan 2026 19:59:04 -0000
+Message-ID: <176911194369.1024.8592198532505888506@22d5995788c3>
 
 
 
@@ -83,10 +83,10 @@ Hello,
 New build issue found on next/master:
 
 ---
- ./include/trace/define_trace.h:118:42: fatal error: ./panthor_trace.h: No such file or directory in drivers/gpu/drm/panthor/panthor_gpu.o (drivers/gpu/drm/panthor/panthor_gpu.c) [logspec:kbuild,kbuild.compiler.error]
+ ./include/trace/define_trace.h:118:10: fatal error: './panthor_trace.h' file not found in drivers/gpu/drm/panthor/panthor_gpu.o (drivers/gpu/drm/panthor/panthor_gpu.c) [logspec:kbuild,kbuild.compiler.error]
 ---
 
-- dashboard: https://d.kernelci.org/i/maestro:3b4c709e81fe466ab9d16c4b959dd04ed77493da
+- dashboard: https://d.kernelci.org/i/maestro:cd7b672e9f4a4e1686f0e661f2aedae6b9039e06
 - giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
 - commit HEAD:  a0c666c25aeefd16f4b088c6549a6fb6b65a8a1d
 - tags: next-20260122
@@ -98,39 +98,40 @@ Reported-by: kernelci.org bot <bot@kernelci.org>
 
 Log excerpt:
 =====================================================
-                 from drivers/gpu/drm/panthor/panthor_gpu.c:26:
-./include/trace/define_trace.h:118:42: fatal error: ./panthor_trace.h: No such file or directory
+In file included from drivers/gpu/drm/panthor/panthor_gpu.c:26:
+In file included from drivers/gpu/drm/panthor/panthor_trace.h:86:
+./include/trace/define_trace.h:118:10: fatal error: './panthor_trace.h' file not found
   118 | #include TRACE_INCLUDE(TRACE_INCLUDE_FILE)
-      |                                          ^
-compilation terminated.
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+./include/trace/define_trace.h:113:32: note: expanded from macro 'TRACE_INCLUDE'
+  113 | # define TRACE_INCLUDE(system) __TRACE_INCLUDE(system)
+      |                                ^~~~~~~~~~~~~~~~~~~~~~~
+./include/trace/define_trace.h:110:34: note: expanded from macro '__TRACE_INCLUDE'
+  110 | # define __TRACE_INCLUDE(system) __stringify(TRACE_INCLUDE_PATH/system.h)
+      |                                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+./include/linux/stringify.h:10:27: note: expanded from macro '__stringify'
+   10 | #define __stringify(x...)       __stringify_1(x)
+      |                                 ^~~~~~~~~~~~~~~~
+./include/linux/stringify.h:9:29: note: expanded from macro '__stringify_1'
+    9 | #define __stringify_1(x...)     #x
+      |                                 ^~
+<scratch space>:63:1: note: expanded from here
+   63 | "./panthor_trace.h"
+      | ^~~~~~~~~~~~~~~~~~~
+1 error generated.
 
 =====================================================
 
 
 # Builds where the incident occurred:
 
-## defconfig+arm64-chromebook+CONFIG_CPU_BIG_ENDIAN=y+debug+kselftest+tinyconfig on (arm64):
-- compiler: gcc-14
-- config: https://files.kernelci.org/kbuild-gcc-14-arm64-mainline-big_endian-697269601908a6300d90db79/.config
-- dashboard: https://d.kernelci.org/build/maestro:697269601908a6300d90db79
-
-## defconfig+arm64-chromebook+kcidebug+lab-setup on (arm64):
-- compiler: gcc-14
-- config: https://files.kernelci.org/kbuild-gcc-14-arm64-chromebook-kcidebug-697269581908a6300d90db73/.config
-- dashboard: https://d.kernelci.org/build/maestro:697269581908a6300d90db73
-
-## defconfig+lab-setup+kselftest on (arm64):
-- compiler: gcc-14
-- config: https://files.kernelci.org/kbuild-gcc-14-arm64-build-only-697269541908a6300d90db70/.config
-- dashboard: https://d.kernelci.org/build/maestro:697269541908a6300d90db70
-
-## defconfig+netdev+nfs-root-boot+kselftest on (arm64):
-- compiler: gcc-14
-- config: https://files.kernelci.org/kbuild-gcc-14-arm64-nfsboot-697269371908a6300d90db59/.config
-- dashboard: https://d.kernelci.org/build/maestro:697269371908a6300d90db59
+## defconfig on (arm64):
+- compiler: clang-21
+- config: https://files.kernelci.org/kbuild-clang-21-arm64-mainline-697268df1908a6300d90db15/.config
+- dashboard: https://d.kernelci.org/build/maestro:697268df1908a6300d90db15
 
 
-#kernelci issue maestro:3b4c709e81fe466ab9d16c4b959dd04ed77493da
+#kernelci issue maestro:cd7b672e9f4a4e1686f0e661f2aedae6b9039e06
 
 --
 This is an experimental report format. Please send feedback in!
