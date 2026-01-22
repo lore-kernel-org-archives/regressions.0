@@ -1,109 +1,139 @@
-Received: from master.debian.org (master.debian.org [82.195.75.110])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dl1-f65.google.com (mail-dl1-f65.google.com [74.125.82.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8078B36CE06;
-	Thu, 22 Jan 2026 18:01:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.110
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7CEB33E373
+	for <regressions@lists.linux.dev>; Thu, 22 Jan 2026 18:59:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769104914; cv=none; b=M2ypeBHdxGimanZ0ExWlQiBncW7UaEXAuhV1vAZLKHG/PUwMSGQ/HyGVY8lZnzvfaQD9ndQMMWZWIeFrf6e9XxPo6Fp1/BlzCTufbHZfk0dicuZTvFlCzE72HfesVIjQVGxcVSDRBL9giUoAiG2NL0qjbbGUw4RXwuL3zg92O00=
+	t=1769108362; cv=none; b=kzYmL8e9ZcKWzjh3j7KKkqdJNVBB9bSJAnN5aYMaZ2NVYgdb8vD49eyO/6Zc0VRweiSla5DlVTSMZi2xHDm3kcqz41kTApEfKgKi+csna/9KcOprpSWR3Ev+idJWjTlv8GuvhnkwKXKGRKeOQQoFa7fWwjvvlzqHaZIEGb9bFO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769104914; c=relaxed/simple;
-	bh=d8MWN97v/uvNybh70ijB/cHsXFyop85ZOXdJWGGWR64=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g6aBh4zJhtF9+pdYQ/K7aPY6wGxVqkypR8x3BLE1NtgVsxYAfvdLdWOkf59PB2rkrVEMcaxjXDBk7r2WxUyd6NON0Z8Zd+hns6uz/ziRTrOLZwlhSbXPDB9MVc6biamorU2DrVC5Sz6gnCUFz6SDV7V5fv3L81nLt1gGl8ZJbR0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=none smtp.mailfrom=master.debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=sqySYp9i; arc=none smtp.client-ip=82.195.75.110
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=master.debian.org
+	s=arc-20240116; t=1769108362; c=relaxed/simple;
+	bh=4hu1g6v6fa86edOO4CtgsbDn0dI/VTmtx7rVd9sxHOk=;
+	h=Content-Type:MIME-Version:Subject:From:To:Cc:Date:Message-ID; b=PcXrfgay8sDWQk6/t9D6bKyY8OfLaR1ihN81Zg9eJyPeBUus4c41Zpdg0nXb4dG95U2InlIA300/J69XMCJArt4lz+g3qBjM7983q/IIg0Z7Oc6epTsq6SF2msYoIw1HjNEOXQiXUeAgVOIzACLzhEeIOfFkq31d3NtRO6mlgCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org; spf=none smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b=YmKM6GC4; arc=none smtp.client-ip=74.125.82.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=kernelci.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="sqySYp9i"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.master; h=In-Reply-To:Content-Type:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-Transfer-Encoding:
-	Content-ID:Content-Description;
-	bh=d8MWN97v/uvNybh70ijB/cHsXFyop85ZOXdJWGGWR64=; b=sqySYp9i9sGp71ItAgpu1cEMAA
-	wBSTzHb2KfKYjsiRcc7jz3IhJOpFKToatmLMUdUoO9Oj8btAv+7N1EiAw+lWWWld82sEq8FzgrfF6
-	fup5Wws6g45a87F/S4c2uzRIGRCCFEguLIqsERGdyQKFs8kVQtl2w6KgCgUW3dEfqnduvSAQlJW41
-	MUrybt2CGMU20i6gjV+suGGwcV3jon1+8MsdF5XSPTlTnA8/72X3ONCs+s17xxWT7wAWIGkBE1ELl
-	4dCuuKFpgk4G5XD8cI5SPNTJnQSbAO3CkeCWXxBXkoBrWnuPrk6wLCNYO0J1yFSxM01hv9sf3vtoC
-	RPEMwFew==;
-Received: from ukleinek by master.debian.org with local (Exim 4.96)
-	(envelope-from <ukleinek@master.debian.org>)
-	id 1viye3-00GB9n-2T;
-	Thu, 22 Jan 2026 17:38:59 +0000
-Date: Thu, 22 Jan 2026 18:38:56 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@debian.org>
-To: Ricardo Ribalda <ribalda@chromium.org>, 1121718-done@bugs.debian.org, 
-	Ralf Jung <post@ralfj.de>
-Cc: Salvatore Bonaccorso <carnil@debian.org>, linux-media@vger.kernel.org, 
-	regressions@lists.linux.dev, Mauro Carvalho Chehab <mchehab@kernel.org>, 
-	Hans de Goede <hansg@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: Bug#1121718: linux-image-6.17.8+deb14-amd64: Logitech C920 HD
- Pro Webcam shows flickering artifacts (sometimes)
-Message-ID: <aeflgf6qtiqxodjdj7jf3qth6fg47p3wkmiunfpsk7suruhh2s@eud4pqticxxn>
-References: <uboug5ectzm4s32yfgopjbcxq2uhsoc4kluaby7a4b7nzfjave@boco7oocnftr>
- <176458169204.346596.13968096833088921213.reportbug@r-ethtop>
- <0490a39a-28d9-4925-a162-5e4d498be257@ralfj.de>
- <aVfPmZ8rUm3Vf7pT@eldamar.lan>
- <58a7c628-63dc-48f7-8a46-357ca2d7d500@ralfj.de>
- <CANiDSCtX-RJrmfiK_rOqi870CK06_ONvnsvqWRZczBXY38eg0w@mail.gmail.com>
- <dc4c95e6-d19d-414a-a7ae-401dacbaebfd@ralfj.de>
- <CANiDSCuse+=+MrDUFc_Sd1zXvtY9TDrX0GF6bs2_w34b03Djkw@mail.gmail.com>
- <176458169204.346596.13968096833088921213.reportbug@r-ethtop>
- <CANiDSCt8KFH7d6cc4zTpf10F4G=O6vmZiSj5pPC0q+_e90Cjpw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b="YmKM6GC4"
+Received: by mail-dl1-f65.google.com with SMTP id a92af1059eb24-12331482b8fso1256226c88.1
+        for <regressions@lists.linux.dev>; Thu, 22 Jan 2026 10:59:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20230601.gappssmtp.com; s=20230601; t=1769108346; x=1769713146; darn=lists.linux.dev;
+        h=message-id:date:reply-to:cc:to:from:subject
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hrIzk2/xJmwFk/zbADXcPOxmFVVXMdsJP8L/1g75haU=;
+        b=YmKM6GC4sBNUhkavmMtUIDQc8LQQG7682VTTvnc2C7+b/C6w0ZYmn/a854GzttjQuM
+         6AFqcIhwa8YIiYKRNroAC9l3MIZPGKY08E+znHbQIjZ13ynHWfMNBh67ECdlhX6UoH7t
+         tWvDTjaTqg3f2SuKhDtot81I1aFpWlphRd6eKuEJTV9tzVE4rubd0hB+as1XmZcpHLs7
+         njuTjgoNIrJS8vvIQ3LDBTLW7WaUZqDJg95rEX+dTugIUKn2vNrgfBLiZOnArB0xx3vE
+         PmVcGULczHqpSjIEUBSSxh6RuzZOBBKfQ57wbdvFRYEPNHhDkf+l0XHGfARmxTh3rnZM
+         Pdzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1769108346; x=1769713146;
+        h=message-id:date:reply-to:cc:to:from:subject
+         :content-transfer-encoding:mime-version:x-gm-gg:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=hrIzk2/xJmwFk/zbADXcPOxmFVVXMdsJP8L/1g75haU=;
+        b=hd7MvSyGaNQJR0W4q2uxNS0bJiGBfm7lXCxNb23kp0B06yIm3MrT/cJNZSDd3zqv0B
+         4DXrZmEoNNnlaXQxw9PM8gEY+l1gmbvwnaBJjAdZMelgRh3p8DRj5D8/29OSqtJ+gWZG
+         JItS0pqurgPDM32GTzKD+RwjVnywySmFMqwl8e6PdOsiCH9w6NdYGki1KEDGjTB2/F2D
+         5gtv60+3f39Zy6HzEHdT63JaK0cejSIc718rjwe6Q41JHAysCYZ3PiWAym38GliY0tPO
+         cJbW7QR1fd2RbG1czb3UpITK/nOQUVzFOGIPB1KWSE7Erc/Fsgy3oWxUv3ya2qSwra/H
+         Zm8w==
+X-Gm-Message-State: AOJu0YwOOgdhtYHv/LfjYGDJFlfH/4QgbX6Mh+CrAqIHdA9dy1i/+gvE
+	vOq93QgKnbKXP3XXN3Cqm+ID74phEDepHFG5uJFxSwvpBAE3xDZCVc72Mm+nFskwDCQ=
+X-Gm-Gg: AZuq6aIggvFLB55r3kqC5R6rcAElLnJEMnvQnNlgoN/yXMiuGpzwEYRdFaS94e1AXjJ
+	3XgSVJB3vwRfzsW4bVgdj1yo47+TVGM+49tBixMIWOCjs9r/DQ4XcRUEgMAtclGR8XSVzytPsjk
+	1fU/oxeMvCuk13w0PREwq1sSdIA7QQhzVw8mVsx1TaH4uttxETgOopdGJb5Lsj+pFi/owOglsN/
+	5CCGVp28O1mDHO/zMcAQbBJ0zDaMOH07GhnD30BgBmhXJV73iBMLV0mLwfeeWOwW8xKYN6ga0ZM
+	9Tm82J76dKsMYU1Y4LeMiZsTqJ54qOopIeJ9M0EeERMegwQoRl4eusZAzYXsqWLiWt5Dwmj45/X
+	QaVxryM8GMOsRm/8TBJriIeYZkQEyOsuZB+K+hdfkYj83FtPuqo6ILQhJEXf/OZtZYrhKFMLxYC
+	vvVUWN
+X-Received: by 2002:a05:7022:e1d:b0:11b:9386:8260 with SMTP id a92af1059eb24-1247dc161d9mr172847c88.45.1769108345973;
+        Thu, 22 Jan 2026 10:59:05 -0800 (PST)
+Received: from 22d5995788c3 ([20.38.40.137])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1247d90ce0dsm484390c88.4.2026.01.22.10.59.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Jan 2026 10:59:05 -0800 (PST)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="bbjbywci6sy4cwzq"
-Content-Disposition: inline
-In-Reply-To: <CANiDSCt8KFH7d6cc4zTpf10F4G=O6vmZiSj5pPC0q+_e90Cjpw@mail.gmail.com>
+Content-Transfer-Encoding: 7bit
+Subject: [REGRESSION] next/master: (build)
+ ./include/trace/define_trace.h:118:42: fatal
+ error: ./panthor_trac...
+From: KernelCI bot <bot@kernelci.org>
+To: kernelci-results@groups.io
+Cc: regressions@lists.linux.dev, gus@collabora.com, linux-next@vger.kernel.org
+Reply-To: kernelci@lists.linux.dev
+Date: Thu, 22 Jan 2026 18:59:05 -0000
+Message-ID: <176910834460.1005.16968493744924197735@22d5995788c3>
 
 
---bbjbywci6sy4cwzq
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: Bug#1121718: linux-image-6.17.8+deb14-amd64: Logitech C920 HD
- Pro Webcam shows flickering artifacts (sometimes)
-MIME-Version: 1.0
-
-Hello Ricardo and Ralf,
-
-On Tue, Jan 20, 2026 at 02:46:54PM +0100, Ricardo Ribalda wrote:
-> Another update
->=20
-> Zoom has notified that they plan to land this even earlier. In 6.7.5
->=20
-> Ralf, if you could confirm that it works/doesn't when zoom is released
-> I will be very grateful.
-
-Given that this turned out to not be a bug in the kernel (and not even
-Debian), I'm closing this bug. Even if the new Zoom release doesn't fix
-it for you, this is their problem and not one in the kernel where we
-could help.
-
-I hope this is ok for all affected parties.
-
-Best regards
-Uwe
 
 
---bbjbywci6sy4cwzq
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
+Hello,
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmlyYK0ACgkQj4D7WH0S
-/k4A1Qf/SW2B0F+I/eo1RQZjXIcUACVqBLvahyuzoN0+pz1I/k9oeZlyGMEzY+W9
-1sciy3aeCu5khydmRT3REhtt52Lwif4XjLR8GD6cmx1HGayqkwo9rKk3IOopMveF
-2GsoPJQoJR/ygpMoIFSb1H/uZGrCCpK07rY9+S0belWM83g2wa0/yeEwOkXHi5i8
-o6NkJspV7rX0+XAm6lT6NuHrOcMVUgnOqg4yQYE1kr8dSNcGwi5RrEWvhFOEhfOh
-tkD8MbnUJ3r3aDfyhaBQjCHzoMRQu3kLOT2RqjKqqrZOlvTY8vomr9emhT9S9CpV
-iyjkIoa2ZPot+Fd9SvaLVChb3HYC/Q==
-=IBWS
------END PGP SIGNATURE-----
+New build issue found on next/master:
 
---bbjbywci6sy4cwzq--
+---
+ ./include/trace/define_trace.h:118:42: fatal error: ./panthor_trace.h: No such file or directory in drivers/gpu/drm/panthor/panthor_gpu.o (drivers/gpu/drm/panthor/panthor_gpu.c) [logspec:kbuild,kbuild.compiler.error]
+---
+
+- dashboard: https://d.kernelci.org/i/maestro:3b4c709e81fe466ab9d16c4b959dd04ed77493da
+- giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+- commit HEAD:  a0c666c25aeefd16f4b088c6549a6fb6b65a8a1d
+- tags: next-20260122
+
+Please include the KernelCI tag when submitting a fix:
+
+Reported-by: kernelci.org bot <bot@kernelci.org>
+
+
+Log excerpt:
+=====================================================
+                 from drivers/gpu/drm/panthor/panthor_gpu.c:26:
+./include/trace/define_trace.h:118:42: fatal error: ./panthor_trace.h: No such file or directory
+  118 | #include TRACE_INCLUDE(TRACE_INCLUDE_FILE)
+      |                                          ^
+compilation terminated.
+
+=====================================================
+
+
+# Builds where the incident occurred:
+
+## defconfig+arm64-chromebook+CONFIG_CPU_BIG_ENDIAN=y+debug+kselftest+tinyconfig on (arm64):
+- compiler: gcc-14
+- config: https://files.kernelci.org/kbuild-gcc-14-arm64-mainline-big_endian-697269601908a6300d90db79/.config
+- dashboard: https://d.kernelci.org/build/maestro:697269601908a6300d90db79
+
+## defconfig+arm64-chromebook+kcidebug+lab-setup on (arm64):
+- compiler: gcc-14
+- config: https://files.kernelci.org/kbuild-gcc-14-arm64-chromebook-kcidebug-697269581908a6300d90db73/.config
+- dashboard: https://d.kernelci.org/build/maestro:697269581908a6300d90db73
+
+## defconfig+lab-setup+kselftest on (arm64):
+- compiler: gcc-14
+- config: https://files.kernelci.org/kbuild-gcc-14-arm64-build-only-697269541908a6300d90db70/.config
+- dashboard: https://d.kernelci.org/build/maestro:697269541908a6300d90db70
+
+## defconfig+netdev+nfs-root-boot+kselftest on (arm64):
+- compiler: gcc-14
+- config: https://files.kernelci.org/kbuild-gcc-14-arm64-nfsboot-697269371908a6300d90db59/.config
+- dashboard: https://d.kernelci.org/build/maestro:697269371908a6300d90db59
+
+
+#kernelci issue maestro:3b4c709e81fe466ab9d16c4b959dd04ed77493da
+
+--
+This is an experimental report format. Please send feedback in!
+Talk to us at kernelci@lists.linux.dev
+
+Made with love by the KernelCI team - https://kernelci.org
