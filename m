@@ -1,140 +1,148 @@
-Received: from mail-dl1-f67.google.com (mail-dl1-f67.google.com [74.125.82.67])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-b6-smtp.messagingengine.com (fhigh-b6-smtp.messagingengine.com [202.12.124.157])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDCE226980F
-	for <regressions@lists.linux.dev>; Thu, 22 Jan 2026 19:59:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.67
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CCD23BE49F
+	for <regressions@lists.linux.dev>; Thu, 22 Jan 2026 22:32:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769111947; cv=none; b=NCCbxl5a6R4pYHnGf4VfCybILb3rbvt8RYY1xgFVC8BsR/v9YEmEz0Dy++JQfgAHWxJ0O4v4CIDnnX4zLEMfOIF3goIzZX7OCoqUy7k1vLqi9MCNt52URJRPFV1sBEJndEFt+shxyljcaxSno/mYZEaW763GGiYhctp4T5BwO3A=
+	t=1769121166; cv=none; b=DPx2YTyY7yk/KuIEWOSx8QTc6OoKi0nt30jQpA8uQQcH0clFiO+LeSRBfaLxhwoqcOLES1WO+lzgC594nAZJaKY96gTWCK0QBmZL9Svt2F8chIv7uPm/WotKdFEJf3nHgL58jekPj15Cpfnt4i9VXmyFEQ19nxBzj0FoP7yGXh0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769111947; c=relaxed/simple;
-	bh=2t8E3MkhKABmyAjVd0Ef3V6oirxpLfRfIzmzGHTHGGQ=;
-	h=Content-Type:MIME-Version:Subject:From:To:Cc:Date:Message-ID; b=nple0Ifo5ubwVTCeM0Wri+TQBsi5COVh8/8kbmXOVMWQCf8nK67+Az4kPytY9ViP2pxSyEF8ge4tX4d44ubZ7pQbirgjdoLpbjZSLDXYpQMRXp/Ax6cfXe0BVJB6AhdIfuOYm8Ann1M8eQ13+2qzriyKb9qXPZRcmKYRTtbqhUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org; spf=none smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b=YI/BC6c0; arc=none smtp.client-ip=74.125.82.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=kernelci.org
+	s=arc-20240116; t=1769121166; c=relaxed/simple;
+	bh=NOAclorXp0xk/AletFeCwImesuzw6pMoIT+Mo/HvVvI=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=k11GkDtsk5/8KaE/Lfl4y+Z6BC/eirdV2fzMSiOelAEiSTmhYnAHR9eibbDXhLCAPDgl9tylJTJB4DyawwUZyUzUOfqJJQ5yF7MZa2TtXHFQa/tA9629pXSfEvkwu0jnSqn3Eb1moN+Xzdmvbm0BInut4f+7+QPM2F2GR048p18=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sent.com; spf=pass smtp.mailfrom=sent.com; dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b=lvykA7IL; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=fxna4hgU; arc=none smtp.client-ip=202.12.124.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sent.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sent.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b="YI/BC6c0"
-Received: by mail-dl1-f67.google.com with SMTP id a92af1059eb24-1233702afd3so2209280c88.0
-        for <regressions@lists.linux.dev>; Thu, 22 Jan 2026 11:59:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20230601.gappssmtp.com; s=20230601; t=1769111945; x=1769716745; darn=lists.linux.dev;
-        h=message-id:date:reply-to:cc:to:from:subject
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KU9C5wBf3Lxzx7WFsDTDEcyUVyGJTPYy46OajzXqiaE=;
-        b=YI/BC6c0/QuKhdWA9A3hAM4TvqHzTUcaZWxXfi7Nk1ezdKWvKQm2DkrdXRTSTTm2Px
-         2jk3k4k3s1W85KTozQUn723M3rfG3Zdgib7GuqBY6E5AvuQg3+8gPOgKdqT5m9E2qRQI
-         Et/W3bMNF5FmDH4WLuFvvOqz9eZ/NO5V7WVyY9lobI6Flx9Zt74fTXJ3O4X23k+T999C
-         ufnEXXa4ERlYFczw9yAY4lQP6bpxII8JqiXfHfNO8Z/c/LDeHozmlHH6zNiQXenkny0+
-         CkIMtFSb0HxQYEqyBg0rgkOD/bOsR6uI7utCjsSSQxbSmPgwSgY1AMjK7nHEePdxqDDb
-         OIvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769111945; x=1769716745;
-        h=message-id:date:reply-to:cc:to:from:subject
-         :content-transfer-encoding:mime-version:x-gm-gg:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=KU9C5wBf3Lxzx7WFsDTDEcyUVyGJTPYy46OajzXqiaE=;
-        b=PN6Hz+nEsDZQYjXbuNweRZD6wAWKza7OJlRFbFLGblErRGzwxsYp8nXeoCWZULTWdo
-         uGuBqD7XpD208mLHonqGH5DO2KODYLe249FTttP4lGkaHdfxlSkOluV2lAbGzpx1t6aK
-         GTOKoK1XfggUat48CsFV1+UKpeOqmylgGL8FE5pvO9PcqZ/vzdZXyGXmQDypt4P5//gD
-         G8mGVDZpfEAub2hFxZgxmdxIN+TnB8HY1yVCUU9yCHxyMHALZyRfH3I6dIkCtbToX0nd
-         h3B4Ic0VCSjUbk6rK49lcsmjWj2L8Jo7zVo3TczXVQc4kj2QZ7b0BmdpSIBcNdsbmgDN
-         KLaA==
-X-Gm-Message-State: AOJu0Yw1kJihHT/+DB6ZbaiQ4hFDPbGSiFejNnq/rwzmdWuGdQpcqrnL
-	g29N6h9l1uOTW92y/IE7KAbUjHmU9+W7L8qLPBToVGQXmYJcVkTUe7gp8PB4bAbd6vY=
-X-Gm-Gg: AZuq6aL14Nt6hy4lRHuFWLzYLhWfVUxh4+pErXelXBoR+n8gse99uM06k9uvq9EEikn
-	43E7urF1ztWGtBW1Z56EUIOsz/CjUI7/tgPnSd4a4eZQvGZCxToWr25IiYKyb2zIKa6eKjn8nfX
-	sCzIpWpxuXm+dV+B+rw8vnb72GeZ2HDSqwsIhwqDrVJlJMH//7iuPVwnMsTLSA1Vwats5o2JEmE
-	OvEmz0cXBqKQerhNuzJ1SPuFe91J4OM5iOYbWX0FbrSTrDW8hzRQGWcXkIsU8YgzUDhy2zBDji+
-	64nfM8Xmff4pioqlJSlzjuQK2+zkiBKMRLG3l9vygqlKx4661XthRCvZ+GsQGeljvcAimaoIUpL
-	X7CkmqaEwVq6djx65FH9LxPOqRmZRoF9c+avw+J0bYw28snfkXHezOni1yStOLXUWWWNXUjIPR+
-	DXsTD6
-X-Received: by 2002:a05:7022:e10:b0:119:e55a:9beb with SMTP id a92af1059eb24-1247dbae7e6mr245500c88.7.1769111944983;
-        Thu, 22 Jan 2026 11:59:04 -0800 (PST)
-Received: from 22d5995788c3 ([20.38.40.137])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1247d9a4275sm760985c88.15.2026.01.22.11.59.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Jan 2026 11:59:04 -0800 (PST)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b="lvykA7IL";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="fxna4hgU"
+Received: from phl-compute-03.internal (phl-compute-03.internal [10.202.2.43])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 485817A12AA;
+	Thu, 22 Jan 2026 17:32:37 -0500 (EST)
+Received: from phl-imap-04 ([10.202.2.82])
+  by phl-compute-03.internal (MEProxy); Thu, 22 Jan 2026 17:32:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sent.com; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1769121157;
+	 x=1769207557; bh=zQRMWdGZbciyHZ89+it2gFuutzz7AH0pjJZIPfqd0bU=; b=
+	lvykA7ILot/Xh+M6roE+fi+6Imaqa7buXBZsCL68ixhK3AYa1aAsEgb3UKUtfjzW
+	9hB7psAOszxi3+yURSNEtEraMMwoAU9spL2KYSx2x4RNs2hkqgPaCT/FJeowRx+R
+	0wFKjMxMC9QZfPlpxSvw2Lqemsvw+j7pRzfQS74+5QUzhcmqyK6pVWDlcNX/ktaf
+	PAmsJXPSLvts43Xg/7BYxH+b+QZMowV/8lHpTXbmjaaPopTUq3nYW2x8i7gnG/j1
+	eLJyYpJHx/D2dSjPEZ9Tfs0mO8FBPn9k2qG0wOAnVlnpmlAvMVge1izxfhLDgxUh
+	5NiWstwQxNkQAZ8pq4zoLg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1769121157; x=
+	1769207557; bh=zQRMWdGZbciyHZ89+it2gFuutzz7AH0pjJZIPfqd0bU=; b=f
+	xna4hgUNfV6Zyy5w3zSezYLab9gylWvBAY2yYyY7bDTaOQz0o/yo/dg+j6CxbViL
+	Ozz9Cfg3hR0l01efi1wuSxMotuMJg/3BohJLOfnY97Tsw9b7/6fiIuUoxHXX1OQX
+	xtyFNAeVUqJU4ZoDzCZhYQGREz8eskf57N0qSmp8Kul6Ltby9S7+RhjcutS5V2jw
+	zKQZXkyEY0cHiabaDKvJxw+7CuUla/QXxI3a59nrEV0Icl5jr6kp1nj+HsqPKM84
+	nVU7jBL5qwbe/5j6dAFVHAtOsAoktuqRaqmxdcbK+4a20h91luMHFc+w3rkq8VD8
+	m1sRQgjeKmHjdgQv2d+JQ==
+X-ME-Sender: <xms:hKVyaX5H3ivQLh2Df439nHeLXkQa5YGkcgQrDfkau11nc-FuHDovow>
+    <xme:hKVyaXt4lmnouzgkB37D2CPiGrYulbTEqniuocwBQUVszVQVh6o-4X5a6sRYh0Nz1
+    CmrRjEt9LlE9PM_Hvahh4P088t9f5jWyyxr35v3JsPUnN86-B49Unc>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddugeejfeeiucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpegtohhrrhgv
+    tghtmhhoshhtuceotghmlhhishhtshesshgvnhhtrdgtohhmqeenucggtffrrghtthgvrh
+    hnpeejleevhedvjefhtdfhueffhfefgedtvddtgfegfeeiveffhfeffeelgffgffegleen
+    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegtmhhlih
+    hsthhssehsvghnthdrtghomhdpnhgspghrtghpthhtohepiedpmhhouggvpehsmhhtphho
+    uhhtpdhrtghpthhtohepvhhkohhulheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprg
+    hnughrihihrdhshhgvvhgthhgvnhhkoheslhhinhhugidrihhnthgvlhdrtghomhdprhgt
+    phhtthhopehmihhkrgdrfigvshhtvghrsggvrhhgsehlihhnuhigrdhinhhtvghlrdgtoh
+    hmpdhrtghpthhtoheprhgvghhrvghsshhiohhnsheslhhishhtshdrlhhinhhugidruggv
+    vhdprhgtphhtthhopegumhgrvghnghhinhgvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpd
+    hrtghpthhtoheplhhinhhugidqihdvtgesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:hKVyaVg8Dl4WgUcEGSI0LXkw6l-pEG76UUcWYM7P1w-Sox__CCr0vA>
+    <xmx:hKVyaUEhtBnRfJcDyK22kvMYG-eyGtGkM31jUKT0kf6A2KcB21xkIw>
+    <xmx:hKVyaU_qWEF9KxBGlfHf8EI3oqHKeNh32IiV3_PWekO0lh5hHXg2kA>
+    <xmx:hKVyaby4m8Z_iSZ4GvMjBOVu07gAjdj2j2Qh6MEUUqaeHLXp6iKuFg>
+    <xmx:haVyachMuLRgpCAngAQl3CX0LtLhqUVsA1msLZR3BIdHIWG2EemRPL6J>
+Feedback-ID: i87314915:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 2A761B6006E; Thu, 22 Jan 2026 17:32:36 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-ThreadId: AwebR64VcaZc
+Date: Thu, 22 Jan 2026 17:29:38 -0500
+From: correctmost <cmlists@sent.com>
+To: "Mika Westerberg" <mika.westerberg@linux.intel.com>,
+ "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>
+Cc: dmaengine@vger.kernel.org, regressions@lists.linux.dev, vkoul@kernel.org,
+ linux-i2c@vger.kernel.org
+Message-Id: <a6474592-87db-4fdc-958c-8b09d324df1e@app.fastmail.com>
+In-Reply-To: <20260122110021.GO2275908@black.igk.intel.com>
+References: <e5ee42bd-0d17-44e7-a306-61d19f1d24b2@app.fastmail.com>
+ <aW4J6bmHn2dLuOxo@smile.fi.intel.com> <aW4MUisgI6d2Efbr@smile.fi.intel.com>
+ <aW9LzBIOIePu59zV@smile.fi.intel.com>
+ <d7627ea0-0965-4469-83c2-e2a15edd58a9@app.fastmail.com>
+ <aXCYwBMTwkHZPYsi@smile.fi.intel.com>
+ <20260121135803.GM2275908@black.igk.intel.com>
+ <aXDos20kksml8wdU@smile.fi.intel.com>
+ <20260121150256.GN2275908@black.igk.intel.com>
+ <aXDuddwBCelAVouQ@smile.fi.intel.com>
+ <20260122110021.GO2275908@black.igk.intel.com>
+Subject: Re: [REGRESSION][BISECTED] Lenovo IdeaPad touchpad does not work when idma64
+ is present in initramfs
+Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
-Subject: [REGRESSION] next/master: (build)
- ./include/trace/define_trace.h:118:10: fatal
- error: './panthor_tra...
-From: KernelCI bot <bot@kernelci.org>
-To: kernelci-results@groups.io
-Cc: regressions@lists.linux.dev, gus@collabora.com, linux-next@vger.kernel.org
-Reply-To: kernelci@lists.linux.dev
-Date: Thu, 22 Jan 2026 19:59:04 -0000
-Message-ID: <176911194369.1024.8592198532505888506@22d5995788c3>
 
+On Thu, Jan 22, 2026, at 6:00 AM, Mika Westerberg wrote:
+> On Wed, Jan 21, 2026 at 05:19:17PM +0200, Andy Shevchenko wrote:
+>> > Well I mean if touchpads actually worked prior this idma64 commit and now
+>> > they don't isn't that a regression?
+>> 
+>> I don't think so, because commit did the right thing and just revealed an issue
+>> that was rather hidden. Reverting is not an option.
+>
+> I now looked at both working and non-working /proc/interrupts and when it
+> is working there is no interrupt flood at all:
+>
+>  27:          0          0          0          0       2277          0  
+>         0          0          0          0          0          0 
+> IR-IO-APIC   27-fasteoi   idma64.0, i2c_designware.0
+>
+> This makes me think that perhaps the toucpad is powered off and that causes
+> the issue until I2C HID probes and resets it. I looked at the ACPI tables
+> but I did not (yet) find anything that stands out.
+>
+> I wonder if it was tried to put i2c-designware*.ko and i2c-hid.ko into the
+> initramfs, and does work it around? I would expect so.
 
+I don't see an i2c-designware module loaded when my touchpad works:
 
+$ grep -i i2c /proc/modules 
+i2c_i801 40960 0 - Live 0x0000000000000000
+i2c_smbus 20480 1 i2c_i801, Live 0x0000000000000000
+i2c_mux 16384 1 i2c_i801, Live 0x0000000000000000
+i2c_hid_acpi 12288 0 - Live 0x0000000000000000
+i2c_hid 45056 1 i2c_hid_acpi, Live 0x0000000000000000
+i2c_algo_bit 24576 2 xe,i915, Live 0x0000000000000000
 
+I tried adding all of the following modules to my initramfs image and I still encountered the touchpad failure:
 
-Hello,
+drivers/dma/idma64.ko.zst
+drivers/hid/i2c-hid/i2c-hid-acpi.ko.zst
+drivers/hid/i2c-hid/i2c-hid.ko.zst
+drivers/i2c/i2c-mux.ko.zst
+drivers/i2c/i2c-smbus.ko.zst
+drivers/i2c/busses/i2c-i801.ko.zst
+drivers/mfd/intel-lpss.ko.zst
+drivers/mfd/intel-lpss-pci.ko.zst
 
-New build issue found on next/master:
-
----
- ./include/trace/define_trace.h:118:10: fatal error: './panthor_trace.h' file not found in drivers/gpu/drm/panthor/panthor_gpu.o (drivers/gpu/drm/panthor/panthor_gpu.c) [logspec:kbuild,kbuild.compiler.error]
----
-
-- dashboard: https://d.kernelci.org/i/maestro:cd7b672e9f4a4e1686f0e661f2aedae6b9039e06
-- giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-- commit HEAD:  a0c666c25aeefd16f4b088c6549a6fb6b65a8a1d
-- tags: next-20260122
-
-Please include the KernelCI tag when submitting a fix:
-
-Reported-by: kernelci.org bot <bot@kernelci.org>
-
-
-Log excerpt:
-=====================================================
-In file included from drivers/gpu/drm/panthor/panthor_gpu.c:26:
-In file included from drivers/gpu/drm/panthor/panthor_trace.h:86:
-./include/trace/define_trace.h:118:10: fatal error: './panthor_trace.h' file not found
-  118 | #include TRACE_INCLUDE(TRACE_INCLUDE_FILE)
-      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-./include/trace/define_trace.h:113:32: note: expanded from macro 'TRACE_INCLUDE'
-  113 | # define TRACE_INCLUDE(system) __TRACE_INCLUDE(system)
-      |                                ^~~~~~~~~~~~~~~~~~~~~~~
-./include/trace/define_trace.h:110:34: note: expanded from macro '__TRACE_INCLUDE'
-  110 | # define __TRACE_INCLUDE(system) __stringify(TRACE_INCLUDE_PATH/system.h)
-      |                                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-./include/linux/stringify.h:10:27: note: expanded from macro '__stringify'
-   10 | #define __stringify(x...)       __stringify_1(x)
-      |                                 ^~~~~~~~~~~~~~~~
-./include/linux/stringify.h:9:29: note: expanded from macro '__stringify_1'
-    9 | #define __stringify_1(x...)     #x
-      |                                 ^~
-<scratch space>:63:1: note: expanded from here
-   63 | "./panthor_trace.h"
-      | ^~~~~~~~~~~~~~~~~~~
-1 error generated.
-
-=====================================================
-
-
-# Builds where the incident occurred:
-
-## defconfig on (arm64):
-- compiler: clang-21
-- config: https://files.kernelci.org/kbuild-clang-21-arm64-mainline-697268df1908a6300d90db15/.config
-- dashboard: https://d.kernelci.org/build/maestro:697268df1908a6300d90db15
-
-
-#kernelci issue maestro:cd7b672e9f4a4e1686f0e661f2aedae6b9039e06
-
---
-This is an experimental report format. Please send feedback in!
-Talk to us at kernelci@lists.linux.dev
-
-Made with love by the KernelCI team - https://kernelci.org
+(The drivers/i2c/algos/i2c-algo-bit.ko.zst module was already present in the working image, so I didn't have to add it.)
