@@ -1,94 +1,138 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yx1-f50.google.com (mail-yx1-f50.google.com [74.125.224.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FD4B42DFF8
-	for <regressions@lists.linux.dev>; Thu, 22 Jan 2026 11:00:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769079628; cv=none; b=GwWEP/so/CNG6YiYqxSxEsreDqa/F2Trvu7sTBw+voFwXNqnd1hv2TwVjIz/+31x0IGrW84nm/Zrf3nOOXs6zBRVmwJbDNw2LddXPmo8vQPO6Cr2Ud+VKSZh2miTzL1LjIGH7lfKamDevrddIt8FXmiHzW7a8y5r6V85c3T/3uI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769079628; c=relaxed/simple;
-	bh=iJSzDSjOLouw8pRYuxyAYFFe9Y8DhZMRz12WUAc0D84=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ACrIDssPliNbU5JNzM+YJvFQcB+T7Eek/NLLnpuexX4FodrehDuv+EJvg07mGYa/uwq+aolo+n4wJ6z1cLoeEThOTLM74wZr3nawVrCjnrLu6zGzEVmPtlRdwyQ5D38pSFJRo8HqAcp1OJgjgAElnoy0gdSyUvgMGNKNCQyH6gg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Mdh7uITA; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE86D3090E8
+	for <regressions@lists.linux.dev>; Thu, 22 Jan 2026 13:41:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.224.50
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1769089298; cv=pass; b=WmLx0GG9aqXqFU7UgJe5SRq1nwPvV6kfuAs4+txph8UOZNdgQPTgd5wr40zCHfhUPQiL3R34BQWz02UX/yBqAeUIegk4xnPRJ73wKWUvyn6xSBQMTpUCB0rssnumIRiM1rsNmapF3KW03DV7xDovplayrmzpn/Z5ZexR6DdSNk8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1769089298; c=relaxed/simple;
+	bh=w2P21e8Xrn00dZ0P+iuyYVl+3bMyas+UXks6Iy2oCiM=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=hTD4+HoOr3aefj65Jx0mmRjdcOtsNigltl2QyjYNf4jOLztFRIgTTZAxmQE71BxWLVc5uTGOV3Y9+NvjgKblE+KPxX6Ry2MguE2m1mUmvZq09zYpHI6DhZqPQizVkkcbxOMGmPZyOQ5VirTT783Xc/zA/niraeks4Abd8ALEnKs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nappairam.dev; spf=none smtp.mailfrom=nappairam.dev; dkim=pass (2048-bit key) header.d=nappairam.dev header.i=@nappairam.dev header.b=j356dHcR; arc=pass smtp.client-ip=74.125.224.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nappairam.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=nappairam.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Mdh7uITA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1769079626; x=1800615626;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=iJSzDSjOLouw8pRYuxyAYFFe9Y8DhZMRz12WUAc0D84=;
-  b=Mdh7uITAGIM/yYztv2R3WCWaxWcvExGpFYthU7Hf53kgm8GBgIRMHZ9V
-   eJTXcE291vn9KnnmVGiUs52TtFRdTo68t9CrCzW4LUcD03LPWtHsO/huA
-   8jd+0ffhdE2p0wyhbb9+ekUEQ87TuTLHDA67ouQGLRybi/u2TxFqZ+1h9
-   6xgtuMVuB0WW7Uw9Xv9o0TFomsrYU0IbhwmBViPCi6t7bM9WJBGQQMvXH
-   0pDv5azbYP9TGvogFWGYeYmRNTlrAdACDbNnNRsoRjZvNKxJ5mNCenpRB
-   92YK7LB6Ti+69xrtg06DXa0cKwoqcpZv7gM39EvBH7LYuNlKOUOQYxsMd
-   A==;
-X-CSE-ConnectionGUID: 4T9nb+IpRkKtkXMmgld5lA==
-X-CSE-MsgGUID: 6A8h+gv0T52uHiFj6g8Jaw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11678"; a="69336472"
-X-IronPort-AV: E=Sophos;i="6.21,246,1763452800"; 
-   d="scan'208";a="69336472"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2026 03:00:26 -0800
-X-CSE-ConnectionGUID: iTZLIFYrTg2FvTke9GHdKA==
-X-CSE-MsgGUID: GqINrK8pTkGYPwza+Lh+KQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,246,1763452800"; 
-   d="scan'208";a="207137681"
-Received: from black.igk.intel.com ([10.91.253.5])
-  by fmviesa009.fm.intel.com with ESMTP; 22 Jan 2026 03:00:23 -0800
-Received: by black.igk.intel.com (Postfix, from userid 1001)
-	id 356A295; Thu, 22 Jan 2026 12:00:21 +0100 (CET)
-Date: Thu, 22 Jan 2026 12:00:21 +0100
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: correctmost <cmlists@sent.com>, dmaengine@vger.kernel.org,
-	regressions@lists.linux.dev, vkoul@kernel.org,
-	linux-i2c@vger.kernel.org
-Subject: Re: [REGRESSION][BISECTED] Lenovo IdeaPad touchpad does not work
- when idma64 is present in initramfs
-Message-ID: <20260122110021.GO2275908@black.igk.intel.com>
-References: <e5ee42bd-0d17-44e7-a306-61d19f1d24b2@app.fastmail.com>
- <aW4J6bmHn2dLuOxo@smile.fi.intel.com>
- <aW4MUisgI6d2Efbr@smile.fi.intel.com>
- <aW9LzBIOIePu59zV@smile.fi.intel.com>
- <d7627ea0-0965-4469-83c2-e2a15edd58a9@app.fastmail.com>
- <aXCYwBMTwkHZPYsi@smile.fi.intel.com>
- <20260121135803.GM2275908@black.igk.intel.com>
- <aXDos20kksml8wdU@smile.fi.intel.com>
- <20260121150256.GN2275908@black.igk.intel.com>
- <aXDuddwBCelAVouQ@smile.fi.intel.com>
+	dkim=pass (2048-bit key) header.d=nappairam.dev header.i=@nappairam.dev header.b="j356dHcR"
+Received: by mail-yx1-f50.google.com with SMTP id 956f58d0204a3-6481bd173c0so928563d50.2
+        for <regressions@lists.linux.dev>; Thu, 22 Jan 2026 05:41:36 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1769089295; cv=none;
+        d=google.com; s=arc-20240605;
+        b=ZtA8keOtktItVqrv9fd50EwVlr1U3bO5lF/mDWI48Guq06S3DJKGSOpXdG3xAOFFTy
+         V0fN6KSO/hs4LAmvYlCQ1RNpGHm0T4ms5m8c0SmKsR5bDwJxYfZ9W5vToIrNV/gyJWyC
+         yhZQYbQzsgxWarKFKDkYhNJhc8fljMEKluTLKf4Yu7xIFYeYywliqDzP3GCHwlTcQKt9
+         CKGGgExdI3Lo7Bn5o2a/9jM/hN3yrGkmjERsXvjnHRUpIoF+OzvaN3KGWjamV35Dd3QQ
+         oqAGzfi+klNo9po5sSOIuFNDTNrjyGiVtIL//SRVTEg1Fo5RnUQWHWdutxsdXMoZEDg4
+         k46A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=cc:to:subject:message-id:date:from:mime-version:dkim-signature;
+        bh=w2P21e8Xrn00dZ0P+iuyYVl+3bMyas+UXks6Iy2oCiM=;
+        fh=JnwBPECiX7SZ16zLNBPjKyf03cGC2xq9tpQeuUa0meE=;
+        b=DPt1OB0+OS2JJjWT9SGI8bMq4cpd/9Vnvr6blbKOoo5y5QdkpXhEJKzl4Ttgazxdgd
+         dKrnr8Pxb/NHkGPIp/+sX3afALzEtmMQ184m64rLvaJ5sm3iBHWvkFFma8zqDMvlwNmb
+         gx18oHLNtu13xMD7EBqfVwrulmFsCtyv+E6q4xIUpWBdocxnYFwl4MnEATG1IwPDRoDK
+         WLwyaWukH0VFkEjEJzoNeZcZmKcpbuXwlH9sRugt0EPJX9RJR6NLr3gIxQ57ahL4DeVr
+         U3UVMuIpEKL7wOWELy/CBjRNYlP7YedXeHyiOdbml9AD17NUjxWU/ZzaQ/QF3JLcN0pj
+         pVwQ==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=nappairam.dev; s=google; t=1769089295; x=1769694095; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=w2P21e8Xrn00dZ0P+iuyYVl+3bMyas+UXks6Iy2oCiM=;
+        b=j356dHcRAHwu+YhA+ZLxo8mGOLaDaB6mrVa7+iz88IRAzgoSOW4CicIBNMqXU/D4W6
+         fCsiTcZDNMXpNBhvMKwFuap5vExHwzQbIHUBRjswm6uzYr8XVZRNfAE+YJSjso8lO8Ey
+         EKhaOZOOPc6mT10w5xpxr+tIX+XadqguCjf4C/rdsDm4mnqqSBiEX8qYzQ9UDB/vaWqF
+         U4ahUIvGXrygeGrqZ5SNu+d05HBfkkYP0dZ07+aesuAwMPi/Yp+mR0gIu+fDPcgFTJSq
+         LBztSU5NQb4ESjPcPSaC9blDFcC6NgEh3kgQ/3S8vzGjVsfrPuLUKgDeZkBc6QE6Swec
+         hvpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1769089295; x=1769694095;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=w2P21e8Xrn00dZ0P+iuyYVl+3bMyas+UXks6Iy2oCiM=;
+        b=V4IaqDXdC8I7+7l39JnmOXY+VXASXKpMWolGKkOVTqMsXqwqRFMaGrsRU/y6KQncnp
+         oW3J2GT4B+Sj2UWNl6I/i4w3twYxlyTVEOjjKCpcPlzp3jjlclakR9MuXNfv44REEwTu
+         RsOgb8Rmmnk8aih78bhwoXCki8TT9tFtgac4ytUbK+yXyVS9Qfc7X1Lhc4Qm17Yz+R0/
+         +L4eZGC/jRg3PcjmstvdMhy7Psq4H6QnRy5OIX4tOU1tbbsY/y+52DGVEkUYRFjdlUJR
+         nDlJpC/oMS183Cw+gyR6V3eKNOLqWjbOyZPt+z0M34tAG6gJdXnKeYSUjJBUiA6lwhkq
+         VmJA==
+X-Forwarded-Encrypted: i=1; AJvYcCWzCtdODwEO6Mr2Rk22D45n8ZFYCioiPOmuHy93bnkL28zkzrOZuX04X0wQt2raBfNV0icRMyG/wyRJ5g==@lists.linux.dev
+X-Gm-Message-State: AOJu0YyS+X52n0VIp28MhgWnnpXzVqJK1KhbOJrIevVwTe4M40zGolcf
+	HeGWj0rzyUY+jWvhcSvQ6v7+vZur9thfJHdJJJo7N91jGvST12BECPnZY94vRzqPNVS/dEM0iOV
+	HZg/Na06Du6o3VMNJ9m6qgQzZ3MFrAg2JyWufEkMqLp0=
+X-Gm-Gg: AZuq6aL3XN/LsxVvSc8gYHE12L0PxNyhnlIerjBD3lA4yhorvrwEtQk8XvVsVRVCP4f
+	P0gqKfxRJJi8UIr9V8boP6bC1vkKjtyswTxKben1p5s9Sg6LgoqZ8skXzwJG09yyM9GkLYfq+H7
+	8CqwWqMcyHL5bnpskMkY48JRI/8cgIhvLypJd4pJYAdcAigwe+rhxuwK8uMPxLLVMq3y9/i0FBC
+	CDOtlKk7wtCEK6DgtJdzgyAgBLlCCVDvR+eFwm1SeB+rE+jexh+gPA=
+X-Received: by 2002:a05:690e:2545:b0:644:60d9:866c with SMTP id
+ 956f58d0204a3-64917773dc2mr12075758d50.93.1769089295468; Thu, 22 Jan 2026
+ 05:41:35 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <aXDuddwBCelAVouQ@smile.fi.intel.com>
+From: Mariappan Ramasamy <mail@nappairam.dev>
+Date: Thu, 22 Jan 2026 21:41:23 +0800
+X-Gm-Features: AZwV_QiZNeDZM11o-MKk_7KDA7mQ7yo_sasVTb9FNUuUgnOAyzlxMEQbDosuESU
+Message-ID: <CAEc-AF7dobeSF+WEvZ0gZ9yS9j-6BS2pj=Ne3XWvW=SqK3558g@mail.gmail.com>
+Subject: [PATCH] Please apply 1fb0d830dab8 to 6.18.y
+To: stable@vger.kernel.org
+Cc: "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>, 
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>, "ravindra@intel.com" <ravindra@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Jan 21, 2026 at 05:19:17PM +0200, Andy Shevchenko wrote:
-> > Well I mean if touchpads actually worked prior this idma64 commit and now
-> > they don't isn't that a regression?
-> 
-> I don't think so, because commit did the right thing and just revealed an issue
-> that was rather hidden. Reverting is not an option.
+Please apply commit 1fb0d830dab89d0dc99bb84a7087b0ceca63d2d8
+("Bluetooth: btintel_pcie: Support for S4 (Hibernate)") to the 6.18
+stable tree.
 
-I now looked at both working and non-working /proc/interrupts and when it
-is working there is no interrupt flood at all:
+This fixes a regression where Intel PCIe Bluetooth devices fail to
+work after resuming from S4 hibernation. It blocks S3 sleep after S4
+hibernation. The device loses power during hibernate and its firmware
+is erased, but the driver doesn't properly reinitialize it on resume.
 
- 27:          0          0          0          0       2277          0          0          0          0          0          0          0 IR-IO-APIC   27-fasteoi   idma64.0, i2c_designware.0
+Steps to reproduce:
 
-This makes me think that perhaps the toucpad is powered off and that causes
-the issue until I2C HID probes and resets it. I looked at the ACPI tables
-but I did not (yet) find anything that stands out.
+1. Suspend works normally before hibernation
+2. Hibernate the system (suspend-then-hibernate or manual hibernate)
+3. Resume from hibernation
+4. Attempt to suspend - fails
 
-I wonder if it was tried to put i2c-designware*.ko and i2c-hid.ko into the
-initramfs, and does work it around? I would expect so.
+Error logs:
+
+Bluetooth: hci0: Timeout (3000 ms) on alive interrupt for D3 entry
+btintel_pcie 0000:00:14.7: PM: pci_pm_suspend(): btintel_pcie_suspend
+[btintel_pcie] returns -16
+btintel_pcie 0000:00:14.7: PM: dpm_run_callback(): pci_pm_suspend returns -16
+btintel_pcie 0000:00:14.7: PM: failed to suspend async: error -16
+PM: Some devices failed to suspend, or early wake event detected
+systemd-suspend.service: Main process exited, code=exited, status=1/FAILURE
+
+After hibernate resume, the driver also shows restore errors:
+
+btintel_pcie 0000:00:14.7: PM: dpm_run_callback(): pci_pm_restore returns -16
+btintel_pcie 0000:00:14.7: PM: failed to restore async: error -16
+Bluetooth: hci0: sending frame failed (-62)
+Bluetooth: hci0: Opcode 0x0c01 failed: -62
+
+I am experiencing this issue on a ThinkPad X1 Carbon laptop with
+NixOS. Hibernation and sleep worked correctly in 6.17.x releases and
+broke after upgrading to 6.18.x.
+
+I have reviewed the changes in drivers/bluetooth/btintel_pcie.c,
+identified this patch as the fix, applied it to 6.18, and tested it.
+Hibernation and sleep work correctly again with this patch applied.
+
+The fix is already in mainline (merged Dec 1, 2025) but has not been
+backported to the 6.18 LTS branch.
+
+Upstream commit: 1fb0d830dab89d0dc99bb84a7087b0ceca63d2d8
+
+Tested-by: Mariappan Ramasamy <mail@nappairam.dev>
+
+Thanks,
+Mariappan Ramasamy
