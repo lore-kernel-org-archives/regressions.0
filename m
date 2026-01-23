@@ -1,78 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24501173;
-	Fri, 23 Jan 2026 17:35:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC6DA2BCF7F
+	for <regressions@lists.linux.dev>; Fri, 23 Jan 2026 20:09:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769189711; cv=none; b=t21nhLOHpOj6tDiEbprWYWMVZer719SBMlFDUGQay3qk1Hy1NSbXtEWBclsS/ark9v8HkGAbrSZSeD/ktDxgQQjcTDoAs1xhXvRyapx5hiS6haH813/Bcf4knRs+WrRRJOTJFcVs7Xwq7eF1RJVG+LAutMQxJ7KcDr0O5a2I6ns=
+	t=1769198959; cv=none; b=oWqfOmLKPLRinS5duP2wysSNi0GyxiYjLAQSP31bD9ZPk2rWxvaNXwD0KPJz/82qMm2GdxCCzVF2d8tDCOS1rzRtQ6flL6ucwSO44PgK5kV6ZKowxsfcwAG7X+GASoPtt0085E8N96FgG+6xB59Ruf69mrCkp/Zkegm1EOxqvoQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769189711; c=relaxed/simple;
-	bh=VOMV+3msTcsGNw+GkM0UslDsY4hQhdoHDJb1wdtiHFQ=;
+	s=arc-20240116; t=1769198959; c=relaxed/simple;
+	bh=nF2v79I4kSFPgvDDjb73ZJpLFS0MsNdvnQNwO3Q7zys=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gFjetTMnKEPlstJvUZH7xRqm6GJXlEr2Ru4HslLIJsh6Sr1f/1rgh+e+6LPPlBvnYDuL5WnhiLwqEN4eV6+S0lDPsIK3I1OsB8cNofdIhNLRMJExxveCqcK1GnAD9kVCdN6UvMGpI+CcCuYaxc06xd8XXRM7tMV28yx54FRDZXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oqvLvnC/; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type:Content-Disposition; b=MtgOYu4jYU2pRS+XdFWr8D7gHdFDPww/hjxbfe17x/GUEj1yMp4gTv8X7TWcNG4LlYNi/5Aa7qdCTLk1lMR/EyV0Yh2oIuFqqImMWJeN0gE7u/NZmgjC0oyfuWkpNmPcYw0QQCsqzTA8fTbcljzsvJH6Ae6THv+pFN3pEqNx0vA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hqZ3Lkcu; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oqvLvnC/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E343EC4CEF1;
-	Fri, 23 Jan 2026 17:35:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769189710;
-	bh=VOMV+3msTcsGNw+GkM0UslDsY4hQhdoHDJb1wdtiHFQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oqvLvnC/Wcf2gtTKwAcJ+x/wPMryn0ceR/XqlfQzNkodxWZIwGq4OJLE1cjkhD77w
-	 7DzTWKAa8Uow1/7d9L1xxHn6mcsMy043YSf6AkzO0HELf1V4ZdfkZWDUSutrGEHwLC
-	 pPLmUzXOYM9jCkseemdW3OtpwauHbnjKXt4h/KQsCqKzQby3myhR+D4Pn4OKzsqghh
-	 krr6po1N2t6+NS3WrcPsR7E4M/jBtmyzKIX/muzauPQYTfq6OS2bV8mkrF3dp3Knh7
-	 0Kcgr0y0drluca1ez1kzQfQDirXyWts3T8/EJsuArMjRlH5TITXflLMQdSk22msy6a
-	 X4Y1qGepmS8rg==
-Date: Fri, 23 Jan 2026 09:35:08 -0800
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Alexey Makhalov <alexey.makhalov@broadcom.com>, x86@kernel.org, 
-	linux-kernel@vger.kernel.org, Ajay Kaher <ajay.kaher@broadcom.com>, 
-	bcm-kernel-feedback-list@broadcom.com, Peter Zijlstra <peterz@infradead.org>, 
-	Justin Forbes <jforbes@fedoraproject.org>, Linux kernel regressions list <regressions@lists.linux.dev>
-Subject: Re: [PATCH] x86/vmware: Fix hypercall clobbers
-Message-ID: <cjacqm5kz67e3nrjfxhpe4lepr27cnbmykdixknta4r2wh7ugq@3wne235ikkb7>
-References: <bed73c01aba29fe651c9e23a9820a21e88ad13e7.1769048488.git.jpoimboe@kernel.org>
- <99a9c69a-fc1a-43b7-8d1e-c42d6493b41f@broadcom.com>
- <73641ce4-9387-48c6-8904-74997f9bb7ac@leemhuis.info>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hqZ3Lkcu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1769198957;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SlstkNyEnMu0SOOtlIRL+3pvXue6Qm44dVA5vs4+sDk=;
+	b=hqZ3LkcuDl41IcAoEYZ9E323ZboghEu0nO/bmI6yj4ritWEt/Esulozb7VdFA+keHQSWEO
+	/VdfpYNabF8t20QW0TBYFMhkWA3NhWopuWg2BbKjYj0JV2AHMbj+iyK8yH6O4+TcMYPjDC
+	+voVIqwYZAnkOqxvVmrFT6QVoNaAXhU=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-570-vz4SscAeNFeJD6DNnMeLUw-1; Fri, 23 Jan 2026 15:09:15 -0500
+X-MC-Unique: vz4SscAeNFeJD6DNnMeLUw-1
+X-Mimecast-MFC-AGG-ID: vz4SscAeNFeJD6DNnMeLUw_1769198955
+Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-89470bda22aso67862696d6.1
+        for <regressions@lists.linux.dev>; Fri, 23 Jan 2026 12:09:15 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1769198955; x=1769803755;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=SlstkNyEnMu0SOOtlIRL+3pvXue6Qm44dVA5vs4+sDk=;
+        b=p/2wJFCZWeOaDfv3G52PShcv71/e3XFurzr4OAAcVjUJ14VmxeZ5uc62EO4UDHd8tn
+         P0Cgr9pR9W1Y2zFV6Zi+13VFmxd5UatO2iyjVjZkvl9XW32n1dLhY5rnQmlJMVSiVmnu
+         BHdYClbsAG+6g7mpSeKjnvhYnJnaiUB0fwIgcaQ1h3q8HEtk89+VrFHZeT8rVjjHrKi7
+         MkyPT12bAISvW1DoMy/zWWMwVSLbnhZnMbDP7FACLeytSqi5lqvPatXr4OGgT95ZlZ5X
+         xhXgOcoARMeHVr7EgyBEEc/A/VM2XLzZWIN6aDEnGpRyG5eKwSACHm+VkQxgT5puOaZl
+         W0Jg==
+X-Forwarded-Encrypted: i=1; AJvYcCX4IQqhjSk5c+10gcSwaMtN7P1ZuYTfvOmeuqI6do+7H0h7oKrTQujZW3+K8uiLwe+2V2/c7smbVbmsYg==@lists.linux.dev
+X-Gm-Message-State: AOJu0YyNY5RjLwNQ7oFh0TLH2RYOropz+RbohHfOgFnVisoMwzNUeqzQ
+	nSw48+jnbOHvl0jjxn5pXEdgeq8mwsE+QSs0rroxBm8g3KxWuXqMjcwslFADFSUiUsRMTZSpGn8
+	RuCYl2F6EtHxGT4SaR9LxCAa5K9tCOqVfIHgMEARfPM6x/l6FQndclcE+FhRWkiT2
+X-Gm-Gg: AZuq6aKbd6oC07vIVBvMiadlhB632hNMMcYRgGVRDOWWWoD4Ps7z0ZblDEisKnzuFCw
+	HJbbRh2n50bixvaCWLS3GCC9VSRnFF62dC4rPt7DSdYHoWnb44mN9m7CeNunC35zfCHmJCZWR7p
+	jzW/LUZy9/6SIYuvySxn7M6REYLf8TejO57tsyTzBZgy68xpdBGHUxMIGoAtUI9/3jlOnv+jJ//
+	bbtAtZCRq45r8i2E5NTZTqK6iCg3FhMDmFuKRZr/TGeJBB/Znd5ygRF4pv6GblCmBR05HYW/cfk
+	lzBaRndNVjXc9oD1S/tHlrg2qJiALiT0mZ5yLls6waCHIe7+dNCKmaQ5707BCDYJqhkfAvZjZJA
+	WYJWQOGY=
+X-Received: by 2002:ad4:5c63:0:b0:892:6efb:95e3 with SMTP id 6a1803df08f44-89497df9196mr33772356d6.3.1769198954898;
+        Fri, 23 Jan 2026 12:09:14 -0800 (PST)
+X-Received: by 2002:ad4:5c63:0:b0:892:6efb:95e3 with SMTP id 6a1803df08f44-89497df9196mr33771846d6.3.1769198954518;
+        Fri, 23 Jan 2026 12:09:14 -0800 (PST)
+Received: from thinkpad2024 ([71.217.48.226])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-8c6e3870c48sm244117285a.51.2026.01.23.12.09.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 Jan 2026 12:09:14 -0800 (PST)
+Date: Fri, 23 Jan 2026 15:09:12 -0500
+From: "John B. Wyatt IV" <jwyatt@redhat.com>
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	"Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org>,
+	Alexey Kardashevskiy <aik@amd.com>,
+	"John B. Wyatt IV" <sageofredondo@gmail.com>,
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: [PATCH] coco/tsm: Remove unused variable tsm_rwsem
+Message-ID: <aXPVaDmBgiMxwYht@thinkpad2024>
+References: <20260120-coco-tsm_rwsem-v1-1-125059fe2f69@linutronix.de>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20260120-coco-tsm_rwsem-v1-1-125059fe2f69@linutronix.de>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: W2HYQ_g6kK-XkVwfl0hLl_FyCJOnix31-Zu_4Fzx1qc_1769198955
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <73641ce4-9387-48c6-8904-74997f9bb7ac@leemhuis.info>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jan 23, 2026 at 10:47:18AM +0100, Thorsten Leemhuis wrote:
-> [CCing the regression list]
-> 
-> On 1/22/26 11:00, Alexey Makhalov wrote:
-> > 
-> > Thanks for reporting the problem.
-> > [...] 
-> > Workarounding QEMU misbehavior from the kernel side by introducing less
-> > efficient asm inlines does not sound correct.
-> 
-> Well, fixing bugs right where they are obviously is a good thing.
-> 
-> But well, the problem according to the description quoted below was
-> exposed by a change that went into 6.19-rc1 -- which makes it a kernel
-> regression that must be fixed in the kernel (ideally before 6.19 is out).
-> 
-> At least from my understanding of Linus point of view on situations like
-> that. Or am I mistaken for some reason?
-> 
-> Or is this a case of "we for now assume this is such a corner case that
-> nobody else will hit; if we are wrong we'll reconsider".
+On Tue, Jan 20, 2026 at 01:07:11PM +0100, Thomas Weißschuh wrote:
+> This variable is and was never used, remove it.
 
-Hm, yes, from that perspective I agree this is a kernel regression that
-needs fixed.  We still want Linux to work with older "broken" versions
-of qemu that clobber registers.
+Hello Dan,
+
+What is the status of this fix? Without this my builds are breaking with
+CONFIG_WERROR=y set.
+
+As per process/handling-regressions.rst; I am CCing regressions.
 
 -- 
-Josh
+Sincerely,
+John Wyatt
+Software Engineer, Core Kernel
+Red Hat
+
