@@ -1,98 +1,134 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8695C33ADA2
-	for <regressions@lists.linux.dev>; Mon, 26 Jan 2026 13:53:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769435637; cv=none; b=DyoNGIVb2tXAVwul3R81OpaWc2JHGOnBOkr0brKshIttNMPFJPvgEeyOPt/y4yJKau0+fnBn1SwsHivRSf72PszlWKXznFxkRGDcZmM3KFYjSVZLKxKePAQVhmyqeLuiMnjiEnzrvmbEeBed7bkCRcOEMC/qmKUePljZmT78WIo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769435637; c=relaxed/simple;
-	bh=9icDPg6ZkVm6GU7we/zP1+CTW2MSDGgmmBuETqa+oJU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZHJjW+9yYMyDZ7D15RP/tbOmi82/kylbgi0vvSBwBBQfAmiS+wcpOn2bI1j9cQTXhrJvE5vUnOS0DeDPmdIBDcQuP9BdL4FSE6cWDkpOJXIMmjoueQiTUWcQfIoExiI3AiIgHrBt2s854f9rdqxkBtXai8TzPEu1iKM8H+Ehnao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=R9zPEz78; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F35F125487B
+	for <regressions@lists.linux.dev>; Mon, 26 Jan 2026 18:57:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.48
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1769453852; cv=pass; b=K+KoCfGY52QPylSWAE1SpCwbugxf3Gcbq1y+zgdbYQOTKpfrXzR59oJ8UGFCmNHeJv6cx04Lml7zmaOMKYuZzZx6JzfBapt2LfebOa+ClXfiRsIZRtYXg1wZJU4DJXBKO0FCXi03ZdS9zVfZcdyeWMg+EItkp5MBkvOwdsBW6mU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1769453852; c=relaxed/simple;
+	bh=hz+RGTXkAy1aPQVsKS3hIYer5EZOTSqKLFdI1ON5/I0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VXYncsG+vUQYyQXcdW3KkArLVamb9dXPhNjZ9A5SldIJ+fAKcrch0HpdLUF1l2J0p4bUwqoHTTa5iU3j+fiE9bzm1jtBX1fhgF7mC6ohUQsrPlSXIidPLjisgFcjYSMYuzUyDhgdrLpnOaiYXP6TCYJ92F2hG9zWJriMRl8pJyw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ezpI9v9W; arc=pass smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="R9zPEz78"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1769435636; x=1800971636;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=9icDPg6ZkVm6GU7we/zP1+CTW2MSDGgmmBuETqa+oJU=;
-  b=R9zPEz78XXqH/uW1OW5FljohC2kNp8hczTBriZZRpRGVl1S8okZ1WwwJ
-   SlY30eLhPCpnCMlE7yGmKHxxthQ3E94gdJeL4dzNJHz8tBrjbz6kJP53Q
-   Fr+9SVHEgZePS9bPygCfXQe3EbvyoVj+w5JdJBD4aCdQVITdk/C5M5DyJ
-   NyJ3tX9KJPJgwOPlaJ4cy5IJo4uo8v1BSdWXMKU0LyUaoIJfxHRbE7Ywi
-   +v5T8WKlx4Mh5AswBneuONTur9GRmsOC1QQpAqciVoLcb69sMk1GE81yC
-   RBkUfgqg21NiAEmrKyAU2fDJ/hcF8fQhp5MIAeyTTGuiHxFMaRqYVIvW3
-   Q==;
-X-CSE-ConnectionGUID: RMZPNZ/AQ6qeoy1ZJYGvzw==
-X-CSE-MsgGUID: bc1lA2LpRuqYlSQoWrZkcA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11683"; a="88024052"
-X-IronPort-AV: E=Sophos;i="6.21,255,1763452800"; 
-   d="scan'208";a="88024052"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2026 05:53:56 -0800
-X-CSE-ConnectionGUID: rfXz4owASQq6Na4vpyGh8A==
-X-CSE-MsgGUID: oHsN1RWcR0mRUT+g0ZpOmw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,255,1763452800"; 
-   d="scan'208";a="206805556"
-Received: from black.igk.intel.com ([10.91.253.5])
-  by orviesa006.jf.intel.com with ESMTP; 26 Jan 2026 05:53:55 -0800
-Received: by black.igk.intel.com (Postfix, from userid 1001)
-	id 0D8F895; Mon, 26 Jan 2026 14:53:53 +0100 (CET)
-Date: Mon, 26 Jan 2026 14:53:53 +0100
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: correctmost <cmlists@sent.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	dmaengine@vger.kernel.org, regressions@lists.linux.dev,
-	vkoul@kernel.org, linux-i2c@vger.kernel.org
-Subject: Re: [REGRESSION][BISECTED] Lenovo IdeaPad touchpad does not work
- when idma64 is present in initramfs
-Message-ID: <20260126135353.GT2275908@black.igk.intel.com>
-References: <d7627ea0-0965-4469-83c2-e2a15edd58a9@app.fastmail.com>
- <aXCYwBMTwkHZPYsi@smile.fi.intel.com>
- <20260121135803.GM2275908@black.igk.intel.com>
- <aXDos20kksml8wdU@smile.fi.intel.com>
- <20260121150256.GN2275908@black.igk.intel.com>
- <aXDuddwBCelAVouQ@smile.fi.intel.com>
- <20260122110021.GO2275908@black.igk.intel.com>
- <a6474592-87db-4fdc-958c-8b09d324df1e@app.fastmail.com>
- <20260123063621.GP2275908@black.igk.intel.com>
- <5c5645eb-66b8-4419-a4e9-ba2672af2f40@app.fastmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ezpI9v9W"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-b886a249da3so49547166b.0
+        for <regressions@lists.linux.dev>; Mon, 26 Jan 2026 10:57:30 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1769453849; cv=none;
+        d=google.com; s=arc-20240605;
+        b=lRub5+2YzM+f3d757L/YhzcF9kXpiHQCNn0KC1NEDXT4ESsbe2hhTQKaFI5hJWVAwp
+         sPE0yXdDKTYL3Jy9uM4A6oQ/1gfo5T1hfRBM4UG2SRcCAxyrjZEl3cFsY8y2GAhAiFjD
+         o3n6Q2vj9X8s6Jt3158YDqZPQX5AsQoWBIF8/8rJl8nixKZXSN3YDOl8tXJoXGY4yFck
+         ipK3xeuhe/bd5T8N1QL0vfv7psMd9HK62Wuh7RdueKYl1FFrDTznrqblbOaCqE3JpD4y
+         vOjh6FK8leNOqWR/lIftjE/kYkJUi14iREx0ZktqGU3DkMMVrplzG35KmlAtV0vHNth9
+         DSNA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=X2Nt6k2L4eZl/SWEw98vmqFsh/LJST5rQhrTBW6429k=;
+        fh=0yGoOcaIsKuzP3Et5hOI2m48/BEN8LsmTu7oRDakEz4=;
+        b=ITg+7uOns0/KNIB6nf9F3EkNm6Fn2aXTS3YsxNoSxgm06p89oSPjGPqBu8z/14xFBR
+         Knk0zW021vivHJA/23PL8RcdxXZ7z54tk9TXQGstnrDQZ+vfiOfAt8nATLprCMrn6imE
+         KDIkymVJ2d+8Xsmm2CGyUqQ7I2zMNGBBfUhehnmqdlzFonPaiNitSCIO9dxwxJfqY/eV
+         TdMvyK/gONAxL2Gwm1U8bM7Lfmi+oL5CEdyT8ITjNiI6Zg8wj/WsJIE9aniZhsxzmFc0
+         jvjvm1cIGl1OKar+Wh6TK3N/QWnB1kUQqkUS6zhqrNYj8hR3I5DIu7ZDwTU7Cbqgcmdw
+         s8+g==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1769453849; x=1770058649; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=X2Nt6k2L4eZl/SWEw98vmqFsh/LJST5rQhrTBW6429k=;
+        b=ezpI9v9WGfyC3UttCg+95hthK6z7uI0SUWgET7xcVGYkB4o250kso/tpZeTskaEPhO
+         1/4Pqo6XMgA2xtQFKEiVGGibg8eNXFJp0sykJO7SFoYDVuGyNu+gQkVRNzY0ZaArwor8
+         u+JJmrTp4k+QEkw2YTqQ5xtY7H5+jtLYe58fi14C3MrKTxk8muS5kn2ir6y9WquYuk1u
+         PhWPrf3KWcgJ1OLVAudXJL+8uTvf4+2Q7RuWGomHXfxe/7z9+o8ORVhoYhPb6iXGFZZj
+         eeG9zX+mFaMrELsfIvwgkSsWH3Jk4CA7pTulU378uuGISuwxxQd8DbmL1wrKLUp0LbK1
+         K6Dw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1769453849; x=1770058649;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=X2Nt6k2L4eZl/SWEw98vmqFsh/LJST5rQhrTBW6429k=;
+        b=nACjdF73hKxl7Yx45TFlWn/G0o/f7j/y6Vs9kt4gLiM7fwl3oIMtk/1V7leWkB7g7A
+         L+cHQ7l0nYqmUTDbvqSIdKmP8dXkwcQiWeAx6bsrqpexi4eKIJwlcstSsXzf5YHh07n9
+         Iarj8sFomRmVBgvtERt4zkI4T31ou9SZO10Qmuj0vibOFwgLyFZ/0g0yB4t3N1UUFpmK
+         2VZGGXGCYza7hlFwZb/+qNvTnkvyvAbSoWma5wV6vZWVlndDOf4Hcb7pltnpXiqWcFK/
+         Huz6Xrq4CZNdO+w71FFXc8JSsAgKDA+O+i5c5Ccp74NvAQFu7Mc+Kzb3UPu9Y2pCPTW1
+         6kTA==
+X-Forwarded-Encrypted: i=1; AJvYcCUiCI1tl0iZzyg31CFfnHb9d8wqUuEAtVrnhYqtdNyflNrBfZMWijgA5ji45gqa/uXxkrv4RHkjINR4MA==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzbzUy2egwtRMTq/RGO4877ZEMMXpOH4JMCdSI0H+lHnyNFxvJW
+	lIC88FIoWtz5/UAgkynQJ1jqwrAf8hmgvwH77RTEx4TiZOct9rqMZNDOo04PELDZTfL4vjFf+K6
+	H8TCVMaDwcqi1Gc2gNsJy5GX+frrtE7E=
+X-Gm-Gg: AZuq6aJPraB1xDozqqQ+jCoJG+dqh4jVoCJ+aNV6dAT8PBCvykKV290WGdobpUqw5zs
+	Ra3BcIXvc453ppBuJC7ncNUhG1xdz82Zv1JNTAPJlkeUOZyEWauR2DuRWC4BAP7kUcTOUxMDgKj
+	/F2nRY7eUX4NqP6WpnM67PkVmSxw1wYTzEWnQ//zLVIJnzpW2s2crUtzq8CjpqCsD538RPNSMl+
+	ACxQguza54ouLIYlerSHdB/gepMxycLLMw3dvSjyHkvVB7Y/dRkhGfKsdkQpFZcmDk+iyQ=
+X-Received: by 2002:a17:907:7fa6:b0:b8a:f365:f2f4 with SMTP id
+ a640c23a62f3a-b8d20b42330mr228465366b.0.1769453849055; Mon, 26 Jan 2026
+ 10:57:29 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <5c5645eb-66b8-4419-a4e9-ba2672af2f40@app.fastmail.com>
+References: <6ba903ad-9897-42bb-8c2d-337385cc3746@molgen.mpg.de>
+ <db387081-345f-423a-a0ff-e13f3bec2d51@molgen.mpg.de> <CADVatmM_mRnkDX=hpUjbyKkZnGynxJfRSujGxm2LaWWMEL_2ew@mail.gmail.com>
+ <ef9223ee-0a4e-468c-bfd0-0cf190d262f1@molgen.mpg.de> <aVgjpWaIRkerdgCa@eldamar.lan>
+ <49cdd663-bcbd-48b4-ac38-77ce94ef0c8d@molgen.mpg.de> <aVj-mz8vaw53TWtX@debian>
+ <aXHeLGr1n-W-Ay44@eldamar.lan>
+In-Reply-To: <aXHeLGr1n-W-Ay44@eldamar.lan>
+From: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Date: Mon, 26 Jan 2026 18:56:52 +0000
+X-Gm-Features: AZwV_QhUnyzIrspUJHMl5wxPaQZIKc2UPXxov3UABxIDoJiLKH6ZmgxeZIssq8Y
+Message-ID: <CADVatmNzTyUAr8UBvm6pHFsKz8xZpqUXh5NQR641JXsCWaPg8g@mail.gmail.com>
+Subject: Re: BUG: kernel NULL pointer dereference, address: 0000000000000000
+To: Salvatore Bonaccorso <carnil@debian.org>
+Cc: Paul Menzel <pmenzel@molgen.mpg.de>, 
+	Sudip Mukherjee <sudip.mukherjee@codethink.co.uk>, linux-kernel@vger.kernel.org, 
+	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org, regressions@lists.linux.dev, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	Hans de Goede <hansg@kernel.org>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	Giuseppe Sacco <eppesuig@debian.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Sat, Jan 24, 2026 at 10:38:14PM -0500, correctmost wrote:
-> I am seeing mixed results with those i2c config changes, depending on which modules are included in the initramfs image.
-> 
-> Build info for both tests:
-> - Commit c072629f05d7
-> - CONFIG_I2C_DESIGNWARE_CORE=m
-> - CONFIG_I2C_DESIGNWARE_PLATFORM=m
-> 
-> --> Test 1 - Various i2c modules absent from initramfs
-> 
-> Modules:
-> - drivers/dma/idma64.ko.zst present in initramfs
-> - drivers/hid/i2c-hid/{i2c-hid-acpi.ko.zst,i2c-hid.ko.zst} absent from initramfs
-> - drivers/i2c/busses/{i2c-designware-core.ko.zst,i2c-designware-platform.ko.zst,i2c-i801.ko.zst} absent from initramfs
-> - drivers/i2c/{i2c-mux.ko.zst,i2c-smbus.ko.zst} absent from initramfs
-> 
-> Result: The touchpad works, but there are still IRQ #27 messages:
+Hi Salvatore,
 
-And the touchpad is working fine after boot too?
+On Thu, 22 Jan 2026 at 09:59, Salvatore Bonaccorso <carnil@debian.org> wrote:
+>
+> Hi Sudip,
+>
+> On Sat, Jan 03, 2026 at 11:33:47AM +0000, Sudip Mukherjee wrote:
+> > On Sat, Jan 03, 2026 at 12:01:19PM +0600, Paul Menzel wrote:
+> > > Dear Salvatore,
+> > >
+> > >
+> > > Thank you for the follow-up.
+> > >
+<snip>
+>
+> We had another report (https://bugs.debian.org/1126128_ but the
+> problem remains here as well the reproducibilty. Uppon several reboots
+> only the first one so far showed the problem and was not reproducible
+> afterwards.
 
-Can you share full dmesg of this boot and let's add "i2c-hid.dyndbg=+p" in
-the kernel command line so we can see what it is doing as well.
+I was going to post the patch today but since you have asked the
+reporter of the last bug to test it so lets wait for few more days.
+
+About the problem showing on the first boot, does that mean that its
+only seen on a cold boot ? and not seen on reboots (reboots without
+power cycle) ?
+Can it be reproduced if the system is powered-off and then powering it on ?
+
+
+-- 
+Regards
+Sudip
