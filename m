@@ -1,129 +1,121 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dl1-f67.google.com (mail-dl1-f67.google.com [74.125.82.67])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAB15311C3B
-	for <regressions@lists.linux.dev>; Tue, 27 Jan 2026 15:09:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F1412DB79B
+	for <regressions@lists.linux.dev>; Tue, 27 Jan 2026 18:59:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.67
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769526573; cv=none; b=Dl7RBbzyDFc5+w8njQ/dlriQs3hbZpVEV9+UzKcpvcevpqs+972omYjRA2aIt54owzwZ+gSArSWwNfZaTLSkRJPHb8akTzlHUBGfUF0OHcM0ld1adWJPOG1vcdaYm3OhWUno2b2yftZ/YHMy0E0l0pzc+ZTAJRwKwbA2yk/dY/A=
+	t=1769540346; cv=none; b=WS98r9b8sCfA4KEq4vhCmB1AoBnLyextG/PhNWdqi62i6u8UhDv0+LiPoJjOaWqQPnGgidJPeRiH7sNnFN/BdJVQtbQJdOGnrH+5zF4e4L1LtMS0Ozx+YCbmfGl6uKYsyCFPqgUcPqt32kIvBmxoquqqct3UeIYqsvJRt7uXwWE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769526573; c=relaxed/simple;
-	bh=l6MXp60odRBYxNQsyCcgzadItXrr5jiugzsoSFXfN/4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ux0tMAetos8+KOGaY0X7r8yBADqlual0F9V4VuY2u/RVFqeetM4OTpTGeFcgAnwYF3ds+qCFZ9u6SiXEASc3dxhnQzngrE5fVLq0elnKA2tWdBcUwcv8ulHn7fJpvm9XwYsxm0BAsQWlVTCBLol6bbCISg9z3m0JVgh5m0hPEBo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Z8FGOuhE; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1769540346; c=relaxed/simple;
+	bh=5IzPdojvBgPrpJZwphzsim8SMgwmkPRRtnBFqrO/msk=;
+	h=Content-Type:MIME-Version:Subject:From:To:Cc:Date:Message-ID; b=QU6t2SCVZz91TNl+TJY9S1WnpS4qHgLvqjyZLt0HbTHK0451Ok5Pda8sC5/z/Z5Qo6D0u90THHvkOPbtdoUhy72Yb/EOYJ7dPzxddAyPXd0f/A+9AaaiAuFjo4aLNUeBXiybhi1luYkGUUxC1psbc95oSxIFUBulcaXwjMaZZos=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org; spf=none smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b=G+2EWTjf; arc=none smtp.client-ip=74.125.82.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=kernelci.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Z8FGOuhE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1769526572; x=1801062572;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=l6MXp60odRBYxNQsyCcgzadItXrr5jiugzsoSFXfN/4=;
-  b=Z8FGOuhEuhe54KcoxF3AJciSR4PWsfTDjYSDXsE+k17BVzsU24WigLoQ
-   WYHxwY/EsYwOgJvcQbOzggEt8MO0arEGzmu2R6TGQzD+oWTjVXCUTgEKg
-   jrkYTF0wurELAEKJ5OhImVJ4Axh7FdoItHzhiM4d1z2ot25BX0J+wq94L
-   Dukj6mJLLYhTRoIYNAZlYscnlfY5SWl4NLoX5VniWWi5ehaCT2xTOq3HO
-   MfT28IOKH/c7gVcRuxcAlzKChG/NHkwdn8TtCsNvMYzG/BMLoVlYaNlq7
-   k09P2GJkN8NuX7EqpfvFh7ZV55MprGNJoy0yyGadcLX3npiG1U2HFle9I
-   A==;
-X-CSE-ConnectionGUID: kLdz2mPgRFO4jIq0NTajhQ==
-X-CSE-MsgGUID: P6CPLO1ASveAE078KjdJTg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11684"; a="96189316"
-X-IronPort-AV: E=Sophos;i="6.21,257,1763452800"; 
-   d="scan'208";a="96189316"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2026 07:09:23 -0800
-X-CSE-ConnectionGUID: Clr8MPhzQXa4KHaExIpsLg==
-X-CSE-MsgGUID: I/tFTgRpQJuAxW+dJaJraw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,257,1763452800"; 
-   d="scan'208";a="207240877"
-Received: from egrumbac-mobl6.ger.corp.intel.com (HELO localhost) ([10.245.245.248])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2026 07:09:21 -0800
-Date: Tue, 27 Jan 2026 17:09:18 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: correctmost <cmlists@sent.com>, dmaengine@vger.kernel.org,
-	regressions@lists.linux.dev, vkoul@kernel.org,
-	linux-i2c@vger.kernel.org
-Subject: Re: [REGRESSION][BISECTED] Lenovo IdeaPad touchpad does not work
- when idma64 is present in initramfs
-Message-ID: <aXjVHocwkflAnKw2@smile.fi.intel.com>
-References: <a6474592-87db-4fdc-958c-8b09d324df1e@app.fastmail.com>
- <20260123063621.GP2275908@black.igk.intel.com>
- <5c5645eb-66b8-4419-a4e9-ba2672af2f40@app.fastmail.com>
- <20260126135353.GT2275908@black.igk.intel.com>
- <57727c07-33d5-4b52-abe2-4fdc2a7488b6@app.fastmail.com>
- <20260127084201.GA2275908@black.igk.intel.com>
- <b285137a-06bc-43c2-ab24-b3bacf8592ec@app.fastmail.com>
- <20260127101912.GJ2275908@black.igk.intel.com>
- <3d78d3cf-bebd-4bdb-8dca-3024dd769f76@app.fastmail.com>
- <20260127144357.GL2275908@black.igk.intel.com>
+	dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b="G+2EWTjf"
+Received: by mail-dl1-f67.google.com with SMTP id a92af1059eb24-124a1b4dd40so420968c88.0
+        for <regressions@lists.linux.dev>; Tue, 27 Jan 2026 10:59:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20230601.gappssmtp.com; s=20230601; t=1769540344; x=1770145144; darn=lists.linux.dev;
+        h=message-id:date:reply-to:cc:to:from:subject
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cSGXJedx7qR79VfRusvQyIhsig7RD38T9b2+vtFHaMo=;
+        b=G+2EWTjfKgM/WFu+AO9ahbS7bBOZgpSkIYtxf85XhTWYAiFk5ECIsuhYFrJH+mhs25
+         rHtOgs8V1TaVc62FoKSXTBGuUo38mQeJpnkEVR1zdz2JPJt7Q/3DUa5EROk3UWOqWuX+
+         HJcA/Kvuc5+ZJo/j5YdoC4WJAVtIi3Wlj4H3Re1W7HgRq55gqT+GdPP0FvB5O0S2Mt2V
+         lvh/xJh0aIL/4HvdL2R1J9l+DTjbt5HkAG6NoFYSteOaGHoo7y6ofrI0Su6L5pgNoFi1
+         8Cc3aLsCcIqzS57PrGWluM/2r6EZNHxWf0EDhXKysS350GE3CdpE00pUGp8ROZTeb+Mi
+         hLHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1769540344; x=1770145144;
+        h=message-id:date:reply-to:cc:to:from:subject
+         :content-transfer-encoding:mime-version:x-gm-gg:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=cSGXJedx7qR79VfRusvQyIhsig7RD38T9b2+vtFHaMo=;
+        b=baJDprThAr3/KcXPteRhRfZSxD0ybs9uPTunJiilqzb+kYJZgMMqpcJTe84cEyQ4H2
+         FyZOnRaQoBJO6NnJHIe6iRhRAE46UbjSXwPCZu+YpAiPJNrkQA62wwJmsu1AZRdlu64h
+         7B1DVCkdPXAutDBUyGuHAPDrePHNclGRgRVI9SaUeNzJqcQRfBP4m8Ax3VTlJEl1OGLo
+         /uDlGX+djuJJ47imchOPzm1zaQm4SIWBdJPPqLQa9dVm9KQgZ88MQu3Jycf8nSp+9bo4
+         II51Da62vWsfNoDuV//MIUub5XRQ0nvBkn6YcyNPAywRGgQ93qf1aHyKDjJYrYWI5Eih
+         rKvA==
+X-Gm-Message-State: AOJu0YyuYLEs4sGbQkpysdjHbE+0qjepc8EKAIWMCU5dM1lTk1jpGEqa
+	tqaO+W5KgRYRnDhGxNE6kiPEodQgrv/TupHERWfb9h7ets45cBj0EYOViJRvbbttVizZFcb5FLy
+	/aQ6hPm8=
+X-Gm-Gg: AZuq6aJ6KyZ4TAgLci1uIVDsZ+zdzdXw7mDy1eXQKWPZdMGcqbOJlENR7VFOqHKvXn/
+	q/ZHI6RRtvU+NpUJsKUWnqyxat5xyCLgX6Mh6myFtDmwBAxdHmU+/DMYbNymBvd0OeiQuX4CxGw
+	t/4aTaszQRcj6xwftuVuPzbfwP9HAOFsUuCWa7DPwHEmx+sEKqq63x0oQ066NoTWlFaneUYodxt
+	4DvMQsdHYKPSbOb4gd0w8PH14Ncj3oqPg4epYGc4+7OdfIcU3U+znGG/Nx9IoSBKGPDdIeqlvkW
+	aa/JKCBUo5dtxlS55vBuHk2zXLwNTAcqGwrnaz9aWzfZC7jstoIaPS+LCQ+zLIXDDko4j7xnhM8
+	A8G1sFly0emhE3fdsPMngb+zJz8/hA66PaDpoxhiyiSjskb077tVL1IXVoCvkVPd7X2WiEBJqMq
+	b6ZcBY
+X-Received: by 2002:a05:7022:6609:b0:11b:8161:5cfc with SMTP id a92af1059eb24-124a00c4cbamr1696781c88.36.1769540343935;
+        Tue, 27 Jan 2026 10:59:03 -0800 (PST)
+Received: from 22d5995788c3 ([20.38.40.137])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-124a7bd05b1sm786545c88.3.2026.01.27.10.59.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Jan 2026 10:59:03 -0800 (PST)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260127144357.GL2275908@black.igk.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
-
-On Tue, Jan 27, 2026 at 03:43:57PM +0100, Mika Westerberg wrote:
-> On Tue, Jan 27, 2026 at 05:56:37AM -0500, correctmost wrote:
-
-...
-
-> > > Okay can you set CONFIG_INTEL_IDMA64=n in .config? That should prevent it
-> > > from loading. Keep the rest as it was.
-> > 
-> > That change makes the IRQ message go away and the touchpad seems to work
-> > fine in my desktop environment (log attached).
-> > 
-> > These are the config changes that I tested with:
-> > - CONFIG_I2C_DESIGNWARE_CORE=m
-> > - CONFIG_I2C_DESIGNWARE_PLATFORM=m
-> > - CONFIG_INTEL_IDMA64=n
-> 
-> Okay thanks it looks good to me too.
-> 
-> I tried to go through the datasheets again but could not figure why the
-> LPSS I2C IP would keep the interrupt asserted.
-
-We can try to dig something internally, but it's another story.
-
-> However, I think we can
-> hack^Hwork this around by simply not creating the IDMA64 device at all for
-> I2C. This should be fine to do because I2C is really not using DMA in the
-> first place so this is kind of just wasting "memory". So something like
-> below.
-> 
-> Please re-enable CONFIG_INTEL_IDMA64=m and the rest and try if this makes
-> it work without the irq splat. And if it does please try with the
-> "original" arch setup and see if that works too (keeping the patch applied
-> of course).
-> 
-> Andy, what's your thoughts on this?
-
-Fun fact, that I was thinking about the similar approach as in "don't enumerate
-DMA for I²C LPSS controllers" a few hours ago (and for the record, sometime ago
-but I don't remember why that time).
-
-So I'm fine, but we need to put also a big comment with the reference to this
-discussion or so.
-
-...
-
-Btw, do we have an i2c alert interrupt here? Might be it's somehow related?
-
--- 
-With Best Regards,
-Andy Shevchenko
+Content-Transfer-Encoding: 7bit
+Subject: [REGRESSION] next/master: (build) drivers/hwmon/cros_ec_hwmon.o:
+ warning:
+ objtool: cros_ec_hwmon_rea...
+From: KernelCI bot <bot@kernelci.org>
+To: kernelci-results@groups.io
+Cc: regressions@lists.linux.dev, gus@collabora.com, linux-next@vger.kernel.org
+Reply-To: kernelci@lists.linux.dev
+Date: Tue, 27 Jan 2026 18:59:03 -0000
+Message-ID: <176954034280.3309.3334972019456076511@22d5995788c3>
 
 
+
+
+
+Hello,
+
+New build issue found on next/master:
+
+---
+ drivers/hwmon/cros_ec_hwmon.o: warning: objtool: cros_ec_hwmon_read+0x7c: can't find jump dest instruction at .text+0xc40 in drivers/hwmon/cros_ec_hwmon.o (scripts/Makefile.build:287) [logspec:kbuild,kbuild.compiler.warning]
+---
+
+- dashboard: https://d.kernelci.org/i/maestro:9be47da80cfd017764d8a2750178c200bba3ef54
+- giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+- commit HEAD:  4f938c7d3b25d87b356af4106c2682caf8c835a2
+- tags: next-20260127
+
+Please include the KernelCI tag when submitting a fix:
+
+Reported-by: kernelci.org bot <bot@kernelci.org>
+
+
+Log excerpt:
+=====================================================
+drivers/hwmon/cros_ec_hwmon.o: warning: objtool: cros_ec_hwmon_read+0x7c: can't find jump dest instruction at .text+0xc40
+
+=====================================================
+
+
+# Builds where the incident occurred:
+
+## cros://chromeos-6.12/x86_64/chromeos-amd-stoneyridge.flavour.config+lab-setup+x86-board+CONFIG_MODULE_COMPRESS=n+CONFIG_MODULE_COMPRESS_NONE=y on (x86_64):
+- compiler: gcc-14
+- config: https://files.kernelci.org/kbuild-gcc-14-x86-chromeos-amd-6979019c1908a6300d99fbd5/.config
+- dashboard: https://d.kernelci.org/build/maestro:6979019c1908a6300d99fbd5
+
+
+#kernelci issue maestro:9be47da80cfd017764d8a2750178c200bba3ef54
+
+--
+This is an experimental report format. Please send feedback in!
+Talk to us at kernelci@lists.linux.dev
+
+Made with love by the KernelCI team - https://kernelci.org
