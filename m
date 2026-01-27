@@ -1,92 +1,105 @@
-Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFF783EBF05;
-	Tue, 27 Jan 2026 07:02:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5D2329E0FD
+	for <regressions@lists.linux.dev>; Tue, 27 Jan 2026 08:42:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769497323; cv=none; b=tIUXP8AKB0d4uY4VP6/smp5GXU0VLK+ZoDkLdv4iu7mHUNrjWy328f1jD+c9m3h8PzG9IathX/0H3lJtIEbLeK4/Oas93+P2A2UKEFob9EWOxEvVxt3/NbvuUTQ4MJAu5mbn2zh6APdFn3/m2F76knRURJv82EtZodok73Ltirw=
+	t=1769503326; cv=none; b=A4QcuxLNuC3sC6BA8zkfjS6Do5uOIqM3okAAIfFhOT0vQ0PZDkQ99/KtrrhbsC+8uGn2WF9n19A2imahC/QZV/xxPile365D+u9aVqnV90bAruss9HzrvK83BpgNIUWsAR0MOrrzw4EEHoQBL1IAPzwcMPOCc8vDPrEgfJnRptA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769497323; c=relaxed/simple;
-	bh=E/eYheXWIcYmrXyOOF2pOYIDtvsZl08ZnA+sCoFz/7Y=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=gq6hiZSHAEKLOWZzk8F9/8mBauRc/4QCTZ1QvOhvcNqp2NmSHuxcSIQK5zrUiBGD8Zdi3jftW3GHqzpXKivHFWmEx/5GOwTNSsLiPkWUtEP/knbg1PH7QkzCuIfkZRNyP3BxNOJP48f8BdB6aCEJn0eSpIus1DYluEdi/LEVP0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=none smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=U7MC0Eee; arc=none smtp.client-ip=82.195.75.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=debian.org
+	s=arc-20240116; t=1769503326; c=relaxed/simple;
+	bh=qidps2Tx7lTSgLV5S9R5cggbG2HZGgVsYm10gEmmsqA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=I0kUZAzrea7M80hUkFjLn7zpRepFEQvcDkM7LBlAQgX0sGS9EjOl0+DN9U1GRneRPWafRQ7Hiftq1BNJH2hozEUQVdkkOlpYNAAtLzArFahdyxSaLqr2bGvz8XZLH0zjHmppi7BpzxSCPXl4PsFtkmq/q5q0jSKMIiEiW9tLM24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bW+Rpk7r; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="U7MC0Eee"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:MIME-Version:Content-Transfer-Encoding
-	:Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:
-	Reply-To:Content-ID:Content-Description;
-	bh=E/eYheXWIcYmrXyOOF2pOYIDtvsZl08ZnA+sCoFz/7Y=; b=U7MC0EeeyatJCV4yWkPw0hKXNB
-	mXO2Ofo0sddgWVbAc4w2tfSBHHCEdOzuH2WijgrlLIzBcVjbXWhFHHEvYEFEzgeX4NLMibAQq28ng
-	ZtOZUFOWCP+OvlAbTeZIv23xJ0Z8hf9qujCT1eo8CmE0ejdkInGhrwT/51WrSnnZINoDPVD/FWL2x
-	rq5txjppgBH5e/zaRq7qC1DD8lMl7kdoji0d60thsnfuNtmh/l2wPkS4zHucEuSa/wkDrApq5SLsF
-	xar3VWMaz76M+qqbwZBX1HDKg+qs/e+m3TbELrH/3uiqJUWs8K3maT3YILWB5INpTrZEr29XuI4PR
-	wzgOCLsw==;
-Received: from authenticated user
-	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.94.2)
-	(envelope-from <eppesuig@debian.org>)
-	id 1vkd56-00GoQC-W4; Tue, 27 Jan 2026 07:01:45 +0000
-Message-ID: <8f8a478ba50bd43d30704f0d74e02058810f2795.camel@debian.org>
-Subject: Re: BUG: kernel NULL pointer dereference, address: 0000000000000000
-From: Giuseppe Sacco <eppesuig@debian.org>
-To: Sudip Mukherjee <sudipm.mukherjee@gmail.com>, Salvatore Bonaccorso
-	 <carnil@debian.org>
-Cc: Paul Menzel <pmenzel@molgen.mpg.de>, Sudip Mukherjee	
- <sudip.mukherjee@codethink.co.uk>, linux-kernel@vger.kernel.org, Andrew
- Morton	 <akpm@linux-foundation.org>, linux-mm@kvack.org,
- regressions@lists.linux.dev,  Thomas Gleixner <tglx@linutronix.de>, Ingo
- Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen	
- <dave.hansen@linux.intel.com>, x86@kernel.org, Hans de Goede
- <hansg@kernel.org>,  Ilpo =?ISO-8859-1?Q?J=E4rvinen?=	
- <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 27 Jan 2026 08:01:43 +0100
-In-Reply-To: <CADVatmNzTyUAr8UBvm6pHFsKz8xZpqUXh5NQR641JXsCWaPg8g@mail.gmail.com>
-References: <6ba903ad-9897-42bb-8c2d-337385cc3746@molgen.mpg.de>
-	 <db387081-345f-423a-a0ff-e13f3bec2d51@molgen.mpg.de>
-	 <CADVatmM_mRnkDX=hpUjbyKkZnGynxJfRSujGxm2LaWWMEL_2ew@mail.gmail.com>
-	 <ef9223ee-0a4e-468c-bfd0-0cf190d262f1@molgen.mpg.de>
-	 <aVgjpWaIRkerdgCa@eldamar.lan>
-	 <49cdd663-bcbd-48b4-ac38-77ce94ef0c8d@molgen.mpg.de>
-	 <aVj-mz8vaw53TWtX@debian> <aXHeLGr1n-W-Ay44@eldamar.lan>
-	 <CADVatmNzTyUAr8UBvm6pHFsKz8xZpqUXh5NQR641JXsCWaPg8g@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2-8 
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bW+Rpk7r"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1769503324; x=1801039324;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=qidps2Tx7lTSgLV5S9R5cggbG2HZGgVsYm10gEmmsqA=;
+  b=bW+Rpk7rdCzWuXXSWYpzFWKlEXiVBh8l+mb3DtDPh4z7GlDbiWbtjY2+
+   lvfJyqd0zM/LFmzzdY3ZXerp4iqx6DtDa5e7PexmSZAQBt6RCwrAFvr+A
+   8fjorRBterU4BgWICnzau4Q+jzD1Pc83Z0egMyGON8QZ3OXqLJ84iA69W
+   HF/zlmYIZirwwMFhsTedCABqZu4qGzhTjne0H3U6ms8a70qnpxiBSPcrq
+   LRuU/H7FDEuLM3RQhil0JWey7ukIrTSXeJjmm64ehLhMchfaUSQ8BXDxk
+   HI9uuJnL2FI9rNmHN+K1QM2tGhK/aJJWDm4GppU36CYDewz48zE4mNUDi
+   A==;
+X-CSE-ConnectionGUID: ayJAt8iEROCbrXOz4uHmpQ==
+X-CSE-MsgGUID: BP0lLMJzRo+X4P0Iq4F96A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11683"; a="80996337"
+X-IronPort-AV: E=Sophos;i="6.21,256,1763452800"; 
+   d="scan'208";a="80996337"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2026 00:42:04 -0800
+X-CSE-ConnectionGUID: wk2UtoB7QVy0dBGh0OSUWQ==
+X-CSE-MsgGUID: ePFmdfQDQzuWfz7dHe99/w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,256,1763452800"; 
+   d="scan'208";a="212029328"
+Received: from black.igk.intel.com ([10.91.253.5])
+  by orviesa003.jf.intel.com with ESMTP; 27 Jan 2026 00:42:02 -0800
+Received: by black.igk.intel.com (Postfix, from userid 1001)
+	id A2A0A98; Tue, 27 Jan 2026 09:42:01 +0100 (CET)
+Date: Tue, 27 Jan 2026 09:42:01 +0100
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: correctmost <cmlists@sent.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	dmaengine@vger.kernel.org, regressions@lists.linux.dev,
+	vkoul@kernel.org, linux-i2c@vger.kernel.org
+Subject: Re: [REGRESSION][BISECTED] Lenovo IdeaPad touchpad does not work
+ when idma64 is present in initramfs
+Message-ID: <20260127084201.GA2275908@black.igk.intel.com>
+References: <20260121135803.GM2275908@black.igk.intel.com>
+ <aXDos20kksml8wdU@smile.fi.intel.com>
+ <20260121150256.GN2275908@black.igk.intel.com>
+ <aXDuddwBCelAVouQ@smile.fi.intel.com>
+ <20260122110021.GO2275908@black.igk.intel.com>
+ <a6474592-87db-4fdc-958c-8b09d324df1e@app.fastmail.com>
+ <20260123063621.GP2275908@black.igk.intel.com>
+ <5c5645eb-66b8-4419-a4e9-ba2672af2f40@app.fastmail.com>
+ <20260126135353.GT2275908@black.igk.intel.com>
+ <57727c07-33d5-4b52-abe2-4fdc2a7488b6@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Debian-User: eppesuig
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <57727c07-33d5-4b52-abe2-4fdc2a7488b6@app.fastmail.com>
 
-Hello Sudip,
+On Tue, Jan 27, 2026 at 01:52:01AM -0500, correctmost wrote:
+> On Mon, Jan 26, 2026, at 8:53 AM, Mika Westerberg wrote:
+> > On Sat, Jan 24, 2026 at 10:38:14PM -0500, correctmost wrote:
+> >> I am seeing mixed results with those i2c config changes, depending on which modules are included in the initramfs image.
+> >> 
+> >> Build info for both tests:
+> >> - Commit c072629f05d7
+> >> - CONFIG_I2C_DESIGNWARE_CORE=m
+> >> - CONFIG_I2C_DESIGNWARE_PLATFORM=m
+> >> 
+> >> --> Test 1 - Various i2c modules absent from initramfs
+> >> 
+> >> Modules:
+> >> - drivers/dma/idma64.ko.zst present in initramfs
+> >> - drivers/hid/i2c-hid/{i2c-hid-acpi.ko.zst,i2c-hid.ko.zst} absent from initramfs
+> >> - drivers/i2c/busses/{i2c-designware-core.ko.zst,i2c-designware-platform.ko.zst,i2c-i801.ko.zst} absent from initramfs
+> >> - drivers/i2c/{i2c-mux.ko.zst,i2c-smbus.ko.zst} absent from initramfs
+> >> 
+> >> Result: The touchpad works, but there are still IRQ #27 messages:
+> >
+> > And the touchpad is working fine after boot too?
+> 
+> Yep, the touchpad seems to work fine in my desktop environment after booting and logging in.
 
-Il giorno lun, 26/01/2026 alle 18.56 +0000, Sudip Mukherjee ha scritto:
-[...]
-> I was going to post the patch today but since you have asked the
-> reporter of the last bug to test it so lets wait for few more days.
->=20
-> About the problem showing on the first boot, does that mean that its
-> only seen on a cold boot ? and not seen on reboots (reboots without
-> power cycle) ?
-> Can it be reproduced if the system is powered-off and then powering
-> it on ?
+Can you do one more experiment?
 
-I am that reporter. The problem appeared only once, on a laptop that is
-never just rebooted, i.e., it is always completely powered off and
-started again after a few hours. I've built the kernel with your patch
-but I would not use it until I would find a way to reproduce the error.
-Sadly I was unable to see the problem again.
-
-The only hint I may provide is that the day the problem showed up, I
-was working in the wild, at about 10=C2=B0C. Maybe this has influenced the
-hardware response timeing.
-
-Bye,
-Giuseppe
+Add "modprobe.blacklist=idma64" in the command line too (keep everything
+else as they are now). Does the touchpad still work and do you still get
+the warning? Please share full dmesg.
