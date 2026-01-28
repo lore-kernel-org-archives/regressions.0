@@ -1,196 +1,124 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f193.google.com (mail-dy1-f193.google.com [74.125.82.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FA30270552
-	for <regressions@lists.linux.dev>; Wed, 28 Jan 2026 12:31:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF186352C20
+	for <regressions@lists.linux.dev>; Wed, 28 Jan 2026 12:59:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769603501; cv=none; b=HnIOZ4EJwGrse7sE3oL1xTEp/yXajj1dEiANP319OYuAwO9WUVVp65fmhKB8fJkX9EE9woYuXFIpLEhyCoLnGliBJUIP/avz/Y0hDMguR+dd8qiuDcX3wcNPFja5V/6QRZygTP24XEGW8zmQzx63+IXeyYt8kGFIdgcWlqTEoI4=
+	t=1769605149; cv=none; b=MWU7OCK0UqDICpWjkfyqkjWb1uw87Jv4nAhTJvLJ3BO4b9tmsxMsS6sCeidgTANs5x1xF1wKlgULcN/R4FlYvlOEDOT6rYMon9zCeB8rVOMbur9tGHC9Pmyua7hag6BfOdNVjL0l1DA8m7S7DnrpxRYLDC6YG1jKTlm+e8EAPFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769603501; c=relaxed/simple;
-	bh=jhReHcVoLeAYfxmXSnz9SKAPwc/pTTpvp9BhBdYEkn0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IPmiFqPpdVQ+NDkxZkX1+pUFc6fwnHoXG2PIXWOQX4z/7ekG7wfodotcIGp1DKr8rXKZtC70AxM+B0aYX5ax2tVl848/pGnjGvjRHvF5QCFQ/N0aCYiOuB6m968H8qVNvARVHQNI1asrmJqr4Zad1/iWp9/h6XByOfMseavpzx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XCZuIhRo; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1769605149; c=relaxed/simple;
+	bh=UlfO564AJzfBgWIhPixEpTnDJDJdI+parV/CzPYapSI=;
+	h=Content-Type:MIME-Version:Subject:From:To:Cc:Date:Message-ID; b=rZvBzu/wIy910iw3onZcxjO5olERSK1puXMKN76pIrGWE3kCy9M8LStz6ulmloAGT9nS+ajseSMJfyGoHK7oDru3ZbmTbJaQSu/bbpcsnp2VG3bYz27IiXBziXXQra3GSDJoXwjBX5T+XQnEGrfeDSIBtzyaBq3Q2h8PGeCcqz4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org; spf=none smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b=dfm6ygWM; arc=none smtp.client-ip=74.125.82.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=kernelci.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XCZuIhRo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1769603499; x=1801139499;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=jhReHcVoLeAYfxmXSnz9SKAPwc/pTTpvp9BhBdYEkn0=;
-  b=XCZuIhRo6rfqip4Hf+CDM4JMyh+hPRYcpZloXKOym+2qpUTR3jfBlhtU
-   ykvpSuP5E0rfbbqBdkCu9e6wM9TxFUA2rKla5nfQrDmi1TvEOACqN35R8
-   MzDx4EeeXQCJr1PB6YMZP4FLxDUVJ4AJ8meOBPtgZQtvrar3lp5d5YtlZ
-   k0DrjabBBjS26DzgO3EhLQV0yqhusXoKqtJU+jHLAcgKY+JOHEAemyRRQ
-   Nol4vwlNbmY7fFYE/NG8kLu/AJFdAxn83eNn1ZeasuGIV55F/v10M2/gY
-   P1+dG/gJ98kAIY/ZpW6V7BVEfVdJyE7d3fZInWqI8DvlfOw8sXLiQrcqt
-   A==;
-X-CSE-ConnectionGUID: Zb06yrCVSqiUOlDVmhvUzQ==
-X-CSE-MsgGUID: eZwMFY1HR5y4DYUYTZyMYA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11684"; a="70713800"
-X-IronPort-AV: E=Sophos;i="6.21,258,1763452800"; 
-   d="scan'208";a="70713800"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jan 2026 04:31:39 -0800
-X-CSE-ConnectionGUID: U7/xe9KjS8qNnnTkKxvSDw==
-X-CSE-MsgGUID: W0GHs2ttRfuqYkLG1KcqLg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,258,1763452800"; 
-   d="scan'208";a="213229400"
-Received: from black.igk.intel.com ([10.91.253.5])
-  by orviesa005.jf.intel.com with ESMTP; 28 Jan 2026 04:31:37 -0800
-Received: by black.igk.intel.com (Postfix, from userid 1001)
-	id F292998; Wed, 28 Jan 2026 13:31:35 +0100 (CET)
-Date: Wed, 28 Jan 2026 13:31:35 +0100
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: correctmost <cmlists@sent.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	dmaengine@vger.kernel.org, regressions@lists.linux.dev,
-	vkoul@kernel.org, linux-i2c@vger.kernel.org
-Subject: Re: [REGRESSION][BISECTED] Lenovo IdeaPad touchpad does not work
- when idma64 is present in initramfs
-Message-ID: <20260128123135.GM2275908@black.igk.intel.com>
-References: <69f5dea3-17b0-4d3a-9de7-eb54f8f0f5cd@app.fastmail.com>
- <aWoM3JibLSBdGHeH@smile.fi.intel.com>
- <aWoUc_GJuZ8SuYCM@smile.fi.intel.com>
- <e5ee42bd-0d17-44e7-a306-61d19f1d24b2@app.fastmail.com>
- <aW4J6bmHn2dLuOxo@smile.fi.intel.com>
- <aW4MUisgI6d2Efbr@smile.fi.intel.com>
- <aW9LzBIOIePu59zV@smile.fi.intel.com>
- <d7627ea0-0965-4469-83c2-e2a15edd58a9@app.fastmail.com>
- <aXnYJQJW4wypkkPC@smile.fi.intel.com>
- <0d93a56c-e452-4cd0-abb4-09c9f916274a@app.fastmail.com>
+	dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b="dfm6ygWM"
+Received: by mail-dy1-f193.google.com with SMTP id 5a478bee46e88-2b6b0500e06so9291281eec.1
+        for <regressions@lists.linux.dev>; Wed, 28 Jan 2026 04:59:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20230601.gappssmtp.com; s=20230601; t=1769605144; x=1770209944; darn=lists.linux.dev;
+        h=message-id:date:reply-to:cc:to:from:subject
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+KkJh3RLDDj6h93IXIjyNerYTMuZsf1CSiGRf5IbgaQ=;
+        b=dfm6ygWMlbtuQ5TyxvSKCzL2fJBtNEyAIi9sSKvzSHQzxPcbIQzctxmMLnLG5xI69u
+         tvgr2AoCnog8tnIJnTrNiRFzKAA/NFyd95II4Cc6+BAjX9oZB64OaFO2+kF+4uKB8UCm
+         qPnjzKrvsDEq0N+FAKguLfrALsQq3/gkRjoKr/4JoQ7nDfb/dE9HWbTU4KiBLYNTQ9jM
+         FSQBWkGc9WvyzvUSx8aD1gnCK+qDZyRcv52V3lOJB7c6N800WgcotNgygUShpmR2um+q
+         uCZOqlshyHKZTOqrSsoxVSnpV8j+eGzgF9Y1xQfRk+JT4V1pgV9UMcD0ecE6usZ1Ym0V
+         +kFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1769605144; x=1770209944;
+        h=message-id:date:reply-to:cc:to:from:subject
+         :content-transfer-encoding:mime-version:x-gm-gg:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=+KkJh3RLDDj6h93IXIjyNerYTMuZsf1CSiGRf5IbgaQ=;
+        b=Tz8pS38bkCIZmemD5eeRDihI/5EHh5f4oNrG9ZBtpddUxLW+H9S6z4viLsiPB6fEeV
+         RgioCK8jlR1w3jrSs2HGp597dvNcVZjl85U0i7y/XzsVEMD9gp/32Hn8F3nHaWupZ8Bi
+         YfjM5iNrKpcgsd+VTAIkRqIZ7xTEbGhP5ho+8PS/TJeuiPg2/pAy2SxF5Ldup6SutOIP
+         ElhE1R4PKZGF2jMVzz+HLFOA9WzTfHI4XfWp9xBgZQY2ALBUCQb+oSHbKz4ZA98XhCjd
+         gsvyfZ8NmdwZSMLC/9gDRtvaf1zdL4FZASulVHSrosGfzFZ16ji7WeNz37dvZkl+uj/M
+         bqwg==
+X-Gm-Message-State: AOJu0YyLpwmF/9RfKHfkHIkOQ0/Y1IY6tZYaNPHulaEfriFcgV1cIcnm
+	YghcDeZd8N9D5WMq0SgYxdwEwTxz5TEO4JKExrX2EzQXW/946CNT98LevfTdY1ouy7Y=
+X-Gm-Gg: AZuq6aIBAV6A78ZfPaTLNPTdWVfZdmPnZgmiE9g35wb446w60SawZJgv+U+8Kf7GGUu
+	hSpFXMPLSLjHnHB+JMqc2uvZ9rJJ8KwccoP3p41blBL88NjKDO+QkLcoyOO1ma2OyQ+KI3Y61xy
+	jbGcJyh+0csTviFrtBUBGm0JUaDq4GLeaslWYbIpflaMhizVE9htKSAXOyQdZ6OPmiIxoY5GsDf
+	lT3UUtawvWck1ukCzAzJDMwGIy6Vjm1FoPk/Bq308JTTroxmUdO3ymkmWQgVCz0XbIlgNFBAxtE
+	WFLqA65fAFKLR3f/N5EAKLmMvcnLYvuiAvhLIvFDPCdhNRASsPpAHHJdqC/qvBObQITKRXdCmn5
+	ztoMYuxiN804dpUKFQ5ZdBDC+HvoYpKMXjOV4lAw3uA5ia/oGov0lx6s0OsDe9/yOzAIveN1PJF
+	4mATR9
+X-Received: by 2002:a05:7301:1698:b0:2b7:1744:726f with SMTP id 5a478bee46e88-2b78d8a6127mr3104705eec.2.1769605144086;
+        Wed, 28 Jan 2026 04:59:04 -0800 (PST)
+Received: from 22d5995788c3 ([20.38.40.137])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2b7a16ef3b3sm2450516eec.12.2026.01.28.04.59.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Jan 2026 04:59:03 -0800 (PST)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <0d93a56c-e452-4cd0-abb4-09c9f916274a@app.fastmail.com>
+Content-Transfer-Encoding: 7bit
+Subject: [REGRESSION] next/pending-fixes: (build) ./include/linux/cma.h:63:13:
+ error:
+ unused function 'cma_skip_dt_d...
+From: KernelCI bot <bot@kernelci.org>
+To: kernelci-results@groups.io
+Cc: regressions@lists.linux.dev, gus@collabora.com, linux-next@vger.kernel.org
+Reply-To: kernelci@lists.linux.dev
+Date: Wed, 28 Jan 2026 12:59:03 -0000
+Message-ID: <176960514308.3654.5873473738719715010@22d5995788c3>
 
-On Wed, Jan 28, 2026 at 05:21:20AM -0500, correctmost wrote:
-> On Wed, Jan 28, 2026, at 4:34 AM, Andy Shevchenko wrote:
-> > On Tue, Jan 20, 2026 at 11:56:15PM -0500, correctmost wrote:
-> >> On Tue, Jan 20, 2026, at 4:33 AM, Andy Shevchenko wrote:
-> >> > On Mon, Jan 19, 2026 at 12:49:59PM +0200, Andy Shevchenko wrote:
-> >> >> On Mon, Jan 19, 2026 at 12:39:41PM +0200, Andy Shevchenko wrote:
-> >> >> > On Fri, Jan 16, 2026 at 07:25:54PM -0500, correctmost wrote:
-> >
-> > ...
-> >
-> >> >> > My understanding that the pin 3 on GPIO might be wrongly configured
-> >> >> > by BIOS.  The difference with the original case is that your GPIO device
-> >> >> > is locked against modifications and until you unlock it (usually
-> >> >> > it's done in BIOS in some debug menu) it may not be fixable without OEM
-> >> >> > fixing the issue themselves. In any case you can try the workaround
-> >> >> > (see https://lore.kernel.org/all/ZftTcSA5dn13eAmr@smile.fi.intel.com/).
-> >> >> > But I am skeptical about it.
-> >> 
-> >> I tested commit c03e9c42ae8 with the following patch and still saw the "probe
-> >> with driver i2c_hid_acpi failed" error:
-> >
-> >> +	{
-> >> +		void __iomem *padcfg0;
-> >> +	        u32 value;
-> >
-> >> +		padcfg0 = intel_get_padcfg(pctrl, 3, PADCFG0);
-> >
-> > I'm sorry to get you back to this one, but can you replace 3 with 82 and try
-> > again (keep the kernel command options with HID debug enabled, etc, but no
-> > other patches applied).
-> 
-> I tested the pin 82 patch by itself (no other patches and no config changes).  I received the IRQ message and the touchpad didn't work (full log attached):
 
-Okay let's add some debug to the drivers involved and try to figure out
-what is happening.
 
-Can you next apply the below patch (only that one) and try? Any test case
-where it reproduces is good. The provide again full dmesg. While at it can
-you enable CONFIG_PRINTK_TIME=y so we can also get timestamps to the dmesg.
 
-diff --git a/drivers/dma/idma64.c b/drivers/dma/idma64.c
-index d147353d47ab..9c06b137ed0b 100644
---- a/drivers/dma/idma64.c
-+++ b/drivers/dma/idma64.c
-@@ -6,6 +6,7 @@
-  * Author: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-  */
- 
-+#define DEBUG
- #include <linux/bitops.h>
- #include <linux/delay.h>
- #include <linux/dmaengine.h>
-@@ -171,6 +172,8 @@ static irqreturn_t idma64_irq(int irq, void *dev)
- 	u32 status_err;
- 	unsigned short i;
- 
-+	dev_dbg_ratelimited(idma64->dma.dev, "status=%#x\n", status);
-+
- 	/* Since IRQ may be shared, check if DMA controller is powered on */
- 	if (status == GENMASK(31, 0))
- 		return IRQ_NONE;
-diff --git a/drivers/i2c/busses/i2c-designware-master.c b/drivers/i2c/busses/i2c-designware-master.c
-index 45bfca05bb30..7461254ec863 100644
---- a/drivers/i2c/busses/i2c-designware-master.c
-+++ b/drivers/i2c/busses/i2c-designware-master.c
-@@ -10,6 +10,7 @@
-  */
- 
- #define DEFAULT_SYMBOL_NAMESPACE	"I2C_DW"
-+#define DEBUG
- 
- #include <linux/delay.h>
- #include <linux/err.h>
-@@ -756,6 +757,7 @@ static irqreturn_t i2c_dw_isr(int this_irq, void *dev_id)
- 
- 	regmap_read(dev->map, DW_IC_ENABLE, &enabled);
- 	regmap_read(dev->map, DW_IC_RAW_INTR_STAT, &stat);
-+	dev_dbg_ratelimited(dev->dev, "enabled=%#x stat=%#x\n", enabled, stat);
- 	if (!enabled || !(stat & ~DW_IC_INTR_ACTIVITY))
- 		return IRQ_NONE;
- 	if (pm_runtime_suspended(dev->dev) || stat == GENMASK(31, 0))
-diff --git a/drivers/mfd/intel-lpss.c b/drivers/mfd/intel-lpss.c
-index 63d6694f7145..b82a22e5977f 100644
---- a/drivers/mfd/intel-lpss.c
-+++ b/drivers/mfd/intel-lpss.c
-@@ -501,6 +501,8 @@ static int intel_lpss_suspend(struct device *dev)
- 	struct intel_lpss *lpss = dev_get_drvdata(dev);
- 	unsigned int i;
- 
-+	dev_info(dev, "supend started\n");
-+
- 	/* Save device context */
- 	for (i = 0; i < LPSS_PRIV_REG_COUNT; i++)
- 		lpss->priv_ctx[i] = readl(lpss->priv + i * 4);
-@@ -513,6 +515,8 @@ static int intel_lpss_suspend(struct device *dev)
- 	if (lpss->type != LPSS_DEV_UART)
- 		writel(0, lpss->priv + LPSS_PRIV_RESETS);
- 
-+	dev_info(dev, "supend finished\n");
-+
- 	return 0;
- }
- 
-@@ -521,12 +525,16 @@ static int intel_lpss_resume(struct device *dev)
- 	struct intel_lpss *lpss = dev_get_drvdata(dev);
- 	unsigned int i;
- 
-+	dev_info(dev, "resume started\n");
-+
- 	intel_lpss_deassert_reset(lpss);
- 
- 	/* Restore device context */
- 	for (i = 0; i < LPSS_PRIV_REG_COUNT; i++)
- 		writel(lpss->priv_ctx[i], lpss->priv + i * 4);
- 
-+	dev_info(dev, "resume finished\n");
-+
- 	return 0;
- }
- 
+
+Hello,
+
+New build issue found on next/pending-fixes:
+
+---
+ ./include/linux/cma.h:63:13: error: unused function 'cma_skip_dt_default_reserved_mem' [-Werror,-Wunused-function] in mm/mm_init.o (mm/mm_init.c) [logspec:kbuild,kbuild.compiler.error]
+---
+
+- dashboard: https://d.kernelci.org/i/maestro:0a972087c7b2bf11675332fb10ac48c0afa797a4
+- giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+- commit HEAD:  0fd19300e770b50ad9fc43026f5e148e185ddae1
+
+
+Please include the KernelCI tag when submitting a fix:
+
+Reported-by: kernelci.org bot <bot@kernelci.org>
+
+
+Log excerpt:
+=====================================================
+In file included from mm/mm_init.c:29:
+./include/linux/cma.h:63:13: error: unused function 'cma_skip_dt_default_reserved_mem' [-Werror,-Wunused-function]
+   63 | static bool cma_skip_dt_default_reserved_mem(void)
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+1 error generated.
+
+=====================================================
+
+
+# Builds where the incident occurred:
+
+## x86_64_defconfig on (x86_64):
+- compiler: clang-21
+- config: https://files.kernelci.org/kbuild-clang-21-x86-6979faff1908a6300d9b70b2/.config
+- dashboard: https://d.kernelci.org/build/maestro:6979faff1908a6300d9b70b2
+
+
+#kernelci issue maestro:0a972087c7b2bf11675332fb10ac48c0afa797a4
+
+--
+This is an experimental report format. Please send feedback in!
+Talk to us at kernelci@lists.linux.dev
+
+Made with love by the KernelCI team - https://kernelci.org
