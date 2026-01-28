@@ -1,173 +1,656 @@
-Received: from mail-dl1-f66.google.com (mail-dl1-f66.google.com [74.125.82.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48E1F353EF3
-	for <regressions@lists.linux.dev>; Wed, 28 Jan 2026 12:59:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6430E2D0600
+	for <regressions@lists.linux.dev>; Wed, 28 Jan 2026 20:09:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769605149; cv=none; b=D3NfTgnAYkPdkTHmCkf5pMhHoqG/XmmQKg4QFLhAC+hpG6NEj6vuo4QP6/Xuo1wzTuTcVfiK7+Qi89C0W9r6GSS/5C80YQpcZuG0bxk6nGpcEcDs+PA8IhQhuLBb9fJXZsbssP0dtEstXPdiJ1YL+xZRQN2/T55bwsbvpzIrZvI=
+	t=1769630994; cv=none; b=bcQycFrb4p1X18Nzo7pwCzzwR8yamKZTGm+q+1/tlkz6aVmgBrh1PYcZmn+ekKcSIkfR037cQKHOEjiP7yyllPkog9wxyvQoegLXNOCd4rPAT2fDS0z4vkg9LzF2xqsdj7Czhw1GQ1VyaEC5WdokMwWfmDfcZNFAYkh0eLGrbDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769605149; c=relaxed/simple;
-	bh=hYTN6x2CzNg+OcWx9A7f7Mclg6facCaDFJJF7F0Gy8M=;
-	h=Content-Type:MIME-Version:Subject:From:To:Cc:Date:Message-ID; b=L2+Xk8gtrqrhxewCKxzdbIHmmYV3Gl7AtScMrKQ+JI7APnDjSoc9xb6aYM4gF9OH/2++vkDr/teaUYe8TyHLPFNoD7txGB+fSv8Znp3v66ek7wTLu5ToQgS/PRHyeLUPt+Jr93+Lbb07xst0y/nPhXa+dZB9kwcTbvF5he+KYTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org; spf=none smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b=C9KKbl10; arc=none smtp.client-ip=74.125.82.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=kernelci.org
+	s=arc-20240116; t=1769630994; c=relaxed/simple;
+	bh=4qB4/IzEisrRFHBmA6OhU5VPWXt/fM7LX8gVddXFq8k=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=GycKgVRXYEqnjMHVvesEPT94moEXx89l/f8oBB9Zowz2WCYMC0MDkL7Y3nJAGQLa7FgNC+0Ksblewabrx9DrLldRfGKcJTfPPZN1bZGgaVZW12RZkhHf67D+jPes8nh0FAsboniGNCfjzRHLuCN0mQd0GmpgTgtudHogCCGv2uo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KT8oehwo; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b="C9KKbl10"
-Received: by mail-dl1-f66.google.com with SMTP id a92af1059eb24-124a635476fso2222781c88.0
-        for <regressions@lists.linux.dev>; Wed, 28 Jan 2026 04:59:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20230601.gappssmtp.com; s=20230601; t=1769605146; x=1770209946; darn=lists.linux.dev;
-        h=message-id:date:reply-to:cc:to:from:subject
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mCggTXK7JIKSfBDUO+yl+DUgOLIMqwfFmjiwcYlX4qk=;
-        b=C9KKbl10iwy1LRqhmq6uoxUnTH6iux8h/hHk+u+Fx+dH25sC3wl4aJpw83c3SePAS7
-         +0Y2Q2Zl+jaKfOEdC5HBLg84Ip2llWmJDCh25wxr+Q/jg7FB/2Cbq5ntpPa8hdCcTy+O
-         rnTSOLMcAQARwO7qyNigCLptmkbTa8dhJ5JPrOnEFC6nPOZ9LqTeckLHnW/bxMOPNoLh
-         x7PryG32dmSVZ5w3if4YIXA7VHlYkSH9rEXb8RxTSF1lZcsMl5iMe6F2PpHJWcenI+hx
-         2jpQx6I6OP6Df48O2tOYR+14JYWUHLooVuKabmG7gEsK5VwWsUjLWCHsnnR3L/rkuT5l
-         yjpQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KT8oehwo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1769630991;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=3oHNovVjTrUYJK49M6wz/FmLMQ5S+SMyDHk83bFrTg8=;
+	b=KT8oehwo6pb13CHO6Vf16nl2JBg2ZuRbMTQjqI0TUNWoAIIwojTHSck7w4cSML8T/Uxr6o
+	risp/pRHCniemcABs0M1SdVmKEBoSx7h/ZlkJ2nWg/FsUKoYonFzKK4ByELmQwe2CpuZXM
+	rqtHSD8B28jUVnLP4vEDY1yuqnG0VXI=
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
+ [209.85.219.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-582-a8R7TSWfMDmkpvUgv_tJdg-1; Wed, 28 Jan 2026 15:09:49 -0500
+X-MC-Unique: a8R7TSWfMDmkpvUgv_tJdg-1
+X-Mimecast-MFC-AGG-ID: a8R7TSWfMDmkpvUgv_tJdg_1769630989
+Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-88a2f8e7d8dso7970316d6.1
+        for <regressions@lists.linux.dev>; Wed, 28 Jan 2026 12:09:49 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769605146; x=1770209946;
-        h=message-id:date:reply-to:cc:to:from:subject
-         :content-transfer-encoding:mime-version:x-gm-gg:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=mCggTXK7JIKSfBDUO+yl+DUgOLIMqwfFmjiwcYlX4qk=;
-        b=s9ndV0YsZj5t8MTj4K0DLxhe6TIBEdM55FsweuxyUC/38kdeyfvVxgsrlf1Uq/sn7n
-         MIZWmAKs8zisRaxO+ZT0Ss4IQPkmC+tc0BrBSQZyQoNHvFaqd/U1oluSABEIqpVjEzvu
-         LLU7CCDcC4EqqyygOt1RScxPT5zXtFmOQQlyTMmo0p7HF+NlI+QIu+06H7lHP0dLKpGj
-         Fsd22qneUfFXYekBuqC0Pm4xodQvlLM988osrsokZqIsohk1ZdgXn53OWo0eZgAMMEAj
-         0wg7HXD/SlFhuxaAkqwI31U5zFj2Dz+E2eiPWyQTxE3vos5VgaiymCcqFYoZI8vPuwAP
-         MN+A==
-X-Gm-Message-State: AOJu0YwG7v6bs2Xkm3tpnTROgaMqHYBCEmZqv/tOFfFWxif4mCfvNu7l
-	2ltcCysM4iqpVGhhCLphlrwZxEz75aMnENXG8Ni/E/2Ps4gnxbFlYbDzxT291fXcyqQ=
-X-Gm-Gg: AZuq6aKle+j907HFsX/e3+c1cDrwhsuOm/YJJpLbps2KDNu1uqwPrBxCkE6QmqUTKKW
-	MOuOoVgNC8iKDJm1FLkP/J2HE+vhAd/DRkb3EKzH2udGKzZ/SPT0zT/oBooIkv5WgGoR8TSyP49
-	tiUmwDQ4t+M1aop1qz6QlJF6l8MA9fIHQrI6VtrlEf+0aa7ArfjNj4fP4LZB+9wHe8i9+zBRN7D
-	U70Fw7JF7CWnQr4Rlwu/q58uQGX6emP2Y5RcOMGwSTC7q/BPhYIroYboE0lTz9ABuWJLbPRi7e4
-	1fNl6KKaCCo1mRXxP0dPc0yy55sHzklD5bnDHXnWAsDA0HoFrm1/+jBd9+RBMwAzlLF95KeQCI9
-	Bsfw3pw9Z2oKTFZenqNoHNrBAWtRn8JJBJe3e6b4uZmqNIqKkmpMFvPVWouETwgMTy5BUld99KL
-	TR4Fnv
-X-Received: by 2002:a05:7022:e2a:b0:123:2ee9:d1b3 with SMTP id a92af1059eb24-124a008b0f3mr3025787c88.2.1769605145521;
-        Wed, 28 Jan 2026 04:59:05 -0800 (PST)
-Received: from 22d5995788c3 ([20.38.40.137])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2b7a16ef3b3sm2450605eec.12.2026.01.28.04.59.04
+        d=1e100.net; s=20230601; t=1769630989; x=1770235789;
+        h=content-transfer-encoding:content-disposition:mime-version
+         :mail-followup-to:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=3oHNovVjTrUYJK49M6wz/FmLMQ5S+SMyDHk83bFrTg8=;
+        b=NxsrFEpibbpApAPGxLU77XCG5MPHzMfFQIFfA33sL2Xd9a2NVHNyeE9FyQo2Qo+eAH
+         jKDTe8LRS0in5xC7nSp+S78TqGVhcEk7FIcPFsP4vNI41uf2HIqBp2tuLuurBWPe0rLA
+         5bPgNFt+aedq067qWcEGivU6fl0Wycu8EpgAQGut6CVwT1D3HZt9uYFAlHuZ5CHJ7PYG
+         8Bdd5PiOHPRtLps5wf6KgQdW0BpipSmS2e8GEHjC+qx2+Q9GiTr2SQ0SPnLYDEV+tsLG
+         bfXjHU90cp0oDWN3/LyatESkj0wBw1hpBzwVtaBF5LDO7pZ+DEu6jYe8Z58Zhq6OjuQW
+         2gOw==
+X-Forwarded-Encrypted: i=1; AJvYcCV2LLYkvNfnHlsbOq7+VTwUxr7eF76LBll8IqI18hep/o/pkKh9Ek7HEeFq32NXM43S+cFYsDoX1SfD4Q==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxAnrLFYkyRCmzvZfMWj7QlfwNxw3Me10G2F2a90Ac6wzP816Yw
+	xQgUngN+LI5QW25RtiOySu852rH/M2UyPDuNGwv4BZxe7nNSeLJub3hUUKIt/Cqcz5CZFFCZDgt
+	IPzgH6sGHR/gp3cqZPf4Kmh/ViL+yQaXNowInv0X2hYypvEYwtZT+yKA4NigC7VZB
+X-Gm-Gg: AZuq6aIpY5r4KZ7VB7js3H1E1JD5Rud49Ej6irOt5o1ZOytTQK4cjKU8xye4ohHVsNg
+	bWICREU/TwgGMKnxF2lcQnsYJXxF/MVTIIgkZsh9ql0XVEJ9/FYtr36OyhVujGPhCYeVcMqy1eB
+	qyMOJnWCzto9V7byEF/mq2nIuJN/AplM6U6VTKOueODbWWL8lX098gyYM93cIctc4+Z++loqDSu
+	ay1VI0SirPkpUnL3rWujzi3RI+2xmxtHZF4ycVC75iJVhCocDmr01KhL9SsqMEkiA71A2Q3tqa1
+	YwONDTQ+ce09/spL+sJHuvK4j8wlQ4eFQVIHmZbhJFTi+9Sa/y11Rcsnv9eQmDp2CIiJF1KBEAH
+	cLsG/L5uS
+X-Received: by 2002:a05:620a:25c6:b0:8b2:f269:f897 with SMTP id af79cd13be357-8c70b8f9103mr843920785a.41.1769630987826;
+        Wed, 28 Jan 2026 12:09:47 -0800 (PST)
+X-Received: by 2002:a05:620a:25c6:b0:8b2:f269:f897 with SMTP id af79cd13be357-8c70b8f9103mr843881385a.41.1769630981344;
+        Wed, 28 Jan 2026 12:09:41 -0800 (PST)
+Received: from localhost ([2607:f2c0:b0bc:f100:e97:de30:9768:6518])
+        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-8c711b7ba79sm240747785a.11.2026.01.28.12.09.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Jan 2026 04:59:04 -0800 (PST)
-Content-Type: text/plain; charset="utf-8"
+        Wed, 28 Jan 2026 12:09:40 -0800 (PST)
+Date: Wed, 28 Jan 2026 15:09:40 -0500
+From: Peter Colberg <pcolberg@redhat.com>
+To: Alex Deucher <alexander.deucher@amd.com>,
+	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Harry Wentland <harry.wentland@amd.com>,
+	Leo Li <sunpeng.li@amd.com>, Rodrigo Siqueira <siqueira@igalia.com>,
+	Ivan Lipski <ivan.lipski@amd.com>
+Cc: amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
+	"Mario Limonciello (AMD)" <superm1@kernel.org>
+Subject: [REGRESSION] drm/amd/display: Add an hdmi_hpd_debounce_delay_ms
+ module
+Message-ID: <aXptBPF3L07zJB1O@earendel>
+Mail-Followup-To: Alex Deucher <alexander.deucher@amd.com>,
+	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Harry Wentland <harry.wentland@amd.com>,
+	Leo Li <sunpeng.li@amd.com>, Rodrigo Siqueira <siqueira@igalia.com>,
+	Ivan Lipski <ivan.lipski@amd.com>, amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev,
+	"Mario Limonciello (AMD)" <superm1@kernel.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: 
- =?utf-8?b?W1JFR1JFU1NJT05dIG5leHQvcGVuZGluZy1maXhlczogKGJ1aWxkKSAuL2luY2x1?=
- =?utf-8?b?ZGUvbGludXgvY21hLmg6NjM6MTM6IGVycm9yOiDigJhjbWFfc2tpcF9kdF9kZWZh?=
- =?utf-8?b?dWx0X3Jlc2VydmVkXy4uLg==?=
-From: KernelCI bot <bot@kernelci.org>
-To: kernelci-results@groups.io
-Cc: regressions@lists.linux.dev, gus@collabora.com, linux-next@vger.kernel.org
-Reply-To: kernelci@lists.linux.dev
-Date: Wed, 28 Jan 2026 12:59:04 -0000
-Message-ID: <176960514428.3654.593941965169897463@22d5995788c3>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: pwn0CR4Sl3cpnKOQN9pe-qXSVRDRiUFvKqac7kb9768_1769630989
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+Hi,
 
+I hit a regression introduced as part of v6.19-rc6 (and still present
+in v6.19-rc7), where, upon unloading the amdgpu module, __flush_work()
+is passed a work struct with the work function set to NULL. The issue
+is seen with an AMD Radeon Pro W7900, but not an AMD Instinct MI210.
 
+#regzbot introduced: d04f73668bebbc5a44a2771ea92b6ec253148050
 
+    4231 static bool __flush_work(struct work_struct *work, bool from_cance=
+l)
+    4232 {
+    4233         struct wq_barrier barr;
+    4234
+    4235         if (WARN_ON(!wq_online))
+    4236                 return false;
+    4237
+--> 4238         if (WARN_ON(!work->func))
+    4239                 return false;
 
-Hello,
+Tests were carried out on an AMD Radeon Pro W7900 with a mainline
+kernel compiled and booted with an up-to-date CentOS Stream 10 x86_64
+and amdgpu firmware commit 993573ac3dc6ab038505c2639701db22f6142487.
 
-New build issue found on next/pending-fixes:
+% cp /lib/modules/6.12.0-191.el10.x86_64/config .config
+% scripts/config --enable LOCALVERSION_AUTO
+% scripts/config --disable EFI_SBAT_FILE
+% scripts/config --disable SECURITY_LOCKDOWN_LSM
+% scripts/config --disable MODULE_SIG
+% make olddefconfig
+% make -j $(nproc) binrpm-pkg
 
----
- ./include/linux/cma.h:63:13: error: ‘cma_skip_dt_default_reserved_mem’ defined but not used [-Werror=unused-function] in mm/mm_init.o (mm/mm_init.c) [logspec:kbuild,kbuild.compiler.error]
----
+The first test exercises commit d04f73668beb which introduced the
+regression, the second test b2426a211dba prior to the regression.
 
-- dashboard: https://d.kernelci.org/i/maestro:8254f44be28c555bd563efce1a70336059fca879
-- giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-- commit HEAD:  0fd19300e770b50ad9fc43026f5e148e185ddae1
+# dmesg --follow-new &
+# cat /proc/cmdline
+BOOT_IMAGE=3D(hd0,gpt2)/boot/ostree/default-8a8985bdb88376ac62c94e787be00de=
+a13130a3b5e56e8598bd96b4cf7eaac4c/vmlinuz-6.19.0-rc5-00016-gd04f73668beb ro=
+ot=3D/dev/mapper/rhel-root rd.lvm.lv=3Drhel/root rd.lvm.lv=3Drhel/swap rw b=
+oot=3DUUID=3D9c458207-c078-4fcf-bb4c-679ae1a3ae9f ostree=3D/ostree/boot.0/d=
+efault/8a8985bdb88376ac62c94e787be00dea13130a3b5e56e8598bd96b4cf7eaac4c/0 "=
+dyndbg=3Dfile drivers/base/firmware_loader/main.c +fmp"
+# rmmod amdgpu
+[   77.410012] [drm] PCIE GART of 512M enabled (table at 0x0000008000300000=
+).
+[   77.410074] amdgpu 0000:83:00.0: amdgpu: PSP is resuming...
+[   77.473976] amdgpu 0000:83:00.0: amdgpu: reserve 0x1300000 from 0x8b3c00=
+0000 for PSP TMR
+[   77.617936] amdgpu 0000:83:00.0: amdgpu: GECC is currently enabled, whic=
+h may affect performance
+[   77.617941] amdgpu 0000:83:00.0: amdgpu: To disable GECC, please reboot =
+the system and load the amdgpu driver with the parameter amdgpu_ras_enable=
+=3D0
+[   77.634803] amdgpu 0000:83:00.0: amdgpu: RAP: optional rap ta ucode is n=
+ot available
+[   77.634808] amdgpu 0000:83:00.0: amdgpu: SECUREDISPLAY: optional secured=
+isplay ta ucode is not available
+[   77.634813] amdgpu 0000:83:00.0: amdgpu: SMU is resuming...
+[   77.634818] amdgpu 0000:83:00.0: amdgpu: smu driver if version =3D 0x000=
+0003d, smu fw if version =3D 0x00000040, smu fw program =3D 0, smu fw versi=
+on =3D 0x004e8300 (78.131.0)
+[   77.634825] amdgpu 0000:83:00.0: amdgpu: SMU driver if version not match=
+ed
+[   77.779854] amdgpu 0000:83:00.0: amdgpu: SMU is resumed successfully!
+[   77.789735] amdgpu 0000:83:00.0: amdgpu: [drm] DMUB hardware initialized=
+: version=3D0x07002F00
+[   77.795903] amdgpu 0000:83:00.0: [drm] Cannot find any crtc or sizes
+[   77.795913] amdgpu 0000:83:00.0: amdgpu: ring gfx_0.0.0 uses VM inv eng =
+0 on hub 0
+[   77.795917] amdgpu 0000:83:00.0: amdgpu: ring comp_1.0.0 uses VM inv eng=
+ 1 on hub 0
+[   77.795921] amdgpu 0000:83:00.0: amdgpu: ring comp_1.1.0 uses VM inv eng=
+ 4 on hub 0
+[   77.795924] amdgpu 0000:83:00.0: amdgpu: ring comp_1.2.0 uses VM inv eng=
+ 6 on hub 0
+[   77.795927] amdgpu 0000:83:00.0: amdgpu: ring comp_1.3.0 uses VM inv eng=
+ 7 on hub 0
+[   77.795930] amdgpu 0000:83:00.0: amdgpu: ring comp_1.0.1 uses VM inv eng=
+ 8 on hub 0
+[   77.795933] amdgpu 0000:83:00.0: amdgpu: ring comp_1.1.1 uses VM inv eng=
+ 9 on hub 0
+[   77.795937] amdgpu 0000:83:00.0: amdgpu: ring comp_1.2.1 uses VM inv eng=
+ 10 on hub 0
+[   77.795940] amdgpu 0000:83:00.0: amdgpu: ring comp_1.3.1 uses VM inv eng=
+ 11 on hub 0
+[   77.795943] amdgpu 0000:83:00.0: amdgpu: ring sdma0 uses VM inv eng 12 o=
+n hub 0
+[   77.795946] amdgpu 0000:83:00.0: amdgpu: ring sdma1 uses VM inv eng 13 o=
+n hub 0
+[   77.795954] amdgpu 0000:83:00.0: amdgpu: ring vcn_unified_0 uses VM inv =
+eng 0 on hub 8
+[   77.795958] amdgpu 0000:83:00.0: amdgpu: ring vcn_unified_1 uses VM inv =
+eng 1 on hub 8
+[   77.795961] amdgpu 0000:83:00.0: amdgpu: ring jpeg_dec uses VM inv eng 4=
+ on hub 8
+[   77.795965] amdgpu 0000:83:00.0: amdgpu: ring mes_kiq_3.1.0 uses VM inv =
+eng 14 on hub 0
+[   77.798920] amdgpu 0000:83:00.0: [drm] Cannot find any crtc or sizes
+[   77.835746] amdgpu 0000:83:00.0: amdgpu: amdgpu: finishing device.
+[   77.934047] firmware_class:fw_name_devm_release: firmware_class: fw_name=
+_devm_release: fw_name-amdgpu/gc_11_0_0_mes1.bin devm-00000000729a84e2 rele=
+ased
+[   77.934052] firmware_class:fw_name_devm_release: firmware_class: fw_name=
+_devm_release: fw_name-amdgpu/gc_11_0_0_mes_2.bin devm-000000008a601096 rel=
+eased
+[   77.934054] firmware_class:fw_name_devm_release: firmware_class: fw_name=
+_devm_release: fw_name-amdgpu/vcn_4_0_0.bin devm-00000000ce1dfe25 released
+[   77.934055] firmware_class:fw_name_devm_release: firmware_class: fw_name=
+_devm_release: fw_name-amdgpu/sdma_6_0_0.bin devm-00000000f4c59a6f released
+[   77.934057] firmware_class:fw_name_devm_release: firmware_class: fw_name=
+_devm_release: fw_name-amdgpu/gc_11_0_0_imu.bin devm-000000000fe0df50 relea=
+sed
+[   77.934059] firmware_class:fw_name_devm_release: firmware_class: fw_name=
+_devm_release: fw_name-amdgpu/gc_11_0_0_mec.bin devm-000000006b38a3b2 relea=
+sed
+[   77.934061] firmware_class:fw_name_devm_release: firmware_class: fw_name=
+_devm_release: fw_name-amdgpu/gc_11_0_0_rlc.bin devm-000000004a747642 relea=
+sed
+[   77.934064] firmware_class:fw_name_devm_release: firmware_class: fw_name=
+_devm_release: fw_name-amdgpu/gc_11_0_0_me.bin devm-000000002ce74390 releas=
+ed
+[   77.934066] firmware_class:fw_name_devm_release: firmware_class: fw_name=
+_devm_release: fw_name-amdgpu/gc_11_0_0_pfp.bin devm-00000000b0e91c69 relea=
+sed
+[   77.934068] firmware_class:fw_name_devm_release: firmware_class: fw_name=
+_devm_release: fw_name-amdgpu/dcn_3_2_0_dmcub.bin devm-000000000b75c19c rel=
+eased
+[   77.934069] firmware_class:fw_name_devm_release: firmware_class: fw_name=
+_devm_release: fw_name-amdgpu/smu_13_0_0.bin devm-000000001ab5d2f3 released
+[   77.934071] firmware_class:fw_name_devm_release: firmware_class: fw_name=
+_devm_release: fw_name-amdgpu/psp_13_0_0_ta.bin devm-00000000a37398c2 relea=
+sed
+[   77.934072] firmware_class:fw_name_devm_release: firmware_class: fw_name=
+_devm_release: fw_name-amdgpu/psp_13_0_0_sos.bin devm-0000000027208a82 rele=
+ased
+[   77.934078] firmware_class:__free_fw_priv: firmware_class: __free_fw_pri=
+v: fw-amdgpu/gc_11_0_0_mes_2.bin fw_priv=3D000000004a41fbe6 data=3D00000000=
+2a21f503 size=3D257344
+[   77.934090] firmware_class:__free_fw_priv: firmware_class: __free_fw_pri=
+v: fw-amdgpu/gc_11_0_0_mes1.bin fw_priv=3D000000004f12a566 data=3D00000000c=
+562adda size=3D218240
+[   77.934117] firmware_class:__free_fw_priv: firmware_class: __free_fw_pri=
+v: fw-amdgpu/vcn_4_0_0.bin fw_priv=3D00000000bf93c3ab data=3D000000003ba747=
+fe size=3D403856
+[   77.934137] firmware_class:__free_fw_priv: firmware_class: __free_fw_pri=
+v: fw-amdgpu/sdma_6_0_0.bin fw_priv=3D000000006a092a88 data=3D00000000007c1=
+a01 size=3D34560
+[   77.934167] firmware_class:__free_fw_priv: firmware_class: __free_fw_pri=
+v: fw-amdgpu/gc_11_0_0_pfp.bin fw_priv=3D00000000b86bbe6d data=3D00000000f1=
+3777ad size=3D231008
+[   77.934175] firmware_class:__free_fw_priv: firmware_class: __free_fw_pri=
+v: fw-amdgpu/gc_11_0_0_me.bin fw_priv=3D00000000493fdf17 data=3D00000000afc=
+5401f size=3D314512
+[   77.934189] firmware_class:__free_fw_priv: firmware_class: __free_fw_pri=
+v: fw-amdgpu/gc_11_0_0_rlc.bin fw_priv=3D0000000035fafe96 data=3D00000000ab=
+68b2da size=3D185376
+[   77.934199] firmware_class:__free_fw_priv: firmware_class: __free_fw_pri=
+v: fw-amdgpu/gc_11_0_0_mec.bin fw_priv=3D00000000293ce4de data=3D000000000e=
+b1a171 size=3D406528
+[   77.934213] firmware_class:__free_fw_priv: firmware_class: __free_fw_pri=
+v: fw-amdgpu/dcn_3_2_0_dmcub.bin fw_priv=3D00000000c705cc78 data=3D00000000=
+f530b58b size=3D284432
+[   77.934228] firmware_class:__free_fw_priv: firmware_class: __free_fw_pri=
+v: fw-amdgpu/smu_13_0_0.bin fw_priv=3D00000000c876ab3e data=3D000000003f056=
+26c size=3D292452
+[   77.934238] firmware_class:__free_fw_priv: firmware_class: __free_fw_pri=
+v: fw-amdgpu/psp_13_0_0_sos.bin fw_priv=3D00000000c877aa90 data=3D00000000f=
+123f702 size=3D268304
+[   77.934249] firmware_class:__free_fw_priv: firmware_class: __free_fw_pri=
+v: fw-amdgpu/psp_13_0_0_ta.bin fw_priv=3D00000000886845ff data=3D0000000046=
+6f9c99 size=3D267520
+[   77.934639] amdgpu 0000:83:00.0: amdgpu: amdgpu: ttm finalized
+[   77.935587] ------------[ cut here ]------------
+[   77.935592] WARNING: kernel/workqueue.c:4238 at __flush_work+0x338/0x350=
+, CPU#31: kworker/31:0/207
+[   77.935603] Modules linked in: snd_hda_codec_alc662 snd_hda_codec_realte=
+k_lib snd_hda_codec_generic amdgpu(-) snd_hda_codec_atihdmi snd_hda_codec_h=
+dmi mt7921e amdxcp drm_panel_backlight_quirks mt7921_common snd_hda_intel d=
+rm_ttm_helper mt792x_lib snd_usb_audio amd_atl intel_rapl_msr ttm snd_hda_c=
+odec mt76_connac_lib snd_usbmidi_lib intel_rapl_common i2c_algo_bit snd_ump=
+ drm_suballoc_helper snd_hda_core mt76 snd_rawmidi amd64_edac gpu_sched snd=
+_intel_dspcfg edac_mce_amd snd_intel_sdw_acpi btusb drm_exec mc snd_hwdep b=
+trtl drm_buddy snd_seq btintel drm_display_helper btbcm mac80211 snd_seq_de=
+vice kvm_amd btmtk cec think_lmi kvm video snd_pcm irqbypass firmware_attri=
+butes_class wmi_bmof bluetooth rapl cfg80211 snd_timer pcspkr crc16 snd i2c=
+_piix4 rfkill k10temp soundcore i2c_smbus libarc4 gpio_amdpt gpio_generic i=
+2c_designware_platform i2c_designware_core loop overlay erofs xfs nvme_tcp =
+nvme_fabrics nvme nvme_core nvme_keyring ahci nvme_auth libahci ghash_clmul=
+ni_intel hkdf r8169 atlantic ccp libata sp5100_tco realtek
+[   77.935687]  macsec wmi sunrpc dm_mirror dm_region_hash dm_log dm_mod fu=
+se nfnetlink
+[   77.935731] CPU: 31 UID: 0 PID: 207 Comm: kworker/31:0 Not tainted 6.19.=
+0-rc5-00016-gd04f73668beb #1 PREEMPT(voluntary)=20
+[   77.935744] Workqueue: events drm_connector_free_work_fn
+[   77.935751] RIP: 0010:__flush_work+0x338/0x350
+[   77.935756] Code: 3e 46 06 00 65 48 8b 15 2e e4 e3 02 48 85 db 48 8b 04 =
+24 48 89 54 24 48 0f 85 e6 fe ff ff e9 fe fd ff ff 0f 0b e9 77 ff ff ff <0f=
+> 0b e9 70 ff ff ff 0f 0b e9 19 ff ff ff e8 15 22 d9 00 0f 1f 44
+[   77.935765] RSP: 0018:ff57cb59c0b7bd68 EFLAGS: 00010246
+[   77.935770] RAX: 0000000000000000 RBX: ff2d8e14daf8d480 RCX: 00000000000=
+00000
+[   77.935775] RDX: 0000000000000000 RSI: 0000000000000001 RDI: ff57cb59c0b=
+7bdb8
+[   77.935779] RBP: ff2d8e14daf8d480 R08: ff2d8e14a1a86420 R09: 00000000002=
+a001f
+[   77.935783] R10: ff2d8e14a1a86401 R11: ff2d8e14a1a86f60 R12: ff2d8e15921=
+80010
+[   77.935788] R13: ff57cb59c0b7bd70 R14: 0000000000000001 R15: 00000000000=
+00000
+[   77.935792] FS:  0000000000000000(0000) GS:ff2d8e3396243000(0000) knlGS:=
+0000000000000000
+[   77.935797] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   77.935801] CR2: 000055f1cff22050 CR3: 0000000112666002 CR4: 0000000000f=
+71ef0
+[   77.935806] PKRU: 55555554
+[   77.935809] Call Trace:
+[   77.935812]  <TASK>
+[   77.935818]  cancel_delayed_work_sync+0x5e/0x80
+[   77.935823]  amdgpu_dm_connector_destroy+0x33/0xe0 [amdgpu]
+[   77.936146]  drm_connector_free_work_fn+0x72/0x90
+[   77.936152]  process_one_work+0x18b/0x340
+[   77.936157]  worker_thread+0x256/0x3a0
+[   77.936162]  ? __pfx_worker_thread+0x10/0x10
+[   77.936166]  kthread+0xfc/0x240
+[   77.936171]  ? __pfx_kthread+0x10/0x10
+[   77.936175]  ? __pfx_kthread+0x10/0x10
+[   77.936180]  ret_from_fork+0x121/0x190
+[   77.936186]  ? __pfx_kthread+0x10/0x10
+[   77.936190]  ret_from_fork_asm+0x1a/0x30
+[   77.936198]  </TASK>
+[   77.936201] ---[ end trace 0000000000000000 ]---
+[   77.936210] ------------[ cut here ]------------
+[   77.936214] WARNING: kernel/workqueue.c:4238 at __flush_work+0x338/0x350=
+, CPU#31: kworker/31:0/207
+[   77.936221] Modules linked in: snd_hda_codec_alc662 snd_hda_codec_realte=
+k_lib snd_hda_codec_generic amdgpu(-) snd_hda_codec_atihdmi snd_hda_codec_h=
+dmi mt7921e amdxcp drm_panel_backlight_quirks mt7921_common snd_hda_intel d=
+rm_ttm_helper mt792x_lib snd_usb_audio amd_atl intel_rapl_msr ttm snd_hda_c=
+odec mt76_connac_lib snd_usbmidi_lib intel_rapl_common i2c_algo_bit snd_ump=
+ drm_suballoc_helper snd_hda_core mt76 snd_rawmidi amd64_edac gpu_sched snd=
+_intel_dspcfg edac_mce_amd snd_intel_sdw_acpi btusb drm_exec mc snd_hwdep b=
+trtl drm_buddy snd_seq btintel drm_display_helper btbcm mac80211 snd_seq_de=
+vice kvm_amd btmtk cec think_lmi kvm video snd_pcm irqbypass firmware_attri=
+butes_class wmi_bmof bluetooth rapl cfg80211 snd_timer pcspkr crc16 snd i2c=
+_piix4 rfkill k10temp soundcore i2c_smbus libarc4 gpio_amdpt gpio_generic i=
+2c_designware_platform i2c_designware_core loop overlay erofs xfs nvme_tcp =
+nvme_fabrics nvme nvme_core nvme_keyring ahci nvme_auth libahci ghash_clmul=
+ni_intel hkdf r8169 atlantic ccp libata sp5100_tco realtek
+[   77.936292]  macsec wmi sunrpc dm_mirror dm_region_hash dm_log dm_mod fu=
+se nfnetlink
+[   77.936331] CPU: 31 UID: 0 PID: 207 Comm: kworker/31:0 Tainted: G       =
+ W           6.19.0-rc5-00016-gd04f73668beb #1 PREEMPT(voluntary)=20
+[   77.936337] Tainted: [W]=3DWARN
+[   77.936342] Workqueue: events drm_connector_free_work_fn
+[   77.936346] RIP: 0010:__flush_work+0x338/0x350
+[   77.936350] Code: 3e 46 06 00 65 48 8b 15 2e e4 e3 02 48 85 db 48 8b 04 =
+24 48 89 54 24 48 0f 85 e6 fe ff ff e9 fe fd ff ff 0f 0b e9 77 ff ff ff <0f=
+> 0b e9 70 ff ff ff 0f 0b e9 19 ff ff ff e8 15 22 d9 00 0f 1f 44
+[   77.936357] RSP: 0018:ff57cb59c0b7bd68 EFLAGS: 00010246
+[   77.936360] RAX: 0000000000000000 RBX: ff2d8e1492153480 RCX: 00000000000=
+00000
+[   77.936363] RDX: 0000000000000000 RSI: 0000000000000001 RDI: ff57cb59c0b=
+7bdb8
+[   77.936366] RBP: ff2d8e1492153480 R08: ff2d8e14a1a861e0 R09: 00000000002=
+a001e
+[   77.936369] R10: ff2d8e14a1a86101 R11: ff2d8e14a1a86420 R12: ff2d8e15921=
+80010
+[   77.936373] R13: ff57cb59c0b7bd70 R14: 0000000000000001 R15: 00000000000=
+00000
+[   77.936376] FS:  0000000000000000(0000) GS:ff2d8e3396243000(0000) knlGS:=
+0000000000000000
+[   77.936379] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   77.936382] CR2: 000055f1cff22050 CR3: 0000000112666002 CR4: 0000000000f=
+71ef0
+[   77.936386] PKRU: 55555554
+[   77.936388] Call Trace:
+[   77.936390]  <TASK>
+[   77.936393]  cancel_delayed_work_sync+0x5e/0x80
+[   77.936397]  amdgpu_dm_connector_destroy+0x33/0xe0 [amdgpu]
+[   77.936613]  drm_connector_free_work_fn+0x72/0x90
+[   77.936617]  process_one_work+0x18b/0x340
+[   77.936621]  worker_thread+0x256/0x3a0
+[   77.936624]  ? __pfx_worker_thread+0x10/0x10
+[   77.936627]  kthread+0xfc/0x240
+[   77.936630]  ? __pfx_kthread+0x10/0x10
+[   77.936634]  ? __pfx_kthread+0x10/0x10
+[   77.936637]  ret_from_fork+0x121/0x190
+[   77.936640]  ? __pfx_kthread+0x10/0x10
+[   77.936643]  ret_from_fork_asm+0x1a/0x30
+[   77.936649]  </TASK>
+[   77.936651] ---[ end trace 0000000000000000 ]---
+[   77.936658] ------------[ cut here ]------------
+[   77.936661] WARNING: kernel/workqueue.c:4238 at __flush_work+0x338/0x350=
+, CPU#31: kworker/31:0/207
+[   77.936666] Modules linked in: snd_hda_codec_alc662 snd_hda_codec_realte=
+k_lib snd_hda_codec_generic amdgpu(-) snd_hda_codec_atihdmi snd_hda_codec_h=
+dmi mt7921e amdxcp drm_panel_backlight_quirks mt7921_common snd_hda_intel d=
+rm_ttm_helper mt792x_lib snd_usb_audio amd_atl intel_rapl_msr ttm snd_hda_c=
+odec mt76_connac_lib snd_usbmidi_lib intel_rapl_common i2c_algo_bit snd_ump=
+ drm_suballoc_helper snd_hda_core mt76 snd_rawmidi amd64_edac gpu_sched snd=
+_intel_dspcfg edac_mce_amd snd_intel_sdw_acpi btusb drm_exec mc snd_hwdep b=
+trtl drm_buddy snd_seq btintel drm_display_helper btbcm mac80211 snd_seq_de=
+vice kvm_amd btmtk cec think_lmi kvm video snd_pcm irqbypass firmware_attri=
+butes_class wmi_bmof bluetooth rapl cfg80211 snd_timer pcspkr crc16 snd i2c=
+_piix4 rfkill k10temp soundcore i2c_smbus libarc4 gpio_amdpt gpio_generic i=
+2c_designware_platform i2c_designware_core loop overlay erofs xfs nvme_tcp =
+nvme_fabrics nvme nvme_core nvme_keyring ahci nvme_auth libahci ghash_clmul=
+ni_intel hkdf r8169 atlantic ccp libata sp5100_tco realtek
+[   77.936718]  macsec wmi sunrpc dm_mirror dm_region_hash dm_log dm_mod fu=
+se nfnetlink
+[   77.936751] CPU: 31 UID: 0 PID: 207 Comm: kworker/31:0 Tainted: G       =
+ W           6.19.0-rc5-00016-gd04f73668beb #1 PREEMPT(voluntary)=20
+[   77.936757] Tainted: [W]=3DWARN
+[   77.936762] Workqueue: events drm_connector_free_work_fn
+[   77.936766] RIP: 0010:__flush_work+0x338/0x350
+[   77.936769] Code: 3e 46 06 00 65 48 8b 15 2e e4 e3 02 48 85 db 48 8b 04 =
+24 48 89 54 24 48 0f 85 e6 fe ff ff e9 fe fd ff ff 0f 0b e9 77 ff ff ff <0f=
+> 0b e9 70 ff ff ff 0f 0b e9 19 ff ff ff e8 15 22 d9 00 0f 1f 44
+[   77.936776] RSP: 0018:ff57cb59c0b7bd68 EFLAGS: 00010246
+[   77.936779] RAX: 0000000000000000 RBX: ff2d8e1492151480 RCX: 00000000000=
+00000
+[   77.936782] RDX: 0000000000000000 RSI: 0000000000000001 RDI: ff57cb59c0b=
+7bdb8
+[   77.936785] RBP: ff2d8e1492151480 R08: ff2d8e14a1a860c0 R09: 00000000002=
+a001d
+[   77.936788] R10: ff2d8e14a1a86001 R11: ff2d8e14a1a861e0 R12: ff2d8e15921=
+80010
+[   77.936791] R13: ff57cb59c0b7bd70 R14: 0000000000000001 R15: 00000000000=
+00000
+[   77.936795] FS:  0000000000000000(0000) GS:ff2d8e3396243000(0000) knlGS:=
+0000000000000000
+[   77.936798] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   77.936801] CR2: 000055f1cff22050 CR3: 0000000112666002 CR4: 0000000000f=
+71ef0
+[   77.936804] PKRU: 55555554
+[   77.936806] Call Trace:
+[   77.936808]  <TASK>
+[   77.936812]  cancel_delayed_work_sync+0x5e/0x80
+[   77.936815]  amdgpu_dm_connector_destroy+0x33/0xe0 [amdgpu]
+[   77.937015]  drm_connector_free_work_fn+0x72/0x90
+[   77.937020]  process_one_work+0x18b/0x340
+[   77.937025]  worker_thread+0x256/0x3a0
+[   77.937029]  ? __pfx_worker_thread+0x10/0x10
+[   77.937034]  kthread+0xfc/0x240
+[   77.937038]  ? __pfx_kthread+0x10/0x10
+[   77.937042]  ? __pfx_kthread+0x10/0x10
+[   77.937047]  ret_from_fork+0x121/0x190
+[   77.937051]  ? __pfx_kthread+0x10/0x10
+[   77.937056]  ret_from_fork_asm+0x1a/0x30
+[   77.937063]  </TASK>
+[   77.937065] ---[ end trace 0000000000000000 ]---
+[   77.937074] ------------[ cut here ]------------
+[   77.937077] WARNING: kernel/workqueue.c:4238 at __flush_work+0x338/0x350=
+, CPU#31: kworker/31:0/207
+[   77.937084] Modules linked in: snd_hda_codec_alc662 snd_hda_codec_realte=
+k_lib snd_hda_codec_generic amdgpu(-) snd_hda_codec_atihdmi snd_hda_codec_h=
+dmi mt7921e amdxcp drm_panel_backlight_quirks mt7921_common snd_hda_intel d=
+rm_ttm_helper mt792x_lib snd_usb_audio amd_atl intel_rapl_msr ttm snd_hda_c=
+odec mt76_connac_lib snd_usbmidi_lib intel_rapl_common i2c_algo_bit snd_ump=
+ drm_suballoc_helper snd_hda_core mt76 snd_rawmidi amd64_edac gpu_sched snd=
+_intel_dspcfg edac_mce_amd snd_intel_sdw_acpi btusb drm_exec mc snd_hwdep b=
+trtl drm_buddy snd_seq btintel drm_display_helper btbcm mac80211 snd_seq_de=
+vice kvm_amd btmtk cec think_lmi kvm video snd_pcm irqbypass firmware_attri=
+butes_class wmi_bmof bluetooth rapl cfg80211 snd_timer pcspkr crc16 snd i2c=
+_piix4 rfkill k10temp soundcore i2c_smbus libarc4 gpio_amdpt gpio_generic i=
+2c_designware_platform i2c_designware_core loop overlay erofs xfs nvme_tcp =
+nvme_fabrics nvme nvme_core nvme_keyring ahci nvme_auth libahci ghash_clmul=
+ni_intel hkdf r8169 atlantic ccp libata sp5100_tco realtek
+[   77.937154]  macsec wmi sunrpc dm_mirror dm_region_hash dm_log dm_mod fu=
+se nfnetlink
+[   77.937197] CPU: 31 UID: 0 PID: 207 Comm: kworker/31:0 Tainted: G       =
+ W           6.19.0-rc5-00016-gd04f73668beb #1 PREEMPT(voluntary)=20
+[   77.937204] Tainted: [W]=3DWARN
+[   77.937211] Workqueue: events drm_connector_free_work_fn
+[   77.937216] RIP: 0010:__flush_work+0x338/0x350
+[   77.937221] Code: 3e 46 06 00 65 48 8b 15 2e e4 e3 02 48 85 db 48 8b 04 =
+24 48 89 54 24 48 0f 85 e6 fe ff ff e9 fe fd ff ff 0f 0b e9 77 ff ff ff <0f=
+> 0b e9 70 ff ff ff 0f 0b e9 19 ff ff ff e8 15 22 d9 00 0f 1f 44
+[   77.937229] RSP: 0018:ff57cb59c0b7bd68 EFLAGS: 00010246
+[   77.937234] RAX: 0000000000000000 RBX: ff2d8e1492155480 RCX: 00000000000=
+00000
+[   77.937238] RDX: 0000000000000000 RSI: 0000000000000001 RDI: ff57cb59c0b=
+7bdb8
+[   77.937242] RBP: ff2d8e1492155480 R08: ff2d8e14836abf00 R09: 00000000002=
+a0026
+[   77.937246] R10: ff2d8e14836abf01 R11: ff2d8e14836abcc0 R12: ff2d8e15921=
+80010
+[   77.937251] R13: ff57cb59c0b7bd70 R14: 0000000000000001 R15: 00000000000=
+00000
+[   77.937255] FS:  0000000000000000(0000) GS:ff2d8e3396243000(0000) knlGS:=
+0000000000000000
+[   77.937260] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   77.937264] CR2: 000055f1cff22050 CR3: 0000000112666002 CR4: 0000000000f=
+71ef0
+[   77.937268] PKRU: 55555554
+[   77.937271] Call Trace:
+[   77.937274]  <TASK>
+[   77.937278]  cancel_delayed_work_sync+0x5e/0x80
+[   77.937283]  amdgpu_dm_connector_destroy+0x33/0xe0 [amdgpu]
+[   77.937467]  drm_connector_free_work_fn+0x72/0x90
+[   77.937471]  process_one_work+0x18b/0x340
+[   77.937475]  worker_thread+0x256/0x3a0
+[   77.937478]  ? __pfx_worker_thread+0x10/0x10
+[   77.937481]  kthread+0xfc/0x240
+[   77.937484]  ? __pfx_kthread+0x10/0x10
+[   77.937488]  ? __pfx_kthread+0x10/0x10
+[   77.937491]  ret_from_fork+0x121/0x190
+[   77.937494]  ? __pfx_kthread+0x10/0x10
+[   77.937498]  ret_from_fork_asm+0x1a/0x30
+[   77.937503]  </TASK>
+[   77.937505] ---[ end trace 0000000000000000 ]---
 
+# dmesg --follow-new &
+# cat /proc/cmdline
+BOOT_IMAGE=3D(hd0,gpt2)/boot/ostree/default-4d1352b3a0c9141bf3b54ff6edfc190=
+370f348342e5f6c795641cfd33ee2c88b/vmlinuz-6.19.0-rc5-00015-gb2426a211dba ro=
+ot=3D/dev/mapper/rhel-root rd.lvm.lv=3Drhel/root rd.lvm.lv=3Drhel/swap rw b=
+oot=3DUUID=3D9c458207-c078-4fcf-bb4c-679ae1a3ae9f ostree=3D/ostree/boot.1/d=
+efault/4d1352b3a0c9141bf3b54ff6edfc190370f348342e5f6c795641cfd33ee2c88b/0 "=
+dyndbg=3Dfile drivers/base/firmware_loader/main.c +fmp"
+# rmmod amdgpu
+[  130.326780] [drm] PCIE GART of 512M enabled (table at 0x0000008000300000=
+).
+[  130.326830] amdgpu 0000:83:00.0: amdgpu: PSP is resuming...
+[  130.390765] amdgpu 0000:83:00.0: amdgpu: reserve 0x1300000 from 0x8b3c00=
+0000 for PSP TMR
+[  130.534582] amdgpu 0000:83:00.0: amdgpu: GECC is currently enabled, whic=
+h may affect performance
+[  130.534587] amdgpu 0000:83:00.0: amdgpu: To disable GECC, please reboot =
+the system and load the amdgpu driver with the parameter amdgpu_ras_enable=
+=3D0
+[  130.551451] amdgpu 0000:83:00.0: amdgpu: RAP: optional rap ta ucode is n=
+ot available
+[  130.551456] amdgpu 0000:83:00.0: amdgpu: SECUREDISPLAY: optional secured=
+isplay ta ucode is not available
+[  130.551461] amdgpu 0000:83:00.0: amdgpu: SMU is resuming...
+[  130.551466] amdgpu 0000:83:00.0: amdgpu: smu driver if version =3D 0x000=
+0003d, smu fw if version =3D 0x00000040, smu fw program =3D 0, smu fw versi=
+on =3D 0x004e8300 (78.131.0)
+[  130.551473] amdgpu 0000:83:00.0: amdgpu: SMU driver if version not match=
+ed
+[  130.695062] amdgpu 0000:83:00.0: amdgpu: SMU is resumed successfully!
+[  130.707036] amdgpu 0000:83:00.0: amdgpu: [drm] DMUB hardware initialized=
+: version=3D0x07002F00
+[  130.714347] amdgpu 0000:83:00.0: [drm] Cannot find any crtc or sizes
+[  130.714359] amdgpu 0000:83:00.0: amdgpu: ring gfx_0.0.0 uses VM inv eng =
+0 on hub 0
+[  130.714364] amdgpu 0000:83:00.0: amdgpu: ring comp_1.0.0 uses VM inv eng=
+ 1 on hub 0
+[  130.714368] amdgpu 0000:83:00.0: amdgpu: ring comp_1.1.0 uses VM inv eng=
+ 4 on hub 0
+[  130.714372] amdgpu 0000:83:00.0: amdgpu: ring comp_1.2.0 uses VM inv eng=
+ 6 on hub 0
+[  130.714375] amdgpu 0000:83:00.0: amdgpu: ring comp_1.3.0 uses VM inv eng=
+ 7 on hub 0
+[  130.714379] amdgpu 0000:83:00.0: amdgpu: ring comp_1.0.1 uses VM inv eng=
+ 8 on hub 0
+[  130.714383] amdgpu 0000:83:00.0: amdgpu: ring comp_1.1.1 uses VM inv eng=
+ 9 on hub 0
+[  130.714387] amdgpu 0000:83:00.0: amdgpu: ring comp_1.2.1 uses VM inv eng=
+ 10 on hub 0
+[  130.714391] amdgpu 0000:83:00.0: amdgpu: ring comp_1.3.1 uses VM inv eng=
+ 11 on hub 0
+[  130.714395] amdgpu 0000:83:00.0: amdgpu: ring sdma0 uses VM inv eng 12 o=
+n hub 0
+[  130.714399] amdgpu 0000:83:00.0: amdgpu: ring sdma1 uses VM inv eng 13 o=
+n hub 0
+[  130.714403] amdgpu 0000:83:00.0: amdgpu: ring vcn_unified_0 uses VM inv =
+eng 0 on hub 8
+[  130.714407] amdgpu 0000:83:00.0: amdgpu: ring vcn_unified_1 uses VM inv =
+eng 1 on hub 8
+[  130.714411] amdgpu 0000:83:00.0: amdgpu: ring jpeg_dec uses VM inv eng 4=
+ on hub 8
+[  130.714415] amdgpu 0000:83:00.0: amdgpu: ring mes_kiq_3.1.0 uses VM inv =
+eng 14 on hub 0
+[  130.717614] amdgpu 0000:83:00.0: [drm] Cannot find any crtc or sizes
+[  130.749867] amdgpu 0000:83:00.0: amdgpu: amdgpu: finishing device.
+[  130.832990] firmware_class:fw_name_devm_release: firmware_class: fw_name=
+_devm_release: fw_name-amdgpu/gc_11_0_0_mes1.bin devm-0000000074b66149 rele=
+ased
+[  130.832994] firmware_class:fw_name_devm_release: firmware_class: fw_name=
+_devm_release: fw_name-amdgpu/gc_11_0_0_mes_2.bin devm-00000000d46d3d0a rel=
+eased
+[  130.832995] firmware_class:fw_name_devm_release: firmware_class: fw_name=
+_devm_release: fw_name-amdgpu/vcn_4_0_0.bin devm-00000000016db898 released
+[  130.832997] firmware_class:fw_name_devm_release: firmware_class: fw_name=
+_devm_release: fw_name-amdgpu/sdma_6_0_0.bin devm-000000005efee9f4 released
+[  130.832998] firmware_class:fw_name_devm_release: firmware_class: fw_name=
+_devm_release: fw_name-amdgpu/gc_11_0_0_imu.bin devm-000000003ae64728 relea=
+sed
+[  130.832999] firmware_class:fw_name_devm_release: firmware_class: fw_name=
+_devm_release: fw_name-amdgpu/gc_11_0_0_mec.bin devm-00000000af46a982 relea=
+sed
+[  130.833001] firmware_class:fw_name_devm_release: firmware_class: fw_name=
+_devm_release: fw_name-amdgpu/gc_11_0_0_rlc.bin devm-000000001cb79a18 relea=
+sed
+[  130.833002] firmware_class:fw_name_devm_release: firmware_class: fw_name=
+_devm_release: fw_name-amdgpu/gc_11_0_0_me.bin devm-00000000cc67f139 releas=
+ed
+[  130.833003] firmware_class:fw_name_devm_release: firmware_class: fw_name=
+_devm_release: fw_name-amdgpu/gc_11_0_0_pfp.bin devm-0000000081c0968b relea=
+sed
+[  130.833004] firmware_class:fw_name_devm_release: firmware_class: fw_name=
+_devm_release: fw_name-amdgpu/dcn_3_2_0_dmcub.bin devm-00000000443f0df7 rel=
+eased
+[  130.833006] firmware_class:fw_name_devm_release: firmware_class: fw_name=
+_devm_release: fw_name-amdgpu/smu_13_0_0.bin devm-00000000b15e02fd released
+[  130.833007] firmware_class:fw_name_devm_release: firmware_class: fw_name=
+_devm_release: fw_name-amdgpu/psp_13_0_0_ta.bin devm-000000000210a6a5 relea=
+sed
+[  130.833008] firmware_class:fw_name_devm_release: firmware_class: fw_name=
+_devm_release: fw_name-amdgpu/psp_13_0_0_sos.bin devm-00000000f20cdcf8 rele=
+ased
+[  130.833014] firmware_class:__free_fw_priv: firmware_class: __free_fw_pri=
+v: fw-amdgpu/gc_11_0_0_mes_2.bin fw_priv=3D000000002d9267e4 data=3D00000000=
+31802202 size=3D257344
+[  130.833024] firmware_class:__free_fw_priv: firmware_class: __free_fw_pri=
+v: fw-amdgpu/gc_11_0_0_mes1.bin fw_priv=3D00000000c7ac6b6f data=3D000000003=
+3e75f41 size=3D218240
+[  130.833055] firmware_class:__free_fw_priv: firmware_class: __free_fw_pri=
+v: fw-amdgpu/vcn_4_0_0.bin fw_priv=3D000000004d750fd5 data=3D000000003b01c6=
+c8 size=3D403856
+[  130.833077] firmware_class:__free_fw_priv: firmware_class: __free_fw_pri=
+v: fw-amdgpu/sdma_6_0_0.bin fw_priv=3D000000009cbfce7c data=3D00000000e9246=
+0ba size=3D34560
+[  130.833109] firmware_class:__free_fw_priv: firmware_class: __free_fw_pri=
+v: fw-amdgpu/gc_11_0_0_pfp.bin fw_priv=3D00000000db83ee7b data=3D0000000030=
+55277c size=3D231008
+[  130.833118] firmware_class:__free_fw_priv: firmware_class: __free_fw_pri=
+v: fw-amdgpu/gc_11_0_0_me.bin fw_priv=3D00000000eacba546 data=3D00000000829=
+0cf98 size=3D314512
+[  130.833126] firmware_class:__free_fw_priv: firmware_class: __free_fw_pri=
+v: fw-amdgpu/gc_11_0_0_rlc.bin fw_priv=3D00000000328bec43 data=3D00000000b1=
+39d21a size=3D185376
+[  130.833134] firmware_class:__free_fw_priv: firmware_class: __free_fw_pri=
+v: fw-amdgpu/gc_11_0_0_mec.bin fw_priv=3D00000000fd9b77a5 data=3D00000000e6=
+42bc9c size=3D406528
+[  130.833151] firmware_class:__free_fw_priv: firmware_class: __free_fw_pri=
+v: fw-amdgpu/dcn_3_2_0_dmcub.bin fw_priv=3D00000000af71cb2f data=3D00000000=
+aca60ab1 size=3D284432
+[  130.833167] firmware_class:__free_fw_priv: firmware_class: __free_fw_pri=
+v: fw-amdgpu/smu_13_0_0.bin fw_priv=3D00000000fa494fe0 data=3D00000000a8e97=
+967 size=3D292452
+[  130.833180] firmware_class:__free_fw_priv: firmware_class: __free_fw_pri=
+v: fw-amdgpu/psp_13_0_0_sos.bin fw_priv=3D000000005273a87e data=3D000000004=
+f725920 size=3D268304
+[  130.833192] firmware_class:__free_fw_priv: firmware_class: __free_fw_pri=
+v: fw-amdgpu/psp_13_0_0_ta.bin fw_priv=3D00000000dbd3858b data=3D00000000b5=
+34cfff size=3D267520
+[  130.833581] amdgpu 0000:83:00.0: amdgpu: amdgpu: ttm finalized
 
-Please include the KernelCI tag when submitting a fix:
+Thanks,
+Peter
 
-Reported-by: kernelci.org bot <bot@kernelci.org>
-
-
-Log excerpt:
-=====================================================
-In file included from mm/mm_init.c:29:
-./include/linux/cma.h:63:13: error: ‘cma_skip_dt_default_reserved_mem’ defined but not used [-Werror=unused-function]
-   63 | static bool cma_skip_dt_default_reserved_mem(void)
-      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  CC      security/selinux/netnode.o
-  CC      security/selinux/netport.o
-  CC      crypto/hmac.o
-cc1: all warnings being treated as errors
-
-=====================================================
-
-
-# Builds where the incident occurred:
-
-## cros://chromeos-6.12/arm64/chromiumos-mediatek.flavour.config+lab-setup+arm64-chromebook+CONFIG_MODULE_COMPRESS=n+CONFIG_MODULE_COMPRESS_NONE=y on (arm64):
-- compiler: gcc-14
-- config: https://files.kernelci.org/kbuild-gcc-14-arm64-chromeos-mediatek-6979fba71908a6300d9b7134/.config
-- dashboard: https://d.kernelci.org/build/maestro:6979fba71908a6300d9b7134
-
-## cros://chromeos-6.12/arm64/chromiumos-qualcomm.flavour.config+lab-setup+arm64-chromebook+CONFIG_MODULE_COMPRESS=n+CONFIG_MODULE_COMPRESS_NONE=y on (arm64):
-- compiler: gcc-14
-- config: https://files.kernelci.org/kbuild-gcc-14-arm64-chromeos-qualcomm-6979fbab1908a6300d9b7137/.config
-- dashboard: https://d.kernelci.org/build/maestro:6979fbab1908a6300d9b7137
-
-## cros://chromeos-6.12/x86_64/chromeos-intel-pineview.flavour.config+lab-setup+x86-board+CONFIG_MODULE_COMPRESS=n+CONFIG_MODULE_COMPRESS_NONE=y on (x86_64):
-- compiler: gcc-14
-- config: https://files.kernelci.org/kbuild-gcc-14-x86-chromeos-intel-6979fbb31908a6300d9b713d/.config
-- dashboard: https://d.kernelci.org/build/maestro:6979fbb31908a6300d9b713d
-
-## defconfig+kcidebug+x86-board on (i386):
-- compiler: gcc-14
-- config: https://files.kernelci.org/kbuild-gcc-14-x86-kcidebug-6979fb8e1908a6300d9b711e/.config
-- dashboard: https://d.kernelci.org/build/maestro:6979fb8e1908a6300d9b711e
-
-## defconfig+preempt_rt on (x86_64):
-- compiler: gcc-14
-- config: https://files.kernelci.org/kbuild-gcc-14-x86-preempt_rt-6979fb9a1908a6300d9b7128/.config
-- dashboard: https://d.kernelci.org/build/maestro:6979fb9a1908a6300d9b7128
-
-## defconfig+preempt_rt+x86-board on (x86_64):
-- compiler: gcc-14
-- config: https://files.kernelci.org/kbuild-gcc-14-x86-preempt_rt_x86_board-6979fb9e1908a6300d9b712b/.config
-- dashboard: https://d.kernelci.org/build/maestro:6979fb9e1908a6300d9b712b
-
-## i386_defconfig on (i386):
-- compiler: gcc-14
-- config: https://files.kernelci.org/kbuild-gcc-14-i386-6979fb641908a6300d9b7100/.config
-- dashboard: https://d.kernelci.org/build/maestro:6979fb641908a6300d9b7100
-
-## x86_64_defconfig+kselftest on (x86_64):
-- compiler: gcc-14
-- config: https://files.kernelci.org/kbuild-gcc-14-x86-build-only-6979fb891908a6300d9b711b/.config
-- dashboard: https://d.kernelci.org/build/maestro:6979fb891908a6300d9b711b
-
-## x86_64_defconfig+kselftest+x86-board on (x86_64):
-- compiler: gcc-14
-- config: https://files.kernelci.org/kbuild-gcc-14-x86-next-6979fb911908a6300d9b7121/.config
-- dashboard: https://d.kernelci.org/build/maestro:6979fb911908a6300d9b7121
-
-## x86_64_defconfig+lab-setup+x86-board+kselftest on (x86_64):
-- compiler: gcc-14
-- config: https://files.kernelci.org/kbuild-gcc-14-x86-6979fb851908a6300d9b7118/.config
-- dashboard: https://d.kernelci.org/build/maestro:6979fb851908a6300d9b7118
-
-
-#kernelci issue maestro:8254f44be28c555bd563efce1a70336059fca879
-
---
-This is an experimental report format. Please send feedback in!
-Talk to us at kernelci@lists.linux.dev
-
-Made with love by the KernelCI team - https://kernelci.org
