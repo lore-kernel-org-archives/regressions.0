@@ -1,152 +1,128 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43AD7280317;
-	Sun,  1 Feb 2026 10:30:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 228A032D44F
+	for <regressions@lists.linux.dev>; Sun,  1 Feb 2026 11:42:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769941819; cv=none; b=U2vdO/bWw5Ko7llys8hLnNYkStQgvexc8VM71Cood/2vTIGVK30mywnXTmplGnqA5UDfzqfJS/eKdKJcmPLxXVrDIhUK3RdUEwqWQdNRLQc1LJnpb1hcNMs/qjsNEZj1KryWePGb8dt3Pm4C2YusIxCXqCEtmBOV+OvVhwVLcjQ=
+	t=1769946165; cv=none; b=ZeV7XwCuwIAPTTBZ3LMAAyFcBIaxNA79ikDUDTdTvJ5qk/+TPNiOiKODeJYBoaMn+nPc78WGB/eQtH5li0AD7MB0EWqzoWUs17R7OJHy5DzegzYsmVNSfIr3RC1QyGh1Pluu9AHW8mfdCipojb+EuANIwDro8060+FHotIeS2R0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769941819; c=relaxed/simple;
-	bh=+kasj8jgbYPe4r1JdJmPUfIuPUZVfGZSX8ow4fFAIR8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=p+f9lyQqUbvsQ4NlXy3H3wjKoKZe5yt54vIVF6ankSFRdBj+TMeoLWogyuiZm3ujtr3DeLUlYI6m/xK4jgA5HAqVwvodHUM0o1Z3QYcI/LCxmgQj1xKxOcSR+jUz2YBm/wdmuXGit8m2aUOQMftqLcBmZO1IoXNxTz3nK1/PRC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=N6aId+6x; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1769946165; c=relaxed/simple;
+	bh=IT4JR0prKa0OCOwFNNDgH78mXPijBfUxl0EpG3hii7c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nSmECsJogg4WCnzIqb99+Nv2D/2uXgCR/nZq2lpcTO6eeuny+LLidms0OUlIXIlc3CCkYjGD/sxmxcEiYIFtoF+SOClcTP8xN8XfBKmIsmXuz4DdEHEalU3bw9ueEUept5LqPKupfVtWB5exDP2BHMp9yaQjf0h2Vf8wxnT0bvk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ej38oT4m; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="N6aId+6x"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=gZDElJ9ZcZR48Aeq9CU/w3Y1HCk2lc3NXhuQunR84Rc=; t=1769941818;
-	x=1770373818; b=N6aId+6xpRCN42NpHAZNXp7RL0lM0UwU/1pdsXw8+awe2ikKRxy4nqwjdEm0k
-	YjiZ7tXyY1sx0owG0WRtt2UhNx8+SFn1Gy6wUkDBGOuvvgxloKWhJAGIK1XDLx4ZqSO3NpeZtByuo
-	bYWhDIFZSTR9a+oGRelYEJbCSPSs9QM9OOVEAt0IILpUZYxmVQHmwzFPx9RtkDDzvfL6hoErvC/lg
-	ElzEBNMwOPJmbSVKCKaAfSBmy9p7pqU6GLUiogVe32RiHh3xVFuMjnNw0i7MdqnC9/uUcN21ak1KZ
-	5KkGBaS8f0HJEQ9Uz6JZ8kCT9CNLtC4bjpuaOhjCKl9pEEnPbw==;
-Received: from [2a02:8108:8984:1d00:a0cf:1912:4be:477f]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128)
-	id 1vmUid-00EMA7-04;
-	Sun, 01 Feb 2026 11:30:15 +0100
-Message-ID: <c9a25ab3-663b-4935-ae11-a750c7bf3aa9@leemhuis.info>
-Date: Sun, 1 Feb 2026 11:30:14 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ej38oT4m"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4126C2BCF7
+	for <regressions@lists.linux.dev>; Sun,  1 Feb 2026 11:42:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1769946164;
+	bh=IT4JR0prKa0OCOwFNNDgH78mXPijBfUxl0EpG3hii7c=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=ej38oT4m6BNSEpwC/byEndhBm1H5h/7y50SvsO2w03ICGrlZ6G7ATmC7b/qF8ZmsR
+	 OTiycp80Qq5k5VWkwEvoljBwLr1rtiXJSy8pcs+InnHsxmw3eEIIH30flw+vEt1YmZ
+	 1P96wLdY/McimrnKt5zV3qa9u6Nl8jJ2iIMBKMtqTCeaGv/xJBjGCErb17f1f+mB92
+	 wav7pjKF11pjPzoNEao6oXg1c5Yhnttd1nAmB7V4+JD1kZV9MNBjEbtjaOoAiVL3LI
+	 +Bzx0FfTGqqORLRFOQdNYNNNsOlsx02K9eswjwy8xBa3OUn2OArCYHDJv+MoMNf6Ho
+	 kakr9KtC1rAOw==
+Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-662f9aeb782so2325608eaf.3
+        for <regressions@lists.linux.dev>; Sun, 01 Feb 2026 03:42:44 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXlD29d1ERO4Z0Zt8p3wnd9sLj9hGsCRGXLr2Lw1/3rFxEyhc7WeNWeKNCQGkZsXOSj4ZqmQ8fyR2DihQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0Ywg2ddT+lsFseDbyINpdEVmEp4GCuNnLuff8Ay9Y7D7rh7oJSsp
+	ctsOA1xuyAytqhijj95uqdpmd9IFlxmo6Rj+kGylrUvaeTM+Fz91pHctMCXENdi++O0WCY1baoP
+	L3LsRbgBdCie6L7jh+maqWEdcJHZmlQ8=
+X-Received: by 2002:a05:6820:2008:b0:662:f764:9064 with SMTP id
+ 006d021491bc7-6630f3850d7mr3448575eaf.48.1769946163562; Sun, 01 Feb 2026
+ 03:42:43 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Regression: CONFIG_ASYNC_KERNEL_PGTABLE_FREE causes memory
- exhaustion and stalls on busy Cascade Lake server (6.18.7 only)
-To: Robert Dinse <nanook@eskimo.com>, akpm@linux-foundation.org
-Cc: linux-mm@kvack.org,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- "stable@vger.kernel.org" <stable@vger.kernel.org>
-References: <06843c7a-909b-41e5-9359-2be51cf9dffa@eskimo.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <06843c7a-909b-41e5-9359-2be51cf9dffa@eskimo.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1769941818;51db4a7a;
-X-HE-SMSGID: 1vmUid-00EMA7-04
+References: <20260113094129.3357-1-spasswolf@web.de> <87h5spk01t.ffs@tglx>
+ <bc20529d7520e7db7de2022bf9c96a1bc3a2f0df.camel@web.de> <87v7h5ia3d.ffs@tglx>
+ <99f1aaba32030d2b9285dbd983fdf8518a181a8d.camel@web.de> <82b4d69a5b943aa5e8aa7cc33fcc00bce02e557c.camel@web.de>
+ <630a4020c87c122c004321971e43c334fd7aceb4.camel@web.de> <2a4e5667-ae24-403f-8fbd-cb37bd66f055@gmx.de>
+In-Reply-To: <2a4e5667-ae24-403f-8fbd-cb37bd66f055@gmx.de>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Sun, 1 Feb 2026 12:42:30 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0i+7yCP-H1snkd-+h-jqXa53fMyJ3bLB6H-1u+P-KuONg@mail.gmail.com>
+X-Gm-Features: AZwV_QhE6FdYk90VCTuNf4rJKUHvyfE-AQ-aLS-eKFM9kup3-2BqSx_MCuon4vA
+Message-ID: <CAJZ5v0i+7yCP-H1snkd-+h-jqXa53fMyJ3bLB6H-1u+P-KuONg@mail.gmail.com>
+Subject: Re: crash during resume of PCIe bridge from v5.17 to next-20260130
+ (v5.16 works)
+To: Armin Wolf <W_Armin@gmx.de>, Bert Karwatzki <spasswolf@web.de>
+Cc: Thomas Gleixner <tglx@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-next@vger.kernel.org, Mario Limonciello <mario.limonciello@amd.com>, 
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Clark Williams <clrkwllms@kernel.org>, 
+	Steven Rostedt <rostedt@goodmis.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	regressions@lists.linux.dev, linux-pci@vger.kernel.org, 
+	linux-acpi@vger.kernel.org, "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, 
+	acpica-devel@lists.linux.dev, Robert Moore <robert.moore@intel.com>, 
+	Saket Dumbre <saket.dumbre@intel.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Clemens Ladisch <clemens@ladisch.de>, Jinchao Wang <wangjinchao600@gmail.com>, 
+	Yury Norov <yury.norov@gmail.com>, Anna Schumaker <anna.schumaker@oracle.com>, 
+	Baoquan He <bhe@redhat.com>, "Darrick J. Wong" <djwong@kernel.org>, Dave Young <dyoung@redhat.com>, 
+	Doug Anderson <dianders@chromium.org>, "Guilherme G. Piccoli" <gpiccoli@igalia.com>, 
+	Helge Deller <deller@gmx.de>, Ingo Molnar <mingo@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	Joanthan Cameron <Jonathan.Cameron@huawei.com>, Joel Granados <joel.granados@kernel.org>, 
+	John Ogness <john.ogness@linutronix.de>, Kees Cook <kees@kernel.org>, 
+	Li Huafei <lihuafei1@huawei.com>, "Luck, Tony" <tony.luck@intel.com>, 
+	Luo Gengkun <luogengkun@huaweicloud.com>, Max Kellermann <max.kellermann@ionos.com>, 
+	Nam Cao <namcao@linutronix.de>, oushixiong <oushixiong@kylinos.cn>, 
+	Petr Mladek <pmladek@suse.com>, Qianqiang Liu <qianqiang.liu@163.com>, 
+	Sergey Senozhatsky <senozhatsky@chromium.org>, Sohil Mehta <sohil.mehta@intel.com>, 
+	Tejun Heo <tj@kernel.org>, Thomas Zimemrmann <tzimmermann@suse.de>, 
+	Thorsten Blum <thorsten.blum@linux.dev>, Ville Syrjala <ville.syrjala@linux.intel.com>, 
+	Vivek Goyal <vgoyal@redhat.com>, Yunhui Cui <cuiyunhui@bytedance.com>, 
+	Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Lo! Top-posting to facilitate processing and CCing the stable list,
-maybe someone has heard of a problem.
+On Sun, Feb 1, 2026 at 11:20=E2=80=AFAM Armin Wolf <W_Armin@gmx.de> wrote:
+>
+> Am 01.02.26 um 01:36 schrieb Bert Karwatzki:
+>
+> > I found the error, the commit
+> > ("drm/amd: Check if ASPM is enabled from PCIe subsystem")
+> > has been applied twice first as cba07cce39ac and a second time
+> > as 7294863a6f01 after it had been superseeded by commit
+> > 0ab5d711ec74 ("drm/amd: Refactor `amdgpu_aspm` to be evaluated per devi=
+ce")
+> > This effectively disables ASPM globally after the built-in GPU (which d=
+oes not
+> > support ASPM) is probed. This is the reason for the crashes and loss of=
+ devices
+> > errors which on average occur after ~1000 resumes of the discrete GPU.
+> >
+> > snippet from git log --oneline drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c =
+in linux-next:
+> > 158a05a0b885 drm/amdgpu: Add use_xgmi_p2p module parameter
+> > 7294863a6f01 drm/amd: Check if ASPM is enabled from PCIe subsystem  <--=
+- This does not belong here!
+> > b784f42cf78b drm/amdgpu: drop testing module parameter
+> > 0b1a63487b0f drm/amdgpu: drop benchmark module parameter
+> > cec2cc7b1c4a drm/amdgpu: Fix typo in *whether* in comment
+> > 0ab5d711ec74 drm/amd: Refactor `amdgpu_aspm` to be evaluated per device=
+ <--- This removes the code from the previous commit.
+> > cba07cce39ac drm/amd: Check if ASPM is enabled from PCIe subsystem  <--=
+- The first time the commit was applied.
+> > dfcc3e8c24cc drm/amdgpu: make cyan skillfish support code more consiste=
+nt
+> >
+> > The fix is simply to revert commit 7294863a6f01.
+> >
+> > I sent a patch for linux-next (unfortunately without CC'ing stable) and=
+ a seperate patch for
+> > v6.18.8, I hope this does not cause confusion ...
+> >
+> > Bert Karwatzki
+>
+> Good work! Thank you for researching the faulty commit that lead to this =
+strange behavior.
 
-Thx for the report. The big questions here is: Is that something that is
-specific to 6.18.y or does it happen with mainline, too? And does it
-still happen with the latest 6.18.y version (there were a few mm fixes)?
-Without answers to this question nobody might look into this if we are
-unlucky. And a bisection would be ideal, but I understand all that is
-not easy if it takes 24h to detect the problem.
+Yes, nice work, thanks!
 
-Ciao, Thorsten
-
-On 1/29/26 07:10, Robert Dinse wrote:
-> 
-> Hardware / setup
-> ----------------
-> - CPU: Intel i9-10980XE (Cascade Lake), all cores overclocked to 4.5 GHz
-> - Motherboard: Gigabyte Aorus Master X299
-> - PSU: 1200W Seasonic
-> - RAM: 256 GB
-> - Storage:
->   - MariaDB: RAID1 of two 1 TB NVMe drives
->   - Other storage: RAID1 arrays of spinning disks
-> 
-> Software
-> --------
-> - OS: Ubuntu 24.04, with most userland and kernel replaced by self-
-> compiled upstream
-> - Kernel:
->   - 6.18.6: stable, previously in production
->   - 6.18.7: regression
-> - Toolchain: gcc 15.2
-> - Services:
->   - Apache 2.4.65 (self-compiled), with modified exec-php to allow per-
-> user PHP versions via handlers
->   - MariaDB with ~60 GB of tables
->   - InnoDB buffer pool: ~70 GB
->   - Several social media sites and other complex web hosting workloads
-> 
-> Baseline behavior (6.18.6)
-> --------------------------
-> Under 6.18.6, the machine behaves as expected:
-> - Roughly half of the 256 GB RAM in use, half available
-> - Memory usage stable over time
-> - Swap usage negligible
-> - Web server and database remain responsive under normal production load
-> 
-> Regression behavior (6.18.7)
-> ----------------------------
-> After upgrading from 6.18.6 to 6.18.7, the system initially runs
-> normally, but after
-> approximately 24 hours of production load:
-> - Total memory usage climbs until RAM is fully consumed
-> - System goes ~10 GB into swap
-> - Web server and database stall intermittently
-> - Overall system responsiveness degrades severely
-> 
-> Reverting to 6.18.6 immediately restores the previous stable behavior.
-> 
-> Attempt to disable CONFIG_ASYNC_KERNEL_PGTABLE_FREE
-> ---------------------------------------------------
-> I attempted to disable the new async kernel page table freeing feature:
-> 
-> - The symbol `CONFIG_ASYNC_KERNEL_PGTABLE_FREE` appears in `.config`
-> - However, it does not appear in xconfig or other configuration frontends
-> - Manually editing `.config` to disable it works only until the next
-> `make`:
->   - As soon as I re-run the build, the option is silently re-enabled
-> - I tried to chase the Kconfig dependencies, but the chain was too
-> convoluted; it appears to be effectively non-user-selectable and forced
-> on by default for my architecture.
-> 
-> From an operator perspective, this feature as currently implemented is
-> not workable on a busy machine like this, and the inability to disable
-> it makes it difficult to bisect or run with a known-good configuration.
-> 
-> Current status
-> --------------
-> - I have reverted to 6.18.6, which remains functional and stable under
-> the same workload.
-> - I have attached the '.config' for the affected 6.18.7 kernel.
-> - I can also collect additional data (vmstat, /proc/meminfo, slabinfo,
-> etc.) if you tell me what would be most useful.
-> 
-> Request
-> -------
-> 1. Is this a known issue with CONFIG_ASYNC_KERNEL_PGTABLE_FREE on large-
-> memory, high-load systems?
-> 2. Is there a supported way to disable this feature on x86_64, or could
-> it be made user-selectable for debugging/regression purposes?
-> 3. Are there specific traces or statistics you would like me to gather
-> when the system is in the "memory maxed + swap in use + stalls" state?
-> 
-> I’m happy to run test kernels or provide additional inform
-
+I wish all of the reporters of kernel issues were so persistent.
