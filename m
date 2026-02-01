@@ -1,41 +1,38 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6069919DF8D;
-	Sun,  1 Feb 2026 10:20:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43AD7280317;
+	Sun,  1 Feb 2026 10:30:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769941232; cv=none; b=lUdiHAHGUk5aTqiANUzF/eTRjcQDhN8TpSjcFQtusq2+wPV4JHOArtBHdMkcOjCb5K+P1DGKwMmFtcFvw5QmBGdA8HEs77WY1/K7DkFLw6abZLDnf4pi+DwcEF2KtY1NXe1ugx4luusFPuUF/mJduzf0b2kPyBWD6KlbJW9UEXI=
+	t=1769941819; cv=none; b=U2vdO/bWw5Ko7llys8hLnNYkStQgvexc8VM71Cood/2vTIGVK30mywnXTmplGnqA5UDfzqfJS/eKdKJcmPLxXVrDIhUK3RdUEwqWQdNRLQc1LJnpb1hcNMs/qjsNEZj1KryWePGb8dt3Pm4C2YusIxCXqCEtmBOV+OvVhwVLcjQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769941232; c=relaxed/simple;
-	bh=uTcjg7oWuXYWxhI5viZWpG4AjyZYMiFFCHK6hnZNmbQ=;
+	s=arc-20240116; t=1769941819; c=relaxed/simple;
+	bh=+kasj8jgbYPe4r1JdJmPUfIuPUZVfGZSX8ow4fFAIR8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tZpSAQaGbnaeY7Xmj+NTFBf50UtoV5sGzHjiPUQBWBcCF+YWv9UkSyCgKfacE7RTN3LxjI5mMGDIrnwmPv+11hhIDPJwqi+A7dkl+BnxWy7yjo6ogmhLQTuss1AiJLqH3mZDAaKAiIvCcYs830XByh9Xjp7yaJGobkI73BgB+ms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=i7WiGSJD; arc=none smtp.client-ip=212.227.15.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	 In-Reply-To:Content-Type; b=p+f9lyQqUbvsQ4NlXy3H3wjKoKZe5yt54vIVF6ankSFRdBj+TMeoLWogyuiZm3ujtr3DeLUlYI6m/xK4jgA5HAqVwvodHUM0o1Z3QYcI/LCxmgQj1xKxOcSR+jUz2YBm/wdmuXGit8m2aUOQMftqLcBmZO1IoXNxTz3nK1/PRC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=N6aId+6x; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="i7WiGSJD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1769941198; x=1770545998; i=w_armin@gmx.de;
-	bh=9x7HpyWOhbUGkwEQIBNa7vexJVFMvQ6wdp3e0Aovy30=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=i7WiGSJDLPksZeJeN5ZeGfcXT7eTrn9bq5uASZzw91IbSbkTGvCX3bGW5ohJlN3C
-	 wx84muhLR71ozgINowEpd1vThw+c2KFdRCmJzz7nQo0+4Q1umF2mN3GIHPhw1vIFp
-	 OMaBUFWpB4g2E0lDD0z1zu5aadXmRG7V9gASh3cbHHVYRQUldlR+CWotRkVgbgXVl
-	 RPNKWHTOrbl9Xkt6mYzFMMLgsKk2iwNKEay6CYdzqm3+n/u/ZnJMkfdBQyDTobGQK
-	 ve21mPDQVdQgW/a34ehaW/wQKbq13nwr56riwW6xpGTr0oeAZh71ssKMDmvcDU1v1
-	 69zzkepqCcmcJa99Lw==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [10.66.134.249] ([164.15.244.57]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1Mulm5-1w3TTi22Jn-00t7V6; Sun, 01
- Feb 2026 11:19:58 +0100
-Message-ID: <2a4e5667-ae24-403f-8fbd-cb37bd66f055@gmx.de>
-Date: Sun, 1 Feb 2026 11:19:46 +0100
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="N6aId+6x"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=gZDElJ9ZcZR48Aeq9CU/w3Y1HCk2lc3NXhuQunR84Rc=; t=1769941818;
+	x=1770373818; b=N6aId+6xpRCN42NpHAZNXp7RL0lM0UwU/1pdsXw8+awe2ikKRxy4nqwjdEm0k
+	YjiZ7tXyY1sx0owG0WRtt2UhNx8+SFn1Gy6wUkDBGOuvvgxloKWhJAGIK1XDLx4ZqSO3NpeZtByuo
+	bYWhDIFZSTR9a+oGRelYEJbCSPSs9QM9OOVEAt0IILpUZYxmVQHmwzFPx9RtkDDzvfL6hoErvC/lg
+	ElzEBNMwOPJmbSVKCKaAfSBmy9p7pqU6GLUiogVe32RiHh3xVFuMjnNw0i7MdqnC9/uUcN21ak1KZ
+	5KkGBaS8f0HJEQ9Uz6JZ8kCT9CNLtC4bjpuaOhjCKl9pEEnPbw==;
+Received: from [2a02:8108:8984:1d00:a0cf:1912:4be:477f]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128)
+	id 1vmUid-00EMA7-04;
+	Sun, 01 Feb 2026 11:30:15 +0100
+Message-ID: <c9a25ab3-663b-4935-ae11-a750c7bf3aa9@leemhuis.info>
+Date: Sun, 1 Feb 2026 11:30:14 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -43,162 +40,113 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: crash during resume of PCIe bridge from v5.17 to next-20260130
- (v5.16 works)
-To: Bert Karwatzki <spasswolf@web.de>, Thomas Gleixner <tglx@kernel.org>,
- linux-kernel@vger.kernel.org
-Cc: linux-next@vger.kernel.org, Mario Limonciello
- <mario.limonciello@amd.com>,
- Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- Clark Williams <clrkwllms@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- regressions@lists.linux.dev, linux-pci@vger.kernel.org,
- linux-acpi@vger.kernel.org, "Rafael J . Wysocki"
- <rafael.j.wysocki@intel.com>, acpica-devel@lists.linux.dev,
- Robert Moore <robert.moore@intel.com>, Saket Dumbre
- <saket.dumbre@intel.com>, Bjorn Helgaas <bhelgaas@google.com>,
- Clemens Ladisch <clemens@ladisch.de>, Jinchao Wang
- <wangjinchao600@gmail.com>, Yury Norov <yury.norov@gmail.com>,
- Anna Schumaker <anna.schumaker@oracle.com>, Baoquan He <bhe@redhat.com>,
- "Darrick J. Wong" <djwong@kernel.org>, Dave Young <dyoung@redhat.com>,
- Doug Anderson <dianders@chromium.org>,
- "Guilherme G. Piccoli" <gpiccoli@igalia.com>, Helge Deller <deller@gmx.de>,
- Ingo Molnar <mingo@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>,
- Joanthan Cameron <Jonathan.Cameron@huawei.com>,
- Joel Granados <joel.granados@kernel.org>,
- John Ogness <john.ogness@linutronix.de>, Kees Cook <kees@kernel.org>,
- Li Huafei <lihuafei1@huawei.com>, "Luck, Tony" <tony.luck@intel.com>,
- Luo Gengkun <luogengkun@huaweicloud.com>,
- Max Kellermann <max.kellermann@ionos.com>, Nam Cao <namcao@linutronix.de>,
- oushixiong <oushixiong@kylinos.cn>, Petr Mladek <pmladek@suse.com>,
- Qianqiang Liu <qianqiang.liu@163.com>,
- Sergey Senozhatsky <senozhatsky@chromium.org>,
- Sohil Mehta <sohil.mehta@intel.com>, Tejun Heo <tj@kernel.org>,
- Thomas Zimemrmann <tzimmermann@suse.de>,
- Thorsten Blum <thorsten.blum@linux.dev>,
- Ville Syrjala <ville.syrjala@linux.intel.com>,
- Vivek Goyal <vgoyal@redhat.com>, Yunhui Cui <cuiyunhui@bytedance.com>,
- Andrew Morton <akpm@linux-foundation.org>
-References: <20260113094129.3357-1-spasswolf@web.de> <87h5spk01t.ffs@tglx>
- <bc20529d7520e7db7de2022bf9c96a1bc3a2f0df.camel@web.de> <87v7h5ia3d.ffs@tglx>
- <99f1aaba32030d2b9285dbd983fdf8518a181a8d.camel@web.de>
- <82b4d69a5b943aa5e8aa7cc33fcc00bce02e557c.camel@web.de>
- <630a4020c87c122c004321971e43c334fd7aceb4.camel@web.de>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <630a4020c87c122c004321971e43c334fd7aceb4.camel@web.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:TYg08LGyCYWL0RjzI4ONXXWizRQBxv3kR0Vr5r4HV9kjJpvdgCk
- 0/euWXpFGLD3gHCPcA7Nn4THoLVo8V1+lhIVEn1W7cOXNQTJObE8suIv4sTMUWnXfEsO+m4
- nbNJlDZrG0yHIOgLOST7YGB7Ei63IJwRrysLzSek8cIyf831VirJFVUZAhDI95fwV4TOtqH
- UUCCKBtgJtb4pRxIeMQlg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:AveMuN3d2N4=;Qo9YCR/IA9BExtuLwf39GJ6cxAA
- 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
- G4SLRa/k=
+Subject: Re: Regression: CONFIG_ASYNC_KERNEL_PGTABLE_FREE causes memory
+ exhaustion and stalls on busy Cascade Lake server (6.18.7 only)
+To: Robert Dinse <nanook@eskimo.com>, akpm@linux-foundation.org
+Cc: linux-mm@kvack.org,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ "stable@vger.kernel.org" <stable@vger.kernel.org>
+References: <06843c7a-909b-41e5-9359-2be51cf9dffa@eskimo.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <06843c7a-909b-41e5-9359-2be51cf9dffa@eskimo.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1769941818;51db4a7a;
+X-HE-SMSGID: 1vmUid-00EMA7-04
 
-Am 01.02.26 um 01:36 schrieb Bert Karwatzki:
+Lo! Top-posting to facilitate processing and CCing the stable list,
+maybe someone has heard of a problem.
 
-> I found the error, the commit
-> ("drm/amd: Check if ASPM is enabled from PCIe subsystem")
-> has been applied twice first as cba07cce39ac and a second time
-> as 7294863a6f01 after it had been superseeded by commit
-> 0ab5d711ec74 ("drm/amd: Refactor `amdgpu_aspm` to be evaluated per device")
-> This effectively disables ASPM globally after the built-in GPU (which does not
-> support ASPM) is probed. This is the reason for the crashes and loss of devices
-> errors which on average occur after ~1000 resumes of the discrete GPU.
->
-> snippet from git log --oneline drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c in linux-next:
-> 158a05a0b885 drm/amdgpu: Add use_xgmi_p2p module parameter
-> 7294863a6f01 drm/amd: Check if ASPM is enabled from PCIe subsystem  <--- This does not belong here!
-> b784f42cf78b drm/amdgpu: drop testing module parameter
-> 0b1a63487b0f drm/amdgpu: drop benchmark module parameter
-> cec2cc7b1c4a drm/amdgpu: Fix typo in *whether* in comment
-> 0ab5d711ec74 drm/amd: Refactor `amdgpu_aspm` to be evaluated per device <--- This removes the code from the previous commit.
-> cba07cce39ac drm/amd: Check if ASPM is enabled from PCIe subsystem  <--- The first time the commit was applied.
-> dfcc3e8c24cc drm/amdgpu: make cyan skillfish support code more consistent
->
-> The fix is simply to revert commit 7294863a6f01.
->
-> I sent a patch for linux-next (unfortunately without CC'ing stable) and a seperate patch for
-> v6.18.8, I hope this does not cause confusion ...
->
-> Bert Karwatzki
+Thx for the report. The big questions here is: Is that something that is
+specific to 6.18.y or does it happen with mainline, too? And does it
+still happen with the latest 6.18.y version (there were a few mm fixes)?
+Without answers to this question nobody might look into this if we are
+unlucky. And a bisection would be ideal, but I understand all that is
+not easy if it takes 24h to detect the problem.
 
-Good work! Thank you for researching the faulty commit that lead to this strange behavior.
+Ciao, Thorsten
 
-Thanks,
-Armin Wolf
+On 1/29/26 07:10, Robert Dinse wrote:
+> 
+> Hardware / setup
+> ----------------
+> - CPU: Intel i9-10980XE (Cascade Lake), all cores overclocked to 4.5 GHz
+> - Motherboard: Gigabyte Aorus Master X299
+> - PSU: 1200W Seasonic
+> - RAM: 256 GB
+> - Storage:
+>   - MariaDB: RAID1 of two 1 TB NVMe drives
+>   - Other storage: RAID1 arrays of spinning disks
+> 
+> Software
+> --------
+> - OS: Ubuntu 24.04, with most userland and kernel replaced by self-
+> compiled upstream
+> - Kernel:
+>   - 6.18.6: stable, previously in production
+>   - 6.18.7: regression
+> - Toolchain: gcc 15.2
+> - Services:
+>   - Apache 2.4.65 (self-compiled), with modified exec-php to allow per-
+> user PHP versions via handlers
+>   - MariaDB with ~60 GB of tables
+>   - InnoDB buffer pool: ~70 GB
+>   - Several social media sites and other complex web hosting workloads
+> 
+> Baseline behavior (6.18.6)
+> --------------------------
+> Under 6.18.6, the machine behaves as expected:
+> - Roughly half of the 256 GB RAM in use, half available
+> - Memory usage stable over time
+> - Swap usage negligible
+> - Web server and database remain responsive under normal production load
+> 
+> Regression behavior (6.18.7)
+> ----------------------------
+> After upgrading from 6.18.6 to 6.18.7, the system initially runs
+> normally, but after
+> approximately 24 hours of production load:
+> - Total memory usage climbs until RAM is fully consumed
+> - System goes ~10 GB into swap
+> - Web server and database stall intermittently
+> - Overall system responsiveness degrades severely
+> 
+> Reverting to 6.18.6 immediately restores the previous stable behavior.
+> 
+> Attempt to disable CONFIG_ASYNC_KERNEL_PGTABLE_FREE
+> ---------------------------------------------------
+> I attempted to disable the new async kernel page table freeing feature:
+> 
+> - The symbol `CONFIG_ASYNC_KERNEL_PGTABLE_FREE` appears in `.config`
+> - However, it does not appear in xconfig or other configuration frontends
+> - Manually editing `.config` to disable it works only until the next
+> `make`:
+>   - As soon as I re-run the build, the option is silently re-enabled
+> - I tried to chase the Kconfig dependencies, but the chain was too
+> convoluted; it appears to be effectively non-user-selectable and forced
+> on by default for my architecture.
+> 
+> From an operator perspective, this feature as currently implemented is
+> not workable on a busy machine like this, and the inability to disable
+> it makes it difficult to bisect or run with a known-good configuration.
+> 
+> Current status
+> --------------
+> - I have reverted to 6.18.6, which remains functional and stable under
+> the same workload.
+> - I have attached the '.config' for the affected 6.18.7 kernel.
+> - I can also collect additional data (vmstat, /proc/meminfo, slabinfo,
+> etc.) if you tell me what would be most useful.
+> 
+> Request
+> -------
+> 1. Is this a known issue with CONFIG_ASYNC_KERNEL_PGTABLE_FREE on large-
+> memory, high-load systems?
+> 2. Is there a supported way to disable this feature on x86_64, or could
+> it be made user-selectable for debugging/regression purposes?
+> 3. Are there specific traces or statistics you would like me to gather
+> when the system is in the "memory maxed + swap in use + stalls" state?
+> 
+> I’m happy to run test kernels or provide additional inform
 
