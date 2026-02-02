@@ -1,122 +1,217 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from SJ2PR03CU001.outbound.protection.outlook.com (mail-westusazon11012050.outbound.protection.outlook.com [52.101.43.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 332E22BE05E
-	for <regressions@lists.linux.dev>; Mon,  2 Feb 2026 10:22:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770027750; cv=none; b=GFYNXsmm+IwIygqpCFK9aE1xqm6i6WnLaPZnZ8VR8o4koriRsENojVTdz6NHbrPDwP/VsdeQH+g1Euc7b1Xq0dl0gS/NCHGEAFhxYQ3d7YvxHOljxM0ykCTAEJI6e5sQVGfYrYt3V0r4D/RiTX3YridjNOcQhRelAGF5e+PRYPI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770027750; c=relaxed/simple;
-	bh=epr231sJVwHfFe18+CImf/yIbQQMtbyXiJ9hAO60XhA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mba1rWeqXIjWc3H4UHoLUMwZwQN0V8KU8Tw4JNerdDXose+uoUBP7qZz5L+lkmpY7n7UffeMMqCX1K5VgT3Ck3vpBZuGf6ViZyxrRAoOVd/oI6rwzT6KVZii7mSbz0rhlO5/lka0LwtlH9dIvq6kNewK5bkKBOGt/zj+GdaR4BU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=V+OU2PAO; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7540C35B14B;
+	Mon,  2 Feb 2026 10:37:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.43.50
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770028652; cv=fail; b=svw4hgNdbunqfWPWu/GIW0SCVhhxXhpAOFOh0uG2kvxDBRDEHRAYAyYEjA7W7b79fO52mFX35sdQ/w8qkJ8UmGRwceXEmNU39ZZMe2u5EebCMamTJShSq/LhXff9KT/GpapW7H80tICvIDHeyE6ZzUOnOl1TdQp6m7v2QVncDnc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770028652; c=relaxed/simple;
+	bh=3cRhKtlQyQSLUyZ5PIylGJf1eLrxAJUPwDMd//V4MLM=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=r2sb3JPRCyb19/pubXI4J+XueA5pR6g4lhUnt5xMZ5rNu89gNV/xQoTF34LcPvgfgnCnudNwgCniBajaqwbseKlYlbr66hc/owMOZfGmz8bGn1yxBKE0GhcsRYd+MUo78+Vrhd6At6W24xQhotZp2z81F12bu/bb862yH3ZI6tU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=P6dYQzSj; arc=fail smtp.client-ip=52.101.43.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="V+OU2PAO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1770027748; x=1801563748;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=epr231sJVwHfFe18+CImf/yIbQQMtbyXiJ9hAO60XhA=;
-  b=V+OU2PAOmBwOLLs0LJJgsgPEb6HD/kz5b9Yx+JkMf6U2mjJZCSdK0Iws
-   +s6bxOB/Kj37gsRrLgnQgqz+ldFNlbMJZY/NGIs46nLt8kGINlClGhbL3
-   X/lDJIbabwBqCrSc0JuVS92CDPF+VD/2b0Q/4rY/0u+VGM9hzqBubvlyS
-   NebaEPQYhUMlQrT+gDHnWRqlWm2rtv1oH0/1KCYXAiW2UWJITRzjyC9x3
-   Irab1NdNnGY0e9sxQALkYIf9R3CXSGnHdnOk0hXLLvPmOVqi5nRDKex41
-   naXFYfCaHZw7/hnn2AJaRDjcMZj3lQStWv8AOtjJsWpUQRgmVPQwpMOnR
-   Q==;
-X-CSE-ConnectionGUID: LtkqXaYLQNaoAnN4T5Whrw==
-X-CSE-MsgGUID: WkdrZ4+UQQ+1oS4jaHPtUA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11689"; a="70900967"
-X-IronPort-AV: E=Sophos;i="6.21,268,1763452800"; 
-   d="scan'208";a="70900967"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2026 02:22:27 -0800
-X-CSE-ConnectionGUID: jdrOrs63QbO6Ea4M4VGBVw==
-X-CSE-MsgGUID: 9Un4wCC7TMev/wG1/dczkw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,268,1763452800"; 
-   d="scan'208";a="213951994"
-Received: from black.igk.intel.com ([10.91.253.5])
-  by fmviesa005.fm.intel.com with ESMTP; 02 Feb 2026 02:22:26 -0800
-Received: by black.igk.intel.com (Postfix, from userid 1001)
-	id 3E68B95; Mon, 02 Feb 2026 11:22:25 +0100 (CET)
-Date: Mon, 2 Feb 2026 11:22:25 +0100
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: correctmost <cmlists@sent.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	dmaengine@vger.kernel.org, regressions@lists.linux.dev,
-	vkoul@kernel.org, linux-i2c@vger.kernel.org
-Subject: Re: [REGRESSION][BISECTED] Lenovo IdeaPad touchpad does not work
- when idma64 is present in initramfs
-Message-ID: <20260202102225.GB2275908@black.igk.intel.com>
-References: <20260128123135.GM2275908@black.igk.intel.com>
- <e94cc7af-4696-4ea6-8231-26f693272004@app.fastmail.com>
- <20260129065837.GT2275908@black.igk.intel.com>
- <513c490f-c433-4298-ae66-6e165aa7b299@app.fastmail.com>
- <20260129115609.GV2275908@black.igk.intel.com>
- <7d966d39-aa5a-4a0f-a115-a4b90632a26c@app.fastmail.com>
- <20260130072620.GW2275908@black.igk.intel.com>
- <53bd143f-525d-4748-af93-3460c9f59d1a@app.fastmail.com>
- <20260202075118.GY2275908@black.igk.intel.com>
- <00ee321d-1f36-4f1e-91f7-fdee4212c5cc@app.fastmail.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="P6dYQzSj"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=xGbbugoRZ3Bs8jWo7ugiT+zJjJLFPshUCNvtWOc4VodD3z/UXNOidswg6WhDQOxKuUWI5gSGpD0Tta3pFV/n0L03DrENXgKGbcjXXTWTgefKEMa+J8EeJRSZBmCnKms41imhocOcwExFndRVNxe+gYUR5BnJ1mjViujKFgG5Ms+gFFfHXmz5/UXK/m4gYDDnhx0Bedk3PA8uYFSDvEKM3eWhz1JQIwaKg1wHpFf1FAl9yrVSExvSN02ixIc0ltuTUxy3YkRKj7ohD0dHgaGBFGW31AHEeguZd/eCoChHcY1P12lPuhj1aryLFTF2cjxp5j/L9jtwpOHZpU8MEhL4wA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=O3/MbYweNFvYR9KpCdZHux7EJ77fgZU7kU7erAflfNs=;
+ b=amFyrFIXKQ0Xo3XcplZxQGefmx5SSQ77Rtx+k446JTtjBv2Sn/iW6ZWDvufQHn30bHlu/XKxLWRVOSvIMiMePVDu/1mKW5ewE6MxLk1hfrPF3qEH4WY/NBZWhMCMRTlLZvqohCdONfUNJ7/3C/O9S45TVYRBt0kOUoOvH5cwiqCxBkY932yKst2JP1wIZKI8y1VU7UPmk48/ctaFFxseLSAhUUJftqK63gT5WJapoN8bD1dOoNz5e6DTfXXLxl5z4dJ5uh270HY6dlcQgBnstjyMAgHwBEjHRHJQcjURuD6DE7naAlwm0V6SUUmfv5et9AkbCSUL83jAD4i0VEnJ2Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=O3/MbYweNFvYR9KpCdZHux7EJ77fgZU7kU7erAflfNs=;
+ b=P6dYQzSjotoeK17bnyuEe9QmHP54DWfVqrbyYxzMUodWg80AG+AmP/GruvkyFWDBCfch3Mc2x7THIvJhX0gkwzr4F4MmYe2OTapgbnDnWbspAXWInAOHEzyh4Hrzaeyzxi+2/sldzd3Qhzl0aXLXVY1yOqF3iGJAqwNJCmmCNPY=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB5685.namprd12.prod.outlook.com (2603:10b6:510:13c::22)
+ by MN0PR12MB5739.namprd12.prod.outlook.com (2603:10b6:208:372::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9564.16; Mon, 2 Feb
+ 2026 10:37:25 +0000
+Received: from PH7PR12MB5685.namprd12.prod.outlook.com
+ ([fe80::ce69:cfae:774d:a65c]) by PH7PR12MB5685.namprd12.prod.outlook.com
+ ([fe80::ce69:cfae:774d:a65c%5]) with mapi id 15.20.9564.016; Mon, 2 Feb 2026
+ 10:37:25 +0000
+Message-ID: <1331d331-7056-4a32-a69d-e4556bb117b0@amd.com>
+Date: Mon, 2 Feb 2026 11:37:12 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: crash during resume of PCIe bridge from v5.17 to next-20260130
+ (v5.16 works)
+To: Thomas Gleixner <tglx@kernel.org>, Bert Karwatzki <spasswolf@web.de>,
+ linux-kernel@vger.kernel.org
+Cc: linux-next@vger.kernel.org, Mario Limonciello
+ <mario.limonciello@amd.com>,
+ Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+ Clark Williams <clrkwllms@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
+ regressions@lists.linux.dev, linux-pci@vger.kernel.org,
+ linux-acpi@vger.kernel.org, "Rafael J . Wysocki"
+ <rafael.j.wysocki@intel.com>, acpica-devel@lists.linux.dev,
+ Robert Moore <robert.moore@intel.com>, Saket Dumbre
+ <saket.dumbre@intel.com>, Bjorn Helgaas <bhelgaas@google.com>,
+ Clemens Ladisch <clemens@ladisch.de>, Jinchao Wang
+ <wangjinchao600@gmail.com>, Yury Norov <yury.norov@gmail.com>,
+ Anna Schumaker <anna.schumaker@oracle.com>, Baoquan He <bhe@redhat.com>,
+ "Darrick J. Wong" <djwong@kernel.org>, Dave Young <dyoung@redhat.com>,
+ Doug Anderson <dianders@chromium.org>,
+ "Guilherme G. Piccoli" <gpiccoli@igalia.com>, Helge Deller <deller@gmx.de>,
+ Ingo Molnar <mingo@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>,
+ Joanthan Cameron <Jonathan.Cameron@huawei.com>,
+ Joel Granados <joel.granados@kernel.org>,
+ John Ogness <john.ogness@linutronix.de>, Kees Cook <kees@kernel.org>,
+ Li Huafei <lihuafei1@huawei.com>, "Luck, Tony" <tony.luck@intel.com>,
+ Luo Gengkun <luogengkun@huaweicloud.com>,
+ Max Kellermann <max.kellermann@ionos.com>, Nam Cao <namcao@linutronix.de>,
+ oushixiong <oushixiong@kylinos.cn>, Petr Mladek <pmladek@suse.com>,
+ Qianqiang Liu <qianqiang.liu@163.com>,
+ Sergey Senozhatsky <senozhatsky@chromium.org>,
+ Sohil Mehta <sohil.mehta@intel.com>, Tejun Heo <tj@kernel.org>,
+ Thomas Zimemrmann <tzimmermann@suse.de>,
+ Thorsten Blum <thorsten.blum@linux.dev>,
+ Ville Syrjala <ville.syrjala@linux.intel.com>,
+ Vivek Goyal <vgoyal@redhat.com>, Yunhui Cui <cuiyunhui@bytedance.com>,
+ Andrew Morton <akpm@linux-foundation.org>, W_Armin@gmx.de
+References: <20260113094129.3357-1-spasswolf@web.de> <87h5spk01t.ffs@tglx>
+ <bc20529d7520e7db7de2022bf9c96a1bc3a2f0df.camel@web.de> <87v7h5ia3d.ffs@tglx>
+ <99f1aaba32030d2b9285dbd983fdf8518a181a8d.camel@web.de>
+ <82b4d69a5b943aa5e8aa7cc33fcc00bce02e557c.camel@web.de>
+ <630a4020c87c122c004321971e43c334fd7aceb4.camel@web.de> <87a4xs2z6i.ffs@tglx>
+Content-Language: en-US
+From: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+In-Reply-To: <87a4xs2z6i.ffs@tglx>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: FR4P281CA0377.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:f7::13) To PH7PR12MB5685.namprd12.prod.outlook.com
+ (2603:10b6:510:13c::22)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <00ee321d-1f36-4f1e-91f7-fdee4212c5cc@app.fastmail.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB5685:EE_|MN0PR12MB5739:EE_
+X-MS-Office365-Filtering-Correlation-Id: c21a52c9-5b96-4f83-9839-08de62470dd1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?Zml1a0oraTRydlR3a1Nzd2pxcE4xUS9NNlJ5UFN5dDcwQWZrV3lvWnhYMHZr?=
+ =?utf-8?B?OHJxZzRnL3dwTy9UR0R3eUoyQjBpb3hxKzNHQ2UrMDI1c0FzcTJoK21nT2tZ?=
+ =?utf-8?B?V2NiSURHTHY4T3JBMFIxajhKOGppd0VtSDJGclBrOU5OT2xzTVZYallGanE2?=
+ =?utf-8?B?NGZJMkJpL1JSVm9TSEtYSW0wOWpWS0l1cEdkMTFjeGxqM2cvaDZiWFovR05K?=
+ =?utf-8?B?dTdIL29IRjNMRm1QU2VXMitmMFMvb3A2OEZXTXMzOW11a2pzRGE5VHpSWGxs?=
+ =?utf-8?B?ZVBEMXR3Z04zeERSbGNFTEtvUjF0WjBlSGZ5ODc5T1ZIYU80ZUdZZ1ZmTUQ4?=
+ =?utf-8?B?YjRaZVJpcElVY0R3a3ZjMFNwbjMvUE5VNjh1czZzWE05S29kSVlJU2pSSzdT?=
+ =?utf-8?B?UTYrNWhvT0NuSkhmSHhRZE1DNzMzeHZUVmN3Njc5WGx6K25kZDZQSXg5eXlF?=
+ =?utf-8?B?VVlKcFBMdDJFbHlGcG00K1NGUjRZWWtEODVVZm5GOEd5K0d5dGtSYStla1l3?=
+ =?utf-8?B?Y2NZL1NYZ2IxWmFSWlRWZEpBZE5VcGw0cDBUOSs0dWhVUEMyZTZlaEVWRkVw?=
+ =?utf-8?B?S05qdnl1elY2Z2Y5VDZqOFdVRUxudFA2K1hPQnYrVjBuZWxBUDJzUmxQQnZl?=
+ =?utf-8?B?RjVaWnJyVHd4aHlaZnVUVE9hZW9PaXgwV0hkVGg1amR0bFcyL2NBalRPSHRo?=
+ =?utf-8?B?MzluLzBZN1hwWngvaXRYL0pJdXdhVk9ENGs1TzkrMS9zVzNrbVl1WEdPeDNh?=
+ =?utf-8?B?VVgyaXJrR0xHemRHYUgrbUo5alJRMlBtVkRQd1dTY29ncmpoVmNsaXRGbGlN?=
+ =?utf-8?B?a2llUk5BUEp1UTJOb3BOb3B0ODE0OFdjU2lCWFZ3SDU3bzBkekRYK1NwOWpG?=
+ =?utf-8?B?MVhtV0FHZzgvSTZxWkI5djVPMlZNZ2FFZVZJQzVJc3UwY3BVbXVIamg0VEFy?=
+ =?utf-8?B?SFZSMU9kQlNUMVBDbE8zM1MwNDBHWXdpZ3cvVm4zSGdEWk5BWThpWUFhenUz?=
+ =?utf-8?B?MHhYZUJoQlp2bVRkTFRKdk1GTlNlcDVQcUVZL2NQYnlSbWQyT3B6RzM2d3BG?=
+ =?utf-8?B?Q1ZMSUlDbnF0QUh1aVJ0UWRrRE5yT0x3WkZzMW5iYkdabEhKa0FWMytHaTIw?=
+ =?utf-8?B?amJOZmhPY0FHRFVqOS9sbWJYajAwRU80c0N0bmk4ODZVY1JWNDZwRlBRRE4z?=
+ =?utf-8?B?NkwzMHVRS0NvLzcvdHpZamxsc1NjU0E0b1hTeGdES2J1T3ozL2lZQWc5djVI?=
+ =?utf-8?B?dkdHR0dCQVNscXJ6ODR0MzR5RkJ2cjlML2xHZExJallXbG5vb245SjNtcHRo?=
+ =?utf-8?B?S3FuN0hmNFhmdFVJT3RTcGZyL3NtS1FLZWplZ2prbCtjVWdhaHp1ZVoxcVMz?=
+ =?utf-8?B?NWZtbEZUUzZFOEt4NXd6bGt3c05oRUtjcURvR1RXTWJnbGczNWVXdUNGZjYy?=
+ =?utf-8?B?Mk9VQ3RHWFQxYmZTNW5kZWI4V2dJOE1yTkFLL0p2T1d6R001NkozK3krb2Jv?=
+ =?utf-8?B?RzJqNExrN2N2NWhjdjhkVVZacDBPVGc5UmJrUHh5SjY0WENjMXdBcitLSXpY?=
+ =?utf-8?B?NkdKRG56aEdVN3JKNlpOcDVDUXVIY3F2Z3ZEL1hPV1BWMGtFMzg0WTZ4YjZW?=
+ =?utf-8?B?a05yK1hXSHRrOHVUZ1NvdlJHV2haZWZLaEtCcnFXWTMvRXQ5b0w2dlRtNS85?=
+ =?utf-8?B?blNoUFRvVnNsMzh5RnFOVFRuRFRCakV4dkZ4ZnlQV1RZbVNMZXcyNldaanBk?=
+ =?utf-8?B?T0pBZVVyU0I0VzRvQjRydFJ5WkRqWThDUGxZL3ZiLzZIZTFmejIwbzVwMDhi?=
+ =?utf-8?B?U21SVzNvVXBld1JFSm9wK3FMV0psRTJkclkvaWlnOGZrekdoZUtwOC9tZFMx?=
+ =?utf-8?B?dm0zbUp3YTh6QkNrZ2xrS2NJUURvRHpyMFBCU1Z6WlVoNDZ6Q2hEY2phd3RO?=
+ =?utf-8?B?c3JGVlZzZE5KVktXS1Q5TVBPdnozSlFDM0huQVdreCt5MElHcU5Td09hN3BI?=
+ =?utf-8?B?cUx2VC9uUXNWRklBVnBSWkFBUUJ4WUtuRFhqbDB0NGlzdU5qenRjSTVDdU5P?=
+ =?utf-8?B?SENvRlNmbG5VcjZRdXBsdVMrd3NsRlRVQ0dZQ3IwQ1hSWGM2ZWtFYzZpcnVJ?=
+ =?utf-8?Q?f++k=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5685.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?bnk4NnJNV3FtT1NnTjdpdXJkUU1lWWFlN1l6N0RyYUNDYjNYYlJOM3B3a0Rs?=
+ =?utf-8?B?V29tRXZUVVRoVXVJdkM4aTRLeDM4aTFnSkRCNndoRFF5M2dDQ3E5TmhYV05E?=
+ =?utf-8?B?bXVYR1ZQWEZOczNlWnFrZjNYSm04OUVvbVJhSFAzL3RHTlo3RWkzUnJ3TDVp?=
+ =?utf-8?B?em5jNENibS9heHBURDRvMTU4Z0NKVnlmZVpPNWcxby92MkFJOVU3RmhsWTAz?=
+ =?utf-8?B?ZjZXYVpGZnBHd2xHeVo4Uk85ZVlmd0ErTlZDYXNQSnF6WkRFSzkxOUpFQ01x?=
+ =?utf-8?B?U2Q3Qzh6RjQ0STJ1RVU3dVlYdGorZGwwWmp2QjAxY3pWTTRNc0JxVTJJNk8z?=
+ =?utf-8?B?OHJNUlEyRHF6SlNkdStaZkZib0owdXJtbElUTXVZemdaOUttY2dXSnAyMGc1?=
+ =?utf-8?B?S1ROYjIyd25wR01FMnk0SWRwZ2Zydm1NeERUS3AxRk1zaTJ2UC8zZFZiZ2pQ?=
+ =?utf-8?B?Ym9Uc3J6RkcrdFZReGgxQlVTc2RIS0NQdHVSckFYQnBIeENCN1BjdS91SXR5?=
+ =?utf-8?B?eVlpdlpqSXpIVDRBMk9taUVLVXJ0aGowU2ZhalBNOWRhY1AyS2RSR1Z3cVlR?=
+ =?utf-8?B?OFRwWUZHTjg2Q1hCK05zVnlwZGNBTFFIcnF5dUs1MmRROGt3V090cS9lZUZz?=
+ =?utf-8?B?VlJPQ0w3WmRIdWFCV3ZrL0xEcEJwUlVMOTlacmRaZ3dGbHc1bFVuNzZHWGlk?=
+ =?utf-8?B?TEpKdEtocXhiOXN6VFQxeHBMTXk5NWlkUS9wVVZsSkQ3N0o0WUR6Z0ZYM210?=
+ =?utf-8?B?T3d5SXNjdzVjVkQ2K3VIVzVVWWpWR2s0WFN4cDFnSFkybnovSXZaNUI0NHVB?=
+ =?utf-8?B?WEtPYk9lOTMxOTR3dUo0OG95aG94LzgzOFY1MHc4NmpUSndGSzRpTFZxM1B3?=
+ =?utf-8?B?VWhhc0E5STFLc3JGWDMxU1dUSjBQUmxQRzlqRCsrVU1zbU5nV0ZwckFkbkhE?=
+ =?utf-8?B?SU1oQWZTdTVMQ0FHbmdrQXF1QVhyZzZIZnVDbDZWQ2J0RFhXKzBPWWorbFI4?=
+ =?utf-8?B?TkFwRzhuQ3phSE42cnQwdzFFam1OcGxZeGc0SWM3b1F5ZlVHd0Q5Q3Zxa3Yv?=
+ =?utf-8?B?akI1NkdUSWRpZFo1UGZIcFE0OTIvSGFWdTJpSDVPdE9zeERDVmdSbnh5UVRw?=
+ =?utf-8?B?ankrdit1d2thb1JGcFQ2akRqblY4dWRNVUVFNW1YMm41T1FYMTcwREJpdDli?=
+ =?utf-8?B?UHFzZHdjdXhsTTV0Z3FEUGhyNTB3R1ZXd0VndUdOUDFSWnpmTWs3bEgvdlFW?=
+ =?utf-8?B?eVdtOWhadHE1TitqVmlYQW5WV3BBT0tLT3BQbTloZXdtSDdjRjhENHNRQ0Z0?=
+ =?utf-8?B?YW15ZDN6RFdlTm5YQW5TM2wwRldMWk1jc0RzOTNGUlpQWEZOUWpHbFVCQ29G?=
+ =?utf-8?B?OVExRGlGeXNFZnRsVzFTdVJ4eHVEMXYxaFExbklLY04zemxJSkRzczNnSnpj?=
+ =?utf-8?B?cHRqeGVSNVd4UGVnSXc2V0p5MzV2VUlIeVpXSGR2Z0xndVBCUlJzUEZrQWli?=
+ =?utf-8?B?RWxoUXdZaXVmUWZVeGhyZk1CWlRxZnRrYXdacXhRWjNvYWtGWVFCRWhhMUl1?=
+ =?utf-8?B?WVhHSXdqR1c1U2JTUU9WMk9nd3NheldBSHFWZCtENVlFTnQ4cldOTllwWHNJ?=
+ =?utf-8?B?bnV0dlNtN0d5UDFUaXN1L1lGTzIyZk9SYkl1VkRrNWJ3WmIxV1N4VDM4MjFJ?=
+ =?utf-8?B?YTdnclZNMlQ1U2c1d1RPeEdLRWtvMHgrQzh0VlA2VDJlUXpNemc4WFluWjRE?=
+ =?utf-8?B?QmpoRmp1bTFINWwxWjArSDdSenBDM1lQQzlDcU8wbFRwc1lpWVlCVHZWaGph?=
+ =?utf-8?B?cEdmK05ocGt4WmZrSkJtd1V4VU1BQ3ErZWl2cmxqcURNVXNsdG1XbGM3dlZk?=
+ =?utf-8?B?dm1PNHZGMlZPQ2xjbE5jRjNZd2dSWmxDWXoveVdMcHN6MnQ1MnhtN2ozbTNH?=
+ =?utf-8?B?VFpOV2kzcHdNY0ExTEpwWFFoRWJJeTIrTDJHMndwTWR2VHlOcGFWRS9IaGJI?=
+ =?utf-8?B?cFJLTE1yejl4UWd2NEVWbDY1OFptUjRiOTdSRXUrRjFwWk82eXAvakppcmlO?=
+ =?utf-8?B?KzdDYk8xM0dEbjBlMnJxcEI0Nm9ENENQWDdGRkZpNzhzYThuaGhPTE9WdGlB?=
+ =?utf-8?B?WVhMOWVvb1Frb1UrQnRLNXdseGoyam8wanRWM1V1Tyt4UGIxeUxXYVNmcEow?=
+ =?utf-8?B?ZnZ6K0FpNURJcFR5WERoaDhaTUxLemJ4dkdLa3BaUnRkRTZtUnM2ZG5HdVJi?=
+ =?utf-8?B?UWpTcnI0c05yaVR0VGE3YUVJVzArVmQ2Qm1WZ1NZTTRPNFdyWkdDY1lKaG1W?=
+ =?utf-8?Q?6SBtWvOXwgFTcBYGZK?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c21a52c9-5b96-4f83-9839-08de62470dd1
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5685.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Feb 2026 10:37:24.9765
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: XJLUJ5DGoBDfhZzYBfoeJVs8ycBkfmHTKF5eHAIswgTFPCnsZCbjwIcdbNsQOgfM
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB5739
 
-On Mon, Feb 02, 2026 at 03:38:21AM -0500, correctmost wrote:
-> >
-> > static irqreturn_t idma64_irq(int irq, void *dev)
-> > {
-> > 	struct idma64 *idma64 = dev;
-> > 	u32 status = dma_readl(idma64, STATUS_INT);
-> > 	u32 status_xfer;
-> > 	u32 status_err;
-> > 	unsigned short i;
-> >
-> > #if 0
-> > 	/* Since IRQ may be shared, check if DMA controller is powered on */
-> > 	if (status == GENMASK(31, 0))
-> > 		return IRQ_NONE;
-> > #endif
-> >
-> > 	dev_vdbg(idma64->dma.dev, "%s: status=%#x\n", __func__, status);
-> >
-> >
-> > I would like to see what's the difference in "working" wrt. I2C-HD messages
-> > above. If you can provide full dmesg again? Thanks!
+On 2/1/26 17:42, Thomas Gleixner wrote:
+> On Sun, Feb 01 2026 at 01:36, Bert Karwatzki wrote:
+>> I found the error, the commit 
+>> ("drm/amd: Check if ASPM is enabled from PCIe subsystem")
+>> has been applied twice first as cba07cce39ac and a second time
+>> as 7294863a6f01 after it had been superseeded by commit
+>> 0ab5d711ec74 ("drm/amd: Refactor `amdgpu_aspm` to be evaluated per device") 
+>> This effectively disables ASPM globally after the built-in GPU (which does not
+>> support ASPM) is probed. This is the reason for the crashes and loss of devices
+>> errors which on average occur after ~1000 resumes of the discrete GPU.
 > 
-> In the previous test, I had commented out pm_runtime_* calls in intel-lpss-pci.c.  I restored those lines and then applied the if 0 patch above (full log attached).
+> Wow. Nice detective work...
 
-Thanks!
+Good catch, indeed.
 
-The I2C DW behaviour differs between the cases. When it fails it holds the
-SCL line but then the timeout triggers.
+But it is not clear to me why disabling ASPM causes trouble, usually it is the other way around.
 
-Could you drop the above hack again so that it should "fail". Then build
-the kernel with CONFIG_PREEMPT_VOLUNTARY=y and add the below hack. Perhaps
-this is just lucky timing? Please try a couple of boots and make sure the
-results are the same each time.
-
-diff --git a/drivers/i2c/busses/i2c-designware-master.c b/drivers/i2c/busses/i2c-designware-master.c
-index 45bfca05bb30..1e2150390809 100644
---- a/drivers/i2c/busses/i2c-designware-master.c
-+++ b/drivers/i2c/busses/i2c-designware-master.c
-@@ -1053,6 +1053,7 @@ int i2c_dw_probe_master(struct dw_i2c_dev *dev)
- 		scnprintf(adap->name, sizeof(adap->name),
- 			  "Synopsys DesignWare I2C adapter");
- 	adap->retries = 3;
-+	adap->timeout = msecs_to_jiffies(5000);
- 	adap->algo = &i2c_dw_algo;
- 	adap->quirks = &i2c_dw_quirks;
- 	adap->dev.parent = dev->dev;
+Regards,
+Christian.
