@@ -1,123 +1,173 @@
-Received: from canpmsgout03.his.huawei.com (canpmsgout03.his.huawei.com [113.46.200.218])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46D134AEE2
-	for <regressions@lists.linux.dev>; Mon,  2 Feb 2026 01:19:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F7D52BE7C3
+	for <regressions@lists.linux.dev>; Mon,  2 Feb 2026 07:51:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769995175; cv=none; b=cYzlBnjwfa7+TLwDTNOUotWx67zuMK8LlIbHXzBAFONqOJvlIHwBtYMP3jT7EKcfO+eFDg/FY/EjjgAlTjc7emFKmK8XGjuRPk0DmR1z0pqKtgWwRTVsGrN4XVs3vtQVHoFG6RJj5KtFPc8oxo8kQwZt/OzyJ2MPRYaJ+MS8akY=
+	t=1770018683; cv=none; b=CZuCdkMczsmwV0P2Xn/t8Idc+xi+2dQV0j79BokZki1M40QRC5NFCX9xsTFnNh6ost0v20V0p9kObsm3STPG/KCRGUPdge9+/V9Qpe1+l2v5Rjo+Y5fcODmDoIEtuD67EyXs/lqL/VQCegZSfjJvhzLpLxJ3Njvx3Z6bkF3m2To=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769995175; c=relaxed/simple;
-	bh=nDydltF1LQZ9cjsdVDGO/kyIbeOcczo664mY57X7VU0=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=D0YMMLQHz8KKcZ9zWfqUqGDudkbQ7/kxwKJdhXoYOvtrWYcDh/7mS7uKyFNCcWqAuzqqJknl3+oYObtDNUVVns8V1JIwC3EM0AyLc/tnYANwhO6STRLG0Z/hf6i4uAsjeOggiTOw5SD07u7tKvy1/U9MuwVLteXRCdP2xfkqhPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=qr5/XE/X; arc=none smtp.client-ip=113.46.200.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+	s=arc-20240116; t=1770018683; c=relaxed/simple;
+	bh=cE1vERJlb9tOat0t1vGBuv/pgNjdAg98DSSNpmxp6c8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AaZS3JOWlFXshCpcPIHcGhmfXQpdZJECSjajPcaU5pCG692q7KEKCzQBLHeKb+1TLrqJ0+M4C9HXa1FLomY7rklrMlTKRVUgmruh7ikG6EJNtwvmOl9ZSU3ESxqMoZRE6NIpnMqclo3FehiLQhW1eKSCZJiEugnN+5BYDkHu23I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bey8T7+O; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="qr5/XE/X"
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=nDydltF1LQZ9cjsdVDGO/kyIbeOcczo664mY57X7VU0=;
-	b=qr5/XE/XVq5TXwygK5y8eidHWrt09lwt/JF+222GIPDYHsvPlEng8rWDLwY0RkN8tlBD2h/3Q
-	Bn+TLG+vv2t7D4xcfAhMNI5vvDCgAAiSOr7BuIJoIoQIe7QoqcZFPZpnQjKi75KqZORwYCkjqdN
-	sbTJDM6f9g8OJhP3B0GPF7U=
-Received: from mail.maildlp.com (unknown [172.19.162.144])
-	by canpmsgout03.his.huawei.com (SkyGuard) with ESMTPS id 4f47vm6WQtzpStX;
-	Mon,  2 Feb 2026 09:15:16 +0800 (CST)
-Received: from kwepemg100014.china.huawei.com (unknown [7.202.181.54])
-	by mail.maildlp.com (Postfix) with ESMTPS id 683B840538;
-	Mon,  2 Feb 2026 09:19:23 +0800 (CST)
-Received: from kwepemj100010.china.huawei.com (7.202.194.4) by
- kwepemg100014.china.huawei.com (7.202.181.54) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.36; Mon, 2 Feb 2026 09:19:23 +0800
-Received: from kwepemj100010.china.huawei.com ([7.202.194.4]) by
- kwepemj100010.china.huawei.com ([7.202.194.4]) with mapi id 15.02.1544.036;
- Mon, 2 Feb 2026 09:19:23 +0800
-From: Zhangjiaji <zhangjiaji1@huawei.com>
-To: "stable@vger.kernel.org" <stable@vger.kernel.org>
-CC: "huyu (D)" <huyu70@h-partners.com>, "Wangqinxiao (Tom)"
-	<wangqinxiao@huawei.com>, "regressions@lists.linux.dev"
-	<regressions@lists.linux.dev>, Liumengqiu <liumengqiu1@huawei.com>
-Subject: lock contention: x86/kvm: Potential deadlock between shrinker_rwsem
- and kvm_lock under high VM load
-Thread-Topic: lock contention: x86/kvm: Potential deadlock between
- shrinker_rwsem and kvm_lock under high VM load
-Thread-Index: AdySmyxt6ZfKKTQjQGq+FIE+eIgsTQBRISkAAABmVOA=
-Date: Mon, 2 Feb 2026 01:19:22 +0000
-Message-ID: <a5ebab14f0444f8da03a6fa4d1978793@huawei.com>
-References: <505c34d2cef84117b7e995c211efc393@huawei.com>
- <eecb1d2d1f7a44ef8c757138cb1b3755@huawei.com>
-In-Reply-To: <eecb1d2d1f7a44ef8c757138cb1b3755@huawei.com>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bey8T7+O"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1770018682; x=1801554682;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=cE1vERJlb9tOat0t1vGBuv/pgNjdAg98DSSNpmxp6c8=;
+  b=bey8T7+OM4qtrjsY1ScXawPPF9cEyQzxq+udml8jkz8/hPj7osVxX7pn
+   GFy1iHsZqtlLNxjcAcG0YpFZM8qvJh40zBFoSvbQ/kb4dbEMvOv4MU9Lk
+   Sxu2ySkWGtHJgl8qNxVsj+uRQoIlCEuyuem2Ieorx9yyeeUrm8IVO3fS5
+   Yq06TiUYm5l3Czj9ldJYXpvl3C7FTuMSKyPiQuOhafvudYf4zZ7dfCOpM
+   59bDiP7SRKVhmD7ViuuC6u8i91/ayNuxRBa36nFyY16qA5+D2MjNovCCn
+   sGd9WysuuU/ka1Xfrmdx9sVyCw23ZFnjCsnsegqNPizEaX6dsw2u298yP
+   Q==;
+X-CSE-ConnectionGUID: 0sdC2QngQ2GI/yvc9o8MqQ==
+X-CSE-MsgGUID: oMFk8AUyRLmYmxdCVQczUA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11689"; a="82598544"
+X-IronPort-AV: E=Sophos;i="6.21,268,1763452800"; 
+   d="scan'208";a="82598544"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2026 23:51:22 -0800
+X-CSE-ConnectionGUID: hl/iWMbCRx6JPDrEph5Wxg==
+X-CSE-MsgGUID: hbW1C4V2QB2c3RTLAC23/w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,268,1763452800"; 
+   d="scan'208";a="232386427"
+Received: from black.igk.intel.com ([10.91.253.5])
+  by fmviesa002.fm.intel.com with ESMTP; 01 Feb 2026 23:51:19 -0800
+Received: by black.igk.intel.com (Postfix, from userid 1001)
+	id B208D95; Mon, 02 Feb 2026 08:51:18 +0100 (CET)
+Date: Mon, 2 Feb 2026 08:51:18 +0100
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: correctmost <cmlists@sent.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	dmaengine@vger.kernel.org, regressions@lists.linux.dev,
+	vkoul@kernel.org, linux-i2c@vger.kernel.org
+Subject: Re: [REGRESSION][BISECTED] Lenovo IdeaPad touchpad does not work
+ when idma64 is present in initramfs
+Message-ID: <20260202075118.GY2275908@black.igk.intel.com>
+References: <aXnYJQJW4wypkkPC@smile.fi.intel.com>
+ <0d93a56c-e452-4cd0-abb4-09c9f916274a@app.fastmail.com>
+ <20260128123135.GM2275908@black.igk.intel.com>
+ <e94cc7af-4696-4ea6-8231-26f693272004@app.fastmail.com>
+ <20260129065837.GT2275908@black.igk.intel.com>
+ <513c490f-c433-4298-ae66-6e165aa7b299@app.fastmail.com>
+ <20260129115609.GV2275908@black.igk.intel.com>
+ <7d966d39-aa5a-4a0f-a115-a4b90632a26c@app.fastmail.com>
+ <20260130072620.GW2275908@black.igk.intel.com>
+ <53bd143f-525d-4748-af93-3460c9f59d1a@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <53bd143f-525d-4748-af93-3460c9f59d1a@app.fastmail.com>
 
-Hi all,
+On Fri, Jan 30, 2026 at 03:18:05AM -0500, correctmost wrote:
+> > Lets try this: block LPSS runtime PM. I know you did it in the past but
+> > this one does it slightly differently (you commented out the ops, this one
+> > prevents the LPSS from runtime suspending). Can you replace previous hack
+> > patch with the below?
+> 
+> After applying that patch, I still see the IRQ message and the touchpad
+> doesn't work (full log attached).
+> 
+> I'm not sure if this is helpful, but it seems like a similar IRQ issue was discussed in the past:
+> - https://lore.kernel.org/all/20251102190921.30068-1-hansg@kernel.org/
+> - https://github.com/alexpevzner/hotfix-kvadra-touchpad
+> - https://bbs.archlinux.org/viewtopic.php?id=302348
 
-I'm hitting a lock contention / long stall issue on an x86 KVM host under h=
-eavy VM load, and I'd like to ask for advice on the proper fix direction.
+Yeah, I think Andy has been part of many of those discussions.
 
-Problem summary
-When the host is under heavy VM pressure and a cache drop is triggered, the=
- reclaim path can hold shrinker_rwsem for a long time due to lock contentio=
-n on kvm_lock inside the KVM/MMU shrinker, which then blocks systemd in a w=
-ay that also holds cgroup_mutex, causing cascading issues (e.g., journald l=
-og gaps).
+I went through again the logs that you have sent and tried to figure if
+there is something we are missing. I noticed couple of things actually.
+First of all it seems that even if we get the interrupt storm the I2C works
+fine until the touchpad has been reset. Second is that the Linux interrupt
+number is different when it "works". This itself does not say much because
+it is just a number (not HW number) but since they are allocated sequently
+maybe something messes up with that.
 
-Observed lock chain / flow
-From what I see:
+The working case:
 
-1. drop_caches leads to slab reclaim and enters shrink_slab()
-2. shrink_slab() takes shrinker_rwsem
-3. It then enters do_shrink_slab()
-4. During slab shrinking, the KVM/MMU shrinker callback is invoked (e.g mmu=
-_shrink_scan()) to reclaim KVM-related caches
-5. mmu_shrink_scan() attempts to take kvm_lock
-6. Under heavy VM load, kvm_lock is highly contended, so the shrinker callb=
-ack stalls and shrinker_rwsem remains held for an extended time
+i2c_hid_acpi i2c-ELAN06FA:00: HID Descriptor: 1e 00 00 01 a3 02 02 00 03 00 1f 00 04 00 00 00 05 00 06 00 f3 04 7e 32 04 00 00 00 00 00
+i2c_hid_acpi i2c-ELAN06FA:00: Requesting IRQ: 156
+i2c_hid_acpi i2c-ELAN06FA:00: entering i2c_hid_parse
+i2c_hid_acpi i2c-ELAN06FA:00: i2c_hid_start_hwreset
+i2c_hid_acpi i2c-ELAN06FA:00: i2c_hid_set_power
+i2c_hid_acpi i2c-ELAN06FA:00: i2c_hid_xfer: cmd=05 00 00 08
+i2c_hid_acpi i2c-ELAN06FA:00: i2c_hid_xfer: cmd=05 00 00 01
+i2c_hid_acpi i2c-ELAN06FA:00: i2c_hid_finish_hwreset: waiting...
+i2c_hid_acpi i2c-ELAN06FA:00: i2c_hid_finish_hwreset: finished.
+i2c_hid_acpi i2c-ELAN06FA:00: asking HID report descriptor
+i2c_hid_acpi i2c-ELAN06FA:00: i2c_hid_xfer: cmd=02 00
+i2c_hid_acpi i2c-ELAN06FA:00: Report Descriptor: 05 01 09 02 a1 01 85 01 09 01 a1 00 05 09 19 01 29 02 15 00 25 01 75 01 95 02 81 02 95 06 81 03 05 01 09 30 09 31 15 81 25 7f 75 08 95 02 81 06 75 08 95 05 81 03 c0 06 00 ff 09 01 85 0e 09 c5
 
-In parallel:
+the non-working case:
 
-7. systemd holds cgroup_mutex (e.g. during cgroup operations) and then trie=
-s to acquire shrinker_rwsem
-8. Because shrinker_rwsem is still held by the drop_caches reclaim path, sy=
-stemd blocks while still holding cgroup_mutex
-9. Other components (e.g. systemd-journald) needing cgroup_mutex become blo=
-cked, leading to issues such as logging stalls/gaps
+i2c_hid_acpi i2c-ELAN06FA:00: HID Descriptor: 1e 00 00 01 a3 02 02 00 03 00 1f 00 04 00 00 00 05 00 06 00 f3 04 7e 32 04 00 00 00 00 00
+i2c_hid_acpi i2c-ELAN06FA:00: Requesting IRQ: 155
+i2c_hid_acpi i2c-ELAN06FA:00: entering i2c_hid_parse
+i2c_hid_acpi i2c-ELAN06FA:00: i2c_hid_start_hwreset
+i2c_hid_acpi i2c-ELAN06FA:00: i2c_hid_set_power
+i2c_hid_acpi i2c-ELAN06FA:00: i2c_hid_xfer: cmd=05 00 00 08
+i2c_hid_acpi i2c-ELAN06FA:00: i2c_hid_xfer: cmd=05 00 00 01
+i2c_hid_acpi i2c-ELAN06FA:00: i2c_hid_finish_hwreset: waiting...
+i2c_hid_acpi i2c-ELAN06FA:00: i2c_hid_finish_hwreset: finished.
+i2c_hid_acpi i2c-ELAN06FA:00: asking HID report descriptor
+i2c_hid_acpi i2c-ELAN06FA:00: i2c_hid_xfer: cmd=02 00
+i2c_designware i2c_designware.0: i2c_dw_xfer: msgs: 2
+i2c_designware i2c_designware.0: enabled=0x1 stat=0x10
+i2c_designware i2c_designware.0: enabled=0x1 stat=0x2514
+i2c_designware i2c_designware.0: enabled=0x1 stat=0x2514
+i2c_designware i2c_designware.0: enabled=0x1 stat=0x2514
+i2c_designware i2c_designware.0: enabled=0x1 stat=0x2514
+i2c_designware i2c_designware.0: enabled=0x1 stat=0x2514
+i2c_designware i2c_designware.0: enabled=0x1 stat=0x2514
+i2c_designware i2c_designware.0: enabled=0x1 stat=0x2514
+i2c_designware i2c_designware.0: enabled=0x1 stat=0x2514
+i2c_designware i2c_designware.0: controller timed out
+hid (null): reading report descriptor failed
+i2c_hid_acpi i2c-ELAN06FA:00: can't add hid device: -110
+i2c_hid_acpi i2c-ELAN06FA:00: probe with driver i2c_hid_acpi failed with error -110
 
-Impact
-- Long stalls in systemd-controlled cgroup operations
-- systemd-journald (and possibly others) blocked on cgroup_mutex, causing l=
-og dropouts / discontinuities
-- Overall system responsiveness degradation during the cache-drop operation
+Both cases the HID descriptor read over I2C works fine. It's just after the
+reset when reading the HID report descriptor things stall. I left the debug
+there above it shows for I2C that MASTER_ON_HOLD is set which means the TX
+fifo is empty and the controller is holding the bus which, I think should
+not happen.
 
-Questions
-1. Is it expected/acceptable for a shrinker callback (KVM/MMU shrinker) to =
-contend on a highly contended lock like kvm_lock while shrinker_rwsem is he=
-ld?
-2. Are there known recommendations to avoid holding shrinker_rwsem across p=
-otentially blocking/contended shrinker callbacks?
-3. Would the preferred fix be on the KVM shrinker side (e.g. using mutex_tr=
-ylock()/spin_trylock() semantics and returning SHRINK_STOP/-EAGAIN style be=
-havior when contended), or on the shrink_slab/shrinker infrastructure side?
-4. Alternatively, is there any known guidance for systemd/cgroup codepaths =
-to avoid waiting on shrinker_rwsem while holding cgroup_mutex (to avoid loc=
-k chaining)?
+Notice also IRQ 155 vs 156.
 
-Please let me know what the most useful information would be, and what dire=
-ction you would recommend for a fix.
+Can you run one more test so that you have the latest debug patch but
+comment out in the idma64.c this part:
 
-Thanks,
-Huyu
+static irqreturn_t idma64_irq(int irq, void *dev)
+{
+	struct idma64 *idma64 = dev;
+	u32 status = dma_readl(idma64, STATUS_INT);
+	u32 status_xfer;
+	u32 status_err;
+	unsigned short i;
+
+#if 0
+	/* Since IRQ may be shared, check if DMA controller is powered on */
+	if (status == GENMASK(31, 0))
+		return IRQ_NONE;
+#endif
+
+	dev_vdbg(idma64->dma.dev, "%s: status=%#x\n", __func__, status);
+
+
+I would like to see what's the difference in "working" wrt. I2C-HD messages
+above. If you can provide full dmesg again? Thanks!
