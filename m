@@ -1,156 +1,145 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4806339A812
-	for <regressions@lists.linux.dev>; Tue,  3 Feb 2026 10:04:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 775B31A840A
+	for <regressions@lists.linux.dev>; Tue,  3 Feb 2026 10:42:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770113096; cv=none; b=Z2FXQ6eewzp3j7gz01FaokPAIHTECYuEiRNiPHJn3K4Kdb46oSbVq7a243ylNT3ZCMjiKr6LQRxYCM4EfLzLMNFyo7qHrGfH9uIxSaPSzDgOWxfCLaqENijC1eO1LuKgmZ5z2yb3u1ySrCoP8610t9n+toxAFs1+EqrHa4r/tUQ=
+	t=1770115340; cv=none; b=H8PkSogwNYCYDW0nfjKrOlLE+zzi+NWL78E7Y73LnxzeROVbRj2meYoUDCKQSdTXBBrQaCrZNVSo919NxYH8bukOJFeOL+WB1yYXapm768F5vfjFYF7e1+eLzxG6LDKhqU3iNpzab0HYEMjuyFEHcSynBbZYeet0pe2wf8a1vsk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770113096; c=relaxed/simple;
-	bh=vtrpsVqQb5YbyQPqbOoqVjxnUae20uePToXzdPR9HFg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mIoJ3D10YiDERzDqgCFn3HgzjvdaTbXBGNoGLJOfSoavo7IL5hYUr62w15ZnG46BxMX8HlC59AbDWAhGjCr7bcAU+EJglc3DHskNxI8z4GExfuPjI6pa9kTYeZ5ysEX1iDVOA5hCbUKeWC6adUjmnazqnizvZsVZKa1YegS0hq8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=n/d9IjOT; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1770115340; c=relaxed/simple;
+	bh=ltQo6UtbL4cxnY12tEyk+BUbsgiar1y0L8VwNUl6s7o=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=OytxQ6Q2fDGwdbADKiSuj11Nus/khlLBAW4xIY8J+DuOQHSgnFhmnWXw3QXPt6qWRHXUXIgzoeBlUMoU55bfp52kwYCs5uTYeSiwcrJKuJdfCGrX6UcAZba/j2Wr64VJe/UZmCov3gV6ttExQVQAo3T97b2ij2jl3p9KmL2tLwA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=3V3/ewB7; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="n/d9IjOT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1770113095; x=1801649095;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=vtrpsVqQb5YbyQPqbOoqVjxnUae20uePToXzdPR9HFg=;
-  b=n/d9IjOTt/U8zzM0q7vJZP+dm4jEY5JkdQ+9vjzCLqzmu9Ni9GqmHjj9
-   DqhSYgOknWE8YoCU0MuGzpCZQ6D8FvzNkaMAbjfGXP9OfG1UwDArpQScu
-   VYDX9zjRujMqxiCHNqW5xDl8SMUOqA5vv+7MLXxGpbRBvyQjHL2F8MvX0
-   iz4PVYVQJS3p13uFQo1YgAoOwXI7eZ4E2jjUR4yCSNXYZidIOqIxg2JtO
-   uYK56V8HTdJ6zyNuVTP7bachyLsDewWn8HNos0nmxkT4wm52bjMnbm4Fw
-   xk4h5zm8yUbkT/pfkmRdo89Oy24qRFT2Tw854Lp8rnj35qgU8siviGSkZ
-   A==;
-X-CSE-ConnectionGUID: SM62noIwRQCPKjMoM6ixow==
-X-CSE-MsgGUID: OJyQVOlBTp6/WIp0OJTlvg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11690"; a="71262687"
-X-IronPort-AV: E=Sophos;i="6.21,270,1763452800"; 
-   d="scan'208";a="71262687"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2026 02:04:55 -0800
-X-CSE-ConnectionGUID: cQg2U5gcRlGlQJ4QvktJ9A==
-X-CSE-MsgGUID: k4wVpFo6TQCFjuzyYyKKSA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,270,1763452800"; 
-   d="scan'208";a="209977287"
-Received: from black.igk.intel.com ([10.91.253.5])
-  by fmviesa010.fm.intel.com with ESMTP; 03 Feb 2026 02:04:53 -0800
-Received: by black.igk.intel.com (Postfix, from userid 1001)
-	id 1BB7495; Tue, 03 Feb 2026 11:04:52 +0100 (CET)
-Date: Tue, 3 Feb 2026 11:04:52 +0100
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: correctmost <cmlists@sent.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	dmaengine@vger.kernel.org, regressions@lists.linux.dev,
-	vkoul@kernel.org, linux-i2c@vger.kernel.org
-Subject: Re: [REGRESSION][BISECTED] Lenovo IdeaPad touchpad does not work
- when idma64 is present in initramfs
-Message-ID: <20260203100452.GE2275908@black.igk.intel.com>
-References: <20260129065837.GT2275908@black.igk.intel.com>
- <513c490f-c433-4298-ae66-6e165aa7b299@app.fastmail.com>
- <20260129115609.GV2275908@black.igk.intel.com>
- <7d966d39-aa5a-4a0f-a115-a4b90632a26c@app.fastmail.com>
- <20260130072620.GW2275908@black.igk.intel.com>
- <53bd143f-525d-4748-af93-3460c9f59d1a@app.fastmail.com>
- <20260202075118.GY2275908@black.igk.intel.com>
- <00ee321d-1f36-4f1e-91f7-fdee4212c5cc@app.fastmail.com>
- <20260202102225.GB2275908@black.igk.intel.com>
- <5ed857f5-59ae-4052-8f2e-dac7fcd014cc@app.fastmail.com>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="3V3/ewB7"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:References:Cc:To:From:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=hXHBxdO+y6TAB7miY3sJ/vJlz5vGfecCgP/B8PbW8N0=; t=1770115338;
+	x=1770547338; b=3V3/ewB7I8JWY49XGNrIshg2LZE6mnMVMy4xoi7qQOFPNxUKjQY32F5ZzpFjm
+	RhE1VYqxrgpxIUrie6ZocpKVI03B5/IgVSTnCR9LyNGM+htZEz3uP8XdwVGRIRUEJLLmWolXF5U+6
+	rH3VzT7aPp9FKtjuqdKQXk8ADq1147wOnzKYtCNBs1LNf5R8bYipFYvRc5osLDZA+iIq08BjsSuWD
+	yS6LAVAhSQpc24ztIY0b6gGAs9g49htO1PzM3MGD4++8Lazdpn+CRr768QreR3qIIwQlKcBz5rEdI
+	YGJmnnoCOxVgGZ69bUDT8jvaP2/YIjO0FjAtjKi13bmXy8ei2w==;
+Received: from [2a02:8108:8984:1d00:a0cf:1912:4be:477f]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128)
+	id 1vnDrE-002zze-1B;
+	Tue, 03 Feb 2026 11:42:08 +0100
+Message-ID: <45c528cf-901c-47d5-a8d2-a4010105e30f@leemhuis.info>
+Date: Tue, 3 Feb 2026 11:42:07 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <5ed857f5-59ae-4052-8f2e-dac7fcd014cc@app.fastmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION][BISECTED] wifi broken on pinebook pro
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: linux-rockchip@lists.infradead.org, regressions@lists.linux.dev,
+ Jan Palus <jpalus@fastmail.com>, Peter Robinson <pbrobinson@gmail.com>,
+ Robin Murphy <robin.murphy@arm.com>, FUKAUMI Naoki <naoki@radxa.com>
+References: <aUKOlj-RvTYlrpiS@rock.grzadka>
+ <CALeDE9OzCzbhKmc61Kgbmzr67oJnjZMjsO6yYbkXujzA-OuO+A@mail.gmail.com>
+ <5f8805a8-b2d6-4bc3-9c6c-c8fc696daacd@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <5f8805a8-b2d6-4bc3-9c6c-c8fc696daacd@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1770115338;5a1de5a8;
+X-HE-SMSGID: 1vnDrE-002zze-1B
 
-On Mon, Feb 02, 2026 at 06:16:02AM -0500, correctmost wrote:
-> > Could you drop the above hack again so that it should "fail". Then build
-> > the kernel with CONFIG_PREEMPT_VOLUNTARY=y and add the below hack. Perhaps
-> > this is just lucky timing? Please try a couple of boots and make sure the
-> > results are the same each time.
+On 1/14/26 14:03, Thorsten Leemhuis wrote:
+> [top-posting to facilitate processing]
 > 
-> I cold booted five times and the touchpad did not work during any of those boots.
+> Peter, Heiko, what's the deal here? This looks stalled. Is temporarily
+> reverting an option, or would that cause regressions for other users
+> that already benefit from the change that is causing the problem?
 
-Thanks!
+I assume this wasn't fixed yet (Jan, please correct me if I'm wrong!):
 
-> I noticed that the "probe with driver" failure reports -22 instead of -110 now:
-> 
-> [   33.023932] i2c_hid_acpi i2c-ELAN06FA:00: Report Descriptor: 05 01 09 02 a1 01 85 01 09 01 a1 00 05 09 19 01 29 02 15 00 25 01 75 01 95 02 81 02 95 06 81 03 05 01 09 30 09 31 15 81 25 7f 75 08 95 02 81 06 75 08 95 05 81 03 c0 06 00 ff 09 01 85 0e 09 c5
-> [   33.026070] hid-generic 0018:04F3:327E.0001: item fetching failed at offset 638/675
-> [   33.027573] hid-generic 0018:04F3:327E.0001: probe with driver hid-generic failed with error -22
-> ...
-> [   33.183959] hid-multitouch 0018:04F3:327E.0001: item fetching failed at offset 638/675
-> [   33.183975] hid-multitouch 0018:04F3:327E.0001: probe with driver hid-multitouch failed with error -22
-> 
+Heiko, could you maybe submit a revert? Fixing this is long overdue
+afaics, as Linus just recently wrote ""rule of thumb [to get
+user-reported regressions fixed] should generally be "within a week",
+preferably before the next rc.""[1] – we are way past that.
 
-This is really odd because "item fetching" is not really accessing any
-hardware bus - it just parses the descriptor and the descriptor looks fine
-to me (and this is the same as in case of working run):
+Note, I assume this will break things for people where the change in
+question improved things. But I suspect he in a situation like this
+Linus prefers to go back to what was "normal" before the culprit was
+merged. If we are unsure about this I guess we should get him involved
+to clean this up.
 
-Usage Page (Generic Desktop)
-Usage (Generic Desktop.Mouse)
-Collection (1)
-  Report ID (1)
-  Usage (Generic Desktop.Pointer)
-  Collection (0)
-    Usage Page (Button)
-    Usage Minimum (1)
-    Usage Maximum (2)
-    Logical Minimum (0)
-    Logical Maximum (1)
-    Report Size (1)
-    Report Count (2)
-    Input (2)
-    Report Count (6)
-    Input (3)
-    Usage Page (Generic Desktop)
-    Usage (Generic Desktop.X)
-    Usage (Generic Desktop.Y)
-    Logical Minimum (129)
-    Logical Maximum (127)
-    Report Size (8)
-    Report Count (2)
-    Input (6)
-    Report Size (8)
-    Report Count (5)
-    Input (3)
-  End Collection (0)
-  Usage Page (Vendor Defined Page 1)
-  Usage (Vendor Defined Page 1.Vendor Usage 1)
-  Report ID (14)
-  Usage (Vendor Defined Page 1.00c5)
+Ciao, Thorsten
 
-I noticed  you still have:
+[1]
+https://lore.kernel.org/all/CAHk-%3Dwi86AosXs66-yi54%2BmpQjPu0upxB8ZAfG%2BLsMyJmcuMSA@mail.gmail.com/
 
-[    0.069726] Dynamic Preempt: full
 
-Can you change that in .config to:
+> On 12/29/25 07:23, Peter Robinson wrote:
+>> On Wed, 17 Dec 2025 at 11:26, Jan Palus <jpalus@fastmail.com> wrote:
+>>>
+>>> WiFi no longer works on Pinebook Pro after upgrade to kernel 6.18. It
+>>> appears firmware fails to load:
+>>>
+>>> ...
+>>> mmc_host mmc0: card is non-removable.
+>>> mmc_host mmc0: Bus speed (slot 0) = 400000Hz (slot req 400000Hz, actual 400000HZ div = 0)
+>>> Bluetooth: hci0: BCM: features 0x0f
+>>> Bluetooth: hci0: BCM4345C5 Ampak_CL1 UART 37.4 MHz BT 5.0 [Version: Version: 0039.0089]
+>>> Bluetooth: hci0: BCM4345C5 (003.006.006) build 0089
+>>> mmc_host mmc0: Bus speed (slot 0) = 148500000Hz (slot req 150000000Hz, actual 148500000HZ div = 0)
+>>> dwmmc_rockchip fe310000.mmc: Successfully tuned phase to 55
+>>> mmc0: new UHS-I speed SDR104 SDIO card at address 0001
+>>> brcmfmac: brcmf_fw_alloc_request: using brcm/brcmfmac43456-sdio for chip BCM4345/9
+>>> usbcore: registered new interface driver brcmfmac
+>>> brcmfmac mmc0:0001:1: Direct firmware load for brcm/brcmfmac43456-sdio.pine64,pinebook-pro.bin failed with error -2
+>>> brcmfmac: brcmf_sdio_bus_rxctl: resumed on timeout
+>>> ieee80211 phy0: brcmf_bus_started: failed: -110
+>>> ieee80211 phy0: brcmf_attach: dongle is not responding: err=-110
+>>> brcmfmac: brcmf_sdio_firmware_callback: brcmf_attach failed
+>>>
+>>> compared to 6.17 instead of last 4 lines with errors there's single one
+>>> with info about loaded firmware:
+>>>
+>>> brcmfmac: brcmf_c_preinit_dcmds: Firmware: BCM4345/9 wl0: May 14 2020 17:26:08 version 7.84.17.1 (r871554) FWID 01-3d9e1d87
+>>>
+>>> Bisected to:
+>>>
+>>> 6d54d935062e2d4a7d3f779ceb9eeff108d0535d is the first new commit
+>>> commit 6d54d935062e2d4a7d3f779ceb9eeff108d0535d (HEAD)
+>>> Author: Peter Robinson <pbrobinson@gmail.com>
+>>> Date:   Wed Aug 27 16:30:37 2025
+>>>
+>>>     arm64: dts: rockchip: Further describe the WiFi for the Pinebook Pro
+>>>
+>>>     Update the wake-up pin and associated interupt details for the
+>>>     Pinebook Pro WiFi module.
+>>>
+>>>     Signed-off-by: Peter Robinson <pbrobinson@gmail.com>
+>>>     Link: https://lore.kernel.org/r/20250827143040.1644867-1-pbrobinson@gmail.com
+>>>     Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+>>>
+>>>  arch/arm64/boot/dts/rockchip/rk3399-pinebook-pro.dts | 18 ++++++++++++++++++
+>>>  1 file changed, 18 insertions(+)
+>>>
+>>>
+>>> With this commit reverted on top of 6.18.1 wireless connection works
+>>> fine.
+>>>
+>>> Not sure what could be relevant but:
+>>> - it's an early model, I think second batch, delivered end of 2019
+>>
+>> Is it the Synoptics or the Cypress/Infineon module? What firmware are you using?
+>>
+>>> - mainline uboot 2025.10 is used
+>>>
+>>>
+>>> #regzbot introduced: 6d54d93506
 
-CONFIG_PREEMPT_VOLUNTARY=y
-
-Also let's add on top of everything one more hack patch, just in case ;-)
-
-diff --git a/drivers/i2c/i2c-core-acpi.c b/drivers/i2c/i2c-core-acpi.c
-index ed90858a27b7..0297ebedb802 100644
---- a/drivers/i2c/i2c-core-acpi.c
-+++ b/drivers/i2c/i2c-core-acpi.c
-@@ -371,7 +371,7 @@ static const struct acpi_device_id i2c_acpi_force_100khz_device_ids[] = {
- 	 * a 400KHz frequency. The root cause of the issue is not known.
- 	 */
- 	{ "DLL0945", 0 },
--	{ "ELAN06FA", 0 },
-+//	{ "ELAN06FA", 0 },
- 	{}
- };
- 
