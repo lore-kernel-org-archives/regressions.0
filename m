@@ -1,183 +1,68 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EE7B3F0750
-	for <regressions@lists.linux.dev>; Wed,  4 Feb 2026 12:31:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80422263C8F
+	for <regressions@lists.linux.dev>; Wed,  4 Feb 2026 12:52:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770208271; cv=none; b=M538q9bTpYD5LWlGW861BESUuFhnGA1JSiZ8V1THO/6By/DNQ0c6dM7s8k+MvNbHvOF5oAv2195NvMOYBeN/lcshJPA1p2ZliwWeDyDBMiosk1qj550b0cSCdHYXsmu6QchuqhJLAGF4rYEqrzMmqxzkcski6NSsaqbjdmedQCo=
+	t=1770209544; cv=none; b=mvJh9mF1GYeWnY47f7LNrHwZ1dZ2OFcIVOYp33WHhm1OCitPcgYtSPxL5KH8HcVbRxxdRt/yoIF1Kcb3JuyLzRI8df+1hKTwEc8+nckh8OtqHmR3bmkHWV6AxI91IZA9KXNMjr7X1gStLLWj72KDtcxagEUF0DfkNigiPWqs/M4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770208271; c=relaxed/simple;
-	bh=rLAcu+ulBxj8TqYakwEhskbVYCF68qpui+jojYzCD6Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EjnCZDdp6BumEk8sqC+QYH72e1Ey/5Fbv3zxzX4nGGejB9Cs2x3JF12MnUrz1YYipVlrfbJdd9MsJHpRr9+xmWT3FqMHB4CwgxxaW8363Omf5USB4DEsIWfY0xFrTpMZnOyCqNFrZvG4pSI4NfHCygdDEBJo3ftaCXDHrE0D6Ko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NW+JXJqW; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NW+JXJqW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1770208271; x=1801744271;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=rLAcu+ulBxj8TqYakwEhskbVYCF68qpui+jojYzCD6Q=;
-  b=NW+JXJqWVxrIDVnyDf1p6mwSY4vh+Is+j1uGnrJRMnvJ4UbmiqBQZqq/
-   GDhjr28To00gTQyzecwrJY0k6kBzgrOgaWvAv+7d7EflBRp6O4DeWBvJZ
-   1VODDAe3PbMS64WErUzTUpgva1IsRslaUm4nkCQGTa+b/WrC5KL6o/5OV
-   r0jWIjiajvp4H6WarZqLpREP7HIp8pkFBLkXMjPAH9K7L45Ggxbs4nxhk
-   uNDVWJkyTlIVTDQQ17OEAqxDZfupb0iD3Q0U3J9Y9tCdmox06U8ZLhUxR
-   575l80tTRdGrzWiOjcNrPaMU0Q+mv6EOC7ktyC6Px7oVP506WrkF6sZP9
-   w==;
-X-CSE-ConnectionGUID: 24llQL1MQk+8IBOfx7U8Nw==
-X-CSE-MsgGUID: A2K7hoRbTICyY8bNVgeBwg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11691"; a="71426842"
-X-IronPort-AV: E=Sophos;i="6.21,272,1763452800"; 
-   d="scan'208";a="71426842"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2026 04:31:10 -0800
-X-CSE-ConnectionGUID: XbPJoQ+KSyifeE8htG6Uhw==
-X-CSE-MsgGUID: 3ibdJ50gSvKBCc4AGDOClg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,272,1763452800"; 
-   d="scan'208";a="209254745"
-Received: from black.igk.intel.com ([10.91.253.5])
-  by orviesa006.jf.intel.com with ESMTP; 04 Feb 2026 04:31:09 -0800
-Received: by black.igk.intel.com (Postfix, from userid 1001)
-	id A85C195; Wed, 04 Feb 2026 13:31:07 +0100 (CET)
-Date: Wed, 4 Feb 2026 13:31:07 +0100
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: correctmost <cmlists@sent.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	dmaengine@vger.kernel.org, regressions@lists.linux.dev,
-	vkoul@kernel.org, linux-i2c@vger.kernel.org
-Subject: Re: [REGRESSION][BISECTED] Lenovo IdeaPad touchpad does not work
- when idma64 is present in initramfs
-Message-ID: <20260204123107.GN2275908@black.igk.intel.com>
-References: <20260129115609.GV2275908@black.igk.intel.com>
- <7d966d39-aa5a-4a0f-a115-a4b90632a26c@app.fastmail.com>
- <20260130072620.GW2275908@black.igk.intel.com>
- <53bd143f-525d-4748-af93-3460c9f59d1a@app.fastmail.com>
- <20260202075118.GY2275908@black.igk.intel.com>
- <00ee321d-1f36-4f1e-91f7-fdee4212c5cc@app.fastmail.com>
- <20260202102225.GB2275908@black.igk.intel.com>
- <5ed857f5-59ae-4052-8f2e-dac7fcd014cc@app.fastmail.com>
- <20260203100452.GE2275908@black.igk.intel.com>
- <5d134f4f-f7f4-4972-9adb-6d10ede5c1bb@app.fastmail.com>
+	s=arc-20240116; t=1770209544; c=relaxed/simple;
+	bh=MPscG735K/T2i3RbKI7vF3SUhpzqS61U4wiFvsIN/Wo=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:References:
+	 In-Reply-To:Content-Type; b=JJYxI+ENwPNwq2OQPmXpUxI6TUb/kspILOZNTdGcqcC5UftMaYeuPlMVgU45hTCbLcQGBAVkROF557BbacvgEIzGYqzdDYZ+293j/2wn6SP31TeKV9fhv+n6CqnWxay3neNhcTQqX9MEfiJJ6XtIZitxcyuOWpAjqXLfoaZj+mM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=fail smtp.mailfrom=leemhuis.info; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=leemhuis.info
+Received: from [2a02:8108:8984:1d00:a0cf:1912:4be:477f]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128)
+	id 1vnc4e-006Dwj-38;
+	Wed, 04 Feb 2026 13:33:37 +0100
+Message-ID: <daac0e5b-0117-4efc-8143-18e255682329@leemhuis.info>
+Date: Wed, 4 Feb 2026 13:33:36 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <5d134f4f-f7f4-4972-9adb-6d10ede5c1bb@app.fastmail.com>
+User-Agent: Mozilla Thunderbird
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1770209543;60329c39;
+X-HE-SMSGID: 1vnc4e-006Dwj-38
 
-On Tue, Feb 03, 2026 at 07:39:36AM -0500, correctmost wrote:
-> On Tue, Feb 3, 2026, at 5:04 AM, Mika Westerberg wrote:
-> > On Mon, Feb 02, 2026 at 06:16:02AM -0500, correctmost wrote:
-> >> > Could you drop the above hack again so that it should "fail". Then build
-> >> > the kernel with CONFIG_PREEMPT_VOLUNTARY=y and add the below hack. Perhaps
-> >> > this is just lucky timing? Please try a couple of boots and make sure the
-> >> > results are the same each time.
-> >> 
-> >> I cold booted five times and the touchpad did not work during any of those boots.
-> >
-> > Thanks!
-> >
-> >> I noticed that the "probe with driver" failure reports -22 instead of -110 now:
-> >> 
-> >> [   33.023932] i2c_hid_acpi i2c-ELAN06FA:00: Report Descriptor: 05 01 09 02 a1 01 85 01 09 01 a1 00 05 09 19 01 29 02 15 00 25 01 75 01 95 02 81 02 95 06 81 03 05 01 09 30 09 31 15 81 25 7f 75 08 95 02 81 06 75 08 95 05 81 03 c0 06 00 ff 09 01 85 0e 09 c5
-> >> [   33.026070] hid-generic 0018:04F3:327E.0001: item fetching failed at offset 638/675
-> >> [   33.027573] hid-generic 0018:04F3:327E.0001: probe with driver hid-generic failed with error -22
-> >> ...
-> >> [   33.183959] hid-multitouch 0018:04F3:327E.0001: item fetching failed at offset 638/675
-> >> [   33.183975] hid-multitouch 0018:04F3:327E.0001: probe with driver hid-multitouch failed with error -22
-> >> 
-> >
-> > This is really odd because "item fetching" is not really accessing any
-> > hardware bus - it just parses the descriptor and the descriptor looks fine
-> > to me (and this is the same as in case of working run):
-> >
-> > Usage Page (Generic Desktop)
-> > Usage (Generic Desktop.Mouse)
-> > Collection (1)
-> >   Report ID (1)
-> >   Usage (Generic Desktop.Pointer)
-> >   Collection (0)
-> >     Usage Page (Button)
-> >     Usage Minimum (1)
-> >     Usage Maximum (2)
-> >     Logical Minimum (0)
-> >     Logical Maximum (1)
-> >     Report Size (1)
-> >     Report Count (2)
-> >     Input (2)
-> >     Report Count (6)
-> >     Input (3)
-> >     Usage Page (Generic Desktop)
-> >     Usage (Generic Desktop.X)
-> >     Usage (Generic Desktop.Y)
-> >     Logical Minimum (129)
-> >     Logical Maximum (127)
-> >     Report Size (8)
-> >     Report Count (2)
-> >     Input (6)
-> >     Report Size (8)
-> >     Report Count (5)
-> >     Input (3)
-> >   End Collection (0)
-> >   Usage Page (Vendor Defined Page 1)
-> >   Usage (Vendor Defined Page 1.Vendor Usage 1)
-> >   Report ID (14)
-> >   Usage (Vendor Defined Page 1.00c5)
-> >
-> > I noticed  you still have:
-> >
-> > [    0.069726] Dynamic Preempt: full
-> >
-> > Can you change that in .config to:
-> >
-> > CONFIG_PREEMPT_VOLUNTARY=y
-> 
-> Strange, I did change that config.  Do I need to change another config for it to take effect?
 
-Probably not.
 
-> CONFIG_PREEMPT_BUILD=y
-> # CONFIG_PREEMPT_NONE is not set
-> CONFIG_PREEMPT_VOLUNTARY=y
-> CONFIG_PREEMPT=y
-> # CONFIG_PREEMPT_LAZY is not set
-> CONFIG_PREEMPT_COUNT=y
-> CONFIG_PREEMPTION=y
-> CONFIG_PREEMPT_DYNAMIC=y
-> CONFIG_PREEMPT_RCU=y
-> CONFIG_PREEMPT_NOTIFIERS=y
-> # CONFIG_PREEMPT_TRACER is not set
-> # CONFIG_PREEMPTIRQ_DELAY_TEST is not set
-> 
-> >
-> > Also let's add on top of everything one more hack patch, just in case ;-)
-> >
-> > diff --git a/drivers/i2c/i2c-core-acpi.c b/drivers/i2c/i2c-core-acpi.c
-> > index ed90858a27b7..0297ebedb802 100644
-> > --- a/drivers/i2c/i2c-core-acpi.c
-> > +++ b/drivers/i2c/i2c-core-acpi.c
-> > @@ -371,7 +371,7 @@ static const struct acpi_device_id 
-> > i2c_acpi_force_100khz_device_ids[] = {
-> >  	 * a 400KHz frequency. The root cause of the issue is not known.
-> >  	 */
-> >  	{ "DLL0945", 0 },
-> > -	{ "ELAN06FA", 0 },
-> > +//	{ "ELAN06FA", 0 },
-> >  	{}
-> >  };
-> 
-> The "DSDT uses known not-working I2C bus speed 400000, forcing it to 100000" message is now gone, but the touchpad still doesn't function (full log attached).
+On 3/9/24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-Thanks again! It still fails in completely unexpected place I wonder if the
-BPF quirsk somehow could affect it?
+#regzbot report:
+https://lore.kernel.org/all/674efe8d-c299-4ce9-bf6b-c1920a5393eb@samsung.com/
+#regzbot introduced: c70b9d5fdcd7
+#regzbot title remoteproc: qcom: booting broken on DragonBoard410c
+#regzbot fix: remoteproc: qcom_wcnss: Fix reserved region mapping failure
+#regzbot monitor:
+https://lore.kernel.org/all/20260128220243.3018526-1-robh@kernel.org/
 
-Could you still try with CONFIG_HID_BPF=n and see if there is any change?
+#regzbot report:
+https://lore.kernel.org/linux-media/uboug5ectzm4s32yfgopjbcxq2uhsoc4kluaby7a4b7nzfjave@boco7oocnftr/
+#regzbot fix: 17526c7e69d073
+
+#regzbot report:
+https://lore.kernel.org/all/CAK8fFZ58fidGUCHi5WFX0uoTPzveUUDzT%3Dk%3DAAm4yWo3bAuCFg@mail.gmail.com/
+#regzbot introduced: bc3a9d217755f6
+#regzbot title: ipmi:si: uninterruptible sleep
+
+
+
