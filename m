@@ -1,102 +1,256 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.166])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 276312D59E8
-	for <regressions@lists.linux.dev>; Fri,  6 Feb 2026 16:31:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.166
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C39625CC6C;
+	Fri,  6 Feb 2026 16:32:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770395488; cv=none; b=Uj7XE4xnWft3b5oCpsJiyjTHF8fW9+1oUA3R8ILqTBfN9LDc3gRnVeG8zP2HyuxYqbXu6aLWZWE7kyFzTq/5vDCcARECwZ9H4Dx+34jWnb4/WYz5rdv7cH0BHsLVIJMdSasLOEdXrBFzxo8qxa9tIRvY7hfn9ftRL6Ro8HMg19A=
+	t=1770395575; cv=none; b=XWMCQ3GsmI9EjfcN2otU0otkbigM2Zr4jSiKcPfsmiKy/KnMouv5v/JieH2Qq0bEu4UYTe0oRpJTZxRac6bO7X71B41+JyVjp9oVUEfzzB3+xRIDO1A+yLL9G0ZQore7XWu+QZuetfjJoCeSb2I28W1HjAr+mdVV3jsUp7Qp6Vc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770395488; c=relaxed/simple;
-	bh=CA0zXufTVCu8yovgyhZqUdx10x8GwI/gpxsU3x47Wok=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jdiQVC8s8941AW2WibzUARLugb6lpV1pKwUAoV0OuXvATrEphplUM+9jC3KJuB6OJyJYMVG4C9a+nMLJNzDD5TlT5VVeede0JjWOotmv/1HBN+vfKEO+95Cvn3x33ClXhf0YQW9ta2auA0/EsHyU51dzsMSslmEK3rn9n1at+eE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=PhTESns2; arc=none smtp.client-ip=188.68.63.166
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1770395575; c=relaxed/simple;
+	bh=50vC6NDaf/FpXjVp+VpUu5wsgos9TxnADXJwtZm7Yfw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TqxSfN7UO5/5GzCIKgKCodp0XuwP5mVG8GwxArmCPyDbMGpP4RtFjgJa5tlOKmCvhXFA17Hsh/KHC7eL5MgJZ3MS9/jOygmf9EXgXeyj6z/+/ygoYTV3EyF3qqAbHjKSsXqhvdheQOyWx/H54NcRdhu98OPIpqEov1C56k9H93Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WO1D+DNi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="PhTESns2"
-Received: from mors-relay-8202.netcup.net (localhost [127.0.0.1])
-	by mors-relay-8202.netcup.net (Postfix) with ESMTPS id 4f6zvB1ZM9z46k0;
-	Fri,  6 Feb 2026 17:24:38 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1770395078;
-	bh=CA0zXufTVCu8yovgyhZqUdx10x8GwI/gpxsU3x47Wok=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=PhTESns2XqhoUnZ+MpXxGrdPz917NASiisM+uIIgqM8qT6RVPmoji5W0WrJX93n5N
-	 VEOqczFbTqrmZphL/6WLrbHR0Y13o5xLpSjG9KGaWIdRI0zqjudyHekaKF7r3x4N7l
-	 D0kDgjb7B8NDxuvO1Akwu2cbzpVYoA+DMY7LhxUWVJrbJk2IJ7L6sOMcT2IachGpEK
-	 1KZQiIO0LP/j0ugHHdcAakAmnjsRF5notollQQhkvK27JIil/YbZF+YXRgp6tpqEnG
-	 4iwkMkgWnel5A7svtlKq1K2efI0OQOpPlrZzEfJFlWn6APHBWgh6n9UXSIg/CjJQGP
-	 rtn+IzeRYkdIg==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-8202.netcup.net (Postfix) with ESMTPS id 4f6zvB0rPzz46hm;
-	Fri,  6 Feb 2026 17:24:38 +0100 (CET)
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4f6zv91G4Kz8sWT;
-	Fri,  6 Feb 2026 17:24:36 +0100 (CET)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id EF9BF66F47;
-	Fri,  6 Feb 2026 17:24:35 +0100 (CET)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <b82d8cc1-2124-417d-95f8-5fed429e2d0e@leemhuis.info>
-Date: Fri, 6 Feb 2026 17:24:34 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WO1D+DNi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82FFCC116C6;
+	Fri,  6 Feb 2026 16:32:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1770395574;
+	bh=50vC6NDaf/FpXjVp+VpUu5wsgos9TxnADXJwtZm7Yfw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WO1D+DNiwPPR9KX2hBUuPCB2MTl6v6TapNLG+/gzgeVgcW2N/lY6aRGarfO0zzxnQ
+	 sK66Micr2FgWn4mFtgQ6f0mXD/RcxJEQrxYdlsf5BnU3vyLJ9po7/GzVbdgaVX1n9L
+	 Pi4Yp4Ke5Sl7WpgXIzlowo0vFoJ+Yu2qQubEhiADX0o6kRUC4uy+2x0rptLjUW4jFZ
+	 kGo/DjLdD8EeiZbXDCmA1Q8oKCsLzeFQoZfOaKlhwRVgGabK4Wk0heQ5jXEsqS15uU
+	 7Ozlug+IPbQbmj43I7WVf8xPNYnIbgS1O0UXb5qv3W5ZoWR7wBKxQKWUUAHFI1euGp
+	 BreZ6Z8EqHx0w==
+Date: Fri, 6 Feb 2026 08:32:51 -0800
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Thomas Gleixner <tglx@glx-um.de>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>, 
+	Alexey Makhalov <alexey.makhalov@broadcom.com>, x86@kernel.org, linux-kernel@vger.kernel.org, 
+	Ajay Kaher <ajay.kaher@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, 
+	Peter Zijlstra <peterz@infradead.org>, Justin Forbes <jforbes@fedoraproject.org>, 
+	Linux kernel regressions list <regressions@lists.linux.dev>, Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH] x86/vmware: Fix hypercall clobbers
+Message-ID: <uc62gsttzmh5o35uh7viy326bqwpq5gxmcxqqyqb4zp4blp7tg@v3kfsotqtaay>
+References: <bed73c01aba29fe651c9e23a9820a21e88ad13e7.1769048488.git.jpoimboe@kernel.org>
+ <99a9c69a-fc1a-43b7-8d1e-c42d6493b41f@broadcom.com>
+ <73641ce4-9387-48c6-8904-74997f9bb7ac@leemhuis.info>
+ <cjacqm5kz67e3nrjfxhpe4lepr27cnbmykdixknta4r2wh7ugq@3wne235ikkb7>
+ <eef847de-7ef5-4491-91f2-7437dcb573cb@leemhuis.info>
+ <kv4bv3jng2iap3qwvk36pciggiho4yhavnfvsisri67jkdt6kr@szokbl6qdibl>
+ <87jywq18yt.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] NFC broken on Thinkpad T14 Gen since 9c328f5
-To: "Lukas K." <kernel@0x83.eu>, linux-kernel@vger.kernel.org, krzk@kernel.org
-Cc: regressions@lists.linux.dev, netdev@vger.kernel.org,
- Michael Thalmeier <michael.thalmeier@hale.at>
-References: <11b7567e-b9a4-4546-9b1c-bb9820bead0c@0x83.eu>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <11b7567e-b9a4-4546-9b1c-bb9820bead0c@0x83.eu>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <177039507652.2809654.1894967214230795230@mxe9fb.netcup.net>
-X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: EF9BF66F47
-X-NC-CID: Bt98CjVrTXu9MdKvxaR1V7auDVmS08codIbbXfbktlRIwkJOQ3M=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <87jywq18yt.ffs@tglx>
 
-On 2/6/26 16:15, Lukas K. wrote:
-> 
-> from 6.17.2 to 6.17.3, the integrated NFC reader (driver: nxp-nci_i2c)
-> in the Thinkpad T14 Gen 4 (AMD) stopped detecting tags. This can be
-> tested by running
-> 
-> sudo nfctool -1 -p -d nfc0
-> 
-> Looking at the commits between 6.17.2 and 6.17.3, 9c328f5 (net: nfc:
-> nci: Add parameter validation for packet data) was the only one related
-> to NFC.
-> 
-> To see if that commit indeed was the culprit, I reverted it on 6.18.7
-> and nfctool is detecting tags again.
-> 
-> Since the offending commit merely adds some bounds checks, the root
-> cause may very well be in another driver in the NFC stack.
+On Fri, Feb 06, 2026 at 11:07:22AM +0100, Thomas Gleixner wrote:
+> So unless there is a compelling argument why the existing hypercall
+> implementation is broken by design, the trivial one-line fix from Alexey
+> is addressing the actual root cause (it just needs a big fat comment)
+> and good enough to cure the regression, no?
 
-Thx for the report. Seems Michael (now CCed) also ran into problems and
-tried to fix them, but looks like that effort stalled; but might be good
-to know if this fixes your problem, too:
+While my original patch might be overkill, Alexey's one-line fix doesn't
+go far enough:
 
-https://lore.kernel.org/all/20260112124819.171028-1-michael.thalmeier@hale.at/
+  1) It only changes one hypercall site, the vmmouse driver has several.
+     All of the following commands are subject to register corruption by
+     QEMU:
 
-Anyway: Given that the regressions seems to be known for a weeks now
-without a fix forthcoming I wonder if we should revert the culprit, as
-we are way past what Linus wants to see in a situation like this (see
-the "within a week" part in
-https://lore.kernel.org/all/CAHk-=wi86AosXs66-yi54+mpQjPu0upxB8ZAfG+LsMyJmcuMSA@mail.gmail.com/
-).
+       VMWARE_CMD_ABSPOINTER_DATA
+       VMWARE_CMD_ABSPOINTER_STATUS
+       VMWARE_CMD_ABSPOINTER_COMMAND
+     
+  2) While the inline asm for vmware_hypercall7() does have RSI/RDI
+     listed as input constraints, it doesn't clobber them.
 
-Ciao, Thorsten
+So a spot fix would need to be something like so:
+
+diff --git a/arch/x86/include/asm/vmware.h b/arch/x86/include/asm/vmware.h
+index c9cf43d5ef23..9f72569fc8c2 100644
+--- a/arch/x86/include/asm/vmware.h
++++ b/arch/x86/include/asm/vmware.h
+@@ -119,6 +119,27 @@ unsigned long vmware_hypercall1(unsigned long cmd, unsigned long in1)
+ 	return out0;
+ }
+ 
++static inline
++unsigned long vmware_hypercall1_clobber(unsigned long cmd, unsigned long in1)
++{
++	unsigned long out0, tmp = 0;
++
++	if (cpu_feature_enabled(X86_FEATURE_TDX_GUEST))
++		return vmware_tdx_hypercall(cmd, in1, 0, 0, 0,
++					    NULL, NULL, NULL, NULL, NULL);
++
++	if (unlikely(!alternatives_patched) && !__is_defined(MODULE))
++		return vmware_hypercall_slow(cmd, in1, 0, 0, 0,
++					     NULL, NULL, NULL, NULL, NULL);
++
++	asm_inline volatile (VMWARE_HYPERCALL
++		: "=a" (out0), "+b" (in1), "+c" (cmd), "+d" (tmp)
++		: [port] "i" (VMWARE_HYPERVISOR_PORT),
++		  "a" (VMWARE_HYPERVISOR_MAGIC)
++		: "di", "si", "cc", "memory");
++	return out0;
++}
++
+ static inline
+ unsigned long vmware_hypercall3(unsigned long cmd, unsigned long in1,
+ 				u32 *out1, u32 *out2)
+@@ -144,6 +165,30 @@ unsigned long vmware_hypercall3(unsigned long cmd, unsigned long in1,
+ 	return out0;
+ }
+ 
++static inline
++unsigned long vmware_hypercall3_clobber(unsigned long cmd, unsigned long in1,
++					u32 *out1, u32 *out2)
++{
++	unsigned long out0, tmp = 0;
++
++	if (cpu_feature_enabled(X86_FEATURE_TDX_GUEST))
++		return vmware_tdx_hypercall(cmd, in1, 0, 0, 0,
++					    out1, out2, NULL, NULL, NULL);
++
++	if (unlikely(!alternatives_patched) && !__is_defined(MODULE))
++		return vmware_hypercall_slow(cmd, in1, 0, 0, 0,
++					     out1, out2, NULL, NULL, NULL);
++
++	asm_inline volatile (VMWARE_HYPERCALL
++		: "=a" (out0), "=b" (*out1), "=c" (*out2), "+d" (tmp)
++		: [port] "i" (VMWARE_HYPERVISOR_PORT),
++		  "a" (VMWARE_HYPERVISOR_MAGIC),
++		  "b" (in1),
++		  "c" (cmd)
++		: "di", "si", "cc", "memory");
++	return out0;
++}
++
+ static inline
+ unsigned long vmware_hypercall4(unsigned long cmd, unsigned long in1,
+ 				u32 *out1, u32 *out2, u32 *out3)
+@@ -169,6 +214,31 @@ unsigned long vmware_hypercall4(unsigned long cmd, unsigned long in1,
+ 	return out0;
+ }
+ 
++static inline
++unsigned long vmware_hypercall4_clobber(unsigned long cmd, unsigned long in1,
++					u32 *out1, u32 *out2, u32 *out3)
++{
++	unsigned long out0;
++
++	if (cpu_feature_enabled(X86_FEATURE_TDX_GUEST))
++		return vmware_tdx_hypercall(cmd, in1, 0, 0, 0,
++					    out1, out2, out3, NULL, NULL);
++
++	if (unlikely(!alternatives_patched) && !__is_defined(MODULE))
++		return vmware_hypercall_slow(cmd, in1, 0, 0, 0,
++					     out1, out2, out3, NULL, NULL);
++
++	asm_inline volatile (VMWARE_HYPERCALL
++		: "=a" (out0), "=b" (*out1), "=c" (*out2), "=d" (*out3)
++		: [port] "i" (VMWARE_HYPERVISOR_PORT),
++		  "a" (VMWARE_HYPERVISOR_MAGIC),
++		  "b" (in1),
++		  "c" (cmd),
++		  "d" (0)
++		: "di", "si", "cc", "memory");
++	return out0;
++}
++
+ static inline
+ unsigned long vmware_hypercall5(unsigned long cmd, unsigned long in1,
+ 				unsigned long in3, unsigned long in4,
+diff --git a/drivers/input/mouse/vmmouse.c b/drivers/input/mouse/vmmouse.c
+index fb1d986a6895..0ab04b8bb923 100644
+--- a/drivers/input/mouse/vmmouse.c
++++ b/drivers/input/mouse/vmmouse.c
+@@ -125,7 +125,7 @@ static psmouse_ret_t vmmouse_report_events(struct psmouse *psmouse)
+ 
+ 	while (count--) {
+ 		/* See if we have motion data. */
+-		status = vmware_hypercall1(VMWARE_CMD_ABSPOINTER_STATUS, 0);
++		status = vmware_hypercall1_clobber(VMWARE_CMD_ABSPOINTER_STATUS, 0);
+ 		if ((status & VMMOUSE_ERROR) == VMMOUSE_ERROR) {
+ 			psmouse_err(psmouse, "failed to fetch status data\n");
+ 			/*
+@@ -145,8 +145,8 @@ static psmouse_ret_t vmmouse_report_events(struct psmouse *psmouse)
+ 		}
+ 
+ 		/* Now get it */
+-		status = vmware_hypercall4(VMWARE_CMD_ABSPOINTER_DATA, 4,
+-					   &x, &y, &z);
++		status = vmware_hypercall4_clobber(VMWARE_CMD_ABSPOINTER_DATA, 4,
++						   &x, &y, &z);
+ 
+ 		/*
+ 		 * And report what we've got. Prefer to report button
+@@ -222,9 +222,9 @@ static void vmmouse_disable(struct psmouse *psmouse)
+ {
+ 	u32 status;
+ 
+-	vmware_hypercall1(VMWARE_CMD_ABSPOINTER_COMMAND, VMMOUSE_CMD_DISABLE);
++	vmware_hypercall1_clobber(VMWARE_CMD_ABSPOINTER_COMMAND, VMMOUSE_CMD_DISABLE);
+ 
+-	status = vmware_hypercall1(VMWARE_CMD_ABSPOINTER_STATUS, 0);
++	status = vmware_hypercall1_clobber(VMWARE_CMD_ABSPOINTER_STATUS, 0);
+ 	if ((status & VMMOUSE_ERROR) != VMMOUSE_ERROR)
+ 		psmouse_warn(psmouse, "failed to disable vmmouse device\n");
+ }
+@@ -246,19 +246,19 @@ static int vmmouse_enable(struct psmouse *psmouse)
+ 	 * Try enabling the device. If successful, we should be able to
+ 	 * read valid version ID back from it.
+ 	 */
+-	vmware_hypercall1(VMWARE_CMD_ABSPOINTER_COMMAND, VMMOUSE_CMD_ENABLE);
++	vmware_hypercall1_clobber(VMWARE_CMD_ABSPOINTER_COMMAND, VMMOUSE_CMD_ENABLE);
+ 
+ 	/*
+ 	 * See if version ID can be retrieved.
+ 	 */
+-	status = vmware_hypercall1(VMWARE_CMD_ABSPOINTER_STATUS, 0);
++	status = vmware_hypercall1_clobber(VMWARE_CMD_ABSPOINTER_STATUS, 0);
+ 	if ((status & 0x0000ffff) == 0) {
+ 		psmouse_dbg(psmouse, "empty flags - assuming no device\n");
+ 		return -ENXIO;
+ 	}
+ 
+-	version = vmware_hypercall1(VMWARE_CMD_ABSPOINTER_DATA,
+-				    1 /* single item */);
++	version = vmware_hypercall1_clobber(VMWARE_CMD_ABSPOINTER_DATA,
++					    1 /* single item */);
+ 	if (version != VMMOUSE_VERSION_ID) {
+ 		psmouse_dbg(psmouse, "Unexpected version value: %u vs %u\n",
+ 			    (unsigned) version, VMMOUSE_VERSION_ID);
+@@ -269,11 +269,10 @@ static int vmmouse_enable(struct psmouse *psmouse)
+ 	/*
+ 	 * Restrict ioport access, if possible.
+ 	 */
+-	vmware_hypercall1(VMWARE_CMD_ABSPOINTER_RESTRICT,
+-			  VMMOUSE_RESTRICT_CPL0);
++	vmware_hypercall1(VMWARE_CMD_ABSPOINTER_RESTRICT, VMMOUSE_RESTRICT_CPL0);
+ 
+-	vmware_hypercall1(VMWARE_CMD_ABSPOINTER_COMMAND,
+-			  VMMOUSE_CMD_REQUEST_ABSOLUTE);
++	vmware_hypercall1_clobber(VMWARE_CMD_ABSPOINTER_COMMAND,
++				  VMMOUSE_CMD_REQUEST_ABSOLUTE);
+ 
+ 	return 0;
+ }
+@@ -320,7 +319,7 @@ int vmmouse_detect(struct psmouse *psmouse, bool set_properties)
+ 
+ 	/* Check if the device is present */
+ 	response = ~VMWARE_HYPERVISOR_MAGIC;
+-	version = vmware_hypercall3(VMWARE_CMD_GETVERSION, 0, &response, &type);
++	version = vmware_hypercall3_clobber(VMWARE_CMD_GETVERSION, 0, &response, &type);
+ 	if (response != VMWARE_HYPERVISOR_MAGIC || version == 0xffffffffU)
+ 		return -ENXIO;
+ 
