@@ -1,127 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CF39426D23;
-	Fri,  6 Feb 2026 19:08:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C49EA2848B2
+	for <regressions@lists.linux.dev>; Fri,  6 Feb 2026 19:57:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770404936; cv=none; b=jlBXrGpRxHAa2QgFbcX+UOlwM1NsthvCBJ7BqyCf7uu9hnp1o6f7iR2YoBG1qptM/fOPPGlh/GPeASSgK4TKJHLmfh5oo4WId4sz52PLyMbQzr4fDVncU50JYflK2GN3tEH/NlV9yG5oSnQTvbVJ8kB+pjtgq3ofWOuwo0Q7/hQ=
+	t=1770407846; cv=none; b=tHpg5kH0jSMv1bTTRoQaf5LjSqaFrQi0WsSgNUJio1YDQM2G/kq9gfplNHwWjFxd3KrQU3zevi6m66xewkKSwt8zTFoJjQi0UMMcSAt4bBZuWs3K2mahNw5e9OOjH38XuTp5SfcfhhhUBLBPZTASgKE4G8bZEaneom5l8GrQxg8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770404936; c=relaxed/simple;
-	bh=YpOveONxZp/efJzEpXQeZnbAG0Zs2Nt4ebm4l9bBT6M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tnZQGrIfw05UdJWWzX6XKayj9Mvumx9YzCeK4fsgcumfZM/8id1zGbDOuiKdUocEZBsdlzDtkJlAocC0u3VYddrrESmuy4GqmEjJBGzk3m2TOENY2lw5EPuM12JhD4yJxvi7xIFmK6W25Lp76pX/Y8qtoX73lZQl1xeRo6FqiQs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ScxwxE0k; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1770407846; c=relaxed/simple;
+	bh=vM06iQYiR+l9HgUQLGCcT8TBUGY4NvnquYYYSbpiA0Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=b9+DPQd5yUSGvq8NLfUR/QzWKxbwvLN7TSYDSHtpmW5odaD748QlKMQ8PS35f4pRBnLLl6bP83eKPDnwZK15X4Mv5qQOtIeSGOTOF7kJy5XkibIFp6kLZpLBZwwLPV2CoWAxZdV7iDHayO79F6f8aLe8z6ZRuTOP4vznwlbtCAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=ZaufPlXW; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ScxwxE0k"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB6EDC116C6;
-	Fri,  6 Feb 2026 19:08:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770404935;
-	bh=YpOveONxZp/efJzEpXQeZnbAG0Zs2Nt4ebm4l9bBT6M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ScxwxE0kYO7ObhdFJ9gogOQxe5EsW9++mUm4FdkZt1oLCuvaYjYvebqEDR+JEX4u2
-	 HGF1u8CkP4SWYuAfsGSq/k/z0riT6xS3nNq21YAgEQzOuPSX4z8DRJC3mduo6Mhxgd
-	 GktapGUhdRHW1DMLxsb1A5XLE4KEJLCgJpN3z8q8taw6Mk8Oe84WZ8jLDllFKZUXY7
-	 ma771F5dZbNXND9fbjvbcoE//6huRJU45yiZenVWzuqgoFLLGIQXkcDlKVg4SmEe75
-	 dQQSrqyw8KxJZzyZZGJHvnRLqI+yE9weq0g7/upxEwawKCBdg6yPyQRCqBcLLbuKTj
-	 xLPwS6A0PpMvw==
-Date: Fri, 6 Feb 2026 11:08:53 -0800
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Thomas Gleixner <tglx@glx-um.de>, 
-	Thorsten Leemhuis <regressions@leemhuis.info>, Alexey Makhalov <alexey.makhalov@broadcom.com>, x86@kernel.org, 
-	linux-kernel@vger.kernel.org, Ajay Kaher <ajay.kaher@broadcom.com>, 
-	bcm-kernel-feedback-list@broadcom.com, Peter Zijlstra <peterz@infradead.org>, 
-	Justin Forbes <jforbes@fedoraproject.org>, Linux kernel regressions list <regressions@lists.linux.dev>
-Subject: Re: [PATCH] x86/vmware: Fix hypercall clobbers
-Message-ID: <2aoadlgueumiq6hf74baskvk5eomsil7jfsxg4vf4ofaggbecl@7seilp4ou5nl>
-References: <bed73c01aba29fe651c9e23a9820a21e88ad13e7.1769048488.git.jpoimboe@kernel.org>
- <99a9c69a-fc1a-43b7-8d1e-c42d6493b41f@broadcom.com>
- <73641ce4-9387-48c6-8904-74997f9bb7ac@leemhuis.info>
- <cjacqm5kz67e3nrjfxhpe4lepr27cnbmykdixknta4r2wh7ugq@3wne235ikkb7>
- <eef847de-7ef5-4491-91f2-7437dcb573cb@leemhuis.info>
- <kv4bv3jng2iap3qwvk36pciggiho4yhavnfvsisri67jkdt6kr@szokbl6qdibl>
- <87jywq18yt.ffs@tglx>
- <uc62gsttzmh5o35uh7viy326bqwpq5gxmcxqqyqb4zp4blp7tg@v3kfsotqtaay>
- <CAHk-=wivx7pi+h+hGmvNFAJm6StQLiQ-b8DdsE5J=LMOWae8Ng@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="ZaufPlXW"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-b8845cb580bso173886566b.3
+        for <regressions@lists.linux.dev>; Fri, 06 Feb 2026 11:57:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1770407844; x=1771012644; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=24CeI2Q4AjFqwrn5xeXopiZwnU4/34xce4fExz113FU=;
+        b=ZaufPlXW3aPadCYvZD672XpyLL1XpixTFkpM7O5E1jYf98D/H4bCffuODqGLNhAUjU
+         3F9Q9C/yda4fx4+Tg76L9P7WeWfYBRfwliCK+KdPVRbNS14ymlPYzhTWF/s3eLGHCuxb
+         rgIApr1HSYOoatW6stszrutLC1ZKG8DZwYRDg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1770407844; x=1771012644;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=24CeI2Q4AjFqwrn5xeXopiZwnU4/34xce4fExz113FU=;
+        b=K9vFLGEa1k6n/jN/We+1lduIfeAORFGFOpTMa5iTSGyOIyFFi2pDW9Q9aHPImrwPvT
+         e/3rDFSlL6lRsAo5RtD5nLsuz2omLwVHwtMLYKxwmqXUW4LmdRk9LGj9of6u8nwwPaIy
+         ZWDUiBYSAuUAt/i+m1i8KBWiadpy56rud3VGtNjKRIJemuI5gxFyBqBM/kOLJmrqjNdA
+         EwERaLWHPcMa2YPI3yu3x2/1Iecsa3x+yHIYd+WKcIPVLa+Xs3Gk8ycc+SO5dGqzdOTC
+         3Ms07cTs+Q6RSNZC3i9mjDHWQgogsCXV8vmQQoUVY2mu+KQtr5egGvbg0vLtBGQllCaT
+         2PbQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVx8Dk2K3LyBKbJ4lrhOs+ABEEiaVl6ltwTYXdnU0MOFR/NjD6jIYUHfkd9pTozrSF5jmGIxVroxi2NLg==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxM1nWXOqlV7H0CQQnDiu8KRx6k5KrYG3ZCxLS+zgDlz6NUcj8x
+	p1CXZ7kUn175fcTLPOXxUX9re8ou/2kDuI5AV+bjYetVKWSxh0SOHK0xgAEM6w97G+XPuiUVvZH
+	0+VkAobA=
+X-Gm-Gg: AZuq6aIm8EfPNQwWIka8g80auCK4bM9wTdkX6FXqIHREGRlCXf6NM223dEo2Kb7pjsR
+	0qCxrz2GKvHnF+78qKJW116PUQ3PzuArUYtNDDHBup/b6VlpQnJ+F5YuD7rZaihlhax6tZOp9zU
+	z97NWxBz8z4dYPFODFcmDlqb/gRMQ2rCI9rdLUjgeHvq8fgeO2C3S9D2LMLI+AAehSXTeL2Mv4l
+	1hExW3IiWKNsaqeMlrXMlPQpjoh275GDn2NnqUvSGNq/rKDmuC1+qwKII7x59kyiYIq/rfJi0JD
+	C/zJCeWwgAjycwLM/k64kEGqVFrBHMtzwK6/oN1QN1KjRFNFgkCtVb+VwM7Acr/IAOd+5nnORTf
+	wh1A+huO0wZc8AzAymCEomSEo9Ay3acfRl4rFv7JNB+sXmpeQ8FidbktA04EKMSEOLenP2EzQMZ
+	FpVJdA+J4KGNet8ar7lsbRorBIFCBb4POpDbibfOhCiTJXTR2/+Laz9zYMjVoL
+X-Received: by 2002:a17:907:3d09:b0:b87:756b:cfb3 with SMTP id a640c23a62f3a-b8edf1ea7a2mr218309066b.19.1770407843757;
+        Fri, 06 Feb 2026 11:57:23 -0800 (PST)
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com. [209.85.208.53])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b8eda7a3045sm109343966b.22.2026.02.06.11.57.23
+        for <regressions@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 06 Feb 2026 11:57:23 -0800 (PST)
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-65378ba2ff7so1417569a12.2
+        for <regressions@lists.linux.dev>; Fri, 06 Feb 2026 11:57:23 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXbgY09/O+NTRfTwSEUANY4HlXEgR6JLXeBQ57wPzgUf60FDMQJDthZ26FfpKjV1EQcyKi64NtL1lijow==@lists.linux.dev
+X-Received: by 2002:a05:6402:2695:b0:658:cf28:90ed with SMTP id
+ 4fb4d7f45d1cf-65984138b98mr2250818a12.15.1770407843012; Fri, 06 Feb 2026
+ 11:57:23 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wivx7pi+h+hGmvNFAJm6StQLiQ-b8DdsE5J=LMOWae8Ng@mail.gmail.com>
+References: <bed73c01aba29fe651c9e23a9820a21e88ad13e7.1769048488.git.jpoimboe@kernel.org>
+ <99a9c69a-fc1a-43b7-8d1e-c42d6493b41f@broadcom.com> <73641ce4-9387-48c6-8904-74997f9bb7ac@leemhuis.info>
+ <cjacqm5kz67e3nrjfxhpe4lepr27cnbmykdixknta4r2wh7ugq@3wne235ikkb7>
+ <eef847de-7ef5-4491-91f2-7437dcb573cb@leemhuis.info> <kv4bv3jng2iap3qwvk36pciggiho4yhavnfvsisri67jkdt6kr@szokbl6qdibl>
+ <87jywq18yt.ffs@tglx> <uc62gsttzmh5o35uh7viy326bqwpq5gxmcxqqyqb4zp4blp7tg@v3kfsotqtaay>
+ <CAHk-=wivx7pi+h+hGmvNFAJm6StQLiQ-b8DdsE5J=LMOWae8Ng@mail.gmail.com> <2aoadlgueumiq6hf74baskvk5eomsil7jfsxg4vf4ofaggbecl@7seilp4ou5nl>
+In-Reply-To: <2aoadlgueumiq6hf74baskvk5eomsil7jfsxg4vf4ofaggbecl@7seilp4ou5nl>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Fri, 6 Feb 2026 11:57:04 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wgeoGrqgd4n7CntnF8hCPr3qvVVgzF7evhacyqstByYmg@mail.gmail.com>
+X-Gm-Features: AZwV_Qh7YGikSEWRwVgtKILg04p3tR4ntVNFhNKDX4MzNWDB7lrS5R3czVXYKcs
+Message-ID: <CAHk-=wgeoGrqgd4n7CntnF8hCPr3qvVVgzF7evhacyqstByYmg@mail.gmail.com>
+Subject: Re: [PATCH] x86/vmware: Fix hypercall clobbers
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: Thomas Gleixner <tglx@glx-um.de>, Thorsten Leemhuis <regressions@leemhuis.info>, 
+	Alexey Makhalov <alexey.makhalov@broadcom.com>, x86@kernel.org, linux-kernel@vger.kernel.org, 
+	Ajay Kaher <ajay.kaher@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, 
+	Peter Zijlstra <peterz@infradead.org>, Justin Forbes <jforbes@fedoraproject.org>, 
+	Linux kernel regressions list <regressions@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Feb 06, 2026 at 09:19:05AM -0800, Linus Torvalds wrote:
-> ,
-> 
-> On Fri, 6 Feb 2026 at 08:32, Josh Poimboeuf <jpoimboe@kernel.org> wrote:
-> >
-> > So a spot fix would need to be something like so:
-> 
-> So from what I can tell, this was never a kernel bug to begin with,
-> and the actual bug is in QEMU. And the kernel change that exposes this
-> is old, and apparently the main issue is that it also then depends on
-> bad luck with a compiler that generates particular code that then
-> shows the QEMU bug.
-> 
-> So what I'd suggest we do is to do the *minimal* workaround for the
-> specific case of the broken QEMU mouse emulation, and not make the
-> already ugly vmware code even worse like your patch.
-> 
-> And the minimal workaround is apparently just the
-> vmmouse_report_events() oneliner that Alexey Makhalov suggested.
+On Fri, 6 Feb 2026 at 11:08, Josh Poimboeuf <jpoimboe@kernel.org> wrote:
+>
+> Anyway, how about just adding RDI/RSI to the clobbers list for those two
+> hypercalls?
 
-So even if we want to use the strategy of only protecting against those
-compiler optimizations which we've seen with our own eyes, that
-one-liner still isn't enough...
+Ack, that looks fine and code generation differences would be pretty minimal.
 
-Looking at the binary, in addition to that vmware_hypercall4.constprop.4
-keeping RDI/RSI live across the hypercall, there's a
-vmware_hypercall3.constprop.0 doing the exact same thing:
+Mind sending a sign-off and I'll apply it and we can forget about this
+unless somebody wants to actually clean up that vmware horror later?
 
-0000000000000130 <vmware_hypercall3.constprop.0>:
-	...
-	179:	ed                   	in     (%dx),%eax
-	17a:	89 1f                	mov    %ebx,(%rdi)
-	17c:	89 0e                	mov    %ecx,(%rsi)
-	17e:	5b                   	pop    %rbx
-	17f:	e9 00 00 00 00       	jmp    184 <vmware_hypercall3.constprop.0+0x54>	180: R_X86_64_PLT32	__x86_return_thunk-0x4
-
-So that's a 2nd hypercall site we'd need to fix.
-
-BTW, I suspect the non-inline + constprop madness is caused by the use
-of CONFIG_DEBUG_SECTION_MISMATCH which adds
--fno-inline-functions-called-once.  I would love to get rid of that
-config option, it creates a lot of grief for me personally.
-
-Anyway, how about just adding RDI/RSI to the clobbers list for those two
-hypercalls?  It shouldn't have much of an impact on other sites anyway,
-it should be rare for the compiler to want to keep di/si live in
-general.
-
-diff --git a/arch/x86/include/asm/vmware.h b/arch/x86/include/asm/vmware.h
-index c9cf43d5ef23..4220dae14a2d 100644
---- a/arch/x86/include/asm/vmware.h
-+++ b/arch/x86/include/asm/vmware.h
-@@ -140,7 +140,7 @@ unsigned long vmware_hypercall3(unsigned long cmd, unsigned long in1,
- 		  "b" (in1),
- 		  "c" (cmd),
- 		  "d" (0)
--		: "cc", "memory");
-+		: "di", "si", "cc", "memory");
- 	return out0;
- }
- 
-@@ -165,7 +165,7 @@ unsigned long vmware_hypercall4(unsigned long cmd, unsigned long in1,
- 		  "b" (in1),
- 		  "c" (cmd),
- 		  "d" (0)
--		: "cc", "memory");
-+		: "di", "si", "cc", "memory");
- 	return out0;
- }
- 
+           Linus
