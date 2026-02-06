@@ -1,256 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C39625CC6C;
-	Fri,  6 Feb 2026 16:32:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770395575; cv=none; b=XWMCQ3GsmI9EjfcN2otU0otkbigM2Zr4jSiKcPfsmiKy/KnMouv5v/JieH2Qq0bEu4UYTe0oRpJTZxRac6bO7X71B41+JyVjp9oVUEfzzB3+xRIDO1A+yLL9G0ZQore7XWu+QZuetfjJoCeSb2I28W1HjAr+mdVV3jsUp7Qp6Vc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770395575; c=relaxed/simple;
-	bh=50vC6NDaf/FpXjVp+VpUu5wsgos9TxnADXJwtZm7Yfw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TqxSfN7UO5/5GzCIKgKCodp0XuwP5mVG8GwxArmCPyDbMGpP4RtFjgJa5tlOKmCvhXFA17Hsh/KHC7eL5MgJZ3MS9/jOygmf9EXgXeyj6z/+/ygoYTV3EyF3qqAbHjKSsXqhvdheQOyWx/H54NcRdhu98OPIpqEov1C56k9H93Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WO1D+DNi; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7573B2DBF47
+	for <regressions@lists.linux.dev>; Fri,  6 Feb 2026 16:58:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.128.45
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770397133; cv=pass; b=HrOSpLkupqc4LSYj/F5sGZ8xx5x43mxPIOYwSD8f2+JEHHlUXRldsUD2YZ3SqH3vWrZLvfgMEykET1Bom/1Lh7+Jyca7uKY6ej0o2sgWd7bvIHOx4bgWvSSwpPlOm1uGE4zdC1LHMPPSiwl7gjA8gXfoprfGAbTXqFQLwS7SbVc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770397133; c=relaxed/simple;
+	bh=b11BpwXCsu+WwRGAGk/MgZ1A/dCg+C3eIJfNjLM98nc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Jd2Q3ctHskYHOJco9sf6JKYbiUjAernOGdAyF1ASyAbvEoe2l4Kt1gb2v4ntL9wk5LOyw4DnWbi81zfDrD05yPtC3Lj6Sg5VDwJ8fF9vv7BXZcSnZXuy3Pi63zSIAw7Eal9l/7eebmgaBBHHPZvkEAuV2Yw54zDiTw0cqUkh7kI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fjhdH8s7; arc=pass smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WO1D+DNi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82FFCC116C6;
-	Fri,  6 Feb 2026 16:32:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770395574;
-	bh=50vC6NDaf/FpXjVp+VpUu5wsgos9TxnADXJwtZm7Yfw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WO1D+DNiwPPR9KX2hBUuPCB2MTl6v6TapNLG+/gzgeVgcW2N/lY6aRGarfO0zzxnQ
-	 sK66Micr2FgWn4mFtgQ6f0mXD/RcxJEQrxYdlsf5BnU3vyLJ9po7/GzVbdgaVX1n9L
-	 Pi4Yp4Ke5Sl7WpgXIzlowo0vFoJ+Yu2qQubEhiADX0o6kRUC4uy+2x0rptLjUW4jFZ
-	 kGo/DjLdD8EeiZbXDCmA1Q8oKCsLzeFQoZfOaKlhwRVgGabK4Wk0heQ5jXEsqS15uU
-	 7Ozlug+IPbQbmj43I7WVf8xPNYnIbgS1O0UXb5qv3W5ZoWR7wBKxQKWUUAHFI1euGp
-	 BreZ6Z8EqHx0w==
-Date: Fri, 6 Feb 2026 08:32:51 -0800
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Thomas Gleixner <tglx@glx-um.de>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>, 
-	Alexey Makhalov <alexey.makhalov@broadcom.com>, x86@kernel.org, linux-kernel@vger.kernel.org, 
-	Ajay Kaher <ajay.kaher@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, 
-	Peter Zijlstra <peterz@infradead.org>, Justin Forbes <jforbes@fedoraproject.org>, 
-	Linux kernel regressions list <regressions@lists.linux.dev>, Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH] x86/vmware: Fix hypercall clobbers
-Message-ID: <uc62gsttzmh5o35uh7viy326bqwpq5gxmcxqqyqb4zp4blp7tg@v3kfsotqtaay>
-References: <bed73c01aba29fe651c9e23a9820a21e88ad13e7.1769048488.git.jpoimboe@kernel.org>
- <99a9c69a-fc1a-43b7-8d1e-c42d6493b41f@broadcom.com>
- <73641ce4-9387-48c6-8904-74997f9bb7ac@leemhuis.info>
- <cjacqm5kz67e3nrjfxhpe4lepr27cnbmykdixknta4r2wh7ugq@3wne235ikkb7>
- <eef847de-7ef5-4491-91f2-7437dcb573cb@leemhuis.info>
- <kv4bv3jng2iap3qwvk36pciggiho4yhavnfvsisri67jkdt6kr@szokbl6qdibl>
- <87jywq18yt.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fjhdH8s7"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-48329eb96a7so2270095e9.3
+        for <regressions@lists.linux.dev>; Fri, 06 Feb 2026 08:58:53 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1770397132; cv=none;
+        d=google.com; s=arc-20240605;
+        b=b8n6IJfQspBnCV3eHId+JZnk+OF4ZMG/weTb8kuJ2uQ0xhhCBpOFgTPwyEn81XW++A
+         B8WNjRPhWN5gS+5m+11DMLRytkH9LS33nYCmYPbNl8L5Tc6yHFJjphx3fqJFLpsklz1u
+         cVkPi90x1dAeqy6q8tjNObGUsIltVSbg0LfwZVtRvvCdbahixnuUAKRekShzTj8nMW+p
+         3PvvBIfBtIOqziEjfDLL9RRxqOThItM8JGu41m2f8nJZLio6kBgc2y0xtPw5iU+8CLI0
+         YLs6cl5M0zywFGk9csLeK0FSBnjjZIhTZ/k+V+TBddBbVqpT0drkXxMJYzZXK5qOW+h0
+         J9kg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=SINkWacze5S98GIhSSbJIYdPhJkcW6UFPLcuajb3eHY=;
+        fh=YYuidP0YAF5yhTQCc4sWc9+RGNo30nXgrHOJltgoDzw=;
+        b=hRlSOB5m4rvpC0QxLg1kGwcwApZDH42Ya1g30JBhOitlOc/R8vgdeGXj/7Fsl+rxcu
+         eCTVFSRAArgYqGD/3tjhVCd4uYoK30HobAM5BOyxhQtPOMBU9XgVRXej2zoYHSWIUlWy
+         pn52n1PqOgt3nMpYJ27NpYcQDkA33q7/1/kj40lCDu1IpZ8s/xqMHqdMSmkbu/O6cQDe
+         yoswNozGyOQObMesTfMk02r4vP3pTDklDK6CwvtOl5Fr3su5fIh7foY/EmA3G/76fHlO
+         tJlfH09khSGb4fH580oZ5FB1WsuHqw2mLjVf0O1SsSToRyB2hrIEv/1TwDtzmhKBk8xT
+         /h5w==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1770397132; x=1771001932; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=SINkWacze5S98GIhSSbJIYdPhJkcW6UFPLcuajb3eHY=;
+        b=fjhdH8s77fJ+y4Zyo280H/lEnn2PwX+6O3152UV30CUstpyKhEdZYWIUaRXx8M5duu
+         nBlEb2G/neOBOAuxlOcIys8rBlRcXHXEuKpk5U6TBiMfkEeIkk7HfXAbEDIRdrAlaWjT
+         eXsBQ0PR3vSAexmeTq9ChaTrBra611cBbFen8DcwPiQiasq6IQFYhK5oqXbfOwLeyKKy
+         Pt62YILIHKBXHyPJB/N6jcmCAVaZd11h+h2Z1xOuACx6/5pGVH3p6/YQyEnp77bJE2Rh
+         ZQ4vvXCRUTA6BaU/DpFzd2e5ncTggJaHwyw/atzLpkC76SpkuO8vftpN9GL3NuPMmSYe
+         667w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1770397132; x=1771001932;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SINkWacze5S98GIhSSbJIYdPhJkcW6UFPLcuajb3eHY=;
+        b=NBi5LbBMHC/LeUJOfWPpcZ+4stFkyH3qN297nZzqlIgV61i9aXdpQfv/YoV49t4iKr
+         Kp9PRovNEzXvaGoADPi8D5Cka45If1X/RgjJkASOPeV/Z2QYDBdzeX6K6Em1mXmqzvIX
+         SSR5Fp+iATs31qnH0uv5h/TiDsAhTklxDDVQ1zW5eGebOG4gwsClK0VvDDbIvghcfMAj
+         br9mPaBKDBAbZCOzz6+/fszSZlfxFH86UTvyDXeJLVGfX+hurQjkyoCbpW2HpSYJ2I//
+         20OH7t75ke9koc0jw8bPp3KzRxDXeDCL0hEpsMlqtOhL1/evQa8i3CW0VgL+FUYEhZwn
+         dZsw==
+X-Forwarded-Encrypted: i=1; AJvYcCVQN01k7gxrgRvwT250Au3eVf5+zwcDejzs8cyi06JdMkPnV+iKHeeYWquNtpUnqnRJjFQbhp0w2/IaEg==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwJ1RHhqxfK8Ff+/CmkTJydtXUlUc10jEMFUrVlPWCyV/UCX5kk
+	/T0v9p+NYYDZ5Qdrtvs458eeDqLMzaruy0UfkK9Gt3q5qjd/WkEBIGvUCqZ11essM+AggPyJ/MR
+	CAXkhShmWTeuB9fpxBmMatAOWce+bNfc=
+X-Gm-Gg: AZuq6aIWfX4kMlOk22DDrlXapNfeuicoQdMWKwhrNpK+10g/6oUlZti7TVJ39zq10hH
+	VU+q+yaI3ShjHLTpYUjmoyBvv1uKZF53HiVkzX8aV68lqBa5dIYfK5ChyPm3dr3vMSXL9rMXJsc
+	49iH9GphVwfZAQIQa7+2jFIEjTjQO9PETBABkjKIplWnc7Lk3rHTUOAC1o1MvrImUI2tiesTohA
+	pxYtO/x66Gh7Fp4jROSl/YViKuMac66AIwVz39+CSOEsAU+Jb9bpiIHaxzlNPT1qPkTvdnH
+X-Received: by 2002:a05:600c:19d1:b0:477:9a28:b09a with SMTP id
+ 5b1f17b1804b1-483208b9470mr43758935e9.0.1770397131636; Fri, 06 Feb 2026
+ 08:58:51 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <87jywq18yt.ffs@tglx>
+References: <CAFLVeg9hwH3PbKu5rPWZWqq6yz5mRRoB9oqxDkxNRdEDLGbVBw@mail.gmail.com>
+ <CAFLVeg_soeYV4tOYKMo6TMYOtuWWU4TFCjUTxUrVEyGcRwMz7A@mail.gmail.com> <df6fcd73-fe0a-42fc-97ce-7e458c340553@leemhuis.info>
+In-Reply-To: <df6fcd73-fe0a-42fc-97ce-7e458c340553@leemhuis.info>
+From: Denis Gessert <denisgessert@gmail.com>
+Date: Fri, 6 Feb 2026 17:58:39 +0100
+X-Gm-Features: AZwV_QgNCppAnl3lb89V9TBwVA6S5u-NVBJN7ILzPpKGv0R-o4J6O7rbHQT_tuA
+Message-ID: <CAFLVeg-qeWu4ntgyqotsgjogPEyhqrMGG=UDWuZe+-D3K8YPTA@mail.gmail.com>
+Subject: Re: [REGRESSION] mt8183-kukui: dts: changes in dts caused display to
+ no longer initialize - Was: Re: mt8183-kukui: drm/mediatek: dts: Invalid
+ display hw pipeline when probing mediatek-drm
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: "angelogioacchino.delregno@collabora.com" <angelogioacchino.delregno@collabora.com>, 
+	Evans Jahja <evansjahja13@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	regressions@lists.linux.dev, =?UTF-8?Q?Otto_Pfl=C3=BCger?= <otto.pflueger@abscue.de>
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Feb 06, 2026 at 11:07:22AM +0100, Thomas Gleixner wrote:
-> So unless there is a compelling argument why the existing hypercall
-> implementation is broken by design, the trivial one-line fix from Alexey
-> is addressing the actual root cause (it just needs a big fat comment)
-> and good enough to cure the regression, no?
+Thanks for the quick response. I compiled 6.18.9 with this patch
+(without reverting the previous commit) and it boots successfully.
 
-While my original patch might be overkill, Alexey's one-line fix doesn't
-go far enough:
+Cheers,
+Denis
 
-  1) It only changes one hypercall site, the vmmouse driver has several.
-     All of the following commands are subject to register corruption by
-     QEMU:
-
-       VMWARE_CMD_ABSPOINTER_DATA
-       VMWARE_CMD_ABSPOINTER_STATUS
-       VMWARE_CMD_ABSPOINTER_COMMAND
-     
-  2) While the inline asm for vmware_hypercall7() does have RSI/RDI
-     listed as input constraints, it doesn't clobber them.
-
-So a spot fix would need to be something like so:
-
-diff --git a/arch/x86/include/asm/vmware.h b/arch/x86/include/asm/vmware.h
-index c9cf43d5ef23..9f72569fc8c2 100644
---- a/arch/x86/include/asm/vmware.h
-+++ b/arch/x86/include/asm/vmware.h
-@@ -119,6 +119,27 @@ unsigned long vmware_hypercall1(unsigned long cmd, unsigned long in1)
- 	return out0;
- }
- 
-+static inline
-+unsigned long vmware_hypercall1_clobber(unsigned long cmd, unsigned long in1)
-+{
-+	unsigned long out0, tmp = 0;
-+
-+	if (cpu_feature_enabled(X86_FEATURE_TDX_GUEST))
-+		return vmware_tdx_hypercall(cmd, in1, 0, 0, 0,
-+					    NULL, NULL, NULL, NULL, NULL);
-+
-+	if (unlikely(!alternatives_patched) && !__is_defined(MODULE))
-+		return vmware_hypercall_slow(cmd, in1, 0, 0, 0,
-+					     NULL, NULL, NULL, NULL, NULL);
-+
-+	asm_inline volatile (VMWARE_HYPERCALL
-+		: "=a" (out0), "+b" (in1), "+c" (cmd), "+d" (tmp)
-+		: [port] "i" (VMWARE_HYPERVISOR_PORT),
-+		  "a" (VMWARE_HYPERVISOR_MAGIC)
-+		: "di", "si", "cc", "memory");
-+	return out0;
-+}
-+
- static inline
- unsigned long vmware_hypercall3(unsigned long cmd, unsigned long in1,
- 				u32 *out1, u32 *out2)
-@@ -144,6 +165,30 @@ unsigned long vmware_hypercall3(unsigned long cmd, unsigned long in1,
- 	return out0;
- }
- 
-+static inline
-+unsigned long vmware_hypercall3_clobber(unsigned long cmd, unsigned long in1,
-+					u32 *out1, u32 *out2)
-+{
-+	unsigned long out0, tmp = 0;
-+
-+	if (cpu_feature_enabled(X86_FEATURE_TDX_GUEST))
-+		return vmware_tdx_hypercall(cmd, in1, 0, 0, 0,
-+					    out1, out2, NULL, NULL, NULL);
-+
-+	if (unlikely(!alternatives_patched) && !__is_defined(MODULE))
-+		return vmware_hypercall_slow(cmd, in1, 0, 0, 0,
-+					     out1, out2, NULL, NULL, NULL);
-+
-+	asm_inline volatile (VMWARE_HYPERCALL
-+		: "=a" (out0), "=b" (*out1), "=c" (*out2), "+d" (tmp)
-+		: [port] "i" (VMWARE_HYPERVISOR_PORT),
-+		  "a" (VMWARE_HYPERVISOR_MAGIC),
-+		  "b" (in1),
-+		  "c" (cmd)
-+		: "di", "si", "cc", "memory");
-+	return out0;
-+}
-+
- static inline
- unsigned long vmware_hypercall4(unsigned long cmd, unsigned long in1,
- 				u32 *out1, u32 *out2, u32 *out3)
-@@ -169,6 +214,31 @@ unsigned long vmware_hypercall4(unsigned long cmd, unsigned long in1,
- 	return out0;
- }
- 
-+static inline
-+unsigned long vmware_hypercall4_clobber(unsigned long cmd, unsigned long in1,
-+					u32 *out1, u32 *out2, u32 *out3)
-+{
-+	unsigned long out0;
-+
-+	if (cpu_feature_enabled(X86_FEATURE_TDX_GUEST))
-+		return vmware_tdx_hypercall(cmd, in1, 0, 0, 0,
-+					    out1, out2, out3, NULL, NULL);
-+
-+	if (unlikely(!alternatives_patched) && !__is_defined(MODULE))
-+		return vmware_hypercall_slow(cmd, in1, 0, 0, 0,
-+					     out1, out2, out3, NULL, NULL);
-+
-+	asm_inline volatile (VMWARE_HYPERCALL
-+		: "=a" (out0), "=b" (*out1), "=c" (*out2), "=d" (*out3)
-+		: [port] "i" (VMWARE_HYPERVISOR_PORT),
-+		  "a" (VMWARE_HYPERVISOR_MAGIC),
-+		  "b" (in1),
-+		  "c" (cmd),
-+		  "d" (0)
-+		: "di", "si", "cc", "memory");
-+	return out0;
-+}
-+
- static inline
- unsigned long vmware_hypercall5(unsigned long cmd, unsigned long in1,
- 				unsigned long in3, unsigned long in4,
-diff --git a/drivers/input/mouse/vmmouse.c b/drivers/input/mouse/vmmouse.c
-index fb1d986a6895..0ab04b8bb923 100644
---- a/drivers/input/mouse/vmmouse.c
-+++ b/drivers/input/mouse/vmmouse.c
-@@ -125,7 +125,7 @@ static psmouse_ret_t vmmouse_report_events(struct psmouse *psmouse)
- 
- 	while (count--) {
- 		/* See if we have motion data. */
--		status = vmware_hypercall1(VMWARE_CMD_ABSPOINTER_STATUS, 0);
-+		status = vmware_hypercall1_clobber(VMWARE_CMD_ABSPOINTER_STATUS, 0);
- 		if ((status & VMMOUSE_ERROR) == VMMOUSE_ERROR) {
- 			psmouse_err(psmouse, "failed to fetch status data\n");
- 			/*
-@@ -145,8 +145,8 @@ static psmouse_ret_t vmmouse_report_events(struct psmouse *psmouse)
- 		}
- 
- 		/* Now get it */
--		status = vmware_hypercall4(VMWARE_CMD_ABSPOINTER_DATA, 4,
--					   &x, &y, &z);
-+		status = vmware_hypercall4_clobber(VMWARE_CMD_ABSPOINTER_DATA, 4,
-+						   &x, &y, &z);
- 
- 		/*
- 		 * And report what we've got. Prefer to report button
-@@ -222,9 +222,9 @@ static void vmmouse_disable(struct psmouse *psmouse)
- {
- 	u32 status;
- 
--	vmware_hypercall1(VMWARE_CMD_ABSPOINTER_COMMAND, VMMOUSE_CMD_DISABLE);
-+	vmware_hypercall1_clobber(VMWARE_CMD_ABSPOINTER_COMMAND, VMMOUSE_CMD_DISABLE);
- 
--	status = vmware_hypercall1(VMWARE_CMD_ABSPOINTER_STATUS, 0);
-+	status = vmware_hypercall1_clobber(VMWARE_CMD_ABSPOINTER_STATUS, 0);
- 	if ((status & VMMOUSE_ERROR) != VMMOUSE_ERROR)
- 		psmouse_warn(psmouse, "failed to disable vmmouse device\n");
- }
-@@ -246,19 +246,19 @@ static int vmmouse_enable(struct psmouse *psmouse)
- 	 * Try enabling the device. If successful, we should be able to
- 	 * read valid version ID back from it.
- 	 */
--	vmware_hypercall1(VMWARE_CMD_ABSPOINTER_COMMAND, VMMOUSE_CMD_ENABLE);
-+	vmware_hypercall1_clobber(VMWARE_CMD_ABSPOINTER_COMMAND, VMMOUSE_CMD_ENABLE);
- 
- 	/*
- 	 * See if version ID can be retrieved.
- 	 */
--	status = vmware_hypercall1(VMWARE_CMD_ABSPOINTER_STATUS, 0);
-+	status = vmware_hypercall1_clobber(VMWARE_CMD_ABSPOINTER_STATUS, 0);
- 	if ((status & 0x0000ffff) == 0) {
- 		psmouse_dbg(psmouse, "empty flags - assuming no device\n");
- 		return -ENXIO;
- 	}
- 
--	version = vmware_hypercall1(VMWARE_CMD_ABSPOINTER_DATA,
--				    1 /* single item */);
-+	version = vmware_hypercall1_clobber(VMWARE_CMD_ABSPOINTER_DATA,
-+					    1 /* single item */);
- 	if (version != VMMOUSE_VERSION_ID) {
- 		psmouse_dbg(psmouse, "Unexpected version value: %u vs %u\n",
- 			    (unsigned) version, VMMOUSE_VERSION_ID);
-@@ -269,11 +269,10 @@ static int vmmouse_enable(struct psmouse *psmouse)
- 	/*
- 	 * Restrict ioport access, if possible.
- 	 */
--	vmware_hypercall1(VMWARE_CMD_ABSPOINTER_RESTRICT,
--			  VMMOUSE_RESTRICT_CPL0);
-+	vmware_hypercall1(VMWARE_CMD_ABSPOINTER_RESTRICT, VMMOUSE_RESTRICT_CPL0);
- 
--	vmware_hypercall1(VMWARE_CMD_ABSPOINTER_COMMAND,
--			  VMMOUSE_CMD_REQUEST_ABSOLUTE);
-+	vmware_hypercall1_clobber(VMWARE_CMD_ABSPOINTER_COMMAND,
-+				  VMMOUSE_CMD_REQUEST_ABSOLUTE);
- 
- 	return 0;
- }
-@@ -320,7 +319,7 @@ int vmmouse_detect(struct psmouse *psmouse, bool set_properties)
- 
- 	/* Check if the device is present */
- 	response = ~VMWARE_HYPERVISOR_MAGIC;
--	version = vmware_hypercall3(VMWARE_CMD_GETVERSION, 0, &response, &type);
-+	version = vmware_hypercall3_clobber(VMWARE_CMD_GETVERSION, 0, &response, &type);
- 	if (response != VMWARE_HYPERVISOR_MAGIC || version == 0xffffffffU)
- 		return -ENXIO;
- 
+Am Fr., 6. Feb. 2026 um 15:55 Uhr schrieb Thorsten Leemhuis
+<regressions@leemhuis.info>:
+>
+> On 2/6/26 12:33, Denis Gessert wrote:
+> >
+> > I found this email chain while troubleshooting why my Levovo Duet
+> > (with the MT8183 chip) would not boot using any 6.18.* kernel.
+> >
+> > I can confirm that on my device the current stable 6.18.8 does not
+> > boot unless I revert the commit
+> >
+> > commit e72d63fa0563f8a6e98c10fed3a9ce74dc0536e6 (HEAD)
+> > Author: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+> > Date:   Thu Jul 24 10:39:08 2025 +0200
+> >
+> >     arm64: dts: mediatek: mt8183: Migrate to display controller OF graph
+> >
+> > mentioned below. With the reverted commit the device boots as intended.
+>
+> There is a fix for it from Otto here that I guess should help
+> https://lore.kernel.org/lkml/20260106-mt8183-display-graph-v2-1-e7e56054eef5@abscue.de/
+>
+> Side note: lacks a stable tag and maybe should have been merged this
+> cycle instead of the next. But given that 6.19 is immanent it might be
+> good if this could be backported to 6.19.y once it landed in mainline.
+>
+> > PS: Apologies for the potential double-mail.
+> No worries, happens.
+>
+> Ciao, Thortsten
