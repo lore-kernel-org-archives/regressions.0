@@ -1,73 +1,51 @@
-Received: from fout-b3-smtp.messagingengine.com (fout-b3-smtp.messagingengine.com [202.12.124.146])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.166])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99CC530F7E9
-	for <regressions@lists.linux.dev>; Fri,  6 Feb 2026 15:15:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.146
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 276312D59E8
+	for <regressions@lists.linux.dev>; Fri,  6 Feb 2026 16:31:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.166
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770390940; cv=none; b=itWSvPh9bglret15F+SZMxkc3WuZ5SWfZFeYLM6qpGnxSlUMpoLfmTh8biVNxgSqwOoRgRzkfwdMCF40vgTF5sP/gaZLDhLjPhBCx6BM+VuNtpfHCMRfHFT+rsaVJoxdkA5B6VvN/KgdtHli30xfi4yGD8FKsLHnXRV9LQS1R+8=
+	t=1770395488; cv=none; b=Uj7XE4xnWft3b5oCpsJiyjTHF8fW9+1oUA3R8ILqTBfN9LDc3gRnVeG8zP2HyuxYqbXu6aLWZWE7kyFzTq/5vDCcARECwZ9H4Dx+34jWnb4/WYz5rdv7cH0BHsLVIJMdSasLOEdXrBFzxo8qxa9tIRvY7hfn9ftRL6Ro8HMg19A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770390940; c=relaxed/simple;
-	bh=kshHsmYXg5UDz2ofCYtDQ2s4f4k+5QWhfqW6mh5a9po=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=Zu3O8w/HVdk/oTIOWgJDcDDzdR98xmUNsHPCUTK3cB2q08TYUQcTFL6wbzw8p2GZpUBIlnS1stdPxcYUZQsziyytCIYWJVYBaiQoPn5Ap26CVrcyZLfh/miPXSjSrtutDv2DmTzbJzUbBqnPLN2ju+6v4FnR02yVrR/Mh71eNKU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=0x83.eu; spf=pass smtp.mailfrom=0x83.eu; dkim=pass (2048-bit key) header.d=0x83.eu header.i=@0x83.eu header.b=g31INle7; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=NCHAq9GY; arc=none smtp.client-ip=202.12.124.146
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=0x83.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=0x83.eu
+	s=arc-20240116; t=1770395488; c=relaxed/simple;
+	bh=CA0zXufTVCu8yovgyhZqUdx10x8GwI/gpxsU3x47Wok=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jdiQVC8s8941AW2WibzUARLugb6lpV1pKwUAoV0OuXvATrEphplUM+9jC3KJuB6OJyJYMVG4C9a+nMLJNzDD5TlT5VVeede0JjWOotmv/1HBN+vfKEO+95Cvn3x33ClXhf0YQW9ta2auA0/EsHyU51dzsMSslmEK3rn9n1at+eE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=PhTESns2; arc=none smtp.client-ip=188.68.63.166
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=0x83.eu header.i=@0x83.eu header.b="g31INle7";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="NCHAq9GY"
-Received: from phl-compute-03.internal (phl-compute-03.internal [10.202.2.43])
-	by mailfout.stl.internal (Postfix) with ESMTP id 7DC161D00189;
-	Fri,  6 Feb 2026 10:15:38 -0500 (EST)
-Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-03.internal (MEProxy); Fri, 06 Feb 2026 10:15:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=0x83.eu; h=cc:cc
-	:content-transfer-encoding:content-type:content-type:date:date
-	:from:from:in-reply-to:message-id:mime-version:reply-to:subject
-	:subject:to:to; s=fm1; t=1770390938; x=1770477338; bh=jxOUZuDNsT
-	pnOvJpDm88R4KKFfQr+YssR216Ry+idb0=; b=g31INle79O+ATraC6PaBrqIfK2
-	mHIRZcvKI0O8KPRgfc2m5AwBq7XA0/eQ0HaZRnFspP4lI6eEOI+GiE87dc/6ayg8
-	BxqK6z/w49eev94X7kgXb4IRR75+oM4xXAw2b4uNZkvn06jFhvWIk6Q7za70Oard
-	Hsk/86N6itFSUeDsEMVieSF6JkNhiihFmx/e+Kd3FGYXccpC8ho1BArv7agpWoo+
-	KLszXX7bnAnJTMWorloITupRq8swWL6FjNkNAM+qkBM9FgcEfpbDo2yn4xGNWqrB
-	JefkA2UAZ3h+TkgCsjxvKj6GPv5RcAVqqfEL26miXITSw8K/92+YaMA7XwYw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:message-id:mime-version:reply-to:subject
-	:subject:to:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm3; t=1770390938; x=1770477338; bh=jxOUZuDNsTpnOvJpDm88R4KKFfQr
-	+YssR216Ry+idb0=; b=NCHAq9GYnZ4RLcH054CoCZM62hwLzMcPjAQMlSC1kGKQ
-	nOIFNfcZ+tl7NonDKGw7i1aLbrVfkW9idlvnJIkpilbu6eBxlQm1ePqr8RYkGid+
-	JX6doKtyRIwZJSsNal/4++62R5Jm67fpdOezaW91VJBdAco/cRDar2yr+O5+lrK/
-	Wyb7tgIPednsPgy2NZbSUKR3faDeu1QbRIZ66C3REXuZSz754hhUP73D5fy1HM7N
-	rzcgWuAaD4evtF3bvaQ0GqQFtshFFHGtloVYzW2MlLZrw8v/vbA4DB3+8S/tvpHu
-	Z1El5nqRlo93khmkZ5jcnsrDbG8N2aiyG21kuuH8bA==
-X-ME-Sender: <xms:mQWGaXFjvcc7ChpqKD8zOQY94WW76ilg6EOiLRaDDOYy7bzh6ktmHA>
-    <xme:mQWGafwqvSsUrzTRcxk8HaoTACw8LHrWWEOOnO7pL-SuGDI7SifKR6-EYQI3d_NT_
-    zzLBAupXw70-yXJz3L_NtrFq0oyJ6rhOk-4tX4_UJdi9QRV-X82V1E>
-X-ME-Received: <xmr:mQWGacrIZEQkNIshXxGTsVQztuZnLGmhwmepDY_isZvIIFO-68KHlKWyfpnqdQegK8VHaCgQghunVsmmz4swe6FE>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddukeekhedtucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucenucfjughrpefkffggfgfvvefhufgtgfesthejredttd
-    dvjeenucfhrhhomhepfdfnuhhkrghsucfmrddfuceokhgvrhhnvghlsedtgiekfedrvghu
-    qeenucggtffrrghtthgvrhhnpeetveetheehleeuvdejtdeufedvhedtgffgudejgeejle
-    eggfeivdejudffhefgjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgr
-    ihhlfhhrohhmpehkvghrnhgvlhestdigkeefrdgvuhdpnhgspghrtghpthhtohepgedpmh
-    houggvpehsmhhtphhouhhtpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgv
-    rhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhriihksehkvghrnhgvlhdrohhrgh
-    dprhgtphhtthhopehrvghgrhgvshhsihhonhhssehlihhsthhsrdhlihhnuhigrdguvghv
-    pdhrtghpthhtohepnhgvthguvghvsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:mQWGaZjgsww9KEaTTlgvoG863QOutQu6V9StBEye4m56TAEF4-duAw>
-    <xmx:mQWGaZjDkYOIemJ68d5F0b6_I36ItkzOGHj2wSgbswurb21BEymyPw>
-    <xmx:mQWGafgBjKC7DFNiVuxTKhowWMgltmW_jgsWiNO2DEHjCZ2w6JqOgw>
-    <xmx:mQWGaZJjFzsbhb1DQ5BvCrqUBHkjN2Q86BescRe4jXa-lSxe0KRbLQ>
-    <xmx:mgWGaYpKX4j2kJ7AC4UZsDbqMLE88VMzQ6pw91Yv2wbSv1c5XsrwC8S9>
-Feedback-ID: i83f146eb:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 6 Feb 2026 10:15:36 -0500 (EST)
-Message-ID: <11b7567e-b9a4-4546-9b1c-bb9820bead0c@0x83.eu>
-Date: Fri, 6 Feb 2026 16:15:34 +0100
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="PhTESns2"
+Received: from mors-relay-8202.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8202.netcup.net (Postfix) with ESMTPS id 4f6zvB1ZM9z46k0;
+	Fri,  6 Feb 2026 17:24:38 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1770395078;
+	bh=CA0zXufTVCu8yovgyhZqUdx10x8GwI/gpxsU3x47Wok=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=PhTESns2XqhoUnZ+MpXxGrdPz917NASiisM+uIIgqM8qT6RVPmoji5W0WrJX93n5N
+	 VEOqczFbTqrmZphL/6WLrbHR0Y13o5xLpSjG9KGaWIdRI0zqjudyHekaKF7r3x4N7l
+	 D0kDgjb7B8NDxuvO1Akwu2cbzpVYoA+DMY7LhxUWVJrbJk2IJ7L6sOMcT2IachGpEK
+	 1KZQiIO0LP/j0ugHHdcAakAmnjsRF5notollQQhkvK27JIil/YbZF+YXRgp6tpqEnG
+	 4iwkMkgWnel5A7svtlKq1K2efI0OQOpPlrZzEfJFlWn6APHBWgh6n9UXSIg/CjJQGP
+	 rtn+IzeRYkdIg==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8202.netcup.net (Postfix) with ESMTPS id 4f6zvB0rPzz46hm;
+	Fri,  6 Feb 2026 17:24:38 +0100 (CET)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4f6zv91G4Kz8sWT;
+	Fri,  6 Feb 2026 17:24:36 +0100 (CET)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id EF9BF66F47;
+	Fri,  6 Feb 2026 17:24:35 +0100 (CET)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <b82d8cc1-2124-417d-95f8-5fed429e2d0e@leemhuis.info>
+Date: Fri, 6 Feb 2026 17:24:34 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -75,32 +53,50 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-To: linux-kernel@vger.kernel.org, krzk@kernel.org
-Content-Language: en-GB
-Cc: regressions@lists.linux.dev, netdev@vger.kernel.org
-From: "Lukas K." <kernel@0x83.eu>
-Subject: [REGRESSION] NFC broken on Thinkpad T14 Gen since 9c328f5
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Subject: Re: [REGRESSION] NFC broken on Thinkpad T14 Gen since 9c328f5
+To: "Lukas K." <kernel@0x83.eu>, linux-kernel@vger.kernel.org, krzk@kernel.org
+Cc: regressions@lists.linux.dev, netdev@vger.kernel.org,
+ Michael Thalmeier <michael.thalmeier@hale.at>
+References: <11b7567e-b9a4-4546-9b1c-bb9820bead0c@0x83.eu>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <11b7567e-b9a4-4546-9b1c-bb9820bead0c@0x83.eu>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: <177039507652.2809654.1894967214230795230@mxe9fb.netcup.net>
+X-Rspamd-Server: rspamd-worker-8404
+X-Rspamd-Queue-Id: EF9BF66F47
+X-NC-CID: Bt98CjVrTXu9MdKvxaR1V7auDVmS08codIbbXfbktlRIwkJOQ3M=
 
-Hi All,
+On 2/6/26 16:15, Lukas K. wrote:
+> 
+> from 6.17.2 to 6.17.3, the integrated NFC reader (driver: nxp-nci_i2c)
+> in the Thinkpad T14 Gen 4 (AMD) stopped detecting tags. This can be
+> tested by running
+> 
+> sudo nfctool -1 -p -d nfc0
+> 
+> Looking at the commits between 6.17.2 and 6.17.3, 9c328f5 (net: nfc:
+> nci: Add parameter validation for packet data) was the only one related
+> to NFC.
+> 
+> To see if that commit indeed was the culprit, I reverted it on 6.18.7
+> and nfctool is detecting tags again.
+> 
+> Since the offending commit merely adds some bounds checks, the root
+> cause may very well be in another driver in the NFC stack.
 
-from 6.17.2 to 6.17.3, the integrated NFC reader (driver: nxp-nci_i2c) 
-in the Thinkpad T14 Gen 4 (AMD) stopped detecting tags. This can be 
-tested by running
+Thx for the report. Seems Michael (now CCed) also ran into problems and
+tried to fix them, but looks like that effort stalled; but might be good
+to know if this fixes your problem, too:
 
-sudo nfctool -1 -p -d nfc0
+https://lore.kernel.org/all/20260112124819.171028-1-michael.thalmeier@hale.at/
 
-Looking at the commits between 6.17.2 and 6.17.3, 9c328f5 (net: nfc: 
-nci: Add parameter validation for packet data) was the only one related 
-to NFC.
+Anyway: Given that the regressions seems to be known for a weeks now
+without a fix forthcoming I wonder if we should revert the culprit, as
+we are way past what Linus wants to see in a situation like this (see
+the "within a week" part in
+https://lore.kernel.org/all/CAHk-=wi86AosXs66-yi54+mpQjPu0upxB8ZAfG+LsMyJmcuMSA@mail.gmail.com/
+).
 
-To see if that commit indeed was the culprit, I reverted it on 6.18.7 
-and nfctool is detecting tags again.
-
-Since the offending commit merely adds some bounds checks, the root 
-cause may very well be in another driver in the NFC stack.
-
-Best Regards,
-
-Lukas
+Ciao, Thorsten
