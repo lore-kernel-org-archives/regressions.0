@@ -1,174 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E107923183F;
-	Fri,  6 Feb 2026 22:24:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DBB921ABAA
+	for <regressions@lists.linux.dev>; Fri,  6 Feb 2026 22:38:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770416699; cv=none; b=GbdvbShf2F2bdkUJJ4TzhMuzWKjRnU5kfhHZV2BC6UFaBv4MYciJe2itqdYsBSFVSTGKrzRrS7FLPlJmICkGxQaBjccLy1n6vZoAbXvwAAoq5qg7eiJ9AVYk57TyOpVaqhRKMt3oYs+K8sY5d1v7ea1Udn/dV+NYc/WTLB3NIkc=
+	t=1770417512; cv=none; b=f7dQzN9o6X7kE8pK/65LzaMj8yIeGihUSJMUcTNzHohB7I0H3GNyUP3qQrYFLV69ykhX8BTQwmNrEeRLPJQ1801yCgx6WcgmwC2EpTWgI9iLH/nmUzM9tzDVB93NHvBIqppGuZgF2yT+iWOexXSRpTcbwi3sJ+bS5voHdSWI2hk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770416699; c=relaxed/simple;
-	bh=8CafBACy+XOG2z0rDuw1PadsDjIp9FgOBrjumDUwdA4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q/8Y7NoYlJ0djNCRGlKTPzZLJGpYUNQ2LGPHwwmquZmANZ1LVXpANCthJUxpMkDk6vXE6HuTu5n2nG0rrgy/zkr44ZABi7eOtBwKKrd0RqToZFPzk86Wk5y5FN0qs88HXej4GPVFuZ1eQEQrrFAtgQkZDSx1F2mBJJPmFf/K4VY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UXP8JknF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1770417512; c=relaxed/simple;
+	bh=AyiPwiRO2V8spV6yty/voeQ6dq0l6vHSH1Gj+dIhqRw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EYJB48gvo6EoLL7mCKbhrlAOj5dViIOMKMfYYcS0iriEuvs6De4xfF0Fkvn6nkOVs6GolGwOjw7/JuuBYY8HuSg4GGAsfUEMpRiGBR8p8GCVcjwCZQm0lis5ZTvUSVnsgH01I9ef57mBr/c+6l7ZkebZh+lOU0ph8ZtGV8z+cOU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=anl/EtXJ; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UXP8JknF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54772C116C6;
-	Fri,  6 Feb 2026 22:24:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770416698;
-	bh=8CafBACy+XOG2z0rDuw1PadsDjIp9FgOBrjumDUwdA4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UXP8JknFpbJMreOym+0CDxogLXc+H035clj33DOOnoTGgOfbVzFhSNxUmr1OnDa6h
-	 /6uXuN++WV6oGf2tBqpKbCkqboUNqUcU/zkLUZDXwfzjjOxsfAxstWubZegN3GjeBK
-	 B46rtg+BwJVnmkbrlmrmTo/5Sj3Ljp60+qJvXtfMzy6lO2fLHFpyDt39c5uYKZxBwL
-	 PnOfirlEAM2k317dms6ulR/HomE99e+FvwlHaPo7hFNk3FKdf45fWxGqosN/0aqy5n
-	 aBLyNHYALfeIqZK8HikU5PzRuHrYWH6VvXvPMt2A8d9INiQtP93ayQS/4TO/x368qs
-	 a61/Fz09thJ0w==
-Date: Fri, 6 Feb 2026 14:24:55 -0800
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Thomas Gleixner <tglx@glx-um.de>, 
-	Thorsten Leemhuis <regressions@leemhuis.info>, Alexey Makhalov <alexey.makhalov@broadcom.com>, x86@kernel.org, 
-	linux-kernel@vger.kernel.org, Ajay Kaher <ajay.kaher@broadcom.com>, 
-	bcm-kernel-feedback-list@broadcom.com, Peter Zijlstra <peterz@infradead.org>, 
-	Justin Forbes <jforbes@fedoraproject.org>, Linux kernel regressions list <regressions@lists.linux.dev>
-Subject: Re: [PATCH] x86/vmware: Fix hypercall clobbers
-Message-ID: <nchtwtwjqwm444au4rsojawomqslolr3hb4ao4rwsi3t7hqawe@ktggphxq2rhd>
-References: <99a9c69a-fc1a-43b7-8d1e-c42d6493b41f@broadcom.com>
- <73641ce4-9387-48c6-8904-74997f9bb7ac@leemhuis.info>
- <cjacqm5kz67e3nrjfxhpe4lepr27cnbmykdixknta4r2wh7ugq@3wne235ikkb7>
- <eef847de-7ef5-4491-91f2-7437dcb573cb@leemhuis.info>
- <kv4bv3jng2iap3qwvk36pciggiho4yhavnfvsisri67jkdt6kr@szokbl6qdibl>
- <87jywq18yt.ffs@tglx>
- <uc62gsttzmh5o35uh7viy326bqwpq5gxmcxqqyqb4zp4blp7tg@v3kfsotqtaay>
- <CAHk-=wivx7pi+h+hGmvNFAJm6StQLiQ-b8DdsE5J=LMOWae8Ng@mail.gmail.com>
- <2aoadlgueumiq6hf74baskvk5eomsil7jfsxg4vf4ofaggbecl@7seilp4ou5nl>
- <CAHk-=wgeoGrqgd4n7CntnF8hCPr3qvVVgzF7evhacyqstByYmg@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="anl/EtXJ"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-b872f1c31f1so313363866b.0
+        for <regressions@lists.linux.dev>; Fri, 06 Feb 2026 14:38:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1770417510; x=1771022310; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=+fxnvWUAAx6E8WpMbtNGsmfTLGp+0qh9c7bOer733a0=;
+        b=anl/EtXJB4PJuPeLNUNFjxgJj5o0A8+RqXYZprITmCyKdDDSXtJfahbenbeEZZzpoD
+         iKTEVUhCWW+dddh6bNMEYOuYfuMSzvgtVubV1mPhSSNyxRg1/9+aeEh6BfFtpk99sfj8
+         MBVpn46Cm4ozTSa8C9if8q7Y/IZw5/iBCw4n4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1770417510; x=1771022310;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+fxnvWUAAx6E8WpMbtNGsmfTLGp+0qh9c7bOer733a0=;
+        b=fNhz/uZqYxQWpRoQv3p2fHY7Rwe18Umq8DEgTZtTErfH/sKabmBJBbIZwPzbCoaVI1
+         AI+U3DKFRGSK11BzkXj747zXTZHvCW/6/gGxqFkORc/QWMw2z7HsTx6pAtJX0vkgE7MP
+         N89tfenmMiS7THRJHezMQBxJPiPFknEFtxSpMk4TAHynCAG5ToKnb7jcRA1rGHA35rgy
+         f7iD5sDksnW898czGMS77bFQTO3SdKlUqb2FJKAA9HTCsk86Kc6Bqmfl9V3tSyvZvg9q
+         RpENd5L2RDBInj2SLEkuFpLOcxXpZLc+DZVlvfqcybIbjR0TvGm2mOys3FrqE1HVHb/y
+         duHw==
+X-Forwarded-Encrypted: i=1; AJvYcCVrz+Ko0SkzlpyYnrGV8xF2lVbEJjpZTg/5RIytZ5efBiOBNrUheePTpr+go4z6s4jWnj6QSwb5M+6f1w==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxjPxhFiqu2EdqOibNVNN3/yTEaR3XgnCSjaGqBk6pylVg4ckVl
+	mEmcRNNxc1wlsv0Tu0hQLvphPIvozpQumzTySk45ukEbv+FT/Gm6gi4PBN3thMoxEVglZw1NtnA
+	PL8owUrU=
+X-Gm-Gg: AZuq6aKxTInTmfLqZRX+x/6VSGPlLQe4L5Fis1UxeQ+novMrIMkj8dbkEsWuUEvF4eP
+	/W43S4rOgDywVqg6n5TZ1upzvBZzHRNNAvYBSCVY6mregEZzGYFgm8kyPLMaI4WxO4xzCEeMnlz
+	kRTda96uXIvkKpCTHUVVoWgZ/fQ6ed4NTCnY077k7Wa3bWbzRrb2JR/42iY4h63RH66DLTo88zC
+	7ypu3+1sSkAvv6pOjJhYiIGww6TdrKwsqaJe+T7h23NQCgNiu4NSqMWjVl/gnXDvDozkrK3g5tB
+	MACLNtqcoo5u86uewt1/tIqh7vaZSflY6uhr0bL4zjr3B9KwzIYH/EpZk6ouww/Z7oSh8i3ztF2
+	N0OmJiPfZEez9+3gg6CHDov42hYmIZbTinG6GwT7BMGspK1JwpinXxLqfZfn3WLvSs5l05MnU2W
+	dWRFM46b5HkRVHOD96T+ChEvxs7Fp2Z887/cjXIn6JhfZlJbXGRW2GeBXNSeWqtPCRh7jaLSM=
+X-Received: by 2002:a17:907:3f16:b0:b88:6164:6421 with SMTP id a640c23a62f3a-b8edf1b0204mr249224466b.16.1770417510347;
+        Fri, 06 Feb 2026 14:38:30 -0800 (PST)
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com. [209.85.218.48])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b8edacf0fcesm115620166b.46.2026.02.06.14.38.28
+        for <regressions@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 06 Feb 2026 14:38:28 -0800 (PST)
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-b872f1c31f1so313361166b.0
+        for <regressions@lists.linux.dev>; Fri, 06 Feb 2026 14:38:28 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXDP6gTgdg/ur/PlmbqNiiILtVAi1OHUa3Jb+Iqm021iac5BzkCvB13jzmtPJVvNFQXJNYTu/BsjaUvuA==@lists.linux.dev
+X-Received: by 2002:a17:907:7f8a:b0:b89:9631:2425 with SMTP id
+ a640c23a62f3a-b8edf1ea78bmr246142266b.19.1770417508316; Fri, 06 Feb 2026
+ 14:38:28 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wgeoGrqgd4n7CntnF8hCPr3qvVVgzF7evhacyqstByYmg@mail.gmail.com>
+References: <99a9c69a-fc1a-43b7-8d1e-c42d6493b41f@broadcom.com>
+ <73641ce4-9387-48c6-8904-74997f9bb7ac@leemhuis.info> <cjacqm5kz67e3nrjfxhpe4lepr27cnbmykdixknta4r2wh7ugq@3wne235ikkb7>
+ <eef847de-7ef5-4491-91f2-7437dcb573cb@leemhuis.info> <kv4bv3jng2iap3qwvk36pciggiho4yhavnfvsisri67jkdt6kr@szokbl6qdibl>
+ <87jywq18yt.ffs@tglx> <uc62gsttzmh5o35uh7viy326bqwpq5gxmcxqqyqb4zp4blp7tg@v3kfsotqtaay>
+ <CAHk-=wivx7pi+h+hGmvNFAJm6StQLiQ-b8DdsE5J=LMOWae8Ng@mail.gmail.com>
+ <2aoadlgueumiq6hf74baskvk5eomsil7jfsxg4vf4ofaggbecl@7seilp4ou5nl>
+ <CAHk-=wgeoGrqgd4n7CntnF8hCPr3qvVVgzF7evhacyqstByYmg@mail.gmail.com> <nchtwtwjqwm444au4rsojawomqslolr3hb4ao4rwsi3t7hqawe@ktggphxq2rhd>
+In-Reply-To: <nchtwtwjqwm444au4rsojawomqslolr3hb4ao4rwsi3t7hqawe@ktggphxq2rhd>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Fri, 6 Feb 2026 14:38:12 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wjzFZMAoJkrOg7LWsQcVOuZhOgMFWGC-sBHOACE8B4+Mw@mail.gmail.com>
+X-Gm-Features: AZwV_Qg-yaT857YLD_LYPh6lZi0YO4Bhb0fSlCaJosM8q5T84L3TZDoC6XUookE
+Message-ID: <CAHk-=wjzFZMAoJkrOg7LWsQcVOuZhOgMFWGC-sBHOACE8B4+Mw@mail.gmail.com>
+Subject: Re: [PATCH] x86/vmware: Fix hypercall clobbers
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: Thomas Gleixner <tglx@glx-um.de>, Thorsten Leemhuis <regressions@leemhuis.info>, 
+	Alexey Makhalov <alexey.makhalov@broadcom.com>, x86@kernel.org, linux-kernel@vger.kernel.org, 
+	Ajay Kaher <ajay.kaher@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, 
+	Peter Zijlstra <peterz@infradead.org>, Justin Forbes <jforbes@fedoraproject.org>, 
+	Linux kernel regressions list <regressions@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Feb 06, 2026 at 11:57:04AM -0800, Linus Torvalds wrote:
-> On Fri, 6 Feb 2026 at 11:08, Josh Poimboeuf <jpoimboe@kernel.org> wrote:
-> >
-> > Anyway, how about just adding RDI/RSI to the clobbers list for those two
-> > hypercalls?
-> 
-> Ack, that looks fine and code generation differences would be pretty minimal.
-> 
-> Mind sending a sign-off and I'll apply it and we can forget about this
-> unless somebody wants to actually clean up that vmware horror later?
+On Fri, 6 Feb 2026 at 14:25, Josh Poimboeuf <jpoimboe@kernel.org> wrote:
+>
+> Here ya go:
 
-Here ya go:
+I'm going to change that commit message to make it clear that it's a
+QEMU bug, plain and simple. There's no point in claiming this fixes a
+kernel bug when it's a pure workaround for a bug elsewhere.
 
----8<---
-
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-Subject: [PATCH] x86/vmware: Fix vmmouse hypercall clobbers
-
-Fedora QA reported the following panic:
-
-  BUG: unable to handle page fault for address: 0000000040003e54
-  #PF: supervisor write access in kernel mode
-  #PF: error_code(0x0002) - not-present page
-  PGD 1082ec067 P4D 0
-  Oops: Oops: 0002 [#1] SMP NOPTI
-  CPU: 0 UID: 0 PID: 0 Comm: swapper/0 Not tainted 6.19.0-0.rc4.260108gf0b9d8eb98df.34.fc43.x86_64 #1 PREEMPT(lazy)
-  Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS edk2-20251119-3.fc43 11/19/2025
-  RIP: 0010:vmware_hypercall4.constprop.0+0x52/0x90
-  Code: 48 83 c4 20 5b e9 69 f0 fc fe 8b 05 a0 c1 b2 01 85 c0 74 23 b8 68 58 4d 56 b9 27 00 00 00 31 d2 bb 04 00 00 00 66 ba 58 56 ed <89> 1f 89 0e 41 89 10 5b e9 3c f0 fc fe 6a 00 49 89 f9 45 31 c0 31
-  RSP: 0018:ff5eeb3240003e40 EFLAGS: 00010046
-  RAX: 0000000000000000 RBX: 000000000000ffca RCX: 000000000000ffac
-  RDX: 0000000000000000 RSI: 0000000040003e58 RDI: 0000000040003e54
-  RBP: ff1e05f3c1204800 R08: ff5eeb3240003e5c R09: 000000009d899c41
-  R10: 000000000000003d R11: ff5eeb3240003ff8 R12: 0000000000000000
-  R13: 00000000000000ff R14: ff1e05f3c02f9e00 R15: 000000000000000c
-  FS:  0000000000000000(0000) GS:ff1e05f489e40000(0000) knlGS:0000000000000000
-  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: 0000000040003e54 CR3: 000000010841d002 CR4: 0000000000771ef0
-  PKRU: 55555554
-  Call Trace:
-   <IRQ>
-   vmmouse_report_events+0x13e/0x1b0
-   psmouse_handle_byte+0x15/0x60
-   ps2_interrupt+0x8a/0xd0
-   ...
-
-It was triggered by dereferencing a bad pointer (in RDI) immediately
-after a VMware hypercall:
-
-  ffffffff82135070 <vmware_hypercall4.constprop.0>:
-  ...
-  ffffffff821350ac:       b8 68 58 4d 56          mov    $0x564d5868,%eax
-  ffffffff821350b1:       b9 27 00 00 00          mov    $0x27,%ecx
-  ffffffff821350b6:       31 d2                   xor    %edx,%edx
-  ffffffff821350b8:       bb 04 00 00 00          mov    $0x4,%ebx
-  ffffffff821350bd:       66 ba 58 56             mov    $0x5658,%dx
-  ffffffff821350c1:       ed                      in     (%dx),%eax	<-- hypercall
-  ffffffff821350c2:       89 1f                   mov    %ebx,(%rdi)	<-- crash
-
-The full disassembly shows that RDI should contain the value of a valid
-kernel stack address (0xff5eeb3240003e54).  Instead it contains
-0x40003e54, suggesting the hypervisor cleared the upper 32 bits.
-
-This issue was bisected to commit aca282ab7e75 ("x86/asm: Annotate
-special section entries"), which added annotations to the ALTERNATIVE()
-macro.  Despite the use of asm_inline, that commit caused the compiler
-to un-inline and const-propagate vmware_hypercall4().
-
-That made RDI live across the hypercall, making the hypervisor's
-register clobbering visible and exposing this latent bug.  Technically
-the bug is in QEMU, but we still need to support old "broken" versions.
-
-This is also exacerbated by CONFIG_DEBUG_SECTION_MISMATCH which sets
--fno-inline-functions-called-once, causing once-called functions to be
-not inlined, and in this case const-propagated as well.
-
-In theory this same issue exists for all the hypercalls in the vmmouse
-driver; in practice it has only been seen with vmware_hypercall3() and
-vmware_hypercall4().  For now, just mark RDI/RSI as clobbered for those
-two calls.  This should have a minimal effect on code generation overall
-as it should be rare for the compiler to want to make RDI/RSI live
-across hypercalls.
-
-Fixes: 34bf25e820ae ("x86/vmware: Introduce VMware hypercall API")
-Fixes: aca282ab7e75 ("x86/asm: Annotate special section entries")
-Reported-by: Justin Forbes <jforbes@fedoraproject.org>
-Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
----
- arch/x86/include/asm/vmware.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/include/asm/vmware.h b/arch/x86/include/asm/vmware.h
-index c9cf43d5ef23..4220dae14a2d 100644
---- a/arch/x86/include/asm/vmware.h
-+++ b/arch/x86/include/asm/vmware.h
-@@ -140,7 +140,7 @@ unsigned long vmware_hypercall3(unsigned long cmd, unsigned long in1,
- 		  "b" (in1),
- 		  "c" (cmd),
- 		  "d" (0)
--		: "cc", "memory");
-+		: "di", "si", "cc", "memory");
- 	return out0;
- }
- 
-@@ -165,7 +165,7 @@ unsigned long vmware_hypercall4(unsigned long cmd, unsigned long in1,
- 		  "b" (in1),
- 		  "c" (cmd),
- 		  "d" (0)
--		: "cc", "memory");
-+		: "di", "si", "cc", "memory");
- 	return out0;
- }
- 
--- 
-2.52.0
-
+               Linus
