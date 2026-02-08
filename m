@@ -1,81 +1,144 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [46.38.247.119])
+Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [81.169.146.165])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3220E2C859
-	for <regressions@lists.linux.dev>; Sat,  7 Feb 2026 11:46:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.38.247.119
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770464806; cv=none; b=QDupJ1ROQXePVVWINprjY5SwxMkgKgFsJae6HoQPNELGD/0HR7/9fc6+KFJu+AI73lenC3G4Jd3Gist9U4L+bDtwbMkYgncQb1mG0TOscGW5R2SfbgOzv0BLabZzwjF6zyHofrKLlWl9ubpUNx6y1uBrbhf95WtwDXsX2cDavS0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770464806; c=relaxed/simple;
-	bh=0E4Y9kW9rQ9MJIHBClU9+2YYNR7BIOY1w2YQspqf84c=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=m/1RyykptIIorhuMUyZCIB6wd4QWM/fRdqn7DEApXqRTCob3+3Z5F7yx9P5psRsQ6akEtKybNreaMrEc9w+eZs07/4goqMJOXN72Sd1S6ddjrL/Vu85umHZSoibviZFVgaNLbG/1pw3xA8aM4YMz0Tl+/4k046lY/4yirqZ6iBw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=VDvuyBWs; arc=none smtp.client-ip=46.38.247.119
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C083B344DBF
+	for <regressions@lists.linux.dev>; Sun,  8 Feb 2026 21:36:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=81.169.146.165
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770586605; cv=pass; b=nhWkkV6ogdrMqSnENiCvCYV2cOEVld/3Je8QOw7fWNLQ37gzSz16xRkB4EnxQDoYLV4eX1aEcD0e0P0V0OFFmmW6XJFxD5FwMLDho4SQlfkk9ZPYO09MbREuClLX9BO6GXCoD15J/DrjDOWZtPlBU9n6EOGalRb4itYMX6lUIkU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770586605; c=relaxed/simple;
+	bh=DqBLUrhBuL06YYsO+DzU6rbEovOYWHLh4Pm3Ji3ddFM=;
+	h=References:Message-ID:From:To:Cc:Subject:Date:Mime-Version:
+	 Content-Type:Content-Disposition; b=TCwrrwZFWOCT+NasY5UHiKmIrAUWWS/w8kXKSy5/b0AuthHDbQoLAG3n2SPMa83BPAHgxdPyBG4jnfP/glXX9lJK1vMDzO+wASUx8gC8Hbk4Q2FK3nPDxRBS0VG0rNZ6poY77DbLOCoMAO6UpuWE7HQmXizn8yoAPdbMBNtcZpQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=masysma.net; spf=pass smtp.mailfrom=masysma.net; dkim=pass (2048-bit key) header.d=masysma.net header.i=@masysma.net header.b=nm4C4Y0E; dkim=permerror (0-bit key) header.d=masysma.net header.i=@masysma.net header.b=WzFDkwjw; arc=pass smtp.client-ip=81.169.146.165
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=masysma.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=masysma.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="VDvuyBWs"
-Received: from mors-relay-8404.netcup.net (localhost [127.0.0.1])
-	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4f7Th2234Xz872Y
-	for <regressions@lists.linux.dev>; Sat,  7 Feb 2026 12:46:42 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1770464802;
-	bh=0E4Y9kW9rQ9MJIHBClU9+2YYNR7BIOY1w2YQspqf84c=;
-	h=Date:Subject:From:To:References:In-Reply-To:From;
-	b=VDvuyBWsIZRsV0zBqA83bgEod2fZuufVzwPDUYxrAR/DGG6QC2PqwxAG740Lxvk0b
-	 XAIxQMcCFl7PimbcYW/T6dSmst3NR2qQO1cdgsY5Mxhi6B+FB8nHKf8Y1o5ls+fxhN
-	 LlF9rRLaQzh5LBA6YQjl+Wsu/hxGt0RWpUMhVKyUTr9lLtBsBQdgjpJ/uS9Ji1oYbZ
-	 WGOBfGGfQa+GUbxg636aoS7xiadBk8XeCBmN1WTBN6dZqdMRUiBHn8wQf2u+4BBfPA
-	 pCJyjF4zi2KIUMj28MfAxSyTuzYyMruS4ycn61sCBeqtQuKw3vtWm1nUf+sApZ7ijA
-	 BcoH0luGpr4Lw==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4f7Th21Mzrz4xWl
-	for <regressions@lists.linux.dev>; Sat,  7 Feb 2026 12:46:42 +0100 (CET)
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4f7Th16z6Lz8sWT
-	for <regressions@lists.linux.dev>; Sat,  7 Feb 2026 12:46:41 +0100 (CET)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 76F17671DF
-	for <regressions@lists.linux.dev>; Sat,  7 Feb 2026 12:46:41 +0100 (CET)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <b5ef1dd4-33f9-4897-b87a-9f98bbb0a299@leemhuis.info>
-Date: Sat, 7 Feb 2026 12:46:41 +0100
+	dkim=pass (2048-bit key) header.d=masysma.net header.i=@masysma.net header.b="nm4C4Y0E";
+	dkim=permerror (0-bit key) header.d=masysma.net header.i=@masysma.net header.b="WzFDkwjw"
+ARC-Seal: i=1; a=rsa-sha256; t=1770586241; cv=none;
+    d=strato.com; s=strato-dkim-0002;
+    b=HFIDYRQ8KCEJiCeQGSXvFjjlAFNO+NeTl8isRM74yaMEINx12xFt5bgtbdM2tMdU/S
+    07aLxiWdSl3Z4ODly6tenNF5U7MBaB3sne94zpsukJMQMq4PtnjCkaRP3Pb+eeVBO9U7
+    XdhGGSUTrVnnJnCzv2VbmeMvYeU3J444qneaIvenwb+zwK+R3ZTYOV7aLQgewkGC5imI
+    evyw0SHJeaZxrNEm5oyF7VRzqlZWqch84rX5NKwSJ1sPEJYYRgwP5S/6uYJLWO8Q3mPE
+    oMShUddGuA0YDDM7xaiQrMa+qX0Zcwpx+rSe35KxTqR0ASYseq1n/4az7W56zASpgtOa
+    18Zw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1770586241;
+    s=strato-dkim-0002; d=strato.com;
+    h=Date:Subject:Cc:To:From:Message-ID:References:Cc:Date:From:Subject:
+    Sender;
+    bh=+O44CNWrLoa/XFnBV8A7kFFREAVFWtrL1ZCd+Xie11A=;
+    b=jJQAo+wL+RcUD/o4MV3kU5FcjpVZC+4pFyL4un4Y9kpOaO2kP09tRg07teajqLmlYT
+    S4/hPa9e4rH02mDumqvUvEoVxgsbhusKb0HzLL+h3dgoihj1FsUDpsvNm9N9BdF7EjBx
+    2x3JP9F0A7toPP8US9GdIBdHiR8wbF2NoKYg65BxWkHLw6U7t27r8wLm4kA6DVTElRU0
+    w5NBl9IIW8AYzjE3CU/l5FI+YrsJTQylhqDJ4vWdu2AEJ8dDPDb4JswNGiDM99cxgtu8
+    z5ynKkiTRz3ziZWGPiAmcwUjc2d7M0va/so328HHvJGZOPiYeeQ06/k3B5rXcvz1HYQs
+    o8Tg==
+ARC-Authentication-Results: i=1; strato.com;
+    arc=none;
+    dkim=none
+X-RZG-CLASS-ID: mo01
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1770586241;
+    s=strato-dkim-0002; d=masysma.net;
+    h=Date:Subject:Cc:To:From:Message-ID:References:Cc:Date:From:Subject:
+    Sender;
+    bh=+O44CNWrLoa/XFnBV8A7kFFREAVFWtrL1ZCd+Xie11A=;
+    b=nm4C4Y0E0omdMrIjIeZUhSDDjowW6QFBbpaApgb+A7lFh5oRIdv8Zap2nBzudi9Ct9
+    hzYaRRTQJdtYvMTbPK3a6+G+5GKWj7zRBclmaMPBZubvHRuC4msKYb7L7bYCL3cBYBIl
+    ZPLYEisGq4mrSM2TKxlVfk6iM8oeplQTkq6yL3VjVasltFDiaBQyJYI8ct4OkfBpVCFK
+    KKb7gTTUh1ARoxB08NBqhL5DOOFIdEmluiRcqzlHMJNm/YPNE8JKjgEo86G+RfQi66gy
+    rUH2qaUIAMxH51YqGabztbwA4vsb0dSo1y2aaBPMYUV16j7g5OWiM+mT0TLUvxMA8uwo
+    arqw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1770586241;
+    s=strato-dkim-0003; d=masysma.net;
+    h=Date:Subject:Cc:To:From:Message-ID:References:Cc:Date:From:Subject:
+    Sender;
+    bh=+O44CNWrLoa/XFnBV8A7kFFREAVFWtrL1ZCd+Xie11A=;
+    b=WzFDkwjwjKGVON5rNZ7IpUxCW38KdE+58QBOtD1Fc0v35Df/U7y94CZe3nREOmgp3X
+    TdtNIUfiCUZohNmVhZAg==
+X-RZG-AUTH: ":JWICemCleuxmQC700vpzGgDMhu8YP6Ql4e3bvdBvsQ2fC5IJhh3tj/mdIDjDL2XEF3B/cogzjlgx+bvlDJMMOb0rK2YO2Wo="
+Received: from masysma-18
+    by smtp.strato.de (RZmta 55.0.1 AUTH)
+    with ESMTPSA id 97fea1218LUeE0j
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+	(Client did not present a certificate);
+    Sun, 8 Feb 2026 22:30:40 +0100 (CET)
+References: <20251008165345.GA627277@bhelgaas> <80340269-c702-442d-a461-300a2041a497@leemhuis.info>
+Message-ID: <cone.1770586239.550948.1302334.1000@masysma-18>
+X-Mailer: https://www.courier-mta.org/cone/
+From: Linux-Fan <info@masysma.net>
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, Hui Wang <hui.wang@canonical.com>,
+    Nirmal Patel <nirmal.patel@linux.intel.com>,
+    Jonathan Derrick <jonathan.derrick@linux.dev>, linux-pci@vger.kernel.org,
+    bhelgaas@google.com, raphael.norwitz@nutanix.com, alay.shah@nutanix.com,
+    suresh.gumpula@nutanix.com, ilpo.jarvinen@linux.intel.com,
+    Chaitanya Kumar Borah <chaitanya.kumar.borah@intel.com>,
+    Ville =?UTF-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>
+Subject: Re: [PATCH] PCI: Disable RRS polling for Intel SSDPE2KX020T8 nvme
+Date: Sun, 08 Feb 2026 22:30:39 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: 
- <177046480164.2285977.16074372057493299304@mxe9fb.netcup.net>
-X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: 76F17671DF
-X-NC-CID: 1tWpuD7J8/f7Pp+9bkFArKE0pZDnEcQk87k/c1tTFhss/1z629w=
+Mime-Version: 1.0
+Content-Type: text/plain; format=flowed; delsp=yes; charset="UTF-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
+Linux regression tracking (Thorsten Leemhuis) writes:
 
+> [top-posting to facilitate processing]
+>
+> The issue discussed in this thread is still on my list of tracked
+> regression, which got me wondering what's the status here. Did it fall
+> through the cracks? Or was the regression maybe fixed already and I just
+> missed it?
 
-On 3/9/24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
+Hello Thorsten,
 
-#regzbot report:
-https://lore.kernel.org/lkml/bed73c01aba29fe651c9e23a9820a21e88ad13e7.1769048488.git.jpoimboe@kernel.org/
-#regzbot fix: 2687c848e57820651b9f69d30c4710f4219f7dbf
+I saw the regression was closed here:
+<https://lore.kernel.org/regressions/e03d4af5-5cdb-4bf4-a568-06b9213247a0@leemhuis.info/>
+
+I am one of the users affected by this issue and are currently running an  
+old Linux version (Linux 6.1 from Debian oldstable) to work around it. As a  
+user I would very much appreciate an upstream fix.
+
+The Debian bug is still open
+<https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1112238> whereas I think  
+Ubuntu got a patch working around the issue for their users:
+<https://bugs.launchpad.net/ubuntu/+source/linux/+bug/2111521>
+
+Is there a chance to possibly include the workaround in the upstream?
+
+As the issue is reproducible on my system, I should be able to test some  
+patches if necessary. Tests are not easy to perform because it degrades the  
+RAID system and I would like to avoid damaging my “production” data hence  
+limit the tests to the required minimum.
+
+But if there is some real doubt that the issue is still present, tell me and  
+I check it again with a more recent kernel version?
+
+Thanks in advance and Kind regards
+Linux-Fan
+
+> On 10/8/25 18:53, Bjorn Helgaas wrote:
+> > Nirmal, Jonathan, can you confirm that when RRS SV is enabled for VMD
+> > Root Ports, we should actually see the 0x0001 value when a device
+> > downstream of VMD responds with RRS?  From the log below, it appears
+> > that we actually get 0xffffffff when reading Device ID after a reset.
+> >
+> > On Thu, Aug 21, 2025 at 11:39:36AM -0500, Bjorn Helgaas wrote:
+> >> On Thu, Jul 03, 2025 at 08:05:05AM +0800, Hui Wang wrote:
+> >>> On 7/2/25 17:43, Hui Wang wrote:
+
+[...]
+
+> > The patch is here:
+> > https://lore.kernel.org/r/20250701232341.GA1859056@bhelgaas
+> > and the log with that patch is here:
+
+[...]
