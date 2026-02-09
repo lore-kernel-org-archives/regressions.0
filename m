@@ -1,104 +1,87 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.162])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFEF2374174;
-	Mon,  9 Feb 2026 16:34:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21C633815E4
+	for <regressions@lists.linux.dev>; Mon,  9 Feb 2026 17:12:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.162
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770654854; cv=none; b=KCSV2YFPxKQvWPQcbYMxd2hIxthdHxQ0jq8c/9z/f+RxBwwiQwR3WbaHuJ4TQLV/JatUUoNwIf9k4ECtJU9h/Wxo18ZTJUVS+5yuGu5ic1AlV/TPfvZUROl6PHGC77SOJN/ObtAblO8dAFSrs4tsRKoS2XyGUlj77Pd+Evy5RWk=
+	t=1770657135; cv=none; b=uY2+CbjFxAY02FSFJ5gg0Z/4A2bggtWXdsKPlu8bWjXKeZOWlHurZHIsYuTNld9eQrJHuXXFPy5s0Onowr5s9eC6Hl7Qh8Y8+jpYiOf6F9dagRSuZ+PVnXcBF2WuaOvM3yQz5ZIQxNskCLDU8B2STUJJd+7kTeLXm+CbccpR5hw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770654854; c=relaxed/simple;
-	bh=hXItPnSI4S1Mss6k7FHxY9pDox6GjX4eWt9ADUIr01M=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=MS2FKejuQ83tRqo+MYW47gVE+GRJZCJInz0iMfR5CVDKKfGt9TranagWN6oJOSsiEzjptque8o7MSPxSfh5QW6nf4UsOAqn0fbyQ5Co4ioGV0O8ROny+JXYkTRcigG2TmSKtVmwPiS8DQ0baa4QqHYRU8vIPrLfLOc5w0ihVWdw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QYkl+bkL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1770657135; c=relaxed/simple;
+	bh=8Oq71d0bB3HEUC7iXLLH4raf8HRUo4372I+QmBWcB6w=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=Mc34FHd2H5x3OwVfD8FaCVd1wl/02AOgnZ70Tv0VdeeS+YxygcCm5JrO1xjAhKBuvA+XH7PCLlF4S2LVL+H9CPWdlr+LgOPLlBQ81UcOMOonvj2WjGfww1gqzZHNfzLgskVSdvkbaFYnWqib/uXaeSIaH9xiamzcJkS/sN4qzZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=A00Kti/v; arc=none smtp.client-ip=188.68.63.162
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QYkl+bkL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 437E5C116C6;
-	Mon,  9 Feb 2026 16:34:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770654854;
-	bh=hXItPnSI4S1Mss6k7FHxY9pDox6GjX4eWt9ADUIr01M=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=QYkl+bkL0n+mf1o+jrVIsKb9QtYltoddflERBitBiCIIT3pb+uMRu82DCRp70F6+k
-	 gN2P2ZKXTSkSFOE+BZQJp8AEOfext3x+tt6tU22llyKrOa7lRpAaT54xvgyUOlPTlO
-	 CyhJ9G3ypaIxAAZg8BjhvBxAa7jR/rZArLOZBcLJklB8DC1tAPqNYBZZMT9dQowhwI
-	 ukc+/W6wbdUL1pMjfyFc1v4y8Ja+wagOhupUUGiXM6eWIgDlrzUqur44qWcnjMQeoQ
-	 NahwCBVv9tFumFuYeNjtaajoVuZKn9S8EHPDqsUO58OhyccKlmp1z7mVCUgPVMeylz
-	 Xd8FOlqgjVKUw==
-Date: Mon, 9 Feb 2026 10:34:13 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Linux-Fan <info@masysma.net>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
-	Hui Wang <hui.wang@canonical.com>,
-	Nirmal Patel <nirmal.patel@linux.intel.com>,
-	Jonathan Derrick <jonathan.derrick@linux.dev>,
-	linux-pci@vger.kernel.org, bhelgaas@google.com,
-	raphael.norwitz@nutanix.com, alay.shah@nutanix.com,
-	suresh.gumpula@nutanix.com, ilpo.jarvinen@linux.intel.com,
-	Chaitanya Kumar Borah <chaitanya.kumar.borah@intel.com>,
-	Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>
-Subject: Re: [PATCH] PCI: Disable RRS polling for Intel SSDPE2KX020T8 nvme
-Message-ID: <20260209163413.GA192568@bhelgaas>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="A00Kti/v"
+Received: from mors-relay-8201.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4f8rpY4CQ5z44gr
+	for <regressions@lists.linux.dev>; Mon,  9 Feb 2026 18:12:05 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1770657125;
+	bh=8Oq71d0bB3HEUC7iXLLH4raf8HRUo4372I+QmBWcB6w=;
+	h=Date:Subject:From:To:References:In-Reply-To:From;
+	b=A00Kti/venGDu5HrpEWy28NRs+2la8lPO3R2ZsdSBAUlFk/NBdhX4LNYpnmTM7ueV
+	 BUDt6uDtrLxCdZI2e3W46pUeiqkvQAh/GdX7pwgpNXw/ydXzKi9momhSrayDteRNd+
+	 e4+nhc/3FgyhzbjfV4jyIKtEc80XhWLUDpEzuyyFKRbsJGk6yoMzJb3iM0rQbiE/d8
+	 7BXLcNzrn5g2pmE5RNe0eJ62kH6uC6pKoawkkW2hVofJ5xg0+Z5jj/N1E+9TNQVPCw
+	 oJ1OaUI1gqH1JFvRmaaSjtSYTqoC8BkJXmrkH1BuOqjMM414FnP49BTABK/W5VfP4w
+	 oHtsaC37nV9dQ==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4f8rpY3V2Qz44gn
+	for <regressions@lists.linux.dev>; Mon,  9 Feb 2026 18:12:05 +0100 (CET)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4f8rpY1lzdz8sbC
+	for <regressions@lists.linux.dev>; Mon,  9 Feb 2026 18:12:05 +0100 (CET)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 7FAB6675C6
+	for <regressions@lists.linux.dev>; Mon,  9 Feb 2026 18:12:04 +0100 (CET)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <3bb3a88b-bebf-4a8d-bd65-aa3a9cb71a74@leemhuis.info>
+Date: Mon, 9 Feb 2026 18:12:04 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <cone.1770586239.550948.1302334.1000@masysma-18>
+User-Agent: Mozilla Thunderbird
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: 
+ <177065712468.3407723.12333652991950216720@mxe9fb.netcup.net>
+X-Rspamd-Server: rspamd-worker-8404
+X-Rspamd-Queue-Id: 7FAB6675C6
+X-NC-CID: gqFk5OZ7tJCn1k7IemNAuoblAsk1kgGIn6lxkAfmzJk9T8tJ+/w=
 
-On Sun, Feb 08, 2026 at 10:30:39PM +0100, Linux-Fan wrote:
-> Linux regression tracking (Thorsten Leemhuis) writes:
-> > The issue discussed in this thread is still on my list of tracked
-> > regression, which got me wondering what's the status here. Did it
-> > fall through the cracks? Or was the regression maybe fixed already
-> > and I just missed it?
 
-> I am one of the users affected by this issue and are currently
-> running an old Linux version (Linux 6.1 from Debian oldstable) to
-> work around it. As a user I would very much appreciate an upstream
-> fix.
-> 
-> The Debian bug is still open
-> <https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1112238> whereas
-> I think Ubuntu got a patch working around the issue for their users:
-> <https://bugs.launchpad.net/ubuntu/+source/linux/+bug/2111521>
-> 
-> Is there a chance to possibly include the workaround in the
-> upstream?
-> 
-> As the issue is reproducible on my system, I should be able to test
-> some patches if necessary. Tests are not easy to perform because it
-> degrades the RAID system and I would like to avoid damaging my
-> “production” data hence limit the tests to the required minimum.
-> 
-> But if there is some real doubt that the issue is still present,
-> tell me and I check it again with a more recent kernel version?
 
-As far as I know this issue still exists, and it has unfortunately
-fallen through the cracks, mostly because I don't have a good idea how
-to debug it.
+On 3/9/24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-Thanks for keeping it alive.  I'll try to come up with some ideas.
+#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=221023
+#regzbot introduced: 2cedb296988c384
+#regzbot title: mei: me: mei_reset periodically causes 5-7 second
+resumes on many systems
 
-> > On 10/8/25 18:53, Bjorn Helgaas wrote:
-> > > Nirmal, Jonathan, can you confirm that when RRS SV is enabled for VMD
-> > > Root Ports, we should actually see the 0x0001 value when a device
-> > > downstream of VMD responds with RRS?  From the log below, it appears
-> > > that we actually get 0xffffffff when reading Device ID after a reset.
-> > >
-> > > On Thu, Aug 21, 2025 at 11:39:36AM -0500, Bjorn Helgaas wrote:
-> > >> On Thu, Jul 03, 2025 at 08:05:05AM +0800, Hui Wang wrote:
-> > >>> On 7/2/25 17:43, Hui Wang wrote:
-> 
-> [...]
-> 
-> > > The patch is here:
-> > > https://lore.kernel.org/r/20250701232341.GA1859056@bhelgaas
-> > > and the log with that patch is here:
-> 
-> [...]
+#regzbot report:
+https://lore.kernel.org/all/CAH2r5mugbrHTwnaQwQiYEUVwbtqmvFYf0WZiLrrJWpgT8iwftw@mail.gmail.com/
+#regzbot introduced: 62089b804895e845
+#regzbot title: kbuild: rpm-pkg: test builds failing on RHEL 9.7
