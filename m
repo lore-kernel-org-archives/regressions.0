@@ -1,144 +1,162 @@
-Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [81.169.146.165])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C083B344DBF
-	for <regressions@lists.linux.dev>; Sun,  8 Feb 2026 21:36:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=81.169.146.165
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770586605; cv=pass; b=nhWkkV6ogdrMqSnENiCvCYV2cOEVld/3Je8QOw7fWNLQ37gzSz16xRkB4EnxQDoYLV4eX1aEcD0e0P0V0OFFmmW6XJFxD5FwMLDho4SQlfkk9ZPYO09MbREuClLX9BO6GXCoD15J/DrjDOWZtPlBU9n6EOGalRb4itYMX6lUIkU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770586605; c=relaxed/simple;
-	bh=DqBLUrhBuL06YYsO+DzU6rbEovOYWHLh4Pm3Ji3ddFM=;
-	h=References:Message-ID:From:To:Cc:Subject:Date:Mime-Version:
-	 Content-Type:Content-Disposition; b=TCwrrwZFWOCT+NasY5UHiKmIrAUWWS/w8kXKSy5/b0AuthHDbQoLAG3n2SPMa83BPAHgxdPyBG4jnfP/glXX9lJK1vMDzO+wASUx8gC8Hbk4Q2FK3nPDxRBS0VG0rNZ6poY77DbLOCoMAO6UpuWE7HQmXizn8yoAPdbMBNtcZpQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=masysma.net; spf=pass smtp.mailfrom=masysma.net; dkim=pass (2048-bit key) header.d=masysma.net header.i=@masysma.net header.b=nm4C4Y0E; dkim=permerror (0-bit key) header.d=masysma.net header.i=@masysma.net header.b=WzFDkwjw; arc=pass smtp.client-ip=81.169.146.165
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=masysma.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=masysma.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E03A8258CDF
+	for <regressions@lists.linux.dev>; Mon,  9 Feb 2026 09:42:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.174
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770630176; cv=none; b=EsCQzTE68JEsVhdd+IUe0L7knE7i/Wcz4hE17DXkYo6YrWLfP9X2f6gu/BdtLVlrtpalJ9xdp8OsmtAs4J9vQ4F4beDFwbssX/SZX39aHloAj5rUE7SjQUXO4IOKHdGAo5ABBddt5JDC9dC2SDA1EVhQZKRljGcSKVsAd3NxDmI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770630176; c=relaxed/simple;
+	bh=UOsVwSOTVWc4zYryltyKNWs3NU6VnGBHfl/YQ/sPQuw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TQ5kHAj4st6YtqxvcpV3cZUvtUy3s4n1H8wNttw9UiVUr4y06kuK/1RW1zngV5dym2ACvJBvbT0gNN5SuCGfJZt4heQ9d4V610TiXjUrppYbPZBBEZ+2ljNOcG2fQJFjF46B3Bzops9hpGDgwpYjBxx2j0eepj6iIK5v4k8V+vI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=HMt1kAcK; arc=none smtp.client-ip=188.68.63.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=masysma.net header.i=@masysma.net header.b="nm4C4Y0E";
-	dkim=permerror (0-bit key) header.d=masysma.net header.i=@masysma.net header.b="WzFDkwjw"
-ARC-Seal: i=1; a=rsa-sha256; t=1770586241; cv=none;
-    d=strato.com; s=strato-dkim-0002;
-    b=HFIDYRQ8KCEJiCeQGSXvFjjlAFNO+NeTl8isRM74yaMEINx12xFt5bgtbdM2tMdU/S
-    07aLxiWdSl3Z4ODly6tenNF5U7MBaB3sne94zpsukJMQMq4PtnjCkaRP3Pb+eeVBO9U7
-    XdhGGSUTrVnnJnCzv2VbmeMvYeU3J444qneaIvenwb+zwK+R3ZTYOV7aLQgewkGC5imI
-    evyw0SHJeaZxrNEm5oyF7VRzqlZWqch84rX5NKwSJ1sPEJYYRgwP5S/6uYJLWO8Q3mPE
-    oMShUddGuA0YDDM7xaiQrMa+qX0Zcwpx+rSe35KxTqR0ASYseq1n/4az7W56zASpgtOa
-    18Zw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1770586241;
-    s=strato-dkim-0002; d=strato.com;
-    h=Date:Subject:Cc:To:From:Message-ID:References:Cc:Date:From:Subject:
-    Sender;
-    bh=+O44CNWrLoa/XFnBV8A7kFFREAVFWtrL1ZCd+Xie11A=;
-    b=jJQAo+wL+RcUD/o4MV3kU5FcjpVZC+4pFyL4un4Y9kpOaO2kP09tRg07teajqLmlYT
-    S4/hPa9e4rH02mDumqvUvEoVxgsbhusKb0HzLL+h3dgoihj1FsUDpsvNm9N9BdF7EjBx
-    2x3JP9F0A7toPP8US9GdIBdHiR8wbF2NoKYg65BxWkHLw6U7t27r8wLm4kA6DVTElRU0
-    w5NBl9IIW8AYzjE3CU/l5FI+YrsJTQylhqDJ4vWdu2AEJ8dDPDb4JswNGiDM99cxgtu8
-    z5ynKkiTRz3ziZWGPiAmcwUjc2d7M0va/so328HHvJGZOPiYeeQ06/k3B5rXcvz1HYQs
-    o8Tg==
-ARC-Authentication-Results: i=1; strato.com;
-    arc=none;
-    dkim=none
-X-RZG-CLASS-ID: mo01
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1770586241;
-    s=strato-dkim-0002; d=masysma.net;
-    h=Date:Subject:Cc:To:From:Message-ID:References:Cc:Date:From:Subject:
-    Sender;
-    bh=+O44CNWrLoa/XFnBV8A7kFFREAVFWtrL1ZCd+Xie11A=;
-    b=nm4C4Y0E0omdMrIjIeZUhSDDjowW6QFBbpaApgb+A7lFh5oRIdv8Zap2nBzudi9Ct9
-    hzYaRRTQJdtYvMTbPK3a6+G+5GKWj7zRBclmaMPBZubvHRuC4msKYb7L7bYCL3cBYBIl
-    ZPLYEisGq4mrSM2TKxlVfk6iM8oeplQTkq6yL3VjVasltFDiaBQyJYI8ct4OkfBpVCFK
-    KKb7gTTUh1ARoxB08NBqhL5DOOFIdEmluiRcqzlHMJNm/YPNE8JKjgEo86G+RfQi66gy
-    rUH2qaUIAMxH51YqGabztbwA4vsb0dSo1y2aaBPMYUV16j7g5OWiM+mT0TLUvxMA8uwo
-    arqw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1770586241;
-    s=strato-dkim-0003; d=masysma.net;
-    h=Date:Subject:Cc:To:From:Message-ID:References:Cc:Date:From:Subject:
-    Sender;
-    bh=+O44CNWrLoa/XFnBV8A7kFFREAVFWtrL1ZCd+Xie11A=;
-    b=WzFDkwjwjKGVON5rNZ7IpUxCW38KdE+58QBOtD1Fc0v35Df/U7y94CZe3nREOmgp3X
-    TdtNIUfiCUZohNmVhZAg==
-X-RZG-AUTH: ":JWICemCleuxmQC700vpzGgDMhu8YP6Ql4e3bvdBvsQ2fC5IJhh3tj/mdIDjDL2XEF3B/cogzjlgx+bvlDJMMOb0rK2YO2Wo="
-Received: from masysma-18
-    by smtp.strato.de (RZmta 55.0.1 AUTH)
-    with ESMTPSA id 97fea1218LUeE0j
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-	(Client did not present a certificate);
-    Sun, 8 Feb 2026 22:30:40 +0100 (CET)
-References: <20251008165345.GA627277@bhelgaas> <80340269-c702-442d-a461-300a2041a497@leemhuis.info>
-Message-ID: <cone.1770586239.550948.1302334.1000@masysma-18>
-X-Mailer: https://www.courier-mta.org/cone/
-From: Linux-Fan <info@masysma.net>
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, Hui Wang <hui.wang@canonical.com>,
-    Nirmal Patel <nirmal.patel@linux.intel.com>,
-    Jonathan Derrick <jonathan.derrick@linux.dev>, linux-pci@vger.kernel.org,
-    bhelgaas@google.com, raphael.norwitz@nutanix.com, alay.shah@nutanix.com,
-    suresh.gumpula@nutanix.com, ilpo.jarvinen@linux.intel.com,
-    Chaitanya Kumar Borah <chaitanya.kumar.borah@intel.com>,
-    Ville =?UTF-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>
-Subject: Re: [PATCH] PCI: Disable RRS polling for Intel SSDPE2KX020T8 nvme
-Date: Sun, 08 Feb 2026 22:30:39 +0100
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="HMt1kAcK"
+Received: from mors-relay8204.netcup.net (localhost [127.0.0.1])
+	by mors-relay8204.netcup.net (Postfix) with ESMTPS id 4f8fjd6pJZz8dxV;
+	Mon,  9 Feb 2026 09:37:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1770629830;
+	bh=UOsVwSOTVWc4zYryltyKNWs3NU6VnGBHfl/YQ/sPQuw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=HMt1kAcKjnMrIJ+UAu4h3D0YtlXRc7t+3XZRlL5sWFYL1/jqDaY4dBxKd946HIOQ+
+	 aZhm6DDzLpbT4vQ64yH4gk5X9t9h/p3n1bE7gRdvRl8zJfJD5ckOuNnJlY0V8G0C86
+	 0hiiB7yWNwnzqTHk4Df9QfxTPuaKqVAiownHz4gA/O4PonQNjwFlZDJInix3xrTxzg
+	 itHlX9CPh2a199Su0lxtv9P2atVU/0kilwrQbOh/D7jXXECO30RQ4nB2Cq4x6PX4vT
+	 VubH+K8g53S1C9rIJX0vP49FrAAvc2vcIXlc4L1Q53kTjA5GzaiB7xfF/MldKAwWo9
+	 IINgsry+3VWmA==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay8204.netcup.net (Postfix) with ESMTPS id 4f8fjd63Zpz8dvw;
+	Mon,  9 Feb 2026 09:37:09 +0000 (UTC)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4f8fjc2J3Jz8sbs;
+	Mon,  9 Feb 2026 10:37:08 +0100 (CET)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 346F0671E0;
+	Mon,  9 Feb 2026 10:37:06 +0100 (CET)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <94b6639b-d1f4-4d03-8ec2-3b24d438bb9b@leemhuis.info>
+Date: Mon, 9 Feb 2026 10:37:05 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Type: text/plain; format=flowed; delsp=yes; charset="UTF-8"
-Content-Disposition: inline
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] PCI: Disable RRS polling for Intel SSDPE2KX020T8 nvme
+To: Linux-Fan <info@masysma.net>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, Hui Wang <hui.wang@canonical.com>,
+ Nirmal Patel <nirmal.patel@linux.intel.com>,
+ Jonathan Derrick <jonathan.derrick@linux.dev>, linux-pci@vger.kernel.org,
+ bhelgaas@google.com, raphael.norwitz@nutanix.com, alay.shah@nutanix.com,
+ suresh.gumpula@nutanix.com, ilpo.jarvinen@linux.intel.com,
+ Chaitanya Kumar Borah <chaitanya.kumar.borah@intel.com>,
+ =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>
+References: <20251008165345.GA627277@bhelgaas>
+ <80340269-c702-442d-a461-300a2041a497@leemhuis.info>
+ <cone.1770586239.550948.1302334.1000@masysma-18>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <cone.1770586239.550948.1302334.1000@masysma-18>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-PPP-Message-ID: 
+ <177062982667.1071451.13713845420128483568@mxe9fb.netcup.net>
+X-Rspamd-Server: rspamd-worker-8404
+X-Rspamd-Queue-Id: 346F0671E0
+X-NC-CID: YoQm/GuUU0Zk+dLVTzzYaruRDeiZxJC6CeBGBATAe1eTOa3qQBM=
 
-Linux regression tracking (Thorsten Leemhuis) writes:
+On 2/8/26 22:30, Linux-Fan wrote:
+> Linux regression tracking (Thorsten Leemhuis) writes:
+> 
+>> [top-posting to facilitate processing]
+>>
+>> The issue discussed in this thread is still on my list of tracked
+>> regression, which got me wondering what's the status here. Did it fall
+>> through the cracks? Or was the regression maybe fixed already and I just
+>> missed it?
+> 
+> Hello Thorsten,
+> 
+> I saw the regression was closed here:
+> <https://lore.kernel.org/regressions/e03d4af5-5cdb-4bf4-
+> a568-06b9213247a0@leemhuis.info/>
 
-> [top-posting to facilitate processing]
->
-> The issue discussed in this thread is still on my list of tracked
-> regression, which got me wondering what's the status here. Did it fall
-> through the cracks? Or was the regression maybe fixed already and I just
-> missed it?
+That is not much relevant, what is relevant is the bug report and the
+activity, in this case this thread.
 
-Hello Thorsten,
+> I am one of the users affected by this issue and are currently running
+> an old Linux version (Linux 6.1 from Debian oldstable) to work around
+> it. As a user I would very much appreciate an upstream fix.
+> 
+> The Debian bug is still open
+> <https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1112238> whereas I
+> think Ubuntu got a patch working around the issue for their users:
+> <https://bugs.launchpad.net/ubuntu/+source/linux/+bug/2111521>
+> 
+> Is there a chance to possibly include the workaround in the upstream?
 
-I saw the regression was closed here:
-<https://lore.kernel.org/regressions/e03d4af5-5cdb-4bf4-a568-06b9213247a0@leemhuis.info/>
+The workaround: maybe. But getting it fixed is what you want, and the
+workaround might be the wrong solution for that. That's up for the
+developers of the affected area to decide.
 
-I am one of the users affected by this issue and are currently running an  
-old Linux version (Linux 6.1 from Debian oldstable) to work around it. As a  
-user I would very much appreciate an upstream fix.
+But the thing is, this thread got messy and doesn't work on its own
+anymore (it should ideally answer questions like "What does the
+workaround look like" without providing a URL, as developers are busy
+and might not follow it; any by now devs likely have totally forgotten
+what this is about, so a kind of re-start might be needed).
 
-The Debian bug is still open
-<https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1112238> whereas I think  
-Ubuntu got a patch working around the issue for their users:
-<https://bugs.launchpad.net/ubuntu/+source/linux/+bug/2111521>
+But maybe we are lucky, and some developers of this area will reply
+within the next two or three days.
 
-Is there a chance to possibly include the workaround in the upstream?
+If not, I'd suggest checking if 6.19 vanilla is still affected (fixing
+6.12.y comes later, so let's ignore that for now). If it is, check if
+the workaround from Ubuntu fixes it there. It might even make sense to
+check if a revert of the culprit fixes it, too. Then report your
+findings and sum up the situation briefly (somewhat similar to a new bug
+report; people likely have forgotten what this thread is about). That
+should work as a good base to restart things here.
 
-As the issue is reproducible on my system, I should be able to test some  
-patches if necessary. Tests are not easy to perform because it degrades the  
-RAID system and I would like to avoid damaging my “production” data hence  
-limit the tests to the required minimum.
+Ciao, Thorsten
 
-But if there is some real doubt that the issue is still present, tell me and  
-I check it again with a more recent kernel version?
+> As the issue is reproducible on my system, I should be able to test some
+> patches if necessary. Tests are not easy to perform because it degrades
+> the RAID system and I would like to avoid damaging my “production” data
+> hence limit the tests to the required minimum.
+> 
+> But if there is some real doubt that the issue is still present, tell me
+> and I check it again with a more recent kernel version?
+> 
+> Thanks in advance and Kind regards
+> Linux-Fan
+> 
+>> On 10/8/25 18:53, Bjorn Helgaas wrote:
+>> > Nirmal, Jonathan, can you confirm that when RRS SV is enabled for VMD
+>> > Root Ports, we should actually see the 0x0001 value when a device
+>> > downstream of VMD responds with RRS?  From the log below, it appears
+>> > that we actually get 0xffffffff when reading Device ID after a reset.
+>> >
+>> > On Thu, Aug 21, 2025 at 11:39:36AM -0500, Bjorn Helgaas wrote:
+>> >> On Thu, Jul 03, 2025 at 08:05:05AM +0800, Hui Wang wrote:
+>> >>> On 7/2/25 17:43, Hui Wang wrote:
+> 
+> [...]
+> 
+>> > The patch is here:
+>> > https://lore.kernel.org/r/20250701232341.GA1859056@bhelgaas
+>> > and the log with that patch is here:
+> 
+> [...]
+> 
 
-Thanks in advance and Kind regards
-Linux-Fan
-
-> On 10/8/25 18:53, Bjorn Helgaas wrote:
-> > Nirmal, Jonathan, can you confirm that when RRS SV is enabled for VMD
-> > Root Ports, we should actually see the 0x0001 value when a device
-> > downstream of VMD responds with RRS?  From the log below, it appears
-> > that we actually get 0xffffffff when reading Device ID after a reset.
-> >
-> > On Thu, Aug 21, 2025 at 11:39:36AM -0500, Bjorn Helgaas wrote:
-> >> On Thu, Jul 03, 2025 at 08:05:05AM +0800, Hui Wang wrote:
-> >>> On 7/2/25 17:43, Hui Wang wrote:
-
-[...]
-
-> > The patch is here:
-> > https://lore.kernel.org/r/20250701232341.GA1859056@bhelgaas
-> > and the log with that patch is here:
-
-[...]
