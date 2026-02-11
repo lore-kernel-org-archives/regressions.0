@@ -1,99 +1,120 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.170])
+Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA35734F46F
-	for <regressions@lists.linux.dev>; Wed, 11 Feb 2026 08:56:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2308A34575A
+	for <regressions@lists.linux.dev>; Wed, 11 Feb 2026 19:18:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770800167; cv=none; b=naqASRlUNu3jnSqUYWl0xxmnw54EAobwaDeoTVSltvBgcQ59QzLndhWy2ju11JqV+m6gWsSoDi8k7jtBGov+mzAs7UaXvinYf8D8BtX9Isq3xJDwjlfBOL64jo8Oe+khO/amIrEXDHSOxmYw9BQq7G9xVmbrThZaxT6MbNyuU7c=
+	t=1770837482; cv=none; b=oVxUJ7/+OVVhVnW8IjxPLtdevKGSE+uXsM96DVM33wcNEY4rTN3K8FCXVblj5+8s/RaXzBLeZSN+sfvaJ9Ih0aNIAAnHdwMExbmydeVJQJxKB+35fVvCt1GRrURYpnasogSN69LtT7WmUlwj7FiqLVvf+xZCfEd/fb3NTffTB7Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770800167; c=relaxed/simple;
-	bh=mhZoGBuJJUBspqYbVe/hCOZuhStX1RXzH+bBNOK3NpU=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=BGAgW7iwd2a6khy9BJzXDtO/EoxtVNxT4LvBGr95PYLCyhI+bQe32CF30diJHfzmJo3OicWQ5+JilUsW5r8z6IBqO2jzDuJeHgwQpZpxezTQlmq82IdG/02N98TpqqKzJomlQx91OAatWqz0h9D3C5+6l/7LTPZsGN7nGz/67Fs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=Vyl0/Leb; arc=none smtp.client-ip=188.68.63.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1770837482; c=relaxed/simple;
+	bh=lDh8dX0kpuo2VFAo5YwZs9ID0zMqXXMty5OMGfVSOaY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ep2OKiB4Ivk6iW/M2mlhi6Jj9XlhFRZucrHBz4qwvVqWF3s5jcGLBla6Jo5PFQl0GWI+8tEVQIyXwt5iwPKVQsiKRukCA/mgBmjNUHLbR3DIEA4zOBwQUyAXeQ7k6ToMbbs4We5H5xTBImbLvTFnxiMNxUwfvBiRNQmXk/VP6ck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=N5y4TIAj; arc=none smtp.client-ip=80.241.56.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="Vyl0/Leb"
-Received: from mors-relay8203.netcup.net (localhost [127.0.0.1])
-	by mors-relay8203.netcup.net (Postfix) with ESMTPS id 4f9sZV1Vtsz8hHQ
-	for <regressions@lists.linux.dev>; Wed, 11 Feb 2026 08:50:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1770799810;
-	bh=mhZoGBuJJUBspqYbVe/hCOZuhStX1RXzH+bBNOK3NpU=;
-	h=Date:Subject:From:To:References:In-Reply-To:From;
-	b=Vyl0/LebxoQ0Z+fGdGeIHpAACDQdvkrX/BnkD9hwyhLNhJFrLbqYAAqaSWo4pwmA2
-	 /J1zSZz2y6T54SVJ/FaNWG5zgIokW5tMzKlLkSXtipHVgYgnoozxqirvO2rhG6pNim
-	 p/UdyvRL1Tp5s2Eqoe5bOarI+b2D8oNFrNO32871Ml3BmcpSJikUDBonVJ/I1MN++a
-	 bPHP8IpkuvW0BjoVQUhrvzVyUNnU22XMwps70/XmNnQPj6LWGvBFSQ2Iq53uHgaLqk
-	 MmQlYoQVA7gARe1JgginKkZWhjQtJfXT3yUE8ZUjQPQA5Mt6t/J1/Q9kt1mYhHGrdD
-	 9V3SSqHitfk7A==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay8203.netcup.net (Postfix) with ESMTPS id 4f9sZV0nsGz8hHK
-	for <regressions@lists.linux.dev>; Wed, 11 Feb 2026 08:50:10 +0000 (UTC)
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="N5y4TIAj"
+Received: from smtp202.mailbox.org (smtp202.mailbox.org [IPv6:2001:67c:2050:b231:465::202])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4f9sZT62Nwz8svF
-	for <regressions@lists.linux.dev>; Wed, 11 Feb 2026 09:50:09 +0100 (CET)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 2FFB2675C4
-	for <regressions@lists.linux.dev>; Wed, 11 Feb 2026 09:50:09 +0100 (CET)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <155da16b-afff-480d-b37a-38550666c26d@leemhuis.info>
-Date: Wed, 11 Feb 2026 09:50:07 +0100
+	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4fB7Vs2h8Zz9vBY;
+	Wed, 11 Feb 2026 20:17:57 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1770837477;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=p5M1b+oSA0YS4SriAeQJke7xSD+ujiJ75qVTi/6MjTI=;
+	b=N5y4TIAjyvdzKisa1jI3YmkiMgSMkt30boCG7jtAgt3N6CtAAoanhTl2BG3lT3e9qjMjBW
+	7geMYHLA6SAaS3RddyGOhcE5YubSEUSFdw3FHDJ1bddtWGYwiUmYD3i5uixltsxtci5pSA
+	TYRQeb8kG40qtVRKRXTNmU+BjEa7HEcLXVQxauHywLkZvnwy5BW1wNltIGkaTFrnLG/Q/U
+	MFf1Vk1GGNGTyJQqwYjeuycfBO/oZElO0OtyqPOu7Hge4nBk9QlFGC2rwX9k02OCnkhN6P
+	ZOJVw/qYtI4yEIVPI9cKNwQAPD1fFYxfAMdAzMRi314NaUTwkceKMj4P5Ny0UA==
+Message-ID: <b3b4f10e-1222-44f7-b308-db7199c67147@mailbox.org>
+Date: Wed, 11 Feb 2026 20:17:52 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: [PATCH] drm/imagination: Convert to
+ dev_pm_domain_{at,de}tach_list()
+To: Geert Uytterhoeven <geert@linux-m68k.org>,
+ Matt Coster <Matt.Coster@imgtec.com>,
+ Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Frank Binns <Frank.Binns@imgtec.com>,
+ Brajesh Gupta <Brajesh.Gupta@imgtec.com>,
+ Alessio Belle <Alessio.Belle@imgtec.com>,
+ Alexandru Dadu <Alexandru.Dadu@imgtec.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+ "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+ "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+References: <194465eda54d1f852a9226cf691ddc5aa208e0a3.1769097977.git.geert+renesas@glider.be>
+ <ffdf3982-e22c-4d01-afa6-5449ed381000@imgtec.com>
+ <CAMuHMdWMh_oJFg-KtapcTDGvYWZ-hg_ZEJ2=E5Tp1apOEc8tnQ@mail.gmail.com>
+Content-Language: en-US
+From: Marek Vasut <marek.vasut@mailbox.org>
+In-Reply-To: <CAMuHMdWMh_oJFg-KtapcTDGvYWZ-hg_ZEJ2=E5Tp1apOEc8tnQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: 
- <177079980935.2592768.12145239980468156801@mxe9fb.netcup.net>
-X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: 2FFB2675C4
-X-NC-CID: /n9BNARxNdMl2XrIhHBldEWfrOT6qXVwvflOcOIYaXpCP6YYmJo=
+X-MBO-RS-META: hfo1ysp6dxn384tk37dfppkcoc1of6be
+X-MBO-RS-ID: c00b551ddfadc58db55
 
+On 1/23/26 2:50 PM, Geert Uytterhoeven wrote:
 
+Hello everyone,
 
-On 3/9/24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
+> On Fri, 23 Jan 2026 at 14:36, Matt Coster <Matt.Coster@imgtec.com> wrote:
+>> On 22/01/2026 16:08, Geert Uytterhoeven wrote:
+>>> Call the dev_pm_domain_attach_list() and dev_pm_domain_detach_list()
+>>> helpers instead of open-coding multi PM Domain handling.
+>>>
+>>> This changes behavior slightly:
+>>>    - The new handling is also applied in case of a single PM Domain,
+>>>    - PM Domains are now referred to by index instead of by name, but
+>>>      "make dtbs_check" enforces the actual naming and ordering anyway,
+>>>    - There are no longer device links created between virtual domain
+>>>      devices, only between virtual devices and the parent device.
+>>
+>> We still need this guarantee, both at start and end of day. In the
+>> current implementation dev_pm_domain_attach_list() iterates forwards,
+>> but so does dev_pm_domain_detach_list(). Even if we changed that, I'd
+>> prefer not to rely on the implementation details when we can declare the
+>> dependencies explicitly.
+> 
+> Note that on R-Car, the PM Domains are nested (see e.g. r8a7795_areas[]),
+> so they are always (un)powered in the correct order.  But that may not
+> be the case in the integration on other SoCs.
+> 
+>> We had/have a patch (attached) kicking around internally to use the
+>> *_list() functions but keep the inter-domain links in place; it got held
+>> up by discussions as to whether we actually need those dependencies for
+>> the hardware to behave correctly. Your patch spurred me to run around
+>> the office and nag people a bit, and it seems we really do need to care
+>> about the ordering.
+> 
+> OK.
+> 
+>> Can you add the links back in for a V2 or I can properly send the
+>> attached patch instead, I don't mind either way.
+> 
+> Please move forward with your patch, you are the expert.
+> I prefer not to be blamed for any breakage ;-)
 
-#regzbot report:
-https://lore.kernel.org/linux-sound/5056506.GXAFRqVoOG@steina-w/
-#regzbot introduced: f514248727606b9
-#regzbot title: ASoC: fsl_xcvr: blocked task on TQMa8MPxL based board
-#regzbot fix: ASoC: fsl_xcvr: Revert fix missing lock in fsl_xcvr_mode_put()
-#regzbot monitor:
-https://lore.kernel.org/all/20260210185714.556385-1-n7l8m4@u.northwestern.edu/
+Has there been any progress on fixing this kernel crash ?
 
-#regzbot report:
-https://lore.kernel.org/all/20250117163102.65807-1-detlev.casanova@collabora.com/
-#regzbot introduced: 5323186e2e8d33
-#regzbot title: ASoC: rockchip: i2s_tdm: audio capture broken on RK3308
+There are already two proposed solutions, but no fix is upstream.
 
-#regzbot report:
-https://lore.kernel.org/all/CAOoqPcSqOZWN7LKmZQzPhu8MWxNsxYoDs2woHotE_te__+MF=w@mail.gmail.com/
-#regzbot introduced: 1ef15fbe6771
-#regzbot dup: https://bugzilla.kernel.org/show_bug.cgi?id=216878
-#regzbot title: smb: client: invalid mount options suddently ignored
-#regzbot fix: smb: client: fix regression with mount options parsing
-#regzbot monitor:
-https://lore.kernel.org/all/20260211041007.324919-1-pc@manguebit.org/
+-- 
+Best regards,
+Marek Vasut
