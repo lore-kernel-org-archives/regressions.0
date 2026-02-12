@@ -1,51 +1,40 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.102])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF2CC4A02
-	for <regressions@lists.linux.dev>; Thu, 12 Feb 2026 18:23:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.102
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45B68299950
+	for <regressions@lists.linux.dev>; Thu, 12 Feb 2026 22:04:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770920629; cv=none; b=mLsPAm1iqveMC0P0W6u5PdYeiGf54R9a8yVgTAC034hdWXQFztz6uuPcm7xBjwlfFElZ7Fj8eVwYMEBGl1g7VPuTk3/uiNWRiiLF8Qa0GukyB8AG8XHaUA1U5z1UzfkO5oP3+ortLeI3ooOBOZKibw6AZPCXUQ8eXC1v9yHpg+k=
+	t=1770933873; cv=none; b=KeZN+oWnJlO4ApVvsjuTXqyPkq/LeWWyTPYSLnVeQPpMWcZEun2BARIm5JGJH+9O4Om5ShtbM1NxQujoWbEcoNlspVPgEBNI/gNpuWjJSeJssTObiaLyF+aVQdnFotQOciReGRUu3kn5v4Oc1A+A8QEoIDLAXHqDW7HmzBeeIVU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770920629; c=relaxed/simple;
-	bh=HCREbIboiOaPQiNqqhtZGLEe+MnQi3f2Apg0aRfEP+4=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=EklewEzXAuMyeFGJKm7i1NOCmIDHX0WBsOtPPUtRsGXeL+Mok2Zim4pRzaFOEPsVp++pj3SNFIoMzZzhKatBEkcWQbytrCYBILltjotvXRCMeuzboAReRpN3XrwX55aWMw57S/ERC7huD7OU3Kc6XDCA0WMyAVhXBci19I+fbxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=KqZdA/MD; arc=none smtp.client-ip=188.68.63.102
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1770933873; c=relaxed/simple;
+	bh=pgou1iAOo03EeIFUgC5tazbjBU6EIspSIgadED/BlSQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=MBEhyRwrhkKZT1cPd+x18ReP3EvUEAAG1yhg6oqLh9vqJCauubPm61Y3QqAGAG4kNiWNt9JzqNvB9Cc74sS+lyXBfSwtv9fCbRWCdzr/wz97BhFr1hlnASXgDIUqhDDrU6738gp0suFtKDrWg8wF8LG+sCm79DuaPStdC2LKbSI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=AsmeFdtk; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="KqZdA/MD"
-Received: from mors-relay-2502.netcup.net (localhost [127.0.0.1])
-	by mors-relay-2502.netcup.net (Postfix) with ESMTPS id 4fBkFq708tz6HB1
-	for <regressions@lists.linux.dev>; Thu, 12 Feb 2026 19:23:43 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1770920624;
-	bh=HCREbIboiOaPQiNqqhtZGLEe+MnQi3f2Apg0aRfEP+4=;
-	h=Date:Subject:From:To:References:In-Reply-To:From;
-	b=KqZdA/MDNMUcqZu2duzqIQXqHHLkAZM2tqVfi8uiW7B1sHVl3DtsA2MACNfCmuyK4
-	 TcCXsqHH8bUfCOWpiN+bjF2HRPYDSX5Yz8r2G6Zr0pAay1wqmSp35imh4C6D5YMDNF
-	 WmrWxSGaAzROOGDJTr5PBjHM8oweHlWkO2618id1rs8B3Vf1+YXFlSPzHyqFh+WL0L
-	 v36C5Co5dwL2kMkZ+YZQkJQIbR49N1bEZ14j9hSQ+FqZNLO0nflaA/MIhB6Aj1v6bp
-	 T+oNFKVlg8BN64Bwaykd4+ZOWo9q1Bv0tT7DF0o0O3ebnK6iPTV7ASJb2H/yQ9/9y6
-	 AWhppkifTrhFw==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-2502.netcup.net (Postfix) with ESMTPS id 4fBkFq6HVwz4xPm
-	for <regressions@lists.linux.dev>; Thu, 12 Feb 2026 19:23:43 +0100 (CET)
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="AsmeFdtk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1770933870;
+	bh=pgou1iAOo03EeIFUgC5tazbjBU6EIspSIgadED/BlSQ=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=AsmeFdtk4nzmEGGCH0TaWKY4Mc+L909ckX7EIlyLRduCbSzoTfKa+GLp/YGC1DEP5
+	 kYrOsZiGNdH2e0qGu8qh2tQjADPh3PxWHw4y37b9VWwjjOjUvRVxmkA2dAIstkaINZ
+	 w6E+Ya336ifoxNxZlVVJYBeoUjRWE4BTHxICRGViXmIGSt2HG2J7+OaPa8ALKKCB/Z
+	 Ahv0te1cv0fEDfPRRq2zG/JIXEtPQLXFsR4Onu1F9nUh620EzKUbab9GXw4ociPylp
+	 9CEAV3Hw6KLKhzsbsDOABmbaQ0siY+mhBpEcxAF8SCoD8d2MKDCOu0ir5fI9bVPsYl
+	 iwMyKXN2kNcXw==
+Received: from [192.168.1.90] (unknown [82.79.138.145])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4fBkFq4MHqz8sgW
-	for <regressions@lists.linux.dev>; Thu, 12 Feb 2026 19:23:43 +0100 (CET)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id BE790671B1
-	for <regressions@lists.linux.dev>; Thu, 12 Feb 2026 19:23:42 +0100 (CET)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <ba25d95d-d8ef-4342-9f18-eaa275c8d471@leemhuis.info>
-Date: Thu, 12 Feb 2026 19:23:42 +0100
+	(Authenticated sender: cristicc)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 098E617E127F;
+	Thu, 12 Feb 2026 23:04:29 +0100 (CET)
+Message-ID: <8e410a11-bd7b-4a12-a711-0514a59409c0@collabora.com>
+Date: Fri, 13 Feb 2026 00:04:29 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -53,51 +42,66 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Subject: Re: [REGRESSION] HDMI monitor not working on Radxa Rock 5B after phy
+ rockchip samsung hdptx HDMI 2.1 FRL patchset
+To: dubito@online.de, Vinod Koul <vkoul@kernel.org>,
+ Neil Armstrong <neil.armstrong@linaro.org>, Heiko Stuebner
+ <heiko@sntech.de>, linux-phy@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ linux-kernel@vger.kernel.org, regressions@lists.linux.dev
+References: <b32164001947ba922aefb6ca86a8dc59e9323d2b.camel@online.de>
+Content-Language: en-US
+From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+In-Reply-To: <b32164001947ba922aefb6ca86a8dc59e9323d2b.camel@online.de>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <177092062294.2502171.7573943755336367046@mxe9fb.netcup.net>
-X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: BE790671B1
-X-NC-CID: 4FlbY2yym5zDSiQV/A+qYARU/kKOg+HsQy+2ZcVpAOPDjoUgnwM=
+Content-Transfer-Encoding: 8bit
 
+Hi Thomas,
 
+On 2/11/26 11:20 PM, Thomas Niederprüm wrote:
+> Hi,
+> 
+> I'm running a Radxa Rock 5B (rk3588) on a 10+ year old Samsung TV screen
+> connected via HDMI. This worked flawlessly in 6.18.7 but does not work on linux-
+> next. I bisected the problem and identified commit 3481fc04 to be the first bad
+> commit. This points to the phy PLL clock rate calculation to be the problem in
+> connection with my monitor. As it seems relevant, I attached the EDID of my
+> monitor.
+> 
+> I'm booting the kernel out of EDK2 after which efifb is correctly taking over
+> the initialized display and I can see the initial kernel boot messages on the
+> HDMI output. After the drm/kms in the kernel takes over the screen shortly turns
+> black, changes resolution, and then correctly displays on 6.18.7. However, in
+> linux-next the screen remains black after kms took over. I cannot see any
+> obvious differences in the boot logs but I attached two boot logs, one for the
+> working 6.18.7 kernel and one for the non-working linux-next kernel.
+> 
+> When reverting 3481fc04..de5dba83 (i.e. the faulty commit and the ones that
+> followed in the HDMI 2.1 FRL series) I can build a working kernel from linux-
+> next.
+> 
+> I don't know where to dig from here but I'm happy to run any test necessary to
+> track down the problem.
 
-On 3/9/24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
+It'd be helpful if you could resend the logs after booting both kernels with the
+following params (requires CONFIG_DYNAMIC_DEBUG=y):
 
-#regzbot report:
-https://lore.kernel.org/all/CAK8fFZ58fidGUCHi5WFX0uoTPzveUUDzT%3Dk%3DAAm4yWo3bAuCFg@mail.gmail.com/
-#regzbot fix: Revert "ipmi:si: Gracefully handle if the BMC is
-non-functional"
+  rockchipdrm.dyndbg=+p dw_hdmi_qp.dyndbg=+p phy_rockchip_samsung_hdptx.dyndbg=+p
 
-#regzbot report:
-https://lore.kernel.org/all/20260212074111.316980-1-mariusz.skamra@codecoup.pl/
-#regzbot introduced: fe05e3c0593f
-#regzbot title: Bluetooth: CIS host feature condition broken
-#regzbot fix: Bluetooth: Fix CIS host feature condition
+As well as running the command below before connecting your display/TV:
 
-#regzbot report:
-https://lore.kernel.org/all/558b602a-1b30-2761-fff4-04d837656ea5@rock-chips.com/
-#regzbot introduced: f61731bd6062
-#regzbot title: arm64: dts: rockchip: rk3588s-evb1-v10 broken
+  $ echo 0x4 > /sys/module/drm/parameters/debug
 
-#regzbot report:
-https://lore.kernel.org/all/a2eae87efe46ebf397bcec3580eb9bc152b80846.camel@collabora.com/
-#regzbot introduced: c29345fa5f66be
-#regzbot title: pmdomain: mediatek: Genio 700 EVK stopped booting
+I've noticed you're forcing "video=HDMI-A-1:1920x1080M@60", which should be
+anyway the preferred mode (according to the EDID).
 
-#regzbot report:
-https://lore.kernel.org/all/20260210013733.1901270-1-nichen@iscas.ac.cn/
-#regzbot introduced: fd24173439c0
-#regzbot title: myri10ge: unintended side effects
-#regzbot fix: myri10ge: replace comma with semicolon to fix regression
+Did you try choosing a different one, e.g. 1920x1080@50 or 1920x1080@30 (they
+are supported according to the listing in CTA-861 Extension Block). That's more
+a test to confirm the issue affects a particular modeline, or is more general.
+
+FWIW I've tested over 40 modes with different displays/TVs and didn't notice any
+regression, hence I'm probably missing something here.
+
+Thanks for the report!
+
+Cristian
