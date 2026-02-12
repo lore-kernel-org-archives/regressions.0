@@ -1,160 +1,133 @@
-Received: from mail-dy1-f173.google.com (mail-dy1-f173.google.com [74.125.82.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5172021D3F2
-	for <regressions@lists.linux.dev>; Thu, 12 Feb 2026 14:00:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CF6635CB84
+	for <regressions@lists.linux.dev>; Thu, 12 Feb 2026 14:38:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770904840; cv=none; b=k6S1p7tqn6X6igy+TY2yP6j3oBRJ0H33fJj4YTEKWb4HC+2aHqpwIQ5G7qSkhvm8HIZUDgrmxZiIQxR1X88EOiUvY+XQctupbkwkDMAkVq/f5Hy0scvwICT4Z4kK1tQtxQWkt897sJvKTaaPEmM5YlEOSdvvDmSnJ3gYQe94IQw=
+	t=1770907130; cv=none; b=nDqbjNxtoG7WURT8+xhr3UFczSaPofFXh4DaryH04X1fsxV7/0DUUJ+aeqenvUHXTgdIr+FHZiccj717f46cfdfHD8dvAsAQgRe9cYDFo2SnpgqDbjPiCKjjDNPNBZGgujNbME4pszeay79Fa9cPnh+ZXlzyI0grKWHjdYUFMxs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770904840; c=relaxed/simple;
-	bh=EMslkeK4yt1/2dVDmbcC70GgkmYYINeF79GnZRnXG+c=;
+	s=arc-20240116; t=1770907130; c=relaxed/simple;
+	bh=7gEtrTZqfCsga0dH/u2j1nxhfGCSN9L3pxdLBXwgRKc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AaMkePGq9+UH2dAdau8TbtrPDX6sWDkWgRUftpJFFqIPUMpURAbQEHOkvjz1J7LJHhKitsHVNf1+nvFqmqJdtjuW3podpvo5U5Vc4uwX48YTEunra5Saniyq8AhWLKV0NxbHUj+ZQbH/hfR+ExdEi6+Mlx0VLGktCZsefq2XHOk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O2vEq0N+; arc=none smtp.client-ip=74.125.82.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 In-Reply-To:Content-Type; b=pgW4VJJd3C2nbbjtTNxFHNlNWr841eRiiEwEllIGcw3WfcW6k5G8h1KxAzRELqNyUYk+X2e+6nEN5MALaxGsJx/8ajTjAw/ZXl8niTkFU1iCJQfE4V7IpkvlhvAw2i4mOMLqABmGH/ADt1WjOM5qCOYyn82TNp2OE2uUtAlcsCM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=hkpRxZnV; arc=none smtp.client-ip=80.241.56.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O2vEq0N+"
-Received: by mail-dy1-f173.google.com with SMTP id 5a478bee46e88-2ba64b5a53aso4577952eec.0
-        for <regressions@lists.linux.dev>; Thu, 12 Feb 2026 06:00:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1770904838; x=1771509638; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=ylimFk0+B20t6OX8XGGamXW0xE6sIJivZp3QqF6GFLA=;
-        b=O2vEq0N++/9Zebrl36eHbMso30scANhH/T1Lb+hKulIU8dqu6lrr7C6TAephuUbwMZ
-         wsi/+IzhLd+tAJkYtWSOjO88uuj8NKLQ3FwHvl1r+D8ih1fc/0GEzD2/bA88x+/x7tG9
-         h4gmBXhy1epoSyfsODGecijypIYZtllyDJ9b2q3vz4WgedENvZTSPJyBg2LmhlJ+q0Gw
-         LTtJ5xLxmVjB9qd4bK0jUsR6b+Xfw95ql9YG3hKB70AhFgD/AnzRVONMJt4DN/WF1NMU
-         xjgMQRrFxR5gC4l7C1QnGwHY+GLQkI5too+imANdRusB8cloCzZjTsW2TZQ+0dnxpK5Q
-         koeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770904838; x=1771509638;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ylimFk0+B20t6OX8XGGamXW0xE6sIJivZp3QqF6GFLA=;
-        b=th8mOb2yhaIbaTLfBtJ0vhEj/0v4QoXtA22bXyblungB8KLxCm5eRJlR7dHy+A5sXn
-         XjEUvhC8PweS9x5R6s3PohSUd9gMYMRL8cUmU0cwjJS9cPscH3oxojvNDL89KODizqKU
-         ugnxcMI1AjghxBrhGpMxpBNNZiD6XTKAv5RT8d7Zf6DUXm+a5RbJPjTmx9a02y8oBzDK
-         t08DR3SIkAgLVkV5GrQjE/WMFx8cay7mEpXUZ7actxFb7Rx50Yve0oY2EtZgT8bdIwBB
-         mI4BpxG3VxQEM00IBDelNurQeFeZwMlnNbZJuaVOwq0dIR7OwI+/7O01Kfr0d2/xkucJ
-         Qu/w==
-X-Forwarded-Encrypted: i=1; AJvYcCXmDVNDw6jC5atTu+pnVApyYAqFguvbpQReVOtGK+xSBASqYKb0dh4vV+o8twKUOzFvz54GXoR4zrQUOA==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzdjgeEWKqniHmNml5US+lNalK3APLBgHF2+hwsTdEBeSNUvtVj
-	+aeHU1dqu9EVkDOCKfEdjYSTpzd/xNN/qAoOWL8E60hNePmupFU5fbPV
-X-Gm-Gg: AZuq6aLS8atiWk36Yeulp4j9ujGNzXiYGdYDmJ9A9s0w5UqJvaLK8Ap5ZFxNU/eLGc9
-	unYvUVqz5MedrcGzs9ENGHW4U5V3kuA6da2xAYIA6PBjH1NP1Ii2vFndCAfPB7O4uKeuIgm7UPH
-	EtW0Petlh5XFegXvoI/YP0GiKIXcEQzIMjKTPhr1MI/A/M+WH+0nZY6l2dviHXIkdp/jQokmIxz
-	ZCH4A24/cNQXZ7YzzlBFAQssJAKcsvoIunck9ONJySDb3Ey/aFlP4dkpelzUPteohvtZd/LU8mH
-	pU6yOFhqjd7Yo2h9qIggi0lKZr8rp2R6AatS2VkknCUJAPZy1/yRqvTqcwXuoHD8PSI/m70NzR7
-	QUW9iPVKpkrOTdp0ubzbN2HcZjjnJYf/gP1L3m700qBAGMzSM+IXDqRMNsKD3Igvp/Yw0iarjbA
-	EsUKtOqzMmrwR28YqUdycgHzt7hjZ7U5dk79tMHw9CEkOcJPrTQ3z+M6xua3TlInahqG+Q8FHa
-X-Received: by 2002:a05:7300:a14c:b0:2b7:95d5:3a32 with SMTP id 5a478bee46e88-2baa7f7c7e5mr1192493eec.1.1770904838009;
-        Thu, 12 Feb 2026 06:00:38 -0800 (PST)
-Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2ba9dcd00d2sm3919413eec.20.2026.02.12.06.00.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Feb 2026 06:00:36 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <975b4e7a-e007-4710-9048-b975cd66780d@roeck-us.net>
-Date: Thu, 12 Feb 2026 06:00:34 -0800
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="hkpRxZnV"
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [10.196.197.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4fBdGF2LM5z9sRl;
+	Thu, 12 Feb 2026 15:38:45 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1770907125;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/tASHD0fqztvwzzYhG9wjA3X6Sb887HuRt+4PzQxJS8=;
+	b=hkpRxZnV4NZ8j1b1klMnWvP1cEFlt4/bJdJBzk3P8iXEt+NmPgvT+JdunIi7ZAYa6dsVDw
+	6sKIkgJrYfcHS9Tvyucnz+KLHnl3lgC2ObC/himMo/eRH9pGUnE2pI9AkpCink6X8rFtcd
+	wp0k1PSqOwpdbkdtO1o2SUN1ybCvMRxI/ek4OP7tRvpJubVdw4HOluLuZWYHa8wWXBIXmS
+	pGURxTQqKWWxC3VZGkWJFVWqPkqJ0w+bzPwDc/I3Ecu4XAvymoqBPqS3kHOnjTI+DljDp3
+	pCF8DZrbxLAp/lwtwXmdMuGdbyS8tQ8fRY9s3u/EIgwuPREyWcub6oS43KkNdw==
+Message-ID: <f5d3dde6-edec-42f4-93cb-459c8677245a@mailbox.org>
+Date: Thu, 12 Feb 2026 15:38:40 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] Revert "ipmi:si: Gracefully handle if the BMC is
- non-functional"
-To: "Rafael J. Wysocki" <rafael@kernel.org>,
- Linux ACPI <linux-acpi@vger.kernel.org>, Corey Minyard <corey@minyard.net>
-Cc: Jaroslav Pulchart <jaroslav.pulchart@gooddata.com>,
- LKML <linux-kernel@vger.kernel.org>, Linux PM <linux-pm@vger.kernel.org>,
- openipmi-developer@lists.sourceforge.net, regressions@lists.linux.dev,
- Igor Raits <igor@gooddata.com>, linux-hwmon@vger.kernel.org
-References: <10802540.nUPlyArG6x@rafael.j.wysocki>
+Subject: Re: [PATCH] drm/imagination: Convert to
+ dev_pm_domain_{at,de}tach_list()
+To: Matt Coster <Matt.Coster@imgtec.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>,
+ Thorsten Leemhuis <regressions@leemhuis.info>,
+ Frank Binns <Frank.Binns@imgtec.com>,
+ Brajesh Gupta <Brajesh.Gupta@imgtec.com>,
+ Alessio Belle <Alessio.Belle@imgtec.com>,
+ Alexandru Dadu <Alexandru.Dadu@imgtec.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+ "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+ "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <194465eda54d1f852a9226cf691ddc5aa208e0a3.1769097977.git.geert+renesas@glider.be>
+ <ffdf3982-e22c-4d01-afa6-5449ed381000@imgtec.com>
+ <CAMuHMdWMh_oJFg-KtapcTDGvYWZ-hg_ZEJ2=E5Tp1apOEc8tnQ@mail.gmail.com>
+ <b3b4f10e-1222-44f7-b308-db7199c67147@mailbox.org>
+ <3e0def93-2f6c-4bcf-8ee5-bf607f2ca382@imgtec.com>
 Content-Language: en-US
-From: Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- np3900V20aS7eD9K8GTU0TGC1pyz6IVJwIE=
-In-Reply-To: <10802540.nUPlyArG6x@rafael.j.wysocki>
+From: Marek Vasut <marek.vasut@mailbox.org>
+In-Reply-To: <3e0def93-2f6c-4bcf-8ee5-bf607f2ca382@imgtec.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-MBO-RS-META: m5na1oyisi5kf9qja4q3ixf1e5yo8yfw
+X-MBO-RS-ID: 5c189705801aa560717
 
-On 2/12/26 05:41, Rafael J. Wysocki wrote:
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On 2/12/26 10:00 AM, Matt Coster wrote:
+> On 11/02/2026 19:17, Marek Vasut wrote:
+>> On 1/23/26 2:50 PM, Geert Uytterhoeven wrote:
+>>
+>> Hello everyone,
+>>
+>>> On Fri, 23 Jan 2026 at 14:36, Matt Coster <Matt.Coster@imgtec.com> wrote:
+>>>> On 22/01/2026 16:08, Geert Uytterhoeven wrote:
+>>>>> Call the dev_pm_domain_attach_list() and dev_pm_domain_detach_list()
+>>>>> helpers instead of open-coding multi PM Domain handling.
+>>>>>
+>>>>> This changes behavior slightly:
+>>>>>     - The new handling is also applied in case of a single PM Domain,
+>>>>>     - PM Domains are now referred to by index instead of by name, but
+>>>>>       "make dtbs_check" enforces the actual naming and ordering anyway,
+>>>>>     - There are no longer device links created between virtual domain
+>>>>>       devices, only between virtual devices and the parent device.
+>>>>
+>>>> We still need this guarantee, both at start and end of day. In the
+>>>> current implementation dev_pm_domain_attach_list() iterates forwards,
+>>>> but so does dev_pm_domain_detach_list(). Even if we changed that, I'd
+>>>> prefer not to rely on the implementation details when we can declare the
+>>>> dependencies explicitly.
+>>>
+>>> Note that on R-Car, the PM Domains are nested (see e.g. r8a7795_areas[]),
+>>> so they are always (un)powered in the correct order.  But that may not
+>>> be the case in the integration on other SoCs.
+>>>
+>>>> We had/have a patch (attached) kicking around internally to use the
+>>>> *_list() functions but keep the inter-domain links in place; it got held
+>>>> up by discussions as to whether we actually need those dependencies for
+>>>> the hardware to behave correctly. Your patch spurred me to run around
+>>>> the office and nag people a bit, and it seems we really do need to care
+>>>> about the ordering.
+>>>
+>>> OK.
+>>>
+>>>> Can you add the links back in for a V2 or I can properly send the
+>>>> attached patch instead, I don't mind either way.
+>>>
+>>> Please move forward with your patch, you are the expert.
+>>> I prefer not to be blamed for any breakage ;-)
+>>
+>> Has there been any progress on fixing this kernel crash ?
+>>
+>> There are already two proposed solutions, but no fix is upstream.
+>>
 > 
-> Revert commit bc3a9d217755 ("ipmi:si: Gracefully handle if the BMC is
-> non-functional") that attempted to improve the handling of the cases
-> in which the BMC was not responsive, but did not succeed.
-> 
-> Instead, it introduced a regression causing AML in ACPI tables that use
-> IMPI operation regions to block indefinitely on the tx_msg->tx_complete
-> completion in acpi_ipmi_space_handler(), which may affect ACPI control
-> methods on any system where IPMI is involved resulting in various types
-> of breakage that is not straightforward to diagnose.
-> 
-> For example, on the system where the regression was first observed, it
-> caused sysfs accesses to attributes exposed by the acpi_power_meter
-> driver to block because they involved AML evaluation which is not
-> super-easy to connect to IPMI.
-> 
-> This is a nasty and rather urgent problem with no viable fix in sight.
-> 
-> Note that AI was involved in diagnosing it, but didn't help much.
-> 
-> Fixes: bc3a9d217755 ("ipmi:si: Gracefully handle if the BMC is non-functional")
-> Closes: https://lore.kernel.org/linux-acpi/CAK8fFZ6Vi4xayvdKh-_eLi-nDNMLuEoMsvwEnb33QqnwS7o4BA@mail.gmail.com/
-> Reported-by: Jaroslav Pulchart <jaroslav.pulchart@gooddata.com>
-> Tested-by: Jaroslav Pulchart <jaroslav.pulchart@gooddata.com>
-> Cc: All applicable <stable@vger.kernel.org>
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> Yes and no. Our patch to use dev_pm_domain_attach_list() has landed in
+> drm-misc-next as commit e19cc5ab347e3 ("drm/imagination: Use
+> dev_pm_domain_attach_list()"), but this does not fix the underlying
+> issue of missing synchronization in the PM core[1] is still unresolved
+> as far as I'm aware.
 
-Acked-by: Guenter Roeck <linux@roeck-us.net>
+OK, but the pvr driver can currently easily crash the kernel on boot if 
+firmware is missing, so that should be fixed soon, right ?
 
+I added the regressions list onto CC, because this seems like a problem 
+worth tracking.
