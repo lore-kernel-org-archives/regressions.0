@@ -1,40 +1,55 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45B68299950
-	for <regressions@lists.linux.dev>; Thu, 12 Feb 2026 22:04:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7BA734A79E
+	for <regressions@lists.linux.dev>; Fri, 13 Feb 2026 09:28:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770933873; cv=none; b=KeZN+oWnJlO4ApVvsjuTXqyPkq/LeWWyTPYSLnVeQPpMWcZEun2BARIm5JGJH+9O4Om5ShtbM1NxQujoWbEcoNlspVPgEBNI/gNpuWjJSeJssTObiaLyF+aVQdnFotQOciReGRUu3kn5v4Oc1A+A8QEoIDLAXHqDW7HmzBeeIVU=
+	t=1770974918; cv=none; b=S9Yb9YP3OqkEtj4BrSXSndBzQ+k+ubb1KHxXG4hUJONkXkey/YmXjRdC1ri+o50I9pdojMAPgjZDylRIWc/tVg27Rv8heey2DEtzoKYS3mqaZS+TEUabTrCUoDYgWlpf//xM8V+I6QQI9NcpM/ncbYuwaiT8eAzEidoCEi+wzfQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770933873; c=relaxed/simple;
-	bh=pgou1iAOo03EeIFUgC5tazbjBU6EIspSIgadED/BlSQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=MBEhyRwrhkKZT1cPd+x18ReP3EvUEAAG1yhg6oqLh9vqJCauubPm61Y3QqAGAG4kNiWNt9JzqNvB9Cc74sS+lyXBfSwtv9fCbRWCdzr/wz97BhFr1hlnASXgDIUqhDDrU6738gp0suFtKDrWg8wF8LG+sCm79DuaPStdC2LKbSI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=AsmeFdtk; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1770974918; c=relaxed/simple;
+	bh=grByNNgXR4K1WiR61nAJLCUz7cIFwiHqZquGeTaeLoE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mwjBHxJ+gEBGXuJ25jyyzkSe1DS1FV19zvroLsIoTb8j8Pibox8KjRsFpAy2WDGOP7E1bLfy0Haft3Dk9AbOiiUFNXiYg5vvCjzbdzICQ2DDMJVzTvVdbdXLOqTXMRI012O6AkRFBr2+JOsdhLFU9ICH0k6Lwlt0lbCssRiD3ds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=GEtbiYpL; arc=none smtp.client-ip=188.68.63.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="AsmeFdtk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1770933870;
-	bh=pgou1iAOo03EeIFUgC5tazbjBU6EIspSIgadED/BlSQ=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=AsmeFdtk4nzmEGGCH0TaWKY4Mc+L909ckX7EIlyLRduCbSzoTfKa+GLp/YGC1DEP5
-	 kYrOsZiGNdH2e0qGu8qh2tQjADPh3PxWHw4y37b9VWwjjOjUvRVxmkA2dAIstkaINZ
-	 w6E+Ya336ifoxNxZlVVJYBeoUjRWE4BTHxICRGViXmIGSt2HG2J7+OaPa8ALKKCB/Z
-	 Ahv0te1cv0fEDfPRRq2zG/JIXEtPQLXFsR4Onu1F9nUh620EzKUbab9GXw4ociPylp
-	 9CEAV3Hw6KLKhzsbsDOABmbaQ0siY+mhBpEcxAF8SCoD8d2MKDCOu0ir5fI9bVPsYl
-	 iwMyKXN2kNcXw==
-Received: from [192.168.1.90] (unknown [82.79.138.145])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="GEtbiYpL"
+Received: from mors-relay8204.netcup.net (localhost [127.0.0.1])
+	by mors-relay8204.netcup.net (Postfix) with ESMTPS id 4fC6KD0LNrz8bRt;
+	Fri, 13 Feb 2026 09:28:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1770974880;
+	bh=grByNNgXR4K1WiR61nAJLCUz7cIFwiHqZquGeTaeLoE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=GEtbiYpL1WcISWTNX1jfaDopTW6B9cHdXG0fasc1XpxWwoXxD7bX3FhA+PQjwhYxb
+	 qWUMUVudbb2QvOjQ9AJT5NRhkTIr5TF5wUXd+7w8yNfKr6fYnYERyuAGF86gQRVb4v
+	 ENwTyqikw+EZ2PpcTwg865N+tyuHM9lUBPIqaOz718KXkMNo+QAmWV04mtrSnjxMWb
+	 W7m/hTk3/zxs0qTkd4NpUUQoUK8g3tY3N+U09erh+K4W8i+yf9kDK9r4BJQsM0oTdX
+	 pujZThphh/D4PeceezSURWmkNCgw+Twy0w5Q5FVQS7QT6qDaAnK3/NehcssGPPHEah
+	 S283xuI0KawLA==
+Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay8204.netcup.net (Postfix) with ESMTPS id 4fC6KC6jWPz8bRr;
+	Fri, 13 Feb 2026 09:27:59 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
+X-Spam-Flag: NO
+X-Spam-Score: -2.898
+X-Spam-Level: 
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	(Authenticated sender: cristicc)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 098E617E127F;
-	Thu, 12 Feb 2026 23:04:29 +0100 (CET)
-Message-ID: <8e410a11-bd7b-4a12-a711-0514a59409c0@collabora.com>
-Date: Fri, 13 Feb 2026 00:04:29 +0200
+	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4fC6KB20YZz8t41;
+	Fri, 13 Feb 2026 10:27:58 +0100 (CET)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 6053E6728C;
+	Fri, 13 Feb 2026 10:27:57 +0100 (CET)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <96e7f0fc-65f4-4613-b556-3a2d869dabb4@leemhuis.info>
+Date: Fri, 13 Feb 2026 10:27:51 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -42,66 +57,87 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] HDMI monitor not working on Radxa Rock 5B after phy
- rockchip samsung hdptx HDMI 2.1 FRL patchset
-To: dubito@online.de, Vinod Koul <vkoul@kernel.org>,
- Neil Armstrong <neil.armstrong@linaro.org>, Heiko Stuebner
- <heiko@sntech.de>, linux-phy@lists.infradead.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-References: <b32164001947ba922aefb6ca86a8dc59e9323d2b.camel@online.de>
-Content-Language: en-US
-From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-In-Reply-To: <b32164001947ba922aefb6ca86a8dc59e9323d2b.camel@online.de>
+Subject: Re: [REGRESSION] mt8183-kukui: dts: changes in dts caused display to
+ no longer initialize - Was: Re: mt8183-kukui: drm/mediatek: dts: Invalid
+ display hw pipeline when probing mediatek-drm
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Denis Gessert <denisgessert@gmail.com>
+Cc: Evans Jahja <evansjahja13@gmail.com>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+ regressions@lists.linux.dev, =?UTF-8?Q?Otto_Pfl=C3=BCger?=
+ <otto.pflueger@abscue.de>
+References: 
+ <CAFLVeg9hwH3PbKu5rPWZWqq6yz5mRRoB9oqxDkxNRdEDLGbVBw@mail.gmail.com>
+ <CAFLVeg_soeYV4tOYKMo6TMYOtuWWU4TFCjUTxUrVEyGcRwMz7A@mail.gmail.com>
+ <df6fcd73-fe0a-42fc-97ce-7e458c340553@leemhuis.info>
+ <CAFLVeg-qeWu4ntgyqotsgjogPEyhqrMGG=UDWuZe+-D3K8YPTA@mail.gmail.com>
+ <908f3c03-a8b0-4535-9cfa-294c6ade8152@collabora.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <908f3c03-a8b0-4535-9cfa-294c6ade8152@collabora.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-PPP-Message-ID: <177097487771.825663.10388203810986665295@mxe9fb.netcup.net>
+X-Rspamd-Server: rspamd-worker-8404
+X-Rspamd-Queue-Id: 6053E6728C
+X-NC-CID: cA1TgezXRliQ2k/M8T5pGyaY7S9Tj9Em3yC/U5L8VvqWxXawOY0=
 
-Hi Thomas,
-
-On 2/11/26 11:20 PM, Thomas Niederprüm wrote:
-> Hi,
+On 2/9/26 12:42, AngeloGioacchino Del Regno wrote:
+> Il 06/02/26 17:58, Denis Gessert ha scritto:
+>> Thanks for the quick response. I compiled 6.18.9 with this patch
+>> (without reverting the previous commit) and it boots successfully.
 > 
-> I'm running a Radxa Rock 5B (rk3588) on a 10+ year old Samsung TV screen
-> connected via HDMI. This worked flawlessly in 6.18.7 but does not work on linux-
-> next. I bisected the problem and identified commit 3481fc04 to be the first bad
-> commit. This points to the phy PLL clock rate calculation to be the problem in
-> connection with my monitor. As it seems relevant, I attached the EDID of my
-> monitor.
+> Well, I missed all those replies to this thread, and sent a redundant reply
+> saying .. well, the same as Thorsten (hey, thanks for being faster than
+> me!).
+
+Happens. :-D
+
+> Happy to see further confirmation that the patch that we both mentioned is
+> actually fixing the issue.
+
+The big question remains: Now that this landed in mainline, should we as
+the stable team to pick this up for 6.18.y and 6.19.y to get it resolved
+there quickly? They might pick it up on their own due to the Fixes tag,
+but that is not guaranteed.
+
+Ciao, Thorsten
+
+>> Am Fr., 6. Feb. 2026 um 15:55 Uhr schrieb Thorsten Leemhuis
+>> <regressions@leemhuis.info>:
+>>>
+>>> On 2/6/26 12:33, Denis Gessert wrote:
+>>>>
+>>>> I found this email chain while troubleshooting why my Levovo Duet
+>>>> (with the MT8183 chip) would not boot using any 6.18.* kernel.
+>>>>
+>>>> I can confirm that on my device the current stable 6.18.8 does not
+>>>> boot unless I revert the commit
+>>>>
+>>>> commit e72d63fa0563f8a6e98c10fed3a9ce74dc0536e6 (HEAD)
+>>>> Author: AngeloGioacchino Del Regno
+>>>> <angelogioacchino.delregno@collabora.com>
+>>>> Date:   Thu Jul 24 10:39:08 2025 +0200
+>>>>
+>>>>      arm64: dts: mediatek: mt8183: Migrate to display controller OF
+>>>> graph
+>>>>
+>>>> mentioned below. With the reverted commit the device boots as intended.
+>>>
+>>> There is a fix for it from Otto here that I guess should help
+>>> https://lore.kernel.org/lkml/20260106-mt8183-display-graph-v2-1-
+>>> e7e56054eef5@abscue.de/
+>>>
+>>> Side note: lacks a stable tag and maybe should have been merged this
+>>> cycle instead of the next. But given that 6.19 is immanent it might be
+>>> good if this could be backported to 6.19.y once it landed in mainline.
+>>>
+>>>> PS: Apologies for the potential double-mail.
+>>> No worries, happens.
+>>>
+>>> Ciao, Thortsten
 > 
-> I'm booting the kernel out of EDK2 after which efifb is correctly taking over
-> the initialized display and I can see the initial kernel boot messages on the
-> HDMI output. After the drm/kms in the kernel takes over the screen shortly turns
-> black, changes resolution, and then correctly displays on 6.18.7. However, in
-> linux-next the screen remains black after kms took over. I cannot see any
-> obvious differences in the boot logs but I attached two boot logs, one for the
-> working 6.18.7 kernel and one for the non-working linux-next kernel.
 > 
-> When reverting 3481fc04..de5dba83 (i.e. the faulty commit and the ones that
-> followed in the HDMI 2.1 FRL series) I can build a working kernel from linux-
-> next.
 > 
-> I don't know where to dig from here but I'm happy to run any test necessary to
-> track down the problem.
 
-It'd be helpful if you could resend the logs after booting both kernels with the
-following params (requires CONFIG_DYNAMIC_DEBUG=y):
-
-  rockchipdrm.dyndbg=+p dw_hdmi_qp.dyndbg=+p phy_rockchip_samsung_hdptx.dyndbg=+p
-
-As well as running the command below before connecting your display/TV:
-
-  $ echo 0x4 > /sys/module/drm/parameters/debug
-
-I've noticed you're forcing "video=HDMI-A-1:1920x1080M@60", which should be
-anyway the preferred mode (according to the EDID).
-
-Did you try choosing a different one, e.g. 1920x1080@50 or 1920x1080@30 (they
-are supported according to the listing in CTA-861 Extension Block). That's more
-a test to confirm the issue affects a particular modeline, or is more general.
-
-FWIW I've tested over 40 modes with different displays/TVs and didn't notice any
-regression, hence I'm probably missing something here.
-
-Thanks for the report!
-
-Cristian
