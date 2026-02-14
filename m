@@ -1,171 +1,128 @@
-Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f194.google.com (mail-dy1-f194.google.com [74.125.82.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABA2031813A
-	for <regressions@lists.linux.dev>; Fri, 13 Feb 2026 22:52:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39BC313DDAE
+	for <regressions@lists.linux.dev>; Sat, 14 Feb 2026 01:59:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771023159; cv=none; b=FD38Q20rRHkTBevmWXmt22DZLZqcNOwO+Cb2lDVIjiBOrk6XTcink+5FJxI+3FWcw239T+aHbXIzFgNPtvYUT4A3mUEGFzLCl/+NpadncITbqou9v/2gjxqs3g7T9SYvtti6lADpoI1nKTuYMA18gNHbGRpOjZUCeYuHz/oFdCc=
+	t=1771034346; cv=none; b=Ime+eqH/VMHYIxxH2seMWhB3H7LD3qIRFdbmKnV+oHWBNnCFYZqgzDikv1ljD2D/gxJN4Qg5UAxYqOBzpUc9jSEe4VSNSUIg0zM7jEVtPytxTLUu5hJSAK02Xs3GLQG4PLbsIFdXvxJJDVboLMfkAxSkaXPLwa5f5x6Qx3jlEpo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771023159; c=relaxed/simple;
-	bh=GDB2HAgsrLNI1U8xhPxOnqOpFKL7/IhToOd84WGIMIo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EZ3eb4ytpF/ycHD7cSevZfzDpT8LxaQlAXlqITbQIg4JKA+SZyo3mwJiKAStzrR0cPkId+SnM+behGCSHyG0xVUKmEni1oHD9zjYt7lm/UJiXyU5spwKHHHYEvo4fSTRY8v55WbLdZMFh3q1PbDanWtJZWIBcjDfn7VmVlznYe8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=nDfBIqoQ; arc=none smtp.client-ip=80.241.56.161
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+	s=arc-20240116; t=1771034346; c=relaxed/simple;
+	bh=U70jkWYNuOW5GtIZ4h0Ej0ry7ecHACUK1uG5EL4lANs=;
+	h=Content-Type:MIME-Version:Subject:From:To:Cc:Date:Message-ID; b=Q5XJCsnYUOHa42yOod8/scWkSfapHCk6mZt9NlPl398qDVY7s52zhlfx6lnZFW3RS1sExPZNu2b148b7dIfgGsN6zwoMuT3XgEnoSE2GasyEuoDlW0ghXC4m7xUfLvI5wNrnu6KthhW7c8SIl+76I+QlQtf9urW3dK1bPSatuTE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org; spf=none smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b=sVolC47H; arc=none smtp.client-ip=74.125.82.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=kernelci.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="nDfBIqoQ"
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:b231:465::2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4fCS9Y5p7fz9sm6;
-	Fri, 13 Feb 2026 23:52:33 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1771023153;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OYMdHs/+oaaB9f+4cKWkLE7Mz2I2iGZ0F48QC7i5Xys=;
-	b=nDfBIqoQul/e7BI/OjW6TuLTAZbUyyZgXzctFELtYFeOcnPL5m17tUbKUdWcB8sW0EUNe2
-	2PP2SKN0bPfbBup5yWPy5sNTU/arlgdVSpmW6aMQXWldq01zXwKYXsZKIYDrjmlrWmbFtk
-	Glan+D26a6YnkTcPZZ9J7lVRGtgicsOncXpSsPSUZ9DnUsb3ITZf23C9QKQFxEqIUGFu8L
-	GJAU+9M/kEvfPvt02ZUSaSelN6ZqodRozdOfgjbJ4gMicIbtx70B0OEA4C2ZkgVjhPEW5O
-	RmmgrXxXMOyzFSl1KLUC/hPGXc/0OnZuyaMjdN1iMr38HbeyN0rJ3JYM5H107w==
-Message-ID: <fcf5ab75-029e-469e-8b2a-51fa5c2a2374@mailbox.org>
-Date: Fri, 13 Feb 2026 23:52:29 +0100
+	dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b="sVolC47H"
+Received: by mail-dy1-f194.google.com with SMTP id 5a478bee46e88-2ba68df3687so2484589eec.1
+        for <regressions@lists.linux.dev>; Fri, 13 Feb 2026 17:59:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20230601.gappssmtp.com; s=20230601; t=1771034344; x=1771639144; darn=lists.linux.dev;
+        h=message-id:date:reply-to:cc:to:from:subject
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=L6ds8ivclhd7/0EdtafyN3E0gV9x1foWSmGde/wizf4=;
+        b=sVolC47HqPrjgn/KAG2nyg7NwfpQLF53b0mYOw5Kqe3YGiv1Wx23qAFN9qHLrTxpFI
+         BBuDyAowNQs9RWqclVAc+gscqrUmWRkcqibKsZO9PJvZTzlBzUT1YPvW0342kwzQ6rbv
+         EZTpSVagVRCLQoiU3GrWfbmTmYBfg+CYp6z/dIR+CSY+2sksHSiibdD3iPmlvxqAET9O
+         n7CQDrVj1vCJpqhBHmj5Y26qd6BdZwACIKCkDGeRux0kjnPDgfVcZQ5iYxeTYykdjHDB
+         jZ8ZSjVf69EMzsuqyCTu8AAX6sgNxYnvwB18Gf7WE/dnackgnYjpi3NXQ5MXtl/q3Jaw
+         5K6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1771034344; x=1771639144;
+        h=message-id:date:reply-to:cc:to:from:subject
+         :content-transfer-encoding:mime-version:x-gm-gg:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=L6ds8ivclhd7/0EdtafyN3E0gV9x1foWSmGde/wizf4=;
+        b=QpBGeXBqadtcEahLP+1iPQwNqWciHiHJ8YllJ/IE4rpL9+qp6URkwp5CH2PM9m+H7Q
+         wJ3wfVeisLoLt7GTljtMgs4yqaDM8Wke3TJ7YwgKMs90OmAoV+x3wy5A/caZZfBGHMbm
+         7nvyvgHPaQ2VxGY7/s93on379VBC/95rgrMQYSryyudzpj5fDphaLXshVbo8MWr+CmPx
+         OLoJO6GF9ixa3hiKxG6hyOA++HwSLBy09Nxqe6tDJHAgIWnM5P0cePdKUIcTexFpBpIT
+         clE9cgvJWRkTyTziaWhBTGlcgsfYbMdmM89GxXzEYb6PQ6bzKWd+3EoIF+HXheTtenYX
+         XjcQ==
+X-Gm-Message-State: AOJu0YxYqMzxv8lJMt5CTCDGr5IRySrUiQsS0ns7D/vC2nMUUYJFcaY1
+	YJeCyptRuReRBMCQ0G2Lz8P+gTEExhm/GWYma7qffSMM2BERPwOyv33Eg0IydBwoy1M=
+X-Gm-Gg: AZuq6aI7C2UuM2LTR2z+9JqVeB8fE1UkTn9H4Izb2iEKFQtclNnUebIrOPa0/1zKrec
+	R0NAfgnoYkksq3IH1WxZxbMrZPbW1raYuKvy6+M17b6wp+tn4+qHzT3dgBmSxF1Dha7nAs55erV
+	sOzyGi/tyC1FPoqYkXCsHB015DlZLa0kxjhaVSCSsnVCOWNXrD6Lvi1sG1DNN5itGDNec3c10Mt
+	Ue6tPi+MvPFDNXZtYpqmapcKSXZEk0O1itCeFz5CPwSwefgLkVn1XgT5FNDt4BcW8Vk6w15kyiu
+	Pe/KfYu1OYdCjs4Xzx3jHlNfBcfpC89KWVw5XbNabxt3QauyJI2OjTs95Tpp9IpunSBgOMBROD3
+	mKMkezs0IrBJaAbxIAreEWdv0wQ2G6rhJ+Hn/thog+Puw/NDbEcIS404JTA7smO7Fp4stQcu3Ay
+	pHeOHZ/25RQ9DKrBux
+X-Received: by 2002:a05:693c:300c:b0:2b7:f145:a61 with SMTP id 5a478bee46e88-2bac97c4b53mr515500eec.31.1771034344125;
+        Fri, 13 Feb 2026 17:59:04 -0800 (PST)
+Received: from f55b40a4666e ([20.38.40.137])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2bacb555b6esm508290eec.8.2026.02.13.17.59.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Feb 2026 17:59:03 -0800 (PST)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Subject: Re: [PATCH] drm/imagination: Convert to
- dev_pm_domain_{at,de}tach_list()
-To: Thorsten Leemhuis <regressions@leemhuis.info>,
- Matt Coster <Matt.Coster@imgtec.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>,
- Frank Binns <Frank.Binns@imgtec.com>,
- Brajesh Gupta <Brajesh.Gupta@imgtec.com>,
- Alessio Belle <Alessio.Belle@imgtec.com>,
- Alexandru Dadu <Alexandru.Dadu@imgtec.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
- "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
- "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <194465eda54d1f852a9226cf691ddc5aa208e0a3.1769097977.git.geert+renesas@glider.be>
- <ffdf3982-e22c-4d01-afa6-5449ed381000@imgtec.com>
- <CAMuHMdWMh_oJFg-KtapcTDGvYWZ-hg_ZEJ2=E5Tp1apOEc8tnQ@mail.gmail.com>
- <b3b4f10e-1222-44f7-b308-db7199c67147@mailbox.org>
- <3e0def93-2f6c-4bcf-8ee5-bf607f2ca382@imgtec.com>
- <f5d3dde6-edec-42f4-93cb-459c8677245a@mailbox.org>
- <f82b7734-6ddc-4029-b38d-147e9a1de021@leemhuis.info>
-Content-Language: en-US
-From: Marek Vasut <marek.vasut@mailbox.org>
-In-Reply-To: <f82b7734-6ddc-4029-b38d-147e9a1de021@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-MBO-RS-META: 96c7hrsacadq8kc9oummy1uk1mamdons
-X-MBO-RS-ID: b7be86f54666a4ea61e
+Content-Transfer-Encoding: 7bit
+Subject: [REGRESSION] mainline/master: (build) in vmlinux.unstripped
+ (scripts/Makefile.vmlinux:72) [logspec:kbuil...
+From: KernelCI bot <bot@kernelci.org>
+To: kernelci-results@groups.io
+Cc: regressions@lists.linux.dev, gus@collabora.com, laura.nao@collabora.com,
+ shreeya.patel@collabora.com, broonie@kernel.org
+Reply-To: kernelci@lists.linux.dev
+Date: Sat, 14 Feb 2026 01:59:03 -0000
+Message-ID: <177103434309.1537.16630109964798020395@f55b40a4666e>
 
-On 2/12/26 4:56 PM, Thorsten Leemhuis wrote:
-> On 2/12/26 15:38, Marek Vasut wrote:
->> On 2/12/26 10:00 AM, Matt Coster wrote:
->>> On 11/02/2026 19:17, Marek Vasut wrote:
->>>> On 1/23/26 2:50 PM, Geert Uytterhoeven wrote:
->>>>> On Fri, 23 Jan 2026 at 14:36, Matt Coster <Matt.Coster@imgtec.com>
->>>>> wrote:
->>>>>> On 22/01/2026 16:08, Geert Uytterhoeven wrote:
->>>>>>> Call the dev_pm_domain_attach_list() and dev_pm_domain_detach_list()
->>>>>>> helpers instead of open-coding multi PM Domain handling.
->>>>>>>
->>>>>>> This changes behavior slightly:
->>>>>>>      - The new handling is also applied in case of a single PM Domain,
->>>>>>>      - PM Domains are now referred to by index instead of by name, but
->>>>>>>        "make dtbs_check" enforces the actual naming and ordering
->>>>>>> anyway,
->>>>>>>      - There are no longer device links created between virtual domain
->>>>>>>        devices, only between virtual devices and the parent device.
->>>>>>
->>>>>> We still need this guarantee, both at start and end of day. In the
->>>>>> current implementation dev_pm_domain_attach_list() iterates forwards,
->>>>>> but so does dev_pm_domain_detach_list(). Even if we changed that, I'd
->>>>>> prefer not to rely on the implementation details when we can
->>>>>> declare the
->>>>>> dependencies explicitly.
->>>>>
->>>>> Note that on R-Car, the PM Domains are nested (see e.g.
->>>>> r8a7795_areas[]),
->>>>> so they are always (un)powered in the correct order.  But that may not
->>>>> be the case in the integration on other SoCs.
->>>>>
->>>>>> We had/have a patch (attached) kicking around internally to use the
->>>>>> *_list() functions but keep the inter-domain links in place; it got
->>>>>> held
->>>>>> up by discussions as to whether we actually need those dependencies
->>>>>> for
->>>>>> the hardware to behave correctly. Your patch spurred me to run around
->>>>>> the office and nag people a bit, and it seems we really do need to
->>>>>> care
->>>>>> about the ordering.
->>>>>
->>>>> OK.
->>>>>
->>>>>> Can you add the links back in for a V2 or I can properly send the
->>>>>> attached patch instead, I don't mind either way.
->>>>>
->>>>> Please move forward with your patch, you are the expert.
->>>>> I prefer not to be blamed for any breakage ;-)
->>>>
->>>> Has there been any progress on fixing this kernel crash ?
->>>>
->>>> There are already two proposed solutions, but no fix is upstream.
->>>
->>> Yes and no. Our patch to use dev_pm_domain_attach_list() has landed in
->>> drm-misc-next as commit e19cc5ab347e3 ("drm/imagination: Use>> dev_pm_domain_attach_list()"), but this does not fix the underlying
->>> issue of missing synchronization in the PM core[1] is still unresolved
->>> as far as I'm aware.
->>
->> OK, but the pvr driver can currently easily crash the kernel on boot if
->> firmware is missing, so that should be fixed soon, right ?
-> 
-> Well, drm-misc-next afaik means that the above mentioned fix would only
-> be merged in 7.1, which is ~4 months away, which is not really "soon"
-> I'd say. Or did I misjudge this?
 
-The PM domain issue here crashes the kernel, so I think this would be 
-material for drm-misc-fixes .
 
->> I added the regressions list onto CC, because this seems like a problem
->> worth tracking.
-> 
-> Noticed that and wondered what change caused the regression.
 
-I think this one:
 
-330e76d31697 ("drm/imagination: Add power domain control")
+Hello,
 
-> Did not
-> find a answer in a quick search on lore[1]. Because if it's a
-> regression, we maybe should just revert the culprit for now according to
-> Linus:
-> https://lore.kernel.org/lkml/CAHk-=wi86AosXs66-yi54+mpQjPu0upxB8ZAfG+LsMyJmcuMSA@mail.gmail.com/
-> 
-> Ciao, Thorsten
-> 
-> [1] I guess this was the initial report from Geert?
-> https://lore.kernel.org/all/CAMuHMdWapT40hV3c+CSBqFOW05aWcV1a6v_NiJYgoYi0i9_PDQ@mail.gmail.com/
+New build issue found on mainline/master:
 
-It is.
+---
+ in vmlinux.unstripped (scripts/Makefile.vmlinux:72) [logspec:kbuild,kbuild.compiler]
+---
 
-I think there are other SoCs which depend on the power domain commit, so 
-revert is not so clear cut anymore. But SoCs which have hierarchical 
-power domains and which manage to probe this driver without having a 
-firmware available for the GPU will simply end with crashed kernel, 
-which is really not good.
+- dashboard: https://d.kernelci.org/i/maestro:b5ed9b51212f5174ccbd9d812fc43e26fcc5361e
+- giturl: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+- commit HEAD:  f50822fd8675c68d294e89bd102f7b487ca3acd3
+
+
+Please include the KernelCI tag when submitting a fix:
+
+Reported-by: kernelci.org bot <bot@kernelci.org>
+
+
+Log excerpt:
+=====================================================
+  LD      .tmp_vmlinux2
+  NM      .tmp_vmlinux2.syms
+  KSYMS   .tmp_vmlinux2.kallsyms.S
+  AS      .tmp_vmlinux2.kallsyms.o
+  LD      vmlinux.unstripped
+  NM      System.map
+  SORTTAB vmlinux.unstripped
+Inconsistent kallsyms data
+Try "make KALLSYMS_EXTRA_PASS=1" as a workaround
+
+=====================================================
+
+
+# Builds where the incident occurred:
+
+## defconfig+CONFIG_ARM64_64K_PAGES=y on (arm64):
+- compiler: clang-21
+- config: https://files.kernelci.org/kbuild-clang-21-arm64-mainline-64K_PAGES-698fbf49a1ae387ffbd780f1/.config
+- dashboard: https://d.kernelci.org/build/maestro:698fbf49a1ae387ffbd780f1
+
+
+#kernelci issue maestro:b5ed9b51212f5174ccbd9d812fc43e26fcc5361e
+
+--
+This is an experimental report format. Please send feedback in!
+Talk to us at kernelci@lists.linux.dev
+
+Made with love by the KernelCI team - https://kernelci.org
