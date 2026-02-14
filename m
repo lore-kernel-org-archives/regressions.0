@@ -1,94 +1,147 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fout-b1-smtp.messagingengine.com (fout-b1-smtp.messagingengine.com [202.12.124.144])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E91192BCF6C;
-	Sat, 14 Feb 2026 19:26:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49E9122D9F7
+	for <regressions@lists.linux.dev>; Sat, 14 Feb 2026 20:17:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.144
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771097217; cv=none; b=sjdwOADb6Kzrv11YR7wW1M4wRBKYwCy7i12vTAxVGc9Hd3tFdmk5REEucq9YhFFjkqRDLYCyxF/OPIQ/nhWnL8FPFBfhyldUb7DI4BR6qYkfkPRuZ3PasNmBQ0G5J25z9OSYgYAqJRTtQaXqWnrqoCyUVlcth5Cn8P5lA9vKFF8=
+	t=1771100260; cv=none; b=R2rQaFujVgcQeji5gsx/DrTfhpPLB8NwhL6za2XlS3lmNp9WiK//5yTUa9PbvIhV9wR6Yyk50Y2fnJCsFwwyn1eqDKRKGKP4dOf0dBa2AUrwZvNHcJCkIwfqKZ6RQHOc2G9qJkuOdoDxj5tuODwonovqAZUSY1br1c0XyhRZjyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771097217; c=relaxed/simple;
-	bh=zVE+zElLDJRJ/vh72R6z5M7yYo9adh6BG2IXaDWNDGU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hsfuT+9oKQS31EIUqqdi/+rZ1tnekiZbpuaBsEb6SxISwBoseK0LzEUOJoobKgVCK4vhWkN2cBBwKm+8kKwKxlGVtt0qSVaUFsCmPWxIvnDn/k4Z1IvKHaR0vWVqZS6wjc+dawlxKwJMydjqJJGiIPAB+l7I6SStgfKPPJ20K6c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mm21YYYj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1771100260; c=relaxed/simple;
+	bh=tkcpYpKdOVGR26NDevqMS/9nzXXaxloYdWOxpwUibGU=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=AcnPlJ2n29F277WJtfqj6YPgn3mSIyBc9Co/3vyBubsEW5z1g29JoLPg4fMBaMc4qZDu3feyXRv0+U5hxVA+xiq2cuxE28tmeKItHK2nliaNXyhba2Wl1O2TOkC1ASHAP2WJ2MRjKyP6Qzaaod8tSvtqUHPrU4h5qE+YH5u79wU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sent.com; spf=pass smtp.mailfrom=sent.com; dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b=dRhLdFNA; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=wVRay7y/; arc=none smtp.client-ip=202.12.124.144
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sent.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sent.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mm21YYYj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 509BAC16AAE;
-	Sat, 14 Feb 2026 19:26:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771097216;
-	bh=zVE+zElLDJRJ/vh72R6z5M7yYo9adh6BG2IXaDWNDGU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mm21YYYjnumIoYF4BRGDxJMjD4RAAKRwzWvkY8s7TEa4tD2NrqvaK3kuB+dt7gkj3
-	 NTsFMC/KZWICJor0QN/shR4EFUyx8zLn5po+L5D0bClQLSTnufZEwJCpFa45ClcZtP
-	 8ikR/jWBstotk5z1aPOH5y1x7RH093ZqiXDdRZKHGBJapJlz5e0e9vhZFMWZtQIf4u
-	 Dl0V/qiWZldg4XKg8pUsfoqOh3pd/+JRnBHTnSt2amqie5cxitX+nR5/W6uvqDM+2l
-	 Jgo8oNNahKW0qPEZbsYbQkE4xsO3on1uULF9GgIQH9ANFyzjaGr4XTBTrl72/J3P/s
-	 fHIksf2u3vRJg==
-Date: Sat, 14 Feb 2026 13:26:54 -0600
-From: Bjorn Andersson <andersson@kernel.org>
-To: David Heidelberg <david@ixit.cz>
-Cc: Alexander Wilhelm <alexander.wilhelm@westermo.com>, 
-	Konrad Dybcio <konradybcio@kernel.org>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	regressions@lists.linux.dev
-Subject: Re: [PATCH v5 0/3] soc: qcom: extend interface for big endian support
-Message-ID: <mmd44dczfsfcjfhfikcjzaxongb6dwy4oqxtpv7t2jvyudzut4@hi3n3e7brse4>
-References: <20251119104008.3505152-1-alexander.wilhelm@westermo.com>
- <dfb72933-938f-43f2-87f3-2e3ab9697125@ixit.cz>
+	dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b="dRhLdFNA";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="wVRay7y/"
+Received: from phl-compute-03.internal (phl-compute-03.internal [10.202.2.43])
+	by mailfout.stl.internal (Postfix) with ESMTP id 3F0201D0011C;
+	Sat, 14 Feb 2026 15:17:37 -0500 (EST)
+Received: from phl-imap-04 ([10.202.2.82])
+  by phl-compute-03.internal (MEProxy); Sat, 14 Feb 2026 15:17:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sent.com; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1771100257;
+	 x=1771186657; bh=IvOS+pgy2uR8zxON+k1BskxbjZLcO9n2BtEa+bvHg+0=; b=
+	dRhLdFNAi/SrlOcjHVnbcN1lt1wDYSXWCXlgca92B6MJqs9/lGu93FX2d5OPO9pp
+	0VAwyWjGmQzd0chL5f20LdGfFAyfDoIWt3HIlO1D4QE8RfSbBMaKjcMIL+/tfeHM
+	LTupomjNhU7U0jzD9K6D9bcT1Hm5oemn8ihra719ZMrUW+A4TXlq2ooxoPwO8ZdB
+	6Zh3tl8uPgEOcoNIT8AqZdVs7QltAYAPR/O2h6xlHDriCk+zxx1u4jC8Adri32FH
+	N6C6/K4MwKqFJs5WtA9BZDNDLgyr+ev/WO0FdAQpHNWCshDwTxYu3IxGXmNRKQw/
+	7+Lzrz0vIedY3AxQ/Cn0KQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1771100257; x=
+	1771186657; bh=IvOS+pgy2uR8zxON+k1BskxbjZLcO9n2BtEa+bvHg+0=; b=w
+	VRay7y/hyqYf9338DXddbG7skU0u4RcNqrqXMi1euDU2Jj8pkW36kejYniWB61XK
+	CpvzhBAPtb6ttzDSmmxcdsaFuMRk19UHsNp7ES89+XPcR9kMrENDguMBQoYRrf4D
+	XR+g7KMS0QYgtL0WFb9wyCkuqZRNz3oceluftbEtyADnbkbvA8hnNz5HXr1S2SWM
+	/ZuCELOgQxFm98Vwaeye+Sjn4T8tIvAMKdTk66J13AG346+pJc6ryvWki/crym10
+	ccPBsGHC+ioNuG/FByUpDFi7kwMp0Ehnv/f9p9yjbKmSSTZV86GmI++/r9gu1XSh
+	CxhAAVgg7PP4qHShnoxGA==
+X-ME-Sender: <xms:YNiQaWRXfB90OD5w1nLmKYSmQrhjg57uosn0H2v-ajGEluIlg4vYQQ>
+    <xme:YNiQaWnhM0KBSV5L9jmlxA4gIjEWfDolLvniceqhD5hGkIxO7b4hgVFxpuzkxceys
+    OQ91uzk2qJJ3JLxzB_BvQzd62HpzLTvRGExPMKraty3jpBlS2oyrJo>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvuddvtdehucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpegtohhrrhgv
+    tghtmhhoshhtuceotghmlhhishhtshesshgvnhhtrdgtohhmqeenucggtffrrghtthgvrh
+    hnpeejleevhedvjefhtdfhueffhfefgedtvddtgfegfeeiveffhfeffeelgffgffegleen
+    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegtmhhlih
+    hsthhssehsvghnthdrtghomhdpnhgspghrtghpthhtohepiedpmhhouggvpehsmhhtphho
+    uhhtpdhrtghpthhtohepvhhkohhulheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprg
+    hnughrihihrdhshhgvvhgthhgvnhhkoheslhhinhhugidrihhnthgvlhdrtghomhdprhgt
+    phhtthhopehmihhkrgdrfigvshhtvghrsggvrhhgsehlihhnuhigrdhinhhtvghlrdgtoh
+    hmpdhrtghpthhtoheprhgvghhrvghsshhiohhnsheslhhishhtshdrlhhinhhugidruggv
+    vhdprhgtphhtthhopegumhgrvghnghhinhgvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpd
+    hrtghpthhtoheplhhinhhugidqihdvtgesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:YNiQab68jDa0O663yj5h9dvLxAGwTAciGtUFqPohlGnS4kD61KCUmQ>
+    <xmx:YNiQaa9w9MBYSO5Qzqzd_V4yqz0BVdcZJK9SiGX_xhYajqNY6OjAMw>
+    <xmx:YNiQaSWQf9ytig_y_EfoFOpuEhkGAwBTISvOv4jD-14OM499f7c59Q>
+    <xmx:YNiQadqYVgTrwhnyxX6Mm0b5XyNAUy0jWeud3BRtIPqREZB5a3qVmw>
+    <xmx:YdiQadb_caXY0-noZFNEfysA5n1PMCIzI8heZAeypZtvEBuwYN4QFjaT>
+Feedback-ID: i87314915:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 3D47AB6006E; Sat, 14 Feb 2026 15:17:36 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <dfb72933-938f-43f2-87f3-2e3ab9697125@ixit.cz>
+X-ThreadId: AwebR64VcaZc
+Date: Sat, 14 Feb 2026 15:17:15 -0500
+From: correctmost <cmlists@sent.com>
+To: "Mika Westerberg" <mika.westerberg@linux.intel.com>
+Cc: "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
+ dmaengine@vger.kernel.org, regressions@lists.linux.dev, vkoul@kernel.org,
+ linux-i2c@vger.kernel.org
+Message-Id: <1654dd48-c86b-4756-82cf-d1fec5732d60@app.fastmail.com>
+In-Reply-To: <20260205103129.GT2275908@black.igk.intel.com>
+References: <5ed857f5-59ae-4052-8f2e-dac7fcd014cc@app.fastmail.com>
+ <20260203100452.GE2275908@black.igk.intel.com>
+ <5d134f4f-f7f4-4972-9adb-6d10ede5c1bb@app.fastmail.com>
+ <20260204123107.GN2275908@black.igk.intel.com>
+ <5ed53c66-69e9-45e1-9b89-e3d555ff412c@app.fastmail.com>
+ <aYNHeqYYa9ixrksM@smile.fi.intel.com>
+ <e7a0d992-ed5c-4435-b567-e0b873360a48@app.fastmail.com>
+ <72c71247-8b54-4820-b25d-34f659e7f957@app.fastmail.com>
+ <20260204153402.GR2275908@black.igk.intel.com>
+ <0d13a547-5f4c-4d5b-83e2-3530469d36c1@app.fastmail.com>
+ <20260205103129.GT2275908@black.igk.intel.com>
+Subject: Re: [REGRESSION][BISECTED] Lenovo IdeaPad touchpad does not work when idma64
+ is present in initramfs
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jan 21, 2026 at 09:22:07AM +0100, David Heidelberg wrote:
-> On 19/11/2025 11:40, Alexander Wilhelm wrote:
-> > Currently, the QMI interface only works on little endian systems due to how
-> > it encodes and decodes data. Most QMI related data structures are defined
-> > in CPU native order and do not use endian specific types.
-> > 
-> > Add support for endian conversion of basic element types in the QMI
-> > encoding and decoding logic. Fix the handling of QMI_DATA_LEN fields to
-> > ensure correct interpretation on big endian systems. These changes are
-> > required to allow QMI to operate correctly across architectures with
-> > different endianness.
-> > ---
-> 
-> Hello,
-> 
-> I recently (next-20260119) started receiving errors on Pixel 3:
-> 
-> [   21.158943] ipa 1e40000.ipa: received modem running event
-> [   21.164616] qmi_encode: Invalid data length
-> [   21.168930] qcom_q6v5_pas remoteproc-adsp: failed to send subsystem event
-> [   21.175844] qmi_encode: Invalid data length
-> [   21.180494] qcom_q6v5_pas remoteproc-cdsp: failed to send subsystem event
-> [   21.187467] qmi_encode: Invalid data length
-> [   21.191772] qcom-q6v5-mss 4080000.remoteproc: failed to send subsystem
-> event
-> [   21.199088] qmi_encode: Invalid data length
-> [   21.203360] qcom-q6v5-mss 4080000.remoteproc: failed to send subsystem
-> event
-> [   21.210636] remoteproc remoteproc0: remote processor 4080000.remoteproc
-> is now up
-> 
-> Since it's not well tested, I believe there could be problem with
-> configuration, but after reverting this series, no errors pop up.
-> 
-> I would believe maybe these errors was previously hidden, but just to be
-> sure asking here.
-> 
+On Thu, Feb 5, 2026, at 5:31 AM, Mika Westerberg wrote:
+> On Wed, Feb 04, 2026 at 10:53:57AM -0500, correctmost wrote:
+>> On Wed, Feb 4, 2026, at 10:34 AM, Mika Westerberg wrote:
+>> > On Wed, Feb 04, 2026 at 10:12:57AM -0500, correctmost wrote:
+>> >> > I will try to debug the config issue and retest the touchpad with the 
+>> >> > proper config changes.
+>> >> 
+>> >> After fixing the config issue, I now see "Dynamic Preempt: voluntary" in
+>> >> the dmesg output.  I also see "# CONFIG_HID_BPF is not set" in
+>> >> /proc/config.gz.
+>> >> 
+>> >> The "probe with driver hid-generic failed with error -22" message is
+>> >> still present and the touchpad doesn't work (full log attached).
+>> >
+>> > Thanks!
+>> >
+>> > I don't see any other way than adding even more debug. It really should at
+>> > least be able to parse the report descriptor as that's exactly the same as
+>> > in working case but let's try to figure why it fails. Can you add again on
+>> > top of everything this one:
+>> 
+>> The attached log has the added hid debug lines.
+>
+> Thanks!
+>
+> I now realized that the dump of the report descriptor truncates it into 64
+> bytes so it can actually contain whatever crap that the controller read and
+> this is probably why the HID parser fails. My apologies.
+>
+> I think at this point there is not much we can do :( You have the
+> workaround, to put everything in the initramfs (or built into the kernel
+> image), right? We have asked schematics from Lenovo but there is no
+> guarantee we get them and I think those are needed to figure out how the
+> touchpad is connected.
 
-#regzbot ^introduced: fe099c387e06
+I have been excluding idma64 from my initramfs image to work around the issue.  I was hoping it'd be possible to make the touchpad work without any user modifications, but it doesn't seem like there is a clean solution.
 
-> Thanks
-> David
-> 
-> [...]--
-> David Heidelberg
-> 
+For future readers, there are two items that I did not yet attempt:
+- Update my BIOS to see if that helps resolve the issue
+- Try to access advanced BIOS options to unlock GPIO pins
+
+Thank you (and Andy) for proposing patches and reviewing all of the debug output :).
