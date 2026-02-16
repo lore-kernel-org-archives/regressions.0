@@ -1,147 +1,171 @@
-Received: from fout-b1-smtp.messagingengine.com (fout-b1-smtp.messagingengine.com [202.12.124.144])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49E9122D9F7
-	for <regressions@lists.linux.dev>; Sat, 14 Feb 2026 20:17:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.144
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B852421257E
+	for <regressions@lists.linux.dev>; Mon, 16 Feb 2026 01:18:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771100260; cv=none; b=R2rQaFujVgcQeji5gsx/DrTfhpPLB8NwhL6za2XlS3lmNp9WiK//5yTUa9PbvIhV9wR6Yyk50Y2fnJCsFwwyn1eqDKRKGKP4dOf0dBa2AUrwZvNHcJCkIwfqKZ6RQHOc2G9qJkuOdoDxj5tuODwonovqAZUSY1br1c0XyhRZjyQ=
+	t=1771204720; cv=none; b=CMxCdSnSPNWI36jynPPn1LERbIuwMViByQw7FtkYrIdl236AGraXN8dmBB1Nc3CgJxzISe9R+AAyIvZKafZgWDQ1OUvEXCa8MToTTLRWhniRPhqZhd1BL4oy34aDXWOa0vF53ksNJetcCFJ6vBmNBIqjMLKbuyBZMdU7CIKUL5Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771100260; c=relaxed/simple;
-	bh=tkcpYpKdOVGR26NDevqMS/9nzXXaxloYdWOxpwUibGU=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=AcnPlJ2n29F277WJtfqj6YPgn3mSIyBc9Co/3vyBubsEW5z1g29JoLPg4fMBaMc4qZDu3feyXRv0+U5hxVA+xiq2cuxE28tmeKItHK2nliaNXyhba2Wl1O2TOkC1ASHAP2WJ2MRjKyP6Qzaaod8tSvtqUHPrU4h5qE+YH5u79wU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sent.com; spf=pass smtp.mailfrom=sent.com; dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b=dRhLdFNA; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=wVRay7y/; arc=none smtp.client-ip=202.12.124.144
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sent.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sent.com
+	s=arc-20240116; t=1771204720; c=relaxed/simple;
+	bh=Vt1/GO5k/RzR8SVs8wPxGoQATAh8Up3BHfZKh9BhnVg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=fjCxDMd0NbM6astu9St3ejiZWr8QA7Rv6T0JAzSt+aNBdUKY7ZVdwNxMgMK8ubojBs6VOQDRVAukmd/O2ijw6/b+OOJ2Oc35xdi3JU+Xf8WgYqMgEy2UwqvukYzSjbyuwEIQtuhHlOmAJLz3Q1tGDnPVccAL/UViOMNHyeZftP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=eq3t9Fg9; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b="dRhLdFNA";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="wVRay7y/"
-Received: from phl-compute-03.internal (phl-compute-03.internal [10.202.2.43])
-	by mailfout.stl.internal (Postfix) with ESMTP id 3F0201D0011C;
-	Sat, 14 Feb 2026 15:17:37 -0500 (EST)
-Received: from phl-imap-04 ([10.202.2.82])
-  by phl-compute-03.internal (MEProxy); Sat, 14 Feb 2026 15:17:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sent.com; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1771100257;
-	 x=1771186657; bh=IvOS+pgy2uR8zxON+k1BskxbjZLcO9n2BtEa+bvHg+0=; b=
-	dRhLdFNAi/SrlOcjHVnbcN1lt1wDYSXWCXlgca92B6MJqs9/lGu93FX2d5OPO9pp
-	0VAwyWjGmQzd0chL5f20LdGfFAyfDoIWt3HIlO1D4QE8RfSbBMaKjcMIL+/tfeHM
-	LTupomjNhU7U0jzD9K6D9bcT1Hm5oemn8ihra719ZMrUW+A4TXlq2ooxoPwO8ZdB
-	6Zh3tl8uPgEOcoNIT8AqZdVs7QltAYAPR/O2h6xlHDriCk+zxx1u4jC8Adri32FH
-	N6C6/K4MwKqFJs5WtA9BZDNDLgyr+ev/WO0FdAQpHNWCshDwTxYu3IxGXmNRKQw/
-	7+Lzrz0vIedY3AxQ/Cn0KQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1771100257; x=
-	1771186657; bh=IvOS+pgy2uR8zxON+k1BskxbjZLcO9n2BtEa+bvHg+0=; b=w
-	VRay7y/hyqYf9338DXddbG7skU0u4RcNqrqXMi1euDU2Jj8pkW36kejYniWB61XK
-	CpvzhBAPtb6ttzDSmmxcdsaFuMRk19UHsNp7ES89+XPcR9kMrENDguMBQoYRrf4D
-	XR+g7KMS0QYgtL0WFb9wyCkuqZRNz3oceluftbEtyADnbkbvA8hnNz5HXr1S2SWM
-	/ZuCELOgQxFm98Vwaeye+Sjn4T8tIvAMKdTk66J13AG346+pJc6ryvWki/crym10
-	ccPBsGHC+ioNuG/FByUpDFi7kwMp0Ehnv/f9p9yjbKmSSTZV86GmI++/r9gu1XSh
-	CxhAAVgg7PP4qHShnoxGA==
-X-ME-Sender: <xms:YNiQaWRXfB90OD5w1nLmKYSmQrhjg57uosn0H2v-ajGEluIlg4vYQQ>
-    <xme:YNiQaWnhM0KBSV5L9jmlxA4gIjEWfDolLvniceqhD5hGkIxO7b4hgVFxpuzkxceys
-    OQ91uzk2qJJ3JLxzB_BvQzd62HpzLTvRGExPMKraty3jpBlS2oyrJo>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvuddvtdehucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepofggfffhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpegtohhrrhgv
-    tghtmhhoshhtuceotghmlhhishhtshesshgvnhhtrdgtohhmqeenucggtffrrghtthgvrh
-    hnpeejleevhedvjefhtdfhueffhfefgedtvddtgfegfeeiveffhfeffeelgffgffegleen
-    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegtmhhlih
-    hsthhssehsvghnthdrtghomhdpnhgspghrtghpthhtohepiedpmhhouggvpehsmhhtphho
-    uhhtpdhrtghpthhtohepvhhkohhulheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprg
-    hnughrihihrdhshhgvvhgthhgvnhhkoheslhhinhhugidrihhnthgvlhdrtghomhdprhgt
-    phhtthhopehmihhkrgdrfigvshhtvghrsggvrhhgsehlihhnuhigrdhinhhtvghlrdgtoh
-    hmpdhrtghpthhtoheprhgvghhrvghsshhiohhnsheslhhishhtshdrlhhinhhugidruggv
-    vhdprhgtphhtthhopegumhgrvghnghhinhgvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpd
-    hrtghpthhtoheplhhinhhugidqihdvtgesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:YNiQab68jDa0O663yj5h9dvLxAGwTAciGtUFqPohlGnS4kD61KCUmQ>
-    <xmx:YNiQaa9w9MBYSO5Qzqzd_V4yqz0BVdcZJK9SiGX_xhYajqNY6OjAMw>
-    <xmx:YNiQaSWQf9ytig_y_EfoFOpuEhkGAwBTISvOv4jD-14OM499f7c59Q>
-    <xmx:YNiQadqYVgTrwhnyxX6Mm0b5XyNAUy0jWeud3BRtIPqREZB5a3qVmw>
-    <xmx:YdiQadb_caXY0-noZFNEfysA5n1PMCIzI8heZAeypZtvEBuwYN4QFjaT>
-Feedback-ID: i87314915:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 3D47AB6006E; Sat, 14 Feb 2026 15:17:36 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="eq3t9Fg9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1771204710;
+	bh=Vt1/GO5k/RzR8SVs8wPxGoQATAh8Up3BHfZKh9BhnVg=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=eq3t9Fg9j5TPlGkXwiQnKGt9JEj3U5C/5dC/FVAYZAhJ5L9U6aPV/i7Em/D5U6tOU
+	 C2PsBO7k8K/gZ14Xe09Q2HredKVuWX+eKWfmE5qlIzNnG8qLgXKKPFhfxcy3NFQBOu
+	 GQ6LRzSwzSdcTVJ4wYig21QQimje8kNwsjl8yKEJtjBLfQCrnMB6xtPhLkqxq0WJMT
+	 czE8fkVJ+b23mK1xRKAuDWHAsPI6vw1OjdMaVJKxnSwdTvcX4BSO6FQMOt7bNjBX8z
+	 99oghpZNQz5YNjYV+je9kHJi31aKIBXeI5wfJiY60QG2mu09klxprxUNTyMkp8DcO2
+	 HSugaCoF6bNGw==
+Received: from [192.168.1.90] (unknown [82.79.138.145])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: cristicc)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 6034617E012E;
+	Mon, 16 Feb 2026 02:18:30 +0100 (CET)
+Message-ID: <98e46dbb-c8e2-451f-accb-ea48f63f9408@collabora.com>
+Date: Mon, 16 Feb 2026 03:18:29 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-ThreadId: AwebR64VcaZc
-Date: Sat, 14 Feb 2026 15:17:15 -0500
-From: correctmost <cmlists@sent.com>
-To: "Mika Westerberg" <mika.westerberg@linux.intel.com>
-Cc: "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
- dmaengine@vger.kernel.org, regressions@lists.linux.dev, vkoul@kernel.org,
- linux-i2c@vger.kernel.org
-Message-Id: <1654dd48-c86b-4756-82cf-d1fec5732d60@app.fastmail.com>
-In-Reply-To: <20260205103129.GT2275908@black.igk.intel.com>
-References: <5ed857f5-59ae-4052-8f2e-dac7fcd014cc@app.fastmail.com>
- <20260203100452.GE2275908@black.igk.intel.com>
- <5d134f4f-f7f4-4972-9adb-6d10ede5c1bb@app.fastmail.com>
- <20260204123107.GN2275908@black.igk.intel.com>
- <5ed53c66-69e9-45e1-9b89-e3d555ff412c@app.fastmail.com>
- <aYNHeqYYa9ixrksM@smile.fi.intel.com>
- <e7a0d992-ed5c-4435-b567-e0b873360a48@app.fastmail.com>
- <72c71247-8b54-4820-b25d-34f659e7f957@app.fastmail.com>
- <20260204153402.GR2275908@black.igk.intel.com>
- <0d13a547-5f4c-4d5b-83e2-3530469d36c1@app.fastmail.com>
- <20260205103129.GT2275908@black.igk.intel.com>
-Subject: Re: [REGRESSION][BISECTED] Lenovo IdeaPad touchpad does not work when idma64
- is present in initramfs
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] HDMI monitor not working on Radxa Rock 5B after phy
+ rockchip samsung hdptx HDMI 2.1 FRL patchset
+To: dubito@online.de, Vinod Koul <vkoul@kernel.org>,
+ Neil Armstrong <neil.armstrong@linaro.org>, Heiko Stuebner
+ <heiko@sntech.de>, linux-phy@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ linux-kernel@vger.kernel.org, regressions@lists.linux.dev
+References: <b32164001947ba922aefb6ca86a8dc59e9323d2b.camel@online.de>
+ <8e410a11-bd7b-4a12-a711-0514a59409c0@collabora.com>
+ <1859c940219a4dbfdf0497afbf333e627ab0ba25.camel@online.de>
+Content-Language: en-US
+From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+In-Reply-To: <1859c940219a4dbfdf0497afbf333e627ab0ba25.camel@online.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, Feb 5, 2026, at 5:31 AM, Mika Westerberg wrote:
-> On Wed, Feb 04, 2026 at 10:53:57AM -0500, correctmost wrote:
->> On Wed, Feb 4, 2026, at 10:34 AM, Mika Westerberg wrote:
->> > On Wed, Feb 04, 2026 at 10:12:57AM -0500, correctmost wrote:
->> >> > I will try to debug the config issue and retest the touchpad with the 
->> >> > proper config changes.
->> >> 
->> >> After fixing the config issue, I now see "Dynamic Preempt: voluntary" in
->> >> the dmesg output.  I also see "# CONFIG_HID_BPF is not set" in
->> >> /proc/config.gz.
->> >> 
->> >> The "probe with driver hid-generic failed with error -22" message is
->> >> still present and the touchpad doesn't work (full log attached).
->> >
->> > Thanks!
->> >
->> > I don't see any other way than adding even more debug. It really should at
->> > least be able to parse the report descriptor as that's exactly the same as
->> > in working case but let's try to figure why it fails. Can you add again on
->> > top of everything this one:
->> 
->> The attached log has the added hid debug lines.
->
-> Thanks!
->
-> I now realized that the dump of the report descriptor truncates it into 64
-> bytes so it can actually contain whatever crap that the controller read and
-> this is probably why the HID parser fails. My apologies.
->
-> I think at this point there is not much we can do :( You have the
-> workaround, to put everything in the initramfs (or built into the kernel
-> image), right? We have asked schematics from Lenovo but there is no
-> guarantee we get them and I think those are needed to figure out how the
-> touchpad is connected.
+Hi Thomas,
 
-I have been excluding idma64 from my initramfs image to work around the issue.  I was hoping it'd be possible to make the touchpad work without any user modifications, but it doesn't seem like there is a clean solution.
+On 2/14/26 12:00 AM, Thomas Niederprüm wrote:
+> Hi Cristian,
+> 
+> 
+> Am Freitag, dem 13.02.2026 um 00:04 +0200 schrieb Cristian Ciocaltea:
+>> Hi Thomas,
+>>
+>> On 2/11/26 11:20 PM, Thomas Niederprüm wrote:
+>>> Hi,
+>>>
+>>> I'm running a Radxa Rock 5B (rk3588) on a 10+ year old Samsung TV screen
+>>> connected via HDMI. This worked flawlessly in 6.18.7 but does not work on
+>>> linux-
+>>> next. I bisected the problem and identified commit 3481fc04 to be the first
+>>> bad
+>>> commit. This points to the phy PLL clock rate calculation to be the problem
+>>> in
+>>> connection with my monitor. As it seems relevant, I attached the EDID of my
+>>> monitor.
+>>>
+>>> I'm booting the kernel out of EDK2 after which efifb is correctly taking
+>>> over
+>>> the initialized display and I can see the initial kernel boot messages on
+>>> the
+>>> HDMI output. After the drm/kms in the kernel takes over the screen shortly
+>>> turns
+>>> black, changes resolution, and then correctly displays on 6.18.7. However,
+>>> in
+>>> linux-next the screen remains black after kms took over. I cannot see any
+>>> obvious differences in the boot logs but I attached two boot logs, one for
+>>> the
+>>> working 6.18.7 kernel and one for the non-working linux-next kernel.
+>>>
+>>> When reverting 3481fc04..de5dba83 (i.e. the faulty commit and the ones that
+>>> followed in the HDMI 2.1 FRL series) I can build a working kernel from
+>>> linux-
+>>> next.
+>>>
+>>> I don't know where to dig from here but I'm happy to run any test necessary
+>>> to
+>>> track down the problem.
+>>
+>> It'd be helpful if you could resend the logs after booting both kernels with
+>> the
+>> following params (requires CONFIG_DYNAMIC_DEBUG=y):
+>>
+>>   rockchipdrm.dyndbg=+p dw_hdmi_qp.dyndbg=+p
+>> phy_rockchip_samsung_hdptx.dyndbg=+p
+>>
+>> As well as running the command below before connecting your display/TV:
+>>
+>>   $ echo 0x4 > /sys/module/drm/parameters/debug
+>>
+>> I've noticed you're forcing "video=HDMI-A-1:1920x1080M@60", which should be
+>> anyway the preferred mode (according to the EDID).
+> 
+> I dumped the kernel messages for a freshly built v6.19 and a linux-next image.
+> For each kernel I booted with the suggested debug options and forcing the modes
+> 1920x1080@60, 1920x1080@50, 1920x1080@30. The boot logs are attached. For v6.19
+> all modes work. Running linux-next, 1920x1080@60 and 1920x1080@50 don't work but
+> 1920x1080@30 works.
+> 
+>> Did you try choosing a different one, e.g. 1920x1080@50 or 1920x1080@30 (they
+>> are supported according to the listing in CTA-861 Extension Block). That's
+>> more
+>> a test to confirm the issue affects a particular modeline, or is more general.
+>>
+> 
+> As stated above, if I force 1920x1080@30 the screen turns on in linux-next.
+> 1920x1080@60 and 1920x1080@50 don't work. This points to something specific to
+> the modeline.
+> 
+> By diff'ing the relevant part of the logs between kernels one can see that in
+> the cases where the screen stays black the log lacks the following lines:
+> 
+>     rockchip-hdptx-phy fed60000.phy: rk_hdptx_ropll_tmds_cmn_config
+> rate=185625000 mdiv=155 sdiv=4 sdm_en=1 k_sign=1 k=16 lc=62
+>     rockchip-hdptx-phy fed60000.phy: PHY clk ready
+> 
+> So obviously the PHY clock never gets ready.
+> 
+> I also attached the diffs I made.
 
-For future readers, there are two items that I did not yet attempt:
-- Update my BIOS to see if that helps resolve the issue
-- Try to access advanced BIOS options to unlock GPIO pins
+Thanks for checking this out!  The behavior is really unexpected and I'm still
+unable to reproduce on my end, i.e. even tested with a Samsung TV, which is
+almost as old as yours:
 
-Thank you (and Andy) for proposing patches and reviewing all of the debug output :).
+  # Mine
+  Vendor & Product Identification:
+    Manufacturer: SAM
+    Model: 2685
+    Serial Number: 1 (0x00000001)
+    Made in: week 46 of 2012
+
+  # Yours
+  Vendor & Product Identification:
+    Manufacturer: SAM
+    Model: 1641
+    Serial Number: 1 (0x00000001)
+    Made in: week 47 of 2009
+
+I added some more debug information, hence could you please apply commit [1] on
+your next-20260213 kernel and share the logs after testing again the
+1920x1080@50 and 1920x1080@30 modes?
+
+[1] https://gitlab.collabora.com/cristicc/linux-next/-/commit/2ce4b1fb60fc601068abbe9131c05c4f09f1380c
+
+Regards,
+Cristian
