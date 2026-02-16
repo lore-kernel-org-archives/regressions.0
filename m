@@ -1,55 +1,50 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.98])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.162])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53F513033DC
-	for <regressions@lists.linux.dev>; Mon, 16 Feb 2026 11:47:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03D0627FD52
+	for <regressions@lists.linux.dev>; Mon, 16 Feb 2026 12:18:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.162
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771242469; cv=none; b=YQ88Y7gvgvI2yFIPbym1SIaf9FYAp77Z+BOZIDzlkDOFMnzgb8RibV5ShqU1UKWMPieYvcmpPcoOpnrIqeUGjMtR1j7XbNRiYEGwrkG8gmmyVH6cyCA40ykOQS8OUvAXXkxiMG1O74r+NRN08ep4eA6pj7WrsiFQNJ/8fzjCfF8=
+	t=1771244325; cv=none; b=c15prziGXbsXPeqKpuN3IUjaB6ZtVNdTgHwLkc7MJatSQGgWt+aT0BwzNiQwl4cEgyRNlxQAKs7inEIXxTLlUcgWa94YVPeiHxvhMKHqql3UniWNNzp+TGtXCfhVQg4Dkm9voW4fhtHH6yoLk4PJZugXr2KN1IqpjYHMOVG9k+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771242469; c=relaxed/simple;
-	bh=TWtVYJwbVjTlf+TJ5trO4TAgIlhhHEYzkkPBbvmXQnM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=P2SuZT6v/pVvYqpmxjryWGFqPVlZVzODjyvqwH11Ame3CsEbMmpKFIXK81DqDk9y7/EsB4ujcPdVzK58fpmeymTP5dwLqNk8p57rfaTtzqG7UbRblHxluX2VXtfaeHNfStkDDTrCO8HJbgg6b4jqCSKIKCmrTtodHOgtd1MCm9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=P/BmG+T/; arc=none smtp.client-ip=188.68.63.98
+	s=arc-20240116; t=1771244325; c=relaxed/simple;
+	bh=BVoFDWF6ISIN7CTIUEY90I/3VW4NTFbUd2v5CFJC5Yc=;
+	h=Message-ID:Date:MIME-Version:From:To:Cc:Subject:Content-Type; b=G0FPuy0HGVqDLk3wFjER13ckHLCXMpy/YIjiAayxgSx6bgPbXXd/rg+dBGS3dPNWfgaOCGbppRh8Kuyp4tYXcg6Hv1FELjzHj+dGPya12ohVnU79I+QEYSaY5GtlQrGt4ppX0tlYIedhGUoy1Xcil+LYZaPZ0CAgQXYkuTp/HZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=P9DO/LM1; arc=none smtp.client-ip=188.68.63.162
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="P/BmG+T/"
-Received: from mors-relay-2501.netcup.net (localhost [127.0.0.1])
-	by mors-relay-2501.netcup.net (Postfix) with ESMTPS id 4fF14k3FmRz68Nl;
-	Mon, 16 Feb 2026 12:38:46 +0100 (CET)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="P9DO/LM1"
+Received: from mors-relay-8201.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4fF1yh0VzQz40BK;
+	Mon, 16 Feb 2026 13:18:36 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1771241926;
-	bh=TWtVYJwbVjTlf+TJ5trO4TAgIlhhHEYzkkPBbvmXQnM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=P/BmG+T/GT4PLid6DhaeP+t5dLYoxvJ8Nwok5nM6FoTWBj9HI8RHg+fXUl0zp0klm
-	 gvw+9Ho2PW0AUsg7ptdU4UGW7KYEdSy0b6yW3GMwnlxXjBZLtu38q2T9VicnpPQA4f
-	 8MIz9NOTOB5ghRR0AL7ET3cQhJQqxFfQdwBBoCnnGQ1aYpMvLH6IP/4yRgO06zfBIK
-	 Bk0fuzPLOXnxxWKfyiQhU5theU1T6jfV7MR4gFK5cX4lljig3HtAI0O2Sl+MP/oHxT
-	 jXMSgrS1HfoxTOi4MzQ3xz7OVS1DT/69faFqvEMi7ERyLTh4wLu1erw4qAyHYzTYdX
-	 effr3R6kVpa3g==
-Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-2501.netcup.net (Postfix) with ESMTPS id 4fF14k2T59z4xbB;
-	Mon, 16 Feb 2026 12:38:46 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
-X-Spam-Flag: NO
-X-Spam-Score: -2.901
-X-Spam-Level: 
+	s=key2; t=1771244316;
+	bh=BVoFDWF6ISIN7CTIUEY90I/3VW4NTFbUd2v5CFJC5Yc=;
+	h=Date:From:To:Cc:Subject:From;
+	b=P9DO/LM1bbFONkYvGdtzw5BOb+tanFwi0M66mIL2pJKIiVqkSfu0cnuvKzTr5Sodt
+	 owa8Cpx1T1d6s5G4g72SnSDm5fk0n9/JMYoCWCpiGaK8gH+Dm3NIl8Nw09sEmh19+2
+	 Uw2A8VgXQY3H7DL7RoVV6ZUFL3GYW25TAP7iBNNIdpRi7aRECLXRMGbj7xnPyh0czA
+	 ZtIdKS+oqpqM3rP1s6U5ttJXj4uwhfg6Sd8XuakBubGZ8JL9lRFYGBG3TRZwOduRZ0
+	 cqvizvrhj/w7QRhzG9GN9nG5wOdSOtsfP2Jawwysj0uLKR5SKSX3i5Y/+3EflXTg52
+	 fyNI26p47noag==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4fF1yg6v5dz408M;
+	Mon, 16 Feb 2026 13:18:35 +0100 (CET)
 Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4fF14g6LlQz8tXF;
-	Mon, 16 Feb 2026 12:38:43 +0100 (CET)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4fF1yg3YX4z8sbC;
+	Mon, 16 Feb 2026 13:18:35 +0100 (CET)
 Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 98E526735E;
-	Mon, 16 Feb 2026 12:38:42 +0100 (CET)
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 9FB78672E4;
+	Mon, 16 Feb 2026 13:18:34 +0100 (CET)
 Authentication-Results: mxe9fb;
         spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
 Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <9c1b2671-3374-4d84-ad14-07dd499bb934@leemhuis.info>
-Date: Mon, 16 Feb 2026 12:38:41 +0100
+Message-ID: <f161e0d3-bafe-4d52-a37d-18299aa34477@leemhuis.info>
+Date: Mon, 16 Feb 2026 13:18:34 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -57,308 +52,92 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm/imagination: Convert to
- dev_pm_domain_{at,de}tach_list()
-To: Matt Coster <Matt.Coster@imgtec.com>,
- Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Marek Vasut <marek.vasut@mailbox.org>,
- Frank Binns <Frank.Binns@imgtec.com>,
- Brajesh Gupta <Brajesh.Gupta@imgtec.com>,
- Alessio Belle <Alessio.Belle@imgtec.com>,
- Alexandru Dadu <Alexandru.Dadu@imgtec.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
- "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
- "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: 
- <194465eda54d1f852a9226cf691ddc5aa208e0a3.1769097977.git.geert+renesas@glider.be>
- <ffdf3982-e22c-4d01-afa6-5449ed381000@imgtec.com>
- <CAMuHMdWMh_oJFg-KtapcTDGvYWZ-hg_ZEJ2=E5Tp1apOEc8tnQ@mail.gmail.com>
- <b3b4f10e-1222-44f7-b308-db7199c67147@mailbox.org>
- <3e0def93-2f6c-4bcf-8ee5-bf607f2ca382@imgtec.com>
- <f5d3dde6-edec-42f4-93cb-459c8677245a@mailbox.org>
- <f82b7734-6ddc-4029-b38d-147e9a1de021@leemhuis.info>
- <fcf5ab75-029e-469e-8b2a-51fa5c2a2374@mailbox.org>
- <95fd3f52-c3ed-40c5-920f-11e8767f701d@leemhuis.info>
- <CAMuHMdV-g+3kTaG6Ost4iHo1Tdi_H=qscLBkBRWuR+6DG5c=SA@mail.gmail.com>
- <1e8e416e-e474-4288-9686-1ba2b88e4946@leemhuis.info>
- <21b1fd77-252e-4fb3-aa65-1c26043c5412@imgtec.com>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
 Content-Language: de-DE, en-US
-In-Reply-To: <21b1fd77-252e-4fb3-aa65-1c26043c5412@imgtec.com>
+To: Aboorva Devarajan <aboorvad@linux.ibm.com>
+Cc: Linux kernel regressions list <regressions@lists.linux.dev>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: https://bugzilla.kernel.org/show_bug.cgi?id=221047
+X-Enigmail-Draft-Status: N11222
+Autocrypt: addr=linux@leemhuis.info; keydata=
+ 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 MEK4
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <177124192325.2523793.2427380843780218947@mxe9fb.netcup.net>
+X-PPP-Message-ID: 
+ <177124431487.2646947.11078356849734660135@mxe9fb.netcup.net>
 X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: 98E526735E
-X-NC-CID: uzHQ5WUvJ493AhCLZM0rmC2igXGsPIiYg8dFR6+uXex9L+LvRrc=
+X-Rspamd-Queue-Id: 9FB78672E4
+X-NC-CID: BY/KfIXviGJA15LigzfZiQWqOTE5TrTrbZjDg2GqMfqXKrcY5PQ=
 
-On 2/16/26 11:58, Matt Coster wrote:
-> On 16/02/2026 10:11, Thorsten Leemhuis wrote:
-> 
-> We're currently trying to force this issue to reproduce on hardware we
-> have on hand; we'd like to see it fixed properly as much as anyone.
+Hi, Thorsten here, the Linux kernel's regression tracker.
 
-Yeah, no worries, I never doubted that. But getting things properly fixed
-can mean "revert, fix, reapply" when it comes to regressions in Linux --
-which is something that should not be seen as something bad, as Linus said
-himself (see below)!
+Aboorva, I noticed a report about a regression in bugzilla.kernel.org
+that appears to be caused by a change of yours:
 
-> From our side at least, I don't believe this is a regression at all.
-In the end what matters is: some change afaics caused systems to not work
-anymore that used to be working -- that makes it a regression my the Linux
-kernels standards. And those by the same standards must be fixed, ideally
-quickly. Find a few quotes on that from Linus below that explains this
-better. 
+07d815701274d1 ("cpuidle: menu: Use residency threshold in polling state
+override decisions") [v6.19-rc1]
 
-Ciao, Thorsten
----
+As many (most?) kernel developers don't keep an eye on the bug tracker,
+I decided to forward it through this mail. To quote from
+https://bugzilla.kernel.org/show_bug.cgi?id=221047 :
 
+"""
+Since Linux 6.18.3 (verified up to 6.18.8), certain Intel platforms
+(tested on Coffee Lake-H - 9300 H Notebook) fail to reach deep Package
+C-states (PC3 ... PC8/PC10) during specific workloads, leading to a
+significant increase in idle system power consumption (approx. +2.5W).
+[...]
+"""
 
-On how quickly regressions should be fixed
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+See the ticket for a lot more details. The reporter apparently worked
+out a fix that helps on the particular system.
 
-* From `2026-01-22 <https://lore.kernel.org/all/CAHk-=wheQNiW_WtHGO7bKkT7Uib-p+ai2JP9M+z+FYcZ6CAxYA@mail.gmail.com/>`_::
+Note, you have to use bugzilla to reach the reporter, as I sadly[1] can
+not CCed them in mails like this.
 
-    But a user complaining should basically result in an immediate fix -
-    possibly a "revert and rethink".
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 
-  With a later clarification on `2026-01-28 <https://lore.kernel.org/all/CAHk-%3Dwi86AosXs66-yi54%2BmpQjPu0upxB8ZAfG%2BLsMyJmcuMSA@mail.gmail.com/>`_::
-
-    It's also worth noting that "immediate" obviously doesn't mean "right
-    this *second* when the problem has been reported".
-
-    But if it's a regression with a known commit that caused it, I think
-    the rule of thumb should generally be "within a week", preferably
-    before the next rc.
-
-* From `2023-04-21 <https://lore.kernel.org/all/CAHk-=wgD98pmSK3ZyHk_d9kZ2bhgN6DuNZMAJaV0WTtbkf=RDw@mail.gmail.com/>`_::
-
-    Known-broken commits either
-     (a) get a timely fix that doesn't have other questions
-    or
-     (b) get reverted
-
-* From `2021-09-20(2) <https://lore.kernel.org/all/CAHk-=wgOvmtRw1TNbMC1rn5YqyTKyn0hz+sc4k0DGNn++u9aYw@mail.gmail.com/>`_::
-
-    [...] review shouldn't hold up reported regressions of existing code. That's
-    just basic _testing_ - either the fix should be applied, or - if the fix is
-    too invasive or too ugly - the problematic source of the regression should
-    be reverted.
-
-    Review should be about new code, it shouldn't be holding up "there's a
-    bug report, here's the obvious fix".
-
-* From `2023-05-08 <https://lore.kernel.org/all/CAHk-=wgzU8_dGn0Yg+DyX7ammTkDUCyEJ4C=NvnHRhxKWC7Wpw@mail.gmail.com/>`_::
-
-    If something doesn't even build, it should damn well be fixed ASAP.
-
-
-On how fixing regressions with reverts can help prevent maintainer burnout
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-* From `2026-01-28 <https://lore.kernel.org/all/CAHk-%3Dwi86AosXs66-yi54%2BmpQjPu0upxB8ZAfG%2BLsMyJmcuMSA@mail.gmail.com/>`_::
-
-    > So how can I/we make "immediate fixes" happen more often without
-    > contributing to maintainer burnout?
-
-    [...] the "revert and rethink" model [...] often a good idea in general
-    unless there's just an obvious fix for an obvious bug [...]
-
-    Exactly so that maintainers don't get stressed out over having a pending
-    problem report that people keep pestering them about.
-
-    I think people are sometimes a bit too bought into whatever changes
-    they made, and reverting is seen as "too drastic", but I think it's
-    often the quick and easy solution for when there isn't some obvious
-    response to a regression report.
-
-
-On why the "no regressions" rule exists
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-* From `2026-01-22 <https://lore.kernel.org/all/CAHk-=wheQNiW_WtHGO7bKkT7Uib-p+ai2JP9M+z+FYcZ6CAxYA@mail.gmail.com/>`_::
-
-    But the basic rule is: be so good about backwards compatibility that
-    users never have to worry about upgrading. They should absolutely feel
-    confident that any kernel-reported problem will either be solved, or
-    have an easy solution that is appropriate for *them* (ie a
-    non-technical user shouldn't be expected to be able to do a lot).
-
-    Because the last thing we want is people holding back from trying new
-    kernels.
-
-* From `2024-05-28 <https://lore.kernel.org/all/CAHk-=wgtb7y-bEh7tPDvDWru7ZKQ8-KMjZ53Tsk37zsPPdwXbA@mail.gmail.com/>`_::
-
-    I introduced that "no regressions" rule something like two decades
-    ago, because people need to be able to update their kernel without
-    fear of something they relied on suddenly stopping to work.
-
-* From `2018-08-03 <https://lore.kernel.org/all/CA+55aFwWZX=CXmWDTkDGb36kf12XmTehmQjbiMPCqCRG2hi9kw@mail.gmail.com/>`_::
-
-    The whole point of "we do not regress" is so that people can upgrade
-    the kernel and never have to worry about it.
-
-    [...]
-
-    Because the only thing that matters IS THE USER.
-
-* From `2017-10-26(1) <https://lore.kernel.org/lkml/CA+55aFxW7NMAMvYhkvz1UPbUTUJewRt6Yb51QAx5RtrWOwjebg@mail.gmail.com/>`_::
-
-    If the kernel used to work for you, the rule is that it continues to work
-    for you.
-
-    [...]
-
-    People should basically always feel like they can update their kernel
-    and simply not have to worry about it.
-
-    I refuse to introduce "you can only update the kernel if you also
-    update that other program" kind of limitations. If the kernel used to
-    work for you, the rule is that it continues to work for you.
-
-
-On exceptions to the "no regressions" rule
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-* From `2026-01-22 <https://lore.kernel.org/all/CAHk-=wheQNiW_WtHGO7bKkT7Uib-p+ai2JP9M+z+FYcZ6CAxYA@mail.gmail.com/>`_::
-
-    There are _very_ few exceptions to that rule, the main one being "the
-    problem was a fundamental huge and gaping security issue and we *had* to
-    make that change, and we couldn't even make your limited use-case just
-    continue to work".
-
-    The other exception is "the problem was reported years after it was
-    introduced, and now most people rely on the new behavior".
-
-    [...]
-
-    Now, if it's one or two users and you can just get them to recompile,
-    that's one thing. Niche hardware and odd use-cases can sometimes be
-    solved that way, and regressions can sometimes be fixed by handholding
-    every single reporter if the reporter is willing and able to change
-    his or her workflow.
-
-* From `2023-04-20 <https://lore.kernel.org/all/CAHk-=wis_qQy4oDNynNKi5b7Qhosmxtoj1jxo5wmB6SRUwQUBQ@mail.gmail.com/>`_::
-
-    And yes, I do consider "regression in an earlier release" to be a
-    regression that needs fixing.
-
-    There's obviously a time limit: if that "regression in an earlier
-    release" was a year or more ago, and just took forever for people to
-    notice, and it had semantic changes that now mean that fixing the
-    regression could cause a _new_ regression, then that can cause me to
-    go "Oh, now the new semantics are what we have to live with".
-
-* From `2021-09-20(3) <https://lore.kernel.org/all/CAHk-=wi7DB2SJ-wngVvsJ7Ak2cM556Q8437sOXo4EJt2BWPdEg@mail.gmail.com/>`_::
-
-    Yes, we have situations where even regressions don't matter - like
-    major security issues that simply cannot be fixed other ways, because
-    the regression _was_ the security hole.
-
-* From `2017-10-26(2) <https://lore.kernel.org/lkml/CA+55aFxW7NMAMvYhkvz1UPbUTUJewRt6Yb51QAx5RtrWOwjebg@mail.gmail.com/>`_::
-
-    There have been exceptions, but they are few and far between, and they
-    generally have some major and fundamental reasons for having happened,
-    that were basically entirely unavoidable, and people _tried_hard_ to
-    avoid them. Maybe we can't practically support the hardware any more
-    after it is decades old and nobody uses it with modern kernels any
-    more. Maybe there's a serious security issue with how we did things,
-    and people actually depended on that fundamentally broken model. Maybe
-    there was some fundamental other breakage that just _had_ to have a
-    flag day for very core and fundamental reasons.
-
-
-On accepting when a regression occurred
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-* From `2026-01-22 <https://lore.kernel.org/all/CAHk-=wheQNiW_WtHGO7bKkT7Uib-p+ai2JP9M+z+FYcZ6CAxYA@mail.gmail.com/>`_::
-
-    But starting to argue about users reporting breaking changes is
-    basically the final line for me. I have a couple of people that I have
-    in my spam block-list and refuse to have anything to do with, and they
-    have generally been about exactly that.
-
-    Note how it's not about making mistakes and _causing_ the regression.
-    That's normal. That's development. But then arguing about it is a
-    no-no.
-
-* From `2024-06-23 <https://lore.kernel.org/all/CAHk-=wi_KMO_rJ6OCr8mAWBRg-irziM=T9wxGC+J1VVoQb39gw@mail.gmail.com/>`_::
-
-    We don't introduce regressions and then blame others.
-
-    There's a very clear rule in kernel development: things that break
-    other things ARE NOT FIXES.
-
-    EVER.
-
-    They get reverted, or the thing they broke gets fixed.
-
-* From `2021-06-05 <https://lore.kernel.org/all/CAHk-=wiUVqHN76YUwhkjZzwTdjMMJf_zN4+u7vEJjmEGh3recw@mail.gmail.com/>`_::
-
-    THERE ARE NO VALID ARGUMENTS FOR REGRESSIONS.
-
-    Honestly, security people need to understand that "not working" is not
-    a success case of security. It's a failure case.
-
-    Yes, "not working" may be secure. But security in that case is *pointless*.
-
-* From `2017-10-26(5) <https://lore.kernel.org/lkml/CA+55aFwiiQYJ+YoLKCXjN_beDVfu38mg=Ggg5LFOcqHE8Qi7Zw@mail.gmail.com/>`_::
-
-    [...] when regressions *do* occur, we admit to them and fix them, instead of
-    blaming user space.
-
-    The fact that you have apparently been denying the regression now for
-    three weeks means that I will revert, and I will stop pulling apparmor
-    requests until the people involved understand how kernel development
-    is done.
-
-
-On back-and-forth
-~~~~~~~~~~~~~~~~~
-
-* From `2024-05-28 <https://lore.kernel.org/all/CAHk-=wgtb7y-bEh7tPDvDWru7ZKQ8-KMjZ53Tsk37zsPPdwXbA@mail.gmail.com/>`_::
-
-    The "no regressions" rule is that we do not introduce NEW bugs.
-
-    It *literally* came about because we had an endless dance of "fix two
-    bugs, introduce one new one", and that then resulted in a system that
-    you cannot TRUST.
-
-* From `2021-09-20(1) <https://lore.kernel.org/all/CAHk-=wi7DB2SJ-wngVvsJ7Ak2cM556Q8437sOXo4EJt2BWPdEg@mail.gmail.com/>`_::
-
-
-    And the thing that makes regressions special is that back when I
-    wasn't so strict about these things, we'd end up in endless "seesaw
-    situations" where somebody would fix something, it would break
-    something else, then that something else would break, and it would
-    never actually converge on anything reliable at all.
-
-* From `2015-08-13 <https://lore.kernel.org/all/CA+55aFxk8-BsiKwr_S-c+4G6wihKPQVMLE34H9wOZpeua6W9+Q@mail.gmail.com/>`_::
-
-    The strict policy of no regressions actually originally started mainly wrt
-    suspend/resume issues, where the "fix one machine, break another" kind of
-    back-and-forth caused endless problems, and meant that we didn't actually
-    necessarily make any forward progress, just moving a problem around.
-
-
-On regressions caused by bugfixes
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-* From `2018-08-03 <https://lore.kernel.org/all/CA+55aFwWZX=CXmWDTkDGb36kf12XmTehmQjbiMPCqCRG2hi9kw@mail.gmail.com/>`_::
-
-    > Kernel had a bug which has been fixed
-
-    That is *ENTIRELY* immaterial.
-
-    Guys, whether something was buggy or not DOES NOT MATTER.
-
-    [...]
-
-    It's basically saying "I took something that worked, and I broke it,
-    but now it's better". Do you not see how f*cking insane that statement
-    is?
+[1] because bugzilla.kernel.org tells users upon registration their
+"email address will never be displayed to logged out users"
