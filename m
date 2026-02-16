@@ -1,51 +1,40 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [194.59.206.189])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3B472F744A
-	for <regressions@lists.linux.dev>; Mon, 16 Feb 2026 10:12:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.59.206.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92E791D5CD1
+	for <regressions@lists.linux.dev>; Mon, 16 Feb 2026 10:47:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771236725; cv=none; b=URumOIvr/Psb5/A8EX2k/POSCGR4ApAQwJ5UQ3oqmeQRj84Q+waExIvLRKQktmFtfjGAxv+10OkXCbFa4P8W8rNNkQ3CSsY0rqiI8fLrRJaIjusj7IjqyeI3bkedxgYkZKwd4KeGRQF9qLqpXYW6nv2L7IeVX3s4GOb582kmho8=
+	t=1771238823; cv=none; b=U3rzpxWM8JRtYof8hqmMZ4GGAHR6IoSJjW5yUrodTFEvpJyLx7I0YYeLfDo2kBGNlvsEHmYXGHGfyGZY1LDCWjeOUaL7XIpIWvjB3oSNnmi0lr5GhpCkd8yA36v01Q6YY19BLOtpnLDZr4oVeyDoPM10wy8vkcR3KShE4jkSmN8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771236725; c=relaxed/simple;
-	bh=a+AO+N0+hMxxllOMS8tpgXXdmhfQk3hL5bqO+vhsQgk=;
+	s=arc-20240116; t=1771238823; c=relaxed/simple;
+	bh=Zzin5ThTM9Imyf75zYHV+Tk+Fha+1QurOEuuq7ZkmWQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rKZhppwc7VRnheUgjEd9esX3OWlyB64uDQSDfkHh8RES8unDIMlfEiFVqkJn9qnck39yh5gGBmIsqMipwbKBZv9RilXxIwAAsHrinmsQa2qD+p6YXriP/KZwnOQDuUGoxVTn55eDjquHlOAer3QvljuQZvcl8iFn++jaVENxZdc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=kUbAkeBx; arc=none smtp.client-ip=194.59.206.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	 In-Reply-To:Content-Type; b=bnR0jlUBMWy64sZytsujAs6WKuFRubuLMELImG38NZsN5bq6rVDT5JJDmiGSRTA6IdJBcJH2CL8m1KYBdCq1ufcqQA/+MQDov+Jl8heHIMFp5wCIkMXoeafV/+CdYj+8HkFreVMPFz20Xnqv6tWSqw0c/fOFwHOnbfaeesK80aU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=fT7TaQ0C; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="kUbAkeBx"
-Received: from relay02-mors.netcup.net (localhost [127.0.0.1])
-	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4fDz8d1zVtz49BJ;
-	Mon, 16 Feb 2026 11:12:01 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1771236721;
-	bh=a+AO+N0+hMxxllOMS8tpgXXdmhfQk3hL5bqO+vhsQgk=;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="fT7TaQ0C"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1771238820;
+	bh=Zzin5ThTM9Imyf75zYHV+Tk+Fha+1QurOEuuq7ZkmWQ=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=kUbAkeBxx1i8a8r8alwVKB0kc3gnlrOt5PnOHYvSv7a53+uFcfRhYdi4lJqYWtKIQ
-	 MmqLQ/rXXpOmGigCoyvwuxsWtLC2S9cFTryWeYIUHIRwIimvt/EIXY+1aDuUnpZLfa
-	 N3gFs94+H/Q5uT+ZDfQyffwXYln4QXRaXclla4tHpe1ZHkMPUp/TDsBR5j0jIrx7Ly
-	 FTVXxS4yPdCUZdKUsJOiQroADvkiJOaOGdExfXO1Gx9P0knMXC+oIILiqSVbwBsooB
-	 6vQ9YD735DLkVNffej+wpMwfCFJJZOTY5uFUjEf3fTiZP/ZUUtrZAHRCCcvdFaAb7m
-	 CHSLV86sT1u5w==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4fDz8d1GY6z7vjk;
-	Mon, 16 Feb 2026 11:12:01 +0100 (CET)
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	b=fT7TaQ0C/ikyDEBGY2C7G+7P/fo4AtNST7bMbWiKDKrmMe+1gy65BjnWZ54PG1+SE
+	 qQDSOTWFjnImyYE30/10pcSWSECaBtFIDN0LThfDdpr7NZIokMjZMuyvPU8zmaaSNL
+	 lbcY1b1SCUMDf7J2pbOWZM4w0D9pY6Hrmk51j5J0UwJMFJN6i9XBLi53U9hrav2InY
+	 oNpaqeAVirbCTqX25CntkeQaRHqIQG9amW2BSA902jnQuRw/Mqf7F1w+KKplsPLVyx
+	 rwimIZmdoETkP7/bYVZG8mWBi8h1UqreKXMrbdVpCXMjdU/bYVzkTaxSAGTdsVX6Gp
+	 5MZMdzkuSwsqA==
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4fDz8b6gs8z8sbC;
-	Mon, 16 Feb 2026 11:11:59 +0100 (CET)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id C2154670B2;
-	Mon, 16 Feb 2026 11:11:58 +0100 (CET)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <1e8e416e-e474-4288-9686-1ba2b88e4946@leemhuis.info>
-Date: Mon, 16 Feb 2026 11:11:58 +0100
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 973AF17E1523;
+	Mon, 16 Feb 2026 11:47:00 +0100 (CET)
+Message-ID: <86e2d0f9-5c25-4cce-b4a8-68fb569f987d@collabora.com>
+Date: Mon, 16 Feb 2026 11:46:59 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -53,188 +42,92 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm/imagination: Convert to
- dev_pm_domain_{at,de}tach_list()
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Marek Vasut <marek.vasut@mailbox.org>,
- Matt Coster <Matt.Coster@imgtec.com>, Frank Binns <Frank.Binns@imgtec.com>,
- Brajesh Gupta <Brajesh.Gupta@imgtec.com>,
- Alessio Belle <Alessio.Belle@imgtec.com>,
- Alexandru Dadu <Alexandru.Dadu@imgtec.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
- "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
- "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: 
- <194465eda54d1f852a9226cf691ddc5aa208e0a3.1769097977.git.geert+renesas@glider.be>
- <ffdf3982-e22c-4d01-afa6-5449ed381000@imgtec.com>
- <CAMuHMdWMh_oJFg-KtapcTDGvYWZ-hg_ZEJ2=E5Tp1apOEc8tnQ@mail.gmail.com>
- <b3b4f10e-1222-44f7-b308-db7199c67147@mailbox.org>
- <3e0def93-2f6c-4bcf-8ee5-bf607f2ca382@imgtec.com>
- <f5d3dde6-edec-42f4-93cb-459c8677245a@mailbox.org>
- <f82b7734-6ddc-4029-b38d-147e9a1de021@leemhuis.info>
- <fcf5ab75-029e-469e-8b2a-51fa5c2a2374@mailbox.org>
- <95fd3f52-c3ed-40c5-920f-11e8767f701d@leemhuis.info>
- <CAMuHMdV-g+3kTaG6Ost4iHo1Tdi_H=qscLBkBRWuR+6DG5c=SA@mail.gmail.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: 
- <CAMuHMdV-g+3kTaG6Ost4iHo1Tdi_H=qscLBkBRWuR+6DG5c=SA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: 
- <177123671937.2266701.10423482834657101236@mxe9fb.netcup.net>
-X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: C2154670B2
-X-NC-CID: Swv/WlwzdIdf24tNqMkmQ1BuziVKRer+tsBF9YerTC2RIfRt8MM=
+Subject: Re: [REGRESSION] mt8183-kukui: dts: changes in dts caused display to
+ no longer initialize - Was: Re: mt8183-kukui: drm/mediatek: dts: Invalid
+ display hw pipeline when probing mediatek-drm
+To: Thorsten Leemhuis <regressions@leemhuis.info>,
+ Denis Gessert <denisgessert@gmail.com>
+Cc: Evans Jahja <evansjahja13@gmail.com>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+ regressions@lists.linux.dev, =?UTF-8?Q?Otto_Pfl=C3=BCger?=
+ <otto.pflueger@abscue.de>
+References: <CAFLVeg9hwH3PbKu5rPWZWqq6yz5mRRoB9oqxDkxNRdEDLGbVBw@mail.gmail.com>
+ <CAFLVeg_soeYV4tOYKMo6TMYOtuWWU4TFCjUTxUrVEyGcRwMz7A@mail.gmail.com>
+ <df6fcd73-fe0a-42fc-97ce-7e458c340553@leemhuis.info>
+ <CAFLVeg-qeWu4ntgyqotsgjogPEyhqrMGG=UDWuZe+-D3K8YPTA@mail.gmail.com>
+ <908f3c03-a8b0-4535-9cfa-294c6ade8152@collabora.com>
+ <96e7f0fc-65f4-4613-b556-3a2d869dabb4@leemhuis.info>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <96e7f0fc-65f4-4613-b556-3a2d869dabb4@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-[top-posting to make sure everybody is aware that involving Linus for a
-judgement call is on the table]
-
-Geert: Many thx for the clarification. In that case:
-
-Geert or Marek: could one of you two please submit a revert for
-330e76d3169721 ("drm/imagination: Add power domain control") [v6.16-rc1]?
-
-With a bit of luck the responsible drm maintainers will pick it up
-quickly -- or it might lead to a different solution for the problem. If
-neither happens within a few days, I'll point Linus to this thread and
-the revert. Then he can make the judgement call if he wants to.
-
-Ciao, Thorsten
-
-On 2/16/26 10:00, Geert Uytterhoeven wrote:
-> On Sat, 14 Feb 2026 at 13:38, Thorsten Leemhuis
-> <regressions@leemhuis.info> wrote:
->> On 2/13/26 23:52, Marek Vasut wrote:
->>> On 2/12/26 4:56 PM, Thorsten Leemhuis wrote:
->>>> On 2/12/26 15:38, Marek Vasut wrote:
->>>>> On 2/12/26 10:00 AM, Matt Coster wrote:
->>>>>> On 11/02/2026 19:17, Marek Vasut wrote:
->>>>>>> On 1/23/26 2:50 PM, Geert Uytterhoeven wrote:
->>>>>>>> On Fri, 23 Jan 2026 at 14:36, Matt Coster <Matt.Coster@imgtec.com>
->>>>>>>> wrote:
->>>>>>>>> On 22/01/2026 16:08, Geert Uytterhoeven wrote:
->>>>>>>>>> Call the dev_pm_domain_attach_list() and
->>>>>>>>>> dev_pm_domain_detach_list()
->>>>>>>>>> helpers instead of open-coding multi PM Domain handling.
->>>>>>>>>>
->>>>>>>>>> This changes behavior slightly:
->>>>>>>>>>      - The new handling is also applied in case of a single PM
->>>>>>>>>> Domain,
->>>>>>>>>>      - PM Domains are now referred to by index instead of by
->>>>>>>>>> name, but
->>>>>>>>>>        "make dtbs_check" enforces the actual naming and ordering
->>>>>>>>>> anyway,
->>>>>>>>>>      - There are no longer device links created between virtual
->>>>>>>>>> domain
->>>>>>>>>>        devices, only between virtual devices and the parent device.
->>>>>>>>>
->>>>>>>>> We still need this guarantee, both at start and end of day. In the
->>>>>>>>> current implementation dev_pm_domain_attach_list() iterates
->>>>>>>>> forwards,
->>>>>>>>> but so does dev_pm_domain_detach_list(). Even if we changed that,
->>>>>>>>> I'd
->>>>>>>>> prefer not to rely on the implementation details when we can
->>>>>>>>> declare the
->>>>>>>>> dependencies explicitly.
->>>>>>>>
->>>>>>>> Note that on R-Car, the PM Domains are nested (see e.g.
->>>>>>>> r8a7795_areas[]),
->>>>>>>> so they are always (un)powered in the correct order.  But that may
->>>>>>>> not
->>>>>>>> be the case in the integration on other SoCs.
->>>>>>>>
->>>>>>>>> We had/have a patch (attached) kicking around internally to use the
->>>>>>>>> *_list() functions but keep the inter-domain links in place; it got
->>>>>>>>> held
->>>>>>>>> up by discussions as to whether we actually need those dependencies
->>>>>>>>> for
->>>>>>>>> the hardware to behave correctly. Your patch spurred me to run
->>>>>>>>> around
->>>>>>>>> the office and nag people a bit, and it seems we really do need to
->>>>>>>>> care
->>>>>>>>> about the ordering.
->>>>>>>>
->>>>>>>> OK.
->>>>>>>>
->>>>>>>>> Can you add the links back in for a V2 or I can properly send the
->>>>>>>>> attached patch instead, I don't mind either way.
->>>>>>>>
->>>>>>>> Please move forward with your patch, you are the expert.
->>>>>>>> I prefer not to be blamed for any breakage ;-)
->>>>>>>
->>>>>>> Has there been any progress on fixing this kernel crash ?
->>>>>>>
->>>>>>> There are already two proposed solutions, but no fix is upstream.
->>>>>>
->>>>>> Yes and no. Our patch to use dev_pm_domain_attach_list() has landed in
->>>>>> drm-misc-next as commit e19cc5ab347e3 ("drm/imagination: Use>>
->>>>>> dev_pm_domain_attach_list()"), but this does not fix the underlying
->>>>>> issue of missing synchronization in the PM core[1] is still unresolved
->>>>>> as far as I'm aware.
->>>>>
->>>>> OK, but the pvr driver can currently easily crash the kernel on boot if
->>>>> firmware is missing, so that should be fixed soon, right ?
->>>>
->>>> Well, drm-misc-next afaik means that the above mentioned fix would only
->>>> be merged in 7.1, which is ~4 months away, which is not really "soon"
->>>> I'd say. Or did I misjudge this?
->>>
->>> The PM domain issue here crashes the kernel, so I think this would be
->>> material for drm-misc-fixes .
+Il 13/02/26 10:27, Thorsten Leemhuis ha scritto:
+> On 2/9/26 12:42, AngeloGioacchino Del Regno wrote:
+>> Il 06/02/26 17:58, Denis Gessert ha scritto:
+>>> Thanks for the quick response. I compiled 6.18.9 with this patch
+>>> (without reverting the previous commit) and it boots successfully.
 >>
->> Yeah, sounds a lot like it.
->>
->>>>> I added the regressions list onto CC, because this seems like a problem
->>>>> worth tracking.
->>>>
->>>> Noticed that and wondered what change caused the regression.
->>>
->>> I think this one:
->>>
->>> 330e76d31697 ("drm/imagination: Add power domain control")
->>
->> Thx; FWIW, that was merged for v6.16-rc1.
->>
->>>> Did not
->>>> find a answer in a quick search on lore[1]. Because if it's a
->>>> regression, we maybe should just revert the culprit for now according to
->>>> Linus:
->>>> https://lore.kernel.org/lkml/CAHk-=wi86AosXs66-
->>>> yi54+mpQjPu0upxB8ZAfG+LsMyJmcuMSA@mail.gmail.com/
->>>>
->>>> [1] I guess this was the initial report from Geert?
->>>> https://lore.kernel.org/all/
->>>> CAMuHMdWapT40hV3c+CSBqFOW05aWcV1a6v_NiJYgoYi0i9_PDQ@mail.gmail.com/
->>>
->>> It is.
->>>
->>> I think there are other SoCs which depend on the power domain commit, so
->>> revert is not so clear cut anymore.
->>
->> Well, it's a judgement call. 330e76d31697 was merged less then a year
->> ago, so I'd not be surprised at all if Linus would revert it in a case
->> like this. But it seems it doesn't revert clearly anymore, which
->> complicates things.
->>
->>> But SoCs which have hierarchical
->>> power domains and which manage to probe this driver without having a
->>> firmware available for the GPU will simply end with crashed kernel,
->>> which is really not good.
->>
->> Does the patch Matt mentioned fix the crash? His "this does not fix the
->> underlying issue [...]" (see quote earlier) makes it sound like the
->> crash or some other problem (theoretical or practical? regression or
->> not?) remains. If that's the case and no quick fix in sight I guess it
->> would be best if someone affected could post a revert and then we can
->> ask Linus if he wants to pick it up.
+>> Well, I missed all those replies to this thread, and sent a redundant reply
+>> saying .. well, the same as Thorsten (hey, thanks for being faster than
+>> me!).
 > 
-> I don't think that patch would fix the crash.  The Adreno and Panfrost
-> GPU drivers do similar things (explicit multi-PM Domain handling),
-> so I am wondering if the issue can be triggered with them too (e.g. on
-> unbind).
+> Happens. :-D
+> 
+>> Happy to see further confirmation that the patch that we both mentioned is
+>> actually fixing the issue.
+> 
+> The big question remains: Now that this landed in mainline, should we as
+> the stable team to pick this up for 6.18.y and 6.19.y to get it resolved
+> there quickly? They might pick it up on their own due to the Fixes tag,
+> but that is not guaranteed.
+> 
+
+Yes, please, that'd be great.
+
+Cheers,
+Angelo
+
+> Ciao, Thorsten
+> 
+>>> Am Fr., 6. Feb. 2026 um 15:55 Uhr schrieb Thorsten Leemhuis
+>>> <regressions@leemhuis.info>:
+>>>>
+>>>> On 2/6/26 12:33, Denis Gessert wrote:
+>>>>>
+>>>>> I found this email chain while troubleshooting why my Levovo Duet
+>>>>> (with the MT8183 chip) would not boot using any 6.18.* kernel.
+>>>>>
+>>>>> I can confirm that on my device the current stable 6.18.8 does not
+>>>>> boot unless I revert the commit
+>>>>>
+>>>>> commit e72d63fa0563f8a6e98c10fed3a9ce74dc0536e6 (HEAD)
+>>>>> Author: AngeloGioacchino Del Regno
+>>>>> <angelogioacchino.delregno@collabora.com>
+>>>>> Date:   Thu Jul 24 10:39:08 2025 +0200
+>>>>>
+>>>>>       arm64: dts: mediatek: mt8183: Migrate to display controller OF
+>>>>> graph
+>>>>>
+>>>>> mentioned below. With the reverted commit the device boots as intended.
+>>>>
+>>>> There is a fix for it from Otto here that I guess should help
+>>>> https://lore.kernel.org/lkml/20260106-mt8183-display-graph-v2-1-
+>>>> e7e56054eef5@abscue.de/
+>>>>
+>>>> Side note: lacks a stable tag and maybe should have been merged this
+>>>> cycle instead of the next. But given that 6.19 is immanent it might be
+>>>> good if this could be backported to 6.19.y once it landed in mainline.
+>>>>
+>>>>> PS: Apologies for the potential double-mail.
+>>>> No worries, happens.
+>>>>
+>>>> Ciao, Thortsten
+>>
+>>
+>>
+> 
+
+
