@@ -1,51 +1,51 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [194.59.206.189])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.61.107])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E48912DAFA9
-	for <regressions@lists.linux.dev>; Mon, 16 Feb 2026 17:28:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.59.206.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02C2B27707
+	for <regressions@lists.linux.dev>; Tue, 17 Feb 2026 08:18:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.61.107
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771262904; cv=none; b=cQNv5kKsu7yM1xDL2SdlcJzes0Pscn4r38cXKgVPQya3/vQcv3dgZBperNMZCc3LsCoupMAOuyk18bZ6WFSDZkVda0fmn/9lQzm8JkgIUJ9A2QnAzql4CrktjjesuKQZtdFzHJIAyhAA50SPHj1c2ASMK+BRothc6NDEvzQg/xM=
+	t=1771316297; cv=none; b=fwDi+dwYm5TCbh3WX5ZnnqHbN184hBfRW4EilE1g6oyfopBLiHfCShSD2czuDi/v4Nja47EFZHJ6kr44ytDs4pRcY2b5sIviaKxHVc/Y4PdC6li82T52f8dofaqSlbByb56k+TY7Fx4R3HIFsoQxlLTaBSWHz1SsBRgANz56Zz4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771262904; c=relaxed/simple;
-	bh=V60Qq5xAu33W8d4d2LDyItq3JD04OsRTwwnEJcb4BXI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mgmeYeYl+PNUuS4n1VVGcHSXRezmUepUR1+OGEA+JsBp/Y4VKKD14zVOF0iIoYHVZsYt3xm6v8xzrQeUWSK1gwTuG+m6qF6XtoZJiWqQwSEJDHMnvP8gsQtBwfs5fChWegeGfgcKk0L0tyT46j17vdgx7dGFDfGxqThXw6K13Rs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=Y2fF7fR4; arc=none smtp.client-ip=194.59.206.189
+	s=arc-20240116; t=1771316297; c=relaxed/simple;
+	bh=wNmASthUQB6K1/NE1lVtryc0WHAWlmUfvnJEL99T7II=;
+	h=Message-ID:Date:MIME-Version:Subject:Cc:References:From:To:
+	 In-Reply-To:Content-Type; b=qMgV98YINjfS9b2EiIpkIZxtdAgIQDJ4W4e3rutm7t2Z00SRsXtEjUr6O1hKm0j5SoAzYVCNcdlTxF2pEhPvfmiT63gN451quBqQ8iLt1kATT6mbL7dSgvBzWpC+sxGX9HHEb7brhdOLP2YKUz7ncsFlpXiHfb1lynVenqfYqzw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=K/INfGig; arc=none smtp.client-ip=188.68.61.107
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="Y2fF7fR4"
-Received: from relay02-mors.netcup.net (localhost [127.0.0.1])
-	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4fF8r36q1Lz4FD3;
-	Mon, 16 Feb 2026 18:28:19 +0100 (CET)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="K/INfGig"
+Received: from mors-relay-8405.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8405.netcup.net (Postfix) with ESMTPS id 4fFXZj2MFDz73QD;
+	Tue, 17 Feb 2026 09:18:05 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1771262900;
-	bh=V60Qq5xAu33W8d4d2LDyItq3JD04OsRTwwnEJcb4BXI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Y2fF7fR4sZSuthgunStz7w+juxDg/tnO6zZnNIf/4z8j9s0aUfYBoz9GTpH7lRGsL
-	 6wq93VZGyBZmAUjtpwdSYnQ2/uZFl2t7Zfe1K5Of2klo4tlJfYE97auxC4cnqql/nz
-	 aH8JeKp3LPREYHrudO8iyLLIvWw2zAVEPyu0Nqu5maZGEeFBpamRtMKnjgphqTRZNY
-	 Q5NMV/ZoiceSDpzj7xO1kU4z4ndIu5MWgfHTUdz7PS27u9Qiq/OIPIdCb16aLWppvs
-	 qlUfvprqlR4mwJwC6GnhNHXi8HSH9cvLlwLc+DW6IjchlczOfnK4RjEAQACuVOBQDN
-	 wUTvc5sUu6MNg==
+	s=key2; t=1771316285;
+	bh=wNmASthUQB6K1/NE1lVtryc0WHAWlmUfvnJEL99T7II=;
+	h=Date:Subject:Cc:References:From:To:In-Reply-To:From;
+	b=K/INfGig2CqnhuhFu1l3cReb1UiZU0ljGlD2Ay1S+/Opx0y8AXgvZVUK4lrSrka81
+	 RPr8l0PTa9CuY9CapWdjy4Dq+WueC/ipSxSnmd4Gm0LNoFrhNJ9b1h0LUU4qRgrCAZ
+	 stAP+rAtnk0hvt0ykzH/WmnRdkhfefImMx9PfOUwigJQZZ5MNmGNmeD+Bz2B8JXWkX
+	 gK/ZbXHhOmecX1JdOtchrAKRHSOXyVwnRfbXC+94c59EZMAAGfm3FTuKDGeh/2NxLe
+	 +hqz5NOeurvA+fgZN+4Vig3SoJG4QbAE1CjwdmPiVkQlWR+sU8tznTQQjdIHsG8hZd
+	 ETi+s84gglMqQ==
 Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4fF8r36565z7vrh;
-	Mon, 16 Feb 2026 18:28:19 +0100 (CET)
+	by mors-relay-8405.netcup.net (Postfix) with ESMTPS id 4fFXZj1djdz73QC;
+	Tue, 17 Feb 2026 09:18:05 +0100 (CET)
 Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4fF8r2359cz8sZP;
-	Mon, 16 Feb 2026 18:28:18 +0100 (CET)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4fFXZg1pH9z8sbs;
+	Tue, 17 Feb 2026 09:18:03 +0100 (CET)
 Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 5DAB1673D8;
-	Mon, 16 Feb 2026 18:28:17 +0100 (CET)
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 771AE67559;
+	Tue, 17 Feb 2026 09:18:01 +0100 (CET)
 Authentication-Results: mxe9fb;
         spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
 Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <973ca923-3654-46be-a9b8-8d38cd7d4a59@leemhuis.info>
-Date: Mon, 16 Feb 2026 18:28:11 +0100
+Message-ID: <6fce0406-1515-4cf8-afdf-24217148d1c8@leemhuis.info>
+Date: Tue, 17 Feb 2026 09:18:00 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -53,83 +53,97 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm/imagination: Convert to
- dev_pm_domain_{at,de}tach_list()
-To: Matt Coster <Matt.Coster@imgtec.com>,
- Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Marek Vasut <marek.vasut@mailbox.org>,
- Frank Binns <Frank.Binns@imgtec.com>,
- Brajesh Gupta <Brajesh.Gupta@imgtec.com>,
- Alessio Belle <Alessio.Belle@imgtec.com>,
- Alexandru Dadu <Alexandru.Dadu@imgtec.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
- "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
- "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Subject: Re: [REGRESSION] mt8183-kukui: dts: changes in dts caused display to
+ no longer initialize - Was: Re: mt8183-kukui: drm/mediatek: dts: Invalid
+ display hw pipeline when probing mediatek-drm
+Cc: Evans Jahja <evansjahja13@gmail.com>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+ regressions@lists.linux.dev, =?UTF-8?Q?Otto_Pfl=C3=BCger?=
+ <otto.pflueger@abscue.de>, Denis Gessert <denisgessert@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 References: 
- <194465eda54d1f852a9226cf691ddc5aa208e0a3.1769097977.git.geert+renesas@glider.be>
- <ffdf3982-e22c-4d01-afa6-5449ed381000@imgtec.com>
- <CAMuHMdWMh_oJFg-KtapcTDGvYWZ-hg_ZEJ2=E5Tp1apOEc8tnQ@mail.gmail.com>
- <b3b4f10e-1222-44f7-b308-db7199c67147@mailbox.org>
- <3e0def93-2f6c-4bcf-8ee5-bf607f2ca382@imgtec.com>
- <f5d3dde6-edec-42f4-93cb-459c8677245a@mailbox.org>
- <f82b7734-6ddc-4029-b38d-147e9a1de021@leemhuis.info>
- <fcf5ab75-029e-469e-8b2a-51fa5c2a2374@mailbox.org>
- <95fd3f52-c3ed-40c5-920f-11e8767f701d@leemhuis.info>
- <CAMuHMdV-g+3kTaG6Ost4iHo1Tdi_H=qscLBkBRWuR+6DG5c=SA@mail.gmail.com>
- <1e8e416e-e474-4288-9686-1ba2b88e4946@leemhuis.info>
- <21b1fd77-252e-4fb3-aa65-1c26043c5412@imgtec.com>
- <9c1b2671-3374-4d84-ad14-07dd499bb934@leemhuis.info>
- <86e23062-e439-41f3-9750-d87fa5b85447@imgtec.com>
+ <CAFLVeg9hwH3PbKu5rPWZWqq6yz5mRRoB9oqxDkxNRdEDLGbVBw@mail.gmail.com>
+ <CAFLVeg_soeYV4tOYKMo6TMYOtuWWU4TFCjUTxUrVEyGcRwMz7A@mail.gmail.com>
+ <df6fcd73-fe0a-42fc-97ce-7e458c340553@leemhuis.info>
+ <CAFLVeg-qeWu4ntgyqotsgjogPEyhqrMGG=UDWuZe+-D3K8YPTA@mail.gmail.com>
+ <908f3c03-a8b0-4535-9cfa-294c6ade8152@collabora.com>
+ <96e7f0fc-65f4-4613-b556-3a2d869dabb4@leemhuis.info>
+ <86e2d0f9-5c25-4cce-b4a8-68fb569f987d@collabora.com>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
 Content-Language: de-DE, en-US
-In-Reply-To: <86e23062-e439-41f3-9750-d87fa5b85447@imgtec.com>
+To: Greg KH <gregkh@linuxfoundation.org>,
+ "stable@vger.kernel.org" <stable@vger.kernel.org>,
+ Sasha Levin <sashal@kernel.org>
+In-Reply-To: <86e2d0f9-5c25-4cce-b4a8-68fb569f987d@collabora.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-PPP-Message-ID: <177126289794.943165.17784038713473654524@mxe9fb.netcup.net>
+X-PPP-Message-ID: <177131628267.3901032.8736787722890015484@mxe9fb.netcup.net>
 X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: 5DAB1673D8
-X-NC-CID: AjV1G+1qi0A50p5fD7769aC/jkB5VYhyTxmItNVrQNIkz8NMXTc=
+X-Rspamd-Queue-Id: 771AE67559
+X-NC-CID: P5UaJjDo5RUgOdWt7kmuYNYP5qwhRRqev6fiWP7bbNuOTjfyU6I=
 
-On 2/16/26 14:37, Matt Coster wrote:
-> On 16/02/2026 11:38, Thorsten Leemhuis wrote:
->> On 2/16/26 11:58, Matt Coster wrote:
->>> On 16/02/2026 10:11, Thorsten Leemhuis wrote:
+On 2/16/26 11:46, AngeloGioacchino Del Regno wrote:
+> Il 13/02/26 10:27, Thorsten Leemhuis ha scritto:
+>> On 2/9/26 12:42, AngeloGioacchino Del Regno wrote:
+>>> Il 06/02/26 17:58, Denis Gessert ha scritto:
+>>>> Thanks for the quick response. I compiled 6.18.9 with this patch
+>>>> (without reverting the previous commit) and it boots successfully.
+>>> Happy to see further confirmation that the patch that we both
+>>> mentioned is
+>>> actually fixing the issue.
+>> The big question remains: Now that this landed in mainline, should we as
+>> the stable team to pick this up for 6.18.y and 6.19.y to get it resolved
+>> there quickly? They might pick it up on their own due to the Fixes tag,
+>> but that is not guaranteed.
+> Yes, please, that'd be great.
+
+Hi stable team! Could you please pick up be0b304eeb8c5f ("arm64: dts:
+mediatek: mt8183: Add missing endpoint IDs to display graph") [merged
+v6.19-post, committed by Angelo, who ACKed this request; see quote
+above] for 6.18.y and 6.19.y? It fixes a regression in e72d63fa0563
+("arm64: dts: mediatek: mt8183: Migrate to display controller OF
+graph"). tia! Ciao, Thorsten
+
+>>>> Am Fr., 6. Feb. 2026 um 15:55 Uhr schrieb Thorsten Leemhuis
+>>>> <regressions@leemhuis.info>:
+>>>>>
+>>>>> On 2/6/26 12:33, Denis Gessert wrote:
+>>>>>>
+>>>>>> I found this email chain while troubleshooting why my Levovo Duet
+>>>>>> (with the MT8183 chip) would not boot using any 6.18.* kernel.
+>>>>>>
+>>>>>> I can confirm that on my device the current stable 6.18.8 does not
+>>>>>> boot unless I revert the commit
+>>>>>>
+>>>>>> commit e72d63fa0563f8a6e98c10fed3a9ce74dc0536e6 (HEAD)
+>>>>>> Author: AngeloGioacchino Del Regno
+>>>>>> <angelogioacchino.delregno@collabora.com>
+>>>>>> Date:   Thu Jul 24 10:39:08 2025 +0200
+>>>>>>
+>>>>>>       arm64: dts: mediatek: mt8183: Migrate to display controller OF
+>>>>>> graph
+>>>>>>
+>>>>>> mentioned below. With the reverted commit the device boots as
+>>>>>> intended.
+>>>>>
+>>>>> There is a fix for it from Otto here that I guess should help
+>>>>> https://lore.kernel.org/lkml/20260106-mt8183-display-graph-v2-1-
+>>>>> e7e56054eef5@abscue.de/
+>>>>>
+>>>>> Side note: lacks a stable tag and maybe should have been merged this
+>>>>> cycle instead of the next. But given that 6.19 is immanent it might be
+>>>>> good if this could be backported to 6.19.y once it landed in mainline.
+>>>>>
+>>>>>> PS: Apologies for the potential double-mail.
+>>>>> No worries, happens.
+>>>>>
+>>>>> Ciao, Thortsten
 >>>
->>> We're currently trying to force this issue to reproduce on hardware we
->>> have on hand; we'd like to see it fixed properly as much as anyone.
+>>>
+>>>
 >>
->> Yeah, no worries, I never doubted that. But getting things properly fixed
->> can mean "revert, fix, reapply" when it comes to regressions in Linux --
->> which is something that should not be seen as something bad, as Linus said
->> himself (see below)!
->>
->>> From our side at least, I don't believe this is a regression at all.
->> In the end what matters is: some change afaics caused systems to not work
->> anymore that used to be working -- that makes it a regression my the Linux
->> kernels standards. And those by the same standards must be fixed, ideally
->> quickly. Find a few quotes on that from Linus below that explains this
->> better. 
-> I feel like I should reiterate that the commit we're talking about
-> reverting is fundamental to support for one of the only two platforms
-> currently supported.
+> 
+> 
+> 
 
-That might or might not be relevant, see the "back and forth" section
-from the Linus quotes.
-
-> And that the changes to add "support" (just
-> bindings and DT) for the affected Renesas platforms came several months
-> *after* this.
-
-Ohh? That might change things then. I relied on the info from Geert and
-Marek – and would be glad if you guys could sort this out, as you are
-the experts here (and I already got myself way deeper involved then I
-wanted to).
-
-> [...]
-
-Ciao, Thorsten
