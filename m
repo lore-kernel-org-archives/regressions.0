@@ -1,85 +1,228 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83C6123BF9F;
-	Tue, 17 Feb 2026 10:32:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE756212FB9
+	for <regressions@lists.linux.dev>; Tue, 17 Feb 2026 15:05:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771324356; cv=none; b=nmMyqKraTpn1VT2L5DvT2wGwvzzLnQ/p038IJXSKPcGDJDi4A9iWGS9Zkm4RnJxg4XZ+VaHUbDolfwHqP3U3TdawiPWUFJ8oGD/nezAMAugUp1Zrv7ltWN8tz+snXCd2RfbwGf8i56+IoRWuWfuqchFIwLqNaELB8v7Rvn66VBk=
+	t=1771340704; cv=none; b=avkDbNfShZjiOBSu3D7fzvTld/YQpQ0p61+dE1apyGOobKphWEidGkXjYIOXMa9tGxn9rwQXwNR1p+ToGygDbb47VvBtNAVkTxdYVwEKETa9KvUGHkGLqf9difeXwHjUtt5PW3rP5LJz1BEbNLGUObc1jmcvufXVJS0oiyOjyO8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771324356; c=relaxed/simple;
-	bh=EU+F3qBEfwa2qi2OJwmfpHEKvticwtw+Y9NIdZ3pMr0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IavXp4j9gr/+3RkB59iSEzoyok3LHDLyxorokHUOA4hCMqyRPleI7tvWrs9TRK+MnCSrUtkwpdd7youYcWubfechGDCn44kCbpZdcm8SFOevuhDc60CLRW059TBL81fjZ+n0cvr7zuQ5+9RNHKX/gcql8oZuE6EGRhFfZZi2Xn4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=VOWVnnv0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1771340704; c=relaxed/simple;
+	bh=/5KxhbtTbf71uyzbr9ORsD/LfXkBS7Hrrl9FU6k0jRU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LI8eAUYkdvTj/9UeQ2tD6IyG4iCiSF+Q0Ci9raiumDlLpMaGULKlw/JrO4E2Jy5gQiZhQ0QYADkKPb2L2iANGJC8XmqeFXeH+ljwrp3IAISWnwB0SGczdtTNTH0A6rhh1dQlN4/Rbi0EJ8AW5XYSlX5spmlCgH1KSieEPNAaAtk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=AxHYE+2D; arc=none smtp.client-ip=80.241.56.161
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="VOWVnnv0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2FC2C4CEF7;
-	Tue, 17 Feb 2026 10:32:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1771324356;
-	bh=EU+F3qBEfwa2qi2OJwmfpHEKvticwtw+Y9NIdZ3pMr0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VOWVnnv0/vR1b2OMZjXz5cRXcrLIPYXZ/Fqav7h70L/eCm6VBeLMYQV5vNmHCABRY
-	 si58s7gzJHvwM8HHTMw0R5WPgONrQTXLuAe7hO6wBX8N0CZbpX1XL0hj6V7TTbGKRA
-	 9m7+XgisfGN7I3xv9q8DcyH/Eaoq9Ka/tTw4m1kc=
-Date: Tue, 17 Feb 2026 11:32:33 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: "stable@vger.kernel.org" <stable@vger.kernel.org>,
-	Sasha Levin <sashal@kernel.org>,
-	Evans Jahja <evansjahja13@gmail.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev,
-	Otto =?iso-8859-1?Q?Pfl=FCger?= <otto.pflueger@abscue.de>,
-	Denis Gessert <denisgessert@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Subject: Re: [REGRESSION] mt8183-kukui: dts: changes in dts caused display to
- no longer initialize - Was: Re: mt8183-kukui: drm/mediatek: dts: Invalid
- display hw pipeline when probing mediatek-drm
-Message-ID: <2026021726-decibel-bootie-39ba@gregkh>
-References: <CAFLVeg9hwH3PbKu5rPWZWqq6yz5mRRoB9oqxDkxNRdEDLGbVBw@mail.gmail.com>
- <CAFLVeg_soeYV4tOYKMo6TMYOtuWWU4TFCjUTxUrVEyGcRwMz7A@mail.gmail.com>
- <df6fcd73-fe0a-42fc-97ce-7e458c340553@leemhuis.info>
- <CAFLVeg-qeWu4ntgyqotsgjogPEyhqrMGG=UDWuZe+-D3K8YPTA@mail.gmail.com>
- <908f3c03-a8b0-4535-9cfa-294c6ade8152@collabora.com>
- <96e7f0fc-65f4-4613-b556-3a2d869dabb4@leemhuis.info>
- <86e2d0f9-5c25-4cce-b4a8-68fb569f987d@collabora.com>
- <6fce0406-1515-4cf8-afdf-24217148d1c8@leemhuis.info>
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="AxHYE+2D"
+Received: from smtp102.mailbox.org (smtp102.mailbox.org [IPv6:2001:67c:2050:b231:465::102])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4fFjcB1vcMz9thx;
+	Tue, 17 Feb 2026 16:04:58 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1771340698;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=j+HfRGqTenwP1WEUYCI3cx5JseSezcTkyhSN5LAXhFw=;
+	b=AxHYE+2DErvJPJwcroO11MQNOzCk0rAxOz3YG1X3yFQcpF23VwGZgzsZBdN5DbzVgoI+z6
+	3Y6wIrts4hn8FjaiCwuktDP5nTHUx8ebFme0d2TiRKTQXU6XZoExbhDKTI9++F8oElYWkE
+	xAILyAmHpqAWoNuXK/k69XW7NWREF8w40ZO4i+TpNAlnIPy8BlP4iBlW3G1rEi3GmEvo1z
+	WcH/vaVCaRVNI9DEB5vKLC1OF20ntQ0x8sItgfkXyg5B3PhexseW2R3xC2W3Z6WmHjXJDu
+	bf2LcKPeWym6ZMoY2qhJPOHpAwSoz6NRiWB22ah9HpBPLE5CnOwF4gwM1hXOIA==
+Message-ID: <80fb62ee-0598-48c1-a490-6eefcd1d3b66@mailbox.org>
+Date: Tue, 17 Feb 2026 15:33:45 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6fce0406-1515-4cf8-afdf-24217148d1c8@leemhuis.info>
+Subject: Re: [PATCH] drm/imagination: Convert to
+ dev_pm_domain_{at,de}tach_list()
+To: Matt Coster <Matt.Coster@imgtec.com>,
+ Thorsten Leemhuis <regressions@leemhuis.info>,
+ Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Frank Binns <Frank.Binns@imgtec.com>,
+ Brajesh Gupta <Brajesh.Gupta@imgtec.com>,
+ Alessio Belle <Alessio.Belle@imgtec.com>,
+ Alexandru Dadu <Alexandru.Dadu@imgtec.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+ "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+ "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <194465eda54d1f852a9226cf691ddc5aa208e0a3.1769097977.git.geert+renesas@glider.be>
+ <ffdf3982-e22c-4d01-afa6-5449ed381000@imgtec.com>
+ <CAMuHMdWMh_oJFg-KtapcTDGvYWZ-hg_ZEJ2=E5Tp1apOEc8tnQ@mail.gmail.com>
+ <b3b4f10e-1222-44f7-b308-db7199c67147@mailbox.org>
+ <3e0def93-2f6c-4bcf-8ee5-bf607f2ca382@imgtec.com>
+ <f5d3dde6-edec-42f4-93cb-459c8677245a@mailbox.org>
+ <f82b7734-6ddc-4029-b38d-147e9a1de021@leemhuis.info>
+ <fcf5ab75-029e-469e-8b2a-51fa5c2a2374@mailbox.org>
+ <95fd3f52-c3ed-40c5-920f-11e8767f701d@leemhuis.info>
+ <CAMuHMdV-g+3kTaG6Ost4iHo1Tdi_H=qscLBkBRWuR+6DG5c=SA@mail.gmail.com>
+ <1e8e416e-e474-4288-9686-1ba2b88e4946@leemhuis.info>
+ <21b1fd77-252e-4fb3-aa65-1c26043c5412@imgtec.com>
+Content-Language: en-US
+From: Marek Vasut <marek.vasut@mailbox.org>
+In-Reply-To: <21b1fd77-252e-4fb3-aa65-1c26043c5412@imgtec.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-MBO-RS-ID: 0ddf39fc09e316a2b4e
+X-MBO-RS-META: up57bdnnrzo8fenaqz6kyojobd4b1d9k
 
-On Tue, Feb 17, 2026 at 09:18:00AM +0100, Thorsten Leemhuis wrote:
-> On 2/16/26 11:46, AngeloGioacchino Del Regno wrote:
-> > Il 13/02/26 10:27, Thorsten Leemhuis ha scritto:
-> >> On 2/9/26 12:42, AngeloGioacchino Del Regno wrote:
-> >>> Il 06/02/26 17:58, Denis Gessert ha scritto:
-> >>>> Thanks for the quick response. I compiled 6.18.9 with this patch
-> >>>> (without reverting the previous commit) and it boots successfully.
-> >>> Happy to see further confirmation that the patch that we both
-> >>> mentioned is
-> >>> actually fixing the issue.
-> >> The big question remains: Now that this landed in mainline, should we as
-> >> the stable team to pick this up for 6.18.y and 6.19.y to get it resolved
-> >> there quickly? They might pick it up on their own due to the Fixes tag,
-> >> but that is not guaranteed.
-> > Yes, please, that'd be great.
+On 2/16/26 11:58 AM, Matt Coster wrote:
+
+[...]
+
+>>>>>>> I added the regressions list onto CC, because this seems like a problem
+>>>>>>> worth tracking.
+>>>>>>
+>>>>>> Noticed that and wondered what change caused the regression.
 > 
-> Hi stable team! Could you please pick up be0b304eeb8c5f ("arm64: dts:
-> mediatek: mt8183: Add missing endpoint IDs to display graph") [merged
-> v6.19-post, committed by Angelo, who ACKed this request; see quote
-> above] for 6.18.y and 6.19.y? It fixes a regression in e72d63fa0563
-> ("arm64: dts: mediatek: mt8183: Migrate to display controller OF
-> graph"). tia! Ciao, Thorsten
+>  From our side at least, I don't believe this is a regression at all. We
+> haven't been able to reproduce this issue on any of the platforms we
+> have available (although we did stumble on a somewhat related bugfix
+> while trying).
 
-Now queued up, thanks.
+There are already two proposed fixes available, and both Geert and me 
+are available for testing any other fixes too.
 
-greg k-h
+And yes, this is a regression, because this causes a kernel crash which 
+did not happen before.
+
+>>>>>
+>>>>> I think this one:
+>>>>>
+>>>>> 330e76d31697 ("drm/imagination: Add power domain control")
+> 
+> This commit added support for multiple power domains on Imagination GPUs
+> in essentially the same manner as other drivers (as mentioned by Geert
+> below). Nothing in there is specific to the Renesas platforms where this
+> bug can be produces and it is required to support other fully-functional
+> platforms such as TI AM68.
+
+That does not imply, that the code is not buggy.
+
+[...]
+
+>>>> Well, it's a judgement call. 330e76d31697 was merged less then a year
+>>>> ago, so I'd not be surprised at all if Linus would revert it in a case
+>>>> like this. But it seems it doesn't revert clearly anymore, which
+>>>> complicates things.
+> 
+> Reverting this change feels backwards, we're saying that Imagination's
+> support for multiple power domains is broken because one platform has
+> issues when we attempt to control its power domains. I fully agree that
+> we should be working towards resolving this issue, but I don't agree
+> that ripping out this handling (that, again, is essentially the same as
+> handling in other GPU drivers) is a reasonable solution (even in the
+> short term).
+> 
+> As it currently stands, we're only declaring two GPUs as "fully
+> supported": AXE-1-16M and BXS-4-64 as made explicit in commit
+> 1c21f240fbc1e ("drm/imagination: Warn or error on unsupported
+> hardware").
+
+Actually, this change landed only very recently and completely broke the 
+GX6250 on R-Car M3W, which used to probe and work before. Now the driver 
+does not even probe with "Unsupported GPU" output, which is clearly bogus.
+
+I would say the aforementioned commit introduced another new regression 
+-- something that used to work before no longer works, functionality was 
+lost because of the change.
+
+> In order to reach the stage where that check occurs, the GPU
+> must be powered on so registers containing the GPU ID can be read.
+> However, the original error report happens long after this and would now
+> require the exp_hw_support module parameter to be set for this point to
+> be reached (as the driver would not attempt to initialise an
+> "unsupported" device without this explicit opt-in).
+
+I don't think it is a good solution to selectively block specific 
+hardware, only to avoid triggering the power domain issue. The power 
+domain issue should be fixed, not hidden.
+
+> It's not currently clear to me whether the crash can be reproduced on
+> the affected Renesas platform without this opt-in; it's feasable that
+> this is the case but we know it occurs during an error unwind after
+> device firmware fails to initialise and the exp_hw_support check happens
+> much earlier than this.
+> 
+> Either way, we should consider adding additional "supported" checks
+> based on compatibile strings earlier during initialization to prevent
+> fundamental issues like this one from even being possible on unsupported
+> and/or unvalidated hardware.
+
+Actually no, the hardware support should be as broad as possible, 
+without imposing any artificial limitations like that. This allows users 
+to test the driver and find errors, which if they are fixed, ultimately 
+improve quality of the driver.
+
+> All that being said, ripping out power domain handling will completely
+> break one of the only two platforms we currently fully support: BXS-4-64
+> which also has two power domains and is present in several TI SoCs (and
+> their DTs).
+
+I am not saying the code should be removed, I am saying the regression 
+should be fixed. There are already two proposed fixes available, so it 
+would be good to move them forward.
+
+1c21f240fbc1e ("drm/imagination: Warn or error on unsupported hardware") 
+should be reverted, this is not helping anything. Warning message would 
+be fine though.
+
+>>>>> But SoCs which have hierarchical
+>>>>> power domains and which manage to probe this driver without having a
+>>>>> firmware available for the GPU will simply end with crashed kernel,
+>>>>> which is really not good.
+>>>>
+>>>> Does the patch Matt mentioned fix the crash? His "this does not fix the
+>>>> underlying issue [...]" (see quote earlier) makes it sound like the
+>>>> crash or some other problem (theoretical or practical? regression or
+>>>> not?) remains. If that's the case and no quick fix in sight I guess it
+>>>> would be best if someone affected could post a revert and then we can
+>>>> ask Linus if he wants to pick it up.
+> 
+> The patch I posted (and applied) is somewhat orthogonal to the issue at
+> hand. Geert originally suggested using the _attach_list() helper as a
+> way to mitigate the issue, and we agree that it's a reasonable cleanup
+> effort to make use of it, but I believe the "fix" in the originally
+> proposed patch came from removing the device links that are required on
+> our platform to ensure the GPU power domains come up (and down) in the
+> correct sequence.
+> 
+>>>
+>>> I don't think that patch would fix the crash.  The Adreno and Panfrost
+>>> GPU drivers do similar things (explicit multi-PM Domain handling),
+>>> so I am wondering if the issue can be triggered with them too (e.g. on
+>>> unbind).
+> 
+> My current understanding of the situation is that the fix proposed by
+> Marek in the Reneasas driver[2] works, but is not suitable since
+> pm_runtime_barrier() should be inserted by the caller, not the power
+> driver. But it seems that's not always possible (particularly when using
+> devm), so I don't really understand where we go from here. I still don't
+> see anything we're doing substantially differently (before or after the
+> commit I mentioned above) from anybody else.
+
+As far as I understand that, Geert was waiting for input from PM people?
+
+At the beginning of this thread, almost a month ago, there was the 
+following exchange, hence I was under the impression that a fix is coming:
+
+"
+ >> Can you add the links back in for a V2 or I can properly send the
+ >> attached patch instead, I don't mind either way.
+ >
+ > Please move forward with your patch, you are the expert.
+ > I prefer not to be blamed for any breakage ;-)
+"
