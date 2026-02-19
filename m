@@ -1,133 +1,123 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96ED0311972
-	for <regressions@lists.linux.dev>; Wed, 18 Feb 2026 20:56:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771448215; cv=none; b=h73ju3nCE3FnC5QL5Q6C3TDBRit/wg5gz+A5Yszz9iuwMuhbmfLrKoAoCkGOPx/qv9h7/6B8Wb8/cXDMBSguA2srfJlUYpm0bYBaKI6VSKGZl48gYSw9qyh2Nfz+YFfi20RnyxG89qPq/HlY1ysBtG5dejNvIs0t6lX5U63jIR4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771448215; c=relaxed/simple;
-	bh=OwmdDIcpJBYXHzGN/OiX+qYUOpoVkCDEW7IiyCqnSpc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=nIXyaluXBkhv3SKBWK/82XDhvDozurjarWfV8ouE6UPAG/8C5dUcdqY6hpzBG/i/PHbB1c5Dh6YFl8N+ynTKciZjqPvU3NWomdwzEMUUGZ7V0ejItH4ZqSPtoBVO2S4J49phVhXOq2SpV9RriPgZmC2xC3sym9wmiTb7VomraXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=S5J56E93; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 614F228469B
+	for <regressions@lists.linux.dev>; Thu, 19 Feb 2026 22:33:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.167.44
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1771540396; cv=pass; b=uQe9f7tLoFlqc8Yg9ZJZ63t5As2NtwKjtz4F2G0c0lH4pytdtsSHDHTvgJGNL+JEmMK/XU1hOhiJc3M4UswwYH5xESGKAOTJk7qIf766R6m8pm2Llq76VhyFJ4H/VkmJLj7zCfFp//PDkiZImCzr2xuZL3Zxn64uxk1l0Ew7Nn8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1771540396; c=relaxed/simple;
+	bh=0c86jRAYAOOniszwr225rxzBQAZQQwvb90WTwPNyTgs=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=uv2uLcu0/nkU8froaATRUvqtrV6UHQOa4cgV5ybcbFAAJvOZcXTPY0nK2acDsMiUhaJaSrWIqcp1uJySc/qRHlJk+4V9H5/5rfmdQ8jxjE3VYdezQciz+vkQDN33dLLqxrPDyyTsn4rpAcO5AJjtVjyjuWVIHr2ExEBinCcaWRk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=heEcAXRM; arc=pass smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="S5J56E93"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1771448212;
-	bh=OwmdDIcpJBYXHzGN/OiX+qYUOpoVkCDEW7IiyCqnSpc=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=S5J56E93P9UTrZ/REL9COO9XVO1m6FzavDwdBnI7cuJx9qGxJ40XAwCrYBoAjPcfd
-	 ADWCaNMxXYkfZC54N1hUHXEzkRqADui5iLVUZV6wD/b2E8f8+fC5POkv+NkniUp9rk
-	 Vxgaph+ucn/vgPJK/XHE0XezfmulXRqL/JB0NqVaY4pZBxiJfrdc9hLR194YhqQUOJ
-	 Jdjz+iTnEe0YYEaqf10jNa7PCI3dWJLOPeCmCFddQG4ws79JF+q0PRhB+12PfWo/G1
-	 pcN4bryzGotxtNiu8pwHNGBXqOBsq7yEO4vVrech0z5WeD4wIXcGJRkO98OortxdQN
-	 y7nGzuBOHT03Q==
-Received: from [192.168.1.90] (unknown [82.79.138.145])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
-	(No client certificate requested)
-	(Authenticated sender: cristicc)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 8622417E131B;
-	Wed, 18 Feb 2026 21:56:52 +0100 (CET)
-Message-ID: <a662745a-1b2a-47b3-a66d-7c1c5c8af525@collabora.com>
-Date: Wed, 18 Feb 2026 22:56:52 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="heEcAXRM"
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-59dd4bec4ecso1642834e87.0
+        for <regressions@lists.linux.dev>; Thu, 19 Feb 2026 14:33:15 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1771540393; cv=none;
+        d=google.com; s=arc-20240605;
+        b=JKj3AGeAT7s+zC4zw6DVv5LSl/KAufZcnrBYFYrcO43T6wC4eYXm1oHedyHV5T3FbL
+         kvZl9rOmnX7dwWTyMdr7wfjhx7zePCNhDBl5RrQPEDFcZ4Ddgym/NVnEO3xXN0gBEJ45
+         9QELGL5K6pIUqpGjNHQQMjtSlC0I+QioSXacnywW/E4LxdaxrGZE3VmxNPdifBo/yVvV
+         7/SRgUddlaNHF97lJWKQTf49BrbebDBhD2bvs8nHSJ37GA+yQT7ufyX17CFKRUXzd5cB
+         SzjcFxw6YYVtdxCLEtarg54ukgMBqmeaR9VvbMdTkOwZTMaGN06XKer6ncu4u6JeZ6Dd
+         yPLg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=cc:to:subject:message-id:date:from:mime-version:dkim-signature;
+        bh=0c86jRAYAOOniszwr225rxzBQAZQQwvb90WTwPNyTgs=;
+        fh=lxkoBtBdbcxhsjSrwTlGSdZ6UOhnEpP4AAr/c8lgK64=;
+        b=SG5kKoB8+aDHRD+IxOAuckaKPq8gskEurTPjiQ7gaHGwUyEl4maARN9700KtFRuRAj
+         TG3jpvUpFkEdojJK641VbeKqdwJoOS+Y/DKqOrgqFrnf3TZKE8uMIfjBvYc2KkBmrkm+
+         UhcHil6iqAGEU7NdBLMCf3oJcrKMVkS812WfuuT6Mw2DypuVCYJFV8L+zf882jecp950
+         QAopyKX1ZZX+b2qlMvOaP97U+BYC+PKEKcTfpnrkPFCrolRaOyzKLffpWPcfr9VPVbcO
+         gjG4lSJqBSoD1C6rkL+NQLqyA0MNnjV7oHLg85SlPye5ROnCTkYjya2MacoLaukOShzB
+         fPUw==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1771540393; x=1772145193; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=0c86jRAYAOOniszwr225rxzBQAZQQwvb90WTwPNyTgs=;
+        b=heEcAXRMOz5sd/y7mkTkbrxvGAk9PA6dzqDFYjj6kz4qwLD55TO5H0O8uSZt9xO1mp
+         KMGztJ45z+QWBNYg+P+hygiq6jg0ti12WEM10a2EUQr1N0CjxauyAP5+rp+FyClhEXV1
+         oOmgDy1//BEFWwiueoRJXUpnGboVqu5wG6GMCDUjZmOZYMfv+g8tm7MT8HTwOTXWIvUX
+         tfvY6xtSnCLalot8pqUe653Mh9n5J/4NpJNIBDMu1kw2bzJfiPAF4s1fWQU1IWZAW0am
+         eguGG3xw92s3B6JlSIlGZswJS4hBoVcFgbwGWOxMY0VHtFwqdUSRXt7m+HknOXa7k8Dh
+         /yxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1771540393; x=1772145193;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0c86jRAYAOOniszwr225rxzBQAZQQwvb90WTwPNyTgs=;
+        b=BQYTljK01ywfzMuArmeIrqZgDXKkILsejL0IvOavBN3D0XBkfqj6IZLyzbbVLxFMTZ
+         gVypull6IheMwLZADpQApt9LyELpMnBRiX5TMP40CL0HrxBG21k07WOpxKEm1iXc4qay
+         KGICORGQDySlndVcjC2kbYp8G3bz+lCvUIKCrgLp5r2Tw8vVXf/bW7YUAQ2g2DRIfPYU
+         NBO7C6cWTe0j5QwtzKaHc+pl60zAgfS+uVHqd3Fk1ez/dPOYoAbXjJ8t3JLQhwCD7PAt
+         EllnU2DIxVy50GvdtsTb3bpG1OpKdpW7w+llI7nagtQCQ+AltCTLZ78QZRkj2OQFuyj3
+         Jreg==
+X-Forwarded-Encrypted: i=1; AJvYcCXRT1yCw25/q0Fgu9JcQAFUek03DsHyXHY5Dg6+DpnkgKhNBFRjbE98C1vjIlonElchiQniyedI33tj1g==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yw6F0D5akwTYHZvl+Q4UxE+CfNTb4qRBlHIf9hGQ9KIYE0WSRLk
+	OOxlWB7Uy2bCZhuZrWFTx6HrlJ8ne8rxhctl0D9nIxLcRRriScF2zkcuE9uvPHcsPvqTYzdPszM
+	nhlRmeUCCj03OQrlWv3bo3HY5u32R2A==
+X-Gm-Gg: AZuq6aLfhGYkWQ6itvmaWV76mWM2Fw9xz+ReVLrn6W2BT/N5OGgOUiJs8P4H6hPZONF
+	5OxjIeq59rXfBvufw5J/vtIf91hsoLyzvWL6gKLFkk3YWT2ya8KbI82lfidW2UeSq7OFc7k41hO
+	gGibF+OGJFH/ORlfQJ/UyON88cQ8MIXmVd+5soxabTEdzr9HEBFxuJ3Qks/SPe57ZLytpoqNP/r
+	o9WUPnWokhGJ/bNdmaiUjxB7VJXXzZNYLcpC0lLdVJpj2DMcYbBCKXdnCPwUffZ50cfVghH1YpE
+	tJu/CUkYhJxEms9lsQ==
+X-Received: by 2002:a05:6512:23a4:b0:59d:f47c:100d with SMTP id
+ 2adb3069b0e04-59f83bbad74mr2430338e87.24.1771540393099; Thu, 19 Feb 2026
+ 14:33:13 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] HDMI monitor not working on Radxa Rock 5B after phy
- rockchip samsung hdptx HDMI 2.1 FRL patchset
-To: dubito@online.de, Vinod Koul <vkoul@kernel.org>,
- Neil Armstrong <neil.armstrong@linaro.org>, Heiko Stuebner
- <heiko@sntech.de>, linux-phy@lists.infradead.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-References: <b32164001947ba922aefb6ca86a8dc59e9323d2b.camel@online.de>
- <8e410a11-bd7b-4a12-a711-0514a59409c0@collabora.com>
- <1859c940219a4dbfdf0497afbf333e627ab0ba25.camel@online.de>
- <98e46dbb-c8e2-451f-accb-ea48f63f9408@collabora.com>
- <4544ec4ccfa49cbdffee098878df7806223935a0.camel@online.de>
- <08369c90-fbab-477d-9ac6-388deddfd3b1@collabora.com>
- <26e31b3b-484f-433b-833f-c639ee437f63@collabora.com>
- <03b5f3d1-6db4-4835-b2a5-c22c1aa63825@collabora.com>
- <a3c3964e9e13c82d944fa1ee0acbb1a7806dd382.camel@online.de>
-Content-Language: en-US
-From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-In-Reply-To: <a3c3964e9e13c82d944fa1ee0acbb1a7806dd382.camel@online.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: John The Cooling Fan <ivan8215145640@gmail.com>
+Date: Fri, 20 Feb 2026 01:33:01 +0300
+X-Gm-Features: AaiRm51jvRuCF3Uzbemg_3Ogc0GaotIPeGjtPgaNcd2hy_qmzlM99LaySlt9CPA
+Message-ID: <CAKx_Wg7_HBxuq5W4T_AmoFYJGQpa6TAS_Fx9SUzyy1itPmj5Bw@mail.gmail.com>
+Subject: [REGRESSION] VRR not detected on a DisplayPort monitor using an AMD GPU
+To: amd-gfx@lists.freedesktop.org
+Cc: dri-devel@lists.freedesktop.org, regressions@lists.linux.dev, 
+	mwen@igalia.com, mario.limonciello@amd.com, alex.hung@amd.com, 
+	daniel.wheeler@amd.com, rodrigo.siqueira@amd.com, alexander.deucher@amd.com, 
+	harry.wentland@amd.com, sunpeng.li@amd.com, christian.koenig@amd.com, 
+	huangalex409@gmail.com
+Content-Type: multipart/mixed; boundary="000000000000d620f9064b34e329"
 
-Hi Thomas,
+--000000000000d620f9064b34e329
+Content-Type: text/plain; charset="UTF-8"
 
-On 2/18/26 10:43 PM, 1und1 wrote:
-> Hi Cristian,
-> 
-> 
-> Am Mittwoch, dem 18.02.2026 um 22:15 +0200 schrieb Cristian Ciocaltea:
->> On 2/18/26 3:22 AM, Cristian Ciocaltea wrote:
->>> On 2/18/26 2:52 AM, Cristian Ciocaltea wrote:
->>>> Hi Thomas,
->>> [...]
->>>
->>>>
->>>> Sorry, I somehow missed the following warning message, though it has been
->>>> already present in all the logs you've sent to me so far:
->>>>
->>>>   rockchip-hdptx-phy fed60000.phy: PLL locked by unknown consumer!
->>>>
->>>> That indicates the PHY has been preconfigured by an external component
->>>> (e.g. the
->>>> bootloader), which is actually a scenario that I didn't verify.
->>>>
->>>> However, this just another way to expose a limitation of the current
->>>> approach
->>>> for managing the TMDS character rate: done via the Common Clock Framework
->>>> API
->>>> instead of the HDMI PHY configuration API.
->>>>
->>>> As a matter of fact, it was actually an item on my TODOs list for quite a
->>>> while,
->>>> but blocked until recently due to several dependencies waiting to be
->>>> merged
->>>> upstream.
->>>>
->>>> Hence I took the opportunity to finalize this task - please give the
->>>> following
->>>> commits in my rk3588-hdmi-debug branch [2] a try:
->>>
->>> I've just realized I introduced a regression while doing some cleanup work,
->>> hence
->>> please ignore this until further notice.
->>
->> I think I got this working properly now, at least it passes all the tests I
->> could run.  The updated commits in [2] are:
->>
->>   fa7cd1e75aaa ("phy: rockchip: samsung-hdptx: Fix rate recalculation for high
->> bpc")
->>   8048db5544da ("phy: rockchip: samsung-hdptx: Exclusively use PHY config API
->> for PLL changes")
->>   0085a382dfd0 ("[DEBUG] drm/rockchip: Add HDMI verbose logging")
->>
-> 
-> applying these commits solves my problems. I tested 1920x1080@60, 1920x1080@50
-> and 1920x1080@30. All work now. Thanks for the quick fix! 
+Noticed a regression with VRR after updating the kernel. My main
+monitor's VRR stopped being recognized, I was no longer able to enable
+it in my desktop environment settings and
+/sys/kernel/debug/dri/0/DP-1/vrr_range showed a range of 0 to 0. I did
+a bisect on the linux kernel git tree, and found that the commit
+introducing this issue is 0159f88a99c9f5722dbe52ac42faf3446f371dea.
 
-Thanks for the quick test!
+The monitor is connected via DisplayPort, no converters as far as I
+know. The GPU in use is AMD Radeon RX 6700XT. There is another
+monitor, connected over HDMI and it has VRR working in all the
+versions I've tested. Attached the DisplayPort monitor's edid copied
+from sysfs.
 
-I can add you to cc: when I submit the series, so that you may provide your
-Tested-by tag if you'd like to.
+#regzbot introduced: 0159f88a99c9f5722dbe52ac42faf3446f371dea
 
-> And the positive side> effect seems to be that you can now take one of your
-> old todos from your list.
+--000000000000d620f9064b34e329
+Content-Type: application/octet-stream; name="main-edid.bin"
+Content-Disposition: attachment; filename="main-edid.bin"
+Content-Transfer-Encoding: base64
+Content-ID: <f_mlu0pn6z0>
+X-Attachment-Id: f_mlu0pn6z0
 
-Indeed. :-)
-
-Regards,
-Cristian
+AP///////wBNZxMnAAAAABkhAQS1PCF4Ol3QqFNHqyEFUFSvzwBxT4GAgQCBwKnAlQCzAAEBal4A
+oKCgKVAwIDUAYVwhAAAaAAAA/QAwS9/fKAEKICAgICAgAAAA/wAwMDAwMDAwMDAwMDAKAAAA/ABE
+RVhQIERRMjdOMgogAXcCAzTxSwECAwQEDhMAABAAIwmHB4MBAABlAwwAEABtGgAAAgEwSwAAAAAA
+AGfYXcQBeMAAAjqAGHE4LUBYLEUAYVwhAAAaNnYAoKCgKVAwIDoAuoghAAAeg0iAGHE4LUBYLEUA
+DyghAAB/AAAAAAAAAAAAAAAAAAAAAAAAAAAAGA==
+--000000000000d620f9064b34e329--
