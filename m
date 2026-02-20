@@ -1,123 +1,77 @@
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 614F228469B
-	for <regressions@lists.linux.dev>; Thu, 19 Feb 2026 22:33:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.167.44
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771540396; cv=pass; b=uQe9f7tLoFlqc8Yg9ZJZ63t5As2NtwKjtz4F2G0c0lH4pytdtsSHDHTvgJGNL+JEmMK/XU1hOhiJc3M4UswwYH5xESGKAOTJk7qIf766R6m8pm2Llq76VhyFJ4H/VkmJLj7zCfFp//PDkiZImCzr2xuZL3Zxn64uxk1l0Ew7Nn8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771540396; c=relaxed/simple;
-	bh=0c86jRAYAOOniszwr225rxzBQAZQQwvb90WTwPNyTgs=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=uv2uLcu0/nkU8froaATRUvqtrV6UHQOa4cgV5ybcbFAAJvOZcXTPY0nK2acDsMiUhaJaSrWIqcp1uJySc/qRHlJk+4V9H5/5rfmdQ8jxjE3VYdezQciz+vkQDN33dLLqxrPDyyTsn4rpAcO5AJjtVjyjuWVIHr2ExEBinCcaWRk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=heEcAXRM; arc=pass smtp.client-ip=209.85.167.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A403322A
+	for <regressions@lists.linux.dev>; Fri, 20 Feb 2026 02:26:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1771554384; cv=none; b=FigZ04rjzEYMn5spmSbyfTuG/+S+IpK3PbdvEO07wpa5bhcAqr2MG6e8XrsodEmIEVjbl1ZZS4i27AIsNMLj7Tv4Bp/Oip77r5tRjLVvzmptFcO4864vQZHzHxH9/r+TUCbJ6531rClQHlVBjouPtkLxNmKEBj0VufHBNaTmeYY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1771554384; c=relaxed/simple;
+	bh=DHcpy+3t3n0jZl79hCY90lUh34so7m5K6sHuh95C6ME=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hhlqkBBgWnk9SGxXPO9zHuZgAEsqzzv97tz8p2lCdnpJKwVDTlj4u16/8ncAY7ruTYzXntmwWC+AbpqIhjLrUN3RBXuU/EahHzlsHiFlyBSWNjv81dVoJrNQzWPfbbs4atnJav8cjLqpAp47zbXj1zybgxTC8Vi6CzeB9vJAexk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pgTnpWrM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="heEcAXRM"
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-59dd4bec4ecso1642834e87.0
-        for <regressions@lists.linux.dev>; Thu, 19 Feb 2026 14:33:15 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1771540393; cv=none;
-        d=google.com; s=arc-20240605;
-        b=JKj3AGeAT7s+zC4zw6DVv5LSl/KAufZcnrBYFYrcO43T6wC4eYXm1oHedyHV5T3FbL
-         kvZl9rOmnX7dwWTyMdr7wfjhx7zePCNhDBl5RrQPEDFcZ4Ddgym/NVnEO3xXN0gBEJ45
-         9QELGL5K6pIUqpGjNHQQMjtSlC0I+QioSXacnywW/E4LxdaxrGZE3VmxNPdifBo/yVvV
-         7/SRgUddlaNHF97lJWKQTf49BrbebDBhD2bvs8nHSJ37GA+yQT7ufyX17CFKRUXzd5cB
-         SzjcFxw6YYVtdxCLEtarg54ukgMBqmeaR9VvbMdTkOwZTMaGN06XKer6ncu4u6JeZ6Dd
-         yPLg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=cc:to:subject:message-id:date:from:mime-version:dkim-signature;
-        bh=0c86jRAYAOOniszwr225rxzBQAZQQwvb90WTwPNyTgs=;
-        fh=lxkoBtBdbcxhsjSrwTlGSdZ6UOhnEpP4AAr/c8lgK64=;
-        b=SG5kKoB8+aDHRD+IxOAuckaKPq8gskEurTPjiQ7gaHGwUyEl4maARN9700KtFRuRAj
-         TG3jpvUpFkEdojJK641VbeKqdwJoOS+Y/DKqOrgqFrnf3TZKE8uMIfjBvYc2KkBmrkm+
-         UhcHil6iqAGEU7NdBLMCf3oJcrKMVkS812WfuuT6Mw2DypuVCYJFV8L+zf882jecp950
-         QAopyKX1ZZX+b2qlMvOaP97U+BYC+PKEKcTfpnrkPFCrolRaOyzKLffpWPcfr9VPVbcO
-         gjG4lSJqBSoD1C6rkL+NQLqyA0MNnjV7oHLg85SlPye5ROnCTkYjya2MacoLaukOShzB
-         fPUw==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1771540393; x=1772145193; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=0c86jRAYAOOniszwr225rxzBQAZQQwvb90WTwPNyTgs=;
-        b=heEcAXRMOz5sd/y7mkTkbrxvGAk9PA6dzqDFYjj6kz4qwLD55TO5H0O8uSZt9xO1mp
-         KMGztJ45z+QWBNYg+P+hygiq6jg0ti12WEM10a2EUQr1N0CjxauyAP5+rp+FyClhEXV1
-         oOmgDy1//BEFWwiueoRJXUpnGboVqu5wG6GMCDUjZmOZYMfv+g8tm7MT8HTwOTXWIvUX
-         tfvY6xtSnCLalot8pqUe653Mh9n5J/4NpJNIBDMu1kw2bzJfiPAF4s1fWQU1IWZAW0am
-         eguGG3xw92s3B6JlSIlGZswJS4hBoVcFgbwGWOxMY0VHtFwqdUSRXt7m+HknOXa7k8Dh
-         /yxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771540393; x=1772145193;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0c86jRAYAOOniszwr225rxzBQAZQQwvb90WTwPNyTgs=;
-        b=BQYTljK01ywfzMuArmeIrqZgDXKkILsejL0IvOavBN3D0XBkfqj6IZLyzbbVLxFMTZ
-         gVypull6IheMwLZADpQApt9LyELpMnBRiX5TMP40CL0HrxBG21k07WOpxKEm1iXc4qay
-         KGICORGQDySlndVcjC2kbYp8G3bz+lCvUIKCrgLp5r2Tw8vVXf/bW7YUAQ2g2DRIfPYU
-         NBO7C6cWTe0j5QwtzKaHc+pl60zAgfS+uVHqd3Fk1ez/dPOYoAbXjJ8t3JLQhwCD7PAt
-         EllnU2DIxVy50GvdtsTb3bpG1OpKdpW7w+llI7nagtQCQ+AltCTLZ78QZRkj2OQFuyj3
-         Jreg==
-X-Forwarded-Encrypted: i=1; AJvYcCXRT1yCw25/q0Fgu9JcQAFUek03DsHyXHY5Dg6+DpnkgKhNBFRjbE98C1vjIlonElchiQniyedI33tj1g==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yw6F0D5akwTYHZvl+Q4UxE+CfNTb4qRBlHIf9hGQ9KIYE0WSRLk
-	OOxlWB7Uy2bCZhuZrWFTx6HrlJ8ne8rxhctl0D9nIxLcRRriScF2zkcuE9uvPHcsPvqTYzdPszM
-	nhlRmeUCCj03OQrlWv3bo3HY5u32R2A==
-X-Gm-Gg: AZuq6aLfhGYkWQ6itvmaWV76mWM2Fw9xz+ReVLrn6W2BT/N5OGgOUiJs8P4H6hPZONF
-	5OxjIeq59rXfBvufw5J/vtIf91hsoLyzvWL6gKLFkk3YWT2ya8KbI82lfidW2UeSq7OFc7k41hO
-	gGibF+OGJFH/ORlfQJ/UyON88cQ8MIXmVd+5soxabTEdzr9HEBFxuJ3Qks/SPe57ZLytpoqNP/r
-	o9WUPnWokhGJ/bNdmaiUjxB7VJXXzZNYLcpC0lLdVJpj2DMcYbBCKXdnCPwUffZ50cfVghH1YpE
-	tJu/CUkYhJxEms9lsQ==
-X-Received: by 2002:a05:6512:23a4:b0:59d:f47c:100d with SMTP id
- 2adb3069b0e04-59f83bbad74mr2430338e87.24.1771540393099; Thu, 19 Feb 2026
- 14:33:13 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pgTnpWrM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 855D4C4CEF7;
+	Fri, 20 Feb 2026 02:26:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1771554383;
+	bh=DHcpy+3t3n0jZl79hCY90lUh34so7m5K6sHuh95C6ME=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=pgTnpWrMHEyOP0K4FUeE+bfKRi9mMZyMT44jfyK8GIBj4oFHZy7Ys1D/ZlnYljqAf
+	 VfPJcNaduC1ScCPsoU0isRhjhITHsQj1U7ZqLtH6UoKTzq2QDHDxCbWUS0cdg+MTFQ
+	 pmrCwKNSA6zmwMsI0YfTwM9Uhz13dfO6RGMXvErGzpbv7Yq9d2jOgfcDVuwoJUDyhU
+	 pAO8HAjuIlZnVTB5hX8BiZDQ8jURsN9uQPVEkLkX66FRoH/6iin1rnuu5cojxWEYMR
+	 bTsPmF58/ZnWlr1zW5Jcg9MDbVbPBqY7Yo5rXZemk1jEBZb6VN9iu9ASz4h9h4RodU
+	 ul6jvXFEjAc+A==
+Message-ID: <090d89a2-4f80-44ef-827c-6462d8948493@kernel.org>
+Date: Thu, 19 Feb 2026 20:26:21 -0600
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: John The Cooling Fan <ivan8215145640@gmail.com>
-Date: Fri, 20 Feb 2026 01:33:01 +0300
-X-Gm-Features: AaiRm51jvRuCF3Uzbemg_3Ogc0GaotIPeGjtPgaNcd2hy_qmzlM99LaySlt9CPA
-Message-ID: <CAKx_Wg7_HBxuq5W4T_AmoFYJGQpa6TAS_Fx9SUzyy1itPmj5Bw@mail.gmail.com>
-Subject: [REGRESSION] VRR not detected on a DisplayPort monitor using an AMD GPU
-To: amd-gfx@lists.freedesktop.org
-Cc: dri-devel@lists.freedesktop.org, regressions@lists.linux.dev, 
-	mwen@igalia.com, mario.limonciello@amd.com, alex.hung@amd.com, 
-	daniel.wheeler@amd.com, rodrigo.siqueira@amd.com, alexander.deucher@amd.com, 
-	harry.wentland@amd.com, sunpeng.li@amd.com, christian.koenig@amd.com, 
-	huangalex409@gmail.com
-Content-Type: multipart/mixed; boundary="000000000000d620f9064b34e329"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] VRR not detected on a DisplayPort monitor using an
+ AMD GPU
+To: John The Cooling Fan <ivan8215145640@gmail.com>,
+ amd-gfx@lists.freedesktop.org
+Cc: dri-devel@lists.freedesktop.org, regressions@lists.linux.dev,
+ mwen@igalia.com, mario.limonciello@amd.com, alex.hung@amd.com,
+ daniel.wheeler@amd.com, rodrigo.siqueira@amd.com, alexander.deucher@amd.com,
+ harry.wentland@amd.com, sunpeng.li@amd.com, christian.koenig@amd.com,
+ huangalex409@gmail.com
+References: <CAKx_Wg7_HBxuq5W4T_AmoFYJGQpa6TAS_Fx9SUzyy1itPmj5Bw@mail.gmail.com>
+Content-Language: en-US
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <CAKx_Wg7_HBxuq5W4T_AmoFYJGQpa6TAS_Fx9SUzyy1itPmj5Bw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
---000000000000d620f9064b34e329
-Content-Type: text/plain; charset="UTF-8"
 
-Noticed a regression with VRR after updating the kernel. My main
-monitor's VRR stopped being recognized, I was no longer able to enable
-it in my desktop environment settings and
-/sys/kernel/debug/dri/0/DP-1/vrr_range showed a range of 0 to 0. I did
-a bisect on the linux kernel git tree, and found that the commit
-introducing this issue is 0159f88a99c9f5722dbe52ac42faf3446f371dea.
 
-The monitor is connected via DisplayPort, no converters as far as I
-know. The GPU in use is AMD Radeon RX 6700XT. There is another
-monitor, connected over HDMI and it has VRR working in all the
-versions I've tested. Attached the DisplayPort monitor's edid copied
-from sysfs.
+On 2/19/26 4:33 PM, John The Cooling Fan wrote:
+> Noticed a regression with VRR after updating the kernel. My main
+> monitor's VRR stopped being recognized, I was no longer able to enable
+> it in my desktop environment settings and
+> /sys/kernel/debug/dri/0/DP-1/vrr_range showed a range of 0 to 0. I did
+> a bisect on the linux kernel git tree, and found that the commit
+> introducing this issue is 0159f88a99c9f5722dbe52ac42faf3446f371dea.
+> 
+> The monitor is connected via DisplayPort, no converters as far as I
+> know. The GPU in use is AMD Radeon RX 6700XT. There is another
+> monitor, connected over HDMI and it has VRR working in all the
+> versions I've tested. Attached the DisplayPort monitor's edid copied
+> from sysfs.
+> 
+> #regzbot introduced: 0159f88a99c9f5722dbe52ac42faf3446f371dea
 
-#regzbot introduced: 0159f88a99c9f5722dbe52ac42faf3446f371dea
+Can you please share your bisect log?  There was a regression from that 
+commit but it was already fixed a long time back.
 
---000000000000d620f9064b34e329
-Content-Type: application/octet-stream; name="main-edid.bin"
-Content-Disposition: attachment; filename="main-edid.bin"
-Content-Transfer-Encoding: base64
-Content-ID: <f_mlu0pn6z0>
-X-Attachment-Id: f_mlu0pn6z0
+commit 7f2b5237e313 ("drm/amd/display: restore invalid MSA timing check 
+for freesync")
 
-AP///////wBNZxMnAAAAABkhAQS1PCF4Ol3QqFNHqyEFUFSvzwBxT4GAgQCBwKnAlQCzAAEBal4A
-oKCgKVAwIDUAYVwhAAAaAAAA/QAwS9/fKAEKICAgICAgAAAA/wAwMDAwMDAwMDAwMDAKAAAA/ABE
-RVhQIERRMjdOMgogAXcCAzTxSwECAwQEDhMAABAAIwmHB4MBAABlAwwAEABtGgAAAgEwSwAAAAAA
-AGfYXcQBeMAAAjqAGHE4LUBYLEUAYVwhAAAaNnYAoKCgKVAwIDoAuoghAAAeg0iAGHE4LUBYLEUA
-DyghAAB/AAAAAAAAAAAAAAAAAAAAAAAAAAAAGA==
---000000000000d620f9064b34e329--
