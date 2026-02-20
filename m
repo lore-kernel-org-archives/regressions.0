@@ -1,51 +1,40 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [185.244.194.184])
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C6EF2D7DC8
-	for <regressions@lists.linux.dev>; Fri, 20 Feb 2026 09:11:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.244.194.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC2C319DF8D
+	for <regressions@lists.linux.dev>; Fri, 20 Feb 2026 22:48:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771578717; cv=none; b=mRAHwKB83XdE3ATHs5dYy+wuTXocTPB+xClqKGwYZTPrjvlu4A6T6eyZa+KYSr8SCwxmes9ceisGBhY4d08T7KAi6+JKk6fSYCr7kFRKGPImqIezGtB9LjS/xgZTfhfBmhTcrfMb7EcIq9Jl14gLY2BpPPddbFATpiLycc3OcB8=
+	t=1771627688; cv=none; b=EyBF6V6kkQYrJCyneI4P79msAuUBBnSiJFa48l2RrBM6ulj4rgDlI58F8zpoQX9W8/HIr9CImUOQtHCTI+T2GtevjWaMcnvHPiTNeUDjOewMOjDJCnfragg9pOVq73Nvz8x9XIOCUezzUMUkbyEWUjIReY2r7CUw6YtgXYdwOqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771578717; c=relaxed/simple;
-	bh=HnNCuAac8FlRvxa2bx4UrCbRdA77eCnoPJaAIqVbiGo=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=puDQIdQQZRLagagKnNhH0Z4tDjVOHBb3k4LbmZBQKLNc9eFwAS+VD7STPHUd6aE6Ior32XVIXGUW4b56GyjMYh5esal0GOwwWnKeP+BZzXLTDkDKjBhsK6zoDOlDuF++AnOGyYQkk42fR4hw0VbwqorwpbViaOa3ez+uEeyMV4c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=VliykZaA; arc=none smtp.client-ip=185.244.194.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1771627688; c=relaxed/simple;
+	bh=xUajZ0NzQHpcohMetE5S2zhjBjZrU4mIhAe7+Gu+q5k=;
+	h=Content-Type:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To; b=myoaLNFBYeqBm3u90wbrrc8JHUArJypQcBdvnCDNa7BiFzDA5axgWqwb/UTpWnUI+um1/XpuCcxqbrKHyuPaFO3gWD7gEjoVy/YK91i7GjWWtoURtOOgdWhGZOlIsZLwS8cldqnob1UGnH7BkGspgyz3XOsj2RFDQ/zXeVGrhmA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=WeY//jxx; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="VliykZaA"
-Received: from relay01-mors.netcup.net (localhost [127.0.0.1])
-	by relay01-mors.netcup.net (Postfix) with ESMTPS id 4fHPTz5HYqz94HH
-	for <regressions@lists.linux.dev>; Fri, 20 Feb 2026 10:05:27 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1771578327;
-	bh=HnNCuAac8FlRvxa2bx4UrCbRdA77eCnoPJaAIqVbiGo=;
-	h=Date:Subject:From:To:References:In-Reply-To:From;
-	b=VliykZaAoZaRbK4Qz5vuWfke9JvE6tnozcBhpVtH4ySog6zpucj6r7nKxZzGYgAl1
-	 0y8nTieuxwIvZ/4FNgK7hmmnETWWjpdAKwWu/VV6wOh0yjK2NyUW+vxLPC27Mdv1we
-	 mLRNqcH/SnEtcFLfQE7ietnX3A46IKlVeJFD3WecdHk4qD8Zh0nv1SO0LB8Zl9szlH
-	 uAbnsHQlsfYQrnq8uOzF6w9wOeyp1uWgDnCG0tBXyNA3z/rAN6w6aXgrSW2oEbooZ+
-	 wB7zlpXdMaWOBDkbV4g3gwfMfvPyMOINJGMbxW6wQUwAJaRmvYsXu9RLnzsnbfQk+m
-	 m+3hRoPoxx71g==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by relay01-mors.netcup.net (Postfix) with ESMTPS id 4fHPTz4bXxz7vfH
-	for <regressions@lists.linux.dev>; Fri, 20 Feb 2026 10:05:27 +0100 (CET)
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4fHPTz32cBz8sgS
-	for <regressions@lists.linux.dev>; Fri, 20 Feb 2026 10:05:27 +0100 (CET)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id B3F6866F46
-	for <regressions@lists.linux.dev>; Fri, 20 Feb 2026 10:05:26 +0100 (CET)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <6c061340-117f-4fe9-91a7-95de606d8d7a@leemhuis.info>
-Date: Fri, 20 Feb 2026 10:05:20 +0100
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="WeY//jxx"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Content-Type:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=P8B+6GXZ399ZWge2H0cM69XOHnrsD1JgRoJzji7/1GE=; b=WeY//jxxlCYd+7abkehDiel/sa
+	EuW99dwTqYOmaj4RoIMr18+M3hEeSb52CPMjA5BoQbHMxJqoXpGl7koSDP9ysTZzIjAOlIySc0iAI
+	KbrXEQIPj5cv8jz/nSKqJqSUhZ6TpShoNK7zqUpSsa4Dq+c3YP7CT8KrQ66XwEvBz4HSV5A1lHTFU
+	me2HFhvUgEyo+KDLKz8C1VD6Cp1B9oB0eGym+Otr+zni4vUjiXf75tPqhpfJxWB+wIIuik1ots9gO
+	8GARBdSh5WOCt+2tnK7rdJRMIeJJaWUj1xJ8+000nVYsXW2IN8gjSivH6qYJQ+y6cVo37sGBN3dZH
+	ZzatUY+g==;
+Received: from [186.208.68.119] (helo=[192.168.18.14])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1vtZHy-003Am8-6d; Fri, 20 Feb 2026 23:47:58 +0100
+Content-Type: multipart/mixed; boundary="------------OEMSXoTdQf21wgWlM0UBxwwI"
+Message-ID: <bed447c7-07a3-46a8-9bcf-da352810883b@igalia.com>
+Date: Fri, 20 Feb 2026 19:47:50 -0300
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -53,44 +42,67 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: [REGRESSION] VRR not detected on a DisplayPort monitor using an
+ AMD GPU
+To: Ivan Sergeev <ivan8215145640@gmail.com>,
+ Mario Limonciello <superm1@kernel.org>, amd-gfx@lists.freedesktop.org
+Cc: dri-devel@lists.freedesktop.org, regressions@lists.linux.dev,
+ mario.limonciello@amd.com, alex.hung@amd.com, daniel.wheeler@amd.com,
+ rodrigo.siqueira@amd.com, alexander.deucher@amd.com, harry.wentland@amd.com,
+ sunpeng.li@amd.com, christian.koenig@amd.com, huangalex409@gmail.com
+References: <CAKx_Wg7_HBxuq5W4T_AmoFYJGQpa6TAS_Fx9SUzyy1itPmj5Bw@mail.gmail.com>
+ <090d89a2-4f80-44ef-827c-6462d8948493@kernel.org>
+ <DGJFVPAQJA15.378GMU7XZXLU@gmail.com> <DGJGDIRQWDG7.XHHKF6UQP0HG@gmail.com>
+ <c70fe261-7fb0-4af5-b755-f02b193c8c5f@kernel.org>
+ <DGJH30US2XMK.S2HOHR14LIW0@gmail.com>
+Content-Language: en-US
+From: Melissa Wen <mwen@igalia.com>
+In-Reply-To: <DGJH30US2XMK.S2HOHR14LIW0@gmail.com>
+
+This is a multi-part message in MIME format.
+--------------OEMSXoTdQf21wgWlM0UBxwwI
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <177157832691.4002597.2687474055907662754@mxe9fb.netcup.net>
-X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: B3F6866F46
-X-NC-CID: f/Getzs0iAOAJHs3sJQx+JHAW3wSelIMmDPP2HpsaiyuclA3xKs=
 
+Hi Ivan,
 
+Thanks for reporting this issue and follow-up bisecting.
+Can you check if the attached patch resolves the issue?
 
-On 3/9/24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
+Thanks in advance,
 
-#regzbot report:
-https://lore.kernel.org/netdev/CAA2RiuSnH_2xc%2B-W6EnFEG00XjS-dszMq61JEvRjcGS31CBw=g@mail.gmail.com/
-#regzbot fix: net: tunnel: make skb_vlan_inet_prepare() return drop reasons
+Melissa Wen
 
-#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=221097
-#regzbot introduced: v6.18..v6.19
-#regzbot title: net: wireless: ath12k: Black Screen/Breaking KDE/System
-Hangs on boot
+On 20/02/2026 00:35, Ivan Sergeev wrote:
+> On Fri Feb 20, 2026 at 6:14 AM MSK, Mario Limonciello wrote:
+>> Can you check out at your bad commit and apply just 7f2b5237e313 at the
+>> bad commit?  Confirm that fixes it.
+> Applied 7f2b5237e313 on top of 0159f88a99c9 and the issue persists.
 
-#regzbot report:
-https://lore.kernel.org/all/587f25e0-a80e-46a5-9f01-87cb40cfa377@wildgooses.com/
-#regzbot introduced: 3e86e4d74c0490e5fc5a7f8de8f29e7579c9ffe5
-#regzbot title: kbuild: extlinux can't boot kernel anymore
+--------------OEMSXoTdQf21wgWlM0UBxwwI
+Content-Type: text/x-patch; charset=UTF-8;
+ name="vrr-without-continuous-freq-support.patch"
+Content-Disposition: attachment;
+ filename="vrr-without-continuous-freq-support.patch"
+Content-Transfer-Encoding: base64
 
-#regzbot report:
-https://lore.kernel.org/lkml/20260210013733.1901270-1-nichen@iscas.ac.cn/
-#regzbot fix: 7c375811b5117dd26e36fc508cff1fb5cd4121aa
+RnJvbSA1ZDVjNDA1MmZjNjRhNjM4MDNmMmYwYWNmN2MyNzYwYjViOGI1MjE4IE1vbiBTZXAg
+MTcgMDA6MDA6MDAgMjAwMQpGcm9tOiBNZWxpc3NhIFdlbiA8bXdlbkBpZ2FsaWEuY29tPgpE
+YXRlOiBGcmksIDIwIEZlYiAyMDI2IDE5OjM4OjQzIC0wMzAwClN1YmplY3Q6IFtQQVRDSF0g
+ZHJtL2RybV9lZGlkOiBpZ25vcmUgY29udGludW91cyBmcmVxIHN1cHBvcnQgZm9yIG1vbml0
+b3IgcmFuZ2UKCkdldCB0aGUgbWluIGFuZCBtYXggcmVmcmVzaCByYXRlIGV2ZW4gaWYgZWRp
+ZCBkb2Vzbid0IHNheSB0aGUgZGlzcGxheQpzdXBwb3J0cyBjb250aW51b3VzIGZyZXF1ZW5j
+aWVzLgoKU2lnbmVkLW9mZi1ieTogTWVsaXNzYSBXZW4gPG13ZW5AaWdhbGlhLmNvbT4KLS0t
+CiBkcml2ZXJzL2dwdS9kcm0vZHJtX2VkaWQuYyB8IDMgLS0tCiAxIGZpbGUgY2hhbmdlZCwg
+MyBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vZHJtX2VkaWQu
+YyBiL2RyaXZlcnMvZ3B1L2RybS9kcm1fZWRpZC5jCmluZGV4IDI2YmI3NzEwYTQ2Mi4uMTdj
+MzJiMzMxNzJlIDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vZHJtX2VkaWQuYworKysg
+Yi9kcml2ZXJzL2dwdS9kcm0vZHJtX2VkaWQuYwpAQCAtNjUxNiw5ICs2NTE2LDYgQEAgc3Rh
+dGljIHZvaWQgZHJtX2dldF9tb25pdG9yX3JhbmdlKHN0cnVjdCBkcm1fY29ubmVjdG9yICpj
+b25uZWN0b3IsCiAJaWYgKGRybV9lZGlkLT5lZGlkLT5yZXZpc2lvbiA8IDQpCiAJCXJldHVy
+bjsKIAotCWlmICghKGRybV9lZGlkLT5lZGlkLT5mZWF0dXJlcyAmIERSTV9FRElEX0ZFQVRV
+UkVfQ09OVElOVU9VU19GUkVRKSkKLQkJcmV0dXJuOwotCiAJZHJtX2Zvcl9lYWNoX2RldGFp
+bGVkX2Jsb2NrKGRybV9lZGlkLCBnZXRfbW9uaXRvcl9yYW5nZSwgJmNsb3N1cmUpOwogCiAJ
+ZHJtX2RiZ19rbXMoY29ubmVjdG9yLT5kZXYsCi0tIAoyLjUwLjEK
 
-
+--------------OEMSXoTdQf21wgWlM0UBxwwI--
