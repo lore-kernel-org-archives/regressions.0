@@ -1,237 +1,138 @@
-Received: from mail-vk1-f176.google.com (mail-vk1-f176.google.com [209.85.221.176])
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48AB247A6B
-	for <regressions@lists.linux.dev>; Sun, 22 Feb 2026 21:56:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.221.176
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771797376; cv=pass; b=q9vl+wKmBbyvvKvOx6WW+v8j3KB8bMn2D5lglZ/Gys5pUvEzZgQecBK/p7jsNZAl878ogaaPtGEMA/L2sarQtF6kouO8EQ8Fw7sPsrz6hiFO4Vqi+L+suYCyBM6TMrGFu0hvZ4xZp5iLr5xWoMqBvIG14gu8YT9e3MQj12D0XJ8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771797376; c=relaxed/simple;
-	bh=JmSvQO5XqyT6TdvcO2hqlfP/xs6Gk//750J3WTyc8u0=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=MLKSn4Hke5B614LQ8u2Ex3rUK3BwUiAKVsjcXkve+CKidznHPjIDot7ZvF7rnYvc7sm3ZXClmi9C4iBjzrE3aRNpuEXu3euLjdcHz7/5pXxMVLVpXsJunZ4kvlX1AaIeuX4I66rBAzDwxMgR30xIjbZaCF8Yr3yQql/D+rWac0Y=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ftdvYv1H; arc=pass smtp.client-ip=209.85.221.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52EB3274FEB
+	for <regressions@lists.linux.dev>; Mon, 23 Feb 2026 02:38:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1771814304; cv=none; b=monzdkkFEe9cm8sDN3uXPMh3XBAu+j+1LyoS3R9pSgh3D0E+4R2wtmpqPlXagLrNE2yIqwvNm98NTqg8FJW9Xjpouyku86pV9De2Yw3G61LyHXZAaExeqNriCKkYFMIJzaICqh8Vmn3z6rNFSGWE1CvH05pv27iYZLYguaGoLw4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1771814304; c=relaxed/simple;
+	bh=hQZ4RzCCncvW2OCRt6NdIBv7oMg2RYjH+aIKCbca1uE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=jOpU/FBRLY0Zcqk0SLY2Z0Lzc4jPA4qyEYNHo0pqGyQuj9v3vA5ViN9+FvvBY0c1X8ZWl9pJn2ll593y4vAUpxu9qAtHGiWeXI58D19yCYatklrTvxb7aG+xeV+iNh53Ptq4yClPnUXYC4j/aSjoqpBalWs2dQL8EjjdprZuayw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z8kAfHNS; arc=none smtp.client-ip=209.85.210.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ftdvYv1H"
-Received: by mail-vk1-f176.google.com with SMTP id 71dfb90a1353d-5674d8be45eso1461042e0c.1
-        for <regressions@lists.linux.dev>; Sun, 22 Feb 2026 13:56:15 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1771797374; cv=none;
-        d=google.com; s=arc-20240605;
-        b=JZnZo3ZylM3oMHUpSyhcHH2Z02OR0HvzCgUjUgdEnr98xs+d0DuvlJ1coUptDr1ADr
-         cDz3/8V6wWM4fUj7fkjdHfUoIPqj0KgyUWtsMqyEbn5/pxXbXH9BCeVDlCrIm7hbw+Z0
-         H+lNBisLuhJBetluVTflYNh7QQvvOKSddOfgUzt78r8RLr7CBidflOsAFOgLPJf4sC2W
-         ivkK7HpES528SSuUSxCFMZ9IZH6bkVefcdGiO+Cqua7xAf3a8+v3Dmgpx2YvYXDKpbWI
-         pSioUZoeGl19O5xqlFSE2iIdCC+RycPFdEo5veFniPxxTsP5AUmR9Vd87PsI7+6Un9Tm
-         Iceg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:dkim-signature;
-        bh=fvZFs6ZWQcArHoivTdoRPMVBttlGZZKU4uro3YAyvz8=;
-        fh=E5g3maHsnyUMAiwVmwUyq6VP4zbCj1sjpTAtNm8Z8AY=;
-        b=IBopUxWxQdWvjItPdCqVy2MbYgzfC8pMErIkWj0a1UlKt0YUPrJ982Jt5omIu1jQTr
-         wKFvFi3dtS0lcLYaliZKUFuwUGVVcX15WgpWPB480F9kAOcK8Ya8ghI4QboAKt2nE1wo
-         PqUV9l41Hlp/lvAeBsIl3ixWLCxvVQu3n62Dc1I/KvtmYxNAaiDUxRSKKe21vkw+gtbn
-         drvB5ZP+mjVUOHilwEIAukC6+I41kPUIWRNYM0V2fCX/23r3lVvkPstMXKm87Axver9n
-         GvqqFHts9iJFNmxu0CkOfb04h+Jlbiu3rhvYrG5aD2SoUOpIOSew+zz5+lvll0TDt1E1
-         vAtA==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z8kAfHNS"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-823081bb15fso2266505b3a.3
+        for <regressions@lists.linux.dev>; Sun, 22 Feb 2026 18:38:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1771797374; x=1772402174; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=fvZFs6ZWQcArHoivTdoRPMVBttlGZZKU4uro3YAyvz8=;
-        b=ftdvYv1HxQOz5+mvRhbpYv3QEqTUGkWc2+iwKWLjwYeAUbf0+n9lrc6PYwsCLLMTfr
-         fLHNSqqF8FqlWh5LHNUZmANSq+GC95QeWGICE27TDlKQUxOrqGX7v5Gpm40NRbVCpKyw
-         KhhkI0xlkXzWEwyAb6xYj1QZo4Rjb7qf2El0GT+dzqN/PcS9hZx4keGCVMphk5m1PnGY
-         vbcExbD35Db06QyjPx9Ya9DV2ci9mCyqg4YB+4AAmDzEWFoKw5wkO/eTKVlOKZFAL9wW
-         +aeZBMb/8siq0hgpfoAAOAA3meW549tvEE502yrNfxeu5FO8GMN5SgIyJOgmUAncdnDu
-         LyXw==
+        d=gmail.com; s=20230601; t=1771814303; x=1772419103; darn=lists.linux.dev;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=kMT8wFDz7qD4WZoEwD8t8Q2gmp9vlJakzzcqRJg3S4U=;
+        b=Z8kAfHNS+Unwi+c+2HivkFkH/x4hWX1qVmtiCmJdTCYohU182FcBvrFFt5MpbW2ccq
+         i6D6UotUf64eu8dT1YdbAiPfE0ywCLtkVXjGcDc/r/NnzUuEpM45hi9VcNwrJpOPj83C
+         ks+pKcdRxVyvE3GKhrstkEE6xV7H8LMwVBhzbdBrdtP6T18Mnlgl6ysNKG4cuyMzFppD
+         wvUDWcT36uP2/gdT/TfNcVOdNVB8kjkh1BtWBiDNl6shDxBiSYOmnl9YurE7xWjdw4e7
+         XveE2v7bXMMBSXD1t2S31DyzwN1pwhIKZAWNGgW6QDfhlGYIOj7bx8Qacds7fRFXmYzJ
+         UzeQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771797374; x=1772402174;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fvZFs6ZWQcArHoivTdoRPMVBttlGZZKU4uro3YAyvz8=;
-        b=Y29HwinQTIuB64MvX7s2Ko/bRf4ERwXspLHI2btFcQB9YZUusXireWKZ7dL3sWPHwE
-         tzQoyPXp2qthFgT11OBbPHpuW5B8MDYS1bYyr/Kx15YNxEjRjCY3/8y+JcsrFcJTqefx
-         GiUKGtBzt4QCPiE1S7XYk9bbAlNS0wdEM8MsC+HNMz/evdCQkBN6bkxkcatn7XaIyGa6
-         7KZy2Rwgs+sRGRMTW1NnMhE18AokxV6MW902vMtwutMQ8rX43mg+dhW+fb+xubfZB0qd
-         JdfkUwvS4GDHPSRCd6+AorRZkBC9I+ybBnnXtGRqxMAoJiJ0CFJGLVE+PtnCjxskcVWV
-         QWgQ==
-X-Gm-Message-State: AOJu0YxtPOANx+sApQOYDlwi4ozygwN+j9VioaKqSJPwf+GXugLwluN5
-	KylKgiI3NQ2msB/yGffT+YzifJ+R+tQfgNtva+EgrHv0vKRwWjILyjGbdA1uCtl8QvvPtAKa6wL
-	vs0Eb7dnxgMe6qXO62e5ZIAMp6baXc8c=
-X-Gm-Gg: AZuq6aLJPekDLJ3tNc0ytxrAV2p3xnenb0z/YSyqc7dS0cMSTH/RTVEOsZgVpin7Zuy
-	/P+jmCopXkBK0MBG1wbLgS2C6WruyYl37PmnYLT7ZHQ5ZHsT37rDO7VTtDP7Dk7pEv9WEsMKcj2
-	lis6qZbTdcCZJS7sTDFjnDbcJS4iTKi4oalRCq5a5dPWA/v5b69WmEa1O88r8M6hwecvQTl/eSG
-	jm7o1Ja1uaK102p0cV7y3kYKLeH+b2aSabQGZXt8oHRApFGZBnnUIFmtj5Fpr7I180SdrQW4Xs6
-	trAUfPLo9wD0JvhR0+Vql97vdtMNmW6dA6vDflJoN3NIuZI7p33ww3ep8X1G+kQh8lDpop3SyDY
-	Xxvl/vGJDHw==
-X-Received: by 2002:a05:6122:469b:b0:55b:1a1b:3273 with SMTP id
- 71dfb90a1353d-568e47abec3mr2195110e0c.6.1771797374061; Sun, 22 Feb 2026
- 13:56:14 -0800 (PST)
+        d=1e100.net; s=20230601; t=1771814303; x=1772419103;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kMT8wFDz7qD4WZoEwD8t8Q2gmp9vlJakzzcqRJg3S4U=;
+        b=hmxdtsGrjmbdefPx1QST1n+6A86OJ0FSoQPQL5AfWnNaWiMolBCyhK9GsGRSK2NGnT
+         vOOKalFzx6R0+zTi3ALPWLl9i3mReGRzzfhSZS/T62ULmai7LYPYvBBXEvhVwEECC0ik
+         LywVIUu9XItM6/RSIHSe7pY0xODP0bJkJZMwHFCgczJW9/uDGAl+QGuCYhW17W5QV5dk
+         AMEJ1qDw/1KSAbWG4xSoXpEqYjbG+SaXtWFuwUSFLHgjw8mm2CjWu+ypr4Qcnv2CnmFY
+         ynyhG44H1o+EaS3aDDPfG0VGYEo47+GwgEi/yo0zO8UjHuJk91YTzHUxj5hA7FSMtv3C
+         mi6g==
+X-Forwarded-Encrypted: i=1; AJvYcCVK4u1u0yHv/R4hRzTsa1LDd7zXjzlVNTS2B7xETconMJVDJLjs7Jio/lycqbDNX8AxOMQSjbgb9zHogQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxklpqvURPUo1IrGxoc9cHzmvqNUHsSAV2erNk4S3ISITp+xn3z
+	DQtVZqkAwWcE/g/G8smZ9UJBc7C3gJ97KJW4AhtTzp44S2siPimeAjX7
+X-Gm-Gg: AZuq6aIB1WSqmD1z5BOw0QK92tW6tNK10znUJpSp3O5drMeJONtmc3MJM1XZStdQRHx
+	dQaBGkwnOGxdhK458u9XBptZWqqFxDh00g1EF8kF83nwsYIC9gvGfNWwiGDEF/IEBCIWULqqHTD
+	jDX5DJeCC4qIGxvdSAOipyEO7C0lvSCZ3vS4Dn60VbvJCJs0dxAQGu0rITR7qlXq2fS73B9XBbl
+	xgfu2Q/p4DQkiAXeqNNszFg1Iqe5nuPLECcvjN9sP/DKfwW7VLGy5FEL8b0B3f5ZiugOopivkIU
+	whsgrQvfWFuhp2m2NNMEBXvTUJ8NupgG8eDj0lKC2eFBuLsnWZIXu53xS3m+kHMbuiEpkKlc6F3
+	QGN98bdtqJh2of+vtlGOPL/bZaw73WEZ5qrebNmhnQ8S1roTHaSJb2Tbs1Tr9pGny4tUFyYrDco
+	dG4zXVpb53H7wCtOvZcYzhdjrfsTSjFw==
+X-Received: by 2002:a05:6a00:338d:b0:81f:4d16:5d8a with SMTP id d2e1a72fcca58-826da95ecd2mr5239840b3a.29.1771814302529;
+        Sun, 22 Feb 2026 18:38:22 -0800 (PST)
+Received: from archie.me ([210.87.74.117])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-826f2fc0c9esm2399402b3a.8.2026.02.22.18.38.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 22 Feb 2026 18:38:21 -0800 (PST)
+Received: by archie.me (Postfix, from userid 1000)
+	id C59D2420AAB4; Mon, 23 Feb 2026 09:38:18 +0700 (WIB)
+Date: Mon, 23 Feb 2026 09:38:18 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Documentation <linux-doc@vger.kernel.org>,
+	Linux Regressions <regressions@lists.linux.dev>
+Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Jonathan Corbet <corbet@lwn.net>
+Subject: [REGRESSION BISECTED] Unexpected section title false positive
+ warnings on DOC: directive
+Message-ID: <aZu9muHK02vPPl8E@archie.me>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: =?UTF-8?B?QW5kcsOpcyBQw6lyZXo=?= <andres.f.perez@gmail.com>
-Date: Sun, 22 Feb 2026 21:55:54 +0000
-X-Gm-Features: AaiRm50d7jLgPyD4kdVKiyrm9CHXFWwo9PDyCMT5qvyZh7PMRFS6zqm3NMkVBvk
-Message-ID: <CAD0gVBsyzYNA6ydPwg9mJ9VQzYg4zPAi24JQ13-=0KtdbQ039A@mail.gmail.com>
-Subject: [REGRESSION] Display freeze on VT switch back to X11 since v6.16
-To: stable@vger.kernel.org, 
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans de Goede <hansg@kernel.org>, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, Jani Nikula <jani.nikula@linux.intel.com>, 
-	Rodrigo Vivi <rodrigo.vivi@intel.com>, Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, 
-	Tvrtko Ursulin <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, intel-gfx@lists.freedesktop.org, 
-	intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-# OVERVIEW
+[this is actually a repost of [1] since that thread didn't get any attention
+from the regressor.]
 
-Since kernel v6.16.1, switching from an X11 session to a text VT and back
-freezes the display on a ThinkPad P15 Gen 2. The system remains responsive
-over SSH; only the display is frozen. Bisecting identified commit
-d1b618e7954802fe ("media: uvcvideo: Do not turn on the camera for some
-ioctls") as the trigger. Reverting the logic change in that commit
-fixes VT switching
-on v6.16.1, v6.17.9, and v6.18.9, but that is not an actual solution. Wayla=
-nd
-compositors (e.g., river and sway) are not affected.
+Hi,
 
-Last good:  v6.15.9
-First bad:  v6.16.1
-Bisect result: d1b618e7954802fe media: uvcvideo: Do not turn on the
-camera for some ioctls
+Building htmldocs on docs-next currenly produces about 80 new warnings; which
+all of them are unexpected section title on DOC: kernel-doc directive, like:
 
-## Hardware:   Lenovo ThinkPad P15 Gen 2i (20YQ0031US)
-CPU:        Intel Core i7-11800H (Tiger Lake-H)
-iGPU:        Intel UHD Graphics (TGL GT1)
-dGPU:       NVIDIA T1200 (not involved in eDP output; driver: nvidia-open)
-Display:    15.6" 1920x1080 eDP, 10 bpc capable (EDID 1.4)
-Webcam:     Integrated Camera on PCH xHCI (Bus 003 Port 004)
-Firmware:   LENOVO N37ET61W (1.97)
-OS:         Arch Linux, Nix home-manager, X11 + xmonad, no display manager
+/home/bagas/repo/linux-kernel/Documentation/driver-api/target:25: ./drivers/target/target_core_user.c:35: CRITICAL: Unexpected section title.
 
-## Symptoms and reproduction steps:
-1. Boot, start X11 on tty1 (startx).
-2. Switch to tty2 (Ctrl+Alt+F2): works.
-3. Switch back to tty1 (Ctrl+Alt+F1): display freezes.
-   - Frozen on the last frame shown before switching away.
-   - System is fully responsive over SSH.
-   - Other VTs switch normally between each other as long as X11 is
-not active on them.
-   - Killing X does not recover the display. A reboot is required.
+Userspace I/O
+------------- [docutils]
+WARNING: kernel-doc 'scripts/kernel-doc.py -rst -enable-lineno -function 'Userspace I/O' ./drivers/target/target_core_user.c' processing failed with: SystemMessage('/home/bagas/repo/linux-kernel/Documentation/driver-api/target:25: ./drivers/target/target_core_user.c:35: (SEVERE/4) Unexpected section title.\n\nUserspace I/O\n-------------')
+/home/bagas/repo/linux-kernel/Documentation/driver-api/target:28: ./include/uapi/linux/target_core_user.h:14: CRITICAL: Unexpected section title.
 
-# DEBUG ANALYSIS
+Ring Design
+----------- [docutils]
+WARNING: kernel-doc 'scripts/kernel-doc.py -rst -enable-lineno -function 'Ring Design' ./include/uapi/linux/target_core_user.h' processing failed with: SystemMessage('/home/bagas/repo/linux-kernel/Documentation/driver-api/target:28: ./include/uapi/linux/target_core_user.h:14: (SEVERE/4) Unexpected section title.\n\nRing Design\n-----------')
 
-On v6.16.1, the VT switch back to X triggers a full modeset due to pipe
-configuration mismatches detected by intel_pipe_config_compare:
+These turns out to be false-positive as touching the source file in question
+(e.g. drivers/target/target_core_user.c) and making htmldocs again makes the
+regression go away for the corresponding docs.
 
-[drm:intel_pipe_config_compare] fastset requirement not met in pipe_bpp
-  (expected 30, found 24)
-[drm:intel_pipe_config_compare] fastset requirement not met in dp_m_n
-  (expected link 269484/524288, found link 336855/524288)
-[drm:intel_pipe_config_compare] fastset requirement not met in dpll_hw_stat=
-e
-  (expected cfgcr0: 0xe001a5, found cfgcr0: 0x1c2)
-[drm:intel_pipe_config_compare] fastset requirement not met in port_clock
-  (expected 270000, found 216000)
-[drm:intel_atomic_check] forcing full modeset
+Bisection (with git-bisect(1)) points to bea467aa5da1f5 ("docs: media:
+v4l2-ioctl.h: document two global variables") as the first bad commit, even
+though that I suspect that bdd1cf87847ff6 ("kernel-doc: add support to handle
+DEFINE_ variables") may be the actual culprit (regressor).
 
-On v6.15.9, the same VT switch shows no such messages.
-no pipe_config_compare runs, no modeset, no freeze.
+The full bisection log:
 
-# BISECT AND VERIFICATION
+git bisect start
+# status: waiting for both good and bad commits
+# bad: [7f3c3a0a9103dc92c823f27db3284ac2914e7558] MAINTAINERS: Add doc files on real-time support to Real-time Linux
+git bisect bad 7f3c3a0a9103dc92c823f27db3284ac2914e7558
+# status: waiting for good commit(s), bad commit known
+# good: [9448598b22c50c8a5bb77a9103e2d49f134c9578] Linux 6.19-rc2
+git bisect good 9448598b22c50c8a5bb77a9103e2d49f134c9578
+# bad: [5188f6bd408f937d81c0c37eb59ddc1035cd912c] docs: admin: devices: /dev/sr<N> for SCSI CD-ROM
+git bisect bad 5188f6bd408f937d81c0c37eb59ddc1035cd912c
+# bad: [bea467aa5da1f51834501da3ac3c40204027a221] docs: media: v4l2-ioctl.h: document two global variables
+git bisect bad bea467aa5da1f51834501da3ac3c40204027a221
+# good: [82e87387f6e2af9f69a7528733e953fd22e815aa] Documentation: kernel-hacking: Remove comma
+git bisect good 82e87387f6e2af9f69a7528733e953fd22e815aa
+# good: [bdd1cf87847ff6aaadd53a185209d2bb2db72165] kernel-doc: add support to handle DEFINE_ variables
+git bisect good bdd1cf87847ff6aaadd53a185209d2bb2db72165
+# first bad commit: [bea467aa5da1f51834501da3ac3c40204027a221] docs: media: v4l2-ioctl.h: document two global variables
 
-The bisect converged on d1b618e7954802fe in the uvcvideo driver. This
-commit adds a switch statement to uvc_v4l2_unlocked_ioctl that allows
-certain V4L2 IOCTLS to call video_ioctl2 directly without first calling
-uvc_pm_get/uvc_pm_put. Prior to this commit, all ioctls called uvc_pm_get
-before video_ioctl2.
+Mauro: Since you're the author of regressor, can you please take a look on it?
 
-## VT switching verification across kernel versions:
+Thanks.
 
-  v6.12.74 arch pkg:   WORKS
-  v6.15.9 arch pkg:    WORKS
-  v6.15.9 from source: WORKS
-  v6.16.1 with d1b618e reverted:     WORKS
-  v6.17.9 with PM wrapping restored: WORKS
-  v6.18.9 with PM wrapping restored: WORKS
+#regzbot introduced: bea467aa5da1f5
 
-  v6.16.1 from source:  FREEZES
-  v6.16.1 arch pkg:     FREEZES
-  v6.17.9 arch pkg:     FREEZES
-  v6.18.9 from source:  FREEZES
-  v6.18.9 arch pkg:     FREEZES
+[1]: https://lore.kernel.org/regressions/aUuLHzk5jdyBAxD7@archie.me/
 
-## Things that do not eliminate the freeze
-
-  - module_blacklist=3Duvcvideo on boot
-  - CONFIG_USB_VIDEO_CLASS=3Dn (compiled out)
-  - i915.enable_psr=3D0
-  - Bypassing intel_vrr_transcoder_enable/disable (no-op)
-  - xrandr --output eDP-1 --set "max bpc" 10
-  - Xorg config FBDepth 30 (No effect on pipe_bpp)
-
-## Workaround patch
-
-Reverting the optimization from d1b618e to restore the unconditional
-uvc_pm_get/put wrapping for all ioctls. This is not a proper fix.
-
-diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/uvc_v=
-4l2.c
-index 9e4a251eca88..15057b47ec4f 100644
---- a/drivers/media/usb/uvc/uvc_v4l2.c
-+++ b/drivers/media/usb/uvc/uvc_v4l2.c
-@@ -1199,33 +1199,12 @@ static long uvc_v4l2_unlocked_ioctl(struct file *fi=
-le,
-  unsigned int converted_cmd =3D v4l2_translate_cmd(cmd);
-  int ret;
-
-- /* The following IOCTLs need to turn on the camera. */
-- switch (converted_cmd) {
-- case UVCIOC_CTRL_MAP:
-- case UVCIOC_CTRL_QUERY:
-- case VIDIOC_G_CTRL:
-- case VIDIOC_G_EXT_CTRLS:
-- case VIDIOC_G_INPUT:
-- case VIDIOC_QUERYCTRL:
-- case VIDIOC_QUERYMENU:
-- case VIDIOC_QUERY_EXT_CTRL:
-- case VIDIOC_S_CTRL:
-- case VIDIOC_S_EXT_CTRLS:
-- case VIDIOC_S_FMT:
-- case VIDIOC_S_INPUT:
-- case VIDIOC_S_PARM:
-- case VIDIOC_TRY_EXT_CTRLS:
-- case VIDIOC_TRY_FMT:
-- ret =3D uvc_pm_get(handle->stream->dev);
-- if (ret)
-- return ret;
-- ret =3D video_ioctl2(file, cmd, arg);
-- uvc_pm_put(handle->stream->dev);
-+ ret =3D uvc_pm_get(handle->stream->dev);
-+ if (ret)
-  return ret;
-- }
--
-- /* The other IOCTLs can run with the camera off. */
-- return video_ioctl2(file, cmd, arg);
-+ ret =3D video_ioctl2(file, cmd, arg);
-+ uvc_pm_put(handle->stream->dev);
-+ return ret;
- }
-
- const struct v4l2_ioctl_ops uvc_ioctl_ops =3D {
-
-Andr=C3=A9s
+-- 
+An old man doll... just what I always wanted! - Clara
