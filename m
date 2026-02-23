@@ -1,293 +1,226 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [46.38.247.119])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0D89364EBF
-	for <regressions@lists.linux.dev>; Mon, 23 Feb 2026 12:00:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771848008; cv=fail; b=XjlfSgSFQMZFp1jJLM9xt5GDXgIFkb9NhQ3vU66ZhIiohZhLy8WGVYpWREdMq7K0/LkZXh2ji06fNGOee62ZsMX3BIxGXtb/EuX5x2Uji1L0QDzN/fjKFPiJeX6Ge7Mful8GQ7atah5MIZSR0ghxKLzGwXdu2eULFzLflKd+YHM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771848008; c=relaxed/simple;
-	bh=2vaRcmUe4OODcTzEi28q9TrX8SPyvJ7vfQdq1JPRwsE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=MaKezhywqDz822o/0jKYF4QOZ20sBSeAI5sMiq0v63kchcoLisCqrtY381NBNac8ODCZqnuVq2qqFDwSm4ZopLvTU/jHt4ZLD73MMEg01PUTvOI2tAVtL2/R+mrP27MQ657VSp7jOdSHZen7eRamULrTcm5wWxRPzPSzM2Jtlj4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=LkCxE4Wq; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=Io8rou66; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E90AA365A0D
+	for <regressions@lists.linux.dev>; Mon, 23 Feb 2026 13:00:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.38.247.119
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1771851631; cv=none; b=kqfArGcqg6Lp4i/417WNGyFOcI1dmi9gA6heQV/2wQrTwha8pJ9CVskkEIi+yYmmQMdjcTcKsi1RcH61kSUpwECb0QNKjjosBDcvxlJP/HVyREUvcWw6wWrBB45vEuCcZJx8cG/gwFIcQpHe4l+0/pGMx4V2L4Jkqe7C9yiz97w=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1771851631; c=relaxed/simple;
+	bh=mdtAPt1u+G474DblEe+23KFM0HhOnWGgYfp1KftsXRs=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=HprlKR4QXoaBaiSo3PYjr38JXXhQjbnAcFWrp24GXmEIuyBMC36qN/j7+93TVYKUDfpFY1SLxV4nj6FazX7VRD+vsCV7V7eIFXeVvI6iekZ5EAjqbzl5i4wuLY+UpGcSTJUtIQ1Yt7mm/rfAKeWo8vQDBXVQBqmtpKpbOFERaaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=I3bFgT2y; arc=none smtp.client-ip=46.38.247.119
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="LkCxE4Wq";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="Io8rou66"
-Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 61N4xogG758121;
-	Mon, 23 Feb 2026 11:59:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2025-04-25; bh=HdMYo0FhWGJPaMLvFA
-	6DcVZ++4WFZzO7h2XSDJDmJyw=; b=LkCxE4WqENdQKVMbuKm8k8q45+SL5YM4Cx
-	TMMmd03k2A9qA7/8u5+3t6O5V9ZlQ0b1POMQGV/kSgKv33yQFjHhduUxX9rACqdd
-	G2x2fWGn4q97f3jqvw59E4LsMDjFOeXszcy2wUGlySIjNXCgppTciCS9Aoii4Fet
-	14uYlzKZD7YMf9HtHgiGKypM4kHFdY8zExcuuug9K9PQm/BQaIti7gGMfPOKLW3n
-	fGy+bxkR9vq2JcVNPwmVeMktuNXT+vMyKs+jpzbZtXxFMQ8WB/YT6z3ZFZK7Pgai
-	IkKIBJEycm+eRGvl4S3AqOc7zQXj25g46mNt73vNGwQLTMmv1kQg==
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4cf4k5sxu2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 23 Feb 2026 11:59:43 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 61NBj4YL028678;
-	Mon, 23 Feb 2026 11:59:42 GMT
-Received: from ch1pr05cu001.outbound.protection.outlook.com (mail-northcentralusazon11010030.outbound.protection.outlook.com [52.101.193.30])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 4cf358911n-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 23 Feb 2026 11:59:42 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=GnNEtEJiTZsfH1J2peDMbH/5fGKtfqB8Iya4QB525n45+xQ3fWeAqaxLasL4rxK0W9+KKB1yJwvR3O1A2exkKapKm2bCoAJ7Dgr55KxQDDeCZljEf5o3rG9zK/sOd7EbJhVod4kyIFopsszDyBU4VJ7DjNBTL2lbBVKu78lnVmRi9zDwBq5sTEPXxsq+a7J61hC8fHNTL5r61GVRHLG/zz3/FDdmYnbmeur1BZfiSOipYIg0+9wAdVtYkiLH/BObcy6BgH/s1qW41+Pgbi5h6/qnfbw+BG+5RWq29cjS3fykpr8s+cAUbgNW3YDO9FmS+ipdQ0DVngdA/a1L34xKmQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=HdMYo0FhWGJPaMLvFA6DcVZ++4WFZzO7h2XSDJDmJyw=;
- b=rHK6qpLOWSK0g6rCYbb4lIvnSaAjFmsr22W7iHJLqRafb6r1gUVmwV87G/jVJfhUdaCkyRCbddrn9UOu1cvryWrC5Pknnhw7Uf4tneFWBOH7KIzYdNeYsSrrmLRUmlu1feryGd8QMmdrluK/keTjGe5Vv/Xsd1pGIiKmBBxPeD2HraByp/kEEXlcExQfvyFZvgh4PDJ/Z3VqlXktb+JQBHr5XR+6MTEglls5p5DFc5biwy251vCR2OzUs4kvxgprEq2do3r3R/yTr2UMtzmTJxz/PRQxvz51om8ApE2yFsswOhoAIhxISeWxgMHXZJIpTS9rdnyvnQ7WUr2mXugdSg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HdMYo0FhWGJPaMLvFA6DcVZ++4WFZzO7h2XSDJDmJyw=;
- b=Io8rou66C9HrH0evNY7JCf0SDstWRkoR7DDIkk254c6HuqXiPOT09I07aNgMF0ioPzM86MSNbGI93lMthgBSXLkkIhji8diLpNxhEL5Xj2aYTlKl+jFnAFr3QDOE1d5b5ex1P7UeGhafVktcikWXTYGvO5/71mJMsvi4buV3NUM=
-Received: from CH3PR10MB7329.namprd10.prod.outlook.com (2603:10b6:610:12c::16)
- by DS7PR10MB5151.namprd10.prod.outlook.com (2603:10b6:5:3a4::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9632.17; Mon, 23 Feb
- 2026 11:59:39 +0000
-Received: from CH3PR10MB7329.namprd10.prod.outlook.com
- ([fe80::c2a4:fdda:f0c2:6f71]) by CH3PR10MB7329.namprd10.prod.outlook.com
- ([fe80::c2a4:fdda:f0c2:6f71%7]) with mapi id 15.20.9632.017; Mon, 23 Feb 2026
- 11:59:38 +0000
-Date: Mon, 23 Feb 2026 20:59:30 +0900
-From: Harry Yoo <harry.yoo@oracle.com>
-To: Chris Bainbridge <chris.bainbridge@gmail.com>
-Cc: vbabka@suse.cz, surenb@google.com, hao.li@linux.dev, leitao@debian.org,
-        Liam.Howlett@oracle.com, zhao1.liu@intel.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-btrfs@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: [REGRESSION] kswapd0: page allocation failure (bisected to
- "slab: add sheaves to most caches")
-Message-ID: <aZxBIpE8R8DxO4eJ@hyeyoo>
-References: <aZt2-oS9lkmwT7Ch@debian.local>
- <aZwSreGj9-HHdD-j@hyeyoo>
- <aZw2LyOjxMc-c3dl@debian.local>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aZw2LyOjxMc-c3dl@debian.local>
-X-ClientProxiedBy: SL2P216CA0172.KORP216.PROD.OUTLOOK.COM
- (2603:1096:101:1b::18) To CH3PR10MB7329.namprd10.prod.outlook.com
- (2603:10b6:610:12c::16)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="I3bFgT2y"
+Received: from mors-relay-8404.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4fKLNQ35qxz88w2;
+	Mon, 23 Feb 2026 13:52:22 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1771851142;
+	bh=mdtAPt1u+G474DblEe+23KFM0HhOnWGgYfp1KftsXRs=;
+	h=Date:From:Subject:To:Cc:References:In-Reply-To:From;
+	b=I3bFgT2y9LPnCCOPaotswFyOaXR9XbMFe/T568GuLEpAsa85n2yENXGCsA4bqq6E7
+	 mKB1bXCxBevo1dqc7809o0YnoYEhvpAZl2IUEfBgUzrzF5BV9Jd6imBXBjjQMp1xRl
+	 1kpR/fTMQrot4TsXhHh0Eo2gdXOw4vvpwbq8jJw3FtePM7ZDg0/Meh+mIxkPqBlIww
+	 bWdh2hCEpNrTF3ZqwcpoD6EKWjK2keUvFBpOFjS4w406mNTw12jCo1MhX9kYOyk1Rd
+	 RFU6imGALJo+qA4gOssUSMGt7GR3oA6bqYprnamtZlVUcIqj5bDXr7c3UrppF4LkUG
+	 Z7hsKRm2jKr+Q==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4fKLNQ2MJ1z4xMh;
+	Mon, 23 Feb 2026 13:52:22 +0100 (CET)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4fKLNP2j6Xz8sbC;
+	Mon, 23 Feb 2026 13:52:21 +0100 (CET)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 12D8F66F54;
+	Mon, 23 Feb 2026 13:52:20 +0100 (CET)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <b4f8ca7a-02b1-4e72-896b-87a00db6338b@leemhuis.info>
+Date: Mon, 23 Feb 2026 13:52:19 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR10MB7329:EE_|DS7PR10MB5151:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7f8ced50-eae0-445e-d6f6-08de72d3053a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?qt3ZguG+HfuFFhX0uxKIFyxrCSjS3H4Gr1+uqU8hBuB5fSrAsufcxMdI82GK?=
- =?us-ascii?Q?p6alkQdM7W3XscsDxw4qUaNJ8nfBbWB93NFTGq+ToH33nyPDbbsk8gkQGxBB?=
- =?us-ascii?Q?U2hKj3H8IYZ6Ljp8daXWONt00lTl+l0XvM9/xGy8Eym/14FPLKGqnjdr+NSr?=
- =?us-ascii?Q?dsMdsjk72wc30vxo76RRy59lcB/P/4zGuLk6sZ+Vc6jysbpxxgCz0ZNMv60q?=
- =?us-ascii?Q?YmVZUh8qIen71ES1fVrVoVD1L3M9ETO7e3EyZ3WmG868NNGi6Tx7GVIMAgf+?=
- =?us-ascii?Q?BeZDXE9KddtuDBKQMFx6J161MvyqCYX9idsVs3mp4ApoqT2S3obnAaHWewt6?=
- =?us-ascii?Q?GZjT4U8mME+xUgTvHGFdzB+6RRKvmGAigqJ9bR+3yn5QvyCZ9Z5dVsL5ywpt?=
- =?us-ascii?Q?uqLROdX61i6hpY6QpwSSuas6Xojp8woFTrcgkGu1PC4ru4OzIGeDhDoFhjfK?=
- =?us-ascii?Q?1lI5rRGLSPHmH3bELvHl8dpxFVKW5oNKx4eaupPeAljcUWaoOLxLHIs814vE?=
- =?us-ascii?Q?2ohpeisy7rQMNqu7gup9ku30hlQuWMdVYJjdTur70nHJlWlXvanodxzUmzuK?=
- =?us-ascii?Q?UVgCQVUjSP+sFqW8hKSXWUR/+puBL9l1ItsI4uvpU6B9/sz2D6O5yTjOsF8c?=
- =?us-ascii?Q?nwj+UQQlrchmkaayTZEMjH12UEAVITxScwH1CRK6eGhQMERgHmQYFpqWh/53?=
- =?us-ascii?Q?VjoSTC8gwj2IQkfyArQm2ZZWGF3RWbLC5B1/GVCvMfQF8QXSbMeFLX3c4nPj?=
- =?us-ascii?Q?ykDqt/S+AldSmIuBYCJHGX78AVnAd5QlUFMuS3hIejDCZ3q3I5kpjjXDzI84?=
- =?us-ascii?Q?61lnhSiUZjqSu4WY2E37chiwfgtTdmVyEZJ7ybkBhsY1m8uEUawWxQvCDL+e?=
- =?us-ascii?Q?Rx4a1C5Thww/kma7oYE5rnTZIQHFyX6Ij3ImgwUL4INfOebVgWyDBtw3xpMZ?=
- =?us-ascii?Q?39/9XtiByJdu8LnpxwufDtF6oV6QXx3uw/H01w5UVIe/vqikUH2CluO2dYhL?=
- =?us-ascii?Q?d4qyi3xQR2kMCYElNOXlLGwXliSlLpLMCmhYNR9sRsYT+i+Yrx6l+1qMlcNz?=
- =?us-ascii?Q?ovjYo+QZGwJMYwihbhiIiUIlE1tc+JIMZAVI/MTA1uaHnO2zO1WcP2hZj6pL?=
- =?us-ascii?Q?IVmgOf2p00hFYadqSmMFEmu7HW0i1nPQjVVmiGXjJlVeKaMSyUmcUJyQE9lO?=
- =?us-ascii?Q?hIL78iWtPRRI9RYAGT/3PLsOYz1xEJ3jMU3WQR95RYrTq3cmimqvy8w1ZuhJ?=
- =?us-ascii?Q?rMlvdBtrTu2/2th+xrAm8PHbZIUby/1ytPv/x1gRmtZ8GAq0g1ljRYOAVcnQ?=
- =?us-ascii?Q?jYsrS9btjlvvND6uuDu4fvv/87bnD3EHtnf/N9PQ7IAHVpH+WogDx+PUIBVj?=
- =?us-ascii?Q?MCJ/7Uk7FsstV5Cz1k2BFoZPuHs8wjDrNnt5Jz5YC/xqfIJnQd8HJcKuuW0L?=
- =?us-ascii?Q?TiypTobK7iOrcdtvGUkYSZUmI6z8G5Rv2hzIajSYm211d/cXq7Lm//yXs2tJ?=
- =?us-ascii?Q?vHB9GL23n00hR1GRQBGgWmlv0a3PdA0iPKRCtROPMw1Eta9X7I12gNyok/iX?=
- =?us-ascii?Q?iYvWH0f5hF/RL/qLN+A=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR10MB7329.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?n8PquKFVZ9EwxoVyw13YT2Aa7eZDLsW/7mGtKC93+PB/VZxqQpk83YwFvK6B?=
- =?us-ascii?Q?Hf7JbCJN3Zrpt4jBTfJ0rbcXGMKmY1/MtOE3bzZYjdxNRcbpwDDSjNQUr8AP?=
- =?us-ascii?Q?vXHmrkBV73DqenqAREMegyqSnUUZHu4N6poAFfacgb3K7AHaADdwhlShsbFB?=
- =?us-ascii?Q?jIyvoPkGMAihmEa6DkYo2yZjG4d+nlJmc2WYo3DG3bOLH3IZeZIVCck3lHz+?=
- =?us-ascii?Q?k+IUljYupr8yi5uuWS4Iapx037Ayt6WmEW6YgwWGHuwAWkPy0P0xA6J2unZB?=
- =?us-ascii?Q?w6aKRBsBeM1rgTi5M1nmnaVJ0tmZBUkPUOAE13cpblSGpEjEICBVVJW6Rda1?=
- =?us-ascii?Q?MTk2823Mu4mDkBYgBfpR6Y3IpPI5P2w2Kfq5rGrKaM/VrKJQI9DUfeW7Qaht?=
- =?us-ascii?Q?K1q/v2kcmf+nB/NXQ41zFrCxsgsAjn6TPv+RYZgCPWDyPap3Tdv9joVEVWCH?=
- =?us-ascii?Q?+U2aXS22WosQCbREbLOGpevZCqdOm/nIzWF3BgIgT39juTOPvnHu/SBAx8+9?=
- =?us-ascii?Q?GR95NBHd2XeahLcRdjnvL2DrUqmMAm4i2Blq4fFPDfjUVtHsbPqKOt2YSPCF?=
- =?us-ascii?Q?yAB3Sfc+HZe2Wj1tBaRAUK/sMGYuQJv0DkuoP7iMTjq3I+7EDGU0qnzgtHt3?=
- =?us-ascii?Q?ozpAsC7DKrFz7lixuEAk/PDIqkpvAcglNqkH01zdtcalLg/ncJqWCxxc7tNt?=
- =?us-ascii?Q?/6iQ6PPsNYyPQxH09SsEEiXPfyIQO18TzNwE/zi60SFa4bZM07LdkY3MO09v?=
- =?us-ascii?Q?JzF8nILeIbDOeetnl0ksqVkiamLWxVDKOeCFZUj0MQyCxiQ4oYETuNacwt6N?=
- =?us-ascii?Q?ut9Tpt934xV8jDGS3peNy9lvatH5JN3jJJxTNcQN0pz8SreV42WR3jTShzsl?=
- =?us-ascii?Q?5f58bFpeaLjhGKmakQTyVVDWOXbx5Z60Bv6vrP9onYR9DOzIJcLi2M8Sv5yO?=
- =?us-ascii?Q?eSQSvzbNwZRglWi6H7dMoU8sma3bbph2YyIMjvVswz48H1P51kACZH01Rp38?=
- =?us-ascii?Q?aeJyvwq7x8GBShP9AjNiboMyam4T0td7UhHk2AulkvlAU0xSIfDxGohQmBKb?=
- =?us-ascii?Q?9g/+PLYKUe3LlCffIotA/SUbh+kCi3eneXtfBxlEM8Ja/UDfkP2LP+mEzSwM?=
- =?us-ascii?Q?RrHNnH1skSYdM6ZTf9kJRRQ3jxTzmicnkonwtFIJCXT7f4+vlmGSSuvbuvbr?=
- =?us-ascii?Q?1gQ83owWo/UpUBI4O2TzVhSR9yFayVcJBkqZYqMtM34XgokeuYAP65UlVV8Z?=
- =?us-ascii?Q?xdwPpwJM7+NSfIdCRMD+wch1cwmUpaSAtPgVtmVGdd1R/KnQcokz9uGByB8y?=
- =?us-ascii?Q?BbdMWCFb36LSwpy4ctK7H4vwUKr2OMjw/N1gstna9N7oewljs6ZzEREvTT3X?=
- =?us-ascii?Q?b7qAE3F7x9FWM/o6ziVLLt1j0/ljdVM4xto9GGHZzKk/QRgC+kDORpyRSidV?=
- =?us-ascii?Q?x4zpndP4x8h504RulAIjzOQ1Iu60WExxBGQtcEu6bP81Ht3smRJSvZP0bXJW?=
- =?us-ascii?Q?fAZrv3ZyBLIkHqFE2iguiiaBMLsAm905/wZPO5Q+I4TW6YlUaPAR/V+I+IAT?=
- =?us-ascii?Q?jjQ4yTdAAYAYyNR3i0ptCKDlelXMW3mpU/yhKpA28U6hjyH+m8eFu5r06pAE?=
- =?us-ascii?Q?fnHKSfJATc/EkdVv8PKMiJEdjepyt07pB8jFLoisJlcqxv6JoMMGtYKH9H98?=
- =?us-ascii?Q?dmshMRp/cSq8hOQxgXRSXBvgOEb36uw2SK6u244odHiwYJdM/asHpe7iaQJ9?=
- =?us-ascii?Q?K4PHZhXsCA=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	8EdZSQTHa4aj9BxJkONwNKiTbCUtbqToqzPQrbc4ay72CK5345t1+Vl69CX5N1K32YcF1JY/I+Ql3ixzSYc/KlhEwL46vx9kE4oZfRFoB4mO5dUs1TB5+NyPOGFRO8kJfjLIhmrOWlenY/O6UcBSyZGEVxyGoohNsk8HUP11Jnkv9qeQjxRdOLMZUWw1S8Es34zMGCoNCgFaTdY/vE/ZgGxCJwKjWqmv9B4n9fA0cVgqMtAl8e9ai3XsPTVRsNKSOnpDE4iLZxItLQ3b77aKDC0pCbYH+oGHuT5bCGlj0ASk1d78UOxLDqLf3J4xLw64/ya8xXxjStQe9MpjvXN7Fjt9CsQaY7YhC3FXMzByG/auMWR1KSJrQ/jA1TkvgMDGywZmk9mF3CJIP+xzmvPV6clgFf+YRzm2NgX0+7alYD6HKRg4ObIarFZchpSnasy5gVGFe5unqjWS8nYo82uuCIWbLhzil9X9JxuEJQWEK/l73Jdaqq/OgVq1HRAgvzP0VDLK9pTNJVwFUWZbCVSwKXs1jdqr6O7k6e6HLJq1e0BCpOzajieImlZzRnFnpCA3xDP9jsmywJ7Hp/gK0+UYwGDg6z63udyXESbtI4s5pKk=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7f8ced50-eae0-445e-d6f6-08de72d3053a
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR10MB7329.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Feb 2026 11:59:38.5985
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 5jJGcPwCpyfc1L0lTyJzzy9KYPPrjBQZI6+c7+bGdzBrCHrI0Kwo/XshBevFnX4y7nBnHBo+PEhWOofJL87nIQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR10MB5151
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-02-23_02,2026-02-20_04,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 adultscore=0 malwarescore=0
- mlxscore=0 suspectscore=0 bulkscore=0 phishscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2602130000
- definitions=main-2602230102
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMjIzMDEwMiBTYWx0ZWRfX7Kqhlu3yQZfV
- El4WC4Ze3BhDtzFVL0+a+Y1xUbcADG/Yyk+UsLtRM+TYhl5vcVs4Ijbey3GUeW4lX35wXsyClzX
- ALWeHwLkt0VPzIquDI1Vbkuq09bM3LcI6sn+JLwd4fCAeAP2PCMSflk0/P6vLsb/H6y8LHVqB84
- 8UkFXQ8eD4doY9lGf3iPUBi66TuNUFJIx2O3PTCU5pcLszCtw4A2/jYQ+VENZp6pp44JbI2ubVL
- OPD4j/r2GFrn8Y/6B5vYmjf90SOmw6TEEPsXUFiWD0P1O3ctXaV2Or51UqbwAQEJe57Og5dte/3
- Rc2PRiANfcYO4CM5l32cDl2VAKMQtR+PPDtZd9C1PGLjtmVZ0GWaq4AwLUEYmrKp/2HxHw89JNy
- bhX6Z4CDQNCHNY1I9xg7bUUbEKvHzXXmLitphaTame6Kb6mZ7U26/VIFWc3QC/xQR9SCdDRwkp3
- Fe7m5ZRRvTVC1Uv+8Og==
-X-Proofpoint-GUID: wP-ApFOCHaRo3ebOnP2qXzUvHfw4wo6Y
-X-Authority-Analysis: v=2.4 cv=b9C/I9Gx c=1 sm=1 tr=0 ts=699c412f cx=c_pps
- a=XiAAW1AwiKB2Y8Wsi+sD2Q==:117 a=XiAAW1AwiKB2Y8Wsi+sD2Q==:17
- a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
- a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=HzLeVaNsDn8A:10 a=GoEa3M9JfhUA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=Mpw57Om8IfrbqaoTuvik:22 a=GgsMoib0sEa3-_RKJdDe:22 a=O6FJd7GuMo-m2MAkU-sA:9
- a=CjuIK1q_8ugA:10
-X-Proofpoint-ORIG-GUID: wP-ApFOCHaRo3ebOnP2qXzUvHfw4wo6Y
+User-Agent: Mozilla Thunderbird
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Subject: Time from regression report to a merge of a fix (was Re: [git pull]
+ drm fixes for 7.0-rc1)
+To: Dave Airlie <airlied@gmail.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Simona Vetter <simona@ffwll.ch>
+Cc: dri-devel <dri-devel@lists.freedesktop.org>,
+ LKML <linux-kernel@vger.kernel.org>, Alex Deucher
+ <alexander.deucher@amd.com>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: 
+ <CAPM=9txvCxvz_NH1zw9WpeCiYYGOxN36Lz1owmbbjfaB2tmjPA@mail.gmail.com>
+Content-Language: de-DE, en-US
+In-Reply-To: 
+ <CAPM=9txvCxvz_NH1zw9WpeCiYYGOxN36Lz1owmbbjfaB2tmjPA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-PPP-Message-ID: 
+ <177185114042.2019614.14186409466347414161@mxe9fb.netcup.net>
+X-Rspamd-Server: rspamd-worker-8404
+X-Rspamd-Queue-Id: 12D8F66F54
+X-NC-CID: x30qopvKun9vn/QR/x+byNHbWOc83WU2jyoWB7Te+eSVhp8cy2c=
 
-On Mon, Feb 23, 2026 at 11:12:47AM +0000, Chris Bainbridge wrote:
-> On Mon, Feb 23, 2026 at 05:41:17PM +0900, Harry Yoo wrote:
-> > On Sun, Feb 22, 2026 at 09:36:58PM +0000, Chris Bainbridge wrote:
-> > > Hi,
-> > > 
-> > > The latest mainline kernel (v6.19-11831-ga95f71ad3e2e) has page
-> > > allocation failures when doing things like compiling a kernel. I can
-> > > also reproduce this with a stress test like
-> > > `stress-ng --vm 2 --vm-bytes 110% --verify -v`
-> > 
-> > Hi, thanks for the report!
-> > 
-> > > [  104.032925] kswapd0: page allocation failure: order:0, mode:0xc0c40(GFP_NOFS|__GFP_COMP|__GFP_NOMEMALLOC), nodemask=(null),cpuset=/,mems_allowed=0
-> > > [  104.033307] CPU: 4 UID: 0 PID: 156 Comm: kswapd0 Not tainted 6.19.0-rc5-00027-g40fd0acc45d0 #435 PREEMPT(voluntary) 
-> > > [  104.033312] Hardware name: HP HP Pavilion Aero Laptop 13-be0xxx/8916, BIOS F.17 12/18/2024
-> > > [  104.033314] Call Trace:
-> > > [  104.033316]  <TASK>
-> > > [  104.033319]  dump_stack_lvl+0x6a/0x90
-> > > [  104.033328]  warn_alloc.cold+0x95/0x1af
-> > > [  104.033334]  ? zone_watermark_ok+0x80/0x80
-> > > [  104.033350]  __alloc_frozen_pages_noprof+0xec3/0x2470
-> > > [  104.033353]  ? __lock_acquire+0x489/0x2600
-> > > [  104.033359]  ? stack_access_ok+0x1c0/0x1c0
-> > > [  104.033367]  ? warn_alloc+0x1d0/0x1d0
-> > > [  104.033371]  ? __lock_acquire+0x489/0x2600
-> > > [  104.033375]  ? _raw_spin_unlock_irqrestore+0x48/0x60
-> > > [  104.033379]  ? _raw_spin_unlock_irqrestore+0x48/0x60
-> > > [  104.033382]  ? lockdep_hardirqs_on+0x78/0x100
-> > > [  104.033394]  allocate_slab+0x2b7/0x510
-> > > [  104.033399]  refill_objects+0x25d/0x380
-> > > [  104.033407]  __pcs_replace_empty_main+0x193/0x5f0
-> > > [  104.033412]  kmem_cache_alloc_noprof+0x5b6/0x6f0
-> > > [  104.033415]  ? alloc_extent_state+0x1b/0x210 [btrfs]
-> > > [  104.033479]  alloc_extent_state+0x1b/0x210 [btrfs]
-> > > [  104.033527]  btrfs_clear_extent_bit_changeset+0x2be/0x9c0 [btrfs]
-> > 
-> > Hmm while bisect points out the first bad commit is
-> > commit e47c897a2949 ("slab: add sheaves to most caches"),
-> > 
-> > I think the caller is supposed to specify __GFP_NOWARN if it doesn't
-> > care about allocation failure?
-> > 
-> > btrfs_clear_extent_bit_changeset() says:
-> > >         if (!prealloc) {
-> > >                 /*
-> > >                  * Don't care for allocation failure here because we might end
-> > >                  * up not needing the pre-allocated extent state at all, which
-> > >                  * is the case if we only have in the tree extent states that 
-> > >                  * cover our input range and don't cover too any other range.
-> > >                  * If we end up needing a new extent state we allocate it later.
-> > >                  */
-> > >                 prealloc = alloc_extent_state(mask);
-> > >         }
-> > 
-> > Oh wait, I see what's going on. bisection pointed out the commit
-> > because slab tries to refill sheaves with __GFP_NOMEMALLOC (and then
-> > falls back to slowpath if it fails).
-> > 
-> > Since failing to refill sheaves doesn't mean the allocation will fail,
-> > it should specify __GFP_NOWARN with __GFP_NOMEMALLOC as long as there's
-> > fallback method.
-> > 
-> > But for __prefill_sheaf_pfmemalloc(), it should specify __GPF_NOWARN on
-> > the first attempt only when gfp_pfmemalloc_allowed() returns true.
+Lo!
+
+On 2/20/26 21:53, Dave Airlie wrote:
+>
+> This is the fixes and cleanups for the end of the merge window, it's
+> nearly all amdgpu, with some amdkfd, then a pagemap core fix, i915/xe
+> display fixes, and some xe driver fixes. Nothing seems out of the
+> ordinary, except amdgpu is a little more volume than usual.
 > 
-> Is this fix sufficient to do the right thing? I tested it, and it does
-> appear to prevent logging of the allocation failures for my test case.
+> Let me know if there are any issues,
 
-I think we should do both both 1) setting __GFP_NOWARN from btrfs side
-and 2) making slab try to refill sheaves with __GFP_NOWARN when
-there's a fallback path.
+Well, there were two fixes in here that made me wonder if our processes
+need some optimization to get regressions fixed at least somewhat as
+fast as Linus wants them to be fixed[1]:
 
-I'm writing a fix for 2) and I'll send it soon.
+* One fix in here was for a amdgpu regression introduced in v6.19-rc6
+(and also affecting many stable series due to backports). The fix was
+ready within ~2 days and could even have made v6.19 -- but it only
+reached mainline through this PR on Friday. IOW: After two weeks. Which
+got me wondering, "Should we do something to merge fixes like that
+faster"? And yes, it's the merge window – but that's also when Arch
+Linux and openSUSE Tumbleweed usually jump to the latest mainline series
+and thus expose regressions like this to many users, so I guess it would
+be good to get them fixed at least as fast as outside of merge windows.
 
-> diff --git a/fs/btrfs/extent-io-tree.c b/fs/btrfs/extent-io-tree.c
-> index d0dd50f7d279..d2e1083848e8 100644
-> --- a/fs/btrfs/extent-io-tree.c
-> +++ b/fs/btrfs/extent-io-tree.c
-> @@ -641,7 +641,7 @@ int btrfs_clear_extent_bit_changeset(struct extent_io_tree *tree, u64 start, u64
->  		 * cover our input range and don't cover too any other range.
->  		 * If we end up needing a new extent state we allocate it later.
->  		 */
-> -		prealloc = alloc_extent_state(mask);
-> +		prealloc = alloc_extent_state(mask | __GFP_NOWARN);
+* One fix in here was for a i915/xe regression introduced in v6.18-rc1.
+Once reported, it took about six weeks to get fixed – and then nearly 10
+days for the fix to reach mainline. Looking at this, I once more
+wondered if this could have been merged faster. But even more I wondered
+why the culprit wasn't reverted, as that's what Linus afaics wants when
+it takes this long.
 
-This seems to be a right thing to do to me, but as I'm not familiar
-with btrfs, I'll let btrfs folks leave comment on it :)
+Note, these are examples of problems that happen in other subsystems as
+well; I chose to bring it up here just because they were good examples,
+as both regressions were also reported at least three times, so those
+are not really corner cases. See below for all the details.
 
->  	}
->  
->  	spin_lock(&tree->lock);
+[1] "But if it's a regression with a known commit that caused it, I
+think the rule of thumb [to fix it] should generally be "within a week",
+preferably before the next rc."
+https://lore.kernel.org/all/CAHk-%3Dwi86AosXs66-yi54%2BmpQjPu0upxB8ZAfG%2BLsMyJmcuMSA@mail.gmail.com/
 
--- 
-Cheers,
-Harry / Hyeonggon
+
+> Mario Limonciello (2):
+>       [...]
+>       drm/amd: Fix hang on amdgpu unload by using pci_dev_is_disconnected()
+
+This is f7afda7fcd169a ("drm/amd: Fix hang on amdgpu unload by using
+pci_dev_is_disconnected()") [authored: 2026-02-05 17:42:54 GMT+1;
+committed: 2026-02-05 23:25:57 GMT+1 by Alex; next arrival:
+next-20260209; merged: 2026-02-21 00:36:38 GMT+1; v6.19-post].
+
+It fixes a regression that has been reported at least three times:
+
+* On Tue, 3 Feb 2026 17:27:00 -0500 (EST):
+https://lore.kernel.org/all/b0c22deb-c0fa-3343-33cf-fd9a77d7db99@absolutedigital.net/
+
+* On February 5, 2026 at 1:30:12 PM GMT+1:
+https://gitlab.freedesktop.org/drm/amd/-/issues/4944
+
+* February 18, 2026 at 9:30:39 PM GMT+1:
+https://gitlab.freedesktop.org/drm/amd/-/issues/4984
+
+And likely a fourth time on February 7, 2026 at 7:25:40 PM GMT+1:
+https://gitlab.freedesktop.org/drm/amd/-/issues/4953
+
+The culprit is 28695ca09d3264 ("drm/amd: Clean up kfd node on surprise
+disconnect") [also known as 6a23e7b4332c10; authored: 2026-01-07
+22:37:28; committed: 2026-01-14 20:51:36; next arrival: next-20260119;
+merged: 2026-01-16 22:48:18; v6.19-rc6 (2026-01-19 00:42:45), v6.18.7
+(2026-01-23 11:21:37), v6.12.67 (2026-01-23 11:18:52), v6.6.122
+(2026-01-30 10:27:43)]
+
+Mario and Alex thus had a fix ready and committed within about two days
+after it was first reported. It thus is an "immediate fix" (yeah!), just
+how Linus wants it (see [1] above).
+
+But then it took two weeks to get it mainlined -- and will now take a
+few days more to reach all those stable trees where it is needed, too.
+
+Give the dates above it could have reached 6.19 (released 2026-02-08
+22:03:27 GMT+1) if we really had wanted to.
+
+That fix could also have made the main drm PR this merge window (send
+Wed, 11 Feb 2026 17:26:03 +1000:), as Alex already asked for merging on
+Fri, 6 Feb 2026 14:27:06 -0500:
+https://lore.kernel.org/all/CAPM=9tzgmO1PWeuxjAxqOmS5PTsOe8jHP9Poy23q6tvY66B1KQ@mail.gmail.com/
+https://lore.kernel.org/all/20260206192706.59396-1-alexander.deucher@amd.com/
+
+If it made that pull, the fix could be in stable already by now. Maybe
+Alex PR just fell through the cracks. Happens, but overall this still
+made me wonder:
+
+(1) Should there maybe have been an additional PR this merge window to
+speed things up? Or some fast track for regressions?
+
+(2) Or should the fix (or a revert of the culprit) maybe even have been
+sent to Linus for 6.19? That would have saved at least one user from
+bisecting and reporting the regression (and likely a few others that
+never reported it).
+
+From Linus' mail I linked above, I'd assume he would have preferred the
+second option here, even if it would have been a last minute fix. If so:
+how could we make that happen more often in the future?
+
+Side note: yes, unbinding a module is likely something only a few users
+do -- but given those three or four reports, it seems it's not that
+unusual. And I don't care too much about this specific fix anyway, as
+it's just an example for the "time it takes fixes for recent regressions
+to reach mainline" aspect that I see all the time in many subsystems. To
+elaborate on that, let me give another example:
+
+> Imre Deak (2):
+>       drm/i915/dp: Fix pipe BPP clamping due to HDR
+
+This is now fe26ae6ac8b88f ("drm/i915/dp: Fix pipe BPP clamping due to
+HDR") [authored: 2026-02-09 14:38:16 GMT+1; committed: 2026-02-12
+07:03:08 GMT+1; next arrival: next-20260212; merged: 2026-02-21 00:36:38
+GMT+1; v6.19-post].
+
+That commit fixes a regressions that has been reported at least three times:
+
+* On December 30, 2025 at 5:07:48 PM GMT+1
+https://gitlab.freedesktop.org/drm/i915/kernel/-/issues/15503
+
+* On January 13, 2026 at 11:51:11 PM GMT+1
+https://gitlab.freedesktop.org/drm/xe/kernel/-/issues/7052
+
+* On February 15, 2026 at 10:13:48 PM GMT+1
+https://gitlab.freedesktop.org/drm/xe/kernel/-/issues/7269
+
+That regression is caused by ba49a4643cf53c ("drm/i915/dp: Set min_bpp
+limit to 30 in HDR mode") [authored: 2025-07-30 07:55:23 GMT+;
+committed: 2025-08-19 08:32:40 GMT+; next arrival: next-20250820;
+merged: 2025-10-02 21:47:25 GMT+; v6.18-rc1 (2025-10-12 22:42:36 GMT+)].
+
+The regression took way longer to get resolved than the first example,
+which makes me wonder:
+
+(1) Should the culprit have been reverted weeks ago to get closer to the
+"immediate fix" target that Linus wants?
+
+(2) This fix also took nine days from being committed to reaching
+mainline. It came a bit too late for the first drm PR this cycle. So
+again: Would more frequent PRs help here? Or some fast-track path for
+regression fixes?
+
+Ciao, Thorsten
