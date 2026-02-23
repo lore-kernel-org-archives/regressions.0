@@ -1,289 +1,293 @@
-Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7DFA3612F9
-	for <regressions@lists.linux.dev>; Mon, 23 Feb 2026 11:52:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.221.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0D89364EBF
+	for <regressions@lists.linux.dev>; Mon, 23 Feb 2026 12:00:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771847549; cv=pass; b=Eo0bq6mbr7whHUiNpGslqS8Vh7XtBU1lW0wLrBrSD2Df2s5noIHWFNahho/FTMZ3JVrt89lGLI+HRTlZnBhfH7x0lTGMCmN3IOJvo3SMxmQFHJalOHfwzcEgxmS4p4vglu/cizA5uN40P4z6DTkpdKqt/F17yK0Ca9t2La7h310=
+	t=1771848008; cv=fail; b=XjlfSgSFQMZFp1jJLM9xt5GDXgIFkb9NhQ3vU66ZhIiohZhLy8WGVYpWREdMq7K0/LkZXh2ji06fNGOee62ZsMX3BIxGXtb/EuX5x2Uji1L0QDzN/fjKFPiJeX6Ge7Mful8GQ7atah5MIZSR0ghxKLzGwXdu2eULFzLflKd+YHM=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771847549; c=relaxed/simple;
-	bh=+d1Gsvyn8shZSpEx0gTkDzpXXrDC99n6t6b6nk1CH4w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UOlLV4DCL+CAV/eN97pbkO+hHPvg6p2Nij408AUyuxSjfG+/l34MkkyRwkcBGdtUofg4B2we/HkhwWLAS6ZjufbXxqAWMCdP/P5NfE74oF1gSlAy5tdM/SWd5HWh3ECeGtqUcfax3fX6rvLF97asUdwbF4sLLIHAqYdEzoSpX/o=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aPPoNycQ; arc=pass smtp.client-ip=209.85.221.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1771848008; c=relaxed/simple;
+	bh=2vaRcmUe4OODcTzEi28q9TrX8SPyvJ7vfQdq1JPRwsE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=MaKezhywqDz822o/0jKYF4QOZ20sBSeAI5sMiq0v63kchcoLisCqrtY381NBNac8ODCZqnuVq2qqFDwSm4ZopLvTU/jHt4ZLD73MMEg01PUTvOI2tAVtL2/R+mrP27MQ657VSp7jOdSHZen7eRamULrTcm5wWxRPzPSzM2Jtlj4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=LkCxE4Wq; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=Io8rou66; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aPPoNycQ"
-Received: by mail-vk1-f172.google.com with SMTP id 71dfb90a1353d-566390e7db3so4089072e0c.1
-        for <regressions@lists.linux.dev>; Mon, 23 Feb 2026 03:52:26 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1771847546; cv=none;
-        d=google.com; s=arc-20240605;
-        b=BhhQ4tC0W9Hndn36rNTlSAbCDPQWRuvFSSA0B0KFiboQk6tUayh3QBhg/z89/62HPq
-         dGqTjvKQ0GotrZHed6q/DaOJZMQ41FS2R7VF3c/IsHjWI9I/9xNo5xV58oQHGSv6maCE
-         Ib4tTBgeBM32jEaToO/9wtT9ZixYJlId9g7+XCckWPlv2p26IzF3fS41JAgqB6yXt7Ni
-         s2wXnngsxxcl7fToy1VriIRsEY3Hpya/rw/5G2MUHi5ewo/p9pAd9AbcFovQB3VURT4J
-         3di7DdM34WTrBbwKDN/Y1Wm6u66x1HmmZxI0VXRRhmMOC7B0AqsFjho8PH/KJgkNZWY8
-         TFvQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=VGP11KQ2dHKSZizL7MNew2Tz13D8uXvvu4p+lY24KEM=;
-        fh=6o1Ox6GTok0iMSQJyZMWzmO8DdYHkGqvFEtxbN4k+8c=;
-        b=QaRkHMhiF0Bvf8AA47eBF9Lisd3m0SESG74+2fuQTs7R5MKIZVrN8723SKZnJ6Oms0
-         PDlF5v73doVWEgcHuuibG3Krp8KmNS9AEsLIYhuMy1U2Gu0uqZ+IDeFvDd84xs0bc9hH
-         PAjgZxjTlC1jG0U9ORRjaNHRZlVWr1hcDYUqB+rB+bc6BfN8/vx8LFZKu2pgFs6HggyU
-         o1mGWaYw4zqodaZx5iPi8eyelUJYMvYAzo86OKwcxwF46q8sXUj+JoUleb03QdAGOcpL
-         UiX7v5vkqE3I5cLyZqH6Pa2QXTP7ikIZARxG6hkG24MiRUjpzEUxv+HB6e3LAp6ZuDMZ
-         dDnA==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="LkCxE4Wq";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="Io8rou66"
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 61N4xogG758121;
+	Mon, 23 Feb 2026 11:59:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=corp-2025-04-25; bh=HdMYo0FhWGJPaMLvFA
+	6DcVZ++4WFZzO7h2XSDJDmJyw=; b=LkCxE4WqENdQKVMbuKm8k8q45+SL5YM4Cx
+	TMMmd03k2A9qA7/8u5+3t6O5V9ZlQ0b1POMQGV/kSgKv33yQFjHhduUxX9rACqdd
+	G2x2fWGn4q97f3jqvw59E4LsMDjFOeXszcy2wUGlySIjNXCgppTciCS9Aoii4Fet
+	14uYlzKZD7YMf9HtHgiGKypM4kHFdY8zExcuuug9K9PQm/BQaIti7gGMfPOKLW3n
+	fGy+bxkR9vq2JcVNPwmVeMktuNXT+vMyKs+jpzbZtXxFMQ8WB/YT6z3ZFZK7Pgai
+	IkKIBJEycm+eRGvl4S3AqOc7zQXj25g46mNt73vNGwQLTMmv1kQg==
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4cf4k5sxu2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 23 Feb 2026 11:59:43 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 61NBj4YL028678;
+	Mon, 23 Feb 2026 11:59:42 GMT
+Received: from ch1pr05cu001.outbound.protection.outlook.com (mail-northcentralusazon11010030.outbound.protection.outlook.com [52.101.193.30])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 4cf358911n-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 23 Feb 2026 11:59:42 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=GnNEtEJiTZsfH1J2peDMbH/5fGKtfqB8Iya4QB525n45+xQ3fWeAqaxLasL4rxK0W9+KKB1yJwvR3O1A2exkKapKm2bCoAJ7Dgr55KxQDDeCZljEf5o3rG9zK/sOd7EbJhVod4kyIFopsszDyBU4VJ7DjNBTL2lbBVKu78lnVmRi9zDwBq5sTEPXxsq+a7J61hC8fHNTL5r61GVRHLG/zz3/FDdmYnbmeur1BZfiSOipYIg0+9wAdVtYkiLH/BObcy6BgH/s1qW41+Pgbi5h6/qnfbw+BG+5RWq29cjS3fykpr8s+cAUbgNW3YDO9FmS+ipdQ0DVngdA/a1L34xKmQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=HdMYo0FhWGJPaMLvFA6DcVZ++4WFZzO7h2XSDJDmJyw=;
+ b=rHK6qpLOWSK0g6rCYbb4lIvnSaAjFmsr22W7iHJLqRafb6r1gUVmwV87G/jVJfhUdaCkyRCbddrn9UOu1cvryWrC5Pknnhw7Uf4tneFWBOH7KIzYdNeYsSrrmLRUmlu1feryGd8QMmdrluK/keTjGe5Vv/Xsd1pGIiKmBBxPeD2HraByp/kEEXlcExQfvyFZvgh4PDJ/Z3VqlXktb+JQBHr5XR+6MTEglls5p5DFc5biwy251vCR2OzUs4kvxgprEq2do3r3R/yTr2UMtzmTJxz/PRQxvz51om8ApE2yFsswOhoAIhxISeWxgMHXZJIpTS9rdnyvnQ7WUr2mXugdSg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1771847546; x=1772452346; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VGP11KQ2dHKSZizL7MNew2Tz13D8uXvvu4p+lY24KEM=;
-        b=aPPoNycQUWSZJuY4hJQHUX4X0knbTdC495RBw79BKZrHRrl/cKZxnbTGy5oVqP9gZL
-         Hd0JUMtM/0tXdIpTSTtbGnUI21t0Rejifci1uhTLehh7/Ua6rgjakLS7kuBTLP/fTzT7
-         whu7dEbEMAzktp2AqgdKFi4X+PFeRi4qMElx52NJ4DFPqV3s7Y4Wugq0Lifs6XPdYajZ
-         s7+payB+27bDyOoZW9I/HYGlZUVNmeyFnPsG6+YqiTNDZIk9kQtZka+B+MYYadUHA9hZ
-         RAKMzA3ZBZmk0RjmwhjrQdc1VeIm0QhYKFvGQSwWLYJtkTxPe+tRl3c4XbTK6LvxFdtB
-         RWbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771847546; x=1772452346;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=VGP11KQ2dHKSZizL7MNew2Tz13D8uXvvu4p+lY24KEM=;
-        b=FU9pg7g5YfhPt8dde779pTA47fQurswSGw0kHErf8ueH5ozPfniMRkl2Tv3uK7Sbgv
-         S/8pqWIhDkKa0B3x9GQHvsG/jZ3imjYZE0fIUub9/4rxsj+ncY2wJBX+8ng70jHt6q/b
-         SqV1uMxguzG2IX3tjAuu9JexNaGm7p82rv7fPWAyy2VVeC7wuJ3QKUiJsEMZ3S8t0Cg+
-         qbDTtXrfhj2YMvIErFp7+64Lm9ehAIEx6KmhFp+GJbIqHUk7P12uuFMK2m4CobEIvntC
-         jhiw00TEYm2xLqB0UFW+xqaGVVJ13q9Dw5YFMgr0Wl8OkP4IdzuYDqg1aNMBoxWcutj+
-         qzfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXlpGRLO2g0nIfLmXox3Ln5NNXDUHHzLNsjvZtvNnURSOxMALu2THXoKBKh1V6m/EIaQ2dZNGpmimU52Q==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxKV91w/d28SFk/nQzv1/nI4iU0G/g4FEdh5iq7W/GInaX1cU09
-	d5uTe4EIyRsHkVzibSBzf7Mqd85qieeVOAFGTwG6yDrutAMsKPw9seAL5SDAVNpbYrRhPVSMnMm
-	B0TphHqK4/7mPxVZzz4NhxFq0WcpRfLY=
-X-Gm-Gg: AZuq6aIuQNsUFuY7wSXZBrTZ+fDu/0sD0z5dVJN4kOo/icyJg+FAgSyg2q3ody1Gn61
-	WAln+DFL9eUtILx9/EOAwZd4NPaAR3npFhla0GP7gvG7KTt1Zgrd2RQJKRC93OlUj78VafKs9g6
-	zbIe65CpiLjgxqM/0W6NtqM2k6kP79eL25Fy7xincbLSMp7E9emUJwb2xX3nCIw5gComyXzUE3z
-	H+KF4Ux1vNo/Px99QOCUpXIKBwlJ23Q3vmVV61J5DnDcJaUfoyRZXZ6IxFivSMw/ZQiKA/YPfW+
-	rocWeDrJP5zXPaGcEsQTjrQXarHxo9T6OIEtGoF+OrnxV20enePomcbY22UTfg88uwSIDoydDe7
-	BtxHlngZ/Qg==
-X-Received: by 2002:a05:6102:4194:b0:5eb:fc32:935c with SMTP id
- ada2fe7eead31-5feb2ea40afmr3964742137.3.1771847545558; Mon, 23 Feb 2026
- 03:52:25 -0800 (PST)
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HdMYo0FhWGJPaMLvFA6DcVZ++4WFZzO7h2XSDJDmJyw=;
+ b=Io8rou66C9HrH0evNY7JCf0SDstWRkoR7DDIkk254c6HuqXiPOT09I07aNgMF0ioPzM86MSNbGI93lMthgBSXLkkIhji8diLpNxhEL5Xj2aYTlKl+jFnAFr3QDOE1d5b5ex1P7UeGhafVktcikWXTYGvO5/71mJMsvi4buV3NUM=
+Received: from CH3PR10MB7329.namprd10.prod.outlook.com (2603:10b6:610:12c::16)
+ by DS7PR10MB5151.namprd10.prod.outlook.com (2603:10b6:5:3a4::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9632.17; Mon, 23 Feb
+ 2026 11:59:39 +0000
+Received: from CH3PR10MB7329.namprd10.prod.outlook.com
+ ([fe80::c2a4:fdda:f0c2:6f71]) by CH3PR10MB7329.namprd10.prod.outlook.com
+ ([fe80::c2a4:fdda:f0c2:6f71%7]) with mapi id 15.20.9632.017; Mon, 23 Feb 2026
+ 11:59:38 +0000
+Date: Mon, 23 Feb 2026 20:59:30 +0900
+From: Harry Yoo <harry.yoo@oracle.com>
+To: Chris Bainbridge <chris.bainbridge@gmail.com>
+Cc: vbabka@suse.cz, surenb@google.com, hao.li@linux.dev, leitao@debian.org,
+        Liam.Howlett@oracle.com, zhao1.liu@intel.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-btrfs@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: [REGRESSION] kswapd0: page allocation failure (bisected to
+ "slab: add sheaves to most caches")
+Message-ID: <aZxBIpE8R8DxO4eJ@hyeyoo>
+References: <aZt2-oS9lkmwT7Ch@debian.local>
+ <aZwSreGj9-HHdD-j@hyeyoo>
+ <aZw2LyOjxMc-c3dl@debian.local>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aZw2LyOjxMc-c3dl@debian.local>
+X-ClientProxiedBy: SL2P216CA0172.KORP216.PROD.OUTLOOK.COM
+ (2603:1096:101:1b::18) To CH3PR10MB7329.namprd10.prod.outlook.com
+ (2603:10b6:610:12c::16)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAD0gVBsyzYNA6ydPwg9mJ9VQzYg4zPAi24JQ13-=0KtdbQ039A@mail.gmail.com>
- <CANiDSCsMVE7qAcjcjbjhYSMoyypkR5Nq-ZA-e=CJVY5CUGAG7Q@mail.gmail.com> <068a5363-de97-4d67-94a9-c9a2baed68b0@leemhuis.info>
-In-Reply-To: <068a5363-de97-4d67-94a9-c9a2baed68b0@leemhuis.info>
-From: =?UTF-8?B?QW5kcsOpcyBQw6lyZXo=?= <andres.f.perez@gmail.com>
-Date: Mon, 23 Feb 2026 11:52:04 +0000
-X-Gm-Features: AaiRm53kqVqwYlk73dxvSEeN9WnimirsmxYiC5QcBDjE53JtGAA8jfNwC48NL8s
-Message-ID: <CAD0gVBs4m9FpBZ9eVcxRK5y601WPkatGE6e9fi1iK0YA=CiMHw@mail.gmail.com>
-Subject: Re: [REGRESSION] Display freeze on VT switch back to X11 since v6.16
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Ricardo Ribalda <ribalda@chromium.org>, stable@vger.kernel.org, 
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans de Goede <hansg@kernel.org>, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, Jani Nikula <jani.nikula@linux.intel.com>, 
-	Rodrigo Vivi <rodrigo.vivi@intel.com>, Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, 
-	Tvrtko Ursulin <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, intel-gfx@lists.freedesktop.org, 
-	intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR10MB7329:EE_|DS7PR10MB5151:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7f8ced50-eae0-445e-d6f6-08de72d3053a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?qt3ZguG+HfuFFhX0uxKIFyxrCSjS3H4Gr1+uqU8hBuB5fSrAsufcxMdI82GK?=
+ =?us-ascii?Q?p6alkQdM7W3XscsDxw4qUaNJ8nfBbWB93NFTGq+ToH33nyPDbbsk8gkQGxBB?=
+ =?us-ascii?Q?U2hKj3H8IYZ6Ljp8daXWONt00lTl+l0XvM9/xGy8Eym/14FPLKGqnjdr+NSr?=
+ =?us-ascii?Q?dsMdsjk72wc30vxo76RRy59lcB/P/4zGuLk6sZ+Vc6jysbpxxgCz0ZNMv60q?=
+ =?us-ascii?Q?YmVZUh8qIen71ES1fVrVoVD1L3M9ETO7e3EyZ3WmG868NNGi6Tx7GVIMAgf+?=
+ =?us-ascii?Q?BeZDXE9KddtuDBKQMFx6J161MvyqCYX9idsVs3mp4ApoqT2S3obnAaHWewt6?=
+ =?us-ascii?Q?GZjT4U8mME+xUgTvHGFdzB+6RRKvmGAigqJ9bR+3yn5QvyCZ9Z5dVsL5ywpt?=
+ =?us-ascii?Q?uqLROdX61i6hpY6QpwSSuas6Xojp8woFTrcgkGu1PC4ru4OzIGeDhDoFhjfK?=
+ =?us-ascii?Q?1lI5rRGLSPHmH3bELvHl8dpxFVKW5oNKx4eaupPeAljcUWaoOLxLHIs814vE?=
+ =?us-ascii?Q?2ohpeisy7rQMNqu7gup9ku30hlQuWMdVYJjdTur70nHJlWlXvanodxzUmzuK?=
+ =?us-ascii?Q?UVgCQVUjSP+sFqW8hKSXWUR/+puBL9l1ItsI4uvpU6B9/sz2D6O5yTjOsF8c?=
+ =?us-ascii?Q?nwj+UQQlrchmkaayTZEMjH12UEAVITxScwH1CRK6eGhQMERgHmQYFpqWh/53?=
+ =?us-ascii?Q?VjoSTC8gwj2IQkfyArQm2ZZWGF3RWbLC5B1/GVCvMfQF8QXSbMeFLX3c4nPj?=
+ =?us-ascii?Q?ykDqt/S+AldSmIuBYCJHGX78AVnAd5QlUFMuS3hIejDCZ3q3I5kpjjXDzI84?=
+ =?us-ascii?Q?61lnhSiUZjqSu4WY2E37chiwfgtTdmVyEZJ7ybkBhsY1m8uEUawWxQvCDL+e?=
+ =?us-ascii?Q?Rx4a1C5Thww/kma7oYE5rnTZIQHFyX6Ij3ImgwUL4INfOebVgWyDBtw3xpMZ?=
+ =?us-ascii?Q?39/9XtiByJdu8LnpxwufDtF6oV6QXx3uw/H01w5UVIe/vqikUH2CluO2dYhL?=
+ =?us-ascii?Q?d4qyi3xQR2kMCYElNOXlLGwXliSlLpLMCmhYNR9sRsYT+i+Yrx6l+1qMlcNz?=
+ =?us-ascii?Q?ovjYo+QZGwJMYwihbhiIiUIlE1tc+JIMZAVI/MTA1uaHnO2zO1WcP2hZj6pL?=
+ =?us-ascii?Q?IVmgOf2p00hFYadqSmMFEmu7HW0i1nPQjVVmiGXjJlVeKaMSyUmcUJyQE9lO?=
+ =?us-ascii?Q?hIL78iWtPRRI9RYAGT/3PLsOYz1xEJ3jMU3WQR95RYrTq3cmimqvy8w1ZuhJ?=
+ =?us-ascii?Q?rMlvdBtrTu2/2th+xrAm8PHbZIUby/1ytPv/x1gRmtZ8GAq0g1ljRYOAVcnQ?=
+ =?us-ascii?Q?jYsrS9btjlvvND6uuDu4fvv/87bnD3EHtnf/N9PQ7IAHVpH+WogDx+PUIBVj?=
+ =?us-ascii?Q?MCJ/7Uk7FsstV5Cz1k2BFoZPuHs8wjDrNnt5Jz5YC/xqfIJnQd8HJcKuuW0L?=
+ =?us-ascii?Q?TiypTobK7iOrcdtvGUkYSZUmI6z8G5Rv2hzIajSYm211d/cXq7Lm//yXs2tJ?=
+ =?us-ascii?Q?vHB9GL23n00hR1GRQBGgWmlv0a3PdA0iPKRCtROPMw1Eta9X7I12gNyok/iX?=
+ =?us-ascii?Q?iYvWH0f5hF/RL/qLN+A=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR10MB7329.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?n8PquKFVZ9EwxoVyw13YT2Aa7eZDLsW/7mGtKC93+PB/VZxqQpk83YwFvK6B?=
+ =?us-ascii?Q?Hf7JbCJN3Zrpt4jBTfJ0rbcXGMKmY1/MtOE3bzZYjdxNRcbpwDDSjNQUr8AP?=
+ =?us-ascii?Q?vXHmrkBV73DqenqAREMegyqSnUUZHu4N6poAFfacgb3K7AHaADdwhlShsbFB?=
+ =?us-ascii?Q?jIyvoPkGMAihmEa6DkYo2yZjG4d+nlJmc2WYo3DG3bOLH3IZeZIVCck3lHz+?=
+ =?us-ascii?Q?k+IUljYupr8yi5uuWS4Iapx037Ayt6WmEW6YgwWGHuwAWkPy0P0xA6J2unZB?=
+ =?us-ascii?Q?w6aKRBsBeM1rgTi5M1nmnaVJ0tmZBUkPUOAE13cpblSGpEjEICBVVJW6Rda1?=
+ =?us-ascii?Q?MTk2823Mu4mDkBYgBfpR6Y3IpPI5P2w2Kfq5rGrKaM/VrKJQI9DUfeW7Qaht?=
+ =?us-ascii?Q?K1q/v2kcmf+nB/NXQ41zFrCxsgsAjn6TPv+RYZgCPWDyPap3Tdv9joVEVWCH?=
+ =?us-ascii?Q?+U2aXS22WosQCbREbLOGpevZCqdOm/nIzWF3BgIgT39juTOPvnHu/SBAx8+9?=
+ =?us-ascii?Q?GR95NBHd2XeahLcRdjnvL2DrUqmMAm4i2Blq4fFPDfjUVtHsbPqKOt2YSPCF?=
+ =?us-ascii?Q?yAB3Sfc+HZe2Wj1tBaRAUK/sMGYuQJv0DkuoP7iMTjq3I+7EDGU0qnzgtHt3?=
+ =?us-ascii?Q?ozpAsC7DKrFz7lixuEAk/PDIqkpvAcglNqkH01zdtcalLg/ncJqWCxxc7tNt?=
+ =?us-ascii?Q?/6iQ6PPsNYyPQxH09SsEEiXPfyIQO18TzNwE/zi60SFa4bZM07LdkY3MO09v?=
+ =?us-ascii?Q?JzF8nILeIbDOeetnl0ksqVkiamLWxVDKOeCFZUj0MQyCxiQ4oYETuNacwt6N?=
+ =?us-ascii?Q?ut9Tpt934xV8jDGS3peNy9lvatH5JN3jJJxTNcQN0pz8SreV42WR3jTShzsl?=
+ =?us-ascii?Q?5f58bFpeaLjhGKmakQTyVVDWOXbx5Z60Bv6vrP9onYR9DOzIJcLi2M8Sv5yO?=
+ =?us-ascii?Q?eSQSvzbNwZRglWi6H7dMoU8sma3bbph2YyIMjvVswz48H1P51kACZH01Rp38?=
+ =?us-ascii?Q?aeJyvwq7x8GBShP9AjNiboMyam4T0td7UhHk2AulkvlAU0xSIfDxGohQmBKb?=
+ =?us-ascii?Q?9g/+PLYKUe3LlCffIotA/SUbh+kCi3eneXtfBxlEM8Ja/UDfkP2LP+mEzSwM?=
+ =?us-ascii?Q?RrHNnH1skSYdM6ZTf9kJRRQ3jxTzmicnkonwtFIJCXT7f4+vlmGSSuvbuvbr?=
+ =?us-ascii?Q?1gQ83owWo/UpUBI4O2TzVhSR9yFayVcJBkqZYqMtM34XgokeuYAP65UlVV8Z?=
+ =?us-ascii?Q?xdwPpwJM7+NSfIdCRMD+wch1cwmUpaSAtPgVtmVGdd1R/KnQcokz9uGByB8y?=
+ =?us-ascii?Q?BbdMWCFb36LSwpy4ctK7H4vwUKr2OMjw/N1gstna9N7oewljs6ZzEREvTT3X?=
+ =?us-ascii?Q?b7qAE3F7x9FWM/o6ziVLLt1j0/ljdVM4xto9GGHZzKk/QRgC+kDORpyRSidV?=
+ =?us-ascii?Q?x4zpndP4x8h504RulAIjzOQ1Iu60WExxBGQtcEu6bP81Ht3smRJSvZP0bXJW?=
+ =?us-ascii?Q?fAZrv3ZyBLIkHqFE2iguiiaBMLsAm905/wZPO5Q+I4TW6YlUaPAR/V+I+IAT?=
+ =?us-ascii?Q?jjQ4yTdAAYAYyNR3i0ptCKDlelXMW3mpU/yhKpA28U6hjyH+m8eFu5r06pAE?=
+ =?us-ascii?Q?fnHKSfJATc/EkdVv8PKMiJEdjepyt07pB8jFLoisJlcqxv6JoMMGtYKH9H98?=
+ =?us-ascii?Q?dmshMRp/cSq8hOQxgXRSXBvgOEb36uw2SK6u244odHiwYJdM/asHpe7iaQJ9?=
+ =?us-ascii?Q?K4PHZhXsCA=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	8EdZSQTHa4aj9BxJkONwNKiTbCUtbqToqzPQrbc4ay72CK5345t1+Vl69CX5N1K32YcF1JY/I+Ql3ixzSYc/KlhEwL46vx9kE4oZfRFoB4mO5dUs1TB5+NyPOGFRO8kJfjLIhmrOWlenY/O6UcBSyZGEVxyGoohNsk8HUP11Jnkv9qeQjxRdOLMZUWw1S8Es34zMGCoNCgFaTdY/vE/ZgGxCJwKjWqmv9B4n9fA0cVgqMtAl8e9ai3XsPTVRsNKSOnpDE4iLZxItLQ3b77aKDC0pCbYH+oGHuT5bCGlj0ASk1d78UOxLDqLf3J4xLw64/ya8xXxjStQe9MpjvXN7Fjt9CsQaY7YhC3FXMzByG/auMWR1KSJrQ/jA1TkvgMDGywZmk9mF3CJIP+xzmvPV6clgFf+YRzm2NgX0+7alYD6HKRg4ObIarFZchpSnasy5gVGFe5unqjWS8nYo82uuCIWbLhzil9X9JxuEJQWEK/l73Jdaqq/OgVq1HRAgvzP0VDLK9pTNJVwFUWZbCVSwKXs1jdqr6O7k6e6HLJq1e0BCpOzajieImlZzRnFnpCA3xDP9jsmywJ7Hp/gK0+UYwGDg6z63udyXESbtI4s5pKk=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7f8ced50-eae0-445e-d6f6-08de72d3053a
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR10MB7329.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Feb 2026 11:59:38.5985
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 5jJGcPwCpyfc1L0lTyJzzy9KYPPrjBQZI6+c7+bGdzBrCHrI0Kwo/XshBevFnX4y7nBnHBo+PEhWOofJL87nIQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR10MB5151
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-02-23_02,2026-02-20_04,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 adultscore=0 malwarescore=0
+ mlxscore=0 suspectscore=0 bulkscore=0 phishscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2602130000
+ definitions=main-2602230102
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMjIzMDEwMiBTYWx0ZWRfX7Kqhlu3yQZfV
+ El4WC4Ze3BhDtzFVL0+a+Y1xUbcADG/Yyk+UsLtRM+TYhl5vcVs4Ijbey3GUeW4lX35wXsyClzX
+ ALWeHwLkt0VPzIquDI1Vbkuq09bM3LcI6sn+JLwd4fCAeAP2PCMSflk0/P6vLsb/H6y8LHVqB84
+ 8UkFXQ8eD4doY9lGf3iPUBi66TuNUFJIx2O3PTCU5pcLszCtw4A2/jYQ+VENZp6pp44JbI2ubVL
+ OPD4j/r2GFrn8Y/6B5vYmjf90SOmw6TEEPsXUFiWD0P1O3ctXaV2Or51UqbwAQEJe57Og5dte/3
+ Rc2PRiANfcYO4CM5l32cDl2VAKMQtR+PPDtZd9C1PGLjtmVZ0GWaq4AwLUEYmrKp/2HxHw89JNy
+ bhX6Z4CDQNCHNY1I9xg7bUUbEKvHzXXmLitphaTame6Kb6mZ7U26/VIFWc3QC/xQR9SCdDRwkp3
+ Fe7m5ZRRvTVC1Uv+8Og==
+X-Proofpoint-GUID: wP-ApFOCHaRo3ebOnP2qXzUvHfw4wo6Y
+X-Authority-Analysis: v=2.4 cv=b9C/I9Gx c=1 sm=1 tr=0 ts=699c412f cx=c_pps
+ a=XiAAW1AwiKB2Y8Wsi+sD2Q==:117 a=XiAAW1AwiKB2Y8Wsi+sD2Q==:17
+ a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
+ a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=HzLeVaNsDn8A:10 a=GoEa3M9JfhUA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=Mpw57Om8IfrbqaoTuvik:22 a=GgsMoib0sEa3-_RKJdDe:22 a=O6FJd7GuMo-m2MAkU-sA:9
+ a=CjuIK1q_8ugA:10
+X-Proofpoint-ORIG-GUID: wP-ApFOCHaRo3ebOnP2qXzUvHfw4wo6Y
 
-Thorsten,
+On Mon, Feb 23, 2026 at 11:12:47AM +0000, Chris Bainbridge wrote:
+> On Mon, Feb 23, 2026 at 05:41:17PM +0900, Harry Yoo wrote:
+> > On Sun, Feb 22, 2026 at 09:36:58PM +0000, Chris Bainbridge wrote:
+> > > Hi,
+> > > 
+> > > The latest mainline kernel (v6.19-11831-ga95f71ad3e2e) has page
+> > > allocation failures when doing things like compiling a kernel. I can
+> > > also reproduce this with a stress test like
+> > > `stress-ng --vm 2 --vm-bytes 110% --verify -v`
+> > 
+> > Hi, thanks for the report!
+> > 
+> > > [  104.032925] kswapd0: page allocation failure: order:0, mode:0xc0c40(GFP_NOFS|__GFP_COMP|__GFP_NOMEMALLOC), nodemask=(null),cpuset=/,mems_allowed=0
+> > > [  104.033307] CPU: 4 UID: 0 PID: 156 Comm: kswapd0 Not tainted 6.19.0-rc5-00027-g40fd0acc45d0 #435 PREEMPT(voluntary) 
+> > > [  104.033312] Hardware name: HP HP Pavilion Aero Laptop 13-be0xxx/8916, BIOS F.17 12/18/2024
+> > > [  104.033314] Call Trace:
+> > > [  104.033316]  <TASK>
+> > > [  104.033319]  dump_stack_lvl+0x6a/0x90
+> > > [  104.033328]  warn_alloc.cold+0x95/0x1af
+> > > [  104.033334]  ? zone_watermark_ok+0x80/0x80
+> > > [  104.033350]  __alloc_frozen_pages_noprof+0xec3/0x2470
+> > > [  104.033353]  ? __lock_acquire+0x489/0x2600
+> > > [  104.033359]  ? stack_access_ok+0x1c0/0x1c0
+> > > [  104.033367]  ? warn_alloc+0x1d0/0x1d0
+> > > [  104.033371]  ? __lock_acquire+0x489/0x2600
+> > > [  104.033375]  ? _raw_spin_unlock_irqrestore+0x48/0x60
+> > > [  104.033379]  ? _raw_spin_unlock_irqrestore+0x48/0x60
+> > > [  104.033382]  ? lockdep_hardirqs_on+0x78/0x100
+> > > [  104.033394]  allocate_slab+0x2b7/0x510
+> > > [  104.033399]  refill_objects+0x25d/0x380
+> > > [  104.033407]  __pcs_replace_empty_main+0x193/0x5f0
+> > > [  104.033412]  kmem_cache_alloc_noprof+0x5b6/0x6f0
+> > > [  104.033415]  ? alloc_extent_state+0x1b/0x210 [btrfs]
+> > > [  104.033479]  alloc_extent_state+0x1b/0x210 [btrfs]
+> > > [  104.033527]  btrfs_clear_extent_bit_changeset+0x2be/0x9c0 [btrfs]
+> > 
+> > Hmm while bisect points out the first bad commit is
+> > commit e47c897a2949 ("slab: add sheaves to most caches"),
+> > 
+> > I think the caller is supposed to specify __GFP_NOWARN if it doesn't
+> > care about allocation failure?
+> > 
+> > btrfs_clear_extent_bit_changeset() says:
+> > >         if (!prealloc) {
+> > >                 /*
+> > >                  * Don't care for allocation failure here because we might end
+> > >                  * up not needing the pre-allocated extent state at all, which
+> > >                  * is the case if we only have in the tree extent states that 
+> > >                  * cover our input range and don't cover too any other range.
+> > >                  * If we end up needing a new extent state we allocate it later.
+> > >                  */
+> > >                 prealloc = alloc_extent_state(mask);
+> > >         }
+> > 
+> > Oh wait, I see what's going on. bisection pointed out the commit
+> > because slab tries to refill sheaves with __GFP_NOMEMALLOC (and then
+> > falls back to slowpath if it fails).
+> > 
+> > Since failing to refill sheaves doesn't mean the allocation will fail,
+> > it should specify __GFP_NOWARN with __GFP_NOMEMALLOC as long as there's
+> > fallback method.
+> > 
+> > But for __prefill_sheaf_pfmemalloc(), it should specify __GPF_NOWARN on
+> > the first attempt only when gfp_pfmemalloc_allowed() returns true.
+> 
+> Is this fix sufficient to do the right thing? I tested it, and it does
+> appear to prevent logging of the allocation failures for my test case.
 
-It's worth a shot. I'll give it a try and report back.
+I think we should do both both 1) setting __GFP_NOWARN from btrfs side
+and 2) making slab try to refill sheaves with __GFP_NOWARN when
+there's a fallback path.
 
-Andr=C3=A9s
+I'm writing a fix for 2) and I'll send it soon.
 
-On Mon, Feb 23, 2026 at 8:26=E2=80=AFAM Thorsten Leemhuis
-<regressions@leemhuis.info> wrote:
->
->
->
-> On 2/23/26 09:10, Ricardo Ribalda wrote:
-> > Hi Andr=C3=A9s
-> >
-> > Thanks for doing the bisecting
-> >
-> > On Sun, 22 Feb 2026 at 22:56, Andr=C3=A9s P=C3=A9rez <andres.f.perez@gm=
-ail.com> wrote:
-> >>
-> >> # OVERVIEW
-> >>
-> >> Since kernel v6.16.1, switching from an X11 session to a text VT and b=
-ack
-> >> freezes the display on a ThinkPad P15 Gen 2. The system remains respon=
-sive
-> >> over SSH; only the display is frozen. Bisecting identified commit
-> >> d1b618e7954802fe ("media: uvcvideo: Do not turn on the camera for some
-> >> ioctls") as the trigger. Reverting the logic change in that commit
-> >> fixes VT switching
-> >> on v6.16.1, v6.17.9, and v6.18.9, but that is not an actual solution. =
-Wayland
-> >> compositors (e.g., river and sway) are not affected.
-> >>
-> >> Last good:  v6.15.9
-> >> First bad:  v6.16.1
-> >> Bisect result: d1b618e7954802fe media: uvcvideo: Do not turn on the
-> >> camera for some ioctls
-> >>
-> >> ## Hardware:   Lenovo ThinkPad P15 Gen 2i (20YQ0031US)
-> >> CPU:        Intel Core i7-11800H (Tiger Lake-H)
-> >> iGPU:        Intel UHD Graphics (TGL GT1)
-> >> dGPU:       NVIDIA T1200 (not involved in eDP output; driver: nvidia-o=
-pen)
->
-> Could this be caused by nvidia's own driver, even if it is not supposed
-> to be involved? Might be worth ruling out with a proper vanilla kernel,
-> ideally really fresh, so 7.0-rc1.
->
-> Ciao, Thorsten
->
-> >> Display:    15.6" 1920x1080 eDP, 10 bpc capable (EDID 1.4)
-> >> Webcam:     Integrated Camera on PCH xHCI (Bus 003 Port 004)
-> >> Firmware:   LENOVO N37ET61W (1.97)
-> >> OS:         Arch Linux, Nix home-manager, X11 + xmonad, no display man=
-ager
-> >>
-> >> ## Symptoms and reproduction steps:
-> >> 1. Boot, start X11 on tty1 (startx).
-> >> 2. Switch to tty2 (Ctrl+Alt+F2): works.
-> >> 3. Switch back to tty1 (Ctrl+Alt+F1): display freezes.
-> >>    - Frozen on the last frame shown before switching away.
-> >>    - System is fully responsive over SSH.
-> >>    - Other VTs switch normally between each other as long as X11 is
-> >> not active on them.
-> >>    - Killing X does not recover the display. A reboot is required.
-> >>
-> >> # DEBUG ANALYSIS
-> >>
-> >> On v6.16.1, the VT switch back to X triggers a full modeset due to pip=
-e
-> >> configuration mismatches detected by intel_pipe_config_compare:
-> >>
-> >> [drm:intel_pipe_config_compare] fastset requirement not met in pipe_bp=
-p
-> >>   (expected 30, found 24)
-> >> [drm:intel_pipe_config_compare] fastset requirement not met in dp_m_n
-> >>   (expected link 269484/524288, found link 336855/524288)
-> >> [drm:intel_pipe_config_compare] fastset requirement not met in dpll_hw=
-_state
-> >>   (expected cfgcr0: 0xe001a5, found cfgcr0: 0x1c2)
-> >> [drm:intel_pipe_config_compare] fastset requirement not met in port_cl=
-ock
-> >>   (expected 270000, found 216000)
-> >> [drm:intel_atomic_check] forcing full modeset
-> >>
-> >> On v6.15.9, the same VT switch shows no such messages.
-> >> no pipe_config_compare runs, no modeset, no freeze.
-> >>
-> >> # BISECT AND VERIFICATION
-> >>
-> >> The bisect converged on d1b618e7954802fe in the uvcvideo driver. This
-> >> commit adds a switch statement to uvc_v4l2_unlocked_ioctl that allows
-> >> certain V4L2 IOCTLS to call video_ioctl2 directly without first callin=
-g
-> >> uvc_pm_get/uvc_pm_put. Prior to this commit, all ioctls called uvc_pm_=
-get
-> >> before video_ioctl2.
-> >>
-> >> ## VT switching verification across kernel versions:
-> >>
-> >>   v6.12.74 arch pkg:   WORKS
-> >>   v6.15.9 arch pkg:    WORKS
-> >>   v6.15.9 from source: WORKS
-> >>   v6.16.1 with d1b618e reverted:     WORKS
-> >>   v6.17.9 with PM wrapping restored: WORKS
-> >>   v6.18.9 with PM wrapping restored: WORKS
-> >>
-> >>   v6.16.1 from source:  FREEZES
-> >>   v6.16.1 arch pkg:     FREEZES
-> >>   v6.17.9 arch pkg:     FREEZES
-> >>   v6.18.9 from source:  FREEZES
-> >>   v6.18.9 arch pkg:     FREEZES
-> >>
-> >> ## Things that do not eliminate the freeze
-> >>
-> >>   - module_blacklist=3Duvcvideo on boot
-> >>   - CONFIG_USB_VIDEO_CLASS=3Dn (compiled out)
-> >
-> > This is puzzling me a bit... You are saying that if you do not build
-> > the uvc driver, the freeze is still happening?
-> >
-> > Am I understanding this correctly?
-> >
-> >>   - i915.enable_psr=3D0
-> >>   - Bypassing intel_vrr_transcoder_enable/disable (no-op)
-> >>   - xrandr --output eDP-1 --set "max bpc" 10
-> >>   - Xorg config FBDepth 30 (No effect on pipe_bpp)
-> >>
-> >> ## Workaround patch
-> >>
-> >> Reverting the optimization from d1b618e to restore the unconditional
-> >> uvc_pm_get/put wrapping for all ioctls. This is not a proper fix.
-> >>
-> >> diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/=
-uvc_v4l2.c
-> >> index 9e4a251eca88..15057b47ec4f 100644
-> >> --- a/drivers/media/usb/uvc/uvc_v4l2.c
-> >> +++ b/drivers/media/usb/uvc/uvc_v4l2.c
-> >> @@ -1199,33 +1199,12 @@ static long uvc_v4l2_unlocked_ioctl(struct fil=
-e *file,
-> >>   unsigned int converted_cmd =3D v4l2_translate_cmd(cmd);
-> >>   int ret;
-> >>
-> >> - /* The following IOCTLs need to turn on the camera. */
-> >> - switch (converted_cmd) {
-> >> - case UVCIOC_CTRL_MAP:
-> >> - case UVCIOC_CTRL_QUERY:
-> >> - case VIDIOC_G_CTRL:
-> >> - case VIDIOC_G_EXT_CTRLS:
-> >> - case VIDIOC_G_INPUT:
-> >> - case VIDIOC_QUERYCTRL:
-> >> - case VIDIOC_QUERYMENU:
-> >> - case VIDIOC_QUERY_EXT_CTRL:
-> >> - case VIDIOC_S_CTRL:
-> >> - case VIDIOC_S_EXT_CTRLS:
-> >> - case VIDIOC_S_FMT:
-> >> - case VIDIOC_S_INPUT:
-> >> - case VIDIOC_S_PARM:
-> >> - case VIDIOC_TRY_EXT_CTRLS:
-> >> - case VIDIOC_TRY_FMT:
-> >> - ret =3D uvc_pm_get(handle->stream->dev);
-> >> - if (ret)
-> >> - return ret;
-> >> - ret =3D video_ioctl2(file, cmd, arg);
-> >> - uvc_pm_put(handle->stream->dev);
-> >> + ret =3D uvc_pm_get(handle->stream->dev);
-> >> + if (ret)
-> >>   return ret;
-> >> - }
-> >> -
-> >> - /* The other IOCTLs can run with the camera off. */
-> >> - return video_ioctl2(file, cmd, arg);
-> >> + ret =3D video_ioctl2(file, cmd, arg);
-> >> + uvc_pm_put(handle->stream->dev);
-> >> + return ret;
-> >>  }
-> >>
-> >>  const struct v4l2_ioctl_ops uvc_ioctl_ops =3D {
-> >>
-> >> Andr=C3=A9s
-> >>
-> >
-> >
->
+> diff --git a/fs/btrfs/extent-io-tree.c b/fs/btrfs/extent-io-tree.c
+> index d0dd50f7d279..d2e1083848e8 100644
+> --- a/fs/btrfs/extent-io-tree.c
+> +++ b/fs/btrfs/extent-io-tree.c
+> @@ -641,7 +641,7 @@ int btrfs_clear_extent_bit_changeset(struct extent_io_tree *tree, u64 start, u64
+>  		 * cover our input range and don't cover too any other range.
+>  		 * If we end up needing a new extent state we allocate it later.
+>  		 */
+> -		prealloc = alloc_extent_state(mask);
+> +		prealloc = alloc_extent_state(mask | __GFP_NOWARN);
+
+This seems to be a right thing to do to me, but as I'm not familiar
+with btrfs, I'll let btrfs folks leave comment on it :)
+
+>  	}
+>  
+>  	spin_lock(&tree->lock);
+
+-- 
+Cheers,
+Harry / Hyeonggon
