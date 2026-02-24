@@ -1,51 +1,55 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [185.244.194.184])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [46.38.247.119])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9692A2877E5
-	for <regressions@lists.linux.dev>; Tue, 24 Feb 2026 12:11:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.244.194.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 521F73815CB
+	for <regressions@lists.linux.dev>; Tue, 24 Feb 2026 13:49:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.38.247.119
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771935078; cv=none; b=e5KdsO1jlW+6fwhIblR4my1avtJFp9b+r5O1bPTIByxaDef+TzzkNe2mLicAHE7Hxv8guczRtNOvS+bzwEj7QQJlXJQ2hkJ3PhZoKZc4n7FNYywfasGwmlPPqz3dkvehUzVG4pGKXRIqXVG9d74PQmyd1TjJCqODcxdn1TsRS0Y=
+	t=1771940963; cv=none; b=M4MJkPZcwWZbzTkL8PbynQGxfsHtroOeKDTanxlR9KC+7y8ShxtYXY+sMEEs6SwAYQZE1ghxax31x8FwAPE/ct1pSgvvfaJ8XcLRHXwEDfK1NiPCEA6kt6a91qmvhBR8LQ8aT8rMPjh2aZdXgxNy6zJ2cyfuH5WK++RK8LEyn2E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771935078; c=relaxed/simple;
-	bh=5IFTXhltXmX0IsmlhDUIauXf6FhFAacrrKlyaxSk8Rk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
-	 In-Reply-To:Content-Type; b=Q2QduEy6xcsRcRRV32G4GMXJMsa9I88uQg0+179zcOM2fCUldwjGDA/63XulvLR8v3cxyPajrD5ZQQ+wpTnGWvh2a/73GGmQ6DEOv87MmsWgOktJ4VMMpspEzKo5f1HzG+z29b5zMQRL6mdKpWrUdh9SvTCMMrW3bbtWt0H42g8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=a0pignQz; arc=none smtp.client-ip=185.244.194.184
+	s=arc-20240116; t=1771940963; c=relaxed/simple;
+	bh=Nyjb4MXHS+XFHtkYIESFSNISmxPs/hiSjhjUbV6phGM=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=RpxLoh6R3Eo/TyG7+ouDTSx5b1/dA4HI+oMrbnV23YgrfBous0kyqUj2b7ktXs4Ilc6M+qvYA6MPIRHn4Yv4nv3Kc1HbUnX1MVyXh8oWAmAe37TPMYiHKpFcH+Q6x3Mn13yKjAa8DGF1OA0abVUxnW2t3LK9m5XtXZiXFiwo1XQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=A/+oc8ta; arc=none smtp.client-ip=46.38.247.119
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="a0pignQz"
-Received: from relay01-mors.netcup.net (localhost [127.0.0.1])
-	by relay01-mors.netcup.net (Postfix) with ESMTPS id 4fKxQN01q0z98c3;
-	Tue, 24 Feb 2026 13:11:08 +0100 (CET)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="A/+oc8ta"
+Received: from mors-relay-8404.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4fKzbZ07wLz89Cv
+	for <regressions@lists.linux.dev>; Tue, 24 Feb 2026 14:49:14 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1771935068;
-	bh=5IFTXhltXmX0IsmlhDUIauXf6FhFAacrrKlyaxSk8Rk=;
-	h=Date:Subject:To:References:From:Cc:In-Reply-To:From;
-	b=a0pignQzyeGS3CsCCnjHbn4LVCMN7Rfrmfd6kfE9qZ1nvziWwQBkC698Skz2N9L1m
-	 DL8jHlRTJ/JATDqDUvxAMUBF65TDwR9KzO5VASWCKoOpS1bha2GjodR0G7OlRUlAkL
-	 mWEdR5vuCfV89TdG6IDWkFJ51R/5Uyw94iA1lrJPwStBkuWfwReAMCZAoYmmLepOAw
-	 PB0RvvSPPkKp46sxVXh+DNA+gEDI4IHlgIuyxRtchMQ3deyjL/INwF14DibY4LOwBO
-	 slT4WcPv9zunK/vrdJX0vERheqVfpOv/4OfT6313QB/wYUwKhBWJajk7IZrvQpBmfo
-	 braziIF66Y9Iw==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by relay01-mors.netcup.net (Postfix) with ESMTPS id 4fKxQM6RL4z7vJt;
-	Tue, 24 Feb 2026 13:11:07 +0100 (CET)
+	s=key2; t=1771940954;
+	bh=Nyjb4MXHS+XFHtkYIESFSNISmxPs/hiSjhjUbV6phGM=;
+	h=Date:Subject:From:To:References:In-Reply-To:From;
+	b=A/+oc8ta0L72+XO9p204uX4LYjdq8gCkfG7PWTf1hNekkyCQDOs1pPeyCzmp9MhV5
+	 j6pkDMAm4Kw8zAJ4FOwc8BrQGm9/VMFy9OsZE8Z2rP1kOWM0N6qmFmL8qhFyYPQA8g
+	 5wqCPTB+WRY55Th5g7iODO2vFJxQixXCqsj7MlVFn+A2CSGYOzYalEAHbbm98GXKiv
+	 9slc1Y82Q63ouct35QQHRz9+dWxg4XugBKF1FJMKfwLui7UBjSawf3RuWXuUFrstjM
+	 FECXD1qL1DQsFWB2X0HohhtNNeWBeBaeP6t3n1Zdk/2eKoKFfN1rkW3P2S4vUD4mu1
+	 IOLvNJrgYJ/zw==
+Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4fKzbY6Xrpz4xHs
+	for <regressions@lists.linux.dev>; Tue, 24 Feb 2026 14:49:13 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
+X-Spam-Flag: NO
+X-Spam-Score: -2.898
+X-Spam-Level: 
 Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4fKxQM1YhSz8sZP;
-	Tue, 24 Feb 2026 13:11:07 +0100 (CET)
+	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4fKzbX6XTBz8sbd
+	for <regressions@lists.linux.dev>; Tue, 24 Feb 2026 14:49:12 +0100 (CET)
 Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 2C14A672E4;
-	Tue, 24 Feb 2026 13:11:06 +0100 (CET)
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id B4E51652C2
+	for <regressions@lists.linux.dev>; Tue, 24 Feb 2026 14:49:11 +0100 (CET)
 Authentication-Results: mxe9fb;
         spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
 Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <3ac876ca-0038-41e8-a1a0-3d5434f30473@leemhuis.info>
-Date: Tue, 24 Feb 2026 13:11:05 +0100
+Message-ID: <5426eced-ba04-45e0-84b1-ce525e660de7@leemhuis.info>
+Date: Tue, 24 Feb 2026 14:49:10 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -53,93 +57,45 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: extlinux can't boot kernel after commit "kbuild: keep .modinfo
- section in vmlinux.unstripped"
-To: Ed W <lists@wildgooses.com>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- masahiroy@kernel.org, nathan@kernel.org
-References: <587f25e0-a80e-46a5-9f01-87cb40cfa377@wildgooses.com>
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
 From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
 Content-Language: de-DE, en-US
-Cc: Linux Kernel Build System <linux-kbuild@vger.kernel.org>,
- Nicolas Schier <nsc@kernel.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-In-Reply-To: <587f25e0-a80e-46a5-9f01-87cb40cfa377@wildgooses.com>
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-PPP-Message-ID: <177193506651.2973788.9122005200268033841@mxe9fb.netcup.net>
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: <177194095190.3693099.9403135517283598156@mxe9fb.netcup.net>
 X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: 2C14A672E4
-X-NC-CID: kwOXViOdelraZOT6zXRj7//q/XWqTKIBcTO6PG5gQEOTMFs5Y8g=
+X-Rspamd-Queue-Id: B4E51652C2
+X-NC-CID: iBAsL8Q/Lrq74eQGsabohdW4Z445fSOpyYo5bO6/37znI2Wa/lQ=
 
-On 2/17/26 20:24, Ed W wrote:
-> Hi, I wonder if I can get some help debugging a problem post the following commit. After trying to
-> upgrade to a newer kernel build I encountered boot failures on my amd64 machine, booting via
-> extlinux and git bisect narrowed it down to this commit:
 
-Thx for the report. Adding a few more recipients to this.
 
-Two things are likely worth checking:
+On 3/9/24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-* Is 7.0-rc1 still affected?
-* If it's possible to revert the culprit in 7.0-rc1, does it fix the
-problem?
+#regzbot report:
+https://lore.kernel.org/all/20260218-wip-fix-iris-plus-v1-1-e6b969defd6d@kernel.org/#t
+#regzbot introduced: dda7dcd9da73
+#regzbot title: drm/i915: kernel lock when waking up blanked screen
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=v6.19.2&id=3e86e4d74c0490e5fc5a7f8de8f29e7579c9ffe5
-> kbuild: keep .modinfo section in vmlinux.unstripped
+#regzbot report:
+https://lore.kernel.org/all/20260219164648.3014-1-spasswolf@web.de/
+#regzbot introduced: 9311e6c29b34
+#regzbot title: ~90s reboot delay with PREEMPT_RT
 
-FWIW: Masahiro Yamada, that's a change of yours.
+#regzbot report:
+https://lore.kernel.org/all/20260221-repeal-emphatic-ddc2e9b94208@spud/
+#regzbot introduced: c217157bcd1df
+#regzbot title: boot failure
 
-Ciao, Thorsten
-
-> Keep the .modinfo section during linking, but strip it from the final vmlinux. 
-> Adjust scripts/mksysmap to exclude modinfo symbols from kallsyms. 
-> This change will allow the next commit to extract the .modinfo section from the vmlinux.unstripped
-> intermediate.
-> 
-> 
-> The symptoms are that prior to this commit I can boot a kernel built using gcc-15 and binutils
-> 2.45.1, however, adding that commit, or trying kernels up to 6.18.12, all fail to boot the bzImage file.
->  
-> Extlinux apparently won't read (or otherwise rejects as invalid) the resulting bzImage kernel with
-> error:
->     failed: I/O error
-> So it doesn't even try to run the kernel, it appears to fail reading from disk (and presumably
-> locating the entry point for execution?)
-> 
-> Kernel is relocatable and hence ends up being built with 
-> VMLINUX_NEEDS_RELOCS=y
-> 
-> Curiously, if I build with clang then the resulting kernels all seem to work without a problem??
-> 
-> System is one of a cluster of Ryzen 9 5950X, but similar errors appear with older Ryzen 9 3900
-> boxes. Underlying OS is gentoo, so packages approximately as per latest releases with that.
-> 
-> I'm not sure how to narrow down what precisely triggers the boot failure though. For example I see
-> similar results to the following on both a working 6.17.0 and a broken 6.18.12
-> 
-> # readelf -l vmlinux | grep -A3 LOAD
->   LOAD           0x0000000000200000 0xffffffff81000000 0x0000000001000000
->                  0x0000000002a8b4d0 0x0000000002a8b4d0  R E    0x200000
->   LOAD           0x0000000002e00000 0xffffffff83c00000 0x0000000003c00000
->                  0x0000000001a00000 0x0000000001a00000  RW     0x200000
->   NOTE           0x0000000002c8b47c 0xffffffff83a8b47c 0x0000000003a8b47c
->                  0x0000000000000054 0x0000000000000054         0x4
-> 
-> On the non working 6.18.12 I see:
-> # readelf -S vmlinux.unstripped | grep modinfo
->   [70] .modinfo          PROGBITS         ffffffff85600000  04800000
-> # readelf -S vmlinux | grep modinfo
-> 
-> So it seems as though the modinfo sectors ARE being stripped?!
-> 
-> My guess is that something has moved or become re-ordered such that the extlinux is rejecting the
-> image?? 
-> 
-> At this point I'm honestly not quite sure what I am doing, so would some kind soul please help me
-> figure out what is happening? I apologise in advance that I've likely not given enough information
-> about the problem, please be gentle...
-> 
-> Ed W
-> 
+#regzbot report:
+https://gitlab.freedesktop.org/drm/i915/kernel/-/issues/15731
+#regzbot introduced: v6.18.8..v6.18.12
+#regzbot title: drm: i915: DisplayPort audio stopped working
 
