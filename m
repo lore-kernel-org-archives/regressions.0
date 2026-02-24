@@ -1,196 +1,464 @@
-Received: from mail-dy1-f181.google.com (mail-dy1-f181.google.com [74.125.82.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09CD139E175
-	for <regressions@lists.linux.dev>; Tue, 24 Feb 2026 14:14:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.181
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771942445; cv=pass; b=sDyptieo0ICTBVGozibGFiBsP9AoEf/3DxaXF87hXHWNfMNWmSugYNFyysHFormo9HsqMWGPPdo1mjbIiuAFWZR770vW9Qpot/Y7of0DmwBzP+Shv3UveseoR1N0XDiUhVhmKb2elOTpG44W4qxXScPdRpt2aDErsWu7efJJXes=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771942445; c=relaxed/simple;
-	bh=X2u1sa8cXw7f3fhCTsjaFodXR3TO0s3l+pgy2+3Z0AY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hhdx4f9f34nlzmZAZLitjtXVXBDs3xoSVgxgndbGReCVavffWS0jIkdJ9rmb9eCqWo5jSRHNnZM8akBJOA4AlCnmDhzrtmrcsRyJr3nhA+eE8kGKnfDyzx7O3efYkACtrZfsXlDMUhg4P8aXi3OM92a1uqRdQa24QxQqQ0rrCEQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lR2Eh3gS; arc=pass smtp.client-ip=74.125.82.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F39ED86329;
+	Tue, 24 Feb 2026 20:46:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1771965997; cv=none; b=MPKpYWmMbpI7JAuOUUaEA37eDT63aMm0sUwF9n6p36W5GeMEbnBKdsxY7LeIS4wiPT4hRU6pKjpKhAjlxQtPGsoGLJIw5f6oFl984TWpRbjfNv8o6/d4FQlI8rAatRIH5bI1EdD4fDE0SDG75uaJfnAqV6tKYKnlDAKCY8UcSNk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1771965997; c=relaxed/simple;
+	bh=jmOYHt9cC6ZpKvMGks7yUQ5i9q/IGQvo01Y/3L+Bs24=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oZ1LOW3iiZeODh343wC2CcZ+QSOA0YPQrirytuiN3ZCsFVAXTNAtJorJQoZM9ITEEE3iefRyLYX59gjc37+lWUYlUb70qz0QFYBGHkEYgVER5upgH0cZZb+3VWJi+d1FqtkeXpd2wPZm8x/+14tlTbxS8huh6KDgUnxCpA4z4jo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DQrHKWTv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lR2Eh3gS"
-Received: by mail-dy1-f181.google.com with SMTP id 5a478bee46e88-2bd801b40dbso241576eec.0
-        for <regressions@lists.linux.dev>; Tue, 24 Feb 2026 06:14:03 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1771942443; cv=none;
-        d=google.com; s=arc-20240605;
-        b=k4nhgrTqmDQSjUwKTtJRgvXrX7i7we+teqp1vbDf4hr64/2Az6gfhs9DYq39Ga0D8D
-         LoUHWrMqGWOOxq504eKpixgbZAuGzERaipAtGAUMgpXH+HqJ6qXaeEIU2uSUC8qtfILg
-         NUP+vdzRPmeBB9UITFz0zQQTGPOT5QfAovzUHpTmENIqFXazc0exbb9PXfo+T4+Q/QeF
-         vsaLoug0YhgNUSpkpuiiaQbwsJJkA2s/Cy/HI6w9dKB3X+nSDmp//KjGvoZfRNmOXtPs
-         TirVygNe7X+9/9S5TTHqJXmqu74ACxiD0zPu4YUd2jCMOt+MGRjiTJk0vjthvNAH11Kn
-         nhyQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=X2u1sa8cXw7f3fhCTsjaFodXR3TO0s3l+pgy2+3Z0AY=;
-        fh=TKbF+muCjooBQ6Y/EXCSVKk8iurkyvwvJGFq2ClxwkY=;
-        b=XO2HvVNuqyzbyQOZYlPV6m9so4Yzsz+eL77WYu6z2DRv1oPB2RG0UaLKmawtpd4q0u
-         br8w0Rx7UHjL5wCrvt9bba7XMpEOTHveQcve6P4jk9E6I8iP/aR0jdT+ovbs7jZjcV6h
-         XCLSftgR5J7f4eHVU+VKh/05PRPZZY9rJkJtwvJdo5l11pY2has4tQHQLPw8RACYioxJ
-         U6qAEzHlM0xo3eqLTXSV0114dn9MMCAMbNHAKznGW4yBFNhd7N5lJKTBW9+/Yp32mgky
-         x/xffx0lg4KNUAXcKf2ZZWup3mYhP6GTv3cIHp3gScVNzrk6jew/i4edXfBCO9eGMclL
-         2ZAA==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1771942443; x=1772547243; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=X2u1sa8cXw7f3fhCTsjaFodXR3TO0s3l+pgy2+3Z0AY=;
-        b=lR2Eh3gS/iGyjvHDjIBMjKSY0mHwldTklW0nQJD30iN8VWhVwUIwYWySE3wthdkeOc
-         A/QwG1Hug/dg3CEAX1A0ksZg80tyyIOfwVpSfcYlvt4wHZo2KG4lMKU9junPSSRK5RYb
-         1DjOcKduXG7gu+QFdLraPZdQRHL6WjdQyTnB45FKhXz082YDcSB1lpRXMdiZq12Cgl36
-         tC7itQUw+8UQ3SZ1hV2Ut1ORL3J72wpP1BzhT+hJOD/UsMEwScUFm+hI/r02vMvhVe54
-         hdN6CVdAovjCosOqecSwHpKXvsBRBWm7Z03mTZsPDHJwSq0HZE58sljxT4aBh4gX6dkg
-         oSMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771942443; x=1772547243;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=X2u1sa8cXw7f3fhCTsjaFodXR3TO0s3l+pgy2+3Z0AY=;
-        b=sMLTmkePJFSzuDr5el3VReKql1uB8CiKAxawUO0ISjNuGnEfgWCRjBJ2qjtwX+W8L3
-         TeaTw0e3yga+yCn3UhyY9Kl/2sZJgkdXrazTM3Ji3aBOUsUxqpsPWDKnjHVaY4tOb9Ef
-         w0KPKuYgjk14nHmxymHLlK/PaVqZOBeBhnw6p4KNDQfxGSEkgAJEL/TSGi2Ku2tVhxsp
-         2iTk+6HENlTfAHSvx/Ahtb0Uk5zZoM3gJxs78GOQrbasq1GZjkVpYbsKvYYGOtQr09WU
-         8RjJU50dxe52l3DGF9XASgWo6gzLQZ+YSegWUoqsqqZ6+nMa4FOM1dX9QpTMmySncSEu
-         OOLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX9mHR+0NAaFYOK1sjkTpqYIrR+Fe2Fqxp4PAmyy7g7Yzk7RtrExHqMsb5Qo17NZKkUGUZGiRXoFzl/Aw==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwL4iHoOCv15qhgZRxNCI2vptf5w0HlNBjnjjV4A8/3ASjipdvD
-	kZhL1NqrBF5jIAMNcdWJuNVHP6aEiPMsXxKpeTeRVMob5gm5+H5dilGbMeNy8ActT7DW3UdVe/u
-	StsPdVRJ0f4tM2u5IZLsduMqswmaKLcs=
-X-Gm-Gg: AZuq6aKAWVaHmcmrnKhsNsAPt0/KSEFWEHN7zNvrLLcXW1eBtUSnuNtgHXyMiYRp447
-	Kc36BT5V3KApzAYEp+CwkECJDi+BoFKhCofbphWQzakcp6ygmXZOnjlwiHkSAx43BnRsmibmHOk
-	jcxKG5KKjzl8T228aHZlPhOOrQmpMWbhqOxnGaYzFv44vf6NN+q1P0LGwmYgWDj721om4jXZQwW
-	rJYTla6WbKD2CAYfOU21PCbSSOT//jLvVAcN5r1tD4HJTZQHzLEvO3jq9w92MLeGr5LO+48PEuJ
-	nnysBeXIwKpw8xZHyurxS3ySPMxZipL7uneB1SpTUP8cVn34JLBRqYzQFNySbgJV49YJ6vpuLFW
-	JQcQD
-X-Received: by 2002:a05:7022:6713:b0:124:af80:9d0c with SMTP id
- a92af1059eb24-1276ac5e868mr2364261c88.0.1771942442816; Tue, 24 Feb 2026
- 06:14:02 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DQrHKWTv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A161C116D0;
+	Tue, 24 Feb 2026 20:46:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1771965996;
+	bh=jmOYHt9cC6ZpKvMGks7yUQ5i9q/IGQvo01Y/3L+Bs24=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DQrHKWTv4H+wrJveLnpCfS/RRPovjTtpmdrOphe68F38sGjJC0aYsPdsbvOaEPjJD
+	 zZ3bsTEGr9Qzt4u/c6pD6aZMu+PODtFLpS0yPAvooza3lMyBq9lRDxcec60lPu1kjB
+	 GivLbVCOI1sXiX9BQsLs2H+v8QiG6j2S+zPaTih9jLFqcyyXynfBtPY+A+F9ELbp3A
+	 M5tmc0c8fWq1ClDzTHJdU7RlfkPG5y95HPLz+5D2+EbY0cPJHgof8YdQNiTF2NB6Vx
+	 2x460+7+rQ6jjAbuPLQ83czEaNCpNO53f84okSCAu14LNqu/+trOXyUFO+1b75yL1l
+	 yp0wvWgoMel0A==
+Date: Tue, 24 Feb 2026 13:46:32 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Thorsten Leemhuis <regressions@leemhuis.info>,
+	Ed W <lists@wildgooses.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	masahiroy@kernel.org,
+	Linux Kernel Build System <linux-kbuild@vger.kernel.org>,
+	Nicolas Schier <nsc@kernel.org>,
+	Linux kernel regressions list <regressions@lists.linux.dev>
+Subject: Re: extlinux can't boot kernel after commit "kbuild: keep .modinfo
+ section in vmlinux.unstripped"
+Message-ID: <20260224204632.GA3510750@ax162>
+References: <587f25e0-a80e-46a5-9f01-87cb40cfa377@wildgooses.com>
+ <3ac876ca-0038-41e8-a1a0-3d5434f30473@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAPM=9txvCxvz_NH1zw9WpeCiYYGOxN36Lz1owmbbjfaB2tmjPA@mail.gmail.com>
- <b4f8ca7a-02b1-4e72-896b-87a00db6338b@leemhuis.info> <CAPM=9tw4xWxwGSr=SMQKjWL2R_LfA-b9joYNMqZXM0atis=10Q@mail.gmail.com>
- <CAPM=9ty9T5uC6YiU73G3Y7cEeTpxh4TafmJB=QB+fvcgTvK2BA@mail.gmail.com>
-In-Reply-To: <CAPM=9ty9T5uC6YiU73G3Y7cEeTpxh4TafmJB=QB+fvcgTvK2BA@mail.gmail.com>
-From: Alex Deucher <alexdeucher@gmail.com>
-Date: Tue, 24 Feb 2026 09:13:51 -0500
-X-Gm-Features: AaiRm51EbOro9HI59W14g0qXUGJ50oTIbGZguxl6JG5x_VcuGjQElINW7NxLpTc
-Message-ID: <CADnq5_N_ktiuYTHskkpVkWD60t_YMUrXpQPhPE+Zo_wiJ5sAgg@mail.gmail.com>
-Subject: Re: Time from regression report to a merge of a fix (was Re: [git
- pull] drm fixes for 7.0-rc1)
-To: Dave Airlie <airlied@gmail.com>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Simona Vetter <simona@ffwll.ch>, 
-	dri-devel <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>, 
-	Alex Deucher <alexander.deucher@amd.com>, 
-	Linux kernel regressions list <regressions@lists.linux.dev>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
-	=?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>, 
-	Jani Nikula <jani.nikula@linux.intel.com>, Imre Deak <imre.deak@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3ac876ca-0038-41e8-a1a0-3d5434f30473@leemhuis.info>
 
-On Tue, Feb 24, 2026 at 2:24=E2=80=AFAM Dave Airlie <airlied@gmail.com> wro=
-te:
->
-> On Tue, 24 Feb 2026 at 16:50, Dave Airlie <airlied@gmail.com> wrote:
-> >
-> > On Mon, 23 Feb 2026 at 22:52, Thorsten Leemhuis
-> > <regressions@leemhuis.info> wrote:
-> > >
-> > > Lo!
-> > >
-> > > On 2/20/26 21:53, Dave Airlie wrote:
-> > > >
-> > > > This is the fixes and cleanups for the end of the merge window, it'=
-s
-> > > > nearly all amdgpu, with some amdkfd, then a pagemap core fix, i915/=
-xe
-> > > > display fixes, and some xe driver fixes. Nothing seems out of the
-> > > > ordinary, except amdgpu is a little more volume than usual.
-> > > >
-> > > > Let me know if there are any issues,
-> > >
-> > > Well, there were two fixes in here that made me wonder if our process=
-es
-> > > need some optimization to get regressions fixed at least somewhat as
-> > > fast as Linus wants them to be fixed[1]:
-> > >
-> > > * One fix in here was for a amdgpu regression introduced in v6.19-rc6
-> > > (and also affecting many stable series due to backports). The fix was
-> > > ready within ~2 days and could even have made v6.19 -- but it only
-> > > reached mainline through this PR on Friday. IOW: After two weeks. Whi=
-ch
-> > > got me wondering, "Should we do something to merge fixes like that
-> > > faster"? And yes, it's the merge window =E2=80=93 but that's also whe=
-n Arch
-> > > Linux and openSUSE Tumbleweed usually jump to the latest mainline ser=
-ies
-> > > and thus expose regressions like this to many users, so I guess it wo=
-uld
-> > > be good to get them fixed at least as fast as outside of merge window=
-s.
->
-> I think due to the patch pipeline depth and volume that amdgpu and
-> i915/xe are dealing with we may need to consider some better
-> regression revert pipelines,
->
-> The problem is most patches get fed into the start of their -next
-> pipelines, where CI etc picks up on them, but there isn't enough
-> urgency to create separate trees or pulls outside the regular fixes
-> ones.
->
-> The amdgpu one definitely should have been fixed in 6.19, Alex any
-> idea how we can alleviate that sort of problem, esp if a bug has
-> multiple regression reports.
+Hi Ed and Thorsten,
 
-I guess I should have done an additional -fixes PR that week.
-Normally I would have been sure to include in the following weeks
--fixes PR, but this was the last one of the cycle.
+On Tue, Feb 24, 2026 at 01:11:05PM +0100, Thorsten Leemhuis wrote:
+> On 2/17/26 20:24, Ed W wrote:
+> > Hi, I wonder if I can get some help debugging a problem post the following commit. After trying to
+> > upgrade to a newer kernel build I encountered boot failures on my amd64 machine, booting via
+> > extlinux and git bisect narrowed it down to this commit:
+> 
+> Thx for the report. Adding a few more recipients to this.
 
-Alex
+Thank you for the linux-kbuild CC, this somehow ended up in my spam box,
+so I did not see it :/
 
->
-> > >
-> > > * One fix in here was for a i915/xe regression introduced in v6.18-rc=
-1.
-> > > Once reported, it took about six weeks to get fixed =E2=80=93 and the=
-n nearly 10
-> > > days for the fix to reach mainline. Looking at this, I once more
-> > > wondered if this could have been merged faster. But even more I wonde=
-red
-> > > why the culprit wasn't reverted, as that's what Linus afaics wants wh=
-en
-> > > it takes this long.
->
-> I think for the i915 one the problem patch should have been reverted
-> asap, but I just don't think there was a responsible person to do it,
-> maintainers need to be in the loop for these sort of problems, but if
-> they aren't in the loop and the regression sits in the bug tracker
-> without them being looped on it, we rely on the reporter or developer
-> to find it and do the right thing. Esp when developers are head down
-> on fixing it, but then it doesn't get flagged as urgent once it goes
-> into the -next pipeline and so on. We don't usually break the weekly
-> fixes cycles for drm, because CI backlogs and other things it just
-> fits nicely, if we do have regressions like this it might be that we
-> need to start having urgent PRs out of cycle, which I don't object to,
-> it's just a matter of whether maintainers can have this sort of
-> insight into patches in the pipeline when there is quite a long
-> backlog.
->
-> Thanks for the detailed analysis, I've cc'ed some more Intel people.
->
-> Dave.
+> Two things are likely worth checking:
+> 
+> * Is 7.0-rc1 still affected?
+> * If it's possible to revert the culprit in 7.0-rc1, does it fix the
+> problem?
+
+I doubt this change will cleanly revert on 7.0-rc1, as it was an early
+patch in a series that touched a few places in Kbuild and it had several
+follow up fixes.
+
+> > https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=v6.19.2&id=3e86e4d74c0490e5fc5a7f8de8f29e7579c9ffe5
+> > kbuild: keep .modinfo section in vmlinux.unstripped
+> 
+> FWIW: Masahiro Yamada, that's a change of yours.
+
+Masahiro has stepped away from regular kernel development and
+maintenance:
+
+  https://lore.kernel.org/20250804142007.776418-1-masahiroy@kernel.org/
+
+So I will deal with this one, as I committed the series.
+
+> > Keep the .modinfo section during linking, but strip it from the final vmlinux. 
+> > Adjust scripts/mksysmap to exclude modinfo symbols from kallsyms. 
+> > This change will allow the next commit to extract the .modinfo section from the vmlinux.unstripped
+> > intermediate.
+> > 
+> > 
+> > The symptoms are that prior to this commit I can boot a kernel built using gcc-15 and binutils
+> > 2.45.1, however, adding that commit, or trying kernels up to 6.18.12, all fail to boot the bzImage file.
+> >  
+> > Extlinux apparently won't read (or otherwise rejects as invalid) the resulting bzImage kernel with
+> > error:
+> >     failed: I/O error
+> > So it doesn't even try to run the kernel, it appears to fail reading from disk (and presumably
+> > locating the entry point for execution?)
+> > 
+> > Kernel is relocatable and hence ends up being built with 
+> > VMLINUX_NEEDS_RELOCS=y
+> > 
+> > Curiously, if I build with clang then the resulting kernels all seem to work without a problem??
+> > 
+> > System is one of a cluster of Ryzen 9 5950X, but similar errors appear with older Ryzen 9 3900
+> > boxes. Underlying OS is gentoo, so packages approximately as per latest releases with that.
+> > 
+> > I'm not sure how to narrow down what precisely triggers the boot failure though. For example I see
+> > similar results to the following on both a working 6.17.0 and a broken 6.18.12
+> > 
+> > # readelf -l vmlinux | grep -A3 LOAD
+> >   LOAD           0x0000000000200000 0xffffffff81000000 0x0000000001000000
+> >                  0x0000000002a8b4d0 0x0000000002a8b4d0  R E    0x200000
+> >   LOAD           0x0000000002e00000 0xffffffff83c00000 0x0000000003c00000
+> >                  0x0000000001a00000 0x0000000001a00000  RW     0x200000
+> >   NOTE           0x0000000002c8b47c 0xffffffff83a8b47c 0x0000000003a8b47c
+> >                  0x0000000000000054 0x0000000000000054         0x4
+> > 
+> > On the non working 6.18.12 I see:
+> > # readelf -S vmlinux.unstripped | grep modinfo
+> >   [70] .modinfo          PROGBITS         ffffffff85600000  04800000
+> > # readelf -S vmlinux | grep modinfo
+> > 
+> > So it seems as though the modinfo sectors ARE being stripped?!
+
+Yes, that is expected. vmlinux.unstripped contains .modinfo for modpost
+processing at build time but it is removed from vmlinux because it is
+not needed at run time.
+
+> > My guess is that something has moved or become re-ordered such that the extlinux is rejecting the
+> > image?? 
+> > 
+> > At this point I'm honestly not quite sure what I am doing, so would some kind soul please help me
+> > figure out what is happening? I apologise in advance that I've likely not given enough information
+> > about the problem, please be gentle...
+
+I think you provided good information off the bat, so no worries on that
+front. I am not entirely positive that this is the root cause but now
+that I am looking at it and have some additional context from a recent
+7.0-rc1 commit [1], I think 3e86e4d74c04 adding .modinfo to ELF_DETAILS
+and removing it from DISCARDS results in .modinfo appears in certain
+places, namely arch/x86/boot/compressed/vmlinux, where it may not be
+expected. Why that breaks this bootloader, not sure, but I don't really
+think it matters. I think we should move .modinfo from ELF_DETAILS
+(which may be used in other non-vmlinux linker scripts) to its own
+macro, add that to all vmlinux linker scripts, and discard it from
+places where it used to be properly discarded. More code but I think
+it will result in fewer problems. As far as I can tell, this is the
+reason that commit d50f21091358 ("kbuild: align modinfo section for
+Secureboot Authenticode EDK2 compat") was needed and that change needed
+a further follow up fix in commit a26a6c93edfe ("kbuild: Strip trailing
+padding bytes from modules.builtin.modinfo"), so we could have saved
+some headache from doing it right from the beginning.
+
+Ed, could you test the below patch with your setup (it should apply
+cleanly to 6.18.13, 6.19.3, or 7.0-rc1) and see if it resolves your
+issue?
+
+[1] ddc6cbef3ef1 ("s390/boot/vmlinux.lds.S: Ensure bzImage ends with SecureBoot trailer")
+
+Cheers,
+Nathan
+
+diff --git a/arch/alpha/kernel/vmlinux.lds.S b/arch/alpha/kernel/vmlinux.lds.S
+index 2efa7dfc798a..2d136c63db16 100644
+--- a/arch/alpha/kernel/vmlinux.lds.S
++++ b/arch/alpha/kernel/vmlinux.lds.S
+@@ -71,6 +71,7 @@ SECTIONS
+ 
+ 	STABS_DEBUG
+ 	DWARF_DEBUG
++	MODINFO
+ 	ELF_DETAILS
+ 
+ 	DISCARDS
+diff --git a/arch/arc/kernel/vmlinux.lds.S b/arch/arc/kernel/vmlinux.lds.S
+index 61a1b2b96e1d..6af63084ff28 100644
+--- a/arch/arc/kernel/vmlinux.lds.S
++++ b/arch/arc/kernel/vmlinux.lds.S
+@@ -123,6 +123,7 @@ SECTIONS
+ 	_end = . ;
+ 
+ 	STABS_DEBUG
++	MODINFO
+ 	ELF_DETAILS
+ 	DISCARDS
+ 
+diff --git a/arch/arm64/kernel/vmlinux.lds.S b/arch/arm64/kernel/vmlinux.lds.S
+index ad6133b89e7a..2964aad0362e 100644
+--- a/arch/arm64/kernel/vmlinux.lds.S
++++ b/arch/arm64/kernel/vmlinux.lds.S
+@@ -349,6 +349,7 @@ SECTIONS
+ 
+ 	STABS_DEBUG
+ 	DWARF_DEBUG
++	MODINFO
+ 	ELF_DETAILS
+ 
+ 	HEAD_SYMBOLS
+diff --git a/arch/csky/kernel/vmlinux.lds.S b/arch/csky/kernel/vmlinux.lds.S
+index d718961786d2..81943981b3af 100644
+--- a/arch/csky/kernel/vmlinux.lds.S
++++ b/arch/csky/kernel/vmlinux.lds.S
+@@ -109,6 +109,7 @@ SECTIONS
+ 
+ 	STABS_DEBUG
+ 	DWARF_DEBUG
++	MODINFO
+ 	ELF_DETAILS
+ 
+ 	DISCARDS
+diff --git a/arch/hexagon/kernel/vmlinux.lds.S b/arch/hexagon/kernel/vmlinux.lds.S
+index 1150b77fa281..aae22283b5e0 100644
+--- a/arch/hexagon/kernel/vmlinux.lds.S
++++ b/arch/hexagon/kernel/vmlinux.lds.S
+@@ -62,6 +62,7 @@ SECTIONS
+ 
+ 	STABS_DEBUG
+ 	DWARF_DEBUG
++	MODINFO
+ 	ELF_DETAILS
+ 	.hexagon.attributes 0 : { *(.hexagon.attributes) }
+ 
+diff --git a/arch/loongarch/kernel/vmlinux.lds.S b/arch/loongarch/kernel/vmlinux.lds.S
+index 08ea921cdec1..d0e1377a041d 100644
+--- a/arch/loongarch/kernel/vmlinux.lds.S
++++ b/arch/loongarch/kernel/vmlinux.lds.S
+@@ -147,6 +147,7 @@ SECTIONS
+ 
+ 	STABS_DEBUG
+ 	DWARF_DEBUG
++	MODINFO
+ 	ELF_DETAILS
+ 
+ #ifdef CONFIG_EFI_STUB
+diff --git a/arch/m68k/kernel/vmlinux-nommu.lds b/arch/m68k/kernel/vmlinux-nommu.lds
+index 2624fc18c131..45d7f4b0177b 100644
+--- a/arch/m68k/kernel/vmlinux-nommu.lds
++++ b/arch/m68k/kernel/vmlinux-nommu.lds
+@@ -85,6 +85,7 @@ SECTIONS {
+ 	_end = .;
+ 
+ 	STABS_DEBUG
++	MODINFO
+ 	ELF_DETAILS
+ 
+ 	/* Sections to be discarded */
+diff --git a/arch/m68k/kernel/vmlinux-std.lds b/arch/m68k/kernel/vmlinux-std.lds
+index 1ccdd04ae462..7326586afe15 100644
+--- a/arch/m68k/kernel/vmlinux-std.lds
++++ b/arch/m68k/kernel/vmlinux-std.lds
+@@ -58,6 +58,7 @@ SECTIONS
+   _end = . ;
+ 
+   STABS_DEBUG
++  MODINFO
+   ELF_DETAILS
+ 
+   /* Sections to be discarded */
+diff --git a/arch/m68k/kernel/vmlinux-sun3.lds b/arch/m68k/kernel/vmlinux-sun3.lds
+index f13ddcc2af5c..1b19fef201fb 100644
+--- a/arch/m68k/kernel/vmlinux-sun3.lds
++++ b/arch/m68k/kernel/vmlinux-sun3.lds
+@@ -51,6 +51,7 @@ __init_begin = .;
+   _end = . ;
+ 
+   STABS_DEBUG
++  MODINFO
+   ELF_DETAILS
+ 
+   /* Sections to be discarded */
+diff --git a/arch/mips/kernel/vmlinux.lds.S b/arch/mips/kernel/vmlinux.lds.S
+index 2b708fac8d2c..579b2cc1995a 100644
+--- a/arch/mips/kernel/vmlinux.lds.S
++++ b/arch/mips/kernel/vmlinux.lds.S
+@@ -217,6 +217,7 @@ SECTIONS
+ 
+ 	STABS_DEBUG
+ 	DWARF_DEBUG
++	MODINFO
+ 	ELF_DETAILS
+ 
+ 	/* These must appear regardless of  .  */
+diff --git a/arch/nios2/kernel/vmlinux.lds.S b/arch/nios2/kernel/vmlinux.lds.S
+index 37b958055064..206f92445bfa 100644
+--- a/arch/nios2/kernel/vmlinux.lds.S
++++ b/arch/nios2/kernel/vmlinux.lds.S
+@@ -57,6 +57,7 @@ SECTIONS
+ 
+ 	STABS_DEBUG
+ 	DWARF_DEBUG
++	MODINFO
+ 	ELF_DETAILS
+ 
+ 	DISCARDS
+diff --git a/arch/openrisc/kernel/vmlinux.lds.S b/arch/openrisc/kernel/vmlinux.lds.S
+index 049bff45f612..9b29c3211774 100644
+--- a/arch/openrisc/kernel/vmlinux.lds.S
++++ b/arch/openrisc/kernel/vmlinux.lds.S
+@@ -101,6 +101,7 @@ SECTIONS
+ 	/* Throw in the debugging sections */
+ 	STABS_DEBUG
+ 	DWARF_DEBUG
++	MODINFO
+ 	ELF_DETAILS
+ 
+         /* Sections to be discarded -- must be last */
+diff --git a/arch/parisc/boot/compressed/vmlinux.lds.S b/arch/parisc/boot/compressed/vmlinux.lds.S
+index ab7b43990857..87d24cc824b6 100644
+--- a/arch/parisc/boot/compressed/vmlinux.lds.S
++++ b/arch/parisc/boot/compressed/vmlinux.lds.S
+@@ -90,6 +90,7 @@ SECTIONS
+ 	/* Sections to be discarded */
+ 	DISCARDS
+ 	/DISCARD/ : {
++		*(.modinfo)
+ #ifdef CONFIG_64BIT
+ 		/* temporary hack until binutils is fixed to not emit these
+ 		 * for static binaries
+diff --git a/arch/parisc/kernel/vmlinux.lds.S b/arch/parisc/kernel/vmlinux.lds.S
+index b445e47903cf..0ca93d6d7235 100644
+--- a/arch/parisc/kernel/vmlinux.lds.S
++++ b/arch/parisc/kernel/vmlinux.lds.S
+@@ -165,6 +165,7 @@ SECTIONS
+ 	_end = . ;
+ 
+ 	STABS_DEBUG
++	MODINFO
+ 	ELF_DETAILS
+ 	.note 0 : { *(.note) }
+ 
+diff --git a/arch/powerpc/kernel/vmlinux.lds.S b/arch/powerpc/kernel/vmlinux.lds.S
+index 15850296c0a9..8fc11d6565bf 100644
+--- a/arch/powerpc/kernel/vmlinux.lds.S
++++ b/arch/powerpc/kernel/vmlinux.lds.S
+@@ -397,6 +397,7 @@ SECTIONS
+ 	_end = . ;
+ 
+ 	DWARF_DEBUG
++	MODINFO
+ 	ELF_DETAILS
+ 
+ 	DISCARDS
+diff --git a/arch/riscv/kernel/vmlinux.lds.S b/arch/riscv/kernel/vmlinux.lds.S
+index 61bd5ba6680a..997f9eb3b22b 100644
+--- a/arch/riscv/kernel/vmlinux.lds.S
++++ b/arch/riscv/kernel/vmlinux.lds.S
+@@ -170,6 +170,7 @@ SECTIONS
+ 
+ 	STABS_DEBUG
+ 	DWARF_DEBUG
++	MODINFO
+ 	ELF_DETAILS
+ 	.riscv.attributes 0 : { *(.riscv.attributes) }
+ 
+diff --git a/arch/s390/kernel/vmlinux.lds.S b/arch/s390/kernel/vmlinux.lds.S
+index 53bcbb91bb9b..2b62395e35bf 100644
+--- a/arch/s390/kernel/vmlinux.lds.S
++++ b/arch/s390/kernel/vmlinux.lds.S
+@@ -221,6 +221,7 @@ SECTIONS
+ 	/* Debugging sections.	*/
+ 	STABS_DEBUG
+ 	DWARF_DEBUG
++	MODINFO
+ 	ELF_DETAILS
+ 
+ 	/*
+diff --git a/arch/sh/kernel/vmlinux.lds.S b/arch/sh/kernel/vmlinux.lds.S
+index 008c30289eaa..169c63fb3c1d 100644
+--- a/arch/sh/kernel/vmlinux.lds.S
++++ b/arch/sh/kernel/vmlinux.lds.S
+@@ -89,6 +89,7 @@ SECTIONS
+ 
+ 	STABS_DEBUG
+ 	DWARF_DEBUG
++	MODINFO
+ 	ELF_DETAILS
+ 
+ 	DISCARDS
+diff --git a/arch/sparc/kernel/vmlinux.lds.S b/arch/sparc/kernel/vmlinux.lds.S
+index f1b86eb30340..7ea510d9b42f 100644
+--- a/arch/sparc/kernel/vmlinux.lds.S
++++ b/arch/sparc/kernel/vmlinux.lds.S
+@@ -191,6 +191,7 @@ SECTIONS
+ 
+ 	STABS_DEBUG
+ 	DWARF_DEBUG
++	MODINFO
+ 	ELF_DETAILS
+ 
+ 	DISCARDS
+diff --git a/arch/um/kernel/dyn.lds.S b/arch/um/kernel/dyn.lds.S
+index a36b7918a011..ad3cefeff2ac 100644
+--- a/arch/um/kernel/dyn.lds.S
++++ b/arch/um/kernel/dyn.lds.S
+@@ -172,6 +172,7 @@ SECTIONS
+ 
+   STABS_DEBUG
+   DWARF_DEBUG
++  MODINFO
+   ELF_DETAILS
+ 
+   DISCARDS
+diff --git a/arch/um/kernel/uml.lds.S b/arch/um/kernel/uml.lds.S
+index a409d4b66114..30aa24348d60 100644
+--- a/arch/um/kernel/uml.lds.S
++++ b/arch/um/kernel/uml.lds.S
+@@ -113,6 +113,7 @@ SECTIONS
+ 
+   STABS_DEBUG
+   DWARF_DEBUG
++  MODINFO
+   ELF_DETAILS
+ 
+   DISCARDS
+diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
+index 587ce3e7c504..e0b152715d9c 100644
+--- a/arch/x86/boot/compressed/vmlinux.lds.S
++++ b/arch/x86/boot/compressed/vmlinux.lds.S
+@@ -88,7 +88,7 @@ SECTIONS
+ 	/DISCARD/ : {
+ 		*(.dynamic) *(.dynsym) *(.dynstr) *(.dynbss)
+ 		*(.hash) *(.gnu.hash)
+-		*(.note.*)
++		*(.note.*) *(.modinfo)
+ 	}
+ 
+ 	.got.plt (INFO) : {
+diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
+index d7af4a64c211..4ed82b1fe173 100644
+--- a/arch/x86/kernel/vmlinux.lds.S
++++ b/arch/x86/kernel/vmlinux.lds.S
+@@ -424,6 +424,7 @@ SECTIONS
+ 	.llvm_bb_addr_map : { *(.llvm_bb_addr_map) }
+ #endif
+ 
++	MODINFO
+ 	ELF_DETAILS
+ 
+ 	DISCARDS
+diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+index 8ca130af301f..7b38ec8dc8dd 100644
+--- a/include/asm-generic/vmlinux.lds.h
++++ b/include/asm-generic/vmlinux.lds.h
+@@ -848,12 +848,14 @@
+ 
+ /* Required sections not related to debugging. */
+ #define ELF_DETAILS							\
+-		.modinfo : { *(.modinfo) . = ALIGN(8); }		\
+ 		.comment 0 : { *(.comment) }				\
+ 		.symtab 0 : { *(.symtab) }				\
+ 		.strtab 0 : { *(.strtab) }				\
+ 		.shstrtab 0 : { *(.shstrtab) }
+ 
++#define MODINFO								\
++		.modinfo : { *(.modinfo) . = ALIGN(8); }
++
+ #ifdef CONFIG_GENERIC_BUG
+ #define BUG_TABLE							\
+ 	. = ALIGN(8);							\
