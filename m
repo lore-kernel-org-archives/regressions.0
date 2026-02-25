@@ -1,55 +1,40 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.61.107])
+Received: from mail1.nippynetworks.com (mail1.nippynetworks.com [91.220.24.129])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFABB38F23B
-	for <regressions@lists.linux.dev>; Wed, 25 Feb 2026 09:47:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.61.107
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4201333D4F0
+	for <regressions@lists.linux.dev>; Wed, 25 Feb 2026 11:58:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.220.24.129
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772012879; cv=none; b=HB3qjygHZzuNYHLX8nGNPkpkfyompSs8lQFKvXsvj3JT4Ws2n0oGDqRG6sghw8KPW4qVrvRgPITwUxPhNCBYw59Xs0+D6lSEL/UWrQPVd1W1WUt5IY5Q/UAg5TP5Ibb1MewgmJgpBND4sfeeZGvDbN+vxtBWtrz7v6Q1VrewOMs=
+	t=1772020696; cv=none; b=YscsVbFkEEXfKJaOlgQ1vZQaQhKTheAqKYFABJrVvaBTVv8gq4ssFPd9uJPgShUQHjk24gnRU8MtCS9QdyH/S4ozcZlprDh0YKmEZHw3wZUEknhSxaWeuh9BNsGG0YPkbYrFgrEbKQ4Q3lGZjf+O7TV2CjVZbn/Q6fXQmWKrsf4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772012879; c=relaxed/simple;
-	bh=ajy236ZbWlDO9JrbU5UYxib23n6YWiLxE/q7rr3YOrQ=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=YPt1onkqGTXDCdJJeQeTjpdEY8GJh9EOGpyoiaXrtsoFpeX7fceWrsB9V3suxTGy7ahI/csX/VmUU9wBDGTSAax3wsjNI25ZVvxHoR05VVLsgL1STt+sI10yIeWaZBx61puwbP1yf/MLUkg4eL38VqxP47C6gqLQ4cvRtyan8NQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=hYEtdRqn; arc=none smtp.client-ip=188.68.61.107
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1772020696; c=relaxed/simple;
+	bh=X3BSEY6AMfvsOuJKktRiDrIuSjEyA7gBe5/TNzodbaU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FOVGD2Pav2dQL7YMd3sSgdj92vEcundHbxmArK8fEOXQwP+Xdbo9SWE+HOVxipk5r69vW0KGYE/7jnjmWyeQrB8/MPSzmKMJhbE0CCjoT7ldYe6o4HnFZb0yLtjS4VHf3AIh6gwrPzSZhfi3rAQgp/hBrOjJOZw05Yw1N4z6U3o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wildgooses.com; spf=pass smtp.mailfrom=wildgooses.com; dkim=pass (1024-bit key) header.d=wildgooses.com header.i=@wildgooses.com header.b=TQT4Mz3H; arc=none smtp.client-ip=91.220.24.129
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wildgooses.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wildgooses.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="hYEtdRqn"
-Received: from mors-relay-8405.netcup.net (localhost [127.0.0.1])
-	by mors-relay-8405.netcup.net (Postfix) with ESMTPS id 4fLVBZ6Qlhz73MB
-	for <regressions@lists.linux.dev>; Wed, 25 Feb 2026 10:47:50 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1772012870;
-	bh=ajy236ZbWlDO9JrbU5UYxib23n6YWiLxE/q7rr3YOrQ=;
-	h=Date:Subject:From:To:References:In-Reply-To:From;
-	b=hYEtdRqnnr0SNnb+Z8ygHzc7wcFIzhMCaQsTo6LpWsvs0Z4JEd/oW/rx6mehmGeou
-	 7qHgG87Z9EYuSEfajVHqeuxWZO1w9n1VfpNwQ8qigz1D7VaaJ3VRJFT7I4i65Im7a9
-	 KxaC2PXwFsiP7DiNIeorxumuOK9oAIKsLQJLJ4vo4AgcnG5hiya1s8ipPUS9OBNSHT
-	 6NXUQYkyjI1/Ipao18iIrL+UkK1aH3AF4EdvQoyzTh1oSYVL0YDF3iX09imGTYwVCe
-	 lNUrci7RiRa/ezbLI3EMaI1qgakKlk0I5UzmJPs0uZGHitiLS8kPb0HKD7IqCQGWTw
-	 mHFYJ9TelFhUQ==
-Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-8405.netcup.net (Postfix) with ESMTPS id 4fLVBZ5jNfz73M1
-	for <regressions@lists.linux.dev>; Wed, 25 Feb 2026 10:47:50 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
-X-Spam-Flag: NO
-X-Spam-Score: -2.899
-X-Spam-Level: 
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	dkim=pass (1024-bit key) header.d=wildgooses.com header.i=@wildgooses.com header.b="TQT4Mz3H"
+Received: from [192.168.8.152] (unknown [94.228.36.46])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
 	(No client certificate requested)
-	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4fLVBZ0jSJz8stj
-	for <regressions@lists.linux.dev>; Wed, 25 Feb 2026 10:47:50 +0100 (CET)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 6DCD567564
-	for <regressions@lists.linux.dev>; Wed, 25 Feb 2026 10:47:49 +0100 (CET)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <91e014fc-f107-4a12-a13f-d84d9da2cad8@leemhuis.info>
-Date: Wed, 25 Feb 2026 10:47:48 +0100
+	(Authenticated sender: ed@wildgooses.com)
+	by mail1.nippynetworks.com (Postfix) with ESMTPSA id 4fLY1R2Nkxzkd2v;
+	Wed, 25 Feb 2026 11:55:07 +0000 (GMT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wildgooses.com;
+	s=dkim; t=1772020507;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=X3BSEY6AMfvsOuJKktRiDrIuSjEyA7gBe5/TNzodbaU=;
+	b=TQT4Mz3Hby5fnHSuZZ69KpI5/a4sxu7iVH1dvVYKbrjd/CNwofShcqtTFNJPjExZNiNei3
+	EveEcEQcAtH3Vval1zSRUCBNurpNBzTok8BgRcJdn5z+wT4Oq/GP7fzk4Dq44tuRiU1gQa
+	8Y4yCtiy8xtMPujx/3UzU5bIF2MASyE=
+Message-ID: <4ff9d8be-ba4c-4698-abe8-31fcf2717acf@wildgooses.com>
+Date: Wed, 25 Feb 2026 11:55:06 +0000
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -57,62 +42,120 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Subject: Re: extlinux can't boot kernel after commit "kbuild: keep .modinfo
+ section in vmlinux.unstripped"
+To: Nathan Chancellor <nathan@kernel.org>,
+ Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ masahiroy@kernel.org,
+ Linux Kernel Build System <linux-kbuild@vger.kernel.org>,
+ Nicolas Schier <nsc@kernel.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <587f25e0-a80e-46a5-9f01-87cb40cfa377@wildgooses.com>
+ <3ac876ca-0038-41e8-a1a0-3d5434f30473@leemhuis.info>
+ <20260224204632.GA3510750@ax162>
+From: Ed W <lists@wildgooses.com>
+Content-Language: en-GB
+In-Reply-To: <20260224204632.GA3510750@ax162>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: 
- <177201286962.3453482.11235065854967666089@mxe9fb.netcup.net>
-X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: 6DCD567564
-X-NC-CID: QcvMtGUkZYP/FpnLtKyAdPuUa3zaZAAXkKgZ6x0Ytue2nodPZSU=
+Content-Transfer-Encoding: quoted-printable
+
+Hi Nathan (and Thorsten), thanks for replying! Appreciated
+
+On 24/02/2026 20:46, Nathan Chancellor wrote:
+> So I will deal with this one, as I committed the series.
 
 
-
-On 3/9/24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
-
-#regzbot report:
-https://lore.kernel.org/all/20260221235050.2558321-1-lkml@antheas.dev/
-#regzbot introduced: 789a5913b29c
-#regzbot title: iommu: Freeze on boot
-#regzbot dup:
-https://www.reddit.com/r/cachyos/comments/1r5sgr6/freeze_on_boot_after_kernel_update_to_619_fixed/
-#regzbot fix: iommu: Skip mapping at address 0x0 if it already exists
-
-#regzbot report:
-https://lore.kernel.org/all/cover.1771409004.git.wqu@suse.com/
-#regzbot introduced: e1bc83f8b157
-#regzbot title: btrfs: various bugs for bs < ps cases
-#regzbot fix: btrfs: fix a bug that makes encoded write bio larger than
-expected
+Thanks so much!!
 
 
-#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=221118
-#regzbot introduced: 534ca75e8e3b71351
-#regzbot title: HID: hid-input: No battery status for ELAN HID devices
-anymore
+>>> My guess is that something has moved or become re-ordered such that t=
+he extlinux is rejecting the
+>>> image??=C2=A0
+>>>
+>>> At this point I'm honestly not quite sure what I am doing, so would s=
+ome kind soul please help me
+>>> figure out what is happening? I apologise in advance that I've likely=
+ not given enough information
+>>> about the problem, please be gentle...
+> I think you provided good information off the bat, so no worries on tha=
+t
+> front. I am not entirely positive that this is the root cause but now
+> that I am looking at it and have some additional context from a recent
+> 7.0-rc1 commit [1], I think 3e86e4d74c04 adding .modinfo to ELF_DETAILS=
+
+> and removing it from DISCARDS results in .modinfo appears in certain
+> places, namely arch/x86/boot/compressed/vmlinux, where it may not be
+> expected. Why that breaks this bootloader, not sure, but I don't really=
+
+> think it matters. I think we should move .modinfo from ELF_DETAILS
+> (which may be used in other non-vmlinux linker scripts) to its own
+> macro, add that to all vmlinux linker scripts, and discard it from
+> places where it used to be properly discarded. More code but I think
+> it will result in fewer problems. As far as I can tell, this is the
+> reason that commit d50f21091358 ("kbuild: align modinfo section for
+> Secureboot Authenticode EDK2 compat") was needed and that change needed=
+
+> a further follow up fix in commit a26a6c93edfe ("kbuild: Strip trailing=
+
+> padding bytes from modules.builtin.modinfo"), so we could have saved
+> some headache from doing it right from the beginning.
+>
+> Ed, could you test the below patch with your setup (it should apply
+> cleanly to 6.18.13, 6.19.3, or 7.0-rc1) and see if it resolves your
+> issue?
+>
+> [1] ddc6cbef3ef1 ("s390/boot/vmlinux.lds.S: Ensure bzImage ends with Se=
+cureBoot trailer")
+>
+> Cheers,
+> Nathan
 
 
-#regzbot report: https://lore.kernel.org/all/aZ0SbIqaIkwoW2mB@fedora/
-#regzbot introduced: 17c38c88294d
-#regzbot title: mm: slab/sheaves: severe performance regression in
-cross-CPU slab allocation
+Yes, your patch works fine against my 6.18.12 kernel on my AMD64 machine =
+and booting with extlinux
+(previously not working)
 
-#regzbot report:
-https://lore.kernel.org/all/fd099b27-8716-4ed9-a2eb-f9b03fbb45cb@skogtun.org/
-#regzbot introduced: f2ae92780ab9
-#regzbot title: firewire: ohci: Black screen on 7.0-rc1
+I also played around a little with some variations and it seems as though=
+ the adding in of the
+=2Emodinfo into the strip is the key, caveat that in my messing around (b=
+ased on inspiration from the
+commit [1] that you mention), I needed to reorder the macros to get it to=
+ compile. Note, I'm not
+suggestion this as a solution, just illustrating some extra info:
 
-#regzbot report:
-https://lore.kernel.org/all/CAPh3n803k8JcBPV5qEzUB-oKzWkAs-D5CU7z%3DVd_nLRCr5ZqQg@mail.gmail.com/
-#regzbot introduced: 662dc80a5e86
-#regzbot title: usbnet: rmnet over usb broken
+--- arch/x86/boot/compressed/vmlinux.lds.S.orig=C2=A0 =C2=A0 2026-02-25 1=
+0:42:45.040655315 +0000
++++ arch/x86/boot/compressed/vmlinux.lds.S=C2=A0 =C2=A0 2026-02-25 11:06:=
+32.907372114 +0000
+@@ -80,17 +80,18 @@
+=C2=A0 =C2=A0 =C2=A0. =3D ALIGN(PAGE_SIZE);=C2=A0 =C2=A0 /* keep ZO size =
+page aligned */
+=C2=A0 =C2=A0 =C2=A0_end =3D .;
+
+-=C2=A0 =C2=A0 STABS_DEBUG
+-=C2=A0 =C2=A0 DWARF_DEBUG
+-=C2=A0 =C2=A0 ELF_DETAILS
+-
+=C2=A0 =C2=A0 =C2=A0DISCARDS
+=C2=A0 =C2=A0 =C2=A0/DISCARD/ : {
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0*(.dynamic) *(.dynsym) *(.dynstr) *(.dy=
+nbss)
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0*(.hash) *(.gnu.hash)
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0*(.note.*)
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 *(.modinfo)
+=C2=A0 =C2=A0 =C2=A0}
+
++=C2=A0 =C2=A0 STABS_DEBUG
++=C2=A0 =C2=A0 DWARF_DEBUG
++=C2=A0 =C2=A0 ELF_DETAILS
++
+=C2=A0 =C2=A0 =C2=A0.got.plt (INFO) : {
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0*(.got.plt)
+=C2=A0 =C2=A0 =C2=A0}
+
+
+Thanks for isolating the issue!
+
+Ed W
+
