@@ -1,122 +1,112 @@
-Received: from mail-dl1-f65.google.com (mail-dl1-f65.google.com [74.125.82.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29DC227B35F
-	for <regressions@lists.linux.dev>; Wed, 25 Feb 2026 20:59:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D20E13009CB;
+	Wed, 25 Feb 2026 21:24:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772053146; cv=none; b=AqTb6JP//m5aMSXIEz0PxRu0QNu/pIUnrdLZiB59VAjLGmWmQSjBA6OWjcVmQ11bX/WB8ZLS9NTCE34UUkooZQ7CBQiFgjsmWNJgEEG3fR/F67KbAWs7YggvqahEaZdub8LgN4knNizurGQH29953Oy/J6pfFHnWYprLEsi1STg=
+	t=1772054669; cv=none; b=q1ZIdFV3v+PBoPFnlwFKXZCO6bYEUqrjWeEuNFWXbgKDICRjTW/2SKYtwh3UHw8N4rbFCqN2Sk5bXGyXEgrZEBBylD+LgrcfQ/vyfHEjjnOOLzEviMle7F8dFpw7Fe4uqmmxMOOZssbP5+avt5H4S+iilseRBlgvCQaurO4Wpik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772053146; c=relaxed/simple;
-	bh=vVUewmCetlatWHv1R0K4yDCftZPESVw6eXHO6Nn7fJA=;
-	h=Content-Type:MIME-Version:Subject:From:To:Cc:Date:Message-ID; b=hRVBRddmitTYH3MiEXOnL2sp0Zv2Q3XkJDekbggLnwWO6c6DPA/3AVpRiYCxGo9FW8mmOhX+yo0CIEMR08tpsRDrFhF9vn5uNnERQUz+uvgpgW9nVDquDWk0EC69lPPmO0+p3OFbuHu1qYZRkEtqHjmUKwp+cKappEXmho+GiiM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org; spf=none smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b=DlmtaA0+; arc=none smtp.client-ip=74.125.82.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=kernelci.org
+	s=arc-20240116; t=1772054669; c=relaxed/simple;
+	bh=An+4PmQKCqtYEv6pK5wyR+h4nWH+oIEekzQFvdCRVOA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PL3Gd/u6PEx8m6Yq+AoDFO2ozRMZW5IQxjbIjmL9PmoUBzPzgfaWlthyQhu59K3glyrevpBmKfZldnE0niIkIyHD7gHLsJpZDIboGdvQiZGZh4G+Wl63Ap/TuQ3D9XAWVUDR2GriQz5M8Tlvzu0zgNwFg5ovu9dML8f55W17/+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JiduML4D; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b="DlmtaA0+"
-Received: by mail-dl1-f65.google.com with SMTP id a92af1059eb24-1271195d2a7so366907c88.0
-        for <regressions@lists.linux.dev>; Wed, 25 Feb 2026 12:59:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20230601.gappssmtp.com; s=20230601; t=1772053144; x=1772657944; darn=lists.linux.dev;
-        h=message-id:date:reply-to:cc:to:from:subject
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MBD+gcuj5ZDr1GM2fX0wE6cy1EESApbULJSp5txJVcs=;
-        b=DlmtaA0+5WpGJkh+a4/vEObD7syRbw+2ee4E1HNggKJZunEB+MRL1K//M1hfpMEoJo
-         P+vU5/azLxGtkPsv9AEMWKwOUfRmyW1s03uRi20/fU7cFwwhFMjsarnwNCy3jBtfDGFS
-         YgGq8VhijN5svwVb4frjrgQVTofJikJmOydemak4b3cHoxBGhjPw+9RH0fzaeKV4s1UK
-         UAyHxkyyi0v8RoqoaiH2fuUtvHTN69CkGvlVjvw8w/9rUv98lXoRh3lYVCiElL+WKbee
-         DFo1jWB/iIj+7sY62mpHdydClp2WJd6UsmobvYj9iDAl1R+T+bveu7ii8KcPbm+rBzeG
-         4Ltw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772053144; x=1772657944;
-        h=message-id:date:reply-to:cc:to:from:subject
-         :content-transfer-encoding:mime-version:x-gm-gg:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=MBD+gcuj5ZDr1GM2fX0wE6cy1EESApbULJSp5txJVcs=;
-        b=ZpNSQqnm/mZUQGl1JEShW/QVgVl9HxjSTeCN9fC58IvufIQQrnOwueGsWnPf49rHLB
-         hJ1Zd4VqBqZ53YN8ss075M1X99m6S2wnA8gLmGFV1V4ffERuwiuPc5MP6vRrQIMOKZB1
-         Fz+jKBHCg6dWyM+FExoPJD90yp/7PetOxn1b2y6WNAsh7AHQTDfkLYLCf6RJNuPvEl17
-         9VyLB5HZtlAzrpfXNQAMhx5ypPpCSAJpcfLva22nBJSUDpriECAabGEwE7G2jxv0qFeH
-         oYJzotIWWO/9+D+mxt32xtEETzT6C7+Q7ROwBdtakH7sZtUQhISyxoNdmiDcNywoRDSF
-         piFw==
-X-Gm-Message-State: AOJu0YzwIxTM+1B7HW82H/p8dGOPcfltgV3hhRZIuNKrp2Xm6o6ABX1X
-	3H1bgtsUDijFDAtejWtjPr+cG1hsuz18sLhLgxl4YUUJSI+5oYZrt0pqOOmWINA6Drs=
-X-Gm-Gg: ATEYQzxnS30EjUpM3MJikNDZwod/OdEQCG8XvWX8qIYhhJzdkKvSGJZN9a+4VRwJCY/
-	FpW4sMOwfOi+SAWc1EqKApyEYmvV0ixly/TXqlR+q73JzzEkTPjiweF1O62u84dE6gRIikroeFy
-	60rYCOnTPRu3Ph4FtYO2Ao4pClGXc7nyykcn53XLUT6Ni8kLJPAff45AtLv2mop6MhrCmSy2hOr
-	f7KkLDKc1CMtl4l2VYrPAS/9YlPoxNzmafQfBenZwHFszF7pmIlk+4Thit76PPtlue1ng+mgqU4
-	PvSmaSUlFeuLfsbd1ei8FnAFfVbnxbm1O0LbPC+dL0/E6e4oWOtWNGymUpnn87eoo2hbYo3KMLw
-	JvtbJeJZIGE9wDqj5+VTC9SgmA3ZbIwH3NXUrGfhkip6b2VpJ9An9zJCIGPaaA83VvQek/PmxBR
-	oC1qJBGVwTjk4oMGle
-X-Received: by 2002:a05:7022:68a4:b0:11b:9386:a3c3 with SMTP id a92af1059eb24-127869c0da7mr1006898c88.46.1772053144055;
-        Wed, 25 Feb 2026 12:59:04 -0800 (PST)
-Received: from d14e337afe00 ([20.38.40.137])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-127899d49ccsm16161c88.3.2026.02.25.12.59.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Feb 2026 12:59:03 -0800 (PST)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JiduML4D"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFB80C116D0;
+	Wed, 25 Feb 2026 21:24:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1772054669;
+	bh=An+4PmQKCqtYEv6pK5wyR+h4nWH+oIEekzQFvdCRVOA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JiduML4DzPfi8sxI3NJqEdgY4tMu+eKzl9mpayo5eqJX+vjj+Hu3k4XF0tsa+XFlS
+	 6CkgMStohNzvXCZTuYbxO9+K6ZO+K2fxMe5+hb6hlhMWclCluU9bfjUhATlQ833WPh
+	 LkT44XM/Ix2RVn0bVZvaOVI6k/jLCgW/qIYVuMMMVSWmwihjvRzcAS3s8fojpJgDc2
+	 VLYCJw+K39fte82wfc99jaqVNqH5XbuEAHCwThaal/0Rh2vsro+YAUjhHfq+K+BS6X
+	 Uy1rN1yc+02Q1V8m7+wVIzqYzc7oWvQ++vy11j2Thg9eLavfl30TKYzNuiGQcY4gnd
+	 mHdvT5DxPkNQw==
+Date: Wed, 25 Feb 2026 14:24:25 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Ed W <lists@wildgooses.com>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	masahiroy@kernel.org,
+	Linux Kernel Build System <linux-kbuild@vger.kernel.org>,
+	Nicolas Schier <nsc@kernel.org>,
+	Linux kernel regressions list <regressions@lists.linux.dev>
+Subject: Re: extlinux can't boot kernel after commit "kbuild: keep .modinfo
+ section in vmlinux.unstripped"
+Message-ID: <20260225212425.GH2755225@ax162>
+References: <587f25e0-a80e-46a5-9f01-87cb40cfa377@wildgooses.com>
+ <3ac876ca-0038-41e8-a1a0-3d5434f30473@leemhuis.info>
+ <20260224204632.GA3510750@ax162>
+ <4ff9d8be-ba4c-4698-abe8-31fcf2717acf@wildgooses.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [REGRESSION] next/master: (build) undefined reference to
- `__udivmoddi4' in
- vmlinux.unstripped (drive...
-From: KernelCI bot <bot@kernelci.org>
-To: kernelci-results@groups.io
-Cc: regressions@lists.linux.dev, gus@collabora.com, linux-next@vger.kernel.org
-Reply-To: kernelci@lists.linux.dev
-Date: Wed, 25 Feb 2026 20:59:03 -0000
-Message-ID: <177205314269.2960.1720626770087948602@d14e337afe00>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <4ff9d8be-ba4c-4698-abe8-31fcf2717acf@wildgooses.com>
 
+On Wed, Feb 25, 2026 at 11:55:06AM +0000, Ed W wrote:
+> Yes, your patch works fine against my 6.18.12 kernel on my AMD64 machine and booting with extlinux
+> (previously not working)
 
+Thanks a lot for verifying! I will send this as a formal patch shortly.
+I will include:
 
+  Tested-by: Ed W <lists@wildgooses.com> # x86_64
 
+in addition to a Reported-by, if that is okay with you. Let me know if
+not and I will remove it before I apply the patch but I want to make
+sure you get proper credit for helping out with this process.
 
-Hello,
+> I also played around a little with some variations and it seems as
+> though the adding in of the .modinfo into the strip is the key, caveat
+> that in my messing around (based on inspiration from the commit [1]
+> that you mention), I needed to reorder the macros to get it to
+> compile. Note, I'm not suggestion this as a solution, just
+> illustrating some extra info:
 
-New build issue found on next/master:
+Yup, this is definitely another option but I still think including
+.modinfo in ELF_DETAILS was dubious from the beginning because it is not
+really a generic ELF section, hence splitting it out.
 
----
- undefined reference to `__udivmoddi4' in vmlinux.unstripped (drivers/gpu/drm/amd/ras/rascore/ras_core.c) [logspec:kbuild,kbuild.compiler.linker_error]
----
+> --- arch/x86/boot/compressed/vmlinux.lds.S.orig    2026-02-25 10:42:45.040655315 +0000
+> +++ arch/x86/boot/compressed/vmlinux.lds.S    2026-02-25 11:06:32.907372114 +0000
+> @@ -80,17 +80,18 @@
+>      . = ALIGN(PAGE_SIZE);    /* keep ZO size page aligned */
+>      _end = .;
+> 
+> -    STABS_DEBUG
+> -    DWARF_DEBUG
+> -    ELF_DETAILS
+> -
+>      DISCARDS
+>      /DISCARD/ : {
+>          *(.dynamic) *(.dynsym) *(.dynstr) *(.dynbss)
+>          *(.hash) *(.gnu.hash)
+>          *(.note.*)
+> +        *(.modinfo)
+>      }
+> 
+> +    STABS_DEBUG
+> +    DWARF_DEBUG
+> +    ELF_DETAILS
+> +
+>      .got.plt (INFO) : {
+>          *(.got.plt)
+>      }
+> 
+> 
+> Thanks for isolating the issue!
 
-- dashboard: https://d.kernelci.org/i/maestro:dc8172b1090ab934a0e5bf70ede907ed6caaba80
-- giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-- commit HEAD:  877552aa875839314afad7154b5a561889e87ea9
-- tags: next-20260225
+Thanks again for reporting it and sorry that I missed it.
 
-Please include the KernelCI tag when submitting a fix:
-
-Reported-by: kernelci.org bot <bot@kernelci.org>
-
-
-Log excerpt:
-=====================================================
-  LD      .tmp_vmlinux1
-ld: drivers/gpu/drm/amd/ras/rascore/ras_core.o: in function `ras_core_convert_timestamp_to_time':
-ras_core.c:(.text+0x273): undefined reference to `__udivmoddi4'
-
-=====================================================
-
-
-# Builds where the incident occurred:
-
-## defconfig+kcidebug+x86-board on (i386):
-- compiler: gcc-14
-- config: https://files.kernelci.org/kbuild-gcc-14-x86-kcidebug-699f38921f24bb69463aa0f4/.config
-- dashboard: https://d.kernelci.org/build/maestro:699f38921f24bb69463aa0f4
-
-
-#kernelci issue maestro:dc8172b1090ab934a0e5bf70ede907ed6caaba80
-
---
-This is an experimental report format. Please send feedback in!
-Talk to us at kernelci@lists.linux.dev
-
-Made with love by the KernelCI team - https://kernelci.org
+Cheers,
+Nathan
