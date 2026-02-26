@@ -1,99 +1,106 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [194.59.206.189])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A25B3376BE4
-	for <regressions@lists.linux.dev>; Thu, 26 Feb 2026 11:42:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.59.206.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 070ED436373
+	for <regressions@lists.linux.dev>; Thu, 26 Feb 2026 16:21:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772106169; cv=none; b=VZHCuSKobI9qxKLduwxR7dX6ukDGH/5wsnwlZHRGTzUemGDdrgnmhw1IpiMe/zt8yF5vfJHWEfhtJCHsDPoGoOTXszvMV24p3EihbZA3+D4UneUYd+TIXpgY9bUjCzq+ECDScI4n/3R6c2MS9AIJsk+gV0aWbUalVfMYa4fz92U=
+	t=1772122894; cv=none; b=n7vDdk75awHkISH7p2tohtfadrX1VBB6VshNwyuPRX0R0iOzmH2J2646YRRZSMPo5Qfz8Po0L81dUc7DRfLn+vrFtRTfo/t155+0O/8DZHQO21POcdaC8NNSjTkQWrenoBX+VwMCeZccX1peqMPmeFZPGnMyq4gUEPzJL7JyxpA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772106169; c=relaxed/simple;
-	bh=ZwOxhl0m7f8ACPsX34CLeKn5CefuFnSnB4gO2UuVQT0=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=nvPaR77pL8ZSvABvVkq76eMyZhnHADho2WOsgAlefMZN11cFiX/QtWZ1kJGGMXmwBz6Zq7HyJr7HWYa0c0y1S0Z9Zv4cnVr46dlzRSFObGWryGbP5sbeE1U8xSFLspnvSOZMkmmbN/dcKc8xCo2KOb5GBSQX5P4qg52sNgb5elc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=YPX56CG3; arc=none smtp.client-ip=194.59.206.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1772122894; c=relaxed/simple;
+	bh=pOav+RWUo+tIL4K3WyminI+GAIz3DxvGhLgbVk6hNqA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=flM+L1Uln6kjSyqxlY8/zStYK676o1Kj836Ymao3ROMr5R7xRrTH7DJG09Y7z/E3Ep6ksdJEYvCXYZlYvDRdey4slNorh8ccMktJCx5WJg3eUPH0eAotVaeGAF/kxRfwrC5Exe/dvdR98O2oDr2L3SuHbbsfOycPfizzb3MCavw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kJzJGYbi; arc=none smtp.client-ip=209.85.208.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="YPX56CG3"
-Received: from relay02-mors.netcup.net (localhost [127.0.0.1])
-	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4fM8V40KhVz4H2D
-	for <regressions@lists.linux.dev>; Thu, 26 Feb 2026 12:33:32 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1772105612;
-	bh=ZwOxhl0m7f8ACPsX34CLeKn5CefuFnSnB4gO2UuVQT0=;
-	h=Date:Subject:From:To:References:In-Reply-To:From;
-	b=YPX56CG3hbWzTWLdPAVQMwgtYXmpsFVt+LBTth7RWlpm0Oz7zHA/u8CZZV05L2Va/
-	 tvlu+fQppKmQF407w8BO2QpIJ3pVIvd+4lvSn+zCougJS+y/Ya0TehHC4LOiQ9jich
-	 zKl8rmEp1zgdG/lM4P+ldQTYGcQ3MKW0kDQwBvGvp6dDgPBJ68uQInm9BPvU8ctznK
-	 gnBRpb7Urx57D+ZGYiREFgVePCtSaqmDJJcizMvJPgS5DgGjaHpitnHMBjY9kxXpOM
-	 s3Oal0cGDaAug0NnoQJ3eMoA/QSKfNCImDQl+xHt9SjdVHfV43uzMzVz+rjQN57nUt
-	 fFDbazwo/NGrA==
-Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
-	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4fM8V36m17z7vhT
-	for <regressions@lists.linux.dev>; Thu, 26 Feb 2026 12:33:31 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
-X-Spam-Flag: NO
-X-Spam-Score: -2.901
-X-Spam-Level: 
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4fM8V33BFvz8sfv
-	for <regressions@lists.linux.dev>; Thu, 26 Feb 2026 12:33:31 +0100 (CET)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 3942967458
-	for <regressions@lists.linux.dev>; Thu, 26 Feb 2026 12:33:30 +0100 (CET)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <414b2060-930f-4b65-a6fc-bb5ea1165a21@leemhuis.info>
-Date: Thu, 26 Feb 2026 12:33:29 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kJzJGYbi"
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-389f933034cso4851901fa.2
+        for <regressions@lists.linux.dev>; Thu, 26 Feb 2026 08:21:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1772122891; x=1772727691; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9i6OR9L/2JEII0FDOqkHjM/vIFngVooiK7atGXQPLJ0=;
+        b=kJzJGYbiv9beBme/+Bhj5+WiT5m7d3tqIUmxjmyWdOrO6sZa/8MreSqw8mCRqlzsb/
+         rSw8UsUVZ2gLUJTxT39JEHui2XUJem5EcWVZX7tM3zBRWjT6db4Q2tvdXRUystNGm2PV
+         OndW6xHXmmThBJ5W5jLfrXK3+o7vc0mt0hMF2xbByae7+jr+/5RfIfavsY8HQfHivq1k
+         1zw3izqDu+IvA3RYC3MBEo2TPJ0UVVFdsHmpzdlR70clmDbI9BlSCkvMbN9a8FLx7tv0
+         5KB7a27oDYRcR2yH1IFL8DifqWFvXsntd6BV/S0b/YArqGTpifhuddsKhW6okGbYOSwG
+         4A/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1772122891; x=1772727691;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=9i6OR9L/2JEII0FDOqkHjM/vIFngVooiK7atGXQPLJ0=;
+        b=ua/It83w/1zjqH9TEF3D0cvu3cctTSv2MpN3vaGjg7KpClv4OKcJSxf83dDubRoRfy
+         Y0RAOTDccj6+igsAC5/SfZIH1Uwp84G5uSILVKO5Z9+jC9oKGdjghvUWc14ns+l8AUAY
+         VdT1DTTSmBr9qhITrf+87bIk5W02/S4qgHgT8sztUqhL8LRtz1HZlbPomzU/b2G0IYs6
+         OOmswaoTo8bbxGyVj1Z1b7X823X+52D/nEQGVCIcbQOjqUpZe/9eiHijrYKn7IGPzMT5
+         8GRZnl5vgTpzqlkcKDMVlcm2XxE2vQSYvb4YZiY9t2jjzGnVq0bDYUY6ej58kdYkiIGv
+         Hm/A==
+X-Forwarded-Encrypted: i=1; AJvYcCXxbo9c4MHXyO3lS/sO9oUn/SnOCwuFp5rq/0PIz6hh+i2DYMfKSMKehrb3DlK4MuwAWXHZof6GPwkTWg==@lists.linux.dev
+X-Gm-Message-State: AOJu0Ywrvc4SjiDHrZsPm9HPb4w67fMuqCGJq9jE/e43Ci8LEssM5XhK
+	6dsXmI8KdgGjItuFuLHXDao0e6avdL0CWT40Sxx9wFDoHS9pU8ElsYER
+X-Gm-Gg: ATEYQzyTR2PEv1nirwxqacYbGSe1QrV9eWhDKbksF3WtNnQP0x2EIYQ11zQEWgx+JIs
+	RjuU0ZVUzXNnutplVlWIWn2QcIrXO+Iz1SNezZc5yH7fX76nYHEOC3M23Zs+9ZV0kmb6QqUWS2q
+	ZSDXlC2nGkwGKbgoQScG+Gyzo/qH3GDwDONI0QWBv3uyCCijdal+CYFSktCZ3B3eme5uGnf3Ggr
+	dMniHW0AqQm+bI++bEpIXY+L3YdHDZOKLNTEfWMAAxWa890cHboZ4jd+h6/DZ2pjYMQfhwYVjwH
+	nEAHDpaFJCg4OenPZTfKQda29M05sgv03UGGAzKPeev/XD5Wv+wrRQ7QoDTlmCPQBdGk1gWQ8di
+	Jvy+50Sw5t2U6DLhzwne4bgkMrupy42XBIfDispbGNVZMOvdblvPqE0NdnWVi2o7V8LlsyWSe1k
+	3x2j+gYjuFw3gzI5BdXSoyM9oTi36VnI8FKw==
+X-Received: by 2002:a05:651c:4210:b0:388:3d86:473 with SMTP id 38308e7fff4ca-389f2f55ee1mr7937691fa.9.1772122890871;
+        Thu, 26 Feb 2026 08:21:30 -0800 (PST)
+Received: from localhost ([188.234.148.119])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-389f2f4b356sm7855121fa.2.2026.02.26.08.21.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Feb 2026 08:21:26 -0800 (PST)
+From: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+To: harry.yoo@oracle.com
+Cc: chris.bainbridge@gmail.com,
+	vbabka@suse.cz,
+	surenb@google.com,
+	dsterba@suse.cz,
+	hao.li@linux.dev,
+	leitao@debian.org,
+	Liam.Howlett@oracle.com,
+	zhao1.liu@intel.com,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-btrfs@vger.kernel.org,
+	regressions@lists.linux.dev,
+	Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Subject: Re: [REGRESSION] kswapd0: page allocation failure (bisected to "slab: add sheaves to most caches")
+Date: Thu, 26 Feb 2026 21:20:52 +0500
+Message-ID: <20260226162052.36121-1-mikhail.v.gavrilov@gmail.com>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <aZ5aAlDDpUoZxx_g@hyeyoo>
+References: <aZ5aAlDDpUoZxx_g@hyeyoo>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: 
- <177210561038.1711075.13057308647469010650@mxe9fb.netcup.net>
-X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: 3942967458
-X-NC-CID: itgKNFanZP4FmffJdzNsck60f6vPoyonGLg1JtgdnwMzecbYmSk=
+Content-Transfer-Encoding: 8bit
 
+On Wed, Feb 25, 2026, Harry Yoo <harry.yoo@oracle.com> wrote:
+> Slab fix is submitted here, please feel free to test:
+>
+> https://lore.kernel.org/linux-mm/20260223133322.16705-1-harry.yoo@oracle.com
 
+No page allocation failures after 33 hours of uptime under normal
+desktop workload with memory pressure (64GB RAM, btrfs + zram swap,
+Chrome with many tabs, AMD GPU).
 
-On 3/9/24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
+Previously without this patch, I was seeing failures from both
+kswapd0/btrfs and chrome/amdgpu callers within 10 hours.
 
-#regzbot report: https://bugzilla.redhat.com/show_bug.cgi?id=2440581
-#regzbot introduced: d5ebe3f7d13d
-#regzbot title: media: ipu-bridge: upside-down sensor DMI quirk needed
-#regzbot monitor:
-https://lore.kernel.org/all/20260225203058.40545-2-johannes.goede@oss.qualcomm.com/
-#regzbot fix: media: ipu-bridge: Add upside-down sensor DMI quirk for
-Dell XPS 13 9340 and XPS 14 9440
+  Kernel: 7.0.0-rc1 (commit 7dff99b35460 + this patch)
+  Hardware: ASUS ROG STRIX B650E-I, AMD Ryzen, 64GB RAM
 
-#regzbot report:
-https://lore.kernel.org/all/CAD0gVBsyzYNA6ydPwg9mJ9VQzYg4zPAi24JQ13-=0KtdbQ039A@mail.gmail.com/
-#regzbot introduced: d1b618e7954802fe
-#regzbot title: Display freeze on VT switch back to X11 since v6.16
-
-#regzbot report:
-https://lore.kernel.org/all/20260226060714.1636773-1-changyuanl@google.com/
-#regzbot introduced: 68a501d7fd82
-#regzbot title: x86/boot: early boot SEV-SNP panic in direct kernel boot
+Tested-by: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
