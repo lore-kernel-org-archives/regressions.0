@@ -1,51 +1,55 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.170])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [185.244.194.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D9A821B185;
-	Thu, 26 Feb 2026 06:15:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FF582C0F6F
+	for <regressions@lists.linux.dev>; Thu, 26 Feb 2026 08:32:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.244.194.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772086561; cv=none; b=OlidqgkYlh7UWPI19FxvsaSLDpzGcIVEgmp1/4sMse4qhvjzOOYxLerZWgh/I0wlK9EB7S428Y4I3xkSGKVHYgvjM3YcJM9m8FkOKwcrfOVe6FSaa5rArsgMSk7tb4TiuhHCtfeRWSb2CWQdaCd45lqVlBl1GvSsMbRA0jS6ztU=
+	t=1772094780; cv=none; b=fZ/snaTCkZTQdb93W1Y3YMoPCpB5An+71Pp8SXELfPdJn64zjOpKTHo/vK3mP40JM91i52yLn9biMv8CfEmXLSD0Hu/BcfflxUVTeFTtdV6zHjG5x87R2lCxLjxZ3Q6x2pUTrlFbVa6WCngPV9f6xggDW4hsx2rSnMc0ldL/KlY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772086561; c=relaxed/simple;
-	bh=YgLF/QZ7DNboUw70vUFZKMnCHyULdhdFZwE/VpZGRVU=;
+	s=arc-20240116; t=1772094780; c=relaxed/simple;
+	bh=WDi6C3+d3xLC6rjFCZmeTduVAfy23pIsrHw2+IEGjho=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PqqUHT6a7GKygwXe8cLAReIYZ/P1H4tPGdgvn/7CU65H6/TdMKUAqHIEj1mJ0CxejfwHeWHLypubhpfOZVxJwmyrgtwLddbBi7rm5Mo72H4kG5UNEQA45kPS1DSvQaj3t9yyva+zuaAlAcd0g/PsKhanZj0Uzpvrz/7dPhwzd8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=Tyr6nIlG; arc=none smtp.client-ip=188.68.63.170
+	 In-Reply-To:Content-Type; b=Qfpx8HS5DqMpHk5qXi9BCsHipG7jMkW/ZI11Sl/b/EnACHLP7FtR0rH2RPXhmnERIgblHONJhoHDF0hDrIadVL+DzmA4xX+zB93fPEKFc8dcnF4YA/1uE6qOHlK5vw7KsKNtVaBM5thbBWwOVkmh1CI1sgbnvQQNVwnwpnp5OyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=bsTbetgJ; arc=none smtp.client-ip=185.244.194.184
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="Tyr6nIlG"
-Received: from mors-relay8203.netcup.net (localhost [127.0.0.1])
-	by mors-relay8203.netcup.net (Postfix) with ESMTPS id 4fM1GP70R9z8g0R;
-	Thu, 26 Feb 2026 06:07:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="bsTbetgJ"
+Received: from relay01-mors.netcup.net (localhost [127.0.0.1])
+	by relay01-mors.netcup.net (Postfix) with ESMTPS id 4fM4Tb1FdJz93vD;
+	Thu, 26 Feb 2026 09:32:51 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1772086078;
-	bh=YgLF/QZ7DNboUw70vUFZKMnCHyULdhdFZwE/VpZGRVU=;
+	s=key2; t=1772094771;
+	bh=WDi6C3+d3xLC6rjFCZmeTduVAfy23pIsrHw2+IEGjho=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Tyr6nIlGF6dLwTPmmV26mzkolNdjJjGfcU6FFexVKVFXJNcD9NwuPOgQfpWAIYghg
-	 eamGRo2E02b3N+5P0o7WwpXpSfi/Qassapk4uW0iybEL51v/2CJIXrejxw2WTOkH8m
-	 CSwGzwxs4nF1Cus8KYQdsBg54idGFgha09Ku3zfc6oX+LYqjicc2tNWMCcipADE9cO
-	 Y1lVRWRU6eLhaPWBb69jD/LeNwbwu0DCtv5Nijc+Zfmo829F7S+H2lXeSQQB4gppK4
-	 cNYuojCWZGEpEjAo8tt/WXeJ6puqGsBlsnDGOz/02vWlglDP14u3FeU3UZwoGsvRRS
-	 aK+xTan+wQT9g==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay8203.netcup.net (Postfix) with ESMTPS id 4fM1GP6FhHz8fy0;
-	Thu, 26 Feb 2026 06:07:57 +0000 (UTC)
+	b=bsTbetgJ1dUJKwqauu7VROIJ9zlwYQ8aOoSsoehGe71JT8J4fGkEYZ6NJZpqnaTDi
+	 FX2c7wCeIuEDwVbKf3wd83D8gJlOgBxAXFMIAR9j5+xhbYwTwljeByXr5D0mlwv/ER
+	 3/Ig/ms4o8kk4J1+aNcOVQfmjvfm7eKeE114qgm9nv3FWZ08FaiH7aCF8VdkXZW5ZD
+	 d6Psgor9PFQugqLL6bt/fVfjBHa1JuRLl/uvW0jsm5DDbZT4qxTIQfoLQbMnIBb0iE
+	 7zNc55/Uzb5o+pJs0m7Oq65FbUpRsvYK574PBo/TMs8NJC6v79YRXqL+Z/TdnU1Ves
+	 A+4ztk3YCnT0Q==
+Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
+	by relay01-mors.netcup.net (Postfix) with ESMTPS id 4fM4Tb0Ykcz7v40;
+	Thu, 26 Feb 2026 09:32:51 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
+X-Spam-Flag: NO
+X-Spam-Score: -2.901
+X-Spam-Level: 
 Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4fM1GN0Ncxz8svL;
-	Thu, 26 Feb 2026 07:07:55 +0100 (CET)
+	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4fM4TW3nhLz8tXJ;
+	Thu, 26 Feb 2026 09:32:47 +0100 (CET)
 Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 166946746C;
-	Thu, 26 Feb 2026 07:07:55 +0100 (CET)
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 51B7A6749B;
+	Thu, 26 Feb 2026 09:32:46 +0100 (CET)
 Authentication-Results: mxe9fb;
         spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
 Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <ff09cd21-3290-4254-85d3-42966efc4ff5@leemhuis.info>
-Date: Thu, 26 Feb 2026 07:07:54 +0100
+Message-ID: <8160818d-0138-481d-ba84-e33d7b3845b9@leemhuis.info>
+Date: Thu, 26 Feb 2026 09:32:45 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -53,82 +57,111 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] next/master: (build) undefined reference to
- `__udivmoddi4' in vmlinux.unstripped (drive...
-To: Randy Dunlap <rdunlap@infradead.org>, kernelci@lists.linux.dev,
- kernelci-results@groups.io, amd-gfx@lists.freedesktop.org
-Cc: regressions@lists.linux.dev, gus@collabora.com,
- linux-next@vger.kernel.org, Kees Cook <keescook@chromium.org>
-References: <177205314269.2960.1720626770087948602@d14e337afe00>
- <469ff3b3-8bb9-44ce-9b08-af49f5c22a5a@infradead.org>
+Subject: Re: question about automatic backports to -stable branches
+To: Greg KH <gregkh@linuxfoundation.org>,
+ Chris Friesen <chris.friesen@windriver.com>
+Cc: stable@vger.kernel.org,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <90479cf8-8087-4c8d-8d94-6bd3b885a77c@windriver.com>
+ <2026022502-spoilage-drearily-cade@gregkh>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
 Content-Language: de-DE, en-US
-In-Reply-To: <469ff3b3-8bb9-44ce-9b08-af49f5c22a5a@infradead.org>
+X-Enigmail-Draft-Status: N11222
+Autocrypt: addr=linux@leemhuis.info; keydata=
+ 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 MEK4
+In-Reply-To: <2026022502-spoilage-drearily-cade@gregkh>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <177208607542.761837.14536169702537603704@mxe9fb.netcup.net>
+X-PPP-Message-ID: <177209476657.1114053.1583330730573682551@mxe9fb.netcup.net>
 X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: 166946746C
-X-NC-CID: 2pNAdk141nwAJ0xhYwf4rFmqgMXzu0TqHMGlOX5neVwQHuIvlOo=
+X-Rspamd-Queue-Id: 51B7A6749B
+X-NC-CID: 1Vki2JfmyV3ZT+EJGxfjVRe6YnU6QqLaCvLiiVHkFxdbHeyu8DM=
 
-On 2/26/26 06:48, Randy Dunlap wrote:
-> [adding amd-gfx]
+On 2/25/26 17:20, Greg KH wrote:
+> On Wed, Feb 25, 2026 at 09:56:12AM -0600, Chris Friesen wrote:
+>>
+>> I'm trying to figure out what the expected process/timeline is for automatic
+>> backports to -stable.
+>>
+>> Commits 2fa119c0e5e5 and a5338e365c45 were merged to mainline on Feb 01,
+>> with the "Cc: stable@vger.kernel.org" in the commit message, but I don't see
+>> either of them backported to either 6.18 or 6.12 -stable branches.
+> For a commit that was made in Dec 16, why did it wait until 7.0-rc1 to
+> be merged?  We treat all of the cc: stable patches that show up in -rc1
+> as "obviously no rush" as that's why they are showing up in -rc1.
 
-FWIW, from a very quick look this looks to be the same issue that 0day
-reported yesterday also that Kees wants to look into:
+For the Dec 16 commit, I can understand this. But that "all" in the last
+sentence hit a nerve here, as from the regression perspective,
+"obviously no rush" to me feels like the wrong categorization for CCed
+stable fixes between, say, -rc7 and the following -rc1, as quite a few
+of those afaics would benefit from being backported rather earlier than
+later:
 
-https://lore.kernel.org/all/202602250926.E587F86@keescook/
-https://lore.kernel.org/all/202602251312.pq8yvrww-lkp@intel.com/
+- Fixes that (maybe overly careful) maintainers at the end of a mainline
+cycle queued for the merge window instead of the current cycle; see the
+first example in this recent mail for one like that:
+https://lore.kernel.org/all/b4f8ca7a-02b1-4e72-896b-87a00db6338b@leemhuis.info/
+
+- CCed stable fixes for regressions that are found and quickly fixed in
+mainline right after a new mainline release came out without anybody
+telling the stable team to manually pick the fix up soon.
+
+So wouldn't it be better after a mainline -rc1 to work through the
+possible backports in an order like this:
+
+1. Recent CCed stable fixes.
+2. Older CCed stable fixes.
+3. Commits with a fixes tag not CCed stable.
 
 Ciao, Thorsten
 
-> On 2/25/26 12:59 PM, KernelCI bot wrote:
->>
->>
->>
->>
->> Hello,
->>
->> New build issue found on next/master:
->>
->> ---
->>  undefined reference to `__udivmoddi4' in vmlinux.unstripped (drivers/gpu/drm/amd/ras/rascore/ras_core.c) [logspec:kbuild,kbuild.compiler.linker_error]
->> ---
->>
->> - dashboard: https://d.kernelci.org/i/maestro:dc8172b1090ab934a0e5bf70ede907ed6caaba80
->> - giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
->> - commit HEAD:  877552aa875839314afad7154b5a561889e87ea9
->> - tags: next-20260225
->>
->> Please include the KernelCI tag when submitting a fix:
->>
->> Reported-by: kernelci.org bot <bot@kernelci.org>
->>
->>
->> Log excerpt:
->> =====================================================
->>   LD      .tmp_vmlinux1
->> ld: drivers/gpu/drm/amd/ras/rascore/ras_core.o: in function `ras_core_convert_timestamp_to_time':
->> ras_core.c:(.text+0x273): undefined reference to `__udivmoddi4'
->>
->> =====================================================
->>
->>
->> # Builds where the incident occurred:
->>
->> ## defconfig+kcidebug+x86-board on (i386):
->> - compiler: gcc-14
->> - config: https://files.kernelci.org/kbuild-gcc-14-x86-kcidebug-699f38921f24bb69463aa0f4/.config
->> - dashboard: https://d.kernelci.org/build/maestro:699f38921f24bb69463aa0f4
->>
->>
->> #kernelci issue maestro:dc8172b1090ab934a0e5bf70ede907ed6caaba80
->>
->> --
->> This is an experimental report format. Please send feedback in!
->> Talk to us at kernelci@lists.linux.dev
->>
->> Made with love by the KernelCI team - https://kernelci.org
->>
-> 
+
+
+
+
+
+
+
+
 
