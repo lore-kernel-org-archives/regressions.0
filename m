@@ -1,104 +1,150 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from CH5PR02CU005.outbound.protection.outlook.com (mail-northcentralusazon11012000.outbound.protection.outlook.com [40.107.200.0])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE8B444CAF6
-	for <regressions@lists.linux.dev>; Thu, 26 Feb 2026 16:31:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772123465; cv=none; b=Xg20Xqgu/V2MQNNtf5lGg9CPQUuntZ5sNxt5KfEFyH021WSXGg/pHrsmw5MJG/mk3yRD7I0ixsEBGV+T+PPzwlTX96IHs53b2kQH+EIe9d0DwMHhSlBQIQsCLZDVqnekXkJYHwzJoaluIhlTrvAnuFGCz2Bkjy8SE7LyMQQMKOs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772123465; c=relaxed/simple;
-	bh=sRMSWEsQbVYqruDLWg50FVRfknHGCccs0DYH9B3QGnM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dTydCS73ZHE3BklLjXVbpEADLpKbpGBjgCou+F3nxw7EP5rVDMDF1zWrlSA/F4k2gp16YobYPVblF9irAOt6KTEWcRquKwx4gVwxH5XlozTEdBTg5ksYhqikJyxfbXt9Laep6oej5spVjgIejtoviFWXEKqiFqHhGhPjskwfdiU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=XqjYFZwI; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37307283FCF
+	for <regressions@lists.linux.dev>; Thu, 26 Feb 2026 20:49:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.200.0
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1772138957; cv=fail; b=CNwVTIcYDv9QfQ56a9cRBHfNZvFK/hi4R2NSFiEwMHNBvknVXt1762vIRPo2pVj7vYFoD7fc2EckeK37eXrUd5eh4TA0T6k/FvVjA5F9RrPwuNDnke4mXKpdXfFITqx1BaNed/sA7v8bPC6n1kGUYZOgfnQ1F/6NKPN0MegKfgY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1772138957; c=relaxed/simple;
+	bh=YnGLhm9ZEtahFAjyQNL1OMicVSt/RhyK0P8gnTVLiUk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=uPPJsyP815uW3yxFMHooxgGwcRsfUqp7FePRd2K65zL4ZOZoHqthxvactCixvQJoMhQ4V6MbVCzbMFRcme7IvGeySm+xuZWNxx8lw1sy/jRBwA7yiKV5cSJqaZOC5oFXdr9UbPj8Dx16McFdwBx0XcaSVXFZIXKywq3CzLNSo1w=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=I6YG+Bh6; arc=fail smtp.client-ip=40.107.200.0
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="XqjYFZwI"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-4398ebdf4c2so37081f8f.2
-        for <regressions@lists.linux.dev>; Thu, 26 Feb 2026 08:31:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1772123462; x=1772728262; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=54084A4OEdYJ/FduLbr67Sj+jCec7nOyoBihp7G/XDQ=;
-        b=XqjYFZwI6m1knSSFV6Ud7u2riSJO7ZvZ6SrAx1DVUULtA+BPW/nDhindUKVBzmtUr3
-         VLVSMmMI6sIM1LB1Th+ojxgoYwF4466ptSjuIujxYsRSLSwwT7z43XG8KlfxCy5GhH8o
-         lacSL0GZZDV2YWTf766mFDP5Ycbd2feh/mcmzNkSQW94MIBF5O+SJTkLRzjd25SlXxE9
-         AxHj3GmqmK0QG2tS2s4enYLS7yoODn/rHdOoz96do58JdEmBYHbPx17RTZjE3nKp8CV6
-         IuCAG4jibZy322cpKrhV7t1QT/+6tsMFMXsHDkobpuGNC+CULgTKY36/8PCuUhHz+e0E
-         JrJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772123462; x=1772728262;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=54084A4OEdYJ/FduLbr67Sj+jCec7nOyoBihp7G/XDQ=;
-        b=ONRiubsHaqiWm8uD0ts/1GyOzNRgtc33gWIsvMhgeaYBmKD6AWDY5lL7T1GU0XMsGI
-         PFpr4r7mKkInTMr1Y40rM3jr52EVs/0GkyqCFQ0pbJGpS9WBcDEIfRzCVD78oTKopPct
-         AtQxG6NO/B0EfJj7MaidkF/SzbRzcueSodDQDFMvzFIosCZMqpw/Dt9NT8i9tEO1pPOU
-         Qlwgm22KhPF4RKA3cvc/DwF1kuq0R0+R32TiyODaVNqdVbbafeZ8nZXLKnWStsuXE+qP
-         SdJKknG3BLEO//tDjfsQsyH3D9fr+S1peaGfqMbPlKy2V1FDH/4feNbpPAnymGQaqKXs
-         J/yQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUyGNfNnTQLZCoYzwCRRASZNAcMY1wa9fZdAbJ5egHYzttkuwD460p6D+uHZG9NfaPVGQdf2k2bkrlKog==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxMuXCEjfTYq78h0EN8X4p0Je+dG0xFVnjUhVxQK3ZTHF/MomTu
-	izlKXGEFWd7SFosGYogc/SwJrJ66/lfeakC/zhFsgm09Ify9PkSUX5Uwoc/GfwcPj9M=
-X-Gm-Gg: ATEYQzxt4378hWiJCv2+nVfGPlQzEkAx7hHklaKcVHvllVsdWiYoJrM4dp6OObKDuLJ
-	Q4bOpDKuQ2JzQNp7DBQpb5wY0iZXY8SljW4p1PiW8nc5jRyovvy2YW+EOb4xHtLNZgkQSjJESuy
-	vq+84lL7VVMrFP6XAbXYGCxIG8I62toJYQEvoPdmMhmFupAeVz05OdU3X8lSoW4KVaMP+R6KaKh
-	L+AW3CAUfrFrPf5MDtfl43IJ4V27mQV0fgs3zf7hHVuWMEvt5YIDBJpv5yoBNxt8uk95tjWBMer
-	X/BrnvCW2ruJVaW0cVtO1R0xoiFyy68F6NA+g5DADCHvr9bpKZYSc4oPNH6DAMs0s3QLYsARaux
-	dHJSOSLk4ZIbGvvEb7flcetqBtXgRKTvkpophR1wAn3RDFRs6RKRp4zQjcQhqZ/ez4msbH/35t3
-	1fxHm0QmiDHRCPekft/FVPFxmWgYA3XWJYG3oQZsw+suwZdB7fgFKXgLLNlA==
-X-Received: by 2002:a05:6000:1101:b0:439:8bee:b984 with SMTP id ffacd0b85a97d-4398beebf07mr6934299f8f.4.1772123462245;
-        Thu, 26 Feb 2026 08:31:02 -0800 (PST)
-Received: from ?IPV6:2001:1a48:8:903:1ed6:4f73:ce38:f9d4? ([2001:1a48:8:903:1ed6:4f73:ce38:f9d4])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4399c76b20bsm596856f8f.35.2026.02.26.08.31.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Feb 2026 08:31:01 -0800 (PST)
-Message-ID: <64604c7e-5db9-49b9-b576-bbc627c8ddd1@suse.com>
-Date: Thu, 26 Feb 2026 17:31:01 +0100
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="I6YG+Bh6"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=XUREu/GJWw2QmS8qIFqkzG6rCsPi+/Z2I095Zcx2lmYSwYJdsm7bnVOGC6ZAveHBIrUWckFZIKe0s0BMCt0SdYr4eR5nt+yzN82LF9Knb5yKMDloP8C99S9af1cKIbDe6IIZC5zvHuBPClRJt8SgCNNfj+mIXZbup4wu4hsxVWB2fTeTlgxJjlQBt9KCB3YHXXcCCrF6g2CqKsGZjVDQ60RSWanYsrY+r6m78dxgaphFBNdyD3UBcSqJyEfGG0neZKvCQrPeVAjCErIBGanKeMOboZF4cCYoKnD4m2/i4BJJCw7J/RZnusSHwoCEKktf+sosfPnNhe/BPZjvt3ZS+w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=8zma5mBBrWc/5mba9cBE0XFLOY+IQdJfbuXFBGzi6Mc=;
+ b=li9EgUWcCvvRwIKiWjI6tcORXfuA8uaZr1GdYrsYzr+DBjho72U/DCvfLjkfvshfkUscmjMP1W1vZZIhIIdBkKma9AplnyqtuARWKCf3SWSfOb7o6Cm9kpEFKotUdEyEwJ63WZnwI9Fal5l6GtfzEEI347Y7e2dSRAKmdUiEZ/H13R2cwq/c1N/QcBmS2FAQ8TkU/xeGtek4GjSYe9F5A7K/EtTe6Q0cdVdWIhr5DaPoHQ9YZivNENWyPhz+0jTHA7/8MqlymcZvM5FeA0AW0FNPyKQFT7Bjbbc6DSIllaK7/xpYYqvK7OS1qcAfZ3036ZBaH78lvqZHLb1+AIVhPg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8zma5mBBrWc/5mba9cBE0XFLOY+IQdJfbuXFBGzi6Mc=;
+ b=I6YG+Bh6f5HYv+KrMBynlnux2DdiPflKnJrhj3UMnSssbmZl1Z8USTAqFZnBX8B05n6fM7U1ms98xKJGUx1Nsv/9ynErTYXO4IYUHEWqdz5hO2bpJb2eVSoQA9HFE488Ud/cmYG2gqKVCEX4+ThaCHxxhA6xesb+9D/p1PXnPGOG9/xaHfun/NeQzFSp7OqCANdUQNvc0XvEYFJ51AdZnO46U9pH5R1w+F332ovHi70h7dN+0BYoaDGmV+En3xfKUNaMuKir5C7TXxhhGYVsrGv4joVbbPz+FnJECSGSUb8BcUFcwYXsGPfOn7AvDMx06iRBENhS8zQqNlk68fsyDQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DS7PR12MB9473.namprd12.prod.outlook.com (2603:10b6:8:252::5) by
+ DS7PR12MB8370.namprd12.prod.outlook.com (2603:10b6:8:eb::22) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9654.14; Thu, 26 Feb 2026 20:49:10 +0000
+Received: from DS7PR12MB9473.namprd12.prod.outlook.com
+ ([fe80::f01d:73d2:2dda:c7b2]) by DS7PR12MB9473.namprd12.prod.outlook.com
+ ([fe80::f01d:73d2:2dda:c7b2%4]) with mapi id 15.20.9654.014; Thu, 26 Feb 2026
+ 20:49:10 +0000
+From: Zi Yan <ziy@nvidia.com>
+To: Bas van Dijk <bas@dfinity.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>, regressions@lists.linux.dev,
+ linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
+ Eero Kelly <eero.kelly@dfinity.org>,
+ Andrew Battat <andrew.battat@dfinity.org>,
+ Adam Bratschi-Kaye <adam.bratschikaye@dfinity.org>
+Subject: Re: [REGRESSION] madvise(MADV_REMOVE) corrupts pages in THP-backed
+ MAP_SHARED memfd (bisected to 7460b470a131)
+Date: Thu, 26 Feb 2026 15:49:05 -0500
+X-Mailer: MailMate (2.0r6290)
+Message-ID: <CB5EF1C4-6285-4EEC-ABD0-A8870E7241E8@nvidia.com>
+In-Reply-To: <CAKNNEtw5_kZomhkugedKMPOG-sxs5Q5OLumWJdiWXv+C9Yct0w@mail.gmail.com>
+References: <CAKNNEtw5_kZomhkugedKMPOG-sxs5Q5OLumWJdiWXv+C9Yct0w@mail.gmail.com>
+Content-Type: text/plain
+X-ClientProxiedBy: SJ0PR13CA0112.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c5::27) To DS7PR12MB9473.namprd12.prod.outlook.com
+ (2603:10b6:8:252::5)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] kswapd0: page allocation failure (bisected to "slab:
- add sheaves to most caches")
-Content-Language: en-US
-To: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>, harry.yoo@oracle.com
-Cc: chris.bainbridge@gmail.com, vbabka@suse.cz, surenb@google.com,
- dsterba@suse.cz, hao.li@linux.dev, leitao@debian.org,
- Liam.Howlett@oracle.com, zhao1.liu@intel.com, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, linux-btrfs@vger.kernel.org, regressions@lists.linux.dev
-References: <aZ5aAlDDpUoZxx_g@hyeyoo>
- <20260226162052.36121-1-mikhail.v.gavrilov@gmail.com>
-From: Vlastimil Babka <vbabka@suse.com>
-In-Reply-To: <20260226162052.36121-1-mikhail.v.gavrilov@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR12MB9473:EE_|DS7PR12MB8370:EE_
+X-MS-Office365-Filtering-Correlation-Id: af17ae90-10d2-46fa-199b-08de75787dce
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
+X-Microsoft-Antispam-Message-Info:
+	yTbHNpgBivIs9gpPBaVwbH+D5Nbg7/N9ONYtXfmgV6Cm8V4dwDxMIWz3936sZa8CQlQjEeWOYNXy++kh5zIHvuIRxzaX3cPfGoFJWKNk30zLR24hxMFJtmotaSh2vPU5ug3ulrJiEUSIco6G0ca4ydarD7L6Bdn5A8fj1Eyafhgapnqqe4o5c+HXZwYQwGvXbooMMc6DHKLKTFRVb2nIE6y/i0R6P2tBK8BgHud7U0PqPmrQwzZpRx5jpi+bg6D5dkDXBjaULhtE3lHWqXH/xBe5sCPvjsJW8Kr9jrSvc+ckXgyBNyiPGbwqEoniDPNHBRZSlYUl5J/EaoZcsK116p/AhkkFbrqkArdoLq56IkDhPPtuMVqMHmiuZ+4+cZtzI/0xhXKHGaqa4WMSnjE76qr9pFUnWblB8W3Qn4lO5Ua9BKdQbezMDQnNpFy9Rdlz5EBon1SyBPJHIsd7fQ2WkTxBbcnVChn+6/AiTpyC2KihFA0tCGvXcKEJjYp3fLzYx7PaeKRJs9barigH8BjXajB2W4bQ3k+zyq5bLpOi0/PwUskg5ZL/mdYgdBWaAG2cS4EbuzdGSEJ29xUwEI+ZOKlY++o5QOIglaOKHoIgKnU5uYDZjHRHxEJ97BJsnAl4nv4NGWmR30AawSySwyw9uP3wPiSmnQqMSwmzrVD28Nfkdjf/FZwLG8FJDfmj5re7IoZozIL2afL5641DDg+tD8CrklgadfCvzpfO+UzH3no=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB9473.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?G28TCbOu7oBHa1Q94kqlZcTuCMbWjYaoXRh4I88MhsHRVQoZ7RlHF2fDvYiO?=
+ =?us-ascii?Q?9qNEdc9WeoW1ePAJM/OCkEAYkKT5C5PneL0Dbq26f8h0Cps3+Tt3c2CQmVhw?=
+ =?us-ascii?Q?hBfZ3rxpWn7wrIrq7ffHAhHgZng4XMfpyE/Jbmzl0zXBOwI/HmMFaZkzsoe2?=
+ =?us-ascii?Q?+0QNpouYHHsuSf5DyCQmcceHP4ARQpd1KtLb/0JaRkkOw8xGQF9FpRQy7ARx?=
+ =?us-ascii?Q?/u/xbGogg9qwVzZSmINrcnd4tUhzUptK1cn3CBkVRtGg/S7v3O+dwXhoLcGY?=
+ =?us-ascii?Q?U2n3WanBeD1VLh7aajw073gbeXPSzBa6gfKkBXmmHNwoTSu/hszkCanSVsvC?=
+ =?us-ascii?Q?zdDfaIVSdd7iYmGk1tgONzF6Cf8u57HK0qIZrzAxnbShCEvZAECSoxd7g6/g?=
+ =?us-ascii?Q?MiM3T1XooEvgoQjZ3piCrNE2FLIDCE0bX/T/XCikF21yNYLxrIuGXEcYwOxt?=
+ =?us-ascii?Q?yj2e/eu1abirDsKUv8gHAShqfl0lO45MVmQ08AaNhC6VA/B0oxN2aZxkC+Yh?=
+ =?us-ascii?Q?n0K74VsZf/rg2aE8p2r1jgr7onGFUB8vxkRPsLDFy0Ri+fWQuRsJRaVDT5Ka?=
+ =?us-ascii?Q?nJfEY1N6jIUsn6TDFTJSo+d/8y4VkTEEv+QFxBc1FlCDXsXsNARAKCmk+Tin?=
+ =?us-ascii?Q?e+O8CFQi/An28nqW5CXPIuipAz7XzCjLxE8OmhlrAgTXG6K7+/pBFr4PXzcN?=
+ =?us-ascii?Q?0DGSwjcG68sN1beT5+KKYsauSV+W4UhArNm3cPxeJNYGolxlhotk3ZqAmsem?=
+ =?us-ascii?Q?d3NdH+dElrt9POibU0VLCF5PSOn2HV3xk3e6Dq3DxB1iAns+1y8fvAgWEU6u?=
+ =?us-ascii?Q?lRSNlxbMTO3l1opV9lGf/swOEm+Np0uhjVe+zoIEqYYorBFYpbGhhDmBDaWp?=
+ =?us-ascii?Q?EiisKpJrp0gAdNY7ctIngpZ10Inqzvo1OKduyn+XcwnCtuaGy7bhqAHH7rZg?=
+ =?us-ascii?Q?erRFpqPX9YJVmkKJdRUnHhqUsCaNC/cwrU2ApGk/D1JZ6p8PjuaO+m6hqzOo?=
+ =?us-ascii?Q?RBsnbRRVfpyVB6bBxSSfeDGAXBXQMNvlPx4v7FBzai10f8weWzX6RV/MVPFy?=
+ =?us-ascii?Q?731Gl+6PxYgK74+Ck8HqMdvxkq8u+t2jG/1MurCD9QLYilngVHpCFJ2NyYx4?=
+ =?us-ascii?Q?T72J1hoMapI3f9BBEnp6Jo5BhmI7oAlcsoMUbDGF66UsoT8mhi1LJUfRLVbf?=
+ =?us-ascii?Q?zR5xzTkRCMT/TMu9pHAjZo4YxuMADzgpsRiBcmBL5LPkFaXNr927FZ1MBwLY?=
+ =?us-ascii?Q?MLa2I7KyaeTRTXxXfJVPwrjGxFXS6xZIMKF01iAr0Vv7EJ+U8gcjVNoJpsCT?=
+ =?us-ascii?Q?d0cT3gyhj2oNwoBE6W/NHPJIprWPuyRY2aHRLqMSHS3I2vjrXu1VtpzBJNFk?=
+ =?us-ascii?Q?qzG4eZPRuhYKhjq0cLpyWoj3N4fybm2GbHnBEz81eZCc5CRU3c4hw+lFKFzr?=
+ =?us-ascii?Q?M58K89mox/YOcuCS1TpCv/QF/X0u9nPqU/ZT3Pe68MMMyxhxPGkDMODGn7AS?=
+ =?us-ascii?Q?ICJroD2X/vA0GD9nWMUQ4/jvmrvcqKvOoLZ2xI5rGrir12yffeumhw8D96pn?=
+ =?us-ascii?Q?3ombnLAnJQ47ZxNfexJZJd8j4k66yHOJqlkkBN59zXwIv+sX/2Z+mwHig/4V?=
+ =?us-ascii?Q?ho1JvkAy5GOi+ITwW1JDDORvX/YePQqIlQV6DkhkWoiO6g4Xsi18Bx0JKLOt?=
+ =?us-ascii?Q?ac9aDvHwn5qkTvCCpC0PaiHSm6yK6oOGoZali+crdCw6E8BH?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: af17ae90-10d2-46fa-199b-08de75787dce
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB9473.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2026 20:49:10.2243
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 9t7zI+e8zVEvYlnBEeXhIG5N1AGGeQQshquUNorXrotyBZZOhQMYqgoIZgGvG2sK
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB8370
 
-On 2/26/26 17:20, Mikhail Gavrilov wrote:
-> On Wed, Feb 25, 2026, Harry Yoo <harry.yoo@oracle.com> wrote:
->> Slab fix is submitted here, please feel free to test:
->>
->> https://lore.kernel.org/linux-mm/20260223133322.16705-1-harry.yoo@oracle.com
-> 
-> No page allocation failures after 33 hours of uptime under normal
-> desktop workload with memory pressure (64GB RAM, btrfs + zram swap,
-> Chrome with many tabs, AMD GPU).
-> 
-> Previously without this patch, I was seeing failures from both
-> kswapd0/btrfs and chrome/amdgpu callers within 10 hours.
-> 
->   Kernel: 7.0.0-rc1 (commit 7dff99b35460 + this patch)
->   Hardware: ASUS ROG STRIX B650E-I, AMD Ryzen, 64GB RAM
-> 
-> Tested-by: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+On 26 Feb 2026, at 15:34, Bas van Dijk wrote:
 
-Thanks, added to the commit.
+> #regzbot introduced: 7460b470a131f985a70302a322617121efdd7caa
+>
+> Hey folks,
+>
+> We discovered madvise(MADV_REMOVE) on a 4KiB range within a
+> huge-page-backed MAP_SHARED memfd region corrupts nearby pages.
+>
+> Using the reproducible test in
+> https://github.com/dfinity/thp-madv-remove-test this was bisected to the
+> first bad commit:
+>
+> commit 7460b470a131f985a70302a322617121efdd7caa
+> Author: Zi Yan <ziy@nvidia.com>
+> Date:   Fri Mar 7 12:40:00 2025 -0500
+>
+>     mm/truncate: use folio_split() in truncate operation
+>
+> v7.0-rc1 still has the regression.
+>
+> The repo mentioned above explains how to reproduce the regression and
+> contains the necessary logs of failed runs on 7460b470a131 and v7.0-rc1, as
+> well as a successful run on its parent 4b94c18d1519.
+
+Thanks for the report. I will look into it.
+
+Best Regards,
+Yan, Zi
