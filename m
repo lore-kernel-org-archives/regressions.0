@@ -1,178 +1,278 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from BL0PR03CU003.outbound.protection.outlook.com (mail-eastusazon11012001.outbound.protection.outlook.com [52.101.53.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83B6D2367D1
-	for <regressions@lists.linux.dev>; Fri, 27 Feb 2026 23:32:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29227387591
+	for <regressions@lists.linux.dev>; Fri, 27 Feb 2026 23:44:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.53.1
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772235178; cv=pass; b=MwrOUHkNJGcn9zneG4w4mAI9xL+H2rmmcjWMkaebRz2/cCx9QB5uI6ua2qmS6qKtXaKbVJwh+o5b1Bl6sIguadKwZLmCqD9/qG2WSqxwG7nQfCgvbmczPeUO1Kh5Y8C4rEFrCOXT3NE3Qz1aE/QtTfq8KYDSRyI2iJBmvWYCtrI=
+	t=1772235868; cv=fail; b=A0mhK41WozQxXNjPMNXVVhEsxIXQ6cl5FC9waEW5enEqrkfxvM52GxEMiX1LjmhRpPi92ECYruO8I6ISNBDyXbNuyFZhOu8zvi57wScdJ8x0EjJM1bLduLUrzmStgu89Qq9O3ZZSXsDlBxTE/R3xwao5ISgz62nQ5HvKw+4HOgQ=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772235178; c=relaxed/simple;
-	bh=Jl6qVoawnojYxXKy+mpIEK2wzTG7xBRL73TA3AR7Rxk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=s8hOUfbfllvZe/V01Ktr9Ci2j4GGlYU36LzRynGsujO65a1gBNfmSwkY4rSYRWluOMdkkV4wbY83CuwaY5EAXI9raNYaHcXP3L1rfkezOl0yDs2zoUnsikGk9zpr57NL5wN2yiJHiLBwRA9sBkptt1yDw7pjpEZyEtKk8md/E28=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=dfinity.org; spf=pass smtp.mailfrom=dfinity.org; dkim=pass (2048-bit key) header.d=dfinity.org header.i=@dfinity.org header.b=W3+MdCN3; arc=pass smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=dfinity.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dfinity.org
+	s=arc-20240116; t=1772235868; c=relaxed/simple;
+	bh=tjv/V0326Dd9qTIqsUXZPuVb24VdVPSWJJvl20KXqGo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=ecC885I36DkBWQVgbJAxaj1KD8ghdPLkiysO+Nu8/Vzatg6iHJu8Rya5ayDGrMbOX2zZaTBs3pUxtl9EjYj7Wld1FfkV2amtC+oGXvgv646ysTq1Z1UshqIPKDHstssvAeTNDq+4IU4QChsce2xtiEsSuxIZDZzYfGoLA4opv50=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=ZFYwdLHi; arc=fail smtp.client-ip=52.101.53.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dfinity.org header.i=@dfinity.org header.b="W3+MdCN3"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-65f767a8d62so4981779a12.2
-        for <regressions@lists.linux.dev>; Fri, 27 Feb 2026 15:32:56 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1772235175; cv=none;
-        d=google.com; s=arc-20240605;
-        b=fejlpaTgekbFPg311wulkfwbosKZV3OdDEcevoxwfWr3ZyWMK1aWptLhfccpFQy9MG
-         BLlXMPlvttxWoZS0vhP1YG9TB643sIhAtHmIkFLTsnmes7BqYCa7qz5hkAmWGXIu/jnz
-         mJXWMm713mcTjuZHbc6INv35abEKAZBeHeS01fpE0MX0BxZSqgPDQErCSCZjrxZGAVI5
-         ajpSRUmKbhcbD5qS35rwahAK1hCv8LMztzuNo8Z9+3ksLF42xWtL11n05LEKTV3X1vh7
-         Cq4DlGgpG382Ku10fM2EU3+1fNsdGzD5C/uUqHxP7ECCN0YIVrAPfRPyoLxcT7tajDde
-         hkeQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=e/eLIE3ND8oKfgZ51wtjS+hjmkhRyVh6yadLObJYXaA=;
-        fh=t/Mgv64bp09akUpW/I2a+kRB6q6+XZE5g2/5c7HnKqU=;
-        b=HBweHanmkxxEmU6hjFMDA4HzEiepPkwK8JWFahVeL9f+9TrBsrOEbeWJx5p/cvqNL5
-         s62F60J7nVWt0oylPxsKyRFX3WEjybhkxFe9XMjKhwl5mZ7IoIp9Rgw6EIlr3JzIRWXz
-         53SmOiOWJZIMAn0uno180iMBXHb5Iw6opOXbqcZN6oKGtSkEIvk0v2BjMRWg8yXOLGA4
-         eWTy6z2peNz6w6AYP+d0aNxTvtXUx+L+6Kd867U618Lci5Onq/FDC2GodQWNYYOF2vT+
-         dPdijud7Pf44JQdToWBtY++4bYIKp7OMGs5QhV+MbGRoyR5Lwp0Qc55ECoRgtEVxH9g3
-         GLEQ==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dfinity.org; s=google; t=1772235175; x=1772839975; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=e/eLIE3ND8oKfgZ51wtjS+hjmkhRyVh6yadLObJYXaA=;
-        b=W3+MdCN30r6oM7FGQ/yrr35GRk8osqMM8xHtf22/HX2RK7x6TpFMsnZrmmAQ2+Y2Mm
-         8jY2mmwkJSB8dSZXDadU1QyToyt9j6PEhDLZnrucLNaAi3fk2lhRbF+03AXpRCYhrlPG
-         OKOZiMn61rTS1MBVPhKZip+knSVR+mf0LSDgEZiyeSZkDWvi89Iischav4AOnu+t9vt4
-         O3OfBbKwSgdB81F5QoBL17iRvzokT7lfGWIonKUnFdE0sl0JdPFm6VqtFkDLDwvE/2r/
-         ECivZtez3cy6Om5FMDiblTeEwEViHJy0NJ34uTE9Ohqwh92zj9egFdTyU1groWdY5Pc5
-         1KBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772235175; x=1772839975;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=e/eLIE3ND8oKfgZ51wtjS+hjmkhRyVh6yadLObJYXaA=;
-        b=K/EhQ1qVt1t6Mtdg20tRxF9iteRUzgAPpaLZQd2T+GtJjnqjQ+Kg/cPEP5+xAycLDS
-         q0lnEumNsiJHjxyyln/OND8puDfV82HQPCyNuDlEcZ4aNL5gAOLp16SPUzx3XWDd3cCf
-         E8bEYdVVtjoG4wt8Ou2DnbdmvLJIEj356AY008hDAYPhhtPFwPZFKczQkhaBeUxwrnfM
-         6Iwh5isWCSeFQTjdp5lxlpgImYFUdT3X5xrAphW4zxNh9pELjtMLqvwm+qmKWdu617kz
-         p1KS0frPGMIoplaxxOIkgmBzjvPLquPeuBoKVXBc7RXWes60KzAHmpUzYy7uICevIXlH
-         9IMw==
-X-Forwarded-Encrypted: i=1; AJvYcCXHXL6h32KZq63bXdrztjl5EK3qDLM0P3rCODKrOrIk0tqZTqQIjnfl1IOmfHoKCdywb+tT6S1Z6e5fLg==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzbTIuFDp3SjxaetYaxJgaobnHrcsmkFKB/6iKDcxwk/LpSQH+0
-	gXsVHFTT4ma8qDfgOLZLKxhzGNKFHvaroe8r7rql2gSpht9djo1kXPqczbThfRgOMQvomQVSIDm
-	rUK18Y9RJ89KnzJMphZtaZR4I4t5x2e5s66lpWonldg==
-X-Gm-Gg: ATEYQzyQEqQ4yHC1pW2goEmklG/uj6Itnh/xASSmtXXKicSgSbMHbuizIGvSz32l9H8
-	Cf2bacDY0O6aB30ertM7YF+OjkVrOQhaT+l3njW0PN66Ym9ZhzB9q5vsSmZJx6HiTneeoVKyAfG
-	cktbxEKm3q0Vai+ru1Y2BXCNMhwKLJqV9AZ0xva04O0p8kxcE1VSiVJcfXaflSK9GH7BaZ9HGOF
-	zcCRY86ZwlNv7VpEWOmh9k1tu5BuuLiit6gQWTxksoQMbmEef3+rV+12rtF86ltnqUOxX94xmI4
-	8vse2TqwB6clc3O/mw==
-X-Received: by 2002:a05:6402:3810:b0:65f:a47f:6e98 with SMTP id
- 4fb4d7f45d1cf-65fddcf17a2mr2834242a12.27.1772235174690; Fri, 27 Feb 2026
- 15:32:54 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="ZFYwdLHi"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ELUlp2htQ42x20lttbKGC8PY6qSU+XbYqlAlMQBuHqf/YeyM9utPrzqbwB1/2oECCj2s8C5USgYstj6qqRS25r8G5zam71LV3J4zbK3Wt8llZdsHXtZXKO7E0cqj53gkKw0UADuSt+RH8o7TLY7QSW/gwGWB+pkM7u2KnuDxG/Og08AHN6VuutxZ5iIyEZpdocz7Q6T+CTuV9NA4f3F5zlTFElytFT++M+Kx4MwwUt/+d247dtj51c2rKUHskdYXWMtsIoolYxQeSw7/2BO/sVO8xR1wPit9Xg0Ex5cXOODht5b/P89SLhjHoxaS86V++zy6jcnrZn/11eO7NMWdLQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=M2jthDnzJUoIOsvrBRpIwweVx3aNelNKRI6ebjHLxJE=;
+ b=R1+ChZfwhYaaJA6wxOSBuf2Fx9jOkFWWaFuHcZePOWaGWuseudLwWUIHLsplo1QTQA10zIozB5X0u+raA6IDD1XYqPw4zuls6q7yv/3J3MWoJVzuq0pIzWGMPOaH7tOyvPzpiElwHLVdaSGVR7P8z7mZ2BFhY4TrFyWQouXbaKyU2WOSUIZt6ruLbFAzaUeLkTwIQQY6mvaWZQpGM2MF+xhSKCXXLgnpkPbJq0WzIc560Ms2P6YVdBXEm1NZ6R6M8KmoUl8+R7mLMOBEmxPqDKCX3vUyfqc+Wg+psEScxmZ7Dc5oySTpZREWL9evXibw5M3Xvjae0I7CTRbNBxxoAQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=M2jthDnzJUoIOsvrBRpIwweVx3aNelNKRI6ebjHLxJE=;
+ b=ZFYwdLHipVLUXZH2RQKffCCTRef9R7bst6/Ya642Pe21SmUcR1k1ERM1ud35IQnkRxqLGL358c0ThFciboDnQD0x6KmxI9VPHnJRRt4MQLtBr675ugmWJ/xZvYNaqpegkt/wR/QhB4zQL3aRbxE1zeEOjxlFGycWAuxhwvmd+Pp2nRoKxjdABa1YvxnAhaDXYO2QxPDPXFB21fvzbHbH69wwfbfk5ErMiGFR+bSvbWK5mM53CUn+VpSspuLQ2j6boSDlsPCsyX9dqcJVn1/jlpm2UAjdayrKkEqNqfynpuoJ1VJ2iMDF7NwgzUJLDx6SG3je4l1apkN4Hpi8LMkRHA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DS7PR12MB9473.namprd12.prod.outlook.com (2603:10b6:8:252::5) by
+ MN0PR12MB5953.namprd12.prod.outlook.com (2603:10b6:208:37c::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9654.16; Fri, 27 Feb
+ 2026 23:44:23 +0000
+Received: from DS7PR12MB9473.namprd12.prod.outlook.com
+ ([fe80::f01d:73d2:2dda:c7b2]) by DS7PR12MB9473.namprd12.prod.outlook.com
+ ([fe80::f01d:73d2:2dda:c7b2%4]) with mapi id 15.20.9654.014; Fri, 27 Feb 2026
+ 23:44:23 +0000
+From: Zi Yan <ziy@nvidia.com>
+To: Bas van Dijk <bas@dfinity.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>, regressions@lists.linux.dev,
+ linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
+ Eero Kelly <eero.kelly@dfinity.org>,
+ Andrew Battat <andrew.battat@dfinity.org>,
+ Adam Bratschi-Kaye <adam.bratschikaye@dfinity.org>
+Subject: Re: [External Sender] [REGRESSION] madvise(MADV_REMOVE) corrupts
+ pages in THP-backed MAP_SHARED memfd (bisected to 7460b470a131)
+Date: Fri, 27 Feb 2026 18:44:18 -0500
+X-Mailer: MailMate (2.0r6290)
+Message-ID: <49DBB7AB-9BC7-4543-91DE-DC472D7A5B44@nvidia.com>
+In-Reply-To: <CAKNNEtziooemhq3Yb8OpOjg4N0bV+Kc+1in0P7L1i_NBWS-q=A@mail.gmail.com>
+References: <CAKNNEtw5_kZomhkugedKMPOG-sxs5Q5OLumWJdiWXv+C9Yct0w@mail.gmail.com>
+ <CB5EF1C4-6285-4EEC-ABD0-A8870E7241E8@nvidia.com>
+ <D4BD80F5-6CA2-42E1-B826-92EACD77A3F3@nvidia.com>
+ <CAKNNEtwZzt3xWh_b1pn4X4FG+cq6FLOP5rR4+G=WUsjHsJRjaA@mail.gmail.com>
+ <2EECA9B4-E1F0-42FF-9E61-3E4AC4B4DC13@nvidia.com>
+ <CAKNNEtziooemhq3Yb8OpOjg4N0bV+Kc+1in0P7L1i_NBWS-q=A@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: SJ0P220CA0001.NAMP220.PROD.OUTLOOK.COM
+ (2603:10b6:a03:41b::7) To DS7PR12MB9473.namprd12.prod.outlook.com
+ (2603:10b6:8:252::5)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAKNNEtw5_kZomhkugedKMPOG-sxs5Q5OLumWJdiWXv+C9Yct0w@mail.gmail.com>
- <CB5EF1C4-6285-4EEC-ABD0-A8870E7241E8@nvidia.com> <D4BD80F5-6CA2-42E1-B826-92EACD77A3F3@nvidia.com>
- <CAKNNEtwZzt3xWh_b1pn4X4FG+cq6FLOP5rR4+G=WUsjHsJRjaA@mail.gmail.com> <2EECA9B4-E1F0-42FF-9E61-3E4AC4B4DC13@nvidia.com>
-In-Reply-To: <2EECA9B4-E1F0-42FF-9E61-3E4AC4B4DC13@nvidia.com>
-From: Bas van Dijk <bas@dfinity.org>
-Date: Sat, 28 Feb 2026 00:32:43 +0100
-X-Gm-Features: AaiRm52i5X9PI75r_CXw7oqvsR4nJ7O2YOcRO4y6Kt2G9VuPp0acJ2VcRalSCjk
-Message-ID: <CAKNNEtziooemhq3Yb8OpOjg4N0bV+Kc+1in0P7L1i_NBWS-q=A@mail.gmail.com>
-Subject: Re: [External Sender] [REGRESSION] madvise(MADV_REMOVE) corrupts
- pages in THP-backed MAP_SHARED memfd (bisected to 7460b470a131)
-To: Zi Yan <ziy@nvidia.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>, regressions@lists.linux.dev, linux-mm@kvack.org, 
-	linux-fsdevel@vger.kernel.org, Eero Kelly <eero.kelly@dfinity.org>, 
-	Andrew Battat <andrew.battat@dfinity.org>, 
-	Adam Bratschi-Kaye <adam.bratschikaye@dfinity.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR12MB9473:EE_|MN0PR12MB5953:EE_
+X-MS-Office365-Filtering-Correlation-Id: 538d7503-a945-4ad6-b01f-08de765a22b7
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	qR81BLpThoBSuQQ5xQEH3YQkTFGJ+HLhURTf2pFDZNfTlWqR/edxrKidmHuW0yR1A2jFhkavea8EGXZLUFN2OQ91ECz8pbmZVaXeB/ametb8VMxd3S9y1u5fjUKoTHVeGndMP46uYdoztbSNKilZ24odqu95qxhBDY5Ip3qsVeRoEJ1S9Ip1Ubu5xyRAokXs3hvnsOPihsBbd+RTjfVIhJ22RRj6XOB/Rh1tlUolLrvyRkiotl5Vf6wDX4BmmxmrfYtB7hIZ/qNwyyuMmKITMj8hWpY07KaHq/wpi21fZaI8GSLaCZ4TF0TlOXjmlUX7R8sDdGaOL+CwMoVBbfcJ/SNpIMnjN9y9SQk8Fu85k06gb4iwhoK82mdkP0mdx7zbH03wN5zCJc+yfJG2BvX2Poj6j0jT1/si1/qb4sRQyfJjMs25Rz62BubfBZrOLzlZKBAJeQVwPNSVP3iaIvEtHnTKxEYYSKpJrQCG0+hVZ63ajrkd29xNbpZlOVdY/miBMOJYyuYm110Pr7muQ4NBTneGGcFeKB4nEi98I2PvhZIbuV7BV5pieATPhRFAzsrbOAbTtF0g+qohUqcHh6vnqVvobhS50TMcajajxi+E7qJLBdlaUdI7dAT6g3GiA58+md1NDHaXHeA7dVROOzStSGMbpnGqLHaT2XWKUyD1ufsn8MTUWnjhU5TJYUPDWY9sXT8btcm6hLYymVZYEfMFOPZG9dDwRRo4uo5zlzfi33lRDrcM6ohqzwIddurLxKdH
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB9473.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?N2dTMEtDanV0NTc1M3NQYlFHWWZyazgrNWF6SExyQlF3d0RKcmgwalUrMHJP?=
+ =?utf-8?B?QU9jQUZhNDh6TVVPOGJ3UmZjZ1BSS3ZHVlB2M0t1NGRGMldMSEhEK2hqOXQz?=
+ =?utf-8?B?UzJQdUtPRmdiWFlZVGYwVEpoWDlTLzZSM0pOM3Z0K28yTUROVHd1Z3RvdzRW?=
+ =?utf-8?B?anpjNHhBTWFCV2pCNjg3aHQyWkdqYmtTZmx5UUE4UEpMcVJFbE4zMlA3K2hL?=
+ =?utf-8?B?YURodHhnZUtSRUNUNGpsZUlPZXFyZXlKZWVLZzVDWGlXM08vZ0xxT2RUbkNG?=
+ =?utf-8?B?bGhNKzN4RTJxYVh4ZXhrMGl6Ynk4bzNxYXpCVWpGakxMcWJGQndHayswOVZF?=
+ =?utf-8?B?OSs5NlIyUTUrRG5nQTAzOFVpOGpzM0pqMjVQUWFFc1RVT3NKbytFL1dsdWF5?=
+ =?utf-8?B?ZS96bm5xRW9WTkhvNnFtcHMrNEVpMVN1Nzlhc1Y2OE9qa3kwSGE2cmVwNVNX?=
+ =?utf-8?B?ZGxFSXdPN1VjWWxyWXNIeTBWaEthRE1SZnJyaS9NRGNaM3Ntbmh2ci96c2Ry?=
+ =?utf-8?B?M3BYOHNYNjJyZ1d4S3lYTlBzV0VtRUJZblFsZ2ZiZWNFTGU5bG03aEJaNVI2?=
+ =?utf-8?B?WW94U2c1QVdjUDlPMzJaMmo1R1l0NTR5dWNEdFI4azY1ZlpJYURYelJza0Jy?=
+ =?utf-8?B?OG1Dd1dxUFh0SkFNVkZKMjRRN0NhRUh4V3FMSHRCUW01QTZVaHZLOXRzcVYv?=
+ =?utf-8?B?RHhjZ3ZScGN0Y2NuS3kyZmlHR3k4VkUxcTM3VnRZaUFDaFd4akM4WnhKWXNa?=
+ =?utf-8?B?L0tZMnlQZ2g5bEk0YVRlYW9wSTc2OTRCQ29LTkhxeVI1eGQwa3YxUWpOUGFp?=
+ =?utf-8?B?bUpqTzh2cHY0Sjg4Z1NwZ0Y1Zy9xNWo5KzJtSCtYRGUzQXp0YnlUZ3BjYVh1?=
+ =?utf-8?B?ekpRZ0dtWklJUk9SM2xRWXhUcUJRWk83cFFDUzN5ZE8wOXJ3R1VPRmRlQkps?=
+ =?utf-8?B?K3FoODcvSmEvVk1tVUJDaithcXJZMTBadFM3ZXJOR0ZGYVBPV2FiMGFydklI?=
+ =?utf-8?B?NjZkRjJGTUZpdERGY0xoR2VZUEhJQzhkL2lxKy8xYmdqbWd6MHVkTWRDSmc3?=
+ =?utf-8?B?TWdMRXpRbytWOUVkWmxCSkF6RDVBai9pQW1KL2RCR3ZYYjlOd1lGb3Q3bXdq?=
+ =?utf-8?B?ZHdvZUxYalo2WENORnNvd2cxQ2JGMUYwNEtkRnBCdzlwYzhZckZxMHB4RzVk?=
+ =?utf-8?B?WTVCbTJOcmU3VUpITWsrZElaV0xpcVZSQittbnZIcXhya29HSFp5OVF1SW5Q?=
+ =?utf-8?B?UTgrbmZncDAxUmFuVWxtQngyVlArY3UxN01iTkV6OFUyZVJWbmN5akVuZDhK?=
+ =?utf-8?B?a3BWUTJ3SVluV3lqNWFxUFA5Uzg3ZnZqNW05a1dRZlRqRk00eENuVTZYRzJ4?=
+ =?utf-8?B?VDR0RUNKRXpYSW5KNHRGeklhamh0eFhlak1nZENQbWNBME9NZUZzZnNFdXRt?=
+ =?utf-8?B?TEpzU0RMM3hlYjQ4SUw5MDAxdHR0YXUvaGM5ZEtwenhwUHVYeUV6SE9LK2hR?=
+ =?utf-8?B?T3hCZndaZm5GbS85elljQ0lIU1kwd08vLzFYKy81R1hOZUY3cmYwV2pjOXZ5?=
+ =?utf-8?B?bE9HSENrTUgydURMZ2h3K0llN1dzV0tFNG82YXdES2xoOXZET3ViRDBQa0Mv?=
+ =?utf-8?B?U01haFZqTCtNVG5SNFI4YmZpbFpCeE10MGFBWXVnQVRWYXlOalJJeDA5V1VZ?=
+ =?utf-8?B?YnkxbVJObjRTQTdjUGVjdi9MMUhTVGtKSkN2aEQ4QlRNZW1yQzFqaHhPUko3?=
+ =?utf-8?B?OUZEcTN5amJsaWFneU1QaGdZQ1hia3dPYzBtb3FuVE1UVGcwNi8zNWNHN0Jl?=
+ =?utf-8?B?WnFvZTcrVEQvbU5zZmtNcTlNWFliZlR6dXhvZUVoeUxKWGFHUi8zZ09DZlZB?=
+ =?utf-8?B?VTRNUFFJeVlVU2tvSlp2TDNkN0pUSWRqSHptRGpqMkZHdThwcHBUWjZaamU5?=
+ =?utf-8?B?YWptK3dpODkySzZjendMZFh3NnZVdkYzcTRxSUFHTVF0MUxJQTI2YWdXNlJ1?=
+ =?utf-8?B?dCtkb3RoOGFoRm94ZDNGOEdlM29sdDVabUZtUVoyQnh3L1lOcEU3YnZRdkZY?=
+ =?utf-8?B?SWxYTzNxZ2MrWFBpTGFQcnRNMGNzVG4zK1E3S2xqODhZaTlaWDdxTHA5eTc0?=
+ =?utf-8?B?TWlwTmxzOEswOWJxNEw1YUpZRHA5cXVFMllyVXRXaG93TnZCZ3FGSXZYRVVT?=
+ =?utf-8?B?OC9IM3ZyMy9sOCtwQnBYMWJjdnk5M01zZWk2bExsVTBXaWZXNTE1ZURRZThL?=
+ =?utf-8?B?ai9Cb0Y0RWdBTng1dWJRenZRQlBXQ2YrMnNobi92Zjl6eVg2ZXZXU0FVRElq?=
+ =?utf-8?Q?VyCdqaxTu2d+5XLGPH?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 538d7503-a945-4ad6-b01f-08de765a22b7
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB9473.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Feb 2026 23:44:23.6079
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Snw/274y3gbZtvXSziUHypEKT1+9nyRqhW0FPq70KT71wpYMtJ5/HSFAKptqpM+v
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB5953
 
-On Fri, Feb 27, 2026 at 8:29=E2=80=AFPM Zi Yan <ziy@nvidia.com> wrote:
->
-> On 26 Feb 2026, at 16:16, Bas van Dijk wrote:
->
-> > On Thu, Feb 26, 2026 at 10:06=E2=80=AFPM Zi Yan <ziy@nvidia.com> wrote:
-> >>
-> >> On 26 Feb 2026, at 15:49, Zi Yan wrote:
-> >>
-> >>> On 26 Feb 2026, at 15:34, Bas van Dijk wrote:
-> >>>
-> >>>> #regzbot introduced: 7460b470a131f985a70302a322617121efdd7caa
-> >>>>
-> >>>> Hey folks,
-> >>>>
-> >>>> We discovered madvise(MADV_REMOVE) on a 4KiB range within a
-> >>>> huge-page-backed MAP_SHARED memfd region corrupts nearby pages.
-> >>>>
-> >>>> Using the reproducible test in
-> >>>> https://github.com/dfinity/thp-madv-remove-test this was bisected to=
+On 27 Feb 2026, at 18:32, Bas van Dijk wrote:
+
+> On Fri, Feb 27, 2026 at 8:29=E2=80=AFPM Zi Yan <ziy@nvidia.com> wrote:
+>>
+>> On 26 Feb 2026, at 16:16, Bas van Dijk wrote:
+>>
+>>> On Thu, Feb 26, 2026 at 10:06=E2=80=AFPM Zi Yan <ziy@nvidia.com> wrote:
+>>>>
+>>>> On 26 Feb 2026, at 15:49, Zi Yan wrote:
+>>>>
+>>>>> On 26 Feb 2026, at 15:34, Bas van Dijk wrote:
+>>>>>
+>>>>>> #regzbot introduced: 7460b470a131f985a70302a322617121efdd7caa
+>>>>>>
+>>>>>> Hey folks,
+>>>>>>
+>>>>>> We discovered madvise(MADV_REMOVE) on a 4KiB range within a
+>>>>>> huge-page-backed MAP_SHARED memfd region corrupts nearby pages.
+>>>>>>
+>>>>>> Using the reproducible test in
+>>>>>> https://github.com/dfinity/thp-madv-remove-test this was bisected to=
  the
-> >>>> first bad commit:
-> >>>>
-> >>>> commit 7460b470a131f985a70302a322617121efdd7caa
-> >>>> Author: Zi Yan <ziy@nvidia.com>
-> >>>> Date:   Fri Mar 7 12:40:00 2025 -0500
-> >>>>
-> >>>>     mm/truncate: use folio_split() in truncate operation
-> >>>>
-> >>>> v7.0-rc1 still has the regression.
-> >>>>
-> >>>> The repo mentioned above explains how to reproduce the regression an=
+>>>>>> first bad commit:
+>>>>>>
+>>>>>> commit 7460b470a131f985a70302a322617121efdd7caa
+>>>>>> Author: Zi Yan <ziy@nvidia.com>
+>>>>>> Date:   Fri Mar 7 12:40:00 2025 -0500
+>>>>>>
+>>>>>>     mm/truncate: use folio_split() in truncate operation
+>>>>>>
+>>>>>> v7.0-rc1 still has the regression.
+>>>>>>
+>>>>>> The repo mentioned above explains how to reproduce the regression an=
 d
-> >>>> contains the necessary logs of failed runs on 7460b470a131 and v7.0-=
+>>>>>> contains the necessary logs of failed runs on 7460b470a131 and v7.0-=
 rc1, as
-> >>>> well as a successful run on its parent 4b94c18d1519.
-> >>>
-> >>> Thanks for the report. I will look into it.
-> >>
-> >> Can you also share your kernel config file? I just ran the reproducer =
+>>>>>> well as a successful run on its parent 4b94c18d1519.
+>>>>>
+>>>>> Thanks for the report. I will look into it.
+>>>>
+>>>> Can you also share your kernel config file? I just ran the reproducer =
 and
-> >> could not trigger the corruption.
-> >
-> > Sure, I just ran `nix build
-> > .#linux_6_14_first_bad_7460b470a131.configfile -o kernel.config` which
-> > produced:
-> >
-> > https://github.com/dfinity/thp-madv-remove-test/blob/master/kernel.conf=
+>>>> could not trigger the corruption.
+>>>
+>>> Sure, I just ran `nix build
+>>> .#linux_6_14_first_bad_7460b470a131.configfile -o kernel.config` which
+>>> produced:
+>>>
+>>> https://github.com/dfinity/thp-madv-remove-test/blob/master/kernel.conf=
 ig
+>>
+>> Hi Bas,
+>>
+>> Can you try the patch below?
 >
-> Hi Bas,
+> The test passes twice with the patch manually applied to the latest
+> master (4d349ee5c778). Thank you!
+
+Great. I will send a proper patch and cc stable to get it backported to all
+stable kernels. Thank you for the report and testing.
+
 >
-> Can you try the patch below?
+> I had trouble applying the patch using `git am` to 7460b470a131 or
+> 7.0-rc1 but this is the first time I've used `git am`, so I might have
+> done something wrong.
 
-The test passes twice with the patch manually applied to the latest
-master (4d349ee5c778). Thank you!
+My fix is based on linux-mm tree, so there could be some difference.
 
-I had trouble applying the patch using `git am` to 7460b470a131 or
-7.0-rc1 but this is the first time I've used `git am`, so I might have
-done something wrong.
+>
+>> I was able to use your app to reproduce the issue after change my shmem =
+THP config from never to always.
+>
+> Yes I had to write "advise" to
+> /sys/kernel/mm/transparent_hugepage/shmem_enabled since it's set to
+> "never" by default in NixOS. See:
+> https://github.com/dfinity/thp-madv-remove-test/blob/d859609820113c690238=
+48452bdba8b619d78a8a/flake.nix#L93
+>
+> It would be great if the patch could be backported to 6.17 used in
+> Ubuntu 24.04 LTS since that's what we use for the Internet Computer
+> and where our tests first started crashing.
 
-> I was able to use your app to reproduce the issue after change my shmem T=
-HP config from never to always.
+The one below applies directly to 6.17.13, in case you want to use it
+locally.
 
-Yes I had to write "advise" to
-/sys/kernel/mm/transparent_hugepage/shmem_enabled since it's set to
-"never" by default in NixOS. See:
-https://github.com/dfinity/thp-madv-remove-test/blob/d859609820113c69023848=
-452bdba8b619d78a8a/flake.nix#L93
+From 03b75f017ffe6cf556fefbd44f44655bf4a9af48 Mon Sep 17 00:00:00 2001
+From: Zi Yan <ziy@nvidia.com>
+Date: Fri, 27 Feb 2026 14:11:36 -0500
+Subject: [PATCH] mm/huge_memory: fix folio_split() race condition with
+ folio_try_get()
 
-It would be great if the patch could be backported to 6.17 used in
-Ubuntu 24.04 LTS since that's what we use for the Internet Computer
-and where our tests first started crashing.
+During a pagecache folio split, the values in the related xarray should not
+be changed from the original folio at xarray split time until all
+after-split folios are ready and stored in the xarray. Otherwise, a
+parallel folio_try_get() can see stale values in the xarray and a stale
+value can be a unfrozen after-split folio. This leads to a wrong folio
+returned to userspace.
 
-Cheers,
+Signed-off-by: Zi Yan <ziy@nvidia.com>
+---
+ mm/huge_memory.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-Bas
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index d4ca8cfd7f9d..3d5bf3bb8a3e 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -3628,6 +3628,7 @@ static int __split_unmapped_folio(struct folio *folio=
+, int new_order,
+ 	const bool is_anon =3D folio_test_anon(folio);
+ 	int old_order =3D folio_order(folio);
+ 	int start_order =3D split_type =3D=3D SPLIT_TYPE_UNIFORM ? new_order : ol=
+d_order - 1;
++	struct folio *origin_folio =3D folio;
+ 	int split_order;
+
+ 	/*
+@@ -3653,7 +3654,13 @@ static int __split_unmapped_folio(struct folio *foli=
+o, int new_order,
+ 				xas_split(xas, folio, old_order);
+ 			else {
+ 				xas_set_order(xas, folio->index, split_order);
+-				xas_try_split(xas, folio, old_order);
++				/*
++				 * use the original folio, so that a parallel
++				 * folio_try_get() waits on it until xarray is
++				 * updated with after-split folios and
++				 * the original one is unfreezed
++				 */
++				xas_try_split(xas, origin_folio, old_order);
+ 				if (xas_error(xas))
+ 					return xas_error(xas);
+ 			}
+--=20
+2.51.0
+
+
+
+Best Regards,
+Yan, Zi
