@@ -1,109 +1,173 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.102])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45E4D379996
-	for <regressions@lists.linux.dev>; Mon,  2 Mar 2026 08:37:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.102
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E96B3D6CDB;
+	Mon,  2 Mar 2026 13:00:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772440640; cv=none; b=mSMAxgBSISCVmvdjCgkqyWgnvrqNlwRP+P2HEB7JbfgJtYI7TAotLmCdnqkUKWihdRJLv5lrEZNK37txpHQhYQXZxaEIj3EzZu8DevZaPwqtNtIQyyICLXY4c2TTpJhVk4jf44KPxs5FttDOLWsdPWPekGFgG2cHLa79QqAGMkg=
+	t=1772456431; cv=none; b=WoJ1b34ITeQXwws2qRvEW7r01LVFlso5lmfwsM8VBB088MaYxZMRxOm5/pBY6KHnuCAtMBsqLz/T6+I+EYBxn9CoNZiEjOe4FVALNG0jmZhWyK1nQqlMGndH1vn7YP3Df/Q75Zui/E+AAWXj0L9i7wfLqrEJrFxXlbTwfTRrb3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772440640; c=relaxed/simple;
-	bh=hA7DOXs5zyuDimjhXxA7C85+MSxHX2pkz9YlNHCp2hM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sVTfPMPRh03NRWasvVaYTiD+Uw3JEjBGR5B02fGvWVjQ8Zjz6qXw63Cl1u7Ll+cvzjEC/wB+IpvfuhsUHKckpbsHDbgimm+JL0kuFtwE3Auuty/7+up7k6Llscj+8JEqZ2pUGN5h4tQpBF7FIYuiKux1aXN6uXU6OpC7q9IwpMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=HVhkVn4i; arc=none smtp.client-ip=188.68.63.102
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1772456431; c=relaxed/simple;
+	bh=imLdeS6iFveJw8eDaHwIPVvoBoJb7640xx7oOV1x+JM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UThKhN/TIeHmKzQSCc6YtZmDprQLL1hn2EiLVhdmyfoBJxDsCXOEQwOk1GgZoClDWuhMkPd94dbYIDXDRf30kL171HeG4kx0LKNWf5h9mDXTScmhqwHcxYBVGuRaWoc0FL6YqHlitLU/52P5U5K1glN4JlvL1q7zo/EJixnLTnI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=JFte0NSx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="HVhkVn4i"
-Received: from mors-relay-2502.netcup.net (localhost [127.0.0.1])
-	by mors-relay-2502.netcup.net (Postfix) with ESMTPS id 4fPX9p0Z4Wz62Qn;
-	Mon,  2 Mar 2026 09:27:42 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1772440062;
-	bh=hA7DOXs5zyuDimjhXxA7C85+MSxHX2pkz9YlNHCp2hM=;
-	h=Date:Subject:To:Cc:References:From:Reply-To:In-Reply-To:From;
-	b=HVhkVn4ioX2ozGnkXLqlsekDHqgn810QQoYB1BAg3bXviAbzytnTxAA8Vxd4vCiKV
-	 RI4PRIvxcPtOLFLADY0sVZBgo5cWyiJAPTQBbIjZkm2ikvmHjd3xihh8ocvhkZdxQP
-	 I5LEoWpsBACVnXS5WQjFQydZvj3PRKPV2b+qw2f++Cr6tsQwRtr+i+iJBb2T48PY+D
-	 +Z13bMuaez0l3J8rGkKi2GPPfeBuzQnBMTUT33fRa5rfGdoA6GgOh8nZ99vOzrSjlL
-	 PK8/CC1KSt4YezJS1A8znABftFvpHGPEwbQpU83FH+Ii3u5ZDAFoZQVSGcPVTujp6G
-	 P8I6WXfXKM6Lg==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-2502.netcup.net (Postfix) with ESMTPS id 4fPX9n6y5gz4xSB;
-	Mon,  2 Mar 2026 09:27:41 +0100 (CET)
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4fPX9n1H5pz8svW;
-	Mon,  2 Mar 2026 09:27:41 +0100 (CET)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id C0829632C5;
-	Mon,  2 Mar 2026 09:27:39 +0100 (CET)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <2107aa63-ac31-4e46-831a-21411962330f@leemhuis.info>
-Date: Mon, 2 Mar 2026 09:27:39 +0100
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="JFte0NSx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B47B9C19423;
+	Mon,  2 Mar 2026 13:00:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1772456430;
+	bh=imLdeS6iFveJw8eDaHwIPVvoBoJb7640xx7oOV1x+JM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JFte0NSxG5UsRGycpkONB4hN8HldmR6q3vDo7lqoK2hf9lG0AeW69gkMYcxNZdy4G
+	 DR7TYoBoCD4dzokXEgTRbAa/X8nzTc0QfZq4MAuw4jotQGgBDnqgxRJ09DkR7l34t2
+	 JFz3pDbP/gJcyGY+qB0N4tVH5TKYtee4/Zzzz/7Y=
+Date: Mon, 2 Mar 2026 08:00:19 -0500
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Chris Friesen <chris.friesen@windriver.com>, stable@vger.kernel.org,
+	Linux kernel regressions list <regressions@lists.linux.dev>
+Subject: Re: question about automatic backports to -stable branches
+Message-ID: <2026030237-unbaked-muskiness-0298@gregkh>
+References: <90479cf8-8087-4c8d-8d94-6bd3b885a77c@windriver.com>
+ <2026022502-spoilage-drearily-cade@gregkh>
+ <8160818d-0138-481d-ba84-e33d7b3845b9@leemhuis.info>
+ <2026030107-jubilant-edge-f5c9@gregkh>
+ <be46e053-7d47-43dc-9c93-5c5e1fff6633@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] Bluetooth: L2CAP: Fix not tracking outstanding TX
- ident
-To: =?UTF-8?Q?Joan_Bruguera_Mic=C3=B3?= <joanbrugueram@gmail.com>,
- linux-bluetooth@vger.kernel.org
-Cc: luiz.von.dentz@intel.com,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <20260126175340.3576865-1-luiz.dentz@gmail.com>
- <20260301233619.1807980-1-joanbrugueram@gmail.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: de-DE, en-US
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <20260301233619.1807980-1-joanbrugueram@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-PPP-Message-ID: 
- <177244006004.2159236.16752863118894184995@mxe9fb.netcup.net>
-X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: C0829632C5
-X-NC-CID: lLD1MOv0PWUG9QGXj8pMgwaOHls+QRdVWz+G+jsxs6ZDirmN/pI=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <be46e053-7d47-43dc-9c93-5c5e1fff6633@leemhuis.info>
 
-On 3/2/26 00:36, Joan Bruguera Micó wrote:
-> I had trouble connecting my Bluetooth headphones on Linux 7.0-rc1,
-> and a bisect landed me on this commit 6c3ea155e5ee. A revert fixes it.
+On Mon, Mar 02, 2026 at 08:51:34AM +0100, Thorsten Leemhuis wrote:
+> On 3/1/26 22:32, Greg KH wrote:
+> > On Thu, Feb 26, 2026 at 09:32:45AM +0100, Thorsten Leemhuis wrote:
+> >> On 2/25/26 17:20, Greg KH wrote:
+> >>> On Wed, Feb 25, 2026 at 09:56:12AM -0600, Chris Friesen wrote:
+> >>>>
+> >>>> I'm trying to figure out what the expected process/timeline is for automatic
+> >>>> backports to -stable.
+> >>>>
+> >>>> Commits 2fa119c0e5e5 and a5338e365c45 were merged to mainline on Feb 01,
+> >>>> with the "Cc: stable@vger.kernel.org" in the commit message, but I don't see
+> >>>> either of them backported to either 6.18 or 6.12 -stable branches.
+> >>> For a commit that was made in Dec 16, why did it wait until 7.0-rc1 to
+> >>> be merged?  We treat all of the cc: stable patches that show up in -rc1
+> >>> as "obviously no rush" as that's why they are showing up in -rc1.
+> >>
+> >> For the Dec 16 commit, I can understand this. But that "all" in the last
+> >> sentence hit a nerve here, as from the regression perspective,
+> >> "obviously no rush" to me feels like the wrong categorization for CCed
+> >> stable fixes between, say, -rc7 and the following -rc1, as quite a few
+> >> of those afaics would benefit from being backported rather earlier than
+> >> later:
+> >>
+> >> - Fixes that (maybe overly careful) maintainers at the end of a mainline
+> >> cycle queued for the merge window instead of the current cycle; see the
+> >> first example in this recent mail for one like that:
+> >> https://lore.kernel.org/all/b4f8ca7a-02b1-4e72-896b-87a00db6338b@leemhuis.info/
+> >>
+> >> - CCed stable fixes for regressions that are found and quickly fixed in
+> >> mainline right after a new mainline release came out without anybody
+> >> telling the stable team to manually pick the fix up soon.
+> >>
+> >> So wouldn't it be better after a mainline -rc1 to work through the
+> >> possible backports in an order like this:
+> >>
+> >> 1. Recent CCed stable fixes.
+> >> 2. Older CCed stable fixes.
+> >> 3. Commits with a fixes tag not CCed stable.
+> > 
+> > Yes, it would be "better", and to be honest, I haven't really thought
+> > about it much.  When staring down 700+ patches to process, it's a bit
+> > hard...
+> > 
+> > I have done simple scans of "is this fixing a crash" and merged them
+> > first.  After that, it's just by order of when they were merged into
+> > Linus's tree, as I see that feed from the git-commits mailing list.
+> > 
+> > Trying to figure out dates as to when things are merged is tough,
 > 
-> The symptom is that when connecting the headphones via bluetoothctl,
-> it either hangs or appears (in pavucontrol) as if it's using the AAC
-> codec, but there's no output. Sometimes after some time, it disconnects
-> and then re-connects successfully but using the MSBC/CVSD codecs.
+> Wondering what you exactly mean with "tough". I assume something along
+> the lines of "it takes time to look up the top-merge for each and every
+> commit to detect the time it was mainlined (and I can't do that
+> efficiently in my mailer)"?
 > 
-> I haven't had time to troubleshoot this further so far, mainly posting
-> if it can save someone a bisect.
+> > as
+> > dates don't always match up, any suggestions on how to process that in a
+> > way that is "fair"?  Just look at "commit date"?  Or "author date"?
 > 
-> Bluetooth chip: Intel Corp. AX210 Bluetooth (ThinkPad T14 Gen 2)
-> Device: Bose QuietComfort Ultra (bluetooth:v009Ep4066d0167)
-> Bluez 5.86-4 (Arch Linux)
-> Kconfig: That of the linux-mainline AUR package, plus UBSAN
+> Hmmm. I guess I would need to understand your workflow a bit better to
+> provide a good answer.
+> 
+> You mentioned "git-commits mailing list" above, so I assume you are
+> processing through the list of commits to backport from your mailer? But
+>  the merge time is at hand there, as it is the time the mail was sent.
+> So if your mailer can search for all mails with a stable tag, then you
+> right after -rc1 could grab all of those from the past three or four
+> weeks (merge window + last week/two latest weeks of the previous cycle),
+> and you'd have those from category 1 above (recent CCed stable fixes).
 
-FWIW, someone reported problems due to that commit in bugzilla, too:
+My "workflow" is, after a few hops and git triggers, a mbox full of
+patches that were tagged "cc: stable@" that have been applied to Linus's
+tree.  They look like the following (to take a recent example):
 
-To quote https://bugzilla.kernel.org/show_bug.cgi?id=221120:
-"""
-Bug 221120 - Bluetooth headphones stop connecting properly after commit
-6c3ea155e5ee3e56606233acde8309afda66d483
+-----
 
-Bisected to this commit. Before this headphones can be connected using
-A2DP music profile or HSP/HFP for bidirectional (headphone and
-microphone mono). After this dependig on the model of the device it has
-only one of options available(Marshall Major iv keeps only HSP while
-Chinese no-name keep only A2DP ). Reverting just this commit from
-Linus's tree restores normal bluetooth audio.
-"""
+Subject: Patch Upstream: usb: host: tegra: Remove manual wake IRQ disposal
 
-Ciao, Thorsten
+commit: ef548189fd3f44786fb813af0018cc8b3bbed2b9
+From: Wayne Chang <waynec@nvidia.com>
+Date: Thu, 15 Jan 2026 18:36:21 +0800
+Subject: usb: host: tegra: Remove manual wake IRQ disposal
+
+We found that calling irq_dispose_mapping() caused a kernel warning
+when removing the driver. The IRQs are obtained using
+platform_get_irq(), which returns a Linux virtual IRQ number directly
+managed by the device core, not by the OF subsystem. Therefore, the
+driver should not call irq_dispose_mapping() for these IRQs.
+
+Fixes: 5df186e2ef11 ("usb: xhci: tegra: Support USB wakeup function for Tegra234")
+Cc: stable@vger.kernel.org
+Signed-off-by: Wayne Chang <waynec@nvidia.com>
+Signed-off-by: Wei-Cheng Chen <weichengc@nvidia.com>
+Link: https://patch.msgid.link/20260115103621.587366-1-weichengc@nvidia.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/usb/host/xhci-tegra.c | 21 ++-------------------
+ 1 file changed, 2 insertions(+), 19 deletions(-)
+
+Rest of the patch here...
+
+---------------
+
+The date of the message is when it was merged into Linus's tree, and I
+see the date of the commit in the body of the email (as shown above), so
+I can order series hopefully by date when applying the commits, but I
+don't have the "commit date to git" shown, and it's not really possible
+to sort on the date in any easy way as it's all in the body of the
+message.
+
+Now MANY subsystems take a long time in getting patches to Linus, so if
+I only sort by date, I will catch them first for those resolve issues
+that were sent during -rc4 or so, or do I sort by date and take the
+newest ones?  Which is "better" to do here?
+
+And again, anything that makes this all have to be sorted manually is
+going to be rough given the 700+ patches that are cc: stable and the
+800+ patches that have Fixes tags only in them (because maintainers
+still haven't read the documentation...)  So any hints on how to choose
+"these before those" would be appreciated.
+
+And I'm not wed to my mbox workflow, if you have any other suggestions,
+I'm more than open to them.
+
+thanks,
+
+greg k-h
