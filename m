@@ -1,83 +1,96 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [91.216.245.30])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89CD4377ED2
-	for <regressions@lists.linux.dev>; Tue,  3 Mar 2026 18:13:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EBCF32E75A
+	for <regressions@lists.linux.dev>; Tue,  3 Mar 2026 18:44:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.216.245.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772561594; cv=none; b=u6mt3SZXQ28M1DpYq96I2VXY8Rx6eXJSwQ44tCIsIFs4kiUtU2Swmy2nrkq3sfTvwDFD0GPqNiCILUWEJY1HQW+7LbzNEpHZC4ruDE4BEtmTVs95i6O40dKR492DlRteAPdO1P9h0YwWrQcULBVYkce9uL7bwe44zo9nXNcfp60=
+	t=1772563498; cv=none; b=MWIhAmqr7VhM1hvINjpvCNrIP2pEd3bnoVrT33sr3w6ucKngPIOYLJZbYMlnhoqMxPxeWdjVbSih8UqXDphjrWQiNzEgMCAGflfq7Ji2Bfj7J+XmApiXurS89R+cI+HDfQqFi7sr72yyJ0SXO3OCI4kf3DxyAvxvYWc+6LdUzN0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772561594; c=relaxed/simple;
-	bh=uwGs40p6feBIPmxttrBlFcsUuz8AcouQMwkXE1EJb2g=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=UPHK/OtKqvam9L878YLC1hpu3XPPBS630xDz9+PSiVESBzqBfd+ckfYHEc1Zo4x+cftzAJHVQif+4u6g1W3YuXS3NjF8Q1AqnFfBKa9o1FV8szNct8/Uo7E06Xw+81y/Zl2BiZjujJ8RVFao218vw7oVHgh08pRDt2wqRHWPHyo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=TXIknWRt; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="TXIknWRt"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net A414940429
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1772561591; bh=ead+Jt3hyOuA/EpgwUGvluHqgPzw4HZOyqlUlURdtUQ=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=TXIknWRtFY9RUwFfzFovBV1ooGTwfgCtdFOCBeEQn0SlgFeR1Ps0gl3PFg3XeR9Ay
-	 VFfsfM0T8riQ6FqUfB7Yqr+2CiV1gKAIjnsrzqSwDQ01bpZVqPiHSror3dKVVIqL41
-	 +hdwIvmfV8iNNnbvp1NYTinSBgIs76ZEhFdobZL3isdZ8UQQH/Cpx8W+ms1Iylm35Y
-	 1qNa+FChAvWEK6VZXTIXj3AvaLjPMJMCQxNtav/337O+vVm20EgmnXA8sILr5EqJ/o
-	 79kvX5T6h0yNA5EYN/xC+RSpObOxOmsmXXM30IzJbza64HtaJJ7UZ215r1lhmpjgEO
-	 7yk99GjI8KSlg==
-Received: from localhost (unknown [IPv6:2601:280:4600:27b::1fe])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature ECDSA (prime256v1) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id A414940429;
-	Tue,  3 Mar 2026 18:13:11 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: Thorsten Leemhuis <linux@leemhuis.info>
-Cc: linux-doc@vger.kernel.org, regressions@lists.linux.dev,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] docs: handling-regressions: add, trim, and sort
- quotes from Linus
-In-Reply-To: <c825d7981e1badb22d15f3f6fc9c95001a017f09.1771833924.git.linux@leemhuis.info>
-References: <c825d7981e1badb22d15f3f6fc9c95001a017f09.1771833924.git.linux@leemhuis.info>
-Date: Tue, 03 Mar 2026 11:13:10 -0700
-Message-ID: <87342gbx3d.fsf@trenco.lwn.net>
+	s=arc-20240116; t=1772563498; c=relaxed/simple;
+	bh=GP2WEtcClxhzHsK+mmjyuAuIYHCZJ+WREvzQ+wMugKY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hqZN/a6mg/3dWCZ9lSsQa3/Qq32q/85UISZNTv90FSMYcJUirops+RZHmSLnU/zsvKmkG5P7m+BfgR9R0SSZ5JmqRPep58ONNet8MwXZ/5GgIfhT1tsGw2A7/wmYs1HLU+sbDvp0165uyfbuGDKq/Wbv/e45OvyYUyjaTGOnO2U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strlen.de; spf=pass smtp.mailfrom=strlen.de; arc=none smtp.client-ip=91.216.245.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strlen.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=strlen.de
+Received: by Chamillionaire.breakpoint.cc (Postfix, from userid 1003)
+	id 9BB3760345; Tue, 03 Mar 2026 19:44:54 +0100 (CET)
+Date: Tue, 3 Mar 2026 19:44:54 +0100
+From: Florian Westphal <fw@strlen.de>
+To: Jindrich Makovicka <makovick@gmail.com>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
+	Genes Lists <lists@sapience.com>,
+	Greg KH <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org,
+	coreteam@netfilter.org, netfilter-devel@vger.kernel.org,
+	Pablo Neira Ayuso <pablo@netfilter.org>, stable@vger.kernel.org,
+	regressions@lists.linux.dev,
+	"Kris Karas (Bug Reporting)" <bugs-a21@moonlit-rail.com>
+Subject: Re: [REGRESSION] 6.19.4 stable netfilter / nftables [resolved]
+Message-ID: <aacsJnLwaAuKZIrf@strlen.de>
+References: <a529a6a9a2755d45765f20b58c5c11e2f790eacb.camel@sapience.com>
+ <45f03b0b-fe8f-4942-bad1-3fbde03d4be1@leemhuis.info>
+ <143e1a402ad78dd7076516a6ceb637f378310b16.camel@sapience.com>
+ <10537f2b74da2b8a5cb8dc939f723291db39ff84.camel@sapience.com>
+ <2026022755-quail-graveyard-93e8@gregkh>
+ <b231fcdb6c66a7b24dcef3ee5c35c5f612d5c1a7.camel@sapience.com>
+ <9d110d860c0c7e110d018ea53a7666eba275da20.camel@gmail.com>
+ <d43b9da4-99ee-4516-9bec-71a9de19618e@leemhuis.info>
+ <ce07b65b86473acac101c4854f6201d05597d48c.camel@gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ce07b65b86473acac101c4854f6201d05597d48c.camel@gmail.com>
 
-Thorsten Leemhuis <linux@leemhuis.info> writes:
+Jindrich Makovicka <makovick@gmail.com> wrote:
+> > > commit 12b1681793e9b7552495290785a3570c539f409d
+> > > Author: Pablo Neira Ayuso <pablo@netfilter.org>
+> > > Date:   Fri Feb 6 13:33:46 2026 +0100
+> > > 
+> > >     netfilter: nft_set_rbtree: validate open interval overlap
+> > > 
+> > > Example set definition is here:
+> > > 
+> > > https://bugzilla.kernel.org/show_bug.cgi?id=221158
+> > 
+> > Does that problem happen with 7.0-rc2 as well? This is important to
+> > know
+> > to determine if this is a general problem or a backporting problem.
+> > 
+> 
+> Yes, the same problem shows up with 7.0-rc2. I updated the bugzilla
+> attachment to reproduce the bug just by feeding it to nft,
+> 
+> # uname -a
+> Linux holly 7.0.0-rc2 #25 SMP PREEMPT_DYNAMIC Tue Mar  3 18:17:21 CET
+> 2026 x86_64 GNU/Linux
+> # nft -f test-full.nft
+> test-full.nft:1643:1-25: Error: Could not process rule: File exists
+> 12.14.179.24-12.14.179.31,
+> ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-> Add additional quotes from Linus while trimming the existing ones and
-> sorting them all into categories. That makes it easier for new
-> developers and maintainers to look up how Linus expects certain
-> situations wrt regressions to be handled. The earlier sections in the
-> document already explain this, but those parts are often questioned --
-> or not considered authoritative at all and plainly ignored. Having it
-> straight from the horse's mouth helps get everyone on the same page,
-> even if that makes the document quite a bit longer (the raw line count
-> of this section doubles, but the number of characters increases by
-> nearly 50%). In return, this covers a lot more aspects and, due to the
-> sub-headings, is easier to navigate.
->
-> In contrast to the more neutral description in the early sections of the
-> document, this also provides a better insight into how serious Linus is
-> about the "no regressions" rule and how he wants it to be interpreted in
-> practice; this makes it easier for new developers and maintainers to
-> understand things and prevent run-ins with higher-level maintainers.
->
-> Signed-off-by: Thorsten Leemhuis <linux@leemhuis.info>
-> ---
->  .../process/handling-regressions.rst          | 695 ++++++++++++------
->  1 file changed, 463 insertions(+), 232 deletions(-)
+Pablo, it looks like the is a discrepancy between the comment and the
+code.  Comment talks about 'open interval', but it checks that some
+start interval was found instead of checking that the OPEN_INTERVAL
+bit is raised:
 
-I really have to wonder just how many quotes from Linus are needed here;
-that's a lot to plow through.
+diff --git a/net/netfilter/nft_set_rbtree.c b/net/netfilter/nft_set_rbtree.c
+--- a/net/netfilter/nft_set_rbtree.c
++++ b/net/netfilter/nft_set_rbtree.c
+@@ -556,7 +556,8 @@ static int __nft_rbtree_insert(const struct net *net, const struct nft_set *set,
+        /* - start element overlaps an open interval but end element is new:
+         *   partial overlap, reported as -ENOEMPTY.
+         */
+-       if (!rbe_ge && priv->start_rbe_cookie && nft_rbtree_interval_end(new))
++       if (!rbe_ge && priv->start_rbe_cookie & NFT_RBTREE_OPEN_INTERVAL &&
++           nft_rbtree_interval_end(new))
+                return -ENOTEMPTY;
 
-Oh well, I've applied the patch, thanks.
 
-jon
+Does that look correct to you?
