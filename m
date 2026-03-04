@@ -1,82 +1,89 @@
-Received: from mail.netfilter.org (mail.netfilter.org [217.70.190.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f54.google.com (mail-oa1-f54.google.com [209.85.160.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1A6D39F173
-	for <regressions@lists.linux.dev>; Wed,  4 Mar 2026 11:09:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.190.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD8C415E5DC
+	for <regressions@lists.linux.dev>; Wed,  4 Mar 2026 14:00:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772622592; cv=none; b=ZABMBUFYTp7Jb6ZTZ2fwhvTgBLiDybPnSqAyT1ya4gt0NyKbT9PvVTAC8H9aFQybnPavk+nTdwDhu/0u0dlByu/UOYBaFRBux8tgjlAZbakY5fvD6I0+gi/vvhAkE9UVxTjejzbGQaCvVRGdqVBvQC4GMJjnGKJN2k98mbMTa8E=
+	t=1772632850; cv=none; b=W+gfzNPt5FnoHAl8yF7deT+zfaytPBVi0Lc1QgLNrCtg57Q1F+WqSRFffQ8B+wUPNURE1fqaeS+fNnN4q/YC+A63qNSvKjabed2ql/iGz5gRPAuCHMlcp7CxGDImDAdDvBN+n5WAOE8Egjb/0ADnVBFr9QAVWBCbI9ugxvMV4WU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772622592; c=relaxed/simple;
-	bh=DZ5EpOMngdd36wqNDd4NjYzA6OxXRNV1rOnQgdUoZNk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H07vgqJp3enuIVgR0B/PpCJIoostp2VOXHfc9MTXQgU4A64Y3aJDZUGbTC46rQ7QVsnEOQShWfI4FQyP6fNOoodBd81bwjAJ8Ti3g/mUoUi7ckfMMoZWQbebZwTWyL/etslNQzZIhnKVONvJSEf1O59vM6s8WJ8qM3HxeiooEbc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=netfilter.org; spf=pass smtp.mailfrom=netfilter.org; dkim=pass (2048-bit key) header.d=netfilter.org header.i=@netfilter.org header.b=gRJaFpb9; arc=none smtp.client-ip=217.70.190.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=netfilter.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netfilter.org
+	s=arc-20240116; t=1772632850; c=relaxed/simple;
+	bh=xyguKu7z//BY77YKs22nfEGGVpXcuyaqKE5Yw58xiZw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SgaWq3HCGvRYYzilk55h3s6q9i01+2ZFnGzduCYukI85NsN4Efa4ENgVRY4I8n8AfOXElaZbq6evVjj8TgrMYzQVboopQiL/kFodxkKwx+77ox+LRg0peBmoar3jiLkcNUO2fCl57SAcv8KbOiF+6m9XSG2vzFGeR9q4xgzYFiA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=UumxGuP/; arc=none smtp.client-ip=209.85.160.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=netfilter.org header.i=@netfilter.org header.b="gRJaFpb9"
-Received: from netfilter.org (mail-agni [217.70.190.124])
-	by mail.netfilter.org (Postfix) with UTF8SMTPSA id 8637B602C6;
-	Wed,  4 Mar 2026 12:09:47 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=netfilter.org;
-	s=2025; t=1772622587;
-	bh=gt4atHiWzBjK0uoCYrFGwaAoutjL7AQKx2Z3OuME5BE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gRJaFpb9RgWm2G1Y+nAquiLopA9BIrWHjBcW7f1wyHewAneXWa+p64Kwzy2BcTCSm
-	 Cd1K+SWWUUl0EqR+CH4+FuDH3gaSTTB89xL2tStmyT8BMeaB2bnb/TWFlDA0D5j6kc
-	 ZI5WrcNgjKPyV6uleytjCWJjeJRpZ/82F4nNytdsUK7mRERGJIqlFFXoBoRUNs5/Z+
-	 pNCKfU3h6UW5aoTJDUK97EqaABJOPpo9DOsMEB5QSRJItKru05tcTId8oq256VO1MK
-	 CqbZkthg5xt+5/lL9CwHKLqqIKWwAewajNfAcojvjUYFZUq/jV2uzjOtBN2Zvi9yaQ
-	 8ale43xA9rXBQ==
-Date: Wed, 4 Mar 2026 12:09:44 +0100
-From: Pablo Neira Ayuso <pablo@netfilter.org>
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Jindrich Makovicka <makovick@gmail.com>,
-	Genes Lists <lists@sapience.com>,
-	Greg KH <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org,
-	coreteam@netfilter.org, netfilter-devel@vger.kernel.org,
-	stable@vger.kernel.org, regressions@lists.linux.dev,
-	"Kris Karas (Bug Reporting)" <bugs-a21@moonlit-rail.com>
-Subject: Re: [REGRESSION] 6.19.4 stable netfilter / nftables [resolved]
-Message-ID: <aagS-IUhQwz6m3MF@chamomile>
-References: <a529a6a9a2755d45765f20b58c5c11e2f790eacb.camel@sapience.com>
- <45f03b0b-fe8f-4942-bad1-3fbde03d4be1@leemhuis.info>
- <143e1a402ad78dd7076516a6ceb637f378310b16.camel@sapience.com>
- <10537f2b74da2b8a5cb8dc939f723291db39ff84.camel@sapience.com>
- <2026022755-quail-graveyard-93e8@gregkh>
- <b231fcdb6c66a7b24dcef3ee5c35c5f612d5c1a7.camel@sapience.com>
- <9d110d860c0c7e110d018ea53a7666eba275da20.camel@gmail.com>
- <aaday5NR-yfCkFVb@chamomile>
- <75a4115f-e7f3-4316-b046-525fcd87cdef@leemhuis.info>
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="UumxGuP/"
+Received: by mail-oa1-f54.google.com with SMTP id 586e51a60fabf-408778a8ec4so1206496fac.0
+        for <regressions@lists.linux.dev>; Wed, 04 Mar 2026 06:00:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1772632848; x=1773237648; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=H//S5xtNAR1QEi+Xm0qsXdAi1/1nJ7dHJA1UBRTwpc0=;
+        b=UumxGuP/wucUl+9ju9kGPIzQCwIdHIYJq2eCp7XEMQsRJiqUpr+jTSOrIZS+nP/aUC
+         lJwBQMwg9YVrFgRIIk5zizTrBcdt0Qn7/PXFQEahrfdUEZQhLsHxeAzR/72Oe2kmF+0N
+         2m3yPj/uvCoUYWsUCuY6YHCghAZckcxwqt4JOhk2anbHJaup0GGelsBXULuYv7TlD71A
+         EVJ79KdE0H81BSckeNlCjUV0Dzsj72ic7/8Ab04i8/MqDvVv6PU80knawwbc53nQAeZz
+         BhomnVETajFPOqBTuoF9hB3u+9SCkzl0BJHADKNoF+197ijGYwAHfl0xy5AFFpK+Rb14
+         4okg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1772632848; x=1773237648;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=H//S5xtNAR1QEi+Xm0qsXdAi1/1nJ7dHJA1UBRTwpc0=;
+        b=ED5s+ISloUCl5T8MxSLzr4MP5GdO/YVsoOXmTHvtvW0SnDleEKvpwi85jkZz3BIiCH
+         ONmZ8izO2oNMv0+iO0yHxkEJVpN6mXv5XIGG6E2rjMMYFauZ8Tr/SvnG3S5HCNm6Pmqw
+         PUdWPIZiliL9qIfh8ySjh08CIWWJNmYQjhznia29i4ZEJeobmwCDwJ6cQc71cNspAuzf
+         t9DO8EWtxS2SoH+61n3xQgo5bdVksdTUcDyzvYxBWNniwn031ruuKRRA1mDeTfJMd7w2
+         2zvWKIr6HRAhxpozR0eih9MufDw7lm8Dz1O4qrwWowLk9RE4nARui1iU73XYs0A1AkFk
+         5lyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUnS0XP7iouIo+oj6G6cd1Gff4fy3FEgDP7sjk5JGdx4nkD7Jv20OH7SOOJRDElLGV/SzXIbC2takeB5A==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzKvPcExHRmRdKiEZkR9wesmvIGRb55dO5hxecL57pNOw6eEDhV
+	i111k+E6aXZRQyj31O4lVNPQStcbNqNrHKdYJxpN+s5S2S572BSpdBlUiMdeirg3D8A=
+X-Gm-Gg: ATEYQzxWMXVszOWK+UhjXvQVhMJ5d1I0ZLknCP/txq9MBSiqJPvoTbm544f76uGCKWP
+	o2YlfUfArXKF7sVl57shMSTO6lSND+uwkUC2QMOjnKFb1CaDLDx0UfW+MMoyGKjXzcxLsLV0npK
+	WlVset7Fo7krUhb17/nNfGR16lzWE62MbqMyyJsNGbxiVxLVooXydhP2SPnBl9NtfMcSKGu+dQP
+	Rlb3bT6Q869ubcmJ7Zx347VR9W/i7zWrj6Rf/w0IkHaLSESL/eAS6g/mSBeGvqVzlWdjMPvdaAk
+	hNifxTKWyvliBc9umf6Jv9tfvEJHs07l6AOeciQ2OQDwqEHiVJLvkwabFDsukz37IZNrnVHbXqW
+	dNjMEr+A8FBlWUGzqs07/jZCe5uWpvO1SoLBAYil0RJ5ciaHJ8Cj6K3/6P/P8h4V19c+Xi/3bAJ
+	PQkpRUWw13YjOZZLd9wXfbotLkU9AjRICInOQRdccSfw5EpCS9c6BonaTH2B4OPrOpMsioeYSb2
+	4p0tzW0cXRNyWK7uPYZ
+X-Received: by 2002:a05:6870:16f5:b0:3ec:52d4:bd49 with SMTP id 586e51a60fabf-416abb9ade9mr1060083fac.48.1772632847670;
+        Wed, 04 Mar 2026 06:00:47 -0800 (PST)
+Received: from [192.168.1.150] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-4160d277316sm17536922fac.17.2026.03.04.06.00.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 04 Mar 2026 06:00:47 -0800 (PST)
+Message-ID: <ff161a14-85e3-46c8-93ac-091f84e23807@kernel.dk>
+Date: Wed, 4 Mar 2026 07:00:46 -0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <75a4115f-e7f3-4316-b046-525fcd87cdef@leemhuis.info>
+User-Agent: Mozilla Thunderbird
+Subject: Re: Reporting a Linux Kernel Vulnerability and Requesting a CVE ID
+To: =?UTF-8?B?5YiY5Lyv56a5?= <liuboyu2024@iscas.ac.cn>, security@kernel.org
+Cc: stable@vger.kernel.org, regressions@lists.linux.dev
+References: <7002e9a4.4e95f.19cb7fe6fb7.Coremail.liuboyu2024@iscas.ac.cn>
+From: Jens Axboe <axboe@kernel.dk>
+Content-Language: en-US
+In-Reply-To: <7002e9a4.4e95f.19cb7fe6fb7.Coremail.liuboyu2024@iscas.ac.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Mar 04, 2026 at 06:50:32AM +0100, Thorsten Leemhuis wrote:
-> On 3/3/26 23:03, Pablo Neira Ayuso wrote:
->  
-> > A new userspace release with this fix is required.
-> 
-> But a new user space should never be required for a new kernel. Find a
-> few quotes from Linus on this below. And I noticed other people ran
-> into this, too, so it's not a corner case:
-> https://lore.kernel.org/all/aaeIDJigEVkDfrRg@chamomile/
-> 
-> So should this be reverted everywhere where this was applied? Or is
-> there some way to do what the commit wanted to do without breaking
-> userspace?
+Hi,
 
-Thanks for explaining.
+Does this still reproduce in current -git? 6.12 is quite old. If it
+does, send the report to linux-block@vger.kernel.org. You need to be
+root to hit any of this, there's no security vulnerability here.
 
-I kindly requested to revert in -stable:
-
-  netfilter: nft_set_rbtree: validate open interval overlap
-
-which amplifies the userspace bug.
+-- 
+Jens Axboe
