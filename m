@@ -1,145 +1,173 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.162])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD0BF33F5BF
-	for <regressions@lists.linux.dev>; Wed,  4 Mar 2026 15:31:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.162
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9731379EE7
+	for <regressions@lists.linux.dev>; Wed,  4 Mar 2026 17:03:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772638311; cv=none; b=UrpUw/hvk5oQr57VC3KqgbkxV9QpsR+DU8AB4cpS6Gs51kQJwZl89BPE10nk0gH3wZ1V+8ZJ1nz9d5DPddRo5t3WrZOkISVULAlwZP0GFWp/5kBvonXMd/Ca1v+p1YD++olyaS6DYhl72JuIy6F/FxLtodItJi+QBnvgHqQdo84=
+	t=1772643787; cv=none; b=SIZ2n5m6XhGDNpt/QD1RVRAW4AuD0E0hKieKB1fa6abDzILZJTqm+QsvRsEK3F/HTQp13onrw34odkp2LQ1Z1fQCsjmWdi8We4ZXfAoVTYz12T1/B5KXODxsj21OoCt3ivn99c0iCBueVnUQBy1oAGlrao4LrxWogFzZFKj+9mE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772638311; c=relaxed/simple;
-	bh=OGSMo+NquOAsUe1dVTaQz5uTuv7KI8qRBbpyfw9azD4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rbxvTybNhxLStnnPexAYSSPpCTOCUaHFYUpbGHtmQ5EYyVfZPCX+FmWlPIu8J7d/Dewjk3pKmKFIVcHae4mbI4QCHshSYU2QVUMmC8YciqoyPJQGLPdsvRltDXWaCTxYH+D6lLBjrGaEpgtA6OpHvDQ21N31ooI7fBznRmC6EnU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=XyHDtfNa; arc=none smtp.client-ip=188.68.63.162
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1772643787; c=relaxed/simple;
+	bh=7lOoWMMA0M8KH3kMw8y4MCoijnwPVWXaUCnl1JTNnJk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Ttmu5XHubgXV7gLMJ2YYZb6fnMtez6TWBA5S0X3/9wMcmBQYwNwBcigI/DpfFu4r7IK1ivdgG7Ea99HmVu2Kq7YgaKjbKTys6z4DdIaYLoZbeoS6vISZNwiKCaqYbC85DnZROCZMi58OU2ZlmUJHXESjShsHzi3qTnWQknCAE2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hpM8zZJx; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="XyHDtfNa"
-Received: from mors-relay-8201.netcup.net (localhost [127.0.0.1])
-	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4fQxV51nbPz4180;
-	Wed,  4 Mar 2026 16:31:41 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1772638301;
-	bh=OGSMo+NquOAsUe1dVTaQz5uTuv7KI8qRBbpyfw9azD4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=XyHDtfNaySHVbEWPAmVe/fuBBFPtvPoW62amykXnsIbSkjtyCcmqGFjN2WFcawJd2
-	 HU0e9Q0IAffbBvCBA+ZYukcB2tBSqr1FwfQwqoJP9xs8Q00OeNA5DSNXKBN0XDcNQf
-	 WRpmchNj9L4fvOUlt9mFPitkkkO/GbT+Xo7vScaegcIpT8sa1gszqO68ZCUiD491SS
-	 uQjs8NiyPLjiokKSOhb1FS+yIoacK1VMc16lWfoJB/sSp1dXR4jNvJ0KDJyaEC5ZA8
-	 /S/6Y0dpE+9lMYSS/06e468EYHDQvdQYXS28tMzD60LNZ9qWpK12ba+Fx4zlXCLg+y
-	 ZI50fu8tLausw==
-Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4fQxV513KQz3wD6;
-	Wed,  4 Mar 2026 16:31:41 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
-X-Spam-Flag: NO
-X-Spam-Score: -2.899
-X-Spam-Level: 
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4fQxV075dLz8tYG;
-	Wed,  4 Mar 2026 16:31:36 +0100 (CET)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 4483F6173C;
-	Wed,  4 Mar 2026 16:31:36 +0100 (CET)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <3e1d90fc-b35f-4785-8263-fd7427c4455a@leemhuis.info>
-Date: Wed, 4 Mar 2026 16:31:33 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hpM8zZJx"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-439c944bb62so667639f8f.3
+        for <regressions@lists.linux.dev>; Wed, 04 Mar 2026 09:03:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1772643784; x=1773248584; darn=lists.linux.dev;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=nbV/oYX7d0ZGq24NywUe6q4Jk9h6nNIgQ4I7M+8thk0=;
+        b=hpM8zZJxJVJ1tloScvGgvbs0HH5Hjh1uy1t3VVQljemE9Vw1sdWF9uhorPpMgp3Vce
+         OscAcLod+EDJRBR+BSSbkxcmf+F9H/3WX+PetLXna+uRF5RNgjSn3J1x17vagM8XVEs1
+         mygO4SDiCCGGLatmQasig5lm6UqVjudwJ5xPcEXGDqT7l1kvrrJ7hXUHnyMcUmeAUNKL
+         SZbcPBJ6VI/U0058PAR4RSIgLviknGKkTLrM8VIjkYn3PVJYKurAPIYyD+3eAkHTamUe
+         dZWbT3jgQ2LU4K7zQ8iipUfEA/zJCiCeU8iid3njjeSZdYgooabR2TdcmPxJ8xqUujHd
+         LrIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1772643784; x=1773248584;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=nbV/oYX7d0ZGq24NywUe6q4Jk9h6nNIgQ4I7M+8thk0=;
+        b=WsU034Yfd1fscpcGKG0M9/UHEcJXzHlUxa9WAB3vzuauArop7LyYLV2szWb1CR3R+B
+         kEANMXiEbZ+iVwIryMBiY82ONTxKlRPXMqokHp7heaWYvZJEDNta2EldLBVRx6JWYJ1B
+         5QvbXE6pV0tGHgNSF0O6b6aPg64AGCNK/6BhlAAMYsTLreUYqb0X8c2c9XSXTH1OTO0Y
+         3tXvsJ3e1dXBqDfhoeEEwqIOaaTWpAhK70aocXXwEaiIsM/k6dFCWiAG3H4KtMM4r7Qj
+         ocf0dTlbGaH9OCgYecm02K7u6+YXluAx2FJwlo7ULelPpAwqgVmU8d8GhpP/kg4wVN2i
+         //ZA==
+X-Forwarded-Encrypted: i=1; AJvYcCXKo5viuvF2NNHRJpa8MYtAok7O24UqePCwRgWHoKQWjobr8R/M7m9/zSrK35SmRrGETHyppP3tLqYtpw==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yzkbu684zZGsi9AJsw4xyTQ4TeBQO3Pj6Q3vdXl1A4vs6Yn/34A
+	rH6zn1H3J8Tm26aTLONUvHec7FH8Wl1c9A76NHNE+ZKH18L0ufoJVt3U
+X-Gm-Gg: ATEYQzyxEd3vkjBr4jbA6+uBtxRDpK74KEJLp904uM0QxC4rvSFTZtnnEo+zI6N8/zq
+	dnl8VPgOCwHtka6DtmbS2n6fE5NJjrvPU3PZS44x0etXmNBUZT/Uan4uzKKHHobICSJM6yR2M1r
+	D7tPDptTTd/2B9TQ647b4PhTOm97dfIsfmjwKXt2APyBdAYCTIEI0XeTlJHUPBCb8HftBE4SdXt
+	l0DJDjr/kf6tR5ZnYpaZxJYuumXo2N5ivqJZuq7wMWdY9fXXgf23Zi/W6KVGKnnnWn11MbZVdFT
+	OxLSiMwxdiQ0GwvcAk/T43sCh2FPLFO5BljlVc8hzVKl+aT45q+wDwKmJ1wNLTywp/LXsqPlmTj
+	1XVRzPl0QIErvJgi5D0FDlCDIhx086Q/yVolVxX6pXyH0bmG7T9ybsGlmZric21AAg/RzlDWdDz
+	2Cn4TtACxEdKkbgEM3Spe9VmtuEy0Q+8N43R+wocmla5mor468QCFPrqBbkxqZDmeP97FsgTJST
+	jHdN+N/YAV2cHbl3Eq7HoD/70Ka9uLUuV7GN8YOudhtTRq4tXH5d8+gVvZ3jGYTTayD62aVhA==
+X-Received: by 2002:a05:6000:601:b0:439:c2b6:d5d8 with SMTP id ffacd0b85a97d-439c8006b97mr4939995f8f.36.1772643783963;
+        Wed, 04 Mar 2026 09:03:03 -0800 (PST)
+Received: from franzs-nb (248.201.173.83.static.wline.lns.sme.cust.swisscom.ch. [83.173.201.248])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-439b8807a4esm23022556f8f.4.2026.03.04.09.03.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Mar 2026 09:03:03 -0800 (PST)
+Date: Wed, 4 Mar 2026 18:03:01 +0100
+From: Franz Schnyder <fra.schnyder@gmail.com>
+To: ming.qian@oss.nxp.com, linux-media@vger.kernel.org
+Cc: mchehab@kernel.org, hverkuil-cisco@xs4all.nl, nicolas@ndufresne.ca, 
+	benjamin.gaignard@collabora.com, p.zabel@pengutronix.de, sebastian.fricke@collabora.com, 
+	shawnguo@kernel.org, ulf.hansson@linaro.org, s.hauer@pengutronix.de, 
+	kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com, l.stach@pengutronix.de, 
+	Frank.li@nxp.com, peng.fan@nxp.com, eagle.zhou@nxp.com, imx@lists.linux.dev, 
+	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, regressions@lists.linux.dev
+Subject: [REGRESSION] boot failure on imx8mp due to e0203ddf9af7
+Message-ID: <n3qmcb62tepxltoskpf7ws6yiirc2so62ia23b42rj3wlmpl67@rvkbuirx7kkp>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION BISECTED] Unexpected section title false positive
- warnings on DOC: directive
-To: Bagas Sanjaya <bagasdotme@gmail.com>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Documentation <linux-doc@vger.kernel.org>,
- Linux Regressions <regressions@lists.linux.dev>
-Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
- Randy Dunlap <rdunlap@infradead.org>, Jonathan Corbet <corbet@lwn.net>
-References: <aZu9muHK02vPPl8E@archie.me>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <aZu9muHK02vPPl8E@archie.me>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-PPP-Message-ID: <177263829659.1718426.8734949187560132349@mxe9fb.netcup.net>
-X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: 4483F6173C
-X-NC-CID: aiTWVA2+ZzZsHFqiTuajvao5b5i4fQUhwQeKFF96/ZhCzoTIecE=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 2/23/26 03:38, Bagas Sanjaya wrote:
-> [this is actually a repost of [1] since that thread didn't get any attention
-> from the regressor.]
+Hello,
 
-"Regressor" feels like a odd word choice here (one that according to
-lore nobody has used before). Makes way more sense (and at least to me
-feels more polite) to say something like "the culprit's author (Mauro)"
-– especially as the person might have forgotten already that they
-authored the change in questions.
+Our iMX8MP SoMs (Verdin and Toradex SMARC) fail to boot after 
+commit e0203ddf9af7 ("media: verisilicon: Avoid G2 bus error while decoding H.264 and HEVC").
+On rare occasions, it's still able to boot.
+It fails after having registered g1 VPU, probably when it tries to
+register g2 VPU.
 
-> Building htmldocs on docs-next currenly produces about 80 new warnings; which
-> all of them are unexpected section title on DOC: kernel-doc directive, like:
+Ming: Any ideas on how to proceed here?
 
-For now it looks like your the only one to see that problem, so maybe
-it's something that is odd on your systems; and given that these are
-warnings I'm included to stop tracking this as a regression.
+Success::
+[    9.040517] hantro-vpu 38300000.video-codec: registered nxp,imx8mm-vpu-g1-dec as /dev/video0
+[    9.052133] hantro-vpu 38310000.video-codec: registered nxp,imx8mq-vpu-g2-dec as /dev/video1
 
-Ciao, Thorsten
 
-> /home/bagas/repo/linux-kernel/Documentation/driver-api/target:25: ./drivers/target/target_core_user.c:35: CRITICAL: Unexpected section title.
-> 
-> Userspace I/O
-> ------------- [docutils]
-> WARNING: kernel-doc 'scripts/kernel-doc.py -rst -enable-lineno -function 'Userspace I/O' ./drivers/target/target_core_user.c' processing failed with: SystemMessage('/home/bagas/repo/linux-kernel/Documentation/driver-api/target:25: ./drivers/target/target_core_user.c:35: (SEVERE/4) Unexpected section title.\n\nUserspace I/O\n-------------')
-> /home/bagas/repo/linux-kernel/Documentation/driver-api/target:28: ./include/uapi/linux/target_core_user.h:14: CRITICAL: Unexpected section title.
-> 
-> Ring Design
-> ----------- [docutils]
-> WARNING: kernel-doc 'scripts/kernel-doc.py -rst -enable-lineno -function 'Ring Design' ./include/uapi/linux/target_core_user.h' processing failed with: SystemMessage('/home/bagas/repo/linux-kernel/Documentation/driver-api/target:28: ./include/uapi/linux/target_core_user.h:14: (SEVERE/4) Unexpected section title.\n\nRing Design\n-----------')
-> 
-> These turns out to be false-positive as touching the source file in question
-> (e.g. drivers/target/target_core_user.c) and making htmldocs again makes the
-> regression go away for the corresponding docs.
-> 
-> Bisection (with git-bisect(1)) points to bea467aa5da1f5 ("docs: media:
-> v4l2-ioctl.h: document two global variables") as the first bad commit, even
-> though that I suspect that bdd1cf87847ff6 ("kernel-doc: add support to handle
-> DEFINE_ variables") may be the actual culprit (regressor).
-> 
-> The full bisection log:
-> 
-> git bisect start
-> # status: waiting for both good and bad commits
-> # bad: [7f3c3a0a9103dc92c823f27db3284ac2914e7558] MAINTAINERS: Add doc files on real-time support to Real-time Linux
-> git bisect bad 7f3c3a0a9103dc92c823f27db3284ac2914e7558
-> # status: waiting for good commit(s), bad commit known
-> # good: [9448598b22c50c8a5bb77a9103e2d49f134c9578] Linux 6.19-rc2
-> git bisect good 9448598b22c50c8a5bb77a9103e2d49f134c9578
-> # bad: [5188f6bd408f937d81c0c37eb59ddc1035cd912c] docs: admin: devices: /dev/sr<N> for SCSI CD-ROM
-> git bisect bad 5188f6bd408f937d81c0c37eb59ddc1035cd912c
-> # bad: [bea467aa5da1f51834501da3ac3c40204027a221] docs: media: v4l2-ioctl.h: document two global variables
-> git bisect bad bea467aa5da1f51834501da3ac3c40204027a221
-> # good: [82e87387f6e2af9f69a7528733e953fd22e815aa] Documentation: kernel-hacking: Remove comma
-> git bisect good 82e87387f6e2af9f69a7528733e953fd22e815aa
-> # good: [bdd1cf87847ff6aaadd53a185209d2bb2db72165] kernel-doc: add support to handle DEFINE_ variables
-> git bisect good bdd1cf87847ff6aaadd53a185209d2bb2db72165
-> # first bad commit: [bea467aa5da1f51834501da3ac3c40204027a221] docs: media: v4l2-ioctl.h: document two global variables
-> 
-> Mauro: Since you're the author of regressor, can you please take a look on it?
-> 
-> Thanks.
-> 
-> #regzbot introduced: bea467aa5da1f5
-> 
-> [1]: https://lore.kernel.org/regressions/aUuLHzk5jdyBAxD7@archie.me/
-> 
+Failure with decoded stacktrace::
+
+[    9.004477] hantro-vpu 38300000.video-codec: registered nxp,imx8mm-vpu-g1-dec as /dev/video0
+[    9.027097] Unable to handle kernel paging request at virtual address ffffd9c18eb05000
+[    9.027132] Mem abort info:
+[    9.027139]   ESR = 0x0000000096000007
+[    9.027147]   EC = 0x25: DABT (current EL), IL = 32 bits
+[    9.027156]   SET = 0, FnV = 0
+[    9.027164]   EA = 0, S1PTW = 0
+[    9.027171]   FSC = 0x07: level 3 translation fault
+[    9.027180] Data abort info:
+[    9.027187]   ISV = 0, ISS = 0x00000007, ISS2 = 0x00000000
+[    9.027196]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+[    9.027205]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+[    9.027215] swapper pgtable: 4k pages, 48-bit VAs, pgdp=000000004924f000
+[    9.027226] [ffffd9c18eb05000] pgd=0000000000000000, p4d=10000000496dd003, pud=1000000102e42403, pmd=100000010c33d403, pte=0000000000000000
+[    9.027258] Internal error: Oops: 0000000096000007 [#1]  SMP
+[    9.101669] Modules linked in: snd_soc_fsl_sai crypto_engine rng_core imx_pcm_dma authenc snd_soc_fsl_aud2htx snd_soc_fsl_utils imx8mp_interconnect libdes i
+mx8mp_hdmi_pai evdev imx8mp_hdmi_tx aes_ce_blk dw_hdmi ghash_ce drm_display_helper snd_soc_simple_card hantro_vpu phy_fsl_imx8mq_usb libaes phy_fsl_samsung_hdm
+i snd_soc_simple_card_utils cec phy_fsl_imx8m_pcie v4l2_vp9 imx8mp_hdmi_pvi typec fsl_imx8_ddr_perf snd_soc_imx_hdmi gf128mul samsung_dsim v4l2_h264 etnaviv ti
+_ads1015 industrialio_triggered_buffer snd_soc_nau8822 ina2xx lm75 gpu_sched i3c lontium_lt8912b kfifo_buf governor_userspace imx_sdma flexcan imx_aipstz dwc3_
+imx8mp imx_bus can_dev spi_nxp_fspi caam spi_imx error pwm_imx27 imx8mm_thermal nvmem_snvs_lpgpr snvs_pwrkey usb_conn_gpio gpio_keys display_connector roles lo
+op fuse ipv6 libsha1 autofs4
+[    9.173690] CPU: 3 UID: 0 PID: 45 Comm: kworker/u16:2 Not tainted 6.19.0+ #47 PREEMPT
+[    9.181623] Hardware name: Toradex Verdin iMX8M Plus on Verdin Development Board (DT)
+[    9.189462] Workqueue: events_unbound deferred_probe_work_func
+[    9.195314] pstate: 600000c5 (nZCv daIF -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[    9.202284] pc : of_find_matching_node_and_match (drivers/of/base.c:1129 drivers/of/base.c:1120 drivers/of/base.c:1187)
+[    9.207869] lr : of_find_matching_node_and_match (drivers/of/base.c:1185)
+[    9.213452] sp : ffff8000805dbad0
+[    9.216771] x29: ffff8000805dbad0 x28: 0000000000000000 x27: 0000000000000000
+[    9.223927] x26: 0000000000000000 x25: 0000000000000000 x24: ffffd9c2060d48e0
+[    9.231078] x23: 0000000000000000 x22: ffffd9c18eb05000 x21: ffff0000ff79d7f8
+[    9.238231] x20: 0000000000000000 x19: ffffd9c18eb05000 x18: 00000000ffffffff
+[    9.245385] x17: ffff263ef9a67000 x16: ffffd9c2055d3d54 x15: ffff8000805db870
+[    9.252536] x14: 0000000000000000 x13: 006365646f632d6f x12: 0000000000000001
+[    9.259689] x11: 0000000000000003 x10: 0000000000000020 x9 : 0000000000000000
+[    9.266842] x8 : 0000000000000020 x7 : 00000000ffffffff x6 : ffff0000c4a9d8c8
+[    9.273995] x5 : 0000000000000014 x4 : 0000000000000000 x3 : 0000000000000001
+[    9.281145] x2 : 0000000000000000 x1 : 0000000000000000 x0 : 0000000000000000
+[    9.288301] Call trace:
+[    9.290753]  of_find_matching_node_and_match (drivers/of/base.c:1129 drivers/of/base.c:1120 drivers/of/base.c:1187) (P)
+[    9.296336] hantro_probe (./include/linux/of.h:983 drivers/media/platform/verisilicon/hantro_drv.c:1047 drivers/media/platform/verisilicon/hantro_drv.c:1225) hantro_vpu
+[    9.301144]  platform_probe (drivers/base/platform.c:1449)
+[    9.304815]  really_probe (drivers/base/dd.c:583 drivers/base/dd.c:661)
+[    9.308399]  __driver_probe_device (drivers/base/dd.c:803)
+[    9.312765]  driver_probe_device (drivers/base/dd.c:833)
+[    9.316956]  __device_attach_driver (drivers/base/dd.c:962)
+[    9.321415]  bus_for_each_drv (drivers/base/bus.c:500)
+[    9.325262]  __device_attach (drivers/base/dd.c:1035)
+[    9.329109]  device_initial_probe (drivers/base/dd.c:1088)
+[    9.333303]  bus_probe_device (drivers/base/bus.c:576)
+[    9.337152]  deferred_probe_work_func (drivers/base/dd.c:125 (discriminator 14))
+[    9.341697]  process_one_work (kernel/workqueue.c:3268)
+[    9.345719]  worker_thread (kernel/workqueue.c:3334 kernel/workqueue.c:3421)
+[    9.349477]  kthread (kernel/kthread.c:467)
+[    9.352716]  ret_from_fork (arch/arm64/kernel/entry.S:861)
+[    9.356303] Code: 6b14001f 9a93d35a 1a80d294 91032273 (39400264)
+All code
+========
+   0:   6b14001f        cmp     w0, w20
+   4:   9a93d35a        csel    x26, x26, x19, le
+   8:   1a80d294        csel    w20, w20, w0, le
+   c:   91032273        add     x19, x19, #0xc8
+  10:*  39400264        ldrb    w4, [x19]               <-- trapping instruction
+
+Code starting with the faulting instruction
+===========================================
+   0:   39400264        ldrb    w4, [x19]
+[    9.362413] ---[ end trace 0000000000000000 ]---
+[    9.367037] note: kworker/u16:2[45] exited with irqs disabled
+[    9.367134] note: kworker/u16:2[45] exited with preempt_count 1
+
+
+Thanks,
+Franz
 
