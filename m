@@ -1,112 +1,96 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [194.59.206.189])
+Received: from smtpbgsg2.qq.com (smtpbgsg2.qq.com [54.254.200.128])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A1863264DF
-	for <regressions@lists.linux.dev>; Thu,  5 Mar 2026 07:52:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.59.206.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A32B39F17C
+	for <regressions@lists.linux.dev>; Thu,  5 Mar 2026 13:53:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.128
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772697132; cv=none; b=Cjt4jsG3fojJdoQiOoOcnpsj8CGaLoNhWsJ9zoiQ4Gb8ueXLL+KYZAl74Ihbs8S4gDrnhWfK8yxWSjDI8I3i/E1UwttfJCn+xLgALbJR/PDOk4cFW+SXgCL5flx6kEZ04OpTfnHyiaNE+67kmq1k976IaNVgtN39UHFQo6A5J1s=
+	t=1772718831; cv=none; b=QfD5V69r6C59Ru9N0jaIRsncF2ao8BQ+PcWRLTvEVXzkE1ltHZVuh0H776VFXYpqZ2WCfWSgK/89Bity10SLOBgw+AtDWWzoMmdZTkphRgkdkkwJxgeXUKt0+DcwqPsSfRB98ar7z4VEqJgYm9kiYmaveg6bN1xu1HgdRydkXXs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772697132; c=relaxed/simple;
-	bh=M1Ugsf9m4Bi0d9LReZu15Ikks7uH70Y9LvuC/L9zoE8=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:References:
-	 In-Reply-To:Content-Type; b=JYfV8iumd2MU9dJC/RBiwJObLBThIlb3sGRn4x32lH7ywdnjE6VKWlLjQuFEfWzkLbMIxC3K086Kk4+hJjpNNOwRpCy90QJgnW3k0Vr6oxRtldupgZbPu0nUhB8npzF40KD5pMNFl3HgHPnCjomZ2BoiU3tFjpdnrZvQ/zZicc0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=Cdd+TTSI; arc=none smtp.client-ip=194.59.206.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1772718831; c=relaxed/simple;
+	bh=VHSP+spYBLa4HhS5qAtiZE0EeSkzP6AJGL804lm/pEg=;
+	h=From:To:Cc:Subject:Mime-Version:Content-Type:Date:Message-ID; b=Wt3UDtIqts2wyU4Xqken/LxwoX0ccfhei1m+u6ZwVAD+HTqUZSLlXtKLgppqFMhZu1pjH73cQcRfCChv92xLcKZmAqJD38+xkqcEKg6FCBb5S+dQoL0QhZ8idtm/z/kmLCFCHlIoSzPMFGZMlC3JxbulFP82nJU9dzSK5Kmse0c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=YmHNMMiF; arc=none smtp.client-ip=54.254.200.128
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="Cdd+TTSI"
-Received: from relay02-mors.netcup.net (localhost [127.0.0.1])
-	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4fRMFC6cf7z4Ckq
-	for <regressions@lists.linux.dev>; Thu,  5 Mar 2026 08:51:59 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1772697119;
-	bh=M1Ugsf9m4Bi0d9LReZu15Ikks7uH70Y9LvuC/L9zoE8=;
-	h=Date:From:Subject:To:References:In-Reply-To:From;
-	b=Cdd+TTSIVog6ZVtTX3mhT4/3Y51lwGkONj4nKcwKmx8CtzswpbjYGvpms1SwKrmyq
-	 wAQNTxpHBM1+icLcIT/fr78FVeIdyoLyLzNlLJURbHkgyH+xKfnArGs/qva8aRoRAM
-	 4XimrcG4gkMm8rWK7NePxGlJKTVvPQTCBxA5wwTOlN6radzKqQSfLdgF9PntN2mTDJ
-	 PaVY2G56nR3SDVnGQQQ3+v2xZPS18/DLCRrmmYpPIv1kLu5A01ZiETqZIwHFfnQZqm
-	 88KDhX6kzHqSupFVPz6sQe75DVoy2nBeOWCd+cpFQrlCzDQ6zkASyOY+Nceb0S2+jK
-	 TpUPrheob8HHA==
-Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
-	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4fRMFC5xGdz7wPS
-	for <regressions@lists.linux.dev>; Thu,  5 Mar 2026 08:51:59 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
-X-Spam-Flag: NO
-X-Spam-Score: -2.898
-X-Spam-Level: 
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4fRMFB0bJgz8t4J
-	for <regressions@lists.linux.dev>; Thu,  5 Mar 2026 08:51:58 +0100 (CET)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 2B881617A5
-	for <regressions@lists.linux.dev>; Thu,  5 Mar 2026 08:51:57 +0100 (CET)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <9a77a88d-99ce-4136-ba05-b6c0e9e22f75@leemhuis.info>
-Date: Thu, 5 Mar 2026 08:51:55 +0100
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="YmHNMMiF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1772718795;
+	bh=VHSP+spYBLa4HhS5qAtiZE0EeSkzP6AJGL804lm/pEg=;
+	h=From:To:Subject:Mime-Version:Date:Message-ID;
+	b=YmHNMMiFtQ9AZOknAjgxwFl6aK8LrwSD5n95rCammIazyym0nEba2KFoD+fEB8YQE
+	 EM455BygjUzxYRQMCk+r5GHZIjT/tzPo6eKLSy/kNtggobnBMlf1VFXd71O9NJQ8Oo
+	 27Q3Ie0iUuHXi5Pwynu2LUBxeo27iojlSxhH5EC8=
+EX-QQ-RecipientCnt: 4
+X-QQ-GoodBg: 1
+X-QQ-SSF: 00400000000000F0
+X-QQ-FEAT: D4aqtcRDiqSHNwC2Dqd2M/t+aQldaspwowpDBZ8q7ts=
+X-QQ-BUSINESS-ORIGIN: 2
+X-QQ-Originating-IP: MXzD4+JBbPK724EJP2iHb2I+jGu86vFU2bo2LKjqPt2H6nzuhHrYSbcW+CjHRmVB
+X-QQ-STYLE: 
+X-QQ-mid: lv3gz7b-6t1772718788t9da881a6
+From: "=?utf-8?B?V2VudGFvIEd1YW4=?=" <guanwentao@uniontech.com>
+To: "=?utf-8?B?cmVncmVzc2lvbnM=?=" <regressions@lists.linux.dev>
+Cc: "=?utf-8?B?c3RhYmxl?=" <stable@vger.kernel.org>, "=?utf-8?B?c2FzaGFs?=" <sashal@kernel.org>, "=?utf-8?B?Z3JlZ2to?=" <gregkh@linuxfoundation.org>
+Subject: [ REGRESSION v6.6.128 ] build failure on x86 because commit 22e460b6333a
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <177269711735.142259.8500724499871381732@mxe9fb.netcup.net>
-X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: 2B881617A5
-X-NC-CID: BpAQYtZ0yCTVgbx2kBOCFfhAZ4Hj1x7gaLGaUTU4FngIKr+dy30=
+Mime-Version: 1.0
+Content-Type: text/plain;
+	charset="utf-8"
+Content-Transfer-Encoding: base64
+Date: Thu, 5 Mar 2026 21:53:08 +0800
+X-Priority: 3
+Message-ID: <tencent_1EDDBDC63EFAE9C27849E987@qq.com>
+X-QQ-MIME: TCMime 1.0 by Tencent
+X-Mailer: QQMail 2.x
+X-QQ-Mailer: QQMail 2.x
+X-BIZMAIL-ID: 8417239797553185690
+X-Address-Ticket:version=;type=;ticket_id=;id_list=;display_name=;session_id=;
+X-QQ-SENDSIZE: 520
+Received: from qq.com (unknown [127.0.0.1])
+	by smtp.qq.com (ESMTP) with SMTP
+	id ; Thu, 05 Mar 2026 21:53:09 +0800 (CST)
+Feedback-ID: lv:uniontech.com:qybglogicsvrsz:qybglogicsvrsz4b-0
+X-QQ-XMAILINFO: NGgULbyAgjAdmOJ3bPv9ZjvtY6iUQ9IQoWJxziqHbCG4dHWshjJg41IY
+	gbo0k/a5REuI6HU8WC4H6PJfMZxGtAqNwKHwjeTB58vEPOLEPalGQC7GEs+et4f0MoVjwyQ
+	CZHqWWQ3ds93NMVYoZpSGUMbYKzCvzQTG7rErqhZQnvTjAgQwz+6DoH5LbtSJ5mIXY6WqRs
+	QeFuZnK5uXllDX4Q1q2cLrz00uLP4UiYItYQ4Px0QY2aOdxuRyMOPN8BOsvSkStHf4vNuWI
+	e1Uo9LOJtvMsHftmB/PglMBfBRh53q1oh8bUv/oeT4wQduWzGjiF90cV67L3+LJ2XXFcwXz
+	4Sek2bVAHus5s3ikKHF7x4bhhhbuHq3Rzb5rw+drzJg072vNFcWaX2PAR914FC8D+I+OXIc
+	QhTN4m6hxHlBpFECNW6QyKWNpDMjG7DSRvfhj0AAud4ZPrKjGkl1LHg8EHnn+g88zIBtoCp
+	2RHW5UykS9PWQnf+S+6OdQ+PWx1IvgTr7fdSWNDKV2Kqhtl6O3W5LcMxfnetHQ+pDA3G0Nw
+	tPXiwqbpOV+60+y849Y97+JyLW1xkUqmAimtrbc0czlSU6o9Ng0hX75GgG6C0y9Ch35CRHy
+	0IST0kwYWB5Nb/WDn0j31G5Fh4oUjLBPGB//RDTiq5VEyoKdEnLA1xUygAwSE2/UDQ/iBdH
+	un4chTUDandouy5wJK9pt45RYze0KaDT98untJhJhnDOLFr3F8OpSUg5AtAPSP/3+3htDcu
+	Q+Hlfc+9e9LbkNEBWK0NIBfymgrFG+zreQiRmRTvG4L6CPXNC0fONrQWTv1aFqwdl+tJk25
+	zxvzYr+AYg24soADcLO7z1YNafLydE4v/XKiC9Bl44zlBkHgnUfDQwhmtzvJuVUjsR1578d
+	VuX66huX+D3YHEAGmYNpHkL52ImohrOlmpb/XfB5W/nyZs5ZShTFnWmdWXl92Z88bOdj2rY
+	eVWZDWqDgFZo70xS2BYW4PqqxDdNsYZv4Y6t2+kcKA8hYc7fNjS1OOkTE+D2EE0Tnwa1IVz
+	KVRQ2vhGnhRRK27s+Hl9H5w8YO5guS5PFg6X8Ava2GpGJExM6vYIULx6rWGj6v7W6tD4CNC
+	xNmad7X8gyYuRWENUow4yDOT5U5pfFaFzVa8i1L8qDf2kqAcoRflJ4=
+X-QQ-XMRINFO: OD9hHCdaPRBwH5bRRRw8tsiH4UAatJqXfg==
+X-QQ-RECHKSPAM: 0
 
-
-
-On 3/9/24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
-
-#regzbot report:
-https://lore.kernel.org/all/20260218-wip-fix-iris-plus-v1-1-e6b969defd6d@kernel.org/
-#regzbot dup: https://gitlab.freedesktop.org/drm/i915/kernel/-/issues/15777
-
-
-#regzbot report:
-https://lore.kernel.org/lkml/CAPh3n803k8JcBPV5qEzUB-oKzWkAs-D5CU7z=Vd_nLRCr5ZqQg@mail.gmail.com/
-#regzbot introduced: c7159e960f14
-#regzbot monitor:
-https://lore.kernel.org/all/20260302102825.274385-1-lvivier@redhat.com/
-#regzbot fix: qmi_wwan: allow max_mtu above hard_mtu to control rx_urb_size
-
-#regzbot report:
-https://lore.kernel.org/all/558b602a-1b30-2761-fff4-04d837656ea5@rock-chips.com/
-#regzbot fix: pmdomain: rockchip: Fix rkvdec0/1 and venc0/1 for RK3588
-#regzbot monitor:
-https://lore.kernel.org/linux-rockchip/1770891364-52147-1-git-send-email-shawn.lin@rock-chips.com/
-
-#regzbot report:
-https://lore.kernel.org/lkml/fd099b27-8716-4ed9-a2eb-f9b03fbb45cb@skogtun.org/
-#regzbot fix: 9197e5949a41cfb5d44a6b8a860766266340d558
-
-#regzbot report:
-https://lore.kernel.org/all/qc0nhk9c6l0a08bkfeplrm3qjssgrjkvkp@sonic.net/
-#regzbot inconclusive: reporter seems MIA
-
-#regzbot report: https://lore.kernel.org/lkml/aZu9muHK02vPPl8E@archie.me/
-#regzbot inconclusive: unclear, maybe something odd on the reporter's
-machine
-
+RGVhciBBbGwsDQoNCnVwZ3JhZGUgdG8gdjYuNi4xMjgsIGJ1aWxkIGZhaWwgaW4geDg2IHdp
+dGggb3VyIGNvbmZpZyB3aXRoIHRoZSBjb21taXQ6DQpnaXQgc2hvdyAyMmU0NjBiNjMzM2E1
+ZjgxOGIwNDJhYzg5MjAxZjhlNzM1NTU2ZjRhDQpjb21taXQgMjJlNDYwYjYzMzNhNWY4MThi
+MDQyYWM4OTIwMWY4ZTczNTU1NmY0YQ0KQXV0aG9yOiBIYXJzaGl0IE1vZ2FsYXBhbGxpIDxo
+YXJzaGl0Lm0ubW9nYWxhcGFsbGlAb3JhY2xlLmNvbT4NCkRhdGU6ICAgVHVlIERlYyAzMCAy
+MjoxNjowOSAyMDI1IC0wODAwDQoNCiAgICB4ODYva2V4ZWM6IGFkZCBhIHNhbml0eSBjaGVj
+ayBvbiBwcmV2aW91cyBrZXJuZWwncyBpbWEga2V4ZWMgYnVmZmVyDQogICAgDQogICAgWyBV
+cHN0cmVhbSBjb21taXQgYzU0ODlkMDQzMzdiNDdlOTNjMDYyM2U4MTQ1ZmNiYTNmNTczOWVm
+ZCBdDQoNCkJScw0KV2VudGFvIEd1YW4NCg0KY29uZmlnOg0KaHR0cHM6Ly9naXN0LmdpdGh1
+Yi5jb20vb3BzaWZmLzQzNDNjMDdiNTU2OTc4MzdmODE2YzcwNjMwOTUxMGMxDQoNCkxvZzoN
+CmFyY2gveDg2L2tlcm5lbC9zZXR1cC5jOiBJbiBmdW5jdGlvbiDigJhpbWFfZ2V0X2tleGVj
+X2J1ZmZlcuKAmToNCmFyY2gveDg2L2tlcm5lbC9zZXR1cC5jOjM4MDoxNTogZXJyb3I6IGlt
+cGxpY2l0IGRlY2xhcmF0aW9uIG9mIGZ1bmN0aW9uIOKAmGltYV92YWxpZGF0ZV9yYW5nZeKA
+mSBbLVdlcnJvcj1pbXBsaWNpdC1mdW5jdGlvbi1kZWNsYXJhdGlvbl0NCiAgMzgwIHwgICAg
+ICAgICByZXQgPSBpbWFfdmFsaWRhdGVfcmFuZ2UoaW1hX2tleGVjX2J1ZmZlcl9waHlzLCBp
+bWFfa2V4ZWNfYnVmZmVyX3NpemUpOw0KICAgICAgfCAgICAgICAgICAgICAgIF5+fn5+fn5+
+fn5+fn5+fn5+fg0KICBDQyBbTV0gIGZzL3pvbmVmcy9maWxlLm8=
 
