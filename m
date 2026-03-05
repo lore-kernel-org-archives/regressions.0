@@ -1,103 +1,86 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [194.59.206.189])
+Received: from smtpbgau1.qq.com (smtpbgau1.qq.com [54.206.16.166])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B58433C6A45
-	for <regressions@lists.linux.dev>; Thu,  5 Mar 2026 15:43:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.59.206.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2A4C262BD
+	for <regressions@lists.linux.dev>; Thu,  5 Mar 2026 15:59:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.206.16.166
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772725409; cv=none; b=kDA6lS0Vaj+EKwE6eNFyPfXRyonEIzl0vcWJLKGvoHt8hIZNIZRCth8uC6hPeIUzlOe7sxylhep+jREFxziO1F8a6Y8kNwRZwiN+qCvKxCaQmnBiW+X30u59jy73cMs2mRtj7qT2fp4X5vKm/HN3K7eAfBicSGShLuWkVwMb6GY=
+	t=1772726348; cv=none; b=UkZ1COC0bi+OaeogNAPjjdPDTZK8Dt0DN01Y9Thp+ya69J4xdemYLSR8c5RfpsDUdNAgg8uJmeyvFgcrfsXRH77vObZoBwBbn/wvGsptJ5jY8d2iNb49Qyv4y1yZ0q5zn3zZGpMrqohq5MlOn4MjKbakKlH8ZOK1lud0oDXsJYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772725409; c=relaxed/simple;
-	bh=v/P8Aoqnfv3/q/kRRumuH1ysaR16WNF9rRYlnfNN0dg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tSYp95hImjN7QcIMRoUGsE9PfgqS+KwsiAjNp/qEL7y0Li9fVZGHAdfyhleGGnU53b/TTV3fqHsOFC+J1Il1Rgdfna/FMtLZOlPrws4ZLa0xKIwJyU4Om/OnM9tmA47eGxtysJczupHUtAgBusa0YbKYnAO+bYKmes8VD31MD6Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=lmoK3DN9; arc=none smtp.client-ip=194.59.206.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1772726348; c=relaxed/simple;
+	bh=I1meZNh+BiNepSvnJPVUQy8FDRlcccIhL0PBmHAFLGc=;
+	h=From:To:Cc:Subject:Mime-Version:Content-Type:Date:Message-ID:
+	 References:In-Reply-To; b=aoSiA12DZ72Ii8Putc5Kd2gxVHjp7EoFx9sdnRA8wPxYt3PaMGlNKbL8jNJ5ZHyFvn43Ah0NF4iORDs9DroaDGcv9AxhaJb0BWG/TTSy7U9DaPuLJDG0cnZJNfbainIZfB3Xa+8QLMQgZL+s/o+/A9+XYQoNbUurxd8qb/L87PQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=d5HyHeOO; arc=none smtp.client-ip=54.206.16.166
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="lmoK3DN9"
-Received: from relay02-mors.netcup.net (localhost [127.0.0.1])
-	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4fRYj76rPhz45fG;
-	Thu,  5 Mar 2026 16:43:23 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1772725404;
-	bh=v/P8Aoqnfv3/q/kRRumuH1ysaR16WNF9rRYlnfNN0dg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=lmoK3DN9EHxkZaEOTJ+jZB5yilQ2KaX57GC58U63vew/96rncbSodTW9PazESnOCX
-	 JPw30/08CbrdSTqxwBmckGxclAcNfasmC++ZFiLMXub2kRJkS6rCwLH8nYQR+5ArbB
-	 DYuE2LNxVptrpFBhIRJjTR9dxDHQ2JE25YxqZXmfatbZOvsB54mJIIAeMwPqzF3I8+
-	 iN4jZMw/YdEjLI7N5Ux8iFT7OqkwOY9hDFbaf9jyNCh6e70zB4BvIaeVlWP4b/EdU7
-	 8xDaYs9zqg+Ar+8+7NFoDgFtbVdkDyj5Rr+QlBzrqdl9TlnnpaI+D/WlQ50m2Osmz6
-	 SpQyz6Nkn2SPg==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4fRYj766Q7z7wrb;
-	Thu,  5 Mar 2026 16:43:23 +0100 (CET)
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4fRYj61hRCz8sWT;
-	Thu,  5 Mar 2026 16:43:22 +0100 (CET)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 768AE617A5;
-	Thu,  5 Mar 2026 16:43:21 +0100 (CET)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <2d32f010-787c-4541-9217-9b08df32b1b9@leemhuis.info>
-Date: Thu, 5 Mar 2026 16:43:20 +0100
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="d5HyHeOO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1772726286;
+	bh=I1meZNh+BiNepSvnJPVUQy8FDRlcccIhL0PBmHAFLGc=;
+	h=From:To:Subject:Mime-Version:Date:Message-ID;
+	b=d5HyHeOO/RQz6ZtAR2tZcsokPXIWE5Qck0u48iFgTLxnvwfZhRa75ChTDQGicuL8R
+	 V6I41ECEV0j3IZ8/IqEHCe5YD9O+p64mpibB8rRCHd0ZuFlUO08k9FujnQhbMxdt4/
+	 oxjNkqLpL2SWMdSAnD6aUjMPTCNWG6q6w7AhE/h4=
+EX-QQ-RecipientCnt: 5
+X-QQ-GoodBg: 1
+X-QQ-SSF: 00400000000000F0
+X-QQ-FEAT: D4aqtcRDiqSHNwC2Dqd2M/t+aQldaspwowpDBZ8q7ts=
+X-QQ-BUSINESS-ORIGIN: 2
+X-QQ-Originating-IP: BwGsXqMA5ZG3nHuPfj/KtL6UnHVnNSKTWKRz1P2EUAU=
+X-QQ-STYLE: 
+X-QQ-mid: lv3gz7b-6t1772726284t6d3630ea
+From: "=?utf-8?B?V2VudGFvIEd1YW4=?=" <guanwentao@uniontech.com>
+To: "=?utf-8?B?VGhvcnN0ZW4gTGVlbWh1aXM=?=" <regressions@leemhuis.info>, "=?utf-8?B?cmVncmVzc2lvbnM=?=" <regressions@lists.linux.dev>
+Cc: "=?utf-8?B?c3RhYmxl?=" <stable@vger.kernel.org>, "=?utf-8?B?U2FzaGEgTGV2aW4=?=" <sashal@kernel.org>, "=?utf-8?B?R3JlZyBLSA==?=" <gregkh@linuxfoundation.org>
+Subject: Re: [ REGRESSION v6.6.128 ] build failure on x86 because commit 22e460b6333a
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [ REGRESSION v6.6.128 ] build failure on x86 because commit
- 22e460b6333a
-To: Wentao Guan <guanwentao@uniontech.com>,
- regressions <regressions@lists.linux.dev>
-Cc: stable <stable@vger.kernel.org>, sashal <sashal@kernel.org>,
- gregkh <gregkh@linuxfoundation.org>
+Mime-Version: 1.0
+Content-Type: text/plain;
+	charset="utf-8"
+Content-Transfer-Encoding: base64
+Date: Thu, 5 Mar 2026 23:58:03 +0800
+X-Priority: 3
+Message-ID: <tencent_160637F6605A44E80C18F34B@qq.com>
+X-QQ-MIME: TCMime 1.0 by Tencent
+X-Mailer: QQMail 2.x
+X-QQ-Mailer: QQMail 2.x
 References: <tencent_1EDDBDC63EFAE9C27849E987@qq.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <tencent_1EDDBDC63EFAE9C27849E987@qq.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-PPP-Message-ID: <177272540176.2496144.1261723391264038826@mxe9fb.netcup.net>
-X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: 768AE617A5
-X-NC-CID: GoeqlWXdsziScIPSt/AAXKsXzgnkrUp2OLk2BzpNmU25McDjoJI=
+	<2d32f010-787c-4541-9217-9b08df32b1b9@leemhuis.info>
+In-Reply-To: <2d32f010-787c-4541-9217-9b08df32b1b9@leemhuis.info>
+X-QQ-ReplyHash: 1334635717
+X-BIZMAIL-ID: 3163466203530119632
+X-Address-Ticket:version=;type=;ticket_id=;id_list=;display_name=;session_id=;
+X-QQ-SENDSIZE: 520
+Received: from qq.com (unknown [127.0.0.1])
+	by smtp.qq.com (ESMTP) with SMTP
+	id ; Thu, 05 Mar 2026 23:58:05 +0800 (CST)
+Feedback-ID: lv:uniontech.com:qybglogicsvrsz:qybglogicsvrsz4b-0
+X-QQ-XMAILINFO: MMnP0fEUKo/h/L8WjTyRZK8rhStyKcaJC54Tumc5nSAakt6Ds2xtD+PH
+	yLXALkmktUpmHLHZe5oGzDNqukLAIF7jJ/iyFh4HXCipRKyHEf5ntnjFAD4yXKKTo6XWWVk
+	JZAagCWxyeKK+01M9J0rRbYkKHunZCACzVux9Gem0RvA0Cij6XU3gXTNzQHCoV977CT2wDR
+	/s5uyJoUh9AXUJRX+QJgJ40p6e4mUFeq2OUe40YwLIXdVOSvSlfJ5lVVpjhdtBkSlF9XK9f
+	qqE8LpRgt7U6dX5M/X8p2q4nod4Zu1GcH2D6zZvH9c8bfQ2ttGSOQtX98hFpKA25v1Hy7ET
+	pvUu38281PKfwXHsKPs9NGSc8VfzQxkF6WhQu7oEluK8JbLIx8XS6ntW0jR3ZRNSA4GlX3B
+	wUrjPfPYcC7dBYF1jjLAY6m18aw9GmB0AkBJ0fBA3yky544iJXlQepaoX8JpYrHG9l4Es0t
+	j+7lCfdDgjnHbEG9uE3iZbDkaK2ZRomhnsh1GvEhDleFj0szVKEwi+oph7jajUaFA77lTaj
+	bbQboDCoRc6ZRZ1rgUA0VTUYcc4zVhaGSSp7aYv1kDjLcdjrJpudaW8nXXQt/SjHGmw94HW
+	s5YHwd7CQsJbpXd6x8dTxOF81WmS/CYYaO6zUk+NpqQnwWCKbhS0pvDyNmAbuddsIgQdCok
+	m9siL0W0s+BwteABt5Dy1lRicm0gZaAauV+j4OfAI7VOdShxGzEjIQ/k8dzPUYjGWiI38TB
+	40/zeyZOmj9awGayZ36jedv4bZZhOLqP53FcRIfTGP2ejIxd1p41lrmXYYys0bIj3syGymB
+	+OuW02z+M6T9rF4ZyVOpixo7NkwUnen7HKQs7LN3rF0v42+yKEjkwokRNoVV2cOgPNFwmMk
+	yMqJk+IrdCA96JUzc3VguUsAIS1avNmnezWDMz4Zd/13QlZRJyzL0AITzrG/RTT2KzRtNfN
+	SrToMOt5xhaA72tK0FaJpeLv+8szVxGpXw1Q7Ronm34pHI19i3sbMURsP7+xqYxgWl3m5qJ
+	adgC7maxA8lXAiV4alaxokoxAfaBk=
+X-QQ-XMRINFO: NyFYKkN4Ny6FuXrnB5Ye7Aabb3ujjtK+gg==
+X-QQ-RECHKSPAM: 0
 
-On 3/5/26 14:53, Wentao Guan wrote:
-> Dear All,
-> 
-> upgrade to v6.6.128, build fail in x86 with our config with the commit:
-
-kernel.org already offers 6.12.76 and 6.6.129, which from a quick look
-should fix this error (and the other one you reported which is basically
-the same problem afaics)
-
-> git show 22e460b6333a5f818b042ac89201f8e735556f4a
-> commit 22e460b6333a5f818b042ac89201f8e735556f4a
-> Author: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
-> Date:   Tue Dec 30 22:16:09 2025 -0800
-> 
->     x86/kexec: add a sanity check on previous kernel's ima kexec buffer
->     
->     [ Upstream commit c5489d04337b47e93c0623e8145fcba3f5739efd ]
-> 
-> BRs
-> Wentao Guan
-> 
-> config:
-> https://gist.github.com/opsiff/4343c07b55697837f816c706309510c1
-> 
-> Log:
-> arch/x86/kernel/setup.c: In function ‘ima_get_kexec_buffer’:
-> arch/x86/kernel/setup.c:380:15: error: implicit declaration of function ‘ima_validate_range’ [-Werror=implicit-function-declaration]
->   380 |         ret = ima_validate_range(ima_kexec_buffer_phys, ima_kexec_buffer_size);
->       |               ^~~~~~~~~~~~~~~~~~
->   CC [M]  fs/zonefs/file.o
+VGhhbmtzIGZvciB5b3VyIG5vdGljZSwNCkkgdGVzdGVkIHRoZSB2Ni42LjEyOSBhbmQgdjYu
+MTIuNzYgd2l0aCBvdXIgY29uZmlnLA0KdGhlIGJ1aWxkIHByb2JsZW0gaGFzIGJlZW4gc29s
+dmVkLg0KDQpCUnMNCldlbnRhbyBHdWFu
 
