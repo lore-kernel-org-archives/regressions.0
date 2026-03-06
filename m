@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED91818B0A;
-	Fri,  6 Mar 2026 00:35:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE5C8EEBA;
+	Fri,  6 Mar 2026 07:12:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772757331; cv=none; b=dXseQzcgPnk9FBecBaVpSa8u8H3N9kgTuIYChEJSaWg9KrPnLXLyeg6TKB24uDNSlfGRQYNzsCytj/9sgRD//8+77eFPgJMmxuJqtmqNaMS7DA4yfmy368fynAOL5QX1S4azh1qnlaDhG1/cDLs6D+G6XWHV5t/mA6vxEMX7F7c=
+	t=1772781175; cv=none; b=ZIOvAiylrhudkoUHPQ09Hw7AdWsjVufX1TAAZ/iXQiqzW/kEHScfFc3UK3cqobWP//e7ZzH23fwylVhRzR5GvEqc/V2eAUzsZu41psaTUOfos6kxcn7c8nBYRv8hbeT1RQGfgXnkU68No7Ox7P8YIFMZ9n3QOac70Vs8E5UKnTI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772757331; c=relaxed/simple;
-	bh=LW7dbYDOkNHz8g43eyYZDS9v1JXlcR+zT14BnEL+RJg=;
+	s=arc-20240116; t=1772781175; c=relaxed/simple;
+	bh=XT0AA5uqBKfCW2YCMSUndSquZ6L/D2yShFNdlBVDBOg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dDn9MeC5YaZ5sHniKi1LyXxD6D9k3QIVK7WG5erPjtQDLEnQrFenLwiOMmTFIIvfofZvgR88MKVWWivdBlIWZ3UWP2xsrrVgBFv7cn+QAS3MOSUg8hlhYZN6SBzqH/ZuiummfCYGeyElRpIbakp98Znu2gXC6Y158Wqq8keK2Lg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SDjU1l3f; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=nBiKiiVsxb8i0iEal5QB20o/dKYBQyy0f9xbzC7nSBnHB+VPSmCrQrUevpboTdkDg+abc8JYbauNjt6p8+Su8Dnh3TmcEmKsoiehajQuVU2ZpbG04/UDRrXrqxzoIVqqyLHXVOFLW7ID6UoQSQ9HJljmKPhJqORyG7s1B0cGmRw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tdAqwqLv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SDjU1l3f"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7136C116C6;
-	Fri,  6 Mar 2026 00:35:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tdAqwqLv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBA69C4CEF7;
+	Fri,  6 Mar 2026 07:12:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772757330;
-	bh=LW7dbYDOkNHz8g43eyYZDS9v1JXlcR+zT14BnEL+RJg=;
+	s=k20201202; t=1772781174;
+	bh=XT0AA5uqBKfCW2YCMSUndSquZ6L/D2yShFNdlBVDBOg=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=SDjU1l3frVFzWgi9iV+ahcW2fjZihPesFK5QZ0pvGQ32gAT/sETj0XTZhp8RyalnN
-	 yUo2Nn5zj2kHRE0uooBGm3VkindmSX553G2d4ILnFH4fxxkp6Efp4CBQSRdOqVUFAO
-	 KTTAysJ1B5KA5zJ4RE1Eo5M+4vWOU/8rExT9JOBpLTQvB7H0Ihdcn+xxikbDV6k4r9
-	 K4sYdcqgHMT05kkD5TmiEACqptUtUMdL5PNysDJEBM6nfyMIA8VCq5Bdjx+uwR6MVG
-	 HOQ8RpAQMVnWcs7N0TEQicB+x5LDUHZhakJswoaXZjMa6nCVHF43WM6CtR89UZdy31
-	 DRImIHpXO2gug==
-Message-ID: <23e8f0df-3eec-46e8-b5f1-5f417460e272@kernel.org>
-Date: Thu, 5 Mar 2026 18:35:28 -0600
+	b=tdAqwqLvr+LgBLcGS/59UrDUb0xfPQE6x2hXuTyIYBTK9iJ3xlPmHcYwjIe2UliWq
+	 pg8qca/NOkP8TF6MgSSIfi8+/uY/Ld4WITcOSC0mp/QcLQ6QyIAOkO0Z5PJIUeoqLF
+	 7i7aY65yYrZdCsNHzrJVBizopzC9orZUQpwIYQkv05OyL7pviv5Qs5/u91dfqvpgGx
+	 eaYSWZh+B8ffBozsASa5PrJvwgcZsbVpppfls+r2B6HaCNJ6p59H5YFSZ5UPaRK9xm
+	 0nIf8ls/GtEwaTX0J4gnxH2wXLn2LPh8i+NiQHkbDG0mMPSufzzf1kL9b/mEHbbpea
+	 3B6MUIfkGJ7kQ==
+Message-ID: <502e876d-3627-4d9b-a02b-d2a708ae67e8@kernel.org>
+Date: Fri, 6 Mar 2026 08:12:48 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -35,83 +35,123 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] AMDISP failure with kernel v7.0-rc2 due to Commit:
- 02c057ddefef5
-To: "Nirujogi, Pratap" <pnirujog@amd.com>, rafael@kernel.org
-Cc: W_Armin@gmx.de, lenb@kernel.org, Bin Du <bin.du@amd.com>,
- benjamin.chan@amd.com, king.li@amd.com, linux-acpi@vger.kernel.org,
- linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-References: <007e3390-6b2b-457e-83c7-c794c5952018@amd.com>
+Subject: Re: [PATCH] Revert "ARM: dts: imx: move nand related property under
+ nand@0"
+To: Frank Li <Frank.li@nxp.com>
+Cc: max.krummenacher@gmx.de, Francesco Dolcini
+ <francesco.dolcini@toradex.com>,
+ Max Krummenacher <max.krummenacher@toradex.com>,
+ Conor Dooley <conor+dt@kernel.org>, Fabio Estevam <festevam@gmail.com>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Peng Fan <peng.fan@nxp.com>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Rob Herring <robh@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
+ Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <aZdDF6BObEu_C4KJ@toolbox>
+ <aZdnhv2QC1szMCVl@lizhi-Precision-Tower-5810> <aZ80BWH6DRu8_W_S@toolbox>
+ <aZ82pG3PO1HxD18B@lizhi-Precision-Tower-5810> <aaBA65_zLu8S6WMS@toolbox>
+ <aaBi9lipWTG5l0hs@lizhi-Precision-Tower-5810>
+ <bd0bd330d140f9d9d222c72c3797f79d08fcae1d.camel@active.ch>
+ <aaWxiERQ4u6IhO7Q@lizhi-Precision-Tower-5810>
+ <aaniGuauaieO3p36@lizhi-Precision-Tower-5810>
+ <39ef5c99-ba8e-40c1-bf93-359db7297d55@kernel.org>
+ <aaoI7TqtClwSKTLg@lizhi-Precision-Tower-5810>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
-From: "Mario Limonciello (AMD) (kernel.org)" <superm1@kernel.org>
-In-Reply-To: <007e3390-6b2b-457e-83c7-c794c5952018@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <aaoI7TqtClwSKTLg@lizhi-Precision-Tower-5810>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+On 05/03/2026 23:51, Frank Li wrote:
+> On Thu, Mar 05, 2026 at 09:37:26PM +0100, Krzysztof Kozlowski wrote:
+>> On 05/03/2026 21:05, Frank Li wrote:
+>>> On Mon, Mar 02, 2026 at 10:49:28AM -0500, Frank Li wrote:
+>>>> On Mon, Mar 02, 2026 at 11:53:00AM +0100, Max Krummenacher wrote:
+>>>>> for our NAND-based modules, and our CI no longer produces any useful
+>>>>> results as a consequence.
+>>>>>
+>>>>> I strongly believe that, as an immediate first step, the commit
+>>>>> that moved the DT NAND chip configuration into its subnode should
+>>>>> be reverted.
+>>>>
+>>>> As my previous said, can do partial revert? Just add back property under
+>>>> gpmi and keep nand@0 node.
+>>>>
+>>>> For example
+>>>>
+>>>> --- a/arch/arm/boot/dts/nxp/imx/imx6qdl-skov-cpu.dtsi
+>>>> +++ b/arch/arm/boot/dts/nxp/imx/imx6qdl-skov-cpu.dtsi
+>>>> @@ -260,14 +260,10 @@ fixed-link {
+>>>> &gpmi {
+>>>>   	pinctrl-names = "default";
+>>>>   	pinctrl-0 = <&pinctrl_gpmi_nand>;
+>>>> +	nand-on-flash-bbt;
+>>>>   	#address-cells = <1>;
+>>>>  	#size-cells = <0>;
+>>>>   	status = "okay";
+>>>>
+>>>> Remove "- nand@0" part.  You can use "git add -p" to do that.
+>>>
+>>> Do you plan rework this patch as what I said?
+>>
+>> Issue and revert were posted two weeks ago. That's maximum time to
+>> handle regression.
+> 
+> Any docuement said these maxium times, I also want to know other maximum
+
+Just read the regression and bug handling docs in the kernel.
+
+> time, such as
+> 	what's max time maintainer need reply? Many patch is not any
+> reponse for long time.
 
 
 
-On 3/5/2026 5:11 PM, Nirujogi, Pratap wrote:
-> Hi Rafael,
-> 
-> In kernel version 7.0-rc2, the AMDISP device reports the following 
-> errors when created via mfd_add_hotplug_devices.
-> 
-> [    5.236645] ACPI: video: Video Device [GFX0] (multi-head: yes  rom: 
-> no  post: no)
-> [    5.236744] input: Video Bus as /devices/ 
-> pci0000:00/0000:00:08.1/0000:c3:00.0/amd_isp_capture.1.auto/input/input21
-> [    5.236779] acpi device:14: Error installing notify handler
-> [    5.236782] acpi device:15: Error installing notify handler
-> [    5.236783] acpi device:16: Error installing notify handler
-> [    5.236784] acpi device:17: Error installing notify handler
-> [    5.236785] acpi device:18: Error installing notify handler
-> [    5.236786] acpi device:19: Error installing notify handler
-> [    5.236786] acpi device:1a: Error installing notify handler
-> [    5.236787] acpi device:1b: Error installing notify handler
-> [    5.236788] acpi device:1c: Error installing notify handler
-> 
-> These failures indicate AMDISP device is incorrectly detected as ACPI 
-> Video device while it is not.
-> 
-> The seems like a regression caused by the change that converts the ACPI 
-> video device to a platform device (commit: 02c057ddefef5).
-> 
-> Issue is not observed in 6.19-rc6, and also when this change is reverted 
-> in 7.0-rc2.
-> 
-> I really appreciate your inputs on addressing this issue and helping us 
-> make progress on 7.0 rc2.
-> 
-> Steps followed to reproduce the issue:
-> 
-> 1. Apply AMDISP v9 patch series [1] on top of kernel v7.0-rc2
-> 2. Add NULL check for “dev->type” in isp_genpd_add_device() [2] (to 
-> avoid kernel panic found in v7.0-rc2)
-> 3. Build kernel with:
->      - CONFIG_AMD_ISP_PLATFORM=y
->      - CONFIG_VIDEO_AMD_ISP4_CAPTURE=m
-> 4. Install kernel on AMDISP supported system (HP ZBook Ultra G1a)
-> 5. Boot system to see the failures
-> 
-> [1] https://lore.kernel.org/all/20260302073020.148277-1-Bin.Du@amd.com/
-> [2] https://github.com/torvalds/linux/blob/master/drivers/gpu/drm/amd/ 
-> amdgpu/isp_v4_1_1.c#L132
-> 
-> Thanks,
-> Pratap
-> 
-> 
-> 
 
-It's a bit weird to see it even probe in this path in the first place. 
-acpi_video_bus_probe() getting called with the mfd device doesn't seem 
-right to me.
-
-I wonder if it's because ISP is an MFD device of GPU (and thus LNXVIDEO 
-ends up matching).
-
-Would a sensible solution be to reject mfd device types in 
-acpi_video_bus_probe()?
-
-> 
-
+Best regards,
+Krzysztof
