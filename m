@@ -1,175 +1,79 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from e234-61.smtp-out.ap-northeast-1.amazonses.com (e234-61.smtp-out.ap-northeast-1.amazonses.com [23.251.234.61])
+	(using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0D7D39903D
-	for <regressions@lists.linux.dev>; Fri,  6 Mar 2026 13:28:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9CCC3D34AD
+	for <regressions@lists.linux.dev>; Fri,  6 Mar 2026 18:10:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.251.234.61
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772803719; cv=none; b=ZjAOqLnk8YlflhrBf9GumgTnWghHzIVhx4fjhCpqtpyUlLvEvZP9qoos2RRI5KVHU0kCUE7jUD5OtpBDeUfjNnxOXyZPqxsbHaWsTjfWPoMullmklolSyDCwTro1B7Q+8MdTPpRwlc/d3SIBgZVScODCVBD8hjktbE1gAKvGtEU=
+	t=1772820643; cv=none; b=lTRkTWYzUd+ycMsY+M+rPg8cRJ8YYzcCL0lxw4f9EJn8fRixiBDWiWbIYRIG6zUPLvBLpnAcNVAK06NGCeRdKZtk9jsW1Fmq6TcsHTf9UGneuxvaIBZOERVUD1S6sQ1MxvRyyKZQAc1iGJLo+AoajpAvR/yT3owei+ofWr6tnqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772803719; c=relaxed/simple;
-	bh=t5MEZmHiOWv5PxQVBO0gx0iq3Ay3b0Mur5FWEPIyD5w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=doIWkBwgVf5oYJlUrOVMpSAXY0Xq+iXIERr4VJTCxx21BcD9H+Aktw1Md7At2sBEeu+pnycFhPprQgV2ceoE+vaercdl87hHQqO12lEhtG7aHCsrA359ams3u+NYYDj2mQ4j1tfdXIfwv+8ZoUaj6yMPm+6YgGccyqqC7BJ5H2U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RkJTRTcn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1772820643; c=relaxed/simple;
+	bh=KVLNn2ax+asM2yDOQBLsW9QcrFqP0O4tRwB/n0oWb9o=;
+	h=From:To:Cc:Subject:Message-ID:Date:MIME-Version:Content-Type; b=rom+T5EQIHq+VmJ5xUvo9xBP4Iow+R1aZ0wHyDu1pXFnzaN3fjM0fk0RWij52ok0ZoS/Ff8O1CZFGZLQQVNQ0VYQmxYbBRLevq+nfFYmtmsBzTOw1ihdspf96sjtmK6v96n4nWyA4z2sXRKqDlYsOZYuN1sr2xOVj2zafh8BumY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mgml.me; spf=pass smtp.mailfrom=send.mgml.me; dkim=pass (1024-bit key) header.d=mgml.me header.i=@mgml.me header.b=PgYiYB2A; dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b=JsPNbVlW; arc=none smtp.client-ip=23.251.234.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mgml.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=send.mgml.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RkJTRTcn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B21B0C2BCB1
-	for <regressions@lists.linux.dev>; Fri,  6 Mar 2026 13:28:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772803719;
-	bh=t5MEZmHiOWv5PxQVBO0gx0iq3Ay3b0Mur5FWEPIyD5w=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=RkJTRTcn7+v+KofZk8+7mAdluhgzWikglWmrFbf0zFMuGgEE+eASLeeI3rQJhDml4
-	 Qx90Zs9I+AyjAoGUE+SHiULputMu2Y5zMIFpaulur6UY4b50xHjwhITlxgMPfLZufW
-	 vgQi65sUAvA5PwUEBJL9Z+SIDaho9SOplO9PTgrl2i74mY/7ZlcldGm+JUSuHb+b2A
-	 OlM85Zv1cRh2fI8PBBJ5Wugco5jwOUsyL4DJE5g08MCZbyW/QzA/Hi63IckumR4vbA
-	 Y4Jb1YEl6XO/KjO/z+rFS70MFdOuzT6Gc1mBDzCAxxOa/yEGJUW9GyL7lYVU7uw06C
-	 +vz4ZbnRzM3xw==
-Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-40f1a1f77a6so2762637fac.2
-        for <regressions@lists.linux.dev>; Fri, 06 Mar 2026 05:28:39 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVQkWhlrssdtiqvlKwmul7ezsQepcKtUoOdQhfR7wfbU2flF67O2vVDYYrsNyCSrTaIODQes9bORHipDw==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yx3j1QRbDLJsxLuqvVizM4ZF/PKHz3WOfn3Yi1uapPHMWXFUGV0
-	qjPZm+PyUDZD3hFNYRqz0E4xNuPam511E6pGcaf1K7FlXyWLntLn4cMEQ543a+tGFhWk13TlhBk
-	wBsfS6UiEL1n6pSbtz32EBnZY7JhbsRI=
-X-Received: by 2002:a05:6870:506b:b0:404:3569:59ef with SMTP id
- 586e51a60fabf-416e4284629mr1177182fac.36.1772803718642; Fri, 06 Mar 2026
- 05:28:38 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=mgml.me header.i=@mgml.me header.b="PgYiYB2A";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="JsPNbVlW"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple; s=resend;
+	d=mgml.me; t=1772820640;
+	h=From:To:Cc:Subject:Message-ID:Content-Transfer-Encoding:Date:MIME-Version:Content-Type;
+	bh=KVLNn2ax+asM2yDOQBLsW9QcrFqP0O4tRwB/n0oWb9o=;
+	b=PgYiYB2AcpXGBbgGWROM32CKUrpavFKTpq3eJl7jVp7O+C8Q1ckluInjneOi+zjJ
+	jOMakibhONk90Sm8/1X13+BF3eLZMpwjLBitd8cmCJTi935drqtSn7D0Elr4FOnPVlE
+	6FDjtf7JSzki/XYnO7OutzYEcTIPPUC9LO4VIySM=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=suwteswkahkjx5z3rgaujjw4zqymtlt2; d=amazonses.com; t=1772820640;
+	h=From:To:Cc:Subject:Message-ID:Content-Transfer-Encoding:Date:MIME-Version:Content-Type:Feedback-ID;
+	bh=KVLNn2ax+asM2yDOQBLsW9QcrFqP0O4tRwB/n0oWb9o=;
+	b=JsPNbVlW+Nnw+tUyJUeNVRHjTzzFi22hlQimb3NmFV3F5Jhv0ZmP5Gj436OTOpXK
+	ggZuzsv4fKIc3QFLF9+T/fgV8CsdAomofLIR3GhYNMEUuDzhl2g1e0ePcjUVxKm74mp
+	AuhG45GZi2QzR4PAPsBwBkH60gc0k7ZFeMNEXo8U=
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+From: Kenta Akagi <k@mgml.me>
+To: regressions@lists.linux.dev
+Cc: stable@vger.kernel.org, sashal@kernel.org
+Subject: [REGRESSION] 6.6.129 tools/perf cannot build due to eddddf4ed7f6
+Message-ID: <0106019cc4583222-d98c40c9-2728-4d21-85b7-a90135726b95-000000@ap-northeast-1.amazonses.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 6 Mar 2026 18:10:40 +0000
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <007e3390-6b2b-457e-83c7-c794c5952018@amd.com> <23e8f0df-3eec-46e8-b5f1-5f417460e272@kernel.org>
- <CAJZ5v0gQK_OPyZGZDPC6WCbVtBuJKggk0Lrscmxxkq1GHiiVRQ@mail.gmail.com> <971fc64d-abef-448a-aa7d-7d4b3391f67e@kernel.org>
-In-Reply-To: <971fc64d-abef-448a-aa7d-7d4b3391f67e@kernel.org>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Fri, 6 Mar 2026 14:28:25 +0100
-X-Gmail-Original-Message-ID: <CAJZ5v0gWvtF2aUc8VhQUt6R7hb4xZ66rYaLx+aJhibig968rZQ@mail.gmail.com>
-X-Gm-Features: AaiRm5215giZCeldrH7h2CgBvzOz5O7T1l92DAMiHY0Bp9Ssx_fPBUW-rCTmAS4
-Message-ID: <CAJZ5v0gWvtF2aUc8VhQUt6R7hb4xZ66rYaLx+aJhibig968rZQ@mail.gmail.com>
-Subject: Re: [REGRESSION] AMDISP failure with kernel v7.0-rc2 due to Commit: 02c057ddefef5
-To: Mario Limonciello <superm1@kernel.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, "Nirujogi, Pratap" <pnirujog@amd.com>, W_Armin@gmx.de, lenb@kernel.org, 
-	Bin Du <bin.du@amd.com>, benjamin.chan@amd.com, king.li@amd.com, 
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Feedback-ID: :1.ap-northeast-1.SskAFE1oaJ7KCjyyJFCV37nkSRmUZttpeGoevLE2CszduPSq19CK0OWqrkMmPMemkYWmFvQfvS6+lCR9ETv8vDWvEFaQZtUQ69n4DuGGNbGH4U7i+CnKWCHWm/HpilUFxPcCpCRFiQTHPHnKlfimqanQj7AjyJ2y8XQuaQGs83Sl+MS5tJ/lS6+Uh2zwyhRo:1.ap-northeast-1.TOS0vxEE3Ar6ai29fkp2i/jb+l2iigajCGeLfF7S3sk=:AmazonSES
+X-SES-Outgoing: 2026.03.06-23.251.234.61
 
-On Fri, Mar 6, 2026 at 1:45=E2=80=AFPM Mario Limonciello <superm1@kernel.or=
-g> wrote:
->
->
->
-> On 3/6/26 6:01 AM, Rafael J. Wysocki wrote:
-> > On Fri, Mar 6, 2026 at 1:35=E2=80=AFAM Mario Limonciello (AMD) (kernel.=
-org)
-> > <superm1@kernel.org> wrote:
-> >>
-> >>
-> >>
-> >> On 3/5/2026 5:11 PM, Nirujogi, Pratap wrote:
-> >>> Hi Rafael,
-> >>>
-> >>> In kernel version 7.0-rc2, the AMDISP device reports the following
-> >>> errors when created via mfd_add_hotplug_devices.
-> >>>
-> >>> [    5.236645] ACPI: video: Video Device [GFX0] (multi-head: yes  rom=
-:
-> >>> no  post: no)
-> >>> [    5.236744] input: Video Bus as /devices/
-> >>> pci0000:00/0000:00:08.1/0000:c3:00.0/amd_isp_capture.1.auto/input/inp=
-ut21
-> >>> [    5.236779] acpi device:14: Error installing notify handler
-> >>> [    5.236782] acpi device:15: Error installing notify handler
-> >>> [    5.236783] acpi device:16: Error installing notify handler
-> >>> [    5.236784] acpi device:17: Error installing notify handler
-> >>> [    5.236785] acpi device:18: Error installing notify handler
-> >>> [    5.236786] acpi device:19: Error installing notify handler
-> >>> [    5.236786] acpi device:1a: Error installing notify handler
-> >>> [    5.236787] acpi device:1b: Error installing notify handler
-> >>> [    5.236788] acpi device:1c: Error installing notify handler
-> >>>
-> >>> These failures indicate AMDISP device is incorrectly detected as ACPI
-> >>> Video device while it is not.
-> >>>
-> >>> The seems like a regression caused by the change that converts the AC=
-PI
-> >>> video device to a platform device (commit: 02c057ddefef5).
-> >>>
-> >>> Issue is not observed in 6.19-rc6, and also when this change is rever=
-ted
-> >>> in 7.0-rc2.
-> >>>
-> >>> I really appreciate your inputs on addressing this issue and helping =
-us
-> >>> make progress on 7.0 rc2.
-> >>>
-> >>> Steps followed to reproduce the issue:
-> >>>
-> >>> 1. Apply AMDISP v9 patch series [1] on top of kernel v7.0-rc2
-> >>> 2. Add NULL check for =E2=80=9Cdev->type=E2=80=9D in isp_genpd_add_de=
-vice() [2] (to
-> >>> avoid kernel panic found in v7.0-rc2)
-> >>> 3. Build kernel with:
-> >>>       - CONFIG_AMD_ISP_PLATFORM=3Dy
-> >>>       - CONFIG_VIDEO_AMD_ISP4_CAPTURE=3Dm
-> >>> 4. Install kernel on AMDISP supported system (HP ZBook Ultra G1a)
-> >>> 5. Boot system to see the failures
-> >>>
-> >>> [1] https://lore.kernel.org/all/20260302073020.148277-1-Bin.Du@amd.co=
-m/
-> >>> [2] https://github.com/torvalds/linux/blob/master/drivers/gpu/drm/amd=
-/
-> >>> amdgpu/isp_v4_1_1.c#L132
-> >>>
-> >>> Thanks,
-> >>> Pratap
-> >>>
-> >>>
-> >>>
-> >>
-> >> It's a bit weird to see it even probe in this path in the first place.
-> >> acpi_video_bus_probe() getting called with the mfd device doesn't seem
-> >> right to me.
-> >>
-> >> I wonder if it's because ISP is an MFD device of GPU (and thus LNXVIDE=
-O
-> >> ends up matching).
-> >>
-> >> Would a sensible solution be to reject mfd device types in
-> >> acpi_video_bus_probe()?
-> >
-> > Every platform device with LNXVIDEO in the device ID list will be
-> > matched and so probed.
-> >
-> > I'm wondering how those devices get that ID though.
->
-> Yeah me too.  I was surprised an MFD device got it.
->
-> Pratap - can you figure this out before we go too far in this path?
->
-> If they really shouldn't have LNXVIDEO fixing that may be a better soluti=
-on.
+Hi,
 
-The current theory is that they share the ACPI companion with the
-"right" ACPI video bus device.  If that is confirmed (for example, by
-testing the patch posted by me earlier), I will be wondering why they
-do so.
+It seems that build of tools/perf fails due to commit=20
+eddddf4ed7f6 ("perf unwind-libdw: Fix invalid reference counts") backported=
+ in v6.6.128.
 
-If the ACPI companion sharing is necessary for some reason, maybe
-changing the type of the other devices to something like auxiliary
-devices can be considered.
+util/unwind-libdw.c: In function =E2=80=98unwind__get_entrie=
+s=E2=80=99:
+util/unwind-libdw.c:323:17: error: implicit declaration of =
+function =E2=80=98map_symbol__exit=E2=80=99; did you mean =
+=E2=80=98symbol__exit=E2=80=99? [-Wimplicit-function-declaration]
+  323 |                 map_symbol__exit(&ui->entries[i].ms);
+      |                 ^~~~~~~~~~~~~~~~
+      |                 =
+symbol__exit
 
-> >
-> > Also, is this really a mainline regression?  AMDISP patches are not in
-> > the mainline, no?
->
-> The amdgpu half of it is mainline, the other half is still on the lists.
+This backport adds a call to map_symbol__exit, but =
+upstream=20
+commit 56e144fe9826 ("perf mem_info: Add and use =
+map_symbol__exit and addr_map_symbol__exit"),=20
+which added this function,=
+ has not been backported to v6.6.
 
-Well, I mean the other part seems to be necessary to reproduce the error.
+I was able to build it by simply =
+reverting eddddf4ed7f6, but I haven't tested perf though...
 
-Also please note that this error is just a bit noisy, but it actually
-means that the probe has failed which is what we want.
+Thanks,
+Akagi
