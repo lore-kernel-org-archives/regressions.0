@@ -1,233 +1,77 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46B1A3A8754
-	for <regressions@lists.linux.dev>; Mon,  9 Mar 2026 12:23:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACBE5387595;
+	Mon,  9 Mar 2026 13:33:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773059028; cv=none; b=teorHe6873viL4nA6rATwkd1uxJMSnfVYK/uaRXFF2Us3ED0wG3sqrKLLHZVRXZNrfh2IBIBTUDTr+9zdPWixvRUF/VvAlqyqp3Gph+M93oY5UztIVfQ5UvhCWnESG8S5PW84x2hvOtf6agbmTEXRNy5cGuienkX+A8Imd+A7Xg=
+	t=1773063239; cv=none; b=jLcDxLp5eMV6dcXClPQOOUa0rHxyZuk1Vz6/vy71Yup4p0WEU1R8IiN3i6mNmg4X07wpbUOpXg0aoHeYP8N1GtxEYWG7VNtxXEIf0jqiou9sDm5bqTlFUnCBDjYmcPOErS2vny+d7x2I9fQmf+rkTiyf2LbdfONUmNntH18hVBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773059028; c=relaxed/simple;
-	bh=tWT3alte6Msk0BbtIJ6dg4j8aCYLVErX4iioeBSJP4M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PIs66nk8GMj2bhXsmypSeL5hGhW8ueLW4yIMOn++brqeFvEUWEBu2piTb96umGGhGpeQzrjUHhJUbNPsHyurqEwfTv7BW+xVOXeWGA67PfB0GDI0EHmZSKCJinmoh32Yc4X/6ujlS+dBa4Z0PrDMmE9DtHqezDSOZygp+kmOV4E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t5Cn2TQ3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1773063239; c=relaxed/simple;
+	bh=lsbKcTQtG7zwZnF6rhbOwY3nmYaQR8LdFtqe+3movFE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VmPn/4Q0+lLYQGJlDefrf4JpBwC8Mz2IEzzdFAQ5vl5Duk+RcflBkw5rsz7FBPSa3h5Ak/uqZ1q7SspB91mDJ6KaTEejMdH4BNbqe7HhGUfoTWZQ9XEqqEidR9qSQ1kJHp0U/Nu0EPeB/jXlJyx/vlb6mIE4LRedSePaskFv7BY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=V4em2hGa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t5Cn2TQ3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D7C5C2BCB4
-	for <regressions@lists.linux.dev>; Mon,  9 Mar 2026 12:23:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1773059028;
-	bh=tWT3alte6Msk0BbtIJ6dg4j8aCYLVErX4iioeBSJP4M=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=t5Cn2TQ3WgO8vSzEExd1SZ0Yb/OMFCnxLomovQUfAsBGlaqTEfnWcH0/RWFHGSjOG
-	 lE7yQJl1WXXP7owrWu+0IDAIKaagmRO/iZlgEdcnqwlkTFqyxojZHRgdLsfgBf3W+T
-	 LIfOqAYs3pT8GCXd33QLbLUivFdrAb7dlZ5OVZKNAjyQNz7HR8LjiF5X52qi1U6Unb
-	 V9ygzWEWccCkZ7ZI1kpVM0JEmZxIFFJIL8CweN/IG+U+h+rAqqIQkYsbuDz7V4yY7e
-	 B3V4ght3+5HqWe8RTV/Say+Y+1RGFYBAA4AM8szlu60yHDHoVbLuTXUPZoqoSGV2y4
-	 4cFnJ/gtdu/zw==
-Received: by mail-oa1-f51.google.com with SMTP id 586e51a60fabf-40f1ffba6a0so3800009fac.0
-        for <regressions@lists.linux.dev>; Mon, 09 Mar 2026 05:23:47 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWmnVwW2i0T+iUyNBCgk/NNP52t8kr7IS6amEnNSOsPAw6jXInUUdwc1pDg0Gv3QIoB1qhfgIzKH+M2xQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0YywLcDans5IX9YKd23QD+LoIJj5UJpf4Qa5hzc85y4x5OisxQMU
-	UWGg0y/7eggRjyk6RJDBZ99Hizp+a2e0gKnJ/cswbmBJNF0pKxrN5YmfZH1PSCJBfUjMRgwQvUX
-	vbUN2gvcFlpKBoiH/nH22ozQJqpC945w=
-X-Received: by 2002:a05:6870:670e:b0:409:7c0b:6aff with SMTP id
- 586e51a60fabf-416e452cff5mr6437992fac.43.1773059027041; Mon, 09 Mar 2026
- 05:23:47 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="V4em2hGa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0373BC2BCB0;
+	Mon,  9 Mar 2026 13:33:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1773063239;
+	bh=lsbKcTQtG7zwZnF6rhbOwY3nmYaQR8LdFtqe+3movFE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=V4em2hGa8hk+gVCNK6/4LkPZz/Suc9JGwzsn9ju8evHigMyVGs/Y5vuytnxhJ+pIe
+	 xx+2DcgxGvT41AnlS+ZFDQ46a+bLEdyJzxWama/ybhuW9gMeS+JyESpfuLR7Z3VDiQ
+	 HBihATg3sa02FEp23I0pJiAzQaTes3WPlhumvXTs=
+Date: Mon, 9 Mar 2026 14:33:56 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Pablo Neira Ayuso <pablo@netfilter.org>,
+	Sasha Levin <sashal@kernel.org>, stable@vger.kernel.org,
+	patches@lists.linux.dev, Florian Westphal <fw@strlen.de>,
+	Linux kernel regressions list <regressions@lists.linux.dev>
+Subject: Re: [PATCH 6.18 315/641] netfilter: nft_set_rbtree: validate open
+ interval overlap
+Message-ID: <2026030945-tarantula-viewless-6b65@gregkh>
+References: <20260225012348.915798704@linuxfoundation.org>
+ <20260225012356.353371017@linuxfoundation.org>
+ <aaeEd8UqYQ33Af7_@chamomile>
+ <69b9d4a7-166d-4f7e-9787-e1b96775ee19@leemhuis.info>
+ <2026030457-shivering-crucial-a99e@gregkh>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <007e3390-6b2b-457e-83c7-c794c5952018@amd.com> <23e8f0df-3eec-46e8-b5f1-5f417460e272@kernel.org>
- <CAJZ5v0gQK_OPyZGZDPC6WCbVtBuJKggk0Lrscmxxkq1GHiiVRQ@mail.gmail.com>
- <971fc64d-abef-448a-aa7d-7d4b3391f67e@kernel.org> <44b0ec66-59d0-4c73-807a-790817f22409@amd.com>
- <20cf0dc1-f1da-464b-9700-e2ce30e438e7@amd.com> <CAJZ5v0iNdTFExoupRmwJmdykdRJa1QUJXzsb+j4M1cpn1qALig@mail.gmail.com>
-In-Reply-To: <CAJZ5v0iNdTFExoupRmwJmdykdRJa1QUJXzsb+j4M1cpn1qALig@mail.gmail.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Mon, 9 Mar 2026 13:23:35 +0100
-X-Gmail-Original-Message-ID: <CAJZ5v0gR+-Y=XqNXoBrUpd9HtSRqGk2cSXBgXsp5YJRsdCTMTg@mail.gmail.com>
-X-Gm-Features: AaiRm51jBSORFjK2m4kqNEgWEBJBt_X3xAcZdami3bmKcKEGsR6L4_r3oX_mTd4
-Message-ID: <CAJZ5v0gR+-Y=XqNXoBrUpd9HtSRqGk2cSXBgXsp5YJRsdCTMTg@mail.gmail.com>
-Subject: Re: [REGRESSION] AMDISP failure with kernel v7.0-rc2 due to Commit: 02c057ddefef5
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: "Du, Bin" <bin.du@amd.com>, "Nirujogi, Pratap" <pnirujog@amd.com>, 
-	Mario Limonciello <superm1@kernel.org>, W_Armin@gmx.de, lenb@kernel.org, benjamin.chan@amd.com, 
-	king.li@amd.com, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2026030457-shivering-crucial-a99e@gregkh>
 
-On Mon, Mar 9, 2026 at 12:58=E2=80=AFPM Rafael J. Wysocki <rafael@kernel.or=
-g> wrote:
->
-> On Mon, Mar 9, 2026 at 9:11=E2=80=AFAM Du, Bin <bin.du@amd.com> wrote:
-> >
-> >
-> >
-> > On 3/9/2026 11:52 AM, Nirujogi, Pratap wrote:
-> > >
-> > >
-> > > On 3/6/2026 7:45 AM, Mario Limonciello wrote:
-> > >> Caution: This message originated from an External Source. Use proper
-> > >> caution when opening attachments, clicking links, or responding.
-> > >>
-> > >>
-> > >> On 3/6/26 6:01 AM, Rafael J. Wysocki wrote:
-> > >>> On Fri, Mar 6, 2026 at 1:35=E2=80=AFAM Mario Limonciello (AMD) (ker=
-nel.org)
-> > >>> <superm1@kernel.org> wrote:
-> > >>>>
-> > >>>>
-> > >>>>
-> > >>>> On 3/5/2026 5:11 PM, Nirujogi, Pratap wrote:
-> > >>>>> Hi Rafael,
-> > >>>>>
-> > >>>>> In kernel version 7.0-rc2, the AMDISP device reports the followin=
-g
-> > >>>>> errors when created via mfd_add_hotplug_devices.
-> > >>>>>
-> > >>>>> [    5.236645] ACPI: video: Video Device [GFX0] (multi-head: yes =
- rom:
-> > >>>>> no  post: no)
-> > >>>>> [    5.236744] input: Video Bus as /devices/
-> > >>>>> pci0000:00/0000:00:08.1/0000:c3:00.0/amd_isp_capture.1.auto/input=
-/
-> > >>>>> input21
-> > >>>>> [    5.236779] acpi device:14: Error installing notify handler
-> > >>>>> [    5.236782] acpi device:15: Error installing notify handler
-> > >>>>> [    5.236783] acpi device:16: Error installing notify handler
-> > >>>>> [    5.236784] acpi device:17: Error installing notify handler
-> > >>>>> [    5.236785] acpi device:18: Error installing notify handler
-> > >>>>> [    5.236786] acpi device:19: Error installing notify handler
-> > >>>>> [    5.236786] acpi device:1a: Error installing notify handler
-> > >>>>> [    5.236787] acpi device:1b: Error installing notify handler
-> > >>>>> [    5.236788] acpi device:1c: Error installing notify handler
-> > >>>>>
-> > >>>>> These failures indicate AMDISP device is incorrectly detected as =
-ACPI
-> > >>>>> Video device while it is not.
-> > >>>>>
-> > >>>>> The seems like a regression caused by the change that converts th=
-e
-> > >>>>> ACPI
-> > >>>>> video device to a platform device (commit: 02c057ddefef5).
-> > >>>>>
-> > >>>>> Issue is not observed in 6.19-rc6, and also when this change is
-> > >>>>> reverted
-> > >>>>> in 7.0-rc2.
-> > >>>>>
-> > >>>>> I really appreciate your inputs on addressing this issue and
-> > >>>>> helping us
-> > >>>>> make progress on 7.0 rc2.
-> > >>>>>
-> > >>>>> Steps followed to reproduce the issue:
-> > >>>>>
-> > >>>>> 1. Apply AMDISP v9 patch series [1] on top of kernel v7.0-rc2
-> > >>>>> 2. Add NULL check for =E2=80=9Cdev->type=E2=80=9D in isp_genpd_ad=
-d_device() [2] (to
-> > >>>>> avoid kernel panic found in v7.0-rc2)
-> > >>>>> 3. Build kernel with:
-> > >>>>>       - CONFIG_AMD_ISP_PLATFORM=3Dy
-> > >>>>>       - CONFIG_VIDEO_AMD_ISP4_CAPTURE=3Dm
-> > >>>>> 4. Install kernel on AMDISP supported system (HP ZBook Ultra G1a)
-> > >>>>> 5. Boot system to see the failures
-> > >>>>>
-> > >>>>> [1] https://lore.kernel.org/all/20260302073020.148277-1-
-> > >>>>> Bin.Du@amd.com/
-> > >>>>> [2] https://github.com/torvalds/linux/blob/master/drivers/gpu/drm=
-/amd/
-> > >>>>> amdgpu/isp_v4_1_1.c#L132
-> > >>>>>
-> > >>>>> Thanks,
-> > >>>>> Pratap
-> > >>>>>
-> > >>>>>
-> > >>>>>
-> > >>>>
-> > >>>> It's a bit weird to see it even probe in this path in the first pl=
-ace.
-> > >>>> acpi_video_bus_probe() getting called with the mfd device doesn't =
-seem
-> > >>>> right to me.
-> > >>>>
-> > >>>> I wonder if it's because ISP is an MFD device of GPU (and thus LNX=
-VIDEO
-> > >>>> ends up matching).
-> > >>>>
-> > >>>> Would a sensible solution be to reject mfd device types in
-> > >>>> acpi_video_bus_probe()?
-> > >>>
-> > >>> Every platform device with LNXVIDEO in the device ID list will be
-> > >>> matched and so probed.
-> > >>>
-> > >>> I'm wondering how those devices get that ID though.
-> > >>
-> > >> Yeah me too.  I was surprised an MFD device got it.
-> > >>
-> > >> Pratap - can you figure this out before we go too far in this path?
-> > >>
-> > > yes, MFD child devices in this case have the device ID as that of par=
-ent
-> > > (GPU) i.e. LNXVIDEO. Its because when no acpi_match is specified, the
-> > > MFD child devices are inheriting the parent's ACPI companion device a=
-nd
-> > > this is resulting in having the same parent's ACPI device ID.
-> > >
-> > > device_set_node(&pdev->dev, acpi_fwnode_handle(adev ?: parent));
-> > > https://github.com/torvalds/linux/blob/master/drivers/mfd/mfd-core.c#=
-L91
-> > >
-> > >> If they really shouldn't have LNXVIDEO fixing that may be a better
-> > >> solution.
-> > >>
-> > > AMD ISP related MFD devices are using the same LNXVIDEO device ID eve=
-n
-> > > on 6.19-rc4, no issues observed earlier. I can confirm automatic AMD =
-ISP
-> > > device probe works and also camera works on 7.0-rc2 if I avoid
-> > > inheriting ACPI companion of the parent (GPU) in the mfd-core.c
-> > >
-> > > // device_set_node(&pdev->dev, acpi_fwnode_handle(adev ?: parent));
-> > > https://github.com/torvalds/linux/blob/master/drivers/mfd/mfd-core.c#=
-L91
-> > >
-> > > But why this is an issue on 7.0-rc2 while it works on 6.19-rc4 needs =
-to
-> > > be root caused.
-> > >
-> >
-> > Possible cause may be.
-> > 1. On 6.x (without commit 02c057ddefef5), the ACPI video driver was
-> > registered as an acpi_driver (static struct acpi_driver acpi_video_bus)
-> > ,  it lives on the ACPI bus (acpi_bus_type). It only binds to struct
-> > acpi_device objects in the ACPI namespace. MFD children of GFX
-> > (amd_isp_capture, amd_isp_i2c_designware, amdisp-pinctrl) are platform
-> > devices on the platform bus, they are completely invisible to
-> > acpi_driver, so there is no chance of the ACPI video driver matching an
-> > MFD child.
-> > 2. On 7.0 (with commit 02c057ddefef5), the ACPI video driver was
-> > converted to a platform_driver (static struct platform_driver
-> > acpi_video_bus), it lives on the platform bus. When the kernel register=
-s
-> > a new platform device, it checks ALL registered platform drivers to see
-> > if any match. The matching logic for acpi_match_table works like this:
-> > - Get the platform device's ACPI companion (ACPI_COMPANION(dev))
-> > - Check if the companion's HID/CID matches any entry in acpi_match_tabl=
-e
-> > - If yes, the driver probes the device
->
-> It does, but then the probe fails.  This is the problem that has been
-> reported to start with.
+On Wed, Mar 04, 2026 at 10:04:40AM +0100, Greg Kroah-Hartman wrote:
+> On Wed, Mar 04, 2026 at 08:29:16AM +0100, Thorsten Leemhuis wrote:
+> > On 3/4/26 02:01, Pablo Neira Ayuso wrote:
+> > > 
+> > > Would it be possible to revert this patch in -stable 6.18?
+> > > 
+> > > There is a bug in userspace nftables 1.1.6 that gets amplified by this
+> > > patch, resulting in rejecting large interval sets with -stable 6.18.
+> > 
+> > Sasha, I wonder if it might be worth the risk squeezing this revert into
+> > 6.18.16 and 6.19.6, as there are various reports coming in about the
+> > regression that Pablo mentioned:
+> > 
+> > https://bugzilla.kernel.org/show_bug.cgi?id=221152
+> > https://bugzilla.kernel.org/show_bug.cgi?id=221158
+> > https://lore.kernel.org/all/9d110d860c0c7e110d018ea53a7666eba275da20.camel@gmail.com/
+> > https://lore.kernel.org/all/2a780701-f1e4-4ff4-b796-889f7ee19ead@crc.id.au/
+> > 
+> > I think I saw a at least two more.
+> 
+> Let's wait for the next cycle, this one is "big enough" as is, I can do
+> a "quick" release with just a revert here for this if needed in a few
+> days.
 
-I guess I know what's going on.
+Sorry for the delay, now queued up.
 
-Every device that shares an ACPI companion with the ACPI video bus
-device advertises itself as "LNXVIDEO", so udev looks for a module
-matching that device ID and since the ACPI video driver is loaded, it
-will not attempt to load anything else.
-
-It may be viable to use an auxiliary device for ACPI video bus device
-representation, let me have a look at that.
+greg k-h
