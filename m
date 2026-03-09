@@ -1,230 +1,223 @@
-Received: from mail-oa1-f46.google.com (mail-oa1-f46.google.com [209.85.160.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0A913A6EEA
-	for <regressions@lists.linux.dev>; Mon,  9 Mar 2026 11:54:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.46
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773057280; cv=pass; b=B2/y0DI7sumcefNF1XEyMmrF7L9yNup6xY2mgSjJtkWYiFy9looTMHjiX5nYGM4XjtREM1AgzkO+H3KACr+drABKdxqOr5FLHtfMm4dk0Qu9vBfQVuXyGHvvxzbY+VTtq7yAGri9X5no8wPndCeXVXbIk4+D+zju5kSjlFOcGVc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773057280; c=relaxed/simple;
-	bh=ZRP4v7PWPX+zmV8EvqiA/mk3c8DRZ7Oi6bAtzLpOn+E=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C66E39E16C
+	for <regressions@lists.linux.dev>; Mon,  9 Mar 2026 11:58:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773057498; cv=none; b=FrLhFjdqgz4Qf5k438upe2582wEQq3Rg5XyYkVWSlANhtlcNSO1wWB0OVyV+J+CH+tsIYN5d9LNXQkiolhTz+0LfHkDTWA40o8/HV84LmSCJyb/GF24owx64aj+bM1ff/EZHwkSqOv1toOVziT9KFu2xNNPkfr2wO1vOrtZldRI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773057498; c=relaxed/simple;
+	bh=2gI7Yjc5NAvinWUylak3mIquzVHXb1csOEJHFOpP6qI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mL5qYzEhYFfAZ2zeKGQtmmdWgd8SXG9LxfPoAJW2mPp0dnOuY0KLfulqJXJVDFJbAquAXglTL1YWRG336T1loRzrqbkgIPfuBp+czPqlAcq9RwXxCy91051LRKl1pAjiZwmsKzjM7urkOXUHzKXvh+sI4nHiRcc5JQWXzwA7/Yw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PbaaiM6D; arc=pass smtp.client-ip=209.85.160.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=mEYSwAmpzXyRS0R2xXGGA9rZlVd+/IH7c1Wu+wa2cNV0FFOSHEMWTCDBYw6BqLeQjzknzMbm6wXnEciaNGazEFs2kjtxPWfoiu45PW+OxOG4ToxjaLiLnEb1CA+kfKypHf50ZrFhQOP/oNZ3wOlYcopd+h2FE+p6+FjfgkCb9Dc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WBT5m1gM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PbaaiM6D"
-Received: by mail-oa1-f46.google.com with SMTP id 586e51a60fabf-4042905015cso4056986fac.0
-        for <regressions@lists.linux.dev>; Mon, 09 Mar 2026 04:54:38 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1773057277; cv=none;
-        d=google.com; s=arc-20240605;
-        b=kNxw8OUPOtyWljCaZFUBU9EuqTRZhkKvr5fhMBaxVe9NZBH3JfzXuAOogOjzM/FbZ5
-         fsvqT93OcHzyhjANUdN1bWOL0tFre4VEG3NYrScb7Bhg5HpDVMdUXEUKAVwMoWWq77fc
-         Bu/x9lyfD0tW6wVSoddffSWxlAd4SyVR/bghGxlI0+8rr55lbfgmMrVAj/R2TCzh7PAd
-         cYjcFLLIvs8EVAly6t6ban7g5bwbJLWjQ3CD6VmyM/W5KKuohqIepd3hHWn4PF4QMfYX
-         PCa6OaM1763cPrbcjcJg52uZxlyjN0SQ7GON0j0JK7BjWffPMRzWO5LygjZ8TvGqpoFI
-         BYYA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=ZRP4v7PWPX+zmV8EvqiA/mk3c8DRZ7Oi6bAtzLpOn+E=;
-        fh=l/l/KzrZpG1UVObj9tm4PcyFrrRNlTjFe3zHPFnR40U=;
-        b=Q9kSf3AtGKwbzIFytpbUE8IlohQh6ov5TIw5yBqBOSBKrN+/oCf7eGAO7rgctGSztx
-         7TrO1Y0hzFAqE+HFUPOpCNPwSLCLQ0/eWfeLigUUK6omv0EZGNAynI6Eh0MQqyUGlFjm
-         Rb8qqlwd6pR0J/QJADz930V4zFUVpdA91ITTW3HH9AS1gYCsrOrE1ZF0rngYzSEHzX9z
-         fa7V0tfjZN+aWD0tnGNkFUVdLLivG3EyNoRrPjpajJsC/H19mJpYjEJm7mKoB25qKJhY
-         9GtekG8xpfidyfB33cxFUB4j0EyU6hgIbGvr3oSXKWxayb3u7YeYb4R2Mcb80xj7Arj+
-         /SpA==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773057277; x=1773662077; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZRP4v7PWPX+zmV8EvqiA/mk3c8DRZ7Oi6bAtzLpOn+E=;
-        b=PbaaiM6DFKvPjEz3ylan0GC5N5BZ/1Ny8Q2on2qFFsFx/m/2FV9ibJ5JlvqZwKXmcT
-         9i3he60ql6M3gQvO5p06DNjMqDL+Zt+/kY/zxakF41KE43GlY5AGlpskQnHQyBKTpNz8
-         i6CWJ98IopNz6KBF8wUK+bq/qy2tzCzWur3ZSNR+IlM87GdvfO7oG61v0XFIY4/uqt88
-         gkXfiO0Gpv+FwjQBVos5ZJlPoJlFXvi2QJ3j3M8cfcOEegGgGrFqebCBp+ZDrnkSVaW8
-         NwbJtV21DkV2f9Fd1b+kEnQcLN5Z45xXwSO2OUeMwC25DH6YUPvnIJg7jwNXV7x5i0uV
-         1XOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773057277; x=1773662077;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=ZRP4v7PWPX+zmV8EvqiA/mk3c8DRZ7Oi6bAtzLpOn+E=;
-        b=oiOJat/7t93DN/JJ3pUX6SzLQumjeDQaeBeSaMIKMDiKZcF3qbWuoOQzY4j26mLHPH
-         wdrojtwUQPVH8uZOc/lstLvy6mR6f3VYn3dXAmz6at2zsPomHgP+IJtTnI5olYoO4Z+0
-         WuieW+mG/S2QkyXJPQgIzNyySfCgBXnybIL7UyXJwz5b2rg/HwetpQJZ2WAgUo+n/YTP
-         LO8KxKdeUC7wQraQZe6SxazTofOJo34So0JnfbtBIT/LwilENP9wlIRvFrQZdxQ7mvZN
-         5nIo2eI3ArXmMC8rrd47YcteqyZxLLRa3g5I7XHw7C4VFjvXqfzhrhHSLHw8CBkX8RZv
-         VUIA==
-X-Forwarded-Encrypted: i=1; AJvYcCWBZMyIquKiwpZBilzjctDNgiYmPfd4SQOlcrthVR6eq8LfmVs1pZ8d67qTjsIGA9SLE2i2L5K55WhWJw==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwZjYImlrjQ/RyV6ITKynHaw06fTvc+OhWTRG5RBGg50gIPQg32
-	tNTW8PXN11dERx8xWKwE23fIyM5V7PblImQIDj3AAuzJb1+8FP5kcHy3F5phMkXUAv5AlUZ62EG
-	s5pfTA8Tk+0j1EU7u54muQ5B8ltvGBB8=
-X-Gm-Gg: ATEYQzz3mxMIi5oz+8/dgsq1+WTAA/iDIktEt9gxy9pzhgxtaP+OmDdlazp1YyWu0xn
-	5gTPf7kvmRoSItMpEDI0RsasXbccQwJ7g9lIvUR9W2y4oenNMK0Prxsy4cTIazpWftsNSnSPIPP
-	mFcfFcwDoUR9r9w79imbxjz6kYaBh67aKfjo85pIKInE2RokLitzvLImFHJQJU7d3UqSgPc0INV
-	qBePnvl6zCF/ULknogDx/5FcwxlvZACqWt1jd5NdTZq5w39UkvRq7cwcUzRzzG5HKEfA5oaRy92
-	4bqS1jKVkf4kzG/09tjN
-X-Received: by 2002:a05:6870:37ce:b0:3d2:4319:38eb with SMTP id
- 586e51a60fabf-416e448be4amr6727108fac.47.1773057277508; Mon, 09 Mar 2026
- 04:54:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WBT5m1gM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16B99C4CEF7
+	for <regressions@lists.linux.dev>; Mon,  9 Mar 2026 11:58:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1773057498;
+	bh=2gI7Yjc5NAvinWUylak3mIquzVHXb1csOEJHFOpP6qI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=WBT5m1gMEJLrTxF+4rQ1z4cVP5+qoLQD7IxK2PBbQ7vk6Zz0UirR8mMeV2+dGQsqR
+	 OpMqLgA+F3y4DV5YY+5o9ctlTqzyeUzbg/gzPcZC6ugKqb76SwNg0mOk9AHsxHrHoD
+	 kuqYzU4uGIH7BcZazZxnqDbFYkRHsUgSWSAGLANPscxglQ9Rf75P8F0W97HGgz5D+0
+	 yODivjrofGn2AoOa2NZMYmusZWpx8ZHeEFS7Xvwhn+xqG7oO5IJmnyc+r4IibKyfbv
+	 Lvn6SUxqlUdHneUVyVBtvI3wHlLAaEuTk4kt6xJnhTk6+wIxeeGjikqBvNfNsPY8Tq
+	 IAkaQtaYVxOQQ==
+Received: by mail-oi1-f171.google.com with SMTP id 5614622812f47-464bba3a9easo7699918b6e.0
+        for <regressions@lists.linux.dev>; Mon, 09 Mar 2026 04:58:18 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWSChTkSh1pfoDKUjB31PYO3mSEm7zRo0A+ro8wbXo8Zx2ZtzQ2qQb8Sku9aOi6ygTXjp8aZMl3wXwkXA==@lists.linux.dev
+X-Gm-Message-State: AOJu0YyDl4a3qSmtpmbUfMlhjjWQwBS2uc0ec8NALj22IG1lBPquwpqS
+	bnTM9o0nM4VfHL7PI5NVRJ4nIkHbY/TBKmhkqWyeo/wyzb5OVaWgAT7uWmhxKaS7nAzbEcTEqTt
+	ZtV9QBTtJo59B5f0kc/cPZkHZk8ipZMI=
+X-Received: by 2002:a05:6808:3025:b0:45e:d827:2d73 with SMTP id
+ 5614622812f47-466dca38648mr6205531b6e.16.1773057497220; Mon, 09 Mar 2026
+ 04:58:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CANkKV92bTD11PCXYzz60WSxcP-0UCM8xtnY4_WraEwQx6TMjaw@mail.gmail.com>
- <CANkKV91Zfp_Bn_koM=Tb5vHQbog2Ja72C819aL-49kQ6PWA_Ow@mail.gmail.com>
- <CANkKV93wfs7oxU8kiyPWeafOs+ugpZSPLQrea7wtoSuGEG+pPw@mail.gmail.com> <68d90523-33dc-451f-a825-72eaa1c4bcb8@leemhuis.info>
-In-Reply-To: <68d90523-33dc-451f-a825-72eaa1c4bcb8@leemhuis.info>
-From: =?UTF-8?B?UsOhY3ogTcOhdMOp?= <raczm0812@gmail.com>
-Date: Mon, 9 Mar 2026 12:54:25 +0100
-X-Gm-Features: AaiRm51LDGipFhqZVVF8l-P-IJc1_ce37qNAFaXZWS4J57r1zOIpXrOgouSBTr0
-Message-ID: <CANkKV91attPiZ4+6DQKcgG10apUbF6k5hs7aJBrfsnfc5jQCew@mail.gmail.com>
-Subject: Re: [6.18.] ThinkPad T14 Gen 2 AMD (LEN2073) - Synaptics touchpad
- remains PS/2, intertouch=1 ineffective, lost sync events
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: linux-input@vger.kernel.org, linux-i2c@vger.kernel.org, 
-	Linux kernel regressions list <regressions@lists.linux.dev>
+References: <007e3390-6b2b-457e-83c7-c794c5952018@amd.com> <23e8f0df-3eec-46e8-b5f1-5f417460e272@kernel.org>
+ <CAJZ5v0gQK_OPyZGZDPC6WCbVtBuJKggk0Lrscmxxkq1GHiiVRQ@mail.gmail.com>
+ <971fc64d-abef-448a-aa7d-7d4b3391f67e@kernel.org> <44b0ec66-59d0-4c73-807a-790817f22409@amd.com>
+ <20cf0dc1-f1da-464b-9700-e2ce30e438e7@amd.com>
+In-Reply-To: <20cf0dc1-f1da-464b-9700-e2ce30e438e7@amd.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Mon, 9 Mar 2026 12:58:04 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0iNdTFExoupRmwJmdykdRJa1QUJXzsb+j4M1cpn1qALig@mail.gmail.com>
+X-Gm-Features: AaiRm50iawWOuCu7hmav7E_lB9A1F0LE9lRU-OUy93uItjEVmUhDVKDI8mSanAk
+Message-ID: <CAJZ5v0iNdTFExoupRmwJmdykdRJa1QUJXzsb+j4M1cpn1qALig@mail.gmail.com>
+Subject: Re: [REGRESSION] AMDISP failure with kernel v7.0-rc2 due to Commit: 02c057ddefef5
+To: "Du, Bin" <bin.du@amd.com>
+Cc: "Nirujogi, Pratap" <pnirujog@amd.com>, Mario Limonciello <superm1@kernel.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, W_Armin@gmx.de, lenb@kernel.org, benjamin.chan@amd.com, 
+	king.li@amd.com, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	regressions@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Thorsten,
-
-Thanks for the response.
-
-I have not yet tested with 7.0-rc, but I will try building and booting the
-latest mainline release candidate and report whether the issue is still
-present.
-
-One additional observation: the touchpad PNP ID on this system is
-LEN2073. I noticed that this ID does not appear in the Synaptics SMBus
-whitelist in drivers/input/mouse/synaptics.c.
-
-Because of this I am wondering whether the device might simply be
-missing from the whitelist rather than this being a regression.
-
-I'll first verify the behaviour on 7.0-rc and then investigate further
-(if needed I can also attempt a bisect).
-
-Best regards,
-Mate
-
-Thorsten Leemhuis <regressions@leemhuis.info> ezt =C3=ADrta (id=C5=91pont: =
-2026.
-m=C3=A1rc. 9., H, 9:12):
+On Mon, Mar 9, 2026 at 9:11=E2=80=AFAM Du, Bin <bin.du@amd.com> wrote:
 >
-> Hi!
 >
-> On 3/5/26 19:07, R=C3=A1cz M=C3=A1t=C3=A9 wrote:
-> >
-> > I did some additional checks on my system with kernel 6.18.13-200.fc43.=
-x86_64:
 >
-> Have you tried if 7.0-rc is still affected?
+> On 3/9/2026 11:52 AM, Nirujogi, Pratap wrote:
+> >
+> >
+> > On 3/6/2026 7:45 AM, Mario Limonciello wrote:
+> >> Caution: This message originated from an External Source. Use proper
+> >> caution when opening attachments, clicking links, or responding.
+> >>
+> >>
+> >> On 3/6/26 6:01 AM, Rafael J. Wysocki wrote:
+> >>> On Fri, Mar 6, 2026 at 1:35=E2=80=AFAM Mario Limonciello (AMD) (kerne=
+l.org)
+> >>> <superm1@kernel.org> wrote:
+> >>>>
+> >>>>
+> >>>>
+> >>>> On 3/5/2026 5:11 PM, Nirujogi, Pratap wrote:
+> >>>>> Hi Rafael,
+> >>>>>
+> >>>>> In kernel version 7.0-rc2, the AMDISP device reports the following
+> >>>>> errors when created via mfd_add_hotplug_devices.
+> >>>>>
+> >>>>> [    5.236645] ACPI: video: Video Device [GFX0] (multi-head: yes  r=
+om:
+> >>>>> no  post: no)
+> >>>>> [    5.236744] input: Video Bus as /devices/
+> >>>>> pci0000:00/0000:00:08.1/0000:c3:00.0/amd_isp_capture.1.auto/input/
+> >>>>> input21
+> >>>>> [    5.236779] acpi device:14: Error installing notify handler
+> >>>>> [    5.236782] acpi device:15: Error installing notify handler
+> >>>>> [    5.236783] acpi device:16: Error installing notify handler
+> >>>>> [    5.236784] acpi device:17: Error installing notify handler
+> >>>>> [    5.236785] acpi device:18: Error installing notify handler
+> >>>>> [    5.236786] acpi device:19: Error installing notify handler
+> >>>>> [    5.236786] acpi device:1a: Error installing notify handler
+> >>>>> [    5.236787] acpi device:1b: Error installing notify handler
+> >>>>> [    5.236788] acpi device:1c: Error installing notify handler
+> >>>>>
+> >>>>> These failures indicate AMDISP device is incorrectly detected as AC=
+PI
+> >>>>> Video device while it is not.
+> >>>>>
+> >>>>> The seems like a regression caused by the change that converts the
+> >>>>> ACPI
+> >>>>> video device to a platform device (commit: 02c057ddefef5).
+> >>>>>
+> >>>>> Issue is not observed in 6.19-rc6, and also when this change is
+> >>>>> reverted
+> >>>>> in 7.0-rc2.
+> >>>>>
+> >>>>> I really appreciate your inputs on addressing this issue and
+> >>>>> helping us
+> >>>>> make progress on 7.0 rc2.
+> >>>>>
+> >>>>> Steps followed to reproduce the issue:
+> >>>>>
+> >>>>> 1. Apply AMDISP v9 patch series [1] on top of kernel v7.0-rc2
+> >>>>> 2. Add NULL check for =E2=80=9Cdev->type=E2=80=9D in isp_genpd_add_=
+device() [2] (to
+> >>>>> avoid kernel panic found in v7.0-rc2)
+> >>>>> 3. Build kernel with:
+> >>>>>       - CONFIG_AMD_ISP_PLATFORM=3Dy
+> >>>>>       - CONFIG_VIDEO_AMD_ISP4_CAPTURE=3Dm
+> >>>>> 4. Install kernel on AMDISP supported system (HP ZBook Ultra G1a)
+> >>>>> 5. Boot system to see the failures
+> >>>>>
+> >>>>> [1] https://lore.kernel.org/all/20260302073020.148277-1-
+> >>>>> Bin.Du@amd.com/
+> >>>>> [2] https://github.com/torvalds/linux/blob/master/drivers/gpu/drm/a=
+md/
+> >>>>> amdgpu/isp_v4_1_1.c#L132
+> >>>>>
+> >>>>> Thanks,
+> >>>>> Pratap
+> >>>>>
+> >>>>>
+> >>>>>
+> >>>>
+> >>>> It's a bit weird to see it even probe in this path in the first plac=
+e.
+> >>>> acpi_video_bus_probe() getting called with the mfd device doesn't se=
+em
+> >>>> right to me.
+> >>>>
+> >>>> I wonder if it's because ISP is an MFD device of GPU (and thus LNXVI=
+DEO
+> >>>> ends up matching).
+> >>>>
+> >>>> Would a sensible solution be to reject mfd device types in
+> >>>> acpi_video_bus_probe()?
+> >>>
+> >>> Every platform device with LNXVIDEO in the device ID list will be
+> >>> matched and so probed.
+> >>>
+> >>> I'm wondering how those devices get that ID though.
+> >>
+> >> Yeah me too.  I was surprised an MFD device got it.
+> >>
+> >> Pratap - can you figure this out before we go too far in this path?
+> >>
+> > yes, MFD child devices in this case have the device ID as that of paren=
+t
+> > (GPU) i.e. LNXVIDEO. Its because when no acpi_match is specified, the
+> > MFD child devices are inheriting the parent's ACPI companion device and
+> > this is resulting in having the same parent's ACPI device ID.
+> >
+> > device_set_node(&pdev->dev, acpi_fwnode_handle(adev ?: parent));
+> > https://github.com/torvalds/linux/blob/master/drivers/mfd/mfd-core.c#L9=
+1
+> >
+> >> If they really shouldn't have LNXVIDEO fixing that may be a better
+> >> solution.
+> >>
+> > AMD ISP related MFD devices are using the same LNXVIDEO device ID even
+> > on 6.19-rc4, no issues observed earlier. I can confirm automatic AMD IS=
+P
+> > device probe works and also camera works on 7.0-rc2 if I avoid
+> > inheriting ACPI companion of the parent (GPU) in the mfd-core.c
+> >
+> > // device_set_node(&pdev->dev, acpi_fwnode_handle(adev ?: parent));
+> > https://github.com/torvalds/linux/blob/master/drivers/mfd/mfd-core.c#L9=
+1
+> >
+> > But why this is an issue on 7.0-rc2 while it works on 6.19-rc4 needs to
+> > be root caused.
+> >
 >
-> And if it is: could you bisect? See
-> https://docs.kernel.org/admin-guide/bug-bisect.html
-> for details. Without a bisection developers developers from both
-> subsystems involved (i2c, input) might not look into this, as everyone
-> will suspect it might be some change to the other subsystems that causes
-> this.
->
-> Ciao, Thorsten
->
-> > 1. Kernel configuration (relevant parts):
-> >
-> > $ grep -i "RMI\|SMBus" /boot/config-$(uname -r)
-> > CONFIG_MOUSE_PS2_SYNAPTICS_SMBUS=3Dy
-> > CONFIG_RMI4_CORE=3Dm
-> > CONFIG_RMI4_I2C=3Dm
-> > CONFIG_RMI4_SMB=3Dm
-> > CONFIG_HID_RMI=3Dm
-> > CONFIG_I2C_HID=3Dy
-> > CONFIG_I2C_HID_ACPI=3Dm
-> >
-> > 2. dmesg output (filtered):
-> >
-> > [ 1.615300] psmouse serio1: synaptics: Trying to set up SMBus access
-> > [ 1.618151] psmouse serio1: synaptics: SMbus companion is not ready yet
-> > [ 17.949336] psmouse serio1: TouchPad at isa0060/serio1/input0 lost
-> > sync at byte 1
-> > [ 17.962506] psmouse serio1: issuing reconnect request
-> > (repeats multiple times)
-> >
-> > 3. libinput reports:
-> >
-> > $ sudo libinput list-devices | grep -i SynPS
-> > Device: SynPS/2 Synaptics TouchPad
-> >
-> > Interpretation:
-> >
-> > - The touchpad is recognized as a SynPS/2 device, i.e., fallback PS/2 m=
-ode.
-> > - SMBus/RMI4 driver stack does not get loaded, despite the kernel
-> > config enabling modules.
-> > - The "SMBus companion is not ready yet" messages indicate that
-> > psmouse attempts SMBus access but cannot reach the device.
-> > - I2C controllers are functional, yet the touchpad does not enumerate
-> > as an I2C HID device.
-> >
-> > Workarounds:
-> >
-> > - Using psmouse.proto=3Dimps avoids lost sync events, confirming
-> > fallback to generic PS/2 handling.
-> >
-> > Observation regarding previous reports:
-> >
-> > - Unlike the 2021 report on ThinkPad P14s Gen 2 (AMD), I do not see
-> > any "bad SMBus base address" messages in dmesg.
-> > - The kernel attempts SMBus access, but fails because the RMI4/hid-rmi
-> > stack does not initialize. The device simply falls back to PS/2 mode.
-> > - Therefore, this does not appear to be the same base address issue as
-> > the earlier P14s case.
-> >
-> > Conclusion:
-> >
-> > - Behavior strongly suggests a missing DMI quirk or regression in the
-> > SMBus detection logic in combination with i2c_piix4 on this Lenovo
-> > ThinkPad T14 Gen 2 (AMD) with LEN2073 touchpad.
-> > - This is reproducible on multiple 6.18.x kernel versions on Fedora 43
-> > stock kernels.
-> >
-> > I can provide full dmesg, libinput outputs, and acpidump if required.
-> >
-> > Best regards,
-> > Mate Racz
-> >
-> > R=C3=A1cz M=C3=A1t=C3=A9 <raczm0812@gmail.com> ezt =C3=ADrta (id=C5=91p=
-ont: 2026. m=C3=A1rc. 4., Sze, 16:02):
-> >>
-> >> This might be related to the earlier report from 2021:
-> >>
-> >> https://lore.kernel.org/linux-input/3d6f7f74-3214-4c03-b352-a2a0d27ea4=
-2b@amd.com/
-> >>
-> >> and a similar report from 2025:
-> >>
-> >> https://lore.kernel.org/linux-input/b2d0af40-876e-4a2d-99a2-236b583e94=
-97@gmail.com/
-> >>
-> >> The 2021 report describes incorrect SMBus address detection with
-> >> i2c_piix4 on ThinkPad P14s Gen 2 (AMD), resulting in RMI4/SMBus not
-> >> functioning correctly and the device remaining in PS/2 mode.
-> >>
-> >> On my system (LEN2073), the behaviour appears very similar:
-> >> - intertouch has no effect
-> >> - "SMBus companion is not ready yet" in dmesg
-> >> - device stays in PS/2 mode
-> >>
-> >> It seems possible that the same underlying piix4 SMBus detection
-> >> issue is still present.
->
+> Possible cause may be.
+> 1. On 6.x (without commit 02c057ddefef5), the ACPI video driver was
+> registered as an acpi_driver (static struct acpi_driver acpi_video_bus)
+> ,  it lives on the ACPI bus (acpi_bus_type). It only binds to struct
+> acpi_device objects in the ACPI namespace. MFD children of GFX
+> (amd_isp_capture, amd_isp_i2c_designware, amdisp-pinctrl) are platform
+> devices on the platform bus, they are completely invisible to
+> acpi_driver, so there is no chance of the ACPI video driver matching an
+> MFD child.
+> 2. On 7.0 (with commit 02c057ddefef5), the ACPI video driver was
+> converted to a platform_driver (static struct platform_driver
+> acpi_video_bus), it lives on the platform bus. When the kernel registers
+> a new platform device, it checks ALL registered platform drivers to see
+> if any match. The matching logic for acpi_match_table works like this:
+> - Get the platform device's ACPI companion (ACPI_COMPANION(dev))
+> - Check if the companion's HID/CID matches any entry in acpi_match_table
+> - If yes, the driver probes the device
+
+It does, but then the probe fails.  This is the problem that has been
+reported to start with.
+
+> amd_isp_capture, amd_isp_i2c_designware, and amdisp-pinctrl are MFD
+> children of GFX and inherit their parent's ACPI companion, which uses
+> the HID "LNXVIDEO". As a result, all these components will match with
+> the ACPI video driver. Consequently, this issue impacts not only
+> amd_isp_capture but also the upstreamed driver amd_isp_i2c_designware
+> (located in drivers/i2c/busses/i2c-designware-amdisp.c under the
+> I2C_DESIGNWARE_AMDISP config) and amdisp-pinctrl (found in
+> drivers/pinctrl/pinctrl-amdisp.c under the PINCTRL_AMDISP config).
+
+Why is inheriting the parent's ACPI node regarded as a good idea?
