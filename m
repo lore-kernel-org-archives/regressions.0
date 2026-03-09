@@ -1,139 +1,250 @@
-Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from CO1PR03CU002.outbound.protection.outlook.com (mail-westus2azon11010058.outbound.protection.outlook.com [52.101.46.58])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D50136C0BC
-	for <regressions@lists.linux.dev>; Sun,  8 Mar 2026 09:57:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.128.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4D18CA45
+	for <regressions@lists.linux.dev>; Mon,  9 Mar 2026 03:53:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.46.58
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772963875; cv=pass; b=dhVyFYkoJ8qteV/z+iH+Ay8kK0NWQbEVNHACPFuNJE+8ZHGnUqTv7VuoNaVrt7mX9eVAHGvAq/ClkL/2vpaMPeDbwqC9AE/Lt6I9VogPY6SwAYpnSyI8STO7t8Ba4vNUxTZRdhx+6vup/O91bauIZy7AaxV8fM0p4m/DHVvhejk=
+	t=1773028382; cv=fail; b=OSECEys+q0h6uKz79oG434DEIv1Fhohnyz3y4/YLZrQDt7XMBN2fjr7H1wXYPzKARSqQkcdF2ARTu2nYxCryI7mYSQJ1pAwvVOHelW0nE9I8y+Jcb55QHfpsMm/8vQ7cv46rBmDkiaw+EPLa5CIveNNBcKkTbTWuteQyF/CFmOg=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772963875; c=relaxed/simple;
-	bh=Vvxd/ab6l+0dULFpMMR+i2N7Xct9SlvBw5IaFdtl7/s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eXC8/+V5E0Nn4UcGkx/X+ak8sR65yju6gOBdWGBDPSUUuuGSAJ9UYwDPS4DJ7aOaiE7th1eCE1jgkRjwRMi3GzyPn6WfN/71nBSUUs4nfmne5Da2G8hPNbytHFx0xFPELQXsO0/b8o5e38tT9CLtnHIKLe+mqQJ9Qop3O41sZnQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e2yrTBTI; arc=pass smtp.client-ip=209.85.128.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1773028382; c=relaxed/simple;
+	bh=7Dk+pQw89QcETjKStNbPkydnhmxiV0E+Co5Lm2bI8U0=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=B+NH6/fz5D8kQCwtTKvy5eIW3cszUeZvL9tJhxO5d3ScqPGiZT6hMLhZNmIF6tU8PbaK93f2bCX+DF2+ZsRP/rEqD5UY7i8jCJQ7625pvcyjcnh29aF7QNuJokaIU+L/G1APIsU7peBXm3nRBY3N9DcpFPMaTqM7i1zrRbLO9Qg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=E8wcyqBm; arc=fail smtp.client-ip=52.101.46.58
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e2yrTBTI"
-Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-798617c0ad5so59200527b3.1
-        for <regressions@lists.linux.dev>; Sun, 08 Mar 2026 01:57:54 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1772963873; cv=none;
-        d=google.com; s=arc-20240605;
-        b=Uv636vP84DsTG52pr5VHj5eUHM3Fi3dRUp5wyGx5RNwczGR7V30uQf8TuQ7BB3FUDK
-         CoIELLg1wat6mKTlPSPkzit02LsW0+P/LVCe2Tfb6wFFCiqpKItt/TR85GKIG0PtV46x
-         11qeL5D+pozBGf9auUVerYNZxh8E3COPAlX06O0B8eWpH+qwKE5C4+jDPJha4EU1t/yr
-         sgKmTNTLo3jURAf/8iWH2K7bWowmdf0+6B2mGz/NXDhnVVB8k0Dbyi7Fx78+lWg1Ddca
-         xl3MFzOIeK91wrR/hVT3DXKXH88yF+wI98vv7bZj8lLo4bL69lzYAFFE4tCr135mvzeq
-         gwHQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=OHApVhRpgBms4jT3GrxYX42NYRA/ImfA8E/bLAmLCdA=;
-        fh=h+JjZ+OYSYfoq+InP+qhlASAoJpl+mDwN2hhhYynYio=;
-        b=jK5lAocqe86dMAg9vAjqVjCouz2keS/tiqALwJfzKH1lugxGst8BaNhGGLDXgoO1kT
-         qX0lJIAk3pAUbLSgQpL4OCINlCekV6cBGal5K3hegYRIWwPwCdw6bVYYKE/+fhFhJtQi
-         oszz63dkAmwyc7D1goHJ6c8Mn2PqHVIJ3lzOdMa+9oXCvZT/EVyKj00LS4/g7K8CJ423
-         dzhBrJnG+Li5BAoe+67VqQFNNm03y6tETeEKxZx6Ml+3hmnBxUVYmgAQ8qjTvms/iR4a
-         Bf7YWaEvdxooEiJvNbd6axU1QZQS9SZ5esWFyWqC5IXhHC5dWE9f+Ojdb+kjIzM4Wv3Q
-         GtCA==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1772963873; x=1773568673; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=OHApVhRpgBms4jT3GrxYX42NYRA/ImfA8E/bLAmLCdA=;
-        b=e2yrTBTIQcr1f6aevvIlSEotZfFSEQKTf6sQA3pvrFt2qUv/g050D3ApU6CXbJ1yIi
-         bkDu3SNdinYIiAPyUabkcnKnrCN0Z0sV8plYaDnDWChZZ6BRd9TKE7hRMIrBl/CXB4+t
-         MQVqbU4GawZpxtrB4D1e2s+rmja8M5uA6iYAnu64U9u0lw6IZorBahIjFL+kziEuHNEt
-         EGPH2tokEoHWHxq45gMzUnxoADJlfRRYIrilbGzVFcr0BvvARiIDZUgWhSDTcNLWknb1
-         9F64247YZrbK35jf5tg9EAKVJXLqQRX17wh2CuLoEGMSCQ+9SlYzLWZQ+N4lN4yO4zPh
-         n1OQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772963873; x=1773568673;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OHApVhRpgBms4jT3GrxYX42NYRA/ImfA8E/bLAmLCdA=;
-        b=EnQCjiKWwlP0A6EkMyXiBExiRfB2ws5JVSEcUDlsI6CaPb4v/gNT8//dfHP1TtbTWV
-         /ZNpfiv6+W2LX07+/WXXQS9+MPviVfElf9CicQYPmogQPXfYKMgaoJHxxEqmlJpBdofI
-         Fx5yympDixUI3T+pQaHN19DnJx+RtRQBGBht9cDAlUb8XszY83SG1GxaBNC287lyeeYo
-         nPPuexpGMQZ/PfMaQ2nnAKp36LmxDtr/1fQsDjz7PhEEW42YwRNvlstC3GmkwLM5RAb+
-         frrKVdxAE2jEu2e7nzO8W+uv3l5jaR8CGfWcbe+VkQQUtvBMtRDfYQ+EwACgGA35pJfq
-         HDFg==
-X-Forwarded-Encrypted: i=1; AJvYcCXgHiCzYp6CX4dDzlzt1/ZKFd3X8PuQ5/LsMZ2BSTaLiy7DVsw329iyGUmNOLBjX4w+HDzw+ZXEE0PxyA==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxVKBlDgSFCxSlvSObNwMABiPXQ0ACJFCJYOiZIZecPw4265kBd
-	g1L2L6GeA0zDzZS+NBbPF3Gm6/n9Xrh/G/RlNFjkbovX/IwEMNZdCM+dx2U7cNODihNu9Lih207
-	jyaDo8DlXt9+qanhaNQD0fXiiCH29Sp8=
-X-Gm-Gg: ATEYQzxglmMIlGnAk4tEnnfeqkiFBDu3RQAuL/DXe8J1b0plN7QVn86GAw26yU8jY/Z
-	TUgSZcDVWYLJXC1tSXiZgZcxz7nwthJcAjDu0Lq2n1qGN9viygM2FuWGTiJ1On2Y/x3FRP/O/PN
-	m6NNF+UJ/pr8HwFgBT+rYNlcRnEFhxoke0MZ6BW+0CrkwaK6wst2wDByedkyiNlEeE3Q7HgYOdX
-	AQ+yF6J2NPAauUDLKSCBYCoJC/4Mih08Ux9rYZpugcDTBCog4iXHZ2xObx+Yh7imzCeySzJcPod
-	5MxSJKi0
-X-Received: by 2002:a05:690c:60c1:b0:798:1219:c780 with SMTP id
- 00721157ae682-798dd67d2e0mr71860667b3.26.1772963873226; Sun, 08 Mar 2026
- 01:57:53 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="E8wcyqBm"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=CMhn1uKxy9g40N2twg81cxL49HHEUAwkTMCf19VuIroVYS0L+aL6nRFkj7hueJr0gs5Y7VDxgKD0MjHek1/VEAhnEOMZvwjwYiVxfbOSCLoepRN8t2uiau2NbPNRV+W9K+0JWL45zTiWj0bsdeKiH2K+FDaDA/CKEXxsZ/11yF6IrWpPkZtFULDSCuOEz1BJol1jSHFjZWJXa2oXroxzDeWeTidOb0o6CRAPdgup2JJ1IIh2hhFHo9kPwCIBiazfrfWN1hmTm4L+i0aHXxJKJdkHbRJzSANx4gU+Mw/iRyU4wou8XVdetFy/Wp05G6hW9u4u3JIwnmmPu+v486KCkw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=JBUvkBKFbMCyGvOsl1hGC6CJkGDJMOeR8cZH4fcNEQo=;
+ b=PHPdMSReII7HUrRYSjPIoUI6fRABkbFqyUJ3cTHXiOVMGayPTtzvItUK/vOuu+R/ILCLV/7qjgCbQ6H37wEx41jIi1eZVy4Zf1MBHNpLXzzvzoVKKuDWkNWqDLVmtn/G/GNPQrI+Sf97pyfjUjxnN/yHt0JTIdM8NhqWkBC8QV4aQWDE7iOGADSSAeKVJDuSOw0g2KZRLzi7pVR5dqiv/+sQCSv4lb/dMCJXzPVXiHd3VBbSEYpRFZjwYGbCqGAvKnQryMlbkb37P6szCxQqSsfHboXAVaxBjV4aFaSKi69FfS9Lb/HvM5SlfHQRR0JY8cLTILLNFmWRHatWk9MSDA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JBUvkBKFbMCyGvOsl1hGC6CJkGDJMOeR8cZH4fcNEQo=;
+ b=E8wcyqBmlroeoFuCjG9xzC36CnyKIzhlaSN/ggohHs+QRS6Dx6Oix8nc+6F0CU1ydy94Y7sUXqlhyRVnjPyjoCz3lgktoNbQSQTEzYBgzCCe9hxmK6TuYopYgJgrd7y/K4Pt4en7Rdo+aiIjJXD3lGnMSBRLkSjdJsGiN3UI00o=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from SA1PR12MB9492.namprd12.prod.outlook.com (2603:10b6:806:459::7)
+ by CY8PR12MB7292.namprd12.prod.outlook.com (2603:10b6:930:53::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9700.10; Mon, 9 Mar
+ 2026 03:52:57 +0000
+Received: from SA1PR12MB9492.namprd12.prod.outlook.com
+ ([fe80::a866:904d:73a1:d65d]) by SA1PR12MB9492.namprd12.prod.outlook.com
+ ([fe80::a866:904d:73a1:d65d%5]) with mapi id 15.20.9700.010; Mon, 9 Mar 2026
+ 03:52:57 +0000
+Message-ID: <44b0ec66-59d0-4c73-807a-790817f22409@amd.com>
+Date: Sun, 8 Mar 2026 23:52:53 -0400
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] AMDISP failure with kernel v7.0-rc2 due to Commit:
+ 02c057ddefef5
+Content-Language: en-GB
+To: Mario Limonciello <superm1@kernel.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: W_Armin@gmx.de, lenb@kernel.org, Bin Du <bin.du@amd.com>,
+ benjamin.chan@amd.com, king.li@amd.com, linux-acpi@vger.kernel.org,
+ linux-kernel@vger.kernel.org, regressions@lists.linux.dev
+References: <007e3390-6b2b-457e-83c7-c794c5952018@amd.com>
+ <23e8f0df-3eec-46e8-b5f1-5f417460e272@kernel.org>
+ <CAJZ5v0gQK_OPyZGZDPC6WCbVtBuJKggk0Lrscmxxkq1GHiiVRQ@mail.gmail.com>
+ <971fc64d-abef-448a-aa7d-7d4b3391f67e@kernel.org>
+From: "Nirujogi, Pratap" <pnirujog@amd.com>
+In-Reply-To: <971fc64d-abef-448a-aa7d-7d4b3391f67e@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: CH2PR02CA0001.namprd02.prod.outlook.com
+ (2603:10b6:610:4e::11) To SA1PR12MB9492.namprd12.prod.outlook.com
+ (2603:10b6:806:459::7)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CA+tjKGrmADg=oG9CT74_mgGNN3h17=LLmnv51K=MggAqo7q2Eg@mail.gmail.com>
- <2026030839-applied-prominent-b774@gregkh>
-In-Reply-To: <2026030839-applied-prominent-b774@gregkh>
-From: hgfdgjn <shichuanyim@gmail.com>
-Date: Sun, 8 Mar 2026 17:56:44 +0800
-X-Gm-Features: AaiRm51SQeSnd_04IO3aC60QnGAmb4XpulyijeEO_HuTpW5Xx2vxx8EEQKdyFwk
-Message-ID: <CA+tjKGoWW70TRw6C+PMDbhpCh5P_jyJ9ciY3HckJystb+X26Mw@mail.gmail.com>
-Subject: Re: [BUG] HDMI monitor shows no signal when the refresh rate is
- higher than the default 60Hz
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, regressions@lists.linux.dev, rvojvodi@amd.com
-Content-Type: text/plain; charset="UTF-8"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA1PR12MB9492:EE_|CY8PR12MB7292:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5056e4e8-0383-49f9-1894-08de7d8f5994
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|1800799024|366016|13003099007|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	XTc0cRXjtTd7ntaa8u3X0/91c4kJCimXi50pSSckk83nmltHadMX9U3C+y2GQPd9ZLx1yc8D4st3Zb2+uNhWUxK3APNszjrOJEoBMTTCKGL8H19wKOMcCBMfemVcrVjQqbQD1S2VeIsyW80FiZtQGumGcRALrlTXW3k36Uwb4zfIlAefn0DtMaIB8/OoI22SXJsz5moCTkXN1yYxALt8p7Xgje44g7vchtS0a6P6RP6qMQUaHeXHzhUj6Vy1C90H2U369AQMDRx/0/vL4sbd8YL2wTxW8DqQcwb94F43gozHYfHS66diCIs6nvb/yR3LfJ4mjDMmZIFHBJgqK/ZK1SOYVHVZZJc0KiB78rEBXgcVWfkP+3kGRcInPKpO/m/cY0SgvSWr0xkcua/Ztpg2i0YHXxq02psBPC/9F3BgDEVTUJsB/yiOmlhX9//RO0vswFXim2LFri8PJcEAoDCrhwx2tkS5i6xd8G7ITOCxcOjZEeVElORgktTicd4MBmfouqAYJg1F2z3Ic/kpJhUSKO3LxrYmRwPkWwHxXOrBJtRISzfxJ1E6+LwtpS292CJu9aMJXaEttfdhjkAFiTcgKGHuDxLsI8PrnbK3FExzxk7lpF0utBTIhG58YtgADXjfGXE7N31RPL4NuKtkSQQ3Sawq57ILtWzC1DDxsopw1YDhYxmssf+Ncy5rupSeyPQKFcO3zygPIhHRm/toCRkYlQ==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR12MB9492.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(13003099007)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?SUdFY1c5UGZSVTd2Z09tZnJKUGZWa0hLUnp5dGFXbkd1ejh2eXNNZmZ1OXRM?=
+ =?utf-8?B?aWFnYm5FbEFSVlJ1YWo5bENjN2FGSkZBOUxYbi9nWjQ4ZWF1YWNHOGhyc2k4?=
+ =?utf-8?B?K0tiUFpkdEZPL1NRVi82RXh2N1RKZkNJdUtwcE00Rncwa0VrLzk1bXI4WXlZ?=
+ =?utf-8?B?MFJkcnA0ZTdlU0tmZHdLNUpoSlpUeHBnd3ZzRTRwSEdyellTNkZxb0ZYUWlW?=
+ =?utf-8?B?WEl5cWNUb2d5TFZMbUFrTzBmczl5ejlycmVTYjR0cnlEU1gwL3hQYjJCSGhr?=
+ =?utf-8?B?QTZrcmh4S2wwaTNGb3pCMHZVVmcwYk5xMk5lYXZNRDhac0lRY0dhYnJ3NFIy?=
+ =?utf-8?B?c24xN0k0WHpNcWd0RjdCOSt0Wm11QWh3MzZtV2hJM0x0YXREZXUxL2NRWWdp?=
+ =?utf-8?B?dC9RckRGVXQxK3l5TlJLSWJZZ2xOQlhMMXJCOFNVUUJXa0RhakdiaFRUWXF3?=
+ =?utf-8?B?UjZ4bmFNZnV2dk5HUEFieCsyNXBuQ2FFL1Y5RzVQc2xHa3ArMlIrQ29wS1l2?=
+ =?utf-8?B?YzNGUWJlSHpSUVFrRUVhYWdEd0RWMk5qbDkvRjdnNjA2SzBJYXc0WTRHb2hO?=
+ =?utf-8?B?ZWY1NEpkQ0paNzhhVW9NeWlXK3NQVUpYSEpwdVpnZkt5WVVFL0k5cExMbTNr?=
+ =?utf-8?B?V0tjNkNWMFFMZ3NKN2ZXcVFiSndncExjekNmMDB3dGtoanphdnVaUWlWYkZk?=
+ =?utf-8?B?M3ArVnJ3ZUtBd2gwZmp4NVVVK3MvVFdkZFNoWXZqRzh4R1ZhMThCSy9lekZC?=
+ =?utf-8?B?U1FqVXl0b1drdWdiUVF6QVBuSHVqVVFOTkNuUGp6cnFOMXhTQ282eHh4aFBm?=
+ =?utf-8?B?cExZWTlFNGdqWE9DcnI0SE90M0NUM2xrUHZMYlFJeUszM2V0dU1teGRyQzFr?=
+ =?utf-8?B?L3dPVjdWanVFSElvNmFuajZqbVIzU3ZXdDUxZlE5QndwbTRVVnpFVTVuSHUw?=
+ =?utf-8?B?bEc2bjFGNWxDb1loK2hhWWZMWlBZdDJtTzZaZUwrWDZSMWgzQUgvOWJUcVJz?=
+ =?utf-8?B?eXYvWFNQenBPclNBaCtnakk1MVZKM0ZDZjJORVZpQy94NlZLNXlFT2ZoK0Iw?=
+ =?utf-8?B?Um9qM214aDdmaVUrSmgvcVlmTzZTM2FYRVpGdldUb2FkT1J1UldINzFYQ05i?=
+ =?utf-8?B?SEV2cmU1N2svYUpLT2pQb0xaR3VpRDVFeStwb0VmZTFrTTJzNVNFcklKandW?=
+ =?utf-8?B?bGhTR29ET0VpQ2o0dlBmZnlCL1Z0K2NKdWd2dHczKzJLM0RrQXh0SEFSVzRK?=
+ =?utf-8?B?aENpOXIzZ1dLUTZQVndLUEc3NHEyQ2taSTVyKzRtQW02NWUxZ081OVNqNms5?=
+ =?utf-8?B?eHA2bVB0Vnk3b3loVUU2M0k5NHMvY3cxYTVmMExTQ2ZoOFVWQWNxZkw2b1VB?=
+ =?utf-8?B?NDlxWFh3NWxLaUhiUVpCbE14NEdvY2NpUGFuQy9TdzhtTzRoTmdEbWtnWmdV?=
+ =?utf-8?B?WEMzRUpuVUtlUmZ0OXFXTXg3YzBlaDF4dUhOeFp5d0FDK016UU1kQ2tROVIy?=
+ =?utf-8?B?eXpGckMvOUNkUEY4TW16cHBSR2pEdVI2NWN5ZnhLVnZuTXllU0MrREkrelFT?=
+ =?utf-8?B?cmE4QlBFRml0UnVta2JjakoybVEwRlhjYk8wWmoySmJZajlGSVF6a0V1TldW?=
+ =?utf-8?B?RmRjd0k5bFVsdzlacFNMS2JzcFJwUW5NaGZObGhnZm5XaHJsVjNvanoxbnl4?=
+ =?utf-8?B?QnlKdnN5S1hzVkVOc3VwZW1DUVd3UHZtYWQ5TkNWVG03UHlDalJ0Mnhud09q?=
+ =?utf-8?B?MWdNb2IrbGY1NlNsRm9UbEpaQmUxSkcvcHZOWW94bUFVeDI5MzJ5b2RQQi9W?=
+ =?utf-8?B?akJ5V2ZUdEpYODZLMGd5enoyUGdvRGR2Q3pNWmFSQy8vRk13MytCK2xoSXNa?=
+ =?utf-8?B?a3F3Y0ROaGZWRXVSa2hkWmt1WE9xYnRUc1IzMEN2Y2RqNVJLNlJHdXJiK1hs?=
+ =?utf-8?B?ekYzWkorVVZRSDBKVCtzZUZjbnd6YTdGM3VvZmhUeFFDeElQa3pCZEw4ZEM2?=
+ =?utf-8?B?UmJQWUFCVE5KdWRmN2JDMUY3amdzMXNGeWVxQzU4K2RIQW1LL3dSZ1habjNJ?=
+ =?utf-8?B?RGZJS0lmS1NNL3VRVnJFQm1WNlpwaEswUnIrT3pDb0FXMCtMbENEQkNiTkRT?=
+ =?utf-8?B?QTVPd3JEWkhxSmpuMUtaaWl6WGV6R3BlbVl1SjVHRmZOWmJocU11dlJKQ2hG?=
+ =?utf-8?B?d1QwRjRIU0FWRnprSmtOclpubmpESGZrSXU5L1pxVGxjRW5aK1g2TlZ1ODFa?=
+ =?utf-8?B?TnZqK3A2cVdUdFNwYnI1Z2J0QzN4enJiWmc3Um40K2ozYTNXY2FqRXBlM3dn?=
+ =?utf-8?B?NUxUVng4d0lzc2NYMlJCUlc1dkxjNHFUcmY4L1FMNzFqSVhVV3pFQT09?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5056e4e8-0383-49f9-1894-08de7d8f5994
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR12MB9492.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Mar 2026 03:52:57.0977
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 9Jr4zBXEY7dcpfagYHGLAZMjZO5OozaBPyUJBFQ10ugCIb3VTUvq5JA+Eybk+p/Be16IN4XTSSCzT0oa6yjOBg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7292
 
-7.0-rc2 can also reproduce it; after locating the issue, it was
-reproduced using the stable upstream master branch.
 
 
->
-> On Sun, Mar 08, 2026 at 05:42:39PM +0800, hgfdgjn wrote:
-> > Hi maintainers:
-> >
-> >   After updating to v6.19.6 on Arch Linux, if I set the refresh rate
-> > higher than 60Hz, the monitor displays "No Signal".
-> > I tried bisecting and found:
-> > > # first bad commit: [3471b9a31ce352ffb343cf02a991261880aac3a7] drm/amd/display: Rework HDMI data channel reads
-> >
-> > This issue on my machine was caused by this change:
-> >
-> > diff --git a/drivers/gpu/drm/amd/display/dc/link/protocols/link_ddc.c
-> > b/drivers/gpu/drm/amd/display/dc/link/protocols/link_ddc.c
-> > index 267180e7bc48..5d2bcce2f669 100644
-> > --- a/drivers/gpu/drm/amd/display/dc/link/protocols/link_ddc.c
-> > +++ b/drivers/gpu/drm/amd/display/dc/link/protocols/link_ddc.c
-> > @@ -549,7 +549,8 @@ void write_scdc_data(struct ddc_service *ddc_service,
-> >      /*Lower than 340 Scramble bit from SCDC caps*/
-> >
-> >      if (ddc_service->link->local_sink &&
-> > -        ddc_service->link->local_sink->edid_caps.panel_patch.skip_scdc_overwrite)
-> > +        (ddc_service->link->local_sink->edid_caps.panel_patch.skip_scdc_overwrite
-> > ||
-> > +        !ddc_service->link->local_sink->edid_caps.scdc_present))
-> >          return;
-> >
-> >      link_query_ddc_data(ddc_service, slave_address, &offset,
-> >
-> >
-> > It appears that scdc_present is always false on my device.
-> > I reverted the change to write_scdc_data(), and the monitor works
-> > normally at high refresh rates.
->
-> Can you cc: the developers and maintainers of this change to let them
-> know?  Otherwise they will not notice it.  Also, does 7.0-rc2 show this
-> issue?
->
-> thanks,
->
-> greg k-h
+On 3/6/2026 7:45 AM, Mario Limonciello wrote:
+> Caution: This message originated from an External Source. Use proper 
+> caution when opening attachments, clicking links, or responding.
+> 
+> 
+> On 3/6/26 6:01 AM, Rafael J. Wysocki wrote:
+>> On Fri, Mar 6, 2026 at 1:35 AM Mario Limonciello (AMD) (kernel.org)
+>> <superm1@kernel.org> wrote:
+>>>
+>>>
+>>>
+>>> On 3/5/2026 5:11 PM, Nirujogi, Pratap wrote:
+>>>> Hi Rafael,
+>>>>
+>>>> In kernel version 7.0-rc2, the AMDISP device reports the following
+>>>> errors when created via mfd_add_hotplug_devices.
+>>>>
+>>>> [    5.236645] ACPI: video: Video Device [GFX0] (multi-head: yes  rom:
+>>>> no  post: no)
+>>>> [    5.236744] input: Video Bus as /devices/
+>>>> pci0000:00/0000:00:08.1/0000:c3:00.0/amd_isp_capture.1.auto/input/ 
+>>>> input21
+>>>> [    5.236779] acpi device:14: Error installing notify handler
+>>>> [    5.236782] acpi device:15: Error installing notify handler
+>>>> [    5.236783] acpi device:16: Error installing notify handler
+>>>> [    5.236784] acpi device:17: Error installing notify handler
+>>>> [    5.236785] acpi device:18: Error installing notify handler
+>>>> [    5.236786] acpi device:19: Error installing notify handler
+>>>> [    5.236786] acpi device:1a: Error installing notify handler
+>>>> [    5.236787] acpi device:1b: Error installing notify handler
+>>>> [    5.236788] acpi device:1c: Error installing notify handler
+>>>>
+>>>> These failures indicate AMDISP device is incorrectly detected as ACPI
+>>>> Video device while it is not.
+>>>>
+>>>> The seems like a regression caused by the change that converts the ACPI
+>>>> video device to a platform device (commit: 02c057ddefef5).
+>>>>
+>>>> Issue is not observed in 6.19-rc6, and also when this change is 
+>>>> reverted
+>>>> in 7.0-rc2.
+>>>>
+>>>> I really appreciate your inputs on addressing this issue and helping us
+>>>> make progress on 7.0 rc2.
+>>>>
+>>>> Steps followed to reproduce the issue:
+>>>>
+>>>> 1. Apply AMDISP v9 patch series [1] on top of kernel v7.0-rc2
+>>>> 2. Add NULL check for “dev->type” in isp_genpd_add_device() [2] (to
+>>>> avoid kernel panic found in v7.0-rc2)
+>>>> 3. Build kernel with:
+>>>>       - CONFIG_AMD_ISP_PLATFORM=y
+>>>>       - CONFIG_VIDEO_AMD_ISP4_CAPTURE=m
+>>>> 4. Install kernel on AMDISP supported system (HP ZBook Ultra G1a)
+>>>> 5. Boot system to see the failures
+>>>>
+>>>> [1] https://lore.kernel.org/all/20260302073020.148277-1-Bin.Du@amd.com/
+>>>> [2] https://github.com/torvalds/linux/blob/master/drivers/gpu/drm/amd/
+>>>> amdgpu/isp_v4_1_1.c#L132
+>>>>
+>>>> Thanks,
+>>>> Pratap
+>>>>
+>>>>
+>>>>
+>>>
+>>> It's a bit weird to see it even probe in this path in the first place.
+>>> acpi_video_bus_probe() getting called with the mfd device doesn't seem
+>>> right to me.
+>>>
+>>> I wonder if it's because ISP is an MFD device of GPU (and thus LNXVIDEO
+>>> ends up matching).
+>>>
+>>> Would a sensible solution be to reject mfd device types in
+>>> acpi_video_bus_probe()?
+>>
+>> Every platform device with LNXVIDEO in the device ID list will be
+>> matched and so probed.
+>>
+>> I'm wondering how those devices get that ID though.
+> 
+> Yeah me too.  I was surprised an MFD device got it.
+> 
+> Pratap - can you figure this out before we go too far in this path?
+> 
+yes, MFD child devices in this case have the device ID as that of parent 
+(GPU) i.e. LNXVIDEO. Its because when no acpi_match is specified, the 
+MFD child devices are inheriting the parent's ACPI companion device and 
+this is resulting in having the same parent's ACPI device ID.
+
+device_set_node(&pdev->dev, acpi_fwnode_handle(adev ?: parent));
+https://github.com/torvalds/linux/blob/master/drivers/mfd/mfd-core.c#L91
+
+> If they really shouldn't have LNXVIDEO fixing that may be a better 
+> solution.
+> 
+AMD ISP related MFD devices are using the same LNXVIDEO device ID even 
+on 6.19-rc4, no issues observed earlier. I can confirm automatic AMD ISP 
+device probe works and also camera works on 7.0-rc2 if I avoid 
+inheriting ACPI companion of the parent (GPU) in the mfd-core.c
+
+// device_set_node(&pdev->dev, acpi_fwnode_handle(adev ?: parent));
+https://github.com/torvalds/linux/blob/master/drivers/mfd/mfd-core.c#L91
+
+But why this is an issue on 7.0-rc2 while it works on 6.19-rc4 needs to 
+be root caused.
+
+>>
+>> Also, is this really a mainline regression?  AMDISP patches are not in
+>> the mainline, no?
+> 
+> The amdgpu half of it is mainline, the other half is still on the lists.
+
