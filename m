@@ -1,212 +1,104 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [194.59.206.189])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3554C2FD
-	for <regressions@lists.linux.dev>; Tue, 10 Mar 2026 08:32:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1B0B288C2D
+	for <regressions@lists.linux.dev>; Tue, 10 Mar 2026 09:34:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.59.206.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773131576; cv=none; b=cGWCE33aEDkyKU+mIr1D/HFDBJuJc1DcsJPmW2x1gGNFPY2Hz8cYk4JZDSQoh/Yu5HImP0U/9/Q2T0PSblEekABveneK0ROOWm0S1nAZg1dG3oUNNjJ/v4dItPKqfjxw/KjA4tw21AvYTMUH9JCMw3e/8FB7sZjDnfTTbkUf4l4=
+	t=1773135274; cv=none; b=K2xwnemjBrxiRa58WCA6dsl0V7jDuJdKYW6dde4tm1+jrFiBapU31sJtVtFrQmeTwHO7m2vTx54PYOqCsp4kokdF0LekOFvGdoJvVN7ijIR92UGvGyFs8M1uCxfHvMy49EQMAEjuAj8PhdZnLO3ChdTpbN3DvTgw3dXWuQiOMts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773131576; c=relaxed/simple;
-	bh=f81pAW2zwR7oqdLTPQ1x+sHJC6GOTfGX015wQYP9eGA=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=K5DYIpd/dKq5fSDjH0luOrAq5nasLNMPfgCRF1NEX7k28X+yIesrvYxjiqUd6TuaaK6c4F7CaS2W8Momu7o/Z875w/SvzGwSQ2y4NxwzeEt3cUQawtj1exOgEiLNhL1Xp4ICrSJ7L3WwyxnptAT9J/XodVSFOzfs2CF7vrOoODc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=R0+J5Ynu; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=0DhkaTMx; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=R0+J5Ynu; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=0DhkaTMx; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1773135274; c=relaxed/simple;
+	bh=nyiNMhyzJ6a+iIOaO1nHwCV3r6eGBMKcbIuopz0McX0=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=jcaZDzBn0wb+Zxanou6FLw9gW9aJq0bQDWHYcD1iMCNcwF7NFr6eETchgoG6y9D8r6NCmpVj4j2aoiz/fqZ/SipqM0zFNV9yHljJqAmoOmMx0KhRev5ix8ws9a69NdxGiiBfY57oPr1clp8/tVVYfYmBwPn9W8sxkOgtwLFQnZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=SazTbYwp; arc=none smtp.client-ip=194.59.206.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="R0+J5Ynu";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="0DhkaTMx";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="R0+J5Ynu";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="0DhkaTMx"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="SazTbYwp"
+Received: from relay02-mors.netcup.net (localhost [127.0.0.1])
+	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4fVTH26j2Bz4DpJ
+	for <regressions@lists.linux.dev>; Tue, 10 Mar 2026 10:34:22 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1773135262;
+	bh=nyiNMhyzJ6a+iIOaO1nHwCV3r6eGBMKcbIuopz0McX0=;
+	h=Date:Subject:From:To:References:In-Reply-To:From;
+	b=SazTbYwpVkRN7KAM2K3o7F5T1OB0uYWSzL52K3S49LvMvgP9gGtzuCb21JkJHL1wY
+	 LCw1UEz3AnK2l6CWs05u/V1Y8bEa+rCG2C1+IfRN3r1uXWmRcBhBua2anhvhdbhcuV
+	 KlF5yc9+fGAYdt15+iUOOkAoUi/bPzEOYuEusigDv3NQR+bNrlGSgXYCUODFzPCEQ1
+	 gwnxIu5DkUlvJBFzDR5/KOv9Pe0BgyKQ+3b90OPIxl+7xT4er50MblvDsU8lMPORXB
+	 SqL3LuxmoG/nZbU6oUSohAOoXvJ9V+ZlyO1pecAi5Ao4Uof1mGhIfT566JlR/6P4mH
+	 29GybaO37M5sQ==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4fVTH260fhz7wRM
+	for <regressions@lists.linux.dev>; Tue, 10 Mar 2026 10:34:22 +0100 (CET)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 08B6E5BCCF;
-	Tue, 10 Mar 2026 08:32:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1773131573; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=o9PaSRDL+LoeYJygYCrzTcK+RLyPyVus0n/koED/N0E=;
-	b=R0+J5YnuMJEpg/yctD68wV/63o8VV41q1D1l5XMR4E6yb/GQE8A8chIfrSFj/M+NlKLo4n
-	g6SA2lt3HJz8HIMNO4pMxVLwdE70jcPypzdcvWWwMwx5uiyOXaoY5nWMJf/xi5nKPs7ngo
-	AuwG0vQaQbS6Ygg2HZIxvoBwPbUVwDw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1773131573;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=o9PaSRDL+LoeYJygYCrzTcK+RLyPyVus0n/koED/N0E=;
-	b=0DhkaTMxOLw1ICQiP0PTpi2x8eDSc3xq5e03ZwNVwhZe+xOkL4zV3KWcelyaYZlHdNYFfM
-	z8fwnAtthsKTKSAw==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1773131573; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=o9PaSRDL+LoeYJygYCrzTcK+RLyPyVus0n/koED/N0E=;
-	b=R0+J5YnuMJEpg/yctD68wV/63o8VV41q1D1l5XMR4E6yb/GQE8A8chIfrSFj/M+NlKLo4n
-	g6SA2lt3HJz8HIMNO4pMxVLwdE70jcPypzdcvWWwMwx5uiyOXaoY5nWMJf/xi5nKPs7ngo
-	AuwG0vQaQbS6Ygg2HZIxvoBwPbUVwDw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1773131573;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=o9PaSRDL+LoeYJygYCrzTcK+RLyPyVus0n/koED/N0E=;
-	b=0DhkaTMxOLw1ICQiP0PTpi2x8eDSc3xq5e03ZwNVwhZe+xOkL4zV3KWcelyaYZlHdNYFfM
-	z8fwnAtthsKTKSAw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id CF6D33F371;
-	Tue, 10 Mar 2026 08:32:52 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id WiVOMTTXr2kIGAAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Tue, 10 Mar 2026 08:32:52 +0000
-Date: Tue, 10 Mar 2026 09:32:52 +0100
-Message-ID: <871phsrsnf.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: =?ISO-8859-1?Q?J=E9r=E9my?= Bethmont <jeremy.bethmont@gmail.com>
-Cc: Kailang Yang <kailang@realtek.com>,
-	alsa-devel@alsa-project.org,
-	regressions@lists.linux.dev,
-	regressions@leemhuis.info
-Subject: Re: [REGRESSION] Audio popping on ThinkPad X1 Carbon Gen 12 (ALC287) after commit d2e01e0c5e94
-In-Reply-To: <CAC88DfvjQvZvdvGdZ00woMymE2tUWk=2Dbqi3EzuzSHxGjEnzw@mail.gmail.com>
-References: <CAC88DfsHrhyhy0Pn1O-z9egBvMYu=6NYgcvcC6KCgwh_-Ldkxg@mail.gmail.com>
-	<87a4wgrxil.wl-tiwai@suse.de>
-	<CAC88DfvjQvZvdvGdZ00woMymE2tUWk=2Dbqi3EzuzSHxGjEnzw@mail.gmail.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/30.2 Mule/6.0
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4fVTH245QJz8sbC
+	for <regressions@lists.linux.dev>; Tue, 10 Mar 2026 10:34:22 +0100 (CET)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id CBE32632AF
+	for <regressions@lists.linux.dev>; Tue, 10 Mar 2026 10:34:21 +0100 (CET)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <5fa4589e-6e57-4b91-9e86-05416cf1f357@leemhuis.info>
+Date: Tue, 10 Mar 2026 10:34:21 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 8bit
-X-Spam-Score: -1.80
-X-Spam-Level: 
-X-Spamd-Result: default: False [-1.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	TO_DN_SOME(0.00)[];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	RCPT_COUNT_FIVE(0.00)[5];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:mid,suse.de:email]
-X-Spam-Flag: NO
-
-On Tue, 10 Mar 2026 09:24:38 +0100,
-Jérémy Bethmont wrote:
-> 
-> Hi Takashi,
-> 
-> Thank you for looking into this so quickly.
-> 
-> As requested, I have attached the output of `alsa-info.sh --no-upload`
-> from my machine.
-> 
-> Please let me know if you have a proposed patch you would like me to
-> test. I am happy to build it and verify if it resolves the popping on
-> my hardware.
-
-I guess dropping the alc_process_coef_fw(codec, en_coefs) call at
-closing would fix your problem while keeping the one at open.
-But I'm not sure about any side-effect by that.
-Kailang, could you check this?
-
-BTW, when you disable runtime PM, does the pop noise still appears?
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: <177313526198.1526095.3977312575393193709@mxe9fb.netcup.net>
+X-Rspamd-Server: rspamd-worker-8404
+X-Rspamd-Queue-Id: CBE32632AF
+X-NC-CID: kAspkcoicrULo1h5g50FmGwtGG87Rw/DCDo6w9DiYiw9nuqms5o=
 
 
-thanks,
 
-Takashi
+On 3/9/24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-> 
-> Best regards,
-> Jeremy
-> 
-> On Tue, 10 Mar 2026 at 13:47, Takashi Iwai <tiwai@suse.de> wrote:
-> >
-> > On Tue, 10 Mar 2026 01:01:11 +0100,
-> > Jérémy Bethmont wrote:
-> > >
-> > > Hi Takashi, Kailang,
-> > >
-> > > I am reporting an audio regression introduced in kernel 6.18.13 on the
-> > > Lenovo ThinkPad X1 Carbon Gen 12 (Meteor Lake, Realtek ALC287 codec,
-> > > SSID: 0x17aa231e).
-> > >
-> > > Since this update, the laptop emits a short, noticeable hardware
-> > > pop/blip from the speakers exactly when an audio stream closes and the
-> > > PCM state suspends. It happens consistently a few seconds after
-> > > playback finishes (e.g., after a system notification or terminal
-> > > bell).
-> > >
-> > > I have tracked the regression down to the following commit:
-> > > d2e01e0c5e947da0b5005ca89efa82baeb232adc ("ALSA: hda/realtek - fixed
-> > > speaker no sound")
-> > >
-> > > #regzbot introduced: d2e01e0c5e947da0b5005ca89efa82baeb232adc
-> > >
-> > > Root cause analysis:
-> > > The commit modifies the `alc287_alc1318_playback_pcm_hook` function,
-> > > adding raw COEF writes to disable/enable AMP silence detection on
-> > > HDA_GEN_PCM_ACT_OPEN and HDA_GEN_PCM_ACT_CLOSE.
-> > >
-> > > Because `alc287_alc1318_playback_pcm_hook` is a shared hook used by
-> > > multiple Lenovo ALC287/ALC1318 devices, these unconditional
-> > > `WRITE_COEF` instructions are being sent to hardware that does not
-> > > need the silence detection fix. On the X1 Carbon Gen 12, executing
-> > > `alc_process_coef_fw(codec, en_coefs)` upon stream close triggers an
-> > > immediate electrical pop. Monitoring with `pw-mon` confirms the
-> > > hardware pop coincides perfectly with the monitor_FR / monitor_FL
-> > > ports going idle/suspended.
-> > >
-> > > Proposed solution:
-> > > Could we revert this commit, or alternatively, wrap these specific
-> > > silence-detection COEF writes in a targeted `ALC287_FIXUP` quirk
-> > > matched via SSID/DMI, rather than executing them globally in the
-> > > shared playback hook?
-> >
-> > Could you give alsa-info.sh output?  Run the script with --no-upload
-> > option and attach the output.
-> >
-> > I guess the bug might not be specific to your device but happening in
-> > general with all matching ones.  As a workaround for such a pop noise,
-> > we often need to reorder verbs or put some delay between verbs.
-> >
-> >
-> > Takashi
-> 
-> 
-> 
-> -- 
-> Jérémy Bethmont
-> 
+#regzbot report:
+https://lore.kernel.org/all/558b602a-1b30-2761-fff4-04d837656ea5@rock-chips.com/
+#regzbot fix: 0fb59eaca18f12
+
+#regzbot report:
+https://lore.kernel.org/lkml/dfb72933-938f-43f2-87f3-2e3ab9697125@ixit.cz/
+#regzbot title: soc: qcom: pixel 3 broke
+
+#regzbot report:
+https://lore.kernel.org/all/CA+tjKGrmADg=oG9CT74_mgGNN3h17=LLmnv51K=MggAqo7q2Eg@mail.gmail.com/
+#regzbot introduced: 3471b9a31ce352
+#regzbot title: drm/amd/display: no signal when the refresh rate is
+higher than the default 60Hz
+
+#regzbot report: https://gitlab.freedesktop.org/drm/amd/-/issues/4893
+#regzbot introduced: v6.18..v6.19
+#regzbot title: drm: amd: Macbook Pro dGPU AMD Radeon R9 M370X crashes
+on boot
+
+#regzbot report:
+https://lore.kernel.org/all/aa6kLwNxoCIvquBT@FUE-ALEWI-WINX/
+#regzbot fix: remoteproc: sysmon: Correct subsys_name_len type in QMI
+request
+
+#regzbot report: https://gitlab.freedesktop.org/drm/amd/-/issues/5052
+#regzbot introduced: v6.19..v7.0-rc2
+#regzbot title: drm/amd: HDMI audio to an external monitor stopped working
