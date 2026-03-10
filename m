@@ -1,157 +1,188 @@
-Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
+Received: from mxchg04.rrz.uni-hamburg.de (mxchg04.rrz.uni-hamburg.de [134.100.38.114])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B6A0321445
-	for <regressions@lists.linux.dev>; Tue, 10 Mar 2026 17:08:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.167.174
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773162505; cv=pass; b=s8TRUGG9teyrS/WeUKsimuxwR9FSU3k2sL9cCTFSCZTGm5Mfl7BTu80cPNqWfS0Kv7sAATt0fwPOtR7wP1GotM5FFa7AsAhk3Yr7o2Mx89GbUKHMo+l23dTXZdKZczCQnzNr6MCV7/L/CAAS15kSqeodsh2raLtQtd7wWFMuX9s=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773162505; c=relaxed/simple;
-	bh=2U/YHmnNSMXb4kAlU6UnBe9Ek70iIOR2VlkPsQRm5tI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PWFk3D7VwXNn9Dew6ZDn8yEyxmB0ZwdVWLPvNsL8SpDXKuxeK7Yuc52EGBZ97zfCbuhrxQBMjqrHxcguaF8G89YnqnKYBSwRK+yFVyxhQjFsoaaZIMel3Ce4DMjaa9sxl6HuhoMDpoD4veFuHdC3VfzaQFW9L9lMJprSSFZqtdg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RR1GFuTK; arc=pass smtp.client-ip=209.85.167.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4572B285CA2
+	for <regressions@lists.linux.dev>; Tue, 10 Mar 2026 23:05:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.100.38.114
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773183909; cv=none; b=FC82qOipk8Y5SmGpVaClhLwj2AONpa8ajqyphGPK9dL5k7AxJv8VZ4e0m3fFSnXKOei5Rds6FL6/LwicmNzDjupEFFwypUBpkCqFhvA7QmXUOsMlm+yDfrG4feKTEyJS2GqrVWwYkYDN05akh347XeliRQMLVnmRi60rsNYvsOk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773183909; c=relaxed/simple;
+	bh=y7Xqpc/wuYWtWe48tqJ7Y9F+CA4BF+ERGQuTslHT+I0=;
+	h=Date:From:To:CC:Subject:Message-ID:MIME-Version:Content-Type; b=UpfHzE7+ybH780PerPJZsy3WR+9THuraGIiV3gB3S0m4F5uHIAoN9jES9joqQKgeRT4hAAxcJyhhiIXkmZHQK4VgJk/2Oym9Ba+n273hJe2/sQW38ZrJShl4rCRoPbsa5vWiE8CHTeAtJm9Y9M4lDGpTfPdWBXGtT29/Ymk8Tnw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=uni-hamburg.de; spf=pass smtp.mailfrom=uni-hamburg.de; dkim=pass (2048-bit key) header.d=uni-hamburg.de header.i=@uni-hamburg.de header.b=iFdqJ/3m; arc=none smtp.client-ip=134.100.38.114
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=uni-hamburg.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uni-hamburg.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RR1GFuTK"
-Received: by mail-oi1-f174.google.com with SMTP id 5614622812f47-466ed3bc95eso1092996b6e.2
-        for <regressions@lists.linux.dev>; Tue, 10 Mar 2026 10:08:24 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1773162503; cv=none;
-        d=google.com; s=arc-20240605;
-        b=RycmfsLEuqFzc1ZtJnKdkZca9USAtlx8EBbKwXzLAF9JVlweV3AYCfFu4jeeoutQJP
-         2HDCp7rNjuNkjp7WiO2IWw/rXqOiqGYW0c+xI/nGnM58MqSvS/zObSscPNIZu422PliB
-         DsAAZVKgDNgZYqSjq/tuUKFaWJtiNehYp7nHApHviMHmZtWL9k7/c3OXNjAonG8Wnz3o
-         7idr96KWBXrThLHB4OYBOOimEDBXG+2FKYMDASP3E7ditrhOdIgxAKRxNb+I94KTCIZo
-         sZv333FaOrQcTK95+Rzor4pEneMkqsNjINXNUbJpRUA4Ya6vdz2ZPwC8otzUSS3F7rP+
-         anOg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=SGjIKYsVg8+/FngR4cBfWixXzW+UJX175bX4IGrA7TU=;
-        fh=nDH/VGuYebH8oMjzFvRD+gj6H6a39EdKd9UfmRcrQwc=;
-        b=dl3NyMyoQzH8/z/VQcL1UIpZ2ywqAHslaz+numLnHputtHrWJNsnYMhp0OfKhxd6MJ
-         K+xOBT08vauUXZJiWCZ6qHJUW5KSGJFuIrxpDrcQGcRekP4I1Ew5SFKFm0FeXRTpvL6G
-         kH+ZZoCaE2C8xgykp+3uqm+2pP58q7lNZynsm9jNrSVTgDgzWNgR4AkSftbUK2dzdsat
-         nBEct1s+fGMF6ujlkwScZ95PwhWJDtSHn28YzfUOX3/NRCVj3tRxOXeu3xarri+f+Spt
-         vtj5mFwqYHneYtj7cmoQQsNc0gdz01AV1RsPZEqb8Tz0FsWa38azUZxzBTzC6KJOK403
-         41Dw==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773162503; x=1773767303; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=SGjIKYsVg8+/FngR4cBfWixXzW+UJX175bX4IGrA7TU=;
-        b=RR1GFuTKIhRmYAQFITyojFEV/Z119vVH7l6Uj370Oxbd2GezA8Iex7WTTKO5xY3Q5b
-         Sf+QjfKA1sVvY88Wam0SjTZwN5tRnTEJY4lPgfzWVesamaw6n7kGHhyAtfWwmIF+TmdU
-         JRUduH9iGAuXFcIk6bbwQzT2uNMBoTH39+WRBabHRT10xpuLDIdAUmGbbXt0ad6lP6Is
-         gTyT1utWU80LgpqzXBPtQXAP6bGTr6oWTJK2lDON2uitQI1fvy3xi5YVLhto1W7+LjSB
-         DETa4RWfbq9bFKMEzAxoUJh6UeDFFucpoWKLFCy/FtwTJ5BsuvpE50Gc1ze+tuLPDUCQ
-         AtYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773162503; x=1773767303;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SGjIKYsVg8+/FngR4cBfWixXzW+UJX175bX4IGrA7TU=;
-        b=AwfXmONIG5dN+VKF3o3IVzhcYseVPXCnHVz4HDlLQ9oL3GgAoFWaZmqqLWu5N367kn
-         +LUeZXG8hhdRCTMS7MQIujVqHIL9AVntONBUtpUD7w5iyvYD3mC0ivXVv8BgUi1xbwwv
-         rs46rg8tdBsOvzn0X5c2Mdvezu4R6Aomhzv7DiNEFORe7u1tc4rAqd47Zinqp2noyK3r
-         M+KFAxshGN8gEQcti1sX9B2URL9oRFNFY2+Sw44WDJm89ynmPOpPkO6hjlDh2Bb4/vvJ
-         MHOa2ap/ivNLOTh2Igrdh7YA9mc57Z9r3WQciFbPJHffWQlrkAc9LCuPqvL8sKNoqAC2
-         BgIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWtn/+dNr68aZsk+EqzTXXlu8BzC5/jQPTzfPo54h2H0lT4WTzsOBaIB0PSMlAyy/K8PSIC95ZtL8NEKA==@lists.linux.dev
-X-Gm-Message-State: AOJu0YyzUYEBBhB9Ir7ktdqVjoZoFt9i5yRF1Do/QSDqx01qoRnrleE0
-	nYMsKpfik9EF9xpGiEdD7dQkUy+lpCTlnXsWNks00Y1ghj29DtxVlC6rZEkE4i5ghr0uTHsTp5i
-	Xu1oc5MO6gGvEWWCA9t2W679SnefiTbY=
-X-Gm-Gg: ATEYQzxD3ww2rdxH6BZ6yscfsIuTmmE5Vvv0n0+c09aY31lKGLreYUuftB0kWPDpuIY
-	JS7wG7oqlKCyveXHoeXv+jmoHQoS+f9NMpizCPPx+V/fMjvbSiJ/Q8MOmakzmhVcX7795qbjfAq
-	Fx6+Cjnq3xlwa9SrNOc0SA5Yun5DweEooEuKRbLIn3ya1UAvln+TJ41uxquuppBXKQqLtTRTbU4
-	0+nCDQKUKuJ4Tbcyc2STLuDJc50RgDJ7pmsNRhmXQm+Osvx+zyqnsZoVuUE4U1N1uTSk+RKQ7mS
-	qyHxyQqmRQztcudD4EF3cJWipf+dDihuMgapcmG+
-X-Received: by 2002:a05:6808:1a01:b0:467:3f4:907d with SMTP id
- 5614622812f47-46703f4faa0mr4092974b6e.56.1773162503370; Tue, 10 Mar 2026
- 10:08:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=uni-hamburg.de header.i=@uni-hamburg.de header.b="iFdqJ/3m"
+Received: from mxchg04.rrz.uni-hamburg.de (mxchg04.rrz.uni-hamburg.de [134.100.38.114])
+	by mxchg04.rrz.uni-hamburg.de (Postfix) with ESMTPS id 4fVq4q3KK1zLlZr;
+	Tue, 10 Mar 2026 23:56:43 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uni-hamburg.de;
+	s=rrzs003; t=1773183403;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=aKlgmgGXApqb89QvKp6ek8VSBUaqeTUHGbk9QK7a158=;
+	b=iFdqJ/3mIpvtYgdVZMORPjtCJLEC0jgKZ5iyxtOwMG4blmWlfn2iMDBESx0ih+yLh8WXvB
+	pZy1xvWod2Y3ZezDVxFliOl4AVCc/k/rCRkveACNQv59LiEmjHSeolSJwHaY7SrxuqftcB
+	BN+f3UUITk3+zG07DCxda7KtDx2inMx1vbGvU2vnFJ2ine2JGykbL0EodgYYpiNqaHaNQA
+	CyZlcqyW6TIpX9UOadEGjrQ1LNvtcApsdfx6pOcq87sajkxbMbTEm6TAz4TI8X/DgCh4in
+	KZSmbMERwPg8FcR5ckXCdK9BW2K3etOGpiD8lieex73+vRYt2vMsd5jqfrCxyA==
+Received: from exchange.uni-hamburg.de (EX-S-MR06.uni-hamburg.de [134.100.84.89])
+	by mxchg04.rrz.uni-hamburg.de (Postfix) with ESMTPS id 4fVq4q1dpPzLlZn;
+	Tue, 10 Mar 2026 23:56:43 +0100 (CET)
+Received: from plasteblaster (134.100.32.91) by EX-S-MR06.uni-hamburg.de
+ (134.100.84.89) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.37; Tue, 10 Mar
+ 2026 23:56:42 +0100
+Date: Tue, 10 Mar 2026 23:56:42 +0100
+From: "Dr. Thomas Orgis" <thomas.orgis@uni-hamburg.de>
+To: Steve French <sfrench@samba.org>
+CC: <linux-cifs@vger.kernel.org>, <regressions@lists.linux.dev>,
+	<stable@vger.kernel.org>
+Subject: [REGRESSION] failure to reconnect on SMB server restart with custom
+ TCP port (not 445): Host is down (at least since 6.6.95)
+Message-ID: <20260310235642.6d9798f4@plasteblaster>
+Organization: =?UTF-8?B?VW5pdmVyc2l0w6R0?= Hamburg
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CANkKV92bTD11PCXYzz60WSxcP-0UCM8xtnY4_WraEwQx6TMjaw@mail.gmail.com>
- <CANkKV91Zfp_Bn_koM=Tb5vHQbog2Ja72C819aL-49kQ6PWA_Ow@mail.gmail.com>
- <CANkKV93wfs7oxU8kiyPWeafOs+ugpZSPLQrea7wtoSuGEG+pPw@mail.gmail.com>
- <68d90523-33dc-451f-a825-72eaa1c4bcb8@leemhuis.info> <CANkKV91attPiZ4+6DQKcgG10apUbF6k5hs7aJBrfsnfc5jQCew@mail.gmail.com>
-In-Reply-To: <CANkKV91attPiZ4+6DQKcgG10apUbF6k5hs7aJBrfsnfc5jQCew@mail.gmail.com>
-From: =?UTF-8?B?UsOhY3ogTcOhdMOp?= <raczm0812@gmail.com>
-Date: Tue, 10 Mar 2026 18:08:12 +0100
-X-Gm-Features: AaiRm53_m8RHubFk28jWl6i2BWsGSUZYGC84-yNOq9y5C3SysgD3CzDC2At4lhQ
-Message-ID: <CANkKV93zUMy3333wpsqyMjxOKecMh8-hdABVaG8sVfnKusaE8g@mail.gmail.com>
-Subject: Re: [6.18.] ThinkPad T14 Gen 2 AMD (LEN2073) - Synaptics touchpad
- remains PS/2, intertouch=1 ineffective, lost sync events
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: linux-input@vger.kernel.org, linux-i2c@vger.kernel.org, 
-	Linux kernel regressions list <regressions@lists.linux.dev>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: EX-S-MR03.uni-hamburg.de (134.100.84.82) To
+ EX-S-MR06.uni-hamburg.de (134.100.84.89)
+X-Rspamd-UID: 45fadb
+X-Rspamd-UID: 40e953
 
-Hi Thorsten and all,
+Dear Linux-CIFS maintainer(s),
 
-I tested the issue on the latest mainline kernel release candidate 7.0-rc3:
+I stumbled upon a regression in the Linux cifs/smb3 client when working
+with a smbd using a non-standard port. I am not the first to note this, see
 
-1. Built and booted 7.0-rc3 without any additional patches:
-   - The touchpad (LEN2073) still exhibits the same "lost sync" behaviour.
+	https://bbs.archlinux.org/viewtopic.php?id=3D306712
 
-2. Applied a local patch adding LEN2073 to the Synaptics SMBus
-whitelist in drivers/input/mouse/synaptics.c:
-   - Rebuilt and booted the kernel with this patch.
-   - Behaviour did not change; the touchpad still does not work properly.
-   - The patch simply adds the LEN2073 PNP ID to the SMBus whitelist.
-     Patch content (for reference):
+which is a report from mid last year, indicating the problem sometime
+after Linux 6.6.72. It is a very simple issue, where details of the
+kernel builds or mount setup don't seem to matter much: Older kernels
+reconnect to a SMB server that was restarted (old processes killed and
+replaced), newer kernels do not and just have a defunct mount.
 
---- a/drivers/input/mouse/synaptics.c
-+++ b/drivers/input/mouse/synaptics.c
-@@ -191,6 +191,7 @@ static const char * const smbus_pnp_ids[] = {
-  "LEN2054", /* E480 */
-  "LEN2055", /* E580 */
-  "LEN2068", /* T14 Gen 1 */
-+ "LEN2073", /* T14 Gen 2 */
-  "SYN1221", /* TUXEDO InfinityBook Pro 14 v5 */
-  "SYN3003", /* HP EliteBook 850 G1 */
-  "SYN3015", /* HP EliteBook 840 G2 */
+I reproduced this in our HPC cluster environment with such smb.conf on
+the server side
 
-Additional observations:
-- psmouse is compiled as builtin.
-- Verified both with and without the `psmouse.synaptics_intertouch=1`
-boot parameter.
-- I2C devices are visible under /sys/bus/i2c/devices/.
-- dmesg output shows:
+[global]
+security =3D user
+map to guest =3D Bad Password
+server role =3D standalone server
+smb ports =3D 1445
 
-[    2.288744] psmouse serio1: synaptics: Touchpad model: 1, fw:
-10.32, id: 0x1e2a1, caps: 0xf014a3/0x940300/0x12e800/0x500000, board
-id: 3471, fw id: 2909640
-[    2.331172] input: SynPS/2 Synaptics TouchPad as
-/devices/platform/i8042/serio1/input/input6
-[  252.979513] psmouse serio1: TouchPad at isa0060/serio1/input0 lost
-sync at byte 1
-[  252.980606] psmouse serio1: TouchPad at isa0060/serio1/input0 lost
-sync at byte 1
-[  252.981855] psmouse serio1: TouchPad at isa0060/serio1/input0 lost
-sync at byte 1
-[  253.008752] psmouse serio1: TouchPad at isa0060/serio1/input0 lost
-sync at byte 1
-[  253.009947] psmouse serio1: TouchPad at isa0060/serio1/input0 lost
-sync at byte 1
+[public]
+path =3D /some/path
+guest ok =3D yes
+read only =3D yes
 
-- The trackpoint was previously disabled in BIOS; after enabling it,
-the touchpad behaves slightly better, but the "lost sync" issue
-persists and PS/2 fallback is still active.
+and such a mount command on the client:
 
-It seems that on this hardware, adding the device to the whitelist
-alone does not enable proper I2C/SMBus operation, and the device does
-not function as a Synaptics touchpad under Linux.
+mount -t smb3 -o port=3D1445,user=3Dguest,password=3Dfoo //server/public dir
+
+When I kill and re-start smbd on the server, older client kernels
+reconnect and continue to return listings and files from the share,
+while newer kernels give this:
+
+$ ls dir
+ls: cannot access 'dir': Host is down
+
+I also see that no smbd process is spawned for the client connection.
+The client simply seems not to try to talk to the server anymore. This
+apparently is only the case with the changed SMB port. With the default
+445, the same setup works. I once tested that with root running smbd or
+by forwarding port 445 to 1445 via socat on the server, things are back
+to normal. The share continues working, server processes are spawned
+and talked to by the client.
+
+Also, it seems that this only covers cases with actual network
+transfer. Mounting on the server from itself (localhost) seems to be
+fine on either port.
+
+I narrowed this down to these kernels working in the same system (which
+is a HPC node booting a Debian 12 image with our custom kernel built
+from vanilla kernel.org sources, barely changed):
+
+6.6.53: good
+6.6.78: good
+6.6.86: good
+
+Also, an Ubuntu client with 5.15.0-164-generic in a distinct setup,
+talking to a differing server, was also fine. So I assume clients
+reconnecting is baseline behaviour. I tested these kernel versions to
+have the regression:
+
+6.6.95: bad
+6.6.97: bad
+6.6.101: bad
+6.12.47: bad
+6.12.55: bad
+6.18.16: bad
+7.0.0-rc3: bad
+
+The last one is torvalds/linux.git as of today, commit
+1f318b96cc84d7c2ab792fcc0bfd42a7ca890681.
+
+So it looks like something backported into 6.6 series between 6.6.86
+and 6.6.95 broke the behaviour and this stayed with us up to the
+current RC. This matches the report in the Arch Linux forums. I tested
+by building kernels and booting real hardware =E2=80=A6 so this already
+took some time and effort. I can test a specific patch/version
+quite easily, but don't have a fully automatic bisecting setup.
+
+The issue should be obvious in any environment, though. It seems to be
+universal once you choose a custom port and have some real (or
+emulated?) network between client and server.
+
+Hopefully an easy fix for someone close to the code?
 
 
-Best regards,
-Mate
+Alrighty then,
+
+Thomas
+
+PS: $ grep -e SMB -e CIFS  .config |grep -i -v -e SMBUS -e SMBIOS
+CONFIG_RMI4_SMB=3Dm
+# CONFIG_CHARGER_SMB347 is not set
+CONFIG_CIFS=3Dm
+CONFIG_CIFS_STATS2=3Dy
+CONFIG_CIFS_ALLOW_INSECURE_LEGACY=3Dy
+CONFIG_CIFS_UPCALL=3Dy
+CONFIG_CIFS_XATTR=3Dy
+CONFIG_CIFS_POSIX=3Dy
+CONFIG_CIFS_DEBUG=3Dy
+# CONFIG_CIFS_DEBUG2 is not set
+# CONFIG_CIFS_DEBUG_DUMP_KEYS is not set
+CONFIG_CIFS_DFS_UPCALL=3Dy
+# CONFIG_CIFS_SWN_UPCALL is not set
+# CONFIG_CIFS_SMB_DIRECT is not set
+CONFIG_CIFS_FSCACHE=3Dy
+# CONFIG_CIFS_COMPRESSION is not set
+CONFIG_SMB_SERVER=3Dm
+# CONFIG_SMB_SERVER_SMBDIRECT is not set
+CONFIG_SMB_SERVER_CHECK_CAP_NET_ADMIN=3Dy
+# CONFIG_SMB_SERVER_KERBEROS5 is not set
+CONFIG_SMBFS=3Dm
+
+PPS: I am testing running Samba smbd as unprivileged user on a
+non-standard port to find a cheap/simple least-privilege way to
+re-export a custom FUSE fs to clients, read-only. Samba smbd doesn't
+really like that, but can be coerced, esp. in a mount namespace where
+the hardcoded paths it uses can be remapped. I could add more layers to
+map the port back to 445 or do something else entirely, but maybe this
+is a half-reasonable scenario why one would like to talk SMB on a
+different port.
+
+--=20
+Dr. Thomas Orgis
+HPC @ Universit=C3=A4t Hamburg
