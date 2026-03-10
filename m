@@ -1,104 +1,214 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [194.59.206.189])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1B0B288C2D
-	for <regressions@lists.linux.dev>; Tue, 10 Mar 2026 09:34:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.59.206.189
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773135274; cv=none; b=K2xwnemjBrxiRa58WCA6dsl0V7jDuJdKYW6dde4tm1+jrFiBapU31sJtVtFrQmeTwHO7m2vTx54PYOqCsp4kokdF0LekOFvGdoJvVN7ijIR92UGvGyFs8M1uCxfHvMy49EQMAEjuAj8PhdZnLO3ChdTpbN3DvTgw3dXWuQiOMts=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773135274; c=relaxed/simple;
-	bh=nyiNMhyzJ6a+iIOaO1nHwCV3r6eGBMKcbIuopz0McX0=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=jcaZDzBn0wb+Zxanou6FLw9gW9aJq0bQDWHYcD1iMCNcwF7NFr6eETchgoG6y9D8r6NCmpVj4j2aoiz/fqZ/SipqM0zFNV9yHljJqAmoOmMx0KhRev5ix8ws9a69NdxGiiBfY57oPr1clp8/tVVYfYmBwPn9W8sxkOgtwLFQnZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=SazTbYwp; arc=none smtp.client-ip=194.59.206.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8978043E49C
+	for <regressions@lists.linux.dev>; Tue, 10 Mar 2026 09:41:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.210.176
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1773135672; cv=pass; b=B2d+WY06KhxA+SOduEdz0UD0AcOfJlu/quiwZK7L1ARqASW0e/XKOTKyuHLom8XvpZjHee6OjqIKM31ni4/qja4NSxS7DQDDfHmxjLum+4C766jO2jiZNCkliVssBAOjp1cCXBHMYqCGgRRWyees866Ugqks5Pgi5xxS3GwrjgM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1773135672; c=relaxed/simple;
+	bh=42EEnIo48m+E4ZUcaEDasfHmBleywoOljOZE8Z+sEMA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lDgAADLxZvKlCcLpE28vDDztXEK57fTTXzMswelmut3obnaMwJsv7zxmTYEuBxgXzfycvlVXncr/kR7pdsfj0o9zbPdLIx+1EE/KicHsmTgg+KeSQxcZ3izwrrT1UGAF7xdMelspROE0edKCz9HdII4PpDXnHNsee+nivwnG8sU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jhDv6nT1; arc=pass smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="SazTbYwp"
-Received: from relay02-mors.netcup.net (localhost [127.0.0.1])
-	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4fVTH26j2Bz4DpJ
-	for <regressions@lists.linux.dev>; Tue, 10 Mar 2026 10:34:22 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1773135262;
-	bh=nyiNMhyzJ6a+iIOaO1nHwCV3r6eGBMKcbIuopz0McX0=;
-	h=Date:Subject:From:To:References:In-Reply-To:From;
-	b=SazTbYwpVkRN7KAM2K3o7F5T1OB0uYWSzL52K3S49LvMvgP9gGtzuCb21JkJHL1wY
-	 LCw1UEz3AnK2l6CWs05u/V1Y8bEa+rCG2C1+IfRN3r1uXWmRcBhBua2anhvhdbhcuV
-	 KlF5yc9+fGAYdt15+iUOOkAoUi/bPzEOYuEusigDv3NQR+bNrlGSgXYCUODFzPCEQ1
-	 gwnxIu5DkUlvJBFzDR5/KOv9Pe0BgyKQ+3b90OPIxl+7xT4er50MblvDsU8lMPORXB
-	 SqL3LuxmoG/nZbU6oUSohAOoXvJ9V+ZlyO1pecAi5Ao4Uof1mGhIfT566JlR/6P4mH
-	 29GybaO37M5sQ==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4fVTH260fhz7wRM
-	for <regressions@lists.linux.dev>; Tue, 10 Mar 2026 10:34:22 +0100 (CET)
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4fVTH245QJz8sbC
-	for <regressions@lists.linux.dev>; Tue, 10 Mar 2026 10:34:22 +0100 (CET)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id CBE32632AF
-	for <regressions@lists.linux.dev>; Tue, 10 Mar 2026 10:34:21 +0100 (CET)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <5fa4589e-6e57-4b91-9e86-05416cf1f357@leemhuis.info>
-Date: Tue, 10 Mar 2026 10:34:21 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jhDv6nT1"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-82418b0178cso6753392b3a.1
+        for <regressions@lists.linux.dev>; Tue, 10 Mar 2026 02:41:09 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1773135669; cv=none;
+        d=google.com; s=arc-20240605;
+        b=dqiDcH2TDV+jhZb88QpQdnZeIcWPU4+DGdFnk0SVZHYJwI4+Dz7I/5pT66HHTEPBBj
+         cd3AW+f4GaH/CkAlTzo4tbCvYZzFi3hUV5OqfuyuKe3lWU0psdfN1UaDQcdPw8WvqwwE
+         sMqCkpDj4ul7U4DjgEKZKJZ2PV9BZ0IugQakjnfVw7nWqL1xwj8S/xnp8HV+M2KRjP5W
+         wcFdUfD1kfO5y0PgG2pZLOrJqOUMXiW+jPBX9d6CJYJGSimK5H3tvbdl51wOZRlvIgy6
+         Ha1VaA53lil5FDaEYwb4cdlZXXcEdA7TM8TWX7Yc+Y1Ic5rrBunr9/vkOdvBhf2Z9Qgu
+         Tgrg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=Too0WbBvqqA2xsVan1ZK/sbxWcWO3tAja3epVtAoaes=;
+        fh=SqjmxUglgV46IdHEXPZpgdd0kHZ7sEHJIGvffm9IJqU=;
+        b=i9T4P+tZOeW/WXlMDI1YZLa2JLNMxpXSfpcoF3ne6LHglwBKadimgnA/Ptrl+8l3TO
+         MbX+Y0rqc+bavnHF/uQ6ODisqr3RotnGdvLO2h75WOhJ+dmWP5kAv71oq0vqGy/EHClI
+         cvoKBc6DB+esGur40D+haRwRqnPhvI7FWW1LJ0E4vdeifZEFFXvzI2AI+1a+vC4ttL4K
+         gaqIkqsaAW5pUe59ft5tlwPN4YLszscnyDYmKJ1P/1nRsk+/e3bU4M7c/GTgqec3+vB6
+         vE1rnb/dU1oIVkqBz1zsBobOPZlrN9sT9ltww1WGUHexwYwJEqXFXryTOBRG1QKTNM0I
+         cIug==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1773135669; x=1773740469; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Too0WbBvqqA2xsVan1ZK/sbxWcWO3tAja3epVtAoaes=;
+        b=jhDv6nT1QQDkflrzzZUChNv4xFa+UyjrNd2H29E8AdIZJEF0Tsj+jGkv7/S0m+e66+
+         rXDVWXEmVbDledwi4nr5AiFI5cWQI+erKei33gouu9oGRNIbHpVkRDPqn9aew7iu/tfh
+         5A7uHr6mrPJEAP3YQ4cz/DyltDjfAqDeDjsxx8yXRyz61+UVSX/gM2gO40Zkm0z+gjLH
+         RNyo48dKOW8b2BgtvQMjJAFCkkNFl78Rf3x8JQPFwFL6R5E0BEhJZbodAVMe8uVHdU78
+         Lvg0f5K428gWb06XlHuW5yfGsq9C+V3oGf/QO5/BDOio2ogYFmCC7E6qN9Dz245cme5m
+         7Psw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1773135669; x=1773740469;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=Too0WbBvqqA2xsVan1ZK/sbxWcWO3tAja3epVtAoaes=;
+        b=Yz9tq8eIRoVlBRL0x3DS6fSfNYneZjCV9Ueo9SUgRnF+4RhDxsKL1mPqvyCWS255Hc
+         py7r6aXiM3pRLMWr8qXep3YykMr2xyyga9HViEd/Z61FSIcL7RpC6abacJJmBlK3tyJD
+         fJn8ZZLa+sB/kuCKa1UWvnC1/FyqrxBpuXo0ZcPBCFqwZiLutDnWbAAXJe4TTYRWLNRp
+         Hpa7juT+HCOpCypGOYNwsngf0WFJ1ZWDWdtWHE1Tze98WojMr7Jeb0pIGGiUjOuS6+Gb
+         Xaq/NnLWZA9fdPOvU8CUXwrL2pVHcjulyxBoDrNGOsd2rATrZRJ5KthJQJy9+UIbmCmH
+         sZJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCULbQ7CUrQyeO+FZ5MfE4CjlV0qMlwlKJjd//lX/1zy4/MJq2IEuCV36j5Bl3ZUNmuChXrLd83oeyMLaw==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yx1OscyaChTZ4TzVGKgEoIj88kR8yU01EC86Qje/BnEBGSS1cSN
+	SHpjivreBQ6KowurzoIrBcqXP6LOJH8K/DuAaQliAF3y8bK/hbo8lM/rWItJSunQ5yPPZUGxn0B
+	c8j/jvNYJAokt3aZdzLwceV7hRTGF9jQ=
+X-Gm-Gg: ATEYQzycdXp4j2u3HinqXYvX3oFa6CccjwvTq94UQro55MxMhsX51sNf04M3mj8k2qf
+	zWGFjTxShnGpWiIG+EQnY5NaSX3iZhYtfzOwyi5kEWIgSfy8HaHtiFwQsxCFRJ0SdLTIWm0G/jb
+	XyWSLIS4X4xXWycYgIE5Vfv+KEynwYGiRkgk2zOnO/I5+HCAB0tE4wW461OjQDsVtPTrl5joEKR
+	MI/pR/i4z5B/UG0E2ZVyQSyOqcSx1gDDMQv3ew/jdMYYqsZnG060ewYNuufuYOvx7KDC3mm/i8G
+	nbsG4CnRapT0ss6KDaix6G4DH5Zw/g5Pq10TLcJQ0O4EfaP+4A==
+X-Received: by 2002:a05:6a00:2789:b0:823:9e5:855e with SMTP id
+ d2e1a72fcca58-829a2b460c1mr12731502b3a.0.1773135668517; Tue, 10 Mar 2026
+ 02:41:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <177313526198.1526095.3977312575393193709@mxe9fb.netcup.net>
-X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: CBE32632AF
-X-NC-CID: kAspkcoicrULo1h5g50FmGwtGG87Rw/DCDo6w9DiYiw9nuqms5o=
+References: <CAC88DfsHrhyhy0Pn1O-z9egBvMYu=6NYgcvcC6KCgwh_-Ldkxg@mail.gmail.com>
+ <87a4wgrxil.wl-tiwai@suse.de> <CAC88DfvjQvZvdvGdZ00woMymE2tUWk=2Dbqi3EzuzSHxGjEnzw@mail.gmail.com>
+ <871phsrsnf.wl-tiwai@suse.de>
+In-Reply-To: <871phsrsnf.wl-tiwai@suse.de>
+From: =?UTF-8?B?SsOpcsOpbXkgQmV0aG1vbnQ=?= <jeremy.bethmont@gmail.com>
+Date: Tue, 10 Mar 2026 16:40:56 +0700
+X-Gm-Features: AaiRm53XcUwyb-5gh4G-OUgUJCFpiE_MjC72GceFp0Xp0OciyYPxLtNoIGmtRic
+Message-ID: <CAC88Dfv9S+BVJAZeZ+rfyRQHB4C05mSNSHyLh+DTvUAyGOCX=g@mail.gmail.com>
+Subject: Re: [REGRESSION] Audio popping on ThinkPad X1 Carbon Gen 12 (ALC287)
+ after commit d2e01e0c5e94
+To: Takashi Iwai <tiwai@suse.de>
+Cc: Kailang Yang <kailang@realtek.com>, alsa-devel@alsa-project.org, 
+	regressions@lists.linux.dev, regressions@leemhuis.info
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+Hi Takashi,
+
+To answer your question: no, if I disable runtime PM (or prevent the
+audio server from suspending the sink), the pop noise does not appear
+at all.
+
+The pop is completely eliminated as long as the device remains awake.
+It strictly occurs at the exact moment the audio stream closes and the
+device drops into a suspended state.
+
+Best regards,
+Jeremy
+
+On Tue, 10 Mar 2026 at 15:32, Takashi Iwai <tiwai@suse.de> wrote:
+>
+> On Tue, 10 Mar 2026 09:24:38 +0100,
+> J=C3=A9r=C3=A9my Bethmont wrote:
+> >
+> > Hi Takashi,
+> >
+> > Thank you for looking into this so quickly.
+> >
+> > As requested, I have attached the output of `alsa-info.sh --no-upload`
+> > from my machine.
+> >
+> > Please let me know if you have a proposed patch you would like me to
+> > test. I am happy to build it and verify if it resolves the popping on
+> > my hardware.
+>
+> I guess dropping the alc_process_coef_fw(codec, en_coefs) call at
+> closing would fix your problem while keeping the one at open.
+> But I'm not sure about any side-effect by that.
+> Kailang, could you check this?
+>
+> BTW, when you disable runtime PM, does the pop noise still appears?
+>
+>
+> thanks,
+>
+> Takashi
+>
+> >
+> > Best regards,
+> > Jeremy
+> >
+> > On Tue, 10 Mar 2026 at 13:47, Takashi Iwai <tiwai@suse.de> wrote:
+> > >
+> > > On Tue, 10 Mar 2026 01:01:11 +0100,
+> > > J=C3=A9r=C3=A9my Bethmont wrote:
+> > > >
+> > > > Hi Takashi, Kailang,
+> > > >
+> > > > I am reporting an audio regression introduced in kernel 6.18.13 on =
+the
+> > > > Lenovo ThinkPad X1 Carbon Gen 12 (Meteor Lake, Realtek ALC287 codec=
+,
+> > > > SSID: 0x17aa231e).
+> > > >
+> > > > Since this update, the laptop emits a short, noticeable hardware
+> > > > pop/blip from the speakers exactly when an audio stream closes and =
+the
+> > > > PCM state suspends. It happens consistently a few seconds after
+> > > > playback finishes (e.g., after a system notification or terminal
+> > > > bell).
+> > > >
+> > > > I have tracked the regression down to the following commit:
+> > > > d2e01e0c5e947da0b5005ca89efa82baeb232adc ("ALSA: hda/realtek - fixe=
+d
+> > > > speaker no sound")
+> > > >
+> > > > #regzbot introduced: d2e01e0c5e947da0b5005ca89efa82baeb232adc
+> > > >
+> > > > Root cause analysis:
+> > > > The commit modifies the `alc287_alc1318_playback_pcm_hook` function=
+,
+> > > > adding raw COEF writes to disable/enable AMP silence detection on
+> > > > HDA_GEN_PCM_ACT_OPEN and HDA_GEN_PCM_ACT_CLOSE.
+> > > >
+> > > > Because `alc287_alc1318_playback_pcm_hook` is a shared hook used by
+> > > > multiple Lenovo ALC287/ALC1318 devices, these unconditional
+> > > > `WRITE_COEF` instructions are being sent to hardware that does not
+> > > > need the silence detection fix. On the X1 Carbon Gen 12, executing
+> > > > `alc_process_coef_fw(codec, en_coefs)` upon stream close triggers a=
+n
+> > > > immediate electrical pop. Monitoring with `pw-mon` confirms the
+> > > > hardware pop coincides perfectly with the monitor_FR / monitor_FL
+> > > > ports going idle/suspended.
+> > > >
+> > > > Proposed solution:
+> > > > Could we revert this commit, or alternatively, wrap these specific
+> > > > silence-detection COEF writes in a targeted `ALC287_FIXUP` quirk
+> > > > matched via SSID/DMI, rather than executing them globally in the
+> > > > shared playback hook?
+> > >
+> > > Could you give alsa-info.sh output?  Run the script with --no-upload
+> > > option and attach the output.
+> > >
+> > > I guess the bug might not be specific to your device but happening in
+> > > general with all matching ones.  As a workaround for such a pop noise=
+,
+> > > we often need to reorder verbs or put some delay between verbs.
+> > >
+> > >
+> > > Takashi
+> >
+> >
+> >
+> > --
+> > J=C3=A9r=C3=A9my Bethmont
+> >
 
 
 
-On 3/9/24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
-
-#regzbot report:
-https://lore.kernel.org/all/558b602a-1b30-2761-fff4-04d837656ea5@rock-chips.com/
-#regzbot fix: 0fb59eaca18f12
-
-#regzbot report:
-https://lore.kernel.org/lkml/dfb72933-938f-43f2-87f3-2e3ab9697125@ixit.cz/
-#regzbot title: soc: qcom: pixel 3 broke
-
-#regzbot report:
-https://lore.kernel.org/all/CA+tjKGrmADg=oG9CT74_mgGNN3h17=LLmnv51K=MggAqo7q2Eg@mail.gmail.com/
-#regzbot introduced: 3471b9a31ce352
-#regzbot title: drm/amd/display: no signal when the refresh rate is
-higher than the default 60Hz
-
-#regzbot report: https://gitlab.freedesktop.org/drm/amd/-/issues/4893
-#regzbot introduced: v6.18..v6.19
-#regzbot title: drm: amd: Macbook Pro dGPU AMD Radeon R9 M370X crashes
-on boot
-
-#regzbot report:
-https://lore.kernel.org/all/aa6kLwNxoCIvquBT@FUE-ALEWI-WINX/
-#regzbot fix: remoteproc: sysmon: Correct subsys_name_len type in QMI
-request
-
-#regzbot report: https://gitlab.freedesktop.org/drm/amd/-/issues/5052
-#regzbot introduced: v6.19..v7.0-rc2
-#regzbot title: drm/amd: HDMI audio to an external monitor stopped working
+--=20
+J=C3=A9r=C3=A9my Bethmont
