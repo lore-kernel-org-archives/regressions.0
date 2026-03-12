@@ -1,221 +1,268 @@
-Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
+Received: from mail-yx1-f50.google.com (mail-yx1-f50.google.com [74.125.224.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEAE1257824
-	for <regressions@lists.linux.dev>; Thu, 12 Mar 2026 15:40:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.219.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66D353F87E6
+	for <regressions@lists.linux.dev>; Thu, 12 Mar 2026 16:29:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.224.50
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773330045; cv=pass; b=glxZJseYA9mzcwN1Y+zOm4wjAyhM77fiWpHHhJ1FCIzCZbEICiZaZBLa9/GehxvrwWXFbQwTI6jG9GZo5ixan1tEASZYFOuLk5qCzYPIyIgokOdYmhwKP27e99tTRyZBOUs473oRcPNPdAIEcbDzCy3JzV1/JT1droz6Z2Fzqbg=
+	t=1773332999; cv=pass; b=of9GdFXiPUJ4WQNKtnd7h52YJXlhUKsPQYyu8MZzzIifG+ipO5wuvzlzlZO9UvZf/epBsksh8EKc6tm/vwd0XSLoHCFREatK+hezh/krZ5RV9eoBAmcy1fvRFcuylmRz6pnvL3EJsSvMD7rxDVp7lU4Nm/yuCTM6ABSPO3bhZ24=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773330045; c=relaxed/simple;
-	bh=9U79XuSEDogMsEE6qxccDeqtvH3bBahfO34fvcv/Lvg=;
+	s=arc-20240116; t=1773332999; c=relaxed/simple;
+	bh=ca3P/9bpWxpAzHAvhfCefleRZXKyY3EW6gZMJdOkXTg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=S0XfvHPBhqDvgamWbJamVGTPMdggkvqgB60TFDgfLuJQdaVVjbbhSZiqWyXWcdZbhfhv8QvL0mVeRSBIkza1vBAWwOFDwp8ASoCxJOsJrYRksrBfrFr7jxEqYbmqvqHrMXiKTKUfBv4s8GRh7Xiv0Vvv6A6SA7eLFn9YTIbEFOk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k6o4XeRg; arc=pass smtp.client-ip=209.85.219.44
+	 To:Cc:Content-Type; b=DS9+F2VYwGtOQIplhIDHTMo1Hia4ndrYgE6fUtgBqYOljG9xPjBxumfjWvYiNBU0Q43cPMVfWhRyCTL2UHG33goSb791CQxmoEiurLPgyl8KKhJiawMLPrX4ju18+WBzdZvth5YzvGxJoUYWVYRk9JCqoUcMb/ggQxORw8T/EGc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FRxp7o6P; arc=pass smtp.client-ip=74.125.224.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k6o4XeRg"
-Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-899ed41208fso4124186d6.1
-        for <regressions@lists.linux.dev>; Thu, 12 Mar 2026 08:40:43 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1773330043; cv=none;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FRxp7o6P"
+Received: by mail-yx1-f50.google.com with SMTP id 956f58d0204a3-64c9a6d68e5so1099815d50.3
+        for <regressions@lists.linux.dev>; Thu, 12 Mar 2026 09:29:52 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1773332991; cv=none;
         d=google.com; s=arc-20240605;
-        b=cNtJ6BKRL/AQU2lTY1gY31k+1UC+efkDc/WNzNXI9915klc2Liw1YWl0Osm0CRgNrv
-         IHkMriMzfl97IWodzbonWzrYZBGymxoHymgMqQkqp91q3agaF59FPDVYahO8rlKLFUsZ
-         mcHcctz0op1rcxKETZ7SqeXiKQo8gos0R3XHP/HOwV6szK9ryPDSx3o167Mmxaf5UONL
-         xdKbszEEqsYUfhGRWT0XOlL3eq7EieQDK8RgP4xRIVDalfslku2M94bKmATBf+POvKHx
-         djeExEadqRtal19SnklkWXcD1Ee2Ibafvm7nbOYoQ+lqcKcJixFj0UivscfuoD+oNOV4
-         vq4g==
+        b=clkaKmW/h2xq+u7N2dXeFXrGP8CJ+G2UCqTKNvvn0h3QwziTRnIzeauuQnFA30VyMW
+         CLwitvPv5gOom/z4RKR6QCv19UsaCjhZ6xyyzWNn78g6pAr735jDpv2zJzE9IZrjZASj
+         +1OP9GD/rHhaNIBcPvhkkPSqJRzh2ih0/1Oo9d2QIFXq19ZzifmljHdlffvCxP72WLv+
+         HTNfWaFKjflsEupk3FcwGBihzUhvzEWpKIJO7rL5Y/WUpDo/WKjTcwfqnhbAeSZ80gaa
+         Bj3bVuvDj+8DU9dunBb5SVgSf1D4Qc/aCr219/MfFfPO9nZk/vsnqcqSiyCSDoUoiimr
+         N8EA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=pTMqddxceH06ae4/6PYanD/2oexQ8xHGkM95DOK/9Sw=;
-        fh=7n7NTZpsMo3X+TRZi6dgu+BDS4s4qYdtawb04U8lIvI=;
-        b=dBd1vFFD+F1IDmwrTGu9eaN6sacKhnMsTWAwlV/0m3f5An+igL5adZa27yo/2JCQJ4
-         FkuK7+IhTiTT9lKcrUMT5eLeUPuBuLm3pdui0XUq5/GSLF1DkChwMMmb59klA5COPvmn
-         OMOa8LAZ2sHYxcuD3P10yuWDj77REgFJhIEoBsxct/lWenk1fXZLV+6IHbLRrSUfYK2n
-         PT2pdvCzncSXFrrQJnlpWYZErrlIJtG6l+BN6vRpHJMt3/Y0Iom2cEZRmgBabGW9d7Kz
-         0IsC0sblIkjamq6XXy1X72C8iSJQr4awJ2g2dNQz9jm+XgTctP62gW1L/Y3ZvmHWpfRP
-         XArg==;
+        bh=abJyJRaFyH8wiPErXc6KKJVQzQfU2n6SLiuYOQcRMlE=;
+        fh=aCCexLyfLColBlQImWUWofG+M9WwT2cZngHbA2A8YGc=;
+        b=Ki340LTU++AH8g6rmnbnuHMnQE1upIW+CtdLE8q4P4wNH7zpNViUc5MVKIDqo5ooaQ
+         OXpIqSFDBMTB67syHph9MEv+uWx2cny3/f2OzqW9UAIPvLA+JHsM9szUDoIo8jWu+Fav
+         EeJ9NoYD3en7hAnABveXr3IJn97kPZWjQJrGgkA7EN2Fz3T0yXwMNcp+rNKv6u6H5IUD
+         RJuFWkNv1/ED7/OTcDWjheSeZGV/GZtfdlH5G+xKqRZvhk9DuIlXGgEJ0Z23C+IuB2GF
+         h/fY/E58H8B7nmeLa5EoSqoP30Qh+wVbIjIM1FbVVHNMmFoTP1hQOQdq4UOhVPkn1py+
+         7SXA==;
         darn=lists.linux.dev
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1773330043; x=1773934843; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1773332991; x=1773937791; darn=lists.linux.dev;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=pTMqddxceH06ae4/6PYanD/2oexQ8xHGkM95DOK/9Sw=;
-        b=k6o4XeRgKv+mR/r+scOUiub88JEJU83dTkCpgCfq1Q5c831h75mIoFSLOr3pFqgQhC
-         2YcGtRUdDZJjoeGJCf8qV1GHtE/HTfTSnkp3RliULT0jd7fsu22NXulA11gX+ndkWTnZ
-         gZZbpqhDpBecFe4lGZcDttppufqadjaqvNBga7QMO0QX2K+WyoRIVxMkEtl5OS4Vk1xA
-         a7T58nFYEyMNWp30tNcjibLVBYvH/E6Bih5+d4UzpjQVnOjG2uYH06xM3f/09gjC4mSq
-         cXfD7npTOtNfHk8Ek9+c12pGVpbK5BVU/+tL8SR8XLNKpjmygfWKDaf4bi8B8//jamFq
-         8udg==
+        bh=abJyJRaFyH8wiPErXc6KKJVQzQfU2n6SLiuYOQcRMlE=;
+        b=FRxp7o6PgyiNxXVwCsbjiqg3y68rorK+2y6quYOIUVMkGyaRxjJAi68DbG5Uzrw8cb
+         3Il1KpvK5wA+2oWAolgzb/9J++EsW/08Yv7p1au035Cixd3Ek0naxJAnpHDi6e0v6zbj
+         w3NKjRTjWJkvaG9cPkO02vWM9srLolDuJrZpiqZyr4FeszIbJsFlrDCiVlg1rpJjiZbt
+         XDkvPSUHttwwZFKiHnfoQM1hHioEC6sxCZZ6zodmrUIJpQCzIwrOlOr1AAYFYJtpvzKs
+         39PXVqxFF6uS35gvzCJsgPxV4BaUrJZDgK98ipN2N4rh+NMymBMsoqcsQlB9uYNLcQg5
+         Z63Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1773330043; x=1773934843;
+        d=1e100.net; s=20230601; t=1773332991; x=1773937791;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=pTMqddxceH06ae4/6PYanD/2oexQ8xHGkM95DOK/9Sw=;
-        b=nAg6zHXPhKoVEFTp1hP2dCUEV2KAgLZsx95xjUV9Jk0oD9uCFVyB0Z++5iR1oZqhHd
-         HGrZ5HTebHXdJ2hQqxvNaTp6hUfWD4tBDMg6L+Mq1/Rts8SGv0vmJHjKGdz3wHBfH/bS
-         lcQsodP7flwfxAW6VNZWHI6hxSl1gQPdos6nM/j12Bjfo3bYEovZrdCCW7KUDENuy3mV
-         NFOvzPgT1j5QqZlqBvGcQ1o7pDsQlDoObpyePH6qGVs/YKtKxGDe2bbF4HT/MwQ3wIYk
-         Hkfwvgl6UtIuWEp3P97ULkqakcJA0Z0eUwqN4wYdfd931+e70SooBc53nNXSGLt+fO+B
-         BUOw==
-X-Forwarded-Encrypted: i=1; AJvYcCV8wwJKRcfJUCgsHmSdY9B0o/S592TfCmizaO499+COhw3ALXqgjiHa3R6sH62iCZw/OtyntmnkYFfNgQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0YyxDfCZ34jn1GYzELLW/lWTbV0u38jPbimU2D6kvCCddH22tO4P
-	6CrbBUWUVtxhU1VZY/QD0pV7Yk//XXtHTkQsSVUWPvJPeohpqqLgBoy3LPvADYWJeBEzYMDAGhG
-	oCskhOZ08sdIMKHAD+l/tGOR7QAqOT+s=
-X-Gm-Gg: ATEYQzzY689UCPpAvZFrc5reCA2Skzpa5UmzHJQnoB+wDbDBmez5ai4ZyNvnuggALTQ
-	h/kAiQltIaQHe7nNz5XHX63waql1WoKMSV1fzrc6HkZL0T+V7r1natzpl77U750zE9Fz0/kYO2u
-	57FCDZ9EVuhzmELrRYfrWK/w4qPY8HewCnNmRjvafbIc/kaGUOHCpMj+qooZQANIYmJOeq8jUhM
-	LjaIt5wvWQMGTm8mQ4tgQhSzBr927+R7+L+72h6sxvheeGHgm0ockRafG8gbxBy9d29Wd0c6DrW
-	PuC7bFkCroYZWFIcCD5UrhIUuwjvcl4t/HxekpC3l3dbGRlHXrtgraIs+MmMdDeOk5Q5o0/VQm7
-	Hg4+D2HhehRgeDIZtLAOgCibAD4uVpQRA3WXK4IHQvuFvXmgPX4wNbe7Wpa3do72yU488CVgDxM
-	x8dK/ncTjRhDjywn1/nuF8wQ==
-X-Received: by 2002:ad4:5ca2:0:b0:899:fd80:f79f with SMTP id
- 6a1803df08f44-89a81dde5abmr2633836d6.23.1773330042750; Thu, 12 Mar 2026
- 08:40:42 -0700 (PDT)
+        bh=abJyJRaFyH8wiPErXc6KKJVQzQfU2n6SLiuYOQcRMlE=;
+        b=td4qdNDZUeeyRh3az3qkbeMk2FY3PfD99Q0TfuPX3ziCWI/bAX103BTlgsZMzvfpSS
+         DexyW33dKyL21tq+WSU0CW1/zIfYTPLUztQAkqKyJQGS7fO0zRbhKS/0qzKHQd78N5sz
+         enykwM5VBmb92Pxc2dLVmKF3uqY0dWtglK6sAefVgqPMoBt+d2JUV2QeWv0nWwTf4QNB
+         ygX6dm7FOQRqHqBdSSB4xmPiJLMq2OsGASveJNWZwaGXqreuWz/lQnriMcuVj/6t30UD
+         koFyJd3CsgN1I53xJFTfj7FIGrbE96dYKQ+ORLUD6Uuu0+8GTXOy/reV373LpWCUCfQg
+         O/jQ==
+X-Gm-Message-State: AOJu0YzXBOrgUHMrj+BXl6CcMw0cS3fUhxfY9JNcMa18jINaIiyYaO4y
+	kWqmgwjm083n6zXg0Nlu6BagvAJUFVkVTOG6xOrACZ7oHJ8IFkBOMILWMHCuJCtWzX3wf4Ki53D
+	AtPsyHNN6+3gSKMlrY6N7iPNy3jHCdqM=
+X-Gm-Gg: ATEYQzxOxUDB1SxjjfEVWIkLX6liPLiMfvoRxwLSGkTzuEvRm0+XYmp9Fpdwiab1F3a
+	tDaKGEzCnfL7N6wjZlsJg+o0nSMte53/ctpa/3IS/E8T7I84wqZ+HflzSy89UptuwAmUIoha6me
+	ky1JC4N7mhD/TphgrjY0oeN268HaEdteo9w7lpazAeu8CB014KG3MsslUgtckZi7nufiHcehh2y
+	WpMJO+eygtR2XPxAnaz6fAFIWn1NZh+nqazzvaV5JS11RcFIhWpdaT49exPTWBBTeqRUifkrwr/
+	mx1+RQV6oPJHNZziNG/cqPgKTbB6BY34/fSUm2vuAJw14i5GBZVSppTJK68XHK0=
+X-Received: by 2002:a05:690c:81:b0:798:5333:ce25 with SMTP id
+ 00721157ae682-79a1c0dd510mr2175737b3.17.1773332990883; Thu, 12 Mar 2026
+ 09:29:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260310235642.6d9798f4@plasteblaster> <c66p7dr6vlujvnwczbnrmqx7monkdgdnm4rwewm76aibn7jza3@d3uik74dei72>
- <CANT5p=q2Lv4pSvEm5EWcM73b7NZsbt1kYEFJtjaAZRS6Gz_OjQ@mail.gmail.com> <42utcrhajix2x3feckj7ap373osq65sgfz6ximnaj4rasszret@ymhf44ddz2wh>
-In-Reply-To: <42utcrhajix2x3feckj7ap373osq65sgfz6ximnaj4rasszret@ymhf44ddz2wh>
-From: Steve French <smfrench@gmail.com>
-Date: Thu, 12 Mar 2026 10:40:30 -0500
-X-Gm-Features: AaiRm52ah7-n07dCG73FeRnFD_pUuk-pLBG0LIJHG-WBVhN-iBaM9Rrd33zCEk0
-Message-ID: <CAH2r5msUyFejEbDafcWzSf5oLE3pJCdreaQTm2dxbqfmGtqCRQ@mail.gmail.com>
-Subject: Re: [REGRESSION] failure to reconnect on SMB server restart with
- custom TCP port (not 445): Host is down (at least since 6.6.95)
-To: Henrique Carvalho <henrique.carvalho@suse.com>
-Cc: Shyam Prasad N <nspmangalore@gmail.com>, 
-	"Dr. Thomas Orgis" <thomas.orgis@uni-hamburg.de>, Steve French <sfrench@samba.org>, 
-	linux-cifs@vger.kernel.org, regressions@lists.linux.dev, 
-	stable@vger.kernel.org
+References: <CA+tjKGrmADg=oG9CT74_mgGNN3h17=LLmnv51K=MggAqo7q2Eg@mail.gmail.com>
+ <2026030839-applied-prominent-b774@gregkh> <CA+tjKGoWW70TRw6C+PMDbhpCh5P_jyJ9ciY3HckJystb+X26Mw@mail.gmail.com>
+ <b3d8717f-07f7-4921-8808-55db94dfdc2e@leemhuis.info> <DM6PR12MB4354705B31704E35F281C5AA8744A@DM6PR12MB4354.namprd12.prod.outlook.com>
+In-Reply-To: <DM6PR12MB4354705B31704E35F281C5AA8744A@DM6PR12MB4354.namprd12.prod.outlook.com>
+From: hgfdgjn <shichuanyim@gmail.com>
+Date: Fri, 13 Mar 2026 00:28:38 +0800
+X-Gm-Features: AaiRm52IBoideGAVT25vO2-eOHfN-ZnyfhEX3UoEXepaFuzbtZ5hi1fYF_r5iCA
+Message-ID: <CA+tjKGqCmTQkxmdzrUfBxyENkMzocic1+OKS2bka5taGoy3SnQ@mail.gmail.com>
+Subject: Re: [BUG] HDMI monitor shows no signal when the refresh rate is
+ higher than the default 60Hz
+To: "Vojvodic, Relja (Reggie)" <Relja.Vojvodic@amd.com>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>, 
+	"Koenig, Christian" <Christian.Koenig@amd.com>, "Deucher, Alexander" <Alexander.Deucher@amd.com>, 
+	"Pillai, Aurabindo" <Aurabindo.Pillai@amd.com>, "Limonciello, Mario" <Mario.Limonciello@amd.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Mar 12, 2026 at 10:10=E2=80=AFAM Henrique Carvalho
-<henrique.carvalho@suse.com> wrote:
->
-> On Thu, Mar 12, 2026 at 05:44:58AM +0530, Shyam Prasad N wrote:
-> > On Wed, Mar 11, 2026 at 7:37=E2=80=AFAM Henrique Carvalho
-> > <henrique.carvalho@suse.com> wrote:
-> > >
-> > > On Tue, Mar 10, 2026 at 11:56:42PM +0100, Dr. Thomas Orgis wrote:
-> > > > Dear Linux-CIFS maintainer(s),
-> > > >
-> > > > I stumbled upon a regression in the Linux cifs/smb3 client when wor=
-king
-> > > > with a smbd using a non-standard port. I am not the first to note t=
-his, see
-> > > >
-> > > >       https://bbs.archlinux.org/viewtopic.php?id=3D306712
-> > > >
-> > > > which is a report from mid last year, indicating the problem someti=
-me
-> > > > after Linux 6.6.72. It is a very simple issue, where details of the
-> > > > kernel builds or mount setup don't seem to matter much: Older kerne=
-ls
-> > > > reconnect to a SMB server that was restarted (old processes killed =
-and
-> > > > replaced), newer kernels do not and just have a defunct mount.
-> > > >
-> > > > I reproduced this in our HPC cluster environment with such smb.conf=
- on
-> > > > the server side
-> > > >
-> > > > [global]
-> > > > security =3D user
-> > > > map to guest =3D Bad Password
-> > > > server role =3D standalone server
-> > > > smb ports =3D 1445
-> > > >
-> > > > [public]
-> > > > path =3D /some/path
-> > > > guest ok =3D yes
-> > > > read only =3D yes
-> > > >
-> > > > and such a mount command on the client:
-> > > >
-> > > > mount -t smb3 -o port=3D1445,user=3Dguest,password=3Dfoo //server/p=
-ublic dir
-> > > >
-> > > > When I kill and re-start smbd on the server, older client kernels
-> > > > reconnect and continue to return listings and files from the share,
-> > > > while newer kernels give this:
-> > > >
-> > >
-> > > My suspicion is that the regression was introduced by:
-> > >
-> > >     5713127da855 ("cifs: update dstaddr whenever channel iface is upd=
-ated")
-> > >
-> > > That change causes parse_server_interfaces() -- should this be runnin=
-g
-> > > without multichannel mount option? -- to overwrite the port stored in
-> > > server->dstaddr with CIFS_PORT.
-> > >
-> > > The attached patch preserves the existing port from server->dstaddr.
-> > >
-> > > Note that I have not yet tested this patch or confirmed the regressio=
-n
-> > > with a bisect. If you can't, I will try to do that tomorrow.
-> > >
-> > > --
-> > > Henrique
-> > > SUSE Labs
-> >
-> > Hi Henrique,
-> >
-> > AFAIK, the ignoring of port from the results was by design and part of
-> > the original code back in 2018:
-> > CIFS: parse and store info on iface queries
-> >
-> > Also, the comment in the code just above says why this is so.
-> > [MS-SMB2] 2.2.32.5.1.1 Clients MUST ignore these
-> >
-> > I checked this section and it says:
-> > Port (2 bytes): This field MUST NOT be used and MUST be reserved. The
-> > server SHOULD set this field to zero, and the client MUST ignore it on
-> > receipt.
-> >
-> > Based on the conversations here, it looks like smbd ignores this.
-> >
-> > I think the right fix would be to make sure that
-> > cifs_chan_update_iface gets called only for secondary channels. That
-> > way, it will not get called for single channel scenarios.
->
-> Sure, I read the comment in the code and the MS-SMB2 protocol. The
-> protocol states that "client MUST ignore [Port] on receipt". Since we
-> are not using p->Port, I don't see how this is a protocol violation.
+The populate_hdmi_info_from_connector() patch is in the stable master
+and running on my device.
+It appears to be a specific monitor issue.
 
-Agree. Looks harmless
+This is the EDID of the monitor I used to reproduce the issue.
 
-> We're using the port that was selected on mount and copied over to
-> server->dstaddr, so that when server->dstaddr is overwridden,
-> server->dstaddr keeps the user selected port.
->
-> Now, even if we only fix that for primary channels, the secondary
-> channels will still get the wrong port when they are overwridden, no? So
-> I don't see how that fixes the issue.
->
-> Apologies if I'm missing something.
->
-> Best regards,
->
-> --
-> Henrique
-> SUSE Labs
->
+$ cat /sys/class/drm/card1-HDMI-A-1/edid | base64
+AP///////wAhY0MkAAAAACQjAQOANR14Loy1r09DqyYOUFSlSwCBgLMAlQABAQEBAQEBAQEBAjq=
+A
+GHE4LUBYLEUADyghAAAeAAAA/AAyNEZTMQogICAgICAgAAAA/QAwkB6lKAAKICAgICAgAAAA/wA=
+w
+MDAwMDAwMDAwMDAxAe4CAyKxSJAEAwESHxM/aAMMABAAOHgA4gB/aBoAAAEBMJDtim+AoHA4QEA=
+w
+IDUADyghAAAeKIOAoHA4KUAwIDUADyghAAAeAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
+A
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA6Q=3D=3D
+$ cat /sys/class/drm/card1-HDMI-A-1/edid | parse-edid
+Checksum Correct
+
+Section "Monitor"
+    Identifier "24FS1"
+    ModelName "24FS1"
+    VendorName "HKC"
+    # Monitor Manufactured week 36 of 2025
+    # EDID version 1.3
+    # Digital Display
+    DisplaySize 530 290
+    Gamma 2.20
+    Option "DPMS" "true"
+    Horizsync 30-165
+    VertRefresh 48-144
+    # Maximum pixel clock is 400MHz
+    #Not giving standard mode: 1280x1024, 60Hz
+    #Not giving standard mode: 1680x1050, 60Hz
+    #Not giving standard mode: 1440x900, 60Hz
+
+    #Extension block found. Parsing...
+#WARNING: I may have missed a mode (CEA mode 63)
+    Modeline     "Mode 8" +hsync +vsync
+    Modeline     "Mode 0" +hsync +vsync
+    Modeline     "Mode 1" 148.500 1920 2008 2052 2200 1080 1084 1089
+1125 +hsync +vsync
+    Modeline     "Mode 2" 74.250 1280 1390 1420 1650 720 725 730 750
++hsync +vsync
+    Modeline     "Mode 3" 27.027 720 736 798 858 480 489 495 525 -hsync -vs=
+ync
+    Modeline     "Mode 4" 25.200 640 656 752 800 480 490 492 525 -hsync -vs=
+ync
+    Modeline     "Mode 5" 27.000 720 732 796 864 576 581 586 625 -hsync -vs=
+ync
+    Modeline     "Mode 6" 148.500 1920 2448 2492 2640 1080 1084 1089
+1125 +hsync +vsync
+    Modeline     "Mode 7" 74.250 1280 1720 1760 1980 720 725 730 750
++hsync +vsync
+    Modeline     "Mode 9" +hsync +vsync
+    Option "PreferredMode" "Mode 8"
+EndSection
 
 
---=20
-Thanks,
+This is another physically damaged monitor of mine, but I couldn't
+reproduce this issue.
+EDID for broken monitor:
 
-Steve
+$ cat /sys/class/drm/card1-HDMI-A-1/edid | base64
+AP///////wBBDB/C+yUAACIfAQOAPCJ4KivFrVBHpiYTUFS/7wDRwIGAMWgxfEVoRXxhaGF8Vl4=
+A
+oKCgKVAwIDUAVVAhAAAeQOcAaqCgZ1AIIJgEVVAhAAAaAAAA/ABQSEwgMjc1TTgKICAgAAAA/QA=
+w
+kB7mPAAKICAgICAgAasCAzDxTBAfBRQEEwMSAhEBPyMJBweDAQAAZQMMABAAZ9hdxAF4gABoGgA=
+A
+AQEwkOZvwgCgoKBVUDAgNQBVUCEAAB5aoACgoKBGUDAgNQBVUCEAAB4COoAYcTgtQFgsRQBVUCE=
+A
+AB7wPADQUaA1UGCIOgBVUCEAABwAAAAAAAAA/Q=3D=3D
+
+If you need other information or testing, please ping me, and I will test A=
+SAP.
+
+Thinks.
+
+Vojvodic, Relja (Reggie) <Relja.Vojvodic@amd.com> =E4=BA=8E2026=E5=B9=B43=
+=E6=9C=8812=E6=97=A5=E5=91=A8=E5=9B=9B 23:14=E5=86=99=E9=81=93=EF=BC=9A
+>
+> [AMD Official Use Only - AMD Internal Distribution Only]
+>
+> Hi,
+>
+> I've brought up this issue with some maintainers on our team and we've be=
+gun looking into it.
+>
+> This issue has come up before and was fixed with this patch: "drm/amd/dis=
+play: Improve HDMI info retrieval", which should be included in the stable =
+master branch. You can double check if this is the case.
+>
+> In the meantime, could we get the EDID of your display to aid in the debu=
+gging?
+>
+> Thanks,
+> Relja
+>
+> ________________________________
+> From: Linux regression tracking (Thorsten Leemhuis) <regressions@leemhuis=
+.info>
+> Sent: Thursday, March 12, 2026 9:33 AM
+> To: Vojvodic, Relja (Reggie) <Relja.Vojvodic@amd.com>
+> Cc: regressions@lists.linux.dev <regressions@lists.linux.dev>; Koenig, Ch=
+ristian <Christian.Koenig@amd.com>; hgfdgjn <shichuanyim@gmail.com>; Deuche=
+r, Alexander <Alexander.Deucher@amd.com>
+> Subject: Re: [BUG] HDMI monitor shows no signal when the refresh rate is =
+higher than the default 60Hz
+>
+> On 3/8/26 10:56, hgfdgjn wrote:
+> > 7.0-rc2 can also reproduce it; after locating the issue, it was
+> > reproduced using the stable upstream master branch.
+>
+> CCing the amdgpu maintainers, as this seems stalled. Dropping Greg and
+> stable, they most likely don't care.
+>
+> Relja Vojvodic, in case you missed it: this regression seems to be
+> caused by a commit of yours: 3471b9a31ce352 ("drm/amd/display: Rework
+> HDMI data channel reads") [v6.19-rc1]
+>
+> Ciao, Thorsten
+>
+> >> On Sun, Mar 08, 2026 at 05:42:39PM +0800, hgfdgjn wrote:
+> >>> Hi maintainers:
+> >>>
+> >>>   After updating to v6.19.6 on Arch Linux, if I set the refresh rate
+> >>> higher than 60Hz, the monitor displays "No Signal".
+> >>> I tried bisecting and found:
+> >>>> # first bad commit: [3471b9a31ce352ffb343cf02a991261880aac3a7] drm/a=
+md/display: Rework HDMI data channel reads
+> >>>
+> >>> This issue on my machine was caused by this change:
+> >>>
+> >>> diff --git a/drivers/gpu/drm/amd/display/dc/link/protocols/link_ddc.c
+> >>> b/drivers/gpu/drm/amd/display/dc/link/protocols/link_ddc.c
+> >>> index 267180e7bc48..5d2bcce2f669 100644
+> >>> --- a/drivers/gpu/drm/amd/display/dc/link/protocols/link_ddc.c
+> >>> +++ b/drivers/gpu/drm/amd/display/dc/link/protocols/link_ddc.c
+> >>> @@ -549,7 +549,8 @@ void write_scdc_data(struct ddc_service *ddc_serv=
+ice,
+> >>>      /*Lower than 340 Scramble bit from SCDC caps*/
+> >>>
+> >>>      if (ddc_service->link->local_sink &&
+> >>> -        ddc_service->link->local_sink->edid_caps.panel_patch.skip_sc=
+dc_overwrite)
+> >>> +        (ddc_service->link->local_sink->edid_caps.panel_patch.skip_s=
+cdc_overwrite
+> >>> ||
+> >>> +        !ddc_service->link->local_sink->edid_caps.scdc_present))
+> >>>          return;
+> >>>
+> >>>      link_query_ddc_data(ddc_service, slave_address, &offset,
+> >>>
+> >>>
+> >>> It appears that scdc_present is always false on my device.
+> >>> I reverted the change to write_scdc_data(), and the monitor works
+> >>> normally at high refresh rates.
+> >>
+> >> Can you cc: the developers and maintainers of this change to let them
+> >> know?  Otherwise they will not notice it.  Also, does 7.0-rc2 show thi=
+s
+> >> issue?
+> >>
+> >> thanks,
+> >>
+> >> greg k-h
+> >
+>
