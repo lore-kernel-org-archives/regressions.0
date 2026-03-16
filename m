@@ -1,51 +1,55 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.61.103])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [185.244.194.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63900282F02
-	for <regressions@lists.linux.dev>; Mon, 16 Mar 2026 11:30:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.61.103
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E47C27BF79
+	for <regressions@lists.linux.dev>; Mon, 16 Mar 2026 11:33:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.244.194.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773660632; cv=none; b=FEYNYHkzrCl8tnez/iNsxA7YuLSmlgFJhTahxLdNGKhSbCV9/ChvuUcusxdUn+H8kybzVyIq6LPX97iV2WW04vrGQhi7bMGXYQMF1QSa5nZm0hk02o9N+mY9cXG3PfcP/k3GTQsY30EpmZPFKHMcN0h/q/TKonu4bjqAR4GY4nk=
+	t=1773660822; cv=none; b=EFz4m3rzoPSz+RUAEXCrMLmbhfmtlaPKlhpz0xwr3ABnn38+FeMrPOXb8jqV/7Eb9ZTMIfBgReysMhfICr/swVTkupz+eMExx1xiLJ55eRMBJlQRkL6ea4fC1eMY11DJyZ3wexXgDGwIxStAkGrL5EOQnzqA0xpJMNFbS2xpyYQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773660632; c=relaxed/simple;
-	bh=VD2SZ4zPl2QiNjFQy49xFNiTsCCQnU4PUIcpFpP9Eus=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uMBFBaetr6julVszJR7hwXDquYFbxeveKerN2C4w+xGwUc/et79yc9yrEwJPo0Z1qJxe8UwHeuz9BBF6V7bY2WO7JXHpchX5VgEMwGtNH/CowdkzbMxMgBVG22xfGu0HjcVfcJ2Ro7k7fb/NupIEbfOYtTw9W7gI7G7687wnmXw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=cXfVaKhl; arc=none smtp.client-ip=188.68.61.103
+	s=arc-20240116; t=1773660822; c=relaxed/simple;
+	bh=NAonwxwUpojmpMApfWyP80JIRuBewFG/nWucH7kNcIU=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=R1xqdBqdAbB7shgxYeFv3DX5TPLFJ2xiB2bKmtvXTa4iM9qzzUtNIjGoyAMkLcJEi8eLn/kY8+KVLmjG8ijmendfjRrR6xBNKGPIM4XHKHpZwo8tWzICM3cGoOvSTpHm0S+EQopWY8y1oPNqrHU4Nrp2xoy87ud16wZrrD+5uGU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=gS8AQqUJ; arc=none smtp.client-ip=185.244.194.184
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="cXfVaKhl"
-Received: from mors-relay-8403.netcup.net (localhost [127.0.0.1])
-	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4fZCZ637Sgz89BG;
-	Mon, 16 Mar 2026 12:30:22 +0100 (CET)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="gS8AQqUJ"
+Received: from relay01-mors.netcup.net (localhost [127.0.0.1])
+	by relay01-mors.netcup.net (Postfix) with ESMTPS id 4fZCdn0L7nz91wf
+	for <regressions@lists.linux.dev>; Mon, 16 Mar 2026 12:33:33 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1773660622;
-	bh=VD2SZ4zPl2QiNjFQy49xFNiTsCCQnU4PUIcpFpP9Eus=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=cXfVaKhlC07VgloevZ/T0lyP4EuX4pTFcfxAIEgc/AdISGU1QIFyIa6oasOkgTVKu
-	 OgfHqbsg8ogfpzKUxvzAtYfrVKbk6ukECQfHt09ZRPD68YneMHUWGItbeghxSROiHz
-	 eXMcwALJta+B20b+TJzzEsZ0ymBhMmDd1PZeMRcvB+haN/1O6ooUYCniYRHg7eYowS
-	 6KBH4C75+qBH4DocFwOtBMC3YCECkl/E+S//gOdqrMecl4pnoebBpPQTLBSgbUo/96
-	 v+pp9UOJ46kap/iussgoBPLDIq66VzZAoOBJPgca7i/x6i+1AtHsswuJ2r8MZZzOG+
-	 uMq05Vds8+Wuw==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4fZCZ62RNbz89B9;
-	Mon, 16 Mar 2026 12:30:22 +0100 (CET)
+	s=key2; t=1773660813;
+	bh=NAonwxwUpojmpMApfWyP80JIRuBewFG/nWucH7kNcIU=;
+	h=Date:Subject:From:To:References:In-Reply-To:From;
+	b=gS8AQqUJUDmKr1JP2XaFPBa6pIY4WG07A4vRPGFDibDYZOL052k6VDYhpKxLRmLkv
+	 /DNyHvEAj+Aw+Nb8FU6LS9+t4pX5LFl6/WJjLOMygv8zkF3GolvMmlIBhn0GAGx56a
+	 f0aWBnJIKCEbhkwLmeQaps36Pqqkl3zOt0qq+7zGImlHIQNm03w/JmYtbI0sF55Rpe
+	 uSojGitc8IpFDLZWXPgYR20mfDB10UIAVIwIWrlnLy7tgx/ej/Z2xFbXO/9R37PrUb
+	 10dvug31hHG1Ay5ktkB/YMnE0q4B1jff1DqKWC+OwLtLvg/gaw7hRrOSAl7k8ELOfz
+	 C97nUuEvaC46w==
+Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
+	by relay01-mors.netcup.net (Postfix) with ESMTPS id 4fZCdm6m7Zz7vVv
+	for <regressions@lists.linux.dev>; Mon, 16 Mar 2026 12:33:32 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
+X-Spam-Flag: NO
+X-Spam-Score: -2.898
+X-Spam-Level: 
 Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4fZCZ566d6z8svh;
-	Mon, 16 Mar 2026 12:30:21 +0100 (CET)
+	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4fZCdm1vMnz8sbl
+	for <regressions@lists.linux.dev>; Mon, 16 Mar 2026 12:33:32 +0100 (CET)
 Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 43263617A5;
-	Mon, 16 Mar 2026 12:30:21 +0100 (CET)
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 7A3F0617A5
+	for <regressions@lists.linux.dev>; Mon, 16 Mar 2026 12:33:31 +0100 (CET)
 Authentication-Results: mxe9fb;
         spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
 Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <fbe7b0ad-28c8-4fa6-adbb-860691657eb2@leemhuis.info>
-Date: Mon, 16 Mar 2026 12:30:19 +0100
+Message-ID: <f81e6ac2-1e14-41f5-bcba-d495902e4ed7@leemhuis.info>
+Date: Mon, 16 Mar 2026 12:33:31 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -53,153 +57,48 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [BUG] Apple Mac mini 2018 + Thunderbolt 3 eGPU: PCI bridge window
- / BAR allocation failure prevents NVIDIA and AMD GPUs from initializing
-To: =?UTF-8?Q?Michal_Babi=C4=8Dka?= <michal.babka@gmail.com>,
- linux-pci@vger.kernel.org
-Cc: linux-usb@vger.kernel.org, linux-acpi@vger.kernel.org,
- regressions@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <FCEB17D3-3DC5-49C8-8C56-8051C875E2F9@gmail.com>
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
 From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
 Content-Language: de-DE, en-US
-In-Reply-To: <FCEB17D3-3DC5-49C8-8C56-8051C875E2F9@gmail.com>
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-PPP-Message-ID: 
- <177366062153.1410887.11442397827644764000@mxe9fb.netcup.net>
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: <177366081166.1411789.7570350561823540999@mxe9fb.netcup.net>
 X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: 43263617A5
-X-NC-CID: KMW1k5vmoE6SyIQHu31VK5FSCSLrfyytH8CRfIlGnJ9kPBgqsxY=
+X-Rspamd-Queue-Id: 7A3F0617A5
+X-NC-CID: 7PMvGnBGe+D0w5I9itTUfmQPmOrVOhlE2fA5MPpckZyRTdYzo/4=
 
-On 3/15/26 12:54, Michal Babička wrote:
-> Subject: Apple Mac mini 2018 + Thunderbolt 3 eGPU: PCI bridge window / BAR allocation failure prevents NVIDIA and AMD GPUs from initializing
 
-Lo! You CCed the regression list, which implies that this is a
-regression. But you did not specify when the problem started. And if it
-really is one: have you considered a git bisection? Then we'd know what
-causes this. This in case of a regression most likely will be needed,
-unless some developer has an idea what might be at fault here.
 
-Ciao, Thorsten
+On 3/9/24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-> Hardware / platform:
-> - Host: Apple Mac mini 2018
-> - Connection: Thunderbolt 3
-> - eGPU enclosure: Razer Core X Chroma
-> - Tested GPUs:
->   - NVIDIA Quadro P400
->   - NVIDIA Quadro P4000
->   - AMD Radeon Vega 64
-> 
-> Linux distributions / kernels tested:
-> - Ubuntu-based systems
-> - Zorin OS 18 Pro
-> - Multiple kernels tested, including 6.12.x and 6.17.x
-> 
-> Problem summary:
-> On Apple Mac mini 2018, an external GPU connected through Thunderbolt 3 in a Razer Core X Chroma enclosure is detected and enumerates on the PCI bus, but GPU initialization fails because PCI bridge windows / BAR resources are not assigned correctly.
-> 
-> This is reproducible across different Linux installations and with GPUs from different vendors, which strongly suggests a platform/topology-level PCIe resource allocation problem rather than a bug in one specific GPU driver.
-> 
-> Observed behavior:
-> - The Thunderbolt enclosure is detected correctly.
-> - boltctl shows the enclosure as connected / authorized.
-> - The GPU appears in lspci.
-> - The kernel loads the vendor driver module.
-> - GPU initialization then fails.
-> 
-> For NVIDIA, nvidia-smi reports:
->   "NVIDIA-SMI has failed because it couldn't communicate with the NVIDIA driver."
-> 
-> Relevant NVIDIA kernel messages include:
-> - "BAR 1 [mem size 0x10000000 64bit pref]: can't assign; no space"
-> - "BAR 3 [mem size 0x02000000 64bit pref]: can't assign; no space"
-> - "This PCI I/O region assigned to your NVIDIA device is invalid"
-> - "BAR1 is 0M @ 0x0"
-> - "RmInitAdapter failed"
-> - in some attempts also:
->   "fallen off the bus and is not responding to commands"
-> 
-> With NVIDIA Quadro P4000, the same general failure pattern was observed:
-> - the GPU is detected on the PCI bus,
-> - the NVIDIA kernel module loads,
-> - initialization fails,
-> - and the logs again point to invalid / missing BAR assignments and resource allocation problems behind the Thunderbolt PCIe bridge hierarchy.
-> 
-> For nouveau, the failure is visible as BAR/resource allocation failure as well, for example:
-> - "bar: one-time init failed, -12"
-> - "init failed with -12"
-> - "Device allocation failed: -12"
-> 
-> With AMD Radeon Vega 64 installed in the same enclosure on the same host, the same fundamental problem occurs:
-> - the enclosure is detected,
-> - the GPU enumerates,
-> - initialization fails,
-> - and the overall behavior indicates the same lower-level PCI resource / bridge window allocation issue.
-> 
-> This strongly suggests the issue is not NVIDIA-specific.
-> 
-> Thunderbolt state:
-> boltctl reports the Razer Core X Chroma enclosure as connected/authorized correctly, for example:
-> - type: peripheral
-> - generation: Thunderbolt 3
-> - status: authorized
-> - rx speed: 40 Gb/s
-> - tx speed: 40 Gb/s
-> 
-> Important conclusion:
-> Thunderbolt authorization itself appears to work.
-> PCI enumeration also works.
-> The failure happens later, at PCI resource assignment / bridge window sizing / BAR allocation time.
-> 
-> Key dmesg patterns observed:
-> - multiple "can't assign; no space" messages for PCI bridges and BARs
-> - BAR1 / BAR3 of the GPU not assigned
-> - bridge windows under the Thunderbolt hierarchy not large enough
-> - reassignment attempts that still leave required windows unassigned or invalid
-> - vendor driver subsequently failing device initialization
-> 
-> Examples of affected topology in logs:
-> - 0000:00:01.1
-> - 0000:05:00.0
-> - 0000:06:01.0
-> - 0000:0b:00.0
-> - in other boots, the same problem may appear under a different BDF address after Thunderbolt re-enumeration
-> 
-> Representative log excerpts:
-> - pci 0000:0b:00.0: BAR 1 [mem size 0x10000000 64bit pref]: can't assign; no space
-> - pci 0000:0b:00.0: BAR 3 [mem size 0x02000000 64bit pref]: can't assign; no space
-> - pci 0000:06:01.0: bridge window [mem size 0x10000000]: can't assign; no space
-> - pci 0000:05:00.0: bridge window [mem size 0x20200000]: can't assign; no space
-> - NVRM: BAR1 is 0M @ 0x0
-> - NVRM: RmInitAdapter failed
-> - NVRM: The NVIDIA GPU ... has fallen off the bus and is not responding to commands
-> - nouveau ... Device allocation failed: -12
-> 
-> Kernel command line options already tested:
-> The following boot parameters were tested in various combinations:
-> - pci=realloc=on
-> - pci=hpbussize=0x33,hpmemsize=256M,hpiosize=2M
-> - pcie_aspm=off
-> - pci=nommconf
-> - pci=noaer
-> 
-> These mitigations did not resolve the issue.
-> 
-> Why this looks platform/topology specific:
-> - The same Thunderbolt eGPU enclosure is recognized correctly.
-> - The same failure pattern appears with NVIDIA Quadro P400, NVIDIA Quadro P4000, and AMD Radeon Vega 64.
-> - The common denominator is Apple Mac mini 2018 + Thunderbolt PCIe topology under Linux.
-> - The failure mode is centered around PCI bridge window sizing / BAR placement, not around one vendor-specific driver alone.
-> 
-> Expected behavior:
-> The Thunderbolt eGPU should receive valid PCI bridge windows and valid BAR assignments so that the GPU driver can initialize the device successfully.
-> 
-> Actual behavior:
-> The GPU is visible on the bus, but bridge windows and BAR resources are not fully assigned, which leaves the device unusable and prevents the driver from completing initialization.
-> 
-> Request:
-> Please investigate PCI resource allocation / bridge window sizing for Thunderbolt eGPU topologies on Apple Mac mini 2018 under Linux, especially where large GPU BARs must be assigned behind multiple Thunderbolt / PCIe bridges.
-> 
-> Cross-vendor reproducibility on the same enclosure and same host strongly suggests that the root cause is in PCIe/Thunderbolt resource allocation on this platform rather than in a specific NVIDIA or AMD driver.
+#regzbot report:
+https://lore.kernel.org/all/20260310235642.6d9798f4@plasteblaster/
+#regzbot introduced: 5713127da855
+#regzbot title: cifs: failure to reconnect on SMB server restart with
+custom TCP port (not 445)
 
+#regzbot report: https://gitlab.freedesktop.org/drm/amd/-/issues/4663
+#regzbot introduced: 58a261bfc967
+#regzbot title: drm/amdgpu: Intermittent 2D OpenGL Hangs
+#regzbot dup:
+https://lore.kernel.org/all/20260311044311.10941-2-bugfood-ml@fatooh.org/
+
+#regzbot report: https://lore.kernel.org/all/aahw_h5DdmYZeeqw@20HS2G4/
+#regzbot introduced: 7e43e0a1141d
+#regzbot title: netfilter/nftables consumes way more memory
+#regzbot fix: netfilter: nft_set_rbtree: revisit array resize logic
+#regzbot monitor:
+https://lore.kernel.org/all/20260312011423.3492328-1-pablo@netfilter.org/
+
+#regzbot report:
+https://lore.kernel.org/all/170a3c247d8b94a2e5714ca0641a91511c9808d3.camel@posteo.de/
+#regzbot introduced: v6.18..v6.19
+#regzbot title: ALSA: ctxfi: Oops
