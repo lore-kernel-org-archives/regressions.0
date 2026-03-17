@@ -1,114 +1,109 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.162])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B390366050
-	for <regressions@lists.linux.dev>; Tue, 17 Mar 2026 11:47:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E26623AA50F
+	for <regressions@lists.linux.dev>; Tue, 17 Mar 2026 12:33:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.162
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773748075; cv=none; b=IpzIUAzjz7AaJIGT9QieFZZDM27rKRAK/YpXzoaEk+iDPtrcPP3RBvbG4Wjg34Dbfk3p/IA96dHY+sImmXQY1keRND8FbnDjeJ9DyECWmXvNFwJMpfYEpwmeRWrCGizSKSVIYzqacBQKFX9chPz2lJOEzlYzxL/C+k9QDV82ACU=
+	t=1773750813; cv=none; b=Sqjptfr2ofqukd0nlHvkZcV2s0o6g1hUFDkLOPgSSuSis6ptWTWOhSc3usAklkRiXNvgxs06IMEBqE6jGKb4nCTjqSHvJlPQxQUTo24M1PDtKz9jupFfrOD9lixfGOxKJP2ZKuFW5rbN+5tyerphKC1M2mFBAVE18g7xVMVntNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773748075; c=relaxed/simple;
-	bh=JdQasyzbMwQG4UJ6BxEFeSmYOOI5nM9Nngo91aNREe4=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=hOby9TVlMI3y/K8F/89/BDLsbw2xNjUgPgpjPmrk2WKYEw1WPRPI7/CcYmWa06MKlglG2wU/TFIfGZ6H8jIEHbK4IjMicYa5y4r8MVdix61uQhAIsDSn2lKpqhU6M6oCLLYZkapzeeGoNqbbZHjWHNorNKsPx5+QISz1fZNihaU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aJUpCofq; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1773750813; c=relaxed/simple;
+	bh=/Ubtx+ApZZl9jVjU6WtLtrBxpASD5/PODvEX7hrgzvQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=eR8m29TuMPY6dk/yd2s0AZmFRi0D6/3Zlmnb7nRdm5OyTL6D3dKwEPThy2CaBje4NtoWepA7OU5/hTi67RA7puru6SXJtIFbk4rx+n3HnZs9oXX0w95uEIBmXKUBlXaXtejvlSVScRNbWsMidXPP5J9EGRhARdcSrjowI50FLZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=azwEds3Q; arc=none smtp.client-ip=188.68.63.162
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aJUpCofq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1773748074; x=1805284074;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=JdQasyzbMwQG4UJ6BxEFeSmYOOI5nM9Nngo91aNREe4=;
-  b=aJUpCofqHY+HWqwh996zR8i7kSfnrK6G/UaywDrtiISkgejpu5YN/B9u
-   yxAjIvpJro1Y/zj1jChWV/pIDFiUZXhMOUly6uV35vz5ALCrasVYgLH2P
-   M9Xrt5ZD6Hbx4km5q+4WF+LQqfO9GH364Llaq35U5oQWXPwqssh5A8d+a
-   X3jvQiiOOeQ/bs5uqYGtmslvalnHnxB33l0rx25knds1hpNJ94+17IWGr
-   xQJg37yoa00DB1x2pcJ3jIE8yjCWOuYwiUjIkYvmqbac4Kqv2xN9ZrHPv
-   dc4qXV/fTFdRBB9sLto4HhMnBNbxi1r6ZSleyloq2+urEABqFKcl469Oj
-   g==;
-X-CSE-ConnectionGUID: VVxuYb06Tru6ctP46B1TpQ==
-X-CSE-MsgGUID: gr5lomi+QZ6k9hBfOnaHcA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11731"; a="74894416"
-X-IronPort-AV: E=Sophos;i="6.23,124,1770624000"; 
-   d="scan'208";a="74894416"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2026 04:47:54 -0700
-X-CSE-ConnectionGUID: xoXiTkqNTdiMkqPkFoJ4kQ==
-X-CSE-MsgGUID: JCFW171WTKSqFvCJxs7QSQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,124,1770624000"; 
-   d="scan'208";a="227217242"
-Received: from egrumbac-mobl6.ger.corp.intel.com (HELO localhost) ([10.245.245.161])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2026 04:47:51 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 17 Mar 2026 13:47:46 +0200 (EET)
-To: Bjorn Helgaas <helgaas@kernel.org>
-cc: =?ISO-8859-2?Q?Micha=B3_Pecio?= <michal.pecio@gmail.com>, 
-    linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, 
-    LKML <linux-kernel@vger.kernel.org>, regressions@lists.linux.dev
-Subject: Re: [REGRESSION 6.14] Some PCI device BARs inacessible
-In-Reply-To: <20260316201651.GA23314@bhelgaas>
-Message-ID: <12da4009-3f6e-3fea-8d21-f8c9d66f7102@linux.intel.com>
-References: <20260316201651.GA23314@bhelgaas>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="azwEds3Q"
+Received: from mors-relay-8201.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4fZrwS0S8Dz44Jg;
+	Tue, 17 Mar 2026 13:33:28 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1773750808;
+	bh=/Ubtx+ApZZl9jVjU6WtLtrBxpASD5/PODvEX7hrgzvQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=azwEds3Q6hWAhQF9bduzwKNy4SGuiO9lXwtv3bruTEelytAl71jIP7kEWrv4AINHe
+	 s75RJTZnfSyXnmKC8dqWx5nN2rrqjCmoDPQCRQ8lGiJNYISFd0Y3cEZVV1UX/usjfK
+	 qYYIaHUwxNtc7bv7bcAERIWYswoC96k5kVCy3y8iHdEefB0jCZelvKNDztEoRky2Hm
+	 PmJUHmOCJBimxJ25LnC+5lYmjK8MHf1N57ufkBAdr7CrxtZLU9RXplmuqBILEfuTp0
+	 fc3/KLDnnrORX+aO8h9mpmGxSRrOHo/+86Ppu50zcH+Y0A9r0Wznsa79a26zUaHH4N
+	 O77IOiP2StkuQ==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4fZrwR6qRBz42mC;
+	Tue, 17 Mar 2026 13:33:27 +0100 (CET)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4fZrwR4cclz8sgW;
+	Tue, 17 Mar 2026 13:33:27 +0100 (CET)
+Received: from luggage.fritz.box (unknown [IPv6:2a02:8108:8984:1d00:a8ad:ebd4:6fc6:160])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 20D8B635A2;
+	Tue, 17 Mar 2026 13:33:27 +0100 (CET)
+Authentication-Results: mxe9fb;
+	spf=pass (sender IP is 2a02:8108:8984:1d00:a8ad:ebd4:6fc6:160) smtp.mailfrom=linux@leemhuis.info smtp.helo=luggage.fritz.box
+Received-SPF: pass (mxe9fb: connection is authenticated)
+From: Thorsten Leemhuis <linux@leemhuis.info>
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: linux-doc@vger.kernel.org,
+	regressions@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 3/5] docs: reporting-issues: add conclusion to the
+ step-by-step guide
+Date: Tue, 17 Mar 2026 13:33:06 +0100
+Message-ID: 
+ <bc18f678b6854879dc7691ecbb762d717da4baa3.1773750701.git.linux@leemhuis.info>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <cover.1773750701.git.linux@leemhuis.info>
+References: <cover.1773750701.git.linux@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-1619845209-1773747867=:968"
-Content-ID: <74457b6c-5b44-7f35-8488-74f2c85f7fe9@linux.intel.com>
+Content-Transfer-Encoding: 8bit
+X-PPP-Message-ID: 
+ <177375080736.2889269.16948562741891668169@mxe9fb.netcup.net>
+X-Rspamd-Server: rspamd-worker-8404
+X-Rspamd-Queue-Id: 20D8B635A2
+X-NC-CID: e0xsZ0y6F9jPA24NM7G/wiOF/W0CiUXaRpzpUtwqc+DtM5KzH4A=
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Text based on a section
+Documentation/admin-guide/verify-bugs-and-bisect-regressions.rst
+and slightly improved after review feedback.
 
---8323328-1619845209-1773747867=:968
-Content-Type: text/plain; CHARSET=ISO-8859-2
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <5749c0c7-bac2-95bc-1be3-cdfecc78e941@linux.intel.com>
+Signed-off-by: Thorsten Leemhuis <linux@leemhuis.info>
+---
+ Documentation/admin-guide/reporting-issues.rst | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-On Mon, 16 Mar 2026, Bjorn Helgaas wrote:
+diff --git a/Documentation/admin-guide/reporting-issues.rst b/Documentation/admin-guide/reporting-issues.rst
+index 9f9c5db25a6c1a..aa058b295c5f33 100644
+--- a/Documentation/admin-guide/reporting-issues.rst
++++ b/Documentation/admin-guide/reporting-issues.rst
+@@ -241,6 +241,20 @@ kernels regularly rebased on those. If that is the case, follow these steps:
+ The reference section below explains each of these steps in more detail.
+ 
+ 
++Conclusion of the step-by-step guide
++------------------------------------
++
++Did you run into trouble following the step-by-step guide not cleared up by the
++reference section below? Did you spot errors? Or do you have ideas on how to
++improve the guide?
++
++If any of that applies, please let the developers know by sending a short note
++or a patch to Thorsten Leemhuis <linux@leemhuis.info> while ideally CCing the
++public Linux docs mailing list <linux-doc@vger.kernel.org>. Such feedback is
++vital to improve this text further, which is in everybody's interest, as it will
++enable more people to master the task described here.
++
++
+ Reference section: Reporting issues to the kernel maintainers
+ =============================================================
+ 
+-- 
+2.53.0
 
-> [+cc Ilpo, +bcc bugzilla reporters and commenters]
->=20
-> On Fri, Apr 18, 2025 at 10:29:26AM +0200, Micha=B3 Pecio wrote:
-> > Hi,
-> >=20
-> > This is a heads up that an apparent PCI regression has been reported
-> > and mistakenly assigned to USB in the kernel bugzilla:
-> >=20
-> > https://bugzilla.kernel.org/show_bug.cgi?id=3D220016
-> >=20
-> > Visible symptom is missing USB devices, but the whole controller fails
-> > to probe, apparently due to devm_request_mem_region() returning NULL,
-> > see drivers/usb/core/hcd-pci.c and usb_hcd_pci_probe().
-> >=20
-> > Same systems also show a similar failure with some AHCI controller.
-> > It seems specific to particular ASUS AMD motherboards.
-> >=20
-> > Somebody found that disabling CONFIG_PCI_REALLOC_ENABLE_AUTO helps.
-> >=20
-> > That's all I know, reporters can be reached via bugzilla.
->=20
-> I see some activity in the bugzilla but no resolution.  Ilpo has done
-> a lot of work in this area since v6.14, though, so I wouldn't be
-> surprised at all if this has been fixed.=20
->=20
-> Would anybody be interested in testing v6.19 or v7.0-rc to see if this
-> problem still exists?
-
-My plan was to look at this ticket again anyway (or has been for like a=20
-few months now but there has been higher prio items get in the way of=20
-looking the ticket up).
-
-(It went to lower prio bin once it was determined it was not a real
-regression but fc enabling pci=3Drealloc. Despite that, I'd still want to=
-=20
-have it fixed eventually.)
-
---=20
- i.
---8323328-1619845209-1773747867=:968--
