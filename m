@@ -1,211 +1,162 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f43.google.com (mail-oo1-f43.google.com [209.85.161.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D72CE37BE94
-	for <regressions@lists.linux.dev>; Tue, 17 Mar 2026 17:45:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA612270EC3
+	for <regressions@lists.linux.dev>; Wed, 18 Mar 2026 02:37:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773769534; cv=none; b=C0SeCX6aQOTENzPhR5ESgySSeU+pJWOpvZ5cNu1xucAr2x20wfsrg9ScnOk2+PZext9u8V+tBkln1DkAQAYP93p4e1VM2QN0bxlIju9YME3EEjk3ysPvbAVVTBZZcncA6MLTIBOK4q+VYIlVRKHjConqPZuZnWbWTCXdK4dSEDE=
+	t=1773801481; cv=none; b=gqZj3WTWxvGOWGcFyPELi+5BM5S+Qn6lXbs9dDZvwZbEg6kRqdS49Hgu8H3zb701qDF6JClLktPOspBtW4CS67oJXnhjUy7pMn0oVWrP0uWLTGWR1ueYmR8Gqbz2tejHXYRX/VcAhdQPBw7NiTeZVBW36OLi7XgmMi7kh4FrjRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1773769534; c=relaxed/simple;
-	bh=iaNWFVFLm7vozirDxvC9jTtq6cozMvhQkxb9+GR6/UM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nYgl6KJG6sqgw0+pA7PbYOjlgKwoAevcmsDsfGqOhPmag7DV906SLLGDGfzUiUc9hpKFpbaFbbT41Adj9Gu3c06HlPw0UYk8iF5M0xD03UcesYjdsbaZ8sfAg6RGe287DXkcpqNc+xQ805SPGCHubSWPLn3Ip7sGgb38ea+0CQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=nDpdg9LH; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=jGOHlKg/; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1773801481; c=relaxed/simple;
+	bh=n0w6e/nOGgYAcidng5lDiAq12GtXKpGxxsbG7TpMjxU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Z3nmIS3t1YqHSXMGUNaMk9Pa8WtgVAIzmXjjTGg8+tiUty1SrZ/JNWMn8hPCi31nXzSrHk/LG54NsabVmD2CGPELAt6KdbteZA1VsMRzjVygh2Eh+TbBdcUPVgp4oMXUhu5OZLvvMKQG5uDzTAK0D5Krk6Nd0wA4wFBue8n1Q4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zm/TJ3ut; arc=none smtp.client-ip=209.85.161.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="nDpdg9LH";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="jGOHlKg/"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62HEHsSo2188418
-	for <regressions@lists.linux.dev>; Tue, 17 Mar 2026 17:45:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=sve/0XHVXakpPoL6EEAxjWXr
-	d/xyFE0tTXS0gGte2N0=; b=nDpdg9LH6CceQx9RwAn5zn9AU+Xt2QzpPN2MYRF5
-	3INjPlpOOCTH1DZA3EqWY0MRvluGeq6/EnccZEF2Ojmbx7ixmZOmQYNCBFPdhN2S
-	Mou7xh+70D3aGseV2PFHlzu5pJrdGNxr/ioc+/iT6tFdrg+cmA2DyPoIXH34ZgkQ
-	uPMO+Rumub2H3y102PI5ZXEzxqsdkz2kAXl0LwNxh7OrVz+TXFXuxZZ8MFMSFvMR
-	w3th+G25fSoxgTOQIo1BqBaFch+QknnSd3VjhohHtf8zypOGIyK9bIlLraiUPZP9
-	xlZj1snVyEJQ0I15FKhOT/qHeYeR2L/Sfn94N95vx99K1Q==
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4cy8kjrv3t-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <regressions@lists.linux.dev>; Tue, 17 Mar 2026 17:45:31 +0000 (GMT)
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-8cd77e5e187so3369382885a.1
-        for <regressions@lists.linux.dev>; Tue, 17 Mar 2026 10:45:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zm/TJ3ut"
+Received: by mail-oo1-f43.google.com with SMTP id 006d021491bc7-67badf2d5b6so3490007eaf.2
+        for <regressions@lists.linux.dev>; Tue, 17 Mar 2026 19:37:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1773769529; x=1774374329; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=sve/0XHVXakpPoL6EEAxjWXrd/xyFE0tTXS0gGte2N0=;
-        b=jGOHlKg/aQWkJiU3dxv0QrHaKbv7hwM1S0s17EEHAPRz+gIkQAjWyN0Yw6hoOHzUhi
-         fjOm+16+EJTRny1GydkndztCTYGVgd/oAWsJg5l3OVOd8/3YbIJPN80ceJ2WaXqjvmTj
-         UWq2Lfjxbi/368U9qyPgmc0qbKxn+PHvvQC3spKiPnA19L35JgOzn4Nrix9xV029Zesf
-         5Pf8MLYGCzLABA8REMN+xjCxu4dTl/VSTM3w5nnBeux9WdZZtpxT3+booxsu03rvErAl
-         wDvSZjxCIJBqYG8kduNpWEii2pATcexNyfsz7nQAeO6q3ihJ7EQBEormhM3QqEqIQpHp
-         ktqg==
+        d=gmail.com; s=20230601; t=1773801479; x=1774406279; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=RHBZTmx3gpGoOcOvI5wr45XrMLqrJh4cbl+ScbRtWNE=;
+        b=Zm/TJ3utHVoHmZT/r2Tg4yhV9iKOovtR39DmssNcmK31ie8iQ2UVFfDe5IN//0WHMu
+         NBfQ3zE08Q6ZYfN4IwoBMIFEibxEC5jwag7hVSmGskyYnsAXDt+TnqrJsetIvY7gtblg
+         C5CWphwlkpcycdbQz4V3sxkuyhQCCLHOEwqA23qLjRlPLGXw5+0CWIxGNsWUuQbbIZgG
+         JvB1/aD91n3KFZC+ckmMmbTxCeN8d5sXQz0VBeH45229aTM2s+11n7FfpoHRT8fZYNk0
+         xHFrbKu587/ce9x/012f7KXw90MDKJg4x5842RALB2+qFXL4XmwqgqKxcb4rCjPTf21R
+         t+/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1773769529; x=1774374329;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sve/0XHVXakpPoL6EEAxjWXrd/xyFE0tTXS0gGte2N0=;
-        b=f5NM7dCmJPVaRh6yhGeOY3ZgEH7fgJA3yruRNydhAAo43BP2KYOrwTetEdkN+M1W+y
-         XbBo9f9QOsOWjCWmel6Ms7UEfJaYdg/SwKug8mEn5XVEPled6LOo7X5E7YktCIKrHq5z
-         ZrIqqtqzfCnHnQaHIZmcMdqVaVCyPYvc7L12GgrikCQXarfkB8YzbqyHvSddis2yq15j
-         vyci7+vr7rWzSbWky+JTQidCJ2wVrqCb+hYTOXLNtOR1/WM0ss103D52muIq05nK85hU
-         PfB0bheEacgojyyAmglyLDNLt1CX/cA1EXS3lfyFqBtjisKpGcJUa9cg7X6gVzc0iobF
-         Eu8g==
-X-Forwarded-Encrypted: i=1; AJvYcCXDvjir34eqllfuFfw+H9QkCA6Wep0wpsywa/DQdK1bvDzGhEQX6L56Rm8d1S8TaKNE7t5apYgdbZ2QJw==@lists.linux.dev
-X-Gm-Message-State: AOJu0YyOH0mxnRKLD/6kJFHhAzPSPZkymkcYIPmVIe4zUB1O6FMVZjdD
-	7N/8/Pilqcl/j1gOQAyUFFzeNiVp4lvcYMSQZCb8t6Hrs905BlX2hNORR4RVXmvva7ZU3SDxsi6
-	w21v7rKh5J3YoTf4BgvzSwHmMKOsQpepYx3PRHUyM71K52J8O7XCOaOc5O+o9Dv3Z+g==
-X-Gm-Gg: ATEYQzzjNru0V2J65zAlpxzT6AHd/jxJ7m9R3qnSqnelmDHWkw/vvrux6z8F7EfpuWm
-	j4fisBFnYr31ssmGZ9Ev6TzO1+PH5xu6lb/5Yv2J8m3DzPORxfah8ACSaCk+IpcfPKCIk45I2gs
-	roCWOfuxFBTR3S0z+Qhpvl0mtjfh7NudK0P6iG9F+CxdZp1ea5+MAZA4J1sUkCdOoraogrbORCC
-	gOiHwVO54hFWIPTuk74H88LqeCriD006Q6rnQU3sh7QJkEcxvMtOq1SFwQBGMV99ZvtxVtpRr0r
-	1lCfIs5MYwItICNfI4zXDoW35j3jFmq+lkFHEG9LYVIXDWZDLOOARso2y5OJyoPO0TyMoBUpKo8
-	ppmllPpUNMtMq5jpknAdrDfeRhYuUkIXVAc8S6vt+QSVkC2qXug8KvczskUQPFim9rn5EUl3Gga
-	py5nA0qyWtcooDggRcGwGylTjMycTIA/H5DUI=
-X-Received: by 2002:a05:620a:19a9:b0:8cd:8320:3359 with SMTP id af79cd13be357-8cfad1e0b92mr60710985a.9.1773769528705;
-        Tue, 17 Mar 2026 10:45:28 -0700 (PDT)
-X-Received: by 2002:a05:620a:19a9:b0:8cd:8320:3359 with SMTP id af79cd13be357-8cfad1e0b92mr60702685a.9.1773769528096;
-        Tue, 17 Mar 2026 10:45:28 -0700 (PDT)
-Received: from umbar.lan (2001-14ba-a073-af00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a073:af00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-38bd517df25sm1088111fa.15.2026.03.17.10.45.26
+        d=1e100.net; s=20251104; t=1773801479; x=1774406279;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RHBZTmx3gpGoOcOvI5wr45XrMLqrJh4cbl+ScbRtWNE=;
+        b=gaqySdK+6Z6pPpqtkqmjuzFQA1B5yHoEPuvRYcyJ7bRMDMbbRWpFlmPnVQLwvf2qr6
+         tRADIDXTznjej/utQOKqIUtobOoe3HpWYinKlAUSjiGFpqxzPH0da2nGnILXu1za8JLb
+         8212SYki9xitzYZwd93jla4hVIZQACkmo5jLhDTkN5b6+kcDUIxpinVjwtO/wg/tF9Th
+         ssMcfFgpOeKr8D9X9znhDrtZc1he85RMsuPhC+fIiRoyJSK+IXtnY9XG3pLUiyIWUIt5
+         y24agojIiXcvIK6+GYRna9oa+efey4mdjxT4eMhvMdnr8zD8xE50jVed6qovcdcHDw2q
+         R4Eg==
+X-Forwarded-Encrypted: i=1; AJvYcCV9OsReXYbNe0BdxiTexRogpMT5vzYpj5MrNF7Oa0315wBGPIO+3M930iIdvES8h7ffNw4pRjSBRSReYw==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yw64/R+6pScZiqc2OM5+v3fcfGS+qt93Apavfi0/5JUvKIS//LV
+	PVwroXyQY6H/W65jzmgCjk0eL3LLHL441t1XVgVa7zOWvXV331k+Gdyn
+X-Gm-Gg: ATEYQzwk3eLvufNHZSRmYGC/RD29JyVawCjqQrbAkMXV48qettZG+9G0oa34yEFsN0A
+	9CTT4xjjjOfqt0NyJRZ8c+8zSs00V8Kw6ixlX49GmGlLT7xSIQp7QHHd6e2JHcflj9jNeCkD5Gn
+	BmcNPvq0chxTbEvOgKzNFuuLc6EvI4jHxzyXOr7D0+2hfwmpZ0mj/09boY6w6Tf7i7OZqACOEhT
+	wZhI4iRduw0F811Pwh1t474k4TmiFUrhbLb94F1Ma/ggzbpimw91vvz2PTh7/9UzVE8ZhO0KsNs
+	UOg7lQazft4oSuEK9/jJ48jEU811+jkKMOMFy74v0EpbpKOAMtWstlpKQ3EtoVGyGWaQFrfWuED
+	E4KijtmUtZtPyk2/+gEgQWscV/JmUIsQa2Yik0m7h+0erYS85cWfvvOAdQg/9lLwfW8cdEYWLUN
+	cU5wm2MDeyE1cUAubTJFujQ8V7ipGGBsyj15g5Widh4Yml+BohDTFXz7XWhR0u5MDJeUVA7TNB
+X-Received: by 2002:a05:6820:2d43:b0:67b:c368:136b with SMTP id 006d021491bc7-67c0da8c338mr1059481eaf.29.1773801478708;
+        Tue, 17 Mar 2026 19:37:58 -0700 (PDT)
+Received: from celestia.turtle.lan (static-23-234-115-121.cust.tzulo.com. [23.234.115.121])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-67c0d88c5bbsm880101eaf.10.2026.03.17.19.37.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Mar 2026 10:45:26 -0700 (PDT)
-Date: Tue, 17 Mar 2026 19:45:25 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Luca Weiss <luca.weiss@fairphone.com>
-Cc: Mahadevan P <mahadevan.p@oss.qualcomm.com>,
-        Rob Clark <robin.clark@oss.qualcomm.com>,
-        Dmitry Baryshkov <lumag@kernel.org>,
-        Abhinav Kumar <abhinav.kumar@linux.dev>,
-        Jessica Zhang <jesszhan0024@gmail.com>, Sean Paul <sean@poorly.run>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Krishna Manikandan <quic_mkrishn@quicinc.com>,
-        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        regressions@lists.linux.dev
-Subject: Re: [PATCH v2] drm/msm/disp/dpu: add merge3d support for sc7280
-Message-ID: <7tcmh65lhy7t452mwkiv37pxqwh6dbuh6voelaag6kph7tfr65@cskiwvoafbdy>
-References: <20260101-4k-v2-1-712ae3c1f816@oss.qualcomm.com>
- <DH1IKLU0YZYU.2SW4WYO7H3H4R@fairphone.com>
- <tbi5mwg4jt5scvr76lpzpvi5zj3kn3entoorsd4dior4g23czd@xtobadslhfrz>
- <DH437ESQRIAF.2336WF7XZBTI@fairphone.com>
+        Tue, 17 Mar 2026 19:37:58 -0700 (PDT)
+From: Sam Edwards <cfsworks@gmail.com>
+X-Google-Original-From: Sam Edwards <CFSworks@gmail.com>
+To: Ilya Dryomov <idryomov@gmail.com>,
+	Alex Markuze <amarkuze@redhat.com>,
+	Viacheslav Dubeyko <slava@dubeyko.com>
+Cc: Milind Changire <mchangir@redhat.com>,
+	Xiubo Li <xiubli@redhat.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	ceph-devel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev,
+	Sam Edwards <CFSworks@gmail.com>,
+	stable@vger.kernel.org
+Subject: [REGRESSION] [PATCH v2] ceph: fix num_ops OBOE when crypto allocation fails
+Date: Tue, 17 Mar 2026 19:37:33 -0700
+Message-ID: <20260318023733.116789-1-CFSworks@gmail.com>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DH437ESQRIAF.2336WF7XZBTI@fairphone.com>
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzE3MDE1NiBTYWx0ZWRfX2fp9siTROwsV
- S1VNSyBc3vDSqlEjvvFGeXZAVB8/vApVtGOJzOQDsCaTnAikVWttXlixRZ3ZlZYJauhDYRBqomT
- /9kELkPABKPVgTbcw06xL0X3xgh974/EX1EGNHTHvqHkntzgELdy2NQ8K2BfM3AnYc7DloC4y5I
- J1OsZ4/xcdeYRa1MZR7thr0UVO++eLkMljqTdQs9zgy8MEe7qOK86VXHITLn2ZMrrZ1BspQXbYA
- kHn6dGcDCppD6qx8x9BO6BZziNRhinu/Il4ac0n6fFK50MxdSH+W0n5jxeP+t1L2MtL3pn/60Qa
- pOtaqJrh5VhhW7sTHMpKi3P8ftx1FVo5CGE7BUyGRECXLXYZaR42t361G2XFE+lrUMFLOdpQUzc
- FLnKFQHvR5TcVIdxQ8/L9B8nRjgdmBbMUQOfpZT7JiR9Uck/vXsOf2yEH3xbTQUIH8m+UgJIZE+
- OFybbEtWG4OGd9NDjdA==
-X-Authority-Analysis: v=2.4 cv=P8I3RyAu c=1 sm=1 tr=0 ts=69b9933b cx=c_pps
- a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=Yq5XynenixoA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=u7WPNUs3qKkmUXheDGA7:22 a=gowsoOTTUOVcmtlkKump:22 a=xNf9USuDAAAA:8
- a=EUspDBNiAAAA:8 a=WX5Q9rlaD-dN8u3Ux8UA:9 a=CjuIK1q_8ugA:10
- a=bTQJ7kPSJx9SKPbeHEYW:22
-X-Proofpoint-ORIG-GUID: ji3_FUrjO-xFQwLYFMy3jel_ESxGPPSU
-X-Proofpoint-GUID: ji3_FUrjO-xFQwLYFMy3jel_ESxGPPSU
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-03-17_04,2026-03-17_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 clxscore=1015 priorityscore=1501 suspectscore=0
- lowpriorityscore=0 adultscore=0 spamscore=0 malwarescore=0 bulkscore=0
- phishscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2603050001
- definitions=main-2603170156
+Content-Transfer-Encoding: 8bit
 
-On Mon, Mar 16, 2026 at 10:08:47AM +0100, Luca Weiss wrote:
-> Hi Dmitry,
-> 
-> On Fri Mar 13, 2026 at 6:14 PM CET, Dmitry Baryshkov wrote:
-> > On Fri, Mar 13, 2026 at 09:33:18AM +0100, Luca Weiss wrote:
-> >> Hi Mahadevan,
-> >> 
-> >> On Thu Jan 1, 2026 at 6:04 AM CET, Mahadevan P wrote:
-> >> > On SC7280 targets, display modes with a width greater than the
-> >> > max_mixer_width (2400) are rejected during mode validation when
-> >> > merge3d is disabled. This limitation exists because, without a
-> >> > 3D merge block, two layer mixers cannot be combined(non-DSC interface),
-> >> > preventing large layers from being split across mixers. As a result,
-> >> > higher resolution modes cannot be supported.
-> >> >
-> >> > Enable merge3d support on SC7280 to allow combining streams from
-> >> > two layer mixers into a single non-DSC interface. This capability
-> >> > removes the width restriction and enables buffer sizes beyond the
-> >> > 2400-pixel limit.
-> >> >
-> >> > Fixes: 591e34a091d1 ("drm/msm/disp/dpu1: add support for display for SC7280 target")
-> >> > Signed-off-by: Mahadevan P <mahadevan.p@oss.qualcomm.com>
-> >> 
-> >> This patch is causing display regression on QCM6490 fairphone-fp5.
-> >> 
-> >> With this patch in 7.0-rc3 (or 6.18.16) there's just pink noise on the
-> >> screen. When reverting this patch everything becomes working again.
-> >> 
-> >> See also https://salsa.debian.org/Mobian-team/devices/kernels/qcom-linux/-/issues/41
-> >> 
-> >> @Dmitry: Can we revert this for later 7.0-rc, in case it's not fixed
-> >> quickly?
-> >
-> > Could you please provide the resource allocation parts of
-> > debugfs/dri/0/state for both working and non-working cases?
-> 
-> Working (patch reverted)
-> 
-> resource mapping:
->         pingpong=# # 68 # - - - - - - - - - 
->         mixer=# - 68 # - - - - 
->         ctl=68 # # # - - - - 
->         dspp=# - - - - - - - 
->         dsc=68 - - - - - - - 
->         cdm=# 
->         sspp=# - - - - - - - # # # - - - - - 
->         cwb=- - - - 
-> 
-> 
-> Broken (with the patch)
-> 
-> resource mapping:
->         pingpong=# # 68 68 - - - - - - - - - 
->         mixer=# - 68 68 - - - - 
->         ctl=68 # # # - - - - 
->         dspp=# - - - - - - - 
->         dsc=68 - - - - - - - 
->         cdm=# 
->         sspp=# - - - - - - - # # # - - - - - 
->         cwb=- - - - 
+move_dirty_folio_in_page_array() may fail if the file is encrypted, the
+dirty folio is not the first in the batch, and it fails to allocate a
+bounce buffer to hold the ciphertext. When that happens,
+ceph_process_folio_batch() simply redirties the folio and flushes the
+current batch -- it can retry that folio in a future batch.
 
-As we have identified that the issue is what downstream calls
-DUALPIPE_3DMERGE_DSC topology, could you please also check several
-things (with the broken kernel):
+However, if this failed folio is not contiguous with the last folio that
+did make it into the batch, then ceph_process_folio_batch() has already
+incremented `ceph_wbc->num_ops`; because it doesn't follow through and
+add the discontiguous folio to the array, ceph_submit_write() -- which
+expects that `ceph_wbc->num_ops` accurately reflects the number of
+contiguous ranges (and therefore the required number of "write extent"
+ops) in the writeback -- will panic the kernel:
 
-- What is being returned by dpu_encoder_helper_get_3d_blend_mode() (in
-  the broken config)?
+    BUG_ON(ceph_wbc->op_idx + 1 != req->r_num_ops);
 
-- If there is any difference in working and broken configs between
-  values being passed to (and programmed to the DSC) in
-  dpu_encoder_prep_dsc() ?
+This issue can be reproduced on affected kernels by writing to
+fscrypt-enabled CephFS file(s) with a 4KiB-written/4KiB-skipped/repeat
+pattern (total filesize should not matter) and gradually increasing the
+system's memory pressure until a bounce buffer allocation fails.
 
-- The same question for pclk calculation in dsi_host.c
+Fix this crash by decrementing `ceph_wbc->num_ops` back to the correct
+value when move_dirty_folio_in_page_array() fails, but the folio already
+started counting a new (i.e. still-empty) extent.
 
+The defect corrected by this patch has existed since 2022 (see first
+`Fixes:`), but another bug blocked multi-folio encrypted writeback until
+recently (see second `Fixes:`). The second commit made it into 6.18.16,
+6.19.6, and 7.0-rc1, unmasking the panic in those versions. This patch
+therefore fixes a regression (panic) introduced by cac190c7674f.
+
+Cc: stable@vger.kernel.org # v6.18+
+Fixes: d55207717ded ("ceph: add encryption support to writepage and writepages")
+Fixes: cac190c7674f ("ceph: fix write storm on fscrypted files")
+Signed-off-by: Sam Edwards <CFSworks@gmail.com>
+---
+
+Changes v1->v2:
+- Added a paragraph to the commit log briefly explaining the I/O pattern to
+  reproduce the issue (thanks Slava)
+
+- Additionally Cc'd regressions@lists.linux.dev as required when handling
+  regressions
+
+Feedback not addressed:
+- "Commit message should link to the mentioned BUG_ON line in a source listing"
+    (link would not really help anyone, and the line is a moving target anyway)
+
+- "Commit message should indicate that ceph_wbc->num_ops is passed to
+   ceph_osdc_new_request() to explain why ceph_wbc->num_ops == req->r_num_ops"
+    (ceph_wbc->num_ops is easy enough to search; and the cause->effect of the
+     BUG_ON() is secondary to the central point that ceph_process_folio_batch()
+     is responsible for ensuring ceph_wbc->num_ops is correct before returning)
+
+- "An issue should be filed in the Ceph Redmine, linked via Closes:"
+    (thanks Ilya for clarifying this is unnecessary)
+
+---
+ fs/ceph/addr.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/fs/ceph/addr.c b/fs/ceph/addr.c
+index e87b3bb94ee8..f366e159ffa6 100644
+--- a/fs/ceph/addr.c
++++ b/fs/ceph/addr.c
+@@ -1366,6 +1366,10 @@ void ceph_process_folio_batch(struct address_space *mapping,
+ 		rc = move_dirty_folio_in_page_array(mapping, wbc, ceph_wbc,
+ 				folio);
+ 		if (rc) {
++			/* Did we just begin a new contiguous op? Nevermind! */
++			if (ceph_wbc->len == 0)
++				ceph_wbc->num_ops--;
++
+ 			folio_redirty_for_writepage(wbc, folio);
+ 			folio_unlock(folio);
+ 			break;
 -- 
-With best wishes
-Dmitry
+2.52.0
+
