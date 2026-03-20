@@ -1,78 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.102])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5227B3A0B11;
-	Fri, 20 Mar 2026 12:34:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AEA238D6A8
+	for <regressions@lists.linux.dev>; Fri, 20 Mar 2026 13:23:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.102
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774010062; cv=none; b=M3W6ZvB43qF1Bk+QJey2oYXUzndOoJlydPZwYVThNk/wnmOVdFZnV79uY99ao59Fxi6vSmPjhW7CQaELVwKA0jscQ2FJflNcLzALMG6vjjaoDojVPYC9TLoQ0+0RtvapoNFan3XIcCnIqEJYXv4JSNnUaSicihA8Lfb1dvgOck0=
+	t=1774013019; cv=none; b=mJHGr+buFjaVIWH4ej1B78mvxjmIH1e/U+1Mphjan4vy2pxM6BQHh9k8SvJKvvRlXvX9CYmlfiXt8eu9K1x6Zl9dfrejWrYyPDTsFOoaSAhiXCA5tJB9L8nE89rZ/2OrAA0AIr7w9A95jBCQ/TMM5ZpWpIu5olFDJQblUn/5uk4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774010062; c=relaxed/simple;
-	bh=0kuYHYKOa9cOrOL9pXPthIlfZkSzriMUGOsY9d18FZg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j6O6VrhzbycqL9chHjWmLScTbpGciIvxrOt6ZKMru8pSO4cYk3D9KtzPPyLQsezrKxujv8sUU5GN/qdSmRO2yUI1cvHY578w+qeA1xwe4mMII/hAJ8YdZeiVlYDOkwgHn3Eg3/rQ8cFtaYKBRLJKL/eLSQXMqvjXXDu8A8gw4qY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=qYiaMxg3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1774013019; c=relaxed/simple;
+	bh=FKRdYxxhm3uUoq5zyPUBTETsZZdWu8DAbg3LzztKAWo=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=PODIfaD5FSTtr/y5ql/GiLBG72thTSlTFSXBqVwbJkg1VVSufxpnO12y/uOa2KkkMxaPKIMLzfZdDhNd5NViGreY0Wy47QBsLIkx3jI/8b3JK4Ob+UnOF6eRlyO3obHh5LQ20GNxHTDFNTLmK8vKcvbkHU/ZLXG+pGKSyRLtUBc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=AHB3Ww0o; arc=none smtp.client-ip=188.68.63.102
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="qYiaMxg3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14B16C4CEF7;
-	Fri, 20 Mar 2026 12:34:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1774010061;
-	bh=0kuYHYKOa9cOrOL9pXPthIlfZkSzriMUGOsY9d18FZg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qYiaMxg3yI/CLbApQPzod5zZ5SWNhcey2+TcuZbO/iCiHcXqwio0qedNo2flkONcn
-	 A8Eo5rMPlEUotkpl1ULTVLCH1C6sQgSSlRQek0dgkUjzwRgJDNydHbHc8NzCU7Un+u
-	 3MZWgA3TGyNxNExp/utZmQTdAkirUEQ6NEQb7Y+M=
-Date: Fri, 20 Mar 2026 13:34:17 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Mark Somerville <mark@qpok.net>, stable@vger.kernel.org,
-	Mario Limonciello <superm1@kernel.org>, regressions@lists.linux.dev,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	Xinhui Pan <Xinhui.Pan@amd.com>, Sasha Levin <sashal@kernel.org>
-Subject: Re: [REGRESSION] Unable to pass AMD RX 6400 GPU via VFIO
-Message-ID: <2026032040-yelp-antidote-3f60@gregkh>
-References: <1be114e1130ca59ee91fc5a73aaf43a912d408ea@qpok.net>
- <2fd785ce-bf37-4875-a9a4-92422870f5b5@leemhuis.info>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="AHB3Ww0o"
+Received: from mors-relay-2502.netcup.net (localhost [127.0.0.1])
+	by mors-relay-2502.netcup.net (Postfix) with ESMTPS id 4fcjth1cTZz67qg
+	for <regressions@lists.linux.dev>; Fri, 20 Mar 2026 14:23:24 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1774013004;
+	bh=FKRdYxxhm3uUoq5zyPUBTETsZZdWu8DAbg3LzztKAWo=;
+	h=Date:Subject:From:To:References:In-Reply-To:From;
+	b=AHB3Ww0oWyQY7UenJo2PYf+n7lR+X1lIxxCO7+qUMYRgZXU73BV6q2UcLu3pXXclx
+	 eBZeYlOuiEieboQzEJfjJh0GXDcX2r+2pLeIl46fDH0ZhubbmI8RbSkq973/KfeEPY
+	 ck2o6VJyodubdJ4qcUVWuGPDRu9ga0exgof88O33zk1gwi9h/s9hYz3NHHAELZzkOP
+	 SPK9ISpn7W1XXaZtd9JWgSzZc694saaOBKXLwet3WvzcWZ75I5JEao1wBtrnjfvMJC
+	 xhFoXjCSuAj/X3KVpbLf8zE+yo4dZAuQGNQE3bY4pLO0UV4p2DCDnFHDn03aIZgBRN
+	 ZHzk1q7Nnkf9w==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-2502.netcup.net (Postfix) with ESMTPS id 4fcjth0vdqz4xMR
+	for <regressions@lists.linux.dev>; Fri, 20 Mar 2026 14:23:24 +0100 (CET)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4fcjtg5ZPlz8sWT
+	for <regressions@lists.linux.dev>; Fri, 20 Mar 2026 14:23:23 +0100 (CET)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 04B4D633B8
+	for <regressions@lists.linux.dev>; Fri, 20 Mar 2026 14:23:22 +0100 (CET)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <377b5bde-a30a-498f-a01f-c7b184ec18f2@leemhuis.info>
+Date: Fri, 20 Mar 2026 14:23:22 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2fd785ce-bf37-4875-a9a4-92422870f5b5@leemhuis.info>
+User-Agent: Mozilla Thunderbird
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: 
+ <177401300317.1614972.11684021310754192597@mxe9fb.netcup.net>
+X-Rspamd-Server: rspamd-worker-8404
+X-Rspamd-Queue-Id: 04B4D633B8
+X-NC-CID: N1bGGb72WQ/rB1TEXur0M8GANsUX+3D+tJ7Ns3aWudkSj4bDgT4=
 
-On Fri, Mar 20, 2026 at 12:42:04PM +0100, Thorsten Leemhuis wrote:
-> @greg/@sasha: I might be missing something, but looks like one patch
-> that was backported missed two series where it's needed (see below for
-> details):
-> 
-> On 3/20/26 10:28, Mark Somerville wrote:
-> > 
-> > I run Debian 13 stable (6.12 kernel) and have encountered a regression.
-> > 
-> > My machine has three GPUs, the iGPU that is part of my 7950X and two dGPUs - one NVIDIA 3090 and one AMD RX 6400. I use the iGPU for the host and only use the two dGPUs with virtual machines via VFIO with libvirt.
-> > 
-> > Although I have specified kernel parameters vfio_pci.ids for the GPUs, I have not blacklisted the amdgpu driver so that the host iGPU can operate.  Previously, starting a VM with the RX 6400 dGPU assigned to it (via VFIO) would work fine. However, doing this with more recent stable kernels causes the machine to hang immediately (and then, ultimately, reset after a while - ~30s). No errors are logged, at least as things are configured just now.
-> > 
-> > I can reliably reproduce this crash and a bisection revealed the commit that introducted the problem: 8140ac7c55e75093a01c6110a2c4025fe7177c57.
-> 
-> That is 28695ca09d3264 ("drm/amd: Clean up kfd node on surprise
-> disconnect") [v6.19-rc6, v6.18.7, v6.12.67 (as 8140ac7c55e750), v6.6.122].
-> 
-> A fix for that f7afda7fcd169a ("drm/amd: Fix hang on amdgpu unload by
-> using pci_dev_is_disconnected()") [v7.0-rc1, v6.18.17, v6.12.77].
-> 
-> @greg/@sasha: Wondering why it's not in 6.19.y and 6.6.y. It failed
-> there first, but later was applied to 6.18.y and 6.12.y:
-> 
-> https://lore.kernel.org/all/?q=%22Fix+hang+on+amdgpu+unload+by+using+pci_dev_is_disconnected%22+%28f%3Agreg+OR+f%3Asasha%29
 
-It's in the queue for 6.6.y, I've queued it up for 6.19.y now too.
 
-thanks,
+On 3/9/24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-greg k-h
+#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=221234
+#regzbot introduced: 7a126c1b6cfa2c
+#regzbot title: PCI: iommu grouping problems
+#regzbot dup:
+https://lore.kernel.org/all/2c30f181-ffc6-4d63-a64e-763cf4528f48@leemhuis.info/
+
+
+#regzbot report: https://lore.kernel.org/all/abmMptgPR581bPUS@mail.iam.tj/#t
+#regzbot dup: https://lore.kernel.org/all/abmNkRC_vSVaP2sC@mail.iam.tj/
+#regzbot dup:
+https://lore.kernel.org/all/1f88b91c-59e6-4347-84c2-50b7cf106c47@samsung.com/
+
+
+#regzbot report:
+https://lore.kernel.org/all/20260315232500.251088-1-CFSworks@gmail.com/
+#regzbot introduced: cac190c7674fea
+#regzbot title: ceph: crash
+#regzbot fix: ceph: fix num_ops OBOE when crypto allocation fails
+#regzbot monitor:
+https://lore.kernel.org/all/20260318023733.116789-1-CFSworks@gmail.com/
+
+#regzbot report: https://lore.kernel.org/all/abNvb2PcrKj1FBeC@ly-workstation
+#regzbot introduced: 88ec797c4680
+#regzbot title: ext4: deadlock on inode reallocation
+#regzbot fix: ext4: Fix deadlock on inode reallocation
+#regzbot monitor:
+https://lore.kernel.org/all/20260320090428.24899-2-jack@suse.cz/
+
+
