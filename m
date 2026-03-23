@@ -1,236 +1,185 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B10033AB278
-	for <regressions@lists.linux.dev>; Mon, 23 Mar 2026 13:04:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33F69381B17
+	for <regressions@lists.linux.dev>; Mon, 23 Mar 2026 22:03:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.173
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774271060; cv=pass; b=s9+BqRPSW96XR77MJFDlezMIaJxKy9D0lXdNAxKhfcuszV/GG/zBJqLCtY+xXF/DRGNZERIxy9nMzBI8xqGK77VWwCdTsQtjH9xtFUH0ie9YBSt6KYVkpByuJaTcGmEXWsabpDXycq6IajomiXVyGvZzkKj6wbH0A8iOo8BAnHo=
+	t=1774303432; cv=pass; b=HTV9/RiknPnBqj2E6vTz6ZV87VIArrkC1ty+q0KzgyL3YA3fC/vRjgT8axjPrcz3X7BVzuLLktJRYtQcNrG1Ryk1i3YjaFnSofVkgvHqCEN0LUKiEa4n/b4j10JoaUn5sRZXfqP447dU6QLpqGPRUXfLdKCKb4gohj/6H0ozQP0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774271060; c=relaxed/simple;
-	bh=Wh+2/Y6YUMQzF4fgYYKLS0YmAgdUeif4NZ7LqrU8mCE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rrSUEXpjO40T+o7PCePjbvxdIECA/BZrwsdneTO2D8lIfZcBLTEL+M7siBRdNaRmBvj/gSCpvb6DnQ7XkFZGKDpRz3E3Ku9wKadFyr77W6cKefVBWhOYCwTxN0s1cHkyKdHD5uOUTQ/xu2hESWk3a46RkZ7Tt0IA03YsjxhZtDA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VOD/l7rA; arc=pass smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1774303432; c=relaxed/simple;
+	bh=isQFDI7d05AvIlrp9iqnyQriaU043z6DYylvG6vWhF4=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=ZNWG4LeUSHtTwfG2RUyKhGJTz7+j7WRKwC+VasAL4jMkran5fNfsLFm6HG6f/Mv4JC0F+dtdW9VWGyucX/o3DHOAyZlS8XTy0fT9zIR3R5Mjs9lDuS4P7HPddi6cjlkfpNCBCd8WRzXaY2EwiEwuoB2OKQWIFP3qtTzX1pY2pAs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ngrV3WAE; arc=pass smtp.client-ip=209.85.160.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VOD/l7rA"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-439af7d77f0so3078522f8f.0
-        for <regressions@lists.linux.dev>; Mon, 23 Mar 2026 06:04:18 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1774271057; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ngrV3WAE"
+Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-509069a7a7fso200921cf.0
+        for <regressions@lists.linux.dev>; Mon, 23 Mar 2026 15:03:51 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1774303430; cv=none;
         d=google.com; s=arc-20240605;
-        b=VRAYXT3Q7wSeD9ThvqHzz8nn4uiKVSVL6obEU4cBq9LFxWyEFdm/KVEDVHW/WZE6xG
-         rq/nvED/EnToZEefJbFpd3RYT6NF5v+5tYo7fb/J47Y7xoGkNyI3KLKON3QbN2B/ihdl
-         vsudZORcKY3MIlRkDg9JgJyYuntM5MGiT5aEuV8KgSogZ5Kf7j65H4RVUJsBE6PuZOOO
-         ZhE84SYNBjtMblAfpCMJAdEJU7SGFTqHVmp3BXnJb9+AsliFSKnP7Iy4iIIPrOqpq2XS
-         xkrCJAPPA31Nn8A44fOCDCUlgSUuDK5nTji6E+V73wD0aVWXEOOzBeDMpSuIkr1bbzXQ
-         lMig==
+        b=aVvyTSiJrJSs8cfRAtOHhPSQa647ReVuF89RCEUF+fi4FWn5RNFM99bCJZ8VSZM4p+
+         yGGa6vCxzhUm7dTYv3vxE+surDcO5Rdt8C8SKSTjijFshielAhuLT2bB8Gemn+O6EsHL
+         fzvnzmpw84yofkCD2CUjMyg3MzN/PFwQbMHN8xc7jq3Oa7KYIzLD/2eWMtaEeJV4IO35
+         bhyhAjrHHPsNPd5cNqWNppBgO6vqGrHWg9RRRfSvIk3fYDdyY5jq4DOAMfKORiSWtQQk
+         tHhQSgl5cDeU0Q/1x8U0dVoDRsVW3GRXPtN1esPLKEJWzUrzvTrVnaRUyeFzY14j47ZV
+         pjzw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=fOlYmEZcAKW1BbsO7s+IxHqQiUBs0vdYc2qidXHICBo=;
-        fh=jRuXxWY1+a87OpoDrVHq/YZvvm8Vvl5q2xtzy0yWHu0=;
-        b=XefAAbd0V/Rb9tUkNEPId9usM6UcAG3sRYuQiuS1xCa0FHiifwLFiDu4LjjVZ576N/
-         RCxAFYNsCn5PWiVSjgR/5TeXZ6iFm/tRmT+oNY9uK2P3yrcRryubtUOxRYA393LK3DCQ
-         XMrTLuhZiqxgDhUGbeuw7gwcMFxnYi1eE8aVwj9qm7mRHgbwmfWU58WXAWYWDGJI87Dx
-         5QJp533Sd0SMsWLO9OE+6NaNy7Gnky0qFfO0wF3MIHe62VLflMoHGizjGCORyFfGRqkS
-         Un0XnaLMEn+nhV68qVvPdFQfmzykDE7fIWSbTiTgZVM8fAnwgLh20f1TbA1ocDUIH0yZ
-         au8A==;
+        h=cc:to:subject:message-id:date:from:mime-version:dkim-signature;
+        bh=o1eGtSxZYUuz2uzB/0xmbY0GGzJTsHFF98WP24mcOxI=;
+        fh=PXFb/jkcvxt4/QYWYP48kfAugRal4NH6wqCiuXehSFs=;
+        b=Nryt+Pi2xnRrmIsD+4oIC/oK3V3Vk4vE6+ev4v8W8PDG8xTisoWJWta+bcaX8ezBbm
+         f8uVbtKm7QsTSCRhyxaL1rSH6PBpLzeFYndN+Tw5C5lcfvH0ai1b3H4H20usYlIzi8Oe
+         dA4G5phzOUPDDab9PmxPU3fI3ZIZp7Ytd+b/nkJFnYY+FkZRh2i2g0yKAGxE8+l+Sj7w
+         D3fnITOUWzPsusbIcgZREAaJmrE+tLuxp/a8A5o7wQ2uBoS6Kupw5CI89vzlBrTmyVX8
+         OZs+Urlr3Hf/hxkeMtEemdeJe5y1XkqxNteeVmkj/1dUDHVfBrJr8teRi1f2PBCa1cry
+         uAuQ==;
         darn=lists.linux.dev
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1774271057; x=1774875857; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fOlYmEZcAKW1BbsO7s+IxHqQiUBs0vdYc2qidXHICBo=;
-        b=VOD/l7rAT/CF2ttSFLRjXGIfhWS/mDy/DEdO489zXVlY3ce7RXaH4c+x2SWVy+m6TZ
-         9LnIPn2+AcsNSz6u/BNNLYoZYbvqG0ynMUwKwzNF4uJah+d/5nPok2inlNt8DuKwwa1Z
-         nINiO64X6gaFmAgNw2D8Bnq/+xFsjY/y1M10gSle8YrYhFdm2KZLNW1MSNrZueqxQ8hx
-         GVVrr9iNkLD/Ey6ZGlhfFtbtIMLlrjBQ9zSH6MnVczOIkuNgefHrTQl1no4MoyXqwxn/
-         b6w4vgZ1QyJgoUmdmoUaBWWZMtJIG92UWEOQIbd+3x3Kvwm/FZ2xOB/z/jq6p2Qf5ss+
-         M0Qw==
+        d=google.com; s=20251104; t=1774303430; x=1774908230; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=o1eGtSxZYUuz2uzB/0xmbY0GGzJTsHFF98WP24mcOxI=;
+        b=ngrV3WAE1qSy9B/oij/CngWACoDWvw5P9ExQONag5THSFslkyTdWDN5qBioz/0J5ug
+         iJOm6tu/JxhFiy56X+auco23bDQYAQ2cUV2ccX1hE12Ck4Q7BF0lRZ6uDKvHPoH3Lx21
+         uFpFYTvsYUtatNBMI+O3vsyj8HF+DD1CyccHAYsHzrEnxpDIQDKHxwdzQ8ukb8uiP0kD
+         7GQnueL+TPaZzcxu7fk1AwUUfy+hx86xW7N062Nz6a2MNO+8JiEondLjgmEPt0ljOwi6
+         xgWuyKE+BKtScbKMfitpEMbBEgYjbZR07lPm4Myiuge/QASBxl1mdTprCcafMKdUwmky
+         oJ/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774271057; x=1774875857;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=fOlYmEZcAKW1BbsO7s+IxHqQiUBs0vdYc2qidXHICBo=;
-        b=sva80S2Pw9iBgyNOh7QRtkFoTPWkNDo+DECcvjsLvyXYMlUNqoCS2PXFAeEXqlLlul
-         E/F0+sgSj6KibhSTj3HGAVHSo7HjSKHjIkCEW9zjGiNBGNDGM8Eu+CZ8UGmNF8HJUp+H
-         SK/n2WIP7m6QFEeYIfhD5YU6qIlM1vDQ/7VEXet88ClK+6zBcJg/USV4aXs07WT0R3Di
-         x6KsK0/KBH0UK0HNopoRKE1CvBgzoDDp1OK8Cc1MMtnMfyPJBTEvulosLeKjKtMO4Fn8
-         bnkCA6raD1Z8fVdTTpHAz4It6RN3qlVPErVVM3H45UNyABinF8LOL4oefg606GDylpTH
-         Lumg==
-X-Forwarded-Encrypted: i=1; AJvYcCXck5ssFidlXTt4pWLkf987wd0ydQe3cTO8j9TjP+9XGs9GEbhL3GmU8aoiMjKPW1hU/i6krbJvYP/UsA==@lists.linux.dev
-X-Gm-Message-State: AOJu0YznAnX5tvfVlcJ9GOPwvvGz6850xwWQGP5DTk/ZaniHb6vj7vnH
-	E76s3EiixNY8iKEfareQiLHfqL2eqpJHt6Na+w8lTGxpP2yRfMUfeufJhXgf0Y3hfzGxSAss89E
-	NL45HPIonyOtFZ7l9WA0nEScq0estJt0JijzX2m47PABA
-X-Gm-Gg: ATEYQzxzjRzaCmE132vVUncH0QdZjKYCXtQ1mcVhnwEv9pYUqA8wxy9B9vMEbNCsgyA
-	A1Jm0Ci7gfaYe61b++rPG8i0lgIXcJZiXI5oKK9Au8DYKe90Kbrj8434FmDMn9HyvJUDEiSakqI
-	b/msGyvemDSoFmYgYbcWbDHefaAmpTJCDLgGcg/rNckh9gDeB6bbmLCtnCo6cxQ+TH3t4Nx6Vs6
-	dN5LknTbXH82ejF6ASuhGbgWIsc+0FM1JuUTbx1+sdaROFz6+OKionZY5zPKCxQnvMDf6OAG/L2
-	7t+dXxgIcCWOoeFe7DWqR5R1f4sx86Wkq8s0//Rr
-X-Received: by 2002:a5d:64c6:0:b0:439:bd26:3c63 with SMTP id
- ffacd0b85a97d-43b64262da5mr18158075f8f.28.1774271056717; Mon, 23 Mar 2026
- 06:04:16 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1774303430; x=1774908230;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=o1eGtSxZYUuz2uzB/0xmbY0GGzJTsHFF98WP24mcOxI=;
+        b=CfZO/kumTWZiuEHrmQbBgTsoKEs+MsrOihSKq6h2m2WfueBYRrCf+RAzMYtnzWFEp7
+         /8GNlM5DIEbFZe9/L6D0zTLCb5qzNgYQEk38qgmufnIy1ddf3BuR2iVV2N7kONJjlZbR
+         ztF2tLl49Q0ZGu23W5kr+TWdcBPVzidPmgQwq7CAh+RI21T1sUV0nrvjDlhJ5tLvmXD4
+         XmgxgwuBG5hYXKPvhBm0ojKYuqD0XN64VpwFaSJLwez0izj4KxO0VSRcGLXg/gT0yo6J
+         oFOGZ3+3TK7Btnh58nXbmWz/wVjjdlfxqB6DvQoo0KiMNRh0XcUHsqzkmon4UQt1Hxa2
+         T8ng==
+X-Forwarded-Encrypted: i=1; AJvYcCXtxsFwby7NNuM7YrHr96jvYJyzsTqSF4bYPm7rpHWVwKMeuFVb4gLJUj2s5ODHouED+hrXLXhUvX4moA==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yz6IcED5UUTOHbdkQE2JdV2h/yRW5I5PAz7YLg3SYw3omMJ1X59
+	8uv3rcBI/04Am4cc7jBBT7uu/zZ/e2f9IwhrZBcCv6I6FbNhRkq8I4GMUn9EUIih09kfDeUmUWH
+	4AJA+XiebwNktR8aQflTU8uYeFkj1x2qwz2rYcyaX
+X-Gm-Gg: ATEYQzyizvC4iaj/4xjFrSgh6Dmu1QI5kqpn8SRxbK+3GoxWR67KK1aCofnTlpZZrWF
+	O4hCCbASqioO+7EPumWBZg0zE/L4gsxqBPo1wCHzCrynXmyyQHdklImCu3XqDJySDYQeE97uoSn
+	HbNmkpex6+JF/gp97c0FyLyq4aeCF5w8LzdBHYkJlaTk6DaNGnmVNe0mpCTrRB12KlYsDrMdrGM
+	qw53ZXGb+uOFz4XJn8Hq57HvCMRWn9DAo/RpX0DS39KQP3VgXn/US5iEMPsViW6EAqC62R5Ouy2
+	9Ftsxd4eRiduMS62r/YL14LxmsgcxHQhuvs=
+X-Received: by 2002:a05:622a:9009:b0:506:1f23:e22c with SMTP id
+ d75a77b69052e-50b6fb9bd95mr4925811cf.6.1774303429792; Mon, 23 Mar 2026
+ 15:03:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAOKSTBs1VNBdjRZe3M2v-nC+pLZZ0-KQtRUZUj6ACqb4Xe7LDg@mail.gmail.com>
- <87ldgakvsc.wl-tiwai@suse.de> <CAOKSTBvbopXOuOfstmasijZgUnT9_qW_dsaeMcHUXhyjj3iRmw@mail.gmail.com>
- <CAOKSTBsWiwwwrmBt3dshrYYo3fQN9eF-gi2Z7BoX6c-Nb3ZoHg@mail.gmail.com>
- <CAOKSTBvND=d4Fq7mt=36p2Y+hKr6aDUbJ6zA4wDOWASwcWjmNQ@mail.gmail.com>
- <87h5qxl8tj.wl-tiwai@suse.de> <CAOKSTBtQi6ZmLmy6u5mP9_gLKZTZHmbb9S36hO99xSsk_EEbcA@mail.gmail.com>
- <87ecm1jii6.wl-tiwai@suse.de> <CAOKSTBtdt=enKSv4ZF7VxDD4QF8+ntyFM5CPJ1Y1QQ7M6TsiKg@mail.gmail.com>
- <CAOKSTBuOV0=1Y62sqf3QALgR+_He=tKLPQ7LZN+xFC6oGWEKVw@mail.gmail.com>
- <87y0k6whm8.wl-tiwai@suse.de> <CAOKSTBuUnS=stepHySGVYH4GbQytEQL45cLj4eV8u0KAsquF5w@mail.gmail.com>
- <87jyvlm6w0.wl-tiwai@suse.de> <CAOKSTBv102MCFnnm9JPp9Zaz_MQNBxu5OnWOCGw29MN7xLbXHA@mail.gmail.com>
- <87h5qpm67n.wl-tiwai@suse.de> <CAOKSTBv3meaMDrJ2tn-dX6agFbTwiEmUeDYu2NTVzc559zd2OQ@mail.gmail.com>
- <CAOKSTBv4GHxQGOhK2NR6QsJERsWSoh6RMp+yv-cV7QBsSgx9iw@mail.gmail.com>
- <f701e9c6-51d2-4388-9162-f02393d6e8b2@leemhuis.info> <CAOKSTBtF9LPtFktAF-357RT_w2bWW9Xg7NimQsizn0VwmR1DJw@mail.gmail.com>
-In-Reply-To: <CAOKSTBtF9LPtFktAF-357RT_w2bWW9Xg7NimQsizn0VwmR1DJw@mail.gmail.com>
-From: Gilberto Ferreira <gilberto.nunes32@gmail.com>
-Date: Mon, 23 Mar 2026 10:03:39 -0300
-X-Gm-Features: AQROBzAicXglsUZT_sZ7BewYrI5CzKQ1gLep8oltTQ16pivfxdE_DJOTqwVmnnk
-Message-ID: <CAOKSTBt+nKabJXav3diFoYAP0yFjD=Ld5HDO7J=z43bb0CA3pA@mail.gmail.com>
-Subject: Re: No HDMI audio with Linux Kernel 7 rc1 or rc2...
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Takashi Iwai <tiwai@suse.de>, linux-sound@vger.kernel.org, 
-	Linux kernel regressions list <regressions@lists.linux.dev>
+From: Chenglong Tang <chenglongtang@google.com>
+Date: Mon, 23 Mar 2026 15:03:39 -0700
+X-Gm-Features: AQROBzCJ71kjMcg47Y9l0d3oTHYV_D4QnyFW5DxoPbe2RkRTxMNDx_bzID4OPcQ
+Message-ID: <CAOdxtTadAFH01Vui1FvWfcmQ8jH1O45owTzUcpYbNvBxnLeM7Q@mail.gmail.com>
+Subject: [REGRESSION] fs/overlayfs/ext4: Severe jbd2 lock contention and
+ journal starvation on concurrent copy-up (v6.6 -> v6.12)
+To: linux-unionfs@vger.kernel.org, linux-ext4@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	regressions@lists.linux.dev
+Cc: jack@suse.com, Jan Kara <jack@suse.cz>, miklos@szeredi.hu, 
+	Amir Goldstein <amir73il@gmail.com>, tytso@mit.edu, adilger.kernel@dilger.ca, 
+	viro@zeniv.linux.org.uk, brauner@kernel.org, Kevin Berry <kpberry@google.com>, 
+	Robert Kolchmeyer <rkolchmeyer@google.com>, Deepa Dinamani <deepadinamani@google.com>, 
+	He Gao <hegao@google.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi there...
+Hi all,
 
-Some good soul with more skill than myself - obviously - did some
-bisec in the kernel 7, and discovered the culprit why some HDMI cards
-do not produce any sound.
-Here we go:
-https://gitlab.freedesktop.org/drm/amd/-/issues/5052
+We are tracking a severe performance regression in Google's
+Container-Optimized OS (COS) that appeared when moving from the 6.6
+LTS kernel to the 6.12 LTS kernel.
 
-So, this morning I applied this patch to the kernel 7rc5, and it works
-without any issues.
+Under concurrent CI workloads (specifically, many containers doing
+Python package compilation / .pyc generation simultaneously), the 6.12
+kernel suffers from massive jbd2 journal contention. Processes hang
+for 20-30 seconds waiting for VFS locks and journal space. On 6.6, the
+exact same workload completes in ~4 seconds.
 
+# Environment:
+* Host FS: ext4 (backed by standard cloud block storage)
+* Container FS: OverlayFS (Docker)
+* Machine: n2d-highmem-96 (96 vCPU, high memory)
+* Good Kernel: 6.6.87
+* Bad Kernels: 6.12.55, 6.12.68
 
-Just want you, guys, to know about that.
+# The Bottleneck
+During the 20+ second hang, `cat /proc/<pid>/stack` reveals three
+distinct groups of blocked processes thrashing on the jbd2 journal.
+The OverlayFS copy-up mechanism seems to be generating so many
+synchronous ext4 transactions that it exhausts the jbd2 transaction
+buffers.
 
-Thanks
+1. Journal Space Exhaustion (Waiting to start transaction):
+[<0>] __jbd2_log_wait_for_space+0xa3/0x240
+[<0>] start_this_handle+0x42d/0x8a0
+[<0>] jbd2__journal_start+0x103/0x1e0
+[<0>] __ext4_journal_start_sb+0x129/0x1c0
+[<0>] __ext4_new_inode+0x7cd/0x1290
+[<0>] ext4_create+0xbc/0x1b0
+[<0>] vfs_create+0x192/0x250
+[<0>] ovl_create_real+0xd5/0x170
+[<0>] ovl_create_or_link+0x1d7/0x7f0
 
+2. VFS Rename / Copy-up Contention (Blocked by the slow sync):
+[<0>] lock_rename+0x29/0x50
+[<0>] ovl_copy_up_flags+0x84c/0x12e0
+[<0>] ovl_create_object+0x4a/0x120
+[<0>] vfs_mkdir+0x1aa/0x260
+[<0>] do_mkdirat+0xb9/0x240
 
----
+3. Synchronous Flush Blocking:
+[<0>] jbd2_log_wait_commit+0x107/0x150
+[<0>] jbd2_journal_force_commit+0x9c/0xc0
+[<0>] ext4_sync_file+0x278/0x310
+[<0>] ovl_sync_file+0x2f/0x50
+[<0>] ovl_copy_up_metadata+0x455/0x4b0
 
+# Minimal Reproducer
+The issue is easily reproducible by triggering 20 concurrent cold
+Python imports in Docker, which forces OverlayFS to copy-up the
+`__pycache__` directories and write the `.pyc` files.
 
-Gilberto Nunes Ferreira
+```bash
+# 1. Build a clean image with no pre-compiled bytecode
+cat << 'EOF' > Dockerfile
+FROM python:3.10-slim
+RUN pip install --quiet google-cloud-compute
+RUN find /usr/local -type d -name "__pycache__" -exec rm -rf {} +
+EOF
+docker build -t clean-import-test .
 
+# 2. Fire 20 concurrent imports
+for i in {1..20}; do
+  docker run --rm clean-import-test bash -c 'time python -c "import
+google.cloud.compute_v1"' > clean_test_cold_$i.log 2>&1 &
+done
+wait
+grep "real" clean_test_cold_*.log
+```
 
+On 6.6.87, all 20 containers finish in ~4.3s.
+On 6.12.x, they hang and finish between 17s and 27s. Bypassing disk
+writes completely mitigates the regression on 6.12 (using
+PYTHONDONTWRITEBYTECODE=1), confirming it is an ext4/overlayfs I/O
+contention issue rather than a CPU scheduling one.
 
+Because the regression spans from 6.6 to 6.12, bisection is quite
+heavy. Before we initiate a full kernel bisect, does this symptom ring
+a bell for any ext4 fast_commit, jbd2 locking, or OverlayFS
+metacopy/sync changes introduced during this window?
 
----
+Any pointers or patches you'd like us to test would be greatly appreciated.
 
-
-Gilberto Nunes Ferreira
-+55 (47) 99676-7530 - Whatsapp / Telegram
-
-
-
-
-
-
-Em qui., 12 de mar. de 2026 =C3=A0s 10:35, Gilberto Ferreira
-<gilberto.nunes32@gmail.com> escreveu:
->
-> Hi Thorsten
->
-> I think this is exactly the same issue.
->
-> Thank you...
->
-> ---
->
->
-> Gilberto Nunes Ferreira
->
->
->
-> ---
->
->
-> Gilberto Nunes Ferreira
-> +55 (47) 99676-7530 - Whatsapp / Telegram
->
->
->
->
->
->
-> Em qui., 12 de mar. de 2026 =C3=A0s 10:24, Thorsten Leemhuis
-> <regressions@leemhuis.info> escreveu:
-> >
-> > On 3/10/26 13:32, Gilberto Ferreira wrote:
-> > > I am sorry to reach you again, guys, but now I noticed that dmesg sho=
-ws me this:
-> > >
-> > > amdgpu 0000:04:00.0: [drm] Failed to setup vendor infoframe on
-> > > connector HDMI-A-1: -22
-> > >
-> > > This never appears in the 6.19 kernel series.
-> >
-> > FWIW, there is another report about broken HDMI auto with amdgpu here:
-> > https://gitlab.freedesktop.org/drm/amd/-/issues/5052
-> >
-> > Might or might not be the same issue.
-> >
-> > In the end the problem remains the same afaics: you likely need to
-> > bisect this (or hope that someone else that has the same problem does).
-> >
-> > Ciao, Thorsten
-> >
-> > > Em seg., 9 de mar. de 2026 =C3=A0s 11:25, Gilberto Ferreira
-> > > <gilberto.nunes32@gmail.com> escreveu:
-> > >>
-> > >> Oh! I see. Sorry about that.
-> > >>
-> > >> ---
-> > >>
-> > >> Gilberto Nunes Ferreira
-> > >>
-> > >>
-> > >>
-> > >>
-> > >>
-> > >> Em seg., 9 de mar. de 2026 =C3=A0s 11:24, Takashi Iwai <tiwai@suse.d=
-e> escreveu:
-> > >>>
-> > >>> On Mon, 09 Mar 2026 15:14:47 +0100,
-> > >>> Gilberto Ferreira wrote:
-> > >>>>
-> > >>>>>> At best, please try git bisect.
-> > >>>> Sorry! I am complete without any acknowledgment on how to proceed =
-in this.
-> > >>>>
-> > >>>>>> Or if it can't work for you, ask your distro people who can help=
-.
-> > >>>> I have tried 3 different distros! I don't think this is some distr=
-o
-> > >>>> related problem.
-> > >>>
-> > >>> No, no, I meant you can ask distro people to build a test kernel, e=
-tc,
-> > >>> instead of you.  And, it'd better to ask distros whether you are th=
-e
-> > >>> only one in the world who hits the problem.  If it can be reproduce=
-d
-> > >>> by others, they can help debugging or bisection, too.  Pinging
-> > >>> repeatedly here on the list doesn't help much, as you can't build a=
-nd
-> > >>> test a patch, unfortunately.
-> > >>>
-> > >>>
-> > >>> Takashi
-> > >
-> >
+Thanks,
+Chenglong Tang
+Google Container-Optimized OS Team
