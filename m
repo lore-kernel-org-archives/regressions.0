@@ -1,211 +1,215 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.61.103])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28D357262F
-	for <regressions@lists.linux.dev>; Tue, 31 Mar 2026 08:32:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.61.103
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D83E019CD1D
+	for <regressions@lists.linux.dev>; Tue, 31 Mar 2026 09:10:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774945968; cv=none; b=us23xy84wR5Ua9xn2aSwsXdql/ap/ER2SMWs3zhdvrkjrX+ABS7VzxDMhnAltgqhwy83C0e97dyp2e74cwuPLG0h5NX3L/hn3qQ7OhXnkmuM2jQLjgVyZgEPfCJCPtVebuJolsNGnOCtXZq/JrqdnChDhGDSMTo2ZfAcIj98JFI=
+	t=1774948232; cv=none; b=gklbFHfozOxvVmFEg6XGD6JLurVONFmTkWoIQLXH+z9N6vepeoqwZccC25blYeonsJBPT19aefFy1LOkT2BCdKm1hmt1X2txmZeLGq8omr7TophJ848AgMpY1qSKekloOxGZ1S/FCvnxHCIvpUB4EjlOGZCpq1tLeqhxzr3tzyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774945968; c=relaxed/simple;
-	bh=qwqgSCBftPz1kQ2WmP/T4+h2qMktRIovKJA3djoOczY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GkY1zxUqCDD8OCddTpdx1qBCIb8LWee72r7Rhsmqb3I5W1FUgjAsK9xaKJodNT1CHa+vnxkZmjh+pAfScvfT6GKfeXmFkA6IYzBlZ9U4MzEOu/9oBRXoio3kTvjirXBsGA4xz4cs/+7TUB80ee31mZGgV0y3+deBK9kjPFUkokk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=NCwZg3k+; arc=none smtp.client-ip=188.68.61.103
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1774948232; c=relaxed/simple;
+	bh=+fcgrokixlEbcf+aOsmiZdoomim6YGRO5kT5k3+jI7I=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DgEKU+IkF2RKK2883erj3boaCCPh9FUx+yOXeDcmlc7lGQvaTKxkszuXuPq7dRv0yBnpgsAyMRKIdtOZTBDFdW3/fvd5C6hBNpDz2Fw2BPQDXgF832HWHUpCzL9RLRKV81Hu/DYKj5iUm9vCLslq/+u43sA26oO09iReLEDUqIg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=i+BvmIya; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=BDdx/Yeq; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="NCwZg3k+"
-Received: from mors-relay-8403.netcup.net (localhost [127.0.0.1])
-	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4flLwB51cSz86Dx;
-	Tue, 31 Mar 2026 10:32:42 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1774945962;
-	bh=qwqgSCBftPz1kQ2WmP/T4+h2qMktRIovKJA3djoOczY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=NCwZg3k+gs+EW+9r+V7orzmexjR+++ubXWI3vZCksmpZiZ2TomLYoYsLttn9b0vuK
-	 LwKQ4TVQqCJPdv6PP/xW/ot9IBKloMtjWctA4I6gCKSmbG0j+6r1Livj/YeKHE7O5H
-	 k45lAh/ab6LvOO/5uX/4Zq1zrYtmE1l5k1ZSUh1A4znv4Mgfo8gLspLSpbCJ+Wvt3j
-	 Nr7n0fJtDkVXsvNeq6u0dlPq9xCT9pAup1c8aw04yEp3LZQY8AFz6ntHq1rFvWoMP/
-	 OhFPDUzAzpKh04Mx0jrGpT8faWbyjfuCFH85FPTJdGFb1zWzbO+660i4HqN/f/DND9
-	 +QClhAKxr4fwg==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4flLw00ZBjz875Z;
-	Tue, 31 Mar 2026 10:32:32 +0200 (CEST)
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4flLvz2MCYz8sZw;
-	Tue, 31 Mar 2026 10:32:31 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id AB377635C7;
-	Tue, 31 Mar 2026 10:32:30 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <b9262818-14e7-4902-af6c-6c7d3560ac4c@leemhuis.info>
-Date: Tue, 31 Mar 2026 10:32:30 +0200
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="i+BvmIya";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="BDdx/Yeq"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62V6TZXe1090309
+	for <regressions@lists.linux.dev>; Tue, 31 Mar 2026 09:10:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=qcppdkim1; bh=fcs5ftBhXtYRcqqz+HI3Ln1If1xisAux+zA
+	c7yob4so=; b=i+BvmIyaeE18u15CE/47Qr73cjIGc8PTRv4o79eFGzPG2yvFM6m
+	rKR4wsLmVtIinwoDhT9cl5qlLrpXDVMnNsUttiZfIoC1jaHNrdEBKOYFLO/aiZul
+	OQn1X2FeP6ZAkrzjuJdtRZz1RENybJsJU4cxd6/Sjm/CKrZnNijdnJm+e8Uo5rLF
+	VBOcUv3bPL3z3QD6rrZeeMtpjChRm0cqA1PL2MLqZqrt8IzIiX+r9putRxu0Suhr
+	UYvhaY2CVZ3rLolNTYTa7PF1qJrBqAkijjEjpnlCPluyhw3cNRnql8qRqtMNW8sh
+	ewDj2ZkYvotiJ8iRpjQKlblSBamiSXwTFlA==
+Received: from mail-pg1-f198.google.com (mail-pg1-f198.google.com [209.85.215.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4d7trd3xky-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <regressions@lists.linux.dev>; Tue, 31 Mar 2026 09:10:30 +0000 (GMT)
+Received: by mail-pg1-f198.google.com with SMTP id 41be03b00d2f7-bce224720d8so3547662a12.1
+        for <regressions@lists.linux.dev>; Tue, 31 Mar 2026 02:10:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1774948229; x=1775553029; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=fcs5ftBhXtYRcqqz+HI3Ln1If1xisAux+zAc7yob4so=;
+        b=BDdx/YeqiXblHl6hcYIuvo3j2WHbWLOgJGkuz+zdcG89z0cqhWYQlbJq30/T9B7YOj
+         Atibw8/IZ/4a8kv/U8EpUeBgqGdHanFNCPQrHp/oG83fU78zQCyKwv9ebTLiO9TG5eJR
+         FuCPNvYMYbsQ/J5KEqJ3qbvPJGPYR3focWXzFEcywpZGeZZv3tadTLz8zRwQdi+VoQrK
+         Oye/C1GuQviPW/NQYIW0MWeHlQui0tKRTN0jq73kvWrj5nr4MYq2yk87J+z3NIUXECG2
+         roRJQDvs9Tj352Qh4RB36pZ6vbAiqjE0JqcqSVzQhOwspMNr+ObGmMm89JU3hVKlQZTQ
+         r3+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1774948229; x=1775553029;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fcs5ftBhXtYRcqqz+HI3Ln1If1xisAux+zAc7yob4so=;
+        b=LpggRZ+2jttm8MhbquO2xGhEmK4/OPa4v/9uA2Mg53LV7VqQ3xemXv0poJG2OFIPyR
+         7RGubOWcPz4SBdN4Z5Eou/wkevHrSNEf6ntfXfgSONnVjItSq5AYlMJQoQtPUKeT+KSp
+         ft73/1RWh4sfoZsSLrsk/CQh/fxElErnKegUh1K8i8iIIE943wFEUxCp249Lu+SHwN+K
+         TaWnfTVmlFrxTPeAjIRQmBEUp82JLQx+BZYkkMrORQyIdqaTxfpX056m3gkqAGtvUqh2
+         9ivb475a3GWDPIPWjlX3mEgW1M7Wz4oPn1BALV0f7A8qidAsaulFgaqmct90RriHw4gM
+         m8pw==
+X-Forwarded-Encrypted: i=1; AJvYcCX70KGArZ38SFSYnvzCHgb9V2gkNF2jW9MXHru3eIkneT7wpRlHsCrWeqluVnroj+EBZsYlDX/dCgg6uA==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yzvl4yBS825JH7HTx5HbrD63xVJoWZJbhgQ8ZVG48wr2Cd75lAv
+	ZjwBDXRt7rxj0d4NpAE8J8xmUT3eM3AgP+DhHIY7eFuIBlsyOKwH1En+Z5UE6SwKo+sxHyuudxb
+	EK3mVuIGY/aNmtg5fzg9+WkaSjNkyLC3akdjm8uyHf/Fa4u7w6To36mNMSMM8GIzNzw==
+X-Gm-Gg: ATEYQzyYRyN8z7k9rtDOR+f9j+fB1uKHAOrTIcSbFx4m51jArF3Z7WnNcd59P83y+rh
+	NnLbE5u8YBcDdxl/SQFpOw8daEOUTL0YzwYMsO6yHv3HbzX/ZYxn5WYZBrmwk3JVz8IIIBdFA8y
+	Kv3vFdl/oBjrKwpdZN5FzGvOMQMUOzg/TDcQzzh7iHBn+453JmYNVzK8V02Yt6ByuLQ1NCyxb5D
+	eDOipB4VNYBRmumKeBtz9+77aRsKXYF3sgzIf8OZm/EGxZkgNXuXhVxeyQ3ZAJC0e8H3kekTxlp
+	ht30zprFaFjQHz9CqBfzTat6RV+CrJt8aBGRddkttyhQPGgPTDU/8McaABnHW5ER2heIbBB3PRM
+	VkMCUg4yYDkFPFK/fzrkWwPdx/VcSu96ByxWHNjs=
+X-Received: by 2002:a05:6a20:7d9c:b0:38b:de3d:d542 with SMTP id adf61e73a8af0-39c87aea147mr17138852637.51.1774948229253;
+        Tue, 31 Mar 2026 02:10:29 -0700 (PDT)
+X-Received: by 2002:a05:6a20:7d9c:b0:38b:de3d:d542 with SMTP id adf61e73a8af0-39c87aea147mr17138802637.51.1774948228605;
+        Tue, 31 Mar 2026 02:10:28 -0700 (PDT)
+Received: from work ([117.193.210.140])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-82cdaa4c3basm1567941b3a.37.2026.03.31.02.10.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Mar 2026 02:10:28 -0700 (PDT)
+From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+To: stable@vger.kernel.org
+Cc: bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, robin.murphy@arm.com,
+        Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>,
+        John Hancock <john@kernel.doghat.io>, bjorn.forsman@gmail.com,
+        Linux kernel regressions list <regressions@lists.linux.dev>
+Subject: [PATCH] Revert "PCI: Enable ACS after configuring IOMMU for OF platforms"
+Date: Tue, 31 Mar 2026 14:40:09 +0530
+Message-ID: <20260331091009.19536-1-manivannan.sadhasivam@oss.qualcomm.com>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [BUG] RCU stall in blk_mq_timeout_work (potentially a regression
- in 6.19.7 or 6.19.8)
-To: Benjamin Eikel <debian@eikel.org>
-Cc: linux-kernel@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
- linux-block@vger.kernel.org,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <21608811.f9utdCOAlc@thinkpad-benjamin>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <21608811.f9utdCOAlc@thinkpad-benjamin>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: 
- <177494595100.2023534.10392121755429736823@mxe9fb.netcup.net>
-X-NC-CID: Ug7DPec9pVtfb9JqNtdp0Y6KmdVidjCaE7w6CrJ3Uai2KZA4E2I=
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-GUID: SqiCGBoJGw7-Z2TISqLMP0N8l4ix1Uz3
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzMxMDA4NiBTYWx0ZWRfX41rK6tvD0ozX
+ Ox5RgnjF/7re2z1ZwqeqG/up0bhXFlDapnFkqc3s7bXb57zCN35MmjIWm0yFZtc2qPDwh2Y3tkq
+ djGjCpN0z52554GN1dptAQ51uPLtVZyVNcndcyGMf26hRvQqhyieVqoIFv9CvaF5sP21YOJGgIL
+ NF3whE1fK/y5Z23h9OFaNr7ScznTDsAZ0UmxW50Umx5h6Ci9wwJjPU1bsK3hqWxe2KvPteipnxV
+ 9g54EgzLnRHm/DgMhWS3WgxMHhjim0MSnAig/4B6LfTIiqeE7XTVzWy5feSCUo5tpYU4BiLumVv
+ y2cCwvshfq+DvpIwG3iFJjayFb9zvmx14sTlrz50Ypc+pZtBLg11ezwnKqbIiCftM+eHZrBI/3Z
+ sOhTct2Y0YZuqS9EqsG42ncYGKXI+Eq9oa2TB72CPkbI9G1smirCGacIrrKVCZ2dn7qmMiKRjga
+ zbooGflRleLUv0PA07w==
+X-Proofpoint-ORIG-GUID: SqiCGBoJGw7-Z2TISqLMP0N8l4ix1Uz3
+X-Authority-Analysis: v=2.4 cv=H8/WAuYi c=1 sm=1 tr=0 ts=69cb8f86 cx=c_pps
+ a=Qgeoaf8Lrialg5Z894R3/Q==:117 a=vr9TklybbRi32TvS4M0W1g==:17
+ a=Yq5XynenixoA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=u7WPNUs3qKkmUXheDGA7:22 a=_K5XuSEh1TEqbUxoQ0s3:22 a=VwQbUJbxAAAA:8
+ a=lAgNKBcoAAAA:8 a=pGLkceISAAAA:8 a=EUspDBNiAAAA:8 a=hAXPUp1672zZkZ7mbzMA:9
+ a=x9snwWr2DeNwDh03kgHS:22 a=drE6d5tx1tjNRBs8zHOc:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-03-31_02,2026-03-28_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ adultscore=0 priorityscore=1501 bulkscore=0 spamscore=0 lowpriorityscore=0
+ clxscore=1011 impostorscore=0 phishscore=0 suspectscore=0 malwarescore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2603050001 definitions=main-2603310086
 
-[CCing the regressions list and Jens, the Block layer maintainer, who
-might have an idea what's wrong here and/or how to best debug it]
+This reverts commit b20b659c2c6a072560b360feda81ae52176034df.
 
-On 3/27/26 20:28, Benjamin Eikel wrote:
-> Dear Linux kernel developers,
-> 
-> I experience repeated RCU stalls in blk_mq_timeout_work causing system freezes.
-> The NVMe drive (more info at the end) shows no errors or controller resets in
-> the kernel log: the hardware appears healthy. No I/O timeout messages precede
-> the stalls.
-> 
-> The stall cascades: khugepaged blocks on __lru_add_drain_all waiting for a
-> workqueue flush that cannot complete, and additional kworkers block on a
-> mutex held by the kblockd rescuer thread. The system becomes noticeably
-> unresponsive and then I notice it in the logs.
-> 
-> In case the logs are too condensed, please tell me and I can provide them
-> fully. If you have pointers on how this could be reproduced and a commit range,
->  I could try to bisect the problem.
+The original commit attempted to enable ACS in pci_dma_configure() prior
+to IOMMU group assignment in iommu_init_device() to fix the ACS enablement
+issue for OF platforms. But that assumption doesn't hold true for kernel
+versions prior to v6.15, because on these older kernels,
+pci_dma_configure() is called *after* iommu_init_device(). So the IOMMU
+groups are already created before the ACS gets enabled. This causes the
+devices that should have been split into separate groups by ACS, getting
+merged into one group, thereby breaking the IOMMU isolation as reported on
+the AMD machines.
 
-A bisection with mainline would help a lot. Maybe doing it between
-6.19.6 and 6.19.8 (which would be quicker) might work out, too (but
-normally it's best to focus on mainline).
+So revert the offending commit to restore the IOMMU group assignment on
+those affected machines. It should be noted that ACS has never really
+worked on kernel versions prior to v6.15, so the revert doesn't make any
+difference for OF platforms.
 
-And this is not my area of expertise, but I noticed that some RCU fixes
-went into -rc6, so might be wise to try that first.
+Reported-by: John Hancock <john@kernel.doghat.io>
+Reported-by: bjorn.forsman@gmail.com
+Closes: https://bugzilla.kernel.org/show_bug.cgi?id=221234
+Fixes: b20b659c2c6a ("PCI: Enable ACS after configuring IOMMU for OF platforms")
+Cc: Linux kernel regressions list <regressions@lists.linux.dev>
+Link: https://lore.kernel.org/regressions/2c30f181-ffc6-4d63-a64e-763cf4528f48@leemhuis.info
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+---
 
-Ciao, Thorsten
+This revert is targeted for v5.15 stable kernel.
 
-> I've assembled the following table by grepping my `journalctl -t kernel` logs
-> over several boots and letting Claude Opus 4.6 analyze it, to detect when the
-> problems could have started.
-> 
-> Analysis of journalctl across all boots since March 09 shows:
-> 
->   Kernel                   Boots  blk_mq_timeout_work stalls
->   6.18.13 (Debian)             2   0
->   6.18.13-bisect (self-built) 10   0
->   6.18.14 (Debian)             2   0
->   6.18.15 (Debian)             7   0
->   6.19.6 (Debian)              3   0
->   6.19.8 (Debian)              5   8 stalls across 2 boots
->   7.0.0-rc4 (self-built)       5   1 stall on 1 boot
->   7.0.0-rc5 (self-built)       5  14 stalls across 2 boots
-> 
-> Zero stalls on any 6.18.x kernel (21 boots total) and on 6.19.6 (3 boots).
-> Stalls begin with 6.19.8. The bug is intermittent, not every boot triggers
-> it, but when it does, stalls come in clusters.
-> 
-> == Trace from 6.19.8+deb14-amd64 (March 26) ==
-> 
-> Mar 26 16:25:16 thinkpad-benjamin kernel: rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
-> Mar 26 16:25:16 thinkpad-benjamin kernel: rcu:         Tasks blocked on level-0 rcu_node (CPUs 0-15): P80
-> Mar 26 16:25:16 thinkpad-benjamin kernel: rcu:         (detected by 5, t=5252 jiffies, g=1882657, q=10144 ncpus=16)
-> Mar 26 16:25:16 thinkpad-benjamin kernel: task:kworker/5:0H    state:R  running task     stack:0     pid:80    tgid:80    ppid:2      task_flags:0x4208060 flags:0x00080010
-> Mar 26 16:25:16 thinkpad-benjamin kernel: Workqueue: kblockd blk_mq_timeout_work
-> Mar 26 16:25:16 thinkpad-benjamin kernel: Call Trace:
-> Mar 26 16:25:16 thinkpad-benjamin kernel:  <IRQ>
-> Mar 26 16:25:16 thinkpad-benjamin kernel:  sched_show_task+0x172/0x1c0
-> Mar 26 16:25:16 thinkpad-benjamin kernel:  rcu_sched_clock_irq.cold+0x4b8/0x5d7
-> Mar 26 16:25:16 thinkpad-benjamin kernel:  ? srso_alias_return_thunk+0x5/0xfbef5
-> Mar 26 16:25:16 thinkpad-benjamin kernel:  ? __pfx_tick_nohz_handler+0x10/0x10
-> Mar 26 16:25:16 thinkpad-benjamin kernel:  update_process_times+0x70/0xc0
-> Mar 26 16:25:16 thinkpad-benjamin kernel:  tick_nohz_handler+0x8f/0x180
-> Mar 26 16:25:16 thinkpad-benjamin kernel:  __hrtimer_run_queues+0x10b/0x240
-> Mar 26 16:25:16 thinkpad-benjamin kernel:  ? srso_alias_return_thunk+0x5/0xfbef5
-> Mar 26 16:25:16 thinkpad-benjamin kernel:  hrtimer_interrupt+0xfc/0x230
-> Mar 26 16:25:16 thinkpad-benjamin kernel:  __sysvec_apic_timer_interrupt+0x58/0x100
-> Mar 26 16:25:16 thinkpad-benjamin kernel:  ? __irq_exit_rcu+0x3d/0xe0
-> Mar 26 16:25:16 thinkpad-benjamin kernel:  sysvec_apic_timer_interrupt+0x6c/0x90
-> Mar 26 16:25:16 thinkpad-benjamin kernel:  </IRQ>
-> Mar 26 16:25:16 thinkpad-benjamin kernel:  <TASK>
-> Mar 26 16:25:16 thinkpad-benjamin kernel:  asm_sysvec_apic_timer_interrupt+0x1a/0x20
-> Mar 26 16:25:16 thinkpad-benjamin kernel: RIP: 0010:finish_task_switch.isra.0+0x9b/0x2c0
-> Mar 26 16:25:16 thinkpad-benjamin kernel:  __schedule+0x492/0xfc0
-> Mar 26 16:25:16 thinkpad-benjamin kernel:  preempt_schedule_irq+0x38/0x60
-> Mar 26 16:25:16 thinkpad-benjamin kernel:  asm_common_interrupt+0x26/0x40
-> Mar 26 16:25:16 thinkpad-benjamin kernel: RIP: 0010:blk_mq_timeout_work+0x194/0x1c0
-> Mar 26 16:25:16 thinkpad-benjamin kernel:  process_one_work+0x192/0x350
-> Mar 26 16:25:16 thinkpad-benjamin kernel:  worker_thread+0x196/0x300
-> Mar 26 16:25:16 thinkpad-benjamin kernel:  kthread+0xfc/0x240
-> Mar 26 16:25:16 thinkpad-benjamin kernel:  ret_from_fork+0x24d/0x290
-> Mar 26 16:25:16 thinkpad-benjamin kernel:  ret_from_fork_asm+0x1a/0x30
-> Mar 26 16:25:16 thinkpad-benjamin kernel:  </TASK>
-> Mar 26 16:25:31 thinkpad-benjamin kernel: rcu: INFO: rcu_preempt detected expedited stalls on CPUs/tasks: { P80 } 5334 jiffies s: 4617 root: 0x0/T
-> 
-> Cascading hung tasks:
-> 
-> Mar 26 16:26:14 thinkpad-benjamin kernel: INFO: task khugepaged:138 blocked for more than 120 seconds.
->   khugepaged -> __lru_add_drain_all -> __flush_work -> wait_for_completion
-> 
-> == Trace from 7.0.0-rc5 (self-built, March 27) ==
-> 
-> Mar 27 12:38:23 thinkpad-benjamin kernel: rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
-> Mar 27 12:38:23 thinkpad-benjamin kernel: rcu:         Tasks blocked on level-0 rcu_node (CPUs 0-15): P32704/1:b..l
-> Mar 27 12:38:23 thinkpad-benjamin kernel: rcu:         (detected by 5, t=5252 jiffies, g=464621, q=10641 ncpus=16)
-> Mar 27 12:38:23 thinkpad-benjamin kernel: task:kworker/5:2H    state:R  running task     stack:0     pid:32704 tgid:32704 ppid:2      task_flags:0x4208060 flags:0x00080000
-> Mar 27 12:38:23 thinkpad-benjamin kernel: Workqueue: kblockd blk_mq_timeout_work
-> Mar 27 12:38:23 thinkpad-benjamin kernel: Call Trace:
-> Mar 27 12:38:23 thinkpad-benjamin kernel:  <TASK>
-> Mar 27 12:38:23 thinkpad-benjamin kernel:  __schedule+0x47c/0x1000
-> Mar 27 12:38:23 thinkpad-benjamin kernel:  preempt_schedule_irq+0x38/0x60
-> Mar 27 12:38:23 thinkpad-benjamin kernel:  asm_common_interrupt+0x26/0x40
-> Mar 27 12:38:23 thinkpad-benjamin kernel: RIP: 0010:blk_mq_timeout_work+0x4c/0x1c0
-> Mar 27 12:38:23 thinkpad-benjamin kernel:  ? blk_mq_timeout_work+0x45/0x1c0
-> Mar 27 12:38:23 thinkpad-benjamin kernel:  process_one_work+0x19d/0x3a0
-> Mar 27 12:38:23 thinkpad-benjamin kernel:  worker_thread+0x1af/0x320
-> Mar 27 12:38:23 thinkpad-benjamin kernel:  kthread+0xe3/0x120
-> Mar 27 12:38:23 thinkpad-benjamin kernel:  ret_from_fork+0x2c9/0x360
-> Mar 27 12:38:23 thinkpad-benjamin kernel:  ret_from_fork_asm+0x1a/0x30
-> Mar 27 12:38:23 thinkpad-benjamin kernel:  </TASK>
-> 
-> Cascading hung tasks 3 minutes later:
-> 
-> Mar 27 12:41:33 thinkpad-benjamin kernel: INFO: task khugepaged:138 blocked for more than 120 seconds.
->   khugepaged -> __lru_add_drain_all -> __flush_work -> wait_for_completion
-> 
-> Mar 27 12:41:33 thinkpad-benjamin kernel: INFO: task kworker/2:0:28992 blocked for more than 120 seconds.
->   kworker/2:0 -> worker_attach_to_pool -> __mutex_lock (blocked on mutex held by kworker/R-kbloc:139)
-> 
-> Mar 27 12:41:33 thinkpad-benjamin kernel: INFO: task kworker/R-kbloc:139 is the mutex owner:
->   rescuer_thread -> worker_attach_to_pool -> set_cpus_allowed_ptr -> affine_move_task -> wake_up_var
-> 
-> The stall recurred 6 times on this boot:
->   12:38, 12:47, 13:55, 13:59, 14:10, 14:12
-> 
-> == NVMe device info ==
-> 
-> No NVMe errors in dmesg, hardware appears healthy:
->   nvme 0000:03:00.0: platform quirk: setting simple suspend
->   nvme nvme0: pci function 0000:03:00.0
->   nvme nvme0: 16/0/0 default/read/poll queues
-> 
-> PCI: 03:00.0 Non-Volatile memory controller: SK hynix Platinum P41/PC801 [1c5c:1959]
-> 
-> Kind regards
-> Benjamin
-> 
-> 
+ drivers/pci/pci-driver.c |  8 --------
+ drivers/pci/pci.c        | 10 +++++++++-
+ drivers/pci/pci.h        |  1 -
+ 3 files changed, 9 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+index ecbe382b56be..08c985478b8f 100644
+--- a/drivers/pci/pci-driver.c
++++ b/drivers/pci/pci-driver.c
+@@ -1616,14 +1616,6 @@ static int pci_dma_configure(struct device *dev)
+ 		ret = acpi_dma_configure(dev, acpi_get_dma_attr(adev));
+ 	}
+ 
+-	/*
+-	 * Attempt to enable ACS regardless of capability because some Root
+-	 * Ports (e.g. those quirked with *_intel_pch_acs_*) do not have
+-	 * the standard ACS capability but still support ACS via those
+-	 * quirks.
+-	 */
+-	pci_enable_acs(to_pci_dev(dev));
+-
+ 	pci_put_host_bridge_device(bridge);
+ 	return ret;
+ }
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index d1474b2129ab..2d4f3080e4dd 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -936,7 +936,7 @@ static void pci_std_enable_acs(struct pci_dev *dev)
+  * pci_enable_acs - enable ACS if hardware support it
+  * @dev: the PCI device
+  */
+-void pci_enable_acs(struct pci_dev *dev)
++static void pci_enable_acs(struct pci_dev *dev)
+ {
+ 	if (!pci_acs_enable)
+ 		goto disable_acs_redir;
+@@ -3609,6 +3609,14 @@ bool pci_acs_path_enabled(struct pci_dev *start,
+ void pci_acs_init(struct pci_dev *dev)
+ {
+ 	dev->acs_cap = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_ACS);
++
++	/*
++	 * Attempt to enable ACS regardless of capability because some Root
++	 * Ports (e.g. those quirked with *_intel_pch_acs_*) do not have
++	 * the standard ACS capability but still support ACS via those
++	 * quirks.
++	 */
++	pci_enable_acs(dev);
+ }
+ 
+ /**
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index d9d7a79e3563..4a8f499d278b 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -562,7 +562,6 @@ static inline resource_size_t pci_resource_alignment(struct pci_dev *dev,
+ }
+ 
+ void pci_acs_init(struct pci_dev *dev);
+-void pci_enable_acs(struct pci_dev *dev);
+ #ifdef CONFIG_PCI_QUIRKS
+ int pci_dev_specific_acs_enabled(struct pci_dev *dev, u16 acs_flags);
+ int pci_dev_specific_enable_acs(struct pci_dev *dev);
+-- 
+2.51.0
 
