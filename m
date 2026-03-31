@@ -1,101 +1,110 @@
-Received: from mailout2.hostsharing.net (mailout2.hostsharing.net [83.223.78.233])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [185.244.194.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 991633DDDAE
-	for <regressions@lists.linux.dev>; Tue, 31 Mar 2026 13:13:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34ED9449EB7
+	for <regressions@lists.linux.dev>; Tue, 31 Mar 2026 18:04:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.244.194.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774962815; cv=none; b=Hxpu9LVOWOT7k2orT568dKE2R8BWwcSp7IFEhsTo0xpg5e0cgGncxPE3pgFrichUQDN+Y1Gs2WQnvkYUq5p7Wp3XOxZmJt3QYGaQfpeF+2yi/q4/ZNwoI89c4WPrZ8yOr/TSQSZ+Q84jzRnlIR221FoiTxegZIkRBfSiog4Pb24=
+	t=1774980285; cv=none; b=UpOac7ZmauhAYsxA41VuZrmixylyhaf17idxByZjWnJh/toOb8WvUjWCjCa1luEZOoxSyU9aQvZ1QW8E6Rf1reJsCnEBeSUkokUOrCXEwF9ZtRS4Uzzt2uevDK59buxuQcGHM2vqjPHPb7eApm/Gxqotws3J3pwARTkYjbiaJ9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774962815; c=relaxed/simple;
-	bh=SHj3DDseZiH/4dxjYYniOZauM69UOEzOw0j1poq4wno=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NECIdePd1q46RbrbbShI3/KA9d0VYcv3V8r/QL/iXF+6kC4/yMgoQhumxZD4sV8GQ9hqS7xPB3mIjNgRa7p1WRBTMXnnC7gXkpL9yiAhWOmeRYseO9AKofDdWaPr35HJQ86upgfXPtL7cLpCU2pKohFncDcdmZthCmz8geESeh8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=pass smtp.mailfrom=wunner.de; arc=none smtp.client-ip=83.223.78.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wunner.de
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	s=arc-20240116; t=1774980285; c=relaxed/simple;
+	bh=TC+9X3XNrQ6yzD1uDevruiF4F3xBaihyG1YtVGrkQwQ=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=an8VzFdqVNGLGESlbKRRYrSr0A4JeJA4TWAGyVfRfmaAzAiGiHbexLd0oCdS5IEcV8hz5IiyZsnZQFkemzQCXnA2ivljTXpL+InV/2EN7FPnqmgzgohFTVghtrd4SgzRwjOaXKaIDGAenBc9mNBmc2tcsGEG58UDufQGeYkB8Io=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=PfO/FHvl; arc=none smtp.client-ip=185.244.194.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="PfO/FHvl"
+Received: from relay01-mors.netcup.net (localhost [127.0.0.1])
+	by relay01-mors.netcup.net (Postfix) with ESMTPS id 4flbc81XFLz95Sy
+	for <regressions@lists.linux.dev>; Tue, 31 Mar 2026 20:04:40 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1774980280;
+	bh=TC+9X3XNrQ6yzD1uDevruiF4F3xBaihyG1YtVGrkQwQ=;
+	h=Date:Subject:From:To:References:In-Reply-To:From;
+	b=PfO/FHvl3i4BJWik8lUD+FEo8xG3VpxdFbDNxoYcA60/Q2qBpp8yG2Zr/set1quOU
+	 aoejtUPT4VhXUTP19qnACNAQ6AqQSmWnEVnZsz9oSxZjpxkc3pBoheHZF0rFL/KkHX
+	 3fGJTW4ZguTrQ+WayEU7E5vwyv6ZXw+nu0x1mS0ngoU1T/y+l7t61b8XoNhEtYypQR
+	 RRkSVJ2NdhifhIUp7Tt0iJc+Y4wGaYeO4mzX6Zrrsan1xIdx0f8gOZVBkPpzhTecEK
+	 jiD2sNCJGnYI6SZCDZlc6HoQOjeXjtuj0jducgT6n6ojJg4Yda6iBYP7OpE6vEGsRn
+	 yJl5PJPuHf89g==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by relay01-mors.netcup.net (Postfix) with ESMTPS id 4flbc80svgz7wCw
+	for <regressions@lists.linux.dev>; Tue, 31 Mar 2026 20:04:40 +0200 (CEST)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature ECDSA (secp384r1) server-digest SHA384
-	 client-signature ECDSA (secp384r1) client-digest SHA384)
-	(Client CN "*.hostsharing.net", Issuer "GlobalSign GCC R6 AlphaSSL CA 2025" (verified OK))
-	by mailout2.hostsharing.net (Postfix) with ESMTPS id CD51910616;
-	Tue, 31 Mar 2026 15:13:32 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id B77456015F77; Tue, 31 Mar 2026 15:13:32 +0200 (CEST)
-Date: Tue, 31 Mar 2026 15:13:32 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Bernd Schumacher <bernd@bschu.de>
-Cc: Salvatore Bonaccorso <carnil@debian.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	1131025@bugs.debian.org, regressions@lists.linux.dev,
-	stable@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [6.12.y regression] Regression with 58130e7ce6cb ("PCI/ERR:
- Ensure error recoverability at all times"): echo vfio-pci >driver_override
- does not work for DVB Adapter
-Message-ID: <acvIfI3naoGsOpFE@wunner.de>
-References: <177373189751.7987.7156982489427825197.reportbug@obelix-trixie.bs.de>
- <acfZrlP0Ua_5D3U4@eldamar.lan>
- <acfhf-odtr0yw_py@wunner.de>
- <74bcd84500e5efcca035624f325e400dd8a21f44.camel@bschu.de>
- <acgohjvBpVcR7HcK@wunner.de>
- <5f9386146f426e2847550681cb7188471205607f.camel@bschu.de>
- <aclRwznwq6KpA2qA@wunner.de>
- <ecf9b2dd96ff97cc035ba297266b8dd05eea88da.camel@bschu.de>
- <acvHjo8PKdyHshSE@wunner.de>
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4flbc7674zz8svC
+	for <regressions@lists.linux.dev>; Tue, 31 Mar 2026 20:04:39 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 53AE0632AE
+	for <regressions@lists.linux.dev>; Tue, 31 Mar 2026 20:04:38 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <4ce2109a-e51b-4978-96ea-dc4e02c171b4@leemhuis.info>
+Date: Tue, 31 Mar 2026 20:04:37 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <acvHjo8PKdyHshSE@wunner.de>
+User-Agent: Mozilla Thunderbird
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: 
+ <177498027851.1736904.16203504646402803547@mxe9fb.netcup.net>
+X-Rspamd-Server: rspamd-worker-8404
+X-Rspamd-Queue-Id: 53AE0632AE
+X-NC-CID: mYx8VmkyFGqLPkRUdFMp1JZ+YANsD24AUwqAULFreRMbF2zADVw=
 
-On Tue, Mar 31, 2026 at 03:09:34PM +0200, Lukas Wunner wrote:
-> Below is a small debug patch.  Could you apply that on top of v6.12.73
-> (or newer) and provide me with the resulting full dmesg output?
 
-Sorry, here's the patch:
 
--- >8 --
+On 3/9/24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 963436edea1c..53c5f23b4290 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -1827,6 +1827,8 @@ int pci_save_state(struct pci_dev *dev)
- {
- 	int i;
- 	/* XXX: 100% dword access ok here? */
-+	if (dev->bus->number == 0x07)
-+		dump_stack();
- 	for (i = 0; i < 16; i++) {
- 		pci_read_config_dword(dev, i * 4, &dev->saved_config_space[i]);
- 		pci_dbg(dev, "save config %#04x: %#010x\n",
-@@ -1887,6 +1889,9 @@ static void pci_restore_config_space_range(struct pci_dev *pdev,
- 
- static void pci_restore_config_space(struct pci_dev *pdev)
- {
-+	if (pdev->bus->number == 0x07)
-+		dump_stack();
-+
- 	if (pdev->hdr_type == PCI_HEADER_TYPE_NORMAL) {
- 		pci_restore_config_space_range(pdev, 10, 15, 0, false);
- 		/* Restore BARs before the command register. */
-diff --git a/drivers/pci/setup-res.c b/drivers/pci/setup-res.c
-index c6d933ddfd46..cbcf185578ac 100644
---- a/drivers/pci/setup-res.c
-+++ b/drivers/pci/setup-res.c
-@@ -363,6 +363,7 @@ int pci_assign_resource(struct pci_dev *dev, int resno)
- 	res->flags &= ~IORESOURCE_UNSET;
- 	res->flags &= ~IORESOURCE_STARTALIGN;
- 	pci_info(dev, "%s %pR: assigned\n", res_name, res);
-+	dump_stack();
- 	if (resno < PCI_BRIDGE_RESOURCES)
- 		pci_update_resource(dev, resno);
- 
+#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=221271
+#regzbot introduced: 0a3fe972a7cb
+#regzbot title: HID: core: GPD Win5 handhelds stopped working
+#regzbot monitor:
+https://lore.kernel.org/all/20260324013847.68024-1-honjow311@gmail.com/
+#regzbot fix: HID: gpd: fix report descriptor on GPD Win handheld
+(2f24:0137)
+
+#regzbot report:
+https://lore.kernel.org/lkml/39ef5c99-ba8e-40c1-bf93-359db7297d55@kernel.org/
+#regzbot fix: "Revert "ARM: dts: imx: move nand related property under
+nand@0""
+
+#regzbot report: https://lore.kernel.org/all/abcGli7C40kr72mB@m.b4.vu/
+#regzbot fix: ALSA: usb-audio: Exclude Scarlett Solo 1st Gen from
+SKIP_IFACE_SETUP
+
+#regzbot report:
+https://lore.kernel.org/lkml/20260312173349.GA137045@francesco-nb/
+#regzbot fix: e8d97c270cb46a
+
+#regzbot report:
+https://lore.kernel.org/all/CAOKSTBs1VNBdjRZe3M2v-nC%2BpLZZ0-KQtRUZUj6ACqb4Xe7LDg@mail.gmail.com/
+#regzbot dup: https://gitlab.freedesktop.org/drm/amd/-/issues/5052
+
+#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=221023
+#regzbot introduced: 2cedb296988c
+#regzbot fix: mei: me: reduce the scope on unexpected reset
+#regbbot monitor:
+https://lore.kernel.org/all/20260330083830.536056-1-alexander.usyskin@intel.com/
+
+
