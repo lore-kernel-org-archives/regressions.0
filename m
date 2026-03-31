@@ -1,55 +1,51 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.162])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.61.103])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEA283947A2
-	for <regressions@lists.linux.dev>; Tue, 31 Mar 2026 07:15:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.162
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28D357262F
+	for <regressions@lists.linux.dev>; Tue, 31 Mar 2026 08:32:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.61.103
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774941318; cv=none; b=Jt07AdN09Y2cF3iX26mqiC57xzGOFQIC3YiggPn4auTXbMbSXf4X8MCXp3fj4THN9dWfAZtOw73EoRzQrmC0oeOEr07Ecwi9xa4faA9wGrtgz++umM/qSFTcl3pkV5aVhzch5OeI++SEg4QgRdbYGaIAMXDEckW3jFVlYGZV+ks=
+	t=1774945968; cv=none; b=us23xy84wR5Ua9xn2aSwsXdql/ap/ER2SMWs3zhdvrkjrX+ABS7VzxDMhnAltgqhwy83C0e97dyp2e74cwuPLG0h5NX3L/hn3qQ7OhXnkmuM2jQLjgVyZgEPfCJCPtVebuJolsNGnOCtXZq/JrqdnChDhGDSMTo2ZfAcIj98JFI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774941318; c=relaxed/simple;
-	bh=niO5bU3qYoiU4TxLfWR/+zKyu2TmCGVpdhr3D5mLX+Q=;
+	s=arc-20240116; t=1774945968; c=relaxed/simple;
+	bh=qwqgSCBftPz1kQ2WmP/T4+h2qMktRIovKJA3djoOczY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BSpS8xY7BK3WjT73t8nSHdvVdiukNpsRw0f8qCfAK/NUtShHIWD5KdxtY1VP9cfrZ2RejqRgVdXc/ZH9uQWOnMmx5fHdod8T2vEhGNS3IeKkVzzLtfgXdnjoN8pw1MJXknaGovkAqjTeGLPRNxZx5seVGLwhetooeM/Wa0TVIKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=YCAV+eVG; arc=none smtp.client-ip=188.68.63.162
+	 In-Reply-To:Content-Type; b=GkY1zxUqCDD8OCddTpdx1qBCIb8LWee72r7Rhsmqb3I5W1FUgjAsK9xaKJodNT1CHa+vnxkZmjh+pAfScvfT6GKfeXmFkA6IYzBlZ9U4MzEOu/9oBRXoio3kTvjirXBsGA4xz4cs/+7TUB80ee31mZGgV0y3+deBK9kjPFUkokk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=NCwZg3k+; arc=none smtp.client-ip=188.68.61.103
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="YCAV+eVG"
-Received: from mors-relay-8201.netcup.net (localhost [127.0.0.1])
-	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4flK2H24Wtz41kq;
-	Tue, 31 Mar 2026 09:07:51 +0200 (CEST)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="NCwZg3k+"
+Received: from mors-relay-8403.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4flLwB51cSz86Dx;
+	Tue, 31 Mar 2026 10:32:42 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1774940871;
-	bh=niO5bU3qYoiU4TxLfWR/+zKyu2TmCGVpdhr3D5mLX+Q=;
+	s=key2; t=1774945962;
+	bh=qwqgSCBftPz1kQ2WmP/T4+h2qMktRIovKJA3djoOczY=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=YCAV+eVGEW+JHRsMLPDqMqg9Qp+/As5V9oWdIlXBGNy/BeolkJpPBLjqmXpueR+al
-	 Ev9b7K7uFV5tIXLTpdLsiHc2QFqgRIvVlJE51whhAYWZSZnwSVNkYW7rarR6etIVYo
-	 dyHMsnL0g6ltcN+2VN9usORLSJsZCFl5MxX3p40+b+DKUUQcRrxHB8o4/hDqLwUHWI
-	 Pb7E3eczRoR4OahMBTe1e0X6320h99wBUm3O0wOlr2fNhnqVmRm6vue3t2iJ7Ek3ck
-	 I1PIalGY96ij9ued91/poYKNQdPVTTNKr9TKrLUzuHO3eexCKxyxMDPbHyq+R3F8OM
-	 /x6L09T05h8ww==
-Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4flK2H16DSz41kB;
-	Tue, 31 Mar 2026 09:07:51 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
-X-Spam-Flag: NO
-X-Spam-Score: -2.901
-X-Spam-Level: 
+	b=NCwZg3k+gs+EW+9r+V7orzmexjR+++ubXWI3vZCksmpZiZ2TomLYoYsLttn9b0vuK
+	 LwKQ4TVQqCJPdv6PP/xW/ot9IBKloMtjWctA4I6gCKSmbG0j+6r1Livj/YeKHE7O5H
+	 k45lAh/ab6LvOO/5uX/4Zq1zrYtmE1l5k1ZSUh1A4znv4Mgfo8gLspLSpbCJ+Wvt3j
+	 Nr7n0fJtDkVXsvNeq6u0dlPq9xCT9pAup1c8aw04yEp3LZQY8AFz6ntHq1rFvWoMP/
+	 OhFPDUzAzpKh04Mx0jrGpT8faWbyjfuCFH85FPTJdGFb1zWzbO+660i4HqN/f/DND9
+	 +QClhAKxr4fwg==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4flLw00ZBjz875Z;
+	Tue, 31 Mar 2026 10:32:32 +0200 (CEST)
 Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4flK2F4y9Kz8tXL;
-	Tue, 31 Mar 2026 09:07:49 +0200 (CEST)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4flLvz2MCYz8sZw;
+	Tue, 31 Mar 2026 10:32:31 +0200 (CEST)
 Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id E16FA635BA;
-	Tue, 31 Mar 2026 09:07:48 +0200 (CEST)
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id AB377635C7;
+	Tue, 31 Mar 2026 10:32:30 +0200 (CEST)
 Authentication-Results: mxe9fb;
         spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
 Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <b3a60d9e-b811-42d9-bf05-f400e1302a30@leemhuis.info>
-Date: Tue, 31 Mar 2026 09:07:48 +0200
+Message-ID: <b9262818-14e7-4902-af6c-6c7d3560ac4c@leemhuis.info>
+Date: Tue, 31 Mar 2026 10:32:30 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -57,33 +53,159 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Oops with 6.19.10: RIP: 0010:hci_sock_get_channel+0x5/0x20
-To: Paul Menzel <pmenzel@molgen.mpg.de>, Gabor Gombas <gombasgg@gmail.com>
-Cc: linux-bluetooth@vger.kernel.org, regressions@lists.linux.dev
-References: <actZBr+wqcABY5mt@lan>
- <e96776d6-ce8c-4626-984e-474f3606445d@molgen.mpg.de>
+Subject: Re: [BUG] RCU stall in blk_mq_timeout_work (potentially a regression
+ in 6.19.7 or 6.19.8)
+To: Benjamin Eikel <debian@eikel.org>
+Cc: linux-kernel@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+ linux-block@vger.kernel.org,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <21608811.f9utdCOAlc@thinkpad-benjamin>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
 Content-Language: de-DE, en-US
-In-Reply-To: <e96776d6-ce8c-4626-984e-474f3606445d@molgen.mpg.de>
+In-Reply-To: <21608811.f9utdCOAlc@thinkpad-benjamin>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 X-PPP-Message-ID: 
- <177494086919.1835925.14006630632952215677@mxe9fb.netcup.net>
-X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: E16FA635BA
-X-NC-CID: A2rfKZRQg7n1SSr5ft6mbS/R7NJjfykfjUE+KXkwFdV9onilZ08=
+ <177494595100.2023534.10392121755429736823@mxe9fb.netcup.net>
+X-NC-CID: Ug7DPec9pVtfb9JqNtdp0Y6KmdVidjCaE7w6CrJ3Uai2KZA4E2I=
 
-On 3/31/26 08:24, Paul Menzel wrote:
-> Am 31.03.26 um 07:17 schrieb Gabor Gombas:
->
-> Can you reproduce the issue? If yes, it’d be a great help, if you could
-> bisect the issue.
+[CCing the regressions list and Jens, the Block layer maintainer, who
+might have an idea what's wrong here and/or how to best debug it]
 
-For instructions see:
-https://docs.kernel.org/admin-guide/verify-bugs-and-bisect-regressions.html
-or https://docs.kernel.org/admin-guide/bug-bisect.html
+On 3/27/26 20:28, Benjamin Eikel wrote:
+> Dear Linux kernel developers,
+> 
+> I experience repeated RCU stalls in blk_mq_timeout_work causing system freezes.
+> The NVMe drive (more info at the end) shows no errors or controller resets in
+> the kernel log: the hardware appears healthy. No I/O timeout messages precede
+> the stalls.
+> 
+> The stall cascades: khugepaged blocks on __lru_add_drain_all waiting for a
+> workqueue flush that cannot complete, and additional kworkers block on a
+> mutex held by the kblockd rescuer thread. The system becomes noticeably
+> unresponsive and then I notice it in the logs.
+> 
+> In case the logs are too condensed, please tell me and I can provide them
+> fully. If you have pointers on how this could be reproduced and a commit range,
+>  I could try to bisect the problem.
 
-Checking if mainline is affected is also important (the first guide
-handles that), as that determines how this needs to be handled.
+A bisection with mainline would help a lot. Maybe doing it between
+6.19.6 and 6.19.8 (which would be quicker) might work out, too (but
+normally it's best to focus on mainline).
+
+And this is not my area of expertise, but I noticed that some RCU fixes
+went into -rc6, so might be wise to try that first.
 
 Ciao, Thorsten
+
+> I've assembled the following table by grepping my `journalctl -t kernel` logs
+> over several boots and letting Claude Opus 4.6 analyze it, to detect when the
+> problems could have started.
+> 
+> Analysis of journalctl across all boots since March 09 shows:
+> 
+>   Kernel                   Boots  blk_mq_timeout_work stalls
+>   6.18.13 (Debian)             2   0
+>   6.18.13-bisect (self-built) 10   0
+>   6.18.14 (Debian)             2   0
+>   6.18.15 (Debian)             7   0
+>   6.19.6 (Debian)              3   0
+>   6.19.8 (Debian)              5   8 stalls across 2 boots
+>   7.0.0-rc4 (self-built)       5   1 stall on 1 boot
+>   7.0.0-rc5 (self-built)       5  14 stalls across 2 boots
+> 
+> Zero stalls on any 6.18.x kernel (21 boots total) and on 6.19.6 (3 boots).
+> Stalls begin with 6.19.8. The bug is intermittent, not every boot triggers
+> it, but when it does, stalls come in clusters.
+> 
+> == Trace from 6.19.8+deb14-amd64 (March 26) ==
+> 
+> Mar 26 16:25:16 thinkpad-benjamin kernel: rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
+> Mar 26 16:25:16 thinkpad-benjamin kernel: rcu:         Tasks blocked on level-0 rcu_node (CPUs 0-15): P80
+> Mar 26 16:25:16 thinkpad-benjamin kernel: rcu:         (detected by 5, t=5252 jiffies, g=1882657, q=10144 ncpus=16)
+> Mar 26 16:25:16 thinkpad-benjamin kernel: task:kworker/5:0H    state:R  running task     stack:0     pid:80    tgid:80    ppid:2      task_flags:0x4208060 flags:0x00080010
+> Mar 26 16:25:16 thinkpad-benjamin kernel: Workqueue: kblockd blk_mq_timeout_work
+> Mar 26 16:25:16 thinkpad-benjamin kernel: Call Trace:
+> Mar 26 16:25:16 thinkpad-benjamin kernel:  <IRQ>
+> Mar 26 16:25:16 thinkpad-benjamin kernel:  sched_show_task+0x172/0x1c0
+> Mar 26 16:25:16 thinkpad-benjamin kernel:  rcu_sched_clock_irq.cold+0x4b8/0x5d7
+> Mar 26 16:25:16 thinkpad-benjamin kernel:  ? srso_alias_return_thunk+0x5/0xfbef5
+> Mar 26 16:25:16 thinkpad-benjamin kernel:  ? __pfx_tick_nohz_handler+0x10/0x10
+> Mar 26 16:25:16 thinkpad-benjamin kernel:  update_process_times+0x70/0xc0
+> Mar 26 16:25:16 thinkpad-benjamin kernel:  tick_nohz_handler+0x8f/0x180
+> Mar 26 16:25:16 thinkpad-benjamin kernel:  __hrtimer_run_queues+0x10b/0x240
+> Mar 26 16:25:16 thinkpad-benjamin kernel:  ? srso_alias_return_thunk+0x5/0xfbef5
+> Mar 26 16:25:16 thinkpad-benjamin kernel:  hrtimer_interrupt+0xfc/0x230
+> Mar 26 16:25:16 thinkpad-benjamin kernel:  __sysvec_apic_timer_interrupt+0x58/0x100
+> Mar 26 16:25:16 thinkpad-benjamin kernel:  ? __irq_exit_rcu+0x3d/0xe0
+> Mar 26 16:25:16 thinkpad-benjamin kernel:  sysvec_apic_timer_interrupt+0x6c/0x90
+> Mar 26 16:25:16 thinkpad-benjamin kernel:  </IRQ>
+> Mar 26 16:25:16 thinkpad-benjamin kernel:  <TASK>
+> Mar 26 16:25:16 thinkpad-benjamin kernel:  asm_sysvec_apic_timer_interrupt+0x1a/0x20
+> Mar 26 16:25:16 thinkpad-benjamin kernel: RIP: 0010:finish_task_switch.isra.0+0x9b/0x2c0
+> Mar 26 16:25:16 thinkpad-benjamin kernel:  __schedule+0x492/0xfc0
+> Mar 26 16:25:16 thinkpad-benjamin kernel:  preempt_schedule_irq+0x38/0x60
+> Mar 26 16:25:16 thinkpad-benjamin kernel:  asm_common_interrupt+0x26/0x40
+> Mar 26 16:25:16 thinkpad-benjamin kernel: RIP: 0010:blk_mq_timeout_work+0x194/0x1c0
+> Mar 26 16:25:16 thinkpad-benjamin kernel:  process_one_work+0x192/0x350
+> Mar 26 16:25:16 thinkpad-benjamin kernel:  worker_thread+0x196/0x300
+> Mar 26 16:25:16 thinkpad-benjamin kernel:  kthread+0xfc/0x240
+> Mar 26 16:25:16 thinkpad-benjamin kernel:  ret_from_fork+0x24d/0x290
+> Mar 26 16:25:16 thinkpad-benjamin kernel:  ret_from_fork_asm+0x1a/0x30
+> Mar 26 16:25:16 thinkpad-benjamin kernel:  </TASK>
+> Mar 26 16:25:31 thinkpad-benjamin kernel: rcu: INFO: rcu_preempt detected expedited stalls on CPUs/tasks: { P80 } 5334 jiffies s: 4617 root: 0x0/T
+> 
+> Cascading hung tasks:
+> 
+> Mar 26 16:26:14 thinkpad-benjamin kernel: INFO: task khugepaged:138 blocked for more than 120 seconds.
+>   khugepaged -> __lru_add_drain_all -> __flush_work -> wait_for_completion
+> 
+> == Trace from 7.0.0-rc5 (self-built, March 27) ==
+> 
+> Mar 27 12:38:23 thinkpad-benjamin kernel: rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
+> Mar 27 12:38:23 thinkpad-benjamin kernel: rcu:         Tasks blocked on level-0 rcu_node (CPUs 0-15): P32704/1:b..l
+> Mar 27 12:38:23 thinkpad-benjamin kernel: rcu:         (detected by 5, t=5252 jiffies, g=464621, q=10641 ncpus=16)
+> Mar 27 12:38:23 thinkpad-benjamin kernel: task:kworker/5:2H    state:R  running task     stack:0     pid:32704 tgid:32704 ppid:2      task_flags:0x4208060 flags:0x00080000
+> Mar 27 12:38:23 thinkpad-benjamin kernel: Workqueue: kblockd blk_mq_timeout_work
+> Mar 27 12:38:23 thinkpad-benjamin kernel: Call Trace:
+> Mar 27 12:38:23 thinkpad-benjamin kernel:  <TASK>
+> Mar 27 12:38:23 thinkpad-benjamin kernel:  __schedule+0x47c/0x1000
+> Mar 27 12:38:23 thinkpad-benjamin kernel:  preempt_schedule_irq+0x38/0x60
+> Mar 27 12:38:23 thinkpad-benjamin kernel:  asm_common_interrupt+0x26/0x40
+> Mar 27 12:38:23 thinkpad-benjamin kernel: RIP: 0010:blk_mq_timeout_work+0x4c/0x1c0
+> Mar 27 12:38:23 thinkpad-benjamin kernel:  ? blk_mq_timeout_work+0x45/0x1c0
+> Mar 27 12:38:23 thinkpad-benjamin kernel:  process_one_work+0x19d/0x3a0
+> Mar 27 12:38:23 thinkpad-benjamin kernel:  worker_thread+0x1af/0x320
+> Mar 27 12:38:23 thinkpad-benjamin kernel:  kthread+0xe3/0x120
+> Mar 27 12:38:23 thinkpad-benjamin kernel:  ret_from_fork+0x2c9/0x360
+> Mar 27 12:38:23 thinkpad-benjamin kernel:  ret_from_fork_asm+0x1a/0x30
+> Mar 27 12:38:23 thinkpad-benjamin kernel:  </TASK>
+> 
+> Cascading hung tasks 3 minutes later:
+> 
+> Mar 27 12:41:33 thinkpad-benjamin kernel: INFO: task khugepaged:138 blocked for more than 120 seconds.
+>   khugepaged -> __lru_add_drain_all -> __flush_work -> wait_for_completion
+> 
+> Mar 27 12:41:33 thinkpad-benjamin kernel: INFO: task kworker/2:0:28992 blocked for more than 120 seconds.
+>   kworker/2:0 -> worker_attach_to_pool -> __mutex_lock (blocked on mutex held by kworker/R-kbloc:139)
+> 
+> Mar 27 12:41:33 thinkpad-benjamin kernel: INFO: task kworker/R-kbloc:139 is the mutex owner:
+>   rescuer_thread -> worker_attach_to_pool -> set_cpus_allowed_ptr -> affine_move_task -> wake_up_var
+> 
+> The stall recurred 6 times on this boot:
+>   12:38, 12:47, 13:55, 13:59, 14:10, 14:12
+> 
+> == NVMe device info ==
+> 
+> No NVMe errors in dmesg, hardware appears healthy:
+>   nvme 0000:03:00.0: platform quirk: setting simple suspend
+>   nvme nvme0: pci function 0000:03:00.0
+>   nvme nvme0: 16/0/0 default/read/poll queues
+> 
+> PCI: 03:00.0 Non-Volatile memory controller: SK hynix Platinum P41/PC801 [1c5c:1959]
+> 
+> Kind regards
+> Benjamin
+> 
+> 
+
