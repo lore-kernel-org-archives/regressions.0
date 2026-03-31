@@ -1,110 +1,171 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [185.244.194.184])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34ED9449EB7
-	for <regressions@lists.linux.dev>; Tue, 31 Mar 2026 18:04:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.244.194.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D2CA3A640A
+	for <regressions@lists.linux.dev>; Tue, 31 Mar 2026 19:47:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774980285; cv=none; b=UpOac7ZmauhAYsxA41VuZrmixylyhaf17idxByZjWnJh/toOb8WvUjWCjCa1luEZOoxSyU9aQvZ1QW8E6Rf1reJsCnEBeSUkokUOrCXEwF9ZtRS4Uzzt2uevDK59buxuQcGHM2vqjPHPb7eApm/Gxqotws3J3pwARTkYjbiaJ9M=
+	t=1774986475; cv=none; b=B8v4YsC+9A91DVCQT3UysLEkz0TSfsFKiDkfPChc7v1UVK03J6SVsPWSR9lkUh4k0aXaYw+VJh3sm9Kb70LeNbTvy3B8RWSuYtr0K1vgUzwXyG51e+q71RS2MXx19Ft5np1rMES6IdbZIJBoAlYK7Lj8RoRXhVXe/RinRAW9OH4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774980285; c=relaxed/simple;
-	bh=TC+9X3XNrQ6yzD1uDevruiF4F3xBaihyG1YtVGrkQwQ=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=an8VzFdqVNGLGESlbKRRYrSr0A4JeJA4TWAGyVfRfmaAzAiGiHbexLd0oCdS5IEcV8hz5IiyZsnZQFkemzQCXnA2ivljTXpL+InV/2EN7FPnqmgzgohFTVghtrd4SgzRwjOaXKaIDGAenBc9mNBmc2tcsGEG58UDufQGeYkB8Io=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=PfO/FHvl; arc=none smtp.client-ip=185.244.194.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1774986475; c=relaxed/simple;
+	bh=vO2+UtJveaRrDgklz6LWihG4TATBZyDl++XdxrpJj5I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IGSJy0pwoBr0moudCIHq95XIlqamLud5mHSc70PNn6qTD//vpkiKE3bp3duG+p04A/NBqnEmyNOOkN9saUcUCVqV7MoPgwoSFXgNS93JRijqyymXTZdIezEdisBN9aagDJ81gfegUqPV+eOR62rPmYiOh37dRWkaL1utKrQttfc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SsAdso12; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="PfO/FHvl"
-Received: from relay01-mors.netcup.net (localhost [127.0.0.1])
-	by relay01-mors.netcup.net (Postfix) with ESMTPS id 4flbc81XFLz95Sy
-	for <regressions@lists.linux.dev>; Tue, 31 Mar 2026 20:04:40 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1774980280;
-	bh=TC+9X3XNrQ6yzD1uDevruiF4F3xBaihyG1YtVGrkQwQ=;
-	h=Date:Subject:From:To:References:In-Reply-To:From;
-	b=PfO/FHvl3i4BJWik8lUD+FEo8xG3VpxdFbDNxoYcA60/Q2qBpp8yG2Zr/set1quOU
-	 aoejtUPT4VhXUTP19qnACNAQ6AqQSmWnEVnZsz9oSxZjpxkc3pBoheHZF0rFL/KkHX
-	 3fGJTW4ZguTrQ+WayEU7E5vwyv6ZXw+nu0x1mS0ngoU1T/y+l7t61b8XoNhEtYypQR
-	 RRkSVJ2NdhifhIUp7Tt0iJc+Y4wGaYeO4mzX6Zrrsan1xIdx0f8gOZVBkPpzhTecEK
-	 jiD2sNCJGnYI6SZCDZlc6HoQOjeXjtuj0jducgT6n6ojJg4Yda6iBYP7OpE6vEGsRn
-	 yJl5PJPuHf89g==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by relay01-mors.netcup.net (Postfix) with ESMTPS id 4flbc80svgz7wCw
-	for <regressions@lists.linux.dev>; Tue, 31 Mar 2026 20:04:40 +0200 (CEST)
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4flbc7674zz8svC
-	for <regressions@lists.linux.dev>; Tue, 31 Mar 2026 20:04:39 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 53AE0632AE
-	for <regressions@lists.linux.dev>; Tue, 31 Mar 2026 20:04:38 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <4ce2109a-e51b-4978-96ea-dc4e02c171b4@leemhuis.info>
-Date: Tue, 31 Mar 2026 20:04:37 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SsAdso12"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-43b9144790dso3355122f8f.1
+        for <regressions@lists.linux.dev>; Tue, 31 Mar 2026 12:47:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1774986472; x=1775591272; darn=lists.linux.dev;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=JqoL4TUjw432Lj+b3alTgzxgihGwGfQl+XtayObkJj0=;
+        b=SsAdso12jWaN6n7+s3ARQ9fed0fzeC4RfEcICnlDXh5Tx70bvdLHgazkWlMVHiNzkB
+         /4J8hqmbH0mauglqUHVw9yH24rMHat0yzt/glY5yPJSX3IJOIBby/Kql/EKpH7IxBvRI
+         vnoZo8vyYbj53viGxVaz4o5uc8HNTRusbPKoxG+aPsRACJkmBsDNwrIXy3p7pfIDeBm9
+         m+vqiSzlsNyXSuAXzRby+v/nSJxTMYqpiJm9ETGa0tQbI6la4ceUHhTqQ8cdpoeMBH8K
+         +b2JgEYfv1Am2qHFpUAfGggKdXij0iuAlUa+Ka0rMZJs3SxmoTGLV8kEDU3/t42yrAub
+         NwCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1774986472; x=1775591272;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=JqoL4TUjw432Lj+b3alTgzxgihGwGfQl+XtayObkJj0=;
+        b=kxVa1HOLeHoZgzaNjW15vItn7qe0hsQWIQzldgq1NIoOwAzplySWXnBPVhcOozXUJT
+         ROUM37N4XiOqN7nYqcp3hZlosEO9bAPihLbu4zb3eUCLgCSEWWAO7JQBpZY9Ze77e78B
+         ef4N10oy7oYM7sXK4jaQ2SIbnBg7+XLhSml7DRTOgdLCtoRGdV6kJ09NRMk6lI8bGQFC
+         rtl/5KMYVpscLV5y9XmaYKVVZQ6J6U2ZFPjPlnG8CDdlRh/dONuzH55S3940eIwPVL3r
+         vMX3N/GniWWlFhhSbXI3l4zim1bTt+lvPGEGYFxynw1Ch/JtVSphfPeK0eaUdNtAr7oX
+         m6mw==
+X-Forwarded-Encrypted: i=1; AJvYcCXG2MD1pY76en5FbA2UmdgG1BR9U2lt8CTdSXSAPnmKnNSugT9QiS2pDfsmVBSHqXyFW+lMCsZUalvO9g==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yz/T8o0gby7pOUEqxzObC+0dYP6omla3P6OBKZvrQQRJORhXxVr
+	PbMcC9cCQte+4jzhSnlvSTLtZ98u/gKHvdyglHfnxhBr24DnYjB/OsqJ
+X-Gm-Gg: ATEYQzzHCfJGwN1Rz3qnuKfPKuJEcbyp0BMen8bUafs4B6mARGGwyvcIfBc1gI+NW1v
+	/WouucM63JMiLj6UozS7DSTCBsVBiRFpkcdtR9vZ8iEsmnCvsYF5QOPRTpLxj4c1KaeB4pxndHm
+	3JTZQW13b/O78ftRg03vbqII3GsymdJUVYiWjli7ebbddvAfMNIbnbF+wkGRzLhgGZ6MMgAODsy
+	KRl3J1FB5Bg6nGKVVdm05PrAOG8pHyfG+zpRRuv8XBKCICi7HZu4dIdVzN09u0DwBn37WtNNitk
+	IvoEXzDKjsBULmGglC5Hmvd4r7iJpy8cHh3KC5vqXvqdgwEzPi2meJt0/45s+PK47U9MJibOYS7
+	Qe9WFBu9m6TVhWZCALnSZkCSF7l43p6tE7cVZCNDw3nmbQNMw6RwvsI5SsCT/h1+HBiGGTBvbkx
+	RMZvHGx5//zFVjY1ASvfbYODMVk6SD1JmeAYNx4vEJZzmWb8WfMA==
+X-Received: by 2002:a05:6000:2586:b0:43d:30f:122c with SMTP id ffacd0b85a97d-43d1504d1f5mr1705188f8f.5.1774986471512;
+        Tue, 31 Mar 2026 12:47:51 -0700 (PDT)
+Received: from raspi.lan (85-67-117-165.pool.digikabel.hu. [85.67.117.165])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43cf24707f2sm31043169f8f.26.2026.03.31.12.47.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Mar 2026 12:47:51 -0700 (PDT)
+Date: Tue, 31 Mar 2026 21:47:49 +0200
+From: Gabor Gombas <gombasgg@gmail.com>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Paul Menzel <pmenzel@molgen.mpg.de>, linux-bluetooth@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: Re: Oops with 6.19.10: RIP: 0010:hci_sock_get_channel+0x5/0x20
+Message-ID: <acwk5Z6AwTwE4H7D@lan>
+References: <actZBr+wqcABY5mt@lan>
+ <e96776d6-ce8c-4626-984e-474f3606445d@molgen.mpg.de>
+ <b3a60d9e-b811-42d9-bf05-f400e1302a30@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: 
- <177498027851.1736904.16203504646402803547@mxe9fb.netcup.net>
-X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: 53AE0632AE
-X-NC-CID: mYx8VmkyFGqLPkRUdFMp1JZ+YANsD24AUwqAULFreRMbF2zADVw=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <b3a60d9e-b811-42d9-bf05-f400e1302a30@leemhuis.info>
 
+On Tue, Mar 31, 2026 at 09:07:48AM +0200, Thorsten Leemhuis wrote:
+> On 3/31/26 08:24, Paul Menzel wrote:
+> > Am 31.03.26 um 07:17 schrieb Gabor Gombas:
+> >
+> > Can you reproduce the issue? If yes, it’d be a great help, if you could
+> > bisect the issue.
+> 
+> For instructions see:
+> https://docs.kernel.org/admin-guide/verify-bugs-and-bisect-regressions.html
+> or https://docs.kernel.org/admin-guide/bug-bisect.html
+> 
+> Checking if mainline is affected is also important (the first guide
+> handles that), as that determines how this needs to be handled.
 
+Unfortunately it's unlikely that I would have time for a bisection
+before the weekend. The bug can be reproduced, I've booted 6.19.10
+again, and this time hit the oops after a few minutes. The oops is
+slightly different, so likely it's some kind of memory corruption. The
+box in question is running Home Assistant, so it is constantly scanning
+for Bluetooth devices.
 
-On 3/9/24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
+I have a 6.19.8 kernel which I've built some time ago but then never
+used, I've booted it now, we'll see how it fares.
 
-#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=221271
-#regzbot introduced: 0a3fe972a7cb
-#regzbot title: HID: core: GPD Win5 handhelds stopped working
-#regzbot monitor:
-https://lore.kernel.org/all/20260324013847.68024-1-honjow311@gmail.com/
-#regzbot fix: HID: gpd: fix report descriptor on GPD Win handheld
-(2f24:0137)
+Gabor
 
-#regzbot report:
-https://lore.kernel.org/lkml/39ef5c99-ba8e-40c1-bf93-359db7297d55@kernel.org/
-#regzbot fix: "Revert "ARM: dts: imx: move nand related property under
-nand@0""
-
-#regzbot report: https://lore.kernel.org/all/abcGli7C40kr72mB@m.b4.vu/
-#regzbot fix: ALSA: usb-audio: Exclude Scarlett Solo 1st Gen from
-SKIP_IFACE_SETUP
-
-#regzbot report:
-https://lore.kernel.org/lkml/20260312173349.GA137045@francesco-nb/
-#regzbot fix: e8d97c270cb46a
-
-#regzbot report:
-https://lore.kernel.org/all/CAOKSTBs1VNBdjRZe3M2v-nC%2BpLZZ0-KQtRUZUj6ACqb4Xe7LDg@mail.gmail.com/
-#regzbot dup: https://gitlab.freedesktop.org/drm/amd/-/issues/5052
-
-#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=221023
-#regzbot introduced: 2cedb296988c
-#regzbot fix: mei: me: reduce the scope on unexpected reset
-#regbbot monitor:
-https://lore.kernel.org/all/20260330083830.536056-1-alexander.usyskin@intel.com/
-
+Mar 31 20:29:21 host bluetoothd[810]: Path /org/bleak/66/140584461213584 removed along with Adv Monitor app :1.101
+Mar 31 20:29:21 host kernel: BUG: unable to handle page fault for address: 00000000bfaf0372
+Mar 31 20:29:21 host kernel: #PF: supervisor read access in kernel mode
+Mar 31 20:29:21 host kernel: #PF: error_code(0x0000) - not-present page
+Mar 31 20:29:21 host kernel: PGD 0 P4D 0 
+Mar 31 20:29:21 host kernel: Oops: Oops: 0000 [#1] SMP PTI
+Mar 31 20:29:21 host kernel: CPU: 0 UID: 0 PID: 810 Comm: bluetoothd Not tainted 6.19.10-gg #48 PREEMPT(lazy) 
+Mar 31 20:29:21 host kernel: Hardware name:  /D54250WYK, BIOS WYLPT10H.86A.0045.2017.0302.2108 03/02/2017
+Mar 31 20:29:21 host kernel: RIP: 0010:hci_sock_get_channel+0x5/0x20
+Mar 31 20:29:21 host kernel: Code: 0f a3 b7 78 03 00 00 0f 92 c0 c3 cc cc cc cc 66 0f 1f 44 00 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 0f 1f 44 00 00 <0f> b7 87 72 03 00 00 c3 cc cc cc cc 0f 1f 40 00 66 66 2e 0f 1f 84
+Mar 31 20:29:21 host kernel: RSP: 0018:ffff9d7201013ad8 EFLAGS: 00010206
+Mar 31 20:29:21 host kernel: RAX: 0000000000000000 RBX: ffff93d9887bec00 RCX: 0000000000000002
+Mar 31 20:29:21 host kernel: RDX: ffff93d9877fbf00 RSI: 000000000000000d RDI: 00000000bfaf0000
+Mar 31 20:29:21 host kernel: RBP: ffffe64e82febc40 R08: ffffffff83b6f7b0 R09: 0000000000000002
+Mar 31 20:29:21 host kernel: R10: ffff93d98bda6000 R11: ffff93d985603600 R12: ffff93d98bda6b28
+Mar 31 20:29:21 host kernel: R13: 0000000000000003 R14: 000000000000000d R15: ffff93d98bda6b08
+Mar 31 20:29:21 host kernel: FS:  00007ff6a4ff2340(0000) GS:ffff93db12797000(0000) knlGS:0000000000000000
+Mar 31 20:29:21 host kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+Mar 31 20:29:21 host kernel: CR2: 00000000bfaf0372 CR3: 000000010bc9e006 CR4: 00000000001726f0
+Mar 31 20:29:21 host kernel: Call Trace:
+Mar 31 20:29:21 host kernel:  <TASK>
+Mar 31 20:29:21 host kernel:  mgmt_pending_find+0x48/0xa0
+Mar 31 20:29:21 host kernel:  remove_adv_monitor+0x3b/0x120
+Mar 31 20:29:21 host kernel:  ? _raw_read_lock+0x13/0x40
+Mar 31 20:29:21 host kernel:  hci_sock_sendmsg+0x656/0xb40
+Mar 31 20:29:21 host kernel:  sock_write_iter+0x181/0x190
+Mar 31 20:29:21 host kernel:  ? ____sys_sendmsg+0x2e5/0x300
+Mar 31 20:29:21 host kernel:  do_iter_readv_writev+0x139/0x230
+Mar 31 20:29:21 host kernel:  vfs_writev+0x120/0x3a0
+Mar 31 20:29:21 host kernel:  ? vfs_read+0x222/0x350
+Mar 31 20:29:21 host kernel:  ? __seccomp_filter+0x34/0x5b0
+Mar 31 20:29:21 host kernel:  ? do_writev+0xde/0x110
+Mar 31 20:29:21 host kernel:  do_writev+0xde/0x110
+Mar 31 20:29:21 host kernel:  do_syscall_64+0x6c/0xe90
+Mar 31 20:29:21 host kernel:  ? syscall_exit_work+0x13e/0x1b0
+Mar 31 20:29:21 host kernel:  ? do_syscall_64+0x8a/0xe90
+Mar 31 20:29:21 host kernel:  ? syscall_exit_work+0x13e/0x1b0
+Mar 31 20:29:21 host kernel:  ? do_syscall_64+0x8a/0xe90
+Mar 31 20:29:21 host kernel:  ? irqentry_exit+0x48/0x530
+Mar 31 20:29:21 host kernel:  entry_SYSCALL_64_after_hwframe+0x71/0x79
+Mar 31 20:29:21 host kernel: RIP: 0033:0x7ff6a54a0e92
+Mar 31 20:29:21 host kernel: Code: 18 41 8b 93 08 03 00 00 59 5e 48 83 f8 fc 75 1a 83 e2 39 83 fa 08 75 12 e8 2b ff ff ff 0f 1f 00 49 89 ca 48 8b 44 24 20 0f 05 <48> 83 c4 18 c3 66 0f 1f 84 00 00 00 00 00 48 83 ec 10 ff 74 24 18
+Mar 31 20:29:21 host kernel: RSP: 002b:00007fff3c414010 EFLAGS: 00000202 ORIG_RAX: 0000000000000014
+Mar 31 20:29:21 host kernel: RAX: ffffffffffffffda RBX: 00007fff3c414090 RCX: 00007ff6a54a0e92
+Mar 31 20:29:21 host kernel: RDX: 0000000000000001 RSI: 00007fff3c414090 RDI: 0000000000000008
+Mar 31 20:29:21 host kernel: RBP: 0000000000000008 R08: 0000000000000000 R09: 0000000000000000
+Mar 31 20:29:21 host kernel: R10: 0000000000000000 R11: 0000000000000202 R12: 0000559419ca6e60
+Mar 31 20:29:21 host kernel: R13: 0000559419ca8f90 R14: 0000559419cc6cb0 R15: 0000000000000000
+Mar 31 20:29:21 host kernel:  </TASK>
+Mar 31 20:29:21 host kernel: Modules linked in: ip_set tun rfcomm 8021q algif_hash algif_skcipher af_alg bnep uinput kvm_intel iwlmvm kvm at24 irqbypass nls_cp437 regmap_i2c iwlwifi vfat mei_hdcp fat ir_rc6_decoder rc_rc6_mce n>
+Mar 31 20:29:21 host kernel: CR2: 00000000bfaf0372
+Mar 31 20:29:21 host kernel: ---[ end trace 0000000000000000 ]---
+Mar 31 20:29:21 host kernel: RIP: 0010:hci_sock_get_channel+0x5/0x20
+Mar 31 20:29:21 host kernel: Code: 0f a3 b7 78 03 00 00 0f 92 c0 c3 cc cc cc cc 66 0f 1f 44 00 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 0f 1f 44 00 00 <0f> b7 87 72 03 00 00 c3 cc cc cc cc 0f 1f 40 00 66 66 2e 0f 1f 84
+Mar 31 20:29:21 host kernel: RSP: 0018:ffff9d7201013ad8 EFLAGS: 00010206
+Mar 31 20:29:21 host kernel: RAX: 0000000000000000 RBX: ffff93d9887bec00 RCX: 0000000000000002
+Mar 31 20:29:21 host kernel: RDX: ffff93d9877fbf00 RSI: 000000000000000d RDI: 00000000bfaf0000
+Mar 31 20:29:21 host kernel: RBP: ffffe64e82febc40 R08: ffffffff83b6f7b0 R09: 0000000000000002
+Mar 31 20:29:21 host kernel: R10: ffff93d98bda6000 R11: ffff93d985603600 R12: ffff93d98bda6b28
+Mar 31 20:29:21 host kernel: R13: 0000000000000003 R14: 000000000000000d R15: ffff93d98bda6b08
+Mar 31 20:29:21 host kernel: FS:  00007ff6a4ff2340(0000) GS:ffff93db12797000(0000) knlGS:0000000000000000
+Mar 31 20:29:21 host kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+Mar 31 20:29:21 host kernel: CR2: 00000000bfaf0372 CR3: 000000010bc9e006 CR4: 00000000001726f0
 
