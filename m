@@ -1,171 +1,152 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout-b2-smtp.messagingengine.com (fout-b2-smtp.messagingengine.com [202.12.124.145])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D2CA3A640A
-	for <regressions@lists.linux.dev>; Tue, 31 Mar 2026 19:47:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69C3D4611CE
+	for <regressions@lists.linux.dev>; Tue, 31 Mar 2026 23:01:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774986475; cv=none; b=B8v4YsC+9A91DVCQT3UysLEkz0TSfsFKiDkfPChc7v1UVK03J6SVsPWSR9lkUh4k0aXaYw+VJh3sm9Kb70LeNbTvy3B8RWSuYtr0K1vgUzwXyG51e+q71RS2MXx19Ft5np1rMES6IdbZIJBoAlYK7Lj8RoRXhVXe/RinRAW9OH4=
+	t=1774998117; cv=none; b=HyII1jTCHDiZcj17ni54igSXZlJCdp3WfddeFDY4ero4xJkbInSu0cISwFbFPd2TST4sIK7xtBawQRBlwq6I3mket0eRWEASHrsAUS/5ZFnWo1MggJgrbd9JEmkiwd1u5kSwRPMddj5SipugxOOT5g7tKEYsfK0MGe94v1HC7SI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774986475; c=relaxed/simple;
-	bh=vO2+UtJveaRrDgklz6LWihG4TATBZyDl++XdxrpJj5I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IGSJy0pwoBr0moudCIHq95XIlqamLud5mHSc70PNn6qTD//vpkiKE3bp3duG+p04A/NBqnEmyNOOkN9saUcUCVqV7MoPgwoSFXgNS93JRijqyymXTZdIezEdisBN9aagDJ81gfegUqPV+eOR62rPmYiOh37dRWkaL1utKrQttfc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SsAdso12; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1774998117; c=relaxed/simple;
+	bh=uhwpHP2Ttf1/01lqwrO31sK/lvNvQg/Kd/276OzWF2Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=lqxKAJPwAMKPyngGy4xbLy0frI9luH7auzuCollsmJcZ4SzRNXvxQQzsCQL359JWwGAHW6JaqH6D9BrY512Kgd5IHdLDvu+fabm9YPfLe9ydKoRq0rfZNjbneCiNIsQbMGBUCf0Sjy1wWkkl6SjB0jkwTixmcoe6rcK+x0E2qiw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org; spf=pass smtp.mailfrom=shazbot.org; dkim=pass (2048-bit key) header.d=shazbot.org header.i=@shazbot.org header.b=pep+ZU7Z; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=gmQnSYAh; arc=none smtp.client-ip=202.12.124.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shazbot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shazbot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SsAdso12"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-43b9144790dso3355122f8f.1
-        for <regressions@lists.linux.dev>; Tue, 31 Mar 2026 12:47:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1774986472; x=1775591272; darn=lists.linux.dev;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=JqoL4TUjw432Lj+b3alTgzxgihGwGfQl+XtayObkJj0=;
-        b=SsAdso12jWaN6n7+s3ARQ9fed0fzeC4RfEcICnlDXh5Tx70bvdLHgazkWlMVHiNzkB
-         /4J8hqmbH0mauglqUHVw9yH24rMHat0yzt/glY5yPJSX3IJOIBby/Kql/EKpH7IxBvRI
-         vnoZo8vyYbj53viGxVaz4o5uc8HNTRusbPKoxG+aPsRACJkmBsDNwrIXy3p7pfIDeBm9
-         m+vqiSzlsNyXSuAXzRby+v/nSJxTMYqpiJm9ETGa0tQbI6la4ceUHhTqQ8cdpoeMBH8K
-         +b2JgEYfv1Am2qHFpUAfGggKdXij0iuAlUa+Ka0rMZJs3SxmoTGLV8kEDU3/t42yrAub
-         NwCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774986472; x=1775591272;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JqoL4TUjw432Lj+b3alTgzxgihGwGfQl+XtayObkJj0=;
-        b=kxVa1HOLeHoZgzaNjW15vItn7qe0hsQWIQzldgq1NIoOwAzplySWXnBPVhcOozXUJT
-         ROUM37N4XiOqN7nYqcp3hZlosEO9bAPihLbu4zb3eUCLgCSEWWAO7JQBpZY9Ze77e78B
-         ef4N10oy7oYM7sXK4jaQ2SIbnBg7+XLhSml7DRTOgdLCtoRGdV6kJ09NRMk6lI8bGQFC
-         rtl/5KMYVpscLV5y9XmaYKVVZQ6J6U2ZFPjPlnG8CDdlRh/dONuzH55S3940eIwPVL3r
-         vMX3N/GniWWlFhhSbXI3l4zim1bTt+lvPGEGYFxynw1Ch/JtVSphfPeK0eaUdNtAr7oX
-         m6mw==
-X-Forwarded-Encrypted: i=1; AJvYcCXG2MD1pY76en5FbA2UmdgG1BR9U2lt8CTdSXSAPnmKnNSugT9QiS2pDfsmVBSHqXyFW+lMCsZUalvO9g==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yz/T8o0gby7pOUEqxzObC+0dYP6omla3P6OBKZvrQQRJORhXxVr
-	PbMcC9cCQte+4jzhSnlvSTLtZ98u/gKHvdyglHfnxhBr24DnYjB/OsqJ
-X-Gm-Gg: ATEYQzzHCfJGwN1Rz3qnuKfPKuJEcbyp0BMen8bUafs4B6mARGGwyvcIfBc1gI+NW1v
-	/WouucM63JMiLj6UozS7DSTCBsVBiRFpkcdtR9vZ8iEsmnCvsYF5QOPRTpLxj4c1KaeB4pxndHm
-	3JTZQW13b/O78ftRg03vbqII3GsymdJUVYiWjli7ebbddvAfMNIbnbF+wkGRzLhgGZ6MMgAODsy
-	KRl3J1FB5Bg6nGKVVdm05PrAOG8pHyfG+zpRRuv8XBKCICi7HZu4dIdVzN09u0DwBn37WtNNitk
-	IvoEXzDKjsBULmGglC5Hmvd4r7iJpy8cHh3KC5vqXvqdgwEzPi2meJt0/45s+PK47U9MJibOYS7
-	Qe9WFBu9m6TVhWZCALnSZkCSF7l43p6tE7cVZCNDw3nmbQNMw6RwvsI5SsCT/h1+HBiGGTBvbkx
-	RMZvHGx5//zFVjY1ASvfbYODMVk6SD1JmeAYNx4vEJZzmWb8WfMA==
-X-Received: by 2002:a05:6000:2586:b0:43d:30f:122c with SMTP id ffacd0b85a97d-43d1504d1f5mr1705188f8f.5.1774986471512;
-        Tue, 31 Mar 2026 12:47:51 -0700 (PDT)
-Received: from raspi.lan (85-67-117-165.pool.digikabel.hu. [85.67.117.165])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43cf24707f2sm31043169f8f.26.2026.03.31.12.47.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2026 12:47:51 -0700 (PDT)
-Date: Tue, 31 Mar 2026 21:47:49 +0200
-From: Gabor Gombas <gombasgg@gmail.com>
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Paul Menzel <pmenzel@molgen.mpg.de>, linux-bluetooth@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: Re: Oops with 6.19.10: RIP: 0010:hci_sock_get_channel+0x5/0x20
-Message-ID: <acwk5Z6AwTwE4H7D@lan>
-References: <actZBr+wqcABY5mt@lan>
- <e96776d6-ce8c-4626-984e-474f3606445d@molgen.mpg.de>
- <b3a60d9e-b811-42d9-bf05-f400e1302a30@leemhuis.info>
+	dkim=pass (2048-bit key) header.d=shazbot.org header.i=@shazbot.org header.b="pep+ZU7Z";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="gmQnSYAh"
+Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
+	by mailfout.stl.internal (Postfix) with ESMTP id 13EE01D000CA;
+	Tue, 31 Mar 2026 19:01:54 -0400 (EDT)
+Received: from phl-frontend-03 ([10.202.2.162])
+  by phl-compute-02.internal (MEProxy); Tue, 31 Mar 2026 19:01:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shazbot.org; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1774998113;
+	 x=1775084513; bh=lBuwiN4qeR4cp/7SH69mL0nqRv1FXISJ3o63/YTRGfg=; b=
+	pep+ZU7ZC3w9Knw2+EVJlg2x63zg4wT3UdZrVqlDEE7Vq2NuVK6V58imjucxc+9d
+	SCoehZTAGBC/3mQZpy5MNXpLhTQGLlfC8bFvgCfOtAKAHv/Z5aN2sexAssHYLS1r
+	Y2pTMWBejAZ1AbridVRr2HEfGqjKnQ9bDjSsvaFNa45dpWao08Ax/IsDbWQgj5CL
+	yo6NraMeq96MzEb6iLYsKls9IXreZ2QyHUrAoxvAymLGhpW82iO90zdk998JSM0Q
+	4jtgjj4CVGOZBQmtFKq0dscJtHvylQattMcrqMpzGOvESf+pORryb+hlTXVBTRXE
+	cMhc+Jw92552e7z+lJFfKQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1774998113; x=
+	1775084513; bh=lBuwiN4qeR4cp/7SH69mL0nqRv1FXISJ3o63/YTRGfg=; b=g
+	mQnSYAhgsyOrSnAkj/YHViJUvj8OiAmpYwFkw24F6NVsIu5WMlskx6uvqqHzY6fL
+	8PppWhL8dPTtie07AOWs0oaVCALp464pZ6hwDPm1qoqI0DQ11mv7sZ8ERBDZNAmr
+	OASopWF885SkfcilJZXeykIfuanC3/Vi/Y001T4qAirq5crfQDhX7GFQfnrV7Pfj
+	/RO4y0l2E3IQ4Msn9lg4d4K0hib9eCKDBJlTbrNRG8aWnANpOrW+gN+HOllg52+u
+	HfbtPBUckTY6IpeevPhdzT019cpRtbyA5c0TuiPPwLORKOccCIgMw+DbAAJTiGpS
+	oarPL1G4UhzL4ake8RacQ==
+X-ME-Sender: <xms:YFLMafuMcmhNatmHxRMsquzXHyKQKw2ECQdrtt13zTzMS1N8aUWuow>
+    <xme:YFLMaW8oQWr8ne2aCzOqpWvRmZV4d4WDBaBUG7oGTLMXbB8_M8kOSumWfaZm0h0-5
+    Z9YyrfRUh8cr3SOwe8VaAAc2hTd6E8VXOkQ2nmKAUhBXnhkWa7gJw>
+X-ME-Received: <xmr:YFLMaQz8T-kL2pA0LQ_0l2_tjttOJXaA5tpN0JudmmFcR_TUfkb238RXQgI>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgddugeejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceurghi
+    lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurh
+    epfffhvfevuffkjghfofggtgfgsehtjeertdertddvnecuhfhrohhmpeetlhgvgicuhghi
+    lhhlihgrmhhsohhnuceorghlvgigsehshhgriigsohhtrdhorhhgqeenucggtffrrghtth
+    gvrhhnpedvkeefjeekvdduhfduhfetkedugfduieettedvueekvdehtedvkefgudegveeu
+    ueenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrlh
+    gvgiesshhhrgiisghothdrohhrghdpnhgspghrtghpthhtohepuddvpdhmohguvgepshhm
+    thhpohhuthdprhgtphhtthhopehluhhkrghsseifuhhnnhgvrhdruggvpdhrtghpthhtoh
+    epsggvrhhnugessghstghhuhdruggvpdhrtghpthhtoheptggrrhhnihhlseguvggsihgr
+    nhdrohhrghdprhgtphhtthhopegshhgvlhhgrggrshesghhoohhglhgvrdgtohhmpdhrtg
+    hpthhtoheprhgrfhgrvghlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehmrghrihho
+    rdhlihhmohhntghivghllhhosegrmhgurdgtohhmpdhrtghpthhtohepuddufedutddvhe
+    essghughhsrdguvggsihgrnhdrohhrghdprhgtphhtthhopehrvghgrhgvshhsihhonhhs
+    sehlihhsthhsrdhlihhnuhigrdguvghvpdhrtghpthhtohepshhtrggslhgvsehvghgvrh
+    drkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:YFLMaQ9lOwQmNviNE1kutxf7BjGVpEcv3AogzAj7vfCI0HcJbQQEcA>
+    <xmx:YFLMaWNk1895DW6-12Ka3SygpAUYWDMiCRhPaVqOjcqerxjQ_Amfew>
+    <xmx:YFLMaYqj8AVcWzH0mBY0BWYbtC0h2V9uRSX1Z62wI_qcTXYWj1oDvw>
+    <xmx:YFLMaV7rEvHQcto4kCNk1YJA3mkl3uzF5D2Xx0-57L1Ph5bYIO8Dvw>
+    <xmx:YVLMaeXAx9OBrpu6BP6didbMwx09-SVpWIumjKVjGkzbke2Utn_ih5-2>
+Feedback-ID: i03f14258:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 31 Mar 2026 19:01:52 -0400 (EDT)
+Date: Tue, 31 Mar 2026 17:01:49 -0600
+From: Alex Williamson <alex@shazbot.org>
+To: Lukas Wunner <lukas@wunner.de>
+Cc: Bernd Schumacher <bernd@bschu.de>, Salvatore Bonaccorso
+ <carnil@debian.org>, Bjorn Helgaas <bhelgaas@google.com>, "Rafael J.
+ Wysocki" <rafael@kernel.org>, Mario Limonciello
+ <mario.limonciello@amd.com>, 1131025@bugs.debian.org,
+ regressions@lists.linux.dev, stable@vger.kernel.org,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, alex@shazbot.org
+Subject: Re: [6.12.y regression] Regression with 58130e7ce6cb ("PCI/ERR:
+ Ensure error recoverability at all times"): echo vfio-pci >driver_override
+ does not work for DVB Adapter
+Message-ID: <20260331170149.3ee222aa@shazbot.org>
+In-Reply-To: <acvHjo8PKdyHshSE@wunner.de>
+References: <177373189751.7987.7156982489427825197.reportbug@obelix-trixie.bs.de>
+	<acfZrlP0Ua_5D3U4@eldamar.lan>
+	<acfhf-odtr0yw_py@wunner.de>
+	<74bcd84500e5efcca035624f325e400dd8a21f44.camel@bschu.de>
+	<acgohjvBpVcR7HcK@wunner.de>
+	<5f9386146f426e2847550681cb7188471205607f.camel@bschu.de>
+	<aclRwznwq6KpA2qA@wunner.de>
+	<ecf9b2dd96ff97cc035ba297266b8dd05eea88da.camel@bschu.de>
+	<acvHjo8PKdyHshSE@wunner.de>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.51; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b3a60d9e-b811-42d9-bf05-f400e1302a30@leemhuis.info>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Mar 31, 2026 at 09:07:48AM +0200, Thorsten Leemhuis wrote:
-> On 3/31/26 08:24, Paul Menzel wrote:
-> > Am 31.03.26 um 07:17 schrieb Gabor Gombas:
-> >
-> > Can you reproduce the issue? If yes, it’d be a great help, if you could
-> > bisect the issue.
+On Tue, 31 Mar 2026 15:09:34 +0200
+Lukas Wunner <lukas@wunner.de> wrote:
+
+> On Mon, Mar 30, 2026 at 08:14:53AM +0200, Bernd Schumacher wrote:
+> > [    0.318903] pci 0000:07:00.0: [dd01:0003] type 00 class 0x048000 PCIe Endpoint
+> > [    0.318939] pci 0000:07:00.0: BAR 0 [mem 0xfffffffffc500000-0xfffffffffc50ffff 64bit]  
 > 
-> For instructions see:
-> https://docs.kernel.org/admin-guide/verify-bugs-and-bisect-regressions.html
-> or https://docs.kernel.org/admin-guide/bug-bisect.html
+> BIOS initially sets the BAR address to an incorrect value (the top 32 bits
+> should be all zeroes instead of all ones)...
 > 
-> Checking if mainline is affected is also important (the first guide
-> handles that), as that determines how this needs to be handled.
+> > [    0.339685] pci 0000:07:00.0: BAR 0 [mem 0xfffffffffc500000-0xfffffffffc50ffff 64bit]: can't claim; no compatible bridge window  
+> [...]
+> > [    0.311065] pci 0000:02:03.0: [1022:57a3] type 01 class 0x060400 PCIe Switch Downstream Port
+> > [    0.311107] pci 0000:02:03.0: PCI bridge to [bus 07]
+> > [    0.311118] pci 0000:02:03.0:   bridge window [mem 0xfc500000-0xfc5fffff]  
+> 
+> ... this doesn't fit into the window of the bridge above the DVB card,
+> which has the top 32 bits set to all zeroes...
+> 
+> > [    0.357346] pci 0000:07:00.0: BAR 0 [mem 0xfc500000-0xfc50ffff 64bit]: assigned  
+> 
+> ... the kernel fixes the incorrect BAR, but it seems there's an ordering
+> issue such that pci_save_state() is called beforehand.  It's weird that
+> this doen't occur with newer kernels and it would be good to understand why.
+> I'm not seeing the ordering issue despite staring at the code for a while.
 
-Unfortunately it's unlikely that I would have time for a bisection
-before the weekend. The bug can be reproduced, I've booted 6.19.10
-again, and this time hit the oops after a few minutes. The oops is
-slightly different, so likely it's some kind of memory corruption. The
-box in question is running Home Assistant, so it is constantly scanning
-for Bluetooth devices.
+Do we know this isn't occurring on newer kernels?  If we have a bogus
+BAR address that later gets fixed, this seems like a fairly unique
+setup.  AIUI, we're saving the state via the call chain invoked by
+subsys_initcall(pcibios_init), but I think we're doing the resource
+fixes in fs_initcall(pcibios_assign_resources).  That suggests that the
+saved state would have the bogus BAR values.
 
-I have a 6.19.8 kernel which I've built some time ago but then never
-used, I've booted it now, we'll see how it fares.
+If we toss PM runtime into that mix, pci_pm_default_resume_early() will
+call pci_restore_state() however pci_save_state() in that file is
+mostly wrapped around pci_dev->state_saved guards.  This suggests we
+likely won't save the reallocated state, but we will restore the
+pre-reallocated state.
 
-Gabor
+Maybe this can be quickly validated by loading vfio-pci with the
+disable_idle_d3=1 option to avoid the PM transition.  Thanks,
 
-Mar 31 20:29:21 host bluetoothd[810]: Path /org/bleak/66/140584461213584 removed along with Adv Monitor app :1.101
-Mar 31 20:29:21 host kernel: BUG: unable to handle page fault for address: 00000000bfaf0372
-Mar 31 20:29:21 host kernel: #PF: supervisor read access in kernel mode
-Mar 31 20:29:21 host kernel: #PF: error_code(0x0000) - not-present page
-Mar 31 20:29:21 host kernel: PGD 0 P4D 0 
-Mar 31 20:29:21 host kernel: Oops: Oops: 0000 [#1] SMP PTI
-Mar 31 20:29:21 host kernel: CPU: 0 UID: 0 PID: 810 Comm: bluetoothd Not tainted 6.19.10-gg #48 PREEMPT(lazy) 
-Mar 31 20:29:21 host kernel: Hardware name:  /D54250WYK, BIOS WYLPT10H.86A.0045.2017.0302.2108 03/02/2017
-Mar 31 20:29:21 host kernel: RIP: 0010:hci_sock_get_channel+0x5/0x20
-Mar 31 20:29:21 host kernel: Code: 0f a3 b7 78 03 00 00 0f 92 c0 c3 cc cc cc cc 66 0f 1f 44 00 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 0f 1f 44 00 00 <0f> b7 87 72 03 00 00 c3 cc cc cc cc 0f 1f 40 00 66 66 2e 0f 1f 84
-Mar 31 20:29:21 host kernel: RSP: 0018:ffff9d7201013ad8 EFLAGS: 00010206
-Mar 31 20:29:21 host kernel: RAX: 0000000000000000 RBX: ffff93d9887bec00 RCX: 0000000000000002
-Mar 31 20:29:21 host kernel: RDX: ffff93d9877fbf00 RSI: 000000000000000d RDI: 00000000bfaf0000
-Mar 31 20:29:21 host kernel: RBP: ffffe64e82febc40 R08: ffffffff83b6f7b0 R09: 0000000000000002
-Mar 31 20:29:21 host kernel: R10: ffff93d98bda6000 R11: ffff93d985603600 R12: ffff93d98bda6b28
-Mar 31 20:29:21 host kernel: R13: 0000000000000003 R14: 000000000000000d R15: ffff93d98bda6b08
-Mar 31 20:29:21 host kernel: FS:  00007ff6a4ff2340(0000) GS:ffff93db12797000(0000) knlGS:0000000000000000
-Mar 31 20:29:21 host kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-Mar 31 20:29:21 host kernel: CR2: 00000000bfaf0372 CR3: 000000010bc9e006 CR4: 00000000001726f0
-Mar 31 20:29:21 host kernel: Call Trace:
-Mar 31 20:29:21 host kernel:  <TASK>
-Mar 31 20:29:21 host kernel:  mgmt_pending_find+0x48/0xa0
-Mar 31 20:29:21 host kernel:  remove_adv_monitor+0x3b/0x120
-Mar 31 20:29:21 host kernel:  ? _raw_read_lock+0x13/0x40
-Mar 31 20:29:21 host kernel:  hci_sock_sendmsg+0x656/0xb40
-Mar 31 20:29:21 host kernel:  sock_write_iter+0x181/0x190
-Mar 31 20:29:21 host kernel:  ? ____sys_sendmsg+0x2e5/0x300
-Mar 31 20:29:21 host kernel:  do_iter_readv_writev+0x139/0x230
-Mar 31 20:29:21 host kernel:  vfs_writev+0x120/0x3a0
-Mar 31 20:29:21 host kernel:  ? vfs_read+0x222/0x350
-Mar 31 20:29:21 host kernel:  ? __seccomp_filter+0x34/0x5b0
-Mar 31 20:29:21 host kernel:  ? do_writev+0xde/0x110
-Mar 31 20:29:21 host kernel:  do_writev+0xde/0x110
-Mar 31 20:29:21 host kernel:  do_syscall_64+0x6c/0xe90
-Mar 31 20:29:21 host kernel:  ? syscall_exit_work+0x13e/0x1b0
-Mar 31 20:29:21 host kernel:  ? do_syscall_64+0x8a/0xe90
-Mar 31 20:29:21 host kernel:  ? syscall_exit_work+0x13e/0x1b0
-Mar 31 20:29:21 host kernel:  ? do_syscall_64+0x8a/0xe90
-Mar 31 20:29:21 host kernel:  ? irqentry_exit+0x48/0x530
-Mar 31 20:29:21 host kernel:  entry_SYSCALL_64_after_hwframe+0x71/0x79
-Mar 31 20:29:21 host kernel: RIP: 0033:0x7ff6a54a0e92
-Mar 31 20:29:21 host kernel: Code: 18 41 8b 93 08 03 00 00 59 5e 48 83 f8 fc 75 1a 83 e2 39 83 fa 08 75 12 e8 2b ff ff ff 0f 1f 00 49 89 ca 48 8b 44 24 20 0f 05 <48> 83 c4 18 c3 66 0f 1f 84 00 00 00 00 00 48 83 ec 10 ff 74 24 18
-Mar 31 20:29:21 host kernel: RSP: 002b:00007fff3c414010 EFLAGS: 00000202 ORIG_RAX: 0000000000000014
-Mar 31 20:29:21 host kernel: RAX: ffffffffffffffda RBX: 00007fff3c414090 RCX: 00007ff6a54a0e92
-Mar 31 20:29:21 host kernel: RDX: 0000000000000001 RSI: 00007fff3c414090 RDI: 0000000000000008
-Mar 31 20:29:21 host kernel: RBP: 0000000000000008 R08: 0000000000000000 R09: 0000000000000000
-Mar 31 20:29:21 host kernel: R10: 0000000000000000 R11: 0000000000000202 R12: 0000559419ca6e60
-Mar 31 20:29:21 host kernel: R13: 0000559419ca8f90 R14: 0000559419cc6cb0 R15: 0000000000000000
-Mar 31 20:29:21 host kernel:  </TASK>
-Mar 31 20:29:21 host kernel: Modules linked in: ip_set tun rfcomm 8021q algif_hash algif_skcipher af_alg bnep uinput kvm_intel iwlmvm kvm at24 irqbypass nls_cp437 regmap_i2c iwlwifi vfat mei_hdcp fat ir_rc6_decoder rc_rc6_mce n>
-Mar 31 20:29:21 host kernel: CR2: 00000000bfaf0372
-Mar 31 20:29:21 host kernel: ---[ end trace 0000000000000000 ]---
-Mar 31 20:29:21 host kernel: RIP: 0010:hci_sock_get_channel+0x5/0x20
-Mar 31 20:29:21 host kernel: Code: 0f a3 b7 78 03 00 00 0f 92 c0 c3 cc cc cc cc 66 0f 1f 44 00 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 0f 1f 44 00 00 <0f> b7 87 72 03 00 00 c3 cc cc cc cc 0f 1f 40 00 66 66 2e 0f 1f 84
-Mar 31 20:29:21 host kernel: RSP: 0018:ffff9d7201013ad8 EFLAGS: 00010206
-Mar 31 20:29:21 host kernel: RAX: 0000000000000000 RBX: ffff93d9887bec00 RCX: 0000000000000002
-Mar 31 20:29:21 host kernel: RDX: ffff93d9877fbf00 RSI: 000000000000000d RDI: 00000000bfaf0000
-Mar 31 20:29:21 host kernel: RBP: ffffe64e82febc40 R08: ffffffff83b6f7b0 R09: 0000000000000002
-Mar 31 20:29:21 host kernel: R10: ffff93d98bda6000 R11: ffff93d985603600 R12: ffff93d98bda6b28
-Mar 31 20:29:21 host kernel: R13: 0000000000000003 R14: 000000000000000d R15: ffff93d98bda6b08
-Mar 31 20:29:21 host kernel: FS:  00007ff6a4ff2340(0000) GS:ffff93db12797000(0000) knlGS:0000000000000000
-Mar 31 20:29:21 host kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-Mar 31 20:29:21 host kernel: CR2: 00000000bfaf0372 CR3: 000000010bc9e006 CR4: 00000000001726f0
-
+Alex
