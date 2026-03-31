@@ -1,161 +1,123 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2F013783CE
-	for <regressions@lists.linux.dev>; Mon, 30 Mar 2026 16:32:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF4503A7F52
+	for <regressions@lists.linux.dev>; Tue, 31 Mar 2026 06:24:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774888355; cv=none; b=s14ZfCuV9Lmm5oTsBrvchf2WnOxD2aQM1JK8ViEAuIaWFgIO0ylMloztpWLkajuS2ZxILAGAZQj5evedAbUNMHMknbbopOKxRLm5olj6J484Y2gQyHui9xteqFhkCgYvUX9bpgmojVS2n12imtHTepPhVRM9kKJSl4RBz0yqi1w=
+	t=1774938283; cv=none; b=YOhkwawy7lOVKOB9pSYqG9fv0rrgN6rUEauLtgs2NAxwquJZeCdVwCpBFT2BV0tiJ1mMfZUUSSoX9tyN/jZlRUxO2Y8JYrnSQm4O2Kocpoa35JWzXRDOpGq6HmuxbqLK/Qc8Gu78sEU1CaKW/s86UVtsvgqcydZkYwmO+Yt5QLY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774888355; c=relaxed/simple;
-	bh=SHMQ/u956dO3YRSw1/LDxtZEBkcgD88+g24Hqcq9GCM=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=LgVZ1CfGReeWFn/zD3LWSW81OU7oDPOJTLEdPgqQBPJNWAt2xSU2syQAtb4Y/svPXNFcSuQ3JNZWab1AsZEujEWJunT+CDKLhCDhHeTJdpXI688n9QQ9u/Sy7JKo+jRHQPNeeRVMBCCJfZL8QvX4zFGLIu2n3j4/ycwoBFy5QZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MzEg5NWU; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MzEg5NWU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1774888354; x=1806424354;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=SHMQ/u956dO3YRSw1/LDxtZEBkcgD88+g24Hqcq9GCM=;
-  b=MzEg5NWUATL7Z36gzy5v7lNkcIaFq0j2octQd75KWyyxhj4RwzfeFtSF
-   eHK/xcDLb9ofoSancxqnrenp86SEMq8eB20JJnlaaNnlBQPN2M+4Gz/Wn
-   30X70j4HRAAH6ilIyfOyB7/8AQ0neSLrCb+YsBuHmUqqo+3P5ZlbG90xB
-   p0RsAUT3wQuTzf27MF6nT3hS3B6IWfcTH5qmkXwg4Tur0y7zpmShLqH46
-   89yhLJree2sz/uKyy2+oRjecwtLB5gBVgehL7H287VvHWYF5bHKrL18jq
-   EmzcNLoFAdBseS9PavnADNtLY6vZz623/yFvhjdjv6XiZrrLaW4TznFQ9
-   g==;
-X-CSE-ConnectionGUID: 2AgfNvaPSQOil/d/wsDO+Q==
-X-CSE-MsgGUID: +CA8tIecTR2gdxWGoJ0hCQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11743"; a="74917432"
-X-IronPort-AV: E=Sophos;i="6.23,150,1770624000"; 
-   d="scan'208";a="74917432"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2026 09:32:33 -0700
-X-CSE-ConnectionGUID: O8s/zpz+QpyY2DRP3Vq2sA==
-X-CSE-MsgGUID: q/NY2QUEQE6BhOz9l/eH/Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,150,1770624000"; 
-   d="scan'208";a="230917620"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.153])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2026 09:32:31 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 30 Mar 2026 19:32:28 +0300 (EEST)
-To: =?ISO-8859-15?Q?Jonas_H=F6glund?= <firefly@firefly.nu>
-cc: Thorsten Leemhuis <regressions@leemhuis.info>, 
-    Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
-    regressions@lists.linux.dev
-Subject: Re: [REGRESSION] amdgpu with Thunderbolt eGPU bracket fails since
- new bridge window alignment calculation code
-In-Reply-To: <52614de3-9658-4390-8e0e-689963f364a4@app.fastmail.com>
-Message-ID: <4a7704af-4c30-3050-e8a6-cb1fa3fd7ec9@linux.intel.com>
-References: <a5f23340-2b84-4734-be11-f5a97c188195@app.fastmail.com> <ec9af6c3-755b-488a-8400-cef9eeeac509@leemhuis.info> <740b10c4-a54a-f776-d564-d3c977d90ba6@linux.intel.com> <52614de3-9658-4390-8e0e-689963f364a4@app.fastmail.com>
+	s=arc-20240116; t=1774938283; c=relaxed/simple;
+	bh=28kdi/rbzdGcHK6YLx4nQWxfR3Qrepjzmqu8EjYmfEk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
+	 In-Reply-To:Content-Type; b=MIak7XM5yR6IOVHUCbfH5JL2k77rf8QNHPdzgUDvMbaCc23mkBHil2JTryKU8rJbpI56YlxAsan9WUmmEiyeXKIXO++MuJXndeej4svDfapIIIambDvgwtKm+RyfrN/MrpgZLubHcIDVWtQSle5rog2XIBQmneCDlZQl5iqtQhg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
+Received: from [192.168.2.229] (p5b13a713.dip0.t-ipconnect.de [91.19.167.19])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 1DF7B4C4430F86;
+	Tue, 31 Mar 2026 08:24:35 +0200 (CEST)
+Message-ID: <e96776d6-ce8c-4626-984e-474f3606445d@molgen.mpg.de>
+Date: Tue, 31 Mar 2026 08:24:33 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-1838993219-1774886953=:968"
-Content-ID: <259c788a-40b5-d4b8-b983-04e9b355d159@linux.intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: Oops with 6.19.10: RIP: 0010:hci_sock_get_channel+0x5/0x20
+To: Gabor Gombas <gombasgg@gmail.com>
+References: <actZBr+wqcABY5mt@lan>
+Content-Language: en-US
+Cc: linux-bluetooth@vger.kernel.org, regressions@lists.linux.dev
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+In-Reply-To: <actZBr+wqcABY5mt@lan>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+#regzbot ^introduced: v6.19.6..v6.19.10
 
---8323328-1838993219-1774886953=:968
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <20f0fc1d-6ec6-9cf2-09cc-b1a5306e3f56@linux.intel.com>
+Dear Gabor,
 
-On Mon, 30 Mar 2026, Jonas H=F6glund wrote:
 
-> On Mon, 30 Mar 2026, at 14:33, Ilpo J=E4rvinen wrote:
-> > I'm skeptical it's exactly the same issue even if the end result is the=
-=20
-> > same.
-> >
-> > The resource fitting algorithm has been in a state of constant flux due=
- to=20
-> > various fixes and improvements into it over all the recent two years.
-> > Unfortunately, fixing one thing (or even moving towards fixing an issue=
-)=20
-> > may break another thing due to how different resource interact.
->=20
-> Ok, yeah, I don't envy having to deal with that.  You're probably right
-> it's more BAR-related, I mostly keyed in on the very similar symptom.
+Thank you for your report.
 
-Definitely the gpu driver could handle an resource issue better than by=20
-calling something that triggers a sanity check somewhere, but it's=20
-secondary problem.
+Am 31.03.26 um 07:17 schrieb Gabor Gombas:
 
-> > That "PCI: Improve head free space usage" series is certainly fixing tw=
-o=20
-> > known corner case with the commit 3958bf16e2fe ("PCI: Stop over-estimat=
-ing=20
-> > bridge window size") but with only heavily filtered logs, I'm unable to=
-=20
-> > confirm if it applies to this case as well.
->=20
-> Sorry for not providing full logs from the get-go; I couldn't think of
-> suitable location.  Here's a full dmesg for reference of the crash
-> manifesting on 7.0.0-rc5:
->=20
-> https://up.firefly.nu/pub/amdgpu-egpu-crash-7.0.0-rc5.dmesg.txt
->=20
->=20
-> > From the limited logs, I suspect this is primarily a BAR resize rollbac=
-k=20
-> > failure which leaves the resources into a state worse than they were pr=
-ior=20
-> > to the resize. The commit 337b1b566db0 ("PCI: Fix restoring BARs on BAR=
-=20
-> > resize rollback path") attempts to rectify that. The entire series is h=
-ere=20
-> > (not all of it went to stable):
->=20
-> > https://lore.kernel.org/all/20251113162628.5946-1-ilpo.jarvinen@linux.i=
-ntel.com/T/#m9b0e316c94f7abc0686e58f902d05ff35aeac3ac
-> >
-> > The fixes to that series are here:
-> >
-> > 5528fd38f230 ("PCI: Fix Resizable BAR restore order")
-> > 08d9eae76b85 ("PCI: Fix BAR resize rollback path overwriting ret")
->=20
-> Unless I misread something, they should both be included in the recently
-> tagged 7.0.0-rc6--I'll try building it and see if the issue is resolved.
->=20
-> I'll reply once I've tested 7.0.0-rc6.
+> I've upgraded to 6.19.10, and within an hour, I got the below Oops. The
+> line from bluetoothd is the only syslog entry close to the oops. 6.19.6
+> run fine on the same host since it was released.
+> 
+> Mar 30 22:00:43 host bluetoothd[807]: Path /org/bleak/65/140683142893552 removed along with Adv Monitor app :1.103
+> Mar 30 22:00:43 host kernel: Oops: general protection fault, probably for non-canonical address 0xf712f8c7a288279f: 0000 [#1] SMP PTI
+> Mar 30 22:00:43 host kernel: CPU: 1 UID: 0 PID: 807 Comm: bluetoothd Not tainted 6.19.10-gg #48 PREEMPT(lazy)
+> Mar 30 22:00:43 host kernel: Hardware name:  /D54250WYK, BIOS WYLPT10H.86A.0045.2017.0302.2108 03/02/2017
+> Mar 30 22:00:43 host kernel: RIP: 0010:hci_sock_get_channel+0x5/0x20
+> Mar 30 22:00:43 host kernel: Code: 0f a3 b7 78 03 00 00 0f 92 c0 c3 cc cc cc cc 66 0f 1f 44 00 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 0f 1f 44 00 00 <0f> b7 87 72 03 00 00 c3 cc cc cc cc 0f 1f 40 00 66 66 2e 0f 1f 84
+> Mar 30 22:00:43 host kernel: RSP: 0018:ffffbb74c11afa68 EFLAGS: 00010206
+> Mar 30 22:00:43 host kernel: RAX: 0000000000000000 RBX: ffff9c46c5ead600 RCX: 0000000000000002
+> Mar 30 22:00:43 host kernel: RDX: ffff9c46c97e1f80 RSI: 000000000000000d RDI: f712f8c7a288242d
+> Mar 30 22:00:43 host kernel: RBP: 0000000000000000 R08: ffffffff8296f7b0 R09: 0000000000000002
+> Mar 30 22:00:43 host kernel: R10: ffff9c46cb124000 R11: ffff9c4796f88400 R12: ffff9c46cb124b28
+> Mar 30 22:00:43 host kernel: R13: 0000000000000003 R14: 000000000000000d R15: ffff9c46cb124b08
+> Mar 30 22:00:43 host kernel: FS:  00007fec5ee85340(0000) GS:ffff9c4853a17000(0000) knlGS:0000000000000000
+> Mar 30 22:00:43 host kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> Mar 30 22:00:43 host kernel: CR2: 00007f959681a008 CR3: 0000000118f08001 CR4: 00000000001726f0
+> Mar 30 22:00:43 host kernel: Call Trace:
+> Mar 30 22:00:43 host kernel:  <TASK>
+> Mar 30 22:00:43 host kernel:  mgmt_pending_find+0x48/0xa0
+> Mar 30 22:00:43 host kernel:  remove_adv_monitor+0x3b/0x120
+> Mar 30 22:00:43 host kernel:  ? _raw_read_lock+0x13/0x40
+> Mar 30 22:00:43 host kernel:  hci_sock_sendmsg+0x656/0xb40
+> Mar 30 22:00:43 host kernel:  sock_write_iter+0x181/0x190
+> Mar 30 22:00:43 host kernel:  do_iter_readv_writev+0x139/0x230
+> Mar 30 22:00:43 host kernel:  vfs_writev+0x120/0x3a0
+> Mar 30 22:00:43 host kernel:  ? __seccomp_filter+0x34/0x5b0
+> Mar 30 22:00:43 host kernel:  ? _copy_to_iter+0x87/0x6b0
+> Mar 30 22:00:43 host kernel:  ? __seccomp_filter+0x34/0x5b0
+> Mar 30 22:00:43 host kernel:  ? do_writev+0xde/0x110
+> Mar 30 22:00:43 host kernel:  do_writev+0xde/0x110
+> Mar 30 22:00:43 host kernel:  do_syscall_64+0x6c/0xe90
+> Mar 30 22:00:43 host kernel:  ? syscall_exit_work+0x13e/0x1b0
+> Mar 30 22:00:43 host kernel:  ? do_syscall_64+0x8a/0xe90
+> Mar 30 22:00:43 host kernel:  ? do_syscall_64+0x8a/0xe90
+> Mar 30 22:00:43 host kernel:  ? switch_fpu_return+0x16/0xd0
+> Mar 30 22:00:43 host kernel:  ? do_syscall_64+0x29f/0xe90
+> Mar 30 22:00:43 host kernel:  ? handle_softirqs+0x13f/0x2a0
+> Mar 30 22:00:43 host kernel:  ? irqentry_exit+0x48/0x530
+> Mar 30 22:00:43 host kernel:  entry_SYSCALL_64_after_hwframe+0x71/0x79
+> Mar 30 22:00:43 host kernel: RIP: 0033:0x7fec5f333e92
+> Mar 30 22:00:43 host kernel: Code: 18 41 8b 93 08 03 00 00 59 5e 48 83 f8 fc 75 1a 83 e2 39 83 fa 08 75 12 e8 2b ff ff ff 0f 1f 00 49 89 ca 48 8b 44 24 20 0f 05 <48> 83 c4 18 c3 66 0f 1f 84 00 00 00 00 00 48 83 ec 10 ff 74 24 18
+> Mar 30 22:00:43 host kernel: RSP: 002b:00007ffc60d23590 EFLAGS: 00000202 ORIG_RAX: 0000000000000014
+> Mar 30 22:00:43 host kernel: RAX: ffffffffffffffda RBX: 00007ffc60d23610 RCX: 00007fec5f333e92
+> Mar 30 22:00:43 host kernel: RDX: 0000000000000001 RSI: 00007ffc60d23610 RDI: 0000000000000008
+> Mar 30 22:00:43 host kernel: RBP: 0000000000000008 R08: 0000000000000000 R09: 0000000000000000
+> Mar 30 22:00:43 host kernel: R10: 0000000000000000 R11: 0000000000000202 R12: 000055bcb1bf7e60
+> Mar 30 22:00:43 host kernel: R13: 000055bcb1bf9f90 R14: 000055bcb1c15520 R15: 0000000000000000
+> Mar 30 22:00:43 host kernel:  </TASK>
+> Mar 30 22:00:43 host kernel: Modules linked in: ip_set tun rfcomm 8021q algif_hash algif_skcipher af_alg bnep uinput kvm_intel iwlmvm mei_hdcp nls_cp437 kvm iwlwifi at24 vfat regmap_i2c fat irqbypass ir_rc6_decoder rc_rc6_mce n>
+> Mar 30 22:00:43 host kernel: ---[ end trace 0000000000000000 ]---
+> Mar 30 22:00:44 host kernel: RIP: 0010:hci_sock_get_channel+0x5/0x20
+> Mar 30 22:00:44 host kernel: Code: 0f a3 b7 78 03 00 00 0f 92 c0 c3 cc cc cc cc 66 0f 1f 44 00 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 0f 1f 44 00 00 <0f> b7 87 72 03 00 00 c3 cc cc cc cc 0f 1f 40 00 66 66 2e 0f 1f 84
+> Mar 30 22:00:44 host kernel: RSP: 0018:ffffbb74c11afa68 EFLAGS: 00010206
+> Mar 30 22:00:44 host kernel: RAX: 0000000000000000 RBX: ffff9c46c5ead600 RCX: 0000000000000002
+> Mar 30 22:00:44 host kernel: RDX: ffff9c46c97e1f80 RSI: 000000000000000d RDI: f712f8c7a288242d
+> Mar 30 22:00:44 host kernel: RBP: 0000000000000000 R08: ffffffff8296f7b0 R09: 0000000000000002
+> Mar 30 22:00:44 host kernel: R10: ffff9c46cb124000 R11: ffff9c4796f88400 R12: ffff9c46cb124b28
+> Mar 30 22:00:44 host kernel: R13: 0000000000000003 R14: 000000000000000d R15: ffff9c46cb124b08
+> Mar 30 22:00:44 host kernel: FS:  00007fec5ee85340(0000) GS:ffff9c4853a17000(0000) knlGS:0000000000000000
+> Mar 30 22:00:44 host kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> Mar 30 22:00:44 host kernel: CR2: 00007f959681a008 CR3: 0000000118f08001 CR4: 00000000001726f0
 
-Hi again,
+Can you reproduce the issue? If yes, it’d be a great help, if you could 
+bisect the issue.
 
-Now that I look more into the logs that probably won't help. For some=20
-reason, it seems that resize is not even attempted and the errno is=20
--EINVAL which is a bit unexpected.
 
-I'm starting to wonder that the problem fixed by this patch once again is=
-=20
-showing its ugly head (it's currently in pci/resource branch, so it won't=
-=20
-appear until 7.1-rc1):
+Kind regards,
 
-https://lore.kernel.org/linux-pci/20260326200427.GA1340256@bhelgaas/
-
-I still don't understand why pbus_select_window() would return NULL in=20
-this case but it looks the most likely candidate where -EINVAL could come=
-=20
-from (I still don't understand what cleared resource's flags if that's the=
-=20
-case but it still seems the best explanation).
-
-Please take logs from this point on with dyndbg=3D"file drivers/pci/*.c +p"=
-=20
-on the kernel's command line so there's little bit of extra info (and=20
-check you are building with CONFIG_DYNAMIC_DEBUG).
-
---=20
- i.
---8323328-1838993219-1774886953=:968--
+Paul
