@@ -1,110 +1,115 @@
-Received: from master.debian.org (master.debian.org [82.195.75.110])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.61.103])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AE02348883;
-	Wed,  1 Apr 2026 13:10:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.110
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAAF3426D11
+	for <regressions@lists.linux.dev>; Wed,  1 Apr 2026 13:29:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.61.103
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775049013; cv=none; b=I7UmVojTU6620FYbNRsGkTA1TEB/6QYgSMMt1C2h8gyTMpyPQuA/Wo+i1TiMdGYyZEy2nVR5i2xxACA/TrQ5BVZuV/N9BdAgMfsjqvvbKL9Xro3u1NrO5tN28oFBdDoH6NlYyQ/f9LLh76Eackfv464RHB77Xh4VDvEGlIl1mNg=
+	t=1775050168; cv=none; b=oAjxQEBPKRRnozI1J3euekrdVtzxLhXEYbcuA456HDy9EPsGGpmPlO+iVwM62K00Tx826Q07EvCWrYswHPcWF9oeuJ7TDKErZuarBO6TACHJiB4lxflHcEBsvofnKSr5i7h7nhzotGAyXs6ZP56cbSUPGBjq6SU4LPV/fALvdJY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775049013; c=relaxed/simple;
-	bh=8AqE06BtIHM26cpry7sh/8rDMddZ5jdzj7W8UqW7xLo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TnR2h+5ZOH3plfZX3q5/lmMo+Wez+RHBJ57c25sGejpONKd3gw9V8/RXTibH0i3BDDNulzftWSWnbtNjAs+9QF9G2LOLYId6LU9rWCMmxlDoPtPrUzCNL4p0cUBJW6bweG07RwP7N8goeFXFnbwtt+axgy5pTyvKNJG8xc0yjBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=none smtp.mailfrom=master.debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=XVGeYd97; arc=none smtp.client-ip=82.195.75.110
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=master.debian.org
+	s=arc-20240116; t=1775050168; c=relaxed/simple;
+	bh=A1deYmY06b41iIK6/yB6rrD7Ljoy9n94gqW3QUZkNs4=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=u5fjpTsiH2mZ1NA9UL6hSrpdwUwdifcqKIGBene+SvMctb8V9R8DaCWiqXLe8na99cAsdl/NDiYfHCyJGaMPPAR/bhX+FYowaXIEXP1Y8cLyqFNV8oST2aRA0mLT9stvPjvTDDJ+6E1C43NkgMPYY14H1FZ29xKvd2c2KcPe2hU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=OkdaWWXK; arc=none smtp.client-ip=188.68.61.103
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="XVGeYd97"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.master; h=In-Reply-To:Content-Type:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-Transfer-Encoding:
-	Content-ID:Content-Description;
-	bh=8AqE06BtIHM26cpry7sh/8rDMddZ5jdzj7W8UqW7xLo=; b=XVGeYd97QFkzva2ukg+FXypfMD
-	lwMyjsG325Y4xPuX3f+KBx2G7GayjOwifam+pg6lZ+DsrZEc9RJV6pfzChiDVLOKPr5g1miZmvIqe
-	32ce40wV0MNPYgN9c5DEKoO0KIr8GkUXZnwLByWttw53P+g3z6HJpOrgpdyC43JApLU4aULHucua1
-	PlR5jmT3/Dt+VhJzrVs0wEquI/sYCcgX1hL9QZzL48ACzr7JYiP8EDqofNmuSjpRITPJYY6ib9yc+
-	DAlpNYus3C6fpmLYfw3lJIdY6tErTHaJK0Nx/iJ6YjJI7cgj/wyJtDe4lL2yJAlGFsOFAtHTB6goG
-	jUQCG/Qw==;
-Received: from ukleinek by master.debian.org with local (Exim 4.96)
-	(envelope-from <ukleinek@master.debian.org>)
-	id 1w7vKd-007UG2-0w;
-	Wed, 01 Apr 2026 13:10:03 +0000
-Date: Wed, 1 Apr 2026 15:10:02 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@debian.org>
-To: Bernd Schumacher <bernd@bschu.de>, 1131025@bugs.debian.org
-Cc: Lukas Wunner <lukas@wunner.de>, 
-	Salvatore Bonaccorso <carnil@debian.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Mario Limonciello <mario.limonciello@amd.com>, 
-	regressions@lists.linux.dev, stable@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: Bug#1131025: [6.12.y regression] Regression with 58130e7ce6cb
- ("PCI/ERR: Ensure error recoverability at all times"): echo vfio-pci
- >driver_override does not work for DVB Adapter
-Message-ID: <ac0Y85OShbK6mHEV@monoceros>
-References: <177373189751.7987.7156982489427825197.reportbug@obelix-trixie.bs.de>
- <acfZrlP0Ua_5D3U4@eldamar.lan>
- <acfhf-odtr0yw_py@wunner.de>
- <74bcd84500e5efcca035624f325e400dd8a21f44.camel@bschu.de>
- <acgohjvBpVcR7HcK@wunner.de>
- <5f9386146f426e2847550681cb7188471205607f.camel@bschu.de>
- <aclRwznwq6KpA2qA@wunner.de>
- <177373189751.7987.7156982489427825197.reportbug@obelix-trixie.bs.de>
- <ecf9b2dd96ff97cc035ba297266b8dd05eea88da.camel@bschu.de>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="OkdaWWXK"
+Received: from mors-relay-8403.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4fm5S40G3Lz8B0c
+	for <regressions@lists.linux.dev>; Wed,  1 Apr 2026 15:29:24 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1775050164;
+	bh=A1deYmY06b41iIK6/yB6rrD7Ljoy9n94gqW3QUZkNs4=;
+	h=Date:Subject:From:To:References:In-Reply-To:From;
+	b=OkdaWWXKWbQ3F1CoII0smBJQXk42XCh5vePTxBeG+mW6AEvGlcLxsEesFoa7aJ1JY
+	 /egZvGWsj6JXGucyuyDbCxkvA1bg0bmUxfJsNbjilqbyhlDIc5TZ2LLqPOdSVqkwDR
+	 yPv5Wy6mweIJvUMF6mEU+cxS1XwT3QNL24qx7eJJNDHAQlmUzj5mUyFJJp90DaLVSI
+	 6IZsDu+NdzklYCvy/Pw4eiq1iuTNs67e6m1cZImJdpVXzDeKjFKf7t2pocWNfKeaaN
+	 QA0Xkrty57AJCGmCQBL8wyf8oPqDk0MrbHZU3CanVFRDLz1SOIbFNP50yCh6Mc+xNZ
+	 VazevNs3uYW1Q==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4fm5S36hljz8B04
+	for <regressions@lists.linux.dev>; Wed,  1 Apr 2026 15:29:23 +0200 (CEST)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4fm5S34qCJz8sgW
+	for <regressions@lists.linux.dev>; Wed,  1 Apr 2026 15:29:23 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 26583632AE
+	for <regressions@lists.linux.dev>; Wed,  1 Apr 2026 15:29:23 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <6a16dbdc-3106-4646-816c-9648b68fd29e@leemhuis.info>
+Date: Wed, 1 Apr 2026 15:29:22 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ovruitqvpmpuucsl"
-Content-Disposition: inline
-In-Reply-To: <ecf9b2dd96ff97cc035ba297266b8dd05eea88da.camel@bschu.de>
+User-Agent: Mozilla Thunderbird
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: <177505016333.1937200.1956542922586979443@mxe9fb.netcup.net>
+X-NC-CID: UcvMdVNEeu+KLX68VWqer/rhAXmTo1/p37uOL2YA/YD1miWQEdQ=
 
 
---ovruitqvpmpuucsl
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: Bug#1131025: [6.12.y regression] Regression with 58130e7ce6cb
- ("PCI/ERR: Ensure error recoverability at all times"): echo vfio-pci
- >driver_override does not work for DVB Adapter
-MIME-Version: 1.0
 
-On Mon, Mar 30, 2026 at 08:14:53AM +0200, Bernd Schumacher wrote:
-> Am Sonntag, dem 29.03.2026 um 18:22 +0200 schrieb Lukas Wunner:
-> > Could you repeat this and add log_buf_len=3D16M to the kernel command
-> > line
-> > so that the dmesg output isn't truncated?
->=20
-> I have now added=A0to /etc/default/grub:
-> GRUB_CMDLINE_LINUX=3D"\"dyndbg=3Dfile log_buf_len=3D16M drivers/pci/* +p\=
-""
-> attached is the dmesg result for 6.12.73
+On 3/9/24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-This looks wrong. Please make this:
+#regzbot report:
+https://lore.kernel.org/all/a5f23340-2b84-4734-be11-f5a97c188195@app.fastmail.com/
+#regzbot title: pci: Thunderbolt eGPU bracket fails since new bridge
+window alignment calculation code
 
-GRUB_CMDLINE_LINUX=3D"\"dyndbg=3Dfile drivers/pci/* +p\" log_buf_len=3D16M"=
-=20
+#regzbot report:
+https://lore.kernel.org/all/CAF1bhLVYLZvD=j2XyuxXDKD-NWNJAwDnpVN+UYeQW-HbzNRn1A@mail.gmail.com/
+#regzbot introduced: v6.18..v6.19
+#regzbot title: btrfs: problem mounting 4-drive RAID1 fs after replace
+was interrupted by kernel crash
 
-Best regards
-Uwe
+#regzbot report:
+https://lore.kernel.org/linuxppc-dev/ms06y93w.ritesh.list@gmail.com/
+#regzbot fix: powerpc/powernv/iommu: iommu incorrectly bypass DMA APIs
+#regzbot monitor:
+https://lore.kernel.org/all/20260331223022.47488-1-gbatra@linux.ibm.com/
 
+#regzbot report: https://gitlab.freedesktop.org/drm/amd/-/issues/5021
+#regzbot fix: 3fc4648b53b7e3
 
---ovruitqvpmpuucsl
-Content-Type: application/pgp-signature; name="signature.asc"
+#regzbot report:
+https://lore.kernel.org/lkml/20260315232500.251088-1-CFSworks@gmail.com/
+#regzbot title: ceph: writeback can lead to a panic
 
------BEGIN PGP SIGNATURE-----
+#regzbot report:
+https://lore.kernel.org/lkml/39ef5c99-ba8e-40c1-bf93-359db7297d55@kernel.org/
+#regzbot from: Max Krummenacher <max.krummenacher@toradex.com>
+#regzbot dup:
+https://lore.kernel.org/lkml/20260219151157.2549198-1-max.oss.09@gmail.com/
+#regzbot title: ARM: dts: imx: Colibri iMX6ULL and Colibri iMX7 no
+longer boot
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmnNGScACgkQj4D7WH0S
-/k6bwQf/Qz+FCTFFiiHGjzCnjbZfBVStR6oAqUY9T2dYtGtjGbPTGAVl1qe8tE+t
-jQ3rJZMZtlZu2hqD05Ghk3sGwMooKyq+6y15VCsOg4/nhBNcMx1bakfhBbVX44tU
-qY1CqvgB7ePfHNG/z+ER64j1J6/17ahEhqVQtrobwEl0e6eIU/DS6n8urgdhoEoA
-SMqyiUeM+JsWMw123MbU2gbYNfPFGl4QD60FJYMrpiulz27gaXEpyb0VemT9fe8q
-7f1Jy//IzEaNQ/uT+9gLXsXY8mXfyCZShhrBNruD8l9p5f9QTW9ZeV4zLDV+lN+z
-tcIVjKnNwkmkv5E+pvAk9PtckgoWiQ==
-=jR9w
------END PGP SIGNATURE-----
+#regzbot report: https://gitlab.freedesktop.org/drm/amd/-/issues/5052
+#regzbot introduced: b82f0759346617b2
+#regzbot title: drm/amdgpu: no audio anymore
+#regzbot fix: drm/amd/display: Wire up dcn10_dio_construct() for all
+pre-DCN401 generations
+#regzbot monitor:
+https://lore.kernel.org/all/20260323211343.263909-1-sunlightlinux@gmail.com/
 
---ovruitqvpmpuucsl--
