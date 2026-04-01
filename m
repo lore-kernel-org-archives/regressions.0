@@ -1,120 +1,99 @@
-Received: from mailout2.hostsharing.net (mailout2.hostsharing.net [83.223.78.233])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [194.59.206.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F16DE34751D
-	for <regressions@lists.linux.dev>; Wed,  1 Apr 2026 04:11:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16C602D3ED1
+	for <regressions@lists.linux.dev>; Wed,  1 Apr 2026 07:03:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.59.206.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775016702; cv=none; b=YURBzCAdsO14TS9JxEUbTMOGJ+2antjno9dFx7Nmv7m7Efv8hNs0bBcDJUHbJmjqVTuMX+EG1XZ7Fg7exXuZwgFxEjmkO/22jrTR+KmVO7JfpyP/5AlyhUxCX8R9CSndy2g/P3mhp6NY7JHK0p2GVs5iiTkfzY68w9TqOn2w2nU=
+	t=1775027017; cv=none; b=fyMU9cnW1ROcHEzLvhyjj9DUtC5LIFZJvDtZslDtkVUxtoFvPbK4yreYq6Te1geVDhuwydb4D9ZqUUDoUEfvIIQ8swcNQtaqC34Wdxa4eqre47DLAsJn7zugXNBfb94fmU1TNcewwupN6JqKBf55KhTqIe0hxPsbfDGEoNHfYnk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775016702; c=relaxed/simple;
-	bh=sAWy1Ivi16Z/gQza1WVmjo4POjr+K6avx4D7/qC3ChA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mtdCbnzDKO/wuErf0UDxZsAyzgCqVuuApXTYHJOH66iapPunE+vScu/F/2AurwAHuZeM2IeEb4tZQQjrAZgfoKANFMT82MTI8Sz5FV5LCs9AaaBkTwiLr20ockI+k9VLWG9HWM882t8Ipkx3UYvsbH425lrfz+B6o6l54Dqyc24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=pass smtp.mailfrom=wunner.de; arc=none smtp.client-ip=83.223.78.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wunner.de
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	s=arc-20240116; t=1775027017; c=relaxed/simple;
+	bh=N8OOutGUwf3lWaTcFhd6/6UsVcM+PoDIr5qT5pP9Eqg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IIdRuOcoowcoYWArUyEqPwHXJrU9I1MR5hv45qUGZDPLd03rruFzymU87efXblXVxtXsijFiBSynOfkKU0Bp99DMo5gB/k7THLO/OGHRsEOORpuqyT6Ezsnkz7ZQtiyv1mR1OKia34Mxk5z89skO2TBi9g488j9IF+uFJSPNZ+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=WbxzmIWR; arc=none smtp.client-ip=194.59.206.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="WbxzmIWR"
+Received: from relay02-mors.netcup.net (localhost [127.0.0.1])
+	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4flwsl4mZDz4642;
+	Wed,  1 Apr 2026 09:02:35 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1775026955;
+	bh=N8OOutGUwf3lWaTcFhd6/6UsVcM+PoDIr5qT5pP9Eqg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=WbxzmIWRr0Qb4JoirbZZlVymL/cy1xgW1Hnr6Smfz6BNQ3xhH97bAuspBiGs+HV7a
+	 Rl4bmQ29EjV/lVWJSvOKHYK8xKkiRorQ4mUPke5miN4WngMTPDBiYYxKb1aErpY0ny
+	 hWgY17GYal6BxzU01rc1rw+VxC7S3Wc9QAMKSlhVjpVbmAQ6UnG9Hh9zKlMR1a1D+h
+	 SAIR5IDC0rCcwF9xhk7zC274B53RahmJ/iug0736N4ymtkNYh+KweE1hbNAWzoc3R/
+	 QEyaJtnsglkaW/nH5boDK5ehfbptiPDwn58S5YxD4Fr1W35kngk2m69t+9Ry1C9Pek
+	 Dcs0KR8hxlYLw==
+Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
+	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4flwsl43pWz7wPW;
+	Wed,  1 Apr 2026 09:02:35 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
+X-Spam-Flag: NO
+X-Spam-Score: -2.898
+X-Spam-Level: 
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature ECDSA (secp384r1) server-digest SHA384
-	 client-signature ECDSA (secp384r1) client-digest SHA384)
-	(Client CN "*.hostsharing.net", Issuer "GlobalSign GCC R6 AlphaSSL CA 2025" (verified OK))
-	by mailout2.hostsharing.net (Postfix) with ESMTPS id 28A5A10610;
-	Wed, 01 Apr 2026 06:11:37 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 16C5D6006954; Wed,  1 Apr 2026 06:11:37 +0200 (CEST)
-Date: Wed, 1 Apr 2026 06:11:37 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Alex Williamson <alex@shazbot.org>
-Cc: Bernd Schumacher <bernd@bschu.de>,
-	Salvatore Bonaccorso <carnil@debian.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	1131025@bugs.debian.org, regressions@lists.linux.dev,
-	stable@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: Re: [6.12.y regression] Regression with 58130e7ce6cb ("PCI/ERR:
- Ensure error recoverability at all times"): echo vfio-pci >driver_override
- does not work for DVB Adapter
-Message-ID: <acya-Q8_pMRRLI6j@wunner.de>
-References: <177373189751.7987.7156982489427825197.reportbug@obelix-trixie.bs.de>
- <acfZrlP0Ua_5D3U4@eldamar.lan>
- <acfhf-odtr0yw_py@wunner.de>
- <74bcd84500e5efcca035624f325e400dd8a21f44.camel@bschu.de>
- <acgohjvBpVcR7HcK@wunner.de>
- <5f9386146f426e2847550681cb7188471205607f.camel@bschu.de>
- <aclRwznwq6KpA2qA@wunner.de>
- <ecf9b2dd96ff97cc035ba297266b8dd05eea88da.camel@bschu.de>
- <acvHjo8PKdyHshSE@wunner.de>
- <20260331170149.3ee222aa@shazbot.org>
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4flwsj73SNz8sbW;
+	Wed,  1 Apr 2026 09:02:33 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 10046635A4;
+	Wed,  1 Apr 2026 09:02:27 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <509b53c2-775f-43ad-8fec-7b59902083d1@leemhuis.info>
+Date: Wed, 1 Apr 2026 09:02:26 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260331170149.3ee222aa@shazbot.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] scsi: megaraid_sas: fix PRP list out-of-bounds write
+To: me@magik.net, "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
+Cc: Kashyap Desai <kashyap.desai@broadcom.com>,
+ Sumit Saxena <sumit.saxena@broadcom.com>,
+ Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
+ Chandrakanth patil <chandrakanth.patil@broadcom.com>,
+ "megaraidlinux.pdl@broadcom.com" <megaraidlinux.pdl@broadcom.com>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: 
+ <GPhsSM0vkgyIrs0DIZ62qeUZX7X4RxwQXVKiuvMx-lHQVSPDxpztUyQOGS0xikqvJ-Z94hMV-dW_5KN_0CX2hsfV7kTf_t0MTf6vdAAaSEc=@magik.net>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: 
+ <GPhsSM0vkgyIrs0DIZ62qeUZX7X4RxwQXVKiuvMx-lHQVSPDxpztUyQOGS0xikqvJ-Z94hMV-dW_5KN_0CX2hsfV7kTf_t0MTf6vdAAaSEc=@magik.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: <177502694743.3974264.8477848332488991285@mxe9fb.netcup.net>
+X-Rspamd-Server: rspamd-worker-8404
+X-Rspamd-Queue-Id: 10046635A4
+X-NC-CID: k90a3Lvilgz3jbbyqlnB/I0phzfYRM0q9LeUGwQ+li9kLHXJQz8=
 
-On Tue, Mar 31, 2026 at 05:01:49PM -0600, Alex Williamson wrote:
-> On Tue, 31 Mar 2026 15:09:34 +0200 Lukas Wunner <lukas@wunner.de> wrote:
-> > On Mon, Mar 30, 2026 at 08:14:53AM +0200, Bernd Schumacher wrote:
-> > > [    0.318903] pci 0000:07:00.0: [dd01:0003] type 00 class 0x048000 PCIe Endpoint
-> > > [    0.318939] pci 0000:07:00.0: BAR 0 [mem 0xfffffffffc500000-0xfffffffffc50ffff 64bit]  
-> > 
-> > BIOS initially sets the BAR address to an incorrect value (the top 32 bits
-> > should be all zeroes instead of all ones)...
-> > 
-> > > [    0.339685] pci 0000:07:00.0: BAR 0 [mem 0xfffffffffc500000-0xfffffffffc50ffff 64bit]: can't claim; no compatible bridge window  
-> > [...]
-> > > [    0.311065] pci 0000:02:03.0: [1022:57a3] type 01 class 0x060400 PCIe Switch Downstream Port
-> > > [    0.311107] pci 0000:02:03.0: PCI bridge to [bus 07]
-> > > [    0.311118] pci 0000:02:03.0:   bridge window [mem 0xfc500000-0xfc5fffff]  
-> > 
-> > ... this doesn't fit into the window of the bridge above the DVB card,
-> > which has the top 32 bits set to all zeroes...
-> > 
-> > > [    0.357346] pci 0000:07:00.0: BAR 0 [mem 0xfc500000-0xfc50ffff 64bit]: assigned  
-> > 
-> > ... the kernel fixes the incorrect BAR, but it seems there's an ordering
-> > issue such that pci_save_state() is called beforehand.  It's weird that
-> > this doen't occur with newer kernels and it would be good to understand why.
-> > I'm not seeing the ordering issue despite staring at the code for a while.
+On 3/27/26 04:20, me@magik.net wrote:
+> megasas_make_prp_nvme() builds NVMe PRP lists in cmd->sg_frame,
+> which is a DMA-pool allocation sized by instance->max_chain_frame_sz.
+> [...]
+> Before this patch, 6.19.10 crashed repeatedly during boot and normal
+> disk I/O. After applying it, the system boots cleanly and completes 4GB
+> direct-I/O reads without crashes.
 > 
-> Do we know this isn't occurring on newer kernels?
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Lukasz Magiera <me@magik.net>
 
-Yes, the reporter tested 6.19.8 and the issue does not occur there:
-https://bugs.debian.org/1131025
+You CCed the regression list, but this lacks a Fixes: tag, which makes
+me wonder: what change caused the problem? That tag would also help the
+stable team to see where this needs to be applied, so it most likely is
+needed.
 
-> AIUI, we're saving the state via the call chain invoked by
-> subsys_initcall(pcibios_init), but I think we're doing the resource
-> fixes in fs_initcall(pcibios_assign_resources).  That suggests that
-> the saved state would have the bogus BAR values.
+> [...]
 
-Hm, seems like a valid observation.
-
-But a call to pci_bus_add_devices() is generally preceded by a call to
-pci_assign_unassigned_root_bus_resources(), see e.g. pci_host_probe()
-or acpi_pci_root_add().  The latter is what's usually used on x86,
-whereas pcibios_init() (actually I think you meant pci_subsys_init())
-is for legacy PCI initialization on x86.
-
-Perhaps you're right and the correction of the BAR value happens in
-the fs_initcall.  We should be able to confirm that once the reporter
-has tested the debug patch I provided, which inserts a dump_stack()
-in the BAR correction codepath as well as in pci_save_state().
-
-> If we toss PM runtime into that mix, pci_pm_default_resume_early() will
-> call pci_restore_state() however pci_save_state() in that file is
-> mostly wrapped around pci_dev->state_saved guards.
-
-The state_saved guards only serve the purpose of recognizing whether
-the driver called pci_save_state() on suspend.  If it did not,
-the PCI core calls pci_save_state().
-
-Thanks for taking a look!
-
-Lukas
+Ciao, Thorsten
