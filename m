@@ -1,195 +1,605 @@
-Received: from out-183.mta1.migadu.com (out-183.mta1.migadu.com [95.215.58.183])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f177.google.com (mail-dy1-f177.google.com [74.125.82.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22901472780
-	for <regressions@lists.linux.dev>; Wed,  1 Apr 2026 17:40:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0F9447B437
+	for <regressions@lists.linux.dev>; Wed,  1 Apr 2026 17:59:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775065242; cv=none; b=X0Dnkdt5okF+M4P48/uW+i/6xl6gHS/SQwzQuFA1+06iJ7uKAb7FVlzi+SfcPbnxw/O2+U+ZANqlHygzD7DJ4vwW3/SfsRFF36yPSWXw7B1mYpnJy7/eJNXMHwXmXQg3rJwQjuDcl4AR6UndW5PwlWTH4BTkSNrGhuBoNPHrFH8=
+	t=1775066349; cv=none; b=iDL1rizr5+RQv7La6K2irdh2/qKyn3ernh95qTP5k+jY+aO6QloTCKFtvH5P4K12wnQ88NccDZkPoiej1ZCfSFK/vsu79zYSadnGA6yxXDKNcTwPdrcc/cYDO61oR+xvKjBnPrepZ+OxDXoBNtkCKU0CZgqEoeQdPQG3/Nqk5FQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775065242; c=relaxed/simple;
-	bh=jETJFmDzLG+xn/mptGxjZkoBLI5/UTLH1Zjl05oy6zE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=b5gYViNgCN/BxnUYlaC62yjXZX2SJdVqNcdoItpE5SXbPsYQiNjRs50wNUhX7buK9ZTNeyJN5VM1DAaY5YQIgrdOCVUDkf9pKMhHJO4As73ZUqaIg7rDWAjWdxNfi2bE7Vb5YcFOnHZyPg7UrPy+HlZ+JZYJJREV7yzkfDmoQ7w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=W9BQ9ApA; arc=none smtp.client-ip=95.215.58.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1775066349; c=relaxed/simple;
+	bh=+sUvLdDr5nYnPTxiE7eoSvJGPnwFFDXCqvr18u6Ab1k=;
+	h=Content-Type:MIME-Version:Subject:From:To:Cc:Date:Message-ID; b=o9//4M7cuDpssXOU/kjNrZlsH/t7Jj8TggAKY9PKgQYf9MzRTzKlcj2akY+JPG9EX49qdnIcpR4ZPLIE/RKZL1C4favpVIw2fscD+2CYVjru9r60ix9Ogu4gPKxsCBx80B17LvFGwXenrjnMyeMY9/hsKt1hlM9x5mz5I77dFjk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org; spf=none smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b=PwmVDGqn; arc=none smtp.client-ip=74.125.82.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=kernelci.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="W9BQ9ApA"
-Message-ID: <76510dfe-d6da-4398-a78c-a02c596d6f75@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1775065239;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MPJvl03OMvaDc2B8pMNuuJg5KOn+6pycqLc7jF79zoI=;
-	b=W9BQ9ApAmE3osoHpxoLcf85EPjlTbqnO7dUyYTEdVm9muGRYSjKkZdaZ1Eb4JhUu5uTv1P
-	+nIVEcBH1fUjE+QN4+K+rGbyNsUYEbQf/a2Qw8ZsJGDD2W4C0hB9p5rlR/TmyfC/Jjfg7J
-	jXYYkLNkRbSDeUrn4/3lf7k5hkZHp0c=
-Date: Wed, 1 Apr 2026 19:40:32 +0200
+	dkim=pass (2048-bit key) header.d=kernelci-org.20230601.gappssmtp.com header.i=@kernelci-org.20230601.gappssmtp.com header.b="PwmVDGqn"
+Received: by mail-dy1-f177.google.com with SMTP id 5a478bee46e88-2c7d8bbad06so187538eec.1
+        for <regressions@lists.linux.dev>; Wed, 01 Apr 2026 10:59:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20230601.gappssmtp.com; s=20230601; t=1775066346; x=1775671146; darn=lists.linux.dev;
+        h=message-id:date:reply-to:cc:to:from:subject
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eAsmZsCNAYbkiIMbRwoyAd4TDDOEPlqrE9XamJJEtiw=;
+        b=PwmVDGqnTRK+SPKOkVZSxVvg1IUE5BagHibHIWR49js2MLSXg6FABDrWz+Mi60OgRg
+         dXIrEeu3c+g6JdyKF+g+lDjmdBYPb5oujaTR4eunO6pwsBUva52xh71j+zEXXt7k437u
+         jQqJD9dFnPq2zywHgoDV9qxhAz9nQxiPbmbsr5xb7BYunmLI8r2xAwr18FdPQyNULFlq
+         b9DYJFKLq4E8rv6tYHNM1zXKsprwF6U3kZKBdlrO+FnxKVK4DHXgK2YkH6exTQNXNTVJ
+         XwCEpqDZetqqYEG8W7r1Eca7xblhvKk8Fh/Ql2NPWLtr1pYlfxFqjnU6Ct7aVuSltJv5
+         lt4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1775066346; x=1775671146;
+        h=message-id:date:reply-to:cc:to:from:subject
+         :content-transfer-encoding:mime-version:x-gm-gg:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=eAsmZsCNAYbkiIMbRwoyAd4TDDOEPlqrE9XamJJEtiw=;
+        b=oCJuTl0hIX1qGDJOM8a4CEVu1rJQY74DmhAM/sIXbCU8Dr0KXL7/uhnDA1YjBi9BuE
+         XGOlwocOFxB9e7wE2RRttmL015MoKHy10WgZIwsOz+DaN8mSOtQ71ku7kSY5Pc1uGRVa
+         ymwWF4b9/d0+XaW3QbLtUSUMlX3nY0r7qmtak40Xosx3ilGumJZ3xpRm9EChdbwXA5Sv
+         cmmbr7CXVPAm6RKbGfUCYounYJwgot9M1oaGYBZ1bvakd5Emntmj9xJyFyh8FCjwph6a
+         35L5kicGb5DVFSvs80Glz6G0DvbxZ1cX7eOa/+Ir3AKEA7J5z2riuqrto85rNHc/i9cK
+         nNPA==
+X-Gm-Message-State: AOJu0YwUiCOp9U0TX67zXeMaB9IHNGiQ/l5aEYVKKBx14cx7RXFpooSv
+	OCiKJf43vLVAvmWjdtZQgw99mrsn+XzmJHsQWpmpxo64Wn+w8AH2r+nkUbUNGAA9uQ7/dvlYBZc
+	aDPUX
+X-Gm-Gg: ATEYQzyyWKWUusqYopn93k8SF/rRQExvHOVhAFrl+KbUaAYRr2zNG6SKRTsTqodezGO
+	NnSdaTUYvnTFQ2Axf1lvyooNIQPBo94SzH5RUxWnqDGS61Aa28darWX3BHQ+6WG1NyIPt81ctwL
+	2SlrOy4dZsOdlIZmje5X4gi4WqIU4C4EdLS16OLoSGfURkQn3wfmHUkYHfLogqK48qryYFUjBBW
+	xL+xxFDwR7ibY0QBThneFL4z0gr4xDTZYsRg19GJoFBcTryv9g7pWOuIZimetUL/E4ptUaTGFO0
+	aY+yzAWSyI12hM+bY8o7rb4bQUNhOVFJr8qhadRj/QubG8V2xJ+fv2FTE7OnJt5MENaQoS9oM+b
+	CLjASV4XPATEiClleYVqRj/asGs7wV3TuXzzcKs10JMtr5Z0gkKL1U3YtbrznPI2QkcLdXCu7cc
+	jdMZ1Qu012hzFuGutLLPrnaiy86ws=
+X-Received: by 2002:a05:7300:2150:b0:2c6:31f0:a025 with SMTP id 5a478bee46e88-2ca9047cf7bmr160622eec.27.1775066345846;
+        Wed, 01 Apr 2026 10:59:05 -0700 (PDT)
+Received: from 984b78e0ad75 ([20.38.40.137])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2ca7d31c7c6sm337995eec.31.2026.04.01.10.59.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Apr 2026 10:59:05 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Subject: Re: [PATCH] HID: gpd: fix report descriptor on GPD Win handheld
- (2f24:0137)
-To: Thorsten Leemhuis <regressions@leemhuis.info>,
- honjow <honjow311@gmail.com>, Jiri Kosina <jikos@kernel.org>,
- Benjamin Tissoires <bentiss@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <20260324013847.68024-1-honjow311@gmail.com>
- <6268c55d-2f1b-473c-b82d-1de1416d14b0@leemhuis.info>
-Content-Language: en-US, it-IT, en-US-large
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Denis Benato <denis.benato@linux.dev>
-In-Reply-To: <6268c55d-2f1b-473c-b82d-1de1416d14b0@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Subject: 
+ =?utf-8?b?W1JFR1JFU1NJT05dIG5leHQvbWFzdGVyOiAoYnVpbGQpIOKAmFBSX0dFVF9TSEFE?=
+ =?utf-8?b?T1dfU1RBQ0tfU1RBVFVT4oCZIHVuZGVjbGFyZWQgKGZpcnN0IHVzZSBpbiB0aGlz?=
+ =?utf-8?b?IGZ1bmN0aW8uLi4=?=
+From: KernelCI bot <bot@kernelci.org>
+To: kernelci-results@groups.io
+Cc: regressions@lists.linux.dev, gus@collabora.com, linux-next@vger.kernel.org
+Reply-To: kernelci@lists.linux.dev
+Date: Wed, 01 Apr 2026 17:59:05 -0000
+Message-ID: <177506634493.1099.8394888702082972052@984b78e0ad75>
 
 
-On 3/31/26 08:25, Thorsten Leemhuis wrote:
-> On 3/24/26 02:38, honjow wrote:
->> The OEM USB HID interface found on GPD Win handhelds (VID 2f24, registered
->> to ShenZhen HuiJiaZhi / GameSir, PID 0137) declares 63-byte Input and
->> Feature reports for Report ID 1, but the firmware only transfers 11 data
->> bytes per interrupt.
->>
->> Since commit 0a3fe972a7cb ("HID: core: Mitigate potential OOB by removing
->> bogus memset()"), the HID core rejects undersized reports instead of zero-
->> padding them. This breaks the device entirely on kernels >= v7.0-rc5.
->>
->> Fix it by patching the report descriptor in report_fixup(), reducing
->> Report Count from 63 to 11 for both Input and Feature.
->>
->> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=221271
->> Signed-off-by: honjow <honjow311@gmail.com>
->> ---
->>  drivers/hid/Kconfig   | 10 +++++++++
->>  drivers/hid/Makefile  |  1 +
->>  drivers/hid/hid-gpd.c | 52 +++++++++++++++++++++++++++++++++++++++++++
->>  drivers/hid/hid-ids.h |  3 +++
->>  4 files changed, 66 insertions(+)
->>  create mode 100644 drivers/hid/hid-gpd.c
->>
->> diff --git a/drivers/hid/Kconfig b/drivers/hid/Kconfig
->> index 10c12d8e65579..20c60f5aca4c5 100644
->> --- a/drivers/hid/Kconfig
->> +++ b/drivers/hid/Kconfig
->> @@ -419,6 +419,16 @@ config HID_GLORIOUS
->>  	  Support for Glorious PC Gaming Race mice such as
->>  	  the Glorious Model O, O- and D.
->>  
->> +config HID_GPD
->> +	tristate "GPD Win handheld OEM HID support"
-> Hmmm, why does this need to be a config option? Can't this be enabled
-> unconditionally? I ask in general, as it's just another point where
-> things can go wrong. But I mainly ask because it's a regression fix –
-> and from my understanding wrt to what Linus wants we don't expect users
-> to turn some .config on to keep their hardware running (unless it can't
-> be avoided at all costs).
->
-> Ciao, Thorsten
->
-Perhaps the place of this, just for affected kernel series that are out
-(assuming stable has the bug, I haven't checked) is to do this on hid-generic,
-otherwise it's a change of driver managing the device?
->> +	depends on USB_HID
->> +	help
->> +	  Report descriptor fix for the OEM USB HID interface (GameSir
->> +	  2f24:0137) found on GPD Win handhelds. The firmware declares 63-byte
->> +	  reports but only sends 11 bytes, which the HID core rejects.
->> +
->> +	  Say Y or M here if you use a GPD Win handheld with this interface.
->> +
->>  config HID_HOLTEK
->>  	tristate "Holtek HID devices"
->>  	depends on USB_HID
->> diff --git a/drivers/hid/Makefile b/drivers/hid/Makefile
->> index 07dfdb6a49c59..03ef72ec4499f 100644
->> --- a/drivers/hid/Makefile
->> +++ b/drivers/hid/Makefile
->> @@ -53,6 +53,7 @@ obj-$(CONFIG_HID_ELO)		+= hid-elo.o
->>  obj-$(CONFIG_HID_EVISION)	+= hid-evision.o
->>  obj-$(CONFIG_HID_EZKEY)		+= hid-ezkey.o
->>  obj-$(CONFIG_HID_FT260)		+= hid-ft260.o
->> +obj-$(CONFIG_HID_GPD)		+= hid-gpd.o
->>  obj-$(CONFIG_HID_GEMBIRD)	+= hid-gembird.o
->>  obj-$(CONFIG_HID_GFRM)		+= hid-gfrm.o
->>  obj-$(CONFIG_HID_GLORIOUS)  += hid-glorious.o
->> diff --git a/drivers/hid/hid-gpd.c b/drivers/hid/hid-gpd.c
->> new file mode 100644
->> index 0000000000000..5b4d203e24995
->> --- /dev/null
->> +++ b/drivers/hid/hid-gpd.c
->> @@ -0,0 +1,52 @@
->> +// SPDX-License-Identifier: GPL-2.0-or-later
->> +/*
->> + *  HID report descriptor fixup for GPD Win handhelds.
->> + *
->> + *  The OEM HID interface (VID 2f24 / GameSir, PID 0137) declares Report ID 1
->> + *  with Report Count 63 (8-bit fields) for both Input and Feature, but the
->> + *  firmware only sends 11 bytes of payload after the report ID.
->> + */
->> +
->> +#include <linux/hid.h>
->> +#include <linux/module.h>
->> +
->> +#include "hid-ids.h"
->> +
->> +#define RDESC_LEN		38
->> +#define RPT_COUNT_INPUT_OFF	21
->> +#define RPT_COUNT_FEATURE_OFF	34
->> +
->> +static const __u8 *gpd_report_fixup(struct hid_device *hdev, __u8 *rdesc,
->> +				    unsigned int *rsize)
->> +{
->> +	if (*rsize != RDESC_LEN)
->> +		return rdesc;
->> +
->> +	if (rdesc[RPT_COUNT_INPUT_OFF - 1] == 0x95 &&
->> +	    rdesc[RPT_COUNT_INPUT_OFF] == 0x3f &&
->> +	    rdesc[RPT_COUNT_FEATURE_OFF - 1] == 0x95 &&
->> +	    rdesc[RPT_COUNT_FEATURE_OFF] == 0x3f) {
->> +		hid_info(hdev, "fixing report counts (63 -> 11 bytes)\n");
->> +		rdesc[RPT_COUNT_INPUT_OFF] = 11;
->> +		rdesc[RPT_COUNT_FEATURE_OFF] = 11;
->> +	}
->> +
->> +	return rdesc;
->> +}
->> +
->> +static const struct hid_device_id gpd_devices[] = {
->> +	{ HID_USB_DEVICE(USB_VENDOR_ID_GAMESIR, USB_DEVICE_ID_GAMESIR_0137) },
->> +	{ }
->> +};
->> +MODULE_DEVICE_TABLE(hid, gpd_devices);
->> +
->> +static struct hid_driver gpd_driver = {
->> +	.name = "gpd",
->> +	.id_table = gpd_devices,
->> +	.report_fixup = gpd_report_fixup,
->> +};
->> +
->> +module_hid_driver(gpd_driver);
->> +
->> +MODULE_DESCRIPTION("HID report descriptor fix for GPD Win handheld (GameSir 2f24:0137)");
->> +MODULE_LICENSE("GPL");
->> diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
->> index 933b7943bdb50..d0a6c19baa660 100644
->> --- a/drivers/hid/hid-ids.h
->> +++ b/drivers/hid/hid-ids.h
->> @@ -533,6 +533,9 @@
->>  #define USB_VENDOR_ID_FRUCTEL	0x25B6
->>  #define USB_DEVICE_ID_GAMETEL_MT_MODE	0x0002
->>  
->> +#define USB_VENDOR_ID_GAMESIR		0x2f24
->> +#define USB_DEVICE_ID_GAMESIR_0137	0x0137
->> +
->>  #define USB_VENDOR_ID_GAMEVICE	0x27F8
->>  #define USB_DEVICE_ID_GAMEVICE_GV186	0x0BBE
->>  #define USB_DEVICE_ID_GAMEVICE_KISHI	0x0BBF
+
+
+
+Hello,
+
+New build issue found on next/master:
+
+---
+ ‘PR_GET_SHADOW_STACK_STATUS’ undeclared (first use in this function) in testcases/gcs_frame (testcases/gcs_frame.c) [logspec:kbuild,kbuild.compiler.error]
+---
+
+- dashboard: https://d.kernelci.org/i/maestro:c8166ec266c9f21b9901ef8c8c40af93cf32eeb0
+- giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+- commit HEAD:  bd0f139e5fc11182777b81cefc3893ea508544ec
+- tags: next-20260401
+
+Please include the KernelCI tag when submitting a fix:
+
+Reported-by: kernelci.org bot <bot@kernelci.org>
+
+
+Log excerpt:
+=====================================================
+testcases/gcs_frame.c:27:21: error: ‘PR_GET_SHADOW_STACK_STATUS’ undeclared (first use in this function)
+   27 |         ret = prctl(PR_GET_SHADOW_STACK_STATUS, &expected, 0, 0, 0);
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~~~~
+testcases/gcs_frame.c:27:21: note: each undeclared identifier is reported only once for each function it appears in
+testcases/gcs_frame.c:53:33: error: ‘GCS_MAGIC’ undeclared (first use in this function); did you mean ‘ZA_MAGIC’?
+   53 |         head = get_header(head, GCS_MAGIC, GET_BUF_RESV_SIZE(context),
+      |                                 ^~~~~~~~~
+      |                                 ZA_MAGIC
+testcases/gcs_frame.c:64:16: error: invalid use of undefined type ‘struct gcs_context’
+   64 |         if (gcs->features_enabled != expected) {
+      |                ^~
+testcases/gcs_frame.c:66:28: error: invalid use of undefined type ‘struct gcs_context’
+   66 |                         gcs->features_enabled, expected);
+      |                            ^~
+testcases/gcs_frame.c:70:16: error: invalid use of undefined type ‘struct gcs_context’
+   70 |         if (gcs->gcspr != gcspr) {
+      |                ^~
+testcases/gcs_frame.c:72:28: error: invalid use of undefined type ‘struct gcs_context’
+   72 |                         gcs->gcspr, gcspr);
+      |                            ^~
+In file included from test_signals.c:17:
+test_signals.c: In function ‘main’:
+test_signals_utils.h:34:55: error: ‘PR_SET_SHADOW_STACK_STATUS’ undeclared (first use in this function)
+   34 |                 register long _arg1 __asm__ ("x0") =  PR_SET_SHADOW_STACK_STATUS; \
+      |                                                       ^~~~~~~~~~~~~~~~~~~~~~~~~~
+test_signals.c:31:17: note: in expansion of macro ‘gcs_set_state’
+   31 |                 gcs_set_state(PR_SHADOW_STACK_ENABLE);
+      |                 ^~~~~~~~~~~~~
+test_signals_utils.h:34:55: note: each undeclared identifier is reported only once for each function it appears in
+   34 |                 register long _arg1 __asm__ ("x0") =  PR_SET_SHADOW_STACK_STATUS; \
+      |                                                       ^~~~~~~~~~~~~~~~~~~~~~~~~~
+test_signals.c:31:17: note: in expansion of macro ‘gcs_set_state’
+   31 |                 gcs_set_state(PR_SHADOW_STACK_ENABLE);
+      |                 ^~~~~~~~~~~~~
+In file included from test_signals.c:17:
+test_signals.c: In function ‘main’:
+test_signals_utils.h:34:55: error: ‘PR_SET_SHADOW_STACK_STATUS’ undeclared (first use in this function)
+   34 |                 register long _arg1 __asm__ ("x0") =  PR_SET_SHADOW_STACK_STATUS; \
+      |                                                       ^~~~~~~~~~~~~~~~~~~~~~~~~~
+test_signals.c:31:17: note: in expansion of macro ‘gcs_set_state’
+   31 |                 gcs_set_state(PR_SHADOW_STACK_ENABLE);
+      |                 ^~~~~~~~~~~~~
+test_signals_utils.h:34:55: note: each undeclared identifier is reported only once for each function it appears in
+   34 |                 register long _arg1 __asm__ ("x0") =  PR_SET_SHADOW_STACK_STATUS; \
+      |                                                       ^~~~~~~~~~~~~~~~~~~~~~~~~~
+test_signals.c:31:17: note: in expansion of macro ‘gcs_set_state’
+   31 |                 gcs_set_state(PR_SHADOW_STACK_ENABLE);
+      |                 ^~~~~~~~~~~~~
+In file included from test_signals.c:17:
+test_signals.c: In function ‘main’:
+test_signals_utils.h:34:55: error: ‘PR_SET_SHADOW_STACK_STATUS’ undeclared (first use in this function)
+   34 |                 register long _arg1 __asm__ ("x0") =  PR_SET_SHADOW_STACK_STATUS; \
+      |                                                       ^~~~~~~~~~~~~~~~~~~~~~~~~~
+test_signals.c:31:17: note: in expansion of macro ‘gcs_set_state’
+   31 |                 gcs_set_state(PR_SHADOW_STACK_ENABLE);
+      |                 ^~~~~~~~~~~~~
+test_signals_utils.h:34:55: note: each undeclared identifier is reported only once for each function it appears in
+   34 |                 register long _arg1 __asm__ ("x0") =  PR_SET_SHADOW_STACK_STATUS; \
+      |                                                       ^~~~~~~~~~~~~~~~~~~~~~~~~~
+test_signals.c:31:17: note: in expansion of macro ‘gcs_set_state’
+   31 |                 gcs_set_state(PR_SHADOW_STACK_ENABLE);
+      |                 ^~~~~~~~~~~~~
+test_signals.c:31:31: error: ‘PR_SHADOW_STACK_ENABLE’ undeclared (first use in this function)
+   31 |                 gcs_set_state(PR_SHADOW_STACK_ENABLE);
+      |                               ^~~~~~~~~~~~~~~~~~~~~~
+test_signals_utils.h:35:61: note: in definition of macro ‘gcs_set_state’
+   35 |                 register long _arg2 __asm__ ("x1") = (long)(state);     \
+      |                                                             ^~~~~
+In file included from test_signals.c:17:
+test_signals.c: In function ‘main’:
+test_signals_utils.h:34:55: error: ‘PR_SET_SHADOW_STACK_STATUS’ undeclared (first use in this function)
+   34 |                 register long _arg1 __asm__ ("x0") =  PR_SET_SHADOW_STACK_STATUS; \
+      |                                                       ^~~~~~~~~~~~~~~~~~~~~~~~~~
+test_signals.c:31:17: note: in expansion of macro ‘gcs_set_state’
+   31 |                 gcs_set_state(PR_SHADOW_STACK_ENABLE);
+      |                 ^~~~~~~~~~~~~
+In file included from test_signals.c:17:
+test_signals.c: In function ‘main’:
+test_signals_utils.h:34:55: note: each undeclared identifier is reported only once for each function it appears in
+   34 |                 register long _arg1 __asm__ ("x0") =  PR_SET_SHADOW_STACK_STATUS; \
+      |                                                       ^~~~~~~~~~~~~~~~~~~~~~~~~~
+test_signals.c:31:17: note: in expansion of macro ‘gcs_set_state’
+   31 |                 gcs_set_state(PR_SHADOW_STACK_ENABLE);
+      |                 ^~~~~~~~~~~~~
+test_signals_utils.h:34:55: error: ‘PR_SET_SHADOW_STACK_STATUS’ undeclared (first use in this function)
+   34 |                 register long _arg1 __asm__ ("x0") =  PR_SET_SHADOW_STACK_STATUS; \
+      |                                                       ^~~~~~~~~~~~~~~~~~~~~~~~~~
+test_signals.c:31:17: note: in expansion of macro ‘gcs_set_state’
+   31 |                 gcs_set_state(PR_SHADOW_STACK_ENABLE);
+      |                 ^~~~~~~~~~~~~
+test_signals_utils.h:34:55: note: each undeclared identifier is reported only once for each function it appears in
+   34 |                 register long _arg1 __asm__ ("x0") =  PR_SET_SHADOW_STACK_STATUS; \
+      |                                                       ^~~~~~~~~~~~~~~~~~~~~~~~~~
+test_signals.c:31:17: note: in expansion of macro ‘gcs_set_state’
+   31 |                 gcs_set_state(PR_SHADOW_STACK_ENABLE);
+      |                 ^~~~~~~~~~~~~
+test_signals.c:31:31: error: ‘PR_SHADOW_STACK_ENABLE’ undeclared (first use in this function)
+   31 |                 gcs_set_state(PR_SHADOW_STACK_ENABLE);
+      |                               ^~~~~~~~~~~~~~~~~~~~~~
+test_signals_utils.h:35:61: note: in definition of macro ‘gcs_set_state’
+   35 |                 register long _arg2 __asm__ ("x1") = (long)(state);     \
+      |                                                             ^~~~~
+test_signals.c:31:31: error: ‘PR_SHADOW_STACK_ENABLE’ undeclared (first use in this function)
+   31 |                 gcs_set_state(PR_SHADOW_STACK_ENABLE);
+      |                               ^~~~~~~~~~~~~~~~~~~~~~
+test_signals_utils.h:35:61: note: in definition of macro ‘gcs_set_state’
+   35 |                 register long _arg2 __asm__ ("x1") = (long)(state);     \
+      |                                                             ^~~~~
+test_signals.c:31:31: error: ‘PR_SHADOW_STACK_ENABLE’ undeclared (first use in this function)
+   31 |                 gcs_set_state(PR_SHADOW_STACK_ENABLE);
+      |                               ^~~~~~~~~~~~~~~~~~~~~~
+test_signals_utils.h:35:61: note: in definition of macro ‘gcs_set_state’
+   35 |                 register long _arg2 __asm__ ("x1") = (long)(state);     \
+      |                                                             ^~~~~
+test_signals.c:31:31: error: ‘PR_SHADOW_STACK_ENABLE’ undeclared (first use in this function)
+   31 |                 gcs_set_state(PR_SHADOW_STACK_ENABLE);
+      |                               ^~~~~~~~~~~~~~~~~~~~~~
+test_signals_utils.h:35:61: note: in definition of macro ‘gcs_set_state’
+   35 |                 register long _arg2 __asm__ ("x1") = (long)(state);     \
+      |                                                             ^~~~~
+In file included from test_signals.c:17:
+test_signals.c: In function ‘main’:
+test_signals_utils.h:34:55: error: ‘PR_SET_SHADOW_STACK_STATUS’ undeclared (first use in this function)
+   34 |                 register long _arg1 __asm__ ("x0") =  PR_SET_SHADOW_STACK_STATUS; \
+      |                                                       ^~~~~~~~~~~~~~~~~~~~~~~~~~
+test_signals.c:31:17: note: in expansion of macro ‘gcs_set_state’
+   31 |                 gcs_set_state(PR_SHADOW_STACK_ENABLE);
+      |                 ^~~~~~~~~~~~~
+test_signals_utils.h:34:55: note: each undeclared identifier is reported only once for each function it appears in
+   34 |                 register long _arg1 __asm__ ("x0") =  PR_SET_SHADOW_STACK_STATUS; \
+      |                                                       ^~~~~~~~~~~~~~~~~~~~~~~~~~
+test_signals.c:31:17: note: in expansion of macro ‘gcs_set_state’
+   31 |                 gcs_set_state(PR_SHADOW_STACK_ENABLE);
+      |                 ^~~~~~~~~~~~~
+In file included from test_signals.c:17:
+test_signals.c: In function ‘main’:
+test_signals_utils.h:34:55: error: ‘PR_SET_SHADOW_STACK_STATUS’ undeclared (first use in this function)
+   34 |                 register long _arg1 __asm__ ("x0") =  PR_SET_SHADOW_STACK_STATUS; \
+      |                                                       ^~~~~~~~~~~~~~~~~~~~~~~~~~
+test_signals.c:31:17: note: in expansion of macro ‘gcs_set_state’
+   31 |                 gcs_set_state(PR_SHADOW_STACK_ENABLE);
+      |                 ^~~~~~~~~~~~~
+test_signals_utils.h:34:55: note: each undeclared identifier is reported only once for each function it appears in
+   34 |                 register long _arg1 __asm__ ("x0") =  PR_SET_SHADOW_STACK_STATUS; \
+      |                                                       ^~~~~~~~~~~~~~~~~~~~~~~~~~
+test_signals.c:31:17: note: in expansion of macro ‘gcs_set_state’
+   31 |                 gcs_set_state(PR_SHADOW_STACK_ENABLE);
+      |                 ^~~~~~~~~~~~~
+test_signals.c:31:31: error: ‘PR_SHADOW_STACK_ENABLE’ undeclared (first use in this function)
+   31 |                 gcs_set_state(PR_SHADOW_STACK_ENABLE);
+      |                               ^~~~~~~~~~~~~~~~~~~~~~
+test_signals_utils.h:35:61: note: in definition of macro ‘gcs_set_state’
+   35 |                 register long _arg2 __asm__ ("x1") = (long)(state);     \
+      |                                                             ^~~~~
+In file included from test_signals.c:17:
+test_signals.c: In function ‘main’:
+test_signals_utils.h:34:55: error: ‘PR_SET_SHADOW_STACK_STATUS’ undeclared (first use in this function)
+   34 |                 register long _arg1 __asm__ ("x0") =  PR_SET_SHADOW_STACK_STATUS; \
+      |                                                       ^~~~~~~~~~~~~~~~~~~~~~~~~~
+test_signals.c:31:17: note: in expansion of macro ‘gcs_set_state’
+   31 |                 gcs_set_state(PR_SHADOW_STACK_ENABLE);
+      |                 ^~~~~~~~~~~~~
+test_signals_utils.h:34:55: note: each undeclared identifier is reported only once for each function it appears in
+   34 |                 register long _arg1 __asm__ ("x0") =  PR_SET_SHADOW_STACK_STATUS; \
+      |                                                       ^~~~~~~~~~~~~~~~~~~~~~~~~~
+test_signals.c:31:17: note: in expansion of macro ‘gcs_set_state’
+   31 |                 gcs_set_state(PR_SHADOW_STACK_ENABLE);
+      |                 ^~~~~~~~~~~~~
+test_signals.c:31:31: error: ‘PR_SHADOW_STACK_ENABLE’ undeclared (first use in this function)
+   31 |                 gcs_set_state(PR_SHADOW_STACK_ENABLE);
+      |                               ^~~~~~~~~~~~~~~~~~~~~~
+test_signals_utils.h:35:61: note: in definition of macro ‘gcs_set_state’
+   35 |                 register long _arg2 __asm__ ("x1") = (long)(state);     \
+      |                                                             ^~~~~
+test_signals.c:31:31: error: ‘PR_SHADOW_STACK_ENABLE’ undeclared (first use in this function)
+   31 |                 gcs_set_state(PR_SHADOW_STACK_ENABLE);
+      |                               ^~~~~~~~~~~~~~~~~~~~~~
+test_signals_utils.h:35:61: note: in definition of macro ‘gcs_set_state’
+   35 |                 register long _arg2 __asm__ ("x1") = (long)(state);     \
+      |                                                             ^~~~~
+In file included from test_signals.c:17:
+test_signals.c: In function ‘main’:
+test_signals_utils.h:34:55: error: ‘PR_SET_SHADOW_STACK_STATUS’ undeclared (first use in this function)
+   34 |                 register long _arg1 __asm__ ("x0") =  PR_SET_SHADOW_STACK_STATUS; \
+      |                                                       ^~~~~~~~~~~~~~~~~~~~~~~~~~
+test_signals.c:31:17: note: in expansion of macro ‘gcs_set_state’
+   31 |                 gcs_set_state(PR_SHADOW_STACK_ENABLE);
+      |                 ^~~~~~~~~~~~~
+test_signals_utils.h:34:55: note: each undeclared identifier is reported only once for each function it appears in
+   34 |                 register long _arg1 __asm__ ("x0") =  PR_SET_SHADOW_STACK_STATUS; \
+      |                                                       ^~~~~~~~~~~~~~~~~~~~~~~~~~
+test_signals.c:31:17: note: in expansion of macro ‘gcs_set_state’
+   31 |                 gcs_set_state(PR_SHADOW_STACK_ENABLE);
+      |                 ^~~~~~~~~~~~~
+In file included from test_signals.c:17:
+test_signals.c: In function ‘main’:
+test_signals_utils.h:34:55: error: ‘PR_SET_SHADOW_STACK_STATUS’ undeclared (first use in this function)
+   34 |                 register long _arg1 __asm__ ("x0") =  PR_SET_SHADOW_STACK_STATUS; \
+      |                                                       ^~~~~~~~~~~~~~~~~~~~~~~~~~
+test_signals.c:31:17: note: in expansion of macro ‘gcs_set_state’
+   31 |                 gcs_set_state(PR_SHADOW_STACK_ENABLE);
+      |                 ^~~~~~~~~~~~~
+test_signals_utils.h:34:55: note: each undeclared identifier is reported only once for each function it appears in
+   34 |                 register long _arg1 __asm__ ("x0") =  PR_SET_SHADOW_STACK_STATUS; \
+      |                                                       ^~~~~~~~~~~~~~~~~~~~~~~~~~
+test_signals.c:31:17: note: in expansion of macro ‘gcs_set_state’
+   31 |                 gcs_set_state(PR_SHADOW_STACK_ENABLE);
+      |                 ^~~~~~~~~~~~~
+In file included from test_signals.c:17:
+test_signals.c: In function ‘main’:
+test_signals_utils.h:34:55: error: ‘PR_SET_SHADOW_STACK_STATUS’ undeclared (first use in this function)
+   34 |                 register long _arg1 __asm__ ("x0") =  PR_SET_SHADOW_STACK_STATUS; \
+      |                                                       ^~~~~~~~~~~~~~~~~~~~~~~~~~
+test_signals.c:31:17: note: in expansion of macro ‘gcs_set_state’
+   31 |                 gcs_set_state(PR_SHADOW_STACK_ENABLE);
+      |                 ^~~~~~~~~~~~~
+test_signals_utils.h:34:55: note: each undeclared identifier is reported only once for each function it appears in
+   34 |                 register long _arg1 __asm__ ("x0") =  PR_SET_SHADOW_STACK_STATUS; \
+      |                                                       ^~~~~~~~~~~~~~~~~~~~~~~~~~
+test_signals.c:31:17: note: in expansion of macro ‘gcs_set_state’
+   31 |                 gcs_set_state(PR_SHADOW_STACK_ENABLE);
+      |                 ^~~~~~~~~~~~~
+test_signals.c:31:31: error: ‘PR_SHADOW_STACK_ENABLE’ undeclared (first use in this function)
+   31 |                 gcs_set_state(PR_SHADOW_STACK_ENABLE);
+      |                               ^~~~~~~~~~~~~~~~~~~~~~
+test_signals_utils.h:35:61: note: in definition of macro ‘gcs_set_state’
+   35 |                 register long _arg2 __asm__ ("x1") = (long)(state);     \
+      |                                                             ^~~~~
+In file included from test_signals.c:17:
+test_signals.c: In function ‘main’:
+test_signals_utils.h:34:55: error: ‘PR_SET_SHADOW_STACK_STATUS’ undeclared (first use in this function)
+   34 |                 register long _arg1 __asm__ ("x0") =  PR_SET_SHADOW_STACK_STATUS; \
+      |                                                       ^~~~~~~~~~~~~~~~~~~~~~~~~~
+test_signals.c:31:17: note: in expansion of macro ‘gcs_set_state’
+   31 |                 gcs_set_state(PR_SHADOW_STACK_ENABLE);
+      |                 ^~~~~~~~~~~~~
+test_signals_utils.h:34:55: note: each undeclared identifier is reported only once for each function it appears in
+   34 |                 register long _arg1 __asm__ ("x0") =  PR_SET_SHADOW_STACK_STATUS; \
+      |                                                       ^~~~~~~~~~~~~~~~~~~~~~~~~~
+test_signals.c:31:17: note: in expansion of macro ‘gcs_set_state’
+   31 |                 gcs_set_state(PR_SHADOW_STACK_ENABLE);
+      |                 ^~~~~~~~~~~~~
+test_signals.c:31:31: error: ‘PR_SHADOW_STACK_ENABLE’ undeclared (first use in this function)
+   31 |                 gcs_set_state(PR_SHADOW_STACK_ENABLE);
+      |                               ^~~~~~~~~~~~~~~~~~~~~~
+test_signals_utils.h:35:61: note: in definition of macro ‘gcs_set_state’
+   35 |                 register long _arg2 __asm__ ("x1") = (long)(state);     \
+      |                                                             ^~~~~
+test_signals.c:31:31: error: ‘PR_SHADOW_STACK_ENABLE’ undeclared (first use in this function)
+   31 |                 gcs_set_state(PR_SHADOW_STACK_ENABLE);
+      |                               ^~~~~~~~~~~~~~~~~~~~~~
+test_signals_utils.h:35:61: note: in definition of macro ‘gcs_set_state’
+   35 |                 register long _arg2 __asm__ ("x1") = (long)(state);     \
+      |                                                             ^~~~~
+In file included from test_signals.c:17:
+test_signals.c: In function ‘main’:
+test_signals_utils.h:34:55: error: ‘PR_SET_SHADOW_STACK_STATUS’ undeclared (first use in this function)
+   34 |                 register long _arg1 __asm__ ("x0") =  PR_SET_SHADOW_STACK_STATUS; \
+      |                                                       ^~~~~~~~~~~~~~~~~~~~~~~~~~
+test_signals.c:31:17: note: in expansion of macro ‘gcs_set_state’
+   31 |                 gcs_set_state(PR_SHADOW_STACK_ENABLE);
+      |                 ^~~~~~~~~~~~~
+test_signals_utils.h:34:55: note: each undeclared identifier is reported only once for each function it appears in
+   34 |                 register long _arg1 __asm__ ("x0") =  PR_SET_SHADOW_STACK_STATUS; \
+      |                                                       ^~~~~~~~~~~~~~~~~~~~~~~~~~
+test_signals.c:31:17: note: in expansion of macro ‘gcs_set_state’
+   31 |                 gcs_set_state(PR_SHADOW_STACK_ENABLE);
+      |                 ^~~~~~~~~~~~~
+In file included from test_signals.c:17:
+test_signals.c: In function ‘main’:
+test_signals_utils.h:34:55: error: ‘PR_SET_SHADOW_STACK_STATUS’ undeclared (first use in this function)
+   34 |                 register long _arg1 __asm__ ("x0") =  PR_SET_SHADOW_STACK_STATUS; \
+      |                                                       ^~~~~~~~~~~~~~~~~~~~~~~~~~
+test_signals.c:31:17: note: in expansion of macro ‘gcs_set_state’
+   31 |                 gcs_set_state(PR_SHADOW_STACK_ENABLE);
+      |                 ^~~~~~~~~~~~~
+test_signals_utils.h:34:55: note: each undeclared identifier is reported only once for each function it appears in
+   34 |                 register long _arg1 __asm__ ("x0") =  PR_SET_SHADOW_STACK_STATUS; \
+      |                                                       ^~~~~~~~~~~~~~~~~~~~~~~~~~
+test_signals.c:31:17: note: in expansion of macro ‘gcs_set_state’
+   31 |                 gcs_set_state(PR_SHADOW_STACK_ENABLE);
+      |                 ^~~~~~~~~~~~~
+test_signals.c:31:31: error: ‘PR_SHADOW_STACK_ENABLE’ undeclared (first use in this function)
+   31 |                 gcs_set_state(PR_SHADOW_STACK_ENABLE);
+      |                               ^~~~~~~~~~~~~~~~~~~~~~
+test_signals_utils.h:35:61: note: in definition of macro ‘gcs_set_state’
+   35 |                 register long _arg2 __asm__ ("x1") = (long)(state);     \
+      |                                                             ^~~~~
+test_signals.c:31:31: error: ‘PR_SHADOW_STACK_ENABLE’ undeclared (first use in this function)
+   31 |                 gcs_set_state(PR_SHADOW_STACK_ENABLE);
+      |                               ^~~~~~~~~~~~~~~~~~~~~~
+test_signals_utils.h:35:61: note: in definition of macro ‘gcs_set_state’
+   35 |                 register long _arg2 __asm__ ("x1") = (long)(state);     \
+      |                                                             ^~~~~
+test_signals.c:31:31: error: ‘PR_SHADOW_STACK_ENABLE’ undeclared (first use in this function)
+   31 |                 gcs_set_state(PR_SHADOW_STACK_ENABLE);
+      |                               ^~~~~~~~~~~~~~~~~~~~~~
+test_signals_utils.h:35:61: note: in definition of macro ‘gcs_set_state’
+   35 |                 register long _arg2 __asm__ ("x1") = (long)(state);     \
+      |                                                             ^~~~~
+In file included from test_signals.c:17:
+test_signals.c: In function ‘main’:
+test_signals_utils.h:34:55: error: ‘PR_SET_SHADOW_STACK_STATUS’ undeclared (first use in this function)
+   34 |                 register long _arg1 __asm__ ("x0") =  PR_SET_SHADOW_STACK_STATUS; \
+      |                                                       ^~~~~~~~~~~~~~~~~~~~~~~~~~
+test_signals.c:31:17: note: in expansion of macro ‘gcs_set_state’
+   31 |                 gcs_set_state(PR_SHADOW_STACK_ENABLE);
+      |                 ^~~~~~~~~~~~~
+test_signals_utils.h:34:55: note: each undeclared identifier is reported only once for each function it appears in
+   34 |                 register long _arg1 __asm__ ("x0") =  PR_SET_SHADOW_STACK_STATUS; \
+      |                                                       ^~~~~~~~~~~~~~~~~~~~~~~~~~
+test_signals.c:31:17: note: in expansion of macro ‘gcs_set_state’
+   31 |                 gcs_set_state(PR_SHADOW_STACK_ENABLE);
+      |                 ^~~~~~~~~~~~~
+test_signals.c:31:31: error: ‘PR_SHADOW_STACK_ENABLE’ undeclared (first use in this function)
+   31 |                 gcs_set_state(PR_SHADOW_STACK_ENABLE);
+      |                               ^~~~~~~~~~~~~~~~~~~~~~
+test_signals_utils.h:35:61: note: in definition of macro ‘gcs_set_state’
+   35 |                 register long _arg2 __asm__ ("x1") = (long)(state);     \
+      |                                                             ^~~~~
+In file included from test_signals.c:17:
+test_signals.c: In function ‘main’:
+test_signals_utils.h:34:55: error: ‘PR_SET_SHADOW_STACK_STATUS’ undeclared (first use in this function)
+   34 |                 register long _arg1 __asm__ ("x0") =  PR_SET_SHADOW_STACK_STATUS; \
+      |                                                       ^~~~~~~~~~~~~~~~~~~~~~~~~~
+test_signals.c:31:17: note: in expansion of macro ‘gcs_set_state’
+   31 |                 gcs_set_state(PR_SHADOW_STACK_ENABLE);
+      |                 ^~~~~~~~~~~~~
+test_signals_utils.h:34:55: note: each undeclared identifier is reported only once for each function it appears in
+   34 |                 register long _arg1 __asm__ ("x0") =  PR_SET_SHADOW_STACK_STATUS; \
+      |                                                       ^~~~~~~~~~~~~~~~~~~~~~~~~~
+test_signals.c:31:17: note: in expansion of macro ‘gcs_set_state’
+   31 |                 gcs_set_state(PR_SHADOW_STACK_ENABLE);
+      |                 ^~~~~~~~~~~~~
+test_signals.c:31:31: error: ‘PR_SHADOW_STACK_ENABLE’ undeclared (first use in this function)
+   31 |                 gcs_set_state(PR_SHADOW_STACK_ENABLE);
+      |                               ^~~~~~~~~~~~~~~~~~~~~~
+test_signals_utils.h:35:61: note: in definition of macro ‘gcs_set_state’
+   35 |                 register long _arg2 __asm__ ("x1") = (long)(state);     \
+      |                                                             ^~~~~
+testcases/testcases.c: In function ‘validate_reserved’:
+testcases/testcases.c:201:22: error: ‘GCS_MAGIC’ undeclared (first use in this function); did you mean ‘ZT_MAGIC’?
+  201 |                 case GCS_MAGIC:
+      |                      ^~~~~~~~~
+      |                      ZT_MAGIC
+testcases/testcases.c:201:22: note: each undeclared identifier is reported only once for each function it appears in
+testcases/testcases.c:204:50: error: invalid application of ‘sizeof’ to incomplete type ‘struct gcs_context’
+  204 |                         if (head->size != sizeof(struct gcs_context))
+      |                                                  ^~~~~~
+testcases/testcases.c: In function ‘validate_reserved’:
+testcases/testcases.c:201:22: error: ‘GCS_MAGIC’ undeclared (first use in this function); did you mean ‘ZT_MAGIC’?
+  201 |                 case GCS_MAGIC:
+      |                      ^~~~~~~~~
+      |                      ZT_MAGIC
+testcases/testcases.c:201:22: note: each undeclared identifier is reported only once for each function it appears in
+testcases/testcases.c:204:50: error: invalid application of ‘sizeof’ to incomplete type ‘struct gcs_context’
+  204 |                         if (head->size != sizeof(struct gcs_context))
+      |                                                  ^~~~~~
+testcases/testcases.c: In function ‘validate_reserved’:
+testcases/testcases.c:201:22: error: ‘GCS_MAGIC’ undeclared (first use in this function); did you mean ‘ZT_MAGIC’?
+  201 |                 case GCS_MAGIC:
+      |                      ^~~~~~~~~
+      |                      ZT_MAGIC
+testcases/testcases.c:201:22: note: each undeclared identifier is reported only once for each function it appears in
+testcases/testcases.c:204:50: error: invalid application of ‘sizeof’ to incomplete type ‘struct gcs_context’
+  204 |                         if (head->size != sizeof(struct gcs_context))
+      |                                                  ^~~~~~
+testcases/testcases.c: In function ‘validate_reserved’:
+testcases/testcases.c:201:22: error: ‘GCS_MAGIC’ undeclared (first use in this function); did you mean ‘ZT_MAGIC’?
+  201 |                 case GCS_MAGIC:
+      |                      ^~~~~~~~~
+      |                      ZT_MAGIC
+testcases/testcases.c:201:22: note: each undeclared identifier is reported only once for each function it appears in
+testcases/testcases.c:204:50: error: invalid application of ‘sizeof’ to incomplete type ‘struct gcs_context’
+  204 |                         if (head->size != sizeof(struct gcs_context))
+      |                                                  ^~~~~~
+testcases/testcases.c: In function ‘validate_reserved’:
+testcases/testcases.c:201:22: error: ‘GCS_MAGIC’ undeclared (first use in this function); did you mean ‘ZT_MAGIC’?
+  201 |                 case GCS_MAGIC:
+      |                      ^~~~~~~~~
+      |                      ZT_MAGIC
+testcases/testcases.c:201:22: note: each undeclared identifier is reported only once for each function it appears in
+testcases/testcases.c:204:50: error: invalid application of ‘sizeof’ to incomplete type ‘struct gcs_context’
+  204 |                         if (head->size != sizeof(struct gcs_context))
+      |                                                  ^~~~~~
+testcases/testcases.c: In function ‘validate_reserved’:
+testcases/testcases.c:201:22: error: ‘GCS_MAGIC’ undeclared (first use in this function); did you mean ‘ZT_MAGIC’?
+  201 |                 case GCS_MAGIC:
+      |                      ^~~~~~~~~
+      |                      ZT_MAGIC
+testcases/testcases.c:201:22: note: each undeclared identifier is reported only once for each function it appears in
+testcases/testcases.c:204:50: error: invalid application of ‘sizeof’ to incomplete type ‘struct gcs_context’
+  204 |                         if (head->size != sizeof(struct gcs_context))
+      |                                                  ^~~~~~
+testcases/testcases.c: In function ‘validate_reserved’:
+testcases/testcases.c:201:22: error: ‘GCS_MAGIC’ undeclared (first use in this function); did you mean ‘ZT_MAGIC’?
+  201 |                 case GCS_MAGIC:
+      |                      ^~~~~~~~~
+      |                      ZT_MAGIC
+testcases/testcases.c:201:22: note: each undeclared identifier is reported only once for each function it appears in
+testcases/testcases.c:204:50: error: invalid application of ‘sizeof’ to incomplete type ‘struct gcs_context’
+  204 |                         if (head->size != sizeof(struct gcs_context))
+      |                                                  ^~~~~~
+testcases/testcases.c: In function ‘validate_reserved’:
+testcases/testcases.c:201:22: error: ‘GCS_MAGIC’ undeclared (first use in this function); did you mean ‘ZT_MAGIC’?
+  201 |                 case GCS_MAGIC:
+      |                      ^~~~~~~~~
+      |                      ZT_MAGIC
+testcases/testcases.c:201:22: note: each undeclared identifier is reported only once for each function it appears in
+testcases/testcases.c:204:50: error: invalid application of ‘sizeof’ to incomplete type ‘struct gcs_context’
+  204 |                         if (head->size != sizeof(struct gcs_context))
+      |                                                  ^~~~~~
+testcases/testcases.c: In function ‘validate_reserved’:
+testcases/testcases.c:201:22: error: ‘GCS_MAGIC’ undeclared (first use in this function); did you mean ‘ZT_MAGIC’?
+  201 |                 case GCS_MAGIC:
+      |                      ^~~~~~~~~
+      |                      ZT_MAGIC
+testcases/testcases.c:201:22: note: each undeclared identifier is reported only once for each function it appears in
+testcases/testcases.c:204:50: error: invalid application of ‘sizeof’ to incomplete type ‘struct gcs_context’
+  204 |                         if (head->size != sizeof(struct gcs_context))
+      |                                                  ^~~~~~
+testcases/testcases.c: In function ‘validate_reserved’:
+testcases/testcases.c:201:22: error: ‘GCS_MAGIC’ undeclared (first use in this function); did you mean ‘ZT_MAGIC’?
+  201 |                 case GCS_MAGIC:
+      |                      ^~~~~~~~~
+      |                      ZT_MAGIC
+testcases/testcases.c:201:22: note: each undeclared identifier is reported only once for each function it appears in
+testcases/testcases.c:204:50: error: invalid application of ‘sizeof’ to incomplete type ‘struct gcs_context’
+  204 |                         if (head->size != sizeof(struct gcs_context))
+      |                                                  ^~~~~~
+testcases/testcases.c: In function ‘validate_reserved’:
+testcases/testcases.c:201:22: error: ‘GCS_MAGIC’ undeclared (first use in this function); did you mean ‘ZT_MAGIC’?
+  201 |                 case GCS_MAGIC:
+      |                      ^~~~~~~~~
+      |                      ZT_MAGIC
+testcases/testcases.c:201:22: note: each undeclared identifier is reported only once for each function it appears in
+testcases/testcases.c:204:50: error: invalid application of ‘sizeof’ to incomplete type ‘struct gcs_context’
+  204 |                         if (head->size != sizeof(struct gcs_context))
+      |                                                  ^~~~~~
+testcases/testcases.c: In function ‘validate_reserved’:
+testcases/testcases.c:201:22: error: ‘GCS_MAGIC’ undeclared (first use in this function); did you mean ‘ZT_MAGIC’?
+  201 |                 case GCS_MAGIC:
+      |                      ^~~~~~~~~
+      |                      ZT_MAGIC
+testcases/testcases.c:201:22: note: each undeclared identifier is reported only once for each function it appears in
+testcases/testcases.c:204:50: error: invalid application of ‘sizeof’ to incomplete type ‘struct gcs_context’
+  204 |                         if (head->size != sizeof(struct gcs_context))
+      |                                                  ^~~~~~
+testcases/testcases.c: In function ‘validate_reserved’:
+testcases/testcases.c:201:22: error: ‘GCS_MAGIC’ undeclared (first use in this function); did you mean ‘ZT_MAGIC’?
+  201 |                 case GCS_MAGIC:
+      |                      ^~~~~~~~~
+      |                      ZT_MAGIC
+testcases/testcases.c:201:22: note: each undeclared identifier is reported only once for each function it appears in
+testcases/testcases.c:204:50: error: invalid application of ‘sizeof’ to incomplete type ‘struct gcs_context’
+  204 |                         if (head->size != sizeof(struct gcs_context))
+      |                                                  ^~~~~~
+testcases/testcases.c: In function ‘validate_reserved’:
+testcases/testcases.c:201:22: error: ‘GCS_MAGIC’ undeclared (first use in this function); did you mean ‘ZT_MAGIC’?
+  201 |                 case GCS_MAGIC:
+      |                      ^~~~~~~~~
+      |                      ZT_MAGIC
+testcases/testcases.c:201:22: note: each undeclared identifier is reported only once for each function it appears in
+testcases/testcases.c:204:50: error: invalid application of ‘sizeof’ to incomplete type ‘struct gcs_context’
+  204 |                         if (head->size != sizeof(struct gcs_context))
+      |                                                  ^~~~~~
+testcases/testcases.c: In function ‘validate_reserved’:
+testcases/testcases.c:201:22: error: ‘GCS_MAGIC’ undeclared (first use in this function); did you mean ‘ZT_MAGIC’?
+  201 |                 case GCS_MAGIC:
+      |                      ^~~~~~~~~
+      |                      ZT_MAGIC
+testcases/testcases.c:201:22: note: each undeclared identifier is reported only once for each function it appears in
+testcases/testcases.c:204:50: error: invalid application of ‘sizeof’ to incomplete type ‘struct gcs_context’
+  204 |                         if (head->size != sizeof(struct gcs_context))
+      |                                                  ^~~~~~
+testcases/testcases.c: In function ‘validate_reserved’:
+testcases/testcases.c:201:22: error: ‘GCS_MAGIC’ undeclared (first use in this function); did you mean ‘ZT_MAGIC’?
+  201 |                 case GCS_MAGIC:
+      |                      ^~~~~~~~~
+      |                      ZT_MAGIC
+testcases/testcases.c:201:22: note: each undeclared identifier is reported only once for each function it appears in
+testcases/testcases.c:204:50: error: invalid application of ‘sizeof’ to incomplete type ‘struct gcs_context’
+  204 |                         if (head->size != sizeof(struct gcs_context))
+      |                                                  ^~~~~~
+
+=====================================================
+
+
+# Builds where the incident occurred:
+
+## defconfig+preempt_rt on (arm64):
+- compiler: gcc-14
+- config: None
+- dashboard: https://d.kernelci.org/build/maestro:69cd3882dcae953c056b53e1
+
+
+#kernelci issue maestro:c8166ec266c9f21b9901ef8c8c40af93cf32eeb0
+
+--
+This is an experimental report format. Please send feedback in!
+Talk to us at kernelci@lists.linux.dev
+
+Made with love by the KernelCI team - https://kernelci.org
