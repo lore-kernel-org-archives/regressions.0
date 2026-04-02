@@ -1,152 +1,276 @@
-Received: from mail-4318.protonmail.ch (mail-4318.protonmail.ch [185.70.43.18])
+Received: from mx-2023-1.gwdg.de (mx-2023-1.gwdg.de [134.76.10.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E5D32DE6F1
-	for <regressions@lists.linux.dev>; Thu,  2 Apr 2026 13:25:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA604313283
+	for <regressions@lists.linux.dev>; Thu,  2 Apr 2026 15:59:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.76.10.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775136357; cv=none; b=BadjUMjYJjUOLzgKCHpl3qDil92+RFe0YP6nZMaGpHVOqdxwlBH1VxlwPTH+J2wuiVG2BvyZfie6EcJO5QPGs+rLZRsmoS9ylBTQMt5Zlt9cr2CZ4PithQulczWYFS108K5+6nVWyMs0Fn2gqY809uwxMtU9Be1WjIW/YFfuGGg=
+	t=1775145601; cv=none; b=FbAo5Z5zIumBVPyXfZLh5Efyl+M5Khu37d52l9M8ESoQ0/BOj8QMQ9eL9EH4HXlatlibrrKz0YFJToZdlngsHPVPlUwH9uXwUYdcLq7x92IKAvVssDeP0P2pFZTZ+LDJd+kStSjvFXAJRWDvXoVVIRUwqLNtm/x/JAChKaERY84=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775136357; c=relaxed/simple;
-	bh=7AU+FKoONfTmb40hDy0wKxmE/m8Em6282YuFBtlwBss=;
-	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=lAg2RPKhvaJ7Munt3t6a+LixtlX2hxdt0EkCumakGTJ1apwbTSP4Ef9w3j1bG7FiKKU3MdzL4XLAC85aiVARCQ8/c8h/Avzdx0pDFOrNoZ6UuoN0IoRMd4+1c+c9/WMSyH9g4LY6nGztbgDCqkoufcvzItFjvuYQfy/bmROc1KE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=danielfernau.com; spf=pass smtp.mailfrom=danielfernau.com; dkim=pass (2048-bit key) header.d=danielfernau.com header.i=@danielfernau.com header.b=GelOC/SL; arc=none smtp.client-ip=185.70.43.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=danielfernau.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=danielfernau.com
+	s=arc-20240116; t=1775145601; c=relaxed/simple;
+	bh=PvsI+t/20v9P5mfFNqZNcxLxAgHixBewv85GaikLfwY=;
+	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version; b=TV5qtFsQ6XF1b5cK6/KykNPBEVTyB8qBv39tngYqxlZpYffdDKfwaRHF4ge0kzBxIEExv6qihGKH3pULv+UbPf5Ai6fkIxbKDGwEv6beb5mvOzeEPrEyGRCEiyEaww5ithGq7EhgrHxLeg7JBFM5rNJpZLuL/LYctB5Fmxa+z40=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ipp.mpg.de; spf=pass smtp.mailfrom=ipp.mpg.de; dkim=pass (2048-bit key) header.d=ipp.mpg.de header.i=@ipp.mpg.de header.b=ZMlrN0Yb; arc=none smtp.client-ip=134.76.10.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ipp.mpg.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ipp.mpg.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=danielfernau.com header.i=@danielfernau.com header.b="GelOC/SL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=danielfernau.com;
-	s=protonmail3; t=1775136353; x=1775395553;
-	bh=7AU+FKoONfTmb40hDy0wKxmE/m8Em6282YuFBtlwBss=;
-	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
-	b=GelOC/SLv4K/Wq/gx+6HMwF6lH0XNSD7bK0C0T2MSbD9zZSebLTkrDUV054cKzkEy
-	 mww2KKSM+kYBAoRWe0fMKw4SJHh9nej2Pj0hUJgTQgmuMQ9hsVTcO/wmD1ERe3unQM
-	 3qCSoeP120liPnBgbK1E4N9pLMTIq3H1cpsr9XigHWyWgX1rMxtZgRro2M3SuXUNhx
-	 51mTI/GvQ/c5OvULrXrwSeWS61HhUho+mABeC4dEUFK2xYkIvqDGNvUCeKt/kszFl4
-	 b5MegpjivS0FtEoxEAX2l16IMcnisj9qEnaGv5D8ICIByUNXk8gNh4Qd83fjY6bq5t
-	 mg2onIrWCJS2A==
-Date: Thu, 02 Apr 2026 13:25:47 +0000
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-From: Daniel Fernau <mail@danielfernau.com>
-Cc: me@magik.net, "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>, Kashyap Desai <kashyap.desai@broadcom.com>, Sumit Saxena <sumit.saxena@broadcom.com>, Shivasharan S <shivasharan.srikanteshwara@broadcom.com>, Chandrakanth patil <chandrakanth.patil@broadcom.com>, "megaraidlinux.pdl@broadcom.com" <megaraidlinux.pdl@broadcom.com>, "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: Re: [PATCH] scsi: megaraid_sas: fix PRP list out-of-bounds write
-Message-ID: <0CFE3F49-179D-4735-86E2-B6C1EE2FDD2A@danielfernau.com>
-Feedback-ID: 131378921:user:proton
-X-Pm-Message-ID: 38d0655639a30ced2910d7fa174ed482641caf73
+	dkim=pass (2048-bit key) header.d=ipp.mpg.de header.i=@ipp.mpg.de header.b="ZMlrN0Yb"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=ipp.mpg.de;
+	s=2023-rsa; h=MIME-Version:Content-Transfer-Encoding:Content-Type:Message-ID:
+	Date:Subject:To:From:Sender:Reply-To:Cc:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=iPp7duenfQKkK0OQ7n2aNd3gXvLVq0F0pHSDTuyFsCg=; b=ZMlrN0YbE6RHfWsdkL04YXBoHZ
+	QreMeUfkAWF+tz2NGhA+FZkr02F7dvoShswuI2mrIS2G/rIwK6mrOftR2TiWDR0umC9hALqzMdFCZ
+	hvz48xi9b30NEpit7pafrgol2vsKL4v77in1V/oDj+7vqIDd/EU68MALnubXXpl3nrjdtzDDLYMZd
+	pCl0fM2/6hYAB9LfnxDaHNg83ELOtaYZkFQj6mctxuZM+yrHfohjblWHMdaR8hq/OiHk6JUeYcVhv
+	i/+iaKbRBD2//TQlWmpNV5Yho59FP8pE7KvwCefpCkU+MiT7e2zGvSTMRalN63k5F3Q8K9kmyZeyU
+	J3syfo7A==;
+Received: from mailer.gwdg.de ([134.76.10.26]:41521)
+	by mailer.gwdg.de with esmtp (GWDG Mailer)
+	(envelope-from <simon.fischer@ipp.mpg.de>)
+	id 1w8K43-0034Gw-02
+	for regressions@lists.linux.dev;
+	Thu, 02 Apr 2026 17:34:35 +0200
+Received: from mbx19-fmz-05.um.gwdg.de ([10.108.142.64] helo=email.gwdg.de)
+	by mailer.gwdg.de with esmtps (TLS1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+	(GWDG Mailer)
+	(envelope-from <simon.fischer@ipp.mpg.de>)
+	id 1w8K43-000Dcq-2P
+	for regressions@lists.linux.dev;
+	Thu, 02 Apr 2026 17:34:35 +0200
+Received: from MBX19-SUB-03.um.gwdg.de (10.108.142.68) by
+ MBX19-FMZ-05.um.gwdg.de (10.108.142.64) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.2.2562.37; Thu, 2 Apr 2026 17:34:35 +0200
+Received: from MBX19-SUB-03.um.gwdg.de ([10.108.142.68]) by
+ MBX19-SUB-03.um.gwdg.de ([10.108.142.68]) with mapi id 15.02.2562.037; Thu, 2
+ Apr 2026 17:34:35 +0200
+From: "Fischer, Simon" <simon.fischer@ipp.mpg.de>
+To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Subject: Lowspeed USB device enumerationg under 5.4.288, but not under 6.8.1
+Thread-Topic: Lowspeed USB device enumerationg under 5.4.288, but not under
+ 6.8.1
+Thread-Index: AdzCs+1oMfzeuAm2S72W6S8kW/Ma3A==
+Date: Thu, 2 Apr 2026 15:34:35 +0000
+Message-ID: <8a29db20f78046578e8dc2c516607240@ipp.mpg.de>
+Accept-Language: de-DE, en-US
+Content-Language: de-DE
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/mixed;
- boundary="b1=_VnoCgvPB31RNdhK6S5U8UITsliC7PM0qQ7ugdRORc"
+X-Virus-Scanned: (clean) by clamav
+X-Spam-Level: -
 
---b1=_VnoCgvPB31RNdhK6S5U8UITsliC7PM0qQ7ugdRORc
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Dear list,
 
-I tested this on an HPE MR416i-o Gen11 with 6.17.13-2-pve and can
-reproduce the crash reliably with large direct-I/O through Ceph.
+I've tried to dig deeper into the issues, tried different quirks and small =
+patches, but was unable to solve this or find the root cause. As this seems=
+ to be a regression of 6.8 from 5.4, I hope this is the correct list?
 
-I also rebuilt and loaded the posted patched megaraid_sas module on that
-system and verified that the patched module was actually in use after
-reboot (module path, hash, srcversion, and vermagic all matched the test
-build).
+I got setup with a low speed isochronous USB device (Optec filter wheel), t=
+hat is connected to a Dell R6515 server via a Lindy 300m 2 Port Fibre Optic=
+ USB 3.0 Extender (which enumerates as a chain of USB3 super speed hubs).
+The server is running Ubuntu 24.04 with a 6.8.1 RT kernel. When connecting =
+the device, it fails to enumerate:
 
-With the patch loaded, the crash still occurs for my reproducer, but the
-failure mode appears to have changed.
+		[ 1843.938804] usb 2-1.2.1: new SuperSpeed USB device number 14 using xhc=
+i_hcd
+		[ 1843.950893] xhci_hcd 0000:04:00.3: Waiting for status stage event
+		[ 1843.950937] xhci_hcd 0000:04:00.3: Waiting for status stage event
+		[ 1843.950981] xhci_hcd 0000:04:00.3: Waiting for status stage event
+		[ 1843.950998] usb 2-1.2.1: New USB device found, idVendor=3D0424, idProd=
+uct=3D7016, bcdDevice=3D 6.26
+		[ 1843.951006] usb 2-1.2.1: New USB device strings: Mfr=3D1, Product=3D2,=
+ SerialNumber=3D0
+		[ 1843.951013] usb 2-1.2.1: Product: USB7016 Smart Hub
+		[ 1843.951018] usb 2-1.2.1: Manufacturer: Microchip
+		[ 1843.951365] xhci_hcd 0000:04:00.3: add ep 0x81, slot id 4, new drop fl=
+ags =3D 0x0, new add flags =3D 0x8
+		[ 1843.951375] xhci_hcd 0000:04:00.3: xhci_check_bandwidth called for ude=
+v 00000000f628da0a
+		[ 1843.951387] xhci_hcd 0000:04:00.3: // Ding dong!
+		[ 1843.952768] xhci_hcd 0000:04:00.3: Successful Endpoint Configure comma=
+nd
+		[ 1843.952825] xhci_hcd 0000:04:00.3: // Ding dong!
+		[ 1843.952865] xhci_hcd 0000:04:00.3: Stopped on No-op or Link TRB for sl=
+ot 4 ep 2
+		[ 1843.952884] xhci_hcd 0000:04:00.3: // Ding dong!
+		[ 1843.969034] hub 2-1.2.1:1.0: USB hub found
+		[ 1843.969108] hub 2-1.2.1:1.0: 3 ports detected
+		[ 1843.969459] xhci_hcd 0000:04:00.3: xHCI version 110 needs hub TT think=
+ time and number of ports
+		[ 1843.969466] xhci_hcd 0000:04:00.3: Set up configure endpoint for hub d=
+evice.
+		[ 1843.969474] xhci_hcd 0000:04:00.3: // Ding dong!
+		[ 1843.969529] xhci_hcd 0000:04:00.3: Successful Endpoint Configure comma=
+nd
+		[ 1844.178598] xhci_hcd 0000:04:00.3: // Ding dong!
+		[ 1844.178634] xhci_hcd 0000:04:00.3: Slot 5 output ctx =3D 0x0x000000017=
+9f5f000 (dma)
+		[ 1844.178643] xhci_hcd 0000:04:00.3: Slot 5 input ctx =3D 0x0x0000000131=
+1ce000 (dma)
+		[ 1844.178652] xhci_hcd 0000:04:00.3: Set slot id 5 dcbaa entry 00000000b=
+b87fc6b to 0x179f5f000
+		[ 1844.208850] xhci_hcd 0000:04:00.3: ep 0x81 - asked for 2 bytes, 1 byte=
+s untransferred
+		[ 1844.224776] xhci_hcd 0000:04:00.3: ep 0x81 - asked for 2 bytes, 1 byte=
+s untransferred
+		[ 1844.240774] xhci_hcd 0000:04:00.3: ep 0x81 - asked for 2 bytes, 1 byte=
+s untransferred
+		[ 1844.242544] xhci_hcd 0000:04:00.3: Set root hub portnum to 3
+		[ 1844.242554] xhci_hcd 0000:04:00.3: Set fake root hub portnum to 1
+		[ 1844.242560] xhci_hcd 0000:04:00.3: udev->tt =3D 0000000000000000
+		[ 1844.242565] xhci_hcd 0000:04:00.3: udev->ttport =3D 0x0
+		[ 1844.242573] xhci_hcd 0000:04:00.3: // Ding dong!
+		[ 1844.250778] usb 2-1.2.1.3: Device not responding to setup address.
+		[ 1844.250888] xhci_hcd 0000:04:00.3: // Ding dong!
+		[ 1844.250919] xhci_hcd 0000:04:00.3: // Ding dong!
+		[ 1844.250959] xhci_hcd 0000:04:00.3: Slot 5 output ctx =3D 0x0x000000017=
+9f5f000 (dma)
+		[ 1844.250968] xhci_hcd 0000:04:00.3: Slot 5 input ctx =3D 0x0x0000000131=
+1ce000 (dma)
+		[ 1844.250976] xhci_hcd 0000:04:00.3: Set slot id 5 dcbaa entry 00000000b=
+b87fc6b to 0x179f5f000
+		[ 1844.256773] xhci_hcd 0000:04:00.3: ep 0x81 - asked for 2 bytes, 1 byte=
+s untransferred
+		[ 1844.272775] xhci_hcd 0000:04:00.3: ep 0x81 - asked for 2 bytes, 1 byte=
+s untransferred
+		[ 1844.288888] xhci_hcd 0000:04:00.3: ep 0x81 - asked for 2 bytes, 1 byte=
+s untransferred
+		[ 1844.304774] xhci_hcd 0000:04:00.3: ep 0x81 - asked for 2 bytes, 1 byte=
+s untransferred
+		[ 1844.320774] xhci_hcd 0000:04:00.3: ep 0x81 - asked for 2 bytes, 1 byte=
+s untransferred
+		[ 1844.336774] xhci_hcd 0000:04:00.3: ep 0x81 - asked for 2 bytes, 1 byte=
+s untransferred
+		[ 1844.352774] xhci_hcd 0000:04:00.3: ep 0x81 - asked for 2 bytes, 1 byte=
+s untransferred
+		[ 1844.368774] xhci_hcd 0000:04:00.3: ep 0x81 - asked for 2 bytes, 1 byte=
+s untransferred
+		[ 1844.384774] xhci_hcd 0000:04:00.3: ep 0x81 - asked for 2 bytes, 1 byte=
+s untransferred
+		[ 1844.400774] xhci_hcd 0000:04:00.3: ep 0x81 - asked for 2 bytes, 1 byte=
+s untransferred
+		[ 1844.416774] xhci_hcd 0000:04:00.3: ep 0x81 - asked for 2 bytes, 1 byte=
+s untransferred
+		[ 1844.432774] xhci_hcd 0000:04:00.3: ep 0x81 - asked for 2 bytes, 1 byte=
+s untransferred
+		[ 1844.448774] xhci_hcd 0000:04:00.3: ep 0x81 - asked for 2 bytes, 1 byte=
+s untransferred
+		[ 1844.458535] xhci_hcd 0000:04:00.3: Set root hub portnum to 3
+		[ 1844.458544] xhci_hcd 0000:04:00.3: Set fake root hub portnum to 1
+		[ 1844.458550] xhci_hcd 0000:04:00.3: udev->tt =3D 0000000000000000
+		[ 1844.458556] xhci_hcd 0000:04:00.3: udev->ttport =3D 0x0
+		[ 1844.458563] xhci_hcd 0000:04:00.3: // Ding dong!
+		[ 1844.464774] xhci_hcd 0000:04:00.3: ep 0x81 - asked for 2 bytes, 1 byte=
+s untransferred
+		[ 1844.466663] usb 2-1.2.1.3: Device not responding to setup address.
+		[ 1844.466771] xhci_hcd 0000:04:00.3: // Ding dong!
+		[ 1844.466801] xhci_hcd 0000:04:00.3: // Ding dong!
+		[ 1844.466843] xhci_hcd 0000:04:00.3: Slot 5 output ctx =3D 0x0x000000017=
+9f5f000 (dma)
+		[ 1844.466851] xhci_hcd 0000:04:00.3: Slot 5 input ctx =3D 0x0x0000000131=
+1ce000 (dma)
+		[ 1844.466860] xhci_hcd 0000:04:00.3: Set slot id 5 dcbaa entry 00000000b=
+b87fc6b to 0x179f5f000
+		[ 1844.480774] xhci_hcd 0000:04:00.3: ep 0x81 - asked for 2 bytes, 1 byte=
+s untransferred
+		[ 1844.496774] xhci_hcd 0000:04:00.3: ep 0x81 - asked for 2 bytes, 1 byte=
+s untransferred
+		[ 1844.512774] xhci_hcd 0000:04:00.3: ep 0x81 - asked for 2 bytes, 1 byte=
+s untransferred
+		[ 1844.528774] xhci_hcd 0000:04:00.3: ep 0x81 - asked for 2 bytes, 1 byte=
+s untransferred
+		[ 1844.544774] xhci_hcd 0000:04:00.3: ep 0x81 - asked for 2 bytes, 1 byte=
+s untransferred
+		[ 1844.560774] xhci_hcd 0000:04:00.3: ep 0x81 - asked for 2 bytes, 1 byte=
+s untransferred
+		[ 1844.576774] xhci_hcd 0000:04:00.3: ep 0x81 - asked for 2 bytes, 1 byte=
+s untransferred
+		[ 1844.592774] xhci_hcd 0000:04:00.3: ep 0x81 - asked for 2 bytes, 1 byte=
+s untransferred
+		[ 1844.608776] xhci_hcd 0000:04:00.3: ep 0x81 - asked for 2 bytes, 1 byte=
+s untransferred
+		[ 1844.624777] xhci_hcd 0000:04:00.3: ep 0x81 - asked for 2 bytes, 1 byte=
+s untransferred
+		[ 1844.640774] xhci_hcd 0000:04:00.3: ep 0x81 - asked for 2 bytes, 1 byte=
+s untransferred
+		[ 1844.656775] xhci_hcd 0000:04:00.3: ep 0x81 - asked for 2 bytes, 1 byte=
+s untransferred
+		[ 1844.672776] xhci_hcd 0000:04:00.3: ep 0x81 - asked for 2 bytes, 1 byte=
+s untransferred
+		[ 1844.674524] usb 2-1.2.1.3: device not accepting address 15, error -71
+		[ 1844.675151] xhci_hcd 0000:04:00.3: // Ding dong!
+		[ 1844.675178] xhci_hcd 0000:04:00.3: Bad real port.
+		[ 1844.675188] xhci_hcd 0000:04:00.3: // Ding dong!
 
-Before the patch, I was hitting the PRP-list boundary condition, with
-the driver logging:
+	[this repeats multiple times until giving up]
 
-=C2=A0 page boundary ptr_sgl: ...
+		[ 1864.698065] usb 2-1.2.1.3.4: device not accepting address 25, error -7=
+1
+		[ 1864.698674] xhci_hcd 0000:04:00.3: // Ding dong!
+		[ 1864.698711] xhci_hcd 0000:04:00.3: Bad real port.
+		[ 1864.698718] usb 2-1.2.1.3-port4: unable to enumerate USB device
+		[ 1864.699443] xhci_hcd 0000:04:00.3: Cancel URB 00000000c8fb420b, dev 1.=
+2.1.3, ep 0x81, starting at offset 0x16e8fb050
+		[ 1864.699455] xhci_hcd 0000:04:00.3: // Ding dong!
+		[ 1864.699474] xhci_hcd 0000:04:00.3: Stopped on Transfer TRB for slot 5 =
+ep 2
+		[ 1864.699481] xhci_hcd 0000:04:00.3: Removing canceled TD starting at 0x=
+16e8fb050 (dma) in stream 0 URB 00000000c8fb420b
+		[ 1864.699489] xhci_hcd 0000:04:00.3: Set TR Deq ptr 0x16e8fb060, cycle 1
 
-and then faulting in the PRP construction path.
+		[ 1864.699495] xhci_hcd 0000:04:00.3: // Ding dong!
+		[ 1864.699500] xhci_hcd 0000:04:00.3: xhci_giveback_invalidated_tds: Keep=
+ cancelled URB 00000000c8fb420b TD as cancel_status is 2
+		[ 1864.699510] xhci_hcd 0000:04:00.3: Successful Set TR Deq Ptr cmd, deq =
+=3D @16e8fb060
+		[ 1864.699517] xhci_hcd 0000:04:00.3: xhci_handle_cmd_set_deq: Giveback c=
+ancelled URB 00000000c8fb420b TD
+		[ 1864.699522] xhci_hcd 0000:04:00.3: Giveback URB 00000000c8fb420b, len =
+=3D 0, expected =3D 2, status =3D -115
+		[ 1864.711179] xhci_hcd 0000:04:00.3: Cancel URB 00000000301149a6, dev 1.=
+2.1, ep 0x81, starting at offset 0x125370300
+		[ 1864.711194] xhci_hcd 0000:04:00.3: // Ding dong!
+		[ 1864.711211] xhci_hcd 0000:04:00.3: Stopped on Transfer TRB for slot 4 =
+ep 2
+		[ 1864.711218] xhci_hcd 0000:04:00.3: Removing canceled TD starting at 0x=
+125370300 (dma) in stream 0 URB 00000000301149a6
+		[ 1864.711226] xhci_hcd 0000:04:00.3: Set TR Deq ptr 0x125370310, cycle 1
 
-With the patch loaded, addr2line now resolves the fault into
-megasas_make_prp_nvme() at the SG-advance path:
-
-=C2=A0 megasas_make_prp_nvme()
-=C2=A0 =C2=A0 drivers/scsi/megaraid/megaraid_sas_fusion.c:2271
-
-which corresponds to:
-
-=C2=A0 sg_scmd =3D sg_next(sg_scmd);
-=C2=A0 sge_addr =3D sg_dma_address(sg_scmd);
-=C2=A0 sge_len =3D sg_dma_len(sg_scmd);
-
-The relevant disassembly also lines up with that sequence. So at least on
-my hardware and workload, the current bounds-check patch is not
-sufficient by itself. It looks like there is an additional unsafe path
-when advancing to the next SG entry and dereferencing it.
-
-In other words, the posted patch may address the PRP-frame boundary
-write, but my reproducer still reaches another failure in
-megasas_make_prp_nvme() afterwards.
-
-I am going to investigate this further over the next few days, including
-whether an additional guard is needed around sg_next() / sg_dma_address()
-/ sg_dma_len() in the PRP builder, and I will report back with results.
-
-For reference, this is on an HPE MR416i-o Gen11, and I can still
-reproduce it with the patched module definitely loaded.
-
-
-Best,
-Daniel
+		[ 1864.711232] xhci_hcd 0000:04:00.3: // Ding dong!
 
 
+When booting into a 5.4.288 PREEMPT_RT kernel we were using before with, ev=
+erything works fine (device enumerates and works).
+When exchanging the USB Extender for a Lindy 200m Fibre Optic USB 2.0 Exten=
+der, everything works fine with the 6.8.1 kernel.
+I cannot inject a USB 2.0 hub before the extender, because it is a super sp=
+eed device and not compatible.
+
+Any suggestions how to fix or further investigate the issue would be greatl=
+y appreciated!
+
+Kind regards
+Simon Fischer
 
 
+Developer
+Department E5 - CoDaC
 
-> On Apr 1, 2026, at 9:02=E2=80=AFAM, Thorsten Leemhuis <regressions@leemhu=
-is.info> wrote:
->=20
-> On 3/27/26 04:20, me@magik.net wrote:
->=20
-> > megasas_make_prp_nvme() builds NVMe PRP lists in cmd->sg_frame,
-> > which is a DMA-pool allocation sized by instance->max_chain_frame_sz.
-> > [...]
-> > Before this patch, 6.19.10 crashed repeatedly during boot and normal
-> > disk I/O. After applying it, the system boots cleanly and completes 4GB
-> > direct-I/O reads without crashes.
-> >=20
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Lukasz Magiera <me@magik.net>
->=20
->=20
-> You CCed the regression list, but this lacks a Fixes: tag, which makes
-> me wonder: what change caused the problem? That tag would also help the
-> stable team to see where this needs to be applied, so it most likely is
-> needed.
->=20
->=20
-> > [...]
->=20
->=20
-> Ciao, Thorsten
---b1=_VnoCgvPB31RNdhK6S5U8UITsliC7PM0qQ7ugdRORc
-Content-Type: application/pgp-keys; name="publickey - mail@danielfernau.com - 0x618592AD.asc"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="publickey - mail@danielfernau.com - 0x618592AD.asc"
 
-LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWSBCTE9DSy0tLS0tCgp4ak1FWjRqZlloWUpLd1lCQkFI
-YVJ3OEJBUWRBR1VmZEF2NVpDUEgxNHVVOFNhLzM2dFB1ZDVYOWdTNkYKckd6aTM3L01jRmJOTFcx
-aGFXeEFaR0Z1YVdWc1ptVnlibUYxTG1OdmJTQThiV0ZwYkVCa1lXNXBaV3htClpYSnVZWFV1WTI5
-dFBzTEFFUVFURmdvQWd3V0NaNGpmWWdNTENRY0prRThWYiszcXJNdVpSUlFBQUFBQQpBQndBSUhO
-aGJIUkFibTkwWVhScGIyNXpMbTl3Wlc1d1ozQnFjeTV2Y21lS0RSZE9maFk1Mzl2UXA5aTIKYW9u
-dlAwNGJPUER5bzZLQ2w5T0VqcUFPblFNVkNnZ0VGZ0FDQVFJWkFRS2JBd0llQVJZaEJHR0ZrcTBI
-CjVFYkYxZ1pnUzA4VmIrM3FyTXVaQUFEclNnRUEvTlRjRTE3WWFYbE5qaXZMZ3lLME9XMitmN2dV
-TDlsQwpKRkF5M3RwSVVPSUJBT0F0UkN6ejlhYW5PMU5aYWRpSHFLNDZLTGVINktjM3hIS0NQaWJD
-ZVBVSnpqZ0UKWjRqZlloSUtLd1lCQkFHWFZRRUZBUUVIUU5WMkV6K2ZPbWJFUWx2SlJEM204VFI5
-SlhyMHNibm1Md2ZDCnQzeEVBV0V0QXdFSUI4SytCQmdXQ2dCd0JZSm5pTjlpQ1pCUEZXL3Q2cXpM
-bVVVVUFBQUFBQUFjQUNCegpZV3gwUUc1dmRHRjBhVzl1Y3k1dmNHVnVjR2R3YW5NdWIzSm5rVU5H
-UkE4SzJTNWhoZnliTUI1VWlOZksKUER4a0N3dVZtY3VvbW4xU0lzY0Ntd3dXSVFSaGhaS3RCK1JH
-eGRZR1lFdFBGVy90NnF6TG1RQUFnT1FBCi9pOUpGL3hPeEJVTHhjV2ozbG1PaDZLUUVkUFhkTnJm
-aVkxNklmSUNDRG9HQVFDODdnOWYyUTUrY25rOAo5WjdETld3cUtWcGdSWExVVVE5KzBRdDBRMnAx
-REE9PQo9aVhPbAotLS0tLUVORCBQR1AgUFVCTElDIEtFWSBCTE9DSy0tLS0tCg==
+Max Planck Institute for Plasmaphysics
+Wendelsteinstrasse 1
+17491 Greifswald, Germany
 
---b1=_VnoCgvPB31RNdhK6S5U8UITsliC7PM0qQ7ugdRORc--
+Phone: +49(0)3834 88 1215
 
