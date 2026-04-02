@@ -1,161 +1,158 @@
-Received: from mail-dl1-f48.google.com (mail-dl1-f48.google.com [74.125.82.48])
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A994D29B216
-	for <regressions@lists.linux.dev>; Thu,  2 Apr 2026 18:27:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.48
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775154475; cv=pass; b=VBljbmbDqHQUKU5xWyizkTXuxt6O67S5wroG3IEY21dQC4fhvAmIJAeGYhyIJP+QUFdEEh8Iv+U6ciHHao6wxRH/z76K9xFFyV99RrVqQIgyv623Ta1ZdwvmV1/Dv1tIpKqaINFKj+9IzwTqkWd/FfERfBMDxVGiLGhTl/+abL0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775154475; c=relaxed/simple;
-	bh=iudOPzLSlC8H7io1upCOkXjod2nGAYdcw06s+W1Ndz4=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 619AD3CB2D0
+	for <regressions@lists.linux.dev>; Thu,  2 Apr 2026 19:02:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775156527; cv=none; b=ittKpG7HblFhhGde5TD6EpX4+tKBAtnlXBtMLtUwbRTB0rFjRoELx0Yd9UHZya9g/6hDCQMgdXmuSBzSNoLaBG3sTzzaG6NSd+MZg9hqY83MBLVdh7frtsa+V84hkrjdc2DIAP7r/eWkKVjKrgnT96XPQJw5c7Fc10e+ZV+c6r0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775156527; c=relaxed/simple;
+	bh=U9z6eCeNaklGoGFqr3cG8Q6RYZwYE9t/g9N0qHgEh3M=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XLs3ko/Cidhs/vTZUZOo8+auha4cfG7YT9BZDsgUAZWi8WRIFxJSf2yiZXSaR2rJvljpPgKWW5htEtTEkVBeeiRZb1amHbefbAJ1pTuqRGo1rwOD7nwFv6MrpFcwLQ8Wx63Zqb3gGc84JWYjZll4qDMjBbfgmm2OCQRzUDAZo/I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IIXagPGk; arc=pass smtp.client-ip=74.125.82.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=pdIeIjqxCFG1G/ShBDrQ/A6jo42oZWaFwxOqgqXRp+Uz+3f+9f/dDpkfUM9Yf7cPDXgTRCk47v/EYrvRR/zMBKNPT6S7G1vKWJIxcVWUgT8PKdrpQayAhlaxMn/zV71NET5N2mwwQe/9O1yd2mhxWVfk78HTKPfHF5SPjMo/VNM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Y+sbTl9B; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IIXagPGk"
-Received: by mail-dl1-f48.google.com with SMTP id a92af1059eb24-1273c690e5bso36330c88.2
-        for <regressions@lists.linux.dev>; Thu, 02 Apr 2026 11:27:54 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1775154474; cv=none;
-        d=google.com; s=arc-20240605;
-        b=jf9jri/mQheGy+Ca1aeAoB+HAt5OkDHvpvinvUKbQuqgOngcoq2wuNLThkEa2catPa
-         lbDtbK00d9ezRvOL5UB/V3LhWnOO8SdHV0HVBIfJKYr2oYsFPQtTleVlddnCla3FDPP/
-         ia2Eur8a5IudQgk9gBeKxtTw2keUdyu2Dy+nZ/Akd9zqJM22/Q1wpZqNnC4rBnwH08Sn
-         uJjAZ+FQH4ixC/5eDz6E7x3muDFVgI922iTrWvzS662iH+53ozWsiiG0htQEEIj58DsX
-         FLxtlEbZPuwAUNUfhbKHMp87GwsOAL+2rj6gfitlF99E/sNZ4mfvyiNW29wFR/8ot2L+
-         YLWQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=3nz78P8JwO8WYCJwneSwFruPF9nag3r5N/7yHGc7wHg=;
-        fh=rzF3HOM/TDk0CbNy4RGavbq2y0ES6rGxrcmCwGsbR/Q=;
-        b=F/zf118K1InF+bT1QMY2N1xs0lYQDtsBqxiEAvjzY+VUySYebfy60DZl0MsifVxBSu
-         kI2TQjRNYpd0XwvxwHwHt5GoI1KYTmbs4QugKEUpp6vmswEuPIhrbQ5SXspVvnmf2KhD
-         4abKsNh/HKaibz5EC59qNwRYJhmsxcYn2UJTMWEehfnsQf0/VkgYXjHpTe/Egc6UHNXX
-         fqMZizjo2z2GA/lgzZAtKakzEO2rZyXGXLS+Teop9W9e0MjRH/7b7qhqCTHlgv+C77KL
-         HHfx0Zbzw4Jt8v92dYRu/W1yT5fu2FzH3fhGlKAjOZ953ZDojqoJm8rEqLh98YQDeCvz
-         7jSg==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Y+sbTl9B"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-66ad907833dso2237378a12.3
+        for <regressions@lists.linux.dev>; Thu, 02 Apr 2026 12:02:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1775154474; x=1775759274; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3nz78P8JwO8WYCJwneSwFruPF9nag3r5N/7yHGc7wHg=;
-        b=IIXagPGka8FDQKeL5o0db1MZRp4Zic9Ul6rk4/wT+DtW7zMWtnPs/DRVmO4e9aZYnN
-         IWJ3lClR7CdgJoEJA7bHZwhs7opfbNqS5hsUPUwKWO0t7/Yu6C/PMDz67ruFe0DJ8W/e
-         lZgenF8T8LRuFaXuKUXOWEUgcRVUK8ys/eLyo2hTXbs2mMJU4IPz6dm0e4vZAvnTHjR/
-         LCFSbu0GCYCzygYcqxHr567Y+ymsrEpAuvWKoTWvxepFw3qb6YRfh9NsrIszGicw3zo6
-         cbm+nOVJKxJfZZgfkISmRajTFjrl0L874EBUBs3IyfclN7QhZI8M/FW2Avp5ZPAJZuH3
-         ChdA==
+        d=linux-foundation.org; s=google; t=1775156522; x=1775761322; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=ePUNrbdwnW/6ontZGK8TOL9te6Vsn2aDppf76uZ2K98=;
+        b=Y+sbTl9B6YjeZvrkGOltVX++1GJmJCYEG5Q5IBggKgwz82itMrb9m1B59SUEZRNfbz
+         JIrVl72E372onpA51IvDtQK1o7Ar38jFhXNbW6NdSapeSjIGmmnpRd0xIvSL+8/8WONz
+         aiybvQKZhLdsxSqnthsHekFVnPx7p83tHmCNI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775154474; x=1775759274;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=3nz78P8JwO8WYCJwneSwFruPF9nag3r5N/7yHGc7wHg=;
-        b=rCAKVV/7Jpfy/Umvtb+wxyTw2d4rUuQPtnWFFoxyWfXhOYGcQtNKnjx7adDcdNcEJq
-         68ZwSM1TDwIqBeqPIgpK+x1ikvfIzpzYvI0aZpHxbQlOgeJrftQOo6oZSuanW/gH+Nyg
-         EvECgniBqhOw91MiMgiQ1Sp3m5T3HMkM0qcnb9aAsUpq7F1TkPPe88CoIoLxr1B5PUDv
-         Jq3n7IpYT02KEL5leE5tJQ17h+7gEldC1EXT1d8fYNW2Y5nshW3y/wmiU0IaCdMlwtp1
-         huYrnspYwLH9uwdzKw+AGPA5qGnNL0Z8Jr72WbR4L1+DVWgxeumrGkmW3suZ6w4rljS4
-         nWZA==
-X-Forwarded-Encrypted: i=1; AJvYcCWXedUGUaVTgEURR0eQ2fb7ZTJ/QKYBu64jSZfGNKucOM6lUuYK3BHQey9ylvHkl7crnPyfTDFLoPlmEQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzWfJ5bQO1hPkOwSVVLXCDoTnJdu35C/lBd0t7Sef2z60ATFp2e
-	FLEDWTmuMdPyN7UU2/JVmzXxwjoaF/OV93XGZ/KsL9adfSAwWAKDqhJUGa37fn+BM3YkNkSMg0R
-	rbPe/AuKhtnYpJ2kOQWWAn1wlY8TtIGk=
-X-Gm-Gg: ATEYQzxMEYPIjOa1q9T6mdEqFk5RJgTDyOgkm30qHXaFKhr96syqUjF4wLCEp3UwsoH
-	Ff7boCAeLfpw6L5OsP7TORt29Q8IKsFj6oXi/aptjtA6ppr7J0QFK6xGdXiQGYHS/pueu4RGMUK
-	gFrWU/i3SXJtghmY/lkuz46ZJdy9Qop+7ZE17JF5QxnqgElRZT/LsJTUO0AR9AM+IpZ8azl1Sfp
-	cVNA5n9mYfZLPclOLWbQobG+9/1sDpZikj5Ua9hIXHmy3zPLGOwypBkeP5knr/FTmPRlfx5Hqor
-	BBrsrwaXW1d3WY2pbH3s9GPj6nYA9kYz3EMe+fYOjG8KDb0DY25fyUbIhZNgUY27NXo5sQ==
-X-Received: by 2002:a05:7022:226:b0:12b:f9aa:a13d with SMTP id
- a92af1059eb24-12bfb6ed5ccmr22345c88.1.1775154473621; Thu, 02 Apr 2026
- 11:27:53 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1775156522; x=1775761322;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ePUNrbdwnW/6ontZGK8TOL9te6Vsn2aDppf76uZ2K98=;
+        b=CPSryg6FyT1iWfju+xCOQsI6Efi+ffm2mkoGmnk2b0mhGFNSnB4NEv30wVuh5X81lJ
+         g2hvm0w8PqmiCu4nynV8PnxwCn5jLx/PQSu9UJsZH4UzoewVFVSis7ZPyxym1soW/ojy
+         cN+8TfleByQDCfiBcuTSq6ypMPLodDJrsGPkWdFVrAlGfJKAHefQVK//t9/T/+qFz+5W
+         QjuqLfTqIMBK+kVqlHgU8cpevRMlPtl1YRwmxZGUFuhRn3MwUSb022ss4GLfBq8/zNfj
+         90W8qzCADBaJoSRjjqxFJVpGGJy9AKj5vr5j1nCJmJBXfTbam1Odx3gjlo5PeVXPZb0O
+         ql6A==
+X-Forwarded-Encrypted: i=1; AJvYcCWR9wapeU2CBjypXwW+rkUj01Y72pNaLAnt0qENPzl8XRg76NEsuH0muzbtAxqhVqPgzM+quSwqn97bpQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yz7EGPOdTql4xfnmoaqK/UKQ416n4vxTCFRFdDBF3NaKMsA3QIl
+	ia4/xDYtVpoJoMvjI5EkOFFIIXG5Y/3eWP65zxzlzNt0+R0hAciiHsFuExFAaRpkTL9Wm1wdREC
+	WTqjcmmA=
+X-Gm-Gg: AeBDievOiqZV3zVmitwZ5+g5TXWlxqrnTJtBmaWWqhopEEy2N9kl++u7GSB4RjBdpM7
+	PDztpHM+YUNbomJZPqL5sch9tUlq3dy1n7uEmWZzQUtKngo+gN9/03ZCYlhXSqj5anS6264ywBV
+	VH9mZ1zlk8DjgHLloknPVB2BOvaL5dmIgk/7Kxrc+4bJdktCNimD4vNp2mqj+pQ6DU21YyDanu5
+	iLEJjxruK6aPOmsEbZAenhuO0MOhdrcuUOZ0m6w7lhJSsUKEAsw9fZ8tlXMyO6bHlRQLrYYSHRN
+	QG4gF1FzWj1Y1mihZnCy8F+LBfgucLfRSab9oqMBBuNZIEt5E1yayuNalnElSz1rt2qWumO40Px
+	nw3qSARSX40joKsYZCkMRf2CSFdrZ9D6G+uvBvH0VUij5S3sftXNO+1jBPSKKGPfbbHbitXOBZo
+	nPBRLL77s8CjkRWYWJOlC8m6nde0xRvju0sQmFec8L8yenAMMDvJW0K7yJxXn8i4lMF+mVzEVs
+X-Received: by 2002:a05:6402:4345:b0:66b:3dec:e8d5 with SMTP id 4fb4d7f45d1cf-66e3f3bf4d0mr131548a12.2.1775156522340;
+        Thu, 02 Apr 2026 12:02:02 -0700 (PDT)
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com. [209.85.208.45])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-66e1bfc789csm628169a12.6.2026.04.02.12.02.01
+        for <regressions@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 02 Apr 2026 12:02:01 -0700 (PDT)
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-66e36d12a00so613134a12.1
+        for <regressions@lists.linux.dev>; Thu, 02 Apr 2026 12:02:01 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUNp7QTn8tVPy8YVJjQok1dKrXJIvBqZE74MKo8XDUvpfxUoEgyW6BfWUEKMXiLeJn1krwbztYMkbEJCQ==@lists.linux.dev
+X-Received: by 2002:a05:6402:5d3:b0:66d:f536:a63d with SMTP id
+ 4fb4d7f45d1cf-66e3f3bf8e4mr130709a12.4.1775156521322; Thu, 02 Apr 2026
+ 12:02:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260401184456.3576660-1-alexander.deucher@amd.com> <47c508c3-3424-4e8a-a63c-1f29d13b6ebe@leemhuis.info>
-In-Reply-To: <47c508c3-3424-4e8a-a63c-1f29d13b6ebe@leemhuis.info>
-From: Alex Deucher <alexdeucher@gmail.com>
-Date: Thu, 2 Apr 2026 14:27:41 -0400
-X-Gm-Features: AQROBzBC6IbXZRo0MtyoO7uYGz-yAUxbl3iCRexA4WI6UV1jaB5oEu9t-_ooXNY
-Message-ID: <CADnq5_MiFOYLP9aUnYw4HFb-xWLZdq245ZB3e6iGn09ywOsY2w@mail.gmail.com>
+References: <20260401184456.3576660-1-alexander.deucher@amd.com>
+ <47c508c3-3424-4e8a-a63c-1f29d13b6ebe@leemhuis.info> <CADnq5_MiFOYLP9aUnYw4HFb-xWLZdq245ZB3e6iGn09ywOsY2w@mail.gmail.com>
+In-Reply-To: <CADnq5_MiFOYLP9aUnYw4HFb-xWLZdq245ZB3e6iGn09ywOsY2w@mail.gmail.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Thu, 2 Apr 2026 12:01:43 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wiNdTNNxzRuxXYq1Ebpiv6YF4UMZApoQGnktbMjKFYP+w@mail.gmail.com>
+X-Gm-Features: AQROBzAMZbuTN23P8TkIKiMVHa1tHl57TLivKQV-jC6Njhuyf6GRrqJ_sBY0N3w
+Message-ID: <CAHk-=wiNdTNNxzRuxXYq1Ebpiv6YF4UMZApoQGnktbMjKFYP+w@mail.gmail.com>
 Subject: Re: Regression fix for audio issues with pre-DCN401 chips (was: Re:
  [pull] amdgpu, amdkfd drm-next-7.1)
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Alex Deucher <alexander.deucher@amd.com>, amd-gfx@lists.freedesktop.org, 
-	airlied@gmail.com, simona.vetter@ffwll.ch, 
-	Linus Torvalds <torvalds@linux-foundation.org>, 
+To: Alex Deucher <alexdeucher@gmail.com>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>, Alex Deucher <alexander.deucher@amd.com>, 
+	amd-gfx@lists.freedesktop.org, airlied@gmail.com, simona.vetter@ffwll.ch, 
 	Linux kernel regressions list <regressions@lists.linux.dev>, dri-devel@lists.freedesktop.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 2, 2026 at 4:59=E2=80=AFAM Thorsten Leemhuis
-<regressions@leemhuis.info> wrote:
+On Thu, 2 Apr 2026 at 11:27, Alex Deucher <alexdeucher@gmail.com> wrote:
 >
-> Lo! Me again, sorry for pestering you folks about workflow issues again
-> after doing so just a few weeks ago. :-/
->
-> On 4/1/26 20:44, Alex Deucher wrote:
-> >
-> > More stuff for 7.1.
-> >
-> > The following changes since commit a51973c5dff8a0f01cc7d1b2007306ea0004=
-fa16:
-> >
-> >   Merge tag 'drm-xe-next-2026-03-26-1' of https://gitlab.freedesktop.or=
-g/drm/xe/kernel into drm-next (2026-03-30 06:04:59 +1000)
-> >
-> > are available in the Git repository at:
-> >
-> >   https://gitlab.freedesktop.org/agd5f/linux.git tags/amd-drm-next-7.1-=
-2026-04-01
-> > [...]
->
-> I noticed that this lacks "drm/amd/display: Wire up
-> dcn10_dio_construct() for all pre-DCN401 generations", which is a fix
-> that was posted 10 days ago[1] for a 7.0-rc1 regression that at least
-> three people hit[2]; a fix that now seems to be in "this week's display
-> driver promotion cycle before merging"[3] at AMD.
->
-> Is this delay really needed / worth it for a regression fix at this
-> point of the our devel cycle?
->
-> And yes, I understand that this might be shared code that AMD wants to
-> test internally first. Still asking, because at the same time it would
-> be nice to (a) fix the regressions rather sooner than later and (b) not
-> fix in the last minute.
->
-> Are "pre-DCN401" chips even tested in this "driver promotion cycle"? And
-> how often does it find problems anyway? Can't we just apply the fix and
-> revert it quickly later in case AMD find problems (yes, I understand
-> that this complicates things, but I wonder if that might be worth it if
-> this is rare)?
->
+> There are always new fixes.  Worse case it ends up in 7.0.1.  If it
+> causes other regressions, then we end up introducing a new regression
+> in rc7.
 
-There are always new fixes.  Worse case it ends up in 7.0.1.  If it
-causes other regressions, then we end up introducing a new regression
-in rc7. Pick your poison I guess.
+This was a regression in rc1, that was reported several weeks ago.
+Anything that gets reported that early in the release cycle is bound
+to hit lots of people, because the number of people testing early rc
+kernels is relatively small.
 
-Alex
+So why pointlessly delay *known* regressions for fear of a potential new one?
 
-> Ciao, Thorsten
->
-> [1]
-> https://lore.kernel.org/all/20260323211343.263909-1-sunlightlinux@gmail.c=
-om/
->
-> [2]
-> https://lore.kernel.org/all/CAOKSTBs1VNBdjRZe3M2v-nC%2BpLZZ0-KQtRUZUj6ACq=
-b4Xe7LDg@mail.gmail.com/
-> https://gitlab.freedesktop.org/drm/amd/-/work_items/5052
->
-> [3]
-> https://lore.kernel.org/all/22eb66d8-b74a-4e0a-9851-7e39c7f950cd@amd.com/
+And why point out rc7, when dammit, this could have been fixed long
+before and *not* be that late in the release?
+
+The bug was reported a month ago. The patch was posted  ten days ago.
+
+It could have been in rc6 and gotten a bit more testing, but was
+delayed for unknown reasons, and now the argument is that we should
+avoid the testing in rc7 and just put it in a stable release instead?
+
+What's the advantage of releasing 7.0 with a known problem, and delay
+any potential reports of whatever new regressions in 7.0.1 instead?
+
+What is the logic here? Really?
+
+As you say, there are always new fixes. But how exactly does that
+change anything?
+
+The fact that there will be new fixes just means that delaying known
+fixes will only result in all those fixes just piling up.
+
+Or worse yet, all those known *problems* piling up, where known
+problems may then end up hiding even more problems that people don't
+even see because they hit the first issue.
+
+So what is the point? Why are things delayed?
+
+The whole reason we have rc release candidates is (a) finding bugs and
+(b) GETTING THEM FIXED BEFORE THE ACTUAL RELEASE.
+
+What did you think a "release candidate" was all about if that's not
+your reading of the issue?
+
+And if fixes look too scary or uncertain, we *revert* the change that
+caused a regression. We don't go "fixing it is too scary".
+
+And yes, we have more timely releases than pretty much any other
+software project has, and that is partly exactly so that things don't
+build up over time.
+
+We don't want new features to build up over time - long long ago we
+had long release cycles that then dragged out even *more* because
+there just was too many changes and they all had issues that needed
+fixing.
+
+But we also don't want the known problems to build up over time.
+
+One of the points of of "release early, release often" is to find bugs
+quickly - and then *fix* them quickly so that we can leave the issue
+behind instead of letting it fester and cause longer-term issues.
+
+This "drag your feet because there will always be other fixes" makes
+absolutely no sense to me, and it's not how we work.
+
+So  honestly, there are exactly two choices: apply the fix, or just
+revert the commit that caused the problem in the first place.
+
+Because no, "let's just have a known regression" is not how we roll.
+
+            Linus
