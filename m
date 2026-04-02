@@ -1,55 +1,28 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [46.38.247.119])
+Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3784E314A79
-	for <regressions@lists.linux.dev>; Thu,  2 Apr 2026 09:06:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.38.247.119
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14DD6375F99
+	for <regressions@lists.linux.dev>; Thu,  2 Apr 2026 10:22:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775120769; cv=none; b=dHLooUeF8ua9PYVJGSV/tyAqEAjlFD2gGh+w9tP6w9A9r6XHH3UIhjPqM94h+1TDMYxvy0CHGrfdYwe3qc9jWFPikjce7K+azq/5zvLFwA4SUuy8ZhCu94WTLx13+AxfQ1KuxnmCUaKxjHbEaikv+wj7VizirurZHSZ8crb4psU=
+	t=1775125373; cv=none; b=i0JAkrc7NEA/h43z/eDe0a6pzlMAkVTGUwJNftn+jjjSJvI7dPTmum6Kz2XxLUbiYGk+IFTRK89mIknYUd59F2yg9Z4cgm0O7Z6PdTClxxji6gjc6TwFK2ZtCBQVC34pEKaOSCWTMX3iEXgIi2TNTjKyXrDmxgeJOp4vOJ394QM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775120769; c=relaxed/simple;
-	bh=Nc7fhhLS5YUR+CO/VR1vbBlId/eSXlrs+lyAwDCOALU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WUlPggN2y81Ha25K2FyP/Htqj8ubOdOyaXlMHSawjX9GqKD3g9EVmVQ9Cn+Y4U7Moy+k8cJ2mya2V7Qjy9rVPGmAL8J0LnkM3ix/fAZ4EJY0Bh3qcKrR87Y5SH71WS9gmh1eYHDe2iFxSPX384vPI6tIfjH7bmoG4j6tF1wfh2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=VqTbZRFE; arc=none smtp.client-ip=46.38.247.119
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="VqTbZRFE"
-Received: from mors-relay-8404.netcup.net (localhost [127.0.0.1])
-	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4fmbM13zkhz8DKf;
-	Thu,  2 Apr 2026 10:56:45 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1775120205;
-	bh=Nc7fhhLS5YUR+CO/VR1vbBlId/eSXlrs+lyAwDCOALU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=VqTbZRFEYygA9iumgyXVFVTRTHBab236GDx+i/RjMy7r8TlutjBlKo7rEgv8wFiWm
-	 tgYjqDXdAuywbKpAEron5OL6NwKWi1wRWhptvlbBTs96CQWF06b9AQ1EA+PdYXgb+Z
-	 ZELXSTVnoEHv1vVChVCBq0FYQeAFZd58v0glIQLHCWbR5egnJl70nGABInDlZ+MHzR
-	 WSJGRdHFI3dFSQjY5lrJ0Xn+Y1N2BvAwkuHz4kmMqEOIhinODb0ppuwkADY90YvFEl
-	 TedjM65CJiOOHD+AkFljunxBXAHHy8gZjALKB1Q6v7Z5jMeyOGti5v8g5oZv/Pf6CG
-	 PwkuhW5tIhCwA==
-Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4fmbM13H1pz4xNZ;
-	Thu,  2 Apr 2026 10:56:45 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
-X-Spam-Flag: NO
-X-Spam-Score: -2.901
-X-Spam-Level: 
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	s=arc-20240116; t=1775125373; c=relaxed/simple;
+	bh=OpqgetGLI9elSjz1+T65ROJUAXPi20HI3b24Wr6039w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
+	 In-Reply-To:Content-Type; b=sdb9NZRzDZjjLh2SsovTSgI060WJwZ1gRiFRdpWrOte0WF/cetPaozVllpAKmX4p1XlTePi/2EbO1AYG98GwXLS8tcAHD82C9waL443jADJkkKULMWaCKOYm3b596hrzo1Ovv7eijBoqRlCA+8RbB67IQu60O126j3ThBHm88B8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
+Received: from [141.14.220.42] (g42.guest.molgen.mpg.de [141.14.220.42])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4fmbLy4g7kz8tXc;
-	Thu,  2 Apr 2026 10:56:42 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id B9DB763618;
-	Thu,  2 Apr 2026 10:56:41 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <14d65103-8809-4a1b-b115-bf5f8d7110ea@leemhuis.info>
-Date: Thu, 2 Apr 2026 10:56:40 +0200
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 3CFF84C2C37D5A;
+	Thu, 02 Apr 2026 12:22:28 +0200 (CEST)
+Message-ID: <42befa05-71bd-4a5e-9f8f-269ad532a234@molgen.mpg.de>
+Date: Thu, 2 Apr 2026 12:22:27 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -57,74 +30,78 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: commit 0c4f1c02d27a880b cause a deadlock issue
-To: "He, Guocai (CN)" <Guocai.He.CN@windriver.com>
-Cc: "miriam.rachel.korenblit@intel.com" <miriam.rachel.korenblit@intel.com>,
- "johannes.berg@intel.com" <johannes.berg@intel.com>,
- Friend <netdev@vger.kernel.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: 
- <CO6PR11MB5586A4475A5EEC47FC10398BCD53A@CO6PR11MB5586.namprd11.prod.outlook.com>
- <PH0PR11MB55934A1C9A8C35B1E751C247CD50A@PH0PR11MB5593.namprd11.prod.outlook.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: 
- <PH0PR11MB55934A1C9A8C35B1E751C247CD50A@PH0PR11MB5593.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: 
- <177512020201.1134988.17516151596232902051@mxe9fb.netcup.net>
-X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: B9DB763618
-X-NC-CID: fZLlAXXf+FKoAxYFp4qKaeb9AU+B8xkJpdFCkTbvyXFJMJeOsE4=
+Subject: Re: [REGRESSION] rtl8822cu: BLE disconnects with firmware 0x0673_0EDC
+To: Hilda Wu <hildawu@realtek.com>
+References: <bug-221309-62941@https.bugzilla.kernel.org/>
+Content-Language: en-US
+Cc: linux-bluetooth@vger.kernel.org, linux-firmware@kernel.org,
+ Josh Boyer <jwboyer@kernel.org>, regressions@lists.linux.dev
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+In-Reply-To: <bug-221309-62941@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 4/1/26 04:28, He, Guocai (CN) wrote:
-> Johannes and Miriam and all:
-> 
-> when we test on kernel 6.1.166, find a deadlock caused by commit
-> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?id=0c4f1c02d27a880b10b58c63f574f13bed4f711d
+[To/Cc: +Hilda, linux-firmware@, Josh]
 
-Does this problem happen with 6.19/7.0-rc6 as well? That is an important
-detail to know if this is a general problem (that needs to be fixed in
-mainline) or something the backport caused (which mainline developers
-might not care about, as that is the domain of the stable team).
+Dear Hilda, dear Josh,
 
-Ciao, Thorsten
 
-> test by command "rtcwake -m mem -s 10"
-> It will hang (detail please see the attached test.log file )
-> 
-> I revert this commit and it works.
-> 
-> #my analysis:
-> 
-> This creates the following call chain:
-> wiphy_suspend()
-> cfg80211_leave_all()
-> cfg80211_leave() # takes wdev->mtx <- LOCK #1
-> __cfg80211_leave()
-> cfg80211_stop_p2p_device() # <-  NEW from 0c4f1c02d27a
-> ieee80211_stop_p2p_device() # mac80211 callback
-> ieee80211_sdata_stop()
-> ieee80211_do_stop()
-> sdata_lock(sdata) # = mutex_lock(&sdata->wdev.mtx)
->                                    <- LOCK #2, SAME mutex!
->                                         DEADLOCK
-> 
-> 
-> In 6.1.x:
-> cfg80211_leave define as:
-> 	wdev_lock(wdev);
-> 	__cfg80211_leave(rdev, wdev);
-> 	wdev_unlock(wdev);
-> 
-> but upstream, __cfg80211_leave is renamed to cfg80211_leave.
-> call cfg80211_leave directly. so have no this issue.
-> 
-> Do anybody meets this issue too?
-> 
-> 
-> Thanks very much.
-> 
-> Guocai
+Hilda, unfortunately, you do not have a Linux Kernel Bugzilla account, 
+so I am replying here.
 
+Am 02.04.26 um 01:57 schrieb bugzilla-daemon@kernel.org:
+> https://bugzilla.kernel.org/show_bug.cgi?id=221309
+> 
+>              Bug ID: 221309
+>             Summary: rtl8822cu: BLE disconnects with firmware 0x0673_0EDC
+>                      regression
+>             Product: Drivers
+>             Version: 2.5
+>            Hardware: AMD
+>                  OS: Linux
+>              Status: NEW
+>            Severity: normal
+>            Priority: P3
+>           Component: Bluetooth
+>            Assignee: linux-bluetooth@vger.kernel.org
+>            Reporter: i+kernel.org@schimpf.link
+>          Regression: No
+> 
+> Created attachment 309794
+>    --> https://bugzilla.kernel.org/attachment.cgi?id=309794&action=edit
+> stability log after downgrade
+> 
+> Overview
+> 
+> After updating linux-firmware-realtek to 20260221-1 (which includes commit fbf93476,
+> "update rtl8822c bt usb and uart firmware to 0x0673"), the RTL8822CU USB Bluetooth adapter
+> (0bda:b00c) begins dropping BLE connections every few minutes. Each disconnect
+> lasts several seconds before the device reconnects. The adapter itself never resets and
+> the USB device remains active throughout. Only the BLE link is lost.
+
+[… Linux 6.19.10-arch1-1 …]
+
+It looks like, the linux-firmware commit [1][2] caused a regression. 
+(Also linux-bluetooth@ wasn’t in Cc?) Could you please look into it? I 
+recommend to revert it for the time being and cut a new linux-firmware 
+release.
+
+
+Kind regards,
+
+Paul
+
+
+PS: Josh, do you have a pointer how to reach the commit from the merge 
+request?
+
+https://gitlab.com/kernel-firmware/linux-firmware/-/merge_requests/900 
+shows 
+https://gitlab.com/kernel-firmware/linux-firmware/-/commit/1f806c75e479fea9f222579deb6e69d285b614fc, 
+but I do not see a way to get to 
+https://gitlab.com/kernel-firmware/linux-firmware/-/commit/fbf93476.
+
+
+[1]: 
+https://lore.kernel.org/all/20260202115751.1056277-1-hildawu@realtek.com/
+[2]: https://gitlab.com/kernel-firmware/linux-firmware/-/commit/fbf93476
