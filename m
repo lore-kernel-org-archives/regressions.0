@@ -1,55 +1,55 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.98])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [46.38.247.119])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAE5829ACC5
-	for <regressions@lists.linux.dev>; Thu,  2 Apr 2026 09:03:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3784E314A79
+	for <regressions@lists.linux.dev>; Thu,  2 Apr 2026 09:06:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.38.247.119
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775120608; cv=none; b=oeH+mGTjxPNnCe8aINFWOtjoHtjcVEXccBs0pCqJMhOxrRoScyTY2N/MmMyZCwjFvP+E5rAwLvbJDwWc1gkKLGNQbNz3GP6ErWB49hLhY49NQbUz5sJLi/dm3K8/U7Vrt8dlv9VsH09k4p5XgurYGGdgUsR50eh/XEqZbdUUBq0=
+	t=1775120769; cv=none; b=dHLooUeF8ua9PYVJGSV/tyAqEAjlFD2gGh+w9tP6w9A9r6XHH3UIhjPqM94h+1TDMYxvy0CHGrfdYwe3qc9jWFPikjce7K+azq/5zvLFwA4SUuy8ZhCu94WTLx13+AxfQ1KuxnmCUaKxjHbEaikv+wj7VizirurZHSZ8crb4psU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775120608; c=relaxed/simple;
-	bh=HYny2x17Gkbklih4RcLp+OyIQaJx/JG4agHGAJxYUls=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=t8MfpEv6sRFXJWqCDdbdgfOUhtkpwYFYpWVVT+3WFoSOiK3b/luCGN3qC64RJjPpS9+qcvZzZv+7b/hYuy5JCjCb7jDiWqGonK2OQrm6sXnPy4wUUvKoAnEpQSbbWzWXDBDIOhYzUXIP0yFWMoi0klxg/8kc1HxQ7XkN9tgwAPE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=GRcnVh8D; arc=none smtp.client-ip=188.68.63.98
+	s=arc-20240116; t=1775120769; c=relaxed/simple;
+	bh=Nc7fhhLS5YUR+CO/VR1vbBlId/eSXlrs+lyAwDCOALU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WUlPggN2y81Ha25K2FyP/Htqj8ubOdOyaXlMHSawjX9GqKD3g9EVmVQ9Cn+Y4U7Moy+k8cJ2mya2V7Qjy9rVPGmAL8J0LnkM3ix/fAZ4EJY0Bh3qcKrR87Y5SH71WS9gmh1eYHDe2iFxSPX384vPI6tIfjH7bmoG4j6tF1wfh2w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=VqTbZRFE; arc=none smtp.client-ip=46.38.247.119
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="GRcnVh8D"
-Received: from mors-relay-2501.netcup.net (localhost [127.0.0.1])
-	by mors-relay-2501.netcup.net (Postfix) with ESMTPS id 4fmbTn4CxFz62sJ
-	for <regressions@lists.linux.dev>; Thu,  2 Apr 2026 11:02:37 +0200 (CEST)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="VqTbZRFE"
+Received: from mors-relay-8404.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4fmbM13zkhz8DKf;
+	Thu,  2 Apr 2026 10:56:45 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1775120557;
-	bh=HYny2x17Gkbklih4RcLp+OyIQaJx/JG4agHGAJxYUls=;
-	h=Date:Subject:From:To:References:In-Reply-To:From;
-	b=GRcnVh8DWsZp4GnfOIo7Rt7LiExA3YDy/cpVR2ivdst4RA4M2k5iEulhf24gZJPrt
-	 g2P2w9QKpBEerf8EFpVcDZqaLu0rg7zqJFcq+Qkm7ZH5VPDZFgwpHbCsKHhYvcRIm7
-	 M8LWsFCp94Tyt+YhK7EirHH3goFEKzznzhUvI/ogy3uEddicQzur+cj0V4BiJrmP8x
-	 1KC+85uQDRqq6i+7y6XTbCtOXhSRehD4I10L/CAYWPoFioJtzy0ItZ36xvEcjM0PEe
-	 UjtaMgB5KOHHdGrSb0JzfPN5llUXjg6fL9i3KBLwlUialxgtSatDpvrqRoJDoi3Q26
-	 J7c24cclvgZIg==
+	s=key2; t=1775120205;
+	bh=Nc7fhhLS5YUR+CO/VR1vbBlId/eSXlrs+lyAwDCOALU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=VqTbZRFEYygA9iumgyXVFVTRTHBab236GDx+i/RjMy7r8TlutjBlKo7rEgv8wFiWm
+	 tgYjqDXdAuywbKpAEron5OL6NwKWi1wRWhptvlbBTs96CQWF06b9AQ1EA+PdYXgb+Z
+	 ZELXSTVnoEHv1vVChVCBq0FYQeAFZd58v0glIQLHCWbR5egnJl70nGABInDlZ+MHzR
+	 WSJGRdHFI3dFSQjY5lrJ0Xn+Y1N2BvAwkuHz4kmMqEOIhinODb0ppuwkADY90YvFEl
+	 TedjM65CJiOOHD+AkFljunxBXAHHy8gZjALKB1Q6v7Z5jMeyOGti5v8g5oZv/Pf6CG
+	 PwkuhW5tIhCwA==
 Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-2501.netcup.net (Postfix) with ESMTPS id 4fmbTn3VJ9z4xQ0
-	for <regressions@lists.linux.dev>; Thu,  2 Apr 2026 11:02:37 +0200 (CEST)
+	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4fmbM13H1pz4xNZ;
+	Thu,  2 Apr 2026 10:56:45 +0200 (CEST)
 X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
 X-Spam-Flag: NO
-X-Spam-Score: -2.898
+X-Spam-Score: -2.901
 X-Spam-Level: 
 Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4fmbTm4dHMz8t4R
-	for <regressions@lists.linux.dev>; Thu,  2 Apr 2026 11:02:36 +0200 (CEST)
+	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4fmbLy4g7kz8tXc;
+	Thu,  2 Apr 2026 10:56:42 +0200 (CEST)
 Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id EDAC563619
-	for <regressions@lists.linux.dev>; Thu,  2 Apr 2026 11:02:35 +0200 (CEST)
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id B9DB763618;
+	Thu,  2 Apr 2026 10:56:41 +0200 (CEST)
 Authentication-Results: mxe9fb;
         spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
 Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <a9aff139-77f9-463f-800c-c470bdba45fc@leemhuis.info>
-Date: Thu, 2 Apr 2026 11:02:35 +0200
+Message-ID: <14d65103-8809-4a1b-b115-bf5f8d7110ea@leemhuis.info>
+Date: Thu, 2 Apr 2026 10:56:40 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -57,50 +57,74 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
+Subject: Re: commit 0c4f1c02d27a880b cause a deadlock issue
+To: "He, Guocai (CN)" <Guocai.He.CN@windriver.com>
+Cc: "miriam.rachel.korenblit@intel.com" <miriam.rachel.korenblit@intel.com>,
+ "johannes.berg@intel.com" <johannes.berg@intel.com>,
+ Friend <netdev@vger.kernel.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: 
+ <CO6PR11MB5586A4475A5EEC47FC10398BCD53A@CO6PR11MB5586.namprd11.prod.outlook.com>
+ <PH0PR11MB55934A1C9A8C35B1E751C247CD50A@PH0PR11MB5593.namprd11.prod.outlook.com>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
 Content-Language: de-DE, en-US
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+In-Reply-To: 
+ <PH0PR11MB55934A1C9A8C35B1E751C247CD50A@PH0PR11MB5593.namprd11.prod.outlook.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <177512055614.1136692.6473441364923982138@mxe9fb.netcup.net>
-X-NC-CID: zdTPccX/7ujF81Vz8fy8BRP2SlP5nfznNEa2D9/ijDd2xm3ZGhY=
+X-PPP-Message-ID: 
+ <177512020201.1134988.17516151596232902051@mxe9fb.netcup.net>
+X-Rspamd-Server: rspamd-worker-8404
+X-Rspamd-Queue-Id: B9DB763618
+X-NC-CID: fZLlAXXf+FKoAxYFp4qKaeb9AU+B8xkJpdFCkTbvyXFJMJeOsE4=
 
+On 4/1/26 04:28, He, Guocai (CN) wrote:
+> Johannes and Miriam and all:
+> 
+> when we test on kernel 6.1.166, find a deadlock caused by commit
+> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?id=0c4f1c02d27a880b10b58c63f574f13bed4f711d
 
+Does this problem happen with 6.19/7.0-rc6 as well? That is an important
+detail to know if this is a general problem (that needs to be fixed in
+mainline) or something the backport caused (which mainline developers
+might not care about, as that is the domain of the stable team).
 
-On 3/9/24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
+Ciao, Thorsten
 
-#regzbot report: https://gitlab.freedesktop.org/drm/amd/-/work_items/5133
-#regzbot introduced: d76c66c6ad839941819
-#regzbot title: drm/amd/pm: kexec stopped working
+> test by command "rtcwake -m mem -s 10"
+> It will hang (detail please see the attached test.log file )
+> 
+> I revert this commit and it works.
+> 
+> #my analysis:
+> 
+> This creates the following call chain:
+> wiphy_suspend()
+> cfg80211_leave_all()
+> cfg80211_leave() # takes wdev->mtx <- LOCK #1
+> __cfg80211_leave()
+> cfg80211_stop_p2p_device() # <-  NEW from 0c4f1c02d27a
+> ieee80211_stop_p2p_device() # mac80211 callback
+> ieee80211_sdata_stop()
+> ieee80211_do_stop()
+> sdata_lock(sdata) # = mutex_lock(&sdata->wdev.mtx)
+>                                    <- LOCK #2, SAME mutex!
+>                                         DEADLOCK
+> 
+> 
+> In 6.1.x:
+> cfg80211_leave define as:
+> 	wdev_lock(wdev);
+> 	__cfg80211_leave(rdev, wdev);
+> 	wdev_unlock(wdev);
+> 
+> but upstream, __cfg80211_leave is renamed to cfg80211_leave.
+> call cfg80211_leave directly. so have no this issue.
+> 
+> Do anybody meets this issue too?
+> 
+> 
+> Thanks very much.
+> 
+> Guocai
 
-#regzbot report:
-https://lore.kernel.org/all/CAOKSTBs1VNBdjRZe3M2v-nC%2BpLZZ0-KQtRUZUj6ACqb4Xe7LDg@mail.gmail.com/
-#regzbot introduced: b82f0759346617b2
-
-#regzbot report:
-https://lore.kernel.org/all/CA+_z3hRjPnQOrEp7uXsNsu6wzqQp9O6FT18i=XcSC7k74Xd2QA@mail.gmail.com/
-#regzbot introduced: v7.0-rc4..v7.0-rc5
-#regzbot title: xhci_hcd: AMD Raphael/Granite Ridge USB 2.0 xHCI
-[1022:15b8] dies on resume from suspend
-
-#regzbot report:
-https://lore.kernel.org/all/PH0PR11MB55934A1C9A8C35B1E751C247CD50A@PH0PR11MB5593.namprd11.prod.outlook.com/
-#regzbot introduced: 0c4f1c02d27a880b10b58c63f574f13bed4f711d
-#regzbot title: wifi: cfg80211: deadlock
-
-#regzbot report:
-https://lore.kernel.org/all/291f78bf-4b4a-40dd-867d-053b36c564b3@proxmox.com/
-#regzbot introduced: 9b8b84879d4adc
-#regzbot title: block: unable to handle page fault errors
-
-#regzbot report: http://lore.kernel.org/all/ac4lw9tTNn4baO_h%40altlinux.org
-#regzbot introduced: 26a40327c25c00
-#regzbot title: drm/xe: NULL pointer dereference
