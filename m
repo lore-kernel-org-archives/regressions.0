@@ -1,88 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [185.244.194.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6E6F3890F0;
-	Thu,  2 Apr 2026 07:52:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FEE13BFE33
+	for <regressions@lists.linux.dev>; Thu,  2 Apr 2026 08:40:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.244.194.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775116365; cv=none; b=Zd0VRdGbfOw++2fsKatfSbmnLU1nE8I/mkyuyzZfIPQGg8PtvRcwgtEKUpi2UtrvoGAd2OEzGSlDiTHqIcdz/8Tv25C2Vhs+/DkNhFqI98Hj/qvjvmg2AMGCHpNOs6ev11x16abs27jLRJZXLwCibPN9rLHuPC88Wh9nRldpUz0=
+	t=1775119229; cv=none; b=mhs81IxA3NNavq/gYIEZGVgxKCrrU6bEusLSXFb3suF3BdytdgQv82i/9Hnk4UxFZgRJQg43xgZQajdkckGx5CdHr6r7c85vhmmhY23ec4tQiqH3H3UlshSU2jZtiAtc5vK8lStlgvtVzSmwjYHsGBqWRe0AJVzAt4xZlMwYBeE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775116365; c=relaxed/simple;
-	bh=UWiMeGXQfNypsb+rddWd0JoYBgN9E5HtRry5MonXx3A=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=VbUsrPh7/uNNGs5YW6WpYHaC8VYFvf0bdfiOzGaYlDsq/CT87MC7o97CVYKRM50oyP0wcsdwy3rNhd77qHvxf7gg6FO1/eFgn0+/7hcC4OVxA+uRmovAiaBRN2k6SV9JTedARoFrpNGars6TNjAnacawYAna3zTfQ6MyOpubCK8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LudHFXUi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1775119229; c=relaxed/simple;
+	bh=b7IYk2CCpldXfIysblUswTo2KkLaHsOSsojnuIXRDP0=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:References:Cc:
+	 In-Reply-To:Content-Type; b=lDAueisUOfLB3qAxxilee7vfCP0GUR+jV/Xhoh89Ry6wSTxfRmePdT+Z0tfiepOFziNVuyyMpqUNYrKJP7HgHJxFEzfm7GqlnFdxN1qci+5WA/PFaJxscxC7swFIXcvQgW5p+JDEba6yB4yHCtrxLw2HUVJmEohQuK5pPNVaWa8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=Y3nDwJQq; arc=none smtp.client-ip=185.244.194.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LudHFXUi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FB5BC19423;
-	Thu,  2 Apr 2026 07:52:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775116364;
-	bh=UWiMeGXQfNypsb+rddWd0JoYBgN9E5HtRry5MonXx3A=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=LudHFXUiErrqykbAeQZButdM55+SJpA3bRxLnDlY68aLOtTSgbKu6glhRnVNgpuG6
-	 hrPG9ylIPoUWfdzqoDEFzz/CCDNCbbFUFUghFrHwFwfCZjhg+nTsnVTwuqCwH5P58N
-	 Fb7xZa6Fd7J/Xi1yKbgzU46/mAgODLTdJ9NB0skC2aPjFIMy3n8MXNmKuagiDMXSkk
-	 V0wnE3GhDmUWNuFGUL4Yc6UsFzM1YakvhRnNitWhfISaTM+VAW8uBnklywkEmjB6aF
-	 D3muxBHfkFcf1BMA03FPcTSaZTBP2gkfM05VPZEEOPvJbK5KxGtKfGr7KvXkQUvajF
-	 w/7WgJ/l4msYA==
-Date: Thu, 2 Apr 2026 09:52:42 +0200 (CEST)
-From: Jiri Kosina <jikos@kernel.org>
-To: Denis Benato <denis.benato@linux.dev>
-cc: Thorsten Leemhuis <regressions@leemhuis.info>, 
-    honjow <honjow311@gmail.com>, Benjamin Tissoires <bentiss@kernel.org>, 
-    linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, 
-    Linux kernel regressions list <regressions@lists.linux.dev>
-Subject: Re: [PATCH] HID: gpd: fix report descriptor on GPD Win handheld
- (2f24:0137)
-In-Reply-To: <76510dfe-d6da-4398-a78c-a02c596d6f75@linux.dev>
-Message-ID: <n39314o3-o1r2-s709-9p9p-6713pppn5q2p@xreary.bet>
-References: <20260324013847.68024-1-honjow311@gmail.com> <6268c55d-2f1b-473c-b82d-1de1416d14b0@leemhuis.info> <76510dfe-d6da-4398-a78c-a02c596d6f75@linux.dev>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="Y3nDwJQq"
+Received: from relay01-mors.netcup.net (localhost [127.0.0.1])
+	by relay01-mors.netcup.net (Postfix) with ESMTPS id 4fmb041Nyyz99lM;
+	Thu,  2 Apr 2026 10:40:20 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1775119220;
+	bh=b7IYk2CCpldXfIysblUswTo2KkLaHsOSsojnuIXRDP0=;
+	h=Date:From:Subject:To:References:Cc:In-Reply-To:From;
+	b=Y3nDwJQqb+LeqhNodKwJx3cPwINl8MpTKS9WDx7UZXP4TDJm+v9/iGpio6vAOzOp7
+	 eQ3yc/uPTkZxWAg8ljxJHCulaxNuo7qK46UV3ZNVJjL+7ViKKfIwXCjs3GZ4d1uc4i
+	 KXNWa+6CJjQiIf3YSsodVF5/jMkeUkSAL7BINgyJOX586Kt7mJrBPZ28zJQFuTVCI6
+	 JgwcBf0HdKocK485Lkr1uWC1jb4E+DkvUEDMYnq1P+vHhrVLk1tJOlojApPhGp6aAW
+	 9Io7o4zDDioGh8qVZrcQbXuPje0Z+owOLJpARfTCzW2dKXlB2a+ooBUDOTXXfjo1xG
+	 ApKeRXAQVr+5A==
+Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
+	by relay01-mors.netcup.net (Postfix) with ESMTPS id 4fmb040gSnz7wYj;
+	Thu,  2 Apr 2026 10:40:20 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
+X-Spam-Flag: NO
+X-Spam-Score: -2.898
+X-Spam-Level: 
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4fmb01579bz8sbl;
+	Thu,  2 Apr 2026 10:40:17 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 01A3E635B4;
+	Thu,  2 Apr 2026 10:40:16 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <47c508c3-3424-4e8a-a63c-1f29d13b6ebe@leemhuis.info>
+Date: Thu, 2 Apr 2026 10:40:16 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Subject: Regression fix for audio issues with pre-DCN401 chips (was: Re:
+ [pull] amdgpu, amdkfd drm-next-7.1)
+To: Alex Deucher <alexander.deucher@amd.com>, amd-gfx@lists.freedesktop.org,
+ airlied@gmail.com, simona.vetter@ffwll.ch
+References: <20260401184456.3576660-1-alexander.deucher@amd.com>
+Content-Language: de-DE, en-US
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ dri-devel@lists.freedesktop.org
+In-Reply-To: <20260401184456.3576660-1-alexander.deucher@amd.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: 
+ <177511921734.1118730.14775591535665344992@mxe9fb.netcup.net>
+X-NC-CID: HXD6nnGI0L3eL6adBXj/cKAE12weFgoTISz9rOMsO/HdM7XzJFI=
 
-On Wed, 1 Apr 2026, Denis Benato wrote:
+Lo! Me again, sorry for pestering you folks about workflow issues again
+after doing so just a few weeks ago. :-/
 
-> > Hmmm, why does this need to be a config option? Can't this be enabled
-> > unconditionally? I ask in general, as it's just another point where
-> > things can go wrong. But I mainly ask because it's a regression fix =E2=
-=80=93
-> > and from my understanding wrt to what Linus wants we don't expect users
-> > to turn some .config on to keep their hardware running (unless it can't
-> > be avoided at all costs).
-> >
-> > Ciao, Thorsten
-> >
-> Perhaps the place of this, just for affected kernel series that are out
-> (assuming stable has the bug, I haven't checked) is to do this on hid-gen=
-eric,
-> otherwise it's a change of driver managing the device?
+On 4/1/26 20:44, Alex Deucher wrote:
+> 
+> More stuff for 7.1.
+> 
+> The following changes since commit a51973c5dff8a0f01cc7d1b2007306ea0004fa16:
+> 
+>   Merge tag 'drm-xe-next-2026-03-26-1' of https://gitlab.freedesktop.org/drm/xe/kernel into drm-next (2026-03-30 06:04:59 +1000)
+> 
+> are available in the Git repository at:
+> 
+>   https://gitlab.freedesktop.org/agd5f/linux.git tags/amd-drm-next-7.1-2026-04-01
+> [...]
 
-The problem is that the device has a broken (violating spec) report=20
-descriptor.
+I noticed that this lacks "drm/amd/display: Wire up
+dcn10_dio_construct() for all pre-DCN401 generations", which is a fix
+that was posted 10 days ago[1] for a 7.0-rc1 regression that at least
+three people hit[2]; a fix that now seems to be in "this week's display
+driver promotion cycle before merging"[3] at AMD.
 
-We got away from it before the change, but with more sanitization having=20
-been put in place in order to deal with potentially malicious devices,=20
-this device (correctly, in some sense), stopped working.
+Is this delay really needed / worth it for a regression fix at this
+point of the our devel cycle?
 
-The way around it is to replace the report descriptor with a fixed one.=20
-And we do it with a specific driver for now (there have been other=20
-proposals, like request_firmware(), or it could eventually be done from=20
-userspace / BPF, but none of it hasn't been yet implemented).
+And yes, I understand that this might be shared code that AMD wants to
+test internally first. Still asking, because at the same time it would
+be nice to (a) fix the regressions rather sooner than later and (b) not
+fix in the last minute.
 
-I have also been thinking about having a config option that'd link all the=
-=20
-HID drivers into one huge hid.ko blob for those scenarios where people=20
-don't care about memory / disk footprint, and want everything to "just=20
-work" automatically (thinking of distro kernels, for example).
+Are "pre-DCN401" chips even tested in this "driver promotion cycle"? And
+how often does it find problems anyway? Can't we just apply the fix and
+revert it quickly later in case AMD find problems (yes, I understand
+that this complicates things, but I wonder if that might be worth it if
+this is rare)?
 
---=20
-Jiri Kosina
-SUSE Labs
+Ciao, Thorsten
 
+[1]
+https://lore.kernel.org/all/20260323211343.263909-1-sunlightlinux@gmail.com/
+
+[2]
+https://lore.kernel.org/all/CAOKSTBs1VNBdjRZe3M2v-nC%2BpLZZ0-KQtRUZUj6ACqb4Xe7LDg@mail.gmail.com/
+https://gitlab.freedesktop.org/drm/amd/-/work_items/5052
+
+[3]
+https://lore.kernel.org/all/22eb66d8-b74a-4e0a-9851-7e39c7f950cd@amd.com/
