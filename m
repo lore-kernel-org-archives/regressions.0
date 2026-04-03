@@ -1,106 +1,106 @@
-Received: from mailout2.hostsharing.net (mailout2.hostsharing.net [83.223.78.233])
+Received: from mx-2023-1.gwdg.de (mx-2023-1.gwdg.de [134.76.10.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC896392815
-	for <regressions@lists.linux.dev>; Fri,  3 Apr 2026 14:58:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FDF73C6A51
+	for <regressions@lists.linux.dev>; Fri,  3 Apr 2026 16:34:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.76.10.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775228340; cv=none; b=SXJFjl9rhnMYrt7TrlxIc4zFcl3c+UpuSM3u39W4PxfdQOnN4pt31oy1KLKKHw4HKg3ZHccH5XaQ1aCXk3uDumTPKxgjNZBXemICd515kpHtM0Mie6rApraUvaGep1b5eghUztx7Nk17/ZZDafHEfg4z02QSbSy5jh1hKSGRqoI=
+	t=1775234059; cv=none; b=dr5j6YNYsMU1rPUxDGe6VscYldQ1n0hbNIOqx2SVRyE1dMQNjN43b/zbIWhp5x08OPc8ejSwytaGFRCN5zZEmrs6ov6igvB0T2/u04x/hkP2QL9E+sT58Da7anGrwzxtrhqDCRO1aXDBu1wi7iqSnkLAticZ5vQxepOIYJIWaSI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775228340; c=relaxed/simple;
-	bh=3Rkb0g97Ceob67GFEhQG4wUs08kRFoCi/DEvg7lzIjk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Bo4jWr83cHsazM4GdzfLkufEFBt5jMPVmX2jFqtafLgfLXPiNalQTfEgUfwgKrdYKPWJ3dPSFVz6Zl68MY3fn3FVamYvIi0kHGaY1/ZH1aoPqz7EqqOr8xWCgg+UXSZWBFwCRbfgF5c863y7atBLOr2EkMZ0/OTKRcW+oOqNdJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=pass smtp.mailfrom=wunner.de; arc=none smtp.client-ip=83.223.78.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wunner.de
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature ECDSA (secp384r1) server-digest SHA384
-	 client-signature ECDSA (secp384r1) client-digest SHA384)
-	(Client CN "*.hostsharing.net", Issuer "GlobalSign GCC R6 AlphaSSL CA 2025" (verified OK))
-	by mailout2.hostsharing.net (Postfix) with ESMTPS id A343810DC6;
-	Fri, 03 Apr 2026 16:58:49 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 845C16000EC2; Fri,  3 Apr 2026 16:58:49 +0200 (CEST)
-Date: Fri, 3 Apr 2026 16:58:49 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Bernd Schumacher <bernd@bschu.de>
-Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@debian.org>,
-	1131025@bugs.debian.org, Salvatore Bonaccorso <carnil@debian.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	regressions@lists.linux.dev, stable@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Alex Williamson <alex@shazbot.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: Re: Bug#1131025: [6.12.y regression] Regression with 58130e7ce6cb
- ("PCI/ERR: Ensure error recoverability at all times"): echo vfio-pci
- >driver_override does not work for DVB Adapter
-Message-ID: <ac_VqcBbKRDkHp69@wunner.de>
-References: <74bcd84500e5efcca035624f325e400dd8a21f44.camel@bschu.de>
- <acgohjvBpVcR7HcK@wunner.de>
- <5f9386146f426e2847550681cb7188471205607f.camel@bschu.de>
- <aclRwznwq6KpA2qA@wunner.de>
- <177373189751.7987.7156982489427825197.reportbug@obelix-trixie.bs.de>
- <ecf9b2dd96ff97cc035ba297266b8dd05eea88da.camel@bschu.de>
- <ac0Y85OShbK6mHEV@monoceros>
- <8275e5b86696dec133889713258c2e158a443496.camel@bschu.de>
- <ac19pxEZKvQuQwFV@wunner.de>
- <7173609c404c5444e634dd3ab26f55f2788d82e4.camel@bschu.de>
+	s=arc-20240116; t=1775234059; c=relaxed/simple;
+	bh=PfnnoFOWm8hG+YfpsBie9s/BDo0/AA/o+tQ5LtFJ4YE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=GSOk9o4yl3kvKEb/FnMQB1HY+QOx9iv9cwAC10h05I7WMrsV83J6juQ8yEmE7mWeI+YwKhK9e5sQJENP342Vb0jS44FtEALbmWKkuoNSNawUdNEBKvwzlIcrq0iIiYEg0Yd1ghKy7WTKxD+C3ZARjrb66g+5wxrhq0Pq4w5mEH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ipp.mpg.de; spf=pass smtp.mailfrom=ipp.mpg.de; dkim=pass (2048-bit key) header.d=ipp.mpg.de header.i=@ipp.mpg.de header.b=VW7AzNtL; arc=none smtp.client-ip=134.76.10.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ipp.mpg.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ipp.mpg.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ipp.mpg.de header.i=@ipp.mpg.de header.b="VW7AzNtL"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=ipp.mpg.de;
+	s=2023-rsa; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:CC:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=u3lPbjPbt1nlOcXtgnGgEM37XILfZRiUU+Z9ZowCfiM=; b=VW7AzNtLjB3RijgcVWxo50/FgH
+	rEDJ971E97UAXVi+dPc21zbACm4fOToLvfohn8mWFhl6RPSrByyZLkBQkVAXrAqEk73yYcVAYnwC1
+	Mnhy57rtbnzfi0cfPFp8fvXu0liWte+JPk1SnNW3HXJpoCGL8bkG9aS80JQzhsvw+7vSQyD60v1+3
+	PmLxUZvtpE/Wk80pw/kVhHOnDgrDqvhJqzkSvTGDzRsd/qgTOEuHP0QszamRdM6UWzrys3BbL10fl
+	drYJi/imanQj4KRpLEBJwF1kuePXc3H1go8sZ0vqD+Q9ZNn8xcBop9BJ7wGLHNaZhrD48HE62vz0b
+	GvTQL1Og==;
+Received: from mailer.gwdg.de ([134.76.10.26]:44884)
+	by mailer.gwdg.de with esmtp (GWDG Mailer)
+	(envelope-from <simon.fischer@ipp.mpg.de>)
+	id 1w8hTC-003JrV-1e;
+	Fri, 03 Apr 2026 18:34:07 +0200
+Received: from mbx19-sub-03.um.gwdg.de ([10.108.142.68] helo=email.gwdg.de)
+	by mailer.gwdg.de with esmtps (TLS1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+	(GWDG Mailer)
+	(envelope-from <simon.fischer@ipp.mpg.de>)
+	id 1w8hTD-0004l2-0u;
+	Fri, 03 Apr 2026 18:34:07 +0200
+Received: from [192.168.178.27] (10.250.9.200) by MBX19-SUB-03.um.gwdg.de
+ (10.108.142.68) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.2.2562.37; Fri, 3 Apr
+ 2026 18:34:06 +0200
+Message-ID: <89a3874e-07cb-4dd5-8e90-e7163fa74acc@ipp.mpg.de>
+Date: Fri, 3 Apr 2026 18:34:05 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7173609c404c5444e634dd3ab26f55f2788d82e4.camel@bschu.de>
+User-Agent: Mozilla Thunderbird
+Subject: Re: Lowspeed USB device enumerationg under 5.4.288, but not under
+ 6.8.1
+To: Greg KH <gregkh@linuxfoundation.org>
+CC: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <8a29db20f78046578e8dc2c516607240@ipp.mpg.de>
+ <2026040255-zone-chamomile-964f@gregkh>
+From: Simon Fischer <simon.fischer@ipp.mpg.de>
+In-Reply-To: <2026040255-zone-chamomile-964f@gregkh>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MBX19-GWD-03.um.gwdg.de (10.108.142.56) To
+ MBX19-SUB-03.um.gwdg.de (10.108.142.68)
+X-Virus-Scanned: (clean) by clamav
+X-Spam-Level: -
 
-[cc += Alex, Ilpo]
+Hi Greg,
 
-On Thu, Apr 02, 2026 at 07:53:09AM +0200, Bernd Schumacher wrote:
-> dmesg with patch is now attached
+thanks for coming back! I will build and try it, has to wait for after 
+the easter weekend. Will report back
 
-Thank you Bernd!
+kind regards
 
-If you cherry-pick these two upstream commits onto v6.12.73,
-does the issue go away?
+Simon
 
-  4d4c10f763d7 ("PCI: Explicitly put devices into D0 when initializing")
-  907a7a2e5bf4 ("PCI/PM: Set up runtime PM even for devices without PCI PM")
+Am 02.04.2026 um 18:10 schrieb Greg KH:
+> On Thu, Apr 02, 2026 at 03:34:35PM +0000, Fischer, Simon wrote:
+>> Dear list,
+>>
+>> I've tried to dig deeper into the issues, tried different quirks and small patches, but was unable to solve this or find the root cause. As this seems to be a regression of 6.8 from 5.4, I hope this is the correct list?
+> 6.8.1 is not supported by anyone but canonical, so there's not much we
+> can do here, sorry as that is a very old and obsolete kernel missing
+> tens of thousands of changes.
+>
+> Can you try running the latest 6.19 release instead?
+>
+> thanks,
+>
+> greg k-h
 
-The second one is a fix for the first one.
+-- 
+Simon Fischer
 
-I suspect that the first one is the reason why you are seeing
-the issue on v6.12.73 but not on current mainline.  The commit
-went into v6.16 but was not backported to LTS kernels.
+Entwickler - CoDaC
+Department Operation
+  
+Max Planck Institut for Plasmaphysics
+Wendelsteinstrasse 1
 
-@Alex:
-The commit sets pci_dev->current_state to PCI_D0 on device enumeration,
-whereas previously it was PCI_UNKNOWN.  This changes code paths in
-a number of places.  In particular:
+17491 Greifswald, Germany
 
-  vfio_pci_core_register_device()
-    vfio_pci_set_power_state()
+Phone: +49(0)3834 88 1215
 
-... calls pci_restore_state() without a prior pci_save_state() if
-current_state is PCI_UNKNOWN.  The function doesn't do that for PCI_D0.
-
-Also, there is a code comment in vfio_pci_core_register_device()
-claiming that "pci-core sets the device power state to an unknown value
-at bootup" which is no longer true since commit 4d4c10f763d7.
-
-I recently had to deal with a regression in ASPM code which was
-likewise caused by the subtle change of current_state from PCI_UNKNOWN
-to PCI_D0, so my non-artificial neural network was trained to recognize
-this pattern and seeing the current_state checks in vfio code thus
-immediately looked suspicious to me:
-
-https://bugzilla.kernel.org/show_bug.cgi?id=220705
-
-Thanks,
-
-Lukas
