@@ -1,222 +1,168 @@
-Received: from mail-dl1-f53.google.com (mail-dl1-f53.google.com [74.125.82.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from BN1PR04CU002.outbound.protection.outlook.com (mail-eastus2azon11010052.outbound.protection.outlook.com [52.101.56.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4D623314D0
-	for <regressions@lists.linux.dev>; Mon,  6 Apr 2026 11:38:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B52B18AE2
+	for <regressions@lists.linux.dev>; Mon,  6 Apr 2026 13:22:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.56.52
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775475514; cv=pass; b=sf68sToWnFvpS4UyOkiDxNaoERyw32PX6HTSmlFjgm4GsEjSsTM8ltn/+NrO2SvIU8BC7n/NNYN5TRF2dUiQ2jaiayaDmvxxE7j3Gf7u47xrUx4Gd7FKrjJ5Ea5OEeJGvt2xyFuaP1XzLT7KnEMWMfGUIwWlwOx0YIyNW2OAWw4=
+	t=1775481767; cv=fail; b=dPJNEkdMCb2UaLTkPj3sXaUjdlR0nx+gtE6RlxkCqN2VIFM5lhi5jNjX7z6LfrEYcQD2JGYK5uqPJH8tD+3i6UpNqpAWz9WtlOuBJMhGsB2SUpouOZb+Drz5wjn33Iij4Vg+NyhUCAMK9Dx5b2+Xlj5pyLE1CKy1u3UiJQYax+s=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775475514; c=relaxed/simple;
-	bh=bnnbD36JRK1H0WmZABZ2TVcYz5ypqCF3La8J3Y5l9rw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WdjQk/Xh9C9NUQX0QQMPYPSeTjAYpQ47RbzPPkzjE/xXsoK2niM6manih70Z6Ph3TGUDMFTPmn5CbooMtf954VNhdtK1ih0doVi2CoIKHgRlrSECrp/oAXD/vj1Ts4M4tH1B/24zER4j7kEzuQ/E7HrdBloWzLqTIhdOPQbpJJw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WghYJCZP; arc=pass smtp.client-ip=74.125.82.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1775481767; c=relaxed/simple;
+	bh=wsMIHbwDrRsHqZUYutQHjshPoDDddPpJJq9VGFSY94c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=gIi2cI8MBT4ulg0FW8XRKOWcuSRosyZCLXnvmd3fmfIdiD6MSkd8kObTQxnSLr1U7l05Y1vXnncI+N09/pxhc7SqUnijXgPnWP7xV36zRLuQwxEI3F7raUbentl911uYCn8xFryVLevQhUYKVE/+OA4ni5cY0qgp/3i0Es67F+k=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=CoQnK1yl; arc=fail smtp.client-ip=52.101.56.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WghYJCZP"
-Received: by mail-dl1-f53.google.com with SMTP id a92af1059eb24-1271195d2a7so8168836c88.0
-        for <regressions@lists.linux.dev>; Mon, 06 Apr 2026 04:38:32 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1775475512; cv=none;
-        d=google.com; s=arc-20240605;
-        b=SjBTVQsmtfPOD+rIj/Zqz9PFBQMZVY/6hGYplyumtf1tGidWrh4iVau2dIvtWwiUUz
-         TRo5IufU0nlDrgq85SUzkxHFTULLPGDpBbkArrvASbyNRqbiFMmc3R4Z/lUaisR2tf1W
-         pbi1AWSCFN6zqunz7Qz3GS2MzUX6mtFgR5IAd3iuEklIuGV8s2LxZzttUEZBbVfJtbIC
-         T/arDouJNmp/7Ykev3wa2dHHVX0WrhLmy55GtAIjSiF0c+QvPSPy9qa3fQsqYSW3nVmO
-         NnMFYT+WJId1PmGQXGwSfeSl5Ab7hULITqWuEPbFOSvYhrrM16740W6hh6HHLEo76spC
-         Jjww==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=MTv8dwBsuDw9G43cN+a9fRgKYOA57T1yFLSQo5apy/w=;
-        fh=efbfjp6f1loCS2gVuwecQTRcRdMYbn03vVj8wpARKb4=;
-        b=SGBz9frBCe+Ce1NdHGbDlZr/5qHCEK78gRQyvdmzdbFLudkiMWvCcY7u3jB+6BYG8S
-         /j0OEDdH4PtMuiIDOa/+DxlrXZwXDppyvNt5qtz2vZ5aURhQZZ2aDq7cYRvAuZ4EvdD/
-         GHDD0nPeB2xKFEEergLzhFKDUQTs8hYHHUcPRvQuD3MrlhHEFX0IWPLYhcUEWRDLl4O5
-         y8joy4EpaoJMy/He0fbOqvem5Bh0OCquNpzRGgyJeDYG1n6ARI13g5Jyj1t9RDnLRxRN
-         3BJ3SneHw3Qbiq3dp03uDwya9s1Bk0LCHdaph7vT236bjpc5pML0CW5cP0VRzrwhibmC
-         X6YQ==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1775475512; x=1776080312; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MTv8dwBsuDw9G43cN+a9fRgKYOA57T1yFLSQo5apy/w=;
-        b=WghYJCZPwu7qJ6GCsC5D+iALBLe9/v6TTgUoWmZEp/yBcpbuQhX7shVJs9cuxzCmIw
-         7pPfe47BkvCz2nhS5sP+c5bfEoV9q7XlRkcbXwfKimhjdTUKUnR0JVkT01Z4JrUhc5tA
-         zdNxokYc2Dz7S3z2TtuRPOiWkg8lhB7NbiuqhzOuw+aSQcVz3ZnGz0rmckLecbrzTWp0
-         s+dwmblK6PNAEz3BkeJqHq0Yfhqas8YOtOaqG2+n7f+q5Is5twZPD54/Z1M9cIOZ7bgJ
-         Jh/JKPokxDlGCZPEqB8kCPU0TNjAeOldgliX9XoEOjWlQ0ArOPCJnyaCgcl5VEVH+MiY
-         JulA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775475512; x=1776080312;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=MTv8dwBsuDw9G43cN+a9fRgKYOA57T1yFLSQo5apy/w=;
-        b=HOca0aEKF9XlN+UsMdXuCb/digfW+eZxUk33qRbW+Ru70mfWn1PQdDBRpsmYKmhp53
-         uD87wyHfK3J1zBohfelswWGbbDZ/P1kqHT1WHEhNGL6NIcZfRZDayfV51Ll8osj+eJ0F
-         9k/wPkp/U4v7TPmAd3g1EoqvEwZi5uknGvM0N+L4T91C1pzfuae6cpJA/nT1xNF9VXck
-         0G/kN3ffduZf33PkObS3jKiO707tnED7kfuEZPkpnMiYNdCI2BT79PMJk0MAn7/FUyIx
-         Y5/HxbTx2CGipx9f1tTGcL3up1NNufe7FlOPEv4Anc5F/IC/UF6JUwRyP/0fsUg/VmLb
-         FXlg==
-X-Forwarded-Encrypted: i=1; AJvYcCXB5Rxf9dQYfl6FlqYjMFFZPajjY2V/cIdHCQxrdtrWxDyRMgspiWHNwrFXOroQHk3NJ0IYBGSkz/JiVg==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwX3p+x5D01jLCmM7Y3ILgmmOz6zAFAUJ1dmAbl81LAa14WWle/
-	2lbPlQeprRBBKwOhHU/05S812BeFQoiL0TyNXOBq0X87yAN/G0hGrBsshr7lAPWHn2uR3IfeXZN
-	wKYwrG/A2Wyhtuw3wMVSgRoX46NGIL+ocmcZlS7tA+tg4
-X-Gm-Gg: AeBDietsGljqYxFm5VWRwelHe9tufBlOd7vgX+0aersJ9BlbG9IwXzBwQumiYLTeYUl
-	HmsW8W0hPiMctrrL5LElrX5imvgCTu+hXfFh8fA33G0uiQbrSQEZBwj2P/luNuED0xKfzJyh5oY
-	6m5Fn9zj5DpmgqY1q+ffB7q0rZurc3puJTNCUvhPZm4ci8LZK54tZKomhiXseTN9WzQfW7yIIvw
-	qbyt90XK/JGMeaa1Xcqh8To+BU4OVrprnbMTlLDXojczwDTqCh1CIMbZaYpSJbph/5H3cE9IrNT
-	SkLv6NlV
-X-Received: by 2002:a05:7022:6199:b0:128:d107:da0f with SMTP id
- a92af1059eb24-12bfb6fb627mr5618745c88.10.1775475511991; Mon, 06 Apr 2026
- 04:38:31 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="CoQnK1yl"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=n4uDfBR8IItphUof5LViCTt0sTbPuitPEQNC2OlluFI1oF3sROZsAt9IBGEjsp4SYK0F+UrEHqFSLQseg1XnxkOSQxNITUkVdSwaZyu1npFqNovoOwcGoLAOg8lGS0/lEhf3Q0sO7xIQUMRCdzolx6WFpVPu7qqU+vNnK5EE+73IjM1O1EKYEbLn/v0HuMunWO4fEVUBlvJQVxXJLbC1V5Xnm9Om3yyYO/aa9A9FaV10AXO+QqQKUeZqBs/3dfnC6oxJ9ZL8ax2e9XDwqMzmXyyoYOqD3/uJka74ZYbefMNq87t2gXgCEuJXGBrwI343Aerb+xZLkImoB5Ng0d0ZfQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=M+3Qup2HicWnDtUPbxBC1DlaOx3WUwL+gd5I61KgsuY=;
+ b=xBV+S8ea15U9ASHyBfXsBZxab2FS93B48L8vvvNEr9mkTW2WzzWIpF7l9ybmBXILLqMg5BShzOwo8ALSfgQskGDMIzSI3+0tD0seupmG1WJh1rDw+tLv/wD2U9BIKVo5KjeXAhDT76dHfDOeYzDxAwjJyOTRpn3W0St2QYQEySj2sOYmkyqA3X1qUyxng5ecTGgzyld5VjupjY437CJqJGoBny3xdURk43cNGn3ywpnjh5wG4i8+lfZrzPdp9wLju0tWbwVNfe2Ks7iIYc5PFL4IjhG3WmnzU+LjmpmatJHCssRqGnC/qilyG9pM7jhCvxRXnHURRiKbPRwWuvRTdQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=M+3Qup2HicWnDtUPbxBC1DlaOx3WUwL+gd5I61KgsuY=;
+ b=CoQnK1yli/bZQ95xuv7mseHwl2NuehsyskeYx+CZWTTY+rnDPmYzyeOZqUpjylfVZjsI7O2b5n0ZMYEr39kGn9ttRbswqofX2tvlR6X0HXZA0ZA+KOcs8/w9iwoa/IWN8VLhOCyUR9q7YSPSNXhx6XgWIGruK4cv+ud+TUoQn40=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM4PR12MB6373.namprd12.prod.outlook.com (2603:10b6:8:a4::7) by
+ DS0PR12MB8270.namprd12.prod.outlook.com (2603:10b6:8:fe::18) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9769.20; Mon, 6 Apr 2026 13:22:43 +0000
+Received: from DM4PR12MB6373.namprd12.prod.outlook.com
+ ([fe80::7da:cc3:cf2e:8ebf]) by DM4PR12MB6373.namprd12.prod.outlook.com
+ ([fe80::7da:cc3:cf2e:8ebf%4]) with mapi id 15.20.9769.018; Mon, 6 Apr 2026
+ 13:22:43 +0000
+Date: Mon, 6 Apr 2026 09:22:34 -0400
+From: Yazen Ghannam <yazen.ghannam@amd.com>
+To: Nick Bowler <nbowler@draconx.ca>
+Cc: Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev, x86@kernel.org,
+	linux-edac@vger.kernel.org
+Subject: Re: PROBLEM: boot hang on ASUS P2B-F (regression)
+Message-ID: <20260406132234.GA327112@yaz-khff2.amd.com>
+References: <mfc7rijyfrtdxj4k6pxqcar7jtqnt6kz77ubrr6iyj52cguesz@qj5uf3to7ukq>
+ <20260321204321.GFab8C6aq2jIhIen_p@fat_crate.local>
+ <fdhaj5pddf6cp7obvgrpzzxmxn46za4acyvhkvjtjy3ukofmok@hocikxl5b42x>
+ <20260321215224.GGab8TGH0c-kmPGUAB@fat_crate.local>
+ <2fgbldvzh3fahs5vipak33alxbn552otazldu6ftamr6reii4t@6syhuc665vys>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2fgbldvzh3fahs5vipak33alxbn552otazldu6ftamr6reii4t@6syhuc665vys>
+X-ClientProxiedBy: CH0PR03CA0196.namprd03.prod.outlook.com
+ (2603:10b6:610:e4::21) To DM4PR12MB6373.namprd12.prod.outlook.com
+ (2603:10b6:8:a4::7)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAOKsz8yxa3Dj1TGiEwE+2Qkx=F520_pSeVSR6h265jkOxbJGUw@mail.gmail.com>
-In-Reply-To: <CAOKsz8yxa3Dj1TGiEwE+2Qkx=F520_pSeVSR6h265jkOxbJGUw@mail.gmail.com>
-From: chichina c <li17324910702@gmail.com>
-Date: Mon, 6 Apr 2026 19:38:21 +0800
-X-Gm-Features: AQROBzBURXUhSPg04MNKIAyCjYPyDCQNhMaVXd5bT34Mp0qbWqwVU1ZICL-F0CU
-Message-ID: <CAOKsz8zLUQ_AtDWJ9uPfEjj5f1w2P8vFvD9wwWOb9pqJehK7HQ@mail.gmail.com>
-Subject: Re: [BUG] virt: acrn: destroy_workqueue() called before eventfd wait
- queue removal in acrn_irqfd_deinit()
-To: fei1.li@intel.com
-Cc: stable@vger.kernel.org, regressions@lists.linux.dev, 
-	acrn-dev@lists.projectacrn.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR12MB6373:EE_|DS0PR12MB8270:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4b0e8111-d421-47e3-a9aa-08de93df958d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|376014|22082099003|18002099003|56012099003;
+X-Microsoft-Antispam-Message-Info:
+	PrzmZdw97iHfXYJbTcx7l2fqsm4wlZqvc19k2SUjsCgteq9z5sOXkui0vV7XChHqv62N2G5mJ452F+APlnXLxmvbuUsA4bW5keMe8kfB1vdRYePDX+P5/UGJLw/9zM/0X4oRn4VcJqOggCIq1IW7juO7ZOPWg9hUZ0kx4cjCCHgBlycBrhQwX5n4E20iZx7b3VDsm9ARMxgq5qopcv4ZA3j3Kacu4w1eEA+CbEB5GzSaYDlSBKkdFS58HJHXeggIsOpJtMh2xKc+0NA1pxeV6YiwNmO8Cyi30Ujy90Oo9vezpx7Ag/ztXU7gQQQe5OySGNIgTDXn0Xk/unFcMmbG5jsr/Vdh8d2Czo23JbsiEYcVJXWcrwv3CwMa9yZWxH5ZYisRgwg2e89+H5XsrxCLCOXzr/6JRhYLgQANi7JjeXhNbjfMv+6RtkEIvmrzMabuWYy6Rwer5gW/v+07oZgxgB/eCmX4+fvDA5LrSqL927POTEQ69QsRmdpUhDl5Msedg0i1qxVuiaUv+FUEZXg8QSvy+fYf92ptAdjvNYLICvaY2TmhUF52ROnpyIkMLgYak7u828jsj8XyD3WsTtK/XixSi2RLG6aj+ldNwdWUhpuCPJ+0DZX4pxAJT2diJXHJ/5odK0xPYJAzdhbdRYoMeq0RW1NG/CCPgoKy8wXqR3paD7YzoYNLxTOdDM4cJVvie0izrFzf7GhifW0OafeghHjaNcDmZiwT7qjlGFhDfVE=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB6373.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(22082099003)(18002099003)(56012099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?OsZLb78KDLUEpXzZPJIt4pE+mZGaUgesw7VpPQ/LXs4svEFa5hszJ5I6v4L0?=
+ =?us-ascii?Q?1PKLO3ZdaVjcyLUF+gv/lt562SkD2pdNTGS+UHwm7dKz4RvY4ITHmlCkGh0j?=
+ =?us-ascii?Q?j9D988VXUHT9nKKTtFvKutA89EmX+oRHJ2BmxUnyk7O/s5A0p12pHnSy4yNQ?=
+ =?us-ascii?Q?MVxtU+QS/18TKsv+RdHvhXdqebbiW9f1eVNRsqUcHmisMdZvPBd/gqt/e95z?=
+ =?us-ascii?Q?k7/CJJEjUZu5G0lSs/483W5VlbHOJJT0HMCurULT1jHp80sXrR1meQC0VDS6?=
+ =?us-ascii?Q?DQOKEjhS4dQlO3XyoVKXh8HfPV5U8FxyP5wgu7nchCMryLAwOHmJuH1+aO1C?=
+ =?us-ascii?Q?TOfAy3LX2PFH2b7RxOACOmo7iJTaj1ki1uVJVyui/YhweaB4JuLd9wqzpHQ2?=
+ =?us-ascii?Q?ahMwR0CRi2qjHu+RKymvDzDwSlgnPLMMlIHAdnP/1onfHRNJNVej8Yu9VKQ0?=
+ =?us-ascii?Q?lSYvsO7+850BBdNt2Rqcjyat9oPS1ev4/DOhbFUycfZBWc+ptL70p+QL83b1?=
+ =?us-ascii?Q?3CR6NZ2oPXO8F33iVWWE5eI2f/KI4bI970SQF4lv4QR0XExP6ifh9byU9vd4?=
+ =?us-ascii?Q?dibLIsdR7BCKd+lsyN0QBSf8l0Wv8sFHy2SGIpSoW5IvUPWq5/z9Obo+hcMz?=
+ =?us-ascii?Q?k1XEK5623LqrvXCjgECyfgvJRfg3eVsVNr2tM3uT1xtYPUg6bKCQdw6vnL6H?=
+ =?us-ascii?Q?vBUkfSFjy57Zz5fFhD3TLixbodXFKgACe6BRN6XJUJsdqCuu2O6n5teyxYcv?=
+ =?us-ascii?Q?DHncTWrf7hmrcGxa8kZD5RYHuDQ5sipf4XLlR/Ry+Hz+Qn2UbbaREFS7vbKw?=
+ =?us-ascii?Q?+CjBO53kBUcTd/tCpHm2KGpR6iebdbH3SmTOA7OISZf+WOy6+yuNE5cNr4Qg?=
+ =?us-ascii?Q?uE/PMfKBgcvUIP+yAikfksJueA+MyRA7Pibp1WWgnPjv418F0jL1Ab/i3hZ+?=
+ =?us-ascii?Q?oG0uOQ8T2DRZp4TCbdsP9po9qc7KFOCdwsDP071txGSeYsSQi5Q67+8WhGXR?=
+ =?us-ascii?Q?dRLJFfS+h+yQ/O4Sr9taah6ysEtRLIvwl/E+eQIG/OSDzqaRgorFUF/tgAOr?=
+ =?us-ascii?Q?sYMSvDRAioBOijBT0UuWLsnVDvK1JCQgIUm3/2uaK+uQY8KqUrKuBuRKtrmN?=
+ =?us-ascii?Q?WMaWbQsfWHPkJuJKHKpXH5lfeb1sQ2RoNxzfKE6dja0D7d+YP9YDqQJrisPc?=
+ =?us-ascii?Q?Q40r27J6SygEOazoU9LT1CVgouMEnNbPjZ/8oPbHJHjLOskOGGU6Z4YXIVVx?=
+ =?us-ascii?Q?g+lx8E5lIanDw7/CPY0gP2N73RhcTlklTUziXpBRRc3o72YwXlHEmXO+Qzqh?=
+ =?us-ascii?Q?sWtH75yeIoopqQ4LQO1qTOiThF9K2ZP6HbAu/0YZPgdRjySUbeeW5fHgZRTS?=
+ =?us-ascii?Q?M6Ois9ofacUi6onwViNh4Slqv/OAplJFmmrD4+0SsGUMtL7qTm3UaRR4A6aW?=
+ =?us-ascii?Q?L8P1jn04EmwssMN+cCPWsP41DGVQaJmB0zMxPs9UZyxV332TiyowcXpJkdwH?=
+ =?us-ascii?Q?Cm56YTqS/IOsq+6w7Kx9034X8mCk7VCR8B7jU6mOtBPjHWuliumEq4y5+Zj7?=
+ =?us-ascii?Q?od3GVHzhfXJeNy+pVYHieSJMFfFbGxtXzSpxhvunrAxRrp1iIn4hDSrFnRzq?=
+ =?us-ascii?Q?pvlV3ZHAfTlBGiGcG+O6fiXNxOLap/0ktWge1mhux0hlRVEa5vhkUCvhOljY?=
+ =?us-ascii?Q?zOIlW44UwBavAbWmRxRkfSfshl+qZ4J1MuKGZMAJYwaFYm1z?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4b0e8111-d421-47e3-a9aa-08de93df958d
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB6373.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Apr 2026 13:22:43.1947
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: I8//bHTyrQQwO74/SDLRB/u2mq9/q40soPmSpYaUTi9oo+tTX8FSl9eTRuoEn6FM53Bpi5/hGlPyhP5zj84V7g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB8270
 
-Adding this email address to the thread for
-reference=EF=BC=9Aacrn-dev@lists.projectacrn.org.
-=3D=3D=3D=3D=3D=3D
+On Sun, Mar 22, 2026 at 11:10:45AM -0400, Nick Bowler wrote:
+> On Sat, Mar 21, 2026 at 10:52:24PM +0100, Borislav Petkov wrote:
+> > Anyway, since you're partially reverting, can you pls try reverting the
+> > Intel-relevant hunks and narrow it down, if possible.
+> >
+> > From the looks of it, I'm thinking:
+> > 
+> > * comment out the intel_apply_cpu_quirks() call
+> > 
+> > * comment out this hunk
+> > 
+> >         /*
+> >          * There are also broken BIOSes on some Pentium M and
+> >          * earlier systems:
+> >          */
+> >         if (c->x86_vfm < INTEL_CORE_YONAH && mca_cfg.bootlog < 0)
+> >                 mca_cfg.bootlog = 0;
+> 
+> Making these changes does not appear to have any effect.
+> 
+> I whittled down the revert to the following patch, and this is
+> sufficient to get the machine booting again:
+> 
+> diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
+> index 8dd424ac5de8..83eb037d4d46 100644
+> --- a/arch/x86/kernel/cpu/mce/core.c
+> +++ b/arch/x86/kernel/cpu/mce/core.c
+> @@ -2284,6 +2284,12 @@ void mcheck_cpu_init(struct cpuinfo_x86 *c)
+>  
+>  	__mcheck_cpu_cap_init();
+>  
+> +	{
+> +	struct mce_bank *mce_banks = this_cpu_ptr(mce_banks_array);
+> +	if (c->x86_vfm < INTEL_NEHALEM_EP && this_cpu_read(mce_num_banks))
+> +		mce_banks[0].init = false;
+> +	}
+> +
 
+Hi Nick,
 
+Can you please test after enabling CONFIG_X86_MCE_INTEL?
 
-Hi,
+Without this, the Intel-specific code, including this quirk, will not be
+built.
 
-I found a teardown ordering bug in the ACRN irqfd cleanup path that can
-lead to a use-after-free (queue_work() on an already-destroyed workqueue)
-when an eventfd is closed concurrently with VM destruction.
-
-Bug description
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-In acrn_irqfd_deinit() (drivers/virt/acrn/irqfd.c:217-227), the cleanup
-order is:
-
-    1. destroy_workqueue(vm->irqfd_wq);          /* line 222 */
-    2. list_for_each ... hsm_irqfd_shutdown(irqfd); /* line 224-225 */
-
-hsm_irqfd_shutdown() calls eventfd_ctx_remove_wait_queue(), which removes
-the irqfd's wait entry from the eventfd's wait queue.  However,
-destroy_workqueue() is called BEFORE this removal, leaving the wait
-entries live across the window between lines 222 and 225.
-
-During that window, if an external process closes (or the kernel delivers
-POLLHUP to) an eventfd that still has an irqfd attached, the wakeup
-callback hsm_irqfd_wakeup() fires (irqfd.c:74-92) and calls:
-
-    queue_work(vm->irqfd_wq, &irqfd->shutdown);   /* line 89 */
-
-At this point vm->irqfd_wq has already been destroyed by
-destroy_workqueue().  destroy_workqueue() sets the internal
-__WQ_DESTROYING flag (kernel/workqueue.c), which causes __queue_work()
-to emit WARN_ONCE and return early rather than corrupt heap directly -
-but the ordering invariant is still violated and on kernels with
-panic_on_warn=3D1 this becomes a kernel panic (denial of service).
-
-Note that hsm_irqfd_wakeup() does not hold irqfds_lock and has no
-synchronization with acrn_irqfd_deinit(), so there is no existing
-mechanism to close this race window.
-
-Compare with KVM's irqfd implementation (virt/kvm/eventfd.c), which
-correctly performs eventfd_ctx_remove_wait_queue() on every irqfd
-*before* flushing/destroying any workqueue infrastructure.
-
-Affected code
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-File: drivers/virt/acrn/irqfd.c
-
-  void acrn_irqfd_deinit(struct acrn_vm *vm)
-  {
-          struct hsm_irqfd *irqfd, *next;
-
-          dev_dbg(acrn_dev.this_device, "VM %u irqfd deinit.\n", vm->vmid);
-          destroy_workqueue(vm->irqfd_wq);         /* BUG: too early */
-          mutex_lock(&vm->irqfds_lock);
-          list_for_each_entry_safe(irqfd, next, &vm->irqfds, list)
-                  hsm_irqfd_shutdown(irqfd);  /* removes wait queue entries=
- */
-          mutex_unlock(&vm->irqfds_lock);
-  }
-
-The invariant that must hold: all call sites that can invoke
-queue_work(vm->irqfd_wq, ...) must be silenced before destroy_workqueue()
-is called.  hsm_irqfd_wakeup() can only be silenced by removing the wait
-queue entry via eventfd_ctx_remove_wait_queue(), which only happens inside
-hsm_irqfd_shutdown().
-
-Proposed fix
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-Move the irqfd shutdown loop before destroy_workqueue():
-
---- a/drivers/virt/acrn/irqfd.c
-+++ b/drivers/virt/acrn/irqfd.c
-@@ -217,9 +217,15 @@ void acrn_irqfd_deinit(struct acrn_vm *vm)
- {
-        struct hsm_irqfd *irqfd, *next;
-
-        dev_dbg(acrn_dev.this_device, "VM %u irqfd deinit.\n", vm->vmid);
--       destroy_workqueue(vm->irqfd_wq);
--       mutex_lock(&vm->irqfds_lock);
-+
-+       /*
-+        * Shut down every irqfd first to remove all wait queue entries.
-+        * This ensures hsm_irqfd_wakeup() can no longer call queue_work()
-+        * on irqfd_wq before we destroy it.
-+        */
-+       mutex_lock(&vm->irqfds_lock);
-        list_for_each_entry_safe(irqfd, next, &vm->irqfds, list)
-                hsm_irqfd_shutdown(irqfd);
-        mutex_unlock(&vm->irqfds_lock);
-+
-+       destroy_workqueue(vm->irqfd_wq);
- }
-
-After this change destroy_workqueue() also implicitly flushes any
-hsm_irqfd_shutdown_work instances that were already queued before deinit
-started (e.g. from a racing POLLHUP that arrived before deinit), so the
-flush semantics are preserved.
-
-Additional note
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-The teardown ordering bug above is real, but simply moving
-destroy_workqueue(vm->irqfd_wq) after the deinit loop may still be
-insufficient.
-
-A racing POLLHUP may already have queued irqfd->shutdown before
-acrn_irqfd_deinit() acquires irqfds_lock. If deinit then calls
-hsm_irqfd_shutdown() directly and frees irqfd, a pending or in-flight
-hsm_irqfd_shutdown_work() can later dereference the freed irqfd, turning
-this into a different use-after-free.
-
-So the safe teardown sequence may need to be:
-
-    1. under irqfds_lock, detach each irqfd from vm->irqfds and remove
-       its eventfd wait queue entry;
-    2. keep detached irqfds alive temporarily;
-    3. flush/destroy irqfd_wq so any previously queued shutdown work
-       drains;
-    4. only then drop eventfd references and free the detached irqfds.
-
-This is closer to KVM's two-stage deactivate/cleanup model, where the
-irqfd is first made inactive and unhooked from eventfd, and is freed
-only after shutdown work has been flushed.
+Thanks,
+Yazen
