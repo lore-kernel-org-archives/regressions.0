@@ -1,181 +1,94 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.162])
+Received: from cmx-mtlrgo001.bell.net (mta-mtl-008.bell.net [209.71.208.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE74F1A6822
-	for <regressions@lists.linux.dev>; Sun,  5 Apr 2026 14:05:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.162
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04DAF30DECB
+	for <regressions@lists.linux.dev>; Mon,  6 Apr 2026 07:57:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.71.208.31
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775397961; cv=none; b=FM9VMWsjUL3rB4TXY4CfL658fAsOw6kdiWQHZLeBZ8Z77063aF/BUiHIY1/dwz6GxdqrL66cOigXelhsxIU9QMpsmQEugZFwr7cfZ2DpOvufWrQLVBOEG2fU/2WDKRyzKRJbeuGjtN+OjQ+3Yk+xR2JupT+N3ASoaHdCFdRU5ns=
+	t=1775462280; cv=none; b=V6NtmEzLGop4DtjJ6MzbSKSRZPBzvmaQ62vtaJC7iZ5JF8uIwtYpxUSPCYnN6M26T1smfnp0TpKa8yannXckXwUOJG59Q8Nfi23BH2BQ7+FZwzOG8xXr+xYP1Lqa7T2OpkpsphTtQZZ6L/M6OnFgU+EJQo57Xjqm0cFLoEZq9qo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775397961; c=relaxed/simple;
-	bh=jQet2Faqu/SfiaQVBlH92dqcmVEQXnUI0ztUimFNtU4=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=MRoGnFS1lU9meZ34SUo0eimiTYzkyyTk7D3WKVONnG6rjz9EoU7T3SpUbT7/RiFYcAmxOYyV5xFiA5h/wfpiR26Gz6zqOdiHeI8+qZ4w3926p3aT9Rmf5Hr5uG8jz4L+Taz1cVetMSmi/2ajCaap+JM1jalv7+lOayCWGYZpHDw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=Rt4tEmCh; arc=none smtp.client-ip=188.68.63.162
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1775462280; c=relaxed/simple;
+	bh=c0N7m5z8hZVNWJq5uAs4Kn5/y5ehEpZ/+gE27TP3eAA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=USex0JZz2lPN/dn8x6loRIIjZsh7BdVaBKfTU8xNjuvWhYUOIanxiusvuFWY01NJiJCGO1+tohk8r1LwKI/JLEHW4BEAC354C4nRXmCZqQUf2dF5mwMcovrCHg5AzyN/ZhzrCt9AkQKyZMmOEGvrk7Tq+8oqr+v0eP/JzZEjmwo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bell.net; spf=pass smtp.mailfrom=bell.net; dkim=pass (2048-bit key) header.d=bell.net header.i=@bell.net header.b=fEtg9w3E; arc=none smtp.client-ip=209.71.208.31
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bell.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bell.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="Rt4tEmCh"
-Received: from mors-relay-8201.netcup.net (localhost [127.0.0.1])
-	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4fpZ3t5N18z3y0c;
-	Sun,  5 Apr 2026 16:05:30 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1775397930;
-	bh=jQet2Faqu/SfiaQVBlH92dqcmVEQXnUI0ztUimFNtU4=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=Rt4tEmChuTXhDzaIUMowBAMGEQ3AOYYVxFJfcVruf0Pp+vjIgUFG05gl17+qj26/v
-	 aESucPxTPGr6/128AfxA1qjmiczIDlZYwA0ibnLKZX06U7UeSwyhOuqcgHoD4wxc0E
-	 mxZLh6Gjx1EJccHX3oScuu6gB5hv5lKNTasgE3kdhW8U0OLKvJ5Mz6J4ZMAkA0swij
-	 PhYazk4Q40uOMTgeJ8BwZBU2zbAbbvuyWbgtm7yu+rOfCD0JG7p388GgFoPdSLGleB
-	 TeKtEYYyjExZQTaVZSrDej9IjyKWaeWppog941k4qIGlh7PlDZeEynV8I5n/quDoI1
-	 1NraFAAJ6Fpww==
-Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4fpZ3t4bQGz3xxZ;
-	Sun,  5 Apr 2026 16:05:30 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
-X-Spam-Flag: NO
-X-Spam-Score: -2.898
-X-Spam-Level: 
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4fpZ3s3LZ7z8sZl;
-	Sun,  5 Apr 2026 16:05:29 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 633A1632E2;
-	Sun,  5 Apr 2026 16:05:28 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <aae00041-805f-4a05-a142-1bbf7027e8aa@leemhuis.info>
-Date: Sun, 5 Apr 2026 16:05:28 +0200
+	dkim=pass (2048-bit key) header.d=bell.net header.i=@bell.net header.b="fEtg9w3E"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bell.net; s=selector1; t=1775462279; 
+        bh=ee/ibGxRB7ZMYV1LgEYDA/tCFpV2VxAtOGiEdEyBcsk=;
+        h=Message-ID:Date:MIME-Version:Subject:To:References:From:In-Reply-To:Content-Type;
+        b=fEtg9w3EirxcQnPfwBcaro031f5i/KHs7BGNg2+G0d3nXBq+DjpY10iaUoQVW82abPAg59vEPkEApEyUeJ8btD+OCeAx0Qj4HXWd1HxTx1kaTaQBTsiZseVZsFSzR674qHHzqni8ibxjZvvG2y/j/RxWAkLfEPxAdiUciaWK8TqMzpDKSrCox3l94/q8gDjSq05ChXeiNOUddhsJ1arFpLMXIL6byMH2CMMBbVNzgxhgaxbNGxOLjnlhn9PnExgvC/115fw3MkWusvDhbh1QSReR+kIDwYgqZsBFTPmVCVjh1c4IDmQlkSUPcuUit8bVze/BwTxZhcfD4ENtMrdS+A==
+X-RG-SOPHOS: Clean
+X-RG-VADE-SC: 0
+X-RG-VADE: Clean
+X-RG-Env-Sender: matt.fagnani@bell.net
+X-RG-Rigid: 69BEEF93021C3F91
+X-RazorGate-Vade: dmFkZTEwdeOu4RFMK0bgxNPhFO6olhcTTPjSXyYQ4ESBdvLEPeNsUtn3i7fQCRLygdbADflYYybHj4BpueTVDOTen5ln1JzbdbKHPhTdhhNQSLcVDkQSvwmtB/nskwz+3ltD5Q4mkjsTsd44WDJx1Jhf04HOzT6Ahy/SdkZI0bV6rpHFmy+ylGlX1Z/lGDxd60P3IDn0oOGXtbd2LRu0Um5eAc4M6dlHsFDZidudjBt0ahqdC5utZ/5K7NDOTgENJ1od7VGPqDLexbGrCoMXBY2VQfhP6dD6OAOtl99YVPkXE+61JFCnh9u7Rt5zAqM7b4+ccpVjxoUeCXYCtD260Ovj9xE9Zh9xUyJqBzI9lUKyzNqutU5h61q5RpyLOHEkjL2DJt4oOPz12sZWcUuphO+RzrqtWpyGMw7Lb4+pvFsT79hg57kJipIFSkdxxGjGKbKdZkXEk8q4EGLdoIzqmUA4DgL9AvydlmkO0iucHSlsTgLYIKxCV7hVeIGSsb/0U2YNHu4JjpgTb/f00JtrAgZQOOf6HQKWegpwNVQUzr5pv612elDG4/EKQRPgDmND7CmfaAxsrsqMINDk5op5S34PrkGxlfG/dAgolhSXJ/fiLatEaTSgTm4fJI9m6Z4N3W97Iqo7D/V+hAZOn+ch4vKeNyvFE9N9CLbSw/SAvzo5EppQyw
+X-RazorGate-Vade-Verdict: clean 0
+X-RazorGate-Vade-Classification: clean
+Received: from [192.168.2.10] (70.48.33.60) by cmx-mtlrgo001.bell.net (authenticated as matt.fagnani@bell.net)
+        id 69BEEF93021C3F91; Mon, 6 Apr 2026 03:54:40 -0400
+Message-ID: <35ed8f9a-66c2-40c3-a545-da4af629014f@bell.net>
+Date: Mon, 6 Apr 2026 03:54:39 -0400
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Regression fix for audio issues with pre-DCN401 chips
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Alex Deucher <alexander.deucher@amd.com>, amd-gfx@lists.freedesktop.org,
- airlied@gmail.com, simona.vetter@ffwll.ch,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- dri-devel@lists.freedesktop.org, Alex Deucher <alexdeucher@gmail.com>
-References: <20260401184456.3576660-1-alexander.deucher@amd.com>
- <47c508c3-3424-4e8a-a63c-1f29d13b6ebe@leemhuis.info>
- <CADnq5_MiFOYLP9aUnYw4HFb-xWLZdq245ZB3e6iGn09ywOsY2w@mail.gmail.com>
- <CAHk-=wiNdTNNxzRuxXYq1Ebpiv6YF4UMZApoQGnktbMjKFYP+w@mail.gmail.com>
- <7030db14-ebd5-4652-9301-b9c8bec441a8@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <7030db14-ebd5-4652-9301-b9c8bec441a8@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: 
- <177539792876.2771324.15287198715894626686@mxe9fb.netcup.net>
-X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: 633A1632E2
-X-NC-CID: iqAdRmPqyAza5dTS3yUUWDo8cevY9eAU5YWUjEXlW4QLs3fVa4I=
+User-Agent: Thunderbird Daily
+Subject: Re: Warnings and errors in drm_mode_config_cleanup when booting
+ 6.19.10 and 7.0-rc5
+To: Greg KH <gregkh@linuxfoundation.org>,
+ Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: dri-devel@lists.freedesktop.org, stable@vger.kernel.org,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <a8f058b3-ea2c-4af1-a19b-9ae2db46754c@bell.net>
+ <9652ce0b-bb4c-489d-9e32-89c5af5c8101@leemhuis.info>
+ <2026040259-glacial-reversal-9a75@gregkh>
+Content-Language: en-US
+From: Matt Fagnani <matt.fagnani@bell.net>
+In-Reply-To: <2026040259-glacial-reversal-9a75@gregkh>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 4/5/26 16:02, Thorsten Leemhuis wrote:
-> On 4/2/26 21:01, Linus Torvalds wrote:
->> On Thu, 2 Apr 2026 at 11:27, Alex Deucher <alexdeucher@gmail.com> wrote:
->>> There are always new fixes.  Worse case it ends up in 7.0.1.  If it
->>> causes other regressions, then we end up introducing a new regression
->>> in rc7.
->> This was a regression in rc1, that was reported several weeks ago.
->> Anything that gets reported that early in the release cycle is bound
->> to hit lots of people, because the number of people testing early rc
->> kernels is relatively small.
+On 2026-04-02 08:12, Greg KH wrote:
+> On Sat, Mar 28, 2026 at 11:52:48AM +0100, Thorsten Leemhuis wrote:
+>> Matt, thx for the report.
 >>
->> So why pointlessly delay *known* regressions for fear of a potential new one?
+>> On 3/28/26 11:30, Matt Fagnani wrote:
+>>> I could try to bisect. The commit
+>>> e493c135980f90c20308d1a98f2e0d1223951e94 drm: Fix use-after-free on
+>>> framebuffers and property blobs when calling drm_dev_unplug was included
+>>> in 6.19.10 and changed drm_mode_config_cleanup https://git.kernel.org/
+>>> pub/scm/linux/kernel/git/stable/linux.git/commit/?
+>>> h=linux-6.19.y&id=e493c135980f90c20308d1a98f2e0d1223951e94
+>> Did a quick search. Turns out this is mainline commit 6bee098b914176
+>> ("drm: Fix use-after-free on framebuffers and property blobs when
+>> calling drm_dev_unplug") -- and when searching for that (FWIW, this is
+>> not widely known, but that is really helpful in case like this, as the
+>> mainline commit id is way more relevant) is turns out that is in the
+>> process of getting reverted:
 >>
->> And why point out rc7, when dammit, this could have been fixed long
->> before and *not* be that late in the release? [...]
-> 
-> Thx for jumping in there. While at it: I see situations like this all
-> the time (I'll reply to this mail with a few current examples), [...]
-FWIW, here are a few examples from the report I sent earlier this week
-(a fix for one regression mentioned there hit your tree yesterday; a fix
-for another is in a PR Greg sent today). All of the following had fixes
-on the list or even in -next a week ago for -rc6:
+>> See https://lore.kernel.org/all/20260326082217.39941-2-dev@lankhorst.se/
+>> or 45ebe43ea00d6b ("Revert "drm: Fix use-after-free on framebuffers and
+>> property blobs when calling drm_dev_unplug"") [next-20260327
+>> (pending-fixes)].
+>>
+>> Sasha and Greg: you might want to make sure to pick this up.
+> When it shows up in a Linus-released kernel, can someone remind us?
+>
+> thanks,
+>
+> greg k-h
 
-##################################################################
-Regressions introduced in -rc1 stage and known for two weeks or more
+7.0-rc7 https://lwn.net/Articles/1066405/ had the patch Revert "drm: Fix 
+use-after-free on framebuffers and property blobs when calling 
+drm_dev_unplug" 
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?h=v7.0-rc7&id=45ebe43ea00d6b9f5b3e0db9c35b8ca2a96b7e70 Thanks.
 
-------------------------------------------------------------------
- ARM: dts: imx: Colibri iMX6ULL and Colibri iMX7 no longer boot
-https://lore.kernel.org/lkml/20260219151157.2549198-1-max.oss.09@gmail.com/
-known for 6 weeks, caused by 8124b4a4a96b (v7.0-rc1)
+Matt
 
-  Fix is bccaf98c1077f2 ("Revert "ARM: dts: imx: move nand related
-property under nand@0"") [next-20260318 (pending-fixes)] aka https://
-lore.kernel.org/lkml/20260219151157.2549198-1-max.oss.09@gmail.com/
-
-------------------------------------------------------------------
-  PCI: problems with Nvidia P40 24GB or eGPU's
-https://bugzilla.kernel.org/show_bug.cgi?id=221205
-https://lore.kernel.org/all/a5f23340-2b84-4734-be11-f5a97c188195@app.fastmail.com/
-known for 22 days, caused by 3958bf16e2fe (v7.0-rc1 as well as v6.19.4,
-v6.18.14)
-
-  Fix is 9036bd0efcb616 ("PCI: Align head space better") [next-20260331,
-afaics targeted for 7.1], which is 09/10 of a series:
-https://lore.kernel.org/all/20260324165633.4583-10-ilpo.jarvinen@linux.intel.com/
-
-------------------------------------------------------------------
-  drm/msm/dpu: pink noise on the screen
-https://lore.kernel.org/lkml/DH1IKLU0YZYU.2SW4WYO7H3H4R@fairphone.com/
-known for 19 days, caused by 2892de3f4f98 (v7.0-rc1)
-
-  Fix is b9699dd862760e ("drm/msm/dpu: don't try using 2 LMs if only one
-DSC is available") [next-20260325] aka
-https://lore.kernel.org/lkml/20260317-fix-3d-dsc-
-v1-1-88b54f62f659@oss.qualcomm.com/
-
-------------------------------------------------------------------
-  ceph: writeback can lead to a panic
-https://lore.kernel.org/lkml/20260315232500.251088-1-CFSworks@gmail.com/
-known for 16 days, caused by cac190c7674f (v7.0-rc1)
-
-  Fix is 681a6d350eff10 ("ceph: fix num_ops off-by-one when crypto
-allocation fails") [next-20260320, might target 7.1] aka
-https://lore.kernel.org/all/20260318023733.116789-1-CFSworks@gmail.com/
-
-##################################################################
-
-Regressions introduced post-rc1
-
-------------------------------------------------------------------
-  HID: core: GPD Win5 handhelds stopped working
-https://bugzilla.kernel.org/show_bug.cgi?id=221271
-Known for 13 days, caused by 0a3fe972a7cb (v7.0-rc5)
-
-  Fix is  9e2a17d2e8088f ("HID: gpd: fix report descriptor on GPD Win
-handheld (2f24:0137)") [next-20260403] aka
-https://lore.kernel.org/all/20260324013847.68024-1-honjow311@gmail.com/
-
-
-##################################################################
-
-Bonus: I'm not on-top of regressions from earlier cycles (sorry!), but I
-know there are at least two that have fixes available for at least a
-week, too:
-
-------------------------------------------------------------------
-2c10400e4a2332 ("media: ipu-bridge: Add upside-down sensor DMI quirk for
-Dell XPS 13 9340 and XPS 14 9440") [next-20260311] aka
-https://lore.kernel.org/all/20260225203058.40545-2-johannes.goede@oss.qualcomm.com/
-
-It looks like this is heading towards 7.1:
-https://lore.kernel.org/all/abAgZWlNRTIDMFda@valkosipuli.retiisi.eu/
-
-------------------------------------------------------------------
-wifi: ath12k: prepare REO update element only for primary link --
-https://lore.kernel.org/all/20260210-ath12k-rxtid-double-free-v1-1-8b523fb2886d@oss.qualcomm.com/
--- sitting on the list since 2026-02-10
-
-------------------------------------------------------------------
 
