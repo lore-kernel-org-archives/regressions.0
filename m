@@ -1,101 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dl1-f41.google.com (mail-dl1-f41.google.com [74.125.82.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43B1D2C326D;
-	Tue,  7 Apr 2026 18:30:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0FE525A321
+	for <regressions@lists.linux.dev>; Tue,  7 Apr 2026 18:59:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775586606; cv=none; b=ENuSyA8nI+wejbrfWNIeluxQW1pScpE0i2AFloOJPEGuFuR3XmVYPhugqGUli1oEygU/YZ/tp2BxQmxh01fa58VbFiX4MNeWjYoDbygTDk5McTGbV/TO4Y6tjCRbVSwWV9U2yNcIlRmWZXYtyK0PkwepfxVCsXsY7niWPBi8OJs=
+	t=1775588347; cv=none; b=jORCDCdM0dUy5u+gmEKlwqrVZwJ/yIAxhLbPGxpWFIYD2g2X6feg9SRVj2P8SYd3yOyz+lymjhDMaqAT9mlAj42hLmE2mx42qy5Fdfvbp83jLPLvrxiHwygqluLLrUc97nSxsuAv2vf8xZhGxtCEQnlW4RR1xTlfX3oHsOBcrho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775586606; c=relaxed/simple;
-	bh=8FB2sFzjoutc4xyAnWoPEMZS+46e7vwR/FgftQEhT7g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mmi6s6SWc4aXuZlnuuFv6e1fK1iwI9eeFVGWij0qaJRQaWB64Ep7uWB6FGbJgGI6SWZBDO6gu+lrU9pBHhu1L4mYnuiNh28IMPSPaOtC5Im/XgA/O5XqLwbXNv2gZzd5smbbJYEOpldD034TnpPz6XtGUYP7ORv5yQAbpGjoCRY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A/wZeUp+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1775588347; c=relaxed/simple;
+	bh=ri3KVWEjWeqq7sVDPoXfzYBoBu5eYsbDcP2PX+rgTOE=;
+	h=Content-Type:MIME-Version:Subject:From:To:Cc:Date:Message-ID; b=Hunr61xF40z+eQrdmk7zrlu7K9sqHGJLDtkj0BfvvKZofwT2PUayUH/l8pdVHobGxFl1voVkQuPLsKw/94rHeiqWDWcwOtAfEmB24Y4RACYHvP+DA/6GgOTh0S1OnAsex7LyTVHZWGRFRYIp7g3sb6bv6Fo2UJk7TkrZfHsRsGk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org; spf=none smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci-org.20251104.gappssmtp.com header.i=@kernelci-org.20251104.gappssmtp.com header.b=wWjOHOd3; arc=none smtp.client-ip=74.125.82.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=kernelci.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A/wZeUp+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83A80C116C6;
-	Tue,  7 Apr 2026 18:30:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775586605;
-	bh=8FB2sFzjoutc4xyAnWoPEMZS+46e7vwR/FgftQEhT7g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=A/wZeUp+3h5lVIG4/qXG1ww2NN6skOjqhxR6NocSLBBTRm/MCGvCbn/n3IV/kVVwv
-	 YJTD0x5UYMEuNYi1zRvkh1r3KTZo/VuTNAw0dxz87T3hboM7smFiSrmu4nHBjP2KJb
-	 +C/bNnPAijSgk8wnDvSQeAecyhPuwpGPDFK3qj5ejR8G1FhNizq1yXNk6hM2fh0dDa
-	 DlasOzboFS1OdrjL2v7Tzi52eE0Fpag2iPfqO4Bbj7ZYQCCudPei24dY6PUSo2P7V6
-	 PlctgpYSUHl1LwwY0wCMuXP4rKHR0h9MWqCKU/ZtUcXOnEHcvnvL+TC0/IuvemlSf5
-	 /3Ygep+LJArbg==
-Date: Tue, 7 Apr 2026 19:30:01 +0100
-From: Mark Brown <broonie@kernel.org>
-To: kernelci-results@groups.io, bot@kernelci.org
-Cc: regressions@lists.linux.dev, gus@collabora.com,
-	linux-next@vger.kernel.org, Ben Copeland <ben.copeland@linaro.org>
-Subject: Re: [REGRESSION] next/master: (build) ./test_signals.h:15:10: fatal
- error: 'asm/hwcap.h' file not found ...
-Message-ID: <747dd81c-dffc-42cd-b7ca-f8fea2a99280@sirena.org.uk>
-References: <177558474358.2474.8332387727108206093@8692ffc4d55e>
+	dkim=pass (2048-bit key) header.d=kernelci-org.20251104.gappssmtp.com header.i=@kernelci-org.20251104.gappssmtp.com header.b="wWjOHOd3"
+Received: by mail-dl1-f41.google.com with SMTP id a92af1059eb24-12c20010f10so144293c88.0
+        for <regressions@lists.linux.dev>; Tue, 07 Apr 2026 11:59:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20251104.gappssmtp.com; s=20251104; t=1775588345; x=1776193145; darn=lists.linux.dev;
+        h=message-id:date:reply-to:cc:to:from:subject
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QL5cfqmnIwgU4uH/kEcSt49/BExY5TYAgpnnilZPUj0=;
+        b=wWjOHOd3OIlt6PBe8JsGIX8n7+o3ic63td8AVLd/kW6KN+ZdQHPECJLzpL9MFmuniu
+         N9Y6QVV8RtEqCjf+kkbNqvVn5iyyV73vOjLzgVlhcIbGoS8Mx5nPNLTQLEZYrovfcoG6
+         gOpjS6u/Tf0gHXwP3/tdXSYEP8B01A6URqPYQISYruUknjR+LNy7tHubYNizizRQ9S1n
+         K/xersGDxg1CkLZHU1MFLRvB4R0D3CwDJX2UIlDQo07XbqIM8Ch20jJyEZ25j0VGc/G4
+         rKPB+PYDDu9jAOlVgF/hS/FBe2qx2/mM/ANn2wcdR9QtFAkY9kCeZoPV9FMBpfmIHeKr
+         ojgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1775588345; x=1776193145;
+        h=message-id:date:reply-to:cc:to:from:subject
+         :content-transfer-encoding:mime-version:x-gm-gg:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=QL5cfqmnIwgU4uH/kEcSt49/BExY5TYAgpnnilZPUj0=;
+        b=R7Fa0P5Jcn/VGjGiqKEO99JOEffkcGxSq+loLsVfTrkWQLG47gnbjB52S1mQU2JpkP
+         ryqGUhGuhUsGAg2nRQGV2eabEFygvuqzlfs6QcQtip9UlgM35PWdKmknpB8xcVAQDpBq
+         dxsooocht0Y+79NsayHtFO8Eh7L9z2N6vDEt84sLkxMD/q4umm6cgfzEAh01YM+e/Znw
+         InBSVZQjxOnDNMDAfcl0ylIS4tSz2wXWnc1CxH5F26+2I+mlCSHpoFFALojWRclKqsZ+
+         /XVivrP9F6uEzBKZ7zln6KnOaf6B2NoFDXUMnHW3RUTOdLGAYdMPzGKMZL7qz+htx+KP
+         MYFA==
+X-Gm-Message-State: AOJu0YyScxmRHNUnCnZxO5zrnJhwfauUb918+uTCdOZbZaHfke2lcph6
+	zOqrPFervTVwF2rO973qdpZPd5R2wD1h/67fyJFE5VcL7xQubcPDn/jvcNur2Y1S6dQ=
+X-Gm-Gg: AeBDies0k79Se/cI23J63ndT6cmF/VsUOSi+V8T2up7h5dQO+UXxTVYOSb7c9BYXRV5
+	5OcT61amRHNXWr8g3I4bqdJQvGRltQ6Q4mZNnlhINC6wLT8CKSBfPqAwQSVZjm9MK/6DA8N0Ze1
+	H0NuhTFDWmo0KWNoUZyhEJiwpSgJZ5X9HG5pZY8aKCPWFUMJd+8//Wx5KNdwtneEu7GgpOK95EN
+	nBCBjD23aHzNOqgLzNOIHLzlqHL0YfLR5NgmzwxiG0E1T18nP+rMx2ylx2SPE6b1XKW5UFOFET6
+	lHT010TLQw8Z7zsxxDZCDaURtW396fZuqORrzxgQweKkVup1g00lsKSee9TXCFHvtTHqIkm0kjt
+	15rExLoZrSVh9aWpLChpBea7soYHEK2ClIIkjWEqJtGczniQ5LcDH7UiZfTW5gneUetSIy4o9cZ
+	/HWTipdN3/g32jM5Fb
+X-Received: by 2002:a05:7022:260b:b0:12b:f9b0:21f4 with SMTP id a92af1059eb24-12bfb779426mr10364415c88.36.1775588344874;
+        Tue, 07 Apr 2026 11:59:04 -0700 (PDT)
+Received: from 8692ffc4d55e ([20.38.40.137])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-12bede54ba8sm20739587c88.10.2026.04.07.11.59.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Apr 2026 11:59:04 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="WjDc6eO9CpZXbxci"
-Content-Disposition: inline
-In-Reply-To: <177558474358.2474.8332387727108206093@8692ffc4d55e>
-X-Cookie: Now, let's SEND OUT for QUICHE!!
+Content-Transfer-Encoding: 7bit
+Subject: [REGRESSION] next/master: (build) in testcases/gcs_exception_fault
+ (Makefile:31) [logspec:kbuild,kbu...
+From: KernelCI bot <bot@kernelci.org>
+To: kernelci-results@groups.io
+Cc: regressions@lists.linux.dev, gus@collabora.com, linux-next@vger.kernel.org
+Reply-To: kernelci@lists.linux.dev
+Date: Tue, 07 Apr 2026 18:59:03 -0000
+Message-ID: <177558834361.2493.10021359695033804908@8692ffc4d55e>
 
 
---WjDc6eO9CpZXbxci
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 07, 2026 at 05:59:04PM -0000, KernelCI bot wrote:
 
-> New build issue found on next/master:
->=20
-> ---
->  ./test_signals.h:15:10: fatal error: 'asm/hwcap.h' file not found in tes=
-tcases/fake_sigreturn_bad_size (testcases/fake_sigreturn_bad_size.c) [logsp=
-ec:kbuild,kbuild.compiler.error]
-> ---
 
-This appears to be something off with the tuxmake build, it's building
-kselftest with:
+Hello,
 
-  make --silent --keep-going --jobs=3D8 O=3D/tmp/kci/artifacts/build INSTAL=
-L_PATH=3D/tmp/kci/artifacts/build/kselftest_install LLVM=3D1 ARCH=3Darm64 C=
-ROSS_COMPILE=3Daarch64-linux-gnu- HOSTCC=3Dclang CC=3Dclang -C tools/testin=
-g/selftests install
+New build issue found on next/master:
 
-which ends up with clang trying to use x86 headers rather than arm64
-ones for the system libraries, plus trying to build x86 headers, since
-it seems to be trying to do an x86 build: =20
+---
+ in testcases/gcs_exception_fault (Makefile:31) [logspec:kbuild,kbuild.other]
+---
 
-  /usr/bin/ld: cannot find /usr/lib/llvm-21/lib/clang/21/lib/x86_64-pc-linu=
-x-gnu/libclang_rt.asan_static.a: No such file or directory
+- dashboard: https://d.kernelci.org/i/maestro:50d72b703d41b945e32985c537b9838bb2aec986
+- giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+- commit HEAD:  f3e6330d7fe42b204af05a2dbc68b379e0ad179e
+- tags: next-20260407
 
-I would not expect HOSTCC or CC to be set for clang builds, I'd expect
-if the binary is configured it'd be done with LLVM=3D/path/to/llvm, or if
-we are doing the above we should be including the relevant arch
-parameters to clang in the commands.
+Please include the KernelCI tag when submitting a fix:
 
---WjDc6eO9CpZXbxci
-Content-Type: application/pgp-signature; name="signature.asc"
+Reported-by: kernelci.org bot <bot@kernelci.org>
 
------BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmnVTSkACgkQJNaLcl1U
-h9DMQwf9GtknNcakZ7b2vSc7D225RnTdseDYJ/Hdd861lvZRbysbGf8y1qFSvXws
-sm8cLgUlIED/+THQLeIGpsUYxLaSjrFfuPK/Ih6je7JanoItl3QnsS8yEHbJo1ZE
-e/8HRGdFALbpOF8e3Y3orA+M+xg4t1VXVtNsyi2lSTG4vwKZd/Ng8SZ3SxZ2m+gV
-FO+Rvu2QiiuUqU5MwxF3wQ8sHAPkp05spcv9QAqr+o249/N0pnE/31gnF0VADQQG
-nCVm/+9eCzPfPbAyLQ8VzwD0xwV3tNE58yonkD171S4C/aKTisKmfEeSVwjcCJ01
-hzmg6IWKUk8lbRhgXnhfgcG/FQMtfQ==
-=cQYj
------END PGP SIGNATURE-----
+Log excerpt:
+=====================================================
 
---WjDc6eO9CpZXbxci--
+=====================================================
+
+
+# Builds where the incident occurred:
+
+## defconfig+arm64-chromebook+CONFIG_ARM64_16K_PAGES=y on (arm64):
+- compiler: gcc-14
+- config: None
+- dashboard: https://d.kernelci.org/build/maestro:69d51d57dcae953c056f963b
+
+
+#kernelci issue maestro:50d72b703d41b945e32985c537b9838bb2aec986
+
+--
+This is an experimental report format. Please send feedback in!
+Talk to us at kernelci@lists.linux.dev
+
+Made with love by the KernelCI team - https://kernelci.org
