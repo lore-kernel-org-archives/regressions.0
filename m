@@ -1,119 +1,104 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.61.107])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FB761EA7F4
-	for <regressions@lists.linux.dev>; Tue,  7 Apr 2026 07:34:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.61.107
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F10C395D90
+	for <regressions@lists.linux.dev>; Tue,  7 Apr 2026 07:37:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775547268; cv=none; b=tAOwDPnQZBcExBcNG3rS95OdOldXcVU0O1cm8pHff45BZaiRDHdjG25YScvUcJsVkMq+5B8V9tTMVuWLWubUtP+RyOwy5PJwRIKTKPXZZMASQ3SiI75WyWlOEe1XieTN77I2ZM5Pbmeh+q7WnGkyU65AswcSk6C1KYdkVbiHfEY=
+	t=1775547470; cv=none; b=Mmpn5UG3KlIO3b7CHpRuwNKEjGIeN04Pwxc6LofxTzMWmWB+QLAHYNVg+LUK9F4bACQGKGbvlxphbd+JMUoL5u806qDYmBrP4qkCACTscokI8c1uCoGxslzD6Weca2aXql29tx8jvVAviIusdCvWnb2RnpjidiesgkSaNlH6pfY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775547268; c=relaxed/simple;
-	bh=Cf3AjLkqLPRYPx0QPok1QyrWU3u503Asy8kNdFV94sA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Y/WQPJl8qep6JXTCTyPSzJgx8pYF7tA4shDO79SPNciH+kzaFbLMpI6V/3hgprEIr2AYLco2yQvaiJUmzGMDOQW0cSPq0EQlGHDgdjXRjGDHtQ57KixdVLtt8CqBb23RFnqAaSCKSJIWTOiNqrGlhAZjdOI9DdRM6t+041pvde4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=YC4G+wba; arc=none smtp.client-ip=188.68.61.107
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1775547470; c=relaxed/simple;
+	bh=3+NC6CHo0X3VCquVypVEb5EG0yaES8GRmsBCzrVMpAg=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=f0Maxi8qC57W7lBTaiKcJZwpsa2BCsYtBoyIZhmk8hhVz0qF/vbt+qHfCC3heAVSAFceuY9ksLhPDKqU8fSIsMYykUX+/Kj3rmaGx7SODvjHI+HCCWbfse/ukP0IZTgS14yWJ6iu7XxxM7zHvAK/kQ1IS8ctQO4PX/b66iyU4xs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MJijVzZy; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="YC4G+wba"
-Received: from mors-relay-8405.netcup.net (localhost [127.0.0.1])
-	by mors-relay-8405.netcup.net (Postfix) with ESMTPS id 4fqd5j3YKwz71x3;
-	Tue,  7 Apr 2026 09:25:45 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1775546745;
-	bh=Cf3AjLkqLPRYPx0QPok1QyrWU3u503Asy8kNdFV94sA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=YC4G+wba0Ra5MFhDF12uJLnh/Seq8/EwFwuYL5bRIJ1kSkPY3I9O11d3JScJRZq84
-	 nyjx78Z64HW4K1e2egOywb7A1p3wTc1roeIZ7SxvKURidEnFC47qdb5OWYfj+YlR6V
-	 /KgSwBIuVVhGCuul/Stos6magnbrfSuH1jdwe1fa6699q2O7LwscBO13d9pHGpuskV
-	 0bpGvfWHA2NDSMOn7DtOJure/dlCmSfXnxM2kV8tvkA2H4iXLAMBhB+oCFXqAqDeTp
-	 PgxWRBGtUWyzSeaf5MbCTZdGBHM++RGyYxoTOUaTLX9vVsES3vaSQuCVx8AbiZ6uTI
-	 ifutNmwims/HA==
-Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-8405.netcup.net (Postfix) with ESMTPS id 4fqd5j2r4Hz71dG;
-	Tue,  7 Apr 2026 09:25:45 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
-X-Spam-Flag: NO
-X-Spam-Score: -2.898
-X-Spam-Level: 
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4fqd5g4kM0z8tcG;
-	Tue,  7 Apr 2026 09:25:43 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 83ACD632A8;
-	Tue,  7 Apr 2026 09:25:42 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <db0b57fb-3379-4657-8a03-b0c632f2b491@leemhuis.info>
-Date: Tue, 7 Apr 2026 09:25:40 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MJijVzZy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1775547470; x=1807083470;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=3+NC6CHo0X3VCquVypVEb5EG0yaES8GRmsBCzrVMpAg=;
+  b=MJijVzZyAyns4oZghUvOtru4IdcK6ZcC21ssTjH5kD/TWiuLdhXC4Luh
+   Ef5fmeWbJzxGLv2Yuz3XQtptIIpjimU8ACqr66dhvagTV90pFcfVGj0cy
+   6JxXt6QvL+wT8w94uUq0RVNnZcmL7w64ABs7cbGoIKZz0i4OKE4T2y36p
+   xUMfKwG3l9LpR6HNljyvrEgmXX7ixaGX8FY6Nh1X0RsuU6c0h7QzP86gb
+   KtbRfC1IeDvweW/KKDPhAU6SJAqFgEWzDl2i7qxqOX8YRGLsCVU5SHyMT
+   lTe2lcpzgVwztu5DiJd/4N6sisAs5cVufRIka/4IWguF3nG6mSTCNtgE8
+   w==;
+X-CSE-ConnectionGUID: sBsFVNQpQZanGalVH48Xyg==
+X-CSE-MsgGUID: 2bALbjkARiaNRxG8PO8e+Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11751"; a="94084673"
+X-IronPort-AV: E=Sophos;i="6.23,165,1770624000"; 
+   d="scan'208";a="94084673"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2026 00:37:49 -0700
+X-CSE-ConnectionGUID: 5MXTMH3lRPGQxOzLvdyH3w==
+X-CSE-MsgGUID: q0DUHcL8RoWvrEiN06coiw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,165,1770624000"; 
+   d="scan'208";a="228004275"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.110])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2026 00:37:46 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 7 Apr 2026 10:37:43 +0300 (EEST)
+To: =?ISO-8859-15?Q?Jonas_H=F6glund?= <firefly@firefly.nu>
+cc: Thorsten Leemhuis <regressions@leemhuis.info>, 
+    Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
+    regressions@lists.linux.dev
+Subject: Re: [REGRESSION] amdgpu with Thunderbolt eGPU bracket fails since
+ new bridge window alignment calculation code
+In-Reply-To: <d50a8eb1-3a16-47c7-bfea-0a3def606c6f@app.fastmail.com>
+Message-ID: <db715a3b-80c7-31ed-bf31-fb55ad7c538c@linux.intel.com>
+References: <a5f23340-2b84-4734-be11-f5a97c188195@app.fastmail.com> <ec9af6c3-755b-488a-8400-cef9eeeac509@leemhuis.info> <740b10c4-a54a-f776-d564-d3c977d90ba6@linux.intel.com> <52614de3-9658-4390-8e0e-689963f364a4@app.fastmail.com>
+ <4a7704af-4c30-3050-e8a6-cb1fa3fd7ec9@linux.intel.com> <ac71d5ee-5895-417e-a7af-51cdecec8b67@app.fastmail.com> <d50a8eb1-3a16-47c7-bfea-0a3def606c6f@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: AW: Lowspeed USB device enumerationg under 5.4.288, but not under
- 6.8.1
-To: "Fischer, Simon" <simon.fischer@ipp.mpg.de>,
- Greg KH <gregkh@linuxfoundation.org>
-Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <8a29db20f78046578e8dc2c516607240@ipp.mpg.de>
- <2026040255-zone-chamomile-964f@gregkh>
- <dbb6846930a044558a52201d5d53a851@ipp.mpg.de>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <dbb6846930a044558a52201d5d53a851@ipp.mpg.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-PPP-Message-ID: 
- <177554674278.3281734.14359598507182801858@mxe9fb.netcup.net>
-X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: 83ACD632A8
-X-NC-CID: uM7oTh3DMna+L4A7VrFKbgqayUSrssuxspMRkTS6TcWlmED1NLY=
+Content-Type: multipart/mixed; boundary="8323328-34575375-1775547463=:983"
 
-On 4/7/26 08:33, Fischer, Simon wrote:
-> 
-> the same behaviour is still present with kernel 6.19.11
-> Anything else I can try/provide?
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Normally a "git bisection"[1] would be asked for to find the change that
-broke things. But given that a 5.4.y versions was the last working
-version it might not help much. But if nobody comes up with a better
-idea it might be worth a shot.
+--8323328-34575375-1775547463=:983
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-The 5.4.y kernel you used was also not vanilla, as you mentioned
-PREEMPT_RT, which was not upstream back them. Might also be worth ruling
-out that it was an influence by trying a 5.4.0 vanilla kernel before
-starting a bisection.
+On Thu, 2 Apr 2026, Jonas H=C3=B6glund wrote:
 
-[1]
-https://docs.kernel.org/admin-guide/verify-bugs-and-bisect-regressions.html
+> On Thu, 2 Apr 2026, at 16:51, Jonas H=C3=B6glund wrote:
+> > Here are dmesg logs (with the appropriate dyndbg cmdline flag) for both
+> > cases, in case it's useful:
+> >
+> > https://up.firefly.nu/pub/amdgpu-egpu-crash-7.0.0-rc6.dmesg.txt
+> > https://up.firefly.nu/pub/amdgpu-egpu-good-pci-resource.dmesg.txt
+>=20
+> Actually, now that I look closer at the good-case dmesg (just after
+> sending the email, typical), I guess I'm not sure how happy the driver
+> and dock really are.  Well, I'll let you weigh in since you're more
+> intimately familiar with the subsystem and expected debug messages.
 
-Ciao, Thorsten
+Hi,
 
-> -----Ursprüngliche Nachricht-----
-> Von: Greg KH <gregkh@linuxfoundation.org> 
-> Gesendet: Donnerstag, 2. April 2026 18:10
-> An: Fischer, Simon <simon.fischer@ipp.mpg.de>
-> Cc: regressions@lists.linux.dev
-> Betreff: Re: Lowspeed USB device enumerationg under 5.4.288, but not under 6.8.1
-> 
-> On Thu, Apr 02, 2026 at 03:34:35PM +0000, Fischer, Simon wrote:
->> Dear list,
->>
->> I've tried to dig deeper into the issues, tried different quirks and small patches, but was unable to solve this or find the root cause. As this seems to be a regression of 6.8 from 5.4, I hope this is the correct list?
-> 
-> 6.8.1 is not supported by anyone but canonical, so there's not much we can do here, sorry as that is a very old and obsolete kernel missing tens of thousands of changes.
-> 
-> Can you try running the latest 6.19 release instead?
-> 
-> thanks,
-> 
-> greg k-h
-> 
+Even the "good" case does fail to enlarge the eGPU resource because some=20
+of the upstream bridge window are pinned by other resources.
 
+It is a problem that has come up multiple times over the past few years=20
+but it's also a problem that is not very easy to solve (but I'm working on=
+=20
+it). The sizing needs to be corrected earlier than that point (before the=
+=20
+other resources pin those bridge windows), at the time we discover that=20
+BAR resize fails, it's already way too late to correct things.
+
+
+--=20
+ i.
+
+--8323328-34575375-1775547463=:983--
