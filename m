@@ -1,106 +1,119 @@
-Received: from mx-2023-1.gwdg.de (mx-2023-1.gwdg.de [134.76.10.21])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.61.107])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1575393DDF
-	for <regressions@lists.linux.dev>; Tue,  7 Apr 2026 07:28:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.76.10.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FB761EA7F4
+	for <regressions@lists.linux.dev>; Tue,  7 Apr 2026 07:34:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.61.107
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775546938; cv=none; b=EMKuldyuRYsH+kpNDHkEL1owIJwerCxp73s5TYIXF+GE2rIASXOnsXJiA89jRJhZnm+WdyesrVTrCuLdaxnMiR5mLorXxsttDHxhwgQn/emvvNtLSBd6pO8Mpqd7eCtQJcLINoYJtyYyzlI1RZrad4msG/16wwDdRmOl8Cf5nHU=
+	t=1775547268; cv=none; b=tAOwDPnQZBcExBcNG3rS95OdOldXcVU0O1cm8pHff45BZaiRDHdjG25YScvUcJsVkMq+5B8V9tTMVuWLWubUtP+RyOwy5PJwRIKTKPXZZMASQ3SiI75WyWlOEe1XieTN77I2ZM5Pbmeh+q7WnGkyU65AswcSk6C1KYdkVbiHfEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775546938; c=relaxed/simple;
-	bh=TlSXuAmgpqXb3WrRqkSjPz6ba3WbLdVEW77hhJp7q5g=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=c6uwXgkPZQUPtqGTKaE9cWNco85CLBiy/fUHbcW4+yGC0vyvwbMoRCklBlPdm/ZclRcjNGKnSaW6p6ortdKw/45wkTy1yitnnkP+2OPKYY17nuzkHmHITUmzUwAs3XZuAyNhMEhHv/qOwfAT+lHqxdZQSNWmVFZvWZ4865xQdY4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ipp.mpg.de; spf=pass smtp.mailfrom=ipp.mpg.de; dkim=pass (2048-bit key) header.d=ipp.mpg.de header.i=@ipp.mpg.de header.b=dcHuTZOG; arc=none smtp.client-ip=134.76.10.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ipp.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ipp.mpg.de
+	s=arc-20240116; t=1775547268; c=relaxed/simple;
+	bh=Cf3AjLkqLPRYPx0QPok1QyrWU3u503Asy8kNdFV94sA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Y/WQPJl8qep6JXTCTyPSzJgx8pYF7tA4shDO79SPNciH+kzaFbLMpI6V/3hgprEIr2AYLco2yQvaiJUmzGMDOQW0cSPq0EQlGHDgdjXRjGDHtQ57KixdVLtt8CqBb23RFnqAaSCKSJIWTOiNqrGlhAZjdOI9DdRM6t+041pvde4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=YC4G+wba; arc=none smtp.client-ip=188.68.61.107
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ipp.mpg.de header.i=@ipp.mpg.de header.b="dcHuTZOG"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=ipp.mpg.de;
-	s=2023-rsa; h=MIME-Version:Content-Transfer-Encoding:Content-Type:In-Reply-To
-	:References:Message-ID:Date:Subject:CC:To:From:Sender:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=TlSXuAmgpqXb3WrRqkSjPz6ba3WbLdVEW77hhJp7q5g=; b=dcHuTZOGGhkiEWIgRGcpy2iPAc
-	FaDmYTfVIUaV8uJSXk7K7bOGoOlqt4LAQRBSpZ51/rka8T3xsxCXoJWqNAi0E1ET51Soh/6Lno4u6
-	6JB9syvHppGRXfJtSnUUQKISJ9cmFH9A6Voto+ysqh/wcfNeaYAdnDB9CoYsKNCz2EjyZGPEL1myd
-	mc5zV9OPBNcB/tZ0KqtH4jm/2i7IXgkvWTFLk5n0ddylrdTDrE2PQ2Tbq2SKn7yBjiAl4+2wrEDi4
-	R54w6TJIcN67vK6qPsWHbYwOFA8lnYTasGxFiXoNqB12uXawSHWmVDcCCWwwUCGrc9PIaMUnFDrcU
-	GIN/Rb2w==;
-Received: from mailer.gwdg.de ([134.76.10.26]:35846)
-	by mailer.gwdg.de with esmtp (GWDG Mailer)
-	(envelope-from <simon.fischer@ipp.mpg.de>)
-	id 1wA0rl-0046Tr-0C;
-	Tue, 07 Apr 2026 09:28:53 +0200
-Received: from mbx19-gwd-05.um.gwdg.de ([10.108.142.58] helo=email.gwdg.de)
-	by mailer.gwdg.de with esmtps (TLS1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-	(GWDG Mailer)
-	(envelope-from <simon.fischer@ipp.mpg.de>)
-	id 1wA0rl-000Ai1-2h;
-	Tue, 07 Apr 2026 09:28:53 +0200
-Received: from MBX19-SUB-03.um.gwdg.de (10.108.142.68) by
- MBX19-GWD-05.um.gwdg.de (10.108.142.58) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.2562.37; Tue, 7 Apr 2026 09:28:48 +0200
-Received: from MBX19-SUB-03.um.gwdg.de ([10.108.142.68]) by
- MBX19-SUB-03.um.gwdg.de ([10.108.142.68]) with mapi id 15.02.2562.037; Tue, 7
- Apr 2026 09:28:48 +0200
-From: "Fischer, Simon" <simon.fischer@ipp.mpg.de>
-To: Greg KH <gregkh@linuxfoundation.org>
-CC: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: AW: Lowspeed USB device enumerationg under 5.4.288, but not under
- 6.8.1
-Thread-Topic: Lowspeed USB device enumerationg under 5.4.288, but not under
- 6.8.1
-Thread-Index: AdzCs+1oMfzeuAm2S72W6S8kW/Ma3P//7O4A//iWntA=
-Date: Tue, 7 Apr 2026 07:28:48 +0000
-Message-ID: <d1408c3a36944b97a278b0b6f905dd11@ipp.mpg.de>
-References: <8a29db20f78046578e8dc2c516607240@ipp.mpg.de>
- <2026040255-zone-chamomile-964f@gregkh>
-In-Reply-To: <2026040255-zone-chamomile-964f@gregkh>
-Accept-Language: de-DE, en-US
-Content-Language: de-DE
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="YC4G+wba"
+Received: from mors-relay-8405.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8405.netcup.net (Postfix) with ESMTPS id 4fqd5j3YKwz71x3;
+	Tue,  7 Apr 2026 09:25:45 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1775546745;
+	bh=Cf3AjLkqLPRYPx0QPok1QyrWU3u503Asy8kNdFV94sA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=YC4G+wba0Ra5MFhDF12uJLnh/Seq8/EwFwuYL5bRIJ1kSkPY3I9O11d3JScJRZq84
+	 nyjx78Z64HW4K1e2egOywb7A1p3wTc1roeIZ7SxvKURidEnFC47qdb5OWYfj+YlR6V
+	 /KgSwBIuVVhGCuul/Stos6magnbrfSuH1jdwe1fa6699q2O7LwscBO13d9pHGpuskV
+	 0bpGvfWHA2NDSMOn7DtOJure/dlCmSfXnxM2kV8tvkA2H4iXLAMBhB+oCFXqAqDeTp
+	 PgxWRBGtUWyzSeaf5MbCTZdGBHM++RGyYxoTOUaTLX9vVsES3vaSQuCVx8AbiZ6uTI
+	 ifutNmwims/HA==
+Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8405.netcup.net (Postfix) with ESMTPS id 4fqd5j2r4Hz71dG;
+	Tue,  7 Apr 2026 09:25:45 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
+X-Spam-Flag: NO
+X-Spam-Score: -2.898
+X-Spam-Level: 
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4fqd5g4kM0z8tcG;
+	Tue,  7 Apr 2026 09:25:43 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 83ACD632A8;
+	Tue,  7 Apr 2026 09:25:42 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <db0b57fb-3379-4657-8a03-b0c632f2b491@leemhuis.info>
+Date: Tue, 7 Apr 2026 09:25:40 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Virus-Scanned: (clean) by clamav
-X-Spam-Level: -
+User-Agent: Mozilla Thunderbird
+Subject: Re: AW: Lowspeed USB device enumerationg under 5.4.288, but not under
+ 6.8.1
+To: "Fischer, Simon" <simon.fischer@ipp.mpg.de>,
+ Greg KH <gregkh@linuxfoundation.org>
+Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <8a29db20f78046578e8dc2c516607240@ipp.mpg.de>
+ <2026040255-zone-chamomile-964f@gregkh>
+ <dbb6846930a044558a52201d5d53a851@ipp.mpg.de>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <dbb6846930a044558a52201d5d53a851@ipp.mpg.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-PPP-Message-ID: 
+ <177554674278.3281734.14359598507182801858@mxe9fb.netcup.net>
+X-Rspamd-Server: rspamd-worker-8404
+X-Rspamd-Queue-Id: 83ACD632A8
+X-NC-CID: uM7oTh3DMna+L4A7VrFKbgqayUSrssuxspMRkTS6TcWlmED1NLY=
 
-On 4/2/26 18:10, Greg KH wrote:
+On 4/7/26 08:33, Fischer, Simon wrote:
+> 
+> the same behaviour is still present with kernel 6.19.11
+> Anything else I can try/provide?
+
+Normally a "git bisection"[1] would be asked for to find the change that
+broke things. But given that a 5.4.y versions was the last working
+version it might not help much. But if nobody comes up with a better
+idea it might be worth a shot.
+
+The 5.4.y kernel you used was also not vanilla, as you mentioned
+PREEMPT_RT, which was not upstream back them. Might also be worth ruling
+out that it was an influence by trying a 5.4.0 vanilla kernel before
+starting a bisection.
+
+[1]
+https://docs.kernel.org/admin-guide/verify-bugs-and-bisect-regressions.html
+
+Ciao, Thorsten
+
+> -----Ursprüngliche Nachricht-----
+> Von: Greg KH <gregkh@linuxfoundation.org> 
+> Gesendet: Donnerstag, 2. April 2026 18:10
+> An: Fischer, Simon <simon.fischer@ipp.mpg.de>
+> Cc: regressions@lists.linux.dev
+> Betreff: Re: Lowspeed USB device enumerationg under 5.4.288, but not under 6.8.1
+> 
 > On Thu, Apr 02, 2026 at 03:34:35PM +0000, Fischer, Simon wrote:
-> > Dear list,
-> >
-> > I've tried to dig deeper into the issues, tried different quirks and sm=
-all
-> patches, but was unable to solve this or find the root cause. As this see=
-ms to
-> be a regression of 6.8 from 5.4, I hope this is the correct list?
->=20
-> 6.8.1 is not supported by anyone but canonical, so there's not much we
-> can do here, sorry as that is a very old and obsolete kernel missing
-> tens of thousands of changes.
->=20
+>> Dear list,
+>>
+>> I've tried to dig deeper into the issues, tried different quirks and small patches, but was unable to solve this or find the root cause. As this seems to be a regression of 6.8 from 5.4, I hope this is the correct list?
+> 
+> 6.8.1 is not supported by anyone but canonical, so there's not much we can do here, sorry as that is a very old and obsolete kernel missing tens of thousands of changes.
+> 
 > Can you try running the latest 6.19 release instead?
-
-Sorry, seems me or my outlook messed something up with the correct reply fo=
-rmat...
-
-I've tried 6.19.11 now and it shows the same behavior as in my original mai=
-l.
-Currently building 5.15.202 and 6.0.19 to cross check.
-
-Thanks & bests
-Simon
-
->=20
+> 
 > thanks,
->=20
+> 
 > greg k-h
+> 
+
