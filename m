@@ -1,104 +1,81 @@
-Received: from abb.hmeau.com (abb.hmeau.com [180.181.231.80])
+Received: from mail-10698.protonmail.ch (mail-10698.protonmail.ch [79.135.106.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63C8A2A1AA;
-	Sun, 12 Apr 2026 05:32:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=180.181.231.80
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6878F611E
+	for <regressions@lists.linux.dev>; Sun, 12 Apr 2026 11:25:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775971965; cv=none; b=fZf+SCnHw9PM2ol2HbXA4vqtS3/zusJs6SqmM8pK/XY0B7dnY2r0HYlSZCoWPtGgw2s3g3I3d/WoPm5TGN2p2CdYlUkzOuu/kajEjpJUJvwcz0CotnzqVA7yfb69Mqx6514ECYIiE4G1Fdqos0UlvJpB0jj7EY3RN6IPhUfvgow=
+	t=1775993147; cv=none; b=K7qXldoHkaMw2pehb0ERN7MTB3GYltR7z+YdKR3sVAzUHxDjDSGTKXjHzTiT7BKAJCam4/4oIDC5BpiKQaA8fTSsUaP/OmUHul3WJz5r9l/n6ZDIy8981d8ymmq2BoVcRdxDBlWzhcg+PnM1qsUp0gZuRXBs+MJUuqaKfI0Mqcg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775971965; c=relaxed/simple;
-	bh=d3JL6Uz4MBiCKNlonEYV9q1mH+XYB9VrWJfi6undVAE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TaskMwbYFfEV6gbmKC3W2u5oqjRppetr9u+T+SMMVKzvW0MYiIWFLZh5Z9bdaVozB/scOYHfLHr8xA8EGVXaLdKQ1mJpal6Eo6k6J38ans2AkLJO8wTNU4elX8rzeHeHSuvqOBUAogCgdlu3eQsRUSbRUQ4hM+KsaL6VX+5X8pE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=gondor.apana.org.au header.i=@gondor.apana.org.au header.b=dZrlutyS; arc=none smtp.client-ip=180.181.231.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	s=arc-20240116; t=1775993147; c=relaxed/simple;
+	bh=XPzIPlFhXf6fmRUvCLaUIiWU6MLIEfddP+HG2LJ0Jrs=;
+	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=PUlUo6bEjByL9IN7DtaioMwvbLm98aPON/4EwD3wIN/48VSqdu/sV5DavNTvqsvcQetamxm39KKEUpSk2qU2WhiKIp3RVQXO4j6n3+8nKdUOV+XugW3nrah5KyE1+FrofsUqDkbn891RIlo31TEuYX83ztrOipXM/y3vwP81xks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=hdN0cOWA; arc=none smtp.client-ip=79.135.106.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gondor.apana.org.au header.i=@gondor.apana.org.au header.b="dZrlutyS"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=gondor.apana.org.au; s=h01; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:cc:to:subject:message-id:date:
-	from:content-type:reply-to; bh=HBBY7Vv/4OnTrQkBaVfR/kNRGngCrEyMnBd5ikS3K/s=; 
-	b=dZrlutySs86n4CG3o/FnLwEmLnDhfW7W910rYaAV+JEV3IBd2NeuX2i3iZV4Djewwr5LPqVijZa
-	zJATyfpJUtyHM5yoKH0rlA0UJXnCozstUG8/l6drnJLL5hpE6FFItvWiTepvOrERjl0CTnLdgGV0h
-	RXdkeyx06Tw06nH1k4e/KABWCqysRCW66Nb4u0/1Q+qmFHyCokC8PFTQKPgivUHvpfNCkmf3mwpY7
-	EbGnGeEkP/HSAr9MfRBIy/8x+Jyp4t2QhkFqokPtNEP6y0Tg8iLk/lFLWclbBX57tlNMCCdp33j5t
-	Vfg4I06lvsl3Ddwecq2IpcxEFeLbKlvNrQ6w==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1wBn1G-005T0s-1h;
-	Sun, 12 Apr 2026 13:32:22 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Sun, 12 Apr 2026 13:32:21 +0800
-Date: Sun, 12 Apr 2026 13:32:21 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Daniel Pouzzner <douzzer@mega.nu>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
-	Taeyang Lee <0wn@theori.io>,
-	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-	Eric Biggers <ebiggers@kernel.org>,
-	Linus Torvalds <torvalds@linuxfoundation.org>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Greg KH <gregkh@linuxfoundation.org>, davem@davemloft.net,
-	Brian Pak <bpak@theori.io>, Juno Im <juno@theori.io>,
-	Jungwon Lim <setuid0@theori.io>,
-	Linux kernel regressions list <regressions@lists.linux.dev>
-Subject: [v2 PATCH] crypto: algif_aead - Fix minimum RX size check for
- decryption
-Message-ID: <adsuZfIjp6OcaAsi@gondor.apana.org.au>
-References: <acOpDrnN3cVfiASk@gondor.apana.org.au>
- <CAH-2XvLZD_-CVQT0omao2+GrdQt1Loq+oo4X6q=0NUAeUk==1w@mail.gmail.com>
- <acTSfLPWDGTaGIf7@gondor.apana.org.au>
- <73ab5267-57b8-4394-9c10-4ee3bf92e444@leemhuis.info>
- <adkOsK-uPRsv49Yz@gondor.apana.org.au>
- <ac3f34e743737c128c289576c1f134d1991d4552.camel@mega.nu>
+	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="hdN0cOWA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+	s=protonmail3; t=1775993138; x=1776252338;
+	bh=XPzIPlFhXf6fmRUvCLaUIiWU6MLIEfddP+HG2LJ0Jrs=;
+	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
+	b=hdN0cOWAy8xzQWID1epLPwrW6+eTN37SazUymeBha/uoxN5bJw2EXsKXYH+VujiH9
+	 BSVKW3CmzycG5HC/ilhIGkQzyrcx+QnD41kID+Jd+riWm3mIcolaq9ta0WdSzNVDgZ
+	 bnPygeW+O9IeJRz1qx/QBkIb+EV9PRIZM2a+QtQVidELAtX7iruQPPZ6ytVe/ihYjS
+	 2k5r+2Jia/sFdQaqAmH6LA2bo0rRDJSee8kBfdAKGOrH/uBeJomnlQopXj1/MWFlEM
+	 2csRUVQpFQicm6WfmsM4jO2eswAqra8o5D8f6tW2sj/yZwv+xcUPSSqw3Um53yF6ul
+	 taPY2v6ZLQsfg==
+Date: Sun, 12 Apr 2026 11:25:34 +0000
+To: "iommu@lists.linux.dev" <iommu@lists.linux.dev>
+From: 70sp <70sp@protonmail.com>
+Cc: "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Subject: [REGRESSION] GPU passes into VM improperly after c376a3456d8b or a98db518dde2
+Message-ID: <HYhMd0Klo0XE_yiVY7XmsgyKKFDwKHfKRy22KrycLcYd0V_ykA4xdbBMJXkA07YX3os6qK-NhMIVi6ITo-CkNIIF0e-GcI0UwwZmdDhAJ0I=@protonmail.com>
+Feedback-ID: 144929603:user:proton
+X-Pm-Message-ID: 26f8abaf4b873fdaaf68ec791466805a3e97048a
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ac3f34e743737c128c289576c1f134d1991d4552.camel@mega.nu>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 10, 2026 at 10:33:39AM -0500, Daniel Pouzzner wrote:
->
-> Meanwhile, next-20260409 with your point patches to
-> crypto/algif_aead.c:_aead_recvmsg() and crypto/af_alg.c:af_alg_pull_tsgl()
-> deterministically produces wrong results on these:
-> 
-> [FAILED: 64-bit - 7.1.0-rc7-next-next-20260409-dirty] AEAD ccm(aes) asynchronous one shot multiple test
-> (/usr/local/libexec/libkcapi/kcapi  -d 4 -x 10   -c ccm(aes) -q 4edb58e8d5eb6bc711c43a6f3693daebde2e5524f1b55297abb29f003236e43d -t a7877c99 -n 674742abd0f5ba -k 2861fd0253705d7875c95ba8a53171b4 -a fb7bc304a3909e66e2e0c5ef952712dd884ce3e7324171369f2c5db1adc48c7d)
-> Exp 8dd351509dcf1df9[...]
-> Got EBADMSG
+Hello,
 
-Sorry I got the maths wrong.  This one works for me:
+I have been dealing with a regression launching a Windows QEMU/KVM virtual =
+machine with a GPU passed through.
 
----8<---
-The check for the minimum receive buffer size did not take the
-tag size into account during decryption.  Fix this by adding the
-required extra length.
+The issue consists of launching a QEMU/KVM VM, which gets stuck for about 2=
+ minutes on booting with a white screen and then having NVIDIA=E2=80=99s co=
+de 43 in Windows.
 
-Reported-by: syzbot+aa11561819dc42ebbc7c@syzkaller.appspotmail.com
-Reported-by: Daniel Pouzzner <douzzer@mega.nu>
-Fixes: d887c52d6ae4 ("crypto: algif_aead - overhaul memory management")
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+I=E2=80=99m certain, that the issue is not caused by anything in Windows or=
+ related software in Linux, because I tried reinstalling my whole PC includ=
+ing the Windows VM. I tried to reproduce the bug on an out-of-the-box Arch =
+Linux install and the bug is still present.
 
-diff --git a/crypto/algif_aead.c b/crypto/algif_aead.c
-index dda15bb05e89..f8bd45f7dc83 100644
---- a/crypto/algif_aead.c
-+++ b/crypto/algif_aead.c
-@@ -144,7 +144,7 @@ static int _aead_recvmsg(struct socket *sock, struct msghdr *msg,
- 	if (usedpages < outlen) {
- 		size_t less = outlen - usedpages;
- 
--		if (used < less) {
-+		if (used < less + (ctx->enc ? 0 : as)) {
- 			err = -EINVAL;
- 			goto free;
- 		}
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+The first bad commit is either a98db518dde246e01ead53617dc0a30d6aaa3752 or =
+c376a3456d8bef43ec556a98c0a04c35086c2737. I don=E2=80=99t know for sure whi=
+ch one introduced it, because during bisection I had to skip a98db518dde246=
+e01ead53617dc0a30d6aaa3752 due to it being unable to launch the virtual mac=
+hine resulting in a different error (didn=E2=80=99t even start booting). In=
+ kernels before these commits, the VM works flawlessly.
+
+I have tested it on latest mainline kernel and the issue is still present. =
+I have been experiencing the issue since kernel 6.13, so I just switched to=
+ the 6.12 LTS kernel instead which doesn=E2=80=99t have this issue.
+
+Configuration of my Linux install and hardware: https://pastebin.com/rcsyyY=
+iK
+.config: https://pastebin.com/RTQCBduD
+dmesg errors: https://pastebin.com/84jPP81E
+lspci: https://pastebin.com/qi29BSWi
+
+#regzbot introduced: a98db518dde246e01ead53617dc0a30d6aaa3752..c376a3456d8b=
+ef43ec556a98c0a04c35086c2737
+
+Best Regards,
+=C5=A0imon Posp=C3=ADchal
