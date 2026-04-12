@@ -1,119 +1,104 @@
-Received: from mail-dy1-f173.google.com (mail-dy1-f173.google.com [74.125.82.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from abb.hmeau.com (abb.hmeau.com [180.181.231.80])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 559643DFC66
-	for <regressions@lists.linux.dev>; Fri, 10 Apr 2026 16:59:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63C8A2A1AA;
+	Sun, 12 Apr 2026 05:32:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=180.181.231.80
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775840349; cv=none; b=HOcKy4irVOPcC6jw/nh7oofqsU4TVHGVbGGDfcTb2eWc+d/ZQcd/jalfigBkkc2CinV/h7ZfWbKHDbimD5P8sEUYmvOd0Emo6Mv8Sfb9Zq3hyk39zg1pONTurohua+qbB0XAsP7w/nk59yvzFvarbdSdWxdnAi4GuXakpig4xiM=
+	t=1775971965; cv=none; b=fZf+SCnHw9PM2ol2HbXA4vqtS3/zusJs6SqmM8pK/XY0B7dnY2r0HYlSZCoWPtGgw2s3g3I3d/WoPm5TGN2p2CdYlUkzOuu/kajEjpJUJvwcz0CotnzqVA7yfb69Mqx6514ECYIiE4G1Fdqos0UlvJpB0jj7EY3RN6IPhUfvgow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775840349; c=relaxed/simple;
-	bh=4fbWoUbN8ckCjQUSnSVhOHa9/jERtl+y/lKJTGDoBOI=;
-	h=Content-Type:MIME-Version:Subject:From:To:Cc:Date:Message-ID; b=t3Vwn+R8s1G0DweQ+SQtnFHd6Rl7r1G/e+qetyywBzBrJx4ejhrPkLi7YGG/A67cgjYueQ7ibI2EPqKsLyX16j7k0teVxHDAqBfrl5WwPInMDuFPdE82hjrGjR+HsL7kKNVGEBR7GmMrmHWmH5zhdWOIlLRuleBAKUg0ahTCOuk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org; spf=none smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci-org.20251104.gappssmtp.com header.i=@kernelci-org.20251104.gappssmtp.com header.b=EhGXTKOR; arc=none smtp.client-ip=74.125.82.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=kernelci.org
+	s=arc-20240116; t=1775971965; c=relaxed/simple;
+	bh=d3JL6Uz4MBiCKNlonEYV9q1mH+XYB9VrWJfi6undVAE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TaskMwbYFfEV6gbmKC3W2u5oqjRppetr9u+T+SMMVKzvW0MYiIWFLZh5Z9bdaVozB/scOYHfLHr8xA8EGVXaLdKQ1mJpal6Eo6k6J38ans2AkLJO8wTNU4elX8rzeHeHSuvqOBUAogCgdlu3eQsRUSbRUQ4hM+KsaL6VX+5X8pE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=gondor.apana.org.au header.i=@gondor.apana.org.au header.b=dZrlutyS; arc=none smtp.client-ip=180.181.231.80
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20251104.gappssmtp.com header.i=@kernelci-org.20251104.gappssmtp.com header.b="EhGXTKOR"
-Received: by mail-dy1-f173.google.com with SMTP id 5a478bee46e88-2d52c7f92b1so1654337eec.0
-        for <regressions@lists.linux.dev>; Fri, 10 Apr 2026 09:59:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20251104.gappssmtp.com; s=20251104; t=1775840345; x=1776445145; darn=lists.linux.dev;
-        h=message-id:date:reply-to:cc:to:from:subject
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CI22AvQsygsRapOWu003btiGsXEMdheCp8cdpnvmm/o=;
-        b=EhGXTKORPZz9Z3Iv8OLVHRicrqJEXieXlr1eUoiA36kfg+qwLHVFg+xKUNdQ/tZQMr
-         I61Jh0CuroQJ8UNVaGHI554tbo1Y+pw+gqlxNGShRLRodm8x3nYYDp4gzLocPq8zm1ek
-         wwbYTm3xNQALRPfj7iwhaCZA664dyIrSeD4QyTMz4NqkUQtAYqSvzIy0Z7J2RVBakF2w
-         vlMkWoRmESyrSbkWVtXv0vA/lTtLd2EaRZEQM65H6qHe8RZIHLKxuSoEga4TV5rhSx/o
-         Vpt20Le4+o7c5/8ZHgN7je8gSZL5nhlAJFmohPqLHBRgfjSU3m7ua7KTaYpnRH411DHk
-         XT6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775840345; x=1776445145;
-        h=message-id:date:reply-to:cc:to:from:subject
-         :content-transfer-encoding:mime-version:x-gm-gg:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=CI22AvQsygsRapOWu003btiGsXEMdheCp8cdpnvmm/o=;
-        b=f04foSuvV6pqjURGHYMn4461QWUmGBHFXnkZBn1JBWT76tv2eYxay/aEAcpGBoXdo5
-         bOAiaYhqg5ROXqKAKzfQmysWpgyoOhFspuoQCPwIhfiE0BVJijiyv8hplDyWF0Gna65m
-         dBWeyp1JZ6TIMQCi+n+CNQOIB2pr5VKlIlcHXtoOFLxKTjFF3M8RXD9Dpj9WRdsJRA88
-         /xJAVXDsJCygy4fmNiVAyaTjxOWNXdIqpai7javHX5hjtzfgYFHqx4+6NKlwQME9xfRo
-         vTBdWJBd2VNOr1Yv8CGDKu6qu8BirjuGhKJpQM3ikbZIdtU7rtO17CkyzV2EKwyBkvNu
-         Ff0g==
-X-Gm-Message-State: AOJu0YzAfonf6MKHmyVLxWIL8UFwTrIacxSBiTgFe4B+6EAjZLlbd5vh
-	CEiHNRuyllyG59+3+VCXuqQXCej8fEIyJTQ6XCNYFqpyuKM0r/VvVgltywP9IKh2fiU=
-X-Gm-Gg: AeBDies1sRf9qR0gYZ6kotQ02Wn740RTpCwab2o9jfKWXNntkSVifFzmfMne0yvc1RM
-	QdlcNao/j9M2sKZBmR15FTbgbkrNw6g8//0BuZGjsha8Otdm8CqxK8/oKknIkyJzQgPxgWfoVzJ
-	P9KK0k4vccv5IHwYhyelh/BM+mUXJ5vN39dHFt+mSayL1A7wXukYM73sgQFgYPA+ap9fBuJ5DyR
-	i20RASpYhkunMYJ9VV+2dvJAXjuETut1tgIKJ7mZ28yHhxfDvj6Z6LB2IWPnafdcDkinA+Z6BJj
-	0OC41UeOnVd6pES7KtVnVoYgJYuTjFqdgk97f55Xjhm2j1Jnxqmu31eWOIx5lEC2XCEu4FJKe0a
-	h2ycwD6cDGERka6ZW3KMQMRfh2g9yeELmJAGtFu3gaivbuifU7LgLL+DkMVZDA1+NPGzVltem18
-	Rgec7JNVzrHGhy1AnZ
-X-Received: by 2002:a05:7300:d183:b0:2d6:526c:55cc with SMTP id 5a478bee46e88-2d6526c5736mr859599eec.6.1775840345053;
-        Fri, 10 Apr 2026 09:59:05 -0700 (PDT)
-Received: from 8692ffc4d55e ([20.38.40.137])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2d55ff826dcsm4891573eec.13.2026.04.10.09.59.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Apr 2026 09:59:03 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=gondor.apana.org.au header.i=@gondor.apana.org.au header.b="dZrlutyS"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=gondor.apana.org.au; s=h01; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:cc:to:subject:message-id:date:
+	from:content-type:reply-to; bh=HBBY7Vv/4OnTrQkBaVfR/kNRGngCrEyMnBd5ikS3K/s=; 
+	b=dZrlutySs86n4CG3o/FnLwEmLnDhfW7W910rYaAV+JEV3IBd2NeuX2i3iZV4Djewwr5LPqVijZa
+	zJATyfpJUtyHM5yoKH0rlA0UJXnCozstUG8/l6drnJLL5hpE6FFItvWiTepvOrERjl0CTnLdgGV0h
+	RXdkeyx06Tw06nH1k4e/KABWCqysRCW66Nb4u0/1Q+qmFHyCokC8PFTQKPgivUHvpfNCkmf3mwpY7
+	EbGnGeEkP/HSAr9MfRBIy/8x+Jyp4t2QhkFqokPtNEP6y0Tg8iLk/lFLWclbBX57tlNMCCdp33j5t
+	Vfg4I06lvsl3Ddwecq2IpcxEFeLbKlvNrQ6w==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1wBn1G-005T0s-1h;
+	Sun, 12 Apr 2026 13:32:22 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Sun, 12 Apr 2026 13:32:21 +0800
+Date: Sun, 12 Apr 2026 13:32:21 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Daniel Pouzzner <douzzer@mega.nu>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
+	Taeyang Lee <0wn@theori.io>,
+	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+	Eric Biggers <ebiggers@kernel.org>,
+	Linus Torvalds <torvalds@linuxfoundation.org>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Greg KH <gregkh@linuxfoundation.org>, davem@davemloft.net,
+	Brian Pak <bpak@theori.io>, Juno Im <juno@theori.io>,
+	Jungwon Lim <setuid0@theori.io>,
+	Linux kernel regressions list <regressions@lists.linux.dev>
+Subject: [v2 PATCH] crypto: algif_aead - Fix minimum RX size check for
+ decryption
+Message-ID: <adsuZfIjp6OcaAsi@gondor.apana.org.au>
+References: <acOpDrnN3cVfiASk@gondor.apana.org.au>
+ <CAH-2XvLZD_-CVQT0omao2+GrdQt1Loq+oo4X6q=0NUAeUk==1w@mail.gmail.com>
+ <acTSfLPWDGTaGIf7@gondor.apana.org.au>
+ <73ab5267-57b8-4394-9c10-4ee3bf92e444@leemhuis.info>
+ <adkOsK-uPRsv49Yz@gondor.apana.org.au>
+ <ac3f34e743737c128c289576c1f134d1991d4552.camel@mega.nu>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [REGRESSION] next/master: (build) in
- testcases/fake_sigreturn_sme_change_vl
- (Makefile:31) [logspec:k...
-From: KernelCI bot <bot@kernelci.org>
-To: kernelci-results@groups.io
-Cc: regressions@lists.linux.dev, gus@collabora.com, linux-next@vger.kernel.org
-Reply-To: kernelci@lists.linux.dev
-Date: Fri, 10 Apr 2026 16:59:03 -0000
-Message-ID: <177584034337.3832.10513430880731960501@8692ffc4d55e>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ac3f34e743737c128c289576c1f134d1991d4552.camel@mega.nu>
 
+On Fri, Apr 10, 2026 at 10:33:39AM -0500, Daniel Pouzzner wrote:
+>
+> Meanwhile, next-20260409 with your point patches to
+> crypto/algif_aead.c:_aead_recvmsg() and crypto/af_alg.c:af_alg_pull_tsgl()
+> deterministically produces wrong results on these:
+> 
+> [FAILED: 64-bit - 7.1.0-rc7-next-next-20260409-dirty] AEAD ccm(aes) asynchronous one shot multiple test
+> (/usr/local/libexec/libkcapi/kcapi  -d 4 -x 10   -c ccm(aes) -q 4edb58e8d5eb6bc711c43a6f3693daebde2e5524f1b55297abb29f003236e43d -t a7877c99 -n 674742abd0f5ba -k 2861fd0253705d7875c95ba8a53171b4 -a fb7bc304a3909e66e2e0c5ef952712dd884ce3e7324171369f2c5db1adc48c7d)
+> Exp 8dd351509dcf1df9[...]
+> Got EBADMSG
 
+Sorry I got the maths wrong.  This one works for me:
 
+---8<---
+The check for the minimum receive buffer size did not take the
+tag size into account during decryption.  Fix this by adding the
+required extra length.
 
+Reported-by: syzbot+aa11561819dc42ebbc7c@syzkaller.appspotmail.com
+Reported-by: Daniel Pouzzner <douzzer@mega.nu>
+Fixes: d887c52d6ae4 ("crypto: algif_aead - overhaul memory management")
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 
-Hello,
-
-New build issue found on next/master:
-
----
- in testcases/fake_sigreturn_sme_change_vl (Makefile:31) [logspec:kbuild,kbuild.other]
----
-
-- dashboard: https://d.kernelci.org/i/maestro:78b76dc6acfd18845f6fc483e154076f27665ae6
-- giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-- commit HEAD:  66672af7a095d89f082c5327f3b15bc2f93d558e
-- tags: next-20260410
-
-Please include the KernelCI tag when submitting a fix:
-
-Reported-by: kernelci.org bot <bot@kernelci.org>
-
-
-Log excerpt:
-=====================================================
-
-=====================================================
-
-
-# Builds where the incident occurred:
-
-## defconfig+arm64-chromebook+kselftest on (arm64):
-- compiler: gcc-14
-- config: None
-- dashboard: https://d.kernelci.org/build/maestro:69d9119886a2e63970e94ab7
-
-
-#kernelci issue maestro:78b76dc6acfd18845f6fc483e154076f27665ae6
-
---
-This is an experimental report format. Please send feedback in!
-Talk to us at kernelci@lists.linux.dev
-
-Made with love by the KernelCI team - https://kernelci.org
+diff --git a/crypto/algif_aead.c b/crypto/algif_aead.c
+index dda15bb05e89..f8bd45f7dc83 100644
+--- a/crypto/algif_aead.c
++++ b/crypto/algif_aead.c
+@@ -144,7 +144,7 @@ static int _aead_recvmsg(struct socket *sock, struct msghdr *msg,
+ 	if (usedpages < outlen) {
+ 		size_t less = outlen - usedpages;
+ 
+-		if (used < less) {
++		if (used < less + (ctx->enc ? 0 : as)) {
+ 			err = -EINVAL;
+ 			goto free;
+ 		}
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
