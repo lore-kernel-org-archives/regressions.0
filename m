@@ -1,151 +1,138 @@
-Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BCF51FC101
-	for <regressions@lists.linux.dev>; Mon, 13 Apr 2026 06:48:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DCFA2D063E;
+	Mon, 13 Apr 2026 06:49:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776062930; cv=none; b=tCZOyKhpjBPxw7rM2Jt3K8aze7hrSMoFkF5A2JgENXip95v2l7dTFz7ChdL+fObWOJMT3PGOZn4QhNaBGrpuhN4DkQg/OPI66j3gH9/FyRXKqrIEuFUIc5ZeXcEk55aN12TQ/vEJJ3ZipNzfJDKSYmP1E4hxmCak3YIHkv/Xu1o=
+	t=1776062973; cv=none; b=dO9dUwZeLvQ5s3TB1bhU9WYtIrz+vw1jwMqPSQejdobqE0kf32+a8HyXf/yGpNEWmFs4H2Fctbm7DeBjhPscwjwcUQEz2yO582kyzaqBBlic3O5b/bHgOymrDtG+hrvNq9Tcy1lwzB/ZKlMvnDeIfo+A9UhwO7KwSV80dw1gv3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776062930; c=relaxed/simple;
-	bh=G00sfWvgnFmN1RJzoAP+P1viqnzTx6BVSPm1ly9IT6o=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=na6ImNXlQ2TvpAkn3U1v44x0A7QrFtid8aIaUuBEjZcMp3sTA0nGcxMhvUAlCqvLhHrVAHAVal8ZG0lZHHNLZuwQ0KlLyfHNt1fCtuPEp9HINvjKafItf7po240MgPubTvw6VVPfAFQnQMPJtF/wN8fpPPThZej7RURr/oUc2k4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bschu.de; spf=pass smtp.mailfrom=bschu.de; dkim=pass (2048-bit key) header.d=bschu.de header.i=@bschu.de header.b=da6eBM9Z; arc=none smtp.client-ip=80.241.56.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bschu.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bschu.de
+	s=arc-20240116; t=1776062973; c=relaxed/simple;
+	bh=c6shzak5a0ojomckogLwWc3omCBdCHFvDRUUPSebb7U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gyGBxOjvzZWDsNYSp0IsH8kyHLr5+wEtwEbRt8dMlAfeJ1DTR6GrBzmoi7+nffhODl8QYEfw4ojnoxhw2kWKZ12I+hMpHAuyrB2wWD7fWHHRuX5oTWe6Yb2Esr/tDuTX0Yh6jlKhKtnzK+xKUWobbcqq9WXXQ01cg7l+p0w9p2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IQLqZ6NE; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bschu.de header.i=@bschu.de header.b="da6eBM9Z"
-Received: from smtp202.mailbox.org (smtp202.mailbox.org [IPv6:2001:67c:2050:b231:465::202])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4fvJ063q3Yz9tf6;
-	Mon, 13 Apr 2026 08:48:38 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bschu.de; s=MBO0001;
-	t=1776062918;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=G00sfWvgnFmN1RJzoAP+P1viqnzTx6BVSPm1ly9IT6o=;
-	b=da6eBM9ZniPnguDp4JbzYSHsekDfOXVF6aNgLqReNr9Z2jq4jVUz2wUL+TEOreaNk3tnzB
-	cFYHEtFtQ5RQN8PWKysp/7n2BDPcbuQqa6EO4y4bUDKlh05HKBpUa5LFexNR7c33LYP/RO
-	AarHlPo5qXLbdp8q3Zn59r/KL8d6cwewgSsF7v3WgU1QMhdZKNFu7b+UTaaIlTNYveKImn
-	sz3suGsbH0k88ZNv/j4GoPdNi9yWtzAo3NkHC8OqATDv57kTE7J5oOQiQisBgRuY05eaZG
-	sXZA85YbpD0W3jUXSsvqqtIML7eM0WPPBsJilOV6X9GKUBlfeahnEGbdYogSQg==
-Authentication-Results: outgoing_mbo_mout;
-	dkim=none;
-	spf=pass (outgoing_mbo_mout: domain of bernd@bschu.de designates 2001:67c:2050:b231:465::202 as permitted sender) smtp.mailfrom=bernd@bschu.de
-Message-ID: <286f43aba56ab3052e5e9412625387d07afb802d.camel@bschu.de>
-Subject: Re: Bug#1131025: [6.12.y regression] Regression with 58130e7ce6cb
- ("PCI/ERR: Ensure error recoverability at all times"): echo vfio-pci
- >driver_override does not work for DVB Adapter
-From: Bernd Schumacher <bernd@bschu.de>
-To: Lukas Wunner <lukas@wunner.de>, "Alexandre N." <an.tech@mailo.com>
-Cc: Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= <ukleinek@debian.org>, 
-	1131025@bugs.debian.org, Salvatore Bonaccorso <carnil@debian.org>, Bjorn
- Helgaas	 <bhelgaas@google.com>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Mario Limonciello <mario.limonciello@amd.com>, regressions@lists.linux.dev,
- stable@vger.kernel.org, 	linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, Alex Williamson	 <alex@shazbot.org>, Ilpo
- =?ISO-8859-1?Q?J=E4rvinen?=	 <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 13 Apr 2026 08:48:33 +0200
-In-Reply-To: <adxlr9lWBTZIQMev@wunner.de>
-References: <aclRwznwq6KpA2qA@wunner.de>
-	 <177373189751.7987.7156982489427825197.reportbug@obelix-trixie.bs.de>
-	 <ecf9b2dd96ff97cc035ba297266b8dd05eea88da.camel@bschu.de>
-	 <ac0Y85OShbK6mHEV@monoceros>
-	 <8275e5b86696dec133889713258c2e158a443496.camel@bschu.de>
-	 <ac19pxEZKvQuQwFV@wunner.de>
-	 <7173609c404c5444e634dd3ab26f55f2788d82e4.camel@bschu.de>
-	 <ac_VqcBbKRDkHp69@wunner.de>
-	 <79618160f928d7ed4ba0a84f3ab420427c5b8d10.camel@bschu.de>
-	 <dd3c3358-de0f-4a56-9c81-04aceaab4058@mailo.com>
-	 <adxlr9lWBTZIQMev@wunner.de>
-Autocrypt: addr=bernd@bschu.de; prefer-encrypt=mutual;
- keydata=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
-Content-Type: multipart/signed; micalg="pgp-sha256";
-	protocol="application/pgp-signature"; boundary="=-47JS6f+aPw6OLQPftc97"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IQLqZ6NE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1776062971; x=1807598971;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=c6shzak5a0ojomckogLwWc3omCBdCHFvDRUUPSebb7U=;
+  b=IQLqZ6NECfz52x35wZ8z5hE86a689ZbnAIPFWRqowFtaiVDRDEUxD1y2
+   T1FkYdiq+3hGwlYEIJm8x+uYj8aHzMQM+5+EzTrAd+znv9+oWg20acTYZ
+   yzOB+IxEVHfqKrPlFL9OpIDoT6YaWWdbcXHiFiXkP2c10TqKiSkx+qo9o
+   qxQJH67AGzwFN42NWrfsfWwt/OzSdyah68CGuVnqM3FAsDug97TnXPIca
+   dipdw9OF0d8iPhjBjXj6qJUudGLSzzhd6o72cSpOw7NWR2VUtrOnMre3P
+   Sj68rF/RKvBTRQn7x7MZ0E18phU9oPir2EHfb9aoLs/20WPlXnw4Itb1y
+   w==;
+X-CSE-ConnectionGUID: cBgZG3PxQwefmSnlrYNwYw==
+X-CSE-MsgGUID: e7xJ4y5cQbq4srPnJnsW5A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11757"; a="76876091"
+X-IronPort-AV: E=Sophos;i="6.23,176,1770624000"; 
+   d="scan'208";a="76876091"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2026 23:49:31 -0700
+X-CSE-ConnectionGUID: 4hs9jAHjQwem1RQhfqg5Sw==
+X-CSE-MsgGUID: zqV8INj0R56ht60ahSP8MA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,176,1770624000"; 
+   d="scan'208";a="229576781"
+Received: from allen-sbox.sh.intel.com (HELO [10.239.159.30]) ([10.239.159.30])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2026 23:49:29 -0700
+Message-ID: <56ce85d5-e0b9-407c-9a86-708111a8a509@linux.intel.com>
+Date: Mon, 13 Apr 2026 14:47:42 +0800
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Rspamd-Queue-Id: 4fvJ063q3Yz9tf6
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] GPU passes into VM improperly after c376a3456d8b or
+ a98db518dde2
+To: 70sp <70sp@protonmail.com>, "iommu@lists.linux.dev"
+ <iommu@lists.linux.dev>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <z7Rkts0EsooZcnCjNfJaK6ursftFU8ubOkH0hcNjzxugEAwGsHLMblOdfoAx-gJzBZ-TMmeUtD7iWBngbFY5UCJCwdSmYqmCVMy-yhbirUk=@protonmail.com>
+Content-Language: en-US
+From: Baolu Lu <baolu.lu@linux.intel.com>
+In-Reply-To: <z7Rkts0EsooZcnCjNfJaK6ursftFU8ubOkH0hcNjzxugEAwGsHLMblOdfoAx-gJzBZ-TMmeUtD7iWBngbFY5UCJCwdSmYqmCVMy-yhbirUk=@protonmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
+On 4/12/26 19:17, 70sp wrote:
+> Hello,
+> 
+> I have been dealing with a regression launching a Windows QEMU/KVM 
+> virtual machine with a GPU passed through.
+> 
+> The issue consists of launching a QEMU/KVM VM, which gets stuck for 
+> about 2 minutes on booting with a white screen and then having NVIDIA’s 
+> code 43 in Windows.
+> 
+> I’m certain, that the issue is not caused by anything in Windows or 
+> related software in Linux, because I tried reinstalling my whole PC 
+> including the Windows VM. I tried to reproduce the bug on an out-of-the- 
+> box Arch Linux install and the bug is still present.
+> 
+> The first bad commit is either a98db518dde246e01ead53617dc0a30d6aaa3752 
+> or c376a3456d8bef43ec556a98c0a04c35086c2737. I don’t know for sure which 
+> one introduced it, because during bisection I had to skip 
+> a98db518dde246e01ead53617dc0a30d6aaa3752 due to it being unable to 
+> launch the virtual machine resulting in a different error (didn’t even 
+> start booting). In kernels before these commits, the VM works flawlessly.
+> 
+> I have tested it on latest mainline kernel and the issue is still 
+> present. I have been experiencing the issue since kernel 6.13, so I just 
+> switched to the 6.12 LTS kernel instead which doesn’t have this issue.
+> 
+> Configuration of my Linux install and hardware: https://pastebin.com/ 
+> rcsyyYiK
+> .config: https://pastebin.com/RTQCBduD
+> dmesg errors: https://pastebin.com/84jPP81E
+> lspci: https://pastebin.com/qi29BSWi
+> 
+> #regzbot introduced: 
+> a98db518dde246e01ead53617dc0a30d6aaa3752..c376a3456d8bef43ec556a98c0a04c35086c2737
 
---=-47JS6f+aPw6OLQPftc97
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Before these commits, if a device was attached to a domain that didn't
+perfectly match the hardware's capabilities (such as address width or
+coherency), the kernel would dynamically adjust the domain to
+accommodate the hardware.
 
-Am Montag, dem 13.04.2026 um 05:40 +0200 schrieb Lukas Wunner:
-> Could both of you, Alexandre and Bernd, give that patch a spin
-> to see if it fixes the issue?
-I confirm, the patch applied to 6.12.73 works for me.
-I also have saved the dmesg (if you need it, please ask for it)
-Thanks!
-Bernd
+Following these two commits, the driver now applies a "match or fail"
+policy. If the domain is incompatible with the device's hardware
+capabilities, it returns -EINVAL. This expects the caller to allocate a
+new domain dedicated to that specific device and attempt the attachment
+again.
 
---=-47JS6f+aPw6OLQPftc97
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
+Can you please add a message line in paging_domain_compatible() to
+verify whether it's a domain compatibility issue?
 
------BEGIN PGP SIGNATURE-----
+diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+index 205debd76989..c7e1e0dfa250 100644
+--- a/drivers/iommu/intel/iommu.c
++++ b/drivers/iommu/intel/iommu.c
+@@ -3111,8 +3111,10 @@ int paging_domain_compatible(struct iommu_domain 
+*domain, struct device *dev)
+                 ret = 
+paging_domain_compatible_second_stage(dmar_domain, iommu);
+         else if (WARN_ON(true))
+                 ret = -EINVAL;
+-       if (ret)
++       if (ret) {
++               dev_info(dev, "domain is not compatible with device, ret 
+= %d", ret);
+                 return ret;
++       }
 
-iQIzBAABCAAdFiEEx5NNNf+H1Sb3l9vqxRmiDRIUYfcFAmnckcEACgkQxRmiDRIU
-Yfckaw/8Dc0j7px+O86wzLK/jBFxi92XGrOBvD4stVbVz0mQtbLRKwg3ZYrgbMcr
-jskcuxVjpYRyjXXiAZ3Rnx1QMGtWYPv94a+JY+L43tsBjQATki5ipbLOPixbQXF7
-CQmqtDkheW5mU5lhJaOiiaSd4nHHvsF/0tlF6oOHZncy2ajfDNj1Z58uJRonvwSC
-tZKaA+zSJWdu3D9tc1/O39Nm46CoBNVk88VDvUBH7MOKpvxIWqt+cbVXJJY2BfM0
-0/5v3smuwfKAheeEyPGQMt4z8pdurN8YSKhNzf7w1To6pvPKFKTEobQXC4Tz1gJF
-Yl/EqZKDHi/KuKgmMcJid9peKdubRH2QmhfxPD4IBLuz01QpA4HZFq3R8eC9G9s7
-hz6B7hXEl/kG2qQQVVPoV50bJPlAnOaOUWwU31HXMjk5cgnuFF3guJkLfQidXRix
-DQ0I/m57DvO3He8+RG1uQ9IQDbpTThNPXtienECuD0GBPVLLYbvNKUGyqso+GM56
-Rlkf9bRN0bhY7NbZPg4QhOJQzyG1pjoH6QgZeOJTQeOL8UziGevNhHvW/WlDimBl
-rWfiZ3w5gLIFpdTozTDBd/016T5P7J6BraxLoF3TuXstNxBtqesXloSA47CdN9Wd
-/QoD7LHrbJzLiGYZaYwRtSvylc9tNQ1XBhbo6iJceSX7c5UFRhY=
-=z7J+
------END PGP SIGNATURE-----
+         if (sm_supported(iommu) && !dev_is_real_dma_subdevice(dev) &&
+             context_copied(iommu, info->bus, info->devfn))
 
---=-47JS6f+aPw6OLQPftc97--
+Thanks,
+baolu
