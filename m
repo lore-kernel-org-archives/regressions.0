@@ -1,242 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.61.103])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD1E637E2E3;
-	Mon, 13 Apr 2026 11:55:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F17893BF68E
+	for <regressions@lists.linux.dev>; Mon, 13 Apr 2026 11:59:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.61.103
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776081359; cv=none; b=k81bjYbXTQKchSeyMryWuzZg7Sj+cmy/oapcA9isBJFjsQIM6njvElZ3xIGzcKkPVK/7VlEPJ38CHVybsb9FuDetRrdPAJnjq3CJzmT8io99Hi8LZJQ8zbzoGnNhskBHkVHTO8Frz7B5QXbCR/uA3+kqSZLtc8Y19+C4y7pvhkQ=
+	t=1776081546; cv=none; b=ApwoRRjgxcrOgLEtBM8stN2BzFGgn104slLl9EpR76a28r1V/xJ5FqqmrMl3iCy4p0Fd0/+x0D/2ZCmpyZSNlIFoQsBrljqGet6WyfW1zLxXv8X61BuyYvApm3eWdJrXmumgabTrh0m6I5OfU6D5E4XYfEIkXLsUx1FfHZy0Sj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776081359; c=relaxed/simple;
-	bh=+GrvEr4Ad/5iehJEwtnzkxjU7cJjjLPujjrKRT9iKuQ=;
-	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type; b=d30Aj9B7U43wg+DEdVV65d+FCQa/6T/gytx18EPBuxLxYVx+ODbDTXLWvvpBlt8WL0Zu1qcbGbI8/73qr93xenw+UjKsYwJjYsPULhhRfwvvR2aPnOP2XvurkbzAT2Fl5gPqh+AH8OWMpinvxdJTuN3vzEv3XMDH8I5XQ/qeOiE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=PdSFP9OH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1776081546; c=relaxed/simple;
+	bh=kdwtsZTX8JHWxSQI096jyZiy3Z+yb1EqPFicOLsBJlg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=j2E+hBKjD04PZWXz7VBiQty9KO0Kr2rUqGNnEvP1pGhqLQkTNFS52qS5TpoiCLUoOmAsb3IcubQMAx7Zf50MslfEm+RrzaY1icGTiNUb9Lo4+RIdK2QTvLvzcn/XYPcagipkoxgAkGOWnoz/I4JSX+0tK4lh6Tg4KwVaGpoDsgw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=WMvY3/JZ; arc=none smtp.client-ip=188.68.61.103
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="PdSFP9OH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B122AC116C6;
-	Mon, 13 Apr 2026 11:55:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1776081359;
-	bh=+GrvEr4Ad/5iehJEwtnzkxjU7cJjjLPujjrKRT9iKuQ=;
-	h=Subject:To:Cc:From:Date:In-Reply-To:From;
-	b=PdSFP9OHPuMyUTExVEMoYO0jLzoV97SAvBwGDvufOUAeY5N0ZW9ONXNgTPYfVRPvY
-	 MhQR+Odz9qfSSpz3Cvu3LpBBd0js1FyXWIwFSQdmmqjyKjvhWLrHxMl6KYIKb2pvZS
-	 IMmBVyUcF5I/Rer7PuTR4ybK7mOyT5NQuY+k3Jrc=
-Subject: Patch "Revert "drm: Fix use-after-free on framebuffers and property blobs when calling drm_dev_unplug"" has been added to the 6.6-stable tree
-To: dev@lankhorst.se,dri-devel@lists.freedesktop.org,e61e64c796ccfb17ae673331a3df4b877bf42d82.camel@linux.intel.com,gregkh@linuxfoundation.org,linux@leemhuis.info,linux@roeck-us.net,matt.fagnani@bell.net,regressions@leemhuis.info,regressions@lists.linux.dev,sashal@kernel.org,simona.vetter@ffwll.ch,thomas.hellstrom@linux.intel.com
-Cc: <stable-commits@vger.kernel.org>
-From: <gregkh@linuxfoundation.org>
-Date: Mon, 13 Apr 2026 13:55:46 +0200
-In-Reply-To: <20260413080333.3079490-1-linux@leemhuis.info>
-Message-ID: <2026041346-jawless-rift-e8ee@gregkh>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="WMvY3/JZ"
+Received: from mors-relay-8403.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4fvQtH3RpRz8B2w;
+	Mon, 13 Apr 2026 13:59:03 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1776081543;
+	bh=kdwtsZTX8JHWxSQI096jyZiy3Z+yb1EqPFicOLsBJlg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=WMvY3/JZ/P+wYNeMbryJ+mrWYJU0HrVBhpxIZVGfjif+Lr5MHBrCOV1H1vmawJBao
+	 vJEYsvB0eg1vimmPk35YpYJJArtC4W0+hWeNMidQLeth6ZgZeaCuEpkerBHiRT1n4v
+	 GLF57i9wjJubmnH0M3ZAFKM5jjOXXXWAUKRAmp8Km2l9gre0sbsOcZ3+DDruIiKJgc
+	 /+X+rO6EIV9Tnvmmm73N1cJ6cl1sgACePbzWngpim+vx2qLiJy0GIz66iq5gr2N9bc
+	 JSdjH2mOUA/56x7SXoB7xx925+nHShPIElF7lZcFDBXUn798FqJtiMjKcubkKVfIW8
+	 z4hw9Zcjcfxxg==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4fvQtH2kMMz89r8;
+	Mon, 13 Apr 2026 13:59:03 +0200 (CEST)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4fvQtB13N3z8scg;
+	Mon, 13 Apr 2026 13:58:57 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id E463D635CE;
+	Mon, 13 Apr 2026 13:58:56 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <58f6e74d-480e-4e0c-aa66-68dfc1de7421@leemhuis.info>
+Date: Mon, 13 Apr 2026 13:58:56 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 8bit
-X-stable: commit
-X-Patchwork-Hint: ignore 
+User-Agent: Mozilla Thunderbird
+Subject: Re: commit 0c4f1c02d27a880b cause a deadlock issue
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: "He, Guocai (CN)" <Guocai.He.CN@windriver.com>,
+ "Berg, Johannes" <johannes.berg@intel.com>, Friend <netdev@vger.kernel.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ "Korenblit, Miriam Rachel" <miriam.rachel.korenblit@intel.com>,
+ "stable@vger.kernel.org" <stable@vger.kernel.org>
+References: 
+ <CO6PR11MB5586A4475A5EEC47FC10398BCD53A@CO6PR11MB5586.namprd11.prod.outlook.com>
+ <PH0PR11MB55934A1C9A8C35B1E751C247CD50A@PH0PR11MB5593.namprd11.prod.outlook.com>
+ <14d65103-8809-4a1b-b115-bf5f8d7110ea@leemhuis.info>
+ <CO6PR11MB5586DF3964BAB4E6131A86CDCD5EA@CO6PR11MB5586.namprd11.prod.outlook.com>
+ <2026040331-evasion-walk-f572@gregkh>
+ <DM3PPF63A6024A9C09C1B13E5DF46C0B72AA35EA@DM3PPF63A6024A9.namprd11.prod.outlook.com>
+ <2026040349-chowtime-freeload-5ca4@gregkh>
+ <DM3PPF63A6024A9E931C940F849C60FAF9EA35EA@DM3PPF63A6024A9.namprd11.prod.outlook.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: 
+ <DM3PPF63A6024A9E931C940F849C60FAF9EA35EA@DM3PPF63A6024A9.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: <177608153730.182129.13646758274842136762@mxe9fb.netcup.net>
+X-NC-CID: lTUSuUsXUuObicN+PqyvLtbNuSKpQVeUo6LeMeMx+NC/Kv4gwkA=
 
-
-This is a note to let you know that I've just added the patch titled
-
-    Revert "drm: Fix use-after-free on framebuffers and property blobs when calling drm_dev_unplug"
-
-to the 6.6-stable tree which can be found at:
-    http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
-
-The filename of the patch is:
-     revert-drm-fix-use-after-free-on-framebuffers-and-property-blobs-when-calling-drm_dev_unplug.patch
-and it can be found in the queue-6.6 subdirectory.
-
-If you, or anyone else, feels it should not be added to the stable tree,
-please let <stable@vger.kernel.org> know about it.
-
-
-From linux@leemhuis.info Mon Apr 13 10:06:33 2026
-From: Thorsten Leemhuis <linux@leemhuis.info>
-Date: Mon, 13 Apr 2026 10:03:33 +0200
-Subject: Revert "drm: Fix use-after-free on framebuffers and property blobs when calling drm_dev_unplug"
-To: regressions@leemhuis.info
-Cc: dri-devel@lists.freedesktop.org, gregkh@linuxfoundation.org, matt.fagnani@bell.net, regressions@lists.linux.dev, sashal@kernel.org, stable@vger.kernel.org, "Maarten Lankhorst" <dev@lankhorst.se>, "Thomas Hellström" <thomas.hellstrom@linux.intel.com>, "Guenter Roeck" <linux@roeck-us.net>, "Simona Vetter" <simona.vetter@ffwll.ch>, "Thorsten Leemhuis" <linux@leemhuis.info>
-Message-ID: <20260413080333.3079490-1-linux@leemhuis.info>
-
-From: Maarten Lankhorst <dev@lankhorst.se>
-
-commit 45ebe43ea00d6b9f5b3e0db9c35b8ca2a96b7e70 upstream.
-
-This reverts commit 6bee098b91417654703e17eb5c1822c6dfd0c01d.
-
-Den 2026-03-25 kl. 22:11, skrev Simona Vetter:
-> On Wed, Mar 25, 2026 at 10:26:40AM -0700, Guenter Roeck wrote:
->> Hi,
+On 4/3/26 15:00, Korenblit, Miriam Rachel wrote:
+>> From: Greg KH <gregkh@linuxfoundation.org>
+>> On Fri, Apr 03, 2026 at 12:44:48PM +0000, Korenblit, Miriam Rachel wrote:
+>>>> -----Original Message-----
+>>>> From: Greg KH <gregkh@linuxfoundation.org>
+>>>> On Fri, Apr 03, 2026 at 11:08:46AM +0000, He, Guocai (CN) wrote:
+>>>>> No, The mainline have no this issue.
+>>>>> The changes of 0c4f1c02d27a880b is not in mainline.
+>>>>
+>>>> That does not make sense, that commit is really commit e1696c8bd005
+>>>> ("wifi: cfg80211: stop NAN and P2P in cfg80211_leave") which is in
+>>>> all of the following releases:
+>>>> 	5.10.252 5.15.202 6.1.165 6.6.128 6.12.75 6.18.14 6.19.4 7.0-rc1
+>>>> confused,
+>>> The change is indeed in mainline, but the locking situation in
+>>> mainline is totally different (that mutex does not even exist there)
+>>> Therefore, the issue is not supposed to happen in mainline.
 >>
->> On Fri, Mar 13, 2026 at 04:17:27PM +0100, Maarten Lankhorst wrote:
->>> When trying to do a rather aggressive test of igt's "xe_module_load
->>> --r reload" with a full desktop environment and game running I noticed
->>> a few OOPSes when dereferencing freed pointers, related to
->>> framebuffers and property blobs after the compositor exits.
->>>
->>> Solve this by guarding the freeing in drm_file with drm_dev_enter/exit,
->>> and immediately put the references from struct drm_file objects during
->>> drm_dev_unplug().
->>>
->>
->> With this patch in v6.18.20, I get the warning backtraces below.
->> The backtraces are gone with the patch reverted.
->
-> Yeah, this needs to be reverted, reasoning below. Maarten, can you please
-> take care of that and feed the revert through the usual channels? I don't
-> think it's critical enough that we need to fast-track this into drm.git
-> directly.
->
-> Quoting the patch here again:
->
->>  drivers/gpu/drm/drm_file.c| 5 ++++-
->>  drivers/gpu/drm/drm_mode_config.c | 9 ++++++---
->>  2 files changed, 10 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/drm_file.c b/drivers/gpu/drm/drm_file.c
->> index ec820686b3021..f52141f842a1f 100644
->> --- a/drivers/gpu/drm/drm_file.c
->> +++ b/drivers/gpu/drm/drm_file.c
->> @@ -233,6 +233,7 @@ static void drm_events_release(struct drm_file *file_priv)
->>  void drm_file_free(struct drm_file *file)
->>  {
->>  struct drm_device *dev;
->> +int idx;
->>
->>  if (!file)
->>  return;
->> @@ -249,9 +250,11 @@ void drm_file_free(struct drm_file *file)
->>
->>  drm_events_release(file);
->>
->> -if (drm_core_check_feature(dev, DRIVER_MODESET)) {
->> +if (drm_core_check_feature(dev, DRIVER_MODESET) &&
->> +drm_dev_enter(dev, &idx)) {
->
-> This is misplaced for two reasons:
->
-> - Even if we'd want to guarantee that we hold a drm_dev_enter/exit
->   reference during framebuffer teardown, we'd need to do this
->   _consistently over all callsites. Not ad-hoc in just one place that a
->   testcase hits. This also means kerneldoc updates of the relevant hooks
->   and at least a bunch of acks from other driver people to document the
->   consensus.
->
-> - More importantly, this is driver responsibilities in general unless we
->   have extremely good reasons to the contrary. Which means this must be
->   placed in xe.
->
->>  drm_fb_release(file);
->>  drm_property_destroy_user_blobs(dev, file);
->> +drm_dev_exit(idx);
->>  }
->>
->>  if (drm_core_check_feature(dev, DRIVER_SYNCOBJ))
->> diff --git a/drivers/gpu/drm/drm_mode_config.c b/drivers/gpu/drm/drm_mode_config.c
->> index 84ae8a23a3678..e349418978f79 100644
->> --- a/drivers/gpu/drm/drm_mode_config.c
->> +++ b/drivers/gpu/drm/drm_mode_config.c
->> @@ -583,10 +583,13 @@ void drm_mode_config_cleanup(struct drm_device *dev)
->>   */
->>  WARN_ON(!list_empty(&dev->mode_config.fb_list));
->>  list_for_each_entry_safe(fb, fbt, &dev->mode_config.fb_list, head) {
->> -struct drm_printer p = drm_dbg_printer(dev, DRM_UT_KMS, "[leaked fb]");
->> +if (list_empty(&fb->filp_head) || drm_framebuffer_read_refcount(fb) > 1) {
->> +struct drm_printer p = drm_dbg_printer(dev, DRM_UT_KMS, "[leaked fb]");
->
-> This is also wrong:
->
-> - Firstly, it's a completely independent bug, we do not smash two bugfixes
->   into one patch.
->
-> - Secondly, it's again a driver bug: drm_mode_cleanup must be called when
->   the last drm_device reference disappears (hence the existence of
->   drmm_mode_config_init), not when the driver gets unbound. The fact that
->   this shows up in a callchain from a devres cleanup means the intel
->   driver gets this wrong (like almost everyone else because historically
->   we didn't know better).
->
->   If we don't follow this rule, then we get races with this code here
->   running concurrently with drm_file fb cleanups, which just does not
->   work. Review pointed that out, but then shrugged it off with a confused
->   explanation:
->
->   https://lore.kernel.org/all/e61e64c796ccfb17ae673331a3df4b877bf42d82.camel@linux.intel.com/
->
->   Yes this also means a lot of the other drm_device teardown that drivers
->   do happens way too early. There is a massive can of worms here of a
->   magnitude that most likely is much, much bigger than what you can
->   backport to stable kernels. Hotunplug is _hard_.
+>> Ok, does that commit now need to be reverted from some of the stable branches?
+>> If so, which ones?
+> 
+> From every version which is < 6.7.
 
-Back to the drawing board, and fixing it in the intel display driver
-instead.
+Greg, do you still have this in your todo mail queue somewhere? Just
+wondering, as last weeks 6.6.y released afics lacked a revert of
+e1696c8bd0056b ("wifi: cfg80211: stop NAN and P2P in cfg80211_leave") --
+and I cannot spot one in your public stable queue either.
 
-Cc: Thomas HellstrÃ¶m <thomas.hellstrom@linux.intel.com>
-Fixes: 6bee098b9141 ("drm: Fix use-after-free on framebuffers and property blobs when calling drm_dev_unplug")
-Reported-by: Guenter Roeck <linux@roeck-us.net>
-Tested-by: Guenter Roeck <linux@roeck-us.net>
-Acked-by: Simona Vetter <simona.vetter@ffwll.ch>
-Signed-off-by: Maarten Lankhorst <dev@lankhorst.se>
-Link: https://patch.msgid.link/20260326082217.39941-2-dev@lankhorst.se
-[ Thorsten: adjust to the v6.6.y/v6.6.y backports of 6bee098b9141 ]
-Signed-off-by: Thorsten Leemhuis <linux@leemhuis.info>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/gpu/drm/drm_file.c        |    5 +----
- drivers/gpu/drm/drm_mode_config.c |    9 +++------
- 2 files changed, 4 insertions(+), 10 deletions(-)
+These are the commits that according to Miri need to be reverted if I
+understood things right:
 
---- a/drivers/gpu/drm/drm_file.c
-+++ b/drivers/gpu/drm/drm_file.c
-@@ -243,7 +243,6 @@ static void drm_events_release(struct dr
- void drm_file_free(struct drm_file *file)
- {
- 	struct drm_device *dev;
--	int idx;
- 
- 	if (!file)
- 		return;
-@@ -269,11 +268,9 @@ void drm_file_free(struct drm_file *file
- 
- 	drm_events_release(file);
- 
--	if (drm_core_check_feature(dev, DRIVER_MODESET) &&
--	    drm_dev_enter(dev, &idx)) {
-+	if (drm_core_check_feature(dev, DRIVER_MODESET)) {
- 		drm_fb_release(file);
- 		drm_property_destroy_user_blobs(dev, file);
--		drm_dev_exit(idx);
- 	}
- 
- 	if (drm_core_check_feature(dev, DRIVER_SYNCOBJ))
---- a/drivers/gpu/drm/drm_mode_config.c
-+++ b/drivers/gpu/drm/drm_mode_config.c
-@@ -546,13 +546,10 @@ void drm_mode_config_cleanup(struct drm_
- 	 */
- 	WARN_ON(!list_empty(&dev->mode_config.fb_list));
- 	list_for_each_entry_safe(fb, fbt, &dev->mode_config.fb_list, head) {
--		if (list_empty(&fb->filp_head) || drm_framebuffer_read_refcount(fb) > 1) {
--			struct drm_printer p = drm_debug_printer("[leaked fb]");
-+		struct drm_printer p = drm_debug_printer("[leaked fb]");
- 
--			drm_printf(&p, "framebuffer[%u]:\n", fb->base.id);
--			drm_framebuffer_print_info(&p, 1, fb);
--		}
--		list_del_init(&fb->filp_head);
-+		drm_printf(&p, "framebuffer[%u]:\n", fb->base.id);
-+		drm_framebuffer_print_info(&p, 1, fb);
- 		drm_framebuffer_free(&fb->base.refcount);
- 	}
- 
+v6.6.128 (4d7a05da767e5c), v6.1.165 (0c4f1c02d27a88), v5.15.202
+(31344ffecd7a34), v5.10.252 (d91240f24e831d)
 
-
-Patches currently in stable-queue which might be from linux@leemhuis.info are
-
-queue-6.6/revert-drm-fix-use-after-free-on-framebuffers-and-property-blobs-when-calling-drm_dev_unplug.patch
+Caio, Thorsten
