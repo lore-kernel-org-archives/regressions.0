@@ -1,111 +1,159 @@
-Received: from vmicros1.altlinux.org (vmicros1.altlinux.org [194.107.17.57])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C1095334681
-	for <regressions@lists.linux.dev>; Mon, 13 Apr 2026 14:24:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.107.17.57
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C50C3C9EE8;
+	Mon, 13 Apr 2026 15:12:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776090294; cv=none; b=EZCjF583M84nzfMymL4s+9/gBDmeoxHDAHnKsrTu2aElIZ95ZR7lMLk0w8ozS2hYgXvNjyVKmMK5U/F1mtg3D3ET39ShPcxDrlBKlqKMbSUOZqaYHp+qLynr5tW8Cd8JzaLIqxM6GAtI+Opd54nCXRvtakEZd3gl8dh3nZJFzIA=
+	t=1776093121; cv=none; b=JQupSsbZnk0tmvwHupzwddHD/ibrAYUUJFEiZ2draExLOEJcm5sxJ+t2QgSYB9uBkJvjb5GMt0MjF6IhfnScJjglGelvyYpf0luNf43gsNRQiYa1gIi/Nl52SOseVK3YpHvMXBenOSrQjVCa1x1NIrhWUBS/hOrMRKBkMifBEnM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776090294; c=relaxed/simple;
-	bh=2uK4wQtHsedmlpEk6CEszlGuENIpDrO17Sn0LEEXCVM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N9mw75vku4ZyHXSR2zbsD8bbRD9nhtmAlfISrvPPPeyh976Ibd+Nkar8vvLgcS08p9fuXsHcu603UjSKH9HSJh5QVVMYSionsEm2TookbZ6w8VJFlUeiaaZOTSjXoExJmhgqVdDNMebWll6UvQmJZIfJoZW0hfGmlZkWnuJ3GXE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=altlinux.org; spf=pass smtp.mailfrom=altlinux.org; arc=none smtp.client-ip=194.107.17.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=altlinux.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altlinux.org
-Received: from imap.altlinux.org (imap.altlinux.org [194.107.17.38])
-	by vmicros1.altlinux.org (Postfix) with ESMTP id 2ACB172C8CC;
-	Mon, 13 Apr 2026 17:17:30 +0300 (MSK)
-Received: from altlinux.org (unknown [193.43.10.9])
-	by imap.altlinux.org (Postfix) with ESMTPSA id 14E8336D00D0;
-	Mon, 13 Apr 2026 17:17:30 +0300 (MSK)
-Date: Mon, 13 Apr 2026 17:17:29 +0300
-From: Vitaly Chikunov <vt@altlinux.org>
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
-	gregkh@linuxfoundation.org, regressions@lists.linux.dev, 
-	Matt Roper <matthew.d.roper@intel.com>, Sasha Levin <sashal@kernel.org>, 
-	Rodrigo Vivi <rodrigo.vivi@intel.com>
-Subject: Re: [regression] Re: Linux 6.12.75
-Message-ID: <adz2d7M3DKb-6jm9@altlinux.org>
-References: <20260304131402.83200-1-sashal@kernel.org>
- <20260304131402.83200-2-sashal@kernel.org>
- <ac4lw9tTNn4baO_h@altlinux.org>
- <c54a0b91-cfbf-463e-964d-bf9a2e524189@leemhuis.info>
+	s=arc-20240116; t=1776093121; c=relaxed/simple;
+	bh=A57Git9ZVolIirBVnwJ70xdfFm5tuMwLdGhl7+zrWdo=;
+	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
+	 Content-Type; b=qWQoDywCOgiECtrW3hMuw/AFnixsoLe1bSkFaN5m7D4V40m8AXuBAsp3Q6cpivgOiSeFkr1nlsQdiFQnJRskYiJeFeKYu0/wJg7RYMBXMRsVGxEDc003bPNsqGZieKN6m50LOKJu4SDnHiKgIc0BMwntxMS39/8D44g3EaRNg1w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=s8vIC03r; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="s8vIC03r"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CF40C2BCB0;
+	Mon, 13 Apr 2026 15:12:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1776093121;
+	bh=A57Git9ZVolIirBVnwJ70xdfFm5tuMwLdGhl7+zrWdo=;
+	h=Subject:To:Cc:From:Date:In-Reply-To:From;
+	b=s8vIC03rH0PwtsZYb8vLawZkv+txCeVljCC+QDZmEYfbVF68OZv7CJWA1ywjigNrh
+	 mU6KXbc2ZfZfEkENoviCuh4jGrk/FsQmIH2XeJ3TwoSx7Me42dlJs6maFK5eD+gMGv
+	 0GHtM07v27rOTA57PsFrjlLExqPc180dBdyCtJIY=
+Subject: Patch "Revert "PCI: Enable ACS after configuring IOMMU for OF platforms"" has been added to the 5.10-stable tree
+To: bhelgaas@google.com,bjorn.forsman@gmail.com,gregkh@linuxfoundation.org,john@kernel.doghat.io,manivannan.sadhasivam@oss.qualcomm.com,regressions@lists.linux.dev,robin.murphy@arm.com
+Cc: <stable-commits@vger.kernel.org>
+From: <gregkh@linuxfoundation.org>
+Date: Mon, 13 Apr 2026 17:11:50 +0200
+In-Reply-To: <20260331091455.30394-1-manivannan.sadhasivam@oss.qualcomm.com>
+Message-ID: <2026041350-twig-refract-7f3b@gregkh>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=koi8-r
-Content-Disposition: inline
-In-Reply-To: <c54a0b91-cfbf-463e-964d-bf9a2e524189@leemhuis.info>
+Content-Type: text/plain; charset=ANSI_X3.4-1968
+Content-Transfer-Encoding: 8bit
+X-stable: commit
+X-Patchwork-Hint: ignore 
 
-Thorsten, Sasha,
 
-On Mon, Apr 13, 2026 at 01:33:18PM +0200, Thorsten Leemhuis wrote:
-> On 4/2/26 10:44, Vitaly Chikunov wrote:
-> > Sasha,
-> > 
-> > 1. I cannot find this commit posted on lore.kernel.org to report to
-> > exact patch.
-> > 
-> > | From: Matt Roper <matthew.d.roper@intel.com>
-> > | Date: Tue, 10 Sep 2024 16:47:29 -0700
-> > | Subject: [PATCH 6.12/sisyphus] drm/xe: Switch MMIO interface to take xe_mmio
-> > |  instead of xe_gt
-> > | 
-> > | [ Upstream commit a84590c5ceb354d2e9f7f6812cfb3a9709e14afa ]
-> > | 
-> > | Since much of the MMIO register access done by the driver is to non-GT
-> > | registers, use of 'xe_gt' in these interfaces has been a long-standing
-> > | design flaw that's been hard to disentangle.
-> > [...]
-> > 
-> > 2. After this patch applied to 6.12.75 there is kernel NULL pointer
-> > dereference BUG on MSI MAG H670 12th Gen Intel(R) Core(TM) i5-12600K
-> > with ASRock Intel Arc B580 Challenger [Alchemist], 12GB:
-> > [...]
-> > The commit is found not by a git bisect (since it's reported by end
-> > user and I cannot reproduce it on my hardware) but (by analyzing dmesg)
-> > with:
-> > [...]
-> > Then finding the suspecting commit:
-> > 
-> >   $ git log --oneline -G'XE_LUNARLAKE' v6.12.74..v6.12.75
-> >   26a40327c25c drm/xe: Switch MMIO interface to take xe_mmio instead of xe_gt
-> > 
-> > 6.18 and above are not affected by the bug. Also, they have another commit
-> > modifying the line which is not present in 6.12 branch:
-> > [...]
-> > Related drm/xe bug report https://gitlab.freedesktop.org/drm/xe/kernel/-/work_items/7661
-> Nobody reacted to this and it seems the gitlab ticket is stalled, too.
-> So let me ask: can this be resolved by reverting 26a40327c25c in 6.12.y?
+This is a note to let you know that I've just added the patch titled
 
-As of me, this is not easy to revert, as it depends on many other
-commits, and git does not have tooling to determine all dependant
-commits for revert. I hope someone from drm subsystem notices this to
-work on it, or Sasha can pull missing commits or revert this (obviously,
-he have tooling for this, but I was unable to find it). [I found
-obsolete references to deps but is seems not used for years and Python
-git-deps tool seems broken.]
+    Revert "PCI: Enable ACS after configuring IOMMU for OF platforms"
 
-What I found is, offending commit is picked due to
+to the 5.10-stable tree which can be found at:
+    http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
 
-  Stable-dep-of: 4a9b4e1fa52a ("drm/xe/mmio: Avoid double-adjust in 64-bit reads")
+The filename of the patch is:
+     revert-pci-enable-acs-after-configuring-iommu-for-of-platforms.patch
+and it can be found in the queue-5.10 subdirectory.
 
-Which, perhaps, needs to be reverted.
+If you, or anyone else, feels it should not be added to the stable tree,
+please let <stable@vger.kernel.org> know about it.
 
-Offending commit 26a40327c25c is not tracked in lore.
-It's part of 9 piece patchset, perhaps they are logically dependent too,
-so need to be reverted together.
 
-The possible fix is part of 6 piece patchset, which does not cherry-pick
-easily due to conflicts.
+From manivannan.sadhasivam@oss.qualcomm.com  Mon Apr 13 17:02:30 2026
+From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+Date: Tue, 31 Mar 2026 14:44:55 +0530
+Subject: Revert "PCI: Enable ACS after configuring IOMMU for OF platforms"
+To: stable@vger.kernel.org
+Cc: bhelgaas@google.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, robin.murphy@arm.com, Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>, John Hancock <john@kernel.doghat.io>, bjorn.forsman@gmail.com, Linux kernel regressions list <regressions@lists.linux.dev>
+Message-ID: <20260331091455.30394-1-manivannan.sadhasivam@oss.qualcomm.com>
 
-If someone can produce correct fix we can participate in the tests.
+From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
 
-Thanks,
+This reverts commit 573497f350b3cdb526c8c38955ddd287c5d4cc53 which is
+commit c41e2fb67e26b04d919257875fa954aa5f6e392e upstream.
 
-> 
-> Ciao, Thorsten
+The original commit attempted to enable ACS in pci_dma_configure() prior
+to IOMMU group assignment in iommu_init_device() to fix the ACS enablement
+issue for OF platforms. But that assumption doesn't hold true for kernel
+versions prior to v6.15, because on these older kernels,
+pci_dma_configure() is called *after* iommu_init_device(). So the IOMMU
+groups are already created before the ACS gets enabled. This causes the
+devices that should have been split into separate groups by ACS, getting
+merged into one group, thereby breaking the IOMMU isolation as reported on
+the AMD machines.
+
+So revert the offending commit to restore the IOMMU group assignment on
+those affected machines. It should be noted that ACS has never really
+worked on kernel versions prior to v6.15, so the revert doesn't make any
+difference for OF platforms.
+
+Reported-by: John Hancock <john@kernel.doghat.io>
+Reported-by: bjorn.forsman@gmail.com
+Closes: https://bugzilla.kernel.org/show_bug.cgi?id=221234
+Fixes: b20b659c2c6a ("PCI: Enable ACS after configuring IOMMU for OF platforms")
+Cc: Linux kernel regressions list <regressions@lists.linux.dev>
+Link: https://lore.kernel.org/regressions/2c30f181-ffc6-4d63-a64e-763cf4528f48@leemhuis.info
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/pci/pci-driver.c |    8 --------
+ drivers/pci/pci.c        |   10 +++++++++-
+ drivers/pci/pci.h        |    1 -
+ 3 files changed, 9 insertions(+), 10 deletions(-)
+
+--- a/drivers/pci/pci-driver.c
++++ b/drivers/pci/pci-driver.c
+@@ -1601,14 +1601,6 @@ static int pci_dma_configure(struct devi
+ 		ret = acpi_dma_configure(dev, acpi_get_dma_attr(adev));
+ 	}
+ 
+-	/*
+-	 * Attempt to enable ACS regardless of capability because some Root
+-	 * Ports (e.g. those quirked with *_intel_pch_acs_*) do not have
+-	 * the standard ACS capability but still support ACS via those
+-	 * quirks.
+-	 */
+-	pci_enable_acs(to_pci_dev(dev));
+-
+ 	pci_put_host_bridge_device(bridge);
+ 	return ret;
+ }
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -894,7 +894,7 @@ static void pci_std_enable_acs(struct pc
+  * pci_enable_acs - enable ACS if hardware support it
+  * @dev: the PCI device
+  */
+-void pci_enable_acs(struct pci_dev *dev)
++static void pci_enable_acs(struct pci_dev *dev)
+ {
+ 	if (!pci_acs_enable)
+ 		goto disable_acs_redir;
+@@ -3548,6 +3548,14 @@ bool pci_acs_path_enabled(struct pci_dev
+ void pci_acs_init(struct pci_dev *dev)
+ {
+ 	dev->acs_cap = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_ACS);
++
++	/*
++	 * Attempt to enable ACS regardless of capability because some Root
++	 * Ports (e.g. those quirked with *_intel_pch_acs_*) do not have
++	 * the standard ACS capability but still support ACS via those
++	 * quirks.
++	 */
++	pci_enable_acs(dev);
+ }
+ 
+ /**
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -547,7 +547,6 @@ static inline resource_size_t pci_resour
+ }
+ 
+ void pci_acs_init(struct pci_dev *dev);
+-void pci_enable_acs(struct pci_dev *dev);
+ #ifdef CONFIG_PCI_QUIRKS
+ int pci_dev_specific_acs_enabled(struct pci_dev *dev, u16 acs_flags);
+ int pci_dev_specific_enable_acs(struct pci_dev *dev);
+
+
+Patches currently in stable-queue which might be from manivannan.sadhasivam@oss.qualcomm.com are
+
+queue-5.10/revert-pci-enable-acs-after-configuring-iommu-for-of-platforms.patch
