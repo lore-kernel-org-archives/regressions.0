@@ -1,46 +1,46 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.61.103])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [46.38.247.119])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA8703A6400
-	for <regressions@lists.linux.dev>; Mon, 13 Apr 2026 08:12:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.61.103
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C45F23A6EE8
+	for <regressions@lists.linux.dev>; Mon, 13 Apr 2026 08:15:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.38.247.119
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776067943; cv=none; b=IhumSfWRhhvKp+/1ONMh8pYOg6ASgeR+25RirbTP5UcTAnTt3S99ZxnvUWXzVYl3/n/IwnKrJikz4gXwAIwZre6vXW/sk+iJyMAQyQJghmWInHwVHFLwfp3HTiQRkG+YQ5DnQYMfWG8V+zotMrTA7ZQnmyhDFZo+LuhTXw4Ye0g=
+	t=1776068140; cv=none; b=K9ceM+dSzHRl+NYks7fpYLstuauJwFr9VstaL0JpfKzoUdGtfm9nb0rSFH6vGUTMNdEdoB8tVrYgMwD8D6ZAhxLWkE/6imkKheIN08oCR4eDWYHec+JO1jobk29Oi5/6djGX24DFRZlXbHiPPdYo5198g0ub7EdNVLYbTCgcmUs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776067943; c=relaxed/simple;
-	bh=IeHkbo8XYL6dePq+h+IBMs1JYaX2SHITQQVbFwCAoOQ=;
+	s=arc-20240116; t=1776068140; c=relaxed/simple;
+	bh=/tefIa72QAAdvaLL7zPjym9ZM2g5JYQreqZruM+7q3k=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=C18XsG7sNckTr7cUCAR6HQ9HDysNRWK2/1NIM5uQh3aF30bZukOin3suX+S3YAOglCc6xCB/2PeUOv2zA5kvnN33wtYgVnyfD2ju1YtnlJ/q7HXS/yxSwNsXoaTWqvC/A/nGTalMEN7vx8zefBw/yKfFI39DQXUgFO6riIrWno8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=knSeXNzH; arc=none smtp.client-ip=188.68.61.103
+	 MIME-Version:Content-Type; b=UfqE5e/EsywJikybkGWoNMitCG6ek6EZyExwsPLP/4YrGYw0mnxiTjszoFf6IZOyEEWNaAeW+B2MBBKTsPJn1oC/UA3bZcZc7ZovC7fEZ2NSeJKsCx0h1ziewvARgof6+G3LTtcL2EyBGdMpzwqqyqyNFS/OasH+pSoEhdvdhP0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=CQVktpOz; arc=none smtp.client-ip=46.38.247.119
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="knSeXNzH"
-Received: from mors-relay-8403.netcup.net (localhost [127.0.0.1])
-	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4fvKgZ6c75z83c8;
-	Mon, 13 Apr 2026 10:04:26 +0200 (CEST)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="CQVktpOz"
+Received: from mors-relay-8404.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4fvKjs0271z88CG;
+	Mon, 13 Apr 2026 10:06:25 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1776067466;
-	bh=IeHkbo8XYL6dePq+h+IBMs1JYaX2SHITQQVbFwCAoOQ=;
+	s=key2; t=1776067585;
+	bh=/tefIa72QAAdvaLL7zPjym9ZM2g5JYQreqZruM+7q3k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=knSeXNzHQ/kUjZ2z/zAXEMHsLE0gQ60R0QMPR97IB9ZZB2wyEUkhifdDpJf0MSR8f
-	 uKFVJZmZK/+NxfCEWnMvZeKQLlUn+BkV2levA8ZLTelvUtJPXT0iRZzWhbMgLFcx2B
-	 e5AfDNE4nw/dI+Yl6Bu9vyLx7wvXPD1vGxt3McpmsnGE9jnY5+9Njhzo227Gy5neCv
-	 6fy52CpbKNgWg3ravJvTjnoGUH148wJSB74JjQVI7Bub8Fuc3lr21ZreCCHDWaV8f1
-	 ssd+3Sh83gTj5A4yrcUYP+PTHzx2hOrczX+EQBO5XxPbni+8GHcX6pjNCbAeeDN2P/
-	 NpSBPR2R/2ajg==
+	b=CQVktpOzFi9CxaHdVlrwExV776NyJlG4QyTV6IpoPeSSPVevCjynTAXg3cQw08lTk
+	 V2nU3BY35uhe3D5oYDjPfcLZG+SHBT+V2W8APDGxMI2kF9b4qOOqJOvK0ZLtd8ugrl
+	 bq/WT6iI/btju00cYqtTFTCusBbxbM8AAiaC09N6oIvWOM+Y0UrfgscN0g0HYG831W
+	 MSPi/a6fPVataogbwfdJUUjI8tljgGmkjetpyzDrmxZY3xbKjsO4CpI46g1+WPR5OJ
+	 tbH7lWinCsG5nPvU/ufFH8ys2iQC/AI3fKcSUduqi1u+vYDvixXyWvgxr7pBt4NDNU
+	 pFkuNM5ZUL2/w==
 Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4fvKgZ5vTCz83ZT;
-	Mon, 13 Apr 2026 10:04:26 +0200 (CEST)
+	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4fvKjB3CKFz4yh4;
+	Mon, 13 Apr 2026 10:05:50 +0200 (CEST)
 Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4fvKgY1Vwpz8sgT;
-	Mon, 13 Apr 2026 10:04:24 +0200 (CEST)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4fvKjB0CG5z8svJ;
+	Mon, 13 Apr 2026 10:05:50 +0200 (CEST)
 Received: from luggage.fritz.box (unknown [IPv6:2a02:8108:8984:1d00:a8ad:ebd4:6fc6:160])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 2504B632D3;
-	Mon, 13 Apr 2026 10:04:24 +0200 (CEST)
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 8F892632D3;
+	Mon, 13 Apr 2026 10:05:48 +0200 (CEST)
 Authentication-Results: mxe9fb;
 	spf=pass (sender IP is 2a02:8108:8984:1d00:a8ad:ebd4:6fc6:160) smtp.mailfrom=linux@leemhuis.info smtp.helo=luggage.fritz.box
 Received-SPF: pass (mxe9fb: connection is authenticated)
@@ -57,10 +57,10 @@ Cc: dri-devel@lists.freedesktop.org,
 	Guenter Roeck <linux@roeck-us.net>,
 	Simona Vetter <simona.vetter@ffwll.ch>,
 	Thorsten Leemhuis <linux@leemhuis.info>
-Subject: [PATCH 6.6.y] Revert "drm: Fix use-after-free on framebuffers and
+Subject: [PATCH 6.1.y] Revert "drm: Fix use-after-free on framebuffers and
  property blobs when calling drm_dev_unplug"
-Date: Mon, 13 Apr 2026 10:03:33 +0200
-Message-ID: <20260413080333.3079490-1-linux@leemhuis.info>
+Date: Mon, 13 Apr 2026 10:05:47 +0200
+Message-ID: <20260413080547.3079663-1-linux@leemhuis.info>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <9c667182-3a9e-4fa3-a568-1cb5b1b74106@leemhuis.info>
 References: <9c667182-3a9e-4fa3-a568-1cb5b1b74106@leemhuis.info>
@@ -73,8 +73,10 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-PPP-Message-ID: 
- <177606746458.3646103.10857321599497945761@mxe9fb.netcup.net>
-X-NC-CID: 4LEqszUZCXp1/3/lQIU2u0ALE/PuW1n9UBMUxH7jr5Qt49yOD0Y=
+ <177606754901.3692969.13620999047659531436@mxe9fb.netcup.net>
+X-Rspamd-Server: rspamd-worker-8404
+X-Rspamd-Queue-Id: 8F892632D3
+X-NC-CID: E9ffI0a27T/UDCm6Rw2NvGctQwWJ3d4m+QfrUGuRA5KcZ31fui4=
 
 From: Maarten Lankhorst <dev@lankhorst.se>
 
@@ -204,10 +206,10 @@ Signed-off-by: Thorsten Leemhuis <linux@leemhuis.info>
  2 files changed, 4 insertions(+), 10 deletions(-)
 
 diff --git drivers/gpu/drm/drm_file.c drivers/gpu/drm/drm_file.c
-index b5a5cede4d3d8b..b943221b238f87 100644
+index 3722c796e632f9..d6a0572984b540 100644
 --- drivers/gpu/drm/drm_file.c
 +++ drivers/gpu/drm/drm_file.c
-@@ -243,7 +243,6 @@ static void drm_events_release(struct drm_file *file_priv)
+@@ -239,7 +239,6 @@ static void drm_events_release(struct drm_file *file_priv)
  void drm_file_free(struct drm_file *file)
  {
  	struct drm_device *dev;
@@ -215,7 +217,7 @@ index b5a5cede4d3d8b..b943221b238f87 100644
  
  	if (!file)
  		return;
-@@ -269,11 +268,9 @@ void drm_file_free(struct drm_file *file)
+@@ -265,11 +264,9 @@ void drm_file_free(struct drm_file *file)
  
  	drm_events_release(file);
  
@@ -229,10 +231,10 @@ index b5a5cede4d3d8b..b943221b238f87 100644
  
  	if (drm_core_check_feature(dev, DRIVER_SYNCOBJ))
 diff --git drivers/gpu/drm/drm_mode_config.c drivers/gpu/drm/drm_mode_config.c
-index f09137046c2bdf..87eb591fe9b5b8 100644
+index 8c844bce4f28a5..8525ef8515406b 100644
 --- drivers/gpu/drm/drm_mode_config.c
 +++ drivers/gpu/drm/drm_mode_config.c
-@@ -546,13 +546,10 @@ void drm_mode_config_cleanup(struct drm_device *dev)
+@@ -544,13 +544,10 @@ void drm_mode_config_cleanup(struct drm_device *dev)
  	 */
  	WARN_ON(!list_empty(&dev->mode_config.fb_list));
  	list_for_each_entry_safe(fb, fbt, &dev->mode_config.fb_list, head) {
@@ -250,7 +252,7 @@ index f09137046c2bdf..87eb591fe9b5b8 100644
  	}
  
 
-base-commit: 8cee53b8eaeb5d1f7c97b7f2381653ed00ffc26b
+base-commit: 8e8fc038cad5988ede9f323677c28eb9a696026c
 -- 
 2.53.0
 
