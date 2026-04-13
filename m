@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 555613B892D;
-	Mon, 13 Apr 2026 15:12:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C3313081D6;
+	Mon, 13 Apr 2026 15:12:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776093141; cv=none; b=XfVE6kXS2Lhn7p1X9cf/Z+fGa6c23Yab+E4EkIs0kt8dyM/Uag7RRXFd8P29KpjtgL4eZYfcGQGzSAt3U2wKQB5kflnpYsasvPTHdg7WB9UP2lQ/fdWEY2IEiiwSgToUimrvsi6VHYIjkvrqTtkzZNg57w5ZjLORGHA1SR400eI=
+	t=1776093149; cv=none; b=lm1Zyf6UxJvlcNlFpB3rGfcM/rl8asmo18U9czUiHrsLlSoZy5F2irFbPl9Bcm3k8OkkuoHYgFZX1abG1lJajYvPlZMnoQCrEwqRWnq7T7vSVMA5q1XiV3zXgxDtc20Dn+HL1DoNnW/eiB9fpLvIYn+p9b/3ufLX0+/X5oTlW9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776093141; c=relaxed/simple;
-	bh=AfXdVsuEGCOXGeyaQk65BaNEEseDhx8yL7YHZEZz5F4=;
+	s=arc-20240116; t=1776093149; c=relaxed/simple;
+	bh=VVi1q8odmK5qB2/SBEK1Dj7ISu9PFwmulX0A/379UmU=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type; b=FEsAwjdbsLaHA+CoUkg06qOhT8jl+B7PSZPg/aYa2TB9lyfChRhCsSMetckp4EFGbPqCtaXC3svI12IroiEk+UuHwQXhARkfM6/BsD8YAFp1AoVVV+o/e1pPNNIMZX/vEPtakj0sDHil52O3+O9qf+Dq88dnNYKPMz/LvPFzsio=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=mpu1aBnJ; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type; b=F0P+2axvplHxya57hRd5mE66bDjnsZ6rB1oyRXEVoNTwOn3nVBoAyvzBcNGQOwUSHFMAzZS6AnEkf1kzQcrc8xILs7hdYLfdTxsn0zlT+1/KiX1FdLzRQVAAwbwQFltkAVvNY54fmK8ZDuCAq5W/pn5S8MFz4Vvb1bGGRiWAKC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=OzupNduW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="mpu1aBnJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5E0BC2BCB9;
-	Mon, 13 Apr 2026 15:12:20 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="OzupNduW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E3C4C2BCB4;
+	Mon, 13 Apr 2026 15:12:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1776093141;
-	bh=AfXdVsuEGCOXGeyaQk65BaNEEseDhx8yL7YHZEZz5F4=;
+	s=korg; t=1776093148;
+	bh=VVi1q8odmK5qB2/SBEK1Dj7ISu9PFwmulX0A/379UmU=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:From;
-	b=mpu1aBnJewdOxRxPHL5ytjeT7G3eKu5N9Wlyyszk5Zcfr6di7MvhIwQvQvprGohtM
-	 6sX0FqjSRvtobuUKVvBCy0PCc2+Tbr9dTn5oVy7vHfOA5MNM1OLPMU7V63DdtcJL5W
-	 kKEKLQIAHcowb5qDe9krZUtqoScihpXRng+fMK90=
-Subject: Patch "Revert "PCI: Enable ACS after configuring IOMMU for OF platforms"" has been added to the 6.1-stable tree
+	b=OzupNduWystyvj62K7f/+kasgmYyEcyJIZEKLWWApMIqQqN4VS3+2Scs0l6HYdw5O
+	 zwvyN+hGfAL9CJ3lR62nuAhx1be2lEfes3sheXNJxn5KB3ZHAax4t3huNlyBqwTtom
+	 ItU9Wp736U+wCOivRAScdiF0QBCA/TanfiCkh2hQ=
+Subject: Patch "Revert "PCI: Enable ACS after configuring IOMMU for OF platforms"" has been added to the 6.6-stable tree
 To: bhelgaas@google.com,bjorn.forsman@gmail.com,gregkh@linuxfoundation.org,john@kernel.doghat.io,manivannan.sadhasivam@oss.qualcomm.com,regressions@lists.linux.dev,robin.murphy@arm.com
 Cc: <stable-commits@vger.kernel.org>
 From: <gregkh@linuxfoundation.org>
-Date: Mon, 13 Apr 2026 17:12:10 +0200
+Date: Mon, 13 Apr 2026 17:12:18 +0200
 In-Reply-To: <20260331091455.30394-1-manivannan.sadhasivam@oss.qualcomm.com>
-Message-ID: <2026041310-headpiece-rasping-acf8@gregkh>
+Message-ID: <2026041318-steadying-duty-2855@gregkh>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -46,12 +46,12 @@ This is a note to let you know that I've just added the patch titled
 
     Revert "PCI: Enable ACS after configuring IOMMU for OF platforms"
 
-to the 6.1-stable tree which can be found at:
+to the 6.6-stable tree which can be found at:
     http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
 
 The filename of the patch is:
      revert-pci-enable-acs-after-configuring-iommu-for-of-platforms.patch
-and it can be found in the queue-6.1 subdirectory.
+and it can be found in the queue-6.6 subdirectory.
 
 If you, or anyone else, feels it should not be added to the stable tree,
 please let <stable@vger.kernel.org> know about it.
@@ -67,7 +67,7 @@ Message-ID: <20260331091455.30394-1-manivannan.sadhasivam@oss.qualcomm.com>
 
 From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
 
-This reverts commit 5d57164c0ab0ac5c99eca49c577994bfbca70a2a which is
+This reverts commit ec494c0260bf57a6fa3aa43a91daf7a774f8bd97 which is
 commit c41e2fb67e26b04d919257875fa954aa5f6e392e upstream.
 
 The original commit attempted to enable ACS in pci_dma_configure() prior
@@ -101,7 +101,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 --- a/drivers/pci/pci-driver.c
 +++ b/drivers/pci/pci-driver.c
-@@ -1667,14 +1667,6 @@ static int pci_dma_configure(struct devi
+@@ -1668,14 +1668,6 @@ static int pci_dma_configure(struct devi
  		ret = acpi_dma_configure(dev, acpi_get_dma_attr(adev));
  	}
  
@@ -118,7 +118,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
  	if (!ret && !driver->driver_managed_dma) {
 --- a/drivers/pci/pci.c
 +++ b/drivers/pci/pci.c
-@@ -1040,7 +1040,7 @@ static void pci_std_enable_acs(struct pc
+@@ -1046,7 +1046,7 @@ static void pci_std_enable_acs(struct pc
   * pci_enable_acs - enable ACS if hardware support it
   * @dev: the PCI device
   */
@@ -127,7 +127,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
  {
  	if (!pci_acs_enable)
  		goto disable_acs_redir;
-@@ -3777,6 +3777,14 @@ bool pci_acs_path_enabled(struct pci_dev
+@@ -3823,6 +3823,14 @@ bool pci_acs_path_enabled(struct pci_dev
  void pci_acs_init(struct pci_dev *dev)
  {
  	dev->acs_cap = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_ACS);
@@ -144,7 +144,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
  /**
 --- a/drivers/pci/pci.h
 +++ b/drivers/pci/pci.h
-@@ -526,7 +526,6 @@ static inline resource_size_t pci_resour
+@@ -557,7 +557,6 @@ static inline resource_size_t pci_resour
  }
  
  void pci_acs_init(struct pci_dev *dev);
@@ -156,4 +156,4 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 Patches currently in stable-queue which might be from manivannan.sadhasivam@oss.qualcomm.com are
 
-queue-6.1/revert-pci-enable-acs-after-configuring-iommu-for-of-platforms.patch
+queue-6.6/revert-pci-enable-acs-after-configuring-iommu-for-of-platforms.patch
