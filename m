@@ -1,51 +1,51 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.61.103])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [194.59.206.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F17893BF68E
-	for <regressions@lists.linux.dev>; Mon, 13 Apr 2026 11:59:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.61.103
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BD442D94A0
+	for <regressions@lists.linux.dev>; Mon, 13 Apr 2026 12:08:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.59.206.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776081546; cv=none; b=ApwoRRjgxcrOgLEtBM8stN2BzFGgn104slLl9EpR76a28r1V/xJ5FqqmrMl3iCy4p0Fd0/+x0D/2ZCmpyZSNlIFoQsBrljqGet6WyfW1zLxXv8X61BuyYvApm3eWdJrXmumgabTrh0m6I5OfU6D5E4XYfEIkXLsUx1FfHZy0Sj8=
+	t=1776082088; cv=none; b=BImX7ewozJu30lkpvOlihvdXNousuwXtoQuN6vkoVGYdQgV9MdQLMmexMwMlMqrMOauiRCOrVQ6TJMnUPrJ7oDnElp9Bs0/9KCpBwu583RykVIbWEla13DBVxCplVhhwWAnW8AdlGevMhGrkzVP2JXkIcw21066iZbpJeINUJNQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776081546; c=relaxed/simple;
-	bh=kdwtsZTX8JHWxSQI096jyZiy3Z+yb1EqPFicOLsBJlg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=j2E+hBKjD04PZWXz7VBiQty9KO0Kr2rUqGNnEvP1pGhqLQkTNFS52qS5TpoiCLUoOmAsb3IcubQMAx7Zf50MslfEm+RrzaY1icGTiNUb9Lo4+RIdK2QTvLvzcn/XYPcagipkoxgAkGOWnoz/I4JSX+0tK4lh6Tg4KwVaGpoDsgw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=WMvY3/JZ; arc=none smtp.client-ip=188.68.61.103
+	s=arc-20240116; t=1776082088; c=relaxed/simple;
+	bh=SxV2WNAfw6YDIyWP49E8HK5zy3S0wtZUgo1xxi236IQ=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=ke5r7Wz2ptjadWC2PiYlJ0kjONq2eaBjOclmExvzq3OzlK+euvlxKRM/4Fz+g+1Zyziek4JGA29aFdaXtV4s68sYyjrbR9Af7UM7pUMULKM3SZ9NE8RhJAtS9hZosW6nJfA7ZYgz+TtIoh9U4rNUdRC8z/N5P0dGSDrZjo5QgYM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=gI5WC90U; arc=none smtp.client-ip=194.59.206.189
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="WMvY3/JZ"
-Received: from mors-relay-8403.netcup.net (localhost [127.0.0.1])
-	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4fvQtH3RpRz8B2w;
-	Mon, 13 Apr 2026 13:59:03 +0200 (CEST)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="gI5WC90U"
+Received: from relay02-mors.netcup.net (localhost [127.0.0.1])
+	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4fvQwj4qV1z4D3w
+	for <regressions@lists.linux.dev>; Mon, 13 Apr 2026 14:01:09 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1776081543;
-	bh=kdwtsZTX8JHWxSQI096jyZiy3Z+yb1EqPFicOLsBJlg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=WMvY3/JZ/P+wYNeMbryJ+mrWYJU0HrVBhpxIZVGfjif+Lr5MHBrCOV1H1vmawJBao
-	 vJEYsvB0eg1vimmPk35YpYJJArtC4W0+hWeNMidQLeth6ZgZeaCuEpkerBHiRT1n4v
-	 GLF57i9wjJubmnH0M3ZAFKM5jjOXXXWAUKRAmp8Km2l9gre0sbsOcZ3+DDruIiKJgc
-	 /+X+rO6EIV9Tnvmmm73N1cJ6cl1sgACePbzWngpim+vx2qLiJy0GIz66iq5gr2N9bc
-	 JSdjH2mOUA/56x7SXoB7xx925+nHShPIElF7lZcFDBXUn798FqJtiMjKcubkKVfIW8
-	 z4hw9Zcjcfxxg==
+	s=key2; t=1776081669;
+	bh=SxV2WNAfw6YDIyWP49E8HK5zy3S0wtZUgo1xxi236IQ=;
+	h=Date:Subject:From:To:References:In-Reply-To:From;
+	b=gI5WC90U4zD98R1VViy08DXefD4bg7syt0RpZqzo5QXUB4b6Jef9DZIADszYOh/tq
+	 r9boUJl1MmWN7kUMMwplHP+clCelrWRyHj+WIHxI8u7tZPZ7hfT5s3dzQSnUddpyrz
+	 EkkXgQZ4vdX+otKJwoRBNg3dxXYVZzOMVbMzPHM8n2XRTy9Wa18GIfRroizfKCU0/O
+	 fJ5RyOE3M/4YcSVU7sHXFxoHmf6F0C3RmoeBbKg2BhPR85ApRLFG3/ZbMt+q5J3dM8
+	 r8OF8VFqIQGwul2OaTtIn+D4MkJIsEDNnx22eOTcWxSeu1hISfBKM9wlWqEibML8TY
+	 /AHyEZgEudfpQ==
 Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4fvQtH2kMMz89r8;
-	Mon, 13 Apr 2026 13:59:03 +0200 (CEST)
+	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4fvQwj47Fwz7w8r
+	for <regressions@lists.linux.dev>; Mon, 13 Apr 2026 14:01:09 +0200 (CEST)
 Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4fvQtB13N3z8scg;
-	Mon, 13 Apr 2026 13:58:57 +0200 (CEST)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4fvQwj273Hz8sZw
+	for <regressions@lists.linux.dev>; Mon, 13 Apr 2026 14:01:09 +0200 (CEST)
 Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id E463D635CE;
-	Mon, 13 Apr 2026 13:58:56 +0200 (CEST)
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 4B820635CE
+	for <regressions@lists.linux.dev>; Mon, 13 Apr 2026 14:01:05 +0200 (CEST)
 Authentication-Results: mxe9fb;
         spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
 Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <58f6e74d-480e-4e0c-aa66-68dfc1de7421@leemhuis.info>
-Date: Mon, 13 Apr 2026 13:58:56 +0200
+Message-ID: <3e599c3e-a451-4689-808b-45da34354c38@leemhuis.info>
+Date: Mon, 13 Apr 2026 14:01:04 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -53,63 +53,46 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: commit 0c4f1c02d27a880b cause a deadlock issue
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: "He, Guocai (CN)" <Guocai.He.CN@windriver.com>,
- "Berg, Johannes" <johannes.berg@intel.com>, Friend <netdev@vger.kernel.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- "Korenblit, Miriam Rachel" <miriam.rachel.korenblit@intel.com>,
- "stable@vger.kernel.org" <stable@vger.kernel.org>
-References: 
- <CO6PR11MB5586A4475A5EEC47FC10398BCD53A@CO6PR11MB5586.namprd11.prod.outlook.com>
- <PH0PR11MB55934A1C9A8C35B1E751C247CD50A@PH0PR11MB5593.namprd11.prod.outlook.com>
- <14d65103-8809-4a1b-b115-bf5f8d7110ea@leemhuis.info>
- <CO6PR11MB5586DF3964BAB4E6131A86CDCD5EA@CO6PR11MB5586.namprd11.prod.outlook.com>
- <2026040331-evasion-walk-f572@gregkh>
- <DM3PPF63A6024A9C09C1B13E5DF46C0B72AA35EA@DM3PPF63A6024A9.namprd11.prod.outlook.com>
- <2026040349-chowtime-freeload-5ca4@gregkh>
- <DM3PPF63A6024A9E931C940F849C60FAF9EA35EA@DM3PPF63A6024A9.namprd11.prod.outlook.com>
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
 From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
 Content-Language: de-DE, en-US
-In-Reply-To: 
- <DM3PPF63A6024A9E931C940F849C60FAF9EA35EA@DM3PPF63A6024A9.namprd11.prod.outlook.com>
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <177608153730.182129.13646758274842136762@mxe9fb.netcup.net>
-X-NC-CID: lTUSuUsXUuObicN+PqyvLtbNuSKpQVeUo6LeMeMx+NC/Kv4gwkA=
+X-PPP-Message-ID: <177608166547.197704.12735716931303542096@mxe9fb.netcup.net>
+X-Rspamd-Server: rspamd-worker-8404
+X-Rspamd-Queue-Id: 4B820635CE
+X-NC-CID: d8dxpvc5RI1R1rQALBq5x2DWFEzWYWwpX301RyBHTDWw7YbEK84=
 
-On 4/3/26 15:00, Korenblit, Miriam Rachel wrote:
->> From: Greg KH <gregkh@linuxfoundation.org>
->> On Fri, Apr 03, 2026 at 12:44:48PM +0000, Korenblit, Miriam Rachel wrote:
->>>> -----Original Message-----
->>>> From: Greg KH <gregkh@linuxfoundation.org>
->>>> On Fri, Apr 03, 2026 at 11:08:46AM +0000, He, Guocai (CN) wrote:
->>>>> No, The mainline have no this issue.
->>>>> The changes of 0c4f1c02d27a880b is not in mainline.
->>>>
->>>> That does not make sense, that commit is really commit e1696c8bd005
->>>> ("wifi: cfg80211: stop NAN and P2P in cfg80211_leave") which is in
->>>> all of the following releases:
->>>> 	5.10.252 5.15.202 6.1.165 6.6.128 6.12.75 6.18.14 6.19.4 7.0-rc1
->>>> confused,
->>> The change is indeed in mainline, but the locking situation in
->>> mainline is totally different (that mutex does not even exist there)
->>> Therefore, the issue is not supposed to happen in mainline.
->>
->> Ok, does that commit now need to be reverted from some of the stable branches?
->> If so, which ones?
-> 
-> From every version which is < 6.7.
 
-Greg, do you still have this in your todo mail queue somewhere? Just
-wondering, as last weeks 6.6.y released afics lacked a revert of
-e1696c8bd0056b ("wifi: cfg80211: stop NAN and P2P in cfg80211_leave") --
-and I cannot spot one in your public stable queue either.
 
-These are the commits that according to Miri need to be reverted if I
-understood things right:
+On 3/9/24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-v6.6.128 (4d7a05da767e5c), v6.1.165 (0c4f1c02d27a88), v5.15.202
-(31344ffecd7a34), v5.10.252 (d91240f24e831d)
+#regzbot report:
+https://lore.kernel.org/stable/a5f23340-2b84-4734-be11-f5a97c188195@app.fastmail.com/
+#regzbot introduced: 3958bf16e2fe1b
+#regzbot fix: 9036bd0e
 
-Caio, Thorsten
+#regzbot report:
+https://gitlab.freedesktop.org/drm/i915/kernel/-/work_items/15731
+#regzbot resolve: inconclusive: reporter MIA
+
+#regzbot report:
+https://lore.kernel.org/stable/20260310235642.6d9798f4@plasteblaster/
+#regzbot introduced: fe856be475f7
+#regzbot fix: d4c7210d2f3ea481a6481f03040a64d9077a6172
+
+#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=221234
+#regzbot fix: 7a126c1b6cfa2c
+
+#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=221283
+#regzbot fix: 6b60e35a7fdba4
+
+
