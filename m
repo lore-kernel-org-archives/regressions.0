@@ -1,50 +1,55 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DCFA2D063E;
-	Mon, 13 Apr 2026 06:49:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 190B93A383B
+	for <regressions@lists.linux.dev>; Mon, 13 Apr 2026 08:07:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776062973; cv=none; b=dO9dUwZeLvQ5s3TB1bhU9WYtIrz+vw1jwMqPSQejdobqE0kf32+a8HyXf/yGpNEWmFs4H2Fctbm7DeBjhPscwjwcUQEz2yO582kyzaqBBlic3O5b/bHgOymrDtG+hrvNq9Tcy1lwzB/ZKlMvnDeIfo+A9UhwO7KwSV80dw1gv3Y=
+	t=1776067638; cv=none; b=jx06Psc7c2MEEN9xedHn10DWwfUIy2g2i9GJYfPWTxnky+UIVqRP2kxMFqABCuzY7UPUH6S/BmofjnM4wXcHdcH+4b2+fcb1FzQAwvC3dLwxRO7lwUbvvN1kzJW0kxs/LHssvbGlzCq1SBmG9YC5zrs5NYrxL3jGvaGUWmH30Rk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776062973; c=relaxed/simple;
-	bh=c6shzak5a0ojomckogLwWc3omCBdCHFvDRUUPSebb7U=;
+	s=arc-20240116; t=1776067638; c=relaxed/simple;
+	bh=LejCnxnvuVcA8k5XFW78fIGB7kn4dCmYvIYPy1OnQd8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gyGBxOjvzZWDsNYSp0IsH8kyHLr5+wEtwEbRt8dMlAfeJ1DTR6GrBzmoi7+nffhODl8QYEfw4ojnoxhw2kWKZ12I+hMpHAuyrB2wWD7fWHHRuX5oTWe6Yb2Esr/tDuTX0Yh6jlKhKtnzK+xKUWobbcqq9WXXQ01cg7l+p0w9p2k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IQLqZ6NE; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	 In-Reply-To:Content-Type; b=EGJ9NSWw0hHg3fjC3FUheP2TVcWJIwZIGn9FMmwhAU0FAVb0QYe/YnkBmGKzMjp+bNZTYvoaKokKWFrF4BtvOkfxugqhnAc0d8MDQRzmb2zMvGqMGCBxJP5cmgSI5/qUto7nyL7lse3uQG7OBT79aEnBbtYnwhVZkvC+MI7ihWA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=YiF7gnnw; arc=none smtp.client-ip=188.68.63.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IQLqZ6NE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1776062971; x=1807598971;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=c6shzak5a0ojomckogLwWc3omCBdCHFvDRUUPSebb7U=;
-  b=IQLqZ6NECfz52x35wZ8z5hE86a689ZbnAIPFWRqowFtaiVDRDEUxD1y2
-   T1FkYdiq+3hGwlYEIJm8x+uYj8aHzMQM+5+EzTrAd+znv9+oWg20acTYZ
-   yzOB+IxEVHfqKrPlFL9OpIDoT6YaWWdbcXHiFiXkP2c10TqKiSkx+qo9o
-   qxQJH67AGzwFN42NWrfsfWwt/OzSdyah68CGuVnqM3FAsDug97TnXPIca
-   dipdw9OF0d8iPhjBjXj6qJUudGLSzzhd6o72cSpOw7NWR2VUtrOnMre3P
-   Sj68rF/RKvBTRQn7x7MZ0E18phU9oPir2EHfb9aoLs/20WPlXnw4Itb1y
-   w==;
-X-CSE-ConnectionGUID: cBgZG3PxQwefmSnlrYNwYw==
-X-CSE-MsgGUID: e7xJ4y5cQbq4srPnJnsW5A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11757"; a="76876091"
-X-IronPort-AV: E=Sophos;i="6.23,176,1770624000"; 
-   d="scan'208";a="76876091"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2026 23:49:31 -0700
-X-CSE-ConnectionGUID: 4hs9jAHjQwem1RQhfqg5Sw==
-X-CSE-MsgGUID: zqV8INj0R56ht60ahSP8MA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,176,1770624000"; 
-   d="scan'208";a="229576781"
-Received: from allen-sbox.sh.intel.com (HELO [10.239.159.30]) ([10.239.159.30])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2026 23:49:29 -0700
-Message-ID: <56ce85d5-e0b9-407c-9a86-708111a8a509@linux.intel.com>
-Date: Mon, 13 Apr 2026 14:47:42 +0800
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="YiF7gnnw"
+Received: from mors-relay-2501.netcup.net (localhost [127.0.0.1])
+	by mors-relay-2501.netcup.net (Postfix) with ESMTPS id 4fvKYk34fhz67KB;
+	Mon, 13 Apr 2026 09:59:22 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1776067162;
+	bh=LejCnxnvuVcA8k5XFW78fIGB7kn4dCmYvIYPy1OnQd8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=YiF7gnnwOaBS3LIH0gMZqDFPfFu4xTRIskTOfqdGPYQ89agnajSqWVeqqs8eTuCo4
+	 WvkFNzC1PG9N0zu+ugEvEXN7c+T+DLelmr5vHEQqV+7ojgNY5dsTWdlttkI6+19E4b
+	 6/7FHsIX18AThgKWQOR5GYB+P711WwKn/Z5ISwWE4S+3+yd1r2g4ut/NOGsq6+sHoW
+	 6a1b1MvJS+u1VSegaDjuXNJDO3xPSEJZgxoMhnO6o22dx4bowApYNGonZtJqH9FHuQ
+	 mq6Cch0TDgox1orQWDtiSh2fG2GKqFK38sZfQcupNwt8YYRezdAfUWYEBWzSJ8PGac
+	 OH8dN++in6oCQ==
+Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-2501.netcup.net (Postfix) with ESMTPS id 4fvKYG00hMz4yW8;
+	Mon, 13 Apr 2026 09:58:58 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
+X-Spam-Flag: NO
+X-Spam-Score: -2.898
+X-Spam-Level: 
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4fvKYD5DF5z8tdJ;
+	Mon, 13 Apr 2026 09:58:56 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 16478635EC;
+	Mon, 13 Apr 2026 09:58:55 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <9c667182-3a9e-4fa3-a568-1cb5b1b74106@leemhuis.info>
+Date: Mon, 13 Apr 2026 09:58:53 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -52,87 +57,65 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] GPU passes into VM improperly after c376a3456d8b or
- a98db518dde2
-To: 70sp <70sp@protonmail.com>, "iommu@lists.linux.dev"
- <iommu@lists.linux.dev>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <z7Rkts0EsooZcnCjNfJaK6ursftFU8ubOkH0hcNjzxugEAwGsHLMblOdfoAx-gJzBZ-TMmeUtD7iWBngbFY5UCJCwdSmYqmCVMy-yhbirUk=@protonmail.com>
-Content-Language: en-US
-From: Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <z7Rkts0EsooZcnCjNfJaK6ursftFU8ubOkH0hcNjzxugEAwGsHLMblOdfoAx-gJzBZ-TMmeUtD7iWBngbFY5UCJCwdSmYqmCVMy-yhbirUk=@protonmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Subject: Re: Warnings and errors in drm_mode_config_cleanup when booting
+ 6.19.10 and 7.0-rc5
+To: Greg KH <gregkh@linuxfoundation.org>, Matt Fagnani <matt.fagnani@bell.net>
+Cc: dri-devel@lists.freedesktop.org, stable@vger.kernel.org,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ Sasha Levin <sashal@kernel.org>
+References: <a8f058b3-ea2c-4af1-a19b-9ae2db46754c@bell.net>
+ <9652ce0b-bb4c-489d-9e32-89c5af5c8101@leemhuis.info>
+ <2026040259-glacial-reversal-9a75@gregkh>
+ <35ed8f9a-66c2-40c3-a545-da4af629014f@bell.net>
+ <2026040609-script-perpetual-16bb@gregkh>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <2026040609-script-perpetual-16bb@gregkh>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-PPP-Message-ID: <177606713563.3612511.1360759713173666767@mxe9fb.netcup.net>
+X-Rspamd-Server: rspamd-worker-8404
+X-Rspamd-Queue-Id: 16478635EC
+X-NC-CID: rWZXVsGMoy449/T/o1Pn7niXYiHQXQsBzfi/7AgSvrWrnJtBrZU=
 
-On 4/12/26 19:17, 70sp wrote:
-> Hello,
-> 
-> I have been dealing with a regression launching a Windows QEMU/KVM 
-> virtual machine with a GPU passed through.
-> 
-> The issue consists of launching a QEMU/KVM VM, which gets stuck for 
-> about 2 minutes on booting with a white screen and then having NVIDIA’s 
-> code 43 in Windows.
-> 
-> I’m certain, that the issue is not caused by anything in Windows or 
-> related software in Linux, because I tried reinstalling my whole PC 
-> including the Windows VM. I tried to reproduce the bug on an out-of-the- 
-> box Arch Linux install and the bug is still present.
-> 
-> The first bad commit is either a98db518dde246e01ead53617dc0a30d6aaa3752 
-> or c376a3456d8bef43ec556a98c0a04c35086c2737. I don’t know for sure which 
-> one introduced it, because during bisection I had to skip 
-> a98db518dde246e01ead53617dc0a30d6aaa3752 due to it being unable to 
-> launch the virtual machine resulting in a different error (didn’t even 
-> start booting). In kernels before these commits, the VM works flawlessly.
-> 
-> I have tested it on latest mainline kernel and the issue is still 
-> present. I have been experiencing the issue since kernel 6.13, so I just 
-> switched to the 6.12 LTS kernel instead which doesn’t have this issue.
-> 
-> Configuration of my Linux install and hardware: https://pastebin.com/ 
-> rcsyyYiK
-> .config: https://pastebin.com/RTQCBduD
-> dmesg errors: https://pastebin.com/84jPP81E
-> lspci: https://pastebin.com/qi29BSWi
-> 
-> #regzbot introduced: 
-> a98db518dde246e01ead53617dc0a30d6aaa3752..c376a3456d8bef43ec556a98c0a04c35086c2737
+[CCing Sasha]
 
-Before these commits, if a device was attached to a domain that didn't
-perfectly match the hardware's capabilities (such as address width or
-coherency), the kernel would dynamically adjust the domain to
-accommodate the hardware.
+On 4/6/26 10:17, Greg KH wrote:
+> On Mon, Apr 06, 2026 at 03:54:39AM -0400, Matt Fagnani wrote:
+>> On 2026-04-02 08:12, Greg KH wrote:
+>>> On Sat, Mar 28, 2026 at 11:52:48AM +0100, Thorsten Leemhuis wrote:
+>>>> On 3/28/26 11:30, Matt Fagnani wrote:
+>>>>> I could try to bisect. The commit
+>>>>> e493c135980f90c20308d1a98f2e0d1223951e94 drm: Fix use-after-free on
+>>>>> framebuffers and property blobs when calling drm_dev_unplug was included
+>>>>> in 6.19.10 and changed drm_mode_config_cleanup https://git.kernel.org/
+>>>>> pub/scm/linux/kernel/git/stable/linux.git/commit/?
+>>>>> h=linux-6.19.y&id=e493c135980f90c20308d1a98f2e0d1223951e94
+>>>> Did a quick search. Turns out this is mainline commit 6bee098b914176
+>>>> ("drm: Fix use-after-free on framebuffers and property blobs when
+>>>> calling drm_dev_unplug") [...] is turns out that is in the
+>>>> process of getting reverted:
+>>>>
+>>>> See https://lore.kernel.org/all/20260326082217.39941-2-dev@lankhorst.se/
+>>>> or 45ebe43ea00d6b ("Revert "drm: Fix use-after-free on framebuffers and
+>>>> property blobs when calling drm_dev_unplug"") [next-20260327
+>>>> (pending-fixes)].
+>>>> Sasha and Greg: you might want to make sure to pick this up.
+>>> When it shows up in a Linus-released kernel, can someone remind us?
+>> 7.0-rc7 https://lwn.net/Articles/1066405/ had the patch Revert "drm: Fix
+>> use-after-free on framebuffers and property blobs when calling
+>> drm_dev_unplug" https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?h=v7.0-rc7&id=45ebe43ea00d6b9f5b3e0db9c35b8ca2a96b7e70 Thanks.
+> 
+> Does not apply on 6.6.y or 6.1.y, so can someone provide a working
+> backport for those branches?
 
-Following these two commits, the driver now applies a "match or fail"
-policy. If the domain is incompatible with the device's hardware
-capabilities, it returns -EINVAL. This expects the caller to allocate a
-new domain dedicated to that specific device and attempt the attachment
-again.
+Hmm, those two got manual backports Sasha did, so he might be in the
+best position to submit the reverts, too.
 
-Can you please add a message line in paging_domain_compatible() to
-verify whether it's a domain compatibility issue?
+But to save you two a few cycles I just prepared those reverts and will
+submit them in reply to this mail. Handle with care, as they are
+untested. Not really sure if this was a wise idea at all. In case of
+problems it might be the best if one of you could redo them from scratch
+in case you have scripts to handle situations like these.
 
-diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
-index 205debd76989..c7e1e0dfa250 100644
---- a/drivers/iommu/intel/iommu.c
-+++ b/drivers/iommu/intel/iommu.c
-@@ -3111,8 +3111,10 @@ int paging_domain_compatible(struct iommu_domain 
-*domain, struct device *dev)
-                 ret = 
-paging_domain_compatible_second_stage(dmar_domain, iommu);
-         else if (WARN_ON(true))
-                 ret = -EINVAL;
--       if (ret)
-+       if (ret) {
-+               dev_info(dev, "domain is not compatible with device, ret 
-= %d", ret);
-                 return ret;
-+       }
-
-         if (sm_supported(iommu) && !dev_is_real_dma_subdevice(dev) &&
-             context_copied(iommu, info->bus, info->devfn))
-
-Thanks,
-baolu
+Ciao. Thorsten
