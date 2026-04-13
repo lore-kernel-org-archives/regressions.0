@@ -1,28 +1,28 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DACC12EBB8C;
-	Mon, 13 Apr 2026 16:18:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD03730BF4E;
+	Mon, 13 Apr 2026 16:42:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776097100; cv=none; b=YpChYke9TlxbvaUTpq910cMr06pMbg4TJPgH8j5ElWTkSlT30tpT2bl6zxkF4PFM0upJudQdJoWpDi3ojZwRAY+SExlPRueJxpvbxsPMc5nKI9qzmJXaJjuIoCFiMmzZbIIvwu6HlrBwUYjMYlru4gRrTZBDWIYzezdGyFdsbuI=
+	t=1776098553; cv=none; b=DUmPuDLwKhwVE/3T6wEAJLEqpuKEEJR2xfeOoKW7jpMk5adjqQ6lW5X8uujOxWD7Unsou9ysk+4JVoweVLLIWJv8iwGR0SyixMsxRTVHDpeQI3++ZntErWXQx63qQwfwF5L9MIUKTrDlhHUzNMfkpoX7OrfhCL0j0ZfAcZbjaDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776097100; c=relaxed/simple;
-	bh=iZiZTWguWpIhP6O74iW4SP/58ORmlvHNlGQ+5lQCbsk=;
+	s=arc-20240116; t=1776098553; c=relaxed/simple;
+	bh=k82+4lM4lLHMqrFJTwbHNGDILbQpOrcf860nZjs7eZo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jqANDV7lpSj/1q+LQ7+HLvK+4Pf8zDNgwoeh9lbFlIT5z/hFFF2/YCyF30DDLq/7aQ6sO8OSVa5GvlP+FnDQcAOizFUgW0VZA6qw8CoJi6wT8mpj34kU4IOOz3H5kSw3/jHp2LuBdX5vOhhJ70cTENJ2jrRyC+wcPdpfpMgMwEU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=pcZccmc9; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=dDaXyds2n6WYDvjm3oa7YJGGzDbJ4R5e4E5u+Wi+r+XwHiNUPoNhbNL8/aboWDzY5jVmxtm40V3Cx//3FWuOwgjQ3ajw5oMcDtsb5CvHQPWhvjn6tYD1Taa3LYpZEEBdsuZWkP7xh1tFW1mQXLD0zUtOnPsADHbZUnsUrGzRtLI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=de5WKc5M; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="pcZccmc9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 723D1C2BCAF;
-	Mon, 13 Apr 2026 16:18:20 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="de5WKc5M"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5341DC2BCB0;
+	Mon, 13 Apr 2026 16:42:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1776097100;
-	bh=iZiZTWguWpIhP6O74iW4SP/58ORmlvHNlGQ+5lQCbsk=;
+	s=korg; t=1776098553;
+	bh=k82+4lM4lLHMqrFJTwbHNGDILbQpOrcf860nZjs7eZo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=pcZccmc981eHTTAu6topCy1T6tyXSWbdGP1EwMVUpMIm8P3oj5J1XXGTAT/J5r5jR
-	 iRyxqU4NhUs9/1c6EEbGb/NMiq/McRJdiohs2yfU12k/bGxJUe0I3qHgi9I372woV7
-	 BN9Ac7b2Wv8yyDhIsP/5fe+llsrtYqYXEbvylo4s=
+	b=de5WKc5MLRpStvOO+PMAO3w4KzVdPghgvKzg5Fx4141IO/emYoUq+3JkKeZWUQatm
+	 xi5Irt7fM4KCku0KODID5N+81JZstGcU5pL9rE4bE5+/pkqszuqdvAvijDRoWIc2HG
+	 EPquIcpQLu5uLvs6N70IcXABooXE2JB0BaO/9XO0=
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To: stable@vger.kernel.org
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -31,12 +31,12 @@ Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	bjorn.forsman@gmail.com,
 	Linux kernel regressions list <regressions@lists.linux.dev>,
 	Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
-Subject: [PATCH 6.1 55/55] Revert "PCI: Enable ACS after configuring IOMMU for OF platforms"
-Date: Mon, 13 Apr 2026 18:01:29 +0200
-Message-ID: <20260413155726.884698810@linuxfoundation.org>
+Subject: [PATCH 5.15 569/570] Revert "PCI: Enable ACS after configuring IOMMU for OF platforms"
+Date: Mon, 13 Apr 2026 18:01:40 +0200
+Message-ID: <20260413155851.793145415@linuxfoundation.org>
 X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260413155724.820472494@linuxfoundation.org>
-References: <20260413155724.820472494@linuxfoundation.org>
+In-Reply-To: <20260413155830.386096114@linuxfoundation.org>
+References: <20260413155830.386096114@linuxfoundation.org>
 User-Agent: quilt/0.69
 X-stable: review
 X-Patchwork-Hint: ignore
@@ -48,13 +48,13 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-6.1-stable review patch.  If anyone has any objections, please let me know.
+5.15-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
 From: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>
 
-This reverts commit 5d57164c0ab0ac5c99eca49c577994bfbca70a2a which is
+This reverts commit b20b659c2c6a072560b360feda81ae52176034df which is
 commit c41e2fb67e26b04d919257875fa954aa5f6e392e upstream.
 
 The original commit attempted to enable ACS in pci_dma_configure() prior
@@ -88,7 +88,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 --- a/drivers/pci/pci-driver.c
 +++ b/drivers/pci/pci-driver.c
-@@ -1667,14 +1667,6 @@ static int pci_dma_configure(struct devi
+@@ -1616,14 +1616,6 @@ static int pci_dma_configure(struct devi
  		ret = acpi_dma_configure(dev, acpi_get_dma_attr(adev));
  	}
  
@@ -101,11 +101,11 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 -	pci_enable_acs(to_pci_dev(dev));
 -
  	pci_put_host_bridge_device(bridge);
- 
- 	if (!ret && !driver->driver_managed_dma) {
+ 	return ret;
+ }
 --- a/drivers/pci/pci.c
 +++ b/drivers/pci/pci.c
-@@ -1040,7 +1040,7 @@ static void pci_std_enable_acs(struct pc
+@@ -936,7 +936,7 @@ static void pci_std_enable_acs(struct pc
   * pci_enable_acs - enable ACS if hardware support it
   * @dev: the PCI device
   */
@@ -114,7 +114,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
  {
  	if (!pci_acs_enable)
  		goto disable_acs_redir;
-@@ -3777,6 +3777,14 @@ bool pci_acs_path_enabled(struct pci_dev
+@@ -3609,6 +3609,14 @@ bool pci_acs_path_enabled(struct pci_dev
  void pci_acs_init(struct pci_dev *dev)
  {
  	dev->acs_cap = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_ACS);
@@ -131,7 +131,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
  /**
 --- a/drivers/pci/pci.h
 +++ b/drivers/pci/pci.h
-@@ -526,7 +526,6 @@ static inline resource_size_t pci_resour
+@@ -562,7 +562,6 @@ static inline resource_size_t pci_resour
  }
  
  void pci_acs_init(struct pci_dev *dev);
