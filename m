@@ -1,81 +1,178 @@
-Received: from mail-10698.protonmail.ch (mail-10698.protonmail.ch [79.135.106.98])
+Received: from mailout3.hostsharing.net (mailout3.hostsharing.net [144.76.133.104])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6878F611E
-	for <regressions@lists.linux.dev>; Sun, 12 Apr 2026 11:25:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0102239E7F
+	for <regressions@lists.linux.dev>; Mon, 13 Apr 2026 03:40:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.76.133.104
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775993147; cv=none; b=K7qXldoHkaMw2pehb0ERN7MTB3GYltR7z+YdKR3sVAzUHxDjDSGTKXjHzTiT7BKAJCam4/4oIDC5BpiKQaA8fTSsUaP/OmUHul3WJz5r9l/n6ZDIy8981d8ymmq2BoVcRdxDBlWzhcg+PnM1qsUp0gZuRXBs+MJUuqaKfI0Mqcg=
+	t=1776051643; cv=none; b=OqZxABY5IuHRsvUoLt2IoRMAB/gYH8rbLrqF8nWbt0gfr1ppk6fHv6x8+WRmWre7pST4BDlDb1jtGX6r2pZHGdiYLOZpd9+K4cJY1xhf4Tpoje8iP+JnunOkgJrsqOxDgtwRSLqhKv4CAQVWw+LBTVhZwkC1uxF3bszZzVLSHds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775993147; c=relaxed/simple;
-	bh=XPzIPlFhXf6fmRUvCLaUIiWU6MLIEfddP+HG2LJ0Jrs=;
-	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=PUlUo6bEjByL9IN7DtaioMwvbLm98aPON/4EwD3wIN/48VSqdu/sV5DavNTvqsvcQetamxm39KKEUpSk2qU2WhiKIp3RVQXO4j6n3+8nKdUOV+XugW3nrah5KyE1+FrofsUqDkbn891RIlo31TEuYX83ztrOipXM/y3vwP81xks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=hdN0cOWA; arc=none smtp.client-ip=79.135.106.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="hdN0cOWA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-	s=protonmail3; t=1775993138; x=1776252338;
-	bh=XPzIPlFhXf6fmRUvCLaUIiWU6MLIEfddP+HG2LJ0Jrs=;
-	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
-	b=hdN0cOWAy8xzQWID1epLPwrW6+eTN37SazUymeBha/uoxN5bJw2EXsKXYH+VujiH9
-	 BSVKW3CmzycG5HC/ilhIGkQzyrcx+QnD41kID+Jd+riWm3mIcolaq9ta0WdSzNVDgZ
-	 bnPygeW+O9IeJRz1qx/QBkIb+EV9PRIZM2a+QtQVidELAtX7iruQPPZ6ytVe/ihYjS
-	 2k5r+2Jia/sFdQaqAmH6LA2bo0rRDJSee8kBfdAKGOrH/uBeJomnlQopXj1/MWFlEM
-	 2csRUVQpFQicm6WfmsM4jO2eswAqra8o5D8f6tW2sj/yZwv+xcUPSSqw3Um53yF6ul
-	 taPY2v6ZLQsfg==
-Date: Sun, 12 Apr 2026 11:25:34 +0000
-To: "iommu@lists.linux.dev" <iommu@lists.linux.dev>
-From: 70sp <70sp@protonmail.com>
-Cc: "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: [REGRESSION] GPU passes into VM improperly after c376a3456d8b or a98db518dde2
-Message-ID: <HYhMd0Klo0XE_yiVY7XmsgyKKFDwKHfKRy22KrycLcYd0V_ykA4xdbBMJXkA07YX3os6qK-NhMIVi6ITo-CkNIIF0e-GcI0UwwZmdDhAJ0I=@protonmail.com>
-Feedback-ID: 144929603:user:proton
-X-Pm-Message-ID: 26f8abaf4b873fdaaf68ec791466805a3e97048a
+	s=arc-20240116; t=1776051643; c=relaxed/simple;
+	bh=tuDwO3YZZfjHQw7URuUniNkMsqfh3GFLuy//dNLxIVA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gfFmfLRwaFzaojCI/YLyi8X3U/jatJKK++rzhBnZyxsbWA1FwQXowpxM+sGxAyA7AzQQtghDYlYbA7XHpMbZQdMDcIMM1z96qmdtCXu+koniXFSkKG8WiACtiR7DQNXteM3YT37EF2LLNyx04kNRlQWifb5EinHzc9pyFDc/rpA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=pass smtp.mailfrom=wunner.de; arc=none smtp.client-ip=144.76.133.104
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wunner.de
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature ECDSA (secp384r1) server-digest SHA384
+	 client-signature ECDSA (secp384r1) client-digest SHA384)
+	(Client CN "*.hostsharing.net", Issuer "GlobalSign GCC R6 AlphaSSL CA 2025" (verified OK))
+	by mailout3.hostsharing.net (Postfix) with ESMTPS id E3C1FC2B;
+	Mon, 13 Apr 2026 05:40:31 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id AD6076017610; Mon, 13 Apr 2026 05:40:31 +0200 (CEST)
+Date: Mon, 13 Apr 2026 05:40:31 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: "Alexandre N." <an.tech@mailo.com>
+Cc: Bernd Schumacher <bernd@bschu.de>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@debian.org>,
+	1131025@bugs.debian.org, Salvatore Bonaccorso <carnil@debian.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	regressions@lists.linux.dev, stable@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Alex Williamson <alex@shazbot.org>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: Re: Bug#1131025: [6.12.y regression] Regression with 58130e7ce6cb
+ ("PCI/ERR: Ensure error recoverability at all times"): echo vfio-pci
+ >driver_override does not work for DVB Adapter
+Message-ID: <adxlr9lWBTZIQMev@wunner.de>
+References: <aclRwznwq6KpA2qA@wunner.de>
+ <177373189751.7987.7156982489427825197.reportbug@obelix-trixie.bs.de>
+ <ecf9b2dd96ff97cc035ba297266b8dd05eea88da.camel@bschu.de>
+ <ac0Y85OShbK6mHEV@monoceros>
+ <8275e5b86696dec133889713258c2e158a443496.camel@bschu.de>
+ <ac19pxEZKvQuQwFV@wunner.de>
+ <7173609c404c5444e634dd3ab26f55f2788d82e4.camel@bschu.de>
+ <ac_VqcBbKRDkHp69@wunner.de>
+ <79618160f928d7ed4ba0a84f3ab420427c5b8d10.camel@bschu.de>
+ <dd3c3358-de0f-4a56-9c81-04aceaab4058@mailo.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <dd3c3358-de0f-4a56-9c81-04aceaab4058@mailo.com>
 
-Hello,
+On Sun, Apr 12, 2026 at 08:04:02PM +0200, Alexandre N. wrote:
+> Independent confirmation on different hardware and a different
+> stable branch, plus test results for the proposed fix on 6.19.11.
+> 
+>   Hardware:   PCI 1b4b:9215  Marvell 88SE9215 PCIe 2.0 x1 4-port
+>               SATA 6 Gb/s controller, whole-device passthrough to a
+>               Windows 10 guest via QEMU/libvirt on
+>               an AMD Ryzen 7 7700 8-Core x86_64 host (Arch Linux).
+>   Last good:  linux 6.18.9
+>   First bad:  linux 6.18.13  (contains stable backport 71c50e60421b
+>                               of upstream a2f1e22390ac, "PCI/ERR:
+>                               Ensure error recoverability at all
+>                               times", first backported in 6.18.10)
+>   Also bad:   linux 6.19.11  (mainline carries a2f1e22390ac)
+> 
+> Confirmed by rolling linux back to 6.18.9 with everything else
+> untouched: problem vanishes. Rolling forward to 6.18.13 or any
+> later versions in 6.18/6.19 reproduces it everytime.
 
-I have been dealing with a regression launching a Windows QEMU/KVM virtual =
-machine with a GPU passed through.
+Hm, that's unexpected.  I cooked up the patch below on Saturday
+but didn't immediately get around to sending it because of a
+security bug report that came in later that day.
 
-The issue consists of launching a QEMU/KVM VM, which gets stuck for about 2=
- minutes on booting with a white screen and then having NVIDIA=E2=80=99s co=
-de 43 in Windows.
+Could both of you, Alexandre and Bernd, give that patch a spin
+to see if it fixes the issue?  I believe the patch should at least
+fix things for Bernd.  If it doesn't fix things for you Alexandre,
+I'll have to dig deeper.
 
-I=E2=80=99m certain, that the issue is not caused by anything in Windows or=
- related software in Linux, because I tried reinstalling my whole PC includ=
-ing the Windows VM. I tried to reproduce the bug on an out-of-the-box Arch =
-Linux install and the bug is still present.
+Thanks!
 
-The first bad commit is either a98db518dde246e01ead53617dc0a30d6aaa3752 or =
-c376a3456d8bef43ec556a98c0a04c35086c2737. I don=E2=80=99t know for sure whi=
-ch one introduced it, because during bisection I had to skip a98db518dde246=
-e01ead53617dc0a30d6aaa3752 due to it being unable to launch the virtual mac=
-hine resulting in a different error (didn=E2=80=99t even start booting). In=
- kernels before these commits, the VM works flawlessly.
+Lukas
 
-I have tested it on latest mainline kernel and the issue is still present. =
-I have been experiencing the issue since kernel 6.13, so I just switched to=
- the 6.12 LTS kernel instead which doesn=E2=80=99t have this issue.
+-- >8 --
 
-Configuration of my Linux install and hardware: https://pastebin.com/rcsyyY=
-iK
-.config: https://pastebin.com/RTQCBduD
-dmesg errors: https://pastebin.com/84jPP81E
-lspci: https://pastebin.com/qi29BSWi
+Subject: [PATCH] PCI: Update saved_config_space upon resource assignment
 
-#regzbot introduced: a98db518dde246e01ead53617dc0a30d6aaa3752..c376a3456d8b=
-ef43ec556a98c0a04c35086c2737
+Bernd reports passthrough failure of a Digital Devices Cine S2 V6 DVB
+adapter plugged into an ASRock X570S PG Riptide board with BIOS version
+P5.41 (09/07/2023):
 
-Best Regards,
-=C5=A0imon Posp=C3=ADchal
+  ddbridge 0000:07:00.0: detected Digital Devices Cine S2 V6 DVB adapter
+  ddbridge 0000:07:00.0: cannot read registers
+  ddbridge 0000:07:00.0: fail
+
+The BIOS assigns an incorrect BAR to the DVB adapter which has the upper
+32 bits set to "all ones".  This doesn't fit into the upstream bridge
+window, which has those bits set to "all zeroes".  The kernel therefore
+corrects the BAR assignment:
+
+  pci 0000:07:00.0: BAR 0 [mem 0xfffffffffc500000-0xfffffffffc50ffff 64bit]: can't claim; no compatible bridge window
+  pci 0000:07:00.0: BAR 0 [mem 0xfc500000-0xfc50ffff 64bit]: assigned
+
+Correction of the BAR assignment happens in an x86-specific fs_initcall,
+pcibios_assign_resources(), after PCI devices have been enumerated in a
+subsys_initcall.  This order was introduced at the behest of Linus in
+2004:
+
+    https://git.kernel.org/tglx/history/c/a06a30144bbc
+
+No other architecture performs such a late BAR correction.
+
+Bernd bisected the issue to commit a2f1e22390ac ("PCI/ERR: Ensure error
+recoverability at all times"), but it only occurs in the absence of commit
+4d4c10f763d7 ("PCI: Explicitly put devices into D0 when initializing").
+This combination exists in stable kernel v6.12.70, but not in mainline,
+hence mainline does not exhibit the issue.
+
+Since commit a2f1e22390ac, config space is saved on enumeration (in a
+subsys_initcall), i.e. prior to the BAR correction.  Upon passthrough,
+the corrected BAR is overwritten with the incorrect saved value by:
+
+  vfio_pci_core_register_device()
+    vfio_pci_set_power_state()
+      pci_restore_state()
+
+But only if the device's current_state is PCI_UNKNOWN, as it was prior to
+commit 4d4c10f763d7.  Since the commit it is PCI_D0, which changes the
+behavior of vfio_pci_set_power_state() to no longer restore the state
+without saving it first.
+
+Although the issue could be fixed in v6.12-stable by backporting
+4d4c10f763d7 or by changing vfio_pci_set_power_state(), a more robust fix
+is to update saved_config_space upon resource assignment.
+
+Reported-by: Bernd Schumacher <bernd@bschu.de>
+Closes: https://lore.kernel.org/r/acfZrlP0Ua_5D3U4@eldamar.lan/
+Fixes: a2f1e22390ac ("PCI/ERR: Ensure error recoverability at all times")
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Cc: stable@vger.kernel.org # v6.12+
+---
+ drivers/pci/setup-res.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/pci/setup-res.c b/drivers/pci/setup-res.c
+index e5fcadfc58b0..1769ba960197 100644
+--- a/drivers/pci/setup-res.c
++++ b/drivers/pci/setup-res.c
+@@ -102,6 +102,7 @@ static void pci_std_update_resource(struct pci_dev *dev, int resno)
+ 	}
+ 
+ 	pci_write_config_dword(dev, reg, new);
++	dev->saved_config_space[reg / 4] = new;
+ 	pci_read_config_dword(dev, reg, &check);
+ 
+ 	if ((new ^ check) & mask) {
+@@ -112,6 +113,7 @@ static void pci_std_update_resource(struct pci_dev *dev, int resno)
+ 	if (res->flags & IORESOURCE_MEM_64) {
+ 		new = region.start >> 16 >> 16;
+ 		pci_write_config_dword(dev, reg + 4, new);
++		dev->saved_config_space[(reg + 4) / 4] = new;
+ 		pci_read_config_dword(dev, reg + 4, &check);
+ 		if (check != new) {
+ 			pci_err(dev, "%s: error updating (high %#010x != %#010x)\n",
+-- 
+2.51.0
+
