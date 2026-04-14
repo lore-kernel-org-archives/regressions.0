@@ -1,145 +1,133 @@
-Received: from mail-24425.protonmail.ch (mail-24425.protonmail.ch [109.224.244.25])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0E6D3BE64C
-	for <regressions@lists.linux.dev>; Tue, 14 Apr 2026 09:23:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.25
+Received: from vmicros1.altlinux.org (vmicros1.altlinux.org [194.107.17.57])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EBCBE3B7760
+	for <regressions@lists.linux.dev>; Tue, 14 Apr 2026 13:57:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.107.17.57
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776158595; cv=none; b=Asy3cEFWbAW8OJliSS6/9A8kza+NRRp+kctH4qobjr9p6yhWwlSPJR2SIS/+gjs+Pfufc1e5hfqEvXUpshAqr4OhF8pvEcSYhXR0YxbrovEddZXdGL1Is2ZI1PiAewaEk3Ug3nzGYZzAZT/907s07JX/RUwrk6MXeW43cvJYHo8=
+	t=1776175062; cv=none; b=A8qox054YKh4gWgaiggcFAWjftSst5zDbzGAE6JcF70XCtrl7xt9CDciDX34cQRi5uPdbj+6IpNjONBRhMBomarApGUloOUyqjL0tzIGS03lFjybi+yp/1Z1SllspeEylN39zLxnSNq/UbhCRj6k7utPFCTYXQHMi5tVTsRBjNc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776158595; c=relaxed/simple;
-	bh=CtU2gXiANRDLMS09ZAXJ7WipHbrS0tbOyTqFy+Dyokc=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kwQEFPP5JEi3KSviaiNeOorO2Pm9qWVkOThbfbcbIzYXh84QV05wgYQ7+Ylr5COhHMZYoOxEoZMmZNgE0zA88JwXyHFtJE2QVoAkfgg+plNsZzB7KpCg6C+FuoloY0k/dyZ6UKvgGDXPns5e8H6872vyUFKlelzyVxSZnh/VASI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=tTgQbuXx; arc=none smtp.client-ip=109.224.244.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="tTgQbuXx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-	s=protonmail3; t=1776158583; x=1776417783;
-	bh=stEBsGH6o1WT/D3trkAv9Ny/2kK8BVeL5s+Q9rX12M8=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=tTgQbuXx8TeKwc4pOF+Uzh2kb6+V3ZGBHp6FBJm2axCAcSxt4J4PfpmOZZ+nOcMhj
-	 PRBHsOqCasv5gmYEhRdA/czqd36h+HrJp6rwyjT5sR/VWzWYYMXevWMHwpo+NE0KYb
-	 Z2b3SScwG/1PNxPdoHVC4uxMeySAeQQI6Dt8TsNoVaCgy+z2GeOdvDg8jmxszjf1zG
-	 pdKQrbCPKv0O4q97lSM/YKbzm2sUeQu7+zhf0OCl1eWWRvDDpNVlsx3gvMLj1GwQOF
-	 YPLQk+q3CMoYWB22GEaky/ntZwvzhicyghGwQrlrXtwLjZ0v5RDW5jsWvQ87xCxbn2
-	 ACEc9W0Nw8t6w==
-Date: Tue, 14 Apr 2026 09:22:58 +0000
-To: Baolu Lu <baolu.lu@linux.intel.com>
-From: 70sp <70sp@protonmail.com>
-Cc: "iommu@lists.linux.dev" <iommu@lists.linux.dev>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: Re: [REGRESSION] GPU passes into VM improperly after c376a3456d8b or a98db518dde2
-Message-ID: <C4BK-Bp_FII0EkxSHQxBS2wO-Age-UxFrp_KfmYzb8cnQ8ZndzBBIPD8S9T86wOifBP0tysQGCFtGQsBsBvG2IzIMw3jb3NF5HGbS3tsawA=@protonmail.com>
-In-Reply-To: <56ce85d5-e0b9-407c-9a86-708111a8a509@linux.intel.com>
-References: <z7Rkts0EsooZcnCjNfJaK6ursftFU8ubOkH0hcNjzxugEAwGsHLMblOdfoAx-gJzBZ-TMmeUtD7iWBngbFY5UCJCwdSmYqmCVMy-yhbirUk=@protonmail.com> <56ce85d5-e0b9-407c-9a86-708111a8a509@linux.intel.com>
-Feedback-ID: 144929603:user:proton
-X-Pm-Message-ID: 2c43e2128b9169123231295ad057298bac432d97
+	s=arc-20240116; t=1776175062; c=relaxed/simple;
+	bh=/zyqVQ2/3C0fP2412RxfQYDOS4/vRkX+99fEJQlBEIU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=t7WwuqUMZq/jUO7E3WDhQj5NHgfRcUJZhDZMJ4KrK8C7Y+cJGQPPxcPPqBNFS70djgVXArj5UTRfe3f00572hjrNzIkpn50oTI75vHePuj+DkeA3aXmAh0Q3uokWXUAeoMKNo3zCmdrekyIyekpcRVy9cCri5NqYZo2pkEn0MWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=altlinux.org; spf=pass smtp.mailfrom=altlinux.org; arc=none smtp.client-ip=194.107.17.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=altlinux.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altlinux.org
+Received: from imap.altlinux.org (imap.altlinux.org [194.107.17.38])
+	by vmicros1.altlinux.org (Postfix) with ESMTP id 9F39272C8CC;
+	Tue, 14 Apr 2026 16:57:38 +0300 (MSK)
+Received: from altlinux.org (unknown [193.43.10.9])
+	by imap.altlinux.org (Postfix) with ESMTPSA id 89E2C36D00D0;
+	Tue, 14 Apr 2026 16:57:38 +0300 (MSK)
+Date: Tue, 14 Apr 2026 16:57:38 +0300
+From: Vitaly Chikunov <vt@altlinux.org>
+To: Thorsten Leemhuis <regressions@leemhuis.info>, 
+	Sasha Levin <sashal@kernel.org>
+Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
+	gregkh@linuxfoundation.org, regressions@lists.linux.dev, 
+	Matt Roper <matthew.d.roper@intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>
+Subject: Re: [regression] Re: Linux 6.12.75
+Message-ID: <ad5Gsd1YoS3607UI@altlinux.org>
+References: <20260304131402.83200-1-sashal@kernel.org>
+ <20260304131402.83200-2-sashal@kernel.org>
+ <ac4lw9tTNn4baO_h@altlinux.org>
+ <c54a0b91-cfbf-463e-964d-bf9a2e524189@leemhuis.info>
+ <adz2d7M3DKb-6jm9@altlinux.org>
+ <ad2G46EyDs8LBoH_@altlinux.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=koi8-r
+Content-Disposition: inline
+In-Reply-To: <ad2G46EyDs8LBoH_@altlinux.org>
 
-I can confirm, that the "domain is not compatible with device" message is n=
-owhere to be seen.
+Thorsten, Sasha,
 
-I have double checked by also adding an else statement with a different mes=
-sage and that one showed up several times. (by pci (iGPU) 0000:00:02.0, pci=
-eport 0000:00:01.0 and vfio-pci (GTX 970) 0000:01:00.0, 0000:01:00.1). ret =
-=3D 0.
-
-
-
-Sent with Proton Mail secure email.
-
-On Monday, April 13th, 2026 at 8:49 AM, Baolu Lu <baolu.lu@linux.intel.com>=
- wrote:
-
-> On 4/12/26 19:17, 70sp wrote:
-> > Hello,
-> >
-> > I have been dealing with a regression launching a Windows QEMU/KVM
-> > virtual machine with a GPU passed through.
-> >
-> > The issue consists of launching a QEMU/KVM VM, which gets stuck for
-> > about 2 minutes on booting with a white screen and then having NVIDIA=
-=E2=80=99s
-> > code 43 in Windows.
-> >
-> > I=E2=80=99m certain, that the issue is not caused by anything in Window=
-s or
-> > related software in Linux, because I tried reinstalling my whole PC
-> > including the Windows VM. I tried to reproduce the bug on an out-of-the=
--
-> > box Arch Linux install and the bug is still present.
-> >
-> > The first bad commit is either a98db518dde246e01ead53617dc0a30d6aaa3752
-> > or c376a3456d8bef43ec556a98c0a04c35086c2737. I don=E2=80=99t know for s=
-ure which
-> > one introduced it, because during bisection I had to skip
-> > a98db518dde246e01ead53617dc0a30d6aaa3752 due to it being unable to
-> > launch the virtual machine resulting in a different error (didn=
-=E2=80=99t even
-> > start booting). In kernels before these commits, the VM works flawlessl=
-y.
-> >
-> > I have tested it on latest mainline kernel and the issue is still
-> > present. I have been experiencing the issue since kernel 6.13, so I jus=
-t
-> > switched to the 6.12 LTS kernel instead which doesn=E2=80=99t have this=
- issue.
-> >
-> > Configuration of my Linux install and hardware: https://pastebin.com/
-> > rcsyyYiK
-> > .config: https://pastebin.com/RTQCBduD
-> > dmesg errors: https://pastebin.com/84jPP81E
-> > lspci: https://pastebin.com/qi29BSWi
-> >
-> > #regzbot introduced:
-> > a98db518dde246e01ead53617dc0a30d6aaa3752..c376a3456d8bef43ec556a98c0a04=
-c35086c2737
->=20
-> Before these commits, if a device was attached to a domain that didn't
-> perfectly match the hardware's capabilities (such as address width or
-> coherency), the kernel would dynamically adjust the domain to
-> accommodate the hardware.
->=20
-> Following these two commits, the driver now applies a "match or fail"
-> policy. If the domain is incompatible with the device's hardware
-> capabilities, it returns -EINVAL. This expects the caller to allocate a
-> new domain dedicated to that specific device and attempt the attachment
-> again.
->=20
-> Can you please add a message line in paging_domain_compatible() to
-> verify whether it's a domain compatibility issue?
->=20
-> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
-> index 205debd76989..c7e1e0dfa250 100644
-> --- a/drivers/iommu/intel/iommu.c
-> +++ b/drivers/iommu/intel/iommu.c
-> @@ -3111,8 +3111,10 @@ int paging_domain_compatible(struct iommu_domain
-> *domain, struct device *dev)
->                  ret =3D
-> paging_domain_compatible_second_stage(dmar_domain, iommu);
->          else if (WARN_ON(true))
->                  ret =3D -EINVAL;
-> -       if (ret)
-> +       if (ret) {
-> +               dev_info(dev, "domain is not compatible with device, ret
-> =3D %d", ret);
->                  return ret;
-> +       }
->=20
->          if (sm_supported(iommu) && !dev_is_real_dma_subdevice(dev) &&
->              context_copied(iommu, info->bus, info->devfn))
->=20
-> Thanks,
-> baolu
+On Tue, Apr 14, 2026 at 03:17:38AM +0300, Vitaly Chikunov wrote:
+> On Mon, Apr 13, 2026 at 05:17:30PM +0300, Vitaly Chikunov wrote:
+> > On Mon, Apr 13, 2026 at 01:33:18PM +0200, Thorsten Leemhuis wrote:
+> > > On 4/2/26 10:44, Vitaly Chikunov wrote:
+> > > > 
+> > > > 1. I cannot find this commit posted on lore.kernel.org to report to
+> > > > exact patch.
+> > > > 
+> > > > | From: Matt Roper <matthew.d.roper@intel.com>
+> > > > | Date: Tue, 10 Sep 2024 16:47:29 -0700
+> > > > | Subject: [PATCH 6.12/sisyphus] drm/xe: Switch MMIO interface to take xe_mmio
+> > > > |  instead of xe_gt
+> > > > | 
+> > > > | [ Upstream commit a84590c5ceb354d2e9f7f6812cfb3a9709e14afa ]
+> > > > | 
+> > > > | Since much of the MMIO register access done by the driver is to non-GT
+> > > > | registers, use of 'xe_gt' in these interfaces has been a long-standing
+> > > > | design flaw that's been hard to disentangle.
+> > > > [...]
+> > > > 
+> > > > 2. After this patch applied to 6.12.75 there is kernel NULL pointer
+> > > > dereference BUG on MSI MAG H670 12th Gen Intel(R) Core(TM) i5-12600K
+> > > > with ASRock Intel Arc B580 Challenger [Alchemist], 12GB:
+> > > > [...]
+> > > > The commit is found not by a git bisect (since it's reported by end
+> > > > user and I cannot reproduce it on my hardware) but (by analyzing dmesg)
+> > > > with:
+> > > > [...]
+> > > > Then finding the suspecting commit:
+> > > > 
+> > > >   $ git log --oneline -G'XE_LUNARLAKE' v6.12.74..v6.12.75
+> > > >   26a40327c25c drm/xe: Switch MMIO interface to take xe_mmio instead of xe_gt
+> > > > 
+> > > > 6.18 and above are not affected by the bug. Also, they have another commit
+> > > > modifying the line which is not present in 6.12 branch:
+> > > > [...]
+> > > > Related drm/xe bug report https://gitlab.freedesktop.org/drm/xe/kernel/-/work_items/7661
+> > > Nobody reacted to this and it seems the gitlab ticket is stalled, too.
+> > > So let me ask: can this be resolved by reverting 26a40327c25c in 6.12.y?
 > 
+> It's turned out these two commits are revertible together:
+> 
+>   8f6848b2f6ea ("drm/xe/mmio: Avoid double-adjust in 64-bit reads")
+>   26a40327c25c ("drm/xe: Switch MMIO interface to take xe_mmio instead of xe_gt")
+> 
+> I am going to ask the users to test this.
+
+After testing revert of these two commits, users report that regress
+does not appear, kernel boots without panic and there is no video artifacts.
+
+So, I kindly ask to revert them from 6.12.y branch if they aren't
+critical.
+
+Thanks,
+
+> 
+> Thanks,
+> 
+> > 
+> > As of me, this is not easy to revert, as it depends on many other
+> > commits, and git does not have tooling to determine all dependant
+> > commits for revert. I hope someone from drm subsystem notices this to
+> > work on it, or Sasha can pull missing commits or revert this (obviously,
+> > he have tooling for this, but I was unable to find it). [I found
+> > obsolete references to deps but is seems not used for years and Python
+> > git-deps tool seems broken.]
+> > 
+> > What I found is, offending commit is picked due to
+> > 
+> >   Stable-dep-of: 4a9b4e1fa52a ("drm/xe/mmio: Avoid double-adjust in 64-bit reads")
+> > 
+> > Which, perhaps, needs to be reverted.
+> > 
+> > Offending commit 26a40327c25c is not tracked in lore.
+> > It's part of 9 piece patchset, perhaps they are logically dependent too,
+> > so need to be reverted together.
+> > 
+> > The possible fix is part of 6 piece patchset, which does not cherry-pick
+> > easily due to conflicts.
+> > 
+> > If someone can produce correct fix we can participate in the tests.
+> > 
+> > Thanks,
+> > 
+> > > 
+> > > Ciao, Thorsten
