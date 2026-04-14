@@ -1,149 +1,145 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-24425.protonmail.ch (mail-24425.protonmail.ch [109.224.244.25])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC80A390C92
-	for <regressions@lists.linux.dev>; Tue, 14 Apr 2026 08:14:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0E6D3BE64C
+	for <regressions@lists.linux.dev>; Tue, 14 Apr 2026 09:23:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776154449; cv=none; b=patJ8HpOjbYjaqj7hPlqVGHK9TwFIrpFhrIGNa8AHOOirqI5lFMABBGLF/YawvLa9ZFEJGcAdrQUl0ae5wCPpWTb4i7KMw5MPMts6Qg6vEIAxESGfU/zmviGR+R4F0AOIH0nmTk4IMxeJn/Z3Jqbmsamri9/eezuqOsR0DtO/j4=
+	t=1776158595; cv=none; b=Asy3cEFWbAW8OJliSS6/9A8kza+NRRp+kctH4qobjr9p6yhWwlSPJR2SIS/+gjs+Pfufc1e5hfqEvXUpshAqr4OhF8pvEcSYhXR0YxbrovEddZXdGL1Is2ZI1PiAewaEk3Ug3nzGYZzAZT/907s07JX/RUwrk6MXeW43cvJYHo8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776154449; c=relaxed/simple;
-	bh=xvxGk9uh0+SYaR79IYrMDUiZnd+4g/OXtzUcSjCUHkU=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IEOPW9NPw2EFXMNdzYIzFjQxRwyL1rq2Bssz29K/9Gug9ZrWM5znfW4m+RMk8bDWsIwnTI4jz+xG9DJzdb86siXzylHBbJcbgm9S88MNlTj+2m0aJEa7cGwA13giiR2XhaqdgHIL49OD8JGI/ZLMbi0hrpxxTQrPcVGcetMn7xI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=XcImGSi8; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=m5IrsRiB; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=FSUZJE4s; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=yWkkAlpX; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1776158595; c=relaxed/simple;
+	bh=CtU2gXiANRDLMS09ZAXJ7WipHbrS0tbOyTqFy+Dyokc=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kwQEFPP5JEi3KSviaiNeOorO2Pm9qWVkOThbfbcbIzYXh84QV05wgYQ7+Ylr5COhHMZYoOxEoZMmZNgE0zA88JwXyHFtJE2QVoAkfgg+plNsZzB7KpCg6C+FuoloY0k/dyZ6UKvgGDXPns5e8H6872vyUFKlelzyVxSZnh/VASI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=tTgQbuXx; arc=none smtp.client-ip=109.224.244.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="XcImGSi8";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="m5IrsRiB";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="FSUZJE4s";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="yWkkAlpX"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id D83046A99F;
-	Tue, 14 Apr 2026 08:14:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1776154447; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MpXDuTtlu9LQfLVP2POAAUdFL5T96rxRZdlEAhYEkG4=;
-	b=XcImGSi8mMx0L73aWFBf7sX+hCVpmjZ0BJfhCgJjXG0R/fRtYmy3WfmBhYyCfQ2jCl5Ajm
-	JFD4r5vbbFxJ7romruRjY4lpRGLhb8LA8EeTIQwAyJx+1HL5jdqwU1HsJHCBVg/LuZaKFI
-	0ogMtntKQHk7UNfXkO5g+UQEPLllJtk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1776154447;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MpXDuTtlu9LQfLVP2POAAUdFL5T96rxRZdlEAhYEkG4=;
-	b=m5IrsRiBPlDe2A7TleprdIFW/qFlOJXz6P0bMOoacarWIVN660dnpDBAQhbELamPJUnqfD
-	QRU5H8BYbQ8qczDg==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=FSUZJE4s;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=yWkkAlpX
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1776154446; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MpXDuTtlu9LQfLVP2POAAUdFL5T96rxRZdlEAhYEkG4=;
-	b=FSUZJE4sK4ixrm7ebSoDUVSd0i7TwxpU5vROyAhvl7102TnsnOlA2RXs3QRyt2IsJWoGy5
-	0Eh4YZWA4oGjrwraseSXx6ae45moP4xKocqmeN+Pmx3UL9EBBptLmFqTEwYtRfdeQ7mJwT
-	HFtdISih0SQtudOXoi1ytSn27ukNEjs=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1776154446;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MpXDuTtlu9LQfLVP2POAAUdFL5T96rxRZdlEAhYEkG4=;
-	b=yWkkAlpXBsQZcT6HVEJpvBjaCCvB784A8bTsu2bYY2dQTplUA/IRFvI+kuHvLd3riPYvSK
-	ngDUH0sNBfvIAZBw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A23254B344;
-	Tue, 14 Apr 2026 08:14:06 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id i3tOJk733WkKBAAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Tue, 14 Apr 2026 08:14:06 +0000
-Date: Tue, 14 Apr 2026 10:14:06 +0200
-Message-ID: <87wlyarmb5.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Kailang <kailang@realtek.com>
-Cc: =?ISO-8859-1?Q?J=E9r=E9my?= Bethmont <jeremy.bethmont@gmail.com>,
-	"alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-	"regressions@leemhuis.info" <regressions@leemhuis.info>
-Subject: Re: [REGRESSION] Audio popping on ThinkPad X1 Carbon Gen 12 (ALC287) after commit d2e01e0c5e94
-In-Reply-To: <c0c7f6edb6e7417a9b51fc2308ec31e4@realtek.com>
-References: <CAC88DfsHrhyhy0Pn1O-z9egBvMYu=6NYgcvcC6KCgwh_-Ldkxg@mail.gmail.com>
-	<87a4wgrxil.wl-tiwai@suse.de>
-	<CAC88DfvjQvZvdvGdZ00woMymE2tUWk=2Dbqi3EzuzSHxGjEnzw@mail.gmail.com>
-	<871phsrsnf.wl-tiwai@suse.de>
-	<f59a70ca796b4d09822f514e7f25ac5c@realtek.com>
-	<CAC88DftEBEEEvODGUZzkry+kgAm=SfH=PAsxwu+SABMBMRMs=Q@mail.gmail.com>
-	<658f53ada52f4de9a0c852dd56554a2a@realtek.com>
-	<CAC88DfvyuWeD99hhKKsHum+wpjjQrOKsdWvKVZMefjhcx3sKBw@mail.gmail.com>
-	<871pgit2hk.wl-tiwai@suse.de>
-	<c0c7f6edb6e7417a9b51fc2308ec31e4@realtek.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/30.2 Mule/6.0
+	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="tTgQbuXx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+	s=protonmail3; t=1776158583; x=1776417783;
+	bh=stEBsGH6o1WT/D3trkAv9Ny/2kK8BVeL5s+Q9rX12M8=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=tTgQbuXx8TeKwc4pOF+Uzh2kb6+V3ZGBHp6FBJm2axCAcSxt4J4PfpmOZZ+nOcMhj
+	 PRBHsOqCasv5gmYEhRdA/czqd36h+HrJp6rwyjT5sR/VWzWYYMXevWMHwpo+NE0KYb
+	 Z2b3SScwG/1PNxPdoHVC4uxMeySAeQQI6Dt8TsNoVaCgy+z2GeOdvDg8jmxszjf1zG
+	 pdKQrbCPKv0O4q97lSM/YKbzm2sUeQu7+zhf0OCl1eWWRvDDpNVlsx3gvMLj1GwQOF
+	 YPLQk+q3CMoYWB22GEaky/ntZwvzhicyghGwQrlrXtwLjZ0v5RDW5jsWvQ87xCxbn2
+	 ACEc9W0Nw8t6w==
+Date: Tue, 14 Apr 2026 09:22:58 +0000
+To: Baolu Lu <baolu.lu@linux.intel.com>
+From: 70sp <70sp@protonmail.com>
+Cc: "iommu@lists.linux.dev" <iommu@lists.linux.dev>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Subject: Re: [REGRESSION] GPU passes into VM improperly after c376a3456d8b or a98db518dde2
+Message-ID: <C4BK-Bp_FII0EkxSHQxBS2wO-Age-UxFrp_KfmYzb8cnQ8ZndzBBIPD8S9T86wOifBP0tysQGCFtGQsBsBvG2IzIMw3jb3NF5HGbS3tsawA=@protonmail.com>
+In-Reply-To: <56ce85d5-e0b9-407c-9a86-708111a8a509@linux.intel.com>
+References: <z7Rkts0EsooZcnCjNfJaK6ursftFU8ubOkH0hcNjzxugEAwGsHLMblOdfoAx-gJzBZ-TMmeUtD7iWBngbFY5UCJCwdSmYqmCVMy-yhbirUk=@protonmail.com> <56ce85d5-e0b9-407c-9a86-708111a8a509@linux.intel.com>
+Feedback-ID: 144929603:user:proton
+X-Pm-Message-ID: 2c43e2128b9169123231295ad057298bac432d97
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Spamd-Result: default: False [-2.01 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	URIBL_BLOCKED(0.00)[suse.de:dkim,suse.de:mid,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	ARC_NA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	FREEMAIL_CC(0.00)[gmail.com,alsa-project.org,lists.linux.dev,leemhuis.info];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:mid,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
-X-Rspamd-Action: no action
-X-Spam-Flag: NO
-X-Spam-Score: -2.01
-X-Spam-Level: 
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: D83046A99F
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 14 Apr 2026 09:57:00 +0200,
-Kailang wrote:
+I can confirm, that the "domain is not compatible with device" message is n=
+owhere to be seen.
+
+I have double checked by also adding an else statement with a different mes=
+sage and that one showed up several times. (by pci (iGPU) 0000:00:02.0, pci=
+eport 0000:00:01.0 and vfio-pci (GTX 970) 0000:01:00.0, 0000:01:00.1). ret =
+=3D 0.
+
+
+
+Sent with Proton Mail secure email.
+
+On Monday, April 13th, 2026 at 8:49 AM, Baolu Lu <baolu.lu@linux.intel.com>=
+ wrote:
+
+> On 4/12/26 19:17, 70sp wrote:
+> > Hello,
+> >
+> > I have been dealing with a regression launching a Windows QEMU/KVM
+> > virtual machine with a GPU passed through.
+> >
+> > The issue consists of launching a QEMU/KVM VM, which gets stuck for
+> > about 2 minutes on booting with a white screen and then having NVIDIA=
+=E2=80=99s
+> > code 43 in Windows.
+> >
+> > I=E2=80=99m certain, that the issue is not caused by anything in Window=
+s or
+> > related software in Linux, because I tried reinstalling my whole PC
+> > including the Windows VM. I tried to reproduce the bug on an out-of-the=
+-
+> > box Arch Linux install and the bug is still present.
+> >
+> > The first bad commit is either a98db518dde246e01ead53617dc0a30d6aaa3752
+> > or c376a3456d8bef43ec556a98c0a04c35086c2737. I don=E2=80=99t know for s=
+ure which
+> > one introduced it, because during bisection I had to skip
+> > a98db518dde246e01ead53617dc0a30d6aaa3752 due to it being unable to
+> > launch the virtual machine resulting in a different error (didn=
+=E2=80=99t even
+> > start booting). In kernels before these commits, the VM works flawlessl=
+y.
+> >
+> > I have tested it on latest mainline kernel and the issue is still
+> > present. I have been experiencing the issue since kernel 6.13, so I jus=
+t
+> > switched to the 6.12 LTS kernel instead which doesn=E2=80=99t have this=
+ issue.
+> >
+> > Configuration of my Linux install and hardware: https://pastebin.com/
+> > rcsyyYiK
+> > .config: https://pastebin.com/RTQCBduD
+> > dmesg errors: https://pastebin.com/84jPP81E
+> > lspci: https://pastebin.com/qi29BSWi
+> >
+> > #regzbot introduced:
+> > a98db518dde246e01ead53617dc0a30d6aaa3752..c376a3456d8bef43ec556a98c0a04=
+c35086c2737
+>=20
+> Before these commits, if a device was attached to a domain that didn't
+> perfectly match the hardware's capabilities (such as address width or
+> coherency), the kernel would dynamically adjust the domain to
+> accommodate the hardware.
+>=20
+> Following these two commits, the driver now applies a "match or fail"
+> policy. If the domain is incompatible with the device's hardware
+> capabilities, it returns -EINVAL. This expects the caller to allocate a
+> new domain dedicated to that specific device and attempt the attachment
+> again.
+>=20
+> Can you please add a message line in paging_domain_compatible() to
+> verify whether it's a domain compatibility issue?
+>=20
+> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+> index 205debd76989..c7e1e0dfa250 100644
+> --- a/drivers/iommu/intel/iommu.c
+> +++ b/drivers/iommu/intel/iommu.c
+> @@ -3111,8 +3111,10 @@ int paging_domain_compatible(struct iommu_domain
+> *domain, struct device *dev)
+>                  ret =3D
+> paging_domain_compatible_second_stage(dmar_domain, iommu);
+>          else if (WARN_ON(true))
+>                  ret =3D -EINVAL;
+> -       if (ret)
+> +       if (ret) {
+> +               dev_info(dev, "domain is not compatible with device, ret
+> =3D %d", ret);
+>                  return ret;
+> +       }
+>=20
+>          if (sm_supported(iommu) && !dev_is_real_dma_subdevice(dev) &&
+>              context_copied(iommu, info->bus, info->devfn))
+>=20
+> Thanks,
+> baolu
 > 
-> OK.
-> Attached.
-> 
-> Thanks.
-
-Applied now.  Thanks.
-
-
-Takashi
