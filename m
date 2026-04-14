@@ -1,235 +1,213 @@
-Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 845A836E477
-	for <regressions@lists.linux.dev>; Tue, 14 Apr 2026 06:37:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.215.179
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776148645; cv=pass; b=MPPFgLHXmF5U45wz4QRxvGC9Aeb0hNAh1BLxrv6GYtUY018Qq7mcJNVX6UPuLIwaafI6qR+GwYhyVzi14U0e6cBC6nA/RSdLQ06U6khve6QLnlF6douM/6Q7rxF/TRd92Ahp5ErRiT0yrmbjAu1bj17EGgjOAx/0O5+ePzlvq0o=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776148645; c=relaxed/simple;
-	bh=6AYlwuiSl7sAbEfuNHnNOQJCIWxT7DJEDSiRqwD5ROk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XOwAtKyh3SPEcoIDqA6wMYX7dyKEKrpigD7kNI0ZFZMJzOkqDl8+JK8mxUXyH4jlysFebMH7bNYlIPnfaSWdTW638vWj1xs5Khm4JviydbjeJJFgFTGBhJLMBKK3uvBdGt019wI7nEaHgk90Kfc9mIJOc95igBqyQerODSmnfeU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KUwyh1YL; arc=pass smtp.client-ip=209.85.215.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FF7036DA02
+	for <regressions@lists.linux.dev>; Tue, 14 Apr 2026 06:44:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776149061; cv=none; b=XO0HlJqZHF+NkNvW214ONnvHE2aUsdVxn7dQKVLLAPkQ65xMTrCHX1+UGCIkcg3t2PSztiC9BGH/CKVX9aKS2XLAqdZkv8c7ebEV10gOZ51cZdOBtWImsIF4lLK/P9BvCFp6LBovFHIIJtR02pzvzDcrrz1unA2B3IGHUrFrzUQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776149061; c=relaxed/simple;
+	bh=K4VOqbnlrdVjgIxsZqmBtjeY4oCuHOchMp+q9xr5Uxc=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=r0JyPv024JOHorAYVWsgyjtLMOiKAIA52OxJQs+eUahL7YnTUnR2qP3iPyEXnL0/maeaKwY++8QD5xO5Dfm93yp20HSdJL378hkDoSdWzdjJD7595NmXtX6e1sVM1RXo2BlWYM6NDtapC90w7xcFIoP8JDjfEvbQhmQ4urlvZRw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=pass (2048-bit key) header.d=realtek.com header.i=@realtek.com header.b=P9d7EWFn; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KUwyh1YL"
-Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-c76b95e652bso2261099a12.3
-        for <regressions@lists.linux.dev>; Mon, 13 Apr 2026 23:37:24 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1776148644; cv=none;
-        d=google.com; s=arc-20240605;
-        b=AYZjw78Rd+eoOHLRmW0xVN/otIvmyO4KZRjEgkCdthHD2wBLY2ROCVBvADMuDx2WIj
-         xTkVuh0loKSRbanKovC9HvI5GVEsnUW4JF2EsqTF9kFK54/7wVaUOmWc6u3T1znyBEAi
-         xWP+wJeXehXCUf/8aPeEg8SHeQqbFwrVxZl76cS/FRdeiZupbOuZ6kLsASmtEN57kOQ6
-         FwOELkUJ5z6J29wgiygl645vgQzttXo2UkP+hhCXkx3k7zLNbrzJBDKl0jm9s/VfM06x
-         QPCnnIDA8nRNM9AtRxt7sNS/yLcKwPuRZbQkAERLn7Gg7HY6hDqeYHo5ntUvLmBfJ6qU
-         IYdg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=insLynn11+1MMlEVZgdZja3tQdpQK7VuHFjY0dKWpWQ=;
-        fh=8eA0T6i4qpcnfdEl790t6uqeieoGdmrYNoRZB5iToNk=;
-        b=SRDQMInghzgnuHnOrPMg/XvBsaoRzk+vUDOJS/VROGzLycXepkUR0YQlvozK+OBFNQ
-         h75Hg2W6eVNpqHgtNpYTtjLCmk7P9GFYGraUnf5gqfehte0o7YuG3MAzj2Mye1fXlJg8
-         hBBd/sTKsldrMtlBgVlDVEtDVc61jHrzxteeyUMVR7BaexSt/SVpPI3rR0D2Px3q3DUt
-         JkC/1UG3O2doeyJmreLQjz8OE+isn0om4Pp5XCWEt0TPIPAZEqOiZ1Q+02+lj+I1FIs0
-         naVu+S15ZS/D9QfTqIhPuotohot88KpokszdJ8JFpKlCat+RJ02C9WmTsvA4SXD2rCVI
-         sGaA==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1776148644; x=1776753444; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=insLynn11+1MMlEVZgdZja3tQdpQK7VuHFjY0dKWpWQ=;
-        b=KUwyh1YLsFhtnXxV00/uWJkT/NZe4Y0klBcWyjIKeIGtfSBwrVV1y4CNSIORDpFLI5
-         KPt3QtmeLr2amsK6CxGYqm4PiQp6kUOy5xpwb6mEsa6vpCMar9px+OUre00xYywpxVm9
-         3FaFwsaG/yo/MafhUssUX/+JvVL+JA9B5IxHj0uc1meEoR8xGJOWlLXkL0oR4yP2Dc7V
-         rfOrVYonu3m6tfe8yQf1ZpN10dAhsW4Lv6mfRGC9KAoHXwcU3jK0B30+DStbgVnxsjDB
-         7J08qaZ2FeMbF7Ds1c9NZUauUugbMW4NQARpI6UtPQSx78rZtqj9TZFRNWLloObymAP6
-         sCEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776148644; x=1776753444;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=insLynn11+1MMlEVZgdZja3tQdpQK7VuHFjY0dKWpWQ=;
-        b=p0i/8hOI+UoaaK3laIwrgEGewoBF+LLycy1nmi4xZH0o1BWfbeBfFLMvcdq5ZM4wv4
-         BForLMxBAj0jcjiImL7Mf6QegNRbl5yVk2XQ5BwuUbkeXdZkweiLCbGb982qoMmylgmB
-         BqY42fbHltujHjwOC+yJwkjZE8998rFicNo4nOGgR0wahuk4SVo3JXeZhggyKHsFjPG9
-         qDTA4CUUKsxBZKpU7b2oJ4dwT/xpgZmCfGQ8hOCgAjKDYtqhlXQ6f8mDqtKqP68Tc9v2
-         zknvGZoYppHLVHd6WYgnhJ6rIkVDKOixwUz6m0xiTspg63tw5gh+rlotVp3eMhBlaT7W
-         EvXg==
-X-Forwarded-Encrypted: i=1; AFNElJ9FQ6h1ELxx43JRmU+4DcpHGqGeDoxHyUk8f6Gu13PUxbda4r0AfpnvD3LDc4fDybxGjS1FI8nEVeg3Yw==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwF6mnp6BZeHKvM/XodhaaKe30aNVXkBRL31dTr0+YmImLf8XAC
-	I+hnoBaQvu5b4Bp/k7YGBngoJp/aQMNY/L+buLwVFfMZcEh6w7ctYvSJhZMfkHIPzqUmJf4xbXW
-	NSEATTsSByFiP7u8QTDtbkhGatHgLZwk=
-X-Gm-Gg: AeBDieuDJd0R30cwVn1cU226eS4Ch+52d4XXgGYHWI6ologV4e6Sh4Ofc0edwWs5bIH
-	DPZNZbzm3+2GzFe+l+oktLrq5oxUPbHG0+TU2LFvUTPqQtecyFxBwp/RcdCD6FwPIBkwcnmhH4S
-	3yRFw5MSsprpC1slLcXUaaRlRoju/2yUbyYzHljJ5wWEYXdsBvlGTuNCl+Y9vqvBKDGV3QE40Wo
-	7JVd8hlo+sMwCLXaoEIfnuZCjeKc5Vi96utSQkzL35wsXokqllUjoehE9o1kQjoSeiTjhLg4153
-	R+z6V5+/TsWfke+s66m70N6fpYDtIeGcfx/ubg==
-X-Received: by 2002:a17:902:da82:b0:2b4:6470:75f4 with SMTP id
- d9443c01a7336-2b4647078femr47230175ad.28.1776148643730; Mon, 13 Apr 2026
- 23:37:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=realtek.com header.i=@realtek.com header.b="P9d7EWFn"
+X-SpamFilter-By: ArmorX SpamTrap 5.80 with qID 63E6hwxD71533778, This message is accepted by code: ctloc85258
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=realtek.com; s=dkim;
+	t=1776149038; bh=m2rZ6Thlz7ys1m+FUoEL3uymyXMeq2xO32LyF7hqZNM=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version;
+	b=P9d7EWFnLOSFkcTGipZIG+PQlsO2tHYfX42WI7TzFXNfrVQHvJTRAW/VJ+fkfIVkw
+	 ffDhyqiR7RDEWEOdiDXBJanV2keHMVNYKzCY0cZwQTQMYhg1dojzmNUI/GkoukTXA9
+	 jkp1P3kfNFlX+n+ckBIPLT9wAjs04l6OuJekE41pdcd7FnXxyNvqSnmjN8eMwyfCKD
+	 wSuRnuIFvHQNM0tITQuLBCKBSDmA6y7TrDYt5QYy7sP9VE9t8s2fSMZ6d1x0lhBzSA
+	 fNnJJ/VUlN6sqI6QJu46Vy7jO3OqlZurYCeDAOSBCxSWR2qsqSxdMure1bzI1kuFuJ
+	 gxy46z2Y+NO/Q==
+Received: from mail.realtek.com (rtkexhmbs04.realtek.com.tw[10.21.1.54])
+	by rtits2.realtek.com.tw (8.15.2/3.26/5.94) with ESMTPS id 63E6hwxD71533778
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 14 Apr 2026 14:43:58 +0800
+Received: from RTKEXHMBS06.realtek.com.tw (10.21.1.56) by
+ RTKEXHMBS04.realtek.com.tw (10.21.1.54) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1748.10; Tue, 14 Apr 2026 14:43:58 +0800
+Received: from RTKEXHMBS06.realtek.com.tw ([fe80::ed72:3015:2840:4458]) by
+ RTKEXHMBS06.realtek.com.tw ([fe80::ed72:3015:2840:4458%10]) with mapi id
+ 15.02.1748.010; Tue, 14 Apr 2026 14:43:58 +0800
+From: Kailang <kailang@realtek.com>
+To: =?utf-8?B?SsOpcsOpbXkgQmV0aG1vbnQ=?= <jeremy.bethmont@gmail.com>
+CC: Takashi Iwai <tiwai@suse.de>,
+        "alsa-devel@alsa-project.org"
+	<alsa-devel@alsa-project.org>,
+        "regressions@lists.linux.dev"
+	<regressions@lists.linux.dev>,
+        "regressions@leemhuis.info"
+	<regressions@leemhuis.info>
+Subject: RE: [REGRESSION] Audio popping on ThinkPad X1 Carbon Gen 12 (ALC287)
+ after commit d2e01e0c5e94
+Thread-Topic: [REGRESSION] Audio popping on ThinkPad X1 Carbon Gen 12 (ALC287)
+ after commit d2e01e0c5e94
+Thread-Index: AQHcsCEJ0ioheXDhmUiIGGE8KvE4VLWmzTwAgAAbEQCAAAJMAIA2AOEQgADgZoCAAIeEwA==
+Date: Tue, 14 Apr 2026 06:43:56 +0000
+Message-ID: <658f53ada52f4de9a0c852dd56554a2a@realtek.com>
+References: <CAC88DfsHrhyhy0Pn1O-z9egBvMYu=6NYgcvcC6KCgwh_-Ldkxg@mail.gmail.com>
+ <87a4wgrxil.wl-tiwai@suse.de>
+ <CAC88DfvjQvZvdvGdZ00woMymE2tUWk=2Dbqi3EzuzSHxGjEnzw@mail.gmail.com>
+ <871phsrsnf.wl-tiwai@suse.de> <f59a70ca796b4d09822f514e7f25ac5c@realtek.com>
+ <CAC88DftEBEEEvODGUZzkry+kgAm=SfH=PAsxwu+SABMBMRMs=Q@mail.gmail.com>
+In-Reply-To: <CAC88DftEBEEEvODGUZzkry+kgAm=SfH=PAsxwu+SABMBMRMs=Q@mail.gmail.com>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: yes
+Content-Type: multipart/mixed;
+	boundary="_002_658f53ada52f4de9a0c852dd56554a2arealtekcom_"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAC88DfsHrhyhy0Pn1O-z9egBvMYu=6NYgcvcC6KCgwh_-Ldkxg@mail.gmail.com>
- <87a4wgrxil.wl-tiwai@suse.de> <CAC88DfvjQvZvdvGdZ00woMymE2tUWk=2Dbqi3EzuzSHxGjEnzw@mail.gmail.com>
- <871phsrsnf.wl-tiwai@suse.de> <f59a70ca796b4d09822f514e7f25ac5c@realtek.com>
-In-Reply-To: <f59a70ca796b4d09822f514e7f25ac5c@realtek.com>
-From: =?UTF-8?B?SsOpcsOpbXkgQmV0aG1vbnQ=?= <jeremy.bethmont@gmail.com>
-Date: Tue, 14 Apr 2026 13:37:11 +0700
-X-Gm-Features: AQROBzC6xEqhYrpdRvJxGXEJ7XxoE0pMXS_rqFAWmaM1oAaQaL4Fxq0dujM5SyI
-Message-ID: <CAC88DftEBEEEvODGUZzkry+kgAm=SfH=PAsxwu+SABMBMRMs=Q@mail.gmail.com>
-Subject: Re: [REGRESSION] Audio popping on ThinkPad X1 Carbon Gen 12 (ALC287)
- after commit d2e01e0c5e94
-To: Kailang <kailang@realtek.com>
-Cc: Takashi Iwai <tiwai@suse.de>, 
-	"alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, 
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>, 
-	"regressions@leemhuis.info" <regressions@leemhuis.info>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi Kailang,
+--_002_658f53ada52f4de9a0c852dd56554a2arealtekcom_
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 
-Thank you for the patch. However, I believe you may have attached the
-wrong file by mistake.
+U29ycnkhISBBdHRhY2hlZCB3cm9uZyBmaWxlLg0KQXR0YWNoZWQgYWdhaW4uDQoNCi0tLS0tT3Jp
+Z2luYWwgTWVzc2FnZS0tLS0tDQpGcm9tOiBKw6lyw6lteSBCZXRobW9udCA8amVyZW15LmJldGht
+b250QGdtYWlsLmNvbT4gDQpTZW50OiBUdWVzZGF5LCBBcHJpbCAxNCwgMjAyNiAyOjM3IFBNDQpU
+bzogS2FpbGFuZyA8a2FpbGFuZ0ByZWFsdGVrLmNvbT4NCkNjOiBUYWthc2hpIEl3YWkgPHRpd2Fp
+QHN1c2UuZGU+OyBhbHNhLWRldmVsQGFsc2EtcHJvamVjdC5vcmc7IHJlZ3Jlc3Npb25zQGxpc3Rz
+LmxpbnV4LmRldjsgcmVncmVzc2lvbnNAbGVlbWh1aXMuaW5mbw0KU3ViamVjdDogUmU6IFtSRUdS
+RVNTSU9OXSBBdWRpbyBwb3BwaW5nIG9uIFRoaW5rUGFkIFgxIENhcmJvbiBHZW4gMTIgKEFMQzI4
+NykgYWZ0ZXIgY29tbWl0IGQyZTAxZTBjNWU5NA0KDQoNCkV4dGVybmFsIG1haWwgOiBUaGlzIGVt
+YWlsIG9yaWdpbmF0ZWQgZnJvbSBvdXRzaWRlIHRoZSBvcmdhbml6YXRpb24uIERvIG5vdCByZXBs
+eSwgY2xpY2sgbGlua3MsIG9yIG9wZW4gYXR0YWNobWVudHMgdW5sZXNzIHlvdSByZWNvZ25pemUg
+dGhlIHNlbmRlciBhbmQga25vdyB0aGUgY29udGVudCBpcyBzYWZlLg0KDQoNCg0KSGkgS2FpbGFu
+ZywNCg0KVGhhbmsgeW91IGZvciB0aGUgcGF0Y2guIEhvd2V2ZXIsIEkgYmVsaWV2ZSB5b3UgbWF5
+IGhhdmUgYXR0YWNoZWQgdGhlIHdyb25nIGZpbGUgYnkgbWlzdGFrZS4NCg0KVGhlIGF0dGFjaGVk
+IHBhdGNoICgiMDAwMC14MS1nZW4xMi1zcGVha2VyLnBhdGNoIikgaXMgZGF0ZWQgTm92ZW1iZXIg
+MTIsIDIwMjQuIEl0cyBjb21taXQgbWVzc2FnZSBtZW50aW9ucyBmaXhpbmcgYW4gaXNzdWUgd2l0
+aCBvbGRlciBCSU9TIHZlcnNpb25zLg0KDQpDb3VsZCB5b3UgcGxlYXNlIGRvdWJsZS1jaGVjaz8N
+Cg0KQmVzdCByZWdhcmRzLA0KSmVyZW15DQoNCk9uIE1vbiwgMTMgQXByIDIwMjYgYXQgMTY6MTYs
+IEthaWxhbmcgPGthaWxhbmdAcmVhbHRlay5jb20+IHdyb3RlOg0KPg0KPiBIaSBKZXJlbXksDQo+
+DQo+IFlvdSBjYW4gdGVzdCBhdHRhY2ggcGF0Y2guDQo+DQo+IEJSLA0KPiBLYWlsYW5nDQo+DQo+
+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFRha2FzaGkgSXdhaSA8dGl3YWlA
+c3VzZS5kZT4NCj4gU2VudDogVHVlc2RheSwgTWFyY2ggMTAsIDIwMjYgNDozMyBQTQ0KPiBUbzog
+SsOpcsOpbXkgQmV0aG1vbnQgPGplcmVteS5iZXRobW9udEBnbWFpbC5jb20+DQo+IENjOiBLYWls
+YW5nIDxrYWlsYW5nQHJlYWx0ZWsuY29tPjsgYWxzYS1kZXZlbEBhbHNhLXByb2plY3Qub3JnOyAN
+Cj4gcmVncmVzc2lvbnNAbGlzdHMubGludXguZGV2OyByZWdyZXNzaW9uc0BsZWVtaHVpcy5pbmZv
+DQo+IFN1YmplY3Q6IFJlOiBbUkVHUkVTU0lPTl0gQXVkaW8gcG9wcGluZyBvbiBUaGlua1BhZCBY
+MSBDYXJib24gR2VuIDEyIA0KPiAoQUxDMjg3KSBhZnRlciBjb21taXQgZDJlMDFlMGM1ZTk0DQo+
+DQo+DQo+IEV4dGVybmFsIG1haWwgOiBUaGlzIGVtYWlsIG9yaWdpbmF0ZWQgZnJvbSBvdXRzaWRl
+IHRoZSBvcmdhbml6YXRpb24uIERvIG5vdCByZXBseSwgY2xpY2sgbGlua3MsIG9yIG9wZW4gYXR0
+YWNobWVudHMgdW5sZXNzIHlvdSByZWNvZ25pemUgdGhlIHNlbmRlciBhbmQga25vdyB0aGUgY29u
+dGVudCBpcyBzYWZlLg0KPg0KPg0KPg0KPiBPbiBUdWUsIDEwIE1hciAyMDI2IDA5OjI0OjM4ICsw
+MTAwLA0KPiBKw6lyw6lteSBCZXRobW9udCB3cm90ZToNCj4gPg0KPiA+IEhpIFRha2FzaGksDQo+
+ID4NCj4gPiBUaGFuayB5b3UgZm9yIGxvb2tpbmcgaW50byB0aGlzIHNvIHF1aWNrbHkuDQo+ID4N
+Cj4gPiBBcyByZXF1ZXN0ZWQsIEkgaGF2ZSBhdHRhY2hlZCB0aGUgb3V0cHV0IG9mIGBhbHNhLWlu
+Zm8uc2ggDQo+ID4gLS1uby11cGxvYWRgIGZyb20gbXkgbWFjaGluZS4NCj4gPg0KPiA+IFBsZWFz
+ZSBsZXQgbWUga25vdyBpZiB5b3UgaGF2ZSBhIHByb3Bvc2VkIHBhdGNoIHlvdSB3b3VsZCBsaWtl
+IG1lIHRvIA0KPiA+IHRlc3QuIEkgYW0gaGFwcHkgdG8gYnVpbGQgaXQgYW5kIHZlcmlmeSBpZiBp
+dCByZXNvbHZlcyB0aGUgcG9wcGluZyANCj4gPiBvbiBteSBoYXJkd2FyZS4NCj4NCj4gSSBndWVz
+cyBkcm9wcGluZyB0aGUgYWxjX3Byb2Nlc3NfY29lZl9mdyhjb2RlYywgZW5fY29lZnMpIGNhbGwg
+YXQgY2xvc2luZyB3b3VsZCBmaXggeW91ciBwcm9ibGVtIHdoaWxlIGtlZXBpbmcgdGhlIG9uZSBh
+dCBvcGVuLg0KPiBCdXQgSSdtIG5vdCBzdXJlIGFib3V0IGFueSBzaWRlLWVmZmVjdCBieSB0aGF0
+Lg0KPiBLYWlsYW5nLCBjb3VsZCB5b3UgY2hlY2sgdGhpcz8NCj4NCj4gQlRXLCB3aGVuIHlvdSBk
+aXNhYmxlIHJ1bnRpbWUgUE0sIGRvZXMgdGhlIHBvcCBub2lzZSBzdGlsbCBhcHBlYXJzPw0KPg0K
+Pg0KPiB0aGFua3MsDQo+DQo+IFRha2FzaGkNCj4NCj4gPg0KPiA+IEJlc3QgcmVnYXJkcywNCj4g
+PiBKZXJlbXkNCj4gPg0KPiA+IE9uIFR1ZSwgMTAgTWFyIDIwMjYgYXQgMTM6NDcsIFRha2FzaGkg
+SXdhaSA8dGl3YWlAc3VzZS5kZT4gd3JvdGU6DQo+ID4gPg0KPiA+ID4gT24gVHVlLCAxMCBNYXIg
+MjAyNiAwMTowMToxMSArMDEwMCwgSsOpcsOpbXkgQmV0aG1vbnQgd3JvdGU6DQo+ID4gPiA+DQo+
+ID4gPiA+IEhpIFRha2FzaGksIEthaWxhbmcsDQo+ID4gPiA+DQo+ID4gPiA+IEkgYW0gcmVwb3J0
+aW5nIGFuIGF1ZGlvIHJlZ3Jlc3Npb24gaW50cm9kdWNlZCBpbiBrZXJuZWwgNi4xOC4xMyANCj4g
+PiA+ID4gb24gdGhlIExlbm92byBUaGlua1BhZCBYMSBDYXJib24gR2VuIDEyIChNZXRlb3IgTGFr
+ZSwgUmVhbHRlayANCj4gPiA+ID4gQUxDMjg3IGNvZGVjLA0KPiA+ID4gPiBTU0lEOiAweDE3YWEy
+MzFlKS4NCj4gPiA+ID4NCj4gPiA+ID4gU2luY2UgdGhpcyB1cGRhdGUsIHRoZSBsYXB0b3AgZW1p
+dHMgYSBzaG9ydCwgbm90aWNlYWJsZSBoYXJkd2FyZSANCj4gPiA+ID4gcG9wL2JsaXAgZnJvbSB0
+aGUgc3BlYWtlcnMgZXhhY3RseSB3aGVuIGFuIGF1ZGlvIHN0cmVhbSBjbG9zZXMgDQo+ID4gPiA+
+IGFuZCB0aGUgUENNIHN0YXRlIHN1c3BlbmRzLiBJdCBoYXBwZW5zIGNvbnNpc3RlbnRseSBhIGZl
+dyANCj4gPiA+ID4gc2Vjb25kcyBhZnRlciBwbGF5YmFjayBmaW5pc2hlcyAoZS5nLiwgYWZ0ZXIg
+YSBzeXN0ZW0gDQo+ID4gPiA+IG5vdGlmaWNhdGlvbiBvciB0ZXJtaW5hbCBiZWxsKS4NCj4gPiA+
+ID4NCj4gPiA+ID4gSSBoYXZlIHRyYWNrZWQgdGhlIHJlZ3Jlc3Npb24gZG93biB0byB0aGUgZm9s
+bG93aW5nIGNvbW1pdDoNCj4gPiA+ID4gZDJlMDFlMGM1ZTk0N2RhMGI1MDA1Y2E4OWVmYTgyYmFl
+YjIzMmFkYyAoIkFMU0E6IGhkYS9yZWFsdGVrIC0gDQo+ID4gPiA+IGZpeGVkIHNwZWFrZXIgbm8g
+c291bmQiKQ0KPiA+ID4gPg0KPiA+ID4gPiAjcmVnemJvdCBpbnRyb2R1Y2VkOiBkMmUwMWUwYzVl
+OTQ3ZGEwYjUwMDVjYTg5ZWZhODJiYWViMjMyYWRjDQo+ID4gPiA+DQo+ID4gPiA+IFJvb3QgY2F1
+c2UgYW5hbHlzaXM6DQo+ID4gPiA+IFRoZSBjb21taXQgbW9kaWZpZXMgdGhlIGBhbGMyODdfYWxj
+MTMxOF9wbGF5YmFja19wY21faG9va2ANCj4gPiA+ID4gZnVuY3Rpb24sIGFkZGluZyByYXcgQ09F
+RiB3cml0ZXMgdG8gZGlzYWJsZS9lbmFibGUgQU1QIHNpbGVuY2UgDQo+ID4gPiA+IGRldGVjdGlv
+biBvbiBIREFfR0VOX1BDTV9BQ1RfT1BFTiBhbmQgSERBX0dFTl9QQ01fQUNUX0NMT1NFLg0KPiA+
+ID4gPg0KPiA+ID4gPiBCZWNhdXNlIGBhbGMyODdfYWxjMTMxOF9wbGF5YmFja19wY21faG9va2Ag
+aXMgYSBzaGFyZWQgaG9vayB1c2VkIA0KPiA+ID4gPiBieSBtdWx0aXBsZSBMZW5vdm8gQUxDMjg3
+L0FMQzEzMTggZGV2aWNlcywgdGhlc2UgdW5jb25kaXRpb25hbCANCj4gPiA+ID4gYFdSSVRFX0NP
+RUZgIGluc3RydWN0aW9ucyBhcmUgYmVpbmcgc2VudCB0byBoYXJkd2FyZSB0aGF0IGRvZXMgDQo+
+ID4gPiA+IG5vdCBuZWVkIHRoZSBzaWxlbmNlIGRldGVjdGlvbiBmaXguIE9uIHRoZSBYMSBDYXJi
+b24gR2VuIDEyLCANCj4gPiA+ID4gZXhlY3V0aW5nIGBhbGNfcHJvY2Vzc19jb2VmX2Z3KGNvZGVj
+LCBlbl9jb2VmcylgIHVwb24gc3RyZWFtIA0KPiA+ID4gPiBjbG9zZSB0cmlnZ2VycyBhbiBpbW1l
+ZGlhdGUgZWxlY3RyaWNhbCBwb3AuIE1vbml0b3Jpbmcgd2l0aCANCj4gPiA+ID4gYHB3LW1vbmAg
+Y29uZmlybXMgdGhlIGhhcmR3YXJlIHBvcCBjb2luY2lkZXMgcGVyZmVjdGx5IHdpdGggdGhlIA0K
+PiA+ID4gPiBtb25pdG9yX0ZSIC8gbW9uaXRvcl9GTCBwb3J0cyBnb2luZyBpZGxlL3N1c3BlbmRl
+ZC4NCj4gPiA+ID4NCj4gPiA+ID4gUHJvcG9zZWQgc29sdXRpb246DQo+ID4gPiA+IENvdWxkIHdl
+IHJldmVydCB0aGlzIGNvbW1pdCwgb3IgYWx0ZXJuYXRpdmVseSwgd3JhcCB0aGVzZSANCj4gPiA+
+ID4gc3BlY2lmaWMgc2lsZW5jZS1kZXRlY3Rpb24gQ09FRiB3cml0ZXMgaW4gYSB0YXJnZXRlZCAN
+Cj4gPiA+ID4gYEFMQzI4N19GSVhVUGAgcXVpcmsgbWF0Y2hlZCB2aWEgU1NJRC9ETUksIHJhdGhl
+ciB0aGFuIGV4ZWN1dGluZyANCj4gPiA+ID4gdGhlbSBnbG9iYWxseSBpbiB0aGUgc2hhcmVkIHBs
+YXliYWNrIGhvb2s/DQo+ID4gPg0KPiA+ID4gQ291bGQgeW91IGdpdmUgYWxzYS1pbmZvLnNoIG91
+dHB1dD8gIFJ1biB0aGUgc2NyaXB0IHdpdGggDQo+ID4gPiAtLW5vLXVwbG9hZCBvcHRpb24gYW5k
+IGF0dGFjaCB0aGUgb3V0cHV0Lg0KPiA+ID4NCj4gPiA+IEkgZ3Vlc3MgdGhlIGJ1ZyBtaWdodCBu
+b3QgYmUgc3BlY2lmaWMgdG8geW91ciBkZXZpY2UgYnV0IGhhcHBlbmluZyANCj4gPiA+IGluIGdl
+bmVyYWwgd2l0aCBhbGwgbWF0Y2hpbmcgb25lcy4gIEFzIGEgd29ya2Fyb3VuZCBmb3Igc3VjaCBh
+IHBvcCANCj4gPiA+IG5vaXNlLCB3ZSBvZnRlbiBuZWVkIHRvIHJlb3JkZXIgdmVyYnMgb3IgcHV0
+IHNvbWUgZGVsYXkgYmV0d2VlbiB2ZXJicy4NCj4gPiA+DQo+ID4gPg0KPiA+ID4gVGFrYXNoaQ0K
+PiA+DQo+ID4NCj4gPg0KPiA+IC0tDQo+ID4gSsOpcsOpbXkgQmV0aG1vbnQNCj4gPg0KDQoNCg0K
+LS0NCkrDqXLDqW15IEJldGhtb250DQo=
 
-The attached patch ("0000-x1-gen12-speaker.patch") is dated November
-12, 2024. Its commit message mentions fixing an issue with older BIOS
-versions.
+--_002_658f53ada52f4de9a0c852dd56554a2arealtekcom_
+Content-Type: application/octet-stream;
+	name="0000-x1-gen12-speaker-pop.patch"
+Content-Description: 0000-x1-gen12-speaker-pop.patch
+Content-Disposition: attachment; filename="0000-x1-gen12-speaker-pop.patch";
+	size=1934; creation-date="Mon, 13 Apr 2026 09:14:30 GMT";
+	modification-date="Mon, 13 Apr 2026 09:05:39 GMT"
+Content-Transfer-Encoding: base64
 
-Could you please double-check?
+ZGlmZiAtLWdpdCBhL3NvdW5kL2hkYS9jb2RlY3MvcmVhbHRlay9hbGMyNjkuYyBiL3NvdW5kL2hk
+YS9jb2RlY3MvcmVhbHRlay9hbGMyNjkuYwppbmRleCAyY2YxY2MzY2I5MWMuLjcyZDE5ZjE4MDg4
+MSAxMDA2NDQKLS0tIGEvc291bmQvaGRhL2NvZGVjcy9yZWFsdGVrL2FsYzI2OS5jCisrKyBiL3Nv
+dW5kL2hkYS9jb2RlY3MvcmVhbHRlay9hbGMyNjkuYwpAQCAtMzY1NCwyMiArMzY1NCwxMSBAQCBz
+dGF0aWMgdm9pZCBhbGMyODdfYWxjMTMxOF9wbGF5YmFja19wY21faG9vayhzdHJ1Y3QgaGRhX3Bj
+bV9zdHJlYW0gKmhpbmZvLAogCQkJCSAgIHN0cnVjdCBzbmRfcGNtX3N1YnN0cmVhbSAqc3Vic3Ry
+ZWFtLAogCQkJCSAgIGludCBhY3Rpb24pCiB7Ci0Jc3RhdGljIGNvbnN0IHN0cnVjdCBjb2VmX2Z3
+IGRpc19jb2Vmc1tdID0gewotCQlXUklURV9DT0VGKDB4MjQsIDB4MDAxMyksIFdSSVRFX0NPRUYo
+MHgyNSwgMHgwMDAwKSwgV1JJVEVfQ09FRigweDI2LCAweEMyMDMpLAotCQlXUklURV9DT0VGKDB4
+MjgsIDB4MDAwNCksIFdSSVRFX0NPRUYoMHgyOSwgMHhiMDIzKSwKLQl9OyAvKiBEaXNhYmxlIEFN
+UCBzaWxlbmNlIGRldGVjdGlvbiAqLwotCXN0YXRpYyBjb25zdCBzdHJ1Y3QgY29lZl9mdyBlbl9j
+b2Vmc1tdID0gewotCQlXUklURV9DT0VGKDB4MjQsIDB4MDAxMyksIFdSSVRFX0NPRUYoMHgyNSwg
+MHgwMDAwKSwgV1JJVEVfQ09FRigweDI2LCAweEMyMDMpLAotCQlXUklURV9DT0VGKDB4MjgsIDB4
+MDA4NCksIFdSSVRFX0NPRUYoMHgyOSwgMHhiMDIzKSwKLQl9OyAvKiBFbmFibGUgQU1QIHNpbGVu
+Y2UgZGV0ZWN0aW9uICovCi0KIAlzd2l0Y2ggKGFjdGlvbikgewogCWNhc2UgSERBX0dFTl9QQ01f
+QUNUX09QRU46Ci0JCWFsY19wcm9jZXNzX2NvZWZfZncoY29kZWMsIGRpc19jb2Vmcyk7CiAJCWFs
+Y193cml0ZV9jb2VmZXhfaWR4KGNvZGVjLCAweDVhLCAweDAwLCAweDk1NGYpOyAvKiB3cml0ZSBn
+cGlvMyB0byBoaWdoICovCiAJCWJyZWFrOwogCWNhc2UgSERBX0dFTl9QQ01fQUNUX0NMT1NFOgot
+CQlhbGNfcHJvY2Vzc19jb2VmX2Z3KGNvZGVjLCBlbl9jb2Vmcyk7CiAJCWFsY193cml0ZV9jb2Vm
+ZXhfaWR4KGNvZGVjLCAweDVhLCAweDAwLCAweDU1NGYpOyAvKiB3cml0ZSBncGlvMyBhcyBkZWZh
+dWx0IHZhbHVlICovCiAJCWJyZWFrOwogCX0KQEAgLTM2OTIsMTAgKzM2ODEsMTUgQEAgc3RhdGlj
+IHZvaWQgYWxjMjg3X2ZpeHVwX2xlbm92b190aGlua3BhZF93aXRoX2FsYzEzMTgoc3RydWN0IGhk
+YV9jb2RlYyAqY29kZWMsCiAJCVdSSVRFX0NPRUYoMHgyNCwgMHgwMDEzKSwgV1JJVEVfQ09FRigw
+eDI1LCAweDAwMDApLCBXUklURV9DT0VGKDB4MjYsIDB4QzMwMSksCiAJCVdSSVRFX0NPRUYoMHgy
+OCwgMHgwMDAxKSwgV1JJVEVfQ09FRigweDI5LCAweGIwMjMpLAogCX07CisJc3RhdGljIGNvbnN0
+IHN0cnVjdCBjb2VmX2Z3IGRpc19jb2Vmc1tdID0geworCQlXUklURV9DT0VGKDB4MjQsIDB4MDAx
+MyksIFdSSVRFX0NPRUYoMHgyNSwgMHgwMDAwKSwgV1JJVEVfQ09FRigweDI2LCAweEMyMDMpLAor
+CQlXUklURV9DT0VGKDB4MjgsIDB4MDAwNCksIFdSSVRFX0NPRUYoMHgyOSwgMHhiMDIzKSwKKwl9
+OyAvKiBEaXNhYmxlIEFNUCBzaWxlbmNlIGRldGVjdGlvbiAqLwogCiAJaWYgKGFjdGlvbiAhPSBI
+REFfRklYVVBfQUNUX1BSRV9QUk9CRSkKIAkJcmV0dXJuOwogCWFsY191cGRhdGVfY29lZl9pZHgo
+Y29kZWMsIDB4MTAsIDE8PDExLCAxPDwxMSk7CisJYWxjX3Byb2Nlc3NfY29lZl9mdyhjb2RlYywg
+ZGlzX2NvZWZzKTsKIAlhbGNfcHJvY2Vzc19jb2VmX2Z3KGNvZGVjLCBjb2Vmcyk7CiAJc3BlYy0+
+cG93ZXJfaG9vayA9IGFsYzI4N19zNF9wb3dlcl9ncGlvM19kZWZhdWx0OwogCXNwZWMtPmdlbi5w
+Y21fcGxheWJhY2tfaG9vayA9IGFsYzI4N19hbGMxMzE4X3BsYXliYWNrX3BjbV9ob29rOwo=
 
-Best regards,
-Jeremy
-
-On Mon, 13 Apr 2026 at 16:16, Kailang <kailang@realtek.com> wrote:
->
-> Hi Jeremy,
->
-> You can test attach patch.
->
-> BR,
-> Kailang
->
-> -----Original Message-----
-> From: Takashi Iwai <tiwai@suse.de>
-> Sent: Tuesday, March 10, 2026 4:33 PM
-> To: J=C3=A9r=C3=A9my Bethmont <jeremy.bethmont@gmail.com>
-> Cc: Kailang <kailang@realtek.com>; alsa-devel@alsa-project.org; regressio=
-ns@lists.linux.dev; regressions@leemhuis.info
-> Subject: Re: [REGRESSION] Audio popping on ThinkPad X1 Carbon Gen 12 (ALC=
-287) after commit d2e01e0c5e94
->
->
-> External mail : This email originated from outside the organization. Do n=
-ot reply, click links, or open attachments unless you recognize the sender =
-and know the content is safe.
->
->
->
-> On Tue, 10 Mar 2026 09:24:38 +0100,
-> J=C3=A9r=C3=A9my Bethmont wrote:
-> >
-> > Hi Takashi,
-> >
-> > Thank you for looking into this so quickly.
-> >
-> > As requested, I have attached the output of `alsa-info.sh --no-upload`
-> > from my machine.
-> >
-> > Please let me know if you have a proposed patch you would like me to
-> > test. I am happy to build it and verify if it resolves the popping on
-> > my hardware.
->
-> I guess dropping the alc_process_coef_fw(codec, en_coefs) call at closing=
- would fix your problem while keeping the one at open.
-> But I'm not sure about any side-effect by that.
-> Kailang, could you check this?
->
-> BTW, when you disable runtime PM, does the pop noise still appears?
->
->
-> thanks,
->
-> Takashi
->
-> >
-> > Best regards,
-> > Jeremy
-> >
-> > On Tue, 10 Mar 2026 at 13:47, Takashi Iwai <tiwai@suse.de> wrote:
-> > >
-> > > On Tue, 10 Mar 2026 01:01:11 +0100,
-> > > J=C3=A9r=C3=A9my Bethmont wrote:
-> > > >
-> > > > Hi Takashi, Kailang,
-> > > >
-> > > > I am reporting an audio regression introduced in kernel 6.18.13 on
-> > > > the Lenovo ThinkPad X1 Carbon Gen 12 (Meteor Lake, Realtek ALC287
-> > > > codec,
-> > > > SSID: 0x17aa231e).
-> > > >
-> > > > Since this update, the laptop emits a short, noticeable hardware
-> > > > pop/blip from the speakers exactly when an audio stream closes and
-> > > > the PCM state suspends. It happens consistently a few seconds
-> > > > after playback finishes (e.g., after a system notification or
-> > > > terminal bell).
-> > > >
-> > > > I have tracked the regression down to the following commit:
-> > > > d2e01e0c5e947da0b5005ca89efa82baeb232adc ("ALSA: hda/realtek -
-> > > > fixed speaker no sound")
-> > > >
-> > > > #regzbot introduced: d2e01e0c5e947da0b5005ca89efa82baeb232adc
-> > > >
-> > > > Root cause analysis:
-> > > > The commit modifies the `alc287_alc1318_playback_pcm_hook`
-> > > > function, adding raw COEF writes to disable/enable AMP silence
-> > > > detection on HDA_GEN_PCM_ACT_OPEN and HDA_GEN_PCM_ACT_CLOSE.
-> > > >
-> > > > Because `alc287_alc1318_playback_pcm_hook` is a shared hook used
-> > > > by multiple Lenovo ALC287/ALC1318 devices, these unconditional
-> > > > `WRITE_COEF` instructions are being sent to hardware that does not
-> > > > need the silence detection fix. On the X1 Carbon Gen 12, executing
-> > > > `alc_process_coef_fw(codec, en_coefs)` upon stream close triggers
-> > > > an immediate electrical pop. Monitoring with `pw-mon` confirms the
-> > > > hardware pop coincides perfectly with the monitor_FR / monitor_FL
-> > > > ports going idle/suspended.
-> > > >
-> > > > Proposed solution:
-> > > > Could we revert this commit, or alternatively, wrap these specific
-> > > > silence-detection COEF writes in a targeted `ALC287_FIXUP` quirk
-> > > > matched via SSID/DMI, rather than executing them globally in the
-> > > > shared playback hook?
-> > >
-> > > Could you give alsa-info.sh output?  Run the script with --no-upload
-> > > option and attach the output.
-> > >
-> > > I guess the bug might not be specific to your device but happening
-> > > in general with all matching ones.  As a workaround for such a pop
-> > > noise, we often need to reorder verbs or put some delay between verbs=
-.
-> > >
-> > >
-> > > Takashi
-> >
-> >
-> >
-> > --
-> > J=C3=A9r=C3=A9my Bethmont
-> >
-
-
-
---=20
-J=C3=A9r=C3=A9my Bethmont
+--_002_658f53ada52f4de9a0c852dd56554a2arealtekcom_--
