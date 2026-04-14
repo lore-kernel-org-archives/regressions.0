@@ -1,154 +1,74 @@
-Received: from vmicros1.altlinux.org (vmicros1.altlinux.org [194.107.17.57])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A5E23E9F66
-	for <regressions@lists.linux.dev>; Tue, 14 Apr 2026 15:24:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.107.17.57
+Received: from mail-24422.protonmail.ch (mail-24422.protonmail.ch [109.224.244.22])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BD7D3B19BC
+	for <regressions@lists.linux.dev>; Tue, 14 Apr 2026 23:03:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776180288; cv=none; b=g2slzkrusUhg0LpJh4OFmyz/aRsuSi+UF6vwQkUi0G45hNVeujM0eRZomXmWmBfBdEIcX5/dwnu/vjOeQi4FnmDarz6aaLYI5xAde24Cm1JrxrBiUhgGGiDWueXI/8RHiXrKLqGcwsP9vjK3zdAgQPFasDFnpMCnHCE5aglDc78=
+	t=1776207841; cv=none; b=oZHCK4w1FG930cKd8LDStFDucZnJYv8Xi/yu4HpzqRaiHAcVc1XyJ6sXD31BcoWlmUkfXDspcmhykxd+WkjqHxAFXV3ubpVCHSC7yiW0uDqvkVOHg2lFiNvA51r7Ci9uaZ6ikB0g0UK14k43RqiFww3VtjRx8s1ikbBMTCmVmIk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776180288; c=relaxed/simple;
-	bh=+oWKlpvzRKdJ5pgReYZcQfHf1GcKqwjmRSjQsWb9xHU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q0l/pDvleNquf1dNpaZnrwd6ksdc8KbnRd9BACkWX5d3pKlkJqFOnbOlhkwOZyPsqmU1txkAVFswX91KYHeG9JW1DdDV3NmPLt78FoV2oba27W2cdpo4dOE8/Fyp9JXjGI0C7ovo7XBnzC/d21MQ5ttxWXOBwruoSqxYt5rrPjI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=altlinux.org; spf=pass smtp.mailfrom=altlinux.org; arc=none smtp.client-ip=194.107.17.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=altlinux.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altlinux.org
-Received: from imap.altlinux.org (imap.altlinux.org [194.107.17.38])
-	by vmicros1.altlinux.org (Postfix) with ESMTP id F357672C8CC;
-	Tue, 14 Apr 2026 18:24:38 +0300 (MSK)
-Received: from altlinux.org (unknown [193.43.10.9])
-	by imap.altlinux.org (Postfix) with ESMTPSA id DCFF436D00D0;
-	Tue, 14 Apr 2026 18:24:38 +0300 (MSK)
-Date: Tue, 14 Apr 2026 18:24:38 +0300
-From: Vitaly Chikunov <vt@altlinux.org>
-To: Thorsten Leemhuis <regressions@leemhuis.info>, 
-	Sasha Levin <sashal@kernel.org>
-Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
-	gregkh@linuxfoundation.org, regressions@lists.linux.dev, 
-	Matt Roper <matthew.d.roper@intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>
-Subject: Re: [regression] Re: Linux 6.12.75
-Message-ID: <ad5ZsSwNM42pa10J@altlinux.org>
-References: <20260304131402.83200-1-sashal@kernel.org>
- <20260304131402.83200-2-sashal@kernel.org>
- <ac4lw9tTNn4baO_h@altlinux.org>
- <c54a0b91-cfbf-463e-964d-bf9a2e524189@leemhuis.info>
- <adz2d7M3DKb-6jm9@altlinux.org>
- <ad2G46EyDs8LBoH_@altlinux.org>
- <ad5Gsd1YoS3607UI@altlinux.org>
+	s=arc-20240116; t=1776207841; c=relaxed/simple;
+	bh=EkBHiVCFVAdtMcYoyVUw520Je70YymN/TMMD4BxSlMg=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hw5VEio9+5nE/u3l/1a3HskbRaj5J1ggBfFAb28kxClupxiKmJKR5LFyvaLSrlVIMycHl+t/kBZ7/kH6Ybfkr3QjGtfx9zBgyubz4GESzGuvE45BF7IiSn6FQUSxreHsOWjnzJwdqg7U9O6UXi2wWFmAxDrZm6m+689LeSHkanA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=r26.me; spf=pass smtp.mailfrom=r26.me; dkim=pass (2048-bit key) header.d=r26.me header.i=@r26.me header.b=Vf49MAmq; arc=none smtp.client-ip=109.224.244.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=r26.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=r26.me
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=r26.me header.i=@r26.me header.b="Vf49MAmq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=r26.me;
+	s=protonmail; t=1776207831; x=1776467031;
+	bh=EkBHiVCFVAdtMcYoyVUw520Je70YymN/TMMD4BxSlMg=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=Vf49MAmqsUKDbrdAeW3u51/etLEzFfqIze9PWcnHZOEEN9PMuF0JDaEQXQVdq2t5O
+	 wBComDJolKiaMRpL+7jOEG0pO03HqWQbxn91d3nXyaNyTgGuFnv6zY03DO8aiQFTmL
+	 uQgqm98yVzzgqpU3afMlnGIRn/yYIiIp48Qi1rg4YGsxYqlGTb8LtuXFSXg77z4SN8
+	 nxPp8DmuQVocWyMXJL+xgGWOpWqLBxFrAuFTAkIMK4ItmcAC6bzqRiMGf1AzEeAecY
+	 V/ZFV7gEk/BRs/oSUnuTn059oD2P44eMaBKtreZBW4LrWUb7be/HR5OsdpSegz1cZb
+	 JtyypY7NSl7Xw==
+Date: Tue, 14 Apr 2026 23:03:49 +0000
+To: =?utf-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+From: Rio Liu <rio@r26.me>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "regressions@lists.linux.dev" <regressions@lists.linux.dev>, Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [REGRESSION] amdgpu fails to load eGPU after 6.19
+Message-ID: <j-oL8G7jik8a-PYnIVU4kE-w4HJaq9pNshpbPC5zphvGa0SIno_vpSq1zEcBUVDx6hSMvbV1eAIcIO7C8jtMv0GTG7UfvWVZaEzabnQ-6YY=@r26.me>
+In-Reply-To: <4dfc25f2-f660-c234-4e4d-c5c76216523d@linux.intel.com>
+References: <a1FodrO_nl6UemO3VLBk5Gsu6PjvxLU-OYhvJEMeKFem-Bpi7ZXDHrIxtwsTCmpn-WndBxnzZNtdKJy_V6PjafnFjSKz7sr1eEfGobRzpgs=@r26.me> <4dfc25f2-f660-c234-4e4d-c5c76216523d@linux.intel.com>
+Feedback-ID: 77429777:user:proton
+X-Pm-Message-ID: d890b8beb51b38e0c8a44847b3d98c8eaa700496
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=koi8-r
-Content-Disposition: inline
-In-Reply-To: <ad5Gsd1YoS3607UI@altlinux.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Thorsten, Sasha,
+Hi Ilpo,
 
-On Tue, Apr 14, 2026 at 04:57:38PM +0300, Vitaly Chikunov wrote:
-> On Tue, Apr 14, 2026 at 03:17:38AM +0300, Vitaly Chikunov wrote:
-> > On Mon, Apr 13, 2026 at 05:17:30PM +0300, Vitaly Chikunov wrote:
-> > > On Mon, Apr 13, 2026 at 01:33:18PM +0200, Thorsten Leemhuis wrote:
-> > > > On 4/2/26 10:44, Vitaly Chikunov wrote:
-> > > > > 
-> > > > > 1. I cannot find this commit posted on lore.kernel.org to report to
-> > > > > exact patch.
-> > > > > 
-> > > > > | From: Matt Roper <matthew.d.roper@intel.com>
-> > > > > | Date: Tue, 10 Sep 2024 16:47:29 -0700
-> > > > > | Subject: [PATCH 6.12/sisyphus] drm/xe: Switch MMIO interface to take xe_mmio
-> > > > > |  instead of xe_gt
-> > > > > | 
-> > > > > | [ Upstream commit a84590c5ceb354d2e9f7f6812cfb3a9709e14afa ]
-> > > > > | 
-> > > > > | Since much of the MMIO register access done by the driver is to non-GT
-> > > > > | registers, use of 'xe_gt' in these interfaces has been a long-standing
-> > > > > | design flaw that's been hard to disentangle.
-> > > > > [...]
-> > > > > 
-> > > > > 2. After this patch applied to 6.12.75 there is kernel NULL pointer
-> > > > > dereference BUG on MSI MAG H670 12th Gen Intel(R) Core(TM) i5-12600K
-> > > > > with ASRock Intel Arc B580 Challenger [Alchemist], 12GB:
-> > > > > [...]
-> > > > > The commit is found not by a git bisect (since it's reported by end
-> > > > > user and I cannot reproduce it on my hardware) but (by analyzing dmesg)
-> > > > > with:
-> > > > > [...]
-> > > > > Then finding the suspecting commit:
-> > > > > 
-> > > > >   $ git log --oneline -G'XE_LUNARLAKE' v6.12.74..v6.12.75
-> > > > >   26a40327c25c drm/xe: Switch MMIO interface to take xe_mmio instead of xe_gt
-> > > > > 
-> > > > > 6.18 and above are not affected by the bug. Also, they have another commit
-> > > > > modifying the line which is not present in 6.12 branch:
-> > > > > [...]
-> > > > > Related drm/xe bug report https://gitlab.freedesktop.org/drm/xe/kernel/-/work_items/7661
-> > > > Nobody reacted to this and it seems the gitlab ticket is stalled, too.
-> > > > So let me ask: can this be resolved by reverting 26a40327c25c in 6.12.y?
-> > 
-> > It's turned out these two commits are revertible together:
-> > 
-> >   8f6848b2f6ea ("drm/xe/mmio: Avoid double-adjust in 64-bit reads")
-> >   26a40327c25c ("drm/xe: Switch MMIO interface to take xe_mmio instead of xe_gt")
-> > 
-> > I am going to ask the users to test this.
-> 
-> After testing revert of these two commits, users report that regress
-> does not appear, kernel boots without panic and there is no video artifacts.
+> This snippet only contains collateral damage and does not show where the
+> problem originates from. Please provide a full dmesg instead with
+> dyndbg=3D"file drivers/pci/*.c +p" on the kernel command line.
+>
+> Preferrably test with the latest code + fixes that are in pci/resources
+> branch (you can just take all changes from there) and get the logs from
+> there. I wouldn't be surprised if your problem is already addressed by
+> those fixes but we'll see.
 
-After analyzing the problem slightly deeper, it seems that there is
-uninitialized mmio.tile issue. Which is fixed in mainline commit
-
-  58548b91101f ("drm/xe: Defer gt->mmio initialization until after multi-tile setup")
-
-The commit also have tag:
-
-  Fixes: fa599b8c95a7 ("drm/xe: Populate GT's mmio iomap from tile during init")
-
-The commit fa599b8c95a7 is picked into 6.12.75 as 0b433e086b9f, but the
-fix is not. Piking it may be the better way to fix the regression than
-the revert of the two aforementioned commits.
-
-I will try to pick the fix, test, and report if it resolves the regress.
+Thanks a lot for the help! I tested on pci/resources
+8cb081667377709f4924ab6b3a88a0d7a761fe91 "PCI: Fix alignment calculation fo=
+r
+resource size larger than align", and the eGPU is now loading! There are so=
+me
+messages in dmesg showing "can't assign; no space" and "failed to assign", =
+but I
+don't see any functional impact from it. Including the dmesg anyways in cas=
+e
+there's anything important: https://pastebin.com/n5hhtkz0.
 
 Thanks,
+Rio
 
-
-> 
-> So, I kindly ask to revert them from 6.12.y branch if they aren't
-> critical.
-> 
-> Thanks,
-> 
-> > 
-> > Thanks,
-> > 
-> > > 
-> > > As of me, this is not easy to revert, as it depends on many other
-> > > commits, and git does not have tooling to determine all dependant
-> > > commits for revert. I hope someone from drm subsystem notices this to
-> > > work on it, or Sasha can pull missing commits or revert this (obviously,
-> > > he have tooling for this, but I was unable to find it). [I found
-> > > obsolete references to deps but is seems not used for years and Python
-> > > git-deps tool seems broken.]
-> > > 
-> > > What I found is, offending commit is picked due to
-> > > 
-> > >   Stable-dep-of: 4a9b4e1fa52a ("drm/xe/mmio: Avoid double-adjust in 64-bit reads")
-> > > 
-> > > Which, perhaps, needs to be reverted.
-> > > 
-> > > Offending commit 26a40327c25c is not tracked in lore.
-> > > It's part of 9 piece patchset, perhaps they are logically dependent too,
-> > > so need to be reverted together.
-> > > 
-> > > The possible fix is part of 6 piece patchset, which does not cherry-pick
-> > > easily due to conflicts.
-> > > 
-> > > If someone can produce correct fix we can participate in the tests.
-> > > 
-> > > Thanks,
-> > > 
-> > > > 
-> > > > Ciao, Thorsten
