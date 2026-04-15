@@ -1,133 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailout3.hostsharing.net (mailout3.hostsharing.net [144.76.133.104])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99E6E2DA768;
-	Wed, 15 Apr 2026 15:52:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DC253E3147
+	for <regressions@lists.linux.dev>; Wed, 15 Apr 2026 15:56:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.76.133.104
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776268334; cv=none; b=Wik39r9lxHX2sv5dfhnTNqtKeiHybJ2AxaM9BUmcNTZZZhW1DMArNEmCLE3nMSgJ7MqqoNHjrLi2HKgNLkC30+vEVaqs+rftQpgF23YLueEKDAC06zNxZdEeZfQ8eA6XlGLMUCATcD905v5oMd4PLui9S0F906PBLCAF0u1goMU=
+	t=1776268569; cv=none; b=b0EL2YxIESpfnNanrH0ncGbxDR7jilGg25Z1fX6ykk4kAJ79QqCARFLMOv0dLz/kWhxOoiO5DJk9TviOc5X4eY1X+aGIIC/VG+OKzjfSHNAiENAo6S4DDDEzfM4GtocWEJcZIqDbE4hvqnwpXOqksyVM20fqjdQth24UjPE5S34=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776268334; c=relaxed/simple;
-	bh=bWtCdlLbngQbKoiwMS3GSNvEBDPDGiO0UkdCZVXcoeM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RnoCkgG4yO+5p+vpJL7C5Q+LeG5aUYbHNkkY3aeu/sH+Bnsxu62zpL8jEjaSd+0j92efkP0Jbs0bOauBZ8lsRS0x0lHDAH55nydtduBfUzP6cYteJrzjdXGuZCuWZxTIbm3TNN46BDUzLLnXp6gqTD0V7ie8BQIumT0L/A6e11A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n/8ceDg8; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n/8ceDg8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD459C19424;
-	Wed, 15 Apr 2026 15:52:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776268334;
-	bh=bWtCdlLbngQbKoiwMS3GSNvEBDPDGiO0UkdCZVXcoeM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=n/8ceDg8sOwzuBGLDgXehGD5knABzdp2iX5meMOGSelwwxVnrwoqDhSnCaOjONSoE
-	 CxL3PcKQaoe5d1CFQ10sFKflAcuQWuT43YofD1eQJWQ2SM63O9WgWDidE2wsTLA5Fp
-	 RQ1cz0gz+zjIDaruBDPnyGV20KDpfQ3MpD7sxLsXiFDZcZLmfEyZUeLDmPrh+LP6a5
-	 f1Cd6exJ3NImZ6hiBaveNraLJETehWRPeR+jjejsDmXExjuX+LY9kMmHGDdE6L9JfG
-	 KceTLWvzLmC2pjhVdjd8HclrLo745oiyljUvD31z9uGd55Mteh+uCwClP4021kcKeY
-	 imsfy7pZgLLGA==
-Date: Wed, 15 Apr 2026 09:52:12 -0600
-From: Keith Busch <kbusch@kernel.org>
-To: =?iso-8859-1?Q?Tom=E1s?= Trnka <trnka@scm.com>
-Cc: Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev, linux-block@vger.kernel.org
-Subject: Re: [REGRESSION][BISECTED] Spurious raid1 device failure triggered
- by qemu direct IO on 6.18+
-Message-ID: <ad-0LIubzaT8M2_O@kbusch-mbp>
-References: <2982107.4sosBPzcNG@electra>
- <ad-sprBWPA20iola@kbusch-mbp>
+	s=arc-20240116; t=1776268569; c=relaxed/simple;
+	bh=d1UU5ZXPZHtItb3fz+Vnqm12sYKrz0Zq+3sQFJsVmxQ=;
+	h=Message-Id:From:Date:Subject:To:Cc; b=ks2UI3h+QQcpi/j8Zy/zO6sA+QJXLwdp97TDCYJFy++Y5Inmo1SI5sFBfqNP53J1gvbcdabd4N/hPu+Vh/uJ11DpaWCF7xuvulyV2XfTw1JNCF82xOYWotcKUmjesJ0ETI1wvH2IxsEZjtY4oTi9OuZcjNQsr5dGx88CnUXObmM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=pass smtp.mailfrom=wunner.de; arc=none smtp.client-ip=144.76.133.104
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wunner.de
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature ECDSA (secp384r1) server-digest SHA384
+	 client-signature ECDSA (secp384r1) client-digest SHA384)
+	(Client CN "*.hostsharing.net", Issuer "GlobalSign GCC R6 AlphaSSL CA 2025" (verified OK))
+	by mailout3.hostsharing.net (Postfix) with ESMTPS id 6CE23C81;
+	Wed, 15 Apr 2026 17:56:03 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 422B06017606; Wed, 15 Apr 2026 17:56:03 +0200 (CEST)
+Message-Id: <febc3f354e0c1f5a9f5b3ee9ffddaa44caccf651.1776268054.git.lukas@wunner.de>
+From: Lukas Wunner <lukas@wunner.de>
+Date: Wed, 15 Apr 2026 17:56:06 +0200
+Subject: [PATCH] PCI: Update saved_config_space upon resource assignment
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Bernd Schumacher <bernd@bschu.de>, "Alexandre N." <an.tech@mailo.com>, Salvatore Bonaccorso <carnil@debian.org>, 1131025@bugs.debian.org, Uwe Kleine-Koenig <ukleinek@debian.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Mario Limonciello <mario.limonciello@amd.com>, Alex Williamson <alex@shazbot.org>, Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>, regressions@lists.linux.dev, linux-pci@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ad-sprBWPA20iola@kbusch-mbp>
 
-On Wed, Apr 15, 2026 at 09:20:06AM -0600, Keith Busch wrote:
-> On Wed, Apr 15, 2026 at 02:18:59PM +0200, Tomás Trnka wrote:
-> > Since 6.18, booting a VM that is backed by a raid1 LVM LV makes that LV 
-> > immediately eject one of the devices. This is apparently because of a direct 
-> > IO read by QEMU failing. I have bisected the issue to the following commit and 
-> > confirmed that reverting that commit (plus dependencies 
-> > 9eab1d4e0d15b633adc170c458c51e8be3b1c553 and 
-> > b475272f03ca5d0c437c8f899ff229b21010ec83) on top of 6.19.11 fixes the issue.
-> > 
-> > commit 5ff3f74e145adc79b49668adb8de276446acf6be
-> > Author: Keith Busch <kbusch@kernel.org>
-> > Date:   Wed Aug 27 07:12:54 2025 -0700
-> > 
-> >     block: simplify direct io validity check
-> >     
-> >     The block layer checks all the segments for validity later, so no need
-> >     for an early check. Just reduce it to a simple position and total length
-> >     check, and defer the more invasive segment checks to the block layer.
-> >     
-> >     Signed-off-by: Keith Busch <kbusch@kernel.org>
-> >     Reviewed-by: Hannes Reinecke <hare@suse.de>
-> >     Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com>
-> >     Reviewed-by: Christoph Hellwig <hch@lst.de>
-> >     Signed-off-by: Jens Axboe <axboe@kernel.dk>
-> > 
-> > The issue looks like this:
-> > 
-> > md/raid1:mdX: dm-17: rescheduling sector 0
-> > md/raid1:mdX: redirecting sector 0 to other mirror: dm-17
-> > (snipped 9 repeats of the preceding two lines)
-> > md/raid1:mdX: dm-17: Raid device exceeded read_error threshold [cur 21:max 20]
-> > md/raid1:mdX: dm-17: Failing raid device
-> > md/raid1:mdX: Disk failure on dm-17, disabling device.
-> > md/raid1:mdX: Operation continuing on 1 devices.
-> > 
-> > There's absolutely nothing wrong with the HW, the issue persists even when I 
-> > move the mirrors to a different pair of PVs (SAS HDD vs SATA SSD).
-> 
-> Thanks for the notice and the logs. Sounds likek something is getting
-> sent to the block layer that can't form a viable IO. The commit you
-> identified should have still error'ed though, just much earlier in the
-> call stack.
-> 
-> Anyway, I'll take a look if there's something I missed handling with the
-> stacking setup you're describing.
+Bernd reports passthrough failure of a Digital Devices Cine S2 V6 DVB
+adapter plugged into an ASRock X570S PG Riptide board with BIOS version
+P5.41 (09/07/2023):
 
-I think the block layer is working as designed. The problem you're
-seeing is likely related to how QEMU probes direct-io limits instead of
-doing proper stat/statx type checks. During its probing, it tries
-various sizes and offsets, and some of these is invalid. The kernel code
-previously still returned the EINVAL error, but it was before entering
-the dm raid layer, and qemu reacted by changing its assumptions.
+  ddbridge 0000:05:00.0: detected Digital Devices Cine S2 V6 DVB adapter
+  ddbridge 0000:05:00.0: cannot read registers
+  ddbridge 0000:05:00.0: fail
 
-The new kernel code eventually returns the same error, but on the other
-side of dm raid stack, and unfortunately dm raid treats this as a device
-failure rather than a user error as intended.
+BIOS assigns an incorrect BAR to the DVB adapter which doesn't fit into
+the upstream bridge window.  The kernel corrects the BAR assignment:
 
-Suggest the stacking layers shouldn't consider BLK_STS_INVAL to be a
-device error or retryable.
+  pci 0000:07:00.0: BAR 0 [mem 0xfffffffffc500000-0xfffffffffc50ffff 64bit]: can't claim; no compatible bridge window
+  pci 0000:07:00.0: BAR 0 [mem 0xfc500000-0xfc50ffff 64bit]: assigned
 
+Correction of the BAR assignment happens in an x86-specific fs_initcall,
+pcibios_assign_resources(), after device enumeration in a subsys_initcall.
+This order was introduced at the behest of Linus in 2004:
+
+    https://git.kernel.org/tglx/history/c/a06a30144bbc
+
+No other architecture performs such a late BAR correction.
+
+Bernd bisected the issue to commit a2f1e22390ac ("PCI/ERR: Ensure error
+recoverability at all times"), but it only occurs in the absence of commit
+4d4c10f763d7 ("PCI: Explicitly put devices into D0 when initializing").
+This combination exists in stable kernel v6.12.70, but not in mainline,
+hence Bernd cannot reproduce the issue with mainline.
+
+Since a2f1e22390ac, config space is saved on enumeration, prior to BAR
+correction.  Upon passthrough, the corrected BAR is overwritten with the
+incorrect saved value by:
+
+  vfio_pci_core_register_device()
+    vfio_pci_set_power_state()
+      pci_restore_state()
+
+But only if the device's current_state is PCI_UNKNOWN, as it was prior to
+commit 4d4c10f763d7.  Since the commit, it is PCI_D0, which changes the
+behavior of vfio_pci_set_power_state() to no longer restore the state
+without saving it first.
+
+Alexandre is reporting the same issue as Bernd, but in his case, mainline
+is affected as well.  The difference is that on Alexandre's system, the
+host kernel binds a driver to the device which is unbound prior to
+passthrough, whereas on Bernd's system no driver gets bound by the host
+kernel.
+
+Unbinding sets current_state to PCI_UNKNOWN in pci_device_remove(), so
+when vfio-pci is subsequently bound to the device, pci_restore_state() is
+once again called without invoking pci_save_state() first.
+
+To robustly fix the issue, always update saved_config_space upon resource
+assignment.
+
+Reported-by: Bernd Schumacher <bernd@bschu.de>
+Tested-by: Bernd Schumacher <bernd@bschu.de>
+Closes: https://lore.kernel.org/r/acfZrlP0Ua_5D3U4@eldamar.lan/
+Reported-by: Alexandre N. <an.tech@mailo.com>
+Tested-by: Alexandre N. <an.tech@mailo.com>
+Closes: https://lore.kernel.org/r/dd3c3358-de0f-4a56-9c81-04aceaab4058@mailo.com/
+Fixes: a2f1e22390ac ("PCI/ERR: Ensure error recoverability at all times")
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Cc: stable@vger.kernel.org # v6.12+
 ---
-diff --git a/drivers/md/raid1-10.c b/drivers/md/raid1-10.c
-index c33099925f230..cf1c25f290f36 100644
---- a/drivers/md/raid1-10.c
-+++ b/drivers/md/raid1-10.c
-@@ -293,8 +293,16 @@ static inline bool raid1_should_read_first(struct mddev *mddev,
-  * bio with REQ_RAHEAD or REQ_NOWAIT can fail at anytime, before such IO is
-  * submitted to the underlying disks, hence don't record badblocks or retry
-  * in this case.
-+ *
-+ * BLK_STS_INVAL means the request itself is malformed (e.g. unaligned
-+ * buffers that violate DMA constraints).  Retrying on another mirror will
-+ * fail the same way, and counting it against the device is wrong.
-  */
- static inline bool raid1_should_handle_error(struct bio *bio)
- {
--	return !(bio->bi_opf & (REQ_RAHEAD | REQ_NOWAIT));
-+	if (bio->bi_opf & (REQ_RAHEAD | REQ_NOWAIT))
-+		return false;
-+	if (bio->bi_status == BLK_STS_INVAL)
-+		return false;
-+	return true;
- }
---
+ drivers/pci/setup-res.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/pci/setup-res.c b/drivers/pci/setup-res.c
+index e5fcadf..1769ba9 100644
+--- a/drivers/pci/setup-res.c
++++ b/drivers/pci/setup-res.c
+@@ -102,6 +102,7 @@ static void pci_std_update_resource(struct pci_dev *dev, int resno)
+ 	}
+ 
+ 	pci_write_config_dword(dev, reg, new);
++	dev->saved_config_space[reg / 4] = new;
+ 	pci_read_config_dword(dev, reg, &check);
+ 
+ 	if ((new ^ check) & mask) {
+@@ -112,6 +113,7 @@ static void pci_std_update_resource(struct pci_dev *dev, int resno)
+ 	if (res->flags & IORESOURCE_MEM_64) {
+ 		new = region.start >> 16 >> 16;
+ 		pci_write_config_dword(dev, reg + 4, new);
++		dev->saved_config_space[(reg + 4) / 4] = new;
+ 		pci_read_config_dword(dev, reg + 4, &check);
+ 		if (check != new) {
+ 			pci_err(dev, "%s: error updating (high %#010x != %#010x)\n",
+-- 
+2.51.0
+
