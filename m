@@ -1,138 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.166])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5D3C3AF661;
-	Wed, 15 Apr 2026 08:23:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67485F507
+	for <regressions@lists.linux.dev>; Wed, 15 Apr 2026 09:17:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.166
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776241400; cv=none; b=qwt4+Qgt7S5P1AOsuR6mTA4anUMXqTexmh2hdmS2c8oB3rJok5eEdmCJEMxE0pbm9aj0c36t/tGS4fkwjmFGhSYNNvJPrs5bZVBggMzzgzUPgB3jyhKjj4vgsfYqyCXr8BmhN3Qe+GhWxaQvA8xr69cylV0QhLxWAZqXY/GPbq4=
+	t=1776244630; cv=none; b=iB90cmKkiMQxGTqdklIpUotylkdhXgf2ATAoBd/DYwfBaYTLE3oDRefc+ySduQkcJB3vJ8yUG/0byZgHrW6kDnY2CwWgn3cQSk1O7xyaX2l4aK0PRyfawR5evJ4Mxvwz6KNFeFxMxeowFvO6r9QCt0Yrhmi1kH6mD2Z1/X+i+3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776241400; c=relaxed/simple;
-	bh=A4nUBX2GSi8UiPiqK6yXaxRW0DyfFtlAi/F6l2Q+T1I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VXwsujFEzql2T71NE1cDxH4Ah05uaYRYVoiywNast3KSyzIHSpkqOgb4DjHtjhJE3wjPvypPU7fWg1KxVS3bdOpjTUzihJEq/RKgqo457asd0pz7BT5OoYfDiqlJ/unkhxlsH39Sqiff6SQOkQhOLLDF59yRPmy3wY9zkEsmkcs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=my2DbNSp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1776244630; c=relaxed/simple;
+	bh=IwsBV3cK6S9hnl6YZYnd3vNZCkuvsU86N6xLae159yY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZVNUFVZBgtKn3x547Ziz3E2wZENTBe+jfc1wBQG0OMBeRFLNJlE06e0VFO7Uxl33znKPoT7td9Tiic0enhkTWwjmc/ifXQHydvt8thLzcYCEKir5yqXutOTwKxmA6kT5l+9djX6pyZTZzHQsfrsPJEfMCOH2oGehGVaGAF8SDkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=ZcbSjh5/; arc=none smtp.client-ip=188.68.63.166
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="my2DbNSp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A627BC19424;
-	Wed, 15 Apr 2026 08:23:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776241400;
-	bh=A4nUBX2GSi8UiPiqK6yXaxRW0DyfFtlAi/F6l2Q+T1I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=my2DbNSpYQur5O3kGa1j7cdcBQkqfJWQdB3Kzi8Qwsl9p2ZbKW0R05hyWWzeygLG2
-	 EWi7s0MCAbGT8BWT2OEUq9THjlY2if5KP8/zuPdcEG7nnlpawxnMi4U+cphwVPzdh0
-	 Ufrdi9R8PM5yPhUxssWkR4PB45c2pVny3FJKX9E9inHSfZpWkyKExo/Q6UePAfgFj4
-	 z7E0lbiKyCf8PXskY3/SvvQWaJdmMdIcBEvv98gj01Bb+v9t3tn7bPejheMYwEWhac
-	 mWWs8ybLJndHwMEvbQ780IClPp6yYBu0Nq1Yw3GsEDNCbZj/AHCYHXcSqCAAaIbhvv
-	 1jwuM4nRsYSIw==
-Date: Wed, 15 Apr 2026 10:23:15 +0200
-From: Benjamin Tissoires <bentiss@kernel.org>
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Jiri Kosina <jikos@kernel.org>, denis.benato@linux.dev, 
-	linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, honjow <honjow311@gmail.com>, 
-	Anj D <aduvnjak@hotmail.com>, Linus Torvalds <torvalds@linux-foundation.org>, 
-	Linux kernel regressions list <regressions@lists.linux.dev>
-Subject: Re: [PATCH] HID: core: add short report quirk and use it for GPD Win
- (2f24:0137)
-Message-ID: <ad9IhFBm85HmoxB2@beelink>
-References: <20260407173212.86942-1-honjow311@gmail.com>
- <adZ2PTzQ05iObcGt@beelink>
- <652713b8-aa98-4ca7-8cd4-8f7ad6cff77f@leemhuis.info>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="ZcbSjh5/"
+Received: from mors-relay-8202.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8202.netcup.net (Postfix) with ESMTPS id 4fwb2T3fQHz47c3;
+	Wed, 15 Apr 2026 11:10:09 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1776244209;
+	bh=IwsBV3cK6S9hnl6YZYnd3vNZCkuvsU86N6xLae159yY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ZcbSjh5/4fQPrOBHKzfd6r9KRqnPImnh8CTuuhtjyCwdtr1NHkB6vqfPXh3sYLpHz
+	 Wqe8D3hmv0ohUgzTJhYUuGN7Jbi4tShZYQV5Rx7iY9Cy0+b6co+47LuES08OJYayQ1
+	 2zAd5232CsL98dYV9C9q1zwW1Riuf83f/8aJr0O3vqL1btHcG1rc+V8igG6cj6pIgC
+	 eO0ZCH5gv2xQMLtqFw1HXZNwDvqSo8M+SSr4xQee24qHeFzSKdp/IsKcY7JEzhRCYN
+	 9W1wYXmG0YOWcnOVyrcM/d1PfWCzcRtAHRbBn2XrRl/j5vs2KY61oJnnh7W63NeuVr
+	 T3f8ycSiZdO4A==
+Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8202.netcup.net (Postfix) with ESMTPS id 4fwb2T2ws7z47Ww;
+	Wed, 15 Apr 2026 11:10:09 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
+X-Spam-Flag: NO
+X-Spam-Score: -2.901
+X-Spam-Level: 
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4fwb2S0YZDz8tdB;
+	Wed, 15 Apr 2026 11:10:08 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 42EAC633C0;
+	Wed, 15 Apr 2026 11:10:07 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <43bf6733-cd16-4455-9a69-5b03a6159810@leemhuis.info>
+Date: Wed, 15 Apr 2026 11:10:05 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <652713b8-aa98-4ca7-8cd4-8f7ad6cff77f@leemhuis.info>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] HID: core: add short report quirk and use it for GPD Win
+ (2f24:0137)
+To: Benjamin Tissoires <bentiss@kernel.org>
+Cc: Jiri Kosina <jikos@kernel.org>, denis.benato@linux.dev,
+ linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
+ honjow <honjow311@gmail.com>, Anj D <aduvnjak@hotmail.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <20260407173212.86942-1-honjow311@gmail.com>
+ <adZ2PTzQ05iObcGt@beelink>
+ <652713b8-aa98-4ca7-8cd4-8f7ad6cff77f@leemhuis.info>
+ <ad9IhFBm85HmoxB2@beelink>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <ad9IhFBm85HmoxB2@beelink>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: <177624420763.2228407.6812998034623786511@mxe9fb.netcup.net>
+X-Rspamd-Server: rspamd-worker-8404
+X-Rspamd-Queue-Id: 42EAC633C0
+X-NC-CID: Rhz0ySDaoI1Yepp8sqywB97cgdA2gvB6ipVnPRrr2KLZFKCq5TI=
 
-On Apr 14 2026, Thorsten Leemhuis wrote:
-> On 4/8/26 17:41, Benjamin Tissoires wrote:
-> > Definitely not a big fan of that new quirk. The issue is that current
-> > hid-core fix is too restrictive because it doesn't have enough
-> > information, like the actual allocated buffer size.
-> > 
-> > On Apr 08 2026, Zhouwang Huang wrote:
-> >> Commit 9e2a17d2e808 ("HID: gpd: fix report descriptor on GPD Win
-> >> handheld (2f24:0137)") used report_fixup to shrink Report Count from
-> >> 63 to 11 so that short reports from firmware <= 1.09 would not be
-> >> rejected by hid_report_raw_event().
-> >>
-> >> However, firmware 1.10 fixed the report length and now sends the full
-> >> 63 bytes.  Because report_fixup already shrank the descriptor,
-> >> usbhid allocates a 12-byte URB buffer — far too small for the 64-byte
-> >> transfer — causing continuous -EOVERFLOW on every interrupt-in URB.
-> >> The HID report descriptor and bcdDevice are identical across firmware
-> >> versions, so report_fixup cannot conditionally apply.
-> > 
-> > OK, so if a firmware already fixed the bug, I'll drop 9e2a17d2e808 from
-> > for-next and not include it in the final 7.0 PR I'll need to send.
-> 
-> Well, that meanwhile dropped commit 9e2a17d2e808 ("HID: gpd: fix report
-> descriptor on GPD Win handheld (2f24:0137)") was supposed to fix a
-> regression honjow (now CCed) reported on 2026-03-23:
-> https://bugzilla.kernel.org/show_bug.cgi?id=221271
-> https://lore.kernel.org/all/20260324013847.68024-1-honjow311@gmail.com/
-> 
-> So it is still unfixed as of now, I assume?
+On 4/15/26 10:23, Benjamin Tissoires wrote:
+> On Apr 14 2026, Thorsten Leemhuis wrote:
+>> On 4/8/26 17:41, Benjamin Tissoires wrote:
 
-correct. But the HW is faulty and a new firmware version works, so it's
-not like there is no options. But...
+Thx for the reply.
 
-> 
-> Side note: was honjow even notified about dropping the commit?
+> [...]
+>>> We can tell people to upgrade to the latest firmware
+>> Well, that should not be required by users when it comes to regressions
+>> -- unless maybe no other way to fix a severe issue can be found. Is that
+>> the case here?
+> Sigh. The fix that was introduced in the previous release cycle was a
+> "security" one. [...]
 
-Not sure we replied to the original thread. That's an omission from us,
-but OTH, the "fix" was only in linux-next, never in a realease kernel,
-so it was just a delay introduced.
+Yeah, I figured and should have made this more obvious in my reply
+(sorry), but it's hard to distinguish "this is a fix for something that
+is unlikely to happen" and is fine to be reverted again temporarily in
+case of regressions from those where that's not a good idea. And I
+wanted to know which of it it was, but clearly did so poorly. Sorry!
+>> How far is a proper fix away? And will that be GPD Win specific, or fix
+> Should be out today or tomorrow, [...]
 
-> 
-> > We can tell people to upgrade to the latest firmware
-> 
-> Well, that should not be required by users when it comes to regressions
-> -- unless maybe no other way to fix a severe issue can be found. Is that
-> the case here?
+Great, thx!
 
-Sigh. The fix that was introduced in the previous release cycle was a
-"security" one. Which explained it had a fast path in being merged into
-the kernel and into stable. I hate those but there was something
-fundamentally wrong in the hid core code. We already got numerous
-reports that the fix is not breaking other devices but is way too
-verbose, so a proper fix is on its way, as soon as I managed to properly
-test it on my machine.
-
-> 
-> > while I work on a proper fix.
-> 
-> How far is a proper fix away? And will that be GPD Win specific, or fix
-
-Should be out today or tomorrow, depending if my machine still randomly
-freeze because of the latest 7.0-rc bugs
-
-GPD specific -> no, it's basically restoring the old behaviour where we
-authorize shorter reports, but only if the provided buffer is big
-enough. This is is the case when we are dealing with an actual call from
-a transport layer like USB or I2C, but not from uhid.
-
-> issues with other issues, too. Because Anj D (now CCed) recently
-> reported a flooded dmesg caused by 0a3fe972a7cb ("HID: core: Mitigate
-> potential OOB by removing bogus memset()") with a APC UPS (USB VID/PID
-> 051D:0002):
-> https://lore.kernel.org/all/MW5PR84MB135613E7947113897DD9FDA4C7272@MW5PR84MB1356.NAMPRD84.PROD.OUTLOOK.COM/
-> 
-> That's with 6.19.12, as the commit was recently backported to 6.18.y and
-> 6.19.y.
-
-Yes, again, please redirect your wrath to the persons who decided that
-this kind of bugs (that we admitedly have to fix) are security in some
-cases :) 
-
-But yeah, security bugs are an annoyance for anybody, and we are far
-from seeing the end of it.
-
-Cheers,
-Benjamin
+Ciao, Thorsten
