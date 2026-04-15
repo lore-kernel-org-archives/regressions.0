@@ -1,106 +1,110 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.166])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67485F507
-	for <regressions@lists.linux.dev>; Wed, 15 Apr 2026 09:17:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.166
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70CE8336886
+	for <regressions@lists.linux.dev>; Wed, 15 Apr 2026 09:20:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776244630; cv=none; b=iB90cmKkiMQxGTqdklIpUotylkdhXgf2ATAoBd/DYwfBaYTLE3oDRefc+ySduQkcJB3vJ8yUG/0byZgHrW6kDnY2CwWgn3cQSk1O7xyaX2l4aK0PRyfawR5evJ4Mxvwz6KNFeFxMxeowFvO6r9QCt0Yrhmi1kH6mD2Z1/X+i+3g=
+	t=1776244807; cv=none; b=KHrEjBMuPvnkDBfC1mz+EIpvkIe4HueBgcP6YNwed5EGNWNNC29rbnKS90FVtcPXvXk/lVtiKoV59t8GhvUOrHtxQvCzPKaTbwTMbPTPA2AVAXegOFA+Lm3dj1c0c006mpfPzPKfdg3DZZbR9e+bz94u5V0W6IavTfDPPEVeYcM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776244630; c=relaxed/simple;
-	bh=IwsBV3cK6S9hnl6YZYnd3vNZCkuvsU86N6xLae159yY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZVNUFVZBgtKn3x547Ziz3E2wZENTBe+jfc1wBQG0OMBeRFLNJlE06e0VFO7Uxl33znKPoT7td9Tiic0enhkTWwjmc/ifXQHydvt8thLzcYCEKir5yqXutOTwKxmA6kT5l+9djX6pyZTZzHQsfrsPJEfMCOH2oGehGVaGAF8SDkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=ZcbSjh5/; arc=none smtp.client-ip=188.68.63.166
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1776244807; c=relaxed/simple;
+	bh=57UoY7yZS9MyAf+dMATtwydTkgWI00D69hwDa2/mVzY=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=tFIQncy3zARpkhFHiIVMwl7N9aLDHWKBn84nDVw+u2F31gVeIer79vuOIgdiHgDJnXOhXxrnXDgFty6p09Wk4s6b3u8Z6I4FOcJvnl/mNrMClIDQK8PH37fCzxxv5ecak38k4uweP1GORA762wPTmM4dIlj5unpIFafr0X0ap2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EdimU/eq; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="ZcbSjh5/"
-Received: from mors-relay-8202.netcup.net (localhost [127.0.0.1])
-	by mors-relay-8202.netcup.net (Postfix) with ESMTPS id 4fwb2T3fQHz47c3;
-	Wed, 15 Apr 2026 11:10:09 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1776244209;
-	bh=IwsBV3cK6S9hnl6YZYnd3vNZCkuvsU86N6xLae159yY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ZcbSjh5/4fQPrOBHKzfd6r9KRqnPImnh8CTuuhtjyCwdtr1NHkB6vqfPXh3sYLpHz
-	 Wqe8D3hmv0ohUgzTJhYUuGN7Jbi4tShZYQV5Rx7iY9Cy0+b6co+47LuES08OJYayQ1
-	 2zAd5232CsL98dYV9C9q1zwW1Riuf83f/8aJr0O3vqL1btHcG1rc+V8igG6cj6pIgC
-	 eO0ZCH5gv2xQMLtqFw1HXZNwDvqSo8M+SSr4xQee24qHeFzSKdp/IsKcY7JEzhRCYN
-	 9W1wYXmG0YOWcnOVyrcM/d1PfWCzcRtAHRbBn2XrRl/j5vs2KY61oJnnh7W63NeuVr
-	 T3f8ycSiZdO4A==
-Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-8202.netcup.net (Postfix) with ESMTPS id 4fwb2T2ws7z47Ww;
-	Wed, 15 Apr 2026 11:10:09 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
-X-Spam-Flag: NO
-X-Spam-Score: -2.901
-X-Spam-Level: 
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4fwb2S0YZDz8tdB;
-	Wed, 15 Apr 2026 11:10:08 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 42EAC633C0;
-	Wed, 15 Apr 2026 11:10:07 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <43bf6733-cd16-4455-9a69-5b03a6159810@leemhuis.info>
-Date: Wed, 15 Apr 2026 11:10:05 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EdimU/eq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1776244806; x=1807780806;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=57UoY7yZS9MyAf+dMATtwydTkgWI00D69hwDa2/mVzY=;
+  b=EdimU/eq819X3KDpOy/uqSx0AqW1LEEsxQRG923zrSDmhPLxhc0G/gCC
+   XNzS41TEKqYEgvs1z4dIrcv42uC+8Dc1GP4BMyavV+uyE2vqqxwB0CvHd
+   0hap/CfwdW91GOtblmTKwDX50WsStyWFusC7OBSmvpJQN+eUqk9jQvQBe
+   UNz+jgZ257sFaKyjdKx6SosOYidZasmJUxBFayXQr2zAlc7rHmymcC22h
+   fJSbVsVrbNRdQgowVAwh4eFYukYo036hfcgQFBd4WHwmVBRkbRCLuSqH7
+   f/saHuIJ+DE26YtxjI2MRqfYZqEvcnMDMRCMR4A4GteSs4AeRIa1wANow
+   Q==;
+X-CSE-ConnectionGUID: dOwaLHOaRAeihaDZILhjMQ==
+X-CSE-MsgGUID: j6D0up+URIezOC2iQrS3eQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11759"; a="77122614"
+X-IronPort-AV: E=Sophos;i="6.23,179,1770624000"; 
+   d="scan'208";a="77122614"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2026 02:20:05 -0700
+X-CSE-ConnectionGUID: UQA5uWU7SeSLyuXYNXJFcw==
+X-CSE-MsgGUID: TH8qk+1iRQ6CjII5MJQLVA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,179,1770624000"; 
+   d="scan'208";a="227184557"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.114])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2026 02:20:02 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 15 Apr 2026 12:19:53 +0300 (EEST)
+To: Rio Liu <rio@r26.me>
+cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+    "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, 
+    "regressions@lists.linux.dev" <regressions@lists.linux.dev>, 
+    Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [REGRESSION] amdgpu fails to load eGPU after 6.19
+In-Reply-To: <j-oL8G7jik8a-PYnIVU4kE-w4HJaq9pNshpbPC5zphvGa0SIno_vpSq1zEcBUVDx6hSMvbV1eAIcIO7C8jtMv0GTG7UfvWVZaEzabnQ-6YY=@r26.me>
+Message-ID: <3bdf3453-8052-3626-f877-c769b88ee0c0@linux.intel.com>
+References: <a1FodrO_nl6UemO3VLBk5Gsu6PjvxLU-OYhvJEMeKFem-Bpi7ZXDHrIxtwsTCmpn-WndBxnzZNtdKJy_V6PjafnFjSKz7sr1eEfGobRzpgs=@r26.me> <4dfc25f2-f660-c234-4e4d-c5c76216523d@linux.intel.com>
+ <j-oL8G7jik8a-PYnIVU4kE-w4HJaq9pNshpbPC5zphvGa0SIno_vpSq1zEcBUVDx6hSMvbV1eAIcIO7C8jtMv0GTG7UfvWVZaEzabnQ-6YY=@r26.me>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] HID: core: add short report quirk and use it for GPD Win
- (2f24:0137)
-To: Benjamin Tissoires <bentiss@kernel.org>
-Cc: Jiri Kosina <jikos@kernel.org>, denis.benato@linux.dev,
- linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
- honjow <honjow311@gmail.com>, Anj D <aduvnjak@hotmail.com>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <20260407173212.86942-1-honjow311@gmail.com>
- <adZ2PTzQ05iObcGt@beelink>
- <652713b8-aa98-4ca7-8cd4-8f7ad6cff77f@leemhuis.info>
- <ad9IhFBm85HmoxB2@beelink>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <ad9IhFBm85HmoxB2@beelink>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <177624420763.2228407.6812998034623786511@mxe9fb.netcup.net>
-X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: 42EAC633C0
-X-NC-CID: Rhz0ySDaoI1Yepp8sqywB97cgdA2gvB6ipVnPRrr2KLZFKCq5TI=
+Content-Type: text/plain; charset=US-ASCII
 
-On 4/15/26 10:23, Benjamin Tissoires wrote:
-> On Apr 14 2026, Thorsten Leemhuis wrote:
->> On 4/8/26 17:41, Benjamin Tissoires wrote:
+On Tue, 14 Apr 2026, Rio Liu wrote:
 
-Thx for the reply.
+> Hi Ilpo,
+> 
+> > This snippet only contains collateral damage and does not show where the
+> > problem originates from. Please provide a full dmesg instead with
+> > dyndbg="file drivers/pci/*.c +p" on the kernel command line.
+> >
+> > Preferrably test with the latest code + fixes that are in pci/resources
+> > branch (you can just take all changes from there) and get the logs from
+> > there. I wouldn't be surprised if your problem is already addressed by
+> > those fixes but we'll see.
+> 
+> Thanks a lot for the help! I tested on pci/resources
+> 8cb081667377709f4924ab6b3a88a0d7a761fe91 "PCI: Fix alignment calculation for
+> resource size larger than align", and the eGPU is now loading! There are some
+> messages in dmesg showing "can't assign; no space" and "failed to assign", but I
+> don't see any functional impact from it. Including the dmesg anyways in case
+> there's anything important: https://pastebin.com/n5hhtkz0.
 
-> [...]
->>> We can tell people to upgrade to the latest firmware
->> Well, that should not be required by users when it comes to regressions
->> -- unless maybe no other way to fix a severe issue can be found. Is that
->> the case here?
-> Sigh. The fix that was introduced in the previous release cycle was a
-> "security" one. [...]
+Hi,
 
-Yeah, I figured and should have made this more obvious in my reply
-(sorry), but it's hard to distinguish "this is a fix for something that
-is unlikely to happen" and is fine to be reverted again temporarily in
-case of regressions from those where that's not a good idea. And I
-wanted to know which of it it was, but clearly did so poorly. Sorry!
->> How far is a proper fix away? And will that be GPD Win specific, or fix
-> Should be out today or tomorrow, [...]
+Thanks for testing.
 
-Great, thx!
+Most of the assignment failures occur for io resources. It tends to be 
+that in large systems of today, hotplug reservation consumes all io space 
+for things that don't need any. Usually, the io resource assignment 
+failures are harmless.
 
-Ciao, Thorsten
+Then there's a bridge window pin for this bridge window:
+
+pcieport 0000:04:00.0: bridge window [mem 0x6000000000-0x60201fffff 64bit pref]: was not released (still contains assigned resources)
+
+That window is pinned in place by sibling devices so kernel cannot 
+release it prior to attempting BAR resizing, which in turn prevents BAR 
+resizing from succeeding as the bridge windows cannot be made large 
+enough.
+
+You should be able to see what the siblings are easily from /proc/iomem.
+
+It may be possible to manually remove the siblings first, resize the 
+eGPU's BAR through sysfs, and finally rescan.
+
+-- 
+ i.
