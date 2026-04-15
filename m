@@ -1,162 +1,92 @@
-Received: from vmicros1.altlinux.org (vmicros1.altlinux.org [194.107.17.57])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61C3A22538F
-	for <regressions@lists.linux.dev>; Wed, 15 Apr 2026 12:40:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.107.17.57
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A01933D8123;
+	Wed, 15 Apr 2026 15:20:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776256811; cv=none; b=W9qdTK2RQSyslOjPf23oJCIc0KZkrjlFCVRcthohfHJtnhszwqzspE9c1seuE77GjLzYeDyZx3+37VoCKSgrH/POHr0q3ATcCwGOtP3fK7G8RzjDoJqD4aWrUViozPmaduPtr4FDY0ZDWPJfe8/Pz/J3J7408U7+rpE9TWnDmJI=
+	t=1776266408; cv=none; b=GfM9tzgeafx1o7+G0FdsioktHlBBRHTR97mL3g+ZP4XdWU+9fpo56qMO9gK9xbXxVznaHq6mVWEa+j9IaSjLux0avuqKvoE4KC/ktGgdlboCA3VME5UNcHGWbeD8m20DROMU48dZyKBtJUo+x/Tc+/gFgPgnLeXivxAmZ8yqu18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776256811; c=relaxed/simple;
-	bh=WhMRwHxqrUmLB1iTZPrhNMa7cyGhlCwbvs9D5uo4/7U=;
+	s=arc-20240116; t=1776266408; c=relaxed/simple;
+	bh=B/Hyg7x8PYnDVSR14340tPKetY3zAVNOK3YI7sycpEg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AczegCGoEUc2ixRTqto4LV/mXIC4QtopFA9/lx6G3inemMHee2ZKST1LwZIkWYs4oLRHzBjNxXmAvIGBiq8EiSwOk+5gEUpQuSVb4AipaBl4QjwTzVLZkyopUVATxqTWlVKqIwfC/ZqEoO++3hqHQtafsZwXS0muA3N3Tmda/VM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=altlinux.org; spf=pass smtp.mailfrom=altlinux.org; arc=none smtp.client-ip=194.107.17.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=altlinux.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altlinux.org
-Received: from imap.altlinux.org (imap.altlinux.org [194.107.17.38])
-	by vmicros1.altlinux.org (Postfix) with ESMTP id 28ED172C8CC;
-	Wed, 15 Apr 2026 15:24:03 +0300 (MSK)
-Received: from altlinux.org (unknown [193.43.10.9])
-	by imap.altlinux.org (Postfix) with ESMTPSA id 1B06E36D00D0;
-	Wed, 15 Apr 2026 15:24:03 +0300 (MSK)
-Date: Wed, 15 Apr 2026 15:24:02 +0300
-From: Vitaly Chikunov <vt@altlinux.org>
-To: Thorsten Leemhuis <regressions@leemhuis.info>, 
-	Sasha Levin <sashal@kernel.org>
-Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
-	gregkh@linuxfoundation.org, regressions@lists.linux.dev, 
-	Matt Roper <matthew.d.roper@intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>
-Subject: Re: [regression] Re: Linux 6.12.75
-Message-ID: <ad-C6HWDbu9ZMRS3@altlinux.org>
-References: <20260304131402.83200-1-sashal@kernel.org>
- <20260304131402.83200-2-sashal@kernel.org>
- <ac4lw9tTNn4baO_h@altlinux.org>
- <c54a0b91-cfbf-463e-964d-bf9a2e524189@leemhuis.info>
- <adz2d7M3DKb-6jm9@altlinux.org>
- <ad2G46EyDs8LBoH_@altlinux.org>
- <ad5Gsd1YoS3607UI@altlinux.org>
- <ad5ZsSwNM42pa10J@altlinux.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=k2GILU/D4ksqchB1zzpCxMVXbYfLum47v4vE7gOy+V/Tp12xhvuV81f1IQKYU0fxsqomZzTI5XQXE9qcyEBnRFsksHSS9uVgRoIl9kvrND6nlb+JhiDFiLRMwenZf6dCey6agJCQFh0gyWm3DdO9gG4Fu59Pj5+U2UcnDmCFznw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QXV/xMAQ; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QXV/xMAQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09927C19424;
+	Wed, 15 Apr 2026 15:20:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1776266408;
+	bh=B/Hyg7x8PYnDVSR14340tPKetY3zAVNOK3YI7sycpEg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QXV/xMAQIT0yjw5vtey1URygslRf4JQte4jVZVEM+w9dKkB3d4LfCa+xG1U+mulX6
+	 iySJxY+mMyQtj01rrAEJggFALLl2u/iY9LcbHo8c1yhUUUOlpKHA/UGadIKKhfryRs
+	 BX6DmatYXXUiou79qMjuGVRAaBM9Px/MJmTyvCA0klwpq77RZc1oVTx9vCnYzmUeG5
+	 wKz0H3Ta2Mc6VHs+eGul3vXrY460eAJEzEmU0AjGzdcxmWWNWuuFqRdHDhM60wBU5j
+	 Ej9CCYztz9L45StPO9XyFBiovg1WkivxH6GmXJgJW/vtQ9nzo6cS4i7K3SNw8aRYIr
+	 POVZDtwgK64RQ==
+Date: Wed, 15 Apr 2026 09:20:06 -0600
+From: Keith Busch <kbusch@kernel.org>
+To: =?iso-8859-1?Q?Tom=E1s?= Trnka <trnka@scm.com>
+Cc: Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev, linux-block@vger.kernel.org
+Subject: Re: [REGRESSION][BISECTED] Spurious raid1 device failure triggered
+ by qemu direct IO on 6.18+
+Message-ID: <ad-sprBWPA20iola@kbusch-mbp>
+References: <2982107.4sosBPzcNG@electra>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=koi8-r
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <ad5ZsSwNM42pa10J@altlinux.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2982107.4sosBPzcNG@electra>
 
-Thorsten, Sasha,
+On Wed, Apr 15, 2026 at 02:18:59PM +0200, Tomás Trnka wrote:
+> Since 6.18, booting a VM that is backed by a raid1 LVM LV makes that LV 
+> immediately eject one of the devices. This is apparently because of a direct 
+> IO read by QEMU failing. I have bisected the issue to the following commit and 
+> confirmed that reverting that commit (plus dependencies 
+> 9eab1d4e0d15b633adc170c458c51e8be3b1c553 and 
+> b475272f03ca5d0c437c8f899ff229b21010ec83) on top of 6.19.11 fixes the issue.
+> 
+> commit 5ff3f74e145adc79b49668adb8de276446acf6be
+> Author: Keith Busch <kbusch@kernel.org>
+> Date:   Wed Aug 27 07:12:54 2025 -0700
+> 
+>     block: simplify direct io validity check
+>     
+>     The block layer checks all the segments for validity later, so no need
+>     for an early check. Just reduce it to a simple position and total length
+>     check, and defer the more invasive segment checks to the block layer.
+>     
+>     Signed-off-by: Keith Busch <kbusch@kernel.org>
+>     Reviewed-by: Hannes Reinecke <hare@suse.de>
+>     Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com>
+>     Reviewed-by: Christoph Hellwig <hch@lst.de>
+>     Signed-off-by: Jens Axboe <axboe@kernel.dk>
+> 
+> The issue looks like this:
+> 
+> md/raid1:mdX: dm-17: rescheduling sector 0
+> md/raid1:mdX: redirecting sector 0 to other mirror: dm-17
+> (snipped 9 repeats of the preceding two lines)
+> md/raid1:mdX: dm-17: Raid device exceeded read_error threshold [cur 21:max 20]
+> md/raid1:mdX: dm-17: Failing raid device
+> md/raid1:mdX: Disk failure on dm-17, disabling device.
+> md/raid1:mdX: Operation continuing on 1 devices.
+> 
+> There's absolutely nothing wrong with the HW, the issue persists even when I 
+> move the mirrors to a different pair of PVs (SAS HDD vs SATA SSD).
 
-On Tue, Apr 14, 2026 at 06:24:38PM +0300, Vitaly Chikunov wrote:
-> On Tue, Apr 14, 2026 at 04:57:38PM +0300, Vitaly Chikunov wrote:
-> > On Tue, Apr 14, 2026 at 03:17:38AM +0300, Vitaly Chikunov wrote:
-> > > On Mon, Apr 13, 2026 at 05:17:30PM +0300, Vitaly Chikunov wrote:
-> > > > On Mon, Apr 13, 2026 at 01:33:18PM +0200, Thorsten Leemhuis wrote:
-> > > > > On 4/2/26 10:44, Vitaly Chikunov wrote:
-> > > > > > 
-> > > > > > 1. I cannot find this commit posted on lore.kernel.org to report to
-> > > > > > exact patch.
-> > > > > > 
-> > > > > > | From: Matt Roper <matthew.d.roper@intel.com>
-> > > > > > | Date: Tue, 10 Sep 2024 16:47:29 -0700
-> > > > > > | Subject: [PATCH 6.12/sisyphus] drm/xe: Switch MMIO interface to take xe_mmio
-> > > > > > |  instead of xe_gt
-> > > > > > | 
-> > > > > > | [ Upstream commit a84590c5ceb354d2e9f7f6812cfb3a9709e14afa ]
-> > > > > > | 
-> > > > > > | Since much of the MMIO register access done by the driver is to non-GT
-> > > > > > | registers, use of 'xe_gt' in these interfaces has been a long-standing
-> > > > > > | design flaw that's been hard to disentangle.
-> > > > > > [...]
-> > > > > > 
-> > > > > > 2. After this patch applied to 6.12.75 there is kernel NULL pointer
-> > > > > > dereference BUG on MSI MAG H670 12th Gen Intel(R) Core(TM) i5-12600K
-> > > > > > with ASRock Intel Arc B580 Challenger [Alchemist], 12GB:
-> > > > > > [...]
-> > > > > > The commit is found not by a git bisect (since it's reported by end
-> > > > > > user and I cannot reproduce it on my hardware) but (by analyzing dmesg)
-> > > > > > with:
-> > > > > > [...]
-> > > > > > Then finding the suspecting commit:
-> > > > > > 
-> > > > > >   $ git log --oneline -G'XE_LUNARLAKE' v6.12.74..v6.12.75
-> > > > > >   26a40327c25c drm/xe: Switch MMIO interface to take xe_mmio instead of xe_gt
-> > > > > > 
-> > > > > > 6.18 and above are not affected by the bug. Also, they have another commit
-> > > > > > modifying the line which is not present in 6.12 branch:
-> > > > > > [...]
-> > > > > > Related drm/xe bug report https://gitlab.freedesktop.org/drm/xe/kernel/-/work_items/7661
-> > > > > Nobody reacted to this and it seems the gitlab ticket is stalled, too.
-> > > > > So let me ask: can this be resolved by reverting 26a40327c25c in 6.12.y?
-> > > 
-> > > It's turned out these two commits are revertible together:
-> > > 
-> > >   8f6848b2f6ea ("drm/xe/mmio: Avoid double-adjust in 64-bit reads")
-> > >   26a40327c25c ("drm/xe: Switch MMIO interface to take xe_mmio instead of xe_gt")
-> > > 
-> > > I am going to ask the users to test this.
-> > 
-> > After testing revert of these two commits, users report that regress
-> > does not appear, kernel boots without panic and there is no video artifacts.
-> 
-> After analyzing the problem slightly deeper, it seems that there is
-> uninitialized mmio.tile issue. Which is fixed in mainline commit
-> 
->   58548b91101f ("drm/xe: Defer gt->mmio initialization until after multi-tile setup")
+Thanks for the notice and the logs. Sounds likek something is getting
+sent to the block layer that can't form a viable IO. The commit you
+identified should have still error'ed though, just much earlier in the
+call stack.
 
-Applying this commit to v6.12.81 does not resolve the regress. Thus, I
-would suggest reverting commits 26a40327c25c and 8f6848b2f6ea.
-
-Thanks,
-
-> 
-> The commit also have tag:
-> 
->   Fixes: fa599b8c95a7 ("drm/xe: Populate GT's mmio iomap from tile during init")
-> 
-> The commit fa599b8c95a7 is picked into 6.12.75 as 0b433e086b9f, but the
-> fix is not. Piking it may be the better way to fix the regression than
-> the revert of the two aforementioned commits.
-> 
-> I will try to pick the fix, test, and report if it resolves the regress.
-> 
-> Thanks,
-> 
-> 
-> > 
-> > So, I kindly ask to revert them from 6.12.y branch if they aren't
-> > critical.
-> > 
-> > Thanks,
-> > 
-> > > 
-> > > Thanks,
-> > > 
-> > > > 
-> > > > As of me, this is not easy to revert, as it depends on many other
-> > > > commits, and git does not have tooling to determine all dependant
-> > > > commits for revert. I hope someone from drm subsystem notices this to
-> > > > work on it, or Sasha can pull missing commits or revert this (obviously,
-> > > > he have tooling for this, but I was unable to find it). [I found
-> > > > obsolete references to deps but is seems not used for years and Python
-> > > > git-deps tool seems broken.]
-> > > > 
-> > > > What I found is, offending commit is picked due to
-> > > > 
-> > > >   Stable-dep-of: 4a9b4e1fa52a ("drm/xe/mmio: Avoid double-adjust in 64-bit reads")
-> > > > 
-> > > > Which, perhaps, needs to be reverted.
-> > > > 
-> > > > Offending commit 26a40327c25c is not tracked in lore.
-> > > > It's part of 9 piece patchset, perhaps they are logically dependent too,
-> > > > so need to be reverted together.
-> > > > 
-> > > > The possible fix is part of 6 piece patchset, which does not cherry-pick
-> > > > easily due to conflicts.
-> > > > 
-> > > > If someone can produce correct fix we can participate in the tests.
-> > > > 
-> > > > Thanks,
-> > > > 
-> > > > > 
-> > > > > Ciao, Thorsten
+Anyway, I'll take a look if there's something I missed handling with the
+stacking setup you're describing.
