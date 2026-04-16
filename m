@@ -1,61 +1,62 @@
-Received: from mail-dy1-f178.google.com (mail-dy1-f178.google.com [74.125.82.178])
+Received: from mail-dy1-f180.google.com (mail-dy1-f180.google.com [74.125.82.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7A9118AE2
-	for <regressions@lists.linux.dev>; Thu, 16 Apr 2026 03:59:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77068199E89
+	for <regressions@lists.linux.dev>; Thu, 16 Apr 2026 04:59:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776311947; cv=none; b=gsUjPj+igVNns5D5D2VuuA3W35oKblV/8kAX940X3dcnova0DC7f+LLKRSgkt4Ik4TQhG9zjxAA+3lBLRckYMNRWIizY5WTxGH4AR8uZOiLkvg44KIcbiMX0AHNA/ThqvoEpNuK87wuTsWoheDrE8U4X2/6kmGvJ+FPpH9mxTMM=
+	t=1776315547; cv=none; b=EQW3XJNgDPgxZrdb08zSGd8AGhq0nLNt6muCcoV7YatRGoZMB4AjbfH0Swm5goP0ksTpXBU8whLMomuE5Oal0as+6hgR0WQGe2uKGCRKtx1X/WgCF466YLEcJ05YEqAMqPjCQWobH+zSr8/QIqd/Z0y4bF6hu/L3zO+mwYEuRD4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776311947; c=relaxed/simple;
-	bh=bkdazd3xQ6b/W6aPc1tyCWNCP32lgCTzlY2gGLluHP4=;
-	h=Content-Type:MIME-Version:Subject:From:To:Cc:Date:Message-ID; b=jRMYet6h5Wdo2f9rlwTAgUpE6+gpEeUCqEux8vzSHYseLUlOc6JGlB+NLo+zucpyDeLc0ONNaS0TT6i0BDf7Elp3qzm8yCcMB3xNkQMkKEAu1ZYWdTU2kiNXKyAcdD1+Gi9aA0ih2XbH+p6CVrE1aWdFi+KreMGUY1fxHtpjGRU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org; spf=pass smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci.org header.i=@kernelci.org header.b=LssNPbE2; arc=none smtp.client-ip=74.125.82.178
+	s=arc-20240116; t=1776315547; c=relaxed/simple;
+	bh=FS/uE5yui7IFQ1XLU18v+aFfRCZ1s2h5PEOB6/YOoZ4=;
+	h=Content-Type:MIME-Version:Subject:From:To:Cc:Date:Message-ID; b=M+QUfNbAdc/qpO5ga2E6DWsKaJjmlrdddzY1HLjok9hV9PlBLGSuF8jmUDaAic8rr2pAfZflApgCDpXHCHiPAa9FeBu770Rsr+go96n9z0x3Uskzcncdm0id5PcOEMMSUJ4rPWTEKN1QmeLJs0VFWIQ02fx4W4eYJvK8L7nqBCk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org; spf=pass smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci.org header.i=@kernelci.org header.b=H3buTqF/; arc=none smtp.client-ip=74.125.82.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernelci.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci.org header.i=@kernelci.org header.b="LssNPbE2"
-Received: by mail-dy1-f178.google.com with SMTP id 5a478bee46e88-2e221a71e19so7490eec.0
-        for <regressions@lists.linux.dev>; Wed, 15 Apr 2026 20:59:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernelci.org header.i=@kernelci.org header.b="H3buTqF/"
+Received: by mail-dy1-f180.google.com with SMTP id 5a478bee46e88-2c15849aa2cso9010190eec.0
+        for <regressions@lists.linux.dev>; Wed, 15 Apr 2026 21:59:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci.org; s=google; t=1776311945; x=1776916745; darn=lists.linux.dev;
+        d=kernelci.org; s=google; t=1776315545; x=1776920345; darn=lists.linux.dev;
         h=message-id:date:reply-to:cc:to:from:subject
          :content-transfer-encoding:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=JJ6SrrIHtj1HhDyHgi4k19oE+I8VvyQZ5gvES52Sx9Y=;
-        b=LssNPbE27ZbGlY8M5uzyhO8kteenx7sU/ECSjdPVExUgndFPE4zZtVZe13nEElubEL
-         ZQTjPnTjnfT29aI+xiRLVyvo8ZQKiWxts8Dh9Jo1XBLJwK50K9P3/tdHfCnUqIhXQsGf
-         DuA7Af4T1uLUm5ONwtkWFvkj96WM9+FO7N5/vy6SXOvY2pDGUQ/DWn8B78eHqfcVYekY
-         6LYXJmp3b6rF8/zEvUcHLF4EG4rvPKd2UKms8kh4FF3rhkAJIfi5VOJ6z8GRhARegCDd
-         eabAapcbZLvF3Cbn4n1tO1nJb0JU59cBRO3r0kyiVGcTiQhwq5XSP4BqxOdD73hpYt8D
-         OsjA==
+        bh=yzpnAkdsoi2Ex2ZmMhsu4dkIqSOp7pyrenjEwFPJ6NM=;
+        b=H3buTqF/HQ1ButiXksEQsA4flLUn1a5ROZa+F2w2sxQBU8eq+9i2qngrKW7zAIiPnL
+         LhunWJ4R8XGkryCqDWYEeVWuOM9YfX61xu2njkuX7n7C8r+kaP5ozCjuWEbE8wgbqdHL
+         bCkhZg0JiwooTG/xE5C7IUZ8Tr1gEttwF5362s0niWE4YoSLmmU0DaG4F2aRU06c9n4j
+         AS3ToLYedS1telE0odWQV6GvecFwQyqKvZ7GRZO3O0g+03o8FQjcFgmcdcjeJezYMnAv
+         2RIn1WncYGCD3RSdNzJ3kH79THmnDwbhnTtQfUUbfEYbGa8Tw/S+u+o+UVDjME+OCYlV
+         dFrg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776311945; x=1776916745;
+        d=1e100.net; s=20251104; t=1776315545; x=1776920345;
         h=message-id:date:reply-to:cc:to:from:subject
          :content-transfer-encoding:mime-version:x-gm-gg:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=JJ6SrrIHtj1HhDyHgi4k19oE+I8VvyQZ5gvES52Sx9Y=;
-        b=ltCXmUAWLKIOZU466zP05ow1RoJGuf0VxAfa4nVDiX/rF2Oxc0BtIYBgJXT/kZVUdf
-         9ALVIJrELxEhBW0Cx4gZuA1BDkKSZijwru+27sW+lQAWZA914k8GEK/KZYlfGzi9GONp
-         vdGfxi6U5O74J+qHrchmbVG6c4a1XAgwY4bSBva5clI/++5IKyhnJSwpQLXF8BZ3ytAi
-         +H36Dv9mqzO7Ic23sFQvisVNS8t9ALcXsQz+1QMRAo7eOcSqvuZpCM7hXS/SJCrrWNdX
-         +2Gnmntyz1H8vmiUI4UA8sDtEhIgWxtFcjV9xVnWN8qmiyVZ0ji1aZui1N1eU68ZWxzg
-         9bCw==
-X-Gm-Message-State: AOJu0YwtxCSsxL3XEypEGYJYU26Tu4byA3CIAfnltQm8V7b+9d94jMdh
-	1yRv7Hf2Dzf/64vF4ujXyGcyqhkV8R2XBdDT5B08eVxELJ3p913ZnJ7nNoyxkP3j6jk=
-X-Gm-Gg: AeBDieuTgZycrshc2koKqmnxTl9zDUmGxGYYnmVlcCztKV4nBVPnJCQJQakrCALBRhj
-	iUwHHjNXf3Yx3qWq3065C07GFz93y0QtObbvFOaLAfqTm7MvqPLnPvPIJTO9Z7bakPX39O2EYpl
-	kqq0ahdGaAg95pHhmo7WDS01CgmrOQh5Me//W0A09lCGZ13Sp5cr2ZGL8oDaqzoD5m18dZ/zZI2
-	j5ofPRbCtpJht8i082s3n9ebG/vTjCPoyaSMq8guTsC+FIR04LCsIHDQNOqni524GclWE7yqHYa
-	yx8ki7JJ/PHjE9opuQcCuTt3YcQ6A/FqAu8TecB1awvcT/KjIGz6i3Oz830ZqHu4UkR7nawRtV+
-	oU1wT3sd5uoFyUZlOG17f5eTPgkcc7kPvceNKjw99bUqTvbb9xNlsQaUupUeiaCYEZ2Ggisk5nu
-	73OYVusTOaIXiY6dcNlDc58A8A3D4=
-X-Received: by 2002:a05:7300:8609:b0:2c7:3a7:c792 with SMTP id 5a478bee46e88-2d5894628d1mr14059968eec.20.1776311944842;
-        Wed, 15 Apr 2026 20:59:04 -0700 (PDT)
+        bh=yzpnAkdsoi2Ex2ZmMhsu4dkIqSOp7pyrenjEwFPJ6NM=;
+        b=tGJBbTL/25ogKoGSXTc9hfs641zfJwIyw1PEUhbUP9nfNVN4agSvE4488Az9/fNYdG
+         AoUV/0rhwzS+JeIjlx1rHwON8HMH4lQbhZkaxBoXjgmPdFkMHhBa5SBqM3cHFcIkkWSQ
+         8ZjrUf3DZiL5UkJ2sC/zKS8FuMHupH1hRI7l6iNhqkpk2iKlfdo5Qs1AYiXLDkvpjd0R
+         2RJt5iU7e/g7pVO/afVPCy5jgtPjfg4JxJMuoC9HMc/18M7dJAXAFCW/3RzrJzQ2mYV3
+         J/pK4Zbm/4ozps+6jjLRjD6AdNnKza42uIQ451yJPqR/64Mxqqzl6msFeDaaZwIoXcP7
+         iF1Q==
+X-Gm-Message-State: AOJu0YwlCrwIsM11MYEBfqIZRBeqCge0raGX0ACiIVk5gZRz+52QZ5Bm
+	o+Ib0srmz2/d910l8v5R/Jr7iwBPF4Xk/YKkHtdWtMWPZZ+RGmnWkbpGJgcMIoRkqTo5hAoqN4K
+	9iyYE
+X-Gm-Gg: AeBDiet1azb9/UP7xpLuRFP57OCxbqOU5oRgfNhURrdN1iM65vBgJZpYzuJAYl7FHsk
+	n+jxZ0Gm2bLVou6Pl0w0PGNOCQIttIb2PtfXzOIiY2O7nmOQnj3sUc/aAAA5wStaHdJhdTsSmDi
+	JCpirY32PjH2o6Wiy9sUeu7jT5wsiOnWt6d9hAzvH1GwEg1Ei9zvWZSn+a6qlIP6SYYEzWArsNb
+	FvQREWX47DWneunZ8s9HuMHutqlQq2KCL+O721TdPlgQmB1D4/TXmfJlLAcnBZUtmfkAlzXT//W
+	71Mf5XWEhzAdmxKG8OK0kYHZqVosulv7EgCc0S6Zh/h9CAa44pWTRrmy8b/5k/PoYWh9k1lDntM
+	5xNnz1pU788B9YUdd/gYLX+pVlTXqFjqOSX8QXeoACQiWVXZP9Pv+tQk/amnoPCTeZQarXHz5IU
+	3mfkrO4Opne81xZBTNzywMhBNu5A58QuThkiM79A==
+X-Received: by 2002:a05:693c:300c:b0:2de:1508:937c with SMTP id 5a478bee46e88-2de1508953bmr3678581eec.24.1776315545471;
+        Wed, 15 Apr 2026 21:59:05 -0700 (PDT)
 Received: from 8692ffc4d55e ([20.38.40.137])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2de8fa5f221sm5643873eec.27.2026.04.15.20.59.03
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2de8919f9a0sm6023576eec.0.2026.04.15.21.59.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Apr 2026 20:59:04 -0700 (PDT)
+        Wed, 15 Apr 2026 21:59:04 -0700 (PDT)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
@@ -65,14 +66,14 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Subject: [REGRESSION] mainline/master: (build) in
- kernel/trace/simple_ring_buffer.o.checked (/tmp/kci/linux/kerne...
+ kernel/trace/simple_ring_buffer.o.checked (kernel/trace/Makefil...
 From: KernelCI bot <bot@kernelci.org>
 To: kernelci-results@groups.io
 Cc: regressions@lists.linux.dev, gus@collabora.com, laura.nao@collabora.com,
  shreeya.patel@collabora.com, broonie@kernel.org
 Reply-To: kernelci@lists.linux.dev
-Date: Thu, 16 Apr 2026 03:59:03 -0000
-Message-ID: <177631194364.6342.5358444760042595921@8692ffc4d55e>
+Date: Thu, 16 Apr 2026 04:59:04 -0000
+Message-ID: <177631554406.6361.12830638488424544998@8692ffc4d55e>
 
 
 
@@ -83,10 +84,10 @@ Hello,
 New build issue found on mainline/master:
 
 ---
- in kernel/trace/simple_ring_buffer.o.checked (/tmp/kci/linux/kernel/trace/Makefile:147) [logspec:kbuild,kbuild.other]
+ in kernel/trace/simple_ring_buffer.o.checked (kernel/trace/Makefile:147) [logspec:kbuild,kbuild.other]
 ---
 
-- dashboard: https://d.kernelci.org/i/maestro:76d4ec715fd28e2b45e3a8ccf6d7a053fbe5821a
+- dashboard: https://d.kernelci.org/i/maestro:dc6932917e2ae83920fc826fdc9ee564f956f14d
 - giturl: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
 - commit HEAD:  9e1e9d660255d7216067193d774f338d08d8528d
 
@@ -104,13 +105,13 @@ Log excerpt:
 
 # Builds where the incident occurred:
 
-## defconfig+allmodconfig+CONFIG_FRAME_WARN=2048 on (arm):
+## i386_defconfig+allmodconfig+CONFIG_FRAME_WARN=2048 on (i386):
 - compiler: clang-21
-- config: None
-- dashboard: https://d.kernelci.org/build/maestro:69e03fc19b5a968309e4cfb9
+- config: https://files.kernelci.org/kbuild-clang-21-i386-allmodconfig-69e040569b5a968309e4d052/.config
+- dashboard: https://d.kernelci.org/build/maestro:69e040569b5a968309e4d052
 
 
-#kernelci issue maestro:76d4ec715fd28e2b45e3a8ccf6d7a053fbe5821a
+#kernelci issue maestro:dc6932917e2ae83920fc826fdc9ee564f956f14d
 
 --
 This is an experimental report format. Please send feedback in!
