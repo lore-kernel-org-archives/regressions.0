@@ -1,122 +1,188 @@
-Received: from mail-dl1-f54.google.com (mail-dl1-f54.google.com [74.125.82.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26AEF317160
-	for <regressions@lists.linux.dev>; Thu, 16 Apr 2026 14:59:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D1AB31A555
+	for <regressions@lists.linux.dev>; Thu, 16 Apr 2026 17:41:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776351548; cv=none; b=K2IQlEY8PpLJ5gk4h2cZo3g9c4DQh2A+XURozwkmFUOUDEO9sEiPzB45t1/oJ5gyBU6LTuyX+laCnXl6aRAs3CFE//R4brIUmW3ykouiy3EDgsC2AYS5GiE7e3p5BRo3UZ41ssV3Y3vbvaG7ehc1pB4fXQgCGZQ2et7Y5I36OYs=
+	t=1776361281; cv=none; b=F8aICgPdPjfBf5wdf4uR5iZ2+KN2Nwr9K+4eh3KVbnp1Wdj2GZO45nd/9CyPIw2ElTU0mLy/sxUoxbb9ZDaqxH51iojIDiR60VpvnpMIN1N/UvnLJpHV9O/Li5tQCKXQEylOiMIDxZxrb06iOE95dWg7L3H+H4dnSzStLvjyzFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776351548; c=relaxed/simple;
-	bh=nEZcCTbMV54noQ7HylpoVGyqeEZCV1ATyFsiiMR67aI=;
-	h=Content-Type:MIME-Version:Subject:From:To:Cc:Date:Message-ID; b=rhzoIDOOilYHBb8XmtURzxNqk/6QCjhOoGI3k3vJdfinQyBDWhXGaN6SRvv0U+2lhw1ZQ8V5mLT9a+7DRmoiWmE4zQUxDdtAZ84ALQ2U9wtkRV5ka66S2sBw4nbwQu1oNGxFYHjljxDfjXFnKR0d31+y6kGlQJgIUgyG1GK+58g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org; spf=pass smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci.org header.i=@kernelci.org header.b=MNKm5Bjc; arc=none smtp.client-ip=74.125.82.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernelci.org
+	s=arc-20240116; t=1776361281; c=relaxed/simple;
+	bh=6ZlNePSW+LesjNJSSMtlYhy1bPfYGCT/dT8RlNEwov0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=up3jT04c/d+ghWXjmRRXC7YXQtc7g9/qmWY7WKlwBiq2AJcGpaKwZ5joj6igYpyrser//NyhAK1LyljdxcUeNDIbW5x+YhCRSmm/iS3SOOjlc/spHcaqNgcM+IVH2YT305O/i4taDPUaWYcRhQw9EpIhVl56gUz5qrZrFJ5TCU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=ZhxlblUz; arc=none smtp.client-ip=188.68.63.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci.org header.i=@kernelci.org header.b="MNKm5Bjc"
-Received: by mail-dl1-f54.google.com with SMTP id a92af1059eb24-128b9b7e3edso7973015c88.0
-        for <regressions@lists.linux.dev>; Thu, 16 Apr 2026 07:59:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci.org; s=google; t=1776351545; x=1776956345; darn=lists.linux.dev;
-        h=message-id:date:reply-to:cc:to:from:subject
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=V384+pK9nOIGW9ZWI05sugBChJBTGGbB1XgQN6V/XAw=;
-        b=MNKm5BjcKoLeQu7Wnt358D4qhpCfTm/tQQbBM+t4K9QFojumCsiybQWqbkLcw+ZRhE
-         zceUOpuuKkCMXoxzrFoXjn9kVTTfiRgM4ciq2DDgX7hvahzLYqlxZ23Jv+PZR1UxJHPu
-         ahfOFb+ILtlmUAGMuiGfiw+a4z3R+NoJEceQirNF4zvQTyVpYc7Uk81FS+sTlw4wOnvk
-         cJY2koGX1ucbDjIhprUJuo9YpBIVNNTvhOa7duduv5n9WnvA71Xulvffzr7M4KWZkNPP
-         FIkSWzDnwkZLdISy8onkc3JHhtSc2LqlUMJ0xJLXh5DW1nMSxz7ghSTwpvsbwRSoNS4C
-         LjDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776351545; x=1776956345;
-        h=message-id:date:reply-to:cc:to:from:subject
-         :content-transfer-encoding:mime-version:x-gm-gg:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=V384+pK9nOIGW9ZWI05sugBChJBTGGbB1XgQN6V/XAw=;
-        b=Vq3/f6MS+k1l2Zv/1KIZsCVjmIiU1sL4UJEQpC8KmgzeBc1m++KnwRyLlayUSrHp4B
-         jPd5swUoXNO56HKOCGushRDFDXZhe2yGaU8mmcg2ZNe6aZaMsitlWwYXuAlSlTSxIyWs
-         qYbABfN3O3bpO8daxsSV4ndaKXdSmNvlSXa2OkQILiSPrEv0WDp/lOJ2lZZqYWxOhIhL
-         EguJz5ao6xqYIT1k+bP4sDJFX29TA9Mia/j5Qe9xHjh2xcQ3QEBMMCtHYeZkrQ7qwqhx
-         otA46AfBeV4/du0L8EoxfwK1Ly5BMPKrIKHMnCu+jxT1BAp+/fWg9IGWExf1Fbphma4d
-         VjcQ==
-X-Gm-Message-State: AOJu0YwY3UdU+OR1Wq2HhdGAO8SPVqyTyCwUPt7MQlLmOILaBbJCu8KV
-	wCsi0ATJgQg4ZILmS9keoY/DEc9PnEuuUWjdcfm8F5YNC/AnflWA885qJnWx8xwEVIdTtADP/Jh
-	lL6o7
-X-Gm-Gg: AeBDiesUQOuEEYh12uGMNw1JELWHQcU/ciJdHJguN82B63LdGNxYT2NbaQqZHoZ5AKw
-	5CDsxjTPyHe2O6O0AeQRF8rOAIVpfCCN720nAQanxuspI7odEX9dUAZJMhD9uCoQWmWb6a3JSZV
-	hqLFbl4lLhVB4qNwgpxDbJmgMbGLnX3cakkvCiQhXymx9XhcCHz5ivHOaIrtciusY5/oyMJbl7o
-	ssa+uImhmpj41SHfYaiEGFHBbHpOSsgKeBEMAu2jW05tTuMUdH1D5FNRNtwx5VTBfah0Qa25TQp
-	2sBcCOJvgf657o+CelIH0qfLykReXiB7jdEJWy3o0RgTtTTWZGkKb6KvSb1eLFp/aty+pPNGo/6
-	YINpODv/qbwbupWi3IFPR9qpuN1wayuTGq7uQ/xWoUk6pIo7wSketJSG2kst7syX1IYuM3lN9pb
-	GAg0mFvQh8JFuCP5EUoYegRMgPGkQ=
-X-Received: by 2002:a05:701b:2219:b0:12c:6da8:8570 with SMTP id a92af1059eb24-12c6da88750mr586006c88.2.1776351545082;
-        Thu, 16 Apr 2026 07:59:05 -0700 (PDT)
-Received: from 8692ffc4d55e ([20.38.40.137])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2de8fa5efb6sm7926116eec.28.2026.04.16.07.59.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Apr 2026 07:59:04 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="ZhxlblUz"
+Received: from mors-relay8203.netcup.net (localhost [127.0.0.1])
+	by mors-relay8203.netcup.net (Postfix) with ESMTPS id 4fxQBq2VZJz8hlN;
+	Thu, 16 Apr 2026 17:35:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1776360915;
+	bh=6ZlNePSW+LesjNJSSMtlYhy1bPfYGCT/dT8RlNEwov0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ZhxlblUzu8kskJTVcqUhfZ5fB0boBO6NNeNXnS4xFNxkdAzPVTVR3PmThaY5YdaTN
+	 pwSOSI1l1X3G8gPkrQ2riJjJBBl76TROoSsF4is1Wpic5iEGOmHlPeQybJ4qdGF/pT
+	 GW4k4L5n/Ae2N65ZXjG3QaG5AFQ4MB41IxTsdsbOW2ZsdkXqvUKpXzxN/6V2bWLFX8
+	 FJcAFrFqa+kvBn+2bjYetMsiPIQeP46smXX1JaaexSxujUul9/Nvh5xoEVzGLDb4Ub
+	 wC1BbAo2qh7PQJyiEoh76T7TNSzd2yycYoDzajcXSmH4ragdDKMo1chfKGHuwnpcql
+	 PbWJCsKHcgC6w==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay8203.netcup.net (Postfix) with ESMTPS id 4fxQBq1hjgz8hlJ;
+	Thu, 16 Apr 2026 17:35:15 +0000 (UTC)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4fxQBp3zzBz8sWT;
+	Thu, 16 Apr 2026 19:35:14 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 3A4A263608;
+	Thu, 16 Apr 2026 19:35:13 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <c64d69bb-9df9-46b7-a1ad-aada30310d36@leemhuis.info>
+Date: Thu, 16 Apr 2026 19:35:11 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [REGRESSION] next/master: (build) "byte_rev_table"
- [lib/zlib_deflate/zlib_deflate.ko] undefined! "by...
-From: KernelCI bot <bot@kernelci.org>
-To: kernelci-results@groups.io
-Cc: regressions@lists.linux.dev, gus@collabora.com, linux-next@vger.kernel.org
-Reply-To: kernelci@lists.linux.dev
-Date: Thu, 16 Apr 2026 14:59:04 -0000
-Message-ID: <177635154368.6552.7060101263009785041@8692ffc4d55e>
+User-Agent: Mozilla Thunderbird
+Subject: Re: Pressing the power button causes the device to freeze completely
+To: Evgeny Sagatov <sagatov@ya.ru>,
+ "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ LKML <linux-kernel@vger.kernel.org>,
+ Michal Wilczynski <michal.wilczynski@intel.com>
+References: <184091776095270@mail.yandex.ru>
+ <10843916-38a7-4d19-8c23-4b2014806eaa@leemhuis.info>
+ <186071776359023@mail.yandex.ru>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <186071776359023@mail.yandex.ru>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-PPP-Message-ID: <177636091350.1878812.7694770508197627927@mxe9fb.netcup.net>
+X-NC-CID: sBzxRd94WofCwVj1pxqA/cibEeLHtf3JFoOovkkMokgPR0JuL2s=
 
+On 4/16/26 19:22, Evgeny Sagatov wrote:
+>> Could you please try 7.0 as well?
+> I compiled 7.0.0 kernel from sources.
+> Unfortunately, this kernel also freezes when the power button is pressed.
 
+Thx for testing.
+  
+>> How did you find that this causes the problem? Did you do a proper
+> bisection and thus checked if the parent of that commit really works?
+>  
+> I don't think I did it correctly.
+> Because the previous commits didn't shut down the PC or cause it to
+> freeze. I think they just weren't working.
+>  
+> I also tried a very simple module tity-power-button. Pressing the power
+> button when using this module also causes a full freeze.
+> I think the problem lies with the ACPI functionality, but none of kernel
+> options helped fix it.
+>  
+> I'm confused.
 
+Then you likely want to properly bisect the bug. Might be best to do
+that on a Debian 12 install (where everything used to be working) by
+following this guide:
 
+https://docs.kernel.org/admin-guide/verify-bugs-and-bisect-regressions.html
 
-Hello,
+But be warned: the regression is old. Even if the culprit is identified
+the usual rules wrt to "no regression" might not apply, as fixing the
+regression could cause regressions for other users.
 
-New build issue found on next/master:
+Ciao, Thorsten
 
----
- "byte_rev_table" [lib/zlib_deflate/zlib_deflate.ko] undefined! "byte_rev_table" [drivers/net/ethernet/spacemit/k1_emac.ko] undefined! "byte_rev_table" [drivers/net/ethernet/stmicro/stmmac/stmmac.ko] undefined! in Module.symvers (/tmp/kci/linux/scripts/Makefile.modpost:147) [logspec:kbuild,kbuild.modpost]
----
+> ----------------
+> Кому: Evgeny Sagatov (sagatov@ya.ru), Rafael J. Wysocki
+> (rafael.j.wysocki@intel.com);
+> Копия: regressions@lists.linux.dev, LKML (linux-kernel@vger.kernel.org),
+> Michal Wilczynski (michal.wilczynski@intel.com);
+> Тема: Pressing the power button causes the device to freeze completely;
+> 16.04.2026, 11:23, "Thorsten Leemhuis" <regressions@leemhuis.info>:
+> 
+>     [removing the stable list, this is not something for them]
+> 
+>     On 4/13/26 18:46, Evgeny Sagatov wrote:
+> 
+>          I have a PC with a motherboard GA-EP45T-UD3LR (Rev. 1.0) <https://
+>          www.gigabyte.com/Motherboard/GA-EP45T-UD3LR-rev-10 <https://
+>         www.gigabyte.com/Motherboard/GA-EP45T-UD3LR-rev-10>> and
+>         processor Intel
+>          Core 2 Quad Q9550.
+>          Previously, I had Debian 12 with kernel 6.1 installed, and
+>         pressing the
+>          power button would shut down the PC as usual.
+>          I updated to Debian 13 with kernel 6.12.74, and now pressing
+>         the power
+>          button causes the PC to freeze completely.
+>           
+>          I see that systemd doesn't even begin to shut down. It freezes
+>          immediately after pressing the button. There's no error message in
+>          console. There's no error message in the logs either.
+>         Netconsole doesn't
+>          report any errors, and the kernel doesn't panic. It just
+>         freezes completely.
+>           
+>          I checked that Live CD with Debian 12 continue to shut down
+>         normally,
+>          but Live CD with Debian 13 freeze.
+>          I tried updating and resetting the BIOS. I tried various kernel
+>          parameters related to ACPI settings. I also tried kernels 6.18
+>         and 6.19.
+>          Nothing fixed the problem.
+> 
+> 
+>     Could you please try 7.0 as well? It contains a fix for the commit you
+>     mentioned below.
+>      
+> 
+>           
+>          If I unload the "button" module, the system doesn't freeze, but
+>         it also
+>          doesn't shut down.
+>          I built "button" module by rolling back its version to commit
+>         1a20d40
+>          <https://github.com/torvalds/linux/ <https://github.com/
+>         torvalds/linux/>
+>          commit/1a20d409c874255086e2f42a729826d490294c91>, which
+>         corresponds to
+>          kernel version 6.1. This module does not freeze, but does not
+>         turn off
+>          the PC either.
+>           
+>          I've found that the freezes have been occurring since commit
+>         0d51157
+>          <https://github.com/torvalds/linux/ <https://github.com/
+>         torvalds/linux/>
+>          commit/0d51157dfaac05ea66616d8a250dce04bef49a4f>.
+> 
+> 
+>     That is 0d51157dfaac05 ("ACPI: button: Eliminate the driver notify
+>     callback") [v6.5-rc1] from Rafael. But that is a very old commit; and
+>     you seem to be switching distro versions and kernel at the same time,
+>     which could interfere.
+> 
+>     How did you find that this causes the problem? Did you do a proper
+>     bisection and thus checked if the parent of that commit really works?
+>      
+> 
+>          Unfortunately, my skills are not enough to understand the
+>         reason for the
+>          freeze.
+>           
+>          I'm attaching dmesg and lspci logs.
+> 
+>     Ciao, Thorsten
+> 
 
-- dashboard: https://d.kernelci.org/i/maestro:48f931aecdceb03cad626bb809f8965302b7fc91
-- giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-- commit HEAD:  452c3b1ea875276105ac90ba474f72b4cd9b77a2
-- tags: next-20260416
-
-Please include the KernelCI tag when submitting a fix:
-
-Reported-by: kernelci.org bot <bot@kernelci.org>
-
-
-Log excerpt:
-=====================================================
-ERROR: modpost: "byte_rev_table" [lib/zlib_deflate/zlib_deflate.ko] undefined!
-ERROR: modpost: "byte_rev_table" [drivers/net/ethernet/spacemit/k1_emac.ko] undefined!
-ERROR: modpost: "byte_rev_table" [drivers/net/ethernet/stmicro/stmmac/stmmac.ko] undefined!
-
-=====================================================
-
-
-# Builds where the incident occurred:
-
-## defconfig on (riscv):
-- compiler: gcc-14
-- config: None
-- dashboard: https://d.kernelci.org/build/maestro:69e0eea19b5a968309e4e915
-
-
-#kernelci issue maestro:48f931aecdceb03cad626bb809f8965302b7fc91
-
---
-This is an experimental report format. Please send feedback in!
-Talk to us at kernelci@lists.linux.dev
-
-Made with love by the KernelCI team - https://kernelci.org
