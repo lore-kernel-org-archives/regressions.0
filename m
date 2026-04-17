@@ -1,188 +1,118 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f170.google.com (mail-dy1-f170.google.com [74.125.82.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D1AB31A555
-	for <regressions@lists.linux.dev>; Thu, 16 Apr 2026 17:41:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B9103264D0
+	for <regressions@lists.linux.dev>; Fri, 17 Apr 2026 13:59:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776361281; cv=none; b=F8aICgPdPjfBf5wdf4uR5iZ2+KN2Nwr9K+4eh3KVbnp1Wdj2GZO45nd/9CyPIw2ElTU0mLy/sxUoxbb9ZDaqxH51iojIDiR60VpvnpMIN1N/UvnLJpHV9O/Li5tQCKXQEylOiMIDxZxrb06iOE95dWg7L3H+H4dnSzStLvjyzFc=
+	t=1776434347; cv=none; b=VgejjczPrLRAaqwN9bJKmKcJaRCdHKXHxXJWTUZSzdkqA+xE5DvMZHxol3TeQZzRWiCqRSE0UJGjyA3FfXpMOxxlBHZ7EJ9oLgAGBe+OGbzMp3OrOR8EuDc0uNRmKGgfmugWkgBDo9pigeLzw1k1aTrd9b7nGayo4sv+7uHZnIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776361281; c=relaxed/simple;
-	bh=6ZlNePSW+LesjNJSSMtlYhy1bPfYGCT/dT8RlNEwov0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=up3jT04c/d+ghWXjmRRXC7YXQtc7g9/qmWY7WKlwBiq2AJcGpaKwZ5joj6igYpyrser//NyhAK1LyljdxcUeNDIbW5x+YhCRSmm/iS3SOOjlc/spHcaqNgcM+IVH2YT305O/i4taDPUaWYcRhQw9EpIhVl56gUz5qrZrFJ5TCU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=ZhxlblUz; arc=none smtp.client-ip=188.68.63.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1776434347; c=relaxed/simple;
+	bh=Ws7Xa9KEaYmSddK6P9t+airuD5pEYV4+PwU4u/5xjxg=;
+	h=Content-Type:MIME-Version:Subject:From:To:Cc:Date:Message-ID; b=LsppJadneotPCXvscGvxYR5/VnsumnTEbXwNShnCeB5p7bigsxvWA0FjPOoYY0v21gWTdgwo+iNYR4eGaSL2pYcPOgqCDea5TMIr/RTInDsnyGgkeEPiZ5jVuXU+xRUoQzi/SW+9GyUz+PwrshQv24leuyl1CdkBmJ7IMmTLpDs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org; spf=pass smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci.org header.i=@kernelci.org header.b=PXps/YhC; arc=none smtp.client-ip=74.125.82.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernelci.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="ZhxlblUz"
-Received: from mors-relay8203.netcup.net (localhost [127.0.0.1])
-	by mors-relay8203.netcup.net (Postfix) with ESMTPS id 4fxQBq2VZJz8hlN;
-	Thu, 16 Apr 2026 17:35:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1776360915;
-	bh=6ZlNePSW+LesjNJSSMtlYhy1bPfYGCT/dT8RlNEwov0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ZhxlblUzu8kskJTVcqUhfZ5fB0boBO6NNeNXnS4xFNxkdAzPVTVR3PmThaY5YdaTN
-	 pwSOSI1l1X3G8gPkrQ2riJjJBBl76TROoSsF4is1Wpic5iEGOmHlPeQybJ4qdGF/pT
-	 GW4k4L5n/Ae2N65ZXjG3QaG5AFQ4MB41IxTsdsbOW2ZsdkXqvUKpXzxN/6V2bWLFX8
-	 FJcAFrFqa+kvBn+2bjYetMsiPIQeP46smXX1JaaexSxujUul9/Nvh5xoEVzGLDb4Ub
-	 wC1BbAo2qh7PQJyiEoh76T7TNSzd2yycYoDzajcXSmH4ragdDKMo1chfKGHuwnpcql
-	 PbWJCsKHcgC6w==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay8203.netcup.net (Postfix) with ESMTPS id 4fxQBq1hjgz8hlJ;
-	Thu, 16 Apr 2026 17:35:15 +0000 (UTC)
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4fxQBp3zzBz8sWT;
-	Thu, 16 Apr 2026 19:35:14 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 3A4A263608;
-	Thu, 16 Apr 2026 19:35:13 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <c64d69bb-9df9-46b7-a1ad-aada30310d36@leemhuis.info>
-Date: Thu, 16 Apr 2026 19:35:11 +0200
+	dkim=pass (2048-bit key) header.d=kernelci.org header.i=@kernelci.org header.b="PXps/YhC"
+Received: by mail-dy1-f170.google.com with SMTP id 5a478bee46e88-2bdcf5970cdso611252eec.0
+        for <regressions@lists.linux.dev>; Fri, 17 Apr 2026 06:59:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci.org; s=google; t=1776434345; x=1777039145; darn=lists.linux.dev;
+        h=message-id:date:reply-to:cc:to:from:subject
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LO8PgW2PfAuIwu+ycMUGMbnWKP5/gsHv03hfidGgBvk=;
+        b=PXps/YhCcMwsIriZC2fVD/2U+60mCWcCorYO7rF7cINBjL+PV4cBi8LYRRQlEsTUD3
+         kp0ocJw/nD9RuAZ2fYTG7tUW4c7kXVTa+UELjXt1tQuo8eWfysRDvvTTv72LWtyiVHqv
+         au1VPJB6AtqTK66ABAwYpr7FMvGo4bikwDiB4nnBWOZ7UZnfNx7pj2unCN57OqcVUTjl
+         xfueIeLbzcYZBQd9+uNnP+JGQ/k/Sg2e1yjgnDzIRT2ksTYZ1cwOPPI1OG6vtfBF7X8W
+         RkVmxV/Qt7V5y1QXoX3QSyfVp1ocytnPuOUqIKClpW4jYu8VQwPtiGvRSmA1zqBSMNQI
+         2ovQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776434345; x=1777039145;
+        h=message-id:date:reply-to:cc:to:from:subject
+         :content-transfer-encoding:mime-version:x-gm-gg:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=LO8PgW2PfAuIwu+ycMUGMbnWKP5/gsHv03hfidGgBvk=;
+        b=B7vYbyb5pbFYqTME5WrXQR4YHcich9tURJ3cdeiIU+a22UwMGjGFGTQdTo6pj24Ezc
+         JMyLo4swX9vL8A9YtECdLVyvdjg4zTWJnzRCOhtKs95TGSvo2ubkRUT0/qnfj+xc2AqD
+         JRN3DzndsYuUvfZEvmL+Po09Y0PcNy0DghmYdtYnebFlWhk+/0Or4c44E7zj39fvFsqM
+         q5PeOFjkYZHKVlwWhqRtshPr6HHrL8w04D3SNBgHy+Jw212MPygjncDqdM6pTVhMYsyz
+         QYXtAo6n9Xvec0tlwvF31TMUk9PjzgXAVNXNf9aIcwq4+Gpz4I4shjQqWVzIH0kvMBbb
+         MKxQ==
+X-Gm-Message-State: AOJu0YyzTT/IraJXorn0XneKkX1WzGcCYKGNu99CMo2A7Ig1NCC1KHbn
+	Um9brDyktLulnMz2n7Ok068Ge0+WGtElzhlCQfkXOLAZgBjdFdOg/4hHDyFqjXlnNbY=
+X-Gm-Gg: AeBDieuxyttpQY0Cc6JmX1mKDKAlXT3NSxQq4UNWIVyc7GDERNxbRMnE4DFfPBXFofi
+	KlwbrdWOvWuhBfMGSeJwBs0sqZY2aiWvsvgYq+lI92QU04Os2R1+yLcHocr77Ol09oHdf94WOzJ
+	X8USVFLgTWC0N3Icc9HPfVqfsAutZEcUr+YXqEtTWTJ0zg/zOhlL29v9fggkb9eExFABbPeyeHp
+	NeX35eYIfhzmSJDSRr5sFxW97nbzOVLviDid87cEPThYHqhBPeVpEtpzWzj0ubkDJQ6wZjPEsqF
+	mDKsENVBOH+Ouj2kF0bLEESlPiCmF4Qmt2dPuFgFVre3hP3bMKZXfOcKn+cFgYB/8gO0RM9IG/v
+	on8nGIjKVY8nd4Zx1lOJgkBJjvBGSbTSCKgNbDo4P/mS1OhL+AClexigGObNvA58+hGw4IKgiZT
+	PQ/lCRuc8d6jxogmAp92xp6WNN7Ms=
+X-Received: by 2002:a05:7300:e12a:b0:2ca:bd22:6102 with SMTP id 5a478bee46e88-2e42e200939mr1103722eec.14.1776434344414;
+        Fri, 17 Apr 2026 06:59:04 -0700 (PDT)
+Received: from 8692ffc4d55e ([20.38.40.137])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2e53ccce426sm2271911eec.16.2026.04.17.06.59.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Apr 2026 06:59:03 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Pressing the power button causes the device to freeze completely
-To: Evgeny Sagatov <sagatov@ya.ru>,
- "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- LKML <linux-kernel@vger.kernel.org>,
- Michal Wilczynski <michal.wilczynski@intel.com>
-References: <184091776095270@mail.yandex.ru>
- <10843916-38a7-4d19-8c23-4b2014806eaa@leemhuis.info>
- <186071776359023@mail.yandex.ru>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <186071776359023@mail.yandex.ru>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-PPP-Message-ID: <177636091350.1878812.7694770508197627927@mxe9fb.netcup.net>
-X-NC-CID: sBzxRd94WofCwVj1pxqA/cibEeLHtf3JFoOovkkMokgPR0JuL2s=
+Content-Transfer-Encoding: 7bit
+Subject: [REGRESSION] next/pending-fixes: (build) in
+ testcases/mangle_pstate_invalid_mode_el1h (Makefile:31) [logspe...
+From: KernelCI bot <bot@kernelci.org>
+To: kernelci-results@groups.io
+Cc: regressions@lists.linux.dev, gus@collabora.com, linux-next@vger.kernel.org
+Reply-To: kernelci@lists.linux.dev
+Date: Fri, 17 Apr 2026 13:59:03 -0000
+Message-ID: <177643434320.6991.5055370416927110654@8692ffc4d55e>
 
-On 4/16/26 19:22, Evgeny Sagatov wrote:
->> Could you please try 7.0 as well?
-> I compiled 7.0.0 kernel from sources.
-> Unfortunately, this kernel also freezes when the power button is pressed.
 
-Thx for testing.
-  
->> How did you find that this causes the problem? Did you do a proper
-> bisection and thus checked if the parent of that commit really works?
->  
-> I don't think I did it correctly.
-> Because the previous commits didn't shut down the PC or cause it to
-> freeze. I think they just weren't working.
->  
-> I also tried a very simple module tity-power-button. Pressing the power
-> button when using this module also causes a full freeze.
-> I think the problem lies with the ACPI functionality, but none of kernel
-> options helped fix it.
->  
-> I'm confused.
 
-Then you likely want to properly bisect the bug. Might be best to do
-that on a Debian 12 install (where everything used to be working) by
-following this guide:
 
-https://docs.kernel.org/admin-guide/verify-bugs-and-bisect-regressions.html
 
-But be warned: the regression is old. Even if the culprit is identified
-the usual rules wrt to "no regression" might not apply, as fixing the
-regression could cause regressions for other users.
+Hello,
 
-Ciao, Thorsten
+New build issue found on next/pending-fixes:
 
-> ----------------
-> Кому: Evgeny Sagatov (sagatov@ya.ru), Rafael J. Wysocki
-> (rafael.j.wysocki@intel.com);
-> Копия: regressions@lists.linux.dev, LKML (linux-kernel@vger.kernel.org),
-> Michal Wilczynski (michal.wilczynski@intel.com);
-> Тема: Pressing the power button causes the device to freeze completely;
-> 16.04.2026, 11:23, "Thorsten Leemhuis" <regressions@leemhuis.info>:
-> 
->     [removing the stable list, this is not something for them]
-> 
->     On 4/13/26 18:46, Evgeny Sagatov wrote:
-> 
->          I have a PC with a motherboard GA-EP45T-UD3LR (Rev. 1.0) <https://
->          www.gigabyte.com/Motherboard/GA-EP45T-UD3LR-rev-10 <https://
->         www.gigabyte.com/Motherboard/GA-EP45T-UD3LR-rev-10>> and
->         processor Intel
->          Core 2 Quad Q9550.
->          Previously, I had Debian 12 with kernel 6.1 installed, and
->         pressing the
->          power button would shut down the PC as usual.
->          I updated to Debian 13 with kernel 6.12.74, and now pressing
->         the power
->          button causes the PC to freeze completely.
->           
->          I see that systemd doesn't even begin to shut down. It freezes
->          immediately after pressing the button. There's no error message in
->          console. There's no error message in the logs either.
->         Netconsole doesn't
->          report any errors, and the kernel doesn't panic. It just
->         freezes completely.
->           
->          I checked that Live CD with Debian 12 continue to shut down
->         normally,
->          but Live CD with Debian 13 freeze.
->          I tried updating and resetting the BIOS. I tried various kernel
->          parameters related to ACPI settings. I also tried kernels 6.18
->         and 6.19.
->          Nothing fixed the problem.
-> 
-> 
->     Could you please try 7.0 as well? It contains a fix for the commit you
->     mentioned below.
->      
-> 
->           
->          If I unload the "button" module, the system doesn't freeze, but
->         it also
->          doesn't shut down.
->          I built "button" module by rolling back its version to commit
->         1a20d40
->          <https://github.com/torvalds/linux/ <https://github.com/
->         torvalds/linux/>
->          commit/1a20d409c874255086e2f42a729826d490294c91>, which
->         corresponds to
->          kernel version 6.1. This module does not freeze, but does not
->         turn off
->          the PC either.
->           
->          I've found that the freezes have been occurring since commit
->         0d51157
->          <https://github.com/torvalds/linux/ <https://github.com/
->         torvalds/linux/>
->          commit/0d51157dfaac05ea66616d8a250dce04bef49a4f>.
-> 
-> 
->     That is 0d51157dfaac05 ("ACPI: button: Eliminate the driver notify
->     callback") [v6.5-rc1] from Rafael. But that is a very old commit; and
->     you seem to be switching distro versions and kernel at the same time,
->     which could interfere.
-> 
->     How did you find that this causes the problem? Did you do a proper
->     bisection and thus checked if the parent of that commit really works?
->      
-> 
->          Unfortunately, my skills are not enough to understand the
->         reason for the
->          freeze.
->           
->          I'm attaching dmesg and lspci logs.
-> 
->     Ciao, Thorsten
-> 
+---
+ in testcases/mangle_pstate_invalid_mode_el1h (Makefile:31) [logspec:kbuild,kbuild.other]
+---
 
+- dashboard: https://d.kernelci.org/i/maestro:ec180fda1c0b1d467ccb20161a74c09a0c2c25d5
+- giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+- commit HEAD:  db41a388b15c9bb61a1f6535b82537ff4081ca4c
+
+
+Please include the KernelCI tag when submitting a fix:
+
+Reported-by: kernelci.org bot <bot@kernelci.org>
+
+
+Log excerpt:
+=====================================================
+
+=====================================================
+
+
+# Builds where the incident occurred:
+
+## defconfig+CONFIG_ARM64_64K_PAGES=y on (arm64):
+- compiler: clang-21
+- config: None
+- dashboard: https://d.kernelci.org/build/maestro:69e21e839b5a968309e51dcd
+
+
+#kernelci issue maestro:ec180fda1c0b1d467ccb20161a74c09a0c2c25d5
+
+--
+This is an experimental report format. Please send feedback in!
+Talk to us at kernelci@lists.linux.dev
+
+Made with love by the KernelCI team - https://kernelci.org
