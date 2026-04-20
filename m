@@ -1,121 +1,137 @@
-Received: from mail-dl1-f49.google.com (mail-dl1-f49.google.com [74.125.82.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.162])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AD1433B96B
-	for <regressions@lists.linux.dev>; Mon, 20 Apr 2026 13:59:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 308C03290B6
+	for <regressions@lists.linux.dev>; Mon, 20 Apr 2026 14:55:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.162
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776693546; cv=none; b=nDI0pfKwKC6M3MFqop7JEH56imcMOLTd7GuJle6gdBGmh9/Gcpsj2NwdJJtB/D9kB3fyZaUjeXnz3VnK8jsOyEUSXdmzM4I4to5J5/3y+iX8tyMW6ZGYrU2O1DrppS6oobgsGWyQYhldTkgFvf3fhgN5MBlDy8lyRTQXyrt7coo=
+	t=1776696926; cv=none; b=rumQvEzm4NX+R1kwb/rDI/oQDO2VmWRP0KDVTjjj+El1zsk8sdO9Vp2mXajyorOLrMhMxOP+VaRJJKOwBPMDSwLqRs+3NYDJ52v3GcXJeHBkaNcu4ju7/q9MmmVE5YpxDU7JKMxVbU4ructXm0Clw4Ex8XOBa8NKjnhObjlW7DE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776693546; c=relaxed/simple;
-	bh=8D0zMvAZqLgFvXito3AM7jNj1K2+4eGGAy+hJjYgCCU=;
-	h=Content-Type:MIME-Version:Subject:From:To:Cc:Date:Message-ID; b=RSPf277WAyqE2XHRx6pd+KxBv4AOaOEaB2CYkoTh9utDa6WjUSGbra6AIu5q2xcmJ1HcpoXzL9IO9acHFcNh/+sJxJMOHvBdj0etBDE7t/YGk8pTh+EZoUlo9U8iE+YPhaFTDC3Zataquffy8ZeEsh3R1fSz3uIOU3WRMdImW08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org; spf=pass smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci.org header.i=@kernelci.org header.b=DMjVmdnO; arc=none smtp.client-ip=74.125.82.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernelci.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernelci.org
+	s=arc-20240116; t=1776696926; c=relaxed/simple;
+	bh=XM471VK+ELxYjQ5qPCbjOc1X0nlC4QIEoRJ23kucUKo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oP4YLjE4fwYRN7MoWi6sxrqgsb3UCyVV/qxGvTcDwYXzFUDiVm4C57cgz25jQd2S8riryP94eYYSuKDYUElx3M6LPKJwixdPo0abQ5qbdk9VL4+evT2Nvl6nPD5PfVqq8GNi9SgS8AwEZ5Exbn0jwk4Llrd/AxbhCmA/3qsvj94=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=Y89ufJes; arc=none smtp.client-ip=188.68.63.162
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci.org header.i=@kernelci.org header.b="DMjVmdnO"
-Received: by mail-dl1-f49.google.com with SMTP id a92af1059eb24-12c8cc7a77eso598413c88.1
-        for <regressions@lists.linux.dev>; Mon, 20 Apr 2026 06:59:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci.org; s=google; t=1776693545; x=1777298345; darn=lists.linux.dev;
-        h=message-id:date:reply-to:cc:to:from:subject
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ADrJDYGplV5ltLlQ5RjbmI+FjLqRGfvA6e0BluhS7fg=;
-        b=DMjVmdnOgVSLfz8ETVn5S6zq4vXehxLVCJ1nZUOJKkp2zrCZLiwidIoRsSan2ulU88
-         08J0ylCOKmYEgneXBD9cK2QE6TJvECDdMRnt+6RRtBdE1yIr31xuXSQSXfIZvfcLeKAh
-         tRzC5t5qlhdpAbVB8EFHtZ7Pg9RijWQe0Io7iSunWBfktOkUcSxCRzvFICgrOHTz9CLg
-         cPQVErKU48m2E8JbN2EpzoAIG+dF+T97I+mS13gdBNJmLAcpVooZPIn0Y2uZJyPRtvtj
-         5Exa21r16gGWhLoY14ceZh7sK11L+3mSUIBhVTIkalLKxx8e4OXf9ZysTAUT2BIMoZoa
-         CbWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776693545; x=1777298345;
-        h=message-id:date:reply-to:cc:to:from:subject
-         :content-transfer-encoding:mime-version:x-gm-gg:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ADrJDYGplV5ltLlQ5RjbmI+FjLqRGfvA6e0BluhS7fg=;
-        b=G0GTcqJDWnhF1FDtqRbQz5CK/2J3mcSA5gW64KPdp+vXPnAQ6/SgGcy9E68VCg7DTU
-         r1WPIlkmlyr1yHx8IZDi1C++HPBk8ZE2s3/qfK11nG0+jOnCCzj4L7X+4IEVai3cpokH
-         DdzW009454MymtH6Jj5M+R0nX4KSkK1WGCE+mnl4lLaqhOQxtxa8mv9fldpqa3tRWdDd
-         4gMlYHy5fGz6WoeOF8VqXpy+Rv087nopxAy3E2tXXW8Yqr11Yk9avdI3NflwFeC3tJ2S
-         oyrnMmFH/3cNqoF2nVVLOXSmdaw67QcKJQGUAE4j0Ep7t7j8lXhgGSoLv0IjCLYiqVY0
-         H4Bg==
-X-Gm-Message-State: AOJu0Yy7bLAkQ5oadPFgV732B2+nTqiheMXJV0XNsoegpDQ+muW+kfRc
-	3H1XwhDgGHgO4wQ46jDCIuNx1ZTK635SDBHBAAyCPnK7LWEq7VBzBam9TdE2kd1XAmz5MuPaDI4
-	ZusCo
-X-Gm-Gg: AeBDievsU6oA2ZIglbHX/kvaic3Di6xJnw08ZnjoM95CcYyv8MURc6xQVKN/Ckdtg/z
-	bKij6s28rO53IQBaOaJMGbx8YePuqe+6v/bPWmfhqrfwMYI2W7wl598fIFAtm82R5nSsRbcjEu/
-	aLe1ccy+aE8hjjrpI5zsXcAJAiM6XdAMyzUityWcke8XdG61I4E5Yjr3fYAVaKREd4sTPwoDPis
-	DI8vkrYcpIcAkx+gz9fA0duTryBUNP56SGstTqdj6ozwlXjpJCv6REHbtil29x1NPLhwxKRU2fO
-	c9ssTDzMth79FaYwoTG+BLzNeOGDPbwwPnpXTJUtwhfk8WUvirx27uimzkRru/E+kUY+1mhVtMw
-	6zTsoYhEMAAdqleYv6AybbpNkaRLHbMW89HGsKO1lbrHPxXXnKvp1K0bA9Z5QMjetvGFlDwnvCS
-	b0mq4kZbEfOskqXOyCk7R34Sv3gN4=
-X-Received: by 2002:a05:7022:2524:b0:119:e569:f874 with SMTP id a92af1059eb24-12c73b4abafmr4983968c88.17.1776693544578;
-        Mon, 20 Apr 2026 06:59:04 -0700 (PDT)
-Received: from 062ea10430ee ([20.38.40.137])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-12c919266f6sm2093081c88.1.2026.04.20.06.59.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2026 06:59:03 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="Y89ufJes"
+Received: from mors-relay-8201.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4fzpKC32hpz45s8;
+	Mon, 20 Apr 2026 16:49:03 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1776696543;
+	bh=XM471VK+ELxYjQ5qPCbjOc1X0nlC4QIEoRJ23kucUKo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Y89ufJes+/vdz6ZovmVwjDHWdPOtUFJcOOtv+cInG6BYXvHQdT2vik8pTPtja9aIG
+	 3kb3xa1p8TavXtUDt7FxOAFIdyYjs+XIv2x3vKVSTR7xOkeNPkSSZ27JoK7WPX4gKm
+	 7MfMEVlIvmd+Aekv+TDDQtS7BmFR8D/y8a8JQO7x5/Ss83AszhdnCiMR2+HNqPwDxL
+	 c9BYlsl/uIaR2/XI75nGWQxcv1HRvMZKkwB3rszKqpQv4c/6sLMfd5jg5HXQpPSqkM
+	 gWaPmcSHv11O//YxRFtpvkX0JluZgtV8b9381H/BaQSe5W2j794/JaXQAYK3etBhyn
+	 zlR0HfBYVmrsQ==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4fzpKC2Gszz45r9;
+	Mon, 20 Apr 2026 16:49:03 +0200 (CEST)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4fzpK92dnVz8svZ;
+	Mon, 20 Apr 2026 16:49:01 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 85E27635C4;
+	Mon, 20 Apr 2026 16:49:00 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <f0b79dd8-00e8-4352-b9ac-20ee6c114086@leemhuis.info>
+Date: Mon, 20 Apr 2026 16:48:58 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] VRR not detected on a DisplayPort monitor using an
+ AMD GPU
+To: Ivan Sergeev <ivan8215145640@gmail.com>, Melissa Wen <mwen@igalia.com>,
+ Mario Limonciello <superm1@kernel.org>, amd-gfx@lists.freedesktop.org
+Cc: dri-devel@lists.freedesktop.org, regressions@lists.linux.dev,
+ mario.limonciello@amd.com, alex.hung@amd.com, daniel.wheeler@amd.com,
+ rodrigo.siqueira@amd.com, alexander.deucher@amd.com, harry.wentland@amd.com,
+ sunpeng.li@amd.com, christian.koenig@amd.com, huangalex409@gmail.com,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: 
+ <CAKx_Wg7_HBxuq5W4T_AmoFYJGQpa6TAS_Fx9SUzyy1itPmj5Bw@mail.gmail.com>
+ <090d89a2-4f80-44ef-827c-6462d8948493@kernel.org>
+ <DGJFVPAQJA15.378GMU7XZXLU@gmail.com> <DGJGDIRQWDG7.XHHKF6UQP0HG@gmail.com>
+ <c70fe261-7fb0-4af5-b755-f02b193c8c5f@kernel.org>
+ <DGJH30US2XMK.S2HOHR14LIW0@gmail.com>
+ <bed447c7-07a3-46a8-9bcf-da352810883b@igalia.com>
+ <DGK98QFUDRR2.1RCLDXI8XRBFR@gmail.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+X-Enigmail-Draft-Status: N11222
+Autocrypt: addr=linux@leemhuis.info; keydata=
+ xsFNBFJ4AQ0BEADCz16x4kl/YGBegAsYXJMjFRi3QOr2YMmcNuu1fdsi3XnM+xMRaukWby47
+ JcsZYLDKRHTQ/Lalw9L1HI3NRwK+9ayjg31wFdekgsuPbu4x5RGDIfyNpd378Upa8SUmvHik
+ apCnzsxPTEE4Z2KUxBIwTvg+snEjgZ03EIQEi5cKmnlaUynNqv3xaGstx5jMCEnR2X54rH8j
+ QPvo2l5/79Po58f6DhxV2RrOrOjQIQcPZ6kUqwLi6EQOi92NS9Uy6jbZcrMqPIRqJZ/tTKIR
+ OLWsEjNrc3PMcve+NmORiEgLFclN8kHbPl1tLo4M5jN9xmsa0OZv3M0katqW8kC1hzR7mhz+
+ Rv4MgnbkPDDO086HjQBlS6Zzo49fQB2JErs5nZ0mwkqlETu6emhxneAMcc67+ZtTeUj54K2y
+ Iu8kk6ghaUAfgMqkdIzeSfhO8eURMhvwzSpsqhUs7pIj4u0TPN8OFAvxE/3adoUwMaB+/plk
+ sNe9RsHHPV+7LGADZ6OzOWWftk34QLTVTcz02bGyxLNIkhY+vIJpZWX9UrfGdHSiyYThHCIy
+ /dLz95b9EG+1tbCIyNynr9TjIOmtLOk7ssB3kL3XQGgmdQ+rJ3zckJUQapLKP2YfBi+8P1iP
+ rKkYtbWk0u/FmCbxcBA31KqXQZoR4cd1PJ1PDCe7/DxeoYMVuwARAQABzSdUaG9yc3RlbiBM
+ ZWVtaHVpcyA8bGludXhAbGVlbWh1aXMuaW5mbz7CwZQEEwEKAD4CGwMFCwkIBwMFFQoJCAsF
+ FgIDAQACHgECF4AWIQSoq8a+lZZX4oPULXVytubvTFg9LQUCaOO74gUJHfEI0wAKCRBytubv
+ TFg9Lc4iD/4omf2z88yGmior2f1BCQTAWxI2Em3S4EJY2+Drs8ZrJ1vNvdWgBrqbOtxN6xHF
+ uvrpM6nbYIoNyZpsZrqS1mCA4L7FwceFBaT9CTlQsZLVV/vQvh2/3vbj6pQbCSi7iemXklF7
+ y6qMfA7rirvojSJZ2mi6tKIQnD2ndVhSsxmo/mAAJc4tiEL+wkdaX1p7bh2Ainp6sfxTqL6h
+ z1kYyjnijpnHaPgQ6GQeGG1y+TSQFKkb/FylDLj3b3efzyNkRjSohcauTuYIq7bniw7sI8qY
+ KUuUkrw8Ogi4e6GfBDgsgHDngDn6jUR2wDAiT6iR7qsoxA+SrJDoeiWS/SK5KRgiKMt66rx1
+ Jq6JowukzNxT3wtXKuChKP3EDzH9aD+U539szyKjfn5LyfHBmSfR42Iz0sofE4O89yvp0bYz
+ GDmlgDpYWZN40IFERfCSxqhtHG1X6mQgxS0MknwoGkNRV43L3TTvuiNrsy6Mto7rrQh0epSn
+ +hxwwS0bOTgJQgOO4fkTvto2sEBYXahWvmsEFdLMOcAj2t7gJ+XQLMsBypbo94yFYfCqCemJ
+ +zU5X8yDUeYDNXdR2veePdS3Baz23/YEBCOtw+A9CP0U4ImXzp82U+SiwYEEQIGWx+aVjf4n
+ RZ/LLSospzO944PPK+Na+30BERaEjx04MEB9ByDFdfkSbM7BTQRSeAENARAAzu/3satWzly6
+ +Lqi5dTFS9+hKvFMtdRb/vW4o9CQsMqL2BJGoE4uXvy3cancvcyodzTXCUxbesNP779JqeHy
+ s7WkF2mtLVX2lnyXSUBm/ONwasuK7KLz8qusseUssvjJPDdw8mRLAWvjcsYsZ0qgIU6kBbvY
+ ckUWkbJj/0kuQCmmulRMcaQRrRYrk7ZdUOjaYmjKR+UJHljxLgeregyiXulRJxCphP5migoy
+ ioa1eset8iF9fhb+YWY16X1I3TnucVCiXixzxwn3uwiVGg28n+vdfZ5lackCOj6iK4+lfzld
+ z4NfIXK+8/R1wD9yOj1rr3OsjDqOaugoMxgEFOiwhQDiJlRKVaDbfmC1G5N1YfQIn90znEYc
+ M7+Sp8Rc5RUgN5yfuwyicifIJQCtiWgjF8ttcIEuKg0TmGb6HQHAtGaBXKyXGQulD1CmBHIW
+ zg7bGge5R66hdbq1BiMX5Qdk/o3Sr2OLCrxWhqMdreJFLzboEc0S13BCxVglnPqdv5sd7veb
+ 0az5LGS6zyVTdTbuPUu4C1ZbstPbuCBwSwe3ERpvpmdIzHtIK4G9iGIR3Seo0oWOzQvkFn8m
+ 2k6H2/Delz9IcHEefSe5u0GjIA18bZEt7R2k8CMZ84vpyWOchgwXK2DNXAOzq4zwV8W4TiYi
+ FiIVXfSj185vCpuE7j0ugp0AEQEAAcLBfAQYAQoAJgIbDBYhBKirxr6Vllfig9QtdXK25u9M
+ WD0tBQJo47viBQkd8QjTAAoJEHK25u9MWD0tCH8P/1b+AZ8K3D4TCBzXNS0muN6pLnISzFa0
+ cWcylwxX2TrZeGpJkg14v2R0cDjLRre9toM44izLaz4SKyfgcBSj9XET0103cVXUKt6SgT1o
+ tevoEqFMKKp3vjDpKEnrcOSOCnfH9W0mXx/jDWbjlKbBlN7UBVoZD/FMM5Ul0KSVFJ9Uij0Z
+ S2WAg50NQi71NBDPcga21BMajHKLFzb4wlBWSmWyryXI6ouabvsbsLjkW3IYl2JupTbK3viH
+ pMRIZVb/serLqhJgpaakqgV7/jDplNEr/fxkmhjBU7AlUYXe2BRkUCL5B8KeuGGvG0AEIQR0
+ dP6QlNNBV7VmJnbU8V2X50ZNozdcvIB4J4ncK4OznKMpfbmSKm3t9Ui/cdEK+N096ch6dCAh
+ AeZ9dnTC7ncr7vFHaGqvRC5xwpbJLg3xM/BvLUV6nNAejZeAXcTJtOM9XobCz/GeeT9prYhw
+ 8zG721N4hWyyLALtGUKIVWZvBVKQIGQRPtNC7s9NVeLIMqoH7qeDfkf10XL9tvSSDY6KVl1n
+ K0gzPCKcBaJ2pA1xd4pQTjf4jAHHM4diztaXqnh4OFsu3HOTAJh1ZtLvYVj5y9GFCq2azqTD
+ pPI3FGMkRipwxdKGAO7tJVzM7u+/+83RyUjgAbkkkD1doWIl+iGZ4s/Jxejw1yRH0R5/uTaB MEK4
+In-Reply-To: <DGK98QFUDRR2.1RCLDXI8XRBFR@gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Subject: [REGRESSION] mainline/master: (build) in
- /tmp/kci/artifacts/build/kselftest/arm64/signal/fake_sigreturn_...
-From: KernelCI bot <bot@kernelci.org>
-To: kernelci-results@groups.io
-Cc: regressions@lists.linux.dev, gus@collabora.com, laura.nao@collabora.com,
- shreeya.patel@collabora.com, broonie@kernel.org
-Reply-To: kernelci@lists.linux.dev
-Date: Mon, 20 Apr 2026 13:59:03 -0000
-Message-ID: <177669354313.1365.5569470091259719174@062ea10430ee>
+X-PPP-Message-ID: <177669654117.1695370.346976246835868325@mxe9fb.netcup.net>
+X-NC-CID: t+PJXoV5THhxAY/EbF03iQSZ8CoExLSOGkJa2jIGBA4msTBXPQk=
 
+On 2/21/26 02:39, Ivan Sergeev wrote:
+> On Sat Feb 21, 2026 at 1:47 AM MSK, Melissa Wen wrote:
+>> Can you check if the attached patch resolves the issue?
+> The patch does resolve the issue!
 
+Melissa, was this ever resolved? I saw that you posted the patch Ivan
+tested as RFC here:
+https://lore.kernel.org/dri-devel/20260223203528.213275-1-mwen@igalia.com/
 
+But from the outside it looks like nothing happened since then, which
+made me wonder if this regression was ever resolved.
 
-
-Hello,
-
-New build issue found on mainline/master:
-
----
- in /tmp/kci/artifacts/build/kselftest/arm64/signal/fake_sigreturn_bad_size (Makefile:21) [logspec:kbuild,kbuild.other]
----
-
-- dashboard: https://d.kernelci.org/i/maestro:09ed4fa8501726a1a9818127c531c15616e20af1
-- giturl: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-- commit HEAD:  c1f49dea2b8f335813d3b348fd39117fb8efb428
-
-
-Please include the KernelCI tag when submitting a fix:
-
-Reported-by: kernelci.org bot <bot@kernelci.org>
-
-
-Log excerpt:
-=====================================================
-': File exists
-
-=====================================================
-
-
-# Builds where the incident occurred:
-
-## defconfig+allmodconfig on (arm64):
-- compiler: clang-21
-- config: None
-- dashboard: https://d.kernelci.org/build/maestro:69e559ce9b5a968309e7d958
-
-
-#kernelci issue maestro:09ed4fa8501726a1a9818127c531c15616e20af1
-
---
-This is an experimental report format. Please send feedback in!
-Talk to us at kernelci@lists.linux.dev
-
-Made with love by the KernelCI team - https://kernelci.org
+Ciao, Thorsten
