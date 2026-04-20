@@ -1,232 +1,188 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [194.59.206.189])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F7452C158E
-	for <regressions@lists.linux.dev>; Mon, 20 Apr 2026 06:55:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.59.206.189
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776668113; cv=none; b=bAKYsDKzbX3rzQTVUMg/poswOcnTmzUb5+8pFXIcJBPCJvomeOQfB49icnA8mlKKPaC+QaHPmfuSZlSrMWsCUfzQcafczIh2GbgG4+G2pNaP1MhSphVjxiCeBW8FqJmNDGDo2kxVMC42fNyp7Tb5cP822fYs+1DLhPbBv5ZAdGQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776668113; c=relaxed/simple;
-	bh=QksXSEtWj/aqlOiYUoLYSYKE/b9f98zhmw8Bkq2GjP0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rl7euQt6JjQo0A/MMlLyeA47qn7PyeZgs7hdKlrV5lTEXjVGFiepbnE7KErsWAkTZoewwDLHdyhy0FFPRLDyW3I9n0Az9mksf2cs5Am679sYggUBMCemdtzesrf2R4cteGAMb587YWChqDDc7D8jnynXuX/LAIg6JfxPhj4daxw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=SvddeVIQ; arc=none smtp.client-ip=194.59.206.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7B06383C99
+	for <regressions@lists.linux.dev>; Mon, 20 Apr 2026 07:59:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.48
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776671962; cv=pass; b=cw3p8S7MSablk8crcFnjArIcLqBxCF5xfP32lF1DvLRZ35O21RfU60fhpIzgCn1pR57j3nVXwW8OWP/oRo+5jR0vOa4ykGwBiXrvR0a4mcAvABeCbMWIfWL4K69ADK8yhCg+0SIvB1RJfOXgtYjW6JiMTkLhaSFZD8NwBAxvvRs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776671962; c=relaxed/simple;
+	bh=skJ5R+wFeOukZf+cjPX17CzqfeE4aSfaDg5kcm2isn4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rS3MM4lj7EIoh5EAZGIWUcXeABjCEAS2taQhEZbu8r07qINkD+C9WWLg0klbF8ZN/fMRjt7/TbgXVG70sX+z8iISyO2lZ6LOMQbOKLj1h8zmp9GsyVF5E9Fxf7hj0TiQo+bI6xmeQRddw3G4ptRIJa0kf8ndvnX0F65zU1nY1wU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cM9QOLJP; arc=pass smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="SvddeVIQ"
-Received: from relay02-mors.netcup.net (localhost [127.0.0.1])
-	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4fzbpF4kz2z48fK;
-	Mon, 20 Apr 2026 08:55:01 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1776668101;
-	bh=QksXSEtWj/aqlOiYUoLYSYKE/b9f98zhmw8Bkq2GjP0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=SvddeVIQfuEAXKxiAaLVhBqTqhQsh4X7LNRulnnJkXzh+CQwxkI9cb5BL1Ss16N/n
-	 Q2r0pvoqQQ3Tjg4gLwMwv6DpDeLbDl/M87GyvriMTaGjoiNQdCHeYjnaqOapS9PLQW
-	 RqOthlRbYSlVUbN0E5L2YvNl2M2Iuzmd9MyPGoUNlCTJ1QvwlE/DjGmjJXg92roTm5
-	 BCsJDs1GsU5X4Jw7r47zV1ZXNLMbR82/cVxBIaMSEi8pNxKgjiIOV19PZg3OT4yjru
-	 b2aPbMJrqWgxovAhjH/sv+l2Alb2ChP9vX0+nPVQHl2V1jfQ1MJVI4KjwYYo6bH2im
-	 l0l8R2nZFKVpw==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4fzbpF42nXz7wjJ;
-	Mon, 20 Apr 2026 08:55:01 +0200 (CEST)
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4fzbpD660qz8sZg;
-	Mon, 20 Apr 2026 08:55:00 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 13B4E635C4;
-	Mon, 20 Apr 2026 08:55:00 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <d274394d-2282-412e-80ad-bbe2c1a41b8a@leemhuis.info>
-Date: Mon, 20 Apr 2026 08:54:58 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cM9QOLJP"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ba699316b42so158086166b.3
+        for <regressions@lists.linux.dev>; Mon, 20 Apr 2026 00:59:20 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1776671959; cv=none;
+        d=google.com; s=arc-20240605;
+        b=DhNI8C2J8jHNfxCH7AlN0hTIReMhUuf7znNJJyl+Bq5jr2F6Ru7DRFzQdX0Zp6xsyR
+         NnK5roaZqI4mid13FMfyfxQG9Lqxy/l8QrFVFAGuLY4wt/zpeTTjeFZyAj1QL8LiAUZR
+         WCBAXFsFAhmx5plknJXNV52ZUe7Uaj9ktyLgV6aPtzr4DhSorDqel6G7BLdI+Cawl9Wl
+         vzDrGHv5VujzMyNUPWJUf2OloX+R0X6AOJWLRGn7JzPEHntkFFcekWkXEi3c9+iaNtIs
+         lGpiPeH3dkO6+yeiOzCuixQc83KcjFxcmbGtOTG5En9PK2M+eIm20km7poQvKHMH7BSK
+         oAsA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=qX8bL6820CZ5JwymJvdCU8o9V6FV5GdqfCje7/oI55k=;
+        fh=5k9SIAHbCxta9l2NVAxXAPhWBOGlOcYHEE/Bxd5yHLE=;
+        b=BUW8UMmSQMUAoJJcoBVoSJxJrbrXQFN+kcu1SM2DaQcmg+8MXhAXD3XrGo9Ucx8pem
+         iaL0dkXghobhN5JD3Hp27OI9RL1JsJ/it8THz6fVuVC49fhKfiebZYHK+40HhHib7A5K
+         FfvQ4KvezvLShB1nY/EV0edkuETY0V2x3kUtwt+ptKIa82u2SrrjsqRiahFD6+iqh41e
+         J2gOOu7B9ayB2OUpqOL3br1WqUZAXpKCH4Me1YvmrIv1YTQtOsi62grrXeGTWfrCeSEi
+         dutXoXlj1j9WxDPfODGyP/36AM1vOOBaKXVBb6dRolYlz/DWMGd9A+dOxmm/SFRwznEJ
+         LQhA==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1776671959; x=1777276759; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qX8bL6820CZ5JwymJvdCU8o9V6FV5GdqfCje7/oI55k=;
+        b=cM9QOLJPNpQLKnEVpBjm9Tk4zt/5iA4dByIokptmYaFpBMqv33irCfSwkjj1m0yo4p
+         yz0vVS0gjNsKbsFUUwTwcUZXHF/1sfOsx/YlGR1SS92r9sf9AqTas3STnPPxnSSE6Be+
+         SqeEuFGutrUE/Uq1+IvurKtXgcE+aq2rAmD8InFBUc68DCDUBvhLUT+whLqLFdXAy5vS
+         UWpD66hhGDRqFMHQERBJlNeHqAaN8pyvh6PwhIh0K5dC19wyN/CPGNTkKlW8BwXY9o7x
+         8qybuLJ4vrElM/rsnJiJum3YF3t9d+jCBPx1P2O/dUj9ai1Fj0cX6E2DRXpWEtWxVa/3
+         MxJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776671959; x=1777276759;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=qX8bL6820CZ5JwymJvdCU8o9V6FV5GdqfCje7/oI55k=;
+        b=lp2kh0vb9VHvbmGQYsak/i0MECq06GSJk3Cv6BKFQra6Dg9wIoZj3rSw1Wp+4P6UEf
+         jc6TJUzFyhn96+JpPHubVxxTBThhUet29hYiGpqY0ZzLMehT5k3Ihfayizu5UyJachTo
+         FxbzgZUA5e/fEesUZl2E/JMQvNNVJX69oQqeLrY1t8L4gQs8n5xDayUCTwGQNJ1zf1wk
+         UubrjvDbem8mwnYZbp5tHOYFbqWDX6GBqfBz9ZE9/1Q2JAQsoP7MlttMUgZCIVrOcv8Y
+         E31XUu48xc+6kKelHidQ929mzmFDe/t/yMHuAe39c6jdB48SAhvlcvbW8KDXch2HSMbf
+         HFNw==
+X-Forwarded-Encrypted: i=1; AFNElJ/eYNczR02g7Mlzpilq5AKt1gudt1AUqtt6Nst4RHC3Eg7XLOiL3Wb5Ny9E7yrSwctTdThC5ilbupkA1Q==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwJjOl8OKEdRMeaqwQRdncOACkMBTpTV/jlgjJZWvPBDJOSfEbV
+	1TSx67aQPU5/3tPfPVceJLIeXNeObhGiXGWgztMqvisuCR+EeRO8PR2yamD5w2XZEWEExrDEXsT
+	uh1pUpVnKexTkJ78SC9QsvOmi7g/7RG4=
+X-Gm-Gg: AeBDieuHL4UX7XGHlfNZoCxZ6BzyfNl5Urp7DVez7H4oULQqQj2BWYvRxb89HLbkK6i
+	+4fScI9T64ewZ+tOb9011koszCGwJlPc0v3gVsS/alhj116rzmLBOqybtq5vN/+uEWsvcKqgTpp
+	OsdNHsSAVBgPfhi6bHUfwPR7GR4BFTzWYlFJvx6q9ljMiztuaYDPraHJy2US2lMJLuWaH0g42Ph
+	qthpO38X36/tzJgZt0VSi+qcafm8LNGwetifb5IVz+nCho/I6ise12tsdpSMfPzRbgHYcuv99Ns
+	MPtqPybQHKW9rtbA9ZqNuYRgOR2fTFdShxLGt3rTpto7FWavDWUMduLJCncI7Ec=
+X-Received: by 2002:a17:907:6a16:b0:b9c:2c55:3384 with SMTP id
+ a640c23a62f3a-ba41adf9231mr607331666b.31.1776671958701; Mon, 20 Apr 2026
+ 00:59:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Pressing the power button causes the device to freeze completely
-To: "Sagatov, Evgeniy" <esagatov@amt.ru>
-Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- LKML <linux-kernel@vger.kernel.org>,
- Michal Wilczynski <michal.wilczynski@intel.com>
-References: <c64d69bb-9df9-46b7-a1ad-aada30310d36@leemhuis.info>
- <26521776666243@mail.yandex.ru> <d161effaca5a456dabcfbb7dbbf105d8@amt.ru>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <d161effaca5a456dabcfbb7dbbf105d8@amt.ru>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-PPP-Message-ID: 
- <177666810036.3331542.10164091241133765747@mxe9fb.netcup.net>
-X-NC-CID: WhuB8YLoSje+NKsxhK36REm6pNLkySTgDvRz8qO2bolbo7suSOQ=
+References: <CAHWLEDHfXZScF5jNDzgOxGXf-MBDcVNtqW0DbNz8Ra8rtcuL+w@mail.gmail.com>
+ <CAOdxtTbwipkyAfDakLAB6aVp6YkPWtKpDdVDUTz88WDB-18HXQ@mail.gmail.com>
+ <CAOQ4uxhUn6oCBuVJqZu+FcMx8XeAQHZbXFAGon4Xeg2SPLJW_A@mail.gmail.com> <CAOdxtTaWWu_7eJWu68zf28zHQP3Y--vXTfbGFsceO47BpN3qxA@mail.gmail.com>
+In-Reply-To: <CAOdxtTaWWu_7eJWu68zf28zHQP3Y--vXTfbGFsceO47BpN3qxA@mail.gmail.com>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Mon, 20 Apr 2026 09:59:06 +0200
+X-Gm-Features: AQROBzDzAqpFjrbD5bTYNQHJCrGk2bhPT57K41uT-FxOcAInwVKNr2-vgwcmqn0
+Message-ID: <CAOQ4uxhCNhGinePrnkSfT9Mtf4o5FmBX7mTA2m4miCMOt3mJqA@mail.gmail.com>
+Subject: Re: [REGRESSION] Return change in 6.12.80+ with volatile mounting
+To: Chenglong Tang <chenglongtang@google.com>
+Cc: Derek Taylor <ddtaylor@google.com>, stable@vger.kernel.org, 
+	regressions@lists.linux.dev, Kevin Berry <kpberry@google.com>, 
+	overlayfs <linux-unionfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 4/20/26 08:41, Sagatov, Evgeniy wrote:
-> Hello Thorsten,
-> 
-> Thanks for the detailed manual!
-> 
-> I determined that the problem started between versions 6.7.12 and 6.8-rc1. Then I ran a 'git bisect' according to the manual.
-> 
-> Result:
-> b0d326da462e20285236e11e4cbc32085de9f363 is the first bad commit
-> commit b0d326da462e20285236e11e4cbc32085de9f363
-> Merge: 8c94ccc7cd69 e37617c8e53a
-> Author: Linus Torvalds <torvalds@linux-foundation.org>
-> Date:   Thu Jan 18 11:57:33 2024 -0800
-> 
->     Merge tag 'sched-urgent-2024-01-18' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
+On Mon, Apr 20, 2026 at 8:31=E2=80=AFAM Chenglong Tang <chenglongtang@googl=
+e.com> wrote:
+>
+> Hi, Amir,
+>
+> Thanks for looking into this! To answer your questions:
+>
+> 1. Production vs. Test Suite Impact
+>
+> The immediate failure we encountered is in containerd's integration
+> test suite (TestImageVolumeCheckVolatileOption). The test explicitly
+> reads /proc/mounts and expects the exact string "volatile".
+>
+> In default production, containerd passes the legacy "volatile" string
+> to the mount syscall, which your patch correctly handles under the
+> hood. So the standard "happy path" is not broken in production.
+>
+> 2. The purpose of WithTempMount() / RemoveVolatileOption
+>
+> Containerd regularly makes temporary overlay mounts (e.g., for
+> unpacking layers). Because overlayfs rejects reusing upper/work dirs
+> from a volatile mount, containerd uses RemoveVolatileOption to strip
+> the volatile flag before these temporary mounts.
+>
+> Currently, containerd's RemoveVolatileOption does an exact string
+> match for "volatile". While it works for the default path, there is a
+> production edge case: if a user explicitly configures their container
+> runtime to use the new "fsync=3Dvolatile" option, older containerd
+> binaries will fail to strip it, and the temporary mounts will be
+> rejected by the kernel.
 
-This is a merge commit. This might be right, but often it is not. Can
-you please retest commits 8c94ccc7cd691472461448f98e2372c75849406c,
-e37617c8e53a1f7fcba6d5e1041f4fd8a2425c27 and
-b0d326da462e20285236e11e4cbc32085de9f363 just to be sure and then share
-your results? tia!
+I need to challenge this specific argument because I do not agree
+that this edge case could be considered a regression at all.
 
-Ciao Thorsten
+An admin from the past could not have set an explicit
+"fsync=3Dvolatile" mount option.
 
->     Pull scheduler fix from Ingo Molnar:
->      "Fix a cpufreq related performance regression on certain systems, where
->       the CPU would remain at the lowest frequency, degrading performance
->       substantially"
-> 
->     * tag 'sched-urgent-2024-01-18' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip:
->       sched/fair: Fix frequency selection for non-invariant case
-> 
->  kernel/sched/cpufreq_schedutil.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> ----
-> Sincerely, Evgeny Sagatov
-> 
->  ----------------
-> 16.04.2026, 20:35, Thorsten Leemhuis (mailto:regressions@leemhuis.info):
-> To: Evgeny Sagatov (mailto:sagatov@ya.ru), Rafael J. Wysocki (mailto:rafael.j.wysocki@intel.com);
-> Copy: mailto:regressions@lists.linux.dev, LKML (mailto:linux-kernel@vger.kernel.org), Michal Wilczynski (mailto:michal.wilczynski@intel.com);
-> Topic: Pressing the power button causes the device to freeze completely;
->  
-> On 4/16/26 19:22, Evgeny Sagatov wrote:
->  Could you please try 7.0 as well?
->  I compiled 7.0.0 kernel from sources.
->  Unfortunately, this kernel also freezes when the power button is pressed.
-> 
-> Thx for testing.
->   
->  How did you find that this causes the problem? Did you do a proper
->  bisection and thus checked if the parent of that commit really works?
->   
->  I don't think I did it correctly.
->  Because the previous commits didn't shut down the PC or cause it to
->  freeze. I think they just weren't working.
->   
->  I also tried a very simple module tity-power-button. Pressing the power
->  button when using this module also causes a full freeze.
->  I think the problem lies with the ACPI functionality, but none of kernel
->  options helped fix it.
->   
->  I'm confused.
-> 
-> Then you likely want to properly bisect the bug. Might be best to do
-> that on a Debian 12 install (where everything used to be working) by
-> following this guide:
-> 
-> https://docs.kernel.org/admin-guide/verify-bugs-and-bisect-regressions.html
-> 
-> But be warned: the regression is old. Even if the culprit is identified
-> the usual rules wrt to "no regression" might not apply, as fixing the
-> regression could cause regressions for other users.
-> 
-> Ciao, Thorsten
->  
->  ----------------
->  To: Evgeny Sagatov (mailto:sagatov@ya.ru), Rafael J. Wysocki
->  (mailto:rafael.j.wysocki@intel.com);
->  Copy: mailto:regressions@lists.linux.dev, LKML (mailto:linux-kernel@vger.kernel.org),
->  Michal Wilczynski (mailto:michal.wilczynski@intel.com);
->  Topic: Pressing the power button causes the device to freeze completely;
->  16.04.2026, 11:23, "Thorsten Leemhuis" <mailto:regressions@leemhuis.info>:
->  
->      [removing the stable list, this is not something for them]
->  
->      On 4/13/26 18:46, Evgeny Sagatov wrote:
->  
->           I have a PC with a motherboard GA-EP45T-UD3LR (Rev. 1.0) <https://
->           https://www.gigabyte.com/Motherboard/GA-EP45T-UD3LR-rev-10 <https://
->          https://www.gigabyte.com/Motherboard/GA-EP45T-UD3LR-rev-10>> and
->          processor Intel
->           Core 2 Quad Q9550.
->           Previously, I had Debian 12 with kernel 6.1 installed, and
->          pressing the
->           power button would shut down the PC as usual.
->           I updated to Debian 13 with kernel 6.12.74, and now pressing
->          the power
->           button causes the PC to freeze completely.
->            
->           I see that systemd doesn't even begin to shut down. It freezes
->           immediately after pressing the button. There's no error message in
->           console. There's no error message in the logs either.
->          Netconsole doesn't
->           report any errors, and the kernel doesn't panic. It just
->          freezes completely.
->            
->           I checked that Live CD with Debian 12 continue to shut down
->          normally,
->           but Live CD with Debian 13 freeze.
->           I tried updating and resetting the BIOS. I tried various kernel
->           parameters related to ACPI settings. I also tried kernels 6.18
->          and 6.19.
->           Nothing fixed the problem.
->  
->  
->      Could you please try 7.0 as well? It contains a fix for the commit you
->      mentioned below.
->       
->  
->            
->           If I unload the "button" module, the system doesn't freeze, but
->          it also
->           doesn't shut down.
->           I built "button" module by rolling back its version to commit
->          1a20d40
->           <https://github.com/torvalds/linux/ <https://github.com/
->          torvalds/linux/>
->           commit/1a20d409c874255086e2f42a729826d490294c91>, which
->          corresponds to
->           kernel version 6.1. This module does not freeze, but does not
->          turn off
->           the PC either.
->            
->           I've found that the freezes have been occurring since commit
->          0d51157
->           <https://github.com/torvalds/linux/ <https://github.com/
->          torvalds/linux/>
->           commit/0d51157dfaac05ea66616d8a250dce04bef49a4f>.
->  
->  
->      That is 0d51157dfaac05 ("ACPI: button: Eliminate the driver notify
->      callback") [v6.5-rc1] from Rafael. But that is a very old commit; and
->      you seem to be switching distro versions and kernel at the same time,
->      which could interfere.
->  
->      How did you find that this causes the problem? Did you do a proper
->      bisection and thus checked if the parent of that commit really works?
->       
->  
->           Unfortunately, my skills are not enough to understand the
->          reason for the
->           freeze.
->            
->           I'm attaching dmesg and lspci logs.
->  
->      Ciao, Thorsten
-> 
+Though experiment - overlayfs adds a new mode fsync=3Doff
+which is more loose than "volatile" because "volatile" can actually
+return error on fsync in some cases.
 
+Overlayfs would also not allow to reuse workdir from such
+a mount.
+
+So would you then claim that adding the new mount option
+"fsync=3Doff" is a regression because of the edge case that an admin
+decided to explicitly add "fsync=3Doff" and RemoveVolatileOption()
+does not handle it.
+
+I don't buy it.
+
+There is a more correct way to handle this situation and it is
+documented in overlayfs.rst:
+
+"When overlay is mounted with "volatile" option, the directory
+"$workdir/work/incompat/volatile" is created.  During next mount, overlay
+checks for this directory and refuses to mount if present. This is a strong
+indicator that the user should discard upper and work directories and creat=
+e
+fresh ones. In very limited cases where the user knows that the system has
+not crashed and contents of upperdir are intact, the "volatile" directory
+can be removed."
+
+containerd unpacking layers falls under this very limited case.
+containerd can syncfs() workdir after unpack & unmount of temp
+overlayfs and remove the "incompat/volatile" directory and then
+the upperdir/workdir are are free to be remounted.
+
+>
+> Conclusion
+>
+> While containerd could theoretically patch their code to accept
+> strings.Contains() or fsync=3Dvolatile going forward, there are many
+
+Following the documentation advise would be better.
+
+> existing containerd binaries in the wild. Given that this patch breaks
+> containerd's CI tests and introduces an edge case for
+> RemoveVolatileOption, it might be safest to fix ovl_show_options in
+> the kernel to continue outputting the legacy "volatile" string to
+> strictly guarantee backwards compatibility with userspace.
+>
+
+Considering my comments above, I think we have not yet reached
+the point where the backward compat "volatile" string is called for,
+but with other reports from production workloads, we could get there.
+
+Thanks for the clear and honest explanations of the containerd situation!
+Amir.
