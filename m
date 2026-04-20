@@ -1,217 +1,185 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.98])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D80E37D135
-	for <regressions@lists.linux.dev>; Sun, 19 Apr 2026 15:12:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.98
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776611531; cv=none; b=qHcSgry9T9URPLPN8mOWQH36ODwx64A/9BvE54lm3gqcbKjpKeLXFxEzS1h75GOffPUaP4A1bdEqPp5H85ydQMNCA7vC6Hs1cwtlGhWr6yQqVD94c9rI+Q23Jksn2zKPLjTHiwK6iPwy4TqLDm4lqfCCKsPXpO2nGo8CX3+8rnM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776611531; c=relaxed/simple;
-	bh=+YW5pgbvt2xYzlng6JlHZSlyIwgl5OtlzmM40Xo/EOE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iPJ7TL5JPziICeY5QGutI/o1JcJNwoh+lpBZRXGodGr0j3JcJokAHZI3jXCz+5qAHPw2Z3uF7qBVIvxBIhjCozfpQzorsLSDtFJEctHYmRc09qcqKPHXJN0Jt94uUX8iNcavCx1ZB93fDOQTDwwV9zqEKeXioUGrVoWLlKzQ6CQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=LktWiIge; arc=none smtp.client-ip=188.68.63.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6327C15746F
+	for <regressions@lists.linux.dev>; Mon, 20 Apr 2026 06:31:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.175
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776666676; cv=pass; b=eSRQc2xtFd1ABvA7DmWmLmKO4pcW84xYXgnMbSMsOSHg5I4dQOkYijhhrwOE7MYl/8ajcI//xC0K7kRfE53TI8XSPU5YekXRDHAIA/kzW/w3xy0JldcPRa43xaiWgOkE4HrA2ZUEtKzxIfxDcBrVzTvCt1y7l1dgPsvVm39fpR8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776666676; c=relaxed/simple;
+	bh=oWdHSX0eVcAgY4PHQuy8lYwoogzXG2T9LHnjRsCPmEQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=P6C7v55b1jJ1AivScak1Ue+AX8ENxuQwn3/lqKM9upvPtefL5tPRLIrRzF5t+K19JUjABkLk99cMow0wIC255UPdNLninHOckGAjaNf/DLEUvenOMtwFWTbDairly9IWNn6oqDed4/2AV6G/Tbuj/gOrjh2RCS876Uuyzu8kwrM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Bhdj7/YQ; arc=pass smtp.client-ip=209.85.160.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="LktWiIge"
-Received: from mors-relay-2501.netcup.net (localhost [127.0.0.1])
-	by mors-relay-2501.netcup.net (Postfix) with ESMTPS id 4fzBt70NH0z6CKC;
-	Sun, 19 Apr 2026 17:11:59 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1776611519;
-	bh=+YW5pgbvt2xYzlng6JlHZSlyIwgl5OtlzmM40Xo/EOE=;
-	h=Date:Subject:To:Cc:References:From:Reply-To:In-Reply-To:From;
-	b=LktWiIgelNzMtip69HqlPovP0mzBtUDQyi3givapaU5ycJJT41tyN8ko3/ZIJTBIy
-	 e65DQbs7WAZuVYAoxNKY2VSi3qzIcvplG9YGGOt/dstTpfSOYLsJOlO/Bki/QDQ7L7
-	 7ct+I6KTgDy+OzSkDPu9rOE1XXdHuhibzfdCBGmLegYAF2Pr5G9WTKwWo/ejg7mczP
-	 OSHhO73qxx1dhn6ZOqIPFkGTTvSDW0ex42uIbeqVWj82WqrEVxHOtU9RD/SuVbbQZt
-	 D+Jl4Qgmmo4rAfJHA00TNQgvflm4MWankpdIBbxifLyspctlXn9OlxCcNXziUAWSYV
-	 hz/P+cwUYRNfg==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-2501.netcup.net (Postfix) with ESMTPS id 4fzBt66mK2z4xZB;
-	Sun, 19 Apr 2026 17:11:58 +0200 (CEST)
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4fzBt61PwKz8sWT;
-	Sun, 19 Apr 2026 17:11:58 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 2D8D6632AE;
-	Sun, 19 Apr 2026 17:11:57 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <5cbb14d8-46f9-4197-917f-51da852d7500@leemhuis.info>
-Date: Sun, 19 Apr 2026 17:11:56 +0200
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Bhdj7/YQ"
+Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-50e61648f10so225931cf.1
+        for <regressions@lists.linux.dev>; Sun, 19 Apr 2026 23:31:15 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1776666674; cv=none;
+        d=google.com; s=arc-20240605;
+        b=hpOnH/tOB7AJpERy2nWfx1I7hpOyWzPPTOn//DG7djofmnj1Im94XobFaghPENXJp0
+         o/z1PkpP8RXtru08TxbEJbuFUxmDlXjFF58Zy8XAKf7wGExRDj8LojSwALAAU2WZRyvt
+         H6w9VDYJpzTV0UR+2+40EmJWKKMdA19V+eOMA/qgG7ifX7HoPpwUN+R2uH7Cn+zzIokc
+         6saltZDsBcW6thCrdUnOlrhbYnSs47883sjGLnsBUnqWCyPg6vk1614apOKgmZkBHWWZ
+         yPh+6/uUKZqop22MmoAUYh0VN9xn7VdNKZlm48Stn9KPfbOHiRgozxjcj7ApeZAlhtPX
+         Q6pA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=oWdHSX0eVcAgY4PHQuy8lYwoogzXG2T9LHnjRsCPmEQ=;
+        fh=yX8wTMEe25cxjPIJ8GUyb9CscwGtNse1gHs8vf0HSCw=;
+        b=WE+EYrM4EK2UcvAT+ulXTCrf4xFuzz4dzuaCxDNv/v9zHAUdEa73mHW6632yDOlXO1
+         Jmfy7uRBf+i6WlrwHCvFq1B/Lfbk1w9S7btMoKhMjuIWGRXnNO42cyTQ4h0rcui9Fg5g
+         gju8sNdmPjWKfpKLah9R/w5547GE55MEMqyi1nlpwHKQ+y4qdYOO0ZnP59gZfDU/QP20
+         baCC6kL/Pfg5PoqzUWCDPNmwymvbB/KBzmimt6q8XymifoYB7WcBvyvmNul0n92Z6vfc
+         XHaV4dVV17NYJAfnStTImFB0zWm57ZooGzn8sTiB4RFebbeNNT296kI5jPkRMG6ybTpp
+         E5gA==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1776666674; x=1777271474; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oWdHSX0eVcAgY4PHQuy8lYwoogzXG2T9LHnjRsCPmEQ=;
+        b=Bhdj7/YQ88Otz1ZIzEkrxizDIYoPcRH/pX5UShnGyLlOVURSbghb/8GbGF/1fNznus
+         1jobqWM74mASob6PTY/OtjfQSiz1QxcWVlcplhG/HRlS+MgJY3agPBCGH/LH0Er4GDX0
+         UlQCAeG4Q620WBSIhE5sZUurSf6C+y7+cNz5WDpcGf16aDna01WsVBNqmuMPuzy75Xhe
+         gfF0wXAkFBDIJfkd+y12qlPdJH/JAR3JsGe3i4PeDKiglI1k9SEG7+hIkWG0HJalDACV
+         4KWJfolTHLJoLvnIEVD87FoQpZkveGw8XUhLkvN+N7X1sb7nPJAfJvqxPhGl+u3nwBrT
+         mVzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776666674; x=1777271474;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=oWdHSX0eVcAgY4PHQuy8lYwoogzXG2T9LHnjRsCPmEQ=;
+        b=E0fwnl7bdqgFQFiFDdtaRfSUAhE+3WckHktFh9b/8l1+8CqrP0plsYqrMwvTSy7QXT
+         LZyXR+yGw9MajlFnjwCL6N+D5lNsVQOrEhaw2CalapoqctnvFPOlwgBCa1UprdN8uPLS
+         rgQ4Nd2BuQQ3JM5ywUtNbrUGLzbUBUxRlabryOwFEOfHF7mgRHBZKvLi+yJNMH0xOO4r
+         n6VjQmAf01/KnW6y6VSz+rrhNceizDgkCOEno7Sd9pr68JLBdrcHlasMoZWMtz1eWcO3
+         zzU28zZn4ta+acSuDY8+RKY8irjuPdx9RtPx1+IVpSBmrJLKmtCFRijtP5P6EPsLx9p+
+         5ccQ==
+X-Forwarded-Encrypted: i=1; AFNElJ/gtf9Q2vjY0dZgfoT4p1R0+8hwd74dFRiERoHljpD8ZVmKdv9ZkL37l5KegdLlAfD214tD9VvKYWQ5kA==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzpUNZl7BL2d4wNZjkpeFt8qAFOisdpETfNuGxkhsvYdarQk+44
+	P3V+NVLinKdoWI/5RuHEsKlvhCc+IITl50kRLGx5cIHIfYBP8dYa9KfUHJnAYm0UCLkDv3KmUBX
+	TK0oSfpTPXtfmq5be5W9q9OD0Lrjc4aDMQp/WGh8h
+X-Gm-Gg: AeBDietLC+ezzdcFOVlMLUWeLGQyXcSgQAWKkxdvetoj/v+eD39p1Rhznt7DOq4ERvC
+	y3iqvVw+YGDrivefwI+aak7GkjzznLlkpiwwKyLWpDjBWybKfmu7qHI/nwEFZ94I/81WC6oOTPy
+	kNvApzPAVGz0Xc3D9tFxBDLCJ4cjOWkrMK4d0FsiHwcIJs6nCtAI0DWWJRbl6ays1FVTFsSw1+b
+	qRD+1XQkN5OQXVBDKDVRGyI2MoanWIHFOVflDypa7+0NoeEOzk7I6AO0Hw57d1aOz0vXK10ju7P
+	FbPan5Mtu5Cd5Im2Cwz+pbZdpjjq
+X-Received: by 2002:a05:622a:4a0b:b0:50e:38f0:ccb2 with SMTP id
+ d75a77b69052e-50e441d1391mr22856791cf.15.1776666673848; Sun, 19 Apr 2026
+ 23:31:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [tip: timers/urgent] clockevents: Add missing resets of the
- next_event_forced flag
-To: Thomas Gleixner <tglx@kernel.org>,
- Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Hanabishi <i.r.e.c.c.a.k.u.n+kernel.org@gmail.com>,
- Eric Naim <dnaim@cachyos.org>, stable@vger.kernel.org,
- linux-tip-commits@vger.kernel.org, x86@kernel.org,
- linux-kernel@vger.kernel.org,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <87340xfeje.ffs@tglx>
- <177636758252.1323100.5283878386670888513.tip-bot2@tip-bot2>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: de-DE, en-US
-X-Enigmail-Draft-Status: N11222
-Autocrypt: addr=linux@leemhuis.info; keydata=
- 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 MEK4
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <177636758252.1323100.5283878386670888513.tip-bot2@tip-bot2>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <177661151754.731094.16057225096151116723@mxe9fb.netcup.net>
-X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: 2D8D6632AE
-X-NC-CID: jGD2kGasqSZ0A0TqCuqGdueid9VDNEO5s2ph8OBZfufbz1XnD0Q=
+References: <CAHWLEDHfXZScF5jNDzgOxGXf-MBDcVNtqW0DbNz8Ra8rtcuL+w@mail.gmail.com>
+ <CAOdxtTbwipkyAfDakLAB6aVp6YkPWtKpDdVDUTz88WDB-18HXQ@mail.gmail.com> <CAOQ4uxhUn6oCBuVJqZu+FcMx8XeAQHZbXFAGon4Xeg2SPLJW_A@mail.gmail.com>
+In-Reply-To: <CAOQ4uxhUn6oCBuVJqZu+FcMx8XeAQHZbXFAGon4Xeg2SPLJW_A@mail.gmail.com>
+From: Chenglong Tang <chenglongtang@google.com>
+Date: Sun, 19 Apr 2026 23:31:02 -0700
+X-Gm-Features: AQROBzDX4AAYXOOslqCZs98JMxceUov0-GNl39rBWIuX_y_Te2pwHmhQJ7fdw3g
+Message-ID: <CAOdxtTaWWu_7eJWu68zf28zHQP3Y--vXTfbGFsceO47BpN3qxA@mail.gmail.com>
+Subject: Re: [REGRESSION] Return change in 6.12.80+ with volatile mounting
+To: Amir Goldstein <amir73il@gmail.com>
+Cc: Derek Taylor <ddtaylor@google.com>, stable@vger.kernel.org, 
+	regressions@lists.linux.dev, Kevin Berry <kpberry@google.com>, 
+	overlayfs <linux-unionfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 4/16/26 21:26, tip-bot2 for Thomas Gleixner wrote:
-> The following commit has been merged into the timers/urgent branch of tip:
-> 
-> Commit-ID:     4096fd0e8eaea13ebe5206700b33f49635ae18e5
-> Gitweb:        https://git.kernel.org/tip/4096fd0e8eaea13ebe5206700b33f49635ae18e5
-> Author:        Thomas Gleixner <tglx@kernel.org>
-> AuthorDate:    Tue, 14 Apr 2026 22:55:01 +02:00
-> Committer:     Thomas Gleixner <tglx@kernel.org>
-> CommitterDate: Thu, 16 Apr 2026 21:22:04 +02:00
-> 
-> clockevents: Add missing resets of the next_event_forced flag
+Hi, Amir,
 
-Just wondering: what's the plan to mainline this? I wonder if this is
-worth mainlining rather quickly and the tell the stable team right
-afterwards to queue it up for 7.0.1, as in addition to the two affected
-people in this thread (one of which stated that "several users from
-CachyOS reported this regression as well") I noticed three more 7.0 bug
-reports in the past few days that likely are fixed by the quoted patch:
+Thanks for looking into this! To answer your questions:
 
-https://gitlab.freedesktop.org/drm/amd/-/work_items/5178#note_3432195
-https://bugzilla.kernel.org/show_bug.cgi?id=221370
-https://bugzilla.kernel.org/show_bug.cgi?id=221377
+1. Production vs. Test Suite Impact
 
-Ciao, Thorsten
+The immediate failure we encountered is in containerd's integration
+test suite (TestImageVolumeCheckVolatileOption). The test explicitly
+reads /proc/mounts and expects the exact string "volatile".
 
-> The prevention mechanism against timer interrupt starvation missed to reset
-> the next_event_forced flag in a couple of places:
-> 
->     - When the clock event state changes. That can cause the flag to be
->       stale over a shutdown/startup sequence
-> 
->     - When a non-forced event is armed, which then prevents rearming before
->       that event. If that event is far out in the future this will cause
->       missed timer interrupts.
-> 
->     - In the suspend wakeup handler.
-> 
-> That led to stalls which have been reported by several people.
-> 
-> Add the missing resets, which fixes the problems for the reporters.
-> 
-> Fixes: d6e152d905bd ("clockevents: Prevent timer interrupt starvation")
-> Reported-by: Hanabishi <i.r.e.c.c.a.k.u.n+kernel.org@gmail.com>
-> Reported-by: Eric Naim <dnaim@cachyos.org>
-> Signed-off-by: Thomas Gleixner <tglx@kernel.org>
-> Tested-by: Hanabishi <i.r.e.c.c.a.k.u.n+kernel.org@gmail.com>
-> Tested-by: Eric Naim <dnaim@cachyos.org>
-> Cc: stable@vger.kernel.org
-> Closes: https://lore.kernel.org/68d1e9ac-2780-4be3-8ee3-0788062dd3a4@gmail.com
-> Link: https://patch.msgid.link/87340xfeje.ffs@tglx
-> ---
->  kernel/time/clockevents.c    | 7 ++++++-
->  kernel/time/tick-broadcast.c | 1 +
->  2 files changed, 7 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kernel/time/clockevents.c b/kernel/time/clockevents.c
-> index b4d7306..5e22697 100644
-> --- a/kernel/time/clockevents.c
-> +++ b/kernel/time/clockevents.c
-> @@ -94,6 +94,9 @@ static int __clockevents_switch_state(struct clock_event_device *dev,
->  	if (dev->features & CLOCK_EVT_FEAT_DUMMY)
->  		return 0;
->  
-> +	/* On state transitions clear the forced flag unconditionally */
-> +	dev->next_event_forced = 0;
-> +
->  	/* Transition with new state-specific callbacks */
->  	switch (state) {
->  	case CLOCK_EVT_STATE_DETACHED:
-> @@ -366,8 +369,10 @@ int clockevents_program_event(struct clock_event_device *dev, ktime_t expires, b
->  	if (delta > (int64_t)dev->min_delta_ns) {
->  		delta = min(delta, (int64_t) dev->max_delta_ns);
->  		cycles = ((u64)delta * dev->mult) >> dev->shift;
-> -		if (!dev->set_next_event((unsigned long) cycles, dev))
-> +		if (!dev->set_next_event((unsigned long) cycles, dev)) {
-> +			dev->next_event_forced = 0;
->  			return 0;
-> +		}
->  	}
->  
->  	if (dev->next_event_forced)
-> diff --git a/kernel/time/tick-broadcast.c b/kernel/time/tick-broadcast.c
-> index 7e57fa3..115e0bf 100644
-> --- a/kernel/time/tick-broadcast.c
-> +++ b/kernel/time/tick-broadcast.c
-> @@ -108,6 +108,7 @@ static struct clock_event_device *tick_get_oneshot_wakeup_device(int cpu)
->  
->  static void tick_oneshot_wakeup_handler(struct clock_event_device *wd)
->  {
-> +	wd->next_event_forced = 0;
->  	/*
->  	 * If we woke up early and the tick was reprogrammed in the
->  	 * meantime then this may be spurious but harmless.
-> 
+In default production, containerd passes the legacy "volatile" string
+to the mount syscall, which your patch correctly handles under the
+hood. So the standard "happy path" is not broken in production.
 
+2. The purpose of WithTempMount() / RemoveVolatileOption
+
+Containerd regularly makes temporary overlay mounts (e.g., for
+unpacking layers). Because overlayfs rejects reusing upper/work dirs
+from a volatile mount, containerd uses RemoveVolatileOption to strip
+the volatile flag before these temporary mounts.
+
+Currently, containerd's RemoveVolatileOption does an exact string
+match for "volatile". While it works for the default path, there is a
+production edge case: if a user explicitly configures their container
+runtime to use the new "fsync=3Dvolatile" option, older containerd
+binaries will fail to strip it, and the temporary mounts will be
+rejected by the kernel.
+
+Conclusion
+
+While containerd could theoretically patch their code to accept
+strings.Contains() or fsync=3Dvolatile going forward, there are many
+existing containerd binaries in the wild. Given that this patch breaks
+containerd's CI tests and introduces an edge case for
+RemoveVolatileOption, it might be safest to fix ovl_show_options in
+the kernel to continue outputting the legacy "volatile" string to
+strictly guarantee backwards compatibility with userspace.
+
+Thanks,
+Chenglong
+
+On Sat, Apr 18, 2026 at 8:40=E2=80=AFAM Amir Goldstein <amir73il@gmail.com>=
+ wrote:
+>
+> On Sat, Apr 18, 2026 at 1:33=E2=80=AFAM Chenglong Tang <chenglongtang@goo=
+gle.com> wrote:
+> >
+> > CC Amir,
+> >
+> > For example, containerd 2.2.0 uses `volatile` instead of `fsync=3Dvolat=
+ile`:
+> > https://github.com/containerd/containerd/blob/main/core/mount/temp.go#L=
+91C1-L92C1
+> >
+> > On Fri, Apr 17, 2026 at 3:41=E2=80=AFPM Derek Taylor <ddtaylor@google.c=
+om> wrote:
+> > >
+> > > This change seems to have so far affected at least containerd in an
+> > > issue reported here
+> > > https://github.com/containerd/containerd/issues/13250.
+> > >
+> > > In stable versions 6.12.80+, commit
+> > > 6c0cfbe020c0fcd2a544fcd2931fbc366ee3cd12 with the specific change
+> > > being:
+> > > [*] The mount option "volatile" is an alias to "fsync=3Dvolatile".
+> > > In this scenario, code relying on checking "volatile" will now fail
+> > > due to the return being "fsync=3Dvolatile".
+> > >
+> > > #regzbot introduced:v6.12.80
+>
+> Hi Chenglong,
+>
+> Thanks for the report.
+>
+> Is this problem in production containerd or in a test suite?
+> I did not understand the purpose of WithTempMount().
+>
+> Is it possible to fix this function to use string.Contains() instead of
+> exact match to the "volatile" mount option?
+>
+> If needed I can fix the kernel to show the legacy "volatile" option,
+> but I would like to first understand how bad the impact of this regressio=
+n
+> is on real production workloads.
+>
+> Thanks,
+> Amir.
