@@ -1,185 +1,238 @@
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from msk-hq-mr3.amt.ru (msk-hq-mr3.amt.ru [212.233.68.154])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6327C15746F
-	for <regressions@lists.linux.dev>; Mon, 20 Apr 2026 06:31:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.175
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776666676; cv=pass; b=eSRQc2xtFd1ABvA7DmWmLmKO4pcW84xYXgnMbSMsOSHg5I4dQOkYijhhrwOE7MYl/8ajcI//xC0K7kRfE53TI8XSPU5YekXRDHAIA/kzW/w3xy0JldcPRa43xaiWgOkE4HrA2ZUEtKzxIfxDcBrVzTvCt1y7l1dgPsvVm39fpR8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776666676; c=relaxed/simple;
-	bh=oWdHSX0eVcAgY4PHQuy8lYwoogzXG2T9LHnjRsCPmEQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=P6C7v55b1jJ1AivScak1Ue+AX8ENxuQwn3/lqKM9upvPtefL5tPRLIrRzF5t+K19JUjABkLk99cMow0wIC255UPdNLninHOckGAjaNf/DLEUvenOMtwFWTbDairly9IWNn6oqDed4/2AV6G/Tbuj/gOrjh2RCS876Uuyzu8kwrM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Bhdj7/YQ; arc=pass smtp.client-ip=209.85.160.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Bhdj7/YQ"
-Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-50e61648f10so225931cf.1
-        for <regressions@lists.linux.dev>; Sun, 19 Apr 2026 23:31:15 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1776666674; cv=none;
-        d=google.com; s=arc-20240605;
-        b=hpOnH/tOB7AJpERy2nWfx1I7hpOyWzPPTOn//DG7djofmnj1Im94XobFaghPENXJp0
-         o/z1PkpP8RXtru08TxbEJbuFUxmDlXjFF58Zy8XAKf7wGExRDj8LojSwALAAU2WZRyvt
-         H6w9VDYJpzTV0UR+2+40EmJWKKMdA19V+eOMA/qgG7ifX7HoPpwUN+R2uH7Cn+zzIokc
-         6saltZDsBcW6thCrdUnOlrhbYnSs47883sjGLnsBUnqWCyPg6vk1614apOKgmZkBHWWZ
-         yPh+6/uUKZqop22MmoAUYh0VN9xn7VdNKZlm48Stn9KPfbOHiRgozxjcj7ApeZAlhtPX
-         Q6pA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=oWdHSX0eVcAgY4PHQuy8lYwoogzXG2T9LHnjRsCPmEQ=;
-        fh=yX8wTMEe25cxjPIJ8GUyb9CscwGtNse1gHs8vf0HSCw=;
-        b=WE+EYrM4EK2UcvAT+ulXTCrf4xFuzz4dzuaCxDNv/v9zHAUdEa73mHW6632yDOlXO1
-         Jmfy7uRBf+i6WlrwHCvFq1B/Lfbk1w9S7btMoKhMjuIWGRXnNO42cyTQ4h0rcui9Fg5g
-         gju8sNdmPjWKfpKLah9R/w5547GE55MEMqyi1nlpwHKQ+y4qdYOO0ZnP59gZfDU/QP20
-         baCC6kL/Pfg5PoqzUWCDPNmwymvbB/KBzmimt6q8XymifoYB7WcBvyvmNul0n92Z6vfc
-         XHaV4dVV17NYJAfnStTImFB0zWm57ZooGzn8sTiB4RFebbeNNT296kI5jPkRMG6ybTpp
-         E5gA==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1776666674; x=1777271474; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oWdHSX0eVcAgY4PHQuy8lYwoogzXG2T9LHnjRsCPmEQ=;
-        b=Bhdj7/YQ88Otz1ZIzEkrxizDIYoPcRH/pX5UShnGyLlOVURSbghb/8GbGF/1fNznus
-         1jobqWM74mASob6PTY/OtjfQSiz1QxcWVlcplhG/HRlS+MgJY3agPBCGH/LH0Er4GDX0
-         UlQCAeG4Q620WBSIhE5sZUurSf6C+y7+cNz5WDpcGf16aDna01WsVBNqmuMPuzy75Xhe
-         gfF0wXAkFBDIJfkd+y12qlPdJH/JAR3JsGe3i4PeDKiglI1k9SEG7+hIkWG0HJalDACV
-         4KWJfolTHLJoLvnIEVD87FoQpZkveGw8XUhLkvN+N7X1sb7nPJAfJvqxPhGl+u3nwBrT
-         mVzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776666674; x=1777271474;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=oWdHSX0eVcAgY4PHQuy8lYwoogzXG2T9LHnjRsCPmEQ=;
-        b=E0fwnl7bdqgFQFiFDdtaRfSUAhE+3WckHktFh9b/8l1+8CqrP0plsYqrMwvTSy7QXT
-         LZyXR+yGw9MajlFnjwCL6N+D5lNsVQOrEhaw2CalapoqctnvFPOlwgBCa1UprdN8uPLS
-         rgQ4Nd2BuQQ3JM5ywUtNbrUGLzbUBUxRlabryOwFEOfHF7mgRHBZKvLi+yJNMH0xOO4r
-         n6VjQmAf01/KnW6y6VSz+rrhNceizDgkCOEno7Sd9pr68JLBdrcHlasMoZWMtz1eWcO3
-         zzU28zZn4ta+acSuDY8+RKY8irjuPdx9RtPx1+IVpSBmrJLKmtCFRijtP5P6EPsLx9p+
-         5ccQ==
-X-Forwarded-Encrypted: i=1; AFNElJ/gtf9Q2vjY0dZgfoT4p1R0+8hwd74dFRiERoHljpD8ZVmKdv9ZkL37l5KegdLlAfD214tD9VvKYWQ5kA==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzpUNZl7BL2d4wNZjkpeFt8qAFOisdpETfNuGxkhsvYdarQk+44
-	P3V+NVLinKdoWI/5RuHEsKlvhCc+IITl50kRLGx5cIHIfYBP8dYa9KfUHJnAYm0UCLkDv3KmUBX
-	TK0oSfpTPXtfmq5be5W9q9OD0Lrjc4aDMQp/WGh8h
-X-Gm-Gg: AeBDietLC+ezzdcFOVlMLUWeLGQyXcSgQAWKkxdvetoj/v+eD39p1Rhznt7DOq4ERvC
-	y3iqvVw+YGDrivefwI+aak7GkjzznLlkpiwwKyLWpDjBWybKfmu7qHI/nwEFZ94I/81WC6oOTPy
-	kNvApzPAVGz0Xc3D9tFxBDLCJ4cjOWkrMK4d0FsiHwcIJs6nCtAI0DWWJRbl6ays1FVTFsSw1+b
-	qRD+1XQkN5OQXVBDKDVRGyI2MoanWIHFOVflDypa7+0NoeEOzk7I6AO0Hw57d1aOz0vXK10ju7P
-	FbPan5Mtu5Cd5Im2Cwz+pbZdpjjq
-X-Received: by 2002:a05:622a:4a0b:b0:50e:38f0:ccb2 with SMTP id
- d75a77b69052e-50e441d1391mr22856791cf.15.1776666673848; Sun, 19 Apr 2026
- 23:31:13 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43A60382395
+	for <regressions@lists.linux.dev>; Mon, 20 Apr 2026 06:49:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.233.68.154
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776667754; cv=none; b=HDghoOilcc5hJJ6ilfqX0aLPPjLeqCDXfP4uAuWcqZQXZctZ1cqzag3z1TrSA0hoGycKVKBkXSBZXt1BQxVV+uDdoEVnh6KOM8fVVTS5AkRCvtst+6u9WC/M8XgMckm6XVnjQTioOmgUV3bEjFltmMT3J4vt9QmSnk3MKp+lyH8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776667754; c=relaxed/simple;
+	bh=NY//a0emxdAkVp85bdfjdqGX6m8Mi7eA/32/M8YTDS0=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=tOUxBN3MGhXBOTu5T9FyzOp472yMsoz1QvlM9PmHPjgO25Dt1jFANIozYPFxXUAHjmFDB1cV63XVVXv4BvPVUPUi12M5PhKdMFHA0DfF1wsnxI6QgJVD2fJrEUfVIdeCGbFqLDP+CYGIO+TRA1y9KDa3o4MTZ7qCzF2yFF1X/Sc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=amt.ru; spf=pass smtp.mailfrom=amt.ru; arc=none smtp.client-ip=212.233.68.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=amt.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amt.ru
+Received: by msk-hq-mr3.amt.ru (Mailsecure, from userid 998)
+	id B72CCA616EB; Mon, 20 Apr 2026 06:41:28 +0000 (UTC)
+Received: from msk-hq-es1.amt.ru (10.0.7.34) by msk-hq-es2.amt.ru (10.0.7.32)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.22; Mon, 20 Apr
+ 2026 09:41:25 +0300
+Received: from msk-hq-es1.amt.ru ([10.0.7.34]) by msk-hq-es1.amt.ru
+ ([10.0.7.34]) with mapi id 15.02.0986.022; Mon, 20 Apr 2026 09:41:25 +0300
+From: "Sagatov, Evgeniy" <esagatov@amt.ru>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+CC: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>, LKML
+	<linux-kernel@vger.kernel.org>, Michal Wilczynski
+	<michal.wilczynski@intel.com>
+Subject: RE: Pressing the power button causes the device to freeze completely
+Thread-Topic: Pressing the power button causes the device to freeze completely
+Thread-Index: AQHc0I5dWWz85Qs22EiEOZsB00kgHbXne/2A
+Date: Mon, 20 Apr 2026 06:41:25 +0000
+Message-ID: <d161effaca5a456dabcfbb7dbbf105d8@amt.ru>
+References: <c64d69bb-9df9-46b7-a1ad-aada30310d36@leemhuis.info>
+ <26521776666243@mail.yandex.ru>
+In-Reply-To: <26521776666243@mail.yandex.ru>
+Accept-Language: en-US
+Content-Language: ru-RU
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+Content-Type: text/plain; charset="koi8-r"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAHWLEDHfXZScF5jNDzgOxGXf-MBDcVNtqW0DbNz8Ra8rtcuL+w@mail.gmail.com>
- <CAOdxtTbwipkyAfDakLAB6aVp6YkPWtKpDdVDUTz88WDB-18HXQ@mail.gmail.com> <CAOQ4uxhUn6oCBuVJqZu+FcMx8XeAQHZbXFAGon4Xeg2SPLJW_A@mail.gmail.com>
-In-Reply-To: <CAOQ4uxhUn6oCBuVJqZu+FcMx8XeAQHZbXFAGon4Xeg2SPLJW_A@mail.gmail.com>
-From: Chenglong Tang <chenglongtang@google.com>
-Date: Sun, 19 Apr 2026 23:31:02 -0700
-X-Gm-Features: AQROBzDX4AAYXOOslqCZs98JMxceUov0-GNl39rBWIuX_y_Te2pwHmhQJ7fdw3g
-Message-ID: <CAOdxtTaWWu_7eJWu68zf28zHQP3Y--vXTfbGFsceO47BpN3qxA@mail.gmail.com>
-Subject: Re: [REGRESSION] Return change in 6.12.80+ with volatile mounting
-To: Amir Goldstein <amir73il@gmail.com>
-Cc: Derek Taylor <ddtaylor@google.com>, stable@vger.kernel.org, 
-	regressions@lists.linux.dev, Kevin Berry <kpberry@google.com>, 
-	overlayfs <linux-unionfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Mailsecure-Released: 1
 
-Hi, Amir,
+Hello Thorsten,
 
-Thanks for looking into this! To answer your questions:
+Thanks for the detailed manual!
 
-1. Production vs. Test Suite Impact
+I determined that the problem started between versions 6.7.12 and 6.8-rc1. =
+Then I ran a 'git bisect' according to the manual.
 
-The immediate failure we encountered is in containerd's integration
-test suite (TestImageVolumeCheckVolatileOption). The test explicitly
-reads /proc/mounts and expects the exact string "volatile".
+Result:
+b0d326da462e20285236e11e4cbc32085de9f363 is the first bad commit
+commit b0d326da462e20285236e11e4cbc32085de9f363
+Merge: 8c94ccc7cd69 e37617c8e53a
+Author: Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu Jan 18 11:57:33 2024 -0800
 
-In default production, containerd passes the legacy "volatile" string
-to the mount syscall, which your patch correctly handles under the
-hood. So the standard "happy path" is not broken in production.
+    Merge tag 'sched-urgent-2024-01-18' of git://git.kernel.org/pub/scm/lin=
+ux/kernel/git/tip/tip
 
-2. The purpose of WithTempMount() / RemoveVolatileOption
+    Pull scheduler fix from Ingo Molnar:
+     "Fix a cpufreq related performance regression on certain systems, wher=
+e
+      the CPU would remain at the lowest frequency, degrading performance
+      substantially"
 
-Containerd regularly makes temporary overlay mounts (e.g., for
-unpacking layers). Because overlayfs rejects reusing upper/work dirs
-from a volatile mount, containerd uses RemoveVolatileOption to strip
-the volatile flag before these temporary mounts.
+    * tag 'sched-urgent-2024-01-18' of git://git.kernel.org/pub/scm/linux/k=
+ernel/git/tip/tip:
+      sched/fair: Fix frequency selection for non-invariant case
 
-Currently, containerd's RemoveVolatileOption does an exact string
-match for "volatile". While it works for the default path, there is a
-production edge case: if a user explicitly configures their container
-runtime to use the new "fsync=3Dvolatile" option, older containerd
-binaries will fail to strip it, and the temporary mounts will be
-rejected by the kernel.
+ kernel/sched/cpufreq_schedutil.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-Conclusion
+----
+Sincerely, Evgeny Sagatov
 
-While containerd could theoretically patch their code to accept
-strings.Contains() or fsync=3Dvolatile going forward, there are many
-existing containerd binaries in the wild. Given that this patch breaks
-containerd's CI tests and introduces an edge case for
-RemoveVolatileOption, it might be safest to fix ovl_show_options in
-the kernel to continue outputting the legacy "volatile" string to
-strictly guarantee backwards compatibility with userspace.
+=9A----------------
+16.04.2026, 20:35, Thorsten Leemhuis (mailto:regressions@leemhuis.info):
+To: Evgeny Sagatov (mailto:sagatov@ya.ru), Rafael J. Wysocki (mailto:rafael=
+.j.wysocki@intel.com);
+Copy: mailto:regressions@lists.linux.dev, LKML (mailto:linux-kernel@vger.ke=
+rnel.org), Michal Wilczynski (mailto:michal.wilczynski@intel.com);
+Topic: Pressing the power button causes the device to freeze completely;
+=9A
+On 4/16/26 19:22, Evgeny Sagatov wrote:
+=9ACould you please try 7.0 as well?
+=9AI compiled 7.0.0 kernel from sources.
+=9AUnfortunately, this kernel also freezes when the power button is pressed=
+.
 
-Thanks,
-Chenglong
+Thx for testing.
+=9A=9A
+=9AHow did you find that this causes the problem? Did you do a proper
+=9Abisection and thus checked if the parent of that commit really works?
+=9A=9A
+=9AI don't think I did it correctly.
+=9ABecause the previous commits didn't shut down the PC or cause it to
+=9Afreeze. I think they just weren't working.
+=9A=9A
+=9AI also tried a very simple module tity-power-button. Pressing the power
+=9Abutton when using this module also causes a full freeze.
+=9AI think the problem lies with the ACPI functionality, but none of kernel
+=9Aoptions helped fix it.
+=9A=9A
+=9AI'm confused.
 
-On Sat, Apr 18, 2026 at 8:40=E2=80=AFAM Amir Goldstein <amir73il@gmail.com>=
- wrote:
->
-> On Sat, Apr 18, 2026 at 1:33=E2=80=AFAM Chenglong Tang <chenglongtang@goo=
-gle.com> wrote:
-> >
-> > CC Amir,
-> >
-> > For example, containerd 2.2.0 uses `volatile` instead of `fsync=3Dvolat=
-ile`:
-> > https://github.com/containerd/containerd/blob/main/core/mount/temp.go#L=
-91C1-L92C1
-> >
-> > On Fri, Apr 17, 2026 at 3:41=E2=80=AFPM Derek Taylor <ddtaylor@google.c=
-om> wrote:
-> > >
-> > > This change seems to have so far affected at least containerd in an
-> > > issue reported here
-> > > https://github.com/containerd/containerd/issues/13250.
-> > >
-> > > In stable versions 6.12.80+, commit
-> > > 6c0cfbe020c0fcd2a544fcd2931fbc366ee3cd12 with the specific change
-> > > being:
-> > > [*] The mount option "volatile" is an alias to "fsync=3Dvolatile".
-> > > In this scenario, code relying on checking "volatile" will now fail
-> > > due to the return being "fsync=3Dvolatile".
-> > >
-> > > #regzbot introduced:v6.12.80
->
-> Hi Chenglong,
->
-> Thanks for the report.
->
-> Is this problem in production containerd or in a test suite?
-> I did not understand the purpose of WithTempMount().
->
-> Is it possible to fix this function to use string.Contains() instead of
-> exact match to the "volatile" mount option?
->
-> If needed I can fix the kernel to show the legacy "volatile" option,
-> but I would like to first understand how bad the impact of this regressio=
-n
-> is on real production workloads.
->
-> Thanks,
-> Amir.
+Then you likely want to properly bisect the bug. Might be best to do
+that on a Debian 12 install (where everything used to be working) by
+following this guide:
+
+https://docs.kernel.org/admin-guide/verify-bugs-and-bisect-regressions.html
+
+But be warned: the regression is old. Even if the culprit is identified
+the usual rules wrt to "no regression" might not apply, as fixing the
+regression could cause regressions for other users.
+
+Ciao, Thorsten
+=9A
+=9A----------------
+=9ATo: Evgeny Sagatov (mailto:sagatov@ya.ru), Rafael J. Wysocki
+=9A(mailto:rafael.j.wysocki@intel.com);
+=9ACopy: mailto:regressions@lists.linux.dev, LKML (mailto:linux-kernel@vger=
+.kernel.org),
+=9AMichal Wilczynski (mailto:michal.wilczynski@intel.com);
+=9ATopic: Pressing the power button causes the device to freeze completely;
+=9A16.04.2026, 11:23, "Thorsten Leemhuis" <mailto:regressions@leemhuis.info=
+>:
+=9A
+=9A=9A=9A=9A=9A[removing the stable list, this is not something for them]
+=9A
+=9A=9A=9A=9A=9AOn 4/13/26 18:46, Evgeny Sagatov wrote:
+=9A
+=9A=9A=9A=9A=9A=9A=9A=9A=9A=9AI have a PC with a motherboard GA-EP45T-UD3LR=
+ (Rev. 1.0) <https://
+=9A=9A=9A=9A=9A=9A=9A=9A=9A=9Ahttps://www.gigabyte.com/Motherboard/GA-EP45T=
+-UD3LR-rev-10 <https://
+=9A=9A=9A=9A=9A=9A=9A=9A=9Ahttps://www.gigabyte.com/Motherboard/GA-EP45T-UD=
+3LR-rev-10>> and
+=9A=9A=9A=9A=9A=9A=9A=9A=9Aprocessor Intel
+=9A=9A=9A=9A=9A=9A=9A=9A=9A=9ACore 2 Quad Q9550.
+=9A=9A=9A=9A=9A=9A=9A=9A=9A=9APreviously, I had Debian 12 with kernel 6.1 i=
+nstalled, and
+=9A=9A=9A=9A=9A=9A=9A=9A=9Apressing the
+=9A=9A=9A=9A=9A=9A=9A=9A=9A=9Apower button would shut down the PC as usual.
+=9A=9A=9A=9A=9A=9A=9A=9A=9A=9AI updated to Debian 13 with kernel 6.12.74, a=
+nd now pressing
+=9A=9A=9A=9A=9A=9A=9A=9A=9Athe power
+=9A=9A=9A=9A=9A=9A=9A=9A=9A=9Abutton causes the PC to freeze completely.
+=9A=9A=9A=9A=9A=9A=9A=9A=9A=9A=9A
+=9A=9A=9A=9A=9A=9A=9A=9A=9A=9AI see that systemd doesn't even begin to shut=
+ down. It freezes
+=9A=9A=9A=9A=9A=9A=9A=9A=9A=9Aimmediately after pressing the button. There'=
+s no error message in
+=9A=9A=9A=9A=9A=9A=9A=9A=9A=9Aconsole. There's no error message in the logs=
+ either.
+=9A=9A=9A=9A=9A=9A=9A=9A=9ANetconsole doesn't
+=9A=9A=9A=9A=9A=9A=9A=9A=9A=9Areport any errors, and the kernel doesn't pan=
+ic. It just
+=9A=9A=9A=9A=9A=9A=9A=9A=9Afreezes completely.
+=9A=9A=9A=9A=9A=9A=9A=9A=9A=9A=9A
+=9A=9A=9A=9A=9A=9A=9A=9A=9A=9AI checked that Live CD with Debian 12 continu=
+e to shut down
+=9A=9A=9A=9A=9A=9A=9A=9A=9Anormally,
+=9A=9A=9A=9A=9A=9A=9A=9A=9A=9Abut Live CD with Debian 13 freeze.
+=9A=9A=9A=9A=9A=9A=9A=9A=9A=9AI tried updating and resetting the BIOS. I tr=
+ied various kernel
+=9A=9A=9A=9A=9A=9A=9A=9A=9A=9Aparameters related to ACPI settings. I also t=
+ried kernels 6.18
+=9A=9A=9A=9A=9A=9A=9A=9A=9Aand 6.19.
+=9A=9A=9A=9A=9A=9A=9A=9A=9A=9ANothing fixed the problem.
+=9A
+=9A
+=9A=9A=9A=9A=9ACould you please try 7.0 as well? It contains a fix for the =
+commit you
+=9A=9A=9A=9A=9Amentioned below.
+=9A=9A=9A=9A=9A=9A
+=9A
+=9A=9A=9A=9A=9A=9A=9A=9A=9A=9A=9A
+=9A=9A=9A=9A=9A=9A=9A=9A=9A=9AIf I unload the "button" module, the system d=
+oesn't freeze, but
+=9A=9A=9A=9A=9A=9A=9A=9A=9Ait also
+=9A=9A=9A=9A=9A=9A=9A=9A=9A=9Adoesn't shut down.
+=9A=9A=9A=9A=9A=9A=9A=9A=9A=9AI built "button" module by rolling back its v=
+ersion to commit
+=9A=9A=9A=9A=9A=9A=9A=9A=9A1a20d40
+=9A=9A=9A=9A=9A=9A=9A=9A=9A=9A<https://github.com/torvalds/linux/ <https://=
+github.com/
+=9A=9A=9A=9A=9A=9A=9A=9A=9Atorvalds/linux/>
+=9A=9A=9A=9A=9A=9A=9A=9A=9A=9Acommit/1a20d409c874255086e2f42a729826d490294c=
+91>, which
+=9A=9A=9A=9A=9A=9A=9A=9A=9Acorresponds to
+=9A=9A=9A=9A=9A=9A=9A=9A=9A=9Akernel version 6.1. This module does not free=
+ze, but does not
+=9A=9A=9A=9A=9A=9A=9A=9A=9Aturn off
+=9A=9A=9A=9A=9A=9A=9A=9A=9A=9Athe PC either.
+=9A=9A=9A=9A=9A=9A=9A=9A=9A=9A=9A
+=9A=9A=9A=9A=9A=9A=9A=9A=9A=9AI've found that the freezes have been occurri=
+ng since commit
+=9A=9A=9A=9A=9A=9A=9A=9A=9A0d51157
+=9A=9A=9A=9A=9A=9A=9A=9A=9A=9A<https://github.com/torvalds/linux/ <https://=
+github.com/
+=9A=9A=9A=9A=9A=9A=9A=9A=9Atorvalds/linux/>
+=9A=9A=9A=9A=9A=9A=9A=9A=9A=9Acommit/0d51157dfaac05ea66616d8a250dce04bef49a=
+4f>.
+=9A
+=9A
+=9A=9A=9A=9A=9AThat is 0d51157dfaac05 ("ACPI: button: Eliminate the driver =
+notify
+=9A=9A=9A=9A=9Acallback") [v6.5-rc1] from Rafael. But that is a very old co=
+mmit; and
+=9A=9A=9A=9A=9Ayou seem to be switching distro versions and kernel at the s=
+ame time,
+=9A=9A=9A=9A=9Awhich could interfere.
+=9A
+=9A=9A=9A=9A=9AHow did you find that this causes the problem? Did you do a =
+proper
+=9A=9A=9A=9A=9Abisection and thus checked if the parent of that commit real=
+ly works?
+=9A=9A=9A=9A=9A=9A
+=9A
+=9A=9A=9A=9A=9A=9A=9A=9A=9A=9AUnfortunately, my skills are not enough to un=
+derstand the
+=9A=9A=9A=9A=9A=9A=9A=9A=9Areason for the
+=9A=9A=9A=9A=9A=9A=9A=9A=9A=9Afreeze.
+=9A=9A=9A=9A=9A=9A=9A=9A=9A=9A=9A
+=9A=9A=9A=9A=9A=9A=9A=9A=9A=9AI'm attaching dmesg and lspci logs.
+=9A
+=9A=9A=9A=9A=9ACiao, Thorsten
+
