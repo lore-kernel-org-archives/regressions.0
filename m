@@ -1,190 +1,296 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [46.38.247.119])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 560B01AF0BB
-	for <regressions@lists.linux.dev>; Tue, 21 Apr 2026 02:47:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776739668; cv=fail; b=jJ4MP0zs4jE/7vBVYC4g3s58eSFd+42zo74n277xrvv8BFg+cwqu20diMbstok4VACDuVA2qA/EFrGVrYAW2phPs4BeRie1O0lFywm64QWjPN6uaA6BlUivEBHFMpJB++Gt23ZZZ04lHFhHxHxZK4BGThnWzNtdwX8fCAr8yYqg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776739668; c=relaxed/simple;
-	bh=4rDfwQWDn9OXOcjaVniQiYbE+xlMz1xMsCni6zHonm4=;
-	h=To:Cc:Subject:From:In-Reply-To:Message-ID:References:Date:
-	 Content-Type:MIME-Version; b=B9yZdbslhKTCKPdZMkiQDZd2mQQgek4qWTkqNQHx1FkFlqDCtFMmqmESHqwqXUN8grKsGUl5FeAULgjD7pYWNiof5TaCqAIL5YQW0n/p+TZNbEvQ9sxiH2XAiHyz3S2yMJuDXOmUboZQTmQs5kkoFHfBJvr9eezjGiUwqbuZFMA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=CqDNK/ns; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=EbAxOVRX; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84CD4318140
+	for <regressions@lists.linux.dev>; Tue, 21 Apr 2026 05:10:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.38.247.119
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776748243; cv=none; b=ldGUM/99ssDMBGe9OCa9U3oEu2bJET/g9seiHIRa7P/mQ3W6pLpbEFXxshgu0npK1pXTOEVL1SCHowcq4drVDcMx6HI6J4J4N7vbE1wetJm7G12+8dfmp3edDqnhMBfD3gE5ZoZ1fpnDzyAkBIYqxG0GmwWGE10rzoh8D5f0Bu8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776748243; c=relaxed/simple;
+	bh=2+X7wH56uP+7PA51+orUA5FPLnSiJ3wUH+8mi/UPhIk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=o184L7k1XsTI6p28k3j0qWmFcV/k7HXVglYAEf1368hOOGuYvVtHfHkER3FZb+O9FiywMUvsprS4LP89Q/CXP6yGwl6paVgJw7PCZHKO/VvNKe3uCGWtL23UBSG44J7JGkNdEKbumejBKn1aX3w5QlGYxtQJ8tVanUk/I9Vh1zE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=NhJk/U9C; arc=none smtp.client-ip=46.38.247.119
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="CqDNK/ns";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="EbAxOVRX"
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 63KLvBAa211935;
-	Tue, 21 Apr 2026 02:47:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2025-04-25; bh=vZObCQsxE9TEaVsH6G
-	mFH683NEXmgWn2DRhpmLffB2A=; b=CqDNK/nsumnvnDufclHApttvId1GjQ/caT
-	jMx/wTYcn/HRgYqDQnv+cOKHMgzQv8zJDbjAzx6FiO4SQSF3YhBsk3/7nFOn54fL
-	80OGW8DDghTF6T5K1b+s6DM3SOO7kATBlgk0NFwQoWrGpTVw+zf9Y5SglCy7NsTS
-	YDlZaPxYYUL35b9VanuXM0iXptENceH3keBeX9ngrNtRYHOip0I0QrY0mkqYqIxA
-	UF2Y5L29GIG/DJTk2dxwBA2Ndnxj0gMzyG3nwr1vR/ad7Sf/QPVO6tA7DFrNKXU9
-	zfH0SqcylWhQGrsZxyLoqL81eGQ6b1Jr5ivmQpNeDa5nHgx8RZVQ==
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4dm2grchpg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 21 Apr 2026 02:47:44 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.7/8.18.1.7) with ESMTP id 63L2aKJd016033;
-	Tue, 21 Apr 2026 02:47:43 GMT
-Received: from bn1pr04cu002.outbound.protection.outlook.com (mail-eastus2azon11010041.outbound.protection.outlook.com [52.101.56.41])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 4dn1cn7emw-2
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 21 Apr 2026 02:47:43 +0000 (GMT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=V8LpDt9mhIkKOH/hgp1KyPIV404ippb3AXuOS035n6yL4KYc86m4gXAIXcGnjDsH8m5+XN471H7KHidCbOwbLipusgY6evhi+zud+JgwVQSvJ5yA6KbvWc5pMO14HRg1Mj3/GjUxZV92spJOdttcv7hO2+kOXAK2Z9q/W37taScbKtcBngofhoQzSJdx6nbdO1YLon3JO/9SwEXpQalUAMRoSjM2Iq28CCXGBXci6ZRitOgpUXnGWiR+o5UheTaB4zGKLcKIR66MnZRrbZw9O18d2Z5nJP4FnH4IpLovy6MLdMj5WUWP4gZpIifodDIOg/+AIWyCdeiCO6JWxf5zhQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vZObCQsxE9TEaVsH6GmFH683NEXmgWn2DRhpmLffB2A=;
- b=esr52Mqk8+F/Lq9uhtSqoKQgeHcvFRG9Ost8Wf5jjOrxoLA0XPoVj6GFKt39bwFsgjmxAJDnLVzzuQeSt8e+Dh7sUV5EOHv86+TYlaoMsTSN1NjQY32llT9cngl8t+TdsN/TtiY2pryMbe8rPB4Hg/S2o+N6DvXJIYKOpo+eNA4bkRp/pB3OSk+tVmTrPfTEfNyrWQPAkP1S5zDimbnDnX8lR9gNKzzGewvPqx4yliftcYr9OUj++oGK22R5NQQ4vd+CRDv5JcnwUblTHoyQEsNCPjMb/+Agmc+qWAx3YVerpkwncBzMp99lL2CAyuf3NQm5rv+hoGFDyQk/Z57hCA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vZObCQsxE9TEaVsH6GmFH683NEXmgWn2DRhpmLffB2A=;
- b=EbAxOVRXYxW9mr7D2HQI8A61UKrwZvNTi3t/ph+djK/Y+QFbIxuf660uuNEMzP2diwoCpRo3KyEW3S0OMf5szL7MCd7Zlk+rky02i9UxBaeo+28LWreYC6QtKQU2R89UQgc5+jCqfW+Gl5hpn/cckAYgo2QXL/6Bg6uOYy7gPFY=
-Received: from CH0PR10MB5338.namprd10.prod.outlook.com (2603:10b6:610:cb::8)
- by SJ5PPF1DE1C92F7.namprd10.prod.outlook.com (2603:10b6:a0f:fc02::792) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9818.21; Tue, 21 Apr
- 2026 02:47:38 +0000
-Received: from CH0PR10MB5338.namprd10.prod.outlook.com
- ([fe80::e525:dd71:b002:6ad5]) by CH0PR10MB5338.namprd10.prod.outlook.com
- ([fe80::e525:dd71:b002:6ad5%6]) with mapi id 15.20.9818.033; Tue, 21 Apr 2026
- 02:47:38 +0000
-To: me@magik.net
-Cc: "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        Kashyap
- Desai <kashyap.desai@broadcom.com>,
-        Sumit Saxena
- <sumit.saxena@broadcom.com>,
-        Shivasharan S
- <shivasharan.srikanteshwara@broadcom.com>,
-        Chandrakanth patil
- <chandrakanth.patil@broadcom.com>,
-        "megaraidlinux.pdl@broadcom.com"
- <megaraidlinux.pdl@broadcom.com>,
-        "regressions@lists.linux.dev"
- <regressions@lists.linux.dev>
-Subject: Re: [PATCH] scsi: megaraid_sas: fix PRP list out-of-bounds write
-From: "Martin K. Petersen" <martin.petersen@oracle.com>
-In-Reply-To: <GPhsSM0vkgyIrs0DIZ62qeUZX7X4RxwQXVKiuvMx-lHQVSPDxpztUyQOGS0xikqvJ-Z94hMV-dW_5KN_0CX2hsfV7kTf_t0MTf6vdAAaSEc=@magik.net>
-	(me@magik.net's message of "Fri, 27 Mar 2026 03:20:36 +0000")
-Organization: Oracle Corporation
-Message-ID: <yq15x5lowt9.fsf@ca-mkp.ca.oracle.com>
-References: <GPhsSM0vkgyIrs0DIZ62qeUZX7X4RxwQXVKiuvMx-lHQVSPDxpztUyQOGS0xikqvJ-Z94hMV-dW_5KN_0CX2hsfV7kTf_t0MTf6vdAAaSEc=@magik.net>
-Date: Mon, 20 Apr 2026 22:47:36 -0400
-Content-Type: text/plain
-X-ClientProxiedBy: YQZPR01CA0146.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:c01:8c::26) To CH0PR10MB5338.namprd10.prod.outlook.com
- (2603:10b6:610:cb::8)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="NhJk/U9C"
+Received: from mors-relay-8404.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4g09FJ3sqbz87gF;
+	Tue, 21 Apr 2026 07:01:56 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1776747716;
+	bh=2+X7wH56uP+7PA51+orUA5FPLnSiJ3wUH+8mi/UPhIk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=NhJk/U9Cmn2oXJAKN7rjRO4FWXf9Igg6Rd0eysyrayXe4OrXmACezFCJeYfzYiLHU
+	 3e+BosrH8dZjVtsyjeTHU2R3H3komQYCXPS5dyYFhI2N4ErktgveiRVMv0CFRELtHv
+	 Am7VoNLpKZLLPy++CZskWsU5gQ7UTSV89tCx0QdYJsy8REDwHxltxkZWuBSW3CkuNH
+	 pwlrYWuop2MNI2AcS7KmmkeUH3zZXTGshSIhRGS5f/rFGCr05VM8iurVr3DHyTw2AM
+	 EjqgGPl7iO77Vj3ScLP0PySPROZMXJ9Z5SU3MAj+UKbqCGlUROySi3tj1Yyp7+/ldj
+	 FQ0JGY61NQweA==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4g09FJ390Qz4xKt;
+	Tue, 21 Apr 2026 07:01:56 +0200 (CEST)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4g09FH52tnz8sZP;
+	Tue, 21 Apr 2026 07:01:55 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 138C1635A6;
+	Tue, 21 Apr 2026 07:01:54 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <1c4a7145-d9d0-44d5-8f19-03d58c89b9cb@leemhuis.info>
+Date: Tue, 21 Apr 2026 07:01:52 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH0PR10MB5338:EE_|SJ5PPF1DE1C92F7:EE_
-X-MS-Office365-Filtering-Correlation-Id: dcf2d3b9-fde0-4801-b648-08de9f5059b2
-X-LD-Processed: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
- BCL:0;ARA:13230040|376014|366016|1800799024|56012099003|18002099003|22082099003;
-X-Microsoft-Antispam-Message-Info:
- xM5QhQMU5uIAIgewznmi23qpmXEMl8OiTRriXEmgqxwj33snBgp4Ef4zyCU/cIL5BEizzuDxRZ7DZ5OSluiYBK/z1W94bWX25bo6Zcz/++KBahcVs3n8K47GJhpv1LinwMdCTLnfLaDBeV5byFRLDVd5/coA6JwVvzrlQQ9FhP8zT5vVMD9z9PQ8rVctRsusILvYvXLvWrH/QGdnbGxiGoSUqJlCJLBWa527uZYZSAYBNMCQrBgqWwe9TzfwGoOkKUkNmMHNqQGVkR9aygzEK2z5MwPMJ2Rcdo9EOCU517pIdaijUnnfDTvVn3UCxZDIebvPRbXdFz4Oo885J1QMaPld6xsmm1eOq5M8AImbrWZq6v/+pOhzAUviR4ehRTJAjh5m2F8Y5Pgo0JtzI296G3HF4aFXkvlbKWawsm2BrsjlQ2v2L465eCm7f6AHYAS+Ql+rl3MHUtGiMh7J9iKcbkRjat1cwxGZ6dLiK55ly4VDcNxgtOVncWNa9Tvh1GVSXIXD2KVY9ljgxvzs/SVmyz5V06y8+XH9m/fn8/1ZVBWHv2lDZApz78T055S5v+PM9f2GabLSKoEy9mjQR98x1RerGO6dXL/fmD3En0grVsATRD1kxmOg+mK3NLwyreBGuxPo9/3KKq9fotE0LjOFgAM+KzvNgvpj2dX5HAf1pGUXt71JRvagNYMhsOn/EhHKWYNNeneWVJ4GeaVM6kJp0iU1n/LNM2+b9I14CbHnPFs=
-X-Forefront-Antispam-Report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR10MB5338.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(56012099003)(18002099003)(22082099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
- =?us-ascii?Q?uTgDHtjkoK86njQEIfv/EtlRCpuMMrFFW2/RRPUxlNoy9AtIf0hShDKSahos?=
- =?us-ascii?Q?eRuqN0v/2sEktwN1xq5akhyGUpK8hiRZ5j7q/TWFprQRlxmsq6GnFj52ZvWQ?=
- =?us-ascii?Q?WfTdnauNiBJ68s1lbqBGN7F/Ojn0WvJJL2wye6WeCwF5Zr3VSHqwoYlwIbe3?=
- =?us-ascii?Q?Nx3sAJY1d+zc7TFEM2F7o03+fFGMlhdUvFIteco4zllXowpPnBSNswa9ZlUy?=
- =?us-ascii?Q?wxLU+WyK9mdl8bdWucaUgMXxWI3ujFjYwRm0Lj+FwrIxwMhJ0p3OytiNLp93?=
- =?us-ascii?Q?dPb3Z2ze8jmxyeTFTg3ENFYKM6tO90rqTgZKhzXSZG+wFtbTQs37n06IyoJa?=
- =?us-ascii?Q?J2RJ10EjzaRg+eG2GTjHLNfpxekmf4x/2TfRgzS8NCJatlrbsnbqZPChUKac?=
- =?us-ascii?Q?t+xe/uLfj/dBz5MtYOSzj48hcZFXuR1eBXjGoqgy+cYggWm4gK8KUFW6dMx0?=
- =?us-ascii?Q?UeDQaL3wzXKDAfrd6U9xSMjqj3yWKsZzppqbDsZAMOckEADvnj2Z8T6wy7gI?=
- =?us-ascii?Q?h/tQVpWjJdSbiB6wSDjovQ9RPXgM8PF3We7NiifCNBoCOw2+KqJs4pCNJKKn?=
- =?us-ascii?Q?seRQAMNOhQHJWe8kdMXKP3qUqtOELXUBHJwFwDFErvtj9RI7p7Xm/IwX1EaF?=
- =?us-ascii?Q?qKq+3zaQUzsEWxwvZkCM9gcFaHPNKBbDSABWocT8NHKxapksXBZbWxLVa4YN?=
- =?us-ascii?Q?NFnwPJfm8cvKL2T6lWKLKNTaWj9hwWM7xYPRCLa0PG+3YOQ6KGEWniJA9itA?=
- =?us-ascii?Q?DchF1cnrW3LyzuDPMxbxpGG6l28lKoCOFZVeVEQIhXaO1b+3RZ7b8+NvYb6J?=
- =?us-ascii?Q?bgEQSQhrYEOtSAaGZLrew/Fg81A9jHhI6dUquXwPqGe7iVj5uJkytzdG/C/N?=
- =?us-ascii?Q?7hjow2VZtc7sZklYQHwGyPgls8l7qUbgAwV6MAXT5HTFs2bRNgJHS5rt3fGc?=
- =?us-ascii?Q?wjfbFBRzPheoeK7a7JRjdJApZnosXm2HGLm12Fv50rZR7i4htNpDUMLAZ/ao?=
- =?us-ascii?Q?vYEcee5tSiajSxMv2L8+lPq800IEf8so4qrGTAbK2equapXiSCFfohHIzv0R?=
- =?us-ascii?Q?7hpGHqd+VTVudKNZ5GOpHR84rkXZ/HZBa3AhyS38fZEERgGRDG5a+/shb+a3?=
- =?us-ascii?Q?uUUWd3ZXdnuWAF3JFxjCvfBGjYEUP/6VqNto9gM5fd29k54gzs32PMcMw0Ln?=
- =?us-ascii?Q?74oKF05ziCkEG3k/6yy21xbLnSOCjLKRWIuFROtuJ3Vpa/Tvx3F+WlmV4Q/C?=
- =?us-ascii?Q?7uhWacENrcnA9tleBvmfGgL4p/pCb48d5sAPpOAYfy3EMh/OpR0cgDglePO2?=
- =?us-ascii?Q?RNQFhZdmLfOvX4gd+rcDRJFTeEsjjnesCZXzpjn+q4baHyeiVWKzFs6x5CEo?=
- =?us-ascii?Q?1IUeILPsHOGRzZaZ20emzirbF+Vt0noQrJFsxj4BfAr+NKrEECVzlKQcD2hd?=
- =?us-ascii?Q?D6EjqsVNJ0qIMkIFCWRY/wMdP2X/8RbyBVn9x0gI5CNmec7+golaf/We3I4d?=
- =?us-ascii?Q?tIyt2ldMcqJHE2SxxpnOeYby6er+GT291HEPMN8GGkdPQbbUo8ox6bUPI4Ih?=
- =?us-ascii?Q?/4oyF4wR5/vzKMQC3E28BFFgAW/MELMNi2kOExlhrkJe57xTni6F5iFjeOYN?=
- =?us-ascii?Q?hwHp+oW7iX+2u3NoVHE1+fWvgwIMCr3oeD6OCjUp40n/kRh9gRhL5jeDHUmj?=
- =?us-ascii?Q?aZWmNRU8iVXlttaf8v8TRmgKksCplHWgwTGfHpmth2juz0/AzhEGaei9fuud?=
- =?us-ascii?Q?nFuQ7A9aI8lsU2uzE8JeLZgNAew1Kes=3D?=
-X-Exchange-RoutingPolicyChecked:
-	KnhswAKRuTOLFJp4n11BrXObu9S1pFRw3LP89QJwWf5wJnAZfuFCpwU6WZ1f3xWDZv1sHyHImZqd2IpZtpmb8Ruuf9FpHAKfJ1m4qOYQW0RCKFiQtNf+wwgmTTtkSkXNx3lpv6GXIhuIjyry3fFuSuPYfjnDgzt/KE5nBdz0CAX/2Oci8SA0a3beovvRWBv4qi+p0myoyUF+63ufCcVrJXCL3UmQGRwZroc1BKIsrz89jhoF8rxG0TIH9KKcxAieRVhNR3ulsffQpOVL1dJI/ytszArr0IicuF6SLGz0M8EDYlMT/qNpPRfmc9+6MS0+3dQR6mI9d4fj6sd8be9Lxw==
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	gS57VbI7mH5gUTzhNMdyBK7FhyA8hi988HgTDWTPEoFBAtIBTTp0Lrjkf+Ntd2QDc8HztwjET2wFg2Idf9I8ZAWkuHnm1NJKdLZ55bwxVVFp7qbrZhsAit4b2m7kgj+VDLJTQ2rQpqyDqJKiKD8DtaHso26efE47LEghi+e2KSO1VBboJ46EdCGLbW+DhG5ZzL7VIxGiwFJa0E5I5STrjt+6bvx+BDBNXft2v3nHGUgxxSTdxQg6NK/wZeQGb7BjyE1FHhlX6MGrLlR9CFZ31LSRFKtCcjqcLysa5EKbsUcp1O3dqBBnJI8OGrHs1nIAk9ezFLvNLvhvSkxPG7Z/lZDrIE0PfckGCIF7WUgUAHh7L/0XEP92uy5oTuq6N4MttEowN23F8RYrEhoHElt7SAOAcjIgvGJpvhP/Fjj07/XxhkQS6yNRtOjA6i+/J82xGydn0YonF80XHVfrgULmCONCgMsNKZrEZ48tDqaONhNKxYEujKl964fiFw30m7UgKc2aCePeElm/bf0xbuTKZBWrj9797A5jk9waBczBe4dEF5xqDe/42OlwOtNPKgEe3TeTT5iCGY+uMagT4lgSSATFcfKKvlQlsKmBZoR/wUw=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dcf2d3b9-fde0-4801-b648-08de9f5059b2
-X-MS-Exchange-CrossTenant-AuthSource: CH0PR10MB5338.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Apr 2026 02:47:38.5528
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: XWzZa+3LKpD3B6u3NKxn3MduGx2ReYjXsCPoLD5sMXhspA3fSLmRbt1q95icf43Te/t0wP5Im96UDtN/VIDfusxwZLTThjQDQDBnV4dVWhQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ5PPF1DE1C92F7
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-04-20_05,2026-04-20_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0
- spamscore=0 mlxscore=0 lowpriorityscore=0 adultscore=0 mlxlogscore=783
- malwarescore=0 bulkscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2604070000 definitions=main-2604210024
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDIxMDAyNSBTYWx0ZWRfX/oBPJFqFlxdv
- af9sYWLmDFzHeeAz+am1u/zCQlUlsIe7Svob+DZzX6fTI0FHKrbhN8aB12pwNXBt552hWKTRXGj
- 3OhfDdJW0ZCnGxIPaip3YsBHH4VqYzqtzBWAIGD643crTSKgzBdoMyRJxSkfuzcvhpYH9f03J6J
- /NAsz9Zpg4SelorvaBEH88/a+gpOpKEd+6ejqiJTaEJfm2Dx5GH9eDf8KyVC/bcL0qkbXmUTqjT
- 76vxm5BqLHhgQ01n91qok5heu9OrRTW3C1iyGBzsSjgzVnPW7cIRogV46xNINFKk58SDyMcdy/Q
- HAf3Ne8PLHRzAsFtfIXz6U49RDoHj6QgxK6f9WAe7NOlVoQc150kcX4rLxa3uWxGld+pqZovo/X
- UpYTQB96PiaG8kKsem9o07R1Edcky15mTizF/qu8faArDiI1/YWWQt3llKHkRUWkkelrw4vzYzO
- bAW6tqhjOzSU10/vq5iNtfFfldFGaJH4HFs02qM8=
-X-Authority-Analysis: v=2.4 cv=TN51jVla c=1 sm=1 tr=0 ts=69e6e550 b=1 cx=c_pps
- a=e1sVV491RgrpLwSTMOnk8w==:117 a=e1sVV491RgrpLwSTMOnk8w==:17
- a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
- a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=xqWC_Br6kY4A:10 a=A5OVakUREuEA:10
- a=GoEa3M9JfhUA:10 a=VkNPw1HP01LnGYTKEx00:22 a=jiCTI4zE5U7BLdzWsZGv:22
- a=7Gl3-_t3PgB9XO-mQDs3:22 a=eRKuCU3VBvCXl2hJBwkA:9 cc=ntf awl=host:13825
-X-Proofpoint-ORIG-GUID: uPnwF7f3GWnkIhaZcFhy3moRqhOk583V
-X-Proofpoint-GUID: uPnwF7f3GWnkIhaZcFhy3moRqhOk583V
+User-Agent: Mozilla Thunderbird
+Subject: Re: Pressing the power button causes the device to freeze completely
+To: "Sagatov, Evgeniy" <esagatov@amt.ru>
+Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ LKML <linux-kernel@vger.kernel.org>,
+ Michal Wilczynski <michal.wilczynski@intel.com>
+References: <c64d69bb-9df9-46b7-a1ad-aada30310d36@leemhuis.info>
+ <26521776666243@mail.yandex.ru> <d161effaca5a456dabcfbb7dbbf105d8@amt.ru>
+ <d274394d-2282-412e-80ad-bbe2c1a41b8a@leemhuis.info>
+ <34758f5c98864b8281cf89c30602981a@amt.ru>
+ <773df6e6f0bd4120b9e39d51559ce6a8@amt.ru>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <773df6e6f0bd4120b9e39d51559ce6a8@amt.ru>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-PPP-Message-ID: <177674771434.4075278.4364186362584113682@mxe9fb.netcup.net>
+X-Rspamd-Server: rspamd-worker-8404
+X-Rspamd-Queue-Id: 138C1635A6
+X-NC-CID: RpzY13Xkmv41H0/y6gVJybwdRKxmMHMYVSPnGHwodvE2szVSSd8=
 
+On 4/21/26 00:20, Sagatov, Evgeniy wrote:
+> I'd also like to point out that without this patch, single-core CPU performance does drop.
+> In my case, it dropped by 30%. I tested it using 7z, stress-ng and sysbench.
+> 
+> -----Original Message-----
+> From: Sagatov, Evgeniy 
+> Sent: Monday, April 20, 2026 10:35 PM
+> To: 'Thorsten Leemhuis' <regressions@leemhuis.info>
+> Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>; regressions@lists.linux.dev; LKML <linux-kernel@vger.kernel.org>; Michal Wilczynski <michal.wilczynski@intel.com>
+> Subject: RE: Pressing the power button causes the device to freeze completely
+> 
+> 8c94ccc7cd691472461448f98e2372c75849406c    good
+> e37617c8e53a1f7fcba6d5e1041f4fd8a2425c27    good
+> b0d326da462e20285236e11e4cbc32085de9f363    bad
+> 
+> I also built the stock Debian 13 kernel, version 6.12.74, and reverted commit b0d326da462e20285236e11e4cbc32085de9f363.
+> The PC shuts down without any issues with this kernel when pressing the power button.
 
-> megasas_make_prp_nvme() builds NVMe PRP lists in cmd->sg_frame,
-> which is a DMA-pool allocation sized by instance->max_chain_frame_sz.
+Maybe there is nothing wrong with the code in those areas here, as it
+might be a timing issue influenced by the performance change. But this
+is not my domain, so consider that a wild guess -- Rafael might be
+better judge here.
 
-Broadcom: Please comment and review!
+Overall I fear there might be not much we can do, unless someone comes
+up with ideas how to debug the real issue.
 
--- 
-Martin K. Petersen
+Ciao, Thorsten
+
+> -----Original Message-----
+> From: Thorsten Leemhuis <regressions@leemhuis.info>
+> Sent: Monday, April 20, 2026 9:55 AM
+> To: Sagatov, Evgeniy <esagatov@amt.ru>
+> Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>; regressions@lists.linux.dev; LKML <linux-kernel@vger.kernel.org>; Michal Wilczynski <michal.wilczynski@intel.com>
+> Subject: Re: Pressing the power button causes the device to freeze completely
+> 
+> On 4/20/26 08:41, Sagatov, Evgeniy wrote:
+>> Hello Thorsten,
+>>
+>> Thanks for the detailed manual!
+>>
+>> I determined that the problem started between versions 6.7.12 and 6.8-rc1. Then I ran a 'git bisect' according to the manual.
+>>
+>> Result:
+>> b0d326da462e20285236e11e4cbc32085de9f363 is the first bad commit 
+>> commit b0d326da462e20285236e11e4cbc32085de9f363
+>> Merge: 8c94ccc7cd69 e37617c8e53a
+>> Author: Linus Torvalds <torvalds@linux-foundation.org>
+>> Date:   Thu Jan 18 11:57:33 2024 -0800
+>>
+>>     Merge tag 'sched-urgent-2024-01-18' of 
+>> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
+> 
+> This is a merge commit. This might be right, but often it is not. Can you please retest commits 8c94ccc7cd691472461448f98e2372c75849406c,
+> e37617c8e53a1f7fcba6d5e1041f4fd8a2425c27 and
+> b0d326da462e20285236e11e4cbc32085de9f363 just to be sure and then share your results? tia!
+> 
+> Ciao Thorsten
+> 
+>>     Pull scheduler fix from Ingo Molnar:
+>>      "Fix a cpufreq related performance regression on certain systems, where
+>>       the CPU would remain at the lowest frequency, degrading performance
+>>       substantially"
+>>
+>>     * tag 'sched-urgent-2024-01-18' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip:
+>>       sched/fair: Fix frequency selection for non-invariant case
+>>
+>>  kernel/sched/cpufreq_schedutil.c | 6 +++++-
+>>  1 file changed, 5 insertions(+), 1 deletion(-)
+>>
+>> ----
+>> Sincerely, Evgeny Sagatov
+>>
+>>  ----------------
+>> 16.04.2026, 20:35, Thorsten Leemhuis (mailto:regressions@leemhuis.info):
+>> To: Evgeny Sagatov (mailto:sagatov@ya.ru), Rafael J. Wysocki 
+>> (mailto:rafael.j.wysocki@intel.com);
+>> Copy: mailto:regressions@lists.linux.dev, LKML 
+>> (mailto:linux-kernel@vger.kernel.org), Michal Wilczynski 
+>> (mailto:michal.wilczynski@intel.com);
+>> Topic: Pressing the power button causes the device to freeze 
+>> completely;
+>>  
+>> On 4/16/26 19:22, Evgeny Sagatov wrote:
+>>  Could you please try 7.0 as well?
+>>  I compiled 7.0.0 kernel from sources.
+>>  Unfortunately, this kernel also freezes when the power button is pressed.
+>>
+>> Thx for testing.
+>>   
+>>  How did you find that this causes the problem? Did you do a proper
+>>  bisection and thus checked if the parent of that commit really works?
+>>   
+>>  I don't think I did it correctly.
+>>  Because the previous commits didn't shut down the PC or cause it to
+>>  freeze. I think they just weren't working.
+>>   
+>>  I also tried a very simple module tity-power-button. Pressing the 
+>> power
+>>  button when using this module also causes a full freeze.
+>>  I think the problem lies with the ACPI functionality, but none of 
+>> kernel
+>>  options helped fix it.
+>>   
+>>  I'm confused.
+>>
+>> Then you likely want to properly bisect the bug. Might be best to do 
+>> that on a Debian 12 install (where everything used to be working) by 
+>> following this guide:
+>>
+>> https://docs.kernel.org/admin-guide/verify-bugs-and-bisect-regressions
+>> .html
+>>
+>> But be warned: the regression is old. Even if the culprit is 
+>> identified the usual rules wrt to "no regression" might not apply, as 
+>> fixing the regression could cause regressions for other users.
+>>
+>> Ciao, Thorsten
+>>  
+>>  ----------------
+>>  To: Evgeny Sagatov (mailto:sagatov@ya.ru), Rafael J. Wysocki
+>>  (mailto:rafael.j.wysocki@intel.com);
+>>  Copy: mailto:regressions@lists.linux.dev, LKML 
+>> (mailto:linux-kernel@vger.kernel.org),
+>>  Michal Wilczynski (mailto:michal.wilczynski@intel.com);
+>>  Topic: Pressing the power button causes the device to freeze 
+>> completely;
+>>  16.04.2026, 11:23, "Thorsten Leemhuis" <mailto:regressions@leemhuis.info>:
+>>  
+>>      [removing the stable list, this is not something for them]
+>>  
+>>      On 4/13/26 18:46, Evgeny Sagatov wrote:
+>>  
+>>           I have a PC with a motherboard GA-EP45T-UD3LR (Rev. 1.0) 
+>> <https://
+>>           https://www.gigabyte.com/Motherboard/GA-EP45T-UD3LR-rev-10
+>> <https://
+>>          https://www.gigabyte.com/Motherboard/GA-EP45T-UD3LR-rev-10>>
+>> and
+>>          processor Intel
+>>           Core 2 Quad Q9550.
+>>           Previously, I had Debian 12 with kernel 6.1 installed, and
+>>          pressing the
+>>           power button would shut down the PC as usual.
+>>           I updated to Debian 13 with kernel 6.12.74, and now pressing
+>>          the power
+>>           button causes the PC to freeze completely.
+>>            
+>>           I see that systemd doesn't even begin to shut down. It 
+>> freezes
+>>           immediately after pressing the button. There's no error 
+>> message in
+>>           console. There's no error message in the logs either.
+>>          Netconsole doesn't
+>>           report any errors, and the kernel doesn't panic. It just
+>>          freezes completely.
+>>            
+>>           I checked that Live CD with Debian 12 continue to shut down
+>>          normally,
+>>           but Live CD with Debian 13 freeze.
+>>           I tried updating and resetting the BIOS. I tried various 
+>> kernel
+>>           parameters related to ACPI settings. I also tried kernels
+>> 6.18
+>>          and 6.19.
+>>           Nothing fixed the problem.
+>>  
+>>  
+>>      Could you please try 7.0 as well? It contains a fix for the 
+>> commit you
+>>      mentioned below.
+>>       
+>>  
+>>            
+>>           If I unload the "button" module, the system doesn't freeze, 
+>> but
+>>          it also
+>>           doesn't shut down.
+>>           I built "button" module by rolling back its version to 
+>> commit
+>>          1a20d40
+>>           <https://github.com/torvalds/linux/ <https://github.com/
+>>          torvalds/linux/>
+>>           commit/1a20d409c874255086e2f42a729826d490294c91>, which
+>>          corresponds to
+>>           kernel version 6.1. This module does not freeze, but does 
+>> not
+>>          turn off
+>>           the PC either.
+>>            
+>>           I've found that the freezes have been occurring since commit
+>>          0d51157
+>>           <https://github.com/torvalds/linux/ <https://github.com/
+>>          torvalds/linux/>
+>>           commit/0d51157dfaac05ea66616d8a250dce04bef49a4f>.
+>>  
+>>  
+>>      That is 0d51157dfaac05 ("ACPI: button: Eliminate the driver 
+>> notify
+>>      callback") [v6.5-rc1] from Rafael. But that is a very old commit; 
+>> and
+>>      you seem to be switching distro versions and kernel at the same 
+>> time,
+>>      which could interfere.
+>>  
+>>      How did you find that this causes the problem? Did you do a 
+>> proper
+>>      bisection and thus checked if the parent of that commit really works?
+>>       
+>>  
+>>           Unfortunately, my skills are not enough to understand the
+>>          reason for the
+>>           freeze.
+>>            
+>>           I'm attaching dmesg and lspci logs.
+>>  
+>>      Ciao, Thorsten
+>>
+> 
+> 
+
