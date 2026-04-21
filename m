@@ -1,213 +1,196 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4A9D27C162
-	for <regressions@lists.linux.dev>; Tue, 21 Apr 2026 15:11:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 073062F25F5
+	for <regressions@lists.linux.dev>; Tue, 21 Apr 2026 17:20:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.177
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776784307; cv=fail; b=Nm2ukwv4/+T3zvuAI7d8cNYDnooKqsjFOG1w2aqEC9lW3Bb9AUtZTVkgkD5L8/vFPyJgQABCzT08sfW8pGsShdus9Wwac16ykRKgzGWRgbLS1ouWfnBjuKM1DcJGkKFLrHnpVzLWIn2SLrIEnYkXX5Z2XmyXbXXm1X7l7jSWm64=
+	t=1776792020; cv=pass; b=i426AXYrtCYCLsqGo/3G/AUGJvmBtPHeS8+J+4nxxT4VTo60loRB5YhRCrqzzceOV9Cp/XqAqwd/0k+QmPj/X/zMGE0pwCWSjtWRsS+P8iEIb2l+W1EFaSyeArJsIW0/D1VnQ71FEICkYDp6WaceLcclSCkd9ZxW9ApJCb3LPxo=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776784307; c=relaxed/simple;
-	bh=Be9u+c2ARod4ND8H5dQSQ5whp9lvKwkGBjAKq+ysVXk=;
-	h=Message-ID:Date:Subject:To:References:CC:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=RrL+FA1fLQVI9mPsY/oRLxjmOsnOloNz2MaKNcBKSVtAJrWwMSrYNCxkVeEifU3f8WIKyGnTbqmMKwcxLvVt/LKowpVvPhRbsjG2qk01LlaX/UKskNY9JthZVt5ThNq5yig9MfqCPuQn26vIauRhuGgv+G1HavVIEYYCqydEKM4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=c66we7EW; arc=fail smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1776792020; c=relaxed/simple;
+	bh=Vxeh3HrJSuiP4oJvDrptNJN1vnuRJPPVEP7iiGSRHi4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=seT7A2DbjMy1v7bxwQQp16sjFPjLbD3Ow+oP/96Dij2peyKzJTH0OfocKVBfLO+r97y4oc0rScpGsxElP6MwrHdEtj2idjSZ5Efl+/+B212f80L7vF0an1LPwvl79AjGCFu/XdCwH8YEYgwHg5i2N7cQ8jhl41RiknbkGU/Ar34=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JeqxOpj9; arc=pass smtp.client-ip=209.85.160.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c66we7EW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1776784306; x=1808320306;
-  h=message-id:date:subject:to:references:cc:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=Be9u+c2ARod4ND8H5dQSQ5whp9lvKwkGBjAKq+ysVXk=;
-  b=c66we7EWkZJH/OFz237IfRSgMZGJY3sJQyJ8G6pMT+8sG+Sm+v52pixU
-   oKQFAv3Qk4Yx6DqIlCS/6GQsBssWXoI1AVSC2szotvW+X89HZJi/mfK3H
-   KgkkjRYtAgjSrunXU9HmomxSEeQx/NpqqCCaopqRKXlxDxjTOTB0K4HmF
-   8wewt809FXxpSf9VlDN5TPnLzKb+QW4GeZWRNl1/+HbbgCzhNm+/TLuop
-   rw4QJZiwDPQfUvUf84pL9MeDfGSs+GiJrdgvgKj3Pj1q2uHjW8W/Nk/QO
-   W6uHFtkF+3dJBYraBLOAa9MelXrKM3vBcbGnh93JkgARobHieO01hxOOu
-   g==;
-X-CSE-ConnectionGUID: edS2JGC/TTOQBo7w3ntHSQ==
-X-CSE-MsgGUID: RcQ5M7qhQa+XWt06FE2zoQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11763"; a="103179961"
-X-IronPort-AV: E=Sophos;i="6.23,191,1770624000"; 
-   d="scan'208";a="103179961"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2026 08:11:45 -0700
-X-CSE-ConnectionGUID: AVNnk6a1Q0inv2sERF50FQ==
-X-CSE-MsgGUID: hfyKyMnvSDmma295UkXeLw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,191,1770624000"; 
-   d="scan'208";a="270143398"
-Received: from fmsmsx903.amr.corp.intel.com ([10.18.126.92])
-  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2026 08:11:45 -0700
-Received: from FMSMSX902.amr.corp.intel.com (10.18.126.91) by
- fmsmsx903.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37; Tue, 21 Apr 2026 08:11:44 -0700
-Received: from fmsedg902.ED.cps.intel.com (10.1.192.144) by
- FMSMSX902.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37 via Frontend Transport; Tue, 21 Apr 2026 08:11:44 -0700
-Received: from BL2PR02CU003.outbound.protection.outlook.com (52.101.52.48) by
- edgegateway.intel.com (192.55.55.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37; Tue, 21 Apr 2026 08:11:44 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=PRDg7czMZOOp37y3U7pk6zXzACNMce8xK5YyOHpicfN6J4IV/lPfqD5f/zTsWoz3qcBzd+jIVS3iZ7BXXpRUE/YmlD1oqm0YlB6S6H0wEAf9f8s5avlToYOFx88MEmzbgYa0X5CYaplQIQE4OLr8rqsYtCOPJ0u690UatJ+zuIn+4G8wHGeIlAL+df17SQmDC/35o8ZoW1rMyblpob2szbUckXblpRhOV9aaLUFKkDIIdDiccinCYkI1N938My7mtE9PTtKGW8X+Qq7YhJApeqySkldV6uAbLfMmPXMktMuAXD3fGYDTOT2I9oVCwMYwV5sBupAeYZSA/Xi3ijLvQA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=KNz27bwW3QDD6JcckAZ0FLwmcDd5xxnL8c3oPCcVIPw=;
- b=kcRWV7avBHRCqCXv5g+fxvLqzWVykmESk1/vcGOnOCHsTl54yTvRMSC4uVYFORUaFt8WavuwRILTZH817Dxh3XzGNTG7cWrziroO68Gulk+o/q3JwnN2p7sWs6ktd0hV9BwkDWg+c2QYYZyo9NvRzXixzdogCq44VCjmEnOqJcnHn1sXAbjd1kOV6z0/CXLYAv3WjEFh4NpWmU0e/LEDFg0mMRMekCVEr5fi5XR/qwwcLC7TiZiRaOPO4ZiXvpxKaYkTP4MqSCfNvvRUNhOSXdE+PEyoSuC4PKA6CuFXf87oB9c7zGma+s/XmGu0q30dT/NF9Lw6fLcmmNkRMR2wEA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DM3PPF63A6024A9.namprd11.prod.outlook.com
- (2603:10b6:f:fc00::f27) by PH0PR11MB4806.namprd11.prod.outlook.com
- (2603:10b6:510:31::21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9846.8; Tue, 21 Apr
- 2026 15:11:41 +0000
-Received: from DM3PPF63A6024A9.namprd11.prod.outlook.com
- ([fe80::f30e:2322:8783:964d]) by DM3PPF63A6024A9.namprd11.prod.outlook.com
- ([fe80::f30e:2322:8783:964d%3]) with mapi id 15.20.9769.046; Tue, 21 Apr 2026
- 15:11:41 +0000
-Message-ID: <33307e6f-19f6-401c-bd49-725c56596678@intel.com>
-Date: Tue, 21 Apr 2026 17:11:36 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: Pressing the power button causes the device to freeze completely
-To: Evgeny Sagatov <sagatov@ya.ru>
-References: <184091776095270@mail.yandex.ru>
-Content-Language: en-US
-CC: "regressions@lists.linux.dev" <regressions@lists.linux.dev>, "Rafael J.
- Wysocki" <rafael@kernel.org>, "linux-acpi@vger.kernel.org"
-	<linux-acpi@vger.kernel.org>, Thorsten Leemhuis <regressions@leemhuis.info>,
-	LKML <linux-kernel@vger.kernel.org>
-From: "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>
-In-Reply-To: <184091776095270@mail.yandex.ru>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: DU2PR04CA0036.eurprd04.prod.outlook.com
- (2603:10a6:10:234::11) To DM3PPF63A6024A9.namprd11.prod.outlook.com
- (2603:10b6:f:fc00::f27)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JeqxOpj9"
+Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-50d836552daso2348171cf.0
+        for <regressions@lists.linux.dev>; Tue, 21 Apr 2026 10:20:17 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1776792017; cv=none;
+        d=google.com; s=arc-20240605;
+        b=KgSk9IG1f54Ir0gvgLo+671LAUdp5bNPZeqpgu41uZin6QJT7CzdYWPIDdVz7UbXax
+         AM2egFWEA9pgbthZc6rYxBx8OyXuVMC+/j5WBa/7fxuHbTYZO+0rOems/quNPz2GbqM2
+         xZFBZrkp7sGcrVSAYuXIG8ipMyESmDTboXVqf9ycNg5GSvml6mg7eIsVdHk/B15pvj0d
+         zj9LtuM32jTtfyMGLRh8D8mvwLCzfHnJinf5zdv4uESJ81cj7R3ed9OKVGXr6BGpprk8
+         UZb9sbtKflEIuHNi7RGys2ZfJSIPR+gOY4fKd8vJr0Qg5R+D3pXSMJ5mV86KJDOTmaIv
+         ZiKw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=Ha9b3BYC/DPqvosH7Lf4u9Isf4lxfWOStmLn8gp6G1A=;
+        fh=zd//6/VicY2y0j/bNwNTmCqoYPZwMoOHWEWTUHywOjQ=;
+        b=NRlYsjEvom1UObnt5px4LK8uuCroiO1D7vJQytEXXkvdXbMwOOh2Q2WaEYbGJQHdj9
+         x55LjEJv+fBeeXwX0UscWNqGCXy9cwd2i/Mu3cWhuoc3dazr7PwYfzyVsGQR2lBngPj3
+         Gk96SqEozbxU2M8a6k29o9IRjUl9/Th2hQ5zJimgJxyy+gQF2qs3lopOuf1A3z4f7djm
+         6996vBq41rh4fqO67zaLH5naB+xCkIaFsywPGT1/SWjqL5sjTLh/F83MREPgmJAJNaES
+         PDNwmRlyaoFp7u18+5alkTEPDi2ehcgMbFLzJhbTgaviT/VHseR1YX0RlcZ/yw5b9lwl
+         4imQ==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1776792017; x=1777396817; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ha9b3BYC/DPqvosH7Lf4u9Isf4lxfWOStmLn8gp6G1A=;
+        b=JeqxOpj9y4FX11JXaYojjqR3deWqroSITjEb8KF8ezKGNGbPScjNw9UYFsCESSfXSA
+         PeBj2nEd+Hh3GLlufwOemJTd1yt981PttEZuGOswHa2DHdV/sDU5KPEMswFtLia7kmvl
+         MIIP6gVcZnVyxeOo603EacxEF+i2t5onkbd+b06uboos5dYtvhcyhVJcR/mLEJXx45Zy
+         yENUaNZB+475uDsa0OeW3wCI9ErMWLLoYl/B6W/cqTMtJB9U0vEHHZKoItC+PbDGizqm
+         nTFUwWRab3uxJeFuI9z4C0HLM873Y0AqWSyARNhX+BZnQi+pH7eI+gDMZ3aoyzd39lAK
+         RKIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776792017; x=1777396817;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=Ha9b3BYC/DPqvosH7Lf4u9Isf4lxfWOStmLn8gp6G1A=;
+        b=pCSs1MOJCLJjnQXkIKoYFDf79WjtQBsH8QObdlrSTmyFif9P05dzVMvgdsmki4ERrr
+         EjQ2NUObgACrnTT3WR0Ihe5x1YVDy6VSu8iZFNJsRlj97WpvgV9aTn8dxMXLR5IYlu05
+         a044clXRn/bJkCeVZ2K2huOJEEnTz8xGU0V5hNuHI7eNDOiMAexugMfr1e/6HJ8ajtT0
+         dWZjnVI1mAFkhUdqt+jAZl6cWBdOvQ2+cnrq6anyVFesYVqyKnneBh0zb2ud5TxNjF93
+         fc4g482bIvtEKXWNXZKK3wXxQPcdtFWrES4ct9liTOorOOVaFT08V+lFdyvbYzcUHToN
+         D9lw==
+X-Forwarded-Encrypted: i=1; AFNElJ+zVTuHbVqnJlDaX5AQ0hcvBKsr2+ucgtEwAyng9iNI/3lZeDcsizc3cRf5qo5N4ffKZoFdRp7PVPTQvQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzrLHi+ckhLilJVb4x6OFMlTL2S5Cu/Oh0LVaCgTC9bW/Bcnvzo
+	8S5h7WGC7PNTpEVFaSlGIj1F2QotFzfLhlYwFrrdOMlBzz7MZ3FramagwKvo/4pswSzseJO9vie
+	Ngj5uGGP0vwM4N1k3gz35lu2ILKOXanimdwE+73Qv
+X-Gm-Gg: AeBDiet1zGdw3RNqq9dCsGqinR188kNFEwCDZnANqwv2BqtKVz0oPBz3A8EY2Eb55eL
+	rFRgHWC0KcqQ0EXecuwGCSdYXSN8BPtByS/Aucj0w1O1e3E42ud04i+/lDlQ2G054Fx7Hq7QOLZ
+	NGsX01aujlKhUE2b+Y7cFuoM2ebCOOmmryGqg742y2AuAqiNHodn8ZKejDIi+oxRi7rSQhp9yG6
+	5JiVGoe6+goUKu7l5kX8NH/2zUFw/s3JrkaQG3sMjp2JPuW2DEd/8uY9i04X+nSGKxvgCWna1ob
+	1R6mKyshNSesmCinMKr5u1Fj0aM4
+X-Received: by 2002:a05:622a:5a87:b0:508:fd42:fd05 with SMTP id
+ d75a77b69052e-50e4420283bmr53961561cf.15.1776792014053; Tue, 21 Apr 2026
+ 10:20:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM3PPF63A6024A9:EE_|PH0PR11MB4806:EE_
-X-MS-Office365-Filtering-Correlation-Id: 54dc2726-2f68-45af-7ae1-08de9fb84ad9
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016|56012099003|18002099003|22082099003;
-X-Microsoft-Antispam-Message-Info: HtvL5XsT199PaIf/OTwbYdBsys84CAspuqGb1g3FMqsokd4YTJ+Q9nVX8Ki018u2ShNbJuWLng0hL7PGyAkbithaNzghyEKcmu/FGtYr4Ka3gYUF0q28VgSyUye2W1ZsUO+sQ8zD7AGs3AaMYpYPtTCvGM1Dy9WGbsmv+HYyAObKPItXV70BZPNGSOQY3aQAuxkUFlbrblMeRDyo8b3CyY5fFPt9YU/DfrTBL8WY5sAy+XwDrajo+K8y0lxseWacE5OW9kvu22D2hMOdkG4RoxXzoLEONQ+Q0Ch0IKVfYCUBJ6pamv6rMDS6mJzCYI4JsrAyT0VzoLmavKYLlRM7IqcwAm29ujJHlu0tLacXYt/TGwgmGg+YZuKWcNHU76DmYvwsYMdCfj9mCzICeit5VfnnLd7qacNdwCV9c9t1FiGCtxXkq6ZcceV1OFrfDIofzjiyO1VOi5kulRBwUO/zSn4GZD+VnP1I41Wx7xRUfqrOiftxqV94uADPbs1PRamik4JpHIsRZzamvie3nktqaB2oYotl02oLtJaZmAgMmjhOudHyjDNHTEk9K67GJbpaLTuWTtTD9gBs3uBCIl8SBjZgtoHgb9P+8vl7yRJCNu2qKUrlIl847MA9SFHI2okgNfCqlwcuI+VAQmOinFAen8D7wYyYJndDs+4BnM3EC8JYqYqWjla3b2U4lETIG09tz834lKldH+CUIoH/jIPTDg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM3PPF63A6024A9.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(56012099003)(18002099003)(22082099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?VVI0dzBTNzhXbU43WXROajl3K3Z1cHpDbStJY0lNSm54Sm1VLzQ5SGdzRXdz?=
- =?utf-8?B?K2krN2Q1bURqUkp6VXJBRTFWZG4rM1V5NXJEbjFLa1ZpS2JuVjVGVFI2cCtJ?=
- =?utf-8?B?aklkLzZwZzBtR3BHSndtSUVtUGRGWFAxQ3pyeEVjVXBDQUZjdzhuN011RTlR?=
- =?utf-8?B?VHJmSkNlZ3QyN1QwV3psMzFBYkcyYmxTRDhzRHRhbTBXb2xRVjYyeXVMK3FV?=
- =?utf-8?B?SHlKS2J4bDBWcVNHUWc4bi9iM0tPUjVsNm5UNjg0bHFjMEFZeEN1dWtORTNz?=
- =?utf-8?B?K0J3em9jaitNYnEvNG5VTGhJSmk2cnRJZWFhL2Z6cEh1dmdGMGRkWkJzMStu?=
- =?utf-8?B?a0ViNDAxaFNDT3FZeGozNC96Z1pEeGNDOW0weCs5MFJzM1ZMVnRSZUpPT3lN?=
- =?utf-8?B?TEw2ZFNmbENHUjdRZzNZbkV0aE0ydDJhUFIxeTF2aUIyR3U1WEJDQU9WL2pk?=
- =?utf-8?B?SEF5eG9UZXBCbmp2Vmp3Yk5NOW9OZ0Y4aDErTSt4bEVJTHNGS1U3WFI2Z09o?=
- =?utf-8?B?U3FoYXd4ZHNBU3NGcVFaQlNETjJGNUJBVElzWDh2blpTMTZNZ0NFaEJFQmto?=
- =?utf-8?B?cng5VVR0eXZ5V2RsN3p5S3drdVdNK3JJMUtuV3BCdjd0aEN1dHZUMFMyNTBP?=
- =?utf-8?B?RGJOSEU3R0poSkxSWkthenV1ajJMdS9YWHlzZkJ5MnVRaWtENUtFSVVwbERF?=
- =?utf-8?B?TzUrR3pseWFUMm83WEx4Y1lobTJtdHdaQlNlWW9QbnhMbllsTGc5ZVlrOTlZ?=
- =?utf-8?B?TEZrN2MyZ3hwR3hmRm5GR0N3c25qNGxvSko0THdtWFRQSTcwRGdkeFBxQVpi?=
- =?utf-8?B?ZVBWK1plemlNZG1HcDhmT1k2YlQxVHEyZ0YzVXZhQUo5dFNJdTZFRnVPMGgx?=
- =?utf-8?B?VlFoczN4UkhUdHdTZGhlN043UEkyWWZyejN3NU5nM0RyRDJFNE1ZOWM5U2hS?=
- =?utf-8?B?ZVVpTllmZVhhVWgzeTd4aVhaQ3c3d2M0Y0V3NGRZSUR6S0kwYnlBdk0xcTQx?=
- =?utf-8?B?bVdmR3ltMkdQZUhmY2VnZGJmd0dIQVY5MitGSCt5T3pzd25RbGhYUjM4dkVh?=
- =?utf-8?B?TEdKWEVGSE14OE5SUjdnanFoc0twVVA2RHowZFo1dy9PKzNTRDhiZFRCdElu?=
- =?utf-8?B?b3ozR1A1OEo0cGo1OGJZYytOdUFBVXFSNTM3bGM3Z1RXU1pjOFB0OGRvdmdu?=
- =?utf-8?B?REo5SzlFSlhEM3JYMUVhMkpvUVhXVXdtQnh0NWpYbFIzM1VxT0VSTXI5bkZP?=
- =?utf-8?B?VFo3TE16Yjl5Qk9DMmZyRG9nOGRYSXl3NGwwV0VvTGRXMGJHQXR0M0lodmdF?=
- =?utf-8?B?Z0xxZGZFTW0wbUxyalFYNzVJZmY3MWNxTTg3RGtvNHhUaUl5RnYyM000dFQz?=
- =?utf-8?B?cWFOamFsa2w0Z3pIN3FJZHhrcmlzY0ZHdEZjUklOYUhHK0lOTVRTRFhRNUlj?=
- =?utf-8?B?eXl6NDliU1V1M0pUbFI3REhjTVB5MDlpeTZGeVR5b24zeDN0VmtqdHBzNStx?=
- =?utf-8?B?cFVuaE9mc2dCamI2M0daZ1BwNHpNekhRQTFpZE9UV0R1L0FzUVpXeUd0bDFY?=
- =?utf-8?B?QzN2a0JHWHhxdVd5djFWUDErejE4K2NycVZWM0NsSktVRkNBaFdjT2xFZ3VB?=
- =?utf-8?B?b1VHek1yZEhSekhzZ3kwRk1hSWFCRzIwMFZpUHJ4UVdKNmhObXhLVkJFZXZW?=
- =?utf-8?B?dWgzRmxGUGluR0hSQ3dYdFFHc3VTVDlTdDUyRzJhY2x5UmdaUjV3QmFPbC9J?=
- =?utf-8?B?N0ZiNEt1VVZZZW5wVEZ3UVA2d1NrUjl6VElTSEdwZzViVjdnTFN2ZEpaQTAw?=
- =?utf-8?B?S2VYZjNSbVVBN0NBNnB2QnBxWVRZT3ZjQ3dub2pZc3FBeThhRUIvYXpzM3dP?=
- =?utf-8?B?RkxWeDlTZGs2ZDRGa0xSYTlOYWlHZWszcXlaMmQvdVhoK1duL3VwVi9hZVZy?=
- =?utf-8?B?WXE3bE4xbC9hbVptajQyeHR3WUR2Qjh6QlBnOWtLdDhtQ0E4Z2VxcVNJUWtU?=
- =?utf-8?B?RWRwVXpHUmRhZFRORzYweTRnSzZHbVd1dDNnWnpHazh3MDQ0Qi8xdVc4VUxY?=
- =?utf-8?B?ZEpXMEFHeGkzSFFSdEJhemVieWVPN2ZHeVpjU0E5WHoyVlg0b2xTS3hjY0dS?=
- =?utf-8?B?MHV4UHhGM0JuRmZiQzFaQi9DRG9QdGFHOXdheng0YXNsYU9DYVcvWGduUnFi?=
- =?utf-8?B?V3FCWG5sWktVZlMvYVp6WHpJY1RtRXAvTnlSWjJ0M2t0YjBEVkRCamlTNW9G?=
- =?utf-8?B?ZzFXQzJuU1BkQjZCZ0ZJNHlLdlBkTm52TlNNMmpSN1ZGTjlvUzRFMW5ScmN0?=
- =?utf-8?B?dzlyakk2emFRczFwK1ZVK2w3OFZqNFF0eXJMSVpQRjAwSUxOYzQrdzZkY3h6?=
- =?utf-8?Q?DCqwmTcNX071BAME=3D?=
-X-Exchange-RoutingPolicyChecked: fel20MfmiseXncA7Rcsec2Ask8VIO6VA0KK8LF0JC1Vfoc/sAe2GfVsiFESKmZzuwGPW58nfSKlV2jkQgQqYvKLTo4KLK5RbRRTbieg7NBQ+mio44T0WtPR2nCTMRK5GZPZ2PxBGGuKugfuy6xU7mJWg7J5Uc7aPm476Fb072Meepp2WBrVDT0Vl4UOO7YlhL5Xc+43Ej9ewhcIjHu83GUaVp3X3FoRKejJt56wEQimrKxgu6Iy63TJ1/h6BrjbTgbcFNX/ZFC6cPEHElSp7nsZBJAR/hX9x5S/3bnBOKMdAwHW7red6mbimiir0D+0FQWNjNlWZdUBIADdsUzt+BQ==
-X-MS-Exchange-CrossTenant-Network-Message-Id: 54dc2726-2f68-45af-7ae1-08de9fb84ad9
-X-MS-Exchange-CrossTenant-AuthSource: DM3PPF63A6024A9.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Apr 2026 15:11:41.4187
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: hcxYpUcHHJbmlg3gnz40TxofFHwXav4uGOQWg94a89cTqRwoVJxLXahLwClwPYgRmXL0tp0ACsFcCjYLmzfUEM5ReE+4OERllxupJdClKNk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB4806
-X-OriginatorOrg: intel.com
+References: <CAHWLEDHfXZScF5jNDzgOxGXf-MBDcVNtqW0DbNz8Ra8rtcuL+w@mail.gmail.com>
+ <CAOdxtTbwipkyAfDakLAB6aVp6YkPWtKpDdVDUTz88WDB-18HXQ@mail.gmail.com>
+ <CAOQ4uxhUn6oCBuVJqZu+FcMx8XeAQHZbXFAGon4Xeg2SPLJW_A@mail.gmail.com>
+ <CAOdxtTaWWu_7eJWu68zf28zHQP3Y--vXTfbGFsceO47BpN3qxA@mail.gmail.com> <CAOQ4uxhCNhGinePrnkSfT9Mtf4o5FmBX7mTA2m4miCMOt3mJqA@mail.gmail.com>
+In-Reply-To: <CAOQ4uxhCNhGinePrnkSfT9Mtf4o5FmBX7mTA2m4miCMOt3mJqA@mail.gmail.com>
+From: Chenglong Tang <chenglongtang@google.com>
+Date: Tue, 21 Apr 2026 10:20:03 -0700
+X-Gm-Features: AQROBzDjNAxFnpR4sQRC9kzmG1vz5c9sq9OzKeP03GuQb7DjEPQ23ObObnZ8GC8
+Message-ID: <CAOdxtTZGFxaayJpqsiFQrWBqXvDn7oyxSL3_9TWP919k0FhWTg@mail.gmail.com>
+Subject: Re: [REGRESSION] Return change in 6.12.80+ with volatile mounting
+To: Amir Goldstein <amir73il@gmail.com>
+Cc: Derek Taylor <ddtaylor@google.com>, stable@vger.kernel.org, 
+	regressions@lists.linux.dev, Kevin Berry <kpberry@google.com>, 
+	overlayfs <linux-unionfs@vger.kernel.org>, Samuel Karp <samuelkarp@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+CC: Samnuel from containerd
 
-On 4/13/2026 6:46 PM, Evgeny Sagatov wrote:
-> Hello,
-> I have a PC with a motherboard GA-EP45T-UD3LR (Rev. 1.0) 
-> <https://www.gigabyte.com/Motherboard/GA-EP45T-UD3LR-rev-10> and 
-> processor Intel Core 2 Quad Q9550.
-> Previously, I had Debian 12 with kernel 6.1 installed, and pressing 
-> the power button would shut down the PC as usual.
-> I updated to Debian 13 with kernel 6.12.74, and now pressing the power 
-> button causes the PC to freeze completely.
-> I see that systemd doesn't even begin to shut down. It freezes 
-> immediately after pressing the button. There's no error message in 
-> console. There's no error message in the logs either. Netconsole 
-> doesn't report any errors, and the kernel doesn't panic. It just 
-> freezes completely.
-
-It looks like the ACPI button notify handler crashes on your system for 
-some obscure reason.
-
-It should be possible to get to the bottom of it, but it will require 
-some investigation if you have the motivation and time to run debug patches.
-
-
-> I checked that Live CD with Debian 12 continue to shut down normally, 
-> but Live CD with Debian 13 freeze.
-> I tried updating and resetting the BIOS. I tried various kernel 
-> parameters related to ACPI settings. I also tried kernels 6.18 and 
-> 6.19. Nothing fixed the problem.
-> If I unload the "button" module, the system doesn't freeze, but it 
-> also doesn't shut down.
-
-This is a useful data point, thanks!
-
-
-> I built "button" module by rolling back its version to commit 1a20d40 
-> <https://github.com/torvalds/linux/commit/1a20d409c874255086e2f42a729826d490294c91>, 
-> which corresponds to kernel version 6.1. This module does not freeze, 
-> but does not turn off the PC either.
-> I've found that the freezes have been occurring since commit 0d51157 
-> <https://github.com/torvalds/linux/commit/0d51157dfaac05ea66616d8a250dce04bef49a4f>.
-
-The main difference made by it is the fixed events handling and if there 
-is a problem with that, a few debug patches should suffice to find out 
-what's going on.  I'll send you one to try shortly.
-
-Thanks, Rafael
-
-
+On Mon, Apr 20, 2026 at 12:59=E2=80=AFAM Amir Goldstein <amir73il@gmail.com=
+> wrote:
+>
+> On Mon, Apr 20, 2026 at 8:31=E2=80=AFAM Chenglong Tang <chenglongtang@goo=
+gle.com> wrote:
+> >
+> > Hi, Amir,
+> >
+> > Thanks for looking into this! To answer your questions:
+> >
+> > 1. Production vs. Test Suite Impact
+> >
+> > The immediate failure we encountered is in containerd's integration
+> > test suite (TestImageVolumeCheckVolatileOption). The test explicitly
+> > reads /proc/mounts and expects the exact string "volatile".
+> >
+> > In default production, containerd passes the legacy "volatile" string
+> > to the mount syscall, which your patch correctly handles under the
+> > hood. So the standard "happy path" is not broken in production.
+> >
+> > 2. The purpose of WithTempMount() / RemoveVolatileOption
+> >
+> > Containerd regularly makes temporary overlay mounts (e.g., for
+> > unpacking layers). Because overlayfs rejects reusing upper/work dirs
+> > from a volatile mount, containerd uses RemoveVolatileOption to strip
+> > the volatile flag before these temporary mounts.
+> >
+> > Currently, containerd's RemoveVolatileOption does an exact string
+> > match for "volatile". While it works for the default path, there is a
+> > production edge case: if a user explicitly configures their container
+> > runtime to use the new "fsync=3Dvolatile" option, older containerd
+> > binaries will fail to strip it, and the temporary mounts will be
+> > rejected by the kernel.
+>
+> I need to challenge this specific argument because I do not agree
+> that this edge case could be considered a regression at all.
+>
+> An admin from the past could not have set an explicit
+> "fsync=3Dvolatile" mount option.
+>
+> Though experiment - overlayfs adds a new mode fsync=3Doff
+> which is more loose than "volatile" because "volatile" can actually
+> return error on fsync in some cases.
+>
+> Overlayfs would also not allow to reuse workdir from such
+> a mount.
+>
+> So would you then claim that adding the new mount option
+> "fsync=3Doff" is a regression because of the edge case that an admin
+> decided to explicitly add "fsync=3Doff" and RemoveVolatileOption()
+> does not handle it.
+>
+> I don't buy it.
+>
+> There is a more correct way to handle this situation and it is
+> documented in overlayfs.rst:
+>
+> "When overlay is mounted with "volatile" option, the directory
+> "$workdir/work/incompat/volatile" is created.  During next mount, overlay
+> checks for this directory and refuses to mount if present. This is a stro=
+ng
+> indicator that the user should discard upper and work directories and cre=
+ate
+> fresh ones. In very limited cases where the user knows that the system ha=
+s
+> not crashed and contents of upperdir are intact, the "volatile" directory
+> can be removed."
+>
+> containerd unpacking layers falls under this very limited case.
+> containerd can syncfs() workdir after unpack & unmount of temp
+> overlayfs and remove the "incompat/volatile" directory and then
+> the upperdir/workdir are are free to be remounted.
+>
+> >
+> > Conclusion
+> >
+> > While containerd could theoretically patch their code to accept
+> > strings.Contains() or fsync=3Dvolatile going forward, there are many
+>
+> Following the documentation advise would be better.
+>
+> > existing containerd binaries in the wild. Given that this patch breaks
+> > containerd's CI tests and introduces an edge case for
+> > RemoveVolatileOption, it might be safest to fix ovl_show_options in
+> > the kernel to continue outputting the legacy "volatile" string to
+> > strictly guarantee backwards compatibility with userspace.
+> >
+>
+> Considering my comments above, I think we have not yet reached
+> the point where the backward compat "volatile" string is called for,
+> but with other reports from production workloads, we could get there.
+>
+> Thanks for the clear and honest explanations of the containerd situation!
+> Amir.
