@@ -1,92 +1,94 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.61.103])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00812225403;
-	Wed, 22 Apr 2026 13:45:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA09B225788
+	for <regressions@lists.linux.dev>; Wed, 22 Apr 2026 13:46:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.61.103
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776865528; cv=none; b=M5L/x0IRvGOCt0NHxlVPliNZkUQLEjEv0ltX7QGBObdqMcbhklTNMXhtDWTF8tZGVqlDWQpFLu4UW6xRDDGTzkysoc4GnSAiuy66OTa52gBtNtkyt8PMMBeIAiyuo7aCNTYQlIMl1bKO9fnVOGDufb1pGhedOpWJXKq+UAKLffA=
+	t=1776865599; cv=none; b=qLaEZp364jx+f1AIFkJLIe9MSnmmjkrHoBs6l2Xr4R5L9teHzobnblqzqxGKkq2Tg+YKhLCUGJt2Gpgz5Y6go5/pBAf1m2P1SuBKKA9TQi0Z9BcvBWG/Q6duLRKmtOpPUEnocL8euF3s63im1qTUQE1F/D1g2MjDruHym3jkzxg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776865528; c=relaxed/simple;
-	bh=XlIMPVFT8LSFo3xeB6oUBZGcINKFQCtQr839TPdOnuo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=awXLyz94RZ8uAUTMIM39Qtoq6JUKGgop/rWxC51/Wnub+/TrT/zBYBQTvyE2ITJm18eRpu/BSNN/u9+F8hnj93H9VYZ7kfeh4j2AbDRG8Jc5MQE9pi5noKJMQutxFOa790LQWQYYtC+oIGq9quJbKSR/gNa3erPqWhiXZJZhckI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=YpNKwhrF; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1776865599; c=relaxed/simple;
+	bh=F5bZE2BE/6FG0ahZLtYj2MDFbyYLiHNtgTRA8QYVx3M=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=tv56YOMmTc6gNs65Q3zjHr2PMWsUw2ELJTLuD7+QXWrrzqm34tw/fMfjwBjRwG13MBUSFcIsVxN7h0u/HsthXznvwi5heaPrCNFdzw0JODe56kyQ7CaZTaNzoHSfRb6bQCp2jC4md7tB8d7pjEdkVAeVJicJwKIV3acmB406LSI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=iU1RYGvI; arc=none smtp.client-ip=188.68.61.103
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YpNKwhrF"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=zpVXbEUfIpmO4kQcsukB71G+pmauVdO2lhouOcQ7VmA=; b=YpNKwhrF1D/UEoyJtvJSew2MYz
-	7jkA8HbJcAzQ1tBUsJvJMDcX2/ppbl0JHLx9MQ8Ql0C5RcAnvKmTIndJz7AiHL/xSaTE3fEFc3hWd
-	/TrOJ9nyDNCJvwVGIRthABLzjRk3NJ1Q3d1U/JkhrSNfSJpePj12YEBsck5X8n6VZ+ahzFoTClFIB
-	dZt4fnP5P4ZUIpkkW1ahaHTZIDPBw6CnMUq8j56P5CR+TPEb9EqsmEU6il6oarQzTsCknSXloAOio
-	NXiQKRhn//bfU6idalIdyf3BvNqitVIIraDDYuSoZGBgS7u3PxlcTEckVmBupZAZmrBwE7I8uq8jQ
-	qM2z9fAA==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wFXtI-0000000BpKj-2ktG;
-	Wed, 22 Apr 2026 13:45:20 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id EAE7E3008E2; Wed, 22 Apr 2026 15:45:19 +0200 (CEST)
-Date: Wed, 22 Apr 2026 15:45:19 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Cc: Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-	Boqun Feng <boqun@kernel.org>, Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	Waiman Long <longman@redhat.com>, John Stultz <jstultz@google.com>,
-	=?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Linux regressions mailing list <regressions@lists.linux.dev>,
-	Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-Subject: Re: [REGRESSION] sched/core merge 1c3b68f0d55b: futex_waitv lost
- wakeup hangs RE Engine games and PID 1 init
-Message-ID: <20260422134519.GQ3102624@noisy.programming.kicks-ass.net>
-References: <CABXGCsPdTyd_79sXZFJEBqYDXGxH3mXXwvhRCagNWzzNGrKt=w@mail.gmail.com>
- <20260421135332.GC1064669@noisy.programming.kicks-ass.net>
- <20260421144105.GA3179637@noisy.programming.kicks-ass.net>
- <CABXGCsO5fKq2nD9nO8yO1z50ZzgCPWqueNXHANjntaswoOh2Dg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="iU1RYGvI"
+Received: from mors-relay-8403.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4g10r91vt7z891k
+	for <regressions@lists.linux.dev>; Wed, 22 Apr 2026 15:46:33 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1776865593;
+	bh=F5bZE2BE/6FG0ahZLtYj2MDFbyYLiHNtgTRA8QYVx3M=;
+	h=Date:Subject:From:To:References:In-Reply-To:From;
+	b=iU1RYGvIhQzbnsvzGhBgQ6yDmPfOzOLbRyqqng1S9utxDZvIzQM9NuJzmsTIDen+R
+	 2g+MI+xqXxWklYaxzW34281Re1XaTdXcmm8d+SqeyiM0GfNeA/IvUO0OzJKk+3M27p
+	 9r53bG0XA9lpLFHiNGVf+BKrGr2kFLEtMeUgFcK5c6Q6Qwc6Z3GuNVWK9+9sTBb6KU
+	 QUPYFrL5lw+/YNLfcNwwzjTnzdc9fph9Xw453wR1JPCzq6ATpoNUANSiC2NvYQ6aRD
+	 PKA78FSIaeipGKrodSwHsvfxR0GZLJooQGqbnS+h/QJ75u85D8C3o5f440jOoCvgzT
+	 VvJTm3wyMX2xg==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4g10r91Cgxz88w9
+	for <regressions@lists.linux.dev>; Wed, 22 Apr 2026 15:46:33 +0200 (CEST)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4g10r86VGFz8sZP
+	for <regressions@lists.linux.dev>; Wed, 22 Apr 2026 15:46:32 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 0A528632BD
+	for <regressions@lists.linux.dev>; Wed, 22 Apr 2026 15:46:31 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <e35866ba-1520-4924-85c3-28fee1f73895@leemhuis.info>
+Date: Wed, 22 Apr 2026 15:46:31 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CABXGCsO5fKq2nD9nO8yO1z50ZzgCPWqueNXHANjntaswoOh2Dg@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: 
+ <177686559220.3851711.10816129654696992549@mxe9fb.netcup.net>
+X-Rspamd-Server: rspamd-worker-8404
+X-Rspamd-Queue-Id: 0A528632BD
+X-NC-CID: nUBc59xsvK+VAebs6ptCJfG0hSBJm54/Ja6mfMDLA6VCeaAgf1I=
 
-On Wed, Apr 22, 2026 at 03:48:16PM +0500, Mikhail Gavrilov wrote:
-> On Tue, Apr 21, 2026 at 7:41 PM Peter Zijlstra <peterz@infradead.org> wrote:>
-> > Specifically, see this thread:
-> >
-> >   https://lore.kernel.org/r/95651a71-1adf-45ba-83eb-5744bc6d4a52@amd.com
-> 
-> You're right — it is to blame, and I was about to follow up to say so.
-> 
-> After sending the first mail I kept re-verifying markers with the
-> stricter RE2+RE9 workload and found that 33c66eb5e984 (parent 1 of
-> 1c3b68f0, which I had marked "good") actually reproduces the hang too.
-> A third bisect run with the stricter workload converges unambiguously
-> on:
-> 
->   25500ba7e77c ("locking/mutex: Remove the list_head from struct mutex")
-> 
-> Parent b9bdd4b68404 ("locking/semaphore: Remove the list_head from struct
-> semaphore"): good. 25500ba7e77c: bad.
 
-Please test this:
 
-  https://lore.kernel.org/r/20260422092335.GH3102924@noisy.programming.kicks-ass.net
+On 3/9/24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-and reply there with your findings if possible.
+#regzbot report: https://gitlab.freedesktop.org/drm/amd/-/work_items/5133
+#regzbot resolve: things work again for reporter with 7.0
+
+#regzbot report:
+https://lore.kernel.org/lkml/CAD0gVBsyzYNA6ydPwg9mJ9VQzYg4zPAi24JQ13-=0KtdbQ039A@mail.gmail.com
+#regzbot resolve: inconclusive: likely unsolved, but really odd and
+likely unique case that stalled
+
+#regzbot report:
+https://lore.kernel.org/linux-hwmon/b476fdf2-1ce6-46ca-8c98-13e0ae1613b3@web.de/
+#regzbot resolve: dealt with in the software that broke and that seems
+to be okay for everyone
+
+#regzbot report:
+https://lore.kernel.org/lkml/177349021750.3039212.10211295677877269201@eldamar.lan/
+#regzbot fix: NFSv4.1: Apply session size limits on clone path
