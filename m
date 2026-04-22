@@ -1,138 +1,94 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80F4D2D877B
-	for <regressions@lists.linux.dev>; Wed, 22 Apr 2026 19:47:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2229370D53
+	for <regressions@lists.linux.dev>; Wed, 22 Apr 2026 19:52:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776887224; cv=none; b=rOMehg2w6MfC/mshAqKLc2HnmekGJFGvhhwect2zl8wOij+8Ht5ION6NGtuJt+pao6rS/zVZMetZ0Nbq05yN7jX0dpV7rBLhYZy5Zy+dElx8SWEw/h3PvFOb6nWJZJKxIHZSZ1I3ZY+QpYn1IFlF/+ZkyZsEjw4Uj1TQGRZqMB0=
+	t=1776887553; cv=none; b=NTUYSvNh1fokEdx6Zsz8YpFtADI9vObG8fqadN97d8a/+9s3OtgjNlGUrYhhzv/TCcI3uRseGf0M9VIFmOY/Yr6dJeVc9Llut5drrRVA3IOdmsWz+WPS7Tp2RIpbL1bL8+1O/5kvuLo9i08Pcd9hB70tt8du7nNywAQtMd/mIJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776887224; c=relaxed/simple;
-	bh=DduDmOR+zwDT7iU/i14+E1nk9zi8hmCda3iqRH4uFnc=;
+	s=arc-20240116; t=1776887553; c=relaxed/simple;
+	bh=xVBGF+nbrhf38KaRbyHp2NMIEb9Bubh5xq3tZt2H+ww=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=mwko86vL1TnNtk6nx/2Oc0v62xd/udAfkNv6P9SyMvIyty/9ltkY8htHhwX+SUgBSg2wMxJhdK8irFfZm+ZWm4eyL91ni0h2/WoVvvKuDUEOP54lEyf/2RuPIFDx6Gcu7O+SLBE+DhR5DgPBoOJ5Mqe//QqRM9P32doIsrREufg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=vzr/TcQ7; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=yIOGVhET; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version:Content-Type; b=JrihdmzYvgUR5ZMdgytsc40V67mzVaLLhXNHeMft7i9k4G4Vs/q5n5tYGeLMUJo9dxOIHqfvyPo3D2UGKSpFWjwN0Zw13h4O/mgzpBc8s0qfVKG9kq1vljSFX6MNhkSINgAJXI9RIRKo+5tpacR+8WwysT2yzp0kOv5d2LloHZ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=CjYuzCCN; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ECOitHdO; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vzr/TcQ7";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="yIOGVhET"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="CjYuzCCN";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ECOitHdO"
 From: Thomas Gleixner <tglx@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1776887221;
+	s=2020; t=1776887550;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=FIad0NUruDUG63kx4ECALjd4inHFblMc1GRENB68XKU=;
-	b=vzr/TcQ7PwlFKHcw3kxS9e+RpxqhTqOk+0x6/WRL5ITuTpLCFEYGcRkA8LuGb320ImhtSR
-	WIC0PNkhHvH3cSQJBUoLDPoZaT7lP51lDZTJbhVKtzj8uCIjiuiEhx5kBsekT/bRAyYdQ0
-	kWshgbh66cOJkZhtx1w4b4m4+ehVTviPTsLn9xGRzvBLSMGE8boNZ9I08Fkdf7tR5IGOYv
-	u4fQUzRzdTxPhRFW60PjE3tvEx5iupIhnCX7y0HvKv6hdHA3t+YxBY3jFDcrrDPgjW5ncg
-	tGZnOqVz7YoHBwLbQobq30vAXhbPzgBDobtJculDL7iBP64uWFuR/nOLiFFCSw==
+	bh=xVBGF+nbrhf38KaRbyHp2NMIEb9Bubh5xq3tZt2H+ww=;
+	b=CjYuzCCNzWOFRouWPMxwzPcG+9qwZESG3C2DlUTOe9FoOj556OGIc90Koi11uaFyUcYZpN
+	IuhwHT3deFgXCFsHHWrxMr56LTdJ/Z65jdOygnlmheY4DV9Ei0VA/yUrhgUhHarQ+6cOUi
+	lmhisUi2Rs1eMjFnU9OQWJCjfEQbgn6SpG0d/vkgxCG4UF+ZHup9JDSgC6nBY4yvgswckU
+	LRPv4xzwtLYWossanAQrZgM7+2NOnu2uyAjc07YYy4r0MPky2KuGKjPU1bOqWW5OWa4k7Y
+	0TxWyyZ3JstuKzMcpxGSqzxy05eusGimts8Ds3qCdX9QXmMBxvNwyqyPwi+ndg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1776887221;
+	s=2020e; t=1776887550;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=FIad0NUruDUG63kx4ECALjd4inHFblMc1GRENB68XKU=;
-	b=yIOGVhETdnA7SVsy83sNKIDsqBO5QBui6NQo6LsNgmFEUmHVFK5uRSmJgeCbGME1ZmLEfc
-	hW9Cf2L8iFcbRJBQ==
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Mathias Stearn <mathias@mongodb.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Catalin Marinas
- <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Boqun Feng
- <boqun.feng@gmail.com>, "Paul E. McKenney" <paulmck@kernel.org>, Chris
- Kennelly <ckennelly@google.com>, Dmitry Vyukov <dvyukov@google.com>,
- regressions@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Jinjie Ruan
- <ruanjinjie@huawei.com>, Blake Oler <blake.oler@mongodb.com>
-Subject: Re: [REGRESSION] rseq: refactoring in v6.19 broke everyone on arm64
- and tcmalloc everywhere
-In-Reply-To: <aekPXvvuKHKlETjm@J2N7QTR9R3.cambridge.arm.com>
-References: <CAHnCjA25b+nO2n5CeifknSKHssJpPrjnf+dtr7UgzRw4Zgu=oA@mail.gmail.com>
- <aejCaG6n9s7ak5TO@J2N7QTR9R3.cambridge.arm.com> <87zf2u28d1.ffs@tglx>
- <aekPXvvuKHKlETjm@J2N7QTR9R3.cambridge.arm.com>
-Date: Wed, 22 Apr 2026 21:47:00 +0200
-Message-ID: <87wlxy22x7.ffs@tglx>
+	bh=xVBGF+nbrhf38KaRbyHp2NMIEb9Bubh5xq3tZt2H+ww=;
+	b=ECOitHdOwdqGpRWFbnVAF2GY5zTBTplF1N7YyPEhtObX3/qQ3o8e4eeRAErkoOlr7PiUtv
+	AokkrK80QRHIm4Cw==
+To: Thorsten Leemhuis <regressions@leemhuis.info>, Uwe =?utf-8?Q?Kleine-K?=
+ =?utf-8?Q?=C3=B6nig?=
+ <u.kleine-koenig@baylibre.com>
+Cc: Alexandre Ghiti <alexghiti@rivosinc.com>, Paul Walmsley
+ <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Anup
+ Patel <anup@brainfault.org>, Sunil V L <sunilvl@ventanamicro.com>,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, Bjorn
+ Helgaas <helgaas@kernel.org>, 1127635@bugs.debian.org, "Aaron D. Johnson"
+ <debbugreporter@fnord.greeley.co.us>, regressions@lists.linux.dev
+Subject: Re: [Patch] PCI/MSI: Handle lack of irqdomain gracefully
+In-Reply-To: <30a50474-a2e4-4b0e-be8c-8050b0356db9@leemhuis.info>
+References: <20241213115704.353665-1-alexghiti@rivosinc.com>
+ <87v7vn917f.ffs@tglx>
+ <CAHVXubiNMp9chdUdvYjiQC2LMhNMMaGEiLMWZ-4RSV54jakP3g@mail.gmail.com>
+ <87ed2a8ow5.ffs@tglx> <abE_QoS5DM-ZltaV@monoceros>
+ <30a50474-a2e4-4b0e-be8c-8050b0356db9@leemhuis.info>
+Date: Wed, 22 Apr 2026 21:52:29 +0200
+Message-ID: <87tst222o2.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 22 2026 at 19:11, Mark Rutland wrote:
-> On Wed, Apr 22, 2026 at 07:49:30PM +0200, Thomas Gleixner wrote:
-> Conceptually we just need to use syscall_enter_from_user_mode() and
-> irqentry_enter_from_user_mode() appropriately.
+On Wed, Apr 22 2026 at 10:50, Thorsten Leemhuis wrote:
+> On 3/11/26 12:22, Uwe Kleine-K=C3=B6nig wrote:
+>> Control: forwarded -1 https://lore.kernel.org/lkml/abE_QoS5DM-ZltaV@mono=
+ceros
+>>=20
+>> #regzbot introduced: a60b990798eb17433d0283788280422b1bd94b18
+>
+> Thomas, in case you missed it: this is a change of yours: a60b990798eb17
+> ("PCI/MSI: Handle lack of irqdomain gracefully") [v6.13-rc5]
 
-Right. I figured that out.
+Yes. That fell through the cracks.
 
-> In practice, I can't use those as-is without introducing the exception
-> masking problems I just fixed up for irqentry_enter_from_kernel_mode(),
-> so I'll need to do some similar refactoring first.
+>> #regzbot from: "Aaron D. Johnson" <debbugreporter@fnord.greeley.co.us>
+>> #regzbot monitor: https://bugs.debian.org/1127635
+>
+> Thx for forwarding the regression. Nothing happened since then -- or am
+> I missing something? If so: is that okay for everybody, or should we do
+> anything about this?
+>
+> BTW, did anyone check if this happens with mainline (6.13/7.0) as well
+> to rule out that this is something that only happenens in the stable
+> series it was backported too? If it's the latter I wonder if reverting
+> it there might be a easy way to resolve this.
 
-See below.
+Let me have a look.
 
-> I haven't paged everything in yet, so just to cehck, is there anything
-> that would behave incorrectly if current->rseq.event.user_irq were set
-> for syscall entry? IIUC it means we'll effectively do the slow path, and
-> I was wondering if that might be acceptable as a one-line bodge for
-> stable.
-
-It might work, but it's trivial enough to avoid that. See below. That on
-top of 6.19.y makes the selftests pass too.
-
-Thanks,
-
-        tglx
----
- arch/arm64/kernel/entry-common.c |   14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
-
---- a/arch/arm64/kernel/entry-common.c
-+++ b/arch/arm64/kernel/entry-common.c
-@@ -58,6 +58,12 @@ static void noinstr exit_to_kernel_mode(
- 	irqentry_exit(regs, state);
- }
- 
-+static __always_inline void arm64_enter_from_user_mode_syscall(struct pt_regs *regs)
-+{
-+	enter_from_user_mode(regs);
-+	mte_disable_tco_entry(current);
-+}
-+
- /*
-  * Handle IRQ/context state management when entering from user mode.
-  * Before this function is called it is not safe to call regular kernel code,
-@@ -65,8 +71,8 @@ static void noinstr exit_to_kernel_mode(
-  */
- static __always_inline void arm64_enter_from_user_mode(struct pt_regs *regs)
- {
--	enter_from_user_mode(regs);
--	mte_disable_tco_entry(current);
-+	arm64_enter_from_user_mode_syscall(regs);
-+	rseq_note_user_irq_entry();
- }
- 
- /*
-@@ -717,7 +723,7 @@ static void noinstr el0_brk64(struct pt_
- 
- static void noinstr el0_svc(struct pt_regs *regs)
- {
--	arm64_enter_from_user_mode(regs);
-+	arm64_enter_from_user_mode_syscall(regs);
- 	cortex_a76_erratum_1463225_svc_handler();
- 	fpsimd_syscall_enter();
- 	local_daif_restore(DAIF_PROCCTX);
-@@ -869,7 +875,7 @@ static void noinstr el0_cp15(struct pt_r
- 
- static void noinstr el0_svc_compat(struct pt_regs *regs)
- {
--	arm64_enter_from_user_mode(regs);
-+	arm64_enter_from_user_mode_syscall(regs);
- 	cortex_a76_erratum_1463225_svc_handler();
- 	local_daif_restore(DAIF_PROCCTX);
- 	do_el0_svc_compat(regs);
