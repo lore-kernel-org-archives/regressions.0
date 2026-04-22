@@ -1,198 +1,422 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.61.103])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A633138736C
-	for <regressions@lists.linux.dev>; Wed, 22 Apr 2026 09:30:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.61.103
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776850228; cv=none; b=O+54UNO7fEHxC/wP3gwHP4W9XOJmAoYaNEqE3yI0ByZrvB8JGuBTU2Z4pxHQwFY/cm90w8Y4Mw+FoWXvO/VoiYRLnuK2dX+oHJ/zUf0PhTClsAfGPhEMGxZj+3w46KcA/ImZF35LW6M8jIS+yEAgKpenOQKLIQJ566CpMCaP6K8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776850228; c=relaxed/simple;
-	bh=JNW8xSB3VQeZ7TY22JqnC/RD8zj1AfxSoJ7DF+WQ4To=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YwAq8PgtweUe8JRv/V3Lr0YOIQuy9Uvnv9W5MiadRzvtjGgr7Duak7Odzv0paBYPOsa/i4AWT+Zo+s/AHftwt3BnS3jpmyw3TQvk7A5I7s8Ugvz+BgVxjySbaLPrOe0TbEHoQFROmwr/kx5dHJnilZPRPgvQrPyDJPUSDLMQYgg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=W1e7+zaB; arc=none smtp.client-ip=188.68.61.103
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CABB23C0621
+	for <regressions@lists.linux.dev>; Wed, 22 Apr 2026 09:50:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.49
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776851457; cv=pass; b=Lr+CfRzWySg7ZyzgbYp22RthqaOHKIFTLtn38qYn/WSHvUg7oXKX3LVnDt7+cj2Pvi5K5JYcSPiccyYQ7nlNrbGPJttyKo52pdu+niFKVO0ThkNV/CVvfcdhuQSYKosL5dANmn72VspuYoM+MxbcuerakVEj8f/ztNQM7v1KAtc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776851457; c=relaxed/simple;
+	bh=CD3Cziql/hKkXplbdlbmxy5qc5suIDlfvrnd8GAEDH0=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=VtNYyrYIJL2suCjbEvuvmPzLI1ee5LEthT6zCkA3/FqqmeN7onn+99x2WgJ/7dZya6X8uF1QhDhYdg2LAg3jMrtpuj0QnjCclejjq8VfdJ6pr7LhVOQm0IcPKf/ZapWHecvII6qHVw7ICJQ3+9FvvhAUCZD3kRTUip4hOXWmOSU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mongodb.com; spf=fail smtp.mailfrom=mongodb.com; dkim=pass (1024-bit key) header.d=mongodb.com header.i=@mongodb.com header.b=WaFS2nsE; arc=pass smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mongodb.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=mongodb.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="W1e7+zaB"
-Received: from mors-relay-8403.netcup.net (localhost [127.0.0.1])
-	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4g0v8W45pWz88pL;
-	Wed, 22 Apr 2026 11:30:19 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1776850219;
-	bh=JNW8xSB3VQeZ7TY22JqnC/RD8zj1AfxSoJ7DF+WQ4To=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=W1e7+zaBzzcNokkp3ZLt+j7S3wGeqFm+M6g+/aN8bjzliJwBKyEplgi6Lbi3VSzn2
-	 klpDud1nWgUh4Zgjx35unSvePaXaJrjECPFHuZtgZHARdfhwAXw6ybZcffsDjnLHFn
-	 2jom6uaCQp254OwN8B5oT/dPRVu45TUo59B/VZGGkiwbwe3nG5b/sHmaHbSROvpF01
-	 bYAi7flOkR5viwcKJXHAxwDwNrdDGfGUhiCxHQ7Gc+tT8THuv+LzO2RSYSXHJKJ1sv
-	 ObQ0E/v+TNw/IuJF2xtIk42KCp3nJjYmT56FcST9TWNNp8p4wYIUP89nVvivoTh1co
-	 FzyC/mqXTA/+g==
-Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4g0v8W3NYmz88nQ;
-	Wed, 22 Apr 2026 11:30:19 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
-X-Spam-Flag: NO
-X-Spam-Score: -2.898
-X-Spam-Level: 
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4g0v8V3CXRz8tZN;
-	Wed, 22 Apr 2026 11:30:18 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 20D5E632A6;
-	Wed, 22 Apr 2026 11:30:17 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=linux@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <ed0ecf21-54b4-41e0-92a9-3c7a0e140882@leemhuis.info>
-Date: Wed, 22 Apr 2026 11:30:10 +0200
+	dkim=pass (1024-bit key) header.d=mongodb.com header.i=@mongodb.com header.b="WaFS2nsE"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ba92146cc86so344576466b.1
+        for <regressions@lists.linux.dev>; Wed, 22 Apr 2026 02:50:55 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1776851454; cv=none;
+        d=google.com; s=arc-20240605;
+        b=h9i15URidG0nMxQ7niUGczd7azawuVN23bCFVQlTPSH8PSNMe0NKxtAq3/JuiVo6l2
+         VaBEX2p9Kq0EUfysVXvvXNgsP8ziWcXuLhZHifnTHje1oTIAaPV6UloL4euQVR1pgXlf
+         lyyPeCA+dalw2amiqXTx0YYt3pN/uVI0hVXQTHBQBjjeoxU9wXjBS6XgxYGoUIChWRpN
+         Bg4HiqvP3IleN+yn23XdRVtur34bzynj/YpGh6p0AnBIGfuF+THPocVIFnvJoepUCPKR
+         MWJl15Ve6M5G2L6zJEcFLxcOqclGFSSrBUVxtxsga4qe5Tj9dNIoxvXoxnHPWjV5oZXD
+         93rQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=cc:to:subject:message-id:date:from:mime-version:dkim-signature;
+        bh=UupnmiDdHUEKLwZg2yWB9e6teUe3IEKjLJ5/xmf/lJc=;
+        fh=d9QCLXGquNhroThKtVUCuis2TAavap8Hz1MfMdmT3Bw=;
+        b=V9DwpMEqWuCe8oIpQrcCw2PuIhYPbUaVZoLE3M7KOw3ZRrnuFyoJI3IaZj1NUaOr+r
+         j+MH8w/yiY7H/SPuMFbTBrpXiPR4XQToUc91EQ1J8fEQmSHRX4Gw6OkuaJKmaRmfZyZl
+         NYDwg/9j38OgPm5XVAt0YKGx+Us3F4E7KOE52FApdwm9tAB8Syp/QiZY6GtAo5mLlDxS
+         YJRgMEU5FR6Ep+nrLjwagIHQpcUvcamKxgqrYYP3o+0L6/zO8MRmFbW9RT56tdHzHjs9
+         GAMBhWJ/rKNSch1Ol7Iwa2sH5paBArUQ/F1z1OW5nt7cqFcMg/QPA5DGh37p7iLaMZ+y
+         sSgA==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=mongodb.com; s=google; t=1776851454; x=1777456254; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=UupnmiDdHUEKLwZg2yWB9e6teUe3IEKjLJ5/xmf/lJc=;
+        b=WaFS2nsEiItWW3C51HecDF1iS+Wn0ciw+FmkmUjUeMpVAo4bvcQBLkwt3nqN35se80
+         i2dcDq02SAkYKn6mLYi9HSTWDyhbTn88dvjgQVGbmO1JuMJO25FUvruVCtTSW3KzePoF
+         adwrUE5C/JGI0FO/Ot1BbpXS+hLPNuOO7KyEo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776851454; x=1777456254;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=UupnmiDdHUEKLwZg2yWB9e6teUe3IEKjLJ5/xmf/lJc=;
+        b=eItQY80Y8OOmWLbZxFxawUIg6R2EeWmP0q601xLQWX7/jiS8jX3DsCCU2gb3LWbfm2
+         G6l0MkqAR2lKVW79V1DAKFhEcixDyVvbXEgWry7ayQCbmhYWquPpWeyCuse4QGDUi7nf
+         Vj7mrJZFxr7EZJgsQprB7t/6MRm5AOvQ/Pjbl6gypOE+Y28709rz2gaUHBBxnGqauSG8
+         UWftQwCIvgyJ4rIYmYPpK9lT5SkIvxdsinbtplEE3j86624L+YjiykXqF7filsmPk/p0
+         UIhpj9i3+KCn73jgaI7R3H+oR79pYOQlyBBSxiZ2K5i/af3RfODJ9AUBNn8X+F3EQ4IH
+         eFKA==
+X-Forwarded-Encrypted: i=1; AFNElJ8scU3gBAa8esEdaCoKwHWOwxduu9V7U3ZqbUTyZfLZMsSdMKxCJY18eoFGmqqZ/8uhO38GD5y8jIoDtg==@lists.linux.dev
+X-Gm-Message-State: AOJu0YydNRMqlmlRyOpY0ZfBpG1Rn0hqdN8e0UzUAfOuTiwzMzxW3rAT
+	/hCbPFgjx2iGUUI7MEeiVU1D3r9NcwQykdPVX3cMD511sgp8cOG87Q/NDkjU8csp8+3tYb5j3o3
+	p3qyBo7IWg2BKVUs4kSB52HHvKMiQw4KU8gAym7hMRw==
+X-Gm-Gg: AeBDieso9c+9MyVVRLXEefmwiAfs7GsdyVRVbqfhitGQShKnHrQtD7DftFXwWwOcp+3
+	ZjDsBhypowTRRXe8UTndsku95BQ2dT6kudBoPI4D08d77wrncABNgZqjYQSUuQ1CUZK7LcTIJyp
+	Ix2m3TfhnerdVPwVuiHIRW9F4R+VrU3WQFQAWnGwFPdch9PVFYCK8IgsorPw4zgt1uVGWbZZjLs
+	6YCdYxbW4f8eKvODUv5EWFr9ak6JMNuFscp4bWgvBVCKF8M3WdQusXCkFltJ4uLESn+q1vyJ6Cd
+	U5sziHTkGH+r8OcR
+X-Received: by 2002:a17:907:7295:b0:ba7:3d21:c136 with SMTP id
+ a640c23a62f3a-ba73d3108d8mr702188566b.18.1776851453919; Wed, 22 Apr 2026
+ 02:50:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH ath-current] wifi: ath12k: prepare REO update element only
- for primary link
-To: Baochen Qiang <baochen.qiang@oss.qualcomm.com>,
- Jeff Johnson <jjohnson@kernel.org>
-Cc: linux-wireless@vger.kernel.org, ath12k@lists.infradead.org,
- linux-kernel@vger.kernel.org,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: 
- <20260210-ath12k-rxtid-double-free-v1-1-8b523fb2886d@oss.qualcomm.com>
-From: Thorsten Leemhuis <linux@leemhuis.info>
-Content-Language: de-DE, en-US
-Autocrypt: addr=linux@leemhuis.info; keydata=
- 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 MEK4
-In-Reply-To: 
- <20260210-ath12k-rxtid-double-free-v1-1-8b523fb2886d@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: 
- <177685021745.1987386.16177602692449177458@mxe9fb.netcup.net>
-X-NC-CID: 4B9LzG65V1rMZagq8sEC1LTmm56Y0hn1qn+uk+gRoKO90N86AuQ=
+From: Mathias Stearn <mathias@mongodb.com>
+Date: Wed, 22 Apr 2026 11:50:26 +0200
+X-Gm-Features: AQROBzDhMsHqdNPKSe11Qbhfa2UYC4rlul_krCZcmg-Bg-A_2qGhn7D5Qqy-wXc
+Message-ID: <CAHnCjA25b+nO2n5CeifknSKHssJpPrjnf+dtr7UgzRw4Zgu=oA@mail.gmail.com>
+Subject: [REGRESSION] rseq: refactoring in v6.19 broke everyone on arm64 and
+ tcmalloc everywhere
+To: Thomas Gleixner <tglx@linutronix.de>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Boqun Feng <boqun.feng@gmail.com>, "Paul E. McKenney" <paulmck@kernel.org>
+Cc: Chris Kennelly <ckennelly@google.com>, Dmitry Vyukov <dvyukov@google.com>, 
+	regressions@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Jinjie Ruan <ruanjinjie@huawei.com>, Blake Oler <blake.oler@mongodb.com>
+Content-Type: multipart/mixed; boundary="000000000000bb1c2e0650097725"
 
-Lo! Top-posting on purpose to make this easy to process.
+--000000000000bb1c2e0650097725
+Content-Type: multipart/alternative; boundary="000000000000bb1c2d0650097723"
 
-Jeff, what happened to below patch? It was supposed to fix the
-regression linked below, but unless I'm missing something (which might
-very well be the case!) it seems it never got any further than this thread.
+--000000000000bb1c2d0650097723
+Content-Type: text/plain; charset="UTF-8"
 
-Ciao, Thorsten
+TL;DR: As of 6.19, rseq no longer provides the documented atomicity
+guarantees on arm64 by failing to abort the critical section on same-core
+preemption/resumption. Additionally, it breaks tcmalloc specifically by
+failing to overwrite the cpu_id_start field at points where it was relied
+on for correctness.
 
-P.S:: Adding a stable tag might be good to ensure this fix is backported.
+This is a SEVERE breakage for MongoDB. We received several user reports of
+crashes on 6.19. I made a stress test that showed that 6.19 can cause
+malloc to return the same pointer twice without it being freed. Because
+that can cause arbitrary corruption, our latest releases have all been
+patched to refuse to start at all on 6.19+.
 
-On 2/10/26 04:07, Baochen Qiang wrote:
-> Commit [1] introduces dp->reo_cmd_update_rx_queue_list for the purpose
-> of tracking all pending REO queue flush commands. The helper
-> ath12k_dp_prepare_reo_update_elem() allocates an element and populates
-> it with REO queue information, then add it to the list. The element would
-> be helpful during clean up stage to finally unmap/free the corresponding
-> REO queue buffer.
-> 
-> In MLO scenarios with more than one links, for non dp_primary_link_only
-> chips like WCN7850, that helper is called for each link peer. This
-> results in multiple elements added to the list but all of them pointing
-> to the same REO queue buffer. Consequently the same buffer gets
-> unmap/freed multiple times:
-> 
-> BUG kmalloc-2k (Tainted: G    B   W  O       ): Object already free
-> -----------------------------------------------------------------------------
-> Allocated in ath12k_wifi7_dp_rx_assign_reoq+0xce/0x280 [ath12k_wifi7] age=7436 cpu=10 pid=16130
->  __kmalloc_noprof
->  ath12k_wifi7_dp_rx_assign_reoq
->  ath12k_dp_rx_peer_tid_setup
->  ath12k_dp_peer_setup
->  ath12k_mac_station_add
->  ath12k_mac_op_sta_state
->  [...]
-> Freed in ath12k_dp_rx_tid_cleanup.part.0+0x25/0x40 [ath12k] age=1 cpu=27 pid=16137
->  kfree
->  ath12k_dp_rx_tid_cleanup.part.0
->  ath12k_dp_rx_reo_cmd_list_cleanup
->  ath12k_dp_cmn_device_deinit
->  ath12k_core_stop
->  ath12k_core_hw_group_cleanup
->  ath12k_pci_remove
-> 
-> Fix this by allowing list addition for primary link only. Note
-> dp_primary_link_only chips like QCN9274 are not affected by this change,
-> because that's what they were doing in the first place.
-> 
-> Tested-on: WCN7850 hw2.0 PCI WLAN.HMT.1.1.c5-00302-QCAHMTSWPL_V1.0_V2.0_SILICONZ-1.115823.3
-> 
-> Fixes: 3bf2e57e7d6c ("wifi: ath12k: Add Retry Mechanism for REO RX Queue Update Failures") # [1]
-> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=221011
-> Signed-off-by: Baochen Qiang <baochen.qiang@oss.qualcomm.com>
-> ---
->  drivers/net/wireless/ath/ath12k/dp_rx.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/drivers/net/wireless/ath/ath12k/dp_rx.c b/drivers/net/wireless/ath/ath12k/dp_rx.c
-> index a32ee9f8061a..6995de7761df 100644
-> --- a/drivers/net/wireless/ath/ath12k/dp_rx.c
-> +++ b/drivers/net/wireless/ath/ath12k/dp_rx.c
-> @@ -565,6 +565,9 @@ static int ath12k_dp_prepare_reo_update_elem(struct ath12k_dp *dp,
->  
->  	lockdep_assert_held(&dp->dp_lock);
->  
-> +	if (!peer->primary_link)
-> +		return 0;
-> +
->  	elem = kzalloc(sizeof(*elem), GFP_ATOMIC);
->  	if (!elem)
->  		return -ENOMEM;
-> 
-> ---
-> base-commit: d9a2be2d72d4f9035f0334e0ff49180fe9df6e52
-> change-id: 20260128-ath12k-rxtid-double-free-289100bb5163
-> 
-> Best regards,
+TCMalloc uses rseq in a "creative" way described at
+https://github.com/google/tcmalloc/blob/master/docs/rseq.md. In particular,
+the "Current CPU Slabs Pointer Caching" section describes an optimization
+that relies on an undocumented fact that the kernel was always overwriting
+cpu_id_start (even when it wouldn't change) to invalidate a user-space
+cache. Since the change to stop writing cpu_id_start seemed to be
+intentional as part of a refactoring merged in 2b09f480f0a1, I started
+working on a userspace patch to stop relying on that. Unfortunately when
+that was complete I ran into a wall that is impossible to work around from
+userspace.
 
+On arm64, the kernel no longer meets the documented guarantee that rseq
+critical sections are atomic with respect to preemption. It seems to only
+abort the critical section when the thread is migrated to a different core.
+The attached test proves it and passes on x86 both before and after 6.19,
+and on arm before 6.19, but fails on arm with 6.19. It pins the process to
+a single core and then has an rseq critical section that observes a change
+made by another thread which is supposed to be impossible. I think this
+will break basically any real usage of rseq, other than just reading the
+current cpu_id.
+
+An LLM pointed to these two specific commits in the refactor as causing
+this (oldest first):
+- 39a167560a61 rseq: Optimize event setting
+This assumed that user_irq would be set on preemption but it wasn't on
+arm64, so TIF_NOTIFY_RESUME isn't raised on same cpu preemption.
+- 566d8015f7ee rseq: Avoid CPU/MM CID updates when no event pending
+This broke TCMalloc slab caching trick by not overwriting cpu_id_start on
+every return to userspace
+
+(I have a lot more analysis and suggested fixes from LLMs since I used them
+heavily in this testing and analysis, but I won't spam you with the slop
+unless requested)
+
+The arm64 change is a clear breakage and I'm sure it will be
+uncontroversial to fix. I can imagine more resistance to reverting to the
+old behavior of always overwriting the cpu_id_start field since that seems
+to have been an intentional optimization choice. I have reached out to the
+TCMalloc maintainers (CC'd) and believe there is a solution that gets the
+vast majority of the optimization while still preserving the behavior that
+TCMalloc currently relies on[1].
+
+Any time a critical section might be aborted (migration, preemption, signal
+delivery, and membarrier IPI), the kernel already must (but doesn't on
+arm64 at the moment) check the rseq_cs field to see if the thread is in a
+critical section, and is documented as nulling the pointer after (I assume
+to make later checks cheaper). It would be sufficient for tcmalloc's
+internal usage if every time the kernel nulled out rseq_cs, it also wrote
+the cpu id to cpu_id_start. That should be essentially free since you are
+already writing to the same cache line. It was pointed out that that could
+be an issue if another rseq user in the same thread nulled rseq_cs after
+its critical section, which would require the kernel to update cpu_id_start
+each time it checks rseq_cs, regardless of whether it nulls it. We aren't
+aware of any processes that mix tcmalloc with other rseq usages that null
+out the field from userspace, but we can't rule them out since it is open
+source. Either way, this preserves the property of not updating
+cpu_id_start on every syscall return and non-membarrier interrupts, which I
+assume is where the majority of the optimization win was from.
+
+All testing of problematic versions was performed on x86_64 and
+aarch64 Ubuntu 24.04.4 with the kernel manually upgraded to
+6.19.8-061908-generic. Source analysis was performed on the v6.19 tag. I
+had a few AI agents confirm that nothing in the relevant changes to master
+should have solved this, but I have not yet tested there.
+
+$ cat /proc/version
+Linux version 6.19.8-061908-generic (kernel@balboa)
+(aarch64-linux-gnu-gcc-15 (Ubuntu 15.2.0-15ubuntu1) 15.2.0, GNU ld (GNU
+Binutils for Ubuntu) 2.46) #202603131837 SMP PREEMPT_DYNAMIC Sat Mar 14
+00:00:07 UTC 2026
+
+[1]  There is also an exploration of some options to make tcmalloc not rely
+on the cpu_id_start overwriting. However we would strongly prefer that
+existing binaries continue to work on 6.19 kernels, even if newer binaries
+don't need that. At least for a good while.
+
+--000000000000bb1c2d0650097723
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div>TL;DR: As of 6.19, rseq no longer provides the docume=
+nted atomicity guarantees on arm64 by failing to abort the critical section=
+ on same-core preemption/resumption. Additionally, it breaks tcmalloc speci=
+fically by failing to overwrite=C2=A0the cpu_id_start field at points where=
+ it was relied on for correctness.=C2=A0</div><div><br></div><div>This is a=
+ SEVERE breakage for MongoDB. We received several user reports of crashes o=
+n 6.19. I made a stress test that showed that 6.19 can cause malloc to retu=
+rn the same pointer twice without it being freed. Because that can cause ar=
+bitrary corruption, our latest releases have all been patched to refuse to =
+start at all on 6.19+.</div><div><br></div><div>TCMalloc uses rseq in a &qu=
+ot;creative&quot; way described at=C2=A0<a href=3D"https://github.com/googl=
+e/tcmalloc/blob/master/docs/rseq.md">https://github.com/google/tcmalloc/blo=
+b/master/docs/rseq.md</a>. In particular, the &quot;Current CPU Slabs Point=
+er Caching&quot; section describes an optimization that relies on an undocu=
+mented fact that the kernel was always overwriting cpu_id_start (even when =
+it wouldn&#39;t change) to invalidate a user-space cache. Since the change =
+to stop writing cpu_id_start seemed to be intentional as part of a refactor=
+ing merged in=C2=A02b09f480f0a1, I started working on a userspace patch to =
+stop relying on that. Unfortunately when that was complete I ran into a wal=
+l that is impossible to work around from userspace.</div><div><br></div><di=
+v>On arm64, the kernel no longer meets the documented guarantee that rseq c=
+ritical sections are atomic with respect to preemption. It seems to only ab=
+ort the critical section when the thread is migrated to a different core. T=
+he attached test proves it and passes on x86 both before and after 6.19, an=
+d on arm before 6.19, but fails on arm with 6.19. It pins the process to a =
+single core and then has an rseq critical section that observes a change ma=
+de by another thread which is supposed to be impossible. I think this will =
+break basically any real usage of rseq, other than just reading the current=
+ cpu_id.<br><br></div><div>An LLM pointed to these two specific commits in =
+the refactor as causing this (oldest first):<br>- 39a167560a61 rseq: Optimi=
+ze event setting</div><div>This assumed that user_irq would be set on preem=
+ption but it wasn&#39;t on arm64, so TIF_NOTIFY_RESUME isn&#39;t raised on =
+same cpu preemption.</div><div>- 566d8015f7ee rseq: Avoid CPU/MM CID update=
+s when no event pending</div><div>This broke TCMalloc slab caching trick by=
+ not overwriting cpu_id_start on every return to userspace</div><div><br></=
+div><div>(I have a lot more analysis and suggested fixes from LLMs since I =
+used them heavily in this testing and analysis, but I won&#39;t spam you wi=
+th the slop unless requested)</div><div><br></div><div>The arm64 change is =
+a clear breakage and I&#39;m sure it will be uncontroversial to fix.=C2=A0I=
+ can imagine more resistance to reverting to the old behavior of always ove=
+rwriting the cpu_id_start field since that seems to have been an intentiona=
+l optimization choice. I have reached out to the TCMalloc maintainers (CC&#=
+39;d) and believe there is a solution that gets the vast majority of the op=
+timization while still preserving the behavior that TCMalloc currently reli=
+es on[1].=C2=A0</div><div><br></div><div>Any time a critical section might =
+be aborted (migration, preemption,=20
+signal delivery, and membarrier IPI), the kernel already must (but doesn&#3=
+9;t on arm64 at the moment) check the rseq_cs=20
+field to see if the thread is in a critical section, and is documented=20
+as nulling the pointer after (I assume to make later checks cheaper). It wo=
+uld be sufficient for tcmalloc&#39;s internal usage if every time the kerne=
+l nulled out rseq_cs, it also wrote the cpu id to cpu_id_start. That should=
+ be essentially free since you are already writing to the same cache line. =
+It was pointed out that that could be an issue if another rseq user in the =
+same thread nulled rseq_cs after its critical section, which would require =
+the kernel to update cpu_id_start each time it checks rseq_cs, regardless o=
+f whether it nulls it. We aren&#39;t aware of any processes that mix tcmall=
+oc with other rseq usages that null out the field from userspace, but we ca=
+n&#39;t rule them out since it is open source. Either way, this preserves t=
+he property of not updating cpu_id_start on every syscall return and non-me=
+mbarrier interrupts, which I assume is where the majority of the optimizati=
+on win was from.</div><div><br></div><div>All testing of problematic versio=
+ns was performed on=C2=A0x86_64 and aarch64=C2=A0Ubuntu 24.04.4 with the ke=
+rnel manually upgraded to 6.19.8-061908-generic. Source analysis was perfor=
+med on the=C2=A0v6.19 tag. I had a few AI agents confirm that nothing in th=
+e relevant changes to master should have solved this, but I have not yet te=
+sted there.</div><div><br></div><div>$ cat /proc/version<br>Linux version 6=
+.19.8-061908-generic (kernel@balboa) (aarch64-linux-gnu-gcc-15 (Ubuntu 15.2=
+.0-15ubuntu1) 15.2.0, GNU ld (GNU Binutils for Ubuntu) 2.46) #202603131837 =
+SMP PREEMPT_DYNAMIC Sat Mar 14 00:00:07 UTC 2026</div><div><br></div><div>[=
+1]=C2=A0 There is also an exploration of some options to make tcmalloc not =
+rely on the cpu_id_start overwriting. However we would strongly prefer that=
+ existing binaries continue to work on 6.19 kernels, even if newer binaries=
+ don&#39;t need that. At least for a good while.</div></div>
+
+--000000000000bb1c2d0650097723--
+--000000000000bb1c2e0650097725
+Content-Type: application/octet-stream; name="rseq_same_cpu_preempt_test.cc"
+Content-Disposition: attachment; filename="rseq_same_cpu_preempt_test.cc"
+Content-Transfer-Encoding: base64
+Content-ID: <f_mo9s5m650>
+X-Attachment-Id: f_mo9s5m650
+
+Ly8gTWluaW1hbCBzaW5nbGUtZmlsZSByc2VxIHJlcHJvIGZvciBzYW1lLUNQVSBwcmVlbXB0aW9u
+IGhhbmRsaW5nLgovLwovLyBCdWlsZDoKLy8gICBnKysgLU8yIC1zdGQ9YysrMjAgLXB0aHJlYWQg
+cnNlcV9zYW1lX2NwdV9wcmVlbXB0X3Rlc3QuY2MgLW8gcnNlcV9zYW1lX2NwdV9wcmVlbXB0X3Rl
+c3QKLy8KLy8gVGhlIG1haW4gdGhyZWFkIHBpbnMgaXRzZWxmIGFuZCBhIHdyaXRlciB0aHJlYWQg
+dG8gb25lIENQVS4gSXQgdGhlbiBlbnRlcnMgYW4KLy8gcnNlcSBjcml0aWNhbCBzZWN0aW9uIHRo
+YXQgc3RvcmVzIDAgdG8gYSBzaGFyZWQgZmxhZyBhbmQgc3BpbnMgdW50aWwgaXQgc2VlcwovLyB0
+aGUgZmxhZyBiZWNvbWUgMS4gSWYgdGhlIGNyaXRpY2FsIHNlY3Rpb24gcmVzdW1lcyBhZnRlciBh
+IHByZWVtcHRpb24gd2l0aG91dAovLyBiZWluZyBhYm9ydGVkLCBpdCB3aWxsIGV2ZW50dWFsbHkg
+b2JzZXJ2ZSB0aGUgd3JpdGVyJ3MgMSBhbmQgYWJvcnQuCi8vCi8vIFRoZSB3cml0ZXIgdGhyZWFk
+IHdha2VzIGV2ZXJ5IDEwIHVzZWMgYW5kIHN0b3JlcyAxIHRvIHRoZSBzaGFyZWQgZmxhZy4KLy8K
+Ly8gRXhwZWN0ZWQgYmVoYXZpb3IgaWYgcnNlcSBwcmVlbXB0aW9uIGFib3J0cyB3b3JrIGNvcnJl
+Y3RseToKLy8gICB0aGUgcHJvZ3JhbSBydW5zIGZvciAxMCBzZWNvbmRzIGFuZCBleGl0cyAwLgov
+LwovLyBFeHBlY3RlZCBiZWhhdmlvciBpZiBzYW1lLUNQVSBwcmVlbXB0aW9uIGNhbiByZXN1bWUg
+aW5zaWRlIHRoZSBDUzoKLy8gICB0aGUgbWFpbiB0aHJlYWQgZXZlbnR1YWxseSByZWFkcyAxIGlu
+c2lkZSB0aGUgQ1MgYW5kIGFib3J0cy4KLy8KLy8gTm90ZSB0byByZWFkZXJzOiB0aGUgdG9wIG9m
+IHRoaXMgZmlsZSBpcyBib3Jpbmcgc2V0dXAgY29kZS4gVGhlIGludGVyZXN0aW5nCi8vIGNvZGUg
+c3RhcnRzIGF0IHJ1bl9vbmVfcnNlcV9hdHRlbXB0KCkgc28geW91IHNob3VsZCBza2lwIGRvd24g
+dGhlcmUgZmlyc3QuCgojaW5jbHVkZSA8ZXJybm8uaD4KI2luY2x1ZGUgPGxpbnV4L3JzZXEuaD4K
+I2luY2x1ZGUgPHNjaGVkLmg+CiNpbmNsdWRlIDxzeXMvcnNlcS5oPgojaW5jbHVkZSA8dW5pc3Rk
+Lmg+CgojaW5jbHVkZSA8Y2hyb25vPgojaW5jbHVkZSA8Y3N0ZGFyZz4KI2luY2x1ZGUgPGNzdGRp
+bnQ+CiNpbmNsdWRlIDxjc3RkaW8+CiNpbmNsdWRlIDxjc3RkbGliPgojaW5jbHVkZSA8Y3N0cmlu
+Zz4KI2luY2x1ZGUgPHRocmVhZD4KCiNpZiAhZGVmaW5lZChfX2FhcmNoNjRfXykgJiYgIWRlZmlu
+ZWQoX194ODZfNjRfXykKI2Vycm9yICJUaGlzIHJlcHJvIGlzIGN1cnJlbnRseSBpbXBsZW1lbnRl
+ZCBmb3IgYWFyY2g2NCBhbmQgeDg2XzY0IG9ubHkuIgojZW5kaWYKCm5hbWVzcGFjZSB7Cgpjb25z
+dGV4cHIgc3RkOjpjaHJvbm86OnNlY29uZHMga1J1bnRpbWV7MTB9Owpjb25zdGV4cHIgbG9uZyBr
+V3JpdGVyU2xlZXBOcyA9IDEwJzAwMDsgIC8vIDEwIHVzZWMKCmFsaWduYXMoNCkgdWludDMyX3Qg
+Z19zaGFyZWRfZmxhZyA9IDA7CgpzdHJ1Y3QgcnNlcSogY3VycmVudF9yc2VxX2FiaSgpIHsKICAg
+IGF1dG8qIHRocmVhZF9wdHIgPSByZWludGVycHJldF9jYXN0PGNoYXIqPihfX2J1aWx0aW5fdGhy
+ZWFkX3BvaW50ZXIoKSk7CiAgICByZXR1cm4gcmVpbnRlcnByZXRfY2FzdDxzdHJ1Y3QgcnNlcSo+
+KHRocmVhZF9wdHIgKyBfX3JzZXFfb2Zmc2V0KTsKfQoKW1tub3JldHVybiwgZ251Ojpmb3JtYXQo
+cHJpbnRmLCAxLCAyKV1dIHZvaWQgZGllKGNvbnN0IGNoYXIqIGZtdCwgLi4uKSB7CiAgICB2YV9s
+aXN0IGFyZ3M7CiAgICB2YV9zdGFydChhcmdzLCBmbXQpOwogICAgc3RkOjp2ZnByaW50ZihzdGRl
+cnIsIGZtdCwgYXJncyk7CiAgICB2YV9lbmQoYXJncyk7CiAgICBzdGQ6OmZwcmludGYoc3RkZXJy
+LCAiXG4iKTsKICAgIF9FeGl0KDEpOwp9CgpbW25vcmV0dXJuXV0gdm9pZCBkaWVfZXJybm8oY29u
+c3QgY2hhciogd2hhdCkgewogICAgZGllKCIlcyBmYWlsZWQ6ICVzIiwgd2hhdCwgc3RkOjpzdHJl
+cnJvcihlcnJubykpOwp9CgppbnQgcGlja19hbmRfcGluX2ZpcnN0X2FsbG93ZWRfY3B1KCkgewog
+ICAgY3B1X3NldF90IHNldDsKICAgIENQVV9aRVJPKCZzZXQpOwogICAgaWYgKHNjaGVkX2dldGFm
+ZmluaXR5KDAsIHNpemVvZihzZXQpLCAmc2V0KSAhPSAwKSB7CiAgICAgICAgZGllX2Vycm5vKCJz
+Y2hlZF9nZXRhZmZpbml0eSIpOwogICAgfQoKICAgIGZvciAoaW50IGNwdSA9IDA7IGNwdSA8IENQ
+VV9TRVRTSVpFOyArK2NwdSkgewogICAgICAgIGlmIChDUFVfSVNTRVQoY3B1LCAmc2V0KSkgewog
+ICAgICAgICAgICBDUFVfWkVSTygmc2V0KTsKICAgICAgICAgICAgQ1BVX1NFVChjcHUsICZzZXQp
+OwogICAgICAgICAgICBpZiAoc2NoZWRfc2V0YWZmaW5pdHkoMCwgc2l6ZW9mKHNldCksICZzZXQp
+ICE9IDApIHsKICAgICAgICAgICAgICAgIGRpZV9lcnJubygic2NoZWRfc2V0YWZmaW5pdHkiKTsK
+ICAgICAgICAgICAgfQogICAgICAgICAgICByZXR1cm4gY3B1OwogICAgICAgIH0KICAgIH0KICAg
+IGRpZSgiTm8gYWxsb3dlZCBDUFUgZm91bmQiKTsKfQoKI2RlZmluZSBSU0VRX1NUUl8xKHgpICN4
+CiNkZWZpbmUgUlNFUV9TVFIoeCkgUlNFUV9TVFJfMSh4KQoKI2RlZmluZSBSU0VRX0FTTV9ERUZJ
+TkVfVEFCTEUobGFiZWwsIHN0YXJ0X2lwLCBwb3N0X2NvbW1pdF9pcCwgYWJvcnRfaXApIFwKICAg
+ICIucHVzaHNlY3Rpb24gX19yc2VxX2NzLCBcImF3XCIgIFxuXHQiICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwKICAgICIuYmFsaWduIDMyICBcblx0IiAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgIFwKICAgIFJTRVFfU1RSKGxhYmVsKSAiOiAgXG5cdCIgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwKICAgICIubG9uZyAwICBcblx0
+IiAgLyogdmVyc2lvbiAqLyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgIFwKICAgICIubG9uZyAwICBcblx0IiAgLyogZmxhZ3MgKi8gICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwKICAgICIucXVh
+ZCAiIFJTRVFfU1RSKHN0YXJ0X2lwKSAiICBcblx0IiAgLyogc3RhcnRfaXAgKi8gICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIFwKICAgICIucXVhZCAiIFJTRVFfU1RSKChwb3N0X2NvbW1p
+dF9pcCkgLSAoc3RhcnRfaXApKSAiICBcblx0IiAgLyogcG9zdF9jb21taXRfb2Zmc2V0ICovIFwK
+ICAgICIucXVhZCAiIFJTRVFfU1RSKGFib3J0X2lwKSAiICBcblx0IiAgLyogYWJvcnRfaXAgKi8g
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwKICAgICIucG9wc2VjdGlvbiAgXG5cdCIK
+CmludCBydW5fb25lX3JzZXFfYXR0ZW1wdChzdHJ1Y3QgcnNlcSogYWJpLCB1aW50MzJfdCogc2hh
+cmVkX2ZsYWcpIHsKICAgIGludCByZXN1bHQgPSAwOwoKI2lmZGVmIENfRVFVSVZBTEVOVCAgLy8g
+QyBlcXVpdmFsZW50OgogICAgLy8gQ3JpdGljYWwgc2VjdGlvbjogc3RvcmUgMCwgdGhlbiBzcGlu
+IHVudGlsIGZsYWcgYmVjb21lcyAxCiAgICAqc2hhcmVkX2ZsYWcgPSAwOwogICAgd2hpbGUgKCpz
+aGFyZWRfZmxhZyA9PSAwKSB7CiAgICAgICAgLy8gc3BpbgogICAgfQogICAgcmVzdWx0ID0gMTsg
+ICAvLyBPYnNlcnZlZCBmbGFnID09IDEKYWJvcnQ6ICAgICAgICAgICAgLy8gQWJvcnQgaGFuZGxl
+ciAoa2VybmVsIGp1bXBzIGhlcmUgaWYgcHJlZW1wdGVkIGluc2lkZSBDUykKICAgIHJlc3VsdCA9
+IC0xOyAgLy8gV2UgY29ycmVjdGx5IG9ic2VydmVkIGEgcHJlZW1wdGlvbiBpbnNpZGUgdGhlIENT
+CiNlbGlmIGRlZmluZWQoX19hYXJjaDY0X18pCiAgICBfX2FzbV9fIF9fdm9sYXRpbGVfXygKICAg
+ICAgICBSU0VRX0FTTV9ERUZJTkVfVEFCTEUoMSwgMmYsIDNmLCA0ZikKICAgICAgICAvLyAgU3Rv
+cmUgYWRkcmVzcyBvZiByc2VxX2NzIGRlc2NyaXB0b3IgaW50byBhYmktPnJzZXFfY3MKICAgICAg
+ICAiICBhZHJwIHgxNSwgMWIgIFxuIgogICAgICAgICIgIGFkZCB4MTUsIHgxNSwgOmxvMTI6MWIg
+IFxuIgogICAgICAgICIgIHN0ciB4MTUsICVbcnNlcV9jc10gIFxuIgogICAgICAgICIyOiAgXG4i
+ICAgICAgICAgICAgICAgICAgICAgICAgIC8vICBDcml0aWNhbCBzZWN0aW9uIHN0YXJ0IChsYWJl
+bCAyKQogICAgICAgICIgIHN0ciB3enIsICVbc2hhcmVkX2ZsYWddICBcbiIgIC8vICAqc2hhcmVk
+X2ZsYWcgPSAwCiAgICAgICAgIjU6ICBcbiIgICAgICAgICAgICAgICAgICAgICAgICAgLy8gIFNw
+aW4gbG9vcDogd2hpbGUgKCpzaGFyZWRfZmxhZyA9PSAwKSB7fQogICAgICAgICIgIGxkciB3MTUs
+ICVbc2hhcmVkX2ZsYWddICBcbiIgIC8vICB3MTUgPSAqc2hhcmVkX2ZsYWcKICAgICAgICAiICBj
+YnogdzE1LCA1YiAgXG4iICAgICAgICAgICAgICAvLyAgaWYgKHcxNSA9PSAwKSBnb3RvIDUgKHNw
+aW4pCiAgICAgICAgIiAgbW92ICV3W3Jlc3VsdF0sICMxICBcbiIgICAgICAgLy8gIHJlc3VsdCA9
+IDEgKG9ic2VydmVkIGZsYWcgPT0gMSkKICAgICAgICAiMzogIFxuIiAgICAgICAgICAgICAgICAg
+ICAgICAgICAvLyAgQ3JpdGljYWwgc2VjdGlvbiBlbmQgLSBmYWxsIHRocm91Z2gKICAgICAgICAi
+ICBiIDk5ZiAgXG4iICAgICAgICAgICAgICAgICAgICAvLyAgSnVtcCBwYXN0IGFib3J0IGhhbmRs
+ZXIKICAgICAgICAiICAubG9uZyAlY1tzaWddICBcbiIgICAgICAgICAgICAvLyAgUlNFUSBzaWdu
+YXR1cmUgKG1hZ2ljIGJ5dGVzIHJlcXVpcmVkIGJ5IGtlcm5lbCkKICAgICAgICAiNDogIFxuIiAg
+ICAgICAgICAgICAgICAgICAgICAgICAvLyAgQWJvcnQgaGFuZGxlciBlbnRyeSAobGFiZWwgNCkK
+ICAgICAgICAiICBtb3YgJXdbcmVzdWx0XSwgIy0xICBcbiIgICAgICAvLyAgcmVzdWx0ID0gLTEK
+ICAgICAgICAiOTk6ICBcbiIgICAgICAgICAgICAgICAgICAgICAgICAvLyAgRW5kIG9mIGFib3J0
+IGhhbmRsZXIKICAgICAgICA6IFtyZXN1bHRdICIrciIocmVzdWx0KSwgW3JzZXFfY3NdICI9bSIo
+YWJpLT5yc2VxX2NzKSwgW3NoYXJlZF9mbGFnXSAiK1EiKCpzaGFyZWRfZmxhZykKICAgICAgICA6
+IFtzaWddICJpIihSU0VRX1NJRykKICAgICAgICA6ICJtZW1vcnkiLCAieDE1Iik7CiNlbGlmIGRl
+ZmluZWQoX194ODZfNjRfXykKICAgIF9fYXNtX18gX192b2xhdGlsZV9fKAogICAgICAgIFJTRVFf
+QVNNX0RFRklORV9UQUJMRSgxLCAyZiwgM2YsIDRmKQogICAgICAgIC8vICBTdG9yZSBhZGRyZXNz
+IG9mIHJzZXFfY3MgZGVzY3JpcHRvciBpbnRvIGFiaS0+cnNlcV9jcwogICAgICAgICIgIGxlYXEg
+MWIoJSVyaXApLCAlJXJheCAgXG5cdCIKICAgICAgICAiICBtb3ZxICUlcmF4LCAlW3JzZXFfY3Nd
+ICBcblx0IgogICAgICAgICIyOiAgXG5cdCIgICAgICAgICAgICAgICAgICAgICAgICAgICAgLy8g
+IENyaXRpY2FsIHNlY3Rpb24gc3RhcnQgKGxhYmVsIDIpCiAgICAgICAgIiAgbW92bCAkMCwgJVtz
+aGFyZWRfZmxhZ10gIFxuXHQiICAgICAvLyAgKnNoYXJlZF9mbGFnID0gMAogICAgICAgICI1OiAg
+XG5cdCIgICAgICAgICAgICAgICAgICAgICAgICAgICAgLy8gIFNwaW4gbG9vcDogd2hpbGUgKCpz
+aGFyZWRfZmxhZyA9PSAwKSB7fQogICAgICAgICIgIG1vdmwgJVtzaGFyZWRfZmxhZ10sICUlZWF4
+ICBcblx0IiAgLy8gIGVheCA9ICpzaGFyZWRfZmxhZwogICAgICAgICIgIHRlc3RsICUlZWF4LCAl
+JWVheCAgXG5cdCIgICAgICAgICAgLy8gIHRlc3QgZWF4ID09IDAKICAgICAgICAiICBqeiA1YiAg
+XG5cdCIgICAgICAgICAgICAgICAgICAgICAgIC8vICBpZiAoZWF4ID09IDApIGdvdG8gNSAoc3Bp
+bikKICAgICAgICAiICBtb3ZsICQxLCAlW3Jlc3VsdF0gIFxuXHQiICAgICAgICAgIC8vICByZXN1
+bHQgPSAxIChvYnNlcnZlZCBmbGFnID09IDEpCiAgICAgICAgIjM6ICBcblx0IiAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAvLyAgQ3JpdGljYWwgc2VjdGlvbiBlbmQgLSBmYWxsIHRocm91Z2gK
+ICAgICAgICAiICBqbXAgOTlmICBcblx0IiAgICAgICAgICAgICAgICAgICAgIC8vICBKdW1wIHBh
+c3QgYWJvcnQgaGFuZGxlcgogICAgICAgICIgIC5sb25nICVjW3NpZ10gIFxuXHQiICAgICAgICAg
+ICAgICAgLy8gIFJTRVEgc2lnbmF0dXJlIChtYWdpYyBieXRlcyByZXF1aXJlZCBieSBrZXJuZWwp
+CiAgICAgICAgIjQ6ICBcblx0IiAgICAgICAgICAgICAgICAgICAgICAgICAgICAvLyAgQWJvcnQg
+aGFuZGxlciBlbnRyeSAobGFiZWwgNCkKICAgICAgICAiICBtb3ZsICQtMSwgJVtyZXN1bHRdICBc
+blx0IiAgICAgICAgIC8vICByZXN1bHQgPSAtMQogICAgICAgICI5OTogIFxuXHQiICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgLy8gIEVuZCBvZiBhYm9ydCBoYW5kbGVyCiAgICAgICAgOiBbcmVz
+dWx0XSAiK3IiKHJlc3VsdCksIFtyc2VxX2NzXSAiPW0iKGFiaS0+cnNlcV9jcyksIFtzaGFyZWRf
+ZmxhZ10gIittIigqc2hhcmVkX2ZsYWcpCiAgICAgICAgOiBbc2lnXSAiaSIoUlNFUV9TSUcpCiAg
+ICAgICAgOiAibWVtb3J5IiwgImNjIiwgInJheCIpOwojZW5kaWYKCiAgICByZXR1cm4gcmVzdWx0
+Owp9Cgp2b2lkIHdyaXRlcl90aHJlYWRfbWFpbigpIHsKICAgIHdoaWxlICh0cnVlKSB7CiAgICAg
+ICAgc3RkOjp0aGlzX3RocmVhZDo6c2xlZXBfZm9yKHN0ZDo6Y2hyb25vOjpuYW5vc2Vjb25kcyhr
+V3JpdGVyU2xlZXBOcykpOwogICAgICAgIF9fYXRvbWljX3N0b3JlX24oJmdfc2hhcmVkX2ZsYWcs
+IDF1LCBfX0FUT01JQ19SRUxBWEVEKTsKICAgIH0KfQoKfSAgLy8gbmFtZXNwYWNlCgppbnQgbWFp
+bigpIHsKICAgIGlmIChfX3JzZXFfc2l6ZSA9PSAwKSB7CiAgICAgICAgZGllKCJyc2VxIGlzIG5v
+dCByZWdpc3RlcmVkIGZvciB0aGlzIHRocmVhZCAoZ2xpYmMgX19yc2VxX3NpemUgPT0gMCk7ICIK
+ICAgICAgICAgICAgIm5lZWQgZ2xpYmMgPj0gMi4zNSB3aXRoIHJzZXEgc3VwcG9ydCBhbmQgYSBr
+ZXJuZWwgdGhhdCBzdXBwb3J0cyByc2VxIik7CiAgICB9CiAgICBjb25zdCBpbnQgY3B1ID0gcGlj
+a19hbmRfcGluX2ZpcnN0X2FsbG93ZWRfY3B1KCk7CiAgICBpZiAoKGludCljdXJyZW50X3JzZXFf
+YWJpKCktPmNwdV9pZCAhPSBjcHUpIHsKICAgICAgICBkaWUoInJzZXEgYWJpIGNwdV9pZCBpcyAl
+ZCBhZnRlciBwaW5uaW5nIHJhdGhlciB0aGFuICVkIiwKICAgICAgICAgICAgY3VycmVudF9yc2Vx
+X2FiaSgpLT5jcHVfaWQsCiAgICAgICAgICAgIGNwdSk7CiAgICB9CgogICAgc3RkOjp0aHJlYWQo
+d3JpdGVyX3RocmVhZF9tYWluKS5kZXRhY2goKTsKCiAgICBjb25zdCBhdXRvIGRlYWRsaW5lID0g
+c3RkOjpjaHJvbm86OnN0ZWFkeV9jbG9jazo6bm93KCkgKyBrUnVudGltZTsKICAgIHVpbnQ2NF90
+IGF0dGVtcHRzID0gMDsKICAgIHVpbnQ2NF90IGFib3J0X3JldHJpZXMgPSAwOwoKICAgIHdoaWxl
+IChzdGQ6OmNocm9ubzo6c3RlYWR5X2Nsb2NrOjpub3coKSA8IGRlYWRsaW5lKSB7CiAgICAgICAg
+KythdHRlbXB0czsKICAgICAgICBjb25zdCBpbnQgcmMgPSBydW5fb25lX3JzZXFfYXR0ZW1wdChj
+dXJyZW50X3JzZXFfYWJpKCksICZnX3NoYXJlZF9mbGFnKTsKICAgICAgICBpZiAocmMgPT0gMSkg
+ewogICAgICAgICAgICBkaWUoIk9ic2VydmVkIHNoYXJlZF9mbGFnID09IDEgaW5zaWRlIHRoZSBy
+c2VxIGNyaXRpY2FsIHNlY3Rpb24gIgogICAgICAgICAgICAgICAgImFmdGVyICVsbHUgYXR0ZW1w
+dHMgb24gY3B1ICVkIiwKICAgICAgICAgICAgICAgIHN0YXRpY19jYXN0PHVuc2lnbmVkIGxvbmcg
+bG9uZz4oYXR0ZW1wdHMpLAogICAgICAgICAgICAgICAgY3B1KTsKICAgICAgICB9IGVsc2UgaWYg
+KHJjICE9IC0xKSB7CiAgICAgICAgICAgIGRpZSgiVW5leHBlY3RlZCByZXR1cm4gdmFsdWUgZnJv
+bSByc2VxOiAlZCBhZnRlciAlbGx1IGF0dGVtcHRzIiwKICAgICAgICAgICAgICAgIHJjLAogICAg
+ICAgICAgICAgICAgc3RhdGljX2Nhc3Q8dW5zaWduZWQgbG9uZyBsb25nPihhdHRlbXB0cykpOwog
+ICAgICAgIH0KICAgICAgICArK2Fib3J0X3JldHJpZXM7CiAgICB9CgogICAgc3RkOjpmcHJpbnRm
+KHN0ZGVyciwKICAgICAgICAgICAgICAgICAiUEFTUzogcmFuIGZvciAlbGxkIHNlY29uZHMgb24g
+Y3B1ICVkLCBhdHRlbXB0cz0lbGx1IGFib3J0X3JldHJpZXM9JWxsdVxuIiwKICAgICAgICAgICAg
+ICAgICBzdGF0aWNfY2FzdDxsb25nIGxvbmc+KGtSdW50aW1lLmNvdW50KCkpLAogICAgICAgICAg
+ICAgICAgIGNwdSwKICAgICAgICAgICAgICAgICBzdGF0aWNfY2FzdDx1bnNpZ25lZCBsb25nIGxv
+bmc+KGF0dGVtcHRzKSwKICAgICAgICAgICAgICAgICBzdGF0aWNfY2FzdDx1bnNpZ25lZCBsb25n
+IGxvbmc+KGFib3J0X3JldHJpZXMpKTsKICAgIF9FeGl0KDApOwp9Cg==
+--000000000000bb1c2e0650097725--
