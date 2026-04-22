@@ -1,205 +1,88 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7657D3DE430
-	for <regressions@lists.linux.dev>; Wed, 22 Apr 2026 12:36:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.54
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776861386; cv=pass; b=jEyOqRN/YTNzYVuQasOnuTng+1GDWdyXPJ20jD3EJ6eZ1XaKuYazHFqfgM30FjjviDxRR4aBFqgX/cUDvdecLRLcTj1cPkPlR6Qso6K9UkuoX4UStypvpRlLFoD/G4aKmTt9C46dpExo/wamZORdR9FVpZSSBVZqfGPwZD60u0o=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776861386; c=relaxed/simple;
-	bh=Z+fpeHyzZDcw59xaiG77ldoRBDmq2F4C7+ZCK7janFE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ciWdIzTl+yeDkAVV7icxFP0OSyF+pKyTvYSi8XaJsdij5Ri/LP95AuffT/sfPgRxaxXnmuAjxf53oAx/mO829ApBjv0PRbMiq9C5tPqT+M3cKBIiq3qzKWPYja+u6v6455KTJxdSZ2NwMhpQyYtTV6L5JL1bfNZ6ewtrgx3jQmk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Pe0UiZ9V; arc=pass smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 849BA3D3318;
+	Wed, 22 Apr 2026 12:56:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776862621; cv=none; b=YtgHwEpniP+m9yObYNjDeTpQlT93FzzELi/JbwtDA8c4FwNZ+y97KUqQ5gI9Lz3eDgf+0pHW7ZSd9vYr1BJmnOfdXfie5C/MmbfQV2QowlsF9hinoIDvWT6I5DRjxgxKo2gSXHDQkV+tm8oCArhVc09vmEk5tc+0nxdoXgtzD2g=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776862621; c=relaxed/simple;
+	bh=bZJYejPinbwg2dgZwGQp878b4bBUZhrcDpVoZap6PBA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ogZJhy381nbjkpv6XAh2xYhkhD6dzoKf8zZ41Px6zhkSJr9Pa9J7dDce9J5l/xDT4J/jJeQF1xJT88ryLXtxkOs5sMRNMXMx7go1yZFsQaB1UNscbBCG6dojccADY39OEEenymdJVzTxPIJMWX4Xx9w6jhAiZag0ygmxtTlK/Nc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=e6/liRiA; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pe0UiZ9V"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-6634bb959a2so7474135a12.1
-        for <regressions@lists.linux.dev>; Wed, 22 Apr 2026 05:36:22 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1776861381; cv=none;
-        d=google.com; s=arc-20240605;
-        b=ljf1dGLlEsBset+Rwar0x7OUMQp/JuqZ2x+XYE92IqU23+C6VHzeYoNhfiIAKmzBcc
-         8WrEF2XSO0+WgV44NGUoUUwO5SoBN3OIfT75Mu3JTZnIEB7BmMiPITsaWN5wB3YGltCz
-         2iLQctzDjZ2TE8IsreS0I0oVhiKjcXUnwfB1lNBY6ScDucf12P4xofeLbPunpYW8/Q8D
-         suqSudEzoYIgQ/ybARZVIzzIgfPsFDUJ5RIIAjkPQgI72aVqQY6XPqGnpfkqQC6xXVNG
-         B8TEvRdr3ngCrdV423hFIydA5NqSeCH5x0F4ZrLWfTvCN+W3PSeZAfEqUbIeyxTkZmbx
-         3PjA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=N6YjFqGBtJU0cul8X9lP9Xhlf/J/5zOSe7U09Cg9PaM=;
-        fh=7Id7wCJe1bPBH8iOViIqtaZbewXQPZIHLGn4yPkSzMw=;
-        b=c3XnurWK6a+8uYoQ3VXFAwhaVr74GM5jmHjstktZD972iUhJTs6FxTHL40+a6UJNeI
-         WNR6Vpe7KKmFT8MGgWqIH8qOBkO2Z7OEbuPQ017I0PxT52hkvgUX+/hdbgeM40YGIfDF
-         kzODy1j6FrdxpdUqhgmzI4z4Mib8PLe8hWUsW2lFRAZ+vgJbGdiS5kYxptTC2DSKfJpU
-         +T6yu/mfL4cYlZ+G2CeUL/77wI0Kqcpx137pLd0JzHj/mLwPBmiC1alskDCh73FkJ+Lv
-         hGRdbUQ5JNBdlDdUYQcObop4NazHF6lp4vaDUKsOvAv27UgnV0OM9nYBTMelQMP5yns2
-         OiBA==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1776861381; x=1777466181; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=N6YjFqGBtJU0cul8X9lP9Xhlf/J/5zOSe7U09Cg9PaM=;
-        b=Pe0UiZ9VteZdPXb/+Mdi9dfz4rGk49Gi6DqeLbvAgomMiy/szRHwhX+4X3XWKHhIy5
-         WSnnSgRhYhFM6YYUSuJnYezOPug3/ssFNv8+FkslazLIS8j8vctnmYxjOP3h1GAHnif7
-         xLrmDXt4G5T7p4qG7ITXDXVOVj5C9uQFnAuoD8EZ36kgGS3H7EuExOpBdsr0sQIb9qle
-         jOLSQ/2JrGbwVJx9FfGRii5kpFOdtMpRFgEhuJrt+hanXeZKr8i3xZ6x065WkESXr8zc
-         T3ygMK1qR27HC9dwuPa9V/SDYs/R+A5tXN/lqlMESsel0DU/GIrF7JFYY+isKy/5gFiL
-         I8kw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776861381; x=1777466181;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=N6YjFqGBtJU0cul8X9lP9Xhlf/J/5zOSe7U09Cg9PaM=;
-        b=mD+2dboftRtTE00WvX5QC/2rHsDarT23O/DzkLSxXivZh0bkF7y5SG5YytHyi/SuZp
-         EQchEevv1N9Myrgfm2nAHPYp5+u8U+ZhUAduRDXAB2TVu0SkbjxfoVgjmvuW41JlDz0a
-         wSZkkVpmvOdaQlCemM4rhr7z0LD0Zie7enV8uDujVtGVrwHGIv7jPV8yuE/cNCc7YkSN
-         Dv1oS+b++vp3RPFqvdozujJHCwYZ9P9yfFY0O/aer9r/3jLvURGSh3EjzJ+pPr9gm/pt
-         FoHgHHrZ2luayjIdjCl0FaX766VxwSzXQRa1hMaeBT8Vnn2qeHcu/AfJJInJGmWbf6m6
-         gVLQ==
-X-Gm-Message-State: AOJu0Yz7tSoo5iKErGJ8eWmJb/nh9G2X033PMknxfnIVdY4d5IG//0OG
-	rR8FBu9gbVxC3n8igeI/K5guc+3Yx1g4ox99wLhywZKawcb4Y0xCwNVZB0J2rrwAAnW5hITsKXa
-	fJYNat0MfgqxoapSl9mkm/x1VTtySWiY=
-X-Gm-Gg: AeBDietLXiFQFUvNaVnvC3JlKCw0XAsrfXfmCa/dMcNl+R3Bw374UIVTeNQ2EP7IB0k
-	VW7K36IB0GjZsUtHMwgsq/gmY8itOwk1IM8t9OaE+w72puCtQIgOlnLpG6LNFGc0exaK4igLEtu
-	lV7pefvRtncaNNxEqlKQ/XMRK0+SuuIbxsHId6PJVK1Nmccch7JhIXKnR3IIYvXhYaHYK6AksqY
-	K9UhvU8VSjr9qg3d6y6U59nRPB6Vi7jBc8ipiJLTxiQSAk/RZkCwSj5NGbZYxcQZivxgssa1sLa
-	jukvTAtxiwb7L6rnUg==
-X-Received: by 2002:a17:907:96a1:b0:ba7:fbfb:4caf with SMTP id
- a640c23a62f3a-ba7fbfb4d91mr657508366b.43.1776861380344; Wed, 22 Apr 2026
- 05:36:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="e6/liRiA"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=bZJYejPinbwg2dgZwGQp878b4bBUZhrcDpVoZap6PBA=; b=e6/liRiAZhw/qeNrxn/I70F0hZ
+	Vf61kP1Ugbq/deh03FjHdUTeOuzaXRUvK9G/4GyBzJyG/R3P/O3BaWLVh833nqNQVQz8aO3AB5Z6e
+	9YYG9F5UNL0Wno7rVQq+S7k3nmq3vFkJsDLZ0zslfPgLdq0rVkRnY1dzfqd3dNlV9bB0no05hjt+A
+	ax7a8uh61rMUI+6JAK5IKxSP/YtSt4Ya/FA91gw0nURDbva+mbzDK8KPB1CBomGDLtBwwxlK+tr8R
+	Al7wJeGc7kv3ETE7JmM4UqbN0GakpY7k5F7EEzGoxRbH/AvZI/9G7HOJW68rZa5w2DfdHXkcaVAuW
+	4VB+BlvA==;
+Received: from 2001-1c00-8d85-4b00-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d85:4b00:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1wFX8L-0000000BPjS-3ewN;
+	Wed, 22 Apr 2026 12:56:50 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id C53D93008E2; Wed, 22 Apr 2026 14:56:47 +0200 (CEST)
+Date: Wed, 22 Apr 2026 14:56:47 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Mathias Stearn <mathias@mongodb.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Boqun Feng <boqun.feng@gmail.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Chris Kennelly <ckennelly@google.com>,
+	Dmitry Vyukov <dvyukov@google.com>, regressions@lists.linux.dev,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	Ingo Molnar <mingo@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	Jinjie Ruan <ruanjinjie@huawei.com>,
+	Blake Oler <blake.oler@mongodb.com>
+Subject: Re: [REGRESSION] rseq: refactoring in v6.19 broke everyone on arm64
+ and tcmalloc everywhere
+Message-ID: <20260422125647.GP3126523@noisy.programming.kicks-ass.net>
+References: <CAHnCjA25b+nO2n5CeifknSKHssJpPrjnf+dtr7UgzRw4Zgu=oA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <12879883.O9o76ZdvQC@rafael.j.wysocki> <168591776860440@mail.yandex.ru>
-In-Reply-To: <168591776860440@mail.yandex.ru>
-From: Evgeny Sagatov <evgeny.sagatov@gmail.com>
-Date: Wed, 22 Apr 2026 15:36:08 +0300
-X-Gm-Features: AQROBzDtGf9k7R1EsVMKW6DV83lURu0DqePYdX100Md0YGa0t--tWKYIatVxa1A
-Message-ID: <CAGAxtY1QDN_vkXEzdT8yUC5ZR3W+18TypEcJLR+-=kUkaBOdTw@mail.gmail.com>
-Subject: Re: Pressing the power button causes the device to freeze completely
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: regressions@lists.linux.dev, linux-acpi@vger.kernel.org, 
-	Thorsten Leemhuis <regressions@leemhuis.info>, LKML <linux-kernel@vger.kernel.org>, 
-	Wysocki Rafael J <rafael.j.wysocki@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHnCjA25b+nO2n5CeifknSKHssJpPrjnf+dtr7UgzRw4Zgu=oA@mail.gmail.com>
 
-Hello Rafael,
+On Wed, Apr 22, 2026 at 11:50:26AM +0200, Mathias Stearn wrote:
 
-I applied the patch that you sent.
-The PC isn't responding to the power button press. It doesn't freeze.
+> Additionally, it breaks tcmalloc specifically by failing to overwrite
+> the cpu_id_start field at points where it was relied on for
+> correctness.
 
-I just want to clarify, did you receive messages where we found the
-first broken commit using git bisect?
+This specific behaviour was documented as being wrong and running with
+DEBUG_RSEQ would have flagged it.
 
-> 8c94ccc7cd691472461448f98e2372c75849406c    good
-> e37617c8e53a1f7fcba6d5e1041f4fd8a2425c27    good
-> b0d326da462e20285236e11e4cbc32085de9f363    bad
+The tcmalloc issue has been contentious for a long time. The tcmalloc
+folks relied on something that was documented to be wrong. It has been
+reported to the tcmalloc people many years ago and if you were to run
+tcmalloc on most any kernel (very much including 6.19) with
+DEBUG_RSEQ=y, it would have yelled.
 
-I'm getting messages that my emails couldn't be delivered, so I'm
-using another email address.
+The tcmalloc people didn't care. There was a proposal for an RSEQ
+extension for what they need, and they didn't care. All this should be
+in their bugzilla or whatever.
 
-----
-Sincerely, Evgeny Sagatov
+The RSEQ rework improved performance significantly for everyone, and
+kept all the documented behaviour (+- arm64 bug). Tcmalloc got screwed
+over because they relied on implementation behaviour that was
+specifically documented to be broken. And they didn't care. Google was
+very much aware of this. And hasn't lifted a finger to remedy it.
 
-> On Tuesday, April 21, 2026 5:11:36 PM CEST Wysocki, Rafael J wrote:
->
->  Hi,
->
->  On 4/13/2026 6:46 PM, Evgeny Sagatov wrote:
->  > Hello,
->  > I have a PC with a motherboard GA-EP45T-UD3LR (Rev. 1.0)
->  > <https://www.gigabyte.com/Motherboard/GA-EP45T-UD3LR-rev-10> and
->  > processor Intel Core 2 Quad Q9550.
->  > Previously, I had Debian 12 with kernel 6.1 installed, and pressing
->  > the power button would shut down the PC as usual.
->  > I updated to Debian 13 with kernel 6.12.74, and now pressing the power
->  > button causes the PC to freeze completely.
->  > I see that systemd doesn't even begin to shut down. It freezes
->  > immediately after pressing the button. There's no error message in
->  > console. There's no error message in the logs either. Netconsole
->  > doesn't report any errors, and the kernel doesn't panic. It just
->  > freezes completely.
->
->  It looks like the ACPI button notify handler crashes on your system for
->  some obscure reason.
->
->  It should be possible to get to the bottom of it, but it will require
->  some investigation if you have the motivation and time to run debug patc=
-hes.
->
->
->  > I checked that Live CD with Debian 12 continue to shut down normally,
->  > but Live CD with Debian 13 freeze.
->  > I tried updating and resetting the BIOS. I tried various kernel
->  > parameters related to ACPI settings. I also tried kernels 6.18 and
->  > 6.19. Nothing fixed the problem.
->  > If I unload the "button" module, the system doesn't freeze, but it
->  > also doesn't shut down.
->
->  This is a useful data point, thanks!
->
->
->  > I built "button" module by rolling back its version to commit 1a20d40
->  > <https://github.com/torvalds/linux/commit/1a20d409c874255086e2f42a7298=
-26d490294c91>,
->  > which corresponds to kernel version 6.1. This module does not freeze,
->  > but does not turn off the PC either.
->  > I've found that the freezes have been occurring since commit 0d51157
->  > <https://github.com/torvalds/linux/commit/0d51157dfaac05ea66616d8a250d=
-ce04bef49a4f>.
->
->  The main difference made by it is the fixed events handling and if there
->  is a problem with that, a few debug patches should suffice to find out
->  what's going on. I'll send you one to try shortly.
->
->
-> First off, on top of 7.0.0 (since the issue is present in this one, I thi=
-nk
-> it's better to focus the debugging on it), let's first check what happens=
- if
-> the ACPI fixed event handler is not installed for the power button at all=
-.
->
-> This should be similar to using a 6.1 version of the button driver (that =
-is,
-> no crash, but pressing the power button will have no effect).
->
-> Please test the patch below and let me know what happens.
->
-> ---
->  drivers/acpi/button.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
->
-> --- a/drivers/acpi/button.c
-> +++ b/drivers/acpi/button.c
-> @@ -628,9 +628,7 @@ static int acpi_button_probe(struct plat
->
->          switch (device->device_type) {
->          case ACPI_BUS_TYPE_POWER_BUTTON:
-> - status =3D acpi_install_fixed_event_handler(ACPI_EVENT_POWER_BUTTON,
-> - acpi_button_event,
-> - button);
-> + status =3D AE_OK;
->                  break;
->          case ACPI_BUS_TYPE_SLEEP_BUTTON:
->                  status =3D acpi_install_fixed_event_handler(ACPI_EVENT_S=
-LEEP_BUTTON,
->
->
->
->
->
-> -------- =D0=9A=D0=BE=D0=BD=D0=B5=D1=86 =D0=BF=D0=B5=D1=80=D0=B5=D1=81=D1=
-=8B=D0=BB=D0=B0=D0=B5=D0=BC=D0=BE=D0=B3=D0=BE =D1=81=D0=BE=D0=BE=D0=B1=D1=
-=89=D0=B5=D0=BD=D0=B8=D1=8F --------
+
