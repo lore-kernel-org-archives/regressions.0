@@ -1,51 +1,51 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.162])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73A663C1985
-	for <regressions@lists.linux.dev>; Wed, 22 Apr 2026 09:11:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.162
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D9613C13FD
+	for <regressions@lists.linux.dev>; Wed, 22 Apr 2026 09:18:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776849069; cv=none; b=jW9egG4JW7y/AkFji7nmBlUNjnsUnhKPxgUvDsH9F/5hkAN8pWAAE06PQ8hTCWV8pSky5nF6xqfJBlHTYf8XIuYIurdgMAQ37lgHbnv2kwMWBBSA2mjbcfVX/T7DmImwbNYCxeexk1ZylTVhcC9OmKDxHnw/28Ew2w2RYOv/q14=
+	t=1776849540; cv=none; b=t0rPs3TXkB/a6s3bgEG73zMI4Vn/H17RInZ5aFsi0sxCVKA2Duo9LwMUZo/Fid3xXYBgHj/H7JWK3PYLm8ttwKjkMXnt+6u4wNcAAIQ+YlIhJaO7gNNywidCj4k+SlzwqiwcGB0mlkXRLI1G23oLUpwaJU5NnoilFNYBAtmqnGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776849069; c=relaxed/simple;
-	bh=VGDrsaKE6igUgJZeM5UoFALIu5tBVuOb4ltGy8GqtFY=;
+	s=arc-20240116; t=1776849540; c=relaxed/simple;
+	bh=BF1zEbvNk3kTqMH+V92H0EY8hWcWDUFqzNweMj+pj7A=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dBW9MtQOzEBsYMBm+8RkBDNk2P0qtddXu2bc5EJTVG7L9KWKlYRB0HK8ICiShibDWWSVFiutWRwJWHjhQHLVvHoL2+g2/fFXgIEHmJF6c9nfi9G1sBNf1V+OF90AjwzshWuVoF2WrgrNpJEGB+egR7pGph4wk0wdp6b2nIpRgKM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=TlvXtQwJ; arc=none smtp.client-ip=188.68.63.162
+	 In-Reply-To:Content-Type; b=phwp0oguyFN3NAYEeRLaN1Gmhk+WfYK0/izZG6K0s7qdRhaEXxOOggx5FpdNZmZc4Ilmnhu01+UUkCaaOgVd4NeBbU88wPuloVATn8vJoA7379Jsb3S3DVb4ahl/FosvjQDphPpYtmBPV8nMhhRudSaXRl9lWXk3lKg9GTeJqP0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=fGSIJcxd; arc=none smtp.client-ip=188.68.63.98
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="TlvXtQwJ"
-Received: from mors-relay-8201.netcup.net (localhost [127.0.0.1])
-	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4g0tjx1x4gz3wg8;
-	Wed, 22 Apr 2026 11:10:45 +0200 (CEST)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="fGSIJcxd"
+Received: from mors-relay-2501.netcup.net (localhost [127.0.0.1])
+	by mors-relay-2501.netcup.net (Postfix) with ESMTPS id 4g0tvG6VDdz66yb;
+	Wed, 22 Apr 2026 11:18:50 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1776849045;
-	bh=VGDrsaKE6igUgJZeM5UoFALIu5tBVuOb4ltGy8GqtFY=;
+	s=key2; t=1776849530;
+	bh=BF1zEbvNk3kTqMH+V92H0EY8hWcWDUFqzNweMj+pj7A=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=TlvXtQwJ3qOmmtusQ81CxnEbEXW8IvkLo/YXRrshqFNEfWW+mSE3q4BYxh4AOG7mg
-	 7T17h4XDp/yYcUgDICjjbJoePrI/cM+lOv2BNbp84lhpwL6WPzr2PZDe3bmWNwsHK5
-	 ynFUy98lwMj13sNEb3JMIxB4djGv1klP5a9vdxMEhesF2CO7tF6L9rdIZffyWOgze/
-	 t2QpF4/Wy7ZnLBCKWZn0wZtgLeph5MKNBtuRuduCFO3mi/32EoY/WfoXlX+n1G0lvu
-	 /fZI+GubrKZaRpeE7avEtjpIDcjHPqcAktt2xMf/zNoHlMagyHQKmjcZoH+LExS4Gs
-	 0FrSKjTOnYzOA==
+	b=fGSIJcxdGOQA5EjsNjngXsYrBrHIYnfiyM09VQTkqbONmKhnu+o0E8P4794qF2oIW
+	 jDB2jJByrZOupL+zxrxn41udM9fmHrVia11fwN4Jn4uwshQXu17eQy7AqqvxhQUlJL
+	 mCHo93vzHC//z96gJacLP/wImyF2G/v6UWpHR0NnMZ5fZOLj48pX4CNBqyeyIo1W8J
+	 7Qt1lcawvI2mar9ilBrYyrLjpQ1KJSMmwAZ3z2uRJQTtD+sYcon+qDPo6lPVn0q/4Q
+	 cjKIR4N5VLPvucHEkqKubV6haAKepoPLRy6/5beAG95dLHuqV1m5T2zd1UC/jWGrMt
+	 zhj7Dy//1f8jg==
 Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4g0tjx1Bpzz3wb2;
-	Wed, 22 Apr 2026 11:10:45 +0200 (CEST)
+	by mors-relay-2501.netcup.net (Postfix) with ESMTPS id 4g0tvG5mVkz4xNb;
+	Wed, 22 Apr 2026 11:18:50 +0200 (CEST)
 Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4g0tjw5chtz8sZg;
-	Wed, 22 Apr 2026 11:10:44 +0200 (CEST)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4g0tvF0Qv0z8sZP;
+	Wed, 22 Apr 2026 11:18:48 +0200 (CEST)
 Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 1E8F8632A6;
-	Wed, 22 Apr 2026 11:10:44 +0200 (CEST)
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 8CF1E632A6;
+	Wed, 22 Apr 2026 11:18:47 +0200 (CEST)
 Authentication-Results: mxe9fb;
         spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
 Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <50d70614-6681-4169-8c2a-e68128f88c9c@leemhuis.info>
-Date: Wed, 22 Apr 2026 11:10:43 +0200
+Message-ID: <0b8607c8-2d29-4fca-961a-b7a677e968a1@leemhuis.info>
+Date: Wed, 22 Apr 2026 11:18:47 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -53,216 +53,228 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [BUG] HDMI monitor shows no signal when the refresh rate is
- higher than the default 60Hz
-To: "Vojvodic, Relja (Reggie)" <Relja.Vojvodic@amd.com>,
- "Deucher, Alexander" <Alexander.Deucher@amd.com>
-Cc: Shichuan Yim <shichuanyim@gmail.com>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- "Koenig, Christian" <Christian.Koenig@amd.com>,
- "Pillai, Aurabindo" <Aurabindo.Pillai@amd.com>,
- "Limonciello, Mario" <Mario.Limonciello@amd.com>,
- "Zuo, Jerry" <Jerry.Zuo@amd.com>
-References: 
- <CA+tjKGrmADg=oG9CT74_mgGNN3h17=LLmnv51K=MggAqo7q2Eg@mail.gmail.com>
- <2026030839-applied-prominent-b774@gregkh>
- <CA+tjKGoWW70TRw6C+PMDbhpCh5P_jyJ9ciY3HckJystb+X26Mw@mail.gmail.com>
- <b3d8717f-07f7-4921-8808-55db94dfdc2e@leemhuis.info>
- <DM6PR12MB4354705B31704E35F281C5AA8744A@DM6PR12MB4354.namprd12.prod.outlook.com>
- <CA+tjKGqCmTQkxmdzrUfBxyENkMzocic1+OKS2bka5taGoy3SnQ@mail.gmail.com>
- <SA0PR12MB4368395D5071FC7AD375B6618740A@SA0PR12MB4368.namprd12.prod.outlook.com>
- <CA+tjKGrcV2p=2EabSjkYiRv=RNmOZq4_5Z49mu-irjJjgEkqCA@mail.gmail.com>
+Subject: Re: Bug#1130336: [regression] Network failure beyond first connection
+ after 69894e5b4c5e ("netfilter: nft_connlimit: update the count if add was
+ skipped")
+To: Fernando Fernandez Mancera <fmancera@suse.de>,
+ =?UTF-8?Q?Alejandro_Oliv=C3=A1n_Alvarez?=
+ <alejandro.olivan.alvarez@gmail.com>,
+ Salvatore Bonaccorso <carnil@debian.org>, 1130336@bugs.debian.org
+Cc: Florian Westphal <fw@strlen.de>, Pablo Neira Ayuso <pablo@netfilter.org>,
+ Phil Sutter <phil@nwl.cc>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+ netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ regressions@lists.linux.dev, stable@vger.kernel.org
+References: <177349610461.3071718.4083978280323144323@eldamar.lan>
+ <c72a56ab-a16c-4866-9a44-a03393f074db@suse.de>
+ <b3cbfd15-acd1-4500-ba30-eac6f48523fb@suse.de> <abW2MAAqLnKZm3KF@strlen.de>
+ <177322336258.4376.10097494324750307114.reportbug@Desk1.simalex.iccbroadcast.com>
+ <4da571ab-fa1d-4ee6-b71c-24f4a28243ed@suse.de> <abqfSB0TUik1kRU4@eldamar.lan>
+ <e24a281622cedf9e8f4dc93c961813aeb7b6ce4c.camel@gmail.com>
+ <8788e351-553f-48da-a6e6-ce082adacb8d@suse.de>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
 Content-Language: de-DE, en-US
-In-Reply-To: 
- <CA+tjKGrcV2p=2EabSjkYiRv=RNmOZq4_5Z49mu-irjJjgEkqCA@mail.gmail.com>
+In-Reply-To: <8788e351-553f-48da-a6e6-ce082adacb8d@suse.de>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-PPP-Message-ID: 
- <177684904450.1964745.16047511871575263824@mxe9fb.netcup.net>
-X-NC-CID: RVpK81Gxew8Ufc3kYT4xn5WBfE9ZEgRqRaVSOABLFCExbxXfAvM=
+X-PPP-Message-ID: <177684952826.1966882.4123776011656959757@mxe9fb.netcup.net>
+X-Rspamd-Server: rspamd-worker-8404
+X-Rspamd-Queue-Id: 8CF1E632A6
+X-NC-CID: Fc5/BRl+Om7MAoRUqKOqqQj6z/ve4Im5YY7m19THIqIw/0EvzvA=
 
-Reggie, Alex, has any progress been made to resolve this? Does not look
-like it from here, but it's easy to miss something.
+Lo! Top-posting on purpose to make this easy to process.
 
-Is reverting the culprit (and maybe reapplying later in improved form)
-and option? Sounds a bit to me like that might create more trouble than
-it solves, but you are the better judges here.
-
-Or should that be moved to
-https://gitlab.freedesktop.org/drm/amd/-/work_items to ensure this does
-not fall through the cracks?
+What happened to this regression? It looks a bit like things stalled and
+fell through the cracks. Or Fernando, did you post a patch like you
+mentioned? I looked for one referring the commit or the reporter, but
+could not find anything -- but maybe I missed it.
 
 Ciao, Thorsten
 
-On 3/17/26 14:28, Shichuan Yim wrote:
-> The EDID has not been modified; it was read directly using the cat
-> command. This is actually the first time I've ever learned about the
-> concept of EDID.
-> 
-> Vojvodic, Relja (Reggie) <Relja.Vojvodic@amd.com> 于2026年3月17日周二 04:32写道：
+On 3/19/26 09:59, Fernando Fernandez Mancera wrote:
+> On 3/19/26 9:44 AM, Alejandro Oliván Alvarez wrote:
+>> Hi folks.
 >>
->> [AMD Official Use Only - AMD Internal Distribution Only]
->>
->> Hi,
->>
->> This EDID does not seem to have a HDMI VSDB or HFSCDB block within it. These blocks are where the SCDC bit gets set within the EDID. The lack of these blocks indicates that SCDC is not supported on this display.
->>
->> Has this EDID been modified in any way? Or is it the EDID right off of the display.
->>
->> Thanks,
->> Relja
->> ________________________________
->> From: hgfdgjn <shichuanyim@gmail.com>
->> Sent: Thursday, March 12, 2026 12:28 PM
->> To: Vojvodic, Relja (Reggie) <Relja.Vojvodic@amd.com>
->> Cc: Linux regressions mailing list <regressions@lists.linux.dev>; Koenig, Christian <Christian.Koenig@amd.com>; Deucher, Alexander <Alexander.Deucher@amd.com>; Pillai, Aurabindo <Aurabindo.Pillai@amd.com>; Limonciello, Mario <Mario.Limonciello@amd.com>
->> Subject: Re: [BUG] HDMI monitor shows no signal when the refresh rate is higher than the default 60Hz
->>
->> [You don't often get email from shichuanyim@gmail.com. Learn why this is important at https://aka.ms/LearnAboutSenderIdentification ]
->>
->> The populate_hdmi_info_from_connector() patch is in the stable master
->> and running on my device.
->> It appears to be a specific monitor issue.
->>
->> This is the EDID of the monitor I used to reproduce the issue.
->>
->> $ cat /sys/class/drm/card1-HDMI-A-1/edid | base64
->> AP///////wAhY0MkAAAAACQjAQOANR14Loy1r09DqyYOUFSlSwCBgLMAlQABAQEBAQEBAQEBAjqA
->> GHE4LUBYLEUADyghAAAeAAAA/AAyNEZTMQogICAgICAgAAAA/QAwkB6lKAAKICAgICAgAAAA/wAw
->> MDAwMDAwMDAwMDAxAe4CAyKxSJAEAwESHxM/aAMMABAAOHgA4gB/aBoAAAEBMJDtim+AoHA4QEAw
->> IDUADyghAAAeKIOAoHA4KUAwIDUADyghAAAeAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
->> AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA6Q==
->> $ cat /sys/class/drm/card1-HDMI-A-1/edid | parse-edid
->> Checksum Correct
->>
->> Section "Monitor"
->>     Identifier "24FS1"
->>     ModelName "24FS1"
->>     VendorName "HKC"
->>     # Monitor Manufactured week 36 of 2025
->>     # EDID version 1.3
->>     # Digital Display
->>     DisplaySize 530 290
->>     Gamma 2.20
->>     Option "DPMS" "true"
->>     Horizsync 30-165
->>     VertRefresh 48-144
->>     # Maximum pixel clock is 400MHz
->>     #Not giving standard mode: 1280x1024, 60Hz
->>     #Not giving standard mode: 1680x1050, 60Hz
->>     #Not giving standard mode: 1440x900, 60Hz
->>
->>     #Extension block found. Parsing...
->> #WARNING: I may have missed a mode (CEA mode 63)
->>     Modeline     "Mode 8" +hsync +vsync
->>     Modeline     "Mode 0" +hsync +vsync
->>     Modeline     "Mode 1" 148.500 1920 2008 2052 2200 1080 1084 1089
->> 1125 +hsync +vsync
->>     Modeline     "Mode 2" 74.250 1280 1390 1420 1650 720 725 730 750
->> +hsync +vsync
->>     Modeline     "Mode 3" 27.027 720 736 798 858 480 489 495 525 -hsync -vsync
->>     Modeline     "Mode 4" 25.200 640 656 752 800 480 490 492 525 -hsync -vsync
->>     Modeline     "Mode 5" 27.000 720 732 796 864 576 581 586 625 -hsync -vsync
->>     Modeline     "Mode 6" 148.500 1920 2448 2492 2640 1080 1084 1089
->> 1125 +hsync +vsync
->>     Modeline     "Mode 7" 74.250 1280 1720 1760 1980 720 725 730 750
->> +hsync +vsync
->>     Modeline     "Mode 9" +hsync +vsync
->>     Option "PreferredMode" "Mode 8"
->> EndSection
->>
->>
->> This is another physically damaged monitor of mine, but I couldn't
->> reproduce this issue.
->> EDID for broken monitor:
->>
->> $ cat /sys/class/drm/card1-HDMI-A-1/edid | base64
->> AP///////wBBDB/C+yUAACIfAQOAPCJ4KivFrVBHpiYTUFS/7wDRwIGAMWgxfEVoRXxhaGF8Vl4A
->> oKCgKVAwIDUAVVAhAAAeQOcAaqCgZ1AIIJgEVVAhAAAaAAAA/ABQSEwgMjc1TTgKICAgAAAA/QAw
->> kB7mPAAKICAgICAgAasCAzDxTBAfBRQEEwMSAhEBPyMJBweDAQAAZQMMABAAZ9hdxAF4gABoGgAA
->> AQEwkOZvwgCgoKBVUDAgNQBVUCEAAB5aoACgoKBGUDAgNQBVUCEAAB4COoAYcTgtQFgsRQBVUCEA
->> AB7wPADQUaA1UGCIOgBVUCEAABwAAAAAAAAA/Q==
->>
->> If you need other information or testing, please ping me, and I will test ASAP.
->>
->> Thinks.
->>
->> Vojvodic, Relja (Reggie) <Relja.Vojvodic@amd.com> 于2026年3月12日周四 23:14写道：
+>> On Wed, 2026-03-18 at 13:49 +0100, Salvatore Bonaccorso wrote:
+>>> Hi Alejandro,
 >>>
->>> [AMD Official Use Only - AMD Internal Distribution Only]
->>>
->>> Hi,
->>>
->>> I've brought up this issue with some maintainers on our team and we've begun looking into it.
->>>
->>> This issue has come up before and was fixed with this patch: "drm/amd/display: Improve HDMI info retrieval", which should be included in the stable master branch. You can double check if this is the case.
->>>
->>> In the meantime, could we get the EDID of your display to aid in the debugging?
->>>
->>> Thanks,
->>> Relja
->>>
->>> ________________________________
->>> From: Linux regression tracking (Thorsten Leemhuis) <regressions@leemhuis.info>
->>> Sent: Thursday, March 12, 2026 9:33 AM
->>> To: Vojvodic, Relja (Reggie) <Relja.Vojvodic@amd.com>
->>> Cc: regressions@lists.linux.dev <regressions@lists.linux.dev>; Koenig, Christian <Christian.Koenig@amd.com>; hgfdgjn <shichuanyim@gmail.com>; Deucher, Alexander <Alexander.Deucher@amd.com>
->>> Subject: Re: [BUG] HDMI monitor shows no signal when the refresh rate is higher than the default 60Hz
->>>
->>> On 3/8/26 10:56, hgfdgjn wrote:
->>>> 7.0-rc2 can also reproduce it; after locating the issue, it was
->>>> reproduced using the stable upstream master branch.
->>>
->>> CCing the amdgpu maintainers, as this seems stalled. Dropping Greg and
->>> stable, they most likely don't care.
->>>
->>> Relja Vojvodic, in case you missed it: this regression seems to be
->>> caused by a commit of yours: 3471b9a31ce352 ("drm/amd/display: Rework
->>> HDMI data channel reads") [v6.19-rc1]
->>>
->>> Ciao, Thorsten
->>>
->>>>> On Sun, Mar 08, 2026 at 05:42:39PM +0800, hgfdgjn wrote:
->>>>>> Hi maintainers:
+>>> On Sun, Mar 15, 2026 at 02:09:33AM +0100, Fernando Fernandez Mancera
+>>> wrote:
+>>>> On 3/14/26 8:25 PM, Florian Westphal wrote:
+>>>>> Fernando Fernandez Mancera <fmancera@suse.de> wrote:
+>>>>>> On 3/14/26 5:13 PM, Fernando Fernandez Mancera wrote:
+>>>>>>> Hi,
+>>>>>>>
+>>>>>>> On 3/14/26 3:03 PM, Salvatore Bonaccorso wrote:
+>>>>>>>> Control: forwarded -1
+>>>>>>>> https://lore.kernel.org/
+>>>>>>>> regressions/177349610461.3071718.4083978280323144323@eldama
+>>>>>>>> r.lan
+>>>>>>>> Control: tags -1 + upstream
+>>>>>>>>
+>>>>>>>> Hi
+>>>>>>>>
+>>>>>>>> In Debian, in https://bugs.debian.org/1130336, Alejandro
+>>>>>>>> reported that
+>>>>>>>> after updates including 69894e5b4c5e ("netfilter:
+>>>>>>>> nft_connlimit:
+>>>>>>>> update the count if add was skipped"), when the following
+>>>>>>>> rule is set
+>>>>>>>>
+>>>>>>>>       iptables -A INPUT -p tcp -m
+>>>>>>>> connlimit --connlimit-above 111 -j
+>>>>>>>> REJECT --reject-with tcp-reset
+>>>>>>>>
+>>>>>>>> connections get stuck accordingly, it can be easily
+>>>>>>>> reproduced by:
+>>>>>>>>
+>>>>>>>> # iptables -A INPUT -p tcp -m connlimit
+>>>>>>>> --connlimit-above 111 -j REJECT
+>>>>>>>> --reject-with tcp-reset
+>>>>>>>> # nft list ruleset
+>>>>>>>> # Warning: table ip filter is managed by iptables-nft, do
+>>>>>>>> not touch!
+>>>>>>>> table ip filter {
+>>>>>>>>            chain INPUT {
+>>>>>>>>                    type filter hook input priority filter;
+>>>>>>>> policy accept;
+>>>>>>>>                    ip protocol tcp xt
+>>>>>>>> match "connlimit" counter packets 0
+>>>>>>>> bytes 0 reject with tcp reset
+>>>>>>>>            }
+>>>>>>>> }
+>>>>>>>> # wget -O /dev/null
+>>>>>>>> https://git.kernel.org/torvalds/t/linux-7.0-
+>>>>>>>> rc3.tar.gz
+>>>>>>>> --2026-03-14 14:53:51--
+>>>>>>>> https://git.kernel.org/torvalds/t/linux-7.0-
+>>>>>>>> rc3.tar.gz
+>>>>>>>> Resolving git.kernel.org
+>>>>>>>> (git.kernel.org)... 172.105.64.184,
+>>>>>>>> 2a01:7e01:e001:937:0:1991:8:25
+>>>>>>>> Connecting to git.kernel.org
+>>>>>>>> (git.kernel.org)|172.105.64.184|:443...
+>>>>>>>> connected.
+>>>>>>>> HTTP request sent, awaiting response... 301 Moved
+>>>>>>>> Permanently
+>>>>>>>> Location:
+>>>>>>>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/
+>>>>>>>> linux.git/snapshot/linux-7.0-rc3.tar.gz
+>>>>>>>> [following]
+>>>>>>>> --2026-03-14 14:53:51--
+>>>>>>>> https://git.kernel.org/pub/scm/linux/kernel/ git/torvalds/l
+>>>>>>>> inux.git/snapshot/linux-7.0-rc3.tar.gz
+>>>>>>>> Reusing existing connection to git.kernel.org:443.
+>>>>>>>> HTTP request sent, awaiting response... 200 OK
+>>>>>>>> Length: unspecified [application/x-gzip]
+>>>>>>>> Saving to: ‘/dev/null’
+>>>>>>>>
+>>>>>>>> /dev/null                         [
+>>>>>>>> <=>                    ] 248.03M
+>>>>>>>> 51.9MB/s    in 5.0s
+>>>>>>>>
+>>>>>>>> 2026-03-14 14:53:56 (49.3 MB/s) - ‘/dev/null’ saved
+>>>>>>>> [260080129]
+>>>>>>>>
+>>>>>>>> # wget -O /dev/null
+>>>>>>>> https://git.kernel.org/torvalds/t/linux-7.0-
+>>>>>>>> rc3.tar.gz
+>>>>>>>> --2026-03-14 14:53:58--
+>>>>>>>> https://git.kernel.org/torvalds/t/linux-7.0-
+>>>>>>>> rc3.tar.gz
+>>>>>>>> Resolving git.kernel.org
+>>>>>>>> (git.kernel.org)... 172.105.64.184,
+>>>>>>>> 2a01:7e01:e001:937:0:1991:8:25
+>>>>>>>> Connecting to git.kernel.org
+>>>>>>>> (git.kernel.org)|172.105.64.184|:443...
+>>>>>>>> failed: Connection timed out.
+>>>>>>>> Connecting to git.kernel.org
+>>>>>>>> (git.kernel.org)|
+>>>>>>>> 2a01:7e01:e001:937:0:1991:8:25|:443...
+>>>>>>>> failed: Network is unreachable.
+>>>>>>>>
+>>>>>>>> Before the 69894e5b4c5e ("netfilter: nft_connlimit: update
+>>>>>>>> the count
+>>>>>>>> if add was skipped") commit this worked.
+>>>>>>>>
+>>>>>>>
+>>>>>>> Thanks for the report. I have reproduced
+>>>>>>> this on upstream kernel. I am working on it.
+>>>>>>>
 >>>>>>
->>>>>>   After updating to v6.19.6 on Arch Linux, if I set the refresh rate
->>>>>> higher than 60Hz, the monitor displays "No Signal".
->>>>>> I tried bisecting and found:
->>>>>>> # first bad commit: [3471b9a31ce352ffb343cf02a991261880aac3a7] drm/amd/display: Rework HDMI data channel reads
+>>>>>> This is what is happening:
 >>>>>>
->>>>>> This issue on my machine was caused by this change:
->>>>>>
->>>>>> diff --git a/drivers/gpu/drm/amd/display/dc/link/protocols/link_ddc.c
->>>>>> b/drivers/gpu/drm/amd/display/dc/link/protocols/link_ddc.c
->>>>>> index 267180e7bc48..5d2bcce2f669 100644
->>>>>> --- a/drivers/gpu/drm/amd/display/dc/link/protocols/link_ddc.c
->>>>>> +++ b/drivers/gpu/drm/amd/display/dc/link/protocols/link_ddc.c
->>>>>> @@ -549,7 +549,8 @@ void write_scdc_data(struct ddc_service *ddc_service,
->>>>>>      /*Lower than 340 Scramble bit from SCDC caps*/
->>>>>>
->>>>>>      if (ddc_service->link->local_sink &&
->>>>>> -        ddc_service->link->local_sink->edid_caps.panel_patch.skip_scdc_overwrite)
->>>>>> +        (ddc_service->link->local_sink->edid_caps.panel_patch.skip_scdc_overwrite
->>>>>> ||
->>>>>> +        !ddc_service->link->local_sink->edid_caps.scdc_present))
->>>>>>          return;
->>>>>>
->>>>>>      link_query_ddc_data(ddc_service, slave_address, &offset,
->>>>>>
->>>>>>
->>>>>> It appears that scdc_present is always false on my device.
->>>>>> I reverted the change to write_scdc_data(), and the monitor works
->>>>>> normally at high refresh rates.
+>>>>>> 1. The first connection is established and
+>>>>>> tracked, all good. When it finishes, it goes to
+>>>>>> TIME_WAIT state
+>>>>>> 2. The second connection is established, ct is
+>>>>>> confirmed since the beginning, skipping the
+>>>>>> tracking and calling a GC.
+>>>>>> 3. The previously tracked connection is cleaned
+>>>>>> up during GC as TIME_WAIT is considered closed.
 >>>>>
->>>>> Can you cc: the developers and maintainers of this change to let them
->>>>> know?  Otherwise they will not notice it.  Also, does 7.0-rc2 show this
->>>>> issue?
+>>>>> This is stupid.  The fix is to add --syn or use
+>>>>> OUTPUT.  Its not even clear to me what the user wants to achive
+>>>>> with this rule.
 >>>>>
->>>>> thanks,
->>>>>
->>>>> greg k-h
 >>>>
+>>>> Yes, the ruleset shown does not make sense. Having said this, it
+>>>> could
+>>>> affect to a soft-limit scenario as the one described on the blamed
+>>>> commit..
 >>>
+>>> Alejandro, can you describe what you would like to achieve with the
+>>> specific rule?
+>>>
+>>> Regards,
+>>> Salvatore
+>>
+>> The intended use of that rule was to prevent (limit) a single host from
+>> establishing too many TCP connections to given host (Denial of
+>> Service... particularly on streaming servers).
+>>
+>> I learnt about it in several IPtables guides/howtos (maaaany years
+>> ago!), and never was an issue on itself.
+>> Was it stupid? ... possibly... It 'seemed' to work, or, at least, when
+>> checking iptables -L -v one could see packet counter for the rule
+>> catching some traffic, without ever noticing it being troublesome, so,
+>> at the very least it 'didn't hurt', and, since DoS ever happened over
+>> the years...well, I tended to think it was indeed working the way I
+>> read it did.
+>>
+>> Certainly, I never (the authors of those guides at their time indeed)
+>> though about the possibility of just target the TCP syn.
+>> I have given a try to adding the --syn option to the rule to see the
+>> difference, and well, it is way less disruptive that way, but it still
+>> breaks things (I saw postfix queues hanging, for instance).
+>>
+> 
+> The current problem with the ruleset is that it mixes both, incoming and
+> outgoing connections. This should probably use --syn flag so it targets
+> connections established against your host only.
+> 
+> Anyway, I am sending a patch fixing this as it makes sense to do it IMO.
+> We just want to understand what is the real use-case and how the ruleset
+> can be improved.
+> 
+> In addition, I would recommend you to transition to nftables because it
+> would be ideal for your use-case. With nftables it would be easy to
+> combine this with sets and probably quota expression to limit the usage.
+> 
+> What is wrong with the current ruleset? (Even before the blammed
+> commit), if you reach the connlimit limit **ALL** TCP connections will
+> be rejected (including legit ones), I do not think that is what you want
+> to achieve.
+> 
+> Thanks,
+> Fernando.
+> 
+>> So, I have but screwed the idea of using connlimit anymore anyways.
+>> Sorry for the noise. Lesson learned.
+>>
+>> Cheers!
+> 
 > 
 
