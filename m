@@ -1,90 +1,189 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E67B3D1CAA;
-	Wed, 22 Apr 2026 13:13:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35A243D1CA8
+	for <regressions@lists.linux.dev>; Wed, 22 Apr 2026 13:27:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776863628; cv=none; b=MP+NNTzEA2mqIkid/1flehMB+ZsvT/kkQ8a5Bdi9J8JrGQmxpQvJSsT7/pDFcoxUmHGIrAQCdSjGvW7S+BvqycnIAyzvkqDX0cFf5obpzRd3DJzgE32B+Q8185/cgpYQKcSKOmjYWjg8eoBOcqvSC0y6QB8GWdN9KiRFzCAr4gY=
+	t=1776864435; cv=none; b=ntDJeE92PYf60L15/9xJtvVueWDEEUQr9xXLe3+u4d1MnZ/SxZ/AtZLmdUFrDYTM5VwyL8pjw57Nvm8eq/7DZZGrC0Yz6p0zy1NxbAlxIgzskya6nY9rNhPOfXPwSTLi/TZtHOzrbUVvSrD5c12mPxABmNjee2OMupKmHMKfq9I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776863628; c=relaxed/simple;
-	bh=kxIVk+2lF1IFEhTBCo9akungjiYvqR+2SYK2EwxtkmU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cHLpgfYwjp1EhG12/xZ/MChUQJFnmk6pb8Ywn3sCIYTf7Iz5IuZsinqpDnW5CU0Tka2ORGpgQTnn/bl4W4Ucg8eOLRvZN0b4ecl6cnTe/8zS4QuBFDAupDfCQ+v7z2653MxqAmn/026EVEbQ+hto3HqEQG9s5Guiy4R0r6oNQAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=tX/+ArC+; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1776864435; c=relaxed/simple;
+	bh=IYC+sUrQnoBvQ7f9cR4U5CF7nGhhi6uzi/Zp3PEjhs0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uviEbpc0N6q2MU07crQi47v5FRJF/5zNvpuoe3MZyadxgDNz3A830iMJnnmbaTwfwkMcKBuLWn8UO2NmvO3MhdSnORjJ4LV2abyItvkTEdB9yxwCx8+I6Cmfpof0C0ScU7t/3Nr91LhqpZQhBg6HFNt4QQtfwqQhwt+YWv/4I6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bb6aoaph; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tX/+ArC+"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=LVW29VgTBcSEwz3Up8blF0S6ObWPFVHT6wdQNGV4Ppk=; b=tX/+ArC+dmBJ6gpIMcIYmbvE+A
-	jhYyel6wJNfb+MJR+kK3WOCw7ZNeKOlhAGIcKkLUMM89y85oTDHlF2nxnLtxR4TUIAzw2am5ABfPx
-	3WkGAsz2BIIbNjXqiihnqldwDQFS9bKqNfjO0wBefgzxYL2QvIVy8PXI3+GilcYW27NU1pnZCK5KZ
-	fbdBWi9e5pRJjHehmA3JtJwrmcTaw4Dk2AriRrqDXEAa+n4ietTA625ZzWgXA+C8xx9h90JiyKpHS
-	4TVPAMKdCeGSyANp7YOpkz7SprOauIUcKRikeDXvk5RgnFpSMPjS6ZuUU548gtCgNqhJhUbCrdW4Z
-	2zL5+/Rg==;
-Received: from 2001-1c00-8d85-4b00-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d85:4b00:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1wFXOd-0000000Bn56-26nM;
-	Wed, 22 Apr 2026 13:13:39 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 2301B3008E2; Wed, 22 Apr 2026 15:13:38 +0200 (CEST)
-Date: Wed, 22 Apr 2026 15:13:38 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Mathias Stearn <mathias@mongodb.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Boqun Feng <boqun.feng@gmail.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Chris Kennelly <ckennelly@google.com>,
-	Dmitry Vyukov <dvyukov@google.com>, regressions@lists.linux.dev,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	Ingo Molnar <mingo@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-	Jinjie Ruan <ruanjinjie@huawei.com>,
-	Blake Oler <blake.oler@mongodb.com>
-Subject: Re: [REGRESSION] rseq: refactoring in v6.19 broke everyone on arm64
- and tcmalloc everywhere
-Message-ID: <20260422131338.GI3102924@noisy.programming.kicks-ass.net>
-References: <CAHnCjA25b+nO2n5CeifknSKHssJpPrjnf+dtr7UgzRw4Zgu=oA@mail.gmail.com>
- <20260422125647.GP3126523@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bb6aoaph"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC2BDC19425
+	for <regressions@lists.linux.dev>; Wed, 22 Apr 2026 13:27:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1776864434;
+	bh=IYC+sUrQnoBvQ7f9cR4U5CF7nGhhi6uzi/Zp3PEjhs0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Bb6aoaphzN4diYbSuF6qXpJ2gzynsAtFIa5YvaA5e4YQA7kF4hitzzuYMc7Qx+mWV
+	 DsHl0CPQ5aX3Snk+eBYxPvJhaGHb7sn8FFAaWbkzJViEkSTKiYVdX7KD8uIiy1XZVY
+	 uvMlZI1xEkTWBbbqUZ7gOPodBzs+2Aq4PEJ4rLw+sPyUPiX7axNhNvSARGa1ULUnMH
+	 sGW5nyGVWcmsorhyUsqVc1WQspzBM4gPBPGJMV/VOrtX+/9mesi+BrdM6Pwl/p6b15
+	 ikkvJR2AK7WlZ9ZjB5SWizp+QGZyUxZI0hTJBK5Kcp+7j9fM451l8xbQuCT8ybFN1Z
+	 uFMCvdvgOwbiw==
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-5a283c44478so9486179e87.3
+        for <regressions@lists.linux.dev>; Wed, 22 Apr 2026 06:27:14 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ8D+0Ubq00At4uPUqLUrHJy4KqO20jUxWcBDkfBh0NsIaXohxCWAA8U48BECWuqlcbGdt2r+S8mvXElBw==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxrQQRQ3Uz46fvQLmVs9Za6R37cz8J9Hh8ISPMuOr6OngXYhCj8
+	E1ujGpp/PqSRCOkEtUUGM80TzzXq4w0TFOurAMNnL/3H/DpQAft2b5T7/W9iwJL0ZgrH1bKeBnt
+	wppFts4Hk2ien5o6xFHBCuiaKneUMN0s=
+X-Received: by 2002:a05:6512:32c8:b0:5a2:c406:a74a with SMTP id
+ 2adb3069b0e04-5a4172de4ccmr8579506e87.35.1776864433237; Wed, 22 Apr 2026
+ 06:27:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260422125647.GP3126523@noisy.programming.kicks-ass.net>
+References: <12879883.O9o76ZdvQC@rafael.j.wysocki> <168591776860440@mail.yandex.ru>
+ <CAGAxtY1QDN_vkXEzdT8yUC5ZR3W+18TypEcJLR+-=kUkaBOdTw@mail.gmail.com>
+In-Reply-To: <CAGAxtY1QDN_vkXEzdT8yUC5ZR3W+18TypEcJLR+-=kUkaBOdTw@mail.gmail.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 22 Apr 2026 15:26:59 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0jzPk1Ad-fkKnKZwBWifQ89oPgEhv7A5M5mLtPyMRX+nw@mail.gmail.com>
+X-Gm-Features: AQROBzCjzFXToE_yaHV47kSWGXepOXgPexweqVCWE1kWPaGN9wSQKqTFZfMy7EQ
+Message-ID: <CAJZ5v0jzPk1Ad-fkKnKZwBWifQ89oPgEhv7A5M5mLtPyMRX+nw@mail.gmail.com>
+Subject: Re: Pressing the power button causes the device to freeze completely
+To: Evgeny Sagatov <evgeny.sagatov@gmail.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, regressions@lists.linux.dev, 
+	linux-acpi@vger.kernel.org, Thorsten Leemhuis <regressions@leemhuis.info>, 
+	LKML <linux-kernel@vger.kernel.org>, 
+	Wysocki Rafael J <rafael.j.wysocki@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 22, 2026 at 02:56:47PM +0200, Peter Zijlstra wrote:
-> On Wed, Apr 22, 2026 at 11:50:26AM +0200, Mathias Stearn wrote:
-> 
-> > Additionally, it breaks tcmalloc specifically by failing to overwrite
-> > the cpu_id_start field at points where it was relied on for
-> > correctness.
-> 
-> This specific behaviour was documented as being wrong and running with
-> DEBUG_RSEQ would have flagged it.
-> 
-> The tcmalloc issue has been contentious for a long time. The tcmalloc
-> folks relied on something that was documented to be wrong. It has been
-> reported to the tcmalloc people many years ago and if you were to run
-> tcmalloc on most any kernel (very much including 6.19) with
-> DEBUG_RSEQ=y, it would have yelled.
-> 
-> The tcmalloc people didn't care. There was a proposal for an RSEQ
-> extension for what they need, and they didn't care. All this should be
-> in their bugzilla or whatever.
-> 
-> The RSEQ rework improved performance significantly for everyone, and
-> kept all the documented behaviour (+- arm64 bug). Tcmalloc got screwed
-> over because they relied on implementation behaviour that was
-> specifically documented to be broken. And they didn't care. Google was
-> very much aware of this. And hasn't lifted a finger to remedy it.
+Hi,
 
-Also: https://lore.kernel.org/all/874io5andc.ffs@tglx/ 
+On Wed, Apr 22, 2026 at 2:36=E2=80=AFPM Evgeny Sagatov <evgeny.sagatov@gmai=
+l.com> wrote:
+>
+> Hello Rafael,
+>
+> I applied the patch that you sent.
+> The PC isn't responding to the power button press. It doesn't freeze.
+
+As expected, thanks!  I'll send you another patch to test (instead of
+the one you have tested) in the next message.
+
+> I just want to clarify, did you receive messages where we found the
+> first broken commit using git bisect?
+>
+> > 8c94ccc7cd691472461448f98e2372c75849406c    good
+> > e37617c8e53a1f7fcba6d5e1041f4fd8a2425c27    good
+> > b0d326da462e20285236e11e4cbc32085de9f363    bad
+
+Yes, I did, but I think that reverting the schedutil change hides the probl=
+em.
+
+BTW, since reverting the schedutil change makes a difference for you,
+I'm wondering about the cpufreq configuration on your system.  Can you
+please send me the
+
+$ grep -r . /sys/devices/system/cpu/cpufreq/
+
+output from your system?
+
+
+> > On Tuesday, April 21, 2026 5:11:36 PM CEST Wysocki, Rafael J wrote:
+> >
+> >  Hi,
+> >
+> >  On 4/13/2026 6:46 PM, Evgeny Sagatov wrote:
+> >  > Hello,
+> >  > I have a PC with a motherboard GA-EP45T-UD3LR (Rev. 1.0)
+> >  > <https://www.gigabyte.com/Motherboard/GA-EP45T-UD3LR-rev-10> and
+> >  > processor Intel Core 2 Quad Q9550.
+> >  > Previously, I had Debian 12 with kernel 6.1 installed, and pressing
+> >  > the power button would shut down the PC as usual.
+> >  > I updated to Debian 13 with kernel 6.12.74, and now pressing the pow=
+er
+> >  > button causes the PC to freeze completely.
+> >  > I see that systemd doesn't even begin to shut down. It freezes
+> >  > immediately after pressing the button. There's no error message in
+> >  > console. There's no error message in the logs either. Netconsole
+> >  > doesn't report any errors, and the kernel doesn't panic. It just
+> >  > freezes completely.
+> >
+> >  It looks like the ACPI button notify handler crashes on your system fo=
+r
+> >  some obscure reason.
+> >
+> >  It should be possible to get to the bottom of it, but it will require
+> >  some investigation if you have the motivation and time to run debug pa=
+tches.
+> >
+> >
+> >  > I checked that Live CD with Debian 12 continue to shut down normally=
+,
+> >  > but Live CD with Debian 13 freeze.
+> >  > I tried updating and resetting the BIOS. I tried various kernel
+> >  > parameters related to ACPI settings. I also tried kernels 6.18 and
+> >  > 6.19. Nothing fixed the problem.
+> >  > If I unload the "button" module, the system doesn't freeze, but it
+> >  > also doesn't shut down.
+> >
+> >  This is a useful data point, thanks!
+> >
+> >
+> >  > I built "button" module by rolling back its version to commit 1a20d4=
+0
+> >  > <https://github.com/torvalds/linux/commit/1a20d409c874255086e2f42a72=
+9826d490294c91>,
+> >  > which corresponds to kernel version 6.1. This module does not freeze=
+,
+> >  > but does not turn off the PC either.
+> >  > I've found that the freezes have been occurring since commit 0d51157
+> >  > <https://github.com/torvalds/linux/commit/0d51157dfaac05ea66616d8a25=
+0dce04bef49a4f>.
+> >
+> >  The main difference made by it is the fixed events handling and if the=
+re
+> >  is a problem with that, a few debug patches should suffice to find out
+> >  what's going on. I'll send you one to try shortly.
+> >
+> >
+> > First off, on top of 7.0.0 (since the issue is present in this one, I t=
+hink
+> > it's better to focus the debugging on it), let's first check what happe=
+ns if
+> > the ACPI fixed event handler is not installed for the power button at a=
+ll.
+> >
+> > This should be similar to using a 6.1 version of the button driver (tha=
+t is,
+> > no crash, but pressing the power button will have no effect).
+> >
+> > Please test the patch below and let me know what happens.
+> >
+> > ---
+> >  drivers/acpi/button.c | 4 +---
+> >  1 file changed, 1 insertion(+), 3 deletions(-)
+> >
+> > --- a/drivers/acpi/button.c
+> > +++ b/drivers/acpi/button.c
+> > @@ -628,9 +628,7 @@ static int acpi_button_probe(struct plat
+> >
+> >          switch (device->device_type) {
+> >          case ACPI_BUS_TYPE_POWER_BUTTON:
+> > - status =3D acpi_install_fixed_event_handler(ACPI_EVENT_POWER_BUTTON,
+> > - acpi_button_event,
+> > - button);
+> > + status =3D AE_OK;
+> >                  break;
+> >          case ACPI_BUS_TYPE_SLEEP_BUTTON:
+> >                  status =3D acpi_install_fixed_event_handler(ACPI_EVENT=
+_SLEEP_BUTTON,
+> >
+> >
+> >
+> >
+> >
+> > -------- =D0=9A=D0=BE=D0=BD=D0=B5=D1=86 =D0=BF=D0=B5=D1=80=D0=B5=D1=81=
+=D1=8B=D0=BB=D0=B0=D0=B5=D0=BC=D0=BE=D0=B3=D0=BE =D1=81=D0=BE=D0=BE=D0=B1=
+=D1=89=D0=B5=D0=BD=D0=B8=D1=8F --------
