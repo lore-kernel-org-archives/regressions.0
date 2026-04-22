@@ -1,51 +1,55 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.98])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.61.103])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D9613C13FD
-	for <regressions@lists.linux.dev>; Wed, 22 Apr 2026 09:18:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A633138736C
+	for <regressions@lists.linux.dev>; Wed, 22 Apr 2026 09:30:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.61.103
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776849540; cv=none; b=t0rPs3TXkB/a6s3bgEG73zMI4Vn/H17RInZ5aFsi0sxCVKA2Duo9LwMUZo/Fid3xXYBgHj/H7JWK3PYLm8ttwKjkMXnt+6u4wNcAAIQ+YlIhJaO7gNNywidCj4k+SlzwqiwcGB0mlkXRLI1G23oLUpwaJU5NnoilFNYBAtmqnGE=
+	t=1776850228; cv=none; b=O+54UNO7fEHxC/wP3gwHP4W9XOJmAoYaNEqE3yI0ByZrvB8JGuBTU2Z4pxHQwFY/cm90w8Y4Mw+FoWXvO/VoiYRLnuK2dX+oHJ/zUf0PhTClsAfGPhEMGxZj+3w46KcA/ImZF35LW6M8jIS+yEAgKpenOQKLIQJ566CpMCaP6K8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776849540; c=relaxed/simple;
-	bh=BF1zEbvNk3kTqMH+V92H0EY8hWcWDUFqzNweMj+pj7A=;
+	s=arc-20240116; t=1776850228; c=relaxed/simple;
+	bh=JNW8xSB3VQeZ7TY22JqnC/RD8zj1AfxSoJ7DF+WQ4To=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=phwp0oguyFN3NAYEeRLaN1Gmhk+WfYK0/izZG6K0s7qdRhaEXxOOggx5FpdNZmZc4Ilmnhu01+UUkCaaOgVd4NeBbU88wPuloVATn8vJoA7379Jsb3S3DVb4ahl/FosvjQDphPpYtmBPV8nMhhRudSaXRl9lWXk3lKg9GTeJqP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=fGSIJcxd; arc=none smtp.client-ip=188.68.63.98
+	 In-Reply-To:Content-Type; b=YwAq8PgtweUe8JRv/V3Lr0YOIQuy9Uvnv9W5MiadRzvtjGgr7Duak7Odzv0paBYPOsa/i4AWT+Zo+s/AHftwt3BnS3jpmyw3TQvk7A5I7s8Ugvz+BgVxjySbaLPrOe0TbEHoQFROmwr/kx5dHJnilZPRPgvQrPyDJPUSDLMQYgg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=W1e7+zaB; arc=none smtp.client-ip=188.68.61.103
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="fGSIJcxd"
-Received: from mors-relay-2501.netcup.net (localhost [127.0.0.1])
-	by mors-relay-2501.netcup.net (Postfix) with ESMTPS id 4g0tvG6VDdz66yb;
-	Wed, 22 Apr 2026 11:18:50 +0200 (CEST)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="W1e7+zaB"
+Received: from mors-relay-8403.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4g0v8W45pWz88pL;
+	Wed, 22 Apr 2026 11:30:19 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1776849530;
-	bh=BF1zEbvNk3kTqMH+V92H0EY8hWcWDUFqzNweMj+pj7A=;
+	s=key2; t=1776850219;
+	bh=JNW8xSB3VQeZ7TY22JqnC/RD8zj1AfxSoJ7DF+WQ4To=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=fGSIJcxdGOQA5EjsNjngXsYrBrHIYnfiyM09VQTkqbONmKhnu+o0E8P4794qF2oIW
-	 jDB2jJByrZOupL+zxrxn41udM9fmHrVia11fwN4Jn4uwshQXu17eQy7AqqvxhQUlJL
-	 mCHo93vzHC//z96gJacLP/wImyF2G/v6UWpHR0NnMZ5fZOLj48pX4CNBqyeyIo1W8J
-	 7Qt1lcawvI2mar9ilBrYyrLjpQ1KJSMmwAZ3z2uRJQTtD+sYcon+qDPo6lPVn0q/4Q
-	 cjKIR4N5VLPvucHEkqKubV6haAKepoPLRy6/5beAG95dLHuqV1m5T2zd1UC/jWGrMt
-	 zhj7Dy//1f8jg==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-2501.netcup.net (Postfix) with ESMTPS id 4g0tvG5mVkz4xNb;
-	Wed, 22 Apr 2026 11:18:50 +0200 (CEST)
+	b=W1e7+zaBzzcNokkp3ZLt+j7S3wGeqFm+M6g+/aN8bjzliJwBKyEplgi6Lbi3VSzn2
+	 klpDud1nWgUh4Zgjx35unSvePaXaJrjECPFHuZtgZHARdfhwAXw6ybZcffsDjnLHFn
+	 2jom6uaCQp254OwN8B5oT/dPRVu45TUo59B/VZGGkiwbwe3nG5b/sHmaHbSROvpF01
+	 bYAi7flOkR5viwcKJXHAxwDwNrdDGfGUhiCxHQ7Gc+tT8THuv+LzO2RSYSXHJKJ1sv
+	 ObQ0E/v+TNw/IuJF2xtIk42KCp3nJjYmT56FcST9TWNNp8p4wYIUP89nVvivoTh1co
+	 FzyC/mqXTA/+g==
+Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4g0v8W3NYmz88nQ;
+	Wed, 22 Apr 2026 11:30:19 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
+X-Spam-Flag: NO
+X-Spam-Score: -2.898
+X-Spam-Level: 
 Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4g0tvF0Qv0z8sZP;
-	Wed, 22 Apr 2026 11:18:48 +0200 (CEST)
+	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4g0v8V3CXRz8tZN;
+	Wed, 22 Apr 2026 11:30:18 +0200 (CEST)
 Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 8CF1E632A6;
-	Wed, 22 Apr 2026 11:18:47 +0200 (CEST)
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 20D5E632A6;
+	Wed, 22 Apr 2026 11:30:17 +0200 (CEST)
 Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=linux@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
 Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <0b8607c8-2d29-4fca-961a-b7a677e968a1@leemhuis.info>
-Date: Wed, 22 Apr 2026 11:18:47 +0200
+Message-ID: <ed0ecf21-54b4-41e0-92a9-3c7a0e140882@leemhuis.info>
+Date: Wed, 22 Apr 2026 11:30:10 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -53,228 +57,142 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Bug#1130336: [regression] Network failure beyond first connection
- after 69894e5b4c5e ("netfilter: nft_connlimit: update the count if add was
- skipped")
-To: Fernando Fernandez Mancera <fmancera@suse.de>,
- =?UTF-8?Q?Alejandro_Oliv=C3=A1n_Alvarez?=
- <alejandro.olivan.alvarez@gmail.com>,
- Salvatore Bonaccorso <carnil@debian.org>, 1130336@bugs.debian.org
-Cc: Florian Westphal <fw@strlen.de>, Pablo Neira Ayuso <pablo@netfilter.org>,
- Phil Sutter <phil@nwl.cc>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- regressions@lists.linux.dev, stable@vger.kernel.org
-References: <177349610461.3071718.4083978280323144323@eldamar.lan>
- <c72a56ab-a16c-4866-9a44-a03393f074db@suse.de>
- <b3cbfd15-acd1-4500-ba30-eac6f48523fb@suse.de> <abW2MAAqLnKZm3KF@strlen.de>
- <177322336258.4376.10097494324750307114.reportbug@Desk1.simalex.iccbroadcast.com>
- <4da571ab-fa1d-4ee6-b71c-24f4a28243ed@suse.de> <abqfSB0TUik1kRU4@eldamar.lan>
- <e24a281622cedf9e8f4dc93c961813aeb7b6ce4c.camel@gmail.com>
- <8788e351-553f-48da-a6e6-ce082adacb8d@suse.de>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
+Subject: Re: [PATCH ath-current] wifi: ath12k: prepare REO update element only
+ for primary link
+To: Baochen Qiang <baochen.qiang@oss.qualcomm.com>,
+ Jeff Johnson <jjohnson@kernel.org>
+Cc: linux-wireless@vger.kernel.org, ath12k@lists.infradead.org,
+ linux-kernel@vger.kernel.org,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: 
+ <20260210-ath12k-rxtid-double-free-v1-1-8b523fb2886d@oss.qualcomm.com>
+From: Thorsten Leemhuis <linux@leemhuis.info>
 Content-Language: de-DE, en-US
-In-Reply-To: <8788e351-553f-48da-a6e6-ce082adacb8d@suse.de>
+Autocrypt: addr=linux@leemhuis.info; keydata=
+ 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 MEK4
+In-Reply-To: 
+ <20260210-ath12k-rxtid-double-free-v1-1-8b523fb2886d@oss.qualcomm.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-PPP-Message-ID: <177684952826.1966882.4123776011656959757@mxe9fb.netcup.net>
-X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: 8CF1E632A6
-X-NC-CID: Fc5/BRl+Om7MAoRUqKOqqQj6z/ve4Im5YY7m19THIqIw/0EvzvA=
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: 
+ <177685021745.1987386.16177602692449177458@mxe9fb.netcup.net>
+X-NC-CID: 4B9LzG65V1rMZagq8sEC1LTmm56Y0hn1qn+uk+gRoKO90N86AuQ=
 
 Lo! Top-posting on purpose to make this easy to process.
 
-What happened to this regression? It looks a bit like things stalled and
-fell through the cracks. Or Fernando, did you post a patch like you
-mentioned? I looked for one referring the commit or the reporter, but
-could not find anything -- but maybe I missed it.
+Jeff, what happened to below patch? It was supposed to fix the
+regression linked below, but unless I'm missing something (which might
+very well be the case!) it seems it never got any further than this thread.
 
 Ciao, Thorsten
 
-On 3/19/26 09:59, Fernando Fernandez Mancera wrote:
-> On 3/19/26 9:44 AM, Alejandro Oliván Alvarez wrote:
->> Hi folks.
->>
->> On Wed, 2026-03-18 at 13:49 +0100, Salvatore Bonaccorso wrote:
->>> Hi Alejandro,
->>>
->>> On Sun, Mar 15, 2026 at 02:09:33AM +0100, Fernando Fernandez Mancera
->>> wrote:
->>>> On 3/14/26 8:25 PM, Florian Westphal wrote:
->>>>> Fernando Fernandez Mancera <fmancera@suse.de> wrote:
->>>>>> On 3/14/26 5:13 PM, Fernando Fernandez Mancera wrote:
->>>>>>> Hi,
->>>>>>>
->>>>>>> On 3/14/26 3:03 PM, Salvatore Bonaccorso wrote:
->>>>>>>> Control: forwarded -1
->>>>>>>> https://lore.kernel.org/
->>>>>>>> regressions/177349610461.3071718.4083978280323144323@eldama
->>>>>>>> r.lan
->>>>>>>> Control: tags -1 + upstream
->>>>>>>>
->>>>>>>> Hi
->>>>>>>>
->>>>>>>> In Debian, in https://bugs.debian.org/1130336, Alejandro
->>>>>>>> reported that
->>>>>>>> after updates including 69894e5b4c5e ("netfilter:
->>>>>>>> nft_connlimit:
->>>>>>>> update the count if add was skipped"), when the following
->>>>>>>> rule is set
->>>>>>>>
->>>>>>>>       iptables -A INPUT -p tcp -m
->>>>>>>> connlimit --connlimit-above 111 -j
->>>>>>>> REJECT --reject-with tcp-reset
->>>>>>>>
->>>>>>>> connections get stuck accordingly, it can be easily
->>>>>>>> reproduced by:
->>>>>>>>
->>>>>>>> # iptables -A INPUT -p tcp -m connlimit
->>>>>>>> --connlimit-above 111 -j REJECT
->>>>>>>> --reject-with tcp-reset
->>>>>>>> # nft list ruleset
->>>>>>>> # Warning: table ip filter is managed by iptables-nft, do
->>>>>>>> not touch!
->>>>>>>> table ip filter {
->>>>>>>>            chain INPUT {
->>>>>>>>                    type filter hook input priority filter;
->>>>>>>> policy accept;
->>>>>>>>                    ip protocol tcp xt
->>>>>>>> match "connlimit" counter packets 0
->>>>>>>> bytes 0 reject with tcp reset
->>>>>>>>            }
->>>>>>>> }
->>>>>>>> # wget -O /dev/null
->>>>>>>> https://git.kernel.org/torvalds/t/linux-7.0-
->>>>>>>> rc3.tar.gz
->>>>>>>> --2026-03-14 14:53:51--
->>>>>>>> https://git.kernel.org/torvalds/t/linux-7.0-
->>>>>>>> rc3.tar.gz
->>>>>>>> Resolving git.kernel.org
->>>>>>>> (git.kernel.org)... 172.105.64.184,
->>>>>>>> 2a01:7e01:e001:937:0:1991:8:25
->>>>>>>> Connecting to git.kernel.org
->>>>>>>> (git.kernel.org)|172.105.64.184|:443...
->>>>>>>> connected.
->>>>>>>> HTTP request sent, awaiting response... 301 Moved
->>>>>>>> Permanently
->>>>>>>> Location:
->>>>>>>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/
->>>>>>>> linux.git/snapshot/linux-7.0-rc3.tar.gz
->>>>>>>> [following]
->>>>>>>> --2026-03-14 14:53:51--
->>>>>>>> https://git.kernel.org/pub/scm/linux/kernel/ git/torvalds/l
->>>>>>>> inux.git/snapshot/linux-7.0-rc3.tar.gz
->>>>>>>> Reusing existing connection to git.kernel.org:443.
->>>>>>>> HTTP request sent, awaiting response... 200 OK
->>>>>>>> Length: unspecified [application/x-gzip]
->>>>>>>> Saving to: ‘/dev/null’
->>>>>>>>
->>>>>>>> /dev/null                         [
->>>>>>>> <=>                    ] 248.03M
->>>>>>>> 51.9MB/s    in 5.0s
->>>>>>>>
->>>>>>>> 2026-03-14 14:53:56 (49.3 MB/s) - ‘/dev/null’ saved
->>>>>>>> [260080129]
->>>>>>>>
->>>>>>>> # wget -O /dev/null
->>>>>>>> https://git.kernel.org/torvalds/t/linux-7.0-
->>>>>>>> rc3.tar.gz
->>>>>>>> --2026-03-14 14:53:58--
->>>>>>>> https://git.kernel.org/torvalds/t/linux-7.0-
->>>>>>>> rc3.tar.gz
->>>>>>>> Resolving git.kernel.org
->>>>>>>> (git.kernel.org)... 172.105.64.184,
->>>>>>>> 2a01:7e01:e001:937:0:1991:8:25
->>>>>>>> Connecting to git.kernel.org
->>>>>>>> (git.kernel.org)|172.105.64.184|:443...
->>>>>>>> failed: Connection timed out.
->>>>>>>> Connecting to git.kernel.org
->>>>>>>> (git.kernel.org)|
->>>>>>>> 2a01:7e01:e001:937:0:1991:8:25|:443...
->>>>>>>> failed: Network is unreachable.
->>>>>>>>
->>>>>>>> Before the 69894e5b4c5e ("netfilter: nft_connlimit: update
->>>>>>>> the count
->>>>>>>> if add was skipped") commit this worked.
->>>>>>>>
->>>>>>>
->>>>>>> Thanks for the report. I have reproduced
->>>>>>> this on upstream kernel. I am working on it.
->>>>>>>
->>>>>>
->>>>>> This is what is happening:
->>>>>>
->>>>>> 1. The first connection is established and
->>>>>> tracked, all good. When it finishes, it goes to
->>>>>> TIME_WAIT state
->>>>>> 2. The second connection is established, ct is
->>>>>> confirmed since the beginning, skipping the
->>>>>> tracking and calling a GC.
->>>>>> 3. The previously tracked connection is cleaned
->>>>>> up during GC as TIME_WAIT is considered closed.
->>>>>
->>>>> This is stupid.  The fix is to add --syn or use
->>>>> OUTPUT.  Its not even clear to me what the user wants to achive
->>>>> with this rule.
->>>>>
->>>>
->>>> Yes, the ruleset shown does not make sense. Having said this, it
->>>> could
->>>> affect to a soft-limit scenario as the one described on the blamed
->>>> commit..
->>>
->>> Alejandro, can you describe what you would like to achieve with the
->>> specific rule?
->>>
->>> Regards,
->>> Salvatore
->>
->> The intended use of that rule was to prevent (limit) a single host from
->> establishing too many TCP connections to given host (Denial of
->> Service... particularly on streaming servers).
->>
->> I learnt about it in several IPtables guides/howtos (maaaany years
->> ago!), and never was an issue on itself.
->> Was it stupid? ... possibly... It 'seemed' to work, or, at least, when
->> checking iptables -L -v one could see packet counter for the rule
->> catching some traffic, without ever noticing it being troublesome, so,
->> at the very least it 'didn't hurt', and, since DoS ever happened over
->> the years...well, I tended to think it was indeed working the way I
->> read it did.
->>
->> Certainly, I never (the authors of those guides at their time indeed)
->> though about the possibility of just target the TCP syn.
->> I have given a try to adding the --syn option to the rule to see the
->> difference, and well, it is way less disruptive that way, but it still
->> breaks things (I saw postfix queues hanging, for instance).
->>
+P.S:: Adding a stable tag might be good to ensure this fix is backported.
+
+On 2/10/26 04:07, Baochen Qiang wrote:
+> Commit [1] introduces dp->reo_cmd_update_rx_queue_list for the purpose
+> of tracking all pending REO queue flush commands. The helper
+> ath12k_dp_prepare_reo_update_elem() allocates an element and populates
+> it with REO queue information, then add it to the list. The element would
+> be helpful during clean up stage to finally unmap/free the corresponding
+> REO queue buffer.
 > 
-> The current problem with the ruleset is that it mixes both, incoming and
-> outgoing connections. This should probably use --syn flag so it targets
-> connections established against your host only.
+> In MLO scenarios with more than one links, for non dp_primary_link_only
+> chips like WCN7850, that helper is called for each link peer. This
+> results in multiple elements added to the list but all of them pointing
+> to the same REO queue buffer. Consequently the same buffer gets
+> unmap/freed multiple times:
 > 
-> Anyway, I am sending a patch fixing this as it makes sense to do it IMO.
-> We just want to understand what is the real use-case and how the ruleset
-> can be improved.
+> BUG kmalloc-2k (Tainted: G    B   W  O       ): Object already free
+> -----------------------------------------------------------------------------
+> Allocated in ath12k_wifi7_dp_rx_assign_reoq+0xce/0x280 [ath12k_wifi7] age=7436 cpu=10 pid=16130
+>  __kmalloc_noprof
+>  ath12k_wifi7_dp_rx_assign_reoq
+>  ath12k_dp_rx_peer_tid_setup
+>  ath12k_dp_peer_setup
+>  ath12k_mac_station_add
+>  ath12k_mac_op_sta_state
+>  [...]
+> Freed in ath12k_dp_rx_tid_cleanup.part.0+0x25/0x40 [ath12k] age=1 cpu=27 pid=16137
+>  kfree
+>  ath12k_dp_rx_tid_cleanup.part.0
+>  ath12k_dp_rx_reo_cmd_list_cleanup
+>  ath12k_dp_cmn_device_deinit
+>  ath12k_core_stop
+>  ath12k_core_hw_group_cleanup
+>  ath12k_pci_remove
 > 
-> In addition, I would recommend you to transition to nftables because it
-> would be ideal for your use-case. With nftables it would be easy to
-> combine this with sets and probably quota expression to limit the usage.
+> Fix this by allowing list addition for primary link only. Note
+> dp_primary_link_only chips like QCN9274 are not affected by this change,
+> because that's what they were doing in the first place.
 > 
-> What is wrong with the current ruleset? (Even before the blammed
-> commit), if you reach the connlimit limit **ALL** TCP connections will
-> be rejected (including legit ones), I do not think that is what you want
-> to achieve.
+> Tested-on: WCN7850 hw2.0 PCI WLAN.HMT.1.1.c5-00302-QCAHMTSWPL_V1.0_V2.0_SILICONZ-1.115823.3
 > 
-> Thanks,
-> Fernando.
+> Fixes: 3bf2e57e7d6c ("wifi: ath12k: Add Retry Mechanism for REO RX Queue Update Failures") # [1]
+> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=221011
+> Signed-off-by: Baochen Qiang <baochen.qiang@oss.qualcomm.com>
+> ---
+>  drivers/net/wireless/ath/ath12k/dp_rx.c | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
->> So, I have but screwed the idea of using connlimit anymore anyways.
->> Sorry for the noise. Lesson learned.
->>
->> Cheers!
+> diff --git a/drivers/net/wireless/ath/ath12k/dp_rx.c b/drivers/net/wireless/ath/ath12k/dp_rx.c
+> index a32ee9f8061a..6995de7761df 100644
+> --- a/drivers/net/wireless/ath/ath12k/dp_rx.c
+> +++ b/drivers/net/wireless/ath/ath12k/dp_rx.c
+> @@ -565,6 +565,9 @@ static int ath12k_dp_prepare_reo_update_elem(struct ath12k_dp *dp,
+>  
+>  	lockdep_assert_held(&dp->dp_lock);
+>  
+> +	if (!peer->primary_link)
+> +		return 0;
+> +
+>  	elem = kzalloc(sizeof(*elem), GFP_ATOMIC);
+>  	if (!elem)
+>  		return -ENOMEM;
 > 
+> ---
+> base-commit: d9a2be2d72d4f9035f0334e0ff49180fe9df6e52
+> change-id: 20260128-ath12k-rxtid-double-free-289100bb5163
 > 
+> Best regards,
 
