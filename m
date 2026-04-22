@@ -1,130 +1,258 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.162])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE3642D5922
-	for <regressions@lists.linux.dev>; Wed, 22 Apr 2026 04:52:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.46
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776833576; cv=pass; b=jxNMxUHUMAdIMw/UwhaEUJHktzkhrlchxjBJin6pHHQdBrVkh2Da+YT7bY1Cb/eME5zYkWqeD+9QTbhbf2qNCc/1x6L7MUPAHrxhCBOClpbSXDrpprKknnXyxceY7ND7ZjLJ5rf2GmqiE59oTVE3CpKwZ1JsjZ73aPKNCxxoqcA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776833576; c=relaxed/simple;
-	bh=q0Y5z69t7EnwFRmoQuriHXgrdZschTXv+jqPXtob9f4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=j25kKe2igaGdV6fYdb+ydaUXMQdMcSdCB7mrXEiTykUEmk0pQksCIzHAUEak5Mmv7C1i4K4wbUdXCcPLGyXriqOeZFa93SiFB4ZWGEIqsJlCO6r8ZKz3nCNere+jFmF8F6Xsroh+2SM6cX9JkHcc8rZOTjFCP1NoKIMTaZtPbL8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mzUrIRSz; arc=pass smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9866A3BF66E;
+	Wed, 22 Apr 2026 08:39:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.162
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776847186; cv=none; b=IThGNOa8NIuIH5MI5PTyWu2bnOBL0l4CMQVUyXu9BRf7kFnD6BgoLI1zCeB3AGRXQ9f0TkzgkqWzsnF7NRKJRS/MNNVOHN0ex6NRTEH/BAcTDli0CLWeObvvJZZKZ+xOjFEKjMOkrl2TviTOpaT6lxXT45MGGifL5DrVp/wptOI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776847186; c=relaxed/simple;
+	bh=yUNY2WJfRMKnvbtKN/j/UvADsxIjSpJls0F3U9Rux10=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qeabovX/wxN/YRsF308cCfKdiGaRXnpGj3BfGNtjIqq5GTjBg4ems+k2cXA/QKv5UEGwdi8biFKrpFG251pds4fuHcb2S/PJBhVPa6ygdbIzgxPuC/ISNUEXWHaI95CGJqIN4uhTy68hHnLVdU61Xla/36/JC2IunIF6jGVDOsU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=g3S8Z4GC; arc=none smtp.client-ip=188.68.63.162
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mzUrIRSz"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-ba9ad0fbc3aso198395266b.1
-        for <regressions@lists.linux.dev>; Tue, 21 Apr 2026 21:52:54 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1776833573; cv=none;
-        d=google.com; s=arc-20240605;
-        b=OmJJV9LmmsnVXXdL2XrI9CIAoSfMJO7a9npTdi3756FE3BFGx43lKL74lq8z+WAzCR
-         bMG13BkRQIYrmnoqcPHflWV/Y3R2cR8QnDWRCsLe61bqRgSifQsR4RwIR3tDxSO0Zwln
-         d7DUG9nNrSXN0MSJd4otRKhbB9Kr+Z5tEIuTfBBBeB5sXCAKeXIAH1pUpBz8ckjr8qpX
-         AX2wGBFHfOITDp2/PEMg/rO/GwBQKdqVXEi9FvuMN7zNv5ypurDHqNdTszGa+/IHgr6W
-         97X6fOUCyy002sOQOAahozY/GRHG9ThH5ZOELqVHsUp4VYzlT/V6sG1nhZi2S2+4jDDH
-         4d4Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=Htvix0mRwzhVxf5R0Kf0KLjebkh+Pa0xXAtyZO4Zg+Y=;
-        fh=6RuZjdF+LcCOCftCrwQ54623vL440Z0WhYMugFrAC+U=;
-        b=CQgVnSYqGtrbavXbLITeeKjsJtuzpAfOb3MnxbhthGNjbZhTKnN/j6sgotDhHlIpxX
-         JWmlNaBfq2N530zwKnwp1g+XYJJ+fBWqafNVRYltdGT1bTjX2Ha8sJpIEhBDr6OfbCQh
-         c1TTyBbpQtulxifIMw9BNzHE2DkN4DDWyMiABs2E4auaCaIds1z2rLOROy8/6zUFymWv
-         VL4E6ADww1qIz/ExijYUZoZ2Ca/krSWVyxNr2fWxqYcC72HRD1H3LbFlsVWiQI+pVp9E
-         kxFgFOxWixTDxeMJFeVHwzbOpbroDULZLc14FV6ReQBeRiOhXLfbCT0piBvJBdABOT+j
-         QlyQ==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1776833573; x=1777438373; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Htvix0mRwzhVxf5R0Kf0KLjebkh+Pa0xXAtyZO4Zg+Y=;
-        b=mzUrIRSz2ymLlxFdNX0QQ3I5g1I9vCmcZy5GaHQGKTjg4xCoNwS+VtNS0tEf1cjMSa
-         5B/GoTdmHyko+8axBmEd2DHnFq18I+p/iP68unqTnqJXXTkKcN2PHc7wALbWv7foWy7g
-         YrHee3xROE+fcrfqfPf5vJi2BUf54k5gJhrqqCNEZgyriBB9uTtgW/zFYQW8VBri69t9
-         5cHVgskDcsDi+jANxt6+jzVIvg/5O9efeeJLWTRy88MQkp50hbm9OoXTzeFsqO8EPezL
-         MhXPPT4m1cZc2tgY5FxCgpODUKG8M62EZiBE0gn5Y6PsXgmCZxCOOmAZOQRcCy1XkBsc
-         HhMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776833573; x=1777438373;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=Htvix0mRwzhVxf5R0Kf0KLjebkh+Pa0xXAtyZO4Zg+Y=;
-        b=X5bJLE6bC/e3iWOPQ7r7eFRlPTXCddJ/czF2CwfSom9US3xHPFsXh8yWENPSYOdrC5
-         AGii0hWw07gZGlXGP/nStW09jJmYImKga6eP2IYz++JHHWYfBm86fnTlZgG1F0Q0r5aq
-         xDOJDlUT+fg2O8e/4sphisjneSR+xYi751nX6cwBeycOhn3pmG0E1/0mdsd+wx4Wnw39
-         DTS1unlajtlLULQM+p+XOmLBBp65DtXaSggXf3tC6HeDNVigtZ+sjZpX0BjihTyZSQaH
-         ltx9nUfreGSUCWMP3L4pl+xNuulG8EOLwjRaMPQi81PFwo0h4PD6lECH5Crw23WsnEiC
-         2WZw==
-X-Forwarded-Encrypted: i=1; AFNElJ+fO1AepKH5oCoBI9KaMWAk96ngK4KduIDXgzlrcWF0wXHB+fSFMy3wARiioA8Axw10NApFvPBhLmbZLw==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzFvpwtM14r4+6cLsEmW0qgOLEpa6u0mPo526JB5VA3yoIca73+
-	qDwfeLN3/22UObgoYIBEpKGueVfaReEavjRTO1UU03/3Z9V5PGsD1aPjp4ft7JCSE/e8GFuSCfo
-	y29bGSEGozd2HL/qtJz+fb+ioP/ssgvw=
-X-Gm-Gg: AeBDiesWM3c9eZajW34NHszBR8r//HsA7IaRtlAOnuF3hQdWVIVFQU5fGHDCNXz0oOO
-	bpIL6p96azQh5eBR/8W/XvduQhljvt/KbTvBHLq4uz1OWLvwQNhwakwoXCugWk4Hb4db/JqxIck
-	HYbKY1o66ocIcq+UQqz+L5BGakveaDtrq/fdUTjrhv65UlktFGqqswkOCbPSha2evvKmocPy4Zi
-	kH9P5f3nv3DsLLYX3bRCmxWbmiy0Cz0G8pZnvP9wFz5BQs9WkqAZROBJC9j7m8ZkRxjAlugvLcX
-	JwEcdx1oYLFFJnrdH+LbjiGa5+zngfW2PGV8oE4FB+oAgDtt1cpxIOtP1B4ohEU=
-X-Received: by 2002:a17:907:1c27:b0:ba7:c8bf:dd94 with SMTP id
- a640c23a62f3a-ba7c8bfe835mr543875066b.33.1776833572885; Tue, 21 Apr 2026
- 21:52:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="g3S8Z4GC"
+Received: from mors-relay-8201.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4g0t1z2Z2Nz3yVZ;
+	Wed, 22 Apr 2026 10:39:35 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1776847175;
+	bh=yUNY2WJfRMKnvbtKN/j/UvADsxIjSpJls0F3U9Rux10=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=g3S8Z4GC6aCNC+t29j/1QGZkgIt7qaTO+iQADn2aywvab/Ev8EjJuMreKxeleihQX
+	 2hdKfdg+HuMkcRjd42bCVLxtYVK/pYNPjhtKZBTkIbN9CBpY4tZ8TIqLN+gY3S7Zc2
+	 uL0t+O3FqDh7lspxKshvzyGOmKdjewuKGSX804Oo0ZDY9+CrX+pPoyPmzj8VBLk5iX
+	 0eOlsua9Cwy80ts/Nh9KmaS6Jq9czu/I2UE3aVO4tKs4gTEnx1vcB5X6RxG777+oOi
+	 4rRAUCE6mkWoex7wdG8eQHgHdDp+Q6kXFCQPyKcjRJvywyLQJcS9cnXpOz+0XPJdV4
+	 vOY3S33AEgiQA==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4g0t1k4b51z40Db;
+	Wed, 22 Apr 2026 10:39:22 +0200 (CEST)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4g0t1j4MTwz8sZP;
+	Wed, 22 Apr 2026 10:39:21 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 88904632AD;
+	Wed, 22 Apr 2026 10:39:20 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <0fe54399-1fb1-4f75-a60c-e171292415a6@leemhuis.info>
+Date: Wed, 22 Apr 2026 10:39:19 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAHWLEDHfXZScF5jNDzgOxGXf-MBDcVNtqW0DbNz8Ra8rtcuL+w@mail.gmail.com>
- <CAOdxtTbwipkyAfDakLAB6aVp6YkPWtKpDdVDUTz88WDB-18HXQ@mail.gmail.com>
- <CAOQ4uxhUn6oCBuVJqZu+FcMx8XeAQHZbXFAGon4Xeg2SPLJW_A@mail.gmail.com>
- <CAOdxtTaWWu_7eJWu68zf28zHQP3Y--vXTfbGFsceO47BpN3qxA@mail.gmail.com>
- <CAOQ4uxhCNhGinePrnkSfT9Mtf4o5FmBX7mTA2m4miCMOt3mJqA@mail.gmail.com>
- <CAOdxtTZGFxaayJpqsiFQrWBqXvDn7oyxSL3_9TWP919k0FhWTg@mail.gmail.com> <CAE6nXrPes8T9Cn4ihTt43qmtgCCZvmMwYXo-yG_HJgNO7y+vVg@mail.gmail.com>
-In-Reply-To: <CAE6nXrPes8T9Cn4ihTt43qmtgCCZvmMwYXo-yG_HJgNO7y+vVg@mail.gmail.com>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Wed, 22 Apr 2026 06:52:41 +0200
-X-Gm-Features: AQROBzA7_yt5-Xb5zZQao-gRyDtlaRD1k1RwPo-4_dBxDZOooY6wSqAWKd1j_dA
-Message-ID: <CAOQ4uxhfwOU7O_vEQsAvRGV-v3_Dk1RcMnwGx-xOpx-FYjoKcg@mail.gmail.com>
-Subject: Re: [REGRESSION] Return change in 6.12.80+ with volatile mounting
-To: Samuel Karp <samuelkarp@google.com>
-Cc: Chenglong Tang <chenglongtang@google.com>, Derek Taylor <ddtaylor@google.com>, 
-	stable@vger.kernel.org, regressions@lists.linux.dev, 
-	Kevin Berry <kpberry@google.com>, overlayfs <linux-unionfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: i.MX8M Plus PCIe link regression
+To: Alexander Stein <alexander.stein@ew.tq-group.com>,
+ Hongxing Zhu <hongxing.zhu@nxp.com>, Manivannan Sadhasivam <mani@kernel.org>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "imx@lists.linux.dev" <imx@lists.linux.dev>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <23024521.EfDdHjke4D@steina-w>
+ <AS8PR04MB88332979F06EDE29E751BCE18C7CA@AS8PR04MB8833.eurprd04.prod.outlook.com>
+ <2qto2ddqmtks37wxtklxo4ctvxyezmgtjcuprnk6crant5fvsu@vdbmqomrcqt3>
+ <6102060.LvFx2qVVIh@steina-w>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <6102060.LvFx2qVVIh@steina-w>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-PPP-Message-ID: <177684716089.1821918.1965836553222221611@mxe9fb.netcup.net>
+X-Rspamd-Server: rspamd-worker-8404
+X-Rspamd-Queue-Id: 88904632AD
+X-NC-CID: pbQs2wGavMMtO1Lsg5Lqnthp6i0QkgfZ7gamkgUvglMNXJR6u80=
 
-On Wed, Apr 22, 2026 at 1:54=E2=80=AFAM Samuel Karp <samuelkarp@google.com>=
- wrote:
->
-> We can fix the test case for the "volatile" option and expect either
-> "volatile" or "fsync=3Dvolatile". Existing use within containerd beyond
-> the test code involves us producing the "volatile" option and passing
-> it to the mount syscall (or _not_ passing it, depending on the
-> situation). This seems like it should still work if "fsync=3Dvolatile"
-> is an alias rather than a replacement.  However, containerd is not in
-> full control of the mount options; as part of snapshot (layer)
-> management external snapshotter implementations can provide mount
-> options to containerd which containerd then passes to the kernel.  The
-> protection in RemoveVolatileOption will break if a newer snapshotter
-> produces "fsync=3Dvolatile" and provides it to an unpatched version of
-> containerd.  I think the breakage scenario then becomes new kernel +
-> new snapshotter (producing the new option) + old containerd.
->
+Lo! What happened to this regression? It looks like it was never
+resolved. Is that something everybody can live with in some way? Or
+something we have to live with, as reverting the culprit at this point
+would create a regression and thus creates even more trouble then it solves?
 
-Even if kernel always shows "volatile" in show mount options
-the scenario you described will break containerd but that would be
-a snapshotter regression (w.r.t. containerd) not a kernel regression.
+Ciao, Thorsten
 
-As I explained before, overlayfs could add a new mount option
-fsync=3Doff which has similar "do not reuse this workdir" semantics.
-I explained the correct fix to this situation.
+On 3/4/26 09:47, Alexander Stein wrote:
+> 
+> Am Mittwoch, 4. März 2026, 07:32:48 CET schrieb Manivannan Sadhasivam:
+>> On Wed, Mar 04, 2026 at 02:55:51AM +0000, Hongxing Zhu wrote:
+>>>> -----Original Message-----
+>>>> From: Manivannan Sadhasivam <mani@kernel.org>
+>>>> Sent: 2026年3月4日 0:42
+>>>> To: Hongxing Zhu <hongxing.zhu@nxp.com>; Alexander Stein
+>>>> <alexander.stein@ew.tq-group.com>
+>>>> Cc: linux-pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+>>>> imx@lists.linux.dev
+>>>> Subject: Re: i.MX8M Plus PCIe link regression
+>>>>
+>>>> On Tue, Mar 03, 2026 at 01:38:13PM +0100, Alexander Stein wrote:
+>>>>> Hi,
+>>>>>
+>>>>> these days I noticed that there is a PCIe link regression on my
+>>>>> i.MX8MP platform (TQMa8MPxL) running next-20260227.
+>>>>> I could bisect it back to commit 9c03e30e3ade3 ("PCI: imx6: Skip link
+>>>>> up workaround for newer platforms"). I always get the following errors:
+>>>>>
+>>>>> imx6q-pcie 33800000.pcie: Link failed to come up. LTSSM:
+>>>>> CFG_LINKWD_START imx6q-pcie 33800000.pcie: probe with driver
+>>>>> imx6q-pcie failed with error -110
+>>>>>
+>>>>> Connected is a Gen1 PCIe -> Ethernet adapter. Interestingly a Gen2
+>>>>> device is detected without issues.
+>>>>>
+>>>>> Reverting 3c96a61dd2e098dda8dcac3dce3d38a3c87afbfc and
+>>>>> b9a8d28ebbf118bb3eac953f4a37abbd341257ab "fixes" my platform, both
+>>>> Gen
+>>>>> 1 and Gen 2 devices are detect. Commit
+>>>>> 3c96a61dd2e098dda8dcac3dce3d38a3c87afbfc is only required for conflict
+>>>> free revert.
+>>>>>
+>>>>> Here is a summary with outputs:
+>>>>> Gen 1 device
+>>>>>> 00:00.0 PCI bridge: Synopsys, Inc. DWC_usb3 / PCIe bridge (rev 01)
+>>>>>> 01:00.0 Ethernet controller: Realtek Semiconductor Co., Ltd.
+>>>>>> RTL8111/8168/8211/8411 PCI Express Gigabit Ethernet Controller (rev
+>>>>>> 01)
+>>>>>
+>>>>> Gen 2 device
+>>>>>> 00:00.0 PCI bridge: Synopsys, Inc. DWC_usb3 / PCIe bridge (rev 01)
+>>>>>> 01:00.0 SATA controller: Marvell Technology Group Ltd. 88SE9128 PCIe
+>>>>>> SATA 6 Gb/s RAID controller (rev 20)
+>>>>>
+>>>>> output of "dmesg | grep imx6q-pcie". Common part for all tests:
+>>>>>> imx6q-pcie 33800000.pcie: host bridge /soc@0/pcie@33800000 ranges:
+>>>>>> imx6q-pcie 33800000.pcie:       IO 0x001ff80000..0x001ff8ffff ->
+>>>>>> 0x0000000000
+>>>>>> imx6q-pcie 33800000.pcie:      MEM 0x0018000000..0x001fefffff ->
+>>>>>> 0x0018000000
+>>>>>> imx6q-pcie 33800000.pcie: config reg[1] 0x1ff00000 == cpu 0x1ff00000
+>>>>>> imx6q-pcie 33800000.pcie: iATU: unroll T, 4 ob, 4 ib, align 64K,
+>>>>>> limit 16G
+>>>>>
+>>>>> next-20260227
+>>>>> Gen 1
+>>>>>> imx6q-pcie 33800000.pcie: Link failed to come up. LTSSM:
+>>>>>> CFG_LINKWD_START imx6q-pcie 33800000.pcie: probe with driver
+>>>>>> imx6q-pcie failed with error -110
+>>>>>
+>>>>> Gen 2
+>>>>>> imx6q-pcie 33800000.pcie: PCIe Gen.2 x1 link up imx6q-pcie
+>>>>>> 33800000.pcie: PCI host bridge to bus 0000:00
+>>>>>
+>>>>> next-20260227 + reverts
+>>>>> Gen 1
+>>>>>> imx6q-pcie 33800000.pcie: PCIe Gen.1 x1 link up imx6q-pcie
+>>>>>> 33800000.pcie: PCIe Gen.1 x1 link up imx6q-pcie 33800000.pcie: PCI
+>>>>>> host bridge to bus 0000:00
+>>>>>
+>>>>> Gen 2
+>>>>>> imx6q-pcie 33800000.pcie: PCIe Gen.1 x1 link up imx6q-pcie
+>>>>>> 33800000.pcie: PCIe Gen.2 x1 link up imx6q-pcie 33800000.pcie: PCI
+>>>>>> host bridge to bus 0000:00
+>>>>>
+>>>>> What can we do here? I'm wondering why Gen 2 trains correctly, while
+>>>>> Gen 1 doesn't.
+>>>>>
+>>>>
+>>>> Thanks for the report and sorry for the breakage. Commit 9c03e30e3ade3,
+>>>> mentions that the workaround is only needed for the i.MX6 platforms. So
+>>>> I'm not sure why the patch breaks i.MX8M and that too only for Gen 1
+>>>> speed.
+>>>>
+>>>> Also, before 9c03e30e3ade3, LTSSM was always started in Gen 1, but as per
+>>>> your finding, only Gen 1 devices fail to work. So the code till
+>>>> imx_pcie_wait_for_speed_change() shouldn't have an impact. Maybe the
+>>>> issue is due to skipping imx_pcie_wait_for_speed_change()?
+>>>>
+>>>> Richard, thoughts?
+>>> Hi Maini:
+>>> Prior to calling imx_pcie_wait_for_speed_change(), the PCIe link must
+>>>  already be established. Before commit 9c03e30e3ade3, the speed change
+>>>  procedure was only initiated after the initial Gen1 link was successfully
+>>>  brought up.
+>>>
+>>> Hi Alexander:
+>>> Sorry for the breakage.
+>>> Before commit 9c03e30e3ade3, i.MX8MP PCIe forced Gen1 link training
+>>>  initially, then switched to Gen3 after link-up by triggering a speed
+>>>  change. After commit 9c03e30e3ade3, link training starts directly at
+>>>  the Gen3 capability level.
+>>>
+>>> The two link training methods differ only in the i.MX8MP Root Complex (RC)
+>>>  link capability configuration prior to link training: one method forces
+>>>  Gen1 speed, while the other retains the default Gen3 setting in your tests.
+>>>
+>>
+>> I still don't understand why the link fails to train at Gen 1.
+> 
+> Independently from the configured maximum link speed, shouldn't the initial
+> link be Gen1 anyway and upgraded to Gen 2 later on?
+> 
+> I added some debug output to dw_pcie_link_up()
+> 
+> imx6q-pcie 33800000.pcie: dw_pcie_link_set_max_speed: current pci->max_link_speed: 3
+> imx6q-pcie 33800000.pcie: dw_pcie_link_up: PCIE_PORT_DEBUG1: 0x08200000
+> imx6q-pcie 33800000.pcie: dw_pcie_link_up: PCIE_PORT_DEBUG1: 0x08200000
+> imx6q-pcie 33800000.pcie: dw_pcie_link_up: PCIE_PORT_DEBUG1: 0x2800f702
+> imx6q-pcie 33800000.pcie: dw_pcie_link_up: PCIE_PORT_DEBUG1: 0x2800f702
+> imx6q-pcie 33800000.pcie: dw_pcie_link_up: PCIE_PORT_DEBUG1: 0x2800f704
+> imx6q-pcie 33800000.pcie: dw_pcie_link_up: PCIE_PORT_DEBUG1: 0x2800f702
+> imx6q-pcie 33800000.pcie: dw_pcie_link_up: PCIE_PORT_DEBUG1: 0x28000000
+> imx6q-pcie 33800000.pcie: dw_pcie_link_up: PCIE_PORT_DEBUG1: 0x2800f702
+> imx6q-pcie 33800000.pcie: dw_pcie_link_up: PCIE_PORT_DEBUG1: 0x2800f722
+> imx6q-pcie 33800000.pcie: dw_pcie_link_up: PCIE_PORT_DEBUG1: 0x2800f702
+> imx6q-pcie 33800000.pcie: dw_pcie_link_up: PCIE_PORT_DEBUG1: 0x2800f702
+> imx6q-pcie 33800000.pcie: Link failed to come up. LTSSM: CFG_LINKWD_START
+> imx6q-pcie 33800000.pcie: probe with driver imx6q-pcie failed with error -110
+> 
+> 
+> imx6q-pcie 33800000.pcie: dw_pcie_link_set_max_speed: current pci->max_link_speed: 2
+> imx6q-pcie 33800000.pcie: dw_pcie_link_up: PCIE_PORT_DEBUG1: 0x08200000
+> imx6q-pcie 33800000.pcie: dw_pcie_link_up: PCIE_PORT_DEBUG1: 0x08200000
+> imx6q-pcie 33800000.pcie: dw_pcie_link_up: PCIE_PORT_DEBUG1: 0x2800f702
+> imx6q-pcie 33800000.pcie: dw_pcie_link_up: PCIE_PORT_DEBUG1: 0x2800f702
+> imx6q-pcie 33800000.pcie: dw_pcie_link_up: PCIE_PORT_DEBUG1: 0x2800f702
+> imx6q-pcie 33800000.pcie: dw_pcie_link_up: PCIE_PORT_DEBUG1: 0x2800f702
+> imx6q-pcie 33800000.pcie: dw_pcie_link_up: PCIE_PORT_DEBUG1: 0x28000000
+> imx6q-pcie 33800000.pcie: dw_pcie_link_up: PCIE_PORT_DEBUG1: 0x2800f702
+> imx6q-pcie 33800000.pcie: dw_pcie_link_up: PCIE_PORT_DEBUG1: 0x28000000
+> imx6q-pcie 33800000.pcie: dw_pcie_link_up: PCIE_PORT_DEBUG1: 0x2800f702
+> imx6q-pcie 33800000.pcie: dw_pcie_link_up: PCIE_PORT_DEBUG1: 0x2800f702
+> imx6q-pcie 33800000.pcie: Link failed to come up. LTSSM: CFG_LINKWD_START
+> imx6q-pcie 33800000.pcie: probe with driver imx6q-pcie failed with error -110
+> 
+> 
+> imx6q-pcie 33800000.pcie: dw_pcie_link_set_max_speed: current pci->max_link_speed: 1
+> imx6q-pcie 33800000.pcie: dw_pcie_link_up: PCIE_PORT_DEBUG1: 0x08200000
+> imx6q-pcie 33800000.pcie: dw_pcie_link_up: PCIE_PORT_DEBUG1: 0x08200000
+> imx6q-pcie 33800000.pcie: dw_pcie_link_up: PCIE_PORT_DEBUG1: 0x08000010
+> imx6q-pcie 33800000.pcie: PCIe Gen.1 x1 link up
+> imx6q-pcie 33800000.pcie: PCI host bridge to bus 0000:00
+> 
+> So for any maximum speed above Gen1 it seems that LTSSM is stuck at link
+> training.
+> Unfortunately only link training and link up bits are defined and RM doesn't
+> show anything, so I don't know what the other bits are indicating.
+> 
+> For a Gen2 device the link training succeeds right away.
+> 
+> imx6q-pcie 33800000.pcie: dw_pcie_link_set_max_speed: current pci->max_link_speed: 2
+> imx6q-pcie 33800000.pcie: dw_pcie_link_up: PCIE_PORT_DEBUG1: 0x08200000
+> imx6q-pcie 33800000.pcie: dw_pcie_link_up: PCIE_PORT_DEBUG1: 0x08200000
+> imx6q-pcie 33800000.pcie: dw_pcie_link_up: PCIE_PORT_DEBUG1: 0x08000010
+> imx6q-pcie 33800000.pcie: PCIe Gen.2 x1 link up
+> imx6q-pcie 33800000.pcie: PCI host bridge to bus 0000:00
+> 
+> Best regards,
+> Alexander
 
-Thanks,
-Amir.
