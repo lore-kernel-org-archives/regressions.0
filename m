@@ -1,155 +1,189 @@
-Received: from mail-4325.protonmail.ch (mail-4325.protonmail.ch [185.70.43.25])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C9453E3C78;
-	Thu, 23 Apr 2026 09:26:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.25
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776936374; cv=none; b=CLIjonesR1zsSxic+Xwqoj8VhqdAwBuZAvIoyrLt7yEH/9KbYGYPiJ3fFTaDZ7RKZ5LDzWciPl3C5NI6qTLH2mNZDXT5H8TuE/6XX4PtiQMzG+xW8Wxa7LOMgq2R6irZxpgk/XatunI4vEnS9ILXE6vl32IbjXbI1BjXZgIRDRo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776936374; c=relaxed/simple;
-	bh=bTadD+jv9LHiJ5uG3E23q5B3A9o1NoncHmFl/1EQxLo=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=idAuTjUP43srUZ5fu/MH8kLyAZqoG/54psPTNYEHHWXslMsep2NzVktxqnO5TIWQwwNAiAJ1R/vNXtjsGlceqJLm5pHY9F6ykq5TXpw2WLKAugmGqppoiviBiScBEfZZKEVQ0OmJKg87fmSkoQ5D1xDS8yUbt5m6LPYsOgS1ZWA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=aqDhl9yD; arc=none smtp.client-ip=185.70.43.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CB423CEB8C
+	for <regressions@lists.linux.dev>; Thu, 23 Apr 2026 10:39:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.52
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776940766; cv=pass; b=UXuGwKG7+qx7RqDeoETe+86oYnL0NkCkhxNEMHw93TRCwxO48iWS7QOSf42nzgVAa2mH3AvJQtNdTRdP1U+MNlSa3nzOxAkMM4Z/Bzzj05U9VMqnuZXeMYNgcS9yYQASWI/IvDakRj36337mYT2H98kT1rAW2Yb+58WUEfMF33E=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776940766; c=relaxed/simple;
+	bh=axjtZr7MIWi9WvuvT/qFBnFbDHBg+cjaNqhmst1f4XE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rV/FPFvbpcs80Bf9nCv0H+xvDJDfKChFyZ34FYh1Tg91gKOh+07YUhXzqCDAvarmnJAM7H7cdRiiDrOv9ZO0rwR4AeUl8usuadpF9nuGdECNTqHDsDIiVcc6I2tyyESjLniG3GnXeGgbrdTrMmrfhwZsCL7KpFyxgnqpcdow5ts=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mongodb.com; spf=fail smtp.mailfrom=mongodb.com; dkim=pass (1024-bit key) header.d=mongodb.com header.i=@mongodb.com header.b=GJF2lkSA; arc=pass smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mongodb.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=mongodb.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="aqDhl9yD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-	s=protonmail3; t=1776936363; x=1777195563;
-	bh=mwZY5DucRwTXoJsKiFxV0MP4yG1k00/Tz8sAf1c7Zys=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=aqDhl9yDazSX273B0wC57PA2H3TYPW/MQbylGHS50ovDEBfJZpDMqaLhUrRuGX9E2
-	 Rlgklk0tjr6IJol2wQFMGWEgwNSA9uJ0trqOXkbbVrpYd16GspswTW5MOuMUv1A1vc
-	 5gxWaRyS6sPDO+k9I+ih6dpzlaMrqYPd/5yTTfjWLNt8/4mtp/OZ2I4FwDJKK8wTT1
-	 xBwwejMHhBCDcqfT6ukam3SN4iAaUpSqROluh1twJLDz5mj2HcAmtzgSmUuRf3/Qu4
-	 9t+QtjhCAT4KHVH0wgAsQuWtwZJc7JARHzEmyVHkBRQw6ihg6P5CFnwa2766eir1kA
-	 mxV2g+wih3b6w==
-Date: Thu, 23 Apr 2026 09:25:58 +0000
-To: Baolu Lu <baolu.lu@linux.intel.com>
-From: 70sp <70sp@protonmail.com>
-Cc: "iommu@lists.linux.dev" <iommu@lists.linux.dev>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: Re: [REGRESSION] GPU passes into VM improperly after c376a3456d8b or a98db518dde2
-Message-ID: <FhMS_WRKl1GUZqMFEwdeZFpixCICEaQ-NIX6-eC7Nti1H0ZeEzBpWUkP5-t9lrOv-NcmW0iefExkPne5riXNqYZ2IM97uM_sg91cgAh4MNY=@protonmail.com>
-In-Reply-To: <C4BK-Bp_FII0EkxSHQxBS2wO-Age-UxFrp_KfmYzb8cnQ8ZndzBBIPD8S9T86wOifBP0tysQGCFtGQsBsBvG2IzIMw3jb3NF5HGbS3tsawA=@protonmail.com>
-References: <z7Rkts0EsooZcnCjNfJaK6ursftFU8ubOkH0hcNjzxugEAwGsHLMblOdfoAx-gJzBZ-TMmeUtD7iWBngbFY5UCJCwdSmYqmCVMy-yhbirUk=@protonmail.com> <56ce85d5-e0b9-407c-9a86-708111a8a509@linux.intel.com> <C4BK-Bp_FII0EkxSHQxBS2wO-Age-UxFrp_KfmYzb8cnQ8ZndzBBIPD8S9T86wOifBP0tysQGCFtGQsBsBvG2IzIMw3jb3NF5HGbS3tsawA=@protonmail.com>
-Feedback-ID: 144929603:user:proton
-X-Pm-Message-ID: 73f9431b3f8899114d03c5ddfa318c374fdad1d9
+	dkim=pass (1024-bit key) header.d=mongodb.com header.i=@mongodb.com header.b="GJF2lkSA"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-65c4152313fso8950235a12.1
+        for <regressions@lists.linux.dev>; Thu, 23 Apr 2026 03:39:24 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1776940763; cv=none;
+        d=google.com; s=arc-20240605;
+        b=Es7uMq3B2Rez9GYoefswzGWTei8YkthlSGTDqzrOM7GhpVxrDcU4WMi6pb6ulEMS4U
+         IUqL1ZR3/wvImahCf6I+ZV+BfiFOob8zyAlPry8y/O+8wLfq5dPk8sMmV1Ek303gfyX8
+         Clldf/nn/S5uXiR6Kjlpy3YcZPTYqOy8aTrt0mz/VmX0RjkOy2U0Hg0J7UTYl3mNosnp
+         ITS3oB7tNSYX96rLI8PqrZQmOfJ3lgyPmZ3gj1s9bvyh2kBtiq/oKuGOQJyNi1vfPnW+
+         0hTUbidjavr3qs5ffmZAHL8hYa1h7+el2dZ3WX/m0Sa5xEnjz28/jWnpgl4MeE5WS31/
+         JGKw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=axjtZr7MIWi9WvuvT/qFBnFbDHBg+cjaNqhmst1f4XE=;
+        fh=IFOZDS1u1tqedu+vp4IxAPyw0WJ8m/jWE4ZKBnEz9/E=;
+        b=D9JTHTYia9JP6zVnpiHBlWptq9uLgHdXi/QlBTfYbgZRTVH9c2Vmm+4XLFITfzAtzM
+         aH8trlagp7PRHfKKggAHd9lDjpbHdb1KaSmSu18sq92uNeip3RlSJVd28mGaGk6da2CC
+         0hAheDxiB3M8sE3GAHtV6CaUSqCwysXXC8gNSCkupfsJxrPmuPcg7dwi04It4lTAPLFZ
+         Kx3jfDtHDV+V94SahYJAL1ZlBupqVYOUGsswz2P6ebNcVeD8y8Gg/9r6j5fO4101JnFC
+         T6XyLcsfg66dmDiVg4Yniygk8Nxnjs7icfN0aKCc8M8IXIeHcKAIxDPQytaDim41yIYC
+         e6Iw==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=mongodb.com; s=google; t=1776940763; x=1777545563; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=axjtZr7MIWi9WvuvT/qFBnFbDHBg+cjaNqhmst1f4XE=;
+        b=GJF2lkSArx7tZjSz5n/PYKRpDsowgsKm0D3F/vesKRyiA8g1hWpo55HmJJnZzP0YQv
+         0BHsO/lHo0tGpjwt4qwFb2l4peFqnGgwEVITL1Apl8KCWymATi4yvytIh1kpXUlTFud8
+         wLfH8AMxaGPBruVhPb8RoG+aeyFx4UnGRIk9Q=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776940763; x=1777545563;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=axjtZr7MIWi9WvuvT/qFBnFbDHBg+cjaNqhmst1f4XE=;
+        b=aVdpASVn8IAXBJ3CRGjW3YIY2c8VoXJ6JbsrhK0Gn5j1cWSlkYIOTMoD9MuZE3oj1o
+         rwUZQuB9zvNDeIFBihB5yk2jEXcVLH1azeH3+tADsEelv7vyQMG1WZbQfBQrnuJLyN+C
+         lTsM7hCXIxt4LAVTLhmd8sys0qL2O/OT6n8o1p3RXcWAXdFgguBuHULGojo6V3tu/JjT
+         oo3UPvprZwqHjrqydiLjrqh2yqXGZqUkTcfcbwD53BAS80f/epRB4g2/O35LlK6Rzaql
+         wk2SuqOl+x9AykQZJBhRB+QBCoGs209IJlKR1lesIA4suXvwFb51J0brCmtDhgfaGfms
+         WadA==
+X-Forwarded-Encrypted: i=1; AFNElJ+XKvoHEtmcz7Dw4a93Om0A7oUDpPf5eoWoGSjnKveK/hZW+OezMlYHJMtCRrXkQD5kpu+Ohz7AQBrLPw==@lists.linux.dev
+X-Gm-Message-State: AOJu0Ywq4LfcBD9X4Ayh4YgrIUruvc9OpGSwhRl+vjvFM3foA2zP+el3
+	P04NLU3wp+DfnO4lkGZd8VgwyczyXVDVDrzOzGTkmh8N/5CmKilqrWW0iCMakFADyc9b8fvw3Lg
+	r6n2ze82CoEZbX5U5wyXpfM4pNsjb7VemIhOqfWp3AA==
+X-Gm-Gg: AeBDietKhg6JDlyqSJ1/r81GrnnIj+K2L2MUY0zmZl+qOy0ppb5k5U+MlhzptQkh8tl
+	NOo8zj3ZLQCOvu7wGykM0yxhZoEYSMFND5SJDnaKBFiJ/sHQVvA0J47dSKvlkw/K4m/QMCXJtT6
+	evvULSJUxAJSCj+oXaQZodyq1T0Fs3G3gxieIfGtY+5GEZUewuWcgBgUgaXaInHGrQBTmKHRoDI
+	IP6a/LFCI6B2EjUi5xHi44dmjle259/Qaq/ymdMLxnSpYg+p2gPqObIkDFGmwH160knF7Ss8h2r
+	+9bhEF1UMEPGawk+
+X-Received: by 2002:a17:907:97cb:b0:ba6:7e1e:778a with SMTP id
+ a640c23a62f3a-ba67e1e78edmr989960466b.1.1776940763204; Thu, 23 Apr 2026
+ 03:39:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+References: <CAHnCjA25b+nO2n5CeifknSKHssJpPrjnf+dtr7UgzRw4Zgu=oA@mail.gmail.com>
+ <20260422125647.GP3126523@noisy.programming.kicks-ass.net> <20260422131338.GI3102924@noisy.programming.kicks-ass.net>
+In-Reply-To: <20260422131338.GI3102924@noisy.programming.kicks-ass.net>
+From: Mathias Stearn <mathias@mongodb.com>
+Date: Thu, 23 Apr 2026 12:38:56 +0200
+X-Gm-Features: AQROBzDLZqpaRWt1enscGE22sx01XrMi4DwyHGjG6mzxtk-KQGkjwLXmTDGeCv8
+Message-ID: <CAHnCjA0zt93wp2jAs6QX3eN+BtR8Xb3iZROzs48xZ3GNrzXOfg@mail.gmail.com>
+Subject: Re: [REGRESSION] rseq: refactoring in v6.19 broke everyone on arm64
+ and tcmalloc everywhere
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Boqun Feng <boqun.feng@gmail.com>, "Paul E. McKenney" <paulmck@kernel.org>, 
+	Chris Kennelly <ckennelly@google.com>, Dmitry Vyukov <dvyukov@google.com>, regressions@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	Ingo Molnar <mingo@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Jinjie Ruan <ruanjinjie@huawei.com>, Blake Oler <blake.oler@mongodb.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Wed, Apr 22, 2026 at 3:13=E2=80=AFPM Peter Zijlstra <peterz@infradead.or=
+g> wrote:
+>
+> On Wed, Apr 22, 2026 at 02:56:47PM +0200, Peter Zijlstra wrote:
+> > On Wed, Apr 22, 2026 at 11:50:26AM +0200, Mathias Stearn wrote:
+> >
+> > > Additionally, it breaks tcmalloc specifically by failing to overwrite
+> > > the cpu_id_start field at points where it was relied on for
+> > > correctness.
+> >
+> > This specific behaviour was documented as being wrong and running with
+> > DEBUG_RSEQ would have flagged it.
+> >
+> > The tcmalloc issue has been contentious for a long time. The tcmalloc
+> > folks relied on something that was documented to be wrong. It has been
+> > reported to the tcmalloc people many years ago and if you were to run
+> > tcmalloc on most any kernel (very much including 6.19) with
+> > DEBUG_RSEQ=3Dy, it would have yelled.
+> >
+> > The tcmalloc people didn't care. There was a proposal for an RSEQ
+> > extension for what they need, and they didn't care. All this should be
+> > in their bugzilla or whatever.
+> >
+> > The RSEQ rework improved performance significantly for everyone, and
+> > kept all the documented behaviour (+- arm64 bug). Tcmalloc got screwed
+> > over because they relied on implementation behaviour that was
+> > specifically documented to be broken. And they didn't care. Google was
+> > very much aware of this. And hasn't lifted a finger to remedy it.
+>
+> Also: https://lore.kernel.org/all/874io5andc.ffs@tglx/
 
-sending a friendly reminder about this ongoing regression.
+(Sorry for the resend to folks who got this already - I got an alert
+that it was rejected by the mailinglists because it contained html so
+attempting to resend as plain text)
 
-Thank you for your attention.
+I won't claim that tcmalloc _should_ be abusing cpu_id_start as it is.
+I agree that it seems questionable at best. However, I will strongly
+disagree with the following comment in that message:
 
-On Tuesday, April 14th, 2026 at 11:22 AM, 70sp <70sp@protonmail.com> wrote:
+> What it not longer does is updating the
+> CPU number for the preemption case on the same CPU
+> because that's just a massive waste of CPU cycles.
 
-> I can confirm, that the "domain is not compatible with device" message is=
- nowhere to be seen.
->=20
-> I have double checked by also adding an else statement with a different m=
-essage and that one showed up several times. (by pci (iGPU) 0000:00:02.0, p=
-cieport 0000:00:01.0 and vfio-pci (GTX 970) 0000:01:00.0, 0000:01:00.1). re=
-t =3D 0.
->=20
->=20
->=20
-> Sent with Proton Mail secure email.
->=20
-> On Monday, April 13th, 2026 at 8:49 AM, Baolu Lu <baolu.lu@linux.intel.co=
-m> wrote:
->=20
-> > On 4/12/26 19:17, 70sp wrote:
-> > > Hello,
-> > >
-> > > I have been dealing with a regression launching a Windows QEMU/KVM
-> > > virtual machine with a GPU passed through.
-> > >
-> > > The issue consists of launching a QEMU/KVM VM, which gets stuck for
-> > > about 2 minutes on booting with a white screen and then having NVIDIA=
-=E2=80=99s
-> > > code 43 in Windows.
-> > >
-> > > I=E2=80=99m certain, that the issue is not caused by anything in Wind=
-ows or
-> > > related software in Linux, because I tried reinstalling my whole PC
-> > > including the Windows VM. I tried to reproduce the bug on an out-of-t=
-he-
-> > > box Arch Linux install and the bug is still present.
-> > >
-> > > The first bad commit is either a98db518dde246e01ead53617dc0a30d6aaa37=
-52
-> > > or c376a3456d8bef43ec556a98c0a04c35086c2737. I don=E2=80=99t know for=
- sure which
-> > > one introduced it, because during bisection I had to skip
-> > > a98db518dde246e01ead53617dc0a30d6aaa3752 due to it being unable to
-> > > launch the virtual machine resulting in a different error (didn=
-=E2=80=99t even
-> > > start booting). In kernels before these commits, the VM works flawles=
-sly.
-> > >
-> > > I have tested it on latest mainline kernel and the issue is still
-> > > present. I have been experiencing the issue since kernel 6.13, so I j=
-ust
-> > > switched to the 6.12 LTS kernel instead which doesn=E2=80=99t have th=
-is issue.
-> > >
-> > > Configuration of my Linux install and hardware: https://pastebin.com/
-> > > rcsyyYiK
-> > > .config: https://pastebin.com/RTQCBduD
-> > > dmesg errors: https://pastebin.com/84jPP81E
-> > > lspci: https://pastebin.com/qi29BSWi
-> > >
-> > > #regzbot introduced:
-> > > a98db518dde246e01ead53617dc0a30d6aaa3752..c376a3456d8bef43ec556a98c0a=
-04c35086c2737
-> >
-> > Before these commits, if a device was attached to a domain that didn't
-> > perfectly match the hardware's capabilities (such as address width or
-> > coherency), the kernel would dynamically adjust the domain to
-> > accommodate the hardware.
-> >
-> > Following these two commits, the driver now applies a "match or fail"
-> > policy. If the domain is incompatible with the device's hardware
-> > capabilities, it returns -EINVAL. This expects the caller to allocate a
-> > new domain dedicated to that specific device and attempt the attachment
-> > again.
-> >
-> > Can you please add a message line in paging_domain_compatible() to
-> > verify whether it's a domain compatibility issue?
-> >
-> > diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
-> > index 205debd76989..c7e1e0dfa250 100644
-> > --- a/drivers/iommu/intel/iommu.c
-> > +++ b/drivers/iommu/intel/iommu.c
-> > @@ -3111,8 +3111,10 @@ int paging_domain_compatible(struct iommu_domain
-> > *domain, struct device *dev)
-> >                  ret =3D
-> > paging_domain_compatible_second_stage(dmar_domain, iommu);
-> >          else if (WARN_ON(true))
-> >                  ret =3D -EINVAL;
-> > -       if (ret)
-> > +       if (ret) {
-> > +               dev_info(dev, "domain is not compatible with device, re=
-t
-> > =3D %d", ret);
-> >                  return ret;
-> > +       }
-> >
-> >          if (sm_supported(iommu) && !dev_is_real_dma_subdevice(dev) &&
-> >              context_copied(iommu, info->bus, info->devfn))
-> >
-> > Thanks,
-> > baolu
-> >
+I don't think it will cost _any_ cycles to implement what I proposed.
+And it especially should have no impact from just enabling rseq on a
+thread as glibc now does. It should only result in different
+instructions being executed when the program actually _uses_ rseq by
+setting the rseq_cs variable to a non-null pointer. I will repeat the
+proposal with a bit more commentary in case you missed some of the
+details that make it free:
+
+Any time a critical section might be aborted (migration, preemption,
+signal delivery, and membarrier IPI), the kernel _already_ must check
+the rseq_cs field to see if the thread is in a critical section [and
+if it is null because the program isn't using rseq critical sections,
+no further action is taken]. This is documented as nulling the pointer
+after (I assume to make later checks cheaper) [if this changed, then
+it *is* a change in _documented behavior_, not just an implementation
+detail]. It would be sufficient for tcmalloc's internal usage if every
+time the kernel nulled out rseq_cs, it also wrote the cpu id to
+cpu_id_start. [This is one additional store to a cacheline you are
+already writing to so it should be ~free on modern OoO CPUs and cheap
+on others. There might be a small cost to loading the current cpu, but
+since nothing depends on that other than the store, I still expect it
+to be ~free]
+
+To make this more concrete, I am proposing adding
+
+unsafe_put_user((u32)task_cpu(t), &t->rseq.usrptr->cpu_id_start, efault);
+
+after each place where you currently do
+
+unsafe_put_user(0ULL, &t->rseq.usrptr->rseq_cs, efault);
+
+in rseq_update_user_cs. Is that something that you would expect to
+cause a performance issue?
+
+Again, I'm not claiming that it is "good" that this needs to be done.
+But it does seem like a small price to pay to keep existing binaries
+working on new kernels. Quoting the first paragraph of
+https://docs.kernel.org/admin-guide/reporting-regressions.html:
+
+> =E2=80=9CWe don=E2=80=99t cause regressions=E2=80=9D is the first rule of=
+ Linux kernel development; Linux founder and lead developer Linus Torvalds =
+established it himself and ensures it=E2=80=99s obeyed.
+
+I don't see anything on that page that says it doesn't count as a
+regression if the userspace program "relied on implementation
+behaviour that was specifically documented to be broken".
