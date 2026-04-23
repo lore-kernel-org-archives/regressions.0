@@ -1,174 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.166])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06C443F0A83;
-	Thu, 23 Apr 2026 13:17:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9BB129BDB4
+	for <regressions@lists.linux.dev>; Thu, 23 Apr 2026 13:39:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.166
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776950226; cv=none; b=hIFffz9pjtaYa2YHODihj8oooXBnRUEcxD12SsYWqzplfhASSHHS8Lqu1Sx369UjXN0drd/dTjE7bNTy8wwNYLd1QMA5aEHC/4M3E7xq42j+LYU49JS+4ObW19LZvtbDeRevm6ctZaHRyL2C89QoJYN49nMcUfPbQwiivN4Boik=
+	t=1776951559; cv=none; b=kA/Oa1YryqzkuSYNn7cRSCKcgsYzYiqzxwk7BRKrlZcXzwORq5Jjt2QDLPjZAsvsjvO7ocSu5bEp299A7YpXYtfR40lPluKv3FaJDjNCDSS2Y8W3qmMHkYh5GJvtQ+Y3I16jiUQKlWbDakL1ZmlRZgg0diXdIF0WqarIkp2cDm4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776950226; c=relaxed/simple;
-	bh=vGXpRG4LLVh/X3uWoVL6OrFPCcZtVGxI9u6JpzE/53g=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uQyT++fw+eR740wjW+3QnSIlz+pXsTTBQhLV3ci+GXzdhvfcGVvRHsSiPXXOLO5UINcDknMLQDcHCi5zQFhFuUggJBCtLNa82hb9EHwdvcjwh1slBOmNaqc3wtlyzCvDi8rkf0zusAHm50ylvBmPgWgvs+qtSZNV1cV3mUakFBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lVImt7XQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1776951559; c=relaxed/simple;
+	bh=VHR4iE7ZTo20h+pblcZV7qQ3hDPjsxA9Z2ffOhQanos=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=cvJfJQls7+RUgR5AsdlncMc7Akby9thGCEydQnbyt2xvTAuzZBHUwdMLsIaot92ql28w0mu2qk//ifRBrhtfuw5eWwGD90j8nj0YUKSR2pmlt1kuCI0QpG2SNhMDTRtYhgcVcrjLpDpafC7SNbr62X4Wu16Io7FVReqPC+4LGlg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=WAe1yRJY; arc=none smtp.client-ip=188.68.63.166
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lVImt7XQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28BDBC2BCAF;
-	Thu, 23 Apr 2026 13:17:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776950225;
-	bh=vGXpRG4LLVh/X3uWoVL6OrFPCcZtVGxI9u6JpzE/53g=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=lVImt7XQgNWB9VcLbWJr+0mErEjwXABcnRKo9AJPAfA8i8vo6kw1+TFjNKcziG/SZ
-	 a8RHW6qmSVqsH0z2qOQ/COItkV8Z1qbAKjT8jH62mETkAo32uvhSBykMWuo4tOoN4W
-	 8QZfcbyjz41JSC3gICpXduv8KwMveIFqdY/DmQ5O45Xkft+diO/jEuWHXH/kVpNvlX
-	 pjotFbmfUU/BMgc0VztJpO74742hjn3G7prP1FW2nlC/BSydey/qCkCr2jaPY74bYC
-	 e3FBvVTEEp40MXGE1LsrNAkUICRFoHZu6aEuLByCUmG9nZc6dY2WoxZg9VB+o8U9rj
-	 s19O40OobjELQ==
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-To: Evgeny Sagatov <evgeny.sagatov@gmail.com>
-Cc: regressions@lists.linux.dev, linux-acpi@vger.kernel.org,
- Thorsten Leemhuis <regressions@leemhuis.info>,
- LKML <linux-kernel@vger.kernel.org>,
- Wysocki Rafael J <rafael.j.wysocki@intel.com>
-Subject: Re: Pressing the power button causes the device to freeze completely
-Date: Thu, 23 Apr 2026 15:17:01 +0200
-Message-ID: <4738258.LvFx2qVVIh@rafael.j.wysocki>
-Organization: Linux Kernel Development
-In-Reply-To:
- <CAGAxtY0tgWJ=QQ48=aYTiQd994Z+9e=BAFN1OFTvzP9KE46t8A@mail.gmail.com>
-References:
- <12879883.O9o76ZdvQC@rafael.j.wysocki>
- <CAJZ5v0j+WO2yP53nvjshFfEo+ETWiyCo7LohoN2DoORVd_NFbw@mail.gmail.com>
- <CAGAxtY0tgWJ=QQ48=aYTiQd994Z+9e=BAFN1OFTvzP9KE46t8A@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="WAe1yRJY"
+Received: from mors-relay-8202.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8202.netcup.net (Postfix) with ESMTPS id 4g1cd806tCz43c0
+	for <regressions@lists.linux.dev>; Thu, 23 Apr 2026 15:39:08 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1776951548;
+	bh=VHR4iE7ZTo20h+pblcZV7qQ3hDPjsxA9Z2ffOhQanos=;
+	h=Date:Subject:From:To:References:In-Reply-To:From;
+	b=WAe1yRJYzOvoxhr3ixGjEf+PcSIBq2Ly1Wdj3wD7aLSD8WDVQsKTevTo8sOASchW+
+	 deqC5ktOs6qB45ObwrGJs1tAaHHTrfsPxx+WbAysZQpuZhWi5kBoCcUbb2gH/OFyD1
+	 2BuNdaNSiWYCE6IApM4f+UfZX91EDRs3lW50tUPkzYdWS2yiZJliXqfO0rMkO98H7O
+	 Hh6bp/lRWX7OLwEXm7+Hg56sl1gwfwOUWIsmQim/8XnvERIY6tQkqr3jLg4xSqEOvL
+	 43B0k4U+JdpPBCYVARsAam5h/Iw5rM9xEXvOqD4bk0CON4UpNJ/BolymWEh9LinK9T
+	 CbGI2Xaa6M3CA==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8202.netcup.net (Postfix) with ESMTPS id 4g1cd76X5Cz435N
+	for <regressions@lists.linux.dev>; Thu, 23 Apr 2026 15:39:07 +0200 (CEST)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4g1cd74TFqz8svH
+	for <regressions@lists.linux.dev>; Thu, 23 Apr 2026 15:39:07 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 4F296632E5
+	for <regressions@lists.linux.dev>; Thu, 23 Apr 2026 15:39:07 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <5fa92978-69bc-4d4d-b331-74e00ec40b14@leemhuis.info>
+Date: Thu, 23 Apr 2026 15:39:07 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: <177695154748.962137.4726945150451533852@mxe9fb.netcup.net>
+X-NC-CID: 0CXzShqS92C/d5TR7xaNS3kwLSSFQjt2H4OwjXrbFkqLNr6ggXo=
 
-On Wednesday, April 22, 2026 4:48:41 PM CEST Evgeny Sagatov wrote:
-> > There are two cpufreq governors to choose from.  Have you decided to co=
-mpile out the other ones on purpose?
->=20
-> Powersave is compiled into the stock Debian kernel as a module, so it
-> does not appear in this list.
->=20
-> I changed governor to powersave and pressed the power button. The PC
-> shut down normally.
 
-Interesting.
 
-Can you please also check what happens if you change the cpufreq governor
-to "performance" (on all CPUs) before pressing the power button?
+On 3/9/24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-The difference is that with the "performance" governor the CPUs will be
-running at the highest frequency.
+#regzbot report:
+https://lore.kernel.org/lkml/CABXGCsPdTyd_79sXZFJEBqYDXGxH3mXXwvhRCagNWzzNGrKt=w@mail.gmail.com/
+#regzbot dup:
+https://lore.kernel.org/all/af005996-05e9-4336-8450-d14ca652ba5d@intel.com/
+#regzbot dup:
+https://lore.kernel.org/r/CANDhNCq%3Doizzud3hH3oqGzTrcjB8OwGeineJ3mwZuGdDWG8fRQ%40mail.gmail.com
+#regzbot fix: locking/mutex: Fix ww_mutex wait_list operations
 
-> =D1=81=D1=80, 22 =D0=B0=D0=BF=D1=80. 2026=E2=80=AF=D0=B3. =D0=B2 17:04, R=
-afael J. Wysocki <rafael@kernel.org>:
-> >
-> > On Wed, Apr 22, 2026 at 3:34=E2=80=AFPM Evgeny Sagatov <evgeny.sagatov@=
-gmail.com> wrote:
-> > >
-> > > # grep -r . /sys/devices/system/cpu/cpufreq/
-> > > /sys/devices/system/cpu/cpufreq/schedutil/rate_limit_us:240
-> > > /sys/devices/system/cpu/cpufreq/policy2/scaling_min_freq:2000000
-> > > /sys/devices/system/cpu/cpufreq/policy2/scaling_available_governors:p=
-erformance
-> > > schedutil
-> >
-> > There are two cpufreq governors to choose from.  Have you decided to
-> > compile out the other ones on purpose?
-> >
-> > It might be useful to compile the powersave governor in and try to
-> > switch over to it (on all CPUs) before pressing the power button
-> > (without any patches applied).
-> >
-> > > /sys/devices/system/cpu/cpufreq/policy2/freqdomain_cpus:2
-> > > /sys/devices/system/cpu/cpufreq/policy2/scaling_governor:schedutil
-> > > /sys/devices/system/cpu/cpufreq/policy2/cpuinfo_max_freq:2834000
-> > > /sys/devices/system/cpu/cpufreq/policy2/scaling_available_frequencies=
-:2834000
-> > > 2000000
-> >
-> > The frequency scaling on this CPU is quite limited (only 2 states to
-> > choose from).
-> >
-> > > /sys/devices/system/cpu/cpufreq/policy2/related_cpus:2
-> > > /sys/devices/system/cpu/cpufreq/policy2/scaling_cur_freq:2000088
-> >
-> > Interestingly, this number doesn't match the available choices (maybe
-> > due to a rounding error or similar).
-> >
-> > > /sys/devices/system/cpu/cpufreq/policy2/scaling_setspeed:<unsupported>
-> > > grep: /sys/devices/system/cpu/cpufreq/policy2/stats/reset: Access den=
-ied
-> > > /sys/devices/system/cpu/cpufreq/policy2/stats/trans_table:   From  : =
-   To
-> > > /sys/devices/system/cpu/cpufreq/policy2/stats/trans_table:         :
-> > > 2834000   2000000
-> > > /sys/devices/system/cpu/cpufreq/policy2/stats/trans_table:  2834000:
-> > >       0       762
-> > > /sys/devices/system/cpu/cpufreq/policy2/stats/trans_table:  2000000:
-> > >     761         0
-> > > /sys/devices/system/cpu/cpufreq/policy2/stats/total_trans:1523
-> > > /sys/devices/system/cpu/cpufreq/policy2/stats/time_in_state:2834000 6=
-606
-> > > /sys/devices/system/cpu/cpufreq/policy2/stats/time_in_state:2000000 2=
-48733
-> > > /sys/devices/system/cpu/cpufreq/policy2/affected_cpus:2
-> > > /sys/devices/system/cpu/cpufreq/policy2/scaling_max_freq:2834000
-> > > /sys/devices/system/cpu/cpufreq/policy2/cpuinfo_transition_latency:16=
-0000
-> > > /sys/devices/system/cpu/cpufreq/policy2/scaling_driver:acpi-cpufreq
-> > > /sys/devices/system/cpu/cpufreq/policy2/cpuinfo_min_freq:2000000
-> > > /sys/devices/system/cpu/cpufreq/policy2/bios_limit:2834000
-> >
-> > The fact that acpi-cpufreq is the scaling driver may be related to the
-> > power button issue in principle.
-> >
-> > I'm still going to send you another debug patch for the button driver t=
-hough.
 
-So the patch is appended.  It causes a message to be printed into the kernel
-log every time the power button is pressed if all goes well, but the system
-will not shut down (it is also not expected to hang).
-
-Please see if that happens with the patch applied (it is a replacement for =
-the
-previous debug patch).  In principle it should work without changing the
-cpufreq governor.
-
-=2D--
- drivers/acpi/button.c |   10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
-
-=2D-- a/drivers/acpi/button.c
-+++ b/drivers/acpi/button.c
-@@ -473,14 +473,12 @@ static void acpi_button_notify(acpi_hand
- 					event, ++button->pushed);
- }
-=20
-=2Dstatic void acpi_button_notify_run(void *data)
-=2D{
-=2D	acpi_button_notify(NULL, ACPI_BUTTON_NOTIFY_STATUS, data);
-=2D}
-=2D
- static u32 acpi_button_event(void *data)
- {
-=2D	acpi_os_execute(OSL_NOTIFY_HANDLER, acpi_button_notify_run, data);
-+	struct acpi_button *button =3D data;
-+
-+	dev_info(button->dev, "ACPI button event\n");
-+
- 	return ACPI_INTERRUPT_HANDLED;
- }
-=20
-
+#regzbot report:
+https://lore.kernel.org/linux-clk/18719902-4b4f-4766-ba92-658f3576f68b@sirena.org.uk/
+#regzbot introduced: 672299736af6
+#regzbot title: clk: bcm: rpi: boot regression
+#regzbot fix: clk: bcm: rpi: Mark VEC clock as CLK_IGNORE_UNUSED
+#regzbot monitor:
+https://lore.kernel.org/all/20260401111416.562279-2-mcanal@igalia.com/
 
 
