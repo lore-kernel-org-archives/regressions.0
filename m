@@ -1,92 +1,152 @@
-Received: from smtpauth.rollernet.us (smtpauth.rollernet.us [208.79.240.5])
+Received: from canpmsgout03.his.huawei.com (canpmsgout03.his.huawei.com [113.46.200.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1C7919D89E
-	for <regressions@lists.linux.dev>; Wed, 22 Apr 2026 22:35:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=208.79.240.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 761713B7B70
+	for <regressions@lists.linux.dev>; Thu, 23 Apr 2026 01:48:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776897327; cv=none; b=LhkTj7hLikGd949X5KIAmwxKo3P2JkGFUiQ9z4z4R6YYLLiXHPxhBibiJcKkXR7yJ4taVgyuVFDbV5GYsAGgel171FMPym8T2SatlQecRIzr6rFSfNO5c/i0QDIpLS9ccbAXU+VgUszM57tKeIjhxKQWQcfcrnsHs5/Qtipsj2k=
+	t=1776908925; cv=none; b=h2UgqFFeV8HtGLk8DUheGlYr1HuDptbtJmO6WeWgeRzxZj3TzKqsMlc5pJG8oVhGO1cvnknHgwHSIBUh52mw4m3cYRq8VRRkj2pv5h2wWnfbTDbYndN+/zTH1MHi0bURNd/NhXAnt5TnaJtU1RrrCCC007dJESZwXjapuFOkOms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776897327; c=relaxed/simple;
-	bh=GOiIbUMSW+shVQwKPptWwq3X3FqenNWCLHvQ3Gv9j8Q=;
-	h=From:To:cc:Subject:In-reply-to:MIME-Version:Content-Type:Date:
-	 Message-Id; b=JpgBHsJtpBCu8Ch+7akqo5rELq6Whf7AhJ03gbmD4j5wAUlwtyIGj+ANb7tT28Y6R1iVaX5faTOmZXjEDvXpLat5l5fFFP11jordCT5zzmieZArUVO+VoLUHg1SgpYuAB3PGjR1FcJBHM9aUzGxnLCn5jCluwaw0HiyO0+BV/80=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fnord.greeley.co.us; spf=pass smtp.mailfrom=fnord.greeley.co.us; dkim=pass (2048-bit key) header.d=fnord.greeley.co.us header.i=@fnord.greeley.co.us header.b=E1rUsaNW; arc=none smtp.client-ip=208.79.240.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fnord.greeley.co.us
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fnord.greeley.co.us
+	s=arc-20240116; t=1776908925; c=relaxed/simple;
+	bh=VfJr6/ne6BdSpeL+wtNRKf7ObYUa3lMi3Tdl440y27M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=HIjOgI7T3AHg6P6Q+3ukWVE9E1aYizsoB2GXWuAZD7GJEMNEDVMBMYp79Ho6W2r7NZb9ISTj16FPyBsej9LtFaWDsublTGFsCDnn+TsTYSrUlj+vM2nghMkfjLiawCAjGBj3E59XakvPOUWDFJYTrPZGm4QZ+FkFABOtMY25cYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=g15DtmAg; arc=none smtp.client-ip=113.46.200.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fnord.greeley.co.us header.i=@fnord.greeley.co.us header.b="E1rUsaNW"
-Received: from smtpauth.rollernet.us (localhost [127.0.0.1])
-	by smtpauth.rollernet.us (Postfix) with ESMTP id EBF502800405;
-	Wed, 22 Apr 2026 15:35:22 -0700 (PDT)
-Received: from mailhub.fnord.greeley.co.us (mailhub.fnord.greeley.co.us [129.146.138.83])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by smtpauth.rollernet.us (Postfix) with ESMTPSA;
-	Wed, 22 Apr 2026 15:35:06 -0700 (PDT)
-Received: by mailhub.fnord.greeley.co.us (Postfix, from userid 10)
-	id C0B1B2DF; Wed, 22 Apr 2026 22:35:05 +0000 (UTC)
-Authentication-Results: zarathud.internal.fnord.greeley.co.us; dmarc=fail (p=none dis=none) header.from=fnord.greeley.co.us
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fnord.greeley.co.us;
-	s=2024q2; t=1776897271;
-	bh=GOiIbUMSW+shVQwKPptWwq3X3FqenNWCLHvQ3Gv9j8Q=;
-	h=From:To:cc:Subject:In-reply-to:Date:From;
-	b=E1rUsaNWliTkrgWsGftpQYuHC/qeyuLHJ3Nh8WAHTD+UNuXbHD5QPCYahmwXWCjG5
-	 ZvPujYddylcWE5r2w0LO3O4Uq0NrvXDc6H52DY3xFfDfYpH59bCjxYgrFPJWIFI8Tn
-	 uRtOFwfqT3uclB4ENnEAnVO6kPu65k19K/FrEfHY9kSlXtb1AsfMKCqQEKpKjjJLPJ
-	 O8Bh0Z9Tlwkr4r4XQ0a9oj/SkMGxmIjtt27zonDjLE2Ms+nhYHQXkB1fUxk+yGV6t0
-	 se4Xll30z5jSHPb7zNHT2+1GtUv27pbRUBbFdcv5ckOWR26G13WTRp9gyNCjwqD4iF
-	 Y46qDR4dwcm3A==
-Received: from zarathud.internal.fnord.greeley.co.us (unknown [IPv6:2001:470:3924:1000:50c6:bdff:fea1:ac49])
-	by zarathud.internal.fnord.greeley.co.us (Postfix) with ESMTP id AE2223B5A;
-	Wed, 22 Apr 2026 22:34:31 +0000 (UTC)
-From: "Aaron D. Johnson" <debbugreporter@fnord.greeley.co.us>
-To: Thomas Gleixner <tglx@linutronix.de>
-cc: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
-    Alexandre Ghiti <alexghiti@rivosinc.com>,
-    Paul Walmsley <paul.walmsley@sifive.com>,
-    Palmer Dabbelt <palmer@dabbelt.com>,
-    Anup Patel <anup@brainfault.org>,
-    Sunil V L <sunilvl@ventanamicro.com>,
-    linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-    Bjorn Helgaas <helgaas@kernel.org>, 1127635@bugs.debian.org,
-    regressions@lists.linux.dev
-Subject: Re: [Patch] PCI/MSI: Handle lack of irqdomain gracefully
-In-reply-to: Your message of "Wed, 22 Apr 2026 23:22:11 +0200."
-             <87qzo61yik.ffs@tglx>
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="g15DtmAg"
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=UzewzguANFV2TNonu/EWhffR9Fy4HKyLATDqORBGlZc=;
+	b=g15DtmAg0PRLsNMtBcmAqBTCqVjbf8q15uVwK/QT4P5lONLjW3pcwWqNDT8aIinawPaHCWKYH
+	8EOxRav4KjZwJ4YQZmmmIzDdIK8kkRdSLNYUs8Mbwt1p8xxs7oLwWEFzKS8UNnZH3+IPFw2LskD
+	srKdL81deQGcjrFQnxtfp6s=
+Received: from mail.maildlp.com (unknown [172.19.163.0])
+	by canpmsgout03.his.huawei.com (SkyGuard) with ESMTPS id 4g1Jjr59NgzpSx7;
+	Thu, 23 Apr 2026 09:42:08 +0800 (CST)
+Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
+	by mail.maildlp.com (Postfix) with ESMTPS id 8F5C440537;
+	Thu, 23 Apr 2026 09:48:34 +0800 (CST)
+Received: from [10.67.109.254] (10.67.109.254) by
+ dggpemf500011.china.huawei.com (7.185.36.131) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Thu, 23 Apr 2026 09:48:33 +0800
+Message-ID: <c5331cd6-76c8-430d-978e-fcad164e48f6@huawei.com>
+Date: Thu, 23 Apr 2026 09:48:45 +0800
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <3447710.1776897242.1@zarathud.internal.fnord.greeley.co.us>
-Date: Wed, 22 Apr 2026 22:34:31 +0000
-Message-Id: <20260422223431.AE2223B5A@zarathud.internal.fnord.greeley.co.us>
-X-Rollernet-Abuse: mailto:abuse@rollernet.us https://www.rollernet.us/policy
-X-Rollernet-Submit: Submit ID 10466d.69e94d1a.7a43e.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] rseq: refactoring in v6.19 broke everyone on arm64
+ and tcmalloc everywhere
+To: Thomas Gleixner <tglx@linutronix.de>, Mark Rutland <mark.rutland@arm.com>
+CC: Mathias Stearn <mathias@mongodb.com>, Mathieu Desnoyers
+	<mathieu.desnoyers@efficios.com>, Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Boqun Feng <boqun.feng@gmail.com>, "Paul E.
+ McKenney" <paulmck@kernel.org>, Chris Kennelly <ckennelly@google.com>, Dmitry
+ Vyukov <dvyukov@google.com>, <regressions@lists.linux.dev>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>, Peter
+ Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Blake Oler
+	<blake.oler@mongodb.com>
+References: <CAHnCjA25b+nO2n5CeifknSKHssJpPrjnf+dtr7UgzRw4Zgu=oA@mail.gmail.com>
+ <aejCaG6n9s7ak5TO@J2N7QTR9R3.cambridge.arm.com> <87zf2u28d1.ffs@tglx>
+ <aekPXvvuKHKlETjm@J2N7QTR9R3.cambridge.arm.com> <87wlxy22x7.ffs@tglx>
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+In-Reply-To: <87wlxy22x7.ffs@tglx>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
+ dggpemf500011.china.huawei.com (7.185.36.131)
 
-Thomas Gleixner writes:
-> Aaron, can you please apply the patch below and see whether it fixes
-> the issue and provide the dmesg with the output of those
-> pr_warn()'s?
 
-I can build it.  But as stated earlier, the machine is no longer in my
-possession.  If it comes back, (and it might -- its new owner is
-having problems supplying sufficient input power in his apartment), I
-will be happy to test patches.
 
-> The other information which would be useful: When you boot a kernel
-> with the commit reverted and look at that OHCI controller with lspci
-> -vvv then you should see whether it has MSI enabled or not. If it
-> has MSI enabled, then please provide the output of
->
->    /sys/kernel/debug/irq/irqs/$IRQNR
->
-> You need to enable CONFIG_GENERIC_IRQ_DEBUGFS for that.
+On 4/23/2026 3:47 AM, Thomas Gleixner wrote:
+> On Wed, Apr 22 2026 at 19:11, Mark Rutland wrote:
+>> On Wed, Apr 22, 2026 at 07:49:30PM +0200, Thomas Gleixner wrote:
+>> Conceptually we just need to use syscall_enter_from_user_mode() and
+>> irqentry_enter_from_user_mode() appropriately.
+> 
+> Right. I figured that out.
+> 
+>> In practice, I can't use those as-is without introducing the exception
+>> masking problems I just fixed up for irqentry_enter_from_kernel_mode(),
+>> so I'll need to do some similar refactoring first.
+> 
+> See below.
+> 
+>> I haven't paged everything in yet, so just to cehck, is there anything
+>> that would behave incorrectly if current->rseq.event.user_irq were set
+>> for syscall entry? IIUC it means we'll effectively do the slow path, and
+>> I was wondering if that might be acceptable as a one-line bodge for
+>> stable.
+> 
+> It might work, but it's trivial enough to avoid that. See below. That on
+> top of 6.19.y makes the selftests pass too.
 
-Noted.  And thanks for the time looking into it.
+This aligns with my thoughts when convert arm64 to generic syscall
+entry. Currently, the arm64 entry code does not distinguish between IRQ
+and syscall entries. It fails to call rseq_note_user_irq_entry() for IRQ
+entries as the generic entry framework does, because arm64 uses
+enter_from_user_mode() exclusively instead of
+irqentry_enter_from_user_mode().
 
-- Aaron
+https://lore.kernel.org/all/20260320102620.1336796-10-ruanjinjie@huawei.com/
+
+> 
+> Thanks,
+> 
+>         tglx
+> ---
+>  arch/arm64/kernel/entry-common.c |   14 ++++++++++----
+>  1 file changed, 10 insertions(+), 4 deletions(-)
+> 
+> --- a/arch/arm64/kernel/entry-common.c
+> +++ b/arch/arm64/kernel/entry-common.c
+> @@ -58,6 +58,12 @@ static void noinstr exit_to_kernel_mode(
+>  	irqentry_exit(regs, state);
+>  }
+>  
+> +static __always_inline void arm64_enter_from_user_mode_syscall(struct pt_regs *regs)
+> +{
+> +	enter_from_user_mode(regs);
+> +	mte_disable_tco_entry(current);
+> +}
+> +
+>  /*
+>   * Handle IRQ/context state management when entering from user mode.
+>   * Before this function is called it is not safe to call regular kernel code,
+> @@ -65,8 +71,8 @@ static void noinstr exit_to_kernel_mode(
+>   */
+>  static __always_inline void arm64_enter_from_user_mode(struct pt_regs *regs)
+>  {
+> -	enter_from_user_mode(regs);
+> -	mte_disable_tco_entry(current);
+> +	arm64_enter_from_user_mode_syscall(regs);
+> +	rseq_note_user_irq_entry();
+>  }
+>  
+>  /*
+> @@ -717,7 +723,7 @@ static void noinstr el0_brk64(struct pt_
+>  
+>  static void noinstr el0_svc(struct pt_regs *regs)
+>  {
+> -	arm64_enter_from_user_mode(regs);
+> +	arm64_enter_from_user_mode_syscall(regs);
+>  	cortex_a76_erratum_1463225_svc_handler();
+>  	fpsimd_syscall_enter();
+>  	local_daif_restore(DAIF_PROCCTX);
+> @@ -869,7 +875,7 @@ static void noinstr el0_cp15(struct pt_r
+>  
+>  static void noinstr el0_svc_compat(struct pt_regs *regs)
+>  {
+> -	arm64_enter_from_user_mode(regs);
+> +	arm64_enter_from_user_mode_syscall(regs);
+>  	cortex_a76_erratum_1463225_svc_handler();
+>  	local_daif_restore(DAIF_PROCCTX);
+>  	do_el0_svc_compat(regs);
+
