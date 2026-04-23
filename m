@@ -1,116 +1,100 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B96D37C93A
-	for <regressions@lists.linux.dev>; Thu, 23 Apr 2026 11:48:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B3623E9F8E;
+	Thu, 23 Apr 2026 11:55:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776944896; cv=none; b=fPIaVt1eFPYJUs98xajS2S41yMfqTuTxNlAhsMHpV6t0u0K/sJ4CqwBikVTKJNUtNAgjZxQdvORG6FicU8Veq0WXVcUa3tlrRw2LR0gW9AbBUCEJ/Fq9GyO6R8PkpHaaWMSsJKxH7ohfjIqBf7nzt7j32xOFbl37ZGi66Kx4c+I=
+	t=1776945357; cv=none; b=eKvL33QEKDpWtD5mjZAJjQlJynyYv6WDcJzFiXmZz7Um9arzGeSuxLjR+j97JbaWcGC4kFruTOfdXKUZUPbzNKpNTrBo/adNnR87bHwPVfPmzDNUyw1XnpTU35T5t8ncMucLtNl1O4WbASPdIvDPfpF3kcub9mQK8uhokh5cZfQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776944896; c=relaxed/simple;
-	bh=l1l+dNdwfcS9H8sU7GZUFT5Hjc9i8GqSQpsbT8TvgLs=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Z/uMR7AJ49V+oqWzYk1/RS7mHAa5sY1ODqeqNHB8yloITKqDcFHB46AYk482hDPRgTWF9w7Ognz+S1Tn1SLj/o9lPixqjnMhOtZp7o98QPBADqQUHkLS0BQqnHocf7zIGVShb50eJtZ44Km++vVF5YpI8jFVCRTJAxd67tQ27c8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ppjznlY3; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NHdURgAv; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1776945357; c=relaxed/simple;
+	bh=CD3tUOMu4RycfIX8q9LpzgLG6HMq++vnOBjZCPZFxiE=;
+	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
+	 Content-Type; b=Jmkxwxy048Tnzu9HMc5LcVGhXI4NrQ1YyIQf4x1HfcSz3ETWI4+xpG2VCUEwdyAak7ydzY5lqT8sgOA7f9i2fKCvPVLoj9/g52BsyMnPju/Z0KqGBmusyoujGUwwSZEeu4FAZPt1tFOf5dfxaUxID5wjJCI2F02aM46QtZ641AY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=dkj2BNZx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ppjznlY3";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NHdURgAv"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1776944893;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2kLp6EQuRiSx+Qrn1H6AKFXY7OanD+wy8Q5FYkeQJAg=;
-	b=ppjznlY36wTPmrvfJwDa34Q31pMkkz9Fw6yo3mvk5UfISfJuJbykVarX8XDE1gebXmKaPa
-	ps/QvVQ0ycQ2v+3b+iNxbyeqdSVyFVI+0dpDoGEKjmGc2CQkeuE9W97hE0aSO2FbYfM9Gv
-	p6x/7iGcZJaERx+1OyILBwQ7GUgxzRPI12enuxA+0RF+rZtuQt95qCU/1rgaufoV7RQ5FN
-	CX1k+APTitHw7nDsY6Qjiruhu5SJTevkp3PrismnQnARDmX4hwFXj1EK77sUFARxq0Dl8t
-	YNQquUnVx9EdV4ms5uerQ543l3okx3jNq3UXP6/klNj7YQ5NcT1sldc4ruMrNg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1776944893;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2kLp6EQuRiSx+Qrn1H6AKFXY7OanD+wy8Q5FYkeQJAg=;
-	b=NHdURgAvj5rDfEqiN/RpuMhjPo9zK7VL5SMlHYfC9+6TQdk3S2T//viQcEdjALHPz4h4+8
-	kKZXJpi4i27dNcBw==
-To: Mathias Stearn <mathias@mongodb.com>, Peter Zijlstra <peterz@infradead.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Catalin Marinas
- <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Boqun Feng
- <boqun.feng@gmail.com>, "Paul E. McKenney" <paulmck@kernel.org>, Chris
- Kennelly <ckennelly@google.com>, Dmitry Vyukov <dvyukov@google.com>,
- regressions@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, Ingo Molnar <mingo@kernel.org>, Mark
- Rutland <mark.rutland@arm.com>, Jinjie Ruan <ruanjinjie@huawei.com>, Blake
- Oler <blake.oler@mongodb.com>
-Subject: Re: [REGRESSION] rseq: refactoring in v6.19 broke everyone on arm64
- and tcmalloc everywhere
-In-Reply-To: <CAHnCjA2fa+dP1+yCYNQrTXQaW-JdtfMj7wMikwMeeCRg-3NhiA@mail.gmail.com>
-References: <CAHnCjA25b+nO2n5CeifknSKHssJpPrjnf+dtr7UgzRw4Zgu=oA@mail.gmail.com>
- <20260422125647.GP3126523@noisy.programming.kicks-ass.net>
- <20260422131338.GI3102924@noisy.programming.kicks-ass.net>
- <CAHnCjA2fa+dP1+yCYNQrTXQaW-JdtfMj7wMikwMeeCRg-3NhiA@mail.gmail.com>
-Date: Thu, 23 Apr 2026 13:48:12 +0200
-Message-ID: <87fr4l28zn.ffs@tglx>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="dkj2BNZx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B801EC2BCAF;
+	Thu, 23 Apr 2026 11:55:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1776945357;
+	bh=CD3tUOMu4RycfIX8q9LpzgLG6HMq++vnOBjZCPZFxiE=;
+	h=Subject:To:Cc:From:Date:In-Reply-To:From;
+	b=dkj2BNZxfrTdibejAhBEqn4/lmO+nbp0W84otx4NanSr+XwR10a5qmCqM3qORNh5D
+	 KwqU0Hn8PS4Il4QV1Mb6N2k67rxBO/HKQc4erSo6sJI7AB7uTpo+VGN0MxKBZBQ38W
+	 fAW2gl6OjBdk013pFF6z1hLg8IdwAdWjVY3AExVI=
+Subject: Patch "Revert "wifi: cfg80211: stop NAN and P2P in cfg80211_leave"" has been added to the 5.15-stable tree
+To: gregkh@linuxfoundation.org,guocai.he.cn@windriver.com,johannes.berg@intel.com,miriam.rachel.korenblit@intel.com,regressions@lists.linux.dev
+Cc: <stable-commits@vger.kernel.org>
+From: <gregkh@linuxfoundation.org>
+Date: Thu, 23 Apr 2026 13:55:29 +0200
+In-Reply-To: <20260414032006.2887625-1-guocai.he.cn@windriver.com>
+Message-ID: <2026042329-broadness-starlight-450b@gregkh>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=ANSI_X3.4-1968
+Content-Transfer-Encoding: 8bit
+X-stable: commit
+X-Patchwork-Hint: ignore 
 
-On Thu, Apr 23 2026 at 11:24, Mathias Stearn wrote:
-> On Wed, Apr 22, 2026 at 3:13=E2=80=AFPM Peter Zijlstra <peterz@infradead.=
-org> wrote:
-> To make this more concrete, I am proposing adding
->
-> unsafe_put_user((u32)task_cpu(t), &t->rseq.usrptr->cpu_id_start, efault);
->
-> after each place where you currently do
->
-> unsafe_put_user(0ULL, &t->rseq.usrptr->rseq_cs, efault);
->
-> in rseq_update_user_cs. Is that something that you would expect to cause a
-> performance issue?
 
-That would work and not bring the performance issues back, but:
+This is a note to let you know that I've just added the patch titled
 
-  1) Did you validate that adding the reset into rseq_update_user_cs() is
-     actually sufficient?
+    Revert "wifi: cfg80211: stop NAN and P2P in cfg80211_leave"
 
-     If adding it to rseq_update_user_cs() is not sufficient, then we
-     have a really serious problem. Because we'd need to go back and do
-     it unconditionally, which then makes the 15% performance
-     regression, which happened when glibc enabled rseq, come back
-     instantaneously. And in that case the damage for tcmalloc() is the
-     lesser of two evils.
+to the 5.15-stable tree which can be found at:
+    http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
 
-  2) The tcmalloc abuse breaks the documented and guaranteed user space
-     ABI and therefore it makes it impossible for any other library in
-     an application which uses tcmalloc to rely on the documented and
-     guaranteed rseq::cpu_id_start/rseq::cpu_id semantics.
+The filename of the patch is:
+     revert-wifi-cfg80211-stop-nan-and-p2p-in-cfg80211_leave.patch
+and it can be found in the queue-5.15 subdirectory.
 
-     Which means, that tcmalloc is holding everybody else hostage.
-     That's just not acceptable. Not even under the no regression rule.
+If you, or anyone else, feels it should not be added to the stable tree,
+please let <stable@vger.kernel.org> know about it.
 
-  3) The fact that tcmalloc prevents a user from enabling rseq debugging
-     is equally unacceptable as it does not allow me to validate my own
-     rseq magic code in my mongodb client because enabling it will make
-     the DB I want to test against go away.
 
-     Again tcmalloc holds everybody else hostage for no reason at all.
+From prvs=8564c0333c=guocai.he.cn@windriver.com Tue Apr 14 05:20:35 2026
+From: guocai.he.cn@windriver.com
+Date: Tue, 14 Apr 2026 11:20:06 +0800
+Subject: Revert "wifi: cfg80211: stop NAN and P2P in cfg80211_leave"
+To: gregkh@linuxfoundation.org
+Cc: stable@vger.kernel.org, johannes.berg@intel.com, netdev@vger.kernel.org, regressions@lists.linux.dev, miriam.rachel.korenblit@intel.com, linux-kernel@vger.kernel.org
+Message-ID: <20260414032006.2887625-1-guocai.he.cn@windriver.com>
 
-The most amazing part is that tcmalloc uses this to spare two
-instruction cycles, but nobody noticed in 8 years how much performance
-the unconditional rseq nonsense in the kernel left on the table.
+From: Guocai He <guocai.he.cn@windriver.com>
 
-Thanks,
+This reverts commit 31344ffecd7a34335ce2b52e8c205bce3cbfca4b which is commit
+e1696c8bd0056bc1a5f7766f58ac333adc203e8a upstream.
 
-        tglx
+The reverted patch introduced a deadlock. The locking situation in mainline is
+totally different, so it is incorrect to directly backport the commit from mainline.
+
+Signed-off-by: Guocai He <guocai.he.cn@windriver.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ net/wireless/core.c |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+--- a/net/wireless/core.c
++++ b/net/wireless/core.c
+@@ -1300,10 +1300,8 @@ void __cfg80211_leave(struct cfg80211_re
+ 		__cfg80211_leave_ocb(rdev, dev);
+ 		break;
+ 	case NL80211_IFTYPE_P2P_DEVICE:
+-		cfg80211_stop_p2p_device(rdev, wdev);
+-		break;
+ 	case NL80211_IFTYPE_NAN:
+-		cfg80211_stop_nan(rdev, wdev);
++		/* cannot happen, has no netdev */
+ 		break;
+ 	case NL80211_IFTYPE_AP_VLAN:
+ 	case NL80211_IFTYPE_MONITOR:
+
+
+Patches currently in stable-queue which might be from guocai.he.cn@windriver.com are
+
+queue-5.15/revert-wifi-cfg80211-stop-nan-and-p2p-in-cfg80211_leave.patch
