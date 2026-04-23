@@ -1,168 +1,234 @@
-Received: from YT5PR01CU002.outbound.protection.outlook.com (mail-canadacentralazon11021108.outbound.protection.outlook.com [40.107.192.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7F8B3EBF04
-	for <regressions@lists.linux.dev>; Thu, 23 Apr 2026 12:54:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.192.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C75DB3845BC
+	for <regressions@lists.linux.dev>; Thu, 23 Apr 2026 12:59:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.181
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776948877; cv=fail; b=YsXlCvgTUFgdWJL0lLnKpbLZ6XzlG9D7DOMGapYfxDiAVHAyDaHlmtVU2hnxmsYDhp8mJjMXS4KnjPJ86aCdQqJm+e4uy+frs41mnZ89rL1k4c6A9GTlRL2x2MaJxuunQFpNxr3ebk1hJvJOI/aB1UpZpIpv5iUmSmJxc9NoXwY=
+	t=1776949144; cv=pass; b=sYlYn8JM7qtsuWKcQd6yoiBsJIUq3oWUrwgSRe6rXt4N2ndK1jCW1xVT8OVOaLHxDhPMu71lb9sNWlecRjn0o3fDeOqSul7P7wbAZcjcBKxa3WBR6ZREQ7zXG/Ty2yYLgy3Vr0pBLVbOiRT4lX4zHr5df4Uc+aOPsOFTzzbmnX0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776948877; c=relaxed/simple;
-	bh=hH3oRhC8FkeG+NvDvv8RH+UAP4ez8+fG3h4arvVAZlY=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=gn/6zokXc5nHFsLZ7yY4uvBCp49tkTF59W2/p1LMzPfksVKEggbH3j3vkvBsi0xXxz6byIZtl51aq5mwGtSniIa70Gr1ycyJUJTkxpPaWkXkjFvM7+fX6PQpSjWKgCeRY+nUjsSKe+UOH2MnrB7m90OYDokNYX3h+2vlRthkI2I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=NT85ltPW; arc=fail smtp.client-ip=40.107.192.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
+	s=arc-20240116; t=1776949144; c=relaxed/simple;
+	bh=4rae3jvkCjQWMcvHSde4gAJUq4nke8pE4IKBx+HyCyg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=b4oQkUoJWPXIoMVHLrV6oGcWKIOzhoY6ir7Xa4tF7unE/2r1W+fKkMx3Ct4bWzsVy3I2NVwjObcjVNw9es26esEdWPbRcimQo8PXsvNBaMysXCDCC7Oooi9RDUH2qVyRoZFTARuB4GdZuoQ6fk8G3Msj+IM5cIy7eX8yiD7m+C8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PtTTPQkx; arc=pass smtp.client-ip=209.85.208.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="NT85ltPW"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=PN65yyacWuwpYAv2Q41s+rUEiWcz7b4F+mRfpGFDgKAAdY1BHImqUYcyOetB0yi7cwdimqRpJlYUtjSxD/RTYzRJM9I+6LWHmi9KgNNeUPLC+w0i0Ofu1bPcpIGyqBiTfCs340ix8ScN6PRMlccd2rLotqmErzvpdyXMwWT97XivKEhWM0jTPbkvLR4TxJSjgApu/0i2FUSDK2RfoV1md4ycR8ZlaUwNdZSolAVjBM83CYUreiBI27jpuauvXQuMgU3X3zmDCxzUc3qSyVoFdO6j7jKclV32gy7SJKmWeDj5sb6MVoN7OuIM8UFKwqk/DgUE+ENUOX6hh6bczUv0aA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dS0kL32TYfjaadqJwiR4tU7C0zcO74nzbLhP/+ybDwc=;
- b=SL7O/qL6/DjE7WZyOfp82lUa9yNqkhUoLWj0bwzEatfd8tv+/Oj7/B68UYtl811s2m78tokd4JZP45PJXFHs9sIllXqZuMngVI1MfNgDEfVo1PYulfCcnKQiLJ5ddTDX5ytcVeRKTrbGcEx+pROWD3avsqLrrfl3RpR7iNJBQJhNGQRdvaNZZV9MX3t2ZUyildaoDQKlY5aFd/jNCwkQIJqmv0tRDww/LtjinjpQaOhwOBw7a/jok8LEEqw+RC0GEd2KrcvKdVCEFA0tYQkUeH+oATlGGFvTVPFRu9wGM0X+IkAKntnxj89uEv4pR8/NLEEYh7qTa916WylYGnMP1w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=efficios.com; dmarc=pass action=none header.from=efficios.com;
- dkim=pass header.d=efficios.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dS0kL32TYfjaadqJwiR4tU7C0zcO74nzbLhP/+ybDwc=;
- b=NT85ltPWbIcSxDkQCNSCgULgH0q4DE6U4jTUG7PJfC/MTc3X6KW7DkuLJCChJvd074uDaumGW7wUQguHqJGPmNYYughOX6J6UbO/isanw21jipqzLnYJrGOFJJCOcEE96F4FbCj0yJVDoxpMKIxPI8dUIGH2FMj0zzH2adj8g7+BmsZb164zLd7vIlsTr/AO1TMZXh0e9xQ+QQE4ppiP69XjT67UiDelkfyRFp+pwhBIbFpJR7LjnsiWSV9PwEmiJkxEqoPV8Mh8VCgO61+k8+zTV6FdnDVdJ8t94atgoBZa3N/NyRh9mdbx96ih/m5sV91I0NhSr5C8TNA6+SQhsA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=efficios.com;
-Received: from YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:be::5)
- by YT1PPF07516E2ED.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b08::506) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9846.22; Thu, 23 Apr
- 2026 12:54:33 +0000
-Received: from YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
- ([fe80::6004:a862:d45d:90c1]) by YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
- ([fe80::6004:a862:d45d:90c1%3]) with mapi id 15.20.9846.021; Thu, 23 Apr 2026
- 12:54:33 +0000
-Message-ID: <39faf352-36bc-4b52-bc1c-06ec3067b752@efficios.com>
-Date: Thu, 23 Apr 2026 08:54:31 -0400
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] rseq: refactoring in v6.19 broke everyone on arm64
- and tcmalloc everywhere
-To: Alejandro Colomar <alx@kernel.org>, Dmitry Vyukov <dvyukov@google.com>
-Cc: Jinjie Ruan <ruanjinjie@huawei.com>, linux-man@vger.kernel.org,
- Thomas Gleixner <tglx@linutronix.de>, Mark Rutland <mark.rutland@arm.com>,
- Mathias Stearn <mathias@mongodb.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Boqun Feng <boqun.feng@gmail.com>, "Paul E. McKenney" <paulmck@kernel.org>,
- Chris Kennelly <ckennelly@google.com>, regressions@lists.linux.dev,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
- Blake Oler <blake.oler@mongodb.com>, Michael Jeanson <mjeanson@efficios.com>
-References: <CAHnCjA25b+nO2n5CeifknSKHssJpPrjnf+dtr7UgzRw4Zgu=oA@mail.gmail.com>
- <aejCaG6n9s7ak5TO@J2N7QTR9R3.cambridge.arm.com> <87zf2u28d1.ffs@tglx>
- <aekPXvvuKHKlETjm@J2N7QTR9R3.cambridge.arm.com> <87wlxy22x7.ffs@tglx>
- <c5331cd6-76c8-430d-978e-fcad164e48f6@huawei.com>
- <CACT4Y+bxnQyHGdVNE1BYTx+Z2-cscLb38HYS9jBM5gPAz8=4bw@mail.gmail.com>
- <aeoLLMcxtqShSOxs@devuan>
-From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Content-Language: en-US
-In-Reply-To: <aeoLLMcxtqShSOxs@devuan>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: YT4PR01CA0184.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:110::21) To YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:be::5)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PtTTPQkx"
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-38e800deae4so56027071fa.0
+        for <regressions@lists.linux.dev>; Thu, 23 Apr 2026 05:59:02 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1776949141; cv=none;
+        d=google.com; s=arc-20240605;
+        b=UAy5TGAaqV1AqsFi4iBvjrnZ5haKt22tcsbOa1JQ1kg54Do3bcoJ7Q6gvirSC+wm6y
+         fRc2Rf+2kgXgvul4+OUQ0fer/EaAhprFiYen+6NFqVN2o3UlF7MPFqxJRrkSxnVrREF/
+         lz7Cel6biMUvTwuIs8pNJgRXWE46mV+aQMWwREzI4Fdjmv9Z7ZOJSwcSDaQc0SccEv1C
+         K3qc3zeW9oSYxWWeLkqy6mdWwR3RBZPM6GVaJPYeV1igDmPrpjcSq8LM+xXEfvI7KAh9
+         AtJtviMAke3RHcvHojJbjs3sOPQDJrwHjkDDE//zqD/EFKZQKc4lmV6LB0T3uKvEFtQt
+         mcFg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=EBoOCn6MiDkjwqqV0dZhBM0Mdu5029Jkm3x6gtbaC2A=;
+        fh=eXKEPtSHMo2KqJmMdqG/pcoU/RHBuU3bxfXpqcAFwic=;
+        b=bBxvx1dEuThxaKXe+TAhaS9QtlYwdXVfq3osHvr2HCe6p1OtRIfI2UUaMscWgrT5vo
+         pR3/QhlOloan2uKaNvpXWXTDimymcemgVg2jfmCjApz8vOMJgvHZivWTLF+Z8iitIKXB
+         UeDfVu5RX4JR5L9m/dAKD3b3N/1vElym/2K2LFpaLF6x+7Bf+olkbtPv5t0IoHd1D+lp
+         koo4wnGQI2vTBJYaTF9/QENSH0ud4IwLgO6dMYKUk/QV3N5o36D8EK3oqQf0foAkyUHa
+         rzvj3EC2OUBYz8LZ/LsWdU2FCASmtexYnWo2/tvNkBGZvKY46/5o2D/K7UJCgaYktrZM
+         +vcQ==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1776949141; x=1777553941; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EBoOCn6MiDkjwqqV0dZhBM0Mdu5029Jkm3x6gtbaC2A=;
+        b=PtTTPQkxQghFLKxci0yOSV1lvxz7uHmZIYSaNmyreykIa57z2WCpag83ryDaXAvKP3
+         yebIeYkFzsrzJqMZQUgQpc1j67ktkqDOR6aLWbGa1gboi3ZJ3u9f8UIhCHnmsVd+M9Yd
+         MGCmQ46sAVFJnoXPnTdXXLcF6+TNwJjkaGgPW91cAzr6vfv4SQB74GKMtObjGm/26gDn
+         kyBFHFc3CUMAPR/IcdPF7DZtv0wnwQMWZ3hV1VEsO5SgU89uZR8Jr+W4rR9LPpu0Ga8b
+         HtXkYg0iiGWygSzLIvY0ILHpSg9ATBYt1h6GW7rTpfkvyahOvJEswtq+g2sg7YQFXvjq
+         fXUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776949141; x=1777553941;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=EBoOCn6MiDkjwqqV0dZhBM0Mdu5029Jkm3x6gtbaC2A=;
+        b=j87X6A/ue+oESZL3o4G8n6MF/c3aIFhXEIIvGoVPY138qKTynZES2c55O+fhGu2ky+
+         RpCnM/+AOYtCllN8XOFxihQAmss6SDAlajqU0vtQhmfPkoXm3Q+D6B0GU7gPvzBDuEIh
+         ML8e4WLP9D7j5eX5LKkOZnBd1fnUEGUAba+3LldKBh0mkIjIeNzVA8WvNbTTMEz2F3gi
+         ZP7KphE3YiSDRis69/JkwigexUxEiCLJMPGEeCScltmD0mKqgIriZqacg50IwoJEG/C5
+         0ursJO5CxIgkmZvIFIQpbUxL39P2KobcGB7kafJDM4GoMQP/J3QFgk1b9/9opgE4oKmJ
+         iG+g==
+X-Forwarded-Encrypted: i=1; AFNElJ+lWOFCtMDEH2+CMF00QKrbkSV+6eyaacwvlpjiZDaVVQeFmjxXNRuLZjMlC75H+qCHjVm/cZIzHSdiaw==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzTMNmes5XXDT1HI6kYS/TKsjMmtXdVHvjezy7+D66s07N6DUYT
+	deII891UR5Aa1l0kBnep0eavPbtCxfjRftCqwksrRf5pAIzszomvBuv132BlsrXPQJOdGxT3hWC
+	Tc6K5koxeNkaeCb5Wy+RtdSk0AGiDol2bQ9s+8Smq
+X-Gm-Gg: AeBDiet793hjSwgVYVEcpP1HBElOx+FDQR+9kQNhaZwusWz63TGZfT/MpqKWa01FfjE
+	KOFIJLtLkhwwFUSf6hceFODk2Kaak1EyoCAGa/VWtjFkGwfKeX/MXCi3LeCMTgT/dDYuvPdhIL9
+	cli+PqmQSdjI9VrJiuYv7YxOlg//2Z+NawAhQxRFMx1CXUJjFCYQbuROZB5zl4gfPcjakbunZvj
+	Hj5G0DY/UGYhRTtyrkKmHyC9pSupbM9BiBRipWmTCZFwwrj+wdi3GXmmlrg3gQJWOugTJFrFVvL
+	KkV7a/I8/WBk5auS3XBljgoZG3O6t9XEuBbeBpJ0Ueg4n9013yhK26tWVR5QDk7qbT8RHhzT6Ij
+	x76Gfaw8OKK4oiog=
+X-Received: by 2002:a05:651c:4209:b0:38e:d870:1db5 with SMTP id
+ 38308e7fff4ca-38ed8701e80mr69433801fa.7.1776949140643; Thu, 23 Apr 2026
+ 05:59:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: YT2PR01MB9175:EE_|YT1PPF07516E2ED:EE_
-X-MS-Office365-Filtering-Correlation-Id: ee8c4ba6-4add-4125-6889-08dea1377786
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|7416014|376014|18002099003|56012099003|22082099003;
-X-Microsoft-Antispam-Message-Info:
-	jO5uCMTYu0RiLgDsRbNLQbim/t1exNJMC6R8SbD33+CzCn2fXyiBC1A93aBDybdBxHfaW2mrP8r8eDN4LVUconimV1exllN6eJNuRUuhx7IEBKFFdGRks7UoF0YIn2zrPCZdpoN9+WZTzdELeu58dFMtfKLj/uIqlmhv6aYwBnAf0q0ZBB/a2N0MP+09BHLw5OUmHtfvvXwR5zKQTsKcPI4rIBySMMQFNEbliK2z58SDp+jMHLaQXGZhqUgH0ZOVxloMKa0C4rcWod6VdE/I1i0FdmaTCv87PzksmO3kfu9C64S7oc5SaCfcsdEYuICrQoG7hclNfl2G9Ef5M0zFCFeGj9mW3jV/zk6GCnW3+EFfiejLg9dMVSQrbb9G7EpnoY7gMCtuZj1ZhA/61UGUDRnQboZiaEY8NfoN8sGLIVK9ZPd7dFpzEpCoAtFP4Kb+Itx19qh2oWRcVT91hDuriC6djjecK56UfiBToZ+BUzQgiwYzfe15ZOXZBte33SRY7gG0x68dKEIQa2ZOxzRbNcQSJFTCkPsiR9r6e6PXYCfuRkVBMPhcixIjtXCKWmOUyxCA9yshvVlOoCB4+HyyUUbqq5ODaQLNHYoQ7l3ytCCI4QOPSnzaUX9U76dcdvPhTy1688PkkIWQk6MatyFYxay7lO8hQ2ISFSzgoHOVxEOs+HDjQf0yta72K8rE4R/1
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(18002099003)(56012099003)(22082099003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?QzFQQmZBUm9BZGtRcFZvdTVITlRVZk9aVkFrRjRkN2lKRzViTlRZdzZPU0FI?=
- =?utf-8?B?SWNuR2FOck9wZ09HV0xBVHZscWp3YWVsQ3lxUjNzclYvVDJwL2FySjkzbG9E?=
- =?utf-8?B?NUVpNFhTRllLZ2d5OExFWWp6a1BYdExIVStnSmFDNFMrM0ZEeFpva3lnMU84?=
- =?utf-8?B?b3V0R0FJT3djMmRMZ1gxTFhnMHFmS05UZVdEWGg5VDRqSUFyU1BhN3FXR1Mx?=
- =?utf-8?B?SE5oS2krOFZDNHF5VnM1ODBXTnIwcDBDYlZydzJZYWNhK1UyRUlaYVE4cVhY?=
- =?utf-8?B?a0E2Wi9mem5uaHFuY0pxb2F0YzJocXhtQmUwVjZaQjltQmx6ck9WRGxpZ3hk?=
- =?utf-8?B?UjYzL0oxcXNzRmNTYXhFZG1UYVpjZzF5cEtQbVdEVDJvYm5PcUJwcjlTdlpr?=
- =?utf-8?B?R3VWSDJkU0hkRk43aG9pMGNrcnBNbFh0RTBhengyeDdCZXpXYnE4NUJXUDd6?=
- =?utf-8?B?NEV4a1U4YUh6ZkpuQnBWdmdpeEJiTDh4dkZqeUtlTW9pcENQODQ4R25iUXZz?=
- =?utf-8?B?eGxYeHBJbjFvb2RCRDdyaERpNjZzdEcyTTZ6UmFmUHFJMG1MZUJTbEUwZFR3?=
- =?utf-8?B?ekF3K1pSSDdOY2NtczhDa01PQUR0bzk4ejRrYXBYcnl0QjUxeHdFVFBtTHVu?=
- =?utf-8?B?dzhPd1V2Wk5KdWRYTG9mckZuMjB4V2tBZ2plQXNvdGNFbGhadng1aWIyWUR4?=
- =?utf-8?B?Z1NneWJ4dmQyRnNuaUl5cUlqWGdFSDRjd216QkZxcE9UeDRTVklzRVZGMEFk?=
- =?utf-8?B?TjIvR3R0NUU1dUNBam4vZ2tlSll1ZEQ4am9mYUYyZkZsUmRQS3d6UGlzMFA1?=
- =?utf-8?B?VmdqdlV2UTVrZnZWWXNXRDlJNS9uakUwOW5Nd2RVTWx2S1MxS1FEMzRZdlZx?=
- =?utf-8?B?VXphVnorU2NVMjNWdUhsSHhxMW1zYW9kYnVWV3NMTS94OGU4MTgwN1dkTmQ2?=
- =?utf-8?B?ZTg3RjFqNER3TUp0V0FPaEh0emRTY1RtUDhZemhxMjFxamR6UUQ5enRNbDJN?=
- =?utf-8?B?c2ozKzFzaVNwRlJCaGVHSlMzbGlGdGc0em5jN3kvbTN6ekJCVTBIWmQwVlEx?=
- =?utf-8?B?Qk5LYzNxRVI2SzRMMndoSmxQUVZzMEw5TmlVcDQyNk55S20xQnc1U3RqNmU2?=
- =?utf-8?B?Q0d0Rlk3UXhKNStEZmVkQ01iN2w4U0tPZm54R1hVWGhDUUM4QzRZT1o2Ujha?=
- =?utf-8?B?Y0RLSnZINjlqVGluZU5IQVN2RmZpQVlsdlNlbzB3SnhGTTA1czFtRnI4djV1?=
- =?utf-8?B?WVI1T1ZoN2Iwa3NtZjNWSEJMb2M5bUVmTzRNa25DVGFGcEp0VjhFdkJWVFJx?=
- =?utf-8?B?TER2bWJGd05iWUJnbG9yWDFuMmQ5Z0drTUc3bS9MbkV4MDFDTG5aOWsyNVFP?=
- =?utf-8?B?MThRN3dTOEx5cHZZVWdPSzdSUDJSYTBIN0oyWFNDWEdPSDJQSUN6RTZNYVZy?=
- =?utf-8?B?bUxSWndTQS93Y1BoYUFFK2JKNGZMeDdNc1Z0U2Q1UUVFeEl6NE1SWmZZRmN4?=
- =?utf-8?B?NzN5WFN4VW5ucmdkY2dFZjcyRzhkc0Q2M2ZwTitEbWFIdVl1SEdQVnhrNGtj?=
- =?utf-8?B?VHljcDFJRUprcHg2ckg1R2NEZFk3QzNUb3FMOEs1WHBpeHQrNVp6RDJpdHN3?=
- =?utf-8?B?ejE1RlhzdEo5WGtVUTBHR2ZrTGtHdjJOM0VPQjBUOWhJdFJNU1l5QllaNzNY?=
- =?utf-8?B?dmEvbC84UXNKejkvQkxZc0lGcUpZMTNJUEpMSFlOODNHUy9KVjNhOWM1c1Zq?=
- =?utf-8?B?cUttczkvMHhtVGdUUnUva1ljeHlsZnVGU2ZUWjhGNlNaQlNXSzNLNzh3QjM0?=
- =?utf-8?B?OGJUejM0bTMyZGhGUnh6UXlsVjZyNUtjYTRPdkdjcytkQmljSmVKU25BV2E0?=
- =?utf-8?B?ZTZuSERuRkJUVUlQa2xtTGtNN2RNWmQ3MWZFZTF2TUZXVnpLblM1bGFvd0M2?=
- =?utf-8?B?ZGFxNDNiVU4wWHhqN3hKcFdQR1J2YURseC95MFEybmgyZ3ovSGx2L2RWdDZx?=
- =?utf-8?B?M1FnWENuU2ZjZEhyK0ZHWWhCbXdUM2ZwWm8rUEcvR3NuNkFoVWx4dklYa0s1?=
- =?utf-8?B?RlZFT05IVVFia1haNjE4ZkpVT3pkWkxtUHhHMGFWNVpjWDNtTlhjbGZDUkhp?=
- =?utf-8?B?TEg1NWRaUS9pTjNiRGxIbUMraVhoWVdIMUw5dEQwTWcwU3lxME52MTdvbXBF?=
- =?utf-8?B?OFhBWXMvdGppcGlSUGtneWhTMzRraEoyWVdIdjRqODhrdXRqSGczTDZVMm1I?=
- =?utf-8?B?c2c1R1d2cktzM3VpMm5hOUdlNXpOZC9sanZvWnpraU5LMVdzaVV5UEdIeFlu?=
- =?utf-8?B?ZVMwU3lOQis2NEpPajNTOWlZRkRSSUNJSW14MzAyb2x2T2pCc0x2THN4cHJK?=
- =?utf-8?Q?xv9OdgQsdwuJBcvE=3D?=
-X-OriginatorOrg: efficios.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ee8c4ba6-4add-4125-6889-08dea1377786
-X-MS-Exchange-CrossTenant-AuthSource: YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Apr 2026 12:54:33.5239
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4f278736-4ab6-415c-957e-1f55336bd31e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: WzNixv9B4RXoDO7Ag/eQ3BUgBWlJvk/wIkjO7gAOVitOKKOTsFUqE6BBpY/qun4Ru7rWoif7uyR4J+Iecn/a7klc0sQ08iOsWPPGT3L1zq8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: YT1PPF07516E2ED
+References: <CAHnCjA25b+nO2n5CeifknSKHssJpPrjnf+dtr7UgzRw4Zgu=oA@mail.gmail.com>
+ <aejCaG6n9s7ak5TO@J2N7QTR9R3.cambridge.arm.com> <87zf2u28d1.ffs@tglx>
+ <aekPXvvuKHKlETjm@J2N7QTR9R3.cambridge.arm.com> <87wlxy22x7.ffs@tglx>
+ <c5331cd6-76c8-430d-978e-fcad164e48f6@huawei.com> <CACT4Y+bxnQyHGdVNE1BYTx+Z2-cscLb38HYS9jBM5gPAz8=4bw@mail.gmail.com>
+ <1e839a25-d15f-40d3-ad6a-20469fb6137c@efficios.com> <CACT4Y+bMH+q2C7Xg9oHRP5ZbmvLpMpYzrdAd7B6XoXYc8=22sQ@mail.gmail.com>
+ <84e0a8f6-c24c-469a-82a4-e82e33b764b4@efficios.com>
+In-Reply-To: <84e0a8f6-c24c-469a-82a4-e82e33b764b4@efficios.com>
+From: Dmitry Vyukov <dvyukov@google.com>
+Date: Thu, 23 Apr 2026 14:58:48 +0200
+X-Gm-Features: AQROBzBMZhPIR5gRUuR2Cv8QJN7ZCnPb8ovR-0L9yVQuuYL1RfgenAYTSh02Kxg
+Message-ID: <CACT4Y+aSvv-n4gknRm8D=pLGsnh7PU3f5MTJSq4tTPqUWn80+A@mail.gmail.com>
+Subject: Re: [REGRESSION] rseq: refactoring in v6.19 broke everyone on arm64
+ and tcmalloc everywhere
+To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Jinjie Ruan <ruanjinjie@huawei.com>, linux-man@vger.kernel.org, 
+	Thomas Gleixner <tglx@linutronix.de>, Mark Rutland <mark.rutland@arm.com>, 
+	Mathias Stearn <mathias@mongodb.com>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Boqun Feng <boqun.feng@gmail.com>, 
+	"Paul E. McKenney" <paulmck@kernel.org>, Chris Kennelly <ckennelly@google.com>, regressions@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
+	Blake Oler <blake.oler@mongodb.com>, Michael Jeanson <mjeanson@efficios.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2026-04-23 08:11, Alejandro Colomar wrote:
-[...]
->>
->> +linux-man
->>
->> This part of the rseq man page needs to be fixed as well I think. The
->> kernel no longer reliably provides clearing of rseq_cs on preemption,
->> right?
->>
->> https://git.kernel.org/pub/scm/libs/librseq/librseq.git/tree/doc/man/rseq.2#n241
-> 
-> +Michael Jeanson
-> 
-> That page seems to be maintained separately, as part of the librseq
-> project.
+On Thu, 23 Apr 2026 at 14:53, Mathieu Desnoyers
+<mathieu.desnoyers@efficios.com> wrote:
+>
+> On 2026-04-23 08:36, Dmitry Vyukov wrote:
+> > On Thu, 23 Apr 2026 at 14:29, Mathieu Desnoyers
+> > <mathieu.desnoyers@efficios.com> wrote:
+> >>
+> >> On 2026-04-23 01:53, Dmitry Vyukov wrote:
+> >> [...]
+> >>> +linux-man
+> >>>
+> >>> This part of the rseq man page needs to be fixed as well I think. The
+> >>> kernel no longer reliably provides clearing of rseq_cs on preemption,
+> >>> right?
+> >>>
+> >>> https://git.kernel.org/pub/scm/libs/librseq/librseq.git/tree/doc/man/=
+rseq.2#n241
+> >>
+> >> I'm maintaining this manual page in librseq.
+> >>
+> >>>
+> >>> "and set to NULL by the kernel when it restarts an assembly
+> >>> instruction sequence block,
+> >>> as well as when the kernel detects that it is preempting or deliverin=
+g
+> >>> a signal outside of the range targeted by the rseq_cs."
+> >>
+> >> I think you got two things confused here.
+> >>
+> >> 1) There is currently a bug on arm64 where it fails to honor the
+> >>      rseq ABI contract wrt critical section abort. AFAIU there is a
+> >>      fix proposed for this.
+> >>
+> >> 2) Thomas relaxed the implementation of cpu_id_start field updates
+> >>      so it only stores to the rseq area when the current cpu actually
+> >>      changes (migration).
+> >>
+> >> So AFAIU the statement in the man page is still fine. It's just arm64
+> >> that needs fixing.
+> >
+> >
+> > My understanding was that due to the ev->user_irq check here:
+> >
+> > +static __always_inline void rseq_sched_switch_event(struct task_struct=
+ *t)
+> > ...
+> > +               bool raise =3D (ev->user_irq | ev->ids_changed) & ev->h=
+as_rseq;
+> > +
+> > +               if (raise) {
+> > +                       ev->sched_switch =3D true;
+> > +                       rseq_raise_notify_resume(t);
+> > +               }
+> >
+> > There won't be any rseq-related processing for threads preempted in
+> > syscalls, which means that rseq_cs won't be NULLed for threads
+> > preempted inside of syscalls.
+>
+> Let's see if I understand your concern correctly. Scenario:
+>
+> A thread is within a rseq critical section. It exits the critical
+> section without clearing the rseq_cs pointer, expecting the kernel
+> to lazily clear the rseq_cs pointer eventually when it detects that
+> it's not nested on top of the userspace critical section anymore.
+> It then calls a system call _outside_ of the rseq critical section,
+> but with rseq_cs pointer set. Based on the rseq man page wording,
+> it would then expect the preemption within the system call to guarantee
+> clearing that that pointer.
 
-Yes, I maintain the librseq project, thanks Alejandro!
+Yes, this is the scenario I had in mind.
 
-Mathieu
-
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-https://www.efficios.com
+> Here is the relevant comment block in the man page:
+>
+>                       Updated by user-space, which sets the address of  t=
+he  cur=E2=80=90
+>                       rently active rseq_cs at the beginning of assembly =
+instruc=E2=80=90
+>                       tion sequence block, and set to NULL by the kernel =
+when  it
+>                       restarts an assembly instruction sequence block, as=
+ well as
+> >>>>>>>>>
+>                       when the kernel detects that it is preempting or de=
+livering
+>                       a  signal  outside  of  the  range targeted by the =
+rseq_cs.
+> >>>>>>>>>
+>                            ^^^ this
+>
+> The whole point about lazy-clearing of rseq_cs is that it _may_ happen wh=
+en
+> the kernel preempts or delivers a signal (or at any point really), but it=
+'s
+> just an optimization.
+>
+> Updating the manual page with this wording would match the intent:
+>
+>                       Updated by user-space, which sets the address of  t=
+he  cur=E2=80=90
+>                       rently active rseq_cs at the beginning of assembly =
+instruc=E2=80=90
+>                       tion sequence block, and set to NULL by the kernel =
+when  it
+>                       restarts an assembly instruction sequence block. Ma=
+y be set
+>                       to NULL by the kernel when it detects that the curr=
+ent
+>                       instruction pointer is outside of the range targete=
+d by
+>                       the rseq_cs.
+>                       Also needs to be set to NULL by user-space before  =
+reclaim=E2=80=90
+>                       ing memory that contains the targeted struct rseq_c=
+s.
+>
+> Thoughts ?
+>
+> Thanks,
+>
+> Mathieu
+>
+> --
+> Mathieu Desnoyers
+> EfficiOS Inc.
+> https://www.efficios.com
