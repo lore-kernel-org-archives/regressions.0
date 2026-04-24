@@ -1,87 +1,117 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C89F63CAE81
-	for <regressions@lists.linux.dev>; Fri, 24 Apr 2026 19:44:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DD7F1DF261;
+	Fri, 24 Apr 2026 19:45:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777059861; cv=none; b=mTpRpJ+aIaZqHNAJ+PZ3u7FjNNmAIWfF5PZg1Ffu3F6HI9MUJq6Jvc743iHOZsFnNL3WaTpTTaxns9qeUlWtLjbUKs2ZjMch6i0r5O6tg9+B4rQvHiKjIjnRSxEaJs74cjXhCKBp88FXfRLbO+hAv7Bh2j8eTIxOKR3dd7TxoEY=
+	t=1777059954; cv=none; b=KERSK1Wij82ZRPTvcVD42kFbg01NBJCICGm61Ro12Ms+QuzqJ3wino1XB14S6g6lr59JmtLDO+yLlHIob9BCTpUjm6JKrrk3GJZckhTlVuLPqHvaSFjFz3B+BJ8T4MqY9G2p36SlCjCTaNjhvdRIRhACufcNhqeTEZMX3U/AvKE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777059861; c=relaxed/simple;
-	bh=Rv1h3iMVnDwYM9WG0Iqg1RxCc654GhyoQ7lLcU+Zr20=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=OGGEbaeAta/7M5S3GfxidI1cVGVEGbgbPwuBYTjyBghxVKeUjetIEphzTHCaLAtyLbGsNaqKSRPYuV3BQWNPco+i9p+UD9TM7iJjB4uK3we8SeSlbzhlCYUMotvEUoBFf0+xaNgPpqt67+hL0+j6SHc+/MwVPKfMLDSQCTnnWCI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4RH1XcFR; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=iqLfAh0z; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1777059954; c=relaxed/simple;
+	bh=8fGdRD+I7sMsJmZir5HbEEQayBQy7LDbY2vgEgcS4TI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WcuUVpcI1fBOdHNPX2recJa0EdHkXjY8mzj2mBxclBux7A+XHKpK1JETsTi9c8s6zbZ9sGy6aoKF2+y1en6NjtG+gxzfTOSCmAluz0Y1WLdkRByCJ5iQyr/LrAF5JgPcmO+7j8ycj08YJxH9SMUDnVAK4dsVwXbcJ+pwhhfyRkg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mfYCR557; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4RH1XcFR";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="iqLfAh0z"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1777059857;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2+rliU4cCrurJTfrKWYSNMc97AT2PbQ8kt0LrYzMJys=;
-	b=4RH1XcFRCUI4pUKFbbaE2ynLn8NOaT602kfQD31J3RDvJfJo7XD92FNpJWLLlcewr0T0mx
-	vN065gMMtlaUbKpjo3gXmlXENzp23fTKmDuJxX9zay6l/eNhSStIrom9wHBQBfbpJhHUA1
-	n1WNq9N84pxe7o/+aHeImeRSB/w6hav2SbDOfsSgxSIfr/h2nypcGrNEJ6dmcmcKyN/V6z
-	rijeVmFkNDQY6InHkE5L5GhmFG5i2y1E9RO2nJwnNqaelod8gOb4/N9/+AJiTaWHK5f013
-	w/eRZCDT3NHFxYWTwvBUMPhyE9BD8eLGG77wcpWUwsrikwt4aL2/Kd6ACssj7g==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1777059857;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2+rliU4cCrurJTfrKWYSNMc97AT2PbQ8kt0LrYzMJys=;
-	b=iqLfAh0zDX4+KsEUDE175S10unwiIU8nPBL256ZhVyzK9+tvLFrNWGmxv0kvMxKW1j2tRu
-	GSek67fxRGEDh5BQ==
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Mathias Stearn <mathias@mongodb.com>, Dmitry Vyukov
- <dvyukov@google.com>, Jinjie Ruan <ruanjinjie@huawei.com>,
- linux-man@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Catalin Marinas
- <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Boqun Feng
- <boqun.feng@gmail.com>, "Paul E. McKenney" <paulmck@kernel.org>, Chris
- Kennelly <ckennelly@google.com>, regressions@lists.linux.dev,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Ingo
- Molnar <mingo@kernel.org>, Blake Oler <blake.oler@mongodb.com>
-Subject: Re: [REGRESSION] rseq: refactoring in v6.19 broke everyone on arm64
- and tcmalloc everywhere
-In-Reply-To: <20260424150318.GE641209@noisy.programming.kicks-ass.net>
-References: <aekPXvvuKHKlETjm@J2N7QTR9R3.cambridge.arm.com>
- <87wlxy22x7.ffs@tglx> <c5331cd6-76c8-430d-978e-fcad164e48f6@huawei.com>
- <CACT4Y+bxnQyHGdVNE1BYTx+Z2-cscLb38HYS9jBM5gPAz8=4bw@mail.gmail.com>
- <87ik9i0xlj.ffs@tglx>
- <CAHnCjA0UBNXfjHw=Y34OrAyGRNUtVF+zWd3ugyX6pd_mCk8K9w@mail.gmail.com>
- <87a4ut1njh.ffs@tglx>
- <CACT4Y+bBD7uCHXKqGo=epBXeEmsZ67Og2YO9kjNMT3ryjUY_sA@mail.gmail.com>
- <CAHnCjA1LqbaUGkPe79EeP6Mpaki8QWeR-JBSbrG0z6pTm9CmUg@mail.gmail.com>
- <87v7dgzbo7.ffs@tglx>
- <20260424150318.GE641209@noisy.programming.kicks-ass.net>
-Date: Fri, 24 Apr 2026 21:44:16 +0200
-Message-ID: <87se8kywhb.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mfYCR557"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1784BC19425;
+	Fri, 24 Apr 2026 19:45:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1777059954;
+	bh=8fGdRD+I7sMsJmZir5HbEEQayBQy7LDbY2vgEgcS4TI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=mfYCR557pbsCAd1r4wmbWbznp4nSBM9TBdy36fmL27O/z4U4niSfH6z/JWBxCnMa4
+	 5fuMPdEfEGjJvcYkTmxaJTk3DCLV5KeJQPD1d2/ZM0XIrokWV6ezK+hBM9Miw80miX
+	 U3060Oq67MTMVunD4CqMRW7WwcAi2B51nk2yo007FEBltersflT7GASCVA37bmKkN+
+	 jiV934RYi6NPieild5GWH6V6RuZUdBnmHVRrjRXAj4yF6Y3mYUSHxSrFG6gqlFP60n
+	 nQhgcEPBu7QR1VN1Sde9Ts9rI0Ya5RWDldL108OJcfL5foL/2Ts1CtlAlfdGsWjKE4
+	 cz3+YtZScLfgw==
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+To: Evgeny Sagatov <evgeny.sagatov@gmail.com>
+Cc: regressions@lists.linux.dev, linux-acpi@vger.kernel.org,
+ Thorsten Leemhuis <regressions@leemhuis.info>,
+ LKML <linux-kernel@vger.kernel.org>,
+ Wysocki Rafael J <rafael.j.wysocki@intel.com>
+Subject: Re: Pressing the power button causes the device to freeze completely
+Date: Fri, 24 Apr 2026 21:45:51 +0200
+Message-ID: <12895688.O9o76ZdvQC@rafael.j.wysocki>
+Organization: Linux Kernel Development
+In-Reply-To:
+ <CAGAxtY0av_gAk6Up9W8RHjrzWurHEou4RBNnv5wwSEsTUNT52Q@mail.gmail.com>
+References:
+ <12879883.O9o76ZdvQC@rafael.j.wysocki> <5107109.31r3eYUQgx@rafael.j.wysocki>
+ <CAGAxtY0av_gAk6Up9W8RHjrzWurHEou4RBNnv5wwSEsTUNT52Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Apr 24 2026 at 17:03, Peter Zijlstra wrote:
-> On Fri, Apr 24, 2026 at 04:16:08PM +0200, Thomas Gleixner wrote:
->> > I was really hoping that we would only need to do the "redundant"
->> > cpu_id_start writes would only be needed on membarrier_rseq IPIs where
->> > it really is a pay-for-what-you-use functionality,
->> 
->> That's fine and can be solved without adding this sequence overhead into
->> the scheduler hotpath.
->
-> Something like so? (probably needs help for !GENERIC bits)
+On Friday, April 24, 2026 7:06:50 PM CEST Evgeny Sagatov wrote:
+> dmesg | grep "Fast frequency"
+> [    8.903099] cpufreq: CPU0: Fast frequency switching enabled
+> [    8.903181] cpufreq: CPU1: Fast frequency switching enabled
+> [    8.903247] cpufreq: CPU2: Fast frequency switching enabled
+> [    8.903316] cpufreq: CPU3: Fast frequency switching enabled
 
-Yes and yes :)
+If it is enabled, let's try to disable it and see what happens.
 
-Let me stare at that !generic tif bits case.
+> When I pressed the power button, the PC froze. Nothing in the log.
+
+Below is an updated version of the previous patch which additionally
+disables fast frequency switching in the ACPI cpufreq driver that is
+in use on your system.
+
+The "Fast frequency switching enabled" messages should not be there
+any more in the log with this patch applied (please verify) and
+please check if pressing the power button will still lock up the
+system.
+
+---
+ drivers/acpi/acpica/evevent.c  |    5 +++++
+ drivers/cpufreq/acpi-cpufreq.c |    3 +--
+ drivers/cpufreq/cpufreq.c      |    1 +
+ 3 files changed, 7 insertions(+), 2 deletions(-)
+
+--- a/drivers/acpi/acpica/evevent.c
++++ b/drivers/acpi/acpica/evevent.c
+@@ -243,6 +243,11 @@ static u32 acpi_ev_fixed_event_dispatch(
+ 	(void)acpi_write_bit_register(acpi_gbl_fixed_event_info[event].
+ 				      status_register_id, ACPI_CLEAR_STATUS);
+ 
++	if (event == ACPI_EVENT_POWER_BUTTON) {
++		pr_info("ACPI power button event\n");
++		return (ACPI_INTERRUPT_HANDLED);
++	}
++
+ 	/*
+ 	 * Make sure that a handler exists. If not, report an error
+ 	 * and disable the event to prevent further interrupts.
+--- a/drivers/cpufreq/acpi-cpufreq.c
++++ b/drivers/cpufreq/acpi-cpufreq.c
+@@ -912,8 +912,7 @@ static int acpi_cpufreq_cpu_init(struct
+ 	 */
+ 	data->resume = 1;
+ 
+-	policy->fast_switch_possible = !acpi_pstate_strict &&
+-		!(policy_is_shared(policy) && policy->shared_type != CPUFREQ_SHARED_TYPE_ANY);
++	policy->fast_switch_possible = false;
+ 
+ 	if (perf->states[0].core_frequency * 1000 != freq_table[0].frequency)
+ 		pr_warn(FW_WARN "P-state 0 is not max freq\n");
+--- a/drivers/cpufreq/cpufreq.c
++++ b/drivers/cpufreq/cpufreq.c
+@@ -473,6 +473,7 @@ void cpufreq_enable_fast_switch(struct c
+ 	if (cpufreq_fast_switch_count >= 0) {
+ 		cpufreq_fast_switch_count++;
+ 		policy->fast_switch_enabled = true;
++		pr_info("CPU%u: Fast frequency switching enabled\n", policy->cpu);
+ 	} else {
+ 		pr_warn("CPU%u: Fast frequency switching not enabled\n",
+ 			policy->cpu);
+
+
 
