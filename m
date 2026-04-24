@@ -1,115 +1,109 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D201E34FF54
-	for <regressions@lists.linux.dev>; Fri, 24 Apr 2026 14:16:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 889F33D410E;
+	Fri, 24 Apr 2026 14:40:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777040172; cv=none; b=faMzYtg2GOqRVxZsjl7g2Gy9AmPuUnbPdqBYd+RfjPxFwSVYlc3JW60BH0v+jt23EkMNyKJ3Ogx9shb/hMmJWjuxrkzuqeEUJw9NYFXEXZBzMEE4/HbrFrl/Iq1srd63VCbfmKHfmF067j71N5hgbGynQYHvLuO0a+Sv7n/7cts=
+	t=1777041608; cv=none; b=jwRyfBFXcPvzasvqSuDBalARbSpYelTp7s48tkG2ggZ/rmWB1Tcjqyitgy7tpybDtbljTkFRk9mL9ckUt+gHNuXoMiCz5GTW7bGAEzpazKhpenuWbgimj7dEW7xZIudOvKfk/zsNQjpx3144oCxhIC1OzfnJSl/WFRjwCIJcMmE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777040172; c=relaxed/simple;
-	bh=hIBfMbUaD1OS53b5jqw7IVBPYFgpAC7mk3ZJpfoVpDM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Y28NQotq144IUcPhIFfEDqV7Kl0Y6PV5EbDVymjw9q9q0D+FlXC89HoopEASJ9aKCYBrmO4V5JYLyqFee5fqMeeI4n1rNF61xU+Z056538a9aUAu5EVMvxOKAJ6znweVC1YveSlgj+C1YyzJCkpp0o8qGbfuhN8xN5VzfhG4TUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=XIsfhMsA; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=VOKawgrw; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1777041608; c=relaxed/simple;
+	bh=/HUHBYr7J8fvctu0YDBJBup+H6tg/5xrzZBGF+e9KeY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FDtoLgvM42hFVDjFeElc+5dVKbG259zmd7WBbfkTi8F9cKWWAj1Bc5ITfwvfk/p9eDWwWOi3ed6fjtCi7F7WXW43OzjpXqmFXkMZ55y0Js5lsp3tUYUQL/JEhcMCfJ82Hixt4Jf8dWwAVOXVUE6rtqlyhoB+c0ty3LfKx5+5jMY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pyG0o2y7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="XIsfhMsA";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="VOKawgrw"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1777040169;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Nnf5w0Quv+PTZ6xRTOC5Ut9ZfHwqUivD6tJWnKdJ5sU=;
-	b=XIsfhMsAOHGOVSikOOaqPnCe28/h7USHYhutuQBKSIvFKi5NObMieQcN5MW1VrLdTIJeau
-	PbSf0mxFh/KBPXx9V0nvBqSceZ2/TOaD8xlCLXrwyoexZZ9mEf9r9FY4WtBc1/el0NSI5v
-	BfT09EzHZPIkIYDV8ZSi4GXsllraEfxjqzzk+9428js8t28yb4u3oukSn9/pcdCdozJzL/
-	bgugLB1vb2efXjDGvNZ07u2hlwLTmMTdMzqKp0tj8L1EEKcwvpaUb1+LS6T9X6jNCdpZTa
-	DKSgFxpm6r6cb1vuAHS6jUX9L52o+pFyNs8pv+AbfB974fuGJzJmel/zRwHiQQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1777040169;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Nnf5w0Quv+PTZ6xRTOC5Ut9ZfHwqUivD6tJWnKdJ5sU=;
-	b=VOKawgrwAk2LjHlmcqkr6TY07Qd5sMbsO+ylRRO8SAQ9u1nAseQHxA16OEcmcofQbWpDCC
-	Kouv/Ms85MBmBiAA==
-To: Mathias Stearn <mathias@mongodb.com>, Dmitry Vyukov <dvyukov@google.com>
-Cc: Jinjie Ruan <ruanjinjie@huawei.com>, linux-man@vger.kernel.org, Mark
- Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Catalin Marinas
- <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Boqun Feng
- <boqun.feng@gmail.com>, "Paul E. McKenney" <paulmck@kernel.org>, Chris
- Kennelly <ckennelly@google.com>, regressions@lists.linux.dev,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Peter
- Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Blake
- Oler <blake.oler@mongodb.com>
-Subject: Re: [REGRESSION] rseq: refactoring in v6.19 broke everyone on arm64
- and tcmalloc everywhere
-In-Reply-To: <CAHnCjA1LqbaUGkPe79EeP6Mpaki8QWeR-JBSbrG0z6pTm9CmUg@mail.gmail.com>
-References: <CAHnCjA25b+nO2n5CeifknSKHssJpPrjnf+dtr7UgzRw4Zgu=oA@mail.gmail.com>
- <aejCaG6n9s7ak5TO@J2N7QTR9R3.cambridge.arm.com> <87zf2u28d1.ffs@tglx>
- <aekPXvvuKHKlETjm@J2N7QTR9R3.cambridge.arm.com> <87wlxy22x7.ffs@tglx>
- <c5331cd6-76c8-430d-978e-fcad164e48f6@huawei.com>
- <CACT4Y+bxnQyHGdVNE1BYTx+Z2-cscLb38HYS9jBM5gPAz8=4bw@mail.gmail.com>
- <87ik9i0xlj.ffs@tglx>
- <CAHnCjA0UBNXfjHw=Y34OrAyGRNUtVF+zWd3ugyX6pd_mCk8K9w@mail.gmail.com>
- <87a4ut1njh.ffs@tglx>
- <CACT4Y+bBD7uCHXKqGo=epBXeEmsZ67Og2YO9kjNMT3ryjUY_sA@mail.gmail.com>
- <CAHnCjA1LqbaUGkPe79EeP6Mpaki8QWeR-JBSbrG0z6pTm9CmUg@mail.gmail.com>
-Date: Fri, 24 Apr 2026 16:16:08 +0200
-Message-ID: <87v7dgzbo7.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pyG0o2y7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB650C19425;
+	Fri, 24 Apr 2026 14:40:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1777041608;
+	bh=/HUHBYr7J8fvctu0YDBJBup+H6tg/5xrzZBGF+e9KeY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=pyG0o2y7erh/w6NST0BQpmqle1ZDa7h43hJco97yxKQU1VxYFOkq/89edruc7o/BM
+	 sPvw7T6H9sNDuevxMwqFNSF/QvlWc+2FxwRZ7sYFlBShisictDWkSu2Al8mwVx7qf5
+	 pEjLfRkhO9qGFOuQq8YZMehuzxjaEBLWvNt0508jDPBUtQ+xpEGcIhvgeDrxd2U1J7
+	 ZM0n/u72+qQAcL+28AtUiPXsRPc52+2T5ZlYleOJuvfqIFKrHTK/LWxp+R9OBvYm9L
+	 BgLcnIUhCvzQ71/PzxrMZmpJdrrvzZSUbj1IjcyiKu6WwqwfTPwFvawWExNPLI54zz
+	 CIJnFAAflOkbg==
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+To: Evgeny Sagatov <evgeny.sagatov@gmail.com>
+Cc: regressions@lists.linux.dev, linux-acpi@vger.kernel.org,
+ Thorsten Leemhuis <regressions@leemhuis.info>,
+ LKML <linux-kernel@vger.kernel.org>,
+ Wysocki Rafael J <rafael.j.wysocki@intel.com>
+Subject: Re: Pressing the power button causes the device to freeze completely
+Date: Fri, 24 Apr 2026 16:40:04 +0200
+Message-ID: <5107109.31r3eYUQgx@rafael.j.wysocki>
+Organization: Linux Kernel Development
+In-Reply-To:
+ <CAGAxtY2vstAuswt0b6sS_0Gi1=S6fd6cetskjfOEKnWqmMZBiw@mail.gmail.com>
+References:
+ <12879883.O9o76ZdvQC@rafael.j.wysocki> <5996744.DvuYhMxLoT@rafael.j.wysocki>
+ <CAGAxtY2vstAuswt0b6sS_0Gi1=S6fd6cetskjfOEKnWqmMZBiw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Apr 24 2026 at 10:32, Mathias Stearn wrote:
-> On Fri, Apr 24, 2026 at 9:57=E2=80=AFAM Dmitry Vyukov <dvyukov@google.com=
-> wrote:
->> The only problem is with membarrier (it used to force write to
->> __rseq_abi.cpu_id_start for all threads, but now it does not).
->> Otherwise the caching scheme works.
->
-> I almost wrote a message last night saying that we didn't need
-> cpu_id_start invalidation on preemption. However, I remembered that
-> the Grow() function[1] does a load outside of a critical section then
-> stores a derived value inside the critical section, guarded only by
-> the cpu_id_start invalidation check in StoreCurrentCpu[2]. It really
-> should be doing a compare against the original value inside the
-> critical section (or just do the whole thing inside), but it doesn't.
-> I haven't reasoned end-to-end through this fully to prove corruption
-> is possible, but I suspect that it is if another thread same-cpu
-> preempts between the loads and the store and updates the header before
-> the original thread resumes and writes its original intended header
-> value. Ditto for signals, which sometimes allocate even though they
-> shouldn't.
->
-> I was really hoping that we would only need to do the "redundant"
-> cpu_id_start writes would only be needed on membarrier_rseq IPIs where
-> it really is a pay-for-what-you-use functionality,
+On Thursday, April 23, 2026 10:07:39 PM CEST Evgeny Sagatov wrote:
+> This patch doesn't change anything. The PC remains frozen when
+> pressing the power button.
 
-That's fine and can be solved without adding this sequence overhead into
-the scheduler hotpath.
+Well, thanks for giving it a go.
 
-> I think existing binaries depend on invalidation on
-> preemption. Luckily that should be cheap enough to be ~free.
+This at least means that the issue is related to certain activity in schedutil,
+and the specific values used by it are most likely irrelevant.
 
-That's only free when it can be burried in the rseq_cs update, which
-means the ID update would not happen when rseq_cs is NULL.
+This time, I'd like to check two things in one go.  First, whether or not
+fast frequency switching is enabled on your system (if it is, it will exercise
+a different code path in schedutil) and second, whether or not the power button
+press processing gets beyond the clearing the associated event status bit.
 
-If those two changes fix it w/o requiring additional tcmalloc changes,
-I'm happy to hack that up tomorrow.
+For this purpose, please apply the patch below and (1) after booting the
+system with the new kernel, run
 
-Thanks,
+$ dmesg | grep "Fast frequency"
 
-        tglx
+and let me know if it produces any output (and what the output is if so).
+
+Then (2) press the power button and see if that still locks up the system
+if schedutil is the cpufreq governor (if it doesn't lock up, a message
+will be printed to the kernel log every time the button is pressed).
+
+---
+ drivers/acpi/acpica/evevent.c |    5 +++++
+ drivers/cpufreq/cpufreq.c     |    1 +
+ 2 files changed, 6 insertions(+)
+
+--- a/drivers/acpi/acpica/evevent.c
++++ b/drivers/acpi/acpica/evevent.c
+@@ -243,6 +243,11 @@ static u32 acpi_ev_fixed_event_dispatch(
+ 	(void)acpi_write_bit_register(acpi_gbl_fixed_event_info[event].
+ 				      status_register_id, ACPI_CLEAR_STATUS);
+ 
++	if (event == ACPI_EVENT_POWER_BUTTON) {
++		pr_info("ACPI power button event\n");
++		return (ACPI_INTERRUPT_HANDLED);
++	}
++
+ 	/*
+ 	 * Make sure that a handler exists. If not, report an error
+ 	 * and disable the event to prevent further interrupts.
+--- a/drivers/cpufreq/cpufreq.c
++++ b/drivers/cpufreq/cpufreq.c
+@@ -473,6 +473,7 @@ void cpufreq_enable_fast_switch(struct c
+ 	if (cpufreq_fast_switch_count >= 0) {
+ 		cpufreq_fast_switch_count++;
+ 		policy->fast_switch_enabled = true;
++		pr_info("CPU%u: Fast frequency switching enabled\n", policy->cpu);
+ 	} else {
+ 		pr_warn("CPU%u: Fast frequency switching not enabled\n",
+ 			policy->cpu);
+
+
+
