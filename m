@@ -1,116 +1,202 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.162])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AED23B2FDA
-	for <regressions@lists.linux.dev>; Thu, 23 Apr 2026 23:14:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1553B1D5CC9
+	for <regressions@lists.linux.dev>; Fri, 24 Apr 2026 07:51:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.162
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776986066; cv=none; b=orOScdpNf/OrRKBDVMvj+jV7aYe/eFl24zpNjAseK5M4i7/kwbB1eGbooT252KDezxNMQHZPpGFyuyX+tX6zb3KjzgDxcguL6P8SQrDiQvvUlOmcnwlSoNSwT0JAaxoOobMLgpewH1sMS2ifoU+zm1tuV6VdEi76TYLY23JVMdI=
+	t=1777017089; cv=none; b=g9kxF6UslxeIM9vdanKKLe2fuSbtn3O2Or5tAf/Blc5gqdwp6uTzXK7+IZGcolWFsHRBlobw+4ovHbBdvkrDRYRMbLEvbzmyXKiXZl6n0YK4P8jgBmZ84mSZV1fM+8OOe/i5mDo08Z6lGCtLNwz10iOwn3N2ALfY5nAMgJORb7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776986066; c=relaxed/simple;
-	bh=bYFZrOG3Kvql/janNW5KwWm8sjNf0R+XieylcBh4SmQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BecDOkRMAwzMTk+mE8/xjLqswcxMBy5BbBO2LRD6IlALJTuxchq8IVFMbdRgdv6gqj332RTs3w3XtHcCuaW5DVyXBIkJsqtjCA1pJrnQabl/DRZ8a3EfdJow1hGOoO5+8vXihLNwzAL2h/KKx+K0mUGtxnlpV9KPChEJjQQAlM8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=GiylyS+8; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1777017089; c=relaxed/simple;
+	bh=q+xPFMBHJhjI+lv575vR2OklPRNyBbx4ReRSfdrgsok=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GuD5oVLH5Vp3f1M68n7TJxN2ZolRcoLHiYwLXLcI4q9AooNNqpl6n1bjvVVDrvna3+wtbDCfPoewdq9/WRWkKhr5U6tV59kIJe8cWX6Ci75PEKwILbu0I0AQjo3nkEABQ9NL/Xb/bZr01PkZ4Bkn7SZ4Hdj9Vu3/TRAG7VM1hzk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=ErBe5CkY; arc=none smtp.client-ip=188.68.63.162
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="GiylyS+8"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ba67b332bbaso804730966b.0
-        for <regressions@lists.linux.dev>; Thu, 23 Apr 2026 16:14:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1776986062; x=1777590862; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=N1IQQeWnAi/WmXsc0Jq8evNouVPa3nP74k+TBTX1EPI=;
-        b=GiylyS+8S4KpCKy7VnCn3hbaUtJkA4KszezKsxHTtSLK969CSZSZgXu/lVogIrIQa5
-         NX57USoIe7OqiJ8gNDc+INf93Hbvqi33qcOPl+qBmsgEK+z1zHQN6u004FteOwlML9AD
-         b2Ew7E8anLC8Ct+oAEcg4vr7oJPPhoeTWpWVM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776986062; x=1777590862;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=N1IQQeWnAi/WmXsc0Jq8evNouVPa3nP74k+TBTX1EPI=;
-        b=k8qcaHz2rxXiuGGoFvxch/KS4U9yJ9PF2/4MGw6ptDrZvt1cIaf5AurNP+CM9july9
-         /pDzm0Dn+8dZfIFMwlYWm3qa8SOy0F3rUZF24b/fp0IEpR/IJdeuIby2j3dTbjoKIlv+
-         sIxtGsdlyxxXKrbSKdneNNvYzXt8HhBtTWNPLWnpDjYECaf+FnwmEDBf+Jv8SbS8TTkp
-         bcRzTiw5aFblAaPuoJaaU/gHE5/Wm4ErKymVgR6wJtrn2eyTtPnmvumtw1KPUE4kB4LC
-         mu2h1NaB7dkv6NXs4CM47NNpK5sZloMZxMmCwmO2qw2maazL52vwxjQddzmwJ8taRy+F
-         Q4oA==
-X-Forwarded-Encrypted: i=1; AFNElJ84YYxTqMvje0Y3li/WXeLJu8zz+A13Hn+sjpm7OfPx44y+wuuJnytaSjPzj5mKIzwba7DcuGrxoyQdrA==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzagHGcNJwC/C84w6cZs9gYu+uX1H/zNtrCkwteYPv/8FgiVdkk
-	JKStfm93sf1VeUZNL/txOoy1m2lgRf6/QnxwXBlVLA/mi1Hdod56oznhqpiYCvfCCa7zPuxwDu/
-	aQDPVWDjWlg==
-X-Gm-Gg: AeBDieuY7AQlUfJVYTQ3dJqkyynCd/cghBzoNz8ihxun1OXPgJwoNUXDHt/e44nRGvJ
-	8tb/DhUbAqiTNunDE57Yld1SLJucoVbuwZTSDhAn2n1L1GQQTz+v0NqRQ4WY7OfCw/cgd+xtRgl
-	joBGWOmxgt1hUvG6JI8948pFi+VuJYkRrWZVF38PK0sk+g5+fYwbfo5D2D/KdMdt+n/OtAeubbt
-	SjjSR5UwGki210uCKglzY++ihQDMmveiBftxevQBvZQgFlbGrswLIl3CaBZJnOYRXCIOVdxlm2A
-	1Yqm6hUfpFWZcLJ83O57zLMxYIQ61BpFFoZl7Lz1G/UXgXYyTeHGQ5DkHKysLrdpd4c2guDe8Ec
-	nhh03pCcKFGtyAI1Vjn01T/0kMVXv+iNffCrauE4WupFR15cPMlHsn5/Epjw97cQdNn38mucyov
-	C+rf9QHTh7E/bGByflf1+nNc9PAMIrFcwVrrHu/FC2vHtu414dUWoBZwv0f0ddzXLm+Wpwb8sXi
-	g7wHlQxuFvvRbLws/IsMA==
-X-Received: by 2002:a17:907:a19e:b0:ba2:4338:e9fb with SMTP id a640c23a62f3a-ba41adf91d9mr952220966b.32.1776986062498;
-        Thu, 23 Apr 2026 16:14:22 -0700 (PDT)
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com. [209.85.218.47])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ba538429115sm661990566b.15.2026.04.23.16.14.22
-        for <regressions@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 23 Apr 2026 16:14:22 -0700 (PDT)
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-b9358bc9c50so970378866b.1
-        for <regressions@lists.linux.dev>; Thu, 23 Apr 2026 16:14:22 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ9gcTx4oAGQgiSeiZ9wz010TZC1lbQdJ0B5++XP91iGI7slQ1Nox66l1dHjQUXIrUOpmSy70aSPOW3IjQ==@lists.linux.dev
-X-Received: by 2002:a17:907:9407:b0:bad:9363:901c with SMTP id
- a640c23a62f3a-bad93639641mr39954666b.17.1776985720966; Thu, 23 Apr 2026
- 16:08:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="ErBe5CkY"
+Received: from mors-relay-8201.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4g24rm627yz3wV6;
+	Fri, 24 Apr 2026 09:50:48 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1777017048;
+	bh=q+xPFMBHJhjI+lv575vR2OklPRNyBbx4ReRSfdrgsok=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ErBe5CkYJiSpCEpAwlGS0YdGEInJklZxc6WkeTyXBue83eWFxfMM8XahI3KvKBpV+
+	 ggAXh4Ec+kNNHyVYRSkXGwhbtsgZLxwq8ncuaiu0XdoqwIBue9dIBBRDLHIJuMmvYy
+	 BZJlIEpM13lSxUKLzrUx0HwADjkPXbZHRjMG8pSE91GSSE/E/YWt5C51SGAh21UO32
+	 3BKv8wfw12Vr4NPf2yCxQcSBx2N04YUi9RVzHefID6ED5TbnR7pPpNLNhENXf7F1cQ
+	 GU9kUOXj0bkaWvP3mC4Lkuc4VIHJRwSQBv7tLL2pRtoid7cC51iD17h5pnyVhp2pXJ
+	 gmcolkhFpYCQw==
+Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4g24rm3J9Cz3wF7;
+	Fri, 24 Apr 2026 09:50:48 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
+X-Spam-Flag: NO
+X-Spam-Score: -2.898
+X-Spam-Level: 
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4g24rk2NqBz8tc2;
+	Fri, 24 Apr 2026 09:50:46 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 70984632DF;
+	Fri, 24 Apr 2026 09:50:45 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <df82dbc6-623f-4be7-acbc-49157e59764c@leemhuis.info>
+Date: Fri, 24 Apr 2026 09:50:44 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAHnCjA25b+nO2n5CeifknSKHssJpPrjnf+dtr7UgzRw4Zgu=oA@mail.gmail.com>
- <20260422125647.GP3126523@noisy.programming.kicks-ass.net>
- <20260422131338.GI3102924@noisy.programming.kicks-ass.net>
- <CAHnCjA2fa+dP1+yCYNQrTXQaW-JdtfMj7wMikwMeeCRg-3NhiA@mail.gmail.com>
- <87fr4l28zn.ffs@tglx> <CAHnCjA07ER=9xBqXq4jf5yn052W-E9ZXD86HxnRGtai6bpXbbQ@mail.gmail.com>
- <87cxzp1tn6.ffs@tglx> <CAHk-=wjsEqWJxXArS-P5+ksSY2Apaox8u6FtUrtyWSBEOL4Q2Q@mail.gmail.com>
- <874il11jac.ffs@tglx> <CAHk-=wh=B3fqU9AaBsyViZR=eVTG5qa2CGyN=qxPROVxu9Gctg@mail.gmail.com>
-In-Reply-To: <CAHk-=wh=B3fqU9AaBsyViZR=eVTG5qa2CGyN=qxPROVxu9Gctg@mail.gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Thu, 23 Apr 2026 16:08:23 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgd-QaWjFvumdX0BPga8ntZYwo=e4ZJr9Cb+sg=BCgtDQ@mail.gmail.com>
-X-Gm-Features: AQROBzDxtByE_zL0yeL09a8qRHzmOD6033ygRjIYzuhDNj41DscorVUQ0eIqXEA
-Message-ID: <CAHk-=wgd-QaWjFvumdX0BPga8ntZYwo=e4ZJr9Cb+sg=BCgtDQ@mail.gmail.com>
-Subject: Re: [REGRESSION] rseq: refactoring in v6.19 broke everyone on arm64
- and tcmalloc everywhere
-To: Thomas Gleixner <tglx@kernel.org>
-Cc: Mathias Stearn <mathias@mongodb.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Boqun Feng <boqun.feng@gmail.com>, 
-	"Paul E. McKenney" <paulmck@kernel.org>, Chris Kennelly <ckennelly@google.com>, 
-	Dmitry Vyukov <dvyukov@google.com>, regressions@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	Ingo Molnar <mingo@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Jinjie Ruan <ruanjinjie@huawei.com>, Blake Oler <blake.oler@mongodb.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: DC analog support regressed by "drm/amd/display: Sync dcn42 with
+ DC 3.2.373"
+To: =?UTF-8?Q?Timur_Krist=C3=B3f?= <timur.kristof@gmail.com>,
+ amd-gfx@lists.freedesktop.org, Alex Deucher <alexander.deucher@amd.com>
+Cc: Harry Wentland <harry.wentland@amd.com>, Leo Li <sunpeng.li@amd.com>,
+ Aurabindo Pillai <aurabindo.pillai@amd.com>, Roman Li <roman.li@amd.com>,
+ Wayne Lin <wayne.lin@amd.com>, Tom Chung <chiahsuan.chung@amd.com>,
+ Fangzhi Zuo <jerry.zuo@amd.com>, Dan Wheeler <daniel.wheeler@amd.com>,
+ Ray Wu <Ray.Wu@amd.com>, Ivan Lipski <ivan.lipski@amd.com>,
+ Alex Hung <alex.hung@amd.com>, David Airlie <airlied@gmail.com>,
+ Christian <christian.koenig@amd.com>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <20260306031932.136179-1-alex.hung@amd.com>
+ <20260306031932.136179-20-alex.hung@amd.com> <7370736.9J7NaK4W3v@timur-max>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <7370736.9J7NaK4W3v@timur-max>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-PPP-Message-ID: <177701704603.204622.11882405151607592230@mxe9fb.netcup.net>
+X-NC-CID: RKmzBR7hlRLGi7BGHvblUZI5R5G2qb2GlgMyhkR/THktSzjkVdc=
 
-On Thu, 23 Apr 2026 at 14:28, Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> This is all 100% on the RSEQ kernel code, not on users who took advantage=
- of it.
+On 4/13/26 15:09, Timur Kristóf wrote:
+> This patch breaks analog connector support in DCE, both for analog encoders 
+> and DP bridge encoders, because it deletes key functions such as 
+> dce110_enable_analog_link_output, dce110_prepare_ddc, 
+> dce110_external_encoder_control, and more.
+> 
+> With this patch applied, when you connect an analog monitor you just get a 
+> crash in DC from trying to call link->dc->hwss.enable_analog_link_output() 
+> which is now NULL.
+> 
+> This is basically undoing all the work I did for supporting old GPUs with DC.
+> I think either this commit should be reverted or someone should add back the 
+> analog support bits that were removed. I'm happy to help with that if needed.
+> What do you guys think?
 
-Side note: when RSEQ was merged, the *primary* documented use case was
-literally user space allocators with percpu caches. That's what I was
-told at the time.
+I noticed that a patch to fix this mistake is ready by now:
+drm/amd/display: Restore analog connector support --
+https://lore.kernel.org/all/20260418003539.1862136-1-Roman.Li@amd.com/
 
-Now I think it was jemalloc(), not tcmalloc, but it's not like
-tcmalloc is some odd minor use-case.
+And from that thread the fix was even "merged" somewhere. But I can't
+see this in -next or Alex' drm-fixes-7.1 pull, so I assume it will miss
+-rc1 (please corrent me if I'm wrong). Is that something to be concerned
+about?
 
-We are pretty much talking about the raison d'=C3=AAtre of the whole rseq
-feature, not some odd small corner case.
+Ciao, Thorsten
 
-               Linus
+> As a side question, why was this commit merged without any review or ack?
+> 
+> Thanks & best regards,
+> Timur
+> 
+> On 2026. március 6., péntek 4:13:45 közép-európai nyári idő Alex Hung wrote:
+>> From: Roman Li <Roman.Li@amd.com>
+>>
+>> This patch provides a bulk merge to align driver
+>> support for DCN42 with Display Core version 3.2.373.
+>>
+>> It includes upgrade for:
+>> - clk_mgr
+>> - dml2/dml21
+>> - optc
+>> - hubp
+>> - mpc
+>> - optc
+>> - hwseq
+>>
+>> Signed-off-by: Roman Li <Roman.Li@amd.com>
+>> Signed-off-by: Alex Hung <alex.hung@amd.com>
+>> ---
+>>  .../gpu/drm/amd/display/dc/bios/bios_parser.c |  11 +-
+>>  .../display/dc/clk_mgr/dcn42/dcn42_clk_mgr.c  | 141 +++--
+>>  .../display/dc/clk_mgr/dcn42/dcn42_clk_mgr.h  |   2 +-
+>>  drivers/gpu/drm/amd/display/dc/core/dc.c      |  95 ++-
+>>  .../gpu/drm/amd/display/dc/core/dc_stream.c   |  41 +-
+>>  .../gpu/drm/amd/display/dc/core/dc_surface.c  |   9 +
+>>  drivers/gpu/drm/amd/display/dc/dc.h           |  59 +-
+>>  .../gpu/drm/amd/display/dc/dc_bios_types.h    |   3 +-
+>>  drivers/gpu/drm/amd/display/dc/dc_hw_types.h  |   2 +-
+>>  drivers/gpu/drm/amd/display/dc/dc_plane.h     |   1 +
+>>  drivers/gpu/drm/amd/display/dc/dc_types.h     |  24 +
+>>  .../amd/display/dc/dccg/dcn401/dcn401_dccg.c  |  20 +
+>>  .../drm/amd/display/dc/dce/dmub_hw_lock_mgr.c |  16 +
+>>  .../drm/amd/display/dc/dce/dmub_hw_lock_mgr.h |  13 +
+>>  .../dml2_0/dml21/dml21_translation_helper.c   |  30 +-
+>>  .../amd/display/dc/dml2_0/dml21/dml21_utils.c |   1 +
+>>  .../display/dc/dml2_0/dml21/dml21_wrapper.c   |  14 +-
+>>  .../dml21/inc/bounding_boxes/dcn42_soc_bb.h   | 308 ++++------
+>>  .../dml21/inc/dml_top_display_cfg_types.h     |  13 +
+>>  .../dc/dml2_0/dml21/inc/dml_top_types.h       |   2 +
+>>  .../dml21/src/dml2_core/dml2_core_dcn4.c      | 204 +++----
+>>  .../dml21/src/dml2_core/dml2_core_factory.c   |   1 +
+>>  .../dml21/src/dml2_core/dml2_core_utils.c     |  63 +-
+>>  .../dml21/src/dml2_core/dml2_core_utils.h     |   2 +
+>>  .../dml21/src/dml2_dpmm/dml2_dpmm_dcn4.c      |   1 -
+>>  .../dml21/src/dml2_dpmm/dml2_dpmm_factory.c   |   1 +
+>>  .../dml2_0/dml21/src/dml2_mcg/dml2_mcg_dcn4.h |   2 +-
+>>  .../dml21/src/dml2_mcg/dml2_mcg_dcn42.h       |   5 +-
+>>  .../dml21/src/dml2_mcg/dml2_mcg_factory.c     |   1 +
+>>  .../dml21/src/dml2_pmo/dml2_pmo_dcn4_fams2.c  |   6 +
+>>  .../dml21/src/dml2_pmo/dml2_pmo_factory.c     |   4 +-
+>>  .../dml21/src/dml2_pmo/dml2_pmo_factory.h     |   2 +-
+>>  .../dml21/src/dml2_top/dml2_top_interfaces.c  |   1 +
+>>  .../dml21/src/dml2_top/dml2_top_legacy.c      |   1 -
+>>  .../src/inc/dml2_internal_shared_types.h      |   3 +
+>>  .../drm/amd/display/dc/dml2_0/dml2_wrapper.c  |   3 +-
+>>  .../amd/display/dc/dpp/dcn30/dcn30_dpp_cm.c   |   2 +
+>>  .../display/dc/dpp/dcn401/dcn401_dpp_dscl.c   |  21 +
+>>  .../hpo/dcn31/dcn31_hpo_dp_stream_encoder.c   |   5 +
+>>  .../amd/display/dc/hubp/dcn401/dcn401_hubp.c  | 201 ++++---
+>>  .../amd/display/dc/hubp/dcn401/dcn401_hubp.h  |  23 +-
+>>  .../amd/display/dc/hubp/dcn42/dcn42_hubp.c    |  85 ++-
+>>  .../amd/display/dc/hubp/dcn42/dcn42_hubp.h    |  16 +-
+>>  .../amd/display/dc/hwss/dce110/dce110_hwseq.c | 136 +++--
+>>  .../amd/display/dc/hwss/dcn401/dcn401_hwseq.c | 412 +++++--------
+>>  .../amd/display/dc/hwss/dcn42/dcn42_hwseq.c   | 553 +++---------------
+>>  .../amd/display/dc/hwss/dcn42/dcn42_hwseq.h   |  10 +-
+>>  .../amd/display/dc/hwss/dcn42/dcn42_init.c    |   8 +-
+>>  drivers/gpu/drm/amd/display/dc/inc/hw/hubp.h  |  36 +-
+>>  .../gpu/drm/amd/display/dc/inc/hw/hw_shared.h |  18 +-
+>>  drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h   | 112 ++--
+>>  drivers/gpu/drm/amd/display/dc/inc/resource.h |   1 +
+>>  .../amd/display/dc/mpc/dcn401/dcn401_mpc.c    | 177 +++---
+>>  .../amd/display/dc/mpc/dcn401/dcn401_mpc.h    |  25 +-
+>>  .../drm/amd/display/dc/mpc/dcn42/dcn42_mpc.c  | 390 ++----------
+>>  .../drm/amd/display/dc/mpc/dcn42/dcn42_mpc.h  |  50 +-
+>>  .../amd/display/dc/optc/dcn10/dcn10_optc.h    |   2 +-
+>>  .../amd/display/dc/optc/dcn42/dcn42_optc.c    | 105 +++-
+>>  .../amd/display/dc/optc/dcn42/dcn42_optc.h    |  13 +-
+>>  .../dc/resource/dcn42/dcn42_resource.c        |  10 +-
+>>  .../dcn401/dcn401_soc_and_ip_translator.c     |   3 +
+>>  .../dcn42/dcn42_soc_and_ip_translator.c       |  12 +-
+>>  .../gpu/drm/amd/display/dmub/inc/dmub_cmd.h   |  38 +-
+>>  .../include/asic_reg/dcn/dcn_4_2_0_offset.h   |   2 +
+>>  .../include/asic_reg/dcn/dcn_4_2_0_sh_mask.h  |   9 +
+>>  65 files changed, 1596 insertions(+), 1984 deletions(-)
+> 
+> 
+> 
+> 
+> 
+
