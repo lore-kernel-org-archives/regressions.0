@@ -1,286 +1,244 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B80D3382F1
-	for <regressions@lists.linux.dev>; Fri, 24 Apr 2026 16:45:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777049119; cv=none; b=JNYQVYRoxqddSbHyzwc5BJxrVjNgJ3RHW9mmUkBkNl4q+9eREGRP/3xfT8WAsR9fFvI0iqaJtBdmcw/JrAexGNfo+ILSu+Kyiwhpd3oH/SFGJqVN06Io3dWvvFydnBpe5JCDWTnw4OWJY4xjk0VqHKozEHduGLvFAzC3THdcbj8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777049119; c=relaxed/simple;
-	bh=NNSj0/hf7tQ6PJoG7h7+22StFVVEM/2F5mFaH+ZLITA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ahcmMRSxIC1iqhbmZwupPkhjvf2+aJkLEKi+U/ngixOamJLGsWhIngcSTd9NYdDb4Z76z8jQkQ2eGu33ZpDERVOe7/jVU/0nHpk33CX4rbYMZbAUaoDRL1h9hh3dya8pYW9p+OSGKt73Zwz3Kz8Q43afN148OZq4q3rKKVRGMG4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=Rbv0USdu; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from mail-dl1-f48.google.com (mail-dl1-f48.google.com [74.125.82.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03CCD78F26
+	for <regressions@lists.linux.dev>; Fri, 24 Apr 2026 16:47:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.48
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1777049229; cv=pass; b=IDA5YpvkfT01clXv26Yv+Zhd8rclv9HFKKw3yg3f4dCMn64N2NkukxsEBMjwADA1wlTewSSonDHb0cGtWX5DXqEP+J5/eHCBNiZ3+VSsWu49El6X75Er2B2WQtbfk+jU6+7JZyIrP/OwL5ntInnBKWyH65MrWjHh2h8dYIDJXio=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1777049229; c=relaxed/simple;
+	bh=JNFjPKSJhw56GT3TqbPtcLJuu9ovjntdwwGH9RvD6RI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Y/ke7gxqWgxBKXlKfMrk5nm+HaHPbiGvBBzmFVbD4yKTFFoyYZD9yh654TTQA4g6XWkyhhXjYA7v7Ks1uQA7YGDT1awUyvMQDILnUxGWz47CEMTmTh5vPKsvGN4RDPCCq+kNMxzmZEXm5GEzm171iIIPlgQIrZD4ZoucRGXQW1w=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hDDggWQm; arc=pass smtp.client-ip=74.125.82.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="Rbv0USdu"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5459F1BB2;
-	Fri, 24 Apr 2026 09:45:11 -0700 (PDT)
-Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 950763FAA1;
-	Fri, 24 Apr 2026 09:45:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1777049116; bh=NNSj0/hf7tQ6PJoG7h7+22StFVVEM/2F5mFaH+ZLITA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Rbv0USduzEorHSW2inheR/4Y4ysBS5NfxbFI5nI/XXSaUiC3dSLiTsJzm6/aSqPQa
-	 B8rqSzUiBZYURyAe+01mfDZav/sLCyClsK5bumX2UXRhKGKdzUvAoHNaAEvRWQIDOb
-	 mu1HddRUhOAFqOE/9PB3078zA/0vhLAFBSRuiuX4=
-Date: Fri, 24 Apr 2026 17:45:07 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-To: Mathias Stearn <mathias@mongodb.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Peter Zijlstra <peterz@infradead.org>
-Cc: Boqun Feng <boqun.feng@gmail.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Chris Kennelly <ckennelly@google.com>,
-	Dmitry Vyukov <dvyukov@google.com>, regressions@lists.linux.dev,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	Ingo Molnar <mingo@kernel.org>, Jinjie Ruan <ruanjinjie@huawei.com>,
-	Blake Oler <blake.oler@mongodb.com>
-Subject: [PATCH] arm64/entry: Fix arm64-specific rseq brokenness (was: Re:
- [REGRESSION] rseq: refactoring in v6.19 broke everyone on arm64) and
- tcmalloc everywhere
-Message-ID: <aeueE1I1OuVkOcEZ@J2N7QTR9R3>
-References: <CAHnCjA25b+nO2n5CeifknSKHssJpPrjnf+dtr7UgzRw4Zgu=oA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hDDggWQm"
+Received: by mail-dl1-f48.google.com with SMTP id a92af1059eb24-12c7288cfb9so175258c88.2
+        for <regressions@lists.linux.dev>; Fri, 24 Apr 2026 09:47:07 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1777049227; cv=none;
+        d=google.com; s=arc-20240605;
+        b=em2HOdRx+KIxoG0AFKzxXMaUQ4Kq4oaaSagEIrZk4EwZN/pl6rz/baRahwAT9j5o3R
+         LJId+CxReVRA6ZLaXrs6EG9wZZ+TvytILkqUgXIYPsoa6ZRYJirSXHE6bdaJOASt4q1Q
+         Cw9mPgGm0Oa2XrxNFeJOwwZDQEg04hR1qyMTqz1vloXj8DIKHN0Q/gpT3q+ZV2zYwZpY
+         DDux++mrxsnBMl2wT8/7y02WWVXSz0p6jivR5p7PG6BZbpS+kk5hATq61oKkDqpmG86Q
+         8qGcs23F/roA5LN9S4EH5Lf1PSD6FnLXGAEZPdP8R6eJa0U2typ4sdP27JmygSBsi+EX
+         gqzw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=eZvZViiM+KTU4U/lHwXHb/VYi6/H9RrxQbIfS0n37TE=;
+        fh=HcjAYqpKxm8t8fb5aM5cJIl0Ww+qNVbWu3A7VhZqEDA=;
+        b=iQiik1YFtkw7O5GAZ2pnDT2fum/pGZ2foAl8wSG9nz3aiWMtYYNG4fdRozExJ/22xE
+         u43DpItJ8lttygviAzPXaux1zbeJYWdjXmn1Z2nCL/RpAekylHfplag3w3zWEhiQz+jO
+         RIFiDj9cOWhyfQevZ0huum76T1jUAurjUWd6Ks/KMoDJWBgnxvCpD31Opuekzau3H+iz
+         rlUpqf17hwSqX9//blH7CnX+yyPnxC4t2jC3IfcDQNdreBcsUIVAC8oDM1BaWk/w+AgY
+         TsJ+dzJbaRHNK4le6Jhly1UegiEAIRZxqbDVm30hc1SVEqynZE5aBbJs2D0vrCzwDVuQ
+         BJDQ==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1777049227; x=1777654027; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eZvZViiM+KTU4U/lHwXHb/VYi6/H9RrxQbIfS0n37TE=;
+        b=hDDggWQm57mGKbH3I++UeyMCvrxDuJzPD224MnBnCK15vG++yu+ciLyqg2c013S4Ez
+         tZXhEBQzRc0iS59wp56/ILWixjC3EhdKoo3uuJHYMau6uyww2XI6Tck98c0hPbvsFNrM
+         xX2iPWd8F7d4Xfm3CkTkLAGC+YJIuzm20Ujoa/12yTwITcDmigjNJc5UTM5oHk7qdEbu
+         o4bp2dd0HGKqciEPQ5ZV7O1ikqJJDvarkbXr/RHLMqhHo9FYUi2HuNzMNeAVDBlKPzij
+         l+LHlX5o/d0QmKeLPdwEu1Hi5LQ0ZDfY2zLIeKr8IxJmPYqtQD2bWnMzGRce/tVlNeJg
+         YTcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1777049227; x=1777654027;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=eZvZViiM+KTU4U/lHwXHb/VYi6/H9RrxQbIfS0n37TE=;
+        b=mvp6+Yf9RfGcea1ECP1qBWT5YYa2z8MgSzRCEqFsetl7I3m2GJ5iRjIv9YOfcaAZ4X
+         xFjoDwulZB22zwlQqmRlKVS2x1ljL2VtMPIL5MH2p9V7lWqdwt9B6S6mf+JbC9+qQVyX
+         mDle9kY+vVkr9XCH0Hs1xY3DlHkvsNFI1eI77RQubZ+sbm684jVPBInd8pyks2BJ4oJq
+         +qSvOLAuHzhSQJToPGaWbU1A2636QAa9UyWazc6w4FF/mWFO0e7iz+6ec/aShdoFQsWD
+         Cr2m4KbMfIODmWthoz4lg01wJB25txUNIlB2oPPtbGPdf/jfq2VVyJDwKIUaI3nP16yE
+         z1Vg==
+X-Forwarded-Encrypted: i=1; AFNElJ9hVRbKyFUGh9Cv/LTpRvTItDyNsGvqAhjNmtHXXXL+7VjeJfspdpqCNkmoTzvo8g3lOAt34fucGoBZ2w==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxTHogCGQtQJBytZXqJIO44fHrrE/XI/hDLtIJsq+Kur06U0ieL
+	HZIjyWInHAhMPc3gkAkAU5HFXBtVjEGdQ3tCaTXkMhKOH5ct7wkX6+g6v0DzCosXjR35sxE4vf2
+	6p8zkxOhRZX8zX1yI6kQlnWbvytX/XYY=
+X-Gm-Gg: AeBDietJf8YI1dLn31w6nt+7RQ+1mBmUC8ipbjtLJXcuwuf1xSPjWOwp6CTgu5y9tZ4
+	PxVvJ4OHjwPDUXe0o2OaFvubJieJ8W+1K5cjqj7spPzEqOLl/2JOvwLKD7VjTKvKxAv0rSmyzFV
+	g7BgY2tfA2sfSnrcUXrIHadWdtuPoET4t2RY3ULYGxPEzI86YwnirG/rBVaXceJxcVLW07mMJxZ
+	YD149ZMrtg9VTeUCMQxxKuVoEmZR/yJ2qk07SGTPJ8NLsH1BQpy3YcuwovuGHSLsDjuXhCaWMAq
+	rDnrbhLLKNXUHAOZp4zWipan2mXp4L6UIdC5q6DnKMo3SDrvBIAEqu5Rm8aCFP6N1ENw6VtnlZg
+	BpfM6
+X-Received: by 2002:a05:7022:5f01:b0:12d:b654:8180 with SMTP id
+ a92af1059eb24-12db65484bfmr1873101c88.2.1777049226880; Fri, 24 Apr 2026
+ 09:47:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHnCjA25b+nO2n5CeifknSKHssJpPrjnf+dtr7UgzRw4Zgu=oA@mail.gmail.com>
+References: <20260306031932.136179-1-alex.hung@amd.com> <20260306031932.136179-20-alex.hung@amd.com>
+ <7370736.9J7NaK4W3v@timur-max> <df82dbc6-623f-4be7-acbc-49157e59764c@leemhuis.info>
+In-Reply-To: <df82dbc6-623f-4be7-acbc-49157e59764c@leemhuis.info>
+From: Alex Deucher <alexdeucher@gmail.com>
+Date: Fri, 24 Apr 2026 12:46:55 -0400
+X-Gm-Features: AQROBzBraznBYsAZpxHnqUE8Q_8czz02MUBY3I2yXLrWz3uNfcj8hqf_okcVyc4
+Message-ID: <CADnq5_MFgdSH6sXPg+bpHYda0SGkK+sLevgwXNo+iDJmYMOdzg@mail.gmail.com>
+Subject: Re: DC analog support regressed by "drm/amd/display: Sync dcn42 with
+ DC 3.2.373"
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: =?UTF-8?Q?Timur_Krist=C3=B3f?= <timur.kristof@gmail.com>, 
+	amd-gfx@lists.freedesktop.org, Alex Deucher <alexander.deucher@amd.com>, 
+	Harry Wentland <harry.wentland@amd.com>, Leo Li <sunpeng.li@amd.com>, 
+	Aurabindo Pillai <aurabindo.pillai@amd.com>, Roman Li <roman.li@amd.com>, 
+	Wayne Lin <wayne.lin@amd.com>, Tom Chung <chiahsuan.chung@amd.com>, 
+	Fangzhi Zuo <jerry.zuo@amd.com>, Dan Wheeler <daniel.wheeler@amd.com>, Ray Wu <Ray.Wu@amd.com>, 
+	Ivan Lipski <ivan.lipski@amd.com>, Alex Hung <alex.hung@amd.com>, 
+	David Airlie <airlied@gmail.com>, Christian <christian.koenig@amd.com>, 
+	Linux kernel regressions list <regressions@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Patch for the arm64-specific issue below. This doesn't fix the generic
-cpu_id_start issue, but it brings arm64 into line with everyone else,
-and it's the shape we'll need going forwards for other stuff anyway.
+On Fri, Apr 24, 2026 at 12:34=E2=80=AFPM Thorsten Leemhuis
+<regressions@leemhuis.info> wrote:
+>
+> On 4/13/26 15:09, Timur Krist=C3=B3f wrote:
+> > This patch breaks analog connector support in DCE, both for analog enco=
+ders
+> > and DP bridge encoders, because it deletes key functions such as
+> > dce110_enable_analog_link_output, dce110_prepare_ddc,
+> > dce110_external_encoder_control, and more.
+> >
+> > With this patch applied, when you connect an analog monitor you just ge=
+t a
+> > crash in DC from trying to call link->dc->hwss.enable_analog_link_outpu=
+t()
+> > which is now NULL.
+> >
+> > This is basically undoing all the work I did for supporting old GPUs wi=
+th DC.
+> > I think either this commit should be reverted or someone should add bac=
+k the
+> > analog support bits that were removed. I'm happy to help with that if n=
+eeded.
+> > What do you guys think?
+>
+> I noticed that a patch to fix this mistake is ready by now:
+> drm/amd/display: Restore analog connector support --
+> https://lore.kernel.org/all/20260418003539.1862136-1-Roman.Li@amd.com/
+>
+> And from that thread the fix was even "merged" somewhere. But I can't
+> see this in -next or Alex' drm-fixes-7.1 pull, so I assume it will miss
+> -rc1 (please corrent me if I'm wrong). Is that something to be concerned
+> about?
 
-I've given it light testing with Mathias's reproducer and the
-kselftests, which all pass.
+It will be in -rc2.
 
-I've also pushed it to my arm64/rseq branch:
+Alex
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/mark/linux.git/log/?h=arm64/rseq
-
-Mark.
-
----->8----
-From 79b65cbbfa20aa2cb0bc248591fab5459cdc101b Mon Sep 17 00:00:00 2001
-From: Mark Rutland <mark.rutland@arm.com>
-Date: Thu, 23 Apr 2026 16:51:12 +0100
-Subject: [PATCH] arm64/entry: Fix arm64-specific rseq brokenness
-
-Mathias Stearn reports that since v6.19, there are two big issues
-affecting rseq:
-
-(1) On arm64 specifically, rseq critical sections aren't aborted when
-    they should be.
-
-(2) The 'cpu_id_start' field is no longer written by the kernel in all
-    cases it used to be, including some cases where TCMalloc depends on
-    the kernel clobbering the field.
-
-This patch fixes issue #1. This patch DOES NOT fix issue #2, which will
-need to be addressed by other patches.
-
-The arm64-specific brokenness is a result of commits:
-
-  2fc0e4b4126c ("rseq: Record interrupt from user space")
-  39a167560a61 ("rseq: Optimize event setting")
-
-The first commit failed to add a call to rseq_note_user_irq_entry() on
-arm64. Thus arm64 never sets rseq_event::user_irq to record that it may
-be necessary to abort an active rseq critical section upon return to
-userspace. On its own, this commit had no functional impact as the value
-of rseq_event::user_irq was not consumed.
-
-The second commit relied upon rseq_event::user_irq to determine whether
-or not to bother to perform rseq work when returning to userspace. As
-rseq_event::user_irq wasn't set on arm64, this work would be skipped,
-and consequently an active rseq critical section would not be aborted.
-
-Fix this by giving arm64 syscall-specific entry/exit paths, and
-performing the relevant logic in syscall and non-syscall paths,
-including calling rseq_note_user_irq_entry() for non-syscall entry.
-
-Currently arm64 cannot use syscall_enter_from_user_mode(),
-syscall_exit_to_user_mode(), and irqentry_exit_to_user_mode(), due to
-ordering constraints with exception masking, and risk of ABI breakage
-for syscall tracing/audit/etc. For the moment the entry/exit logic is
-left as arm64-specific, but mirroring the generic code.
-
-I intend to follow up with refactoring/cleanup, as we did for kernel
-mode entry paths in commit:
-
-  041aa7a85390 ("entry: Split preemption from irqentry_exit_to_kernel_mode()")
-
-... which will allow arm64 to use the GENERIC_IRQ_ENTRY functions directly.
-
-Fixes: 39a167560a61 ("rseq: Optimize event setting")
-Reported-by: Mathias Stearn <mathias@mongodb.com>
-Link: https://lore.kernel.org/regressions/CAHnCjA25b+nO2n5CeifknSKHssJpPrjnf+dtr7UgzRw4Zgu=oA@mail.gmail.com/
-Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Chris Kennelly <ckennelly@google.com>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Will Deacon <will@kernel.org>
----
- arch/arm64/kernel/entry-common.c | 29 ++++++++++++++++++++++-------
- include/linux/irq-entry-common.h |  8 --------
- include/linux/rseq_entry.h       | 19 -------------------
- 3 files changed, 22 insertions(+), 34 deletions(-)
-
-diff --git a/arch/arm64/kernel/entry-common.c b/arch/arm64/kernel/entry-common.c
-index cb54335465f66..65ade1f1544f6 100644
---- a/arch/arm64/kernel/entry-common.c
-+++ b/arch/arm64/kernel/entry-common.c
-@@ -62,6 +62,12 @@ static void noinstr arm64_exit_to_kernel_mode(struct pt_regs *regs,
- 	irqentry_exit_to_kernel_mode_after_preempt(regs, state);
- }
- 
-+static __always_inline void arm64_syscall_enter_from_user_mode(struct pt_regs *regs)
-+{
-+	enter_from_user_mode(regs);
-+	mte_disable_tco_entry(current);
-+}
-+
- /*
-  * Handle IRQ/context state management when entering from user mode.
-  * Before this function is called it is not safe to call regular kernel code,
-@@ -70,20 +76,29 @@ static void noinstr arm64_exit_to_kernel_mode(struct pt_regs *regs,
- static __always_inline void arm64_enter_from_user_mode(struct pt_regs *regs)
- {
- 	enter_from_user_mode(regs);
-+	rseq_note_user_irq_entry();
- 	mte_disable_tco_entry(current);
- 	sme_enter_from_user_mode();
- }
- 
-+static __always_inline void arm64_syscall_exit_to_user_mode(struct pt_regs *regs)
-+{
-+	local_irq_disable();
-+	syscall_exit_to_user_mode_prepare(regs);
-+	local_daif_mask();
-+	mte_check_tfsr_exit();
-+	exit_to_user_mode();
-+}
-+
- /*
-  * Handle IRQ/context state management when exiting to user mode.
-  * After this function returns it is not safe to call regular kernel code,
-  * instrumentable code, or any code which may trigger an exception.
-  */
+>
+> Ciao, Thorsten
+>
+> > As a side question, why was this commit merged without any review or ac=
+k?
+> >
+> > Thanks & best regards,
+> > Timur
+> >
+> > On 2026. m=C3=A1rcius 6., p=C3=A9ntek 4:13:45 k=C3=B6z=C3=A9p-eur=C3=B3=
+pai ny=C3=A1ri id=C5=91 Alex Hung wrote:
+> >> From: Roman Li <Roman.Li@amd.com>
+> >>
+> >> This patch provides a bulk merge to align driver
+> >> support for DCN42 with Display Core version 3.2.373.
+> >>
+> >> It includes upgrade for:
+> >> - clk_mgr
+> >> - dml2/dml21
+> >> - optc
+> >> - hubp
+> >> - mpc
+> >> - optc
+> >> - hwseq
+> >>
+> >> Signed-off-by: Roman Li <Roman.Li@amd.com>
+> >> Signed-off-by: Alex Hung <alex.hung@amd.com>
+> >> ---
+> >>  .../gpu/drm/amd/display/dc/bios/bios_parser.c |  11 +-
+> >>  .../display/dc/clk_mgr/dcn42/dcn42_clk_mgr.c  | 141 +++--
+> >>  .../display/dc/clk_mgr/dcn42/dcn42_clk_mgr.h  |   2 +-
+> >>  drivers/gpu/drm/amd/display/dc/core/dc.c      |  95 ++-
+> >>  .../gpu/drm/amd/display/dc/core/dc_stream.c   |  41 +-
+> >>  .../gpu/drm/amd/display/dc/core/dc_surface.c  |   9 +
+> >>  drivers/gpu/drm/amd/display/dc/dc.h           |  59 +-
+> >>  .../gpu/drm/amd/display/dc/dc_bios_types.h    |   3 +-
+> >>  drivers/gpu/drm/amd/display/dc/dc_hw_types.h  |   2 +-
+> >>  drivers/gpu/drm/amd/display/dc/dc_plane.h     |   1 +
+> >>  drivers/gpu/drm/amd/display/dc/dc_types.h     |  24 +
+> >>  .../amd/display/dc/dccg/dcn401/dcn401_dccg.c  |  20 +
+> >>  .../drm/amd/display/dc/dce/dmub_hw_lock_mgr.c |  16 +
+> >>  .../drm/amd/display/dc/dce/dmub_hw_lock_mgr.h |  13 +
+> >>  .../dml2_0/dml21/dml21_translation_helper.c   |  30 +-
+> >>  .../amd/display/dc/dml2_0/dml21/dml21_utils.c |   1 +
+> >>  .../display/dc/dml2_0/dml21/dml21_wrapper.c   |  14 +-
+> >>  .../dml21/inc/bounding_boxes/dcn42_soc_bb.h   | 308 ++++------
+> >>  .../dml21/inc/dml_top_display_cfg_types.h     |  13 +
+> >>  .../dc/dml2_0/dml21/inc/dml_top_types.h       |   2 +
+> >>  .../dml21/src/dml2_core/dml2_core_dcn4.c      | 204 +++----
+> >>  .../dml21/src/dml2_core/dml2_core_factory.c   |   1 +
+> >>  .../dml21/src/dml2_core/dml2_core_utils.c     |  63 +-
+> >>  .../dml21/src/dml2_core/dml2_core_utils.h     |   2 +
+> >>  .../dml21/src/dml2_dpmm/dml2_dpmm_dcn4.c      |   1 -
+> >>  .../dml21/src/dml2_dpmm/dml2_dpmm_factory.c   |   1 +
+> >>  .../dml2_0/dml21/src/dml2_mcg/dml2_mcg_dcn4.h |   2 +-
+> >>  .../dml21/src/dml2_mcg/dml2_mcg_dcn42.h       |   5 +-
+> >>  .../dml21/src/dml2_mcg/dml2_mcg_factory.c     |   1 +
+> >>  .../dml21/src/dml2_pmo/dml2_pmo_dcn4_fams2.c  |   6 +
+> >>  .../dml21/src/dml2_pmo/dml2_pmo_factory.c     |   4 +-
+> >>  .../dml21/src/dml2_pmo/dml2_pmo_factory.h     |   2 +-
+> >>  .../dml21/src/dml2_top/dml2_top_interfaces.c  |   1 +
+> >>  .../dml21/src/dml2_top/dml2_top_legacy.c      |   1 -
+> >>  .../src/inc/dml2_internal_shared_types.h      |   3 +
+> >>  .../drm/amd/display/dc/dml2_0/dml2_wrapper.c  |   3 +-
+> >>  .../amd/display/dc/dpp/dcn30/dcn30_dpp_cm.c   |   2 +
+> >>  .../display/dc/dpp/dcn401/dcn401_dpp_dscl.c   |  21 +
+> >>  .../hpo/dcn31/dcn31_hpo_dp_stream_encoder.c   |   5 +
+> >>  .../amd/display/dc/hubp/dcn401/dcn401_hubp.c  | 201 ++++---
+> >>  .../amd/display/dc/hubp/dcn401/dcn401_hubp.h  |  23 +-
+> >>  .../amd/display/dc/hubp/dcn42/dcn42_hubp.c    |  85 ++-
+> >>  .../amd/display/dc/hubp/dcn42/dcn42_hubp.h    |  16 +-
+> >>  .../amd/display/dc/hwss/dce110/dce110_hwseq.c | 136 +++--
+> >>  .../amd/display/dc/hwss/dcn401/dcn401_hwseq.c | 412 +++++--------
+> >>  .../amd/display/dc/hwss/dcn42/dcn42_hwseq.c   | 553 +++--------------=
 -
- static __always_inline void arm64_exit_to_user_mode(struct pt_regs *regs)
- {
- 	local_irq_disable();
--	exit_to_user_mode_prepare_legacy(regs);
-+	irqentry_exit_to_user_mode_prepare(regs);
- 	local_daif_mask();
- 	sme_exit_to_user_mode();
- 	mte_check_tfsr_exit();
-@@ -92,7 +107,7 @@ static __always_inline void arm64_exit_to_user_mode(struct pt_regs *regs)
- 
- asmlinkage void noinstr asm_exit_to_user_mode(struct pt_regs *regs)
- {
--	arm64_exit_to_user_mode(regs);
-+	arm64_syscall_exit_to_user_mode(regs);
- }
- 
- /*
-@@ -716,12 +731,12 @@ static void noinstr el0_brk64(struct pt_regs *regs, unsigned long esr)
- 
- static void noinstr el0_svc(struct pt_regs *regs)
- {
--	arm64_enter_from_user_mode(regs);
-+	arm64_syscall_enter_from_user_mode(regs);
- 	cortex_a76_erratum_1463225_svc_handler();
- 	fpsimd_syscall_enter();
- 	local_daif_restore(DAIF_PROCCTX);
- 	do_el0_svc(regs);
--	arm64_exit_to_user_mode(regs);
-+	arm64_syscall_exit_to_user_mode(regs);
- 	fpsimd_syscall_exit();
- }
- 
-@@ -868,11 +883,11 @@ static void noinstr el0_cp15(struct pt_regs *regs, unsigned long esr)
- 
- static void noinstr el0_svc_compat(struct pt_regs *regs)
- {
--	arm64_enter_from_user_mode(regs);
-+	arm64_syscall_enter_from_user_mode(regs);
- 	cortex_a76_erratum_1463225_svc_handler();
- 	local_daif_restore(DAIF_PROCCTX);
- 	do_el0_svc_compat(regs);
--	arm64_exit_to_user_mode(regs);
-+	arm64_syscall_exit_to_user_mode(regs);
- }
- 
- static void noinstr el0_bkpt32(struct pt_regs *regs, unsigned long esr)
-diff --git a/include/linux/irq-entry-common.h b/include/linux/irq-entry-common.h
-index 167fba7dbf043..1fabf0f5ea8e7 100644
---- a/include/linux/irq-entry-common.h
-+++ b/include/linux/irq-entry-common.h
-@@ -218,14 +218,6 @@ static __always_inline void __exit_to_user_mode_validate(void)
- 	lockdep_sys_exit();
- }
- 
--/* Temporary workaround to keep ARM64 alive */
--static __always_inline void exit_to_user_mode_prepare_legacy(struct pt_regs *regs)
--{
--	__exit_to_user_mode_prepare(regs, EXIT_TO_USER_MODE_WORK);
--	rseq_exit_to_user_mode_legacy();
--	__exit_to_user_mode_validate();
--}
--
- /**
-  * syscall_exit_to_user_mode_prepare - call exit_to_user_mode_loop() if required
-  * @regs:	Pointer to pt_regs on entry stack
-diff --git a/include/linux/rseq_entry.h b/include/linux/rseq_entry.h
-index f11ebd34f8b95..a3762410c4ab6 100644
---- a/include/linux/rseq_entry.h
-+++ b/include/linux/rseq_entry.h
-@@ -753,24 +753,6 @@ static __always_inline void rseq_irqentry_exit_to_user_mode(void)
- 	ev->events = 0;
- }
- 
--/* Required to keep ARM64 working */
--static __always_inline void rseq_exit_to_user_mode_legacy(void)
--{
--	struct rseq_event *ev = &current->rseq.event;
--
--	rseq_stat_inc(rseq_stats.exit);
--
--	if (static_branch_unlikely(&rseq_debug_enabled))
--		WARN_ON_ONCE(ev->sched_switch);
--
--	/*
--	 * Ensure that event (especially user_irq) is cleared when the
--	 * interrupt did not result in a schedule and therefore the
--	 * rseq processing did not clear it.
--	 */
--	ev->events = 0;
--}
--
- void __rseq_debug_syscall_return(struct pt_regs *regs);
- 
- static __always_inline void rseq_debug_syscall_return(struct pt_regs *regs)
-@@ -786,7 +768,6 @@ static inline bool rseq_exit_to_user_mode_restart(struct pt_regs *regs, unsigned
- }
- static inline void rseq_syscall_exit_to_user_mode(void) { }
- static inline void rseq_irqentry_exit_to_user_mode(void) { }
--static inline void rseq_exit_to_user_mode_legacy(void) { }
- static inline void rseq_debug_syscall_return(struct pt_regs *regs) { }
- static inline bool rseq_grant_slice_extension(unsigned long ti_work, unsigned long mask) { return false; }
- #endif /* !CONFIG_RSEQ */
--- 
-2.30.2
-
+> >>  .../amd/display/dc/hwss/dcn42/dcn42_hwseq.h   |  10 +-
+> >>  .../amd/display/dc/hwss/dcn42/dcn42_init.c    |   8 +-
+> >>  drivers/gpu/drm/amd/display/dc/inc/hw/hubp.h  |  36 +-
+> >>  .../gpu/drm/amd/display/dc/inc/hw/hw_shared.h |  18 +-
+> >>  drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h   | 112 ++--
+> >>  drivers/gpu/drm/amd/display/dc/inc/resource.h |   1 +
+> >>  .../amd/display/dc/mpc/dcn401/dcn401_mpc.c    | 177 +++---
+> >>  .../amd/display/dc/mpc/dcn401/dcn401_mpc.h    |  25 +-
+> >>  .../drm/amd/display/dc/mpc/dcn42/dcn42_mpc.c  | 390 ++----------
+> >>  .../drm/amd/display/dc/mpc/dcn42/dcn42_mpc.h  |  50 +-
+> >>  .../amd/display/dc/optc/dcn10/dcn10_optc.h    |   2 +-
+> >>  .../amd/display/dc/optc/dcn42/dcn42_optc.c    | 105 +++-
+> >>  .../amd/display/dc/optc/dcn42/dcn42_optc.h    |  13 +-
+> >>  .../dc/resource/dcn42/dcn42_resource.c        |  10 +-
+> >>  .../dcn401/dcn401_soc_and_ip_translator.c     |   3 +
+> >>  .../dcn42/dcn42_soc_and_ip_translator.c       |  12 +-
+> >>  .../gpu/drm/amd/display/dmub/inc/dmub_cmd.h   |  38 +-
+> >>  .../include/asic_reg/dcn/dcn_4_2_0_offset.h   |   2 +
+> >>  .../include/asic_reg/dcn/dcn_4_2_0_sh_mask.h  |   9 +
+> >>  65 files changed, 1596 insertions(+), 1984 deletions(-)
+> >
+> >
+> >
+> >
+> >
+>
