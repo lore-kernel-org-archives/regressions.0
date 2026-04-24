@@ -1,202 +1,277 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.162])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1553B1D5CC9
-	for <regressions@lists.linux.dev>; Fri, 24 Apr 2026 07:51:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.162
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777017089; cv=none; b=g9kxF6UslxeIM9vdanKKLe2fuSbtn3O2Or5tAf/Blc5gqdwp6uTzXK7+IZGcolWFsHRBlobw+4ovHbBdvkrDRYRMbLEvbzmyXKiXZl6n0YK4P8jgBmZ84mSZV1fM+8OOe/i5mDo08Z6lGCtLNwz10iOwn3N2ALfY5nAMgJORb7c=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777017089; c=relaxed/simple;
-	bh=q+xPFMBHJhjI+lv575vR2OklPRNyBbx4ReRSfdrgsok=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GuD5oVLH5Vp3f1M68n7TJxN2ZolRcoLHiYwLXLcI4q9AooNNqpl6n1bjvVVDrvna3+wtbDCfPoewdq9/WRWkKhr5U6tV59kIJe8cWX6Ci75PEKwILbu0I0AQjo3nkEABQ9NL/Xb/bZr01PkZ4Bkn7SZ4Hdj9Vu3/TRAG7VM1hzk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=ErBe5CkY; arc=none smtp.client-ip=188.68.63.162
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 211BD372ECE
+	for <regressions@lists.linux.dev>; Fri, 24 Apr 2026 07:57:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.167.47
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1777017432; cv=pass; b=DEIUYUSo8oM48JOp6btRt3ifWZDpotH4f5rXBiM7lXXtvJiE1P2FgsA1qV7/rOUiAKZI1oVRSAO+bX0JT3O+5JK2WcFXxsJAigsnQoP/xFOh+74Ysy1La9P8lF9Uum2ZNbeTQ31OtQOb2RaybvaHneiAUrPq6gX5jY69RHok+Ek=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1777017432; c=relaxed/simple;
+	bh=HCb0SMH+1JGy/xLd8LWsIFi5YiWSKOjijV9SvLdq1C0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Cp2u2+Uz3n4/DPs6GfIVkrPGEaJKitqTRbpLXiMPBXllcogrYBfxLRwmyrcdqWeHBpxtVio7qjS60QZXxZUqMXphO6FB/30juz65d0fW+AifidNP9k8QXQ8JKyjNlk9Z0T1U63YGfnbnj0RytUG7QiuHL2QUdb2R+ahNRMha8MM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dkv5jnF9; arc=pass smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="ErBe5CkY"
-Received: from mors-relay-8201.netcup.net (localhost [127.0.0.1])
-	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4g24rm627yz3wV6;
-	Fri, 24 Apr 2026 09:50:48 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1777017048;
-	bh=q+xPFMBHJhjI+lv575vR2OklPRNyBbx4ReRSfdrgsok=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ErBe5CkYJiSpCEpAwlGS0YdGEInJklZxc6WkeTyXBue83eWFxfMM8XahI3KvKBpV+
-	 ggAXh4Ec+kNNHyVYRSkXGwhbtsgZLxwq8ncuaiu0XdoqwIBue9dIBBRDLHIJuMmvYy
-	 BZJlIEpM13lSxUKLzrUx0HwADjkPXbZHRjMG8pSE91GSSE/E/YWt5C51SGAh21UO32
-	 3BKv8wfw12Vr4NPf2yCxQcSBx2N04YUi9RVzHefID6ED5TbnR7pPpNLNhENXf7F1cQ
-	 GU9kUOXj0bkaWvP3mC4Lkuc4VIHJRwSQBv7tLL2pRtoid7cC51iD17h5pnyVhp2pXJ
-	 gmcolkhFpYCQw==
-Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4g24rm3J9Cz3wF7;
-	Fri, 24 Apr 2026 09:50:48 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
-X-Spam-Flag: NO
-X-Spam-Score: -2.898
-X-Spam-Level: 
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4g24rk2NqBz8tc2;
-	Fri, 24 Apr 2026 09:50:46 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 70984632DF;
-	Fri, 24 Apr 2026 09:50:45 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <df82dbc6-623f-4be7-acbc-49157e59764c@leemhuis.info>
-Date: Fri, 24 Apr 2026 09:50:44 +0200
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dkv5jnF9"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-5a415fd6bceso8406329e87.1
+        for <regressions@lists.linux.dev>; Fri, 24 Apr 2026 00:57:08 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1777017427; cv=none;
+        d=google.com; s=arc-20240605;
+        b=Sf0iDcUAz+n0DWu7jsE0m7PBzhQm0bdjM3NDaG+4C9pACH8bgPjK+bYgAPxrGDMevz
+         eaX0QhBzV/t8jOrTTl3uSIYBhpBuliaBODe7e0Jq1AQgxwfe8KAyIZMJLBdyh+L6orZb
+         NzDbKgNzhXG+QkhfC9SwEc+KVlKdJaLyxAD3lxZpZEfDuqta6rRC3MzGW5IC/fMG8OKz
+         HYUyRfaGjAVt+jpaDyMj2yHiWaPYatMJB4og1UVKEBmMBbpwHFXcs1LjulxQw0LD+n9P
+         7C/JUnJfoxRtVs7kiRlkF6A5zJGSK1YotSxzZsQnkJRu8EOSvGycsifRI+Zvwsf+GJ2+
+         M1EQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=tH1PYd1ytZ2gVkG2S56kMVCpAGOPHrHwrakfrH4hUps=;
+        fh=ADQj71S1wU6N7Sz2ToE+2jQGYHMIkRkrlyqxnzTQA2Q=;
+        b=IVH7fFv6U2/2heplqkA2Uts+ORJ2UdbmlD1uBUiV7XFn0fkjlPKnGJtuWSH3rWYJE5
+         YuMQBXKT1AlfWe83PR5rW/vMhs2DZJ8RdJ9rlk2MTvcLY0dL23uZpXhIImq6ZA1C63l0
+         yB6ydR5kVbJyaTrHzMMXQMfi2hNLfskem29XFjV/ESixHSVcEII/z6XzTBGCxQuFvOJ8
+         54IP86ArRMgyVTPc5LhW05DbAItmMDzFF3RJNHtBKn4PLtJkv8ryEipvZo8RpjqIHdnh
+         Q/jJ1wkGv1A9VvJzWABeA0sFhzw4HY8Bx8EEEcpi5Akrl1vh8lYyu62dlJitzIdqm+3V
+         7Lbw==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1777017427; x=1777622227; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tH1PYd1ytZ2gVkG2S56kMVCpAGOPHrHwrakfrH4hUps=;
+        b=dkv5jnF9a9BADhxD4mgeQiwcV3scWsUtiesUPRwfhWnts9/i0nM6IML000hpT73GXj
+         fxb9nRwnDTClRepknsqJ4CiPMwEBFvWNPl5LJw8amSixcw/CqIAGTfAWJ4k6UG0jhDve
+         i8ifTVXJ9JxYeEhPwP6dY7sirL8+ne/9ZSDjgPaznNbrrtazinBcjiaT4QozFmYTmslJ
+         0GxzyVIlEUZ7RQhBPjRbwSSn/Ok3ZtwiWIxtXu1X5V6luxipOyZ7R2aCJE750qij6oLD
+         umJwl08puXkBumGOI4F6Awn0x+/PG/CnlpPAkoAogPRP6BK0xRspNm3Q3aVfDcEDauvR
+         NBXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1777017427; x=1777622227;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=tH1PYd1ytZ2gVkG2S56kMVCpAGOPHrHwrakfrH4hUps=;
+        b=W8hXHXak5pM9Wcs/5uLBqUhmlJ4AvENEnwCxLf/85EbkBuh5zIT+30SLUIDbehVnQ0
+         jIW91h+8F5gIuMa+KxtBsFdFfMVnPDxJSYajm+sgANQYbSNBfhz7qGvezq85QEnOHR6d
+         UR4NURfrEhA4seI3ryuxd1u+FkiKHulhmX9YptLHFAW+149E5AxPDrIPhAy3RL419jZH
+         TYoi6pVamOrAp8/f6qY5RMBRK/15udSx+jnNuyK0xGUmbCF/OameVBSSvU0FvVl+V1zE
+         VGPd2AFZyzy5ZItEI0h9MkPNvfMz66i7Pcn/J7IkN3O+VbZIDHJOKp+8iUWKi9H7W8Dn
+         3LsA==
+X-Forwarded-Encrypted: i=1; AFNElJ+T0BlXec/GqmX5O/4fCBplN6tdT+0zMh24LMyD4ce5cg4QNDmiCkkV9Mbd555yZb2fjlT5jT3rQ/9PwQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yz0f+4F5h76lHdZ4Drc4Bnfly3e8BrtMlJF3FAeoADjhilKAtML
+	Q1bEPdZEM4ROWciDvlQdEJrcMicpTAOVkWt0pR2vDyyhdhme/80oCnHApcNKo2R0n5i+34uo1uQ
+	9UY2kb9xRkZyA3IKQWpf6enLiaX+aGB4ZN12IMTA2
+X-Gm-Gg: AeBDiesmR78wusK/rJkl7upPPeD93+Sert6/WLby5EJAuk8YRunmuUxfFDmyIm/zR38
+	h+nV7F69vclT3NaqqKhif6YEJ6txg9x11fuadwAzLH8eUe3omnAgaK5NH/8BWlVre8dk9QyqF2N
+	XFj3jtS3bugWgEEno6tDtzm4WVEkvNHE6elY1OQPu1PRwKx+j9YMj6/OU+djspGVbknWIeaP/Mh
+	C2xhoAUQ6iaMeOlSSv+6kSpOAr3/P4sY+ZZghWMJKHWOXyqlh1ob4rqbVuhAhh1r1z/aoJfphPJ
+	xlR8D0c8HuqcSBv0ya4S0GQvfPz+PyghNWwHSkkw7fyH6NLOmRLs0SvLzP+v5OUv2FMP3iRYNrV
+	MsRYmZCQj6KBpmuqENvA7yf4cyto=
+X-Received: by 2002:a05:6512:61b3:b0:5a3:e7f1:5946 with SMTP id
+ 2adb3069b0e04-5a4171766e8mr10818350e87.9.1777017426431; Fri, 24 Apr 2026
+ 00:57:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: DC analog support regressed by "drm/amd/display: Sync dcn42 with
- DC 3.2.373"
-To: =?UTF-8?Q?Timur_Krist=C3=B3f?= <timur.kristof@gmail.com>,
- amd-gfx@lists.freedesktop.org, Alex Deucher <alexander.deucher@amd.com>
-Cc: Harry Wentland <harry.wentland@amd.com>, Leo Li <sunpeng.li@amd.com>,
- Aurabindo Pillai <aurabindo.pillai@amd.com>, Roman Li <roman.li@amd.com>,
- Wayne Lin <wayne.lin@amd.com>, Tom Chung <chiahsuan.chung@amd.com>,
- Fangzhi Zuo <jerry.zuo@amd.com>, Dan Wheeler <daniel.wheeler@amd.com>,
- Ray Wu <Ray.Wu@amd.com>, Ivan Lipski <ivan.lipski@amd.com>,
- Alex Hung <alex.hung@amd.com>, David Airlie <airlied@gmail.com>,
- Christian <christian.koenig@amd.com>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <20260306031932.136179-1-alex.hung@amd.com>
- <20260306031932.136179-20-alex.hung@amd.com> <7370736.9J7NaK4W3v@timur-max>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <7370736.9J7NaK4W3v@timur-max>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-PPP-Message-ID: <177701704603.204622.11882405151607592230@mxe9fb.netcup.net>
-X-NC-CID: RKmzBR7hlRLGi7BGHvblUZI5R5G2qb2GlgMyhkR/THktSzjkVdc=
+References: <CAHnCjA25b+nO2n5CeifknSKHssJpPrjnf+dtr7UgzRw4Zgu=oA@mail.gmail.com>
+ <aejCaG6n9s7ak5TO@J2N7QTR9R3.cambridge.arm.com> <87zf2u28d1.ffs@tglx>
+ <aekPXvvuKHKlETjm@J2N7QTR9R3.cambridge.arm.com> <87wlxy22x7.ffs@tglx>
+ <c5331cd6-76c8-430d-978e-fcad164e48f6@huawei.com> <CACT4Y+bxnQyHGdVNE1BYTx+Z2-cscLb38HYS9jBM5gPAz8=4bw@mail.gmail.com>
+ <87ik9i0xlj.ffs@tglx> <CAHnCjA0UBNXfjHw=Y34OrAyGRNUtVF+zWd3ugyX6pd_mCk8K9w@mail.gmail.com>
+ <87a4ut1njh.ffs@tglx>
+In-Reply-To: <87a4ut1njh.ffs@tglx>
+From: Dmitry Vyukov <dvyukov@google.com>
+Date: Fri, 24 Apr 2026 09:56:54 +0200
+X-Gm-Features: AQROBzACQ3yI2kl8vg3Kcy5MxWLQ9Q6j6OYD-UEZj9wyuB3F1SqwdpFTVc0GJDU
+Message-ID: <CACT4Y+bBD7uCHXKqGo=epBXeEmsZ67Og2YO9kjNMT3ryjUY_sA@mail.gmail.com>
+Subject: Re: [REGRESSION] rseq: refactoring in v6.19 broke everyone on arm64
+ and tcmalloc everywhere
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Mathias Stearn <mathias@mongodb.com>, Jinjie Ruan <ruanjinjie@huawei.com>, 
+	linux-man@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Boqun Feng <boqun.feng@gmail.com>, 
+	"Paul E. McKenney" <paulmck@kernel.org>, Chris Kennelly <ckennelly@google.com>, regressions@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
+	Blake Oler <blake.oler@mongodb.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 4/13/26 15:09, Timur Kristóf wrote:
-> This patch breaks analog connector support in DCE, both for analog encoders 
-> and DP bridge encoders, because it deletes key functions such as 
-> dce110_enable_analog_link_output, dce110_prepare_ddc, 
-> dce110_external_encoder_control, and more.
-> 
-> With this patch applied, when you connect an analog monitor you just get a 
-> crash in DC from trying to call link->dc->hwss.enable_analog_link_output() 
-> which is now NULL.
-> 
-> This is basically undoing all the work I did for supporting old GPUs with DC.
-> I think either this commit should be reverted or someone should add back the 
-> analog support bits that were removed. I'm happy to help with that if needed.
-> What do you guys think?
+On Thu, 23 Apr 2026 at 21:31, Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> On Thu, Apr 23 2026 at 12:51, Mathias Stearn wrote:
+> > On Thu, Apr 23, 2026 at 12:39=E2=80=AFPM Thomas Gleixner <tglx@linutron=
+ix.de> wrote:
+> >> The kernel clears rseq_cs reliably when user space was interrupted and=
+:
+> >>
+> >>     the task was preempted
+> >> or
+> >>     the return from interrupt delivers a signal
+> >>
+> >> If the task invoked a syscall then there is absolutely no reason to do
+> >> either of this because syscalls from within a critical section are a
+> >> bug and catched when enabling rseq debugging.
+> >>
+> >> The original code did this along with unconditionally updating CPU/MMC=
+ID
+> >> which resulted in ~15% performance regression on a syscall heavy
+> >> database benchmark once glibc started to register rseq.
+> >
+> > Just to be clear TCMalloc does not need either rseq_cs to be cleared
+> > or cpu_id_start to be written to on syscalls because it doesn't do
+> > syscalls from critical sections. It will actually benefit (slightly)
+> > from not updating cpu_id_start on syscalls.
+>
+> I know that it does not do syscalls from within critical sections, but
+> it relies on cpu_id_start being unconditionally updated in one way or
+> the other.
+>
+> > It is specifically in the cases where an rseq would need to be aborted
+> > (preemption, signals, migration, and membarrier IPI with the rseq
+> > flag) that TCMalloc relies on cpu_id_start being written. It does rely
+> > on that write even when not inside the critical section, because it
+> > effectively uses that to detect if there were any would-cause-abort
+> > events in between two critical sections. But since it leaves the
+> > rseq_cs pointer non-null between critical sections, so you dont need
+> > to add _any_ overhead for programs that never make use of rseq after
+> > registration, or add any overhead to syscalls even for those who do.
+>
+> Well. According to the comment in the tcmalloc code:
+>
+> // Calculation of the address of the current CPU slabs region is needed f=
+or
+> // allocation/deallocation fast paths, but is quite expensive. Due to var=
+iable
+> // shift and experimental support for "virtual CPUs", the calculation inv=
+olves
+> // several additional loads and dependent calculations. Pseudo-code for t=
+he
+> // address calculation is as follows:
+> //
+> //   cpu_offset =3D TcmallocSlab.virtual_cpu_id_offset_;
+> //   cpu =3D *(&__rseq_abi + virtual_cpu_id_offset_);
+> //   slabs_and_shift =3D TcmallocSlab.slabs_and_shift_;
+> //   shift =3D slabs_and_shift & kShiftMask;
+> //   shifted_cpu =3D cpu << shift;
+> //   slabs =3D slabs_and_shift & kSlabsMask;
+> //   slabs +=3D shifted_cpu;
+> //
+> // To remove this calculation from fast paths, we cache the slabs address
+> // for the current CPU in thread local storage. However, when a thread is
+> // rescheduled to another CPU, we somehow need to understand that the cac=
+hed
+>
+>                   ^^^^^^^^^^^
+>
+> // address is not valid anymore. To achieve this, we overlap the top 4 by=
+tes
+> // of the cached address with __rseq_abi.cpu_id_start. When a thread is
+> // rescheduled the kernel overwrites cpu_id_start with the current CPU nu=
+mber,
+> // which gives us the signal that the cached address is not valid anymore=
+.
+>
+> The kernel still as of today (the arm64 bug aside) updates the
+> cpu_id_start and cpu_id fields in rseq when a task is rescheduled to
+> another CPU.
+>
+> So if the code only requires to know when it got rescheduled to another
+> CPU then it still should work, no?
 
-I noticed that a patch to fix this mistake is ready by now:
-drm/amd/display: Restore analog connector support --
-https://lore.kernel.org/all/20260418003539.1862136-1-Roman.Li@amd.com/
+This was my first thought too:
+https://lore.kernel.org/lkml/CACT4Y+a9GnOh3wHKSRwzoKF6_OSksQ8qehnHfpCgkQSt_=
+OOmYg@mail.gmail.com/
+The only problem is with membarrier (it used to force write to
+__rseq_abi.cpu_id_start for all threads, but now it does not).
+Otherwise the caching scheme works.
 
-And from that thread the fix was even "merged" somewhere. But I can't
-see this in -next or Alex' drm-fixes-7.1 pull, so I assume it will miss
--rc1 (please corrent me if I'm wrong). Is that something to be concerned
-about?
+I have a tentative fix for tcmalloc:
+https://github.com/dvyukov/tcmalloc/commit/58d0eca91503f539b26d20b6f55fb2f6=
+f8bc0c37
 
-Ciao, Thorsten
+The crux is as follows.
+Tcmalloc needs to make all threads stop using old cached slab
+pointers. The stopping procedure is now:
 
-> As a side question, why was this commit merged without any review or ack?
-> 
-> Thanks & best regards,
-> Timur
-> 
-> On 2026. március 6., péntek 4:13:45 közép-európai nyári idő Alex Hung wrote:
->> From: Roman Li <Roman.Li@amd.com>
->>
->> This patch provides a bulk merge to align driver
->> support for DCN42 with Display Core version 3.2.373.
->>
->> It includes upgrade for:
->> - clk_mgr
->> - dml2/dml21
->> - optc
->> - hubp
->> - mpc
->> - optc
->> - hwseq
->>
->> Signed-off-by: Roman Li <Roman.Li@amd.com>
->> Signed-off-by: Alex Hung <alex.hung@amd.com>
->> ---
->>  .../gpu/drm/amd/display/dc/bios/bios_parser.c |  11 +-
->>  .../display/dc/clk_mgr/dcn42/dcn42_clk_mgr.c  | 141 +++--
->>  .../display/dc/clk_mgr/dcn42/dcn42_clk_mgr.h  |   2 +-
->>  drivers/gpu/drm/amd/display/dc/core/dc.c      |  95 ++-
->>  .../gpu/drm/amd/display/dc/core/dc_stream.c   |  41 +-
->>  .../gpu/drm/amd/display/dc/core/dc_surface.c  |   9 +
->>  drivers/gpu/drm/amd/display/dc/dc.h           |  59 +-
->>  .../gpu/drm/amd/display/dc/dc_bios_types.h    |   3 +-
->>  drivers/gpu/drm/amd/display/dc/dc_hw_types.h  |   2 +-
->>  drivers/gpu/drm/amd/display/dc/dc_plane.h     |   1 +
->>  drivers/gpu/drm/amd/display/dc/dc_types.h     |  24 +
->>  .../amd/display/dc/dccg/dcn401/dcn401_dccg.c  |  20 +
->>  .../drm/amd/display/dc/dce/dmub_hw_lock_mgr.c |  16 +
->>  .../drm/amd/display/dc/dce/dmub_hw_lock_mgr.h |  13 +
->>  .../dml2_0/dml21/dml21_translation_helper.c   |  30 +-
->>  .../amd/display/dc/dml2_0/dml21/dml21_utils.c |   1 +
->>  .../display/dc/dml2_0/dml21/dml21_wrapper.c   |  14 +-
->>  .../dml21/inc/bounding_boxes/dcn42_soc_bb.h   | 308 ++++------
->>  .../dml21/inc/dml_top_display_cfg_types.h     |  13 +
->>  .../dc/dml2_0/dml21/inc/dml_top_types.h       |   2 +
->>  .../dml21/src/dml2_core/dml2_core_dcn4.c      | 204 +++----
->>  .../dml21/src/dml2_core/dml2_core_factory.c   |   1 +
->>  .../dml21/src/dml2_core/dml2_core_utils.c     |  63 +-
->>  .../dml21/src/dml2_core/dml2_core_utils.h     |   2 +
->>  .../dml21/src/dml2_dpmm/dml2_dpmm_dcn4.c      |   1 -
->>  .../dml21/src/dml2_dpmm/dml2_dpmm_factory.c   |   1 +
->>  .../dml2_0/dml21/src/dml2_mcg/dml2_mcg_dcn4.h |   2 +-
->>  .../dml21/src/dml2_mcg/dml2_mcg_dcn42.h       |   5 +-
->>  .../dml21/src/dml2_mcg/dml2_mcg_factory.c     |   1 +
->>  .../dml21/src/dml2_pmo/dml2_pmo_dcn4_fams2.c  |   6 +
->>  .../dml21/src/dml2_pmo/dml2_pmo_factory.c     |   4 +-
->>  .../dml21/src/dml2_pmo/dml2_pmo_factory.h     |   2 +-
->>  .../dml21/src/dml2_top/dml2_top_interfaces.c  |   1 +
->>  .../dml21/src/dml2_top/dml2_top_legacy.c      |   1 -
->>  .../src/inc/dml2_internal_shared_types.h      |   3 +
->>  .../drm/amd/display/dc/dml2_0/dml2_wrapper.c  |   3 +-
->>  .../amd/display/dc/dpp/dcn30/dcn30_dpp_cm.c   |   2 +
->>  .../display/dc/dpp/dcn401/dcn401_dpp_dscl.c   |  21 +
->>  .../hpo/dcn31/dcn31_hpo_dp_stream_encoder.c   |   5 +
->>  .../amd/display/dc/hubp/dcn401/dcn401_hubp.c  | 201 ++++---
->>  .../amd/display/dc/hubp/dcn401/dcn401_hubp.h  |  23 +-
->>  .../amd/display/dc/hubp/dcn42/dcn42_hubp.c    |  85 ++-
->>  .../amd/display/dc/hubp/dcn42/dcn42_hubp.h    |  16 +-
->>  .../amd/display/dc/hwss/dce110/dce110_hwseq.c | 136 +++--
->>  .../amd/display/dc/hwss/dcn401/dcn401_hwseq.c | 412 +++++--------
->>  .../amd/display/dc/hwss/dcn42/dcn42_hwseq.c   | 553 +++---------------
->>  .../amd/display/dc/hwss/dcn42/dcn42_hwseq.h   |  10 +-
->>  .../amd/display/dc/hwss/dcn42/dcn42_init.c    |   8 +-
->>  drivers/gpu/drm/amd/display/dc/inc/hw/hubp.h  |  36 +-
->>  .../gpu/drm/amd/display/dc/inc/hw/hw_shared.h |  18 +-
->>  drivers/gpu/drm/amd/display/dc/inc/hw/mpc.h   | 112 ++--
->>  drivers/gpu/drm/amd/display/dc/inc/resource.h |   1 +
->>  .../amd/display/dc/mpc/dcn401/dcn401_mpc.c    | 177 +++---
->>  .../amd/display/dc/mpc/dcn401/dcn401_mpc.h    |  25 +-
->>  .../drm/amd/display/dc/mpc/dcn42/dcn42_mpc.c  | 390 ++----------
->>  .../drm/amd/display/dc/mpc/dcn42/dcn42_mpc.h  |  50 +-
->>  .../amd/display/dc/optc/dcn10/dcn10_optc.h    |   2 +-
->>  .../amd/display/dc/optc/dcn42/dcn42_optc.c    | 105 +++-
->>  .../amd/display/dc/optc/dcn42/dcn42_optc.h    |  13 +-
->>  .../dc/resource/dcn42/dcn42_resource.c        |  10 +-
->>  .../dcn401/dcn401_soc_and_ip_translator.c     |   3 +
->>  .../dcn42/dcn42_soc_and_ip_translator.c       |  12 +-
->>  .../gpu/drm/amd/display/dmub/inc/dmub_cmd.h   |  38 +-
->>  .../include/asic_reg/dcn/dcn_4_2_0_offset.h   |   2 +
->>  .../include/asic_reg/dcn/dcn_4_2_0_sh_mask.h  |   9 +
->>  65 files changed, 1596 insertions(+), 1984 deletions(-)
-> 
-> 
-> 
-> 
-> 
+slab->stopped =3D true;
+membarrier();
 
+and all rseq critical sections now check the stopped flag in the
+cached slab pointer. If it's set, the thread does not proceed to use
+the slab.
+
+
+
+
+> But it does not, which makes it clear that it relies on this
+> undocumented behaviour of the kernel to rewrite rseq::cpu_id_start
+> unconditionally. I'm not yet convinced that it relies on it only when
+> interrupted between two subsequent critical sections. We'll see.
+>
+> ....
+>
+> Now we come to the best part of this comment:
+>
+> // Note: this makes __rseq_abi.cpu_id_start unusable for its original pur=
+pose.
+>
+> So any code sequence which ends up in:
+>
+>    x =3D tcmalloc();
+>    dostuff(x)
+>      evaluate(rseq::cpu_id_start, rseq::cpu_id)
+>
+> is doomed. This might be acceptable for Google internal usage where they
+> control the full stack and can prevent anyone else to utilize rseq, but
+> in an open ecosystem that's obviously a non-starter.
+>
+> And they definitely forgot to add this to the comment:
+>
+> // Never enable CONFIG_RSEQ_DEBUG in the kernel when you use tcmalloc as
+> // it will expose the blatant ABI abuse and therefore will kill your
+> // application.
+>
+> If your assumption that the rewrite is only required when rseq::rseq_cs
+> is non NULL and user space was interrupted is correct, then the obvious
+> no-brainer would have been to add:
+>
+>         __u64   rseq_usr_data;
+>
+> to struct rseq and clear that unconditionally when rseq::rseq_cs is
+> cleared.
+>
+> But that would have been too simple, would work independent of endianess
+> and not in the way of anybody else.
+>
+> But I know that's incompatible with the features first, correctness
+> later and we own the world anyway mindset.
+>
+> Just for giggles I asked Google Gemini about the implications of
+> tmalloc's rseq abuse. The answer is pretty clear:
+>
+>    "In short, TCMalloc treats RSEQ as a private optimization rather than
+>     a shared system resource, which compromises the stability and
+>     extensibility of any application that needs RSEQ for anything other
+>     than memory allocation."
+>
+> It's also very clear about the wilful ignorance of the tcmalloc people:
+>
+>    "In summary, the developers have known for at least 6 years that the
+>     implementation was non-standard and conflicting with other rseq
+>     usage. The github issue which requested glibc compatibility was
+>     opened in 2022 and has been unresolved since then."
+>
+> Thanks,
+>
+>         tglx
