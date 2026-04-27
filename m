@@ -1,128 +1,171 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.61.107])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 988953B2FF3
-	for <regressions@lists.linux.dev>; Mon, 27 Apr 2026 09:44:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.61.107
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7058339FCBF;
+	Mon, 27 Apr 2026 11:03:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777283082; cv=none; b=PLUvzoMCKnQTKU9nUrBpUkn48Lawyk3P9pEU17vTWIg3r6l5dFz27nvIYuNYp9d/TE5pBU6ezv4m7KEMbjLHAFwq6WxS3dNFZI0YwY1PDI8gXK/R7iCUiMSXm7lynIqlME6U57x4emQkLgKXj8Hk0RsRu5+dQ+5KpUjaN2CW0fc=
+	t=1777287816; cv=none; b=Uo9VDE0C7bjW9b9Ce7lIDmXXvHELmsxhRdjGt8PFE/AjznVcfdzYeHCmMcGNdGGuWv7H1aS4hjah0avh2YbMmCQai5YCuffz/515sDWBTjf5TXDeE/KbERFpEmvp9BkUNNpn5j+lTChBo/8xJ92KCkSmlpy4KsrN13sGpRAjVLA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777283082; c=relaxed/simple;
-	bh=WAZl2h4jDPwyDStFG5RaQK5OkI2VUxN4Ha5YU0wrxNU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
-	 In-Reply-To:Content-Type; b=tpaKlPsn4NAUfjDP3RbsNoTiFjVjgvFST8b/XPkh/aCkX7na8hL5KkXzN4BdeDAiM8KZS7RTJq4yPl4Rk/srVuu4thW4zwS7uFm+oTAm4JU8Eg/pwkucyxi0yTIZjBqCoepeR7Ol9ySeTgHhtDsndJuBYQdb/HvcsaHBvl6cpX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=QPoHYnKp; arc=none smtp.client-ip=188.68.61.107
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1777287816; c=relaxed/simple;
+	bh=mfBAB9FOwkm1Dop7GmMwc5djKkLgtg5prbiveNDEdfI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=IeXZmzCGl5FxKv5BafxHNNsJd6X3+XVPLoFZ8lyuT7yAbaJQQGLw1zJ+gUC8E16DGmPdILEuUuWSJ31fdCGx2bXop3WO4Pw9/G9LeqO+yEVOV3UrZAE0vCzviAG3bBwLJljGSvta4/ZzNHZkyZTTT0IpbMI9+l8jRtUdQHnUSuw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=otd0/abj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="QPoHYnKp"
-Received: from mors-relay-8405.netcup.net (localhost [127.0.0.1])
-	by mors-relay-8405.netcup.net (Postfix) with ESMTPS id 4g3z2R48WVz71Rl;
-	Mon, 27 Apr 2026 11:35:43 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1777282543;
-	bh=WAZl2h4jDPwyDStFG5RaQK5OkI2VUxN4Ha5YU0wrxNU=;
-	h=Date:Subject:To:References:From:Cc:Reply-To:In-Reply-To:From;
-	b=QPoHYnKpfVBaPOc5UWoNMSH4LNGLk+EnLKw2CqVa0HMdrowXkFHJ+VhxtJZTIIS8z
-	 aR1W6YK8AbD0NYjnXeCCvFpL4yfGKH8VTCgGr3GHYIdZpNOkWP/Yt74IboqiBQlNa8
-	 Hg2PC6N32L90uy0Oj/Ys2ANvlBG9RnZ5OzsRhfiVAezsW17Wp7E1Yex0NUWB/hSjrM
-	 ciESgFugKCo0m5OprzVRI3c9QZesVaxQtkIhGgYSQoexVzcodxwZ98VCkw1C9bBUuS
-	 ViVy7qkgK7VcHr8BFu8J1Z8529StnfjUvDBxEKP4b8RBS1c2yiFgp9bzO44KhFJBwy
-	 cJP94MJfLw3tw==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-8405.netcup.net (Postfix) with ESMTPS id 4g3z2R3SLWz71R1;
-	Mon, 27 Apr 2026 11:35:43 +0200 (CEST)
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4g3z2Q3HFjz8sZh;
-	Mon, 27 Apr 2026 11:35:42 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id A8262632B7;
-	Mon, 27 Apr 2026 11:35:41 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <6c48aff5-b6ee-40af-98f0-c26ded3095bc@leemhuis.info>
-Date: Mon, 27 Apr 2026 11:35:40 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="otd0/abj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 579ACC2BCB6;
+	Mon, 27 Apr 2026 11:03:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1777287816;
+	bh=mfBAB9FOwkm1Dop7GmMwc5djKkLgtg5prbiveNDEdfI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=otd0/abjUvw83JPGQOA2ciEwz7mgMnJ3o+QFjuaxPsN8ubpwpOxV9sHQbzcm8jOv/
+	 2EaWRp+AzJjyJDmuGRGuqtVXjqmLLqRSUYP6qLpo3SmOYNNOUc61RQdmt3SGB/g5D4
+	 Dr0LeH5zkb3vAWr0/LJDfuCVK6FPnLHng4CzEjBemuBmrdVfBeVDQCoyB8ii3Bn6X1
+	 SHgxf1ryl6sPypmZYS+ccHOZWr1+xdFe7fj2EnwJPbT3aYAhXZ2pKHly5nHzURbFoE
+	 8DA0/mz3h362AGfaBATTWHfXod8o5mHpRv3safu6kJ4CvsXEV2xvboDPilL0fE4u/m
+	 tTx+VMWL4/K5w==
+From: Thomas Gleixner <tglx@kernel.org>
+To: Florian Weimer <fweimer@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Mathias Stearn
+ <mathias@mongodb.com>, Dmitry Vyukov <dvyukov@google.com>, Jinjie Ruan
+ <ruanjinjie@huawei.com>, linux-man@vger.kernel.org, Mark Rutland
+ <mark.rutland@arm.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Catalin Marinas
+ <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Boqun Feng
+ <boqun.feng@gmail.com>, "Paul E. McKenney" <paulmck@kernel.org>, Chris
+ Kennelly <ckennelly@google.com>, regressions@lists.linux.dev,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Ingo
+ Molnar <mingo@kernel.org>, Blake Oler <blake.oler@mongodb.com>, Rich
+ Felker <dalias@libc.org>, Matthew Wilcox <willy@infradead.org>, Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Torvalds
+ <torvalds@linuxfoundation.org>, criu@lists.linux.dev
+Subject: Re: [REGRESSION] rseq: refactoring in v6.19 broke everyone on arm64
+ and tcmalloc everywhere
+In-Reply-To: <lhujyts4zr8.fsf@oldenburg.str.redhat.com>
+References: <aekPXvvuKHKlETjm@J2N7QTR9R3.cambridge.arm.com>
+ <87wlxy22x7.ffs@tglx> <c5331cd6-76c8-430d-978e-fcad164e48f6@huawei.com>
+ <CACT4Y+bxnQyHGdVNE1BYTx+Z2-cscLb38HYS9jBM5gPAz8=4bw@mail.gmail.com>
+ <87ik9i0xlj.ffs@tglx>
+ <CAHnCjA0UBNXfjHw=Y34OrAyGRNUtVF+zWd3ugyX6pd_mCk8K9w@mail.gmail.com>
+ <87a4ut1njh.ffs@tglx>
+ <CACT4Y+bBD7uCHXKqGo=epBXeEmsZ67Og2YO9kjNMT3ryjUY_sA@mail.gmail.com>
+ <CAHnCjA1LqbaUGkPe79EeP6Mpaki8QWeR-JBSbrG0z6pTm9CmUg@mail.gmail.com>
+ <87v7dgzbo7.ffs@tglx>
+ <20260424150318.GE641209@noisy.programming.kicks-ass.net>
+ <87se8kywhb.ffs@tglx> <87jyttz8cf.ffs@tglx>
+ <lhujyts4zr8.fsf@oldenburg.str.redhat.com>
+Date: Mon, 27 Apr 2026 13:03:32 +0200
+Message-ID: <87h5owzmuz.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] amdgpu error -22 first encountered in kernel 6.19,
- not fixed in 7.0
-To: Brandon Taylor <br.ta.2818@gmail.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: 
- <CAMYTvdA+yCqU4_9mzMUkX_3S=myExKMBCyB88dYWCMwA1edsrw@mail.gmail.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: de-DE, en-US
-Cc: Linux kernel regressions list <regressions@lists.linux.dev>,
- Alex Deucher <alexander.deucher@amd.com>,
- "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
- Timo Lindfors <timo.lindfors@iki.fi>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: 
- <CAMYTvdA+yCqU4_9mzMUkX_3S=myExKMBCyB88dYWCMwA1edsrw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-PPP-Message-ID: <177728254204.278230.6479635209091071276@mxe9fb.netcup.net>
-X-NC-CID: oDMoUf7EhfuY0SViidsRx00FAG2iO8Bu/2zx3SOezkW25uKD0uU=
+Content-Type: text/plain
 
-On 4/26/26 01:22, Brandon Taylor wrote:
-> I have an AMD Radeon R9 270X GPU (yes, I know it's old) which used to
-> default to the `radeon` firmware
+On Mon, Apr 27 2026 at 09:40, Florian Weimer wrote:
+> * Thomas Gleixner:
+>> The real question is how to differentiate between the legacy and the
+>> optimized mode. I have two working variants to achieve that:
+>>
+>>    1) The fully safe option requires a new flag for RSEQ
+>>       registration. It obviously requires a glibc update. (Suggested by
+>>       PeterZ)
+>
+> Without glibc changes, RSEQ would keep working, but with the old,
+> problematic performance, right?
 
-FYI, as using the wrong terms can lead to confusion while dealing with
-bugs: that's not a firmware, that's the driver (sometimes also called
-kernel module)
+Correct.
 
-> on kernel versions up to and
-> including 6.18. I could manually change this behavior to use the new
-> `amdgpu` firmware by setting `radeon.si_support=0 amdgpu.si_support=1`
-> as kernel parameters in the GRUB bootloader. Everything worked fine,
-> and I was able to play my Windows games without any problems.
-> 
-> That was, until kernel version 6.19 came out.>
-> 6.19, from what I was able to Google, was supposed to have AMD GPUs to
-> default to the new `amdgpu` firmware. Unfortunately, when I updated
-> the kernel and rebooted, I got a black screen.
-> 
-> Further Google searches led me to reboot, set `nomodeset` in the
-> kernel parameters, switch to a TTY, login, and investigate the output
-> of a `dmesg` command — and what I saw ... Well, let's just say it's
-> the kind of thing that would make Linus go Chernobyl:
-> 
-> `amdgpu: probe with driver amdgpu failed with error -22`
+> If we don't have a notification in the auxiliary vector, we'd have to do
+> two system calls at process start, which isn't ideal, but is probably
+> not a significant issue, either.
+>
+> I haven't verified this, but it looks like introducing the flag breaks
+> CRIU?  In dump_thread_rseq, we have this:
+>
+>         if (rseqc.flags != 0) {
+>                 pr_err("something wrong with ptrace(PTRACE_GET_RSEQ_CONFIGURATION, %d) flags = 0x%x\n", tid,
+>                        rseqc.flags);
+>                 return -1;
+>         }
 
-Please provide a full kernel log, this is needed to full understand the
-problem
+Yeah. That'd need to be fixed or work around.
 
-> And this issue has not been fixed in kernel version 7.0, which I guess
-> is set to be the next LTS kernel.
+> I suppose a workaround could make this behavior flag a prctl flag.  CRIU
+> wouldn't dump and restore that until taught about it.  If the new
+> behavior is switched on explicitly by the flag, it would be
+> backwards-compatible, except that restoring with unpatched CRIU would
+> lead to a performance loss.
 
-No, it's not.
+It's worse. The flag will also enable extended RSEQ features beyond
+mmcid and requires that the registered rseq size is >= offsetof(struct
+rseq, end)'
 
-> Now, I hope to God that this email finds whoever is responsible for
-> breaking this `amdgpu` firmware before the same thing happens to Linus
-> via Fedora 44, and he goes berserk. I realize that's not a heck of a
-> lot of time, but God only knows HOW many Linux users with AMD GPUs are
-> pissed off by this kind of issue — and I for one can only imagine how
-> Linus' reaction will compare when it happens to HIM!
+>>    2) Determine the requirements of the registering task via the size of
+>>       the registered RSEQ area.
+>>
+>>       The original implementation, which TCMalloc depends on, registers
+>>       a 32 byte region (ORIG_RSEG_SIZE). This region has 32 byte
+>>       alignment requirement.
+>>
+>>       The extension safe newer variant exposes the kernel RSEQ feature
+>>       size via getauxval(AT_RSEQ_FEATURE_SIZE) and the alignment
+>>       requirement via getauxval(AT_RSEQ_ALIGN). The alignment
+>>       requirement is that the registered rseq region is aligned to the
+>>       next power of two of the feature size. The kernel currently has a
+>>       feature size of 33 bytes, which means the alignment requirement is
+>>       64 bytes.
+>
+> There are still glibc builds in use that do not use AT_RSEQ_ALIGN, and
+> instead unconditionally reserve a size of 32.  In some builds, the RSEQ
+> area is not aligned to a multiple of 64, which makes glibc
+> indistinguishable from tcmalloc.
 
-FWIW, you seem to assume that the problem hits everyone with a AMD GPUs.
-That's not the case, we'd know this by now. Maybe it's not even
-something that hits everyone with a card/gpu like yours, as some falires
-only show up in certain environments, for example in combination with a
-specific mainboard chipset or firmware.
+That's how it is. So with a size of 32 this will fallback to legacy mode
+and not unlock the extended features independent of the alignment. The
+alignment requirements are:
 
-Anyway: I CCed a few people that might be able to help. But they likely
-will need at least the full kernel log mentioned above .
+          Size 32:     32 bytes
+          Size >32:    64 bytes
 
-Ciao, Thorsten
+> You could look at the location of the thread pointer relative to the
+> RSEQ area at registration to tell them apart, but that is perhaps too
+> nasty.
+
+*Blink*
+
+> Switching to the new extensible RSEQ allocation code in older glibc
+> builds is not entirely trivial, and I would prefer not doing that.
+> Registering with a new flag is comparatively simple, and we could
+> backport it, except that it might not be compatible with CRIU.
+
+Neither with CRIU nor with the requirement to support additional
+features which require the registered rseq memory size to be at least as
+large as the kernel requires. That's why we have AT_RSEQ_FEATURE_SIZE.
+
+Otherwise we'd end up with runtime conditionals for every single
+feature, which just adds more gunk into the hotpaths and ends up in a
+ever growing compatibility nightmare.
+
+So if a process runs on a newer kernel with let's say 40 bytes rseq
+size, then it can't be safely migrated with CRIU to a older kernel with
+32 bytes rseq size as you don't know whether the process uses some of
+the extended features in the newer kernel already. But that's not any
+different from extended syscall features etc.
+
+So with the size based detection we end up with the following:
+
+  Size 32:             legacy mode no matter whether that's TCMalloc or
+                       glibc. Does not support extended features
+  
+  Size >= kernel size: optimized mode with support for extended features
+
+Thanks,
+
+        tglx
+
+
