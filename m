@@ -1,112 +1,181 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8917D40DFB3
-	for <regressions@lists.linux.dev>; Mon, 27 Apr 2026 07:06:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8916D34DCE0;
+	Mon, 27 Apr 2026 07:17:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777273594; cv=none; b=rS8SCDLROUeBd4Zn0oh4e+1CDabgaVeEgUrdSn0NQpHZqMjYKE4+eBAkBJBIi9xZXgWSqyXNlPd/y8IpCncRp0Y7RMD89sHe/MehC1BG7suemrA6L1Qj46HCg+BHZ8qU9frRPAa2mi/+R2oFYJV6BpeEvG3rM0nPrzxV2tUNfkc=
+	t=1777274259; cv=none; b=uWQfpQHHLc0p3oAlKP6Ti9/boxAybIi0DZan/w77annVxztdBER3Pp+UgOp6aSI/0E9bds6pq/fbNxa9jHuFf6e0yxwrCKRk/k8hULUABnMlOOY2iTL0qkkFXI9ziDWWMYMHukihzT0oMT2t4d2/W40o7zaBR/KL8eVX1UOY0qQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777273594; c=relaxed/simple;
-	bh=QPRD0dFfCvef1eruEXtc9WQXEZWajAjrT4tystAAUdk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Hupq7YlGnTHVAUwx9Do2/Dxna+8Qp2Z0m7cnVQXOBkCqnnHN+OCmebPj8tGGqqCMrBytqyXCzANeUa2kuVDrdLkOGSeLQlh+SiU3VKN0J6WmNpEEhBNJXK9jeVMsQ46ADseBj3u3kwgAfiulB/poySZ/E51JZyGtKaBB019t19g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AUVwEd6i; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1777274259; c=relaxed/simple;
+	bh=b49hu7t2dUya5gkqxXlrh7yrs+2BFABxzbC6TK/WHWA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WnKjBsljDlFTUTA5y2Ecb+UvEzxwNJNEpZnBK9J8uOAE97Cc4mdKXADXUghmNjFdDJ2ws4fi/eam/fhSpQtzfftUDoGcaH61ULug074h/8cLo8OLQUx62rIcc0yg9Z8B41FkR0QwKbUZRrG8vHe6KdiAbt0csJPqq2gW677hcQ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AGyShNIJ; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AUVwEd6i"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1777273591;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=y7/7InQ3YxlIclzI7DLSo4lq3zCq3+EvHj491D6ofKI=;
-	b=AUVwEd6iufboI/qHqUTRMKKtGd2SfIWD3yqB6QcmANQ9L2+Gw+bIvHcPfge/qxg0Qb8VKq
-	yGeQYJ65dOfeBIisawLRThrF8Bmk67f1Eipac6GNRejE+zAM3fM/MK0MKDSp74wjlZJ6VR
-	EwczYKGXGQ9wF65Tj3pWdBw730u8Ruk=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-330-COmrkNHAP0e5g2ifgSTz9g-1; Mon,
- 27 Apr 2026 03:06:26 -0400
-X-MC-Unique: COmrkNHAP0e5g2ifgSTz9g-1
-X-Mimecast-MFC-AGG-ID: COmrkNHAP0e5g2ifgSTz9g_1777273583
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0014F18004A9;
-	Mon, 27 Apr 2026 07:06:22 +0000 (UTC)
-Received: from fweimer-oldenburg.csb.redhat.com (unknown [10.44.48.4])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A35AC19560AB;
-	Mon, 27 Apr 2026 07:06:15 +0000 (UTC)
-From: Florian Weimer <fweimer@redhat.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Thomas Gleixner <tglx@kernel.org>,  Mathias Stearn
- <mathias@mongodb.com>,  Peter Zijlstra <peterz@infradead.org>,  Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>,  Catalin Marinas
- <catalin.marinas@arm.com>,  Will Deacon <will@kernel.org>,  Boqun Feng
- <boqun.feng@gmail.com>,  "Paul E. McKenney" <paulmck@kernel.org>,  Chris
- Kennelly <ckennelly@google.com>,  Dmitry Vyukov <dvyukov@google.com>,
-  regressions@lists.linux.dev,  linux-kernel@vger.kernel.org,
-  linux-arm-kernel@lists.infradead.org,  Ingo Molnar <mingo@kernel.org>,
-  Mark Rutland <mark.rutland@arm.com>,  Jinjie Ruan
- <ruanjinjie@huawei.com>,  Blake Oler <blake.oler@mongodb.com>
-Subject: Re: [REGRESSION] rseq: refactoring in v6.19 broke everyone on arm64
- and tcmalloc everywhere
-In-Reply-To: <CAHk-=wh=B3fqU9AaBsyViZR=eVTG5qa2CGyN=qxPROVxu9Gctg@mail.gmail.com>
-	(Linus Torvalds's message of "Thu, 23 Apr 2026 14:28:35 -0700")
-References: <CAHnCjA25b+nO2n5CeifknSKHssJpPrjnf+dtr7UgzRw4Zgu=oA@mail.gmail.com>
-	<20260422125647.GP3126523@noisy.programming.kicks-ass.net>
-	<20260422131338.GI3102924@noisy.programming.kicks-ass.net>
-	<CAHnCjA2fa+dP1+yCYNQrTXQaW-JdtfMj7wMikwMeeCRg-3NhiA@mail.gmail.com>
-	<87fr4l28zn.ffs@tglx>
-	<CAHnCjA07ER=9xBqXq4jf5yn052W-E9ZXD86HxnRGtai6bpXbbQ@mail.gmail.com>
-	<87cxzp1tn6.ffs@tglx>
-	<CAHk-=wjsEqWJxXArS-P5+ksSY2Apaox8u6FtUrtyWSBEOL4Q2Q@mail.gmail.com>
-	<874il11jac.ffs@tglx>
-	<CAHk-=wh=B3fqU9AaBsyViZR=eVTG5qa2CGyN=qxPROVxu9Gctg@mail.gmail.com>
-Date: Mon, 27 Apr 2026 09:06:13 +0200
-Message-ID: <lhuqzo051cq.fsf@oldenburg.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AGyShNIJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1777274257; x=1808810257;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=b49hu7t2dUya5gkqxXlrh7yrs+2BFABxzbC6TK/WHWA=;
+  b=AGyShNIJ1vlNVsube3Sy3g56FWU1GpehdpNLnvBOgHoAxt0mvTwU6Izr
+   cO4Lxu680iPKbwNDeN53IJjYNcUvNOUGnOu8Uy1jd7oawhac9e9GhhJaV
+   ysxKQa55rRM9GRKgusRf6rQTGFM+opS5KBXMMHiwUHddfmufffiqfrqQ0
+   zNzbRGafMSCrTkcHvYT8ZLXkn9YlsYW3LD0Df8/0I00qqgDmTMwAvzVcy
+   OEuQGBvwnKucgZyvFXsHqzgAnSAA3wTkdogE7Jzl9kQoBo8cK2xFPbcB1
+   KkSnQjnqKYmZnAyjXav68HscjmBjEUSha5C7nym9kFF07FHAJctU7vik0
+   A==;
+X-CSE-ConnectionGUID: BgHDAv4+TO2Gob90f5Mwhg==
+X-CSE-MsgGUID: OfQ5gH4RQUuyaTp1G0zxjA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11768"; a="78267308"
+X-IronPort-AV: E=Sophos;i="6.23,201,1770624000"; 
+   d="scan'208";a="78267308"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2026 00:17:37 -0700
+X-CSE-ConnectionGUID: ZrdvUpvgRuKVGyCtM1FTsQ==
+X-CSE-MsgGUID: WCrs2hnhTha8/diOQJ+erg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,201,1770624000"; 
+   d="scan'208";a="235332177"
+Received: from allen-sbox.sh.intel.com (HELO [10.239.159.30]) ([10.239.159.30])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2026 00:17:36 -0700
+Message-ID: <d6a7f70c-5a8a-4be6-abdd-5b3decbb602a@linux.intel.com>
+Date: Mon, 27 Apr 2026 15:15:24 +0800
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
-X-Mimecast-MFC-PROC-ID: zfQn1E-I-KYYveTEsEM2BD43ASoALgEmlUe4Wx7g7PQ_1777273583
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] GPU passes into VM improperly after c376a3456d8b or
+ a98db518dde2
+To: 70sp <70sp@protonmail.com>
+Cc: "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <z7Rkts0EsooZcnCjNfJaK6ursftFU8ubOkH0hcNjzxugEAwGsHLMblOdfoAx-gJzBZ-TMmeUtD7iWBngbFY5UCJCwdSmYqmCVMy-yhbirUk=@protonmail.com>
+ <56ce85d5-e0b9-407c-9a86-708111a8a509@linux.intel.com>
+ <C4BK-Bp_FII0EkxSHQxBS2wO-Age-UxFrp_KfmYzb8cnQ8ZndzBBIPD8S9T86wOifBP0tysQGCFtGQsBsBvG2IzIMw3jb3NF5HGbS3tsawA=@protonmail.com>
+Content-Language: en-US
+From: Baolu Lu <baolu.lu@linux.intel.com>
+In-Reply-To: <C4BK-Bp_FII0EkxSHQxBS2wO-Age-UxFrp_KfmYzb8cnQ8ZndzBBIPD8S9T86wOifBP0tysQGCFtGQsBsBvG2IzIMw3jb3NF5HGbS3tsawA=@protonmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-* Linus Torvalds:
+On 4/14/26 17:22, 70sp wrote:
+> I can confirm, that the "domain is not compatible with device" message is nowhere to be seen.
+> 
+> I have double checked by also adding an else statement with a different message and that one showed up several times. (by pci (iGPU) 0000:00:02.0, pcieport 0000:00:01.0 and vfio-pci (GTX 970) 0000:01:00.0, 0000:01:00.1). ret = 0.
+> 
 
->>     // Note: this makes __rseq_abi.cpu_id_start unusable for its original purpose.
->>
->>     Do you seriously want to proliferate that?
->
-> Absolutely.
->
-> That's how clever hacks work - they take advantage of things past
-> their design parameters. "If it works, it's not stupid".
->
-> We don't then turn around and say "you were clever, and we did
-> something stupid, so now we'll hurt you".
->
-> This is all 100% on the RSEQ kernel code, not on users who took
-> advantage of it.
+Hmm, it seems the domain is compatible with the device hardware and was
+attached successfully. Perhaps you can try to check the differences
+between these two domain attachments by dumping the root, context, and
+PASID table entries and comparing the configurations of the success and
+failure cases.
 
-RSEQ was intended to be modular, with more than one library using it
-within a process, without coordination (beyond sticking to the RSEQ
-protocol).  The tcmalloc approach is incompatible with that.  Once
-tcmalloc starts using RSEQ in its peculiar way, nothing else in the
-process can, and vice versa.  This is far from ideal because the
-particular descheduling notification that tcmalloc uses could be
-implemented in a much simpler way than full RSEQ, given its non-modular
-nature.
+To do this, simply apply the change below with CONFIG_DMAR_DEBUG
+enabled:
+
+diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+index 4d0e65bc131d..bf303cfcf2ee 100644
+--- a/drivers/iommu/intel/iommu.c
++++ b/drivers/iommu/intel/iommu.c
+@@ -1345,6 +1345,9 @@ static int dmar_domain_attach_device(struct 
+dmar_domain *domain,
+         if (ret)
+                 goto out_block_translation;
+
++       dmar_fault_dump_ptes(iommu, PCI_DEVID(info->bus, info->devfn),
++                            0, IOMMU_NO_PASID);
++
+         return 0;
+
+  out_block_translation:
 
 Thanks,
-Florian
+baolu
+
+> 
+> Sent with Proton Mail secure email.
+> 
+> On Monday, April 13th, 2026 at 8:49 AM, Baolu Lu <baolu.lu@linux.intel.com> wrote:
+> 
+>> On 4/12/26 19:17, 70sp wrote:
+>>> Hello,
+>>>
+>>> I have been dealing with a regression launching a Windows QEMU/KVM
+>>> virtual machine with a GPU passed through.
+>>>
+>>> The issue consists of launching a QEMU/KVM VM, which gets stuck for
+>>> about 2 minutes on booting with a white screen and then having NVIDIA’s
+>>> code 43 in Windows.
+>>>
+>>> I’m certain, that the issue is not caused by anything in Windows or
+>>> related software in Linux, because I tried reinstalling my whole PC
+>>> including the Windows VM. I tried to reproduce the bug on an out-of-the-
+>>> box Arch Linux install and the bug is still present.
+>>>
+>>> The first bad commit is either a98db518dde246e01ead53617dc0a30d6aaa3752
+>>> or c376a3456d8bef43ec556a98c0a04c35086c2737. I don’t know for sure which
+>>> one introduced it, because during bisection I had to skip
+>>> a98db518dde246e01ead53617dc0a30d6aaa3752 due to it being unable to
+>>> launch the virtual machine resulting in a different error (didn’t even
+>>> start booting). In kernels before these commits, the VM works flawlessly.
+>>>
+>>> I have tested it on latest mainline kernel and the issue is still
+>>> present. I have been experiencing the issue since kernel 6.13, so I just
+>>> switched to the 6.12 LTS kernel instead which doesn’t have this issue.
+>>>
+>>> Configuration of my Linux install and hardware: https://pastebin.com/
+>>> rcsyyYiK
+>>> .config: https://pastebin.com/RTQCBduD
+>>> dmesg errors: https://pastebin.com/84jPP81E
+>>> lspci: https://pastebin.com/qi29BSWi
+>>>
+>>> #regzbot introduced:
+>>> a98db518dde246e01ead53617dc0a30d6aaa3752..c376a3456d8bef43ec556a98c0a04c35086c2737
+>>
+>> Before these commits, if a device was attached to a domain that didn't
+>> perfectly match the hardware's capabilities (such as address width or
+>> coherency), the kernel would dynamically adjust the domain to
+>> accommodate the hardware.
+>>
+>> Following these two commits, the driver now applies a "match or fail"
+>> policy. If the domain is incompatible with the device's hardware
+>> capabilities, it returns -EINVAL. This expects the caller to allocate a
+>> new domain dedicated to that specific device and attempt the attachment
+>> again.
+>>
+>> Can you please add a message line in paging_domain_compatible() to
+>> verify whether it's a domain compatibility issue?
+>>
+>> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+>> index 205debd76989..c7e1e0dfa250 100644
+>> --- a/drivers/iommu/intel/iommu.c
+>> +++ b/drivers/iommu/intel/iommu.c
+>> @@ -3111,8 +3111,10 @@ int paging_domain_compatible(struct iommu_domain
+>> *domain, struct device *dev)
+>>                   ret =
+>> paging_domain_compatible_second_stage(dmar_domain, iommu);
+>>           else if (WARN_ON(true))
+>>                   ret = -EINVAL;
+>> -       if (ret)
+>> +       if (ret) {
+>> +               dev_info(dev, "domain is not compatible with device, ret
+>> = %d", ret);
+>>                   return ret;
+>> +       }
+>>
+>>           if (sm_supported(iommu) && !dev_is_real_dma_subdevice(dev) &&
+>>               context_copied(iommu, info->bus, info->devfn))
+>>
+>> Thanks,
+>> baolu
+>>
 
