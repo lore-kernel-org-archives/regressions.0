@@ -1,127 +1,134 @@
-Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.98])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A53939A7F4;
-	Mon, 27 Apr 2026 09:31:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCB762D9481
+	for <regressions@lists.linux.dev>; Mon, 27 Apr 2026 09:38:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777282296; cv=none; b=Y6QPpD/REBR03oFTohKkwiyxCNdatJ54i0rwpiwg2wXPkMckdDxSUv+weBCsqxjpSyqmI8CGOo6sFtct3qLZM8iQIM3loh/6BjhkcEiWkoiQrhWc9Ua/1arLa4rxsfDoDsA/eMN4dmD04Wq6FOHj/yFExairzeAlitGpEbxMq4A=
+	t=1777282685; cv=none; b=XFG1wFTcenW/aXn6JsuCFukJ9MPgME0EIOyS0rNuDU9fIxK3M8ZvxiWMPDjyvNTgbtl9KR1CtNbxvvGemBhyDjficVDIN3AdktkW7Lpo5PNLL8B0mpR6HD7nXBdpcKRflTfZAj7v9RGL/heyOeWCICC4XlimXlhg+fsZ1mYX/Sc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777282296; c=relaxed/simple;
-	bh=A0oXCMrybLIEwLDt5XmVSSXvZtqREUvn/lU0xjuCu6A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X7RlpiH4U48fP7xcaHQwOPkJx6htsaGnPx/MwzSXv/GL4y1XOtjahdgAfzubHJTJZpvxhlhpyLUHYpH73D6e7E/yAlG8/oXPCbNJ0LVVMEelN69/jc1rkvvotwD8JEamtzY10Gjt8bdUiiRyOv5QuQDhFk/zbA/TQHDdIN2G1eY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=Oui0MOT0; arc=none smtp.client-ip=217.194.8.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
+	s=arc-20240116; t=1777282685; c=relaxed/simple;
+	bh=ofNF5C7Ug4dk2ZiNcdA825bSUg2IVrEKLOPUt5sOPEo=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=m1cpwHAEL9KCWgeAx0aq2RfLp/0VEG1QzK8I7xUa4jwbV/5kqyu2cc9VPR9ZOQNSxp7EAyvlymfJu0gXcTuS6rclb7W5Dj/KBJsqqXy8sgy/dcSn5GKPAOPWW/JqULdj8l8SEpzlFH0oHVdKUcuooLC9ZEQGKKWd8fLu9JsSD28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=XbJ7JEvD; arc=none smtp.client-ip=188.68.63.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="Oui0MOT0"
-Received: from francesco-nb (248.201.173.83.static.wline.lns.sme.cust.swisscom.ch [83.173.201.248])
-	by mail11.truemail.it (Postfix) with ESMTPA id 39F831FB1B;
-	Mon, 27 Apr 2026 11:31:31 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
-	s=default; t=1777282292;
-	bh=3f+ipyipbG9ve74SWingHtpF8ckpjt3qTGqxppXfFzY=; h=From:To:Subject;
-	b=Oui0MOT0x94+2dM3R5uOpRffJ9Wx9j6ylSA9QAkTg92XTx+dn56JG7xkyoASs/fa6
-	 jeurKD+LfLijfHlA9mg6wH5OqqjaEOvDVucHz17xzhALz3mdyDx+/MsPHaZVp+YVxJ
-	 VIU34BPvnoFHTPl+YThEFIUGqU6HzI1TbxO1HNl3JHKluUYtK9yGDDeiUXDnyOF/Yz
-	 U9rQ8naikD2oQ8qGchfq7QlTttc7kMhUh/sUuzk97naTvYQq6FTtCPfwqgnIJIqwXO
-	 eWElkycEwmM5cl9ZVK2doQf8R3IWlYTNVaMEWuAXQbf20IyJv35NG87Vt7cb+pgGT3
-	 aaV344jJwI6MA==
-Date: Mon, 27 Apr 2026 11:31:27 +0200
-From: Francesco Dolcini <francesco@dolcini.it>
-To: Francesco Dolcini <francesco@dolcini.it>, peng.fan@oss.nxp.com,
-	Alexander Stein <alexander.stein@ew.tq-group.com>,
-	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Cc: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>, Chen-Yu Tsai <wens@kernel.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>, Frank Li <Frank.Li@nxp.com>,
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	imx@lists.linux.dev, linux-renesas-soc@vger.kernel.org,
-	linux-sunxi@lists.linux.dev, driver-core@lists.linux.dev,
-	regressions@lists.linux.dev
-Subject: Re: [PATCH v2 6/9] soc: imx8m: don't access of_root directly
-Message-ID: <20260427093127.GA50667@francesco-nb>
-References: <20260223-soc-of-root-v2-0-b45da45903c8@oss.qualcomm.com>
- <20260223-soc-of-root-v2-6-b45da45903c8@oss.qualcomm.com>
- <6593091.DvuYhMxLoT@steina-w>
- <20260427064704.GA17710@francesco-nb>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="XbJ7JEvD"
+Received: from mors-relay-2501.netcup.net (localhost [127.0.0.1])
+	by mors-relay-2501.netcup.net (Postfix) with ESMTPS id 4g3z4y62dpz66Bc;
+	Mon, 27 Apr 2026 11:37:54 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1777282674;
+	bh=ofNF5C7Ug4dk2ZiNcdA825bSUg2IVrEKLOPUt5sOPEo=;
+	h=Date:Subject:From:To:Cc:Reply-To:References:In-Reply-To:From;
+	b=XbJ7JEvDAEf49zY+0mXxAqAcKFSa5521gAyCKZh0qNAJxgPw/aA5RYomIYjsIM05F
+	 nA0CmSfmkkW6uSb7znaHUrpzsm5CF7mCbTGQgS3xUEEFSUYwYH1N6iGUn5Yvoma8KS
+	 rZQ+ChxV6M0D/XIH4X/nPYKT9RgyzkXLhvCetxxTb0JoIinRykSLttNaSuPIWT3+eP
+	 Ha3L1UmlW0mVfBudWSfxoW0kIUzlxWSCVFJDjvHTAGKj6osOUxYwmC+0QfHGySLb3J
+	 bKQH4Brel0IWc8V6KJasFMSu9ihFMWTPRjywuXiPNGKJiwrBdS4Q32zmz5spk0yNbJ
+	 Pnox/TDNmathA==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-2501.netcup.net (Postfix) with ESMTPS id 4g3z4y5JxLz4xD3;
+	Mon, 27 Apr 2026 11:37:54 +0200 (CEST)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4g3z4y0KD8z8sgT;
+	Mon, 27 Apr 2026 11:37:54 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 70EC3632B7;
+	Mon, 27 Apr 2026 11:37:53 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <ed3171ef-eda8-4907-a35b-2e2b8185e574@leemhuis.info>
+Date: Mon, 27 Apr 2026 11:37:53 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260427064704.GA17710@francesco-nb>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] amdgpu error -22 first encountered in kernel 6.19,
+ not fixed in 7.0
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Brandon Taylor <br.ta.2818@gmail.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: Linux kernel regressions list <regressions@lists.linux.dev>,
+ Alex Deucher <alexander.deucher@amd.com>,
+ "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+ Timo Lindfors <timo.lindfors@iki.fi>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ =?UTF-8?Q?Timur_Krist=C3=B3f?= <timur.kristof@gmail.com>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+References: 
+ <CAMYTvdA+yCqU4_9mzMUkX_3S=myExKMBCyB88dYWCMwA1edsrw@mail.gmail.com>
+ <6c48aff5-b6ee-40af-98f0-c26ded3095bc@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <6c48aff5-b6ee-40af-98f0-c26ded3095bc@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-PPP-Message-ID: <177728267378.279541.17168315814522822753@mxe9fb.netcup.net>
+X-NC-CID: exb88VKTz+PlWa+wzr8qsiERlTM7i2TLbBJx2nuWy+7sQEOlb1U=
 
-+Peng
+[note: please remove Timo Lindfors when replying to this mail and
+include Timur Kristóf – sorry everyone and especially Timo, my mailers
+address book tricked me]
 
-Hello all,
-
-On Mon, Apr 27, 2026 at 08:47:04AM +0200, Francesco Dolcini wrote:
-> On Tue, Mar 24, 2026 at 11:24:09AM +0100, Alexander Stein wrote:
-> > Hi,
-> > 
-> > Am Montag, 23. Februar 2026, 14:37:21 CET schrieb Bartosz Golaszewski:
-> > > Don't access of_root directly as it reduces the build test coverage for
-> > > this driver with COMPILE_TEST=y and OF=n. Use existing helper functions
-> > > to retrieve the relevant information.
-> > > 
-> > > Suggested-by: Rob Herring <robh@kernel.org>
-> > > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-> > 
-> > today I noticed the following warning running next-20260323:
-> > > caam 30900000.crypto: No clock data provided for i.MX SoC
-> > 
-> > This happens when there is no matching against the soc_id.
-> > 
-> > Checking the source it turns out this patch is the cause that the SoC info
-> > does not provide soc_id anymore.
-> > next-20260323:
-> > > $ grep . /sys/devices/soc0/*
-> > > /sys/devices/soc0/family:Freescale i.MX
-> > > /sys/devices/soc0/machine:TQ-Systems i.MX8MPlus TQMa8MPxL on MBa8MP-RAS314
-> > > grep: /sys/devices/soc0/power: Is a directory
-> > > /sys/devices/soc0/revision:unknown
-> > > /sys/devices/soc0/serial_number:0000000000000000
-> > > grep: /sys/devices/soc0/subsystem: Is a directory
-> > 
-> > reverting this patch (2524b293a59e586afd06358d0b191ab57208a920):
-> > > $ grep . /sys/devices/soc0/*
-> > > /sys/devices/soc0/family:Freescale i.MX
-> > > /sys/devices/soc0/machine:TQ-Systems i.MX8MPlus TQMa8MPxL on MBa8MP-RAS314
-> > > grep: /sys/devices/soc0/power: Is a directory
-> > > /sys/devices/soc0/revision:1.1
-> > > /sys/devices/soc0/serial_number:469677A693A4B8CE131D180033E44903
-> > > /sys/devices/soc0/soc_id:i.MX8MP
-> > > grep: /sys/devices/soc0/subsystem: Is a directory
-> > 
-> > soc_id is restored. Now that I write these lines I noticed that
-> > serial_number also contained empty value which is restored with the revert.
+On 4/27/26 11:35, Linux regression tracking (Thorsten Leemhuis) wrote:
+> On 4/26/26 01:22, Brandon Taylor wrote:
+>> I have an AMD Radeon R9 270X GPU (yes, I know it's old) which used to
+>> default to the `radeon` firmware
 > 
-> Any update on this? I would say this is a regression in 7.1-rc1.
+> FYI, as using the wrong terms can lead to confusion while dealing with
+> bugs: that's not a firmware, that's the driver (sometimes also called
+> kernel module)
 > 
-> I noticed the same issue, and CAAM is not working.
+>> on kernel versions up to and
+>> including 6.18. I could manually change this behavior to use the new
+>> `amdgpu` firmware by setting `radeon.si_support=0 amdgpu.si_support=1`
+>> as kernel parameters in the GRUB bootloader. Everything worked fine,
+>> and I was able to play my Windows games without any problems.
+>>
+>> That was, until kernel version 6.19 came out.>
+>> 6.19, from what I was able to Google, was supposed to have AMD GPUs to
+>> default to the new `amdgpu` firmware. Unfortunately, when I updated
+>> the kernel and rebooted, I got a black screen.
+>>
+>> Further Google searches led me to reboot, set `nomodeset` in the
+>> kernel parameters, switch to a TTY, login, and investigate the output
+>> of a `dmesg` command — and what I saw ... Well, let's just say it's
+>> the kind of thing that would make Linus go Chernobyl:
+>>
+>> `amdgpu: probe with driver amdgpu failed with error -22`
 > 
-> [    0.000000] Linux version 7.1.0-rc1-0.0.0-devel (oe-user@oe-host) (aarch64-tdx-linux-gcc (GCC) 15.2.0, GNU ld (GNU Binutils) 2.46) #1 SMP PREEMPT Sun Apr 26 21:19:00 UTC 2026
-> ...
-> [   10.611139] caam 30900000.crypto: No clock data provided for i.MX SoC
-> [   10.611211] caam 30900000.crypto: probe with driver caam failed with error -22
-
-I guess this is the fix
-
-https://lore.kernel.org/all/20260427-soc-imx8m-fix-v1-1-1fe5b43d8090@nxp.com/
+> Please provide a full kernel log, this is needed to full understand the
+> problem
+> 
+>> And this issue has not been fixed in kernel version 7.0, which I guess
+>> is set to be the next LTS kernel.
+> 
+> No, it's not.
+> 
+>> Now, I hope to God that this email finds whoever is responsible for
+>> breaking this `amdgpu` firmware before the same thing happens to Linus
+>> via Fedora 44, and he goes berserk. I realize that's not a heck of a
+>> lot of time, but God only knows HOW many Linux users with AMD GPUs are
+>> pissed off by this kind of issue — and I for one can only imagine how
+>> Linus' reaction will compare when it happens to HIM!
+> 
+> FWIW, you seem to assume that the problem hits everyone with a AMD GPUs.
+> That's not the case, we'd know this by now. Maybe it's not even
+> something that hits everyone with a card/gpu like yours, as some falires
+> only show up in certain environments, for example in combination with a
+> specific mainboard chipset or firmware.
+> 
+> Anyway: I CCed a few people that might be able to help. But they likely
+> will need at least the full kernel log mentioned above .
+> 
+> Ciao, Thorsten
 
