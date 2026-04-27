@@ -1,177 +1,120 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 337E83CEB9D
-	for <regressions@lists.linux.dev>; Mon, 27 Apr 2026 14:01:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4163D34DB46
+	for <regressions@lists.linux.dev>; Mon, 27 Apr 2026 16:12:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777298515; cv=none; b=LxZLmkMlyW8vmrN/mArE/GFwU8hzfUISGl+uP5i3I3rXPx+oLyxj8xeb+ws8/OlY/kaycatqonbfMgcsLnzqZ6/qqWU7ffFv3JENeZByyYO5cMfSrQ9sjTCd22zQr+TSaVq4CNzswp9BccoRSc3XHKS+y/xy8RLgvaPXYMohi5Q=
+	t=1777306369; cv=none; b=NW7p0ibWmITTeApg/Kn4M2gZpvxOzH/R4OC12AG0pHje/zKLfx2U6qdfezzDqPSpmqLWzdmBfopjTEdHhCejhCbKU1+rDw2+RRsCOG/wz7ta6A8PFLjlXE2Rx1sZWLypmF7E3CcyeB1dp5U8rJOmDOBkStkLSMVlpmMpmeNAcP8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777298515; c=relaxed/simple;
-	bh=DWToCEIaXUKWmzZCo1GynuIdV0WlRzUNUcIX47DR9ME=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=j7T1dAPcSN2Rg5Oo36DnF5vyO3N48DAauBE933zWbbHetjnhGmgM1rm85rdjfUxPMrXUspovnQ1gCJtjbYFenEVqmVi/RjSJRMAi6EHS6/vdTvY0HZ1Yzt3vN1pDMwCtNoPavnUV2wtdj6TAO7kc+SGfbdPpVOwIs65JrkBQc70=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PtR3TsxM; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1777306369; c=relaxed/simple;
+	bh=JiG+a6OmNShmf/V9YM93PxwNMCHArtk4gJjadNuKmUo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BZwHxBD8ySpyOyypj2xX3N03RDn8Unw9hacnFbSI/Ao642p6DIcCB47qSj637Iscc3VARH6dsxBcojHlHNFBU6tAOLXIQmvp2tM/4nRLR+LR6YhOk2d6TJg/hn+aB2q3WtoFbtXNrzMHW1Y0yOrQmEs/VFgDHSapD+xEFf9/lsU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Tz6graNs; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PtR3TsxM"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4852a9c6309so95015835e9.0
-        for <regressions@lists.linux.dev>; Mon, 27 Apr 2026 07:01:53 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Tz6graNs"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-b9c3e2cf3c0so1772952866b.1
+        for <regressions@lists.linux.dev>; Mon, 27 Apr 2026 09:12:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1777298512; x=1777903312; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DWToCEIaXUKWmzZCo1GynuIdV0WlRzUNUcIX47DR9ME=;
-        b=PtR3TsxMIu3zenVQpR1u/p5DipIZktD6ZvVFkV/1eXk5e8Y6jrPrNZJvHLR9454DRH
-         a4T9ytla+46y88ZEjKvomXgY70XBvX4zB4qNImuzp3RzQPwH1UgMXvBHG4MtTbONXJmw
-         0eGXd6gB129KfoKoRSHGiFXpnOut2kv4qtTJOnbEUzGizGkA5F4CAkajonjgJ2Vi7LHc
-         TW4wixctsLU15JBigaIeMwS6x1Do3xSz1HWLf2cIuxgjhwH8/O2uNVeEMa8KVjjVNeri
-         48ev55g+IUAV9Iu2npZ7g7fZJo/q9LxD4+F4ta/kmsdOdJYY3simpexZx9UpFE9zzYX9
-         qp9g==
+        d=linux-foundation.org; s=google; t=1777306366; x=1777911166; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=JbhNNtkACDoe7xFvlMDxo1hg3mD7N2S9mOLV3kh/g2Q=;
+        b=Tz6graNsldr8rtXMSVp68Kl55Di3tAh9ZTsO3sH+WYJN+SDYnaDMUPGDgkWX8MGe7J
+         /GFmHLHG92+cmbvNO9Ah5EdHAjU+PTaa5T5Fkeklm4Xh4G6Q7Z4aVlChNwz1utRxnYt1
+         cvOLrUoDEL9fHx0VCYJ35fwyUokcrPxi1L4zc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777298512; x=1777903312;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=DWToCEIaXUKWmzZCo1GynuIdV0WlRzUNUcIX47DR9ME=;
-        b=C2S9T7ghyL/28HjLwv/6yO7XQL4vEWVHESOnh4DES7rZIzi/Es57GR26VWQQHN6sF/
-         71JXebCncWS68wMnbBXVCen21+0IhxAF1ksrbZLrzJ/4Jeub8me2J8L1nIEZ0g8HdY96
-         S3hPX1tdT4fwUfWpRx95CG/wIvRpYm5Bo3kx8nVoMcHodr5aiI8M9blpEGHxWVs203wD
-         oX0T2pxr4opCBZKEPnHY4gM5oKkJh03KczfioVOUvGKQZSvK4o3ySLMxt0gOCSXYiPKD
-         gsFrMJ5ScoRY0Ik7rwaS5Eyaqx9sbS48wa/rg8r/TLEIx7NonBQCS+EL7f1XjWh0HajE
-         rphw==
-X-Gm-Message-State: AOJu0Yy7jrq4jJxatplaNF1PJ/7/02H5abLj6+SIJ1AvGk30C+eJPrk4
-	e5aYkQJE2P38PKKso5/2lHXn8g2VK9NbLFXNL9ZWREywsFdh+semarfE
-X-Gm-Gg: AeBDietSrp3drYK7EbqYPsSfdjRhEVRnt07pBJw/wfX/qzaRhFQluLXfZ0qfjZ8ql4z
-	GA72V/JMqftR5pHs3wCZTlbZCiLMssuGUri5cqm9Ycvd2s2pdhA+lDIw507YgRQaCQ92cW0SSKk
-	88ZRPNHWLCdFKJ1/ea6pEmgiO5I3i3+JIY6ii0sC2WzbsRKwzXX2qcOXKWG77xiR7y5GxqGMIRF
-	BvQqOYdeWq7hRNaIO8W2qk33pIzrTiqJGENtE8MN7O5wt108wCxHw0caCHAnNvQks+EhIdkUneR
-	w3MprBXE9IT723UHNGopTqDFkFYl8G3L7uSNtqWAI61ModvM/5kEEmvb3R/EPXhznOXT+xZJjSU
-	yoF0uDcZGJbDpJ1n6TQD9QyqpyKb7FsUh59brzVUfsHeko05/hTxSZPy0gkpeBjK86iPxF2KprE
-	Fl/rC5yPruqGj0xpCBmsI7iGTTrLxuEbEym8TYcYoCmpRIvMduwHu5/5WuxU42udR+ro0ow/Z8g
-	B2Fu73vdw==
-X-Received: by 2002:a05:600c:4593:b0:488:c120:480a with SMTP id 5b1f17b1804b1-488fb78bf05mr614809525e9.31.1777298512250;
-        Mon, 27 Apr 2026 07:01:52 -0700 (PDT)
-Received: from timur-hyperion.localnet (5401DFC2.dsl.pool.telekom.hu. [84.1.223.194])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4891c08faffsm1050495965e9.1.2026.04.27.07.01.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Apr 2026 07:01:51 -0700 (PDT)
-From: Timur =?UTF-8?B?S3Jpc3TDs2Y=?= <timur.kristof@gmail.com>
-To: Brandon Taylor <br.ta.2818@gmail.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- Christian =?UTF-8?B?S8O2bmln?= <christian.koenig@amd.com>
-Cc: Linux kernel regressions list <regressions@lists.linux.dev>,
- Alex Deucher <alexander.deucher@amd.com>,
- "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>
-Subject: Re: [REGRESSION] amdgpu error -22 first encountered in kernel 6.19,
- not fixed in 7.0
-Date: Mon, 27 Apr 2026 16:01:50 +0200
-Message-ID: <2730559.vYhyI6sBWr@timur-hyperion>
-In-Reply-To: <ed3171ef-eda8-4907-a35b-2e2b8185e574@leemhuis.info>
-References:
- <CAMYTvdA+yCqU4_9mzMUkX_3S=myExKMBCyB88dYWCMwA1edsrw@mail.gmail.com>
- <6c48aff5-b6ee-40af-98f0-c26ded3095bc@leemhuis.info>
- <ed3171ef-eda8-4907-a35b-2e2b8185e574@leemhuis.info>
+        d=1e100.net; s=20251104; t=1777306366; x=1777911166;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JbhNNtkACDoe7xFvlMDxo1hg3mD7N2S9mOLV3kh/g2Q=;
+        b=Z9xbl1zKb3xjQuQqKQLXQKSVtngle9dA/PbLPreqL3rLR4/MBLSCDUedCr2NeV58j2
+         u3dOWTspp2+BNQ8YV0elihoo2gV08wxB30Pj0CV4RbTOwmVwWBuLrvHmuRKkNPd7FFE/
+         V2FZWor801klxMeGZFHOfm+wgWsyWTtOUDPZHC5/NutAosxTm8AlU25OCG5luSmDusPu
+         ydi9wCzyb3Wba5qtZ2xJjvuMCtIWE9eIVW6FZ3aNAL7Fup5Est9bESM7OzIYZY4bI99n
+         F9DW8+pVb143303Zyux/+LVigZI9XmEgKSctqXtAETrDB23bYSS68f5AAZdU88myzsqa
+         Oymw==
+X-Forwarded-Encrypted: i=1; AFNElJ9MpsJocLBKcumTShNp4ozetCHyfF1lE9xTtsTLhzZ4vRPZU99cS9r5dCDXfcfWNJh222t7bkQCo8eefg==@lists.linux.dev
+X-Gm-Message-State: AOJu0YznBa/ZFC/YQB5/Rmpc5LlpDnRtfaXmrDiK0h58TzHG0vrWjXVG
+	D/9WoTIh05kUuN5ZcbpygEM7GwAAiRzpYrxzQYE//TT+6H+vG9fgCCmYJl0P0Uq9hYyr1WnSt23
+	GA9tg7bE=
+X-Gm-Gg: AeBDievcMIxghEfVBhfNK74ed1c8ljm4M6bnX/CnqCiGNy8k8ub8Hghj+CQKQMDOwVB
+	U/5ZdEjxjlu7wdBpF2cP+boITx5dzXIh1edCikY7jH01HyZcMAgUC1Q9JWHyRxithtP9bxs9rVk
+	KJt7EDP+ffiCanUjXFKolYupv9UIeUvYBhZbi+pFBlV9EOMjsmQvYaN9vC4AIGL533YZQTagBe2
+	pRit/osrNjjEiDxVolEiLj+Vt5Wd6byOz7iI7+C/gDJXpgXP0Igsx07TzkdvzxdiFCHk8E79fqj
+	PBPalphryPuveuA8i0NzmHbMqSjirrGTM1zs2KIZjJO0sYbxh9jjAXuB7mNq6ckZ3cP/QcW/HyA
+	S6TtQYUj+7TpXM7jrdK0Rk7vs5CMVqHbarVr6yLmyeAyggq8J0DFBW7NSyQfwtqTtfp7ttMeQ0a
+	D1qpXqgpX3RtevYcDzJS2wzOF28EiUuVXwA96Yc+yClwg2/RB3TtePqZ/LnBT6BnbXi4ulZvlAd
+	1oamnL6+lk=
+X-Received: by 2002:a17:906:4fc6:b0:bab:f5a8:1255 with SMTP id a640c23a62f3a-babf5b75850mr1015310266b.33.1777306366254;
+        Mon, 27 Apr 2026 09:12:46 -0700 (PDT)
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com. [209.85.208.53])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ba454d1bbb1sm1115827866b.38.2026.04.27.09.12.42
+        for <regressions@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Apr 2026 09:12:43 -0700 (PDT)
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-671c24f23b1so15280848a12.0
+        for <regressions@lists.linux.dev>; Mon, 27 Apr 2026 09:12:42 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ8iYU7ENFiXwpUuHjhV2xlrXwbwaB+gFJb+1ex4V0Q7FW+IB7mCzfMMb+0vO7kXr5aIVfff2bT6oRMNAw==@lists.linux.dev
+X-Received: by 2002:a05:6402:c46:b0:670:d548:da79 with SMTP id
+ 4fb4d7f45d1cf-672bfd87175mr18954968a12.3.1777306362462; Mon, 27 Apr 2026
+ 09:12:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
+References: <CAHnCjA25b+nO2n5CeifknSKHssJpPrjnf+dtr7UgzRw4Zgu=oA@mail.gmail.com>
+ <20260422125647.GP3126523@noisy.programming.kicks-ass.net>
+ <20260422131338.GI3102924@noisy.programming.kicks-ass.net>
+ <CAHnCjA2fa+dP1+yCYNQrTXQaW-JdtfMj7wMikwMeeCRg-3NhiA@mail.gmail.com>
+ <87fr4l28zn.ffs@tglx> <CAHnCjA07ER=9xBqXq4jf5yn052W-E9ZXD86HxnRGtai6bpXbbQ@mail.gmail.com>
+ <87cxzp1tn6.ffs@tglx> <CAHk-=wjsEqWJxXArS-P5+ksSY2Apaox8u6FtUrtyWSBEOL4Q2Q@mail.gmail.com>
+ <874il11jac.ffs@tglx> <CAHk-=wh=B3fqU9AaBsyViZR=eVTG5qa2CGyN=qxPROVxu9Gctg@mail.gmail.com>
+ <lhuqzo051cq.fsf@oldenburg.str.redhat.com>
+In-Reply-To: <lhuqzo051cq.fsf@oldenburg.str.redhat.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Mon, 27 Apr 2026 09:12:26 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wiLdmz92CCfu2+-9_UrGSn6Pu6sUVvLs5gjyhGaEov-BA@mail.gmail.com>
+X-Gm-Features: AVHnY4KSfM89JX8og5V5ge1wHnX-tp7SzfuRcYZnE_6XGeDyPM7Sz-28_HY9VRI
+Message-ID: <CAHk-=wiLdmz92CCfu2+-9_UrGSn6Pu6sUVvLs5gjyhGaEov-BA@mail.gmail.com>
+Subject: Re: [REGRESSION] rseq: refactoring in v6.19 broke everyone on arm64
+ and tcmalloc everywhere
+To: Florian Weimer <fweimer@redhat.com>
+Cc: Thomas Gleixner <tglx@kernel.org>, Mathias Stearn <mathias@mongodb.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Boqun Feng <boqun.feng@gmail.com>, "Paul E. McKenney" <paulmck@kernel.org>, 
+	Chris Kennelly <ckennelly@google.com>, Dmitry Vyukov <dvyukov@google.com>, regressions@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	Ingo Molnar <mingo@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Jinjie Ruan <ruanjinjie@huawei.com>, Blake Oler <blake.oler@mongodb.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi,
+On Mon, 27 Apr 2026 at 00:06, Florian Weimer <fweimer@redhat.com> wrote:
+>
+> RSEQ was intended to be modular
 
-Thank you Thorsten for forwarding this to me, indeed I am working on improv=
-ing=20
-the driver for these GPUs. See my replies below.
+You are entirely missing the point. "Intention" is immaterial.
 
-On Monday, April 27, 2026 11:37:53=E2=80=AFAM Central European Summer Time =
-Thorsten=20
-Leemhuis wrote:
-> [note: please remove Timo Lindfors when replying to this mail and
-> include Timur Krist=C3=B3f =E2=80=93 sorry everyone and especially Timo, =
-my mailers
-> address book tricked me]
->=20
-> On 4/27/26 11:35, Linux regression tracking (Thorsten Leemhuis) wrote:
-> > On 4/26/26 01:22, Brandon Taylor wrote:
-> >> I have an AMD Radeon R9 270X GPU (yes, I know it's old) which used to
-> >> default to the `radeon` firmware
-> >=20
-> > FYI, as using the wrong terms can lead to confusion while dealing with
-> > bugs: that's not a firmware, that's the driver (sometimes also called
-> > kernel module)
+All that matters is reality. Intentions are ephemeral farts in the wind.
 
-=2D "radeon" is the old kernel driver for these GPUs that didn't support Vu=
-lkan=20
-and therefore was mostly useless for gaming.
-=2D "amdgpu" is the new driver, which supports Vulkan and offers better per=
-f,=20
-this is the default since Linux 6.19.
+There is *one* major rule in kernel development, and it is "we don't
+break user space".
 
-I don't think this is a firmware issue.
+And user space is inconvenient, I know. Users do odd and strange
+things. Sometimes on purpose, but quite often entirely accidentally.
 
-> >=20
-> >> on kernel versions up to and
-> >> including 6.18. I could manually change this behavior to use the new
-> >> `amdgpu` firmware by setting `radeon.si_support=3D0 amdgpu.si_support=
-=3D1`
-> >> as kernel parameters in the GRUB bootloader. Everything worked fine,
-> >> and I was able to play my Windows games without any problems.
-> >>=20
-> >> That was, until kernel version 6.19 came out.>
-> >> 6.19, from what I was able to Google, was supposed to have AMD GPUs to
-> >> default to the new `amdgpu` firmware. Unfortunately, when I updated
-> >> the kernel and rebooted, I got a black screen.
-> >>=20
-> >> Further Google searches led me to reboot, set `nomodeset` in the
-> >> kernel parameters, switch to a TTY, login, and investigate the output
-> >> of a `dmesg` command =E2=80=94 and what I saw ... Well, let's just say=
- it's
-> >> the kind of thing that would make Linus go Chernobyl:
-> >>=20
-> >> `amdgpu: probe with driver amdgpu failed with error -22`
-> >=20
+The end result is the same as far as the kernel is concerned: we don't
+break tools that people use.
 
-I am sorry this happened and understand the frustration.
+This is simply not up for discussion. Any "intent" that isn't actually
+enforced by _checking_ for it is only wishful thinking, and worth
+nothing at all.
 
-Please open an issue here:
-https://gitlab.freedesktop.org/drm/amd/-/work_items/new
-and upload your full dmesg log. Please ping me personally @Venemo on that=20
-issue after you opened it so we can start investigating what is wrong there.
-
-I got curious so I plugged in my R9 270X right now. I am typing this email =
-on=20
-a computer with a Radeon R9 270X using Linux 6.19.12 on Fedora 43 and it wo=
-rks=20
-fine. We are going to need to need more details in order to diagnose what t=
-he=20
-problem really is. We might ask you to test some proposed fixes, considerin=
-g=20
-that the issue doesn't happen on my R9 270X, I don't have a way to verify i=
-t.
-
-> >> Now, I hope to God that this email finds whoever is responsible for
-> >> breaking this `amdgpu` firmware before the same thing happens to Linus
-> >> via Fedora 44, and he goes berserk. I realize that's not a heck of a
-> >> lot of time, but God only knows HOW many Linux users with AMD GPUs are
-> >> pissed off by this kind of issue =E2=80=94 and I for one can only imag=
-ine how
-> >> Linus' reaction will compare when it happens to HIM!
-
-I'm happy to help, there is no need for personal insults.
-
-(Note that the issue clearly doesn't affect all AMD GPUs and it clearly doe=
-sn't=20
-even affect all R9 270X GPUs.)
-
-Thanks & best regards,
-Timur
-
-
-
+                   Linus
