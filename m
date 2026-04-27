@@ -1,38 +1,60 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80C432E11D2;
-	Mon, 27 Apr 2026 03:51:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42AF527FB2A;
+	Mon, 27 Apr 2026 06:47:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777261910; cv=none; b=WrxyDn492FLJDnfg+KaxB6wpvIK9QiEDyV1j0vmXCj84oULHrH1XKPqhTHgit4R0TuE5UU6jcVAFCtHQJw4pMplIUVJEWrgqcbD+9RUOBqTQW0zH43RY/5SJ9us+bp+LXyMaMULYWZX3yoJ+HEYaNPjW++GBIIKuLkRdfKdZ9Y0=
+	t=1777272441; cv=none; b=Mz0tT+V5yCBqQtj1jJODVXKUQo3p+cMpEPAYBb2xxWLZuUbNIoHWJm8LJfHncIjpfvAsnFFAev2BWehmNITZ++1o0LoIN2EmI4Bitoopi0p4seg2vrgNb6aCSoz4cg0Jekg63v7Sc0hhipS69hmpxgntZCcULwnBF7N/Y0mF2Og=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777261910; c=relaxed/simple;
-	bh=Pg6XUODrdfT8x6SVOm/92QEhs4B1/dQMLI4JVCWBeX0=;
+	s=arc-20240116; t=1777272441; c=relaxed/simple;
+	bh=ilnIqpXFCyNt6g6RokOmstrJQTMIjyHCwgEExR/hbPs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P4pShH1ZwyNnBI8Zz7fCeYwtPMUJpgSrdcjU1lxla1yXAIf7iSzH5wAoWJ4hVOxh00/sCRWE6OnfIe3A448uFf3QOpnxKzCAeMTwE1Ibyqnryb2K3X50t5427yADKbHqQdYgYlRlardsv0gRMsXYBMdnoD+EteJSF2jZ58MZ3/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ESNQGdoj; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=eNtzB+fYptOvf6duINfmA1PVQX/WFM8kP9W/Q8AK9mXTaWXGWvBEHUd803vrbySvq0MfcG0YlYjbBo2yLG5htWnoZ1uwku5X81m8f2aWJpSvpRanScayNh4K2CxctaxkU4Y/++32wbggWxo+O86WGSes4dE826d1AOLZdw72s34=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=tVn55DDp; arc=none smtp.client-ip=217.194.8.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ESNQGdoj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5570DC19425;
-	Mon, 27 Apr 2026 03:51:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1777261910;
-	bh=Pg6XUODrdfT8x6SVOm/92QEhs4B1/dQMLI4JVCWBeX0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ESNQGdoj+aWIprEyqTgGSLUpXlQdmIPlutuefFcrRqV0H15RmrX8HsTp05zE6vxEE
-	 zaQmVUeuymea4PYf/ZdCPVl7fmaL7NZKNE5k9m+2lS9aCFSVp0JkO8PQDwLQWMlbvX
-	 2/sZh3+iglfusL8lsOv/UkXWuPbsbOZ6jIUzZBCc=
-Date: Sun, 26 Apr 2026 23:16:28 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Thorsten Leemhuis <linux@leemhuis.info>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-	Linux kernel regressions list <regressions@lists.linux.dev>,
-	LKML <linux-kernel@vger.kernel.org>
-Subject: Re: the stuttering regression in 7.0: should I have done something
- different?
-Message-ID: <2026042656-exposure-crayon-a7c5@gregkh>
-References: <4dd98a32-d1d6-43de-910c-7e487503177e@leemhuis.info>
+	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="tVn55DDp"
+Received: from francesco-nb (248.201.173.83.static.wline.lns.sme.cust.swisscom.ch [83.173.201.248])
+	by mail11.truemail.it (Postfix) with ESMTPA id 2944B1F94F;
+	Mon, 27 Apr 2026 08:47:08 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
+	s=default; t=1777272429;
+	bh=kbd+KJ62CZU4qnR3q8Wb/lGJuOs9KI6EpKwpM2lUoVc=; h=From:To:Subject;
+	b=tVn55DDp/bNzLaXOdmrsekwW1j/RGVrzSryO6xtEvOGnM47lLZu4sHZoIbLZ3O50D
+	 QLuh58iINvRQlZPI2oGj7ijDMlBombEcGp2s8l7Q3FBbnFd61SujArKZkArTLsgeQ/
+	 8KL7u/Ias7XgtOuEtORdSLFCSDGyrOmLvQ3r7WQy50GvXVY8+M+84PkbchtzHu7Fmc
+	 d/yTv5mVVO8G+2veajDbG2BO9od7+77/ts0/pSmt1iVFL4SltVKOxvDZEc53S2gPY3
+	 w78TFRrQa3eRrvWRfBPkMUx69iEKQcoQ3jWRrCVcLMHByifQEwQXtJYW9yqeAZSiv0
+	 6hIZ5IIubfeSw==
+Date: Mon, 27 Apr 2026 08:47:04 +0200
+From: Francesco Dolcini <francesco@dolcini.it>
+To: Alexander Stein <alexander.stein@ew.tq-group.com>,
+	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Cc: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>, Chen-Yu Tsai <wens@kernel.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>, Frank Li <Frank.Li@nxp.com>,
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	imx@lists.linux.dev, linux-renesas-soc@vger.kernel.org,
+	linux-sunxi@lists.linux.dev, driver-core@lists.linux.dev,
+	regressions@lists.linux.dev
+Subject: Re: [PATCH v2 6/9] soc: imx8m: don't access of_root directly
+Message-ID: <20260427064704.GA17710@francesco-nb>
+References: <20260223-soc-of-root-v2-0-b45da45903c8@oss.qualcomm.com>
+ <20260223-soc-of-root-v2-6-b45da45903c8@oss.qualcomm.com>
+ <6593091.DvuYhMxLoT@steina-w>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -41,26 +63,58 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <4dd98a32-d1d6-43de-910c-7e487503177e@leemhuis.info>
+In-Reply-To: <6593091.DvuYhMxLoT@steina-w>
 
-On Thu, Apr 23, 2026 at 06:30:24PM +0200, Thorsten Leemhuis wrote:
-> Linus, Greg, if you have a minute, please help me out with something I'm
-> wondering about:
+Hello Alexander, Bartosz
+
+On Tue, Mar 24, 2026 at 11:24:09AM +0100, Alexander Stein wrote:
+> Hi,
 > 
-> Should I have done something different wrt. to the periodic lockup aka
-> stuttering regression? The one quite a few users encountered, bisected,
-> and reported last week following the 7.0 release before it was fixed in
-> mainline & 7.0.1 during the first half of this week; see below for a
-> timeline of the whole thing.
+> Am Montag, 23. Februar 2026, 14:37:21 CET schrieb Bartosz Golaszewski:
+> > Don't access of_root directly as it reduces the build test coverage for
+> > this driver with COMPILE_TEST=y and OF=n. Use existing helper functions
+> > to retrieve the relevant information.
+> > 
+> > Suggested-by: Rob Herring <robh@kernel.org>
+> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
 > 
-> I'm not asking if this could have been prevented or if the developers
-> did anything wrong handling this. I ask because I want to do the right
-> thing if similar situations arise in the future to ensure they are
-> handled like you folks want them to.
+> today I noticed the following warning running next-20260323:
+> > caam 30900000.crypto: No clock data provided for i.MX SoC
+> 
+> This happens when there is no matching against the soc_id.
+> 
+> Checking the source it turns out this patch is the cause that the SoC info
+> does not provide soc_id anymore.
+> next-20260323:
+> > $ grep . /sys/devices/soc0/*
+> > /sys/devices/soc0/family:Freescale i.MX
+> > /sys/devices/soc0/machine:TQ-Systems i.MX8MPlus TQMa8MPxL on MBa8MP-RAS314
+> > grep: /sys/devices/soc0/power: Is a directory
+> > /sys/devices/soc0/revision:unknown
+> > /sys/devices/soc0/serial_number:0000000000000000
+> > grep: /sys/devices/soc0/subsystem: Is a directory
+> 
+> reverting this patch (2524b293a59e586afd06358d0b191ab57208a920):
+> > $ grep . /sys/devices/soc0/*
+> > /sys/devices/soc0/family:Freescale i.MX
+> > /sys/devices/soc0/machine:TQ-Systems i.MX8MPlus TQMa8MPxL on MBa8MP-RAS314
+> > grep: /sys/devices/soc0/power: Is a directory
+> > /sys/devices/soc0/revision:1.1
+> > /sys/devices/soc0/serial_number:469677A693A4B8CE131D180033E44903
+> > /sys/devices/soc0/soc_id:i.MX8MP
+> > grep: /sys/devices/soc0/subsystem: Is a directory
+> 
+> soc_id is restored. Now that I write these lines I noticed that
+> serial_number also contained empty value which is restored with the revert.
 
-I think this went fine.  It was caught properly, and fixed, and pushed
-out to users pretty quickly.  We can't really ask for more :)
+Any update on this? I would say this is a regression in 7.1-rc1.
 
-thanks,
+I noticed the same issue, and CAAM is not working.
 
-greg k-h
+[    0.000000] Linux version 7.1.0-rc1-0.0.0-devel (oe-user@oe-host) (aarch64-tdx-linux-gcc (GCC) 15.2.0, GNU ld (GNU Binutils) 2.46) #1 SMP PREEMPT Sun Apr 26 21:19:00 UTC 2026
+...
+[   10.611139] caam 30900000.crypto: No clock data provided for i.MX SoC
+[   10.611211] caam 30900000.crypto: probe with driver caam failed with error -22
+
+Francesco
+
