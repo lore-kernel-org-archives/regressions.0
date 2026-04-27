@@ -1,149 +1,127 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56353389E09
-	for <regressions@lists.linux.dev>; Mon, 27 Apr 2026 07:41:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A53939A7F4;
+	Mon, 27 Apr 2026 09:31:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777275666; cv=none; b=MUWj/hMWujsdzUCWWMIWEdiqz4KxnpkXcKAcSARi3vNaoaiXP+ss42Ij0B6lGFevLQDI6mRxDHNQUDmvapNwpdVSG0cYOOF3EYHiuSc880TkGk8cbvkwNVMgwGAnHrlpg0oCGZA+dBEGf5m37X7/R5poIpmQOCnUmdQHSWKKSBU=
+	t=1777282296; cv=none; b=Y6QPpD/REBR03oFTohKkwiyxCNdatJ54i0rwpiwg2wXPkMckdDxSUv+weBCsqxjpSyqmI8CGOo6sFtct3qLZM8iQIM3loh/6BjhkcEiWkoiQrhWc9Ua/1arLa4rxsfDoDsA/eMN4dmD04Wq6FOHj/yFExairzeAlitGpEbxMq4A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777275666; c=relaxed/simple;
-	bh=uJcIvYBSho/JC2TjO7L/9Kp7cP7KBThZDPtdb6eTnxo=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=gUBLyy2uIMn7NJEqxrpywv8FTtt+IxE7ddRXE0nBlRRoldvlPWOxpihLItxPQmc/Kze87kAuLQgcBCpjWycN7hBNomRczSxXlOSYVrj0aq4/eDfphJzxpXJtXDxX5opf+v5933v6tXXjVV4OPMBuZOnBvHR40oeLGrkZIuqCXkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NSuLs4te; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1777282296; c=relaxed/simple;
+	bh=A0oXCMrybLIEwLDt5XmVSSXvZtqREUvn/lU0xjuCu6A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=X7RlpiH4U48fP7xcaHQwOPkJx6htsaGnPx/MwzSXv/GL4y1XOtjahdgAfzubHJTJZpvxhlhpyLUHYpH73D6e7E/yAlG8/oXPCbNJ0LVVMEelN69/jc1rkvvotwD8JEamtzY10Gjt8bdUiiRyOv5QuQDhFk/zbA/TQHDdIN2G1eY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=Oui0MOT0; arc=none smtp.client-ip=217.194.8.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NSuLs4te"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1777275662;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GpOgCcb4ilQt4GgXVtC95e/+8g1AuEOs4okthTTjNEo=;
-	b=NSuLs4teKhbu2C9FCJ5MJQJnXOCjHEmT3xKCZEaqtIJYs7+vKAD9HFNOzg3gc1iHDggwKe
-	dyiNaOTec7N9YKlvalkVfeCVQupHIV0/UosW22L84UK+yBT/JZp+SStIELtbo5yee+RMeQ
-	Q4hG/5bn/BICfGOVIKRi50PLKWS2pMU=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-119-0IPi-P0tMAayg2A5qbA2ow-1; Mon,
- 27 Apr 2026 03:40:57 -0400
-X-MC-Unique: 0IPi-P0tMAayg2A5qbA2ow-1
-X-Mimecast-MFC-AGG-ID: 0IPi-P0tMAayg2A5qbA2ow_1777275654
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 454E318003F6;
-	Mon, 27 Apr 2026 07:40:53 +0000 (UTC)
-Received: from fweimer-oldenburg.csb.redhat.com (unknown [10.44.48.4])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id AFFEA180047F;
-	Mon, 27 Apr 2026 07:40:46 +0000 (UTC)
-From: Florian Weimer <fweimer@redhat.com>
-To: Thomas Gleixner <tglx@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>,  Mathias Stearn
- <mathias@mongodb.com>,  Dmitry Vyukov <dvyukov@google.com>,  Jinjie Ruan
- <ruanjinjie@huawei.com>,  linux-man@vger.kernel.org,  Mark Rutland
- <mark.rutland@arm.com>,  Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>,  Catalin Marinas
- <catalin.marinas@arm.com>,  Will Deacon <will@kernel.org>,  Boqun Feng
- <boqun.feng@gmail.com>,  "Paul E. McKenney" <paulmck@kernel.org>,  Chris
- Kennelly <ckennelly@google.com>,  regressions@lists.linux.dev,
-  linux-kernel@vger.kernel.org,  linux-arm-kernel@lists.infradead.org,
-  Ingo Molnar <mingo@kernel.org>,  Blake Oler <blake.oler@mongodb.com>,
-  Rich Felker <dalias@libc.org>,  Matthew Wilcox <willy@infradead.org>,
-  Greg Kroah-Hartman <gregkh@linuxfoundation.org>,  Linus Torvalds
- <torvalds@linuxfoundation.org>, criu@lists.linux.dev
-Subject: Re: [REGRESSION] rseq: refactoring in v6.19 broke everyone on arm64
- and tcmalloc everywhere
-In-Reply-To: <87jyttz8cf.ffs@tglx> (Thomas Gleixner's message of "Mon, 27 Apr
-	2026 00:04:48 +0200")
-References: <aekPXvvuKHKlETjm@J2N7QTR9R3.cambridge.arm.com>
-	<87wlxy22x7.ffs@tglx>
-	<c5331cd6-76c8-430d-978e-fcad164e48f6@huawei.com>
-	<CACT4Y+bxnQyHGdVNE1BYTx+Z2-cscLb38HYS9jBM5gPAz8=4bw@mail.gmail.com>
-	<87ik9i0xlj.ffs@tglx>
-	<CAHnCjA0UBNXfjHw=Y34OrAyGRNUtVF+zWd3ugyX6pd_mCk8K9w@mail.gmail.com>
-	<87a4ut1njh.ffs@tglx>
-	<CACT4Y+bBD7uCHXKqGo=epBXeEmsZ67Og2YO9kjNMT3ryjUY_sA@mail.gmail.com>
-	<CAHnCjA1LqbaUGkPe79EeP6Mpaki8QWeR-JBSbrG0z6pTm9CmUg@mail.gmail.com>
-	<87v7dgzbo7.ffs@tglx>
-	<20260424150318.GE641209@noisy.programming.kicks-ass.net>
-	<87se8kywhb.ffs@tglx> <87jyttz8cf.ffs@tglx>
-Date: Mon, 27 Apr 2026 09:40:43 +0200
-Message-ID: <lhujyts4zr8.fsf@oldenburg.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="Oui0MOT0"
+Received: from francesco-nb (248.201.173.83.static.wline.lns.sme.cust.swisscom.ch [83.173.201.248])
+	by mail11.truemail.it (Postfix) with ESMTPA id 39F831FB1B;
+	Mon, 27 Apr 2026 11:31:31 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
+	s=default; t=1777282292;
+	bh=3f+ipyipbG9ve74SWingHtpF8ckpjt3qTGqxppXfFzY=; h=From:To:Subject;
+	b=Oui0MOT0x94+2dM3R5uOpRffJ9Wx9j6ylSA9QAkTg92XTx+dn56JG7xkyoASs/fa6
+	 jeurKD+LfLijfHlA9mg6wH5OqqjaEOvDVucHz17xzhALz3mdyDx+/MsPHaZVp+YVxJ
+	 VIU34BPvnoFHTPl+YThEFIUGqU6HzI1TbxO1HNl3JHKluUYtK9yGDDeiUXDnyOF/Yz
+	 U9rQ8naikD2oQ8qGchfq7QlTttc7kMhUh/sUuzk97naTvYQq6FTtCPfwqgnIJIqwXO
+	 eWElkycEwmM5cl9ZVK2doQf8R3IWlYTNVaMEWuAXQbf20IyJv35NG87Vt7cb+pgGT3
+	 aaV344jJwI6MA==
+Date: Mon, 27 Apr 2026 11:31:27 +0200
+From: Francesco Dolcini <francesco@dolcini.it>
+To: Francesco Dolcini <francesco@dolcini.it>, peng.fan@oss.nxp.com,
+	Alexander Stein <alexander.stein@ew.tq-group.com>,
+	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Cc: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>, Chen-Yu Tsai <wens@kernel.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>, Frank Li <Frank.Li@nxp.com>,
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	imx@lists.linux.dev, linux-renesas-soc@vger.kernel.org,
+	linux-sunxi@lists.linux.dev, driver-core@lists.linux.dev,
+	regressions@lists.linux.dev
+Subject: Re: [PATCH v2 6/9] soc: imx8m: don't access of_root directly
+Message-ID: <20260427093127.GA50667@francesco-nb>
+References: <20260223-soc-of-root-v2-0-b45da45903c8@oss.qualcomm.com>
+ <20260223-soc-of-root-v2-6-b45da45903c8@oss.qualcomm.com>
+ <6593091.DvuYhMxLoT@steina-w>
+ <20260427064704.GA17710@francesco-nb>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
-X-Mimecast-MFC-PROC-ID: 708bPZ0d18K8bveIboUQbuYmShkAgB1UV9sqeQJZpO4_1777275654
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260427064704.GA17710@francesco-nb>
 
-* Thomas Gleixner:
++Peng
 
-> The real question is how to differentiate between the legacy and the
-> optimized mode. I have two working variants to achieve that:
->
->    1) The fully safe option requires a new flag for RSEQ
->       registration. It obviously requires a glibc update. (Suggested by
->       PeterZ)
+Hello all,
 
-Without glibc changes, RSEQ would keep working, but with the old,
-problematic performance, right?
+On Mon, Apr 27, 2026 at 08:47:04AM +0200, Francesco Dolcini wrote:
+> On Tue, Mar 24, 2026 at 11:24:09AM +0100, Alexander Stein wrote:
+> > Hi,
+> > 
+> > Am Montag, 23. Februar 2026, 14:37:21 CET schrieb Bartosz Golaszewski:
+> > > Don't access of_root directly as it reduces the build test coverage for
+> > > this driver with COMPILE_TEST=y and OF=n. Use existing helper functions
+> > > to retrieve the relevant information.
+> > > 
+> > > Suggested-by: Rob Herring <robh@kernel.org>
+> > > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+> > 
+> > today I noticed the following warning running next-20260323:
+> > > caam 30900000.crypto: No clock data provided for i.MX SoC
+> > 
+> > This happens when there is no matching against the soc_id.
+> > 
+> > Checking the source it turns out this patch is the cause that the SoC info
+> > does not provide soc_id anymore.
+> > next-20260323:
+> > > $ grep . /sys/devices/soc0/*
+> > > /sys/devices/soc0/family:Freescale i.MX
+> > > /sys/devices/soc0/machine:TQ-Systems i.MX8MPlus TQMa8MPxL on MBa8MP-RAS314
+> > > grep: /sys/devices/soc0/power: Is a directory
+> > > /sys/devices/soc0/revision:unknown
+> > > /sys/devices/soc0/serial_number:0000000000000000
+> > > grep: /sys/devices/soc0/subsystem: Is a directory
+> > 
+> > reverting this patch (2524b293a59e586afd06358d0b191ab57208a920):
+> > > $ grep . /sys/devices/soc0/*
+> > > /sys/devices/soc0/family:Freescale i.MX
+> > > /sys/devices/soc0/machine:TQ-Systems i.MX8MPlus TQMa8MPxL on MBa8MP-RAS314
+> > > grep: /sys/devices/soc0/power: Is a directory
+> > > /sys/devices/soc0/revision:1.1
+> > > /sys/devices/soc0/serial_number:469677A693A4B8CE131D180033E44903
+> > > /sys/devices/soc0/soc_id:i.MX8MP
+> > > grep: /sys/devices/soc0/subsystem: Is a directory
+> > 
+> > soc_id is restored. Now that I write these lines I noticed that
+> > serial_number also contained empty value which is restored with the revert.
+> 
+> Any update on this? I would say this is a regression in 7.1-rc1.
+> 
+> I noticed the same issue, and CAAM is not working.
+> 
+> [    0.000000] Linux version 7.1.0-rc1-0.0.0-devel (oe-user@oe-host) (aarch64-tdx-linux-gcc (GCC) 15.2.0, GNU ld (GNU Binutils) 2.46) #1 SMP PREEMPT Sun Apr 26 21:19:00 UTC 2026
+> ...
+> [   10.611139] caam 30900000.crypto: No clock data provided for i.MX SoC
+> [   10.611211] caam 30900000.crypto: probe with driver caam failed with error -22
 
-If we don't have a notification in the auxiliary vector, we'd have to do
-two system calls at process start, which isn't ideal, but is probably
-not a significant issue, either.
+I guess this is the fix
 
-I haven't verified this, but it looks like introducing the flag breaks
-CRIU?  In dump_thread_rseq, we have this:
-
-        if (rseqc.flags != 0) {
-                pr_err("something wrong with ptrace(PTRACE_GET_RSEQ_CONFIGURATION, %d) flags = 0x%x\n", tid,
-                       rseqc.flags);
-                return -1;
-        }
-
-I suppose a workaround could make this behavior flag a prctl flag.  CRIU
-wouldn't dump and restore that until taught about it.  If the new
-behavior is switched on explicitly by the flag, it would be
-backwards-compatible, except that restoring with unpatched CRIU would
-lead to a performance loss.
-
->    2) Determine the requirements of the registering task via the size of
->       the registered RSEQ area.
->
->       The original implementation, which TCMalloc depends on, registers
->       a 32 byte region (ORIG_RSEG_SIZE). This region has 32 byte
->       alignment requirement.
->
->       The extension safe newer variant exposes the kernel RSEQ feature
->       size via getauxval(AT_RSEQ_FEATURE_SIZE) and the alignment
->       requirement via getauxval(AT_RSEQ_ALIGN). The alignment
->       requirement is that the registered rseq region is aligned to the
->       next power of two of the feature size. The kernel currently has a
->       feature size of 33 bytes, which means the alignment requirement is
->       64 bytes.
-
-There are still glibc builds in use that do not use AT_RSEQ_ALIGN, and
-instead unconditionally reserve a size of 32.  In some builds, the RSEQ
-area is not aligned to a multiple of 64, which makes glibc
-indistinguishable from tcmalloc.  You could look at the location of the
-thread pointer relative to the RSEQ area at registration to tell them
-apart, but that is perhaps too nasty.
-
-Switching to the new extensible RSEQ allocation code in older glibc
-builds is not entirely trivial, and I would prefer not doing that.
-Registering with a new flag is comparatively simple, and we could
-backport it, except that it might not be compatible with CRIU.
-
-Thanks,
-Florian
+https://lore.kernel.org/all/20260427-soc-imx8m-fix-v1-1-1fe5b43d8090@nxp.com/
 
