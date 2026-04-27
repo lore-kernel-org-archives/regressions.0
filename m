@@ -1,137 +1,130 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 837F82F547F;
-	Mon, 27 Apr 2026 20:31:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7316F373BE9;
+	Mon, 27 Apr 2026 21:06:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777321905; cv=none; b=Q1zhIyvya9+zTTLgUxDvUkZSdK6jjv0jwxo/lqbb+ei520XbSJASVlRjKmi6kuAu1WPldCk0v47SQWVJD1FDtyh7fmAMfADQPaCTSbPBGWVsfH17fK9yr27Bda62wQUm5kJdUDI2zbJeSJLp2pOC0gx02jacKmGzxN+KRtAhIf8=
+	t=1777323974; cv=none; b=AUG5oOpOUJ7yb4Ns2T09m4J1rFSvFlQbsiDzMt9Q4zN4zLBDza+gJfJZQQ1YKEgJbA/xgvuye6XjqvVX8jeJ0+9rJQViV1kDgrFzxrASQxUm2Lr2yYP35VmioFfIGzNeG+hM6PIrDii+ojOm6rTB0x5AHaBX0MpnEfMz1vbdvxE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777321905; c=relaxed/simple;
-	bh=0Ri7ky56QroweDGD7QliPPyIVKk1G5Cnjzc9z2u1OpI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MhznHjxRq96d7UasaYBLwQvuP8mH/KhQMjh/ymVb4ncI3RseI2w+LkcycXsrl5ei0jkTxur71mZHx91FXap5aeCOIomA8b9KIkXiJ5KmZA6UDSrJa6uOOQaHGiyDrxc2k5rikmnZXVN2cTRme+G07zhDF2so+NuFiDuBXakmkGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AlFjA8cQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777323974; c=relaxed/simple;
+	bh=KBRYX6tEB+mYgRW4VfUUMxd2Mz2ql4bOLSZemcFFgzQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=lcZqReaYMI6pnDq921dEyg6oN6NE20Xuov+uTKKO3Zytg5eodmDM/lrn3E9kq+o3xoBOo4sRCh2PAO0o8j6ZqZlFIAOwbpSeNazzZ9EueAfFLwEgbldtnQSb0WXAvGb9Nu0bG08ufaBW8Tk36QJVkrPrdewfaswIxZPN+s7KpaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JkGn6Kt1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AlFjA8cQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14587C19425;
-	Mon, 27 Apr 2026 20:31:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JkGn6Kt1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D742AC2BCB5;
+	Mon, 27 Apr 2026 21:06:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777321905;
-	bh=0Ri7ky56QroweDGD7QliPPyIVKk1G5Cnjzc9z2u1OpI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=AlFjA8cQBhiriH37cdh7ywnf7x6P4xJfnLaksRSJuSgGzYDzAgJIepgQhcOd78Lvu
-	 pB2vwJQGdCVfX7TFhTTFYW8qWUFsQrNt6PiQBSynWXjYV0HDPb8byo4LItRoSG/hBp
-	 5+HrQGnse8aUOFwOUmNLRZmp9donC1QhqElfonXU8sOFgmHHfzcIF+3p9Nk099uOo+
-	 vaVCxFIeCf4khQ1iGd0udQy593w2FiGRamLSPU8itEKkXLPgQR/4PYEOeIMTtzJ1bt
-	 yNGZQRunu2LdShFE0gLvm1F3KxgX1Zc79C8IWOZzzNE+zr/TEKW0pSN13MTeV7MTNj
-	 cNKVJZ7LIVurQ==
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-To: Evgeny Sagatov <evgeny.sagatov@gmail.com>
-Cc: regressions@lists.linux.dev, linux-acpi@vger.kernel.org,
- Thorsten Leemhuis <regressions@leemhuis.info>,
- LKML <linux-kernel@vger.kernel.org>,
- Wysocki Rafael J <rafael.j.wysocki@intel.com>
-Subject: Re: Pressing the power button causes the device to freeze completely
-Date: Mon, 27 Apr 2026 22:31:42 +0200
-Message-ID: <6006426.DvuYhMxLoT@rafael.j.wysocki>
-Organization: Linux Kernel Development
-In-Reply-To:
- <CAGAxtY28bho6+PRoEypepAK1UpmGQ8WzkvPnUEmGvx7vWqkHeA@mail.gmail.com>
-References:
- <12879883.O9o76ZdvQC@rafael.j.wysocki> <6005325.DvuYhMxLoT@rafael.j.wysocki>
- <CAGAxtY28bho6+PRoEypepAK1UpmGQ8WzkvPnUEmGvx7vWqkHeA@mail.gmail.com>
+	s=k20201202; t=1777323973;
+	bh=KBRYX6tEB+mYgRW4VfUUMxd2Mz2ql4bOLSZemcFFgzQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=JkGn6Kt1y6YH2h8fUEmQXSUTStPRDHM2qzazqiwDfzrp6yp3KfOna5pLtvZI56K0/
+	 4smug6gT/MjmzFbaHA7z3V1bFhyMnPQQcKKudIw4h+lcp6MfiU7D7R16jSpsMFkb2n
+	 xULOmLBk0gqKQTrzvS1qWHybmBONUnBnk+2c01fOQUAru014iwvBBtBYWChmrUy4hK
+	 Y/vaPQaYaLPMPvY1O/xsBHqJUIHFaP6HoKicxLjmZLF13PcsjGYbXP0hn3JG2brSIJ
+	 sHKDKx5MOKEkjwpJjWT+/+mTLA5yUMDoFBYokYwNcXKNR+bjt02WD8YYBr58rffEB3
+	 G8gUnHVAXeS6Q==
+From: Thomas Gleixner <tglx@kernel.org>
+To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Florian Weimer
+ <fweimer@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Mathias Stearn
+ <mathias@mongodb.com>, Dmitry Vyukov <dvyukov@google.com>, Jinjie Ruan
+ <ruanjinjie@huawei.com>, linux-man@vger.kernel.org, Mark Rutland
+ <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will
+ Deacon <will@kernel.org>, Boqun Feng <boqun.feng@gmail.com>, "Paul E.
+ McKenney" <paulmck@kernel.org>, Chris Kennelly <ckennelly@google.com>,
+ regressions@lists.linux.dev, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, Ingo Molnar <mingo@kernel.org>,
+ Blake Oler <blake.oler@mongodb.com>, Rich Felker <dalias@libc.org>,
+ Matthew Wilcox <willy@infradead.org>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, Linus Torvalds
+ <torvalds@linuxfoundation.org>, criu@lists.linux.dev, Michael Jeanson
+ <mjeanson@efficios.com>
+Subject: Re: [REGRESSION] rseq: refactoring in v6.19 broke everyone on arm64
+ and tcmalloc everywhere
+In-Reply-To: <7f8783a6-1a48-4c92-850c-d285a788b491@efficios.com>
+References: <aekPXvvuKHKlETjm@J2N7QTR9R3.cambridge.arm.com>
+ <87wlxy22x7.ffs@tglx> <c5331cd6-76c8-430d-978e-fcad164e48f6@huawei.com>
+ <CACT4Y+bxnQyHGdVNE1BYTx+Z2-cscLb38HYS9jBM5gPAz8=4bw@mail.gmail.com>
+ <87ik9i0xlj.ffs@tglx>
+ <CAHnCjA0UBNXfjHw=Y34OrAyGRNUtVF+zWd3ugyX6pd_mCk8K9w@mail.gmail.com>
+ <87a4ut1njh.ffs@tglx>
+ <CACT4Y+bBD7uCHXKqGo=epBXeEmsZ67Og2YO9kjNMT3ryjUY_sA@mail.gmail.com>
+ <CAHnCjA1LqbaUGkPe79EeP6Mpaki8QWeR-JBSbrG0z6pTm9CmUg@mail.gmail.com>
+ <87v7dgzbo7.ffs@tglx>
+ <20260424150318.GE641209@noisy.programming.kicks-ass.net>
+ <87se8kywhb.ffs@tglx> <87jyttz8cf.ffs@tglx>
+ <lhujyts4zr8.fsf@oldenburg.str.redhat.com>
+ <7f8783a6-1a48-4c92-850c-d285a788b491@efficios.com>
+Date: Mon, 27 Apr 2026 23:06:09 +0200
+Message-ID: <87bjf4yuym.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 
-On Monday, April 27, 2026 10:12:33 PM CEST Evgeny Sagatov wrote:
-> dmesg | grep "frequency scaling"
-> [    8.552380] acpi_cpufreq: CPU0: Using I/O space for frequency scaling
-> [    8.552386] acpi_cpufreq: CPU0: frequency scaling I/O port number: 2176
-> [    8.552478] acpi_cpufreq: CPU1: Using I/O space for frequency scaling
-> [    8.552480] acpi_cpufreq: CPU1: frequency scaling I/O port number: 2176
-> [    8.552584] acpi_cpufreq: CPU2: Using I/O space for frequency scaling
-> [    8.552586] acpi_cpufreq: CPU2: frequency scaling I/O port number: 2176
-> [    8.552668] acpi_cpufreq: CPU3: Using I/O space for frequency scaling
-> [    8.552670] acpi_cpufreq: CPU3: frequency scaling I/O port number: 2176
-> 
-> Messages that appear when I press the power button:
-> apr 27 23:07:33 srv kernel: ACPI power button event
-> apr 27 23:07:33 srv kernel: ACPI event status register ID: 3
+On Mon, Apr 27 2026 at 14:35, Mathieu Desnoyers wrote:
+> On 2026-04-27 03:40, Florian Weimer wrote:
+>> Switching to the new extensible RSEQ allocation code in older glibc
+>> builds is not entirely trivial, and I would prefer not doing that.
+>> Registering with a new flag is comparatively simple, and we could
+>> backport it, except that it might not be compatible with CRIU.
+> A third option would allow the entire range of older libc versions to
+> benefit from rseq optimizations, gating the "v2" behavior on:
+>
+>    rseq_len > 32 || (flags & RSEQ_FLAG_V2)
 
-Of course it's a power button, so the register ID is 3 and the register
-is PM1.  Sorry for missing that previously.
+No. Features beyond mm_cid require optimized mode and a larger rseq
+area. That's not negotiable. See below.
 
-Please apply the slightly update patch below (which replaces the previous
-one) and send the messages printed to the log after booting the new
-kernel and pressing the power button.
+> That v2 behavior would:
+>
+> A) Enforce the ABI contract:
+>
+>     - RO fields corruption -> kill process,
 
----
- drivers/acpi/acpica/evevent.c  |    8 ++++++++
- drivers/cpufreq/acpi-cpufreq.c |    8 ++++++--
- drivers/cpufreq/cpufreq.c      |    1 +
- 3 files changed, 15 insertions(+), 2 deletions(-)
+My patch does that already and the time slice extension muck does so too
+from day one.
 
---- a/drivers/acpi/acpica/evevent.c
-+++ b/drivers/acpi/acpica/evevent.c
-@@ -243,6 +243,14 @@ static u32 acpi_ev_fixed_event_dispatch(
- 	(void)acpi_write_bit_register(acpi_gbl_fixed_event_info[event].
- 				      status_register_id, ACPI_CLEAR_STATUS);
- 
-+	if (event == ACPI_EVENT_POWER_BUTTON) {
-+		pr_info("ACPI power button event\n");
-+		pr_info("ACPI event status I/O port number: %llu\n",
-+			acpi_gbl_xpm1a_status.address);
-+
-+		return (ACPI_INTERRUPT_HANDLED);
-+	}
-+
- 	/*
- 	 * Make sure that a handler exists. If not, report an error
- 	 * and disable the event to prevent further interrupts.
---- a/drivers/cpufreq/acpi-cpufreq.c
-+++ b/drivers/cpufreq/acpi-cpufreq.c
-@@ -479,8 +479,8 @@ static unsigned int acpi_cpufreq_fast_sw
- 			return next_freq;
- 	}
- 
--	data->cpu_freq_write(&perf->control_register,
--			     perf->states[next_perf_state].control);
-+	/*data->cpu_freq_write(&perf->control_register,
-+			     perf->states[next_perf_state].control);*/
- 	perf->state = next_perf_state;
- 	return next_freq;
- }
-@@ -887,9 +887,13 @@ static int acpi_cpufreq_cpu_init(struct
- 		 * unknown and not detectable via IO ports.
- 		 */
- 		policy->cur = acpi_cpufreq_guess_freq(data, policy->cpu);
-+		pr_info("CPU%u: Using I/O space for frequency scaling\n", cpu);
-+		pr_info("CPU%u: frequency scaling I/O port number: %llu\n", cpu,
-+			perf->control_register.address);
- 		break;
- 	case ACPI_ADR_SPACE_FIXED_HARDWARE:
- 		acpi_cpufreq_driver.get = get_cur_freq_on_cpu;
-+		pr_info("CPU%u: Using FFH for frequency scaling\n", cpu);
- 		break;
- 	default:
- 		break;
---- a/drivers/cpufreq/cpufreq.c
-+++ b/drivers/cpufreq/cpufreq.c
-@@ -473,6 +473,7 @@ void cpufreq_enable_fast_switch(struct c
- 	if (cpufreq_fast_switch_count >= 0) {
- 		cpufreq_fast_switch_count++;
- 		policy->fast_switch_enabled = true;
-+		pr_info("CPU%u: Fast frequency switching enabled\n", policy->cpu);
- 	} else {
- 		pr_warn("CPU%u: Fast frequency switching not enabled\n",
- 			policy->cpu);
+>     - System call within rseq critical section -> kill process,
 
+No. That's overkill for syscall heavy workloads.
 
+Also it's not a functional correctness problem which affects multiple
+RSEQ users in an application. User space can do even worse things.
 
+      cs_start
+      call foo	// foo uses rseq too ....
+      cs_end
+
+Invoking a syscall from within the critical section is stupid, but at
+least harmless vs. other usage in the same thread as the syscall needs
+to return before anything else can go and use RSEQ in that thread, no?
+
+People who develop RSEQ critical sections can enable debug mode via the
+sysfs knob if they want to prove that their code is correct. That's a
+debug aid, not more.
+
+> B) Allow optimization of the rseq field updates (only update relevant
+>     fields on migration),
+
+That's part of the whole combo. Optimized behaviour and new features.
+
+> This entirely decouples the feature enablement concern (rseq_len) from
+> the strictness/optimization mode (v2).
+
+Which causes us to sprinkle more conditionals into the hot paths for
+individual features instead of simply doing unconditional stores and be
+done with it. It's bad enough that we have one, we don't need more.
+
+User space knows the size the kernel expects and if it insists on using
+the original size, so be it. Keep it simple.
+
+Thanks,
+
+        tglx
