@@ -1,120 +1,112 @@
-Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42AF527FB2A;
-	Mon, 27 Apr 2026 06:47:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8917D40DFB3
+	for <regressions@lists.linux.dev>; Mon, 27 Apr 2026 07:06:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777272441; cv=none; b=Mz0tT+V5yCBqQtj1jJODVXKUQo3p+cMpEPAYBb2xxWLZuUbNIoHWJm8LJfHncIjpfvAsnFFAev2BWehmNITZ++1o0LoIN2EmI4Bitoopi0p4seg2vrgNb6aCSoz4cg0Jekg63v7Sc0hhipS69hmpxgntZCcULwnBF7N/Y0mF2Og=
+	t=1777273594; cv=none; b=rS8SCDLROUeBd4Zn0oh4e+1CDabgaVeEgUrdSn0NQpHZqMjYKE4+eBAkBJBIi9xZXgWSqyXNlPd/y8IpCncRp0Y7RMD89sHe/MehC1BG7suemrA6L1Qj46HCg+BHZ8qU9frRPAa2mi/+R2oFYJV6BpeEvG3rM0nPrzxV2tUNfkc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777272441; c=relaxed/simple;
-	bh=ilnIqpXFCyNt6g6RokOmstrJQTMIjyHCwgEExR/hbPs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eNtzB+fYptOvf6duINfmA1PVQX/WFM8kP9W/Q8AK9mXTaWXGWvBEHUd803vrbySvq0MfcG0YlYjbBo2yLG5htWnoZ1uwku5X81m8f2aWJpSvpRanScayNh4K2CxctaxkU4Y/++32wbggWxo+O86WGSes4dE826d1AOLZdw72s34=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=tVn55DDp; arc=none smtp.client-ip=217.194.8.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
+	s=arc-20240116; t=1777273594; c=relaxed/simple;
+	bh=QPRD0dFfCvef1eruEXtc9WQXEZWajAjrT4tystAAUdk=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Hupq7YlGnTHVAUwx9Do2/Dxna+8Qp2Z0m7cnVQXOBkCqnnHN+OCmebPj8tGGqqCMrBytqyXCzANeUa2kuVDrdLkOGSeLQlh+SiU3VKN0J6WmNpEEhBNJXK9jeVMsQ46ADseBj3u3kwgAfiulB/poySZ/E51JZyGtKaBB019t19g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AUVwEd6i; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="tVn55DDp"
-Received: from francesco-nb (248.201.173.83.static.wline.lns.sme.cust.swisscom.ch [83.173.201.248])
-	by mail11.truemail.it (Postfix) with ESMTPA id 2944B1F94F;
-	Mon, 27 Apr 2026 08:47:08 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
-	s=default; t=1777272429;
-	bh=kbd+KJ62CZU4qnR3q8Wb/lGJuOs9KI6EpKwpM2lUoVc=; h=From:To:Subject;
-	b=tVn55DDp/bNzLaXOdmrsekwW1j/RGVrzSryO6xtEvOGnM47lLZu4sHZoIbLZ3O50D
-	 QLuh58iINvRQlZPI2oGj7ijDMlBombEcGp2s8l7Q3FBbnFd61SujArKZkArTLsgeQ/
-	 8KL7u/Ias7XgtOuEtORdSLFCSDGyrOmLvQ3r7WQy50GvXVY8+M+84PkbchtzHu7Fmc
-	 d/yTv5mVVO8G+2veajDbG2BO9od7+77/ts0/pSmt1iVFL4SltVKOxvDZEc53S2gPY3
-	 w78TFRrQa3eRrvWRfBPkMUx69iEKQcoQ3jWRrCVcLMHByifQEwQXtJYW9yqeAZSiv0
-	 6hIZ5IIubfeSw==
-Date: Mon, 27 Apr 2026 08:47:04 +0200
-From: Francesco Dolcini <francesco@dolcini.it>
-To: Alexander Stein <alexander.stein@ew.tq-group.com>,
-	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-Cc: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>, Chen-Yu Tsai <wens@kernel.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>, Frank Li <Frank.Li@nxp.com>,
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	imx@lists.linux.dev, linux-renesas-soc@vger.kernel.org,
-	linux-sunxi@lists.linux.dev, driver-core@lists.linux.dev,
-	regressions@lists.linux.dev
-Subject: Re: [PATCH v2 6/9] soc: imx8m: don't access of_root directly
-Message-ID: <20260427064704.GA17710@francesco-nb>
-References: <20260223-soc-of-root-v2-0-b45da45903c8@oss.qualcomm.com>
- <20260223-soc-of-root-v2-6-b45da45903c8@oss.qualcomm.com>
- <6593091.DvuYhMxLoT@steina-w>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AUVwEd6i"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1777273591;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=y7/7InQ3YxlIclzI7DLSo4lq3zCq3+EvHj491D6ofKI=;
+	b=AUVwEd6iufboI/qHqUTRMKKtGd2SfIWD3yqB6QcmANQ9L2+Gw+bIvHcPfge/qxg0Qb8VKq
+	yGeQYJ65dOfeBIisawLRThrF8Bmk67f1Eipac6GNRejE+zAM3fM/MK0MKDSp74wjlZJ6VR
+	EwczYKGXGQ9wF65Tj3pWdBw730u8Ruk=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-330-COmrkNHAP0e5g2ifgSTz9g-1; Mon,
+ 27 Apr 2026 03:06:26 -0400
+X-MC-Unique: COmrkNHAP0e5g2ifgSTz9g-1
+X-Mimecast-MFC-AGG-ID: COmrkNHAP0e5g2ifgSTz9g_1777273583
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0014F18004A9;
+	Mon, 27 Apr 2026 07:06:22 +0000 (UTC)
+Received: from fweimer-oldenburg.csb.redhat.com (unknown [10.44.48.4])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A35AC19560AB;
+	Mon, 27 Apr 2026 07:06:15 +0000 (UTC)
+From: Florian Weimer <fweimer@redhat.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Thomas Gleixner <tglx@kernel.org>,  Mathias Stearn
+ <mathias@mongodb.com>,  Peter Zijlstra <peterz@infradead.org>,  Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>,  Catalin Marinas
+ <catalin.marinas@arm.com>,  Will Deacon <will@kernel.org>,  Boqun Feng
+ <boqun.feng@gmail.com>,  "Paul E. McKenney" <paulmck@kernel.org>,  Chris
+ Kennelly <ckennelly@google.com>,  Dmitry Vyukov <dvyukov@google.com>,
+  regressions@lists.linux.dev,  linux-kernel@vger.kernel.org,
+  linux-arm-kernel@lists.infradead.org,  Ingo Molnar <mingo@kernel.org>,
+  Mark Rutland <mark.rutland@arm.com>,  Jinjie Ruan
+ <ruanjinjie@huawei.com>,  Blake Oler <blake.oler@mongodb.com>
+Subject: Re: [REGRESSION] rseq: refactoring in v6.19 broke everyone on arm64
+ and tcmalloc everywhere
+In-Reply-To: <CAHk-=wh=B3fqU9AaBsyViZR=eVTG5qa2CGyN=qxPROVxu9Gctg@mail.gmail.com>
+	(Linus Torvalds's message of "Thu, 23 Apr 2026 14:28:35 -0700")
+References: <CAHnCjA25b+nO2n5CeifknSKHssJpPrjnf+dtr7UgzRw4Zgu=oA@mail.gmail.com>
+	<20260422125647.GP3126523@noisy.programming.kicks-ass.net>
+	<20260422131338.GI3102924@noisy.programming.kicks-ass.net>
+	<CAHnCjA2fa+dP1+yCYNQrTXQaW-JdtfMj7wMikwMeeCRg-3NhiA@mail.gmail.com>
+	<87fr4l28zn.ffs@tglx>
+	<CAHnCjA07ER=9xBqXq4jf5yn052W-E9ZXD86HxnRGtai6bpXbbQ@mail.gmail.com>
+	<87cxzp1tn6.ffs@tglx>
+	<CAHk-=wjsEqWJxXArS-P5+ksSY2Apaox8u6FtUrtyWSBEOL4Q2Q@mail.gmail.com>
+	<874il11jac.ffs@tglx>
+	<CAHk-=wh=B3fqU9AaBsyViZR=eVTG5qa2CGyN=qxPROVxu9Gctg@mail.gmail.com>
+Date: Mon, 27 Apr 2026 09:06:13 +0200
+Message-ID: <lhuqzo051cq.fsf@oldenburg.str.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6593091.DvuYhMxLoT@steina-w>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+X-Mimecast-MFC-PROC-ID: zfQn1E-I-KYYveTEsEM2BD43ASoALgEmlUe4Wx7g7PQ_1777273583
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain
 
-Hello Alexander, Bartosz
+* Linus Torvalds:
 
-On Tue, Mar 24, 2026 at 11:24:09AM +0100, Alexander Stein wrote:
-> Hi,
-> 
-> Am Montag, 23. Februar 2026, 14:37:21 CET schrieb Bartosz Golaszewski:
-> > Don't access of_root directly as it reduces the build test coverage for
-> > this driver with COMPILE_TEST=y and OF=n. Use existing helper functions
-> > to retrieve the relevant information.
-> > 
-> > Suggested-by: Rob Herring <robh@kernel.org>
-> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
-> 
-> today I noticed the following warning running next-20260323:
-> > caam 30900000.crypto: No clock data provided for i.MX SoC
-> 
-> This happens when there is no matching against the soc_id.
-> 
-> Checking the source it turns out this patch is the cause that the SoC info
-> does not provide soc_id anymore.
-> next-20260323:
-> > $ grep . /sys/devices/soc0/*
-> > /sys/devices/soc0/family:Freescale i.MX
-> > /sys/devices/soc0/machine:TQ-Systems i.MX8MPlus TQMa8MPxL on MBa8MP-RAS314
-> > grep: /sys/devices/soc0/power: Is a directory
-> > /sys/devices/soc0/revision:unknown
-> > /sys/devices/soc0/serial_number:0000000000000000
-> > grep: /sys/devices/soc0/subsystem: Is a directory
-> 
-> reverting this patch (2524b293a59e586afd06358d0b191ab57208a920):
-> > $ grep . /sys/devices/soc0/*
-> > /sys/devices/soc0/family:Freescale i.MX
-> > /sys/devices/soc0/machine:TQ-Systems i.MX8MPlus TQMa8MPxL on MBa8MP-RAS314
-> > grep: /sys/devices/soc0/power: Is a directory
-> > /sys/devices/soc0/revision:1.1
-> > /sys/devices/soc0/serial_number:469677A693A4B8CE131D180033E44903
-> > /sys/devices/soc0/soc_id:i.MX8MP
-> > grep: /sys/devices/soc0/subsystem: Is a directory
-> 
-> soc_id is restored. Now that I write these lines I noticed that
-> serial_number also contained empty value which is restored with the revert.
+>>     // Note: this makes __rseq_abi.cpu_id_start unusable for its original purpose.
+>>
+>>     Do you seriously want to proliferate that?
+>
+> Absolutely.
+>
+> That's how clever hacks work - they take advantage of things past
+> their design parameters. "If it works, it's not stupid".
+>
+> We don't then turn around and say "you were clever, and we did
+> something stupid, so now we'll hurt you".
+>
+> This is all 100% on the RSEQ kernel code, not on users who took
+> advantage of it.
 
-Any update on this? I would say this is a regression in 7.1-rc1.
+RSEQ was intended to be modular, with more than one library using it
+within a process, without coordination (beyond sticking to the RSEQ
+protocol).  The tcmalloc approach is incompatible with that.  Once
+tcmalloc starts using RSEQ in its peculiar way, nothing else in the
+process can, and vice versa.  This is far from ideal because the
+particular descheduling notification that tcmalloc uses could be
+implemented in a much simpler way than full RSEQ, given its non-modular
+nature.
 
-I noticed the same issue, and CAAM is not working.
-
-[    0.000000] Linux version 7.1.0-rc1-0.0.0-devel (oe-user@oe-host) (aarch64-tdx-linux-gcc (GCC) 15.2.0, GNU ld (GNU Binutils) 2.46) #1 SMP PREEMPT Sun Apr 26 21:19:00 UTC 2026
-...
-[   10.611139] caam 30900000.crypto: No clock data provided for i.MX SoC
-[   10.611211] caam 30900000.crypto: probe with driver caam failed with error -22
-
-Francesco
+Thanks,
+Florian
 
