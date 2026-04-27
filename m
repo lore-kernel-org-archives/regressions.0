@@ -1,130 +1,201 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7316F373BE9;
-	Mon, 27 Apr 2026 21:06:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777323974; cv=none; b=AUG5oOpOUJ7yb4Ns2T09m4J1rFSvFlQbsiDzMt9Q4zN4zLBDza+gJfJZQQ1YKEgJbA/xgvuye6XjqvVX8jeJ0+9rJQViV1kDgrFzxrASQxUm2Lr2yYP35VmioFfIGzNeG+hM6PIrDii+ojOm6rTB0x5AHaBX0MpnEfMz1vbdvxE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777323974; c=relaxed/simple;
-	bh=KBRYX6tEB+mYgRW4VfUUMxd2Mz2ql4bOLSZemcFFgzQ=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=lcZqReaYMI6pnDq921dEyg6oN6NE20Xuov+uTKKO3Zytg5eodmDM/lrn3E9kq+o3xoBOo4sRCh2PAO0o8j6ZqZlFIAOwbpSeNazzZ9EueAfFLwEgbldtnQSb0WXAvGb9Nu0bG08ufaBW8Tk36QJVkrPrdewfaswIxZPN+s7KpaM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JkGn6Kt1; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ACDB39FCAF
+	for <regressions@lists.linux.dev>; Mon, 27 Apr 2026 21:50:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.50
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1777326609; cv=pass; b=mnl3fEvwJ6GhytSpSf3++RvlhNdRFxYpb/U/Jyfy6RS6zXuPjhdjjHOdVkpIbunlRQYkgY1rXWczk/BpZ1n4OoLCAMo08K9eCh8TSlYisT3rdxaTF1BeTTqKAFjnDaQwUedtQj6bpIeZ8VaA9WGgG8h8/4LBiPTqGqCysDKyQSo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1777326609; c=relaxed/simple;
+	bh=L7xa02X7WdX9x9vHRITtqt4+zXkzCD26OYMMG+OjAXo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZManF3lkcw3iPmFMJdIRPw+CV0mhcapO0pb+L/7106L7cGja+zIZDbdk8i90rA4NwrASDvfjdPgQq1zcZcm1MoZlvkpKtREsZQ/CjeG5gmkTuOOd2KKuRKwDfKwbck9sXVDWHK/GkAEweebR3Gf8bgbUWnIMCUQwO9Bf+CHN1Gk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OH17PN+/; arc=pass smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JkGn6Kt1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D742AC2BCB5;
-	Mon, 27 Apr 2026 21:06:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777323973;
-	bh=KBRYX6tEB+mYgRW4VfUUMxd2Mz2ql4bOLSZemcFFgzQ=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=JkGn6Kt1y6YH2h8fUEmQXSUTStPRDHM2qzazqiwDfzrp6yp3KfOna5pLtvZI56K0/
-	 4smug6gT/MjmzFbaHA7z3V1bFhyMnPQQcKKudIw4h+lcp6MfiU7D7R16jSpsMFkb2n
-	 xULOmLBk0gqKQTrzvS1qWHybmBONUnBnk+2c01fOQUAru014iwvBBtBYWChmrUy4hK
-	 Y/vaPQaYaLPMPvY1O/xsBHqJUIHFaP6HoKicxLjmZLF13PcsjGYbXP0hn3JG2brSIJ
-	 sHKDKx5MOKEkjwpJjWT+/+mTLA5yUMDoFBYokYwNcXKNR+bjt02WD8YYBr58rffEB3
-	 G8gUnHVAXeS6Q==
-From: Thomas Gleixner <tglx@kernel.org>
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Florian Weimer
- <fweimer@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Mathias Stearn
- <mathias@mongodb.com>, Dmitry Vyukov <dvyukov@google.com>, Jinjie Ruan
- <ruanjinjie@huawei.com>, linux-man@vger.kernel.org, Mark Rutland
- <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will
- Deacon <will@kernel.org>, Boqun Feng <boqun.feng@gmail.com>, "Paul E.
- McKenney" <paulmck@kernel.org>, Chris Kennelly <ckennelly@google.com>,
- regressions@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, Ingo Molnar <mingo@kernel.org>,
- Blake Oler <blake.oler@mongodb.com>, Rich Felker <dalias@libc.org>,
- Matthew Wilcox <willy@infradead.org>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, Linus Torvalds
- <torvalds@linuxfoundation.org>, criu@lists.linux.dev, Michael Jeanson
- <mjeanson@efficios.com>
-Subject: Re: [REGRESSION] rseq: refactoring in v6.19 broke everyone on arm64
- and tcmalloc everywhere
-In-Reply-To: <7f8783a6-1a48-4c92-850c-d285a788b491@efficios.com>
-References: <aekPXvvuKHKlETjm@J2N7QTR9R3.cambridge.arm.com>
- <87wlxy22x7.ffs@tglx> <c5331cd6-76c8-430d-978e-fcad164e48f6@huawei.com>
- <CACT4Y+bxnQyHGdVNE1BYTx+Z2-cscLb38HYS9jBM5gPAz8=4bw@mail.gmail.com>
- <87ik9i0xlj.ffs@tglx>
- <CAHnCjA0UBNXfjHw=Y34OrAyGRNUtVF+zWd3ugyX6pd_mCk8K9w@mail.gmail.com>
- <87a4ut1njh.ffs@tglx>
- <CACT4Y+bBD7uCHXKqGo=epBXeEmsZ67Og2YO9kjNMT3ryjUY_sA@mail.gmail.com>
- <CAHnCjA1LqbaUGkPe79EeP6Mpaki8QWeR-JBSbrG0z6pTm9CmUg@mail.gmail.com>
- <87v7dgzbo7.ffs@tglx>
- <20260424150318.GE641209@noisy.programming.kicks-ass.net>
- <87se8kywhb.ffs@tglx> <87jyttz8cf.ffs@tglx>
- <lhujyts4zr8.fsf@oldenburg.str.redhat.com>
- <7f8783a6-1a48-4c92-850c-d285a788b491@efficios.com>
-Date: Mon, 27 Apr 2026 23:06:09 +0200
-Message-ID: <87bjf4yuym.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OH17PN+/"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ba92146cc86so1161656266b.1
+        for <regressions@lists.linux.dev>; Mon, 27 Apr 2026 14:50:06 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1777326605; cv=none;
+        d=google.com; s=arc-20240605;
+        b=ahG5LV5JBYos3t/iUL6qWwC3nzBhTvSQw0SaN83NQf2Zm3oQ7wIRq5pmSHlf0Rutfk
+         efXaM0Okpv+fV8CPZLViMA1DeDkIFdNcC2zeZ+8h7mvjFuI6UfpdVsky85uLQAJGuALd
+         unKsUxY6UIzgyWq1rkhKttzYWsu0gFQUX04CFHZp9Vd4Idrsj6+zzD9EftX69Wb9bp+u
+         QJcpdv0SMLRb1aZCVMXCY5XWZUy2nCbt46zfEu8QtHNHiNNwBhPnOi+EuVCLgr4pJ5fG
+         Nu6bTlx78HJA6xgtcMGaBVMhK+rWVXeEWVxxtJacVpLGe9+DtOdHtmrhpHTQA+oAkWyj
+         m84Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=oXNTkuokTYZhJ+ynIL21Ir8zjvS3sW03jWnhSBy68kg=;
+        fh=7Id7wCJe1bPBH8iOViIqtaZbewXQPZIHLGn4yPkSzMw=;
+        b=ZLF2Rn1VnVnW8IqVml/4lsu7qJm5eLnC20O90g9rcTRAgKInAVy+aF1FAYuNwserFX
+         CKykav9waY3E/tJ284UX7eQxqHK8yZEOuUlnmt/8+OH/QYsNx63Bovh6a9XtYyyPz8BG
+         BLKVpW7ckeEq5S5bsqBtsxt88T0G/G2GfG2uA0kjFstOrLc65Lt0lBHoM7wiN8l0sZ0I
+         5kCyBq1Pw83l5nzF2fBQZDJo4id28iViMGOVImC1DNNTaeRnI3X0hwBo4ZGoGDddl+N0
+         Y25m6dpIblP1Zn4bGUAFxtCXiJmGmt4GT0AZyfauVmhwvWlKGyLIggTdNVgPYlCY5trj
+         f8nA==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1777326605; x=1777931405; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oXNTkuokTYZhJ+ynIL21Ir8zjvS3sW03jWnhSBy68kg=;
+        b=OH17PN+/+2m5wGIx22aze0FVohLS0DWA025bLdLeYUie8MyH/4iqnVS2XAJf4tRESO
+         ce6dbRzI7nAhoAadLQ3h+re5DvjM21nwFB2hlqjlQaAoCvxcBWNPsf2ybIDKVBpDD72E
+         i8pvF/45NBHawSgu3qH8MDdzjDUtdnJ7apyDF1Kiw0xqekazfsAz9DGllcBJ+LO8rnDz
+         B+SS0c5eXtwM1v6L8K5fvm418KtrU1Pu5AfXhqyue8BKS+N7Rd+FKk+PQv6zNWLUpY5N
+         3ersKyA7KDHezMld1cydqM/VPIgyFBethD/+3Kq8yWC0iHQ8Fb1DK+OTCLnD71KULcwJ
+         4FVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1777326605; x=1777931405;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=oXNTkuokTYZhJ+ynIL21Ir8zjvS3sW03jWnhSBy68kg=;
+        b=b9rUhOpeKoUBZJh0X59G+c5UlTpNkD5BVlarUZ5DFHKgRM7DDLWYmDxqGX8sUi84rF
+         PGKWVCUKEO0krEqd6Lk6x3WKDtUFcgtQ3wFG12i6LUWvtRGaDJJNEx3ciZwM2drA+DoP
+         n0rYj8rvgW3f5NdUS9Dgh71WPeQG3OpqcDQJEUszjTgHZvp65ek44KQyQRTM1qMSO5H4
+         YUIHpIqysaCva54htULs2NVMbI0LyJxnm4nsBrXfaZxPg9mD9BBkLykvU/Yzy7Q8pD6c
+         cpmBPGpQ/MDFDEb8UxTGGoY0uDtAoSSdcU+S+YV3oZ1TMNtzj2F2O/+J3HOWSJh0oZax
+         /+Nw==
+X-Gm-Message-State: AOJu0YzegkeB+EAmt2xpaSFl7MFtAMZFc3K4s4ABLNjAFEmxKiRNjvEK
+	ry0EkemPMBfa4HmUI9e07MX/F8CKz+0u/Tc9WpM1Q/EbGT/IYk+zZ4YUdDH1QVD3Ucn4OCcvTH4
+	20FC01I5qdKbl2jdyFW3NhiGiF9x9Fvs=
+X-Gm-Gg: AeBDievk9OvnDH3tsNq/77A69zsreFnN3X0ybjK3DNa+cPnnsG9uDe5u+wN6+JmC1Fs
+	QBginVNDYr+FhP2blEmep9ija9jWdVhwgvWdGvEdV38Fd+awhnIZA00q9S9GlwEMGftoWrr6hKu
+	//T747uftOlbQYwI3ZTkfTBDEXwHGOkmuVljN7FJU8qORFs36UoWlV0Y24DkLPKIW8IiO0q2hXH
+	UOOfddlDujnobrgdXx3IvoIbfwvVBBBql7OuMQ1MyBznFAQ7UxqXsIavzxUsYx8oAaqjhPobhD2
+	AzDaap1iawLjwq5ZNA==
+X-Received: by 2002:a17:907:5c4:b0:bb7:e621:1fb7 with SMTP id
+ a640c23a62f3a-bb803d65610mr27224366b.36.1777326604854; Mon, 27 Apr 2026
+ 14:50:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <12879883.O9o76ZdvQC@rafael.j.wysocki> <6005325.DvuYhMxLoT@rafael.j.wysocki>
+ <CAGAxtY28bho6+PRoEypepAK1UpmGQ8WzkvPnUEmGvx7vWqkHeA@mail.gmail.com> <6006426.DvuYhMxLoT@rafael.j.wysocki>
+In-Reply-To: <6006426.DvuYhMxLoT@rafael.j.wysocki>
+From: Evgeny Sagatov <evgeny.sagatov@gmail.com>
+Date: Tue, 28 Apr 2026 00:49:51 +0300
+X-Gm-Features: AVHnY4LYfieYFEwFkIH9vT0bp_c4_c5sUBtPRqiCRcUPccxdXq9Voy4SegmRU2I
+Message-ID: <CAGAxtY2QRhfoP5NjMQOg5WB15DpPcmX3aBWEy70xYKGMveZ_zg@mail.gmail.com>
+Subject: Re: Pressing the power button causes the device to freeze completely
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: regressions@lists.linux.dev, linux-acpi@vger.kernel.org, 
+	Thorsten Leemhuis <regressions@leemhuis.info>, LKML <linux-kernel@vger.kernel.org>, 
+	Wysocki Rafael J <rafael.j.wysocki@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 27 2026 at 14:35, Mathieu Desnoyers wrote:
-> On 2026-04-27 03:40, Florian Weimer wrote:
->> Switching to the new extensible RSEQ allocation code in older glibc
->> builds is not entirely trivial, and I would prefer not doing that.
->> Registering with a new flag is comparatively simple, and we could
->> backport it, except that it might not be compatible with CRIU.
-> A third option would allow the entire range of older libc versions to
-> benefit from rseq optimizations, gating the "v2" behavior on:
+apr 28 00:48:34 srv kernel: ACPI power button event
+apr 28 00:48:34 srv kernel: ACPI event status I/O port number: 1024
+
+=D0=BF=D0=BD, 27 =D0=B0=D0=BF=D1=80. 2026=E2=80=AF=D0=B3. =D0=B2 23:31, Raf=
+ael J. Wysocki <rafael@kernel.org>:
 >
->    rseq_len > 32 || (flags & RSEQ_FLAG_V2)
-
-No. Features beyond mm_cid require optimized mode and a larger rseq
-area. That's not negotiable. See below.
-
-> That v2 behavior would:
+> On Monday, April 27, 2026 10:12:33 PM CEST Evgeny Sagatov wrote:
+> > dmesg | grep "frequency scaling"
+> > [    8.552380] acpi_cpufreq: CPU0: Using I/O space for frequency scalin=
+g
+> > [    8.552386] acpi_cpufreq: CPU0: frequency scaling I/O port number: 2=
+176
+> > [    8.552478] acpi_cpufreq: CPU1: Using I/O space for frequency scalin=
+g
+> > [    8.552480] acpi_cpufreq: CPU1: frequency scaling I/O port number: 2=
+176
+> > [    8.552584] acpi_cpufreq: CPU2: Using I/O space for frequency scalin=
+g
+> > [    8.552586] acpi_cpufreq: CPU2: frequency scaling I/O port number: 2=
+176
+> > [    8.552668] acpi_cpufreq: CPU3: Using I/O space for frequency scalin=
+g
+> > [    8.552670] acpi_cpufreq: CPU3: frequency scaling I/O port number: 2=
+176
+> >
+> > Messages that appear when I press the power button:
+> > apr 27 23:07:33 srv kernel: ACPI power button event
+> > apr 27 23:07:33 srv kernel: ACPI event status register ID: 3
 >
-> A) Enforce the ABI contract:
+> Of course it's a power button, so the register ID is 3 and the register
+> is PM1.  Sorry for missing that previously.
 >
->     - RO fields corruption -> kill process,
-
-My patch does that already and the time slice extension muck does so too
-from day one.
-
->     - System call within rseq critical section -> kill process,
-
-No. That's overkill for syscall heavy workloads.
-
-Also it's not a functional correctness problem which affects multiple
-RSEQ users in an application. User space can do even worse things.
-
-      cs_start
-      call foo	// foo uses rseq too ....
-      cs_end
-
-Invoking a syscall from within the critical section is stupid, but at
-least harmless vs. other usage in the same thread as the syscall needs
-to return before anything else can go and use RSEQ in that thread, no?
-
-People who develop RSEQ critical sections can enable debug mode via the
-sysfs knob if they want to prove that their code is correct. That's a
-debug aid, not more.
-
-> B) Allow optimization of the rseq field updates (only update relevant
->     fields on migration),
-
-That's part of the whole combo. Optimized behaviour and new features.
-
-> This entirely decouples the feature enablement concern (rseq_len) from
-> the strictness/optimization mode (v2).
-
-Which causes us to sprinkle more conditionals into the hot paths for
-individual features instead of simply doing unconditional stores and be
-done with it. It's bad enough that we have one, we don't need more.
-
-User space knows the size the kernel expects and if it insists on using
-the original size, so be it. Keep it simple.
-
-Thanks,
-
-        tglx
+> Please apply the slightly update patch below (which replaces the previous
+> one) and send the messages printed to the log after booting the new
+> kernel and pressing the power button.
+>
+> ---
+>  drivers/acpi/acpica/evevent.c  |    8 ++++++++
+>  drivers/cpufreq/acpi-cpufreq.c |    8 ++++++--
+>  drivers/cpufreq/cpufreq.c      |    1 +
+>  3 files changed, 15 insertions(+), 2 deletions(-)
+>
+> --- a/drivers/acpi/acpica/evevent.c
+> +++ b/drivers/acpi/acpica/evevent.c
+> @@ -243,6 +243,14 @@ static u32 acpi_ev_fixed_event_dispatch(
+>         (void)acpi_write_bit_register(acpi_gbl_fixed_event_info[event].
+>                                       status_register_id, ACPI_CLEAR_STAT=
+US);
+>
+> +       if (event =3D=3D ACPI_EVENT_POWER_BUTTON) {
+> +               pr_info("ACPI power button event\n");
+> +               pr_info("ACPI event status I/O port number: %llu\n",
+> +                       acpi_gbl_xpm1a_status.address);
+> +
+> +               return (ACPI_INTERRUPT_HANDLED);
+> +       }
+> +
+>         /*
+>          * Make sure that a handler exists. If not, report an error
+>          * and disable the event to prevent further interrupts.
+> --- a/drivers/cpufreq/acpi-cpufreq.c
+> +++ b/drivers/cpufreq/acpi-cpufreq.c
+> @@ -479,8 +479,8 @@ static unsigned int acpi_cpufreq_fast_sw
+>                         return next_freq;
+>         }
+>
+> -       data->cpu_freq_write(&perf->control_register,
+> -                            perf->states[next_perf_state].control);
+> +       /*data->cpu_freq_write(&perf->control_register,
+> +                            perf->states[next_perf_state].control);*/
+>         perf->state =3D next_perf_state;
+>         return next_freq;
+>  }
+> @@ -887,9 +887,13 @@ static int acpi_cpufreq_cpu_init(struct
+>                  * unknown and not detectable via IO ports.
+>                  */
+>                 policy->cur =3D acpi_cpufreq_guess_freq(data, policy->cpu=
+);
+> +               pr_info("CPU%u: Using I/O space for frequency scaling\n",=
+ cpu);
+> +               pr_info("CPU%u: frequency scaling I/O port number: %llu\n=
+", cpu,
+> +                       perf->control_register.address);
+>                 break;
+>         case ACPI_ADR_SPACE_FIXED_HARDWARE:
+>                 acpi_cpufreq_driver.get =3D get_cur_freq_on_cpu;
+> +               pr_info("CPU%u: Using FFH for frequency scaling\n", cpu);
+>                 break;
+>         default:
+>                 break;
+> --- a/drivers/cpufreq/cpufreq.c
+> +++ b/drivers/cpufreq/cpufreq.c
+> @@ -473,6 +473,7 @@ void cpufreq_enable_fast_switch(struct c
+>         if (cpufreq_fast_switch_count >=3D 0) {
+>                 cpufreq_fast_switch_count++;
+>                 policy->fast_switch_enabled =3D true;
+> +               pr_info("CPU%u: Fast frequency switching enabled\n", poli=
+cy->cpu);
+>         } else {
+>                 pr_warn("CPU%u: Fast frequency switching not enabled\n",
+>                         policy->cpu);
+>
+>
+>
