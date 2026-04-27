@@ -1,218 +1,158 @@
-Received: from YT6PR01CU002.outbound.protection.outlook.com (mail-canadacentralazon11022086.outbound.protection.outlook.com [40.107.193.86])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 418D640DFDC;
-	Mon, 27 Apr 2026 18:35:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.193.86
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777314931; cv=fail; b=jEUBUur/TKHjEIoilHm7/52HisLdcwxjWYssKjC15E80wPiyv6IDR/HqH4UjkJJLCfZY90BNRdPn7sjP7s2ORXKf1zxp+F4DSd64nr/9R7464/xlj9WrJCKbVcWp35IWhK8wMBvX0Qgy4BfSqoYk6HevW9zWb8fFPrg7UcK4Lc0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777314931; c=relaxed/simple;
-	bh=oNqjQcN1LS43hug1BMB2LowGv71Rq/YUhNSAvR3rkgQ=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=JCtKk4EfF9/FbenrwMVOsGIWv/4GhAic4leWQoR0uF9LsOoVbk9howqWDrSqkzcODbWoKvFnbsmK/ZgWVca5l95qOEiltuHQnqZlNnMU2uLpbNFvwdqHb+giK5YRzoIhYrud8lyvf3dGXBZkGoaaes4eWFjCgQ/D/WOFhuH3hMU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=l592UTsh; arc=fail smtp.client-ip=40.107.193.86
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66818259C80;
+	Mon, 27 Apr 2026 18:48:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1777315700; cv=none; b=bx+GZOm0bsJ89IOIf9MkO9RrcQuGny8dTGTHM4qNdqqkiCKj5OdXM9zNH/yukf0OyDxTfnFadMSwPcEyQQ3u+fg4+FGTEHm1ZNd4GNYpDQZSiLpw4qZuvW/VRvU66GO+97HSZuCLZJueUcsz6ZcL9bOUmrbDK/MH1a1u3kAkVXY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1777315700; c=relaxed/simple;
+	bh=mLh6tPFmcuL5D0yiOXdc1yXDa2u/1qIKf32tMn5IUCo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WZeJn2ssgZ9HhsPhWKFjlHPEMOzzyZ8EtxpzVSLTtDWLsVUMq66i/5UqCatlaul5LhFe67hl/ZNQ8sV7BAnYaIxHruH11mQ6vGVQvVKG7TUoK1mH4sF3mAFfe+JS7YgiMQn68EwSuiXu7gUiJH8Isqs6uggqBXMgbSkOd8h5vQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FXFhDGKJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="l592UTsh"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=JzEy7iJ3khKeHhuy9XJokuZqq0RoyEEhOrHXI6TiH0kRjmr3Pwf/RgDrk49mTaGugPuUfJa254jJ3xtf0a9tBF7qXxPbxSABZRi1G2kQgUT0OidDmlZvVWAQxHFg1VaZxGK2j7xlJOsiMSusYeaowJBXl+kAvP3QsuN3I4KW2lE5ibdb6ctdm7iRUNtkDKQXdnmHxuemjKXEEss1WkGdfcYRP+VpFNWtyNBiWQN/sYXIcBlPmeP1uDHokm8Z7X8qwflnwAoSHfIbuTOD6y/Pqd7ayDFF++WIrUiPUJRmVhSDdPq2e10Xfn5EQrnZklVGJi3CiALK7rOfv+NEElklZQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ly5gsQzW24HcWcrd9A5H/YLEt6HUPzxFH8mX07JWyAU=;
- b=CsegxrC/fsdgXvDqeEg+po69tRMRRdLIcj6jF/p/s+/oTcE15EvLOyVBlKz9OM3Jth+2npHlGGdZPhdu2NyQ3G+6GsQJj8apUutLugR919bEvaHu5XGsU2wOeWLNcx5+h32uVS+OA9VRk0FlyYjVjg9up7S84k3ERO7ocnc2sJ0wiJDn7Mr8+3ouxErwZ3E/Baqv/BkwZvRd2RAY8GCOmsQmm9r+F7RsYAOXwpEe7DLvG5Uq5y1i0pcpO00ksIo6nIBzokzunue3caXb2D28anR8lCMn4xcuJXnMVi9RM8JOKLL97+SJEWAPHhcdV7t8pIbfVTz2TYNBzMhCDQRv8A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=efficios.com; dmarc=pass action=none header.from=efficios.com;
- dkim=pass header.d=efficios.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ly5gsQzW24HcWcrd9A5H/YLEt6HUPzxFH8mX07JWyAU=;
- b=l592UTsh1AhrDbPdFRjUWBasWmUlV6UZVxeDUDc85LtWv1kes3Va1V6c4GJdmhMdWEMoJnyazzXzZ/IcSmuKvQLc907rAb8xTg2TTwBpTxsbyEejpRHoGqLHEPX5dzgJArWCQkQL+UEUzHEYIfj5s2VLU7ohH9Hw9CCk32vyf9JvW4Gf+iNUim5vXuVgEK4ByxnneyNI1b/re/HLvJLXZNyqmRE/4s/op836cFIwfjyk3tJjTlzboX9DRuPpwLp+SRUjbuG+9/xr1SM+Wf/vmLNRRDupzXDEtfSVhsNDRZhq6FhTZ+gUME0eC+gBt5Q9OfhK8SQfNk1cEo55qHAbVw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=efficios.com;
-Received: from YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:be::5)
- by YT2PR01MB10418.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:dc::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9846.26; Mon, 27 Apr
- 2026 18:35:26 +0000
-Received: from YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
- ([fe80::6004:a862:d45d:90c1]) by YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
- ([fe80::6004:a862:d45d:90c1%3]) with mapi id 15.20.9846.025; Mon, 27 Apr 2026
- 18:35:25 +0000
-Message-ID: <7f8783a6-1a48-4c92-850c-d285a788b491@efficios.com>
-Date: Mon, 27 Apr 2026 14:35:22 -0400
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] rseq: refactoring in v6.19 broke everyone on arm64
- and tcmalloc everywhere
-To: Florian Weimer <fweimer@redhat.com>, Thomas Gleixner <tglx@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>,
- Mathias Stearn <mathias@mongodb.com>, Dmitry Vyukov <dvyukov@google.com>,
- Jinjie Ruan <ruanjinjie@huawei.com>, linux-man@vger.kernel.org,
- Mark Rutland <mark.rutland@arm.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Boqun Feng <boqun.feng@gmail.com>, "Paul E. McKenney" <paulmck@kernel.org>,
- Chris Kennelly <ckennelly@google.com>, regressions@lists.linux.dev,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- Ingo Molnar <mingo@kernel.org>, Blake Oler <blake.oler@mongodb.com>,
- Rich Felker <dalias@libc.org>, Matthew Wilcox <willy@infradead.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Linus Torvalds <torvalds@linuxfoundation.org>, criu@lists.linux.dev,
- Michael Jeanson <mjeanson@efficios.com>
-References: <aekPXvvuKHKlETjm@J2N7QTR9R3.cambridge.arm.com>
- <87wlxy22x7.ffs@tglx> <c5331cd6-76c8-430d-978e-fcad164e48f6@huawei.com>
- <CACT4Y+bxnQyHGdVNE1BYTx+Z2-cscLb38HYS9jBM5gPAz8=4bw@mail.gmail.com>
- <87ik9i0xlj.ffs@tglx>
- <CAHnCjA0UBNXfjHw=Y34OrAyGRNUtVF+zWd3ugyX6pd_mCk8K9w@mail.gmail.com>
- <87a4ut1njh.ffs@tglx>
- <CACT4Y+bBD7uCHXKqGo=epBXeEmsZ67Og2YO9kjNMT3ryjUY_sA@mail.gmail.com>
- <CAHnCjA1LqbaUGkPe79EeP6Mpaki8QWeR-JBSbrG0z6pTm9CmUg@mail.gmail.com>
- <87v7dgzbo7.ffs@tglx>
- <20260424150318.GE641209@noisy.programming.kicks-ass.net>
- <87se8kywhb.ffs@tglx> <87jyttz8cf.ffs@tglx>
- <lhujyts4zr8.fsf@oldenburg.str.redhat.com>
-From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Content-Language: en-US
-In-Reply-To: <lhujyts4zr8.fsf@oldenburg.str.redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: YT4PR01CA0273.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:109::21) To YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:be::5)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FXFhDGKJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7574C19425;
+	Mon, 27 Apr 2026 18:48:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1777315700;
+	bh=mLh6tPFmcuL5D0yiOXdc1yXDa2u/1qIKf32tMn5IUCo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=FXFhDGKJom+jWucYDifOVTH5Dul/TfCA8uBEVzktZRjI3hizWvO4iD3MdCB0GolVj
+	 s2k2Zoi+T0NCXVc8rcOckztnR41VHX4MG+CxLGiQt8H9FBdHkPNLjz6deXA72RcA4y
+	 eU4jNgQD+s+DdhFdonHzLNZMFXaE9g0IBoC7vCEOYA6TIV6PXGBCi2C+edVR+Npo1e
+	 FjFIZB4gzhq1KsGDpqUotK0Ss0hFvpVh/YYRGckdASGtp7r9/A7wG2DwU2WhcRo3B+
+	 OVXBSgihOe6oWLcc6LIOlyPwLNG+S48RLfUhGL16Uoio4iDsZ1g2bAnYRMaymksASp
+	 bP7pj0ePRlnQQ==
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+To: Evgeny Sagatov <evgeny.sagatov@gmail.com>
+Cc: regressions@lists.linux.dev, linux-acpi@vger.kernel.org,
+ Thorsten Leemhuis <regressions@leemhuis.info>,
+ LKML <linux-kernel@vger.kernel.org>,
+ Wysocki Rafael J <rafael.j.wysocki@intel.com>
+Subject: Re: Pressing the power button causes the device to freeze completely
+Date: Mon, 27 Apr 2026 20:48:17 +0200
+Message-ID: <6005325.DvuYhMxLoT@rafael.j.wysocki>
+Organization: Linux Kernel Development
+In-Reply-To:
+ <CAGAxtY3HF3iOV7ZKq9-LTjyA-p3jNVHKSi5CBM8AJ38LYUdXbw@mail.gmail.com>
+References:
+ <12879883.O9o76ZdvQC@rafael.j.wysocki>
+ <CAJZ5v0ivGuRESW2B1_+8s1=YSm9YV4FAuc1CB9FGTdwHZuGZNA@mail.gmail.com>
+ <CAGAxtY3HF3iOV7ZKq9-LTjyA-p3jNVHKSi5CBM8AJ38LYUdXbw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: YT2PR01MB9175:EE_|YT2PR01MB10418:EE_
-X-MS-Office365-Filtering-Correlation-Id: 40da9610-9bdd-449a-55c6-08dea48bbf52
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|7416014|376014|56012099003|18002099003|22082099003;
-X-Microsoft-Antispam-Message-Info:
-	Z0hlTubLKMngRV5vUyLpo9gedW+NLJ9bHlVPzb+PuyJAQOY8zeAxIgQaFKE7ON2uIvhubszO4SoUY5iJbwCIP7Pv2Pyrc+8ZnkA/0XE3EyOfDz2gluWX5OZOSZEkYXDU2Gv2pdw4AeqnIlv9FfAynzYT46OyVXGDptBEuDa3VYGiBDpTR/3Bfh+XuxIyAWQpfl9ax3WFwgwSherzKsc+GOioSCnUZ1o/bB32lq6rJhkgtWnR0FWvUgiq0jmMiTtvubaNVDOMBZnU6ZkKd4KIBGFLcuaTEvdNr2kg8U8i12Z71ZDzqNVDo38ImR1WmSEztD1F9lqXr+9zGeibEdvT2MareFOqjLK9yOvbxdrvoEEkWOZcxlw0ZQjfmhOfpfCGW8Gkaqr7ZtnAhd6Xolik9WeuHE5gaNG+W7yFFqUOoAbhqwp+NK28vmZkg0gMaCiqfmUAbEigofmRS3abr+Aeno3Du2w3gHd5eLxvt+SSQqOL/2b2/zuUmrcKR0QWnoJfmwnLN5W81AqWGTNrq44GAsbNzCafhGgIbrEQO9RP/xfyg3NOLwxsnfplyJyN7ampDjP6mc/84GFNgKHiHoV4+8ItJ44BCj72VmOloyQOoEhebxkMPYivt6rIXM6RhCPKq01zG36rGC0VE6wXb5/COCrEO40Wlf2FFCObmddWM5EsWfqTPnb0nagycw35AjYr
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(56012099003)(18002099003)(22082099003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?aGF4MUx5cEg2WWN5MXhEWHBhcGJaNHprb0U1NmVacnovdCtUWHhKT0thb2NC?=
- =?utf-8?B?aHlUUkExQWdFZVhEQ2hpMURyWHliSTlKTlVFeVVwSG92MFJQYlJIRk5UTU9m?=
- =?utf-8?B?WS9nelZBek15TDl6TkthVmpWaU5oVTAva1pxR1crbEFIbVhFUmxXUHZMNUI3?=
- =?utf-8?B?c1pzck5vb2NPZWJadGN1VWRvQ0I1QzhhQ0tReDMyZHBlWnBkTllpUWIyenEz?=
- =?utf-8?B?NzVIeHNRcjRIVm1vZXU1S2pYSEJBZVhNdWg5OU01ZGhkV1F1L3ZzckpGWWpK?=
- =?utf-8?B?Ti9hczhIbXo4eml4czhZSGg0TWZ1Vm1ENDlhdlhkdWEvdXlPSDJCcGVMVjVQ?=
- =?utf-8?B?SkZ6U0ZzK0o5am0zbnFqTkpiS0ZjSzVvcW1rbDBYckdrcDB2dThibmxpbVRC?=
- =?utf-8?B?RnJyZGN5dUEvMWJ1dUlKMEZYbEtMbEtPMGE2aksxa0hSRUFqZkJ0dHoycFFo?=
- =?utf-8?B?QyswdW1pVU43U1hUcENpWi9tbzN6TnJDMjk0Y3NUOXQzTjJObkhHU2piWjRy?=
- =?utf-8?B?Z0hqR09kdWFXV3hlb01DMXJrNmNVdEY3YVZVeGlZTHFLUlRQY2dkN3lxcmp5?=
- =?utf-8?B?Q2ZVMWlHRnhuK0lHR3ZzU2FIRnhsWVZKVkdWZVFiV3JqVWNIYzArSnZKRjhx?=
- =?utf-8?B?MEdDaHowRTNYZjV3VXBza080T2lENno0ZGp5Tk1nditlTllmalNRdGhXcHJU?=
- =?utf-8?B?b0wwNTJxWGJVU0NPS3ZWQUpicllyRTRwdVlNZ2ZmUHFuVCsrYnYxcHVqNk9U?=
- =?utf-8?B?QWpuU1gyaERBOWFLVnJnRjAxdDRpeTNBOHQza285Z3lZeFR4cFNQYnZRcnRI?=
- =?utf-8?B?YXFjMnRLMHlqUUtJVG1IY2VDbUFVUUozNS9IbEgwaWVTUlpSbitHd0orOXBn?=
- =?utf-8?B?RTE5aXVTODFtdG05cmlTRWE5bERVWkVUMEtGSXl0YWRCZTN5RkJKdkFqSHBy?=
- =?utf-8?B?aTdRSFlHSi9XRUY5eFZWV1BBWXU0QjB4Y0VJM1ZoNk8xc2ZNUFZBeGx5eUd3?=
- =?utf-8?B?dlJmR3BwRlFNR1JtUGNxYTJST2NDOTFyVy9zaXNrL2NDNFpyemZzbE91MzAr?=
- =?utf-8?B?WjZ1RUxJZG9nYmtvQ0hUNFlIV0M2K2hnbUtiRVNQOHVVdWRiYmlHa1JuUUNC?=
- =?utf-8?B?bVpWMlFRL0F1RGdNSHh6akFVL2dOODRIalk1emdpQjVnRkoxaHRHb1lTZ1R0?=
- =?utf-8?B?YmJsWEJvSGlSejd1Y25vNHNWUHFHZm0xZVJaWkRTTnRIZ0x4TE1xT1p5bVlY?=
- =?utf-8?B?VW5OTHdWR2NXTTFBZmIvajRINjhSWDNOb1NkUEMyUitXRWxnMm8ycytGTk95?=
- =?utf-8?B?M1oyS1JyZVQ4R3J2eVZpUXkvOHBUa3RBd00vRlNPYUQySkovaFgxRitsNlhS?=
- =?utf-8?B?S3FWaGhjQU9RYVdIZUpkNEZKNWtMVjVXejZ3elh0dE1ubHJFMVJBcWl3d2Q2?=
- =?utf-8?B?WUd5SkIwRFBMZHQzRHVjMkVqbFZKWmdvM2h4Ym1ZNm9Gak8yMXRCaTZJQ29h?=
- =?utf-8?B?Y0QwdE43aXdqSDZ5L3kxWmR1SytBenl2UkFub1hicUNrOWFuVklGWTdyS1Np?=
- =?utf-8?B?ZFRFMlNkNVdhTE04NVZtNFRKR0xMQzZ6N0dwS0haYTRaeE9tNFk0VVRkUEo0?=
- =?utf-8?B?ZDA0UDVtUXpCdWx6a1M5Smt4L2Jtc2w2Y0Q1MVZrRHRMZU5VYkowUHQ5NGV0?=
- =?utf-8?B?bmdhdmpaQXU3dE5ybGhTS1lZeEkwTHdmV2ZrZDNXUzJRMS9Ea3JUTDVZQXhv?=
- =?utf-8?B?RzNkVlAycDVESE1mZkR0M1lHeCtHYjJveVNUL2ZjOGxwS3Z1RDMybktabjdV?=
- =?utf-8?B?V2FPMmlicXdRMVBFbVZGZ0thVm5Xbkh4djU2czAxQzYzR29ad28rbllGNHNs?=
- =?utf-8?B?dkR1TjRLNGRySUpYY3NDbDY0d3RGcXhiQnhDMmFkZGN4VnoxOFR4M01BR2Fq?=
- =?utf-8?B?LytOM1RhOUl1eWRUbldJSTEvL3NYYVFOcUJxWUdsbytVT2ZtNkN2TWJiMTYr?=
- =?utf-8?B?amYxUmN5aWY1OURuNGZPZDB0Z2JJYWtZczAyeTVsN3BRbEcrZTY0K3ZyYlhl?=
- =?utf-8?B?bHAwU1MrWkJ2VzUvZ3llWjZPcllpb0taUG02R0trckZnbTEyN2RtMm5DY1lW?=
- =?utf-8?B?REhPb3dibDliSG5acmdscEdJLzdOQXpaSVhLRW9zc0ZNN25veWN4enNrZXkw?=
- =?utf-8?B?aDZTUHFhellCMlFFOGYvVk5ic3owUFo4Y3NKUzJEZHUzVGZRcUNUenZsZUI4?=
- =?utf-8?B?WHpCcm0vbUsweCtkQzBicDNOelNRYnhBazZMMEJiZXVBTUJWeW1XVko4dm93?=
- =?utf-8?B?WThyeDI2ZWk4b3duZk5uYVdYcldwekgrTCt5N2tkWGs2TFhKbEtMQk9UeWZT?=
- =?utf-8?Q?LsrMq1/YvbWAnSq3Lo4ks5YNYeslNxErxC8E/?=
-X-OriginatorOrg: efficios.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 40da9610-9bdd-449a-55c6-08dea48bbf52
-X-MS-Exchange-CrossTenant-AuthSource: YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Apr 2026 18:35:25.5061
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4f278736-4ab6-415c-957e-1f55336bd31e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Ks1tL8lX4jXKyjgTsnvPscobwKDM0cisgZf1DBPAAZUDtT0xILFxh6GU5VqnHk4ITfffQYm8e24Pz9mJ//9GwBoooL7sI5VgVulcmQLLyCY=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: YT2PR01MB10418
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
 
-On 2026-04-27 03:40, Florian Weimer wrote:
-> * Thomas Gleixner:
+On Sunday, April 26, 2026 10:45:03 PM CEST Evgeny Sagatov wrote:
+> dmesg | grep "frequency s"
+> [    8.622778] acpi_cpufreq: CPU0: Using I/O space for frequency scaling
+> [    8.622806] cpufreq: CPU0: Fast frequency switching enabled
+> [    8.622869] acpi_cpufreq: CPU1: Using I/O space for frequency scaling
+> [    8.622888] cpufreq: CPU1: Fast frequency switching enabled
+> [    8.622938] acpi_cpufreq: CPU2: Using I/O space for frequency scaling
+> [    8.622955] cpufreq: CPU2: Fast frequency switching enabled
+> [    8.623006] acpi_cpufreq: CPU3: Using I/O space for frequency scaling
+> [    8.623026] cpufreq: CPU3: Fast frequency switching enabled
 > 
->> The real question is how to differentiate between the legacy and the
->> optimized mode. I have two working variants to achieve that:
-[...]
+> When I press the power button, a message is displayed:
+> apr 26 23:40:36 srv kernel: ACPI power button event
 > 
-> Switching to the new extensible RSEQ allocation code in older glibc
-> builds is not entirely trivial, and I would prefer not doing that.
-> Registering with a new flag is comparatively simple, and we could
-> backport it, except that it might not be compatible with CRIU.
-A third option would allow the entire range of older libc versions to
-benefit from rseq optimizations, gating the "v2" behavior on:
+> The PC does not freeze.
 
-   rseq_len > 32 || (flags & RSEQ_FLAG_V2)
+Good.
 
-As a result:
+> The single core performance benchmark shows good values.
 
-- restore compatibility with existing tcmalloc binaries.
+That most likely is a coincidence.
 
-- glibc 2.41+ would benefit from optimization without changes.
+The above means that the issue is related to HW accesses in the I/O space.
 
-- glibc 2.35-2.40 would be able to easily backport minimal changes [*]
-   to benefit from kernel optimizations (flags & RSEQ_FLAG_V2).
-   Likewise for RHEL glibc 2.34 with backported rseq support.
+I don't actually think that the writes to the I/O space outright clash with
+each other, but the timing between them may be somewhat overly aggressive.
 
-[*] Minimal changes to allow older libc to use the optimized mode
-     involve implementing a new query for getauxval(AT_RSEQ_V2),
-     which would return nonzero when the kernel supports the v2
-     flag, and when supported pass a new RSEQ_FLAG_V2 flag to rseq
-     on registration.
+Let's first check what I/O ports come into play though.
 
-That v2 behavior would:
+Please apply the patch below (which is a replacement for the previous one),
+run
 
-A) Enforce the ABI contract:
+$ dmesg | grep "frequency scaling"
 
-    - RO fields corruption -> kill process,
+after a fresh boot of the new kernel and let me know the output of it.
 
-    - System call within rseq critical section -> kill process,
+Then, press the power button and send the messages printed after that.
 
-B) Allow optimization of the rseq field updates (only update relevant
-    fields on migration),
+---
+ drivers/acpi/acpica/evevent.c  |   12 ++++++++++++
+ drivers/cpufreq/acpi-cpufreq.c |    8 ++++++--
+ drivers/cpufreq/cpufreq.c      |    1 +
+ 3 files changed, 19 insertions(+), 2 deletions(-)
 
-This entirely decouples the feature enablement concern (rseq_len) from
-the strictness/optimization mode (v2).
+--- a/drivers/acpi/acpica/evevent.c
++++ b/drivers/acpi/acpica/evevent.c
+@@ -243,6 +243,18 @@ static u32 acpi_ev_fixed_event_dispatch(
+ 	(void)acpi_write_bit_register(acpi_gbl_fixed_event_info[event].
+ 				      status_register_id, ACPI_CLEAR_STATUS);
+ 
++	if (event == ACPI_EVENT_POWER_BUTTON) {
++		pr_info("ACPI power button event\n");
++		if (acpi_gbl_fixed_event_info[event].status_register_id == 0)
++			pr_info("ACPI event status I/O port number: %llu\n",
++				acpi_gbl_xpm1a_status.address);
++		else
++			pr_info("ACPI event status register ID: %u\n",
++				acpi_gbl_fixed_event_info[event].status_register_id);
++
++		return (ACPI_INTERRUPT_HANDLED);
++	}
++
+ 	/*
+ 	 * Make sure that a handler exists. If not, report an error
+ 	 * and disable the event to prevent further interrupts.
+--- a/drivers/cpufreq/acpi-cpufreq.c
++++ b/drivers/cpufreq/acpi-cpufreq.c
+@@ -479,8 +479,8 @@ static unsigned int acpi_cpufreq_fast_sw
+ 			return next_freq;
+ 	}
+ 
+-	data->cpu_freq_write(&perf->control_register,
+-			     perf->states[next_perf_state].control);
++	/*data->cpu_freq_write(&perf->control_register,
++			     perf->states[next_perf_state].control);*/
+ 	perf->state = next_perf_state;
+ 	return next_freq;
+ }
+@@ -887,9 +887,13 @@ static int acpi_cpufreq_cpu_init(struct
+ 		 * unknown and not detectable via IO ports.
+ 		 */
+ 		policy->cur = acpi_cpufreq_guess_freq(data, policy->cpu);
++		pr_info("CPU%u: Using I/O space for frequency scaling\n", cpu);
++		pr_info("CPU%u: frequency scaling I/O port number: %llu\n", cpu,
++			perf->control_register.address);
+ 		break;
+ 	case ACPI_ADR_SPACE_FIXED_HARDWARE:
+ 		acpi_cpufreq_driver.get = get_cur_freq_on_cpu;
++		pr_info("CPU%u: Using FFH for frequency scaling\n", cpu);
+ 		break;
+ 	default:
+ 		break;
+--- a/drivers/cpufreq/cpufreq.c
++++ b/drivers/cpufreq/cpufreq.c
+@@ -473,6 +473,7 @@ void cpufreq_enable_fast_switch(struct c
+ 	if (cpufreq_fast_switch_count >= 0) {
+ 		cpufreq_fast_switch_count++;
+ 		policy->fast_switch_enabled = true;
++		pr_info("CPU%u: Fast frequency switching enabled\n", policy->cpu);
+ 	} else {
+ 		pr_warn("CPU%u: Fast frequency switching not enabled\n",
+ 			policy->cpu);
 
-This keeps compatibility with current tcmalloc binaries because
-tcmalloc always registers a 32 bytes rseq_len without the v2
-flag set. tcmalloc already has its own internal fields at fixed
-offsets from the rseq structure which conflict with extended rseq
-fields, so limiting the tcmalloc work-around behavior to
-rseq_len == 32 seem to align well with the tcmalloc project
-approach towards extensibility and ecosystem inter-compatibility.
 
-Thoughts ?
 
-Thanks,
-
-Mathieu
-
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-https://www.efficios.com
