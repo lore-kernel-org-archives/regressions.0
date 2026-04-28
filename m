@@ -1,98 +1,166 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 250DD3A9638;
-	Tue, 28 Apr 2026 15:46:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5C2432C94A;
+	Tue, 28 Apr 2026 17:40:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777391209; cv=none; b=cDwpkEPhvaJtCdEF3yZL0Nm7qxD/YeMY9TnDVQeafiE1FPFhsONLQf5foky75TETWFkkmltYg4QnPYUni0MK5T4NZqYhpaeR1UO/mrlPItMRo7OuXPgate9nm4CjWOy8tdFOc3rOHPQpRoU0nqDSwmvCl8/xxcBEXMd0mgMwF0M=
+	t=1777398014; cv=none; b=Z71LLUWDDSR+/K+fCIlgoPd+HT0+aWuX6Ch8CwtS0i3xFu6yc5gy6Sw6mOFwy/pQvycRhUDNz86FxR9Jx0aQtZKd02KsMGmeIEsY0PGHG/ipAI6sGwGAXY0M9yFlu2MfjsfhwdjJMc+6eFCzTV49edusEVg9SwdieIMZtLST8RA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777391209; c=relaxed/simple;
-	bh=iIS5d7fRxW7S6odCsDl4X3HcZxpkS42TgfE7jbXgS5M=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=ThFiWC0Cj/Y6A2KLfFSR2eYGF1rVAssF06+b88FtR+kuJOwamFyzHmvZmfYsCIm0TbiqG9kXsK7YhodqpeoJ/XCV0fo/IeVHt5A9E1iVWe4tQ68Mrwo+Kde4HnfxJrjOmQoZkWtWkCo2q3PxMof45fGX8r4UdlcJUTmZ3it+c0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AaPEGNLx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777398014; c=relaxed/simple;
+	bh=wlZZpjzxWAOt7ylLcWj2difhc5YFhk+f8toFmHOjMUU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=dHzmPxQEbJkTlHwEHXQUJFsSB2I/C91a768Rv5aIFx6ITblp9ii3yD7MhGp3fV/3YKcoki/LSYz54wM7zqXANONw9mnTwqtpzUxi//Q8uI9q9Sze/4XiSAR26Y7n60x99nehNfyVMFmDnl1QRQqMmWruGHpN9qVZXLw2Xlpbptw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dDHVfQPn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AaPEGNLx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFB59C2BCAF;
-	Tue, 28 Apr 2026 15:46:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dDHVfQPn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A1BCC2BCAF;
+	Tue, 28 Apr 2026 17:40:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777391208;
-	bh=iIS5d7fRxW7S6odCsDl4X3HcZxpkS42TgfE7jbXgS5M=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=AaPEGNLxjE3kpd7p7WWA7METjdMWHxdcavEm3IEmYD7Hti59vrDJNEsPgQ2evF9oa
-	 NFe7GsExS2H3E2LVaKiX6YA2Hi1LlJ7myR4/rNcIW8Fyi80VLWqr6WTAqUCXFVVxS8
-	 EtzFCVQ8+5jJrftAotTK72ch1UKXlegYMwdaIr3/U7ABCujwDFNsVYoPHBevsXFyVi
-	 m94J7eUo4986XvPtJKmp4C/hmmQeVLo//Lg9Td/Ts77F01liXkQan6rqeNvcH0TY4e
-	 nd/+L9cpG2bkkQMQWwaiJtdAV8h0QQXDzSaXLzEIzAibpRymVmXhy+mcoA4cZ57Cuz
-	 iTMrXoCMey7Og==
-From: Thomas Gleixner <tglx@kernel.org>
-To: Mathias Stearn <mathias@mongodb.com>, Dmitry Vyukov <dvyukov@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Jinjie Ruan
- <ruanjinjie@huawei.com>, linux-man@vger.kernel.org, Mark Rutland
- <mark.rutland@arm.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Catalin Marinas
- <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Boqun Feng
- <boqun.feng@gmail.com>, "Paul E. McKenney" <paulmck@kernel.org>, Chris
- Kennelly <ckennelly@google.com>, regressions@lists.linux.dev,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Ingo
- Molnar <mingo@kernel.org>, Blake Oler <blake.oler@mongodb.com>, Florian
- Weimer <fweimer@redhat.com>, Rich Felker <dalias@libc.org>, Matthew Wilcox
- <willy@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Linus Torvalds <torvalds@linuxfoundation.org>
-Subject: Re: [REGRESSION] rseq: refactoring in v6.19 broke everyone on arm64
- and tcmalloc everywhere
-In-Reply-To: <CAHnCjA2sCwOumOjWm=wW=Kj0C83KVW5zS+51=9=YSeAzuEaVQA@mail.gmail.com>
-References: <aekPXvvuKHKlETjm@J2N7QTR9R3.cambridge.arm.com>
- <87wlxy22x7.ffs@tglx> <c5331cd6-76c8-430d-978e-fcad164e48f6@huawei.com>
- <CACT4Y+bxnQyHGdVNE1BYTx+Z2-cscLb38HYS9jBM5gPAz8=4bw@mail.gmail.com>
- <87ik9i0xlj.ffs@tglx>
- <CAHnCjA0UBNXfjHw=Y34OrAyGRNUtVF+zWd3ugyX6pd_mCk8K9w@mail.gmail.com>
- <87a4ut1njh.ffs@tglx>
- <CACT4Y+bBD7uCHXKqGo=epBXeEmsZ67Og2YO9kjNMT3ryjUY_sA@mail.gmail.com>
- <CAHnCjA1LqbaUGkPe79EeP6Mpaki8QWeR-JBSbrG0z6pTm9CmUg@mail.gmail.com>
- <87v7dgzbo7.ffs@tglx>
- <20260424150318.GE641209@noisy.programming.kicks-ass.net>
- <87se8kywhb.ffs@tglx> <87jyttz8cf.ffs@tglx>
- <CACT4Y+ZofNqpeDdgde969LzLznxbRb8CPB6m=CS2RiSmkSYPQQ@mail.gmail.com>
- <878qa7zexc.ffs@tglx> <875x5bzeeb.ffs@tglx>
- <CACT4Y+b_RH2eZMuh1YUyqnoK-5KUpdWW4z1q2ZQWkY_GcBqmNw@mail.gmail.com>
- <CAHnCjA2sCwOumOjWm=wW=Kj0C83KVW5zS+51=9=YSeAzuEaVQA@mail.gmail.com>
-Date: Tue, 28 Apr 2026 17:46:44 +0200
-Message-ID: <87wlxrxf2z.ffs@tglx>
+	s=k20201202; t=1777398014;
+	bh=wlZZpjzxWAOt7ylLcWj2difhc5YFhk+f8toFmHOjMUU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=dDHVfQPnkfDIjCcOqnkd2//91tKxxz7Ye2BN6Ytuf8Fz4k7mOP2Df8vuA4Z/9QeWs
+	 BbKdVkIcaDJqjDTKKt13cGWZdvbdvnhkchkHdr3f4AdmEYoHx74j30JS49irn7xfxl
+	 zp0ARMxKIXOoOiFoZ6sm9cb5Z5/nXwdr3W4A/kKQLMUBFWr9RD3x0yonSAkXbUtVFp
+	 vzl9xiWAqbHa2sWHzk/jrUX7A0GDT/HqG6FaFeh/yaEhpqaJj2AygUFddftllpyHGc
+	 giLw8gzMJjlU01kXzeDUhXtPw5KAOHkknzU8hW1jpdQuUnfaX9xtJN/aG73cHy4/0T
+	 H5qoCPnCssCUw==
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+To: Evgeny Sagatov <evgeny.sagatov@gmail.com>
+Cc: regressions@lists.linux.dev, linux-acpi@vger.kernel.org,
+ Thorsten Leemhuis <regressions@leemhuis.info>,
+ LKML <linux-kernel@vger.kernel.org>,
+ Wysocki Rafael J <rafael.j.wysocki@intel.com>
+Subject: Re: Pressing the power button causes the device to freeze completely
+Date: Tue, 28 Apr 2026 19:40:11 +0200
+Message-ID: <6281827.lOV4Wx5bFT@rafael.j.wysocki>
+Organization: Linux Kernel Development
+In-Reply-To:
+ <CAGAxtY2QRhfoP5NjMQOg5WB15DpPcmX3aBWEy70xYKGMveZ_zg@mail.gmail.com>
+References:
+ <12879883.O9o76ZdvQC@rafael.j.wysocki> <6006426.DvuYhMxLoT@rafael.j.wysocki>
+ <CAGAxtY2QRhfoP5NjMQOg5WB15DpPcmX3aBWEy70xYKGMveZ_zg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Apr 28 2026 at 15:31, Mathias Stearn wrote:
-> On Tue, Apr 28, 2026 at 11:54=E2=80=AFAM Dmitry Vyukov <dvyukov@google.co=
-m> wrote:
->>
->> On Tue, 28 Apr 2026 at 10:18, Thomas Gleixner <tglx@kernel.org> wrote:
->> >
->> > Is there a pre-compiled version of those tcmalloc tests somewhere?
->>
->> I've attached an archive with 2 tests that I used.
->
-> Here is an additional test. It is the stress test I used to show that
-> it could result in two live allocations getting the same address. It
-> will run for up to a minute or until the first double allocation gets
-> detected (usually within 30ms on 6.19).
+On Monday, April 27, 2026 11:49:51 PM CEST Evgeny Sagatov wrote:
+> apr 28 00:48:34 srv kernel: ACPI power button event
+> apr 28 00:48:34 srv kernel: ACPI event status I/O port number: 1024
+>=20
+> =D0=BF=D0=BD, 27 =D0=B0=D0=BF=D1=80. 2026=E2=80=AF=D0=B3. =D0=B2 23:31, R=
+afael J. Wysocki <rafael@kernel.org>:
+> >
+> > On Monday, April 27, 2026 10:12:33 PM CEST Evgeny Sagatov wrote:
+> > > dmesg | grep "frequency scaling"
+> > > [    8.552380] acpi_cpufreq: CPU0: Using I/O space for frequency scal=
+ing
+> > > [    8.552386] acpi_cpufreq: CPU0: frequency scaling I/O port number:=
+ 2176
+> > > [    8.552478] acpi_cpufreq: CPU1: Using I/O space for frequency scal=
+ing
+> > > [    8.552480] acpi_cpufreq: CPU1: frequency scaling I/O port number:=
+ 2176
+> > > [    8.552584] acpi_cpufreq: CPU2: Using I/O space for frequency scal=
+ing
+> > > [    8.552586] acpi_cpufreq: CPU2: frequency scaling I/O port number:=
+ 2176
+> > > [    8.552668] acpi_cpufreq: CPU3: Using I/O space for frequency scal=
+ing
+> > > [    8.552670] acpi_cpufreq: CPU3: frequency scaling I/O port number:=
+ 2176
 
-Thanks to both of you for providing those binaries.
+The I/O ports that play the role in this issue are separate from each other=
+ in
+the address space, but that need not mean that they are physically independ=
+ent.
 
-I've run all three binaries now on my latest version in parallel for
-quite same time and it seems to hold up. Mark just told me privately
-that these plus the arm64 fix he's working on survive that double
-allocation test.
+My current theory is that accessing one of them while an access to the other
+one is still in progress may cause the platform to lock up, or there is an
+access pattern that causes that to happen.
 
-Let me go and write a cover letter and post the pile.
+Let's first test the simplest variant of that theory and see what happens if
+all I/O port accesses in acpi_os_write_port() are serialized, which is done
+in the patch below (it is a replacement for all of the patches sent so far).
 
-Thanks,
+In addition, that patch causes schedutil to use the slow path for updating =
+the
+frequency because the I/O space is generally somewhat too slow to be used
+from the scheduler context relatively often, but that should not affect the
+behavior related to I/O space accesses.
 
-        tglx
+Please check if the system still locks up after pressing the power button
+with this patch applied.
+
+=2D--
+ drivers/acpi/osl.c             |    9 +++++++--
+ drivers/cpufreq/acpi-cpufreq.c |    9 ++++++---
+ 2 files changed, 13 insertions(+), 5 deletions(-)
+
+=2D-- a/drivers/acpi/osl.c
++++ b/drivers/acpi/osl.c
+@@ -700,8 +700,10 @@ EXPORT_SYMBOL(acpi_os_read_port);
+=20
+ acpi_status acpi_os_write_port(acpi_io_address port, u32 value, u32 width)
+ {
+=2D	if (!IS_ENABLED(CONFIG_HAS_IOPORT))
+=2D		return AE_NOT_IMPLEMENTED;
++#ifdef CONFIG_HAS_IOPORT
++	static DEFINE_RAW_SPINLOCK(acpi_os_write_port_lock);
++
++	guard(raw_spinlock_irqsave)(&acpi_os_write_port_lock);
+=20
+ 	if (width <=3D 8) {
+ 		outb(value, port);
+@@ -715,6 +717,9 @@ acpi_status acpi_os_write_port(acpi_io_a
+ 	}
+=20
+ 	return AE_OK;
++#else
++	return AE_NOT_IMPLEMENTED;
++#endif
+ }
+=20
+ EXPORT_SYMBOL(acpi_os_write_port);
+=2D-- a/drivers/cpufreq/acpi-cpufreq.c
++++ b/drivers/cpufreq/acpi-cpufreq.c
+@@ -878,6 +878,10 @@ static int acpi_cpufreq_cpu_init(struct
+ 	policy->freq_table =3D freq_table;
+ 	perf->state =3D 0;
+=20
++	policy->fast_switch_possible =3D !acpi_pstate_strict &&
++		!(policy_is_shared(policy) &&
++		  policy->shared_type !=3D CPUFREQ_SHARED_TYPE_ANY);
++
+ 	switch (perf->control_register.space_id) {
+ 	case ACPI_ADR_SPACE_SYSTEM_IO:
+ 		/*
+@@ -887,6 +891,8 @@ static int acpi_cpufreq_cpu_init(struct
+ 		 * unknown and not detectable via IO ports.
+ 		 */
+ 		policy->cur =3D acpi_cpufreq_guess_freq(data, policy->cpu);
++		/* I/O spcase is too slow for fast switching. */
++		policy->fast_switch_possible =3D false;
+ 		break;
+ 	case ACPI_ADR_SPACE_FIXED_HARDWARE:
+ 		acpi_cpufreq_driver.get =3D get_cur_freq_on_cpu;
+@@ -912,9 +918,6 @@ static int acpi_cpufreq_cpu_init(struct
+ 	 */
+ 	data->resume =3D 1;
+=20
+=2D	policy->fast_switch_possible =3D !acpi_pstate_strict &&
+=2D		!(policy_is_shared(policy) && policy->shared_type !=3D CPUFREQ_SHARED_=
+TYPE_ANY);
+=2D
+ 	if (perf->states[0].core_frequency * 1000 !=3D freq_table[0].frequency)
+ 		pr_warn(FW_WARN "P-state 0 is not max freq\n");
+=20
+
+
+
