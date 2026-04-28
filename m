@@ -1,201 +1,303 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from canpmsgout03.his.huawei.com (canpmsgout03.his.huawei.com [113.46.200.218])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ACDB39FCAF
-	for <regressions@lists.linux.dev>; Mon, 27 Apr 2026 21:50:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.50
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777326609; cv=pass; b=mnl3fEvwJ6GhytSpSf3++RvlhNdRFxYpb/U/Jyfy6RS6zXuPjhdjjHOdVkpIbunlRQYkgY1rXWczk/BpZ1n4OoLCAMo08K9eCh8TSlYisT3rdxaTF1BeTTqKAFjnDaQwUedtQj6bpIeZ8VaA9WGgG8h8/4LBiPTqGqCysDKyQSo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777326609; c=relaxed/simple;
-	bh=L7xa02X7WdX9x9vHRITtqt4+zXkzCD26OYMMG+OjAXo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZManF3lkcw3iPmFMJdIRPw+CV0mhcapO0pb+L/7106L7cGja+zIZDbdk8i90rA4NwrASDvfjdPgQq1zcZcm1MoZlvkpKtREsZQ/CjeG5gmkTuOOd2KKuRKwDfKwbck9sXVDWHK/GkAEweebR3Gf8bgbUWnIMCUQwO9Bf+CHN1Gk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OH17PN+/; arc=pass smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 323B622173D
+	for <regressions@lists.linux.dev>; Tue, 28 Apr 2026 01:40:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.218
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1777340404; cv=none; b=azX2vA4PCwi4eoVmy9Nk1e8kQgkmt8RzGAmxlfdlTg1VfCZ6zF2SLdIqQgaeguG9MxU7z0Dlx5r8brqIUfby8QhBCd430Jf9X7sw+ORBsWLvESIMqz1A30BQD92Xm39Cvhy2GAHVZr17P70uMtuZ75fDQtLhMJInglTGWl8l/XQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1777340404; c=relaxed/simple;
+	bh=WU3xe617abCKg9Yttm94QPXbifhoZSFuJ/Z3RtgJMpo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=SR+9Rlx88gvqkpaxyPsJdmM8c/3lqMRnYTLciPRWtIxRPXeOFh2Y0r8HBDlrIGQze5WlgnqHXc2Ma6jKJsfu4/7BQ5kH5BdSG7NpKwg3nxUtzWJKJ3ROVJlQ7kAkzo6keW7qfKIs4hqpv62hHoYCoMjagT9ZIBJpWA/NLl+T+nA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=2g9cc0h5; arc=none smtp.client-ip=113.46.200.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OH17PN+/"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ba92146cc86so1161656266b.1
-        for <regressions@lists.linux.dev>; Mon, 27 Apr 2026 14:50:06 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1777326605; cv=none;
-        d=google.com; s=arc-20240605;
-        b=ahG5LV5JBYos3t/iUL6qWwC3nzBhTvSQw0SaN83NQf2Zm3oQ7wIRq5pmSHlf0Rutfk
-         efXaM0Okpv+fV8CPZLViMA1DeDkIFdNcC2zeZ+8h7mvjFuI6UfpdVsky85uLQAJGuALd
-         unKsUxY6UIzgyWq1rkhKttzYWsu0gFQUX04CFHZp9Vd4Idrsj6+zzD9EftX69Wb9bp+u
-         QJcpdv0SMLRb1aZCVMXCY5XWZUy2nCbt46zfEu8QtHNHiNNwBhPnOi+EuVCLgr4pJ5fG
-         Nu6bTlx78HJA6xgtcMGaBVMhK+rWVXeEWVxxtJacVpLGe9+DtOdHtmrhpHTQA+oAkWyj
-         m84Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=oXNTkuokTYZhJ+ynIL21Ir8zjvS3sW03jWnhSBy68kg=;
-        fh=7Id7wCJe1bPBH8iOViIqtaZbewXQPZIHLGn4yPkSzMw=;
-        b=ZLF2Rn1VnVnW8IqVml/4lsu7qJm5eLnC20O90g9rcTRAgKInAVy+aF1FAYuNwserFX
-         CKykav9waY3E/tJ284UX7eQxqHK8yZEOuUlnmt/8+OH/QYsNx63Bovh6a9XtYyyPz8BG
-         BLKVpW7ckeEq5S5bsqBtsxt88T0G/G2GfG2uA0kjFstOrLc65Lt0lBHoM7wiN8l0sZ0I
-         5kCyBq1Pw83l5nzF2fBQZDJo4id28iViMGOVImC1DNNTaeRnI3X0hwBo4ZGoGDddl+N0
-         Y25m6dpIblP1Zn4bGUAFxtCXiJmGmt4GT0AZyfauVmhwvWlKGyLIggTdNVgPYlCY5trj
-         f8nA==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1777326605; x=1777931405; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oXNTkuokTYZhJ+ynIL21Ir8zjvS3sW03jWnhSBy68kg=;
-        b=OH17PN+/+2m5wGIx22aze0FVohLS0DWA025bLdLeYUie8MyH/4iqnVS2XAJf4tRESO
-         ce6dbRzI7nAhoAadLQ3h+re5DvjM21nwFB2hlqjlQaAoCvxcBWNPsf2ybIDKVBpDD72E
-         i8pvF/45NBHawSgu3qH8MDdzjDUtdnJ7apyDF1Kiw0xqekazfsAz9DGllcBJ+LO8rnDz
-         B+SS0c5eXtwM1v6L8K5fvm418KtrU1Pu5AfXhqyue8BKS+N7Rd+FKk+PQv6zNWLUpY5N
-         3ersKyA7KDHezMld1cydqM/VPIgyFBethD/+3Kq8yWC0iHQ8Fb1DK+OTCLnD71KULcwJ
-         4FVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777326605; x=1777931405;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=oXNTkuokTYZhJ+ynIL21Ir8zjvS3sW03jWnhSBy68kg=;
-        b=b9rUhOpeKoUBZJh0X59G+c5UlTpNkD5BVlarUZ5DFHKgRM7DDLWYmDxqGX8sUi84rF
-         PGKWVCUKEO0krEqd6Lk6x3WKDtUFcgtQ3wFG12i6LUWvtRGaDJJNEx3ciZwM2drA+DoP
-         n0rYj8rvgW3f5NdUS9Dgh71WPeQG3OpqcDQJEUszjTgHZvp65ek44KQyQRTM1qMSO5H4
-         YUIHpIqysaCva54htULs2NVMbI0LyJxnm4nsBrXfaZxPg9mD9BBkLykvU/Yzy7Q8pD6c
-         cpmBPGpQ/MDFDEb8UxTGGoY0uDtAoSSdcU+S+YV3oZ1TMNtzj2F2O/+J3HOWSJh0oZax
-         /+Nw==
-X-Gm-Message-State: AOJu0YzegkeB+EAmt2xpaSFl7MFtAMZFc3K4s4ABLNjAFEmxKiRNjvEK
-	ry0EkemPMBfa4HmUI9e07MX/F8CKz+0u/Tc9WpM1Q/EbGT/IYk+zZ4YUdDH1QVD3Ucn4OCcvTH4
-	20FC01I5qdKbl2jdyFW3NhiGiF9x9Fvs=
-X-Gm-Gg: AeBDievk9OvnDH3tsNq/77A69zsreFnN3X0ybjK3DNa+cPnnsG9uDe5u+wN6+JmC1Fs
-	QBginVNDYr+FhP2blEmep9ija9jWdVhwgvWdGvEdV38Fd+awhnIZA00q9S9GlwEMGftoWrr6hKu
-	//T747uftOlbQYwI3ZTkfTBDEXwHGOkmuVljN7FJU8qORFs36UoWlV0Y24DkLPKIW8IiO0q2hXH
-	UOOfddlDujnobrgdXx3IvoIbfwvVBBBql7OuMQ1MyBznFAQ7UxqXsIavzxUsYx8oAaqjhPobhD2
-	AzDaap1iawLjwq5ZNA==
-X-Received: by 2002:a17:907:5c4:b0:bb7:e621:1fb7 with SMTP id
- a640c23a62f3a-bb803d65610mr27224366b.36.1777326604854; Mon, 27 Apr 2026
- 14:50:04 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="2g9cc0h5"
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=pDwE7wKYwD2f44L+Z40JlpqwY3yuoiet96aLvALDJ2Q=;
+	b=2g9cc0h5sJhPNGXrtQekeUfyBTMUhgD61nVvAKAhMN/QhZYMJvzsUGXtwzr2vMmouS8qizPXv
+	JiVu6mMAyJoJKiQssKDXpY7ia3J0HE7oC3kCkF/7ptvyVOAtYAd4uiA7WMqtrzi2dGeh2PR6oME
+	SLigfb+DOMg1DboE/0xZMn4=
+Received: from mail.maildlp.com (unknown [172.19.163.104])
+	by canpmsgout03.his.huawei.com (SkyGuard) with ESMTPS id 4g4NHR4L15zpSwg;
+	Tue, 28 Apr 2026 09:33:23 +0800 (CST)
+Received: from dggpemf500011.china.huawei.com (unknown [7.185.36.131])
+	by mail.maildlp.com (Postfix) with ESMTPS id 339824048F;
+	Tue, 28 Apr 2026 09:39:58 +0800 (CST)
+Received: from [10.67.109.254] (10.67.109.254) by
+ dggpemf500011.china.huawei.com (7.185.36.131) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Tue, 28 Apr 2026 09:39:57 +0800
+Message-ID: <21b50a60-0cbf-43ee-b6d1-318cba206aea@huawei.com>
+Date: Tue, 28 Apr 2026 09:39:56 +0800
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <12879883.O9o76ZdvQC@rafael.j.wysocki> <6005325.DvuYhMxLoT@rafael.j.wysocki>
- <CAGAxtY28bho6+PRoEypepAK1UpmGQ8WzkvPnUEmGvx7vWqkHeA@mail.gmail.com> <6006426.DvuYhMxLoT@rafael.j.wysocki>
-In-Reply-To: <6006426.DvuYhMxLoT@rafael.j.wysocki>
-From: Evgeny Sagatov <evgeny.sagatov@gmail.com>
-Date: Tue, 28 Apr 2026 00:49:51 +0300
-X-Gm-Features: AVHnY4LYfieYFEwFkIH9vT0bp_c4_c5sUBtPRqiCRcUPccxdXq9Voy4SegmRU2I
-Message-ID: <CAGAxtY2QRhfoP5NjMQOg5WB15DpPcmX3aBWEy70xYKGMveZ_zg@mail.gmail.com>
-Subject: Re: Pressing the power button causes the device to freeze completely
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: regressions@lists.linux.dev, linux-acpi@vger.kernel.org, 
-	Thorsten Leemhuis <regressions@leemhuis.info>, LKML <linux-kernel@vger.kernel.org>, 
-	Wysocki Rafael J <rafael.j.wysocki@intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64/entry: Fix arm64-specific rseq brokenness
+To: Mark Rutland <mark.rutland@arm.com>, Mathias Stearn <mathias@mongodb.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>, Catalin Marinas
+	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Thomas Gleixner
+	<tglx@linutronix.de>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Peter Zijlstra <peterz@infradead.org>
+CC: Boqun Feng <boqun.feng@gmail.com>, "Paul E. McKenney"
+	<paulmck@kernel.org>, Chris Kennelly <ckennelly@google.com>, Dmitry Vyukov
+	<dvyukov@google.com>, <regressions@lists.linux.dev>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>, Ingo
+ Molnar <mingo@kernel.org>, Blake Oler <blake.oler@mongodb.com>
+References: <CAHnCjA25b+nO2n5CeifknSKHssJpPrjnf+dtr7UgzRw4Zgu=oA@mail.gmail.com>
+ <aeueE1I1OuVkOcEZ@J2N7QTR9R3>
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+In-Reply-To: <aeueE1I1OuVkOcEZ@J2N7QTR9R3>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
+ dggpemf500011.china.huawei.com (7.185.36.131)
 
-apr 28 00:48:34 srv kernel: ACPI power button event
-apr 28 00:48:34 srv kernel: ACPI event status I/O port number: 1024
 
-=D0=BF=D0=BD, 27 =D0=B0=D0=BF=D1=80. 2026=E2=80=AF=D0=B3. =D0=B2 23:31, Raf=
-ael J. Wysocki <rafael@kernel.org>:
->
-> On Monday, April 27, 2026 10:12:33 PM CEST Evgeny Sagatov wrote:
-> > dmesg | grep "frequency scaling"
-> > [    8.552380] acpi_cpufreq: CPU0: Using I/O space for frequency scalin=
-g
-> > [    8.552386] acpi_cpufreq: CPU0: frequency scaling I/O port number: 2=
-176
-> > [    8.552478] acpi_cpufreq: CPU1: Using I/O space for frequency scalin=
-g
-> > [    8.552480] acpi_cpufreq: CPU1: frequency scaling I/O port number: 2=
-176
-> > [    8.552584] acpi_cpufreq: CPU2: Using I/O space for frequency scalin=
-g
-> > [    8.552586] acpi_cpufreq: CPU2: frequency scaling I/O port number: 2=
-176
-> > [    8.552668] acpi_cpufreq: CPU3: Using I/O space for frequency scalin=
-g
-> > [    8.552670] acpi_cpufreq: CPU3: frequency scaling I/O port number: 2=
-176
-> >
-> > Messages that appear when I press the power button:
-> > apr 27 23:07:33 srv kernel: ACPI power button event
-> > apr 27 23:07:33 srv kernel: ACPI event status register ID: 3
->
-> Of course it's a power button, so the register ID is 3 and the register
-> is PM1.  Sorry for missing that previously.
->
-> Please apply the slightly update patch below (which replaces the previous
-> one) and send the messages printed to the log after booting the new
-> kernel and pressing the power button.
->
+
+On 4/25/2026 12:45 AM, Mark Rutland wrote:
+> Patch for the arm64-specific issue below. This doesn't fix the generic
+> cpu_id_start issue, but it brings arm64 into line with everyone else,
+> and it's the shape we'll need going forwards for other stuff anyway.
+> 
+> I've given it light testing with Mathias's reproducer and the
+> kselftests, which all pass.
+> 
+> I've also pushed it to my arm64/rseq branch:
+> 
+>   https://git.kernel.org/pub/scm/linux/kernel/git/mark/linux.git/log/?h=arm64/rseq
+> 
+> Mark.
+> 
+> ---->8----
+> From 79b65cbbfa20aa2cb0bc248591fab5459cdc101b Mon Sep 17 00:00:00 2001
+> From: Mark Rutland <mark.rutland@arm.com>
+> Date: Thu, 23 Apr 2026 16:51:12 +0100
+> Subject: [PATCH] arm64/entry: Fix arm64-specific rseq brokenness
+> 
+> Mathias Stearn reports that since v6.19, there are two big issues
+> affecting rseq:
+> 
+> (1) On arm64 specifically, rseq critical sections aren't aborted when
+>     they should be.
+> 
+> (2) The 'cpu_id_start' field is no longer written by the kernel in all
+>     cases it used to be, including some cases where TCMalloc depends on
+>     the kernel clobbering the field.
+> 
+> This patch fixes issue #1. This patch DOES NOT fix issue #2, which will
+> need to be addressed by other patches.
+> 
+> The arm64-specific brokenness is a result of commits:
+> 
+>   2fc0e4b4126c ("rseq: Record interrupt from user space")
+>   39a167560a61 ("rseq: Optimize event setting")
+> 
+> The first commit failed to add a call to rseq_note_user_irq_entry() on
+> arm64. Thus arm64 never sets rseq_event::user_irq to record that it may
+> be necessary to abort an active rseq critical section upon return to
+> userspace. On its own, this commit had no functional impact as the value
+> of rseq_event::user_irq was not consumed.
+> 
+> The second commit relied upon rseq_event::user_irq to determine whether
+> or not to bother to perform rseq work when returning to userspace. As
+> rseq_event::user_irq wasn't set on arm64, this work would be skipped,
+> and consequently an active rseq critical section would not be aborted.
+> 
+> Fix this by giving arm64 syscall-specific entry/exit paths, and
+> performing the relevant logic in syscall and non-syscall paths,
+> including calling rseq_note_user_irq_entry() for non-syscall entry.
+> 
+> Currently arm64 cannot use syscall_enter_from_user_mode(),
+> syscall_exit_to_user_mode(), and irqentry_exit_to_user_mode(), due to
+> ordering constraints with exception masking, and risk of ABI breakage
+> for syscall tracing/audit/etc. For the moment the entry/exit logic is
+> left as arm64-specific, but mirroring the generic code.
+> 
+> I intend to follow up with refactoring/cleanup, as we did for kernel
+> mode entry paths in commit:
+> 
+>   041aa7a85390 ("entry: Split preemption from irqentry_exit_to_kernel_mode()")
+> 
+> ... which will allow arm64 to use the GENERIC_IRQ_ENTRY functions directly.
+> 
+> Fixes: 39a167560a61 ("rseq: Optimize event setting")
+> Reported-by: Mathias Stearn <mathias@mongodb.com>
+> Link: https://lore.kernel.org/regressions/CAHnCjA25b+nO2n5CeifknSKHssJpPrjnf+dtr7UgzRw4Zgu=oA@mail.gmail.com/
+> Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Chris Kennelly <ckennelly@google.com>
+> Cc: Dmitry Vyukov <dvyukov@google.com>
+> Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Will Deacon <will@kernel.org>
 > ---
->  drivers/acpi/acpica/evevent.c  |    8 ++++++++
->  drivers/cpufreq/acpi-cpufreq.c |    8 ++++++--
->  drivers/cpufreq/cpufreq.c      |    1 +
->  3 files changed, 15 insertions(+), 2 deletions(-)
->
-> --- a/drivers/acpi/acpica/evevent.c
-> +++ b/drivers/acpi/acpica/evevent.c
-> @@ -243,6 +243,14 @@ static u32 acpi_ev_fixed_event_dispatch(
->         (void)acpi_write_bit_register(acpi_gbl_fixed_event_info[event].
->                                       status_register_id, ACPI_CLEAR_STAT=
-US);
->
-> +       if (event =3D=3D ACPI_EVENT_POWER_BUTTON) {
-> +               pr_info("ACPI power button event\n");
-> +               pr_info("ACPI event status I/O port number: %llu\n",
-> +                       acpi_gbl_xpm1a_status.address);
-> +
-> +               return (ACPI_INTERRUPT_HANDLED);
-> +       }
-> +
->         /*
->          * Make sure that a handler exists. If not, report an error
->          * and disable the event to prevent further interrupts.
-> --- a/drivers/cpufreq/acpi-cpufreq.c
-> +++ b/drivers/cpufreq/acpi-cpufreq.c
-> @@ -479,8 +479,8 @@ static unsigned int acpi_cpufreq_fast_sw
->                         return next_freq;
->         }
->
-> -       data->cpu_freq_write(&perf->control_register,
-> -                            perf->states[next_perf_state].control);
-> +       /*data->cpu_freq_write(&perf->control_register,
-> +                            perf->states[next_perf_state].control);*/
->         perf->state =3D next_perf_state;
->         return next_freq;
+>  arch/arm64/kernel/entry-common.c | 29 ++++++++++++++++++++++-------
+>  include/linux/irq-entry-common.h |  8 --------
+>  include/linux/rseq_entry.h       | 19 -------------------
+>  3 files changed, 22 insertions(+), 34 deletions(-)
+> 
+> diff --git a/arch/arm64/kernel/entry-common.c b/arch/arm64/kernel/entry-common.c
+> index cb54335465f66..65ade1f1544f6 100644
+> --- a/arch/arm64/kernel/entry-common.c
+> +++ b/arch/arm64/kernel/entry-common.c
+> @@ -62,6 +62,12 @@ static void noinstr arm64_exit_to_kernel_mode(struct pt_regs *regs,
+>  	irqentry_exit_to_kernel_mode_after_preempt(regs, state);
 >  }
-> @@ -887,9 +887,13 @@ static int acpi_cpufreq_cpu_init(struct
->                  * unknown and not detectable via IO ports.
->                  */
->                 policy->cur =3D acpi_cpufreq_guess_freq(data, policy->cpu=
-);
-> +               pr_info("CPU%u: Using I/O space for frequency scaling\n",=
- cpu);
-> +               pr_info("CPU%u: frequency scaling I/O port number: %llu\n=
-", cpu,
-> +                       perf->control_register.address);
->                 break;
->         case ACPI_ADR_SPACE_FIXED_HARDWARE:
->                 acpi_cpufreq_driver.get =3D get_cur_freq_on_cpu;
-> +               pr_info("CPU%u: Using FFH for frequency scaling\n", cpu);
->                 break;
->         default:
->                 break;
-> --- a/drivers/cpufreq/cpufreq.c
-> +++ b/drivers/cpufreq/cpufreq.c
-> @@ -473,6 +473,7 @@ void cpufreq_enable_fast_switch(struct c
->         if (cpufreq_fast_switch_count >=3D 0) {
->                 cpufreq_fast_switch_count++;
->                 policy->fast_switch_enabled =3D true;
-> +               pr_info("CPU%u: Fast frequency switching enabled\n", poli=
-cy->cpu);
->         } else {
->                 pr_warn("CPU%u: Fast frequency switching not enabled\n",
->                         policy->cpu);
->
->
->
+>  
+> +static __always_inline void arm64_syscall_enter_from_user_mode(struct pt_regs *regs)
+> +{
+> +	enter_from_user_mode(regs);
+> +	mte_disable_tco_entry(current);
+
+Did we skip sme_enter/exit_from_user_mode() on the syscall path on
+purpose? Not very familiar with ARM64 SME.
+
+> +}
+> +
+>  /*
+>   * Handle IRQ/context state management when entering from user mode.
+>   * Before this function is called it is not safe to call regular kernel code,
+> @@ -70,20 +76,29 @@ static void noinstr arm64_exit_to_kernel_mode(struct pt_regs *regs,
+>  static __always_inline void arm64_enter_from_user_mode(struct pt_regs *regs)
+>  {
+>  	enter_from_user_mode(regs);
+> +	rseq_note_user_irq_entry();
+
+Can we just use irqentry_enter_from_user_mode() instead?
+
+>  	mte_disable_tco_entry(current);
+>  	sme_enter_from_user_mode();
+>  }
+>  
+> +static __always_inline void arm64_syscall_exit_to_user_mode(struct pt_regs *regs)
+> +{
+> +	local_irq_disable();
+> +	syscall_exit_to_user_mode_prepare(regs);
+> +	local_daif_mask();
+> +	mte_check_tfsr_exit();
+> +	exit_to_user_mode();
+> +}
+> +
+>  /*
+>   * Handle IRQ/context state management when exiting to user mode.
+>   * After this function returns it is not safe to call regular kernel code,
+>   * instrumentable code, or any code which may trigger an exception.
+>   */
+> -
+>  static __always_inline void arm64_exit_to_user_mode(struct pt_regs *regs)
+>  {
+>  	local_irq_disable();
+> -	exit_to_user_mode_prepare_legacy(regs);
+> +	irqentry_exit_to_user_mode_prepare(regs);
+>  	local_daif_mask();
+>  	sme_exit_to_user_mode();
+>  	mte_check_tfsr_exit();
+> @@ -92,7 +107,7 @@ static __always_inline void arm64_exit_to_user_mode(struct pt_regs *regs)
+>  
+>  asmlinkage void noinstr asm_exit_to_user_mode(struct pt_regs *regs)
+>  {
+> -	arm64_exit_to_user_mode(regs);
+> +	arm64_syscall_exit_to_user_mode(regs);
+>  }
+>  
+>  /*
+> @@ -716,12 +731,12 @@ static void noinstr el0_brk64(struct pt_regs *regs, unsigned long esr)
+>  
+>  static void noinstr el0_svc(struct pt_regs *regs)
+>  {
+> -	arm64_enter_from_user_mode(regs);
+> +	arm64_syscall_enter_from_user_mode(regs);
+>  	cortex_a76_erratum_1463225_svc_handler();
+>  	fpsimd_syscall_enter();
+>  	local_daif_restore(DAIF_PROCCTX);
+>  	do_el0_svc(regs);
+> -	arm64_exit_to_user_mode(regs);
+> +	arm64_syscall_exit_to_user_mode(regs);
+>  	fpsimd_syscall_exit();
+>  }
+>  
+> @@ -868,11 +883,11 @@ static void noinstr el0_cp15(struct pt_regs *regs, unsigned long esr)
+>  
+>  static void noinstr el0_svc_compat(struct pt_regs *regs)
+>  {
+> -	arm64_enter_from_user_mode(regs);
+> +	arm64_syscall_enter_from_user_mode(regs);
+>  	cortex_a76_erratum_1463225_svc_handler();
+>  	local_daif_restore(DAIF_PROCCTX);
+>  	do_el0_svc_compat(regs);
+> -	arm64_exit_to_user_mode(regs);
+> +	arm64_syscall_exit_to_user_mode(regs);
+>  }
+
+Otherwise, looks fine to me.
+
+>  
+>  static void noinstr el0_bkpt32(struct pt_regs *regs, unsigned long esr)
+> diff --git a/include/linux/irq-entry-common.h b/include/linux/irq-entry-common.h
+> index 167fba7dbf043..1fabf0f5ea8e7 100644
+> --- a/include/linux/irq-entry-common.h
+> +++ b/include/linux/irq-entry-common.h
+> @@ -218,14 +218,6 @@ static __always_inline void __exit_to_user_mode_validate(void)
+>  	lockdep_sys_exit();
+>  }
+>  
+> -/* Temporary workaround to keep ARM64 alive */
+> -static __always_inline void exit_to_user_mode_prepare_legacy(struct pt_regs *regs)
+> -{
+> -	__exit_to_user_mode_prepare(regs, EXIT_TO_USER_MODE_WORK);
+> -	rseq_exit_to_user_mode_legacy();
+> -	__exit_to_user_mode_validate();
+> -}
+> -
+>  /**
+>   * syscall_exit_to_user_mode_prepare - call exit_to_user_mode_loop() if required
+>   * @regs:	Pointer to pt_regs on entry stack
+> diff --git a/include/linux/rseq_entry.h b/include/linux/rseq_entry.h
+> index f11ebd34f8b95..a3762410c4ab6 100644
+> --- a/include/linux/rseq_entry.h
+> +++ b/include/linux/rseq_entry.h
+> @@ -753,24 +753,6 @@ static __always_inline void rseq_irqentry_exit_to_user_mode(void)
+>  	ev->events = 0;
+>  }
+>  
+> -/* Required to keep ARM64 working */
+> -static __always_inline void rseq_exit_to_user_mode_legacy(void)
+> -{
+> -	struct rseq_event *ev = &current->rseq.event;
+> -
+> -	rseq_stat_inc(rseq_stats.exit);
+> -
+> -	if (static_branch_unlikely(&rseq_debug_enabled))
+> -		WARN_ON_ONCE(ev->sched_switch);
+> -
+> -	/*
+> -	 * Ensure that event (especially user_irq) is cleared when the
+> -	 * interrupt did not result in a schedule and therefore the
+> -	 * rseq processing did not clear it.
+> -	 */
+> -	ev->events = 0;
+> -}
+> -
+>  void __rseq_debug_syscall_return(struct pt_regs *regs);
+>  
+>  static __always_inline void rseq_debug_syscall_return(struct pt_regs *regs)
+> @@ -786,7 +768,6 @@ static inline bool rseq_exit_to_user_mode_restart(struct pt_regs *regs, unsigned
+>  }
+>  static inline void rseq_syscall_exit_to_user_mode(void) { }
+>  static inline void rseq_irqentry_exit_to_user_mode(void) { }
+> -static inline void rseq_exit_to_user_mode_legacy(void) { }
+>  static inline void rseq_debug_syscall_return(struct pt_regs *regs) { }
+>  static inline bool rseq_grant_slice_extension(unsigned long ti_work, unsigned long mask) { return false; }
+>  #endif /* !CONFIG_RSEQ */
+
