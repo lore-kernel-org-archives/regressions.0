@@ -1,94 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailout2.hostsharing.net (mailout2.hostsharing.net [83.223.78.233])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7E7A3D47AA;
-	Tue, 28 Apr 2026 08:51:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CB873DA5C5
+	for <regressions@lists.linux.dev>; Tue, 28 Apr 2026 09:58:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777366293; cv=none; b=Ti6Mt8bCsc4XVDaVfMD76L74lytgMcddBFCLS4dLYV6628ncDnyabA/n7sdvXbSnAGjiljc5NKv4pxEHCMSREL9I4MBvTUIE9x0/eOBRSr4oOS5h6HUqRFeTUOzPHrqTUdsUV4sCghE5/E1xYH82UCB8bVoSkhEH+KOHsQy7DNE=
+	t=1777370293; cv=none; b=R8XhCwnKL8Z9A2ZisqTKoFZtcofebS7EH0QB2PCqu99VR+DkzcbNXxTJXido/6aZeSVttNYJLqPIbfHV8T52f9Zbzqp3s+bgYcTeBXkiN9NICsjW/uoi8MlfnMJa6cdA4lLtIcdWTKT4edbK85CnHkbTjlcFSbsvvvB3uIBKoNI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777366293; c=relaxed/simple;
-	bh=i+gw1fUS40ohLdc9hars3DbakHqzU1swpdINODPO6os=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=fEjts995R7PRttbbT05uw1kISVgTC58kMwxixEQiPA6HnIYmNUM6sgxHzbO2+PkRA2i9TYlWyUsLOZNaw3RXET+v2JIEXIgC7Fr6s4hPgG3jz6fFNWxfj4jsj9Hz+FE9xVcMq18xzHNarFE0HrLUHxKi5T8UwgsPkY4aUojZ6PI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eXmN98cV; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eXmN98cV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5AF33C2BCAF;
-	Tue, 28 Apr 2026 08:51:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777366293;
-	bh=i+gw1fUS40ohLdc9hars3DbakHqzU1swpdINODPO6os=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=eXmN98cVMNrCbnHMFjHbGS84RGWKEra7LXonBvzfuwfGmIXZisbJcekgqvKFDgY7L
-	 PuUUw/a9cU4yFuq3aiogZuzehQ6GhvTRcFM1+3BateDmaE/2WnyKHzIqzU6f3a11bM
-	 cD6k/HarW9MZRR7lSuQtaLOuTMq5NXOwO9m0zI1L6UQFvhJrIYEBCMU5TpXYSjfLaP
-	 JuU4TZFger38FLg2yc+xVZTKSd7w5GDTpHloQL4Cw32Lni6JRZLELf98vzQ2XblLEv
-	 i1MI8atlgEEo6NOjevfuR77HjT2qhgXnHS82eqxwlvAMae3CoZWlPxWjHGszWEvvtT
-	 ibFsXcT1i3h/w==
-From: Thomas Gleixner <tglx@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Mathias Stearn <mathias@mongodb.com>, Dmitry Vyukov
- <dvyukov@google.com>, Jinjie Ruan <ruanjinjie@huawei.com>,
- linux-man@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Catalin Marinas
- <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Boqun Feng
- <boqun.feng@gmail.com>, "Paul E. McKenney" <paulmck@kernel.org>, Chris
- Kennelly <ckennelly@google.com>, regressions@lists.linux.dev,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Ingo
- Molnar <mingo@kernel.org>, Blake Oler <blake.oler@mongodb.com>, Florian
- Weimer <fweimer@redhat.com>, Rich Felker <dalias@libc.org>, Matthew Wilcox
- <willy@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Linus Torvalds <torvalds@linuxfoundation.org>
-Subject: Re: [REGRESSION] rseq: refactoring in v6.19 broke everyone on arm64
- and tcmalloc everywhere
-In-Reply-To: <20260428073938.GH3126523@noisy.programming.kicks-ass.net>
-References: <CACT4Y+bxnQyHGdVNE1BYTx+Z2-cscLb38HYS9jBM5gPAz8=4bw@mail.gmail.com>
- <87ik9i0xlj.ffs@tglx>
- <CAHnCjA0UBNXfjHw=Y34OrAyGRNUtVF+zWd3ugyX6pd_mCk8K9w@mail.gmail.com>
- <87a4ut1njh.ffs@tglx>
- <CACT4Y+bBD7uCHXKqGo=epBXeEmsZ67Og2YO9kjNMT3ryjUY_sA@mail.gmail.com>
- <CAHnCjA1LqbaUGkPe79EeP6Mpaki8QWeR-JBSbrG0z6pTm9CmUg@mail.gmail.com>
- <87v7dgzbo7.ffs@tglx>
- <20260424150318.GE641209@noisy.programming.kicks-ass.net>
- <87se8kywhb.ffs@tglx> <87jyttz8cf.ffs@tglx>
- <20260428073938.GH3126523@noisy.programming.kicks-ass.net>
-Date: Tue, 28 Apr 2026 10:51:29 +0200
-Message-ID: <87zf2nxyb2.ffs@tglx>
+	s=arc-20240116; t=1777370293; c=relaxed/simple;
+	bh=AANVrtiuKHOX9EkivNHz7obhlqfxoVqwjKfsh5xXeDU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=skImJi4UuellLXP2MnQPUBq424ApBkeZDU2jEfkzsrZBKcPyxBHOH4320cJa/1tp6OdifLb2ez1LrS9SUzVxhBPkTmiCeTn8NpTljZ47L/N+YqObcHvy/Nf6TuUSqcn3FS4aVwUkk/RddkTWLLvDaZOP7n+jxYav2EHTQvVq+q8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=pass smtp.mailfrom=wunner.de; arc=none smtp.client-ip=83.223.78.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wunner.de
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature ECDSA (secp384r1) server-digest SHA384
+	 client-signature ECDSA (secp384r1) client-digest SHA384)
+	(Client CN "*.hostsharing.net", Issuer "GlobalSign GCC R6 AlphaSSL CA 2025" (verified OK))
+	by mailout2.hostsharing.net (Postfix) with ESMTPS id AA10810604;
+	Tue, 28 Apr 2026 11:58:00 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 957696127156; Tue, 28 Apr 2026 11:58:00 +0200 (CEST)
+Date: Tue, 28 Apr 2026 11:58:00 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: regressions@lists.linux.dev
+Subject: Re: [6.12.y regression] Regression with 58130e7ce6cb ("PCI/ERR:
+ Ensure error recoverability at all times"): echo vfio-pci >driver_override
+ does not work for DVB Adapter
+Message-ID: <afCEqLEHkqUWRBlr@wunner.de>
+References: <177373189751.7987.7156982489427825197.reportbug@obelix-trixie.bs.de>
+ <acfZrlP0Ua_5D3U4@eldamar.lan>
+ <f0054ecb-2524-42e5-ac1d-ed8ab114bcef@leemhuis.info>
+ <ae2lgMRLPDQZSzI6@wunner.de>
+ <833c7e46-c44d-4715-b2ea-01723ada8e58@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <833c7e46-c44d-4715-b2ea-01723ada8e58@leemhuis.info>
 
-On Tue, Apr 28 2026 at 09:39, Peter Zijlstra wrote:
-> On Mon, Apr 27, 2026 at 12:04:48AM +0200, Thomas Gleixner wrote:
->>  static inline void rseq_signal_deliver(struct ksignal *ksig, struct pt_regs *regs)
->>  {
->> -	if (IS_ENABLED(CONFIG_GENERIC_IRQ_ENTRY)) {
->> +	if (IS_ENABLED(CONFIG_GENERIC_IRQ_ENTRY) && rseq_optimized(current)) {
->
-> rseq_optimized() already implies GENERIC_IRQ_ENTRY
+On Tue, Apr 28, 2026 at 10:41:51AM +0200, Thorsten Leemhuis wrote:
+> On 4/26/26 07:41, Lukas Wunner wrote:
+> > #regzbot introduced: a2f1e22390ac
+> > #regzbot introduced: v6.12.70..
+> > #regzbot introduced: v6.18.10..
+> > #regzbot introduced: v6.19..
+> 
+> Thx for this. This is an interesting idea nobody had yet. But I guess it
+> should work the other way around: assume that affects all branches that
+> contain a2f1e22390ac and a backport of it, unless told otherwise (at
+> usually that's the case).
 
-Indeed.
+Right, we originally thought that only v6.12-stable is affected but
+it turned out that mainline is affected as well.
 
->> +			u8			optimized;
->>  			union {
->>  				u16		error;
->>  				struct {
->
-> I know you like the 'optimized' name, it is faster etc. However, the
-> description there suggests: has_rseq_v2 not be a bad name.
->
-> And while I write this, I figured we could have the value of has_rseq be
-> 2, rather than 1, but this might end up generating worse code, dunno,
-> haven't tried yet.
+On the dashboard at...
 
-Tried that early on and it was worse, but back the approach has changed
-since then and I just validated that it's actually fine to do so. Fixed.
+https://linux-regtracking.leemhuis.info/regzbot/
+
+... the regression was previously only listed on the stable/longterm page.
+After I sent the above-quoted update, it's now listed on the mainline page,
+but under:
+
+"older cycles (..v6.19), unknown culprit, with activity in the past three weeks"
+
+I think the correct one would be:
+
+"older cycles (..v6.19), culprit identified, with activity in the past three months
+"
+
+or
+
+"previous cycle (v6.19..v7.0), culprit identified, with activity in the past three months"
+
+It's unclear to me why both of these lists have v6.19 in their title.
+The latter only contains regressions introduced in v7.0-rc1, so I suppose
+v6.19 being named in the list title might be erroneous.
+
+> > #regzbot title: PCI VFIO passthrough broken if BIOS assigned incorrect BARs
+> > #regzbot fix: 'PCI: Update saved_config_space upon resource assignment'
+> > #regzbot monitor: https://lore.kernel.org/all/acfZrlP0Ua_5D3U4@eldamar.lan/
+> 
+> Any idea when that patch might be reviewed and make it further? I assume
+> Bjorn is the bottleneck (and seems to have been afk or something?)?
+
+TBH the reason I sent this update to the regression tracker was to
+raise awareness and maybe prompt you to ping Bjorn.  ;)
+It's more effective when a ping comes from someone else than the
+patch submitter.  Upstream diplomacy... ;)
 
 Thanks,
 
-        tglx
+Lukas
