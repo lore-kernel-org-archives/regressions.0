@@ -1,164 +1,252 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65DE537CD23
-	for <regressions@lists.linux.dev>; Tue, 28 Apr 2026 21:05:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.52
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777410331; cv=pass; b=LNTjqQ7v9xa/o5MwM4Ypc+xjDDJCyYmdLmsz4ygLd3S5uRgL5vBYGjEy3FhyHw42PgEslNlOAgrtYiqURHANTEVAty8lbVhvb7C/LiyrM6+jFUAk74QnGOj2s78V/f+VPKMSF9w2SBapUExGVX0L47vpg8gezL7U2a2mmR4/0Gg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777410331; c=relaxed/simple;
-	bh=1yuXwi+NqO9qPAU8oODt9J+EEmGmc1IBnbpHbe4Kmn0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=S10ydVG9NWKiE2nAgFx2DobWSYSxnyQmJB+Y4KcFqTj8XM2IPROMtGdC0FDlk3IEU2UzK7pHP/KEFLi3v9Tt19FXKkFDLN1kZrau77RFR1CNyqs/ZwnFOOuyR6S6uRA6FMKcbO29XfS3Rxms0AJSgcaWll9AVHZRA23U0Wkkn1g=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DXj3KK/s; arc=pass smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BF273CD8D3;
+	Tue, 28 Apr 2026 23:33:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1777419216; cv=none; b=L9up/RqHKbsS5VR7pNWte+eB5iuL8fGc7N4gNJ5W0nKNq7FJpC7iGmpYMEHNeFg/xik72oXPUkVUerq3jXnAkz87IFf/X/esb8GS/AV8A+RxGvxKXqkaZMjXWtJ1AR1SN6oYv+QQ7WBA2TemkKb8YAINrP/j4yR1nYIXZBIsW6U=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1777419216; c=relaxed/simple;
+	bh=QhWQTeIjll8FnQkwo7iOYgrMHne1/N0D/l+10UovomU=;
+	h=Date:Message-ID:From:To:Cc:Subject; b=Ww0LOxiIl/qEiG0a8j74JJz69geUKM0NZ2fDlz/3pbVrTscSFU0t5jRiXAC1QDP+6UNMLRnsKCd/GsvGDulkReYPCr0q6vb/wufMB3IIjhTdUiLiGtOrvNfsuf8FqS5xJ+UcPitbtTgkxhKWT48+yn9aAKB+99dYpuybKc7V0MU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=empWNvUD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DXj3KK/s"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-6729c6f0ca7so14566879a12.0
-        for <regressions@lists.linux.dev>; Tue, 28 Apr 2026 14:05:29 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1777410328; cv=none;
-        d=google.com; s=arc-20240605;
-        b=Nx57faFZU1VvwR1VuD2SQyjcnWSZ+2Km1m+6ujjt2Ki5JmrVm3Ht0BdlwsUP5hv3U3
-         sTFuHO7Wowr43aOs1CXLsNTxlgtkmc8c6SiRXXZ8DN6FbPJjlSM60bYHAtjXJpvSVNpM
-         I/UUfChoyqE4+NIhvDiuRdEJO+M7oKYhbmeuXriY3iuKIxjjcx/7ua20W9VvATvBqeZu
-         B5Sgc9mfrlwDLNTnXxHdpbOBcDrvAfBD/ptO9mbKFoCeFb+XW2E0A7n9jsycrN+ntCQt
-         SLDCekaKgBFuPyJ4CcNsTM+3ihRn7yTwg4buPnJVKgj7+5dqS40Pdinu809ICX+P/40c
-         Wgew==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=MYqCNgCYe/2QmSmAUXHuU+yjG/QUozFu1M4rpW5vIC8=;
-        fh=7Id7wCJe1bPBH8iOViIqtaZbewXQPZIHLGn4yPkSzMw=;
-        b=XvtaQVw10g6AvSfXjKzvUiKgxve3Wo+8hxRTVITLEaE44ASc2Tw643OSpBz+oF8OC5
-         8ISx0vLBUHn/hkh+nA4qvra6BGQ/LRx6T7Ay6csdDpIeAkimUwkUQ0ku2j8nTDWInQfv
-         zYSD7iyHjR+mjXCunqoQR2Zu5mLlMArxEl/kqdEF+m2G5IuamSqyWQArCB28G/ieIEnu
-         7PRcW1e4jfz+1R8c9FMkh5zgDs/GK+8cdjR7X5fK74y29wo+buVJd9p+i6G7OB3EONzN
-         rSSWCaxxAt/ZK7Xz49iKbpLBny2XWn2YaxZJJL3bl+v9Y3LAeYBrBRbBHEDUt1PmXjAy
-         W+jQ==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1777410328; x=1778015128; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MYqCNgCYe/2QmSmAUXHuU+yjG/QUozFu1M4rpW5vIC8=;
-        b=DXj3KK/sgS4lcmME+bBZ5KPOqYyPbhO+f8DnCk0ak9HZnuRgs0eu5wjjP37GOf5Tz/
-         2yq+kpr5x8Dw1lhyK+CSdeWNTcvlh/AtZhmg4GGsBAfsUTsb5B1NHH/Wa89/JHCgHWw/
-         eZTXlSda7nu+Zj8djZgc8jSgNXawZPFAdGGhCuXRBZjNSOUrthxpe+Csz6+TImirSoiW
-         h7Wve3Yzx2aeYK/5RXk1zeD6lqoo83Zb8BwEWKaT16ZvBcHIO6uonk84c3O4TgManbaL
-         K53IAnYnTz3mHzLkQQnpfmCopWPrLzpcAIEFJ4x61HWGK6GolnUdt0eqrLatdV86znbA
-         po+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777410328; x=1778015128;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=MYqCNgCYe/2QmSmAUXHuU+yjG/QUozFu1M4rpW5vIC8=;
-        b=RPZSMVlnzr4KyC0TiijzSzI5tGtMQx7/+8gUm8RWMxYyc9W6KyeCrsKSIpqG3XBwsV
-         aY3juyCUNJ8YWsnRsp0HzKujp+EEXHTlig/aKwvXmfX1zU5+1Hyb0c+uJCGxxJ8QN40G
-         LJUhDXj6vV4L7imu/9NjxzO8fvrH5AZKUd1EHDJwNKQ0yFO5a0CxD3hE5ct0DHGMWauW
-         3o7ZspOK4y1ECDcCp2x1BOylRUeLei0X6rACnRYr96VGM1IQSsZoyAzYEF7jBTnREnYb
-         vE/S63/cpxa3NIdzCWmJeEDSzSxk3A8DXZV5RBqM2j80cZwAC2JlE99qdUx4koftJzj7
-         XLkQ==
-X-Gm-Message-State: AOJu0YxzIgdw+b04dVoIcZdcH0DWIVNibwcKyIeCKRXcJCev+lsMH5Se
-	/KJpAOkVgUzUq5+ArCkXrNA9OjAagjB2d1Bn54Vrd0LZSSqUGXvNpFx3LKXku5HM0Fout1vHHH8
-	AkRplQeVD4OPTU2rec6i8qR3Nlj94d7c=
-X-Gm-Gg: AeBDiev31HCS8vk2tiLBBsz3yimPb4gxg2yWJ/xQVBZ4vRQJBO3164eKrQmEvidoO55
-	XiddYMJTS7bZzVAdX5NnOwt7qqG6+edXakNg4RJzSi3b7Y0Daa7xahlm/C1/lnXFpJwjI3mZirw
-	eGv69YwASqa2huWGB/o66t2IuLWwhAvd+nSAU4EICj4UoV4fMjkwwi/IBJcf4NDZKfq/O4a/YSy
-	g1twLUfuFlEuGjAQj9VaTHPZ5fLj7q7TcvGISY7rvVjfyl/zPX//epe8axXYABToWc+QQe8lAgr
-	uanxm24ppwHBkVCyZiQ/7usj6g83
-X-Received: by 2002:a17:906:4785:b0:baa:77ac:97a with SMTP id
- a640c23a62f3a-bb93e655b30mr56610966b.36.1777410327474; Tue, 28 Apr 2026
- 14:05:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="empWNvUD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0D1FC2BCB7;
+	Tue, 28 Apr 2026 23:33:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1777419215;
+	bh=QhWQTeIjll8FnQkwo7iOYgrMHne1/N0D/l+10UovomU=;
+	h=Date:From:To:Cc:Subject:From;
+	b=empWNvUDe4gJU3gNTAOyjwtn0lHC17xvNPK+0cAdzsCCyPzw+OWSQ6nGhpzaXq5fJ
+	 lggw8e43aS0jIkbmOGntojha4NSzClAlQ/hygBDeqnwDeqNnMc/nD7lBvGCkGpSLtx
+	 qt/ZhUyx1vcyHbiQz0oGXO++x/HaPhTtFXggVSqUtFDeLSHVdQFkFov+/Y3qpMnYuV
+	 BoSeALlsKI2EotB06jtumi6V3OnP7yeKHTDRHXpYxh0K2FzZRtwqfila7Xt4GcuOHs
+	 2YKsgVVeS4KzxZHZLtqJiHraFqNeusr/t3cvmHp9GmhhcD+p950Rin6HEbQQSGykNI
+	 uG6q0+I24XsCQ==
+Date: Wed, 29 Apr 2026 01:33:31 +0200
+Message-ID: <20260428221058.149538293@kernel.org>
+User-Agent: quilt/0.68
+From: Thomas Gleixner <tglx@kernel.org>
+To: LKML <linux-kernel@vger.kernel.org>
+Cc: Mathias Stearn <mathias@mongodb.com>,
+ Dmitry Vyukov <dvyukov@google.com>,
+ Peter Zijlstra <peterz@infradead.org>,
+ linux-man@vger.kernel.org,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Chris Kennelly <ckennelly@google.com>,
+ regressions@lists.linux.dev,
+ Ingo Molnar <mingo@kernel.org>,
+ Blake Oler <blake.oler@mongodb.com>,
+ Florian Weimer <fweimer@redhat.com>,
+ Rich Felker <dalias@libc.org>,
+ Matthew Wilcox <willy@infradead.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Linus Torvalds <torvalds@linuxfoundation.org>
+Subject: [patch 00/10] rseq: Cure refactoring regressions 
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-References: <12879883.O9o76ZdvQC@rafael.j.wysocki> <6281827.lOV4Wx5bFT@rafael.j.wysocki>
- <CAGAxtY1VBXN_6xY0WiraJt-BQiYp_kSdTt8xbPkgP8xPB26=WQ@mail.gmail.com> <12904177.O9o76ZdvQC@rafael.j.wysocki>
-In-Reply-To: <12904177.O9o76ZdvQC@rafael.j.wysocki>
-From: Evgeny Sagatov <evgeny.sagatov@gmail.com>
-Date: Wed, 29 Apr 2026 00:05:14 +0300
-X-Gm-Features: AVHnY4Ki0QIR34i68-Z6MwECjgIbd1TRovLm9MfERd7YAUb8T7QA0bS1UzvhZ1o
-Message-ID: <CAGAxtY2SEkx7OgMgM5ypA8qsBN0h6pcs111VjnhD-5ZGq7Je6Q@mail.gmail.com>
-Subject: Re: Pressing the power button causes the device to freeze completely
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: regressions@lists.linux.dev, linux-acpi@vger.kernel.org, 
-	Thorsten Leemhuis <regressions@leemhuis.info>, LKML <linux-kernel@vger.kernel.org>, 
-	Wysocki Rafael J <rafael.j.wysocki@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-The PC also froze with this patch when I pressed the power button.
+Mathias reported that as of Linux 6.19 TCMalloc fails to work with RSEQ,
+which is related to the non-ABI conforming usage of RSEQ by TCMalloc:
 
-=D0=B2=D1=82, 28 =D0=B0=D0=BF=D1=80. 2026=E2=80=AF=D0=B3. =D0=B2 22:58, Raf=
-ael J. Wysocki <rafael@kernel.org>:
->
-> On Tuesday, April 28, 2026 9:11:34 PM CEST Evgeny Sagatov wrote:
-> > Yes, the PC froze when I pressed the power button.
->
-> Well, in that case, let's try to serialize all accesses to I/O ports
-> used in the ACPI code.
->
-> The patch below replaces the previous one, please give it a go.
->
-> ---
->  drivers/acpi/osl.c             |    6 ++++++
->  drivers/cpufreq/acpi-cpufreq.c |    4 +++-
->  2 files changed, 9 insertions(+), 1 deletion(-)
->
-> --- a/drivers/acpi/osl.c
-> +++ b/drivers/acpi/osl.c
-> @@ -664,6 +664,8 @@ u64 acpi_os_get_timer(void)
->                 (ACPI_100NSEC_PER_SEC / HZ);
->  }
->
-> +static DEFINE_RAW_SPINLOCK(acpi_os_port_lock);
-> +
->  acpi_status acpi_os_read_port(acpi_io_address port, u32 *value, u32 widt=
-h)
->  {
->         u32 dummy;
-> @@ -682,6 +684,8 @@ acpi_status acpi_os_read_port(acpi_io_ad
->         else
->                 value =3D &dummy;
->
-> +       guard(raw_spinlock_irqsave)(&acpi_os_port_lock);
-> +
->         if (width <=3D 8) {
->                 *value =3D inb(port);
->         } else if (width <=3D 16) {
-> @@ -703,6 +707,8 @@ acpi_status acpi_os_write_port(acpi_io_a
->         if (!IS_ENABLED(CONFIG_HAS_IOPORT))
->                 return AE_NOT_IMPLEMENTED;
->
-> +       guard(raw_spinlock_irqsave)(&acpi_os_port_lock);
-> +
->         if (width <=3D 8) {
->                 outb(value, port);
->         } else if (width <=3D 16) {
-> --- a/drivers/cpufreq/acpi-cpufreq.c
-> +++ b/drivers/cpufreq/acpi-cpufreq.c
-> @@ -913,7 +913,9 @@ static int acpi_cpufreq_cpu_init(struct
->         data->resume =3D 1;
->
->         policy->fast_switch_possible =3D !acpi_pstate_strict &&
-> -               !(policy_is_shared(policy) && policy->shared_type !=3D CP=
-UFREQ_SHARED_TYPE_ANY);
-> +               (!policy_is_shared(policy) ||
-> +                policy->shared_type =3D=3D CPUFREQ_SHARED_TYPE_ANY) &&
-> +               perf->control_register.space_id !=3D ACPI_ADR_SPACE_SYSTE=
-M_IO;
->
->         if (perf->states[0].core_frequency * 1000 !=3D freq_table[0].freq=
-uency)
->                 pr_warn(FW_WARN "P-state 0 is not max freq\n");
->
->
->
+  https://lore.kernel.org/CAHnCjA25b+nO2n5CeifknSKHssJpPrjnf+dtr7UgzRw4Zgu=oA@mail.gmail.com
+
+How we got there:
+
+  1) The original RSEQ implementation updates the rseq::cpu_id_start field
+     in user space more or less unconditionally on every exit to user
+     space, whether the CPU/MMCID have been changed or not.
+
+     That went unnoticed for years because nothing used rseq aside of
+     Google and TCMalloc. Once glibc registered rseq, this resulted in a
+     up to 15% performance penalty for syscall heavy workloads.
+
+  2) The rseq::cpu_id_start field is documented as read only for user
+     space in the ABI contract and guaranteed to be updated by the
+     kernel when a task is migrated to a different CPU.
+
+  3) TCMalloc abuses the sub-optimal implementation (see #1) and scribbles
+     over rseq::cpu_id_start for their own nefarious purposes.
+
+  4) As a consequence of #4 tcmalloc cannot be used together with any
+     other facility/library which wants to utilize the ABI guaranteed
+     properties of rseq::cpu_id_start in the same application.
+
+  5) tcmalloc violates the ABI from day one and has since refused to
+     address the problem despite being offered a kernel side rseq
+     extension to solve it many years ago and despite claiming to
+     be happy to accomodate.
+
+  6) When addressing the performance issues of RSEQ the unconditional
+     update stopped to exist under the valid assumption that the kernel has
+     only to satisfy the guaranteed ABI properties, which in turn broke
+     TCMalloc.
+
+Due to that everyone is in a hard place and up a creek without a paddle.
+
+After various solutions had been discussed and explored, it turned out that
+this can be solved sanely with the following focus points:
+
+  1) Keep it as simple as possible and avoid expensive workarounds for the
+     sake of TCMalloc
+
+  2) [Re]enable the wider ecosystem to leverage the full potential of RSEQ
+
+There are some unavoidable downsides which come with this:
+
+  1) TCMalloc compatible mode is mutually exclusive with the performance
+     optimizations which broke it in the first place
+
+  2) As a collateral damage older GLIBC versions, which do not implement
+     the variable sized RSEQ registration suffer from #1
+
+  3) Existing (time slice extensions) and future extended RSEQ features
+     can't be enabled for #1 and #2
+
+The required effort for solving these problems, the resulting maintenance
+burdens and the thereby inflicted road blocks for further improvements on
+the v2 ABI requirements are severe enough to accept that the unwillingness
+of a single entity to collaborate with the larger ecosystem for many years
+causes the collateral damage described in #2 and therefore #3.
+
+As Linus decreed the onus is on the lack of ABI compliance enforcement in
+the original RSEQ kernel implementation and the clever abuse is fine.
+That's technically correct, but in the context of the larger ecosystem a
+fundamentally flawed decision. Though that's a completely different
+discussion to have as it affects the long term sustainability of the Open
+Source ecosystem in general and the ability to protect it against rogue
+actors, which are thereby officialy entitled to hold a whole ecosystem
+hostage and force the people who provide them their operational base to go
+out on a limb to make progress. Despite public statements that they are
+aware of the ABI violations and "happy" to adjust as the kernel side
+evolves. Truly clever by some definition of clever.
+
+Back to the technical issues and the solution.
+
+Thanks to the laziness or lack of maintenance of various architectures the
+uptake of the generic entry code infrastructure is limited.
+
+That caused the optimization rework to keep the original code around pretty
+much unmodified plus-minus a few trivial details. So far the optimized code
+has been written so that the original code paths are optimized out by the
+compiler via compile time constant conditions (Kconfig options).
+
+That allows to replace these compile time constant conditions by runtime
+evaluations depending on the ABI mode of RSEQ. With some effort it was
+possible to reduce the impact of those runtime conditionals to vanish in
+the noise of performance counter based observations.
+
+That's the easy part. The more interesting question was how to distinguish
+between a v1 (legacy) and v2 (optimized and extended feature enabled) RSEQ
+registration to avoid putting the whole ecosystem back into the performance
+stone age.
+
+This came with two options:
+
+     1) A new registration feature flag, which would cause the whole
+     	ecosystem to adopt including the resulting consequences for CRIU
+     	and others.
+
+     2) Make the ABI variant depend on the registration size.
+
+#2 turned out to be the least horrible choice.
+
+The original RSEQ implementation, which TCMalloc depends on, registers a 32
+byte region (ORIG_RSEG_SIZE). This region has a 32 byte alignment
+requirement.
+
+The extension safe newer variant exposes the kernel RSEQ feature size via
+getauxval(AT_RSEQ_FEATURE_SIZE) and the alignment requirement via
+getauxval(AT_RSEQ_ALIGN). The alignment requirement is that the registered
+RSEQ region is aligned to the next power of two of the feature size. The
+kernel currently has a feature size of 33 bytes, which means the alignment
+requirement is 64 bytes.
+
+The TCMalloc RSEQ region is embedded into a cache line aligned data
+structure starting at offset 32 bytes so that bytes 28-31 and the
+cpu_id_start field at bytes 32-35 form a 64-bit little endian pointer with
+the top-most bit (63 set) to check whether the kernel has overwritten
+cpu_id_start with an actual CPU id value, which is guaranteed to not have
+the top most bit set.
+
+As this is part of TCMalloc's performance tuned magic, it's a pretty safe
+assumption, that TCMalloc won't use a larger RSEQ size.
+
+This allows the kernel to declare that registrations with a size greater
+than the original size of 32 bytes, which is the case since time slice
+extensions got introduced, as RSEQ ABI v2 with the following differences to
+the original behaviour:
+
+  1) Unconditional updates of the user read only fields (CPU, node, MMCID)
+     are removed. Those fields are only updated on registration, task
+     migration and MMCID changes.
+
+  2) Unconditional evaluation of the criticial section pointer is
+     removed. It's only evaluated when user space was interrupted and was
+     scheduled out or before delivering a signal in the interrupted
+     context.
+
+  3) The read/only requirement of the ID fields is enforced. When the
+     kernel detects that userspace manipulated the fields, the process is
+     terminated. This ensures that multiple entities (libraries) can
+     utilize RSEQ without interfering.
+
+  4) Todays extended RSEQ feature (time slice extensions) and future
+     extensions are only enabled in the v2 enabled mode.
+
+Registrations with the original size of 32 bytes operate in backwards
+compatible legacy mode without performance improvements and extended
+features.
+
+The following series implements exactly this and is based on v7.1-rc1. It
+applies cleanly to v7.0 and would need some minor tweaks to be backported
+to the already EOL v6.19.y kernel.
+
+It's also available from git with the extra benefit that the git branch
+contains also the related ARM64 fix, which affects not just the TCMalloc
+usage base for the conveniance of testers.
+
+    git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git core/rseq
+
+The combination in this tree survives:
+
+    - The kernel side (adjusted) selftests
+
+    - The provided TCMalloc tests (only partial for ARM64 as the provided
+      main TCMalloc tests are x86 only and TCMalloc is impossible to build
+      for mere mortals).
+
+Thanks to everyone involved for feedback, suggestions, testing and test
+cases!
+
+Thanks,
+
+	tglx
+---
+ Documentation/userspace-api/rseq.rst               |   94 +++++++++
+ include/linux/rseq.h                               |   35 ++-
+ include/linux/rseq_entry.h                         |  110 +++++------
+ include/linux/rseq_types.h                         |    9 
+ include/uapi/linux/rseq.h                          |    5 
+ kernel/rseq.c                                      |  209 +++++++++++++--------
+ kernel/sched/membarrier.c                          |   11 +
+ tools/testing/selftests/rseq/Makefile              |    7 
+ tools/testing/selftests/rseq/check_optimized.c     |   17 +
+ tools/testing/selftests/rseq/legacy_check.c        |   65 ++++++
+ tools/testing/selftests/rseq/param_test.c          |   22 +-
+ tools/testing/selftests/rseq/rseq-abi.h            |    7 
+ tools/testing/selftests/rseq/rseq.c                |   39 +--
+ tools/testing/selftests/rseq/rseq.h                |    8 
+ tools/testing/selftests/rseq/run_legacy_check.sh   |    4 
+ tools/testing/selftests/rseq/run_param_test.sh     |   39 +++
+ tools/testing/selftests/rseq/run_timeslice_test.sh |   14 +
+ tools/testing/selftests/rseq/slice_test.c          |   12 -
+ 18 files changed, 521 insertions(+), 186 deletions(-)
+
+
