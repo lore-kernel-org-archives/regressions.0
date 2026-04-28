@@ -1,81 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [194.59.206.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C5163D0939;
-	Tue, 28 Apr 2026 08:18:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2F3D2C027B
+	for <regressions@lists.linux.dev>; Tue, 28 Apr 2026 08:21:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.59.206.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777364320; cv=none; b=mz6GFb6TbQwJSuGBnw+AteB+NPhWHyHGPAVV1d8quqsiGrOS0t+vgKLlrHOSHWjAw8w8/pWeFiHXTqQcXgCm6+06gF4KKxXj4kuXbcafVaoUzUkfvaU/UYwuRTDSEQI0v8j9WKpy/FjAbjbg57umHKAM1UpVmwUPRFqtXsFsxJA=
+	t=1777364497; cv=none; b=kVQ/o7U5wmbmVJ+gaiEqbHmpumhQSI6A66hsNuECoA9xw7L2watSLZdKascTRkcF6cNr5F6EE0KnaHpHcSHjRBafYwcC0JsCLESb4hdnyU8/tijdLAzdtIQH3n88JrblgIxWYeZf4HjzauROkk6w8juO8a/76Mm6CS4hWt7orF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777364320; c=relaxed/simple;
-	bh=MhezThA/nJ+hhYlIaaGQ8ij0+fmtxu+kVhgm7c/bqys=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Ed1x3LFSRzVDKJISGykYM5iTYClfL+okp72/UfEoA+TL5wOOc6lcI9vQAv9VhBew7XjYXXx9AQNVqRg1U8sU5hDgfAQeHsqHfFzzJqvxog2xbzzQEEeM+yTe1x3vOsKnvAN6y93JxpNaefw3IPmIvb2+YsX7xxf+1ETHUR3AQrc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KoiIKsZV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777364497; c=relaxed/simple;
+	bh=l8CmnhD0yw7sSvPNJ+Ewn3uZv52hFWu3doqiMEXKhI8=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=LkzUCHhIGnEqfnsi1JuHTQ7KxbQAhPQzxI4YflfxwNJt2xjhH7UJ+CX6SssWBHqOiWSPFKfcrkO/x/4OM6Tnf4+FanwrY8Iz4bXEDg1CbzvQHDZh+JiN8kV1LnHl3OmmZ5l7fDiQWLdGIMYq9GsGdRsEW7bMIM71g+ke5opCi74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=TsAikdLJ; arc=none smtp.client-ip=194.59.206.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KoiIKsZV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7FA4C2BCB6;
-	Tue, 28 Apr 2026 08:18:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777364320;
-	bh=MhezThA/nJ+hhYlIaaGQ8ij0+fmtxu+kVhgm7c/bqys=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=KoiIKsZVUlhecxBNBYmQEotK+aS0RK1/dQsgOKul81md2mFjJYhmHKpjrJfr6Iz2D
-	 HQQW8Qf3mT3exqI38otWfZpNxkNc0n3uo2QpDP1OBDdiDq3SMP9PCdmVWMqXL4mjpY
-	 aXYPxRMk+IbwHdNuwi2PlqrV/KZxYzeaT32k3+emMojKxBTWNHLue8heBzpWmw2h86
-	 FiwlCoRxoxwBkCRxOuvUUadL3Kx9BBsMiIlwbc8b1kCgDoJ7A3K5o8ZQFQcqcJgTej
-	 HRm80v2iFmZMTpIjGKoQJcT56rr/m4f86WdE3+cfEeGgT6NxYSUVyQq9wfE+tBtzZW
-	 oPJA0BNAFcWLg==
-From: Thomas Gleixner <tglx@kernel.org>
-To: Dmitry Vyukov <dvyukov@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Mathias Stearn
- <mathias@mongodb.com>, Jinjie Ruan <ruanjinjie@huawei.com>,
- linux-man@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Catalin Marinas
- <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Boqun Feng
- <boqun.feng@gmail.com>, "Paul E. McKenney" <paulmck@kernel.org>, Chris
- Kennelly <ckennelly@google.com>, regressions@lists.linux.dev,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Ingo
- Molnar <mingo@kernel.org>, Blake Oler <blake.oler@mongodb.com>, Florian
- Weimer <fweimer@redhat.com>, Rich Felker <dalias@libc.org>, Matthew Wilcox
- <willy@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Linus Torvalds <torvalds@linuxfoundation.org>
-Subject: Re: [REGRESSION] rseq: refactoring in v6.19 broke everyone on arm64
- and tcmalloc everywhere
-In-Reply-To: <878qa7zexc.ffs@tglx>
-References: <aekPXvvuKHKlETjm@J2N7QTR9R3.cambridge.arm.com>
- <87wlxy22x7.ffs@tglx> <c5331cd6-76c8-430d-978e-fcad164e48f6@huawei.com>
- <CACT4Y+bxnQyHGdVNE1BYTx+Z2-cscLb38HYS9jBM5gPAz8=4bw@mail.gmail.com>
- <87ik9i0xlj.ffs@tglx>
- <CAHnCjA0UBNXfjHw=Y34OrAyGRNUtVF+zWd3ugyX6pd_mCk8K9w@mail.gmail.com>
- <87a4ut1njh.ffs@tglx>
- <CACT4Y+bBD7uCHXKqGo=epBXeEmsZ67Og2YO9kjNMT3ryjUY_sA@mail.gmail.com>
- <CAHnCjA1LqbaUGkPe79EeP6Mpaki8QWeR-JBSbrG0z6pTm9CmUg@mail.gmail.com>
- <87v7dgzbo7.ffs@tglx>
- <20260424150318.GE641209@noisy.programming.kicks-ass.net>
- <87se8kywhb.ffs@tglx> <87jyttz8cf.ffs@tglx>
- <CACT4Y+ZofNqpeDdgde969LzLznxbRb8CPB6m=CS2RiSmkSYPQQ@mail.gmail.com>
- <878qa7zexc.ffs@tglx>
-Date: Tue, 28 Apr 2026 10:18:36 +0200
-Message-ID: <875x5bzeeb.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="TsAikdLJ"
+Received: from relay02-mors.netcup.net (localhost [127.0.0.1])
+	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4g4YLH0yMFz49DD
+	for <regressions@lists.linux.dev>; Tue, 28 Apr 2026 10:21:27 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1777364487;
+	bh=l8CmnhD0yw7sSvPNJ+Ewn3uZv52hFWu3doqiMEXKhI8=;
+	h=Date:Subject:From:To:References:In-Reply-To:From;
+	b=TsAikdLJ2zqukHlEgYgJutUyzoEsz3FME+XgCJES5e2n99V9Dmvcgm7YRQEVtuv2p
+	 FkW6I/KZdpz/G8cFr1GuWAykFKSrAUyRndrR9BwZYNMxAd85jpp3UQmxd1J8mMomaG
+	 aHJw0gPCqZ7nlJLdCLpYNhczI/Ls76mil0Y5XKtRHEGAib2sMl05zDAXLnQZ9zSJw9
+	 Q4gzrRqKURc6rCDnJWkKuokmRMBaYsuCh6QNxzqf1oBOPXQ1VOqy9rPiI5UVTDAkEn
+	 j04AECPAwNb64kF+5anjEVLoxqMXI2wE8+e3hc7Z2ftNk9MFO9+HnrPX+eqCB2aS0j
+	 Uq1T8DPzqSIOg==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4g4YLH0G5xz7wPG
+	for <regressions@lists.linux.dev>; Tue, 28 Apr 2026 10:21:27 +0200 (CEST)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4g4YLG5SV0z8sZh
+	for <regressions@lists.linux.dev>; Tue, 28 Apr 2026 10:21:26 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 40775633D0
+	for <regressions@lists.linux.dev>; Tue, 28 Apr 2026 10:21:26 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <2918508f-120b-495c-b4ec-6db3a969ebc5@leemhuis.info>
+Date: Tue, 28 Apr 2026 10:21:25 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: <177736448643.1339916.9426953394179087336@mxe9fb.netcup.net>
+X-NC-CID: oeUOjw4tNlLRCFdjmeAcQWWUa5yALfg7i0recRLCR5xNCWoe0pk=
 
-On Tue, Apr 28 2026 at 10:07, Thomas Gleixner wrote:
->> Not sure if that's it, or there is something else.
->
-> Can you try the updated version below?
 
-Is there a pre-compiled version of those tcmalloc tests somewhere?
 
-I tried to build it from source, but I really have better things to do
-than wasting my time on debugging this bazel nonsense.
+On 3/9/24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-Thanks,
+#regzbot report:
+https://lore.kernel.org/all/CAEg67GmFS0Q4oSZkz8zWdOzckSth9_vBPiOy6a7-d697C2w2Xg@mail.gmail.com/
+#regzbot introduced: 42fd432fe6d320323215ebdf4de4d0d7e56e6792
+#regzbot title: amd-xgbe: CL37 autonegotiation broke
 
-        tglx
+#regzbot report:
+https://lore.kernel.org/linux-media/CA+V-a8t481xuwava0nb7uY9CUPqFWZ_8EP0xrK3BgumP7HDcLg@mail.gmail.com
+#regzbot introduced: 937f3e6b51f1
+#regzbot title: media: renesas: vsp1: brx: configuration of the DRM
+pipeline broken
+#regzbot fix: Revert "media: renesas: vsp1: brx: Fix format propagation"
+#regzbot monitor
+https://lore.kernel.org/all/20260425215037.3557213-1-laurent.pinchart%2Brenesas@ideasonboard.com/
+
+#regzbot report:
+https://lore.kernel.org/all/ae07cef84AmXK43H@hu-mdsor-hyd.qualcomm.com/
+#regzbot introduced: 93c97bc8d85d57
+#regzbot title: drm/msm: dsi: resolutions broken
+
+#regzbot report: https://lore.kernel.org/all/acfZrlP0Ua_5D3U4@eldamar.lan/
+#regzbot introduced: a2f1e22390ac
+
