@@ -1,68 +1,263 @@
-Received: from mail-10699.protonmail.ch (mail-10699.protonmail.ch [79.135.106.99])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C35F718FDBE
-	for <regressions@lists.linux.dev>; Wed, 29 Apr 2026 20:30:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.99
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEFB63AD53B;
+	Wed, 29 Apr 2026 21:15:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777494622; cv=none; b=lMCe3WfQ3eSA4GkODmk2+WRjzzQLfBu140PFAp+0Xb6GqRAb576OiW5HMkhemdYvfkOxiqBHyp0vqLQfZooO/veEILO8UJ9YNl7rspHGJTmG+gb1mNqPN8vji8J/JtR3rZPdef+Dh/MI0EOIG1xT20RlIMNR9Mo/lvl86CdSecg=
+	t=1777497304; cv=none; b=KAqHDk4fFthwHeT9wEX8ptutpL9iXdRvtJogLZqCATkb31mRmr10Fj4Y6nXJgJW+2mz4Qa12mtZ1blKlFK+I9fUU2NnSA5bGDhcLxZYMqa3kCcWczElPtKr+AtSPS6jnLVixTj6XdC+0AHm0K41bLdb3TryFCejkFdniLOUIHdo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777494622; c=relaxed/simple;
-	bh=Shkopm7iRkiRRvMZTEUfotA/mauOc515ok0LWfExaK0=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kaEu+ilUATDFjAHdAtgKN7TPRvlHq85Qndw8eImH/zYGazU3xFLIoHWKwpK8Qx9NMPMeJmoKjU8GunF2qsCTTSGZ92atUZ7ip2wEHBHRnPG24vjwePmfsDsNVUybO2kmwwyAAlYX7HGg9hV0Qn9yKcCjcNqS9wX3W9UkXsi1f9o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=F3v2067i; arc=none smtp.client-ip=79.135.106.99
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
+	s=arc-20240116; t=1777497304; c=relaxed/simple;
+	bh=rcmPdl53ACE8rMRw190SHxJ9XhLeqWSrk5Jk80PuOME=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References; b=K23zGZv3AS6zvh1ZoTH/ywQIDggflxXxWvTIwaTz5HpFWzZFkVfIXlUR1orQPV898wC3/KrQEYPBg/LajBQOYay/znBzOWwYGKdSubiSIr/YTkk6+/de6/2afRGBH2f+HhWlQL8zGNaKRHS7DNsrOmD4tx55rS6Ka59muhL7Ur0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K7LDmZZK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="F3v2067i"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-	s=protonmail3; t=1777494611; x=1777753811;
-	bh=Shkopm7iRkiRRvMZTEUfotA/mauOc515ok0LWfExaK0=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=F3v2067idAV3DkW1iU/uKrzToucEw00ALf9F2viEhYN/S941Fg1QBVjMgSEMQsjTa
-	 xFaDCoHDiKVrdRSobPyeBIFtbK/VlkI1osj7yT+hh8qiOeJuv4LHFfyfTbzqfpH8Mg
-	 f0TPlSCU1sZXyu1fJMlyY6EJNVesjqhbEMBo0ZT1T4g2dE1ZPrb4A9igAPyKXj1BFp
-	 e8io6RUHi8ghhVi70uK5ubT0RMNw4y/vP8vJQmmutBNjOTV0UP5RWZDsTIFXpCeNp8
-	 4h0r8yMutXh1LTzImpPCLs0ldqJEdh0UOO35sj52lgPiRsd3mZ7cO8oDGfC7etiPEl
-	 RUrvi6w7YsgPQ==
-Date: Wed, 29 Apr 2026 20:30:05 +0000
-To: Baolu Lu <baolu.lu@linux.intel.com>
-From: 70sp <70sp@protonmail.com>
-Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>, "iommu@lists.linux.dev" <iommu@lists.linux.dev>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [REGRESSION] GPU passes into VM improperly after c376a3456d8b or a98db518dde2
-Message-ID: <uaUIyysjsnLHVLladjVXkuU63CTRoEzcw3BdlDX2cdkt8T82i0AX79VQAJo08uMKvpnn20xyK0Pu2PrtyMV3hmSgcwutWhV14fgjyTW3aiQ=@protonmail.com>
-In-Reply-To: <d6a7f70c-5a8a-4be6-abdd-5b3decbb602a@linux.intel.com>
-References: <z7Rkts0EsooZcnCjNfJaK6ursftFU8ubOkH0hcNjzxugEAwGsHLMblOdfoAx-gJzBZ-TMmeUtD7iWBngbFY5UCJCwdSmYqmCVMy-yhbirUk=@protonmail.com> <56ce85d5-e0b9-407c-9a86-708111a8a509@linux.intel.com> <C4BK-Bp_FII0EkxSHQxBS2wO-Age-UxFrp_KfmYzb8cnQ8ZndzBBIPD8S9T86wOifBP0tysQGCFtGQsBsBvG2IzIMw3jb3NF5HGbS3tsawA=@protonmail.com> <d6a7f70c-5a8a-4be6-abdd-5b3decbb602a@linux.intel.com>
-Feedback-ID: 144929603:user:proton
-X-Pm-Message-ID: 9c6464a690565b6ced3136017c15918f85c54e08
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K7LDmZZK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B597C2BCB3;
+	Wed, 29 Apr 2026 21:15:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1777497304;
+	bh=rcmPdl53ACE8rMRw190SHxJ9XhLeqWSrk5Jk80PuOME=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=K7LDmZZKB/I8+3uemoOBioOk2fv9IfeItIHL1S+ylIkxJy/SnyPErZFk1stxWDOOk
+	 M+bKsj5h69A46uBM46q7sv7b1cCFIl4gJ63yVZk/G9QkByvgZ4V+uyggDGeBH7TqZc
+	 8QUSd1No27ijOUcb19qQpMjS5qyyg/A6sB5rYO9pCJLLkGOvl0vKuqLmltRrf+LKmv
+	 dEOZ5d4qMmNHbKubVHSucsy3og6kuBtoTh0x7r9rtS8p9hJmxbrG+1LOoJyGFipFdq
+	 5cPGI0I3VaCE+rOU9ThP8E87o20J44WJeI6S/Hv11+uRK8T5Os4scEox2k0gZp8b0m
+	 oZ6OZ+jdqnyLw==
+Date: Wed, 29 Apr 2026 11:15:03 -1000
+Message-ID: <35e0670adb4abeab13da2c321582af9f@kernel.org>
+From: Tejun Heo <tj@kernel.org>
+To: Martin Pitt <martin@piware.de>
+Cc: regressions@lists.linux.dev, cgroups@vger.kernel.org, lizefan.x@bytedance.com, hannes@cmpxchg.org,
+ Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: Re: [REGRESSION] 6.9.11: systemd hangs in cgroup_drain_dying during cleanup after podman operations
+In-Reply-To: <f19d08689301f9cc0211e6273f833246@kernel.org>
+References: <afHNg2VX2jy9bW7y@piware.de> <f19d08689301f9cc0211e6273f833246@kernel.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
 
-So I have tested it on both a working kernel (v6.12) and an affected kernel=
- (mainline).
-=20
-I managed to get the domain translation structures on the affected kernel, =
-but couldn't get them on the working one since reading the file always ende=
-d up in a system crash or a segmentation fault.
-=20
-I also couldn't get the PASID table entries, because the GPU doesn't suppor=
-t PASID.
-=20
-Domain translation structures:
-GPU: https://pastebin.com/4EY5Wmsj
-GPU audio device: https://pastebin.com/fLf7weii
-=20
-I've also looked through dmesg on both configurations, and on the affected =
-kernel, this was the only data I found to have atleast something different.=
- (On the working kernel basically nothing was reported)
-=20
-Referenced snippet of dmesg: https://pastebin.com/5e3jQ2BL
+Hello,
+
+I think I have the mechanism. The deadlock chains three things together.
+
+1. Host PID 1 systemd is doing rmdir on user-1001.slice. rmdir enters
+   cgroup_drain_dying() which waits until nr_populated_csets drops to
+   0. The wait was added in 1b164b876c36 ("cgroup: Wait for dying
+   tasks to leave on rmdir") so that rmdir doesn't succeed while
+   dying tasks are still on the cgroup's css_set - the controller
+   invariant being kept is "no tasks running in an offlined css"
+   (see d245698d727a for where that got established on the dying-task
+   side).
+
+2. nr_populated_csets only drops when cgroup_task_dead() runs, which
+   happens from finish_task_switch() after the dying task's
+   do_task_dead() - i.e., after the very last context switch out of
+   the task.
+
+3. The container's PID 1 (whatever the entrypoint runs) is in
+   do_exit() but parked in zap_pid_ns_processes' second wait loop:
+
+       for (;;) {
+           set_current_state(TASK_INTERRUPTIBLE);
+           if (pid_ns->pid_allocated == init_pids)
+               break;
+           schedule();
+       }
+
+   pid_allocated stays > init_pids because at least one struct pid in
+   the namespace is still in the idr - i.e., its task hasn't been
+   reaped (release_task -> free_pid hasn't run).
+
+The unreaped task is the host parent of one of the container helpers
+- in the podman case, an exec session child whose host parent died
+during the pkill cascade (conmon, the user manager, etc.) and got
+re-parented to host PID 1. PID 1 was supposed to wait4() it as part of
+normal reaping, but PID 1 is blocked in (1). Chicken-and-egg.
+
+Why fuse-overlayfs masks it: with fuse-overlayfs the container
+teardown finishes fast enough that the container's PID 1 reaches
+do_task_dead before host PID 1 has had time to become the reaper of
+the orphan. With kernel-overlayfs the teardown drags long enough that
+the reparent + drain wait land in the iterator-hidden window
+simultaneously, and once they do, the wedge is permanent.
+
+I have a minimal C reproducer (~150 lines, no podman, no daemons,
+runs as root) that hits the exact same code paths. The shape: A
+unshares a pid namespace and forks B (PID 1 of the namespace) and C
+(PID 2; A is C's host parent, NOT B). Both run in an inner cgroup. A
+SIGKILLs both, then calls rmdir() without wait4()-ing C. C becomes a
+zombie pinning pid_allocated; B parks in zap_pid_ns_processes; A's
+rmdir parks in cgroup_drain_dying. Verified on stock 6.19.14 and
+mainline 7.1-rc1+, also under virtme-ng. Source inlined at the bottom
+of this mail.
+
+For the fix, I'm still thinking. The rough direction is to split
+cgroup rmdir: the user-visible side (directory unlink, cgroup.procs
+disappears, the cgroup looks gone to userspace) completes as soon as
+the iterator goes empty, while the backend teardown (kill_css /
+css_offline) gets deferred until nr_populated_csets actually drops to
+0. That keeps the "no running tasks in an offlined css" invariant
+intact while letting the rmdir syscall return so host PID 1 can
+resume reaping. Need to look at what shapes this cleanly without
+breaking other cgroup core
+expectations.
+
+Thanks for the report.
+
+--
+tejun
+
+----- min-repro.c -----
+
+/*
+ * Minimal reproducer for cgroup_drain_dying / zap_pid_ns_processes
+ * deadlock. No podman, no daemons.
+ *
+ *   A — host process. Forks B (PID 1 of new pidns) and C (PID 2 of
+ *       same pidns, but with A as host-side parent). After unshare,
+ *       A's nsproxy->pid_ns_for_children is the level-1 namespace,
+ *       so each subsequent fork lands a new task there.
+ *   B — A's first child after unshare. PID 1 of new pidns.
+ *   C — A's second child. PID 2 of same pidns, but parented to A
+ *       at the host level (not to B). When C dies, SIGCHLD goes to
+ *       A, NOT to B's zap_pid_ns_processes loop.
+ *
+ * Sequence:
+ *   1. A puts itself in inner cgroup; B and C inherit on fork.
+ *   2. A unshares CLONE_NEWPID, forks B and C.
+ *   3. A moves out of inner so inner can be rmdir'd later.
+ *   4. A SIGKILLs B and C. Both are killed.
+ *   5. B's exit invokes zap_pid_ns_processes. zap walks idr, sees C
+ *      (already SIGKILL'd), but C is NOT B's child — kernel_wait4(-1)
+ *      returns -ECHILD immediately. zap reaches second loop:
+ *      `pid_allocated > 1` because C's struct pid is still in idr
+ *      (C is zombie awaiting A's wait4). zap sleeps.
+ *   6. A calls rmdir(inner) WITHOUT calling wait4. cgroup_drain_dying
+ *      sees nr_populated_csets > 0 (B still on cset->tasks; C may or
+ *      may not be), iterator empty (B has PF_EXITING && live==0).
+ *      Drain sleeps waiting for cgroup_task_dead, which only fires
+ *      after B reaches do_task_dead, which it can't until zap returns,
+ *      which it can't until pid_allocated drops to 1, which won't
+ *      happen until A reaps C — but A is stuck in rmdir.
+ *
+ * Run as root.
+ */
+
+#define _GNU_SOURCE
+#include <errno.h>
+#include <fcntl.h>
+#include <sched.h>
+#include <signal.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/stat.h>
+#include <sys/syscall.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <unistd.h>
+
+static void die(const char *msg)
+{
+	perror(msg);
+	exit(1);
+}
+
+static void write_str(const char *path, const char *s)
+{
+	int fd = open(path, O_WRONLY);
+	if (fd < 0)
+		die(path);
+	if (write(fd, s, strlen(s)) < 0)
+		die(path);
+	close(fd);
+}
+
+int main(int argc, char **argv)
+{
+	const char *cgroot = (argc > 1) ? argv[1] : "/sys/fs/cgroup/drain-min";
+	char cginner[256], path[300], buf[32];
+
+	snprintf(cginner, sizeof(cginner), "%s/inner", cgroot);
+
+	mkdir(cgroot, 0755);
+	if (mkdir(cginner, 0755) < 0 && errno != EEXIST)
+		die("mkdir inner");
+
+	snprintf(path, sizeof(path), "%s/cgroup.procs", cginner);
+	snprintf(buf, sizeof(buf), "%d", getpid());
+	write_str(path, buf);
+
+	if (unshare(CLONE_NEWPID) < 0)
+		die("unshare CLONE_NEWPID");
+
+	pid_t b = fork();
+	if (b < 0)
+		die("fork B");
+	if (b == 0) {
+		/* B: PID 1 of new pidns */
+		pause();
+		_exit(0);
+	}
+
+	pid_t c = fork();
+	if (c < 0)
+		die("fork C");
+	if (c == 0) {
+		/* C: PID 2 of new pidns, host parent is A */
+		pause();
+		_exit(0);
+	}
+
+	snprintf(path, sizeof(path), "%s/cgroup.procs", cgroot);
+	write_str(path, buf);
+
+	fprintf(stderr, "A: B host pid=%d, C host pid=%d\n", b, c);
+
+	/* Briefly verify pidns membership */
+	for (int i = 0; i < 2; i++) {
+		pid_t p = (i == 0) ? b : c;
+		char dpath[64], dbuf[256];
+		snprintf(dpath, sizeof(dpath), "/proc/%d/status", p);
+		int fd = open(dpath, O_RDONLY);
+		if (fd >= 0) {
+			ssize_t n = read(fd, dbuf, sizeof(dbuf) - 1);
+			close(fd);
+			if (n > 0) {
+				dbuf[n] = 0;
+				char *l = strstr(dbuf, "NSpid:");
+				if (l) {
+					char *e = strchr(l, '\n');
+					if (e) *e = 0;
+					fprintf(stderr, "  pid=%d %s\n", p, l);
+				}
+			}
+		}
+	}
+
+	/* SIGKILL both. After this, B starts zap_pid_ns_processes; C
+	 * dies and becomes a zombie waiting for A's wait4. */
+	kill(b, SIGKILL);
+	kill(c, SIGKILL);
+
+	usleep(500000);
+
+	fprintf(stderr, "A: rmdir(%s) — wedges if bug present "
+		"(deliberately NOT wait4-ing C)\n", cginner);
+
+	int rc = rmdir(cginner);
+	int saved_errno = errno;
+	fprintf(stderr, "A: rmdir returned %d (errno=%d %s)\n", rc,
+		saved_errno, strerror(saved_errno));
+
+	/* For cleanup if rmdir succeeded */
+	waitpid(c, NULL, WNOHANG);
+	waitpid(b, NULL, WNOHANG);
+	rmdir(cgroot);
+	return rc;
+}
+----- end min-repro.c -----
