@@ -1,93 +1,93 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D7103AE718
-	for <regressions@lists.linux.dev>; Wed, 29 Apr 2026 08:21:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E8A43AF642
+	for <regressions@lists.linux.dev>; Wed, 29 Apr 2026 08:22:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.173
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777450871; cv=pass; b=bQC70Vg2H+9+3dHJVPDf2pZTWomMzc5fnBQKPfy84I+x8QFtuHiAL/8r6jOVys9I/9G3XznXkh8rSyqq+ZlaLm4O+24mIGxKdlhK1xlAL1tSH1M6V0Kqv/jCw/JEySD8eEjPtYMj/C3fhdor9ouCuAFjyGeqbCvvPitgRSd02W8=
+	t=1777450971; cv=pass; b=WrWd06nifL4l/bVoJSigMUum0EMIQGRUOE0wZM3FAPWuxrpx4z6FpmPKVOS6ptge1y2tCkqThlSmlK5VwStL6FzWY/5/bVD8MXjlvuomHhGKbge5nvxJkz4f8HUcI0AiPGZYTF8P3QUlxiY6gBLQ7POCI6xc8Z2d+dEYGcRoZZk=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777450871; c=relaxed/simple;
-	bh=13XwfqhLUv9YD2+OITsa1SDRM9/48Gva02HT41TUdvQ=;
+	s=arc-20240116; t=1777450971; c=relaxed/simple;
+	bh=QMIexiS3w30F+i/rgGUir2GUYE7nYg8msUQh5MMI2IQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lYhIJv8yiIvsTqofMYn3IFhoTuOx5/oYFZ5OCi294/SXcTp2LfVGxq51ALclX46ToStHRTdrEbUt8DV5cmJIm66qaNx5w8Jg8OVDJ5lglt2/aQ/PvAHzJAeh6oQ08kxFpNFWavbWRPHi3PhU9Levy6KFKy8QFVhgdsuthmmPlSs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DdnrE+T5; arc=pass smtp.client-ip=209.85.208.175
+	 To:Cc:Content-Type; b=AOGWObkTzjk8n0Ipwqb5z7ZUn7qFGTEZlUyo1tDDFbaiUrXcwA/eUhMeR0v0L542oTihSnFaxVxJyJINnwLbs+/+buJxhryDi92cdS6gtczpJbG6dO4gbybnlzVdtAIy4B4Mq2ofmfgPO29t4B1/9WUpK/m+O4uFh9R6irLmf9Y=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=O7u3A33z; arc=pass smtp.client-ip=209.85.208.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DdnrE+T5"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-38def541b0bso106299421fa.1
-        for <regressions@lists.linux.dev>; Wed, 29 Apr 2026 01:21:09 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1777450868; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="O7u3A33z"
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-3878de20527so95268641fa.3
+        for <regressions@lists.linux.dev>; Wed, 29 Apr 2026 01:22:50 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1777450969; cv=none;
         d=google.com; s=arc-20240605;
-        b=PvYEH0CIDRpNXl4k05fyHkk11RmGP5jTz/uI8IdINbt9e8BsSKN2nULqelHX8PZJ8R
-         bGYNjGQkwhQ7r94NB33BOC7KKtdnW7nNIO8dRMNVFVxgHx6vJ1swcjTt1aWxmuTGDM5N
-         nwPzcuU0dZ7q5H7ld81WIhD/bPBB+Rd8amIVkX3378SD927sycnD5oVQSZFGglss8+39
-         5qZh5QYEVmM5g8F10253eFDNSbT+9c0wIFx+3VbEkzkKy6wJ7OkkXdbBcT7/G5V8rjqA
-         eGUENP818yLPniE+USKjM5CGt7M4rpRknDFkJvSDLvBSmjUSAPjBdt+xsQ+LvYOH/AQS
-         PHbw==
+        b=Rm9BhqIvsEIFKYjfhOIdABtSvkyS0wfcyA3YRifv28+ql/DB7qzI/BKIXhd+b2P+kW
+         CCK1Wm3i5u0VR6eSqlONSmvTfAtcVRtFh47gZd0Dzqa5KU+e/AoRMOuKChrNwUm0kL+Y
+         OxGMZc9Bttf0B05gqh0Hw/zE/s32zvGu/jlCMRIBqJnwF3u4PhYHIXBQoJAZYdq48ui/
+         Yt6979jKXpDXWN8tdyZzB0l9SR95lc3PjYkfxHOhxPB5QJl7/euzkE+Vu4B1h+ZGl4c5
+         /POTZEdGCPhokgroxzsZbDGaGD9m3sQ9ffttefDYiMK4uMeCCgqOGgVwOpH8J6M+LqeO
+         +6aQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:dkim-signature;
-        bh=Bu2VePOZ3zS8zvijxyqOnbIickAo3bdhMuuKFWMT/hQ=;
-        fh=MGVEbsT8EjI+StPropsodOBLzvie+YsXuil9eY3SC5Q=;
-        b=UIdZni8m/SthRU3qhv0yQy22K4EIf4a/KFQ/I5rLBcx2C7kDL6DLK2uxVJH8sh9pCK
-         uG+oeYmxDHPWQylpzLg3lNbDzmHgoEwFY6WEIfXY94809WqaayMvS/GTbX+wgsPqN9O0
-         abu9WRGWbKcj7wuCnqpiWmkah5J0bZp4xhoBl8A7k3IzdJdHX4VDpXe/kTmrDm+5rNlV
-         HkuSjGDLYwDqVZrYZnTXwjDe+qg6vAjdp4a7ss43kBgJF9/qkJ+lpBLrS3wAGYd0+UKg
-         e5bKHpTWl6FKp3iD8Ma97tHyhduBgnFPNFT7aSmQ/OGfGShhKMm+0uTBBNj5b0kr3pGb
-         Wrmw==;
+        bh=cR+LIUqKtMciQbVPi5gi+r/yye6H6/khj2zavabOARg=;
+        fh=qHwSOvdGu9dAAXfYQYq1Sw+1P4aMr0zO7SWX8Il8+pg=;
+        b=F7NNlYity6VtT9fbr2ybkssgLD6zJrUVQ87XeiFH6csqt1hNfo0cyfe39k6WTi4Dqj
+         SOUAsxQqsQeN4P0JxIVfOa2ynSCl9swWgxC/CTgBcb6cm8LJ8g79Di++AqYT2YeEzUhs
+         OoK2PxfxdxZbkqoZSgGyswphrmNcEVDgxMuO7AUVs8tI4Hcc0GDlJAk5G67cTphaD1Tm
+         tLYCD8ZWzNFPfCWFflEJK48BG6SWugnsCKE86kHSoj+V5oCzsAWJOFm00Wp6qejlK+5Z
+         j7uWlID2QrEW3pSQUfpfpeIMrJwgp/g35XhFA34UebMYjDCspZV9HNNHl1/5DJCmB25v
+         CRPg==;
         darn=lists.linux.dev
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1777450868; x=1778055668; darn=lists.linux.dev;
+        d=google.com; s=20251104; t=1777450969; x=1778055769; darn=lists.linux.dev;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Bu2VePOZ3zS8zvijxyqOnbIickAo3bdhMuuKFWMT/hQ=;
-        b=DdnrE+T5Vc2T+PWfKmvUK4cWnMuZLXmDttjbUjF3SMTJPJjQ/HLMU5GoW2bUeu483K
-         BVYNjcBEYloTL8NYD1yToX1fy30fEs73Aqcz6KsQQzzNrlhFAePAcBg5R1Cd4PcbntVV
-         NSK+fyIn7LHPXKZBYJu1ffF+M1afXNF2xvPRNd1ErtNXD7VmbAlj2KPKAnvdIHCqneMY
-         74nDPXxpdnN7ViAqeuqH7kB8nLd7Q/Q9vhswa9UmFbxMOb9IgXLSvoGYXZOK6BSPU8bn
-         uzi9Bu1tYtGOtr9erp5fv4UcSVTRFsFxqHfaYxVddMn3Njq41c4QmwdNbiY9zyp6lq0p
-         Hqhw==
+        bh=cR+LIUqKtMciQbVPi5gi+r/yye6H6/khj2zavabOARg=;
+        b=O7u3A33zSp7gRIEj5ciCJFXo4msLgttFRPlYuAzNlr/DM/Ezn8FalZhwfPNL3etrkU
+         0L8P6DlcDRSnawOJcjet95gStivNqyZNHlIfPZ3jaNVSZCKEM3ZGwvQuCoPjBjFSwF8W
+         VTyBo622bPo0FLoBNfv+KSgFZ8qHa5H+b5bN+9Kc7ywSdupXaWJ79ryt/1RqyKIMM9OE
+         i7yoW+RND7egWbY0+UsT5zEw69ccpuplXf/oUZhhUABXHyCpWhGE+00uLahDkcZgRS0H
+         tNFICqSc800gSsCR0MzAQHGPVVUxXTbsZg3edZEkC5C6n54tBD8fWh90sLkXd7b8S0cn
+         BVhg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777450868; x=1778055668;
+        d=1e100.net; s=20251104; t=1777450969; x=1778055769;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Bu2VePOZ3zS8zvijxyqOnbIickAo3bdhMuuKFWMT/hQ=;
-        b=MY6QPbslLgga4WLAdhwrO1UjZjM46WGwx03YI7Y5cZI8SADO/EmxWyk6waP2iiUQtM
-         CZGw7wseZcpY4NcQn+mYW3qERH7qdaq3Z96YxpgNtkTPo0gGmhTeB6PBf5rG5/OyJCTn
-         ZcLzjdpJT5AxHw33Dagnfl+jgvEfJi/fcxl3C/Y4hZG1eTdm4hYoM8RRLfpEttYy8Z8N
-         RymwmJh+1PRGLc0NApIRHTfjLVgvbR86+ooBxaRtMUdaOz5kTSMAMMrgs+/27Ty5g6zR
-         XPc8JDecRl0c4q/N05xiMglODzIikHwaD8xI36+Haa6a8ZtyXGtRF8TmgsHW+b3WWY5q
-         dTbg==
-X-Forwarded-Encrypted: i=1; AFNElJ/nmeJAcTtChvJ/l4Nh1XuzXETyrHY3G5iOTstGyZ18WtaDvini6WQ2Bb05XOwkEggpeQq9EQxhQfURsg==@lists.linux.dev
-X-Gm-Message-State: AOJu0YyGhHlIZfpQy4Xi6e66Or1FdidRLvOlaoMdgb6Xp30A+ra5sfWp
-	eDn/YSwHa9rS2RZNi47/pCnap+ITtRppyHp25PRr+oLwz8RQCnTZcQL2mLjTV71DBhZ+9bdnaeV
-	O+xPAc8MKdxe4CsPhD69ZJnAL6Ec4pKC2j2MEWbGp
-X-Gm-Gg: AeBDievMSGqL6ZVM/EEp0zRC1OVku/kP78UHKc5yEiyy7bcGo9MTj/xnZKM/Cks5nIm
-	Y9srd8rKtg8NLEHhUumxDOEmvBQ+ue0V5BRh0iuTfV4YVkles2CpeNmZcuNi2JCoc9W3x9TrrkR
-	gp/3pEG1jIdAElG5BsO9cCYRs6XHz4Hlb3ScUYmIOi/2L0AZ/L7F8ZGJdNT6m+h/c4M0Ry0byuI
-	m13biD2X1z5yt52ct/cLjK0l+tVTWyxFntwpDjUn/MZbuOfDR/BpVLH17MmGPuArV/raCt5xXjW
-	8HZdOjk9e2t41e24lC0F07593OrzBJeHoG+TqD0ACxbjOyleYF/yLk6PtiUp6/Fz0YMsQxPwY4W
-	kY9EVzu8Nj51gGA1wHQ==
-X-Received: by 2002:a2e:ad03:0:b0:38e:d64d:a511 with SMTP id
- 38308e7fff4ca-39240cacf0bmr24624591fa.6.1777450867868; Wed, 29 Apr 2026
- 01:21:07 -0700 (PDT)
+        bh=cR+LIUqKtMciQbVPi5gi+r/yye6H6/khj2zavabOARg=;
+        b=UTEZvWquBEG4+FY77rNxllQRrlHzp4DRMKNKIPYxkOMdD9aGYCBHP2RRuL+0Q8SpMT
+         QmN+2RrjqeV/D5XIu5ry9SD/onb97E4xY8ZnVQ6PYgqz+vnHeFi3m07ySNxkrPOaMcxv
+         mJwYPDp79aae3t6ZXVJ11FDjAjaVq1OkQpZYQMIKom3g0+ejR8iifm7sddBY/dCoYABg
+         pbN3AwajMZQuoIW9nzxRQx3n8C9RkGK6kdTMqbPW+Jw5/Ze4LTxBFYg9mQFxL4bf736D
+         Kky+AyaKbgD6Z5SGaI/oErGb3smlDZjDQKjwYzs6EIIZo/qFu60LXOyMC5Fbr21wAtTR
+         nqQg==
+X-Forwarded-Encrypted: i=1; AFNElJ+96SDh9F0H9fIqyy4zHeSRWebcorb/h7VTF+dmAVUqnpFyhJkj5qU28ossm1rI1lwp6eaL61fol5XRgQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yzcgju+OLNlEuKVnqgg1/2rZXpQQCenfw9h7uWnUMqAKnjhyHhL
+	AHlELkpI2TjA78eZGU7WDxRemgNiETFGVZkZnorTtYba4vmdUQ2tMhiD//z6+8YZSJrHe/xSYBP
+	zgL7vau9u+aZGFyHGBqq06vcBSkIEjvgtRKe+F75m
+X-Gm-Gg: AeBDieuu609Pxmele0BNUU4jha3iIpWYn3lSaYaGl0wiPY7GfDxDLc+GA5I1VMnxXS0
+	g3XocJ0SNe5BflE4aS2aNnwPbb5ICKfBiokB3JJMcfBxIzSarD/iS/8z9iTefWPDuD6Xa3TEN9S
+	9yCYutd34Yazgx98d0/ktwJITMYit17KjaD0Ypp6rs13lTaDOoNsTVczxqql5SlQp25ulOac4Kt
+	fkxObykYyWOjxG479czQzYBHG2Udg7745YFBnX8WuE6pEGjlhdMh7nPVjQn9JPKesyolOxhtOMH
+	kd+cV54M9FJKbyAa+qgyw9JDmIA5MD6+fsLQRGorp6fstNK1HEkU2ozQSdfrI233Tw+HwPYB8rm
+	o2ZKWnNH9ZS91FvWKoA==
+X-Received: by 2002:a2e:9fc8:0:b0:38e:bf20:2758 with SMTP id
+ 38308e7fff4ca-39240ccfc4bmr23514281fa.9.1777450968292; Wed, 29 Apr 2026
+ 01:22:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260428221058.149538293@kernel.org> <20260428224427.271566313@kernel.org>
-In-Reply-To: <20260428224427.271566313@kernel.org>
+References: <20260428221058.149538293@kernel.org> <20260428224427.353887714@kernel.org>
+In-Reply-To: <20260428224427.353887714@kernel.org>
 From: Dmitry Vyukov <dvyukov@google.com>
-Date: Wed, 29 Apr 2026 10:20:54 +0200
-X-Gm-Features: AVHnY4LaZJdd5XY_GbpBSDdNvmEl_dFGYyC97Ez6Bh5Frtx4kV_iigaasCfnRwc
-Message-ID: <CACT4Y+YtK3+=nK1LDqwnFCMc60VDk7LZtcmEJQz4AGbTqb6NXA@mail.gmail.com>
-Subject: Re: [patch 01/10] rseq: Set rseq::cpu_id_start to 0 on unregistration
+Date: Wed, 29 Apr 2026 10:22:36 +0200
+X-Gm-Features: AVHnY4IX_PemTXtwPIZdYMebOlq58du3lkZPLQ-D2jLt8xvBVvze9Js-VpSakHE
+Message-ID: <CACT4Y+aSmUJOwdKdiNP4mKhGwjSOvS42ueByLdCj_P_aEZvu8g@mail.gmail.com>
+Subject: Re: [patch 02/10] rseq: Protect rseq_reset() against interrupts
 To: Thomas Gleixner <tglx@kernel.org>
 Cc: LKML <linux-kernel@vger.kernel.org>, Mathias Stearn <mathias@mongodb.com>, 
 	Peter Zijlstra <peterz@infradead.org>, linux-man@vger.kernel.org, 
@@ -101,61 +101,32 @@ Content-Type: text/plain; charset="UTF-8"
 
 On Wed, 29 Apr 2026 at 01:33, Thomas Gleixner <tglx@kernel.org> wrote:
 >
-> The RSEQ rework changed that to RSEQ_CPU_UNINITILIZED, which is obviously
-> incompatible. Revert back to the original behavior.
+> rseq_reset() uses memset() to clear the tasks rseq data. That's racy
+> against membarrier() and preemption.
 >
-> Fixes: 0f085b41880e ("rseq: Provide and use rseq_set_ids()")
+> Guard it with irqsave to cure this.
+>
+> Fixes: faba9d250eae ("rseq: Introduce struct rseq_data")
 > Reported-by: Dmitry Vyukov <dvyukov@google.com>
 > Signed-off-by: Thomas Gleixner <tglx@kernel.org>
 > Cc: stable@vger.kernel.org
+> ---
+>  include/linux/rseq.h |    1 +
+>  1 file changed, 1 insertion(+)
+>
+> --- a/include/linux/rseq.h
+> +++ b/include/linux/rseq.h
+> @@ -119,6 +119,7 @@ static inline void rseq_virt_userspace_e
+>
+>  static inline void rseq_reset(struct task_struct *t)
+>  {
+> +       guard(irqsave)();
+
+This may deserve a comment for future readers, but otherwise:
 
 Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
 
-> ---
->  kernel/rseq.c |   20 +++++++++-----------
->  1 file changed, 9 insertions(+), 11 deletions(-)
->
-> --- a/kernel/rseq.c
-> +++ b/kernel/rseq.c
-> @@ -236,11 +236,6 @@ static int __init rseq_debugfs_init(void
->  }
->  __initcall(rseq_debugfs_init);
->
-> -static bool rseq_set_ids(struct task_struct *t, struct rseq_ids *ids, u32 node_id)
-> -{
-> -       return rseq_set_ids_get_csaddr(t, ids, node_id, NULL);
-> -}
-> -
->  static bool rseq_handle_cs(struct task_struct *t, struct pt_regs *regs)
->  {
->         struct rseq __user *urseq = t->rseq.usrptr;
-> @@ -384,19 +379,22 @@ void rseq_syscall(struct pt_regs *regs)
->
->  static bool rseq_reset_ids(void)
->  {
-> -       struct rseq_ids ids = {
-> -               .cpu_id         = RSEQ_CPU_ID_UNINITIALIZED,
-> -               .mm_cid         = 0,
-> -       };
-> +       struct rseq __user *rseq = current->rseq.usrptr;
->
->         /*
->          * If this fails, terminate it because this leaves the kernel in
->          * stupid state as exit to user space will try to fixup the ids
->          * again.
->          */
-> -       if (rseq_set_ids(current, &ids, 0))
-> -               return true;
-> +       scoped_user_rw_access(rseq, efault) {
-> +               unsafe_put_user(0, &rseq->cpu_id_start, efault);
-> +               unsafe_put_user(RSEQ_CPU_ID_UNINITIALIZED, &rseq->cpu_id, efault);
-> +               unsafe_put_user(0, &rseq->node_id, efault);
-> +               unsafe_put_user(0, &rseq->mm_cid, efault);
-> +       }
-> +       return true;
->
-> +efault:
->         force_sig(SIGSEGV);
->         return false;
+>         memset(&t->rseq, 0, sizeof(t->rseq));
+>         t->rseq.ids.cpu_id = RSEQ_CPU_ID_UNINITIALIZED;
 >  }
 >
