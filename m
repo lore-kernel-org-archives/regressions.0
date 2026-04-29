@@ -1,301 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.162])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D489F44B675;
-	Tue, 28 Apr 2026 23:34:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 883B93803D3
+	for <regressions@lists.linux.dev>; Wed, 29 Apr 2026 06:49:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.162
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777419268; cv=none; b=Cj7L6sQcBEYE3ONpr4g7Q4bzHT9SyElxfkh4YR0Wt8UE7djdcDrBGZ2e6Da4lk2JRBm8Y+i4HFht8WHpGAC+7bMJkI0jubgbTtocvmkDHs+HXtC4YltyAq3l4z1XXyGjaf+SqzBTgMmCnAA6XXKQD6GXn5fcKKMoxm+0RNCk++Y=
+	t=1777445388; cv=none; b=nT2n1hw/XuqjAQ+SqBlhRtZEaj4Xkc7+jjJw+aSzkrvNqtWGHjUUcJw0GLaEWlNcqzSgh7WZb2syEoK26mv0oqRj+ZSR+uotOh/T6obWsXJ7JWbkQTWFcMV6kJft1BbtvWw4DRXTDx6xFQFy/z5l8pmRiJ2OMBnHAzSMpRP+56w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777419268; c=relaxed/simple;
-	bh=qF5P88ZpPi9v84Qdsyp2IIlMFiao/NGHMWllPD/x1bw=;
-	h=Date:Message-ID:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=B5CFNnO+owZAu/TntPBFBIwwqeTef4zK7cvGSmLTaHrpR2jOkvpTEm8yErUmFlKwLDTj84N/cuQgMRD2UWXny8aexpNf8LRXwbgrl2cX/F+leKuYAvonTvTea27ZDDqn8VYQc4NHdDA1PDTV9NFLxh8OBCvzZkV18UA9pvO7eqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TmlxxJEI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777445388; c=relaxed/simple;
+	bh=KTjNaI0ST9Bl5mbCeC/PrzM8CDyuTpBXxzbiU8JSvA4=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=ebBbOWzFbZAwRhfOf3QGC6FJsQJXRzu51B49z9vqh4iANV29G1CDB2z+/pbvlZ0ymeGC6OF5jt8UIUaXo4WnuCf1wQyIIFjOL/8GrHGxaviQdve3kAjtc1Z8MZm8HDN0PJxjGnCL3b38WPmMFl5gZlY0pFA4WqSX3+A7FiFThdE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=EqVO0ped; arc=none smtp.client-ip=188.68.63.162
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TmlxxJEI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2893CC2BCAF;
-	Tue, 28 Apr 2026 23:34:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777419268;
-	bh=qF5P88ZpPi9v84Qdsyp2IIlMFiao/NGHMWllPD/x1bw=;
-	h=Date:From:To:Cc:Subject:References:From;
-	b=TmlxxJEI76GrXqYVc5oqf7nL1R9DbPA5j0WzrkVRxK2MC6SMsGXZMR97I13+BPwp5
-	 C8+L7ECtGMozURoMEB8vNOKpYpbFEChtHOJPRECUVQ9PS9tV0PyZ9fYwrsqR/KviJ+
-	 fNwWla1y5AN3XxVRdA6AdT1uPGaGo/mOjKSqGorfoopF/Lr93EtfDz9CE3wpWLjsis
-	 qRSuFemaOOYlQA+vbHuUn8JQW9oyZjfCto6JKyUsw6HurudobURtrAt6u7VmQGxQPC
-	 b+za0pPqrQngtm+TAkSrUK0qGzNJlaoLl2ZHC1hH04VhNCtyG0G1k/uId3xJhMtuHs
-	 bX5+Xz9e8BJrA==
-Date: Wed, 29 Apr 2026 01:34:25 +0200
-Message-ID: <20260428224428.009121296@kernel.org>
-User-Agent: quilt/0.68
-From: Thomas Gleixner <tglx@kernel.org>
-To: LKML <linux-kernel@vger.kernel.org>
-Cc: Mathias Stearn <mathias@mongodb.com>,
- Dmitry Vyukov <dvyukov@google.com>,
- Peter Zijlstra <peterz@infradead.org>,
- linux-man@vger.kernel.org,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Chris Kennelly <ckennelly@google.com>,
- regressions@lists.linux.dev,
- Ingo Molnar <mingo@kernel.org>,
- Blake Oler <blake.oler@mongodb.com>,
- Florian Weimer <fweimer@redhat.com>,
- Rich Felker <dalias@libc.org>,
- Matthew Wilcox <willy@infradead.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Linus Torvalds <torvalds@linuxfoundation.org>
-Subject: [patch 10/10] selftests/rseq: Expand for optimized RSEQ ABI v2
-References: <20260428221058.149538293@kernel.org>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="EqVO0ped"
+Received: from mors-relay-8201.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4g57Fr2bP9z3qYh
+	for <regressions@lists.linux.dev>; Wed, 29 Apr 2026 08:49:36 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1777445376;
+	bh=KTjNaI0ST9Bl5mbCeC/PrzM8CDyuTpBXxzbiU8JSvA4=;
+	h=Date:Subject:From:To:References:In-Reply-To:From;
+	b=EqVO0pednnFGH2VqImE0udeyu2m59McYCSeVbaj7CwvjKC4sftVg1zXVLDV8ulu+L
+	 1AIXaXeAcPjzmJ2O98v7KjugJudjiD9VGTTSF0v4+mG/UrOTj2QSxTMQ7TwnS9xcQw
+	 OQ2+2PmLDTw0cn0CVSWr2NeNWIQgXnjM40HtmRBEdv8rUfkivLGiRrqKAaJQETzzhG
+	 ydCIupdh+qF5G6ityxjmbe0zjv0/IBcYhUtUkcekOSvnamQYECmftmW7no6b5lOeDm
+	 xI0o6lAXZX56wZRGLsAMk7jhTxPWqnVHJ8skiAiYT0x3nfKGxcHJqEeOX7LbupZZL1
+	 z63YznqXw1y3Q==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4g57Fc5Y2Zz43pW
+	for <regressions@lists.linux.dev>; Wed, 29 Apr 2026 08:49:24 +0200 (CEST)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4g57Fc20b9z8sbB
+	for <regressions@lists.linux.dev>; Wed, 29 Apr 2026 08:49:24 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id B1CC863407
+	for <regressions@lists.linux.dev>; Wed, 29 Apr 2026 08:49:23 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <1fc3caa7-5a69-483f-9527-5368975d0834@leemhuis.info>
+Date: Wed, 29 Apr 2026 08:49:22 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: <177744536389.2287848.2063549001431898921@mxe9fb.netcup.net>
+X-NC-CID: X45SOpxK/c62nerMHN5AtLzxPNKuX8PH7jU6DBkSrqh83s7iW2o=
 
-Update the selftests so they are executed for legacy (32 bytes RSEQ region)
-and optimized RSEQ ABI v2 mode.
 
-Fixes: d6200245c75e ("rseq: Allow registering RSEQ with slice extension")
-Signed-off-by: Thomas Gleixner <tglx@kernel.org>
-Cc: stable@vger.kernel.org
----
- tools/testing/selftests/rseq/Makefile              |    7 ++-
- tools/testing/selftests/rseq/check_optimized.c     |   17 +++++++++
- tools/testing/selftests/rseq/param_test.c          |   22 +++++++----
- tools/testing/selftests/rseq/run_param_test.sh     |   39 +++++++++++++++++++++
- tools/testing/selftests/rseq/run_timeslice_test.sh |   14 +++++++
- tools/testing/selftests/rseq/slice_test.c          |    2 -
- 6 files changed, 89 insertions(+), 12 deletions(-)
 
---- a/tools/testing/selftests/rseq/Makefile
-+++ b/tools/testing/selftests/rseq/Makefile
-@@ -17,11 +17,11 @@ OVERRIDE_TARGETS = 1
- TEST_GEN_PROGS = basic_test basic_percpu_ops_test basic_percpu_ops_mm_cid_test param_test \
- 		param_test_benchmark param_test_compare_twice param_test_mm_cid \
- 		param_test_mm_cid_benchmark param_test_mm_cid_compare_twice \
--		syscall_errors_test slice_test legacy_check
-+		syscall_errors_test slice_test legacy_check check_optimized
- 
- TEST_GEN_PROGS_EXTENDED = librseq.so
- 
--TEST_PROGS = run_param_test.sh run_syscall_errors_test.sh run_legacy_check.sh
-+TEST_PROGS = run_param_test.sh run_syscall_errors_test.sh run_legacy_check.sh run_timeslice_test.sh
- 
- TEST_FILES := settings
- 
-@@ -62,3 +62,6 @@ include ../lib.mk
- 
- $(OUTPUT)/slice_test: slice_test.c $(TEST_GEN_PROGS_EXTENDED) rseq.h rseq-*.h
- 	$(CC) $(CFLAGS) $< $(LDLIBS) -lrseq -o $@
-+
-+$(OUTPUT)/check_optimized: check_optimized.c $(TEST_GEN_PROGS_EXTENDED) rseq.h rseq-*.h
-+	$(CC) $(CFLAGS) $< $(LDLIBS) -lrseq -o $@
---- /dev/null
-+++ b/tools/testing/selftests/rseq/check_optimized.c
-@@ -0,0 +1,17 @@
-+// SPDX-License-Identifier: LGPL-2.1
-+#define _GNU_SOURCE
-+#include <assert.h>
-+#include <sched.h>
-+#include <signal.h>
-+#include <stdio.h>
-+#include <string.h>
-+#include <sys/time.h>
-+
-+#include "rseq.h"
-+
-+int main(int argc, char **argv)
-+{
-+	if (__rseq_register_current_thread(true, false))
-+		return -1;
-+	return 0;
-+}
---- a/tools/testing/selftests/rseq/param_test.c
-+++ b/tools/testing/selftests/rseq/param_test.c
-@@ -38,7 +38,7 @@ static int opt_modulo, verbose;
- static int opt_yield, opt_signal, opt_sleep,
- 		opt_disable_rseq, opt_threads = 200,
- 		opt_disable_mod = 0, opt_test = 's';
--
-+static bool opt_rseq_legacy;
- static long long opt_reps = 5000;
- 
- static __thread __attribute__((tls_model("initial-exec")))
-@@ -481,7 +481,7 @@ void *test_percpu_spinlock_thread(void *
- 	long long i, reps;
- 
- 	if (!opt_disable_rseq && thread_data->reg &&
--	    rseq_register_current_thread())
-+	    __rseq_register_current_thread(true, opt_rseq_legacy))
- 		abort();
- 	reps = thread_data->reps;
- 	for (i = 0; i < reps; i++) {
-@@ -558,7 +558,7 @@ void *test_percpu_inc_thread(void *arg)
- 	long long i, reps;
- 
- 	if (!opt_disable_rseq && thread_data->reg &&
--	    rseq_register_current_thread())
-+	    __rseq_register_current_thread(true, opt_rseq_legacy))
- 		abort();
- 	reps = thread_data->reps;
- 	for (i = 0; i < reps; i++) {
-@@ -712,7 +712,7 @@ void *test_percpu_list_thread(void *arg)
- 	long long i, reps;
- 	struct percpu_list *list = (struct percpu_list *)arg;
- 
--	if (!opt_disable_rseq && rseq_register_current_thread())
-+	if (!opt_disable_rseq && __rseq_register_current_thread(true, opt_rseq_legacy))
- 		abort();
- 
- 	reps = opt_reps;
-@@ -895,7 +895,7 @@ void *test_percpu_buffer_thread(void *ar
- 	long long i, reps;
- 	struct percpu_buffer *buffer = (struct percpu_buffer *)arg;
- 
--	if (!opt_disable_rseq && rseq_register_current_thread())
-+	if (!opt_disable_rseq && __rseq_register_current_thread(true, opt_rseq_legacy))
- 		abort();
- 
- 	reps = opt_reps;
-@@ -1105,7 +1105,7 @@ void *test_percpu_memcpy_buffer_thread(v
- 	long long i, reps;
- 	struct percpu_memcpy_buffer *buffer = (struct percpu_memcpy_buffer *)arg;
- 
--	if (!opt_disable_rseq && rseq_register_current_thread())
-+	if (!opt_disable_rseq && __rseq_register_current_thread(true, opt_rseq_legacy))
- 		abort();
- 
- 	reps = opt_reps;
-@@ -1258,7 +1258,7 @@ void *test_membarrier_worker_thread(void
- 	const int iters = opt_reps;
- 	int i;
- 
--	if (rseq_register_current_thread()) {
-+	if (__rseq_register_current_thread(true, opt_rseq_legacy)) {
- 		fprintf(stderr, "Error: rseq_register_current_thread(...) failed(%d): %s\n",
- 			errno, strerror(errno));
- 		abort();
-@@ -1323,7 +1323,7 @@ void *test_membarrier_manager_thread(voi
- 	intptr_t expect_a = 0, expect_b = 0;
- 	int cpu_a = 0, cpu_b = 0;
- 
--	if (rseq_register_current_thread()) {
-+	if (__rseq_register_current_thread(true, opt_rseq_legacy)) {
- 		fprintf(stderr, "Error: rseq_register_current_thread(...) failed(%d): %s\n",
- 			errno, strerror(errno));
- 		abort();
-@@ -1475,6 +1475,7 @@ static void show_usage(int argc, char **
- 	printf("	[-D M] Disable rseq for each M threads\n");
- 	printf("	[-T test] Choose test: (s)pinlock, (l)ist, (b)uffer, (m)emcpy, (i)ncrement, membarrie(r)\n");
- 	printf("	[-M] Push into buffer and memcpy buffer with memory barriers.\n");
-+	printf("	[-O] Test with optimized RSEQ\n");
- 	printf("	[-v] Verbose output.\n");
- 	printf("	[-h] Show this help.\n");
- 	printf("\n");
-@@ -1602,6 +1603,9 @@ int main(int argc, char **argv)
- 		case 'M':
- 			opt_mo = RSEQ_MO_RELEASE;
- 			break;
-+		case 'L':
-+			opt_rseq_legacy = true;
-+			break;
- 		default:
- 			show_usage(argc, argv);
- 			goto error;
-@@ -1618,7 +1622,7 @@ int main(int argc, char **argv)
- 	if (set_signal_handler())
- 		goto error;
- 
--	if (!opt_disable_rseq && rseq_register_current_thread())
-+	if (!opt_disable_rseq && __rseq_register_current_thread(true, opt_rseq_legacy))
- 		goto error;
- 	if (!opt_disable_rseq && !rseq_validate_cpu_id()) {
- 		fprintf(stderr, "Error: cpu id getter unavailable\n");
---- a/tools/testing/selftests/rseq/run_param_test.sh
-+++ b/tools/testing/selftests/rseq/run_param_test.sh
-@@ -34,6 +34,11 @@ REPS=1000
- SLOW_REPS=100
- NR_THREADS=$((6*${NR_CPUS}))
- 
-+# Prevent GLIBC from registering RSEQ so the selftest can run in legacy and
-+# performance optimized mode.
-+GLIBC_TUNABLES="${GLIBC_TUNABLES:-}:glibc.pthread.rseq=0"
-+export GLIBC_TUNABLES
-+
- function do_tests()
- {
- 	local i=0
-@@ -103,6 +108,40 @@ function inject_blocking()
- 	NR_LOOPS=
- }
- 
-+echo "Testing in legacy RSEQ mode"
-+echo "Yield injection (25%)"
-+inject_blocking -m 4 -y -L
-+
-+echo "Yield injection (50%)"
-+inject_blocking -m 2 -y -L
-+
-+echo "Yield injection (100%)"
-+inject_blocking -m 1 -y -L
-+
-+echo "Kill injection (25%)"
-+inject_blocking -m 4 -k -L
-+
-+echo "Kill injection (50%)"
-+inject_blocking -m 2 -k -L
-+
-+echo "Kill injection (100%)"
-+inject_blocking -m 1 -k -L
-+
-+echo "Sleep injection (1ms, 25%)"
-+inject_blocking -m 4 -s 1 -L
-+
-+echo "Sleep injection (1ms, 50%)"
-+inject_blocking -m 2 -s 1 -L
-+
-+echo "Sleep injection (1ms, 100%)"
-+inject_blocking -m 1 -s 1 -L
-+
-+./check_optimized || {
-+    echo "Skipping optimized RSEQ mode test. Not supported";
-+    exit 0
-+}
-+
-+echo "Testing in optimized RSEQ mode"
- echo "Yield injection (25%)"
- inject_blocking -m 4 -y
- 
---- /dev/null
-+++ b/tools/testing/selftests/rseq/run_timeslice_test.sh
-@@ -0,0 +1,14 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0+
-+
-+# Prevent GLIBC from registering RSEQ so the selftest can run in legacy
-+# and performance optimized mode.
-+GLIBC_TUNABLES="${GLIBC_TUNABLES:-}:glibc.pthread.rseq=0"
-+export GLIBC_TUNABLES
-+
-+./check_optimized || {
-+    echo "Skipping optimized RSEQ mode test. Not supported";
-+    exit 0
-+}
-+
-+./slice_test
---- a/tools/testing/selftests/rseq/slice_test.c
-+++ b/tools/testing/selftests/rseq/slice_test.c
-@@ -124,7 +124,7 @@ FIXTURE_SETUP(slice_ext)
- {
- 	cpu_set_t affinity;
- 
--	if (rseq_register_current_thread())
-+	if (__rseq_register_current_thread(true, false))
- 		SKIP(return, "RSEQ not supported\n");
- 
- 	if (prctl(PR_RSEQ_SLICE_EXTENSION, PR_RSEQ_SLICE_EXTENSION_SET,
+On 3/9/24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
+
+#regzbot report:
+https://lore.kernel.org/all/20260404-thoughtful-placid-boobook-da26da@quoll/
+#regzbot introduced: e948cbdc41d6f4
+#regzbot title: ARM: dts: imx: booting broke
+#regzbot dup:
+https://lore.kernel.org/all/ab6b9b36-f08d-451a-9c2d-ef27b813d744@armadeus.com/
+
+#regzbot report:
+https://lore.kernel.org/all/CADo9pHjr-zZ9C3+026y5+XOGPSeRzSJMCHof27TVPtAUNgTc8A@mail.gmail.com/
+#regzbot introduced: v7.0..v7.1-rc1
+#regzbot title: Too low/broken backlight with Linux 7.1-rc1 on Dell
+Latitude 7390
+#regzbot dup: https://bugzilla.kernel.org/show_bug.cgi?id=221429
+
 
