@@ -1,221 +1,161 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.162])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AA0040DFA4
-	for <regressions@lists.linux.dev>; Wed, 29 Apr 2026 07:26:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.162
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777447593; cv=none; b=TMuh1YqkcAh8N8ckbD25GH6P7slvK6mKQb+DqdTypLGmBB10JcKgqHrt3IFVY2r02IoD0nXirp1YVo121SnOyqhq1bOez2+nnTKuBjUKGY4IGo8VbQc0I6OuzJJnyIhkxBRfV/i5ibted9S8UALpyVJKp9bC8V7QyQREkFarkKE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777447593; c=relaxed/simple;
-	bh=oQde5zE4oF8XHfRrVSDCm604TzeXwdKc0Oi7Jedt6/k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DGVF+5UloW9hyZajzMPlptt1xE1r0o/7eCQ6N40iTX6NlJqjr5nC5eMkt/MAgTDKBWJhiDyhaD6CElygjRfFdQjFyjsaVXoRL1Suokm2mu2OF2fpav7519qsniGEj/1rzR3exlhvhEBRTWNmHftnZHBmnRZlCMHUC4j5/+dw1EE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=kb76pK91; arc=none smtp.client-ip=188.68.63.162
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D7103AE718
+	for <regressions@lists.linux.dev>; Wed, 29 Apr 2026 08:21:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.175
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1777450871; cv=pass; b=bQC70Vg2H+9+3dHJVPDf2pZTWomMzc5fnBQKPfy84I+x8QFtuHiAL/8r6jOVys9I/9G3XznXkh8rSyqq+ZlaLm4O+24mIGxKdlhK1xlAL1tSH1M6V0Kqv/jCw/JEySD8eEjPtYMj/C3fhdor9ouCuAFjyGeqbCvvPitgRSd02W8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1777450871; c=relaxed/simple;
+	bh=13XwfqhLUv9YD2+OITsa1SDRM9/48Gva02HT41TUdvQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lYhIJv8yiIvsTqofMYn3IFhoTuOx5/oYFZ5OCi294/SXcTp2LfVGxq51ALclX46ToStHRTdrEbUt8DV5cmJIm66qaNx5w8Jg8OVDJ5lglt2/aQ/PvAHzJAeh6oQ08kxFpNFWavbWRPHi3PhU9Levy6KFKy8QFVhgdsuthmmPlSs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DdnrE+T5; arc=pass smtp.client-ip=209.85.208.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="kb76pK91"
-Received: from mors-relay-8201.netcup.net (localhost [127.0.0.1])
-	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4g583Z74ptz3y6Z;
-	Wed, 29 Apr 2026 09:25:46 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1777447547;
-	bh=oQde5zE4oF8XHfRrVSDCm604TzeXwdKc0Oi7Jedt6/k=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=kb76pK91Auzn5syjdNDGpF6zxXD3bjETDBPyMsGIAYPemV8k0V4EC1/rpz7iVbDTW
-	 81IxZFKi266+SmBaa1mIpuOp9NdE1JB86OIrbotLfgyUq6zEtEK6mmZ2qF5+CF+yd8
-	 xcSwkQGOVhZ9uM/3ZnVvjJeYtMvl4jDny5yabRGiVv9qt3L7y77VWqRVzZGXM+FRRi
-	 JMbsaEvrmEiJkMDPXY5OA/pAh4ruKErnnc9rFw9QF57qkhnp9DDuUjA/5rCMdUueTL
-	 6LpEC+hOn4v2tQeniPSzM/kDNdFi7KN+ok4b4eVewcGRfByaHwCpRu/exRlM5twKwJ
-	 GrE7wxdcrNHXw==
-Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4g583Z6C2wz3y4w;
-	Wed, 29 Apr 2026 09:25:46 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
-X-Spam-Flag: NO
-X-Spam-Score: -2.898
-X-Spam-Level: 
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4g583W4bVPz8tdJ;
-	Wed, 29 Apr 2026 09:25:43 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id BEF6A633D0;
-	Wed, 29 Apr 2026 09:25:42 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <40051e46-11a8-414a-aa8a-ecb37846a649@leemhuis.info>
-Date: Wed, 29 Apr 2026 09:25:42 +0200
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DdnrE+T5"
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-38def541b0bso106299421fa.1
+        for <regressions@lists.linux.dev>; Wed, 29 Apr 2026 01:21:09 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1777450868; cv=none;
+        d=google.com; s=arc-20240605;
+        b=PvYEH0CIDRpNXl4k05fyHkk11RmGP5jTz/uI8IdINbt9e8BsSKN2nULqelHX8PZJ8R
+         bGYNjGQkwhQ7r94NB33BOC7KKtdnW7nNIO8dRMNVFVxgHx6vJ1swcjTt1aWxmuTGDM5N
+         nwPzcuU0dZ7q5H7ld81WIhD/bPBB+Rd8amIVkX3378SD927sycnD5oVQSZFGglss8+39
+         5qZh5QYEVmM5g8F10253eFDNSbT+9c0wIFx+3VbEkzkKy6wJ7OkkXdbBcT7/G5V8rjqA
+         eGUENP818yLPniE+USKjM5CGt7M4rpRknDFkJvSDLvBSmjUSAPjBdt+xsQ+LvYOH/AQS
+         PHbw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=Bu2VePOZ3zS8zvijxyqOnbIickAo3bdhMuuKFWMT/hQ=;
+        fh=MGVEbsT8EjI+StPropsodOBLzvie+YsXuil9eY3SC5Q=;
+        b=UIdZni8m/SthRU3qhv0yQy22K4EIf4a/KFQ/I5rLBcx2C7kDL6DLK2uxVJH8sh9pCK
+         uG+oeYmxDHPWQylpzLg3lNbDzmHgoEwFY6WEIfXY94809WqaayMvS/GTbX+wgsPqN9O0
+         abu9WRGWbKcj7wuCnqpiWmkah5J0bZp4xhoBl8A7k3IzdJdHX4VDpXe/kTmrDm+5rNlV
+         HkuSjGDLYwDqVZrYZnTXwjDe+qg6vAjdp4a7ss43kBgJF9/qkJ+lpBLrS3wAGYd0+UKg
+         e5bKHpTWl6FKp3iD8Ma97tHyhduBgnFPNFT7aSmQ/OGfGShhKMm+0uTBBNj5b0kr3pGb
+         Wrmw==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1777450868; x=1778055668; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Bu2VePOZ3zS8zvijxyqOnbIickAo3bdhMuuKFWMT/hQ=;
+        b=DdnrE+T5Vc2T+PWfKmvUK4cWnMuZLXmDttjbUjF3SMTJPJjQ/HLMU5GoW2bUeu483K
+         BVYNjcBEYloTL8NYD1yToX1fy30fEs73Aqcz6KsQQzzNrlhFAePAcBg5R1Cd4PcbntVV
+         NSK+fyIn7LHPXKZBYJu1ffF+M1afXNF2xvPRNd1ErtNXD7VmbAlj2KPKAnvdIHCqneMY
+         74nDPXxpdnN7ViAqeuqH7kB8nLd7Q/Q9vhswa9UmFbxMOb9IgXLSvoGYXZOK6BSPU8bn
+         uzi9Bu1tYtGOtr9erp5fv4UcSVTRFsFxqHfaYxVddMn3Njq41c4QmwdNbiY9zyp6lq0p
+         Hqhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1777450868; x=1778055668;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Bu2VePOZ3zS8zvijxyqOnbIickAo3bdhMuuKFWMT/hQ=;
+        b=MY6QPbslLgga4WLAdhwrO1UjZjM46WGwx03YI7Y5cZI8SADO/EmxWyk6waP2iiUQtM
+         CZGw7wseZcpY4NcQn+mYW3qERH7qdaq3Z96YxpgNtkTPo0gGmhTeB6PBf5rG5/OyJCTn
+         ZcLzjdpJT5AxHw33Dagnfl+jgvEfJi/fcxl3C/Y4hZG1eTdm4hYoM8RRLfpEttYy8Z8N
+         RymwmJh+1PRGLc0NApIRHTfjLVgvbR86+ooBxaRtMUdaOz5kTSMAMMrgs+/27Ty5g6zR
+         XPc8JDecRl0c4q/N05xiMglODzIikHwaD8xI36+Haa6a8ZtyXGtRF8TmgsHW+b3WWY5q
+         dTbg==
+X-Forwarded-Encrypted: i=1; AFNElJ/nmeJAcTtChvJ/l4Nh1XuzXETyrHY3G5iOTstGyZ18WtaDvini6WQ2Bb05XOwkEggpeQq9EQxhQfURsg==@lists.linux.dev
+X-Gm-Message-State: AOJu0YyGhHlIZfpQy4Xi6e66Or1FdidRLvOlaoMdgb6Xp30A+ra5sfWp
+	eDn/YSwHa9rS2RZNi47/pCnap+ITtRppyHp25PRr+oLwz8RQCnTZcQL2mLjTV71DBhZ+9bdnaeV
+	O+xPAc8MKdxe4CsPhD69ZJnAL6Ec4pKC2j2MEWbGp
+X-Gm-Gg: AeBDievMSGqL6ZVM/EEp0zRC1OVku/kP78UHKc5yEiyy7bcGo9MTj/xnZKM/Cks5nIm
+	Y9srd8rKtg8NLEHhUumxDOEmvBQ+ue0V5BRh0iuTfV4YVkles2CpeNmZcuNi2JCoc9W3x9TrrkR
+	gp/3pEG1jIdAElG5BsO9cCYRs6XHz4Hlb3ScUYmIOi/2L0AZ/L7F8ZGJdNT6m+h/c4M0Ry0byuI
+	m13biD2X1z5yt52ct/cLjK0l+tVTWyxFntwpDjUn/MZbuOfDR/BpVLH17MmGPuArV/raCt5xXjW
+	8HZdOjk9e2t41e24lC0F07593OrzBJeHoG+TqD0ACxbjOyleYF/yLk6PtiUp6/Fz0YMsQxPwY4W
+	kY9EVzu8Nj51gGA1wHQ==
+X-Received: by 2002:a2e:ad03:0:b0:38e:d64d:a511 with SMTP id
+ 38308e7fff4ca-39240cacf0bmr24624591fa.6.1777450867868; Wed, 29 Apr 2026
+ 01:21:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] PCI: Update saved_config_space upon resource assignment
-To: Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <helgaas@kernel.org>
-Cc: Bernd Schumacher <bernd@bschu.de>, "Alexandre N." <an.tech@mailo.com>,
- Salvatore Bonaccorso <carnil@debian.org>, 1131025@bugs.debian.org,
- Uwe Kleine-Koenig <ukleinek@debian.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Mario Limonciello <mario.limonciello@amd.com>,
- Alex Williamson <alex@shazbot.org>,
- Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>, regressions@lists.linux.dev,
- linux-pci@vger.kernel.org
-References: 
- <febc3f354e0c1f5a9f5b3ee9ffddaa44caccf651.1776268054.git.lukas@wunner.de>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: de-DE, en-US
-X-Enigmail-Draft-Status: N11222
-Autocrypt: addr=linux@leemhuis.info; keydata=
- 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 MEK4
-In-Reply-To: 
- <febc3f354e0c1f5a9f5b3ee9ffddaa44caccf651.1776268054.git.lukas@wunner.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <177744754331.2437893.7300139824891796474@mxe9fb.netcup.net>
-X-NC-CID: 4H1AzZDm7MNaS380OBd68xyjr7zkXvMklCezlslU6cqGG3sGses=
+References: <20260428221058.149538293@kernel.org> <20260428224427.271566313@kernel.org>
+In-Reply-To: <20260428224427.271566313@kernel.org>
+From: Dmitry Vyukov <dvyukov@google.com>
+Date: Wed, 29 Apr 2026 10:20:54 +0200
+X-Gm-Features: AVHnY4LaZJdd5XY_GbpBSDdNvmEl_dFGYyC97Ez6Bh5Frtx4kV_iigaasCfnRwc
+Message-ID: <CACT4Y+YtK3+=nK1LDqwnFCMc60VDk7LZtcmEJQz4AGbTqb6NXA@mail.gmail.com>
+Subject: Re: [patch 01/10] rseq: Set rseq::cpu_id_start to 0 on unregistration
+To: Thomas Gleixner <tglx@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Mathias Stearn <mathias@mongodb.com>, 
+	Peter Zijlstra <peterz@infradead.org>, linux-man@vger.kernel.org, 
+	Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Chris Kennelly <ckennelly@google.com>, regressions@lists.linux.dev, 
+	Ingo Molnar <mingo@kernel.org>, Blake Oler <blake.oler@mongodb.com>, 
+	Florian Weimer <fweimer@redhat.com>, Rich Felker <dalias@libc.org>, 
+	Matthew Wilcox <willy@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Linus Torvalds <torvalds@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 
-Top-posting, to make this easy to process:
+On Wed, 29 Apr 2026 at 01:33, Thomas Gleixner <tglx@kernel.org> wrote:
+>
+> The RSEQ rework changed that to RSEQ_CPU_UNINITILIZED, which is obviously
+> incompatible. Revert back to the original behavior.
+>
+> Fixes: 0f085b41880e ("rseq: Provide and use rseq_set_ids()")
+> Reported-by: Dmitry Vyukov <dvyukov@google.com>
+> Signed-off-by: Thomas Gleixner <tglx@kernel.org>
+> Cc: stable@vger.kernel.org
 
-Bjorn, sorry for bothering you, but I wondered: is below patch still in
-your review queue? It fixes a regression that made it to a longterm
-series that two people reported.
+Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
 
-Ciao, Thorsten
-
-On 4/15/26 17:56, Lukas Wunner wrote:
-> Bernd reports passthrough failure of a Digital Devices Cine S2 V6 DVB
-> adapter plugged into an ASRock X570S PG Riptide board with BIOS version
-> P5.41 (09/07/2023):
-> 
->   ddbridge 0000:05:00.0: detected Digital Devices Cine S2 V6 DVB adapter
->   ddbridge 0000:05:00.0: cannot read registers
->   ddbridge 0000:05:00.0: fail
-> 
-> BIOS assigns an incorrect BAR to the DVB adapter which doesn't fit into
-> the upstream bridge window.  The kernel corrects the BAR assignment:
-> 
->   pci 0000:07:00.0: BAR 0 [mem 0xfffffffffc500000-0xfffffffffc50ffff 64bit]: can't claim; no compatible bridge window
->   pci 0000:07:00.0: BAR 0 [mem 0xfc500000-0xfc50ffff 64bit]: assigned
-> 
-> Correction of the BAR assignment happens in an x86-specific fs_initcall,
-> pcibios_assign_resources(), after device enumeration in a subsys_initcall.
-> This order was introduced at the behest of Linus in 2004:
-> 
->     https://git.kernel.org/tglx/history/c/a06a30144bbc
-> 
-> No other architecture performs such a late BAR correction.
-> 
-> Bernd bisected the issue to commit a2f1e22390ac ("PCI/ERR: Ensure error
-> recoverability at all times"), but it only occurs in the absence of commit
-> 4d4c10f763d7 ("PCI: Explicitly put devices into D0 when initializing").
-> This combination exists in stable kernel v6.12.70, but not in mainline,
-> hence Bernd cannot reproduce the issue with mainline.
-> 
-> Since a2f1e22390ac, config space is saved on enumeration, prior to BAR
-> correction.  Upon passthrough, the corrected BAR is overwritten with the
-> incorrect saved value by:
-> 
->   vfio_pci_core_register_device()
->     vfio_pci_set_power_state()
->       pci_restore_state()
-> 
-> But only if the device's current_state is PCI_UNKNOWN, as it was prior to
-> commit 4d4c10f763d7.  Since the commit, it is PCI_D0, which changes the
-> behavior of vfio_pci_set_power_state() to no longer restore the state
-> without saving it first.
-> 
-> Alexandre is reporting the same issue as Bernd, but in his case, mainline
-> is affected as well.  The difference is that on Alexandre's system, the
-> host kernel binds a driver to the device which is unbound prior to
-> passthrough, whereas on Bernd's system no driver gets bound by the host
-> kernel.
-> 
-> Unbinding sets current_state to PCI_UNKNOWN in pci_device_remove(), so
-> when vfio-pci is subsequently bound to the device, pci_restore_state() is
-> once again called without invoking pci_save_state() first.
-> 
-> To robustly fix the issue, always update saved_config_space upon resource
-> assignment.
-> 
-> Reported-by: Bernd Schumacher <bernd@bschu.de>
-> Tested-by: Bernd Schumacher <bernd@bschu.de>
-> Closes: https://lore.kernel.org/r/acfZrlP0Ua_5D3U4@eldamar.lan/
-> Reported-by: Alexandre N. <an.tech@mailo.com>
-> Tested-by: Alexandre N. <an.tech@mailo.com>
-> Closes: https://lore.kernel.org/r/dd3c3358-de0f-4a56-9c81-04aceaab4058@mailo.com/
-> Fixes: a2f1e22390ac ("PCI/ERR: Ensure error recoverability at all times")
-> Signed-off-by: Lukas Wunner <lukas@wunner.de>
-> Cc: stable@vger.kernel.org # v6.12+
 > ---
->  drivers/pci/setup-res.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/pci/setup-res.c b/drivers/pci/setup-res.c
-> index e5fcadf..1769ba9 100644
-> --- a/drivers/pci/setup-res.c
-> +++ b/drivers/pci/setup-res.c
-> @@ -102,6 +102,7 @@ static void pci_std_update_resource(struct pci_dev *dev, int resno)
->  	}
->  
->  	pci_write_config_dword(dev, reg, new);
-> +	dev->saved_config_space[reg / 4] = new;
->  	pci_read_config_dword(dev, reg, &check);
->  
->  	if ((new ^ check) & mask) {
-> @@ -112,6 +113,7 @@ static void pci_std_update_resource(struct pci_dev *dev, int resno)
->  	if (res->flags & IORESOURCE_MEM_64) {
->  		new = region.start >> 16 >> 16;
->  		pci_write_config_dword(dev, reg + 4, new);
-> +		dev->saved_config_space[(reg + 4) / 4] = new;
->  		pci_read_config_dword(dev, reg + 4, &check);
->  		if (check != new) {
->  			pci_err(dev, "%s: error updating (high %#010x != %#010x)\n",
-
+>  kernel/rseq.c |   20 +++++++++-----------
+>  1 file changed, 9 insertions(+), 11 deletions(-)
+>
+> --- a/kernel/rseq.c
+> +++ b/kernel/rseq.c
+> @@ -236,11 +236,6 @@ static int __init rseq_debugfs_init(void
+>  }
+>  __initcall(rseq_debugfs_init);
+>
+> -static bool rseq_set_ids(struct task_struct *t, struct rseq_ids *ids, u32 node_id)
+> -{
+> -       return rseq_set_ids_get_csaddr(t, ids, node_id, NULL);
+> -}
+> -
+>  static bool rseq_handle_cs(struct task_struct *t, struct pt_regs *regs)
+>  {
+>         struct rseq __user *urseq = t->rseq.usrptr;
+> @@ -384,19 +379,22 @@ void rseq_syscall(struct pt_regs *regs)
+>
+>  static bool rseq_reset_ids(void)
+>  {
+> -       struct rseq_ids ids = {
+> -               .cpu_id         = RSEQ_CPU_ID_UNINITIALIZED,
+> -               .mm_cid         = 0,
+> -       };
+> +       struct rseq __user *rseq = current->rseq.usrptr;
+>
+>         /*
+>          * If this fails, terminate it because this leaves the kernel in
+>          * stupid state as exit to user space will try to fixup the ids
+>          * again.
+>          */
+> -       if (rseq_set_ids(current, &ids, 0))
+> -               return true;
+> +       scoped_user_rw_access(rseq, efault) {
+> +               unsafe_put_user(0, &rseq->cpu_id_start, efault);
+> +               unsafe_put_user(RSEQ_CPU_ID_UNINITIALIZED, &rseq->cpu_id, efault);
+> +               unsafe_put_user(0, &rseq->node_id, efault);
+> +               unsafe_put_user(0, &rseq->mm_cid, efault);
+> +       }
+> +       return true;
+>
+> +efault:
+>         force_sig(SIGSEGV);
+>         return false;
+>  }
+>
