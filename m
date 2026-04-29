@@ -1,93 +1,93 @@
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E8A43AF642
-	for <regressions@lists.linux.dev>; Wed, 29 Apr 2026 08:22:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09A6C1A9F8D
+	for <regressions@lists.linux.dev>; Wed, 29 Apr 2026 08:37:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.167.45
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777450971; cv=pass; b=WrWd06nifL4l/bVoJSigMUum0EMIQGRUOE0wZM3FAPWuxrpx4z6FpmPKVOS6ptge1y2tCkqThlSmlK5VwStL6FzWY/5/bVD8MXjlvuomHhGKbge5nvxJkz4f8HUcI0AiPGZYTF8P3QUlxiY6gBLQ7POCI6xc8Z2d+dEYGcRoZZk=
+	t=1777451835; cv=pass; b=ShEfvnjZyN3frXyYnJlM3jtr9BTUnPINN2y4iDIgLf/e9OsfGi4o+beHVLOm+K4VuyeIRuUWnuStUnUpJg29O3HgGvvrnger9/GatDTpegDu++wfTplJCmUspoARi3RTrVrDAvAhFy28VFM3GR/9qsPJeCRGD4jbMI71rcyDnfI=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777450971; c=relaxed/simple;
-	bh=QMIexiS3w30F+i/rgGUir2GUYE7nYg8msUQh5MMI2IQ=;
+	s=arc-20240116; t=1777451835; c=relaxed/simple;
+	bh=p+wBY0juLjY+wIPI3CEUuk+q//2kCqOjNQiqSgAGMYA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AOGWObkTzjk8n0Ipwqb5z7ZUn7qFGTEZlUyo1tDDFbaiUrXcwA/eUhMeR0v0L542oTihSnFaxVxJyJINnwLbs+/+buJxhryDi92cdS6gtczpJbG6dO4gbybnlzVdtAIy4B4Mq2ofmfgPO29t4B1/9WUpK/m+O4uFh9R6irLmf9Y=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=O7u3A33z; arc=pass smtp.client-ip=209.85.208.173
+	 To:Cc:Content-Type; b=kpJ/6jske21d12KCWkUPBnXaRzilaPUIFtLDpVo8zItWqCzQ3oAL3MV6TzRqqg/2M/W9zMXwQJNiGqiqym21oiZPWB8OSa1zkl9tLngpXPLm244hPxsWBwR2klogI7rfLFBOGo30dxjKrW4E2jDRQeWpoftcAarOLxBuVIpOopY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UxQYPXan; arc=pass smtp.client-ip=209.85.167.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="O7u3A33z"
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-3878de20527so95268641fa.3
-        for <regressions@lists.linux.dev>; Wed, 29 Apr 2026 01:22:50 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1777450969; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UxQYPXan"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-5a40502e63bso11074635e87.0
+        for <regressions@lists.linux.dev>; Wed, 29 Apr 2026 01:37:12 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1777451831; cv=none;
         d=google.com; s=arc-20240605;
-        b=Rm9BhqIvsEIFKYjfhOIdABtSvkyS0wfcyA3YRifv28+ql/DB7qzI/BKIXhd+b2P+kW
-         CCK1Wm3i5u0VR6eSqlONSmvTfAtcVRtFh47gZd0Dzqa5KU+e/AoRMOuKChrNwUm0kL+Y
-         OxGMZc9Bttf0B05gqh0Hw/zE/s32zvGu/jlCMRIBqJnwF3u4PhYHIXBQoJAZYdq48ui/
-         Yt6979jKXpDXWN8tdyZzB0l9SR95lc3PjYkfxHOhxPB5QJl7/euzkE+Vu4B1h+ZGl4c5
-         /POTZEdGCPhokgroxzsZbDGaGD9m3sQ9ffttefDYiMK4uMeCCgqOGgVwOpH8J6M+LqeO
-         +6aQ==
+        b=LBASVsk5tQs/INSrWZzaDz0Pb188MzVZAQw/JC/5+HMk9zfPT+7F8DPxvEXxFrS9T9
+         tv1HsmkWJKq3uDpPxNs1cNZTfU87eSfDz7UVx/INPZXcvZn3pjJ5HHuk889MsGOUJ9LM
+         nm7k+SqDzE6kGYf1QvheJ/+aEp8gpvXwkH1zaSo9w8CRVzR71q6mxM+5eImcL/3uGDNA
+         OwJUF3Fi/7QGqx+u0+crMILhsJXUldMChXqn4wtev7sScITPJ6Snd/PsS+s8kppZIJ3W
+         b+ycp+mWsVF3IAlJ6UsT655VRCNRxal9vzwxKFNLEdvK3juvebyK1gSfzuCGjA8A4J5g
+         jVRw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:dkim-signature;
-        bh=cR+LIUqKtMciQbVPi5gi+r/yye6H6/khj2zavabOARg=;
-        fh=qHwSOvdGu9dAAXfYQYq1Sw+1P4aMr0zO7SWX8Il8+pg=;
-        b=F7NNlYity6VtT9fbr2ybkssgLD6zJrUVQ87XeiFH6csqt1hNfo0cyfe39k6WTi4Dqj
-         SOUAsxQqsQeN4P0JxIVfOa2ynSCl9swWgxC/CTgBcb6cm8LJ8g79Di++AqYT2YeEzUhs
-         OoK2PxfxdxZbkqoZSgGyswphrmNcEVDgxMuO7AUVs8tI4Hcc0GDlJAk5G67cTphaD1Tm
-         tLYCD8ZWzNFPfCWFflEJK48BG6SWugnsCKE86kHSoj+V5oCzsAWJOFm00Wp6qejlK+5Z
-         j7uWlID2QrEW3pSQUfpfpeIMrJwgp/g35XhFA34UebMYjDCspZV9HNNHl1/5DJCmB25v
-         CRPg==;
+        bh=TMm2b6fcDJ4VCBGYQ5BqcAM0hKQDzqSm7Hl9JCLIH6w=;
+        fh=Tg6h8gCxmXvWS5ENSOE3MjUTW7e5s6yl9zw7J9eR4Oc=;
+        b=gjcDrhU13sxCJzz5pwb7qaYqjp7jNitV1qclzctksvwzzen1xVhSs0nR8R4QaoCcTD
+         KMT+wWaFNkJCouYz+LaiOJg+j8ZSyylJnWZoa0PAreg/x37gVCJ8kfPITX7cBD9XIo+r
+         cfq2KSCmYZNvZuLzS8q+FVFZL4E1HhMJ0xI+i3m+U4XotUmUfRGJ6G/vOBaAiMU+ahlO
+         PGucNfap2GbLJCevQVugUzgE8XZIPyiqwNCF82trfwM7no3lDKlF1Nl+1vAnTskQoEKY
+         2ustBcrvX+DBFdpQy2YJTOci5cfJnV14BHHrOZMWiuFSv8KLNTEOmd1TspYS/v5Q0tt2
+         yyiw==;
         darn=lists.linux.dev
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1777450969; x=1778055769; darn=lists.linux.dev;
+        d=google.com; s=20251104; t=1777451831; x=1778056631; darn=lists.linux.dev;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=cR+LIUqKtMciQbVPi5gi+r/yye6H6/khj2zavabOARg=;
-        b=O7u3A33zSp7gRIEj5ciCJFXo4msLgttFRPlYuAzNlr/DM/Ezn8FalZhwfPNL3etrkU
-         0L8P6DlcDRSnawOJcjet95gStivNqyZNHlIfPZ3jaNVSZCKEM3ZGwvQuCoPjBjFSwF8W
-         VTyBo622bPo0FLoBNfv+KSgFZ8qHa5H+b5bN+9Kc7ywSdupXaWJ79ryt/1RqyKIMM9OE
-         i7yoW+RND7egWbY0+UsT5zEw69ccpuplXf/oUZhhUABXHyCpWhGE+00uLahDkcZgRS0H
-         tNFICqSc800gSsCR0MzAQHGPVVUxXTbsZg3edZEkC5C6n54tBD8fWh90sLkXd7b8S0cn
-         BVhg==
+        bh=TMm2b6fcDJ4VCBGYQ5BqcAM0hKQDzqSm7Hl9JCLIH6w=;
+        b=UxQYPXanA8dhgDrC+pO3om5mejtUAvBMXuZM9fcFQriN99cU/wRIduY9Y/MvQIeUP5
+         ghH89OJI7vY9T7vuTNhlba/NU9LP+ySlv6lNd3uievIVLKp2EiNet5HIsh5EKm90ya4I
+         eqqWGeP4/qoFEx7nxABrzuKwJcws16sGmCGsXgIlb1oVwfUuvgTggQq1JTIjJRLY4Q4I
+         ym/3kW6B8eFU4Xs9/zSL4FYYlaK1OqejsQA+m/Y6OUrKfmLz4L/3DddIExZYXLI+6X2k
+         cV7puDHAC33PFyER3xGgwIyzLWPXO/ZbKy4Iv7YWkZqe6aTFI+rCrb8WPn6lEErwN6o6
+         BPKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777450969; x=1778055769;
+        d=1e100.net; s=20251104; t=1777451831; x=1778056631;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=cR+LIUqKtMciQbVPi5gi+r/yye6H6/khj2zavabOARg=;
-        b=UTEZvWquBEG4+FY77rNxllQRrlHzp4DRMKNKIPYxkOMdD9aGYCBHP2RRuL+0Q8SpMT
-         QmN+2RrjqeV/D5XIu5ry9SD/onb97E4xY8ZnVQ6PYgqz+vnHeFi3m07ySNxkrPOaMcxv
-         mJwYPDp79aae3t6ZXVJ11FDjAjaVq1OkQpZYQMIKom3g0+ejR8iifm7sddBY/dCoYABg
-         pbN3AwajMZQuoIW9nzxRQx3n8C9RkGK6kdTMqbPW+Jw5/Ze4LTxBFYg9mQFxL4bf736D
-         Kky+AyaKbgD6Z5SGaI/oErGb3smlDZjDQKjwYzs6EIIZo/qFu60LXOyMC5Fbr21wAtTR
-         nqQg==
-X-Forwarded-Encrypted: i=1; AFNElJ+96SDh9F0H9fIqyy4zHeSRWebcorb/h7VTF+dmAVUqnpFyhJkj5qU28ossm1rI1lwp6eaL61fol5XRgQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yzcgju+OLNlEuKVnqgg1/2rZXpQQCenfw9h7uWnUMqAKnjhyHhL
-	AHlELkpI2TjA78eZGU7WDxRemgNiETFGVZkZnorTtYba4vmdUQ2tMhiD//z6+8YZSJrHe/xSYBP
-	zgL7vau9u+aZGFyHGBqq06vcBSkIEjvgtRKe+F75m
-X-Gm-Gg: AeBDieuu609Pxmele0BNUU4jha3iIpWYn3lSaYaGl0wiPY7GfDxDLc+GA5I1VMnxXS0
-	g3XocJ0SNe5BflE4aS2aNnwPbb5ICKfBiokB3JJMcfBxIzSarD/iS/8z9iTefWPDuD6Xa3TEN9S
-	9yCYutd34Yazgx98d0/ktwJITMYit17KjaD0Ypp6rs13lTaDOoNsTVczxqql5SlQp25ulOac4Kt
-	fkxObykYyWOjxG479czQzYBHG2Udg7745YFBnX8WuE6pEGjlhdMh7nPVjQn9JPKesyolOxhtOMH
-	kd+cV54M9FJKbyAa+qgyw9JDmIA5MD6+fsLQRGorp6fstNK1HEkU2ozQSdfrI233Tw+HwPYB8rm
-	o2ZKWnNH9ZS91FvWKoA==
-X-Received: by 2002:a2e:9fc8:0:b0:38e:bf20:2758 with SMTP id
- 38308e7fff4ca-39240ccfc4bmr23514281fa.9.1777450968292; Wed, 29 Apr 2026
- 01:22:48 -0700 (PDT)
+        bh=TMm2b6fcDJ4VCBGYQ5BqcAM0hKQDzqSm7Hl9JCLIH6w=;
+        b=eyUTPa/lAHTeN8c1FSiv+6DmVsMEw8PzAm8+Nc4s4ZsJaZ9079vnRnFnqGFRAQSNCb
+         WkPdneFcSESyHYMlBYrJ3Azr1xGIIIsxLw9lhwna2O/Is+Gq9bT6n3aGdd1lxDwsamPx
+         g2BEZnDMKoc+tXWEARkEtyd4gd34DYB+DMm/cCCb4WR7LcMycDDc7bDa6WWxMAAR8naE
+         iQychZTt4TZP933SPTpD3MC0jQMShbQeXEMAinHhK4MXhzV4PnOugxbFYPmQBJ7YkStt
+         JWQiD+L04LwPED4nUvTx/31+XPlVsDOinMZkhKGhZLZ5WLWc2f0xpnd+bkELkt1Y84wo
+         jD9g==
+X-Forwarded-Encrypted: i=1; AFNElJ9rBgZlVpH9chjOHvTa1DaOoiuV54MR7UYXx/cId4q4k4CiUnaxRF6qoOvV2tigQUf/QoAj3m5dxaNjBA==@lists.linux.dev
+X-Gm-Message-State: AOJu0Ywniqb3mIeghCGZJtBuNGbJy+1vWFoGQFJzXgqyhJ623Y0sQ6hZ
+	irBEWT30lVLZJr+FsG1kzE+eIfTPjZo0iuyYgcIVSUBPj1iuwNIlSmaJkktXXPfGAiwfckcMiRV
+	X/GETq97wXUT9Wi8uEpQu+J8OwA43lMDWWCV8G3RJ
+X-Gm-Gg: AeBDietG4ThqXUtnLk4Sk6jk8gpmdtppGwbHkETv7yQFg49azxi80rCdLx4Mv1wH0Dm
+	NFmjUl/5CMXRClHHZdMV4QJDqwJe0K8FeQIg7wyKy+IKTQ+4KgoqMx6QAFTm5gNRfaE6TGoeWnY
+	a+NflinDAd+7VlddhVojCa7HvjRIhwxsv5aZ8iHWk9w1jHpML4xzFtK6T98sMeMiocaluveQ7wy
+	sBEWBPzxrJ/M9hf5mYdSFOCIYucS2wyBIVsfnP0unfF8XEN4SiHtyWMfDy1Z9Ias+VY7I1Z2xdi
+	zFvKC2ENjUmwH7ivv7tXwsemVD3FXl4Qz63cuiiCZvzPB2z8zwQKvFOxLkRufWhRNvp+cxYj83I
+	4yDaj8txNb/YOYgB2Pg==
+X-Received: by 2002:a05:6512:10c7:b0:5a2:c05c:1199 with SMTP id
+ 2adb3069b0e04-5a749cf3cb3mr1165203e87.15.1777451830245; Wed, 29 Apr 2026
+ 01:37:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260428221058.149538293@kernel.org> <20260428224427.353887714@kernel.org>
-In-Reply-To: <20260428224427.353887714@kernel.org>
+References: <20260428221058.149538293@kernel.org> <20260428224427.437059375@kernel.org>
+In-Reply-To: <20260428224427.437059375@kernel.org>
 From: Dmitry Vyukov <dvyukov@google.com>
-Date: Wed, 29 Apr 2026 10:22:36 +0200
-X-Gm-Features: AVHnY4IX_PemTXtwPIZdYMebOlq58du3lkZPLQ-D2jLt8xvBVvze9Js-VpSakHE
-Message-ID: <CACT4Y+aSmUJOwdKdiNP4mKhGwjSOvS42ueByLdCj_P_aEZvu8g@mail.gmail.com>
-Subject: Re: [patch 02/10] rseq: Protect rseq_reset() against interrupts
+Date: Wed, 29 Apr 2026 10:36:58 +0200
+X-Gm-Features: AVHnY4Igk12Oy_shlJR0om__FeFvofb63SKKJnxwMZ7_ZWH22zkZb_Rsi2ddxN8
+Message-ID: <CACT4Y+bQrTsZg1nzRsMzBcRcYrf8jW99UMKpmhtY30=5kV0vTA@mail.gmail.com>
+Subject: Re: [patch 03/10] rseq: Dont advertise time slice extensions if disabled
 To: Thomas Gleixner <tglx@kernel.org>
 Cc: LKML <linux-kernel@vger.kernel.org>, Mathias Stearn <mathias@mongodb.com>, 
 	Peter Zijlstra <peterz@infradead.org>, linux-man@vger.kernel.org, 
@@ -101,32 +101,60 @@ Content-Type: text/plain; charset="UTF-8"
 
 On Wed, 29 Apr 2026 at 01:33, Thomas Gleixner <tglx@kernel.org> wrote:
 >
-> rseq_reset() uses memset() to clear the tasks rseq data. That's racy
-> against membarrier() and preemption.
+> If time slice extensions have been disabled on the kernel command line,
+> then advertising them in RSEQ flags is wrong.
 >
-> Guard it with irqsave to cure this.
+> Adjust the conditionals to reflect reality, fixup the misleading comments
+> about the gap of these flags and the rseq::flags field.
 >
-> Fixes: faba9d250eae ("rseq: Introduce struct rseq_data")
-> Reported-by: Dmitry Vyukov <dvyukov@google.com>
+> Fixes: d6200245c75e ("rseq: Allow registering RSEQ with slice extension")
 > Signed-off-by: Thomas Gleixner <tglx@kernel.org>
 > Cc: stable@vger.kernel.org
-> ---
->  include/linux/rseq.h |    1 +
->  1 file changed, 1 insertion(+)
->
-> --- a/include/linux/rseq.h
-> +++ b/include/linux/rseq.h
-> @@ -119,6 +119,7 @@ static inline void rseq_virt_userspace_e
->
->  static inline void rseq_reset(struct task_struct *t)
->  {
-> +       guard(irqsave)();
-
-This may deserve a comment for future readers, but otherwise:
 
 Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
 
->         memset(&t->rseq, 0, sizeof(t->rseq));
->         t->rseq.ids.cpu_id = RSEQ_CPU_ID_UNINITIALIZED;
->  }
+> ---
+>  include/uapi/linux/rseq.h |    5 ++++-
+>  kernel/rseq.c             |    9 +++++----
+>  2 files changed, 9 insertions(+), 5 deletions(-)
+>
+> --- a/include/uapi/linux/rseq.h
+> +++ b/include/uapi/linux/rseq.h
+> @@ -28,7 +28,7 @@ enum rseq_cs_flags_bit {
+>         RSEQ_CS_FLAG_NO_RESTART_ON_PREEMPT_BIT  = 0,
+>         RSEQ_CS_FLAG_NO_RESTART_ON_SIGNAL_BIT   = 1,
+>         RSEQ_CS_FLAG_NO_RESTART_ON_MIGRATE_BIT  = 2,
+> -       /* (3) Intentional gap to put new bits into a separate byte */
+> +       /* (3) Intentional gap to keep new bits separate */
+>
+>         /* User read only feature flags */
+>         RSEQ_CS_FLAG_SLICE_EXT_AVAILABLE_BIT    = 4,
+> @@ -161,6 +161,9 @@ struct rseq {
+>          *      - RSEQ_CS_FLAG_NO_RESTART_ON_PREEMPT
+>          *      - RSEQ_CS_FLAG_NO_RESTART_ON_SIGNAL
+>          *      - RSEQ_CS_FLAG_NO_RESTART_ON_MIGRATE
+> +        *
+> +        * It is now used for feature status advertisement by the kernel.
+> +        * See: enum rseq_cs_flags_bit for further information.
+>          */
+>         __u32 flags;
+>
+> --- a/kernel/rseq.c
+> +++ b/kernel/rseq.c
+> @@ -462,10 +462,11 @@ SYSCALL_DEFINE4(rseq, struct rseq __user
+>                 return -EFAULT;
+>
+>         if (IS_ENABLED(CONFIG_RSEQ_SLICE_EXTENSION)) {
+> -               rseqfl |= RSEQ_CS_FLAG_SLICE_EXT_AVAILABLE;
+> -               if (rseq_slice_extension_enabled() &&
+> -                   (flags & RSEQ_FLAG_SLICE_EXT_DEFAULT_ON))
+> -                       rseqfl |= RSEQ_CS_FLAG_SLICE_EXT_ENABLED;
+> +               if (rseq_slice_extension_enabled()) {
+> +                       rseqfl |= RSEQ_CS_FLAG_SLICE_EXT_AVAILABLE;
+> +                       if (flags & RSEQ_FLAG_SLICE_EXT_DEFAULT_ON)
+> +                               rseqfl |= RSEQ_CS_FLAG_SLICE_EXT_ENABLED;
+> +               }
+>         }
+>
+>         scoped_user_write_access(rseq, efault) {
 >
