@@ -1,263 +1,278 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEFB63AD53B;
-	Wed, 29 Apr 2026 21:15:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777497304; cv=none; b=KAqHDk4fFthwHeT9wEX8ptutpL9iXdRvtJogLZqCATkb31mRmr10Fj4Y6nXJgJW+2mz4Qa12mtZ1blKlFK+I9fUU2NnSA5bGDhcLxZYMqa3kCcWczElPtKr+AtSPS6jnLVixTj6XdC+0AHm0K41bLdb3TryFCejkFdniLOUIHdo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777497304; c=relaxed/simple;
-	bh=rcmPdl53ACE8rMRw190SHxJ9XhLeqWSrk5Jk80PuOME=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References; b=K23zGZv3AS6zvh1ZoTH/ywQIDggflxXxWvTIwaTz5HpFWzZFkVfIXlUR1orQPV898wC3/KrQEYPBg/LajBQOYay/znBzOWwYGKdSubiSIr/YTkk6+/de6/2afRGBH2f+HhWlQL8zGNaKRHS7DNsrOmD4tx55rS6Ka59muhL7Ur0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K7LDmZZK; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81C1F3A873B
+	for <regressions@lists.linux.dev>; Wed, 29 Apr 2026 21:17:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.54
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1777497430; cv=pass; b=d5j18TbPWDK9EoanMgge0a0Hgsod/7t/V5DMWJplZECG5aakH+iIbWH2no61l8a5MAoSN8yqy5SOGRWKyZwGxT4ChC4nZOg7DVHblZHWCbkj5gHmIR6uNdwpEFgjkV8V7SjQjFraahqz/KcxMafenmgiRLJvdpthkHeqjbW6IsM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1777497430; c=relaxed/simple;
+	bh=3bpZh9hQlts0dYs3ZbQFjTJzAxcieL24QZx80d/S960=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Sz+wbDsfUHT5nMSBgJBJavaAbMDDAgMAr+q3ivYYFFu+RCPy8vLXt16bkICirSiYu/SfXe34tjCS92K0RS71T8X6BuiG285upC6epwC4VTr9+tafC7fVlKGTGGH2qJn8FsL4xlKJl32ndP6CSBya3XqyBMreRsriJV+26gHIQwA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YJhk64mj; arc=pass smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K7LDmZZK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B597C2BCB3;
-	Wed, 29 Apr 2026 21:15:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777497304;
-	bh=rcmPdl53ACE8rMRw190SHxJ9XhLeqWSrk5Jk80PuOME=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=K7LDmZZKB/I8+3uemoOBioOk2fv9IfeItIHL1S+ylIkxJy/SnyPErZFk1stxWDOOk
-	 M+bKsj5h69A46uBM46q7sv7b1cCFIl4gJ63yVZk/G9QkByvgZ4V+uyggDGeBH7TqZc
-	 8QUSd1No27ijOUcb19qQpMjS5qyyg/A6sB5rYO9pCJLLkGOvl0vKuqLmltRrf+LKmv
-	 dEOZ5d4qMmNHbKubVHSucsy3og6kuBtoTh0x7r9rtS8p9hJmxbrG+1LOoJyGFipFdq
-	 5cPGI0I3VaCE+rOU9ThP8E87o20J44WJeI6S/Hv11+uRK8T5Os4scEox2k0gZp8b0m
-	 oZ6OZ+jdqnyLw==
-Date: Wed, 29 Apr 2026 11:15:03 -1000
-Message-ID: <35e0670adb4abeab13da2c321582af9f@kernel.org>
-From: Tejun Heo <tj@kernel.org>
-To: Martin Pitt <martin@piware.de>
-Cc: regressions@lists.linux.dev, cgroups@vger.kernel.org, lizefan.x@bytedance.com, hannes@cmpxchg.org,
- Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: Re: [REGRESSION] 6.9.11: systemd hangs in cgroup_drain_dying during cleanup after podman operations
-In-Reply-To: <f19d08689301f9cc0211e6273f833246@kernel.org>
-References: <afHNg2VX2jy9bW7y@piware.de> <f19d08689301f9cc0211e6273f833246@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YJhk64mj"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-baebe98afa0so25574166b.3
+        for <regressions@lists.linux.dev>; Wed, 29 Apr 2026 14:17:08 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1777497427; cv=none;
+        d=google.com; s=arc-20240605;
+        b=aILv2xeSQzN/K4VL8rkpqnzChPIA+T5R6rUGXUOdObBdBP9AQwoNDJB6hXoa9d3u/I
+         q+rhhN+2Ice7qNJmtFM4RRCyb9W8PdLjRLq046E5M945HiHeolbotk8ltCQjniAQ5iGH
+         LEh7RRueUhIs2Cp92jBZVF4PcmghbOSurv/phScwREK6M3dV0BamHCryVsBpavIMa9O6
+         ma0DjXkhtMN2nnW4Ez6SmsVrwssVqpZ0eVa45It0hCyipaaoRJ1g4+ZE31F9N7gG/oXn
+         MqsRhthShGkVZs5I++tFR6E3OyQ+SLaNaZ3tdTnfHnW6raflrW7tDpetVWl5RxnfdVCu
+         BGVQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=j3TppP6mq4j0d1qnbCekTG1cdcTHkaYTXo+iqgksTc4=;
+        fh=aNFrgwd+2g2qwBUxxhwD6FiioojO5VxAS5dtacpUOlg=;
+        b=LdpkrJC3NJNWy3hN9/VpzlHDflu+Q+00HC14zA+rZhYcRuUQyKeQmJ3Q5fO8ghlICP
+         XrgAAFQrbexZCw5sqrVm/H9890iN95M/ZPTm3x5sXUwZbOb+t8kJGBYAcUUB3kihKHbT
+         no+UtQXCp/zjjUKVyXQuvh6NC1URD7925x1K2uNPepPJGNdtLINlhmNJ3SAdrh8Rp/Qr
+         O8L9hAMZ08qMN9mrhgKCoxqXtxDhAwbNsokZlihyydSNSGRmrutwjMsC5ChZZ8xd5tf7
+         tnF50AWpI+ZM5FiT+exkylV25L7hxWUnScZq00zKMaf/VvaEj8Icv8lGbNBtZe7NK4WL
+         1gmg==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1777497427; x=1778102227; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=j3TppP6mq4j0d1qnbCekTG1cdcTHkaYTXo+iqgksTc4=;
+        b=YJhk64mj/2K9Bi0RaVxb4vaBqx4smNJjFUeqF0UmIfx95p0ZQh1V87ZotPmXl3Fsg4
+         EEJ79+glS65BZ4hP1+PJneO4ANJyebR7UYimCpQjvfEMi54UkVQn3kMu3PmCsGf0d1n4
+         X0H0CoTB5FTAGAhqhoF0KIgTQvHFk6kuollb7b+YQTZrFW7wmi2qzLrMIbic/drHNhkp
+         Ls7efZ1LZgLXCFih4uBhU5fj1kfAa/DeAUScMJU6GzUgqH/1zaXVUBFyuaFxtOefAda3
+         dFjoXNBj+9SBkCWfZ5SjcP6HpOEzaOpmK+wlV2JnVJvya2XFyscB27zsZNYUOn9dEidG
+         npHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1777497427; x=1778102227;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=j3TppP6mq4j0d1qnbCekTG1cdcTHkaYTXo+iqgksTc4=;
+        b=TUygpctP96U7GcQIO+aJXknwTlbuGThylF1y8dkkOHOsKGnj6OgtScnimVZRyM+uWO
+         9VSn749Wm5qEv/YX0+W4hniYqWdjQAenzgB7pZD3RyTniCzbUmvA5KCNRFEPKV7jUJrf
+         UcVX0uVjVH/zQ1otaCh1WaUe5pWMnUCYWOBX3wVGobbPKgbKiMJMgVmKWSpwyhJu2lqk
+         nnW7//dE4zpHZBcQqcQ4aHJQIB0qIg8Pbb+cfR+WIVsYzfVi1fI3Rw6PguK6JhgJpVqL
+         EJwhFhuvzoXS2urxnC1xdVeiC6rzTt6TLO1XqqivLRoCh2JkGL/kdeXlKj6fRK/40T1t
+         oCkw==
+X-Gm-Message-State: AOJu0YxHZKFBkHw0F0mTRj7rJRpCtY4rXE6cAkTQPEvqgqjrC/JsAlKu
+	J9kQ3lTt+TGP55Z7onXI8gdOYo/Qfy+SH2Zx7M2Ea2RVzW3Sw5auAYFXaMcBs5ZtFyftHIwLVXb
+	qLDFAP4XN0v2YpeAq/orcn6ZxhJaqzr8=
+X-Gm-Gg: AeBDievPTQiGwriLx1zjv5sNjX7e7nnjvwhT5Hn02eUr7+5oycoH6WZUqiUlMp2x1qb
+	BME6TOXelMzEcCXOeT9Smnume9R3ht0LuggiV/FrMRCHxm+b1UswWGf0IulM4CsDbjLo2DZ+suL
+	iDYHSqYyMTQut9KYW//tDqdjhQ1p+Zgq10zga5yy/XTCynsvsgQ0v2yvgLM1tCC/Dw+vNpJYZgD
+	yLrX3wetyoklgJVn/R/sa/QIu3U2EF1+TjUYYK9k3M4PuFPjNhHpj9Gggp4UZ+jhtCgSLC3A9Uo
+	XahztlMW9BJ+JxJ9Ww==
+X-Received: by 2002:a17:907:a286:b0:b9c:5cf3:50a6 with SMTP id
+ a640c23a62f3a-bbac7e84109mr21464166b.30.1777497426616; Wed, 29 Apr 2026
+ 14:17:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+References: <12879883.O9o76ZdvQC@rafael.j.wysocki> <CAGAxtY2SEkx7OgMgM5ypA8qsBN0h6pcs111VjnhD-5ZGq7Je6Q@mail.gmail.com>
+ <CAJZ5v0ikAeu7cW9K6sfKYbbsVK51GOsFrX-qv3KJ7cVr-gRHew@mail.gmail.com> <6010375.DvuYhMxLoT@rafael.j.wysocki>
+In-Reply-To: <6010375.DvuYhMxLoT@rafael.j.wysocki>
+From: Evgeny Sagatov <evgeny.sagatov@gmail.com>
+Date: Thu, 30 Apr 2026 00:16:51 +0300
+X-Gm-Features: AVHnY4KQuLV8jtSJgaT06T0eu5vZOeUPrvaMqIdpG3nAv6ESCUXOtpijMALDXbk
+Message-ID: <CAGAxtY2N-=3taOBCTFZzEmm4NqJ-KhtsWq0fNts_tn3nAxpkTA@mail.gmail.com>
+Subject: Re: Pressing the power button causes the device to freeze completely
+ (schedutil involved)
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>, 
+	ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Thorsten Leemhuis <regressions@leemhuis.info>, 
+	LKML <linux-kernel@vger.kernel.org>, 
+	Wysocki Rafael J <rafael.j.wysocki@intel.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
+	Linux PM <linux-pm@vger.kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+The PC froze when I pressed the power button.
 
-I think I have the mechanism. The deadlock chains three things together.
+grep -r . /sys/devices/system/cpu/cpufreq/
+/sys/devices/system/cpu/cpufreq/schedutil/rate_limit_us:240
+/sys/devices/system/cpu/cpufreq/policy0/scaling_min_freq:2000000
+/sys/devices/system/cpu/cpufreq/policy0/scaling_available_governors:perform=
+ance
+schedutil
+/sys/devices/system/cpu/cpufreq/policy0/freqdomain_cpus:0 1 2 3
+/sys/devices/system/cpu/cpufreq/policy0/scaling_governor:schedutil
+/sys/devices/system/cpu/cpufreq/policy0/cpuinfo_max_freq:2834000
+/sys/devices/system/cpu/cpufreq/policy0/scaling_available_frequencies:28340=
+00
+2000000
+/sys/devices/system/cpu/cpufreq/policy0/related_cpus:0 1 2 3
+/sys/devices/system/cpu/cpufreq/policy0/scaling_cur_freq:1999759
+/sys/devices/system/cpu/cpufreq/policy0/scaling_setspeed:<unsupported>
+grep: /sys/devices/system/cpu/cpufreq/policy0/stats/reset: =D0=9E=D1=82=D0=
+=BA=D0=B0=D0=B7=D0=B0=D0=BD=D0=BE =D0=B2 =D0=B4=D0=BE=D1=81=D1=82=D1=83=D0=
+=BF=D0=B5
+/sys/devices/system/cpu/cpufreq/policy0/stats/trans_table:   From  :    To
+/sys/devices/system/cpu/cpufreq/policy0/stats/trans_table:         :
+2834000   2000000
+/sys/devices/system/cpu/cpufreq/policy0/stats/trans_table:  2834000:
+      0       844
+/sys/devices/system/cpu/cpufreq/policy0/stats/trans_table:  2000000:
+    843         0
+/sys/devices/system/cpu/cpufreq/policy0/stats/total_trans:1687
+/sys/devices/system/cpu/cpufreq/policy0/stats/time_in_state:2834000 1164
+/sys/devices/system/cpu/cpufreq/policy0/stats/time_in_state:2000000 14130
+/sys/devices/system/cpu/cpufreq/policy0/affected_cpus:0 1 2 3
+/sys/devices/system/cpu/cpufreq/policy0/scaling_max_freq:2834000
+/sys/devices/system/cpu/cpufreq/policy0/cpuinfo_transition_latency:160000
+/sys/devices/system/cpu/cpufreq/policy0/scaling_driver:acpi-cpufreq
+/sys/devices/system/cpu/cpufreq/policy0/cpuinfo_min_freq:2000000
+/sys/devices/system/cpu/cpufreq/policy0/cpuinfo_avg_freq:1999759
+/sys/devices/system/cpu/cpufreq/policy0/bios_limit:2834000
 
-1. Host PID 1 systemd is doing rmdir on user-1001.slice. rmdir enters
-   cgroup_drain_dying() which waits until nr_populated_csets drops to
-   0. The wait was added in 1b164b876c36 ("cgroup: Wait for dying
-   tasks to leave on rmdir") so that rmdir doesn't succeed while
-   dying tasks are still on the cgroup's css_set - the controller
-   invariant being kept is "no tasks running in an offlined css"
-   (see d245698d727a for where that got established on the dying-task
-   side).
-
-2. nr_populated_csets only drops when cgroup_task_dead() runs, which
-   happens from finish_task_switch() after the dying task's
-   do_task_dead() - i.e., after the very last context switch out of
-   the task.
-
-3. The container's PID 1 (whatever the entrypoint runs) is in
-   do_exit() but parked in zap_pid_ns_processes' second wait loop:
-
-       for (;;) {
-           set_current_state(TASK_INTERRUPTIBLE);
-           if (pid_ns->pid_allocated == init_pids)
-               break;
-           schedule();
-       }
-
-   pid_allocated stays > init_pids because at least one struct pid in
-   the namespace is still in the idr - i.e., its task hasn't been
-   reaped (release_task -> free_pid hasn't run).
-
-The unreaped task is the host parent of one of the container helpers
-- in the podman case, an exec session child whose host parent died
-during the pkill cascade (conmon, the user manager, etc.) and got
-re-parented to host PID 1. PID 1 was supposed to wait4() it as part of
-normal reaping, but PID 1 is blocked in (1). Chicken-and-egg.
-
-Why fuse-overlayfs masks it: with fuse-overlayfs the container
-teardown finishes fast enough that the container's PID 1 reaches
-do_task_dead before host PID 1 has had time to become the reaper of
-the orphan. With kernel-overlayfs the teardown drags long enough that
-the reparent + drain wait land in the iterator-hidden window
-simultaneously, and once they do, the wedge is permanent.
-
-I have a minimal C reproducer (~150 lines, no podman, no daemons,
-runs as root) that hits the exact same code paths. The shape: A
-unshares a pid namespace and forks B (PID 1 of the namespace) and C
-(PID 2; A is C's host parent, NOT B). Both run in an inner cgroup. A
-SIGKILLs both, then calls rmdir() without wait4()-ing C. C becomes a
-zombie pinning pid_allocated; B parks in zap_pid_ns_processes; A's
-rmdir parks in cgroup_drain_dying. Verified on stock 6.19.14 and
-mainline 7.1-rc1+, also under virtme-ng. Source inlined at the bottom
-of this mail.
-
-For the fix, I'm still thinking. The rough direction is to split
-cgroup rmdir: the user-visible side (directory unlink, cgroup.procs
-disappears, the cgroup looks gone to userspace) completes as soon as
-the iterator goes empty, while the backend teardown (kill_css /
-css_offline) gets deferred until nr_populated_csets actually drops to
-0. That keeps the "no running tasks in an offlined css" invariant
-intact while letting the rmdir syscall return so host PID 1 can
-resume reaping. Need to look at what shapes this cleanly without
-breaking other cgroup core
-expectations.
-
-Thanks for the report.
-
---
-tejun
-
------ min-repro.c -----
-
-/*
- * Minimal reproducer for cgroup_drain_dying / zap_pid_ns_processes
- * deadlock. No podman, no daemons.
- *
- *   A — host process. Forks B (PID 1 of new pidns) and C (PID 2 of
- *       same pidns, but with A as host-side parent). After unshare,
- *       A's nsproxy->pid_ns_for_children is the level-1 namespace,
- *       so each subsequent fork lands a new task there.
- *   B — A's first child after unshare. PID 1 of new pidns.
- *   C — A's second child. PID 2 of same pidns, but parented to A
- *       at the host level (not to B). When C dies, SIGCHLD goes to
- *       A, NOT to B's zap_pid_ns_processes loop.
- *
- * Sequence:
- *   1. A puts itself in inner cgroup; B and C inherit on fork.
- *   2. A unshares CLONE_NEWPID, forks B and C.
- *   3. A moves out of inner so inner can be rmdir'd later.
- *   4. A SIGKILLs B and C. Both are killed.
- *   5. B's exit invokes zap_pid_ns_processes. zap walks idr, sees C
- *      (already SIGKILL'd), but C is NOT B's child — kernel_wait4(-1)
- *      returns -ECHILD immediately. zap reaches second loop:
- *      `pid_allocated > 1` because C's struct pid is still in idr
- *      (C is zombie awaiting A's wait4). zap sleeps.
- *   6. A calls rmdir(inner) WITHOUT calling wait4. cgroup_drain_dying
- *      sees nr_populated_csets > 0 (B still on cset->tasks; C may or
- *      may not be), iterator empty (B has PF_EXITING && live==0).
- *      Drain sleeps waiting for cgroup_task_dead, which only fires
- *      after B reaches do_task_dead, which it can't until zap returns,
- *      which it can't until pid_allocated drops to 1, which won't
- *      happen until A reaps C — but A is stuck in rmdir.
- *
- * Run as root.
- */
-
-#define _GNU_SOURCE
-#include <errno.h>
-#include <fcntl.h>
-#include <sched.h>
-#include <signal.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/stat.h>
-#include <sys/syscall.h>
-#include <sys/types.h>
-#include <sys/wait.h>
-#include <unistd.h>
-
-static void die(const char *msg)
-{
-	perror(msg);
-	exit(1);
-}
-
-static void write_str(const char *path, const char *s)
-{
-	int fd = open(path, O_WRONLY);
-	if (fd < 0)
-		die(path);
-	if (write(fd, s, strlen(s)) < 0)
-		die(path);
-	close(fd);
-}
-
-int main(int argc, char **argv)
-{
-	const char *cgroot = (argc > 1) ? argv[1] : "/sys/fs/cgroup/drain-min";
-	char cginner[256], path[300], buf[32];
-
-	snprintf(cginner, sizeof(cginner), "%s/inner", cgroot);
-
-	mkdir(cgroot, 0755);
-	if (mkdir(cginner, 0755) < 0 && errno != EEXIST)
-		die("mkdir inner");
-
-	snprintf(path, sizeof(path), "%s/cgroup.procs", cginner);
-	snprintf(buf, sizeof(buf), "%d", getpid());
-	write_str(path, buf);
-
-	if (unshare(CLONE_NEWPID) < 0)
-		die("unshare CLONE_NEWPID");
-
-	pid_t b = fork();
-	if (b < 0)
-		die("fork B");
-	if (b == 0) {
-		/* B: PID 1 of new pidns */
-		pause();
-		_exit(0);
-	}
-
-	pid_t c = fork();
-	if (c < 0)
-		die("fork C");
-	if (c == 0) {
-		/* C: PID 2 of new pidns, host parent is A */
-		pause();
-		_exit(0);
-	}
-
-	snprintf(path, sizeof(path), "%s/cgroup.procs", cgroot);
-	write_str(path, buf);
-
-	fprintf(stderr, "A: B host pid=%d, C host pid=%d\n", b, c);
-
-	/* Briefly verify pidns membership */
-	for (int i = 0; i < 2; i++) {
-		pid_t p = (i == 0) ? b : c;
-		char dpath[64], dbuf[256];
-		snprintf(dpath, sizeof(dpath), "/proc/%d/status", p);
-		int fd = open(dpath, O_RDONLY);
-		if (fd >= 0) {
-			ssize_t n = read(fd, dbuf, sizeof(dbuf) - 1);
-			close(fd);
-			if (n > 0) {
-				dbuf[n] = 0;
-				char *l = strstr(dbuf, "NSpid:");
-				if (l) {
-					char *e = strchr(l, '\n');
-					if (e) *e = 0;
-					fprintf(stderr, "  pid=%d %s\n", p, l);
-				}
-			}
-		}
-	}
-
-	/* SIGKILL both. After this, B starts zap_pid_ns_processes; C
-	 * dies and becomes a zombie waiting for A's wait4. */
-	kill(b, SIGKILL);
-	kill(c, SIGKILL);
-
-	usleep(500000);
-
-	fprintf(stderr, "A: rmdir(%s) — wedges if bug present "
-		"(deliberately NOT wait4-ing C)\n", cginner);
-
-	int rc = rmdir(cginner);
-	int saved_errno = errno;
-	fprintf(stderr, "A: rmdir returned %d (errno=%d %s)\n", rc,
-		saved_errno, strerror(saved_errno));
-
-	/* For cleanup if rmdir succeeded */
-	waitpid(c, NULL, WNOHANG);
-	waitpid(b, NULL, WNOHANG);
-	rmdir(cgroot);
-	return rc;
-}
------ end min-repro.c -----
+=D1=81=D1=80, 29 =D0=B0=D0=BF=D1=80. 2026=E2=80=AF=D0=B3. =D0=B2 23:22, Raf=
+ael J. Wysocki <rafael@kernel.org>:
+>
+> On Wednesday, April 29, 2026 8:24:02 PM CEST Rafael J. Wysocki wrote:
+> > On Tue, Apr 28, 2026 at 11:05=E2=80=AFPM Evgeny Sagatov
+> > <evgeny.sagatov@gmail.com> wrote:
+> > >
+> > > The PC also froze with this patch when I pressed the power button.
+> >
+> > Which means that the issue is not simply a matter of the lack of
+> > synchronization between different I/O space accesses, so most likely
+> > the problem lies deeper.
+> >
+> > Let me summarize what we've learned so far (and expand the CC list some=
+what).
+> >
+> > For those who have not seen the previous discussion, it is at:
+> >
+> > https://lore.kernel.org/lkml/CAGAxtY2SEkx7OgMgM5ypA8qsBN0h6pcs111VjnhD-=
+5ZGq7Je6Q@mail.gmail.com/#r
+> >
+> > 1. The issue is basically that the platform locks up completely when
+> > the power button is pressed
+> >
+> > This is reproducible 100% of the time.
+> >
+> > The power button processing flow is that, if the power button event is
+> > enabled in the ACPI PM1_ENABLE register, pressing the button causes
+> > the corresponding status bit in the ACPI PM1_STATUS register to be
+> > set, which in turn causes an ACPI interrupt (SCI) to trigger (both
+> > PM1_STATUS and PM1_ENABLE registers are accessible through the I/O
+> > address space).
+> >
+> > The SCI processing involves reading both the power button status and
+> > enable bits and clearing the former if set (this needs to be done or
+> > an interrupt storm would start if the status bit was not cleared).
+> >
+> > We don't actually know which of the steps above specifically causes
+> > the platform to lock up, but that doesn't matter too much because all
+> > of them are necessary.
+> >
+> > Clearing the power button enable bit in PM1_ENABLE prevents the issue
+> > from occurring (but then the power button obviously doesn't work).
+> >
+> > 2. The issue only occurs if the schedutil cpufreq governor is used
+> >
+> > If either the "powersave" or "ondemand" governor is used instead, the
+> > issue doesn't appear.
+> >
+> > Also switching over to a different cpufreq governor (on all CPUs)
+> > before pressing the power button makes the issue go away.
+> >
+> > 3. The issue didn't occur at all before commit e37617c8e53a
+> > ("sched/fair: Fix frequency selection for non-invariant case")
+> >
+> > Reverting the merge that introduced commit e37617c8e53a into the
+> > mainline makes the issue go away.
+> >
+> > 4. The issue occurs regardless of how schedutil invokes the cpufreq
+> > driver ("fast switch" vs sugov_deferred_update())
+> >
+> > 5. The cpufreq driver in question is acpi-cpufreq and it uses a
+> > control register located in the I/O address space (the same control
+> > register is used for all CPUs)
+> >
+> > 6. If acpi-cpufreq is not allowed to write into the control register
+> > at all, the issue doesn't occur
+> >
+> > 7. Synchronizing all of the I/O space accesses in the ACPI-related
+> > code (via a spinlock), including acpi-cpufreq, doesn't prevent the
+> > issue from occurring
+> >
+> > So overall, it looks like the control register access pattern in
+> > acpi-cpufreq that results from schedutil's use of it after commit
+> > e37617c8e53a somehow puts the platform into a state in which a power
+> > button event causes it to lock up at the hardware level.
+> >
+> > While there are a couple of things more to check, I'm afraid that
+> > there may not be a viable way to address this issue other than
+> > replacing the schedutil governor with ondemand on this platform.
+>
+> Below is one more patch to try.  It should cause acpi-cpufreq to use
+> one shared cpufreq policy instead of 4 per-CPU policies which is
+> more adequate because the CPUs share one control register.  It should
+> also cause acpi-cpufreq to update the control register only on CPU0.
+>
+> Let's see if this changes the control register access pattern sufficientl=
+y
+> to work around the power button problem.
+>
+> In any case, please send the output of
+>
+> $ grep -r . /sys/devices/system/cpu/cpufreq/
+>
+> from a kernel with this patch applied.
+>
+> ---
+>  drivers/cpufreq/acpi-cpufreq.c |   10 ++++++----
+>  1 file changed, 6 insertions(+), 4 deletions(-)
+>
+> --- a/drivers/cpufreq/acpi-cpufreq.c
+> +++ b/drivers/cpufreq/acpi-cpufreq.c
+> @@ -743,7 +743,7 @@ static int acpi_cpufreq_cpu_init(struct
+>         if (result)
+>                 goto err_free_mask;
+>
+> -       policy->shared_type =3D perf->shared_type;
+> +       policy->shared_type =3D CPUFREQ_SHARED_TYPE_ANY;
+>
+>         /*
+>          * Will let policy->cpus know about dependency only when software
+> @@ -751,9 +751,9 @@ static int acpi_cpufreq_cpu_init(struct
+>          */
+>         if (policy->shared_type =3D=3D CPUFREQ_SHARED_TYPE_ALL ||
+>             policy->shared_type =3D=3D CPUFREQ_SHARED_TYPE_ANY) {
+> -               cpumask_copy(policy->cpus, perf->shared_cpu_map);
+> +               cpumask_copy(policy->cpus, cpu_present_mask);
+>         }
+> -       cpumask_copy(data->freqdomain_cpus, perf->shared_cpu_map);
+> +       cpumask_copy(data->freqdomain_cpus, cpu_present_mask);
+>
+>  #ifdef CONFIG_SMP
+>         dmi_check_system(sw_any_bug_dmi_table);
+> @@ -913,7 +913,9 @@ static int acpi_cpufreq_cpu_init(struct
+>         data->resume =3D 1;
+>
+>         policy->fast_switch_possible =3D !acpi_pstate_strict &&
+> -               !(policy_is_shared(policy) && policy->shared_type !=3D CP=
+UFREQ_SHARED_TYPE_ANY);
+> +               (!policy_is_shared(policy) ||
+> +                policy->shared_type =3D=3D CPUFREQ_SHARED_TYPE_ANY) &&
+> +               perf->control_register.space_id !=3D ACPI_ADR_SPACE_SYSTE=
+M_IO;
+>
+>         if (perf->states[0].core_frequency * 1000 !=3D freq_table[0].freq=
+uency)
+>                 pr_warn(FW_WARN "P-state 0 is not max freq\n");
+>
+>
+>
