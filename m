@@ -1,113 +1,129 @@
-Received: from mail.piware.de (mail.piware.de [37.120.164.117])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 64CBE2494F0
-	for <regressions@lists.linux.dev>; Thu, 30 Apr 2026 06:15:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.120.164.117
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2914339EF30
+	for <regressions@lists.linux.dev>; Thu, 30 Apr 2026 10:40:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777529739; cv=none; b=nfVCyQPPza2HQKog4o25M8+Nco4OGk7s1IGsyGZkxmqgL+yd8+1zU1bzzekp8uTt6yPxvCPz56DfADpBSJuSz1MzvYOUOmdGrJhqPUfs+j0HzviYnzuJeCO31dP2F+GR4kN8joM9lmq2CMIVh1E8CHvtsQlabaf6xvj+8roFAPs=
+	t=1777545650; cv=none; b=IqxwXWvLR7KsIolLcUeb7J8+DBtXVs4dxIsIJqejwGQlbARw+h+iboJ69DcQpEWihNlxfY2dEbrGBrK1Qn1bD/sPnlkRZP9ZKODyEXMYla1kh202pOWt3XE4qZXtmYS+rNoaeyONO+HBIFHphb8iq2eNtRi82EtDyNGzogRzag0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777529739; c=relaxed/simple;
-	bh=E4+ylKbyqg7Yh08Hc76TKdbHV10Z8nP9qTXS592twIs=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=SpfIZIoE5pI1AGdqaqXeCL+7tjMrEgfYxNNhirbg6V35/fKVRiSzzH5MWeh1Q9dSit69IxU+K0FHrsKX8uheDTnz208vYEt7vSYbX9QuFmTF0EBQ0G+MS2w4a6D1A1Qh2ZAbHMwKp9f1FC3KiimXdag6K+d9GgKccA7xx1pMbzY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=piware.de; spf=pass smtp.mailfrom=piware.de; dkim=pass (2048-bit key) header.d=piware.de header.i=@piware.de header.b=tAtjzXlN; arc=none smtp.client-ip=37.120.164.117
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=piware.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=piware.de
+	s=arc-20240116; t=1777545650; c=relaxed/simple;
+	bh=39dgywz31qzhdr4Cuy2OO5ajN7e6XIGKUu8xn8hAdFg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CJYYEYSpHtKq455VVrm4RoTnehaYVsR+fWaojk0jljUY65GIbEyO0Hfd2XXpMh2MhJ+4OzgYVmItQl9Xwh2CCgntvBzrP7RaDtLeipKW3sh9+vmco6pJEpk9J3jcO9K+aJuClXqLtW66/PQw+mowejWpFGxHejfGn8NPDnJ8oA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gsiBo9aS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=piware.de header.i=@piware.de header.b="tAtjzXlN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=piware.de; s=2025;
-	t=1777529735; bh=E4+ylKbyqg7Yh08Hc76TKdbHV10Z8nP9qTXS592twIs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=tAtjzXlN5ScHZcV6tSmFfHwpQ6pOQxtg05/ZNfN3dXMAhbDSvwpW4VK7ZYXvkMRm5
-	 GkU46R4ED6ToK4IH0ZKs2STwTMtcjb4R0eU64M8lQOAlrmx9Yj/qejDFQ3cqEi0VnL
-	 wE3rXyMHaOb69XXsPazYYFS2p89v860vYYh5mnMfPtJZq14RVD3OZ9qEpiItNv2UFJ
-	 h11Fi8LyzuRBUi8AYD4YPEHKnUp/0x/SK9dguq4Pao9havoutki11RTSwmqzxdv22u
-	 uOU4BJ3d83mZRnEliHZNqGZIEbuOGsn/1FVnJFIrMAFoCBVT7a0WiRxRcQrls/lOV7
-	 dUOa9B+IWg24g==
-Received: from piware.de (localhost [127.0.0.1])
-	by mail.piware.de (Postfix) with ESMTP id AC81EFF881;
-	Thu, 30 Apr 2026 08:15:35 +0200 (CEST)
-Date: Thu, 30 Apr 2026 08:15:33 +0200
-From: Martin Pitt <martin@piware.de>
-To: Tejun Heo <tj@kernel.org>
-Cc: regressions@lists.linux.dev, cgroups@vger.kernel.org,
-	hannes@cmpxchg.org,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: Re: [REGRESSION] 6.9.11: systemd hangs in cgroup_drain_dying during
- cleanup after podman operations
-Message-ID: <afLzhRPSaD2Atp7G@piware.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gsiBo9aS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF00BC2BCF5
+	for <regressions@lists.linux.dev>; Thu, 30 Apr 2026 10:40:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1777545649;
+	bh=39dgywz31qzhdr4Cuy2OO5ajN7e6XIGKUu8xn8hAdFg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=gsiBo9aS32oDdUM7G/YhNQ98dNLt8TnwL0A+dovNj0+RiBON+J/x1s966qkc72cww
+	 8qgSoWWtlRbTGMy9A9WsEGlr+NfNhjqklk+SzrtN2OBtYXYdicnB2jemew1XttMr7Y
+	 Z9V5eV9iQencfCDrdcxF+FJbmEkj3bhSKcBdqh3DEyNs2nCIpR5xqYh9/epsMDaaic
+	 E7T8816bxxFFhD+3q2CL+crT5bisWXzvxzQuJCmq/R7B+6RbJYPI2cgT7yWsMgWRv4
+	 57Q4cnqhMPaHvnOUp6svldT/kV/MXaSV2+4CBnoPFl82c0ssaRtz8TSvVCDHdrb5Oy
+	 t0CrSmdj1wYtw==
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-38ce0ab821cso7293161fa.0
+        for <regressions@lists.linux.dev>; Thu, 30 Apr 2026 03:40:49 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ+Qi2U1jKj1J2JiRy/XaGLfFNRoxTn1Q0Nb6MpsLhqG8ap/xgyosQ0SjlIpoM/vHluOCrmHwv9QFBq4MQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwMwmc4o0u2Su1rjHHRP3vuTfnyeUl20ev0VPaJ6uI/4gRRjmVR
+	7cI3ePMqMnlLVaZsOkcOfxFwmcHEKVWD6MxED9+WpQUNJJ8at/k4Tjf0/oI1xntYhDRtPTES76S
+	RRwrAFY+XOnTAnaTR9NwcJ7CBVq0QvJY=
+X-Received: by 2002:a05:6512:2396:b0:5a4:6f5:6c4e with SMTP id
+ 2adb3069b0e04-5a8522d4faamr878008e87.19.1777545648107; Thu, 30 Apr 2026
+ 03:40:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <35e0670adb4abeab13da2c321582af9f@kernel.org>
- <f19d08689301f9cc0211e6273f833246@kernel.org>
+References: <12879883.O9o76ZdvQC@rafael.j.wysocki> <CAGAxtY2SEkx7OgMgM5ypA8qsBN0h6pcs111VjnhD-5ZGq7Je6Q@mail.gmail.com>
+ <CAJZ5v0ikAeu7cW9K6sfKYbbsVK51GOsFrX-qv3KJ7cVr-gRHew@mail.gmail.com>
+ <6010375.DvuYhMxLoT@rafael.j.wysocki> <CAGAxtY2N-=3taOBCTFZzEmm4NqJ-KhtsWq0fNts_tn3nAxpkTA@mail.gmail.com>
+In-Reply-To: <CAGAxtY2N-=3taOBCTFZzEmm4NqJ-KhtsWq0fNts_tn3nAxpkTA@mail.gmail.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 30 Apr 2026 12:40:35 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0j2MKGRFRRVT4rFuzr2OwJg7ufAfDKUS0rgAsg-EBH6Kg@mail.gmail.com>
+X-Gm-Features: AVHnY4LVq_nGYEhV3o7zDZLNtARqjVJZ9s53dHCOXJKKxiFrmibB-uDXWdgbsPg
+Message-ID: <CAJZ5v0j2MKGRFRRVT4rFuzr2OwJg7ufAfDKUS0rgAsg-EBH6Kg@mail.gmail.com>
+Subject: Re: Pressing the power button causes the device to freeze completely
+ (schedutil involved)
+To: Evgeny Sagatov <evgeny.sagatov@gmail.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Linux regressions mailing list <regressions@lists.linux.dev>, 
+	ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Thorsten Leemhuis <regressions@leemhuis.info>, 
+	LKML <linux-kernel@vger.kernel.org>, 
+	Wysocki Rafael J <rafael.j.wysocki@intel.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
+	Linux PM <linux-pm@vger.kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello Tejun,
+On Wed, Apr 29, 2026 at 11:17=E2=80=AFPM Evgeny Sagatov
+<evgeny.sagatov@gmail.com> wrote:
+>
+> The PC froze when I pressed the power button.
 
-(Dropping lizefan.x@bytedance.com from CC:, it doesn't exist any more)
+Well, we need to dig more I guess.
 
-Tejun Heo [2026-04-29  6:21 -1000]:
-> Thanks for the report. The dmesg you attached has only a partial sysrq-t
-> - the dying-task stacks I need were pushed out of the ring buffer. Could
-> you increase log_buf_len, reproduce, trigger sysrq-t, and send the
-> resulting dmesg?
+> grep -r . /sys/devices/system/cpu/cpufreq/
+> /sys/devices/system/cpu/cpufreq/schedutil/rate_limit_us:240
+> /sys/devices/system/cpu/cpufreq/policy0/scaling_min_freq:2000000
+> /sys/devices/system/cpu/cpufreq/policy0/scaling_available_governors:perfo=
+rmance
+> schedutil
+> /sys/devices/system/cpu/cpufreq/policy0/freqdomain_cpus:0 1 2 3
+> /sys/devices/system/cpu/cpufreq/policy0/scaling_governor:schedutil
+> /sys/devices/system/cpu/cpufreq/policy0/cpuinfo_max_freq:2834000
+> /sys/devices/system/cpu/cpufreq/policy0/scaling_available_frequencies:283=
+4000
+> 2000000
+> /sys/devices/system/cpu/cpufreq/policy0/related_cpus:0 1 2 3
+> /sys/devices/system/cpu/cpufreq/policy0/scaling_cur_freq:1999759
 
-Increased to 4M, which was enough. I added it to the bottom of the debug notes
-comment [1], direct link: [2]. I suppose its' not necessary any more, but just
-for the records..
+This kind of calls for some investigation.  It should not be less than
+scaling_min_freq, even though this looks like a rounding error.
 
-[1] https://github.com/cockpit-project/bots/pull/8970#issuecomment-4342147158
-[2] https://github.com/user-attachments/files/27231725/dmesg-task-dump.txt
+> /sys/devices/system/cpu/cpufreq/policy0/scaling_setspeed:<unsupported>
+> grep: /sys/devices/system/cpu/cpufreq/policy0/stats/reset: =D0=9E=D1=82=
+=D0=BA=D0=B0=D0=B7=D0=B0=D0=BD=D0=BE =D0=B2 =D0=B4=D0=BE=D1=81=D1=82=D1=83=
+=D0=BF=D0=B5
+> /sys/devices/system/cpu/cpufreq/policy0/stats/trans_table:   From  :    T=
+o
+> /sys/devices/system/cpu/cpufreq/policy0/stats/trans_table:         :
+> 2834000   2000000
+> /sys/devices/system/cpu/cpufreq/policy0/stats/trans_table:  2834000:
+>       0       844
+> /sys/devices/system/cpu/cpufreq/policy0/stats/trans_table:  2000000:
+>     843         0
+> /sys/devices/system/cpu/cpufreq/policy0/stats/total_trans:1687
+> /sys/devices/system/cpu/cpufreq/policy0/stats/time_in_state:2834000 1164
+> /sys/devices/system/cpu/cpufreq/policy0/stats/time_in_state:2000000 14130
+> /sys/devices/system/cpu/cpufreq/policy0/affected_cpus:0 1 2 3
+> /sys/devices/system/cpu/cpufreq/policy0/scaling_max_freq:2834000
+> /sys/devices/system/cpu/cpufreq/policy0/cpuinfo_transition_latency:160000
+> /sys/devices/system/cpu/cpufreq/policy0/scaling_driver:acpi-cpufreq
+> /sys/devices/system/cpu/cpufreq/policy0/cpuinfo_min_freq:2000000
+> /sys/devices/system/cpu/cpufreq/policy0/cpuinfo_avg_freq:1999759
+> /sys/devices/system/cpu/cpufreq/policy0/bios_limit:2834000
 
-Tejun Heo [2026-04-29 11:15 -1000]:
-> I think I have the mechanism. The deadlock chains three things together.
+So with the same patch applied (because I think that the one-policy
+configuration is suitable for this platform), please capture the
+output of
 
-You are a genius!
+grep -r . /sys/devices/system/cpu/cpufreq/
 
-> 3. The container's PID 1 (whatever the entrypoint runs) is in
->    do_exit() but parked in zap_pid_ns_processes' second wait loop:
+switch over to the ondemand governor, wait for some time, capture the
+output of the above command again and send both.
 
-FTR, the container is pretty dumb, just 
+Also, please send the output of
 
-  podman run quay.io/prometheus/busybox sh -c 'echo 123; sleep infinity'
+grep . /sys/firmware/acpi/interrupts/sci*
 
-we are not actually interested in the container workload for this tests, but
-testing cockpit-podman for managing containers on the host.
+acquired after doing all of the above.
 
-However, I just confirmed that busybox'es sh, like "proper" bash, does reap
-child processes (unlike for example running `sleep` directly as pid 1, then you
-do get zombies)
-
-> ----- min-repro.c -----
-
-On Fedora 44 with 6.9.13, this hangs at
-
-    A: rmdir(/sys/fs/cgroup/drain-min/inner) — wedges if bug present (deliberately NOT wait4-ing C)
-
-root        1501  0.0  0.1   2460  1764 pts/0    D+   06:10   0:00 /tmp/repr
-root        1502  0.0  0.0      0     0 pts/0    S+   06:10   0:00 [repr]
-root        1503  0.0  0.0      0     0 pts/0    Z+   06:10   0:00 [repr] <defunct>
-
-as expected. It does not wedge up the system in the same way as breaking all
-"ls /proc" and such.
-
-On Fedora 44 with older 6.9.10 kernel the reproducer finishes (no hang), with
-EBUSY:
-
-: B host pid=1444, C host pid=1445
-  pid=1444 NSpid:	1444	1
-  pid=1445 NSpid:	1445	2
-A: rmdir(/sys/fs/cgroup/drain-min/inner) — wedges if bug present (deliberately NOT wait4-ing C)
-A: rmdir returned -1 (errno=16 Device or resource busy)
-
-I suppose you know all that, but just in case confirming on my setup helps in
-any way.
-
-Thanks!
-
-Martin
+You may as well check again if the power button works after switching
+to ondemand.
