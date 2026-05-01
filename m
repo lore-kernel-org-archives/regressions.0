@@ -1,182 +1,71 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63F60279DB6
-	for <regressions@lists.linux.dev>; Fri,  1 May 2026 12:00:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 701B43DFC61;
+	Fri,  1 May 2026 16:55:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777636845; cv=none; b=b720vUiuSWVWTdkHMqigyDayKe9jcb6qUscVggBgHrFklhQqO1WYsZVH1ma7n7N9RigeGNEoKnu4Ud3C64oMq+H1w8YjZ1jONr1q5zLcDO+RWn+ubDvForihaZtSVthLWnmu4uSiMmZbhPLssfjYAokbDce89sCr9CR0m2WPMZI=
+	t=1777654544; cv=none; b=SGoSu6P9Es2NzLQTjs2Z3/3NJqNZ0gljqW/j59Tww+x6Mm3/tnj0c5QzY3PbThSJTF4h5DHOSwamtqyarAS5cwpTj9XGFFksnvct22dIBk3eXnJe2dxF8NLm5AbQrax7KNvNK0ibTRA6mQd08w5BM1qhchD4pU3pWBTXzX/wZTQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777636845; c=relaxed/simple;
-	bh=Prvv7B0ov4/EhjwbeFDd/isxbU+ETX0Tg1NWb+ujt4c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=adZxyyeC58T1V5dMVy1oe3IW7M6nvIcL/lV5DPxEmDsbZ9nXuVuAu+XoJkt+6JboCZ0JH/GFb/gaa36jrdTil1ANbmPaNsqUDLjXyviaLeJJOIh0JuakdX73i592+Z+IJw7VFpdLzrJcvNyYqypclN3nn4TFb2I6Tm+IzE+ihog=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DC6M8WON; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777654544; c=relaxed/simple;
+	bh=zZEX11EnodeOPZpk/nnPQyXHsNzmC0XGnL5siN3Bd94=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=tQzOt4LHp1Gw4Ei/nLQQgyKXderNeoW57t/j/6fPN7aVKdk77wQYJcd5Ec/w1TnPNHSa8CGf5WovpOzmmJHK6YL4O1mebEGy/KsPnIteMFD2kp+PrfEfpYUinZ5FS6AuhBvxab2XaVvPt7mU3wWYkhibbMvHg359jEC0V8Sm/r4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ehjsaifn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DC6M8WON"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 281B8C2BCC4
-	for <regressions@lists.linux.dev>; Fri,  1 May 2026 12:00:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ehjsaifn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F22EC2BCB4;
+	Fri,  1 May 2026 16:55:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777636845;
-	bh=Prvv7B0ov4/EhjwbeFDd/isxbU+ETX0Tg1NWb+ujt4c=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=DC6M8WON5YvLORhN4QtI6pjt5reE5F0a+Wa1WMFUuH0ZsAr5ih8+mRJazO/x28+/j
-	 ImoTl4LyLMcbz1wKLFNc9UgYiyUhKOkaMGb+FvytX2LwqecmdtG+jdgbC8yNpJPxx2
-	 GzESMNHmqxZtUTb3BE87gJHegOpNtceIM33HAYPOJ5s2i0gRzo/dDdILWprKh/ecet
-	 uepihGtnJCB2Xt2q5VhEfuYuTrzyMgE3tyBGeotjkfCObc3YrswYP0f1kSjtEV2ka+
-	 ENvksu/nE+NHKDinzpaTAdmQqGtJRM+vJPE0XPbe9ZjepBibNHxoLZAmOEyu+3uAXI
-	 U9pfsXhb3qeGA==
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-38dfb789d7fso17254081fa.2
-        for <regressions@lists.linux.dev>; Fri, 01 May 2026 05:00:45 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ95dKgR9/QLKnwiGCzsF4gRvXvOFdxfgnHUylck95EDgJKXWLK0ADHeL6i2SuXYTTSfIQI/ImrFInQxAA==@lists.linux.dev
-X-Gm-Message-State: AOJu0YyjZYLANvtVkvNBTurg1cS5qAbh5TljOd+Ota7QphrkPjOCnCUL
-	r5sU9c7f6/AnJ0Wd5TRqTu1SHY9ehX4FPOMY1ZNP9LNzVK2YX8nyoYKWOdSJuVBMTJdR9sAW8Gp
-	3HtF+4P3N22RF9rzILSJmuT6Pf/VnVSg=
-X-Received: by 2002:a05:6512:1253:b0:5a2:b51a:6a55 with SMTP id
- 2adb3069b0e04-5a8522d919emr2916721e87.29.1777636843461; Fri, 01 May 2026
- 05:00:43 -0700 (PDT)
+	s=k20201202; t=1777654543;
+	bh=zZEX11EnodeOPZpk/nnPQyXHsNzmC0XGnL5siN3Bd94=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=EhjsaifnSEQ9wgEVc8AVz4wYg13nMfDLPPzpVUZTH1dznjDbag578c9RpPplfp+yH
+	 m1e2RIDAN0z3q3MflucrFj/XyFfFg+F7kwhirI4c2WIB8vu4D6Kw88VIsiguHdzE7u
+	 P7jTtN0CnT9aCHkpmOFfi05BIuPbLCeTtPixgabTu0b9tfYw1+N0Ou4Ut8qFfOmO05
+	 OhvYXrMkkWd8Ki+UZHdV8q0Inz9jPc8FRnyJ3RSq0Ygb18hCrmDP2gU4pOqEB9U/TX
+	 /mt6Acjg+mUJRyirgEPr0YejDcPueACrAMCQVFr9cJXK636A568YnyHKGmKoaceewX
+	 +YmDs+xipzEQw==
+Date: Fri, 1 May 2026 11:55:42 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Matthias Dittrich <dittrich.m@gmx.net>
+Cc: bhelgaas@google.com, linux-pci@vger.kernel.org,
+	regressions@lists.linux.dev,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Subject: Re: [REGRESSION] PCI BAR allocation/D3cold failure: NVIDIA MX250
+ inaccessible since Kernel 6.x on Acer Swift 3 (SF314-56G)
+Message-ID: <20260501165542.GA491695@bhelgaas>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <12879883.O9o76ZdvQC@rafael.j.wysocki> <CAGAxtY3h4sEphqKL-jiSn4p0NT9mdZtOFrVxW7CDo22XdL56iw@mail.gmail.com>
- <CAJZ5v0ixuF=AQf0_VcPH=4jo5X-HbEB3WvJAnk8_fZes+bjyLg@mail.gmail.com>
- <12909238.O9o76ZdvQC@rafael.j.wysocki> <CAGAxtY2J3vBJ9oUh1nt1c9ytRE_o=-rwk7nLKuDN==jW2kodbA@mail.gmail.com>
-In-Reply-To: <CAGAxtY2J3vBJ9oUh1nt1c9ytRE_o=-rwk7nLKuDN==jW2kodbA@mail.gmail.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Fri, 1 May 2026 14:00:30 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0gX3O5rQ21WedZD8v-hJgBN=U67TwETGNuPquk4u+AhtQ@mail.gmail.com>
-X-Gm-Features: AVHnY4LyegHNXIktJOgi8NQ9SuD6HKNF69LprPtSs1OL2JnnuUQxHDKy9ENV8iw
-Message-ID: <CAJZ5v0gX3O5rQ21WedZD8v-hJgBN=U67TwETGNuPquk4u+AhtQ@mail.gmail.com>
-Subject: Re: Pressing the power button causes the device to freeze completely
- (schedutil involved)
-To: Evgeny Sagatov <evgeny.sagatov@gmail.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Linux regressions mailing list <regressions@lists.linux.dev>, 
-	ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Thorsten Leemhuis <regressions@leemhuis.info>, 
-	LKML <linux-kernel@vger.kernel.org>, 
-	Wysocki Rafael J <rafael.j.wysocki@intel.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
-	Linux PM <linux-pm@vger.kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a27da33f-96da-477b-b7ae-e7bcd3a34796@gmx.net>
 
-On Fri, May 1, 2026 at 1:18=E2=80=AFAM Evgeny Sagatov <evgeny.sagatov@gmail=
-.com> wrote:
->
-> Rafael,
->
-> I'm leaving on vacation today. I'll be able to conduct new checks
-> starting May 17th.
+[+cc Ilpo]
 
-Sure, thanks for the notice!
+On Fri, May 01, 2026 at 10:13:41AM +0200, Matthias Dittrich wrote:
+> Dear Kernel Developers,
+> 
+> I found a regression and did my best to identify the issue and find a
+> workaround, but I am not a developer. I also published the regression in the
+> NVIDIA Linux Developer Forum, but it appears to be a kernel regression and
+> not a driver issue, as the latest drivers work on older kernels (e.g., 5.15)
+> but fail on anything 6.x+. I did not perform a git bisect as compiling on
+> this i5-8265U - because of its low performance I can only compile one kernel
+> over night.
+> 
+> **Description:**
+> The NVIDIA MX250 GPU on Acer Swift 3 (SF314-56G / BIOS 1.14) is inaccessible
+> on any Linux distribution using Kernel 6.x or 7.x. The device fails to
+> initialize during the driver probe routine.
 
-> Thanks for helping with resolving the issue!
+Thanks for the report.  With the newest kernel available to you, can
+you please capture the complete dmesg and output of "sudo lspci -vv"?
+Don't filter out things that don't seem relevant; we can easily do
+that.
 
-No problem.
-
-> =D1=87=D1=82, 30 =D0=B0=D0=BF=D1=80. 2026=E2=80=AF=D0=B3. =D0=B2 17:42, R=
-afael J. Wysocki <rafael@kernel.org>:
-> >
-> > On Thursday, April 30, 2026 3:57:41 PM CEST Rafael J. Wysocki wrote:
-> > > On Thu, Apr 30, 2026 at 1:41=E2=80=AFPM Evgeny Sagatov <evgeny.sagato=
-v@gmail.com> wrote:
-> > > >
-> > > > I noticed that for powersave mode, I'm getting the following values=
-:
-> > >
-> > > I guess you mean with the powersave governor.
-> > >
-> > > > cat /proc/cpuinfo | grep MHz
-> > > > cpu MHz         : 2798.689
-> > > > cpu MHz         : 1999.659
-> > > > cpu MHz         : 1999.797
-> > > > cpu MHz         : 2741.103
-> > > > Also, there's now no difference in the single-core benchmark betwee=
-n
-> > > > schedutil, ondemand, powersave and performance modes. The benchmark
-> > > > always gives a very high result.
-> > > > This wasn't the case before; the modes had different performance le=
-vels.
-> > >
-> > > I would expect schedutil, ondemand and performance to give similar
-> > > scores, but for powersave I would expect the score to be lower.
-> > >
-> > > With the same patch applied, can you please switch over to powersave,
-> > > reset the stats and then capture the output of
-> > >
-> > > grep -r . /sys/devices/system/cpu/cpufreq/
-> > >
-> > > Also, I'd still like to see the output of
-> > >
-> > > grep . /sys/firmware/acpi/interrupts/sci*
-> >
-> > Additionally, please remove all of the debug patches sent so far, apply
-> > the one below and send a dmesg boot log.
-> >
-> > I want to check if all of the CPUs use the same control values when
-> > they write to the frequency scaling control register.
-> >
-> > ---
-> >  drivers/cpufreq/acpi-cpufreq.c |   12 +++++++++---
-> >  drivers/cpufreq/cpufreq.c      |    1 +
-> >  2 files changed, 10 insertions(+), 3 deletions(-)
-> >
-> > --- a/drivers/cpufreq/acpi-cpufreq.c
-> > +++ b/drivers/cpufreq/acpi-cpufreq.c
-> > @@ -887,9 +887,14 @@ static int acpi_cpufreq_cpu_init(struct
-> >                  * unknown and not detectable via IO ports.
-> >                  */
-> >                 policy->cur =3D acpi_cpufreq_guess_freq(data, policy->c=
-pu);
-> > +               pr_info("CPU%u: Using I/O space for frequency scaling\n=
-", cpu);
-> > +               pr_info("CPU%u: frequency scaling control address: %llu=
-, bit width: %u\n",
-> > +                       cpu, perf->control_register.address,
-> > +                       perf->control_register.bit_width);
-> >                 break;
-> >         case ACPI_ADR_SPACE_FIXED_HARDWARE:
-> >                 acpi_cpufreq_driver.get =3D get_cur_freq_on_cpu;
-> > +               pr_info("CPU%u: Using FFH for frequency scaling\n", cpu=
-);
-> >                 break;
-> >         default:
-> >                 break;
-> > @@ -898,13 +903,14 @@ static int acpi_cpufreq_cpu_init(struct
-> >         /* notify BIOS that we exist */
-> >         acpi_processor_notify_smm(THIS_MODULE);
-> >
-> > -       pr_debug("CPU%u - ACPI performance management activated.\n", cp=
-u);
-> > +       pr_info("CPU%u - ACPI performance management activated.\n", cpu=
-);
-> >         for (i =3D 0; i < perf->state_count; i++)
-> > -               pr_debug("     %cP%d: %d MHz, %d mW, %d uS\n",
-> > +               pr_info("     %cP%d: %d MHz, %d mW, %d uS, %u\n",
-> >                         (i =3D=3D perf->state ? '*' : ' '), i,
-> >                         (u32) perf->states[i].core_frequency,
-> >                         (u32) perf->states[i].power,
-> > -                       (u32) perf->states[i].transition_latency);
-> > +                       (u32) perf->states[i].transition_latency,
-> > +                       (u32) perf->states[i].control);
-> >
-> >         /*
-> >          * the first call to ->target() should result in us actually
-> > --- a/drivers/cpufreq/cpufreq.c
-> > +++ b/drivers/cpufreq/cpufreq.c
-> > @@ -473,6 +473,7 @@ void cpufreq_enable_fast_switch(struct c
-> >         if (cpufreq_fast_switch_count >=3D 0) {
-> >                 cpufreq_fast_switch_count++;
-> >                 policy->fast_switch_enabled =3D true;
-> > +               pr_info("CPU%u: Fast frequency switching enabled\n", po=
-licy->cpu);
-> >         } else {
-> >                 pr_warn("CPU%u: Fast frequency switching not enabled\n"=
-,
-> >                         policy->cpu);
-> >
-> >
-> >
-> >
+Bjorn
