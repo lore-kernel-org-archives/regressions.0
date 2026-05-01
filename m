@@ -1,206 +1,516 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D30393BF69C
-	for <regressions@lists.linux.dev>; Thu, 30 Apr 2026 23:18:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.52
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777591085; cv=pass; b=fp89ojZ+l+9p8ZVtM9WvIIYQnKtmBqyInYisiGjGmUQ5ucVG5ZauCRAZJPMUvaMbGODJBej7GvqdXMlf2oYO/6VfC+bobos0c4DO2440UJ8ZaIDjRSZ3u5vPhIskE7H0k1a504HoPijthSLrBQ+3pva0aWbthS2rTwBG0yjyXgo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777591085; c=relaxed/simple;
-	bh=qMssuPB08Ftixa7cUXrksbDoBvMFkJHrhq6Zs/nyBnM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=b3LeDhbx++nTlbuDQNHj7kirD8wUSZjpmOGZSxk384U1J7gNj/EsTbmIfX3u+LPflOhdb+O+Yh0W/31aSI5hX2DkKsA+j7dhA3RzUdvLjLLGPWnBQlm26fzThy2JuEn0dM0ATYv5Eb06tAsOU+rrsXCQlhoSzCoXRzlMyPW0/k4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MA/1yNPK; arc=pass smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 168AD2DF68;
+	Fri,  1 May 2026 02:29:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1777602585; cv=none; b=rKYDFNASldrq3oFnFr6x0O/Zrbgb9ZZr6PafmN1z6u37RVrvqhSyEaGSHkhataOv9Uu/BTQN3xFF2VLsabQXmPJjDXGGbLFNvdTO3dVUA/L9IZmvcfMLV00ZkiG76KB+EoUIHSPPyFfQ4/nhDibuiMpG+TKI4eEtgb3L7XWMkwo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1777602585; c=relaxed/simple;
+	bh=NbwQhy35/GGHiQfhGtWqFMGJ0eXfEH0j7A2085wHP5I=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=C9NtME/SBe+hq32cyjMDOugJi5OYh2KgLJ9BW8n2K/1oYOIKix7wdkByIXWGEzJm05exnbiq7OhiH1sLplqrtAOt5imay5K91n/qyYlHxkeGPRA80zoSznNONt43ERud20jifL0O6N43j0vDnu9G887fQ6M9Kg+XdPlEj8M0Gbo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TT6ZnyK7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MA/1yNPK"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ba51e69988aso247716666b.0
-        for <regressions@lists.linux.dev>; Thu, 30 Apr 2026 16:18:02 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1777591080; cv=none;
-        d=google.com; s=arc-20240605;
-        b=DjrV1ZO7D6I3ApWRfQaAXTneyMMhCZIZX+5Pov3E1b/Wkoqfx0+ORV/8X9slpQCTpq
-         55MI3X7JLxS8EFZ3iVl8oif+6fDCHZLtZZ1am3z6pWBBlXI6CEICqigCuTTh9g65fu0q
-         gmccjwvt1sHjvoscbwBqWomq38qiZuXAbUyr34Fb54Ylu6P4aiykQ4TbJ6VPSTP9cSff
-         v3Rx7NczIcwTrgX+0MFFIg/8E1/xkYa7K4TDB6P6ivDrVYlPn01fPNw6MqtE/2NHnlcl
-         ZctB+TtWt3NxuEudDdixMH6NynXC6kRd+vt1ddp/V/wJFtdrg3EQvyv1pmr7dcj4FU0R
-         tWRQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=wr4f/O6tnwowWz0YOGfaBNk5o8gSqrjyXSQ8QIaml/8=;
-        fh=aNFrgwd+2g2qwBUxxhwD6FiioojO5VxAS5dtacpUOlg=;
-        b=GW5XpHCgzAYN04PlWxwW2+AVqc9c+y0iZ5UmLRbqfUzYk0VXxiiYIBPT4rOeickHeb
-         qq67DgVMLUeHqg3ge5WGnBMlyo9BHrtkcqAEASoAvwIHX8ZrxsJTIG1XmyN+IJ5o5QfO
-         cTsQYGKJE2q99rq8PGvlBreLAn0SlCOyqb3iDrL2934SNMPGEeL0NLOpjGLQSAr/XbSe
-         /uZdgvjbF8Xmhtl40UIf49VhBHGnr17ap1EcMd610MPSj6irvRHXnUiMgP7XywBmzuW7
-         kX1CmGf37uFrO6X1D02wo47HO6SIN64YUQKv7TW8I1f3t2oMB14+ouuGhxJY7DjqVmNC
-         Bapg==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1777591080; x=1778195880; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wr4f/O6tnwowWz0YOGfaBNk5o8gSqrjyXSQ8QIaml/8=;
-        b=MA/1yNPKWJX2dj5E86suWEayLX6fNS5Ajr+3t8HQzABn5qGPg5nKxf/NnRmUSF0fqO
-         LyIUwaRZoNUAtjIN/9AOQv8ipT6qFA4OO1RqBQbWNg6ORYmTMC5PwExGpTR7bR3s5xOm
-         q+ea82OBqPhtC/6R/VX6lSY+hDK27ASKEveTftQH3pip8lIiLLp/K6D0+L0ntfCn+de6
-         UurKwBcysojWk8BQkDBahitooF8B0kW6HjNCv6VAuQtLtMd66tFglAPQg5K1BrvSs6bF
-         n+ltBPDxCf5J9xTqKafp+pJyo3VpUl2wBineMmHQ1rrzOvllONy9Zq9pMl0O8k0vyrKH
-         cWpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777591080; x=1778195880;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=wr4f/O6tnwowWz0YOGfaBNk5o8gSqrjyXSQ8QIaml/8=;
-        b=cHawXOQ80UmpCdICPooZO5uZle2QMz9NPO6ZSeCS5XnxfDk35GIQGBGIUCM/wqYolX
-         V4tCor9pLg71vzAx/cxIbrtGHy5beUIS3XK8dl1ABWzwNabHYQbzRa7O+hYdjXpw6S/N
-         hSNCwVWmIxXGSh5TNkivmbodDJ9ZbLWJ0k5MG72NZMA2tIPPlSge0X/jPTlesxSLqwrv
-         uyV35i95An+5upE2pADTVTVPZX1hAWo0sjtgPmP07SZSSfwzPSkhmOXfkY9RNfs65G2+
-         dd/po9cmbuWM3ZLvy0/2k+rBrRoqcsDMMvvsqemAOWP7E8EYybR6aL5Yf8nZRKx6ZXxd
-         uP1A==
-X-Gm-Message-State: AOJu0YwH/ieAJpSj0Wjf++soy6tEm5AZ3sVk+JyvkIjk6oR2lSOr6ct9
-	grgJxYj952MesDLq/v3cdkK8siK5mPuZo4kSj9HNPCrthOO93LNEAIkXXTb2iLt8gVNTW71j4XM
-	RkWZT7S+XDCrwgjMySoKlELryKWHMFE8=
-X-Gm-Gg: AeBDieuwrMVApv+JdOCb4eeshzw+MsTSIYzPPHUuoAaq7Wt0+5pLWGZNqMvMqWLkC+G
-	YmHoxdF4K+pHA1wWlEg+7vokHJBq5gE0O+X2X7X5g+TcojlDpt1lzMtepFq+LLB4r/wd94nVzdm
-	A0XOVi4d1U/ZwCmKrC9CbSgRVl0HTlUL5qwCisoN1kfYjXimLL2N7pcmc5EeLSmCV+vbWpJGWZC
-	MGRhBFEl8wA6EZM8HLDo+hJ8N8bW5I8GAETSB80UkOm2TnK3Vxz1mMyRKylnDFmG4jwwewjoWO3
-	l81gZLMHw21HeGcNog==
-X-Received: by 2002:a17:907:3e82:b0:ba7:e65:a5f0 with SMTP id
- a640c23a62f3a-bbebe614a46mr27887066b.5.1777591080209; Thu, 30 Apr 2026
- 16:18:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TT6ZnyK7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9514DC2BCB3;
+	Fri,  1 May 2026 02:29:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1777602584;
+	bh=NbwQhy35/GGHiQfhGtWqFMGJ0eXfEH0j7A2085wHP5I=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=TT6ZnyK7JrR90i8WCo1VM6t7XIdqBtGSG+94LQE+nkM83GxZAIY6Pip8sjo/x/eSh
+	 gkxm7DJP6BFf2c+8XGHktcdm/xT0wsDtuM/JbM1RG8x1AE4u3Al2nDdiWBA8WCS0uq
+	 qieQHkRqZXvo+64mPl6QAJeNPJrhnPYjVsbaM89a7ukAZxnwoe1TJPotzd5h+1UMNX
+	 p6tC+oklzQ50N9vSAMYQ5bnr9H5AGS4iRxolQ+0lTteZuEtoy+CrBf+CMM9ioX9qcU
+	 MBSIwLoN8JwO9g+sYQAfajVdtvaYwNTEn12WUBQjP0i9LG39t8wRGnA/wIAkq9cM7N
+	 ns4BihJALO2KQ==
+From: Tejun Heo <tj@kernel.org>
+To: Martin Pitt <martin@piware.de>
+Cc: regressions@lists.linux.dev,
+	cgroups@vger.kernel.org,
+	lizefan.x@bytedance.com,
+	hannes@cmpxchg.org,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	linux-kernel@vger.kernel.org,
+	Tejun Heo <tj@kernel.org>
+Subject: [PATCH] cgroup: Defer css percpu_ref kill on rmdir until cgroup is depopulated
+Date: Thu, 30 Apr 2026 16:29:43 -1000
+Message-ID: <20260501022943.3714461-1-tj@kernel.org>
+X-Mailer: git-send-email 2.54.0
+In-Reply-To: <afHNg2VX2jy9bW7y@piware.de>
+References: <afHNg2VX2jy9bW7y@piware.de>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <12879883.O9o76ZdvQC@rafael.j.wysocki> <CAGAxtY3h4sEphqKL-jiSn4p0NT9mdZtOFrVxW7CDo22XdL56iw@mail.gmail.com>
- <CAJZ5v0ixuF=AQf0_VcPH=4jo5X-HbEB3WvJAnk8_fZes+bjyLg@mail.gmail.com> <12909238.O9o76ZdvQC@rafael.j.wysocki>
-In-Reply-To: <12909238.O9o76ZdvQC@rafael.j.wysocki>
-From: Evgeny Sagatov <evgeny.sagatov@gmail.com>
-Date: Fri, 1 May 2026 02:17:48 +0300
-X-Gm-Features: AVHnY4Jqj25Kx5PBJv7oNLRVP3qU3f7s4xB1XbA1jZxGD5_AcSNv8SeOCrXOIeU
-Message-ID: <CAGAxtY2J3vBJ9oUh1nt1c9ytRE_o=-rwk7nLKuDN==jW2kodbA@mail.gmail.com>
-Subject: Re: Pressing the power button causes the device to freeze completely
- (schedutil involved)
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>, 
-	ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Thorsten Leemhuis <regressions@leemhuis.info>, 
-	LKML <linux-kernel@vger.kernel.org>, 
-	Wysocki Rafael J <rafael.j.wysocki@intel.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
-	Linux PM <linux-pm@vger.kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Rafael,
+A chain of commits going back to v7.0 reworked rmdir to satisfy the
+controller invariant that a subsystem's ->css_offline() must not run while
+tasks are still doing kernel-side work in the cgroup.
 
-I'm leaving on vacation today. I'll be able to conduct new checks
-starting May 17th.
+[1] d245698d727a ("cgroup: Defer task cgroup unlink until after the task is done switching out")
+[2] a72f73c4dd9b ("cgroup: Don't expose dead tasks in cgroup")
+[3] 1b164b876c36 ("cgroup: Wait for dying tasks to leave on rmdir")
+[4] 4c56a8ac6869 ("cgroup: Fix cgroup_drain_dying() testing the wrong condition")
+[5] 13e786b64bd3 ("cgroup: Increment nr_dying_subsys_* from rmdir context")
 
-Thanks for helping with resolving the issue!
+[1] moved task cset unlink from do_exit() to finish_task_switch() so a
+task's cset link drops only after the task has fully stopped scheduling.
+That made tasks past exit_signals() linger on cset->tasks until their final
+context switch, which led to a series of problems as what userspace expected
+to see after rmdir diverged from what the kernel needs to wait for. [2]-[5]
+tried to bridge that divergence: [2] filtered the exiting tasks from
+cgroup.procs; [3] had rmdir(2) sleep in TASK_UNINTERRUPTIBLE for them; [4]
+fixed the wait's condition; [5] made nr_dying_subsys_* visible
+synchronously.
 
-=D1=87=D1=82, 30 =D0=B0=D0=BF=D1=80. 2026=E2=80=AF=D0=B3. =D0=B2 17:42, Raf=
-ael J. Wysocki <rafael@kernel.org>:
->
-> On Thursday, April 30, 2026 3:57:41 PM CEST Rafael J. Wysocki wrote:
-> > On Thu, Apr 30, 2026 at 1:41=E2=80=AFPM Evgeny Sagatov <evgeny.sagatov@=
-gmail.com> wrote:
-> > >
-> > > I noticed that for powersave mode, I'm getting the following values:
-> >
-> > I guess you mean with the powersave governor.
-> >
-> > > cat /proc/cpuinfo | grep MHz
-> > > cpu MHz         : 2798.689
-> > > cpu MHz         : 1999.659
-> > > cpu MHz         : 1999.797
-> > > cpu MHz         : 2741.103
-> > > Also, there's now no difference in the single-core benchmark between
-> > > schedutil, ondemand, powersave and performance modes. The benchmark
-> > > always gives a very high result.
-> > > This wasn't the case before; the modes had different performance leve=
-ls.
-> >
-> > I would expect schedutil, ondemand and performance to give similar
-> > scores, but for powersave I would expect the score to be lower.
-> >
-> > With the same patch applied, can you please switch over to powersave,
-> > reset the stats and then capture the output of
-> >
-> > grep -r . /sys/devices/system/cpu/cpufreq/
-> >
-> > Also, I'd still like to see the output of
-> >
-> > grep . /sys/firmware/acpi/interrupts/sci*
->
-> Additionally, please remove all of the debug patches sent so far, apply
-> the one below and send a dmesg boot log.
->
-> I want to check if all of the CPUs use the same control values when
-> they write to the frequency scaling control register.
->
-> ---
->  drivers/cpufreq/acpi-cpufreq.c |   12 +++++++++---
->  drivers/cpufreq/cpufreq.c      |    1 +
->  2 files changed, 10 insertions(+), 3 deletions(-)
->
-> --- a/drivers/cpufreq/acpi-cpufreq.c
-> +++ b/drivers/cpufreq/acpi-cpufreq.c
-> @@ -887,9 +887,14 @@ static int acpi_cpufreq_cpu_init(struct
->                  * unknown and not detectable via IO ports.
->                  */
->                 policy->cur =3D acpi_cpufreq_guess_freq(data, policy->cpu=
-);
-> +               pr_info("CPU%u: Using I/O space for frequency scaling\n",=
- cpu);
-> +               pr_info("CPU%u: frequency scaling control address: %llu, =
-bit width: %u\n",
-> +                       cpu, perf->control_register.address,
-> +                       perf->control_register.bit_width);
->                 break;
->         case ACPI_ADR_SPACE_FIXED_HARDWARE:
->                 acpi_cpufreq_driver.get =3D get_cur_freq_on_cpu;
-> +               pr_info("CPU%u: Using FFH for frequency scaling\n", cpu);
->                 break;
->         default:
->                 break;
-> @@ -898,13 +903,14 @@ static int acpi_cpufreq_cpu_init(struct
->         /* notify BIOS that we exist */
->         acpi_processor_notify_smm(THIS_MODULE);
->
-> -       pr_debug("CPU%u - ACPI performance management activated.\n", cpu)=
-;
-> +       pr_info("CPU%u - ACPI performance management activated.\n", cpu);
->         for (i =3D 0; i < perf->state_count; i++)
-> -               pr_debug("     %cP%d: %d MHz, %d mW, %d uS\n",
-> +               pr_info("     %cP%d: %d MHz, %d mW, %d uS, %u\n",
->                         (i =3D=3D perf->state ? '*' : ' '), i,
->                         (u32) perf->states[i].core_frequency,
->                         (u32) perf->states[i].power,
-> -                       (u32) perf->states[i].transition_latency);
-> +                       (u32) perf->states[i].transition_latency,
-> +                       (u32) perf->states[i].control);
->
->         /*
->          * the first call to ->target() should result in us actually
-> --- a/drivers/cpufreq/cpufreq.c
-> +++ b/drivers/cpufreq/cpufreq.c
-> @@ -473,6 +473,7 @@ void cpufreq_enable_fast_switch(struct c
->         if (cpufreq_fast_switch_count >=3D 0) {
->                 cpufreq_fast_switch_count++;
->                 policy->fast_switch_enabled =3D true;
-> +               pr_info("CPU%u: Fast frequency switching enabled\n", poli=
-cy->cpu);
->         } else {
->                 pr_warn("CPU%u: Fast frequency switching not enabled\n",
->                         policy->cpu);
->
->
->
->
+The cgroup_drain_dying() wait in [3] turned out to be a dead end. When the
+rmdir caller is also the reaper of a zombie that pins a pidns teardown (e.g.
+host PID 1 systemd reaping orphan pids that were re-parented to it during
+the same teardown), rmdir blocks in TASK_UNINTERRUPTIBLE waiting for those
+pids to free, the pids can't free because PID 1 is the reaper and it's stuck
+in rmdir, and the system A-A deadlocks. No internal lock ordering breaks
+this; the wait itself is the bug.
+
+The css killing side that drove the original reorder, however, can be made
+cleanly asynchronous: ->css_offline() is already async, run from
+css_killed_work_fn() driven by percpu_ref_kill_and_confirm(). The fix is to
+make that chain start only after all tasks have left the cgroup. rmdir's
+user-visible side then returns as soon as cgroup.procs and friends are
+empty, while ->css_offline() still runs only after the cgroup is fully
+drained.
+
+Verified by the original reproducer (pidns teardown + zombie reaper, runs
+under vng) which hangs vanilla and succeeds here, and by per-commit
+deterministic repros for [2], [3], [4], [5] with a boot parameter that
+widens the post-exit_signals() window so each state is reliably reachable.
+Some stress tests on top of that.
+
+This seems like the right approach and I don't see problems with it. The
+changes are somewhat invasive but not excessively so, so backporting to
+-stable should be okay. If something does turn out to be wrong, the fallback
+is to revert the entire chain ([1]-[5]) and rework in the development branch
+instead.
+
+Fixes: 1b164b876c36 ("cgroup: Wait for dying tasks to leave on rmdir")
+Cc: stable@vger.kernel.org # v7.0+
+Reported-by: Martin Pitt <martin@piware.de>
+Link: https://lore.kernel.org/all/afHNg2VX2jy9bW7y@piware.de/
+Link: https://lore.kernel.org/all/35e0670adb4abeab13da2c321582af9f@kernel.org/
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+Hello Martin,
+
+Could you give this a try? It defers the percpu_ref kill chain on
+rmdir until the cgroup is fully drained, which removes the
+TASK_UNINTERRUPTIBLE wait that deadlocked against PID 1 reaping. The
+patch description has the details.
+
+Thanks.
+
+ include/linux/cgroup-defs.h |   4 +-
+ kernel/cgroup/cgroup.c      | 241 ++++++++++++++++--------------------
+ 2 files changed, 110 insertions(+), 135 deletions(-)
+
+diff --git a/include/linux/cgroup-defs.h b/include/linux/cgroup-defs.h
+index f42563739d2e..50a784da7a81 100644
+--- a/include/linux/cgroup-defs.h
++++ b/include/linux/cgroup-defs.h
+@@ -611,8 +611,8 @@ struct cgroup {
+ 	/* used to wait for offlining of csses */
+ 	wait_queue_head_t offline_waitq;
+ 
+-	/* used by cgroup_rmdir() to wait for dying tasks to leave */
+-	wait_queue_head_t dying_populated_waitq;
++	/* defers killing csses after removal until cgroup is depopulated */
++	struct work_struct finish_destroy_work;
+ 
+ 	/* used to schedule release agent */
+ 	struct work_struct release_agent_work;
+diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
+index c928dea9dea6..5634bac9cb9c 100644
+--- a/kernel/cgroup/cgroup.c
++++ b/kernel/cgroup/cgroup.c
+@@ -264,10 +264,10 @@ static void cgroup_finalize_control(struct cgroup *cgrp, int ret);
+ static void css_task_iter_skip(struct css_task_iter *it,
+ 			       struct task_struct *task);
+ static int cgroup_destroy_locked(struct cgroup *cgrp);
++static void cgroup_finish_destroy(struct cgroup *cgrp);
+ static struct cgroup_subsys_state *css_create(struct cgroup *cgrp,
+ 					      struct cgroup_subsys *ss);
+ static void css_release(struct percpu_ref *ref);
+-static void kill_css(struct cgroup_subsys_state *css);
+ static int cgroup_addrm_files(struct cgroup_subsys_state *css,
+ 			      struct cgroup *cgrp, struct cftype cfts[],
+ 			      bool is_add);
+@@ -797,6 +797,10 @@ static void cgroup_update_populated(struct cgroup *cgrp, bool populated)
+ 		if (was_populated == cgroup_is_populated(cgrp))
+ 			break;
+ 
++		/* subtree just emptied below an offlined cgrp; fire deferred destroy */
++		if (was_populated && !css_is_online(&cgrp->self))
++			queue_work(cgroup_offline_wq, &cgrp->finish_destroy_work);
++
+ 		cgroup1_check_for_release(cgrp);
+ 		TRACE_CGROUP_PATH(notify_populated, cgrp,
+ 				  cgroup_is_populated(cgrp));
+@@ -2039,6 +2043,15 @@ static int cgroup_reconfigure(struct fs_context *fc)
+ 	return 0;
+ }
+ 
++static void cgroup_finish_destroy_work_fn(struct work_struct *work)
++{
++	struct cgroup *cgrp = container_of(work, struct cgroup, finish_destroy_work);
++
++	cgroup_lock();
++	cgroup_finish_destroy(cgrp);
++	cgroup_unlock();
++}
++
+ static void init_cgroup_housekeeping(struct cgroup *cgrp)
+ {
+ 	struct cgroup_subsys *ss;
+@@ -2065,7 +2078,7 @@ static void init_cgroup_housekeeping(struct cgroup *cgrp)
+ #endif
+ 
+ 	init_waitqueue_head(&cgrp->offline_waitq);
+-	init_waitqueue_head(&cgrp->dying_populated_waitq);
++	INIT_WORK(&cgrp->finish_destroy_work, cgroup_finish_destroy_work_fn);
+ 	INIT_WORK(&cgrp->release_agent_work, cgroup1_release_agent);
+ }
+ 
+@@ -3375,7 +3388,8 @@ static void cgroup_apply_control_disable(struct cgroup *cgrp)
+ 
+ 			if (css->parent &&
+ 			    !(cgroup_ss_mask(dsct) & (1 << ss->id))) {
+-				kill_css(css);
++				kill_css_sync(css);
++				kill_css_finish(css);
+ 			} else if (!css_visible(css)) {
+ 				css_clear_dir(css);
+ 				if (ss->css_reset)
+@@ -5514,7 +5528,7 @@ static struct cftype cgroup_psi_files[] = {
+  * css destruction is four-stage process.
+  *
+  * 1. Destruction starts.  Killing of the percpu_ref is initiated.
+- *    Implemented in kill_css().
++ *    Implemented in kill_css_finish().
+  *
+  * 2. When the percpu_ref is confirmed to be visible as killed on all CPUs
+  *    and thus css_tryget_online() is guaranteed to fail, the css can be
+@@ -5993,7 +6007,7 @@ int cgroup_mkdir(struct kernfs_node *parent_kn, const char *name, umode_t mode)
+ /*
+  * This is called when the refcnt of a css is confirmed to be killed.
+  * css_tryget_online() is now guaranteed to fail.  Tell the subsystem to
+- * initiate destruction and put the css ref from kill_css().
++ * initiate destruction and put the css ref from kill_css_finish().
+  */
+ static void css_killed_work_fn(struct work_struct *work)
+ {
+@@ -6025,15 +6039,12 @@ static void css_killed_ref_fn(struct percpu_ref *ref)
+ }
+ 
+ /**
+- * kill_css - destroy a css
+- * @css: css to destroy
++ * kill_css_sync - synchronous half of css teardown
++ * @css: css being killed
+  *
+- * This function initiates destruction of @css by removing cgroup interface
+- * files and putting its base reference.  ->css_offline() will be invoked
+- * asynchronously once css_tryget_online() is guaranteed to fail and when
+- * the reference count reaches zero, @css will be released.
++ * See cgroup_destroy_locked().
+  */
+-static void kill_css(struct cgroup_subsys_state *css)
++static void kill_css_sync(struct cgroup_subsys_state *css)
+ {
+ 	struct cgroup_subsys *ss = css->ss;
+ 
+@@ -6056,24 +6067,6 @@ static void kill_css(struct cgroup_subsys_state *css)
+ 	 */
+ 	css_clear_dir(css);
+ 
+-	/*
+-	 * Killing would put the base ref, but we need to keep it alive
+-	 * until after ->css_offline().
+-	 */
+-	css_get(css);
+-
+-	/*
+-	 * cgroup core guarantees that, by the time ->css_offline() is
+-	 * invoked, no new css reference will be given out via
+-	 * css_tryget_online().  We can't simply call percpu_ref_kill() and
+-	 * proceed to offlining css's because percpu_ref_kill() doesn't
+-	 * guarantee that the ref is seen as killed on all CPUs on return.
+-	 *
+-	 * Use percpu_ref_kill_and_confirm() to get notifications as each
+-	 * css is confirmed to be seen as killed on all CPUs.
+-	 */
+-	percpu_ref_kill_and_confirm(&css->refcnt, css_killed_ref_fn);
+-
+ 	css->cgroup->nr_dying_subsys[ss->id]++;
+ 	/*
+ 	 * Parent css and cgroup cannot be freed until after the freeing
+@@ -6086,44 +6079,88 @@ static void kill_css(struct cgroup_subsys_state *css)
+ }
+ 
+ /**
+- * cgroup_destroy_locked - the first stage of cgroup destruction
++ * kill_css_finish - deferred half of css teardown
++ * @css: css being killed
++ *
++ * See cgroup_destroy_locked().
++ */
++static void kill_css_finish(struct cgroup_subsys_state *css)
++{
++	lockdep_assert_held(&cgroup_mutex);
++
++	/*
++	 * Skip on re-entry: cgroup_apply_control_disable() may have killed @css
++	 * earlier. cgroup_destroy_locked() can still walk it because
++	 * offline_css() (which NULLs cgrp->subsys[ssid]) runs async.
++	 */
++	if (percpu_ref_is_dying(&css->refcnt))
++		return;
++
++	/*
++	 * Killing would put the base ref, but we need to keep it alive until
++	 * after ->css_offline().
++	 */
++	css_get(css);
++
++	/*
++	 * cgroup core guarantees that, by the time ->css_offline() is invoked,
++	 * no new css reference will be given out via css_tryget_online(). We
++	 * can't simply call percpu_ref_kill() and proceed to offlining css's
++	 * because percpu_ref_kill() doesn't guarantee that the ref is seen as
++	 * killed on all CPUs on return.
++	 *
++	 * Use percpu_ref_kill_and_confirm() to get notifications as each css is
++	 * confirmed to be seen as killed on all CPUs.
++	 */
++	percpu_ref_kill_and_confirm(&css->refcnt, css_killed_ref_fn);
++}
++
++/**
++ * cgroup_destroy_locked - destroy @cgrp (called on rmdir)
+  * @cgrp: cgroup to be destroyed
+  *
+- * css's make use of percpu refcnts whose killing latency shouldn't be
+- * exposed to userland and are RCU protected.  Also, cgroup core needs to
+- * guarantee that css_tryget_online() won't succeed by the time
+- * ->css_offline() is invoked.  To satisfy all the requirements,
+- * destruction is implemented in the following two steps.
+- *
+- * s1. Verify @cgrp can be destroyed and mark it dying.  Remove all
+- *     userland visible parts and start killing the percpu refcnts of
+- *     css's.  Set up so that the next stage will be kicked off once all
+- *     the percpu refcnts are confirmed to be killed.
+- *
+- * s2. Invoke ->css_offline(), mark the cgroup dead and proceed with the
+- *     rest of destruction.  Once all cgroup references are gone, the
+- *     cgroup is RCU-freed.
+- *
+- * This function implements s1.  After this step, @cgrp is gone as far as
+- * the userland is concerned and a new cgroup with the same name may be
+- * created.  As cgroup doesn't care about the names internally, this
+- * doesn't cause any problem.
++ * Tear down @cgrp on behalf of rmdir. Constraints:
++ *
++ * - Userspace: rmdir must succeed when cgroup.procs and friends are empty.
++ *
++ * - Kernel: subsystem ->css_offline() must not run while any task in @cgrp's
++ *   subtree is still doing kernel work. A task hidden from cgroup.procs (past
++ *   exit_signals() with signal->live cleared) can still schedule, allocate, and
++ *   consume resources until its final context switch. Dying descendants in the
++ *   subtree can host such tasks too.
++ *
++ * - Kernel: css_tryget_online() must fail by the time ->css_offline() runs.
++ *
++ * The destruction runs in three parts:
++ *
++ * - This function: synchronous user-visible state teardown plus kill_css_sync()
++ *   on each subsystem css.
++ *
++ * - cgroup_finish_destroy(): kicks the percpu_ref kill via kill_css_finish() on
++ *   each subsystem css. Fires once @cgrp's subtree is fully drained, either
++ *   inline here or from cgroup_update_populated().
++ *
++ * - The percpu_ref kill chain: css_killed_ref_fn -> css_killed_work_fn ->
++ *   ->css_offline() -> release/free.
++ *
++ * Return 0 on success, -EBUSY if a userspace-visible task or an online child
++ * remains.
+  */
+ static int cgroup_destroy_locked(struct cgroup *cgrp)
+-	__releases(&cgroup_mutex) __acquires(&cgroup_mutex)
+ {
+ 	struct cgroup *tcgrp, *parent = cgroup_parent(cgrp);
+ 	struct cgroup_subsys_state *css;
+ 	struct cgrp_cset_link *link;
++	struct css_task_iter it;
++	struct task_struct *task;
+ 	int ssid, ret;
+ 
+ 	lockdep_assert_held(&cgroup_mutex);
+ 
+-	/*
+-	 * Only migration can raise populated from zero and we're already
+-	 * holding cgroup_mutex.
+-	 */
+-	if (cgroup_is_populated(cgrp))
++	css_task_iter_start(&cgrp->self, 0, &it);
++	task = css_task_iter_next(&it);
++	css_task_iter_end(&it);
++	if (task)
+ 		return -EBUSY;
+ 
+ 	/*
+@@ -6147,9 +6184,8 @@ static int cgroup_destroy_locked(struct cgroup *cgrp)
+ 		link->cset->dead = true;
+ 	spin_unlock_irq(&css_set_lock);
+ 
+-	/* initiate massacre of all css's */
+ 	for_each_css(css, ssid, cgrp)
+-		kill_css(css);
++		kill_css_sync(css);
+ 
+ 	/* clear and remove @cgrp dir, @cgrp has an extra ref on its kn */
+ 	css_clear_dir(&cgrp->self);
+@@ -6180,79 +6216,27 @@ static int cgroup_destroy_locked(struct cgroup *cgrp)
+ 	/* put the base reference */
+ 	percpu_ref_kill(&cgrp->self.refcnt);
+ 
++	if (!cgroup_is_populated(cgrp))
++		cgroup_finish_destroy(cgrp);
++
+ 	return 0;
+ };
+ 
+ /**
+- * cgroup_drain_dying - wait for dying tasks to leave before rmdir
+- * @cgrp: the cgroup being removed
+- *
+- * cgroup.procs and cgroup.threads use css_task_iter which filters out
+- * PF_EXITING tasks so that userspace doesn't see tasks that have already been
+- * reaped via waitpid(). However, cgroup_has_tasks() - which tests whether the
+- * cgroup has non-empty css_sets - is only updated when dying tasks pass through
+- * cgroup_task_dead() in finish_task_switch(). This creates a window where
+- * cgroup.procs reads empty but cgroup_has_tasks() is still true, making rmdir
+- * fail with -EBUSY from cgroup_destroy_locked() even though userspace sees no
+- * tasks.
++ * cgroup_finish_destroy - deferred half of @cgrp destruction
++ * @cgrp: cgroup whose subtree just became empty
+  *
+- * This function aligns cgroup_has_tasks() with what userspace can observe. If
+- * cgroup_has_tasks() but the task iterator sees nothing (all remaining tasks are
+- * PF_EXITING), we wait for cgroup_task_dead() to finish processing them. As the
+- * window between PF_EXITING and cgroup_task_dead() is short, the wait is brief.
+- *
+- * This function only concerns itself with this cgroup's own dying tasks.
+- * Whether the cgroup has children is cgroup_destroy_locked()'s problem.
+- *
+- * Each cgroup_task_dead() kicks the waitqueue via cset->cgrp_links, and we
+- * retry the full check from scratch.
+- *
+- * Must be called with cgroup_mutex held.
++ * See cgroup_destroy_locked() for the rationale.
+  */
+-static int cgroup_drain_dying(struct cgroup *cgrp)
+-	__releases(&cgroup_mutex) __acquires(&cgroup_mutex)
++static void cgroup_finish_destroy(struct cgroup *cgrp)
+ {
+-	struct css_task_iter it;
+-	struct task_struct *task;
+-	DEFINE_WAIT(wait);
++	struct cgroup_subsys_state *css;
++	int ssid;
+ 
+ 	lockdep_assert_held(&cgroup_mutex);
+-retry:
+-	if (!cgroup_has_tasks(cgrp))
+-		return 0;
+-
+-	/* Same iterator as cgroup.threads - if any task is visible, it's busy */
+-	css_task_iter_start(&cgrp->self, 0, &it);
+-	task = css_task_iter_next(&it);
+-	css_task_iter_end(&it);
+-
+-	if (task)
+-		return -EBUSY;
+ 
+-	/*
+-	 * All remaining tasks are PF_EXITING and will pass through
+-	 * cgroup_task_dead() shortly. Wait for a kick and retry.
+-	 *
+-	 * cgroup_has_tasks() can't transition from false to true while we're
+-	 * holding cgroup_mutex, but the true to false transition happens
+-	 * under css_set_lock (via cgroup_task_dead()). We must retest and
+-	 * prepare_to_wait() under css_set_lock. Otherwise, the transition
+-	 * can happen between our first test and prepare_to_wait(), and we
+-	 * sleep with no one to wake us.
+-	 */
+-	spin_lock_irq(&css_set_lock);
+-	if (!cgroup_has_tasks(cgrp)) {
+-		spin_unlock_irq(&css_set_lock);
+-		return 0;
+-	}
+-	prepare_to_wait(&cgrp->dying_populated_waitq, &wait,
+-			TASK_UNINTERRUPTIBLE);
+-	spin_unlock_irq(&css_set_lock);
+-	mutex_unlock(&cgroup_mutex);
+-	schedule();
+-	finish_wait(&cgrp->dying_populated_waitq, &wait);
+-	mutex_lock(&cgroup_mutex);
+-	goto retry;
++	for_each_css(css, ssid, cgrp)
++		kill_css_finish(css);
+ }
+ 
+ int cgroup_rmdir(struct kernfs_node *kn)
+@@ -6264,12 +6248,9 @@ int cgroup_rmdir(struct kernfs_node *kn)
+ 	if (!cgrp)
+ 		return 0;
+ 
+-	ret = cgroup_drain_dying(cgrp);
+-	if (!ret) {
+-		ret = cgroup_destroy_locked(cgrp);
+-		if (!ret)
+-			TRACE_CGROUP_PATH(rmdir, cgrp);
+-	}
++	ret = cgroup_destroy_locked(cgrp);
++	if (!ret)
++		TRACE_CGROUP_PATH(rmdir, cgrp);
+ 
+ 	cgroup_kn_unlock(kn);
+ 	return ret;
+@@ -7029,7 +7010,6 @@ void cgroup_task_exit(struct task_struct *tsk)
+ 
+ static void do_cgroup_task_dead(struct task_struct *tsk)
+ {
+-	struct cgrp_cset_link *link;
+ 	struct css_set *cset;
+ 	unsigned long flags;
+ 
+@@ -7043,11 +7023,6 @@ static void do_cgroup_task_dead(struct task_struct *tsk)
+ 	if (thread_group_leader(tsk) && atomic_read(&tsk->signal->live))
+ 		list_add_tail(&tsk->cg_list, &cset->dying_tasks);
+ 
+-	/* kick cgroup_drain_dying() waiters, see cgroup_rmdir() */
+-	list_for_each_entry(link, &cset->cgrp_links, cgrp_link)
+-		if (waitqueue_active(&link->cgrp->dying_populated_waitq))
+-			wake_up(&link->cgrp->dying_populated_waitq);
+-
+ 	if (dl_task(tsk))
+ 		dec_dl_tasks_cs(tsk);
+ 
+-- 
+2.54.0
+
