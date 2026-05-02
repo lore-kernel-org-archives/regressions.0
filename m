@@ -1,45 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DE553CFF56;
-	Fri,  1 May 2026 19:51:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B8511B3925
+	for <regressions@lists.linux.dev>; Sat,  2 May 2026 09:22:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777665080; cv=none; b=RriGK0GPxEm0O5YX8RoPvFbepLJUttQTIEbGiQD/hreb7V+5THBQFJ4pO8TLszB97TR0EyFkK68oi+Ft1GXlBZegspvAPW6zFqpkBwaEDDgy76+d3brHXfvOmdFeQ14oGn+vsgAfpLB1kZl/Q2ADGe+U3okV8e5V7kSpQUqzwqE=
+	t=1777713773; cv=none; b=l4X02NeZ0MO3Q+iKRwfxdCp9ji/5J47XsbaGbV5PgAGIE8ptDSOUSN1vlddYTr2jik+lAoFKovIxewaTS6L85g+zF9mDPdj+2rOAN7IHLbpzBUHJCbZU8f2RDPgquqmhW7Uq00SuTYF8TfYu2XzD5xg/NvvkWDy5YA9eJKxouMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777665080; c=relaxed/simple;
-	bh=2lwK0DRmBaAJw8gyAufqK7jzcxgKzRLJfNjgaScql5g=;
+	s=arc-20240116; t=1777713773; c=relaxed/simple;
+	bh=5D3TxgIyE00DYrWiTKhypjt+XeZdEVjGxqgjrwqORLI=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=FxEHmZwszKnULk0rdV+gHUto61rJgp2S9/LoCk2CqNIrpJ2u8RFkp6QXZqWGs63+/eMrQhP0oMlTA+9hp/edblDMdNVpqLSlnDH2rq0Mc8SEXtFWZPX7ucuN8uPwVeflUM3ZNIycyw+vJILxZsnlEd2qiU3D4LXe36jxOQMaOGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=srPRTdlj; arc=none smtp.client-ip=10.30.226.201
+	 Content-Disposition; b=j7cSM0VJ6xehRgePGA3I5Cq3LkAr5kXRKVT9x64Ika4FEguJJ585EQRoLKM6RpmgpR42tbX+2/rpAS/qI0cuTciQ8znyIdwzk9CeNMTRGsMxPq3Na8C+uIlrt7A+7RTGBm4TF+J9T7ce1XohjlNfzb911EYJkWSEUS3/i55FYho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SrQ1A94c; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="srPRTdlj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCFE5C2BCB4;
-	Fri,  1 May 2026 19:51:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777665080;
-	bh=2lwK0DRmBaAJw8gyAufqK7jzcxgKzRLJfNjgaScql5g=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=srPRTdljPgAgcQl0cQ2FP8JuQz/ZBexicobfWo69YwU+2UWBwJMaKBJ4KUkKv4hfB
-	 Ggbk8HPpnvZOsVBaVEiWVbxIhmXt1JLyT93k4gNmVYoo1eBEQi3yeV0gS7GcqmU7Vm
-	 l4rVDMXhBsHJtaJZP+sUSPv2N/ExfiAXZBUgh+PlzPK75cgSk1Ncb+gYZ1LeClu3cN
-	 nWCkrtANJoUVQUZuYpbi5U6IwrUqH+P+Ie6N17lbtb58tbKFVUtb+/8E53qJ6IXnew
-	 W+/S35PeavybIrWSDXd2qpFnpldRFg2y9VlHnsii0z7hD/8tQXRUTi7TqQYqYXTGOm
-	 Ie9n7fy5r058A==
-Date: Fri, 1 May 2026 14:51:18 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Lukas Wunner <lukas@wunner.de>
-Cc: Bernd Schumacher <bernd@bschu.de>, "Alexandre N." <an.tech@mailo.com>,
-	Salvatore Bonaccorso <carnil@debian.org>, 1131025@bugs.debian.org,
-	Uwe Kleine-Koenig <ukleinek@debian.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Alex Williamson <alex@shazbot.org>,
-	Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>,
-	regressions@lists.linux.dev, linux-pci@vger.kernel.org,
-	Thorsten Leemhuis <regressions@leemhuis.info>
-Subject: Re: [PATCH] PCI: Update saved_config_space upon resource assignment
-Message-ID: <20260501195118.GA516950@bhelgaas>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SrQ1A94c"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-488ba840146so20843645e9.1
+        for <regressions@lists.linux.dev>; Sat, 02 May 2026 02:22:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1777713771; x=1778318571; darn=lists.linux.dev;
+        h=content-disposition:mime-version:mail-followup-to:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5D3TxgIyE00DYrWiTKhypjt+XeZdEVjGxqgjrwqORLI=;
+        b=SrQ1A94cjl0wgP+S8gPnNi72dbP64tJC0E2dx/b52nbEwhukv7bqjOxTb+eHqMbNXY
+         Cjfbb2hNTbkM/Olpvz/f1CKnKPY9TYdhAQ0Q4Yz0D3Q/32BQqTUreYWUgumKc6J46qaA
+         VXodcuFO6H88irHLHyuF8JYdFPSqO3cF+2gE4jpPdDrWClaOr0Ro22cyF7JcSUh5tQES
+         NEYcGWZUDRxl9+Sh2J7mwpOUWhfR4GnfAtA6j7cLoLJx2QJqZyy7gX7U7zweA2BUXm2D
+         Y61XZFVFLdRiWaRTmbUq4LFAu/ruH0D9JXv7ofT9EuuAgDT04DD1PqTFxEsOO8R1k26J
+         Bxrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1777713771; x=1778318571;
+        h=content-disposition:mime-version:mail-followup-to:message-id
+         :subject:cc:to:from:date:sender:x-gm-gg:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=5D3TxgIyE00DYrWiTKhypjt+XeZdEVjGxqgjrwqORLI=;
+        b=TYEf9JBkEGLBLdpHeTICClHqjGpW7fTkk4IWU8sVCQ3RElscziLVeSPdSC7pWi/Rpy
+         yfr/8DZTxUG00qmQ5hr+/outqn8PGSfRliHUx0KH3/zoBW8w7sPmPOfOrBY/JfWZXRGn
+         c0aJpFHswBVgHA2261rOAMuKlrud20mNjNgf81cuVDls1tLnjswCvoJW7WdR+IxVetZ7
+         ylDgKuwQ4cxXBxsNcvmJd69RiyfI14vH99NRFjyRlcAomFeAtO047hXUcMun249dWDYF
+         SGumMUkN/ZoA/3BuBzTFvhuPU7hFbuL429+nCEfa0Fi498GWitoG0KUIYXg3PrWgnUHo
+         NGyw==
+X-Gm-Message-State: AOJu0YwmwQNomL0gy7HAfgK6H5UIhNS576hqnezL3CIPcpKCUFDnboWO
+	LYGmOStk+DSG/SOxAddw2LD703oXwLBokb2+kP+n5PWb/Ftr4JWAvgWF
+X-Gm-Gg: AeBDietehIKSOK6AgL61dCnBZsO72rM2c+zUMOPRlCvF347kwXbv9RwxsRGlYvZKUIv
+	pijyuVA36Z6bxr18f+0GqWJC6sgMW5Coy8g99lE7aOnLUeP+YHZa9V7VFUBQPJdOmd0oDKbkqPX
+	4ZGWFAuhPIjfa5ALoEZrcYjKr+e+D/rnQDreY+fG3gl1sB+EUIJEg7mMXW3Aj2bUrxF+r045YET
+	ce9HZIyEY55fNYNli0gBwiXeR+qKhUiXUb+cLh/w3LNiQgG//TZeN0rDxA5dMVuUbMAdI7n9c6Y
+	CSfuULKa2VBRmSqThEDh47xUym4j3jrgsXZxbEzFveVw78ZNLCoJOxa+37Pp3/r6sAaVOzhvukR
+	d2LKLORcRq93TSpSahbxswAL29l5XvRgylnoWKrXhEoYiS9kJswQgPKvhkrqBqYzH9ORIIOtWyU
+	xa92RRyXVngFMVP0cJLqpB6aSgNMkTgfeZozJXSKgrq7fVIXqgPy/C9MamvJvqYdwUvjeCgA==
+X-Received: by 2002:a05:600c:3f06:b0:485:3abe:ab86 with SMTP id 5b1f17b1804b1-48a9852cc0bmr36278225e9.4.1777713770454;
+        Sat, 02 May 2026 02:22:50 -0700 (PDT)
+Received: from eldamar.lan (c-82-192-247-196.customer.ggaweb.ch. [82.192.247.196])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-44a986aa70dsm11010046f8f.25.2026.05.02.02.22.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 02 May 2026 02:22:49 -0700 (PDT)
+Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
+Received: by eldamar.lan (Postfix, from userid 1000)
+	id C3801BE2EE7; Sat, 02 May 2026 11:22:48 +0200 (CEST)
+Date: Sat, 2 May 2026 11:22:48 +0200
+From: Salvatore Bonaccorso <carnil@debian.org>
+To: Jiayuan Chen <jiayuan.chen@shopee.com>, Paolo Abeni <pabeni@redhat.com>,
+	Sasha Levin <sashal@kernel.org>
+Cc: regressions@lists.linux.dev, stable@vger.kernel.org,
+	1135514@bugs.debian.org, podorski <podorski@gmail.com>,
+	Brad Barnett <debian-bugs5@l8r.net>,
+	"David S. Miller" <davem@davemloft.net>,
+	David Ahern <dsahern@kernel.org>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>
+Subject: [6.1.y regresssion] 9a95ec9144ee ("xfrm: fix ip_rt_bug race in
+ icmp_route_lookup reverse path") causes log spam on ping to unreachable host
+Message-ID: <177771348699.1898023.16904466444228860838@eldamar.lan>
+Mail-Followup-To: Jiayuan Chen <jiayuan.chen@shopee.com>,
+	Paolo Abeni <pabeni@redhat.com>, Sasha Levin <sashal@kernel.org>,
+	regressions@lists.linux.dev, stable@vger.kernel.org,
+	1135514@bugs.debian.org, podorski <podorski@gmail.com>,
+	Brad Barnett <debian-bugs5@l8r.net>,
+	"David S. Miller" <davem@davemloft.net>,
+	David Ahern <dsahern@kernel.org>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Simon Horman <horms@kernel.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -48,102 +92,30 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <febc3f354e0c1f5a9f5b3ee9ffddaa44caccf651.1776268054.git.lukas@wunner.de>
 
-[+cc Thorsten, thanks for the reminder!]
+Control: forwarded -1 https://lore.kernel.org/regressions/177771348699.1898023.16904466444228860838@eldamar.lan
 
-On Wed, Apr 15, 2026 at 05:56:06PM +0200, Lukas Wunner wrote:
-> Bernd reports passthrough failure of a Digital Devices Cine S2 V6 DVB
-> adapter plugged into an ASRock X570S PG Riptide board with BIOS version
-> P5.41 (09/07/2023):
-> 
->   ddbridge 0000:05:00.0: detected Digital Devices Cine S2 V6 DVB adapter
->   ddbridge 0000:05:00.0: cannot read registers
->   ddbridge 0000:05:00.0: fail
-> 
-> BIOS assigns an incorrect BAR to the DVB adapter which doesn't fit into
-> the upstream bridge window.  The kernel corrects the BAR assignment:
-> 
->   pci 0000:07:00.0: BAR 0 [mem 0xfffffffffc500000-0xfffffffffc50ffff 64bit]: can't claim; no compatible bridge window
->   pci 0000:07:00.0: BAR 0 [mem 0xfc500000-0xfc50ffff 64bit]: assigned
-> 
-> Correction of the BAR assignment happens in an x86-specific fs_initcall,
-> pcibios_assign_resources(), after device enumeration in a subsys_initcall.
-> This order was introduced at the behest of Linus in 2004:
-> 
->     https://git.kernel.org/tglx/history/c/a06a30144bbc
-> 
-> No other architecture performs such a late BAR correction.
-> 
-> Bernd bisected the issue to commit a2f1e22390ac ("PCI/ERR: Ensure error
-> recoverability at all times"), but it only occurs in the absence of commit
-> 4d4c10f763d7 ("PCI: Explicitly put devices into D0 when initializing").
-> This combination exists in stable kernel v6.12.70, but not in mainline,
-> hence Bernd cannot reproduce the issue with mainline.
-> 
-> Since a2f1e22390ac, config space is saved on enumeration, prior to BAR
-> correction.  Upon passthrough, the corrected BAR is overwritten with the
-> incorrect saved value by:
-> 
->   vfio_pci_core_register_device()
->     vfio_pci_set_power_state()
->       pci_restore_state()
-> 
-> But only if the device's current_state is PCI_UNKNOWN, as it was prior to
-> commit 4d4c10f763d7.  Since the commit, it is PCI_D0, which changes the
-> behavior of vfio_pci_set_power_state() to no longer restore the state
-> without saving it first.
-> 
-> Alexandre is reporting the same issue as Bernd, but in his case, mainline
-> is affected as well.  The difference is that on Alexandre's system, the
-> host kernel binds a driver to the device which is unbound prior to
-> passthrough, whereas on Bernd's system no driver gets bound by the host
-> kernel.
-> 
-> Unbinding sets current_state to PCI_UNKNOWN in pci_device_remove(), so
-> when vfio-pci is subsequently bound to the device, pci_restore_state() is
-> once again called without invoking pci_save_state() first.
-> 
-> To robustly fix the issue, always update saved_config_space upon resource
-> assignment.
-> 
-> Reported-by: Bernd Schumacher <bernd@bschu.de>
-> Tested-by: Bernd Schumacher <bernd@bschu.de>
-> Closes: https://lore.kernel.org/r/acfZrlP0Ua_5D3U4@eldamar.lan/
-> Reported-by: Alexandre N. <an.tech@mailo.com>
-> Tested-by: Alexandre N. <an.tech@mailo.com>
-> Closes: https://lore.kernel.org/r/dd3c3358-de0f-4a56-9c81-04aceaab4058@mailo.com/
-> Fixes: a2f1e22390ac ("PCI/ERR: Ensure error recoverability at all times")
-> Signed-off-by: Lukas Wunner <lukas@wunner.de>
-> Cc: stable@vger.kernel.org # v6.12+
+Hi
 
-a2f1e22390ac appeared in v6.19.  Applied this fix to pci/for-linus for
-v7.1, thanks!
+[sending correctly including the needed mailinglists]
 
-> ---
->  drivers/pci/setup-res.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/pci/setup-res.c b/drivers/pci/setup-res.c
-> index e5fcadf..1769ba9 100644
-> --- a/drivers/pci/setup-res.c
-> +++ b/drivers/pci/setup-res.c
-> @@ -102,6 +102,7 @@ static void pci_std_update_resource(struct pci_dev *dev, int resno)
->  	}
->  
->  	pci_write_config_dword(dev, reg, new);
-> +	dev->saved_config_space[reg / 4] = new;
->  	pci_read_config_dword(dev, reg, &check);
->  
->  	if ((new ^ check) & mask) {
-> @@ -112,6 +113,7 @@ static void pci_std_update_resource(struct pci_dev *dev, int resno)
->  	if (res->flags & IORESOURCE_MEM_64) {
->  		new = region.start >> 16 >> 16;
->  		pci_write_config_dword(dev, reg + 4, new);
-> +		dev->saved_config_space[(reg + 4) / 4] = new;
->  		pci_read_config_dword(dev, reg + 4, &check);
->  		if (check != new) {
->  			pci_err(dev, "%s: error updating (high %#010x != %#010x)\n",
-> -- 
-> 2.51.0
-> 
+This is a 6.1.y specific regression, so I'm not CC'ing netdev, but
+maintainers, hope this is fine. After a backport of 81b84de32bb2
+("xfrm: fix ip_rt_bug race in icmp_route_lookup reverse path") was
+applied in the 6.1.y stable series as
+9a95ec9144eeff1fc6fbcc21b677e322c6f1430b, user are reporting that on
+pings to unreachable host the log is spammed with the "detected local
+route for %pI4 during ICMP sending, src %pI4\n" messages.
+
+One report is at: https://bugs.debian.org/1135514
+
+This does not happens with other stable series versions (6.12.y
+tested explicitly, 6.6.y I have not avaiable to test).
+
+Is there a missing requisite in 6.1.y?
+
+#regzbot introduced: 9a95ec9144eeff1fc6fbcc21b677e322c6f1430b
+#regzbot link: https://bugs.debian.org/1135514
+
+Regards,
+Salvatore
