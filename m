@@ -1,85 +1,59 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 303272DF6E9;
-	Mon,  4 May 2026 07:28:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E23AC3E6383;
+	Mon,  4 May 2026 18:54:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777879731; cv=none; b=FUjaP+EomyzBnA70xvXpCV7Bmg6VUdMyQYldczMKTd5r1eEK1WG0g5RCfl04UsWJ7qduSiyBfJIxsEcYSxk/R+iGIyVLzfFbNgtFFpkKMQuvk/IiU4G9Mkq2p5Kuitxg4ERqCOmFlvNdp75VzXi1lxxiFgylNP8h7bw1KwUUOaE=
+	t=1777920850; cv=none; b=hp/cgmRRohuvMhpwICeyxfGnPIyC/Vb8H+FrMyE+8P1BH4T+c0peiSU/4IINkIF+qCM7f4u98JgDwpZ4K07wTO06mTJ6HjwE9jIGcfBYBAhTzC0FHacKJFbdG/xk0JifRxk+BazU+1oEivBeSuC8MnCAZ/+SMjKIknIESkYE6nQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777879731; c=relaxed/simple;
-	bh=U8grDQsG4o7FCiABmuvMOAKAJ8HFDRDURCKVnfrZHKA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=at3pqy99JmjH9NaLAJqFfsCk0HJbBXojKgK7mIAVA6BiCqmGYpggXqosdxOZalAWbBX2exMrZNJlSujReHMvDf7Czn1Swa0yN4ZF3WHANVqo55+pH7zf/ZPdLmWxQOALOwpByjs/V59bTtwo56eFF+w97ETixK0n1n97kI4KB7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=lkB0ncpt; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=tQ+TTJPc; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1777920850; c=relaxed/simple;
+	bh=h+uhi/NqA0FdGMn82gWEgw/8zcywPLWzEWQvhat6/88=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References; b=JfHE0Xh9QCTclWdcCWTxi28b/8ovh4bV27v6XRFkSpW1LsCuX7qg62ZIEOdOOZKzZ5zT4Oz3yt4n4ZivKoe1MaGS9HbQutfwK/l8cAjs6OvUPSFLMOoCF+t/JGIA0549PcU/hDQgEJznRNeHc+t16ZpY5hZ2m1pcqyyMxt7hkVk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FGyOvreE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lkB0ncpt";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="tQ+TTJPc"
-Date: Mon, 4 May 2026 09:28:46 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1777879728;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=U8grDQsG4o7FCiABmuvMOAKAJ8HFDRDURCKVnfrZHKA=;
-	b=lkB0ncptDjO+lD0w9K3flKDJovPeaeaIw8NDSAliM1dIacRt6kQQGQB9pQKmdsTxgEo5lg
-	TCdR2MfMWr2JFylxeDeg/AEx9oh0LsLmmauPc3w2udkzICEvBq3wSDLQI03jMtzkbpqv6w
-	91dcYogTzI8NZpqhP3wz6vaRutTT5Dx+1F7ZlrGrHkn4XSroDxVGm5YDwfI2iulLPWx27X
-	GFf2c3g+OdofvMjbrFyrCJSd2LNyaaQYCJD/P10r5dsPPhwYD+nZljQEHOfEX0ulEJu04s
-	iWD/jr38opR4lOdBqOofm7iMIu3yLuVQ1WL2XSnJ11bFLDR/Klq8Z81KJVPeqw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1777879728;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=U8grDQsG4o7FCiABmuvMOAKAJ8HFDRDURCKVnfrZHKA=;
-	b=tQ+TTJPcsqIc5w5QGGg/5Oomn1KVNn4g1lIwIImtqX8PhQyW6/+Xqle7GOoLPvuQClk/w4
-	uSoZbZqe16NWtzAg==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Tejun Heo <tj@kernel.org>
-Cc: Martin Pitt <martin@piware.de>, regressions@lists.linux.dev,
-	cgroups@vger.kernel.org, Johannes Weiner <hannes@cmpxchg.org>,
-	Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>,
-	David Vernet <void@manifault.com>, Andrea Righi <arighi@nvidia.com>,
-	Changwoo Min <changwoo@igalia.com>,
-	Emil Tsalapatis <emil@etsalapatis.com>, sched-ext@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 cgroup/for-7.1-fixes sched_ext/for-7.1-fixes] cgroup:
- Defer css percpu_ref kill on rmdir until cgroup is depopulated
-Message-ID: <20260504072846.qM4LxsIF@linutronix.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FGyOvreE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E928C2BCB8;
+	Mon,  4 May 2026 18:54:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1777920849;
+	bh=h+uhi/NqA0FdGMn82gWEgw/8zcywPLWzEWQvhat6/88=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=FGyOvreEiMEaXdRBOOmb+UQ2J0P8dT1vMZM2ECeQ8cWbZ2pPj+ydl4qOo+xkF3VmR
+	 pYPQly6gcwTXC3PQBpNHwZIZB4i4JmllJ5++KeYIr0sE9yObcv5snbFy1kHlFkiQ3L
+	 T7Ecr9Vnhu8QgiQ83n6U0S58A9C9Mt4j+VH19cFiPyfPLN4md2drA4aD7o53xczR1n
+	 iHo7QOGQ0PSz9Jvm2pbdRWN5buHlgKMpXTfDdZGkDZweqVCc9XjukvVGTHWfS6AprY
+	 vsh6SJrmb56SjJCaPdYYeiCRme7c51Ys4cqsEpiWEHsMrIBTzSSmzTvdUPYIlXba0K
+	 /43mPcLCWW91g==
+Date: Mon, 04 May 2026 08:54:08 -1000
+Message-ID: <fb9ce3e0dbd50b89a1c9b687fc445be8@kernel.org>
+From: Tejun Heo <tj@kernel.org>
+To: Martin Pitt <martin@piware.de>
+Cc: regressions@lists.linux.dev,
+ cgroups@vger.kernel.org,
+ Johannes Weiner <hannes@cmpxchg.org>,
+ Michal Koutný <mkoutny@suse.com>,
+ Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+ David Vernet <void@manifault.com>,
+ Andrea Righi <arighi@nvidia.com>,
+ Changwoo Min <changwoo@igalia.com>,
+ Emil Tsalapatis <emil@etsalapatis.com>,
+ sched-ext@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 cgroup/for-7.1-fixes sched_ext/for-7.1-fixes] cgroup: Defer css percpu_ref kill on rmdir until cgroup is depopulated
+In-Reply-To: <ad3b4597f3df81914b871618535370db@kernel.org>
 References: <ad3b4597f3df81914b871618535370db@kernel.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <ad3b4597f3df81914b871618535370db@kernel.org>
 
-On 2026-05-01 08:31:22 [-1000], Tejun Heo wrote:
-> A chain of commits going back to v7.0 reworked rmdir to satisfy the
-> controller invariant that a subsystem's ->css_offline() must not run while
-> tasks are still doing kernel-side work in the cgroup.
-=E2=80=A6
->=20
-> Fixes: 1b164b876c36 ("cgroup: Wait for dying tasks to leave on rmdir")
-> Cc: stable@vger.kernel.org # v7.0+
-> Reported-by: Martin Pitt <martin@piware.de>
-> Link: https://lore.kernel.org/all/afHNg2VX2jy9bW7y@piware.de/
-> Link: https://lore.kernel.org/all/35e0670adb4abeab13da2c321582af9f@kernel=
-=2Eorg/
-> Signed-off-by: Tejun Heo <tj@kernel.org>
-> Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Hello,
 
-I gave it a quick spin, everything looks fine.
+Applied to cgroup/for-7.1-fixes.
 
-Acked-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Thanks.
 
-Sebastian
+--
+tejun
