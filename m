@@ -1,127 +1,197 @@
-Received: from mail-dl1-f46.google.com (mail-dl1-f46.google.com [74.125.82.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from CH4PR04CU002.outbound.protection.outlook.com (mail-northcentralusazon11013043.outbound.protection.outlook.com [40.107.201.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD4BA38F65D
-	for <regressions@lists.linux.dev>; Tue,  5 May 2026 14:59:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.46
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777993148; cv=none; b=W2bifqzBkh7NsNvUCfOhyf/Y/zgkGbbHp9MKqmWujSWNXQP6yCLZaqrhBI96ksOMaiz3g1oh6a51ffAKN/3lLsom6AFo93fpVuqJTCBj7T8jHBo/YrWWP713NqHNfhN/wIJNVmI+s+bqoQoW2ZOkMDX8XIRIBNLrwAl9JN0J95M=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777993148; c=relaxed/simple;
-	bh=3ko3A4kimfuWBvgGqRXOJUht8CCrfn4FYAasG+Lug2c=;
-	h=Content-Type:MIME-Version:Subject:From:To:Cc:Date:Message-ID; b=deNdteiWcOlRyI8qMhOhuRTtjpJ/+K1eVSU48+OWa86SWOuP098IW21WrYNWErXA7a3Lw/yadjVE4rcRFYVvx4YbkTyBZqp/HmtQ18GyVXzUi6w1VcES/dEPmmzrwFXelIvE7KZbb3+xbz8kR4Dc0OHGGkY6ywjuTE4KQHmd1BE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kernelci.org; spf=pass smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci.org header.i=@kernelci.org header.b=eluZiZhp; arc=none smtp.client-ip=74.125.82.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kernelci.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernelci.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4576748122A
+	for <regressions@lists.linux.dev>; Tue,  5 May 2026 15:05:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.201.43
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1777993534; cv=fail; b=pdC5ILvwF8k358p29DlMm2jb85DzcJ3OqqmWxMQTIc83tOXLOYG/WnzNc2gRtIkbYe0+MwNyGgamkc/VIAxEHh7kb+W+dCKbq6uXANHpsM9SXUgomXuI6hO9QLu8uc6YTtFxnapvq03vS0D01kCJwq2YhSsn88DG2u03gMYR/hQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1777993534; c=relaxed/simple;
+	bh=xMlLyJ58uEY81IxP7J9WA6O9c7ywOXM8Z/WSm//J46A=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=nY34RJG0SahYvtUoCe3om3OO9bROYlrak1UnCtEVad0gOm6cU0QWrUVeUn5IvbU6wLZbL/Fp/MQXVrlXgTovSbRlzDMnpKK98NNJ1r05BjVse7xmMVyCpYR13ooZz1fX5GI2NhOO8XA/IWJ4Y3SlgeL0yF7KnOCccKtVVlbCthU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=RzsD43B/; arc=fail smtp.client-ip=40.107.201.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci.org header.i=@kernelci.org header.b="eluZiZhp"
-Received: by mail-dl1-f46.google.com with SMTP id a92af1059eb24-130a4aae5ccso3771363c88.1
-        for <regressions@lists.linux.dev>; Tue, 05 May 2026 07:59:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci.org; s=google; t=1777993146; x=1778597946; darn=lists.linux.dev;
-        h=message-id:date:reply-to:cc:to:from:subject
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=V+JNAHsC4qi6OiUkol5+kLRuL2+NBa4HUfFXhnGmjXY=;
-        b=eluZiZhpV3J9VBS/zRla9TUBIhRFpMByHPC6pUEIzxzWiDz7dvvdyENBIoud3fWSL+
-         teVIDrEaOZAn7GtGZWHDNJ5UjFKXwk7+E+W045tQEKZKpvuEdg8ej8N5lvNNb07QEvpr
-         ssUe4HJYjzd+v6gojZ2pv8on7Ox87La/ZWHZtcVs9buQJYyP66dtAVNw9dPaV724Rgqw
-         jt2bjkwtLwJ/tUqZ/JzIV1PoGYe6gJPji0MKv58l1a/O3OdOF/+WpTih7AvQjaaDpG+Y
-         3lNtIPcuCRZWOl74vuE6h7JK/N69QFG6BK7P1q4YaN0f9cFJ698o+vOFkZ0+4I6LkvcX
-         iHgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777993146; x=1778597946;
-        h=message-id:date:reply-to:cc:to:from:subject
-         :content-transfer-encoding:mime-version:x-gm-gg:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=V+JNAHsC4qi6OiUkol5+kLRuL2+NBa4HUfFXhnGmjXY=;
-        b=V7gFRCG/4idqKqNzubdnTcBXq5DHK/Q505KdwZXIWI3I7UC6IthoV5OpQxs2npXsqJ
-         o9U9m1eAx/ciM1ayfUGkB6V4LUHQKMcUBduNtX2bQTzIOfDV0pprgTpAilBJdYij8CDy
-         oSG9TJpRiZfpmZgAT/50aAP43ZuaPjsvby+MfwblbPJufIY1c0pLqJpYsNSQS/AhLnkA
-         06CT7W2KB6NNlqrQolC61sWFxfO+71TJ6KW9W6cC9kkGG7itRGm04k//h1WvXlDRHK4k
-         ptnjcJNtVDFCaeAOEQR0PSonC7rSaTNdf4ObUeiE7fAsZlMhVNI+YHb8x75LXYBRKtZ0
-         q8tA==
-X-Gm-Message-State: AOJu0YxPDUM1XNmsg15i6OiW9/9s73GGy3qyaTkWdeZ7CXwHztVgQJ9Y
-	+fJUUNmUA3WxGVldFQvxF80a618zkyOI0OsNsVwlqvgPJlGYaiDNh5Iv3ZLs4Xw5Wo0=
-X-Gm-Gg: AeBDietQ2PgNEzYetgJpw6MxEn79IGxSgabeyd2d5AN+Pn7yobzH4YT9HNh94h7zwHU
-	mvUs6mfNOxQbSQsD+L967Vu2wqG1T3lXIs4/et6XTquViskFG/dutyGulfQedfCYye3vM0x9BBY
-	38ACg5xPTjHxxB6euv8Y7LuvKczLq+mbRUS/BvL+KHxmu3EYOCFc5SdisRx2mbBDFGdBYU+rC+K
-	XRBa5wckTYBqQHW/yfKPpS2LRYjz5WUV7ZRJdESOYWAg8tDUP+BCWgwWvKKwdIndKVNwPxpbQlU
-	omJJ5aGRMsBcMcmBSm1VLEXZw2A1U2b2bXoqDumjkVgadFm2c98GLEBe7r4cuc3Wi99DLothXF/
-	WzinOHo4jwAtzJReKXhDMgTLRjQXDNF6e689GYS3FjnfBoMu46KuIliga9/V2IIwRH6tta9fmWN
-	yjfz8fqnsE79K1EQGi8ZV/2CLmHBg=
-X-Received: by 2002:a05:7022:523:b0:12d:ca31:f1b5 with SMTP id a92af1059eb24-12dfd81a74cmr7152860c88.26.1777993145586;
-        Tue, 05 May 2026 07:59:05 -0700 (PDT)
-Received: from 997d03828cfd ([20.38.40.137])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-12df8278e7dsm19358808c88.2.2026.05.05.07.59.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 May 2026 07:59:05 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="RzsD43B/"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=aJbWPFhOMfAzgsoSpqiO3HrnGAmj98Ioj8O28I+F/QAzBp0zerX4uoD1z/6YWmTol3OG5zzHRfR1fksimPXloVxFiOyh9PvBne7+7qIZ6Gek+cfuHl7NoQWFRTo13mXe95xoq3SbSMh3wH+nnrmB5gLLxpxQZY69Na9DT7WuJ9P5LnTJyCfLuIb/bY9hD2cU6ZhbLHtkbZXJcjcCMtmS7N67HwVAU2G14mOw17B7ntuHEm0V3c0lYVAjbmDtfDKhWqc1sspDUrRQuVbBwqFttiCEfz/PchvUweXDAtNNOdu8OhDIiEW5BQ6lL5KrDRXEvA5ip5zkoGN+ZKjVqYR7oA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=jf2aIwrdQkySFzA765s/xcY4Fo+YLk6dmqOc0YSs7zM=;
+ b=ApMiZ+Q1YvuNoGoN2HvUPpWz922SeBn5RdoemDtwFtvuM1IUUlfSvZ4C3NBYIope2RxVtuvP/aEBoYdD5EAmtIg9Qeyh/7Dp/PPqxXk2VgDMqo2M2eUVg165D95bfBHw2C775YHrtv4rWhL6g9k3ZPltcxYzz9SgY0VYDsJsMtuzYl8xs+S1QbR9IJP+faMBDUAzWpxrFAFd/ww4WApbHPj6ZRV8UA9Hfa3XL4vsGpz7gDQPyH2titfAbZlZ5vcPuZRdoCeD9PLY8lJciYAn9UMPUUIPiklWsLwbTC83ZFMM7RQVUxB2QQMwq/spw3CJ59RsaNSI8eUTWmQAVl8jrQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jf2aIwrdQkySFzA765s/xcY4Fo+YLk6dmqOc0YSs7zM=;
+ b=RzsD43B/aFl/DG0z0KT15w0GEjI7zHy5A6rdJwfh0RIwR9chs1CkQyDrfJA8TWNmbQmBhx8KXzzy3Z/F5tMQ4Ms9kbiqz+XCfyd9DZYTebw0vggf/bkxIV0c/nkPBjiaBkPn90t7V7mL/ZQ49MEJ4VJO3Ae4hf8tu27lhB4Ert4uLPyEB/IYBT+2w9I+SurYMB61PQOkZNU0bTZb0VO6Go7aN8iGCD/dqbRzQXc41w7LK6THHfcEsuWogVOIVUSKXgeSw4oZc88Xx9TzVA9OU2j2mdSEOAwtgX9A/bJ4QP8LuxnXp+jAloHuQBWnSkWA6N6JqFaTwV5qhng+adLKpg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DM4PR12MB5248.namprd12.prod.outlook.com (2603:10b6:5:39c::15)
+ by MW9PR12MB999209.namprd12.prod.outlook.com (2603:10b6:303:301::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9870.25; Tue, 5 May
+ 2026 15:05:27 +0000
+Received: from DM4PR12MB5248.namprd12.prod.outlook.com
+ ([fe80::92d8:797b:4db0:d385]) by DM4PR12MB5248.namprd12.prod.outlook.com
+ ([fe80::92d8:797b:4db0:d385%4]) with mapi id 15.20.9870.023; Tue, 5 May 2026
+ 15:05:27 +0000
+Message-ID: <980382a2-3b8c-4da1-ac9b-efd8c0d2c1be@nvidia.com>
+Date: Tue, 5 May 2026 18:05:22 +0300
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] aquantia: Sunshine/Moonlight UDP video streaming
+ broken since 5b4015ad833c ("net: aquantia: Remove redundant UDP length
+ adjustment with GSO_PARTIAL")
+To: Matthew Schwartz <matthew.schwartz@linux.dev>,
+ Dragos Tatulea <dtatulea@nvidia.com>, Jakub Kicinski <kuba@kernel.org>
+Cc: regressions@lists.linux.dev, netdev@vger.kernel.org,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <6c3fb15e-711d-4b8d-b152-e03d9b05293f@linux.dev>
+ <5293b717-6a8e-40b6-bd6b-61043a062451@nvidia.com>
+ <cdce7fbb-671d-48b0-95ff-56b882d3e9a5@linux.dev>
+From: Gal Pressman <gal@nvidia.com>
+Content-Language: en-US
+In-Reply-To: <cdce7fbb-671d-48b0-95ff-56b882d3e9a5@linux.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: TL2P290CA0004.ISRP290.PROD.OUTLOOK.COM
+ (2603:1096:950:2::13) To DM4PR12MB5248.namprd12.prod.outlook.com
+ (2603:10b6:5:39c::15)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [REGRESSION] next/master: (build) variable 'jack_state' is
- uninitialized when
- used here [-Werror,-Wu...
-From: KernelCI bot <bot@kernelci.org>
-To: kernelci-results@groups.io
-Cc: regressions@lists.linux.dev, gus@collabora.com, linux-next@vger.kernel.org
-Reply-To: kernelci@lists.linux.dev
-Date: Tue, 05 May 2026 14:59:04 -0000
-Message-ID: <177799314451.2848.13872601558442495235@997d03828cfd>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR12MB5248:EE_|MW9PR12MB999209:EE_
+X-MS-Office365-Filtering-Correlation-Id: c95743d3-dc28-4cf3-d434-08deaab7bd74
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|376014|1800799024|56012099003|18002099003|22082099003;
+X-Microsoft-Antispam-Message-Info:
+	/4mZ9diS/CPhL+Ox1124u2F1+WhUDI60XwXIk1VGeEQrx3dbOSYBYnVoNxi6RC1mXYNjtfYHfDdMHLnsGXbFpz7Up2m5SFfJ2gIgsQOL9osbOeWMHdSIkdpFz7p6bqJPR7/E9NNEWZ3wm1retD+BpsoWcle7rPviUGM66LSFNaTRKLtnPz2DzOU+yiLcTXCT4nnftP5AjUprs9JaRv9zuASAHoufCx2t1s6Z9oKcK3VE7B7ZRIQRQNtDiB3/uy7JeFczs8EZDRjBWVyPZs7MCZMgLmLckmDgXMMet6IW9F5B/AWGqEra6dU/ryaX39hNfy5FeHba8LhfnSUPym1Kzt/Pv019Hp1TR8oTQMgYeYRNtvuLfx6LuoBKcQU8iDyPGonqLBr/0Rt1tLwc0eZSW0NmTu+N3saWmLxUX1MLWk4fJ2f9t7Wy154yS1dh+N+utF3NDp0zN68MN9evfhJFhk5gJyF1NBvslm/XC63LYHuypRvOcRuA0MBk+G/zs3OzHPQMFToRkLAAB++BpEnEwWq6kSnA/Yrcvk36rg9+UqCpmK7QUQeIQhzDza/zKojr8vX5nWNGfjTJhFK/boJjyMH+QcfZoJL9ePYJLZPGfkskBJrcTVEYDEt9ZOdJCQ0TvL2ILz1mZAZLV+rLGI+MpHKVEyqQ+rlStm9xgIzXpSwpjyqvnhEYvIT2WDw6r+so
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5248.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(56012099003)(18002099003)(22082099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?VURXOWFwT0VNVzlmMS9HaDY4dlFudTVPN1Rid3FQMUhCcDFNZzNKbVZsaEFN?=
+ =?utf-8?B?WDBDRVRSZkJXeWRDcHpEa3lvd250MFFPQVg2WlFDZjI1UUp6eXFwcm85TGhH?=
+ =?utf-8?B?U0FXdWRNT0VaYW9WK29aaW5rTFNGTTBPOVVrcjgwWGxzcEhORGkvTEZ2Qjlj?=
+ =?utf-8?B?cG81S1dsVUJ2bU1GUDdHcWRlQ00yL3JUY09ob0FBSWpjd244WEVVM2VlUWNK?=
+ =?utf-8?B?NVhyTm0vejd6WXloL1BwcHRpMXZjSlljUlhoL21wRWR5cXBaT1ZlWmxYRkdF?=
+ =?utf-8?B?TW1IMUcwaHFVVm54SWZtRndEOUU4eHd3RXYrRUk2UzZScEl2d3oxbHVJUGxk?=
+ =?utf-8?B?ZHNncmlFQ3NQMWJ6UVZZaTV3cU4xNk9VS3k2MjNEUlZFU3NraUs5UEdLVWlv?=
+ =?utf-8?B?b0ZEYUY4M3JGM0NKUUExaUJGb3ZFN3EyUmFHNzhXWlBkTnZUZVhienJ3cWF6?=
+ =?utf-8?B?MUp1bmNTYnVtc21hMENoUnVDN0pJVkFIMTVXTithUzBKbm4rbGtxTTJ1MGl0?=
+ =?utf-8?B?dnZ3RnlKczVJUmIxRDZxaFB1VVVqbktSSVdyRTNQMVAwL2RoYlN5TFp5VFM0?=
+ =?utf-8?B?cERWek9iVmhCb01oZEh1RU5JRW9Gd2tSNEpZbjZxbVhwL2hMYUtTUlh4WDlx?=
+ =?utf-8?B?cDhmZ0dSSFE5enRCSjNZZFN2SnNKRnY3WTluV0RIRnRJbytCMUxoVi9nOVNp?=
+ =?utf-8?B?RE8vNHFDQk5yaVFsRkVmcHdrWm1qRm5mY3N0alR1UjBIajZrbzNKNVA3Ni81?=
+ =?utf-8?B?L2F1a2NWckhJcW9HTGJDVDdGM1o3ZEtXekZDR2w1RXFSc1djd2s3cWFvMFdu?=
+ =?utf-8?B?OUZGelorcVNGL0x0MXM0Y0g4UVZUNXY4SjNwQ0xhOS9SeVZjQWNvMHJBY0lz?=
+ =?utf-8?B?Z0RtK0dEZzczS2lBMjZGS1ptNFhwckJhTUpLNnRUYkxobVhFKytpT2lVdENT?=
+ =?utf-8?B?ejBVMWJhMjJEeUZid0ExcU9wRGhNczgwNys0S05zU3I4WGdDLzRTSlhLRUtr?=
+ =?utf-8?B?Uk1qeFRwU1lCWXhlenZaZUN5NzFMSFE2R21xclhyR3FLSGhRdk9Mb1paaFdr?=
+ =?utf-8?B?MWVtRWh4QTdpelBEY01adWxlNDloYkIveE1Qd2dQOWhSckhPYXVRLzJMMEo2?=
+ =?utf-8?B?Y2JGd0IzdXVNT2l0U00xRFBPY0VwNzN3MTNGQkRyVHJSMnNETjgxQytseHJG?=
+ =?utf-8?B?eHZpT3JWYVpKZ2RQa2o1Qk5LZDFtQnY4dTJXQ0RTaFAwRFViR3gyQitIZEY3?=
+ =?utf-8?B?TU5Db0grZHlZbDZGY3MyUGJaVEIzQ0FrMWhMbGk3YzRjeC9xK1NmNnJRMEhX?=
+ =?utf-8?B?RFllcW5DUXV1YTRSZ25FWWVwU1NuWXlZZzIzMFRNd1plYUJrNGFKSExJS2pH?=
+ =?utf-8?B?aW11VTU2bmh2K2haTW53eG9FZEd2TWlWd1RFc1JHOWxhTFZOUEkvTXBxRW1I?=
+ =?utf-8?B?dll1bzVXbERaaWs4a0YyTzZxNHFMK0c3L21OMmEvRnYxckhZWTRXSzBYV3ZE?=
+ =?utf-8?B?MDNxT2hkRFFIMnVmY3dSNUJ4MmRtVWpjeFhPVzFuN052WjNDUnFEM0Z5TlJG?=
+ =?utf-8?B?eHZSd0pYay85dFllY2JMNUhlcWF3bzM1SHZyRXZhRkg5U25JL0RNYzVqZDl2?=
+ =?utf-8?B?WWtidFZmTGZvckhPKzVzV3VualpZWEpjMTd5N1FzSmRiRmZsYkFwU2x0eG00?=
+ =?utf-8?B?M25la3FLWW91Mi9ZUkdod1RCclpsRW9TUUhRNERQYXMwbkxLaUViamgvbGRY?=
+ =?utf-8?B?WTlhakNtNytlWW1hbjJ2eE5Nbk5UTnpqZXpFL2hkT05PYWdSY3dyaVlWSU9p?=
+ =?utf-8?B?ckVwaExkR0VweWFIM0x2eGJEWW1Ea042R0VkU0VrZC9ENjVkZUFsakhXMEJ6?=
+ =?utf-8?B?azVpRmRUQWFkRE1OVmNvSGNTMVFhWGJ3N1QvbHZKbGVXNjNKMDNFeEpxbEtq?=
+ =?utf-8?B?S0dnZExkZ2dHeUJLT1hxbS9Jd3lmano5NG56aktXdkxQeU5BR1BWMWdvdkxq?=
+ =?utf-8?B?a2c4YzRhOXJxWGZick83Q05qU00ra3VhbTJaMVhHNjlTVkR2VnJCNHlhSktK?=
+ =?utf-8?B?WXhpWWVheTRFVm1ZNWM5dnlycGtRZVNzRHB1S2phQ216aWh2YzJGaEVjYXc2?=
+ =?utf-8?B?SWhuSFJjSkUyM083alk5amtlaFZWWnV2aDhkaHdEQUVpUDBDSldidGI0QlFk?=
+ =?utf-8?B?M2RWY2h0dWVkdDZWWkhubFNnRHUvY3I5elZQQ3JqU0JBaVFPcVdmS0plYjEz?=
+ =?utf-8?B?cVNYUWxUTi9Nbysxd3BlcGlhbFM0UmpjcndGekJ3dWxoR2pxNVJpdUdyajIx?=
+ =?utf-8?Q?Wj/n0LfRuxQGmGVaXs?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c95743d3-dc28-4cf3-d434-08deaab7bd74
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB5248.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 May 2026 15:05:26.9067
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: llVqCU6+ceEJ2kT4AuYg0s91/TqsTHMSLdym0Us1uNztRmNruDrtO9iDilFtJdJQ
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW9PR12MB999209
 
+On 27/04/2026 21:26, Matthew Schwartz wrote:
+> On 4/27/26 11:09 AM, Gal Pressman wrote:
+>> Hello Matthew,
+>>
+>> On 27/04/2026 2:20, Matthew Schwartz wrote:
+>>> Hello,
+>>>
+>>> When using a previously working setup of remote streaming from my workstation to another device via Sunshine (the host server) and Moonlight (the client app) on my home network, I no longer receive any video output on the client app after upgrading my host workstation to kernel 7.0. Reverting back to kernel 6.19 on the host restored my setup to a working state.
+>>>
+>>> After bisecting, I landed on 5b4015ad833c ("net: aquantia: Remove redundant UDP length adjustment with GSO_PARTIAL") as the first bad commit. I confirmed this by moving the cable to my second on-board NIC (Intel) on the same workstation, which restored video output without any other kernel changes. My affected on-board NIC is Aquantia AQC113 [1d6a:04c0] (rev 03), atlantic driver, firmware 1.3.34, MTU 1500.
+>>>
+>>> Looking into it a bit further, ethtool -K enp97s0 tx-udp-segmentation off also serves as a workaround on my Aquantia port without changing to my other ethernet port. The working Intel NIC reports tx-udp-segmentation as "off [fixed]", so traffic falls back to software UDP segmentation on there.
+>>>
+>>> Please let me know if there's any additional info I can provide.
+>>>
+>>> Thanks,
+>>> Matt
+>>>
+>>> #regzbot introduced: 5b4015ad833c
+>>
+>> Thank you for the report and the bisect!
+>>
+>> I will take a look and try to figure out what's wrong (though I don't
+>> have real hardware to test on).
+>> Is the userspace app open source? can I see its code and try to run it
+>> myself?
+> 
+> Thanks for the reply. The code for Sunshine is available here: https://github.com/LizardByte/Sunshine and the code for Moonlight is here: https://github.com/moonlight-stream/moonlight-qt.
+> 
+> I have been using the Arch Linux Sunshine package which I installed by following the Linux instructions here: https://docs.lizardbyte.dev/projects/sunshine/latest/md_docs_2getting__started.html, but there are also binaries for other distros or it's buildable from source. For Moonlight, I have been using the Flatpak distributed on Flathub because the client device runs an atomic rootfs, but you can also use any other device that Moonlight supports.
+> 
+>>
+>> I will be OOO for the rest of the week, hope to have some meaningful
+>> reply by the end of next week.
+> 
 
+I think I see the issue, do you mind testing the following diff?
 
+index a0813d425b71..5bd1706b11b0 100644
+--- a/net/ipv4/udp_offload.c
++++ b/net/ipv4/udp_offload.c
+@@ -599,10 +599,22 @@ struct sk_buff *__udp_gso_segment(struct sk_buff *gso_skb,
+ 		uh = udp_hdr(seg);
+ 	}
 
+-	/* last packet can be partial gso_size, account for that in checksum */
+-	newlen = htons(skb_tail_pointer(seg) - skb_transport_header(seg) +
+-		       seg->data_len);
+-	check = csum16_add(csum16_sub(uh->check, uh->len), newlen);
++	if (skb_is_gso(seg)) {
++		newlen = msslen;
++	} else {
++		/* last packet can be partial gso_size, account for that in
++		 * checksum.
++		 */
++		newlen = htons(skb_tail_pointer(seg) -
++			       skb_transport_header(seg) + seg->data_len);
++		check = csum16_add(csum16_sub(uh->check, uh->len), newlen);
++	}
 
-Hello,
-
-New build issue found on next/master:
-
----
- variable 'jack_state' is uninitialized when used here [-Werror,-Wuninitialized] in sound/soc/sdca/sdca_jack.o (sound/soc/sdca/sdca_jack.c) [logspec:kbuild,kbuild.compiler.error]
----
-
-- dashboard: https://d.kernelci.org/i/maestro:ed6f3327055b3d832c87e92ead3d68396560c4f5
-- giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-- commit HEAD:  4cd074ae20bbcc293bbbce9163abe99d68ae6ae0
-- tags: next-20260505
-
-Please include the KernelCI tag when submitting a fix:
-
-Reported-by: kernelci.org bot <bot@kernelci.org>
-
-
-Log excerpt:
-=====================================================
-/tmp/kci/linux/sound/soc/sdca/sdca_jack.c:211:5: error: variable 'jack_state' is uninitialized when used here [-Werror,-Wuninitialized]
-  211 |                                 jack_state->mask |= type_get_mask(type);
-      |                                 ^~~~~~~~~~
-/tmp/kci/linux/sound/soc/sdca/sdca_jack.c:193:32: note: initialize the variable 'jack_state' to silence this warning
-  193 |                 struct jack_state *jack_state;
-      |                                              ^
-      |                                               = NULL
-1 error generated.
-
-=====================================================
-
-
-# Builds where the incident occurred:
-
-## x86_64_defconfig+kselftest+x86-board on (x86_64):
-- compiler: clang-21
-- config: None
-- dashboard: https://d.kernelci.org/build/maestro:69f9efc40e4ee292cbd73c6a
-
-
-#kernelci issue maestro:ed6f3327055b3d832c87e92ead3d68396560c4f5
-
---
-This is an experimental report format. Please send feedback in!
-Talk to us at kernelci@lists.linux.dev
-
-Made with love by the KernelCI team - https://kernelci.org
+ 	uh->len = newlen;
+ 	uh->check = check;
