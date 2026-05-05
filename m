@@ -1,55 +1,51 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [46.38.247.119])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9756130C371
-	for <regressions@lists.linux.dev>; Tue,  5 May 2026 08:36:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.38.247.119
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95908332EB1
+	for <regressions@lists.linux.dev>; Tue,  5 May 2026 10:04:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777970165; cv=none; b=vByneh1+COljnz8ddSYkf6/G9wf5QDNhPkGdKy6R1nANYbQnYWlauQwiU/5NjuWdhSkEXj63F2wtK6hzFzSH1BO1sF9El1zNSi5oQBjsdrkt214uFVC8tDOtyu7yUhdAOpQCJ/jTJb5bqXWq29980EfK9JqadE+BHiotCejiLKU=
+	t=1777975482; cv=none; b=iJRQVH6U8XCCNqepS1PoZ1kSuIQv/UDYjMydM3SwNcM+KBvyxiYZGjTOHyZBH0AuKyR6BGFU/JkGielzAumZ486xwo8lkSJ3vx8TL6XiUKJpJBFcQE8q9FMrkhjYOMVubh/asBA9RcEVu0HpGtNi6yUftbd6qr8lpxVef8cROyo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777970165; c=relaxed/simple;
-	bh=CWaeVcm00SPOZ3SYrZTELMqqVT5hEgks1+ooT6SplRw=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=RtOidMTVqHKlmCTNTtGKGLGt0SroE2DXoKwtjW5MDtULC0MWuvzdsCuD1HpJC5FtRiVqJNBIKH3qSNa+zghM11zEllKGcgb8AudUJl3HI76VB6OC/3DhZmoi2L3azz1mELZZzo2REJYi1R2dJElPmHoNGXs4wtk5Nec/93nrQGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=ecDVrcwI; arc=none smtp.client-ip=46.38.247.119
+	s=arc-20240116; t=1777975482; c=relaxed/simple;
+	bh=31+tRYJDJ5u78DT8GDFHtjM26njVhRnYewdENDhk8h4=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=KFkK5AopldDaz4jzBcaRigM6wYUNx1BLK5tvWM4/rc9XhJTIFlwtIqNQVnBj1EZjWxl72FYxZdt+pHd79kOKZbpJzDPXOiN+qv0dstKi/moC0Ff0gKEFVFjMBv5u9WlX6UxwGWIeb6ed2DjrPnEvPtV+GTIf3kQl6dNYmTRZY34=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=TX0ki9RN; arc=none smtp.client-ip=188.68.63.98
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="ecDVrcwI"
-Received: from mors-relay-8404.netcup.net (localhost [127.0.0.1])
-	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4g8s6l03Xlz84gm;
-	Tue,  5 May 2026 10:26:23 +0200 (CEST)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="TX0ki9RN"
+Received: from mors-relay-2501.netcup.net (localhost [127.0.0.1])
+	by mors-relay-2501.netcup.net (Postfix) with ESMTPS id 4g8vJ020Ygz679f
+	for <regressions@lists.linux.dev>; Tue,  5 May 2026 12:04:32 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1777969583;
-	bh=CWaeVcm00SPOZ3SYrZTELMqqVT5hEgks1+ooT6SplRw=;
-	h=Date:From:Subject:To:Cc:References:In-Reply-To:From;
-	b=ecDVrcwI/NsVgH94jp9G5ZpdTyRQiWodi0k6kneErLedsBZNU+DO9EcpFdG28vLcv
-	 nOBZGqgQUlGzN60MI71ZvhNBgMt0Hkvl6W3FDQ/MNcReC7kNbbdC1bvD6wz9GVxygk
-	 TAouICfeOWo9Zakgms8+eQ2as9PMOtccOKyTCNURbGQzdznwE3J/z5Us2AOfjQcJar
-	 Nbdq0R8qCuSLwA6oFxMjr2nZyPDX38+iOLt9cr2X38FqaSCBDmpywfwaari3VpCufs
-	 h98iihPlb6Uwg3MscQqJcxlxEnGdEdoLaCyaHUILl2fDjhCI106xQk4DHHJerPVdb5
-	 1mK8XN8PIiU3g==
-Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4g8s6k6SX0z4xBP;
-	Tue,  5 May 2026 10:26:22 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
-X-Spam-Flag: NO
-X-Spam-Score: -2.901
-X-Spam-Level: 
+	s=key2; t=1777975472;
+	bh=31+tRYJDJ5u78DT8GDFHtjM26njVhRnYewdENDhk8h4=;
+	h=Date:Subject:From:To:References:In-Reply-To:From;
+	b=TX0ki9RNkE05X3t5wuPeRRaMww8FDpKnuYI4uBIh/7ivnbAMKPif3o010VK3/PbqI
+	 gmZtqYLe8hxuMtyG/Dn4O/FT0uBkpxowZToKycMurzvAYaLGU0xOxsowlEUHFf5a+K
+	 zpibIEm1dMZoDRQPUMqhA8OfANMZ0mC2HCNLeJPZU1RqvdEjgyI3o6ybJSOWjcmzGb
+	 Q8eMSp961YFk8V3gTtpbUpFLZI8wX/BVAgyHFyKLyR8yO6SYwgFbF5su2pKvJAdAwr
+	 Fiul0GHGayh89JkkYfvfvpiDruhJyJ759A6S/Ol5Hr1EijB8NMBZtwPO4czLxtbWuz
+	 jW92PW4rSm5CQ==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-2501.netcup.net (Postfix) with ESMTPS id 4g8vJ01JLrz4xJN
+	for <regressions@lists.linux.dev>; Tue,  5 May 2026 12:04:32 +0200 (CEST)
 Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4g8s6j2GKxz8tcZ;
-	Tue,  5 May 2026 10:26:21 +0200 (CEST)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4g8vHz6H6Yz8svZ
+	for <regressions@lists.linux.dev>; Tue,  5 May 2026 12:04:31 +0200 (CEST)
 Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 0D705632E7;
-	Tue,  5 May 2026 10:26:20 +0200 (CEST)
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 34D4E63294
+	for <regressions@lists.linux.dev>; Tue,  5 May 2026 12:04:31 +0200 (CEST)
 Authentication-Results: mxe9fb;
         spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
 Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <198e2ce4-07e1-46c0-818d-1eb18645aca0@leemhuis.info>
-Date: Tue, 5 May 2026 10:26:18 +0200
+Message-ID: <5b37956b-2de2-4c3b-bbe8-b5180fcb5b6a@leemhuis.info>
+Date: Tue, 5 May 2026 12:04:30 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -57,83 +53,60 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-Subject: Re: [REGRESSION] stmmac: Random DMA reset failure on RK3399 since
- v6.18
-To: Jensen Huang <jensenhuang@friendlyarm.com>,
- Russell King <linux@armlinux.org.uk>
-Cc: Heiner Kallweit <hkallweit1@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
- regressions@lists.linux.dev, netdev@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>
-References: 
- <CAMpZ1qEwNOqR-KQD4kEqd93aB-TpHnG6WdQc2tXUF0aXMmw_SA@mail.gmail.com>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
 Content-Language: de-DE, en-US
-In-Reply-To: 
- <CAMpZ1qEwNOqR-KQD4kEqd93aB-TpHnG6WdQc2tXUF0aXMmw_SA@mail.gmail.com>
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <177796958042.440629.6346085614767550390@mxe9fb.netcup.net>
+X-PPP-Message-ID: <177797547138.589314.16453641255915626356@mxe9fb.netcup.net>
 X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: 0D705632E7
-X-NC-CID: X0X9YM9AO5JfeE2JIDWZSK0of2cFrXJQgrXnbgYhGbZq4CaBI28=
+X-Rspamd-Queue-Id: 34D4E63294
+X-NC-CID: bz8T+BUhWdzF4IoB/ZO3r76pDZU/IyR3L0sVSeqBu7zn9JEiXZQ=
 
-[Jumping in here, as there are no replies yet]
 
-BTW, Russel, just in case you missed this: looks like this regressions
-caused by a change of yours.
 
-On 4/29/26 14:53, Jensen Huang wrote:
-> 
-> I'm reporting a regression on RK3399 (stmmac) observed in v6.18.24.
-> When a network cable is connected during boot, the DMA reset
-> occasionally fails with the error message: "Failed to reset the dma".
-> 
-> This appears to be a timing issue related to the EEE RX clock-stop
-> logic. Based on my investigation with the RTL8211E PHY, I monitored
-> the PHY register PS1R (MMD device 3, address 0x01) and observed a
-> value of 0x0f40. This indicates that the PHY is in LPI mode and the RX
-> clock may have already stopped.
-> 
-> While commit dd557266cf5f ("net: stmmac: block PHY RXC clock-stop")
+On 3/9/24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-Just wondering: have you tried if mainline (e.g. 7.1-rc1) is still
-affected? This is something that is always a good advisable (some people
-would call it required). In this case even more, as it since a while
-contains a fix for the change you mentioned, that wasn't backported:
-c171e679ee66d7 ("net: stmmac: Disable EEE RX clock stop when VLAN is
-enabled"). But this is not my area of expertise (and in different area
-of the code), so that fix might be unrelated to your issue.
+#regzbot report:
+https://lore.kernel.org/all/8cf80f450085ac17164e8fa1391e9635@linux.ibm.com/
+#regzbot introduced: da6b5aae84beb0917ecb
+#regzbot title: nfsd: Use-after-free panics on ppc64le
 
-Ciao, Thorsten
+#regzbot report:
+https://lore.kernel.org/all/8fd5d3a3-d1d7-4542-a0db-1678989940d4@ovn.org/
+#regzbot introduced: 9c42bc9db90a15
+#regzbot title: netfilter: nf_conntrack_expect: FTP test failures in OVS
 
-> ensures the clock is running before the DMA reset, my tests suggest
-> that the phylink_rx_clk_stop_block() call might not provide a
-> sufficiently stable RX clock in time for the immediate DMA reset that
-> follows.
-> 
-> Since stmmac already sets mac_requires_rxc = true, I modified
-> phylink_bringup_phy() to honor this flag. This avoids toggling the
-> PHY's clk_stop_enable during the initialization sequence, ensuring the
-> RX clock remains active and stable throughout.
-> With the change below, I achieved 200/200 successful reboots with the
-> cable connected (previously ~50% failure rate).
-> 
-> --- a/drivers/net/phy/phylink.c
-> +++ b/drivers/net/phy/phylink.c
-> @@ -2171,7 +2171,7 @@ static int phylink_bringup_phy(struct phylink
-> *pl, struct phy_device *phy,
->      /* Allow the MAC to stop its clock if the PHY has the capability */
->      pl->mac_tx_clk_stop = phy_eee_tx_clock_stop_capable(phy) > 0;
-> 
-> -    if (pl->mac_supports_eee_ops) {
-> +    if (pl->mac_supports_eee_ops && !pl->config->mac_requires_rxc) {
->          /* Explicitly configure whether the PHY is allowed to stop it's
->           * receive clock.
->           */
-> 
-> Any feedback/testing on this would be appreciated.
-> 
-> Best regards,
-> Jensen Huang
-> 
+#regzbot report:
+https://lore.kernel.org/all/bf0ba588-002b-4860-848e-e806b193840a@app.fastmail.com/
+#regzbot introduced: f77f281b6118
+#regzbot title: fsverity: overlayfs: verity validation broken
+
+#regzbot report:
+https://lore.kernel.org/all/CAMRc=MfADC2ncuUQiSW7TnUwBUWCJn9i=wZ9dqYMZNo2h6qOxw@mail.gmail.com/
+#regzbot introduced: 57be33f85e369ce9f69f61eaa34734e0d3bd47a7
+#regzbot title: nfc: nxp-nci: IRQ storm
+
+#regzbot report:
+https://lore.kernel.org/all/20260501202438.376033-1-florian.fainelli@broadcom.com/
+#regzbot introduced: 03f920936977
+#regzbot title: PCI: controller: PCI3/NVMe performnace dramatically lower
+#regzbot link: https://github.com/raspberrypi/linux/issues/7343
+#regzbot fix: PCI: brcmstb: Assign pcie->gen from pcie_get_link_speed()
+
+#regzbot report:
+https://lore.kernel.org/all/773ba972-433b-44b4-89d2-295bd9f5de38@huawei.com/
+#regzbot introduced: 37c4e72b0651
+#regzbot title: scsi: massive resource usage that can lead to kernel crashes
+#regzbot dup:
+https://lore.kernel.org/all/20260415204850.799431-1-mwilck@suse.com/
+
 
