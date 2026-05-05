@@ -1,112 +1,127 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.98])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dl1-f46.google.com (mail-dl1-f46.google.com [74.125.82.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95908332EB1
-	for <regressions@lists.linux.dev>; Tue,  5 May 2026 10:04:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD4BA38F65D
+	for <regressions@lists.linux.dev>; Tue,  5 May 2026 14:59:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777975482; cv=none; b=iJRQVH6U8XCCNqepS1PoZ1kSuIQv/UDYjMydM3SwNcM+KBvyxiYZGjTOHyZBH0AuKyR6BGFU/JkGielzAumZ486xwo8lkSJ3vx8TL6XiUKJpJBFcQE8q9FMrkhjYOMVubh/asBA9RcEVu0HpGtNi6yUftbd6qr8lpxVef8cROyo=
+	t=1777993148; cv=none; b=W2bifqzBkh7NsNvUCfOhyf/Y/zgkGbbHp9MKqmWujSWNXQP6yCLZaqrhBI96ksOMaiz3g1oh6a51ffAKN/3lLsom6AFo93fpVuqJTCBj7T8jHBo/YrWWP713NqHNfhN/wIJNVmI+s+bqoQoW2ZOkMDX8XIRIBNLrwAl9JN0J95M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777975482; c=relaxed/simple;
-	bh=31+tRYJDJ5u78DT8GDFHtjM26njVhRnYewdENDhk8h4=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=KFkK5AopldDaz4jzBcaRigM6wYUNx1BLK5tvWM4/rc9XhJTIFlwtIqNQVnBj1EZjWxl72FYxZdt+pHd79kOKZbpJzDPXOiN+qv0dstKi/moC0Ff0gKEFVFjMBv5u9WlX6UxwGWIeb6ed2DjrPnEvPtV+GTIf3kQl6dNYmTRZY34=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=TX0ki9RN; arc=none smtp.client-ip=188.68.63.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1777993148; c=relaxed/simple;
+	bh=3ko3A4kimfuWBvgGqRXOJUht8CCrfn4FYAasG+Lug2c=;
+	h=Content-Type:MIME-Version:Subject:From:To:Cc:Date:Message-ID; b=deNdteiWcOlRyI8qMhOhuRTtjpJ/+K1eVSU48+OWa86SWOuP098IW21WrYNWErXA7a3Lw/yadjVE4rcRFYVvx4YbkTyBZqp/HmtQ18GyVXzUi6w1VcES/dEPmmzrwFXelIvE7KZbb3+xbz8kR4Dc0OHGGkY6ywjuTE4KQHmd1BE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kernelci.org; spf=pass smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci.org header.i=@kernelci.org header.b=eluZiZhp; arc=none smtp.client-ip=74.125.82.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kernelci.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernelci.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="TX0ki9RN"
-Received: from mors-relay-2501.netcup.net (localhost [127.0.0.1])
-	by mors-relay-2501.netcup.net (Postfix) with ESMTPS id 4g8vJ020Ygz679f
-	for <regressions@lists.linux.dev>; Tue,  5 May 2026 12:04:32 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1777975472;
-	bh=31+tRYJDJ5u78DT8GDFHtjM26njVhRnYewdENDhk8h4=;
-	h=Date:Subject:From:To:References:In-Reply-To:From;
-	b=TX0ki9RNkE05X3t5wuPeRRaMww8FDpKnuYI4uBIh/7ivnbAMKPif3o010VK3/PbqI
-	 gmZtqYLe8hxuMtyG/Dn4O/FT0uBkpxowZToKycMurzvAYaLGU0xOxsowlEUHFf5a+K
-	 zpibIEm1dMZoDRQPUMqhA8OfANMZ0mC2HCNLeJPZU1RqvdEjgyI3o6ybJSOWjcmzGb
-	 Q8eMSp961YFk8V3gTtpbUpFLZI8wX/BVAgyHFyKLyR8yO6SYwgFbF5su2pKvJAdAwr
-	 Fiul0GHGayh89JkkYfvfvpiDruhJyJ759A6S/Ol5Hr1EijB8NMBZtwPO4czLxtbWuz
-	 jW92PW4rSm5CQ==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-2501.netcup.net (Postfix) with ESMTPS id 4g8vJ01JLrz4xJN
-	for <regressions@lists.linux.dev>; Tue,  5 May 2026 12:04:32 +0200 (CEST)
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4g8vHz6H6Yz8svZ
-	for <regressions@lists.linux.dev>; Tue,  5 May 2026 12:04:31 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 34D4E63294
-	for <regressions@lists.linux.dev>; Tue,  5 May 2026 12:04:31 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <5b37956b-2de2-4c3b-bbe8-b5180fcb5b6a@leemhuis.info>
-Date: Tue, 5 May 2026 12:04:30 +0200
+	dkim=pass (2048-bit key) header.d=kernelci.org header.i=@kernelci.org header.b="eluZiZhp"
+Received: by mail-dl1-f46.google.com with SMTP id a92af1059eb24-130a4aae5ccso3771363c88.1
+        for <regressions@lists.linux.dev>; Tue, 05 May 2026 07:59:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci.org; s=google; t=1777993146; x=1778597946; darn=lists.linux.dev;
+        h=message-id:date:reply-to:cc:to:from:subject
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=V+JNAHsC4qi6OiUkol5+kLRuL2+NBa4HUfFXhnGmjXY=;
+        b=eluZiZhpV3J9VBS/zRla9TUBIhRFpMByHPC6pUEIzxzWiDz7dvvdyENBIoud3fWSL+
+         teVIDrEaOZAn7GtGZWHDNJ5UjFKXwk7+E+W045tQEKZKpvuEdg8ej8N5lvNNb07QEvpr
+         ssUe4HJYjzd+v6gojZ2pv8on7Ox87La/ZWHZtcVs9buQJYyP66dtAVNw9dPaV724Rgqw
+         jt2bjkwtLwJ/tUqZ/JzIV1PoGYe6gJPji0MKv58l1a/O3OdOF/+WpTih7AvQjaaDpG+Y
+         3lNtIPcuCRZWOl74vuE6h7JK/N69QFG6BK7P1q4YaN0f9cFJ698o+vOFkZ0+4I6LkvcX
+         iHgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1777993146; x=1778597946;
+        h=message-id:date:reply-to:cc:to:from:subject
+         :content-transfer-encoding:mime-version:x-gm-gg:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=V+JNAHsC4qi6OiUkol5+kLRuL2+NBa4HUfFXhnGmjXY=;
+        b=V7gFRCG/4idqKqNzubdnTcBXq5DHK/Q505KdwZXIWI3I7UC6IthoV5OpQxs2npXsqJ
+         o9U9m1eAx/ciM1ayfUGkB6V4LUHQKMcUBduNtX2bQTzIOfDV0pprgTpAilBJdYij8CDy
+         oSG9TJpRiZfpmZgAT/50aAP43ZuaPjsvby+MfwblbPJufIY1c0pLqJpYsNSQS/AhLnkA
+         06CT7W2KB6NNlqrQolC61sWFxfO+71TJ6KW9W6cC9kkGG7itRGm04k//h1WvXlDRHK4k
+         ptnjcJNtVDFCaeAOEQR0PSonC7rSaTNdf4ObUeiE7fAsZlMhVNI+YHb8x75LXYBRKtZ0
+         q8tA==
+X-Gm-Message-State: AOJu0YxPDUM1XNmsg15i6OiW9/9s73GGy3qyaTkWdeZ7CXwHztVgQJ9Y
+	+fJUUNmUA3WxGVldFQvxF80a618zkyOI0OsNsVwlqvgPJlGYaiDNh5Iv3ZLs4Xw5Wo0=
+X-Gm-Gg: AeBDietQ2PgNEzYetgJpw6MxEn79IGxSgabeyd2d5AN+Pn7yobzH4YT9HNh94h7zwHU
+	mvUs6mfNOxQbSQsD+L967Vu2wqG1T3lXIs4/et6XTquViskFG/dutyGulfQedfCYye3vM0x9BBY
+	38ACg5xPTjHxxB6euv8Y7LuvKczLq+mbRUS/BvL+KHxmu3EYOCFc5SdisRx2mbBDFGdBYU+rC+K
+	XRBa5wckTYBqQHW/yfKPpS2LRYjz5WUV7ZRJdESOYWAg8tDUP+BCWgwWvKKwdIndKVNwPxpbQlU
+	omJJ5aGRMsBcMcmBSm1VLEXZw2A1U2b2bXoqDumjkVgadFm2c98GLEBe7r4cuc3Wi99DLothXF/
+	WzinOHo4jwAtzJReKXhDMgTLRjQXDNF6e689GYS3FjnfBoMu46KuIliga9/V2IIwRH6tta9fmWN
+	yjfz8fqnsE79K1EQGi8ZV/2CLmHBg=
+X-Received: by 2002:a05:7022:523:b0:12d:ca31:f1b5 with SMTP id a92af1059eb24-12dfd81a74cmr7152860c88.26.1777993145586;
+        Tue, 05 May 2026 07:59:05 -0700 (PDT)
+Received: from 997d03828cfd ([20.38.40.137])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-12df8278e7dsm19358808c88.2.2026.05.05.07.59.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 May 2026 07:59:05 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <177797547138.589314.16453641255915626356@mxe9fb.netcup.net>
-X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: 34D4E63294
-X-NC-CID: bz8T+BUhWdzF4IoB/ZO3r76pDZU/IyR3L0sVSeqBu7zn9JEiXZQ=
+Subject: [REGRESSION] next/master: (build) variable 'jack_state' is
+ uninitialized when
+ used here [-Werror,-Wu...
+From: KernelCI bot <bot@kernelci.org>
+To: kernelci-results@groups.io
+Cc: regressions@lists.linux.dev, gus@collabora.com, linux-next@vger.kernel.org
+Reply-To: kernelci@lists.linux.dev
+Date: Tue, 05 May 2026 14:59:04 -0000
+Message-ID: <177799314451.2848.13872601558442495235@997d03828cfd>
 
 
 
-On 3/9/24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
-
-#regzbot report:
-https://lore.kernel.org/all/8cf80f450085ac17164e8fa1391e9635@linux.ibm.com/
-#regzbot introduced: da6b5aae84beb0917ecb
-#regzbot title: nfsd: Use-after-free panics on ppc64le
-
-#regzbot report:
-https://lore.kernel.org/all/8fd5d3a3-d1d7-4542-a0db-1678989940d4@ovn.org/
-#regzbot introduced: 9c42bc9db90a15
-#regzbot title: netfilter: nf_conntrack_expect: FTP test failures in OVS
-
-#regzbot report:
-https://lore.kernel.org/all/bf0ba588-002b-4860-848e-e806b193840a@app.fastmail.com/
-#regzbot introduced: f77f281b6118
-#regzbot title: fsverity: overlayfs: verity validation broken
-
-#regzbot report:
-https://lore.kernel.org/all/CAMRc=MfADC2ncuUQiSW7TnUwBUWCJn9i=wZ9dqYMZNo2h6qOxw@mail.gmail.com/
-#regzbot introduced: 57be33f85e369ce9f69f61eaa34734e0d3bd47a7
-#regzbot title: nfc: nxp-nci: IRQ storm
-
-#regzbot report:
-https://lore.kernel.org/all/20260501202438.376033-1-florian.fainelli@broadcom.com/
-#regzbot introduced: 03f920936977
-#regzbot title: PCI: controller: PCI3/NVMe performnace dramatically lower
-#regzbot link: https://github.com/raspberrypi/linux/issues/7343
-#regzbot fix: PCI: brcmstb: Assign pcie->gen from pcie_get_link_speed()
-
-#regzbot report:
-https://lore.kernel.org/all/773ba972-433b-44b4-89d2-295bd9f5de38@huawei.com/
-#regzbot introduced: 37c4e72b0651
-#regzbot title: scsi: massive resource usage that can lead to kernel crashes
-#regzbot dup:
-https://lore.kernel.org/all/20260415204850.799431-1-mwilck@suse.com/
 
 
+Hello,
+
+New build issue found on next/master:
+
+---
+ variable 'jack_state' is uninitialized when used here [-Werror,-Wuninitialized] in sound/soc/sdca/sdca_jack.o (sound/soc/sdca/sdca_jack.c) [logspec:kbuild,kbuild.compiler.error]
+---
+
+- dashboard: https://d.kernelci.org/i/maestro:ed6f3327055b3d832c87e92ead3d68396560c4f5
+- giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+- commit HEAD:  4cd074ae20bbcc293bbbce9163abe99d68ae6ae0
+- tags: next-20260505
+
+Please include the KernelCI tag when submitting a fix:
+
+Reported-by: kernelci.org bot <bot@kernelci.org>
+
+
+Log excerpt:
+=====================================================
+/tmp/kci/linux/sound/soc/sdca/sdca_jack.c:211:5: error: variable 'jack_state' is uninitialized when used here [-Werror,-Wuninitialized]
+  211 |                                 jack_state->mask |= type_get_mask(type);
+      |                                 ^~~~~~~~~~
+/tmp/kci/linux/sound/soc/sdca/sdca_jack.c:193:32: note: initialize the variable 'jack_state' to silence this warning
+  193 |                 struct jack_state *jack_state;
+      |                                              ^
+      |                                               = NULL
+1 error generated.
+
+=====================================================
+
+
+# Builds where the incident occurred:
+
+## x86_64_defconfig+kselftest+x86-board on (x86_64):
+- compiler: clang-21
+- config: None
+- dashboard: https://d.kernelci.org/build/maestro:69f9efc40e4ee292cbd73c6a
+
+
+#kernelci issue maestro:ed6f3327055b3d832c87e92ead3d68396560c4f5
+
+--
+This is an experimental report format. Please send feedback in!
+Talk to us at kernelci@lists.linux.dev
+
+Made with love by the KernelCI team - https://kernelci.org
