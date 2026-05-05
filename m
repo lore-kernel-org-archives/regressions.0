@@ -1,197 +1,288 @@
-Received: from CH4PR04CU002.outbound.protection.outlook.com (mail-northcentralusazon11013043.outbound.protection.outlook.com [40.107.201.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4576748122A
-	for <regressions@lists.linux.dev>; Tue,  5 May 2026 15:05:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.201.43
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777993534; cv=fail; b=pdC5ILvwF8k358p29DlMm2jb85DzcJ3OqqmWxMQTIc83tOXLOYG/WnzNc2gRtIkbYe0+MwNyGgamkc/VIAxEHh7kb+W+dCKbq6uXANHpsM9SXUgomXuI6hO9QLu8uc6YTtFxnapvq03vS0D01kCJwq2YhSsn88DG2u03gMYR/hQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777993534; c=relaxed/simple;
-	bh=xMlLyJ58uEY81IxP7J9WA6O9c7ywOXM8Z/WSm//J46A=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=nY34RJG0SahYvtUoCe3om3OO9bROYlrak1UnCtEVad0gOm6cU0QWrUVeUn5IvbU6wLZbL/Fp/MQXVrlXgTovSbRlzDMnpKK98NNJ1r05BjVse7xmMVyCpYR13ooZz1fX5GI2NhOO8XA/IWJ4Y3SlgeL0yF7KnOCccKtVVlbCthU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=RzsD43B/; arc=fail smtp.client-ip=40.107.201.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 836323D0930
+	for <regressions@lists.linux.dev>; Tue,  5 May 2026 20:40:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778013615; cv=none; b=pg0BDTjs5w+/QBFPnCvhTYuhU5vo4i6N13OweW1OXRij44b3IkiqRkPhT5lph39loBlWkuSHF8Eelpa5iEEjLiCDDcxBJJ9Jw3JeffcGAIoEEuBVadIl7ftzt5PBpsh317xd+kDWkhfojrOhhKVG9CUgXVAA5aP/Mz9KXNv6jn4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778013615; c=relaxed/simple;
+	bh=EpGaEwKFGuiP4t9mZpBgQM5X2R+L9JBlxUfkrxWEs1o=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=VrjWHlyM+z5AEHv+R9bp3ntmbnGRy+14DagR91YFqOqZbt7dCqtRzOWoyRa+S8FzGiw9FEulnxVez7MHSuVf5vNAyKLrrEMCLyRJ9581WTFhliS5KSVOrpx6e4N4nDR9g95v+kql1sy+Mx9UXhO0PQ4tWbJeAkvs9msOuJk8RH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jZyDhyAV; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="RzsD43B/"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=aJbWPFhOMfAzgsoSpqiO3HrnGAmj98Ioj8O28I+F/QAzBp0zerX4uoD1z/6YWmTol3OG5zzHRfR1fksimPXloVxFiOyh9PvBne7+7qIZ6Gek+cfuHl7NoQWFRTo13mXe95xoq3SbSMh3wH+nnrmB5gLLxpxQZY69Na9DT7WuJ9P5LnTJyCfLuIb/bY9hD2cU6ZhbLHtkbZXJcjcCMtmS7N67HwVAU2G14mOw17B7ntuHEm0V3c0lYVAjbmDtfDKhWqc1sspDUrRQuVbBwqFttiCEfz/PchvUweXDAtNNOdu8OhDIiEW5BQ6lL5KrDRXEvA5ip5zkoGN+ZKjVqYR7oA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=jf2aIwrdQkySFzA765s/xcY4Fo+YLk6dmqOc0YSs7zM=;
- b=ApMiZ+Q1YvuNoGoN2HvUPpWz922SeBn5RdoemDtwFtvuM1IUUlfSvZ4C3NBYIope2RxVtuvP/aEBoYdD5EAmtIg9Qeyh/7Dp/PPqxXk2VgDMqo2M2eUVg165D95bfBHw2C775YHrtv4rWhL6g9k3ZPltcxYzz9SgY0VYDsJsMtuzYl8xs+S1QbR9IJP+faMBDUAzWpxrFAFd/ww4WApbHPj6ZRV8UA9Hfa3XL4vsGpz7gDQPyH2titfAbZlZ5vcPuZRdoCeD9PLY8lJciYAn9UMPUUIPiklWsLwbTC83ZFMM7RQVUxB2QQMwq/spw3CJ59RsaNSI8eUTWmQAVl8jrQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jf2aIwrdQkySFzA765s/xcY4Fo+YLk6dmqOc0YSs7zM=;
- b=RzsD43B/aFl/DG0z0KT15w0GEjI7zHy5A6rdJwfh0RIwR9chs1CkQyDrfJA8TWNmbQmBhx8KXzzy3Z/F5tMQ4Ms9kbiqz+XCfyd9DZYTebw0vggf/bkxIV0c/nkPBjiaBkPn90t7V7mL/ZQ49MEJ4VJO3Ae4hf8tu27lhB4Ert4uLPyEB/IYBT+2w9I+SurYMB61PQOkZNU0bTZb0VO6Go7aN8iGCD/dqbRzQXc41w7LK6THHfcEsuWogVOIVUSKXgeSw4oZc88Xx9TzVA9OU2j2mdSEOAwtgX9A/bJ4QP8LuxnXp+jAloHuQBWnSkWA6N6JqFaTwV5qhng+adLKpg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DM4PR12MB5248.namprd12.prod.outlook.com (2603:10b6:5:39c::15)
- by MW9PR12MB999209.namprd12.prod.outlook.com (2603:10b6:303:301::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9870.25; Tue, 5 May
- 2026 15:05:27 +0000
-Received: from DM4PR12MB5248.namprd12.prod.outlook.com
- ([fe80::92d8:797b:4db0:d385]) by DM4PR12MB5248.namprd12.prod.outlook.com
- ([fe80::92d8:797b:4db0:d385%4]) with mapi id 15.20.9870.023; Tue, 5 May 2026
- 15:05:27 +0000
-Message-ID: <980382a2-3b8c-4da1-ac9b-efd8c0d2c1be@nvidia.com>
-Date: Tue, 5 May 2026 18:05:22 +0300
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] aquantia: Sunshine/Moonlight UDP video streaming
- broken since 5b4015ad833c ("net: aquantia: Remove redundant UDP length
- adjustment with GSO_PARTIAL")
-To: Matthew Schwartz <matthew.schwartz@linux.dev>,
- Dragos Tatulea <dtatulea@nvidia.com>, Jakub Kicinski <kuba@kernel.org>
-Cc: regressions@lists.linux.dev, netdev@vger.kernel.org,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <6c3fb15e-711d-4b8d-b152-e03d9b05293f@linux.dev>
- <5293b717-6a8e-40b6-bd6b-61043a062451@nvidia.com>
- <cdce7fbb-671d-48b0-95ff-56b882d3e9a5@linux.dev>
-From: Gal Pressman <gal@nvidia.com>
-Content-Language: en-US
-In-Reply-To: <cdce7fbb-671d-48b0-95ff-56b882d3e9a5@linux.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: TL2P290CA0004.ISRP290.PROD.OUTLOOK.COM
- (2603:1096:950:2::13) To DM4PR12MB5248.namprd12.prod.outlook.com
- (2603:10b6:5:39c::15)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jZyDhyAV"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-671dad7cac8so6326274a12.0
+        for <regressions@lists.linux.dev>; Tue, 05 May 2026 13:40:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1778013612; x=1778618412; darn=lists.linux.dev;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=wP0T8HbpG/ezhgyMGr0ErCtPzM0+G4QaMUxS65Bsvbc=;
+        b=jZyDhyAVKghYU6+CLr8kPQtR68O5kSg6B5+IvZAHjFYsl6wFrrygq66ncuBRm1rk32
+         0UcB0z66EU/l/AAORcarJjBjqDNEwFVXdA5Utztqiv/jxjgbmp/ni7sCMCf4lSJO2cFN
+         FOy9xAfbML8wDAih4lGKeMnWPC8MonK5N2T9JFe0RhIm98yDQZuISz/Sx2L/e+erRLD1
+         oz2F3v0CzUFuGdGOyX5Z9vMY3RtLQoOmZX/okFAuMuV16z3bIWPve15Ob4oaIHdFKoQC
+         j72gxOZJVF2bIrFTvas+DSu4GnuWjFCQIMFDxahX3LhiwWsEXJw7IZnK4P3WzaonMFBt
+         Dqeg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778013612; x=1778618412;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :sender:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wP0T8HbpG/ezhgyMGr0ErCtPzM0+G4QaMUxS65Bsvbc=;
+        b=drbN4J2ZT1wnJXSAU9wcifxSQbCgcO9Fpd2kxt4cc6iyDkQkWnG8Am1eepwu+nlPFm
+         v5j5t3P+t1u3SKGQ6su7CAMfgtvylciYRuYnER14lTF9tr3wN6Pl4FZjNukVHVCtQ26F
+         RpCG7mgPddYAaGUjwxNAzYsV9PRPBZW0Ctd9XGRLv7LzQWVCisaFAbBuHXYGYpWVZ0eP
+         d2ZkXR9ppLIUxwzJWsIa4VxvHkWHRH3iJWPgE5VBLctmz8C7BL5LznEoDP2Gf9dpfuaS
+         eOZ4LNtwragecauTQf327why5OTOViZC16/3s/bvcEyx6bCkoWRLWp9qXUBhBam95xQg
+         a+Xg==
+X-Forwarded-Encrypted: i=1; AFNElJ+x1DmItbO+489wOPPyvoglkIrZpGJ6WeJYy2JBusrnkzWmBw5hvueCguZ2QGbsT4BN8nC6R8VYg68RAQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwUG8r4v4mhv4BMdLHVS+tM6km9AC2V/qGOuYV+10BfFByzd49U
+	LPxnskavhAY5oxv4F5Ld4nihtDVVnrG7YNb9YFBnXuZGlLdntvMsTb6Z9cAbj5ow
+X-Gm-Gg: AeBDievB37gj8eEBnX1/Ah0kc8sO2uz4qmlvjtIJGcBzFuhlYCBP4JZ/SyKI04lzFZG
+	W0sAng8HS9eVMOfXwyoXFYpzMQmR6bIIDImA+xcHs4NiQk73qacPrq9115o87eGGK6pEND1qAxK
+	JHKMMyrzRmqVRqlkazMSUqlWgeISH7WLh4L5iXEemiIAxPEU3yYuzBC0sdlMEs2Y27XO07BGkRp
+	Lkirm1FYN3v1ESRXkHbT7Z29nOZSul9nBItVQaSkkMuymoaf4I9wDaNL6wAAWoE93Z68ucidO5X
+	YY8Fme3qso8bvJzyu3BkymOJKfgrkZFl7bClk0bJ63Lw0FWKRcbHXvooX8rKOitvnElh258o/p5
+	CDRZ5yc6KCJBLE14qVmRzpdth3rvZNoo2eUnwF8fEFmUimlwIS0Ab90J06TIWsCgC/+zmNFHvHv
+	0APFFaHLaq5Cd3s1m55qSR0AoqbV8xZyo=
+X-Received: by 2002:a05:6402:2b8a:b0:67c:5935:39e4 with SMTP id 4fb4d7f45d1cf-67d638b1793mr68564a12.3.1778013611534;
+        Tue, 05 May 2026 13:40:11 -0700 (PDT)
+Received: from eldamar.lan ([88.130.212.107])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-67cd91ea07dsm675870a12.31.2026.05.05.13.40.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 May 2026 13:40:10 -0700 (PDT)
+Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
+Received: by eldamar.lan (Postfix, from userid 1000)
+	id 6A563BE2EE7; Tue, 05 May 2026 22:40:09 +0200 (CEST)
+Date: Tue, 5 May 2026 22:40:09 +0200
+From: Salvatore Bonaccorso <carnil@debian.org>
+To: stable <stable@vger.kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Sasha Levin <sashal@kernel.org>, regressions@lists.linux.dev,
+	Ankit Soni <Ankit.Soni@amd.com>, Srikanth Aithal <sraithal@amd.com>,
+	Vasant Hegde <vasant.hegde@amd.com>,
+	Joerg Roedel <joerg.roedel@amd.com>, 1135313@bugs.debian.org,
+	Friedemann Stoyan <fstoyan@swapon.de>
+Subject: Please backport 9e249c484128 ("iommu/amd: serialize sequence
+ allocation under concurrent TLB invalidations") to 6.12.y
+Message-ID: <afpVqZDIRVmdV960@eldamar.lan>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR12MB5248:EE_|MW9PR12MB999209:EE_
-X-MS-Office365-Filtering-Correlation-Id: c95743d3-dc28-4cf3-d434-08deaab7bd74
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|376014|1800799024|56012099003|18002099003|22082099003;
-X-Microsoft-Antispam-Message-Info:
-	/4mZ9diS/CPhL+Ox1124u2F1+WhUDI60XwXIk1VGeEQrx3dbOSYBYnVoNxi6RC1mXYNjtfYHfDdMHLnsGXbFpz7Up2m5SFfJ2gIgsQOL9osbOeWMHdSIkdpFz7p6bqJPR7/E9NNEWZ3wm1retD+BpsoWcle7rPviUGM66LSFNaTRKLtnPz2DzOU+yiLcTXCT4nnftP5AjUprs9JaRv9zuASAHoufCx2t1s6Z9oKcK3VE7B7ZRIQRQNtDiB3/uy7JeFczs8EZDRjBWVyPZs7MCZMgLmLckmDgXMMet6IW9F5B/AWGqEra6dU/ryaX39hNfy5FeHba8LhfnSUPym1Kzt/Pv019Hp1TR8oTQMgYeYRNtvuLfx6LuoBKcQU8iDyPGonqLBr/0Rt1tLwc0eZSW0NmTu+N3saWmLxUX1MLWk4fJ2f9t7Wy154yS1dh+N+utF3NDp0zN68MN9evfhJFhk5gJyF1NBvslm/XC63LYHuypRvOcRuA0MBk+G/zs3OzHPQMFToRkLAAB++BpEnEwWq6kSnA/Yrcvk36rg9+UqCpmK7QUQeIQhzDza/zKojr8vX5nWNGfjTJhFK/boJjyMH+QcfZoJL9ePYJLZPGfkskBJrcTVEYDEt9ZOdJCQ0TvL2ILz1mZAZLV+rLGI+MpHKVEyqQ+rlStm9xgIzXpSwpjyqvnhEYvIT2WDw6r+so
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5248.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(56012099003)(18002099003)(22082099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?VURXOWFwT0VNVzlmMS9HaDY4dlFudTVPN1Rid3FQMUhCcDFNZzNKbVZsaEFN?=
- =?utf-8?B?WDBDRVRSZkJXeWRDcHpEa3lvd250MFFPQVg2WlFDZjI1UUp6eXFwcm85TGhH?=
- =?utf-8?B?U0FXdWRNT0VaYW9WK29aaW5rTFNGTTBPOVVrcjgwWGxzcEhORGkvTEZ2Qjlj?=
- =?utf-8?B?cG81S1dsVUJ2bU1GUDdHcWRlQ00yL3JUY09ob0FBSWpjd244WEVVM2VlUWNK?=
- =?utf-8?B?NVhyTm0vejd6WXloL1BwcHRpMXZjSlljUlhoL21wRWR5cXBaT1ZlWmxYRkdF?=
- =?utf-8?B?TW1IMUcwaHFVVm54SWZtRndEOUU4eHd3RXYrRUk2UzZScEl2d3oxbHVJUGxk?=
- =?utf-8?B?ZHNncmlFQ3NQMWJ6UVZZaTV3cU4xNk9VS3k2MjNEUlZFU3NraUs5UEdLVWlv?=
- =?utf-8?B?b0ZEYUY4M3JGM0NKUUExaUJGb3ZFN3EyUmFHNzhXWlBkTnZUZVhienJ3cWF6?=
- =?utf-8?B?MUp1bmNTYnVtc21hMENoUnVDN0pJVkFIMTVXTithUzBKbm4rbGtxTTJ1MGl0?=
- =?utf-8?B?dnZ3RnlKczVJUmIxRDZxaFB1VVVqbktSSVdyRTNQMVAwL2RoYlN5TFp5VFM0?=
- =?utf-8?B?cERWek9iVmhCb01oZEh1RU5JRW9Gd2tSNEpZbjZxbVhwL2hMYUtTUlh4WDlx?=
- =?utf-8?B?cDhmZ0dSSFE5enRCSjNZZFN2SnNKRnY3WTluV0RIRnRJbytCMUxoVi9nOVNp?=
- =?utf-8?B?RE8vNHFDQk5yaVFsRkVmcHdrWm1qRm5mY3N0alR1UjBIajZrbzNKNVA3Ni81?=
- =?utf-8?B?L2F1a2NWckhJcW9HTGJDVDdGM1o3ZEtXekZDR2w1RXFSc1djd2s3cWFvMFdu?=
- =?utf-8?B?OUZGelorcVNGL0x0MXM0Y0g4UVZUNXY4SjNwQ0xhOS9SeVZjQWNvMHJBY0lz?=
- =?utf-8?B?Z0RtK0dEZzczS2lBMjZGS1ptNFhwckJhTUpLNnRUYkxobVhFKytpT2lVdENT?=
- =?utf-8?B?ejBVMWJhMjJEeUZid0ExcU9wRGhNczgwNys0S05zU3I4WGdDLzRTSlhLRUtr?=
- =?utf-8?B?Uk1qeFRwU1lCWXhlenZaZUN5NzFMSFE2R21xclhyR3FLSGhRdk9Mb1paaFdr?=
- =?utf-8?B?MWVtRWh4QTdpelBEY01adWxlNDloYkIveE1Qd2dQOWhSckhPYXVRLzJMMEo2?=
- =?utf-8?B?Y2JGd0IzdXVNT2l0U00xRFBPY0VwNzN3MTNGQkRyVHJSMnNETjgxQytseHJG?=
- =?utf-8?B?eHZpT3JWYVpKZ2RQa2o1Qk5LZDFtQnY4dTJXQ0RTaFAwRFViR3gyQitIZEY3?=
- =?utf-8?B?TU5Db0grZHlZbDZGY3MyUGJaVEIzQ0FrMWhMbGk3YzRjeC9xK1NmNnJRMEhX?=
- =?utf-8?B?RFllcW5DUXV1YTRSZ25FWWVwU1NuWXlZZzIzMFRNd1plYUJrNGFKSExJS2pH?=
- =?utf-8?B?aW11VTU2bmh2K2haTW53eG9FZEd2TWlWd1RFc1JHOWxhTFZOUEkvTXBxRW1I?=
- =?utf-8?B?dll1bzVXbERaaWs4a0YyTzZxNHFMK0c3L21OMmEvRnYxckhZWTRXSzBYV3ZE?=
- =?utf-8?B?MDNxT2hkRFFIMnVmY3dSNUJ4MmRtVWpjeFhPVzFuN052WjNDUnFEM0Z5TlJG?=
- =?utf-8?B?eHZSd0pYay85dFllY2JMNUhlcWF3bzM1SHZyRXZhRkg5U25JL0RNYzVqZDl2?=
- =?utf-8?B?WWtidFZmTGZvckhPKzVzV3VualpZWEpjMTd5N1FzSmRiRmZsYkFwU2x0eG00?=
- =?utf-8?B?M25la3FLWW91Mi9ZUkdod1RCclpsRW9TUUhRNERQYXMwbkxLaUViamgvbGRY?=
- =?utf-8?B?WTlhakNtNytlWW1hbjJ2eE5Nbk5UTnpqZXpFL2hkT05PYWdSY3dyaVlWSU9p?=
- =?utf-8?B?ckVwaExkR0VweWFIM0x2eGJEWW1Ea042R0VkU0VrZC9ENjVkZUFsakhXMEJ6?=
- =?utf-8?B?azVpRmRUQWFkRE1OVmNvSGNTMVFhWGJ3N1QvbHZKbGVXNjNKMDNFeEpxbEtq?=
- =?utf-8?B?S0dnZExkZ2dHeUJLT1hxbS9Jd3lmano5NG56aktXdkxQeU5BR1BWMWdvdkxq?=
- =?utf-8?B?a2c4YzRhOXJxWGZick83Q05qU00ra3VhbTJaMVhHNjlTVkR2VnJCNHlhSktK?=
- =?utf-8?B?WXhpWWVheTRFVm1ZNWM5dnlycGtRZVNzRHB1S2phQ216aWh2YzJGaEVjYXc2?=
- =?utf-8?B?SWhuSFJjSkUyM083alk5amtlaFZWWnV2aDhkaHdEQUVpUDBDSldidGI0QlFk?=
- =?utf-8?B?M2RWY2h0dWVkdDZWWkhubFNnRHUvY3I5elZQQ3JqU0JBaVFPcVdmS0plYjEz?=
- =?utf-8?B?cVNYUWxUTi9Nbysxd3BlcGlhbFM0UmpjcndGekJ3dWxoR2pxNVJpdUdyajIx?=
- =?utf-8?Q?Wj/n0LfRuxQGmGVaXs?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c95743d3-dc28-4cf3-d434-08deaab7bd74
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB5248.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 May 2026 15:05:26.9067
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: llVqCU6+ceEJ2kT4AuYg0s91/TqsTHMSLdym0Us1uNztRmNruDrtO9iDilFtJdJQ
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW9PR12MB999209
+Content-Type: multipart/mixed; boundary="aSHEFBW7c4jh6yb3"
+Content-Disposition: inline
 
-On 27/04/2026 21:26, Matthew Schwartz wrote:
-> On 4/27/26 11:09 AM, Gal Pressman wrote:
->> Hello Matthew,
->>
->> On 27/04/2026 2:20, Matthew Schwartz wrote:
->>> Hello,
->>>
->>> When using a previously working setup of remote streaming from my workstation to another device via Sunshine (the host server) and Moonlight (the client app) on my home network, I no longer receive any video output on the client app after upgrading my host workstation to kernel 7.0. Reverting back to kernel 6.19 on the host restored my setup to a working state.
->>>
->>> After bisecting, I landed on 5b4015ad833c ("net: aquantia: Remove redundant UDP length adjustment with GSO_PARTIAL") as the first bad commit. I confirmed this by moving the cable to my second on-board NIC (Intel) on the same workstation, which restored video output without any other kernel changes. My affected on-board NIC is Aquantia AQC113 [1d6a:04c0] (rev 03), atlantic driver, firmware 1.3.34, MTU 1500.
->>>
->>> Looking into it a bit further, ethtool -K enp97s0 tx-udp-segmentation off also serves as a workaround on my Aquantia port without changing to my other ethernet port. The working Intel NIC reports tx-udp-segmentation as "off [fixed]", so traffic falls back to software UDP segmentation on there.
->>>
->>> Please let me know if there's any additional info I can provide.
->>>
->>> Thanks,
->>> Matt
->>>
->>> #regzbot introduced: 5b4015ad833c
->>
->> Thank you for the report and the bisect!
->>
->> I will take a look and try to figure out what's wrong (though I don't
->> have real hardware to test on).
->> Is the userspace app open source? can I see its code and try to run it
->> myself?
-> 
-> Thanks for the reply. The code for Sunshine is available here: https://github.com/LizardByte/Sunshine and the code for Moonlight is here: https://github.com/moonlight-stream/moonlight-qt.
-> 
-> I have been using the Arch Linux Sunshine package which I installed by following the Linux instructions here: https://docs.lizardbyte.dev/projects/sunshine/latest/md_docs_2getting__started.html, but there are also binaries for other distros or it's buildable from source. For Moonlight, I have been using the Flatpak distributed on Flathub because the client device runs an atomic rootfs, but you can also use any other device that Moonlight supports.
-> 
->>
->> I will be OOO for the rest of the week, hope to have some meaningful
->> reply by the end of next week.
-> 
 
-I think I see the issue, do you mind testing the following diff?
+--aSHEFBW7c4jh6yb3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-index a0813d425b71..5bd1706b11b0 100644
---- a/net/ipv4/udp_offload.c
-+++ b/net/ipv4/udp_offload.c
-@@ -599,10 +599,22 @@ struct sk_buff *__udp_gso_segment(struct sk_buff *gso_skb,
- 		uh = udp_hdr(seg);
- 	}
+Hi
 
--	/* last packet can be partial gso_size, account for that in checksum */
--	newlen = htons(skb_tail_pointer(seg) - skb_transport_header(seg) +
--		       seg->data_len);
--	check = csum16_add(csum16_sub(uh->check, uh->len), newlen);
-+	if (skb_is_gso(seg)) {
-+		newlen = msslen;
-+	} else {
-+		/* last packet can be partial gso_size, account for that in
-+		 * checksum.
-+		 */
-+		newlen = htons(skb_tail_pointer(seg) -
-+			       skb_transport_header(seg) + seg->data_len);
-+		check = csum16_add(csum16_sub(uh->check, uh->len), newlen);
-+	}
+After updating to 6.12.85 in Debian we got a regression report, where
+frequently a user had "AMD-Vi: Completion-Wait loop timed out" logged.
+The report is at: https://bugs.debian.org/1135313
 
- 	uh->len = newlen;
- 	uh->check = check;
+While investigating it looks d2a0cac10597 ("iommu/amd: move
+wait_on_sem() out of spinlock") got backported to 6.12.y but a
+followup for it not.
+
+https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1135313#43 confirmed
+that a backport of 9e249c484128 solved the problem. Now that one does
+not apply cleanly. As an alternative the following two might work, the
+first is a clean cherry-pick, the second on top needed a slight
+adjustment since in 6.12.y f32fe7cb0198 is not present.
+
+it would be though ideal if the maintainers can confirm this is the
+way to go.
+
+Regards,
+Salvatore
+
+--aSHEFBW7c4jh6yb3
+Content-Type: text/x-diff; charset=us-ascii
+Content-Disposition: attachment;
+	filename="0001-iommu-amd-Use-atomic64_inc_return-in-iommu.c.patch"
+
+From c1eddc8c4ee7dc0ef651d87c51676fe4cd60a9df Mon Sep 17 00:00:00 2001
+From: Uros Bizjak <ubizjak@gmail.com>
+Date: Mon, 7 Oct 2024 10:43:31 +0200
+Subject: [PATCH 1/2] iommu/amd: Use atomic64_inc_return() in iommu.c
+
+commit 5ce73c524f5fb5abd7b1bfed0115474b4fb437b4 upstream.
+
+Use atomic64_inc_return(&ref) instead of atomic64_add_return(1, &ref)
+to use optimized implementation and ease register pressure around
+the primitive for targets that implement optimized variant.
+
+Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+Cc: Joerg Roedel <joro@8bytes.org>
+Cc: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Robin Murphy <robin.murphy@arm.com>
+Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+Link: https://lore.kernel.org/r/20241007084356.47799-1-ubizjak@gmail.com
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Salvatore Bonaccorso <carnil@debian.org>
+---
+ drivers/iommu/amd/iommu.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/iommu/amd/iommu.c b/drivers/iommu/amd/iommu.c
+index fecca5c32e8a..24e2de90ac2e 100644
+--- a/drivers/iommu/amd/iommu.c
++++ b/drivers/iommu/amd/iommu.c
+@@ -1266,7 +1266,7 @@ static int iommu_completion_wait(struct amd_iommu *iommu)
+ 	if (!iommu->need_sync)
+ 		return 0;
+ 
+-	data = atomic64_add_return(1, &iommu->cmd_sem_val);
++	data = atomic64_inc_return(&iommu->cmd_sem_val);
+ 	build_completion_wait(&cmd, iommu, data);
+ 
+ 	raw_spin_lock_irqsave(&iommu->lock, flags);
+@@ -2929,7 +2929,7 @@ static void iommu_flush_irt_and_complete(struct amd_iommu *iommu, u16 devid)
+ 		return;
+ 
+ 	build_inv_irt(&cmd, devid);
+-	data = atomic64_add_return(1, &iommu->cmd_sem_val);
++	data = atomic64_inc_return(&iommu->cmd_sem_val);
+ 	build_completion_wait(&cmd2, iommu, data);
+ 
+ 	raw_spin_lock_irqsave(&iommu->lock, flags);
+-- 
+2.53.0
+
+
+--aSHEFBW7c4jh6yb3
+Content-Type: text/x-diff; charset=us-ascii
+Content-Disposition: attachment;
+	filename="0002-iommu-amd-serialize-sequence-allocation-under-concur.patch"
+
+From c0e5ddae730cd75b2c806655a8ced16148bafa2c Mon Sep 17 00:00:00 2001
+From: Ankit Soni <Ankit.Soni@amd.com>
+Date: Thu, 22 Jan 2026 15:30:38 +0000
+Subject: [PATCH 2/2] iommu/amd: serialize sequence allocation under concurrent
+ TLB invalidations
+
+commit 9e249c48412828e807afddc21527eb734dc9bd3d upstream.
+
+With concurrent TLB invalidations, completion wait randomly gets timed out
+because cmd_sem_val was incremented outside the IOMMU spinlock, allowing
+CMD_COMPL_WAIT commands to be queued out of sequence and breaking the
+ordering assumption in wait_on_sem().
+Move the cmd_sem_val increment under iommu->lock so completion sequence
+allocation is serialized with command queuing.
+And remove the unnecessary return.
+
+Fixes: d2a0cac10597 ("iommu/amd: move wait_on_sem() out of spinlock")
+
+Tested-by: Srikanth Aithal <sraithal@amd.com>
+Reported-by: Srikanth Aithal <sraithal@amd.com>
+Signed-off-by: Ankit Soni <Ankit.Soni@amd.com>
+Reviewed-by: Vasant Hegde <vasant.hegde@amd.com>
+Signed-off-by: Joerg Roedel <joerg.roedel@amd.com>
+[Salvatore Bonaccorso: Backport to v6.12.y where f32fe7cb0198
+("iommu/amd: Add support to remap/unmap IOMMU buffers for kdump") is not
+present]
+Signed-off-by: Salvatore Bonaccorso <carnil@debian.org>
+---
+ drivers/iommu/amd/amd_iommu_types.h |  2 +-
+ drivers/iommu/amd/init.c            |  2 +-
+ drivers/iommu/amd/iommu.c           | 18 ++++++++++++------
+ 3 files changed, 14 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/iommu/amd/amd_iommu_types.h b/drivers/iommu/amd/amd_iommu_types.h
+index a14ee649d3da..df2aa1c4fafc 100644
+--- a/drivers/iommu/amd/amd_iommu_types.h
++++ b/drivers/iommu/amd/amd_iommu_types.h
+@@ -781,7 +781,7 @@ struct amd_iommu {
+ 
+ 	u32 flags;
+ 	volatile u64 *cmd_sem;
+-	atomic64_t cmd_sem_val;
++	u64 cmd_sem_val;
+ 
+ #ifdef CONFIG_AMD_IOMMU_DEBUGFS
+ 	/* DebugFS Info */
+diff --git a/drivers/iommu/amd/init.c b/drivers/iommu/amd/init.c
+index e1816ae8699d..78e9ceda2338 100644
+--- a/drivers/iommu/amd/init.c
++++ b/drivers/iommu/amd/init.c
+@@ -1742,7 +1742,7 @@ static int __init init_iommu_one(struct amd_iommu *iommu, struct ivhd_header *h,
+ 	iommu->pci_seg = pci_seg;
+ 
+ 	raw_spin_lock_init(&iommu->lock);
+-	atomic64_set(&iommu->cmd_sem_val, 0);
++	iommu->cmd_sem_val = 0;
+ 
+ 	/* Add IOMMU to internal data structures */
+ 	list_add_tail(&iommu->list, &amd_iommu_list);
+diff --git a/drivers/iommu/amd/iommu.c b/drivers/iommu/amd/iommu.c
+index 24e2de90ac2e..d0e53a03eff0 100644
+--- a/drivers/iommu/amd/iommu.c
++++ b/drivers/iommu/amd/iommu.c
+@@ -1252,6 +1252,12 @@ static int iommu_queue_command(struct amd_iommu *iommu, struct iommu_cmd *cmd)
+ 	return iommu_queue_command_sync(iommu, cmd, true);
+ }
+ 
++static u64 get_cmdsem_val(struct amd_iommu *iommu)
++{
++	lockdep_assert_held(&iommu->lock);
++	return ++iommu->cmd_sem_val;
++}
++
+ /*
+  * This function queues a completion wait command into the command
+  * buffer of an IOMMU
+@@ -1266,11 +1272,11 @@ static int iommu_completion_wait(struct amd_iommu *iommu)
+ 	if (!iommu->need_sync)
+ 		return 0;
+ 
+-	data = atomic64_inc_return(&iommu->cmd_sem_val);
+-	build_completion_wait(&cmd, iommu, data);
+-
+ 	raw_spin_lock_irqsave(&iommu->lock, flags);
+ 
++	data = get_cmdsem_val(iommu);
++	build_completion_wait(&cmd, iommu, data);
++
+ 	ret = __iommu_queue_command_sync(iommu, &cmd, false);
+ 	raw_spin_unlock_irqrestore(&iommu->lock, flags);
+ 
+@@ -2929,10 +2935,11 @@ static void iommu_flush_irt_and_complete(struct amd_iommu *iommu, u16 devid)
+ 		return;
+ 
+ 	build_inv_irt(&cmd, devid);
+-	data = atomic64_inc_return(&iommu->cmd_sem_val);
+-	build_completion_wait(&cmd2, iommu, data);
+ 
+ 	raw_spin_lock_irqsave(&iommu->lock, flags);
++	data = get_cmdsem_val(iommu);
++	build_completion_wait(&cmd2, iommu, data);
++
+ 	ret = __iommu_queue_command_sync(iommu, &cmd, true);
+ 	if (ret)
+ 		goto out_err;
+@@ -2946,7 +2953,6 @@ static void iommu_flush_irt_and_complete(struct amd_iommu *iommu, u16 devid)
+ 
+ out_err:
+ 	raw_spin_unlock_irqrestore(&iommu->lock, flags);
+-	return;
+ }
+ 
+ static void set_dte_irq_entry(struct amd_iommu *iommu, u16 devid,
+-- 
+2.53.0
+
+
+--aSHEFBW7c4jh6yb3--
