@@ -1,125 +1,114 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.166])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 306AB3E1CF3
-	for <regressions@lists.linux.dev>; Wed,  6 May 2026 08:07:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.166
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F8FB367F3A
+	for <regressions@lists.linux.dev>; Wed,  6 May 2026 08:34:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778054877; cv=none; b=f6bwdx7rLDFqmirx5y8hhudrsAcT91ai8tQIPcahxVZcIBuTigAGjNRYIcCtoV/SMtxT5ZAMez4D+Hc4hXanq5j76bzHhyJDxGKYAtZ3xptG1G0lbcwFuuffoOmwc6kTpgDtaaxMjqymUsDKYboe+vrzGlFBQezvbx18z1RQxA4=
+	t=1778056490; cv=none; b=Z1d0TnlPZnMTWhoGXXkhncQKTwnx8TNd023kGW3bWlGeRBrZut2agx62QdBi1WKUHN30l3YbWOJXykaTcTCgCQEnbR8aWejed4zOzKYSdcq3KzDPi93Vm9WMmVw8T2/fnssvqq9DYL5KgMswkFgKTRQg+2x3v2xW611AqUAwCTk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778054877; c=relaxed/simple;
-	bh=o794TmHSGyfou6IVoyu8vzy9hgYiBe8ZRTmwQYE3hrg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
-	 In-Reply-To:Content-Type; b=WotqLOSJTmfzkOG74hMMaMn77E8D4lkDBZD5QRZ6kabwT4oqaYqwOSfvnpN1iyZyWG8M+7eokdbtcaEiUhdsT3pqDTH9BXVmw4JwioFD7nSl1RSsBsh5lB5fvbPf9g1ZNtP9jSxHfgVhLiU2HaDMyvZEJYX6+Efo8tBoOUF0jUI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=cm7NTW8i; arc=none smtp.client-ip=188.68.63.166
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1778056490; c=relaxed/simple;
+	bh=I1J9akN2iG0xeezhbdYpo1s4eVlOCZKtP1+ueuzkiZc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=TW07EHXGz1du9VdMRgIkbKhybXN2QR7uODVRTe4aWyUjwZZm87CmBSMT6VMMrPYYxW9oWv2xKZme54vXCIiVZhLpcKfEb0yz6eWtiEgDb+aOtzSFu7yf8fSpAeHQ2cZ+KmsNMO39Hym+UFlXMXvyzXL5QkBtxuAo3KG/BS/x174=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X4aiOLYT; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="cm7NTW8i"
-Received: from mors-relay-8202.netcup.net (localhost [127.0.0.1])
-	by mors-relay-8202.netcup.net (Postfix) with ESMTPS id 4g9Sfl5T8Hz3wdY;
-	Wed,  6 May 2026 10:07:43 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1778054863;
-	bh=o794TmHSGyfou6IVoyu8vzy9hgYiBe8ZRTmwQYE3hrg=;
-	h=Date:Subject:To:References:From:Cc:In-Reply-To:From;
-	b=cm7NTW8iBMi5WuJ3duW9tnkU8kaCVdBt3cxXVqr8PkZX9iyJEXKFW66dBEJWWwEa2
-	 kXrlRQiCE62JghpcaPgkRU5Lo+hsiyve+GoJlF7xGJgRud0OQ/zxh7GjsIjDVoCGeb
-	 zDyA/vZO/m+Gtoy+LYcXHqSKcA6Jr1ipJE7ELj5GNdRvGIPj88cfZhYmUK3KgIbtOb
-	 dUjNuwKXQNIUIoRnBBN+vscdaJAVPADLxuv9d+Z6uXBH882JjOph0tYXuUlq3Gpa1r
-	 dbytkGE4Z7cRMcy6HqY7ai/MaWWPCRhjxahuDROEhIsQCsmLufv/4p4EPh4ta2am8o
-	 YBmapi+EnKEmA==
-Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-8202.netcup.net (Postfix) with ESMTPS id 4g9Sfg4lQ2z41dT;
-	Wed,  6 May 2026 10:07:39 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
-X-Spam-Flag: NO
-X-Spam-Score: -2.901
-X-Spam-Level: 
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4g9Sff0mfzz8tZx;
-	Wed,  6 May 2026 10:07:37 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 4F55D63449;
-	Wed,  6 May 2026 10:07:37 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <00b05188-c352-42b9-888a-01e9bf00fb34@leemhuis.info>
-Date: Wed, 6 May 2026 10:07:35 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X4aiOLYT"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-48374014a77so72468495e9.3
+        for <regressions@lists.linux.dev>; Wed, 06 May 2026 01:34:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1778056488; x=1778661288; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8z5ED+Pf9v/Xkb5NAgAq58SEZN/bOoZeXGr3NEMbxVk=;
+        b=X4aiOLYT6ur+A0VV64UBb8UPj/3vqr6ICp0M/UohZ/1NLD3Vn7XNELIsJQOgEzeFYz
+         83u+1RcZv6ZyTvahVgrP0ff2lU2aEMmlTZ/jKcUlAtCwydxoa6auUq7PttJbu1agkGEc
+         6jjE+TM6Bb5ofkB9k9csIyomAhMAtImW6Nb2dSJSYkNuk4xXBmz6UghksHbqsNhYGISy
+         Cbq0+zgxgk38wbBHvrbNbLxhyrqnLbBZl129KUxiKB6is6utV8/8yHIfY3Zk24JG7jSX
+         4ivwQNJLIPizNDVl0Wu5VRe0Aeq/bhvareV92GUu22qavXm2Q4ROmSrmKF+cKttU69qW
+         VgsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778056488; x=1778661288;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=8z5ED+Pf9v/Xkb5NAgAq58SEZN/bOoZeXGr3NEMbxVk=;
+        b=QW4AOQys3B4iUXXvALxk7HAf3PE2Oi9JG2yCZIi/dwieVFVm2frLU81+WMkUa5f5tA
+         SRUc13jyRkk1TRVabX3qx4to6jcPYw4tjFBibppmzhnvnjhjZ6w20NkUhYdVVAdEOJUx
+         YBJ6LsQzit47S0s+LdJvtPqdYTBqNBdHRJADWwlmR3zQM8ft0thdNk2NyAD2euMmzD8v
+         A3aK+pZmV5QDai/zz4eTGd06yyrRXUv19261TN0hxnv/fCzN5bIcDTijOuUPqf9wqtNM
+         1z1I1G/Fv35ne56gjJcDEzmF8wnxkIMPDZiixnJ5UvGCSpQBQ+HJWmZy6FROu6mEIdpr
+         MLTA==
+X-Gm-Message-State: AOJu0YyNgAetxeLl0snGGQE2idHtad+XA1h5EphrQLNU5S8/IJyORE13
+	AuOSDpYf1M2h4x9HW50wuCMrZcuCuayycARYbo3kbWbxstN4gvng0Bd5
+X-Gm-Gg: AeBDieuBVLwc77D1Ylz29ZeoibAhlq2BFTzTH4Ad++6Q6HlbxNN6op7JNj9fdUqhAVh
+	17meeRJZ39tWcKk7bqbfNHJ+9mX90wKXqSNIWF7QJScGTJWB/+Jf02gquF4sFE/8Qzr6gf5Q8rQ
+	eULbCfuh9z0wRp5jJTTiKGxtVLd4+6C9MQxEQGtiksgH/T3p1KJGjmKyHqTyl8zfYoOJOTinDEj
+	adDsq8UFgtRA4buUDiU28hFDHQ6JREjS7xdjV4dgXbFUfgoI0aUFQoKpLk9HJWlnMoaiA5GXlqR
+	7OSoXU5s+kScP1qIwr2z1r9gD7jgxVHrtwft/naYU/bShHZMhnEuKXgOriltP23pCCKWlWx4RoR
+	MNBaqjYPYAtLacFIckbSlNfHRx7l3yR6zArEJXMGOviGI6UsPPqiSathsRWy5Z8vPoXPWXxYszd
+	7vOxnOGx6O+0uNNuq0FFqI1V1pmg0cwZOBV8BlCVWn0Eav9g==
+X-Received: by 2002:a05:600c:3ba8:b0:48a:7676:30bc with SMTP id 5b1f17b1804b1-48e52bd5035mr38991645e9.14.1778056487414;
+        Wed, 06 May 2026 01:34:47 -0700 (PDT)
+Received: from foxbook (bgt227.neoplus.adsl.tpnet.pl. [83.28.83.227])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48e53895effsm29069145e9.3.2026.05.06.01.34.46
+        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
+        Wed, 06 May 2026 01:34:47 -0700 (PDT)
+Date: Wed, 6 May 2026 10:34:42 +0200
+From: Michal Pecio <michal.pecio@gmail.com>
+To: "Fischer, Simon" <simon.fischer@ipp.mpg.de>
+Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Subject: Re: Lowspeed USB device enumerationg under 5.4.288, but not under
+ 6.8.1
+Message-ID: <20260506103442.0ab840ef.michal.pecio@gmail.com>
+In-Reply-To: <50fff510499b47d09df9317855680552@ipp.mpg.de>
+References: <50fff510499b47d09df9317855680552@ipp.mpg.de>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Regression in 7.0] OLPC-XO-1.5 will not boot after commit
- 157266edcc
-To: An <an.m@mailbox.org>, Thomas Gleixner <tglx@kernel.org>,
- Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>
-References: <f8566380-6a40-435a-bf8c-6c0e0999d434@mailbox.org>
- <7a0c8eec-2e97-4eaf-a8aa-f7e97da93908@mailbox.org>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: de-DE, en-US
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- the arch/x86 maintainers <x86@kernel.org>, David Gow <david@davidgow.net>
-In-Reply-To: <7a0c8eec-2e97-4eaf-a8aa-f7e97da93908@mailbox.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-PPP-Message-ID: <177805485774.3692967.1012349254078436911@mxe9fb.netcup.net>
-X-NC-CID: 9Ejv8bIagbJkdzI+FwWAiJssPYhMwr1kEkfMfhhQAZhuENdHTms=
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Lo! Looks like nothing happened since the report (please correct me if
-I'm wrong, it's easy to miss something). Adding a few more people and
-lists to the recipients of this reply, maybe that will things rolling.
-
-FWIW, the culprit seems to be 157266edcc5671 ("x86/boot/e820: Simplify
-append_e820_table() and remove restriction on single-entry tables")
-[v7.0-rc1] from Ingo.
-
-Therefore adding David Gow, who submitted a fix for the culprit -- but
-that didn't make it anywhere afaics, unless I'm missing something. For
-details see:
-https://lore.kernel.org/all/20260416065746.1896647-1-david@davidgow.net/
-
-Ciao, Thorsten
-
-On 4/19/26 22:08, An wrote:
-> On 19/04/2026 10.46, An wrote:
->> [please keep me in CC, I'm not subscribed]
->>
->> Hi Ingo,
->>
->> my OLPC XO-1.5 stopped booting when switching from 6.19 to 7.0
->>
->> I bisected this to
->>
->> commit 157266edcc56715323de1bd60e49194b3b66a174
->> Author: Ingo Molnar <mingo@kernel.org>
->> Date:   Thu May 15 14:05:41 2025 +0200
->>
->>      x86/boot/e820: Simplify append_e820_table() and remove
->> restriction on single-entry tables
->>
->> The XO boots from a forth environment and is rather quirky.
->> If I can help with any logs or tests, please let me know.
->>
->> I'm compiling a 7.0 kernel with the patch reverted,
->> but it smells like a plain revert isn't the best idea.
->>
->> Thank you,
->> An Müller
->>
+On Wed, 6 May 2026 07:19:53 +0000, Fischer, Simon wrote:
+> I have been able to reproduce the problem with a current (6.19)
+> kernel and independent of PREEMPT_RT status. But I have also been
+> able to identify that the difference between my Ubuntu provided 5.4
+> and 6.8 kernels that leads to the problem, is actually the CONFIG_HZ
+> build config parameter.
 > 
-> I've tested both 7.0 and current mainline: with this patch reverted,
-> they boot fine, the revert applies cleanly in both cases.
-> 
-> Thanks,
-> An
+> Ubuntu's 6.8 kernel is by default built with CONFIG_HZ=1000, while
+> the old 5.4 kernel was built with CONFIG_HZ=250. If I rebuild
+> Ubuntu's 5.4 with 1000Hz, I also cannot talk to the devices, and when
+> I compile 6.19 or 6.8 with 250Hz, they work (currently running a
+> rebuilt Ubuntu 6.8.1 with only that one parameter updated, I
+> sometimes still see errors, but an automatic retry of the driver is
+> then successful).
 
+Quite fascinating ;)
+
+BTW, I would still be interested to see 'lsusb -v' of any low-speed
+isochronous device. Can such a thing seriously work with xhci?
+
+> So, a regression this is not :-)
+>
+> Since I cannot imagine in what way the system interrupt frequency
+> would directly affect this part in such a reproducible and
+> significant manner, I would think it more likely that the USB core or
+> xhci drivers actually use that setting value somewhere themselves and
+> maybe wrongly. So this should probably realy go to some other list.
+> If you know which, I would greatly appreciate you forwarding my
+> information  or telling me where to take it.
+
+Per Documentation/admin-guide/reporting-issues.rst, try your best guess
+which kernel part might be responsible and report there.
+
+In short: linux-usb@vger.kernel.org
+
+Regards,
+Michal
