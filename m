@@ -1,288 +1,134 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+Received: from mail-dl1-f51.google.com (mail-dl1-f51.google.com [74.125.82.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 836323D0930
-	for <regressions@lists.linux.dev>; Tue,  5 May 2026 20:40:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778013615; cv=none; b=pg0BDTjs5w+/QBFPnCvhTYuhU5vo4i6N13OweW1OXRij44b3IkiqRkPhT5lph39loBlWkuSHF8Eelpa5iEEjLiCDDcxBJJ9Jw3JeffcGAIoEEuBVadIl7ftzt5PBpsh317xd+kDWkhfojrOhhKVG9CUgXVAA5aP/Mz9KXNv6jn4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778013615; c=relaxed/simple;
-	bh=EpGaEwKFGuiP4t9mZpBgQM5X2R+L9JBlxUfkrxWEs1o=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=VrjWHlyM+z5AEHv+R9bp3ntmbnGRy+14DagR91YFqOqZbt7dCqtRzOWoyRa+S8FzGiw9FEulnxVez7MHSuVf5vNAyKLrrEMCLyRJ9581WTFhliS5KSVOrpx6e4N4nDR9g95v+kql1sy+Mx9UXhO0PQ4tWbJeAkvs9msOuJk8RH4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jZyDhyAV; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDC26C2FF
+	for <regressions@lists.linux.dev>; Wed,  6 May 2026 01:04:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.51
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778029479; cv=pass; b=DguojWPSnsFtJRFwL/Cb1AtGvCM1P5Ah0JWdfF/TPBHSjAnmN6+xv9RiAiofgAa2E5mp2HLPWGdL6FOoBNhd5bMNl/8q5UDKZXvACE4gp/PXkmSp/CvcSTaQEpHTnFqvvAn3Ul3OkvEzL+bqG2iWm51UQy4IrhWukktMNzdSU+o=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778029479; c=relaxed/simple;
+	bh=WeSGqUsBPS7NdUbSMuKhfVFAr+0NNERLbgb+lqLr2OA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=GDA5eAKl0nplYHnjyWLkszcGkaSUCIB+aifVWbO++IM7dGFFaD6H1vPJt05WurCFXVVm/hm7tn25yaNZfHet9zv+w6ncLAlSpF3pb8Hn0iNqk+mRMrp7UmIcNcARYckCiycMOSOljAVAwWO6AZxnMo5UmU87eOPumMonb8CHh1A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=shopee.com; spf=pass smtp.mailfrom=shopee.com; dkim=pass (2048-bit key) header.d=shopee.com header.i=@shopee.com header.b=RuM8LjYZ; arc=pass smtp.client-ip=74.125.82.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=shopee.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shopee.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jZyDhyAV"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-671dad7cac8so6326274a12.0
-        for <regressions@lists.linux.dev>; Tue, 05 May 2026 13:40:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=shopee.com header.i=@shopee.com header.b="RuM8LjYZ"
+Received: by mail-dl1-f51.google.com with SMTP id a92af1059eb24-12c8c9c4cd8so284622c88.0
+        for <regressions@lists.linux.dev>; Tue, 05 May 2026 18:04:37 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1778029477; cv=none;
+        d=google.com; s=arc-20240605;
+        b=PAU6ZW0ASuIdkuwVZGhlFqFTOd8mzH08qAgvTVZSdr2QQt8coX0unMUo5CbgYzC4Nj
+         GOT7jXv4fEgQzd4qQN5UE/13/VXmnN0zzPyiGrG22egsGEmv8eTW3qDTM2qyexaUYiPG
+         Zaz6OMw8LWoUQC5zG4b2B7o3mNJGzDQkiNIffcvKbpeWSWMtXokN4pTMTqu0cQTGpvXF
+         Opz5echPmKRUECuK+6njGiKqYFuPIbwlTfHokP10GI1uoDULF/42gH98QZQezH8CTaWR
+         SmVYVElBBHL49XQOCYSOyZKwJD7Uq9ZV8fuh5HfpiqQJo+Vfj5DbNAJJrnKpGdiBzB95
+         m8vw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=DsE+PeSrf/NzrEl9og37JNUjubQniqz8TNKhe4A4HRE=;
+        fh=bVzdqoCk60WaDsnw7jRgeN25S8c3TOO6p36Yl5v1SFE=;
+        b=LHdUeStP/nhlqssJDpL0dKqWF2ZcfBhibBwYpGPGaE60j74oaHmoiV4rE2/7havy3e
+         gFfmhNgzOgVdq3N/vIPHi5gkDYUHNV0qrDOP15O3i0VMr1MIf7CHUnYLDv/35BfV4IGp
+         RX4JTLhDPqKV6RGEwl6l5FSm36AJSEHUUIyhLOMPbNvlm2Xc7ibrYLA4OXaEEbb86S+A
+         jjFTXuSD4Oygiu/Y/KVv2qsHmejtNtxRss+UN2oGESZdIkD9BlGvmrfQ5fu7avGu+Ybz
+         rhPHCFZywPVzYwiTMjS1XtOQaV1A3royGSJB5IurANaki4EWjW3mQo8Xrka6xo72mU+m
+         fhsA==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1778013612; x=1778618412; darn=lists.linux.dev;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=wP0T8HbpG/ezhgyMGr0ErCtPzM0+G4QaMUxS65Bsvbc=;
-        b=jZyDhyAVKghYU6+CLr8kPQtR68O5kSg6B5+IvZAHjFYsl6wFrrygq66ncuBRm1rk32
-         0UcB0z66EU/l/AAORcarJjBjqDNEwFVXdA5Utztqiv/jxjgbmp/ni7sCMCf4lSJO2cFN
-         FOy9xAfbML8wDAih4lGKeMnWPC8MonK5N2T9JFe0RhIm98yDQZuISz/Sx2L/e+erRLD1
-         oz2F3v0CzUFuGdGOyX5Z9vMY3RtLQoOmZX/okFAuMuV16z3bIWPve15Ob4oaIHdFKoQC
-         j72gxOZJVF2bIrFTvas+DSu4GnuWjFCQIMFDxahX3LhiwWsEXJw7IZnK4P3WzaonMFBt
-         Dqeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778013612; x=1778618412;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :sender:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=shopee.com; s=shopee.com; t=1778029477; x=1778634277; darn=lists.linux.dev;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=wP0T8HbpG/ezhgyMGr0ErCtPzM0+G4QaMUxS65Bsvbc=;
-        b=drbN4J2ZT1wnJXSAU9wcifxSQbCgcO9Fpd2kxt4cc6iyDkQkWnG8Am1eepwu+nlPFm
-         v5j5t3P+t1u3SKGQ6su7CAMfgtvylciYRuYnER14lTF9tr3wN6Pl4FZjNukVHVCtQ26F
-         RpCG7mgPddYAaGUjwxNAzYsV9PRPBZW0Ctd9XGRLv7LzQWVCisaFAbBuHXYGYpWVZ0eP
-         d2ZkXR9ppLIUxwzJWsIa4VxvHkWHRH3iJWPgE5VBLctmz8C7BL5LznEoDP2Gf9dpfuaS
-         eOZ4LNtwragecauTQf327why5OTOViZC16/3s/bvcEyx6bCkoWRLWp9qXUBhBam95xQg
-         a+Xg==
-X-Forwarded-Encrypted: i=1; AFNElJ+x1DmItbO+489wOPPyvoglkIrZpGJ6WeJYy2JBusrnkzWmBw5hvueCguZ2QGbsT4BN8nC6R8VYg68RAQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwUG8r4v4mhv4BMdLHVS+tM6km9AC2V/qGOuYV+10BfFByzd49U
-	LPxnskavhAY5oxv4F5Ld4nihtDVVnrG7YNb9YFBnXuZGlLdntvMsTb6Z9cAbj5ow
-X-Gm-Gg: AeBDievB37gj8eEBnX1/Ah0kc8sO2uz4qmlvjtIJGcBzFuhlYCBP4JZ/SyKI04lzFZG
-	W0sAng8HS9eVMOfXwyoXFYpzMQmR6bIIDImA+xcHs4NiQk73qacPrq9115o87eGGK6pEND1qAxK
-	JHKMMyrzRmqVRqlkazMSUqlWgeISH7WLh4L5iXEemiIAxPEU3yYuzBC0sdlMEs2Y27XO07BGkRp
-	Lkirm1FYN3v1ESRXkHbT7Z29nOZSul9nBItVQaSkkMuymoaf4I9wDaNL6wAAWoE93Z68ucidO5X
-	YY8Fme3qso8bvJzyu3BkymOJKfgrkZFl7bClk0bJ63Lw0FWKRcbHXvooX8rKOitvnElh258o/p5
-	CDRZ5yc6KCJBLE14qVmRzpdth3rvZNoo2eUnwF8fEFmUimlwIS0Ab90J06TIWsCgC/+zmNFHvHv
-	0APFFaHLaq5Cd3s1m55qSR0AoqbV8xZyo=
-X-Received: by 2002:a05:6402:2b8a:b0:67c:5935:39e4 with SMTP id 4fb4d7f45d1cf-67d638b1793mr68564a12.3.1778013611534;
-        Tue, 05 May 2026 13:40:11 -0700 (PDT)
-Received: from eldamar.lan ([88.130.212.107])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-67cd91ea07dsm675870a12.31.2026.05.05.13.40.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 May 2026 13:40:10 -0700 (PDT)
-Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
-Received: by eldamar.lan (Postfix, from userid 1000)
-	id 6A563BE2EE7; Tue, 05 May 2026 22:40:09 +0200 (CEST)
-Date: Tue, 5 May 2026 22:40:09 +0200
-From: Salvatore Bonaccorso <carnil@debian.org>
-To: stable <stable@vger.kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Sasha Levin <sashal@kernel.org>, regressions@lists.linux.dev,
-	Ankit Soni <Ankit.Soni@amd.com>, Srikanth Aithal <sraithal@amd.com>,
-	Vasant Hegde <vasant.hegde@amd.com>,
-	Joerg Roedel <joerg.roedel@amd.com>, 1135313@bugs.debian.org,
-	Friedemann Stoyan <fstoyan@swapon.de>
-Subject: Please backport 9e249c484128 ("iommu/amd: serialize sequence
- allocation under concurrent TLB invalidations") to 6.12.y
-Message-ID: <afpVqZDIRVmdV960@eldamar.lan>
+        bh=DsE+PeSrf/NzrEl9og37JNUjubQniqz8TNKhe4A4HRE=;
+        b=RuM8LjYZ+HCtQGrmhEB64h1QpEPkj2ysEtp4oQonTj75PxvcCDzbOK0KfGDqudZzVV
+         D/ARrzwSqB33U3ni7g5go8M7/698cczWvgAILsWdKb9ETRqDTJRxI/2mxabRquXOhRMW
+         h7oARW4QwMJdwedb93GnPO3082d4vcnQy+/n5+4Z7QETNelfPC77S1fiU9DXCgJgdtrn
+         1U6Lm0DeDNeEu91ja5q40KW9FOtew+cvBqjOAZTaK0+TtKwqNFPhgnlfmZmrat6rNDiK
+         0yw4/HGVYnD9X/bQghi6JmB56nv0GT1cFSWN3lltgpTOKNpAewtCVyx99OSZHc4rGHDS
+         qpwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778029477; x=1778634277;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=DsE+PeSrf/NzrEl9og37JNUjubQniqz8TNKhe4A4HRE=;
+        b=LxvueuMSBpFEBuC9hzrLrJQC8xF+UPGq8xYJY3h3Jre+fpF7d0Z4BLp38V7fGKFVM9
+         sNREnupo8utZsxR2f+1FMB6JHQZMBhuL7pex5x8Wjep8/Mf85kYPN7zm0K45QUNAbEn9
+         Fj4RmPR6qlGU2hQuARhCpWBEmXTscQbkEb1FJeRVFgEJ8Q1P7L89TYIUZeoLRJbzz/HN
+         POZP3ucnGwLkf/GhP9TkkLJi0WLXOK1WGEEZoRCcK/QU/sQoowk4GmYp/rUuyfci0I08
+         xoFL9mrKkFTVKOmIP/8lCTBew+e3bJ9Lryu0yTbMspFIE4km5CBHTOk8lJnhaZ6ZcBs0
+         Q8rg==
+X-Forwarded-Encrypted: i=1; AFNElJ9x9Q/wudnmzWKWx8m2mzsDI2QkV1TlqokXq/tVK7iEMgDp57NqFc5y9nUeufaUMudX5b6HkmnGrhxy+A==@lists.linux.dev
+X-Gm-Message-State: AOJu0YydPxne9lcb1zsMIH57kX7IO9odj9CWOrOImgevf573e6pVTbqC
+	+EHJWLEJBkpBVZb52WSwqUEvWxjBMBcn9bM8WlBlTyyF6AwhJ2vqdB/WAl44Amk46XDqnyebEE9
+	HJrEn+zAFa/ISdmkAk41DGS2HMTpjbMJpyqgo3N8Nqg==
+X-Gm-Gg: AeBDiesn+jaMeeWpQpnU3PPeaggcZVAhV8MAkyshm42OhrsW6lkkDz+7OoOyI3Ig+zS
+	hGx9Zn3SATeLdzEyM4xhQQ5ilESmbZ4gMKpmi8DqIxAfUOn/c8TjR986RwfLzhUVv14RyyPL3Fs
+	V92pwU3OnEcDOXE/e56eLKKt8LPeJNjVI3lrOVKzIWIxIgnP6qhHgSyQy3AehR6x8ms0BF2dW95
+	HrHHPCsuXYt8lWHMPjUfbXJsJ3yBag97TalssDXyeVnZX9Ck6SyjXyqCNkoakGaG71JIKQeBQxt
+	vCVatiPakJ9Qk04CsHvLn3DVjHk=
+X-Received: by 2002:a05:7300:fb8a:b0:2c1:82c2:bc31 with SMTP id
+ 5a478bee46e88-2f3d079d433mr2147391eec.10.1778029476904; Tue, 05 May 2026
+ 18:04:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="aSHEFBW7c4jh6yb3"
-Content-Disposition: inline
+References: <177771348699.1898023.16904466444228860838@eldamar.lan>
+In-Reply-To: <177771348699.1898023.16904466444228860838@eldamar.lan>
+From: Jiayuan Chen <jiayuan.chen@shopee.com>
+Date: Wed, 6 May 2026 09:04:24 +0800
+X-Gm-Features: AVHnY4Ld4uQUyoOaqaQn_pJ5ltYCQOi65ut2p0eYluQk8TlWIlP0ecsVLB1r7No
+Message-ID: <CAL3Ev5070_=K9F9+03GrE2+4tgr=j_CO19=m4ZPTd17YSwmokQ@mail.gmail.com>
+Subject: Re: [6.1.y regresssion] 9a95ec9144ee ("xfrm: fix ip_rt_bug race in
+ icmp_route_lookup reverse path") causes log spam on ping to unreachable host
+To: Jiayuan Chen <jiayuan.chen@shopee.com>, Paolo Abeni <pabeni@redhat.com>, 
+	Sasha Levin <sashal@kernel.org>, regressions@lists.linux.dev, stable@vger.kernel.org, 
+	1135514@bugs.debian.org, podorski <podorski@gmail.com>, 
+	Brad Barnett <debian-bugs5@l8r.net>, "David S. Miller" <davem@davemloft.net>, 
+	David Ahern <dsahern@kernel.org>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Simon Horman <horms@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+I think it because we failed to backport  this patch before:
+https://lore.kernel.org/stable/20250207161555-b1a8749027831a1a@stable.kerne=
+l.org/T/#m0c880c1f04f7211aea9b7f6b4de0b64aa1726417
 
---aSHEFBW7c4jh6yb3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-Hi
-
-After updating to 6.12.85 in Debian we got a regression report, where
-frequently a user had "AMD-Vi: Completion-Wait loop timed out" logged.
-The report is at: https://bugs.debian.org/1135313
-
-While investigating it looks d2a0cac10597 ("iommu/amd: move
-wait_on_sem() out of spinlock") got backported to 6.12.y but a
-followup for it not.
-
-https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1135313#43 confirmed
-that a backport of 9e249c484128 solved the problem. Now that one does
-not apply cleanly. As an alternative the following two might work, the
-first is a clean cherry-pick, the second on top needed a slight
-adjustment since in 6.12.y f32fe7cb0198 is not present.
-
-it would be though ideal if the maintainers can confirm this is the
-way to go.
-
-Regards,
-Salvatore
-
---aSHEFBW7c4jh6yb3
-Content-Type: text/x-diff; charset=us-ascii
-Content-Disposition: attachment;
-	filename="0001-iommu-amd-Use-atomic64_inc_return-in-iommu.c.patch"
-
-From c1eddc8c4ee7dc0ef651d87c51676fe4cd60a9df Mon Sep 17 00:00:00 2001
-From: Uros Bizjak <ubizjak@gmail.com>
-Date: Mon, 7 Oct 2024 10:43:31 +0200
-Subject: [PATCH 1/2] iommu/amd: Use atomic64_inc_return() in iommu.c
-
-commit 5ce73c524f5fb5abd7b1bfed0115474b4fb437b4 upstream.
-
-Use atomic64_inc_return(&ref) instead of atomic64_add_return(1, &ref)
-to use optimized implementation and ease register pressure around
-the primitive for targets that implement optimized variant.
-
-Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-Cc: Joerg Roedel <joro@8bytes.org>
-Cc: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Robin Murphy <robin.murphy@arm.com>
-Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
-Link: https://lore.kernel.org/r/20241007084356.47799-1-ubizjak@gmail.com
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Signed-off-by: Salvatore Bonaccorso <carnil@debian.org>
----
- drivers/iommu/amd/iommu.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/iommu/amd/iommu.c b/drivers/iommu/amd/iommu.c
-index fecca5c32e8a..24e2de90ac2e 100644
---- a/drivers/iommu/amd/iommu.c
-+++ b/drivers/iommu/amd/iommu.c
-@@ -1266,7 +1266,7 @@ static int iommu_completion_wait(struct amd_iommu *iommu)
- 	if (!iommu->need_sync)
- 		return 0;
- 
--	data = atomic64_add_return(1, &iommu->cmd_sem_val);
-+	data = atomic64_inc_return(&iommu->cmd_sem_val);
- 	build_completion_wait(&cmd, iommu, data);
- 
- 	raw_spin_lock_irqsave(&iommu->lock, flags);
-@@ -2929,7 +2929,7 @@ static void iommu_flush_irt_and_complete(struct amd_iommu *iommu, u16 devid)
- 		return;
- 
- 	build_inv_irt(&cmd, devid);
--	data = atomic64_add_return(1, &iommu->cmd_sem_val);
-+	data = atomic64_inc_return(&iommu->cmd_sem_val);
- 	build_completion_wait(&cmd2, iommu, data);
- 
- 	raw_spin_lock_irqsave(&iommu->lock, flags);
--- 
-2.53.0
-
-
---aSHEFBW7c4jh6yb3
-Content-Type: text/x-diff; charset=us-ascii
-Content-Disposition: attachment;
-	filename="0002-iommu-amd-serialize-sequence-allocation-under-concur.patch"
-
-From c0e5ddae730cd75b2c806655a8ced16148bafa2c Mon Sep 17 00:00:00 2001
-From: Ankit Soni <Ankit.Soni@amd.com>
-Date: Thu, 22 Jan 2026 15:30:38 +0000
-Subject: [PATCH 2/2] iommu/amd: serialize sequence allocation under concurrent
- TLB invalidations
-
-commit 9e249c48412828e807afddc21527eb734dc9bd3d upstream.
-
-With concurrent TLB invalidations, completion wait randomly gets timed out
-because cmd_sem_val was incremented outside the IOMMU spinlock, allowing
-CMD_COMPL_WAIT commands to be queued out of sequence and breaking the
-ordering assumption in wait_on_sem().
-Move the cmd_sem_val increment under iommu->lock so completion sequence
-allocation is serialized with command queuing.
-And remove the unnecessary return.
-
-Fixes: d2a0cac10597 ("iommu/amd: move wait_on_sem() out of spinlock")
-
-Tested-by: Srikanth Aithal <sraithal@amd.com>
-Reported-by: Srikanth Aithal <sraithal@amd.com>
-Signed-off-by: Ankit Soni <Ankit.Soni@amd.com>
-Reviewed-by: Vasant Hegde <vasant.hegde@amd.com>
-Signed-off-by: Joerg Roedel <joerg.roedel@amd.com>
-[Salvatore Bonaccorso: Backport to v6.12.y where f32fe7cb0198
-("iommu/amd: Add support to remap/unmap IOMMU buffers for kdump") is not
-present]
-Signed-off-by: Salvatore Bonaccorso <carnil@debian.org>
----
- drivers/iommu/amd/amd_iommu_types.h |  2 +-
- drivers/iommu/amd/init.c            |  2 +-
- drivers/iommu/amd/iommu.c           | 18 ++++++++++++------
- 3 files changed, 14 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/iommu/amd/amd_iommu_types.h b/drivers/iommu/amd/amd_iommu_types.h
-index a14ee649d3da..df2aa1c4fafc 100644
---- a/drivers/iommu/amd/amd_iommu_types.h
-+++ b/drivers/iommu/amd/amd_iommu_types.h
-@@ -781,7 +781,7 @@ struct amd_iommu {
- 
- 	u32 flags;
- 	volatile u64 *cmd_sem;
--	atomic64_t cmd_sem_val;
-+	u64 cmd_sem_val;
- 
- #ifdef CONFIG_AMD_IOMMU_DEBUGFS
- 	/* DebugFS Info */
-diff --git a/drivers/iommu/amd/init.c b/drivers/iommu/amd/init.c
-index e1816ae8699d..78e9ceda2338 100644
---- a/drivers/iommu/amd/init.c
-+++ b/drivers/iommu/amd/init.c
-@@ -1742,7 +1742,7 @@ static int __init init_iommu_one(struct amd_iommu *iommu, struct ivhd_header *h,
- 	iommu->pci_seg = pci_seg;
- 
- 	raw_spin_lock_init(&iommu->lock);
--	atomic64_set(&iommu->cmd_sem_val, 0);
-+	iommu->cmd_sem_val = 0;
- 
- 	/* Add IOMMU to internal data structures */
- 	list_add_tail(&iommu->list, &amd_iommu_list);
-diff --git a/drivers/iommu/amd/iommu.c b/drivers/iommu/amd/iommu.c
-index 24e2de90ac2e..d0e53a03eff0 100644
---- a/drivers/iommu/amd/iommu.c
-+++ b/drivers/iommu/amd/iommu.c
-@@ -1252,6 +1252,12 @@ static int iommu_queue_command(struct amd_iommu *iommu, struct iommu_cmd *cmd)
- 	return iommu_queue_command_sync(iommu, cmd, true);
- }
- 
-+static u64 get_cmdsem_val(struct amd_iommu *iommu)
-+{
-+	lockdep_assert_held(&iommu->lock);
-+	return ++iommu->cmd_sem_val;
-+}
-+
- /*
-  * This function queues a completion wait command into the command
-  * buffer of an IOMMU
-@@ -1266,11 +1272,11 @@ static int iommu_completion_wait(struct amd_iommu *iommu)
- 	if (!iommu->need_sync)
- 		return 0;
- 
--	data = atomic64_inc_return(&iommu->cmd_sem_val);
--	build_completion_wait(&cmd, iommu, data);
--
- 	raw_spin_lock_irqsave(&iommu->lock, flags);
- 
-+	data = get_cmdsem_val(iommu);
-+	build_completion_wait(&cmd, iommu, data);
-+
- 	ret = __iommu_queue_command_sync(iommu, &cmd, false);
- 	raw_spin_unlock_irqrestore(&iommu->lock, flags);
- 
-@@ -2929,10 +2935,11 @@ static void iommu_flush_irt_and_complete(struct amd_iommu *iommu, u16 devid)
- 		return;
- 
- 	build_inv_irt(&cmd, devid);
--	data = atomic64_inc_return(&iommu->cmd_sem_val);
--	build_completion_wait(&cmd2, iommu, data);
- 
- 	raw_spin_lock_irqsave(&iommu->lock, flags);
-+	data = get_cmdsem_val(iommu);
-+	build_completion_wait(&cmd2, iommu, data);
-+
- 	ret = __iommu_queue_command_sync(iommu, &cmd, true);
- 	if (ret)
- 		goto out_err;
-@@ -2946,7 +2953,6 @@ static void iommu_flush_irt_and_complete(struct amd_iommu *iommu, u16 devid)
- 
- out_err:
- 	raw_spin_unlock_irqrestore(&iommu->lock, flags);
--	return;
- }
- 
- static void set_dte_irq_entry(struct amd_iommu *iommu, u16 devid,
--- 
-2.53.0
-
-
---aSHEFBW7c4jh6yb3--
+On Sat, May 2, 2026 at 5:22=E2=80=AFPM Salvatore Bonaccorso <carnil@debian.=
+org> wrote:
+>
+> Control: forwarded -1 https://lore.kernel.org/regressions/177771348699.18=
+98023.16904466444228860838@eldamar.lan
+>
+> Hi
+>
+> [sending correctly including the needed mailinglists]
+>
+> This is a 6.1.y specific regression, so I'm not CC'ing netdev, but
+> maintainers, hope this is fine. After a backport of 81b84de32bb2
+> ("xfrm: fix ip_rt_bug race in icmp_route_lookup reverse path") was
+> applied in the 6.1.y stable series as
+> 9a95ec9144eeff1fc6fbcc21b677e322c6f1430b, user are reporting that on
+> pings to unreachable host the log is spammed with the "detected local
+> route for %pI4 during ICMP sending, src %pI4\n" messages.
+>
+> One report is at: https://bugs.debian.org/1135514
+>
+> This does not happens with other stable series versions (6.12.y
+> tested explicitly, 6.6.y I have not avaiable to test).
+>
+> Is there a missing requisite in 6.1.y?
+>
+> #regzbot introduced: 9a95ec9144eeff1fc6fbcc21b677e322c6f1430b
+> #regzbot link: https://bugs.debian.org/1135514
+>
+> Regards,
+> Salvatore
