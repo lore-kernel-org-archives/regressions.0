@@ -1,173 +1,125 @@
-Received: from mx-2023-1.gwdg.de (mx-2023-1.gwdg.de [134.76.10.21])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.166])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11C50219FC
-	for <regressions@lists.linux.dev>; Wed,  6 May 2026 07:58:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.76.10.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 306AB3E1CF3
+	for <regressions@lists.linux.dev>; Wed,  6 May 2026 08:07:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.166
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778054313; cv=none; b=Uptu8h4mSNOxTX3AlzR51HGQDDg0nFsvYQmJXohFJsMaI8QPcDnKQqEIpFNvXLPBX82Ivjn7+LDbUcYTxCi7aO/y2+YP526jImoqocaatYRLO+3l+u35K/5BXGSSNA7nCOfT2n8ciGcQebwi9SeVLdSR459uLFs6A9aidN3KXN4=
+	t=1778054877; cv=none; b=f6bwdx7rLDFqmirx5y8hhudrsAcT91ai8tQIPcahxVZcIBuTigAGjNRYIcCtoV/SMtxT5ZAMez4D+Hc4hXanq5j76bzHhyJDxGKYAtZ3xptG1G0lbcwFuuffoOmwc6kTpgDtaaxMjqymUsDKYboe+vrzGlFBQezvbx18z1RQxA4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778054313; c=relaxed/simple;
-	bh=nmsXdp0DpS/f+3j7SxP7pzkggvxdC0kmCi0LipJuqzw=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=NkBtt3iiBz3JLhuXi7tdVJRidigXG/1yHqkV0GY9w8orkofWOdLlE29QieGLftp8UkSM50K4U4RM3l6F66AmpuEQ9EVMefWemXegdE1klCuTzanExF/inQN7jcxYj1QRROzs+JD//Z+MwoYFx1W04NR/VbjFf3gg9gQ6R4colC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ipp.mpg.de; spf=pass smtp.mailfrom=ipp.mpg.de; dkim=pass (2048-bit key) header.d=ipp.mpg.de header.i=@ipp.mpg.de header.b=Rvbn4YHe; arc=none smtp.client-ip=134.76.10.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ipp.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ipp.mpg.de
+	s=arc-20240116; t=1778054877; c=relaxed/simple;
+	bh=o794TmHSGyfou6IVoyu8vzy9hgYiBe8ZRTmwQYE3hrg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
+	 In-Reply-To:Content-Type; b=WotqLOSJTmfzkOG74hMMaMn77E8D4lkDBZD5QRZ6kabwT4oqaYqwOSfvnpN1iyZyWG8M+7eokdbtcaEiUhdsT3pqDTH9BXVmw4JwioFD7nSl1RSsBsh5lB5fvbPf9g1ZNtP9jSxHfgVhLiU2HaDMyvZEJYX6+Efo8tBoOUF0jUI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=cm7NTW8i; arc=none smtp.client-ip=188.68.63.166
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ipp.mpg.de header.i=@ipp.mpg.de header.b="Rvbn4YHe"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=ipp.mpg.de;
-	s=2023-rsa; h=MIME-Version:Content-Transfer-Encoding:Content-Type:Message-ID:
-	Date:Subject:CC:To:From:Sender:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=wjngW6tiilQHVTLQs9j41/ugcNtgL1URak4KUCE9C20=; b=Rvbn4YHeQJ3+oh64HaBM4IjqlL
-	UjobogA5YjR/+3j/djHeY+EXZtsfJkVYlHIEk5nutmKo0JqKJNhs88+wKCgGbdQVCVNjizwJ2O7Xd
-	P4/AWa5QJtaQI5TCiajmNBPFDqtTU7g7c0kVQra2RrKILLTYwMnud91LUbYxS0P3MvMvG2s9z4Hn5
-	9RMHbicgPpCztgOglVXFsyKMwMRzsA03avK774Fqkfy+m+K75hcspS/kzZn2CjwBUdvDJSFMdqOnR
-	VXzYKQ4pBxDIvCAUgbxbxHD1tEPY3i/sO3Ga3ZQwwYFPNY9ZMenm71i4sDbT3rRN5QmcANTpkuNy5
-	bTmy/naQ==;
-Received: from mailer.gwdg.de ([134.76.10.26]:55780)
-	by mailer.gwdg.de with esmtp (GWDG Mailer)
-	(envelope-from <simon.fischer@ipp.mpg.de>)
-	id 1wKWXw-00GgP6-2b;
-	Wed, 06 May 2026 09:19:53 +0200
-Received: from mbx19-sub-05.um.gwdg.de ([10.108.142.70] helo=email.gwdg.de)
-	by mailer.gwdg.de with esmtps (TLS1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-	(GWDG Mailer)
-	(envelope-from <simon.fischer@ipp.mpg.de>)
-	id 1wKWXx-000Da8-1s;
-	Wed, 06 May 2026 09:19:53 +0200
-Received: from MBX19-SUB-03.um.gwdg.de (10.108.142.68) by
- MBX19-SUB-05.um.gwdg.de (10.108.142.70) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.2562.37; Wed, 6 May 2026 09:19:53 +0200
-Received: from MBX19-SUB-03.um.gwdg.de ([10.108.142.68]) by
- MBX19-SUB-03.um.gwdg.de ([10.108.142.68]) with mapi id 15.02.2562.037; Wed, 6
- May 2026 09:19:53 +0200
-From: "Fischer, Simon" <simon.fischer@ipp.mpg.de>
-To: Michal Pecio <michal.pecio@gmail.com>
-CC: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: RE: Lowspeed USB device enumerationg under 5.4.288, but not under
- 6.8.1
-Thread-Topic: Lowspeed USB device enumerationg under 5.4.288, but not under
- 6.8.1
-Thread-Index: AdzdJo3z45kiUj3OTySYjjv1p7YIIA==
-Date: Wed, 6 May 2026 07:19:53 +0000
-Message-ID: <50fff510499b47d09df9317855680552@ipp.mpg.de>
-Accept-Language: de-DE, en-US
-Content-Language: de-DE
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="cm7NTW8i"
+Received: from mors-relay-8202.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8202.netcup.net (Postfix) with ESMTPS id 4g9Sfl5T8Hz3wdY;
+	Wed,  6 May 2026 10:07:43 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1778054863;
+	bh=o794TmHSGyfou6IVoyu8vzy9hgYiBe8ZRTmwQYE3hrg=;
+	h=Date:Subject:To:References:From:Cc:In-Reply-To:From;
+	b=cm7NTW8iBMi5WuJ3duW9tnkU8kaCVdBt3cxXVqr8PkZX9iyJEXKFW66dBEJWWwEa2
+	 kXrlRQiCE62JghpcaPgkRU5Lo+hsiyve+GoJlF7xGJgRud0OQ/zxh7GjsIjDVoCGeb
+	 zDyA/vZO/m+Gtoy+LYcXHqSKcA6Jr1ipJE7ELj5GNdRvGIPj88cfZhYmUK3KgIbtOb
+	 dUjNuwKXQNIUIoRnBBN+vscdaJAVPADLxuv9d+Z6uXBH882JjOph0tYXuUlq3Gpa1r
+	 dbytkGE4Z7cRMcy6HqY7ai/MaWWPCRhjxahuDROEhIsQCsmLufv/4p4EPh4ta2am8o
+	 YBmapi+EnKEmA==
+Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8202.netcup.net (Postfix) with ESMTPS id 4g9Sfg4lQ2z41dT;
+	Wed,  6 May 2026 10:07:39 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
+X-Spam-Flag: NO
+X-Spam-Score: -2.901
+X-Spam-Level: 
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4g9Sff0mfzz8tZx;
+	Wed,  6 May 2026 10:07:37 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 4F55D63449;
+	Wed,  6 May 2026 10:07:37 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <00b05188-c352-42b9-888a-01e9bf00fb34@leemhuis.info>
+Date: Wed, 6 May 2026 10:07:35 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Virus-Scanned: (clean) by clamav
-X-Spam-Level: -
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Regression in 7.0] OLPC-XO-1.5 will not boot after commit
+ 157266edcc
+To: An <an.m@mailbox.org>, Thomas Gleixner <tglx@kernel.org>,
+ Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>
+References: <f8566380-6a40-435a-bf8c-6c0e0999d434@mailbox.org>
+ <7a0c8eec-2e97-4eaf-a8aa-f7e97da93908@mailbox.org>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ the arch/x86 maintainers <x86@kernel.org>, David Gow <david@davidgow.net>
+In-Reply-To: <7a0c8eec-2e97-4eaf-a8aa-f7e97da93908@mailbox.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-PPP-Message-ID: <177805485774.3692967.1012349254078436911@mxe9fb.netcup.net>
+X-NC-CID: 9Ejv8bIagbJkdzI+FwWAiJssPYhMwr1kEkfMfhhQAZhuENdHTms=
 
+Lo! Looks like nothing happened since the report (please correct me if
+I'm wrong, it's easy to miss something). Adding a few more people and
+lists to the recipients of this reply, maybe that will things rolling.
 
+FWIW, the culprit seems to be 157266edcc5671 ("x86/boot/e820: Simplify
+append_e820_table() and remove restriction on single-entry tables")
+[v7.0-rc1] from Ingo.
 
-> On Wed, 6 May 2026 08:58, Pecio, Michal wrote:=20
-> > On Thu, 2 Apr 2026 15:34:35 +0000, Fischer, Simon wrote:
-> > Dear list,
-> >
-> > I've tried to dig deeper into the issues, tried different quirks and
-> > small patches, but was unable to solve this or find the root cause.
-> > As this seems to be a regression of 6.8 from 5.4, I hope this is the
-> > correct list?
-> >
-> > I got setup with a low speed isochronous USB device (Optec filter
-> > wheel), that is connected to a Dell R6515 server via a Lindy 300m 2
-> > Port Fibre Optic USB 3.0 Extender (which enumerates as a chain of
-> > USB3 super speed hubs). The server is running Ubuntu 24.04 with a
-> > 6.8.1 RT kernel. When connecting the device, it fails to enumerate:
->=20
-> Hi,
->=20
-> Are you still fighting with this?
->=20
-> I'm afraid I have no better suggestions than others: bisect it.
-> To avoid bisecting all commits, you could manually bisect major
-> releases and then test USB commits added by the "bad" release,
-> as the problem likely came from USB subsystem.
->=20
-> By "low speed", do you mean the 1Mbps data rate defined by USB 1.x?
-> That's odd, such devices aren't allowed to use isochronous endpoints
-> so it would be big luck if they work at all with any SW and HW.
->=20
-> Would you mind posting its 'lsusb -v', from the working system?
->=20
-> Your log shows a failure to enumerate some SuperSpeed device, while
-> any USB1/USB2 device should be showing on another bus (probably 1),
-> unless your range extender somehow changes "apparent" speed.
->=20
-> Also, if the problem reproduces on current kernels, you could try
-> sending logs (from a current kernel) to linux-usb in order to reach
-> more USB developers.
->=20
-> Regards,
-> Michal
+Therefore adding David Gow, who submitted a fix for the culprit -- but
+that didn't make it anywhere afaics, unless I'm missing something. For
+details see:
+https://lore.kernel.org/all/20260416065746.1896647-1-david@davidgow.net/
 
-Hi Michal,
+Ciao, Thorsten
 
-thanks for coming back. I had as of yet postponing an update for workload r=
-easons, but mostly because my Outlook is very bad at following the rules of=
- this mailing list :-)
+On 4/19/26 22:08, An wrote:
+> On 19/04/2026 10.46, An wrote:
+>> [please keep me in CC, I'm not subscribed]
+>>
+>> Hi Ingo,
+>>
+>> my OLPC XO-1.5 stopped booting when switching from 6.19 to 7.0
+>>
+>> I bisected this to
+>>
+>> commit 157266edcc56715323de1bd60e49194b3b66a174
+>> Author: Ingo Molnar <mingo@kernel.org>
+>> Date:   Thu May 15 14:05:41 2025 +0200
+>>
+>>      x86/boot/e820: Simplify append_e820_table() and remove
+>> restriction on single-entry tables
+>>
+>> The XO boots from a forth environment and is rather quirky.
+>> If I can help with any logs or tests, please let me know.
+>>
+>> I'm compiling a 7.0 kernel with the patch reverted,
+>> but it smells like a plain revert isn't the best idea.
+>>
+>> Thank you,
+>> An Müller
+>>
+> 
+> I've tested both 7.0 and current mainline: with this patch reverted,
+> they boot fine, the revert applies cleanly in both cases.
+> 
+> Thanks,
+> An
 
-I have been able to reproduce the problem with a current (6.19) kernel and =
-independent of PREEMPT_RT status. But I have also been able to identify tha=
-t the difference between my Ubuntu provided 5.4 and 6.8 kernels that leads =
-to the problem, is actually the CONFIG_HZ build config parameter.
-
-Ubuntu's 6.8 kernel is by default built with CONFIG_HZ=3D1000, while the ol=
-d 5.4 kernel was built with CONFIG_HZ=3D250. If I rebuild Ubuntu's 5.4 with=
- 1000Hz, I also cannot talk to the devices, and when I compile 6.19 or 6.8 =
-with 250Hz, they work (currently running a rebuilt Ubuntu 6.8.1 with only t=
-hat one parameter updated, I sometimes still see errors, but an automatic r=
-etry of the driver is then successful).
-
-So, a regression this is not :-)
-
-Since I cannot imagine in what way the system interrupt frequency would dir=
-ectly affect this part in such a reproducible and significant manner, I wou=
-ld think it more likely that the USB core or xhci drivers actually use that=
- setting value somewhere themselves and maybe wrongly. So this should proba=
-bly realy go to some other list. If you know which, I would greatly appreci=
-ate you forwarding my information  or telling me where to take it.
-
-Thanks a lot & best regards
-Simon
-
->=20
-> > [...]
-> >
-> >
-> > When booting into a 5.4.288 PREEMPT_RT kernel we were using before
-> > with, everything works fine (device enumerates and works). When
-> > exchanging the USB Extender for a Lindy 200m Fibre Optic USB 2.0
-> > Extender, everything works fine with the 6.8.1 kernel. I cannot
-> > inject a USB 2.0 hub before the extender, because it is a super speed
-> > device and not compatible.
-> >
-> > Any suggestions how to fix or further investigate the issue would be
-> > greatly appreciated!
-> >
-> > Kind regards
-> > Simon Fischer
-> >
-> >
-> > Developer
-> > Department E5 - CoDaC
-> >
-> >
-> > Max Planck Institute for Plasmaphysics
-> > Wendelsteinstrasse 1
-> > 17491 Greifswald, Germany
-> >
-> > Phone: +49(0)3834 88 1215
-> >
