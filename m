@@ -1,111 +1,107 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.162])
+Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 802843EB807
-	for <regressions@lists.linux.dev>; Wed,  6 May 2026 10:35:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.162
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 281F543DA31;
+	Wed,  6 May 2026 12:00:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778063722; cv=none; b=C9nTovavQs9/mAZfFZyVRiSZXqLHAMqfF+CiIljuo8GPhdBgpUywAb9PrwdnZKyAme7X9Vyc/cz/DF3mlJ+jh3gMOf2ssQIPEa3rZKVMJO0bYkkz3WkoqSPkYhDilkM0NOGQXE7reb6KSqh3XAbOjqwvX+oi6Rnw5SJ58Prpkog=
+	t=1778068846; cv=none; b=evjdUfrEZJvyY5RohKMetM5XEwL1r74ez1doqov9oIknhFfwzFXVPSHPFZ96GNA9GOoXYcvw6xoHMqkvx3vGiZo0pdZn8UsHx24Xi3vy28G/2mH8RSp1w2ibQRgNqGiSCSrjEgf02SQk+zX8/W/Wzj7kH+tlT58ftLJ3H++lJNk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778063722; c=relaxed/simple;
-	bh=khlgcmY9/G5wNSenaITKQTG+WgOFSpDaCE/oY/AWk+o=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=c6xAg84v4QPVX2BjvvwtVl6wvoMrDaV4yN/EvQMN/GcsSaQjwnO345/MG7Jh4rJQw1HjKsBz9uqj9CTiM1ribfXQFsne7hON0ZNPoWNyR/wfZcGaozHfCWoVQFPpwbHkTICM6ezHBcpy+mCNm5aXYxyfhL6lsZkmlo7tSyhpCOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=MRRSAt5l; arc=none smtp.client-ip=188.68.63.162
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1778068846; c=relaxed/simple;
+	bh=6jt9rqVjDw8+U9+bWoSE6lGs9K7U1O4LWJ1RxwZ2qBY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sJqbxBJQDZ3jxi3EHy0vTKCxxROoJFreYneNTDlnMpChoGImYK5PjW2baxQUDy/zlloO1g71VTmv3YLlBfnRa+WvDYHVI/cLNmCZeY4qSFZr05rdvzQafiCyxkTi4DpHnf7WcatERxKbFrnUQSumGsLn9C5onOUWMfl1JET6olY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=umrRFSUs; arc=none smtp.client-ip=82.195.75.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=debian.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="MRRSAt5l"
-Received: from mors-relay-8201.netcup.net (localhost [127.0.0.1])
-	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4g9Wwx1TLCz3wNN
-	for <regressions@lists.linux.dev>; Wed,  6 May 2026 12:35:13 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1778063713;
-	bh=khlgcmY9/G5wNSenaITKQTG+WgOFSpDaCE/oY/AWk+o=;
-	h=Date:Subject:From:To:References:In-Reply-To:From;
-	b=MRRSAt5lc2aCfik9ujPeIPE6hMNFNW5FdiUkMvHxHCX9ieEKQpVH1d3u3MXXzeoO5
-	 c2aRSx9UkgEDkJFVousYjuxP+4LzN/jFblRPXz322YoP872YCbWMjYjYE87r7ZiLfW
-	 6Uzx9Q+MMvCtvO5SnzzN6TiXkQUOwTtkREqNWQZKlcuvCcNhnAPUWWc5qJglUFoiDd
-	 djqwB9RSJk9gwDy5aJn48wewdTPOMPKsg63dOzYET9zPOwpocYb4W2kGTqlWVp8iuC
-	 7hYR5DiBWEWAZ5IpEk6xwmQajbpNoJaXGTFdyeBhwmgBQVOEAErKKU55ITeRBM6s2J
-	 SeJCOm6JuNSHw==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4g9Wvz5mlxz3wQS
-	for <regressions@lists.linux.dev>; Wed,  6 May 2026 12:34:23 +0200 (CEST)
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4g9Wvz3fd6z8sWT
-	for <regressions@lists.linux.dev>; Wed,  6 May 2026 12:34:23 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id E1A2363311
-	for <regressions@lists.linux.dev>; Wed,  6 May 2026 12:34:22 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <0fb33769-4826-40b5-a855-52ef853c9faa@leemhuis.info>
-Date: Wed, 6 May 2026 12:34:22 +0200
+	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="umrRFSUs"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Reply-To:Content-ID:Content-Description;
+	bh=PrD9nIfCondzVS8dnGq0XJ558JQOwkmWdaEIgtjAFEA=; b=umrRFSUsjcuCpTZdSQk2odTaq7
+	zSBZZX2lQZItYCEvrISEfnyMikiZEmqhK8KL7uiNf7ZN1zCtZuFYDwkw6jGEG2tx6SOkW9Bzpuh/L
+	KSFbupma37aFWDYl5j5lfqV7E9Jel0ze6pHVY7Isee27GI9JrHStaeHcZ0lGloc3lPL6nYKgkY9F0
+	gHt1Ch1yZMilMSCHZCpRNZ0Bzh5R3ZzY3vHAGb2aUcSK0wyqZ4sbxwLLeHP4TjqxCc6TiCjXEpHRB
+	L31vXa4eu9tgr1a0CYsHBWvu8pgu6otkRkrj1tmE9HJGk2mioynCuyvhhGtkQOndJKv4hHYLxkAP2
+	ul3+z9og==;
+Received: from authenticated user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.96)
+	(envelope-from <carnil@debian.org>)
+	id 1wKavZ-003ZcQ-2E;
+	Wed, 06 May 2026 12:00:34 +0000
+Received: by eldamar.lan (Postfix, from userid 1000)
+	id 6F753BE2EE7; Wed, 06 May 2026 14:00:32 +0200 (CEST)
+Date: Wed, 6 May 2026 14:00:32 +0200
+From: Salvatore Bonaccorso <carnil@debian.org>
+To: Jiayuan Chen <jiayuan.chen@shopee.com>, 1135514@bugs.debian.org
+Cc: Paolo Abeni <pabeni@redhat.com>, Sasha Levin <sashal@kernel.org>,
+	regressions@lists.linux.dev, stable@vger.kernel.org,
+	podorski <podorski@gmail.com>, Brad Barnett <debian-bugs5@l8r.net>,
+	"David S. Miller" <davem@davemloft.net>,
+	David Ahern <dsahern@kernel.org>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Simon Horman <horms@kernel.org>
+Subject: Re: Bug#1135514: [6.1.y regresssion] 9a95ec9144ee ("xfrm: fix
+ ip_rt_bug race in icmp_route_lookup reverse path") causes log spam on ping
+ to unreachable host
+Message-ID: <afstYFbDuJ-zQOtw@eldamar.lan>
+Mail-Followup-To: Jiayuan Chen <jiayuan.chen@shopee.com>,
+	1135514@bugs.debian.org, Paolo Abeni <pabeni@redhat.com>,
+	Sasha Levin <sashal@kernel.org>, regressions@lists.linux.dev,
+	stable@vger.kernel.org, podorski <podorski@gmail.com>,
+	Brad Barnett <debian-bugs5@l8r.net>,
+	"David S. Miller" <davem@davemloft.net>,
+	David Ahern <dsahern@kernel.org>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Simon Horman <horms@kernel.org>
+References: <177771348699.1898023.16904466444228860838@eldamar.lan>
+ <177768508393.32886.13183514325428485879.reportbug@pjp3.podorski.net>
+ <CAL3Ev5070_=K9F9+03GrE2+4tgr=j_CO19=m4ZPTd17YSwmokQ@mail.gmail.com>
+ <afsMUZa99G_gsve1@eldamar.lan>
+ <177768508393.32886.13183514325428485879.reportbug@pjp3.podorski.net>
+ <CAL3Ev50kzBn41s2twKjKAv=98sPHwPVCp5nmgmA8XGJA3FdVmg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: 
- <177806366311.3931726.13543000548239465312@mxe9fb.netcup.net>
-X-NC-CID: AfOd8W5iCGal7UTKqx0ZHE0UXlkMd+D/NXAa8DL051rf2r9jvhM=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAL3Ev50kzBn41s2twKjKAv=98sPHwPVCp5nmgmA8XGJA3FdVmg@mail.gmail.com>
+X-Debian-User: carnil
 
+Hi Jiayuan,
 
+On Wed, May 06, 2026 at 05:47:52PM +0800, Jiayuan Chen wrote:
+> On Wed, May 6, 2026 at 5:39 PM Salvatore Bonaccorso <carnil@debian.org> wrote:
+> >
+> > Hi Jiayuan,
+> >
+> > On Wed, May 06, 2026 at 09:04:24AM +0800, Jiayuan Chen wrote:
+> > > I think it because we failed to backport  this patch before:
+> > > https://lore.kernel.org/stable/20250207161555-b1a8749027831a1a@stable.kernel.org/T/#m0c880c1f04f7211aea9b7f6b4de0b64aa1726417
+> >
+> > Which won't apply cleanly, I assume this was the reason it got not
+> > backported to 6.1.y. Do you have a backport of that, or should the
+> > original commit introducing the issue be reverted from 6.1.y?
+> >
+> > Regards,
+> > Salvtore
+> 
+> I tried to backport this patch to stable. Hope these patches apply successfully.
+> 
+> https://lore.kernel.org/stable/20260506012057.285743-1-jiayuan.chen@linux.dev/T/#u
+> https://lore.kernel.org/stable/20260506012115.286204-1-jiayuan.chen@linux.dev/T/#u
 
-On 3/9/24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
+I tried the patch on top of 6.1.170 and this resolves the issue. I
+added the Tested-by to your patch submission.
 
-#regzbot report: https://gitlab.freedesktop.org/drm/amd/-/work_items/5167
-#regzbot introduced: 69e3be6893a7e668660b05a966bead82bbddb01d
-#regzbot title: drm: amdgpu: Garbled HDMI display on wakup from DPMS or
-suspend
+Thank you.
 
-#regzbot report:
-https://lore.kernel.org/lkml/773ba972-433b-44b4-89d2-295bd9f5de38@huawei.com/
-#regzbot monitor:
-https://lore.kernel.org/linux-scsi/20260421202018.511388-1-mwilck@suse.com/
-
-#regzbot report:
-https://lore.kernel.org/all/177771348699.1898023.16904466444228860838@eldamar.lan/
-#regzbot fix: net: Fix icmp host relookup triggering ip_rt_bug
-
-#regzbot report:
-https://lore.kernel.org/dri-devel/CAKx_Wg7_HBxuq5W4T_AmoFYJGQpa6TAS_Fx9SUzyy1itPmj5Bw@mail.gmail.com/
-#regzbot monitor:
-https://lore.kernel.org/dri-devel/20260223203528.213275-1-mwen@igalia.com/
-
-#regzbot report:
-https://lore.kernel.org/linux-arm-kernel/23024521.EfDdHjke4D@steina-w/
-#regzbot resolve: inconclusive: seems nobody cares anymore
-
-#regzbot report: https://lore.kernel.org/lkml/abE_QoS5DM-ZltaV@monoceros/
-#regzbot resolve: inconclusive: affected machine unavailable for tests
-
-#regzbot report:
-https://lore.kernel.org/stable/CA%2BtjKGrmADg=oG9CT74_mgGNN3h17=LLmnv51K=MggAqo7q2Eg@mail.gmail.com/
-#regzbot resolve: inconclusive: lack of feedback from reporter
-
-#regzbot report:
-https://lore.kernel.org/all/87df54eb-c527-4f1a-a3a7-67afbd73cb47@leemhuis.info/
-#regzbot monitor:
-https://lore.kernel.org/all/87df54eb-c527-4f1a-a3a7-67afbd73cb47@leemhuis.info/
-#regzbot resolve: inconclusive: very old, seems nobody really cares
+Regards,
+Salvatore
