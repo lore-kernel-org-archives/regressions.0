@@ -1,51 +1,55 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.170])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E1EE3E3DAA
-	for <regressions@lists.linux.dev>; Wed,  6 May 2026 09:56:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C8FE3F7880
+	for <regressions@lists.linux.dev>; Wed,  6 May 2026 10:08:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778061409; cv=none; b=tcsW4eaBhuIu89FKYjqzrQByc2jWf7Zd2cggMPwto2UMPNUsP77//WBP1x+grmZ1WuVD3o5/rnNaAAKaMfqrp9jZ63I5KH3PwAThpDz0i0aNUeVPd1HeJZIBw5mRu0c4IBpr7A3nxuQpUGcsts+K9soqk3trPqoGFAGXW3rrID0=
+	t=1778062111; cv=none; b=dhEE2FEEoEUrKiq2Tz9LjtLZWjboFlZ56J/WdbjYUbQHUSH1LBHmGegNl2IKiPqimTSfG8CpVu303Q7wSxXQJWqab1nu/593t672tJwdFTMqQtRsD/2OQL1+tsthZ/78YI0ZFFWziK1RjZoUdXPGWjUVrttXxz6uwCgHL6SnwUM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778061409; c=relaxed/simple;
-	bh=GGV9DNdwCRoaJL90u+Hhuk9ehoDj8FDOovIw7TYhYJU=;
+	s=arc-20240116; t=1778062111; c=relaxed/simple;
+	bh=iis9Zd0SBict4Bak0auwTAhx2IKRF+3FvzhaufxAPBU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZNibVNl0JO6E+apAQGkztelgzvVW/BpujBg6Kmp8cre5nvlVN7kfcWCddJ/gkkyOwlxd671q2HCEvq4IGa4+IQ826j/+OwDlMzIvGuaMKFoDsSnzjJ4TyZPIJPo/dH5yjXsKhABG7HsIC8jNcGJgaZzQGZ2TJIJp0jrGSWCjM60=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=FVvWscX7; arc=none smtp.client-ip=188.68.63.170
+	 In-Reply-To:Content-Type; b=IxLI1GTaEnbS8mI6R/sXqtIaEjyt8UC0V6Cmbz8finDgaxo7XNKuynTZoqUSkEO0OBHU2KyUTd3KcQqMWh9xs12zhvP3+uwNUfjx+7/Ynur7BY0qCFECetNPgZ3hyr48HsKyBi06j8lNl9fZZjnsZC3rACWhXsotjDAGF6ACUJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=jS9k94FQ; arc=none smtp.client-ip=188.68.63.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="FVvWscX7"
-Received: from mors-relay8203.netcup.net (localhost [127.0.0.1])
-	by mors-relay8203.netcup.net (Postfix) with ESMTPS id 4g9VvD4dgGz8hfY;
-	Wed,  6 May 2026 09:48:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="jS9k94FQ"
+Received: from mors-relay8204.netcup.net (localhost [127.0.0.1])
+	by mors-relay8204.netcup.net (Postfix) with ESMTPS id 4g9W7k45rJz8h4g;
+	Wed,  6 May 2026 09:59:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1778060920;
-	bh=GGV9DNdwCRoaJL90u+Hhuk9ehoDj8FDOovIw7TYhYJU=;
+	s=key2; t=1778061570;
+	bh=iis9Zd0SBict4Bak0auwTAhx2IKRF+3FvzhaufxAPBU=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=FVvWscX7l78GZ/COWVrEW371dC842Ox4zJZbjbu8ezaSwRI88S5zpSBNMbelTXxrl
-	 cXjbH2J4Y7iR3vSM7s8VZ88Dfj0hn8rB2lhYHNkAsMrUlRQAY1juw8Usi8l2FStUX3
-	 2zRxbRmMudGavMdOPR1fcbkKb3quZXUakyzx9jm7tBvV85ikWjUVzKY1HsVIvsK7Z/
-	 NqWx+okx+sAp0icBvCdGEdVrcn3w2+IxDnvnIVfNcViZWcqkyjPMdFnZm4cehROGBN
-	 ncMZbmWHNp09YgIvi6kkwnJavbF+YhQt5eIYl65NIVPaNLa2dLy/D9dDRIAmTKZvMI
-	 3FyvnmgfMe0aw==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay8203.netcup.net (Postfix) with ESMTPS id 4g9VvD3tzzz8hfV;
-	Wed,  6 May 2026 09:48:40 +0000 (UTC)
+	b=jS9k94FQElD3vAt9MHNt/7BYg80cUeOT2mQSrTVG+CXbrWrFNF99owS01i/uATM0K
+	 QlRKCIGcyYxUCmrqE84uh3Xr4vf6yxuHHAhVXODUJ2S/ZKcWMh3ZjxoqYchjD4G8Tj
+	 90F1Jd55a/P0rLBPsJe/o1oCI4K3u22uBMxljClq5qTBSU0rQci7SCZX3qseQZpTez
+	 xpnD8GW8kjgZlppE3gZBIcqKAgIjTyBl6lBrcobBeol4e6FMgv5u+X88eNFejtlytX
+	 j5E4w9g8FoZjgPD9RF6sQtMbFipnYJqdPo2tfIHCYry8CpSxntnHCxPS2PrktzV04I
+	 xtsK0eOsDknbg==
+Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay8204.netcup.net (Postfix) with ESMTPS id 4g9W7k3Mlcz8h3k;
+	Wed,  6 May 2026 09:59:30 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
+X-Spam-Flag: NO
+X-Spam-Score: -2.898
+X-Spam-Level: 
 Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4g9VvC5lhdz8sgT;
-	Wed,  6 May 2026 11:48:39 +0200 (CEST)
+	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4g9W7h67kWz8tdd;
+	Wed,  6 May 2026 11:59:28 +0200 (CEST)
 Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id B06F763304;
-	Wed,  6 May 2026 11:48:38 +0200 (CEST)
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id B7BE163304;
+	Wed,  6 May 2026 11:59:27 +0200 (CEST)
 Authentication-Results: mxe9fb;
         spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
 Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <f1c742e0-41c1-4bdc-867c-a768a5eb89c5@leemhuis.info>
-Date: Wed, 6 May 2026 11:48:37 +0200
+Message-ID: <b60a7ab8-dbab-4684-abf4-4dd2a9024f8d@leemhuis.info>
+Date: Wed, 6 May 2026 11:59:27 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -53,13 +57,12 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] KVM: x86: Rate-limit global clock updates on vCPU load
-To: Sean Christopherson <seanjc@google.com>, Lei Chen <lei.chen@smartx.com>
-Cc: igor@gooddata.com, jan.cipa@gooddata.com, jaroslav.pulchart@gooddata.com,
- kvm@vger.kernel.org, linux-kernel@vger.kernel.org, pbonzini@redhat.com,
+Subject: Re: [Intel-wired-lan] [PATCH iwl-net v3] e1000e: Reconfigure PLL
+ clock gate timeout and re-enable K1 on Meteor Lake
+To: Dima Ruinskiy <dima.ruinskiy@intel.com>, intel-wired-lan@lists.osuosl.org
+Cc: jacob.e.keller@intel.com, anthony.l.nguyen@intel.com,
  Linux kernel regressions list <regressions@lists.linux.dev>
-References: <adVGrJaRlRooO4su@google.com>
- <20260409142226.2581-1-lei.chen@smartx.com> <adf8Q1VSeAMMyCa_@google.com>
+References: <20260417104330.3031987-1-dima.ruinskiy@intel.com>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
 Content-Language: de-DE, en-US
 X-Enigmail-Draft-Status: N11222
@@ -106,113 +109,103 @@ Autocrypt: addr=linux@leemhuis.info; keydata=
  8zG721N4hWyyLALtGUKIVWZvBVKQIGQRPtNC7s9NVeLIMqoH7qeDfkf10XL9tvSSDY6KVl1n
  K0gzPCKcBaJ2pA1xd4pQTjf4jAHHM4diztaXqnh4OFsu3HOTAJh1ZtLvYVj5y9GFCq2azqTD
  pPI3FGMkRipwxdKGAO7tJVzM7u+/+83RyUjgAbkkkD1doWIl+iGZ4s/Jxejw1yRH0R5/uTaB MEK4
-In-Reply-To: <adf8Q1VSeAMMyCa_@google.com>
+In-Reply-To: <20260417104330.3031987-1-dima.ruinskiy@intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-PPP-Message-ID: 
- <177806091922.3821122.18141829574976920146@mxe9fb.netcup.net>
+ <177806156804.3824900.17782720002740269364@mxe9fb.netcup.net>
 X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: B06F763304
-X-NC-CID: wK9o0aQCpElR5NBNPkBy66XV8zKmcEwDpfvEQeJ+o3KYVLhZRyM=
+X-Rspamd-Queue-Id: B7BE163304
+X-NC-CID: Uy9H2qVS4/FdlR3f+QTKW4KxsXW9ZrkWgITiz/w6KRL/37KKqW4=
 
-On 4/9/26 21:21, Sean Christopherson wrote:
-> On Thu, Apr 09, 2026, Lei Chen wrote:
->> commit 446fcce2a52b ("Revert "x86: kvm: rate-limit global clock updates"")
->> dropped the rate limiting for KVM_REQ_GLOBAL_CLOCK_UPDATE.
->>
->> As a result, kvm_arch_vcpu_load() can queue global clock update requests
->> every time a vCPU is scheduled when the master clock is disabled or when
->> the vCPU is loaded for the first time.
->>
->> Restore the throttling with a per-VM ratelimit state and gate
->> KVM_REQ_GLOBAL_CLOCK_UPDATE through __ratelimit(), so frequent vCPU
->> scheduling does not generate a steady stream of redundant clock update
->> requests.
->>
->> Fixes: 446fcce2a52b ("Revert "x86: kvm: rate-limit global clock updates"")
->> Signed-off-by: Lei Chen <lei.chen@smartx.com>
->> Reported-by: Jaroslav Pulchart <jaroslav.pulchart@gooddata.com>
->> Closes: https://lore.kernel.org/all/CAK8fFZ5gY8_Mw2A=iZVFNVKQNrXQzVsn-HTd+Me9K6ZfmdgA+Q@mail.gmail.com/
+On 4/17/26 12:43, Dima Ruinskiy wrote:
+> Commit 3c7bf5af21960 ("e1000e: Introduce private flag to disable K1")
+> disabled K1 by default on Meteor Lake and newer systems due to packet
+> loss observed on various platforms. However, disabling K1 caused an
+> increase in power consumption.
+> 
+> To mitigate this, reconfigure the PLL clock gate value so that K1 can
+> remain enabled without incurring the additional power consumption.
+> Re-enable K1 by default, but keep the private flag to support disabling
+> it via ethtool. Additionally, introduce a DMI quirk table, so that K1 may
+> be disabled by default on known problematic systems. Currently, this
+> includes the Dell Pro 16 Plus, where the issue has been reported to persist
+> despite the changes to the PLL lock timeout.
+> 
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=220954
+> Link: https://lists.osuosl.org/pipermail/intel-wired-lan/Week-of-Mon-20250623/048860.html
+> Link: https://lists.osuosl.org/pipermail/intel-wired-lan/Week-of-Mon-20260330/054059.html
 
-Was this performance regression ever addressed? Looks like this fall
-through the cracks, but it's easy to miss something.
+What happened to this fix for a regression first reported in January? It
+looks like it fell through the cracks. Or was some other solution found?
 
 Ciao, Thorsten
 
->> ---
->> CHANGELOG:
->> v2:
->> - remove comment of kvmclock_update_rs
->> - make sure kvm_arch_vcpu_load make KVM_REQ_CLOCK_UPDATE for this vcpu
->> - add RATELIMIT_MSG_ON_RELEASE to kvmclock_update_rs
->>
->> v1:
->> - initial version(https://lore.kernel.org/all/20260407070046.2336-1-lei.chen@smartx.com/)
->> ---
->>  arch/x86/include/asm/kvm_host.h |  1 +
->>  arch/x86/kvm/x86.c              | 11 +++++++++--
->>  2 files changed, 10 insertions(+), 2 deletions(-)
->>
->> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
->> index 5a3bfa293e8b..5e750c49d21e 100644
->> --- a/arch/x86/include/asm/kvm_host.h
->> +++ b/arch/x86/include/asm/kvm_host.h
->> @@ -1453,6 +1453,7 @@ struct kvm_arch {
->>  	bool use_master_clock;
->>  	u64 master_kernel_ns;
->>  	u64 master_cycle_now;
->> +	struct ratelimit_state kvmclock_update_rs;
->>  
->>  #ifdef CONFIG_KVM_HYPERV
->>  	struct kvm_hv hyperv;
->> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
->> index 63afdb6bb078..a534e8391611 100644
->> --- a/arch/x86/kvm/x86.c
->> +++ b/arch/x86/kvm/x86.c
->> @@ -5210,8 +5210,13 @@ void kvm_arch_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
->>  		 * On a host with synchronized TSC, there is no need to update
->>  		 * kvmclock on vcpu->cpu migration
->>  		 */
->> -		if (!vcpu->kvm->arch.use_master_clock || vcpu->cpu == -1)
->> -			kvm_make_request(KVM_REQ_GLOBAL_CLOCK_UPDATE, vcpu);
->> +		if (!vcpu->kvm->arch.use_master_clock || vcpu->cpu == -1) {
->> +			if (__ratelimit(&vcpu->kvm->arch.kvmclock_update_rs))
->> +				kvm_make_request(KVM_REQ_GLOBAL_CLOCK_UPDATE, vcpu);
->> +			else
->> +				kvm_make_request(KVM_REQ_CLOCK_UPDATE, vcpu);
+> Signed-off-by: Dima Ruinskiy <dima.ruinskiy@intel.com>
+> Co-developed-by: Vitaly Lifshits <vitaly.lifshits@intel.com>
+> Signed-off-by: Vitaly Lifshits <vitaly.lifshits@intel.com>
+> Fixes: 3c7bf5af21960 ("e1000e: Introduce private flag to disable K1")
+> ---
+> v3: add DMI quirk
+> v2: add comment for the PLL timeout value and revisit the commit message
+> v1: initial version
+> ---
+>  drivers/net/ethernet/intel/e1000e/ich8lan.c |  3 +++
+>  drivers/net/ethernet/intel/e1000e/netdev.c  | 15 ++++++++++++++-
+>  2 files changed, 17 insertions(+), 1 deletion(-)
 > 
-> What I was trying to call out in my review of v1, is that prior to commit
-> 446fcce2a52b, the effectively ratelimiting applied to *all* instances of
-> KVM_REQ_GLOBAL_CLOCK_UPDATE.  Which meant that KVM's existing behavior is that
-> kvm_write_system_time() would be subject to the ratelimiting as well.
-> 
-> That said, I don't see any obvious problems with immediately honoring writes to
-> MSR_KVM_SYSTEM_TIME{,_NEW}, and it's probably a much better experience for the
-> guest.  So I'm a-ok with this approach, but we should call out that skipping the
-> synthetic MSR case is deliberate.  No need for a v3, I'll add a blurb when
-> applying.
-> 
->> +		}
->> +
->>  		if (vcpu->cpu != cpu)
->>  			kvm_make_request(KVM_REQ_MIGRATE_TIMER, vcpu);
->>  		vcpu->cpu = cpu;
->> @@ -13189,6 +13194,8 @@ int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
->>  	raw_spin_lock_init(&kvm->arch.tsc_write_lock);
->>  	mutex_init(&kvm->arch.apic_map_lock);
->>  	seqcount_raw_spinlock_init(&kvm->arch.pvclock_sc, &kvm->arch.tsc_write_lock);
->> +	ratelimit_state_init(&kvm->arch.kvmclock_update_rs, HZ, 10);
->> +	ratelimit_set_flags(&kvm->arch.kvmclock_update_rs, RATELIMIT_MSG_ON_RELEASE);
-> 
-> IIUC, so long was KVM doesn't explicitly invoke ratelimit_state_exit(), setting
-> RATELIMIT_MSG_ON_RELEASE means we won't get dmesg spam?  To be clear, I'm 100%
-> in favor of suppressing dmesg output.
-> 
->>  	kvm->arch.kvmclock_offset = -get_kvmclock_base_ns();
->>  
->>  	raw_spin_lock_irqsave(&kvm->arch.tsc_write_lock, flags);
->> -- 
->> 2.51.0
->>
-> 
+> diff --git a/drivers/net/ethernet/intel/e1000e/ich8lan.c b/drivers/net/ethernet/intel/e1000e/ich8lan.c
+> index dea208db1be5..aa90e0ce8aca 100644
+> --- a/drivers/net/ethernet/intel/e1000e/ich8lan.c
+> +++ b/drivers/net/ethernet/intel/e1000e/ich8lan.c
+> @@ -1594,6 +1594,9 @@ static s32 e1000_check_for_copper_link_ich8lan(struct e1000_hw *hw)
+>  			phy_reg &= ~I217_PLL_CLOCK_GATE_MASK;
+>  			if (speed == SPEED_100 || speed == SPEED_10)
+>  				phy_reg |= 0x3E8;
+> +			else if (hw->mac.type == e1000_pch_mtp ||
+> +				 hw->mac.type == e1000_pch_ptp)
+> +				phy_reg |= 0x1D5;
+>  			else
+>  				phy_reg |= 0xFA;
+>  			e1e_wphy_locked(hw, I217_PLL_CLOCK_GATE_REG, phy_reg);
+> diff --git a/drivers/net/ethernet/intel/e1000e/netdev.c b/drivers/net/ethernet/intel/e1000e/netdev.c
+> index 4d553c6edd98..a7605e453382 100644
+> --- a/drivers/net/ethernet/intel/e1000e/netdev.c
+> +++ b/drivers/net/ethernet/intel/e1000e/netdev.c
+> @@ -25,6 +25,7 @@
+>  #include <linux/pm_runtime.h>
+>  #include <linux/prefetch.h>
+>  #include <linux/suspend.h>
+> +#include <linux/dmi.h>
+>  
+>  #include "e1000.h"
+>  #define CREATE_TRACE_POINTS
+> @@ -58,6 +59,17 @@ static const struct e1000_info *e1000_info_tbl[] = {
+>  	[board_pch_ptp]		= &e1000_pch_ptp_info,
+>  };
+>  
+> +static const struct dmi_system_id disable_k1_list[] = {
+> +	{
+> +		.ident = "Dell Pro 16 Plus PB16250",
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "Dell Pro 16 Plus PB16250"),
+> +		},
+> +	},
+> +	{}
+> +};
+> +
+>  struct e1000_reg_info {
+>  	u32 ofs;
+>  	char *name;
+> @@ -7748,7 +7760,8 @@ static int e1000_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+>  	/* init PTP hardware clock */
+>  	e1000e_ptp_init(adapter);
+>  
+> -	if (hw->mac.type >= e1000_pch_mtp)
+> +	/* disable K1 by default on known problematic systems */
+> +	if (hw->mac.type >= e1000_pch_mtp && dmi_check_system(disable_k1_list))
+>  		adapter->flags2 |= FLAG2_DISABLE_K1;
+>  
+>  	/* reset the hardware with the new settings */
 
