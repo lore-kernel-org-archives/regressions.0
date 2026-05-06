@@ -1,134 +1,118 @@
-Received: from mail-dl1-f51.google.com (mail-dl1-f51.google.com [74.125.82.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [185.244.194.184])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDC26C2FF
-	for <regressions@lists.linux.dev>; Wed,  6 May 2026 01:04:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.51
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778029479; cv=pass; b=DguojWPSnsFtJRFwL/Cb1AtGvCM1P5Ah0JWdfF/TPBHSjAnmN6+xv9RiAiofgAa2E5mp2HLPWGdL6FOoBNhd5bMNl/8q5UDKZXvACE4gp/PXkmSp/CvcSTaQEpHTnFqvvAn3Ul3OkvEzL+bqG2iWm51UQy4IrhWukktMNzdSU+o=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778029479; c=relaxed/simple;
-	bh=WeSGqUsBPS7NdUbSMuKhfVFAr+0NNERLbgb+lqLr2OA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=GDA5eAKl0nplYHnjyWLkszcGkaSUCIB+aifVWbO++IM7dGFFaD6H1vPJt05WurCFXVVm/hm7tn25yaNZfHet9zv+w6ncLAlSpF3pb8Hn0iNqk+mRMrp7UmIcNcARYckCiycMOSOljAVAwWO6AZxnMo5UmU87eOPumMonb8CHh1A=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=shopee.com; spf=pass smtp.mailfrom=shopee.com; dkim=pass (2048-bit key) header.d=shopee.com header.i=@shopee.com header.b=RuM8LjYZ; arc=pass smtp.client-ip=74.125.82.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=shopee.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shopee.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CC4F1A6820
+	for <regressions@lists.linux.dev>; Wed,  6 May 2026 06:33:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.244.194.184
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778049204; cv=none; b=TQyFknXSXu4fEW4OjyvfS0jatX0xNLGst+B1otXkhw46o+EH2tKW/9FKgGvh+x1hV+pXxroKA13zaA1ZI5YQGFNR+4ee8g6cVPjq39dyc0W22KhukIiRQDzZaq6wBXuq7P86j5YT0mo/DO14rux5tVwbkxUIiBOzMlcwjE0/Bp4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778049204; c=relaxed/simple;
+	bh=cnGDF1vmv3OA5If192bW0Xx6xpQ6o7VzYJvjj5RZJr0=;
+	h=Message-ID:Date:MIME-Version:From:To:Cc:Subject:Content-Type; b=o6sd5hO65shm4M0WXFKvoh/cbzAwroFkUf/6LNuYPrGHUPA/7SQvKx58wfzQHJjrnmTKuUEJXb94DmTGaKyq6eGLRngVhSJs5u8ESjC3eK2UbWMuK2melQLnTLrNEf8uGdpBenIAYPsLUD+d0TcF75oC8zVIngKyCsC3uIFWZm0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=EwYwy5/g; arc=none smtp.client-ip=185.244.194.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=shopee.com header.i=@shopee.com header.b="RuM8LjYZ"
-Received: by mail-dl1-f51.google.com with SMTP id a92af1059eb24-12c8c9c4cd8so284622c88.0
-        for <regressions@lists.linux.dev>; Tue, 05 May 2026 18:04:37 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1778029477; cv=none;
-        d=google.com; s=arc-20240605;
-        b=PAU6ZW0ASuIdkuwVZGhlFqFTOd8mzH08qAgvTVZSdr2QQt8coX0unMUo5CbgYzC4Nj
-         GOT7jXv4fEgQzd4qQN5UE/13/VXmnN0zzPyiGrG22egsGEmv8eTW3qDTM2qyexaUYiPG
-         Zaz6OMw8LWoUQC5zG4b2B7o3mNJGzDQkiNIffcvKbpeWSWMtXokN4pTMTqu0cQTGpvXF
-         Opz5echPmKRUECuK+6njGiKqYFuPIbwlTfHokP10GI1uoDULF/42gH98QZQezH8CTaWR
-         SmVYVElBBHL49XQOCYSOyZKwJD7Uq9ZV8fuh5HfpiqQJo+Vfj5DbNAJJrnKpGdiBzB95
-         m8vw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=DsE+PeSrf/NzrEl9og37JNUjubQniqz8TNKhe4A4HRE=;
-        fh=bVzdqoCk60WaDsnw7jRgeN25S8c3TOO6p36Yl5v1SFE=;
-        b=LHdUeStP/nhlqssJDpL0dKqWF2ZcfBhibBwYpGPGaE60j74oaHmoiV4rE2/7havy3e
-         gFfmhNgzOgVdq3N/vIPHi5gkDYUHNV0qrDOP15O3i0VMr1MIf7CHUnYLDv/35BfV4IGp
-         RX4JTLhDPqKV6RGEwl6l5FSm36AJSEHUUIyhLOMPbNvlm2Xc7ibrYLA4OXaEEbb86S+A
-         jjFTXuSD4Oygiu/Y/KVv2qsHmejtNtxRss+UN2oGESZdIkD9BlGvmrfQ5fu7avGu+Ybz
-         rhPHCFZywPVzYwiTMjS1XtOQaV1A3royGSJB5IurANaki4EWjW3mQo8Xrka6xo72mU+m
-         fhsA==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shopee.com; s=shopee.com; t=1778029477; x=1778634277; darn=lists.linux.dev;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DsE+PeSrf/NzrEl9og37JNUjubQniqz8TNKhe4A4HRE=;
-        b=RuM8LjYZ+HCtQGrmhEB64h1QpEPkj2ysEtp4oQonTj75PxvcCDzbOK0KfGDqudZzVV
-         D/ARrzwSqB33U3ni7g5go8M7/698cczWvgAILsWdKb9ETRqDTJRxI/2mxabRquXOhRMW
-         h7oARW4QwMJdwedb93GnPO3082d4vcnQy+/n5+4Z7QETNelfPC77S1fiU9DXCgJgdtrn
-         1U6Lm0DeDNeEu91ja5q40KW9FOtew+cvBqjOAZTaK0+TtKwqNFPhgnlfmZmrat6rNDiK
-         0yw4/HGVYnD9X/bQghi6JmB56nv0GT1cFSWN3lltgpTOKNpAewtCVyx99OSZHc4rGHDS
-         qpwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778029477; x=1778634277;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=DsE+PeSrf/NzrEl9og37JNUjubQniqz8TNKhe4A4HRE=;
-        b=LxvueuMSBpFEBuC9hzrLrJQC8xF+UPGq8xYJY3h3Jre+fpF7d0Z4BLp38V7fGKFVM9
-         sNREnupo8utZsxR2f+1FMB6JHQZMBhuL7pex5x8Wjep8/Mf85kYPN7zm0K45QUNAbEn9
-         Fj4RmPR6qlGU2hQuARhCpWBEmXTscQbkEb1FJeRVFgEJ8Q1P7L89TYIUZeoLRJbzz/HN
-         POZP3ucnGwLkf/GhP9TkkLJi0WLXOK1WGEEZoRCcK/QU/sQoowk4GmYp/rUuyfci0I08
-         xoFL9mrKkFTVKOmIP/8lCTBew+e3bJ9Lryu0yTbMspFIE4km5CBHTOk8lJnhaZ6ZcBs0
-         Q8rg==
-X-Forwarded-Encrypted: i=1; AFNElJ9x9Q/wudnmzWKWx8m2mzsDI2QkV1TlqokXq/tVK7iEMgDp57NqFc5y9nUeufaUMudX5b6HkmnGrhxy+A==@lists.linux.dev
-X-Gm-Message-State: AOJu0YydPxne9lcb1zsMIH57kX7IO9odj9CWOrOImgevf573e6pVTbqC
-	+EHJWLEJBkpBVZb52WSwqUEvWxjBMBcn9bM8WlBlTyyF6AwhJ2vqdB/WAl44Amk46XDqnyebEE9
-	HJrEn+zAFa/ISdmkAk41DGS2HMTpjbMJpyqgo3N8Nqg==
-X-Gm-Gg: AeBDiesn+jaMeeWpQpnU3PPeaggcZVAhV8MAkyshm42OhrsW6lkkDz+7OoOyI3Ig+zS
-	hGx9Zn3SATeLdzEyM4xhQQ5ilESmbZ4gMKpmi8DqIxAfUOn/c8TjR986RwfLzhUVv14RyyPL3Fs
-	V92pwU3OnEcDOXE/e56eLKKt8LPeJNjVI3lrOVKzIWIxIgnP6qhHgSyQy3AehR6x8ms0BF2dW95
-	HrHHPCsuXYt8lWHMPjUfbXJsJ3yBag97TalssDXyeVnZX9Ck6SyjXyqCNkoakGaG71JIKQeBQxt
-	vCVatiPakJ9Qk04CsHvLn3DVjHk=
-X-Received: by 2002:a05:7300:fb8a:b0:2c1:82c2:bc31 with SMTP id
- 5a478bee46e88-2f3d079d433mr2147391eec.10.1778029476904; Tue, 05 May 2026
- 18:04:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="EwYwy5/g"
+Received: from relay01-mors.netcup.net (localhost [127.0.0.1])
+	by relay01-mors.netcup.net (Postfix) with ESMTPS id 4g9QMq5dFxz98fG;
+	Wed,  6 May 2026 08:24:39 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1778048679;
+	bh=cnGDF1vmv3OA5If192bW0Xx6xpQ6o7VzYJvjj5RZJr0=;
+	h=Date:From:To:Cc:Subject:From;
+	b=EwYwy5/gIZfKqRVg+S5H6lILMG1Tze/WDValZgk9CAuSLpNqDD2QTeT7UGrM1tOLV
+	 n5/i/a+Rs6f3DtTi+c+8OkplgADCmFOzMMxMd2ro92j0fdge6w9Ajpyt3wIA5MgGuv
+	 ugXuOTWCrtN54+74+jWXvd/43v4hrJOEEzm89ujb3P+24L4B+vv+zL6lXUjeY6Po7P
+	 n6RCeH3sQ7MjNpXZaJOogZxanrAlWQMswkFNgErj+eN3BSMUrh9pWGO+uHPnJgxiZ0
+	 X7WRmMTSk69kj7OGhXI6W1YZiGIBs1nYsnoqcYkTM9txNgmEQ80cqFxRP3oL99zsFh
+	 a3oEG3q7ptRBg==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by relay01-mors.netcup.net (Postfix) with ESMTPS id 4g9QMq4x0bz7wT7;
+	Wed,  6 May 2026 08:24:39 +0200 (CEST)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4g9QMq1Kp0z8tH0;
+	Wed,  6 May 2026 08:24:39 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 616A863304;
+	Wed,  6 May 2026 08:24:38 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <36875d66-f601-4d18-9654-bd86b60918e8@leemhuis.info>
+Date: Wed, 6 May 2026 08:24:36 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <177771348699.1898023.16904466444228860838@eldamar.lan>
-In-Reply-To: <177771348699.1898023.16904466444228860838@eldamar.lan>
-From: Jiayuan Chen <jiayuan.chen@shopee.com>
-Date: Wed, 6 May 2026 09:04:24 +0800
-X-Gm-Features: AVHnY4Ld4uQUyoOaqaQn_pJ5ltYCQOi65ut2p0eYluQk8TlWIlP0ecsVLB1r7No
-Message-ID: <CAL3Ev5070_=K9F9+03GrE2+4tgr=j_CO19=m4ZPTd17YSwmokQ@mail.gmail.com>
-Subject: Re: [6.1.y regresssion] 9a95ec9144ee ("xfrm: fix ip_rt_bug race in
- icmp_route_lookup reverse path") causes log spam on ping to unreachable host
-To: Jiayuan Chen <jiayuan.chen@shopee.com>, Paolo Abeni <pabeni@redhat.com>, 
-	Sasha Levin <sashal@kernel.org>, regressions@lists.linux.dev, stable@vger.kernel.org, 
-	1135514@bugs.debian.org, podorski <podorski@gmail.com>, 
-	Brad Barnett <debian-bugs5@l8r.net>, "David S. Miller" <davem@davemloft.net>, 
-	David Ahern <dsahern@kernel.org>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Simon Horman <horms@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+To: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+Cc: Linux kernel regressions list <regressions@lists.linux.dev>,
+ Linux Sound System <linux-sound@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>, stoa@gmx.us, Harin Lee <me@harin.net>
+Subject: [regression] ctxfi: no speaker output when headphones connected on
+ >=7.0.x
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: 
+ <177804867871.3542330.14212866223770791000@mxe9fb.netcup.net>
+X-Rspamd-Server: rspamd-worker-8404
+X-Rspamd-Queue-Id: 616A863304
+X-NC-CID: CVuLerVtKSZWOkotPRFlUWqmERuHinQhfAud3Cq4m46JOFb0W1I=
 
-I think it because we failed to backport  this patch before:
-https://lore.kernel.org/stable/20250207161555-b1a8749027831a1a@stable.kerne=
-l.org/T/#m0c880c1f04f7211aea9b7f6b4de0b64aa1726417
+Hi! Just FYI, I noticed a regression report in bugzilla:
 
-On Sat, May 2, 2026 at 5:22=E2=80=AFPM Salvatore Bonaccorso <carnil@debian.=
-org> wrote:
+https://bugzilla.kernel.org/show_bug.cgi?id=221461
+
+To quote:
+
+> Dutch Ingraham 2026-05-03 18:12:49 UTC
 >
-> Control: forwarded -1 https://lore.kernel.org/regressions/177771348699.18=
-98023.16904466444228860838@eldamar.lan
->
-> Hi
->
-> [sending correctly including the needed mailinglists]
->
-> This is a 6.1.y specific regression, so I'm not CC'ing netdev, but
-> maintainers, hope this is fine. After a backport of 81b84de32bb2
-> ("xfrm: fix ip_rt_bug race in icmp_route_lookup reverse path") was
-> applied in the 6.1.y stable series as
-> 9a95ec9144eeff1fc6fbcc21b677e322c6f1430b, user are reporting that on
-> pings to unreachable host the log is spammed with the "detected local
-> route for %pI4 during ICMP sending, src %pI4\n" messages.
->
-> One report is at: https://bugs.debian.org/1135514
->
-> This does not happens with other stable series versions (6.12.y
-> tested explicitly, 6.6.y I have not avaiable to test).
->
-> Is there a missing requisite in 6.1.y?
->
-> #regzbot introduced: 9a95ec9144eeff1fc6fbcc21b677e322c6f1430b
-> #regzbot link: https://bugs.debian.org/1135514
->
-> Regards,
-> Salvatore
+> Kernels >=7.0.1 contain a regression as to Creative Sound Blaster Z SE 
+> discrete pci sound card, but not integrated. Kernels 7.0.1, 7.0.2, and 
+> 7.0.3 tested; 7.0.0 not tested. Reverting to any 6.18.x or 6.12.x does 
+> not present the issue.
+> 
+> Specifically, using pipewire managed by pavucontrol, on both Gentoo and 
+> Arch Linux, when both external speakers and headphones are connected,
+> all sound is routed through the headphones regardless of whether settings
+> are set to Line Out/Speaker or Line Out/Headphones; there is no speaker 
+> output. If headphones are disconnected, without reboot, speakers work; 
+> reconnect headphones, without reboot, sound reverts to headphones.
+> 
+> Kernel: 7.0.3, Gentoo compiled from source using olddefconfig on 6.18.24
+> 		.config; Arch standard release
+> 'lspci -nnk | grep -i audio' attached
+> 'dmesg | grep -i audio' for 7.0.3 and 6.18.24 attached
+> pipewire-1.6.4 on both Gentoo and Arch Linux
+> alsa-firmware-1.2.4 on both Gentoo and Arch Linux
+> 'cat /proc/sys/kernel/tainted' returns 0 for both Gentoo and Arch Linux
+> 
+> Processor		:	AMD Ryzen7 5700G
+> Motherboard		:	Asus Prime X570-Pro
+> RAM				:	Patriot Viper Steel DDR-4 @3200mHz
+> Graphics        :   ASRock AMD Radeon RX 7600 Challenger 8GB OC
+> Sound Card      :   Creative Sound Blaster Z SE
+> 
+> 
+> Expected outcome: ability to choose output to either speakers or head-
+> phones while both are plugged-in to sound card.
+> 
+> Workaround: none known.
+
+See the ticket for more details. One of them: 7.1-rc2 is affected as
+well. Reporter is CCed. Forwarded this to ensure this report makes it to
+the interested parties, as bugzilla might not have forwarded this.
+
+Dutch Ingraham: if nobody within a few days has an idea why this
+happens, you will likely have to use a git bisection to get this resolved.
+
+Ciao, Thorsten
