@@ -1,138 +1,117 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 459453B9D90
-	for <regressions@lists.linux.dev>; Thu,  7 May 2026 18:41:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02B913A1699
+	for <regressions@lists.linux.dev>; Thu,  7 May 2026 19:09:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778179270; cv=none; b=L3t6UjWZg80sQ0l8eXLBzwf/SsqNeaGpZQYZOOPh44yly8lFJGHGgpZGJB9V5NN1svWfiHk7QIKpMeZL4JwwNqLZZtrMbvuee4ejrnOhQ5/0GtEywK4N+VB2AdRKHmjbbayQks4DFcUrDsMeAkX0oxhq41gKDrOSLMao6NqbISU=
+	t=1778180952; cv=none; b=Wk8ye8gYFQFyormz4u6q2SQ0F0Y9joEe9Q4alwdmwbtJAoTmzQKAML5C3irpX20HUPkzIQ17aUuqJDDrXCtnGr1XpGQrHGP1lvBIDKtdeb7NAEYQ5sC/f30Z29TuvBnUOt/6CzHwB0TlufcgW4PtMgPIfqCDub0ch29xb6gSVyM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778179270; c=relaxed/simple;
-	bh=xWyjC/upAI1+c436Rr4CHFnRGtiuozY1aD79YjF2iZU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=W3/AMO3qfhQOb34GQ/JJz2z+KgSnqO0/czBapMDGyr6Kkf1jd63Kv9ZsXZePXp/V0CD9JwvGuaVgpsZ4/gwBoeDkgTr71nJKvphUXYNtqN+uVI1ITCoSiP0Fqd0IUjOXCQzGzT/w6CENLd+iy1Ai5r6CYhSfyN0Pb8HFm7FPz4Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ODL2pYdz; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1778180952; c=relaxed/simple;
+	bh=Ms2KvJFVR6HYBltl81OHgXxkhjfuXDqHHtKaMZKJquE=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=qSTp/aZBPC2+llaNXnL/a34WetAZ44Fsf0XvvGK48n71lwu2cXFXnLxN4KpCj51A/E0C7NEkaWQPEOjT0I5tuSLOImsrcMVwQSIlI/dW15OYjM9rYZ9ReKBxbzgeKmkjKKa0oG0hBy3grrVdqSnFm6MVXw75WoOywLrGSW9iqoE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pBQl3uBg; arc=none smtp.client-ip=209.85.214.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ODL2pYdz"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2b458ca2296so7985725ad.0
-        for <regressions@lists.linux.dev>; Thu, 07 May 2026 11:41:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pBQl3uBg"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2b9a3c3c4eeso13366465ad.3
+        for <regressions@lists.linux.dev>; Thu, 07 May 2026 12:09:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1778179266; x=1778784066; darn=lists.linux.dev;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=xWyjC/upAI1+c436Rr4CHFnRGtiuozY1aD79YjF2iZU=;
-        b=ODL2pYdzBrWQ0nVJ20359LAsboas8cJr1ES8n2BsevkIUSVMz2lOoHOYr4bhUB/x9r
-         xiOuWRzaHCf+AmWyrgQu63EeFJo5/W8dgsCUVG5PSIuP2EfduADzzb7kvSnaYb6rp5Nh
-         i1MdeWY94T7YDXH/5heDGEoA/ew1ayWsjxaMNpWBXJq7U4phYeBoF08saCkwuKgG+FSd
-         WBfNzjnM9RfUWLCMP0p7YTQMoumNMvYCak9TVmCWVkc3FmPp8V5MwyBobnDhASi+3hoX
-         w568abnh1wEDT0pjnxU0bEFTWecbWdvfideDZvH61saDzv3E03GYGXJxLM+RsWkG/bCQ
-         Bejg==
+        d=google.com; s=20251104; t=1778180950; x=1778785750; darn=lists.linux.dev;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=6KoXjOK5QFOjtrkDoTfqMRdZ3nPGO5a5QHereU923po=;
+        b=pBQl3uBgOi26DAeAZYNhTaU8EIdS4BVp2FXFDex6BWsW/rhFi8SDZpdFiwiwdZSQq5
+         VhV0t5uQsYSiRtKgQmfLVR6LTgmlLOUb/2DGnvvMPTJCR0gGySu1I1Q5DiKTlkgvObha
+         La4v8LVXN4cX5Nl+2HAFcHgcoVfhAAMDZ/0/b5BPgiK0TIlNAOaKBMGDqlKrgKxD+dv0
+         IXr6+nxivY3Z2samosw4JQKhVwjmSL0D6Sj4QLa9MW/qAqL7ib24Y8AAJFKsxDD5L/n9
+         4PGC3st8PfmBQlyOcK7OvKRc56Bzsv/gPtl/iihJFs+Cp0A9mWEAQUgyCsGemgKc42Ck
+         kz3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778179266; x=1778784066;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xWyjC/upAI1+c436Rr4CHFnRGtiuozY1aD79YjF2iZU=;
-        b=lzzOSl0SXh3VhW5yxwQcIQNd5WSOoxlwXl/vDLON+batC67xSNGjQOamaIHeYMSV29
-         YX/i3+w2V6hxOUG1NwiqqlaIH94HgjxTc/57yEk48wBX8tbzdL5AKSeBs2QUkVlNTDtI
-         Tgt0bf5SqXXk8au4n/tH6tGswdIb7muLwNAE++gPpicqy/QYVl57P73BSmqTUqPzJu5m
-         HxiZnnWNkO//CAifVWHH0Ql8eGYPsnKfpJJ2AQdxNwFTVfmGUkML+cLxzrPOIKl/EvR7
-         +E0eghR/UVpTyVCm3wzTfXmVxUxIopT51UXQ4VbPjvnEU8+YKJFKDlXJXMoicyoBeP+y
-         83Bw==
-X-Forwarded-Encrypted: i=1; AFNElJ9PR/E7xWteFbBqo2hoRGWnsoYIvvCmZlOISLv/jr8eGKxCXGq+G6xC7XLPDStcafn0G30ntnyEoVKQjQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxKUKHbuwdkWcaJAMB76tTchZlpDTTyDYxQ6VwH74opFoljvVaM
-	lwKQHUxX2u3swYP5ni9GJJzyw47GDujEKMLVgNhzliVruG/SDZG/yWQMXPv4eA2T
-X-Gm-Gg: Acq92OHN5MwM208bMcdS0onvci+xofSIDndtR8tXB+1wksw+UvvAs742jKl67xpSoXG
-	FvtTqqoEW2BDSGsfWfLaeaMP+kpEDFg9CKNrzApFJzDKFFpEMAcpDQU6Ty6VTdM87l1KtO1nKDb
-	0onu+5nWklwt2Ooat9qoWKc/WggxvfOs03yzLj5q0lqG/4Av4DdXWmo93TLaXwt36ZhfF6x5+q3
-	K8bmvE1euGPhXF0cAcqnX0GdickDfVE6UTwK7UVvobxQyeZWtti4O0Ys4vatR4bnoMZWOSY4Pxs
-	3d1D7qizIkvSpaz9RJCA/n2BCzjeLCD5AC9F8tGgls4sn1j3cl/eEBLeTCAuwk96O/nAS/pRn6F
-	ic2vJxoQqqJ9CSPKyzCryBnXfNvm4vsg9Z8BO1GaOJ7wEHYTXNrHuepbQhrO8YZUChusts0+X/s
-	OSUWHGUl4onbs4ZjJUPXmHGuNQOCW5bTI3bQSRyouWf1TSHlT6q4AuZqxDefV4/qQA5rUawlHah
-	K22RhWnejcbvidz+RIKeDxlYHuxGeY=
-X-Received: by 2002:a17:903:b4b:b0:2b0:b41e:c5c3 with SMTP id d9443c01a7336-2ba7a34601amr91271385ad.29.1778179265783;
-        Thu, 07 May 2026 11:41:05 -0700 (PDT)
-Received: from archlinux ([2405:201:1b:225f:36f2:f474:be1d:cad7])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2bae7560c67sm4577375ad.26.2026.05.07.11.41.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 May 2026 11:41:05 -0700 (PDT)
-Date: Fri, 8 May 2026 00:11:01 +0530
-From: Krishna Chomal <krishna.chomal108@gmail.com>
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
-	yue li <mc.root.ly@gmail.com>, Linux kernel regressions list <regressions@lists.linux.dev>
-Subject: Re: [REGRESSION] hp-wmi fails to probe on HP OMEN (board 8D41)
-Message-ID: <afzbmLgsW0HBJ7-C@archlinux>
-References: <CABd86uaQY9-ZSU-_PHKtZZyWnDFHLEsuaM+NBV5nOLWA+YSX7A@mail.gmail.com>
- <afb0f9gaS5z_SmRX@archlinux>
- <38bef028-d574-4e7a-b857-f10ab6796833@leemhuis.info>
- <553a4232-f4cb-4d67-bdee-067b5f038f64@leemhuis.info>
- <6d97e48a-be18-b99f-f4d5-aae50220ac53@linux.intel.com>
- <7b8293d0-7811-4def-bc96-56c0422f0ee7@leemhuis.info>
+        d=1e100.net; s=20251104; t=1778180950; x=1778785750;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6KoXjOK5QFOjtrkDoTfqMRdZ3nPGO5a5QHereU923po=;
+        b=EPE9UCY/t8lC83/Sf3io34r2JNfS3Ra5eK++mXvcOOk/a7VtboryM0Sf19DMbylSKH
+         4rj6FvldKhqQMEEqs22C0JEBbgDpgqrchBIWzechKZ2HInpI2f/spUMWJ47+SIIwWmW5
+         bk/y7rO1DSY0cK3IlW33PRxlc0mTlGYzri4lnpJYeuKMqjjXPE8weUxv72R3VrW7qfmr
+         aTvDO4RN//feTNd4jyaiBsG2JZpcVtjKLS6VLOKc2VDxhV63dQkaSTT1FDEIPZN6SMQu
+         rDFqU3LchfA3p3Xa9hAPl/OyBJMnMyWz+2/4LP5EHVDnlFzEWgRHM33d0/ee/YABZpr6
+         Uutw==
+X-Forwarded-Encrypted: i=1; AFNElJ+/jWwtFRgqNfK7Q+rxpJmFlxGgPQn+wgvCKAhg6XWKDy0Ky6swIW+xUZCk1RDLfsC7dhjTEeMaqivLOA==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxRt0DT5b2znaDnW2eZdNtOBmFtYXP8ltmwgdO69BfwrC5bj1fm
+	kj+m7E2j5DOCRPSrL+KDEVN2oSB9BmqIrlHZFdIOnXJkM1djt3x563nwlnkYUALvFOHuSlz+12Q
+	LCu4T7Q==
+X-Received: from pgbcp6.prod.google.com ([2002:a05:6a02:4006:b0:c76:a6b1:ed23])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:328e:b0:39c:643e:f062
+ with SMTP id adf61e73a8af0-3aa5a9056b6mr10273614637.7.1778180950020; Thu, 07
+ May 2026 12:09:10 -0700 (PDT)
+Date: Thu, 7 May 2026 12:09:09 -0700
+In-Reply-To: <CAK8fFZ7LEyyR2ChXCD7B8vjvDcyG1c4jtv3wYMV4GCiUkOi1Pw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <7b8293d0-7811-4def-bc96-56c0422f0ee7@leemhuis.info>
+Mime-Version: 1.0
+References: <adVGrJaRlRooO4su@google.com> <20260409142226.2581-1-lei.chen@smartx.com>
+ <adf8Q1VSeAMMyCa_@google.com> <f1c742e0-41c1-4bdc-867c-a768a5eb89c5@leemhuis.info>
+ <afs6PJzU3rHZwGv3@google.com> <cd8a2ae6-a276-480d-b942-bcd318a30451@leemhuis.info>
+ <aftct6WWHdOG_EwX@google.com> <CAK8fFZ4j1tYc+eYH79RQnNSjr9J-SocFL6duMuBg+76NHhRUxQ@mail.gmail.com>
+ <afulNSVKMzrx35i_@google.com> <CAK8fFZ7LEyyR2ChXCD7B8vjvDcyG1c4jtv3wYMV4GCiUkOi1Pw@mail.gmail.com>
+Message-ID: <afzjVYupUl-nlaDK@google.com>
+Subject: Re: [PATCH v2] KVM: x86: Rate-limit global clock updates on vCPU load
+From: Sean Christopherson <seanjc@google.com>
+To: Jaroslav Pulchart <jaroslav.pulchart@gooddata.com>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>, Lei Chen <lei.chen@smartx.com>, igor@gooddata.com, 
+	jan.cipa@gooddata.com, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	pbonzini@redhat.com, 
+	Linux kernel regressions list <regressions@lists.linux.dev>, 
+	Linus Torvalds <torvalds@linux-foundation.org>
+Content-Type: text/plain; charset="us-ascii"
 
-On Thu, May 07, 2026 at 12:59:41PM +0200, Thorsten Leemhuis wrote:
->On 5/7/26 11:55, Ilpo Järvinen wrote:
->> On Thu, 7 May 2026, Thorsten Leemhuis wrote:
->>> On 5/4/26 09:22, Thorsten Leemhuis wrote:
->>>> On 5/3/26 09:26, Krishna Chomal wrote:
->>>>> On Thu, Apr 30, 2026 at 12:59:58PM +0800, yue li wrote:
->>>>>> [...]
->>>>>> Regression:
->>>>>> The hp-wmi driver works correctly on kernel 6.18.6-zen1-1-zen,
->>>>>> but fails to probe on 7.0.2-zen1-1-zen with error -22.
->>>>>>
->>>>>> Issue:
->>>>>> On the affected kernel, loading the module fails:
->>>>> [...]
->>>>> Thanks for reporting. This is a known issue [1]. There are 2 failures in
->>>>> your dmesg output:
->>>>> 1. Unknown EC layout: The fix for this has been sent recently.
->>>>>    Currently, it is in the review-ilpo-fixes branch [2].
->>>
->>> It[1] afaics is sitting there for a week already afaics.
->>
->> I'm sorry to be a disappointment here, but I don't find a week a
->> particularly long time.
->
->For a normal patch, I fully agree. But for a regression fix, it is a
->long time[1]. And to me it looked like the patch "platform/x86: hp-wmi:
->silence unknown board warning for 8D41"[2] was a the second and
->necessary part of a fix for the regression Yue Li reported at the start
->of this thread[3] -- without making it obvious in the patch description
->that it was one, so you couldn't know, which is why I CCed you here.
->
->But from looking at Krishna's earlier reply in this thread again, it now
->seems to me like I misinterpreted the "applying the above mentioned 2
->patch" statement, as 9d317a54e46d3b ("platform/x86: hp-wmi: fix fan
->table parsing") [already in v7.1-rc1 and hopefully backported soon]
->seems to be the main fix and the other one ("platform/x86: hp-wmi:
->silence unknown board warning for 8D41"[2] just silences a warning that
->is not causing trouble.
->
+On Thu, May 07, 2026, Jaroslav Pulchart wrote:
+> > On Wed, May 06, 2026, Jaroslav Pulchart wrote:
+> > > > On Wed, May 06, 2026, Thorsten Leemhuis wrote:
+> > I think the only remaining question is why/how KVM's master clock is getting
+> > disabled.  But that's more of a question for your deployment than it is a question
+> > for upstream; it's possible there's a different KVM bug lurking, but it's more
+> > likely that something in your setup is incompatible with using the master clock.
+> >
+> > Note, it's certainly not "wrong" for the master clock to be disabled, but it's
+> > quite suprising, especially for Firecracker VMs.  It's worth investigating as
+> > there might be an underlying issue that's very easy to address, and "fixing" it
+> > should provide (very) small performance benefits.
+> 
+> I've dug into the "master clock question" and have an idea.
+> 
+> Our Firecracker hosts are themselves L1 KVM VMs (nested
+> virtualisation) running on AMD EPYC 9454P and EPYC 9455 hardware. Even
+> though the compute nodes use cpu_mode=host-passthrough in qemu kvm,
+> the invtsc CPUID bit is filtered out by QEMU, which I hadn't realized.
+> Without it the guest kernel marks the TSC unstable at boot:
+>     tsc: Marking TSC unstable due to TSCs unsynchronized
+> and falls back to kvm-clock as its clocksource.
+> 
+> I suppose that in turn prevents KVM from enabling the master clock for
+> any L2 guests (the Firecracker microVMs), am I right?
+> 
+> I have resolved the issue by explicitly adding +invtsc to
+> cpu_model_extra_flags in our OpenStack nova.conf. After this change
+> the L1 VMs now correctly show constant_tsc and nonstop_tsc in
+> /proc/cpuinfo and switch clocksource to tsc. I also confirmed the IPI
+> storm disappears without the v2 patch when +invtsc is present, and
+> returns when it is absent on a vanilla 7.0.3 kernel.
+> 
+> So could this be the answer to your question: "the master clock was
+> disabled because QEMU silently drops invtsc even in host-passthrough
+> mode"?
 
-Yes that's right. The fan table fix allows the driver to be loaded and
-fixes the regression, while the follow-up patch is only to silence the
-dmesg warning. I will be more explicit from next time, sorry for any
-confusion that I might have created.
+Yep, that'd do it.   Linux-as-a-guest will prefer kvmclock over TSC if the TSC
+isnt constant and non-stop.  That in turn will prevent KVM (as the L1 hypervisor)
+from using the master clock, since it sees the kernel clocksource as not being
+(directly) based on TSC.
 
->Sorry, my deepest apologies for causing trouble.
->
->Ciao, Thorsten
->
->[1]https://www.kernel.org/doc/html/latest/process/handling-regressions.html#on-how-quickly-regressions-should-be-fixed
->[2]https://lore.kernel.org/all/20260429180953.129885-1-krishna.chomal108@gmail.com/
->
->[3]https://lore.kernel.org/all/CABd86uaQY9-ZSU-_PHKtZZyWnDFHLEsuaM+NBV5nOLWA+YSX7A@mail.gmail.com/
+Thanks for the follow-up!
