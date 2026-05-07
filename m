@@ -1,122 +1,238 @@
-Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F1653BD650
-	for <regressions@lists.linux.dev>; Thu,  7 May 2026 13:16:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.84.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A07DE3F9F35
+	for <regressions@lists.linux.dev>; Thu,  7 May 2026 13:24:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778159801; cv=none; b=Q+aT85ecYEOKDl30UlhOTFOf2V7ZLVUkTIwnYTq9WoRYqGGmpLx4tBKTIPhlfPNH8FxW2smoKO6cjOEMDI/jRUZ0JIjUecCW78g0l8ulNKgo79hczDC8ZAJiefuJYxbj3km+HGH+e3Q7CuRYzFmutDTTYpsjo5PfUhiBZkuqQrE=
+	t=1778160279; cv=none; b=dLadcwdpq66dsW9UgBMgBnuIGQDP5ydX1Pyp0v3VKxJ0hAX0eIQ2CxEtvQEe5bZt0e0m+Hr0CM4WRxbWiEUWQVUg9Iw/1XIziVnqIT6TNaab8082g7sqUffcbq6UGW37rQAf0naR2t27gi7EMQlcysXPvYrHR/7485Ulu+BAySU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778159801; c=relaxed/simple;
-	bh=e2NO9S2CUv0l/kJNqVzdSn/oCiFZneGT+/6/s5hgRZ4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=X/vJQVVH4Q/Na9TBnxAAmu63E7dZiAQ8jE1WGRyFKUcziAlfg3xve7vjMP5nOeIYCS+wevIJgxuSAhMbYSkJ+CMxnoqUmPKQGB06Wk/T1fWpIoJTzVkPOOkxb8p1h3Thy1pQW7RRrsFzRYySf7+4yDiDzK9d0AEw0XTDE2FouYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=LR3/57vo; arc=none smtp.client-ip=185.246.84.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1778160279; c=relaxed/simple;
+	bh=jEJY9P21gNV4Tkvx/gB+23ZX6SpU6eVNb4s/rwb2nTQ=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kgBJ0ChLO7fT/UjQB41cWJ8/+aIl3oAnmBEjv2BRuymgw66nF+Iny0WjPbMWYKjZyoJZCE6BZtupm/GHuXT8NJtwOJM6Wf9+KXaXK7PxIb+YFfJ4c/lYCeS/FJOCHNPvNsyFw0iMXoIQTFjwTqPT7zdLoTb1t7nN2td7NoQACrw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=VNuMgdaw; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=26RN7Q3b; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=VNuMgdaw; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=26RN7Q3b; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="LR3/57vo"
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-02.galae.net (Postfix) with ESMTPS id D67211A3537;
-	Thu,  7 May 2026 13:16:37 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id A976160495;
-	Thu,  7 May 2026 13:16:37 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 8CAC9108193CD;
-	Thu,  7 May 2026 15:16:34 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1778159797; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:content-language:in-reply-to:references;
-	bh=XODxyG0t34liTUxM6lR0h9aJjLL9z8JcMy1OM1KkZ8M=;
-	b=LR3/57vo3wtfAcr5IQ61vpLoU4u/Tr0bWWTZEBy2a0gmvY9PSTfClfGLTLXYlXJY/L9z/S
-	sfD5EImCF/jCxOvEYKFXkLP4UsEJg8ijSQMCOH4ZxIZiE4xCiyF2A42soz5S9KPkxq+fdo
-	gn4gH6Pv9lrKk+ABxBmTnHWDZdRcseRea1RvavSqZh+tUYwrPYCgQPaEr/4GzphrKtN7H5
-	0vlap56tEL0lSiRKnHmcKQrFhd/HKdNSJEDbzLq1YXLZAgRi7eoBKYk26xprMudzXdmjzH
-	UyD9JDMaiORq5GMtyGYcI9So3T5aHBnOfeXHGyBQtO6dtbJowT0a3UaYwpbnTg==
-Message-ID: <a43833c5-797e-4487-87c5-a489e12e730b@bootlin.com>
-Date: Thu, 7 May 2026 15:16:33 +0200
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="VNuMgdaw";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="26RN7Q3b";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="VNuMgdaw";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="26RN7Q3b"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 7408766D2F;
+	Thu,  7 May 2026 13:24:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1778160271; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DMh8pnMsfMs24o4kg2uEJRLF/FMF2DHddoTt+5thtY8=;
+	b=VNuMgdaww1enlFoVMkXQ2itV/hqGy93eaExkT69dCr7Ltx0sjQaM3wilF5e261qpCHbQDt
+	nkF0w4ceqpQXHz/dVG9I9dT9cSBZs7f2rUgk94sT4Ca8daT8Ez8ZgRxtk/i1yiqfNb2reR
+	S4lP4HIPItLX2cwq7SL4TkzHeRO/yq8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1778160271;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DMh8pnMsfMs24o4kg2uEJRLF/FMF2DHddoTt+5thtY8=;
+	b=26RN7Q3bPeguIJDUIEMT1iREnac/uOxiAXdE4HIgnVWpO5My5UIl0HYAyF1OXJsVX5ncSJ
+	+kbgZLoHcMNALADA==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=VNuMgdaw;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=26RN7Q3b
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1778160271; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DMh8pnMsfMs24o4kg2uEJRLF/FMF2DHddoTt+5thtY8=;
+	b=VNuMgdaww1enlFoVMkXQ2itV/hqGy93eaExkT69dCr7Ltx0sjQaM3wilF5e261qpCHbQDt
+	nkF0w4ceqpQXHz/dVG9I9dT9cSBZs7f2rUgk94sT4Ca8daT8Ez8ZgRxtk/i1yiqfNb2reR
+	S4lP4HIPItLX2cwq7SL4TkzHeRO/yq8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1778160271;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DMh8pnMsfMs24o4kg2uEJRLF/FMF2DHddoTt+5thtY8=;
+	b=26RN7Q3bPeguIJDUIEMT1iREnac/uOxiAXdE4HIgnVWpO5My5UIl0HYAyF1OXJsVX5ncSJ
+	+kbgZLoHcMNALADA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 27095593A7;
+	Thu,  7 May 2026 13:24:31 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id aHmVB4+S/GntcQAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Thu, 07 May 2026 13:24:31 +0000
+Date: Thu, 07 May 2026 15:24:30 +0200
+Message-ID: <87qznnpd2p.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Matt DeVillier <matt.devillier@gmail.com>
+Cc: Takashi Iwai <tiwai@suse.de>,
+    Dutch Ingraham <stoa@gmx.us>,
+	Harin Lee <me@harin.net>,
+	Thorsten
+ Leemhuis <regressions@leemhuis.info>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Linux kernel regressions list
+ <regressions@lists.linux.dev>,
+	Linux Sound System
+ <linux-sound@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [regression] ctxfi: no speaker output when headphones connected on >=7.0.x
+In-Reply-To: <trinity-c85da660-f130-434c-a64c-a076180ce5c0-1778158023623@3c-app-mailcom-bs03>
+References: <36875d66-f601-4d18-9654-bd86b60918e8@leemhuis.info>
+	<87bjett3ud.wl-tiwai@suse.de>
+	<7929c116-ff2e-413b-ae73-e7d19e846e0f@harin.net>
+	<87v7czrasg.wl-tiwai@suse.de>
+	<trinity-c85da660-f130-434c-a64c-a076180ce5c0-1778158023623@3c-app-mailcom-bs03>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/30.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] stmmac: Random DMA reset failure on RK3399 since
- v6.18
-To: Jensen Huang <jensenhuang@friendlyarm.com>,
- Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Russell King <linux@armlinux.org.uk>,
- Heiner Kallweit <hkallweit1@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
- regressions@lists.linux.dev, netdev@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>
-References: <CAMpZ1qEwNOqR-KQD4kEqd93aB-TpHnG6WdQc2tXUF0aXMmw_SA@mail.gmail.com>
- <198e2ce4-07e1-46c0-818d-1eb18645aca0@leemhuis.info>
- <CAMpZ1qGEOiPj7cApnWJnojSyEpDmXfco=No5n1VfyTCoNyCyFQ@mail.gmail.com>
-From: Maxime Chevallier <maxime.chevallier@bootlin.com>
-Content-Language: en-US
-In-Reply-To: <CAMpZ1qGEOiPj7cApnWJnojSyEpDmXfco=No5n1VfyTCoNyCyFQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Level: 
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-2.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_TO(0.00)[gmail.com];
+	TO_DN_ALL(0.00)[];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com,gmx.us];
+	FREEMAIL_CC(0.00)[suse.de,gmx.us,harin.net,leemhuis.info,perex.cz,suse.com,lists.linux.dev,vger.kernel.org];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	TAGGED_RCPT(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	DKIM_TRACE(0.00)[suse.de:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[leemhuis.info:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:dkim,suse.de:email,suse.de:mid,suse.com:email]
+X-Rspamd-Queue-Id: 7408766D2F
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Score: -2.01
 
-Hi,
-
-On 07/05/2026 14:49, Jensen Huang wrote:
-> On Tue, May 5, 2026 at 4:26 PM Thorsten Leemhuis
-> <regressions@leemhuis.info> wrote:
->>
->> [Jumping in here, as there are no replies yet]
->>
->> BTW, Russel, just in case you missed this: looks like this regressions
->> caused by a change of yours.
-
-I think Russell is dealing with unpleasant personal stuff, let's see if we
-can figure this out while he's away.
-
->>
->> On 4/29/26 14:53, Jensen Huang wrote:
->>>
->>> I'm reporting a regression on RK3399 (stmmac) observed in v6.18.24.
->>> When a network cable is connected during boot, the DMA reset
->>> occasionally fails with the error message: "Failed to reset the dma".
->>>
->>> This appears to be a timing issue related to the EEE RX clock-stop
->>> logic. Based on my investigation with the RTL8211E PHY, I monitored
->>> the PHY register PS1R (MMD device 3, address 0x01) and observed a
->>> value of 0x0f40. This indicates that the PHY is in LPI mode and the RX
->>> clock may have already stopped.
-
-From what I get, your current hypthesis is that it takes a while for that
-clock to stabilize and therefore we're accessing the DMA registers too soon ?
-
-Can you confirm that with the addition of a small delay ?
-
->>>
->>> While commit dd557266cf5f ("net: stmmac: block PHY RXC clock-stop")
->>
->> Just wondering: have you tried if mainline (e.g. 7.1-rc1) is still
->> affected? This is something that is always a good advisable (some people
->> would call it required). In this case even more, as it since a while
->> contains a fix for the change you mentioned, that wasn't backported:
->> c171e679ee66d7 ("net: stmmac: Disable EEE RX clock stop when VLAN is
->> enabled"). But this is not my area of expertise (and in different area
->> of the code), so that fix might be unrelated to your issue.
+On Thu, 07 May 2026 14:47:03 +0200,
+Dutch Ingraham wrote:
 > 
-> Thanks for the pointer.
-> As you suggested, I have tested the mainline and confirmed that the
-> issue is not present in v7.1-rc2, nor as early as v6.19-rc1. However,
-> I verified that the issue persists in the latest stable v6.18.26.
-> I performed a git bisect and the result pointed exactly to the commit
-> you mentioned: c171e679ee66d7 ("net: stmmac: Disable EEE RX clock stop
-> when VLAN is enabled").
+> > Sent: Thursday, May 07, 2026 at 1:30 AM
+> > From: "Takashi Iwai" <tiwai@suse.de>
+> > To: "Harin Lee" <me@harin.net>
+> > Cc: "Takashi Iwai" <tiwai@suse.de>, "Thorsten Leemhuis" <regressions@leemhuis.info>, "Jaroslav Kysela" <perex@perex.cz>, "Takashi Iwai" <tiwai@suse.com>, "Linux kernel regressions list" <regressions@lists.linux.dev>, "Linux Sound System" <linux-sound@vger.kernel.org>, "LKML" <linux-kernel@vger.kernel.org>, stoa@gmx.us
+> > Subject: Re: [regression] ctxfi: no speaker output when headphones connected on >=7.0.x
+> >
+> > On Thu, 07 May 2026 00:06:11 +0200,
+> > Harin Lee wrote:
+> > > 
+> > > On 5/6/26 4:05 PM, Takashi Iwai wrote:
+> > > > On Wed, 06 May 2026 08:24:36 +0200,
+> > > > Thorsten Leemhuis wrote:
+> > > >> 
+> > > >> Hi! Just FYI, I noticed a regression report in bugzilla:
+> > > >> 
+> > > >> https://bugzilla.kernel.org/show_bug.cgi?id=221461
+> > > >> 
+> > > >> To quote:
+> > > >> 
+> > > >>> Dutch Ingraham 2026-05-03 18:12:49 UTC
+> > > >>> 
+> > > >>> Kernels >=7.0.1 contain a regression as to Creative Sound Blaster Z SE
+> > > >>> discrete pci sound card, but not integrated. Kernels 7.0.1, 7.0.2, and
+> > > >>> 7.0.3 tested; 7.0.0 not tested. Reverting to any 6.18.x or 6.12.x does
+> > > >>> not present the issue.
+> > > >>> 
+> > > >>> Specifically, using pipewire managed by pavucontrol, on both Gentoo and
+> > > >>> Arch Linux, when both external speakers and headphones are connected,
+> > > >>> all sound is routed through the headphones regardless of whether settings
+> > > >>> are set to Line Out/Speaker or Line Out/Headphones; there is no speaker
+> > > >>> output. If headphones are disconnected, without reboot, speakers work;
+> > > >>> reconnect headphones, without reboot, sound reverts to headphones.
+> > > >>> 
+> > > >>> Kernel: 7.0.3, Gentoo compiled from source using olddefconfig on 6.18.24
+> > > >>> 		.config; Arch standard release
+> > > >>> 'lspci -nnk | grep -i audio' attached
+> > > >>> 'dmesg | grep -i audio' for 7.0.3 and 6.18.24 attached
+> > > >>> pipewire-1.6.4 on both Gentoo and Arch Linux
+> > > >>> alsa-firmware-1.2.4 on both Gentoo and Arch Linux
+> > > >>> 'cat /proc/sys/kernel/tainted' returns 0 for both Gentoo and Arch Linux
+> > > >>> 
+> > > >>> Processor		:	AMD Ryzen7 5700G
+> > > >>> Motherboard		:	Asus Prime X570-Pro
+> > > >>> RAM				:	Patriot Viper Steel DDR-4 @3200mHz
+> > > >>> Graphics        :   ASRock AMD Radeon RX 7600 Challenger 8GB OC
+> > > >>> Sound Card      :   Creative Sound Blaster Z SE
+> > > >>> 
+> > > >>> 
+> > > >>> Expected outcome: ability to choose output to either speakers or head-
+> > > >>> phones while both are plugged-in to sound card.
+> > > >>> 
+> > > >>> Workaround: none known.
+> > > >> 
+> > > >> See the ticket for more details. One of them: 7.1-rc2 is affected as
+> > > >> well. Reporter is CCed. Forwarded this to ensure this report makes it to
+> > > >> the interested parties, as bugzilla might not have forwarded this.
+> > > >> 
+> > > >> Dutch Ingraham: if nobody within a few days has an idea why this
+> > > >> happens, you will likely have to use a git bisection to get this resolved.
+> > > > 
+> > > > As there have been many significant changes in ctxfi since 6.18, it's
+> > > > hard to tell what broke.  Please go git bisect.
+> > > > 
+> > > > 
+> > > > thanks,
+> > > > 
+> > > > Takashi
+> > > > 
+> > > 
+> > > Creative Sound Blaster Z-series uses the snd_hda_codec_ca0132 driver,
+> > > not snd_ctxfi. The dmesg logs in the bugzilla shows only ca0132
+> > > entries.
+> > 
+> > Ah, sorry, then it's easier.  The only major change is the
+> > commit 778031e1658d206a52bf9491c91ae5d4f4a2509d
+> >     ALSA: hda/ca0132: Set HP/Speaker auto-detect default from headphone pin verb
+> > 
+> > Try to revert this one.
+> > 
+> > 
+> > thanks,
+> > 
+> > Takashi
+> > 
+> 
+> I can confirm this seems like a good candidate. I built and tested 6.19.14
+> and 7.0. On 6.19.14, speakers work as expected; on 7.0, speakers are not
+> working as expected and the offending patch is included in the 7.0 patchset.
+> 
+> Thank you all for your work on this issue.
 
-Do you mean that c171e679ee66d7 ("net: stmmac: Disable EEE RX clock stop
-when VLAN is enabled") introduces the bug on 6.18.26 ?
-
-do you have the possibility of bisecting to verify when exactly the issue
-was solved between v6.18 and v6.19 ?
-
-Maxime
+OK, then let's put Matt to the party.
+Matt, could you help for debugging the regression?
 
 
+Takashi
