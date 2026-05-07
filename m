@@ -1,165 +1,363 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [185.244.194.184])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAE4F27FB1F
-	for <regressions@lists.linux.dev>; Thu,  7 May 2026 13:45:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.244.194.184
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778161542; cv=none; b=FnldMAtGL25oQB2agnjDhjduvwoggkJhgbjPLAGWtNYQVJo85DvsSRC6myrMRMIEmLKdq0rr9w89jnYj+2PpNrFQW3Kfyx5fJFpP00lu/J1jXhDEfpbxxTRbxke6/oL7WQiwGeAwS2vkkfqYtwirPDNGNo5NYhuh8KwJBCSOAyQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778161542; c=relaxed/simple;
-	bh=iahk48ROHqEubuzP/daBlbyZpbAXB6goRutnC/S6tvo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Hf0jzAtgniY4q5SX3za8dRvgIQjsFtr8W0aU5m27tG8bZXdWoRYYplnAvjln2CK7CcXkpKSdDi/+XaNvV7FtkSCeXuGS+A9zPJirWCbsGjHH9NZnUqkS6xGo3D3mJUQixEkG0w/y33ExN5cIHloFajZpwfJ2viZ55VcvMxWqlY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=WAztdomc; arc=none smtp.client-ip=185.244.194.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F5CB3B4EA2
+	for <regressions@lists.linux.dev>; Thu,  7 May 2026 15:05:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.170
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778166340; cv=pass; b=rrqIPg6At5oO1fEdKXW5rRUa7jyHSuCADLaKPKX2yUmTHMdzIIzSCfGjbPMFBeJVImmVqCvGJr5fqx1bQKCj8J9fIxSqmewkjp7jJhiZoeZXCRE0ajfq6Lqei23OqAjeEWqnd4ALuUFeYZgPCpyAXuxp12CSso7Tbr4drGaQN7M=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778166340; c=relaxed/simple;
+	bh=K0NiWPNqm2cSvY4eAZTTZRlIjAifEq7Bne9AkD9/RwY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=to8R+F7VLBXV4aK+e0fqD9O5iv8U9Pd4drBJS0JXIhIkSAQ2dBjj8SP9lMdo3KTU3l76uJlKcNzvHxOSWJpQuSD6KrQmTinsRn2N1fzZ7iWgrWzpmFFB/qemzhEDIhD2GBPGZGZ9v3qKLdGWbvWhFE/RH3sb33peYpc2scLncBA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LSznxQj4; arc=pass smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="WAztdomc"
-Received: from relay01-mors.netcup.net (localhost [127.0.0.1])
-	by relay01-mors.netcup.net (Postfix) with ESMTPS id 4gBCT93mLWz8trZ;
-	Thu,  7 May 2026 15:16:58 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1778159821;
-	bh=iahk48ROHqEubuzP/daBlbyZpbAXB6goRutnC/S6tvo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=WAztdomcU3bGdVVYxKQ7Xv5salF0mGYCKTw0BHeuCVIUb6v4A7o6q0A/JheCKvqoi
-	 4/wXvWHeoo0jO0OGe3IpDd7Kr8hFyaCdzu+x16GX7PcPJ7EqLuI1BB/l5DEoVs40CG
-	 aOShkamkKYorCkE9UVl3qaNJxDuC0g6hoZX2yE49GfVUpkjHDAw4Fpu/TrpgpgFVA5
-	 sn1NicWqtkG8Hou0t+pSSaIBtPPDnYLIpTv1wbuQRygtLy5tWb3DFYJ5XGdFFuibyM
-	 2YN6Nv1zER/cstsNW7N43CGHPpT25kAVF1lysv/QracEPOFeXH+0B2zqkZN/6hagaT
-	 8TdAHdBnvZHfw==
-Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
-	by relay01-mors.netcup.net (Postfix) with ESMTPS id 4gBCP95jpyz7w8s;
-	Thu,  7 May 2026 15:13:30 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
-X-Spam-Flag: NO
-X-Spam-Score: -2.898
-X-Spam-Level: 
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4gBCNq5YRJz8tdv;
-	Thu,  7 May 2026 15:13:15 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 3254D5FBF7;
-	Thu,  7 May 2026 15:13:14 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <5308c658-7d4c-4292-b091-a51546ea4d23@leemhuis.info>
-Date: Thu, 7 May 2026 15:13:12 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LSznxQj4"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2ba6485d219so6778475ad.3
+        for <regressions@lists.linux.dev>; Thu, 07 May 2026 08:05:39 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1778166338; cv=none;
+        d=google.com; s=arc-20240605;
+        b=V0pLtQdW3RKAFMLYjkx0nFQcon2smbgmd7FDAUc35QHSEz2iMu1jshGxBSUcpis/bu
+         vhwxdvaTzVMMpBl44L5p7KgH8E3/0C64r1/gDDscTcbDwy+/4XR0awsk/oHrh+pnEdhN
+         HdsGsiBYWRWje7z1JRiX7Slh2wS/WUnGxfyq1pERsmF3SRHFL8lBY6ereKW0dzVUaH5B
+         EpgQNK42BcC2UNYSxsEfpCXMUzAeJSBO6EP+3nvYljkfHLdDxcu95hwu+oSGPEeUs/cQ
+         XMlnzmIHqn3xeyota5iBaClSQsbB9qpDe53DStOP203liRMZSKawGHwDwr7yXq1WCJ63
+         d0MQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=WlXk1xvZJKso2Hfg4lKi3OPDMAcCJczZRsXxWL2O5yU=;
+        fh=hxBMaMFM58hsv2/bGxcK7RFxP/UdlWHmpbwdL/IN8Ww=;
+        b=LIZ66yoHhuj0tG8EciLX2m93SQcbpqIyChol4z09/W9W0EhYptcYZvCNXDvHbGKvHa
+         pHdjD8RwiKlNtzl22N4Rjze51j6B7ajIqgMEKGmFzPReQ3i8O1h2g9odPMuAVwBU7Bae
+         Yi/5hHHnKv5dJ2Nezx25pgBJ49hjdzh4P+7INL+mxV/KKcFlAqUqKO7iZYBQ4RgziHJv
+         f5PKQlrR0KZ7T9NwtN06Snv682sQUjQ6AjbWn6P1BiozTjgiZ+c02zw2rqvo6CnDjiMp
+         p7hdXbTUnXPnOw0UYlydeSXQgdWV4dD1A+L821twlxKYB4y5qSz+WfuGW83Jyt4KYerc
+         A1UQ==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1778166338; x=1778771138; darn=lists.linux.dev;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WlXk1xvZJKso2Hfg4lKi3OPDMAcCJczZRsXxWL2O5yU=;
+        b=LSznxQj4+RXVUEiVItauVBtzF7FFZ5PCPttXKQkL2OLAtQgqaA3IxTBsuc7ewJMzxW
+         HUFbAIY4XLvLRX9pHRCpd3fNkc7gd0Z2RpRkUnMQP7FzIBBdRD9JYqQNZ8e1XVRAgFpx
+         /qV7u4ZPtNFb10k8p1G8jIf2VzsZFEYdFpuCB0Nhsg3OX3aXtcjdBVCnyrkuk/XdGFl5
+         Id+A/EiCDfvl8b147El86pr1ui3CLA8qOsj8Td0g/1xoL22AScsmKAsSre9aeR2r37mg
+         ENH6amc7nuh8Pc6iM8Z52SFWC9FC5ffPbzMjwgk/v5I5eBBBQBSJFmdoywHYxD1FTZzo
+         HeIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778166338; x=1778771138;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=WlXk1xvZJKso2Hfg4lKi3OPDMAcCJczZRsXxWL2O5yU=;
+        b=i9K4A9pYC0+zUYKESri70A9aGBT2k+ZFNzDEzijuTN3KOzi/1zOWlI5uzshwBCWtFC
+         mk8/rLPtYRVH+0qKufTZQtVwt0+9rJL+7ddMyj/zxTQbPtJRCO78LHqSqNmVqChIiAyo
+         3FvAlB0O6M75D6Dgom4fGUXIM3rpTtaewyHvLBeSKc3YjEZWdY5C4KRhgq1yhq/YelIy
+         Elrq94T+zuQchPKcKXVF7i0U7fEU+uO6yKcpjoYxPUIintHT1hHn3gZkkcC3Vrohzonx
+         yOiV//puRI+cwbRuckVacORAl+385kolbOwhJ8smOFIgh6oUGozt0eQA+pKmODj2nJJc
+         zvaQ==
+X-Gm-Message-State: AOJu0YxBmqLWxGzU5QCanMcCZH5F9n33+sRbO+eYHwtaJvKUQIChlxrP
+	e7hGryXBHuL02GELgqhumRecuCRSk25r9ILaf5lA5OPM6mbVSGwcqHj5CxqVWhzYnHKMaTrQZSA
+	EJtXlmR+LG7SOtjM49fc9FPYIGIoYsP+Efg==
+X-Gm-Gg: AeBDietlf6CX7YIHABywUWNwnmQpUojVzpUtj+epBu4Vcw4efEZ2FaeUm7trLPrTJp7
+	/yEPxiQA47WDGBgGeZ2XhDmMJ9SGKEUdfuCrq6ncPJKc0j2FzqU7l47mm7XElvcw0krBZqGRd0t
+	VOwgk0CvfnujDJqkq2Q+tY1GaXltIF4wQ47jj95uhWHOu5MwoZmg1YJgU1v4XeAUetEn7Ll3GOf
+	7bp5kOi/QKqAJ6j2zlRC8fMIHD855/y48sTXV99B/i9sXfZHRZaaiAowvAeyHm88KRxmmFMsZce
+	YfQiPx2hvsFNBKZr
+X-Received: by 2002:a17:902:cf4c:b0:2b7:88d8:efde with SMTP id
+ d9443c01a7336-2ba78f4e986mr79586585ad.7.1778166338000; Thu, 07 May 2026
+ 08:05:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] stmmac: Random DMA reset failure on RK3399 since
- v6.18
-To: Ovidiu Panait <ovidiu.panait.rb@renesas.com>,
- Jensen Huang <jensenhuang@friendlyarm.com>
-Cc: Russell King <linux@armlinux.org.uk>,
- Heiner Kallweit <hkallweit1@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
- regressions@lists.linux.dev, netdev@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>
-References: 
- <CAMpZ1qEwNOqR-KQD4kEqd93aB-TpHnG6WdQc2tXUF0aXMmw_SA@mail.gmail.com>
- <198e2ce4-07e1-46c0-818d-1eb18645aca0@leemhuis.info>
- <CAMpZ1qGEOiPj7cApnWJnojSyEpDmXfco=No5n1VfyTCoNyCyFQ@mail.gmail.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: 
- <CAMpZ1qGEOiPj7cApnWJnojSyEpDmXfco=No5n1VfyTCoNyCyFQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-PPP-Message-ID: <177815959488.33597.6466634683394731939@mxe9fb.netcup.net>
-X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: 3254D5FBF7
-X-NC-CID: IBN/mSWKxNoJwMBcFpQeKstCk/dAkTAf0eUmoE0TLKkEBHFk3lA=
+References: <36875d66-f601-4d18-9654-bd86b60918e8@leemhuis.info>
+ <87bjett3ud.wl-tiwai@suse.de> <7929c116-ff2e-413b-ae73-e7d19e846e0f@harin.net>
+ <87v7czrasg.wl-tiwai@suse.de> <trinity-c85da660-f130-434c-a64c-a076180ce5c0-1778158023623@3c-app-mailcom-bs03>
+ <87qznnpd2p.wl-tiwai@suse.de> <CAFTm+6Bj_dWdSifUoS7hZ3kfVambXK_=7jyGuHp33RZoSEGVUA@mail.gmail.com>
+In-Reply-To: <CAFTm+6Bj_dWdSifUoS7hZ3kfVambXK_=7jyGuHp33RZoSEGVUA@mail.gmail.com>
+From: Matt DeVillier <matt.devillier@gmail.com>
+Date: Thu, 7 May 2026 10:05:26 -0500
+X-Gm-Features: AVHnY4JbhzIrb0QVTsRshnWS7g2Ew_o6XmQR3rxwnKn3GWlBk5pyqjlM4NV7qiE
+Message-ID: <CAFTm+6Dtsc8z7s4Gj+6A9zGpXyj93tQEbkzQLu13S36SmhB8Zw@mail.gmail.com>
+Subject: Re: [regression] ctxfi: no speaker output when headphones connected
+ on >=7.0.x
+To: regressions@lists.linux.dev, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-[+Ovidiu Panait]
-
-On 5/7/26 14:49, Jensen Huang wrote:
-> On Tue, May 5, 2026 at 4:26 PM Thorsten Leemhuis
-> <regressions@leemhuis.info> wrote:
->> On 4/29/26 14:53, Jensen Huang wrote:
+On Thu, May 7, 2026 at 8:24=E2=80=AFAM Takashi Iwai <tiwai@suse.de> wrote:
 >
->>> I'm reporting a regression on RK3399 (stmmac) observed in v6.18.24.
->>> When a network cable is connected during boot, the DMA reset
->>> occasionally fails with the error message: "Failed to reset the dma".
->>>
->>> This appears to be a timing issue related to the EEE RX clock-stop
->>> logic. Based on my investigation with the RTL8211E PHY, I monitored
->>> the PHY register PS1R (MMD device 3, address 0x01) and observed a
->>> value of 0x0f40. This indicates that the PHY is in LPI mode and the RX
->>> clock may have already stopped.
->>>
->>> While commit dd557266cf5f ("net: stmmac: block PHY RXC clock-stop")
->>
->> Just wondering: have you tried if mainline (e.g. 7.1-rc1) is still
->> affected? This is something that is always a good advisable (some people
->> would call it required). In this case even more, as it since a while
->> contains a fix for the change you mentioned, that wasn't backported:
->> c171e679ee66d7 ("net: stmmac: Disable EEE RX clock stop when VLAN is
->> enabled"). But this is not my area of expertise (and in different area
->> of the code), so that fix might be unrelated to your issue.
-> 
-> Thanks for the pointer.
-> As you suggested, I have tested the mainline and confirmed that the
-> issue is not present in v7.1-rc2, nor as early as v6.19-rc1. However,
-> I verified that the issue persists in the latest stable v6.18.26.
-> I performed a git bisect and the result pointed exactly to the commit
-> you mentioned: c171e679ee66d7 ("net: stmmac: Disable EEE RX clock stop
-> when VLAN is enabled").
+> On Thu, 07 May 2026 14:47:03 +0200,
+> Dutch Ingraham wrote:
+> >
+> > > Sent: Thursday, May 07, 2026 at 1:30 AM
+> > > From: "Takashi Iwai" <tiwai@suse.de>
+> > > To: "Harin Lee" <me@harin.net>
+> > > Cc: "Takashi Iwai" <tiwai@suse.de>, "Thorsten Leemhuis" <regressions@=
+leemhuis.info>, "Jaroslav Kysela" <perex@perex.cz>, "Takashi Iwai" <tiwai@s=
+use.com>, "Linux kernel regressions list" <regressions@lists.linux.dev>, "L=
+inux Sound System" <linux-sound@vger.kernel.org>, "LKML" <linux-kernel@vger=
+.kernel.org>, stoa@gmx.us
+> > > Subject: Re: [regression] ctxfi: no speaker output when headphones co=
+nnected on >=3D7.0.x
+> > >
+> > > On Thu, 07 May 2026 00:06:11 +0200,
+> > > Harin Lee wrote:
+> > > >
+> > > > On 5/6/26 4:05 PM, Takashi Iwai wrote:
+> > > > > On Wed, 06 May 2026 08:24:36 +0200,
+> > > > > Thorsten Leemhuis wrote:
+> > > > >>
+> > > > >> Hi! Just FYI, I noticed a regression report in bugzilla:
+> > > > >>
+> > > > >> https://bugzilla.kernel.org/show_bug.cgi?id=3D221461
+> > > > >>
+> > > > >> To quote:
+> > > > >>
+> > > > >>> Dutch Ingraham 2026-05-03 18:12:49 UTC
+> > > > >>>
+> > > > >>> Kernels >=3D7.0.1 contain a regression as to Creative Sound Bla=
+ster Z SE
+> > > > >>> discrete pci sound card, but not integrated. Kernels 7.0.1, 7.0=
+.2, and
+> > > > >>> 7.0.3 tested; 7.0.0 not tested. Reverting to any 6.18.x or 6.12=
+.x does
+> > > > >>> not present the issue.
+> > > > >>>
+> > > > >>> Specifically, using pipewire managed by pavucontrol, on both Ge=
+ntoo and
+> > > > >>> Arch Linux, when both external speakers and headphones are conn=
+ected,
+> > > > >>> all sound is routed through the headphones regardless of whethe=
+r settings
+> > > > >>> are set to Line Out/Speaker or Line Out/Headphones; there is no=
+ speaker
+> > > > >>> output. If headphones are disconnected, without reboot, speaker=
+s work;
+> > > > >>> reconnect headphones, without reboot, sound reverts to headphon=
+es.
+> > > > >>>
+> > > > >>> Kernel: 7.0.3, Gentoo compiled from source using olddefconfig o=
+n 6.18.24
+> > > > >>>               .config; Arch standard release
+> > > > >>> 'lspci -nnk | grep -i audio' attached
+> > > > >>> 'dmesg | grep -i audio' for 7.0.3 and 6.18.24 attached
+> > > > >>> pipewire-1.6.4 on both Gentoo and Arch Linux
+> > > > >>> alsa-firmware-1.2.4 on both Gentoo and Arch Linux
+> > > > >>> 'cat /proc/sys/kernel/tainted' returns 0 for both Gentoo and Ar=
+ch Linux
+> > > > >>>
+> > > > >>> Processor             :       AMD Ryzen7 5700G
+> > > > >>> Motherboard           :       Asus Prime X570-Pro
+> > > > >>> RAM                           :       Patriot Viper Steel DDR-4=
+ @3200mHz
+> > > > >>> Graphics        :   ASRock AMD Radeon RX 7600 Challenger 8GB OC
+> > > > >>> Sound Card      :   Creative Sound Blaster Z SE
+> > > > >>>
+> > > > >>>
+> > > > >>> Expected outcome: ability to choose output to either speakers o=
+r head-
+> > > > >>> phones while both are plugged-in to sound card.
+> > > > >>>
+> > > > >>> Workaround: none known.
+> > > > >>
+> > > > >> See the ticket for more details. One of them: 7.1-rc2 is affecte=
+d as
+> > > > >> well. Reporter is CCed. Forwarded this to ensure this report mak=
+es it to
+> > > > >> the interested parties, as bugzilla might not have forwarded thi=
+s.
+> > > > >>
+> > > > >> Dutch Ingraham: if nobody within a few days has an idea why this
+> > > > >> happens, you will likely have to use a git bisection to get this=
+ resolved.
+> > > > >
+> > > > > As there have been many significant changes in ctxfi since 6.18, =
+it's
+> > > > > hard to tell what broke.  Please go git bisect.
+> > > > >
+> > > > >
+> > > > > thanks,
+> > > > >
+> > > > > Takashi
+> > > > >
+> > > >
+> > > > Creative Sound Blaster Z-series uses the snd_hda_codec_ca0132 drive=
+r,
+> > > > not snd_ctxfi. The dmesg logs in the bugzilla shows only ca0132
+> > > > entries.
+> > >
+> > > Ah, sorry, then it's easier.  The only major change is the
+> > > commit 778031e1658d206a52bf9491c91ae5d4f4a2509d
+> > >     ALSA: hda/ca0132: Set HP/Speaker auto-detect default from headpho=
+ne pin verb
+> > >
+> > > Try to revert this one.
+> > >
+> > >
+> > > thanks,
+> > >
+> > > Takashi
+> > >
+> >
+> > I can confirm this seems like a good candidate. I built and tested 6.19=
+.14
+> > and 7.0. On 6.19.14, speakers work as expected; on 7.0, speakers are no=
+t
+> > working as expected and the offending patch is included in the 7.0 patc=
+hset.
+> >
+> > Thank you all for your work on this issue.
+>
+> OK, then let's put Matt to the party.
+> Matt, could you help for debugging the regression?
+>
+>
+> Takashi
 
-Great! Could you please cherry-pick c171e679ee66d7 to 6.18.y and see if
-that fixes things? It sounds like it should.
 
-@Ovidiu Panait: c171e679ee66d7 is a commit of yours. If Jensen confirms
-that cherry-picking fixed the problem, I'd say we ask Greg to pick it up
-for 6.18.y -- unless you see any reasons why that might be a bad idea.
+I can confirm the regression here on my 2013 Chromebook Pixel w/CA0132.
 
-> Additionally, I tested the case where CONFIG_VLAN_8021Q is not set,
-> and the DMA reset issue occurs again.
+Looking more closely, the issue is that tVNID_HP_ASEL and VNID_HP_SEL are
+mutually exclusive selection sources in ca0132_select_out() /
+ca0132_alt_select_out(),
+and auto-detect always "wins." So, enabling auto-detect effectively
+disabled user
+override.
 
-I'd say that is likely best discussed in a new thread you might want to
-start. Also wondering if it was like that earlier. Or iow: if that is a
-regression or not.
+While reverting would fix this problem, it would reintroduce the
+problem of jack-detect being
+ignored completely. A better solution would be to default to
+auto-detect, but allow manual selection
+to override. Here's a quick patch I whipped up that should resolve the
+issue (untested though):
+---
+From: Matt DeVillier <matt.devillier@gmail.com>
+Date: Thu, 7 May 2026 09:58:41 -0500
+Subject: [PATCH] ALSA: hda/ca0132: Disable auto-detect on manual output sel=
+ect
 
-Ciao, Thorsten
+Commit 778031e1658d ("ALSA: hda/ca0132: Set HP/Speaker
+auto-detect default from headphone pin verb") enables HP/Speaker
+auto-detect by default when the headphone pin supports presence detect.
 
->>> ensures the clock is running before the DMA reset, my tests suggest
->>> that the phylink_rx_clk_stop_block() call might not provide a
->>> sufficiently stable RX clock in time for the immediate DMA reset that
->>> follows.
->>>
->>> Since stmmac already sets mac_requires_rxc = true, I modified
->>> phylink_bringup_phy() to honor this flag. This avoids toggling the
->>> PHY's clk_stop_enable during the initialization sequence, ensuring the
->>> RX clock remains active and stable throughout.
->>> With the change below, I achieved 200/200 successful reboots with the
->>> cable connected (previously ~50% failure rate).
->>>
->>> --- a/drivers/net/phy/phylink.c
->>> +++ b/drivers/net/phy/phylink.c
->>> @@ -2171,7 +2171,7 @@ static int phylink_bringup_phy(struct phylink
->>> *pl, struct phy_device *phy,
->>>      /* Allow the MAC to stop its clock if the PHY has the capability */
->>>      pl->mac_tx_clk_stop = phy_eee_tx_clock_stop_capable(phy) > 0;
->>>
->>> -    if (pl->mac_supports_eee_ops) {
->>> +    if (pl->mac_supports_eee_ops && !pl->config->mac_requires_rxc) {
->>>          /* Explicitly configure whether the PHY is allowed to stop it's
->>>           * receive clock.
->>>           */
->>>
->>> Any feedback/testing on this would be appreciated.
->>>
->>> Best regards,
->>> Jensen Huang
->>>
->>
+With auto-detect enabled, ca0132_select_out() and ca0132_alt_select_out()
+choose the output from jack presence instead of the manual HP/Speaker
+selection. This means selecting speaker output while headphones are
+plugged in updates the control state, but audio still routes to the
+headphones.
 
+Treat an explicit manual output selection as a request to leave
+auto-detect mode. Clear the HP/Speaker auto-detect switch before applying
+the manual selection, and notify userspace so the auto-detect control
+state is updated in mixers. Do this for both the normal HP/Speaker
+Playback Switch and the alternate Output Select control used by desktop
+cards.
+
+This keeps auto-detect enabled by default for devices with jack presence
+detection, while preserving the expected behavior that a manual output
+choice takes effect immediately.
+
+Fixes: 778031e1658d ("ALSA: hda/ca0132: Set HP/Speaker auto-detect
+default from headphone pin verb")
+Signed-off-by: Matt DeVillier <matt.devillier@gmail.com>
+---
+ sound/hda/codecs/ca0132.c | 44 +++++++++++++++++++++++++++++++------------=
+-
+ 1 file changed, 31 insertions(+), 13 deletions(-)
+
+diff --git a/sound/hda/codecs/ca0132.c b/sound/hda/codecs/ca0132.c
+index ad533b04ab29..be565ffaade0 100644
+--- a/sound/hda/codecs/ca0132.c
++++ b/sound/hda/codecs/ca0132.c
+@@ -5498,6 +5498,30 @@ static int zxr_headphone_gain_set(struct
+hda_codec *codec, long val)
+  return 0;
+ }
+
++/*
++ * Manual output selection (HP/Speaker Playback Switch or alt Output Selec=
+t)
++ * is meaningful only when HP/Speaker auto-detect is disabled, since the
++ * select_out path always prefers jack presence when auto-detect is on. Wh=
+en
++ * the user explicitly chooses an output, turn auto-detect off so the manu=
+al
++ * choice actually takes effect, and notify userspace so the auto-detect
++ * control reflects the new state.
++ */
++static void ca0132_disable_hp_auto_detect(struct hda_codec *codec)
++{
++ struct ca0132_spec *spec =3D codec->spec;
++ struct snd_kcontrol *kctl;
++
++ if (!spec->vnode_lswitch[VNID_HP_ASEL - VNODE_START_NID])
++ return;
++
++ spec->vnode_lswitch[VNID_HP_ASEL - VNODE_START_NID] =3D 0;
++ kctl =3D snd_hda_find_mixer_ctl(codec,
++      "HP/Speaker Auto Detect Playback Switch");
++ if (kctl)
++ snd_ctl_notify(codec->card, SNDRV_CTL_EVENT_MASK_VALUE,
++       &kctl->id);
++}
++
+ static int ca0132_vnode_switch_set(struct snd_kcontrol *kcontrol,
+  struct snd_ctl_elem_value *ucontrol)
+ {
+@@ -5510,14 +5534,11 @@ static int ca0132_vnode_switch_set(struct
+snd_kcontrol *kcontrol,
+  int auto_jack;
+
+  if (nid =3D=3D VNID_HP_SEL) {
+- auto_jack =3D
+- spec->vnode_lswitch[VNID_HP_ASEL - VNODE_START_NID];
+- if (!auto_jack) {
+- if (ca0132_use_alt_functions(spec))
+- ca0132_alt_select_out(codec);
+- else
+- ca0132_select_out(codec);
+- }
++ ca0132_disable_hp_auto_detect(codec);
++ if (ca0132_use_alt_functions(spec))
++ ca0132_alt_select_out(codec);
++ else
++ ca0132_select_out(codec);
+  return 1;
+  }
+
+@@ -5978,7 +5999,6 @@ static int ca0132_alt_output_select_put(struct
+snd_kcontrol *kcontrol,
+  struct ca0132_spec *spec =3D codec->spec;
+  int sel =3D ucontrol->value.enumerated.item[0];
+  unsigned int items =3D NUM_OF_OUTPUTS;
+- unsigned int auto_jack;
+
+  if (sel >=3D items)
+  return 0;
+@@ -5988,10 +6008,8 @@ static int ca0132_alt_output_select_put(struct
+snd_kcontrol *kcontrol,
+
+  spec->out_enum_val =3D sel;
+
+- auto_jack =3D spec->vnode_lswitch[VNID_HP_ASEL - VNODE_START_NID];
+-
+- if (!auto_jack)
+- ca0132_alt_select_out(codec);
++ ca0132_disable_hp_auto_detect(codec);
++ ca0132_alt_select_out(codec);
+
+  return 1;
+ }
+--=20
+2.51.0
