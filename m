@@ -1,95 +1,198 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [194.59.206.189])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08D9533A00C
-	for <regressions@lists.linux.dev>; Thu,  7 May 2026 06:23:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.59.206.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D015930B502
+	for <regressions@lists.linux.dev>; Thu,  7 May 2026 06:30:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778135013; cv=none; b=S7Qmg+nJmO7m1MMdjdln+3r9NJMT5MbJzcvaBA2gVqnIKKlZaM5DSFFPghMXUA0RpmMLaOmyoKglrmsnePzs5Gm0JudUtSyim5T1r5vXwbBzWrIkLmgO1cJfPBG7bLznRPHANqUdQ0aGU1U49nJoV1U3/JW8yGgASm+CneGNr4M=
+	t=1778135460; cv=none; b=jPTxAnflAGNe5KbwsNO5k4nO8IxqmR31UUE+gGQ6DpOaITld5gT/0g0+v3WQEnpYbY0r0m/EDUMnGjUFCK6qKUtYd3L1BnQ+MYPMfGVp8r+N0zNRlY7kT2EvqjADH87VQA+Kxd/6TINjpl4/vs9IOCNZR/BZhTSZAX+dqW1vkJ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778135013; c=relaxed/simple;
-	bh=vL4DabYOD9B6tSqbsgRgvxI82cLXViFTzFEHJXUIi2c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KACLrDvvd3V/pejtVz0jWas+9sJMJkkXlSfVQmIg7D5UzzYFrKGEK275xQ6orBWpmo9E3V4PsT04CNfNFTTtNuvlaLabgUg02fDO/xJfW2qbru6bUzbhLhfTaMXgc9R8zq0Ccyfaw8kC/preyUD5DtzZ2G9tmNhPw1i5eHLqSAk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=XNIf6V+d; arc=none smtp.client-ip=194.59.206.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1778135460; c=relaxed/simple;
+	bh=zvRBYWCH+40kkk25vA0pRR1NNoZOpRUEbQ7rluml4dU=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bqZe1K6z7BLdb3JfRQ+G1wSzHEPhrnjfkqddIgRU5Zj8g890L8vXouo8pG49ZqTjcD+DrGmeNlpWcE26OUbNk3Np9BZtulsbzjWOFVCBKuu/liZHt8hIl5GAFxiWhrYCRt7jflTeVVQ9mGLqrFUmXOtXpKEVhdErNfQk3uR2o2g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=eWHbUhh2; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=s4Tundeo; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=oIxRsprf; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=t88P4H7R; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="XNIf6V+d"
-Received: from relay02-mors.netcup.net (localhost [127.0.0.1])
-	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4gB2571NKJz4Btc;
-	Thu,  7 May 2026 08:14:03 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1778134443;
-	bh=vL4DabYOD9B6tSqbsgRgvxI82cLXViFTzFEHJXUIi2c=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=XNIf6V+dLxp4NXjq3SL/sM3dunYoc4rEgiJjpIMFWwwDcyry6YZcy0uSDt83otv2b
-	 N7BYL6pV4KVmhtrhvjJAFzjuhSJaz8Q3kBUe49JwAWwJ8PSXdl19SAcWXkMhb/ykjy
-	 2ffV2RLyuw55+EyljhODmkX/HjbPjU/DLsMhI5so7J9Xwzr7fXS1bNU95zxB8CX3UY
-	 dmkfkZEC1lIgnU8W7XYgqwYcO+lScV07XBzCR5aW5wGsg02ff+r2w6mi4C6z7hjJf8
-	 QDq/DMwSmU3qaz+VRjfvtOyip6No7qmuq1cT5eIVDLpy7vGuhaoUIK3PfktAXttS4D
-	 1ruFoWoc6Q6jQ==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4gB2570fbsz7vfc;
-	Thu,  7 May 2026 08:14:03 +0200 (CEST)
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="eWHbUhh2";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="s4Tundeo";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="oIxRsprf";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="t88P4H7R"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4gB2561PKgz8sZg;
-	Thu,  7 May 2026 08:14:02 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id AA4FD5FBF7;
-	Thu,  7 May 2026 08:14:01 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <c0305eb4-811f-492d-9ee1-db1e8759af3f@leemhuis.info>
-Date: Thu, 7 May 2026 08:14:00 +0200
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 2E6AD6C0EF;
+	Thu,  7 May 2026 06:30:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1778135457; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KIqkZZ/pvJuXyh6+01SchqSmGEsFf1BU4zPkUR94J9s=;
+	b=eWHbUhh2Ogl06IOckRyQqJrs+fN+cFaTdy6HiwNDZ5iYju/cKc4FSaYmG9QA/sbrmhAD4U
+	9j00Q0I7q4CYKq9ZZSz7g1wLiO+O0wbiQm8SCyvgo9bEZ/tfuG2UvsKebMkkmGurW+R6Rk
+	gYbUb8PyQ1jhzqOSglZte/46V6VR0WI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1778135457;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KIqkZZ/pvJuXyh6+01SchqSmGEsFf1BU4zPkUR94J9s=;
+	b=s4Tundeoa9oNp5oPHoAMtWW8bfe6tfyODWXkXSQh14fDQvDc38j3y6ZBlG8coITFIQiOS/
+	DxqacFcOhW1StTDw==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1778135456; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KIqkZZ/pvJuXyh6+01SchqSmGEsFf1BU4zPkUR94J9s=;
+	b=oIxRsprfRC7hZBlnyZGKp6ky5R6gdN2UFcPZgVzNplWZzSig1PQ1lbtYFORKcj3LyZs/Wp
+	1332TEuaHZKGEEPNNSRqNdfzcVJ8QDe9UJqBt3rAgfKcehcVKUdfgAYATQhpqlei/YDU12
+	yWJKdtzZ4IFyugOXsWWEzSVyIpGDCwQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1778135456;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KIqkZZ/pvJuXyh6+01SchqSmGEsFf1BU4zPkUR94J9s=;
+	b=t88P4H7R8fFdJ2HQnDbncwA40dc4UX4xQTtDfq2VeqBqrFIhS3of1mMTx3gV/maJj5PpmK
+	2vtfm5Zz4902uiBQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id DB9C6593A7;
+	Thu,  7 May 2026 06:30:55 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id KBctNJ8x/GlgTgAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Thu, 07 May 2026 06:30:55 +0000
+Date: Thu, 07 May 2026 08:30:55 +0200
+Message-ID: <87v7czrasg.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Harin Lee <me@harin.net>
+Cc: Takashi Iwai <tiwai@suse.de>,
+	Thorsten Leemhuis <regressions@leemhuis.info>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Linux kernel regressions list <regressions@lists.linux.dev>,
+	Linux Sound System <linux-sound@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	stoa@gmx.us
+Subject: Re: [regression] ctxfi: no speaker output when headphones connected on >=7.0.x
+In-Reply-To: <7929c116-ff2e-413b-ae73-e7d19e846e0f@harin.net>
+References: <36875d66-f601-4d18-9654-bd86b60918e8@leemhuis.info>
+	<87bjett3ud.wl-tiwai@suse.de>
+	<7929c116-ff2e-413b-ae73-e7d19e846e0f@harin.net>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/30.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] amdgpu fails to load eGPU after 6.19
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Bjorn Helgaas <bhelgaas@google.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- Rio Liu <rio@r26.me>
-References: 
- <a1FodrO_nl6UemO3VLBk5Gsu6PjvxLU-OYhvJEMeKFem-Bpi7ZXDHrIxtwsTCmpn-WndBxnzZNtdKJy_V6PjafnFjSKz7sr1eEfGobRzpgs=@r26.me>
- <4dfc25f2-f660-c234-4e4d-c5c76216523d@linux.intel.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <4dfc25f2-f660-c234-4e4d-c5c76216523d@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-PPP-Message-ID: 
- <177813444197.2807031.18438117709254262244@mxe9fb.netcup.net>
-X-NC-CID: n2LspJU92EYRXPtK9VRjUeEldcGFM4szdVWA2meL9Wpn/7iW6ko=
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Flag: NO
+X-Spam-Score: -3.30
+X-Spamd-Result: default: False [-3.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_TLS_ALL(0.00)[];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	FREEMAIL_ENVRCPT(0.00)[gmx.us];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FREEMAIL_CC(0.00)[suse.de,leemhuis.info,perex.cz,suse.com,lists.linux.dev,vger.kernel.org,gmx.us];
+	TO_DN_SOME(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,imap1.dmz-prg2.suse.org:helo]
+X-Spam-Level: 
 
-Lo! Restarting this after deliberately waiting for a bit:
+On Thu, 07 May 2026 00:06:11 +0200,
+Harin Lee wrote:
+> 
+> On 5/6/26 4:05 PM, Takashi Iwai wrote:
+> > On Wed, 06 May 2026 08:24:36 +0200,
+> > Thorsten Leemhuis wrote:
+> >> 
+> >> Hi! Just FYI, I noticed a regression report in bugzilla:
+> >> 
+> >> https://bugzilla.kernel.org/show_bug.cgi?id=221461
+> >> 
+> >> To quote:
+> >> 
+> >>> Dutch Ingraham 2026-05-03 18:12:49 UTC
+> >>> 
+> >>> Kernels >=7.0.1 contain a regression as to Creative Sound Blaster Z SE
+> >>> discrete pci sound card, but not integrated. Kernels 7.0.1, 7.0.2, and
+> >>> 7.0.3 tested; 7.0.0 not tested. Reverting to any 6.18.x or 6.12.x does
+> >>> not present the issue.
+> >>> 
+> >>> Specifically, using pipewire managed by pavucontrol, on both Gentoo and
+> >>> Arch Linux, when both external speakers and headphones are connected,
+> >>> all sound is routed through the headphones regardless of whether settings
+> >>> are set to Line Out/Speaker or Line Out/Headphones; there is no speaker
+> >>> output. If headphones are disconnected, without reboot, speakers work;
+> >>> reconnect headphones, without reboot, sound reverts to headphones.
+> >>> 
+> >>> Kernel: 7.0.3, Gentoo compiled from source using olddefconfig on 6.18.24
+> >>> 		.config; Arch standard release
+> >>> 'lspci -nnk | grep -i audio' attached
+> >>> 'dmesg | grep -i audio' for 7.0.3 and 6.18.24 attached
+> >>> pipewire-1.6.4 on both Gentoo and Arch Linux
+> >>> alsa-firmware-1.2.4 on both Gentoo and Arch Linux
+> >>> 'cat /proc/sys/kernel/tainted' returns 0 for both Gentoo and Arch Linux
+> >>> 
+> >>> Processor		:	AMD Ryzen7 5700G
+> >>> Motherboard		:	Asus Prime X570-Pro
+> >>> RAM				:	Patriot Viper Steel DDR-4 @3200mHz
+> >>> Graphics        :   ASRock AMD Radeon RX 7600 Challenger 8GB OC
+> >>> Sound Card      :   Creative Sound Blaster Z SE
+> >>> 
+> >>> 
+> >>> Expected outcome: ability to choose output to either speakers or head-
+> >>> phones while both are plugged-in to sound card.
+> >>> 
+> >>> Workaround: none known.
+> >> 
+> >> See the ticket for more details. One of them: 7.1-rc2 is affected as
+> >> well. Reporter is CCed. Forwarded this to ensure this report makes it to
+> >> the interested parties, as bugzilla might not have forwarded this.
+> >> 
+> >> Dutch Ingraham: if nobody within a few days has an idea why this
+> >> happens, you will likely have to use a git bisection to get this resolved.
+> > 
+> > As there have been many significant changes in ctxfi since 6.18, it's
+> > hard to tell what broke.  Please go git bisect.
+> > 
+> > 
+> > thanks,
+> > 
+> > Takashi
+> > 
+> 
+> Creative Sound Blaster Z-series uses the snd_hda_codec_ca0132 driver,
+> not snd_ctxfi. The dmesg logs in the bugzilla shows only ca0132
+> entries.
 
-On 4/14/26 16:28, Ilpo Järvinen wrote:
-> Please note that there are also some fixes to the new algorithm which are 
-> only queued for v7.1 as is (I expect they'll be backported from there 
-> though). They're currently in the pci/resource branch awaiting PCI 
-> maintainer (Bjorn Helgaas) to make PR to Linus.
+Ah, sorry, then it's easier.  The only major change is the
+commit 778031e1658d206a52bf9491c91ae5d4f4a2509d
+    ALSA: hda/ca0132: Set HP/Speaker auto-detect default from headphone pin verb
 
-FWIW, I assume you mainly meant the patches from this series:
-https://lore.kernel.org/all/20260324165633.4583-1-ilpo.jarvinen@linux.intel.com/
+Try to revert this one.
 
-The series iirc fixed a few regressions at least three people reported
-with eGPU setup in 6.19/7.0. So I guess it really would be good to have
-them backported. Which leads to two questions:
 
-* Have any reasons against backporting turned up in between?
-* If not, could you or anybody else be so kind and submit those for
-inclusion in the 7.0 series to get those regressions finally resolved
-for users that don't want to run -rc kernels?
+thanks,
 
-Ciao, Thorsten
+Takashi
