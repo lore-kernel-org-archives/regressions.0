@@ -1,193 +1,175 @@
-Received: from mail-dy1-f169.google.com (mail-dy1-f169.google.com [74.125.82.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5CB73B530D
-	for <regressions@lists.linux.dev>; Thu,  7 May 2026 09:28:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.169
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778146097; cv=pass; b=nBWEsaUftQjSTrD8UUX9mBXeLgdOwIdbnDy1C5vlPO/VZOKUpD3R9dFINNzv0MJV+9jfdoMWX0dwPcii1iOjXuRyP3ix9/lF3sZMKBm7/5rerLj2wqJqBuoTujsuq/LG95sSj4Iejg7j9zBZqu8dYf+/Ux5qKsmjoW8KmGw69uM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778146097; c=relaxed/simple;
-	bh=uG48gz07/ERrhaEalqaDAFGeCiIQvVWR0mawwwMKVPg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NPfRkcEP102cNP+HUhKo3cs+fPr+O7W8EZ6Ijwhdo60uMCEYiRrn095E2TzbL3v1g8tEdEelAc3SsG5SjuOxHxO421mdlcQ8vc7EB9iDITWnnzv+9/l8989y0ClXli1AD8eTASFXe7d+VtxhmK1aKqvZC/E9I2bPotRx2Gv816w=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gooddata.com; spf=pass smtp.mailfrom=gooddata.com; dkim=pass (1024-bit key) header.d=gooddata.com header.i=@gooddata.com header.b=W63xX7FB; arc=pass smtp.client-ip=74.125.82.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gooddata.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gooddata.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22CA83CCA02
+	for <regressions@lists.linux.dev>; Thu,  7 May 2026 09:55:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778147743; cv=none; b=hoMqaXxdQedkh+3buie6hMT1HpnmY6RpgsLg608wG0g6jgkLQbCXodFAgkuuDuaGPaxMN1u8mpL7a2oyUigJwEKqU5LIBKpS0f/n4RSevLlXCRWAdDpA72lBrYPfzZjO29yNHRRq5jRcewZpF2tG5HqOZP4IfARtkVZSea803JI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778147743; c=relaxed/simple;
+	bh=/zzzHZMG+uW2bO7g4Oenf1+yGbfgZuNT2WlmWKXw1KM=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=SB9iNRH1vYiWBpy1FMoFiT7BSZsA2BwtgQAni7TPJFqP4gBnuu55rodbfe/OekKW5ygPxS4W7NQHpNIhi1Rvrjsbcuj7/c3Fu4UPtfG4qS5rHgQhw0OvYu1uGxxx6rxwzCuvPiLp1K1DAAyPx1A8bCLNHsndAT888MwmogTBEXA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MOV7xDzp; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=gooddata.com header.i=@gooddata.com header.b="W63xX7FB"
-Received: by mail-dy1-f169.google.com with SMTP id 5a478bee46e88-2ef2a1cc06dso908578eec.0
-        for <regressions@lists.linux.dev>; Thu, 07 May 2026 02:28:15 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1778146095; cv=none;
-        d=google.com; s=arc-20240605;
-        b=OXfVtsY727H2kaPm9yqG9UGwKdVyfgSQDfvxR4zrzZt6eW0w3iJDqE8GKEaCUPsM6Z
-         kB7AB0X8g9V3mTamVYsykd2nY6hKla4ww3xg8jkW2FKyR/vtMog6dBquUBWbk9/RDVEu
-         3r0z6gwyUiKnAo2rzOa0b87Eg+lYBKaSHEflo1D7MP9FKeA/8qH/LNFELCg5ZfR8Qy0D
-         jHIFy+1AGQP4lTY1bqyBuVVYouHuWg0TwYxYxh813vXWhltOtbEARJcQL2cJZRO/oDig
-         +t5SKdYpQQSsEASkiE1KrAkkwbayPGSIommuYU0xpTNbzM1tNQZlPL/RTZ4zVjyMwbu9
-         KGnQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=st4j4yDNd/Vgs2qSKmrVzYM5MgTRPVOHyQ3pVjtByHs=;
-        fh=jQLUbJgCj9qrK5MUEd3MPGBDHYxCzUFd9txaW6D/ECE=;
-        b=IQb1D84A344gEIFaXqiTOpcaYeoMqe4hgKQH9T/dfEIA2iCMpni84HJFvIb0WP1/gA
-         sNmu7ZA/VD8ge0RVk0b4CQq+OIiagD6Db0hnO3rjU0aMZ8RU1/+MFItHlzptv5ujOQCj
-         YUJMI/vZ2LiC9uZLAJA7OB67+XA27+6f3D0LZU2PHpcVZgU8S6/w/5uERu2yDQmCCr9q
-         x7t6ijQQ5v5HwhbQQg/32eJ0Li7MWmmqQLMTWvpFjXVoCISvi4OmXeqJAvuQiWoisXZe
-         9Vwcf7a21PXVV1l95mY+tYPejkplTAwaz65adoug4Uv3WON7BYknzXQDPbWocpsXrPdS
-         sihA==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gooddata.com; s=google; t=1778146095; x=1778750895; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=st4j4yDNd/Vgs2qSKmrVzYM5MgTRPVOHyQ3pVjtByHs=;
-        b=W63xX7FBWzhaGW9P9CgpzRxeam9eW4MoFsct4IeqSPFmnW0uYzdrDw/S0lYkQ8q/LK
-         hLEvY6mdkatqkjUX64snFLDlsKMQcQOmSCemZ5x+vJ3WwvjuzqHpkh0jjQ5GLtXYlE/4
-         hmchdrx8FNp/dAMHVKv+VarFKQ/uY5TRUf6qs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778146095; x=1778750895;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=st4j4yDNd/Vgs2qSKmrVzYM5MgTRPVOHyQ3pVjtByHs=;
-        b=pC6oqjAfoOyvKjPpdYuapdMBbZ22XIrQ/QytJDw3ihSy1Bo6rGF8DHhD67ofztMQnG
-         9S+wnuPhFWNXt+4dmsVGoZLTKcD4dp1fz6fPbvXHAxlcWwzEBkGV4N50g7AK//vEZQms
-         j6tNjny8/V/KNRX539YCiaXBdQD8oqWB8VsrPM44VkIZ2kCJ7NF6Zh1PgAxk7vz0MVUA
-         fMWIv+JJcF/Sg4DMSYmxpG0BM6vrXTDSSjRAjNK4szRN00gs7+u5BSR53CWtWWm2zuyE
-         WHUxLChBHd7EIzMgQQZppwXO3MUE9yl1c/ASNPBBc8uTbMhmB9UuhcJ8DDv/HtnQqs41
-         nYmg==
-X-Forwarded-Encrypted: i=1; AFNElJ+aB4yO5aNE7p2WJyOkqxhfHGXdXtg2q5CZyTThWOJTec+0uhmGqn0fhsw4FECUXsFZpDdYgTmaaJ17kQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxKbw30NFNAY1UeVrrhRqOAhspDD+Dgv8Qrq0Jk+EgN+xwIFAmY
-	v8TCuxpwS4QYzakGia9FEmQFcYDbx9jyzEKZoFG3V0wVvs8C2AztOeB1jxOCi1q8YAgIxMHZEVh
-	8w2pvALWPkaYH1zjrOlGmvrX+aXmEOZ5v44DV8FY8
-X-Gm-Gg: AeBDievAiayFwiWJWtjWg6ieZe6udxmrcEn4w+rketh7BGdzd8KEZx25VTfX43G3c8q
-	gFurNTaixjXEvGHcwsjAPQGKSTquoupbHyll3F5UbANps01i3Nrn/b750pgW8Fqi6W2TwTrsDCE
-	mfqkLYhOsprgqCHMlx1tVWo0A8iAekUD0wrpCxNXIiiVsh5TAu48HuRsmOdOFfZLU+6KH6MJNO8
-	mQ/Wo10IhB1P31glThIDaTA9W/6drRxWFwQ1ZmJ8ClSoWT0ns1tXoOfAbFOXlKLSwhjdea6b0qg
-	e5orjcrhjqLjaIaOcMI=
-X-Received: by 2002:a05:7022:4384:b0:12d:b7e5:a67b with SMTP id
- a92af1059eb24-131851cd4edmr4445274c88.14.1778146094940; Thu, 07 May 2026
- 02:28:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MOV7xDzp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1778147740; x=1809683740;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=/zzzHZMG+uW2bO7g4Oenf1+yGbfgZuNT2WlmWKXw1KM=;
+  b=MOV7xDzplX3iGyOeTrnLGInl1Nt0gDs7ChpVzR7tAcNv3o7EySskHEPG
+   he9esQwwBYn3Ut6OR+VKEkh6FLMd3uth1n9Oj8TuFESSrBlyRU9bkWoT8
+   Gl6C3bnjoUQWm47KgyV/XzQGceeCaL5pOgoS+r+oPsAR3nEXrTQIBl5DJ
+   rwoKEFO54KNMIGFZLs/t/bHX3Aui5aVOOXp0GZFju8Ci4bNhHc7J0hC8/
+   hmo/c1H92Aum3kNmV6U4/r5Zdnyn04NdqSrC5XlD0Mj9NWJmdG92YL6yF
+   Qk+AQ0ZqLR6VOoBpXh6bfbxSlB3ZtAFkDP+TbmdDQxBLRgvWUwXjsRCSD
+   A==;
+X-CSE-ConnectionGUID: OlIexx8dQT+v2FaURwfFTw==
+X-CSE-MsgGUID: UqnR0gcwQiqxv+ewqXS9CQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11778"; a="90550536"
+X-IronPort-AV: E=Sophos;i="6.23,221,1770624000"; 
+   d="scan'208";a="90550536"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2026 02:55:39 -0700
+X-CSE-ConnectionGUID: r3/UJ8lVSW2UUbuzQl7JVQ==
+X-CSE-MsgGUID: xMKYacZ9RRu8XhZ9HaBnTw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,221,1770624000"; 
+   d="scan'208";a="240750114"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.116])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2026 02:55:36 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 7 May 2026 12:55:33 +0300 (EEST)
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+cc: Krishna Chomal <krishna.chomal108@gmail.com>, 
+    yue li <mc.root.ly@gmail.com>, 
+    Linux kernel regressions list <regressions@lists.linux.dev>
+Subject: Re: [REGRESSION] hp-wmi fails to probe on HP OMEN (board 8D41)
+In-Reply-To: <553a4232-f4cb-4d67-bdee-067b5f038f64@leemhuis.info>
+Message-ID: <6d97e48a-be18-b99f-f4d5-aae50220ac53@linux.intel.com>
+References: <CABd86uaQY9-ZSU-_PHKtZZyWnDFHLEsuaM+NBV5nOLWA+YSX7A@mail.gmail.com> <afb0f9gaS5z_SmRX@archlinux> <38bef028-d574-4e7a-b857-f10ab6796833@leemhuis.info> <553a4232-f4cb-4d67-bdee-067b5f038f64@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <adVGrJaRlRooO4su@google.com> <20260409142226.2581-1-lei.chen@smartx.com>
- <adf8Q1VSeAMMyCa_@google.com> <f1c742e0-41c1-4bdc-867c-a768a5eb89c5@leemhuis.info>
- <afs6PJzU3rHZwGv3@google.com> <cd8a2ae6-a276-480d-b942-bcd318a30451@leemhuis.info>
- <aftct6WWHdOG_EwX@google.com> <CAK8fFZ4j1tYc+eYH79RQnNSjr9J-SocFL6duMuBg+76NHhRUxQ@mail.gmail.com>
- <afulNSVKMzrx35i_@google.com>
-In-Reply-To: <afulNSVKMzrx35i_@google.com>
-From: Jaroslav Pulchart <jaroslav.pulchart@gooddata.com>
-Date: Thu, 7 May 2026 11:27:47 +0200
-X-Gm-Features: AVHnY4LukJFzBmfOx9MgTOo0UGn0C_rQ5CqYrphbLKyaHN6po0yvNBI3CgZDb6I
-Message-ID: <CAK8fFZ7LEyyR2ChXCD7B8vjvDcyG1c4jtv3wYMV4GCiUkOi1Pw@mail.gmail.com>
-Subject: Re: [PATCH v2] KVM: x86: Rate-limit global clock updates on vCPU load
-To: Sean Christopherson <seanjc@google.com>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>, Lei Chen <lei.chen@smartx.com>, igor@gooddata.com, 
-	jan.cipa@gooddata.com, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	pbonzini@redhat.com, 
-	Linux kernel regressions list <regressions@lists.linux.dev>, 
-	Linus Torvalds <torvalds@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/mixed; BOUNDARY="8323328-669493635-1778144530=:983"
+Content-ID: <d0ced2e4-0c93-4579-2a29-03e841bd8735@linux.intel.com>
 
->
-> On Wed, May 06, 2026, Jaroslav Pulchart wrote:
-> > > On Wed, May 06, 2026, Thorsten Leemhuis wrote:
-> > > > On 5/6/26 14:55, Sean Christopherson wrote:
-> > > > > On Wed, May 06, 2026, Thorsten Leemhuis wrote:
-> > > > >> On 4/9/26 21:21, Sean Christopherson wrote:
-> > > > >>> On Thu, Apr 09, 2026, Lei Chen wrote:
-> > > > >>>> commit 446fcce2a52b ("Revert "x86: kvm: rate-limit global clock updates"")
-> > > > >>>> dropped the rate limiting for KVM_REQ_GLOBAL_CLOCK_UPDATE.
-> > > > >>>>
-> > > > >>>> As a result, kvm_arch_vcpu_load() can queue global clock update requests
-> > > > >>>> every time a vCPU is scheduled when the master clock is disabled or when
-> > > > >>>> the vCPU is loaded for the first time.
-> > > > >>>>
-> > > > >>>> Restore the throttling with a per-VM ratelimit state and gate
-> > > > >>>> KVM_REQ_GLOBAL_CLOCK_UPDATE through __ratelimit(), so frequent vCPU
-> > > > >>>> scheduling does not generate a steady stream of redundant clock update
-> > > > >>>> requests.
-> > > > >>>>
-> > > > >>>> Fixes: 446fcce2a52b ("Revert "x86: kvm: rate-limit global clock updates"")
-> > > > >>>> Signed-off-by: Lei Chen <lei.chen@smartx.com>
-> > > > >>>> Reported-by: Jaroslav Pulchart <jaroslav.pulchart@gooddata.com>
-> > > > >>>> Closes: https://lore.kernel.org/all/CAK8fFZ5gY8_Mw2A=iZVFNVKQNrXQzVsn-HTd+Me9K6ZfmdgA+Q@mail.gmail.com/
-> > > > >>
-> > > > >> Was this performance regression ever addressed?
-> > > > > Nope, not yet.
-> > > > >
-> > > > >> Looks like this fall through the cracks, but it's easy to miss something.
-> > > > >
-> > > > > It's in my list of patches to apply (probably for 7.2?).  I didn't want to squeeze
-> > > > > it into the initial 7.1 pull request for a variety of reasons.
-> > > >
-> > > > Hmmm. CCing Linus so he can speak up if he wants to about the following:
-> > > >
-> > > > Given that this is a fix for a performance regression[1] I'd say it's
-> > > > not as urgent as a "something stopped working" case -- so I guess it's
-> > > > something where the "[fix] "within a week", preferably before the next
-> > > > rc" approach Linus recently mentioned does not need to be applied strictly.
-> > > >
-> > > > But Jaroslav OTOH reported it more than 7 weeks ago already and back
-> > > > then called it something that "severely impacts KVM hosts running many
-> > > > Firecracker microVMs."[1];
-> > >
-> > > For a setup that is likely broken.  On modern hardware, the path in question
-> > > should never actually be hit.  I do want to resolve the bug since older hardware
-> > > and funky setups do rely on the old behavior, but it's not pants-on-fire urgent.
-> > >
-> > > More importantly, the original reporter(s) hasn't responded to any of our questions,
-> > > or to the proposed fix.  I'm not going to rush in a fix if I don't actually *know*
-> > > it's going to fix the original problem.
-> >
-> > Hi Sean, Thorsten,
-> >
-> > sorry for the missing response from my side, this thread unfortunately
-> > ended up in trash due to mail filters on my side and I completely
-> > missed it.
->
-> No worries, gmail's Spam filter is my nemesis :-)
->
-> > I currently don't have the full context loaded back in yet, but I'll re-read
-> > the thread and follow up properly once I do.
->
-> I think the only remaining question is why/how KVM's master clock is getting
-> disabled.  But that's more of a question for your deployment than it is a question
-> for upstream; it's possible there's a different KVM bug lurking, but it's more
-> likely that something in your setup is incompatible with using the master clock.
->
-> Note, it's certainly not "wrong" for the master clock to be disabled, but it's
-> quite suprising, especially for Firecracker VMs.  It's worth investigating as
-> there might be an underlying issue that's very easy to address, and "fixing" it
-> should provide (very) small performance benefits.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-I've dug into the "master clock question" and have an idea.
+--8323328-669493635-1778144530=:983
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <92321a94-52c6-e7f3-836a-a8c47cd9654c@linux.intel.com>
 
-Our Firecracker hosts are themselves L1 KVM VMs (nested
-virtualisation) running on AMD EPYC 9454P and EPYC 9455 hardware. Even
-though the compute nodes use cpu_mode=host-passthrough in qemu kvm,
-the invtsc CPUID bit is filtered out by QEMU, which I hadn't realized.
-Without it the guest kernel marks the TSC unstable at boot:
-    tsc: Marking TSC unstable due to TSCs unsynchronized
-and falls back to kvm-clock as its clocksource.
+On Thu, 7 May 2026, Thorsten Leemhuis wrote:
 
-I suppose that in turn prevents KVM from enabling the master clock for
-any L2 guests (the Firecracker microVMs), am I right?
+> [+Ilpo]
+>=20
+> On 5/4/26 09:22, Thorsten Leemhuis wrote:
+> > On 5/3/26 09:26, Krishna Chomal wrote:
+> >> On Thu, Apr 30, 2026 at 12:59:58PM +0800, yue li wrote:
+> >>> [...]
+> >>> Regression:
+> >>> The hp-wmi driver works correctly on kernel 6.18.6-zen1-1-zen,
+> >>> but fails to probe on 7.0.2-zen1-1-zen with error -22.
+> >>>
+> >>> Issue:
+> >>> On the affected kernel, loading the module fails:
+> >> [...]
+> >> Thanks for reporting. This is a known issue [1]. There are 2 failures =
+in
+> >> your dmesg output:
+> >> 1. Unknown EC layout: The fix for this has been sent recently.
+> >> =A0=A0 Currently, it is in the review-ilpo-fixes branch [2].
+>=20
+> It[1] afaics is sitting there for a week already afaics.
 
-I have resolved the issue by explicitly adding +invtsc to
-cpu_model_extra_flags in our OpenStack nova.conf. After this change
-the L1 VMs now correctly show constant_tsc and nonstop_tsc in
-/proc/cpuinfo and switch clocksource to tsc. I also confirmed the IPI
-storm disappears without the v2 patch when +invtsc is present, and
-returns when it is absent on a vanilla 7.0.3 kernel.
+Hi,
 
-So could this be the answer to your question: "the master clock was
-disabled because QEMU silently drops invtsc even in host-passthrough
-mode"?
+I'm sorry to be a disappointment here, but I don't find a week a=20
+particularly long time.
+
+First, a patch sits in the review-ilpo-fixes branch (think of it as a=20
+staging branch) until LKP builds it to avoid totally breaking anyone's=20
+next builds if prematurely advancing anything to the fixes branch. My=20
+feel is LKP hasn't been particularly swift recently.
+
+As not many will have a look on patches in review-ilpo-fixes, it will have=
+=20
+to sit some more in the fixes branch to be exposed to wider scale of=20
+testing and checking before doing PR. It takes one day for getting it=20
+included into linux-next in the first place. Then the remaining question=20
+is, how many days you expect Dan (or others) to need to do his checker=20
+runs and come up with a problem report or correction patch.
+
+I don't see how I could make the time much shorter than a week without=20
+effectively bypassing some of the quality control steps. But perhaps you=20
+have some suggestions how we can make Dan work even faster than he already
+does... :-)
+
+Besides, the change you brought up is on my scale the least critical=20
+change among the ones queued in the fixes branch. Without the other two,
+I'd delay making the PR so it would be sitting there yet another week. ;-)
+
+> Wondering if it
+> might be worth resubmitting the patch with a Fixes tag as well as a
+> Link/Closes tag pointing to this thread to make the "this is fixing a
+> regression" aspect obvious to ensure the fix is merged this cycle?
+> Adding a stable tag would be great, too.
+
+I'm not sure what to add and where, wasn't the fan table fix already=20
+merged earlier? And it had Fixes tag.
+
+This ec layout thing, on the other hand, doesn't seem that critical or=20
+even a serious issue. We cannot really "fix" it anyway without platform=20
+providing us the current profile information so it's all about silencing=20
+the warning which is hardly worth all this fuzz, IMO.
+
+
+With all this being said, I still do appreciate the work you do, my=20
+intention is to not antagonize regression tracking you do in any way.
+
+--=20
+ i.
+
+> Ciao, Thorsten
+>=20
+> [1]
+> https://lore.kernel.org/all/20260429180953.129885-1-krishna.chomal108@gma=
+il.com/
+>=20
+> >> 2. Probe failed: This is due to a failure in parsing the fan table. Th=
+e
+> >> =A0=A0 fix for this has been merged into 7.1-rc1 [3].
+> >>
+> >> Using kernel 7.1 (or applying the above mentioned 2 patch manually to
+> >> your current build) should restore full support for your device.
+> >=20
+> > You you then maybe be so kind and submit backports to the 7.0.y stable
+> > series to prevent more people from running into this?
+>=20
+> Side note: s/You you/Could you/ #uhhps #sorry
+>=20
+> >> [1] https://lore.kernel.org/platform-driver-x86/4ae4d7f9-f1db-4394-b0d=
+9-
+> >> c75dc39afcf8@gmail.com
+> >> [2] https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-
+> >> drivers-x86.git/commit/?h=3Dreview-ilpo-
+> >> fixes&id=3Dc2d4b76458c9ebf81eae2916970320f1f61ad002
+> >> [3] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git=
+/
+> >> commit/drivers/platform/x86/hp/hp-wmi.c?h=3Dv7.1-
+> >> rc1&id=3D9d317a54e46d3b6420567dc5b63e9d7ff5c064a3
+> >=20
+> >=20
+>=20
+--8323328-669493635-1778144530=:983--
