@@ -1,198 +1,79 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D015930B502
-	for <regressions@lists.linux.dev>; Thu,  7 May 2026 06:30:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FB60343D63;
+	Thu,  7 May 2026 08:30:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778135460; cv=none; b=jPTxAnflAGNe5KbwsNO5k4nO8IxqmR31UUE+gGQ6DpOaITld5gT/0g0+v3WQEnpYbY0r0m/EDUMnGjUFCK6qKUtYd3L1BnQ+MYPMfGVp8r+N0zNRlY7kT2EvqjADH87VQA+Kxd/6TINjpl4/vs9IOCNZR/BZhTSZAX+dqW1vkJ4=
+	t=1778142656; cv=none; b=sL16+QRq3XcP3R5LV+QBl6C/ueKM9l/voQQdcbJsBkd6W7bOsrECa0MjIHHHMEMJn9vftSWB5+LF6RS9mIxRTC68K2Hm/Mm/9EXd71Xx9SrEYhkGhZlXDIYVvHZHn5F7DnnSjyKvysTBBzHyeD5/YxeHxEyFTTuFEnjGnvmuM84=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778135460; c=relaxed/simple;
-	bh=zvRBYWCH+40kkk25vA0pRR1NNoZOpRUEbQ7rluml4dU=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bqZe1K6z7BLdb3JfRQ+G1wSzHEPhrnjfkqddIgRU5Zj8g890L8vXouo8pG49ZqTjcD+DrGmeNlpWcE26OUbNk3Np9BZtulsbzjWOFVCBKuu/liZHt8hIl5GAFxiWhrYCRt7jflTeVVQ9mGLqrFUmXOtXpKEVhdErNfQk3uR2o2g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=eWHbUhh2; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=s4Tundeo; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=oIxRsprf; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=t88P4H7R; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1778142656; c=relaxed/simple;
+	bh=geHavgZaZIVCiukXpx1HhV2cBMxsNeuDV0MhY4hXAok=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QkACzJ4Jmud+P9/u4H0UiNIqUiDu8osaqg+CojVYN3xv1zXDsR77fH1gOhj3zKz5cnrmY68TaHEVSoRSonX6OD9ZHHpHltqjotJ1M5yJjsg66K9bWnQwBBDgWpq0bfRN+F4VLIySUCodcAll5R/kWjbQd9GwVn8IegxiQ/bcjKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mV3UTGk+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="eWHbUhh2";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="s4Tundeo";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="oIxRsprf";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="t88P4H7R"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 2E6AD6C0EF;
-	Thu,  7 May 2026 06:30:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1778135457; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KIqkZZ/pvJuXyh6+01SchqSmGEsFf1BU4zPkUR94J9s=;
-	b=eWHbUhh2Ogl06IOckRyQqJrs+fN+cFaTdy6HiwNDZ5iYju/cKc4FSaYmG9QA/sbrmhAD4U
-	9j00Q0I7q4CYKq9ZZSz7g1wLiO+O0wbiQm8SCyvgo9bEZ/tfuG2UvsKebMkkmGurW+R6Rk
-	gYbUb8PyQ1jhzqOSglZte/46V6VR0WI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1778135457;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KIqkZZ/pvJuXyh6+01SchqSmGEsFf1BU4zPkUR94J9s=;
-	b=s4Tundeoa9oNp5oPHoAMtWW8bfe6tfyODWXkXSQh14fDQvDc38j3y6ZBlG8coITFIQiOS/
-	DxqacFcOhW1StTDw==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1778135456; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KIqkZZ/pvJuXyh6+01SchqSmGEsFf1BU4zPkUR94J9s=;
-	b=oIxRsprfRC7hZBlnyZGKp6ky5R6gdN2UFcPZgVzNplWZzSig1PQ1lbtYFORKcj3LyZs/Wp
-	1332TEuaHZKGEEPNNSRqNdfzcVJ8QDe9UJqBt3rAgfKcehcVKUdfgAYATQhpqlei/YDU12
-	yWJKdtzZ4IFyugOXsWWEzSVyIpGDCwQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1778135456;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KIqkZZ/pvJuXyh6+01SchqSmGEsFf1BU4zPkUR94J9s=;
-	b=t88P4H7R8fFdJ2HQnDbncwA40dc4UX4xQTtDfq2VeqBqrFIhS3of1mMTx3gV/maJj5PpmK
-	2vtfm5Zz4902uiBQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id DB9C6593A7;
-	Thu,  7 May 2026 06:30:55 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id KBctNJ8x/GlgTgAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Thu, 07 May 2026 06:30:55 +0000
-Date: Thu, 07 May 2026 08:30:55 +0200
-Message-ID: <87v7czrasg.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Harin Lee <me@harin.net>
-Cc: Takashi Iwai <tiwai@suse.de>,
-	Thorsten Leemhuis <regressions@leemhuis.info>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mV3UTGk+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71A86C2BCB2;
+	Thu,  7 May 2026 08:30:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1778142655;
+	bh=geHavgZaZIVCiukXpx1HhV2cBMxsNeuDV0MhY4hXAok=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mV3UTGk+MA0RxR/oH1m9bqdw82ETSU6Csmba+7UlV7HnQbDouCGG0lsP0O9hrxDC4
+	 +kZMq6EAXIE0wF60O+9oTW5jtS1Q9sOXTDvL4GZPpJ870Or+Z68DSQKjIP32Uh2qYJ
+	 5uX3vzsNVhrHcdR5Y1d+Ah7NBvXnwW8zPATQFH/9v7tNwrP7tMbFUiTky9sxsz+u6J
+	 JCxdr9ZrtfMP29JmC2+Ujkfxw48wolgQNtl9eEn9Y0oNMN+jbFLS9p04+Yb25Au5Cb
+	 rCMDJmaiAGP3fIao8i0g1x8Hlhbf+Zxni0uLiACCRCDwMWYl/RFDi0waJYCkFVDsek
+	 wXYs+BL0UgMbw==
+Date: Thu, 7 May 2026 10:30:50 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: An <an.m@mailbox.org>, Thomas Gleixner <tglx@kernel.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
 	Linux kernel regressions list <regressions@lists.linux.dev>,
-	Linux Sound System <linux-sound@vger.kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	stoa@gmx.us
-Subject: Re: [regression] ctxfi: no speaker output when headphones connected on >=7.0.x
-In-Reply-To: <7929c116-ff2e-413b-ae73-e7d19e846e0f@harin.net>
-References: <36875d66-f601-4d18-9654-bd86b60918e8@leemhuis.info>
-	<87bjett3ud.wl-tiwai@suse.de>
-	<7929c116-ff2e-413b-ae73-e7d19e846e0f@harin.net>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/30.2 Mule/6.0
+	the arch/x86 maintainers <x86@kernel.org>,
+	David Gow <david@davidgow.net>
+Subject: Re: [Regression in 7.0] OLPC-XO-1.5 will not boot after commit
+ 157266edcc
+Message-ID: <afxNuhoyMsl26tIy@gmail.com>
+References: <f8566380-6a40-435a-bf8c-6c0e0999d434@mailbox.org>
+ <7a0c8eec-2e97-4eaf-a8aa-f7e97da93908@mailbox.org>
+ <00b05188-c352-42b9-888a-01e9bf00fb34@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Spam-Flag: NO
-X-Spam-Score: -3.30
-X-Spamd-Result: default: False [-3.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_TLS_ALL(0.00)[];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	FREEMAIL_ENVRCPT(0.00)[gmx.us];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FREEMAIL_CC(0.00)[suse.de,leemhuis.info,perex.cz,suse.com,lists.linux.dev,vger.kernel.org,gmx.us];
-	TO_DN_SOME(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Level: 
-
-On Thu, 07 May 2026 00:06:11 +0200,
-Harin Lee wrote:
-> 
-> On 5/6/26 4:05 PM, Takashi Iwai wrote:
-> > On Wed, 06 May 2026 08:24:36 +0200,
-> > Thorsten Leemhuis wrote:
-> >> 
-> >> Hi! Just FYI, I noticed a regression report in bugzilla:
-> >> 
-> >> https://bugzilla.kernel.org/show_bug.cgi?id=221461
-> >> 
-> >> To quote:
-> >> 
-> >>> Dutch Ingraham 2026-05-03 18:12:49 UTC
-> >>> 
-> >>> Kernels >=7.0.1 contain a regression as to Creative Sound Blaster Z SE
-> >>> discrete pci sound card, but not integrated. Kernels 7.0.1, 7.0.2, and
-> >>> 7.0.3 tested; 7.0.0 not tested. Reverting to any 6.18.x or 6.12.x does
-> >>> not present the issue.
-> >>> 
-> >>> Specifically, using pipewire managed by pavucontrol, on both Gentoo and
-> >>> Arch Linux, when both external speakers and headphones are connected,
-> >>> all sound is routed through the headphones regardless of whether settings
-> >>> are set to Line Out/Speaker or Line Out/Headphones; there is no speaker
-> >>> output. If headphones are disconnected, without reboot, speakers work;
-> >>> reconnect headphones, without reboot, sound reverts to headphones.
-> >>> 
-> >>> Kernel: 7.0.3, Gentoo compiled from source using olddefconfig on 6.18.24
-> >>> 		.config; Arch standard release
-> >>> 'lspci -nnk | grep -i audio' attached
-> >>> 'dmesg | grep -i audio' for 7.0.3 and 6.18.24 attached
-> >>> pipewire-1.6.4 on both Gentoo and Arch Linux
-> >>> alsa-firmware-1.2.4 on both Gentoo and Arch Linux
-> >>> 'cat /proc/sys/kernel/tainted' returns 0 for both Gentoo and Arch Linux
-> >>> 
-> >>> Processor		:	AMD Ryzen7 5700G
-> >>> Motherboard		:	Asus Prime X570-Pro
-> >>> RAM				:	Patriot Viper Steel DDR-4 @3200mHz
-> >>> Graphics        :   ASRock AMD Radeon RX 7600 Challenger 8GB OC
-> >>> Sound Card      :   Creative Sound Blaster Z SE
-> >>> 
-> >>> 
-> >>> Expected outcome: ability to choose output to either speakers or head-
-> >>> phones while both are plugged-in to sound card.
-> >>> 
-> >>> Workaround: none known.
-> >> 
-> >> See the ticket for more details. One of them: 7.1-rc2 is affected as
-> >> well. Reporter is CCed. Forwarded this to ensure this report makes it to
-> >> the interested parties, as bugzilla might not have forwarded this.
-> >> 
-> >> Dutch Ingraham: if nobody within a few days has an idea why this
-> >> happens, you will likely have to use a git bisection to get this resolved.
-> > 
-> > As there have been many significant changes in ctxfi since 6.18, it's
-> > hard to tell what broke.  Please go git bisect.
-> > 
-> > 
-> > thanks,
-> > 
-> > Takashi
-> > 
-> 
-> Creative Sound Blaster Z-series uses the snd_hda_codec_ca0132 driver,
-> not snd_ctxfi. The dmesg logs in the bugzilla shows only ca0132
-> entries.
-
-Ah, sorry, then it's easier.  The only major change is the
-commit 778031e1658d206a52bf9491c91ae5d4f4a2509d
-    ALSA: hda/ca0132: Set HP/Speaker auto-detect default from headphone pin verb
-
-Try to revert this one.
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <00b05188-c352-42b9-888a-01e9bf00fb34@leemhuis.info>
 
 
-thanks,
+* Thorsten Leemhuis <regressions@leemhuis.info> wrote:
 
-Takashi
+> Lo! Looks like nothing happened since the report (please correct me if
+> I'm wrong, it's easy to miss something). Adding a few more people and
+> lists to the recipients of this reply, maybe that will things rolling.
+>
+> FWIW, the culprit seems to be 157266edcc5671 ("x86/boot/e820: Simplify
+> append_e820_table() and remove restriction on single-entry tables")
+> [v7.0-rc1] from Ingo.
+
+Yeah, I missed the empty table case. :-/
+
+> Therefore adding David Gow, who submitted a fix for the culprit -- but
+> that didn't make it anywhere afaics, unless I'm missing something. For
+> details see:
+> https://lore.kernel.org/all/20260416065746.1896647-1-david@davidgow.net/
+
+This fix is now queued up and should go upstream later this week:
+
+  5772f6535227 ("x86/boot/e820: Re-enable BIOS fallback if e820 table is empty")
+
+Thanks,
+
+	Ingo
