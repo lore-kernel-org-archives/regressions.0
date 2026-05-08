@@ -1,56 +1,56 @@
-Received: from PH0PR06CU001.outbound.protection.outlook.com (mail-westus3azon11011033.outbound.protection.outlook.com [40.107.208.33])
+Received: from SA9PR02CU001.outbound.protection.outlook.com (mail-southcentralusazon11013050.outbound.protection.outlook.com [40.93.196.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AECE63DD536
-	for <regressions@lists.linux.dev>; Fri,  8 May 2026 12:57:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.208.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D68541C2F7
+	for <regressions@lists.linux.dev>; Fri,  8 May 2026 19:01:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.196.50
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778245078; cv=fail; b=QvmNc7ee/REx94RpjnAVqpIuFpDbZ5Nn+gADD4Nz6aLLTXqbB2OjJocNT2HVYaEno++0qsDxaKl38mgB4cUBjx0C5v7uPGZKwU7qJiBacd86T3syRAy8WHgzs3jS0pwZ/EcEbdocaqysOW6DVZQ+MhBvaHHK0UqcMpdXMh3IgiU=
+	t=1778266883; cv=fail; b=esTYW79iVBeqVgUYbLDUB11OoMXtFAtDNj56XzlHRdr7a+GCGjc4w8BMmVwpFVAvw4sWds99Iq6OjtMxTfkukEcGL6vy6jxTG65b06uPpm6dnUOCOjSPUeG+rkUKK39GgzKsES06rWvi+aydiJUkd99SabGpnDD2dNInE4PQktQ=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778245078; c=relaxed/simple;
-	bh=igGal4kRFlJZCxpV1mjro8bUHq2WQoo9UNk7CrOx6dk=;
+	s=arc-20240116; t=1778266883; c=relaxed/simple;
+	bh=taanhLw/CYAoPP9N9dutMnLwjgvJ/luy7yL7cYa3uF8=;
 	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=inK66tA3N44TdemSQeCmhlQnrOSZ+GLFlsnMrLPLZTG2PbY0UH8gPD4+FbWuyV0m7eG2sr/zEMASB94PWDIMdWGe8lBAKMrSDTYp+2Tuo+uv7zFLfmTxvR7j9wqqTI6sIGRqqTHkxZT0+vUS/ld5cUXGOMZUHPhdW+BP1d8yVxQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=wyG4JQGt; arc=fail smtp.client-ip=40.107.208.33
+	 Content-Type:MIME-Version; b=dp3osyKsEU/q6Gmky1GlCrkG4ka4b9b5bRAqH6lCFo0jVMxTlGANhO04aNTNmW9RdA+ju9IbDpIXb/Ekv3gOQYrchhJ2qpltNt/bObrn16gR+V+IMDPys9amXyC+9h4efnQb/H8Jl5TuMjYzIyFOZVbbnfREjDDboAfeo23a73M=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=BXsltLSG; arc=fail smtp.client-ip=40.93.196.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="wyG4JQGt"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="BXsltLSG"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=HgCK99ILIs/iD5KbDwBbOJ+69CT+SJ4L/fiT8jum6UTdT3GKa0pWN1W9mkgnGWu8aNBv9/wcMkPS3BU3PbFT0hpaIhgBfFRCNSsNwUGTxVj1cEAXGKaBsRsDi07ES6sBAph/FrgRF0jCaeBUYx2NeFu1aRaEiZL1hp4CQkC5oROyiI7vUUlOV3Sie2onNmOXUWxEDLi0xE0u6psJuY+7pdKRINsL32/P2TDN1WzWOZwbmX5qQFe5E8QhEg1iZbyzWVJ25hl2et7Xjta1pR9HfHTsCS34MhECF04CcxlGEbCIgj76dvBJopjsSGFjFk3mxRN7yyXvlhTyJOSh1IutFw==
+ b=c1G4Q32V8uzM+HD6AmR6C+d41vQBveW+qzfi7PQzreZYuVhvBVH3HUzkGgNM6hYJdnsRAxscKHsjgRHfMfyj3eXa800gxDgs31VVhnrL4oomTYfEfro7Nguuox46HlzUBgW9LZ5/ggtXCGMX//BVHHWNsCgxFSgkTguJThLAmDeC+TOT2lgEiicBexkvObsnkdkmAAcOO17R8o493uZLmqiCvJTeqK0lqNx3SlGVjyjQSkqyfKbR/EPnG5NZcRUYHg2azNz1XS3h81vBzfP8eJyZTGWtLYPEWqDHL+WL2VGMerKypbR7acUB302EyWKH0/lCVcjZQ96Xitjqiz3Nlw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4q0WPZjAJZ4AyCJ8JVkx1S0HAUw7kaBGxtl1kEAkAkY=;
- b=XDxb5Gz6AeKWiRtJCJhHVZ0qGHd98tpy62kpypNC0PQErAuGM3e824h3wCUxwiJxai38an8XrmaYnwsSFyCDdm2EklB7pa/KGTIL+CBjexebVdOeNo046s50zQ2yoCdK4VNxWIEewaz8lHXd5FPHVaa5IqLRHoNM9u7A3N0HRRfWs8QFudwZRS5wbLU4/DOiELwPGleixyOUO4w6qPmStasRaxGqwJYvQyhSGX0Gh7e4lm9Bu2rHrqIfVEyz6PudhIlbhh7mDLpXVIvN9bjVJIcAbnl6/CH6oDEFGXRPm1xoxjI3NqIrGZB41SfnyT/5gzpYJRHSD9HXEnLulQT+HA==
+ bh=uAv+voAQSwqoidArWmPpWQCgRIKJLorAf5Da6kB81VI=;
+ b=HvW/ROaoPUOdjYoTUbbngG52+K1xC5/kbsVo29oWQgVnhy7ysm3uv7oO0Ay6wYVw86wMdzzR4CXNcDzydouxutjhpqlQv8Ljiya7dqglZSbmU+seR55IRGyNc3TaEInMFh1uiKnF1BhlZ6UE+UPHIjL3s6P5w2tBQowTOMbVzrr7AWF+Q6v0A4sGKmRyvg2i7K8Nj4cyp9Fs/1MCUSiUvli4iBffkwyr/FcazxSQYzWaOioVP4WUTrxBA1M795dOLizlzFbLoBuZa9p2p7X8AlKOdoZyqetXtE88VlHJ3nj0e8WUkpA+5yI2gvEroyQ1vO4Kv7ETXLp6b8PQ4RAiGA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4q0WPZjAJZ4AyCJ8JVkx1S0HAUw7kaBGxtl1kEAkAkY=;
- b=wyG4JQGt+A10hKnb6X8sa/MhGx1v5c0vKGyXaUttQuiOxR8/LjWTdUIQdmkfy0yaF3hAT6Rdj1MaDRSB4A8IkDld9Nq8oB2q1xaI84ladkuPRKwBDM8w2oOEVyWSo651RyT6DWgkHEFVfNAo4tyyt4Oyv+5IBYdPVAKawfnW1T4=
+ bh=uAv+voAQSwqoidArWmPpWQCgRIKJLorAf5Da6kB81VI=;
+ b=BXsltLSGqJEJNf+ufo5E5oGQW38CyO3SFMOdLUe8vtzp/B782jcjM5IC9o0zuCHapzyNlzgy5IG5t+WUBWI5mdvmce39Ni2OyDFmBVp7C/WosazfuYYV1DsREs2XNrT9uGHtqXPbJ5YDoUJWuBNXYvUfg4hmRChyznlL2mn5gIk=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
 Received: from SA0PR12MB4557.namprd12.prod.outlook.com (2603:10b6:806:9d::10)
- by PH7PR12MB5594.namprd12.prod.outlook.com (2603:10b6:510:134::13) with
+ by DS0PR12MB9059.namprd12.prod.outlook.com (2603:10b6:8:c5::18) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9891.19; Fri, 8 May
- 2026 12:57:50 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9870.25; Fri, 8 May
+ 2026 19:01:15 +0000
 Received: from SA0PR12MB4557.namprd12.prod.outlook.com
  ([fe80::885a:79b3:8288:287]) by SA0PR12MB4557.namprd12.prod.outlook.com
  ([fe80::885a:79b3:8288:287%5]) with mapi id 15.20.9891.019; Fri, 8 May 2026
- 12:57:49 +0000
-Message-ID: <8c39f42a-f024-4f05-8d77-a95e7ca1c702@amd.com>
-Date: Fri, 8 May 2026 07:57:44 -0500
+ 19:01:15 +0000
+Message-ID: <b2b60a42-53f1-4ee7-8361-2a07737e1bad@amd.com>
+Date: Fri, 8 May 2026 14:01:10 -0500
 User-Agent: Mozilla Thunderbird
 Subject: Re: [REGRESSION] CPU running at fixed frequency (~1.7 GHz) with
  kernel 7.1-rc1
 Content-Language: en-US
-To: Thorsten Leemhuis <regressions@leemhuis.info>,
- =?UTF-8?B?VmlrdG9yIErDpGdlcnNrw7xwcGVy?= <viktor_jaegerskuepper@freenet.de>
+To: =?UTF-8?B?VmlrdG9yIErDpGdlcnNrw7xwcGVy?=
+ <viktor_jaegerskuepper@freenet.de>
 Cc: linux-pm@vger.kernel.org, regressions@lists.linux.dev,
- Huang Rui <ray.huang@amd.com>
+ Huang Rui <ray.huang@amd.com>, Thorsten Leemhuis <regressions@leemhuis.info>
 References: <14a87c99-785c-4b16-bfce-35ecbf053448@freenet.de>
  <f35244cb-1f17-42a9-9479-5eee196cae5e@amd.com>
  <f0b13b69-f5fa-4346-b1cd-dbae4a450c80@freenet.de>
@@ -61,12 +61,14 @@ References: <14a87c99-785c-4b16-bfce-35ecbf053448@freenet.de>
  <f4fd9018-2a05-454b-a887-9b1c9a8a14df@amd.com>
  <33a693a8-a460-49b7-83cb-1ab7b66ce69e@freenet.de>
  <46eaec7d-a359-40c8-9c5c-57ecc3506805@leemhuis.info>
+ <8c39f42a-f024-4f05-8d77-a95e7ca1c702@amd.com>
+ <b5882c89-aa71-4205-ab25-ca9f038340df@freenet.de>
 From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <46eaec7d-a359-40c8-9c5c-57ecc3506805@leemhuis.info>
+In-Reply-To: <b5882c89-aa71-4205-ab25-ca9f038340df@freenet.de>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SN7PR04CA0237.namprd04.prod.outlook.com
- (2603:10b6:806:127::32) To SA0PR12MB4557.namprd12.prod.outlook.com
+X-ClientProxiedBy: SA1PR05CA0008.namprd05.prod.outlook.com
+ (2603:10b6:806:2d2::15) To SA0PR12MB4557.namprd12.prod.outlook.com
  (2603:10b6:806:9d::10)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
@@ -75,250 +77,215 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA0PR12MB4557:EE_|PH7PR12MB5594:EE_
-X-MS-Office365-Filtering-Correlation-Id: a09632ac-6df2-4395-cb3c-08dead016842
+X-MS-TrafficTypeDiagnostic: SA0PR12MB4557:EE_|DS0PR12MB9059:EE_
+X-MS-Office365-Filtering-Correlation-Id: 68cdf2ca-00ec-44cc-4275-08dead342dc4
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|376014|13003099007|18002099003|56012099003|22082099003;
+	BCL:0;ARA:13230040|1800799024|366016|376014|3023799003|56012099003|18002099003|22082099003;
 X-Microsoft-Antispam-Message-Info:
-	CbDf87/bDLkxixd/eNi7/Yb6jtT/aitUEO3KS2Vhqg/fTEQFCvpbSG7Pmui04mBqQxpHG03mF0YHhAbDK0MpDfAxSFyO0PhVNzmOJVvbGE/ePfyM3A5dG/2fXQnmcAR0GhL12H+YJB/5EJtGWq9OePssvXx9+tkTFcs637H9DxtT/6wTW/zSGZRzyvqc3v+1oa6hB155J3uiKZeVJpNU5R9JaIAT3T/Rx+nKJyCqdnHeFgvf3OoUoCDeBIC63DAeoRTsYqOrIc4LWwc/R9RDr8ueoeMhu1k3BJbSqo17anaW8a8d7Qfc1y3ep91UD1seKfGD9z3yrC6wPZ0SvjUY/S07gF5Dwj36zWwwbwQq2edIAeUxb9eQV2Bokq4ofR3dR7E6JUHVn8Tr0AAIoHHkYWgZrHTNeE4BNAF7+2ojSGuly36eiSkcGu1DYwb+oHE6jijfMOa6hbJkmds0PuUbmUJIY2vnU96z+oqborWJrCEYi1DQBNszA4O+4qySSXaFjxdUmOcyrcA8wMUPkZKb9RfQlt8w2eNPSwjJEOktpah5A/YpBfgxAwh2WRJKWZQ91aGnZQMv7rq82t4DUzwx2qXp/fg0P9b7hAByMnGR3VANOGPAiKAWlVKpJfHsuB4LFq9fD4L60kwH2GjGqgJBmWVprqt22SU3WTqxdwtS2TC3Wa9H0xaD4HkoL6L5g91Dzyq7t2jwSjlTiJbp/owiFg==
+	KpVX5JwdvbgsfWCBvuwu17mUN59NUuxqDM5ToiD5xm0KsuhTptk6hlmZ2A/f29b4GirhVwJgnA86ou/4Oa7V5tM8ShnOoD1aAhAimrYFGXXASb6Hvfe3X4JpQJht8T6ACJGXl7hgTeiO9eBdurTDm9Nq+v8SbSpL28bwGwZYfkKhoTBToKsDJVT7UmRlB5gvCGC8REMutpRmPI5KjFq8Evu2FkiKjUvI9N42pezqTaIduwQF4tq309CmDs6Z4lgzogF6p+iUAwyvkEo6UoMrI73/kw5SigeHaL9AfJeYvy4Px/GliOXwpLXEiOUpzKLplNW1DgvdHOpwe/2OYPI2ZE01LaPjhxIX59ix6TYFEw5rJDiNxsWJeIiSkV93Iyfbbx9Q8ci8dEO5PIu6YNG6H1T4CQTu9JSRJ49GRUL7Cm6nIQgmTAPUy2be1JTdjc0otT8NknxfoBfn1f/nxOXmJVZLHC7gUuBXLWeiDLV7V/khgEQcR0EHXEfHcmPfrrbGMsptzD1sTY9RRe8kX1el1L/m8eJQPJNnX0F/nwwSZY28XxSQbr0UK6sbkjaMTm0UvER15s3V1EnZrJpIRWz9y9vmkQpipuOAWTO19d+4CzspxrWdmsWf4mDIVWCnLZ4/cNQHyCqZMrAmHAqoP6eUpLbUAwuaOAIA6DYgAROmRzL049jf0GR1nyXUDGDboB0a
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA0PR12MB4557.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(13003099007)(18002099003)(56012099003)(22082099003);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA0PR12MB4557.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(3023799003)(56012099003)(18002099003)(22082099003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?U2xScjBaWkdmaEZLaDRTTTliQ0dHejE2RGExUzd3RzhJdUYvd3NjWFRPWm9S?=
- =?utf-8?B?V0lFdTRkS3RyNWR6dW1SZTd2clQ1ckd5eTQ0M3pCbTN5Mnc5a0NtZFlJOUN5?=
- =?utf-8?B?d2JJMmFNcU12Y2o1aG1RaDRwS3BxVEsxRUNDWjE3MkdmeEVTVVErTUdRWUF6?=
- =?utf-8?B?bnE5M2lxd0dZWElQSHpETERVVG1DWmlia1dHZE9DdnVNaFF4dkxkWmE2alJE?=
- =?utf-8?B?QTEzS1I4UThJdjdqTGtZSTNydmpVVWNkbkpUc2JVYTd1ZWRNU1crN2lKeVJQ?=
- =?utf-8?B?bGx0VkVoelA3LytzZSsyZURPRmtra21reTBzTUl3SzNudEtHQURWaVF2bDZ6?=
- =?utf-8?B?bTJQdXJqaGJMaUVKUERMY3owakM2MkpFa2NyOFpFSEMrVlJscXp5bzhyeXJ2?=
- =?utf-8?B?TTByR1FLSjRQUzdiOFhZQ1JYUEpNbWwzN3kwcHU2a2ZsaldxdHVTaTJDbmZX?=
- =?utf-8?B?d1BWSVMwakN2N1BaVVFQTU9xV3ZwUC9xOU5MV0NVa3dZMk9ieUlKRklpRTRm?=
- =?utf-8?B?bmVvRmJaemtCakN4OTMyZ1V4cm1tdGlZTWYwU2JZazJrdzV3YkxMVnJKbFF0?=
- =?utf-8?B?N2IzQm1Ld0hJTERmZ3FnMkpqZkpzWnhhSFZCMXl5REJLRFJOM1UyK3VsTzRs?=
- =?utf-8?B?amltLzM3VUlMOW1vcHhRM3ZVZVlIUGF5dW4rbGhkOUdCbTB2ejRjSnVRelJW?=
- =?utf-8?B?WXZ4dUVVa1JqM1FYRzE0c0g2UnF6Zjljbi9rbEVEVnFrUTNoaEhjem52R0t2?=
- =?utf-8?B?UWxuRXhUbnYvdEh1M0MvUGdibHpLMVNEdDBTSFJoYlRjRko1ZnQxeVI0U0hG?=
- =?utf-8?B?Z3dXYUMwTUNzVXRpRjJsdW9jQnc4OWJETUxDcWhiSnpzdTh0K2RxbWNPL2Nn?=
- =?utf-8?B?dkhsdUJTd1B4MjRMRkRRSDlVRVMyMHQ3ZGdEd3dhME1sbGZiV0c1VlR0WlNm?=
- =?utf-8?B?eGRqVnRobVhqbkhRVnYwTllkdGxLaUhveUhucjZrS2lkd1ZjdG8wUGxxeWw1?=
- =?utf-8?B?aW1hZW5sbjdYMkVmK2FxcXgrc0FPTUxqcU5RQmFxeTJFRGVGVEQ5czcyVWl5?=
- =?utf-8?B?dFF4S3NoRTNLRU9FY0toc2lGc3BobFlORnNEYkJYbzc4TFRkTlNHVmwyZmdS?=
- =?utf-8?B?Y2tRRjh3YWlTWFdWNGJTQ1plaXZpbW5pcmdWR0Y0TVFuOS8zMUNJMVh6T3Ay?=
- =?utf-8?B?N05hc3psYmxZcmdmaHpzRUZacTFNaVlpQkRrWkNxYWZCKzNESldZejdIWHRK?=
- =?utf-8?B?UmtXNU5vV1pRVmI4S2dydklpazc0TjY1TSthdllTMmpCZ2gzRDFza3d1Q29H?=
- =?utf-8?B?YTgxWnR1KzlqdEtLWEY5czBjYXNmd2RjQnFHQU1nQ3JqdHVsZ0VPamsybHlY?=
- =?utf-8?B?bjQvQmxkSXFOcVArSXhsbXIzOGpGOGRZOUxxUTljSEcrTnZSamZWeDJBTjhY?=
- =?utf-8?B?MjFaeCs2SzNxMHlnTHlHUVAwc1pYVDVscW5ZbkpEcFVxVGx6K0tuYjhRNSt2?=
- =?utf-8?B?RGE3UVRMWXlnVGowUlhBblFRYTBRTEM1MjFjWUl0WDBuTnc0aWNldlZJaEo5?=
- =?utf-8?B?bkVrZ2c0ZXIxeFEzemxyVTZ2VkZrV3ZSbVl5OTdOMGYwYS9rRytkS25VWlJZ?=
- =?utf-8?B?V0VqTVdqenVVWnZ0eFRlM1FhbkluY2JDa3ZhOE5BTHluS3ExN1ZVRmRLVzdI?=
- =?utf-8?B?SklBQ0VxSTU2Tzg2a3RXVDNGYlZYY1BIcndvcWdoZk5QTm5Uclg5YVNRNk5l?=
- =?utf-8?B?NE81ZUE3VXZSZzREY3RtQ2hGWk9GSlhtZ1NNTDdjTWw4UjZ2OHkyeU5lOWYw?=
- =?utf-8?B?NDBHV3N2Y1BDNEp1MFNaS0JwU29Ed3JPRDY1TjRwc0pwNFlGQWoxZG9VUktz?=
- =?utf-8?B?R1dRMGhTUmRXemt5YkJYVFFwdGxOS3hkeHJlbS9rcXh1ck5ZM1Uwdzd5SkFT?=
- =?utf-8?B?bk85SGVWZmZ0dmpzaHlwWHUwOTQxM3YrWjE4YitjRXFHd1FVeHUrY1lGQzhx?=
- =?utf-8?B?Y3FMUHdteDJyRnNkZzZCMk9kYVV2MlVDQjFuV0FHdjFISmQ1cGlETm9md1Bq?=
- =?utf-8?B?SDZpa2RwQms4SURHVmxKZFJybUY1dXJndk5WWFZNbHpaUDduS1N3cUdVZDhl?=
- =?utf-8?B?R0tsb1FXdEZxU3J3UWlGYmR2VlpnVllRZytCZFkwYnplQmV5ZHJXMEswTWMw?=
- =?utf-8?B?OHVma0cxbzJCSkhHWlcyc0VaUkhaUWgrS1UrQzRsS3Y0OXV6bW9HRTNNWFlh?=
- =?utf-8?B?MjRIVEZ5S2VVQmVKQk1WTXFzWUtLVGpmMTFBWG56TlROdXUxSXZud3NXRUhz?=
- =?utf-8?B?a0pQa0RDOVcrUUtOK2Rvd2NlRHl1S1E2Um9ZNi9TNmpXQXNtR1pkdz09?=
+	=?utf-8?B?bCt1ZlEySjBZa1V5WVhUaXlVRytLSXRmUGZPZmplaUY5ajR6N01lcXZMd2dG?=
+ =?utf-8?B?YVQ2dUZrODNGUndOMk9ud001RHo2NklDTGxseFd2R0RZV2Y4SUJ4N3FMSFZN?=
+ =?utf-8?B?RVREeUsxQm5tL0RZc1FwUjJRaUJtK2t4OVlZV0Jzek15SEVsK0JkU2tKU2lY?=
+ =?utf-8?B?dnYvZXROb0tudU81WXduSWZ1ZjYyWFQ1R1pETzZpbTRvbVU3TGxYRVVvbWlh?=
+ =?utf-8?B?d01QNTkvQlBUM25JNkZjcWVQUHhGVEIwRVpJVnJVUzA0ZEVrS014SUh4Tm1V?=
+ =?utf-8?B?Wm90d1Zub3B6OHdFVVpaaFFHWWN1a0xQRTk5dUp6cHV3NzY3SUFDazVSQ3kr?=
+ =?utf-8?B?bUdxaWgzZFp2emlwZDloVWJrZ2NLaHhTU2hsaHBLL0ErV2hrbjArZ0piZVpB?=
+ =?utf-8?B?dm5YcXlIakpmcE91UVlvVVNVRVlKb2tudFVqQjNqc0tNSkNsVE52emZIT0FB?=
+ =?utf-8?B?VlpUZXpLZ0dOV0h3VHpUK1pGNzVrMDRjZ1hySW5oUDdmbmI4UU5WZFZSZGh0?=
+ =?utf-8?B?Y3RVVDZadkdTeDRmV1lLZEpveDl3akhqWlRmWEZBZHhnZ0dUMjlxTnh1dzhB?=
+ =?utf-8?B?SWdHdVB0RllHWmFpcVlON2NFVE1zTmE4VEYxZlV2ZU1jSU1QN2x0Y0RSUG5R?=
+ =?utf-8?B?ZDFDK1pTbU9xVFhtSlFQRGlXaFI1bk0zYTF2R2V2ZEZFL1ZERlVjVTVUTzFr?=
+ =?utf-8?B?eFpvN2xZNDg4Ym83NGlUd0YzZWphWnpHUVRLbnFsc0I2QjVhUitVL0Z4Qksw?=
+ =?utf-8?B?SWR0RUUvaElFN2FCcS9TaU03OWw5VnZEdkxobFNzNEVFWjNXOEtqUjB0R01u?=
+ =?utf-8?B?ZmVpVUxUL1Yvc1F5b1RPemRtemhpTHIrZnJ3TzJPWjVYZ2Z5UU5nY0cyaGZU?=
+ =?utf-8?B?cU5laGpUem81eFJHSmVwS2pvbk5tTC8yNGFIbFhscjVnY0REUldnQUJwTmEr?=
+ =?utf-8?B?ZHZwalJLYnhhYVczc1ZoVjg5czVWaWFnZllzanFQT1djTDN2elNYTG9TUnlm?=
+ =?utf-8?B?T3NUVUZNYkN3ZWQwQzBCZWJuT1d2VGd5Z3NuM1BudDFtVHVwaWlCQjM1YVZ4?=
+ =?utf-8?B?NXFabTVDdDBTWkpuQm9Qb01VRXl1YVdJaXZsQm85VUMxcklHbSt6SFpLdlla?=
+ =?utf-8?B?YkFzMk9lNDNTQUpPcFhOeFpXeUxqSVhmZWFnVWM5OVZheUIrMTg4RXAxdXRK?=
+ =?utf-8?B?dE9ZT0FUUmljeUFjRG5NelFqSnNFeVl6ZHNkS3ZyNUJJNmsyUmRuaGFnZS9K?=
+ =?utf-8?B?azJUUGRidXNmTWtoK014bHhHem9oWnhQRndTdTgrekJCVjhZSXRqZDc3UXc3?=
+ =?utf-8?B?M3YwbG9GUzRUVWZmL042RTlEejl4dTRXYWVoWFBuZDczQmI2WngreUFzNVRa?=
+ =?utf-8?B?Wm13UkFOcEVGNUZKK3Y5MnJPV2Fvc0JMaWpTdlMwZG1JRktzeVlKVUg4ZlRR?=
+ =?utf-8?B?cEdaMHNObHBxK3NQZUN1U3NnbHgzaGtKOU9iS0Y5bVJuUi9KV2Zma1g3NStC?=
+ =?utf-8?B?QUdtejVpWGl2bHBkbGRuR1RoMGppK1dyZ2kwdHcvem9jVk1pODQxcWhtMS8w?=
+ =?utf-8?B?YzJZZzFQV0JJQW5hWWR2TjRCMnh3cTZsVzF5cVo4RnF1WTVGL0x6dVl4Z1h5?=
+ =?utf-8?B?NVh4aUU3M0ZWeVAxL3ZVb2dtMmU5TGJTTjc5S0lhcHRDb0d4MXV0aDBCaDls?=
+ =?utf-8?B?RzM5WHdUTlp3MDFneGR2UVk5RWM1S2JxZ3F2bVRhTjE2V2ZKUS9aWVl5d25v?=
+ =?utf-8?B?RENFaUtsQm16dE9RTEJaR2graEUvRE5MdGZvVlMwVWFPeDk3akdGL2JSNzJi?=
+ =?utf-8?B?OWc1V1YyeTNtc001bWptSnJ3RDM3bE5mdmhZSE1jSUQxbUFRb2RxRGc3R2Jy?=
+ =?utf-8?B?WVpLSkR4WUZhZ1NZdzBVbVBTc3psVXc0U2ZXZkRqTEtFR0RQQU1DYkIyMHdk?=
+ =?utf-8?B?ODlYZ2g5NU80TmZFbkFnTkVwSUo2K0piaDM0bS8rL094T21UY0dYbEdkblcy?=
+ =?utf-8?B?WXN0N1ZaY21iNFRWQnBJN2FVTU9Sdm9sZDM2U1gyS2VLSFdaaUlEV2ZQazAy?=
+ =?utf-8?B?ZFIySENibUVVSmx5Tzl4UVE4Ukpib1hZL0RjL3RHZVBPTmM1MXowdHhaWWFT?=
+ =?utf-8?B?R1ZpZ3J0VjliNUxxUjVPVTFGWWd6T2hpT1dUMEtpUklhQ2Jpa3YwZTlpN3BZ?=
+ =?utf-8?B?N09ZeStlK0toWkpHK0d5R2V1S1hzVFlIZnNDZ2c0TkVzVTVQZGVGdEtIcmYz?=
+ =?utf-8?B?YU9KTzhiVEtmOTdTRG5zOXN4OCtoOUlKSVZpNjRpQkllclNFdVhEbnVGVWVB?=
+ =?utf-8?B?eXZXUGJlNmFPU0FWMktmVzg5MldST1NMeUVVd0xzclo5eHN4VlJzQT09?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a09632ac-6df2-4395-cb3c-08dead016842
+X-MS-Exchange-CrossTenant-Network-Message-Id: 68cdf2ca-00ec-44cc-4275-08dead342dc4
 X-MS-Exchange-CrossTenant-AuthSource: SA0PR12MB4557.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 May 2026 12:57:49.4078
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 May 2026 19:01:15.2264
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: R0bkB21oafyCZDViupd8iVAqyXP1P+QNs2OtVsbeq5YgAMIRrJWIG6ln33NbjGoV+IAgWZgIyTdkLoUNRnjhfw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB5594
+X-MS-Exchange-CrossTenant-UserPrincipalName: RfLqB17y4Hqb53L0aKqtJfb67j05RtgF3jNHytmnW3C+Ps9BoR6OHxZU09SOZw69S5XVi0tBFNhYSb2V0yLM6g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB9059
 
-On 5/8/26 04:31, Thorsten Leemhuis wrote:
-> Lo! Mario, what happened to this? This lookes stalled.
 
-I got caught up with other things and forgot about it.
 
-> 
-> Side notes:
-> 
-> * another report about an issue like this was filed here and contains a
-> patch from Mario for testing:
-> https://bugzilla.kernel.org/show_bug.cgi?id=221473
-
-Yes please see if that helps.
-
-> 
-> * there is a whole patch series with fixes for the culprit:
-> https://lore.kernel.org/all/20260508051748.10484-1-kprateek.nayak@amd.com/
-> 
-
-I don't think any of these will help; but that would a fine surprise if so.
-
-> Ciao, Thorsten
-> 
-> On 4/29/26 20:34, Viktor Jägersküpper wrote:
->> Am 29.04.26 um 19:14 schrieb Mario Limonciello:
+On 5/8/26 13:56, Viktor Jägersküpper wrote:
+> Am 08.05.26 um 14:57 schrieb Mario Limonciello:
+>> On 5/8/26 04:31, Thorsten Leemhuis wrote:
 >>>
+>>> Side notes:
 >>>
->>> On 4/29/26 11:20, Viktor Jägersküpper wrote:
->>>> Am 29.04.26 um 17:54 schrieb Mario Limonciello:
+>>> * another report about an issue like this was filed here and contains a
+>>> patch from Mario for testing:
+>>> https://bugzilla.kernel.org/show_bug.cgi?id=221473
+>>
+>> Yes please see if that helps.
+>>
+> 
+> This patch doesn't fix the bug. I believe this makes sense if you look at the
+> debugging output below, but that's just a guess.
+
+OK.
+
+> 
+>>>
+>>> * there is a whole patch series with fixes for the culprit:
+>>> https://lore.kernel.org/all/20260508051748.10484-1-kprateek.nayak@amd.com/
+>>>
+>>
+>> I don't think any of these will help; but that would a fine surprise if so.
+>>
+> 
+> This patch series fixes the bug when I boot with "amd_dynamic_epp=disable" (I built
+> the kernel with CONFIG_X86_AMD_PSTATE_DYNAMIC_EPP=y). I didn't bisect to find out
+> which patch contains the partial fix, but I can do this if it helps.
+> 
+> If you need further information (acpidump and/or output from amd-pstate tool), just
+> tell me.
+
+When you have dynamic EPP enabled it sets up platform profile.  With 
+that series in place does changing platform profile help?
+
+> 
+> Last week I got this output after applying a debugging patch from you:
+>>> On 4/29/26 20:34, Viktor Jägersküpper wrote:
+>>>> Am 29.04.26 um 19:14 schrieb Mario Limonciello:
 >>>>>
->>>>>
->>>>> On 4/29/26 10:38, Viktor Jägersküpper wrote:
->>>>>> Am 29.04.26 um 16:25 schrieb Mario Limonciello:
->>>>>>>
->>>>>>>
->>>>>>> On 4/29/26 08:54, Viktor Jägersküpper wrote:
->>>>>>>> [You don't often get email from viktor_jaegerskuepper@freenet.de. Learn why this is important at https://aka.ms/LearnAboutSenderIdentification ]
->>>>>>>>
->>>>>>>> Am 29.04.26 um 15:04 schrieb Mario Limonciello:
->>>>>>>>>
->>>>>>>>>
->>>>>>>>> On 4/29/26 07:34, Viktor Jägersküpper wrote:
->>>>>>>>>> [You don't often get email from viktor_jaegerskuepper@freenet.de. Learn why this is important at https://aka.ms/LearnAboutSenderIdentification ]
->>>>>>>>>>
->>>>>>>>>> Hi,
->>>>>>>>>>
->>>>>>>>>> when I boot my desktop system running with an AMD Ryzen 9 5900X using
->>>>>>>>>> the kernel 7.1-rc1, all CPU cores seem to run at ~1.7 GHz constantly,
->>>>>>>>>> i.e. I don't observe any core frequency boosting under load. This never
->>>>>>>>>> happened with older kernel releases, e.g. with 7.0-rc7. I ran
->>>>>>>>>> 'git bisect' and found this first bad commit:
->>>>>>>>>>
->>>>>>>>>> e30ca6dd5345c5b8ba05f346a8e81105352fe571 cpufreq/amd-pstate: Add dynamic energy performance preference
->>>>>>>>>
->>>>>>>>> If you compile with CONFIG_X86_AMD_PSTATE_DYNAMIC_EPP=n (instead of using kernel command line to turn it off) does the issue go away?
->>>>>>>>>
->>>>>>>>
->>>>>>>> No, and still nothing about amd-pstate in dmesg.
->>>>>>>
->>>>>>> Can you turn on dynamic debugging for amd-pstate.c?  Something like this:
->>>>>>>
->>>>>>> dyndbg='file drivers/cpufreq/amd-pstate.c +p'
->>>>>>>
->>>>>>
->>>>>> Both kernel builds (with CONFIG_X86_AMD_PSTATE_DYNAMIC_EPP=y/n) have the following config:
->>>>>> CONFIG_DYNAMIC_DEBUG=y
->>>>>> CONFIG_DYNAMIC_DEBUG_CORE=y
->>>>>>
->>>>>> Booting with the above dyndbg parameter gives me only this line about amd-pstate in dmesg:
->>>>>> [    0.844066] amd_pstate: AMD CPPC shared memory based functionality is supported
->>>>>>
->>>>>> Do I have to do anything else besides booting with the dyndbg parameter? I have tried
->>>>>> both builds.
->>>>>
->>>>> You shouldn't have to.  I think there might be something silently failing in the init path now.  Maybe platform profile registration is failing for your system?  I haven't reproduced this on my side on any of my systems unfortunately.
->>>>>
->>>>> Do you think you can sprinkle printk()'s around the init to figure it out?  If you need me to write a patch that does this I can try to whip one up.
->>>>>
+>>>>> OK thanks.  Here is a debugging patch that should show what's happening in the new paths from e30ca6dd5345c5b8ba05f346a8e81105352fe571 so we can confirm root cause on your system.
 >>>>
->>>> Please write a patch, I am just a user trying to help.
+>>>> These are the dmesg lines concerning amd-pstate:
+>>>> [    0.845044] amd_pstate: amd_pstate: CPU 0: calling amd_pstate_set_dynamic_epp (current_profile=3)
+>>>> [    0.845047] amd_pstate: amd_pstate: CPU 0: get_balanced_epp: power_supply_is_system_supplied=1, returning EPP=0x0 (ac=0x0, dc=0x80)
+>>>> [    0.845059] amd_pstate: amd_pstate: CPU 0: platform_profile_register succeeded
+>>>> [    0.845060] amd_pstate: amd_pstate: CPU 0: registering power supply notifier
+>>>> [    0.849046] amd_pstate: amd_pstate: CPU 1: calling amd_pstate_set_dynamic_epp (current_profile=3)
+>>>> [    0.849047] amd_pstate: amd_pstate: CPU 1: get_balanced_epp: power_supply_is_system_supplied=1, returning EPP=0x0 (ac=0x0, dc=0x80)
+>>>> [    0.849058] amd_pstate: amd_pstate: CPU 1: platform_profile_register succeeded
+>>>> [    0.849059] amd_pstate: amd_pstate: CPU 1: registering power supply notifier
+>>>> [    0.853043] amd_pstate: amd_pstate: CPU 2: calling amd_pstate_set_dynamic_epp (current_profile=3)
+>>>> [    0.853044] amd_pstate: amd_pstate: CPU 2: get_balanced_epp: power_supply_is_system_supplied=1, returning EPP=0x0 (ac=0x0, dc=0x80)
+>>>> [    0.853054] amd_pstate: amd_pstate: CPU 2: platform_profile_register succeeded
+>>>> [    0.853054] amd_pstate: amd_pstate: CPU 2: registering power supply notifier
+>>>> [    0.857043] amd_pstate: amd_pstate: CPU 3: calling amd_pstate_set_dynamic_epp (current_profile=3)
+>>>> [    0.857044] amd_pstate: amd_pstate: CPU 3: get_balanced_epp: power_supply_is_system_supplied=1, returning EPP=0x0 (ac=0x0, dc=0x80)
+>>>> [    0.857054] amd_pstate: amd_pstate: CPU 3: platform_profile_register succeeded
+>>>> [    0.857054] amd_pstate: amd_pstate: CPU 3: registering power supply notifier
+>>>> [    0.861045] amd_pstate: amd_pstate: CPU 4: calling amd_pstate_set_dynamic_epp (current_profile=3)
+>>>> [    0.861046] amd_pstate: amd_pstate: CPU 4: get_balanced_epp: power_supply_is_system_supplied=1, returning EPP=0x0 (ac=0x0, dc=0x80)
+>>>> [    0.861056] amd_pstate: amd_pstate: CPU 4: platform_profile_register succeeded
+>>>> [    0.861057] amd_pstate: amd_pstate: CPU 4: registering power supply notifier
+>>>> [    0.865044] amd_pstate: amd_pstate: CPU 5: calling amd_pstate_set_dynamic_epp (current_profile=3)
+>>>> [    0.865046] amd_pstate: amd_pstate: CPU 5: get_balanced_epp: power_supply_is_system_supplied=1, returning EPP=0x0 (ac=0x0, dc=0x80)
+>>>> [    0.865057] amd_pstate: amd_pstate: CPU 5: platform_profile_register succeeded
+>>>> [    0.865058] amd_pstate: amd_pstate: CPU 5: registering power supply notifier
+>>>> [    0.870044] amd_pstate: amd_pstate: CPU 6: calling amd_pstate_set_dynamic_epp (current_profile=3)
+>>>> [    0.870046] amd_pstate: amd_pstate: CPU 6: get_balanced_epp: power_supply_is_system_supplied=1, returning EPP=0x0 (ac=0x0, dc=0x80)
+>>>> [    0.870058] amd_pstate: amd_pstate: CPU 6: platform_profile_register succeeded
+>>>> [    0.870058] amd_pstate: amd_pstate: CPU 6: registering power supply notifier
+>>>> [    0.874044] amd_pstate: amd_pstate: CPU 7: calling amd_pstate_set_dynamic_epp (current_profile=3)
+>>>> [    0.874045] amd_pstate: amd_pstate: CPU 7: get_balanced_epp: power_supply_is_system_supplied=1, returning EPP=0x0 (ac=0x0, dc=0x80)
+>>>> [    0.874056] amd_pstate: amd_pstate: CPU 7: platform_profile_register succeeded
+>>>> [    0.874057] amd_pstate: amd_pstate: CPU 7: registering power supply notifier
+>>>> [    0.878045] amd_pstate: amd_pstate: CPU 8: calling amd_pstate_set_dynamic_epp (current_profile=3)
+>>>> [    0.878046] amd_pstate: amd_pstate: CPU 8: get_balanced_epp: power_supply_is_system_supplied=1, returning EPP=0x0 (ac=0x0, dc=0x80)
+>>>> [    0.878055] amd_pstate: amd_pstate: CPU 8: platform_profile_register succeeded
+>>>> [    0.878056] amd_pstate: amd_pstate: CPU 8: registering power supply notifier
+>>>> [    0.882045] amd_pstate: amd_pstate: CPU 9: calling amd_pstate_set_dynamic_epp (current_profile=3)
+>>>> [    0.882046] amd_pstate: amd_pstate: CPU 9: get_balanced_epp: power_supply_is_system_supplied=1, returning EPP=0x0 (ac=0x0, dc=0x80)
+>>>> [    0.882055] amd_pstate: amd_pstate: CPU 9: platform_profile_register succeeded
+>>>> [    0.882056] amd_pstate: amd_pstate: CPU 9: registering power supply notifier
+>>>> [    0.886045] amd_pstate: amd_pstate: CPU 10: calling amd_pstate_set_dynamic_epp (current_profile=3)
+>>>> [    0.886046] amd_pstate: amd_pstate: CPU 10: get_balanced_epp: power_supply_is_system_supplied=1, returning EPP=0x0 (ac=0x0, dc=0x80)
+>>>> [    0.886055] amd_pstate: amd_pstate: CPU 10: platform_profile_register succeeded
+>>>> [    0.886056] amd_pstate: amd_pstate: CPU 10: registering power supply notifier
+>>>> [    0.890045] amd_pstate: amd_pstate: CPU 11: calling amd_pstate_set_dynamic_epp (current_profile=3)
+>>>> [    0.890046] amd_pstate: amd_pstate: CPU 11: get_balanced_epp: power_supply_is_system_supplied=1, returning EPP=0x0 (ac=0x0, dc=0x80)
+>>>> [    0.890056] amd_pstate: amd_pstate: CPU 11: platform_profile_register succeeded
+>>>> [    0.890056] amd_pstate: amd_pstate: CPU 11: registering power supply notifier
+>>>> [    0.894046] amd_pstate: amd_pstate: CPU 12: calling amd_pstate_set_dynamic_epp (current_profile=3)
+>>>> [    0.894047] amd_pstate: amd_pstate: CPU 12: get_balanced_epp: power_supply_is_system_supplied=1, returning EPP=0x0 (ac=0x0, dc=0x80)
+>>>> [    0.894056] amd_pstate: amd_pstate: CPU 12: platform_profile_register succeeded
+>>>> [    0.894057] amd_pstate: amd_pstate: CPU 12: registering power supply notifier
+>>>> [    0.898046] amd_pstate: amd_pstate: CPU 13: calling amd_pstate_set_dynamic_epp (current_profile=3)
+>>>> [    0.898047] amd_pstate: amd_pstate: CPU 13: get_balanced_epp: power_supply_is_system_supplied=1, returning EPP=0x0 (ac=0x0, dc=0x80)
+>>>> [    0.898055] amd_pstate: amd_pstate: CPU 13: platform_profile_register succeeded
+>>>> [    0.898056] amd_pstate: amd_pstate: CPU 13: registering power supply notifier
+>>>> [    0.902046] amd_pstate: amd_pstate: CPU 14: calling amd_pstate_set_dynamic_epp (current_profile=3)
+>>>> [    0.902048] amd_pstate: amd_pstate: CPU 14: get_balanced_epp: power_supply_is_system_supplied=1, returning EPP=0x0 (ac=0x0, dc=0x80)
+>>>> [    0.902059] amd_pstate: amd_pstate: CPU 14: platform_profile_register succeeded
+>>>> [    0.902059] amd_pstate: amd_pstate: CPU 14: registering power supply notifier
+>>>> [    0.906046] amd_pstate: amd_pstate: CPU 15: calling amd_pstate_set_dynamic_epp (current_profile=3)
+>>>> [    0.906048] amd_pstate: amd_pstate: CPU 15: get_balanced_epp: power_supply_is_system_supplied=1, returning EPP=0x0 (ac=0x0, dc=0x80)
+>>>> [    0.906060] amd_pstate: amd_pstate: CPU 15: platform_profile_register succeeded
+>>>> [    0.906060] amd_pstate: amd_pstate: CPU 15: registering power supply notifier
+>>>> [    0.910046] amd_pstate: amd_pstate: CPU 16: calling amd_pstate_set_dynamic_epp (current_profile=3)
+>>>> [    0.910048] amd_pstate: amd_pstate: CPU 16: get_balanced_epp: power_supply_is_system_supplied=1, returning EPP=0x0 (ac=0x0, dc=0x80)
+>>>> [    0.910058] amd_pstate: amd_pstate: CPU 16: platform_profile_register succeeded
+>>>> [    0.910059] amd_pstate: amd_pstate: CPU 16: registering power supply notifier
+>>>> [    0.914047] amd_pstate: amd_pstate: CPU 17: calling amd_pstate_set_dynamic_epp (current_profile=3)
+>>>> [    0.914048] amd_pstate: amd_pstate: CPU 17: get_balanced_epp: power_supply_is_system_supplied=1, returning EPP=0x0 (ac=0x0, dc=0x80)
+>>>> [    0.914059] amd_pstate: amd_pstate: CPU 17: platform_profile_register succeeded
+>>>> [    0.914060] amd_pstate: amd_pstate: CPU 17: registering power supply notifier
+>>>> [    0.918049] amd_pstate: amd_pstate: CPU 18: calling amd_pstate_set_dynamic_epp (current_profile=3)
+>>>> [    0.918051] amd_pstate: amd_pstate: CPU 18: get_balanced_epp: power_supply_is_system_supplied=1, returning EPP=0x0 (ac=0x0, dc=0x80)
+>>>> [    0.918081] amd_pstate: amd_pstate: CPU 18: platform_profile_register succeeded
+>>>> [    0.918082] amd_pstate: amd_pstate: CPU 18: registering power supply notifier
+>>>> [    0.922049] amd_pstate: amd_pstate: CPU 19: calling amd_pstate_set_dynamic_epp (current_profile=3)
+>>>> [    0.922051] amd_pstate: amd_pstate: CPU 19: get_balanced_epp: power_supply_is_system_supplied=1, returning EPP=0x0 (ac=0x0, dc=0x80)
+>>>> [    0.922070] amd_pstate: amd_pstate: CPU 19: platform_profile_register succeeded
+>>>> [    0.922071] amd_pstate: amd_pstate: CPU 19: registering power supply notifier
+>>>> [    0.926049] amd_pstate: amd_pstate: CPU 20: calling amd_pstate_set_dynamic_epp (current_profile=3)
+>>>> [    0.926052] amd_pstate: amd_pstate: CPU 20: get_balanced_epp: power_supply_is_system_supplied=1, returning EPP=0x0 (ac=0x0, dc=0x80)
+>>>> [    0.926073] amd_pstate: amd_pstate: CPU 20: platform_profile_register succeeded
+>>>> [    0.926074] amd_pstate: amd_pstate: CPU 20: registering power supply notifier
+>>>> [    0.930049] amd_pstate: amd_pstate: CPU 21: calling amd_pstate_set_dynamic_epp (current_profile=3)
+>>>> [    0.930052] amd_pstate: amd_pstate: CPU 21: get_balanced_epp: power_supply_is_system_supplied=1, returning EPP=0x0 (ac=0x0, dc=0x80)
+>>>> [    0.930071] amd_pstate: amd_pstate: CPU 21: platform_profile_register succeeded
+>>>> [    0.930072] amd_pstate: amd_pstate: CPU 21: registering power supply notifier
+>>>> [    0.934050] amd_pstate: amd_pstate: CPU 22: calling amd_pstate_set_dynamic_epp (current_profile=3)
+>>>> [    0.934052] amd_pstate: amd_pstate: CPU 22: get_balanced_epp: power_supply_is_system_supplied=1, returning EPP=0x0 (ac=0x0, dc=0x80)
+>>>> [    0.934072] amd_pstate: amd_pstate: CPU 22: platform_profile_register succeeded
+>>>> [    0.934073] amd_pstate: amd_pstate: CPU 22: registering power supply notifier
+>>>> [    0.938050] amd_pstate: amd_pstate: CPU 23: calling amd_pstate_set_dynamic_epp (current_profile=3)
+>>>> [    0.938052] amd_pstate: amd_pstate: CPU 23: get_balanced_epp: power_supply_is_system_supplied=1, returning EPP=0x0 (ac=0x0, dc=0x80)
+>>>> [    0.938073] amd_pstate: amd_pstate: CPU 23: platform_profile_register succeeded
+>>>> [    0.938074] amd_pstate: amd_pstate: CPU 23: registering power supply notifier
+>>>>
+>>>>
 >>>
->>> OK thanks.  Here is a debugging patch that should show what's happening in the new paths from e30ca6dd5345c5b8ba05f346a8e81105352fe571 so we can confirm root cause on your system.
->>
->> These are the dmesg lines concerning amd-pstate:
->> [    0.845044] amd_pstate: amd_pstate: CPU 0: calling amd_pstate_set_dynamic_epp (current_profile=3)
->> [    0.845047] amd_pstate: amd_pstate: CPU 0: get_balanced_epp: power_supply_is_system_supplied=1, returning EPP=0x0 (ac=0x0, dc=0x80)
->> [    0.845059] amd_pstate: amd_pstate: CPU 0: platform_profile_register succeeded
->> [    0.845060] amd_pstate: amd_pstate: CPU 0: registering power supply notifier
->> [    0.849046] amd_pstate: amd_pstate: CPU 1: calling amd_pstate_set_dynamic_epp (current_profile=3)
->> [    0.849047] amd_pstate: amd_pstate: CPU 1: get_balanced_epp: power_supply_is_system_supplied=1, returning EPP=0x0 (ac=0x0, dc=0x80)
->> [    0.849058] amd_pstate: amd_pstate: CPU 1: platform_profile_register succeeded
->> [    0.849059] amd_pstate: amd_pstate: CPU 1: registering power supply notifier
->> [    0.853043] amd_pstate: amd_pstate: CPU 2: calling amd_pstate_set_dynamic_epp (current_profile=3)
->> [    0.853044] amd_pstate: amd_pstate: CPU 2: get_balanced_epp: power_supply_is_system_supplied=1, returning EPP=0x0 (ac=0x0, dc=0x80)
->> [    0.853054] amd_pstate: amd_pstate: CPU 2: platform_profile_register succeeded
->> [    0.853054] amd_pstate: amd_pstate: CPU 2: registering power supply notifier
->> [    0.857043] amd_pstate: amd_pstate: CPU 3: calling amd_pstate_set_dynamic_epp (current_profile=3)
->> [    0.857044] amd_pstate: amd_pstate: CPU 3: get_balanced_epp: power_supply_is_system_supplied=1, returning EPP=0x0 (ac=0x0, dc=0x80)
->> [    0.857054] amd_pstate: amd_pstate: CPU 3: platform_profile_register succeeded
->> [    0.857054] amd_pstate: amd_pstate: CPU 3: registering power supply notifier
->> [    0.861045] amd_pstate: amd_pstate: CPU 4: calling amd_pstate_set_dynamic_epp (current_profile=3)
->> [    0.861046] amd_pstate: amd_pstate: CPU 4: get_balanced_epp: power_supply_is_system_supplied=1, returning EPP=0x0 (ac=0x0, dc=0x80)
->> [    0.861056] amd_pstate: amd_pstate: CPU 4: platform_profile_register succeeded
->> [    0.861057] amd_pstate: amd_pstate: CPU 4: registering power supply notifier
->> [    0.865044] amd_pstate: amd_pstate: CPU 5: calling amd_pstate_set_dynamic_epp (current_profile=3)
->> [    0.865046] amd_pstate: amd_pstate: CPU 5: get_balanced_epp: power_supply_is_system_supplied=1, returning EPP=0x0 (ac=0x0, dc=0x80)
->> [    0.865057] amd_pstate: amd_pstate: CPU 5: platform_profile_register succeeded
->> [    0.865058] amd_pstate: amd_pstate: CPU 5: registering power supply notifier
->> [    0.870044] amd_pstate: amd_pstate: CPU 6: calling amd_pstate_set_dynamic_epp (current_profile=3)
->> [    0.870046] amd_pstate: amd_pstate: CPU 6: get_balanced_epp: power_supply_is_system_supplied=1, returning EPP=0x0 (ac=0x0, dc=0x80)
->> [    0.870058] amd_pstate: amd_pstate: CPU 6: platform_profile_register succeeded
->> [    0.870058] amd_pstate: amd_pstate: CPU 6: registering power supply notifier
->> [    0.874044] amd_pstate: amd_pstate: CPU 7: calling amd_pstate_set_dynamic_epp (current_profile=3)
->> [    0.874045] amd_pstate: amd_pstate: CPU 7: get_balanced_epp: power_supply_is_system_supplied=1, returning EPP=0x0 (ac=0x0, dc=0x80)
->> [    0.874056] amd_pstate: amd_pstate: CPU 7: platform_profile_register succeeded
->> [    0.874057] amd_pstate: amd_pstate: CPU 7: registering power supply notifier
->> [    0.878045] amd_pstate: amd_pstate: CPU 8: calling amd_pstate_set_dynamic_epp (current_profile=3)
->> [    0.878046] amd_pstate: amd_pstate: CPU 8: get_balanced_epp: power_supply_is_system_supplied=1, returning EPP=0x0 (ac=0x0, dc=0x80)
->> [    0.878055] amd_pstate: amd_pstate: CPU 8: platform_profile_register succeeded
->> [    0.878056] amd_pstate: amd_pstate: CPU 8: registering power supply notifier
->> [    0.882045] amd_pstate: amd_pstate: CPU 9: calling amd_pstate_set_dynamic_epp (current_profile=3)
->> [    0.882046] amd_pstate: amd_pstate: CPU 9: get_balanced_epp: power_supply_is_system_supplied=1, returning EPP=0x0 (ac=0x0, dc=0x80)
->> [    0.882055] amd_pstate: amd_pstate: CPU 9: platform_profile_register succeeded
->> [    0.882056] amd_pstate: amd_pstate: CPU 9: registering power supply notifier
->> [    0.886045] amd_pstate: amd_pstate: CPU 10: calling amd_pstate_set_dynamic_epp (current_profile=3)
->> [    0.886046] amd_pstate: amd_pstate: CPU 10: get_balanced_epp: power_supply_is_system_supplied=1, returning EPP=0x0 (ac=0x0, dc=0x80)
->> [    0.886055] amd_pstate: amd_pstate: CPU 10: platform_profile_register succeeded
->> [    0.886056] amd_pstate: amd_pstate: CPU 10: registering power supply notifier
->> [    0.890045] amd_pstate: amd_pstate: CPU 11: calling amd_pstate_set_dynamic_epp (current_profile=3)
->> [    0.890046] amd_pstate: amd_pstate: CPU 11: get_balanced_epp: power_supply_is_system_supplied=1, returning EPP=0x0 (ac=0x0, dc=0x80)
->> [    0.890056] amd_pstate: amd_pstate: CPU 11: platform_profile_register succeeded
->> [    0.890056] amd_pstate: amd_pstate: CPU 11: registering power supply notifier
->> [    0.894046] amd_pstate: amd_pstate: CPU 12: calling amd_pstate_set_dynamic_epp (current_profile=3)
->> [    0.894047] amd_pstate: amd_pstate: CPU 12: get_balanced_epp: power_supply_is_system_supplied=1, returning EPP=0x0 (ac=0x0, dc=0x80)
->> [    0.894056] amd_pstate: amd_pstate: CPU 12: platform_profile_register succeeded
->> [    0.894057] amd_pstate: amd_pstate: CPU 12: registering power supply notifier
->> [    0.898046] amd_pstate: amd_pstate: CPU 13: calling amd_pstate_set_dynamic_epp (current_profile=3)
->> [    0.898047] amd_pstate: amd_pstate: CPU 13: get_balanced_epp: power_supply_is_system_supplied=1, returning EPP=0x0 (ac=0x0, dc=0x80)
->> [    0.898055] amd_pstate: amd_pstate: CPU 13: platform_profile_register succeeded
->> [    0.898056] amd_pstate: amd_pstate: CPU 13: registering power supply notifier
->> [    0.902046] amd_pstate: amd_pstate: CPU 14: calling amd_pstate_set_dynamic_epp (current_profile=3)
->> [    0.902048] amd_pstate: amd_pstate: CPU 14: get_balanced_epp: power_supply_is_system_supplied=1, returning EPP=0x0 (ac=0x0, dc=0x80)
->> [    0.902059] amd_pstate: amd_pstate: CPU 14: platform_profile_register succeeded
->> [    0.902059] amd_pstate: amd_pstate: CPU 14: registering power supply notifier
->> [    0.906046] amd_pstate: amd_pstate: CPU 15: calling amd_pstate_set_dynamic_epp (current_profile=3)
->> [    0.906048] amd_pstate: amd_pstate: CPU 15: get_balanced_epp: power_supply_is_system_supplied=1, returning EPP=0x0 (ac=0x0, dc=0x80)
->> [    0.906060] amd_pstate: amd_pstate: CPU 15: platform_profile_register succeeded
->> [    0.906060] amd_pstate: amd_pstate: CPU 15: registering power supply notifier
->> [    0.910046] amd_pstate: amd_pstate: CPU 16: calling amd_pstate_set_dynamic_epp (current_profile=3)
->> [    0.910048] amd_pstate: amd_pstate: CPU 16: get_balanced_epp: power_supply_is_system_supplied=1, returning EPP=0x0 (ac=0x0, dc=0x80)
->> [    0.910058] amd_pstate: amd_pstate: CPU 16: platform_profile_register succeeded
->> [    0.910059] amd_pstate: amd_pstate: CPU 16: registering power supply notifier
->> [    0.914047] amd_pstate: amd_pstate: CPU 17: calling amd_pstate_set_dynamic_epp (current_profile=3)
->> [    0.914048] amd_pstate: amd_pstate: CPU 17: get_balanced_epp: power_supply_is_system_supplied=1, returning EPP=0x0 (ac=0x0, dc=0x80)
->> [    0.914059] amd_pstate: amd_pstate: CPU 17: platform_profile_register succeeded
->> [    0.914060] amd_pstate: amd_pstate: CPU 17: registering power supply notifier
->> [    0.918049] amd_pstate: amd_pstate: CPU 18: calling amd_pstate_set_dynamic_epp (current_profile=3)
->> [    0.918051] amd_pstate: amd_pstate: CPU 18: get_balanced_epp: power_supply_is_system_supplied=1, returning EPP=0x0 (ac=0x0, dc=0x80)
->> [    0.918081] amd_pstate: amd_pstate: CPU 18: platform_profile_register succeeded
->> [    0.918082] amd_pstate: amd_pstate: CPU 18: registering power supply notifier
->> [    0.922049] amd_pstate: amd_pstate: CPU 19: calling amd_pstate_set_dynamic_epp (current_profile=3)
->> [    0.922051] amd_pstate: amd_pstate: CPU 19: get_balanced_epp: power_supply_is_system_supplied=1, returning EPP=0x0 (ac=0x0, dc=0x80)
->> [    0.922070] amd_pstate: amd_pstate: CPU 19: platform_profile_register succeeded
->> [    0.922071] amd_pstate: amd_pstate: CPU 19: registering power supply notifier
->> [    0.926049] amd_pstate: amd_pstate: CPU 20: calling amd_pstate_set_dynamic_epp (current_profile=3)
->> [    0.926052] amd_pstate: amd_pstate: CPU 20: get_balanced_epp: power_supply_is_system_supplied=1, returning EPP=0x0 (ac=0x0, dc=0x80)
->> [    0.926073] amd_pstate: amd_pstate: CPU 20: platform_profile_register succeeded
->> [    0.926074] amd_pstate: amd_pstate: CPU 20: registering power supply notifier
->> [    0.930049] amd_pstate: amd_pstate: CPU 21: calling amd_pstate_set_dynamic_epp (current_profile=3)
->> [    0.930052] amd_pstate: amd_pstate: CPU 21: get_balanced_epp: power_supply_is_system_supplied=1, returning EPP=0x0 (ac=0x0, dc=0x80)
->> [    0.930071] amd_pstate: amd_pstate: CPU 21: platform_profile_register succeeded
->> [    0.930072] amd_pstate: amd_pstate: CPU 21: registering power supply notifier
->> [    0.934050] amd_pstate: amd_pstate: CPU 22: calling amd_pstate_set_dynamic_epp (current_profile=3)
->> [    0.934052] amd_pstate: amd_pstate: CPU 22: get_balanced_epp: power_supply_is_system_supplied=1, returning EPP=0x0 (ac=0x0, dc=0x80)
->> [    0.934072] amd_pstate: amd_pstate: CPU 22: platform_profile_register succeeded
->> [    0.934073] amd_pstate: amd_pstate: CPU 22: registering power supply notifier
->> [    0.938050] amd_pstate: amd_pstate: CPU 23: calling amd_pstate_set_dynamic_epp (current_profile=3)
->> [    0.938052] amd_pstate: amd_pstate: CPU 23: get_balanced_epp: power_supply_is_system_supplied=1, returning EPP=0x0 (ac=0x0, dc=0x80)
->> [    0.938073] amd_pstate: amd_pstate: CPU 23: platform_profile_register succeeded
->> [    0.938074] amd_pstate: amd_pstate: CPU 23: registering power supply notifier
->>
 >>
 > 
 
