@@ -1,623 +1,231 @@
-Received: from mail-dl1-f48.google.com (mail-dl1-f48.google.com [74.125.82.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.freenet.de (mout.freenet.de [194.97.204.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93FF7308F26
-	for <regressions@lists.linux.dev>; Fri,  8 May 2026 20:21:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D45D41474CC;
+	Fri,  8 May 2026 20:31:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.97.204.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778271709; cv=none; b=Qp9oG3u6iDWC0exBUpb/90E3/BJvGydPIRWxETZkCCs6A2iF1j+RJ5Qq3smsJbBeC0H3snzwSHmMdYm1WeGyfa68Cs10QcClDa2dV6pIQB8GBN5bMHJn2fsV74+oaZd9lOa8+P23q4sxNcH0gOPpbeju9BtR2ySxVPVRVKhcUS0=
+	t=1778272319; cv=none; b=jsBWZskqV5/e7zI5T1IxMLmHHaouJNsKS2gED1fB4iz1EpSOa+xSUWYZi0tfl8H2deCN5glR4Yi8oko3KxTw/AP+WBwek7mbXwEt3vbfYzRQi0taaW7UVCAlZh/dG/ai5ewmAkYEJmZVGzPo26mvAhWEivjy7uHDyh/0KPrVhjA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778271709; c=relaxed/simple;
-	bh=rfJNHGDEEb9AWgAh1BjDeTFID1Cj9yK6Q7bo9Z182A0=;
+	s=arc-20240116; t=1778272319; c=relaxed/simple;
+	bh=eTlshjf6Y9q6kGQJTyMjrSwlT+rjZOKTUR1luBtF46Y=;
 	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=Mm8Pgi5wumxMsd2KHfeGWnvLSB15s9HHZAfNbOIEmoyvS5Ju5HxMJMikomKQ0Kcr3Y4S9YMrbxfXHPeTmx44MsG6baGYq7tfvqyF4a4kFtKu8CrsE3e6v8UOIg+0mt8TPcFDc4aSw3ibHCvRdlwtsHjwCBWEBJhUIRACO87/tsc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M1rp+V/V; arc=none smtp.client-ip=74.125.82.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 In-Reply-To:Content-Type; b=HD3QYWriFmuL3vLwWyhi4sPZr0otLQOvlMrO2PAxCeQyeTSEo69l9t2wNT5CViXcKcearHID2qXkKcUbgKnY/oshEajmdMxvVrlBjk1zUU6e/3zhr0H1FbB8Rj6PVuXU96txUq5fCKT5mZNr04a5dGua8CkYZPgWJ9vpoDITy/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=freenet.de; spf=pass smtp.mailfrom=freenet.de; dkim=pass (2048-bit key) header.d=freenet.de header.i=@freenet.de header.b=NLk75ysP; arc=none smtp.client-ip=194.97.204.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=freenet.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=freenet.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M1rp+V/V"
-Received: by mail-dl1-f48.google.com with SMTP id a92af1059eb24-1329fc4bf77so339491c88.1
-        for <regressions@lists.linux.dev>; Fri, 08 May 2026 13:21:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1778271707; x=1778876507; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=2Ixs/RBeSRw/1zBXWhTXPnd24zouTe6elpYl19qS6tk=;
-        b=M1rp+V/VrorS57HE+tDs6IGC+g0pFeWixlIwbF6Puf2JY3tI3k8xMhfBmJbo+Hy/1l
-         myosArImZoWe2M8ea6nEFmJmyhyMKfFvHI6Ko3WExHFOSIvisNk6IyttbCNOLbeV+XRJ
-         ReiFA1KM+kywJ7BUc8H34xiGLnembmUYbnkWqhQt4WDTzEVcCgWEJD/ya/izPADe9zFg
-         6egHjQyB11olCJ5l3myU4xcyE04dcsxitryrETRSItFdZ7Rvt7gw2sGgmqJFVUFN6KEO
-         EVsLPG3Xpv0b/VT2STAv93MpUsR583WY+pJNm1SQIW17arbNobRxJ3e1wCwUekRUoLiW
-         ceHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778271707; x=1778876507;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2Ixs/RBeSRw/1zBXWhTXPnd24zouTe6elpYl19qS6tk=;
-        b=JIBHjHQzm4x8CkTmevakfO4UkFEz81E1gcV0VvtJWs7Ggzqj5yByHogoL2OibXZreP
-         mAVzRs+IziHGfOMTUY9aoQEZkOUu0JKpG0+fKHeDXc7fMb950+qHXZP3PnO8OEROFfcC
-         kjH+Iybfv0wItW5ophD24NWFw7wtBRL8G5ek3e+k8/Tn17s9bEaC/eSApYmdKcjFUmhG
-         LQRESeQlFSITCjpYfXqUqQzZ7IO9L1GmahezwNcCjIN6N6ljqA8ZCctb7zoU027FS4Ow
-         s5Y7wzwApZp9ZOFSZobLtCuMGFv6mypiobrnfX89+iZ4fTfNuVUwKjYZvXQBy+tkwVt1
-         9s6w==
-X-Forwarded-Encrypted: i=1; AFNElJ/pS5w6bS+8NH0vW56WG9vnrnveivPGlPbAMTX4PJ713g+MmgzWqAbInC/r97BrH4S23KhnQwPeRl1VKA==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwIx+bMh2kxSBW0oXT7FFRvfXBNzYpuH1iI8ycsjN9TqPwdZSq7
-	Op2r3zFCgQ+LGIxTX4E6ovbsXSuJNaN/ciDKmnLKNeVPycULI4uPNexV5PIoBiL+
-X-Gm-Gg: AeBDieueXME4OI22mgTJGjzNEPsGXomx8WPvT7JDRcCCbAAkxps2ARQDKr0P+rRmg9G
-	Q0/YaIO8gye/aDmJZOyYWQUYlazJGO7BYEXrevxarlewUdqp2jDShj+jOpWWVaFq+vbjx5zcG6o
-	+GgotUqt1nZe7C9dhQQoX+WFkwhzuA9LIwLxzHqwlTAqcGfJJTIP4dFxpm1IdhVRxf1ACaGNGeH
-	uK747ux4zDLw79Zm5SwLloZDlLWxJ2ZR4rxw3vWCHaBDjqTmGLRlbC6WjIzPwmFTv6gz5fWqwU9
-	dyAQSSQiPF/f3k3YMKdmPhjwU6sIaMsFr8vU3FmS5F/X37W1hzDzgBkA0iYQJBE49I6lYzpRhOg
-	092Xay4OkYADETmNa4mbMsHVwjjtInd/DRSYs7giXfWaDwU+t0xBqFItB4L1yqFHoqF/PoKmSMP
-	k/a5gB9IQr+s7S2HUi2jTgs2dydz4rJsjET8fNtfJM
-X-Received: by 2002:a05:7022:1e10:b0:12b:fc21:874d with SMTP id a92af1059eb24-131880edbfemr7529522c88.19.1778271706356;
-        Fri, 08 May 2026 13:21:46 -0700 (PDT)
-Received: from [192.168.21.192] ([67.170.89.46])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2f888d3af4esm3767958eec.25.2026.05.08.13.21.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 08 May 2026 13:21:45 -0700 (PDT)
-Message-ID: <f275d82e-2187-428f-a331-4001d9f9d853@gmail.com>
-Date: Fri, 8 May 2026 13:21:44 -0700
+	dkim=pass (2048-bit key) header.d=freenet.de header.i=@freenet.de header.b="NLk75ysP"
+Received: from [2001:748:400:3319::4] (helo=sub6.mail.fnrz.de)
+	by mout2.mail.fnrz.de with esmtpa (ID viktor.jaegerskuepper@freenet.de) (port 25) (Exim 4.98.2 #2)
+	id 1wLRrX-0000000APoc-00RT;
+	Fri, 08 May 2026 22:31:55 +0200
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=freenet.de;
+	s=mjaymdexmjqk; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
+	References:Cc:To:From:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=UVaGjweJhz5IuiHGOpGBDKErnVCWMlvhQ6vm6Wgf7eo=; b=NLk75ysPHYMSrSSlabB1qkaGgV
+	os8qZGAu7VHT57rVXG0eOpD5G+pqjXDQYxvGuItuTpfGOKnBBMyDuqtb/SGr0xa1bdbHjvZbzDodv
+	/fgK9bOF0YCgrQn1rhjCEdd5g0P5nwCoOQ253y7hryjVuwMsCaa18a2/yrd4pOBFcv/Rw02d4iGO1
+	6Wsw4Hd0b2cr/lE12bFd24bkuwoyz4ZVaNHiUh4nnb3BWSXtYMLg7sQ10b2wKs41RN1hLjSnq6gM5
+	dAr/75j4IUIItiHRRQgr2BhjgmQH42pfZV4k3UgHXaVQcHkeXIIk7QjAKWZghihZBDWYXnU3Zp357
+	kza6YhZw==;
+Received: from [2a02:8071:a85:f020:ffe1:3c05:724:94e2] (port=56226 helo=[127.0.0.1])
+	by sub6.mail.fnrz.de with esmtpsa (ID viktor.jaegerskuepper@freenet.de) (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (port 465) (Exim 4.96 #2)
+	id 1wLRrW-002gzu-2j;
+	Fri, 08 May 2026 22:31:54 +0200
+Message-ID: <c8b2f359-365d-4d3e-bcc9-3b594e92886c@freenet.de>
+Date: Fri, 8 May 2026 22:32:16 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Betterbird (Linux)
-Subject: Re: the stuttering regression in 7.0: should I have done something
- different?
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] CPU running at fixed frequency (~1.7 GHz) with
+ kernel 7.1-rc1
+From: =?UTF-8?B?VmlrdG9yIErDpGdlcnNrw7xwcGVy?=
+ <viktor_jaegerskuepper@freenet.de>
+To: Mario Limonciello <mario.limonciello@amd.com>
+Cc: linux-pm@vger.kernel.org, regressions@lists.linux.dev,
+ Huang Rui <ray.huang@amd.com>, Thorsten Leemhuis <regressions@leemhuis.info>
+References: <14a87c99-785c-4b16-bfce-35ecbf053448@freenet.de>
+ <f35244cb-1f17-42a9-9479-5eee196cae5e@amd.com>
+ <f0b13b69-f5fa-4346-b1cd-dbae4a450c80@freenet.de>
+ <fbfea6b5-eb13-484d-bf66-6fb1dee4d30d@amd.com>
+ <8654f7a1-5023-4874-a90a-5332ba6301b3@freenet.de>
+ <dba72492-e96f-4fd8-9520-89fee242271f@amd.com>
+ <dea2c864-bd47-4bc8-a46b-f061771c2b4d@freenet.de>
+ <f4fd9018-2a05-454b-a887-9b1c9a8a14df@amd.com>
+ <33a693a8-a460-49b7-83cb-1ab7b66ce69e@freenet.de>
+ <46eaec7d-a359-40c8-9c5c-57ecc3506805@leemhuis.info>
+ <8c39f42a-f024-4f05-8d77-a95e7ca1c702@amd.com>
+ <b5882c89-aa71-4205-ab25-ca9f038340df@freenet.de>
+ <b2b60a42-53f1-4ee7-8361-2a07737e1bad@amd.com>
+ <5fa4c763-bf94-4507-8667-f3dcb032b2e0@freenet.de>
+ <399597ae-5186-4276-a585-acb1fd8155ad@amd.com>
+ <abba6f26-b696-4fcb-addc-754b295deb4f@freenet.de>
 Content-Language: en-US
-From: Tony Rodriguez <unixpro1970@gmail.com>
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
- Greg KH <gregkh@linuxfoundation.org>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- LKML <linux-kernel@vger.kernel.org>, Thomas Gleixner <tglx@kernel.org>
-References: <ffb44522-f01c-4be3-849d-27dc17fbca7f@leemhuis.info>
- <D5D19776-C809-4284-9417-F9A860877B98@gmail.com>
- <1c165caf-36b4-4673-97fd-ed86bef17b88@leemhuis.info>
- <3332123b-9e11-4895-9ab3-1707fba5815c@gmail.com>
-In-Reply-To: <3332123b-9e11-4895-9ab3-1707fba5815c@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+In-Reply-To: <abba6f26-b696-4fcb-addc-754b295deb4f@freenet.de>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-FN-MUUID: 1778272314A68405FF130FO
+X-Scan-TS: Fri, 08 May 2026 22:31:54 +0200
 
-Just confirmed on my end today.  This regression also impacts both 
-SPARC64 S7-2 and SPARC64 T7-1 on v7.0.4 and v7.1-rc2 as well. Different 
-systems using the same exact kernels.
-
-** Please see points (A1) (A2) (B1) (B2)
-
-Once again, I am not experiencing such issues when "my patch" (link 
-below) is added to address this regression.
-
-https://github.com/sparclinux/issues/issues/79#issuecomment-4362173884
-
-Output demonstrating issues for SPARC64 S7-2 and T7-1 systems (without 
-my regression patch):
-
-PS - On May 2nd, 2026 at 9:42 PM: I also sent an email to Thomas 
-Gleixner regarding this issue.  I will be happy to validate any patches 
-from your end regarding this issue, as time permits me to do so.
-
-
-Best regards,
-
-Tony Rodriguez
-
-
-  A1) SPARC64 S7-2: Kernel v7.1.0-rc2
-uname -a
-Linux s7t7-debian-test 7.1.0-rc2-test01 #1 SMP Fri May  8 10:02:12 PDT 
-2026 sparc64 GNU/Linux
-
-cat /proc/cmdline
-BOOT_IMAGE=/boot/vmlinuz-7.1.0-rc2-test01 
-root=UUID=ce937a4b-126a-41bd-a54b-03a424421086 ro console=ttyHV0,9600n81 
-systemd.log_level=info systemd.show_status=1 
-systemd.journald.forward_to_console=0 plymouth.enable=0 quiet
-
-[  243.267359] INFO: task kworker/u512:1:706 blocked for more than 120 
-seconds.
-[  243.281208]       Not tainted 7.1.0-rc2-test01 #1
-[  243.290583] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" 
-disables this message.
-[  243.306349] INFO: task kworker/127:1:714 blocked for more than 120 
-seconds.
-[  243.320106]       Not tainted 7.1.0-rc2-test01 #1
-[  243.329476] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" 
-disables this message.
-
-[  364.099350] INFO: task kworker/u512:1:706 blocked for more than 241 
-seconds.
-[  364.113199]       Not tainted 7.1.0-rc2-test01 #1
-[  364.122585] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" 
-disables this message.
-[  364.138328] INFO: task kworker/127:1:714 blocked for more than 241 
-seconds.
-[  364.152086]       Not tainted 7.1.0-rc2-test01 #1
-[  364.161470] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" 
-disables this message.
-
-[  485.295360] INFO: task kworker/u512:1:706 blocked for more than 362 
-seconds.
-[  485.309209]       Not tainted 7.1.0-rc2-test01 #1
-[  485.318581] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" 
-disables this message.
-[  485.334345] INFO: task kworker/127:1:714 blocked for more than 362 
-seconds.
-[  485.348099]       Not tainted 7.1.0-rc2-test01 #1
-[  485.357467] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" 
-disables this message.
-
-[  726.849598] INFO: task kworker/u512:1:706 blocked for more than 604 
-seconds.
-[  726.863444]       Not tainted 7.1.0-rc2-test01 #1
-[  726.872832] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" 
-disables this message.
-[  726.888573] INFO: task kworker/127:1:714 blocked for more than 604 
-seconds.
-[  726.902340]       Not tainted 7.1.0-rc2-test01 #1
-[  726.911708] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" 
-disables this message.
-
-sudo dmesg | grep -iE block | grep -iE worker
-[  243.267359] INFO: task kworker/u512:1:706 blocked for more than 120 
-seconds.
-[  243.306349] INFO: task kworker/127:1:714 blocked for more than 120 
-seconds.
-[  364.099350] INFO: task kworker/u512:1:706 blocked for more than 241 
-seconds.
-[  364.138328] INFO: task kworker/127:1:714 blocked for more than 241 
-seconds.
-[  485.295360] INFO: task kworker/u512:1:706 blocked for more than 362 
-seconds.
-[  485.334345] INFO: task kworker/127:1:714 blocked for more than 362 
-seconds.
-[  605.849474] INFO: task kworker/u512:1:706 blocked for more than 483 
-seconds.
-[  605.888461] INFO: task kworker/127:1:714 blocked for more than 483 
-seconds.
-
-sudo poweroff or sudo reboot
-NOTE(S): Random hangs during startup. Also, hangs during shutdown/reboot 
-process.
--------------------------------------------------------------------------------------------
-A2) SPARC64 S7-2: Kernel v7.0.4
-[  OK  ] Finished e2scrub_reap.service - Remove Stale Online ext4 
-Metadata Check Snapshots.
-
-Debian GNU/Linux forky/sid s7t7-debian-test ttyHV0
-
-s7t7-debian-test login: tonyr
-Password:
-Linux s7t7-debian-test 7.0.4-test01 #1 SMP Fri May  8 09:27:58 PDT 2026 
-sparc64
-[...]
-Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
-permitted by applicable law.
-
-login: timed [  114.687722] rcu: INFO: rcu_sched detected stalls on 
-CPUs/tasks:
-[  114.699319] rcu:     67-...!: (240 GPs behind) idle=e9c0/0/0x0 
-softirq=174/174 fqs=0 (false positive?)
-[  114.717370] rcu:     102-...!: (73 GPs behind) idle=77e0/0/0x0 
-softirq=286/287 fqs=0 (false positive?)
-[  114.735419] rcu:     111-...!: (52 GPs behind) idle=11d8/0/0x0 
-softirq=860/861 fqs=0 (false positive?)
-[  114.753489] rcu:     (detected by 11, t=5268 jiffies, g=4457, q=528 
-ncpus=128)
-[  114.767628] rcu: rcu_sched kthread timer wakeup didn't happen for 
-5270 jiffies! g4457 f0x0 RCU_GP_WAIT_FQS(5) ->state=0x402
-[  114.789647] rcu:     Possible timer handling issue on cpu=105 
-timer-softirq=98
-[  114.803535] rcu: rcu_sched kthread starved for 5280 jiffies! g4457 
-f0x0 RCU_GP_WAIT_FQS(5) ->state=0x402 ->cpu=105
-[  114.824201] rcu:     Unless rcu_sched kthread gets sufficient CPU 
-time, OOM is now expected behavior.
-[  114.842080] rcu: RCU grace-period kthread stack dump:
-[  114.852221] rcu: Stack dump where RCU GP kthread last ran:
-[  135.867723] rcu: INFO: rcu_sched detected stalls on CPUs/tasks:
-[  135.879326] rcu:     65-...!: (1 GPs behind) idle=35b0/0/0x0 
-softirq=483/484 fqs=0 (false positive?)
-[  135.897024] rcu:     67-...!: (241 GPs behind) idle=ecc0/0/0x0 
-softirq=174/174 fqs=0 (false positive?)
-[  135.915082] rcu:     102-...!: (74 GPs behind) idle=7800/0/0x0 
-softirq=286/287 fqs=0 (false positive?)
-[  135.933123] rcu:     111-...!: (53 GPs behind) idle=1238/0/0x0 
-softirq=860/861 fqs=0 (false positive?)
-[  135.951184] rcu:     (detected by 64, t=5272 jiffies, g=4461, q=752 
-ncpus=128)
-[  135.965398] rcu: rcu_sched kthread timer wakeup didn't happen for 
-5275 jiffies! g4461 f0x0 RCU_GP_WAIT_FQS(5) ->state=0x402
-[  135.987393] rcu:     Possible timer handling issue on cpu=105 
-timer-softirq=98
-[  136.001287] rcu: rcu_sched kthread starved for 5285 jiffies! g4461 
-f0x0 RCU_GP_WAIT_FQS(5) ->state=0x402 ->cpu=105
-[  136.021944] rcu:     Unless rcu_sched kthread gets sufficient CPU 
-time, OOM is now expected behavior.
-[  136.039829] rcu: RCU grace-period kthread stack dump:
-[  136.049971] rcu: Stack dump where RCU GP kthread last ran:
-
-NOTE(S): Unable to login and random hangs during system startup.
--------------------------------------------------------------------------
-B1) SPARC64 T7-1: Kernel v7.1.0-rc2
-lscpu;uname -a
-Architecture:          sparc64
-   CPU op-mode(s):      32-bit, 64-bit
-   Byte Order:          Big Endian
-CPU(s):                256
-   On-line CPU(s) list: 0-255
-Model name:            SPARC-M7
-   Thread(s) per core:  8
-   Core(s) per socket:  32
-   Socket(s):           1
-   Flags:               sun4v
-Caches (sum of all):
-   L1d:                 4 MiB (256 instances)
-   L1i:                 4 MiB (256 instances)
-   L2:                  64 MiB (256 instances)
-Linux s7t7-debian-test 7.1.0-rc2-test01 #1 SMP Fri May  8 10:02:12 PDT 
-2026 sparc64 GNU/Linux
-
-   526.766867] rcu:     8-...!: (806 GPs behind) idle=069c/0/0x1 
-softirq=682/682 fqs=0
-[  526.781618] rcu:     22-...!: (0 ticks this GP) idle=7b40/0/0x0 
-softirq=739/739 fqs=0 (false positive?)
-[  526.799841] rcu:     89-...!: (770 GPs behind) idle=7800/0/0x0 
-softirq=270/273 fqs=0 (false positive?)
-[  526.817901] rcu:     112-...!: (225 GPs behind) idle=c0c8/0/0x0 
-softirq=193/193 fqs=0 (false positive?)
-[  526.836131] rcu:     189-...!: (0 ticks this GP) idle=8ef0/0/0x0 
-softirq=1016/1016 fqs=0 (false positive?)
-[  526.854885] rcu:     204-...!: (0 ticks this GP) idle=5d20/0/0x0 
-softirq=774/774 fqs=0 (false positive?)
-[  526.873278] rcu:     219-...!: (225 GPs behind) idle=d580/0/0x0 
-softirq=605/607 fqs=0 (false positive?)
-[  526.891508] rcu:     226-...!: (233 GPs behind) idle=ec08/0/0x0 
-softirq=1189/1190 fqs=0 (false positive?)
-[  526.910079] rcu:     (detected by 157, t=5289 jiffies, g=5989, q=5339 
-ncpus=256)
-[  526.924916] rcu: rcu_sched kthread timer wakeup didn't happen for 
-5295 jiffies! g5989 f0x0 RCU_GP_WAIT_FQS(5) ->state=0x402
-[  526.946930] rcu:     Possible timer handling issue on cpu=94 
-timer-softirq=279
-[  526.960818] rcu: rcu_sched kthread starved for 5302 jiffies! g5989 
-f0x0 RCU_GP_WAIT_FQS(5) ->state=0x402 ->cpu=94
-[  526.981300] rcu:     Unless rcu_sched kthread gets sufficient CPU 
-time, OOM is now expected behavior.
-[  526.999182] rcu: RCU grace-period kthread stack dump:
-[  527.009301] rcu: Stack dump where RCU GP kthread last ran:
-[  548.035259] rcu: INFO: rcu_sched detected stalls on CPUs/tasks:
-[  548.046861] rcu:     8-...!: (807 GPs behind) idle=071c/0/0x1 
-softirq=682/682 fqs=0
-[  548.061608] rcu:     17-...!: (0 ticks this GP) idle=00e8/0/0x0 
-softirq=812/812 fqs=0 (false positive?)
-[  548.079831] rcu:     84-...!: (0 ticks this GP) idle=d2b0/0/0x0 
-softirq=797/797 fqs=0 (false positive?)
-[  548.098070] rcu:     89-...!: (771 GPs behind) idle=7be8/0/0x0 
-softirq=270/273 fqs=0 (false positive?)
-[  548.116122] rcu:     112-...!: (226 GPs behind) idle=c110/0/0x0 
-softirq=193/193 fqs=0 (false positive?)
-[  548.134342] rcu:     185-...!: (0 ticks this GP) idle=45b8/0/0x0 
-softirq=871/871 fqs=0 (false positive?)
-[  548.152759] rcu:     193-...!: (0 ticks this GP) idle=1758/0/0x0 
-softirq=1520/1520 fqs=0 (false positive?)
-[  548.171509] rcu:     205-...!: (0 ticks this GP) idle=1e98/0/0x0 
-softirq=852/852 fqs=0 (false positive?)
-[  548.189893] rcu:     219-...!: (226 GPs behind) idle=d5c8/0/0x0 
-softirq=605/607 fqs=0 (false positive?)
-[  548.208128] rcu:     226-...!: (234 GPs behind) idle=eff0/0/0x0 
-softirq=1189/1190 fqs=0 (false positive?)
-[  548.226699] rcu:     (detected by 115, t=5300 jiffies, g=5993, q=5539 
-ncpus=256)
-[  548.241699] rcu: rcu_sched kthread timer wakeup didn't happen for 
-5303 jiffies! g5993 f0x0 RCU_GP_WAIT_FQS(5) ->state=0x402
-[  548.263704] rcu:     Possible timer handling issue on cpu=94 
-timer-softirq=279
-[  548.277593] rcu: rcu_sched kthread starved for 5311 jiffies! g5993 
-f0x0 RCU_GP_WAIT_FQS(5) ->state=0x402 ->cpu=94
-[  548.298081] rcu:     Unless rcu_sched kthread gets sufficient CPU 
-time, OOM is now expected behavior.
-[  548.315971] rcu: RCU grace-period kthread stack dump:
-[  548.326084] rcu: Stack dump where RCU GP kthread last ran:
-[  569.343268] rcu: INFO: rcu_sched detected stalls on CPUs/tasks:
-[  569.354868] rcu:     8-...!: (808 GPs behind) idle=07ac/0/0x1 
-softirq=682/682 fqs=0
-[  569.369617] rcu:     89-...!: (772 GPs behind) idle=8518/0/0x0 
-softirq=270/273 fqs=0 (false positive?)
-[  569.387674] rcu:     112-...!: (227 GPs behind) idle=c168/0/0x0 
-softirq=193/193 fqs=0 (false positive?)
-[  569.405894] rcu:     219-...!: (227 GPs behind) idle=d620/0/0x0 
-softirq=605/607 fqs=0 (false positive?)
-[  569.424128] rcu:     226-...!: (235 GPs behind) idle=f920/0/0x0 
-softirq=1189/1190 fqs=0 (false positive?)
-[  569.442700] rcu:     (detected by 76, t=5276 jiffies, g=5997, q=5665 
-ncpus=256)
-[  569.457146] rcu: rcu_sched kthread timer wakeup didn't happen for 
-5278 jiffies! g5997 f0x0 RCU_GP_WAIT_FQS(5) ->state=0x402
-[  569.479149] rcu:     Possible timer handling issue on cpu=94 
-timer-softirq=279
-[  569.493043] rcu: rcu_sched kthread starved for 5285 jiffies! g5997 
-f0x0 RCU_GP_WAIT_FQS(5) ->state=0x402 ->cpu=94
-[  569.513534] rcu:     Unless rcu_sched kthread gets sufficient CPU 
-time, OOM is now expected behavior.
-[  569.531419] rcu: RCU grace-period kthread stack dump:
-[  569.541536] rcu: Stack dump where RCU GP kthread last ran:
-[  590.563260] rcu: INFO: rcu_sched detected stalls on CPUs/tasks:
-[  590.574870] rcu:     8-...!: (809 GPs behind) idle=0824/0/0x1 
-softirq=682/682 fqs=0
-[  590.589618] rcu:     89-...!: (773 GPs behind) idle=8850/0/0x0 
-softirq=270/273 fqs=0 (false positive?)
-[  590.607682] rcu:     112-...!: (228 GPs behind) idle=c198/0/0x0 
-softirq=193/193 fqs=0 (false positive?)
-[  590.625904] rcu:     195-...!: (0 ticks this GP) idle=7178/0/0x0 
-softirq=1038/1038 fqs=0 (false positive?)
-[  590.644660] rcu:     207-...!: (0 ticks this GP) idle=9440/0/0x0 
-softirq=809/809 fqs=0 (false positive?)
-[  590.663056] rcu:     219-...!: (228 GPs behind) idle=d650/0/0x0 
-softirq=605/607 fqs=0 (false positive?)
-[  590.681285] rcu:     226-...!: (236 GPs behind) idle=fc78/0/0x0 
-softirq=1189/1190 fqs=0 (false positive?)
-[  590.699859] rcu:     (detected by 138, t=5286 jiffies, g=6001, q=5524 
-ncpus=256)
-[  590.714623] rcu: rcu_sched kthread timer wakeup didn't happen for 
-5288 jiffies! g6001 f0x0 RCU_GP_WAIT_FQS(5) ->state=0x402
-[  590.736635] rcu:     Possible timer handling issue on cpu=94 
-timer-softirq=279
-[  590.750524] rcu: rcu_sched kthread starved for 5296 jiffies! g6001 
-f0x0 RCU_GP_WAIT_FQS(5) ->state=0x402 ->cpu=94
-[  590.771021] rcu:     Unless rcu_sched kthread gets sufficient CPU 
-time, OOM is now expected behavior.
-[  590.788903] rcu: RCU grace-period kthread stack dump:
-[  590.799012] rcu: Stack dump where RCU GP kthread last ran:
-[  606.363275] INFO: task kworker/u1024:0:12 blocked for more than 483 
-seconds.
-[  606.377139]       Tainted: G        W  7.1.0-rc2-test01 #1
-[  606.389636] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" 
-disables this message.
-[  611.823259] rcu: INFO: rcu_sched detected stalls on CPUs/tasks:
-[  611.834860] rcu:     8-...!: (810 GPs behind) idle=08bc/0/0x1 
-softirq=682/682 fqs=0
-[  611.849612] rcu:     89-...!: (774 GPs behind) idle=91a8/0/0x0 
-softirq=270/273 fqs=0 (false positive?)
-[  611.867665] rcu:     112-...!: (229 GPs behind) idle=c1d8/0/0x0 
-softirq=193/193 fqs=0 (false positive?)
-[  611.885887] rcu:     205-...!: (0 ticks this GP) idle=2160/0/0x0 
-softirq=865/865 fqs=0 (false positive?)
-[  611.904290] rcu:     219-...!: (229 GPs behind) idle=d690/0/0x0 
-softirq=605/607 fqs=0 (false positive?)
-[  611.922525] rcu:     226-...!: (237 GPs behind) idle=05e0/0/0x0 
-softirq=1189/1190 fqs=0 (false positive?)
-[  611.941095] rcu:     (detected by 166, t=5283 jiffies, g=6005, q=5522 
-ncpus=256)
-[  611.955789] rcu: rcu_sched kthread timer wakeup didn't happen for 
-5285 jiffies! g6005 f0x0 RCU_GP_WAIT_FQS(5) ->state=0x402
-[  611.977793] rcu:     Possible timer handling issue on cpu=94 
-timer-softirq=279
-[  611.991685] rcu: rcu_sched kthread starved for 5292 jiffies! g6005 
-f0x0 RCU_GP_WAIT_FQS(5) ->state=0x402 ->cpu=94
-[  612.012174] rcu:     Unless rcu_sched kthread gets sufficient CPU 
-time, OOM is now expected behavior.
-[  612.030060] rcu: RCU grace-period kthread stack dump:
-[  612.040180] rcu: Stack dump where RCU GP kthread last ran:
-
-r[  727.195272] INFO: task kworker/u1024:0:12 blocked for more than 604 
-seconds.
-[  727.209134]       Tainted: G        W  7.1.0-rc2-test01 #1
-[  727.221628] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" 
-disables this message.
-
-NOTE(S): Random hangs and same messages as S7-2. Takes about 15 minutes 
-to see the messages.
----------------------------------------------------------
-B2) SPARC64 T7-1 Kernel v7.0.4
-[  OK  ] Finished e2scrub_reap.service - Remove Stale Online ext4 
-Metadata Check Snapshots.
-
-Debian GNU/Linux forky/sid s7t7-debian-test ttyHV0
-
-s7t7-debian-test login: tonyr
-Password:
-Linux s7t7-debian-test 7.0.4-test01 #1 SMP Fri May  8 09:27:58 PDT 2026 
-sparc64
-[..]
-Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
-permitted by applicable law.
-[   79.468871] rcu: INFO: rcu_sched detected stalls on CPUs/tasks:
-[   79.480483] rcu:     114-...!: (424 GPs behind) idle=8760/0/0x0 
-softirq=126/126 fqs=0 (false positive?)
-[   79.498713] rcu:     (detected by 90, t=5259 jiffies, g=3769, q=818 
-ncpus=256)
-[   79.512702] rcu: rcu_sched kthread timer wakeup didn't happen for 
-5260 jiffies! g3769 f0x0 RCU_GP_WAIT_FQS(5) ->state=0x402
-[   79.534808] rcu:     Possible timer handling issue on cpu=2 
-timer-softirq=330
-[   79.548516] rcu: rcu_sched kthread starved for 5267 jiffies! g3769 
-f0x0 RCU_GP_WAIT_FQS(5) ->state=0x402 ->cpu=2
-[   79.568838] rcu:     Unless rcu_sched kthread gets sufficient CPU 
-time, OOM is now expected behavior.
-[   79.586709] rcu: RCU grace-period kthread stack dump:
-[   79.596867] rcu: Stack dump where RCU GP kthread last ran:
-[  100.612874] rcu: INFO: rcu_sched detected stalls on CPUs/tasks:
-[  100.624477] rcu:     114-...!: (425 GPs behind) idle=88f0/0/0x0 
-softirq=126/126 fqs=0 (false positive?)
-[  100.642709] rcu:     157-...!: (0 ticks this GP) idle=4c08/0/0x0 
-softirq=122/122 fqs=0 (false positive?)
-[  100.661106] rcu:     (detected by 3, t=5264 jiffies, g=3773, q=1046 
-ncpus=256)
-[  100.675155] rcu: rcu_sched kthread timer wakeup didn't happen for 
-5265 jiffies! g3773 f0x0 RCU_GP_WAIT_FQS(5) ->state=0x402
-[  100.697211] rcu:     Possible timer handling issue on cpu=2 
-timer-softirq=330
-[  100.710934] rcu: rcu_sched kthread starved for 5276 jiffies! g3773 
-f0x0 RCU_GP_WAIT_FQS(5) ->state=0x402 ->cpu=2
-[  100.731244] rcu:     Unless rcu_sched kthread gets sufficient CPU 
-time, OOM is now expected behavior.
-[  100.749125] rcu: RCU grace-period kthread stack dump:
-[  100.759255] rcu: Stack dump where RCU GP kthread last ran:
-login: ti[  121.776867] rcu: INFO: rcu_sched detected stalls on CPUs/tasks:
-[  121.788467] rcu:     114-...!: (426 GPs behind) idle=8a20/0/0x0 
-softirq=126/126 fqs=0 (false positive?)
-[  121.806703] rcu:     (detected by 3, t=5259 jiffies, g=3777, q=1267 
-ncpus=256)
-[  121.820664] rcu: rcu_sched kthread timer wakeup didn't happen for 
-5260 jiffies! g3777 f0x0 RCU_GP_WAIT_FQS(5) ->state=0x402
-[  121.842799] rcu:     Possible timer handling issue on cpu=2 
-timer-softirq=330
-[  121.856521] rcu: rcu_sched kthread starved for 5271 jiffies! g3777 
-f0x0 RCU_GP_WAIT_FQS(5) ->state=0x402 ->cpu=2
-[  121.876836] rcu:     Unless rcu_sched kthread gets sufficient CPU 
-time, OOM is now expected behavior.
-[  121.894717] rcu: RCU grace-period kthread stack dump:
-[  121.904824] rcu: Stack dump where RCU GP kthread last ran:
-[  142.920877] rcu: INFO: rcu_sched detected stalls on CPUs/tasks:
-[  142.932481] rcu:     114-...!: (427 GPs behind) idle=8b98/0/0x0 
-softirq=126/126 fqs=0 (false positive?)
-[  142.950709] rcu:     158-...!: (1 GPs behind) idle=5220/0/0x0 
-softirq=142/148 fqs=0 (false positive?)
-[  142.968586] rcu:     (detected by 122, t=5260 jiffies, g=3781, q=722 
-ncpus=256)
-[  142.982808] rcu: rcu_sched kthread timer wakeup didn't happen for 
-5265 jiffies! g3781 f0x0 RCU_GP_WAIT_FQS(5) ->state=0x402
-[  143.004857] rcu:     Possible timer handling issue on cpu=2 
-timer-softirq=330
-[  143.018583] rcu: rcu_sched kthread starved for 5273 jiffies! g3781 
-f0x0 RCU_GP_WAIT_FQS(5) ->state=0x402 ->cpu=2
-[  143.038893] rcu:     Unless rcu_sched kthread gets sufficient CPU 
-time, OOM is now expected behavior.
-[  143.056761] rcu: RCU grace-period kthread stack dump:
-[  143.066898] rcu: Stack dump where RCU GP kthread last ran:
-[  164.084863] rcu: INFO: rcu_sched detected stalls on CPUs/tasks:
-[  164.096463] rcu:     14-...!: (0 ticks this GP) idle=56b0/0/0x0 
-softirq=165/165 fqs=0 (false positive?)
-[  164.114695] rcu:     114-...!: (428 GPs behind) idle=8ed0/0/0x0 
-softirq=126/126 fqs=0 (false positive?)
-[  164.132916] rcu:     (detected by 96, t=5264 jiffies, g=3785, q=750 
-ncpus=256)
-[  164.146969] rcu: rcu_sched kthread timer wakeup didn't happen for 
-5265 jiffies! g3785 f0x0 RCU_GP_WAIT_FQS(5) ->state=0x402
-[  164.169019] rcu:     Possible timer handling issue on cpu=2 
-timer-softirq=330
-[  164.182728] rcu: rcu_sched kthread starved for 5276 jiffies! g3785 
-f0x0 RCU_GP_WAIT_FQS(5) ->state=0x402 ->cpu=2
-[  164.203055] rcu:     Unless rcu_sched kthread gets sufficient CPU 
-time, OOM is now expected behavior.
-[  164.220922] rcu: RCU grace-period kthread stack dump:
-[  164.231039] rcu: Stack dump where RCU GP kthread last ran:
-[  185.248867] rcu: INFO: rcu_sched detected stalls on CPUs/tasks:
-[  185.260468] rcu:     21-...!: (0 ticks this GP) idle=36c8/0/0x0 
-softirq=154/154 fqs=0 (false positive?)
-[  185.278684] rcu:     114-...!: (429 GPs behind) idle=8f68/0/0x0 
-softirq=126/126 fqs=0 (false positive?)
-[  185.296922] rcu:     (detected by 116, t=5264 jiffies, g=3789, q=760 
-ncpus=256)
-[  185.311140] rcu: rcu_sched kthread timer wakeup didn't happen for 
-5265 jiffies! g3789 f0x0 RCU_GP_WAIT_FQS(5) ->state=0x402
-[  185.333205] rcu:     Possible timer handling issue on cpu=2 
-timer-softirq=330
-[  185.346918] rcu: rcu_sched kthread starved for 5276 jiffies! g3789 
-f0x0 RCU_GP_WAIT_FQS(5) ->state=0x402 ->cpu=2
-[  185.367224] rcu:     Unless rcu_sched kthread gets sufficient CPU 
-time, OOM is now expected behavior.
-[  185.385113] rcu: RCU grace-period kthread stack dump:
-[  185.395229] rcu: Stack dump where RCU GP kthread last ran:
-   OK  ] Reached target network-online.target - Network is Online.
-[  OK  ] Started anacron.service - Run anacron jobs.
-[  OK  ] Started cups-browsed.service - Make remote CUPS printers 
-available locally.
-          Starting exim4.service - exim Mail Transport Agent...
-          Starting xrdp.service - xrdp daemon...
-[  OK  ] Finished user-runtime-dir@1000.service - User Runtime Directory 
-/run/user/1000.
-[  OK  ] Started xrdp.service - xrdp daemon.
-[  OK  ] Started serial-getty@ttyHV0.service - Serial Getty on ttyHV0.
-          Starting user@1000.service - User Manager for UID 1000...
-[  OK  ] Started exim4.service - exim Mail Transport Agent.
-[  OK  ] Reached target multi-user.target - Multi-User System.
-[  OK  ] Reached target graphical.target - Graphical Interface.
-[  OK  ] Started user@1000.service - User Manager for UID 1000.
-[FAILED] Failed to start session-1.scope - Session 1 of User tonyr.
-See 'systemctl status session-1.scope' for details.
-[  206.412865] rcu: INFO: rcu_sched detected stalls on CPUs/tasks:
-[  206.424477] rcu:     114-...!: (430 GPs behind) idle=97b0/0/0x0 
-softirq=126/126 fqs=0 (false positive?)
-[  206.442691] rcu:     (detected by 123, t=5259 jiffies, g=3793, q=5473 
-ncpus=256)
-[  206.457056] rcu: rcu_sched kthread timer wakeup didn't happen for 
-5261 jiffies! g3793 f0x0 RCU_GP_WAIT_FQS(5) ->state=0x402
-[  206.479157] rcu:     Possible timer handling issue on cpu=2 
-timer-softirq=330
-[  206.492868] rcu: rcu_sched kthread starved for 5271 jiffies! g3793 
-f0x0 RCU_GP_WAIT_FQS(5) ->state=0x402 ->cpu=2
-[  206.513173] rcu:     Unless rcu_sched kthread gets sufficient CPU 
-time, OOM is now expected behavior.
-[  206.531061] rcu: RCU grace-period kthread stack dump:
-[  206.541202] rcu: Stack dump where RCU GP kthread last ran:
-
-NOTE(S): Unable to login and random hangs during system startup. Same 
-messages/issues as S7-2.
-
->
-> On 5/8/26 12:50 AM, Thorsten Leemhuis wrote:
->> [+tglx so he knows about it; details about the problem that Tony faces
->> can be found in https://github.com/sparclinux/issues/issues/79 ]
->>
->> On 5/8/26 09:38, Tony Rodriguez wrote:
->>> I still don't believe this is fixed upstream as of v7.03 and v7.1-rc1,
->> Yes and no. It looks like d6e152d905bdb1 ("clockevents: Prevent timer
->> interrupt starvation") causes two regression.
->>
->> Thomas fixed one with 4096fd0e8eaea1 ("clockevents: Add missing resets
->> of the next_event_forced flag") -- and feedback shows that it definitely
->> solved the problem for quite a few people. If that's not the case for
->> you, then you seem to face a different problem caused by the same
->> change. Happens, that's life sometimes.
->>
->> Ciao, Thorsten
->>
->>> only when my patch is applied does the SPARC64 S7-2 system become 
->>> stable
->>> again. I also tested my patch with v7.0.4 and it works their as well.
->>> Will perform additional tests without my fix against v7.0.4 and 
->>> v7.1-rc2
->>> later today to revalidate the regression (USA Pacific time).
->>>
->>> Tony Rodriguez
->>> www.linkedin.com/in/unixpro1970
->>>
->>>> On May 7, 2026, at 11:33 PM, Thorsten Leemhuis <linux@leemhuis.info>
->>>> wrote:
->>>>
->>>> ﻿On 5/8/26 07:51, John Paul Adrian Glaubitz wrote:
->>>>> On Thu, 2026-04-23 at 18:30 +0200, Thorsten Leemhuis wrote:
->>>>>> FWIW, here is the rough timeline of the regression, just to be 
->>>>>> sure we
->>>>>> are all on the same page:
+Am 08.05.26 um 22:05 schrieb Viktor Jägersküpper:
+> Am 08.05.26 um 21:56 schrieb Mario Limonciello:
+>> On 5/8/26 14:53, Viktor Jägersküpper wrote:
+>>> Am 08.05.26 um 21:01 schrieb Mario Limonciello:
+>>>> On 5/8/26 13:56, Viktor Jägersküpper wrote:
+>>>>> Am 08.05.26 um 14:57 schrieb Mario Limonciello:
+>>>>>> On 5/8/26 04:31, Thorsten Leemhuis wrote:
+>>>>>>> * there is a whole patch series with fixes for the culprit:
+>>>>>>> https://lore.kernel.org/all/20260508051748.10484-1-kprateek.nayak@amd.com/
+>>>>>>>
 >>>>>>
->>>>>> * The regression I'm talking about is caused by d6e152d905bdb1
->>>>>> ("clockevents: Prevent timer interrupt starvation") [authored:
->>>>>> 2026-04-07 10:54:17; committed: 2026-04-10 22:45:38; next arrival:
->>>>>> next-20260413; merged: 2026-04-12 19:01:55; v7.0 (2026-04-12 
->>>>>> 22:48:06)]
->>>>> [...]
->>>>> Tony Rodriguez from the SPARC community has observed the regression
->>>>> on SPARC as well
->>>>> and proposed a fix to address it [1]. Not sure whether he has
->>>>> retested on the latest
->>>>> commit of Linus' tree yet.
+>>>>>> I don't think any of these will help; but that would a fine surprise if so.
+>>>>>>
 >>>>>
->>>>> Tony, can you verify that 4096fd0e8eaea1 fixes the issue for you?
+>>>>> This patch series fixes the bug when I boot with "amd_dynamic_epp=disable" (I built
+>>>>> the kernel with CONFIG_X86_AMD_PSTATE_DYNAMIC_EPP=y). I didn't bisect to find out
+>>>>> which patch contains the partial fix, but I can do this if it helps.
 >>>>>
->>>>>> [1] https://github.com/sparclinux/issues/issues/79
->>>> It's likely a different regressions, as that report's title says that
->>>> v7.0.1, v7.0.2, v7.0.3, and v7.1‑rc1 are affected, which all 
->>>> contain the
->>>> fix, aka 4096fd0e8eaea1. Reporting in a new thread is likely best, as
->>>> the authors of the culprit are not even CCed here.
+>>>>> If you need further information (acpidump and/or output from amd-pstate tool), just
+>>>>> tell me.
 >>>>
->>>> Ciao, Thorsten
+>>>> When you have dynamic EPP enabled it sets up platform profile.  With that series in place does changing platform profile help?
+>>>
+>>> Strangely *changing* the power profile (to any value) seems to enable the expected
+>>> boosting behaviour, but since I can only do that when the PC has finished booting,
+>>> the cores still seem to be stuck at ~1.7 GHz until then. Unless I am doing something
+>>> stupid, that's not how it's supposed to work, I guess?
+
+Correction: Only changing the profile to "power-saver" leads to the expected behaviour,
+switching between "balanced" and "performance" even several times in a row doesn't
+help.
+
+>>
+>> Can you confirm your tree when you found this?
+>> 7.1-rc2 + Prateek's series?
+> 
+> Yes, exactly this.
+> 
+>>
+>> I would say that is not expected behavior; but it does hint further at the second bug.  Hopefully I can repro it.
+>>
+>>>
+>>>>> Last week I got this output after applying a debugging patch from you:
+>>>>>>> On 4/29/26 20:34, Viktor Jägersküpper wrote:
+>>>>>>>> Am 29.04.26 um 19:14 schrieb Mario Limonciello:
+>>>>>>>>>
+>>>>>>>>> OK thanks.  Here is a debugging patch that should show what's happening in the new paths from e30ca6dd5345c5b8ba05f346a8e81105352fe571 so we can confirm root cause on your system.
+>>>>>>>>
+>>>>>>>> These are the dmesg lines concerning amd-pstate:
+>>>>>>>> [    0.845044] amd_pstate: amd_pstate: CPU 0: calling amd_pstate_set_dynamic_epp (current_profile=3)
+>>>>>>>> [    0.845047] amd_pstate: amd_pstate: CPU 0: get_balanced_epp: power_supply_is_system_supplied=1, returning EPP=0x0 (ac=0x0, dc=0x80)
+>>>>>>>> [    0.845059] amd_pstate: amd_pstate: CPU 0: platform_profile_register succeeded
+>>>>>>>> [    0.845060] amd_pstate: amd_pstate: CPU 0: registering power supply notifier
+>>>>>>>> [    0.849046] amd_pstate: amd_pstate: CPU 1: calling amd_pstate_set_dynamic_epp (current_profile=3)
+>>>>>>>> [    0.849047] amd_pstate: amd_pstate: CPU 1: get_balanced_epp: power_supply_is_system_supplied=1, returning EPP=0x0 (ac=0x0, dc=0x80)
+>>>>>>>> [    0.849058] amd_pstate: amd_pstate: CPU 1: platform_profile_register succeeded
+>>>>>>>> [    0.849059] amd_pstate: amd_pstate: CPU 1: registering power supply notifier
+>>>>>>>> [    0.853043] amd_pstate: amd_pstate: CPU 2: calling amd_pstate_set_dynamic_epp (current_profile=3)
+>>>>>>>> [    0.853044] amd_pstate: amd_pstate: CPU 2: get_balanced_epp: power_supply_is_system_supplied=1, returning EPP=0x0 (ac=0x0, dc=0x80)
+>>>>>>>> [    0.853054] amd_pstate: amd_pstate: CPU 2: platform_profile_register succeeded
+>>>>>>>> [    0.853054] amd_pstate: amd_pstate: CPU 2: registering power supply notifier
+>>>>>>>> [    0.857043] amd_pstate: amd_pstate: CPU 3: calling amd_pstate_set_dynamic_epp (current_profile=3)
+>>>>>>>> [    0.857044] amd_pstate: amd_pstate: CPU 3: get_balanced_epp: power_supply_is_system_supplied=1, returning EPP=0x0 (ac=0x0, dc=0x80)
+>>>>>>>> [    0.857054] amd_pstate: amd_pstate: CPU 3: platform_profile_register succeeded
+>>>>>>>> [    0.857054] amd_pstate: amd_pstate: CPU 3: registering power supply notifier
+>>>>>>>> [    0.861045] amd_pstate: amd_pstate: CPU 4: calling amd_pstate_set_dynamic_epp (current_profile=3)
+>>>>>>>> [    0.861046] amd_pstate: amd_pstate: CPU 4: get_balanced_epp: power_supply_is_system_supplied=1, returning EPP=0x0 (ac=0x0, dc=0x80)
+>>>>>>>> [    0.861056] amd_pstate: amd_pstate: CPU 4: platform_profile_register succeeded
+>>>>>>>> [    0.861057] amd_pstate: amd_pstate: CPU 4: registering power supply notifier
+>>>>>>>> [    0.865044] amd_pstate: amd_pstate: CPU 5: calling amd_pstate_set_dynamic_epp (current_profile=3)
+>>>>>>>> [    0.865046] amd_pstate: amd_pstate: CPU 5: get_balanced_epp: power_supply_is_system_supplied=1, returning EPP=0x0 (ac=0x0, dc=0x80)
+>>>>>>>> [    0.865057] amd_pstate: amd_pstate: CPU 5: platform_profile_register succeeded
+>>>>>>>> [    0.865058] amd_pstate: amd_pstate: CPU 5: registering power supply notifier
+>>>>>>>> [    0.870044] amd_pstate: amd_pstate: CPU 6: calling amd_pstate_set_dynamic_epp (current_profile=3)
+>>>>>>>> [    0.870046] amd_pstate: amd_pstate: CPU 6: get_balanced_epp: power_supply_is_system_supplied=1, returning EPP=0x0 (ac=0x0, dc=0x80)
+>>>>>>>> [    0.870058] amd_pstate: amd_pstate: CPU 6: platform_profile_register succeeded
+>>>>>>>> [    0.870058] amd_pstate: amd_pstate: CPU 6: registering power supply notifier
+>>>>>>>> [    0.874044] amd_pstate: amd_pstate: CPU 7: calling amd_pstate_set_dynamic_epp (current_profile=3)
+>>>>>>>> [    0.874045] amd_pstate: amd_pstate: CPU 7: get_balanced_epp: power_supply_is_system_supplied=1, returning EPP=0x0 (ac=0x0, dc=0x80)
+>>>>>>>> [    0.874056] amd_pstate: amd_pstate: CPU 7: platform_profile_register succeeded
+>>>>>>>> [    0.874057] amd_pstate: amd_pstate: CPU 7: registering power supply notifier
+>>>>>>>> [    0.878045] amd_pstate: amd_pstate: CPU 8: calling amd_pstate_set_dynamic_epp (current_profile=3)
+>>>>>>>> [    0.878046] amd_pstate: amd_pstate: CPU 8: get_balanced_epp: power_supply_is_system_supplied=1, returning EPP=0x0 (ac=0x0, dc=0x80)
+>>>>>>>> [    0.878055] amd_pstate: amd_pstate: CPU 8: platform_profile_register succeeded
+>>>>>>>> [    0.878056] amd_pstate: amd_pstate: CPU 8: registering power supply notifier
+>>>>>>>> [    0.882045] amd_pstate: amd_pstate: CPU 9: calling amd_pstate_set_dynamic_epp (current_profile=3)
+>>>>>>>> [    0.882046] amd_pstate: amd_pstate: CPU 9: get_balanced_epp: power_supply_is_system_supplied=1, returning EPP=0x0 (ac=0x0, dc=0x80)
+>>>>>>>> [    0.882055] amd_pstate: amd_pstate: CPU 9: platform_profile_register succeeded
+>>>>>>>> [    0.882056] amd_pstate: amd_pstate: CPU 9: registering power supply notifier
+>>>>>>>> [    0.886045] amd_pstate: amd_pstate: CPU 10: calling amd_pstate_set_dynamic_epp (current_profile=3)
+>>>>>>>> [    0.886046] amd_pstate: amd_pstate: CPU 10: get_balanced_epp: power_supply_is_system_supplied=1, returning EPP=0x0 (ac=0x0, dc=0x80)
+>>>>>>>> [    0.886055] amd_pstate: amd_pstate: CPU 10: platform_profile_register succeeded
+>>>>>>>> [    0.886056] amd_pstate: amd_pstate: CPU 10: registering power supply notifier
+>>>>>>>> [    0.890045] amd_pstate: amd_pstate: CPU 11: calling amd_pstate_set_dynamic_epp (current_profile=3)
+>>>>>>>> [    0.890046] amd_pstate: amd_pstate: CPU 11: get_balanced_epp: power_supply_is_system_supplied=1, returning EPP=0x0 (ac=0x0, dc=0x80)
+>>>>>>>> [    0.890056] amd_pstate: amd_pstate: CPU 11: platform_profile_register succeeded
+>>>>>>>> [    0.890056] amd_pstate: amd_pstate: CPU 11: registering power supply notifier
+>>>>>>>> [    0.894046] amd_pstate: amd_pstate: CPU 12: calling amd_pstate_set_dynamic_epp (current_profile=3)
+>>>>>>>> [    0.894047] amd_pstate: amd_pstate: CPU 12: get_balanced_epp: power_supply_is_system_supplied=1, returning EPP=0x0 (ac=0x0, dc=0x80)
+>>>>>>>> [    0.894056] amd_pstate: amd_pstate: CPU 12: platform_profile_register succeeded
+>>>>>>>> [    0.894057] amd_pstate: amd_pstate: CPU 12: registering power supply notifier
+>>>>>>>> [    0.898046] amd_pstate: amd_pstate: CPU 13: calling amd_pstate_set_dynamic_epp (current_profile=3)
+>>>>>>>> [    0.898047] amd_pstate: amd_pstate: CPU 13: get_balanced_epp: power_supply_is_system_supplied=1, returning EPP=0x0 (ac=0x0, dc=0x80)
+>>>>>>>> [    0.898055] amd_pstate: amd_pstate: CPU 13: platform_profile_register succeeded
+>>>>>>>> [    0.898056] amd_pstate: amd_pstate: CPU 13: registering power supply notifier
+>>>>>>>> [    0.902046] amd_pstate: amd_pstate: CPU 14: calling amd_pstate_set_dynamic_epp (current_profile=3)
+>>>>>>>> [    0.902048] amd_pstate: amd_pstate: CPU 14: get_balanced_epp: power_supply_is_system_supplied=1, returning EPP=0x0 (ac=0x0, dc=0x80)
+>>>>>>>> [    0.902059] amd_pstate: amd_pstate: CPU 14: platform_profile_register succeeded
+>>>>>>>> [    0.902059] amd_pstate: amd_pstate: CPU 14: registering power supply notifier
+>>>>>>>> [    0.906046] amd_pstate: amd_pstate: CPU 15: calling amd_pstate_set_dynamic_epp (current_profile=3)
+>>>>>>>> [    0.906048] amd_pstate: amd_pstate: CPU 15: get_balanced_epp: power_supply_is_system_supplied=1, returning EPP=0x0 (ac=0x0, dc=0x80)
+>>>>>>>> [    0.906060] amd_pstate: amd_pstate: CPU 15: platform_profile_register succeeded
+>>>>>>>> [    0.906060] amd_pstate: amd_pstate: CPU 15: registering power supply notifier
+>>>>>>>> [    0.910046] amd_pstate: amd_pstate: CPU 16: calling amd_pstate_set_dynamic_epp (current_profile=3)
+>>>>>>>> [    0.910048] amd_pstate: amd_pstate: CPU 16: get_balanced_epp: power_supply_is_system_supplied=1, returning EPP=0x0 (ac=0x0, dc=0x80)
+>>>>>>>> [    0.910058] amd_pstate: amd_pstate: CPU 16: platform_profile_register succeeded
+>>>>>>>> [    0.910059] amd_pstate: amd_pstate: CPU 16: registering power supply notifier
+>>>>>>>> [    0.914047] amd_pstate: amd_pstate: CPU 17: calling amd_pstate_set_dynamic_epp (current_profile=3)
+>>>>>>>> [    0.914048] amd_pstate: amd_pstate: CPU 17: get_balanced_epp: power_supply_is_system_supplied=1, returning EPP=0x0 (ac=0x0, dc=0x80)
+>>>>>>>> [    0.914059] amd_pstate: amd_pstate: CPU 17: platform_profile_register succeeded
+>>>>>>>> [    0.914060] amd_pstate: amd_pstate: CPU 17: registering power supply notifier
+>>>>>>>> [    0.918049] amd_pstate: amd_pstate: CPU 18: calling amd_pstate_set_dynamic_epp (current_profile=3)
+>>>>>>>> [    0.918051] amd_pstate: amd_pstate: CPU 18: get_balanced_epp: power_supply_is_system_supplied=1, returning EPP=0x0 (ac=0x0, dc=0x80)
+>>>>>>>> [    0.918081] amd_pstate: amd_pstate: CPU 18: platform_profile_register succeeded
+>>>>>>>> [    0.918082] amd_pstate: amd_pstate: CPU 18: registering power supply notifier
+>>>>>>>> [    0.922049] amd_pstate: amd_pstate: CPU 19: calling amd_pstate_set_dynamic_epp (current_profile=3)
+>>>>>>>> [    0.922051] amd_pstate: amd_pstate: CPU 19: get_balanced_epp: power_supply_is_system_supplied=1, returning EPP=0x0 (ac=0x0, dc=0x80)
+>>>>>>>> [    0.922070] amd_pstate: amd_pstate: CPU 19: platform_profile_register succeeded
+>>>>>>>> [    0.922071] amd_pstate: amd_pstate: CPU 19: registering power supply notifier
+>>>>>>>> [    0.926049] amd_pstate: amd_pstate: CPU 20: calling amd_pstate_set_dynamic_epp (current_profile=3)
+>>>>>>>> [    0.926052] amd_pstate: amd_pstate: CPU 20: get_balanced_epp: power_supply_is_system_supplied=1, returning EPP=0x0 (ac=0x0, dc=0x80)
+>>>>>>>> [    0.926073] amd_pstate: amd_pstate: CPU 20: platform_profile_register succeeded
+>>>>>>>> [    0.926074] amd_pstate: amd_pstate: CPU 20: registering power supply notifier
+>>>>>>>> [    0.930049] amd_pstate: amd_pstate: CPU 21: calling amd_pstate_set_dynamic_epp (current_profile=3)
+>>>>>>>> [    0.930052] amd_pstate: amd_pstate: CPU 21: get_balanced_epp: power_supply_is_system_supplied=1, returning EPP=0x0 (ac=0x0, dc=0x80)
+>>>>>>>> [    0.930071] amd_pstate: amd_pstate: CPU 21: platform_profile_register succeeded
+>>>>>>>> [    0.930072] amd_pstate: amd_pstate: CPU 21: registering power supply notifier
+>>>>>>>> [    0.934050] amd_pstate: amd_pstate: CPU 22: calling amd_pstate_set_dynamic_epp (current_profile=3)
+>>>>>>>> [    0.934052] amd_pstate: amd_pstate: CPU 22: get_balanced_epp: power_supply_is_system_supplied=1, returning EPP=0x0 (ac=0x0, dc=0x80)
+>>>>>>>> [    0.934072] amd_pstate: amd_pstate: CPU 22: platform_profile_register succeeded
+>>>>>>>> [    0.934073] amd_pstate: amd_pstate: CPU 22: registering power supply notifier
+>>>>>>>> [    0.938050] amd_pstate: amd_pstate: CPU 23: calling amd_pstate_set_dynamic_epp (current_profile=3)
+>>>>>>>> [    0.938052] amd_pstate: amd_pstate: CPU 23: get_balanced_epp: power_supply_is_system_supplied=1, returning EPP=0x0 (ac=0x0, dc=0x80)
+>>>>>>>> [    0.938073] amd_pstate: amd_pstate: CPU 23: platform_profile_register succeeded
+>>>>>>>> [    0.938074] amd_pstate: amd_pstate: CPU 23: registering power supply notifier
+>>>>>>>>
+>>>>>>>>
+>>>>>>>
+>>>>>>
+>>>>>
+>>>>
+>>>
+>>
+> 
+
