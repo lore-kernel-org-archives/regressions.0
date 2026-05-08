@@ -1,55 +1,51 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.174])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.162])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E02E33AD9C
-	for <regressions@lists.linux.dev>; Fri,  8 May 2026 06:33:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28F5C37CD52
+	for <regressions@lists.linux.dev>; Fri,  8 May 2026 07:54:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.162
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778222017; cv=none; b=qhtHnVnAT6Cshyh1nXc5OP1vcW/N2bQLTOljklehK0xLP/ae3OzDXV9ytQQ9cKM01BXcGEJ8xX00qcUMiG0sq14pyXtP1tw9oVL3/TUdUoeDFLEDUg8Jxe2YNJA9xoNfNlG1nY+frLHIoZdOjnV9LlnTlZVbi2u+gb72+8GlkDw=
+	t=1778226848; cv=none; b=bfH1Gzpiz1aPRXpscKpPKqdqpRX4M3uEI4WhZVeyqXpnQYC6FsR4G+v171pF2rkTb1NyQu69U73NGlINY7swn9NxEUqjOr4b5gNz71hw5/PYLkqKJ8RrxUACserCF19jr6TdWZAy+z5z+4oFnKZFltOR4rpXdkvXtQ+uuNTFaDk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778222017; c=relaxed/simple;
-	bh=lCKo62+PdQ9b8FPWXetloQ/qLurm0UCRo6ajqLyX12A=;
+	s=arc-20240116; t=1778226848; c=relaxed/simple;
+	bh=3D6N8Wqln8ocycX1adE6giaEuBVGW+rRoNbdeRSOO20=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gJbUQM/XLsIjFC664q3UOX287M7iRc69kGAO4km2Xge0BrPleI9aeYreUFOz5GM39DAscDIsBQ5zZmI3uj4rUZ6VJewdmXdjGCf3/TajS95rqEX6gShWtsZQlW2OOypKFlkfr1PH3zmDARaHKn8s44/WNYucB+99AEPyz7u3ymo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=aM0tTOCW; arc=none smtp.client-ip=188.68.63.174
+	 In-Reply-To:Content-Type; b=dEejfLvQCIrAIqyA1gArkZWeE8S/J9mmm0GYSwmGcCIQDYYnyYboSoh2cba5u8HPYUcZ99hYOq+tuVkChLMSP1IZ/6HGUAuzW0uowuBmGzRaPDs1NtkX8zDZfMCi7PoZOOjU13PdMCD7AhuupvKyK2q2fuANnCG3BLcKNW5hauE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=gq/Aw/AQ; arc=none smtp.client-ip=188.68.63.162
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="aM0tTOCW"
-Received: from mors-relay8204.netcup.net (localhost [127.0.0.1])
-	by mors-relay8204.netcup.net (Postfix) with ESMTPS id 4gBfSw2gkLz8klS;
-	Fri,  8 May 2026 06:33:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="gq/Aw/AQ"
+Received: from mors-relay-8201.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4gBhFx6Z7jz46Pd;
+	Fri,  8 May 2026 09:53:57 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1778222000;
-	bh=lCKo62+PdQ9b8FPWXetloQ/qLurm0UCRo6ajqLyX12A=;
+	s=key2; t=1778226837;
+	bh=3D6N8Wqln8ocycX1adE6giaEuBVGW+rRoNbdeRSOO20=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=aM0tTOCWxrAFOavdcHrFzrHiPlsnZyMr2BxxNOycyrjiB9uvncXmKISPfHPLeSv8Y
-	 cb3ZJlxCpnGZtCrpReULw5O/geO1LEJDRqlY99mxlrIZf34nhvXnwy/2En0Hd5DtXk
-	 CvWDP5G6bV5CWVpWFev1LL5Q+xvnYySkvA0NsBX0egbNnfEYmcOXbS7hRh5sYRVk15
-	 Nzwz0sufuUYOAMizSWXBSjijHj/0KMIfZsaFfokLwPyT3MJuXBoJrl8CnJjxZCNkR9
-	 XA8PrjLSN/N/JPyXEurj2/nRJ2gL5Rq43zd9x5EIl7Wt3CrfukxQpp0HVuNPD8Yq7i
-	 BAdUbF/N5pcUA==
-Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay8204.netcup.net (Postfix) with ESMTPS id 4gBfSw1x3kz8kl2;
-	Fri,  8 May 2026 06:33:20 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
-X-Spam-Flag: NO
-X-Spam-Score: -2.901
-X-Spam-Level: 
+	b=gq/Aw/AQhbKBQo7f9thR3MGnr/TvLMbHcRgBB6jsSFaOD1xDi5/gjAnR5BBQquEMb
+	 7o4Byj3KFXgQQgDxntc+TBk0xpGqTDpAGZzpjN3dkkeznbEB1rIeV0MiJgZNNPIc89
+	 vlIBagnIPthyielZq1wbh21XwxVAE3zERoMZTK1vH6PT7iwOQJPkbBZeDwZYHNFh6J
+	 FpqP8C2QVm0UlB3VmThj+AdN15uSQ4axqeUtQZVO7/S8SGtYHRtpWOZCvMGflSMEPi
+	 L0981F6PfpB+HXfzx8X5iGlPAcjKr4Oi+FkP2elaSNWzWSTPTeMg1p+dPiq489Fq7D
+	 prPAVJzTIrXWg==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4gBhFx5pz3z46Mf;
+	Fri,  8 May 2026 09:53:57 +0200 (CEST)
 Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4gBfSv2ZnFz8tZp;
-	Fri,  8 May 2026 08:33:19 +0200 (CEST)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4gBh9z5r9Mz8tjT;
+	Fri,  8 May 2026 09:50:31 +0200 (CEST)
 Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 9D58961826;
-	Fri,  8 May 2026 08:33:18 +0200 (CEST)
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id B3F6E60362;
+	Fri,  8 May 2026 09:50:30 +0200 (CEST)
 Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=linux@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
 Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <ffb44522-f01c-4be3-849d-27dc17fbca7f@leemhuis.info>
-Date: Fri, 8 May 2026 08:33:17 +0200
+Message-ID: <1c165caf-36b4-4673-97fd-ed86bef17b88@leemhuis.info>
+Date: Fri, 8 May 2026 09:50:30 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -59,15 +55,17 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: the stuttering regression in 7.0: should I have done something
  different?
-To: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+To: Tony Rodriguez <unixpro1970@gmail.com>
+Cc: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
  Greg KH <gregkh@linuxfoundation.org>,
- Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Linux kernel regressions list <regressions@lists.linux.dev>,
- LKML <linux-kernel@vger.kernel.org>, Tony Rodriguez <unixpro1970@gmail.com>
-References: <4dd98a32-d1d6-43de-910c-7e487503177e@leemhuis.info>
- <371674dd1f67973025d9fa293c01c99ee3279fc8.camel@physik.fu-berlin.de>
-From: Thorsten Leemhuis <linux@leemhuis.info>
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ LKML <linux-kernel@vger.kernel.org>, Thomas Gleixner <tglx@kernel.org>
+References: <ffb44522-f01c-4be3-849d-27dc17fbca7f@leemhuis.info>
+ <D5D19776-C809-4284-9417-F9A860877B98@gmail.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
 Content-Language: de-DE, en-US
+X-Enigmail-Draft-Status: N11222
 Autocrypt: addr=linux@leemhuis.info; keydata=
  xsFNBFJ4AQ0BEADCz16x4kl/YGBegAsYXJMjFRi3QOr2YMmcNuu1fdsi3XnM+xMRaukWby47
  JcsZYLDKRHTQ/Lalw9L1HI3NRwK+9ayjg31wFdekgsuPbu4x5RGDIfyNpd378Upa8SUmvHik
@@ -111,38 +109,67 @@ Autocrypt: addr=linux@leemhuis.info; keydata=
  8zG721N4hWyyLALtGUKIVWZvBVKQIGQRPtNC7s9NVeLIMqoH7qeDfkf10XL9tvSSDY6KVl1n
  K0gzPCKcBaJ2pA1xd4pQTjf4jAHHM4diztaXqnh4OFsu3HOTAJh1ZtLvYVj5y9GFCq2azqTD
  pPI3FGMkRipwxdKGAO7tJVzM7u+/+83RyUjgAbkkkD1doWIl+iGZ4s/Jxejw1yRH0R5/uTaB MEK4
-In-Reply-To: 
- <371674dd1f67973025d9fa293c01c99ee3279fc8.camel@physik.fu-berlin.de>
+In-Reply-To: <D5D19776-C809-4284-9417-F9A860877B98@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-PPP-Message-ID: <177822199895.1965071.4662186663855972614@mxe9fb.netcup.net>
+X-PPP-Message-ID: 
+ <177822663106.2070279.10412447286703157782@mxe9fb.netcup.net>
 X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: 9D58961826
-X-NC-CID: 4GNVuDBa2B5b5qI86awJ0i+hcXD8pvfsPLajzhlyQ2joMYTIQzk=
+X-Rspamd-Queue-Id: B3F6E60362
+X-NC-CID: 4ftG8n7JVwX25Kwhf7lvSCraAUHjMNZFmiG4BCHL/Pbk9cZl810=
 
-On 5/8/26 07:51, John Paul Adrian Glaubitz wrote:
-> On Thu, 2026-04-23 at 18:30 +0200, Thorsten Leemhuis wrote:
->> FWIW, here is the rough timeline of the regression, just to be sure we
->> are all on the same page:
->>
->> * The regression I'm talking about is caused by d6e152d905bdb1
->> ("clockevents: Prevent timer interrupt starvation") [authored:
->> 2026-04-07 10:54:17; committed: 2026-04-10 22:45:38; next arrival:
->> next-20260413; merged: 2026-04-12 19:01:55; v7.0 (2026-04-12 22:48:06)]
-> [...]
-> Tony Rodriguez from the SPARC community has observed the regression on SPARC as well
-> and proposed a fix to address it [1]. Not sure whether he has retested on the latest
-> commit of Linus' tree yet.
-> 
-> Tony, can you verify that 4096fd0e8eaea1 fixes the issue for you?
->
->> [1] https://github.com/sparclinux/issues/issues/79
+[+tglx so he knows about it; details about the problem that Tony faces
+can be found in https://github.com/sparclinux/issues/issues/79 ]
 
-It's likely a different regressions, as that report's title says that
-v7.0.1, v7.0.2, v7.0.3, and v7.1‑rc1 are affected, which all contain the
-fix, aka 4096fd0e8eaea1. Reporting in a new thread is likely best, as
-the authors of the culprit are not even CCed here.
+On 5/8/26 09:38, Tony Rodriguez wrote:
+> I still don't believe this is fixed upstream as of v7.03 and v7.1-rc1,
+
+Yes and no. It looks like d6e152d905bdb1 ("clockevents: Prevent timer
+interrupt starvation") causes two regression.
+
+Thomas fixed one with 4096fd0e8eaea1 ("clockevents: Add missing resets
+of the next_event_forced flag") -- and feedback shows that it definitely
+solved the problem for quite a few people. If that's not the case for
+you, then you seem to face a different problem caused by the same
+change. Happens, that's life sometimes.
 
 Ciao, Thorsten
 
+> only when my patch is applied does the SPARC74 S7-2 system become stable
+> again. I also tested my patch with v7.04 and it works their as well.
+> Will perform additional tests without my fix against v7.0.4 and v7.1-rc2
+> later today to revalidate the regression (USA Pacific time).
+> 
+> Tony Rodriguez
+> www.linkedin.com/in/unixpro1970
+> 
+>> On May 7, 2026, at 11:33 PM, Thorsten Leemhuis <linux@leemhuis.info>
+>> wrote:
+>>
+>> ﻿On 5/8/26 07:51, John Paul Adrian Glaubitz wrote:
+>>> On Thu, 2026-04-23 at 18:30 +0200, Thorsten Leemhuis wrote:
+>>>> FWIW, here is the rough timeline of the regression, just to be sure we
+>>>> are all on the same page:
+>>>>
+>>>> * The regression I'm talking about is caused by d6e152d905bdb1
+>>>> ("clockevents: Prevent timer interrupt starvation") [authored:
+>>>> 2026-04-07 10:54:17; committed: 2026-04-10 22:45:38; next arrival:
+>>>> next-20260413; merged: 2026-04-12 19:01:55; v7.0 (2026-04-12 22:48:06)]
+>>> [...]
+>>> Tony Rodriguez from the SPARC community has observed the regression
+>>> on SPARC as well
+>>> and proposed a fix to address it [1]. Not sure whether he has
+>>> retested on the latest
+>>> commit of Linus' tree yet.
+>>>
+>>> Tony, can you verify that 4096fd0e8eaea1 fixes the issue for you?
+>>>
+>>>> [1] https://github.com/sparclinux/issues/issues/79
+>>
+>> It's likely a different regressions, as that report's title says that
+>> v7.0.1, v7.0.2, v7.0.3, and v7.1‑rc1 are affected, which all contain the
+>> fix, aka 4096fd0e8eaea1. Reporting in a new thread is likely best, as
+>> the authors of the culprit are not even CCed here.
+>>
+>> Ciao, Thorsten
 
