@@ -1,66 +1,66 @@
 Received: from mail-dl1-f48.google.com (mail-dl1-f48.google.com [74.125.82.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 315573803EA
-	for <regressions@lists.linux.dev>; Fri,  8 May 2026 20:16:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93FF7308F26
+	for <regressions@lists.linux.dev>; Fri,  8 May 2026 20:21:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778271365; cv=none; b=W3GUTp8Hj1wEq42AkW32hdkhVpSlOP1HWq4amnkmPpFHDgIH/h2qUKYv/HI0he2wyAsEqVWTXRNvlxlc0YWQVIIOm1o7RuPahLr/yRKlU84sJJr9X3k0EpWogjaZfoXNfbI/RieKfUnbC2n4Ou44tApEr3dKP88PZebd1cUNvxE=
+	t=1778271709; cv=none; b=Qp9oG3u6iDWC0exBUpb/90E3/BJvGydPIRWxETZkCCs6A2iF1j+RJ5Qq3smsJbBeC0H3snzwSHmMdYm1WeGyfa68Cs10QcClDa2dV6pIQB8GBN5bMHJn2fsV74+oaZd9lOa8+P23q4sxNcH0gOPpbeju9BtR2ySxVPVRVKhcUS0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778271365; c=relaxed/simple;
-	bh=FLv3NPTpqfRjjdJad1Xdfi/Gu52BvvOTnZpX1CTUyCE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lMKtr60RhJ1J0d1XV3t4CmI8nwM8eWtCQ3w5wipTBtC/StgUzkKFW3C13muX93fBw049wdmxiMQpPC/RfaU67IajzdZO5MUsFDYu3LEEhNUkwfE+Lxhq5pXNtJVU4tP1JVwooNl5S4Nz4VB8xjkwZH2LOjLHvd1j1PBZXkHMX7g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RnffxNN6; arc=none smtp.client-ip=74.125.82.48
+	s=arc-20240116; t=1778271709; c=relaxed/simple;
+	bh=rfJNHGDEEb9AWgAh1BjDeTFID1Cj9yK6Q7bo9Z182A0=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=Mm8Pgi5wumxMsd2KHfeGWnvLSB15s9HHZAfNbOIEmoyvS5Ju5HxMJMikomKQ0Kcr3Y4S9YMrbxfXHPeTmx44MsG6baGYq7tfvqyF4a4kFtKu8CrsE3e6v8UOIg+0mt8TPcFDc4aSw3ibHCvRdlwtsHjwCBWEBJhUIRACO87/tsc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M1rp+V/V; arc=none smtp.client-ip=74.125.82.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RnffxNN6"
-Received: by mail-dl1-f48.google.com with SMTP id a92af1059eb24-1309f4ee973so2875789c88.1
-        for <regressions@lists.linux.dev>; Fri, 08 May 2026 13:16:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M1rp+V/V"
+Received: by mail-dl1-f48.google.com with SMTP id a92af1059eb24-1329fc4bf77so339491c88.1
+        for <regressions@lists.linux.dev>; Fri, 08 May 2026 13:21:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1778271362; x=1778876162; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=gmail.com; s=20251104; t=1778271707; x=1778876507; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:references:cc:to:from
+         :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=a0tCiD9L8BUWUPzowM5Rp+qb4mUR+jQnkB3fU3U3ZVA=;
-        b=RnffxNN6JnORpc8Iqx3y6i6FPW1mHK18ZxSxMR4CXWTvWm4vxgCBmnAi/iZEEsGUB3
-         o2aOsEqAtQcSz/uuDCAzPPR5JB8XFg5062PJiVd92Vc8RzhTWAyHJkFAXOZGGhQ+D+tm
-         blPXqWyyD6pAjUU/ODq+gVrQ+ulhOd6iD/p7PKkqzgN9SzDKJY9O+0FS3109TgEJuHYS
-         3a9DtvlLTKYRzrWe8khqMeJrbauuYHvWLVgwRaHf2rviZweKrmkjz0I8PWGdYgEFczna
-         8fAN+4Z0NGBfvMHvjjKoLPsSpJLznxQfwSHgKlnio9RQki1S1qo9Barf32OcSIGFydRT
-         CKbg==
+        bh=2Ixs/RBeSRw/1zBXWhTXPnd24zouTe6elpYl19qS6tk=;
+        b=M1rp+V/VrorS57HE+tDs6IGC+g0pFeWixlIwbF6Puf2JY3tI3k8xMhfBmJbo+Hy/1l
+         myosArImZoWe2M8ea6nEFmJmyhyMKfFvHI6Ko3WExHFOSIvisNk6IyttbCNOLbeV+XRJ
+         ReiFA1KM+kywJ7BUc8H34xiGLnembmUYbnkWqhQt4WDTzEVcCgWEJD/ya/izPADe9zFg
+         6egHjQyB11olCJ5l3myU4xcyE04dcsxitryrETRSItFdZ7Rvt7gw2sGgmqJFVUFN6KEO
+         EVsLPG3Xpv0b/VT2STAv93MpUsR583WY+pJNm1SQIW17arbNobRxJ3e1wCwUekRUoLiW
+         ceHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778271362; x=1778876162;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20251104; t=1778271707; x=1778876507;
+        h=content-transfer-encoding:in-reply-to:references:cc:to:from
+         :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=a0tCiD9L8BUWUPzowM5Rp+qb4mUR+jQnkB3fU3U3ZVA=;
-        b=Es7PmXHrFPeugk/5gwy0L6omT/ZybaMZ8mUjcHrb3ACScX1igYJxOD903bpEqHKFYL
-         pXs/GNLvV6eXn87fonndm/SV36/Zpt54iqT2jw/lcHilZiDnftN9+0ArEYsh/WgelXiu
-         urlRrgjdXACWmIpg0ufq5aSjMY4qHdQYfkKn+qy5aegNr4jEtn/lV5+uufBQkxpwubdN
-         tFZb6IoV9tOZnOSvm1a/gr2NpRjYZVh/s8H8p2xANcSncy5pD/npF5XSL6Eh5jQn2Xcu
-         5yhwTN369Y2bdVWg3pBC+mB9mnQt9oIv4cfYMb3E8bQNj4t0MD9I67l53XOxpEv3uPAF
-         pPpg==
-X-Forwarded-Encrypted: i=1; AFNElJ+zpF/x2yi4kY4cHJnZzBUvJnKcWzzqJjOh7HcHBQ/PAHPSQ0WV576+LepeUyzENq069QaoY0scuJKQCw==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwaNkLtU3/zr8lwJF2xWaWuO27ItiBX9ZB4N+PqtS+lk2Wkxglc
-	NyuaA2jAv3HqbsfXVZhK1MXOShxqCnAPJN1IqxGnxNmjGvWLmRO316Dk
-X-Gm-Gg: AeBDieu6b6JYcBA3VVS7td1LLBMD4X4kdWFGOpjuPSPyn7u7t5D7MOskYOmW6c1Cm7f
-	Vze2wsCgtkM5F9fvRCzpPejIexCMyoM7oC8PJLsJgFvZv2LT9y//lDgOpLBBpnGptpeMnJir/JF
-	qJ3XkF+0HOwwobolja44WBEWdQxa4ekl4ydMDHDox015XTwi0X1uBq/+GQIVDJ2OQPcpnzkPusq
-	vDZS9SvSwXueIweGiOM/O/waHeTRh0aqpSYjj1G7pykN7pwkbjUVtkXhX+h2eEiFB83cl3+vh62
-	J9f3XHZ8HiRMGNI5W+TQwXzpr074n6tJasE3TZZ2opIIkbJKtCp+cRuWbb5voiJ+Kdt2n2Be3sq
-	iYhEnb3J7I74ct29+gXsnVfplhK4JZUFVjEh4K9d0cAgVOzF8u57iFrmXulHvmT9ZzYgYvfIvv6
-	7Y/bGIBr8ns6tI4twis8UpRSPMZK42gQ==
-X-Received: by 2002:a05:7022:986:b0:130:68a1:a234 with SMTP id a92af1059eb24-1318eb40b05mr6959056c88.40.1778271361632;
-        Fri, 08 May 2026 13:16:01 -0700 (PDT)
+        bh=2Ixs/RBeSRw/1zBXWhTXPnd24zouTe6elpYl19qS6tk=;
+        b=JIBHjHQzm4x8CkTmevakfO4UkFEz81E1gcV0VvtJWs7Ggzqj5yByHogoL2OibXZreP
+         mAVzRs+IziHGfOMTUY9aoQEZkOUu0JKpG0+fKHeDXc7fMb950+qHXZP3PnO8OEROFfcC
+         kjH+Iybfv0wItW5ophD24NWFw7wtBRL8G5ek3e+k8/Tn17s9bEaC/eSApYmdKcjFUmhG
+         LQRESeQlFSITCjpYfXqUqQzZ7IO9L1GmahezwNcCjIN6N6ljqA8ZCctb7zoU027FS4Ow
+         s5Y7wzwApZp9ZOFSZobLtCuMGFv6mypiobrnfX89+iZ4fTfNuVUwKjYZvXQBy+tkwVt1
+         9s6w==
+X-Forwarded-Encrypted: i=1; AFNElJ/pS5w6bS+8NH0vW56WG9vnrnveivPGlPbAMTX4PJ713g+MmgzWqAbInC/r97BrH4S23KhnQwPeRl1VKA==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwIx+bMh2kxSBW0oXT7FFRvfXBNzYpuH1iI8ycsjN9TqPwdZSq7
+	Op2r3zFCgQ+LGIxTX4E6ovbsXSuJNaN/ciDKmnLKNeVPycULI4uPNexV5PIoBiL+
+X-Gm-Gg: AeBDieueXME4OI22mgTJGjzNEPsGXomx8WPvT7JDRcCCbAAkxps2ARQDKr0P+rRmg9G
+	Q0/YaIO8gye/aDmJZOyYWQUYlazJGO7BYEXrevxarlewUdqp2jDShj+jOpWWVaFq+vbjx5zcG6o
+	+GgotUqt1nZe7C9dhQQoX+WFkwhzuA9LIwLxzHqwlTAqcGfJJTIP4dFxpm1IdhVRxf1ACaGNGeH
+	uK747ux4zDLw79Zm5SwLloZDlLWxJ2ZR4rxw3vWCHaBDjqTmGLRlbC6WjIzPwmFTv6gz5fWqwU9
+	dyAQSSQiPF/f3k3YMKdmPhjwU6sIaMsFr8vU3FmS5F/X37W1hzDzgBkA0iYQJBE49I6lYzpRhOg
+	092Xay4OkYADETmNa4mbMsHVwjjtInd/DRSYs7giXfWaDwU+t0xBqFItB4L1yqFHoqF/PoKmSMP
+	k/a5gB9IQr+s7S2HUi2jTgs2dydz4rJsjET8fNtfJM
+X-Received: by 2002:a05:7022:1e10:b0:12b:fc21:874d with SMTP id a92af1059eb24-131880edbfemr7529522c88.19.1778271706356;
+        Fri, 08 May 2026 13:21:46 -0700 (PDT)
 Received: from [192.168.21.192] ([67.170.89.46])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-13278210d40sm4443546c88.4.2026.05.08.13.16.00
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2f888d3af4esm3767958eec.25.2026.05.08.13.21.45
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 08 May 2026 13:16:01 -0700 (PDT)
-Message-ID: <3332123b-9e11-4895-9ab3-1707fba5815c@gmail.com>
-Date: Fri, 8 May 2026 13:15:59 -0700
+        Fri, 08 May 2026 13:21:45 -0700 (PDT)
+Message-ID: <f275d82e-2187-428f-a331-4001d9f9d853@gmail.com>
+Date: Fri, 8 May 2026 13:21:44 -0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -70,6 +70,8 @@ MIME-Version: 1.0
 User-Agent: Betterbird (Linux)
 Subject: Re: the stuttering regression in 7.0: should I have done something
  different?
+Content-Language: en-US
+From: Tony Rodriguez <unixpro1970@gmail.com>
 To: Thorsten Leemhuis <regressions@leemhuis.info>
 Cc: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
  Greg KH <gregkh@linuxfoundation.org>,
@@ -79,9 +81,8 @@ Cc: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
 References: <ffb44522-f01c-4be3-849d-27dc17fbca7f@leemhuis.info>
  <D5D19776-C809-4284-9417-F9A860877B98@gmail.com>
  <1c165caf-36b4-4673-97fd-ed86bef17b88@leemhuis.info>
-Content-Language: en-US
-From: Tony Rodriguez <unixpro1970@gmail.com>
-In-Reply-To: <1c165caf-36b4-4673-97fd-ed86bef17b88@leemhuis.info>
+ <3332123b-9e11-4895-9ab3-1707fba5815c@gmail.com>
+In-Reply-To: <3332123b-9e11-4895-9ab3-1707fba5815c@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
@@ -99,12 +100,12 @@ https://github.com/sparclinux/issues/issues/79#issuecomment-4362173884
 Output demonstrating issues for SPARC64 S7-2 and T7-1 systems (without 
 my regression patch):
 
-PS - On May 2nd 2026 at 9:42 PM: I also sent an email to Thomas Gleixner 
-regarding this issue.  Will be happy to validate any patches from your 
-end regarding this issue, as time permits me to do so.
+PS - On May 2nd, 2026 at 9:42 PM: I also sent an email to Thomas 
+Gleixner regarding this issue.  I will be happy to validate any patches 
+from your end regarding this issue, as time permits me to do so.
 
 
-Best Regards,
+Best regards,
 
 Tony Rodriguez
 
@@ -376,7 +377,7 @@ time, OOM is now expected behavior.
 [  590.799012] rcu: Stack dump where RCU GP kthread last ran:
 [  606.363275] INFO: task kworker/u1024:0:12 blocked for more than 483 
 seconds.
-[  606.377139]       Tainted: G        W  7.1.0-rc2-test01 #1
+[  606.377139]       Tainted: G        W  7.1.0-rc2-test01 #1
 [  606.389636] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" 
 disables this message.
 [  611.823259] rcu: INFO: rcu_sched detected stalls on CPUs/tasks:
@@ -407,7 +408,7 @@ time, OOM is now expected behavior.
 
 r[  727.195272] INFO: task kworker/u1024:0:12 blocked for more than 604 
 seconds.
-[  727.209134]       Tainted: G        W  7.1.0-rc2-test01 #1
+[  727.209134]       Tainted: G        W  7.1.0-rc2-test01 #1
 [  727.221628] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" 
 disables this message.
 
@@ -561,57 +562,62 @@ time, OOM is now expected behavior.
 NOTE(S): Unable to login and random hangs during system startup. Same 
 messages/issues as S7-2.
 
-
-On 5/8/26 12:50 AM, Thorsten Leemhuis wrote:
-> [+tglx so he knows about it; details about the problem that Tony faces
-> can be found in https://github.com/sparclinux/issues/issues/79 ]
 >
-> On 5/8/26 09:38, Tony Rodriguez wrote:
->> I still don't believe this is fixed upstream as of v7.03 and v7.1-rc1,
-> Yes and no. It looks like d6e152d905bdb1 ("clockevents: Prevent timer
-> interrupt starvation") causes two regression.
->
-> Thomas fixed one with 4096fd0e8eaea1 ("clockevents: Add missing resets
-> of the next_event_forced flag") -- and feedback shows that it definitely
-> solved the problem for quite a few people. If that's not the case for
-> you, then you seem to face a different problem caused by the same
-> change. Happens, that's life sometimes.
->
-> Ciao, Thorsten
->
->> only when my patch is applied does the SPARC74 S7-2 system become stable
->> again. I also tested my patch with v7.0.4 and it works their as well.
->> Will perform additional tests without my fix against v7.0.4 and v7.1-rc2
->> later today to revalidate the regression (USA Pacific time).
+> On 5/8/26 12:50 AM, Thorsten Leemhuis wrote:
+>> [+tglx so he knows about it; details about the problem that Tony faces
+>> can be found in https://github.com/sparclinux/issues/issues/79 ]
 >>
->> Tony Rodriguez
->> www.linkedin.com/in/unixpro1970
+>> On 5/8/26 09:38, Tony Rodriguez wrote:
+>>> I still don't believe this is fixed upstream as of v7.03 and v7.1-rc1,
+>> Yes and no. It looks like d6e152d905bdb1 ("clockevents: Prevent timer
+>> interrupt starvation") causes two regression.
 >>
->>> On May 7, 2026, at 11:33 PM, Thorsten Leemhuis <linux@leemhuis.info>
->>> wrote:
+>> Thomas fixed one with 4096fd0e8eaea1 ("clockevents: Add missing resets
+>> of the next_event_forced flag") -- and feedback shows that it definitely
+>> solved the problem for quite a few people. If that's not the case for
+>> you, then you seem to face a different problem caused by the same
+>> change. Happens, that's life sometimes.
+>>
+>> Ciao, Thorsten
+>>
+>>> only when my patch is applied does the SPARC64 S7-2 system become 
+>>> stable
+>>> again. I also tested my patch with v7.0.4 and it works their as well.
+>>> Will perform additional tests without my fix against v7.0.4 and 
+>>> v7.1-rc2
+>>> later today to revalidate the regression (USA Pacific time).
 >>>
->>> ﻿On 5/8/26 07:51, John Paul Adrian Glaubitz wrote:
->>>> On Thu, 2026-04-23 at 18:30 +0200, Thorsten Leemhuis wrote:
->>>>> FWIW, here is the rough timeline of the regression, just to be sure we
->>>>> are all on the same page:
+>>> Tony Rodriguez
+>>> www.linkedin.com/in/unixpro1970
+>>>
+>>>> On May 7, 2026, at 11:33 PM, Thorsten Leemhuis <linux@leemhuis.info>
+>>>> wrote:
+>>>>
+>>>> ﻿On 5/8/26 07:51, John Paul Adrian Glaubitz wrote:
+>>>>> On Thu, 2026-04-23 at 18:30 +0200, Thorsten Leemhuis wrote:
+>>>>>> FWIW, here is the rough timeline of the regression, just to be 
+>>>>>> sure we
+>>>>>> are all on the same page:
+>>>>>>
+>>>>>> * The regression I'm talking about is caused by d6e152d905bdb1
+>>>>>> ("clockevents: Prevent timer interrupt starvation") [authored:
+>>>>>> 2026-04-07 10:54:17; committed: 2026-04-10 22:45:38; next arrival:
+>>>>>> next-20260413; merged: 2026-04-12 19:01:55; v7.0 (2026-04-12 
+>>>>>> 22:48:06)]
+>>>>> [...]
+>>>>> Tony Rodriguez from the SPARC community has observed the regression
+>>>>> on SPARC as well
+>>>>> and proposed a fix to address it [1]. Not sure whether he has
+>>>>> retested on the latest
+>>>>> commit of Linus' tree yet.
 >>>>>
->>>>> * The regression I'm talking about is caused by d6e152d905bdb1
->>>>> ("clockevents: Prevent timer interrupt starvation") [authored:
->>>>> 2026-04-07 10:54:17; committed: 2026-04-10 22:45:38; next arrival:
->>>>> next-20260413; merged: 2026-04-12 19:01:55; v7.0 (2026-04-12 22:48:06)]
->>>> [...]
->>>> Tony Rodriguez from the SPARC community has observed the regression
->>>> on SPARC as well
->>>> and proposed a fix to address it [1]. Not sure whether he has
->>>> retested on the latest
->>>> commit of Linus' tree yet.
+>>>>> Tony, can you verify that 4096fd0e8eaea1 fixes the issue for you?
+>>>>>
+>>>>>> [1] https://github.com/sparclinux/issues/issues/79
+>>>> It's likely a different regressions, as that report's title says that
+>>>> v7.0.1, v7.0.2, v7.0.3, and v7.1‑rc1 are affected, which all 
+>>>> contain the
+>>>> fix, aka 4096fd0e8eaea1. Reporting in a new thread is likely best, as
+>>>> the authors of the culprit are not even CCed here.
 >>>>
->>>> Tony, can you verify that 4096fd0e8eaea1 fixes the issue for you?
->>>>
->>>>> [1] https://github.com/sparclinux/issues/issues/79
->>> It's likely a different regressions, as that report's title says that
->>> v7.0.1, v7.0.2, v7.0.3, and v7.1‑rc1 are affected, which all contain the
->>> fix, aka 4096fd0e8eaea1. Reporting in a new thread is likely best, as
->>> the authors of the culprit are not even CCed here.
->>>
->>> Ciao, Thorsten
+>>>> Ciao, Thorsten
