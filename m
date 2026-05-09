@@ -1,72 +1,68 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E17630FF1D;
-	Sat,  9 May 2026 12:20:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 219D138AC64;
+	Sat,  9 May 2026 12:47:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778329201; cv=none; b=rQ3BCVSjSfRY5fBmAcQSLOZw+7C+hKDwugYJelF45HKA2rZMPEvS7VGBKkcAwn1oSVo/Mg58la8GOMGdZgRqZ36qxntjoKFA6pq4Bl1xjxYpJZfm2wvOQOx9gqEtfM/AZ/0kl/AInLWqbxUQR+ejGjKghXfxpYEMXgz7AvAbq1Y=
+	t=1778330848; cv=none; b=NmEXB9m8Banqetx/tbW/0kB3q9A0PL+kLuZ6+y1PnZdVmv7ZV05bWBSaLnO5Dfpznpq1+saIUsXNXj+slNiQ4bUp4PiwVdS9UtD7EE5006B7SQoinw0DJfnThi9X5/nDVhDzXfNKGI+AuMHoZuCTg9l2kIGEXx8OySzh7cTxXxw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778329201; c=relaxed/simple;
-	bh=Cq7/QM49XQIon1SXcxU39hmlYFljvekcg/7oaZVUPos=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LJ/GxbLchSu6LdBwTeIGokhzUHs640ZBQeKfZDLj3po95sXVkSvka61PWKUWMRiSTM6fEyRnkRc0W4FcBFH3TGuJk2PJl9B9OOX23ar7EHcPz9cN/8cd4omPiGPH3K5og9esXHUsqGVL4oBausJCAUdUWwQviTVT94F5Z3R6Yao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XhcFoNnO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778330848; c=relaxed/simple;
+	bh=tJH39pP2r/C+aDyFKlChMAjTtQ/FE9m1Z87av86WDl8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=QGCrX85jcPMR96nQaG1okiu30FlIHK2Ma37fgAIt562/MwRCpR/NZyAkLCWbAn5el66AaUvT+g2owb3UlskZYG+gXfF3RJ0lEs1BtjBwSiM+aN1at5XjLjchoFWpqX/x0iudfR/WrjRROO81W4b1idKiIi2J6yahlD/bZi2cXM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ThaO49Y0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XhcFoNnO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AD15C2BCB2;
-	Sat,  9 May 2026 12:19:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ThaO49Y0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA1D4C2BCF4;
+	Sat,  9 May 2026 12:47:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778329201;
-	bh=Cq7/QM49XQIon1SXcxU39hmlYFljvekcg/7oaZVUPos=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XhcFoNnOLchiOyp+IpFy1WAwrUu4KBrpYvJztnKdW0Fn5ebQPp9EmbiZ4y1NxEsxT
-	 XG4bho/mW5xFbcUaMPIP/k2s7GadqLGLbR8/vaC9HDU6d5Ar13ATXwawARlLZHJ84k
-	 TwfB3jjeIp3g/FD7k2sk4mRvnzprCP8t3blehYM48Q5A9uqy1/eVf2AMgwiX2wA9dj
-	 VXk5IIUzNABErG86Ak8X6EjAWhg9vk2yhffE8xSS17c1O9BOZUVdlH4i9XqDQ7hzVg
-	 VEhuaSywM7P/1ln4541/Ucc97rcSGO2u4yAPdRdyH5ClLKijctKTxB/Umi1FhUSSrn
-	 hGDT+AgvS6NXw==
-Date: Sat, 9 May 2026 13:19:56 +0100
-From: Sudeep Holla <sudeep.holla@kernel.org>
-To: Jack Matthews <jack@jackmatthe.ws>
-Cc: Marc Zyngier <maz@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-	Sudeep Holla <sudeep.holla@kernel.org>,
-	linux-arm-kernel@lists.infradead.org, regressions@lists.linux.dev,
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: Regression in split ARM MMIO timer driver
-Message-ID: <20260509-ruddy-dragonfly-of-poetry-45e9f1@sudeepholla>
-References: <46A20F89-E208-4091-8B6E-B5C38BF82B42@jackmatthe.ws>
+	s=k20201202; t=1778330848;
+	bh=tJH39pP2r/C+aDyFKlChMAjTtQ/FE9m1Z87av86WDl8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=ThaO49Y0JzgbdY0bfuZnKprenNm7AV2QSGTUpSsSPlAtuxEZzP4bmrvJkxMDub2VZ
+	 5AO6EQRqE/O1UcGQUPxNi9IajwWqPRwckTqsVuqlbb6B+GZY2NISP1SQ4B0IPfBIXb
+	 QTfPnmc7nRrk0eUy/UAlp6aqSfvZTKjHCfq56wMeoSYIrRsd0JxmhzIL/x/GeFbz9/
+	 UFok+MJBuSqBp6FZLbR4JdQO4Zo3aMvkFt3SHfAFPPrg3TDnE2mxixzuf5CPblgmrc
+	 1l4lFR6ghDxqOG047TxSKtefO8KlNHdWHu04jl800dWetrG85UF9cFMRgbcWaDbbYD
+	 tvFbQy7k07QrA==
+From: Sasha Levin <sashal@kernel.org>
+To: stable <stable@vger.kernel.org>
+Cc: Sasha Levin <sashal@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	regressions@lists.linux.dev,
+	Ankit Soni <Ankit.Soni@amd.com>,
+	Srikanth Aithal <sraithal@amd.com>,
+	Vasant Hegde <vasant.hegde@amd.com>,
+	Joerg Roedel <joerg.roedel@amd.com>,
+	1135313@bugs.debian.org,
+	Friedemann Stoyan <fstoyan@swapon.de>,
+	Salvatore Bonaccorso <carnil@debian.org>
+Subject: Re: Please backport 9e249c484128 ("iommu/amd: serialize sequence allocation under concurrent TLB invalidations") to 6.12.y
+Date: Sat,  9 May 2026 08:46:51 -0400
+Message-ID: <20260509122858.287b6eb9d6ed.re-iommu-amd-serialize-6.12-6.6@kernel.org>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <afpVqZDIRVmdV960@eldamar.lan>
+References: <afpVqZDIRVmdV960@eldamar.lan>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <46A20F89-E208-4091-8B6E-B5C38BF82B42@jackmatthe.ws>
+Content-Transfer-Encoding: 8bit
 
-On Fri, May 08, 2026 at 03:48:14PM -0400, Jack Matthews wrote:
-> Hello,
->
-> I am working on mainlining an old chip, Qualcomm's MDM9625 modem.
-> I had previously booted 6.17-rc3 before putting this project to the side,
-> but when I restarted work on 7.0 I was unable to boot. 
-> I have bisected this to commit 0f67b56d84b4c49adfd61f19f81f84ec613ab51a
-> (https://lore.kernel.org/all/20250814154622.10193-4-maz@kernel.org/) and
-> reverting this commit makes the device boot successfully. Unfortunately I do
-> not have access to low level debugging such as UART so I have not been able
-> to pinpoint exactly what is missing.
-> My changes for this chip are all available here in case it is an issue of my
-> own doing: https://github.com/jackmthws/linux/commits/mdm9625-latest/.
+> https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1135313#43 confirmed
+> that a backport of 9e249c484128 solved the problem. Now that one does
+> not apply cleanly. As an alternative the following two might work, the
+> first is a clean cherry-pick, the second on top needed a slight
+> adjustment since in 6.12.y f32fe7cb0198 is not present.
 
-Looking briefly into the DTS file, I couldn't find the sysreg based arch
-timer node in the DT. It could be just an overlook unless there is some
-issue with it that it's not added. After the above mentioned commit, the
-MMIO timer gets initialised bit late in the boot and could be the reason
-for boot failure. Unless you have intentionally not added it, I would
-suggest to add it and try.
+Both patches queued for 6.12.y.
 
--- 
-Regards,
-Sudeep
+I extended the same backport to 6.6.y as well - it carries d2a0cac10597
+and the same older atomic64_add_return(1,..) pattern, so it is exposed
+to the same race.
+
+--
+Sasha
