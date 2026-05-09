@@ -1,105 +1,72 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35FC938F939;
-	Sat,  9 May 2026 08:45:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E17630FF1D;
+	Sat,  9 May 2026 12:20:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778316312; cv=none; b=H2vBqmwhLEmDcevjzANvCnSj2ey03a3EIi0hXQN+Y96iBOBQ58oEX2rFInEWdflSrZ1z+TEmLrhhvPAvVHFHm9aBLMWu6f83jupMGVWGAXEj73xWzjHhlOkQGC/HuF7B9HWTXujHt3Ca8pUPl0v7gGVjZS2zJpakan/SwaF5N0Q=
+	t=1778329201; cv=none; b=rQ3BCVSjSfRY5fBmAcQSLOZw+7C+hKDwugYJelF45HKA2rZMPEvS7VGBKkcAwn1oSVo/Mg58la8GOMGdZgRqZ36qxntjoKFA6pq4Bl1xjxYpJZfm2wvOQOx9gqEtfM/AZ/0kl/AInLWqbxUQR+ejGjKghXfxpYEMXgz7AvAbq1Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778316312; c=relaxed/simple;
-	bh=VahACnmISsK/pJLBRfVnHq1AO2ulykOODkGw12kjbRk=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XcdzfLZranmZLV2nkVnWajxBi/Mf9mouPiD7obudOEACnJ2vqOp+UNuMS47GDl4JrG5UNdTuxmEF/onRT8USgS9wTB5HmDE0Xe8ensnU49rsf5Gy9AuNe7PQa9Vpp6zy0U6EH4xO9B0qonaOzH+A+HEr+Z33Dt5/NU94BwJQfUE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XdL1m73M; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778329201; c=relaxed/simple;
+	bh=Cq7/QM49XQIon1SXcxU39hmlYFljvekcg/7oaZVUPos=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LJ/GxbLchSu6LdBwTeIGokhzUHs640ZBQeKfZDLj3po95sXVkSvka61PWKUWMRiSTM6fEyRnkRc0W4FcBFH3TGuJk2PJl9B9OOX23ar7EHcPz9cN/8cd4omPiGPH3K5og9esXHUsqGVL4oBausJCAUdUWwQviTVT94F5Z3R6Yao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XhcFoNnO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XdL1m73M"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACEBEC2BCB2;
-	Sat,  9 May 2026 08:45:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XhcFoNnO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AD15C2BCB2;
+	Sat,  9 May 2026 12:19:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778316311;
-	bh=VahACnmISsK/pJLBRfVnHq1AO2ulykOODkGw12kjbRk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=XdL1m73MCKiC/RtCYGcwccNwIKKyrNlf9P7IXPe7Sr39A6ILsf48tUFwds0E6N09p
-	 r3grLf/rFS5pULDLweIkbhLKk6K3neT4nFJDCgPUWJUQzVGojOhngff3vh8FhGEfzi
-	 nHH/Bt4uNjcuWZ1Aw7URnWN88P5oN8bYDzoAiw9TRA+lFPrfvEtzAwuvppTjQKtrRg
-	 ThPYPJvrebtmFdYv0KzW+OPkyHYUrimlfPdvLeRWcyQVQHN/0W7+m8m/6wWqSfs2RO
-	 CpufGG+qSMROyp4sq7g9WVFX5/35ZtcqbV6INmWGUVJWsOzP4vVHFUyEdLlqJ/SjNl
-	 rSzn8blnERNig==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=lobster-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.98.2)
-	(envelope-from <maz@kernel.org>)
-	id 1wLdJ7-00000000aIL-0ODj;
-	Sat, 09 May 2026 08:45:09 +0000
-Date: Sat, 09 May 2026 09:45:05 +0100
-Message-ID: <87y0ht9dke.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
+	s=k20201202; t=1778329201;
+	bh=Cq7/QM49XQIon1SXcxU39hmlYFljvekcg/7oaZVUPos=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XhcFoNnOLchiOyp+IpFy1WAwrUu4KBrpYvJztnKdW0Fn5ebQPp9EmbiZ4y1NxEsxT
+	 XG4bho/mW5xFbcUaMPIP/k2s7GadqLGLbR8/vaC9HDU6d5Ar13ATXwawARlLZHJ84k
+	 TwfB3jjeIp3g/FD7k2sk4mRvnzprCP8t3blehYM48Q5A9uqy1/eVf2AMgwiX2wA9dj
+	 VXk5IIUzNABErG86Ak8X6EjAWhg9vk2yhffE8xSS17c1O9BOZUVdlH4i9XqDQ7hzVg
+	 VEhuaSywM7P/1ln4541/Ucc97rcSGO2u4yAPdRdyH5ClLKijctKTxB/Umi1FhUSSrn
+	 hGDT+AgvS6NXw==
+Date: Sat, 9 May 2026 13:19:56 +0100
+From: Sudeep Holla <sudeep.holla@kernel.org>
 To: Jack Matthews <jack@jackmatthe.ws>
-Cc: Mark Rutland <mark.rutland@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	regressions@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org
+Cc: Marc Zyngier <maz@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	Sudeep Holla <sudeep.holla@kernel.org>,
+	linux-arm-kernel@lists.infradead.org, regressions@lists.linux.dev,
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 Subject: Re: Regression in split ARM MMIO timer driver
-In-Reply-To: <46A20F89-E208-4091-8B6E-B5C38BF82B42@jackmatthe.ws>
+Message-ID: <20260509-ruddy-dragonfly-of-poetry-45e9f1@sudeepholla>
 References: <46A20F89-E208-4091-8B6E-B5C38BF82B42@jackmatthe.ws>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: jack@jackmatthe.ws, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, regressions@lists.linux.dev, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <46A20F89-E208-4091-8B6E-B5C38BF82B42@jackmatthe.ws>
 
-On Fri, 08 May 2026 20:48:14 +0100,
-Jack Matthews <jack@jackmatthe.ws> wrote:
-> 
+On Fri, May 08, 2026 at 03:48:14PM -0400, Jack Matthews wrote:
 > Hello,
-> 
+>
 > I am working on mainlining an old chip, Qualcomm's MDM9625 modem.
-> I had previously booted 6.17-rc3 before putting this project to the
-> side, but when I restarted work on 7.0 I was unable to boot.
+> I had previously booted 6.17-rc3 before putting this project to the side,
+> but when I restarted work on 7.0 I was unable to boot. 
+> I have bisected this to commit 0f67b56d84b4c49adfd61f19f81f84ec613ab51a
+> (https://lore.kernel.org/all/20250814154622.10193-4-maz@kernel.org/) and
+> reverting this commit makes the device boot successfully. Unfortunately I do
+> not have access to low level debugging such as UART so I have not been able
+> to pinpoint exactly what is missing.
+> My changes for this chip are all available here in case it is an issue of my
+> own doing: https://github.com/jackmthws/linux/commits/mdm9625-latest/.
 
-> I have bisected this to commit
-> 0f67b56d84b4c49adfd61f19f81f84ec613ab51a
-> (https://lore.kernel.org/all/20250814154622.10193-4-maz@kernel.org/)
-> and reverting this commit makes the device boot
-> successfully. Unfortunately I do not have access to low level
-> debugging such as UART so I have not been able to pinpoint exactly
-> what is missing.
-
-> My changes for this chip are all available here in case it is an
-> issue of my own doing:
-> https://github.com/jackmthws/linux/commits/mdm9625-latest/ I
-> apologize if I this isn't the proper way to submit a regression
-> report, this is my first time doing so.
-
-Given that this is not a machine that is supported upstream, this
-really isn't a regression. Unless of course you can reproduce it on
-something that is currently supported, and in which case it would
-absolutely be a regression.
-
-I'm afraid that without a boot log, it is going to be difficult to
-pinpoint what is going wrong here. This is most likely a latent bug
-either in the MMIO timer driver, or something unexpected in the way
-the platform is described.
-
-Could you start by posting a kernel boot log of 7.0 with this commit
-reverted? I'm also interested in finding out what happens if you don't
-revert that commit, but instead comment out the entry in the Makefile
-for the MMIO driver.
-
-Thanks,
-
-	M.
+Looking briefly into the DTS file, I couldn't find the sysreg based arch
+timer node in the DT. It could be just an overlook unless there is some
+issue with it that it's not added. After the above mentioned commit, the
+MMIO timer gets initialised bit late in the boot and could be the reason
+for boot failure. Unless you have intentionally not added it, I would
+suggest to add it and try.
 
 -- 
-Jazz isn't dead. It just smells funny.
+Regards,
+Sudeep
