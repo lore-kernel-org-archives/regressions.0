@@ -1,100 +1,202 @@
-Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46B1430E0FB
-	for <regressions@lists.linux.dev>; Sun, 10 May 2026 20:57:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6666A1A08A3;
+	Sun, 10 May 2026 21:29:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778446676; cv=none; b=kxPLkdGVvvZBAoUzSekw4hVuDD57U0sDcyLC5AYpREUQu7E2LHj1lOHNAmMEXA3cbAl/Thg4mwmN4nWmuwoHxt9ivJJTzDCJEDl90wlK0Bh8uKid+w71KTtT7EUm8UN/Ge1JJuyt06cC78jMqjoyDCfA62g2VanO6n45OqjFvn4=
+	t=1778448600; cv=none; b=r1jrAtN5m+4brJFmokj5jyQ0ymWoNK4kQu2Om2cHokxhImoCWVgpUkYkIqNMM9xSakKsPsgCqeQ3vWVEgZVPtefrlbHmxb3uuXQxoVWfW2A7mHaHe6WBrFLtjzMyaVD2u31i4l9McO1QSxB+VzFBInztCY1Rfo0yq4DXATT9QjQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778446676; c=relaxed/simple;
-	bh=U3XG11g75IcTjdRGvwT9tM9l7i7M8yifd56uOB36Wsk=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=uKBPkhlFLyGFoi4F8LH+NTUgPsMuh1TMjxo8mOuGRQ46izWQ2Ie7aPRqMAXgxsKL2OgBpQ107WbADin7blRvmoXEIAqsmy0sCfWBONskdcM8Ggd4VGQXuMYIby02XsDxfjB4S1nMI4cZNpGnjqJhftCQCkvDOATTbxlN03Fmob8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=ZzEosxeQ; arc=none smtp.client-ip=80.241.56.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+	s=arc-20240116; t=1778448600; c=relaxed/simple;
+	bh=FdrNVSg7fcizkvWshXjVrtUyPWJCSG7U2/JCVvT97No=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=LZVQBHKzT/vFHU0EiNKB8S4Wc8CjJXbjoWu+EgmJg1H8Tiv46IDDqsdrJqy4uo8SN0x4CCr+Yjb21ypfYphKPPvEeJgWRKphntu3O1bmJAnGcsY2KSdvmoHPBUUdSNNG/x72J6e343dqInWvbNT9z5CNxnzSl8vOHNvwMmrwgSU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ejoI4I14; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="ZzEosxeQ"
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [10.196.197.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4gDFYT6Sztz9t8W;
-	Sun, 10 May 2026 22:57:49 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1778446670;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=JhbkDIgXOs/Y9f4bIfEtVjnIvM/A/84iZ7rQjx1TFrs=;
-	b=ZzEosxeQ3kh0XSwlKI+79DS079iUxOiXPGpsqiiu79VPMcXIjnn26+3ubtGlQCgjHJsxkk
-	EagOTRR+b9+YR6JzYKeh3yrsgHRPvCKwOyzmgvekp+og5URxGpm0gEKy+qE5VmF97gYUnF
-	r8QkOgPbhElyJAF+XF0+cbNdv5g7ykd1ps+ahQsaV2zt2OPVd7pAhjEyQq22UAmynCTG1s
-	1p1LMZVj++ljAKqkP63C8yDP5YJUiiO575O7AFrB3cVuW/OdPTIR5PGwiIioVPj2Y36KmJ
-	xW06mZmYzxRZG5WcxFocCOSECYNPKksU4u0RDRmN7ZUtZEuXWeRi6ZYpv5jN6Q==
-Message-ID: <04657838-46d1-432d-95e1-eb73b930b032@mailbox.org>
-Date: Sun, 10 May 2026 22:57:46 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ejoI4I14"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 228CDC2BCB8;
+	Sun, 10 May 2026 21:29:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1778448599;
+	bh=FdrNVSg7fcizkvWshXjVrtUyPWJCSG7U2/JCVvT97No=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=ejoI4I14NrtnRWAkEZ4yk9FJ48xAnLIt28n1X8Evqzf47GKnvaKSobRrk6ZWwa3nc
+	 Jod9XdY3eNSJfuWK0UKar4BX9mFR4U/TYzmdu7ETR8i6a2D9mlKEsO/zuElgirho4F
+	 FE+3X8wf/l09OGCJRxPNLhClYxbaqyIsfsZEfemTMCE+Vz7jZGNQ9rWgsQPLXWQQL6
+	 0iv7vqYAuZ/JScqgzN4qaE3fNjz9aC9wv5m+APWIfEgZC+XRVvu9e65zQhRxKOAHFh
+	 9b93GcOyu9c7jqv4w37TV81l87ievCroVNeZxBh/huiB8faGp6GCp/cK/EXZus7NdK
+	 fNpEOdVtd6wtw==
+From: Thomas Gleixner <tglx@kernel.org>
+To: Tony Rodriguez <unixpro1970@gmail.com>, Thorsten Leemhuis
+ <regressions@leemhuis.info>
+Cc: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Greg KH
+ <gregkh@linuxfoundation.org>, Linus Torvalds
+ <torvalds@linux-foundation.org>, Linux kernel regressions list
+ <regressions@lists.linux.dev>, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: the stuttering regression in 7.0: should I have done something
+ different?
+In-Reply-To: <3332123b-9e11-4895-9ab3-1707fba5815c@gmail.com>
+References: <ffb44522-f01c-4be3-849d-27dc17fbca7f@leemhuis.info>
+ <D5D19776-C809-4284-9417-F9A860877B98@gmail.com>
+ <1c165caf-36b4-4673-97fd-ed86bef17b88@leemhuis.info>
+ <3332123b-9e11-4895-9ab3-1707fba5815c@gmail.com>
+Date: Sun, 10 May 2026 23:29:56 +0200
+Message-ID: <871pfj9cmj.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Language: en-US
-To: Peter Zijlstra <peterz@infradead.org>, Juri Lelli
- <juri.lelli@redhat.com>, Sasha Levin <sashal@kernel.org>
-Cc: regressions@lists.linux.dev, stable@vger.kernel.org,
- linux-rt-users@vger.kernel.org
-From: Lukas Beckmann <lbckmnn@mailbox.org>
-Subject: [REGRESSION] 6.12.y: d66792919d4f (sched/deadline: Use revised wakeup
- rule for dl_server) causes latencies up to 50ms with PREEMPT_RT
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-MBO-RS-META: 819ydxywk7c5su85wrfixtgzefupgtru
-X-MBO-RS-ID: 69f2eb288b23dbea7ee
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Fri, May 08 2026 at 13:15, Tony Rodriguez wrote:
+> Just confirmed on my end today.=C2=A0 This regression also impacts both=20
+> SPARC64 S7-2 and SPARC64 T7-1 on v7.0.4 and v7.1-rc2 as well. Different=20
+> systems using the same exact kernels.
+>
+> ** Please see points (A1) (A2) (B1) (B2)
+>
+> Once again, I am not experiencing such issues when "my patch" (link=20
+> below) is added to address this regression.
+>
+> https://github.com/sparclinux/issues/issues/79#issuecomment-4362173884
 
-I am reporting a regression which was introduced by d66792919d4f on 6.12.y.
-Since this commit, cyclictest reports latencies up to 50 milliseconds, 
-on kernels with CONFIG_PREEMPT_RT=y.
+Github issues are really not helpful.
 
-Steps to reproduce:
-1. run a load (e.g. stress-ng --cpu 4 --io 2 --vm 2 --vm-bytes 128M)
-2. run cyclictest (e.g. cyclictest -a -t -m -p 80 -i 250 -d 0)
+> PS - On May 2nd 2026 at 9:42 PM: I also sent an email to Thomas Gleixner=
+=20
+> regarding this issue.=C2=A0 Will be happy to validate any patches from yo=
+ur=20
+> end regarding this issue, as time permits me to do so.
 
-cyclictest results on the current linux-6.12.y branch (tag v6.12.87):
-# /dev/cpu_dma_latency set to 0us
-policy: fifo: loadavg: 9.37 9.21 6.90 9/211 978
-T: 0 ( 884) P:80 I:250 C:4688252 Min: 3 Act: 6 Avg: 6 Max: 51956
-T: 1 ( 885) P:80 I:250 C:4688051 Min: 3 Act: 7 Avg: 6 Max: 50106
-T: 2 ( 886) P:80 I:250 C:4688242 Min: 3 Act: 6 Avg: 6 Max: 51965
-T: 3 ( 887) P:80 I:250 C:4688434 Min: 3 Act: 12 Avg: 8 Max: 59
+Sorry, that mail got lost as it was in reply to a random other archived
+thread which has absolutely nothing to do with the problem at hand.
 
-cyclictest results on 6.12.y with d66792919d4f reverted:
-# /dev/cpu_dma_latency set to 0us
-policy: fifo: loadavg: 9.43 9.50 9.44 8/204 5758
-T: 0 ( 862) P:80 I:250 C:272329322 Min: 3 Act: 6 Avg: 6 Max: 57
-T: 1 ( 863) P:80 I:250 C:272329324 Min: 3 Act: 7 Avg: 6 Max: 77
-T: 2 ( 864) P:80 I:250 C:272329322 Min: 3 Act: 7 Avg: 6 Max: 68
-T: 3 ( 865) P:80 I:250 C:272329322 Min: 3 Act: 16 Avg: 7 Max: 81
+I just looked at your github thing. Despite your changelog claiming
+otherwise your "fix" breaks the DoS protection completely. It's a
+polished version of a revert.
 
-This is reproducible on multiple machines.
+It also lacks a proper root cause analysis. This list:
 
-It looks like the timer fires and there is also a sched_waking event in 
-the trace, but the cyclictest thread does not get scheduled for another 
-50ms.
+    - skipped programming events when delta <=3D min_delta_ns
+    - changed force semantics for overdue events
+    - introduced a sticky next_event_forced state
+    - returned success even when no event was programmed
 
-I found this, because Debian updated its rt kernel from 6.12.74 to 6.12.85.
-The issue was also present with upstream 6.12.85 and HEAD, but not with 
-6.12.74, so I started bisecting and eventually found d66792919d4f.
+does not qualify and is actually wrong.
 
-Is it possible to revert the commit?
+The code does not unconditionally skip the programming of events when
+delta <=3D min_delta_ns. It only does so conditionally when the previous
+force programmed min_delta_ns event has not been delivered to the kernel
+yet, i.e. dev->next_event_forced is still set.
 
-I can provide traces or help with testing if needed.
+That flag is only set when the minimal value has been successfully
+programmed and it _is_ cleared on the next timer interrupt, which should
+obviously happen due to this minimal delta programming. It is also
+cleared when a new event > min_delta_ns is successfully programmed
+_before_ the previous one was delivered.
 
-Thanks
-Lukas Beckmann
+IOW, the core code programmed the hardware with the min_delta_ns
+(min_delta_ticks) timeout and the SPARC clockevents driver returned
+success (0). Now the core code refuses to do further reprogramming with
+the min_delta_ns timeout as that would shift the expiry (interrupt)
+further out until the interrupt actually is delivered or some other
+event which is not below the min_delta_ns threshold is programmed.
 
-#regzbot introduced: d66792919d4f
+So let's assume that this logic is causing the problem, then the only
+explanation for the observed behaviour is that the expected interrupt
+due to a forced min_delta_ns programming is never delivered.=20
 
+That made me look into the SPARC specific set_next_event() functions. I
+don't know which variant your machines are using, but all of them have
+the same underlying problem. The interrupt is based on a equal
+comparator, so the programming logic for each of the tick variants is:
+
+$variant_add_compare(delta)
+{
+      cmp =3D read_timer() + delta;
+      write_comparator(cmp);
+      now =3D read_timer();
+      return (now - cmp) > 0;
+}
+
+and the actual set_next_event() function which is invoked from the core
+code does:
+
+   return tick_operations.add_compare(delta) ? -ETIME : 0;
+
+IOW, when the timer read _after_ writing the comparator value is ahead
+of the comparator value the operation failed. Looks about right in
+theory.
+
+But then there is the reality of hardware which ruins everything. I've
+banged my head against the wall many years ago when debugging a similar
+issue with the x86 HPET which has the same hardware design failure of
+using a compare equal comparator instead of having a compare less than
+equal one. See the lengthy comment in hpet_clkevt_set_next_event() for
+further information.
+
+Can you apply the debug patch below, which will disable tracing once it
+hits the hung task detector and then retrieve the trace?
+
+If that's not possible as the system is unresponsive, then please add
+'ftrace_dump_on_oops' on the kernel command line or enable it after boot
+in /proc/sys/kernel and let the kernel panic when it hits the hung task
+detector fail.
+
+Thanks,
+
+        tglx
+---
+--- a/arch/sparc/kernel/time_64.c
++++ b/arch/sparc/kernel/time_64.c
+@@ -732,8 +732,10 @@ void __irq_entry timer_interrupt(int irq
+ 	if (unlikely(!evt->event_handler)) {
+ 		printk(KERN_WARNING
+ 		       "Spurious SPARC64 timer interrupt on cpu %d\n", cpu);
+-	} else
++	} else {
++		trace_printk("Invoking handler %pS\n", evt->event_handler);
+ 		evt->event_handler(evt);
++	}
+=20
+ 	irq_exit();
+=20
+--- a/kernel/hung_task.c
++++ b/kernel/hung_task.c
+@@ -248,6 +248,7 @@ static void hung_task_info(struct task_s
+ 	 * accordingly
+ 	 */
+ 	if (sysctl_hung_task_warnings || hung_task_call_panic) {
++		tracing_off();
+ 		if (sysctl_hung_task_warnings > 0)
+ 			sysctl_hung_task_warnings--;
+ 		pr_err("INFO: task %s:%d blocked%s for more than %ld seconds.\n",
+--- a/kernel/time/clockevents.c
++++ b/kernel/time/clockevents.c
+@@ -370,18 +370,22 @@ int clockevents_program_event(struct clo
+ 		delta =3D min(delta, (int64_t) dev->max_delta_ns);
+ 		cycles =3D ((u64)delta * dev->mult) >> dev->shift;
+ 		if (!dev->set_next_event((unsigned long) cycles, dev)) {
++			trace_printk("Successfully programmed %lld %lld\n", expires, delta);
+ 			dev->next_event_forced =3D 0;
+ 			return 0;
+ 		}
+ 	}
+=20
+-	if (dev->next_event_forced)
++	if (dev->next_event_forced) {
++		trace_printk("Skipping %lld %lld\n", expires, delta);
+ 		return 0;
++	}
+=20
+ 	if (dev->set_next_event(dev->min_delta_ticks, dev)) {
+ 		if (!force || clockevents_program_min_delta(dev))
+ 			return -ETIME;
+ 	}
++	trace_printk("Force programmed min delta %lld %lld\n", expires, delta);
+ 	dev->next_event_forced =3D 1;
+ 	return 0;
+ }
