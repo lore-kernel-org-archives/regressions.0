@@ -1,171 +1,63 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.166])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BA9A382F0C
-	for <regressions@lists.linux.dev>; Mon, 11 May 2026 07:35:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.166
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C47B3B6BF2;
+	Mon, 11 May 2026 08:17:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778484952; cv=none; b=lD+WzNA/OJGWk+ufkgHlcKNZ1mDSc1hzB29+ftYFKEFtY3M6VDWEF8q5wU6ahAWpo+62/dzMekouDeC+ua71988VOjU3X9Y8eWTIUPuzn8h/dMMCMMAvpVhfK0a3VlK2m3cxvpa90f0Qv2phyF4/UfasusXXxvw+IXmy+qbU+hQ=
+	t=1778487427; cv=none; b=a6g+AFuslXcCEORr5nwmz0AiODbS6szg1xr7QggdM0zwsOlLJPpdYg2334b/t6uDzhpDAe6AG3C0vW4EpW7hGstwqhw3u49DtPi3Q9vZkX84EQcYwuN7ftEGQUdOPOAUBtAnegQEL6Sil1gICT1/4TDmwrAR15PHyJzXq5jIMks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778484952; c=relaxed/simple;
-	bh=JekxQ3jhAEWwckKcTZ1KtXX5cs1axMVv72xdmWNzLC0=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=EPG9+D1GhFj4nz6YyB+XGNuQY5po1Rp8fyL0yuMNi6CUkAfPEdODhDhzfup8xivjCtPYGyxRcDFiMd1dRKK8BkcX09ivmlsStNv5JGSNyoXJPaf3yc8CWgAb8yX5cJfOasVqAa33VuXGK4oNpL5H3d/Q5D6Szp/HTcwYo52toGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=SaVmE+eC; arc=none smtp.client-ip=188.68.63.166
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1778487427; c=relaxed/simple;
+	bh=KPcJ5hXTrwKnBFSf+/D3W3X1RxZdjdwGOBGpUyeY9+E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q+KlNaa3kI5MVloT/4bPQQ9oW6Iz1SNGenItwuIx6uz7CbRMecbqqMdUJHzy2du8zh2lpVZv/1gm07VIcJ8cVQ/r/WlEOBeHzNW4BdImMYwudn5SLfPoEbt/+oUnPXwa/vWn3b15BYftQJ3WAzCbRh9lFramwpWIiuuYfjl3jhY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=rVobUHTG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="SaVmE+eC"
-Received: from mors-relay-8202.netcup.net (localhost [127.0.0.1])
-	by mors-relay-8202.netcup.net (Postfix) with ESMTPS id 4gDWjT0lbPz41YZ;
-	Mon, 11 May 2026 09:35:41 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1778484941;
-	bh=JekxQ3jhAEWwckKcTZ1KtXX5cs1axMVv72xdmWNzLC0=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=SaVmE+eCwtnk+V7y6Fc+oBUmBkHhRzHxhauDGaXbgSZO01Nj9EqZsUbuLsbYvrgqr
-	 7VOZ1jiSFQr4GxlLKz04WCYIJrEcNWl939fBtlXodSi8QgWPOacKNrLxrzUcxmyu8Q
-	 UDgUbSeSX2r/BWQmHRpvdC4d0WRNFb7JShsoY3Jyn7N4+N7zjzty4sx9nFOLezsWIT
-	 5A163bJ2c46kPmWNtv7yawU11yEtyvDWUV42u0L18+rHqpqUP/ILRndvX4BGc6jC3M
-	 iKUHTuV5RUOFZfnyg50gEBwjvgoi0DsFXdpCZZMJqsSgXgpSs4zpjx4ePXfR+/uplc
-	 UPKGdmZCicHqg==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-8202.netcup.net (Postfix) with ESMTPS id 4gDWjS74qGz41YQ;
-	Mon, 11 May 2026 09:35:40 +0200 (CEST)
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4gDWjS1W60z8sgW;
-	Mon, 11 May 2026 09:35:40 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 2E7F56183D;
-	Mon, 11 May 2026 09:35:39 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <f07da4c5-cdb9-42c8-b4e7-f5122254ed8a@leemhuis.info>
-Date: Mon, 11 May 2026 09:35:37 +0200
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="rVobUHTG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5AB9EC2BCB0;
+	Mon, 11 May 2026 08:17:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1778487424;
+	bh=KPcJ5hXTrwKnBFSf+/D3W3X1RxZdjdwGOBGpUyeY9+E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rVobUHTGza6GZfg8w0UTZAMczYbMPQch/G+cyMGhEw7IXFraKAnGZANTLqWXuL0Zf
+	 2FyPwogC9dBiIJlQRlKNcE9Oipc2KvfuFWb8IXDATI2CV4gpSkdeH/xhtVFLIkOVL2
+	 NSgPzgiQZ90w1neSUehMWCn+yjRK5T4sZXygWOlo=
+Date: Mon, 11 May 2026 10:17:02 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: "stable@vger.kernel.org" <stable@vger.kernel.org>,
+	Russell King <linux@armlinux.org.uk>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Andrew Lunn <andrew@lunn.ch>, regressions@lists.linux.dev,
+	netdev@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+	Jensen Huang <jensenhuang@friendlyarm.com>,
+	Ovidiu Panait <ovidiu.panait.rb@renesas.com>
+Subject: Re: [REGRESSION] stmmac: Random DMA reset failure on RK3399 since
+ v6.18
+Message-ID: <2026051154-region-handcart-09b6@gregkh>
+References: <CAMpZ1qEwNOqR-KQD4kEqd93aB-TpHnG6WdQc2tXUF0aXMmw_SA@mail.gmail.com>
+ <198e2ce4-07e1-46c0-818d-1eb18645aca0@leemhuis.info>
+ <CAMpZ1qGEOiPj7cApnWJnojSyEpDmXfco=No5n1VfyTCoNyCyFQ@mail.gmail.com>
+ <5308c658-7d4c-4292-b091-a51546ea4d23@leemhuis.info>
+ <f07da4c5-cdb9-42c8-b4e7-f5122254ed8a@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] stmmac: Random DMA reset failure on RK3399 since
- v6.18
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: "stable@vger.kernel.org" <stable@vger.kernel.org>
-Cc: Russell King <linux@armlinux.org.uk>,
- Heiner Kallweit <hkallweit1@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
- regressions@lists.linux.dev, netdev@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>,
- Jensen Huang <jensenhuang@friendlyarm.com>,
- Ovidiu Panait <ovidiu.panait.rb@renesas.com>
-References: 
- <CAMpZ1qEwNOqR-KQD4kEqd93aB-TpHnG6WdQc2tXUF0aXMmw_SA@mail.gmail.com>
- <198e2ce4-07e1-46c0-818d-1eb18645aca0@leemhuis.info>
- <CAMpZ1qGEOiPj7cApnWJnojSyEpDmXfco=No5n1VfyTCoNyCyFQ@mail.gmail.com>
- <5308c658-7d4c-4292-b091-a51546ea4d23@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <5308c658-7d4c-4292-b091-a51546ea4d23@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-PPP-Message-ID: <177848493954.3705305.4101896583574132066@mxe9fb.netcup.net>
-X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: 2E7F56183D
-X-NC-CID: ly4E+x+yMjHTTvk5EYhBSqPUYKsrNng/6ZNrMOBTFRTtmW+g2rA=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f07da4c5-cdb9-42c8-b4e7-f5122254ed8a@leemhuis.info>
 
-Greg, Sasha, could you please cherry-pick c171e679ee66d7 ("net: stmmac:
-Disable EEE RX clock stop when VLAN is enabled") [v6.19-rc1] to 6.18.y?
-It fixes a regression for Jensen Huang (for details see below; it was
-later confirmed that c171e679ee66d7 really fixes this) caused by
-dd557266cf5fb0 ("net: stmmac: block PHY RXC clock-stop") [v6.15-rc1]. tia!
+On Mon, May 11, 2026 at 09:35:37AM +0200, Thorsten Leemhuis wrote:
+> Greg, Sasha, could you please cherry-pick c171e679ee66d7 ("net: stmmac:
+> Disable EEE RX clock stop when VLAN is enabled") [v6.19-rc1] to 6.18.y?
+> It fixes a regression for Jensen Huang (for details see below; it was
+> later confirmed that c171e679ee66d7 really fixes this) caused by
+> dd557266cf5fb0 ("net: stmmac: block PHY RXC clock-stop") [v6.15-rc1]. tia!
 
-Ciao, Thorsten
+Now queued up, thanks.
 
-On 5/7/26 15:13, Thorsten Leemhuis wrote:
-> [+Ovidiu Panait]
-> On 5/7/26 14:49, Jensen Huang wrote:
->> On Tue, May 5, 2026 at 4:26 PM Thorsten Leemhuis
->> <regressions@leemhuis.info> wrote:
->>> On 4/29/26 14:53, Jensen Huang wrote:
->>
->>>> I'm reporting a regression on RK3399 (stmmac) observed in v6.18.24.
->>>> When a network cable is connected during boot, the DMA reset
->>>> occasionally fails with the error message: "Failed to reset the dma".
->>>>
->>>> This appears to be a timing issue related to the EEE RX clock-stop
->>>> logic. Based on my investigation with the RTL8211E PHY, I monitored
->>>> the PHY register PS1R (MMD device 3, address 0x01) and observed a
->>>> value of 0x0f40. This indicates that the PHY is in LPI mode and the RX
->>>> clock may have already stopped.
->>>>
->>>> While commit dd557266cf5f ("net: stmmac: block PHY RXC clock-stop")
->>>
->>> Just wondering: have you tried if mainline (e.g. 7.1-rc1) is still
->>> affected? This is something that is always a good advisable (some people
->>> would call it required). In this case even more, as it since a while
->>> contains a fix for the change you mentioned, that wasn't backported:
->>> c171e679ee66d7 ("net: stmmac: Disable EEE RX clock stop when VLAN is
->>> enabled"). But this is not my area of expertise (and in different area
->>> of the code), so that fix might be unrelated to your issue.
->>
->> Thanks for the pointer.
->> As you suggested, I have tested the mainline and confirmed that the
->> issue is not present in v7.1-rc2, nor as early as v6.19-rc1. However,
->> I verified that the issue persists in the latest stable v6.18.26.
->> I performed a git bisect and the result pointed exactly to the commit
->> you mentioned: c171e679ee66d7 ("net: stmmac: Disable EEE RX clock stop
->> when VLAN is enabled").
-> 
-> Great! Could you please cherry-pick c171e679ee66d7 to 6.18.y and see if
-> that fixes things? It sounds like it should.
-> 
-> @Ovidiu Panait: c171e679ee66d7 is a commit of yours. If Jensen confirms
-> that cherry-picking fixed the problem, I'd say we ask Greg to pick it up
-> for 6.18.y -- unless you see any reasons why that might be a bad idea.
-> 
->> Additionally, I tested the case where CONFIG_VLAN_8021Q is not set,
->> and the DMA reset issue occurs again.
-> 
-> I'd say that is likely best discussed in a new thread you might want to
-> start. Also wondering if it was like that earlier. Or iow: if that is a
-> regression or not.
-> 
-> Ciao, Thorsten
-> 
->>>> ensures the clock is running before the DMA reset, my tests suggest
->>>> that the phylink_rx_clk_stop_block() call might not provide a
->>>> sufficiently stable RX clock in time for the immediate DMA reset that
->>>> follows.
->>>>
->>>> Since stmmac already sets mac_requires_rxc = true, I modified
->>>> phylink_bringup_phy() to honor this flag. This avoids toggling the
->>>> PHY's clk_stop_enable during the initialization sequence, ensuring the
->>>> RX clock remains active and stable throughout.
->>>> With the change below, I achieved 200/200 successful reboots with the
->>>> cable connected (previously ~50% failure rate).
->>>>
->>>> --- a/drivers/net/phy/phylink.c
->>>> +++ b/drivers/net/phy/phylink.c
->>>> @@ -2171,7 +2171,7 @@ static int phylink_bringup_phy(struct phylink
->>>> *pl, struct phy_device *phy,
->>>>      /* Allow the MAC to stop its clock if the PHY has the capability */
->>>>      pl->mac_tx_clk_stop = phy_eee_tx_clock_stop_capable(phy) > 0;
->>>>
->>>> -    if (pl->mac_supports_eee_ops) {
->>>> +    if (pl->mac_supports_eee_ops && !pl->config->mac_requires_rxc) {
->>>>          /* Explicitly configure whether the PHY is allowed to stop it's
->>>>           * receive clock.
->>>>           */
->>>>
->>>> Any feedback/testing on this would be appreciated.
->>>>
->>>> Best regards,
->>>> Jensen Huang
->>>>
->>>
-> 
-
+greg k-h
