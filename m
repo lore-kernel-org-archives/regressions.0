@@ -1,116 +1,81 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.102])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F1EE374187
-	for <regressions@lists.linux.dev>; Mon, 11 May 2026 11:45:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.102
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27B583D9DD7;
+	Mon, 11 May 2026 14:21:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778499937; cv=none; b=EMW3NtKq5dX/r2GtPil+Q/evEoJNEPl0y8AUXJASIua7STRpwobSaKLWaT68q34GatoM//HToUdnVoO6jfiFBUNYqD22G9OuhCNTZo1OT4I/zrLJ+/1FBcrPyyUkbHQnB2VPf26JzrvXseTW8cUsGqoZHnoC09MVFggnLTZ0oPY=
+	t=1778509320; cv=none; b=FLOgFh/oaGrDQG2MhiJKxi++oavGS0d14FrksrqQA5wQIfL7t8DJm8erC2Ju5PAWo9nWrk8dqVWE1iADNkfw25gXwqAkjC0Gi/+jg85N0jQKhO6cu/TFfe+Oh2837cDADsCT4xtRf+aZg57pJYZpBwrgi4jK/eeq1E8rBn70gBQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778499937; c=relaxed/simple;
-	bh=LoBBFFmJSYRfR2t6BmLfXNxl3t73iagTGsznReQ7kvY=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=L2WrZgCy5lpZMR4MZWbQ7PcBGQ/ignccyqosVYsqoY/ZcJRfYtoBvz3bPdh3iH63yUZG0ZVC05Y+gtvzqMpIDG2aOlyoR0dZthZGRVVJzhezxIzuSixPMnCuUlG68qHaUEXGmVa3p1AmwJAla+luYoyyFxETcytyRtAJS5INijk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=beWtsixL; arc=none smtp.client-ip=188.68.63.102
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1778509320; c=relaxed/simple;
+	bh=UWwlvz/FBg65FNAhHu+MP/kqeZ/hILQT6+2DtYu8mYE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=CzTWnHYnZXsyHACELya63EyzSK8RyaqCbPFF5Ol+hnTaQDtQ2mu0NHuSholkSimPVbK9+IfeSJZUNaHAcBx+df0wKdDEGvZDITZwkmQGp2Vxml20I7HQcppuHhH/VPpzZP04DMRNFS8PLCi2hZu1/HKbaH+wHKpFDaI4A7XWh50=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S6/mdimA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="beWtsixL"
-Received: from mors-relay-2502.netcup.net (localhost [127.0.0.1])
-	by mors-relay-2502.netcup.net (Postfix) with ESMTPS id 4gDdFm0L8lz65s1
-	for <regressions@lists.linux.dev>; Mon, 11 May 2026 13:45:32 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1778499932;
-	bh=LoBBFFmJSYRfR2t6BmLfXNxl3t73iagTGsznReQ7kvY=;
-	h=Date:Subject:From:To:References:In-Reply-To:From;
-	b=beWtsixLXBjiTfKU2JqfrhbuxsbUY56Eq1W5QwbKtBbzgmOIc2tPo9wgcZf5myVDc
-	 6rBbE5VMuDk4gNXFfNMU0SqVJhuL3/vqaMWXzN1HSr93zUhIQ9dJo+4LGlOx/sYr4r
-	 aFmAdyeiQddI1UfW+98UQ6RWwsxU9nublNXZOnkZdsCaWrTkF81ZODn4dnAjqUganr
-	 Eyr9AJ4UBZ915LgV3hrujoG6V3q1DctdtANya5bGQdOnEzhAu08D+2JebuRVOY1D70
-	 q9jUeZ4XpnQvn3T+AYbAV2JdOME47/MYIr5H+7LO1/anvELQdy3ZWUZV8UGWhCseuR
-	 fVOpctZcmNMug==
-Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-2502.netcup.net (Postfix) with ESMTPS id 4gDdFl6krQz4xZL
-	for <regressions@lists.linux.dev>; Mon, 11 May 2026 13:45:31 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
-X-Spam-Flag: NO
-X-Spam-Score: -2.898
-X-Spam-Level: 
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4gDdFk4wzRz8tZd
-	for <regressions@lists.linux.dev>; Mon, 11 May 2026 13:45:30 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 0D43C60300
-	for <regressions@lists.linux.dev>; Mon, 11 May 2026 13:45:30 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <4a4afc5e-2b86-4c2c-a48c-1e86a88f9303@leemhuis.info>
-Date: Mon, 11 May 2026 13:45:29 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S6/mdimA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCF1DC2BCF7;
+	Mon, 11 May 2026 14:21:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1778509319;
+	bh=UWwlvz/FBg65FNAhHu+MP/kqeZ/hILQT6+2DtYu8mYE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=S6/mdimA/Varc6IDGxnvDIUXKWhsf+TjpoEuSUKTty5eHbDf3BHRJ05RVz0nbrw2l
+	 JKM2EUD5ZGAy4owhWqPD8rfRwXjNfr7v6AlMulsyuHNMZNZ53Y11hFAaN8Mf+l6s8u
+	 qrUuKTtiINSIrMhG3O4u833YpyF5F3lHFk6WFM0X5HzPNcf3xfB1tL7jbicc/xSYko
+	 TjW5/YrbyjUnZgS5EIRzR66K1m+Cy/rJwvWiO3G8Ks+1+2vLR6x1uMmkpKYfSIcIu1
+	 dlQKOlFGBMMfqoYxy76aBvdh2medwWbFkRXd+98QUTyom97t9igqIgtvAKkIZOYmhz
+	 wHXnwSgla+SIw==
+From: Sasha Levin <sashal@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>
+Cc: Sasha Levin <sashal@kernel.org>,
+	regressions@lists.linux.dev,
+	stable@vger.kernel.org,
+	linux-rt-users@vger.kernel.org,
+	Lukas Beckmann <lbckmnn@mailbox.org>,
+	Mike Galbraith <efault@gmx.de>
+Subject: Re: [REGRESSION] 6.12.y: d66792919d4f (sched/deadline: Use revised wakeup rule for dl_server) causes latencies up to 50ms with PREEMPT_RT
+Date: Mon, 11 May 2026 10:21:50 -0400
+Message-ID: <20260511141441.stable-reply-0001@kernel.org>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <04657838-46d1-432d-95e1-eb73b930b032@mailbox.org>
+References: <04657838-46d1-432d-95e1-eb73b930b032@mailbox.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: 
- <177849993021.4072723.18375345307705474295@mxe9fb.netcup.net>
-X-NC-CID: 7AR0nrK7UJ4o8H7QAOtAc+80KW0E6HsWgPf6rKNatwri39DOud8=
+Content-Transfer-Encoding: 8bit
 
+On Sun, May 10, 2026 at 10:57:46PM +0200, Lukas Beckmann wrote:
+> I am reporting a regression which was introduced by d66792919d4f on 6.12.y.
+> Since this commit, cyclictest reports latencies up to 50 milliseconds,
+> on kernels with CONFIG_PREEMPT_RT=y.
+[...]
+> Is it possible to revert the commit?
+>
+> I can provide traces or help with testing if needed.
 
+Thanks for the detailed report. Before I revert d66792919d4f from 6.12.y,
+I'd like to confirm whether the underlying issue is the missing dl_server
+rework chain on 6.12.y rather than the revised wakeup rule itself.
 
-On 3/9/24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
-> 
-> Interacting with regzbot from arbitrary places is a recently added
-> feature of regzbot usable via the new '#regzbot report <url>' command.
-> The indented use of this feature is for updating minor aspect of
-> regressions already tracked, e.g. "change the title" or "tell regzbot
-> about a related discussion". Such things until now had to be done using
-> regzbot commands in a direct or indirect reply to report -- but there
-> they would mainly be noise for most others and just add to the huge
-> amount of mail people already get. It's also takes a more time to send a
-> lot of individual mails instead of preparing just one.
-> 
-> The new command will be documented on
-> https://gitlab.com/knurd42/regzbot/ once it got a bit more testing.
-> 
-> Ciao, Thorsten
+Mike's reply notes that his local 6.12-rt tree carrying the following
+three commits in cannot reproduce, while the same tree without them
+reproduces quickly:
 
-#regzbot report: https://gitlab.freedesktop.org/drm/amd/-/work_items/5272
-#regzbot introduced: 33efc6346e8cf7
-#regzbot title: drm/amd/display: screen goes black halfway through the
-booting process
+  cccb45d7c429 ("sched/deadline: Less agressive dl_server handling")
+  4ae8d9aa9f9d ("sched/deadline: Fix dl_server getting stuck")
+  a3a70caf7906 ("sched/deadline: Fix dl_server behaviour")
 
-#regzbot report:
-https://gitlab.freedesktop.org/drm/i915/kernel/-/work_items/16043
-#regzbot introduced: 40d2f5820951de
-#regzbot title: drm/i915/backlight: S0iX broken
+d66792919d4f's upstream commit message explicitly says it relies on the
+state established by a3a70caf7906, and none of the three are in 6.12.y.
 
-#regzbot report:
-https://lore.kernel.org/lkml/CAMpZ1qEwNOqR-KQD4kEqd93aB-TpHnG6WdQc2tXUF0aXMmw_SA@mail.gmail.com/
-#regzbot fix: c171e679ee66d7
+Could you give those three commits a spin on top of 6.12.y (keeping
+d66792919d4f in place) and see whether the latency goes away?
 
-#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=221394
-#regzbot introduced: dbf9b7bb0edf
-#regzbot fix: wifi: rtl8xxxu: Detect the maximum supported channel width
-
-
-
-
+-- 
+Thanks,
+Sasha
