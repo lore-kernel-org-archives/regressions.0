@@ -1,185 +1,143 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.61.103])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 784202264D9
-	for <regressions@lists.linux.dev>; Mon, 11 May 2026 05:50:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F76E296BC1
+	for <regressions@lists.linux.dev>; Mon, 11 May 2026 06:30:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.61.103
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778478626; cv=none; b=fNPhjzjOhDzSlu29dJYIa8WGIWDfJq3E4IDFE6Ksa36Yy8b92uG4ufidYJhG7xAKlY6JYaSs/DAw2HI231QEHLTMBlM8LKJ6fxyE6CzypNfYkg2VGR16gOb6niarg3AuPv7LY6uCpJz57XbieoeotH8YjGvT894KpWzqubcAso4=
+	t=1778481018; cv=none; b=N9cLnC7AMk0xVYXXpg48ud7dYpyNUKEf9agx120oJrOowYaM6VxSs0emIL83ohfBx5dpGYDM75LkCIeoLMGUZ36KXGVU1BvJ3ptht2zfYWawgIGEAqIYB6/5u2758q/SmLNxGCdx39NbKqfsx4BoiotcvARl0EZB56vzPoov//E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778478626; c=relaxed/simple;
-	bh=hITaVkmTUBwCX42V4U+BzWMAmlOZGLB3u3tO8Pxt/80=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=QC5GssjZcx/y1R4rV+XWBPL1qFDlvGyUOfqQkz/79yyHz/HCylp29+ceozdfRYqV3l8Svq0iQzm23764cO9Wt6gcurRNl4Z2xrxUGFT96Tie8KzLjosuR6aP2qmiZ/g1VZLeu+G1tlR9zaUtnDkr7TZWmD9I639TdEy7YiIs9v8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=efault@gmx.de header.b=s18R2b6a; arc=none smtp.client-ip=212.227.17.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1778481018; c=relaxed/simple;
+	bh=LKk49BYYahEX/ogTF3fB76enQeNUY+jlhggXzzuQoKQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
+	 In-Reply-To:Content-Type; b=JlH7bjA4URMPc3MFX9mm4ODXGvpQcgcemyYRx4Fx9k7UafI17KufnyczWoxGreSxhciWjkJebpoWKGki0xczw/IxnmVVjV2ByzjUXMYdMOm5gZhyOe/iuRTlyfu7HTdIG0ra2OZ/Wzxy5GuFcFP7xRXBvw6fxci1w5yMSROV1Y0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=l4dLhcjL; arc=none smtp.client-ip=188.68.61.103
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=efault@gmx.de header.b="s18R2b6a"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1778478612; x=1779083412; i=efault@gmx.de;
-	bh=UEEAxBRGXRa1cHSDWDSr8aXCOwVXFh53F6kM/lSIswA=;
-	h=X-UI-Sender-Class:Message-ID:Subject:From:To:Cc:Date:In-Reply-To:
-	 References:Content-Type:Content-Transfer-Encoding:MIME-Version:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=s18R2b6aiVdl8RJ8X+Gve3Qga5Z3CH1wiH/Dvag8UkfILAUgp7WqQNbhUIrSadg7
-	 W6e4LfYhJrXi52j7tLJuAYSy2f7eiLPy312AiEBcMxr20yqJNw8glQIvGkysFmqq9
-	 InyZNYeoWXleiWNLWxmyEWsDD+kkK529AjypApowYRQXPzcIPLqt6/Lpm7qRpaaN2
-	 KmkDciAZ1Qqvyaq+5mv9YqgYDekhgjoxyHc2ZcXw8S1EAcvxDVaTD+NhtSdenric0
-	 SvVteMLagPlsc4lLUKl/v11lKpsD1CZC9T87WQ0TDB12klkEYFtoZd7cpuzbOV8op
-	 shlahfoMuOr7idDzZQ==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from client.hidden.invalid by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MJmKX-1wflIA3thR-00Y3A9; Mon, 11
- May 2026 07:50:12 +0200
-Message-ID: <c3120aeed5b0bc34e96e39a9494986aa0fedd332.camel@gmx.de>
-Subject: Re: [REGRESSION] 6.12.y: d66792919d4f (sched/deadline: Use revised
- wakeup rule for dl_server) causes latencies up to 50ms with PREEMPT_RT
-From: Mike Galbraith <efault@gmx.de>
-To: Lukas Beckmann <lbckmnn@mailbox.org>, Peter Zijlstra
- <peterz@infradead.org>,  Juri Lelli <juri.lelli@redhat.com>, Sasha Levin
- <sashal@kernel.org>
-Cc: regressions@lists.linux.dev, stable@vger.kernel.org, 
-	linux-rt-users@vger.kernel.org
-Date: Mon, 11 May 2026 07:50:10 +0200
-In-Reply-To: <04657838-46d1-432d-95e1-eb73b930b032@mailbox.org>
-References: <04657838-46d1-432d-95e1-eb73b930b032@mailbox.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="l4dLhcjL"
+Received: from mors-relay-8403.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4gDVFq0K5lz86L2;
+	Mon, 11 May 2026 08:30:07 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1778481007;
+	bh=LKk49BYYahEX/ogTF3fB76enQeNUY+jlhggXzzuQoKQ=;
+	h=Date:Subject:To:References:From:Cc:In-Reply-To:From;
+	b=l4dLhcjLsUrRMeESiD8by5l8cbIpn5nZZ30jxNbCatV26LjjHvEYatv3kX91mk9jG
+	 E4l3HNDNmL6BcAf0wTZmFbm5sx1zjhSBYMhxvxZFgMxl32G0eMrdQSETbKmjTzED/T
+	 aeujt//+hJiId6NttkOW+oKGwPiXEU7NpBSFUMnW44AXodlpcKeDsAuq+BXhDu55e7
+	 LXajUdcx+oqGdzJHfkKUcY3QyCPc99dFBYTDSgmntS5Leh97rYmxRAEDMxBZInmtoH
+	 f1qic421jX0ZVuwI9WGGGrBLipnacGndKlWl/zYeKxPDgKthKiFdy/WrudU6THC8eN
+	 cUu8Sl7dkPbWQ==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4gDVFp6kb6z86GN;
+	Mon, 11 May 2026 08:30:06 +0200 (CEST)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4gDVFp1vKvz8svf;
+	Mon, 11 May 2026 08:30:06 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 9F3D061837;
+	Mon, 11 May 2026 08:30:05 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <01ffb0cc-dcf6-4e60-adf3-fbb96e0666d0@leemhuis.info>
+Date: Mon, 11 May 2026 08:30:04 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Provags-ID: V03:K1:UJsqE6cITQCeGD1xwNumGYt+t2NS3uQ/NbVTwASzZryTUjawul5
- 1nQvKGt4R4cpMqtcQ7KTj2382cQ9ISLX2rimmbYqNYgxqSSRy5S9oI3z/cmeUlNSugY4Xn8
- bH0YkoI/ab6UUYYxTF3uXD1zbp8H2Tgd5W40yEsfk/diSxg2K5snN7fQ9zoC3CcHjHnc30i
- rqE26JWyYw4+9fbjppO4g==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:JrAeleBm9ng=;lwLr2GBZDtlzaRvptRmxpsPUING
- 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
- lzkkLGQhzyNe+vSKNYFVyn4/GGJ06PH7Pcw0=
+User-Agent: Mozilla Thunderbird
+Subject: Re: Linux 7.1-rc3 regression (Bluetooth)
+To: markus.suvanto@gmail.com
+References: <f652d5d9841a9b7c100dd19ee97c86099f580724.camel@gmail.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+Cc: linux-kernel@vger.kernel.org,
+ "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ Luiz Augusto von Dentz <luiz.dentz@gmail.com>, Pauli Virtanen <pav@iki.fi>,
+ Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+In-Reply-To: <f652d5d9841a9b7c100dd19ee97c86099f580724.camel@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: <177848100600.3495226.3526253921001327380@mxe9fb.netcup.net>
+X-NC-CID: u9b/F5+RGuLVrkiC2KntT5mHbEnDMX0DYPqupjqEls0GsAUhdqA=
 
-On Sun, 2026-05-10 at 22:57 +0200, Lukas Beckmann wrote:
-> Hi,
+On 5/11/26 07:17, markus.suvanto@gmail.com wrote:
+> Hello
+> 
+> I upgrade 7.1-rc2 to 7.1-rc3. After that bluetooth  didn't start
+> hci0: Failed to send wmt func ctrl (-22)
+> My fix was to revert commit 634a4408c0615c523cf7531790f4f14a422b9206
 
-Greetings!
+Thx for your report. FWIW, there are two proposed fixed for this change
+floating around:
 
-> I am reporting a regression which was introduced by d66792919d4f on 6.12.=
-y.
-> Since this commit, cyclictest reports latencies up to 50 milliseconds,=
-=20
-> on kernels with CONFIG_PREEMPT_RT=3Dy.
->=20
-> Steps to reproduce:
-> 1. run a load (e.g. stress-ng --cpu 4 --io 2 --vm 2 --vm-bytes 128M)
-> 2. run cyclictest (e.g. cyclictest -a -t -m -p 80 -i 250 -d 0)
+https://lore.kernel.org/all/20260508173121.27526-1-mikhail.v.gavrilov@gmail.com/
+https://lore.kernel.org/all/770d36b07311bf88210c187923f243fb9f126f04.1777058551.git.pav@iki.fi/
 
-...
+Given that this is the third revert within a short time-frame I wonder
+if we should fast-track a fix (once ready) to spare more users the pain
+of bisecting & reporting.
 
+Ciao, Thorsten
 
-> I found this, because Debian updated its rt kernel from 6.12.74 to 6.12.8=
-5.
-> The issue was also present with upstream 6.12.85 and HEAD, but not with=
-=20
-> 6.12.74, so I started bisecting and eventually found d66792919d4f.
->=20
-> Is it possible to revert the commit?
->=20
-> I can provide traces or help wth testing if needed.
+> -Markus Suvanto
+> 
+> 
+> commit 994246ea1eed9029d648b28a9828359f5046173e (HEAD -> master)
+> Author: Markus Suvanto <markus.suvanto@movesole.com>
+> Date:   Mon May 11 07:29:47 2026 +0300
+> 
+>     Revert "Bluetooth: btmtk: validate WMT event SKB length before struct access"
+>     
+>     This reverts commit 634a4408c0615c523cf7531790f4f14a422b9206.
+> 
+> commit 5d6919055dec134de3c40167a490f33c74c12581 (tag: v7.1-rc3, origin/master, origin/HEAD)
+> Author: Linus Torvalds <torvalds@linux-foundation.org>
+> Date:   Sun May 10 14:08:09 2026 -0700
+> 
+>     Linux 7.1-rc3
+> 
+> 
+> Lenovo ThinkPad T14s Gen 1 (20UJ) AMD Ryzen 5 PRO 4650U 
+> 
+> Not working dmesg:
+> masu@t470 ~ % grep Bluetoot dmesg_7.1.0-rc3 
+> [    4.229749] Bluetooth: Core ver 2.22
+> [    4.232923] Bluetooth: HCI device and connection manager initialized
+> [    4.233081] Bluetooth: HCI socket layer initialized
+> [    4.233227] Bluetooth: L2CAP socket layer initialized
+> [    4.233236] Bluetooth: SCO socket layer initialized
+> [    4.413060] Bluetooth: hci0: HW/SW Version: 0x008a008a, Build Time: 20251223091725
+> [    6.142372] Bluetooth: BNEP (Ethernet Emulation) ver 1.3
+> [    6.142384] Bluetooth: BNEP filters: protocol multicast
+> [    6.142393] Bluetooth: BNEP socket layer initialized
+> [    7.727087] Bluetooth: hci0: Failed to send wmt func ctrl (-22)
+> [    7.727140] Bluetooth: hci0: HCI Enhanced Setup Synchronous Connection command is advertised, but not supported.
+> 
+> 
+> Working dmesg:
+> masu@t470 ~ % grep Bluetoot dmesg_7.1.0-rc3-00001-g994246ea1eed  
+> [    4.296358] Bluetooth: Core ver 2.22
+> [    4.296385] Bluetooth: HCI device and connection manager initialized
+> [    4.296393] Bluetooth: HCI socket layer initialized
+> [    4.296399] Bluetooth: L2CAP socket layer initialized
+> [    4.296404] Bluetooth: SCO socket layer initialized
+> [    4.391514] Bluetooth: hci0: HW/SW Version: 0x008a008a, Build Time: 20251223091725
+> [    6.087152] Bluetooth: BNEP (Ethernet Emulation) ver 1.3
+> [    6.087165] Bluetooth: BNEP filters: protocol multicast
+> [    6.087172] Bluetooth: BNEP socket layer initialized
+> [    7.591891] Bluetooth: hci0: Device setup in 3127955 usecs
+> [    7.591922] Bluetooth: hci0: HCI Enhanced Setup Synchronous Connection command is advertised, but not supported.
+> [    7.657339] Bluetooth: MGMT ver 1.23
+> [   25.883135] Bluetooth: RFCOMM TTY layer initialized
+> [   25.883150] Bluetooth: RFCOMM socket layer initialized
+> [   25.883154] Bluetooth: RFCOMM ver 1.11
 
-FWIW, my box says this *may* be due to a fix (+follow-ups) that didn't
-wander back to stable.
-
-cccb45d7c429 ("sched/deadline: Less agressive dl_server handling")
-   Fixes: 557a6bfc662c ("sched/fair: Add trivial fair server")
-
-Follow-ups:
-4ae8d9aa9f9d ("sched/deadline: Fix dl_server getting stuck")
-a3a70caf7906 ("sched/deadline: Fix dl_server behaviour")
-
-Local 6.12-rt tree containing the above (et al) failed to reproduce in
-the hour I let it try to, whereas a build excluding only all locally
-added fix backports reproduced in fairly short order.
-
-Suspects NOT confirmed in total isolation...
-
-	-Mike
