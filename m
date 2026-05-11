@@ -1,257 +1,185 @@
-Received: from mail-dl1-f46.google.com (mail-dl1-f46.google.com [74.125.82.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A7D61684BE
-	for <regressions@lists.linux.dev>; Mon, 11 May 2026 03:13:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 784202264D9
+	for <regressions@lists.linux.dev>; Mon, 11 May 2026 05:50:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778469211; cv=none; b=uijwINMTGsCaH5slnkxWcBVxVEroeLmF3WJWBEIhWjPv8wN3XanGubyhPiLmcdL+yOQ0Ky/szqMOwncQwikRsAN5M4iLnwLZvp9CWdxs9R3ls7GHjp8k9IQo9hMQjm9TJeDew4o2qXrfwetUd6AfSegn4MASKIZ6UHJE7g//VEQ=
+	t=1778478626; cv=none; b=fNPhjzjOhDzSlu29dJYIa8WGIWDfJq3E4IDFE6Ksa36Yy8b92uG4ufidYJhG7xAKlY6JYaSs/DAw2HI231QEHLTMBlM8LKJ6fxyE6CzypNfYkg2VGR16gOb6niarg3AuPv7LY6uCpJz57XbieoeotH8YjGvT894KpWzqubcAso4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778469211; c=relaxed/simple;
-	bh=rwTOmXellP2APmptdgYM7+fMuOZcObO44+euSbxxuGA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HgsOAH+fYn8p+v5XiZ0ktX4Z49r2YsuohabgR+NjNgmvD3qOu8vEMODkcvtZ7lW7o5oodRDMzWYeaRdbckGZCF1N56zMcQ+ZYJbjImTcrubIvEaOkq57uVs57OIqcpBBIRKE1FgJiSyMoVMZtKr6XWpEf6eBCmRWMJ0vS0V/XgU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=pKeOevXf; arc=none smtp.client-ip=74.125.82.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1778478626; c=relaxed/simple;
+	bh=hITaVkmTUBwCX42V4U+BzWMAmlOZGLB3u3tO8Pxt/80=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=QC5GssjZcx/y1R4rV+XWBPL1qFDlvGyUOfqQkz/79yyHz/HCylp29+ceozdfRYqV3l8Svq0iQzm23764cO9Wt6gcurRNl4Z2xrxUGFT96Tie8KzLjosuR6aP2qmiZ/g1VZLeu+G1tlR9zaUtnDkr7TZWmD9I639TdEy7YiIs9v8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=efault@gmx.de header.b=s18R2b6a; arc=none smtp.client-ip=212.227.17.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pKeOevXf"
-Received: by mail-dl1-f46.google.com with SMTP id a92af1059eb24-12e332315a8so8434777c88.0
-        for <regressions@lists.linux.dev>; Sun, 10 May 2026 20:13:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1778469209; x=1779074009; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=D3PmEHf9UYRUqeCliUmozp/Gh5y1lEYZdEX3NcIRmss=;
-        b=pKeOevXfxvUTSj6Uo1tR6p47cpu3PuufwsC0b+sBfK5EWJC456yX7bFNfkot/uIb63
-         QgqWUryHoFN3oMqu6AAMsumiX3pUA4l/ofW6ztai91vSLen2//ZP9HoFJdIbF6FuE7kP
-         ghv40OUwA0X7lG2LrB4KnhQ+zcmDeWJfaosvcgalx5O70b21CTHSMqa5QSyrRui2w6wd
-         1QXCuy96A3wcq4NiDtKKfBO8Q23hvazyxI3XZDY7OaIiZFEQtjnGDJ/NpZLrsmqSf4E8
-         nKyKZLCx3pop8V1wetZ6VxA0+zIoxRYbsOsrThUYDyB7MDO6c+nsymD5KpgEoMANARam
-         P1AA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778469209; x=1779074009;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=D3PmEHf9UYRUqeCliUmozp/Gh5y1lEYZdEX3NcIRmss=;
-        b=GAN9sOiebteqCwm0t+RLjWXLLpyh4VkYwMKYv/L1CiTGxP7rDncLw2wCEfZPNl/26A
-         6dRe8u4dxHQN+F1WzjKN0af9V2du2NFcHyXbbcfu/+p/LSu/sqmDlhVhm0G1bj6LdRxb
-         N+fi/gFxJT2Lpw4mie5VsBgpA6Nol+AUtg3wVn2lZQJbNBS+zBBKeXsCFeiLw0ecwf/0
-         3mmp/u5U4abha/0TXlzVFPHEP18Ck0vBboOyfj7LydaIcZaulg8DekhTwjmrnsGRvX3E
-         LWfFJ2ov6ngXLnVQ90edm2zfgMxAXUbLpF2DD3dKska+2wtXJ6qnSUbMWd5mMyzVOZR5
-         kjXQ==
-X-Forwarded-Encrypted: i=1; AFNElJ8/8/jkfpM9L3PFgnnSQVvWpLxEDCav5ASBeBorj+ZWuRvLbDetXxVLi+6jt/WldqRFFjhZm9tHgT+EoA==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxB3Fl1plpG+32/SjM8MBy2uHeJWgqhpyeWJ6fCocSZ4cZn9atD
-	o6FqRWPYm/WXJugEWKAcnLnEbbF9fTCiL67b03PL2Qx6IilQVERPzk36lrAxU6W1
-X-Gm-Gg: Acq92OFmAGNocbhNVwAlnpnWHh3HOrI2VojdVGudh4cTUJR3iZyziEKglatTaKNYsIc
-	pAXR1As9zYkwtwA5lGa8S8lYtfMslTfXKR10Wuq3kfybIQjVPS8N4W5wzThva2tR313MB72jVRn
-	FTtiG7qqD3x0o6X2eJnJG0aE1cM7fXs6nIrliyLwnNpRqVtlm+CbqNajBDDC9ih1ncv0+AZanH4
-	txmyTTTrvu9oLYr7XcgNC4+Gf7usuEAfqGkTrke/60bE5rcin3mJv35+nypF4TIihF02cEtIrck
-	ooKhsax4wBZKlHMjmmeRellxA2YhjllmgiJPkcSuA5jWH62oMMEOICW+xvEOzbP7KcGr9ex4jC4
-	mJUzWXPSXmF37TyDiZB8xM6guv0jn2F1NicDmJQfRT19kPgdhx90y8CgJUyVlos3Yw3OEOOJqwe
-	yzAiswqGWMCoLaGsJ8z0YhxPuneUFu9Oys4uydd8QfZPf3yAIA2t8=
-X-Received: by 2002:a05:7022:ea21:b0:130:6904:e817 with SMTP id a92af1059eb24-132a83eeb71mr3817495c88.39.1778469209120;
-        Sun, 10 May 2026 20:13:29 -0700 (PDT)
-Received: from [192.168.21.192] ([67.170.89.46])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2f88885b820sm11702661eec.20.2026.05.10.20.13.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 10 May 2026 20:13:28 -0700 (PDT)
-Message-ID: <a7a0d78b-435e-43c8-b436-5e7f4dd39dee@gmail.com>
-Date: Sun, 10 May 2026 20:13:26 -0700
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=efault@gmx.de header.b="s18R2b6a"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1778478612; x=1779083412; i=efault@gmx.de;
+	bh=UEEAxBRGXRa1cHSDWDSr8aXCOwVXFh53F6kM/lSIswA=;
+	h=X-UI-Sender-Class:Message-ID:Subject:From:To:Cc:Date:In-Reply-To:
+	 References:Content-Type:Content-Transfer-Encoding:MIME-Version:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=s18R2b6aiVdl8RJ8X+Gve3Qga5Z3CH1wiH/Dvag8UkfILAUgp7WqQNbhUIrSadg7
+	 W6e4LfYhJrXi52j7tLJuAYSy2f7eiLPy312AiEBcMxr20yqJNw8glQIvGkysFmqq9
+	 InyZNYeoWXleiWNLWxmyEWsDD+kkK529AjypApowYRQXPzcIPLqt6/Lpm7qRpaaN2
+	 KmkDciAZ1Qqvyaq+5mv9YqgYDekhgjoxyHc2ZcXw8S1EAcvxDVaTD+NhtSdenric0
+	 SvVteMLagPlsc4lLUKl/v11lKpsD1CZC9T87WQ0TDB12klkEYFtoZd7cpuzbOV8op
+	 shlahfoMuOr7idDzZQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from client.hidden.invalid by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MJmKX-1wflIA3thR-00Y3A9; Mon, 11
+ May 2026 07:50:12 +0200
+Message-ID: <c3120aeed5b0bc34e96e39a9494986aa0fedd332.camel@gmx.de>
+Subject: Re: [REGRESSION] 6.12.y: d66792919d4f (sched/deadline: Use revised
+ wakeup rule for dl_server) causes latencies up to 50ms with PREEMPT_RT
+From: Mike Galbraith <efault@gmx.de>
+To: Lukas Beckmann <lbckmnn@mailbox.org>, Peter Zijlstra
+ <peterz@infradead.org>,  Juri Lelli <juri.lelli@redhat.com>, Sasha Levin
+ <sashal@kernel.org>
+Cc: regressions@lists.linux.dev, stable@vger.kernel.org, 
+	linux-rt-users@vger.kernel.org
+Date: Mon, 11 May 2026 07:50:10 +0200
+In-Reply-To: <04657838-46d1-432d-95e1-eb73b930b032@mailbox.org>
+References: <04657838-46d1-432d-95e1-eb73b930b032@mailbox.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Betterbird (Linux)
-Subject: Re: the stuttering regression in 7.0: should I have done something
- different?
-Content-Language: en-US
-To: Thomas Gleixner <tglx@kernel.org>,
- Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
- Greg KH <gregkh@linuxfoundation.org>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- LKML <linux-kernel@vger.kernel.org>
-References: <ffb44522-f01c-4be3-849d-27dc17fbca7f@leemhuis.info>
- <D5D19776-C809-4284-9417-F9A860877B98@gmail.com>
- <1c165caf-36b4-4673-97fd-ed86bef17b88@leemhuis.info>
- <3332123b-9e11-4895-9ab3-1707fba5815c@gmail.com> <871pfj9cmj.ffs@tglx>
-From: Tony Rodriguez <unixpro1970@gmail.com>
-In-Reply-To: <871pfj9cmj.ffs@tglx>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:UJsqE6cITQCeGD1xwNumGYt+t2NS3uQ/NbVTwASzZryTUjawul5
+ 1nQvKGt4R4cpMqtcQ7KTj2382cQ9ISLX2rimmbYqNYgxqSSRy5S9oI3z/cmeUlNSugY4Xn8
+ bH0YkoI/ab6UUYYxTF3uXD1zbp8H2Tgd5W40yEsfk/diSxg2K5snN7fQ9zoC3CcHjHnc30i
+ rqE26JWyYw4+9fbjppO4g==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:JrAeleBm9ng=;lwLr2GBZDtlzaRvptRmxpsPUING
+ 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
+ lzkkLGQhzyNe+vSKNYFVyn4/GGJ06PH7Pcw0=
 
-Hi Thomas,
+On Sun, 2026-05-10 at 22:57 +0200, Lukas Beckmann wrote:
+> Hi,
 
-Thank you for the detailed analysis — this helps clarify the situation 
-on the SPARC side.
+Greetings!
 
-You are correct that my earlier explanation focused too much on the core 
-changes and not enough on the SPARC clockevents behaviour under the new 
-forced-min-delta semantics. However, having a stable system is equally 
-important and is the main reason that I developed the test patch (to 
-help). However, your explanation makes sense.
+> I am reporting a regression which was introduced by d66792919d4f on 6.12.=
+y.
+> Since this commit, cyclictest reports latencies up to 50 milliseconds,=
+=20
+> on kernels with CONFIG_PREEMPT_RT=3Dy.
+>=20
+> Steps to reproduce:
+> 1. run a load (e.g. stress-ng --cpu 4 --io 2 --vm 2 --vm-bytes 128M)
+> 2. run cyclictest (e.g. cyclictest -a -t -m -p 80 -i 250 -d 0)
 
-I will apply your debug patch and capture the trace as requested.  If 
-the system becomes unresponsive, I will enable ftrace_dump_on_oops so 
-the trace is emitted when the hung task detector triggers.
+...
 
-Once I have the trace, I’ll send another email.
 
-Thanks again for the guidance — I’ll follow up with trace results 
-sometime tomorrow.
+> I found this, because Debian updated its rt kernel from 6.12.74 to 6.12.8=
+5.
+> The issue was also present with upstream 6.12.85 and HEAD, but not with=
+=20
+> 6.12.74, so I started bisecting and eventually found d66792919d4f.
+>=20
+> Is it possible to revert the commit?
+>=20
+> I can provide traces or help wth testing if needed.
 
-Tony
+FWIW, my box says this *may* be due to a fix (+follow-ups) that didn't
+wander back to stable.
 
-On 5/10/26 2:29 PM, Thomas Gleixner wrote:
-> On Fri, May 08 2026 at 13:15, Tony Rodriguez wrote:
->> Just confirmed on my end today.  This regression also impacts both
->> SPARC64 S7-2 and SPARC64 T7-1 on v7.0.4 and v7.1-rc2 as well. Different
->> systems using the same exact kernels.
->>
->> ** Please see points (A1) (A2) (B1) (B2)
->>
->> Once again, I am not experiencing such issues when "my patch" (link
->> below) is added to address this regression.
->>
->> https://github.com/sparclinux/issues/issues/79#issuecomment-4362173884
-> Github issues are really not helpful.
->
->> PS - On May 2nd 2026 at 9:42 PM: I also sent an email to Thomas Gleixner
->> regarding this issue.  Will be happy to validate any patches from your
->> end regarding this issue, as time permits me to do so.
-> Sorry, that mail got lost as it was in reply to a random other archived
-> thread which has absolutely nothing to do with the problem at hand.
->
-> I just looked at your github thing. Despite your changelog claiming
-> otherwise your "fix" breaks the DoS protection completely. It's a
-> polished version of a revert.
->
-> It also lacks a proper root cause analysis. This list:
->
->      - skipped programming events when delta <= min_delta_ns
->      - changed force semantics for overdue events
->      - introduced a sticky next_event_forced state
->      - returned success even when no event was programmed
->
-> does not qualify and is actually wrong.
->
-> The code does not unconditionally skip the programming of events when
-> delta <= min_delta_ns. It only does so conditionally when the previous
-> force programmed min_delta_ns event has not been delivered to the kernel
-> yet, i.e. dev->next_event_forced is still set.
->
-> That flag is only set when the minimal value has been successfully
-> programmed and it _is_ cleared on the next timer interrupt, which should
-> obviously happen due to this minimal delta programming. It is also
-> cleared when a new event > min_delta_ns is successfully programmed
-> _before_ the previous one was delivered.
->
-> IOW, the core code programmed the hardware with the min_delta_ns
-> (min_delta_ticks) timeout and the SPARC clockevents driver returned
-> success (0). Now the core code refuses to do further reprogramming with
-> the min_delta_ns timeout as that would shift the expiry (interrupt)
-> further out until the interrupt actually is delivered or some other
-> event which is not below the min_delta_ns threshold is programmed.
->
-> So let's assume that this logic is causing the problem, then the only
-> explanation for the observed behaviour is that the expected interrupt
-> due to a forced min_delta_ns programming is never delivered.
->
-> That made me look into the SPARC specific set_next_event() functions. I
-> don't know which variant your machines are using, but all of them have
-> the same underlying problem. The interrupt is based on a equal
-> comparator, so the programming logic for each of the tick variants is:
->
-> $variant_add_compare(delta)
-> {
->        cmp = read_timer() + delta;
->        write_comparator(cmp);
->        now = read_timer();
->        return (now - cmp) > 0;
-> }
->
-> and the actual set_next_event() function which is invoked from the core
-> code does:
->
->     return tick_operations.add_compare(delta) ? -ETIME : 0;
->
-> IOW, when the timer read _after_ writing the comparator value is ahead
-> of the comparator value the operation failed. Looks about right in
-> theory.
->
-> But then there is the reality of hardware which ruins everything. I've
-> banged my head against the wall many years ago when debugging a similar
-> issue with the x86 HPET which has the same hardware design failure of
-> using a compare equal comparator instead of having a compare less than
-> equal one. See the lengthy comment in hpet_clkevt_set_next_event() for
-> further information.
->
-> Can you apply the debug patch below, which will disable tracing once it
-> hits the hung task detector and then retrieve the trace?
->
-> If that's not possible as the system is unresponsive, then please add
-> 'ftrace_dump_on_oops' on the kernel command line or enable it after boot
-> in /proc/sys/kernel and let the kernel panic when it hits the hung task
-> detector fail.
->
-> Thanks,
->
->          tglx
-> ---
-> --- a/arch/sparc/kernel/time_64.c
-> +++ b/arch/sparc/kernel/time_64.c
-> @@ -732,8 +732,10 @@ void __irq_entry timer_interrupt(int irq
->   	if (unlikely(!evt->event_handler)) {
->   		printk(KERN_WARNING
->   		       "Spurious SPARC64 timer interrupt on cpu %d\n", cpu);
-> -	} else
-> +	} else {
-> +		trace_printk("Invoking handler %pS\n", evt->event_handler);
->   		evt->event_handler(evt);
-> +	}
->   
->   	irq_exit();
->   
-> --- a/kernel/hung_task.c
-> +++ b/kernel/hung_task.c
-> @@ -248,6 +248,7 @@ static void hung_task_info(struct task_s
->   	 * accordingly
->   	 */
->   	if (sysctl_hung_task_warnings || hung_task_call_panic) {
-> +		tracing_off();
->   		if (sysctl_hung_task_warnings > 0)
->   			sysctl_hung_task_warnings--;
->   		pr_err("INFO: task %s:%d blocked%s for more than %ld seconds.\n",
-> --- a/kernel/time/clockevents.c
-> +++ b/kernel/time/clockevents.c
-> @@ -370,18 +370,22 @@ int clockevents_program_event(struct clo
->   		delta = min(delta, (int64_t) dev->max_delta_ns);
->   		cycles = ((u64)delta * dev->mult) >> dev->shift;
->   		if (!dev->set_next_event((unsigned long) cycles, dev)) {
-> +			trace_printk("Successfully programmed %lld %lld\n", expires, delta);
->   			dev->next_event_forced = 0;
->   			return 0;
->   		}
->   	}
->   
-> -	if (dev->next_event_forced)
-> +	if (dev->next_event_forced) {
-> +		trace_printk("Skipping %lld %lld\n", expires, delta);
->   		return 0;
-> +	}
->   
->   	if (dev->set_next_event(dev->min_delta_ticks, dev)) {
->   		if (!force || clockevents_program_min_delta(dev))
->   			return -ETIME;
->   	}
-> +	trace_printk("Force programmed min delta %lld %lld\n", expires, delta);
->   	dev->next_event_forced = 1;
->   	return 0;
->   }
+cccb45d7c429 ("sched/deadline: Less agressive dl_server handling")
+   Fixes: 557a6bfc662c ("sched/fair: Add trivial fair server")
+
+Follow-ups:
+4ae8d9aa9f9d ("sched/deadline: Fix dl_server getting stuck")
+a3a70caf7906 ("sched/deadline: Fix dl_server behaviour")
+
+Local 6.12-rt tree containing the above (et al) failed to reproduce in
+the hour I let it try to, whereas a build excluding only all locally
+added fix backports reproduced in fairly short order.
+
+Suspects NOT confirmed in total isolation...
+
+	-Mike
