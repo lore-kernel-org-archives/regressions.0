@@ -1,109 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1CEC4921A0;
-	Tue, 12 May 2026 08:17:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB0A9492514;
+	Tue, 12 May 2026 08:32:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778573865; cv=none; b=pNrWI3rpUQclB8DvB6B7HimLWwlOEigXcFyQ+0sOE3N1xVMpLuBxaNM4V14CZHBzGRtCslHAuvG6pBY7F/MLLOFTfcXJS4+XLVOuHN76kWuoTxqG86clw6nvx3MrYPo6geo8xsyffXXfj7qYxk3Vm8M+SwzFP1JwuUtu/pNwnic=
+	t=1778574747; cv=none; b=kyORYYTKFWCK/G2Kev06PNXf+ncyv2cZajq/mWwxbHu8R9O0Agpt+KL40nYLJ0EH/AmX8yUljgWcMjCrSdjvUgJGwaJy4IdxrAVAGPw1ve+Rx4ICftljJZZsmlDRMmEjMmiwMCXG5jxq0x4zQNVtuyQQPWk8C9e73Ys1hA6l35w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778573865; c=relaxed/simple;
-	bh=wYyyzgZZXOeKgdcWpmGuhU1Q+C6chQuc5I0CN1aHGkk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=F7qggq+htHNQhDMPOf91yKATtGPZCVTrtyLiJcdl4OaWUwbjcuO+Tx6/43LrsvJwEXQeGE7CFPXyFs1KVnQrVLIISOmoCK3bx0Qp9VMhDNd8n33imx2SndvsWZ4fSKSuCdxAQmZ6HrHPB8ftvMTq3+CBsyriNrdSEeQh2XKpNJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HZ8JYoOJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778574747; c=relaxed/simple;
+	bh=lhC6FGHVTldczQBnXN69+M2T0emEbfSX+YIiX7+rU+w=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=K7CgzMdjmKIdAs7Eou+qoZ+xgRPPgaF7KL+lFXl9fBWUJfcK8ZNziwpHUxC/0PLsrSs+CgnR7nDmCN4CMdSVf37q75/P1kQMcJf4oAndgvsoS8Ie+FCiu2/o2k0iDJISSflCHhkDFVwJNntkWUtELONQyXac6zrHXMgF2F3vwXg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=pass (2048-bit key) header.d=realtek.com header.i=@realtek.com header.b=t8u2cEa/; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HZ8JYoOJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30857C2BCB8;
-	Tue, 12 May 2026 08:17:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778573864;
-	bh=wYyyzgZZXOeKgdcWpmGuhU1Q+C6chQuc5I0CN1aHGkk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=HZ8JYoOJ9CknhyGiIdFqvEqaOqo8AH0OI/1gPlqApCPcaMVPCbrExPNNRfwDzntNb
-	 ZzFiTU5/poR3gAdVdKrVO1WhuvW68otRIIvk8RRhZ3wUTJX634xrSkk+o6xLwddsnG
-	 xiiBY9piemhiRVAb3uLoILLASIS+v4eieQmoKrmKIMIHs1wHT6NeiBluqIc4nfBqPr
-	 tyeZr2CxZbYHdexcWrVSP3ZDJ/JEUC3BMXqRv1PGn0BjlH3upJfsc6zOLGku/MldKN
-	 R+zz3PoEZOj5o9FioGfuXeSNzWAVSYEBaEX3gdRaDcXxEr/Wc5VAPH2TDtLuey4ghI
-	 qsiRv1qlxvJlg==
-From: Thomas Gleixner <tglx@kernel.org>
-To: Tony Rodriguez <unixpro1970@gmail.com>
-Cc: Linux kernel regressions list <regressions@lists.linux.dev>, LKML
- <linux-kernel@vger.kernel.org>, sparclinux@vger.kernel.org, John Paul
- Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Thorsten Leemhuis
- <regressions@leemhuis.info>
-Subject: Re: the stuttering regression in 7.0: should I have done something
- different
-In-Reply-To: <088e6cfa-0167-4748-af6c-458ade2f303a@gmail.com>
-References: <ffb44522-f01c-4be3-849d-27dc17fbca7f@leemhuis.info>
- <D5D19776-C809-4284-9417-F9A860877B98@gmail.com>
- <1c165caf-36b4-4673-97fd-ed86bef17b88@leemhuis.info>
- <3332123b-9e11-4895-9ab3-1707fba5815c@gmail.com> <871pfj9cmj.ffs@tglx>
- <a7a0d78b-435e-43c8-b436-5e7f4dd39dee@gmail.com>
- <088e6cfa-0167-4748-af6c-458ade2f303a@gmail.com>
-Date: Tue, 12 May 2026 10:17:41 +0200
-Message-ID: <878q9p82je.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=realtek.com header.i=@realtek.com header.b="t8u2cEa/"
+X-SpamFilter-By: ArmorX SpamTrap 5.80 with qID 64C8WBJp83817931, This message is accepted by code: ctloc85258
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=realtek.com; s=dkim;
+	t=1778574731; bh=lhC6FGHVTldczQBnXN69+M2T0emEbfSX+YIiX7+rU+w=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding:MIME-Version;
+	b=t8u2cEa/Yt9JAtKwdBlgVe4L8yhbcf4oHmHIcn5dv8RjqfoEdVauCQ2/amdgzVJEx
+	 WHT9SiSx7oLKOC1Mjs2tjjNbOi02voaIUWM4CE0hB1Cc6swpO8J7UPiw6GKToU8QIr
+	 jtZwtcrBO2HZ+FdIVXKAhCNug4yQw/4oOczZRGiAoBO3sfIkY/Hv0aIAmz3rMssXZe
+	 6kXt//AxwRAK0AMCu+kLXZWPiw/EVIssh69ktiVCHbtv3BxPff1Z0Ok0LRIl8P3sI4
+	 FjxDIoliySzGZVMRdQm1yrftyUCj4gQ2gFRdjO7V0SRfWDcNkQ1nvs475wqxE+8lWi
+	 4wglzzo4ggF/w==
+Received: from mail.realtek.com (rtkexhmbs02.realtek.com.tw[172.21.6.41])
+	by rtits2.realtek.com.tw (8.15.2/3.27/5.94) with ESMTPS id 64C8WBJp83817931
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 12 May 2026 16:32:11 +0800
+Received: from RTKEXHMBS06.realtek.com.tw (10.21.1.56) by
+ RTKEXHMBS02.realtek.com.tw (172.21.6.41) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.17; Tue, 12 May 2026 16:32:11 +0800
+Received: from RTKEXHMBS06.realtek.com.tw (10.21.1.56) by
+ RTKEXHMBS06.realtek.com.tw (10.21.1.56) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.17; Tue, 12 May 2026 16:32:11 +0800
+Received: from RTKEXHMBS06.realtek.com.tw ([::1]) by
+ RTKEXHMBS06.realtek.com.tw ([fe80::e6fd:5a3f:8946:92c4%10]) with mapi id
+ 15.02.2562.017; Tue, 12 May 2026 16:32:11 +0800
+From: Ping-Ke Shih <pkshih@realtek.com>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+CC: Jes Sorensen <Jes.Sorensen@gmail.com>,
+        Bitterblue Smith
+	<rtl8821cerfe2@gmail.com>,
+        "linux-wireless@vger.kernel.org"
+	<linux-wireless@vger.kernel.org>,
+        "art1310@proton.me" <art1310@proton.me>,
+        Linux kernel regressions list <regressions@lists.linux.dev>
+Subject: RE: [PATCH rtw-next v2] wifi: rtl8xxxu: Detect the maximum supported
+ channel width
+Thread-Topic: [PATCH rtw-next v2] wifi: rtl8xxxu: Detect the maximum supported
+ channel width
+Thread-Index: AQHc19AdbF1YRPFzdU66bhcRCp5GbrYAJkIAgAgQNgCAAWlB8P//6UKAgACZGmA=
+Date: Tue, 12 May 2026 08:32:11 +0000
+Message-ID: <29a93dc3d9d24b3a809310694ffc5d34@realtek.com>
+References: <c57de68e-5d57-4c26-898f-8a284bb25381@gmail.com>
+ <ee88b3a2-2cc9-4370-b782-189a603a7fa1@RTKEXHMBS04.realtek.com.tw>
+ <41693ffc-926c-4e67-9a48-b6e1b1d150bd@leemhuis.info>
+ <f26992e669744e6f87084e017f897275@realtek.com>
+ <1cf071e9-5d3c-4d55-ac75-49eb4c461422@leemhuis.info>
+In-Reply-To: <1cf071e9-5d3c-4d55-ac75-49eb4c461422@leemhuis.info>
+Accept-Language: en-US, zh-TW
+Content-Language: zh-TW
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 11 2026 at 22:03, Tony Rodriguez wrote:
->> Can you apply the debug patch below, which will disable tracing once it
->> hits the hung task detector and then retrieve the trace?=20
-> As requested, I applied your debug patch to v7.1=E2=80=91rc3 and captured=
- the
-> trace output.  On the SPARC64 S7=E2=80=912 system the machine becomes
-> unresponsive and produces many thousands of lines of trace data that
-> do not appear to terminate.
-
-Yes, it takes a while to spill out over serial.
-
-> Posting the full output inline or as an attachment may be impractical,
-> so I=E2=80=99ve included the key sections below.
-
-Kinda.
-
-> If you prefer the complete trace, please let me know the best way to=20
-> provide it. Guessing the kernel mailing isn't best to attach that?
-
-Correct.
-
-> [=C2=A0 249.004209] [<0000000000000000>] 0x0
-> [=C2=A0 249.019116] Dumping ftrace buffer:
-> [=C2=A0 249.025666] ---------------------------------
-> [=C2=A0 249.034534]=C2=A0 =C2=A0<idle>-0=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A00d.... 1836659us :=20
-> clockevents_program_event: Successfully programmed 4000000 4000000
-> [=C2=A0 249.055418]=C2=A0 =C2=A0<idle>-0=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A00d.h.. 1845926us : timer_interrupt:=20
-
-So this is the interesting part, but that's starting at 1.836659s
-while the actual problem happens ~120 seconds later and the detection
-takes another 120 seconds.
-
-Assuming that one of the CPUs does not get timer interrupts anymore, the
-trace of that CPU should end around the time the last programming
-happened. So the interesting part is at the end of the output. The
-default buffer size per CPU is 1408k, which holds about 150k entries, so
-we can just shorten the buffers to make this less painful.
-
-Can you add 'trace_buf_size=3D50k' to the kernel command line, which
-limits the buffer size to about 640 entries. Assuming 115200 Baud this
-should then take about 4 seconds per CPU to dump, which still is a bunch
-on a large machine, but definitely way more workable than the default.
-
-IIRC, SPARC64 S7=E2=80=912 has 128 threads total, so the resulting uncompre=
-ssed
-output should be around 7-8M. That's highly compressable text, so the
-resulting dump.xz should be suitable to be stored in github. If github
-does not allow you, let me know and we work something out.
-
-Thanks,
-
-        tglx
-
+VGhvcnN0ZW4gTGVlbWh1aXMgPHJlZ3Jlc3Npb25zQGxlZW1odWlzLmluZm8+IHdyb3RlOg0KPiBP
+biA1LzEyLzI2IDAyOjQ0LCBQaW5nLUtlIFNoaWggd3JvdGU6DQo+ID4gVGhvcnN0ZW4gTGVlbWh1
+aXMgPGxpbnV4QGxlZW1odWlzLmluZm8+IHdyb3RlOg0KPiA+PiBPbiA1LzYvMjYgMDk6NTcsIFBp
+bmctS2UgU2hpaCB3cm90ZToNCj4gPj4+IEJpdHRlcmJsdWUgU21pdGggPHJ0bDg4MjFjZXJmZTJA
+Z21haWwuY29tPiB3cm90ZToNCj4gPj4+DQo+ID4+Pj4gU29tZSBkZXZpY2VzIG1hbGZ1bmN0aW9u
+IHdoZW4gY29ubmVjdGVkIHRvIGEgbmV0d29yayB3aXRoIDQwIE1IeiBjaGFubmVsDQo+ID4+Pj4g
+d2lkdGgsIGJlY2F1c2UgdGhleSBkb24ndCBzdXBwb3J0IHRoYXQuDQo+ID4+Pj4NCj4gPj4+PiBS
+VEw4MTg4RlUsIFJUTDgxOTJGVSwgYW5kIFJUTDg3MTBCVSAoUlRMODE4OEdVKSBoYXZlIGEgd2F5
+IHRvIHNpZ25hbA0KPiA+Pj4+IHRoaXMgKGFuZCBzb21lIG90aGVyIGNhcGFiaWxpdGllcykgdG8g
+dGhlIGRyaXZlci4gR2V0IHRoaXMgaW5mb3JtYXRpb24NCj4gPj4+PiBmcm9tIHRoZSBoYXJkd2Fy
+ZSBhbmQgYWR2ZXJ0aXNlIDQwIE1IeiBzdXBwb3J0IG9ubHkgd2hlbiB0aGUgaGFyZHdhcmUNCj4g
+Pj4+PiBjYW4gaGFuZGxlIGl0LiBXZSBhc3N1bWUgdGhlIG90aGVyIGNoaXBzIGNhbiBhbHdheXMg
+aGFuZGxlIGl0Lg0KPiA+Pj4+DQo+ID4+Pj4gUlRMODcxMEJVIG5lZWRzIGEgZGlmZmVyZW50IHdh
+eSB0byByZXRyaWV2ZSB0aGlzIGluZm9ybWF0aW9uLCB3aGljaCB3aWxsDQo+ID4+Pj4gYmUgaW1w
+bGVtZW50ZWQgc29tZSBvdGhlciB0aW1lLg0KPiA+Pj4+DQo+ID4+Pj4gRml4ZXM6IGRiZjliN2Ji
+MGVkZiAoIndpZmk6IHJ0bDh4eHh1OiBFbmFibGUgNDAgTUh6IHdpZHRoIGJ5IGRlZmF1bHQiKQ0K
+PiA+Pj4+IENjOiBzdGFibGVAdmdlci5rZXJuZWwub3JnDQo+ID4+Pj4gQ2xvc2VzOiBodHRwczov
+L2J1Z3ppbGxhLmtlcm5lbC5vcmcvc2hvd19idWcuY2dpP2lkPTIyMTM5NA0KPiA+Pj4+IFNpZ25l
+ZC1vZmYtYnk6IEJpdHRlcmJsdWUgU21pdGggPHJ0bDg4MjFjZXJmZTJAZ21haWwuY29tPg0KPiA+
+Pj4+IFJldmlld2VkLWJ5OiBQaW5nLUtlIFNoaWggPHBrc2hpaEByZWFsdGVrLmNvbT4NCj4gPj4N
+Cj4gPj4gVGh4IGZvciBmaXhpbmcgdGhpcyENCj4gPj4NCj4gPj4+IDEgcGF0Y2goZXMpIGFwcGxp
+ZWQgdG8gcnR3LW5leHQgYnJhbmNoIG9mIHJ0dy5naXQsIHRoYW5rcy4NCj4gPj4+IGVmNzcxZWFi
+Yzc5ZCB3aWZpOiBydGw4eHh4dTogRGV0ZWN0IHRoZSBtYXhpbXVtIHN1cHBvcnRlZCBjaGFubmVs
+IHdpZHRoDQo+ID4+PiBodHRwczovL2dpdGh1Yi5jb20vcGtzaGloL3J0dy5naXQNCj4gPj4NCj4g
+Pj4gcnR3LW5leHQgc291bmRzIGxpa2UgaXQgYWltcyBmb3IgdGhlIG5leHQgbWVyZ2Ugd2luZG93
+OyBhbmQgaXQgc2VlbXMgdGhlDQo+ID4+IGZpeCBoYXNuJ3QgZXZlbiBoaXQgLW5leHQgeWV0LiBU
+aGlzIGlzIHNsaWdodGx5IHVuZm9ydHVuYXRlLCBhcyB0aGlzDQo+ID4+IGFmYWljcyBpcyBhIGZp
+eCBmb3IgYSByZWNlbnQgcmVncmVzc2lvbiAtLSBzbyBpdCBpZGVhbGx5IHNob3VsZCBoZWFkDQo+
+ID4+IHRvd2FyZHMgbWFpbmxpbmUgYnkgbm93WzFdLCBhcyBMaW51cycgdGhlIHJ1bGUgb2YgdGh1
+bWIgaXMgdG8gImdlbmVyYWxseQ0KPiA+PiBmaXggcmVncmVzc2lvbnMgIndpdGhpbiBhIHdlZWsi
+LCBwcmVmZXJhYmx5IGJlZm9yZSB0aGUgbmV4dCByYyJbMV0uDQo+ID4+DQo+ID4+IE9yIGFtIEkg
+bWlzc2luZyBzb21ldGhpbmc/IFRoYXQgbWlnaHQgdmVyeSB3ZWxsIGJlIHRoZSBjYXNlLCBzbyBk
+byBub3QNCj4gPj4gaGVzaXRhdGUgdG8gdGVsbCBtZSENCj4gPg0KPiA+IEFzIHRoaXMgcGF0Y2gg
+YXBwbGllZCB0byBwdWJsaWMgcnR3IHRyZWUsIGFuZCBwZW9wbGUgd2hvIGVuY291bnRlcmVkIHRo
+ZQ0KPiA+IHByb2JsZW0gaW4gYnVnemlsbGEgY2FuIHdvcmsgYWdhaW4uIFRvIHByZXZlbnQgYnJl
+YWtpbmcgdGhlIHB1YmxpYyB0cmVlLA0KPiA+IEknZCBrZWVwIGl0IGFzIHdhcy4NCj4gDQo+IEkn
+bSBub3Qgc3VyZSBJIHVuZGVyc3RhbmQgdGhpcyBjb3JyZWN0bHkuDQo+IA0KPiBEbyB5b3UgbWVh
+biBzb21ldGhpbmcgbGlrZSAidGhlIGZpeCBpcyBub3cgaW4gdGhlIHJ0dy1uZXh0IHRyZWUsIHNv
+IEkNCj4gY2FuJ3QgbWFpbmxpbmUgaXQgbm93LCBhcyB0aGlzIHdvdWxkIGJyZWFrIHRoZSBydHct
+bmV4dCI/IEJ1dCB3aHk/DQoNClllcy4gKEkgbWVhbnQgcnR3LW5leHQgdHJlZSkNCg0KPiBZb3UN
+Cj4gY2FuIGNoZXJyeS1waWNrIG9yIGRpcmVjdGx5IGFwcGx5IHRoZSBmaXggdG8gYSBwZW5kaW5n
+IGJyYW5jaCAob3IgZXZlbg0KPiBhc2sgTGludXMgdG8gbWVyZ2UgaXQgZGlyZWN0bHkgZnJvbSB0
+aGUgbGlzdCwgYnV0IHRoYXQgaXMgbGlrZWx5IG5vdA0KPiB3b3J0aCBpdCBoZXJlKSBhbmQgZ2l0
+IHdpbGwgbm9ybWFsbHkgbGF0ZXIgbm90aWNlIHRoaXMgYW5kIGZ1bGx5DQo+IGF1dG9tYXRpY2Fs
+bHkgaGFuZGxlIGV2ZXJ5dGhpbmcgd2hlbiB0aGUgZml4IGNvbWVzIGluIGFnYWluIGR1cmluZyB0
+aGUNCj4gbmV4dCBtZXJnZSB3aW5kb3cuDQoNCkkga25vdyBnaXQgY2FuIGhhbmRsZSB0aGF0LCBi
+dXQgaXMgaXQgYW4gYWNjZXB0YWJsZSBwcmFjdGljZSBmb3Igc2luZ2xlIG9uZQ0KY29tbWl0IHRv
+IGFwcGVhciB0d2ljZT8NCg0KQXMgdGhlIHJlcG9ydGVyIGhhcyBmaXhlZCBoaXMgcHJvYmxlbSwg
+Y2FuIHdlIGtlZXAgdGhpcyBjb21taXQgYXMgaXQgd2FzPw0KDQpQaW5nLUtlDQoNCg==
