@@ -1,130 +1,109 @@
-Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5659513AD05
-	for <regressions@lists.linux.dev>; Tue, 12 May 2026 00:20:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4C751448D5;
+	Tue, 12 May 2026 00:44:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778545215; cv=none; b=aB6GeJ3RV5kHFjeBHPM7/TobFPzeXbnvZlShTLqtccu0rZ3ndM68a6DnD45xuhQbtVMWdvi2GRrF7+U3hEycZnuxwsDd8GoWjn3Lo3EqZN443VM2PDjrX2c6DFEsVvQDm033wwMMk3iTIPlrpGOYR2/HAd91IivnuLd4NYJ+49E=
+	t=1778546697; cv=none; b=Qshy2cEz4riQKvlcX9MarxG0501uPaWq56kEORfwuLLfs/Ftr16d+MjcY1hdVOgYvlPKfjqgyQV6XqnApyC/mv4E3CUA8zw5O5HR7dfbKdw0p295GjRVjF+LbhPl5xt9YsbXTLEno9jUNbeq+KLc7RIRoiZhnLKvLT05dLVzuPQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778545215; c=relaxed/simple;
-	bh=lfYQGESk1pYjERlvde7/XCo/qKCsCSf/aFieokQBwLs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GxxR8yeqPj3ib78yd0sV99TrYbsTpBRznZsSgmvVZJD5EzTGxbjhL8c6a+OrRBdTkjC/m57FAslaNzDuvOxdU0czN9xP5bcTPXyAFRSLIv/dccUacNzrZYUOR/7TIBgYPm91+Z/ZXnOkY6wRAApFp+bMSCFNSq+ZTuXS/uTvs48=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=lwSypuB0; arc=none smtp.client-ip=91.218.175.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1778546697; c=relaxed/simple;
+	bh=sseY+/jo8EDcFzjLtSuyFmopibhtbUEYPlr0n3PPu5Y=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=qNsowRUZz7dQMEYJ8XhZlMoIk5nvHlTYHUgdEKXIEWfihHh2eb/mBkzEbkW79t46QImj5H08l18tro/MOeF83n0nqndtnlnGrlmyU3jqLCQnM56RtZLKdg2xbJYdhhUb5+2oKqi6pMTAw0s/JW16N7H/utfBwXdmT0yuqiXXmVA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=pass (2048-bit key) header.d=realtek.com header.i=@realtek.com header.b=hNHYECdW; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="lwSypuB0"
-Message-ID: <abe0ffb6-0c46-4e6f-87e6-bd8be1407469@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1778545210;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MBaPVTjD3puxjgiW7Y9T4J5M3RK9VooXxh/buPzfQ94=;
-	b=lwSypuB0ep7PiRQwW6z5Ne89pZZHtvi92mljIsMUDARYzVFkv+DS9wyzs5P55sbNJwcShX
-	KX69vQlmB8tIdIqFNGJ0d6HgPI3war5r/Txg02KLh6VqG9/N0rRVSOyFMj+nRBYANMzzGS
-	JBD1Qp3+y15QDJYJGRPa8fl65QlCg48=
-Date: Mon, 11 May 2026 17:20:06 -0700
+	dkim=pass (2048-bit key) header.d=realtek.com header.i=@realtek.com header.b="hNHYECdW"
+X-SpamFilter-By: ArmorX SpamTrap 5.80 with qID 64C0ieEeB3412887, This message is accepted by code: ctloc85258
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=realtek.com; s=dkim;
+	t=1778546680; bh=sseY+/jo8EDcFzjLtSuyFmopibhtbUEYPlr0n3PPu5Y=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding:MIME-Version;
+	b=hNHYECdW3RN3+I1jYu+xQePdx2j/Znh/v+hEl+OBfqqNRT1caw0A/4ly7UMxo/5H7
+	 LTSSG9Cs/gOkJVLcF/CA4Vyu+mGImzdfRTypd+K8sRS5BiUKoW/EjZ93axTsRTsnuI
+	 +APgeY3SF9AfCNi4yJafoZUs0w4569jVUVEHuBIYhwmFgHOJVZHZdLRpbATfvx2ijM
+	 dBE0M6YU/GkfPmLSduH61ReZRh3CSktYEiRIGmWoXjzfvsnNJPH/6XIO48iJaLzq0X
+	 CQnZU0rI0tdvZ0ZOxKP9cEFqoU38GKocTVQAl9NM/K92aQ3Y0XyUaGo4q3KMDowv8j
+	 3rp0veFTvoRhQ==
+Received: from mail.realtek.com (rtkexhmbs03.realtek.com.tw[10.21.1.53])
+	by rtits2.realtek.com.tw (8.15.2/3.27/5.94) with ESMTPS id 64C0ieEeB3412887
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 12 May 2026 08:44:40 +0800
+Received: from RTKEXHMBS06.realtek.com.tw (10.21.1.56) by
+ RTKEXHMBS03.realtek.com.tw (10.21.1.53) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.17; Tue, 12 May 2026 08:44:40 +0800
+Received: from RTKEXHMBS06.realtek.com.tw (10.21.1.56) by
+ RTKEXHMBS06.realtek.com.tw (10.21.1.56) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.17; Tue, 12 May 2026 08:44:40 +0800
+Received: from RTKEXHMBS06.realtek.com.tw ([::1]) by
+ RTKEXHMBS06.realtek.com.tw ([fe80::e6fd:5a3f:8946:92c4%10]) with mapi id
+ 15.02.2562.017; Tue, 12 May 2026 08:44:40 +0800
+From: Ping-Ke Shih <pkshih@realtek.com>
+To: Thorsten Leemhuis <linux@leemhuis.info>
+CC: Jes Sorensen <Jes.Sorensen@gmail.com>,
+        Bitterblue Smith
+	<rtl8821cerfe2@gmail.com>,
+        "linux-wireless@vger.kernel.org"
+	<linux-wireless@vger.kernel.org>,
+        "art1310@proton.me" <art1310@proton.me>,
+        Linux kernel regressions list <regressions@lists.linux.dev>
+Subject: RE: [PATCH rtw-next v2] wifi: rtl8xxxu: Detect the maximum supported
+ channel width
+Thread-Topic: [PATCH rtw-next v2] wifi: rtl8xxxu: Detect the maximum supported
+ channel width
+Thread-Index: AQHc19AdbF1YRPFzdU66bhcRCp5GbrYAJkIAgAgQNgCAAWlB8A==
+Date: Tue, 12 May 2026 00:44:40 +0000
+Message-ID: <f26992e669744e6f87084e017f897275@realtek.com>
+References: <c57de68e-5d57-4c26-898f-8a284bb25381@gmail.com>
+ <ee88b3a2-2cc9-4370-b782-189a603a7fa1@RTKEXHMBS04.realtek.com.tw>
+ <41693ffc-926c-4e67-9a48-b6e1b1d150bd@leemhuis.info>
+In-Reply-To: <41693ffc-926c-4e67-9a48-b6e1b1d150bd@leemhuis.info>
+Accept-Language: en-US, zh-TW
+Content-Language: zh-TW
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Subject: Re: [REGRESSION] aquantia: Sunshine/Moonlight UDP video streaming
- broken since 5b4015ad833c ("net: aquantia: Remove redundant UDP length
- adjustment with GSO_PARTIAL")
-To: Gal Pressman <gal@nvidia.com>
-Cc: Dragos Tatulea <dtatulea@nvidia.com>, Jakub Kicinski <kuba@kernel.org>,
- regressions@lists.linux.dev, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <980382a2-3b8c-4da1-ac9b-efd8c0d2c1be@nvidia.com>
- <F03BE787-07D1-440C-81FD-F7B4D5F1E0C6@linux.dev>
- <9f601313-cade-4bd8-8e38-3777139de46d@nvidia.com>
- <677976cf-d438-4997-bfc6-2691e5579d2c@nvidia.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Matthew Schwartz <matthew.schwartz@linux.dev>
-In-Reply-To: <677976cf-d438-4997-bfc6-2691e5579d2c@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-On 5/10/26 5:38 AM, Gal Pressman wrote:
-> On 06/05/2026 17:20, Gal Pressman wrote:
->> On 06/05/2026 10:49, Matthew Schwartz wrote:
->>>
->>>
->>>> On May 5, 2026, at 8:05 AM, Gal Pressman <gal@nvidia.com> wrote:
->>>>
->>>> ﻿On 27/04/2026 21:26, Matthew Schwartz wrote:
->>>>>> On 4/27/26 11:09 AM, Gal Pressman wrote:
->>>>>> Hello Matthew,
->>>>>>
->>>>>> On 27/04/2026 2:20, Matthew Schwartz wrote:
->>>>>>> Hello,
->>>>>>>
->>>>>>> When using a previously working setup of remote streaming from my workstation to another device via Sunshine (the host server) and Moonlight (the client app) on my home network, I no longer receive any video output on the client app after upgrading my host workstation to kernel 7.0. Reverting back to kernel 6.19 on the host restored my setup to a working state.
->>>>>>>
->>>>>>> After bisecting, I landed on 5b4015ad833c ("net: aquantia: Remove redundant UDP length adjustment with GSO_PARTIAL") as the first bad commit. I confirmed this by moving the cable to my second on-board NIC (Intel) on the same workstation, which restored video output without any other kernel changes. My affected on-board NIC is Aquantia AQC113 [1d6a:04c0] (rev 03), atlantic driver, firmware 1.3.34, MTU 1500.
->>>>>>>
->>>>>>> Looking into it a bit further, ethtool -K enp97s0 tx-udp-segmentation off also serves as a workaround on my Aquantia port without changing to my other ethernet port. The working Intel NIC reports tx-udp-segmentation as "off [fixed]", so traffic falls back to software UDP segmentation on there.
->>>>>>>
->>>>>>> Please let me know if there's any additional info I can provide.
->>>>>>>
->>>>>>> Thanks,
->>>>>>> Matt
->>>>>>>
->>>>>>> #regzbot introduced: 5b4015ad833c
->>>>>>
->>>>>> Thank you for the report and the bisect!
->>>>>>
->>>>>> I will take a look and try to figure out what's wrong (though I don't
->>>>>> have real hardware to test on).
->>>>>> Is the userspace app open source? can I see its code and try to run it
->>>>>> myself?
->>>>>
->>>>> Thanks for the reply. The code for Sunshine is available here: https://github.com/LizardByte/Sunshine and the code for Moonlight is here: https://github.com/moonlight-stream/moonlight-qt.
->>>>>
->>>>> I have been using the Arch Linux Sunshine package which I installed by following the Linux instructions here: https://docs.lizardbyte.dev/projects/sunshine/latest/md_docs_2getting__started.html, but there are also binaries for other distros or it's buildable from source. For Moonlight, I have been using the Flatpak distributed on Flathub because the client device runs an atomic rootfs, but you can also use any other device that Moonlight supports.
->>>>>
->>>>>>
->>>>>> I will be OOO for the rest of the week, hope to have some meaningful
->>>>>> reply by the end of next week.
->>>>>
->>>>
->>>> I think I see the issue, do you mind testing the following diff?
->>>
->>> Sorry for the delay. I applied this diff and I’m able to stream from my host to clients again without any issues.
->>>
->>> If you send this version upstream, feel free to add my Tested-by to it.
->>
->> Thanks for verifying!
->>
->> I will finalize this and submit a proper patch soon.
-> 
-> Hey Matthew,
-> 
-> I made a small change to the patch, can you please verify it still fixes
-> the issue?
-
-Yes, this diff also fixes the issue.
-
-> 
-> diff --git a/net/ipv4/udp_offload.c b/net/ipv4/udp_offload.c
-> index a0813d425b71..71df45f9488a 100644
-> --- a/net/ipv4/udp_offload.c
-> +++ b/net/ipv4/udp_offload.c
-> @@ -604,7 +604,7 @@ struct sk_buff *__udp_gso_segment(struct sk_buff *gso_skb,
->  		       seg->data_len);
->  	check = csum16_add(csum16_sub(uh->check, uh->len), newlen);
-> 
-> -	uh->len = newlen;
-> +	uh->len = skb_is_gso(seg) ? msslen : newlen;
->  	uh->check = check;
-> 
->  	if (seg->ip_summed == CHECKSUM_PARTIAL)
-
+VGhvcnN0ZW4gTGVlbWh1aXMgPGxpbnV4QGxlZW1odWlzLmluZm8+IHdyb3RlOg0KPiBPbiA1LzYv
+MjYgMDk6NTcsIFBpbmctS2UgU2hpaCB3cm90ZToNCj4gPiBCaXR0ZXJibHVlIFNtaXRoIDxydGw4
+ODIxY2VyZmUyQGdtYWlsLmNvbT4gd3JvdGU6DQo+ID4NCj4gPj4gU29tZSBkZXZpY2VzIG1hbGZ1
+bmN0aW9uIHdoZW4gY29ubmVjdGVkIHRvIGEgbmV0d29yayB3aXRoIDQwIE1IeiBjaGFubmVsDQo+
+ID4+IHdpZHRoLCBiZWNhdXNlIHRoZXkgZG9uJ3Qgc3VwcG9ydCB0aGF0Lg0KPiA+Pg0KPiA+PiBS
+VEw4MTg4RlUsIFJUTDgxOTJGVSwgYW5kIFJUTDg3MTBCVSAoUlRMODE4OEdVKSBoYXZlIGEgd2F5
+IHRvIHNpZ25hbA0KPiA+PiB0aGlzIChhbmQgc29tZSBvdGhlciBjYXBhYmlsaXRpZXMpIHRvIHRo
+ZSBkcml2ZXIuIEdldCB0aGlzIGluZm9ybWF0aW9uDQo+ID4+IGZyb20gdGhlIGhhcmR3YXJlIGFu
+ZCBhZHZlcnRpc2UgNDAgTUh6IHN1cHBvcnQgb25seSB3aGVuIHRoZSBoYXJkd2FyZQ0KPiA+PiBj
+YW4gaGFuZGxlIGl0LiBXZSBhc3N1bWUgdGhlIG90aGVyIGNoaXBzIGNhbiBhbHdheXMgaGFuZGxl
+IGl0Lg0KPiA+Pg0KPiA+PiBSVEw4NzEwQlUgbmVlZHMgYSBkaWZmZXJlbnQgd2F5IHRvIHJldHJp
+ZXZlIHRoaXMgaW5mb3JtYXRpb24sIHdoaWNoIHdpbGwNCj4gPj4gYmUgaW1wbGVtZW50ZWQgc29t
+ZSBvdGhlciB0aW1lLg0KPiA+Pg0KPiA+PiBGaXhlczogZGJmOWI3YmIwZWRmICgid2lmaTogcnRs
+OHh4eHU6IEVuYWJsZSA0MCBNSHogd2lkdGggYnkgZGVmYXVsdCIpDQo+ID4+IENjOiBzdGFibGVA
+dmdlci5rZXJuZWwub3JnDQo+ID4+IENsb3NlczogaHR0cHM6Ly9idWd6aWxsYS5rZXJuZWwub3Jn
+L3Nob3dfYnVnLmNnaT9pZD0yMjEzOTQNCj4gPj4gU2lnbmVkLW9mZi1ieTogQml0dGVyYmx1ZSBT
+bWl0aCA8cnRsODgyMWNlcmZlMkBnbWFpbC5jb20+DQo+ID4+IFJldmlld2VkLWJ5OiBQaW5nLUtl
+IFNoaWggPHBrc2hpaEByZWFsdGVrLmNvbT4NCj4gDQo+IFRoeCBmb3IgZml4aW5nIHRoaXMhDQo+
+IA0KPiA+IDEgcGF0Y2goZXMpIGFwcGxpZWQgdG8gcnR3LW5leHQgYnJhbmNoIG9mIHJ0dy5naXQs
+IHRoYW5rcy4NCj4gPiBlZjc3MWVhYmM3OWQgd2lmaTogcnRsOHh4eHU6IERldGVjdCB0aGUgbWF4
+aW11bSBzdXBwb3J0ZWQgY2hhbm5lbCB3aWR0aA0KPiA+IGh0dHBzOi8vZ2l0aHViLmNvbS9wa3No
+aWgvcnR3LmdpdA0KPiANCj4gcnR3LW5leHQgc291bmRzIGxpa2UgaXQgYWltcyBmb3IgdGhlIG5l
+eHQgbWVyZ2Ugd2luZG93OyBhbmQgaXQgc2VlbXMgdGhlDQo+IGZpeCBoYXNuJ3QgZXZlbiBoaXQg
+LW5leHQgeWV0LiBUaGlzIGlzIHNsaWdodGx5IHVuZm9ydHVuYXRlLCBhcyB0aGlzDQo+IGFmYWlj
+cyBpcyBhIGZpeCBmb3IgYSByZWNlbnQgcmVncmVzc2lvbiAtLSBzbyBpdCBpZGVhbGx5IHNob3Vs
+ZCBoZWFkDQo+IHRvd2FyZHMgbWFpbmxpbmUgYnkgbm93WzFdLCBhcyBMaW51cycgdGhlIHJ1bGUg
+b2YgdGh1bWIgaXMgdG8gImdlbmVyYWxseQ0KPiBmaXggcmVncmVzc2lvbnMgIndpdGhpbiBhIHdl
+ZWsiLCBwcmVmZXJhYmx5IGJlZm9yZSB0aGUgbmV4dCByYyJbMV0uDQo+IA0KPiBPciBhbSBJIG1p
+c3Npbmcgc29tZXRoaW5nPyBUaGF0IG1pZ2h0IHZlcnkgd2VsbCBiZSB0aGUgY2FzZSwgc28gZG8g
+bm90DQo+IGhlc2l0YXRlIHRvIHRlbGwgbWUhDQoNCkFzIHRoaXMgcGF0Y2ggYXBwbGllZCB0byBw
+dWJsaWMgcnR3IHRyZWUsIGFuZCBwZW9wbGUgd2hvIGVuY291bnRlcmVkIHRoZQ0KcHJvYmxlbSBp
+biBidWd6aWxsYSBjYW4gd29yayBhZ2Fpbi4gVG8gcHJldmVudCBicmVha2luZyB0aGUgcHVibGlj
+IHRyZWUsDQpJJ2Qga2VlcCBpdCBhcyB3YXMuDQoNCkkgd2lsbCBiZSBjYXJlZnVsbHkgdG8gaGFu
+ZGxlIHRoaXMga2luZCBvZiBwYXRjaGVzIGxhdGVyLiANCg0KUGluZy1LZQ0KDQo=
