@@ -1,55 +1,51 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [194.59.206.189])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [185.244.194.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6ED3357CE3
-	for <regressions@lists.linux.dev>; Tue, 12 May 2026 07:17:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.59.206.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E62A448AE29
+	for <regressions@lists.linux.dev>; Tue, 12 May 2026 08:03:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.244.194.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778570253; cv=none; b=FrFJNJyvsPp/BOyAJl/4jBoN3zjYpWWzcSF4DZbMswPRPI+YU2cEMKTTwJ4s+R7pz093eI/fAvtj5HnAvC9yoi/jzoouqVDS2BLM4hHHj8X+Z3A94mgLssX/wWV6iTziOHZMjOMOPKfHEfNeYIydJYr/ibRFE/1uhSo3UAzZqBw=
+	t=1778573016; cv=none; b=NUas0xchS5vHiYLaUsqRV8l634wOpS7Lg5eho7l4g5sAi7GPnAj7k3XNB9p/K+eMM3eECXha7RMMlHp643U3hPhCK6X7ZXoKr54A8VvFEo1cvr7Jb3E2o4ktnTjZy/PmOUJZOgeom8hPC6bmQ1TBLfbrarYW2C3xokbrUwE0+SY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778570253; c=relaxed/simple;
-	bh=PGK8gd6RLPN8TVxowId4B7hcSPJeq9KHicvlzsl8Knw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AN+PxFbI9OGyZ1gttsKwvegWkHqdoidRLzAPv1aa+ObEyDP2wycl8GlOkWWbbEetIJ4m1UcEjtUuDhvvqfmYaJwEgJ4EdjxOVeezxN1rJkfmprowqhbBv/iApd11tMD6DsKSONDszK5Q1JGV21FUecKM/dghhzGnL6ffJIusm6M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=Nn+WSIsG; arc=none smtp.client-ip=194.59.206.189
+	s=arc-20240116; t=1778573016; c=relaxed/simple;
+	bh=yLc2hQOMqJF9LvMr6LkLdpqmLGYjnstRKlOFE7B59/o=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=PzYVB3BRw1pq0nXec+y71PqzaERe69HxPeVxf80WXaPM6jptbIatZP1blLxx1pUpHjnl4/JZAzxsMg9U7Y3c48CAq2C1NkTPdJ465apnJ1GYlMmKSKARmLRvSRn3QkBqGzlP1Mjn8sfe21TBxfJboWT6GD/unhxDk+v1hjw7VbY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=OjzLk/Mz; arc=none smtp.client-ip=185.244.194.184
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="Nn+WSIsG"
-Received: from relay02-mors.netcup.net (localhost [127.0.0.1])
-	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4gF7Fn2NFtz4DjS;
-	Tue, 12 May 2026 09:17:17 +0200 (CEST)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="OjzLk/Mz"
+Received: from relay01-mors.netcup.net (localhost [127.0.0.1])
+	by relay01-mors.netcup.net (Postfix) with ESMTPS id 4gF8Gz6S4Zz92gH
+	for <regressions@lists.linux.dev>; Tue, 12 May 2026 10:03:23 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1778570237;
-	bh=PGK8gd6RLPN8TVxowId4B7hcSPJeq9KHicvlzsl8Knw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Nn+WSIsGKMUArqFjDfeL3a5xe6RMrjbsPFAzWGkjBgssAnjNfFmDD+tmucG055shE
-	 G0iLf/F5cgcvqoryLTDupvCdImdTgbnJVXFhsO33SphWxInnXhclguuuNJPW3TsLxp
-	 F5Xjdvw7SnZRX1tTXa8HIKbw4+R9BpU6ITtRJ8B2UfzpUwfpkt3bfLJgRz+U5a9+B8
-	 bJ2jDQlafeKlDIurzIlCdbFB6BpA1lMOZYSRURw9zG3QFgmo2BxOVsw5RB/1u4EkXL
-	 G55jEnuBTprwwF2zoHtMcEktxVyNCkFGwPNPSrcPTN8xBrzSPP7nF3KRTg4FH9bXtS
-	 Fc1yU70L/4XDQ==
-Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
-	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4gF7Fn1h2yz7vt2;
-	Tue, 12 May 2026 09:17:17 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
-X-Spam-Flag: NO
-X-Spam-Score: -2.899
-X-Spam-Level: 
+	s=key2; t=1778573003;
+	bh=yLc2hQOMqJF9LvMr6LkLdpqmLGYjnstRKlOFE7B59/o=;
+	h=Date:Subject:From:To:References:In-Reply-To:From;
+	b=OjzLk/Mz9a4zlZADOxDzInlPIj4Ow4sCCeaOxGxxpS1AXKtTah0H5MZrn19MOitEa
+	 mebiaM1hScFcV4VYshgPOQKEJ5FumR7uKmDIdxGF4yJNkWgtCGTO39xAioVaL00iCe
+	 uojWgQR2nEXzUYBnouEbUb5JIjSzuv2wY14bGpBc805sQBtoWLGQSIMqjTmpWqn4IP
+	 d7GCnGJ6WICN7x5dCBzY4NA1fHISnLk46oG4GFiN44RaV4H8B375g4ZG/bb+ouns+Z
+	 sG/Ik0+AghrnQEIwa3+hmXIqwVQ5eWb1nS3sGjFh0ONQVTdyVo6oIiY1b9bzq4smGT
+	 Lf1M2dLjuFrKw==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by relay01-mors.netcup.net (Postfix) with ESMTPS id 4gF8Gz5m7Sz7vFX
+	for <regressions@lists.linux.dev>; Tue, 12 May 2026 10:03:23 +0200 (CEST)
 Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4gF7Fm1Nlcz8tgR;
-	Tue, 12 May 2026 09:17:16 +0200 (CEST)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4gF8Gz3v9xz8sZh
+	for <regressions@lists.linux.dev>; Tue, 12 May 2026 10:03:23 +0200 (CEST)
 Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 9893F6184E;
-	Tue, 12 May 2026 09:17:15 +0200 (CEST)
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 1EBC061851
+	for <regressions@lists.linux.dev>; Tue, 12 May 2026 10:03:23 +0200 (CEST)
 Authentication-Results: mxe9fb;
         spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
 Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <1cf071e9-5d3c-4d55-ac75-49eb4c461422@leemhuis.info>
-Date: Tue, 12 May 2026 09:17:15 +0200
+Message-ID: <fe4e00ed-81f7-4d3d-9024-ec509ccdfd16@leemhuis.info>
+Date: Tue, 12 May 2026 10:03:22 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -57,80 +53,39 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH rtw-next v2] wifi: rtl8xxxu: Detect the maximum supported
- channel width
-To: Ping-Ke Shih <pkshih@realtek.com>
-Cc: Jes Sorensen <Jes.Sorensen@gmail.com>,
- Bitterblue Smith <rtl8821cerfe2@gmail.com>,
- "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
- "art1310@proton.me" <art1310@proton.me>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <c57de68e-5d57-4c26-898f-8a284bb25381@gmail.com>
- <ee88b3a2-2cc9-4370-b782-189a603a7fa1@RTKEXHMBS04.realtek.com.tw>
- <41693ffc-926c-4e67-9a48-b6e1b1d150bd@leemhuis.info>
- <f26992e669744e6f87084e017f897275@realtek.com>
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
 From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
 Content-Language: de-DE, en-US
-In-Reply-To: <f26992e669744e6f87084e017f897275@realtek.com>
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <177857023592.2936282.8027880108869927067@mxe9fb.netcup.net>
-X-NC-CID: cRX10LR12CGbJk05VwtesGzqXrlvOYJOYxN7G/QGIRCguOG3psQ=
+X-PPP-Message-ID: <177857300329.3018391.2538976502446988105@mxe9fb.netcup.net>
+X-NC-CID: Ovhry9WsWfzobtUzjoviEeFEp0pXDKxGfALVzzOEyCH/EAetaCE=
 
 
 
-On 5/12/26 02:44, Ping-Ke Shih wrote:
-> Thorsten Leemhuis <linux@leemhuis.info> wrote:
->> On 5/6/26 09:57, Ping-Ke Shih wrote:
->>> Bitterblue Smith <rtl8821cerfe2@gmail.com> wrote:
->>>
->>>> Some devices malfunction when connected to a network with 40 MHz channel
->>>> width, because they don't support that.
->>>>
->>>> RTL8188FU, RTL8192FU, and RTL8710BU (RTL8188GU) have a way to signal
->>>> this (and some other capabilities) to the driver. Get this information
->>>> from the hardware and advertise 40 MHz support only when the hardware
->>>> can handle it. We assume the other chips can always handle it.
->>>>
->>>> RTL8710BU needs a different way to retrieve this information, which will
->>>> be implemented some other time.
->>>>
->>>> Fixes: dbf9b7bb0edf ("wifi: rtl8xxxu: Enable 40 MHz width by default")
->>>> Cc: stable@vger.kernel.org
->>>> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=221394
->>>> Signed-off-by: Bitterblue Smith <rtl8821cerfe2@gmail.com>
->>>> Reviewed-by: Ping-Ke Shih <pkshih@realtek.com>
->>
->> Thx for fixing this!
->>
->>> 1 patch(es) applied to rtw-next branch of rtw.git, thanks.
->>> ef771eabc79d wifi: rtl8xxxu: Detect the maximum supported channel width
->>> https://github.com/pkshih/rtw.git
->>
->> rtw-next sounds like it aims for the next merge window; and it seems the
->> fix hasn't even hit -next yet. This is slightly unfortunate, as this
->> afaics is a fix for a recent regression -- so it ideally should head
->> towards mainline by now[1], as Linus' the rule of thumb is to "generally
->> fix regressions "within a week", preferably before the next rc"[1].
->>
->> Or am I missing something? That might very well be the case, so do not
->> hesitate to tell me!
-> 
-> As this patch applied to public rtw tree, and people who encountered the
-> problem in bugzilla can work again. To prevent breaking the public tree,
-> I'd keep it as was.
+On 3/9/24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-I'm not sure I understand this correctly.
+#regzbot report:
+https://lore.kernel.org/all/04657838-46d1-432d-95e1-eb73b930b032@mailbox.org/
+#regzbot fix: sched/deadline: Fix dl_server behaviour
 
-Do you mean something like "the fix is now in the rtw-next tree, so I
-can't mainline it now, as this would break the rtw-next"? But why? You
-can cherry-pick or directly apply the fix to a pending branch (or even
-ask Linus to merge it directly from the list, but that is likely not
-worth it here) and git will normally later notice this and fully
-automatically handle everything when the fix comes in again during the
-next merge window.
+#regzbot report:
+https://lore.kernel.org/all/321c2e57-6a17-4aef-ba42-d2ebd577e472@solid-run.com/
+#regzbot introduced: d6c65b0fd621
+#regzbot title: iommupt: boot stalls with many smmu errors
 
-Or did I misinterpret what you meant?
+#regzbot report:
+https://lore.kernel.org/all/caf5e011a5b3fbdbab8c50d064bc8342212d5cc1.1778505897.git.geert+renesas@glider.be/
+#regzbot introduced: 1c21f240fbc1e47b94e
+#regzbot title: drm/imagination: driver stopped working on various
+Renesas R-Car SoCs
 
-Ciao, Thorsten
 
