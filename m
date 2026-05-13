@@ -1,51 +1,55 @@
 Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [194.59.206.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B98CE38B130
-	for <regressions@lists.linux.dev>; Wed, 13 May 2026 07:19:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF883399CEF
+	for <regressions@lists.linux.dev>; Wed, 13 May 2026 07:29:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.59.206.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778656753; cv=none; b=dpjLqTJzQ9RoDBRgfw0rKn8U1kXH1aHbvk2SVcAtkOufL+UTdDpgsaLEtUz3z5uMnfnx9WNZ3A2miUNRx7jUoorcsFiyphxjxtGFXnXNf9j/ibSr2m27W3u6EawJBPYbiuusfyrqzRVdrWkxOdsiB7wr+zIZIJ5mzhPL5PmHqDM=
+	t=1778657370; cv=none; b=NPDyJkPM2H3uEwWunnh2hwsnUeyzjKApOeEkZfijb9nEUn+0fhbPfGdJlsky+9c4Ul56H1oEgTrpndMIOhs9QAiNBPpTvH/WoH1trccyLpBSl2J9AOqtK01pP1Wn+0I3VsOnJ88NIzwuRS4ohl0WVZm7h45bPgeFdXTnLp4A9wQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778656753; c=relaxed/simple;
-	bh=5kxVGKfQe8uBn9mf2fs5xsMbfVIyrxVpHyE3jgy1Fd8=;
+	s=arc-20240116; t=1778657370; c=relaxed/simple;
+	bh=pG71c39goFyUCjuCFj7zzvR+Fzscz227AYDcEls4FO8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MUmzFuMK5yqZ4FfEsDZrAl7Ei3My6DrQbyX1wb86eduMu/X4ysaO8KF6yiMyxrH/aZygyAb2rckj79YGK0xQoEzKChah34/Y85y9TkONzz/BudND+1usTiZtOBltlfdMU+lPE9zb3/E3dvMaiSG6NO8iPQDtOHeL9M2d3rsquM8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=lc+V16PP; arc=none smtp.client-ip=194.59.206.189
+	 In-Reply-To:Content-Type; b=Uc1rK76pRvgR6yvfo/QN1sXtwmG7Ym1EuyEHMOrA/EuGL3ZpWolrjCxa1A3Vek85Oye/RBIslWTA31n9QluGsi3ZjRF8Y9BieJhkc9QZOJIENjErIV55DsujkK3YnUJW2SCO6fXg5nUdB8msDD4L2zmII4M2m6Uytty59p2+qzA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=k5muzZPr; arc=none smtp.client-ip=194.59.206.189
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="lc+V16PP"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="k5muzZPr"
 Received: from relay02-mors.netcup.net (localhost [127.0.0.1])
-	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4gFlFN11Dvz4F7D;
-	Wed, 13 May 2026 09:19:04 +0200 (CEST)
+	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4gFlTM38H9z4Fyc;
+	Wed, 13 May 2026 09:29:27 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1778656744;
-	bh=5kxVGKfQe8uBn9mf2fs5xsMbfVIyrxVpHyE3jgy1Fd8=;
+	s=key2; t=1778657367;
+	bh=pG71c39goFyUCjuCFj7zzvR+Fzscz227AYDcEls4FO8=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=lc+V16PPveBadlZYCOkbn+9whCItXAenypm5jWaMuYU7tORDmg+YwY5zPurTT826g
-	 jwZucYVWPJ58OSCKG5EB/s+sOtZt557mWTPf/W+tAzDMLOJ2JkzNCZp/T4yRhO3aCL
-	 xBQo4xOhoMX92Xb7gj0gUndk/51msCjjKG8J5AXgQ7fYPxhWX4gB25Druu3Cl5YmZ7
-	 89pWsk5qIo/VgHQJ86tcbBnG86Iq0B0fC/Ul2d9yNAImRzh4Xddvaj2yB1qo4JW6Nc
-	 X36eyqMHsdk1wNbOE6bQigDsOLCZincbtgsUTsNUO4k3ovH6Skyiam5KfsoC5Tjz5m
-	 Ojl4SVIZ0aKDg==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4gFlF40DMQz7wtc;
-	Wed, 13 May 2026 09:18:48 +0200 (CEST)
+	b=k5muzZPrWetQbHBzM+233vfG5gyYE94DPaRlw22wzTuHUCfLbO0IyYUJLtjuS3Y3t
+	 bCLLAOtzr05Q1NoytJYlpippbBkFTl0xI5oQLuigEcbroGhj6zAHtlaF3jxPCk6fMb
+	 gopfYglN0z1yGinKjjgFdMkqYWejRoQWE2ebKY/buPTcVbNZy+XAYmfVj+A7kh8aMq
+	 qgi6BWJiRHMameHbWrx3T6ID2nTm69PYcB6yGoAYb7kMAU29ejpyeX2tsKqcMRaxau
+	 FLi9slyeDMPXY1ZgbX/s0ixw4nKnW9krQQKVEgk2n6rybFeAS58OxWL7hRhw4vzFGz
+	 q0DYdef/R6ijA==
+Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
+	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4gFlTM2QFSz7vsR;
+	Wed, 13 May 2026 09:29:27 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
+X-Spam-Flag: NO
+X-Spam-Score: -2.898
+X-Spam-Level: 
 Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4gFlF32Svqz8sZP;
-	Wed, 13 May 2026 09:18:47 +0200 (CEST)
+	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4gFlTK6BRCz8tY0;
+	Wed, 13 May 2026 09:29:25 +0200 (CEST)
 Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 9633961840;
-	Wed, 13 May 2026 09:18:46 +0200 (CEST)
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 0F50561840;
+	Wed, 13 May 2026 09:29:25 +0200 (CEST)
 Authentication-Results: mxe9fb;
         spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
 Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <971ecb6c-2687-429f-af86-fc980c2d04f9@leemhuis.info>
-Date: Wed, 13 May 2026 09:18:45 +0200
+Message-ID: <7e3c68dc-5695-4978-a991-68f6e9d1c4e8@leemhuis.info>
+Date: Wed, 13 May 2026 09:29:24 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -53,15 +57,20 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] NFSv4: clear exception state on successful mkdir retry
-To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>
-Cc: NeilBrown <neil@brown.name>, =?UTF-8?B?SmFuIMSMw61wYQ==?=
- <jan.cipa@gooddata.com>, linux-nfs@vger.kernel.org,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org,
- Igor Raits <igor.raits@gmail.com>,
+Subject: Re: [PATCH v2 4/5] workqueue: Show all busy workers in stall
+ diagnostics
+To: Jiri Slaby <jirislaby@kernel.org>, Breno Leitao <leitao@debian.org>
+Cc: Tejun Heo <tj@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>,
+ Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
+ Omar Sandoval <osandov@osandov.com>, Song Liu <song@kernel.org>,
+ Danielle Costantino <dcostantino@meta.com>, kasan-dev@googlegroups.com,
+ Petr Mladek <pmladek@suse.com>, kernel-team@meta.com,
  Linux kernel regressions list <regressions@lists.linux.dev>
-References: <177745671692.1474915.5018486129724109553@noble.neil.brown.name>
- <20260429104938.1776671-1-igor.raits@gmail.com>
+References: <20260305-wqstall_start-at-v2-0-b60863ee0899@debian.org>
+ <20260305-wqstall_start-at-v2-4-b60863ee0899@debian.org>
+ <4ed2b000-2306-49fe-87b8-8bfd7f6b6d43@kernel.org>
+ <afx1DYxOGzjIP_EV@gmail.com>
+ <671a7905-f6b3-4bd4-bb08-130a5cc340e4@kernel.org>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
 Content-Language: de-DE, en-US
 X-Enigmail-Draft-Status: N11222
@@ -108,89 +117,83 @@ Autocrypt: addr=linux@leemhuis.info; keydata=
  8zG721N4hWyyLALtGUKIVWZvBVKQIGQRPtNC7s9NVeLIMqoH7qeDfkf10XL9tvSSDY6KVl1n
  K0gzPCKcBaJ2pA1xd4pQTjf4jAHHM4diztaXqnh4OFsu3HOTAJh1ZtLvYVj5y9GFCq2azqTD
  pPI3FGMkRipwxdKGAO7tJVzM7u+/+83RyUjgAbkkkD1doWIl+iGZ4s/Jxejw1yRH0R5/uTaB MEK4
-In-Reply-To: <20260429104938.1776671-1-igor.raits@gmail.com>
+In-Reply-To: <671a7905-f6b3-4bd4-bb08-130a5cc340e4@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-PPP-Message-ID: <177865672697.2026246.4275505350607620547@mxe9fb.netcup.net>
-X-NC-CID: ygNZwBd7ph64L/KKoGw8R+beybIRJGKhvAc2Q28ZTMwh6wJ0svQ=
+X-PPP-Message-ID: 
+ <177865736549.2046807.16942547980219644060@mxe9fb.netcup.net>
+X-NC-CID: wxXGA6i+6AkjkbZQVaqDGMWCBjEf2WM3lQqcJiT+fJVyNsf9mrI=
 
-[top-posting to facilitate processing]
+On 5/11/26 07:21, Jiri Slaby wrote:
+> we currently have several reports of this. On s390, ppc64, and x86_64.
 
-@NFSv4 maintainers, just wondering, did this patch maybe fall through
-the cracks? It fixes a regression, that's why it's on my radar. Or was
-there some progress and I missed it?
+I stumbled on this by accident and this is not my area of expertise, so
+the following might be bogus:
+
+Is this maybe the same as "Observed Workqueue lockups on offline CPUs.":
+https://lore.kernel.org/lkml/97a7d011-d573-4754-9e5d-68b562c64089@linux.ibm.com/
+
+Fix is here:
+https://lore.kernel.org/lkml/20260508174353.905746-1-paulmck@kernel.org/
 
 Ciao, Thorsten
 
-On 4/29/26 12:49, Igor Raits wrote:
-> After a server returns NFS4ERR_DELAY for an NFSv4 CREATE issued by
-> mkdir(2), the client correctly waits and retries.  When the retry
-> succeeds, however, mkdir(2) can still surface -EEXIST to userspace
-> even though the directory was just created on the server.
+> On 07. 05. 26, 15:11, Breno Leitao wrote:
+>> Hi Jiri,
+>>
+>> On Thu, May 07, 2026 at 12:20:33PM +0200, Jiri Slaby wrote:
+>>> On 05. 03. 26, 17:15, Breno Leitao wrote:
+>>>
+>>>    BUG: workqueue lockup - pool cpus=144 node=0 flags=0x4 nice=0
+>>> stuck for
+>>> 168224s!
+>>
+>> That's an extremely long stall (~1.95 days).
+>>
+>>> ...
+>>>    Showing busy workqueues and worker pools:
+>>>    workqueue rcu_gp: flags=0x108
+>>>      pwq 578: cpus=144 node=0 flags=0x4 nice=0 active=3 refcnt=4
+>>> in:
+>>>    https://bugzilla.suse.com/show_bug.cgi?id=1263947
+>>> ?
+>>>
+>>> Can this (or other patch from the series) cause this? Should there be
+>>> something like cpu_online() instead of task_is_running() somewhere?
+>>
+>> This series only affects stall reporting, not detection. The changes run
+>> after the watchdog has identified a stall, so the detection logic itself
+>> remains unchanged.
+>>
+>> To help diagnose this issue, could you provide some additional
+>> information:
+>>
+>> 1) Was CPU 144 online at any point? If so, when was it taken offline?
 > 
-> Reproducer (random 16-hex names so collisions are not the cause)
-> against an in-kernel Linux nfsd; reproduces under both NFSv4.0 and
-> NFSv4.2:
+> It was not, it's non-present.
 > 
->   N=2000000; base=/var/gdc/export
->   for ((i=1; i<=N; i++)); do
->       d=$base/$(openssl rand -hex 8)
->       mkdir "$d" 2>/dev/null || echo "$(date +%T) failed loop=$i $d"
->       rmdir "$d" 2>/dev/null
->   done
+>> 2) Does this message appear repeatedly? If you bring CPU 144 online, does
+>>     the issue resolve?
 > 
-> Failures cluster at the cadence at which the server-side auth/export
-> cache refresh path causes nfsd to return NFS4ERR_DELAY for CREATE.
+> Yes, look at this new x86_64 report's dmesg (I believe it is related to
+> the above report):
+>   BUG: workqueue lockup - pool cpus=2 node=0 flags=0x4 nice=0 stuck for
+> 50s!
+> in:
+>   https://bugzilla.suse.com/attachment.cgi?id=890229
 > 
-> A wire trace of one failure (the three CREATE RPCs all come from a
-> single mkdir(2), generated by the do-while in nfs4_proc_mkdir()):
+> $ grep -c BUG sl.txt
+> 504
+> $ grep -c pwq sl.txt
+> 509
 > 
->   client -> server  CREATE name=...  -> NFS4ERR_DELAY
->   ~100 ms later
->   client -> server  CREATE name=...  -> NFS4_OK         (dir created)
->   ~80 us later
->   client -> server  CREATE name=...  -> NFS4ERR_EXIST   (correct)
+> It comes from:
+> https://bugzilla.suse.com/show_bug.cgi?id=1264554
 > 
-> Since commit dd862da61e91 ("nfs: fix incorrect handling of large-number
-> NFS errors in nfs4_do_mkdir()"), nfs4_handle_exception() is called only
-> when _nfs4_proc_mkdir() returned an error.  That gate breaks retry-state
-> hygiene: nfs4_do_handle_exception() resets exception.{delay,recovering,
-> retry} to 0 on entry, so calling it on success is what previously
-> cleared the retry flag set by the preceding NFS4ERR_DELAY iteration.
-> With the gate in place, exception.retry stays at 1 after the successful
-> retry, the loop runs once more, and the resulting CREATE for an
-> already-created name yields NFS4ERR_EXIST -> -EEXIST to userspace.
+>> 3) Have you run similar tests on earlier kernel versions without seeing
+>>     this behavior, or is this a clear regression?
 > 
-> Drop the conditional and call nfs4_handle_exception() unconditionally,
-> matching every other do-while in fs/nfs/nfs4proc.c (nfs4_proc_symlink(),
-> nfs4_proc_link(), etc.).  The dentry/status separation introduced by
-> that commit is preserved.
+> It's new in 7.0. Going back to 6.19.12 makes it disappear.
 > 
-> Fixes: dd862da61e91 ("nfs: fix incorrect handling of large-number NFS errors in nfs4_do_mkdir()")
-> Reported-and-tested-by: Jan Čípa <jan.cipa@gooddata.com>
-> Closes: https://lore.kernel.org/linux-nfs/CA+9S74hSp_tJu2Ffe2BPNC2T25gfkhgjjDkdgSsF5c2rnJq_wA@mail.gmail.com/
-> Reviewed-by: NeilBrown <neil@brown.name>
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Igor Raits <igor.raits@gmail.com>
-> ---
->  fs/nfs/nfs4proc.c | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
-> 
-> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-> index a0885ae55abc..ffd14141ea1d 100644
-> --- a/fs/nfs/nfs4proc.c
-> +++ b/fs/nfs/nfs4proc.c
-> @@ -5393,10 +5393,9 @@ static struct dentry *nfs4_proc_mkdir(struct inode *dir, struct dentry *dentry,
->  	do {
->  		alias = _nfs4_proc_mkdir(dir, dentry, sattr, label, &err);
->  		trace_nfs4_mkdir(dir, &dentry->d_name, err);
-> +		err = nfs4_handle_exception(NFS_SERVER(dir), err, &exception);
->  		if (err)
-> -			alias = ERR_PTR(nfs4_handle_exception(NFS_SERVER(dir),
-> -							      err,
-> -							      &exception));
-> +			alias = ERR_PTR(err);
->  	} while (exception.retry);
->  	nfs4_label_release_security(label);
->  
+> thanks,
 
