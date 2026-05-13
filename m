@@ -1,55 +1,51 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [194.59.206.189])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.162])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF883399CEF
-	for <regressions@lists.linux.dev>; Wed, 13 May 2026 07:29:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.59.206.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6249C37F8C1
+	for <regressions@lists.linux.dev>; Wed, 13 May 2026 07:35:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.162
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778657370; cv=none; b=NPDyJkPM2H3uEwWunnh2hwsnUeyzjKApOeEkZfijb9nEUn+0fhbPfGdJlsky+9c4Ul56H1oEgTrpndMIOhs9QAiNBPpTvH/WoH1trccyLpBSl2J9AOqtK01pP1Wn+0I3VsOnJ88NIzwuRS4ohl0WVZm7h45bPgeFdXTnLp4A9wQ=
+	t=1778657719; cv=none; b=PSYxb40Ipadw0BlBEY5aN1IsVeXeTZSfjdxX3LqV1u4TIYNc5fCdT8v/XHRmBVtkPNqKgPh7L/6gkzdmd51XPN7lCeEXk56CSyAuCDfunwqr8JkLm7mTwQFRAHiMg/p8TYkVSziq0oDRPDXrKhBrznbVqQUlX3W6R8R072UoY/A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778657370; c=relaxed/simple;
-	bh=pG71c39goFyUCjuCFj7zzvR+Fzscz227AYDcEls4FO8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Uc1rK76pRvgR6yvfo/QN1sXtwmG7Ym1EuyEHMOrA/EuGL3ZpWolrjCxa1A3Vek85Oye/RBIslWTA31n9QluGsi3ZjRF8Y9BieJhkc9QZOJIENjErIV55DsujkK3YnUJW2SCO6fXg5nUdB8msDD4L2zmII4M2m6Uytty59p2+qzA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=k5muzZPr; arc=none smtp.client-ip=194.59.206.189
+	s=arc-20240116; t=1778657719; c=relaxed/simple;
+	bh=EcNCFdnmb4da9hdod00zUf+szlccQi45zfiem9cpmNQ=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=DSvDdjNgnxjqKhdkN9zPzq3XwF/ZAsD8qrQb7rsaqMmRObdukhyHe8pPM9pdH4fZA4kTpUA7+AFZaZW0liVo0uTsHOK1pUgVKsTbdXt2V42QzwQGgFrmF1J+8YZUHIizlm39K9S6yZk/r71IMAPXtCc7glKvP/zg0sVvNGJvPDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=Ef63Aauy; arc=none smtp.client-ip=188.68.63.162
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="k5muzZPr"
-Received: from relay02-mors.netcup.net (localhost [127.0.0.1])
-	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4gFlTM38H9z4Fyc;
-	Wed, 13 May 2026 09:29:27 +0200 (CEST)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="Ef63Aauy"
+Received: from mors-relay-8201.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4gFlbz0Xjdz3wh2
+	for <regressions@lists.linux.dev>; Wed, 13 May 2026 09:35:11 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1778657367;
-	bh=pG71c39goFyUCjuCFj7zzvR+Fzscz227AYDcEls4FO8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=k5muzZPrWetQbHBzM+233vfG5gyYE94DPaRlw22wzTuHUCfLbO0IyYUJLtjuS3Y3t
-	 bCLLAOtzr05Q1NoytJYlpippbBkFTl0xI5oQLuigEcbroGhj6zAHtlaF3jxPCk6fMb
-	 gopfYglN0z1yGinKjjgFdMkqYWejRoQWE2ebKY/buPTcVbNZy+XAYmfVj+A7kh8aMq
-	 qgi6BWJiRHMameHbWrx3T6ID2nTm69PYcB6yGoAYb7kMAU29ejpyeX2tsKqcMRaxau
-	 FLi9slyeDMPXY1ZgbX/s0ixw4nKnW9krQQKVEgk2n6rybFeAS58OxWL7hRhw4vzFGz
-	 q0DYdef/R6ijA==
-Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
-	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4gFlTM2QFSz7vsR;
-	Wed, 13 May 2026 09:29:27 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
-X-Spam-Flag: NO
-X-Spam-Score: -2.898
-X-Spam-Level: 
+	s=key2; t=1778657711;
+	bh=EcNCFdnmb4da9hdod00zUf+szlccQi45zfiem9cpmNQ=;
+	h=Date:Subject:From:To:References:In-Reply-To:From;
+	b=Ef63Aauy6ViwhHmpTcjIPxNkkTwBLFw+ZP08TqE7+MgW+j1yfP9W+nPbo6fy6sA6p
+	 nex89JTVzTVWMpR5GMfdfKduh/KgpTQmQ78nx61KUqSfiMSnDGreERToB+xaF3iWpW
+	 KZStXHg5yJHnOoKqmYxlqchPdLCqfRmHYb3+oCiTQ0YmHHnkZqKGVvmH4LDaNysE0r
+	 xv0FfYiPATbmW9MNYRJSjzPnZLJ4W4Xd7wezRBIKdQDoLnRgc0t+tXF51ZVinBRUvo
+	 wayny4uc/RAmPWvV15InupvRlLXy9YOZdCO/6mCQl9AHVpG3NI0Ib14BJo776THV/I
+	 adPRGX0qXjyvA==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4gFlbK6vfwz3xmH
+	for <regressions@lists.linux.dev>; Wed, 13 May 2026 09:34:37 +0200 (CEST)
 Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4gFlTK6BRCz8tY0;
-	Wed, 13 May 2026 09:29:25 +0200 (CEST)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4gFlbK4mT8z8sZP
+	for <regressions@lists.linux.dev>; Wed, 13 May 2026 09:34:37 +0200 (CEST)
 Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 0F50561840;
-	Wed, 13 May 2026 09:29:25 +0200 (CEST)
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 2B64661857
+	for <regressions@lists.linux.dev>; Wed, 13 May 2026 09:34:37 +0200 (CEST)
 Authentication-Results: mxe9fb;
         spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
 Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <7e3c68dc-5695-4978-a991-68f6e9d1c4e8@leemhuis.info>
-Date: Wed, 13 May 2026 09:29:24 +0200
+Message-ID: <74a06b8a-c300-4b72-ba85-3cf426a3bdaf@leemhuis.info>
+Date: Wed, 13 May 2026 09:34:36 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -57,143 +53,37 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/5] workqueue: Show all busy workers in stall
- diagnostics
-To: Jiri Slaby <jirislaby@kernel.org>, Breno Leitao <leitao@debian.org>
-Cc: Tejun Heo <tj@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>,
- Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
- Omar Sandoval <osandov@osandov.com>, Song Liu <song@kernel.org>,
- Danielle Costantino <dcostantino@meta.com>, kasan-dev@googlegroups.com,
- Petr Mladek <pmladek@suse.com>, kernel-team@meta.com,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <20260305-wqstall_start-at-v2-0-b60863ee0899@debian.org>
- <20260305-wqstall_start-at-v2-4-b60863ee0899@debian.org>
- <4ed2b000-2306-49fe-87b8-8bfd7f6b6d43@kernel.org>
- <afx1DYxOGzjIP_EV@gmail.com>
- <671a7905-f6b3-4bd4-bb08-130a5cc340e4@kernel.org>
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
 From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
 Content-Language: de-DE, en-US
-X-Enigmail-Draft-Status: N11222
-Autocrypt: addr=linux@leemhuis.info; keydata=
- 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 MEK4
-In-Reply-To: <671a7905-f6b3-4bd4-bb08-130a5cc340e4@kernel.org>
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-PPP-Message-ID: 
- <177865736549.2046807.16942547980219644060@mxe9fb.netcup.net>
-X-NC-CID: wxXGA6i+6AkjkbZQVaqDGMWCBjEf2WM3lQqcJiT+fJVyNsf9mrI=
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: <177865767738.2048419.8843341560127694078@mxe9fb.netcup.net>
+X-NC-CID: QrvEM67eyMjeexVSiHZHYX05grPbq5nWov5CFH9M/EcgFapu5h8=
 
-On 5/11/26 07:21, Jiri Slaby wrote:
-> we currently have several reports of this. On s390, ppc64, and x86_64.
 
-I stumbled on this by accident and this is not my area of expertise, so
-the following might be bogus:
 
-Is this maybe the same as "Observed Workqueue lockups on offline CPUs.":
-https://lore.kernel.org/lkml/97a7d011-d573-4754-9e5d-68b562c64089@linux.ibm.com/
+On 3/9/24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-Fix is here:
-https://lore.kernel.org/lkml/20260508174353.905746-1-paulmck@kernel.org/
+#regzbot report:
+https://lore.kernel.org/lkml/CAMRc=MfADC2ncuUQiSW7TnUwBUWCJn9i=wZ9dqYMZNo2h6qOxw@mail.gmail.com/
+#regzbot monitor:
+https://lore.kernel.org/lkml/20260511082611.12721-1-bartosz.golaszewski@oss.qualcomm.com/
 
-Ciao, Thorsten
+#regzbot report:
+https://lore.kernel.org/all/5efe9e03-4d86-43a0-9ec2-e610ff31095d@free.fr/
+#regzbot introduced: 8324a54f604d
+#regzbot title: serial: 8250: BREAK + SysRq dispatch broken
 
-> On 07. 05. 26, 15:11, Breno Leitao wrote:
->> Hi Jiri,
->>
->> On Thu, May 07, 2026 at 12:20:33PM +0200, Jiri Slaby wrote:
->>> On 05. 03. 26, 17:15, Breno Leitao wrote:
->>>
->>>    BUG: workqueue lockup - pool cpus=144 node=0 flags=0x4 nice=0
->>> stuck for
->>> 168224s!
->>
->> That's an extremely long stall (~1.95 days).
->>
->>> ...
->>>    Showing busy workqueues and worker pools:
->>>    workqueue rcu_gp: flags=0x108
->>>      pwq 578: cpus=144 node=0 flags=0x4 nice=0 active=3 refcnt=4
->>> in:
->>>    https://bugzilla.suse.com/show_bug.cgi?id=1263947
->>> ?
->>>
->>> Can this (or other patch from the series) cause this? Should there be
->>> something like cpu_online() instead of task_is_running() somewhere?
->>
->> This series only affects stall reporting, not detection. The changes run
->> after the watchdog has identified a stall, so the detection logic itself
->> remains unchanged.
->>
->> To help diagnose this issue, could you provide some additional
->> information:
->>
->> 1) Was CPU 144 online at any point? If so, when was it taken offline?
-> 
-> It was not, it's non-present.
-> 
->> 2) Does this message appear repeatedly? If you bring CPU 144 online, does
->>     the issue resolve?
-> 
-> Yes, look at this new x86_64 report's dmesg (I believe it is related to
-> the above report):
->   BUG: workqueue lockup - pool cpus=2 node=0 flags=0x4 nice=0 stuck for
-> 50s!
-> in:
->   https://bugzilla.suse.com/attachment.cgi?id=890229
-> 
-> $ grep -c BUG sl.txt
-> 504
-> $ grep -c pwq sl.txt
-> 509
-> 
-> It comes from:
-> https://bugzilla.suse.com/show_bug.cgi?id=1264554
-> 
->> 3) Have you run similar tests on earlier kernel versions without seeing
->>     this behavior, or is this a clear regression?
-> 
-> It's new in 7.0. Going back to 6.19.12 makes it disappear.
-> 
-> thanks,
-
+#regzbot report:
+https://lore.kernel.org/netdev/8fd5d3a3-d1d7-4542-a0db-1678989940d4@ovn.org/
+#regzbot fix: netfilter: nf_conntrack_expect: restore helper propagation
+via expectation
