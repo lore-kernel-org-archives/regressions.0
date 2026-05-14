@@ -1,241 +1,206 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dl1-f45.google.com (mail-dl1-f45.google.com [74.125.82.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D88E336A03B;
-	Wed, 13 May 2026 20:28:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22C8D3D7D69
+	for <regressions@lists.linux.dev>; Thu, 14 May 2026 07:24:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778704119; cv=none; b=qSKGQmzyQDpiA5WXT9fWvyyP3LwpCasg5Yde/keHxLqR3ItQftEoLlk50TyQb2V9xkIDtw1wB/Cw+D0OBlJYPzgVCMu7uhQ+Oy7d8Jj0lcTJZa3uuxd2vCUZjq1BxB7r2inI3Gj0OKnidoNPsousXZXqD/cXAnesF7EPbXCwuJI=
+	t=1778743491; cv=none; b=m+AigaK0OMWfvgvNh6N3qyhZ4J+0QOrn/BhoFdp0f+h204a7X90kevzQsj8uL8vVZtKelYSx2N4eSeOnd6+mtnGZqYWP3pPvq9TYo0QiVGnW+W+Slj24Ya7O8wpEtxKiSbXYpF/pmzCt4DZVGs0QJwAVmBek380mdOswT251+XA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778704119; c=relaxed/simple;
-	bh=UwV7dp061yPXHpBysGQkz14b8ewpCpll2N49lOp5C14=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=GjAqUvW+3CzMa4PM7LLe+oSJPxuJGZEogrJZjp4CeyoD5fC9luJ04C9R4O+0+C+kbK/c4qbXBLIJVM9b9pW/4uXHsgvgAjzOeSUB7Mp9t5Wi7tDc55iByxa3rQAOD+fMSTLBV0wMWD/U7k3neTXcyClGwddrmSXx0KhTmwio2YU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rZl4SuvK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778743491; c=relaxed/simple;
+	bh=ZsIbdxclhE0yu0CL85hsH+17xmgFscAym9LDrlC1wNM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lk4ii9ozZaxGfsrXtI1LYlkG7qCeGuq1ZiiKktSOaTKv0+ucRpwbxwWA+hEp0aWxd5zR5WLELng8cZB5JVTIzLXjsgBEK3NMOkXAv7ptDwOLfIMyFhPP1e/Q7oVsyaU/kcpS42J+kjLwSe64Grp/RmnSDwrrLEsqFSqfb4UDsOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Uld/nzE/; arc=none smtp.client-ip=74.125.82.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rZl4SuvK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFD66C2BCB7;
-	Wed, 13 May 2026 20:28:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778704119;
-	bh=UwV7dp061yPXHpBysGQkz14b8ewpCpll2N49lOp5C14=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=rZl4SuvKEyr/StDOQEbWRIwK67mELxG90TmI1mxZay4KL7suZgulrfO2ShwTomSev
-	 UZX7ISaqUs27Ptppf+r+VMzHFoUD/0v+NcQt+KrJ5Oey0yMRprzl1AiTBOMskjbyDz
-	 5Cligk8XXZ+QgZ9nLuvntlKAnQKPgYxF8zdyDIGaOvaucpBaYcIdXB1Vd3yK71+pc3
-	 q4TzzXio6fGh488i3Z3x4LeA4oPz3BOXVYHzehDplLEvRVM3epLQHIicchXeCPYtog
-	 VougUyaTXFd7PFd01iS0RapT0VsSEckTfNl2A8nigSZ5aCLnuti76HIn9+xPFmKiUz
-	 J8NjYAvTYuFDA==
-From: Thomas Gleixner <tglx@kernel.org>
-To: Tony Rodriguez <unixpro1970@gmail.com>
-Cc: Linux kernel regressions list <regressions@lists.linux.dev>, LKML
- <linux-kernel@vger.kernel.org>, sparclinux@vger.kernel.org, John Paul
- Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Thorsten Leemhuis
- <regressions@leemhuis.info>
-Subject: Re: the stuttering regression in 7.0: should I have done something
- different
-In-Reply-To: <64f465ca-6117-4375-9c4b-af771b8205fd@gmail.com>
-References: <ffb44522-f01c-4be3-849d-27dc17fbca7f@leemhuis.info>
- <D5D19776-C809-4284-9417-F9A860877B98@gmail.com>
- <1c165caf-36b4-4673-97fd-ed86bef17b88@leemhuis.info>
- <3332123b-9e11-4895-9ab3-1707fba5815c@gmail.com> <871pfj9cmj.ffs@tglx>
- <a7a0d78b-435e-43c8-b436-5e7f4dd39dee@gmail.com>
- <088e6cfa-0167-4748-af6c-458ade2f303a@gmail.com> <878q9p82je.ffs@tglx>
- <64f465ca-6117-4375-9c4b-af771b8205fd@gmail.com>
-Date: Wed, 13 May 2026 22:28:35 +0200
-Message-ID: <87tssb6olo.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Uld/nzE/"
+Received: by mail-dl1-f45.google.com with SMTP id a92af1059eb24-1329507c387so3408781c88.1
+        for <regressions@lists.linux.dev>; Thu, 14 May 2026 00:24:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1778743489; x=1779348289; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=F97Fyk4de96jpUWYQ2GaVritRCACZPpXcVzTRglA1VM=;
+        b=Uld/nzE/Eki4gm6mSFQd4eb9ioCIwcpwwKVeEVz6eeZRz1+T3R/u4UIkhVqzmP/7qz
+         dLPgyoqkLyULMZLTiIULpT5qiKlBuCG7yCRRbHMtbnvclZuUFHl14iiU5ALbuElJKUVM
+         0fGvnCERDwW+yh0BMczqcCVDRJ1f7+WOGBzC3VptsZdxJZsqEbqs/IVkRaGqbxOZtfW/
+         nmbrB6Ky/2qB5jsvh2cWhXWwAZVNXJel+xykS3jr7jIJ2lUtPL7aB4sskNXfEyNGdscJ
+         vpnZJ2iX9QrOyetRcLBF74/nJ/O8GRa/XmYWzv7x5GABLdk8BO4k5YKGQrwmNyJZE6Qc
+         5dow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778743489; x=1779348289;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=F97Fyk4de96jpUWYQ2GaVritRCACZPpXcVzTRglA1VM=;
+        b=b/28Z0A2qffBX6e9GBHxoAgn01uZHJX4CFRJ6LKLe+qMbm4PB0V/yIH+3SSDDc2jS8
+         kpzwLEBAL8D3KOPQToRV/j9Vkj1TriVThcNOdZ/d4j39ZObKdLDFcw2uN0lH3wdjYiOn
+         s1K/y3bYktLwzLYAHYKGWIhQJvyjlQrRHtE6fmer4VRKdz9Y2w5T3DLqBT4oCnFFw/uH
+         fDN491IKx1fImHj3xQJWzVXfXlCDqTS/jv2HvApBVT856HMTO34iH6d6a9vDpwAPeFpE
+         5sunOZkzkbEl4lQl3azNsdcegBXOxiXjwT+Zro2lF9D80iHAojSQYRghEZGFbyc1BG6u
+         UMXQ==
+X-Gm-Message-State: AOJu0Yw6YmiUYSpQ3HqgIOXhtAL99pJOs2MJsAh5zxxG49BgUEyA0k2/
+	6l8uObndSi16D2bzxco/zIe+gIZ5FE9pBcqUwYB0B5ZAkpeapHLZLxFN
+X-Gm-Gg: Acq92OFfXZoRA9ou+YZ+KRJKdqZu8+RLhxE8CJBEt9hv48i9dAFF2kiI29cJTXVpBZi
+	no2TL4HA/xDK/0+BYvvQiMXMlMAal9un7+Bx+8VFNfvDN4lZhuuhulcwXOKKNYRIsk1O9oZshDt
+	S8EhHY5rlubOaNeEZPhBR2dagTekPlbhS0dZLIPbAtmAEs64U1MlRr4iDoS4gBjxcpRAtA+BX5J
+	kBf5qHA3Y4GPm9B0FvUjv5b0OvYz0T3byb5klDf6icDCZfm61ii0HjQvYXlXElG5KjRJMBL2iAs
+	+UxbrkzVVnQWRnfYlAxCRUFVl9/GvgnocawqNY4cQZ8gIqjpHCgnGEQDXZpY8bzcWdc5IRYJupj
+	3FCu0tZ9+vP6yRIzB8lM6WTz6b7tQ2x9QAwKS8HBDcwUzemFlRilhAyq2sx6I2/uo8wWoiQFjdy
+	5El7VmoPx0IiFD9nxDtuDdrmbfkGlgQ90o6rAlMeBZ
+X-Received: by 2002:a05:7022:6612:b0:12c:6da8:856d with SMTP id a92af1059eb24-1349ab4b4a8mr3637724c88.26.1778743488955;
+        Thu, 14 May 2026 00:24:48 -0700 (PDT)
+Received: from [192.168.21.192] ([67.170.89.46])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-134cbcb93f3sm3248292c88.3.2026.05.14.00.24.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 14 May 2026 00:24:48 -0700 (PDT)
+Message-ID: <e45438e7-8501-4c10-95ee-07f118de8a51@gmail.com>
+Date: Thu, 14 May 2026 00:24:46 -0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Betterbird (Linux)
+Subject: Re: the stuttering regression in 7.0: should I have done something
+ different
+Content-Language: en-US
+To: Thomas Gleixner <tglx@kernel.org>
+Cc: Linux kernel regressions list <regressions@lists.linux.dev>,
+ LKML <linux-kernel@vger.kernel.org>, sparclinux@vger.kernel.org,
+ John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+ Thorsten Leemhuis <regressions@leemhuis.info>,
+ Linus Torvalds <torvalds@linux-foundation.org>
+References: <ffb44522-f01c-4be3-849d-27dc17fbca7f@leemhuis.info>
+ <D5D19776-C809-4284-9417-F9A860877B98@gmail.com>
+ <1c165caf-36b4-4673-97fd-ed86bef17b88@leemhuis.info>
+ <3332123b-9e11-4895-9ab3-1707fba5815c@gmail.com> <871pfj9cmj.ffs@tglx>
+ <a7a0d78b-435e-43c8-b436-5e7f4dd39dee@gmail.com>
+ <088e6cfa-0167-4748-af6c-458ade2f303a@gmail.com> <878q9p82je.ffs@tglx>
+ <64f465ca-6117-4375-9c4b-af771b8205fd@gmail.com> <87tssb6olo.ffs@tglx>
+From: Tony Rodriguez <unixpro1970@gmail.com>
+In-Reply-To: <87tssb6olo.ffs@tglx>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Tony!
+Hi Thomas,
 
-On Tue, May 12 2026 at 14:43, Tony Rodriguez wrote:
->> Can you add 'trace_buf_size=3D50k' to the kernel command line, which
->> limits the buffer size to about 640 entries. Assuming 115200 Baud this
->> should then take about 4 seconds per CPU to dump, which still is a bunch
->> on a large machine, but definitely way more workable than the default.
+Cheers!
+
+Initial validation of the test patches for v7.0.6 and 7.1-rc3 on the 
+S7-2 looks promising: I have not observed panics, timer delays, or other 
+timer-related issues so far. I will pause broader validation on the S7-2 
+and T7-1 until I receive your recommendation or any requested revisions 
+(see inline comments below).
+
+Note: I did see an intermittent error on the S7-2 running 7.1-rc3, 
+usually when the system is under heavy load during a kernel build. I’m 
+not sure whether it is a separate problem?
+
+"[676.464681] BUG: Bad rss-counter state mm:000000008d9f1cf2 
+type:MM_FILEPAGES val:-4096 Comm:cc1 Pid:78165".
+
+On 5/13/26 1:28 PM, Thomas Gleixner wrote:
+
+> Just to be clear: I never saw the VHDL code of that CPU, but that
+> pattern is way too familiar.
 >
-> Done.=C2=A0 The complete trace file "s7-2-05122026-dump.tar.gz" can be=20
-> obtained from my GitHub repo:
+> Those equal comparators, which were designed by AI (Absence of
+> Intelligence) before AI got popular, generally work this way:
 >
-> https://github.com/unixpro1970/Sparc64-Kernel-Debugging-Dumps
+>    The comparator is only evaluated on the clock edge which increments
+>    the counter, but not when the comparator value is written. So a write
+>    of the same value does not result in an interrupt.
+>
+> That's an "optimization" which spares quite a few gates and is obviously
+> nowhere documented. So software has to deal with the consequences by
+> using a crystal ball, which is trivial to get wrong and can go unnoticed
+> for a long time until it roars it's ugly head at some point for whatever
+> reasons.
+>
+> I'm willing to bet a round of beers at the next conference that this is
+> the problem and that it will magically disappear when you change that
+> condition to:
+>
+>          return (read_cnt() - exp) >= 0 ? -ETIME : 0;
 
-Thanks for providing the data. So in both traces there is a clear
-indication that the forced programmed min delta does not result in an
-interrupt. Here are the last trace events on the affected CPUs.
+Attempted to locate "return (read_cnt() - exp) >= 0 ? -ETIME : 0;" but 
+could not find an exact match. After additional inspection I updated the 
+following functions "tick_add_compare()" and "stick_add_compare()" in 
+arch/sparc/kernel/time_64.c to from "> 0L" to ">= 0L". This appears to 
+have resolved the lost-timer behavior.
 
-No AHAVI CPU 116:
+--- time_64.c.orig
++++ time_64.c
+@@ -146,7 +146,7 @@
+                              : "=r" (new_tick));
+         new_tick &= ~TICKCMP_IRQ_BIT;
 
-[  280.939873]   <idle>-0       116d.h.. 11612209us : timer_interrupt: Invo=
-king handler hrtimer_interrupt+0x0/0x280
-[  280.980493]   <idle>-0       116d.h.. 11612213us : clockevents_program_e=
-vent: Successfully programmed 9580000000 3991235
-[  281.023902]   <idle>-0       116d.... 11612218us : clockevents_program_e=
-vent: Successfully programmed 10112024440 536010830
-[  281.089687]   <idle>-0       116dn... 11636205us : clockevents_program_e=
-vent: Force programmed min delta 9600000000 10
+-       return ((long)(new_tick - (orig_tick+adj))) > 0L;
++       return ((long)(new_tick - (orig_tick+adj))) >= 0L;
+  }
 
-No AHAVI CPU 100:
+  static unsigned long tick_add_tick(unsigned long adj)
+@@ -277,7 +277,7 @@
+                              : "=r" (new_tick));
+         new_tick &= ~TICKCMP_IRQ_BIT;
 
-[  299.943989]  systemd-1       100d.h.. 27594794us : timer_interrupt: Invo=
-king handler hrtimer_interrupt+0x0/0x280
-[  299.964303]  systemd-1       100d.h.. 27594796us : clockevents_program_e=
-vent: Successfully programmed 25560000000 1407865
-[  299.986182]  systemd-1       100d.... 27594932us : clockevents_program_e=
-vent: Force programmed min delta 1 -25558727644
-[  300.007707]  systemd-1       100d.h.. 27594933us : timer_interrupt: Invo=
-king handler hrtimer_interrupt+0x0/0x280
-[  300.028019]  systemd-1       100d.h.. 27594934us : clockevents_program_e=
-vent: Successfully programmed 25560000000 1269565
-[  300.049894]  systemd-1       100d.... 27594971us : clockevents_program_e=
-vent: Force programmed min delta 1 -25558767244
-[  300.071415]  systemd-1       100d.... 27598043us : clockevents_program_e=
-vent: Skipping 25560000000 -1838405
+-       return ((long)(new_tick - (orig_tick+adj))) > 0L;
++       return ((long)(new_tick - (orig_tick+adj))) >= 0L;
+  }
 
-AHAVI CPU 6:
+  static unsigned long stick_get_frequency(void)
 
-[ 1247.573212]   <idle>-0         6d.h.. 84194945us : timer_interrupt: Invo=
-king handler hrtimer_interrupt+0x0/0x280
-[ 1247.613828]   <idle>-0         6d.h.. 84194947us : clockevents_program_e=
-vent: Successfully programmed 80140000000 3928334
-[ 1247.762267]   <idle>-0         6d.h.. 84198876us : timer_interrupt: Invo=
-king handler hrtimer_interrupt+0x0/0x280
-[ 1247.844549]   <idle>-0         6d.h.. 84198878us : clockevents_program_e=
-vent: Force programmed min delta 80140000000 771
+>
+> unless they managed to add some extra propagation delay to that
+> comparator write like the HPET folks did at some point without telling
+> anyone. I doubt the SPARC janitor who implemented it did so because
+> that would have made the failure way more likely.
+>
+> I have truly no idea why the original code did not expose this problem,
+> though it might have been just papered over by sheer luck and timing.
+>
+> Thanks,
+>
+>          tglx
+> ---
+> --- a/kernel/time/clockevents.c
+> +++ b/kernel/time/clockevents.c
+> @@ -381,6 +381,8 @@ int clockevents_program_event(struct clo
+>   	if (dev->set_next_event(dev->min_delta_ticks, dev)) {
+>   		if (!force || clockevents_program_min_delta(dev))
+>   			return -ETIME;
+> +	} else if (delta <= 0) {
+> +		dev->next_event = ktime_add_ns(ktime_get(), dev->min_delta_ns);
+>   	}
+>   	dev->next_event_forced = 1;
+>   	return 0;
+>
+You mentioned this kernel/time/clockevents.c patch is optional, but I 
+propose revising clockevents_program_event(). If the requested event 
+time is already at or before now, record a sane next_event (now + 
+min_delta) so core code sees a future expected time and can behave 
+correctly. Does this seem reasonable?
 
-AHAVI CPU 61:
+  --- clockevents.c.orig
++++ clockevents.c
+@@ -347,6 +347,11 @@
+         if (dev->set_next_event(dev->min_delta_ticks, dev)) {
+                 if (!force || clockevents_program_min_delta(dev))
+                         return -ETIME;
++       } else {
++               ktime_t now = ktime_get();
++               s64 delta_ns = ktime_to_ns(ktime_sub(expires, now));
++               if (delta_ns <= 0)
++                       dev->next_event = ktime_add_ns(now, 
+dev->min_delta_ns);
+         }
+         dev->next_event_forced = 1;
+         return 0;
 
-[ 1258.222440]   <idle>-0        61d.h.. 84234905us : timer_interrupt: Invo=
-king handler hrtimer_interrupt+0x0/0x280
-[ 1258.516354]   <idle>-0        61dnh.. 84234910us : clockevents_program_e=
-vent: Successfully programmed 84176000000 3999995280
-[ 1258.648636]   <idle>-0        61dn... 84234914us : clockevents_program_e=
-vent: Successfully programmed 80180000000 3991863
-[ 1258.868940]   <idle>-0        61d.h.. 84238906us : timer_interrupt: Invo=
-king handler hrtimer_interrupt+0x0/0x280
-[ 1258.993594]   <idle>-0        61d.h.. 84238908us : clockevents_program_e=
-vent: Force programmed min delta 80180000000 612
-
-So there is only one case (CPU116) where another event in the past
-programming (delta < 0) is skipped due to the force bit being set. But
-that skip happens ~3ms after the min delta was programmed, which should
-have resulted in an interrupt which never happened.
-
-The original code is not really different vs. that min delta
-programming, except that it does not have the next_event_forced
-logic. But as you can see above this logic is not really making a
-difference.
-
-So I went through the differences line by line again and I found a very
-subtle difference, but I can't seen how that would magically cure the
-actual problem of the non-firing interrupt. The missing update of
-dev->next_event in the force reprogram case of (delta <=3D 0) is
-completely irrelevant as both events are in the past so it does not
-matter at all. Nevertheless see the pointless and purely cosmetic delta
-patch below.
-
-But coming back to the trace data. There are tons of instances where the
-forced programmed min delta results in an interrupt right afterwards:
-
-[ 1258.868940]   <idle>-0        61d.h.. 84238906us : timer_interrupt: Invo=
-king handler hrtimer_interrupt+0x0/0x280
-[ 1258.889262]   <idle>-0        60d.h.. 84238906us : timer_interrupt: Invo=
-king handler hrtimer_interrupt+0x0/0x280
-[ 1258.909570]   <idle>-0        63d.h.. 84238906us : timer_interrupt: Invo=
-king handler hrtimer_interrupt+0x0/0x280
-[ 1258.929877]   <idle>-0        70d.h.. 84238906us : timer_interrupt: Invo=
-king handler hrtimer_interrupt+0x0/0x280
-[ 1258.950197]   <idle>-0        60d.h.. 84238907us : clockevents_program_e=
-vent: Force programmed min delta 80180000000 552
-[ 1258.971896]   <idle>-0        63d.h.. 84238908us : clockevents_program_e=
-vent: Force programmed min delta 80180000000 627
-[ 1258.993594]   <idle>-0        61d.h.. 84238908us : clockevents_program_e=
-vent: Force programmed min delta 80180000000 612
-[ 1259.015292]   <idle>-0        70d.h.. 84238908us : clockevents_program_e=
-vent: Force programmed min delta 80180000000 313
-[ 1259.036992]   <idle>-0        60d.h.. 84238910us : timer_interrupt: Invo=
-king handler hrtimer_interrupt+0x0/0x280
-[ 1259.057313]   <idle>-0        63d.h.. 84238910us : timer_interrupt: Invo=
-king handler hrtimer_interrupt+0x0/0x280
-[ 1259.077620]   <idle>-0        70d.h.. 84238912us : timer_interrupt: Invo=
-king handler hrtimer_interrupt+0x0/0x280
-
-So all four involved CPUs force program min delta from the timer
-interrupt context, but only three of them actually get an interrupt
-afterwards. CPU61 fails to deliver one and as a result it goes stale.
-
-As the set_next_event() callback returns 0 (success) in all cases -
-otherwise we wouldn't see the trace entry - this all points to a problem
-with that rearming logic:
-
-        exp =3D read_cnt() + delta_ticks;
-        write_cmp(exp);
-        return (read_cnt() - exp) > 0 ? -ETIME : 0;
-
-Your machine uses 'stick', which runs according to the conversion
-factors in dmesg at 1GHz, but the CPU runs at 4.27GHz AFAIK. So you can
-clearly run into a situation like this:
-
-        TICK_CNT        CPU
-        T1              exp =3D read_cnt() + D
-                        ...                     // Some delay
-        T1 + D
-                        write_cmp(T1 + D)
-                        now =3D read_cnt()	// Reads T1 + D
-        T1 + D + 1
-                        ---> returns success and the interrupt is never fir=
-ing
-Why?
-
-Just to be clear: I never saw the VHDL code of that CPU, but that
-pattern is way too familiar.
-
-Those equal comparators, which were designed by AI (Absence of
-Intelligence) before AI got popular, generally work this way:
-
-  The comparator is only evaluated on the clock edge which increments
-  the counter, but not when the comparator value is written. So a write
-  of the same value does not result in an interrupt.
-
-That's an "optimization" which spares quite a few gates and is obviously
-nowhere documented. So software has to deal with the consequences by
-using a crystal ball, which is trivial to get wrong and can go unnoticed
-for a long time until it roars it's ugly head at some point for whatever
-reasons.
-
-I'm willing to bet a round of beers at the next conference that this is
-the problem and that it will magically disappear when you change that
-condition to:
-
-        return (read_cnt() - exp) >=3D 0 ? -ETIME : 0;
-
-unless they managed to add some extra propagation delay to that
-comparator write like the HPET folks did at some point without telling
-anyone. I doubt the SPARC janitor who implemented it did so because
-that would have made the failure way more likely.
-
-I have truly no idea why the original code did not expose this problem,
-though it might have been just papered over by sheer luck and timing.
-
-Thanks,
-
-        tglx
----
---- a/kernel/time/clockevents.c
-+++ b/kernel/time/clockevents.c
-@@ -381,6 +381,8 @@ int clockevents_program_event(struct clo
- 	if (dev->set_next_event(dev->min_delta_ticks, dev)) {
- 		if (!force || clockevents_program_min_delta(dev))
- 			return -ETIME;
-+	} else if (delta <=3D 0) {
-+		dev->next_event =3D ktime_add_ns(ktime_get(), dev->min_delta_ns);
- 	}
- 	dev->next_event_forced =3D 1;
- 	return 0;
 
