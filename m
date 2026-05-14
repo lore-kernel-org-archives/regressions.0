@@ -1,106 +1,156 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.166])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB8CC3DC873
-	for <regressions@lists.linux.dev>; Thu, 14 May 2026 08:33:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.166
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A3DF3AB26D;
+	Thu, 14 May 2026 10:24:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778747626; cv=none; b=rRP9oIN/ee5mQZ3zF9rEup6LJIXrD1l38SJ+T9wZ6QGDQfg67gVSz/uy1SSCpdpvG8zuVQ2DBEVWxCLCOQBfjT5N6o0WJH/q7Nf1YLCe/8C9KhJR/XLTSaZsNxNz81Yartr+29ZtIKxlQu7gHvtPqHRQ2yo1NAfcmpje3H6Bc0E=
+	t=1778754289; cv=none; b=SVdZn2APUXp3o98w7RC+WLlcQhj9IMRiJGSyJ147ogCrrJ+rfNwyJE64jVNnWh5WJ51Gd3LX1rNo2K7dhWyELc+RHPL0p7NHBekyVL92TlFmMRQw0AGJG6okT35Qyj4Y48vK+jdkrQVeF6eh4do8C2dwuWRDULCMgSOEKhViIyk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778747626; c=relaxed/simple;
-	bh=1/uIy/dO97+Ue0DparU/zR5/4TCBQxsb+9so8I5VeGg=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:References:
-	 In-Reply-To:Content-Type; b=KtZpfpo6rAJZa6mA2bJJRQBSQIEdexbaP9zEivcYmSDfeCxg4OloSy/t4uKt3Jl53ugKDQy+ETYJWfTZTWel5hg/cYaR0i/sSeOlYPcrVTBunifEUzwOgImmm7OCz2zNn1NIs8raMEgplXpOkdR1f6FOoCxFi6fapXWsNpHV3kc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=jFTnZZUC; arc=none smtp.client-ip=188.68.63.166
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1778754289; c=relaxed/simple;
+	bh=rPMvnGQqst3vADlA54Xt8XuwO5jj10AGcvalmTbWTm8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=CkzOTSYPnpq5WmjQDH+lEv7vepRuH6VlOh392JUh04jmbZjS0a4CF1jjqlA+M9CaBcu3Kq/cQkQPT279K7Kkadkyti5do07cugwX2DkLVAVbEVFOKmieHTV0TeaaF6W2Zb3Xdv2S9G2W93vlkhMfbLz/GZ+pcVif11jY5CM1KHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mnt3RB67; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="jFTnZZUC"
-Received: from mors-relay-8202.netcup.net (localhost [127.0.0.1])
-	by mors-relay-8202.netcup.net (Postfix) with ESMTPS id 4gGNrs1H1jz45j0
-	for <regressions@lists.linux.dev>; Thu, 14 May 2026 10:33:33 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1778747613;
-	bh=1/uIy/dO97+Ue0DparU/zR5/4TCBQxsb+9so8I5VeGg=;
-	h=Date:From:Subject:To:References:In-Reply-To:From;
-	b=jFTnZZUCGUDBHEUK0vHfL6HjyNGGYnxcY5TK9ai4wE4g8JlvVlyo1I2u4XYoZ42s/
-	 vXqG7TsDGRH7qwWSAmAeM7X8Oj0V/6UCTTd6GdbP9ehaXV+ETLTzCr7ZfjVMnJg4pl
-	 6rJur0ZcGSLK1zMhtEXc8Sqdq6s+ZpE370aZekokkCK9MWAbUFlNS4/h1BQ6fOflhE
-	 o6Lc/yU2VdsyikxuM7yZL1Ws2fbAkwfpNDdl0BOPVnAd+Pd/8RdTY/LLsEYq+V2Bs2
-	 61MnjjCj3GQX3Ol3AJlveUUfp4zqYouGm/r8/ENkqU+LH8QZv2x9K+WBPJ0RMeGX99
-	 RP6oplzUWXmoQ==
-Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-8202.netcup.net (Postfix) with ESMTPS id 4gGNqp34Nfz422b
-	for <regressions@lists.linux.dev>; Thu, 14 May 2026 10:32:38 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
-X-Spam-Flag: NO
-X-Spam-Score: -2.901
-X-Spam-Level: 
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4gGNqn68NNz8tbP
-	for <regressions@lists.linux.dev>; Thu, 14 May 2026 10:32:37 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 48AEA5F9DD
-	for <regressions@lists.linux.dev>; Thu, 14 May 2026 10:32:37 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <f8780f37-8dfa-40b5-bb39-5dc98884d6bc@leemhuis.info>
-Date: Thu, 14 May 2026 10:32:35 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mnt3RB67"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B649C2BCB3;
+	Thu, 14 May 2026 10:24:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1778754289;
+	bh=rPMvnGQqst3vADlA54Xt8XuwO5jj10AGcvalmTbWTm8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=mnt3RB67koobjq3JQnbggOb2GhOGHdHxxvEBt3cAaLF8tJ9asBzZJ/QQi+ARN/Otv
+	 MepTBmqQRKuBM78A/fqtKrl0L+7xoyoNfDFtJm4ci3JhmzrpBPWGXQr+vb2R/ksQZ1
+	 RCZuRaHjLu17RhPTPbZj/2TdWVDgstCdQfTwhWwxmPjMEqMH3icY7NyGFFyqL7bZml
+	 ThHHyy6hpDXF5RrcjClZyNPkf2ZVhPmq7KiBYGTuH2bjxajhUtdY5ky3eIRmVUz7gE
+	 HkVDPtUisUTZ5E+wTSpRQRKWr6M0xyodaQcTfnweznM76hC5DnISepEBL87x0Z9fA2
+	 DlLz3NwCASclA==
+From: Thomas Gleixner <tglx@kernel.org>
+To: Tony Rodriguez <unixpro1970@gmail.com>
+Cc: Linux kernel regressions list <regressions@lists.linux.dev>, LKML
+ <linux-kernel@vger.kernel.org>, sparclinux@vger.kernel.org, John Paul
+ Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Thorsten Leemhuis
+ <regressions@leemhuis.info>, Linus Torvalds
+ <torvalds@linux-foundation.org>
+Subject: Re: the stuttering regression in 7.0: should I have done something
+ different
+In-Reply-To: <e45438e7-8501-4c10-95ee-07f118de8a51@gmail.com>
+References: <ffb44522-f01c-4be3-849d-27dc17fbca7f@leemhuis.info>
+ <D5D19776-C809-4284-9417-F9A860877B98@gmail.com>
+ <1c165caf-36b4-4673-97fd-ed86bef17b88@leemhuis.info>
+ <3332123b-9e11-4895-9ab3-1707fba5815c@gmail.com> <871pfj9cmj.ffs@tglx>
+ <a7a0d78b-435e-43c8-b436-5e7f4dd39dee@gmail.com>
+ <088e6cfa-0167-4748-af6c-458ade2f303a@gmail.com> <878q9p82je.ffs@tglx>
+ <64f465ca-6117-4375-9c4b-af771b8205fd@gmail.com> <87tssb6olo.ffs@tglx>
+ <e45438e7-8501-4c10-95ee-07f118de8a51@gmail.com>
+Date: Thu, 14 May 2026 12:24:44 +0200
+Message-ID: <87qznez3tf.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: 
- <177874755746.1600700.18364888424212929809@mxe9fb.netcup.net>
-X-NC-CID: v0PABmbTgv2UXQwTZ/30StoWnjhe42r0VrbtzXYvFhNUNVOSvcI=
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, May 14 2026 at 00:24, Tony Rodriguez wrote:
+> Initial validation of the test patches for v7.0.6 and 7.1-rc3 on the=20
+> S7-2 looks promising: I have not observed panics, timer delays, or other=
+=20
+> timer-related issues so far. I will pause broader validation on the S7-2=
+=20
+> and T7-1 until I receive your recommendation or any requested revisions=20
+> (see inline comments below).
+>
+> Note: I did see an intermittent error on the S7-2 running 7.1-rc3,=20
+> usually when the system is under heavy load during a kernel build. I=E2=
+=80=99m=20
+> not sure whether it is a separate problem?
+>
+> "[676.464681] BUG: Bad rss-counter state mm:000000008d9f1cf2=20
+> type:MM_FILEPAGES val:-4096 Comm:cc1 Pid:78165".
 
+That's unrelated and an accounting issue in the MM code. Please report
+it separately to the MM people.
 
-On 3/9/24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
+> On 5/13/26 1:28 PM, Thomas Gleixner wrote:
+>> I'm willing to bet a round of beers at the next conference that this is
+>> the problem and that it will magically disappear when you change that
+>> condition to:
+>>
+>>          return (read_cnt() - exp) >=3D 0 ? -ETIME : 0;
+>
+> Attempted to locate "return (read_cnt() - exp) >=3D 0 ? -ETIME : 0;" but=
+=20
+> could not find an exact match. After additional inspection I updated the=
+=20
+> following functions "tick_add_compare()" and "stick_add_compare()" in=20
+> arch/sparc/kernel/time_64.c to from "> 0L" to ">=3D 0L". This appears to=
+=20
+> have resolved the lost-timer behavior.
 
-#regzbot report:
-https://lore.kernel.org/linux-bluetooth/770d36b07311bf88210c187923f243fb9f126f04.1777058551.git.pav@iki.fi/
-#regzbot fix: Bluetooth: btmtk: accept too short WMT FUNC_CTRL events
+I condensed the logic for illustration and rightfully assumed that you
+will figure it out. :)
 
-#regzbot report:
-https://lore.kernel.org/linux-fsdevel/bf0ba588-002b-4860-848e-e806b193840a@app.fastmail.com/
-#regzbot fix: 0c8c88b8eb82a2a41b
+> --- time_64.c.orig
+> +++ time_64.c
+> @@ -146,7 +146,7 @@
+>  =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0: "=3Dr" (new_tick));
+>  =C2=A0 =C2=A0 =C2=A0 =C2=A0 new_tick &=3D ~TICKCMP_IRQ_BIT;
+>
+> -=C2=A0 =C2=A0 =C2=A0 =C2=A0return ((long)(new_tick - (orig_tick+adj))) >=
+ 0L;
+> +=C2=A0 =C2=A0 =C2=A0 =C2=A0return ((long)(new_tick - (orig_tick+adj))) >=
+=3D 0L;
+>  =C2=A0}
+>
+>  =C2=A0static unsigned long tick_add_tick(unsigned long adj)
+> @@ -277,7 +277,7 @@
+>  =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0: "=3Dr" (new_tick));
+>  =C2=A0 =C2=A0 =C2=A0 =C2=A0 new_tick &=3D ~TICKCMP_IRQ_BIT;
+>
+> -=C2=A0 =C2=A0 =C2=A0 =C2=A0return ((long)(new_tick - (orig_tick+adj))) >=
+ 0L;
+> +=C2=A0 =C2=A0 =C2=A0 =C2=A0return ((long)(new_tick - (orig_tick+adj))) >=
+=3D 0L;
+>  =C2=A0}
 
-#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=221505
-#regzbot introduced:e30ca6dd5345
-#regzbot title: cpufreq/amd-pstate: EBUSY when switching to performance
-profile via PPD
+Looks correct, but you missed the one in hbtick_add_compare() which has
+the same issue.
 
-#regzbot report:
-https://lore.kernel.org/all/7f10abbd-fb78-4c3a-ab90-7ca78239891a@oldschoolsolutions.biz/
-#regzbot introduced: 8ea6e25c853603
-#regzbot title: SoC: qcom: q6apm: sound broken on sc8280xp (Blackrock)
+>> --- a/kernel/time/clockevents.c
+>> +++ b/kernel/time/clockevents.c
+>> @@ -381,6 +381,8 @@ int clockevents_program_event(struct clo
+>>   	if (dev->set_next_event(dev->min_delta_ticks, dev)) {
+>>   		if (!force || clockevents_program_min_delta(dev))
+>>   			return -ETIME;
+>> +	} else if (delta <=3D 0) {
+>> +		dev->next_event =3D ktime_add_ns(ktime_get(), dev->min_delta_ns);
+>>   	}
+>>   	dev->next_event_forced =3D 1;
+>>   	return 0;
+>>
+> You mentioned this kernel/time/clockevents.c patch is optional, but I=20
+> propose revising clockevents_program_event(). If the requested event=20
+> time is already at or before now, record a sane next_event (now +=20
+> min_delta) so core code sees a future expected time and can behave=20
+> correctly. Does this seem reasonable?
 
-#regzbot report:
-https://lore.kernel.org/all/CAOPSVF04q6uvVdq8GTRLHBrVMdpt9=o9wVcFMc6f-yhmSBcZqQ@mail.gmail.com/
-#regzbot introduced: 32be3ca4cf78b
-#regzbot title: wifi: ath11k: suspend/resume failures on a Lenovo
-ThinkPad P14s Gen 5 AMD
-#regzbot fix: wifi: ath11k: clear shared SRNG pointer state on restart
-#regzbot monitor:
-https://lore.kernel.org/all/20260513-kfarnung-ath11k-srng-clear-pointer-state-v1-1-bc700dd8b333@gmail.com/
+The related core code only cares what the last programmed expiry value
+in clock monotonic (i.e. the @expires argument) was. And the only
+interesting information is whether it's in the future or not. If it's in
+the past then it does not matter how much in the past it is.
+
+Whatever we fake into it is never going to reflect anything related to
+reality anyway and there is no guarantee that the code which reads it
+will see a future expected time depending on the time elapsed between
+faking it and reading it. So it's truly a cosmetic exercise for no real
+value.
+
+Thanks,
+
+        tglx
