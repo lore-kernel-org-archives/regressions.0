@@ -1,156 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from retry-chloe4.scw-tem.cloud (retry-chloe4.scw-tem.cloud [51.159.124.110])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A3DF3AB26D;
-	Thu, 14 May 2026 10:24:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA40E3C13FD
+	for <regressions@lists.linux.dev>; Fri, 15 May 2026 02:42:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.159.124.110
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778754289; cv=none; b=SVdZn2APUXp3o98w7RC+WLlcQhj9IMRiJGSyJ147ogCrrJ+rfNwyJE64jVNnWh5WJ51Gd3LX1rNo2K7dhWyELc+RHPL0p7NHBekyVL92TlFmMRQw0AGJG6okT35Qyj4Y48vK+jdkrQVeF6eh4do8C2dwuWRDULCMgSOEKhViIyk=
+	t=1778812937; cv=none; b=OYhwe8Hn0qNqgYCbxqcZAF9aXeJQJ+Ea7Md/e2pOo7mi7SBcL4RuAndRmNAgOF6a0zkjK2bl5ppjKp4g5yfzDSzNqVIGSwu2UkLEzej4qSEFvPPRPHG/W8MO8wJ+n4n9TcWmkNRK4b+n2yodk7e6b/BzRraZaM1PuHuWKkWyjtE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778754289; c=relaxed/simple;
-	bh=rPMvnGQqst3vADlA54Xt8XuwO5jj10AGcvalmTbWTm8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=CkzOTSYPnpq5WmjQDH+lEv7vepRuH6VlOh392JUh04jmbZjS0a4CF1jjqlA+M9CaBcu3Kq/cQkQPT279K7Kkadkyti5do07cugwX2DkLVAVbEVFOKmieHTV0TeaaF6W2Zb3Xdv2S9G2W93vlkhMfbLz/GZ+pcVif11jY5CM1KHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mnt3RB67; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778812937; c=relaxed/simple;
+	bh=ew7VQjXWjgeV6HZGAKFsqPlJHT91mWIVTWDUpOChy+U=;
+	h=Message-ID:Date:Mime-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=aiJ06OXEcyVac5T+7unP/Iop525j/LZR1OvuYwMsZFHuZ3wEQbr1FKwvbRO0hy19N16pdiqg3IQusNihxNOoX5Aa0TB3mx8N44t8ZXyblG5jAMrAUerDmWbRRI9+vZwtMU0yvnCEFdt9//D2ujX8eFrd0HY49/3ozcYnccbgvo4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=augustwikerfors.se; spf=pass smtp.mailfrom=augustwikerfors.se; dkim=pass (2048-bit key) header.d=augustwikerfors.se header.i=@augustwikerfors.se header.b=gUq4ajLg; arc=none smtp.client-ip=51.159.124.110
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=augustwikerfors.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=augustwikerfors.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mnt3RB67"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B649C2BCB3;
-	Thu, 14 May 2026 10:24:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778754289;
-	bh=rPMvnGQqst3vADlA54Xt8XuwO5jj10AGcvalmTbWTm8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=mnt3RB67koobjq3JQnbggOb2GhOGHdHxxvEBt3cAaLF8tJ9asBzZJ/QQi+ARN/Otv
-	 MepTBmqQRKuBM78A/fqtKrl0L+7xoyoNfDFtJm4ci3JhmzrpBPWGXQr+vb2R/ksQZ1
-	 RCZuRaHjLu17RhPTPbZj/2TdWVDgstCdQfTwhWwxmPjMEqMH3icY7NyGFFyqL7bZml
-	 ThHHyy6hpDXF5RrcjClZyNPkf2ZVhPmq7KiBYGTuH2bjxajhUtdY5ky3eIRmVUz7gE
-	 HkVDPtUisUTZ5E+wTSpRQRKWr6M0xyodaQcTfnweznM76hC5DnISepEBL87x0Z9fA2
-	 DlLz3NwCASclA==
-From: Thomas Gleixner <tglx@kernel.org>
-To: Tony Rodriguez <unixpro1970@gmail.com>
-Cc: Linux kernel regressions list <regressions@lists.linux.dev>, LKML
- <linux-kernel@vger.kernel.org>, sparclinux@vger.kernel.org, John Paul
- Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Thorsten Leemhuis
- <regressions@leemhuis.info>, Linus Torvalds
- <torvalds@linux-foundation.org>
-Subject: Re: the stuttering regression in 7.0: should I have done something
- different
-In-Reply-To: <e45438e7-8501-4c10-95ee-07f118de8a51@gmail.com>
-References: <ffb44522-f01c-4be3-849d-27dc17fbca7f@leemhuis.info>
- <D5D19776-C809-4284-9417-F9A860877B98@gmail.com>
- <1c165caf-36b4-4673-97fd-ed86bef17b88@leemhuis.info>
- <3332123b-9e11-4895-9ab3-1707fba5815c@gmail.com> <871pfj9cmj.ffs@tglx>
- <a7a0d78b-435e-43c8-b436-5e7f4dd39dee@gmail.com>
- <088e6cfa-0167-4748-af6c-458ade2f303a@gmail.com> <878q9p82je.ffs@tglx>
- <64f465ca-6117-4375-9c4b-af771b8205fd@gmail.com> <87tssb6olo.ffs@tglx>
- <e45438e7-8501-4c10-95ee-07f118de8a51@gmail.com>
-Date: Thu, 14 May 2026 12:24:44 +0200
-Message-ID: <87qznez3tf.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=augustwikerfors.se header.i=@augustwikerfors.se header.b="gUq4ajLg"
+Message-ID: <51b55b97-615b-4f5e-b454-df646f4058b7@augustwikerfors.se>
+Date: Fri, 15 May 2026 04:26:38 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+From: August Wikerfors <git@augustwikerfors.se>
+Subject: Re: Linux 7.1-rc3 regression (Bluetooth)
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ stable@vger.kernel.org, Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+ Pauli Virtanen <pav@iki.fi>, Mikhail Gavrilov
+ <mikhail.v.gavrilov@gmail.com>, markus.suvanto@gmail.com
+References: <f652d5d9841a9b7c100dd19ee97c86099f580724.camel@gmail.com>
+ <01ffb0cc-dcf6-4e60-adf3-fbb96e0666d0@leemhuis.info>
+Content-Language: en-US
+In-Reply-To: <01ffb0cc-dcf6-4e60-adf3-fbb96e0666d0@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Scw-Domain: augustwikerfors.se
+X-Scw-Tem-Message-Id: 2f57aab1-d47f-4a11-80b0-5725a4ba193c
+DKIM-Signature: a=rsa-sha256; bh=yReQT2nv0QzV9P4GZJON/h4X3M8148FFEXXI8CspZ9c=;
+ c=relaxed/relaxed; d=augustwikerfors.se;
+ h=message-id:date:from:subject:to:cc;
+ s=812a4465-b64d-440c-bdd2-3148e8f56cf0; t=1778812001; v=1;
+ b=gUq4ajLg0IGQX6w/Q/6GA4HPgbadfB2cXrr1u+5GSymnARud3dDM3Ii1t+SCvYHeon+xmvHp
+ YTNQdNUWi3+fjGkZ/JXAUFUREBYctHkhwJ5kcyR5qFVi0PXObb+8YtL5Whc9NJaCLUKZfb3ghW7
+ EVzOSlsEYFyNOzQIcC1v6TGF7NbRhJpFEpDH0WOGELLGjNe+HmJ0zIpK2Vgo2OqW6GyGOpfYkAe
+ khfvrK5wqLVzK8FfP6GptUhzyxuIEwRRvNTCSe9Nw1dsjont8EUP9joeuQnkylG8JVPs49G7HHN
+ TSvR7MzmHw4x4ffXixsQIuX80haKzljGSKAPtYEYTWnYQ==
 
-On Thu, May 14 2026 at 00:24, Tony Rodriguez wrote:
-> Initial validation of the test patches for v7.0.6 and 7.1-rc3 on the=20
-> S7-2 looks promising: I have not observed panics, timer delays, or other=
-=20
-> timer-related issues so far. I will pause broader validation on the S7-2=
-=20
-> and T7-1 until I receive your recommendation or any requested revisions=20
-> (see inline comments below).
->
-> Note: I did see an intermittent error on the S7-2 running 7.1-rc3,=20
-> usually when the system is under heavy load during a kernel build. I=E2=
-=80=99m=20
-> not sure whether it is a separate problem?
->
-> "[676.464681] BUG: Bad rss-counter state mm:000000008d9f1cf2=20
-> type:MM_FILEPAGES val:-4096 Comm:cc1 Pid:78165".
-
-That's unrelated and an accounting issue in the MM code. Please report
-it separately to the MM people.
-
-> On 5/13/26 1:28 PM, Thomas Gleixner wrote:
->> I'm willing to bet a round of beers at the next conference that this is
->> the problem and that it will magically disappear when you change that
->> condition to:
+On 2026-05-11 08:30, Thorsten Leemhuis wrote:
+> On 5/11/26 07:17, markus.suvanto@gmail.com wrote:
+>> Hello
 >>
->>          return (read_cnt() - exp) >=3D 0 ? -ETIME : 0;
->
-> Attempted to locate "return (read_cnt() - exp) >=3D 0 ? -ETIME : 0;" but=
-=20
-> could not find an exact match. After additional inspection I updated the=
-=20
-> following functions "tick_add_compare()" and "stick_add_compare()" in=20
-> arch/sparc/kernel/time_64.c to from "> 0L" to ">=3D 0L". This appears to=
-=20
-> have resolved the lost-timer behavior.
+>> I upgrade 7.1-rc2 to 7.1-rc3. After that bluetooth  didn't start
+>> hci0: Failed to send wmt func ctrl (-22)
+>> My fix was to revert commit 634a4408c0615c523cf7531790f4f14a422b9206
+> 
+> Thx for your report. FWIW, there are two proposed fixed for this change
+> floating around:
+> 
+> https://lore.kernel.org/all/20260508173121.27526-1-mikhail.v.gavrilov@gmail.com/
+> https://lore.kernel.org/all/770d36b07311bf88210c187923f243fb9f126f04.1777058551.git.pav@iki.fi/
+> 
+> Given that this is the third revert within a short time-frame I wonder
+> if we should fast-track a fix (once ready) to spare more users the pain
+> of bisecting & reporting.
 
-I condensed the logic for illustration and rightfully assumed that you
-will figure it out. :)
+FYI the commit that caused this regression was backported to the latest
+stable releases (6.12.88, 6.18.30 and 7.0.7). I encountered it after
+updating to 7.0.7 and can confirm that the patch from the second link
+fixes it. That patch is now in the bluetooth tree as e3ac0d9f1a20
+("Bluetooth: btmtk: accept too short WMT FUNC_CTRL events") and a pull
+request [1] has been made to the net tree. Unfortunately this seems to
+have been a few hours too late to make it into the net pull request for
+7.1-rc4 [2], so the fix might not get into mainline until next week.
 
-> --- time_64.c.orig
-> +++ time_64.c
-> @@ -146,7 +146,7 @@
->  =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0: "=3Dr" (new_tick));
->  =C2=A0 =C2=A0 =C2=A0 =C2=A0 new_tick &=3D ~TICKCMP_IRQ_BIT;
->
-> -=C2=A0 =C2=A0 =C2=A0 =C2=A0return ((long)(new_tick - (orig_tick+adj))) >=
- 0L;
-> +=C2=A0 =C2=A0 =C2=A0 =C2=A0return ((long)(new_tick - (orig_tick+adj))) >=
-=3D 0L;
->  =C2=A0}
->
->  =C2=A0static unsigned long tick_add_tick(unsigned long adj)
-> @@ -277,7 +277,7 @@
->  =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0: "=3Dr" (new_tick));
->  =C2=A0 =C2=A0 =C2=A0 =C2=A0 new_tick &=3D ~TICKCMP_IRQ_BIT;
->
-> -=C2=A0 =C2=A0 =C2=A0 =C2=A0return ((long)(new_tick - (orig_tick+adj))) >=
- 0L;
-> +=C2=A0 =C2=A0 =C2=A0 =C2=A0return ((long)(new_tick - (orig_tick+adj))) >=
-=3D 0L;
->  =C2=A0}
+As a side note, it is unfortunate that there does not seem to be a
+process to prevent patches that are known to cause regressions from
+being backported to stable releases. As far as I can tell, this was
+added to regzbot tracking [3] a day before the culprit was queued for
+stable [4], so such a process could have prevented this regression in
+stable releases.
 
-Looks correct, but you missed the one in hbtick_add_compare() which has
-the same issue.
+[1] https://lore.kernel.org/all/20260514172340.1515042-1-luiz.dentz@gmail.com/
+[2] https://lore.kernel.org/all/20260514142703.267609-1-pabeni@redhat.com/
+[3] https://lore.kernel.org/all/8a17737e-ba9b-4842-a429-c4eab3abcdec@leemhuis.info/
+[4] https://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git/commit/?id=7780f283d14c8c6bf40fe9262219ad821a5dae80
 
->> --- a/kernel/time/clockevents.c
->> +++ b/kernel/time/clockevents.c
->> @@ -381,6 +381,8 @@ int clockevents_program_event(struct clo
->>   	if (dev->set_next_event(dev->min_delta_ticks, dev)) {
->>   		if (!force || clockevents_program_min_delta(dev))
->>   			return -ETIME;
->> +	} else if (delta <=3D 0) {
->> +		dev->next_event =3D ktime_add_ns(ktime_get(), dev->min_delta_ns);
->>   	}
->>   	dev->next_event_forced =3D 1;
->>   	return 0;
->>
-> You mentioned this kernel/time/clockevents.c patch is optional, but I=20
-> propose revising clockevents_program_event(). If the requested event=20
-> time is already at or before now, record a sane next_event (now +=20
-> min_delta) so core code sees a future expected time and can behave=20
-> correctly. Does this seem reasonable?
-
-The related core code only cares what the last programmed expiry value
-in clock monotonic (i.e. the @expires argument) was. And the only
-interesting information is whether it's in the future or not. If it's in
-the past then it does not matter how much in the past it is.
-
-Whatever we fake into it is never going to reflect anything related to
-reality anyway and there is no guarantee that the code which reads it
-will see a future expected time depending on the time elapsed between
-faking it and reading it. So it's truly a cosmetic exercise for no real
-value.
-
-Thanks,
-
-        tglx
+Regards,
+August Wikerfors
