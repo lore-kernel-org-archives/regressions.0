@@ -1,66 +1,51 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [185.244.194.184])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7682136E496
-	for <regressions@lists.linux.dev>; Fri, 15 May 2026 13:20:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90DC548BD48
+	for <regressions@lists.linux.dev>; Fri, 15 May 2026 15:11:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.244.194.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778851254; cv=none; b=ehigz1pw810TKt9JntAHbP+cEefgFUMRmNWSOkruVDtgq9aDfPjBkbhf9ZQyRuDumievT79ph3vYz0vD77PDnMead7RX8o4pWYzymZukpbFmoQ2UD2oZhPg731+Wi13P+AibvjxMgHoFX4h1CzfM+CgAW02M1DozGNCel86XV0w=
+	t=1778857889; cv=none; b=uo19cKx4IGpNGoY3wK7TTqOLVYUT83f1eliI9TT9BUcT3jYkGRXK1JgMFVHQVKjONxR0NztnLAsIQVvTq8cxACORg05agsMasSl2AIAawpS0uwsu9vVPm78s3JFWEIGM0HCB8qP1UsJVlNUKuINPpwhXNDyvyTMTifUDVeD5Ufw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778851254; c=relaxed/simple;
-	bh=EUjHVdOL4OnxkiFEE9a6tRvO0ZDZXORiHe5u5drmdcA=;
+	s=arc-20240116; t=1778857889; c=relaxed/simple;
+	bh=NIu0Ci9yasRCP6TqXm6xmiCeZw9UVbaW4PiVBp7uO7Q=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SaVLgbJX9fg4qOOw4aqZOG0fXbVgPcBFUhojyO3AlnuIlm2i6yGjdzf9x+E+Js+9IPN7xFI55w8qG0CgDqmJB/mPm024jTuN9SD6fvCpQzvs19mkKVlEuwX06LrZcgrCxmrX9dVVxWXcAzSkFerO7TaC1W2pQFeb/PRyywIRlj4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=qQCB2oJQ; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
+	 In-Reply-To:Content-Type; b=A7+poOVkNI2xD9DkHfLSsYjrG/fiQqFsV/zn721wNF35tX0vdS/6PLH6h5LdQGfrWhcopvzun+EQQq0XZBQUqnlRCQY5iXBaxhSR4CiXKJSiY+ZcASvxVYxxo3SI9WArYgTCEyzALDFItsg5PXdGBc8bRVa98lSp15eA86kqKMc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=YLNaK1W6; arc=none smtp.client-ip=185.244.194.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="qQCB2oJQ"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4891c00e7aeso75306035e9.2
-        for <regressions@lists.linux.dev>; Fri, 15 May 2026 06:20:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20251104; t=1778851246; x=1779456046; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=F8hzVkH/JruLQyMtnsvB/kmo/8/tYX8ehTN6GhMa4cU=;
-        b=qQCB2oJQpbIIUhuojZGMcv97SU9QkpSn6Kbnh2iQGh/wQ+OaVdi28LX9HkXdvPNiau
-         apzALDG4RHggQsifSBKETVNpvbPQfFecC4YZsI60VuGpPOONrZ7UK8IbVaVMatHekzCZ
-         2Tdqyo/Qk+st7L5T3ASfWPsX6u1f7LsH9iyzl4B71aH+80oV34K2CBai/AUyHdP1r4/b
-         3pPzQw1hUw70uUILx8c6KVGJVi6jWy7ErxRfQ0oJgJCs7a8I1S6X6pPHhTSoSaK6y5IA
-         WwAkzOcZ4GHTAoVGGcyk7yQp5I/wVfzJFVOf0EFUrFfW5GBIcIodGzFwUFXx7jyuHBq5
-         +rkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778851246; x=1779456046;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=F8hzVkH/JruLQyMtnsvB/kmo/8/tYX8ehTN6GhMa4cU=;
-        b=AdOUmLX9ryyTR2g4vxBf9Au61ZVY0Q4C3nZRcFjJNyV2lWKx8TABhQped6iGLpfdJn
-         l6WJsaKFtSHBvILCifxYjtuhR7nAb13MOPGFUvCvvyvUsoEPdazH3BYltJ1hN+3zHHJA
-         7IQYwJd7ga0FtCinU3NtJ+5KwHsnlcRvRU4lzpxjZ9zbEYu9lfji4E89hhyrjmhdDJHy
-         TUgOzPUHv+BQIEe+LoHF+DQfB9f/VNJNQqH+mJ2UKrbMomMYp2ob2Jw+1qO3w/T8tlrk
-         TWNXHqCQdvTCsi9M7iw/VJUxHxkLTcLGwafh3Pmlwgz6MmukA+fLpNJCiavDIqMGJ/0N
-         aCrw==
-X-Gm-Message-State: AOJu0YzIyAPBrKiGmg6Yh2lC0L/V/Qe1rV8uUWCOE5WS3hnMIgTyEwcq
-	h8DvFKKAwAHyJwKQpsB7ZL2ikWClsCnTYs0d3iAVo6pLBuEYDX88HanuXX8ICPF0
-X-Gm-Gg: Acq92OGNH1PbqzUZp5yhzmQJTtRLj9QScpXUF0P9qXdp1N+aoe0V/GM3AamBuhS9Iau
-	RsYcFcWcSnMUeo6ZlPTHJbL/hue8rR2OlpxPRZst+sFqouKXfDj3gm04lQGDnUwXYL+oDYyRMu8
-	/PNuVYWyNH/zrm6ETSUilLjaf5VWkuJsgS5g3mv8hp3zHrHyb6WrsX83W9AUcxAUPRWg2g7gFdV
-	sti+rW4Lfm2UjjKQOoP7RLgNlLYu59Qv1XRU1emy+6YYASubaHXZq0YlQ2GMA6JLqQJQu/WmhLk
-	ONa2MCmqbJl4pljrNIl1ODSRYxKjKPFVZVFM6Kpkn7N0xl4diIRPET0R9EbXmMOpaeiROSOZUmT
-	tQiLyBKQz5oq2JyUFIWoj7xrD6DVB9sEx4LJFvEcrM03IAFWy3+c/tZBzEApA2T7516NUjKO6V1
-	ZDcjvmxwpOKi+sBDCnoPXM8r1Gqn4wOLGc8eInp/d50cwGHEEmDP3eMHr9mIpa9XYicRhIDLXda
-	j8PIcuSV3U=
-X-Received: by 2002:a05:600c:3e1b:b0:48a:6fd4:d3d4 with SMTP id 5b1f17b1804b1-48fe6626c48mr46512445e9.29.1778851245713;
-        Fri, 15 May 2026 06:20:45 -0700 (PDT)
-Received: from [192.168.200.7] (p57b87516.dip0.t-ipconnect.de. [87.184.117.22])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-45d9e767d0bsm13548577f8f.3.2026.05.15.06.20.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 15 May 2026 06:20:45 -0700 (PDT)
-Message-ID: <b5c9390d-e365-4a99-acc0-11d9fde8f17d@message-id.googlemail.com>
-Date: Fri, 15 May 2026 15:20:44 +0200
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="YLNaK1W6"
+Received: from relay01-mors.netcup.net (localhost [127.0.0.1])
+	by relay01-mors.netcup.net (Postfix) with ESMTPS id 4gH9dQ6XPhz95xn;
+	Fri, 15 May 2026 17:11:22 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1778857882;
+	bh=NIu0Ci9yasRCP6TqXm6xmiCeZw9UVbaW4PiVBp7uO7Q=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=YLNaK1W6EX0lbqQ0svrpyEPc5gnn45q0dbG9NRiC/P44oyI5nAODrYMwb/LsoFxhA
+	 vrTmaQM8XMjZ5pjJnNh31EPOLtw+pV1NcmsySgsBJHJct9Wh1JiqI7MvyJ9VVT242h
+	 5YglWAC5Co5YNo93tEeBWs53KO/vjS9C+qE4FKDVd2E909NzwfHaXaDANKrurj1yWx
+	 hGDHKWgG0K8V2weB/Iy5SZwVewH3apzrxJ95b6vLZJqiIFqBNQpcLPK7/AGGXj1qHm
+	 ml/LpVlOO85O1PJUXcQRgwCNMGSf3qDc0Eg82G1ZGR0GCGyPcDbKXDurxdGe+On710
+	 f0tWfdZtWP+NQ==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by relay01-mors.netcup.net (Postfix) with ESMTPS id 4gH9cK5JYpz7x5l;
+	Fri, 15 May 2026 17:10:25 +0200 (CEST)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4gH9cK0RHlz8sZP;
+	Fri, 15 May 2026 17:10:24 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id DC6685F9AF;
+	Fri, 15 May 2026 17:10:23 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <f5cf1c30-48a4-4102-ae00-b74cf02e639e@leemhuis.info>
+Date: Fri, 15 May 2026 17:10:17 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -68,69 +53,151 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] bisected: 7.1rc1 breaks backlight control on
- Thinkpad T480
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Linux kernel regressions list <regressions@lists.linux.dev>,
- LKML <linux-kernel@vger.kernel.org>, "Kandpal, Suraj"
- <suraj.kandpal@intel.com>
-References: <d2de7933-e650-4b19-8d88-90d66693dcfc@message-id.googlemail.com>
- <233da598-4172-4f16-9fd5-67590984616a@leemhuis.info>
-From: Stefan Seyfried <stefan.seyfried@googlemail.com>
-Content-Language: en-US
-In-Reply-To: <233da598-4172-4f16-9fd5-67590984616a@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Subject: Re: [GIT PULL] bluetooth 2026-05-14
+To: davem@davemloft.net, kuba@kernel.org
+Cc: linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
+ Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Greg KH <gregkh@linuxfoundation.org>
+References: <20260514172340.1515042-1-luiz.dentz@gmail.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+X-Enigmail-Draft-Status: N11222
+Autocrypt: addr=linux@leemhuis.info; keydata=
+ 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 MEK4
+In-Reply-To: <20260514172340.1515042-1-luiz.dentz@gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-PPP-Message-ID: 
+ <177885782428.2534966.14422332395235472068@mxe9fb.netcup.net>
+X-NC-CID: 4VsUA7rWd/0eRMFI7BCFOcLGq7AXiqg1amkvb0XAv6M6XP83ZBw=
 
-Am 15.05.26 um 14:13 schrieb Thorsten Leemhuis:
-> On 5/15/26 13:47, Stefan Seyfried wrote:
->>
->> I found that 7.1rc1 broke the backlight control on my Thinkpad T480.
->> Bisected it to
->>
->>> 40d2f5820951dee818d05c14677277048bd85f9f is the first bad commit
->>> commit 40d2f5820951dee818d05c14677277048bd85f9f
->>> Author: Suraj Kandpal <suraj.kandpal@intel.com>
->>> Date:   Tue Feb 24 08:43:22 2026 +0530
->>>
->>>      drm/i915/backlight: Remove try_vesa_interface
+[+Linus +Greg]
+
+On 5/14/26 19:23, Luiz Augusto von Dentz wrote:
+> The following changes since commit c78bdba7b9666020c0832150a4fc4c0aebc7c6ac:
 > 
-> FWIW: Here are two bug reports that contain proposed fixes for what
-> might or might not be the issue your face:
+>   net: phy: DP83TC811: add reading of abilities (2026-05-14 15:17:12 +0200)
 > 
-> https://gitlab.freedesktop.org/drm/i915/kernel/-/work_items/16043
-> https://gitlab.freedesktop.org/drm/i915/kernel/-/work_items/16015
+> are available in the Git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/bluetooth/bluetooth.git tags/for-net-2026-05-14
+> 
+> for you to fetch changes up to 375ba7484132662a4a8c7547d088fb6275c00282:
+> 
+>   Bluetooth: hci_qca: Convert timeout from jiffies to ms (2026-05-14 09:58:08 -0400)
 
-Thanks, will look into testing the patches floating around there.
+It seems this PR sadly came too late for this week's net PR to mainline
+that was merged yesterday.
 
-For now, this
+TWIMC, from my point of view, it would be great if we somehow could
+still get the changes from this PR or at least the btmtk fix it
+contains[1] to mainline this week before -rc4, as it is fixing a
+regression known since 2026-04-24 that at least five people encountered
+with mainline since -rc3 due to 634a4408c0615c ("Bluetooth: btmtk:
+validate WMT event SKB length before struct access") [006b9943b982 in
+-next].
 
-  diff --git a/drivers/gpu/drm/i915/display/intel_dp_aux_backlight.c 
-b/drivers/gpu/drm/i915/display/intel_dp_aux_backlight.c
-  index a8d56ebf06a2..c4ac46559669 100644
-  --- a/drivers/gpu/drm/i915/display/intel_dp_aux_backlight.c
-  +++ b/drivers/gpu/drm/i915/display/intel_dp_aux_backlight.c
-  @@ -745,7 +745,7 @@ int intel_dp_aux_init_backlight_funcs(struct 
-intel_connector *connector)
-                  return 0;
-          }
+Another reason: Greg a few hours ago backported the culprit for the
+regression to v7.0.7, v6.18.30, and v6.12.88, which led to a bunch of
+other reports coming in[3]. Greg could, of course, revert it, but
+usually he prefers to just merge the fix. But of course the fix must
+first hit mainline (or at least -next) -- and that might only happen
+next Thursday, as there usually is only one net PR per week. Luiz even
+wanted to "expedite a PR to have it fixed asap"[4], but that didn't work
+out afaics, hence this mail.
 
-  -       if (intel_dp_aux_supports_vesa_backlight(connector)) {
-  +       if (0 && intel_dp_aux_supports_vesa_backlight(connector)) {
-                  drm_dbg_kms(dev, "[CONNECTOR:%d:%s] Using VESA eDP 
-backlight controls\n",
-                              connector->base.base.id, 
-connector->base.name);
-                  panel->backlight.funcs = &intel_dp_vesa_bl_funcs;
+Ciao, Thorsten
 
-is enough to get the backlight control on the T480 going again.
+[1] btmtk: accept too short WMT FUNC_CTRL events – also available here:
+https://lore.kernel.org/all/770d36b07311bf88210c187923f243fb9f126f04.1777058551.git.pav@iki.fi/
 
-I know nothing about that code (obviously), but maybe 
-"intel_dp_aux_supports_vesa_backlight()" is wrongly determining VESA 
-backlight support on my machine?
+[2]
+https://lore.kernel.org/lkml/20260508173121.27526-1-mikhail.v.gavrilov@gmail.com/
+https://lore.kernel.org/lkml/f652d5d9841a9b7c100dd19ee97c86099f580724.camel@gmail.com/
+https://bugzilla.kernel.org/show_bug.cgi?id=221511
+https://lore.kernel.org/lkml/20260514-bluetooh-fix-mt7922-v1-1-499c878af1e5@zohomail.in/
+https://lore.kernel.org/lkml/20260514-bluetooh-fix-mt7922-v1-1-499c878af1e5@zohomail.in/
+(+ one more report in a Fedora kernel chatroom)
 
--- 
-Stefan Seyfried
+[3]
+https://bugzilla.kernel.org/show_bug.cgi?id=221521
+https://lore.kernel.org/lkml/51b55b97-615b-4f5e-b454-df646f4058b7@augustwikerfors.se/
++ a four more people in
+https://bodhi.fedoraproject.org/updates/FEDORA-2026-6b173ffc2a#comment-4646633
 
-"For a successful technology, reality must take precedence over
-  public relations, for nature cannot be fooled." -- Richard Feynman
+[4]
+https://lore.kernel.org/all/CABBYNZ+FfhYtU2=J-V4pjKf_vKV=Y5LhVhxS_epKe-qaUUt8_g@mail.gmail.com/
+
+
+> ----------------------------------------------------------------
+> bluetooth pull request for net:
+> 
+>  - af_bluetooth: serialize accept_q access
+>  - L2CAP: ecred_reconfigure: send packed pdu, not stack pointer
+>  - btmtk: accept too short WMT FUNC_CTRL events
+>  - hci_qca: Convert timeout from jiffies to ms
+> 
+> ----------------------------------------------------------------
+> Jiexun Wang (1):
+>       Bluetooth: serialize accept_q access
+> 
+> Michael Bommarito (1):
+>       Bluetooth: L2CAP: ecred_reconfigure: send packed pdu, not stack pointer
+> 
+> Pauli Virtanen (1):
+>       Bluetooth: btmtk: accept too short WMT FUNC_CTRL events
+> 
+> Shuai Zhang (1):
+>       Bluetooth: hci_qca: Convert timeout from jiffies to ms
+> 
+>  drivers/bluetooth/btmtk.c         |  4 +-
+>  drivers/bluetooth/hci_qca.c       | 33 +++++++--------
+>  include/net/bluetooth/bluetooth.h |  1 +
+>  net/bluetooth/af_bluetooth.c      | 87 +++++++++++++++++++++++++++++----------
+>  net/bluetooth/l2cap_core.c        |  2 +-
+>  5 files changed, 85 insertions(+), 42 deletions(-)
+> 
+
