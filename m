@@ -1,62 +1,61 @@
-Received: from mail-dy1-f174.google.com (mail-dy1-f174.google.com [74.125.82.174])
+Received: from mail-dy1-f175.google.com (mail-dy1-f175.google.com [74.125.82.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01CAD40B6F3
-	for <regressions@lists.linux.dev>; Fri, 15 May 2026 08:59:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF2593E4C62
+	for <regressions@lists.linux.dev>; Fri, 15 May 2026 08:59:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778835548; cv=none; b=IbQx/NWRPYFkknoJViLoYC4TjU4RkB5iHQHVoqA9fLIjPJDayWmEfdFVgwq4Jy8yXO2Y9fNUs/g7i2twRiLfu1DtmoYVmrORgyN+Y5pkEAjT/Xs7Zlm9FsWmHrs1o4eYP1FldXi2N3TfWEd5e00jqhrOey93WVaGSaLP2eIdtS0=
+	t=1778835551; cv=none; b=GeCW5aH7SQ0HzqLW2GGfRk9pLuYHUG6YRIOIuLOESz9X7BnYewWsCdrOtVp2TKIv5SM/J4XzMI/IopAaNsx4/kIKlFE1aVSbnPq3f05AjquiLhkchg2BRLh+5mxvX4fxKMwSZI2+GYVE0s1vvuSEkciUFlv0tqqMuSnkhjtGkr8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778835548; c=relaxed/simple;
-	bh=BT+4lpqZRbSwNOvxlQYruw1zhvM/zbwBLoUgq6GCQBU=;
-	h=Content-Type:MIME-Version:Subject:From:To:Cc:Date:Message-ID; b=KGK7Su4XcooKeBLrpIzhDpju9ryhdw5PCpG9dU4sUY+ThxCeWOw3BcB8+AoQyWnJsnp/RnzTJFCovx7xII14vpZK3MWTGuUhKbDuGmg5ARXMIBtl0GY25bjqWHMA+bmFXnL+nL/iAkrwS7HIX0W0uljZZi1NaVL8mBHEOBAjfag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kernelci.org; spf=pass smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci.org header.i=@kernelci.org header.b=C1S7mGCf; arc=none smtp.client-ip=74.125.82.174
+	s=arc-20240116; t=1778835551; c=relaxed/simple;
+	bh=UkDP3Zk4CisPh+rTAuaNtzTGhttoBehwVidfPgBrXsU=;
+	h=Content-Type:MIME-Version:Subject:From:To:Cc:Date:Message-ID; b=O6lj4lWwAcOR5gO80BJX+Z1EQxfbveaBwzaJMl27eTku731eXUSqgkmB+WfzZIe0Emm0H2Na9fWcUx2pXWz9a50aehNIFfuEO5LUnhX05hVO4AJzs+zw3/YjHpjvG6ekWgZ5z2wOIlnRYZwj2ar6fYQlXjAL6c7f5QW4waCHh/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kernelci.org; spf=pass smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci.org header.i=@kernelci.org header.b=jewm+9Hn; arc=none smtp.client-ip=74.125.82.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kernelci.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernelci.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci.org header.i=@kernelci.org header.b="C1S7mGCf"
-Received: by mail-dy1-f174.google.com with SMTP id 5a478bee46e88-2c15849aa2cso12157324eec.0
-        for <regressions@lists.linux.dev>; Fri, 15 May 2026 01:59:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernelci.org header.i=@kernelci.org header.b="jewm+9Hn"
+Received: by mail-dy1-f175.google.com with SMTP id 5a478bee46e88-2f7020a928eso12614010eec.1
+        for <regressions@lists.linux.dev>; Fri, 15 May 2026 01:59:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci.org; s=google; t=1778835546; x=1779440346; darn=lists.linux.dev;
+        d=kernelci.org; s=google; t=1778835549; x=1779440349; darn=lists.linux.dev;
         h=message-id:date:reply-to:cc:to:from:subject
          :content-transfer-encoding:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=caE4sK84bQ2Z+itYTqOqWMAyp1aXOUT2/Er1oZIv61c=;
-        b=C1S7mGCfJ2hVdjqFuQEsxtcmW6AnrATKKuH5lEoM4RPaDt8QlDzz81s8lBYHgu9kFa
-         CCdzR+NImroWUxYSOafH/IBfIe69WkwtH7ZLmQbaJmCb5WcpgFVk1IGFe/kbpCJY53n0
-         P2yVp+zxJLlFXlkalk4/mz3wa292CDvOcd8tbePZJg1/dRdBTIgHBiNLdp415tFSXqIo
-         L9263sPiirTccyYHRGww7gBPQ+y0DBW4jHcjs0eGtrKJkyMdcNbS4ReDqbEpRZOCR1WE
-         +tejQxby6HTONnMolC0f16hbH2IcDtPCkkrpZ2RperIth9U6cJ/QTq6Ho1WSQODdcT1T
-         CWGQ==
+        bh=W0QX2ZVw9bpFX+QilRz3z78NA4w3Wcvrf3OoYpsFLD4=;
+        b=jewm+9HnYqqOh5ZuWkO8L9vcyKsNgg8MBdIpWYbAI+WeYMWCCVoLlRroNPqGfxX5Tk
+         1yU97/IP1BoD7itTU/abfAmiQwT84oGRg/neDv6aoWDz5oS4bVnfRgfMyXbhuS4aL/UK
+         C2xxDsP4A+hdjoIsuyatGKok/ChLaz9J8y3km1kxFvLb9mPGyagIJBj1BBm33PEwZnBB
+         qWbxrwqSE0RIC9352/OB3Ev4+Jf/vG5BmbhxthYTkmy7Mp3VT6o3tW64Np46XtsbSATL
+         7FpcRMA3GPkCEfJ6byfpuQufPU0URWT0RUG+FCCp0XdNFmpnIXKPry4BZqU2DgFxx491
+         NQxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778835546; x=1779440346;
+        d=1e100.net; s=20251104; t=1778835549; x=1779440349;
         h=message-id:date:reply-to:cc:to:from:subject
          :content-transfer-encoding:mime-version:x-gm-gg:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=caE4sK84bQ2Z+itYTqOqWMAyp1aXOUT2/Er1oZIv61c=;
-        b=BpnzzPFLqWSLBwtSqa0Kp5K11uyEBZHVeG3U8NtH+YXjpeF1fszNJzyswy+nsd8Qfl
-         F4BVchUOfRcwuosfVzKRfbmiIUD2dcSX1WlvzFdGiduRWRGHyt6HeSI7I1ow+dzJ4g4U
-         EGmVGjJ/pQePAnDoTBl+piqBCLIc1K6P4Y3b7avAyR59aGa1as8ySmTOxME8GOixUQhP
-         T9IJTDLrkGkwv4zXB452mNr8/PddWsqbJxtIiZigEoceEE1Qf/L4hm228Q9Wni7eepwe
-         g77ZhfT+0Ly19q71UM9Dce3yEi+xRM3HNy+e/PypWaLzliLvPedR9wyEkj1OYWhDFo8o
-         oD4A==
-X-Gm-Message-State: AOJu0YwF8XXjPp88IoPWHkLrMa7ywmEep7CqPWFeCsS674jEdAUbsB3b
-	UOXwT4rlWGKPGbcjPm0x/euzwbicKKaB6dX3ewCBFfcDcbmxOGr3XqjXNlCG417leUcEfv3Wx/y
-	w+O4e
-X-Gm-Gg: Acq92OGiVitT5k/W5o1VzTrktGjdQXoB5edcmLOab2K6KiIk0+HnY8zizuy7UF/EwfW
-	0kgUJZlskrWg8SeWH/iWI/UcmyBFjkY8NGlzDfpEp304ru6T9v22wVc/dSjUaps1J//2aiRJ5yt
-	kEsjytECzZwttjnnoYI7Xcswxf9RgTX19dUaHxi4aYlQcdqp/I5wAwDvQ06y8O7LGj98FccCBgD
-	4X+GKeLVVTehdjD12YE3IvXfPeT6scytdzcrYPhj6sGqyIMFyc70Tp9dmYJsFs/I/cF0MEwSxd6
-	fYpPSVO2tecii/6xcN8o+MpYbfW1kShbmoC4Gx2fjwn0cRhyusIMC7friKJZecVy2HJzDxLkpEg
-	NIe7TaC0j33O48YJPbCrzsk6B/xhu7O5oANVsxEzceL48YjK4tATrGVMedyNAbdhKjJQZruDzhE
-	0DSq9ovh9sQ9utbdos
-X-Received: by 2002:a05:7300:dc03:b0:2ee:be86:7b90 with SMTP id 5a478bee46e88-303986b1538mr1391087eec.29.1778835545848;
-        Fri, 15 May 2026 01:59:05 -0700 (PDT)
+        bh=W0QX2ZVw9bpFX+QilRz3z78NA4w3Wcvrf3OoYpsFLD4=;
+        b=Qd3jAnwFSiHDuhlCY4BS3YJw/0efa4fAwxpOAQ7870knBkdUiYKlyiPuz29ILS5YMN
+         hggdgorKx7gmZdze2xldVBrsF2suyI6+Fv3ukJkw6tKinf5OVOOfR4yjRtJuaHuvUElg
+         CLTB/QQoBrYI3/SYNV81Kh58eSyNObrD4woJtpD6cXCmcuEJRllquo61nEZhJOjdB1Nt
+         PvEeO/J/7zFkN3qmYjSNY/nqbMMRFXf3xMm0OIrNuvP8pv/6KY7t7Epnjw2sFU6a7gpF
+         siEIvnMaTxHPZ2e63sqzVoUxCzY46ojKtNDoDkw9vC0OF8WParCJa2H+ozyVYSlxu0nY
+         eGzw==
+X-Gm-Message-State: AOJu0YxOk0CMZbR+N9WfNM2/GW6RhXQO94NP1/sFSLxYFMWfKsd3Kny0
+	ZOPl1nl3wbYrNd7V8TnQGQtuwdTmHGK7qvSMk40hKbOaIPzqJYfufBxkG+qpFtCtpgU=
+X-Gm-Gg: Acq92OEFNa6AgMXZEe8qsmsuXsqkpoOUuFkb11XIQ6/i8/ESYzoJIwQk5xwfjCoAxXk
+	dDC5s2oUEKW97oohIYG809gQxO24uoY614oyC/4PgrVB30VZGp0sjmlG0v1rbJqIekZ3J2OVZna
+	3shxU7DV4a6EO7oLUcYJz4hKH65ePXjlP/EN8uXfu06k566gqWBnRhJ84puEtkec5u04fZ1Ljd8
+	0um8BGkCRYtYNjQJ915ZAM8wfI0bVK37MZgd3XlvJ3VnW/NhJP3ePGghesgTOhIzqvEpPZgi/RH
+	TXGqoEmbvNRSdZEriVUBYRdY3B7zDTlKapqnI77piP6Qh0CmkGSfuGDr5rqT+PqCGefwk4IY6g7
+	M+r9YYtfeCj4T+wVsp8Of5RY6cj3S/mHFN8Emt/3vu4HDF9APDWKiPAe8h31hW/PxXiUGsVxRZ4
+	CCVwAhId4Q5XoBrnPD
+X-Received: by 2002:a05:693c:2b0e:b0:2dd:2ad3:f799 with SMTP id 5a478bee46e88-303982ac821mr1410025eec.9.1778835548836;
+        Fri, 15 May 2026 01:59:08 -0700 (PDT)
 Received: from 330cfa3079ca ([20.38.40.137])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-30296dcb6f6sm7262374eec.17.2026.05.15.01.59.04
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-302977a9474sm6220889eec.25.2026.05.15.01.59.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 May 2026 01:59:04 -0700 (PDT)
+        Fri, 15 May 2026 01:59:08 -0700 (PDT)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
@@ -64,17 +63,18 @@ List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [REGRESSION] mainline/master: (build) format specifies type 'long'
- but the
- argument has type 'size_t' (a...
+Content-Transfer-Encoding: 8bit
+Subject: 
+ =?utf-8?b?W1JFR1JFU1NJT05dIG1haW5saW5lL21hc3RlcjogKGJ1aWxkKSBmb3JtYXQg4oCY?=
+ =?utf-8?b?JWxk4oCZIGV4cGVjdHMgYXJndW1lbnQgb2YgdHlwZSDigJhsb25nIGludOKAmSwg?=
+ =?utf-8?b?YnV0IGFyZ3VtZW50IDUgaC4uLg==?=
 From: KernelCI bot <bot@kernelci.org>
 To: kernelci-results@groups.io
 Cc: regressions@lists.linux.dev, gus@collabora.com, laura.nao@collabora.com,
  shreeya.patel@collabora.com, broonie@kernel.org
 Reply-To: kernelci@lists.linux.dev
-Date: Fri, 15 May 2026 08:59:04 -0000
-Message-ID: <177883554431.890.896648059104722532@330cfa3079ca>
+Date: Fri, 15 May 2026 08:59:08 -0000
+Message-ID: <177883554772.890.14362912312699978244@330cfa3079ca>
 
 
 
@@ -85,10 +85,10 @@ Hello,
 New build issue found on mainline/master:
 
 ---
- format specifies type 'long' but the argument has type 'size_t' (aka 'unsigned int') [-Werror,-Wformat] in drivers/hid/hid-core.o (drivers/hid/hid-core.c) [logspec:kbuild,kbuild.compiler.error]
+ format ‘%ld’ expects argument of type ‘long int’, but argument 5 has type ‘size_t’ {aka ‘unsigned int’} [-Werror=format=] in drivers/hid/hid-core.o (drivers/hid/hid-core.c) [logspec:kbuild,kbuild.compiler.error]
 ---
 
-- dashboard: https://d.kernelci.org/i/maestro:6790c78db860b3d911e9ad88aac9854e2ed77dc5
+- dashboard: https://d.kernelci.org/i/maestro:2c134b9650a439d5a2095ada3b457a32db6a944f
 - giturl: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
 - commit HEAD:  70eda68668d1476b459b64e69b8f36659fa9dfa8
 
@@ -100,67 +100,85 @@ Reported-by: kernelci.org bot <bot@kernelci.org>
 
 Log excerpt:
 =====================================================
-/tmp/kci/linux/drivers/hid/hid-core.c:2054:29: error: format specifies type 'long' but the argument has type 'size_t' (aka 'unsigned int') [-Werror,-Wformat]
+drivers/hid/hid-core.c:2053:43: error: format ‘%ld’ expects argument of type ‘long int’, but argument 5 has type ‘size_t’ {aka ‘unsigned int’} [-Werror=format=]
  2053 |                 hid_warn_ratelimited(hid, "Event data for report %d is incorrect (%d vs %ld)\n",
-      |                                                                                         ~~~
-      |                                                                                         %zu
- 2054 |                                      report->id, csize, bsize);
-      |                                                         ^~~~~
-/tmp/kci/linux/include/linux/hid.h:1342:43: note: expanded from macro 'hid_warn_ratelimited'
- 1342 |         dev_warn_ratelimited(&(hid)->dev, fmt, ##__VA_ARGS__)
-      |                                           ~~~    ^~~~~~~~~~~
-/tmp/kci/linux/include/linux/dev_printk.h:227:46: note: expanded from macro 'dev_warn_ratelimited'
-  227 |         dev_level_ratelimited(dev_warn, dev, fmt, ##__VA_ARGS__)
-      |                                              ~~~    ^~~~~~~~~~~
-/tmp/kci/linux/include/linux/dev_printk.h:215:25: note: expanded from macro 'dev_level_ratelimited'
-  215 |                 dev_level(dev, fmt, ##__VA_ARGS__);                     \
-      |                                ~~~    ^~~~~~~~~~~
-/tmp/kci/linux/include/linux/dev_printk.h:156:70: note: expanded from macro 'dev_warn'
-  156 |         dev_printk_index_wrap(_dev_warn, KERN_WARNING, dev, dev_fmt(fmt), ##__VA_ARGS__)
-      |                                                                     ~~~     ^~~~~~~~~~~
-/tmp/kci/linux/include/linux/dev_printk.h:110:23: note: expanded from macro 'dev_printk_index_wrap'
+      |                                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+./include/linux/dev_printk.h:110:30: note: in definition of macro ‘dev_printk_index_wrap’
   110 |                 _p_func(dev, fmt, ##__VA_ARGS__);                       \
-      |                              ~~~    ^~~~~~~~~~~
-/tmp/kci/linux/drivers/hid/hid-core.c:2076:29: error: format specifies type 'long' but the argument has type 'size_t' (aka 'unsigned int') [-Werror,-Wformat]
+      |                              ^~~
+./include/linux/dev_printk.h:156:61: note: in expansion of macro ‘dev_fmt’
+  156 |         dev_printk_index_wrap(_dev_warn, KERN_WARNING, dev, dev_fmt(fmt), ##__VA_ARGS__)
+      |                                                             ^~~~~~~
+./include/linux/dev_printk.h:215:17: note: in expansion of macro ‘dev_warn’
+  215 |                 dev_level(dev, fmt, ##__VA_ARGS__);                     \
+      |                 ^~~~~~~~~
+./include/linux/dev_printk.h:227:9: note: in expansion of macro ‘dev_level_ratelimited’
+  227 |         dev_level_ratelimited(dev_warn, dev, fmt, ##__VA_ARGS__)
+      |         ^~~~~~~~~~~~~~~~~~~~~
+./include/linux/hid.h:1342:9: note: in expansion of macro ‘dev_warn_ratelimited’
+ 1342 |         dev_warn_ratelimited(&(hid)->dev, fmt, ##__VA_ARGS__)
+      |         ^~~~~~~~~~~~~~~~~~~~
+drivers/hid/hid-core.c:2053:17: note: in expansion of macro ‘hid_warn_ratelimited’
+ 2053 |                 hid_warn_ratelimited(hid, "Event data for report %d is incorrect (%d vs %ld)\n",
+      |                 ^~~~~~~~~~~~~~~~~~~~
+drivers/hid/hid-core.c:2053:91: note: format string is defined here
+ 2053 |                 hid_warn_ratelimited(hid, "Event data for report %d is incorrect (%d vs %ld)\n",
+      |                                                                                         ~~^
+      |                                                                                           |
+      |                                                                                           long int
+      |                                                                                         %d
+drivers/hid/hid-core.c:2075:43: error: format ‘%ld’ expects argument of type ‘long int’, but argument 5 has type ‘size_t’ {aka ‘unsigned int’} [-Werror=format=]
  2075 |                 hid_warn_ratelimited(hid, "Event data for report %d was too short (%d vs %ld)\n",
-      |                                                                                          ~~~
-      |                                                                                          %zu
- 2076 |                                      report->id, rsize, bsize);
-      |                                                         ^~~~~
-/tmp/kci/linux/include/linux/hid.h:1342:43: note: expanded from macro 'hid_warn_ratelimited'
- 1342 |         dev_warn_ratelimited(&(hid)->dev, fmt, ##__VA_ARGS__)
-      |                                           ~~~    ^~~~~~~~~~~
-/tmp/kci/linux/include/linux/dev_printk.h:227:46: note: expanded from macro 'dev_warn_ratelimited'
-  227 |         dev_level_ratelimited(dev_warn, dev, fmt, ##__VA_ARGS__)
-      |                                              ~~~    ^~~~~~~~~~~
-/tmp/kci/linux/include/linux/dev_printk.h:215:25: note: expanded from macro 'dev_level_ratelimited'
-  215 |                 dev_level(dev, fmt, ##__VA_ARGS__);                     \
-      |                                ~~~    ^~~~~~~~~~~
-/tmp/kci/linux/include/linux/dev_printk.h:156:70: note: expanded from macro 'dev_warn'
-  156 |         dev_printk_index_wrap(_dev_warn, KERN_WARNING, dev, dev_fmt(fmt), ##__VA_ARGS__)
-      |                                                                     ~~~     ^~~~~~~~~~~
-/tmp/kci/linux/include/linux/dev_printk.h:110:23: note: expanded from macro 'dev_printk_index_wrap'
+      |                                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+./include/linux/dev_printk.h:110:30: note: in definition of macro ‘dev_printk_index_wrap’
   110 |                 _p_func(dev, fmt, ##__VA_ARGS__);                       \
-      |                              ~~~    ^~~~~~~~~~~
-2 errors generated.
+      |                              ^~~
+./include/linux/dev_printk.h:156:61: note: in expansion of macro ‘dev_fmt’
+  156 |         dev_printk_index_wrap(_dev_warn, KERN_WARNING, dev, dev_fmt(fmt), ##__VA_ARGS__)
+      |                                                             ^~~~~~~
+./include/linux/dev_printk.h:215:17: note: in expansion of macro ‘dev_warn’
+  215 |                 dev_level(dev, fmt, ##__VA_ARGS__);                     \
+      |                 ^~~~~~~~~
+./include/linux/dev_printk.h:227:9: note: in expansion of macro ‘dev_level_ratelimited’
+  227 |         dev_level_ratelimited(dev_warn, dev, fmt, ##__VA_ARGS__)
+      |         ^~~~~~~~~~~~~~~~~~~~~
+./include/linux/hid.h:1342:9: note: in expansion of macro ‘dev_warn_ratelimited’
+ 1342 |         dev_warn_ratelimited(&(hid)->dev, fmt, ##__VA_ARGS__)
+      |         ^~~~~~~~~~~~~~~~~~~~
+drivers/hid/hid-core.c:2075:17: note: in expansion of macro ‘hid_warn_ratelimited’
+ 2075 |                 hid_warn_ratelimited(hid, "Event data for report %d was too short (%d vs %ld)\n",
+      |                 ^~~~~~~~~~~~~~~~~~~~
+drivers/hid/hid-core.c:2075:92: note: format string is defined here
+ 2075 |                 hid_warn_ratelimited(hid, "Event data for report %d was too short (%d vs %ld)\n",
+      |                                                                                          ~~^
+      |                                                                                            |
+      |                                                                                            long int
+      |                                                                                          %d
+  CC      drivers/gpu/drm/i915/intel_runtime_pm.o
+  AR      drivers/platform/x86/amd/built-in.a
+  CC      drivers/platform/x86/eeepc-laptop.o
+  CC      drivers/md/dm-stripe.o
+  CC      drivers/firmware/efi/vars.o
+  CC      drivers/net/ethernet/realtek/r8169_main.o
+cc1: all warnings being treated as errors
 
 =====================================================
 
 
 # Builds where the incident occurred:
 
-## defconfig+allmodconfig+CONFIG_FRAME_WARN=2048 on (arm):
-- compiler: clang-21
-- config: None
-- dashboard: https://d.kernelci.org/build/maestro:6a068eb70ed99f002e8a9e67
+## i386_defconfig on (i386):
+- compiler: gcc-14
+- config: https://files.kernelci.org/kbuild-gcc-14-i386-6a068f300ed99f002e8a9f04/.config
+- dashboard: https://d.kernelci.org/build/maestro:6a068f300ed99f002e8a9f04
 
-## i386_defconfig+allmodconfig+CONFIG_FRAME_WARN=2048 on (i386):
-- compiler: clang-21
-- config: https://files.kernelci.org/kbuild-clang-21-i386-allmodconfig-6a068f340ed99f002e8a9f07/.config
-- dashboard: https://d.kernelci.org/build/maestro:6a068f340ed99f002e8a9f07
+## i386_defconfig+kselftest on (i386):
+- compiler: gcc-14
+- config: https://files.kernelci.org/kbuild-gcc-14-i386-mainline-6a068f3b0ed99f002e8a9f0d/.config
+- dashboard: https://d.kernelci.org/build/maestro:6a068f3b0ed99f002e8a9f0d
 
 
-#kernelci issue maestro:6790c78db860b3d911e9ad88aac9854e2ed77dc5
+#kernelci issue maestro:2c134b9650a439d5a2095ada3b457a32db6a944f
 
 --
 This is an experimental report format. Please send feedback in!
