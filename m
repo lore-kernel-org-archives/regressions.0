@@ -1,93 +1,84 @@
-Received: from retry-chloe4.scw-tem.cloud (retry-chloe4.scw-tem.cloud [51.159.124.110])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from marumie.magnifi.ca (marumie.magnifi.ca [45.76.236.235])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA40E3C13FD
-	for <regressions@lists.linux.dev>; Fri, 15 May 2026 02:42:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.159.124.110
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 402A7315D33
+	for <regressions@lists.linux.dev>; Fri, 15 May 2026 03:16:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.76.236.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778812937; cv=none; b=OYhwe8Hn0qNqgYCbxqcZAF9aXeJQJ+Ea7Md/e2pOo7mi7SBcL4RuAndRmNAgOF6a0zkjK2bl5ppjKp4g5yfzDSzNqVIGSwu2UkLEzej4qSEFvPPRPHG/W8MO8wJ+n4n9TcWmkNRK4b+n2yodk7e6b/BzRraZaM1PuHuWKkWyjtE=
+	t=1778814997; cv=none; b=Hb655Bg8sgSXoyN4Eh2+jUoIYnTZ7HXmfGx7h74aBGQGNGatv5q/XfFEMQ6ARvjKrK2jOD8ufzVkIY818GIVLplWno+z43xlWafloLjaVM5+RzDZvxy7F/3mqDK/rddxNzeclCCsrOh7/5OafEO0pt8kMJULDZ9kiyW+eV/5CFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778812937; c=relaxed/simple;
-	bh=ew7VQjXWjgeV6HZGAKFsqPlJHT91mWIVTWDUpOChy+U=;
-	h=Message-ID:Date:Mime-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=aiJ06OXEcyVac5T+7unP/Iop525j/LZR1OvuYwMsZFHuZ3wEQbr1FKwvbRO0hy19N16pdiqg3IQusNihxNOoX5Aa0TB3mx8N44t8ZXyblG5jAMrAUerDmWbRRI9+vZwtMU0yvnCEFdt9//D2ujX8eFrd0HY49/3ozcYnccbgvo4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=augustwikerfors.se; spf=pass smtp.mailfrom=augustwikerfors.se; dkim=pass (2048-bit key) header.d=augustwikerfors.se header.i=@augustwikerfors.se header.b=gUq4ajLg; arc=none smtp.client-ip=51.159.124.110
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=augustwikerfors.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=augustwikerfors.se
+	s=arc-20240116; t=1778814997; c=relaxed/simple;
+	bh=BWbCHHvumKOOVJC5S1tALBtpvdcW5tPe99hcM33DN5Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Z56j/upE3RnBx60feW7iTrjHIseRLePRkTDcY21VkEd9rTmD6352iMNDS/vtuSuR3E9Cje5Z5InPl8Zc3U2esDuxrOQebzcll8/diE9xkhz+ratV/QHjavMbYzW5VmMzPvXIuE6XcdmYJBP9PYIc9yDxvkV3Rd0B7vcVl9570TI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=correspondwith.me; spf=pass smtp.mailfrom=correspondwith.me; dkim=pass (2048-bit key) header.d=correspondwith.me header.i=@correspondwith.me header.b=cZMOnGN5; arc=none smtp.client-ip=45.76.236.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=correspondwith.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=correspondwith.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=augustwikerfors.se header.i=@augustwikerfors.se header.b="gUq4ajLg"
-Message-ID: <51b55b97-615b-4f5e-b454-df646f4058b7@augustwikerfors.se>
-Date: Fri, 15 May 2026 04:26:38 +0200
+	dkim=pass (2048-bit key) header.d=correspondwith.me header.i=@correspondwith.me header.b="cZMOnGN5"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; s=mail; bh=BWbCHHvumKOOVJC
+	5S1tALBtpvdcW5tPe99hcM33DN5Y=; h=subject:cc:to:from:date;
+	d=correspondwith.me; b=cZMOnGN5tYkgW0D7ZGC8N9hpptxmNt0nr1RbmmGZyS5TJ1I
+	Up3ghbW3aPxkiEWDY2qB+BWufZ+4vOem75zlBq3dKSgMgqFJkq9DQ7dc5G4Epe9ij0tbAi
+	Ju7eVkRTCvyerqgYFxBmB0E3HaJXinXfDb2cY6U56uZm2gDtY4zEbnLRoJxfaFSQZjO/WK
+	HrYv/Fexskj7pgPZ7yAviqO8NNib96OWi9lPsmG7rW96kcayUSBdl0GA2vuFNiqJb7IAoi
+	cRZ0oyyeSaMKVyLKyyoGBOtsjmBqtrI2tzR4wF2Ph91Jheroi+kXvO/Ydv4BHzKpoIuNHl
+	VTPI8C/SXKZhpqQ==
+Received: from localhost (marumie.magnifi.ca [local])
+	by marumie.magnifi.ca (OpenSMTPD) with ESMTPA id 4043533c;
+	Fri, 15 May 2026 02:49:50 +0000 (UTC)
+Date: Fri, 15 May 2026 02:49:50 +0000
+From: Aaron Muir Hamilton <aaron@correspondwith.me>
+To: linux-bluetooth@vger.kernel.org
+Cc: regressions@lists.linux.dev, Marcel Holtmann <marcel@holtmann.org>, 
+	Tristan Madani <tristan@talencesecurity.com>, Luiz Augusto von Dentz <luiz.von.dentz@intel.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [REGRESSION] MT7925 Bluetooth fails to initialize after btmtk fix
+ 634a4408c061 ("Bluetooth: btmtk: validate WMT event SKB length")
+Message-ID: <5i35wmc4z7sz54jo5uj6ywext2enh4ik3oxmfmperqk2v5kc27@ppvm6oodzipn>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-From: August Wikerfors <git@augustwikerfors.se>
-Subject: Re: Linux 7.1-rc3 regression (Bluetooth)
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- stable@vger.kernel.org, Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
- Pauli Virtanen <pav@iki.fi>, Mikhail Gavrilov
- <mikhail.v.gavrilov@gmail.com>, markus.suvanto@gmail.com
-References: <f652d5d9841a9b7c100dd19ee97c86099f580724.camel@gmail.com>
- <01ffb0cc-dcf6-4e60-adf3-fbb96e0666d0@leemhuis.info>
-Content-Language: en-US
-In-Reply-To: <01ffb0cc-dcf6-4e60-adf3-fbb96e0666d0@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Scw-Domain: augustwikerfors.se
-X-Scw-Tem-Message-Id: 2f57aab1-d47f-4a11-80b0-5725a4ba193c
-DKIM-Signature: a=rsa-sha256; bh=yReQT2nv0QzV9P4GZJON/h4X3M8148FFEXXI8CspZ9c=;
- c=relaxed/relaxed; d=augustwikerfors.se;
- h=message-id:date:from:subject:to:cc;
- s=812a4465-b64d-440c-bdd2-3148e8f56cf0; t=1778812001; v=1;
- b=gUq4ajLg0IGQX6w/Q/6GA4HPgbadfB2cXrr1u+5GSymnARud3dDM3Ii1t+SCvYHeon+xmvHp
- YTNQdNUWi3+fjGkZ/JXAUFUREBYctHkhwJ5kcyR5qFVi0PXObb+8YtL5Whc9NJaCLUKZfb3ghW7
- EVzOSlsEYFyNOzQIcC1v6TGF7NbRhJpFEpDH0WOGELLGjNe+HmJ0zIpK2Vgo2OqW6GyGOpfYkAe
- khfvrK5wqLVzK8FfP6GptUhzyxuIEwRRvNTCSe9Nw1dsjont8EUP9joeuQnkylG8JVPs49G7HHN
- TSvR7MzmHw4x4ffXixsQIuX80haKzljGSKAPtYEYTWnYQ==
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 2026-05-11 08:30, Thorsten Leemhuis wrote:
-> On 5/11/26 07:17, markus.suvanto@gmail.com wrote:
->> Hello
->>
->> I upgrade 7.1-rc2 to 7.1-rc3. After that bluetooth  didn't start
->> hci0: Failed to send wmt func ctrl (-22)
->> My fix was to revert commit 634a4408c0615c523cf7531790f4f14a422b9206
-> 
-> Thx for your report. FWIW, there are two proposed fixed for this change
-> floating around:
-> 
-> https://lore.kernel.org/all/20260508173121.27526-1-mikhail.v.gavrilov@gmail.com/
-> https://lore.kernel.org/all/770d36b07311bf88210c187923f243fb9f126f04.1777058551.git.pav@iki.fi/
-> 
-> Given that this is the third revert within a short time-frame I wonder
-> if we should fast-track a fix (once ready) to spare more users the pain
-> of bisecting & reporting.
+I bisected a regression on MediaTek MT7925 (Framework Desktop) in linux-7.0.y which appears responsible for this issue. It initializes and works correctly in 7.0.6 but not in 7.0.7.
 
-FYI the commit that caused this regression was backported to the latest
-stable releases (6.12.88, 6.18.30 and 7.0.7). I encountered it after
-updating to 7.0.7 and can confirm that the patch from the second link
-fixes it. That patch is now in the bluetooth tree as e3ac0d9f1a20
-("Bluetooth: btmtk: accept too short WMT FUNC_CTRL events") and a pull
-request [1] has been made to the net tree. Unfortunately this seems to
-have been a few hours too late to make it into the net pull request for
-7.1-rc4 [2], so the fix might not get into mainline until next week.
+The bisect landed on commit 70d37a8b9229e394cc17ddad47e90b81d80fcd09 which is a backport of 634a4408c0615c523cf7531790f4f14a422b9206:
 
-As a side note, it is unfortunate that there does not seem to be a
-process to prevent patches that are known to cause regressions from
-being backported to stable releases. As far as I can tell, this was
-added to regzbot tracking [3] a day before the culprit was queued for
-stable [4], so such a process could have prevented this regression in
-stable releases.
+commit 634a4408c0615c523cf7531790f4f14a422b9206
+Author: Tristan Madani <tristan@talencesecurity.com>
+Date:   Tue Apr 21 11:14:54 2026 +0000
 
-[1] https://lore.kernel.org/all/20260514172340.1515042-1-luiz.dentz@gmail.com/
-[2] https://lore.kernel.org/all/20260514142703.267609-1-pabeni@redhat.com/
-[3] https://lore.kernel.org/all/8a17737e-ba9b-4842-a429-c4eab3abcdec@leemhuis.info/
-[4] https://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git/commit/?id=7780f283d14c8c6bf40fe9262219ad821a5dae80
+    Bluetooth: btmtk: validate WMT event SKB length before struct access
 
-Regards,
-August Wikerfors
+    btmtk_usb_hci_wmt_sync() casts the WMT event response SKB data to
+    struct btmtk_hci_wmt_evt (7 bytes) and struct btmtk_hci_wmt_evt_funcc
+    (9 bytes) without first checking that the SKB contains enough data.
+    A short firmware response causes out-of-bounds reads from SKB tailroom.
+
+    Use skb_pull_data() to validate and advance past the base WMT event
+    header. For the FUNC_CTRL case, pull the additional status field bytes
+    before accessing them.
+
+    Fixes: d019930b0049 ("Bluetooth: btmtk: move btusb_mtk_hci_wmt_sync to btmtk.c")
+    Cc: stable@vger.kernel.org
+    Signed-off-by: Tristan Madani <tristan@talencesecurity.com>
+    Signed-off-by: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
+
+In dmesg, the failure shows up as:
+
+    Bluetooth: hci0: Failed to send wmt func ctrl (-22)
+
+Cheers!
+
+#regzbot introduced: 634a4408c0615c523cf7531790f4f14a422b9206
+
+-- 
+
+  Aaron Muir Hamilton
+  +1 313 240 2152  +1 307 365 7527
+
