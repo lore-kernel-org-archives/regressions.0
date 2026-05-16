@@ -1,94 +1,91 @@
-Received: from mail-10699.protonmail.ch (mail-10699.protonmail.ch [79.135.106.99])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.61.107])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CC6E27707
-	for <regressions@lists.linux.dev>; Sat, 16 May 2026 03:07:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.99
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8CDC242D62
+	for <regressions@lists.linux.dev>; Sat, 16 May 2026 05:00:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.61.107
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778900852; cv=none; b=tQawQ5AKKKCVjHy61rq8OS3scBkfGABGyv0cyTPV5YbUt25Tv4vInSSQjUzmF0x1GFkbhPcRgIQYb8k2EGNU+5Ad91RvXt5TrwMeWJoAAKKaP7H4Bk3hJFXA9u23Gow2mMeqI/H7HAJNyiOH8jegbVBBK6NK/6ArLW2miYJx9FY=
+	t=1778907641; cv=none; b=m7yyTvC9jOELXuTbFyyEQnbH8mIBIVq1VULKhtupYSBnHVkEs2yrHeMigRQzMMrZZIcriE/BzuHEE1EEbGzuoE9F8uDr6sizkR2Hkn9WEzhvEkgXAvOzw00c1pdtTq9tvH1Zf95LiHd4tpL7Oj4zU9sZCAJUgFwUnl/l0O1HF+0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778900852; c=relaxed/simple;
-	bh=6fy1f7XUSZQA5YcDBruOrIfvmpOs85SiG27ChDz4mGo=;
-	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=gXcC8EYwsEXkWP3rztMY5kQKQOPM/crLUWf5FkIVK82ygSo8TqflIN/NSCeAJJG1Vy1TwZiLnYOg6NUw6mxE1i77HGyAVWBO/f5IfrM2ITo1llpy/U0QarXUMexx3iSPs5O66q/kHrO/p/3PuqMS0ZFbjRA5qK2ouHRQat4curs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=wsOuW936; arc=none smtp.client-ip=79.135.106.99
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
+	s=arc-20240116; t=1778907641; c=relaxed/simple;
+	bh=9Arq76jPc3Tt110HVM78+n4zly+GtQgML33L96NniLA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=m1+21cWqt/h3bVdEkh/+gmI3Ut4afoGNGt4St+wbDOy1jZQAyqJvvMAtYGCtj14fkPOiRPcVbYUxLQNOnRSerxTfVIdhXJI/wdI9StZeLw8G6/b3S4tdJesqR2HfdOxE0IFWCNz0GvVFHEMTp59MpB61Tc+UqKa5t0xSejmuCQQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=PZryapRG; arc=none smtp.client-ip=188.68.61.107
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="wsOuW936"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-	s=protonmail3; t=1778900849; x=1779160049;
-	bh=6fy1f7XUSZQA5YcDBruOrIfvmpOs85SiG27ChDz4mGo=;
-	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
-	b=wsOuW93677eETvfQejFSSQfk1LiZ18Cx35z2BFYaCOe70vOFS9nTyH4HycGsi8jDG
-	 qyGoSTWAXquDcpjZoMnFqF58qJUALLvvH7LBDKZA7Zv8jeRGBEz2Bt6hP0SYJzXntr
-	 vP1sU4sY+ix54zucUYDJu4QmPfb/nPTpm0DEFKwJLlLkBHJVwepjTi9mgdDltgUwI6
-	 EJGXpdH0ErIgNTnkIP4gddFZY8N5uuTiUopqLukJIIr40ZyWRdV3tDySOj/54wPxhh
-	 MGI36Le2KZ+AID5ixi3mRcF15hGuNKrJVPjf5yqwrUpMEhuW8jKFBTDy5F0RZvIxBe
-	 rFyIxGXZranwQ==
-Date: Sat, 16 May 2026 03:07:22 +0000
-To: "peterz@infradead.org" <peterz@infradead.org>
-From: batcain <batcain@protonmail.com>
-Cc: "juri.lelli@redhat.com" <juri.lelli@redhat.com>, "jstultz@google.com" <jstultz@google.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "stable@vger.kernel.org" <stable@vger.kernel.org>, "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: [REGRESSION] sched/deadline: Hard lockup during CPU offline after commit 14a857056466
-Message-ID: <r16mBH1ydY4oK0PInLKwpYR2I5qZBsV5J0JsNLrXAh8OR_QC6z6lABKlcvpzgUiBuarTKtVTP977RLI4mqt64Ydtd2O3yfhRuRJkQ1JL8u8=@protonmail.com>
-Feedback-ID: 19886882:user:proton
-X-Pm-Message-ID: 77c86ae82036ad0157b9a6547e3c3ace3618e4fb
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="PZryapRG"
+Received: from mors-relay-8405.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8405.netcup.net (Postfix) with ESMTPS id 4gHX264nwkz71ly;
+	Sat, 16 May 2026 07:00:30 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1778907630;
+	bh=9Arq76jPc3Tt110HVM78+n4zly+GtQgML33L96NniLA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=PZryapRGsXop9V5NumgYqiQY2tQWuTBGJWBhpW1PFqYBELYYk8dUEnupr86DOaN+q
+	 ixxVWgsUmZ/f76ZWg0oFyf2Gd5WIO6nzdAESVFMzXRdEnVAMwpkoA5ATJrGssP90yI
+	 kG+4j/xOWWXUxZNyHA/KvD8xydBB1eUoy5Jb1Lipn3mfUi0Q6oPzYfmBupAznZWTfX
+	 mq6YD9/Cq5y4zburW5mz3oYorjuHBEXJuwUg5fVe60/QIqQbYw6pdFb918GSgLsxBG
+	 WxBR8+2oVuvXTdTW0V2JHH96y4CJ85XJTfIV24I7bz2FMguQWvfwV652Sb2jCLho/R
+	 D/arf9wdLk3cw==
+Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8405.netcup.net (Postfix) with ESMTPS id 4gHX1t07B9z71qT;
+	Sat, 16 May 2026 07:00:18 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
+X-Spam-Flag: NO
+X-Spam-Score: -2.901
+X-Spam-Level: 
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4gHX1r2KSnz8tbb;
+	Sat, 16 May 2026 07:00:16 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 6A72261829;
+	Sat, 16 May 2026 07:00:15 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <f9a01992-8fa6-48b5-8dfb-045bea94aee8@leemhuis.info>
+Date: Sat, 16 May 2026 07:00:14 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: Bluetooth: btmtk: MT7925 fails "wmt func ctrl" (-EINVAL) since
+ 634a4408c061
+To: Bernie Innocenti <bernie@codewiz.org>, linux-bluetooth@vger.kernel.org
+Cc: regressions@lists.linux.dev
+References: <9f6967e5-c37f-4e21-b0d2-8eea4a0b5809@codewiz.org>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <9f6967e5-c37f-4e21-b0d2-8eea4a0b5809@codewiz.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: 
+ <177890761566.3787954.13725076437515354787@mxe9fb.netcup.net>
+X-Rspamd-Server: rspamd-worker-8404
+X-Rspamd-Queue-Id: 6A72261829
+X-NC-CID: +8TevIF7Dc7cQKDjhmWN+Ksq0VzPstbGJpFHTVB5LA9cGXi3VDI=
 
-[1.] One line summary of the problem:sched/deadline: Hard lockup during CPU=
- offline/migration due to frozen rq_clock loop in update_dl_revised_wakeup(=
-)
+On 5/16/26 04:27, Bernie Innocenti wrote:
+> 
+> Since commit 634a4408c061 ("Bluetooth: btmtk: validate WMT event SKB
+> length before struct access") my MediaTek MT7925 Bluetooth adapter no
+> longer initializes. The controller never registers and is absent from
+> userspace.
 
-[2.] Full description of the problem/report:
-A deterministic hard lockup occurs during CPU hotplug (offlining a secondar=
-y core) on stable kernels containing commit 14a857056466be9d3d907a94e92a704=
-ac1be149b.
+Thx for the report, this is a known problem, the fix in heading towards
+mainline:
+https://lore.kernel.org/all/CABBYNZ+FfhYtU2=J-V4pjKf_vKV=Y5LhVhxS_epKe-qaUUt8_g@mail.gmail.com/
 
-When a CPU core is set offline, tasks are migrated within the stop_machine(=
-) context where local interrupts are fully disabled (irqs_disabled()). Duri=
-ng task migration, enqueue_task_dl() calls update_dl_entity(). Because of t=
-he new dl_defer rule introduced for implicit dl_servers, the code is forced=
- into the update_dl_revised_wakeup() branch.
+Ciao, Thorsten
 
-Inside update_dl_revised_wakeup(), the logic depends on rq_clock(rq) to cal=
-culate laxity:
-u64 laxity =3D dl_se->deadline - rq_clock(rq);
 
-However, under the stop_machine() noirq phase, the runqueue clock is stale/=
-frozen. Since the clock does not progress across iterations within the enqu=
-eue loop, the mathematical state stalls. Consequently, dl_entity_overflow()=
- continuously evaluates to true, trapping the processor core in an infinite=
- loop inside the enqueue path, resulting in a system-wide hard lockup.
 
-[3.] Keywords (keywords of the affected subsystem):
-sched, deadline, dl_server, cpuhp, hotplug, hard-lockup, regression
 
-[4.] Kernel information (output of "uname -a" or version):
-Linux workstation 7.0.7-hardened2-1-hardened #1 SMP PREEMPT_DYNAMIC Fri, 15=
- May 2026 00:03:13 +0000 x86_64 GNU/Linux
-
-[5.] Most recent kernel version which did not have the bug:
-Any kernel release prior to the integration/backport of commit 14a857056466=
-.
-
-[6.] Output of Oops/Panic/Bug/Objdump:
-No native kernel oops/panic stack trace is written to disk/serial because t=
-he freeze occurs inside stop_machine() with interrupts masked. NMI watchdog=
- triggers a hard lockup panic if aggressively armed.
-
-[7.] A small program which triggers the problem:
-# echo 0 > /sys/devices/system/cpu/cpu1/online
-
-[8.] Environment description (Hardware, distribution, etc.):
-Hardware: Confirmed on both AMD Zen 2 (Renoir) and AMD Zen 4 (Phoenix) plat=
-forms.
-Distribution: Arch Linux (using official extra/linux-hardened kernel packag=
-e).
