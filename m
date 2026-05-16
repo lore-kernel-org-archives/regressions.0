@@ -1,550 +1,151 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.102])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5718175A60
-	for <regressions@lists.linux.dev>; Sat, 16 May 2026 14:29:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.102
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CAC53D6494
+	for <regressions@lists.linux.dev>; Sat, 16 May 2026 14:52:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778941756; cv=none; b=HM129ze3b9HLR8M/cO+AV+SoHls2nc+MPIw/7XkD/V6hQ9D7wT4Bv5Cq/3y+hkNbNfmbbiIX2Ei71KKk+/CxYf29ReI1o6sFRfOq7NrkJevvj3O587ltUiBwgSOdlzYzHC/ICM4jX45ifIB6+jE4NqkZlcZSAF7j3E0I8sZJWFU=
+	t=1778943162; cv=none; b=FWmdzCodXCdb29DImRCW75mLBZiZVcl3TF3ORRTqpw7J2ZwjR1DrxMRA9a8wuRd17gXrYInlefoQea5imb0goMKKP5ew/WiuLh1BRlGdHz1nvFRPqcU27sXTuAZrAJuRD+E66kvvpzI/4SvvTXnZ+LYHunK0iYhV4mIW7Ii4j6k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778941756; c=relaxed/simple;
-	bh=yukteMTgTuhy1Dq2+g/KgyS8/y3jlepnBgX+ZS9OVbQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=n6qvQLtEWULP2gv9tta4t10NicDzvrjtcmkwHGZyeK+f/xsOu7L+ygdYCT1poH7camXctyuW0B/Wlp1MbB/ws2qkjU4uiU+uKOxNeTz6FqVFFrJOVcjUzKkCfgOQ0VURKpWKaAQUl6RNbC0P/AaC2wx74oLXe2Fi7gPIEGJQ6aQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=gATPLSjA; arc=none smtp.client-ip=188.68.63.102
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1778943162; c=relaxed/simple;
+	bh=QmkJpHUldte/egmuA7DGybI2tVG7cghkcZq8VmZIces=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=aUb9EQqnlZTMgK+DPFla+JGUAXAESpAhoFgGvCeFWK8EJZ6TeuakvIDt1otztuRs9JhX92G7Sv66LAoc3i2V+w7kcVMH2NZo+B/i60cS9q5NHWCOFM1RIcNjit8D6uokApmagGml4+ij2dVr59/qvriZhc6+ezVWhGqBy8HMgYU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=pzwZS407; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="gATPLSjA"
-Received: from mors-relay-2502.netcup.net (localhost [127.0.0.1])
-	by mors-relay-2502.netcup.net (Postfix) with ESMTPS id 4gHmfG5bj7z66jn;
-	Sat, 16 May 2026 16:29:10 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1778941750;
-	bh=yukteMTgTuhy1Dq2+g/KgyS8/y3jlepnBgX+ZS9OVbQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=gATPLSjAYvxMsT/1uAdYhW++Vylj1A5SRxHOytn4GHdFnn5ViwWO1d8139MHfjZlZ
-	 IpmYZK/Rs4CH4hvr2V9QKKYb76DLvDhB16+N5rX2+tsaPLRVyGnydjZ+AyMxeIMUaq
-	 fanRQROox52mW5WNQsEbQWOpD06xy3ga86ooKxz+bGD6RxZWkIbnDzBwciBMykW1RX
-	 TelXZMoTxdSdMLetVALkJnXhKy5pONAq5PmcAcOzVV7u1FN36lMJYIyQvf6eQQ0RAn
-	 smwL6Ff/BhShR5yh2RJVDvtCQHw12QWckagqN8w41jX0t5RQdzmZFc94OCxZQnJ7Hu
-	 /s9uZwzxhCtuw==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-2502.netcup.net (Postfix) with ESMTPS id 4gHmfG4tz4z4xbK;
-	Sat, 16 May 2026 16:29:10 +0200 (CEST)
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4gHmfF5s6vz8sZh;
-	Sat, 16 May 2026 16:29:09 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id DD45B6178E;
-	Sat, 16 May 2026 16:29:08 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <449c834d-d115-4242-aa5a-43daa085f178@leemhuis.info>
-Date: Sat, 16 May 2026 16:29:07 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pzwZS407"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-bcb5370bb0dso209983966b.1
+        for <regressions@lists.linux.dev>; Sat, 16 May 2026 07:52:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1778943159; x=1779547959; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zxxDjL5gnnI2uwzrc+KACxtlyJsnDYW3Yb57xozjSks=;
+        b=pzwZS407UCqACacyZtJzcFqu3BzP5oNYg++DUmC/HkLWUdExojhZ9FrmPJ9I6JX+kr
+         MtiqoMNFg3DwiRF7AEfbLzZuAaOKTlPGLEWdFvI94Vw2/yTEfUqRsFtia8SktH5hcSH1
+         4ixME0dMhb3lT+0hOYbnVrdg3I07nR/M1QOLorOMNruFrpQDFuyZ63AwUJ3ViJmYmQsN
+         gMyheMNOexJs7HFB4/jV2ZBf/Su+7UMKq9C0dnNZfC1Kn3AStqS70n4PUhHGHxYyY1nf
+         gOb2G7vcumSunqEOsSJZSdiHIP1Aa1Sc+X8AOPAzWt00gzP1AAmDQa2N3CnTPPZ+ug3x
+         r8Fw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778943159; x=1779547959;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zxxDjL5gnnI2uwzrc+KACxtlyJsnDYW3Yb57xozjSks=;
+        b=bvAQtFHV++GBUz7ZlOmd/XY5JN9bY6F03qXfNnC8A23eDxRBLE+P2Mo/FwPSg8aiAt
+         2W0PCwFfn+JF9rOeHqoO4WFZTYYgX9vnpuY8Ms5Rls5T4AZPPgl78wwnhbfSlqL2v68n
+         sJUS4phjKbPsrG8XdNOHSqRa49d3IzHfnJDDR6mAeNB2hWipQiGL9jrZJrWTgdtqeQWJ
+         mZGOrr370V8zaen2eq70oSLyaD8/h07c+KQMJotXa0wfnNXZkIWb+uELEZq9L06B1/gx
+         9R6O8Ku6fY85wdZdsRrQWSHY/dPoHVkrJy65lx974toSQFJ+fvBE2gFJeqpT3Irtgd41
+         G7nQ==
+X-Forwarded-Encrypted: i=1; AFNElJ8p4ELDqBgT4TH5er3VOEpXfk/idIbeZUqcaojxYq9TQRSe20x0F+9Mx/5vmPnXFH257+r+G3HHLr3r8A==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yw/XgGaAilRUAiepoathemrgNRbn+Ufn5vrIsTp2YP1QU8tzVWF
+	Wz2y/ki9baSTENWavqoJxfOVDd+YRl46izaGfLTFrcRuCHNE9VNTkes=
+X-Gm-Gg: Acq92OGtk0Whm2+H/rfG6Rl43reGgXamzqSrISIfYa5O160C1vIAbHegebND4WmliFq
+	+1Ou8Rm905YNo9/ntHFL73+LmzeJ93VtVs8Rk0OrvRGJFFboH7SqTnEv10VUnGJuz3ElEUqFpI3
+	FPNWWH2oO0cPnZkuF1g+iVLp4+XNxtzbupJ46GCCC3JtpaNKaDSoiUhcjGZFiTmZxAfjHouTCsE
+	3JBZKNMIC41DPy5GR+iyVIbM2RPtjstmwYX1ZpTF4q5e9a5r6tGQknxjpvcWqYPKysDJyV9s5He
+	Sw5n31XTThl8CzxFyZy4OK7OBCu5ChRGen7l87to1/0vRjfiHzGwUkzxEdW3gpx1Zcq17n/olRc
+	1Mh4F0L+QPA8S0soBtSM8cU0UwQqXC5Yey9/eXv0GSrHE0+m/16aA8yEe3f7Dln/w1yGU0yLquf
+	SVBpR2DfSPz9UFtE+tSM33NpQhysvhWLe/pAfPlfZYxOqdm4fOdnwfnjagFvwlIPObzJp6/hm0t
+	XiHnqe/uEGpUMXglo0nqVNhobiLqNBQ8sRPx77vIPAWpQ9FUdc1hw==
+X-Received: by 2002:a17:906:8e0e:b0:bd1:d244:ca24 with SMTP id a640c23a62f3a-bd517861053mr429002166b.14.1778943158629;
+        Sat, 16 May 2026 07:52:38 -0700 (PDT)
+Received: from nn ([2001:1ab8:1003:0:5454:f357:ba89:4e22])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-bd4f4bd0a40sm352858966b.12.2026.05.16.07.52.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 16 May 2026 07:52:38 -0700 (PDT)
+Sender: N B <gen.benner@gmail.com>
+From: =?UTF-8?q?Nerijus=20Bend=C5=BEi=C5=ABnas?= <nerijus.bendziunas@gmail.com>
+To: Andrew Lunn <andrew@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>
+Cc: Russell King <linux@armlinux.org.uk>,
+	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev,
+	stable@vger.kernel.org
+Subject: [PATCH net v2] net: phy: skip EEE advertisement write when autoneg is disabled
+Date: Sat, 16 May 2026 17:52:20 +0300
+Message-ID: <20260516145220.875871-1-nerijus.bendziunas@gmail.com>
+X-Mailer: git-send-email 2.54.0
+In-Reply-To: <20260516114334.812828-1-nerijus.bendziunas@gmail.com>
+References: <20260516114334.812828-1-nerijus.bendziunas@gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] PCI BAR allocation/D3cold failure: NVIDIA MX250
- inaccessible since Kernel 6.x on Acer Swift 3 (SF314-56G)
-To: Matthias Dittrich <dittrich.m@gmx.net>
-Cc: bhelgaas@google.com, linux-pci@vger.kernel.org,
- regressions@lists.linux.dev, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?=
- <ilpo.jarvinen@linux.intel.com>, Bjorn Helgaas <helgaas@kernel.org>
-References: <20260501165542.GA491695@bhelgaas>
- <561131dd-0e42-437a-9724-a036238a9bb4@gmx.net>
- <5f716613-d996-46db-96ec-6c0251219922@gmx.net>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <5f716613-d996-46db-96ec-6c0251219922@gmx.net>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-PPP-Message-ID: <177894174919.1511302.2101319284274074505@mxe9fb.netcup.net>
-X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: DD45B6178E
-X-NC-CID: OqpIY/ucfpDW55AsFxvLV+hqQujyKKeSDZS991UWzVt84ZfMPbw=
 
-On 5/16/26 12:16, Matthias Dittrich wrote:
-> 
-> I completed the bisect test between kernel 5.15 und 5.16 and found the
-> commit and now have reproducible revert-test results. I used the
-> bisect.sh (attached ) for automation. Testing criteria was status rev ff
-> (bad) or rev a1 (good).  As it was the first indicator for me on Ubuntu.
-> I also used olddefconfig as I know this config worked before.
->
-> The identified commit (see final-bisect-log.txt) is:
-> # first bad commit: [a1224f34d72a103829d6953935d6c6621f135b83] ACPI: PM:
-> Check states of power resources during initialization
+genphy_c45_an_config_eee_aneg() writes the EEE advertisement to the
+auto-negotiation device's MMD register space (MDIO_MMD_AN, register
+MDIO_AN_EEE_ADV).  These registers are read by the link partner only
+during auto-negotiation, so writing them while autoneg is disabled
+cannot influence the link.  On some PHYs (e.g. Broadcom BCM54213PE)
+the write nevertheless reaches the chip and disturbs the receive
+datapath.
 
-Thx for the bisection. Not my area of expertise, so the following might
-send everyone in the wrong direction, nevertheless FWIW:
+Concretely, running
 
-That commit caused trouble on two other machines and DMI quirks were
-added to make them work again; see 9b04d99788cf47 ("ACPI: PM: Do not
-turn of unused power resources on the Toshiba Click Mini") [v6.4-rc1]
-and cd7ef20ba8c6e9 ("ACPI: PM: Add unused power resource quirk for
-THUNDEROBOT ZERO") [v7.0-rc1] for details. Wonder if the problem on your
-machine is similar.
+    ethtool -s eth0 speed 100 duplex full autoneg off
+    ethtool --set-eee eth0 eee off
 
-Ciao, Thorsten
+leaves eth0 with TX working and RX completely silent on a
+Raspberry Pi 4 / CM4 board (bcmgenet + BCM54213PE in rgmii-rxid).
+Switching back to autoneg recovers the link.
 
-> Additionally testing (see Abschlusstest.txt):
-> 
->   * Verification with Parent commit test: git checkout
->     a1224f34d72a103829d6953935d6c6621f135b83~1
->       o lspci reports `rev a1` and  `nvidia-smi` works correctly
->   * Revert test on 5.16 with git revert --no-commit
->     a1224f34d72a103829d6953935d6c6621f135b83
->       o     lspci reports `rev a1` and  `nvidia-smi` works correctly
->   * Revert test on 6.1 with git revert --no-commit
->     a1224f34d72a103829d6953935d6c6621f135b83
->       o lspci reports `rev a1` and  `nvidia-smi` works correctly
-> 
-> With kernels like 6.2 and newer "git revert" result in an error and
-> stops (transleted to english):
-> 
-> git revert --no-commit a1224f34d72a103829d6953935d6c6621f135b83 Auto-
-> merging drivers/acpi/power.c CONFLICT (content): Merge conflict in
-> drivers/acpi/power.c error: could not revert a1224f34d72a... (ACPI: PM:
-> Check states of power resources during initialization) Hint: After
-> resolving the conflicts, mark the corrected paths with: Hint: 'git add
-> <paths>' or 'git rm <paths>'
-> 
-> All tests have been done with Ubuntu 22.04. 
-> 
-> Let me know if I can test anything further.
-> 
-> 
-> Test summary Ubuntu:
-> 
-> Test Case
-> 
-> 	
-> 
-> Kernel / Commit
-> 
-> 	
-> 
-> Modification
-> 
-> 	
-> 
-> PCI State
-> 
-> 	
-> 
-> |Nvidia-smi/
-> NVIDIA Driver|
-> 
-> 	
-> 
-> Result
-> 
-> Baseline good
-> Ubuntu 22.04
-> 
-> 	
-> 
-> Linux 5.15
-> 
-> 	
-> 
-> none
-> 
-> 	
-> 
-> |rev a1|
-> 
-> 	
-> 
-> works
-> 
-> 	
-> 
-> GOOD
-> 
-> Baseline bad
-> 
-> 	
-> 
-> Linux 5.16
-> 
-> 	
-> 
-> none
-> 
-> 	
-> 
-> |rev ff|
-> 
-> 	
-> 
-> fails
-> 
-> 	
-> 
-> BAD
-> 
-> Bisect parent
-> 
-> 	
-> 
-> |a1224f34...~1|
-> 
-> 	
-> 
-> none
-> 
-> 	
-> 
-> |rev a1|
-> 
-> 	
-> 
-> works
-> 
-> 	
-> 
-> GOOD
-> 
-> First bad commit
-> 
-> 	
-> 
-> |a1224f34...|
-> 
-> 	
-> 
-> none
-> 
-> 	
-> 
-> |rev ff|
-> 
-> 	
-> 
-> fails
-> 
-> 	
-> 
-> BAD
-> 
-> Revert verification
-> 
-> 	
-> 
-> |a1224f34...|
-> 
-> 	
-> 
-> reverted
-> 
-> 	
-> 
-> |rev a1|
-> 
-> 	
-> 
-> works
-> 
-> 	
-> 
-> GOOD
-> 
-> Forward revert test
-> 
-> 	
-> 
-> Linux 6.1
-> 
-> 	
-> 
-> reverted
-> 
-> 	
-> 
-> |rev a1|
-> 
-> 	
-> 
-> works
-> 
-> 	
-> 
-> GOOD
-> 
-> Ubuntu 22.04 (standard)
-> 
-> 	
-> 
-> Linux 6.8
-> 
-> 	
-> 
-> none
-> 
-> 	
-> 
-> |rev ff|
-> 
-> 	
-> 
-> fails
-> 
-> 	
-> 
-> BAD
-> 
-> Modern revert attempt
-> 
-> 	
-> 
-> Linux 6.2
-> 
-> 	
-> 
-> revert attempted
-> 
-> 	
-> 
-> conflict in |drivers/acpi/power.c|
-> 
-> 	
-> 
-> n/a
-> 
-> 	
-> 
-> not testable
-> 
-> *Linux 5.15 is the standard in Ubuntu 20.04 but also available as
-> downgrade in Ubuntu 22.04
-> 
-> Test summary CachyOS:
-> 
-> Test Case
-> 
-> 	
-> 
-> Kernel / Commit
-> 
-> 	
-> 
-> Modification
-> 
-> 	
-> 
-> PCI State
-> 
-> 	
-> 
-> |Nvidia-smi/
-> NVIDIA Driver|
-> 
-> 	
-> 
-> Result
-> 
-> Standard
-> 
-> 	
-> 
-> Linux 7.0.2
-> 
-> 	
-> 
-> none
-> 
-> 	
-> 
-> |rev a1|
-> 
-> 	
-> 
-> fails
-> 
-> 	
-> 
-> BAD
-> 
-> LTS
-> 
-> 	
-> 
-> Linux 6.18
-> 
-> 	
-> 
-> none
-> 
-> 	
-> 
-> |rev a1|
-> 
-> 	
-> 
-> fails
-> 
-> 	
-> 
-> BAD
-> 
-> Start parameter
-> 
-> 	
-> 
-> |Linux ||7.0.2|
-> 
-> 	
-> 
-> start parameter
-> 
-> 	
-> 
-> |-|
-> 
-> 	
-> 
-> fails
-> 
-> 	
-> 
-> BAD
-> 
-> git
-> 
-> 	
-> 
-> |Linux ||5.15|
-> 
-> 	
-> 
-> none
-> 
-> 	
-> 
-> 
-> 	
-> 
-> 
-> 	
-> 
-> not testable system freeze
-> 
-> git
-> 
-> 	
-> 
-> |Linux ||7.0.2|
-> 
-> 	
-> 
-> revert attempted
-> 
-> 	
-> 
-> 
-> 	
-> 
-> 
-> 	
-> 
-> not testable
-> 
-> 
-> Kind regards,
-> Matthias
-> 
-> Am 11.05.2026 um 11:34 schrieb Matthias Dittrich:
->>
->> Dear Bjorn,
->>
->> Thank you for the quick response. For transparency, I used the AI tool
->> Gemini during the bug-fixing and testing process. I am not an IT
->> specialist and therefore cannot fully verify all of the AI’s
->> conclusions in my last mail.
->>
->> All kernels were tested manually by installing the OS and kernel. The
->> recommended boot parameters were also tested manually. The logs sent
->> previously and in this mail are raw terminal outputs generated from
->> the commands listed in the "Skript" file.
->>
->>
->> The dmesg and |lspci|output from the newest CachyOS kernel is
->> attached. Additionally, the following commands were also run for the
->> Ubuntu 5.15 kernel for comparison:
->>
->> dmesg
->> sudo lspci -vv > lspci-vv-ubuntu2205-K515-good.txt
->> sudo lspci -vvv > lspci-vvv-ubuntu2205-K515-good.txt
->> sudo lspci -vvxxxx > lspci-vvxxxx-ubuntu2205-K515-good.txt
->> sudo lspci -s 02:00.0 -vvxxxx > lspci_gpu_$(uname -r).txt
->> sudo lspci -t > lspci_tree_$(uname -r).txt
->>
->>
->> Gemini recommended performing a git bisect with optimized parameters
->> to reduce compilation time.
->>
->>   * Before starting the bisect tests, I tested different kernel
->>     revisions. The "git" kernel 5.15 (with localmodconfig) appears to
->>     work just like the newer Ubuntu 5.15 kernel, as the graphics card
->>     status is shown as |(rev a1)|. The earliest kernel revision where
->>     the status changes to |(rev ff)|starts with kernel 5.16 (tested
->>     with localmodconfig). However, the NVIDIA driver itself could not
->>     be tested.
->>   * The bisect between 5.15 and 5.16 result in|
->>      [342a67f0884293639bd17ea44df754ead799e669]|| NFS: Label the
->>     dentry with a verifier in nfs_link(), nfs_symlink()|, which seems
->>     incorrect, as the verification using |git checkout
->>     342a67f0884293639bd17ea44df754ead799e669~1|also failed.
->>   * An automated bisect was attempted without localmodconfig, but
->>     there were technical issues and I have not yet been able to
->>     complete the testing.
->>
->> I also noticed that the |lspci|results differ between CachyOS and Ubuntu:
->>
->> 02:00.0 3D controller: NVIDIA Corporation GP108M [GeForce MX250] (rev a1)
->>
->>   * |(rev a1)|— Ubuntu 22.04 Kernel 5.15 (works), CachyOS Kernel 6.1
->>     LTS and Kernel 7, but NVIDIA MX150 does not work
->>   * |(rev ff)|— Ubuntu 22.04 Kernel 5.16 and newer (localmodconfig)
->>     and Kernel 6.8 and NVIDIA MX150 does not work
->>
->> Kind regards,
->> Matthias
->>
->>
->>
->> Am 01.05.2026 um 18:55 schrieb Bjorn Helgaas:
->>> [+cc Ilpo]
->>>
->>> On Fri, May 01, 2026 at 10:13:41AM +0200, Matthias Dittrich wrote:
->>>> Dear Kernel Developers,
->>>>
->>>> I found a regression and did my best to identify the issue and find a
->>>> workaround, but I am not a developer. I also published the regression in the
->>>> NVIDIA Linux Developer Forum, but it appears to be a kernel regression and
->>>> not a driver issue, as the latest drivers work on older kernels (e.g., 5.15)
->>>> but fail on anything 6.x+. I did not perform a git bisect as compiling on
->>>> this i5-8265U - because of its low performance I can only compile one kernel
->>>> over night.
->>>>
->>>> **Description:**
->>>> The NVIDIA MX250 GPU on Acer Swift 3 (SF314-56G / BIOS 1.14) is inaccessible
->>>> on any Linux distribution using Kernel 6.x or 7.x. The device fails to
->>>> initialize during the driver probe routine.
->>> Thanks for the report.  With the newest kernel available to you, can
->>> you please capture the complete dmesg and output of "sudo lspci -vv"?
->>> Don't filter out things that don't seem relevant; we can easily do
->>> that.
->>>
->>> Bjorn
+Prior to commit f26a29a038ee ("net: phy: ensure that genphy_c45_an_config_eee_aneg() sees new value of phydev->eee_cfg.eee_enabled"),
+the disable path was effectively a no-op because the helper read
+the stale eee_cfg.eee_enabled, so the underlying PHY behavior never
+surfaced.
+
+Bisected on rpi-6.12.y between commits 83943264 (good) and
+effcbc88 (bad) to f26a29a038ee.
+
+Fixes: f26a29a038ee ("net: phy: ensure that genphy_c45_an_config_eee_aneg() sees new value of phydev->eee_cfg.eee_enabled")
+Cc: stable@vger.kernel.org
+Signed-off-by: Nerijus Bendžiūnas <nerijus.bendziunas@gmail.com>
+---
+Changes since v1:
+ - Reworded the inline comment and commit message: the MMD AN
+   write is read by the chip with side-effects, not silently
+   ignored. Suggested by Andrew Lunn.
+ - Tightened the reproducer paragraph (was repeating paragraph 1).
+
+v1: https://lore.kernel.org/netdev/20260516114334.812828-1-nerijus.bendziunas@gmail.com/
+ drivers/net/phy/phy-c45.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/drivers/net/phy/phy-c45.c b/drivers/net/phy/phy-c45.c
+index d48aa7231b37..126951741428 100644
+--- a/drivers/net/phy/phy-c45.c
++++ b/drivers/net/phy/phy-c45.c
+@@ -940,6 +940,14 @@ EXPORT_SYMBOL_GPL(genphy_c45_read_eee_abilities);
+  */
+ int genphy_c45_an_config_eee_aneg(struct phy_device *phydev)
+ {
++	/* Writing MMD AN advertisements while autoneg is disabled has no
++	 * effect on link-partner negotiation, but on some PHYs (e.g. the
++	 * Broadcom BCM54213PE) the write itself disturbs the receive
++	 * datapath. Skip it.
++	 */
++	if (phydev->autoneg == AUTONEG_DISABLE)
++		return 0;
++
+ 	if (!phydev->eee_cfg.eee_enabled) {
+ 		__ETHTOOL_DECLARE_LINK_MODE_MASK(adv) = {};
+ 
+-- 
+2.54.0
 
