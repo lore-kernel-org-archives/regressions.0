@@ -1,116 +1,94 @@
-Received: from morpheus.develer.net (morpheus.develer.net [2.228.72.60])
+Received: from mail-10699.protonmail.ch (mail-10699.protonmail.ch [79.135.106.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ECB224886E
-	for <regressions@lists.linux.dev>; Sat, 16 May 2026 02:34:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=2.228.72.60
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CC6E27707
+	for <regressions@lists.linux.dev>; Sat, 16 May 2026 03:07:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778898876; cv=none; b=rHZb0ZfhWs2/xNYSPOXRMRRqvyxcelfkessqrLIh23KPis1SIwhUzafTiTXV+cf+o6YDUWeiqdssS7zsz+gTHYN6CVllYuD/yaXPdOT044oraYoYhAKDfcdwwnV5JTchTGnNT7xk4Uzn8KlIneW2HVoOtwjtnwW5zd1KoyMOrEA=
+	t=1778900852; cv=none; b=tQawQ5AKKKCVjHy61rq8OS3scBkfGABGyv0cyTPV5YbUt25Tv4vInSSQjUzmF0x1GFkbhPcRgIQYb8k2EGNU+5Ad91RvXt5TrwMeWJoAAKKaP7H4Bk3hJFXA9u23Gow2mMeqI/H7HAJNyiOH8jegbVBBK6NK/6ArLW2miYJx9FY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778898876; c=relaxed/simple;
-	bh=Sr9LQCNEgyUVSUZQJoAkJM8M2xtysEoGe/O3A32DsXA=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=HjfFH8xYZOl+hyPUvXgxjnNXh0IvT0rbw2GjePHgMuwEonD3IIRDMOxj3OGdleWcCZkhZuG1zbU4gQvhCNX0eSVW8s0512Kfdn8bMOM8D3mWHiDFpFwp2oi32ndZV/BC9Ddr9FZYQ7J/cEcSaT1NORNQPwKC+qbP/Pd7CfVOF7c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=codewiz.org; spf=pass smtp.mailfrom=codewiz.org; dkim=pass (1024-bit key) header.d=codewiz.org header.i=@codewiz.org header.b=Uhn4C4NJ; arc=none smtp.client-ip=2.228.72.60
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=codewiz.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codewiz.org
+	s=arc-20240116; t=1778900852; c=relaxed/simple;
+	bh=6fy1f7XUSZQA5YcDBruOrIfvmpOs85SiG27ChDz4mGo=;
+	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=gXcC8EYwsEXkWP3rztMY5kQKQOPM/crLUWf5FkIVK82ygSo8TqflIN/NSCeAJJG1Vy1TwZiLnYOg6NUw6mxE1i77HGyAVWBO/f5IfrM2ITo1llpy/U0QarXUMexx3iSPs5O66q/kHrO/p/3PuqMS0ZFbjRA5qK2ouHRQat4curs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=wsOuW936; arc=none smtp.client-ip=79.135.106.99
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=codewiz.org header.i=@codewiz.org header.b="Uhn4C4NJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codewiz.org; s=mail;
-	t=1778898457; bh=Sr9LQCNEgyUVSUZQJoAkJM8M2xtysEoGe/O3A32DsXA=;
-	h=Date:To:Cc:From:Subject:From;
-	b=Uhn4C4NJ7/EZStOjtbKjH09nkHS86u+YtCfJRxL2ohMxkO4/N82ZdEd3YuR9NCJR2
-	 ISsxprB2MMps3CF5O5XNYnMz8ccIwgQccoXWGMouR6K4xjwsvfd2ALb/hXaX0mw2nD
-	 COiUGbX+tfXcNJgrKHuLRlvd55kHjRSlzey0WmWU=
-Received: from [IPV6:2404:7a80:ff26:6c00:7853:dba:2963:526b] (unknown [IPv6:2404:7a80:ff26:6c00:7853:dba:2963:526b])
-	(Authenticated sender: bernie)
-	by morpheus.develer.net (Postfix) with ESMTPSA id 72F4124514C;
-	Sat, 16 May 2026 04:27:36 +0200 (CEST)
-Message-ID: <9f6967e5-c37f-4e21-b0d2-8eea4a0b5809@codewiz.org>
-Date: Sat, 16 May 2026 11:27:32 +0900
+	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="wsOuW936"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+	s=protonmail3; t=1778900849; x=1779160049;
+	bh=6fy1f7XUSZQA5YcDBruOrIfvmpOs85SiG27ChDz4mGo=;
+	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
+	b=wsOuW93677eETvfQejFSSQfk1LiZ18Cx35z2BFYaCOe70vOFS9nTyH4HycGsi8jDG
+	 qyGoSTWAXquDcpjZoMnFqF58qJUALLvvH7LBDKZA7Zv8jeRGBEz2Bt6hP0SYJzXntr
+	 vP1sU4sY+ix54zucUYDJu4QmPfb/nPTpm0DEFKwJLlLkBHJVwepjTi9mgdDltgUwI6
+	 EJGXpdH0ErIgNTnkIP4gddFZY8N5uuTiUopqLukJIIr40ZyWRdV3tDySOj/54wPxhh
+	 MGI36Le2KZ+AID5ixi3mRcF15hGuNKrJVPjf5yqwrUpMEhuW8jKFBTDy5F0RZvIxBe
+	 rFyIxGXZranwQ==
+Date: Sat, 16 May 2026 03:07:22 +0000
+To: "peterz@infradead.org" <peterz@infradead.org>
+From: batcain <batcain@protonmail.com>
+Cc: "juri.lelli@redhat.com" <juri.lelli@redhat.com>, "jstultz@google.com" <jstultz@google.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "stable@vger.kernel.org" <stable@vger.kernel.org>, "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Subject: [REGRESSION] sched/deadline: Hard lockup during CPU offline after commit 14a857056466
+Message-ID: <r16mBH1ydY4oK0PInLKwpYR2I5qZBsV5J0JsNLrXAh8OR_QC6z6lABKlcvpzgUiBuarTKtVTP977RLI4mqt64Ydtd2O3yfhRuRJkQ1JL8u8=@protonmail.com>
+Feedback-ID: 19886882:user:proton
+X-Pm-Message-ID: 77c86ae82036ad0157b9a6547e3c3ace3618e4fb
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Content-Language: en-US
-To: linux-bluetooth@vger.kernel.org
-Cc: regressions@lists.linux.dev
-From: Bernie Innocenti <bernie@codewiz.org>
-Subject: Bluetooth: btmtk: MT7925 fails "wmt func ctrl" (-EINVAL) since
- 634a4408c061
-Autocrypt: addr=bernie@codewiz.org; keydata=
- xjMEXxKIihYJKwYBBAHaRw8BAQdAEaAGAHL1d+7jYCkWrJabzd1reJYnxeoh45PTz8+7ERXN
- JUJlcm5pZSBJbm5vY2VudGkgPGJlcm5pZUBjb2Rld2l6Lm9yZz7CkAQTFggAOBYhBGkdgfqR
- 5j+13Wxn/QvieBz8fxukBQJfEoiKAhsDBQsJCAcDBRUKCQgLBRYDAgEAAh4BAheAAAoJEAvi
- eBz8fxuk7PEBALTnPaPxYWXvPXxQ7WLcd4BvcfxIh+86O8sfh+OK9M87AP431LAnBx6lLArU
- 8sXlHi9kq5Nx0FEeD0iQkl4f+Wk9C844BF8SiIoSCisGAQQBl1UBBQEBB0CyluVyxU6BIr7q
- 8dkdVt2C6CHSNE1gcNoIOTD3xcG7AgMBCAfCeAQYFggAIBYhBGkdgfqR5j+13Wxn/QvieBz8
- fxukBQJfEoiKAhsMAAoJEAvieBz8fxukLC0A/jSvI5r8WmvrN7GMalg1PqF5JEruVtMIZaTY
- LD/ARox4AP9mgTyGs+XWQvqdw5FiEcAVQal6BT1xTiLFq48PN/v4Aw==
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+[1.] One line summary of the problem:sched/deadline: Hard lockup during CPU=
+ offline/migration due to frozen rq_clock loop in update_dl_revised_wakeup(=
+)
 
-Since commit 634a4408c061 ("Bluetooth: btmtk: validate WMT event SKB 
-length before struct access") my MediaTek MT7925 Bluetooth adapter no 
-longer initializes. The controller never registers and is absent from 
-userspace.
+[2.] Full description of the problem/report:
+A deterministic hard lockup occurs during CPU hotplug (offlining a secondar=
+y core) on stable kernels containing commit 14a857056466be9d3d907a94e92a704=
+ac1be149b.
 
-I'm seeing this on a Framework 16 (AMD Ryzen AI 9) with a MediaTek 
-MT7925 (USB ID 0e8d:0717) running Fedora Rawhide.
+When a CPU core is set offline, tasks are migrated within the stop_machine(=
+) context where local interrupts are fully disabled (irqs_disabled()). Duri=
+ng task migration, enqueue_task_dl() calls update_dl_entity(). Because of t=
+he new dl_defer rule introduced for implicit dl_servers, the code is forced=
+ into the update_dl_revised_wakeup() branch.
 
-Firmware is BT_RAM_CODE_MT7925_1_1_hdr.bin and loads fine in both, so 
-this is not a firmware or kconfig issue.
+Inside update_dl_revised_wakeup(), the logic depends on rq_clock(rq) to cal=
+culate laxity:
+u64 laxity =3D dl_se->deadline - rq_clock(rq);
 
-Bad kernel (7.1.0-0.rc3.260515g70eda68668d1.27.fc45.x86_64):
+However, under the stop_machine() noirq phase, the runqueue clock is stale/=
+frozen. Since the clock does not progress across iterations within the enqu=
+eue loop, the mathematical state stalls. Consequently, dl_entity_overflow()=
+ continuously evaluates to true, trapping the processor core in an infinite=
+ loop inside the enqueue path, resulting in a system-wide hard lockup.
 
-   Bluetooth: hci0: HW/SW Version: 0x00000000, Build Time: 20260106153314
-   Bluetooth: hci0: Failed to send wmt func ctrl (-22)
-   Bluetooth: hci0: HCI Enhanced Setup Synchronous Connection command is 
-advertised, but not supported.
+[3.] Keywords (keywords of the affected subsystem):
+sched, deadline, dl_server, cpuhp, hotplug, hard-lockup, regression
 
-Good kernel (7.0.0-62.fc45.x86_64):
+[4.] Kernel information (output of "uname -a" or version):
+Linux workstation 7.0.7-hardened2-1-hardened #1 SMP PREEMPT_DYNAMIC Fri, 15=
+ May 2026 00:03:13 +0000 x86_64 GNU/Linux
 
-   Bluetooth: hci0: HW/SW Version: 0x00000000, Build Time: 20260106153314
-   Bluetooth: hci0: Device setup in 296567 usecs
-   Bluetooth: hci0: AOSP extensions version v1.00
+[5.] Most recent kernel version which did not have the bug:
+Any kernel release prior to the integration/backport of commit 14a857056466=
+.
 
+[6.] Output of Oops/Panic/Bug/Objdump:
+No native kernel oops/panic stack trace is written to disk/serial because t=
+he freeze occurs inside stop_machine() with interrupts masked. NMI watchdog=
+ triggers a hard lockup panic if aggressively armed.
 
-Bug analysis courtesy of Claude Opus, I haven't verified:
+[7.] A small program which triggers the problem:
+# echo 0 > /sys/devices/system/cpu/cpu1/online
 
-   The failure (-22 = -EINVAL) comes from the new length guard in the
-   BTMTK_WMT_FUNC_CTRL branch of btmtk_usb_hci_wmt_sync():
-
-     case BTMTK_WMT_FUNC_CTRL:
-         if (!skb_pull_data(data->evt_skb, sizeof(wmt_evt_funcc->status))) {
-             err = -EINVAL;
-             goto err_free_skb;
-         }
-
-   The first skb_pull_data() (base 7-byte WMT event) succeeds — neither
-   "WMT event too short" nor "Wrong op" is logged — so it is specifically
-   this second 2-byte status pull that returns NULL. The MT7925 FUNC_CTRL
-   response is shorter than the full 9-byte struct
-   btmtk_hci_wmt_evt_funcc the check assumes, so a valid response is now
-   rejected. The pre-commit code tolerated this, hence the regression.
-   The commit's bounds-check intent is sound, but the trailing status
-   field should be treated as optional for devices that return a short
-   event, rather than hard failing.
-
-   The commit was isolated by code inspection: it is the only post-7.0
-   btmtk change introducing an -EINVAL in this path.
-
-   The commit is Cc: stable, so affected stable trees likely regress too.
-
-
-Happy to test patches or provide full dmesg / btmon traces.
-
-#regzbot introduced: 634a4408c061
-
--- 
-_ // Bernie Innocenti
-\X/  https://codewiz.org/
-
+[8.] Environment description (Hardware, distribution, etc.):
+Hardware: Confirmed on both AMD Zen 2 (Renoir) and AMD Zen 4 (Phoenix) plat=
+forms.
+Distribution: Arch Linux (using official extra/linux-hardened kernel packag=
+e).
