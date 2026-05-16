@@ -1,37 +1,37 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [194.59.206.189])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.102])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2D633559CA;
-	Sat, 16 May 2026 10:10:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.59.206.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E23335E1C8
+	for <regressions@lists.linux.dev>; Sat, 16 May 2026 10:22:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.102
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778926256; cv=none; b=PslZBGyy94GSvrQWLeCymj8tsFH7sPD66dnBeal/zJ96ENk4juXJTq9Y2krwWvyQEfE5Ms75+mXrldIVMuyzhKPknpxq5eCsud9uPyqXbMyNCMij31dA9z663VlBUE07z+NSAUabZADEpSZt/LtXg6ouRSutHBt8UYA09hdkV3o=
+	t=1778926972; cv=none; b=TwvIuluHumlSoyv1TTerRC7QFe+jgMuCARx6/t7a8UEiilkWSSJI1ofjI6dTdUQntbyTe0VZdDqC9wiqUC8d/BotFf5lA4ObTXZZfux+zZJdXwVxuGZAq3DCZmW/R0FJJA7qHSq6dlRveaQWqEwq0foCZZdr/SL0rRi42QtkDMg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778926256; c=relaxed/simple;
-	bh=7wnIojVr9TnHw4xpU/gYsVgLqdfgCzoKF9H5UJo6j5c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JGsksUPxwPR+Jb2gMEK2rhG3tU1O93TzOxZ+0/YTMkLO+hTedakR6VD8qyjxiyevAqETZyfjbt4k20rt3ZXfgR2xgwqa0E/WLXL7R5fh5gk7I7vjgK84YvwkYXqpGi/dkLIy+2ac/e2KmF7XwKZKo1HGG8obHp5YHFjPk52lBfk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=BAX+a1Sf; arc=none smtp.client-ip=194.59.206.189
+	s=arc-20240116; t=1778926972; c=relaxed/simple;
+	bh=cPG1mz/pxGUQC+Kegbpw3DSWRI/5n0HOe2XJIdpJdhI=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=TiZWywtNi3n3f81goAuSbeMtpMkrR+LHjgvGsc3H28mR6bksTwzSW5J2P+gg2KP1o6ao/aDysyUEnUwUx7NHz1bbEDpDMLIRJl780DYyw2FnPViS8DYTJbndO+CuFMeO6Ug+SG+k5nVC2cxCC67JnuMxiihsDYtQ3TYD6/36OGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=EzUmaLdu; arc=none smtp.client-ip=188.68.63.102
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="BAX+a1Sf"
-Received: from relay02-mors.netcup.net (localhost [127.0.0.1])
-	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4gHfw46fCXz496p;
-	Sat, 16 May 2026 12:10:44 +0200 (CEST)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="EzUmaLdu"
+Received: from mors-relay-2502.netcup.net (localhost [127.0.0.1])
+	by mors-relay-2502.netcup.net (Postfix) with ESMTPS id 4gHg03065zz66lC
+	for <regressions@lists.linux.dev>; Sat, 16 May 2026 12:14:11 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1778926244;
-	bh=7wnIojVr9TnHw4xpU/gYsVgLqdfgCzoKF9H5UJo6j5c=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=BAX+a1SfTKx3a1vzc8L9QrNEJS2H9gS7LwNO+kNkeqFecNpBuJtO/CJVJH9pxNy2r
-	 mTzIGs+LaL6EIpi8w82IrFjXgpYCD9SG7GdgCg1E7+p5MKDcAMK1BwTdDwU8hsQ5Tk
-	 ZbYFukW3z7MVPhnxvW7b2ZnqfbDwnRePFttJCMEfbpRjHPXxxFg5KFPaOFxCw3tZ1u
-	 1ms6sgpPb0HcNtF+0rWFRjrQvFso9JJ9U8UWbZ7ys9iTOMeZWj1atUt/JhLS/t5cmU
-	 EP/ngtCstv8Nm1GA3MFsTDqVFvRbbq/YBbEnuOXz5HV3XwZv5WvvEBAXXTS45ODvjB
-	 7ZOtpJhmRq7Qg==
+	s=key2; t=1778926451;
+	bh=cPG1mz/pxGUQC+Kegbpw3DSWRI/5n0HOe2XJIdpJdhI=;
+	h=Date:Subject:From:To:References:In-Reply-To:From;
+	b=EzUmaLdurqm17ElvupS41M6ewQD9LsAFTmHXfiaNfCT5M7Gg+wrVf8VBw2RLRJtcv
+	 bGJtONclWjx6nW5A0HUAxkopgAe4Hg6FEWPmdPIG53L34CQn6O+9dAx7sb31jvXcXT
+	 wrf8e2RwXiG52i2ItQF8hOacLD0eN/Kn9uANB16dd+GGFMcipJt/PCY+S0rEJVScnl
+	 udJuokapgu93Sz5ZgEmjzN+E1oaBCK0eGGtIsLTGjYB/Vh7KiCVfRPIaShCmABoZIk
+	 GyyZs85UiyzyJJe658Uh7LREDcBcCT2RDCvKBL41HrHmqcOR7PNqAdugm6uyxEzLZy
+	 Jy7MMhVsHw5IQ==
 Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
-	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4gHfw45vFPz7xLx;
-	Sat, 16 May 2026 12:10:44 +0200 (CEST)
+	by mors-relay-2502.netcup.net (Postfix) with ESMTPS id 4gHfzJ5MKnz4yBf
+	for <regressions@lists.linux.dev>; Sat, 16 May 2026 12:13:32 +0200 (CEST)
 X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
 X-Spam-Flag: NO
 X-Spam-Score: -2.898
@@ -40,16 +40,16 @@ Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4gHfw34fwhz8tYs;
-	Sat, 16 May 2026 12:10:43 +0200 (CEST)
+	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4gHfzG3hKfz8tYg
+	for <regressions@lists.linux.dev>; Sat, 16 May 2026 12:13:30 +0200 (CEST)
 Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 7382261829;
-	Sat, 16 May 2026 12:10:42 +0200 (CEST)
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 0F53861829
+	for <regressions@lists.linux.dev>; Sat, 16 May 2026 12:13:30 +0200 (CEST)
 Authentication-Results: mxe9fb;
         spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
 Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <999d967b-331c-468b-b5ab-1ed7d35c8b05@leemhuis.info>
-Date: Sat, 16 May 2026 12:10:40 +0200
+Message-ID: <41c5d1f8-0eb0-4115-951f-7ceb6448065c@leemhuis.info>
+Date: Sat, 16 May 2026 12:13:28 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -57,72 +57,79 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Revert "nfc: nxp-nci: remove interrupt trigger type"
-To: David Heidelberg <david@ixit.cz>, Carl Lee <carl.lee@amd.com>
-Cc: oe-linux-nfc@lists.linux.dev, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org, brgl@kernel.org, Sasha Levin <sashal@kernel.org>,
- Ian Ray <ian.ray@gehealthcare.com>,
- Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
- Jakub Kicinski <kuba@kernel.org>, Mark Pearson <mpearson@squebb.ca>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <20260511082611.12721-1-bartosz.golaszewski@oss.qualcomm.com>
- <366cef36-d3cb-485f-a71a-dea347e8531b@ixit.cz>
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
 From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
 Content-Language: de-DE, en-US
-In-Reply-To: <366cef36-d3cb-485f-a71a-dea347e8531b@ixit.cz>
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-PPP-Message-ID: <177892624304.87246.771635449133262671@mxe9fb.netcup.net>
-X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: 7382261829
-X-NC-CID: 7j6E55DFeOfLwJGzrUYjF8WQnCdzICCgtv9X2CperLqHSIg89bY=
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: <177892641022.88068.14537348119743755037@mxe9fb.netcup.net>
+X-NC-CID: QWPQD+NEassoLPjPzER9qUbtoVjF3wEhXsqwAv+8KkDWbODMF60=
 
-On 5/15/26 21:28, David Heidelberg wrote:
->
-> do you see any better solution than just reverting it? In case no, I'll
-> accept the revert.
 
-FWIW, Mark hit the issue as well on a few Lenovo machines and prefers
-reverting, too:
-https://lore.kernel.org/all/c1f80da1-9bf8-41c3-b645-3ae95e116add@app.fastmail.com/
 
-> On 11/05/2026 10:26, Bartosz Golaszewski wrote:
->> This commit causes an infinite interrupt storm on Lenovo T14s (at least
->> the AMD Ryzen 7 variant)
+On 3/9/24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-Side note: wondering if it would be wise to specific the generation of
-the T14s, but I guess it won't make much of a difference. Adding a
-link/closes tag to above thread would be nice, too.
+#regzbot report:
+https://gitlab.freedesktop.org/drm/i915/kernel/-/issues/16015
+#regzbot introduced: 40d2f5820951
 
-Ciao, Thorsten
+#regzbot report:
+https://lore.kernel.org/all/982b9bc1-0a0a-4fc5-8e3a-3672db2b29a1@nvidia.com/
+#regzbot introduced: db359fccf212e7fa3136e6edbed6228475646fd7
+#regzbot title: mm: tcp_mmap broken
+#regzbot fix: Revert "mm: introduce a new page type for page pool in
+page type"
+#regzbot monitor:
+https://lore.kernel.org/all/20260515034701.17027-1-byungchul@sk.com/
 
->> which requires blacklisting of this driver.
->> Neither firmware updates nor the proposed solution[1] seem to help. This
->> reverts the change due to an unfixed regression. The problem is present
->> since v6.19.6 stable kernel.
->>
->> [1] https://lore.kernel.org/all/20260311-nfc-nxp-nci-i2c-restore-irq-
->> trigger-fallback-v1-1-9e20714411d7@amd.com/
->>
->> Cc: stable@vger.kernel.org # v6.19, v7.0
->> Fixes: 941270962861 ("nfc: nxp-nci: remove interrupt trigger type")
->> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
->> ---
->>   drivers/nfc/nxp-nci/i2c.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/nfc/nxp-nci/i2c.c b/drivers/nfc/nxp-nci/i2c.c
->> index b3d34433bd14..e99e1f381028 100644
->> --- a/drivers/nfc/nxp-nci/i2c.c
->> +++ b/drivers/nfc/nxp-nci/i2c.c
->> @@ -305,7 +305,7 @@ static int nxp_nci_i2c_probe(struct i2c_client
->> *client)
->>         r = request_threaded_irq(client->irq, NULL,
->>                    nxp_nci_i2c_irq_thread_fn,
->> -                 IRQF_ONESHOT,
->> +                 IRQF_TRIGGER_RISING | IRQF_ONESHOT,
->>                    NXP_NCI_I2C_DRIVER_NAME, phy);
->>       if (r < 0)
->>           nfc_err(&client->dev, "Unable to register IRQ handler\n");
-> 
+#regzbot report:
+https://lore.kernel.org/all/CAMRc=MfADC2ncuUQiSW7TnUwBUWCJn9i=wZ9dqYMZNo2h6qOxw@mail.gmail.com/
+#regzbot dup: https://bugzilla.kernel.org/show_bug.cgi?id=221515
+
+#regzbot report:
+https://lore.kernel.org/all/9f6967e5-c37f-4e21-b0d2-8eea4a0b5809@codewiz.org/
+#regzbot dup:
+https://lore.kernel.org/linux-bluetooth/770d36b07311bf88210c187923f243fb9f126f04.1777058551.git.pav@iki.fi/
+
+#regzbot report:
+https://lore.kernel.org/linux-bluetooth/5i35wmc4z7sz54jo5uj6ywext2enh4ik3oxmfmperqk2v5kc27@ppvm6oodzipn/
+#regzbot dup:
+https://lore.kernel.org/linux-bluetooth/770d36b07311bf88210c187923f243fb9f126f04.1777058551.git.pav@iki.fi/
+
+#regzbot report:
+https://lore.kernel.org/linux-bluetooth/770d36b07311bf88210c187923f243fb9f126f04.1777058551.git.pav@iki.fi/
+#regzbot dup:
+https://lore.kernel.org/all/CAJ8Bt0iC5bVgCRw28YXB1mo%2B-p_sTM_cp6fF%2BqVNapyL-Hsayg@mail.gmail.com/
+
+#regzbot report:
+https://lore.kernel.org/linux-bluetooth/770d36b07311bf88210c187923f243fb9f126f04.1777058551.git.pav@iki.fi/
+#regzbot dup: https://bugzilla.kernel.org/show_bug.cgi?id=221521
+
+#regzbot report:
+https://lore.kernel.org/linux-bluetooth/770d36b07311bf88210c187923f243fb9f126f04.1777058551.git.pav@iki.fi/
+#regzbot dup: https://bugzilla.kernel.org/show_bug.cgi?id=221525
+
+#regzbot report:
+https://lore.kernel.org/linux-bluetooth/770d36b07311bf88210c187923f243fb9f126f04.1777058551.git.pav@iki.fi/
+#regzbot dup: https://bugzilla.kernel.org/show_bug.cgi?id=221529
+
+#regzbot report:
+https://lore.kernel.org/linux-bluetooth/770d36b07311bf88210c187923f243fb9f126f04.1777058551.git.pav@iki.fi/
+#regzbot dup: https://bugzilla.kernel.org/show_bug.cgi?id=221511
+
+#regzbot report:
+https://lore.kernel.org/all/d2ffd82d-01cb-470e-bb02-70c163c61216@ofz.sk/
+#regzbot dup: https://bugzilla.kernel.org/show_bug.cgi?id=221512
+#regzbot resolve: most likely a temporal coincidence rather than a
+kernel regression
+
+
 
