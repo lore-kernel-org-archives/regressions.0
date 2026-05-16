@@ -1,90 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from morpheus.develer.net (morpheus.develer.net [2.228.72.60])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCB5935E1DD;
-	Fri, 15 May 2026 19:57:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ECB224886E
+	for <regressions@lists.linux.dev>; Sat, 16 May 2026 02:34:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=2.228.72.60
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778875051; cv=none; b=Ky9mm6CsFFMISgCawlDfS618VzTPKu/sfzz/s6jtuOJkNuESSUmWgtEjzkm9fJvB5BOuL+dpBoV/o27RxMAzYJXa/K6tzVRKeyyQYdmDXG8eFqREK9Mpfh1cDDGF2MMe7oojSEnULUiu3fdIoD7+pCzpvbVbOJuYyXQF9S5zOOc=
+	t=1778898876; cv=none; b=rHZb0ZfhWs2/xNYSPOXRMRRqvyxcelfkessqrLIh23KPis1SIwhUzafTiTXV+cf+o6YDUWeiqdssS7zsz+gTHYN6CVllYuD/yaXPdOT044oraYoYhAKDfcdwwnV5JTchTGnNT7xk4Uzn8KlIneW2HVoOtwjtnwW5zd1KoyMOrEA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778875051; c=relaxed/simple;
-	bh=RcxWdxyOtt3pt04+C5YwWOqopc6gNCYhI8U1a+BYkJU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Rxw16YDZ+kUd6z5NY3ttds0HNH7qaR/indi8GOOWKMlT3LJioSV7akvd3uCFtXff00gUNMjoqvGJquROgmv3eyBNqFkNdAWibTFtgbbRKEtQ8wm5Y8JeJP1DBh0Z4hkioInHkhQTLssrBZpLrX5smCGKZp3UPWoHDv/M/9PQjRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HfG+Xc92; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778898876; c=relaxed/simple;
+	bh=Sr9LQCNEgyUVSUZQJoAkJM8M2xtysEoGe/O3A32DsXA=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=HjfFH8xYZOl+hyPUvXgxjnNXh0IvT0rbw2GjePHgMuwEonD3IIRDMOxj3OGdleWcCZkhZuG1zbU4gQvhCNX0eSVW8s0512Kfdn8bMOM8D3mWHiDFpFwp2oi32ndZV/BC9Ddr9FZYQ7J/cEcSaT1NORNQPwKC+qbP/Pd7CfVOF7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=codewiz.org; spf=pass smtp.mailfrom=codewiz.org; dkim=pass (1024-bit key) header.d=codewiz.org header.i=@codewiz.org header.b=Uhn4C4NJ; arc=none smtp.client-ip=2.228.72.60
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=codewiz.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codewiz.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HfG+Xc92"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C91C1C2BCB0;
-	Fri, 15 May 2026 19:57:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778875051;
-	bh=RcxWdxyOtt3pt04+C5YwWOqopc6gNCYhI8U1a+BYkJU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=HfG+Xc928ulaLjMPWEV/pB4ilpCrrZeiWLQSrLaHrqkXohnAfxYdXspfqczhtQ6TK
-	 lTREExRXGhC5AU8Sq6VVPyrAS4C/kmH1zK2hmeggpkVKPEdQ3BQYOhqoeAf4q5C/xi
-	 GxwLsxNz1VJWumYwH1Y+JfqkQfbWp+sVVozDsQN3WOJUGQlYBEf0TmbflP/oLI2noh
-	 y8JglzauKVTQP6m0CtPkUpgfSFbquBz8OTmRa6C+5OjSTIepE9+bi8GYWitZ9A34e9
-	 e0XOACnNvO/9YaPpi5EzhyJML8E6Uf55nVroqW9qQ/OHhrxdrcaXwhu2ps+kM2xira
-	 yyTzQ9m7RMgPA==
-From: Thomas Gleixner <tglx@kernel.org>
-To: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Tony Rodriguez
- <unixpro1970@gmail.com>
-Cc: Linux kernel regressions list <regressions@lists.linux.dev>, LKML
- <linux-kernel@vger.kernel.org>, sparclinux@vger.kernel.org, Thorsten
- Leemhuis <regressions@leemhuis.info>, Linus Torvalds
- <torvalds@linux-foundation.org>
-Subject: Re: the stuttering regression in 7.0: should I have done something
- different
-In-Reply-To: <a0feba9667ac6760f82137cca89afac7da786f22.camel@physik.fu-berlin.de>
-References: <ffb44522-f01c-4be3-849d-27dc17fbca7f@leemhuis.info>
- <D5D19776-C809-4284-9417-F9A860877B98@gmail.com>
- <1c165caf-36b4-4673-97fd-ed86bef17b88@leemhuis.info>
- <3332123b-9e11-4895-9ab3-1707fba5815c@gmail.com> <871pfj9cmj.ffs@tglx>
- <a7a0d78b-435e-43c8-b436-5e7f4dd39dee@gmail.com>
- <088e6cfa-0167-4748-af6c-458ade2f303a@gmail.com> <878q9p82je.ffs@tglx>
- <64f465ca-6117-4375-9c4b-af771b8205fd@gmail.com> <87tssb6olo.ffs@tglx>
- <e45438e7-8501-4c10-95ee-07f118de8a51@gmail.com> <87qznez3tf.ffs@tglx>
- <0669f754-a313-4aa3-9923-0c374d49feb3@gmail.com> <871pfcznw0.ffs@tglx>
- <a0feba9667ac6760f82137cca89afac7da786f22.camel@physik.fu-berlin.de>
-Date: Fri, 15 May 2026 21:57:27 +0200
-Message-ID: <87se7sxx7c.ffs@tglx>
+	dkim=pass (1024-bit key) header.d=codewiz.org header.i=@codewiz.org header.b="Uhn4C4NJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codewiz.org; s=mail;
+	t=1778898457; bh=Sr9LQCNEgyUVSUZQJoAkJM8M2xtysEoGe/O3A32DsXA=;
+	h=Date:To:Cc:From:Subject:From;
+	b=Uhn4C4NJ7/EZStOjtbKjH09nkHS86u+YtCfJRxL2ohMxkO4/N82ZdEd3YuR9NCJR2
+	 ISsxprB2MMps3CF5O5XNYnMz8ccIwgQccoXWGMouR6K4xjwsvfd2ALb/hXaX0mw2nD
+	 COiUGbX+tfXcNJgrKHuLRlvd55kHjRSlzey0WmWU=
+Received: from [IPV6:2404:7a80:ff26:6c00:7853:dba:2963:526b] (unknown [IPv6:2404:7a80:ff26:6c00:7853:dba:2963:526b])
+	(Authenticated sender: bernie)
+	by morpheus.develer.net (Postfix) with ESMTPSA id 72F4124514C;
+	Sat, 16 May 2026 04:27:36 +0200 (CEST)
+Message-ID: <9f6967e5-c37f-4e21-b0d2-8eea4a0b5809@codewiz.org>
+Date: Sat, 16 May 2026 11:27:32 +0900
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird Beta
+Content-Language: en-US
+To: linux-bluetooth@vger.kernel.org
+Cc: regressions@lists.linux.dev
+From: Bernie Innocenti <bernie@codewiz.org>
+Subject: Bluetooth: btmtk: MT7925 fails "wmt func ctrl" (-EINVAL) since
+ 634a4408c061
+Autocrypt: addr=bernie@codewiz.org; keydata=
+ xjMEXxKIihYJKwYBBAHaRw8BAQdAEaAGAHL1d+7jYCkWrJabzd1reJYnxeoh45PTz8+7ERXN
+ JUJlcm5pZSBJbm5vY2VudGkgPGJlcm5pZUBjb2Rld2l6Lm9yZz7CkAQTFggAOBYhBGkdgfqR
+ 5j+13Wxn/QvieBz8fxukBQJfEoiKAhsDBQsJCAcDBRUKCQgLBRYDAgEAAh4BAheAAAoJEAvi
+ eBz8fxuk7PEBALTnPaPxYWXvPXxQ7WLcd4BvcfxIh+86O8sfh+OK9M87AP431LAnBx6lLArU
+ 8sXlHi9kq5Nx0FEeD0iQkl4f+Wk9C844BF8SiIoSCisGAQQBl1UBBQEBB0CyluVyxU6BIr7q
+ 8dkdVt2C6CHSNE1gcNoIOTD3xcG7AgMBCAfCeAQYFggAIBYhBGkdgfqR5j+13Wxn/QvieBz8
+ fxukBQJfEoiKAhsMAAoJEAvieBz8fxukLC0A/jSvI5r8WmvrN7GMalg1PqF5JEruVtMIZaTY
+ LD/ARox4AP9mgTyGs+XWQvqdw5FiEcAVQal6BT1xTiLFq48PN/v4Aw==
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi!
+Hi,
 
-On Fri, May 15 2026 at 19:51, John Paul Adrian Glaubitz wrote:
-> On Fri, 2026-05-15 at 17:35 +0200, Thomas Gleixner wrote:
->> > Thank you again for the debugging guidance and for the feedback on my 
->> > original patch addressing the timer starvation issue. It was a pleasure 
->> > contributing to the resolution.
->> 
->> Thank you for going through the hassle of chasing it down and providing
->> the debug data to analyze it.
->> 
->> I'm still puzzled how this went unnoticed for almost two decades:
->> 
->>    112f48716d9f ("[SPARC64]: Add clocksource/clockevents support.")
->
-> My suspicion is that it was previously visible only in certain edge cases,
-> in particular on machines with many cores and high load.
->
-> Case in point: In the past, SPARC LDOMs with lots of virtual CPUs could
-> crash in rares cases when building packages such as GCC or LLVM and running
-> their testsuites.
+Since commit 634a4408c061 ("Bluetooth: btmtk: validate WMT event SKB 
+length before struct access") my MediaTek MT7925 Bluetooth adapter no 
+longer initializes. The controller never registers and is absent from 
+userspace.
 
-I assume those occasional failures did not leave conclusive hints around.
+I'm seeing this on a Framework 16 (AMD Ryzen AI 9) with a MediaTek 
+MT7925 (USB ID 0e8d:0717) running Fedora Rawhide.
 
-> I don't know if Tony's patch fixes this long-time issue that we have observed
-> in the past on Debian's buildds, but I think that the chances aren't too bad.
+Firmware is BT_RAM_CODE_MT7925_1_1_hdr.bin and loads fine in both, so 
+this is not a firmware or kconfig issue.
 
-Good luck!
+Bad kernel (7.1.0-0.rc3.260515g70eda68668d1.27.fc45.x86_64):
 
-> Thanks to both of you for hunting this down!
+   Bluetooth: hci0: HW/SW Version: 0x00000000, Build Time: 20260106153314
+   Bluetooth: hci0: Failed to send wmt func ctrl (-22)
+   Bluetooth: hci0: HCI Enhanced Setup Synchronous Connection command is 
+advertised, but not supported.
 
-For some stupid reasons I like such puzzles :)
+Good kernel (7.0.0-62.fc45.x86_64):
+
+   Bluetooth: hci0: HW/SW Version: 0x00000000, Build Time: 20260106153314
+   Bluetooth: hci0: Device setup in 296567 usecs
+   Bluetooth: hci0: AOSP extensions version v1.00
+
+
+Bug analysis courtesy of Claude Opus, I haven't verified:
+
+   The failure (-22 = -EINVAL) comes from the new length guard in the
+   BTMTK_WMT_FUNC_CTRL branch of btmtk_usb_hci_wmt_sync():
+
+     case BTMTK_WMT_FUNC_CTRL:
+         if (!skb_pull_data(data->evt_skb, sizeof(wmt_evt_funcc->status))) {
+             err = -EINVAL;
+             goto err_free_skb;
+         }
+
+   The first skb_pull_data() (base 7-byte WMT event) succeeds — neither
+   "WMT event too short" nor "Wrong op" is logged — so it is specifically
+   this second 2-byte status pull that returns NULL. The MT7925 FUNC_CTRL
+   response is shorter than the full 9-byte struct
+   btmtk_hci_wmt_evt_funcc the check assumes, so a valid response is now
+   rejected. The pre-commit code tolerated this, hence the regression.
+   The commit's bounds-check intent is sound, but the trailing status
+   field should be treated as optional for devices that return a short
+   event, rather than hard failing.
+
+   The commit was isolated by code inspection: it is the only post-7.0
+   btmtk change introducing an -EINVAL in this path.
+
+   The commit is Cc: stable, so affected stable trees likely regress too.
+
+
+Happy to test patches or provide full dmesg / btmon traces.
+
+#regzbot introduced: 634a4408c061
+
+-- 
+_ // Bernie Innocenti
+\X/  https://codewiz.org/
+
