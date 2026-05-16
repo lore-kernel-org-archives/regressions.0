@@ -1,147 +1,101 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F63223ABBF
-	for <regressions@lists.linux.dev>; Sat, 16 May 2026 15:03:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6993B1E4BE
+	for <regressions@lists.linux.dev>; Sat, 16 May 2026 19:51:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778943794; cv=none; b=MUHzHF+LjuFE8hx5cjYZobgof/HMFmiv9Rs4ghnUzZ77oc/Nt1OaX20ZL6d/A1ANuZ7LInKmqgeyeEbVlb4ovnXun85FFPDtASP3Qwvj3qoDjqCneUlmfhrSpOYOAFjE0D8moIHAOddxPunPBvY6OUtdcI0wePCwgh0GW/Mq2/k=
+	t=1778961065; cv=none; b=imBBkHdPVMlXu6Tpsf221eNIP1MOnJiP/ro+tjA0eTZaGzT8cqAvkuo/Qhk9SmNFGPGbGa3yl2n+6lkKkAOrrRxLkfv2HkksdCOYKyCviiTEkiXAiOUBIeJjS0gfxuPoW89J4MLch7lKpK6TQrEHObhxXPjKidTt0FahKPLHm+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778943794; c=relaxed/simple;
-	bh=QmkJpHUldte/egmuA7DGybI2tVG7cghkcZq8VmZIces=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=d/QXXTELyobvmMxnqvMZ/lBdaebU6kPyh/7WkyvSc/rRXAu6EVS4wuHjHaqQgp50qFmUh0zCfRdvQLUQL+dQR+dET/X6oX9FMZDhaaz43ZsMBLIXkcONuHtfetUdcwX8IzWABGCuChGld4/wQkYFJMESg5JJwikwgLGT4qLuA7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mZhQLSLR; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1778961065; c=relaxed/simple;
+	bh=NW0z9IhbkDKRr/tOGwzpWxbUSWH+j2j5riXF3KwYMck=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SowTMR6exABox+STafs3lIr0wQ6CeGfl2sIMWcERWp/Rs7E/aaJiMaAzvapn9lSO7J5p+aH4t/n1hAn/Z7BoW3fEpYbDyAvv7InxJNfO81o3DbzawXc3LYjNH7Io8md4rO1ZGWGUZLXcsT01gRgiSS760BlcEJX+Z1TPZC8KxLs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=oobwcGwG; arc=none smtp.client-ip=80.241.56.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mZhQLSLR"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-bd4f8260e4eso189340166b.1
-        for <regressions@lists.linux.dev>; Sat, 16 May 2026 08:03:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1778943791; x=1779548591; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=zxxDjL5gnnI2uwzrc+KACxtlyJsnDYW3Yb57xozjSks=;
-        b=mZhQLSLRaGl3tcL/sBw2p4mwGc0/lhkHOEe/qwkZ3KEiVAs7lWtRVGus9BnoMi5Owq
-         XjFd6mpenIY+bnqs6S0tgj4C7EH3XNSx7kaG+wssSKh6rd48x7a7t/+zXSjfHno76fgI
-         mC9RfY4W2Prxbb70ujKWjYZlqIetMNAJapWwQzLeBCF6G6fGpEJhOxesheEUTw75XqSr
-         Cg4Ikq5UJGWOvIz3DsRwHjTKDSsxS6LNLVYrJR1ysUbqNZUGqnqlog6GLmrx2yLfUEca
-         0OhD0/24KUuayXEHYfuXmdlrb1NagKGD9GrvQwe2LEWviHEaiW1kQwTFu8S2n9l1ekJS
-         gZfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778943791; x=1779548591;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zxxDjL5gnnI2uwzrc+KACxtlyJsnDYW3Yb57xozjSks=;
-        b=N9aM5NKfK1VoUaqt8nVnuk+4EFbV/vS8c+U0gufVnV2q9S8hQR0hJ7vnzi+pPeWpRA
-         XvNYef+2zl3HZg8j7bJ08/tKuVGuOYhQRA9Vklyp1nS/1pR86QuuwO0wT7XYkbYHS8CY
-         Xal0em532XItVKVBSYonvqSKaFsm7c824PugQ/h9V7uA7MxpFEmhEwkX/HPo/sxwRI/K
-         2cHG4qvYtCDdNXwGZJaePIsHqpL7YaCpvEFjkYMTN6Tx6m5ihHi1k+KbMtk0Snx5AdOW
-         SAUFGP1t1DCs3JSMYbbg5AvTEuuOG7Jfmwc1r+PbJoFrABEfvJizh9Q0MCE/yCDMXH+r
-         8yEw==
-X-Forwarded-Encrypted: i=1; AFNElJ/mzRoMy/LKhc0XPRBQpSeC/ZZsYCoKsBVgDg2YQekxaw19l8ifLZRGGtD9Bk+l98JYmuLcw8Of6EtsBQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0YyT4qbqvuYdikrw0+mCD7fjTR2io8mlBcpG3KqxUTij9XJ4jF88
-	IFyw/D3Y1KG/kjidrbCuKPbldQXjowMipL3OTmwjJcrpjWQ24dCtgQI=
-X-Gm-Gg: Acq92OHLbEKwgP5NPMeC+1uTsSWP/nBfn1iRY49WUbbzNYpz+xs6BC++q1R6hHa6Iwb
-	nvAiAtpImKYZppyNh6E1DJgSSyz6t5fhIxmONP4xAiPPoqV9cRu/tEyoM6y2P/1cYetA28ek+++
-	GJ69s1pr2jbwwHiJUS6L+gdGOJkpdaVe6U8NyRqH6ntQavTE2nodXLNlEa873uFIr8/TsotfbvE
-	cdbhOuoNNq4xRoJxKY6/ukSDBXDFSC++DLI2ARpBixfmJeQ6AEU8sKJBZJExXV1blxdGumWG4dO
-	/k3OhRSLXord8nJTCP7A9CAGQoYSjwqZeE71HCPABKHO+LwaMsXeE4v3/cvM9Vn67m1uLBp5XDy
-	i5sRR8TczjBd+IkBYl5KsrXE8Y3I8+iYj164Z+xjCL1YQAmfMRH0i1oyTRLR87a4+8oKrI2aGnc
-	MpSnaxgVjzXcWoW1XUvPUQM2UNozWgGZflodgTYr3puuYlBfrQ/WfqXN3ol8vQ/ITTA28BPNibX
-	tuhKfjkjMaZ/ybg+PWT7REO/ZOau7THhwgYAf3VGZY=
-X-Received: by 2002:a17:906:f59a:b0:bd4:6c96:f87b with SMTP id a640c23a62f3a-bd5178f913bmr453717966b.28.1778943790650;
-        Sat, 16 May 2026 08:03:10 -0700 (PDT)
-Received: from nn ([2001:1ab8:1003:0:5454:f357:ba89:4e22])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-68310b3e8fbsm3313946a12.2.2026.05.16.08.03.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 16 May 2026 08:03:09 -0700 (PDT)
-Sender: N B <gen.benner@gmail.com>
-From: =?UTF-8?q?Nerijus=20Bend=C5=BEi=C5=ABnas?= <nerijus.bendziunas@gmail.com>
-To: Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>
-Cc: Russell King <linux@armlinux.org.uk>,
-	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev,
-	stable@vger.kernel.org
-Subject: [PATCH net v2] net: phy: skip EEE advertisement write when autoneg is disabled
-Date: Sat, 16 May 2026 18:02:51 +0300
-Message-ID: <20260516150251.879680-1-nerijus.bendziunas@gmail.com>
-X-Mailer: git-send-email 2.54.0
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="oobwcGwG"
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [10.196.197.2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4gHvnV0nB3z9vTk;
+	Sat, 16 May 2026 21:50:54 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1778961054;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PEhqOpaWWSv+ARlx/Z4JVeUPUWXupWXmKcbzc9qwsMQ=;
+	b=oobwcGwGRpXJsREMPj/Iy6rIrhK7lVVvBuV5ePQvEdIrZKXUYD5sm9hnuPFE64gB812uXz
+	sFRqZg4JiGBZfKeAzYRh0pm2nlSlhl2BPkJz8CHk/UUw7y7W9BmIKuL0LfAnB9JP71ffQj
+	AnLi9iejwE9jKjv4MugjdDekKYMywgqL1H0kO7m3NRMecLeXfDhFH0oPXrKrTA0VkhN6Wj
+	o7MvlvWERKqQDCY2fLO+IDxCnGuL13ulvz9ZOpQa/AdnyLA0K124Df9M7Aluucfl0z9rjR
+	1aJuYSQKcMsMJZ3AMJJ1BzMEYSS1brrMXzQ64DUSgNvMrrpAu+t/Qxa8qoRHUA==
+Date: Sat, 16 May 2026 21:50:49 +0200
+From: Lukas Beckmann <lbckmnn@mailbox.org>
+To: Sasha Levin <sashal@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>
+Cc: regressions@lists.linux.dev, stable@vger.kernel.org,
+	linux-rt-users@vger.kernel.org, Mike Galbraith <efault@gmx.de>
+Subject: Re: [REGRESSION] 6.12.y: d66792919d4f (sched/deadline: Use revised
+ wakeup rule for dl_server) causes latencies up to 50ms with PREEMPT_RT
+Message-ID: <agjKmWqi_6qR0TJO@lukas-yuanda-arch.localdomain>
+References: <04657838-46d1-432d-95e1-eb73b930b032@mailbox.org>
+ <20260511141441.stable-reply-0001@kernel.org>
+ <4e31e3b5-fa69-4c4c-a5e9-dea7a8452ee7@mailbox.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <4e31e3b5-fa69-4c4c-a5e9-dea7a8452ee7@mailbox.org>
+X-MBO-RS-META: ddgoobbgpdgr8n4i1chaj6m6o4dbo4wm
+X-MBO-RS-ID: 76f75684ade3cfac31e
 
-genphy_c45_an_config_eee_aneg() writes the EEE advertisement to the
-auto-negotiation device's MMD register space (MDIO_MMD_AN, register
-MDIO_AN_EEE_ADV).  These registers are read by the link partner only
-during auto-negotiation, so writing them while autoneg is disabled
-cannot influence the link.  On some PHYs (e.g. Broadcom BCM54213PE)
-the write nevertheless reaches the chip and disturbs the receive
-datapath.
+On Tue, May 12, 2026 at 12:08:49AM +0200, Lukas Beckmann wrote:
+> 
+> On 5/11/26 16:21, Sasha Levin wrote:
+> > Thanks for the detailed report. Before I revert d66792919d4f from 6.12.y,
+> > I'd like to confirm whether the underlying issue is the missing dl_server
+> > rework chain on 6.12.y rather than the revised wakeup rule itself.
+> >
+> > Mike's reply notes that his local 6.12-rt tree carrying the following
+> > three commits in cannot reproduce, while the same tree without them
+> > reproduces quickly:
+> >
+> >   cccb45d7c429 ("sched/deadline: Less agressive dl_server handling")
+> >   4ae8d9aa9f9d ("sched/deadline: Fix dl_server getting stuck")
+> >   a3a70caf7906 ("sched/deadline: Fix dl_server behaviour")
+> >
+> > d66792919d4f's upstream commit message explicitly says it relies on the
+> > state established by a3a70caf7906, and none of the three are in 6.12.y.
+> >
+> > Could you give those three commits a spin on top of 6.12.y (keeping
+> > d66792919d4f in place) and see whether the latency goes away?
+> 
+> If I apply the three commits on 6.12.y, the latencies indeed go away.
+> This is running for a few hours now, and the latencies showed up after 30
+> minutes tops, with plain 6.12.y before.
+> I will leave this running.
+> 
+> Note:
+> I also tried applying only cccb45d7c429 ("sched/deadline: Less agressive
+> dl_server handling") before, and that also seems to fix the issue.
+> 
+> Thanks
+> Lukas
 
-Concretely, running
+Hey Sasha,
 
-    ethtool -s eth0 speed 100 duplex full autoneg off
-    ethtool --set-eee eth0 eee off
+Cyclictest is still running and looking good (latency-wise).
+How should we proceed?
 
-leaves eth0 with TX working and RX completely silent on a
-Raspberry Pi 4 / CM4 board (bcmgenet + BCM54213PE in rgmii-rxid).
-Switching back to autoneg recovers the link.
-
-Prior to commit f26a29a038ee ("net: phy: ensure that genphy_c45_an_config_eee_aneg() sees new value of phydev->eee_cfg.eee_enabled"),
-the disable path was effectively a no-op because the helper read
-the stale eee_cfg.eee_enabled, so the underlying PHY behavior never
-surfaced.
-
-Bisected on rpi-6.12.y between commits 83943264 (good) and
-effcbc88 (bad) to f26a29a038ee.
-
-Fixes: f26a29a038ee ("net: phy: ensure that genphy_c45_an_config_eee_aneg() sees new value of phydev->eee_cfg.eee_enabled")
-Cc: stable@vger.kernel.org
-Signed-off-by: Nerijus BendÅ¾iÅ«nas <nerijus.bendziunas@gmail.com>
----
-Changes since v1:
- - Reworded the inline comment and commit message: the MMD AN
-   write is read by the chip with side-effects, not silently
-   ignored. Suggested by Andrew Lunn.
- - Tightened the reproducer paragraph (was repeating paragraph 1).
-
-v1: https://lore.kernel.org/netdev/20260516114334.812828-1-nerijus.bendziunas@gmail.com/
- drivers/net/phy/phy-c45.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/drivers/net/phy/phy-c45.c b/drivers/net/phy/phy-c45.c
-index d48aa7231b37..126951741428 100644
---- a/drivers/net/phy/phy-c45.c
-+++ b/drivers/net/phy/phy-c45.c
-@@ -940,6 +940,14 @@ EXPORT_SYMBOL_GPL(genphy_c45_read_eee_abilities);
-  */
- int genphy_c45_an_config_eee_aneg(struct phy_device *phydev)
- {
-+	/* Writing MMD AN advertisements while autoneg is disabled has no
-+	 * effect on link-partner negotiation, but on some PHYs (e.g. the
-+	 * Broadcom BCM54213PE) the write itself disturbs the receive
-+	 * datapath. Skip it.
-+	 */
-+	if (phydev->autoneg == AUTONEG_DISABLE)
-+		return 0;
-+
- 	if (!phydev->eee_cfg.eee_enabled) {
- 		__ETHTOOL_DECLARE_LINK_MODE_MASK(adv) = {};
- 
--- 
-2.54.0
-
+Thanks
+Lukas
