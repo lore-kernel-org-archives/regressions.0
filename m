@@ -1,55 +1,55 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.170])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [194.59.206.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75D38357D15
-	for <regressions@lists.linux.dev>; Sat, 16 May 2026 05:51:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2D633559CA;
+	Sat, 16 May 2026 10:10:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.59.206.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778910692; cv=none; b=VC/RMgS4BN7qqsP0YMeVzizXMZxS6pbtiyKQFmiYabXrN98hPJz76rkGm/aoCvOvQ087OJ7xRqe7G2XOCV6vqAphiq2fkFoZwXmjgbJcf2oKmlWBCkNx7x4BKz24nRkbZs2lMVR7naIcRfwLN/v3lLggpK7+1LJTYN3KTlncSHo=
+	t=1778926256; cv=none; b=PslZBGyy94GSvrQWLeCymj8tsFH7sPD66dnBeal/zJ96ENk4juXJTq9Y2krwWvyQEfE5Ms75+mXrldIVMuyzhKPknpxq5eCsud9uPyqXbMyNCMij31dA9z663VlBUE07z+NSAUabZADEpSZt/LtXg6ouRSutHBt8UYA09hdkV3o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778910692; c=relaxed/simple;
-	bh=hFx6/s2sAYF13Pn/shDeL9QZnQJT6/4ZXNYrL1wlKqs=;
+	s=arc-20240116; t=1778926256; c=relaxed/simple;
+	bh=7wnIojVr9TnHw4xpU/gYsVgLqdfgCzoKF9H5UJo6j5c=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eKsLJ5UL9thrL6CbJZOXMxJIN24rYHaA2g3JFFwiizNsNZjiLRkwTerckHwBbDslH0LhXhDmxVtMnkQ+KCg26hXb+m2pYmsbGQCxpmXHCxgiNOWrrbBJRrUM8LN6rH2am3QMGws5G0EfMZ0bOWjCZ9i1xbw9xGdh7YsPt1eYSKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=ArzGe75j; arc=none smtp.client-ip=188.68.63.170
+	 In-Reply-To:Content-Type; b=JGsksUPxwPR+Jb2gMEK2rhG3tU1O93TzOxZ+0/YTMkLO+hTedakR6VD8qyjxiyevAqETZyfjbt4k20rt3ZXfgR2xgwqa0E/WLXL7R5fh5gk7I7vjgK84YvwkYXqpGi/dkLIy+2ac/e2KmF7XwKZKo1HGG8obHp5YHFjPk52lBfk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=BAX+a1Sf; arc=none smtp.client-ip=194.59.206.189
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="ArzGe75j"
-Received: from mors-relay8203.netcup.net (localhost [127.0.0.1])
-	by mors-relay8203.netcup.net (Postfix) with ESMTPS id 4gHY8v1YdTz8dC4;
-	Sat, 16 May 2026 05:51:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="BAX+a1Sf"
+Received: from relay02-mors.netcup.net (localhost [127.0.0.1])
+	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4gHfw46fCXz496p;
+	Sat, 16 May 2026 12:10:44 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1778910687;
-	bh=hFx6/s2sAYF13Pn/shDeL9QZnQJT6/4ZXNYrL1wlKqs=;
+	s=key2; t=1778926244;
+	bh=7wnIojVr9TnHw4xpU/gYsVgLqdfgCzoKF9H5UJo6j5c=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ArzGe75jC//Onn+iTfNImIVG9a0CxCO4S94F3grozLglivsmu0adbQgwBDvIxmQh2
-	 FYImq7u8QgSJROPtzox0EINJTeVA5H5SrP1sSG27fgcBhgo2xcHNBH1X7U1FUnDDgi
-	 R5CgM75nrw2061eUspBJLSnCMAB44uz+Fy/mUam7auhWPgx5egu06gpeRh1ISgq0rx
-	 RY6EURbaUuFn04fw2HBCUkjjgg2ODGhdXJWQEdX2VrMWvrfKwHUJ379Ij4ThfuS79w
-	 +AKmB5zBxDOizGZGwGQ5Y+nvuD9JB3YuMU318l+ihWUkGVp3DaSft7gn4BTtM/u9Iy
-	 xaNlewOF5uejQ==
+	b=BAX+a1SfTKx3a1vzc8L9QrNEJS2H9gS7LwNO+kNkeqFecNpBuJtO/CJVJH9pxNy2r
+	 mTzIGs+LaL6EIpi8w82IrFjXgpYCD9SG7GdgCg1E7+p5MKDcAMK1BwTdDwU8hsQ5Tk
+	 ZbYFukW3z7MVPhnxvW7b2ZnqfbDwnRePFttJCMEfbpRjHPXxxFg5KFPaOFxCw3tZ1u
+	 1ms6sgpPb0HcNtF+0rWFRjrQvFso9JJ9U8UWbZ7ys9iTOMeZWj1atUt/JhLS/t5cmU
+	 EP/ngtCstv8Nm1GA3MFsTDqVFvRbbq/YBbEnuOXz5HV3XwZv5WvvEBAXXTS45ODvjB
+	 7ZOtpJhmRq7Qg==
 Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay8203.netcup.net (Postfix) with ESMTPS id 4gHY8v0nxXz8XyK;
-	Sat, 16 May 2026 05:51:27 +0000 (UTC)
+	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4gHfw45vFPz7xLx;
+	Sat, 16 May 2026 12:10:44 +0200 (CEST)
 X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
 X-Spam-Flag: NO
-X-Spam-Score: -2.901
+X-Spam-Score: -2.898
 X-Spam-Level: 
 Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4gHY8t0Mwdz8tZK;
-	Sat, 16 May 2026 07:51:26 +0200 (CEST)
+	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4gHfw34fwhz8tYs;
+	Sat, 16 May 2026 12:10:43 +0200 (CEST)
 Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 4AE496038A;
-	Sat, 16 May 2026 07:51:25 +0200 (CEST)
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 7382261829;
+	Sat, 16 May 2026 12:10:42 +0200 (CEST)
 Authentication-Results: mxe9fb;
         spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
 Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <d7b819bd-f3e0-4931-bcd8-6bc4aa50a3f5@leemhuis.info>
-Date: Sat, 16 May 2026 07:51:24 +0200
+Message-ID: <999d967b-331c-468b-b5ab-1ed7d35c8b05@leemhuis.info>
+Date: Sat, 16 May 2026 12:10:40 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -57,34 +57,72 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Bluetooth: btmtk: regression in 634a4408c breaks MT7922 FUNC_CTRL
- handshake
-To: Sergey Kasmy <sergey.kasmy@gmail.com>, linux-bluetooth@vger.kernel.org
-Cc: tristan@talencesecurity.com, marcel@holtmann.org,
- Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+Subject: Re: [PATCH] Revert "nfc: nxp-nci: remove interrupt trigger type"
+To: David Heidelberg <david@ixit.cz>, Carl Lee <carl.lee@amd.com>
+Cc: oe-linux-nfc@lists.linux.dev, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org, brgl@kernel.org, Sasha Levin <sashal@kernel.org>,
+ Ian Ray <ian.ray@gehealthcare.com>,
+ Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
+ Jakub Kicinski <kuba@kernel.org>, Mark Pearson <mpearson@squebb.ca>,
  Linux kernel regressions list <regressions@lists.linux.dev>
-References: 
- <CAJ8Bt0iC5bVgCRw28YXB1mo+-p_sTM_cp6fF+qVNapyL-Hsayg@mail.gmail.com>
+References: <20260511082611.12721-1-bartosz.golaszewski@oss.qualcomm.com>
+ <366cef36-d3cb-485f-a71a-dea347e8531b@ixit.cz>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
 Content-Language: de-DE, en-US
-In-Reply-To: 
- <CAJ8Bt0iC5bVgCRw28YXB1mo+-p_sTM_cp6fF+qVNapyL-Hsayg@mail.gmail.com>
+In-Reply-To: <366cef36-d3cb-485f-a71a-dea347e8531b@ixit.cz>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <177891068561.3873274.8920997460952381602@mxe9fb.netcup.net>
+Content-Transfer-Encoding: 8bit
+X-PPP-Message-ID: <177892624304.87246.771635449133262671@mxe9fb.netcup.net>
 X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: 4AE496038A
-X-NC-CID: t1C18Qh/gqjwNjo2tqrjUxrg0DCqJL1mKijFd0aPK/rVQjKf7LY=
+X-Rspamd-Queue-Id: 7382261829
+X-NC-CID: 7j6E55DFeOfLwJGzrUYjF8WQnCdzICCgtv9X2CperLqHSIg89bY=
 
-On 5/15/26 23:02, Sergey Kasmy wrote:
-> 
-> Commit 634a4408c0615c523cf7531790f4f14a422b9206 ("Bluetooth: btmtk:
-> validate WMT event SKB length before struct access") introduced a
-> regression that breaks my MediaTek MT7922 Bluetooth adapter (USB ID
-> 0e8d:0616).
+On 5/15/26 21:28, David Heidelberg wrote:
+>
+> do you see any better solution than just reverting it? In case no, I'll
+> accept the revert.
 
-Thx for the report, this is a known problem, the fix in heading towards
-mainline:
-https://lore.kernel.org/all/CABBYNZ+FfhYtU2=J-V4pjKf_vKV=Y5LhVhxS_epKe-qaUUt8_g@mail.gmail.com/
+FWIW, Mark hit the issue as well on a few Lenovo machines and prefers
+reverting, too:
+https://lore.kernel.org/all/c1f80da1-9bf8-41c3-b645-3ae95e116add@app.fastmail.com/
+
+> On 11/05/2026 10:26, Bartosz Golaszewski wrote:
+>> This commit causes an infinite interrupt storm on Lenovo T14s (at least
+>> the AMD Ryzen 7 variant)
+
+Side note: wondering if it would be wise to specific the generation of
+the T14s, but I guess it won't make much of a difference. Adding a
+link/closes tag to above thread would be nice, too.
 
 Ciao, Thorsten
+
+>> which requires blacklisting of this driver.
+>> Neither firmware updates nor the proposed solution[1] seem to help. This
+>> reverts the change due to an unfixed regression. The problem is present
+>> since v6.19.6 stable kernel.
+>>
+>> [1] https://lore.kernel.org/all/20260311-nfc-nxp-nci-i2c-restore-irq-
+>> trigger-fallback-v1-1-9e20714411d7@amd.com/
+>>
+>> Cc: stable@vger.kernel.org # v6.19, v7.0
+>> Fixes: 941270962861 ("nfc: nxp-nci: remove interrupt trigger type")
+>> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+>> ---
+>>   drivers/nfc/nxp-nci/i2c.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/nfc/nxp-nci/i2c.c b/drivers/nfc/nxp-nci/i2c.c
+>> index b3d34433bd14..e99e1f381028 100644
+>> --- a/drivers/nfc/nxp-nci/i2c.c
+>> +++ b/drivers/nfc/nxp-nci/i2c.c
+>> @@ -305,7 +305,7 @@ static int nxp_nci_i2c_probe(struct i2c_client
+>> *client)
+>>         r = request_threaded_irq(client->irq, NULL,
+>>                    nxp_nci_i2c_irq_thread_fn,
+>> -                 IRQF_ONESHOT,
+>> +                 IRQF_TRIGGER_RISING | IRQF_ONESHOT,
+>>                    NXP_NCI_I2C_DRIVER_NAME, phy);
+>>       if (r < 0)
+>>           nfc_err(&client->dev, "Unable to register IRQ handler\n");
+> 
+
