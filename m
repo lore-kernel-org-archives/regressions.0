@@ -1,207 +1,150 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [46.38.247.119])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B62DF380FF6
-	for <regressions@lists.linux.dev>; Mon, 18 May 2026 04:39:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.38.247.119
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B83DF17DFE7
+	for <regressions@lists.linux.dev>; Mon, 18 May 2026 07:43:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779079173; cv=none; b=mVzhm0oU78ufCO0rOxT+ygWd2xTE0T8Xj7KmadS0kJ6vbxEMSnQCMAUK5I5A9cc6QzCEwCkN8eoDPSxyf7d14/juANL6IQX18e6SNreYitrZn9IuKnTQcjlbPurNyo477nmyD8N2FYGf20+C+9xlEzvD6MH5cDPNrfCgMbWAh7U=
+	t=1779090208; cv=none; b=ci8DNYZOMP2QnQbzDwl3I0rU4zdcpLir47SS1RemzcKz9TeGxJ6sJoY+x/uatE/vDgTFVFBYUs2/V/Q0Sd50R13V2jMCdowXAStoTkGMmGrgXWN1kZGq78XXROcnRaByb//4OssWl+BQlcIfpekvkJpVoc3sD/IyVRv+emZAiV4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779079173; c=relaxed/simple;
-	bh=OzaLGagXIHUtFy4JrSoMFMJIG2DLcb6UhsO9uRYB6g8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Za8J0xybIEwYbjXHwTJ/JQbSw6zCwHMySjxOFALVImdZkd0N78SrGWEt18zEJnx5e1vl8V9WCI9vsFIRBMZwRWxnF+AFIHe3a6RcLKPxB/hu2Mtob4eoL7OTA5mgsna5IsxlyL13Mf3wMNzH8O4Mt9TXxIF027q/w09ujAcpMkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=HAZP68dX; arc=none smtp.client-ip=46.38.247.119
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1779090208; c=relaxed/simple;
+	bh=MovC6lzwqjBIYUrOC7QBOqcc/WMNFxOnawRcJ7P2/Ik=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 In-Reply-To:Content-Type:Content-Disposition; b=hqr6hc43Uw8g5+Ojjuoa9brEvwngsry5Tcs6Nox9KpJN5mJvGvOh566fR4iqJzbspks2nmmsbDhMGVVrL3uBKYwh85vz1sac5kmMxM0IjRaeVZmH3mKhQ97MNe0uOXRYS4NvztY1XcsmkApiYZWPvVDE2cvFOhGxb5iUOuE6/rU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Gc9A8k58; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="HAZP68dX"
-Received: from mors-relay-8404.netcup.net (localhost [127.0.0.1])
-	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4gJlSp4Hxnz88ZL;
-	Mon, 18 May 2026 06:39:22 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1779079162;
-	bh=OzaLGagXIHUtFy4JrSoMFMJIG2DLcb6UhsO9uRYB6g8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=HAZP68dXuFErFiaB+INOgkEdsO10jvzRmFUKyFdzVCGCu6WxdgVZDQbVFwGsSllig
-	 9NQjT+wBml17Kn/LBOgncXFxxGdvfo/Q3AWutV6IQHE42mPtxff3NCZnZP+mmCXUif
-	 2UcRag51H4m6H0R/ESavFG60Ke4im7Mhu2GR1yOl7r5KPfs7CCSNEZm7YDyQTILFZ1
-	 IQ0PmHwzCGqDyJhZet5DZY93hYCzWW32FR17QQeIU51rpwXRPDTvNPjeN3MyMkBVi0
-	 9byMT2qUOCvH54YxBAwmTk/BME+dkyNLvAJasLLMo8CIVNbKmuMoUYBsYzC3FWgUFG
-	 n0/c7NztsIfKg==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4gJlSp3bmFz4y9R;
-	Mon, 18 May 2026 06:39:22 +0200 (CEST)
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4gJlSn06SVz8sbH;
-	Mon, 18 May 2026 06:39:21 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id EEDD761859;
-	Mon, 18 May 2026 06:39:19 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <e31f3922-a3e4-4993-aad5-d3973e8fd88e@leemhuis.info>
-Date: Mon, 18 May 2026 06:39:19 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Gc9A8k58"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1779090205;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dkz4o1HCLWz8eoAHqvdPjV97uEnFp10w6ezT5caacdg=;
+	b=Gc9A8k58vYjivikp6pAsUdHrnD9zgdHlkR40JMyiiFjOusNdTmUQ0NTNA93nAbd5M0P47x
+	wjRi7+6mwz4egU7sZFN+eqB8H1eBcJ33uG0F1+pkSF0O3PmdzZ3pUZJ69R83QQHPgU1kHZ
+	99YqT0V6vqWxMI7P0y22eyjIfA7ap4M=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-639-FNd6_a9YMyCdQ95dnPJbGg-1; Mon, 18 May 2026 03:43:23 -0400
+X-MC-Unique: FNd6_a9YMyCdQ95dnPJbGg-1
+X-Mimecast-MFC-AGG-ID: FNd6_a9YMyCdQ95dnPJbGg_1779090203
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-48fd2b502e2so14481515e9.2
+        for <regressions@lists.linux.dev>; Mon, 18 May 2026 00:43:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779090201; x=1779695001;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dkz4o1HCLWz8eoAHqvdPjV97uEnFp10w6ezT5caacdg=;
+        b=Mi5z+1UVUrtvNtoVzXSbFWr6Yz6ic7wXIg0q1bTcF1U/OKhhB6/WVBLnScM1fZQ8NV
+         w38zjpd689RVLMpMTnwhugnQ2pdxPuJ+i/EEPhoadOnNomfGAONqcQzMGCRovEeklApB
+         JQJMRLgvGyzReeadThHLt0Rpc1c0ZqWZ5Wag1fc+eNhHPfLiHrim9Cla+IVuxI/R4MjM
+         yjsZigo8jYDPxkU+LNggC5Qtf6HMLdesncVQ8xJLPgHBQrW5szjQbDkRNjkKZWdu1GSU
+         +BGaKHkd0lCnrMTQ3Am4I9MyNbgPpdzP7GunZViNbxFNDFlm8pCmIwqmFhSknBBzDa1k
+         Pv1A==
+X-Forwarded-Encrypted: i=1; AFNElJ8GV5Tqcu1uviW08F4rC/wKxn0hjZCrWxsWcki5Bms52avW8TRY1LaRb4fy4Dr5Zpw3oz3TZ68XPgLOpg==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzeRR9CHv4j1c9tL7aesYvpNqNASucmqKNRIVVFVZ1zggrQZkPc
+	U9BuCT0RwkgPtjKPezfjmbitJWZCk+t87J1ZKKR773/aBM2hK8p9cakj8BMznlPplpKEEdfozCR
+	X2/OTfx1sJogBlLUF48LqkfLCoRA+bwsrhBJ5s/8Zi7TYoN631gGsu7dNliVASDl45ZeJ1fdo
+X-Gm-Gg: Acq92OGo74qa9dqNIy+kXvDwWZRScUaZhtnUR3XMPcaxqL5gXWDWZDoZGp9UkzZMH7y
+	ftmQ6Q8k9l4aQ6MNXgchUNfZhTm+ExMxfOeYFbd7w1h1HRN1RNJpsYyiXNlbXc/0fhKs7oNzs3s
+	aHB10n+N0OJenPnHooLXqpV7SB+X6mqOvsTfyTyA1l3XO3BVeaPlXLUyx38xf87mBt29tPO6Jw8
+	KL0Q9a/Jx9enYs27d172kP/DFkBN1Oxx2I3gDhds/ccuj6thLI5qHr2ZeZ4TtvLFDD84PwQWiat
+	RE/WdWlVcaKufZKUE/or76pqOVMUxjn4Ux6dMlFxLzcUbl/vHcJzo9q0SAoSqCpfhhUP7PU895B
+	5t9mncqNQ7k7f1eDHDmy13qbrhEdK6jLdMMT0unrPfgyIo8tLo7L5
+X-Received: by 2002:a05:600c:8189:b0:48a:9428:5522 with SMTP id 5b1f17b1804b1-48fe632249dmr217556755e9.16.1779090201292;
+        Mon, 18 May 2026 00:43:21 -0700 (PDT)
+X-Received: by 2002:a05:600c:8189:b0:48a:9428:5522 with SMTP id 5b1f17b1804b1-48fe632249dmr217556445e9.16.1779090200920;
+        Mon, 18 May 2026 00:43:20 -0700 (PDT)
+Received: from jlelli-thinkpadt14gen4.remote.csb ([151.29.56.132])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48fe4c834besm241779275e9.3.2026.05.18.00.43.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 May 2026 00:43:19 -0700 (PDT)
+Date: Mon, 18 May 2026 09:43:18 +0200
+From: "juri.lelli@redhat.com" <juri.lelli@redhat.com>
+To: batcain <batcain@protonmail.com>
+Cc: "peterz@infradead.org" <peterz@infradead.org>,
+	"jstultz@google.com" <jstultz@google.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"stable@vger.kernel.org" <stable@vger.kernel.org>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Subject: Re: [REGRESSION] sched/deadline: Hard lockup during CPU offline
+ after commit 14a857056466
+Message-ID: <agrDFlsPQxzWa9Xs@jlelli-thinkpadt14gen4.remote.csb>
+References: <r16mBH1ydY4oK0PInLKwpYR2I5qZBsV5J0JsNLrXAh8OR_QC6z6lABKlcvpzgUiBuarTKtVTP977RLI4mqt64Ydtd2O3yfhRuRJkQ1JL8u8=@protonmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] Bluetooth: btmtk: MT7922 "Failed to send wmt func
- ctrl (-22)" after 634a4408c0615c ("validate WMT event SKB length before
- struct access")
-To: Brandon Arnold <brandon.arnold@gmail.com>, linux-bluetooth@vger.kernel.org
-Cc: luiz.von.dentz@intel.com, tristan@talencesecurity.com,
- chris.lu@mediatek.com, linux-mediatek@lists.infradead.org,
- gregkh@linuxfoundation.org, stable@vger.kernel.org,
- regressions@lists.linux.dev
-References: 
- <CAM07e=vYJE8khJmbsn75SOYye44o8YV8TZsRyF1mFRuUTMCgUw@mail.gmail.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: 
- <CAM07e=vYJE8khJmbsn75SOYye44o8YV8TZsRyF1mFRuUTMCgUw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <177907916034.1224972.6526818772537645703@mxe9fb.netcup.net>
-X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: EEDD761859
-X-NC-CID: PkYu26wWqt6EFZ70ruyetuywmOlLLQScmB9N8nSUyoxWkDceoy4=
+In-Reply-To: <r16mBH1ydY4oK0PInLKwpYR2I5qZBsV5J0JsNLrXAh8OR_QC6z6lABKlcvpzgUiBuarTKtVTP977RLI4mqt64Ydtd2O3yfhRuRJkQ1JL8u8=@protonmail.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: 6nUEexuSmMpZUdGMJ4fwYN8a0Tp1KXZpJiMZlxcNJbU_1779090203
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 5/18/26 01:25, Brandon Arnold wrote:
-> #regzbot introduced: 634a4408c0615c206885e60ea05f489c426f64b6
-> #regzbot title: MT7922 BT controller never registers (wmt func ctrl
-> -22) after btmtk WMT SKB-length validation
+Hello,
 
-Thx for the reports, there are quite a few similar ones already; the
-problem is known and the fix (see the link below) should be heading to
-mainline this week and from there go to stable.
+On 16/05/26 03:07, batcain wrote:
+> [1.] One line summary of the problem:sched/deadline: Hard lockup
+> during CPU offline/migration due to frozen rq_clock loop in
+> update_dl_revised_wakeup()
+> 
+> [2.] Full description of the problem/report: A deterministic hard
+> lockup occurs during CPU hotplug (offlining a secondary core) on
+> stable kernels containing commit
+> 14a857056466be9d3d907a94e92a704ac1be149b.
+> 
+> When a CPU core is set offline, tasks are migrated within the
+> stop_machine() context where local interrupts are fully disabled
+> (irqs_disabled()). During task migration, enqueue_task_dl() calls
+> update_dl_entity(). Because of the new dl_defer rule introduced for
+> implicit dl_servers, the code is forced into the
+> update_dl_revised_wakeup() branch.
+> 
+> Inside update_dl_revised_wakeup(), the logic depends on rq_clock(rq)
+> to calculate laxity: u64 laxity = dl_se->deadline - rq_clock(rq);
+> 
+> However, under the stop_machine() noirq phase, the runqueue clock is
+> stale/frozen. Since the clock does not progress across iterations
+> within the enqueue loop, the mathematical state stalls. Consequently,
+> dl_entity_overflow() continuously evaluates to true, trapping the
+> processor core in an infinite loop inside the enqueue path, resulting
+> in a system-wide hard lockup.
 
-Ciao, Thorsten
+I cannot immediately see how this issue can affect dl-server(s), as they
+cannot migrate and are de-activated on CPUs going offline.
 
-#regzbot dup:
-https://lore.kernel.org/linux-bluetooth/770d36b07311bf88210c187923f243fb9f126f04.1777058551.git.pav@iki.fi/
+> [3.] Keywords (keywords of the affected subsystem): sched, deadline,
+> dl_server, cpuhp, hotplug, hard-lockup, regression
+> 
+> [4.] Kernel information (output of "uname -a" or version): Linux
+> workstation 7.0.7-hardened2-1-hardened #1 SMP PREEMPT_DYNAMIC Fri, 15
+> May 2026 00:03:13 +0000 x86_64 GNU/Linux
+> 
+> [5.] Most recent kernel version which did not have the bug: Any kernel
+> release prior to the integration/backport of commit 14a857056466.
+> 
+> [6.] Output of Oops/Panic/Bug/Objdump: No native kernel oops/panic
+> stack trace is written to disk/serial because the freeze occurs inside
+> stop_machine() with interrupts masked. NMI watchdog triggers a hard
+> lockup panic if aggressively armed.
+> 
+> [7.] A small program which triggers the problem: # echo 0 >
+> /sys/devices/system/cpu/cpu1/online
+> 
+> [8.] Environment description (Hardware, distribution, etc.): Hardware:
+> Confirmed on both AMD Zen 2 (Renoir) and AMD Zen 4 (Phoenix)
+> platforms. Distribution: Arch Linux (using official
+> extra/linux-hardened kernel package).
 
-> Hello there.
-> 
-> I wanted to report the below information about a commit that I
-> confirmed broke my MediaTek MT7922 adapter. The commit is also built
-> into the main Arch Linux package, so it affected me during a routine
-> update (see the BBS link in the report below). This adapter is the one
-> that came with my Framework Laptop 16 system.
-> 
-> Apologies for Claude's verbosity and language but I can confirm I
-> attended the bisect and revert of the offending diff. Thank you!
-> 
-> Workaround in use: pinned to the Arch Linux pre-7.0.7 kernel.
-> 
-> Thanks,
-> Brandon Arnold
-> 
-> Commit 634a4408c0615c ("Bluetooth: btmtk: validate WMT event SKB
-> length before struct access"), backported to 7.0.x stable and shipped
-> in v7.0.7, breaks Bluetooth on the MediaTek MT7922: the WMT function
-> control step fails with -EINVAL and the HCI controller never
-> registers. WiFi on the same chip (mt7921e) is unaffected.
-> 
-> This is NOT a v6.19->v7.0 mainline regression -- mainline v7.0 is
-> GOOD. The regression is the above commit specifically; it is absent
-> from v7.0 and v7.0.6 and present in v7.0.7.
-> 
-> Scope / affected versions
-> -------------------------
-> - GOOD: mainline v7.0, linux-stable v7.0.6 (commit absent)
-> - BAD: linux-stable v7.0.7 (commit present)
-> - Independently reported on Arch (different machine -- Lenovo
-> IdeaPad, MT7922 USB [0489:e0d8]): BROKEN on linux 7.0.7.arch2-1,
-> WORKING on 7.0.6.arch1-1, identical symptom.
-> https://bbs.archlinux.org/viewtopic.php?id=313561
-> 
-> Hardware / firmware (primary reporter)
-> --------------------------------------
-> - Framework Laptop 16 (AMD Ryzen AI 300 Series), board FRANMHCP09 A9
-> - BIOS: INSYDE/Framework 03.04, 2025-11-06
-> - MT7922, PCI [14c3:0616] subsys [14c3:e616]; BT side USB, driver
-> btusb/btmtk; WiFi side mt7921e (works)
-> - linux-firmware 20260410; BT firmware BT_RAM_CODE_MT7922_1_1,
-> HW/SW Version 0x008a008a, Build Time 20260224103448
-> - bluez 5.86
-> 
-> Symptom
-> -------
-> The firmware download and version handshake still succeed (identical
-> HW/SW version line before and after), then:
-> 
-> Bluetooth: hci0: HW/SW Version: 0x008a008a, Build Time: 20260224103448
-> Bluetooth: hci0: Failed to send wmt func ctrl (-22)
-> 
-> No "Device setup in N usecs" follows; BlueZ reports "No default
-> controller available". hci0 exists in /sys/class/bluetooth and is not
-> rfkill-blocked. Reproducible deterministically on cold boot,
-> `modprobe -r btusb; modprobe btusb`, and full USB unbind/rebind. It
-> fails even with btusb enable_autosuspend=0, so this is distinct from
-> the known func-ctrl/autosuspend race.
-> 
-> Analysis
-> --------
-> 634a4408c0615c reworks btmtk_usb_hci_wmt_sync() to validate length
-> with skb_pull_data() before casting the WMT event:
-> 
-> - wmt_evt = (struct btmtk_hci_wmt_evt *)data->evt_skb->data;
-> + wmt_evt = skb_pull_data(data->evt_skb, sizeof(*wmt_evt));
-> + if (!wmt_evt) { ... err = -EINVAL; goto err_free_skb; }
-> ...
-> case BTMTK_WMT_FUNC_CTRL:
-> + if (!skb_pull_data(data->evt_skb,
-> + sizeof(wmt_evt_funcc->status))) {
-> + err = -EINVAL; goto err_free_skb;
-> + }
-> wmt_evt_funcc = (struct btmtk_hci_wmt_evt_funcc *)wmt_evt;
-> 
-> For the FUNC_CTRL response from the MT7922, one of these
-> skb_pull_data() calls returns NULL and the function returns -EINVAL
-> (surfaced as "Failed to send wmt func ctrl (-22)"). In effect the
-> length the driver now requires
-> (sizeof(struct btmtk_hci_wmt_evt) + sizeof(status)) exceeds what this
-> controller actually sends for FUNC_CTRL, so a valid handshake is now
-> rejected. The pre-patch code cast and read the same bytes without the
-> strict length gate and worked on this hardware.
-> 
-> Empirical confirmation (mainline, no distro patches)
-> ----------------------------------------------------
-> Built faithfully from the running Arch config (only LOCALVERSION
-> added); no out-of-tree changes.
-> 
-> - mainline v7.0 : GOOD (commit absent)
-> - linux-stable v7.0.7 : BAD (kernel 7.0.7-bisect; WMT func ctrl -22
-> count = 1; hci0 device setup never completes; bluetoothctl shows 0
-> controllers)
-> - v7.0.7 + revert of
-> 70d37a8b9229 (the 7.0.7
-> backport of 634a4408c0615c): GOOD (kernel
-> 7.0.7-bisect-00001-ge33bfb5d7480; WMT func ctrl -22 count = 0; hci0
-> device setup OK; bluetoothctl shows 1 controller)
-> 
-> The reverted tree's drivers/bluetooth/btmtk.c is byte-identical to
-> v7.0.6 (git diff v7.0.6 -- drivers/bluetooth/btmtk.c is empty), so the
-> v7.0.7-vs-revert pair isolates exactly this one commit.
-> 
-> Reproduction
-> ------------
-> 1. Boot a kernel >= v7.0.7-equivalent on MT7922 hardware.
-> 2. `bluetoothctl list` -> no controller.
-> 3. `journalctl -k -b | grep 'wmt func ctrl'` -> -22.
-> 4. Revert 634a4408c0615c (or boot v7.0.6) -> controller registers.
-> 
-> A straight revert restores operation and is offered as the candidate
-> fix; alternatively the length checks should be relaxed to match the
-> MT7922's actual FUNC_CTRL WMT event length. I can test patches, or
-> provide full bad/good kernel logs, btmon/hci traces, and the exact
-> short SKB length on request.
+Also cannot reproduce at my end.
+
+Thanks,
+Juri
 
