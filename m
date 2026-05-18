@@ -1,148 +1,178 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A07148AE02;
-	Mon, 18 May 2026 16:13:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from zg8tmtyylji0my4xnjqumte4.icoremail.net (zg8tmtyylji0my4xnjqumte4.icoremail.net [162.243.164.118])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE924494A1F
+	for <regressions@lists.linux.dev>; Mon, 18 May 2026 16:51:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.243.164.118
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779120830; cv=none; b=gnXWwk2E7MyoESQxS6ZtvOFdUaSBWmSOPBxxTXlIdaaKj9H4nBAfon0gbDt/OMLcWJqW68Mj93DA0Fy09GndVoEBWexD2VmwKGsz23cXYzaEt45OySoXQ96mZNlB/avxr7qpCkG7Qb3c8OX2q/G6Any4KMIjlq969VEh+je49sY=
+	t=1779123109; cv=none; b=vDWN7JUA1mhE8J3J1EME7+4+lWAgavKZOZTnFoqNB2OO+3axNDeprcQq1Dr3jZVKTPEjgU5n6qxRYSxZMEHoNmS4OW+pSs9OswwR27/w3zcGvR8CKJ348LLt4w/+U6jhGeEHDf7dqR7p6I7QAvFFwoQVYkGWgV4hEVCVEGcL2yI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779120830; c=relaxed/simple;
-	bh=1aPTzS8AxZw6WiwbV8gLyRuVvCej87lMpx6XhMRA5KA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MiAvwNm9mVafsN7xzLlodbx26Q2CzoFGHzREVnWVBUkhLPqlnDaV4GmLEpCZxAgjaVSyZWQEm4EPkJS3Tia6Q63EkfhSCiI2O4nWpZpwBh2IJ4aI2ooHQFFRFKS3nT3CJIH6A2K1i56jCIgEONjHoV+d0GXnwVUmUGynTPBtaGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O3GQxRXu; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O3GQxRXu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EEC23C4AF09;
-	Mon, 18 May 2026 16:13:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1779120829;
-	bh=1aPTzS8AxZw6WiwbV8gLyRuVvCej87lMpx6XhMRA5KA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=O3GQxRXufEXYYUsy8a3Lk4kijg2TASegSHnSLIsWqxYpyCbuPcvISXcwXyJcRoddT
-	 G2EfYWpk0g0prJ1IK++pokWCdSEHgYBHA4vk5R19zmgK0/8N6JkV4yqH21FO0Ivef8
-	 Tg4QMx35lmT2UkU5+4LXA9hNzWJN7VQxE/SYvN1gkJ58+/sT0wDNU7VIS0Fk4eVULT
-	 6guoWh5QybDcBC+tqIeS8nik6fDKPLDqaTJW41QBJCJ35E1YpZsIDxomGByy0vzlYO
-	 wKpBh0KJkxYZST+n6pn3ViUkuW6J0Lz+DkNzFb4yrjf269Wtyw6Ik5M5FTrlSSWVLT
-	 atZpPk0W6H3ig==
-Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 42AD9F40089;
-	Mon, 18 May 2026 12:13:48 -0400 (EDT)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-01.internal (MEProxy); Mon, 18 May 2026 12:13:48 -0400
-X-ME-Sender: <xms:vDoLaqizI8W9NnB50EGjBnXBS-I5AJ_pkgwwdkZK-qNdb0Is5lfrpg>
-    <xme:vDoLagnOLwYQTHy3lOJM7LKqI080g4b28TJ7fDkHVYwlKU5p9es2N7kkO9hI0oGKu
-    OkMiCJ0MKPgvNNpdzWHP1iOyHBkPy-cZc5oIYkKy2YuODWeDj7DcA>
-X-ME-Received: <xmr:vDoLarpXFGgiFkBOFaAwxZcx5CQNgkZCMBJhYCvl0mT5XjkAaSofwN-qZ-NYintZyHg0MDT6wVZsS9p5X0pAejuVLS6ywplc>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgddufeelfedvucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepuehoqhhunhcu
-    hfgvnhhguceosghoqhhunheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrhhnpe
-    elueehtefhtddtgfejvdejueehhfekteevueeuueekgeetieeggeehvdffhefhhfenucff
-    ohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenucfrrg
-    hrrghmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhn
-    rghlihhthidqudeijedtleekgeejuddqudejjeekheehhedvqdgsohhquhhnpeepkhgvrh
-    hnvghlrdhorhhgsehfihigmhgvrdhnrghmvgdpnhgspghrtghpthhtohepudehpdhmohgu
-    vgepshhmthhpohhuthdprhgtphhtthhopehrvghgrhgvshhsihhonhhssehlvggvmhhhuh
-    hishdrihhnfhhopdhrtghpthhtohepphgruhhlmhgtkheskhgvrhhnvghlrdhorhhgpdhr
-    tghpthhtohepuhhrvgiikhhisehgmhgrihhlrdgtohhmpdhrtghpthhtohepsghoqhhunh
-    drfhgvnhhgsehgmhgrihhlrdgtohhmpdhrtghpthhtohepjhhovghlrghgnhgvlhhfsehn
-    vhhiughirgdrtghomhdprhgtphhtthhopehrtghusehvghgvrhdrkhgvrhhnvghlrdhorh
-    hgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdho
-    rhhgpdhrtghpthhtohepghhorheslhhinhhugidrihgsmhdrtghomhdprhgtphhtthhope
-    hfrhgvuggvrhhitgeskhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:vDoLakK0eKK8cnzulGAMq1qXs7tDZYpqLlpVrh6rDzXDXmjqhGnKXA>
-    <xmx:vDoLavAnLH44uRVUjQ5UG_YIjPldutzQO1UGGvZzLa3a0sdN6ZE4Lg>
-    <xmx:vDoLau7sVCceWR3sTJL9BslY77NU2qgZabVoAEFD3iRwhWPaHWsW3g>
-    <xmx:vDoLajHzbatfTLFdiDQkOdqTYYxC51bL82_JLq3OeNtrWhFNPnSq9Q>
-    <xmx:vDoLahQQs7EQD6sJxMUOSFE0rGTWZLsAwmpH7yTDm2NUhGmBYGct_reL>
-Feedback-ID: i8dbe485b:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 18 May 2026 12:13:47 -0400 (EDT)
-Date: Mon, 18 May 2026 09:13:46 -0700
-From: Boqun Feng <boqun@kernel.org>
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: paulmck@kernel.org, Uladzislau Rezki <urezki@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Joel Fernandes <joelagnelf@nvidia.com>, RCU <rcu@vger.kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Samir <samir@linux.ibm.com>,
-	Shrikanth Hegde <sshegde@linux.ibm.com>, Tejun Heo <tj@kernel.org>,
-	Linux kernel regressions list <regressions@lists.linux.dev>,
-	Jiri Slaby <jirislaby@kernel.org>
-Subject: Re: [PATCH -next v1 05/12] srcu: Don't queue workqueue handlers to
- never-online CPUs
-Message-ID: <ags6ug97zNR6Fiiw@tardis.local>
-References: <20260511175448.153326-1-urezki@gmail.com>
- <20260511175448.153326-6-urezki@gmail.com>
- <f669fbc9-c068-489f-bd91-4e81561a6e58@leemhuis.info>
- <agm4-6f-6rOgQPFB@pc636>
- <3dd5cce0-51f9-4cf1-81b8-246e6c6a633a@paulmck-laptop>
- <53d546e4-8db0-4e14-a79d-270212081be7@leemhuis.info>
+	s=arc-20240116; t=1779123109; c=relaxed/simple;
+	bh=G66PCK+TdKLWLFpGPLSGvE0WJKLr0HqQSFO4U/aioj0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=bvo++rjcChHourIf5+J6p1WFeYdWljnQqTnuSe/Ud43o5xbNo65iPzUNNoy+XDbHCE+Ii2GsfOCxFFsJdn1cF1Iw86oFSqZOzApTas/+NHfM00A4aT8q5yGtQDJljbjHNyMfWpme/UxOG/bZreT2C6hYzEf67V7CfdO0fwnFLUI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stu.xmu.edu.cn; spf=pass smtp.mailfrom=stu.xmu.edu.cn; arc=none smtp.client-ip=162.243.164.118
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stu.xmu.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stu.xmu.edu.cn
+Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
+	by hzbj-icmmx-6 (Coremail) with SMTP id AQAAfwDneWWdQwtqfKP8AA--.35533S2;
+	Tue, 19 May 2026 00:51:41 +0800 (CST)
+Received: from 23020251154299$stu.xmu.edu.cn ( [38.175.103.185] ) by
+ ajax-webmail-mail (Coremail) ; Tue, 19 May 2026 00:51:22 +0800 (GMT+08:00)
+Date: Tue, 19 May 2026 00:51:22 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From: "Chengfeng Lin" <23020251154299@stu.xmu.edu.cn>
+To: ljs@kernel.org
+Cc: "Andrew Morton" <akpm@linux-foundation.org>, linux-mm@kvack.org,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	"David Hildenbrand" <david@kernel.org>,
+	"Vlastimil Babka" <vbabka@suse.cz>, "Jann Horn" <jannh@google.com>,
+	"Johannes Weiner" <hannes@cmpxchg.org>,
+	"Michal Hocko" <mhocko@kernel.org>,
+	"Qi Zheng" <zhengqi.arch@bytedance.com>,
+	"Shakeel Butt" <shakeel.butt@linux.dev>,
+	"Chris Li" <chrisl@kernel.org>, "Kairui Song" <kasong@tencent.com>,
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: [REGRESSION] mm/mprotect: shared dirty PTE toggle takes ~1.6x
+ longer on v6.19 than v6.12
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version 2025.3-cmXT6 build
+ 20260202(ad063891) Copyright (c) 2002-2026 www.mailtech.cn OP_ICM_ICMVM
+In-Reply-To: <agsy99AP2zixlGIi@lucifer>
+References: <662955ba.f499.19e3b2cf478.Coremail.23020251154299@stu.xmu.edu.cn>
+ <agsy99AP2zixlGIi@lucifer>
+X-CM-CTRLMSGS: =?B?55v0QDiH6nJ5xwDR7hwMki1N8jM=
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <53d546e4-8db0-4e14-a79d-270212081be7@leemhuis.info>
+Message-ID: <3628a9aa.f5bf.19e3bffd48a.Coremail.23020251154299@stu.xmu.edu.cn>
+X-Coremail-Locale: en_US
+X-CM-TRANSID:AQAAfwCnwfKLQwtqaO9AAA--.3532W
+X-CM-SenderInfo: astqjiysvrikiuszmqhvwxh5lpxovvfxof0/1tbiAQALEGoKJkIFV
+	AAAsP
+Authentication-Results: hzbj-icmmx-6; spf=neutral smtp.mail=2302025115
+	4299@stu.xmu.edu.cn;
+X-Coremail-Antispam: 1Uk129KBjvJXoW3XrykKr1DKw15Kw15GF4kWFg_yoWxXFyDpF
+	ZxGa47Krsrtr97C392qF4UWF4jv3ykGr15Xr15Gr4xAFZ8uF109rW7Kr18XFWqkrn7W3yY
+	vFWqq34DXwn5AaDanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	DUYxn0WfASr-VFAU7a7-sFnT9fnUUIcSsGvfJ3UbIYCTnIWIevJa73UjIFyTuYvj4RJUUU
+	UUUUU
 
-On Sun, May 17, 2026 at 09:11:10PM +0200, Thorsten Leemhuis wrote:
-> On 5/17/26 20:03, Paul E. McKenney wrote:
-> > On Sun, May 17, 2026 at 02:47:55PM +0200, Uladzislau Rezki wrote:
-> >> On Wed, May 13, 2026 at 12:38:01PM +0200, Thorsten Leemhuis wrote:
-> >>> On 5/11/26 19:54, Uladzislau Rezki (Sony) wrote:
-> >>>> From: "Paul E. McKenney" <paulmck@kernel.org>
-> >>>>
-> >>>> While an srcu_struct structure is in the midst of switching from CPU-0
-> >>>> to all-CPUs state, it can attempt to invoke callbacks for CPUs that
-> >>>> have never been online.  Worse yet, it can attempt in invoke callbacks
-> >>>> for CPUs that never will be online, even including imaginary CPUs not in
-> >>>> cpu_possible_mask.  This can cause hangs on s390,
-> >>>
-> >>> Uladzislau, Paul, according to the fixes tag below this change fixes a
-> >>> change that went into 7.0-rc6 -- and apparently causes a "hang" on some
-> >>> architectures. So shouldn't this be heading to mainline instead of
-> >>> -next? Ideally with a stable tag to ensure backporting to 7.0.y, but
-> >>> that is a separate decision?
-> >>>
+SGkgTG9yZW56bywNCg0KU29ycnkgYWJvdXQgdGhlIHN0YWxlIGFkZHJlc3MuIEkgd2lsbCB1c2Ug
+bGpzQGtlcm5lbC5vcmcgZm9yIGZ1dHVyZQ0Ka2VybmVsIG1haWxzLg0KDQpUaGlzIGlzIGEgc3lu
+dGhldGljL3NvdXJjZS1jYWxpYnJhdGVkIHVzZXJzcGFjZSBtaWNyby13b3JrbG9hZCwgbm90IGEN
+CnJlZ3Jlc3Npb24gSSBvYnNlcnZlZCBpbiBhIHByb2R1Y3Rpb24gYXBwbGljYXRpb24uDQoNClRo
+ZSB3b3JrbG9hZCB3YXMgZ2VuZXJhdGVkIGZyb20gdGhlIG1tL21wcm90ZWN0LmMgcGF0aCBhbmQg
+dGhlbiBuYXJyb3dlZA0KdG8gdGhlIHNoYXJlZC1kaXJ0eSBmdWxsLXJhbmdlIFBURSB0b2dnbGUg
+Y2FzZSB3aGVyZSB0aGUgdGltaW5nIHNpZ25hbCB3YXMNCnN0YWJsZSBlbm91Z2ggdG8gcmVwb3J0
+LiBTbyB0aGUgaW50ZW5kZWQgY2xhaW0gaXMgbGltaXRlZCB0byAidGhpcyBsZWdhbA0KdXNlcnNw
+YWNlIG1wcm90ZWN0IHBhdHRlcm4gcmVncmVzc2VkIGluIHRoZSB0ZXN0IHNldHVwIiwgbm90ICJh
+IGtub3duIHJlYWwNCmFwcGxpY2F0aW9uIHdvcmtsb2FkIHJlZ3Jlc3NlZCIuDQoNCkkgYWdyZWUg
+dGhhdCB0aGlzIG1ha2VzIHRoZSByZXBvcnQgd2Vha2VyIHRoYW4gYW4gYXBwbGljYXRpb24tbGV2
+ZWwNCnJlZ3Jlc3Npb24uIEkgc2VudCBpdCBiZWNhdXNlIHRoZSBkZWx0YSBpcyBsYXJnZSBpbiB0
+aGUgY2xlYW4gMUNQVSBmb3JtYWwNCnJ1biAofjEuNjd4IHNsb3dlciBvbiB2Ni4xOSB2cyB2Ni4x
+MiksIGFuZCB0aGUgcGF0aCBsb29rZWQgcGxhdXNpYmx5IHRpZWQNCnRvIHRoZSBjaGFuZ2VfcHRl
+X3JhbmdlKCkgYmF0Y2hpbmcgcGF0aCB3aGVyZSB0aGUgc2hhcmVkLWRpcnR5IGNhc2UgZGlkDQpu
+b3QgZm9ybSBhbiBlZmZlY3RpdmUgYmF0Y2ggaW4gbXkgcHJvYmUgcnVucy4NCg0KRGF2aWQgYWxz
+byBwb2ludGVkIG1lIGF0IFBlZHJvJ3MgcmVjZW50IG1wcm90ZWN0IG1pY3JvLW9wdGltaXphdGlv
+bg0Kc2VyaWVzLiBJIGhhdmUgbm90IHRlc3RlZCB0aGF0IHlldCwgc28gSSB3aWxsIGZpcnN0IGNo
+ZWNrIHdoZXRoZXIgdGhhdA0Kc2VyaWVzIGFscmVhZHkgcmVtb3ZlcyBtb3N0IG9mIHRoaXMgc3lu
+dGhldGljIHNpZ25hbC4gSWYgaXQgZG9lcywgSSB3aWxsDQpmb2xsb3cgdXAgYW5kIG1hcmsgdGhp
+cyBhY2NvcmRpbmdseS4gSWYgdGhlIHNpZ25hbCByZW1haW5zLCBJIGNhbiBwcmVwYXJlDQphIHN0
+YW5kYWxvbmUgcmVwcm9kdWNlciBhbmQvb3IgdHJ5IHRvIGJpc2VjdCB0aGUgZXhhY3QgY3VscHJp
+dCBjb21taXQNCmJlZm9yZSBhc2tpbmcgeW91IHRvIHNwZW5kIG1vcmUgdGltZSBvbiBpdC4NCg0K
+U29ycnkgZm9yIHRoZSBub2lzZSwgYW5kIHRoYW5rcyBmb3IgdGFraW5nIGEgbG9vay4NCg0KVGhh
+bmtzLA0KQ2hlbmdmZW5nCgoKPiAtLS0tLeWOn+Wni+mCruS7ti0tLS0tCj4g5Y+R5Lu25Lq6OiAi
+TG9yZW56byBTdG9ha2VzIiA8bGpzQGtlcm5lbC5vcmc+Cj4g5Y+R6YCB5pe26Ze0OjIwMjYtMDUt
+MTggMjM6NDM6MTAgKOaYn+acn+S4gCkKPiDmlLbku7bkuro6ICJDaGVuZ2ZlbmcgTGluIiA8MjMw
+MjAyNTExNTQyOTlAc3R1LnhtdS5lZHUuY24+Cj4g5oqE6YCBOiAiQW5kcmV3IE1vcnRvbiIgPGFr
+cG1AbGludXgtZm91bmRhdGlvbi5vcmc+LCBsaW51eC1tbUBrdmFjay5vcmcsICJMaWFtIFIuIEhv
+d2xldHQiIDxMaWFtLkhvd2xldHRAb3JhY2xlLmNvbT4sICJEYXZpZCBIaWxkZW5icmFuZCIgPGRh
+dmlkQGtlcm5lbC5vcmc+LCAiVmxhc3RpbWlsIEJhYmthIiA8dmJhYmthQHN1c2UuY3o+LCAiSmFu
+biBIb3JuIiA8amFubmhAZ29vZ2xlLmNvbT4sICJKb2hhbm5lcyBXZWluZXIiIDxoYW5uZXNAY21w
+eGNoZy5vcmc+LCAiTWljaGFsIEhvY2tvIiA8bWhvY2tvQGtlcm5lbC5vcmc+LCAiUWkgWmhlbmci
+IDx6aGVuZ3FpLmFyY2hAYnl0ZWRhbmNlLmNvbT4sICJTaGFrZWVsIEJ1dHQiIDxzaGFrZWVsLmJ1
+dHRAbGludXguZGV2PiwgIkNocmlzIExpIiA8Y2hyaXNsQGtlcm5lbC5vcmc+LCAiS2FpcnVpIFNv
+bmciIDxrYXNvbmdAdGVuY2VudC5jb20+LCBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnLCBy
+ZWdyZXNzaW9uc0BsaXN0cy5saW51eC5kZXYKPiDkuLvpopg6IFJlOiBbUkVHUkVTU0lPTl0gbW06
+IE1BRFZfUEFHRU9VVCBUSFAvbm8tc3dhcCByZWZhdWx0IHRha2VzIH4xLjd4IGxvbmdlciBvbiB2
+Ni4xOSB0aGFuIHY2LjEyCj4gCj4gLWNjIHdyb25nIGVtYWlsCj4gCj4gT25lIGRheSBJIHdpbGwg
+Z2V0IHRvIHN0b3AgbmFnZ2luZyBsaWtlIHRoaXMgOikgT3IganVzdCBpZ25vcmUgbWFpbHMgdGhh
+dCBnbyB0bwo+IHRoZSB3cm9uZyBwbGFjZS4KPiAKPiBQbGVhc2UgdXNlIGxqc0BrZXJuZWwub3Jn
+LiBJIHN3aXRjaGVkIG92ZXIgYSB3aGlsZSBhZ28uIEkgdGVuZCB0byBtYXJrIGtlcm5lbAo+IG1h
+aWxzIHRoYXQgZ28gdG8gbXkgd29yayBhZGRyZXNzIHJlYWQgd2l0aG91dCByZWFkaW5nIHRoZW0u
+Cj4gCj4gUGVvcGxlIHJlZ3VsYXJseSB1cGRhdGUgdGhlaXIgZW1haWxzLCBzbyBpdCdzIGltcG9y
+dGFudCB0byByZS1jaGVjayB0aGVtIHdoZW4KPiB5b3Ugc2VuZCBhIG5ldyBtYWlsLgo+IAo+IE9u
+IE1vbiwgTWF5IDE4LCAyMDI2IGF0IDA5OjAxOjAyUE0gKzA4MDAsIENoZW5nZmVuZyBMaW4gd3Jv
+dGU6Cj4gPiBIaSwKPiA+Cj4gPiBJIHdvdWxkIGxpa2UgdG8gcmVwb3J0IGEgdXNlcnNwYWNlLXZp
+c2libGUgbXByb3RlY3QoKSBwZXJmb3JtYW5jZQo+ID4gcmVncmVzc2lvbiBpbiBhIHNoYXJlZCBk
+aXJ0eSBQVEUgd29ya2xvYWQuCj4gPgo+ID4gVGhlIHdvcmtsb2FkIGlzIGludGVudGlvbmFsbHkg
+bmFycm93Ogo+ID4KPiA+ICAgLSBhbm9ueW1vdXMgc2hhcmVkIDY0IE1pQiBtYXBwaW5nCj4gPiAg
+IC0gcHJlZmF1bHQgYmVmb3JlIHByb3RlY3Rpb24gY2hhbmdlcwo+ID4gICAtIHJlcGVhdGVkbHkg
+dG9nZ2xlIHRoZSB3aG9sZSByYW5nZSB3aXRoIG1wcm90ZWN0KFBST1RfUkVBRCkKPiA+ICAgLSBy
+ZXN0b3JlIHdpdGggbXByb3RlY3QoUFJPVF9SRUFEIHwgUFJPVF9XUklURSkKPiA+ICAgLSB3cml0
+ZS10b3VjaCBhZnRlciB0aGUgcHJvdGVjdGlvbiBjeWNsZQo+ID4KPiA+IFRoaXMgaXMgbm90IG1l
+YW50IGFzIGEgZ2VuZXJpYyBtcHJvdGVjdCgpIHJlZ3Jlc3Npb24gcmVwb3J0LiBJbgo+ID4gcGFy
+dGljdWxhciwgSSBhbSBub3QgY2xhaW1pbmcgdGhhdCB0aGUgYW5vbi9USFAgbXByb3RlY3QgcGF0
+aHMgcmVncmVzcy4KPiA+IFRoZSBjdXJyZW50IHNpZ25hbCBpcyBzY29wZWQgdG8gdGhlIHNoYXJl
+ZC1kaXJ0eSBmdWxsLXJhbmdlIFBURSB0b2dnbGUKPiA+IHBhdGggYWJvdmUuCj4gPgo+ID4gVGhl
+IGN1cnJlbnQgcHVibGljIGV2aWRlbmNlIGJ1bmRsZSBpcyBoZXJlOgo+ID4KPiA+ICAgaHR0cHM6
+Ly9naXRodWIuY29tL2xjZjAzOTkvbGludXgtbW0tcmVncmVzc2lvbi1ldmlkZW5jZS0yMDI2LTA1
+L3RyZWUvZTEzNDY5Yi9tcHJvdGVjdC1zaGFyZWQtZGlydHktdG9nZ2xlCj4gPgo+ID4gVGhlIGdl
+bmVyYXRlZCB3b3JrbG9hZCBzb3VyY2UgdXNlZCBmb3IgYXVkaXRpbmcgdGhlIHdvcmtsb2FkIHNl
+bWFudGljcyBpcwo+ID4gaGVyZToKPiA+Cj4gPiAgIGh0dHBzOi8vZ2l0aHViLmNvbS9sY2YwMzk5
+L2xpbnV4LW1tLXJlZ3Jlc3Npb24tZXZpZGVuY2UtMjAyNi0wNS9ibG9iL2UxMzQ2OWIvbXByb3Rl
+Y3Qtc2hhcmVkLWRpcnR5LXRvZ2dsZS93b3JrbG9hZC9tcHJvdGVjdF9wYXRoc19zdG9ybS5jCj4g
+Pgo+ID4gVGhlIGZvcm1hbCBleHBlcmltZW50IHByb2ZpbGUgaXMgaGVyZToKPiA+Cj4gPiAgIGh0
+dHBzOi8vZ2l0aHViLmNvbS9sY2YwMzk5L2xpbnV4LW1tLXJlZ3Jlc3Npb24tZXZpZGVuY2UtMjAy
+Ni0wNS90cmVlL2UxMzQ2OWIvbXByb3RlY3Qtc2hhcmVkLWRpcnR5LXRvZ2dsZS9leHBlcmltZW50
+cwo+ID4KPiA+IFRoZSBmb3JtYWwgdGltaW5nIHJ1bnMgY29tcGFyZSB2Ni4xMi43NyBhbmQgdjYu
+MTkuOSB3aXRoIHNpbWlsYXIga2VybmVsCj4gPiBjb25maWd1cmF0aW9uLCB1c2luZyBRRU1VIGRp
+cmVjdCBib290LiBUaGUgZm9ybWFsIHBlcmZvcm1hbmNlIHJ1bnMgd2VyZQo+ID4gY2xlYW4gdGlt
+aW5nIHJ1bnMgd2l0aCBjb3ZlcmFnZSBkaXNhYmxlZC4gQ292ZXJhZ2Ugd2FzIGNvbGxlY3RlZAo+
+ID4gc2VwYXJhdGVseSBhbmQgaXMgbm90IHVzZWQgZm9yIHRoZSB0aW1pbmcgbnVtYmVycyBiZWxv
+dy4KPiA+Cj4gPiBMYWIgZW52aXJvbm1lbnQ6Cj4gPgo+ID4gICBob3N0IGxhYmVsOiBsY2YKPiA+
+ICAgaG9zdCBrZXJuZWw6IExpbnV4IDYuMTQuMC0zNy1nZW5lcmljIHg4Nl82NAo+ID4gICBRRU1V
+OiBxZW11LXN5c3RlbS14ODZfNjQgOC4yLjIKPiA+ICAgY29udGFpbmVyL2Nncm91cCBDUFUgc2V0
+OiAwLDIsNCw2LDgsMTAsMTIsMTQKPiA+ICAgY29udGFpbmVyL2Nncm91cCBtZW1vcnkgbGltaXQ6
+IDE2MTA2MTI3MzYwIGJ5dGVzCj4gPiAgIGd1ZXN0IG1lbW9yeTogUUVNVV9NRU1fTUI9MTQzMzYK
+PiA+ICAgZ3Vlc3QgQ1BVczogUUVNVV9TTVA9MS8yLzQKPiA+ICAgcmVwZXRpdGlvbnM6IDkKPiA+
+ICAgdmVyc2lvbiBvcmRlcjogaW50ZXJsZWF2ZWQKPiA+ICAgcGVyZm9ybWFuY2UgY292ZXJhZ2Vf
+ZW5hYmxlZDogZmFsc2UKPiA+Cj4gPiBQcmltYXJ5IHJlc3VsdCwgY3ljbGVfbnNfcGVyX3BhZ2Us
+IGxvd2VyIGlzIGJldHRlcjoKPiA+Cj4gPiAgIENQVSAgIHY2LjEyLjc3ICAgdjYuMTkuOSAgIG9s
+ZC1sb3dlci12cy1uZXcgICB2Ni4xOS92Ni4xMiAgIHJlbGlhYmlsaXR5Cj4gPiAgICAgMSAgICAg
+IDM0Ni44ICAgICA1NzguMSAgICAgICAgNDAuMCUgICAgICAgICAgICAgMS42N3ggICAgICByZWxp
+YWJsZQo+ID4gICAgIDIgICAgICAzOTQuNyAgICAgNjQxLjcgICAgICAgIDM4LjUlICAgICAgICAg
+ICAgIDEuNjN4ICAgICAgcm9idXN0LW9ubHkKPiA+ICAgICA0ICAgICAgMzgxLjEgICAgIDYyNC44
+ICAgICAgICAzOS4wJSAgICAgICAgICAgICAxLjY0eCAgICAgIHBhcnRpYWwsIHNhbWUgZGlyZWN0
+aW9uCj4gPgo+ID4gVGhlIHN0cm9uZ2VzdCBjdXJyZW50IHJlc3VsdCBpcyB0aGUgMUNQVSBsYWIg
+Zm9ybWFsIHJlc3VsdC4gVGhlIDJDUFUgY2FzZQo+ID4gaXMgc2FtZS1kaXJlY3Rpb24gYnV0IHJv
+YnVzdC1vbmx5IGluIHRoZSBmcmFtZXdvcmsgY2xhc3NpZmljYXRpb24uIFRoZQo+ID4gNENQVSBj
+YXNlIGlzIHNhbWUtZGlyZWN0aW9uIGJ1dCBwYXJ0aWFsIGJlY2F1c2Ugb25lIFFFTVUgcnVuIGZh
+aWxlZDsgdGhlCj4gPiBzdW1tYXJ5IHN0aWxsIGhhcyA4IHN1Y2Nlc3NmdWwgcnVucyBmb3IgdGhh
+dCBDUFUgY291bnQuCj4gPgo+ID4gVGhlIGN1cnJlbnQgbWVjaGFuaXNtIGh5cG90aGVzaXMgaXMg
+bG9jYWwgdG8gdGhlIHNoYXJlZC1kaXJ0eSBQVEUgcGF0aC4KPiA+IEluIHY2LjE5LCB0aGUgbWVh
+c3VyZWQgaG90IHBhdGggZ29lcyB0aHJvdWdoIHRoZSBjaGFuZ2VfcHRlX3JhbmdlKCkKPiA+IGJh
+dGNoaW5nIG1hY2hpbmVyeToKPiA+Cj4gPiAgIGNoYW5nZV9wdGVfcmFuZ2UoKQo+ID4gICAgIC0+
+IG1wcm90ZWN0X2ZvbGlvX3B0ZV9iYXRjaCgpCj4gPiAgICAgLT4gbW9kaWZ5X3Byb3Rfc3RhcnRf
+cHRlcygpCj4gPiAgICAgLT4gc2V0X3dyaXRlX3Byb3RfY29tbWl0X2ZsdXNoX3B0ZXMoKQo+ID4g
+ICAgIC0+IHByb3RfY29tbWl0X2ZsdXNoX3B0ZXMoKQo+ID4KPiA+IEZvciB0aGlzIHNoYXJlZC1k
+aXJ0eSB3b3JrbG9hZCwgZm9sbG93LXVwIGJhdGNoLXByb2JlIGF0dHJpYnV0aW9uIHNob3dlZAo+
+ID4gbnJfcHRlcz0xIGluIHRoZSBtZWFzdXJlZCBwYXRoLiBUaGUgaHlwb3RoZXNpcyBpcyB0aGF0
+IHRoZSBleHRyYSBmb2xpbwo+ID4gbG9va3VwLCBiYXRjaC1zaXplIHF1ZXJ5LCBoZWxwZXIgZGlz
+cGF0Y2gsIGFuZCBjb21taXQgbWFjaGluZXJ5IGFyZSBwYWlkCj4gPiBwZXIgNCBLaUIgUFRFIHdp
+dGhvdXQgZWZmZWN0aXZlIGJhdGNoLXNpemUgYW1vcnRpemF0aW9uIGluIHRoaXMgd29ya2xvYWQu
+Cj4gPiBUaGlzIGlzIG1lY2hhbmlzbSBpbnRlcnByZXRhdGlvbiwgbm90IGEgY29tcGxldGVkIGN1
+bHByaXQtY29tbWl0IGJpc2VjdC4KPiA+Cj4gPiBJIGhhdmUgbm90IGJpc2VjdGVkIHRoZSBleGFj
+dCBjdWxwcml0IGNvbW1pdCB5ZXQuIFNlcGFyYXRlIHJlbGVhc2UtbGV2ZWwKPiA+IHNhbml0eSBj
+aGVja3Mgc2hvd2VkIHY2LjE4LjE5IGFscmVhZHkgaW4gdGhlIHNsb3cgcmFuZ2UsIHNvIHRoZSBj
+dXJyZW50Cj4gPiBiZXN0IHJlcG9ydGluZyByYW5nZSBpczoKPiA+Cj4gPiAjcmVnemJvdCBpbnRy
+b2R1Y2VkOiB2Ni4xMi4udjYuMTgKPiA+Cj4gPiBQbGVhc2UgbGV0IG1lIGtub3cgaWYgYSBzdGFu
+ZGFsb25lIHJlcHJvZHVjZXIsIGEgbmFycm93ZXIgYmlzZWN0LCBvcgo+ID4gYWRkaXRpb25hbCBy
+YXcgbG9ncyB3b3VsZCBiZSBtb3JlIHVzZWZ1bC4KPiAKPiBJcyB0aGlzIHJlYWxseSBhIHJlZ3Jl
+c3Npb24geW91J3JlIHNlZWluZyBpbiByZWFsIHdvcmtsYW9kcyBvciBzeW50aGV0aWM/Cj4gCj4g
+VGhhbmtzLCBMb3JlbnpvCg==
 
-FWIW, I'm happy to create an urgent PR to Linus with this fix. Since it
-fixes a commit in the previous urgent fix PR from me. Ulad, let me know
-if you want me to do it.
-
-Regards,
-Boqun
-
-> >> I assume it will be picked to stable
-> 
-> Thx for the reply. This answered the second aspect I raised. What about
-> the first: shouldn't this be heading to mainline this cycle, ideally
-> quite soon? Or is this the plan and I misinterpreted the "-next" in the
-> subject?
-> 
-> Sadly Jiri (now CCed) afaics didn't yet report if this fix helped to fix
-> the issues they were seeing, but it sounded a lot like it was likely:
-> https://lore.kernel.org/all/f0351414-41af-4f74-899c-87fb5bb45621@kernel.org/
-> 
-> >> since there is a "Fixes:" tag. From
-> >> the other hand i can explicitly update commit message with Cc: stable@vger.kernel.org
-> >>
-> >> Paul, any thoughts?
-> > 
-> > The "Fixes" tag should cover it.
-> 
-> Often it does, yes, but it might be silently dropped for one reason or
-> another. So in the end only a stable tag will guarantee backporting
-> attempt by the stable team.
-> 
-> Site note: I recently also tried to persuade Greg to also take those
-> with a stable tag first in case there is a huge backlog.
-> 
-> Ciao, Thorsten
