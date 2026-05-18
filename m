@@ -1,135 +1,113 @@
-Received: from mail-dy1-f173.google.com (mail-dy1-f173.google.com [74.125.82.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BE1C2F363F
-	for <regressions@lists.linux.dev>; Mon, 18 May 2026 12:59:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.173
+Received: from zg8tmtyylji0my4xnjqumte4.icoremail.net (zg8tmtyylji0my4xnjqumte4.icoremail.net [162.243.164.118])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7D5F3D330A
+	for <regressions@lists.linux.dev>; Mon, 18 May 2026 12:59:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.243.164.118
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779109150; cv=none; b=ORIllhCjt3r9MfCFL0btYt6GEK1EF02J23eNIF/Xx7+/QkkAU2LVUTjx2H1Hw8MgGm3/8IngUfNfPk+8TzyQN1WE63MCidhyyLuWSSJygDyCrLZiaXocn1e3dz1wiIbhRRz/R0ysEDeqI56xQ2TMkipaFdatFPyYBGmY0KMeevg=
+	t=1779109172; cv=none; b=lYO+Gk76g4GgJNQViHJ20g2Qeh2YLsTTrZ3ygrTMtudSu9jv76LhGp9i6OxY4EuXbHEizRdIEZZXkgWiH5udIyN6CwkpP7GmI2CHJ8IEVgEldvhJoYJeKY6W/A1k+wMrZ5m9WVhaUxdARC1mk7F3BGaJvSEdJoWGs0wb6lGZTbE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779109150; c=relaxed/simple;
-	bh=xwenoXoBcKZbor0J9cma9ZCefU/PzDqWBJpa7npMX+M=;
-	h=Content-Type:MIME-Version:Subject:From:To:Cc:Date:Message-ID; b=uZAoidMkN6TGFa24AEfgv4ansv9zGj1vl32fD7qCbi9sKUl0kJ6ugWIoXzh1wa32YHmwtrT6tmKmBubvsw05fVDYR7VgHdKcaC3hIHPyPd8yvFInc6yvrgx67CQef1X7jsMF+2C6tj7g11Zrx96e9DXjGecI5+oClVxd7RBplKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kernelci.org; spf=pass smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci.org header.i=@kernelci.org header.b=Lm4m20SU; arc=none smtp.client-ip=74.125.82.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kernelci.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernelci.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci.org header.i=@kernelci.org header.b="Lm4m20SU"
-Received: by mail-dy1-f173.google.com with SMTP id 5a478bee46e88-2ef8d6ba48bso1059560eec.1
-        for <regressions@lists.linux.dev>; Mon, 18 May 2026 05:59:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci.org; s=google; t=1779109145; x=1779713945; darn=lists.linux.dev;
-        h=message-id:date:reply-to:cc:to:from:subject
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OuTEZR64FKNuPtyRQsfSeTrHGtBZhqAWTR0BwH6z2gU=;
-        b=Lm4m20SU5/yQsjLun5lmSk3GXPEUgQuEMZoWaPDulb0Rj1tv5tNXT2PFKmGFfnn11A
-         zUEhS3ciGGLW7MBeLfjfqHIdMPH54weZkIHfvOIkOfpXg5c1g8d/OIEJilARJPDMJXdR
-         FaJ23GEfpJRIMWcAFPCd34Wez1JJicHq++/yqPxgLNIAxRneHd7zpQbM9gbGbBDTl+tF
-         m7KIyaEvAWhytSvsN3n8VAjdQZhz9DLiygv5WfLl2SCog8ddkhaMG8NJZT5EzlxYnc2T
-         CXPItDXWggrhw09fTYUreUUgyKqENvkUHcdJ4QxbFtYyXe5tlrPv0yWDH+amijz6uNHY
-         TWfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779109145; x=1779713945;
-        h=message-id:date:reply-to:cc:to:from:subject
-         :content-transfer-encoding:mime-version:x-gm-gg:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=OuTEZR64FKNuPtyRQsfSeTrHGtBZhqAWTR0BwH6z2gU=;
-        b=LMNlQnE9JrrOzNaOD5VGF12d3AIUKqfgN32iDx94hosu5xA21hF9CBm7JiTpCNQYxy
-         9VKk2Xvb7Qx/9S6VN+vT+qb4BvAPUtx70eMRrEVWoxC012mvjp9iEiQL3noerolY1YC7
-         kHIgJXZks2vQxHPu/cdMGmpGoOY20GBaoQgOqPlSrBTykoSBplBgokEbU9vmrxmxS4a3
-         W2YXuezMYWWe0rc+3Z2VKtV/LRKgUM9ApsGeDyoyks+jleNPpZJbLAJ5hXsgowGaPOux
-         7aXJzREqxwm+ORFC1hOKnf+i1cZ8dSV34pwk9Zg8W5NUoPueSyyBVE7kCCvuTePGh/5t
-         cVWg==
-X-Gm-Message-State: AOJu0Yyc7pGWlmW7E/NjSTzCFBMrt0AT0k5hEYu0qa+9cQuZ98so1RN8
-	pR0xdy3uzGv6/D2p/Hkgqn7F9wEIz+umDelVk4O0AjkSD0b7uQNqUwkd7Z9vWgdqFx0=
-X-Gm-Gg: Acq92OEfKGRyc+mvnAnwTOP11W5xL7VTiwrPeMRFR5OzE0ArS4XnKRYBA/zPCXWtslW
-	mmLfEVIjVndyDbR3Ewtp7K3Ajfq73rNyXlBudQNCc1imTRLIHPGEgC3ZHOR+zkHDf2HgWaSiNNP
-	8DGNP7jokBSONMZYQVhQZzSgr3cW7FLFRXYRH9XAjo8NGA77b1RNe9vyK/mJ3IzfR2sQfiBP9Ui
-	UBhsmoCwOjG5XKDDSnxMn7zQukOkMAUREdp/yyd/GUvxfQjyGpni+rCUpDUjReTJkxQaiOZqKuB
-	guK1itN12iRKofjm63FiwT9g3MhujqwXGE6xv+rn5b802xZ6PKdAtzNHzppUOC8go9Hgj3fRcbO
-	Of/ucP7rV3m2xTuTlWXV3ycoEdT+OTVyoUcQyE/E4jTvnT/4SUjrXLwKQuYDPvIdjzhuwDWOFC/
-	SaCDjAqkyMzY2vOBhf
-X-Received: by 2002:a05:7301:128f:b0:2ed:e16:6b39 with SMTP id 5a478bee46e88-303979efbeemr5948778eec.17.1779109144678;
-        Mon, 18 May 2026 05:59:04 -0700 (PDT)
-Received: from 330cfa3079ca ([20.38.40.137])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-30293e2ea78sm13518841eec.6.2026.05.18.05.59.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 May 2026 05:59:04 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1779109172; c=relaxed/simple;
+	bh=dL8RaNUwdIvAGzMbDe4euvMXb8ZjjKNct2aqFLqAbHs=;
+	h=Date:From:To:Cc:Subject:Content-Type:MIME-Version:Message-ID; b=dbSp+8u5wLOwtF5C/iDMReOqNjPH3zR3SgIPgYpufBs4uG6XpiVk2/gCFDRKmY9gufAXBbhvBIM4xWY324i0soJ2vZi6PpfSgFpFQMj+1KDgRInWRHMnK3+eqOsfK0vH1q29RzTEiBvRH+YJd9I58XlRUaANkofLPcMYHjnZiQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stu.xmu.edu.cn; spf=pass smtp.mailfrom=stu.xmu.edu.cn; arc=none smtp.client-ip=162.243.164.118
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stu.xmu.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stu.xmu.edu.cn
+Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
+	by hzbj-icmmx-7 (Coremail) with SMTP id AQAAfwAnLmIjDQtq_ZlpCg--.259S2;
+	Mon, 18 May 2026 20:59:15 +0800 (CST)
+Received: from 23020251154299$stu.xmu.edu.cn ( [38.175.103.185] ) by
+ ajax-webmail-mail (Coremail) ; Mon, 18 May 2026 20:59:04 +0800 (GMT+08:00)
+Date: Mon, 18 May 2026 20:59:04 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From: "Chengfeng Lin" <23020251154299@stu.xmu.edu.cn>
+To: "Andrew Morton" <akpm@linux-foundation.org>, linux-mm@kvack.org
+Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	"Lorenzo Stoakes" <lorenzo.stoakes@oracle.com>,
+	"David Hildenbrand" <david@kernel.org>,
+	"Vlastimil Babka" <vbabka@suse.cz>, "Jann Horn" <jannh@google.com>,
+	"Johannes Weiner" <hannes@cmpxchg.org>,
+	"Michal Hocko" <mhocko@kernel.org>,
+	"Qi Zheng" <zhengqi.arch@bytedance.com>,
+	"Shakeel Butt" <shakeel.butt@linux.dev>,
+	"Chris Li" <chrisl@kernel.org>, "Kairui Song" <kasong@tencent.com>,
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
+Subject: [REGRESSION] mm: MADV_PAGEOUT THP/no-swap refault takes ~1.7x
+ longer on v6.19 than v6.12
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version 2025.3-cmXT6 build
+ 20260202(ad063891) Copyright (c) 2002-2026 www.mailtech.cn OP_ICM_ICMVM
+X-CM-CTRLMSGS: =?B?J5ax9ziH6nJ5xwDR7hwMki1N8jM=
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: 
- =?utf-8?q?=5BREGRESSION=5D_next/pending-fixes=3A_=28build=29_implicit_declar?=
- =?utf-8?q?ation_of_function_=E2=80=98=5F=5Fhuge=5Fpmd=5Funshare=E2=80=99=3B?=
- =?utf-8?q?_did_you_mea=2E=2E=2E?=
-From: KernelCI bot <bot@kernelci.org>
-To: kernelci-results@groups.io
-Cc: regressions@lists.linux.dev, gus@collabora.com, linux-next@vger.kernel.org
-Reply-To: kernelci@lists.linux.dev
-Date: Mon, 18 May 2026 12:59:04 -0000
-Message-ID: <177910914374.2347.13071319489279095550@330cfa3079ca>
+Message-ID: <3f4567fc.f496.19e3b2b297b.Coremail.23020251154299@stu.xmu.edu.cn>
+X-Coremail-Locale: en_US
+X-CM-TRANSID:AQAAfwCnwfIZDQtqEqpAAA--.3251W
+X-CM-SenderInfo: astqjiysvrikiuszmqhvwxh5lpxovvfxof0/1tbiAQALEGoKJkIEc
+	AABsr
+Authentication-Results: hzbj-icmmx-7; spf=neutral smtp.mail=2302025115
+	4299@stu.xmu.edu.cn;
+X-Coremail-Antispam: 1Uk129KBjvJXoWxAF13ZF47uw18GF48Xw4rAFb_yoW5Wr17pF
+	sYg3srGwsaqr9rJa92va1kWF18tws3Gr4rXFn8KFs7urs8GFyF9rsa9w18AFZFyr1kXayY
+	9FZ8AryDWF1kAaDanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	DUYxn0WfASr-VFAU7a7-sFnT9fnUUIcSsGvfJ3UbIYCTnIWIevJa73UjIFyTuYvj4RJUUU
+	UUUUU
 
+SGksDQoNCkkgd291bGQgbGlrZSB0byByZXBvcnQgYSB1c2Vyc3BhY2UtdmlzaWJsZSBwZXJmb3Jt
+YW5jZSByZWdyZXNzaW9uIGluIGENCk1BRFZfUEFHRU9VVCB3b3JrbG9hZC4NCg0KVGhlIHdvcmts
+b2FkIGlzIGludGVudGlvbmFsbHkgbmFycm93Og0KDQogIC0gbWFwIDE2IE1pQiBhbm9ueW1vdXMg
+bWVtb3J5DQogIC0gdXNlIHRoZSBkZWZhdWx0IFRIUCBwb2xpY3kNCiAgLSBydW4gaW4gYSBndWVz
+dCB3aXRoIG5vIGNvbmZpZ3VyZWQgc3dhcA0KICAtIGNhbGwgbWFkdmlzZShNQURWX1BBR0VPVVQp
+DQogIC0gcmVmYXVsdC93cml0ZS10b3VjaCB0aGUgbWFwcGluZw0KDQpUaGlzIGlzIG5vdCBtZWFu
+dCBhcyBhIGdlbmVyaWMgbWFkdmlzZSgpIG9yIGdlbmVyaWMgTUFEVl9QQUdFT1VUDQpyZWdyZXNz
+aW9uIHJlcG9ydC4gVGhlIHNpZ25hbCBpcyBjdXJyZW50bHkgc2NvcGVkIHRvIHRoZSBUSFAgKyBu
+by1zd2FwICsNCnJlZmF1bHQvd3JpdGUtdG91Y2ggd29ya2Zsb3cgYWJvdmUuDQoNClRoZSBjdXJy
+ZW50IHB1YmxpYyBldmlkZW5jZSBidW5kbGUgaXMgaGVyZToNCg0KICBodHRwczovL2dpdGh1Yi5j
+b20vbGNmMDM5OS9saW51eC1tbS1yZWdyZXNzaW9uLWV2aWRlbmNlLTIwMjYtMDUvdHJlZS9lMTM0
+NjliL21hZHZpc2UtcGFnZW91dC10aHAtbm9zd2FwLXJlZmF1bHQNCg0KVGhlIHN0YW5kYWxvbmUg
+d29ya2xvYWQgc291cmNlIGlzIGhlcmU6DQoNCiAgaHR0cHM6Ly9naXRodWIuY29tL2xjZjAzOTkv
+bGludXgtbW0tcmVncmVzc2lvbi1ldmlkZW5jZS0yMDI2LTA1L3RyZWUvZTEzNDY5Yi9tYWR2aXNl
+LXBhZ2VvdXQtdGhwLW5vc3dhcC1yZWZhdWx0L3dvcmtsb2FkDQoNClRoZSBmb3JtYWwgZXhwZXJp
+bWVudCBwcm9maWxlIGlzIGhlcmU6DQoNCiAgaHR0cHM6Ly9naXRodWIuY29tL2xjZjAzOTkvbGlu
+dXgtbW0tcmVncmVzc2lvbi1ldmlkZW5jZS0yMDI2LTA1L3RyZWUvZTEzNDY5Yi9tYWR2aXNlLXBh
+Z2VvdXQtdGhwLW5vc3dhcC1yZWZhdWx0L2V4cGVyaW1lbnRzDQoNClRoZSBmb3JtYWwgdGltaW5n
+IHJ1bnMgY29tcGFyZSB2Ni4xMi43NyBhbmQgdjYuMTkuOSB3aXRoIHNpbWlsYXIga2VybmVsDQpj
+b25maWd1cmF0aW9uLCB1c2luZyBRRU1VIGRpcmVjdCBib290LiBUaGUgZm9ybWFsIHBlcmZvcm1h
+bmNlIHJ1bnMgd2VyZQ0KY2xlYW4gdGltaW5nIHJ1bnMgd2l0aCBjb3ZlcmFnZSBkaXNhYmxlZC4g
+Q292ZXJhZ2Ugd2FzIGNvbGxlY3RlZA0Kc2VwYXJhdGVseSBhbmQgaXMgbm90IHVzZWQgZm9yIHRo
+ZSB0aW1pbmcgbnVtYmVycyBiZWxvdy4NCg0KTGFiIGVudmlyb25tZW50Og0KDQogIGhvc3QgbGFi
+ZWw6IGxjZg0KICBob3N0IGtlcm5lbDogTGludXggNi4xNC4wLTM3LWdlbmVyaWMgeDg2XzY0DQog
+IFFFTVU6IHFlbXUtc3lzdGVtLXg4Nl82NCA4LjIuMg0KICBjb250YWluZXIvY2dyb3VwIENQVSBz
+ZXQ6IDAsMiw0LDYsOCwxMCwxMiwxNA0KICBjb250YWluZXIvY2dyb3VwIG1lbW9yeSBsaW1pdDog
+MTYxMDYxMjczNjAgYnl0ZXMNCiAgZ3Vlc3QgbWVtb3J5OiBRRU1VX01FTV9NQj0xNDMzNg0KICBn
+dWVzdCBDUFVzOiBRRU1VX1NNUD0xLzIvNA0KICByZXBldGl0aW9uczogOQ0KICB2ZXJzaW9uIG9y
+ZGVyOiBpbnRlcmxlYXZlZA0KICBwZXJmb3JtYW5jZSBjb3ZlcmFnZV9lbmFibGVkOiBmYWxzZQ0K
+DQpQcmltYXJ5IHJlc3VsdCwgY3ljbGVfbnNfcGVyX3BhZ2UsIGxvd2VyIGlzIGJldHRlcjoNCg0K
+ICBDUFUgICB2Ni4xMi43NyAgIHY2LjE5LjkgICBvbGQtbG93ZXItdnMtbmV3ICAgdjYuMTkvdjYu
+MTINCiAgICAxICAgICAxOTAwLjMgICAgMzMwNC43ICAgICAgICA0Mi41JSAgICAgICAgICAgICAx
+Ljc0eA0KICAgIDIgICAgIDIxMDcuNyAgICAzNTgzLjIgICAgICAgIDQxLjIlICAgICAgICAgICAg
+IDEuNzB4DQogICAgNCAgICAgMjE1NC4yICAgIDM2OTAuOSAgICAgICAgNDEuNiUgICAgICAgICAg
+ICAgMS43MXgNCg0KTUFEVl9QQUdFT1VUIHN5c2NhbGwvcmVjbGFpbS1zaWRlIHNlZ21lbnQsIGFk
+dmlzZV9uc19wZXJfcGFnZSwgbG93ZXIgaXMNCmJldHRlcjoNCg0KICBDUFUgICB2Ni4xMi43NyAg
+IHY2LjE5LjkgICBvbGQtbG93ZXItdnMtbmV3ICAgdjYuMTkvdjYuMTINCiAgICAxICAgICAxNzEz
+LjIgICAgMjkyMi43ICAgICAgICA0MS40JSAgICAgICAgICAgICAxLjcxeA0KICAgIDIgICAgIDE5
+MjQuNyAgICAzMTYyLjkgICAgICAgIDM5LjElICAgICAgICAgICAgIDEuNjR4DQogICAgNCAgICAg
+MTk1My4xICAgIDMyODQuMiAgICAgICAgNDAuNSUgICAgICAgICAgICAgMS42OHgNCg0KVGhlIGN1
+cnJlbnQgbWVjaGFuaXNtIGludGVycHJldGF0aW9uIGlzIHRoYXQgdGhlIHRpbWluZyBkaWZmZXJl
+bmNlIGlzIGluDQp0aGUgTUFEVl9QQUdFT1VUL3JlY2xhaW0gcGFydCwgbm90IHByaW1hcmlseSBp
+biB0aGUgbGF0ZXIgcmVmYXVsdCB0b3VjaC4NClRoZSBwYXRoIGV2aWRlbmNlIHBvaW50cyBhdCB0
+aGUgbm8tc3dhcCByZWNsYWltL3N3YXAtYWxsb2NhdGlvbi1mYWlsdXJlDQpjaGFpbjoNCg0KICBt
+YWR2aXNlKE1BRFZfUEFHRU9VVCkNCiAgICAtPiByZWNsYWltX3BhZ2VzKCkNCiAgICAtPiBzaHJp
+bmtfZm9saW9fbGlzdCgpDQogICAgLT4gZm9saW9fYWxsb2Nfc3dhcCgpDQogICAgLT4gc3dhcCBh
+bGxvY2F0aW9uIGZhaWx1cmUgcGF0aA0KDQpJIGhhdmUgbm90IGJpc2VjdGVkIHRoZSBleGFjdCBj
+dWxwcml0IGNvbW1pdCB5ZXQuIFNlcGFyYXRlIHJlbGVhc2UtbGV2ZWwNCnNhbml0eSBjaGVja3Mg
+c2hvd2VkIHY2LjE4LjE5IGFscmVhZHkgaW4gdGhlIHNsb3cgcmFuZ2UsIHNvIHRoZSBjdXJyZW50
+DQpiZXN0IHJlcG9ydGluZyByYW5nZSBpczoNCg0KI3JlZ3pib3QgaW50cm9kdWNlZDogdjYuMTIu
+LnY2LjE4DQoNClBsZWFzZSBsZXQgbWUga25vdyBpZiBhIGRpZmZlcmVudCByZXByb2R1Y2VyIHNo
+YXBlLCBhIG5hcnJvd2VyIGJpc2VjdCwgb3INCmFkZGl0aW9uYWwgcmF3IGxvZ3Mgd291bGQgYmUg
+bW9yZSB1c2VmdWwuCg==
 
-
-
-
-Hello,
-
-New build issue found on next/pending-fixes:
-
----
- implicit declaration of function ‘__huge_pmd_unshare’; did you mean ‘huge_pmd_unshare’? [-Wimplicit-function-declaration] in mm/hugetlb.o (mm/hugetlb.c) [logspec:kbuild,kbuild.compiler.error]
----
-
-- dashboard: https://d.kernelci.org/i/maestro:ea522c94f7a4928113e69e8165de6c30db45f5e4
-- giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-- commit HEAD:  298cc5aa5aae60cc009e3cd66ff730bb53e3e1ad
-
-
-Please include the KernelCI tag when submitting a fix:
-
-Reported-by: kernelci.org bot <bot@kernelci.org>
-
-
-Log excerpt:
-=====================================================
-mm/hugetlb.c:7281:17: error: implicit declaration of function ‘__huge_pmd_unshare’; did you mean ‘huge_pmd_unshare’? [-Wimplicit-function-declaration]
- 7281 |                 __huge_pmd_unshare(&tlb, vma, address, ptep, take_locks);
-      |                 ^~~~~~~~~~~~~~~~~~
-      |                 huge_pmd_unshare
-  AS      arch/x86/kernel/irqflags.o
-
-=====================================================
-
-
-# Builds where the incident occurred:
-
-## defconfig+kcidebug+x86-board on (i386):
-- compiler: gcc-14
-- config: https://files.kernelci.org/kbuild-gcc-14-x86-kcidebug-6a0b067ed06a47b7c8f841fe/.config
-- dashboard: https://d.kernelci.org/build/maestro:6a0b067ed06a47b7c8f841fe
-
-## i386_defconfig on (i386):
-- compiler: gcc-14
-- config: https://files.kernelci.org/kbuild-gcc-14-i386-build-only-6a0b0654d06a47b7c8f841d9/.config
-- dashboard: https://d.kernelci.org/build/maestro:6a0b0654d06a47b7c8f841d9
-
-## i386_defconfig+kselftest on (i386):
-- compiler: gcc-14
-- config: https://files.kernelci.org/kbuild-gcc-14-i386-kselftest-6a0b0658d06a47b7c8f841dc/.config
-- dashboard: https://d.kernelci.org/build/maestro:6a0b0658d06a47b7c8f841dc
-
-
-#kernelci issue maestro:ea522c94f7a4928113e69e8165de6c30db45f5e4
-
---
-This is an experimental report format. Please send feedback in!
-Talk to us at kernelci@lists.linux.dev
-
-Made with love by the KernelCI team - https://kernelci.org
