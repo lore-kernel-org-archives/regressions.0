@@ -1,111 +1,184 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.102])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC69E22D7A1
-	for <regressions@lists.linux.dev>; Mon, 18 May 2026 08:35:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.102
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 881C03FD947;
+	Mon, 18 May 2026 12:11:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779093359; cv=none; b=E6Ym4Ix4aeN5LP1TbldVSerzPrkrGdkJL1XWrx6kn4lLXvrY9sDEtdinKsXn9ECis8a2CX2zWhpFfXQ/eTjrppKn1Yc5t8dOr4qz99h2xqTj/zHnhSMveO8/i52Yk27olAv1q9az6OnB8hl4Pu5kEPRH4kk7Yc7vdYVdwYEx6aI=
+	t=1779106274; cv=none; b=GEapcdm/DMhWRsIjKoZCU9gTns8xU+2tOqP3O8mnrdu7lSCsV0UolyJ7ykVVpLrq9CQIeNKafE7VmJS3tBwzxdPj7enQxAwfBiHyzEIKhvpzZ+ZGSk+OvxEn9/wLYKI1MFjZf4O6Tp56vGWAVfdy5AcXWomJAnxA2n0tQR/a468=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779093359; c=relaxed/simple;
-	bh=xHfwBmeiTLjpNqhiU48vMjCtAGt9XcKV7Is9mXyIGKM=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=c2holMZLmR1SjQZqYbiJKvgXTGQ2E8gMVhfIr/E+5L9YnvgjQdWxlBkfGU9ozZcmXXiluYJ0GpnT3uQ2KRrbV/YEKSI/vX5WQKFWzNF+fc/3zQHi5WWOO7TQiZ+2FBqOzwDTNncXt0HtARf1W1KtrLGn3CPBhKhzP22v9housFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=RK3tLvwX; arc=none smtp.client-ip=188.68.63.102
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1779106274; c=relaxed/simple;
+	bh=r5jzII3rEEB7Bvaff0gh9EGxCIHT2y9dgQr23V7KZQE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GRS/DBat1tSJ2YwnSe2IWz5jNzzb3ZPsnqJfNqVZEmg5+HFpKQEbnmXe/KGK2BVhqvkWY/pjjfH78ctrXLpj1HrTEGlRhgIzEDXiUzurwGQp+59G415jwLUanJbSE784DqHmn0ZlJCqY3TSuSi7ea0LbSBFTcPH3P5Kj7NtCTfU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jWyIZKeC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="RK3tLvwX"
-Received: from mors-relay-2502.netcup.net (localhost [127.0.0.1])
-	by mors-relay-2502.netcup.net (Postfix) with ESMTPS id 4gJrjb64vQz63m5
-	for <regressions@lists.linux.dev>; Mon, 18 May 2026 10:35:47 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1779093347;
-	bh=xHfwBmeiTLjpNqhiU48vMjCtAGt9XcKV7Is9mXyIGKM=;
-	h=Date:Subject:From:To:References:In-Reply-To:From;
-	b=RK3tLvwXkL16+n5r9RAAobZnR3lpAJxKDMb+Qe3eR46o/rPyfYXYB5djfmzMuslZN
-	 mV6gyKg0uSdwnGSY0iOpZBipxek4hPYV1BmnqqwKG8P0P9DkYFGJmFbbpjIMsjulDW
-	 GqYqZL85IJifc+rmdrVhB6sjChrgAwkXGkksxD0OwGU0skd0VUAv2i7Me7ittLgwMt
-	 xKPiFt8O20Si3LQQ5dyCkF2bBy81BL01JbIbeDMySJGQz5hAA+amrzuQ0fL27AgSxD
-	 xjRrRPIsmJDbJaDF116IWEl5FG37EYo6iu/5embKbfM1wV/NdsV+EfVDBR5VUiomjl
-	 WGhz29e1oNPpw==
-Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-2502.netcup.net (Postfix) with ESMTPS id 4gJrjb5MN6z4xsW
-	for <regressions@lists.linux.dev>; Mon, 18 May 2026 10:35:47 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
-X-Spam-Flag: NO
-X-Spam-Score: -2.898
-X-Spam-Level: 
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4gJrjZ51p7z8tZp
-	for <regressions@lists.linux.dev>; Mon, 18 May 2026 10:35:46 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 3218361851
-	for <regressions@lists.linux.dev>; Mon, 18 May 2026 10:35:46 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <ee1916a2-cc01-438a-8a4c-165ad6ded284@leemhuis.info>
-Date: Mon, 18 May 2026 10:35:45 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jWyIZKeC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92B2BC2BCC6;
+	Mon, 18 May 2026 12:11:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1779106274;
+	bh=r5jzII3rEEB7Bvaff0gh9EGxCIHT2y9dgQr23V7KZQE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jWyIZKeCvjJz6PaNbN9a3n4OfV2F4vW2SY3AGOi57n5LDy0kcOch5a2IZ1S78O/SV
+	 LVbwzT60qUSooP8jNG4KY4Syii8/sT0NaoEqS5z2qZXY2SAzbJc8k2P7/w7xt6oAHC
+	 v3OEPSRZ8V+HjiQ3ws+HeNdtRMLA7j3tz1wXYHYkgI9N7GLzz/X2ix7+yWMCiTDpNc
+	 feeOyDeL7zvyIrtK2XKNahIlLspne6UDnS1IX5CYGzZFjjfv1SwsrYlZ8oxGvCtnLa
+	 mnCoa2aOw50KHDeeGE999qN+yvYFowoy1j79f1JDEaLR1/SPrD1se+UpNoEsioy7qC
+	 Dz0hyatE7eqgg==
+Date: Mon, 18 May 2026 13:11:09 +0100
+From: Will Deacon <will@kernel.org>
+To: chichina c <li17324910702@gmail.com>, dovmurik@linux.ibm.com,
+	kraxel@redhat.com
+Cc: stable@vger.kernel.org, regressions@lists.linux.dev, gshan@redhat.com,
+	viro@zeniv.linux.org.uk, suzuki.poulose@arm.com, ardb@kernel.org
+Subject: Re: [REPORT] efi_secret: potential use-after-unmap via stale
+ seq_file private after device removal
+Message-ID: <agsB3ZxcmF-AKPb2@willie-the-truck>
+References: <CAOKsz8xqb9MYTbcFnJ-0R=zBRR-oKSNXmMLjFbO5aw1vXo_Ncw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: 
- <177909334636.1902626.18006172376011646162@mxe9fb.netcup.net>
-X-NC-CID: iqSFy11Tjcfb/Png9TQmotW7k5OAxtR4FoJtDZvSBVtR+4bQMfs=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAOKsz8xqb9MYTbcFnJ-0R=zBRR-oKSNXmMLjFbO5aw1vXo_Ncw@mail.gmail.com>
 
+[Adding folks who were involved in the efi_secret driver]
 
+I also think this should probably just be discussed on the mailing
+list...
 
-On 3/9/24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
+Will
+
+(original report below)
+
+On Fri, Apr 03, 2026 at 05:10:17PM +0800, chichina c wrote:
+>    Hello Linux kernel security team,
 > 
-> Interacting with regzbot from arbitrary places is a recently added
-> feature of regzbot usable via the new '#regzbot report <url>' command.
-> The indented use of this feature is for updating minor aspect of
-> regressions already tracked, e.g. "change the title" or "tell regzbot
-> about a related discussion". Such things until now had to be done using
-> regzbot commands in a direct or indirect reply to report -- but there
-> they would mainly be noise for most others and just add to the huge
-> amount of mail people already get. It's also takes a more time to send a
-> lot of individual mails instead of preparing just one.
+>    I would like to report a potential security issue in
+>    drivers/virt/coco/efi_secret/efi_secret.c.
 > 
-> The new command will be documented on
-> https://gitlab.com/knurd42/regzbot/ once it got a bit more testing.
+>    The issue appears to be a stale pointer / use-after-unmap in the
+>    securityfs read path after device removal.
 > 
-> Ciao, Thorsten
-
-#regzbot report:
-https://lore.kernel.org/all/d2de7933-e650-4b19-8d88-90d66693dcfc@message-id.googlemail.com/
-#regzbot introduced: 40d2f5820951dee818d
-#regzbot title: drm/i915/backlight: backlight control broken on Thinkpad
-T480
-#regzbot dup:
-https://gitlab.freedesktop.org/drm/i915/kernel/-/work_items/16043
-
-#regzbot report:
-https://lore.kernel.org/lkml/CADo9pHjr-zZ9C3%2B026y5%2BXOGPSeRzSJMCHof27TVPtAUNgTc8A@mail.gmail.com/
-#regzbot introduced: 40d2f5820951dee818d
-
-#regzbot report: https://gitlab.freedesktop.org/drm/amd/-/work_items/5286
-#regzbot introduced: 6f71d5dd3206
-#regzbot title: drm: amdgpu: handling FreeSync via MCCS broke VRR
-
+>    In efi_secret_securityfs_setup(), each securityfs file is created with
+>    its private data pointing directly to a struct secret_entry inside the
+>    mapped EFI secret area:
+> 
+>  e = (struct secret_entry *)ptr;
+>  securityfs_create_file(guid_str, 0440, dir, (void *)e,
+>                         &efi_secret_bin_file_fops);
+> 
+>    The file uses DEFINE_SHOW_ATTRIBUTE(efi_secret_bin_file), so open()
+>    eventually calls:
+> 
+>  single_open(file, efi_secret_bin_file_show, inode->i_private);
+> 
+>    This means an already-open file descriptor keeps the secret_entry pointer
+>    in seq_file->private.
+> 
+>    Later, efi_secret_bin_file_show() uses that saved pointer:
+> 
+>  struct secret_entry *e = file->private;
+>  if (e)
+>          seq_write(file, e->data, secret_entry_data_len(e));
+> 
+>    The problem is that the lifetime of this pointer is tied to the EFI
+>    secret area mapping. The secret_entry object is not separately allocated;
+>    it lives inside s->secret_data.
+> 
+>    On device removal, the driver does:
+> 
+>  efi_secret_securityfs_teardown(dev);
+>  efi_secret_unmap_area();
+> 
+>    and efi_secret_unmap_area() calls:
+> 
+>  iounmap(s->secret_data);
+> 
+>    At that point, an already-open file descriptor may still hold the old
+>    secret_entry pointer in seq_file->private. A later read on that old fd
+>    appears able to reach efi_secret_bin_file_show() and dereference
+>    e->len / e->data after the backing mapping has been removed.
+> 
+>    My understanding is that securityfs_remove() tears down the dentry/inode
+>    tree, but it does not invalidate seq_file->private for file descriptors
+>    that were already opened before removal. Also, the show path uses
+>    single_release() only, with no extra pinning or refcounting of the
+>    underlying secret_entry object.
+> 
+>    Expected trigger sequence:
+> 
+>     1. The platform exposes EFI coco secrets and the driver creates
+>        /sys/kernel/security/secrets/coco/.
+>     2. A process opens one of the secret files and keeps the fd open.
+>     3. The device is removed or unbound, so efi_secret_remove() runs and
+>        unmaps s->secret_data.
+>     4. The process reads again from the already-open fd.
+>    probe
+>     └─ efi_secret_map_area
+>         └─ s->secret_data = ioremap_encrypted(...)
+> 
+>    probe
+>     └─ efi_secret_securityfs_setup
+>         ├─ e = (struct secret_entry *)ptr
+>         └─ securityfs_create_file(..., data=e, ...)
+> 
+>    open(fd)
+>     └─ efi_secret_bin_file_open
+>         └─ single_open(file, show, inode->i_private)
+>             └─ seq_file->private = e
+> 
+>    read(fd)
+>     └─ seq_read
+>         └─ efi_secret_bin_file_show
+>             └─ e = seq_file->private
+>             └─ read e->len / e->data
+> 
+>    remove
+>     └─ efi_secret_remove
+>         ├─ securityfs_remove(...)
+>         └─ iounmap(s->secret_data)
+> 
+>    read(old fd again)
+>     └─ seq_read
+>         └─ efi_secret_bin_file_show
+>             └─ use old seq_file->private = stale e
+>             └─ access unmapped memory
+> 
+>    The expected result is a stale dereference of a secret_entry pointer
+>    whose backing memory has already been unmapped. At minimum this looks
+>    like a local kernel crash / DoS issue.
+> 
+>    This report is currently based on source analysis.
+> 
+>    Environment:
+>    Kernel: [v7.0-rc6]
+> 
+>    A possible fix would be one of the following:
+> 
+>      • avoid storing raw pointers into the mapped secret area in
+>        seq_file->private;
+>      • use a separately allocated refcounted object whose lifetime is not
+>        tied directly to the ioremap mapping;
+>      • delay iounmap(s->secret_data) until all open readers are gone;
+>      • explicitly invalidate or drain already-open readers before unmapping.
+>        |
+> 
+>    If this is confirmed to be a real issue and fixed, I would appreciate it
+>    if my reporter information could be included in the report/changelog.
+> 
+>    Best regards,
+> 
+>    chichi
+> 
+>    [1]Li17324910702@gmail.com
+> 
+> References
+> 
+>    Visible links
+>    1. mailto:Li17324910702@gmail.com
