@@ -1,138 +1,135 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f174.google.com (mail-dy1-f174.google.com [74.125.82.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5017F38F64C
-	for <regressions@lists.linux.dev>; Mon, 18 May 2026 19:30:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29CE61E376C
+	for <regressions@lists.linux.dev>; Mon, 18 May 2026 19:59:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779132620; cv=none; b=nF6oUovWBW4DdLrCkZMRzqVnXDpWl6pXHlSudlKzLKCfOWM8JTFGnoRPBU+sVz0FOdIDEpfp2xNfrzHxczEUYXRwA3GxjTcdpgctfavmCk1ViI4aAWqqmXRFbulBqdemPlt4XemRT+WMOl37GRU4P/i1m0v0sY7Kk8s8NSOcBlA=
+	t=1779134347; cv=none; b=Bl6YrzVIiJ/XU9Wn9Ix/VF1Dk2Mz88TRA/Q1kXVhf9QArY5+xEgXPSnPL5fm4YptOabTdOE1+ubnGCDHV7aDW4eNJEE08Mb/+5lXdpihR8Nz0LOqvvHw6ZQ9HOdjKYPojbqpdbxE7CixhC0q5zPCJpmf759BfVARddQM4DNuDHE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779132620; c=relaxed/simple;
-	bh=DdX2iIFCSalYqzjtTrWney+Z5bj6ec5weDXdJolRS5g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZJD1RkdQSYbRya34fl6iGvmqBjNAWVySRBqJSAIXV0SVHRzu9GrEvEga6cjVLl5zyYlzDaYxRRv6q87t+phv8/rK64aMHEmmP+LPZ5+OEjxGw2t0FJsKQKMe1aizraZq4rg3VXFVrGCN6oaJZz637aavAoycANZabeEcc1GjOlE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g43ZjO+c; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1779134347; c=relaxed/simple;
+	bh=wcFmzL5/Pjd0ljg1fNotvik1uWid9z7/6uq+AzTMto8=;
+	h=Content-Type:MIME-Version:Subject:From:To:Cc:Date:Message-ID; b=o3RRoEClLmAJZ/78zRYZzmkWaZ2fKwVrzxQuq8hXTZyZKURfCdfsKFEUI5UJNqy9StdX3mnsasqc0gjtnUi4h7LFmHwIT/0GEE5j3ICD3lSkIYGJFZkN72G1pctf4taHoCAElbOiiy6giNWenPc1vVLkcIbP/r9ZEfYDuWbZMYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kernelci.org; spf=pass smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci.org header.i=@kernelci.org header.b=NOz2nj4a; arc=none smtp.client-ip=74.125.82.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kernelci.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernelci.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g43ZjO+c"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A02E4C2BCF6;
-	Mon, 18 May 2026 19:30:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1779132620;
-	bh=DdX2iIFCSalYqzjtTrWney+Z5bj6ec5weDXdJolRS5g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=g43ZjO+cFxhBTiOyzS+xdgNNPxwvST7r5fxpxqCH941vKep9c6n6es1+r3/ih/EwK
-	 5ZKd2pZLQQnMNPblSna228xD5Yg0xxRmwHC0ymOMW+2P1ALQeN1uWOC5UVCewRSbBo
-	 /xpaPpT+nfQsKCSJa3ndrRo4Kr70KfbGQUvMmyUmbQJg6yjCkCxlgtbolXY6Wa2qxo
-	 Fik5lnlf36mEvpp0UyfQ57grA+1yOnNVuBK1VtL/ClPOU5aOpxpMqzo4Y96MdCM65D
-	 i+d/49aTt/HG1s+M+DA/fhj3zfxLghm2MZhKy0NqfZJBxyLbCaTF6lZR/1KS0w4JI2
-	 XaxpqZphPl1/g==
-Received: from phl-compute-12.internal (phl-compute-12.internal [10.202.2.52])
-	by mailfauth.phl.internal (Postfix) with ESMTP id E31BBF40086;
-	Mon, 18 May 2026 15:30:18 -0400 (EDT)
-Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-12.internal (MEProxy); Mon, 18 May 2026 15:30:18 -0400
-X-ME-Sender: <xms:ymgLaq_nNafjvpbSCxiZGAdSCii3Tuii5ZBx2u0Gpi2xST2fXqDoWg>
-    <xme:ymgLagQ_IqvXp2AMqaDCt9twwVtlzFph9PgZPsQayVZm9_v8yrDa2dvqP2FIz56VV
-    sjyZUwZ2OjZ-8FEnYmcbjTbjhu8WNlu8OoFpoh2Ywq1ghIkqHj7hA>
-X-ME-Received: <xmr:ymgLapn0M0bsTt3Wktsc6RDXKzxthf3Df-6FNw4mkklAEWCxXzq6ePbA6tx2FJxOmPoZKpfQnnKeAH4t6IjC-sXVrIciRVQD>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgddufeeljeduucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepuehoqhhunhcu
-    hfgvnhhguceosghoqhhunheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrhhnpe
-    elueehtefhtddtgfejvdejueehhfekteevueeuueekgeetieeggeehvdffhefhhfenucff
-    ohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenucfrrg
-    hrrghmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhn
-    rghlihhthidqudeijedtleekgeejuddqudejjeekheehhedvqdgsohhquhhnpeepkhgvrh
-    hnvghlrdhorhhgsehfihigmhgvrdhnrghmvgdpnhgspghrtghpthhtohepudehpdhmohgu
-    vgepshhmthhpohhuthdprhgtphhtthhopehurhgviihkihesghhmrghilhdrtghomhdprh
-    gtphhtthhopehrvghgrhgvshhsihhonhhssehlvggvmhhhuhhishdrihhnfhhopdhrtghp
-    thhtohepphgruhhlmhgtkheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepsghoqhhunh
-    drfhgvnhhgsehgmhgrihhlrdgtohhmpdhrtghpthhtohepjhhovghlrghgnhgvlhhfsehn
-    vhhiughirgdrtghomhdprhgtphhtthhopehrtghusehvghgvrhdrkhgvrhhnvghlrdhorh
-    hgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdho
-    rhhgpdhrtghpthhtohepghhorheslhhinhhugidrihgsmhdrtghomhdprhgtphhtthhope
-    hfrhgvuggvrhhitgeskhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:ymgLajXZcpy1qga9ciHrGV8cHNrKxEL4aeyN981UGnk5bMW7PvxE9Q>
-    <xmx:ymgLamc15HSbTErQMD7Aj0sI14Q8pJatpKc2KGxMT56vcpbEf1jL-g>
-    <xmx:ymgLapmSfytH15wX8d4BsHtMnUV-YFXqHqEBZBrAX8GkuMRwA2GfJQ>
-    <xmx:ymgLagAfEsbN9FOtZ_aBKqxIWuoIWqlxqqgahSPLcRJXKoknf1v-wg>
-    <xmx:ymgLajexyW3LxC6yHJpJWJmHm1iFjlrO1CkurDanVFwLCC5cLWoDgfK2>
-Feedback-ID: i8dbe485b:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 18 May 2026 15:30:17 -0400 (EDT)
-Date: Mon, 18 May 2026 12:30:08 -0700
-From: Boqun Feng <boqun@kernel.org>
-To: Uladzislau Rezki <urezki@gmail.com>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>, paulmck@kernel.org,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Joel Fernandes <joelagnelf@nvidia.com>, RCU <rcu@vger.kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Samir <samir@linux.ibm.com>,
-	Shrikanth Hegde <sshegde@linux.ibm.com>, Tejun Heo <tj@kernel.org>,
-	Linux kernel regressions list <regressions@lists.linux.dev>,
-	Jiri Slaby <jirislaby@kernel.org>
-Subject: Re: [PATCH -next v1 05/12] srcu: Don't queue workqueue handlers to
- never-online CPUs
-Message-ID: <agtowPsNCB2LioTN@tardis.local>
-References: <20260511175448.153326-1-urezki@gmail.com>
- <20260511175448.153326-6-urezki@gmail.com>
- <f669fbc9-c068-489f-bd91-4e81561a6e58@leemhuis.info>
- <agm4-6f-6rOgQPFB@pc636>
- <3dd5cce0-51f9-4cf1-81b8-246e6c6a633a@paulmck-laptop>
- <53d546e4-8db0-4e14-a79d-270212081be7@leemhuis.info>
- <ags6ug97zNR6Fiiw@tardis.local>
- <agtG4JmmyH1ycg16@milan>
+	dkim=pass (2048-bit key) header.d=kernelci.org header.i=@kernelci.org header.b="NOz2nj4a"
+Received: by mail-dy1-f174.google.com with SMTP id 5a478bee46e88-2bdcf5970cdso1722036eec.0
+        for <regressions@lists.linux.dev>; Mon, 18 May 2026 12:59:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci.org; s=google; t=1779134345; x=1779739145; darn=lists.linux.dev;
+        h=message-id:date:reply-to:cc:to:from:subject
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8uYg5vEkVblvL8tlqyPPTP/ZLoRL6eBCHzseSUQ7sMs=;
+        b=NOz2nj4abUlxlsUZ0pF6Sjw2srY2NKPxwWicTvlJfAk0tnAk1G8NGbxWP5Kh/maQmK
+         lSFq+Kjj6E2NsEbl0tG3OqL8pJxzlwVL5eSrZ0pJwBbyK54lvImZfSaC/OF+hTWS1+YL
+         NL2TrmvZdU4IARGYHLDHQWznjrsPfXv44LitC0Q6GeKCrD1KCnTCsuBqcwRIxfkCGNhx
+         YeOVCrzzmK+CxhxQVwoXVK1rt7hx0V3j/b539Dcibp2dF/r32vCC3A7HYAUySSZq48S3
+         P4jW4ZCzT41nmiZCA6IB5SIHS/goFvjSMq1192tcoIIv+QI5DpPZt2xfeDviFimV+1Wi
+         4KiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779134345; x=1779739145;
+        h=message-id:date:reply-to:cc:to:from:subject
+         :content-transfer-encoding:mime-version:x-gm-gg:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=8uYg5vEkVblvL8tlqyPPTP/ZLoRL6eBCHzseSUQ7sMs=;
+        b=VXqVOmrrRcZpFK6Q9hGOkTF5Yow5Nd2iVrJLADs8svm73T0Y2JlpBdoi4KZAIwQAwn
+         gS2r5cWkr6/kqiHLxBfQ70A74fpHgKn6cZOOZFSwE1MTqEtHZFRVBHbNlDXjEJyfHwyr
+         dGUsp2MpHRdBTQaOBuk8/qBAhpURwr27WeLqeZOlMQySmPmQT68pSe7uBJyQKP+OoP7c
+         PCXvFuCdyJKl7lp15/bh2s1sXdUOTQQbqK6kh+iXZWubEH6gEthriwQ6DjjfL3Sa783k
+         cieETPNjKVQAH6fwDblMU/6sHCb8KpPCdEdh6Z2FwzmnpkGAdbN9igyzNDOrrBOKn5Og
+         6GVQ==
+X-Gm-Message-State: AOJu0YwNDh8Z94YY/dbc2gHsARq8rCdJMRUKyi1BUhDhjeZrWhNOXlAI
+	ekoR+cICs6wv3FMSJ31VLuTAE4/oncEylAnPui2K/bNFBLLB9le+ghYdzmAnV3sHK0w=
+X-Gm-Gg: Acq92OG6OnHSpH2wf2d0IMBjCMeA0EKNSoDwEEIvXbuW0xYx/Fw8/abUaWNk9KQD6bs
+	JtBc+J/cfx59h0APb0CU01wYKggh7Ik8OvPixfsFHTh0IQAKkC0ElI0aJREA9vJWiH8ueujYlt0
+	5Wcv5OMYF7AhXoB9/FJTj2bkKpoDutAo0Pcy1HQpYgAm44dKg6Oo1mrW0w3zh1jLN2dQcK/CV70
+	F1/BpBkR45ngLd2UB6cEnR9yP4ADDwyV3vJtxqO7DY6ZQWRc1bhr4xr7bEWeCZZwjBcKxQI8cuZ
+	QaRCE3ZqoY29zHKkUljNw0lJLg8jgko6SaxXnIqVef0p/3/hvyB6pJEicOz5XKklZojYh3e7aqS
+	W5ljECpxevk2rcxjbgUtYj9nZHdjFuyooAuPdGb5YrirpSJkHtoQ9c4n3SnThm+uAi/WPYokUa0
+	p5NKPpi3j4sf7hYLmF
+X-Received: by 2002:a05:7300:f193:b0:2df:7882:1cf3 with SMTP id 5a478bee46e88-3025eaafc91mr9454487eec.2.1779134345075;
+        Mon, 18 May 2026 12:59:05 -0700 (PDT)
+Received: from 330cfa3079ca ([20.38.40.137])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-30296dcc458sm17680415eec.18.2026.05.18.12.59.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 May 2026 12:59:04 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <agtG4JmmyH1ycg16@milan>
+Content-Transfer-Encoding: 7bit
+Subject: [REGRESSION] mainline/master: (build) variable 'old_size' is
+ uninitialized
+ when used here [-Werror,-Wuni...
+From: KernelCI bot <bot@kernelci.org>
+To: kernelci-results@groups.io
+Cc: regressions@lists.linux.dev, gus@collabora.com, laura.nao@collabora.com,
+ shreeya.patel@collabora.com, broonie@kernel.org
+Reply-To: kernelci@lists.linux.dev
+Date: Mon, 18 May 2026 19:59:04 -0000
+Message-ID: <177913434403.2484.8283537970935500940@330cfa3079ca>
 
-On Mon, May 18, 2026 at 07:05:36PM +0200, Uladzislau Rezki wrote:
-> On Mon, May 18, 2026 at 09:13:46AM -0700, Boqun Feng wrote:
-> > On Sun, May 17, 2026 at 09:11:10PM +0200, Thorsten Leemhuis wrote:
-> > > On 5/17/26 20:03, Paul E. McKenney wrote:
-> > > > On Sun, May 17, 2026 at 02:47:55PM +0200, Uladzislau Rezki wrote:
-> > > >> On Wed, May 13, 2026 at 12:38:01PM +0200, Thorsten Leemhuis wrote:
-> > > >>> On 5/11/26 19:54, Uladzislau Rezki (Sony) wrote:
-> > > >>>> From: "Paul E. McKenney" <paulmck@kernel.org>
-> > > >>>>
-> > > >>>> While an srcu_struct structure is in the midst of switching from CPU-0
-> > > >>>> to all-CPUs state, it can attempt to invoke callbacks for CPUs that
-> > > >>>> have never been online.  Worse yet, it can attempt in invoke callbacks
-> > > >>>> for CPUs that never will be online, even including imaginary CPUs not in
-> > > >>>> cpu_possible_mask.  This can cause hangs on s390,
-> > > >>>
-> > > >>> Uladzislau, Paul, according to the fixes tag below this change fixes a
-> > > >>> change that went into 7.0-rc6 -- and apparently causes a "hang" on some
-> > > >>> architectures. So shouldn't this be heading to mainline instead of
-> > > >>> -next? Ideally with a stable tag to ensure backporting to 7.0.y, but
-> > > >>> that is a separate decision?
-> > > >>>
-> > 
-> > FWIW, I'm happy to create an urgent PR to Linus with this fix. Since it
-> > fixes a commit in the previous urgent fix PR from me. Ulad, let me know
-> > if you want me to do it.
-> > 
-> I do not mind :) So i can drop this patch!
-> 
 
-Alright, I created the fix branch at:
 
-	https://git.kernel.org/pub/scm/linux/kernel/git/rcu/linux.git/log/?h=fixes.v7.1
 
-And I'm going to throw some tests on it. Will send the pull request
-tomorrow.
 
-Regards,
-Boqun
+Hello,
 
-> --
-> Uladzislau Rezki
+New build issue found on mainline/master:
+
+---
+ variable 'old_size' is uninitialized when used here [-Werror,-Wuninitialized] in fs/smb/client/cifsfs.o (fs/smb/client/cifsfs.c) [logspec:kbuild,kbuild.compiler.error]
+---
+
+- dashboard: https://d.kernelci.org/i/maestro:8fef554699226f88449edfc56be31812d3edd327
+- giturl: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+- commit HEAD:  4bf5d3da79c48e1df4bab82c9680c53adeff7820
+
+
+Please include the KernelCI tag when submitting a fix:
+
+Reported-by: kernelci.org bot <bot@kernelci.org>
+
+
+Log excerpt:
+=====================================================
+/tmp/kci/linux/fs/smb/client/cifsfs.c:1390:29: error: variable 'old_size' is uninitialized when used here [-Werror,-Wuninitialized]
+ 1390 |                 if (rc == 0 && new_size > old_size) {
+      |                                           ^~~~~~~~
+/tmp/kci/linux/fs/smb/client/cifsfs.c:1307:37: note: initialize the variable 'old_size' to silence this warning
+ 1307 |         unsigned long long i_size, old_size, new_size, zero_point;
+      |                                            ^
+      |                                             = 0
+/tmp/kci/linux/fs/smb/client/cifsfs.c:1375:13: error: variable 'zero_point' is uninitialized when used here [-Werror,-Wuninitialized]
+ 1375 |         if (fend > zero_point)
+      |                    ^~~~~~~~~~
+/tmp/kci/linux/fs/smb/client/cifsfs.c:1307:59: note: initialize the variable 'zero_point' to silence this warning
+ 1307 |         unsigned long long i_size, old_size, new_size, zero_point;
+      |                                                                  ^
+      |                                                                   = 0
+2 errors generated.
+
+=====================================================
+
+
+# Builds where the incident occurred:
+
+## defconfig+allmodconfig+CONFIG_FRAME_WARN=2048 on (arm):
+- compiler: clang-21
+- config: None
+- dashboard: https://d.kernelci.org/build/maestro:6a0b542b744d1c1da0198902
+
+
+#kernelci issue maestro:8fef554699226f88449edfc56be31812d3edd327
+
+--
+This is an experimental report format. Please send feedback in!
+Talk to us at kernelci@lists.linux.dev
+
+Made with love by the KernelCI team - https://kernelci.org
