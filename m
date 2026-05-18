@@ -1,126 +1,197 @@
-Received: from mail-dl1-f44.google.com (mail-dl1-f44.google.com [74.125.82.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD9B147D938
-	for <regressions@lists.linux.dev>; Mon, 18 May 2026 13:59:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A36DB466B73;
+	Mon, 18 May 2026 15:36:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779112747; cv=none; b=IEDD5dTnFJ1q2a+kXzE9I5yDjf4E3Ut/8OMjo2a8Mr5HHHTzl5pce5D9dQ9jT7uRfwiUWYYTxaq/VT/IYuCzXgF67Aokkljdhn0NBP8N6ss8ZayGhuvTZNzVdS+k79QTXyt1iefCcyjoatLlj4llIosqN384cpffGIgFE0hvDBY=
+	t=1779118594; cv=none; b=Xh/aMY3DIlNFEnAQTlOzStq62611t6N+sjy93MAs4TIlwmjgYZ1iSuEqDniol8r1ONtaa9DbSjYTHOEZbidEcmogxU4qnm0BoVL+jummsJ/4tGvtGmufl+73v++jvKHisCbm72INkwl6mLGZKZh26z8olN3ke5Fa5vrmIhNM3uE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779112747; c=relaxed/simple;
-	bh=byBSY8/p4MUqq7nTg4fDT/uexWJQLmz/HqHZ0zlkuWw=;
-	h=Content-Type:MIME-Version:Subject:From:To:Cc:Date:Message-ID; b=g0gID3D6jt6Hb6sT42sERsjaTac+BYXVToNsDFX1MfFmJDQL61IT6HPr2B9BQe0eQnCPDz16KQ42VsPusiXtUGtwWzQgdqAafxJukI8xM2FWN/m5MGXHM/cd/aqFvGK/ZFrz3NktHfh9iMx7wHB5KMd+WbyAFJb1ZqfEGeVafR0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kernelci.org; spf=pass smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci.org header.i=@kernelci.org header.b=AlqmrRIi; arc=none smtp.client-ip=74.125.82.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kernelci.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernelci.org
+	s=arc-20240116; t=1779118594; c=relaxed/simple;
+	bh=h6lzYDBY+bebtEBLrGArfwg08knGWmdMX+yo4EffkBQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HN4oLPaag/xReFdCPyMy4MwuWSxL2ixKfbSFfHLYL4P7+wSlGVzF7bGLzuzCykkMZ0XEJJHo6YJRw3H1SEfMIPyjKiMostEp5hGDOf7cyeiR/u0Nxpau4EoM8f8TxABcvELwc//hFNrk28uaDOZuKW6neRm+meQxaC3wiIVUg0g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MurWd7kO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci.org header.i=@kernelci.org header.b="AlqmrRIi"
-Received: by mail-dl1-f44.google.com with SMTP id a92af1059eb24-12c8f9846c8so2602700c88.0
-        for <regressions@lists.linux.dev>; Mon, 18 May 2026 06:59:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci.org; s=google; t=1779112745; x=1779717545; darn=lists.linux.dev;
-        h=message-id:date:reply-to:cc:to:from:subject
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CLihxZ3CAf0WAx03zk131v5nnNf6cERDVla+NTBzN5g=;
-        b=AlqmrRIiv1+67kEs8H4EpmNFUVJQvNha+kokn/yxBtfZRGI4LqO/gDuoaasGP7vNFU
-         /2THypdkNiIqVHDrjWA6iucY17pOeC1VUQvhIT/W1NJfZwut0Cxqt/rEizqCK7gh/bRF
-         2i+4LbAnyfir/aitaHVQhiZ81l8nKMHEvorwS+P/TpZCkuh7uVi261MNR9xkWmUiQ9k3
-         t+8OJ3eL4SA0ld4oMza6T21qfXePqXMqQzyUjGNMiu3MdVPYtFJ/JLwbz2EXKxTIFH6K
-         RDHGXIWFUU+IGDP0jlposd23cs/lQrUzhUCtEPoj+TnBdnjmMkDgO3xHDOiM2uCWdeN7
-         TC6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779112745; x=1779717545;
-        h=message-id:date:reply-to:cc:to:from:subject
-         :content-transfer-encoding:mime-version:x-gm-gg:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=CLihxZ3CAf0WAx03zk131v5nnNf6cERDVla+NTBzN5g=;
-        b=Ae09sxozS90bOExLsq9BOc/Cj20jFLJTOBUhScvga7TolnPNo+5Jf0BcYKVHSqQb93
-         S50alGGPhstRHrTc0iQdJeS2lm3KCwnmWEDTOGSz/FDQzjhm5SSY9vR+d40CfahoUbau
-         jVbDt/AjkMkuaakcx4k/6LObaIVflmaGeNN4c2IY91rwZeE2mj1kxUgkMizbn0vil/be
-         q2x4VqK53fc6hiGrAv0s4L6kKAPtfmTikRbvjNnBrfqpTI/frgmqeMu3jK+NGzcud9TD
-         YWdZszR4AHe3EDZYbbKtxMyK8Se3qUqvSTl6nvt7EEyYvUdw3dWUiPQuU3CVqcfURc4z
-         mqIg==
-X-Gm-Message-State: AOJu0Yw4cisCwog38Bua5E0zpLaTOuphkhG9eDw2RIRqlnFo/lY7XD8H
-	32wo/jrsidquyUHxLVh+jT82QCRxVK1hZdsWQVV1RRY41XlR0nfIKTchFB4TQespo8k=
-X-Gm-Gg: Acq92OGcO8QqwMQC3EGLrYHMlOqYDdZCN9k6G0YWYBbYPU5T+IRQO29xeEn0a/Q9FJN
-	kmooXliP66JuaoLXjarjNsgUMDz9uRrGN3EaG1fK0w3zF/LRSStETI3jkYl1lh2vI/gcMMYVnqb
-	VqB/GM30J2jV9i2STY8BUSmL1K5Z+QbcTqU6vO4+aC/KU0W/pFC0gbQq5KC7uzvbjn0NehgTKvs
-	INMx9ltFerGK3arLzJi3ckqq8VwT0B3+yzURWr5RpY8kgS2FwFzoA4psKf8atCLDUEY/PTtGekb
-	9THl2nmaYXP+FcFrTY4UoJKUc5y5qO9uHtvO7ChGWdJ3GV4e7z9a/bBElOl6hHpxlVqDPmdnrBn
-	UC+WBP0UG3k4YhIJmaDPad+BtzvmAYVfdQxRy2HpUVr2XFL8Jc4lAwnHNVR3nLckKQ/P/xy3bkz
-	HE9523ts7gZq88uUKzfLV5oV1Mc2g=
-X-Received: by 2002:a05:7301:198e:b0:2dd:144b:6c2 with SMTP id 5a478bee46e88-303986a03b9mr5812003eec.27.1779112744876;
-        Mon, 18 May 2026 06:59:04 -0700 (PDT)
-Received: from 330cfa3079ca ([20.38.40.137])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-30296dcc458sm16517523eec.18.2026.05.18.06.59.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 May 2026 06:59:04 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MurWd7kO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9074C2BCB7;
+	Mon, 18 May 2026 15:36:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1779118594;
+	bh=h6lzYDBY+bebtEBLrGArfwg08knGWmdMX+yo4EffkBQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=MurWd7kOhGgPLFW5/2rqb2N9O8WTdfGoiylNbTnz7vlLrF1ozm89Ulor/qjtbwZa7
+	 P5Z8v9v6oY1bIip1f0UPW05SqVwvACgjhGnO0e9mvVXwLyFerfOfRg4ca1momDYEJD
+	 /zFYNNhrRthMvj/K+fm2vFBHmkLfXQXKIqXzST4qkEBDjB2MjErHSgDwNTkG+pSdfP
+	 NlFVpGROPPbkryU/L9eoh53esGyXQ4A7PZ1QcOgCml1O4wobOSVxA2tuPP5lzMYFOl
+	 Vbg9ZtYXLdVq8JddvMSn+0F2UMrSxeYX8pw1izV4vCR/SGQEjjjA+lptqrSgb3Z45h
+	 0PloSuxht84SA==
+Message-ID: <dfdef925-4127-4e7c-bbe1-e7b2542355da@kernel.org>
+Date: Mon, 18 May 2026 17:36:27 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] mm: MADV_PAGEOUT THP/no-swap refault takes ~1.7x
+ longer on v6.19 than v6.12
+To: Chengfeng Lin <23020251154299@stu.xmu.edu.cn>,
+ Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org
+Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
+ Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
+ Qi Zheng <zhengqi.arch@bytedance.com>, Shakeel Butt
+ <shakeel.butt@linux.dev>, Chris Li <chrisl@kernel.org>,
+ Kairui Song <kasong@tencent.com>, linux-kernel@vger.kernel.org,
+ regressions@lists.linux.dev, Pedro Falcato <pfalcato@suse.de>
+References: <662955ba.f499.19e3b2cf478.Coremail.23020251154299@stu.xmu.edu.cn>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=david@kernel.org; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <662955ba.f499.19e3b2cf478.Coremail.23020251154299@stu.xmu.edu.cn>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Subject: [REGRESSION] next/pending-fixes: (build) call to undeclared function
- '__huge_pmd_unshare'; ISO C99 and late...
-From: KernelCI bot <bot@kernelci.org>
-To: kernelci-results@groups.io
-Cc: regressions@lists.linux.dev, gus@collabora.com, linux-next@vger.kernel.org
-Reply-To: kernelci@lists.linux.dev
-Date: Mon, 18 May 2026 13:59:04 -0000
-Message-ID: <177911274362.2366.9336793608219101169@330cfa3079ca>
 
+On 5/18/26 15:01, Chengfeng Lin wrote:
+> Hi,
+> 
+> I would like to report a userspace-visible mprotect() performance
+> regression in a shared dirty PTE workload.
+> 
+> The workload is intentionally narrow:
+> 
+>   - anonymous shared 64 MiB mapping
+>   - prefault before protection changes
+>   - repeatedly toggle the whole range with mprotect(PROT_READ)
+>   - restore with mprotect(PROT_READ | PROT_WRITE)
+>   - write-touch after the protection cycle
+> 
+> This is not meant as a generic mprotect() regression report. In
+> particular, I am not claiming that the anon/THP mprotect paths regress.
+> The current signal is scoped to the shared-dirty full-range PTE toggle
+> path above.
+> 
+> The current public evidence bundle is here:
+> 
+>   https://github.com/lcf0399/linux-mm-regression-evidence-2026-05/tree/e13469b/mprotect-shared-dirty-toggle
+> 
+> The generated workload source used for auditing the workload semantics is
+> here:
+> 
+>   https://github.com/lcf0399/linux-mm-regression-evidence-2026-05/blob/e13469b/mprotect-shared-dirty-toggle/workload/mprotect_paths_storm.c
+> 
+> The formal experiment profile is here:
+> 
+>   https://github.com/lcf0399/linux-mm-regression-evidence-2026-05/tree/e13469b/mprotect-shared-dirty-toggle/experiments
+> 
+> The formal timing runs compare v6.12.77 and v6.19.9 with similar kernel
+> configuration, using QEMU direct boot. The formal performance runs were
+> clean timing runs with coverage disabled. Coverage was collected
+> separately and is not used for the timing numbers below.
+> 
+> Lab environment:
+> 
+>   host label: lcf
+>   host kernel: Linux 6.14.0-37-generic x86_64
+>   QEMU: qemu-system-x86_64 8.2.2
+>   container/cgroup CPU set: 0,2,4,6,8,10,12,14
+>   container/cgroup memory limit: 16106127360 bytes
+>   guest memory: QEMU_MEM_MB=14336
+>   guest CPUs: QEMU_SMP=1/2/4
+>   repetitions: 9
+>   version order: interleaved
+>   performance coverage_enabled: false
+> 
+> Primary result, cycle_ns_per_page, lower is better:
+> 
+>   CPU   v6.12.77   v6.19.9   old-lower-vs-new   v6.19/v6.12   reliability
+>     1      346.8     578.1        40.0%             1.67x      reliable
+>     2      394.7     641.7        38.5%             1.63x      robust-only
+>     4      381.1     624.8        39.0%             1.64x      partial, same direction
+> 
+> The strongest current result is the 1CPU lab formal result. The 2CPU case
+> is same-direction but robust-only in the framework classification. The
+> 4CPU case is same-direction but partial because one QEMU run failed; the
+> summary still has 8 successful runs for that CPU count.
+> 
+> The current mechanism hypothesis is local to the shared-dirty PTE path.
+> In v6.19, the measured hot path goes through the change_pte_range()
+> batching machinery:
+> 
+>   change_pte_range()
+>     -> mprotect_folio_pte_batch()
+>     -> modify_prot_start_ptes()
+>     -> set_write_prot_commit_flush_ptes()
+>     -> prot_commit_flush_ptes()
+> 
+> For this shared-dirty workload, follow-up batch-probe attribution showed
+> nr_ptes=1 in the measured path. The hypothesis is that the extra folio
+> lookup, batch-size query, helper dispatch, and commit machinery are paid
+> per 4 KiB PTE without effective batch-size amortization in this workload.
+> This is mechanism interpretation, not a completed culprit-commit bisect.
+> 
+> I have not bisected the exact culprit commit yet. Separate release-level
+> sanity checks showed v6.18.19 already in the slow range, so the current
+> best reporting range is:
+> 
+> #regzbot introduced: v6.12..v6.18
+> 
+> Please let me know if a standalone reproducer, a narrower bisect, or
+> additional raw logs would be more useful.
 
+Pedro recently optimized this:
 
+https://lore.kernel.org/all/20260402141628.3367596-1-pfalcato@suse.de/
 
+Maybe that fixes most of the regression for you?
 
-Hello,
+-- 
+Cheers,
 
-New build issue found on next/pending-fixes:
-
----
- call to undeclared function '__huge_pmd_unshare'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration] in mm/hugetlb.o (mm/hugetlb.c) [logspec:kbuild,kbuild.compiler.error]
----
-
-- dashboard: https://d.kernelci.org/i/maestro:2586999164f3c8a7d01dd3db2d8850a7c0865475
-- giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-- commit HEAD:  298cc5aa5aae60cc009e3cd66ff730bb53e3e1ad
-
-
-Please include the KernelCI tag when submitting a fix:
-
-Reported-by: kernelci.org bot <bot@kernelci.org>
-
-
-Log excerpt:
-=====================================================
-/tmp/kci/linux/mm/hugetlb.c:7281:3: error: call to undeclared function '__huge_pmd_unshare'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
- 7281 |                 __huge_pmd_unshare(&tlb, vma, address, ptep, take_locks);
-      |                 ^
-/tmp/kci/linux/mm/hugetlb.c:7281:3: note: did you mean 'huge_pmd_unshare'?
-/tmp/kci/linux/mm/hugetlb.c:6973:5: note: 'huge_pmd_unshare' declared here
- 6973 | int huge_pmd_unshare(struct mmu_gather *tlb, struct vm_area_struct *vma,
-      |     ^
-1 error generated.
-
-=====================================================
-
-
-# Builds where the incident occurred:
-
-## defconfig+CONFIG_ARM64_64K_PAGES=y on (arm64):
-- compiler: clang-21
-- config: None
-- dashboard: https://d.kernelci.org/build/maestro:6a0b05bad06a47b7c8f81a2c
-
-
-#kernelci issue maestro:2586999164f3c8a7d01dd3db2d8850a7c0865475
-
---
-This is an experimental report format. Please send feedback in!
-Talk to us at kernelci@lists.linux.dev
-
-Made with love by the KernelCI team - https://kernelci.org
+David
