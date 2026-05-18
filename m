@@ -1,45 +1,88 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00E3D36EAB9;
-	Mon, 18 May 2026 15:43:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A07148AE02;
+	Mon, 18 May 2026 16:13:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779118993; cv=none; b=q//00PzJlxMznNmnT7wK5Km3xRN8S98eGMtnvejnlji+hwFanPyU7WegdyRen7XTVhCv7VmZqAzHAgh/fkntNQhOdChQkGWvNq+5T1DDaCJ3lnTrmAvRHaXpkOVyeMipUQLeCGe++6ogd8Fiq9jo1iOdmn0O6MlrPChM9TSgQJM=
+	t=1779120830; cv=none; b=gnXWwk2E7MyoESQxS6ZtvOFdUaSBWmSOPBxxTXlIdaaKj9H4nBAfon0gbDt/OMLcWJqW68Mj93DA0Fy09GndVoEBWexD2VmwKGsz23cXYzaEt45OySoXQ96mZNlB/avxr7qpCkG7Qb3c8OX2q/G6Any4KMIjlq969VEh+je49sY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779118993; c=relaxed/simple;
-	bh=GLQUQ2YMd7L4yqFJ4T6ArD6R0WK4BtbxD8q8KaJ2e0w=;
+	s=arc-20240116; t=1779120830; c=relaxed/simple;
+	bh=1aPTzS8AxZw6WiwbV8gLyRuVvCej87lMpx6XhMRA5KA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sEgxNSXH0rXfdfsFxB1znnUzyJoKufmIKkL0tK8viqxrdxLVYKRmpXY8yB6X0VHY5ijTc1P66z0TQhx0evWRdET8SG+SKeYkZyySwi0oDfudO3JhN4uDulAZ8p7JAfeGtqMECK30+Js7bSEU84LE+RQ0RD/a7aQTgni7FLXcPBE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iSK9GksY; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=MiAvwNm9mVafsN7xzLlodbx26Q2CzoFGHzREVnWVBUkhLPqlnDaV4GmLEpCZxAgjaVSyZWQEm4EPkJS3Tia6Q63EkfhSCiI2O4nWpZpwBh2IJ4aI2ooHQFFRFKS3nT3CJIH6A2K1i56jCIgEONjHoV+d0GXnwVUmUGynTPBtaGU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O3GQxRXu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iSK9GksY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B29DC2BCB7;
-	Mon, 18 May 2026 15:43:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O3GQxRXu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EEC23C4AF09;
+	Mon, 18 May 2026 16:13:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1779118992;
-	bh=GLQUQ2YMd7L4yqFJ4T6ArD6R0WK4BtbxD8q8KaJ2e0w=;
+	s=k20201202; t=1779120829;
+	bh=1aPTzS8AxZw6WiwbV8gLyRuVvCej87lMpx6XhMRA5KA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iSK9GksY2tgD856xhn4GI6sQ28Trphlm3aJkWES2dN8eEpUQDkO/sA3xGy8MUbOf1
-	 OWSQ2jOV/ybtN58m3wIVgIlsjjEiSaiogharOUZnY0mz4caKtdladDUyait9yZoWZx
-	 e6pwuLjOGBrmexzvl2qob+rJ6dALGxhpQwQ6Kv3rUXZfP1qpO6acrQku9XMZYAqjyh
-	 sBSDfzKB/fiej39GUJDcfLQZi2DifNfNBou4xK+kvgZD3dGl165wNEvH9dDfyV/hC3
-	 7HYb8GGUMMcaU7al1sAoPaYl7RJlxsO8NbfuFUJe3tzu2kezfuAzU8esa1bAWqxg/i
-	 Ym5bC5LAfdOHg==
-Date: Mon, 18 May 2026 16:43:10 +0100
-From: Lorenzo Stoakes <ljs@kernel.org>
-To: Chengfeng Lin <23020251154299@stu.xmu.edu.cn>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org, 
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>, David Hildenbrand <david@kernel.org>, 
-	Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, 
-	Qi Zheng <zhengqi.arch@bytedance.com>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Chris Li <chrisl@kernel.org>, Kairui Song <kasong@tencent.com>, linux-kernel@vger.kernel.org, 
-	regressions@lists.linux.dev
-Subject: Re: [REGRESSION] mm: MADV_PAGEOUT THP/no-swap refault takes ~1.7x
- longer on v6.19 than v6.12
-Message-ID: <agsy99AP2zixlGIi@lucifer>
-References: <662955ba.f499.19e3b2cf478.Coremail.23020251154299@stu.xmu.edu.cn>
+	b=O3GQxRXufEXYYUsy8a3Lk4kijg2TASegSHnSLIsWqxYpyCbuPcvISXcwXyJcRoddT
+	 G2EfYWpk0g0prJ1IK++pokWCdSEHgYBHA4vk5R19zmgK0/8N6JkV4yqH21FO0Ivef8
+	 Tg4QMx35lmT2UkU5+4LXA9hNzWJN7VQxE/SYvN1gkJ58+/sT0wDNU7VIS0Fk4eVULT
+	 6guoWh5QybDcBC+tqIeS8nik6fDKPLDqaTJW41QBJCJ35E1YpZsIDxomGByy0vzlYO
+	 wKpBh0KJkxYZST+n6pn3ViUkuW6J0Lz+DkNzFb4yrjf269Wtyw6Ik5M5FTrlSSWVLT
+	 atZpPk0W6H3ig==
+Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 42AD9F40089;
+	Mon, 18 May 2026 12:13:48 -0400 (EDT)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-01.internal (MEProxy); Mon, 18 May 2026 12:13:48 -0400
+X-ME-Sender: <xms:vDoLaqizI8W9NnB50EGjBnXBS-I5AJ_pkgwwdkZK-qNdb0Is5lfrpg>
+    <xme:vDoLagnOLwYQTHy3lOJM7LKqI080g4b28TJ7fDkHVYwlKU5p9es2N7kkO9hI0oGKu
+    OkMiCJ0MKPgvNNpdzWHP1iOyHBkPy-cZc5oIYkKy2YuODWeDj7DcA>
+X-ME-Received: <xmr:vDoLarpXFGgiFkBOFaAwxZcx5CQNgkZCMBJhYCvl0mT5XjkAaSofwN-qZ-NYintZyHg0MDT6wVZsS9p5X0pAejuVLS6ywplc>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgddufeelfedvucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepuehoqhhunhcu
+    hfgvnhhguceosghoqhhunheskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrhhnpe
+    elueehtefhtddtgfejvdejueehhfekteevueeuueekgeetieeggeehvdffhefhhfenucff
+    ohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenucfrrg
+    hrrghmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhn
+    rghlihhthidqudeijedtleekgeejuddqudejjeekheehhedvqdgsohhquhhnpeepkhgvrh
+    hnvghlrdhorhhgsehfihigmhgvrdhnrghmvgdpnhgspghrtghpthhtohepudehpdhmohgu
+    vgepshhmthhpohhuthdprhgtphhtthhopehrvghgrhgvshhsihhonhhssehlvggvmhhhuh
+    hishdrihhnfhhopdhrtghpthhtohepphgruhhlmhgtkheskhgvrhhnvghlrdhorhhgpdhr
+    tghpthhtohepuhhrvgiikhhisehgmhgrihhlrdgtohhmpdhrtghpthhtohepsghoqhhunh
+    drfhgvnhhgsehgmhgrihhlrdgtohhmpdhrtghpthhtohepjhhovghlrghgnhgvlhhfsehn
+    vhhiughirgdrtghomhdprhgtphhtthhopehrtghusehvghgvrhdrkhgvrhhnvghlrdhorh
+    hgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdho
+    rhhgpdhrtghpthhtohepghhorheslhhinhhugidrihgsmhdrtghomhdprhgtphhtthhope
+    hfrhgvuggvrhhitgeskhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:vDoLakK0eKK8cnzulGAMq1qXs7tDZYpqLlpVrh6rDzXDXmjqhGnKXA>
+    <xmx:vDoLavAnLH44uRVUjQ5UG_YIjPldutzQO1UGGvZzLa3a0sdN6ZE4Lg>
+    <xmx:vDoLau7sVCceWR3sTJL9BslY77NU2qgZabVoAEFD3iRwhWPaHWsW3g>
+    <xmx:vDoLajHzbatfTLFdiDQkOdqTYYxC51bL82_JLq3OeNtrWhFNPnSq9Q>
+    <xmx:vDoLahQQs7EQD6sJxMUOSFE0rGTWZLsAwmpH7yTDm2NUhGmBYGct_reL>
+Feedback-ID: i8dbe485b:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 18 May 2026 12:13:47 -0400 (EDT)
+Date: Mon, 18 May 2026 09:13:46 -0700
+From: Boqun Feng <boqun@kernel.org>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: paulmck@kernel.org, Uladzislau Rezki <urezki@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Joel Fernandes <joelagnelf@nvidia.com>, RCU <rcu@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Samir <samir@linux.ibm.com>,
+	Shrikanth Hegde <sshegde@linux.ibm.com>, Tejun Heo <tj@kernel.org>,
+	Linux kernel regressions list <regressions@lists.linux.dev>,
+	Jiri Slaby <jirislaby@kernel.org>
+Subject: Re: [PATCH -next v1 05/12] srcu: Don't queue workqueue handlers to
+ never-online CPUs
+Message-ID: <ags6ug97zNR6Fiiw@tardis.local>
+References: <20260511175448.153326-1-urezki@gmail.com>
+ <20260511175448.153326-6-urezki@gmail.com>
+ <f669fbc9-c068-489f-bd91-4e81561a6e58@leemhuis.info>
+ <agm4-6f-6rOgQPFB@pc636>
+ <3dd5cce0-51f9-4cf1-81b8-246e6c6a633a@paulmck-laptop>
+ <53d546e4-8db0-4e14-a79d-270212081be7@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -48,106 +91,58 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <662955ba.f499.19e3b2cf478.Coremail.23020251154299@stu.xmu.edu.cn>
+In-Reply-To: <53d546e4-8db0-4e14-a79d-270212081be7@leemhuis.info>
 
--cc wrong email
+On Sun, May 17, 2026 at 09:11:10PM +0200, Thorsten Leemhuis wrote:
+> On 5/17/26 20:03, Paul E. McKenney wrote:
+> > On Sun, May 17, 2026 at 02:47:55PM +0200, Uladzislau Rezki wrote:
+> >> On Wed, May 13, 2026 at 12:38:01PM +0200, Thorsten Leemhuis wrote:
+> >>> On 5/11/26 19:54, Uladzislau Rezki (Sony) wrote:
+> >>>> From: "Paul E. McKenney" <paulmck@kernel.org>
+> >>>>
+> >>>> While an srcu_struct structure is in the midst of switching from CPU-0
+> >>>> to all-CPUs state, it can attempt to invoke callbacks for CPUs that
+> >>>> have never been online.  Worse yet, it can attempt in invoke callbacks
+> >>>> for CPUs that never will be online, even including imaginary CPUs not in
+> >>>> cpu_possible_mask.  This can cause hangs on s390,
+> >>>
+> >>> Uladzislau, Paul, according to the fixes tag below this change fixes a
+> >>> change that went into 7.0-rc6 -- and apparently causes a "hang" on some
+> >>> architectures. So shouldn't this be heading to mainline instead of
+> >>> -next? Ideally with a stable tag to ensure backporting to 7.0.y, but
+> >>> that is a separate decision?
+> >>>
 
-One day I will get to stop nagging like this :) Or just ignore mails that go to
-the wrong place.
+FWIW, I'm happy to create an urgent PR to Linus with this fix. Since it
+fixes a commit in the previous urgent fix PR from me. Ulad, let me know
+if you want me to do it.
 
-Please use ljs@kernel.org. I switched over a while ago. I tend to mark kernel
-mails that go to my work address read without reading them.
+Regards,
+Boqun
 
-People regularly update their emails, so it's important to re-check them when
-you send a new mail.
-
-On Mon, May 18, 2026 at 09:01:02PM +0800, Chengfeng Lin wrote:
-> Hi,
->
-> I would like to report a userspace-visible mprotect() performance
-> regression in a shared dirty PTE workload.
->
-> The workload is intentionally narrow:
->
->   - anonymous shared 64 MiB mapping
->   - prefault before protection changes
->   - repeatedly toggle the whole range with mprotect(PROT_READ)
->   - restore with mprotect(PROT_READ | PROT_WRITE)
->   - write-touch after the protection cycle
->
-> This is not meant as a generic mprotect() regression report. In
-> particular, I am not claiming that the anon/THP mprotect paths regress.
-> The current signal is scoped to the shared-dirty full-range PTE toggle
-> path above.
->
-> The current public evidence bundle is here:
->
->   https://github.com/lcf0399/linux-mm-regression-evidence-2026-05/tree/e13469b/mprotect-shared-dirty-toggle
->
-> The generated workload source used for auditing the workload semantics is
-> here:
->
->   https://github.com/lcf0399/linux-mm-regression-evidence-2026-05/blob/e13469b/mprotect-shared-dirty-toggle/workload/mprotect_paths_storm.c
->
-> The formal experiment profile is here:
->
->   https://github.com/lcf0399/linux-mm-regression-evidence-2026-05/tree/e13469b/mprotect-shared-dirty-toggle/experiments
->
-> The formal timing runs compare v6.12.77 and v6.19.9 with similar kernel
-> configuration, using QEMU direct boot. The formal performance runs were
-> clean timing runs with coverage disabled. Coverage was collected
-> separately and is not used for the timing numbers below.
->
-> Lab environment:
->
->   host label: lcf
->   host kernel: Linux 6.14.0-37-generic x86_64
->   QEMU: qemu-system-x86_64 8.2.2
->   container/cgroup CPU set: 0,2,4,6,8,10,12,14
->   container/cgroup memory limit: 16106127360 bytes
->   guest memory: QEMU_MEM_MB=14336
->   guest CPUs: QEMU_SMP=1/2/4
->   repetitions: 9
->   version order: interleaved
->   performance coverage_enabled: false
->
-> Primary result, cycle_ns_per_page, lower is better:
->
->   CPU   v6.12.77   v6.19.9   old-lower-vs-new   v6.19/v6.12   reliability
->     1      346.8     578.1        40.0%             1.67x      reliable
->     2      394.7     641.7        38.5%             1.63x      robust-only
->     4      381.1     624.8        39.0%             1.64x      partial, same direction
->
-> The strongest current result is the 1CPU lab formal result. The 2CPU case
-> is same-direction but robust-only in the framework classification. The
-> 4CPU case is same-direction but partial because one QEMU run failed; the
-> summary still has 8 successful runs for that CPU count.
->
-> The current mechanism hypothesis is local to the shared-dirty PTE path.
-> In v6.19, the measured hot path goes through the change_pte_range()
-> batching machinery:
->
->   change_pte_range()
->     -> mprotect_folio_pte_batch()
->     -> modify_prot_start_ptes()
->     -> set_write_prot_commit_flush_ptes()
->     -> prot_commit_flush_ptes()
->
-> For this shared-dirty workload, follow-up batch-probe attribution showed
-> nr_ptes=1 in the measured path. The hypothesis is that the extra folio
-> lookup, batch-size query, helper dispatch, and commit machinery are paid
-> per 4 KiB PTE without effective batch-size amortization in this workload.
-> This is mechanism interpretation, not a completed culprit-commit bisect.
->
-> I have not bisected the exact culprit commit yet. Separate release-level
-> sanity checks showed v6.18.19 already in the slow range, so the current
-> best reporting range is:
->
-> #regzbot introduced: v6.12..v6.18
->
-> Please let me know if a standalone reproducer, a narrower bisect, or
-> additional raw logs would be more useful.
-
-Is this really a regression you're seeing in real worklaods or synthetic?
-
-Thanks, Lorenzo
+> >> I assume it will be picked to stable
+> 
+> Thx for the reply. This answered the second aspect I raised. What about
+> the first: shouldn't this be heading to mainline this cycle, ideally
+> quite soon? Or is this the plan and I misinterpreted the "-next" in the
+> subject?
+> 
+> Sadly Jiri (now CCed) afaics didn't yet report if this fix helped to fix
+> the issues they were seeing, but it sounded a lot like it was likely:
+> https://lore.kernel.org/all/f0351414-41af-4f74-899c-87fb5bb45621@kernel.org/
+> 
+> >> since there is a "Fixes:" tag. From
+> >> the other hand i can explicitly update commit message with Cc: stable@vger.kernel.org
+> >>
+> >> Paul, any thoughts?
+> > 
+> > The "Fixes" tag should cover it.
+> 
+> Often it does, yes, but it might be silently dropped for one reason or
+> another. So in the end only a stable tag will guarantee backporting
+> attempt by the stable team.
+> 
+> Site note: I recently also tried to persuade Greg to also take those
+> with a stable tag first in case there is a huge backlog.
+> 
+> Ciao, Thorsten
