@@ -1,78 +1,108 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E32D335575
-	for <regressions@lists.linux.dev>; Tue, 19 May 2026 11:48:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3628F4CA294;
+	Tue, 19 May 2026 12:07:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779191338; cv=none; b=HGGfmQDX/hqi62s9XCURb0jqA6wbACkgWM1VXNpGn4lu8R1Qqc7rAwzpft0v6RQRLfu+5Ui8/8ORYBywincpFm9CV+XmBa1dmD5//rQ1/r1MfoHRH1TRJ1q7kmiYD5fn6ENO4hrd3r+Yj2yuHlD6mT1KEwmOChoKEZaYQsAwIF0=
+	t=1779192451; cv=none; b=pXB8KwwH8120IxvhnEp5inX8G6cChWmGdq6ygZUSLptKp4E5k0cYIj4sT+aEhtUXzkrLtUdsgpohBfrva34UEItMI3NDSg+wLn7insMA/Fg5XzA+SRwEDJkT/SMKQWkv1EUcDq0r4Lqd9R5/26kFqurVW+3pGtlRsRxFGy26AHk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779191338; c=relaxed/simple;
-	bh=P8tH35z/uw0sUKZFgOPDgy73UQSBzwGUIBPWsAuyH6s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nmqUFihRuiMKNxsjCjQvHc/9ytjiSr4xqWdrsy48JfkEkHeEWDEIj8BUVkwjsMuOgXXQH2T45XkdSfpXL3Do1drk9XuXB3NrnUjrifByWMWiXVway0PHM0MNcujZVzoe6NG3orft5oLTVfIcNeNrheh9W6cW9xNBrMTTwMeOzts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AyIyPC+T; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1779192451; c=relaxed/simple;
+	bh=24gjXT5wmA214FuTksvBZxjgz04Ja4qpNigX7sxq6hM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ODCRDUYWlDM9bDMNPsoUOJLnVerjyqbhxeItlgFZfSNXItE8GXzOLRwlwWXCNxIs5T1PaDuYoyKKiIWzMtAtBHABw7u4hnewb4oXaRh1CpqLb9zoNtISaHHNfDmKA6slr/df0EuWRzpOI3RpoeOx0DusG4/t+oJy5WvQNZ8eMbQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=gPAceZru; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AyIyPC+T"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15C4CC2BCF6
-	for <regressions@lists.linux.dev>; Tue, 19 May 2026 11:48:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1779191338;
-	bh=P8tH35z/uw0sUKZFgOPDgy73UQSBzwGUIBPWsAuyH6s=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=AyIyPC+Th7V8akdW2YEbMD7D6pYR0JZw+wVug4nh6QxWBviCvESRqZsU9E8y3TUrF
-	 FOZREpj5dz9FH2KgXYy7g9biXVpVK8inm6xv8GG8AFxRBBow0lZlmArtlxlYUV/S5Q
-	 bm2siEC/VPlZYV8n0V/A0pi/5QTTI0XzbBwqKz0vKuY1KMMhie3NAw67j7CqXVddd+
-	 Kfrx6k2Aiehd7ebuR7WKGZqovjL+yjdp17CRl85zKQVAHT772t3TRRVO/dGL7vzmGj
-	 brtYp54Xfya0cTNcHG3/dARudZ01yO4tgQg8/Nw8IvCmoqrUAKp8s519tBEjWAvRtC
-	 desOjo5DtIt6g==
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-5a8e33556c0so4637807e87.0
-        for <regressions@lists.linux.dev>; Tue, 19 May 2026 04:48:57 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ/y5tVcx2B/knRS1BLO7T7O+Jjue7QeeOACnitrXgid3vW2C/RK0d4ucwkTvC7KZEPqz8IUUP3WrebL2g==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwAv5crLIUtxYhCvoxmsy0sENelyXwo7caHLYjHIzxqHJOH1dK3
-	XS2RXPCxi1D8jXAdeNriFDRpWJ3jdJlnOVCS4/bYI7YhOWfr8Z4gQpQLf2sBlKmmijPYZ9LCCxf
-	wdvOKtc58NZXZtgLGuaiDi02YcZXX36Y=
-X-Received: by 2002:a05:6512:15a7:b0:5a8:7ed5:7462 with SMTP id
- 2adb3069b0e04-5a8ffc4b5cemr5829232e87.6.1779191336447; Tue, 19 May 2026
- 04:48:56 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="gPAceZru"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 777D5C2BCC7;
+	Tue, 19 May 2026 12:07:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1779192451;
+	bh=24gjXT5wmA214FuTksvBZxjgz04Ja4qpNigX7sxq6hM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gPAceZru+S9ZuIhn16V91zK89WlwILsx+YuFd/0X3f6mr5V35bCAYgGzZxVQG94An
+	 XeLA3r777h01ClFUmPgrT+qG6kESsr7JJlPG8caR1aRWaxNz6iiadjiTWvOZ/2rBTs
+	 Ftcf22u/gnE0okDk/bJGyZnN1lx4JEEc36yQhWRw=
+Date: Tue, 19 May 2026 14:06:43 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: "stable@vger.kernel.org" <stable@vger.kernel.org>,
+	Sasha Levin <sashal@kernel.org>, linux-bluetooth@vger.kernel.org,
+	netdev@vger.kernel.org,
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>, davem@davemloft.net,
+	kuba@kernel.org,
+	Linux kernel regressions list <regressions@lists.linux.dev>,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [GIT PULL] bluetooth 2026-05-14
+Message-ID: <2026051909-impurity-nemesis-2f65@gregkh>
+References: <20260514172340.1515042-1-luiz.dentz@gmail.com>
+ <f5cf1c30-48a4-4102-ae00-b74cf02e639e@leemhuis.info>
+ <4946f5f3-b7e2-4949-89f7-6427015027c6@leemhuis.info>
+ <2026051954-revision-sierra-6bb4@gregkh>
+ <eb5301f9-3133-4fe3-b358-61f14d1ffa5b@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <E2OXET.4X5GTP37VTNC3@kousu.ca> <4bba4c5a-debb-4844-a032-986f761a74af@leemhuis.info>
-In-Reply-To: <4bba4c5a-debb-4844-a032-986f761a74af@leemhuis.info>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Tue, 19 May 2026 13:48:42 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0g6aHsdmNhW3Yr54KnGkOHn81bXFVHD-6+bvYWUsmZZdw@mail.gmail.com>
-X-Gm-Features: AVHnY4KxJPOE1zcY4KC6fhnc9_2se9KlcaGnCNlMQYBIAtVrV38iYDqoTJo8Dgs
-Message-ID: <CAJZ5v0g6aHsdmNhW3Yr54KnGkOHn81bXFVHD-6+bvYWUsmZZdw@mail.gmail.com>
-Subject: Re: [REGRESSION] Toshiba Fn keys + lidswitch
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Nick <nick@kousu.ca>, 
-	regressions@lists.linux.dev, linux-acpi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
-	todd.e.brandt@linux.intel.com, xi.pardee@linux.intel.com, 
-	platform-driver-x86@vger.kernel.org, stable@vger.kernel.org, 
-	Azael Avalos <coproscefalo@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <eb5301f9-3133-4fe3-b358-61f14d1ffa5b@leemhuis.info>
 
-On Tue, May 19, 2026 at 10:56=E2=80=AFAM Thorsten Leemhuis
-<regressions@leemhuis.info> wrote:
->
-> [CCing Azael, just in case]
->
-> On 5/12/26 18:49, Nick wrote:
-> > My Toshiba Tecra X40 laptop's function keys no longer send events.
->
-> Rafael, have you seen that this regression seems to be caused by a
-> change of yours? Namely 57c31e6d620f13 ("ACPI: scan: Use
-> acpi_setup_gpe_for_wake() for buttons") [v7.0-rc1]
+On Tue, May 19, 2026 at 12:53:49PM +0200, Thorsten Leemhuis wrote:
+> On 5/19/26 12:30, Greg KH wrote:
+> > On Tue, May 19, 2026 at 09:04:38AM +0200, Thorsten Leemhuis wrote:
+> >> On 5/15/26 17:10, Thorsten Leemhuis wrote:
+> >>> On 5/14/26 19:23, Luiz Augusto von Dentz wrote:
+> >>>
+> >>>> The following changes since commit c78bdba7b9666020c0832150a4fc4c0aebc7c6ac:
+> >>>>   net: phy: DP83TC811: add reading of abilities (2026-05-14 15:17:12 +0200)
+> >>>>
+> >>>> are available in the Git repository at:
+> >>>>
+> >>>>   git://git.kernel.org/pub/scm/linux/kernel/git/bluetooth/bluetooth.git tags/for-net-2026-05-14
+> >>>>
+> >>>> for you to fetch changes up to 375ba7484132662a4a8c7547d088fb6275c00282:
+> >>>>
+> >>>>   Bluetooth: hci_qca: Convert timeout from jiffies to ms (2026-05-14 09:58:08 -0400)
+> >>>
+> >>> It seems this PR sadly came too late for this week's net PR to mainline
+> >>> that was merged yesterday.
+> >>>
+> >>> TWIMC, from my point of view, it would be great if we somehow could
+> >>> still get the changes from this PR or at least the btmtk fix it
+> >>> contains[1] to mainline this week before -rc4, as it is fixing a
+> >>> regression known since 2026-04-24 that at least five people encountered
+> >>> with mainline since -rc3 due to 634a4408c0615c ("Bluetooth: btmtk:
+> >>> validate WMT event SKB length before struct access") [006b9943b982 in
+> >>> -next].
+> >>
+> >> Greg, Sasha, that [1] fix I was talking about now reached -next as
+> >> 162b1adeb057d2 ("Bluetooth: btmtk: accept too short WMT FUNC_CTRL
+> >> events") and will likely hit mainline on Thursday or so with the weekly
+> >> -net PR to -mainline. If that's good enough for you, I'd say it would be
+> >> good to pick this up for the next round of stable kernels.
+> > 
+> > That "Fixes:" tag is referring to something that is also not in any
+> > tree, but that commit does have a cc: stable in it.  So do we need both
+> > of these:
+> 
+> Valid question, as yes, there is a slight mixup here:
+> 
+> > 041e88fb0c08 ("Bluetooth: btmtk: validate WMT event SKB length before struct access")
+> 
+> That is already in v7.0.7, v6.18.30, v6.12.88, as 041e88fb0c08 is the
+> -next commit-id for mainline commit-id 634a4408c0615c ("Bluetooth:
+> btmtk: validate WMT event SKB length before struct access") -- the one
+> that is causing the regression that I want to get fixed. So we now only
+> need:
+> 
+> > 162b1adeb057 ("Bluetooth: btmtk: accept too short WMT FUNC_CTRL events")
 
-Yes, I have.
+Ok, but that "Fixes:" tag pointing to an invalid commit is going to be a
+nightmare to track over time, ugh.
 
-> No complains, just wondering, as it was easy to miss. Ciao, Thorsten
+I'll go queue this up now, thanks.
 
-Sure, thanks for pointing this out.
+greg k-h
