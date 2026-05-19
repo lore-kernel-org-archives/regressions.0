@@ -1,108 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.tipi-net.de (mail.tipi-net.de [194.13.80.246])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3628F4CA294;
-	Tue, 19 May 2026 12:07:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21BA74BCAD7
+	for <regressions@lists.linux.dev>; Tue, 19 May 2026 12:49:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.13.80.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779192451; cv=none; b=pXB8KwwH8120IxvhnEp5inX8G6cChWmGdq6ygZUSLptKp4E5k0cYIj4sT+aEhtUXzkrLtUdsgpohBfrva34UEItMI3NDSg+wLn7insMA/Fg5XzA+SRwEDJkT/SMKQWkv1EUcDq0r4Lqd9R5/26kFqurVW+3pGtlRsRxFGy26AHk=
+	t=1779194984; cv=none; b=D1hLZRu/wSe8ZU3lbKuOylaP66TXxVghYnKgxTssKQhCf4T6HQ9sX0prgUnkyadZ5HO/u1SXqedJJtmUv+FPLYcqVmdlihUCwViW2r8g63Kpif/KZ8SdNlmc0hcXqUdi9iEUOhy2Do3LodGO0BJgva9bdt84RBRSZ5McUU1sfTs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779192451; c=relaxed/simple;
-	bh=24gjXT5wmA214FuTksvBZxjgz04Ja4qpNigX7sxq6hM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ODCRDUYWlDM9bDMNPsoUOJLnVerjyqbhxeItlgFZfSNXItE8GXzOLRwlwWXCNxIs5T1PaDuYoyKKiIWzMtAtBHABw7u4hnewb4oXaRh1CpqLb9zoNtISaHHNfDmKA6slr/df0EuWRzpOI3RpoeOx0DusG4/t+oJy5WvQNZ8eMbQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=gPAceZru; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1779194984; c=relaxed/simple;
+	bh=PmRdx8FRHXEbQy7+lAOa4RyFLZUwwH/S0Yo3h+evwYY=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=i2on5J8cddnn1QRx60GfAvqKpZ62asyZzSjA1fG8rP5h5TQORrV/zaLMHMPLvCxmeAZf+iUGrZ3L4AxAxM5hS4ije41JCEos1CX1kXe21issJ7BBI506FNN+qJiNNfjFQ2mCor1wPvGPitWOsJMFRTJforxtTYMO9IlHQLi+zUs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tipi-net.de; spf=pass smtp.mailfrom=tipi-net.de; dkim=pass (2048-bit key) header.d=tipi-net.de header.i=@tipi-net.de header.b=xH8uJz5C; arc=none smtp.client-ip=194.13.80.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tipi-net.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tipi-net.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="gPAceZru"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 777D5C2BCC7;
-	Tue, 19 May 2026 12:07:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1779192451;
-	bh=24gjXT5wmA214FuTksvBZxjgz04Ja4qpNigX7sxq6hM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gPAceZru+S9ZuIhn16V91zK89WlwILsx+YuFd/0X3f6mr5V35bCAYgGzZxVQG94An
-	 XeLA3r777h01ClFUmPgrT+qG6kESsr7JJlPG8caR1aRWaxNz6iiadjiTWvOZ/2rBTs
-	 Ftcf22u/gnE0okDk/bJGyZnN1lx4JEEc36yQhWRw=
-Date: Tue, 19 May 2026 14:06:43 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: "stable@vger.kernel.org" <stable@vger.kernel.org>,
-	Sasha Levin <sashal@kernel.org>, linux-bluetooth@vger.kernel.org,
-	netdev@vger.kernel.org,
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>, davem@davemloft.net,
-	kuba@kernel.org,
-	Linux kernel regressions list <regressions@lists.linux.dev>,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [GIT PULL] bluetooth 2026-05-14
-Message-ID: <2026051909-impurity-nemesis-2f65@gregkh>
-References: <20260514172340.1515042-1-luiz.dentz@gmail.com>
- <f5cf1c30-48a4-4102-ae00-b74cf02e639e@leemhuis.info>
- <4946f5f3-b7e2-4949-89f7-6427015027c6@leemhuis.info>
- <2026051954-revision-sierra-6bb4@gregkh>
- <eb5301f9-3133-4fe3-b358-61f14d1ffa5b@leemhuis.info>
+	dkim=pass (2048-bit key) header.d=tipi-net.de header.i=@tipi-net.de header.b="xH8uJz5C"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 337BDA4FA2;
+	Tue, 19 May 2026 14:49:23 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tipi-net.de; s=dkim;
+	t=1779194971; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=KYHK9v8QDbL8YKvFNpIhVX5SjY8D12WYNhJK8Mla/t0=;
+	b=xH8uJz5CyS1nIr22DGdlIQrbdTZcXek14ghLIo7lNXiUst5FiCopGRidLa8kI+dEN4UmXX
+	Z2H6vX2S+yl6Bn3TIFvV5KeKLxdkan7l/GIBWZX9vDjucLS6c+uwwYxpMqFpEqvJvD221G
+	Co768t1utmjTK9Dox7xKBZNc9ObVWqVgHTpNEi2JBGh+LTYPH4RVjJ2maYz2PksPmxFUTX
+	yNH9UUD/dNoLgMNy2mfERcbPlgzvg/9J/Lncq8nSV1swVxQ2mRqFBBFGjEhFqJYA4WfykM
+	Vgt9S6A+KpZ2KihPEK32Q/BMuBh7YSUpjQzxk9s+dUmU/dgTmCxyzKqhbPVw3g==
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <eb5301f9-3133-4fe3-b358-61f14d1ffa5b@leemhuis.info>
+Date: Tue, 19 May 2026 14:49:23 +0200
+From: Nicolai Buchwitz <nb@tipi-net.de>
+To: =?UTF-8?Q?Nerijus_Bend=C5=BEi=C5=ABnas?= <nerijus.bendziunas@gmail.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
+ Russell King <linux@armlinux.org.uk>, "Russell King (Oracle)"
+ <rmk+kernel@armlinux.org.uk>, "David S . Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+ <pabeni@redhat.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ regressions@lists.linux.dev, stable@vger.kernel.org
+Subject: Re: [PATCH net v2] net: phy: skip EEE advertisement write when
+ autoneg is disabled
+In-Reply-To: <20260516150251.879680-1-nerijus.bendziunas@gmail.com>
+References: <20260516150251.879680-1-nerijus.bendziunas@gmail.com>
+Message-ID: <f8cb33492160a3d75669c573913a363f@tipi-net.de>
+X-Sender: nb@tipi-net.de
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Tue, May 19, 2026 at 12:53:49PM +0200, Thorsten Leemhuis wrote:
-> On 5/19/26 12:30, Greg KH wrote:
-> > On Tue, May 19, 2026 at 09:04:38AM +0200, Thorsten Leemhuis wrote:
-> >> On 5/15/26 17:10, Thorsten Leemhuis wrote:
-> >>> On 5/14/26 19:23, Luiz Augusto von Dentz wrote:
-> >>>
-> >>>> The following changes since commit c78bdba7b9666020c0832150a4fc4c0aebc7c6ac:
-> >>>>   net: phy: DP83TC811: add reading of abilities (2026-05-14 15:17:12 +0200)
-> >>>>
-> >>>> are available in the Git repository at:
-> >>>>
-> >>>>   git://git.kernel.org/pub/scm/linux/kernel/git/bluetooth/bluetooth.git tags/for-net-2026-05-14
-> >>>>
-> >>>> for you to fetch changes up to 375ba7484132662a4a8c7547d088fb6275c00282:
-> >>>>
-> >>>>   Bluetooth: hci_qca: Convert timeout from jiffies to ms (2026-05-14 09:58:08 -0400)
-> >>>
-> >>> It seems this PR sadly came too late for this week's net PR to mainline
-> >>> that was merged yesterday.
-> >>>
-> >>> TWIMC, from my point of view, it would be great if we somehow could
-> >>> still get the changes from this PR or at least the btmtk fix it
-> >>> contains[1] to mainline this week before -rc4, as it is fixing a
-> >>> regression known since 2026-04-24 that at least five people encountered
-> >>> with mainline since -rc3 due to 634a4408c0615c ("Bluetooth: btmtk:
-> >>> validate WMT event SKB length before struct access") [006b9943b982 in
-> >>> -next].
-> >>
-> >> Greg, Sasha, that [1] fix I was talking about now reached -next as
-> >> 162b1adeb057d2 ("Bluetooth: btmtk: accept too short WMT FUNC_CTRL
-> >> events") and will likely hit mainline on Thursday or so with the weekly
-> >> -net PR to -mainline. If that's good enough for you, I'd say it would be
-> >> good to pick this up for the next round of stable kernels.
-> > 
-> > That "Fixes:" tag is referring to something that is also not in any
-> > tree, but that commit does have a cc: stable in it.  So do we need both
-> > of these:
-> 
-> Valid question, as yes, there is a slight mixup here:
-> 
-> > 041e88fb0c08 ("Bluetooth: btmtk: validate WMT event SKB length before struct access")
-> 
-> That is already in v7.0.7, v6.18.30, v6.12.88, as 041e88fb0c08 is the
-> -next commit-id for mainline commit-id 634a4408c0615c ("Bluetooth:
-> btmtk: validate WMT event SKB length before struct access") -- the one
-> that is causing the regression that I want to get fixed. So we now only
-> need:
-> 
-> > 162b1adeb057 ("Bluetooth: btmtk: accept too short WMT FUNC_CTRL events")
+Hi Nerijus
 
-Ok, but that "Fixes:" tag pointing to an invalid commit is going to be a
-nightmare to track over time, ugh.
+On 16.5.2026 17:02, Nerijus Bendžiūnas wrote:
+> genphy_c45_an_config_eee_aneg() writes the EEE advertisement to the
+> auto-negotiation device's MMD register space (MDIO_MMD_AN, register
+> MDIO_AN_EEE_ADV).  These registers are read by the link partner only
+> during auto-negotiation, so writing them while autoneg is disabled
+> cannot influence the link.  On some PHYs (e.g. Broadcom BCM54213PE)
+> the write nevertheless reaches the chip and disturbs the receive
+> datapath.
+> 
+> Concretely, running
+> 
+>     ethtool -s eth0 speed 100 duplex full autoneg off
+>     ethtool --set-eee eth0 eee off
+> 
+> leaves eth0 with TX working and RX completely silent on a
+> Raspberry Pi 4 / CM4 board (bcmgenet + BCM54213PE in rgmii-rxid).
+> Switching back to autoneg recovers the link.
+> 
 
-I'll go queue this up now, thanks.
+Can confirm this. A quick look at the BCM54213PE datasheet shows that 
+EEE is
+only applied if autoneg is enabled (as expected). With autoneg disabled 
+it
+is undefined behavior, but clearly breaks communication.
 
-greg k-h
+> [...]
+
+> 
+> diff --git a/drivers/net/phy/phy-c45.c b/drivers/net/phy/phy-c45.c
+> index d48aa7231b37..126951741428 100644
+> --- a/drivers/net/phy/phy-c45.c
+> +++ b/drivers/net/phy/phy-c45.c
+> @@ -940,6 +940,14 @@ EXPORT_SYMBOL_GPL(genphy_c45_read_eee_abilities);
+>   */
+>  int genphy_c45_an_config_eee_aneg(struct phy_device *phydev)
+>  {
+> +	/* Writing MMD AN advertisements while autoneg is disabled has no
+> +	 * effect on link-partner negotiation, but on some PHYs (e.g. the
+> +	 * Broadcom BCM54213PE) the write itself disturbs the receive
+> +	 * datapath. Skip it.
+> +	 */
+> +	if (phydev->autoneg == AUTONEG_DISABLE)
+> +		return 0;
+> +
+>  	if (!phydev->eee_cfg.eee_enabled) {
+>  		__ETHTOOL_DECLARE_LINK_MODE_MASK(adv) = {};
+
+Reviewed-by: Nicolai Buchwitz <nb@tipi-net.de>
+Tested-by: Nicolai Buchwitz <nb@tipi-net.de>
+
+Thanks
+Nicolai
