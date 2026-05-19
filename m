@@ -1,134 +1,154 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.102])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 844BC1E1E16;
-	Tue, 19 May 2026 04:20:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.102
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779164446; cv=none; b=nq8hZKFQDM6QytA9pGgJh/idf9WxDtms31iCKR+3OlLc6ralgjT8e++40iT+eYeKaNqpMYFgefY1S8yiSL7OnUzwD418wdSJ+tqhQV0dwCTs8j89717fMTPwf7LqSzJ7otAg+4uT/NlaZVHs5W7pbTfdBPkFQzVHc/j1lYdm6MM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779164446; c=relaxed/simple;
-	bh=Oan+xwMUawmIqv/D2NhRkR/LbaGBbgz/qXptY+GXEUY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YATD2WNniCEryLFdLnhB1/1rG/Q5h/TwM2Q9eIeFdKo6Mi37sebpBtAFAVb+JLiaisAhkCElLLGx1tFuczIoHix7k8vBELH9+iJjmgzwTIZVHcZGyvL0DU2ttsmJMM70Kvj6uLDM1fVPaAj8IXSpQa1u3zbV/pWlRhhZq0wkOQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=UPGw5IGs; arc=none smtp.client-ip=188.68.63.102
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCD90128395
+	for <regressions@lists.linux.dev>; Tue, 19 May 2026 04:31:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.221.50
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779165117; cv=pass; b=iCnshaJxaum6dwxWOiAnMLj0C4B+u+6dyG0lUKYWmo4CFyzPzDwBlYsJk/0WKkQZDZn3VViUsjw8mMPoHZSoSP3oKEmbAVPnjr/BmjC6yHIhFFekVwjpgEicTcHCRgOYYd7zfV7pJOvAOPGT8hKbWrAo5CJWmKbcQq6rZcqFlXQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779165117; c=relaxed/simple;
+	bh=LB2eeG1SpolST48Ht8N5ZVmPK5SGJL8UVYCuIxMFohc=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=t/+uRx+1jpBEM3z7Y7MlaJvvh7a4UGfn87zWO/ou4Cz3+uht1rK+ytiEltjsz6r8L56/L/BMNB//DX3hv1Hgt/nD6iIKpFXYhIY5BybujBxG5pXfl/02YVc2wyMDvKsWZ4ymrFjhc+yXtAJ/hoZP/dst9KKwT+XdW+kfJ7k7Qvk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kkDKx8al; arc=pass smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="UPGw5IGs"
-Received: from mors-relay-2502.netcup.net (localhost [127.0.0.1])
-	by mors-relay-2502.netcup.net (Postfix) with ESMTPS id 4gKM0l5CCFz692F;
-	Tue, 19 May 2026 06:20:39 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1779164439;
-	bh=Oan+xwMUawmIqv/D2NhRkR/LbaGBbgz/qXptY+GXEUY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=UPGw5IGstSNzgz9FQGQ3r4UsuNA+XLyYA+XHPfaZDD3EiS1urH7h6iB/+DYKrOy/a
-	 OZVUxZ89rW3Qp8qHNMGF1zLiapa/nA31qL2dom4vFORH5SaTu7voD8qv+V5WglnkVP
-	 zXvgeIgcZU6GuGAzcrhq3Q53ZJlvJxQ4e2+hQAk97IEcmtNcEj26Pjqwz1Aj84VSyp
-	 q5POe7ry/2GxzIQGGqoIKKpmD9zN2a3v7Rt/G9G01+6Axiyl2SSujHmmNGa3G6W6JI
-	 iwrpOWb88LX4T2gpnrLweACTCicEyfauBf+2AviFTa1C7EYKLIK2nNLrTs7rZYcEBB
-	 F0Uza/CB+X3Wg==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-2502.netcup.net (Postfix) with ESMTPS id 4gKM0l4ScGz4xpv;
-	Tue, 19 May 2026 06:20:39 +0200 (CEST)
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4gKM0k48Z0z8sb7;
-	Tue, 19 May 2026 06:20:38 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id E6B4F61886;
-	Tue, 19 May 2026 06:20:37 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <c5cf994e-0378-4be4-abae-5e23b2777195@leemhuis.info>
-Date: Tue, 19 May 2026 06:20:37 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kkDKx8al"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-45562c41ec7so1753921f8f.1
+        for <regressions@lists.linux.dev>; Mon, 18 May 2026 21:31:55 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1779165114; cv=none;
+        d=google.com; s=arc-20240605;
+        b=C4kEuSysYMVPoNQvzOm5GkH4lYp52jaJHXtJ/3SVjBf5qsb/8p2btgX6Yf6Azv+hKA
+         NybjNXUY2ywylhqCjiBetXctAbgevzqSM174pXuC5vT3h9uiSjKJkGq4oj3s2uior/aa
+         r+jxRM/9m0927HZRwqmC+6gQbF7hTNSqY0ifV0GR97/P46bFThy9fcrQO7UhzrFDHGEw
+         lgqIytBaKxGSuGppJ4PtZL5VbhsGIk9eheE9m2AUC0R2hkhjTXepDz3XXGXjzv4n04V4
+         Hr/9l3E8ki0lyImt63jQvcm3O4hAu8DqEjZAGYbiRzbB1W7W5lv5fJU0DHnsItt+FXq2
+         naPw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=cc:to:subject:message-id:date:from:mime-version:dkim-signature;
+        bh=LB2eeG1SpolST48Ht8N5ZVmPK5SGJL8UVYCuIxMFohc=;
+        fh=LfcRV2Q7HrPe7+JkypElTJuGNLc/6/fl0FSpkEsi49M=;
+        b=Eoyqw9+H7t2fV7y7dkrFPBsXOD9nC6oiVPrbnKv4thYNgHPElrUPYIVsy7/7urbfQv
+         b6zMlvaKQlyary1cZt5LF3+5zFnbnB26Y8YNt24CELqpuuGO7mxPakfRjtthYWjNAbKu
+         rMzvp9W1uzQ0GC6UWWwJyRNCUM/eaBAcc2GPTuBqHlElDIbv/ZcvH3lwWKDgjLvXCz3K
+         BiaKGuQHzrQ5yy+rYKCecEEG86rlV4tCdMWhmQtVUN/c1LW2Dxcxmgj5glgs3l4PMblb
+         ol3T7JscLsJ6vvdcHfvNdkvGrZ5s8oUflKeiYar6kBPDeI3ClejqR5WOPbvE3Bp/4AfA
+         WfuA==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1779165114; x=1779769914; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=LB2eeG1SpolST48Ht8N5ZVmPK5SGJL8UVYCuIxMFohc=;
+        b=kkDKx8alivWQ72yw46Hi9eRyZDHgMygucxvl2CmBUARuaxx529Sxg5/L7UcTWJswBi
+         qXX4ZE44wVyNUcex0SWqmqmrj2za+JfdeKihICmJN4SWBR6xE3cC0+x0+Nyp8xOx4UL1
+         J1fUlfUAEXTNfdSppY2PDLsscKLATeuewIKLwtwyEtjlbXoJOORGn7PdBE+OebCC9d3D
+         jqI3GARPag3euoJxzxSBmL6sdqXiTFvEf06gadR3m62N6E429k5GADKEvevhbYL42YZp
+         7m7M5HtPHj6OixBdvy/ePY0NGtqK7+GlrjP9bntqnujY4ZdXPAi9khHCwkT/134AxoDz
+         kdmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779165114; x=1779769914;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=LB2eeG1SpolST48Ht8N5ZVmPK5SGJL8UVYCuIxMFohc=;
+        b=F5Oe1JY/+Eg/NLya6PgOkxmJMlmwk7kKSp1LH37MIyPx0vZ4+v7oeUYlL0miHieYpV
+         SbOoOwcXjKWhqAGPtLnGnNaNgdG6sYWsHsMKerf0LcO6+F3nwH6YXPwkVZAKqCKgY4iu
+         zPcEyUl43eh1TqsE0c9QuhdPqbfD2rLRfjRv3jWhuON5Gwd8bTqwlqe/sjISyLw4JVw3
+         I+vAcP7Ww/cNrlFELaeoqb9gXsFqGXremWgjq76hfaicDFNeoa4zKacERPd8tK6dtV5E
+         jLXewEYFqaBsoC23KNxYdqVrRhCbu/MQd0YrMFiwpL2MNaUdOPqANFlAoPMzcX0+WY4j
+         ORig==
+X-Forwarded-Encrypted: i=1; AFNElJ8LX3CJIzxHQkHklL5fU7Mi34bOjp+4gbkylvkNL7Zm8itFl/t2zJGMc4m4Ti9KUpDvjtHDvrsIiKPXnw==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzPqm+ulk7i538AAruy60Hfzv+AJd037n3qHhgvIRR3ZA9c9WDs
+	JufSx3l2VaEaiXZCGDrq3X2Av3YOtmqjts4h5yGBIVsZgpbhrbcayUDR6oJbd9WZvwDHwOBBNoC
+	MXE4RxenGWk4yruAQTfyDkff2zIijm5A=
+X-Gm-Gg: Acq92OFc4Ixtuo/SpfmE1MyAQRG+ya6b5euv2IQAXiCL/slZr0XNxRrDhyzDPogks0Y
+	LEngcZ1IWeBzAY0Tga4p2Tuh641/urbDHAaY4vGIc/fnuJXQW9qMYpZgpv/YHG5hFrdDDP2Fu3i
+	8but/cgXuAw2rh99j1NtXUSNQMNQsw548B5IjNul5hqpzhkq/Q+8BlZgA0gGz0P8BTbum4ies5n
+	zG/jorA48fI/IkEsZQmj1GrrEzdIlK7VZ9p/CoDuDTh2tTsYWYkx+58OjIoFVyUq3/MKO3ep8X9
+	pEwjsrNxkPmNTuxjCiZR
+X-Received: by 2002:a05:600d:10:b0:48f:cfae:b654 with SMTP id
+ 5b1f17b1804b1-48fe60e5537mr217793815e9.1.1779165113908; Mon, 18 May 2026
+ 21:31:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] mainline/master: (build) variable 'old_size' is
- uninitialized when used here [-Werror,-Wuni...
-To: kernelci@lists.linux.dev, kernelci-results@groups.io
-Cc: regressions@lists.linux.dev, gus@collabora.com, laura.nao@collabora.com,
- shreeya.patel@collabora.com, broonie@kernel.org
-References: <177913434403.2484.8283537970935500940@330cfa3079ca>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <177913434403.2484.8283537970935500940@330cfa3079ca>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <177916443827.782505.12740523809279455409@mxe9fb.netcup.net>
-X-NC-CID: AJYMxMkH5fUN4Dubn7tZ/ogUl4/W+9EgJ8Vei5pdbjDwAO7WBSs=
+From: Baley Eccles <baleycod@gmail.com>
+Date: Tue, 19 May 2026 14:31:42 +1000
+X-Gm-Features: AVHnY4Li5nUZrvw8vcm2bYlGMK9IhnqMjGOljLZnXZ-_QnQCztFbvk2LXkdu2tc
+Message-ID: <CADCSNFD0Ut-jJohTQFczjBgaVf=mBrc2rq4hJQncVZpF4bCoxw@mail.gmail.com>
+Subject: [REGRESSION] Bluetooth: MT7922 fails to initialize after "Bluetooth:
+ btmtk: validate WMT event SKB length before struct access"
+To: linux-bluetooth@vger.kernel.org
+Cc: Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
+	regressions@lists.linux.dev, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 5/18/26 21:59, KernelCI bot wrote:
-> 
-> 
-> 
-> 
-> Hello,
-> 
-> New build issue found on mainline/master:
-> 
-> ---
->  variable 'old_size' is uninitialized when used here [-Werror,-Wuninitialized] in fs/smb/client/cifsfs.o (fs/smb/client/cifsfs.c) [logspec:kbuild,kbuild.compiler.error]
-> ---
+Subject: [REGRESSION] Bluetooth: MT7922 fails to initialize after
+"Bluetooth: btmtk: validate WMT event SKB length before struct access"
 
-I guess this is fixed by
-https://git.kernel.org/torvalds/c/8cf8b5ae8e093132b0dce0a932af10c9ef077936
-in mainline
+Hi all,
 
-> - dashboard: https://d.kernelci.org/i/maestro:8fef554699226f88449edfc56be31812d3edd327
-> - giturl: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-> - commit HEAD:  4bf5d3da79c48e1df4bab82c9680c53adeff7820
-> 
-> 
-> Please include the KernelCI tag when submitting a fix:
-> 
-> Reported-by: kernelci.org bot <bot@kernelci.org>
-> 
-> 
-> Log excerpt:
-> =====================================================
-> /tmp/kci/linux/fs/smb/client/cifsfs.c:1390:29: error: variable 'old_size' is uninitialized when used here [-Werror,-Wuninitialized]
->  1390 |                 if (rc == 0 && new_size > old_size) {
->       |                                           ^~~~~~~~
-> /tmp/kci/linux/fs/smb/client/cifsfs.c:1307:37: note: initialize the variable 'old_size' to silence this warning
->  1307 |         unsigned long long i_size, old_size, new_size, zero_point;
->       |                                            ^
->       |                                             = 0
-> /tmp/kci/linux/fs/smb/client/cifsfs.c:1375:13: error: variable 'zero_point' is uninitialized when used here [-Werror,-Wuninitialized]
->  1375 |         if (fend > zero_point)
->       |                    ^~~~~~~~~~
-> /tmp/kci/linux/fs/smb/client/cifsfs.c:1307:59: note: initialize the variable 'zero_point' to silence this warning
->  1307 |         unsigned long long i_size, old_size, new_size, zero_point;
->       |                                                                  ^
->       |                                                                   = 0
-> 2 errors generated.
-> 
-> =====================================================
-> 
-> 
-> # Builds where the incident occurred:
-> 
-> ## defconfig+allmodconfig+CONFIG_FRAME_WARN=2048 on (arm):
-> - compiler: clang-21
-> - config: None
-> - dashboard: https://d.kernelci.org/build/maestro:6a0b542b744d1c1da0198902
-> 
-> 
-> #kernelci issue maestro:8fef554699226f88449edfc56be31812d3edd327
-> 
-> --
-> This is an experimental report format. Please send feedback in!
-> Talk to us at kernelci@lists.linux.dev
-> 
-> Made with love by the KernelCI team - https://kernelci.org
-> 
+I have experienced and looked into a regression on a MediaTek MT7922
+adapter. Bluetooth works on v6.18.29, fails on v6.18.30, and reverting
+the bisected commit fixes it.
 
+Hardware:
+MEDIATEK Corp. MT7922 802.11ax PCI Express Wireless Network Adapter [14c3:7922]
+Subsystem: AzureWave ASUS PCE-AXE59BT [1a3b:5300]
+
+Good kernel:
+6.18.29-p2-gentoo-dist
+Upstream base: v6.18.29
+
+Bad kernel:
+6.18.30-p1-gentoo-dist
+Upstream base: v6.18.30
+
+Failure:
+bluetoothctl list prints nothing / no default controller is available.
+
+Bad dmesg:
+Bluetooth: hci0: HW/SW Version: 0x008a008a, Build Time: 20260224103448
+Bluetooth: hci0: Failed to send wmt func ctrl (-22)
+Bluetooth: hci0: HCI Enhanced Setup Synchronous Connection command is
+advertised, but not supported.
+
+Good dmesg:
+Bluetooth: hci0: HW/SW Version: 0x008a008a, Build Time: 20260224103448
+Bluetooth: hci0: Device setup in 129909 usecs
+Bluetooth: hci0: HCI Enhanced Setup Synchronous Connection command is
+advertised, but not supported.
+Bluetooth: hci0: AOSP extensions version v1.00
+Bluetooth: hci0: AOSP quality report is supported
+Bluetooth: MGMT ver 1.23
+
+Firmware:
+/lib/firmware/mediatek/BT_RAM_CODE_MT7922_1_1_hdr.bin
+/lib/firmware/mediatek/WIFI_MT7922_patch_mcu_1_1_hdr.bin
+/lib/firmware/mediatek/WIFI_RAM_CODE_MT7922_1.bin
+
+Bisect result:
+624fb79dadc1b65757986a9d0fdde5c0cf3fe179 is the first bad commit
+
+Bluetooth: btmtk: validate WMT event SKB length before struct access
+
+This is a stable backport of upstream commit:
+634a4408c0615c523cf7531790f4f14a422b9206
+
+Reverting 624fb79dadc1b65757986a9d0fdde5c0cf3fe179 on top of v6.18.30
+fixes the issue and Bluetooth works again.
+
+Please let me know if there is any additional logging or testing I can provide.
+
+#regzbot introduced: 624fb79dadc1b65757986a9d0fdde5c0cf3fe179
+
+Cheers,
+Baley
