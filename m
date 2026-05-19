@@ -1,94 +1,102 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03D113403FF
-	for <regressions@lists.linux.dev>; Tue, 19 May 2026 14:08:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DB5019ABD8;
+	Tue, 19 May 2026 14:22:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779199730; cv=none; b=JpXzF0FP6MTqbWhmaqheVE2Uoux6EEHFlvMDo6r3uZ1TFBepG7h8a/D7kq1cW+kZzMqLEmV0Qn3Y3pwhE+EMevy7QtXigvezDEzqJu5DR/ukqZtd9S/gs6560yxaBZwewfnDWHb+AHZcZu8wXM7eXxWi+i6h0c4rPZN7RKcew74=
+	t=1779200535; cv=none; b=Eys/Tda4PsiGzkAVtu53wKURgGI/9v9m1vauQFbnuMUd1zeEir/z3bCq6I0jZVJCK1wnN/omivySxHx/l5+0IQl7kXRytcxwu1qMn3P5sXfRUM/7O9W0EIXcg6v7LC6DassR4g8GAzNjThqk0id/K7v6KBRkWXb7/fZ3480a/Hg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779199730; c=relaxed/simple;
-	bh=g0OSmfsNbDEyt/NV945XR6ZR476gQ9iLJFvsCNc9nKw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uI4scnq6dAccs86U4QevxHrMpM7ScWcdQoDWQbVvZJZtH7cme6Q4ol5L6PjfgU3ysCtGTsZIkbJpH6SyyyetkXW5QeEfLaYgshgBHtAN/FPB4DgJUTH3v3CUyLA237XQJ0pYFxDdxDGxXhT46ofJxYN6Rj9/4s8637wJo/M3nek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IQrm9+X/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1779200535; c=relaxed/simple;
+	bh=Nj0+fOHrT8gzoSrRvxdofwjdBxWWBmtjb01jCAdP9qY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=MS4q+MJR93VGZm3f28pFyrKh0y8AIzLYvSv1FIt1FrG/pMlN5d6SUbRUVaSP7K0NzvjRNxHLhkYM9gAVd4nBAQipH70tHC1xaAefSjbYB+NNRGfR9wCR9J+HQ5lX1ntElmVJzDCOFuWO9lFjQovP4ZIt3+bjWdWT/NzysBWxr2o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rC2F/+7u; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IQrm9+X/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1374C2BCC7
-	for <regressions@lists.linux.dev>; Tue, 19 May 2026 14:08:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rC2F/+7u"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E2EEC2BCB8;
+	Tue, 19 May 2026 14:22:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1779199729;
-	bh=g0OSmfsNbDEyt/NV945XR6ZR476gQ9iLJFvsCNc9nKw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=IQrm9+X/iiPr0al/z0NC3EhqjsaOwtlhOYVehYQmP1pSjloODYvfVaPm6aG98IYBa
-	 7PFGw6Fehm/zwTntc433ZxKqPW+BoE+OKM5h++IipFPbzuN/JkouxJGA0LeItGTIz/
-	 cI4u6HMKawQS3DvcBUVcGCFQFURteHx6Ia0ZT8zJBeOcDRGF3oRQ7+tvxpC7N+nk9t
-	 gq/MthtYmK/Mm7pjB/Rg92/SEPy52ahQXq0Ta6/J84JqvUz3HAIYRiGLUvTsIf/+VK
-	 W+QC8aAbe+wRCBMmIfcoSObbjLzRGrFuzUXCMki3pUv3yBySKqg1DwPofzaSjAqmgK
-	 7sbgyxkXSTE/w==
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-38e97e73234so33005451fa.1
-        for <regressions@lists.linux.dev>; Tue, 19 May 2026 07:08:49 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ/nuXDDq+W5WNPr9nUx9bvxEnKgsn3kFjpstb1rvM1A+FIzsFmDcpDPiwp52Ki6tPj71tkuqu6ysoxUig==@lists.linux.dev
-X-Gm-Message-State: AOJu0Ywb10SbNvjC6Ofvdy5FDakEV+qtRLb1ANpqo8kla95eMQ40K/vr
-	pztkSiZj7cfQ+N3CQx3AXy2LH2NwGhWoo51bQrKDRy0JnJeXeTF9kTpQfNG/bDcWIwYrKfVAZgZ
-	VyhV+ktsD3RN5VLO4j94VkFs6iQWfoas=
-X-Received: by 2002:a05:6512:1321:b0:5a4:1a2:1d39 with SMTP id
- 2adb3069b0e04-5aa0e5ffab1mr4973395e87.6.1779199728096; Tue, 19 May 2026
- 07:08:48 -0700 (PDT)
+	s=k20201202; t=1779200535;
+	bh=Nj0+fOHrT8gzoSrRvxdofwjdBxWWBmtjb01jCAdP9qY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=rC2F/+7uO+8hfWiwmoz0iE0V98UG3QrbpRHPov6WuGQzv1rIvgQDf647O37bclSc8
+	 HOcpWUTW7oaoY01syoUBNYSeJJyaFlNnNTgwUuA4HdWT2O2zK8/YP68aQT2ltFd0R0
+	 ZDs+qcSWC6o+Jm8cpkzTv9tGW5u6hlQ5ewKmjtIHY7118gVAg0psEsfSizVtp6CG4Q
+	 k5m74pG/U20ik+LNlftEsfpcFeu4yKsTWGw24nHHzo2qNOB2wHPz9Ev5BckPBnUIyS
+	 o35AK+FlgUCDL98JXGtR3iK7uc3FnQnXmNG6iiSQT/O30l353OlaAGs8jz6nlcBtCa
+	 Tzs/8pJAdWsqw==
+From: Thomas Gleixner <tglx@kernel.org>
+To: Tony Rodriguez <unixpro1970@gmail.com>, davem@davemloft.net,
+ sparclinux@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, andreas@gaisler.com,
+ thomas.weissschuh@linutronix.de, regressions@lists.linux.dev,
+ glaubitz@physik.fu-berlin.de, linux@leemhuis.info,
+ torvalds@linux-foundation.org, Tony Rodriguez <unixpro1970@gmail.com>
+Subject: Re: [PATCH v2 1/1] sparc64: Fix comparator problem with timer
+ interrupts
+In-Reply-To: <20260519022421.5978-2-unixpro1970@gmail.com>
+References: <20260519022421.5978-1-unixpro1970@gmail.com>
+ <20260519022421.5978-2-unixpro1970@gmail.com>
+Date: Tue, 19 May 2026 16:22:11 +0200
+Message-ID: <878q9fxywc.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <E2OXET.4X5GTP37VTNC3@kousu.ca>
-In-Reply-To: <E2OXET.4X5GTP37VTNC3@kousu.ca>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Tue, 19 May 2026 16:08:36 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0jVQyWYqPo_MiUwNQb7FLNR_Q_++Xq=xA1owcHpcjN=OA@mail.gmail.com>
-X-Gm-Features: AVHnY4IYHpFZ_8NApVrHEaV-a4gahD_pRqfgG7xqb3mOswDf3PM0BnPOwltOgho
-Message-ID: <CAJZ5v0jVQyWYqPo_MiUwNQb7FLNR_Q_++Xq=xA1owcHpcjN=OA@mail.gmail.com>
-Subject: Re: [REGRESSION] Toshiba Fn keys + lidswitch
-To: Nick <nick@kousu.ca>
-Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, regressions@lists.linux.dev, 
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pm@vger.kernel.org, todd.e.brandt@linux.intel.com, 
-	xi.pardee@linux.intel.com, platform-driver-x86@vger.kernel.org, 
-	stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-On Tue, May 12, 2026 at 7:16=E2=80=AFPM Nick <nick@kousu.ca> wrote:
+On Mon, May 18 2026 at 19:24, Tony Rodriguez wrote:
+> On SPARC64 the check:
 >
-> My Toshiba Tecra X40 laptop's function keys no longer send events.
+>     return ((long)(new_tick - (orig_tick + adj))) > 0L;
 >
-> Specifically the mute ("KEY_MUTE"), lock ("KEY_COFFEE"), "power plan"
-> ("KEY_BATTERY"), sleep ("KEY_SLEEP"), mic mute (for some reason this
-> reads as "KEY_SUSPEND"), screen switch ("KEY_SWITCHVIDEOMODE"),
-> brightness ("KEY_BRIGHTNESSDOWN" and "KEY_BRIGHTNESSUP"), and rfkill
-> ("KEY_WLAN") hotkeys -- these are the Fn-shifted versions of Esc, F1,
-> F2, F3, F4, F5, F6, F7 and F8 -- keys no longer work. Neither does the
-> lid-switch.
+> Is safe only if retries make forward progress. The comparator can
+> take effect with a latency, so the moment when counter == comparator
+> may be missed, which can cause delays or hangs on some SPARC64 systems.
 >
-> Fn+F9, Fn+10, Fn+F11 and Fn+12 still work; those show up on
-> /dev/input/event3 like the rest of my keyboard, but the hotkeys show up
-> on /dev/input/event6.
+> For clarity:
+>     exp = orig_tick + adj   /* expected comparator value */
 >
-> I'm on ArchLinux. My keys worked on v6.19.14, I first noticed them
-> broken on v7.0.2.
->
-> I bisected mainline and found the break is: "ACPI: scan: Use
-> acpi_setup_gpe_for_wake() for buttons"
-> <https://lore.kernel.org/all/2259694.irdbgypaU6@rafael.j.wysocki/>.
-> That is, 57c31e6d620f132dcf610b2c52b4cdbd203c6f4a is bad and
-> 88fad6ce090b395af4c654594a54589a386bf24b is good.
->
-> #regzbot introduced: 57c31e6d620f132dcf610b2c52b4cdbd203c6f4a
->
-> Maybe acpi_mark_gpe_for_wake was initializing something particular to
-> Toshiba hardware?
+> The current check requires new_tick to be strictly greater than exp;
+> equality (new_tick == exp) is treated as not yet passed and the caller
+> will retry.
 
-Thanks for reporting!
+That's confusing at best. You really want to explain how the ordering is
+similar to what I described in the analysis:
 
-I think that the problem is acpi_setup_gpe_for_wake() doing too much,
-I'll send you a patch to test later today.
+        exp = read_cnt() + delta_ticks;
+        write_cmp(exp);
+        return (read_cnt() - exp) > 0;
+
+If the counter advanced past the expected expiry time, after writing it,
+then the caller will retry, as the calling code does:
+
+     return tick.add_compare(delta_ticks) ? -ETIME : 0;
+
+But it won't do so when the counter is equal, which is causing the
+problem.
+
+> By contrast, using:
+>
+>     return ((long)(new_tick - (orig_tick + adj))) >= 0L;
+>
+> causes the caller to stop retrying and assume the timer is scheduled;
+> both equality and greater-than are accepted (new_tick == exp or
+> new_tick > exp).
+
+It's the other way round. When counter >= expiry time, then the write is
+considered failed. If the counter has not yet reached expiry time,
+i.e. it is smaller, then it assumes the timer is scheduled.
+
+> Signed-off-by: Tony Rodriguez <unixpro1970@gmail.com>
+
+It would be nice to have a link to the original thread in the change log
+itself as that gives people quick access when they are wondering about
+this a year down the road.
+
+Thanks,
+
+        tglx
