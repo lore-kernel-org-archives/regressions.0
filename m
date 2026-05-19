@@ -1,121 +1,124 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [46.38.247.119])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51467403E90
-	for <regressions@lists.linux.dev>; Tue, 19 May 2026 15:13:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.38.247.119
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A55A7400DFC;
+	Tue, 19 May 2026 15:19:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779203637; cv=none; b=JV6itMBeHEuBnNZYwVbeSNM08HoH9b3P5wBBrkiNXj8uk2CI61IgWrlL6fq0uA3ARgnWGrY7qV51x28wiRzbEh3yhRqaYebXmZj0YhyGdF+cz8UNQz0bK/rnjiRJo9zM0t3JLJDm3A375vOamOr7Yynvt0dz3w1PyCEEt1Tb/Y4=
+	t=1779203949; cv=none; b=MN481U65FwWBiN9EHirg/seJEbPbLAhw/0yqEix5/CRn31VuKd78KDdN1nxg/GfvkFwxKd+0rmKySt+Vd7/yUlsPy8xpi2o8w4zGcuhkluNeBNLTcMLcYirQGQHOFiu15IpxWicvsIBKVNk2BJSKKwLqm2p8fs61lrH0KcTrTaI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779203637; c=relaxed/simple;
-	bh=cONcmZY6w1xlJTH91ApnEy8EvJ3d48+7xLYNuc9LkZs=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=QXdfPSkz1wLKX1+Uqke+yhBGMbHwYSHNGZJljSC5lyxQ/5NgPTiX/rGKFzPixKlscct9xlSga+WbqSlYv3cNYXUKUtM9YjrieBbfQ+LM1dYx/v9YNSzpZtFfeQiyDifvDRGjQOvGB5u48Xr2CFL8c5UW//rWgYH2O6+Fk5g558E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=WXpDKmo8; arc=none smtp.client-ip=46.38.247.119
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1779203949; c=relaxed/simple;
+	bh=nNsxKpDn2GIl+ynVQyOFWi8VuSsq3U/b8KBRqO60zFM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AzyEk9ullhdkcIPCcggow4Xrpp6zSfEPFUgZ+sNAqxtatcMSQ1qcTAthTlvOt7Rkz0Zu03HT6eHnpcOlR0YfiSMygxDEHp4MLyP6yVZYdIKdcwwQ3qpQMa/AYj0v+GM0NIxysOoODOP/4VqnGjpKhda0s6yw2PVq+zlr8NQI8RA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=pARPau/Z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="WXpDKmo8"
-Received: from mors-relay-8404.netcup.net (localhost [127.0.0.1])
-	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4gKdVN0jn2z89Wl
-	for <regressions@lists.linux.dev>; Tue, 19 May 2026 17:13:48 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1779203628;
-	bh=cONcmZY6w1xlJTH91ApnEy8EvJ3d48+7xLYNuc9LkZs=;
-	h=Date:Subject:From:To:References:In-Reply-To:From;
-	b=WXpDKmo8pPPiScQUYEBj2wlYETO3Bzpuil/Hswhu3w//9CKvrrdrGXm+I0TDR3PRF
-	 kw1GH3xbqArjrF5qPj4KCk1rl5JWZ/vwKmGRGjAPUnfT2LVgjObZ2f/QBZv5WTwX4r
-	 mqgn/IUkSXFGjNAGyWxe3m+DzbxSkQ9k7CWoQCws2RG/OONBlyVyzz5BfK99brq7oj
-	 2hvUC1fJ/LQs6JFlF/Kd/MFqGT8a800MWFbA1/y7sluErI9oGyOz4YdtOllK1RFKdM
-	 eX63T9CSSzrgNVez4MEgVDurHyQp2E32j9M3GqMm3hBhNj5mXYwdNAmUSARtFSh2Kh
-	 8elRDSv2dMRoQ==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4gKdVN015Wz4y1f
-	for <regressions@lists.linux.dev>; Tue, 19 May 2026 17:13:48 +0200 (CEST)
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4gKdVM5cQDz8scM
-	for <regressions@lists.linux.dev>; Tue, 19 May 2026 17:13:47 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 0764961840
-	for <regressions@lists.linux.dev>; Tue, 19 May 2026 17:13:46 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <f1a5235a-0e90-497e-86eb-6f74f033a287@leemhuis.info>
-Date: Tue, 19 May 2026 17:13:46 +0200
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="pARPau/Z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D61DCC2BCB8;
+	Tue, 19 May 2026 15:19:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1779203949;
+	bh=nNsxKpDn2GIl+ynVQyOFWi8VuSsq3U/b8KBRqO60zFM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pARPau/Z0VNLvUTTeuvLQ1kKek93j9hxvsdWGgFgrcJFzbpxLC8Lq2BclUqNnOYfr
+	 RUb7w25Z0RUAZZW43ennx6Oe7UvVdovqifsnjYsDZ8/I9QZ5cNlmcHTwSAtLwobNe+
+	 bSfJb3SyPrQg0K36TyXXhH95lBzWq5uiBcd3WfaY=
+Date: Tue, 19 May 2026 17:18:22 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
+	"stable@vger.kernel.org" <stable@vger.kernel.org>,
+	Sasha Levin <sashal@kernel.org>, linux-bluetooth@vger.kernel.org,
+	netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
+	Linux kernel regressions list <regressions@lists.linux.dev>,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [GIT PULL] bluetooth 2026-05-14
+Message-ID: <2026051942-uproar-drainpipe-6370@gregkh>
+References: <20260514172340.1515042-1-luiz.dentz@gmail.com>
+ <f5cf1c30-48a4-4102-ae00-b74cf02e639e@leemhuis.info>
+ <4946f5f3-b7e2-4949-89f7-6427015027c6@leemhuis.info>
+ <2026051954-revision-sierra-6bb4@gregkh>
+ <eb5301f9-3133-4fe3-b358-61f14d1ffa5b@leemhuis.info>
+ <2026051909-impurity-nemesis-2f65@gregkh>
+ <CABBYNZKKbTXc-okp9P2OncMYXHX9C1XC+pRC7XWOhv-8nPNZ5A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <177920362719.2875011.196795145459928917@mxe9fb.netcup.net>
-X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: 0764961840
-X-NC-CID: Lz1baI3/g3nYHCQuhDitmJdaokXPEh/HjfVEtt5dZVSFfjMKUoU=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CABBYNZKKbTXc-okp9P2OncMYXHX9C1XC+pRC7XWOhv-8nPNZ5A@mail.gmail.com>
 
+On Tue, May 19, 2026 at 09:44:39AM -0400, Luiz Augusto von Dentz wrote:
+> Hi Greg,
+> 
+> On Tue, May 19, 2026 at 8:07 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Tue, May 19, 2026 at 12:53:49PM +0200, Thorsten Leemhuis wrote:
+> > > On 5/19/26 12:30, Greg KH wrote:
+> > > > On Tue, May 19, 2026 at 09:04:38AM +0200, Thorsten Leemhuis wrote:
+> > > >> On 5/15/26 17:10, Thorsten Leemhuis wrote:
+> > > >>> On 5/14/26 19:23, Luiz Augusto von Dentz wrote:
+> > > >>>
+> > > >>>> The following changes since commit c78bdba7b9666020c0832150a4fc4c0aebc7c6ac:
+> > > >>>>   net: phy: DP83TC811: add reading of abilities (2026-05-14 15:17:12 +0200)
+> > > >>>>
+> > > >>>> are available in the Git repository at:
+> > > >>>>
+> > > >>>>   git://git.kernel.org/pub/scm/linux/kernel/git/bluetooth/bluetooth.git tags/for-net-2026-05-14
+> > > >>>>
+> > > >>>> for you to fetch changes up to 375ba7484132662a4a8c7547d088fb6275c00282:
+> > > >>>>
+> > > >>>>   Bluetooth: hci_qca: Convert timeout from jiffies to ms (2026-05-14 09:58:08 -0400)
+> > > >>>
+> > > >>> It seems this PR sadly came too late for this week's net PR to mainline
+> > > >>> that was merged yesterday.
+> > > >>>
+> > > >>> TWIMC, from my point of view, it would be great if we somehow could
+> > > >>> still get the changes from this PR or at least the btmtk fix it
+> > > >>> contains[1] to mainline this week before -rc4, as it is fixing a
+> > > >>> regression known since 2026-04-24 that at least five people encountered
+> > > >>> with mainline since -rc3 due to 634a4408c0615c ("Bluetooth: btmtk:
+> > > >>> validate WMT event SKB length before struct access") [006b9943b982 in
+> > > >>> -next].
+> > > >>
+> > > >> Greg, Sasha, that [1] fix I was talking about now reached -next as
+> > > >> 162b1adeb057d2 ("Bluetooth: btmtk: accept too short WMT FUNC_CTRL
+> > > >> events") and will likely hit mainline on Thursday or so with the weekly
+> > > >> -net PR to -mainline. If that's good enough for you, I'd say it would be
+> > > >> good to pick this up for the next round of stable kernels.
+> > > >
+> > > > That "Fixes:" tag is referring to something that is also not in any
+> > > > tree, but that commit does have a cc: stable in it.  So do we need both
+> > > > of these:
+> > >
+> > > Valid question, as yes, there is a slight mixup here:
+> > >
+> > > > 041e88fb0c08 ("Bluetooth: btmtk: validate WMT event SKB length before struct access")
+> > >
+> > > That is already in v7.0.7, v6.18.30, v6.12.88, as 041e88fb0c08 is the
+> > > -next commit-id for mainline commit-id 634a4408c0615c ("Bluetooth:
+> > > btmtk: validate WMT event SKB length before struct access") -- the one
+> > > that is causing the regression that I want to get fixed. So we now only
+> > > need:
+> > >
+> > > > 162b1adeb057 ("Bluetooth: btmtk: accept too short WMT FUNC_CTRL events")
+> >
+> > Ok, but that "Fixes:" tag pointing to an invalid commit is going to be a
+> > nightmare to track over time, ugh.
+> 
+> Hmm, did we get the wrong hash or something? Usually, that would show
+> up in the verify-fixes.sh, but perhaps it didn't capture it this time
+> for some reason, perhaps I'm running an outdated version or something
+> similar.
 
+Something went wrong if we ended up with a patch in the stable trees,
+yet this fix is referring to it as a different git sha.  Don't know
+where the disconnect happend :(
 
-On 3/9/24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
+thanks,
 
-#regzbot report:
-https://lore.kernel.org/all/20260516114334.812828-1-nerijus.bendziunas@gmail.com/
-#regzbot introduced: f26a29a038ee
-#regzbot title: net: phy: skip negotian problems due to EE
-#regzbot fix: net: phy: skip EEE advertisement write when autoneg is
-disabled
-#regzbot monitor:
-https://lore.kernel.org/all/20260516150251.879680-1-nerijus.bendziunas@gmail.com/
-
-#regzbot report: https://gitlab.freedesktop.org/drm/amd/-/issues/5286
-#regzbot fix: drm/amd/display: Consult MCCS FreeSync cap only if
-requested & supported
-#regzbot monitor:
-https://lore.kernel.org/all/20260518154809.660061-1-michel@daenzer.net/
-
-#regzbot report:
-https://lore.kernel.org/lkml/97a7d011-d573-4754-9e5d-68b562c64089@linux.ibm.com/
-#regzbot monitor:
-https://lore.kernel.org/all/f669fbc9-c068-489f-bd91-4e81561a6e58@leemhuis.info/
-
-#regzbot report:
-https://lore.kernel.org/lkml/20260423-stoke-ocean-139dbe306256@thorsis.com/
-#regzbot fix: memory: atmel-ebi: Allow deferred probing
-
-#regzbot report:
-https://lore.kernel.org/lkml/f8566380-6a40-435a-bf8c-6c0e0999d434@mailbox.org/
-#regzbot fix: x86/boot/e820: Re-enable BIOS fallback if e820 table is empty
-
-#regzbot report:
-https://lore.kernel.org/lkml/CAMRc=MfADC2ncuUQiSW7TnUwBUWCJn9i=wZ9dqYMZNo2h6qOxw@mail.gmail.com/
-#regzbot fix: nfc: nxp-nci: i2c: use rising-edge IRQ on ACPI systems
-#regzbot monitor:
-https://lore.kernel.org/lkml/20260519-nfc-nxp-nci-i2c-restore-irq-trigger-fallback-v5-1-1a826cfbc128@amd.com/
-
-#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=221505
-#regzbot introduced: e30ca6dd5345
-
-#regzbot report:
-https://lore.kernel.org/lkml/CADo9pHjr-zZ9C3%2B026y5%2BXOGPSeRzSJMCHof27TVPtAUNgTc8A@mail.gmail.com/
-#regzbot dup:
-https://lore.kernel.org/lkml/CADo9pHjr-zZ9C3%2B026y5%2BXOGPSeRzSJMCHof27TVPtAUNgTc8A@mail.gmail.com/
-#regzbot fix: Revert "drm/i915/backlight: Remove try_vesa_interface"
-#regzbot monitor:
-https://lore.kernel.org/all/20260517024709.1016121-1-suraj.kandpal@intel.com/
+greg k-h
