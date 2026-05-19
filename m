@@ -1,33 +1,51 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [185.244.194.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68BA52D94AB;
-	Tue, 19 May 2026 04:52:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8913F2E5B1B
+	for <regressions@lists.linux.dev>; Tue, 19 May 2026 05:06:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.244.194.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779166335; cv=none; b=bUbE5BTianWB21Q6EV2xIVz2BCmGpxOaYY+GIzjU8OSFzJtQdwIh5lj+4krh+DWFvzydrk78q6PuiYBq8NWlAINWOt6oC5yXP7D2MNZ1wELAnmpMz+1t4icUv4YipNi5i5JKI5ABG4ISlNJ85vNvlb7dFvdmdqWQSxiKXpabQ0M=
+	t=1779167168; cv=none; b=Gjea8PtHqzi9hzAQ0ArJi1oPcwAiQQ6wdvtbkko7zTvYW8oQ6oUihm9zAONgcvpcTupw2hUhfrGyuYp69n2JbYUYokY822il7cIgeFF/yxmQYU/915U7sNE8hnTmxRMyELdF5viEa4nLF6uEKhTnbnwVq5K18C+za7/B6lvk8Kg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779166335; c=relaxed/simple;
-	bh=/HR6KNEhm9RlYnNQYcHck5sV+fdadssIRhSj5BGOslU=;
+	s=arc-20240116; t=1779167168; c=relaxed/simple;
+	bh=FAiCEhzhtFbXPSs7rpt5n/p1t2w9wK7VlAtkJJg+KxY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gRBp08+2P3z8kK+RoZOX0UF2z10SlahN7XnlQXvHAobek0TBcqNLVbQCatAOoA+LXtObpH7BwZddtgoplQ0237Q5DzbFWSiDO0L8tS+ElBtCPvs2y37AlB1yB9Ekugf0O6pcHRh6DI8jumLQgpwhKu40QTiYk0uN2Lzm+2wRZKg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hcx2v/Ao; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=ECVyr8bIE5pZlqLV6R8k/bSZYqRgsSw5Tq36ZM/NC7+8+bAPbCudB9HjejCUhm+iuC2yVMBl02GHF9faxLYEuDa0ijkzHCYpyanmvVE1R+BR48r2BD18SH795G//5Xa322e7GSi1XxvS/eUOCHoK7xza6sLfm9bYg46y1GzHfEQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=K5koFewW; arc=none smtp.client-ip=185.244.194.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hcx2v/Ao"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0784C2BCB3;
-	Tue, 19 May 2026 04:52:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1779166335;
-	bh=/HR6KNEhm9RlYnNQYcHck5sV+fdadssIRhSj5BGOslU=;
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="K5koFewW"
+Received: from relay01-mors.netcup.net (localhost [127.0.0.1])
+	by relay01-mors.netcup.net (Postfix) with ESMTPS id 4gKN0z3wSZz94yW;
+	Tue, 19 May 2026 07:05:55 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1779167155;
+	bh=FAiCEhzhtFbXPSs7rpt5n/p1t2w9wK7VlAtkJJg+KxY=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Hcx2v/AoPAMs0cKkZdKF99AKEA1QEcEFDp6mG378/M9dODP70cf/ook1n3HgjDoBo
-	 rjP91awXQR2fdFacO6sz/YcgfqvQCqC3UoP6UHyORTUdyNc6Z0PxFb/Ucf8Inwo5Y+
-	 H1Z/SllivuhdvOruZQgQhXTPQ2TYKma2pPqx/YW2ZVE0IE0TrvSHwkJTTfVo5Xcv8N
-	 jzzJPf0Kozg+bQAgR0K4Dq1yUTUJpJ0kvpsMXjN6aEipSiIXKo2hORDmGXhlt4Fjq2
-	 uh6lTSaiQiO1m6/4ZU0t2quswoMVkN59yxQPBT8AUvc9I5QC+CThwtKqUY6JKmD+zK
-	 k6jR/i7t5hfZw==
-Message-ID: <dc492675-2323-4acb-a6e7-da75a0c2f208@kernel.org>
-Date: Tue, 19 May 2026 06:52:07 +0200
+	b=K5koFewWjOv2W8vANcfdXTMyEtXNYiUyZ95mUequ8KmkWT+fgzDTFAXrIehrfI23b
+	 tpJMxJXRrvVJ7+xn5vN2JaIrLvqj8VkZRjgBgbIuNdmizmU7cJ/7Hv4VMJquKzpXFA
+	 qtIBP3sZqn/hWy6MGytcy8e0K5GDF/UCrxcuxvicfvI7VCEje9HMTNwevZZC+uy6xI
+	 /F7xPUTaUjgplsY4uSpTCo7RXmzjbxzOAhnD6NDTAh8OIOpu5JYk7prM5kb/RO5gdL
+	 tNDEgc4aRuVXxVkYJSAeOKxO1e/YIndepX0zm5SWrK/trrflexI7bgCDKojglYwwT0
+	 PIqNktQ2AJ3Rg==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by relay01-mors.netcup.net (Postfix) with ESMTPS id 4gKMzw5nYDz7v62;
+	Tue, 19 May 2026 07:05:00 +0200 (CEST)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4gKMzw1QcXz8sbH;
+	Tue, 19 May 2026 07:05:00 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 311F861884;
+	Tue, 19 May 2026 07:04:59 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <ff4c4ba2-dc26-4b05-87c2-03cc70afdcc5@leemhuis.info>
+Date: Tue, 19 May 2026 07:04:58 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -35,102 +53,96 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH -next v1 05/12] srcu: Don't queue workqueue handlers to
- never-online CPUs
-To: Boqun Feng <boqun@kernel.org>,
- Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: paulmck@kernel.org, Uladzislau Rezki <urezki@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>, Joel Fernandes <joelagnelf@nvidia.com>,
- RCU <rcu@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
- Vasily Gorbik <gor@linux.ibm.com>, Frederic Weisbecker
- <frederic@kernel.org>, Samir <samir@linux.ibm.com>,
- Shrikanth Hegde <sshegde@linux.ibm.com>, Tejun Heo <tj@kernel.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <20260511175448.153326-1-urezki@gmail.com>
- <20260511175448.153326-6-urezki@gmail.com>
- <f669fbc9-c068-489f-bd91-4e81561a6e58@leemhuis.info> <agm4-6f-6rOgQPFB@pc636>
- <3dd5cce0-51f9-4cf1-81b8-246e6c6a633a@paulmck-laptop>
- <53d546e4-8db0-4e14-a79d-270212081be7@leemhuis.info>
- <ags6ug97zNR6Fiiw@tardis.local>
-Content-Language: en-US
-From: Jiri Slaby <jirislaby@kernel.org>
-Autocrypt: addr=jirislaby@kernel.org; keydata=
- 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
-In-Reply-To: <ags6ug97zNR6Fiiw@tardis.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Subject: Re: [REGRESSION] Bluetooth: MT7922 fails to initialize after
+ "Bluetooth: btmtk: validate WMT event SKB length before struct access"
+To: Baley Eccles <baleycod@gmail.com>, linux-bluetooth@vger.kernel.org
+Cc: Marcel Holtmann <marcel@holtmann.org>,
+ Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, regressions@lists.linux.dev,
+ stable@vger.kernel.org
+References: 
+ <CADCSNFD0Ut-jJohTQFczjBgaVf=mBrc2rq4hJQncVZpF4bCoxw@mail.gmail.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: 
+ <CADCSNFD0Ut-jJohTQFczjBgaVf=mBrc2rq4hJQncVZpF4bCoxw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: <177916709967.849087.9352424421516320279@mxe9fb.netcup.net>
+X-NC-CID: vq9DJS+14lEdcttPEpzaRJbmdMSDWX9ZqxtKYJX+AwMCHyCP/iQ=
 
-On 18. 05. 26, 18:13, Boqun Feng wrote:
->>>> I assume it will be picked to stable
->>
->> Thx for the reply. This answered the second aspect I raised. What about
->> the first: shouldn't this be heading to mainline this cycle, ideally
->> quite soon? Or is this the plan and I misinterpreted the "-next" in the
->> subject?
->>
->> Sadly Jiri (now CCed) afaics didn't yet report if this fix helped to fix
->> the issues they were seeing, but it sounded a lot like it was likely:
->> https://lore.kernel.org/all/f0351414-41af-4f74-899c-87fb5bb45621@kernel.org/
+On 5/19/26 06:31, Baley Eccles wrote:
+> Subject: [REGRESSION] Bluetooth: MT7922 fails to initialize after
+> "Bluetooth: btmtk: validate WMT event SKB length before struct access"
+> 
+> Hi all,
+> 
+> I have experienced and looked into a regression on a MediaTek MT7922
+> adapter. Bluetooth works on v6.18.29, fails on v6.18.30, and reverting
+> the bisected commit fixes it.
 
-Yes, it did!
+Thx for the report, there are quite a few similar ones already; the
+problem is known and the fix (see the link below) should be heading to
+mainline this week and from there go to various stable series.
 
-You could have checked the linked bug, BTW:
-https://bugzilla.suse.com/show_bug.cgi?id=1263947#c19
+Ciao, Thorsten
 
- > works nicely without complaining about non-existant CPUs
+#regzbot dup:
+https://lore.kernel.org/linux-bluetooth/770d36b07311bf88210c187923f243fb9f126f04.1777058551.git.pav@iki.fi/
 
-and:
+> Hardware:
+> MEDIATEK Corp. MT7922 802.11ax PCI Express Wireless Network Adapter [14c3:7922]
+> Subsystem: AzureWave ASUS PCE-AXE59BT [1a3b:5300]
+> 
+> Good kernel:
+> 6.18.29-p2-gentoo-dist
+> Upstream base: v6.18.29
+> 
+> Bad kernel:
+> 6.18.30-p1-gentoo-dist
+> Upstream base: v6.18.30
+> 
+> Failure:
+> bluetoothctl list prints nothing / no default controller is available.
+> 
+> Bad dmesg:
+> Bluetooth: hci0: HW/SW Version: 0x008a008a, Build Time: 20260224103448
+> Bluetooth: hci0: Failed to send wmt func ctrl (-22)
+> Bluetooth: hci0: HCI Enhanced Setup Synchronous Connection command is
+> advertised, but not supported.
+> 
+> Good dmesg:
+> Bluetooth: hci0: HW/SW Version: 0x008a008a, Build Time: 20260224103448
+> Bluetooth: hci0: Device setup in 129909 usecs
+> Bluetooth: hci0: HCI Enhanced Setup Synchronous Connection command is
+> advertised, but not supported.
+> Bluetooth: hci0: AOSP extensions version v1.00
+> Bluetooth: hci0: AOSP quality report is supported
+> Bluetooth: MGMT ver 1.23
+> 
+> Firmware:
+> /lib/firmware/mediatek/BT_RAM_CODE_MT7922_1_1_hdr.bin
+> /lib/firmware/mediatek/WIFI_MT7922_patch_mcu_1_1_hdr.bin
+> /lib/firmware/mediatek/WIFI_RAM_CODE_MT7922_1.bin
+> 
+> Bisect result:
+> 624fb79dadc1b65757986a9d0fdde5c0cf3fe179 is the first bad commit
+> 
+> Bluetooth: btmtk: validate WMT event SKB length before struct access
+> 
+> This is a stable backport of upstream commit:
+> 634a4408c0615c523cf7531790f4f14a422b9206
+> 
+> Reverting 624fb79dadc1b65757986a9d0fdde5c0cf3fe179 on top of v6.18.30
+> fixes the issue and Bluetooth works again.
+> 
+> Please let me know if there is any additional logging or testing I can provide.
+> 
+> #regzbot introduced: 624fb79dadc1b65757986a9d0fdde5c0cf3fe179
+> 
+> Cheers,
+> Baley
 
- > seems stopped messages about workqueue lockup and not exist CPUs at 
-kernel 7.0.7-1-default now
-
-But:
- > FYI the power8 machine hangs using 7.0.7-2.gf1d450c-default, to be 
-investigated.
-
-That's likely not related.
-
-thanks,
--- 
-js
-suse labs
