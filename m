@@ -1,102 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [46.38.247.119])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DB5019ABD8;
-	Tue, 19 May 2026 14:22:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51467403E90
+	for <regressions@lists.linux.dev>; Tue, 19 May 2026 15:13:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.38.247.119
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779200535; cv=none; b=Eys/Tda4PsiGzkAVtu53wKURgGI/9v9m1vauQFbnuMUd1zeEir/z3bCq6I0jZVJCK1wnN/omivySxHx/l5+0IQl7kXRytcxwu1qMn3P5sXfRUM/7O9W0EIXcg6v7LC6DassR4g8GAzNjThqk0id/K7v6KBRkWXb7/fZ3480a/Hg=
+	t=1779203637; cv=none; b=JV6itMBeHEuBnNZYwVbeSNM08HoH9b3P5wBBrkiNXj8uk2CI61IgWrlL6fq0uA3ARgnWGrY7qV51x28wiRzbEh3yhRqaYebXmZj0YhyGdF+cz8UNQz0bK/rnjiRJo9zM0t3JLJDm3A375vOamOr7Yynvt0dz3w1PyCEEt1Tb/Y4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779200535; c=relaxed/simple;
-	bh=Nj0+fOHrT8gzoSrRvxdofwjdBxWWBmtjb01jCAdP9qY=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=MS4q+MJR93VGZm3f28pFyrKh0y8AIzLYvSv1FIt1FrG/pMlN5d6SUbRUVaSP7K0NzvjRNxHLhkYM9gAVd4nBAQipH70tHC1xaAefSjbYB+NNRGfR9wCR9J+HQ5lX1ntElmVJzDCOFuWO9lFjQovP4ZIt3+bjWdWT/NzysBWxr2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rC2F/+7u; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1779203637; c=relaxed/simple;
+	bh=cONcmZY6w1xlJTH91ApnEy8EvJ3d48+7xLYNuc9LkZs=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=QXdfPSkz1wLKX1+Uqke+yhBGMbHwYSHNGZJljSC5lyxQ/5NgPTiX/rGKFzPixKlscct9xlSga+WbqSlYv3cNYXUKUtM9YjrieBbfQ+LM1dYx/v9YNSzpZtFfeQiyDifvDRGjQOvGB5u48Xr2CFL8c5UW//rWgYH2O6+Fk5g558E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=WXpDKmo8; arc=none smtp.client-ip=46.38.247.119
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rC2F/+7u"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E2EEC2BCB8;
-	Tue, 19 May 2026 14:22:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1779200535;
-	bh=Nj0+fOHrT8gzoSrRvxdofwjdBxWWBmtjb01jCAdP9qY=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=rC2F/+7uO+8hfWiwmoz0iE0V98UG3QrbpRHPov6WuGQzv1rIvgQDf647O37bclSc8
-	 HOcpWUTW7oaoY01syoUBNYSeJJyaFlNnNTgwUuA4HdWT2O2zK8/YP68aQT2ltFd0R0
-	 ZDs+qcSWC6o+Jm8cpkzTv9tGW5u6hlQ5ewKmjtIHY7118gVAg0psEsfSizVtp6CG4Q
-	 k5m74pG/U20ik+LNlftEsfpcFeu4yKsTWGw24nHHzo2qNOB2wHPz9Ev5BckPBnUIyS
-	 o35AK+FlgUCDL98JXGtR3iK7uc3FnQnXmNG6iiSQT/O30l353OlaAGs8jz6nlcBtCa
-	 Tzs/8pJAdWsqw==
-From: Thomas Gleixner <tglx@kernel.org>
-To: Tony Rodriguez <unixpro1970@gmail.com>, davem@davemloft.net,
- sparclinux@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, andreas@gaisler.com,
- thomas.weissschuh@linutronix.de, regressions@lists.linux.dev,
- glaubitz@physik.fu-berlin.de, linux@leemhuis.info,
- torvalds@linux-foundation.org, Tony Rodriguez <unixpro1970@gmail.com>
-Subject: Re: [PATCH v2 1/1] sparc64: Fix comparator problem with timer
- interrupts
-In-Reply-To: <20260519022421.5978-2-unixpro1970@gmail.com>
-References: <20260519022421.5978-1-unixpro1970@gmail.com>
- <20260519022421.5978-2-unixpro1970@gmail.com>
-Date: Tue, 19 May 2026 16:22:11 +0200
-Message-ID: <878q9fxywc.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="WXpDKmo8"
+Received: from mors-relay-8404.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4gKdVN0jn2z89Wl
+	for <regressions@lists.linux.dev>; Tue, 19 May 2026 17:13:48 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1779203628;
+	bh=cONcmZY6w1xlJTH91ApnEy8EvJ3d48+7xLYNuc9LkZs=;
+	h=Date:Subject:From:To:References:In-Reply-To:From;
+	b=WXpDKmo8pPPiScQUYEBj2wlYETO3Bzpuil/Hswhu3w//9CKvrrdrGXm+I0TDR3PRF
+	 kw1GH3xbqArjrF5qPj4KCk1rl5JWZ/vwKmGRGjAPUnfT2LVgjObZ2f/QBZv5WTwX4r
+	 mqgn/IUkSXFGjNAGyWxe3m+DzbxSkQ9k7CWoQCws2RG/OONBlyVyzz5BfK99brq7oj
+	 2hvUC1fJ/LQs6JFlF/Kd/MFqGT8a800MWFbA1/y7sluErI9oGyOz4YdtOllK1RFKdM
+	 eX63T9CSSzrgNVez4MEgVDurHyQp2E32j9M3GqMm3hBhNj5mXYwdNAmUSARtFSh2Kh
+	 8elRDSv2dMRoQ==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4gKdVN015Wz4y1f
+	for <regressions@lists.linux.dev>; Tue, 19 May 2026 17:13:48 +0200 (CEST)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4gKdVM5cQDz8scM
+	for <regressions@lists.linux.dev>; Tue, 19 May 2026 17:13:47 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 0764961840
+	for <regressions@lists.linux.dev>; Tue, 19 May 2026 17:13:46 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <f1a5235a-0e90-497e-86eb-6f74f033a287@leemhuis.info>
+Date: Tue, 19 May 2026 17:13:46 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: <177920362719.2875011.196795145459928917@mxe9fb.netcup.net>
+X-Rspamd-Server: rspamd-worker-8404
+X-Rspamd-Queue-Id: 0764961840
+X-NC-CID: Lz1baI3/g3nYHCQuhDitmJdaokXPEh/HjfVEtt5dZVSFfjMKUoU=
 
-On Mon, May 18 2026 at 19:24, Tony Rodriguez wrote:
-> On SPARC64 the check:
->
->     return ((long)(new_tick - (orig_tick + adj))) > 0L;
->
-> Is safe only if retries make forward progress. The comparator can
-> take effect with a latency, so the moment when counter == comparator
-> may be missed, which can cause delays or hangs on some SPARC64 systems.
->
-> For clarity:
->     exp = orig_tick + adj   /* expected comparator value */
->
-> The current check requires new_tick to be strictly greater than exp;
-> equality (new_tick == exp) is treated as not yet passed and the caller
-> will retry.
 
-That's confusing at best. You really want to explain how the ordering is
-similar to what I described in the analysis:
 
-        exp = read_cnt() + delta_ticks;
-        write_cmp(exp);
-        return (read_cnt() - exp) > 0;
+On 3/9/24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-If the counter advanced past the expected expiry time, after writing it,
-then the caller will retry, as the calling code does:
+#regzbot report:
+https://lore.kernel.org/all/20260516114334.812828-1-nerijus.bendziunas@gmail.com/
+#regzbot introduced: f26a29a038ee
+#regzbot title: net: phy: skip negotian problems due to EE
+#regzbot fix: net: phy: skip EEE advertisement write when autoneg is
+disabled
+#regzbot monitor:
+https://lore.kernel.org/all/20260516150251.879680-1-nerijus.bendziunas@gmail.com/
 
-     return tick.add_compare(delta_ticks) ? -ETIME : 0;
+#regzbot report: https://gitlab.freedesktop.org/drm/amd/-/issues/5286
+#regzbot fix: drm/amd/display: Consult MCCS FreeSync cap only if
+requested & supported
+#regzbot monitor:
+https://lore.kernel.org/all/20260518154809.660061-1-michel@daenzer.net/
 
-But it won't do so when the counter is equal, which is causing the
-problem.
+#regzbot report:
+https://lore.kernel.org/lkml/97a7d011-d573-4754-9e5d-68b562c64089@linux.ibm.com/
+#regzbot monitor:
+https://lore.kernel.org/all/f669fbc9-c068-489f-bd91-4e81561a6e58@leemhuis.info/
 
-> By contrast, using:
->
->     return ((long)(new_tick - (orig_tick + adj))) >= 0L;
->
-> causes the caller to stop retrying and assume the timer is scheduled;
-> both equality and greater-than are accepted (new_tick == exp or
-> new_tick > exp).
+#regzbot report:
+https://lore.kernel.org/lkml/20260423-stoke-ocean-139dbe306256@thorsis.com/
+#regzbot fix: memory: atmel-ebi: Allow deferred probing
 
-It's the other way round. When counter >= expiry time, then the write is
-considered failed. If the counter has not yet reached expiry time,
-i.e. it is smaller, then it assumes the timer is scheduled.
+#regzbot report:
+https://lore.kernel.org/lkml/f8566380-6a40-435a-bf8c-6c0e0999d434@mailbox.org/
+#regzbot fix: x86/boot/e820: Re-enable BIOS fallback if e820 table is empty
 
-> Signed-off-by: Tony Rodriguez <unixpro1970@gmail.com>
+#regzbot report:
+https://lore.kernel.org/lkml/CAMRc=MfADC2ncuUQiSW7TnUwBUWCJn9i=wZ9dqYMZNo2h6qOxw@mail.gmail.com/
+#regzbot fix: nfc: nxp-nci: i2c: use rising-edge IRQ on ACPI systems
+#regzbot monitor:
+https://lore.kernel.org/lkml/20260519-nfc-nxp-nci-i2c-restore-irq-trigger-fallback-v5-1-1a826cfbc128@amd.com/
 
-It would be nice to have a link to the original thread in the change log
-itself as that gives people quick access when they are wondering about
-this a year down the road.
+#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=221505
+#regzbot introduced: e30ca6dd5345
 
-Thanks,
-
-        tglx
+#regzbot report:
+https://lore.kernel.org/lkml/CADo9pHjr-zZ9C3%2B026y5%2BXOGPSeRzSJMCHof27TVPtAUNgTc8A@mail.gmail.com/
+#regzbot dup:
+https://lore.kernel.org/lkml/CADo9pHjr-zZ9C3%2B026y5%2BXOGPSeRzSJMCHof27TVPtAUNgTc8A@mail.gmail.com/
+#regzbot fix: Revert "drm/i915/backlight: Remove try_vesa_interface"
+#regzbot monitor:
+https://lore.kernel.org/all/20260517024709.1016121-1-suraj.kandpal@intel.com/
