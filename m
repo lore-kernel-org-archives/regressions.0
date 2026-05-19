@@ -1,168 +1,132 @@
-Received: from zg8tmtyylji0my4xnjqumte4.icoremail.net (zg8tmtyylji0my4xnjqumte4.icoremail.net [162.243.164.118])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B0583D171E
-	for <regressions@lists.linux.dev>; Tue, 19 May 2026 07:28:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.243.164.118
+Received: from mail-dl1-f54.google.com (mail-dl1-f54.google.com [74.125.82.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F41333DCDBA
+	for <regressions@lists.linux.dev>; Tue, 19 May 2026 07:58:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779175708; cv=none; b=bfQKlJXD3KS4A/9GNSxEPDsP7ifMEPbDDF/ZOfjYtfB6i033WLGBrUBnfSWREByj0eLw5FGJ+kVMhAjAvnL0r2SswgZHwkzy6hUBmN7yix/ZhNBc7efTAfMrJ8RORRMe+k2cXUC/xLV6HmzYkKxRIw3AAp2Llc1jw4aPlbXpQPw=
+	t=1779177497; cv=none; b=rTxKq6nsjAmLXyZV/IWg+Cjdn0kbVM4ocV/YFiFaxdMB/v9Vvjfvh6Zw/fUZEqNpVmdEup05pGjNk/iZTi55gw3phjH67dLDZXFeEFSkBeufxDt8j1FrC2uJcjo1b5FdPiIhO3NRMI1ww7p/Aoe/HreYwU3r7YkENLNBRf/99LQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779175708; c=relaxed/simple;
-	bh=PYEpChuGluL8N1mTdg8j8fy/wBbkao+nqDOhQPM6smc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=RE/YQV9zTEiw50brJSIANtNZy4p2VW5i75m98GbQdneLr0AwOI+MhiwHXu1EjopS4GaRP+WPz4egmEJ1bQpGNL3cXo64Whuo6LgpmuWyPA7D+hZO55grMCiX9Cw/uJ0DM40CR+4lXBxw4TaI7tHbUKCNaoiwQmZ8+Tn8cApt/iI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stu.xmu.edu.cn; spf=pass smtp.mailfrom=stu.xmu.edu.cn; arc=none smtp.client-ip=162.243.164.118
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stu.xmu.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stu.xmu.edu.cn
-Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
-	by hzbj-icmmx-6 (Coremail) with SMTP id AQAAfwAHD6MTEQxq7uH+AA--.33732S2;
-	Tue, 19 May 2026 15:28:19 +0800 (CST)
-Received: from 23020251154299$stu.xmu.edu.cn ( [117.28.251.180] ) by
- ajax-webmail-mail (Coremail) ; Tue, 19 May 2026 15:28:00 +0800 (GMT+08:00)
-Date: Tue, 19 May 2026 15:28:00 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From: "Chengfeng Lin" <23020251154299@stu.xmu.edu.cn>
-To: "Kairui Song" <ryncsn@gmail.com>
-Cc: "Andrew Morton" <akpm@linux-foundation.org>, linux-mm@kvack.org,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	"David Hildenbrand" <david@kernel.org>,
-	"Vlastimil Babka" <vbabka@suse.cz>, "Jann Horn" <jannh@google.com>,
-	"Johannes Weiner" <hannes@cmpxchg.org>,
-	"Michal Hocko" <mhocko@kernel.org>,
-	"Qi Zheng" <zhengqi.arch@bytedance.com>,
-	"Shakeel Butt" <shakeel.butt@linux.dev>,
-	"Chris Li" <chrisl@kernel.org>, linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev, ljs@kernel.org
-Subject: Re: Re: [REGRESSION] mm: MADV_PAGEOUT THP/no-swap refault takes
- ~1.7x longer on v6.19 than v6.12
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version 2025.3-cmXT6 build
- 20260202(ad063891) Copyright (c) 2002-2026 www.mailtech.cn OP_ICM_ICMVM
-In-Reply-To: <CAMgjq7AD2ivdgD_kRx+0+w0M=Fvz5dXepw84_Ui_q7=97B4Ofw@mail.gmail.com>
-References: <3f4567fc.f496.19e3b2b297b.Coremail.23020251154299@stu.xmu.edu.cn>
- <CAMgjq7AD2ivdgD_kRx+0+w0M=Fvz5dXepw84_Ui_q7=97B4Ofw@mail.gmail.com>
-X-CM-CTRLMSGS: =?B?ZVlcYDiH6nJ5xwDR7hwMki1N8jM=
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+	s=arc-20240116; t=1779177497; c=relaxed/simple;
+	bh=TZ0RN3qnNzUPKYI6sc0z1cZ1dFrGqG8XGPMWNd6bguI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=dP/Ysa8SpjLIDLEIGNcNjO+W/AFPyDDiaePig8hvE1XL3YRgHhtybPwR8Lqi5MH1bkm0bcOlr8ZiwlUfRvIjhqOoINJK5IVg1Tnn2SF/8v3WckHvfmsfz7UdspkIbqfVojoVSdl2saJoyJEyFDTVaVa8avJM2K8GHqJACCwm/j4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eGM07DYn; arc=none smtp.client-ip=74.125.82.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eGM07DYn"
+Received: by mail-dl1-f54.google.com with SMTP id a92af1059eb24-1309f4ee97fso3540665c88.1
+        for <regressions@lists.linux.dev>; Tue, 19 May 2026 00:58:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1779177495; x=1779782295; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=q7SDGHJz2p+KDEC7XABBWobKGkDCgsLu+7qpYk+YyVw=;
+        b=eGM07DYnXTakiVEQ8XteXVQ0ypbOucpPDbzZ2Mm6Au9iMmHT33eO2x8ozBasCyQGLP
+         OMli6n2WedJGu23HOotR9O+q8os/ckKX9tQ5v9OkaUcjZGIhf9iIhastGCqa2P/sD/jF
+         8JYORRtbBSXSqxBjSQBKyVdN/4auZ91+TfG7sSrUond33GRCmiNLUIezAX5mBIJdpUIG
+         oD5aIpfNMJ+wE/mcbBZeSXA9zEwoC7x4Z8y0AO/dt4OCaJ08cdv6XHADv8Ta6jEDPAz7
+         26MvZgBEv3TwGmBT7UGdn8kpWg58zIC9wXot+YGBccVWnk21vKTDIwX+300AryaRlu+v
+         2fvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779177495; x=1779782295;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=q7SDGHJz2p+KDEC7XABBWobKGkDCgsLu+7qpYk+YyVw=;
+        b=VPviTLtMIlccm85Mj9P5WAh3xZSbZyxlrtcgPKSimLPLRa9s7V9tMBggf1uTpA8yH+
+         rnJ6iRR/8epuaqWbe2K4Nif2R1OBleCxSJyqlTHs+DqvcMiNwIvjdH5vXxF6QkHMeVYF
+         CMTgYa7NBfEcAKmhYbcqDliJff5ZMKWLXjAwXi4LHsxK3x0VAE3d3dV/3uiL/CWB2YHP
+         TOx/uNgHAJoAm2Z8S1Zgz5ANqoi8SrnMY6IrEvf2bFKhiBrtFZ1Y00WWXBpzRMX5Iglz
+         eyItv70N/LThqH4XCrMkL/k6/o8T3g/gHZ1xvJUQo5Na31WNvfaWrjdMtd/kVdNKWlwU
+         SgRw==
+X-Forwarded-Encrypted: i=1; AFNElJ/JGmtDXaPYkqcO70r79YOHMaErhVbaaa9X/xAnhSknk5lAnGlXYCUtW8KTsZYTMCSUMfN8GRhe/Ctwog==@lists.linux.dev
+X-Gm-Message-State: AOJu0YyMVrxQ59/rFsrCU/U/SskxrJsVybsn9NlojKxXXIkK8uBq1ez/
+	1butByqYoH4mWkcCHr4lQwnQdga/2o2cuFeHZRgTnZljZTKCfUSkHPXg
+X-Gm-Gg: Acq92OFNUyIzmiZC3nJFC+ZbJS8icfA4OHmBhiOjwFdyS94wf+2R4svwSWMbmwHBZE4
+	xksPqQSUMxrRkHK41TDvsBlSk6JvoOxe4fBTNVtB0dcmhcO8hUyHum/AgMztl+pL+MmBUT4qfeR
+	qqLUXPSklNBe0S/vYYBtFsiH1ssxbXpzFOlZ2aZOiGuvh3ZRdqj0HUjju9vyc/HQRdyfaXm+Yb3
+	65GvXBJ8DvQ7kRiuNrl4ht1RfaPWoOyH4u7gKtvrR5vheIR36wX8ufFouF1c9UQovYeVXOAGmUH
+	b9gGhlpUXQu6z/RlrKk42nUW0z7HFm8+9dAKEp7pZsD/iX001l5zB+IKGNcgUxcXfylGBruUiXh
+	wWNy96PPXAZ2x6CsM3ahoWyRyrOFWwXgo+FphHNNLvNPT8fyhCZmfhA+RVF+SaxamybbzONkLuZ
+	UnvUesYehoElbyQ9LLq9YDzacMQrSv6K8Nud4L
+X-Received: by 2002:a05:7022:6082:b0:12b:f616:1a4e with SMTP id a92af1059eb24-13504740a2fmr7096626c88.23.1779177494893;
+        Tue, 19 May 2026 00:58:14 -0700 (PDT)
+Received: from s7t7-debian-test.local ([67.170.89.46])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-134cf44668asm18768901c88.6.2026.05.19.00.58.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 May 2026 00:58:14 -0700 (PDT)
+From: Tony Rodriguez <unixpro1970@gmail.com>
+To: davem@davemloft.net,
+	sparclinux@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	andreas@gaisler.com,
+	thuth@redhat.com,
+	regressions@lists.linux.dev,
+	glaubitz@physik.fu-berlin.de,
+	unixpro1970@gmail.com
+Subject: [PATCH 0/1] sparc64: unify thread stack sizing and add explicit 32KB stack
+Date: Tue, 19 May 2026 00:57:54 -0700
+Message-ID: <20260519075809.8993-1-unixpro1970@gmail.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Message-ID: <5ea2e480.f8c4.19e3f226b6d.Coremail.23020251154299@stu.xmu.edu.cn>
-X-Coremail-Locale: en_US
-X-CM-TRANSID:AQAAfwCXsfIBEQxqrNhBAA--.4453W
-X-CM-SenderInfo: astqjiysvrikiuszmqhvwxh5lpxovvfxof0/1tbiAQALEGoKJkIFV
-	AAEsL
-Authentication-Results: hzbj-icmmx-6; spf=neutral smtp.mail=2302025115
-	4299@stu.xmu.edu.cn;
-X-Coremail-Antispam: 1Uk129KBjvJXoW3XrykXFWxtFyrJr4rWr13twb_yoW7uFy5pF
-	ZYg3ZrGrsrtr97J39Fvw4DWF1jy393GF4fJFn8Gr4kur98uasYgr429r1rXasFkr1DWFWY
-	9rWqy3srWFykA3DanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	DUYxn0WfASr-VFAU7a7-sFnT9fnUUIcSsGvfJ3UbIYCTnIWIevJa73UjIFyTuYvj4RJUUU
-	UUUUU
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-SGksDQoNClRoYW5rcyBmb3IgbG9va2luZyBhdCB0aGlzLiBZb3VyIGNvbW1lbnRzIG1ha2Ugc2Vu
-c2UsIGFuZCBzb3JyeSBmb3IgdGhlDQpjb25mdXNpbmcgd29yZGluZyBpbiB0aGUgb3JpZ2luYWwg
-cmVwb3J0Lg0KDQpZb3UgYXJlIHJpZ2h0IHRoYXQsIHdpdGggbm8gc3dhcCBjb25maWd1cmVkLCB0
-aGlzIHNob3VsZCBub3QgYmUgZGVzY3JpYmVkDQphcyBhIHJlYWwgcGFnZW91dC9yZWZhdWx0IGNh
-c2UuIEEgbW9yZSBhY2N1cmF0ZSBkZXNjcmlwdGlvbiBpcyBhDQpNQURWX1BBR0VPVVQgYW5vbi9U
-SFAgbm8tc3dhcCByZWNsYWltLWZhaWx1cmUgcGF0aC4gVGhlIGxhdGVyIHdyaXRlLXRvdWNoDQpp
-cyBqdXN0IHBhcnQgb2YgdGhlIHdvcmtsb2FkIGl0ZXJhdGlvbjsgaXQgc2hvdWxkIG5vdCBiZSBw
-cmVzZW50ZWQgYXMNCmV2aWRlbmNlIHRoYXQgdGhlIHBhZ2VzIHdlcmUgYWN0dWFsbHkgcGFnZWQg
-b3V0IGFuZCBmYXVsdGVkIGJhY2sgaW4uDQoNCkFsc28sIGN5Y2xlX25zX3Blcl9wYWdlIGlzIHBv
-b3JseSBuYW1lZC4gSGVyZSAiY3ljbGUiIG1lYW5zIG9uZSBmdWxsDQp3b3JrbG9hZCBpdGVyYXRp
-b24sIG5vdCBDUFUgY3ljbGVzLiBUaGUgbWV0cmljIGlzIHdhbGwtY2xvY2sgbmFub3NlY29uZHMN
-CnBlciBwYWdlIGZvciBvbmUgY29tcGxldGUgd29ya2xvYWQgaXRlcmF0aW9uLiBJIHdpbGwgbWFr
-ZSB0aGF0IGNsZWFyZXIgaW4NCmZ1dHVyZSBkZXNjcmlwdGlvbnMuDQoNCkkgYWdyZWUgdGhhdCB0
-aGUgZW5kLXRvLWVuZCB0aW1pbmcgYnkgaXRzZWxmIGlzIG5vdCBlbm91Z2ggdG8gc2hvdyB3aGVy
-ZQ0KdGhlIHRpbWUgaXMgc3BlbnQuIEkgd2lsbCBjb2xsZWN0IGEgcGVyZiBvciBmdHJhY2UgYnJl
-YWtkb3duIGNvbXBhcmluZw0KdjYuMTIuNzcgYW5kIHY2LjE5LjksIGFuZCBmb2xsb3cgdXAgd2l0
-aCB0aGUgcmVzdWx0cyBvbiB0aGlzIHRocmVhZC4NCg0KVGhhbmtzLA0KQ2hlbmdmZW5nDQoKCgo+
-IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tCj4gRnJvbTogIkthaXJ1aSBTb25nIiA8cnluY3Nu
-QGdtYWlsLmNvbT4KPiBTZW50OlR1ZXNkYXksIDA1LzE5LzIwMjYgMDI6MTQ6NDEKPiBUbzogIkNo
-ZW5nZmVuZyBMaW4iIDwyMzAyMDI1MTE1NDI5OUBzdHUueG11LmVkdS5jbj4KPiBDYzogIkFuZHJl
-dyBNb3J0b24iIDxha3BtQGxpbnV4LWZvdW5kYXRpb24ub3JnPiwgbGludXgtbW1Aa3ZhY2sub3Jn
-LCAiTGlhbSBSLiBIb3dsZXR0IiA8TGlhbS5Ib3dsZXR0QG9yYWNsZS5jb20+LCAiTG9yZW56byBT
-dG9ha2VzIiA8bG9yZW56by5zdG9ha2VzQG9yYWNsZS5jb20+LCAiRGF2aWQgSGlsZGVuYnJhbmQi
-IDxkYXZpZEBrZXJuZWwub3JnPiwgIlZsYXN0aW1pbCBCYWJrYSIgPHZiYWJrYUBzdXNlLmN6Piwg
-Ikphbm4gSG9ybiIgPGphbm5oQGdvb2dsZS5jb20+LCAiSm9oYW5uZXMgV2VpbmVyIiA8aGFubmVz
-QGNtcHhjaGcub3JnPiwgIk1pY2hhbCBIb2NrbyIgPG1ob2Nrb0BrZXJuZWwub3JnPiwgIlFpIFpo
-ZW5nIiA8emhlbmdxaS5hcmNoQGJ5dGVkYW5jZS5jb20+LCAiU2hha2VlbCBCdXR0IiA8c2hha2Vl
-bC5idXR0QGxpbnV4LmRldj4sICJDaHJpcyBMaSIgPGNocmlzbEBrZXJuZWwub3JnPiwgbGludXgt
-a2VybmVsQHZnZXIua2VybmVsLm9yZywgcmVncmVzc2lvbnNAbGlzdHMubGludXguZGV2Cj4gU3Vi
-amVjdDogUmU6IFtSRUdSRVNTSU9OXSBtbTogTUFEVl9QQUdFT1VUIFRIUC9uby1zd2FwIHJlZmF1
-bHQgdGFrZXMgfjEuN3ggbG9uZ2VyIG9uIHY2LjE5IHRoYW4gdjYuMTIKPiAKPiBPbiBNb24sIE1h
-eSAxOCwgMjAyNiBhdCA5OjA54oCvUE0gQ2hlbmdmZW5nIExpbgo+IDwyMzAyMDI1MTE1NDI5OUBz
-dHUueG11LmVkdS5jbj4gd3JvdGU6Cj4gPgo+ID4gSGksCj4gPgo+ID4gSSB3b3VsZCBsaWtlIHRv
-IHJlcG9ydCBhIHVzZXJzcGFjZS12aXNpYmxlIHBlcmZvcm1hbmNlIHJlZ3Jlc3Npb24gaW4gYQo+
-ID4gTUFEVl9QQUdFT1VUIHdvcmtsb2FkLgo+IAo+IEhpIENoZW5nZmVuZywKPiAKPiBUaGFua3Mg
-Zm9yIHRoZSByZXBvcnQuIFZlcnkgaW50ZXJlc3RpbmcsIGJ1dCBpdCBsb29rcyBhIGJpdCBjb25m
-dXNpbmcuCj4gWW91IGFyZSBkb2luZyBQQUdFT1VUIG9mIGFub24gcGFnZXMgd2l0aG91dCBzd2Fw
-IHNldHVwLCBzbyBub3RoaW5nIGlzCj4gYWN0dWFsbHkgYmVpbmcgcGFnZW91dGVkPwo+IAo+ID4g
-VGhlIHdvcmtsb2FkIGlzIGludGVudGlvbmFsbHkgbmFycm93Ogo+ID4KPiA+ICAgLSBtYXAgMTYg
-TWlCIGFub255bW91cyBtZW1vcnkKPiA+ICAgLSB1c2UgdGhlIGRlZmF1bHQgVEhQIHBvbGljeQo+
-ID4gICAtIHJ1biBpbiBhIGd1ZXN0IHdpdGggbm8gY29uZmlndXJlZCBzd2FwCj4gPiAgIC0gY2Fs
-bCBtYWR2aXNlKE1BRFZfUEFHRU9VVCkKPiA+ICAgLSByZWZhdWx0L3dyaXRlLXRvdWNoIHRoZSBt
-YXBwaW5nCj4gPgo+ID4gVGhpcyBpcyBub3QgbWVhbnQgYXMgYSBnZW5lcmljIG1hZHZpc2UoKSBv
-ciBnZW5lcmljIE1BRFZfUEFHRU9VVAo+ID4gcmVncmVzc2lvbiByZXBvcnQuIFRoZSBzaWduYWwg
-aXMgY3VycmVudGx5IHNjb3BlZCB0byB0aGUgVEhQICsgbm8tc3dhcCArCj4gPiByZWZhdWx0L3dy
-aXRlLXRvdWNoIHdvcmtmbG93IGFib3ZlLgo+ID4KPiA+IFRoZSBjdXJyZW50IHB1YmxpYyBldmlk
-ZW5jZSBidW5kbGUgaXMgaGVyZToKPiA+Cj4gPiAgIGh0dHBzOi8vZ2l0aHViLmNvbS9sY2YwMzk5
-L2xpbnV4LW1tLXJlZ3Jlc3Npb24tZXZpZGVuY2UtMjAyNi0wNS90cmVlL2UxMzQ2OWIvbWFkdmlz
-ZS1wYWdlb3V0LXRocC1ub3N3YXAtcmVmYXVsdAo+ID4KPiA+IFRoZSBzdGFuZGFsb25lIHdvcmts
-b2FkIHNvdXJjZSBpcyBoZXJlOgo+ID4KPiA+ICAgaHR0cHM6Ly9naXRodWIuY29tL2xjZjAzOTkv
-bGludXgtbW0tcmVncmVzc2lvbi1ldmlkZW5jZS0yMDI2LTA1L3RyZWUvZTEzNDY5Yi9tYWR2aXNl
-LXBhZ2VvdXQtdGhwLW5vc3dhcC1yZWZhdWx0L3dvcmtsb2FkCj4gPgo+ID4gVGhlIGZvcm1hbCBl
-eHBlcmltZW50IHByb2ZpbGUgaXMgaGVyZToKPiA+Cj4gPiAgIGh0dHBzOi8vZ2l0aHViLmNvbS9s
-Y2YwMzk5L2xpbnV4LW1tLXJlZ3Jlc3Npb24tZXZpZGVuY2UtMjAyNi0wNS90cmVlL2UxMzQ2OWIv
-bWFkdmlzZS1wYWdlb3V0LXRocC1ub3N3YXAtcmVmYXVsdC9leHBlcmltZW50cwo+ID4KPiA+IFRo
-ZSBmb3JtYWwgdGltaW5nIHJ1bnMgY29tcGFyZSB2Ni4xMi43NyBhbmQgdjYuMTkuOSB3aXRoIHNp
-bWlsYXIga2VybmVsCj4gPiBjb25maWd1cmF0aW9uLCB1c2luZyBRRU1VIGRpcmVjdCBib290LiBU
-aGUgZm9ybWFsIHBlcmZvcm1hbmNlIHJ1bnMgd2VyZQo+ID4gY2xlYW4gdGltaW5nIHJ1bnMgd2l0
-aCBjb3ZlcmFnZSBkaXNhYmxlZC4gQ292ZXJhZ2Ugd2FzIGNvbGxlY3RlZAo+ID4gc2VwYXJhdGVs
-eSBhbmQgaXMgbm90IHVzZWQgZm9yIHRoZSB0aW1pbmcgbnVtYmVycyBiZWxvdy4KPiA+Cj4gPiBM
-YWIgZW52aXJvbm1lbnQ6Cj4gPgo+ID4gICBob3N0IGxhYmVsOiBsY2YKPiA+ICAgaG9zdCBrZXJu
-ZWw6IExpbnV4IDYuMTQuMC0zNy1nZW5lcmljIHg4Nl82NAo+ID4gICBRRU1VOiBxZW11LXN5c3Rl
-bS14ODZfNjQgOC4yLjIKPiA+ICAgY29udGFpbmVyL2Nncm91cCBDUFUgc2V0OiAwLDIsNCw2LDgs
-MTAsMTIsMTQKPiA+ICAgY29udGFpbmVyL2Nncm91cCBtZW1vcnkgbGltaXQ6IDE2MTA2MTI3MzYw
-IGJ5dGVzCj4gPiAgIGd1ZXN0IG1lbW9yeTogUUVNVV9NRU1fTUI9MTQzMzYKPiA+ICAgZ3Vlc3Qg
-Q1BVczogUUVNVV9TTVA9MS8yLzQKPiA+ICAgcmVwZXRpdGlvbnM6IDkKPiA+ICAgdmVyc2lvbiBv
-cmRlcjogaW50ZXJsZWF2ZWQKPiA+ICAgcGVyZm9ybWFuY2UgY292ZXJhZ2VfZW5hYmxlZDogZmFs
-c2UKPiA+Cj4gPiBQcmltYXJ5IHJlc3VsdCwgY3ljbGVfbnNfcGVyX3BhZ2UsIGxvd2VyIGlzIGJl
-dHRlcjoKPiAKPiBXaGF0IGlzIGN5Y2xlX25zX3Blcl9wYWdlPyBUaGUgbmFtZSBpcyBhbWJpZ3Vv
-dXMuICJjeWNsZSIgcmVhZHMgbGlrZQo+IENQVSBjeWNsZXMgYnV0IHRoZSB2YWx1ZSBkb2Vzbid0
-IG1hdGNoLiBPciB5b3UgbWVhbiBpdGVyYXRpb24/IENhbiB5b3UKPiBtYWtlIHRoaXMgY2xlYW5l
-cj8KPiAKPiA+ICAgQ1BVICAgdjYuMTIuNzcgICB2Ni4xOS45ICAgb2xkLWxvd2VyLXZzLW5ldyAg
-IHY2LjE5L3Y2LjEyCj4gPiAgICAgMSAgICAgMTkwMC4zICAgIDMzMDQuNyAgICAgICAgNDIuNSUg
-ICAgICAgICAgICAgMS43NHgKPiA+ICAgICAyICAgICAyMTA3LjcgICAgMzU4My4yICAgICAgICA0
-MS4yJSAgICAgICAgICAgICAxLjcweAo+ID4gICAgIDQgICAgIDIxNTQuMiAgICAzNjkwLjkgICAg
-ICAgIDQxLjYlICAgICAgICAgICAgIDEuNzF4Cj4gPgo+ID4gTUFEVl9QQUdFT1VUIHN5c2NhbGwv
-cmVjbGFpbS1zaWRlIHNlZ21lbnQsIGFkdmlzZV9uc19wZXJfcGFnZSwgbG93ZXIgaXMKPiA+IGJl
-dHRlcjoKPiA+Cj4gPiAgIENQVSAgIHY2LjEyLjc3ICAgdjYuMTkuOSAgIG9sZC1sb3dlci12cy1u
-ZXcgICB2Ni4xOS92Ni4xMgo+ID4gICAgIDEgICAgIDE3MTMuMiAgICAyOTIyLjcgICAgICAgIDQx
-LjQlICAgICAgICAgICAgIDEuNzF4Cj4gPiAgICAgMiAgICAgMTkyNC43ICAgIDMxNjIuOSAgICAg
-ICAgMzkuMSUgICAgICAgICAgICAgMS42NHgKPiA+ICAgICA0ICAgICAxOTUzLjEgICAgMzI4NC4y
-ICAgICAgICA0MC41JSAgICAgICAgICAgICAxLjY4eAo+ID4KPiA+IFRoZSBjdXJyZW50IG1lY2hh
-bmlzbSBpbnRlcnByZXRhdGlvbiBpcyB0aGF0IHRoZSB0aW1pbmcgZGlmZmVyZW5jZSBpcyBpbgo+
-ID4gdGhlIE1BRFZfUEFHRU9VVC9yZWNsYWltIHBhcnQsIG5vdCBwcmltYXJpbHkgaW4gdGhlIGxh
-dGVyIHJlZmF1bHQgdG91Y2guCj4gCj4gUmlnaHQsIHdpdGggbm8gc3dhcCBjb25maWd1cmVkLCB0
-aGUgcG9zdC1hZHZpc2Ugc2hvdWxkIG5vdCBiZSBmYXVsdGluZwo+IGF0IGFsbCBJIHRoaW5rPyBJ
-dCB3aWxsIGp1c3Qgc3BsaXQgdGhlIHBhZ2VzIElJVUMsIGhvd2V2ZXIsIHRoYXQgbWlnaHQKPiBj
-YXVzZSBtb3JlIFRMQiBwcmVzc3VyZS4gQnV0IHRoaXMgc3BsaXQtb24tYWxsb2MtZmFpbHVyZSBw
-YXRoIGl0c2VsZgo+IHdhc24ndCBjaGFuZ2VkIGZyb20gNi4xMiB0byA2LjE4LiBJZiB0aGVyZSBp
-cyBubyBzd2FwLCB3ZSBjYW4gc2tpcCB0aGUKPiBzcGxpdCB0aG91Z2gsIGFuZCBtYXliZSBtYWtl
-IGZvbGlvX2FsbG9jX3N3YXAgZmFpbCBhIGJpdCBmYXN0ZXIuCj4gU2tpcHBpbmcgdGhlIHNwbGl0
-IHNlZW1zIG1vcmUgbWVhbmluZ2Z1bCBhbmQgY291bGQgc2lnbmlmaWNhbnRseSBzcGVlZAo+IHVw
-IHRoaXMgc3BlY2lmaWMgdGVzdCwgaWYgdGhpcyBpcyBuZWNlc3NhcnkuCj4gCj4gPiBUaGUgcGF0
-aCBldmlkZW5jZSBwb2ludHMgYXQgdGhlIG5vLXN3YXAgcmVjbGFpbS9zd2FwLWFsbG9jYXRpb24t
-ZmFpbHVyZQo+ID4gY2hhaW46Cj4gPgo+ID4gICBtYWR2aXNlKE1BRFZfUEFHRU9VVCkKPiA+ICAg
-ICAtPiByZWNsYWltX3BhZ2VzKCkKPiA+ICAgICAtPiBzaHJpbmtfZm9saW9fbGlzdCgpCj4gPiAg
-ICAgLT4gZm9saW9fYWxsb2Nfc3dhcCgpCj4gPiAgICAgLT4gc3dhcCBhbGxvY2F0aW9uIGZhaWx1
-cmUgcGF0aAo+IAo+IFdoYXQgeW91IHBvc3RlZCwgaW5jbHVkZSB0aGF0IHJlcG8sIHNlZW1zIG9u
-bHkgaGFzIGVuZCB0byBlbmQgdGltaW5nLgo+IEl0IHdvdWxkIGJlIG11Y2ggbW9yZQo+IHVzZWZ1
-bCBpZiB5b3UgY29sbGVjdCBhIHBlcmYgb3IgZnRyYWNlIGJyZWFrZG93biBzb21ldGhpbmcgbGlr
-ZToKPiBodHRwczovL2xvcmUua2VybmVsLm9yZy9hbGwvQ0FNZ2pxN0JmTz1kTlllcDR6MWFTN25V
-QUpVM2JrdFIxN2dZQXVmeD1ra0x1ZHE0ZEFRQG1haWwuZ21haWwuY29tLwo+IAo+IE9yIGxpa2Ug
-dGhpczoKPiBodHRwczovL2xvcmUua2VybmVsLm9yZy9hbGwvMjAyNjA0MjIwMDM0MTIuMTE2Nzgt
-MS14dWV5dWFuLmNoZW4yMUBnbWFpbC5jb20vCg==
+This patch fixes a reproducible stack exhaustion issue on SPARC64
+that occurs during USB hub enumeration. This regression may have
+started sometime after kernel v6.12. With the default 16KB kernel
+stack, the following panic is triggered early in boot:
+
+    [   25.528399] Call Trace:
+    [   25.528403] [<0000000000433cd4>] dump_stack+0x8/0x18
+    [   25.528419] [<00000000004297ac>] vpanic+0xdc/0x318
+    [   25.528429] [<0000000000429a0c>] panic+0x24/0x30
+    [   25.528436] [<0000000000be2280>] __schedule+0xa8/0x7bc
+    [   25.528445] [<0000000000be2b60>] schedule+0x24/0x4c
+    [   25.528452] [<0000000000be6970>] schedule_timeout+0xc8/0xe4
+    [   25.528459] [<0000000000be3318>] __wait_for_common+0x78/0xf0
+    [   25.528466] [<0000000000be3550>] wait_for_completion_timeout+0x1c/0x2c
+    [   25.528473] [<000000001005e2f4>] usb_start_wait_urb+0x68/0x128 [usbcore]
+    [   25.528502] [<000000001005e468>] usb_control_msg+0xb4/0xf8 [usbcore]
+    [   25.528518] [<0000000010051180>] set_port_feature+0x44/0x54 [usbcore]
+    [   25.528530] [<00000000100530f0>] hub_power_on+0xc8/0xe8 [usbcore]
+    [   25.528543] [<0000000010054fd8>] hub_activate+0x12c/0x644 [usbcore]
+    [   25.528557] [<0000000010059438>] hub_probe+0xdd4/0xeb0 [usbcore]
+    [   25.528570] [<0000000010062360>] usb_probe_interface+0x234/0x26c [usbcore]
+    [   25.528585] [<0000000000a10a40>] really_probe+0x1ac/0x3b0
+
+This is caused by large SPARC64 trapframes, register-window spills,
+and deep call paths in usbcore. A 16KB stack is insufficient for
+this workload.
+
+The new logic is:
+
+    SPARC64:
+        THREAD_SIZE = 4 * PAGE_SIZE (32KB)
+        THREAD_SHIFT = PAGE_SHIFT + 2
+        THREAD_SIZE_ORDER = 2
+
+    Non‑SPARC64 with PAGE_SHIFT == 13:
+        Retains the existing 16KB stack behavior
+
+    Fallback:
+        Retains the existing 8KB stack behavior
+
+Signed-off-by: Tony Rodriguez <unixpro1970@gmail.com>
+
+
+Tony Rodriguez (1):
+  sparc64: unify thread stack sizing and add explicit 32KB stack
+
+ arch/sparc/include/asm/thread_info_64.h | 28 ++++++++++++-------------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
+
+--
+2.53.0
 
