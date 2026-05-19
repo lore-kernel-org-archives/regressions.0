@@ -1,79 +1,163 @@
-Received: from comms.kousu.ca (comms.kousu.ca [46.23.90.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from phan-van4.scw-tem.cloud (phan-van4.scw-tem.cloud [51.159.124.109])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8B5E2F12B3
-	for <regressions@lists.linux.dev>; Tue, 19 May 2026 17:26:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.23.90.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 019934028C6
+	for <regressions@lists.linux.dev>; Tue, 19 May 2026 17:37:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.159.124.109
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779211580; cv=none; b=tu/hZfNpzmyWPzHz0jd6lEbQ6hUX7CeeRX83GfC6PFMR6dr6Q/14zyXXFHmiiO+SVjmkvxPrnjg5JAW6D9jy4q9O8NL9x2+k48wdIBiYRTNjhdhTRqXpIuLIL/byAxiAvyCPzfuNbORZM51OxelNLQTjp+NFeiwkputextgU2Ns=
+	t=1779212277; cv=none; b=cfkvFZEn5g2AznrbKcPx5XAugqCDKCI6byG0Ug0ihAb1LMTlF9ZpgGuaDDRYmMAfONKItRerJKVW0BES3iUm/GaoT5n/V5xd16/xwa6CUvpTxyv27Y3QsGqGZZnX4gBB2dLjVTzWnZuJwqV5TNdGHpBMvx+4APX0M/+udX7awfc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779211580; c=relaxed/simple;
-	bh=cHwMJaARA/IKd6jTUeKQL/jjhAGlTHo3byD5ccnvl+w=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=X3FGmDjHXPaOItWrwnrcIJSn338vSP5JQReyj5mULwxhXHtYc8bxFxsOtT9cnFmRSA4T/RcJvgmo8KVznVMVutGgTPQtRFA0TqRpUU3lKYGQ0nuRsLwCDrvbpk9zFby/eTjbNf+VLt94EMH9JT17Q3MUiHEWvLUztdGTL+TX3/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kousu.ca; spf=pass smtp.mailfrom=kousu.ca; dkim=permerror (0-bit key) header.d=kousu.ca header.i=@kousu.ca header.b=2SVE0/pb; dkim=pass (2048-bit key) header.d=kousu.ca header.i=@kousu.ca header.b=bbBHK0F+; arc=none smtp.client-ip=46.23.90.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kousu.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kousu.ca
+	s=arc-20240116; t=1779212277; c=relaxed/simple;
+	bh=Hh1YcciGZumXppFcnqOssFAiw5yBXVmcqR70GJ2lvdg=;
+	h=Message-ID:Date:Mime-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tPi1/z9dhEKonflOfqb2jgZB9nZa9mJq6XZzrvFiQZH5+h288BGf0hO3RSYmkEJzpSLXpf1Xxb1zDRadryk/bCHYN9A08MN5fy4BdePbkYX3H5+K84854bFV4fTLQFvSkgi5vsglD+G1N+nPs6KrCCxTkP2Uw/cNsBn2xaGfFQY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=augustwikerfors.se; spf=pass smtp.mailfrom=augustwikerfors.se; dkim=pass (2048-bit key) header.d=augustwikerfors.se header.i=@augustwikerfors.se header.b=lBMZD9Kd; arc=none smtp.client-ip=51.159.124.109
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=augustwikerfors.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=augustwikerfors.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=permerror (0-bit key) header.d=kousu.ca header.i=@kousu.ca header.b="2SVE0/pb";
-	dkim=pass (2048-bit key) header.d=kousu.ca header.i=@kousu.ca header.b="bbBHK0F+"
-DKIM-Signature: v=1; a=ed25519-sha256; c=simple/simple; s=ed25519; bh=cHwMJaAR
-	A/IKd6jTUeKQL/jjhAGlTHo3byD5ccnvl+w=; h=references:in-reply-to:
-	subject:cc:to:from:date; d=kousu.ca; b=2SVE0/pboCLMoat/88OtiDfPyDrHMeS
-	kNCKbMnRodzJ8YYLb2zT4PzTAwhr/5LjWmCA0yClN7RKVsCXYjSJAAA==
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; s=rsa; bh=cHwMJaARA/IKd6jT
-	UeKQL/jjhAGlTHo3byD5ccnvl+w=; h=references:in-reply-to:subject:cc:to:
-	from:date; d=kousu.ca; b=bbBHK0F+ETMIdXbIut25aL4fdRR7Q7B/Ypp2BEgINBeuN
-	aumR1JbCMb+IMoiaK2MYn6vo6geDffpnN+vHxlDuqR17QQ3e6Rv21PPDmx6RdOp0hDoNTN
-	l/PFZ5BOjW6nqA/JIVW7UkjChQTZ/xbzYFIOTIabHniVenbBl7fcVMqAJ1esbTIjfEilJS
-	LtMTDdNFtbRuPqJgMC8eELu4RUK7Upw6ANmj/zIewmUOy/0YnTGw/5iL1wfkHNCGXHTEhv
-	82j+3YH/ck3WSQF3dG+D8fHRorym0ApOof/eRmyv7dXLPy5+QQTC0cu6K/K8f+mh2xnHf/
-	HBm1XU3jCXjVbCOSg==
-Received: from ehlo.thunderbird.net (<unknown> [2606:6d00:15:c187:61b4:8831:db57:8e68])
-	by comms.kousu.ca (OpenSMTPD) with ESMTPSA id 30f8d29c (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-	Tue, 19 May 2026 19:26:05 +0200 (CEST)
-Date: Tue, 19 May 2026 17:26:00 +0000
-From: Nick <nick@kousu.ca>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-CC: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, regressions@lists.linux.dev,
- linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pm@vger.kernel.org
-Subject: Re: [REGRESSION] Toshiba Fn keys + lidswitch
-In-Reply-To: <12896447.O9o76ZdvQC@rafael.j.wysocki>
-References: <E2OXET.4X5GTP37VTNC3@kousu.ca> <CAJZ5v0jVQyWYqPo_MiUwNQb7FLNR_Q_++Xq=xA1owcHpcjN=OA@mail.gmail.com> <12896447.O9o76ZdvQC@rafael.j.wysocki>
-Message-ID: <1B3380AD-5B40-4A39-8E61-3F5A41CD6D01@kousu.ca>
+	dkim=pass (2048-bit key) header.d=augustwikerfors.se header.i=@augustwikerfors.se header.b="lBMZD9Kd"
+Message-ID: <e666c332-e2aa-4525-a208-a4a08742d2e0@augustwikerfors.se>
+Date: Tue, 19 May 2026 19:37:35 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Subject: Re: [GIT PULL] bluetooth 2026-05-14
+To: Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+ Greg KH <gregkh@linuxfoundation.org>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
+ "stable@vger.kernel.org" <stable@vger.kernel.org>,
+ Sasha Levin <sashal@kernel.org>, linux-bluetooth@vger.kernel.org,
+ netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ Linus Torvalds <torvalds@linux-foundation.org>
+References: <20260514172340.1515042-1-luiz.dentz@gmail.com>
+ <f5cf1c30-48a4-4102-ae00-b74cf02e639e@leemhuis.info>
+ <4946f5f3-b7e2-4949-89f7-6427015027c6@leemhuis.info>
+ <2026051954-revision-sierra-6bb4@gregkh>
+ <eb5301f9-3133-4fe3-b358-61f14d1ffa5b@leemhuis.info>
+ <2026051909-impurity-nemesis-2f65@gregkh>
+ <CABBYNZKKbTXc-okp9P2OncMYXHX9C1XC+pRC7XWOhv-8nPNZ5A@mail.gmail.com>
+ <2026051942-uproar-drainpipe-6370@gregkh>
+ <CABBYNZKzWgL3nmeA=CtN9s80LRyDiJ97aQXgvfSm9vYUBw_SpA@mail.gmail.com>
+Content-Language: en-US
+From: August Wikerfors <git@augustwikerfors.se>
+In-Reply-To: <CABBYNZKzWgL3nmeA=CtN9s80LRyDiJ97aQXgvfSm9vYUBw_SpA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Scw-Domain: augustwikerfors.se
+X-Scw-Tem-Message-Id: b807181e-083e-4510-880a-8e8153927351
+DKIM-Signature: a=rsa-sha256; bh=Txy3fsJraKmT/pLDtNhESFuzdhjEx/YzrQC5SlbqiTY=;
+ c=relaxed/relaxed; d=augustwikerfors.se;
+ h=message-id:date:subject:to:cc:from;
+ s=812a4465-b64d-440c-bdd2-3148e8f56cf0; t=1779212260; v=1;
+ b=lBMZD9Kd+T5V+7XewGRsx0w0BZFXZO0Zk9NSl3kzyhehcF9E/YUIMHGil1mpX4Es+P+mhtU0
+ ZMqqlJ9MKTebANvtAraehHuBU9ld3Nj93udTNHLRs3pvYgCR15krTgAqM9UROkxRDZUvpJrS7Gy
+ RbH74EGsermX8dX9Cd1vrkzxl96q+jF0mvRwXzF1y9wdTAxt/2T4YkuxHNjJ9qWR3GnJ0+wFN1X
+ SUWBe2aTbyOZGTdk7knsXDY/eE/FqRpVhvsaU0g+6hJDZF7WWej1h6U6tNF+f/kptb2no/M8ny0
+ oLesXcJN22M3hV8wYUPpKLY8WE4yO6DWPsF+R6RtfzqIg==
 
+On 2026-05-19 17:49, Luiz Augusto von Dentz wrote:
+> Hi Greg,
+> 
+> On Tue, May 19, 2026 at 11:19 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+>>
+>> On Tue, May 19, 2026 at 09:44:39AM -0400, Luiz Augusto von Dentz wrote:
+>>> Hi Greg,
+>>>
+>>> On Tue, May 19, 2026 at 8:07 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+>>>>
+>>>> On Tue, May 19, 2026 at 12:53:49PM +0200, Thorsten Leemhuis wrote:
+>>>>> On 5/19/26 12:30, Greg KH wrote:
+>>>>>> On Tue, May 19, 2026 at 09:04:38AM +0200, Thorsten Leemhuis wrote:
+>>>>>>> On 5/15/26 17:10, Thorsten Leemhuis wrote:
+>>>>>>>> On 5/14/26 19:23, Luiz Augusto von Dentz wrote:
+>>>>>>>>
+>>>>>>>>> The following changes since commit c78bdba7b9666020c0832150a4fc4c0aebc7c6ac:
+>>>>>>>>>    net: phy: DP83TC811: add reading of abilities (2026-05-14 15:17:12 +0200)
+>>>>>>>>>
+>>>>>>>>> are available in the Git repository at:
+>>>>>>>>>
+>>>>>>>>>    git://git.kernel.org/pub/scm/linux/kernel/git/bluetooth/bluetooth.git tags/for-net-2026-05-14
+>>>>>>>>>
+>>>>>>>>> for you to fetch changes up to 375ba7484132662a4a8c7547d088fb6275c00282:
+>>>>>>>>>
+>>>>>>>>>    Bluetooth: hci_qca: Convert timeout from jiffies to ms (2026-05-14 09:58:08 -0400)
+>>>>>>>>
+>>>>>>>> It seems this PR sadly came too late for this week's net PR to mainline
+>>>>>>>> that was merged yesterday.
+>>>>>>>>
+>>>>>>>> TWIMC, from my point of view, it would be great if we somehow could
+>>>>>>>> still get the changes from this PR or at least the btmtk fix it
+>>>>>>>> contains[1] to mainline this week before -rc4, as it is fixing a
+>>>>>>>> regression known since 2026-04-24 that at least five people encountered
+>>>>>>>> with mainline since -rc3 due to 634a4408c0615c ("Bluetooth: btmtk:
+>>>>>>>> validate WMT event SKB length before struct access") [006b9943b982 in
+>>>>>>>> -next].
+>>>>>>>
+>>>>>>> Greg, Sasha, that [1] fix I was talking about now reached -next as
+>>>>>>> 162b1adeb057d2 ("Bluetooth: btmtk: accept too short WMT FUNC_CTRL
+>>>>>>> events") and will likely hit mainline on Thursday or so with the weekly
+>>>>>>> -net PR to -mainline. If that's good enough for you, I'd say it would be
+>>>>>>> good to pick this up for the next round of stable kernels.
+>>>>>>
+>>>>>> That "Fixes:" tag is referring to something that is also not in any
+>>>>>> tree, but that commit does have a cc: stable in it.  So do we need both
+>>>>>> of these:
+>>>>>
+>>>>> Valid question, as yes, there is a slight mixup here:
+>>>>>
+>>>>>> 041e88fb0c08 ("Bluetooth: btmtk: validate WMT event SKB length before struct access")
+>>>>>
+>>>>> That is already in v7.0.7, v6.18.30, v6.12.88, as 041e88fb0c08 is the
+>>>>> -next commit-id for mainline commit-id 634a4408c0615c ("Bluetooth:
+>>>>> btmtk: validate WMT event SKB length before struct access") -- the one
+>>>>> that is causing the regression that I want to get fixed. So we now only
+>>>>> need:
+>>>>>
+>>>>>> 162b1adeb057 ("Bluetooth: btmtk: accept too short WMT FUNC_CTRL events")
+>>>>
+>>>> Ok, but that "Fixes:" tag pointing to an invalid commit is going to be a
+>>>> nightmare to track over time, ugh.
+>>>
+>>> Hmm, did we get the wrong hash or something? Usually, that would show
+>>> up in the verify-fixes.sh, but perhaps it didn't capture it this time
+>>> for some reason, perhaps I'm running an outdated version or something
+>>> similar.
+>>
+>> Something went wrong if we ended up with a patch in the stable trees,
+>> yet this fix is referring to it as a different git sha.  Don't know
+>> where the disconnect happend :(
+> 
+> 041e88fb0c08 ("Bluetooth: btmtk: validate WMT event SKB length before
+> struct access")
+> 
+> I don't have that in any of our tree either, this is actually
+> 634a4408c061 on all trees in the chain:
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/bluetooth/bluetooth.git/commit/?id=634a4408c061
+> https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git/commit/?id=634a4408c061
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=634a4408c061
+> 
+> Or actually that was the hash before it got rebased on bluetooth-next tree:
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/bluetooth/bluetooth-next.git/commit/?id=041e88fb0c08
+> 
+> But I didn't send the PR from that three so perhaps somebody else sent
+> it to stable with the wrong fixes tag?
+I believe the confusion comes from "Bluetooth: btmtk: accept too short 
+WMT FUNC_CTRL events" itself currently having different commit hashes in 
+bluetooth (e3ac0d9f1a20) and bluetooth-next (162b1adeb057). The former 
+correctly refers to "Bluetooth: btmtk: validate WMT event SKB length 
+before struct access" as 634a4408c061 in the Fixes tag and was merged 
+into net yesterday heading for 7.1-rc5. The latter still refers to it as 
+041e88fb0c08. Both are now in next-20260519 but only the latter was in 
+next-20260518 which was the latest at the time of Thorsten's message.
 
+Greg, this means picking e3ac0d9f1a20 instead of 162b1adeb057 should 
+result in a valid Fixes tag.
 
-On May 19, 2026 5:15:13=E2=80=AFp=2Em=2E UTC, "Rafael J=2E Wysocki" <rafae=
-l@kernel=2Eorg> wrote:
->On Tuesday, May 19, 2026 4:08:36 PM CEST Rafael J=2E Wysocki wrote:
->> On Tue, May 12, 2026 at 7:16=E2=80=AFPM Nick <nick@kousu=2Eca> wrote:
->> >
->> > My Toshiba Tecra X40 laptop's function keys no longer send events=2E
->> >
->> > #regzbot introduced: 57c31e6d620f132dcf610b2c52b4cdbd203c6f4a
->> >
->> > Maybe acpi_mark_gpe_for_wake was initializing something particular to
->> > Toshiba hardware?
->>=20
->> Thanks for reporting!
->>=20
->> I think that the problem is acpi_setup_gpe_for_wake() doing too much,
->> I'll send you a patch to test later today=2E
->
->So please let me know if the patch below fixes the problem for you=2E
-
-Excellent! Thank you, I'll be able to try it soon, just as soon as I don't=
- need my laptop functional=2E
-
-- kousu
+Regards,
+August Wikerfors
