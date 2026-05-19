@@ -1,154 +1,136 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCD90128395
-	for <regressions@lists.linux.dev>; Tue, 19 May 2026 04:31:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.221.50
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779165117; cv=pass; b=iCnshaJxaum6dwxWOiAnMLj0C4B+u+6dyG0lUKYWmo4CFyzPzDwBlYsJk/0WKkQZDZn3VViUsjw8mMPoHZSoSP3oKEmbAVPnjr/BmjC6yHIhFFekVwjpgEicTcHCRgOYYd7zfV7pJOvAOPGT8hKbWrAo5CJWmKbcQq6rZcqFlXQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779165117; c=relaxed/simple;
-	bh=LB2eeG1SpolST48Ht8N5ZVmPK5SGJL8UVYCuIxMFohc=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=t/+uRx+1jpBEM3z7Y7MlaJvvh7a4UGfn87zWO/ou4Cz3+uht1rK+ytiEltjsz6r8L56/L/BMNB//DX3hv1Hgt/nD6iIKpFXYhIY5BybujBxG5pXfl/02YVc2wyMDvKsWZ4ymrFjhc+yXtAJ/hoZP/dst9KKwT+XdW+kfJ7k7Qvk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kkDKx8al; arc=pass smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68BA52D94AB;
+	Tue, 19 May 2026 04:52:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779166335; cv=none; b=bUbE5BTianWB21Q6EV2xIVz2BCmGpxOaYY+GIzjU8OSFzJtQdwIh5lj+4krh+DWFvzydrk78q6PuiYBq8NWlAINWOt6oC5yXP7D2MNZ1wELAnmpMz+1t4icUv4YipNi5i5JKI5ABG4ISlNJ85vNvlb7dFvdmdqWQSxiKXpabQ0M=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779166335; c=relaxed/simple;
+	bh=/HR6KNEhm9RlYnNQYcHck5sV+fdadssIRhSj5BGOslU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gRBp08+2P3z8kK+RoZOX0UF2z10SlahN7XnlQXvHAobek0TBcqNLVbQCatAOoA+LXtObpH7BwZddtgoplQ0237Q5DzbFWSiDO0L8tS+ElBtCPvs2y37AlB1yB9Ekugf0O6pcHRh6DI8jumLQgpwhKu40QTiYk0uN2Lzm+2wRZKg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hcx2v/Ao; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kkDKx8al"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-45562c41ec7so1753921f8f.1
-        for <regressions@lists.linux.dev>; Mon, 18 May 2026 21:31:55 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1779165114; cv=none;
-        d=google.com; s=arc-20240605;
-        b=C4kEuSysYMVPoNQvzOm5GkH4lYp52jaJHXtJ/3SVjBf5qsb/8p2btgX6Yf6Azv+hKA
-         NybjNXUY2ywylhqCjiBetXctAbgevzqSM174pXuC5vT3h9uiSjKJkGq4oj3s2uior/aa
-         r+jxRM/9m0927HZRwqmC+6gQbF7hTNSqY0ifV0GR97/P46bFThy9fcrQO7UhzrFDHGEw
-         lgqIytBaKxGSuGppJ4PtZL5VbhsGIk9eheE9m2AUC0R2hkhjTXepDz3XXGXjzv4n04V4
-         Hr/9l3E8ki0lyImt63jQvcm3O4hAu8DqEjZAGYbiRzbB1W7W5lv5fJU0DHnsItt+FXq2
-         naPw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=cc:to:subject:message-id:date:from:mime-version:dkim-signature;
-        bh=LB2eeG1SpolST48Ht8N5ZVmPK5SGJL8UVYCuIxMFohc=;
-        fh=LfcRV2Q7HrPe7+JkypElTJuGNLc/6/fl0FSpkEsi49M=;
-        b=Eoyqw9+H7t2fV7y7dkrFPBsXOD9nC6oiVPrbnKv4thYNgHPElrUPYIVsy7/7urbfQv
-         b6zMlvaKQlyary1cZt5LF3+5zFnbnB26Y8YNt24CELqpuuGO7mxPakfRjtthYWjNAbKu
-         rMzvp9W1uzQ0GC6UWWwJyRNCUM/eaBAcc2GPTuBqHlElDIbv/ZcvH3lwWKDgjLvXCz3K
-         BiaKGuQHzrQ5yy+rYKCecEEG86rlV4tCdMWhmQtVUN/c1LW2Dxcxmgj5glgs3l4PMblb
-         ol3T7JscLsJ6vvdcHfvNdkvGrZ5s8oUflKeiYar6kBPDeI3ClejqR5WOPbvE3Bp/4AfA
-         WfuA==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779165114; x=1779769914; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=LB2eeG1SpolST48Ht8N5ZVmPK5SGJL8UVYCuIxMFohc=;
-        b=kkDKx8alivWQ72yw46Hi9eRyZDHgMygucxvl2CmBUARuaxx529Sxg5/L7UcTWJswBi
-         qXX4ZE44wVyNUcex0SWqmqmrj2za+JfdeKihICmJN4SWBR6xE3cC0+x0+Nyp8xOx4UL1
-         J1fUlfUAEXTNfdSppY2PDLsscKLATeuewIKLwtwyEtjlbXoJOORGn7PdBE+OebCC9d3D
-         jqI3GARPag3euoJxzxSBmL6sdqXiTFvEf06gadR3m62N6E429k5GADKEvevhbYL42YZp
-         7m7M5HtPHj6OixBdvy/ePY0NGtqK7+GlrjP9bntqnujY4ZdXPAi9khHCwkT/134AxoDz
-         kdmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779165114; x=1779769914;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=LB2eeG1SpolST48Ht8N5ZVmPK5SGJL8UVYCuIxMFohc=;
-        b=F5Oe1JY/+Eg/NLya6PgOkxmJMlmwk7kKSp1LH37MIyPx0vZ4+v7oeUYlL0miHieYpV
-         SbOoOwcXjKWhqAGPtLnGnNaNgdG6sYWsHsMKerf0LcO6+F3nwH6YXPwkVZAKqCKgY4iu
-         zPcEyUl43eh1TqsE0c9QuhdPqbfD2rLRfjRv3jWhuON5Gwd8bTqwlqe/sjISyLw4JVw3
-         I+vAcP7Ww/cNrlFELaeoqb9gXsFqGXremWgjq76hfaicDFNeoa4zKacERPd8tK6dtV5E
-         jLXewEYFqaBsoC23KNxYdqVrRhCbu/MQd0YrMFiwpL2MNaUdOPqANFlAoPMzcX0+WY4j
-         ORig==
-X-Forwarded-Encrypted: i=1; AFNElJ8LX3CJIzxHQkHklL5fU7Mi34bOjp+4gbkylvkNL7Zm8itFl/t2zJGMc4m4Ti9KUpDvjtHDvrsIiKPXnw==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzPqm+ulk7i538AAruy60Hfzv+AJd037n3qHhgvIRR3ZA9c9WDs
-	JufSx3l2VaEaiXZCGDrq3X2Av3YOtmqjts4h5yGBIVsZgpbhrbcayUDR6oJbd9WZvwDHwOBBNoC
-	MXE4RxenGWk4yruAQTfyDkff2zIijm5A=
-X-Gm-Gg: Acq92OFc4Ixtuo/SpfmE1MyAQRG+ya6b5euv2IQAXiCL/slZr0XNxRrDhyzDPogks0Y
-	LEngcZ1IWeBzAY0Tga4p2Tuh641/urbDHAaY4vGIc/fnuJXQW9qMYpZgpv/YHG5hFrdDDP2Fu3i
-	8but/cgXuAw2rh99j1NtXUSNQMNQsw548B5IjNul5hqpzhkq/Q+8BlZgA0gGz0P8BTbum4ies5n
-	zG/jorA48fI/IkEsZQmj1GrrEzdIlK7VZ9p/CoDuDTh2tTsYWYkx+58OjIoFVyUq3/MKO3ep8X9
-	pEwjsrNxkPmNTuxjCiZR
-X-Received: by 2002:a05:600d:10:b0:48f:cfae:b654 with SMTP id
- 5b1f17b1804b1-48fe60e5537mr217793815e9.1.1779165113908; Mon, 18 May 2026
- 21:31:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hcx2v/Ao"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0784C2BCB3;
+	Tue, 19 May 2026 04:52:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1779166335;
+	bh=/HR6KNEhm9RlYnNQYcHck5sV+fdadssIRhSj5BGOslU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Hcx2v/AoPAMs0cKkZdKF99AKEA1QEcEFDp6mG378/M9dODP70cf/ook1n3HgjDoBo
+	 rjP91awXQR2fdFacO6sz/YcgfqvQCqC3UoP6UHyORTUdyNc6Z0PxFb/Ucf8Inwo5Y+
+	 H1Z/SllivuhdvOruZQgQhXTPQ2TYKma2pPqx/YW2ZVE0IE0TrvSHwkJTTfVo5Xcv8N
+	 jzzJPf0Kozg+bQAgR0K4Dq1yUTUJpJ0kvpsMXjN6aEipSiIXKo2hORDmGXhlt4Fjq2
+	 uh6lTSaiQiO1m6/4ZU0t2quswoMVkN59yxQPBT8AUvc9I5QC+CThwtKqUY6JKmD+zK
+	 k6jR/i7t5hfZw==
+Message-ID: <dc492675-2323-4acb-a6e7-da75a0c2f208@kernel.org>
+Date: Tue, 19 May 2026 06:52:07 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Baley Eccles <baleycod@gmail.com>
-Date: Tue, 19 May 2026 14:31:42 +1000
-X-Gm-Features: AVHnY4Li5nUZrvw8vcm2bYlGMK9IhnqMjGOljLZnXZ-_QnQCztFbvk2LXkdu2tc
-Message-ID: <CADCSNFD0Ut-jJohTQFczjBgaVf=mBrc2rq4hJQncVZpF4bCoxw@mail.gmail.com>
-Subject: [REGRESSION] Bluetooth: MT7922 fails to initialize after "Bluetooth:
- btmtk: validate WMT event SKB length before struct access"
-To: linux-bluetooth@vger.kernel.org
-Cc: Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
-	regressions@lists.linux.dev, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH -next v1 05/12] srcu: Don't queue workqueue handlers to
+ never-online CPUs
+To: Boqun Feng <boqun@kernel.org>,
+ Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: paulmck@kernel.org, Uladzislau Rezki <urezki@gmail.com>,
+ Boqun Feng <boqun.feng@gmail.com>, Joel Fernandes <joelagnelf@nvidia.com>,
+ RCU <rcu@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+ Vasily Gorbik <gor@linux.ibm.com>, Frederic Weisbecker
+ <frederic@kernel.org>, Samir <samir@linux.ibm.com>,
+ Shrikanth Hegde <sshegde@linux.ibm.com>, Tejun Heo <tj@kernel.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <20260511175448.153326-1-urezki@gmail.com>
+ <20260511175448.153326-6-urezki@gmail.com>
+ <f669fbc9-c068-489f-bd91-4e81561a6e58@leemhuis.info> <agm4-6f-6rOgQPFB@pc636>
+ <3dd5cce0-51f9-4cf1-81b8-246e6c6a633a@paulmck-laptop>
+ <53d546e4-8db0-4e14-a79d-270212081be7@leemhuis.info>
+ <ags6ug97zNR6Fiiw@tardis.local>
+Content-Language: en-US
+From: Jiri Slaby <jirislaby@kernel.org>
+Autocrypt: addr=jirislaby@kernel.org; keydata=
+ xsFNBE6S54YBEACzzjLwDUbU5elY4GTg/NdotjA0jyyJtYI86wdKraekbNE0bC4zV+ryvH4j
+ rrcDwGs6tFVrAHvdHeIdI07s1iIx5R/ndcHwt4fvI8CL5PzPmn5J+h0WERR5rFprRh6axhOk
+ rSD5CwQl19fm4AJCS6A9GJtOoiLpWn2/IbogPc71jQVrupZYYx51rAaHZ0D2KYK/uhfc6neJ
+ i0WqPlbtIlIrpvWxckucNu6ZwXjFY0f3qIRg3Vqh5QxPkojGsq9tXVFVLEkSVz6FoqCHrUTx
+ wr+aw6qqQVgvT/McQtsI0S66uIkQjzPUrgAEtWUv76rM4ekqL9stHyvTGw0Fjsualwb0Gwdx
+ ReTZzMgheAyoy/umIOKrSEpWouVoBt5FFSZUyjuDdlPPYyPav+hpI6ggmCTld3u2hyiHji2H
+ cDpcLM2LMhlHBipu80s9anNeZhCANDhbC5E+NZmuwgzHBcan8WC7xsPXPaiZSIm7TKaVoOcL
+ 9tE5aN3jQmIlrT7ZUX52Ff/hSdx/JKDP3YMNtt4B0cH6ejIjtqTd+Ge8sSttsnNM0CQUkXps
+ w98jwz+Lxw/bKMr3NSnnFpUZaxwji3BC9vYyxKMAwNelBCHEgS/OAa3EJoTfuYOK6wT6nadm
+ YqYjwYbZE5V/SwzMbpWu7Jwlvuwyfo5mh7w5iMfnZE+vHFwp/wARAQABzSFKaXJpIFNsYWJ5
+ IDxqaXJpc2xhYnlAa2VybmVsLm9yZz7CwXcEEwEIACEFAlW3RUwCGwMFCwkIBwIGFQgJCgsC
+ BBYCAwECHgECF4AACgkQvSWxBAa0cEnVTg//TQpdIAr8Tn0VAeUjdVIH9XCFw+cPSU+zMSCH
+ eCZoA/N6gitEcnvHoFVVM7b3hK2HgoFUNbmYC0RdcSc80pOF5gCnACSP9XWHGWzeKCARRcQR
+ 4s5YD8I4VV5hqXcKo2DFAtIOVbHDW+0okOzcecdasCakUTr7s2fXz97uuoc2gIBB7bmHUGAH
+ XQXHvdnCLjDjR+eJN+zrtbqZKYSfj89s/ZHn5Slug6w8qOPT1sVNGG+eWPlc5s7XYhT9z66E
+ l5C0rG35JE4PhC+tl7BaE5IwjJlBMHf/cMJxNHAYoQ1hWQCKOfMDQ6bsEr++kGUCbHkrEFwD
+ UVA72iLnnnlZCMevwE4hc0zVhseWhPc/KMYObU1sDGqaCesRLkE3tiE7X2cikmj/qH0CoMWe
+ gjnwnQ2qVJcaPSzJ4QITvchEQ+tbuVAyvn9H+9MkdT7b7b2OaqYsUP8rn/2k1Td5zknUz7iF
+ oJ0Z9wPTl6tDfF8phaMIPISYrhceVOIoL+rWfaikhBulZTIT5ihieY9nQOw6vhOfWkYvv0Dl
+ o4GRnb2ybPQpfEs7WtetOsUgiUbfljTgILFw3CsPW8JESOGQc0Pv8ieznIighqPPFz9g+zSu
+ Ss/rpcsqag5n9rQp/H3WW5zKUpeYcKGaPDp/vSUovMcjp8USIhzBBrmI7UWAtuedG9prjqfO
+ wU0ETpLnhgEQAM+cDWLL+Wvc9cLhA2OXZ/gMmu7NbYKjfth1UyOuBd5emIO+d4RfFM02XFTI
+ t4MxwhAryhsKQQcA4iQNldkbyeviYrPKWjLTjRXT5cD2lpWzr+Jx7mX7InV5JOz1Qq+P+nJW
+ YIBjUKhI03ux89p58CYil24Zpyn2F5cX7U+inY8lJIBwLPBnc9Z0An/DVnUOD+0wIcYVnZAK
+ DiIXODkGqTg3fhZwbbi+KAhtHPFM2fGw2VTUf62IHzV+eBSnamzPOBc1XsJYKRo3FHNeLuS8
+ f4wUe7bWb9O66PPFK/RkeqNX6akkFBf9VfrZ1rTEKAyJ2uqf1EI1olYnENk4+00IBa+BavGQ
+ 8UW9dGW3nbPrfuOV5UUvbnsSQwj67pSdrBQqilr5N/5H9z7VCDQ0dhuJNtvDSlTf2iUFBqgk
+ 3smln31PUYiVPrMP0V4ja0i9qtO/TB01rTfTyXTRtqz53qO5dGsYiliJO5aUmh8swVpotgK4
+ /57h3zGsaXO9PGgnnAdqeKVITaFTLY1ISg+Ptb4KoliiOjrBMmQUSJVtkUXMrCMCeuPDGHo7
+ 39Xc75lcHlGuM3yEB//htKjyprbLeLf1y4xPyTeeF5zg/0ztRZNKZicgEmxyUNBHHnBKHQxz
+ 1j+mzH0HjZZtXjGu2KLJ18G07q0fpz2ZPk2D53Ww39VNI/J9ABEBAAHCwV8EGAECAAkFAk6S
+ 54YCGwwACgkQvSWxBAa0cEk3tRAAgO+DFpbyIa4RlnfpcW17AfnpZi9VR5+zr496n2jH/1ld
+ wRO/S+QNSA8qdABqMb9WI4BNaoANgcg0AS429Mq0taaWKkAjkkGAT7mD1Q5PiLr06Y/+Kzdr
+ 90eUVneqM2TUQQbK+Kh7JwmGVrRGNqQrDk+gRNvKnGwFNeTkTKtJ0P8jYd7P1gZb9Fwj9YLx
+ jhn/sVIhNmEBLBoI7PL+9fbILqJPHgAwW35rpnq4f/EYTykbk1sa13Tav6btJ+4QOgbcezWI
+ wZ5w/JVfEJW9JXp3BFAVzRQ5nVrrLDAJZ8Y5ioWcm99JtSIIxXxt9FJaGc1Bgsi5K/+dyTKL
+ wLMJgiBzbVx8G+fCJJ9YtlNOPWhbKPlrQ8+AY52Aagi9WNhe6XfJdh5g6ptiOILm330mkR4g
+ W6nEgZVyIyTq3ekOuruftWL99qpP5zi+eNrMmLRQx9iecDNgFr342R9bTDlb1TLuRb+/tJ98
+ f/bIWIr0cqQmqQ33FgRhrG1+Xml6UXyJ2jExmlO8JljuOGeXYh6ZkIEyzqzffzBLXZCujlYQ
+ DFXpyMNVJ2ZwPmX2mWEoYuaBU0JN7wM+/zWgOf2zRwhEuD3A2cO2PxoiIfyUEfB9SSmffaK/
+ S4xXoB6wvGENZ85Hg37C7WDNdaAt6Xh2uQIly5grkgvWppkNy4ZHxE+jeNsU7tg=
+In-Reply-To: <ags6ug97zNR6Fiiw@tardis.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Subject: [REGRESSION] Bluetooth: MT7922 fails to initialize after
-"Bluetooth: btmtk: validate WMT event SKB length before struct access"
+On 18. 05. 26, 18:13, Boqun Feng wrote:
+>>>> I assume it will be picked to stable
+>>
+>> Thx for the reply. This answered the second aspect I raised. What about
+>> the first: shouldn't this be heading to mainline this cycle, ideally
+>> quite soon? Or is this the plan and I misinterpreted the "-next" in the
+>> subject?
+>>
+>> Sadly Jiri (now CCed) afaics didn't yet report if this fix helped to fix
+>> the issues they were seeing, but it sounded a lot like it was likely:
+>> https://lore.kernel.org/all/f0351414-41af-4f74-899c-87fb5bb45621@kernel.org/
 
-Hi all,
+Yes, it did!
 
-I have experienced and looked into a regression on a MediaTek MT7922
-adapter. Bluetooth works on v6.18.29, fails on v6.18.30, and reverting
-the bisected commit fixes it.
+You could have checked the linked bug, BTW:
+https://bugzilla.suse.com/show_bug.cgi?id=1263947#c19
 
-Hardware:
-MEDIATEK Corp. MT7922 802.11ax PCI Express Wireless Network Adapter [14c3:7922]
-Subsystem: AzureWave ASUS PCE-AXE59BT [1a3b:5300]
+ > works nicely without complaining about non-existant CPUs
 
-Good kernel:
-6.18.29-p2-gentoo-dist
-Upstream base: v6.18.29
+and:
 
-Bad kernel:
-6.18.30-p1-gentoo-dist
-Upstream base: v6.18.30
+ > seems stopped messages about workqueue lockup and not exist CPUs at 
+kernel 7.0.7-1-default now
 
-Failure:
-bluetoothctl list prints nothing / no default controller is available.
+But:
+ > FYI the power8 machine hangs using 7.0.7-2.gf1d450c-default, to be 
+investigated.
 
-Bad dmesg:
-Bluetooth: hci0: HW/SW Version: 0x008a008a, Build Time: 20260224103448
-Bluetooth: hci0: Failed to send wmt func ctrl (-22)
-Bluetooth: hci0: HCI Enhanced Setup Synchronous Connection command is
-advertised, but not supported.
+That's likely not related.
 
-Good dmesg:
-Bluetooth: hci0: HW/SW Version: 0x008a008a, Build Time: 20260224103448
-Bluetooth: hci0: Device setup in 129909 usecs
-Bluetooth: hci0: HCI Enhanced Setup Synchronous Connection command is
-advertised, but not supported.
-Bluetooth: hci0: AOSP extensions version v1.00
-Bluetooth: hci0: AOSP quality report is supported
-Bluetooth: MGMT ver 1.23
-
-Firmware:
-/lib/firmware/mediatek/BT_RAM_CODE_MT7922_1_1_hdr.bin
-/lib/firmware/mediatek/WIFI_MT7922_patch_mcu_1_1_hdr.bin
-/lib/firmware/mediatek/WIFI_RAM_CODE_MT7922_1.bin
-
-Bisect result:
-624fb79dadc1b65757986a9d0fdde5c0cf3fe179 is the first bad commit
-
-Bluetooth: btmtk: validate WMT event SKB length before struct access
-
-This is a stable backport of upstream commit:
-634a4408c0615c523cf7531790f4f14a422b9206
-
-Reverting 624fb79dadc1b65757986a9d0fdde5c0cf3fe179 on top of v6.18.30
-fixes the issue and Bluetooth works again.
-
-Please let me know if there is any additional logging or testing I can provide.
-
-#regzbot introduced: 624fb79dadc1b65757986a9d0fdde5c0cf3fe179
-
-Cheers,
-Baley
+thanks,
+-- 
+js
+suse labs
