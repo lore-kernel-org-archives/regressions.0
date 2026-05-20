@@ -1,166 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dl1-f44.google.com (mail-dl1-f44.google.com [74.125.82.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C99D3DDDB6;
-	Wed, 20 May 2026 12:46:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA8CD24E4A1
+	for <regressions@lists.linux.dev>; Wed, 20 May 2026 12:59:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779281221; cv=none; b=WW/aJpq6MebsREUN+xY9o1wkWiBEqonoUAdErPi33yY8TVn8q0r0QAKJd9vK0G6M3fx74PJ3W2yKOS1Mj+UBeCCqJHmlAC9huQGQYta2DBsfJIJEKWPdMYE/10l/fB61YSn25feEDkK8Y7bPcByi2Auy+pUHu0Ks7z4gRnQXaqA=
+	t=1779281949; cv=none; b=kzttU9D/M8rZ3tlHauJxBjsetSiTf1YVaAzgDpohfww6k2eYpWyv/os8lRF2YRmQtoP4P4OAG+cz9ixgMfTljyNuovC3gHJn5b1xWgHbIMVzRG0anrhIZzRMYevza7yt/dhZqmYtDS8n9oj9xaOmAK02sU/8gKeX1tjgv4aA9V0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779281221; c=relaxed/simple;
-	bh=3/Un1eOoGYRy096NF5teMY/O3oMt370yJJNe4tNDORE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eODvKvGivwgdMCEklWk1gunwTlhaN7gcwfUrf6xh8UICw2zy8JvVHzQW60+LBCgnXBZxhHt26v6Uk5JXjRwYdU53QbiXnWWsWeiqfuALEAUWC2TZ/aSri+59E9s2hCP2u4jysTdu9Iup6RokwqqQvidBFJoU/zqp8pfhqXk0F7w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=pi7IKK24; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1779281949; c=relaxed/simple;
+	bh=65RCTQjSqiH9OvgLpUr6Nvm6TMbutL/FAxsgSqjiKxE=;
+	h=Content-Type:MIME-Version:Subject:From:To:Cc:Date:Message-ID; b=g0MHYbK3Z7vuNPs5oLRXaIVTHTnWTPPdhB9E6JCGldf1BGWT5yrhrYdy/S2ebemQfeLgqLnimEl6BXjoRZe66dpCphM340SagecGEO9Mi9iOlpRZLACzdYLxlsj485FkkfTun+P7a0G3ocxNCclzzJIOx6tsNHlyU5VjtdA259o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kernelci.org; spf=pass smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci.org header.i=@kernelci.org header.b=GwOHMU1q; arc=none smtp.client-ip=74.125.82.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kernelci.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernelci.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="pi7IKK24"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 630991F000E9;
-	Wed, 20 May 2026 12:46:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxfoundation.org;
-	s=korg; t=1779281219;
-	bh=8BtRnQV9ve1mRwTxt1keynXJeLz4QoTeDa0cQ9uPH5Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=pi7IKK24E+1k8wRaaR2f/X9TDdtTLnfP2kXkrZ3uGFKw3myHS3arznZZMxizR1ZCN
-	 vCUigAxoM6uVGskN+bYHz9IZtlwOHe9bNmEznSkZ1DB5dTkPLBgtL/nC3vrsrwvwfN
-	 EFbQSC3yHnBih6e1G7Hh6eiJ2ioajZKEFgXLxORA=
-Date: Wed, 20 May 2026 14:47:03 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: August Wikerfors <git@augustwikerfors.se>
-Cc: Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-	Thorsten Leemhuis <regressions@leemhuis.info>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>,
-	Sasha Levin <sashal@kernel.org>, linux-bluetooth@vger.kernel.org,
-	netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org,
-	Linux kernel regressions list <regressions@lists.linux.dev>,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [GIT PULL] bluetooth 2026-05-14
-Message-ID: <2026052026-barber-espresso-1d9a@gregkh>
-References: <20260514172340.1515042-1-luiz.dentz@gmail.com>
- <f5cf1c30-48a4-4102-ae00-b74cf02e639e@leemhuis.info>
- <4946f5f3-b7e2-4949-89f7-6427015027c6@leemhuis.info>
- <2026051954-revision-sierra-6bb4@gregkh>
- <eb5301f9-3133-4fe3-b358-61f14d1ffa5b@leemhuis.info>
- <2026051909-impurity-nemesis-2f65@gregkh>
- <CABBYNZKKbTXc-okp9P2OncMYXHX9C1XC+pRC7XWOhv-8nPNZ5A@mail.gmail.com>
- <2026051942-uproar-drainpipe-6370@gregkh>
- <CABBYNZKzWgL3nmeA=CtN9s80LRyDiJ97aQXgvfSm9vYUBw_SpA@mail.gmail.com>
- <e666c332-e2aa-4525-a208-a4a08742d2e0@augustwikerfors.se>
+	dkim=pass (2048-bit key) header.d=kernelci.org header.i=@kernelci.org header.b="GwOHMU1q"
+Received: by mail-dl1-f44.google.com with SMTP id a92af1059eb24-13621cca8f5so187240c88.0
+        for <regressions@lists.linux.dev>; Wed, 20 May 2026 05:59:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci.org; s=google; t=1779281946; x=1779886746; darn=lists.linux.dev;
+        h=message-id:date:reply-to:cc:to:from:subject
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qgr1ZYz07Uly84CvVDogKTgiacxKhqua82HkZPCO/LI=;
+        b=GwOHMU1qalDlJq5b9BmJcOI1eapY02jnXMeqiM4oXboPmYbjNEjpIu3YEnV6I+eVQ3
+         tPzCbxfJYSVt3Z31u+7fKHCKdR7b7YbhFXbUoyEzof4V93yV3L34PC1KB9oR+PX0m2I/
+         bxze1xxv/V6ejKD1OPY9aK2eL750vRozwh+41eavIJ/M1S0rOL8SEVKnoDfd4Rvng+9A
+         ZwCpgJSfRAyiANp1Wx8BluUmkrXZ7dvg21iVw+iCHBbZb4sUWppd1UAvu5MN8CSxHiD+
+         ncuAiG8M0RLwqbTBcTQTZjGvmXT3LbgAwDKTv3wHgLk2ilYYeCEGwYi1iBV2zHtnavhf
+         Iakw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779281946; x=1779886746;
+        h=message-id:date:reply-to:cc:to:from:subject
+         :content-transfer-encoding:mime-version:x-gm-gg:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=qgr1ZYz07Uly84CvVDogKTgiacxKhqua82HkZPCO/LI=;
+        b=FpalJUQgzj1aL0QahEppuAYAJd6C7gzapVdKaDWBJipHLvY+kcy4zMtNWYyBTncHrm
+         Q2KO0fPbCVQsa2C0O9GloD/VC9RvsITnLR24BYciv5yZ8oCDrtUt8v4GWYtm1v39vBvK
+         cEDqFEOIuI8wqk2g39YycBwqaGLULNd9euYqI0V5uSoApLE99nFakmtw28UqU3Fe2wzW
+         RzH8fEZXFZHQ5eTWJBFVWlQ7WvnwQrksnb2fI5M0647PIZt++aHxlzo1CtV4rs8qQkVx
+         amukG8E7z4MPmTiPJOzAuKUwJrcylsz8I4fwZAbW3HAz6N+dTLj4susOB//YSYf4Lq4+
+         A1fA==
+X-Gm-Message-State: AOJu0YxHIRetXcxJzksB+3qQe506q6DY+BXrKgexExeB6eH+MiNs/jAb
+	Tm7xC4I1EK5xq8XRkkJY5rhK8AlrTZpwYYj0Pb24rb+WmMPUDIa6nOznxPRFeLn73aU=
+X-Gm-Gg: Acq92OETkQnbom7zfQE/oqxfb+rUOM9biMR2NTq02UfY/QEJjmG9Z0TRmGiCEGbvY9+
+	0JgrQ2oGYrd3m58JA+PhYpjez/Oili2viwy32+53UKFZbz36K7MtnyewC9W9yOiomitFN5smmDL
+	vFcxEgD6DzAjK8dFnd9E9nFgeeGNi5DWSj8jtu71Ystly1+l/ftVDcRCh81GP+WPiG2dgddPlWC
+	4dhQ95wfRXgoQ6FASV0NYOrLhZW1spG4yCjEj6kDzCKWQwCyZXdxa5e9UEw9fJwqcpkBO81oVc0
+	8gIZ3eK+D8aTWcdHJqMmUkUYXxMo5E9KiJTrwUjR9mMoOX6UBoIVvgkvLcIv1PSFXaGueyZMVrj
+	6HDXhAQJ7cTRAocfXJyB1wIAAz977V55tRy0kogKx9yXOwRl9eFXy/h1I1gYxI+mXFG4LCCKkoO
+	9PvpXH6hj1EpIKXVaNdxMSrGRo360=
+X-Received: by 2002:a05:7022:6993:b0:134:df7f:910d with SMTP id a92af1059eb24-1350451e077mr9875479c88.7.1779281945853;
+        Wed, 20 May 2026 05:59:05 -0700 (PDT)
+Received: from 330cfa3079ca ([20.38.40.137])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-134cbdce9fasm21886223c88.4.2026.05.20.05.59.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 May 2026 05:59:04 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <e666c332-e2aa-4525-a208-a4a08742d2e0@augustwikerfors.se>
+Content-Transfer-Encoding: 7bit
+Subject: [REGRESSION] next/master: (build) stack frame size (2104) exceeds
+ limit (2048)
+ in 'dml31_ModeSupport...
+From: KernelCI bot <bot@kernelci.org>
+To: kernelci-results@groups.io
+Cc: regressions@lists.linux.dev, gus@collabora.com, linux-next@vger.kernel.org
+Reply-To: kernelci@lists.linux.dev
+Date: Wed, 20 May 2026 12:59:04 -0000
+Message-ID: <177928194404.3268.18401290607331979680@330cfa3079ca>
 
-On Tue, May 19, 2026 at 07:37:35PM +0200, August Wikerfors wrote:
-> On 2026-05-19 17:49, Luiz Augusto von Dentz wrote:
-> > Hi Greg,
-> > 
-> > On Tue, May 19, 2026 at 11:19 AM Greg KH <gregkh@linuxfoundation.org> wrote:
-> > > 
-> > > On Tue, May 19, 2026 at 09:44:39AM -0400, Luiz Augusto von Dentz wrote:
-> > > > Hi Greg,
-> > > > 
-> > > > On Tue, May 19, 2026 at 8:07 AM Greg KH <gregkh@linuxfoundation.org> wrote:
-> > > > > 
-> > > > > On Tue, May 19, 2026 at 12:53:49PM +0200, Thorsten Leemhuis wrote:
-> > > > > > On 5/19/26 12:30, Greg KH wrote:
-> > > > > > > On Tue, May 19, 2026 at 09:04:38AM +0200, Thorsten Leemhuis wrote:
-> > > > > > > > On 5/15/26 17:10, Thorsten Leemhuis wrote:
-> > > > > > > > > On 5/14/26 19:23, Luiz Augusto von Dentz wrote:
-> > > > > > > > > 
-> > > > > > > > > > The following changes since commit c78bdba7b9666020c0832150a4fc4c0aebc7c6ac:
-> > > > > > > > > >    net: phy: DP83TC811: add reading of abilities (2026-05-14 15:17:12 +0200)
-> > > > > > > > > > 
-> > > > > > > > > > are available in the Git repository at:
-> > > > > > > > > > 
-> > > > > > > > > >    git://git.kernel.org/pub/scm/linux/kernel/git/bluetooth/bluetooth.git tags/for-net-2026-05-14
-> > > > > > > > > > 
-> > > > > > > > > > for you to fetch changes up to 375ba7484132662a4a8c7547d088fb6275c00282:
-> > > > > > > > > > 
-> > > > > > > > > >    Bluetooth: hci_qca: Convert timeout from jiffies to ms (2026-05-14 09:58:08 -0400)
-> > > > > > > > > 
-> > > > > > > > > It seems this PR sadly came too late for this week's net PR to mainline
-> > > > > > > > > that was merged yesterday.
-> > > > > > > > > 
-> > > > > > > > > TWIMC, from my point of view, it would be great if we somehow could
-> > > > > > > > > still get the changes from this PR or at least the btmtk fix it
-> > > > > > > > > contains[1] to mainline this week before -rc4, as it is fixing a
-> > > > > > > > > regression known since 2026-04-24 that at least five people encountered
-> > > > > > > > > with mainline since -rc3 due to 634a4408c0615c ("Bluetooth: btmtk:
-> > > > > > > > > validate WMT event SKB length before struct access") [006b9943b982 in
-> > > > > > > > > -next].
-> > > > > > > > 
-> > > > > > > > Greg, Sasha, that [1] fix I was talking about now reached -next as
-> > > > > > > > 162b1adeb057d2 ("Bluetooth: btmtk: accept too short WMT FUNC_CTRL
-> > > > > > > > events") and will likely hit mainline on Thursday or so with the weekly
-> > > > > > > > -net PR to -mainline. If that's good enough for you, I'd say it would be
-> > > > > > > > good to pick this up for the next round of stable kernels.
-> > > > > > > 
-> > > > > > > That "Fixes:" tag is referring to something that is also not in any
-> > > > > > > tree, but that commit does have a cc: stable in it.  So do we need both
-> > > > > > > of these:
-> > > > > > 
-> > > > > > Valid question, as yes, there is a slight mixup here:
-> > > > > > 
-> > > > > > > 041e88fb0c08 ("Bluetooth: btmtk: validate WMT event SKB length before struct access")
-> > > > > > 
-> > > > > > That is already in v7.0.7, v6.18.30, v6.12.88, as 041e88fb0c08 is the
-> > > > > > -next commit-id for mainline commit-id 634a4408c0615c ("Bluetooth:
-> > > > > > btmtk: validate WMT event SKB length before struct access") -- the one
-> > > > > > that is causing the regression that I want to get fixed. So we now only
-> > > > > > need:
-> > > > > > 
-> > > > > > > 162b1adeb057 ("Bluetooth: btmtk: accept too short WMT FUNC_CTRL events")
-> > > > > 
-> > > > > Ok, but that "Fixes:" tag pointing to an invalid commit is going to be a
-> > > > > nightmare to track over time, ugh.
-> > > > 
-> > > > Hmm, did we get the wrong hash or something? Usually, that would show
-> > > > up in the verify-fixes.sh, but perhaps it didn't capture it this time
-> > > > for some reason, perhaps I'm running an outdated version or something
-> > > > similar.
-> > > 
-> > > Something went wrong if we ended up with a patch in the stable trees,
-> > > yet this fix is referring to it as a different git sha.  Don't know
-> > > where the disconnect happend :(
-> > 
-> > 041e88fb0c08 ("Bluetooth: btmtk: validate WMT event SKB length before
-> > struct access")
-> > 
-> > I don't have that in any of our tree either, this is actually
-> > 634a4408c061 on all trees in the chain:
-> > 
-> > https://git.kernel.org/pub/scm/linux/kernel/git/bluetooth/bluetooth.git/commit/?id=634a4408c061
-> > https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git/commit/?id=634a4408c061
-> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=634a4408c061
-> > 
-> > Or actually that was the hash before it got rebased on bluetooth-next tree:
-> > 
-> > https://git.kernel.org/pub/scm/linux/kernel/git/bluetooth/bluetooth-next.git/commit/?id=041e88fb0c08
-> > 
-> > But I didn't send the PR from that three so perhaps somebody else sent
-> > it to stable with the wrong fixes tag?
-> I believe the confusion comes from "Bluetooth: btmtk: accept too short WMT
-> FUNC_CTRL events" itself currently having different commit hashes in
-> bluetooth (e3ac0d9f1a20) and bluetooth-next (162b1adeb057). The former
-> correctly refers to "Bluetooth: btmtk: validate WMT event SKB length before
-> struct access" as 634a4408c061 in the Fixes tag and was merged into net
-> yesterday heading for 7.1-rc5. The latter still refers to it as
-> 041e88fb0c08. Both are now in next-20260519 but only the latter was in
-> next-20260518 which was the latest at the time of Thorsten's message.
-> 
-> Greg, this means picking e3ac0d9f1a20 instead of 162b1adeb057 should result
-> in a valid Fixes tag.
 
-Ok, now done.  Be careful of duplicate commits in different branches
-that are marked for backporting with different ids.  It can cause
-massive confusion (i.e. don't be like the drm tree...)
 
-thanks,
 
-greg k-h
+
+Hello,
+
+New build issue found on next/master:
+
+---
+ stack frame size (2104) exceeds limit (2048) in 'dml31_ModeSupportAndSystemConfigurationFull' [-Werror,-Wframe-larger-than] in drivers/gpu/drm/amd/amdgpu/../display/dc/dml/dcn31/display_mode_vba_31.o (drivers/gpu/drm/amd/amdgpu/../display/dc/dml/dcn31/display_mode_vba_31.c) [logspec:kbuild,kbuild.compiler.error]
+---
+
+- dashboard: https://d.kernelci.org/i/maestro:504ac30a3bdad797a2185cd52e1b61acb0439072
+- giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+- commit HEAD:  687da68900cd1a46549f7d9430c7d40346cb86a0
+- tags: next-20260520
+
+Please include the KernelCI tag when submitting a fix:
+
+Reported-by: kernelci.org bot <bot@kernelci.org>
+
+
+Log excerpt:
+=====================================================
+/tmp/kci/linux/drivers/gpu/drm/amd/amdgpu/../display/dc/dml/dcn31/display_mode_vba_31.c:3800:6: error: stack frame size (2104) exceeds limit (2048) in 'dml31_ModeSupportAndSystemConfigurationFull' [-Werror,-Wframe-larger-than]
+ 3800 | void dml31_ModeSupportAndSystemConfigurationFull(struct display_mode_lib *mode_lib)
+      |      ^
+1 error generated.
+
+=====================================================
+
+
+# Builds where the incident occurred:
+
+## x86_64_defconfig+kselftest+x86-board on (x86_64):
+- compiler: clang-21
+- config: None
+- dashboard: https://d.kernelci.org/build/maestro:6a0daa38744d1c1da0287568
+
+
+#kernelci issue maestro:504ac30a3bdad797a2185cd52e1b61acb0439072
+
+--
+This is an experimental report format. Please send feedback in!
+Talk to us at kernelci@lists.linux.dev
+
+Made with love by the KernelCI team - https://kernelci.org
