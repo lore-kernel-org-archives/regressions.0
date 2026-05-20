@@ -1,37 +1,37 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [46.38.247.119])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [185.244.194.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FD5E2D12EC
-	for <regressions@lists.linux.dev>; Wed, 20 May 2026 08:58:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.38.247.119
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61ADF25742F
+	for <regressions@lists.linux.dev>; Wed, 20 May 2026 09:28:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.244.194.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779267542; cv=none; b=Hn8HPHPoHlF1WGpPzdGX4p8iBdxZGxkQskGtSnPP3pPoZCe2zd+/WBtJP58kP25OJ9LT6cUSpgtYP/6/Kv91zQpL4FvoBmv6y+BQXuTu2+F56ewsct5Tp6XjYkhrcfMezYohNOCdnKYEFE0s54ZA7NjR0nlBHiYWFaxe9kLEaXw=
+	t=1779269326; cv=none; b=aGGpJTinbfdfa5PasKmmBYm+w3k6cQG/trMztB6ULMRdQvEVtHMkoV4k3C4zxOqUqprL+nIMTflSGf9e6LUxjN4spuuazweFtdv+DtWCd8MgIC20rxh0HqxGvQNeClQ3I2fezwvmQ9q/H0T6lK45k1Isrp2dcTdDLz1qlhij4SU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779267542; c=relaxed/simple;
-	bh=kmrXM2xDfbqfbD/fPnVMn722OKYUpDmg0PIS/FT5SZg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=X0PMVEgGWXVTN21BnBdD3TcNOp0azL3qsi95p+eMTT8t++V2Bh0IH7woq6mLP+XyXAC6TClQ+bnt+f27dzfyn4Dh+jWiV2N4n4swR6gWoJcNeZU+ECQOf/ibuvEDBJ8KAi/MUte30kcsoytPp25QlHGoT+wDJWBu5klHruIhjGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=TiS8wmmg; arc=none smtp.client-ip=46.38.247.119
+	s=arc-20240116; t=1779269326; c=relaxed/simple;
+	bh=rKmYikphpPSeJKpiA/WqUkYDxrQobhiNt/XQ6aYdC/s=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=LsiB1jUrJ+GdNPPlCArzup8nvloGQUR/RZ3iPLQPKx04uy/KBOQaVMaaX7+e+D9Hydl97LrgoxYirV2dVEFTzJo+9deXeh3N9uTvDbPLuVDcMXUArLsQ0Z3yfpJt3p8CyITuOaCprOb21AYVrWrMLLEPA988UnCjMUea9hhA7l0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=TubMsasz; arc=none smtp.client-ip=185.244.194.184
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="TiS8wmmg"
-Received: from mors-relay-8404.netcup.net (localhost [127.0.0.1])
-	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4gL57L2cdnz8Bhl;
-	Wed, 20 May 2026 10:58:54 +0200 (CEST)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="TubMsasz"
+Received: from relay01-mors.netcup.net (localhost [127.0.0.1])
+	by relay01-mors.netcup.net (Postfix) with ESMTPS id 4gL5nd2vDvz973H
+	for <regressions@lists.linux.dev>; Wed, 20 May 2026 11:28:37 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1779267534;
-	bh=kmrXM2xDfbqfbD/fPnVMn722OKYUpDmg0PIS/FT5SZg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=TiS8wmmgmEN3MmJ97cDmmZS8IBihnWHKhIwMnVLkARVLaOj2ScsgoWL+p6Eca13Up
-	 tAsME4F78gk0PMpZ7A0/q29X/7i13398cZiojoyhZptQyVFVVIePw+h1dbleeyyUxq
-	 LrlTUsrn1bAvl0CqiYY8+7YtOIKTJuUtpN967X71k/aKQEPRtvwNN+LwDxyd1jNpJp
-	 KPjk4pWiMWnRNvAQ4CoUAcdlA6YIHeWYlxWXtRR95//I6E1ehgB0ab6Ktndveb+/lw
-	 h8BbSNQauyLac/bbTp3sDtAVim9NEHULXRI3BYoPt/uZ7G44stU+EcGtXs9bBNStVx
-	 lY/lsDT7Ra0Ew==
+	s=key2; t=1779269317;
+	bh=rKmYikphpPSeJKpiA/WqUkYDxrQobhiNt/XQ6aYdC/s=;
+	h=Date:Subject:From:To:References:In-Reply-To:From;
+	b=TubMsaszd5yUWpBJIKwzT+7kjA9GUMtuqtxSjRggr5o4YoaOZ2SUzJU60sSir+YaA
+	 xHx6ilbTTHD+oF504GQYrWPn4JKVv1dgHu/cOtKU3j2AVBqBqNjihd95asq3PjRNI0
+	 eXG9FOauqkTru6ltQLIPHMyH0lmWpxuuPzsltFDnmsNWzgIFZc8bv9hlQsUgRErDY5
+	 KtL/7iRyZ6iLkyXNuQfRRRvIV/tKhlmyItFp8UFdFDWOuw6hNqtRTV0XZ9orBSQ8wz
+	 haf1qMiCUHudzo9qXegGE5fmtdrBC/hWdy+vHjGwnOX3Q8GVV8dnXgL/vlaMNiG+/f
+	 /2aT82bvgUWgQ==
 Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4gL57L1vx9z4x86;
-	Wed, 20 May 2026 10:58:54 +0200 (CEST)
+	by relay01-mors.netcup.net (Postfix) with ESMTPS id 4gL5nd2CVcz7wyx
+	for <regressions@lists.linux.dev>; Wed, 20 May 2026 11:28:37 +0200 (CEST)
 X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
 X-Spam-Flag: NO
 X-Spam-Score: -2.898
@@ -40,16 +40,16 @@ Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4gL57K0Kq4z8tYl;
-	Wed, 20 May 2026 10:58:53 +0200 (CEST)
+	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4gL5nc3d0Bz8t3w
+	for <regressions@lists.linux.dev>; Wed, 20 May 2026 11:28:36 +0200 (CEST)
 Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 56A1D6034C;
-	Wed, 20 May 2026 10:58:52 +0200 (CEST)
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id C9EE56031E
+	for <regressions@lists.linux.dev>; Wed, 20 May 2026 11:28:35 +0200 (CEST)
 Authentication-Results: mxe9fb;
         spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
 Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <3e181f99-42d3-484f-a89b-2f5955146a5b@leemhuis.info>
-Date: Wed, 20 May 2026 10:58:51 +0200
+Message-ID: <4b1a6c5e-8db9-49d8-b1dc-537b0ae90957@leemhuis.info>
+Date: Wed, 20 May 2026 11:28:35 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -57,82 +57,36 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: 7.0-rc4 dcn31_program_compbuf_size trace
-To: Minxi Hou <houminxi@gmail.com>, jwollrath@web.de
-Cc: amd-gfx@lists.freedesktop.org, Eric Naim <dnaim@cachyos.org>,
- Bhuvanachandra Pinninti <bpinnint@amd.com>,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- Alex Deucher <alexander.deucher@amd.com>,
- Antonio Quartulli <antonio@mandelbit.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-References: <20260316094232.6bb6f0bf@schienar>
- <20260518080835.100682-1-houminxi@gmail.com>
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
 From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
 Content-Language: de-DE, en-US
-In-Reply-To: <20260518080835.100682-1-houminxi@gmail.com>
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <177926753273.259557.14850135628493609089@mxe9fb.netcup.net>
-X-NC-CID: G1osxqXGYcLY/uTBF2vW+9WvFR2CJOYw9Mw7Dp7IC2jHdK6N1ds=
+X-PPP-Message-ID: <177926931598.327675.988988115598780071@mxe9fb.netcup.net>
+X-NC-CID: mDKMtHOu64lqvU2uEQh1BgQuCwzk4gA+Jo/Ht0D40OOkqVPF1qE=
 
-[+a few people]
 
-On 5/18/26 10:08, Minxi Hou wrote:
-> On Mon, 16 Mar 2026 09:42:32 +0100, Julian Wollrath wrote:
->> when turning the display off via 'xset dpms force off' I observe the
->> following warning and trace under 7.0-rc4 with a AMD Ryzen 7 PRO 8840U
-> 
-> I can reproduce the same warning on different hardware with a different
-> trigger.
-> 
-> Machine: HP Z66 G6 14 (ProBook 4 G1ah), AMD Ryzen 7 H 255 (HawkPoint1),
-> kernel 7.0.8-200.fc44.x86_64.
-> 
-> Trigger: HDMI hotplug with an external 4K monitor. The Z66's HDMI port
-> uses a DP-to-HDMI protocol converter with FRL support (dmesg shows
-> "DP-HDMI FRL PCON supported"). Connecting the monitor at boot causes
-> the first timeout during initialization; subsequent hotplug events
-> repeat it at runtime.
-> 
-> The call trace matches yours exactly:
->   dcn31_program_compbuf_size line:141
->   dcn20_optimize_bandwidth
->   dc_commit_state_no_check
->   dc_commit_streams
->   amdgpu_dm_atomic_commit_tail
-> 
-> Not seen with 6.19.x. CachyOS community bisected this to:
-> 
->   commit 592c5b80110d5e9e50873b5364818cb6f401e26d
->   "drm/amd/display: Migrate HUBBUB register access from hwseq to hubbub component"
 
-Antonio posted a RFC fix for that comment here with a reference to a
-warning that on a *very quick* look looks similar:
-https://lore.kernel.org/all/20260519144509.2646680-1-antonio@mandelbit.com/
+On 3/9/24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-Wondering if we need a ticket here to get this resolved:
-https://gitlab.freedesktop.org/drm/amd/-/work_items/
+#regzbot report:
+https://lore.kernel.org/all/539202f5-43ba-4938-a9b2-393c1bb3e072@westermo.com/
+#regzbot introduced: c378cdae463696
+#regzbot title: usbnet: no longer possible to set an MTU of 1504
+#regzbot fix: qmi_wwan: allow max_mtu above hard_mtu to control rx_urb_size
 
-But from the reply to Antonio's patch is sounds like it's not needed.
+#regzbot report: https://lore.kernel.org/all/agvqqMt9x0df-WXS@google.com/
+#regzbot introduced: e613904fa419
+#regzbot title: usb: typec: ucsi: laptop does not enter suspend anymore
 
-Ciao, Thorsten
-
-> One thing I noticed on my setup: the amdgpu driver defaults to
-> max_bpc=16 for the HDMI connector. With a HDMI 2.0 monitor (BenQ
-> EL2870U, Max TMDS 340 MHz) at 4K@60Hz, the higher color depth
-> increases bandwidth demand during compbuf reprogramming and makes the
-> timeout happen more often. Adding amdgpu.deep_color=0 helps but does
-> not fix the root cause.
-> 
-> Partial workaround:
->   amdgpu.runpm=0 amdgpu.gfx_off=0 amdgpu.deep_color=0
-> 
-> A patch proposed by Giuseppe Ranieri in the CachyOS issue tracker [1]
-> changes the REG_WAIT parameters from 1us*100 to 1000us*30 and resolves
-> the warning for several users with DCN 3.1 hardware. Discussion there
-> is ongoing about whether 2-10us*1000 would be a better fit.
-> 
-> [1] https://github.com/CachyOS/linux-cachyos/issues/810
-> 
-> Minxi Hou
-
+#regzbot report: https://gitlab.freedesktop.org/drm/amd/-/issues/5286
+#regzbot monitor:
+https://lore.kernel.org/all/44069eb146824aa195312f5b02c49287@valvesoftware.com/
