@@ -1,39 +1,37 @@
-Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
+Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 928A536921E
-	for <regressions@lists.linux.dev>; Fri, 22 May 2026 21:31:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9057A38B7B6
+	for <regressions@lists.linux.dev>; Fri, 22 May 2026 21:31:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779485497; cv=none; b=T6cRyQ+tL4G/EwzjLJLX5vumlZozWIW18sElgFoeSu4Y+PhqKyCgMs0YKoNXMZ8kDYhblhHe4B3udUjAu9gdgmugj6sVvc25L7hqnzW2HHXu6syub4awE4qWCcJS4bHzS8PXN4K8E5RdufRSsKfmsMWcZbCdGt4Swy/1PN/+RK8=
+	t=1779485499; cv=none; b=uahovu1U/Xgd7OR+pM87nV8wGeyZCIifg7u+t0vYUvYyKKoRpMOihZKz1Pf9UP7Fq2Y3UgEgBuKxVvV70cwThcMeOgvtQDmxpPbJh2arvJ8shjFSs85t0bsTIaDdHXDhSztft1UBD/WOEuxDdLzBvG7N/l5QEEWNy+UM3E7sgsg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779485497; c=relaxed/simple;
-	bh=vcMNDE+hOT51Fh5tW0+/q5lQ+FknIWM2KMavnMOpM+M=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Yt3rjobmx00c7XfpbzH7y7Iv6Vv4viT2sX/MsCdJhMYFRMSSeBvOinY2m5w8VbatfP3nAVGa+PabXM+XWLgsdR7b4kVN1ZBLDzwlVFg4jX7CMAodUbqS9rEQArYSWX0fTXh0P/cGb8JhWJhHDmTxCV1ftqTUNxaqXMOG8FRNpRg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=GX2gdHxK; arc=none smtp.client-ip=80.241.56.172
+	s=arc-20240116; t=1779485499; c=relaxed/simple;
+	bh=j1xddUMMBFb16SlgtUX0HJ3qWkaM0wyMdYabFeuRnqQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=B7MSPQU1dgz3yHuIXJWnEKfdQ2F+VAmhXi5dVQ+geHSTyRFTvhspe+Cpr8/AqpQAiOZxbSLXbLoZ5UNJvqtwnYTTyeb2y2x7gSsimaWtbjOccDw3QpjMcnEej+7jQ4NEdnQyanWKlD0UuOK5+cDM9VK8CvJPHHyInN6EckMUwcQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=V2njL/sY; arc=none smtp.client-ip=80.241.56.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="GX2gdHxK"
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:b231:465::2])
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="V2njL/sY"
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [10.196.197.2])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4gMdkt0jNJz9v5j;
-	Fri, 22 May 2026 23:31:34 +0200 (CEST)
+	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4gMdkp1Rr7z9v7g;
+	Fri, 22 May 2026 23:31:30 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1779485494;
+	t=1779485490;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ga6yOivf1BItHTEhFihWVIi+//+QToeV8i2rNnNMJZo=;
-	b=GX2gdHxKLfhlpD1ffSz3VUszrQGlD/AcTDi3plZ7JasBy9ZvSZwQuCKMeuN/HT9ra4XPN2
-	Z9f8z74l3joXxpTL9s1SYHAI7ABGRs4zvrwv6cTo5zFqp0a1ru7akFT9u/cyU9KFkF9v5u
-	9UOAJd61pX0PvKcZwTx5WO/BNdUC+nCkUa99gcj1ZZNrhsvhdPF9F28Xu+GXFiLnQAUeLo
-	wqWRZuMIzv0fuxb4UnFgFpkVIgVVfz4jFWpABWUT1s4/RMqERHFOWKJCLxEAgxVbp8oqZ/
-	83ldIrHRziBGe/ltHLuj1B/NkFWJ1CaUk4gQwCeKNZ2Rbv0ElLNU1XAOPPOMjg==
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=UXbfCdtu7pGqLsOvdQmNScTjV6C5Xgofhl0P02rcJTY=;
+	b=V2njL/sYNgXsEjgp6TbytVFj7NzfjJ7dLbRTCdvJS69TPWx6P5sQslBFWOm2FqKglmEupb
+	xwrfTJJDz2P7FrrMDM+cWjNWZC5yVAVBu6Fpvn7prNk/9pLb9hlzKTkhBALZwcPcFZEBR/
+	Cs62WmZNC2E8LjPgbrasRFC0tWnh78yzaWVlXDbaMWbdRauUQ9MqI8dJfftpwNHt+Y9Z0h
+	JhhUIDXaq7Z+Pt1/fknkxOEKDmKaSw8pnISl1Xbyx2Ns3+D+Xj1ChzCwS5cVCXzbOralF8
+	NenNLQzhoUpH3P29COX1DLIFGmWQgwnJgOiXHHzhPwOhOP9ZpHJ/ENbQ1YT78Q==
 From: Lukas Beckmann <lbckmnn@mailbox.org>
 To: Sasha Levin <sashal@kernel.org>
 Cc: stable@vger.kernel.org,
@@ -41,11 +39,9 @@ Cc: stable@vger.kernel.org,
 	Mike Galbraith <efault@gmx.de>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Juri Lelli <juri.lelli@redhat.com>
-Subject: [PATCH 6.12.y 2/3] sched/deadline: Fix dl_server getting stuck
-Date: Fri, 22 May 2026 23:31:19 +0200
-Message-ID: <20260522213120.1205100-3-lbckmnn@mailbox.org>
-In-Reply-To: <20260522213120.1205100-1-lbckmnn@mailbox.org>
-References: <20260522213120.1205100-1-lbckmnn@mailbox.org>
+Subject: [PATCH 6.12.y 0/3] backport missing dependencies of d66792919d4f
+Date: Fri, 22 May 2026 23:31:17 +0200
+Message-ID: <20260522213120.1205100-1-lbckmnn@mailbox.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -53,162 +49,43 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-MBO-RS-ID: c71a87632b9704e5746
-X-MBO-RS-META: gq1c5zginjropqhjymmbbxn5qtdspeeb
+X-MBO-RS-ID: 4e49c896b262d06495c
+X-MBO-RS-META: rdttdt3rxadx8eh3tpqjxs9zfj138bm7
 
-From: Peter Zijlstra <peterz@infradead.org>
+Commit d66792919d4f ("sched/deadline: Use revised wakeup rule for
+dl_server") in the 6.12.y stable tree (upstream commit 14a857056466)
+depends on three upstream commits that were not backported:
 
-commit 4ae8d9aa9f9dc7137ea5e564d79c5aa5af1bc45c upstream.
+  commit cccb45d7c429 ("sched/deadline: Less agressive dl_server handling")
+  commit 4ae8d9aa9f9d ("sched/deadline: Fix dl_server getting stuck")
+  commit a3a70caf7906 ("sched/deadline: Fix dl_server behaviour")
 
-John found it was easy to hit lockup warnings when running locktorture
-on a 2 CPU VM, which he bisected down to: commit cccb45d7c429
-("sched/deadline: Less agressive dl_server handling").
+Without these, cyclictest under load reports latencies up to ~50ms on 
+PREEMPT_RT.
 
-While debugging it seems there is a chance where we end up with the
-dl_server dequeued, with dl_se->dl_server_active. This causes
-dl_server_start() to return without enqueueing the dl_server, thus it
-fails to run when RT tasks starve the cpu.
+For context, see the regression report:
+https://lore.kernel.org/regressions/04657838-46d1-432d-95e1-eb73b930b032@mailbox.org
 
-When this happens, dl_server_timer() catches the
-'!dl_se->server_has_tasks(dl_se)' case, which then calls
-replenish_dl_entity() and dl_server_stopped() and finally return
-HRTIMER_NO_RESTART.
+Testing:
+Tested on two different machines with Debian's PREEMPT_RT config for about 
+10 hours.
+Without these patches cyclictest under load spikes to ~50ms in less than 
+30 minutes, with the series applied the latency spikes are gone.
 
-This ends in no new timer and also no enqueue, leaving the dl_server
-'dead', allowing starvation.
+Thanks,
+Lukas
 
-What should have happened is for the bandwidth timer to start the
-zero-laxity timer, which in turn would enqueue the dl_server and cause
-dl_se->server_pick_task() to be called -- which will stop the
-dl_server if no fair tasks are observed for a whole period.
+Peter Zijlstra (3):
+  sched/deadline: Less agressive dl_server handling
+  sched/deadline: Fix dl_server getting stuck
+  sched/deadline: Fix dl_server behaviour
 
-IOW, it is totally irrelevant if there are fair tasks at the moment of
-bandwidth refresh.
-
-This removes all dl_se->server_has_tasks() users, so remove the whole
-thing.
-
-Fixes: cccb45d7c4295 ("sched/deadline: Less agressive dl_server handling")
-Reported-by: John Stultz <jstultz@google.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Tested-by: John Stultz <jstultz@google.com>
-[ adjust renamed variable in fair_server_has_tasks (which this patch
-removes) ]
-Signed-off-by: Lukas Beckmann <lbckmnn@mailbox.org>
----
  include/linux/sched.h   |  1 -
- kernel/sched/deadline.c | 12 +-----------
- kernel/sched/fair.c     |  7 +------
- kernel/sched/sched.h    |  4 ----
- 4 files changed, 2 insertions(+), 22 deletions(-)
+ kernel/sched/deadline.c | 16 +++-------------
+ kernel/sched/fair.c     | 16 +---------------
+ kernel/sched/sched.h    | 37 +++++++++++++++++++++++++++++++------
+ 4 files changed, 35 insertions(+), 35 deletions(-)
 
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 299a65a92d2e..464d281aa2e4 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -701,7 +701,6 @@ struct sched_dl_entity {
- 	 * runnable task.
- 	 */
- 	struct rq			*rq;
--	dl_server_has_tasks_f		server_has_tasks;
- 	dl_server_pick_f		server_pick_task;
- 
- #ifdef CONFIG_RT_MUTEXES
-diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
-index 9c5fa95b345a..7a2ea2183975 100644
---- a/kernel/sched/deadline.c
-+++ b/kernel/sched/deadline.c
-@@ -916,7 +916,7 @@ static void replenish_dl_entity(struct sched_dl_entity *dl_se)
- 	 */
- 	if (dl_se->dl_defer && !dl_se->dl_defer_running &&
- 	    dl_time_before(rq_clock(dl_se->rq), dl_se->deadline - dl_se->runtime)) {
--		if (!is_dl_boosted(dl_se) && dl_se->server_has_tasks(dl_se)) {
-+		if (!is_dl_boosted(dl_se)) {
- 
- 			/*
- 			 * Set dl_se->dl_defer_armed and dl_throttled variables to
-@@ -1201,8 +1201,6 @@ static void __push_dl_task(struct rq *rq, struct rq_flags *rf)
- /* a defer timer will not be reset if the runtime consumed was < dl_server_min_res */
- static const u64 dl_server_min_res = 1 * NSEC_PER_MSEC;
- 
--static bool dl_server_stopped(struct sched_dl_entity *dl_se);
--
- static enum hrtimer_restart dl_server_timer(struct hrtimer *timer, struct sched_dl_entity *dl_se)
- {
- 	struct rq *rq = rq_of_dl_se(dl_se);
-@@ -1220,12 +1218,6 @@ static enum hrtimer_restart dl_server_timer(struct hrtimer *timer, struct sched_
- 		if (!dl_se->dl_runtime)
- 			return HRTIMER_NORESTART;
- 
--		if (!dl_se->server_has_tasks(dl_se)) {
--			replenish_dl_entity(dl_se);
--			dl_server_stopped(dl_se);
--			return HRTIMER_NORESTART;
--		}
--
- 		if (dl_se->dl_defer_armed) {
- 			/*
- 			 * First check if the server could consume runtime in background.
-@@ -1891,11 +1883,9 @@ static bool dl_server_stopped(struct sched_dl_entity *dl_se)
- }
- 
- void dl_server_init(struct sched_dl_entity *dl_se, struct rq *rq,
--		    dl_server_has_tasks_f has_tasks,
- 		    dl_server_pick_f pick_task)
- {
- 	dl_se->rq = rq;
--	dl_se->server_has_tasks = has_tasks;
- 	dl_se->server_pick_task = pick_task;
- }
- 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index d26e078d0623..f36512892adf 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -9058,11 +9058,6 @@ static struct task_struct *__pick_next_task_fair(struct rq *rq, struct task_stru
- 	return pick_next_task_fair(rq, prev, NULL);
- }
- 
--static bool fair_server_has_tasks(struct sched_dl_entity *dl_se)
--{
--	return !!dl_se->rq->cfs.nr_running;
--}
--
- static struct task_struct *fair_server_pick_task(struct sched_dl_entity *dl_se)
- {
- 	return pick_task_fair(dl_se->rq);
-@@ -9074,7 +9069,7 @@ void fair_server_init(struct rq *rq)
- 
- 	init_dl_entity(dl_se);
- 
--	dl_server_init(dl_se, rq, fair_server_has_tasks, fair_server_pick_task);
-+	dl_server_init(dl_se, rq, fair_server_pick_task);
- }
- 
- /*
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index a09e2d25edd5..9391ff62cdaa 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -371,9 +371,6 @@ extern s64 dl_scaled_delta_exec(struct rq *rq, struct sched_dl_entity *dl_se, s6
-  *
-  *   dl_se::rq -- runqueue we belong to.
-  *
-- *   dl_se::server_has_tasks() -- used on bandwidth enforcement; we 'stop' the
-- *                                server when it runs out of tasks to run.
-- *
-  *   dl_se::server_pick() -- nested pick_next_task(); we yield the period if this
-  *                           returns NULL.
-  *
-@@ -389,7 +386,6 @@ extern void dl_server_update(struct sched_dl_entity *dl_se, s64 delta_exec);
- extern void dl_server_start(struct sched_dl_entity *dl_se);
- extern void dl_server_stop(struct sched_dl_entity *dl_se);
- extern void dl_server_init(struct sched_dl_entity *dl_se, struct rq *rq,
--		    dl_server_has_tasks_f has_tasks,
- 		    dl_server_pick_f pick_task);
- 
- extern void dl_server_update_idle_time(struct rq *rq,
 -- 
 2.54.0
 
