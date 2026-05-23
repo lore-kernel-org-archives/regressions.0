@@ -1,113 +1,127 @@
-Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dl1-f44.google.com (mail-dl1-f44.google.com [74.125.82.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1278238A299
-	for <regressions@lists.linux.dev>; Fri, 22 May 2026 21:35:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75AD81B6D1A
+	for <regressions@lists.linux.dev>; Sat, 23 May 2026 01:59:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779485750; cv=none; b=VEna0FbU80Sgkl4bgNxt2H48C79zI1CWeVPtnETkjsK02iBbgIBov4kYULjxToaZb0rmB+acmWu70B0DDDoHyc82TiDHn4EycmzRtmDDZmsTZSITmBRLWzpe0nUahFNVsLKMrFl6/8FmJAQKmI0uu3vnFWZFUrlv+k/lxtBa4lY=
+	t=1779501548; cv=none; b=auhThdsn6fmtm9p5qJ6gM+OaUsqo8A0Vgp0X6aheYEa/1Qhh/pe404djERn8nTcJhXQNsq6Yts/8F7rPpBRWjRpYGYnVJbs1SJb1pjn+0KoXbwFynlBjBOy7MiAH1apR20aCltImbhplsDjV6ohd94y6dn4LYgZIcI7Jzh97NeI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779485750; c=relaxed/simple;
-	bh=6mqs19zcjW9MPMkLIEWnJ6K3J4xE3leiRLzVL6gy9Uw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rQGF7uYz3PTAFoY9LNB/5yA3+Ouw79r9GWCtTR8vCsQBCWRng+qBdPNgu/4c9ETiC7OS714Fa7MNVM91RmtoC6muVSor52UBzZGOsgm2d/FvVZBR8teXPu2V+72rK4jCw2DDCzXeTFpPUikjzzWQEuZ+GhmuRcxcxJLUeklgPGY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=QpcEkhP/; arc=none smtp.client-ip=80.241.56.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+	s=arc-20240116; t=1779501548; c=relaxed/simple;
+	bh=2iktPfJHs/5VL3RvyV3gEFJ9pZowo8ZHx9VaqqSetrQ=;
+	h=Content-Type:MIME-Version:Subject:From:To:Cc:Date:Message-ID; b=I7BxomDN9S0KFgh1PTEAsfik5Kmn8AiF0RaK/WLsbOWq5IOUhmGqgHCoLyN08pBKdTQhzuAxHXMsKH6XKNj6z2LuBrX1nDpewwefHZdesYjmOrm4m61/izQwH5mDNVM7iKBJXEtF/+lpmhA9NjA6Zf4QBZVkoXV9lFZ8uOWl2No=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kernelci.org; spf=pass smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci.org header.i=@kernelci.org header.b=bVsb1Ecl; arc=none smtp.client-ip=74.125.82.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kernelci.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernelci.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="QpcEkhP/"
-Received: from smtp102.mailbox.org (smtp102.mailbox.org [IPv6:2001:67c:2050:b231:465::102])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4gMdqj22g7z9vGS;
-	Fri, 22 May 2026 23:35:45 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1779485745;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0cb50XGJqdLe/0Jbg6NNuje/yLxMm8hagq02OE3Rdbc=;
-	b=QpcEkhP/AxRarMUUWElJHqIgwT4lpnGmNAnJhySUZjjy5tBibgkuL1ksmYlCy62K877bxI
-	WEPgVVmEOl3Q4juRR7JV/XBiXy1LyiSv/6PA7nkGx5l0lTBgbnq7VkrknLHwWhttUh6Ne8
-	fOvAbN4GoFYAhjC5e66AATpLOGTjrPI1M+LmjrEJROxs47OXLIovqW+1XBz4cHQr84BlUT
-	HlHE6IK6W7QyEI9eIyRURFptIhfKVBWsnOq6irfl2MJFH8lIZOo5dRFW6OLGj8ovft8Oza
-	50/1j10nxgJZvS1Z5lWEPxGZvaUNTOsq/ucMvl1aFtDaUk1LHeTeG46sJ8llWA==
-Date: Fri, 22 May 2026 23:35:35 +0200
-From: Lukas Beckmann <lbckmnn@mailbox.org>
-To: Sasha Levin <sashal@kernel.org>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
-	regressions@lists.linux.dev, Juri Lelli <juri.lelli@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>, stable@vger.kernel.org,
-	linux-rt-users@vger.kernel.org, Mike Galbraith <efault@gmx.de>
-Subject: Re: [REGRESSION] 6.12.y: d66792919d4f (sched/deadline: Use revised
- wakeup rule for dl_server) causes latencies up to 50ms with PREEMPT_RT
-Message-ID: <ahDMJzEIPUKIQ0cQ@lukas-arch>
-References: <04657838-46d1-432d-95e1-eb73b930b032@mailbox.org>
- <20260511141441.stable-reply-0001@kernel.org>
- <4e31e3b5-fa69-4c4c-a5e9-dea7a8452ee7@mailbox.org>
- <agjKmWqi_6qR0TJO@lukas-yuanda-arch.localdomain>
- <36acb7e8-1fae-4c6d-8145-a29685007a76@leemhuis.info>
- <ag83sNErxAAZorCG@laps>
+	dkim=pass (2048-bit key) header.d=kernelci.org header.i=@kernelci.org header.b="bVsb1Ecl"
+Received: by mail-dl1-f44.google.com with SMTP id a92af1059eb24-133466cf955so23538433c88.0
+        for <regressions@lists.linux.dev>; Fri, 22 May 2026 18:59:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci.org; s=google; t=1779501545; x=1780106345; darn=lists.linux.dev;
+        h=message-id:date:reply-to:cc:to:from:subject
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rcIUocxYH8HE5EE3kEUWaQO8MrsqBwXNGVoZRgWzEGo=;
+        b=bVsb1EclowP0AvPhoITg87JgRxAN5rSKY5Atjme7kqo6mgLPvQitMDrhM86k8TCch4
+         J0y7RfTI+y+7/aSopeKYMhBGoK7s8yOT/p+yUhIvd+ubSyQBxUUhFyfLKOhZrT9d6oUY
+         NB3TGCy/mmfIHv5PuKB68U3PHo9OlpTrc4eO1j2pmCpt2hc+/68JKDwNdBACV6JQsxi4
+         cbF72MZIGH+lXjk3FPed/d0eNAToMJiradwd8VYuM31fJabZQNL/WQhOuwNWMxZ31UsM
+         r7I9q59ITwT8QkW9S+VSYV2fJ6F25ZOXo4a+x/WtbPcgtq6YHlO1FA+bq9VYvvfryZRy
+         JVUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779501545; x=1780106345;
+        h=message-id:date:reply-to:cc:to:from:subject
+         :content-transfer-encoding:mime-version:x-gm-gg:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=rcIUocxYH8HE5EE3kEUWaQO8MrsqBwXNGVoZRgWzEGo=;
+        b=knT6maEzuLLK+DDNdlwOrOsYMNLK7B9YEL5TGw3RjhZVSVz7GKOj1+jLgbaqd/q4b7
+         MQVhRxW4pmwAYxB5REIDbAfc0Vx9sBb/71/r0v1iluUJEvP/hGisb78XRkTMfm5D7C3G
+         kwMxADzVHtNZZvBKaERKSUMqdMbCf6Z4RhoeEpHTSPyGRXdxsZLkH8MbXLlLOtUnQcta
+         FLSXF1R7NvrO2qsUni7lo7lOuOYNUWf5tYm3ZhLxE7eynAqLDKONW1nzGKTGeowkablc
+         ksSqMp30rxsbhZW73abSB3NxYD4WU8dskkkmZtYenGO5oW01lnUrFFZ4PpCALui6zBDO
+         aLaQ==
+X-Gm-Message-State: AOJu0YwT3Oi0E8m2TL11Ieo+zYG4upherN/YTBYCPt2soOkk4KeHKiDQ
+	WX/aAInnPjGY35ORbj0cdStqr1D/CO5j3f+XW3GCWpf84DJejXtClycSB2/H5/xf/XA=
+X-Gm-Gg: Acq92OEEi4WQjqZX51qC2OBYZ/QTOHUfeNg04aTH+HuiK9IMSl9veojq5ZPGimouX4n
+	Ng8+/rl6YxVvVTYHbMiI2QYHLrna5wpm7lWz2ku3L2rb6474ixmySLgd4lmtm+Z2FYYc1/UV5ic
+	/09HdvAaPQdhCR8MwSH4nFblZIf41Eq96/f48QpYxUy9gU8mK6kmdwcPAi22wdguyj9c/LRA6vI
+	LzcAZtLO1SLYZfW2evuJVy3uvPdpwSBVVs0P7aXd3/RrkMBjrcN4r9I5pL+9RjZGcw6OPr4SBEZ
+	4bz2iqTALlhqWLStfsN/yghHq2uYwal6WWh2DfkyYdLGOQRyQjLuxL6RnonFtSkTo4bEGWhl72y
+	njpAyXStJXmvewYIh806IJ8tDAWkEQMN3qI4rBHWawtDvmgL48waFSKRHqkZQ12lvqtWNkHaGt3
+	fl8wIgJiWcUska1bFJ
+X-Received: by 2002:a05:7300:818a:b0:2ed:6f94:9d94 with SMTP id 5a478bee46e88-30449156e51mr3186375eec.19.1779501545368;
+        Fri, 22 May 2026 18:59:05 -0700 (PDT)
+Received: from 330cfa3079ca ([20.38.40.137])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-3045245d6aesm2214650eec.26.2026.05.22.18.59.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 May 2026 18:59:04 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ag83sNErxAAZorCG@laps>
-X-MBO-RS-META: yp6io1r5ek3qkuj7awrr571p6w9jzziz
-X-MBO-RS-ID: a03349e21277d638757
+Content-Transfer-Encoding: 7bit
+Subject: [REGRESSION] mainline/master: (build) omitting the parameter name in
+ a
+ function definition is a C23 exte...
+From: KernelCI bot <bot@kernelci.org>
+To: kernelci-results@groups.io
+Cc: regressions@lists.linux.dev, gus@collabora.com, laura.nao@collabora.com,
+ shreeya.patel@collabora.com, broonie@kernel.org
+Reply-To: kernelci@lists.linux.dev
+Date: Sat, 23 May 2026 01:59:04 -0000
+Message-ID: <177950154440.4433.14069879562080222690@330cfa3079ca>
 
-On Thu, May 21, 2026 at 12:49:52PM -0400, Sasha Levin wrote:
-> On Thu, May 21, 2026 at 09:32:32AM +0200, Thorsten Leemhuis wrote:
-> > On 5/16/26 21:50, Lukas Beckmann wrote:
-> > > On Tue, May 12, 2026 at 12:08:49AM +0200, Lukas Beckmann wrote:
-> > > > On 5/11/26 16:21, Sasha Levin wrote:
-> > > > > Thanks for the detailed report. Before I revert d66792919d4f from 6.12.y,
-> > > > > I'd like to confirm whether the underlying issue is the missing dl_server
-> > > > > rework chain on 6.12.y rather than the revised wakeup rule itself.
-> > > > > 
-> > > > > Mike's reply notes that his local 6.12-rt tree carrying the following
-> > > > > three commits in cannot reproduce, while the same tree without them
-> > > > > reproduces quickly:
-> > > > > 
-> > > > >    cccb45d7c429 ("sched/deadline: Less agressive dl_server handling")
-> > > > >    4ae8d9aa9f9d ("sched/deadline: Fix dl_server getting stuck")
-> > > > >    a3a70caf7906 ("sched/deadline: Fix dl_server behaviour")
-> > > > > 
-> > > > > d66792919d4f's upstream commit message explicitly says it relies on the
-> > > > > state established by a3a70caf7906, and none of the three are in 6.12.y.
-> > > > > 
-> > > > > Could you give those three commits a spin on top of 6.12.y (keeping
-> > > > > d66792919d4f in place) and see whether the latency goes away?
-> > > > 
-> > > > If I apply the three commits on 6.12.y, the latencies indeed go away.
-> > > > This is running for a few hours now, and the latencies showed up after 30
-> > > > minutes tops, with plain 6.12.y before.
-> > > > I will leave this running.
-> > > 
-> > > Cyclictest is still running and looking good (latency-wise).
-> > > How should we proceed?
-> > 
-> > Sasha, just wondering: is this still in your queue? It sounds like a
-> > clear case to pick those three up for 6.12.y (everybody: please correct
-> > me if I'm wrong). Or are you busy and should we ask Greg to pick them up?
-> 
-> Nope, sorry, I got sidetracked by a large series of commits from the merge window.
-> 
-> I'll plan to queue this up for the next release. It'll be even better if
-> someone can send us a more "official" backport request, ideally with a
-> tested-by too :)
-Done in 
-https://lore.kernel.org/stable/20260522213120.1205100-1-lbckmnn@mailbox.org/
-> -- 
-> Thanks,
-> Sasha
 
-Thanks,
-Lukas
+
+
+
+Hello,
+
+New build issue found on mainline/master:
+
+---
+ omitting the parameter name in a function definition is a C23 extension [-Werror,-Wc23-extensions] in drivers/gpu/drm/msm/msm_gem_shrinker.o (drivers/gpu/drm/msm/msm_gem_shrinker.c) [logspec:kbuild,kbuild.compiler.error]
+---
+
+- dashboard: https://d.kernelci.org/i/maestro:2f5f68fe5a378a5f91c53b2ded9eaca026d2608c
+- giturl: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+- commit HEAD:  79bd2dded182b1d458b18e62684b7f82ffc682e5
+
+
+Please include the KernelCI tag when submitting a fix:
+
+Reported-by: kernelci.org bot <bot@kernelci.org>
+
+
+Log excerpt:
+=====================================================
+/tmp/kci/linux/drivers/gpu/drm/msm/msm_gem_shrinker.c:105:58: error: omitting the parameter name in a function definition is a C23 extension [-Werror,-Wc23-extensions]
+  105 | purge(struct drm_gem_object *obj, struct ww_acquire_ctx *)
+      |                                                          ^
+/tmp/kci/linux/drivers/gpu/drm/msm/msm_gem_shrinker.c:117:58: error: omitting the parameter name in a function definition is a C23 extension [-Werror,-Wc23-extensions]
+  117 | evict(struct drm_gem_object *obj, struct ww_acquire_ctx *)
+      |                                                          ^
+2 errors generated.
+
+=====================================================
+
+
+# Builds where the incident occurred:
+
+## defconfig+allmodconfig+CONFIG_FRAME_WARN=2048 on (arm):
+- compiler: clang-21
+- config: None
+- dashboard: https://d.kernelci.org/build/maestro:6a10eccf5bf5d05c97423e72
+
+
+#kernelci issue maestro:2f5f68fe5a378a5f91c53b2ded9eaca026d2608c
+
+--
+This is an experimental report format. Please send feedback in!
+Talk to us at kernelci@lists.linux.dev
+
+Made with love by the KernelCI team - https://kernelci.org
