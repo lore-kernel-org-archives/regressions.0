@@ -1,110 +1,76 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7317025B08E;
-	Sun, 24 May 2026 03:24:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8B7E27A12F;
+	Sun, 24 May 2026 12:09:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779593081; cv=none; b=Ox1aNzSZksoVTn5xFssWl+cb/4WByXb/gljw2tmiKo5qkFvLwqoc3UYif2E/PiiUODjwq6Qmkm+rtag2L1z757AK0aavWWkb7NsZYUBoYTM7E9Q1eWDDVZU7yu8tDuHNx5Ex2ZjC41SbWg4JjAfeyikehScrKJU17IUdJWibjK4=
+	t=1779624564; cv=none; b=mXnmb4f8Czy8qW0Uyx7wnTKNEfblZ/wDFkwuygt/crxeS0UVwe0QTjrwtP6dX4W7fbHHJJPesK5iWIUdp/0aIRalVf99p/1r6cru7IThvyyjoy4lw6bwk/mYK1nJYcyUPrmDMHuJJnKN/8zY5CEg+t4hkuyYEPzWIPiMKLlrAsg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779593081; c=relaxed/simple;
-	bh=+4CGH23ZgNaVjn9kOrGwgSXDnmnj2A8VkQuHJ7OErqg=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=lMKytqTiSUrVNxV/MFZ8iKsODm2lMrT4NCvssz0HAr3mk5noHl5DdM65s9wCRsg25fbzlwv6utiUmnjo7oAX/Gt2mizS7q3zHKFM2gEhdfaqFgZZsp/x/FPn2DSptAIw3YxCO8rOPqDRBAHzolPEkxAZR2qpYmUUZJ1mmerv1lQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LzD4MTKs; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1779624564; c=relaxed/simple;
+	bh=Fyo3h8bdk6TYJP262Df1/1BLKcyCrsLPLFcND4zSlSA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=e35vbcW6zCe86rVacQfABbuO4DFzARh8Jd7hEE6/hK/rbr2eHQ5gRd/rXdfCBgsVpaBAespm8Zv7ync5PFESYNoRYfitz2dnNy/R3bW/F8ZRoiCemuqa/7IB32UzK8VDzsuoxF/e2z/BgwF/4dDcM4EdxnzZuvZeAPwI6IkRUtM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B8RjBp9T; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LzD4MTKs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1779593079; x=1811129079;
-  h=message-id:date:mime-version:cc:subject:from:to:
-   references:in-reply-to:content-transfer-encoding;
-  bh=+4CGH23ZgNaVjn9kOrGwgSXDnmnj2A8VkQuHJ7OErqg=;
-  b=LzD4MTKsLUWYKlN76hjLlrNenoJRH9pJ4zUOzzbz/wf1xUQHAAp7QmJz
-   +RDBV4tcR1FqBwlTHusKHYKdOM8fYJ30UqVfpWHMULaicRaf8eBnlX9bP
-   qsRLiYleb7I003Dsx27548AJCho7gCX24LDP6+c52E4IFZzGx4yXfZ4Bb
-   ZmXAXZVYtgPtzhMg5aPTrgwmJbMlWekV4AIKBPZ3SfJu0i6E/6LaZNDim
-   MJP1YOw1i/FNSbAwMI4HZQyua6byiKM3Htyct4wkGcHTo2gE3qiiNm1BR
-   cSPxyevYdQDMDxVGptCJ81qW3Rjv2bm2qiRElynvhHGUSHOKdEuwlaQCa
-   g==;
-X-CSE-ConnectionGUID: b9GAGqYLSEuUkW32GhlqmA==
-X-CSE-MsgGUID: FgAfRtBlQpCGx3aQmducnw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11795"; a="80370537"
-X-IronPort-AV: E=Sophos;i="6.24,165,1774335600"; 
-   d="scan'208";a="80370537"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2026 20:24:39 -0700
-X-CSE-ConnectionGUID: 7JXrK1i9Ssm42lNqm1K9ig==
-X-CSE-MsgGUID: 7Hm4CGcGQL20AsE/UJd7KA==
-X-ExtLoop1: 1
-Received: from blu2-mobl.ccr.corp.intel.com (HELO [10.124.248.249]) ([10.124.248.249])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2026 20:24:37 -0700
-Message-ID: <7ec374cb-9a0a-4e30-8410-3a028e46cacd@linux.intel.com>
-Date: Sun, 24 May 2026 11:24:35 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B8RjBp9T"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C76661F000E9;
+	Sun, 24 May 2026 12:09:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779624563;
+	bh=5pApOR5X2I9xTZ0qfUnZk2+FffulHCxsGQPx04hfQ40=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=B8RjBp9TdKSsU8okMPeQs85051n+ltVhUBuRSaOfnIvooL5w9convLxSTrYhZ6sFq
+	 oB9aJ/71e8X14KcwCY7Mg+rNnqjU3x8u5gC+GaejDYEyfX7naVARdUmPWoLwkkA4sB
+	 9TlRXUPMNb17sMyXtiDV7oXcu/09dmmxDdcv6OFpBe1ilJvbRfSBJJ0+jihF49m3XB
+	 7WDAvgDuUKLOEkT3k5CBspGJJ63ChtWVkDKx5a+cwhTxcMCw/zSBys4FAKA3+ffBOx
+	 LWmFzkDGdk9ziT3qfbP9CV06ZyC6SyY91nkQjBT3WpDO7Sf/BxlGHhR/pzWP+DDzEt
+	 B/gvMaidu7HIw==
+From: Sasha Levin <sashal@kernel.org>
+To: Lukas Beckmann <lbckmnn@mailbox.org>
+Cc: Sasha Levin <sashal@kernel.org>,
+	stable@vger.kernel.org,
+	regressions@lists.linux.dev,
+	Mike Galbraith <efault@gmx.de>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>
+Subject: Re: [PATCH 6.12.y 0/3] backport missing dependencies of d66792919d4f
+Date: Sun, 24 May 2026 08:09:19 -0400
+Message-ID: <20260524-stable-item004-reply@kernel.org>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <20260522213120.1205100-1-lbckmnn@mailbox.org>
+References: <20260522213120.1205100-1-lbckmnn@mailbox.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: Re: [REGRESSION] GPU passes into VM improperly after c376a3456d8b or
- a98db518dde2
-From: Baolu Lu <baolu.lu@linux.intel.com>
-To: 70sp <70sp@protonmail.com>
-References: <z7Rkts0EsooZcnCjNfJaK6ursftFU8ubOkH0hcNjzxugEAwGsHLMblOdfoAx-gJzBZ-TMmeUtD7iWBngbFY5UCJCwdSmYqmCVMy-yhbirUk=@protonmail.com>
- <56ce85d5-e0b9-407c-9a86-708111a8a509@linux.intel.com>
- <C4BK-Bp_FII0EkxSHQxBS2wO-Age-UxFrp_KfmYzb8cnQ8ZndzBBIPD8S9T86wOifBP0tysQGCFtGQsBsBvG2IzIMw3jb3NF5HGbS3tsawA=@protonmail.com>
- <d6a7f70c-5a8a-4be6-abdd-5b3decbb602a@linux.intel.com>
-Content-Language: en-US
-In-Reply-To: <d6a7f70c-5a8a-4be6-abdd-5b3decbb602a@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 4/27/2026 3:15 PM, Baolu Lu wrote:
-> On 4/14/26 17:22, 70sp wrote:
->> I can confirm, that the "domain is not compatible with device" message 
->> is nowhere to be seen.
->>
->> I have double checked by also adding an else statement with a 
->> different message and that one showed up several times. (by pci (iGPU) 
->> 0000:00:02.0, pcieport 0000:00:01.0 and vfio-pci (GTX 970) 
->> 0000:01:00.0, 0000:01:00.1). ret = 0.
->>
-> 
-> Hmm, it seems the domain is compatible with the device hardware and was
-> attached successfully. Perhaps you can try to check the differences
-> between these two domain attachments by dumping the root, context, and
-> PASID table entries and comparing the configurations of the success and
-> failure cases.
-> 
-> To do this, simply apply the change below with CONFIG_DMAR_DEBUG
-> enabled:
-> 
-> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
-> index 4d0e65bc131d..bf303cfcf2ee 100644
-> --- a/drivers/iommu/intel/iommu.c
-> +++ b/drivers/iommu/intel/iommu.c
-> @@ -1345,6 +1345,9 @@ static int dmar_domain_attach_device(struct 
-> dmar_domain *domain,
->          if (ret)
->                  goto out_block_translation;
-> 
-> +       dmar_fault_dump_ptes(iommu, PCI_DEVID(info->bus, info->devfn),
-> +                            0, IOMMU_NO_PASID);
-> +
->          return 0;
-> 
->   out_block_translation:
+> Commit d66792919d4f ("sched/deadline: Use revised wakeup rule for
+> dl_server") in the 6.12.y stable tree (upstream commit 14a857056466)
+> depends on three upstream commits that were not backported:
+>
+>   commit cccb45d7c429 ("sched/deadline: Less agressive dl_server handling")
+>   commit 4ae8d9aa9f9d ("sched/deadline: Fix dl_server getting stuck")
+>   commit a3a70caf7906 ("sched/deadline: Fix dl_server behaviour")
 
-Have you tried this patch? It dumps the context and PASID table entries
-after a domain is attached to the device. Hopefully, you can find some
-clues by comparing the good and bad kernels.
+Thanks for tracking this down. Before I queue this, the series is
+missing two more follow-up fixes that both carry "Fixes: cccb45d7c429"
+and that are needed for the dl_server logic to behave correctly:
 
+  4717432dfd99 ("sched/deadline: Fix dl_server_stopped()")
+  bb4700adc3ab ("sched/deadline: Always stop dl-server before changing parameters")
+
+Without 4717432dfd99 the dl_server_stopped() check is inverted (it
+returns the wrong polarity after cccb45d7c429), and without
+bb4700adc3ab the per-rq running_bw accounting can get out of sync when
+dl-server parameters change while it is still active.
+
+Could you send a v2 that includes both follow-ups on top of the
+existing three? Then this should be safe to apply as a whole.
+
+-- 
 Thanks,
-baolu
+Sasha
