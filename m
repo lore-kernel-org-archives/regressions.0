@@ -1,64 +1,94 @@
-Received: from mail-43166.protonmail.ch (mail-43166.protonmail.ch [185.70.43.166])
+Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B65FA28A3FA;
-	Mon, 25 May 2026 19:58:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.166
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F87A282F3A
+	for <regressions@lists.linux.dev>; Mon, 25 May 2026 21:09:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779739086; cv=none; b=sVRbXj6SLVMI5oe0N3uP68wU0UOIsbuh3FN6qzmyq+3vGZ6F51tsaZNeKlNWlDmkuyKL1IjxDc0P3DBG/W6mpgHCPIVC3PbatO4A1MNHxWxF9c1MnZE43q9SFMsKWt6COPFxtQcWRiLb4i4l0AEhb+UecN775y5lBpa3GKHRFdI=
+	t=1779743392; cv=none; b=WYwhefQOq7DNDcxOvCWQIkYKXO+LldbQoS8rHgpNqpiAWjSYyB2810PtfbzkvVIa2izdkLjdtWG0jc6oQPcE5g8Tzgbukfd/0lW63Thzc3rn3+H64UnGOHTky6HkGj5k3JB3Ufrk8fa7hie4Z3vIEMTCQsBtnT+5YwN1bIKCwUM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779739086; c=relaxed/simple;
-	bh=F3sBAHDY3dmezL9//b0IHl4EvGIlwH5Z3hS8+5rg9+k=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Pqbp8y87b9dXMPMYUr029rgvsK34b9xgkrTelBNYX7f2NKGv6oddEJAuKdDATLnNlKLD0uA5T8A1tqE6EGMwmNEmw+tzXYt56ypVn/ErN1a0VBOLXZTvBK/8N2JRqTUEzCPE4Y1ekfgsCFFI8ejG2cCng8j/1sz+t0zewrmZd+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=VwMWiJIG; arc=none smtp.client-ip=185.70.43.166
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
+	s=arc-20240116; t=1779743392; c=relaxed/simple;
+	bh=+cNOAp2028JXp6edK92run+tWtoHNfBFzInSepj/RX8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=G8KGSoeo84g9lIytP9732r3BjycVM1WM35UbeRDXgLQTm97j237WJrWX6kJD04VNH/1BVoWGS0FjWCXTcwyBOCPWho0wse2/QXA7mn6tY82wZsDxfKj7S+2vlRZUVuDYcMbLW7II4tInwZI16Az0TElmtT6ZwSyhtvHQ/dGiLBs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=FLFxxuGX; arc=none smtp.client-ip=80.241.56.161
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="VwMWiJIG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-	s=protonmail3; t=1779739077; x=1779998277;
-	bh=F3sBAHDY3dmezL9//b0IHl4EvGIlwH5Z3hS8+5rg9+k=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=VwMWiJIGywzEHQwpkJ7wXwiKkkodZILNbJIest/eyoRr+2k67cCAHCvx6OAfpSeVG
-	 yLci6GkaIwf81MSKD1KhxH/tks1DB4zxprVJp4Q3SRCBgAshxPAo7XJHmHV4JDIh5R
-	 WxPe06m/o1/4xTr/dxAoEJaTy5yH5koomqqSuh2q42yclme1RbjtaxCHv7+VJh7Mi/
-	 VKK8QOx5D72mTLuzu1yEyeDwFoTdgxRrdT1e5BSQ8MwlRrcXU1pTR1m0bm9KrWe+3L
-	 H9evMZICrJxcpIS3+bux/lDyp0l1V9oyZWORdLkuoO8fW8WWHTYE2UrY0QVdozvhWu
-	 qdjAKkpDN15mg==
-Date: Mon, 25 May 2026 19:57:53 +0000
-To: Baolu Lu <baolu.lu@linux.intel.com>
-From: 70sp <70sp@protonmail.com>
-Cc: "iommu@lists.linux.dev" <iommu@lists.linux.dev>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: Re: [REGRESSION] GPU passes into VM improperly after c376a3456d8b or a98db518dde2
-Message-ID: <5bVscg7a2_H1PPW3HmVtrYv_Xwtti2hzjD065W4OdwsD9rC2gw7sGVEg-2U596VZn8O2LAEfhWeZklRk63ymqNW9220R6R_jjif7BaWol9o=@protonmail.com>
-In-Reply-To: <7ec374cb-9a0a-4e30-8410-3a028e46cacd@linux.intel.com>
-References: <z7Rkts0EsooZcnCjNfJaK6ursftFU8ubOkH0hcNjzxugEAwGsHLMblOdfoAx-gJzBZ-TMmeUtD7iWBngbFY5UCJCwdSmYqmCVMy-yhbirUk=@protonmail.com> <56ce85d5-e0b9-407c-9a86-708111a8a509@linux.intel.com> <C4BK-Bp_FII0EkxSHQxBS2wO-Age-UxFrp_KfmYzb8cnQ8ZndzBBIPD8S9T86wOifBP0tysQGCFtGQsBsBvG2IzIMw3jb3NF5HGbS3tsawA=@protonmail.com> <d6a7f70c-5a8a-4be6-abdd-5b3decbb602a@linux.intel.com> <7ec374cb-9a0a-4e30-8410-3a028e46cacd@linux.intel.com>
-Feedback-ID: 144929603:user:proton
-X-Pm-Message-ID: 25272949be4e0c4c782296e3186657a2dafea950
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="FLFxxuGX"
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [10.196.197.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4gPT6L6l6Mz9tpW;
+	Mon, 25 May 2026 23:09:46 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1779743387;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+MJb6/CP5vqre61pVwaQFM6mT5LkgE0KcEkYykb14Ss=;
+	b=FLFxxuGXsxlH0woWLrqSuCwdQ7cLsESWrtfP/5/41qNG/fgT5A03tefsVsN16qOHlKMtUS
+	bUtFlpWYvCayqqXuL4ZmvraP30H0RZRihZKUlUtzn6MxJ1r+aWMnKZzlcDz2/GVYD/fX15
+	QqEw2HhPkSYyY46WqJzgErLo4YXa7djdoBru71ngy8BYcwWF2uOkYvBW6wJS08TON0w0kp
+	12qAsO5c2dpKzTj9x3VE5/Vz/bXg/qDZbi8aSoT2FnPSIXPi+TI5WYxB26DG/LF1lU5hKC
+	MobvjEddZRW5EfOS18Ls2IIuKKcJ7fXq22/Y5g4InXbhO8gtva/TEi74tQMg+Q==
+Date: Mon, 25 May 2026 23:09:38 +0200
+From: Lukas Beckmann <lbckmnn@mailbox.org>
+To: Sasha Levin <sashal@kernel.org>
+Cc: stable@vger.kernel.org, regressions@lists.linux.dev,
+	Mike Galbraith <efault@gmx.de>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>
+Subject: Re: [PATCH 6.12.y 0/3] backport missing dependencies of d66792919d4f
+Message-ID: <ahS6ksSyBL6HimBh@lukas-arch>
+References: <20260522213120.1205100-1-lbckmnn@mailbox.org>
+ <20260524-stable-item004-reply@kernel.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260524-stable-item004-reply@kernel.org>
+X-MBO-RS-META: iom4retsz3t7hpo4bcxysstc18nbpcc9
+X-MBO-RS-ID: d512d0f8e072fd5317e
 
-> Have you tried this patch? It dumps the context and PASID table entries
-> after a domain is attached to the device. Hopefully, you can find some
-> clues by comparing the good and bad kernels.
->=20
-> Thanks,
-> baolu
+On Sun, May 24, 2026 at 08:09:19AM -0400, Sasha Levin wrote:
+> > Commit d66792919d4f ("sched/deadline: Use revised wakeup rule for
+> > dl_server") in the 6.12.y stable tree (upstream commit 14a857056466)
+> > depends on three upstream commits that were not backported:
+> >
+> >   commit cccb45d7c429 ("sched/deadline: Less agressive dl_server handling")
+> >   commit 4ae8d9aa9f9d ("sched/deadline: Fix dl_server getting stuck")
+> >   commit a3a70caf7906 ("sched/deadline: Fix dl_server behaviour")
+> 
+> Thanks for tracking this down. Before I queue this, the series is
+> missing two more follow-up fixes that both carry "Fixes: cccb45d7c429"
+> and that are needed for the dl_server logic to behave correctly:
+> 
+>   4717432dfd99 ("sched/deadline: Fix dl_server_stopped()")
+>   bb4700adc3ab ("sched/deadline: Always stop dl-server before changing parameters")
+> 
+> Without 4717432dfd99 the dl_server_stopped() check is inverted (it
+> returns the wrong polarity after cccb45d7c429), and without
+> bb4700adc3ab the per-rq running_bw accounting can get out of sync when
+> dl-server parameters change while it is still active.
 
-https://lore.kernel.org/linux-iommu/uaUIyysjsnLHVLladjVXkuU63CTRoEzcw3BdlDX=
-2cdkt8T82i0AX79VQAJo08uMKvpnn20xyK0Pu2PrtyMV3hmSgcwutWhV14fgjyTW3aiQ=3D@pro=
-tonmail.com/
+I did notice 4717432dfd99 while preparing v1, since it caused the
+conflicts in a3a70caf7906. However, since 4ae8d9aa9f9d ("sched/deadline:
+Fix dl_server getting stuck") removes dl_server_stopped() entirely, the
+end result is the same whether 4717432dfd99 is included or not.
 
-I did, as I already wrote before. I looked through everything I could and w=
-as related, but I just haven't found anything. I don't know where else to l=
-ook than I already did and documented before. If you have any idea where sh=
-ould I look for something, I will do so.
+That said, including it is probably better :)
+
+> 
+> Could you send a v2 that includes both follow-ups on top of the
+> existing three? Then this should be safe to apply as a whole.
+
+Yes, I will do that.
+
+Thanks
+Lukas
