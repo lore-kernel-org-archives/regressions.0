@@ -1,118 +1,82 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.170])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81669282F03
-	for <regressions@lists.linux.dev>; Tue, 26 May 2026 11:02:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 508EE3E0C66;
+	Tue, 26 May 2026 11:35:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779793340; cv=none; b=rm5SfOP5WP1Fr88DdvLR7wBSlc0cpgIElJwQ48iwvZ/WrAciok5BoAvQxI0eXdaqmQOq/NAUbu6WBSriO24wfTXFwreg4JufdwUj/95vBYob6WxZdycC9Nxe5YzwtsGnpPzUTlX2apf5PctjLL45QIVzYhY/n7C9mY071BtGC7A=
+	t=1779795316; cv=none; b=uLZdQXA8t9L4ao0gQjh8CBEkQhJ0w2Ts569twWO70s7lHzww4zVxpi+cGHwFy12dr6qo1+39Wxr864hhKCEvVVSt4KRvEur/R8W9HelFTgv0WoCJ2hkmqQ3XNhhpomCy8BFvsHsNHxnFVa3CCxrAWmhiHpAMK2+CuviaBq/zMBA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779793340; c=relaxed/simple;
-	bh=X5PmJFYOnMoCHDWkg1xofv0SJcbSHYDhtU0aqiODcPE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aBBnQ9MDOPpnYrvVZpxgMT9GGFnmeYEd9Db28Yx4+j4SYxCskwJM9oRpY5NZEvr2AbqUyN4iiL6oCqk+id8Gnz21OSq/PkXR6jYweLQtNoULDqmIYCZ7mO3xkj16btKz5UfJGGDjJjgcoVjuSktwUya9La7l7rbXPgFSrutDw78=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=bNM3rJtN; arc=none smtp.client-ip=188.68.63.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1779795316; c=relaxed/simple;
+	bh=ZFEWDQVpgi2M+dqFkSK+iIFTP7OyecjxApY93rIvv8w=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=pvb46etghuiDNHkEFfFmCWzpxXQ/JEAJVZBy9n0+H/ceotcpd1T5lNMYwJmJnXskOKk+Mouj6DkNcZ+t5l90MdmZ/4EwyC7dRm0a50y6cmhslA1Gf+GzkzEX/aXx4ukP9/6xpYMRH+LVnet1AykN+c7CKx8UI6eDvzFn3sHNkMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=emQ34TJu; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="bNM3rJtN"
-Received: from mors-relay8203.netcup.net (localhost [127.0.0.1])
-	by mors-relay8203.netcup.net (Postfix) with ESMTPS id 4gPqZm4mrQz8gZm;
-	Tue, 26 May 2026 11:02:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1779793328;
-	bh=X5PmJFYOnMoCHDWkg1xofv0SJcbSHYDhtU0aqiODcPE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=bNM3rJtNx/NvVUELxIAG2LtHQAmELBpJKTBS6Jk40WHOB/AOg+9szKTbfoNhOyCAt
-	 GmqxyoxaKvpdKuDOY+8fSXhCTtNaCog8SNCBv4xsnNrjsQPv7zA8SVtl4TdAPf0148
-	 ubmH0LmiRzXXTGspOUwXkEwwdkuPWR5LS3boBlwSQZ94bf2A2O8v9UawrsjkpjaX+5
-	 e70EaFIZ0QBIGZVZ8EGIVx0KIpcBKxTjAVZKBzGfFnMGfMVsfSa8n+BRtbM5KF1zuk
-	 y6ln4Uj6bNWya8r28IVYDEsHXI+4fyR0obMb9gusPZEYUEGhPU3m26gc2dD+6wOgh6
-	 jFr8NlAQQ4kag==
-Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay8203.netcup.net (Postfix) with ESMTPS id 4gPqZm42RYz8gWh;
-	Tue, 26 May 2026 11:02:08 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
-X-Spam-Flag: NO
-X-Spam-Score: -2.901
-X-Spam-Level: 
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4gPqZk5GgLz8tcX;
-	Tue, 26 May 2026 13:02:06 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 9AEBD61886;
-	Tue, 26 May 2026 13:02:05 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <28aa7450-e4c1-43d8-acc8-16a95df1d1a1@leemhuis.info>
-Date: Tue, 26 May 2026 13:02:04 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="emQ34TJu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A59841F00A3D;
+	Tue, 26 May 2026 11:35:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779795314;
+	bh=Li26XPRm7/eoUa6Pz5Hdq/jrI3WVUijGkMu6MzHsS3A=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=emQ34TJuiu8uYpW4PVd1xzv8qQ5w2qXXovys85E0abTHLanqxmJVOl6hTWcgQsPm3
+	 wWdgfaJR8/hwh53YS1QCKNMQ++kvVKR21Kf45EhsvJlCdB1fgKPtL7ziRg73Z5jc2m
+	 LQgNulY7ll9DBgfzwiUj87hSCXhrcP1Pq/j6gi7qHj0ec2xP1TzFdN/k6gHSia78MC
+	 klbz+eYjjLF5ueCgUtHvuXs3jv1OGleyTgKZ3yo/2HJRvlp24O0tcV+HsLFxpVdOKA
+	 hwnLS93GV2R6dFSKARyqr3dEPpkO3vxhhlB71YSFkuDeTInHWDnc7FeV+fxCjh3NqO
+	 enMzwdenk5Mgg==
+From: Sasha Levin <sashal@kernel.org>
+To: stable@vger.kernel.org,
+	Natanael Copa <ncopa@alpinelinux.org>
+Cc: Sasha Levin <sashal@kernel.org>,
+	regressions@lists.linux.dev,
+	linux-s390@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	vneethv@linux.ibm.com,
+	oberpar@linux.ibm.com,
+	hca@linux.ibm.com,
+	gor@linux.ibm.com,
+	agordeev@linux.ibm.com,
+	borntraeger@linux.ibm.com,
+	svens@linux.ibm.com
+Subject: Re: [REGRESSION] 6.6.141 s390x build failure in s390/cio due to missing driver_override infrastructure
+Date: Tue, 26 May 2026 07:35:06 -0400
+Message-ID: <20260525231000.agent5-0002@kernel.org>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <20260525101635.26090-1-ncopa@alpinelinux.org>
+References: <20260525101635.26090-1-ncopa@alpinelinux.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Subject:[REGRESSION] fs/qnx6: incorrect pointer arithmetic breaks
- dir scanning completely
-To: Oleg Chaun <olegchaun@gmail.com>, stable@vger.kernel.org
-Cc: regressions@lists.linux.dev, willy@infradead.org, brauner@kernel.org,
- Arpith Kalaginanavoor <arpithk@nvidia.com>,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- Linux-fsdevel <linux-fsdevel@vger.kernel.org>
-References: <d02905f7-6ef8-4df0-bb55-dea44fda6ce2@gmail.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <d02905f7-6ef8-4df0-bb55-dea44fda6ce2@gmail.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-PPP-Message-ID: <177979332608.596138.12636427513309806755@mxe9fb.netcup.net>
-X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: 9AEBD61886
-X-NC-CID: cPbqH/IzxRA6KHLDH+mnHajbvASCnvhBeSWrNM+7XMRObnKunM4=
 
-On 5/26/26 12:40, Oleg Chaun wrote:
-> 
-> A change to fs/qnx6/dir.c:qnx6_readdir() introduced in commit b2aa615
-> contains an incorrect pointer arithmetic (adding an offset expressed in
-> QNX6_DIR_ENTRY_SIZE units to a plain char * pointer) which breaks QNX6
-> directory reading completely: only few entries are visible, kernel log
-> is spammed with "invalid direntry size" messages.
+> v6.6.141 fails to build on s390x with
+>
+>   drivers/s390/cio/css.c: error: implicit declaration of function
+>     'device_match_driver_override'
+>   drivers/s390/cio/css.c: error: 'struct bus_type' has no member named
+>     'driver_override'
+>
+> The s390/cio change (c4295487124f, upstream ac4d8bb6e2e1) was queued
+> without its driver-core prerequisite cb3d1049f4ea ("driver core:
+> generalize driver_override in struct device").
+>
+> Could you backport cb3d1049f4ea to 6.6.y, or revert c4295487124f?
 
-Thx for the report. From a quick look it seems Arpith Kalaginanavoor
-(now CCed) reported this last month and provided a proper patch:
-https://lore.kernel.org/all/20260310102233.391113-1-arpithk@nvidia.com/
+Thanks for the report and the analysis.
 
-Al (now CCed, too) suggested a slightly different fix, but it seems
-since then nothing happened.
+The driver-core prerequisite (cb3d1049f4ea) is already queued for
+6.6.y - The companion bdddb54c533f ("driver core: platform: use generic
+driver_override infrastructure") is queued too. Once 6.6.142 ships the build
+error should resolve.
 
-Ciao, Thorsten
+Newer LTS branches (6.12/6.18/7.0) already have the prerequisite as
+an ancestor, so only 6.6.y was affected.
 
-> The following patch seems to fix the issue:
-> 
-> --- /tmp/temp/linux-6.17/fs/qnx6/dir.c    2025-09-28 23:39:22.000000000
-> +0200
-> +++ ./dir.c    2026-02-13 18:52:56.000000000 +0100
-> @@ -138,8 +138,8 @@
->              ctx->pos = (n + 1) << PAGE_SHIFT;
->              return PTR_ERR(kaddr);
->          }
-> -        de = (struct qnx6_dir_entry *)(kaddr + offset);
-> -        limit = kaddr + last_entry(inode, n);
-> +        de = ((struct qnx6_dir_entry *)kaddr) + offset;
-> +        limit = kaddr + last_entry(inode, n) * QNX6_DIR_ENTRY_SIZE;
->          for (; (char *)de < limit; de++, ctx->pos +=
-> QNX6_DIR_ENTRY_SIZE) {
->              int size = de->de_size;
->              u32 no_inode = fs32_to_cpu(sbi, de->de_inode);
-> 
-> I can test any further changes on real QNX6 fs images if necessary.
-
-#regzbot introduced: b2aa61556fcfa8
-#regzbot title: qnx6: dir scanning broken
-#regzbot dup:
-https://lore.kernel.org/all/20260310102233.391113-1-arpithk@nvidia.com/
+--
+Thanks,
+Sasha
