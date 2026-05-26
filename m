@@ -1,206 +1,94 @@
-Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.61.103])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC83B3563DD
-	for <regressions@lists.linux.dev>; Mon, 25 May 2026 21:12:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E5F330CD85
+	for <regressions@lists.linux.dev>; Tue, 26 May 2026 06:45:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.61.103
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779743535; cv=none; b=h/e1cD6+E6NvJpvFgFaPKbmvrFbDOE5VqfVLvplKLg5e2yWa1cd9e1TqKm7Wr4JqYKS5vcdbDDESXnMPD6w3of149m+g8gG1L8vjS13HogYgu57K8pYCAqBDcKSJ7SpPNA3RqCPrzQbAOvIm8eQXZ8ACbJsnM+iLd1TwvEm4LKY=
+	t=1779777936; cv=none; b=eLyiHz5Ru+WB8+VaFDP+23hFJRp2XdSQ3+QOlpfA2LgDK6p/tKSSm10qmSpjw1+eTJUPZmwipA2kC1d5RAU/rUhNDXrSknKJflSPr85ZNDG3OM7r9vWA5paQ0Ek5WN3gbfknkRcKQ3tejGprborq32no0tx0rQAjrcwJDWmF0Y0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779743535; c=relaxed/simple;
-	bh=JQXTZHv9ynWImIw+uH/mNYj+0s8vEWBOyNsiUY/pfjU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZOC55GPfqr0bPR17zgzjWFfbbeGtrjOBhGeFLDVvkz/TRIyGkHV8s379awb3WJ3V51vttF0g5TrRR59msi5/BTgn4ShUOKiePa5dQqQ7B82rPIXLENaO5wFB8EqK0/FeD0KLnPuy9klxcoqPKOj/AiY4SmLHxcGljq3AxG30tqw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=E0yuVoXv; arc=none smtp.client-ip=80.241.56.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+	s=arc-20240116; t=1779777936; c=relaxed/simple;
+	bh=sy2UVt47KvvBZjkvIegcfLekUZy6gD3iViRYXJDAQm4=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=con4sBLVMxwJH3+vNFc9QFiIElBwhxouG4tZRjzCHk8jjXLVHdieU73us+HWcxMJsACQfwWkQJn+ZfBolhW5/fK8MPUx2D93wzzYj7HsTxczj4JDb5YyaawhAWPZiPBNbD0AhuAiKwppsVZqfwrbwdtZFqBMTUwNhezB+Sqef9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=X/C4BCZS; arc=none smtp.client-ip=188.68.61.103
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="E0yuVoXv"
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:b231:465::2])
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="X/C4BCZS"
+Received: from mors-relay-8403.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4gPjtX3chvz8Bhh
+	for <regressions@lists.linux.dev>; Tue, 26 May 2026 08:45:24 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1779777924;
+	bh=sy2UVt47KvvBZjkvIegcfLekUZy6gD3iViRYXJDAQm4=;
+	h=Date:Subject:From:To:References:In-Reply-To:From;
+	b=X/C4BCZSKmAn5TJoUP0W2dhFxXnM5+uuUkBWZGYdSMg16uvf8u9u2UFa7ub20mWeI
+	 2v16wgNHyOYktIIStlGwvHJ5KlKfGy32KYhRpBmWP83XOmoMUOnsl5yQaNa75j+DBk
+	 Fdb5DDVKfnYC019OmyzrQ5enFeYCv0jg6PKPI56jMatJNnnFCwq+SoKo8MHXCt1Uiu
+	 ur+OU6Q0h+MgGBfpH1VrY/yzsNzGRm3E46pObDNeRkNdfR90AahG7jfMhOs7vSmoxm
+	 79FdduUqXMGe/sTH2cq4QW0lJK6OsiVHq/OTvqObz92vXqgCFJ5Wg9yrU4ZY0EVcIT
+	 FUWB3OYJ0/dsA==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4gPjtX2w6tz8Bh3
+	for <regressions@lists.linux.dev>; Tue, 26 May 2026 08:45:24 +0200 (CEST)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4gPT9640gKz9tlh;
-	Mon, 25 May 2026 23:12:10 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1779743530;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=d9NXHG1QsRDaHFoIeVWakdM8OMmJhV8CF//uWMDN8Ds=;
-	b=E0yuVoXv2zSwQRDfY9xKOgdVqMCf6/V7QqXTFFLGf/6c5RJNB7i12eesljVi/93hG9tRY0
-	TOE51fU4QKPeXcUw2LwQYE38/qRI+1DOHwhRU5OYJdsMTKSfByZhXLmyIWk7V/7TkC4gmR
-	fYgzyjyNOFiGY66D8GnkizATGus4wTZ8wuQKePPlpPyf9avKy7Q9BRTan47tS1H1P29LaQ
-	GFBwfof2cENvdN3uYHRtGRIOPd4DTn9RwAKrFo2PG7FEmrq2/ThdwYMkcUGZCPcert+YBR
-	N7FHj91XkSNvZ+4UVk9xME8epq1XNN+TvT1vbgDWWSor86awoC5AT+firEGGCg==
-From: Lukas Beckmann <lbckmnn@mailbox.org>
-To: Sasha Levin <sashal@kernel.org>
-Cc: stable@vger.kernel.org,
-	regressions@lists.linux.dev,
-	Mike Galbraith <efault@gmx.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>
-Subject: [PATCH 6.12.y v2 5/5] sched/deadline: Fix dl_server behaviour
-Date: Mon, 25 May 2026 23:11:17 +0200
-Message-ID: <20260525211117.630141-6-lbckmnn@mailbox.org>
-In-Reply-To: <20260525211117.630141-1-lbckmnn@mailbox.org>
-References: <https://lore.kernel.org/stable/20260522213120.1205100-1-lbckmnn@mailbox.org/>
- <20260525211117.630141-1-lbckmnn@mailbox.org>
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4gPjtX1VhZz8scM
+	for <regressions@lists.linux.dev>; Tue, 26 May 2026 08:45:24 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 5C6B96031E
+	for <regressions@lists.linux.dev>; Tue, 26 May 2026 08:45:23 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <6f460a7a-6bb9-4024-a2ef-9438675814ca@leemhuis.info>
+Date: Tue, 26 May 2026 08:45:22 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-MBO-RS-ID: c5996619e56c2379293
-X-MBO-RS-META: 4kuscmnbgd5oiyu6h4sgp31t7d3pjckn
+User-Agent: Mozilla Thunderbird
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: <177977792358.186384.12659492602114578301@mxe9fb.netcup.net>
+X-Rspamd-Server: rspamd-worker-8404
+X-Rspamd-Queue-Id: 5C6B96031E
+X-NC-CID: FNwMZ2NWxiKGFg9YNyX06f+sLSoZlmHXRsD4ers6s+98NveytgM=
 
-From: Peter Zijlstra <peterz@infradead.org>
 
-commit a3a70caf7906708bf9bbc80018752a6b36543808 upstream.
 
-John reported undesirable behaviour with the dl_server since commit:
-cccb45d7c4295 ("sched/deadline: Less agressive dl_server handling").
+On 3/9/24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-When starving fair tasks on purpose (starting spinning FIFO tasks),
-his fair workload, which often goes (briefly) idle, would delay fair
-invocations for a second, running one invocation per second was both
-unexpected and terribly slow.
+#regzbot report:
+https://lore.kernel.org/all/20260525101635.26090-1-ncopa@alpinelinux.org/
+#regzbot introduced: c4295487124f
 
-The reason this happens is that when dl_se->server_pick_task() returns
-NULL, indicating no runnable tasks, it would yield, pushing any later
-jobs out a whole period (1 second).
+#regzbot report: https://lore.kernel.org/all/ahC8Pyuatu_AvnZp@google.com/
+#regzbot introduced: eaf290c404f7c3
+#regzbot title: PCI: dwc: suspend/resume regression on a Qualcomm
+SC7280 laptop
 
-Instead simply stop the server. This should restore behaviour in that
-a later wakeup (which restarts the server) will be able to continue
-running (subject to the CBS wakeup rules).
+#regzbot report:
+https://lore.kernel.org/lkml/20260501202438.376033-1-florian.fainelli@broadcom.com/
+#regzbot fix: ed831e7ea1a860bdbab3eadeb95f7f73e9d212df
 
-Notably, this does not re-introduce the behaviour cccb45d7c4295 set
-out to solve, any start/stop cycle is naturally throttled by the timer
-period (no active cancel).
-
-Fixes: cccb45d7c4295 ("sched/deadline: Less agressive dl_server handling")
-Reported-by: John Stultz <jstultz@google.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Tested-by: John Stultz <jstultz@google.com>
-Closes: https://lore.kernel.org/regressions/04657838-46d1-432d-95e1-eb73b930b032@mailbox.org
-Signed-off-by: Lukas Beckmann <lbckmnn@mailbox.org>
----
- include/linux/sched.h   |  1 -
- kernel/sched/deadline.c | 23 ++---------------------
- kernel/sched/sched.h    | 33 +++++++++++++++++++++++++++++++--
- 3 files changed, 33 insertions(+), 24 deletions(-)
-
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 464d281aa2e4..f9ffe42cae17 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -674,7 +674,6 @@ struct sched_dl_entity {
- 	unsigned int			dl_defer	  : 1;
- 	unsigned int			dl_defer_armed	  : 1;
- 	unsigned int			dl_defer_running  : 1;
--	unsigned int			dl_server_idle    : 1;
- 
- 	/*
- 	 * Bandwidth enforcement timer. Each -deadline task has its
-diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
-index 609783d7de29..a6c699e43111 100644
---- a/kernel/sched/deadline.c
-+++ b/kernel/sched/deadline.c
-@@ -1621,10 +1621,8 @@ void dl_server_update_idle_time(struct rq *rq, struct task_struct *p)
- void dl_server_update(struct sched_dl_entity *dl_se, s64 delta_exec)
- {
- 	/* 0 runtime = fair server disabled */
--	if (dl_se->dl_runtime) {
--		dl_se->dl_server_idle = 0;
-+	if (dl_se->dl_runtime)
- 		update_curr_dl_se(dl_se->rq, dl_se, delta_exec);
--	}
- }
- 
- /*
-@@ -1868,20 +1866,6 @@ void dl_server_stop(struct sched_dl_entity *dl_se)
- 	dl_se->dl_server_active = 0;
- }
- 
--static bool dl_server_stopped(struct sched_dl_entity *dl_se)
--{
--	if (!dl_se->dl_server_active)
--		return true;
--
--	if (dl_se->dl_server_idle) {
--		dl_server_stop(dl_se);
--		return true;
--	}
--
--	dl_se->dl_server_idle = 1;
--	return false;
--}
--
- void dl_server_init(struct sched_dl_entity *dl_se, struct rq *rq,
- 		    dl_server_pick_f pick_task)
- {
-@@ -2637,10 +2621,7 @@ static struct task_struct *__pick_task_dl(struct rq *rq)
- 	if (dl_server(dl_se)) {
- 		p = dl_se->server_pick_task(dl_se);
- 		if (!p) {
--			if (!dl_server_stopped(dl_se)) {
--				dl_se->dl_yielded = 1;
--				update_curr_dl_se(rq, dl_se, 0);
--			}
-+			dl_server_stop(dl_se);
- 			goto again;
- 		}
- 		rq->dl_server = dl_se;
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 9391ff62cdaa..7956abeb9154 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -377,10 +377,39 @@ extern s64 dl_scaled_delta_exec(struct rq *rq, struct sched_dl_entity *dl_se, s6
-  *   dl_server_update() -- called from update_curr_common(), propagates runtime
-  *                         to the server.
-  *
-- *   dl_server_start()
-- *   dl_server_stop()  -- start/stop the server when it has (no) tasks.
-+ *   dl_server_start() -- start the server when it has tasks; it will stop
-+ *			  automatically when there are no more tasks, per
-+ *			  dl_se::server_pick() returning NULL.
-+ *
-+ *   dl_server_stop() -- (force) stop the server; use when updating
-+ *                       parameters.
-  *
-  *   dl_server_init() -- initializes the server.
-+ *
-+ * When started the dl_server will (per dl_defer) schedule a timer for its
-+ * zero-laxity point -- that is, unlike regular EDF tasks which run ASAP, a
-+ * server will run at the very end of its period.
-+ *
-+ * This is done such that any runtime from the target class can be accounted
-+ * against the server -- through dl_server_update() above -- such that when it
-+ * becomes time to run, it might already be out of runtime and get deferred
-+ * until the next period. In this case dl_server_timer() will alternate
-+ * between defer and replenish but never actually enqueue the server.
-+ *
-+ * Only when the target class does not manage to exhaust the server's runtime
-+ * (there's actualy starvation in the given period), will the dl_server get on
-+ * the runqueue. Once queued it will pick tasks from the target class and run
-+ * them until either its runtime is exhaused, at which point its back to
-+ * dl_server_timer, or until there are no more tasks to run, at which point
-+ * the dl_server stops itself.
-+ *
-+ * By stopping at this point the dl_server retains bandwidth, which, if a new
-+ * task wakes up imminently (starting the server again), can be used --
-+ * subject to CBS wakeup rules -- without having to wait for the next period.
-+ *
-+ * Additionally, because of the dl_defer behaviour the start/stop behaviour is
-+ * naturally thottled to once per period, avoiding high context switch
-+ * workloads from spamming the hrtimer program/cancel paths.
-  */
- extern void dl_server_update(struct sched_dl_entity *dl_se, s64 delta_exec);
- extern void dl_server_start(struct sched_dl_entity *dl_se);
--- 
-2.54.0
-
+#regzbot report:
+https://lore.kernel.org/lkml/5efe9e03-4d86-43a0-9ec2-e610ff31095d@free.fr/
+#regzbot fix: serial: 8250: dispatch SysRq character in
+serial8250_handle_irq()
