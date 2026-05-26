@@ -1,63 +1,55 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EA8D3DD510
-	for <regressions@lists.linux.dev>; Tue, 26 May 2026 10:40:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81669282F03
+	for <regressions@lists.linux.dev>; Tue, 26 May 2026 11:02:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779792018; cv=none; b=R0TmptKrkpYJXTuJnUhO7JBLvZZMBzOY5xrOJsWhBG04erqWWLMpenxGTFWCRRq9ybQXqL36O+43SUAEo/YSIoKJmbgtg0eHwnbu7qm8lWD8NuBDJHU1pbDsGnFreEgzf9ubjBTKclj6+m5pb3t87GmhM19MSkAsJBYAqGFWyX8=
+	t=1779793340; cv=none; b=rm5SfOP5WP1Fr88DdvLR7wBSlc0cpgIElJwQ48iwvZ/WrAciok5BoAvQxI0eXdaqmQOq/NAUbu6WBSriO24wfTXFwreg4JufdwUj/95vBYob6WxZdycC9Nxe5YzwtsGnpPzUTlX2apf5PctjLL45QIVzYhY/n7C9mY071BtGC7A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779792018; c=relaxed/simple;
-	bh=Bls7qHvIUDoc4ooazcpfeyKMHkmvPOvpEwus1CeH7IE=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=kDCGVrXLwTEJIJCbMru+NRWn/3+byUjwMxFTQeeX6qOQ0AWPUodWTROouuTp8Kcp2V0/qx1kj0Q43S49ixL7W5SyhhjiFHMjwBwj6264xxhfW7QsMfnB8lMU7eBvw+QxjBZ0b0Xvv0l40F2jLmh+jCRdvzbjw9PRBgQkkiQtl2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=etTg8LHT; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1779793340; c=relaxed/simple;
+	bh=X5PmJFYOnMoCHDWkg1xofv0SJcbSHYDhtU0aqiODcPE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aBBnQ9MDOPpnYrvVZpxgMT9GGFnmeYEd9Db28Yx4+j4SYxCskwJM9oRpY5NZEvr2AbqUyN4iiL6oCqk+id8Gnz21OSq/PkXR6jYweLQtNoULDqmIYCZ7mO3xkj16btKz5UfJGGDjJjgcoVjuSktwUya9La7l7rbXPgFSrutDw78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=bNM3rJtN; arc=none smtp.client-ip=188.68.63.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="etTg8LHT"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-bcd0111ea98so1447897966b.1
-        for <regressions@lists.linux.dev>; Tue, 26 May 2026 03:40:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779792016; x=1780396816; darn=lists.linux.dev;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fqXUGLpT1dA9YMKXdh8DEtG5timDuzzlcnIySkvCiMY=;
-        b=etTg8LHTh024it8fBPG8+3oq7Tn4RywPqFAmgeNnI88Y/7/4Yy0wxOuvr2H0Igedh/
-         n+h34S5a37vdsV6O1+a48nEhIX+tqJrOQkxaBxXvSi6rJix7GwqgF3chseOm3UD5u30H
-         0so54EPnCOqNqMaoyHgILQDEQgUxQfY+ifFHbSWWnA6Mde7RwcUYbpPh+cyoLxNAW2B9
-         +sGt8e3DMGB43Dqt56zTHro/8+E+z8Qri7ehuccWtRbn6w0NpRzLhPRz5LZtrD3ax9wc
-         eSKERFbICDBNB/XjasdU8gP5RFtuz+HN4UFf/MuHrjceFbyoankiJ+AtwmBcXy5bJspd
-         peIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779792016; x=1780396816;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:x-gm-gg:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=fqXUGLpT1dA9YMKXdh8DEtG5timDuzzlcnIySkvCiMY=;
-        b=l+1F2FSB5OG7MMY4s0HNPez8CFp8cRGychCnNaoO4HHaRkq7PPPbAms5iLRvr/j5W8
-         Pl2MJ/ORxhjixapcmXaY1fQTngDl8gfXz5ORYLzFk3B0Pm9XPJ4tjFyOdqgF5lcQnGMh
-         dQ5qYlTyKFQRCXiLdnXVm3L1mZeiEaxnqBMXeb1fRKHjDeogzez2L2YdiMBRkJiw3+tX
-         y3JS7Uiil+W5T2gTpzF0IdLyNJ6US//AEFwMAwvcYWeMrJtGBvityKZ0RVlb5KS533Qb
-         BG/gclhyuvsOJFXwMQ9zgWOrqBviXFA9ny7O2eXTTDNd3WYFwGn+7Xg5D4HX5K56Xfli
-         CmKA==
-X-Gm-Message-State: AOJu0YypTeNqwwKpRggaxHLMUgMsMCvBTNuITxxkAEhUBNtSRl4jgozM
-	kurwSAJTCgLCyp3UbakETNyVLA1xuUxg+Cnq6nTBMtqDhp2msndf0xKl
-X-Gm-Gg: Acq92OEX27SGCesgo3gQgAew8FbPEkqDRZBvdF6pP61KOYxCGpTnO9kQhZiVhKN2m8x
-	UMYuXCS9T2ZXCEguYewwEVuodh5qIrMjyBwTRWpW4ZuwYjqzJbCiC/1bSR0cMWBsI4I/t+DHsK7
-	3UTRpvupP7LH2HLQr/WFreAdcYsQYurSOMsR3tNWamAOAbJuUJt8bhyJqgiHiFWF+GR0YrqYUqA
-	w7rrgxvBZFkCRJTsixWb2OEGLO9OzS/69j2UtYaBsQhV/aLdu1KEeb0ohUC2J5EI3ODrzzfnglA
-	OUlKfajBStQsyu3767C7CUFjLhL9LC/AKUgn4qTBBoff5m4vzwdjrgmWIj2J6oBCGC4orZ6/Dzi
-	h52q1eepU4veQFxQysWGqkl920z53WvOQ7WmvwsYNsBEzEyUAX8L8uAnvkhSzquq/dL6Cg1kTHu
-	D1lCPOjlqI2x/+yMDAR1OA+7goRiQ=
-X-Received: by 2002:a17:906:8a64:b0:bda:916b:c87e with SMTP id a640c23a62f3a-bdd28b6f18emr790400566b.12.1779792015569;
-        Tue, 26 May 2026 03:40:15 -0700 (PDT)
-Received: from [192.168.7.128] ([80.242.35.109])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-688bb139b40sm4764655a12.24.2026.05.26.03.40.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 26 May 2026 03:40:15 -0700 (PDT)
-Message-ID: <d02905f7-6ef8-4df0-bb55-dea44fda6ce2@gmail.com>
-Date: Tue, 26 May 2026 12:40:12 +0200
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="bNM3rJtN"
+Received: from mors-relay8203.netcup.net (localhost [127.0.0.1])
+	by mors-relay8203.netcup.net (Postfix) with ESMTPS id 4gPqZm4mrQz8gZm;
+	Tue, 26 May 2026 11:02:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1779793328;
+	bh=X5PmJFYOnMoCHDWkg1xofv0SJcbSHYDhtU0aqiODcPE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=bNM3rJtNx/NvVUELxIAG2LtHQAmELBpJKTBS6Jk40WHOB/AOg+9szKTbfoNhOyCAt
+	 GmqxyoxaKvpdKuDOY+8fSXhCTtNaCog8SNCBv4xsnNrjsQPv7zA8SVtl4TdAPf0148
+	 ubmH0LmiRzXXTGspOUwXkEwwdkuPWR5LS3boBlwSQZ94bf2A2O8v9UawrsjkpjaX+5
+	 e70EaFIZ0QBIGZVZ8EGIVx0KIpcBKxTjAVZKBzGfFnMGfMVsfSa8n+BRtbM5KF1zuk
+	 y6ln4Uj6bNWya8r28IVYDEsHXI+4fyR0obMb9gusPZEYUEGhPU3m26gc2dD+6wOgh6
+	 jFr8NlAQQ4kag==
+Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay8203.netcup.net (Postfix) with ESMTPS id 4gPqZm42RYz8gWh;
+	Tue, 26 May 2026 11:02:08 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
+X-Spam-Flag: NO
+X-Spam-Score: -2.901
+X-Spam-Level: 
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4gPqZk5GgLz8tcX;
+	Tue, 26 May 2026 13:02:06 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 9AEBD61886;
+	Tue, 26 May 2026 13:02:05 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <28aa7450-e4c1-43d8-acc8-16a95df1d1a1@leemhuis.info>
+Date: Tue, 26 May 2026 13:02:04 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -65,45 +57,62 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: stable@vger.kernel.org
-Cc: regressions@lists.linux.dev, willy@infradead.org, brauner@kernel.org
-From: Oleg Chaun <olegchaun@gmail.com>
-Subject: Subject:[REGRESSION] fs/qnx6: incorrect pointer arithmetic breaks dir
- scanning completely
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Subject: Re: Subject:[REGRESSION] fs/qnx6: incorrect pointer arithmetic breaks
+ dir scanning completely
+To: Oleg Chaun <olegchaun@gmail.com>, stable@vger.kernel.org
+Cc: regressions@lists.linux.dev, willy@infradead.org, brauner@kernel.org,
+ Arpith Kalaginanavoor <arpithk@nvidia.com>,
+ Alexander Viro <viro@zeniv.linux.org.uk>,
+ Linux-fsdevel <linux-fsdevel@vger.kernel.org>
+References: <d02905f7-6ef8-4df0-bb55-dea44fda6ce2@gmail.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <d02905f7-6ef8-4df0-bb55-dea44fda6ce2@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-PPP-Message-ID: <177979332608.596138.12636427513309806755@mxe9fb.netcup.net>
+X-Rspamd-Server: rspamd-worker-8404
+X-Rspamd-Queue-Id: 9AEBD61886
+X-NC-CID: cPbqH/IzxRA6KHLDH+mnHajbvASCnvhBeSWrNM+7XMRObnKunM4=
 
+On 5/26/26 12:40, Oleg Chaun wrote:
+> 
+> A change to fs/qnx6/dir.c:qnx6_readdir() introduced in commit b2aa615
+> contains an incorrect pointer arithmetic (adding an offset expressed in
+> QNX6_DIR_ENTRY_SIZE units to a plain char * pointer) which breaks QNX6
+> directory reading completely: only few entries are visible, kernel log
+> is spammed with "invalid direntry size" messages.
 
-#regzbot introduced: b2aa615
+Thx for the report. From a quick look it seems Arpith Kalaginanavoor
+(now CCed) reported this last month and provided a proper patch:
+https://lore.kernel.org/all/20260310102233.391113-1-arpithk@nvidia.com/
 
-Hello,
+Al (now CCed, too) suggested a slightly different fix, but it seems
+since then nothing happened.
 
-A change to fs/qnx6/dir.c:qnx6_readdir() introduced in commit b2aa615 
-contains an incorrect pointer arithmetic (adding an offset expressed in 
-QNX6_DIR_ENTRY_SIZE units to a plain char * pointer) which breaks QNX6 
-directory reading completely: only few entries are visible, kernel log 
-is spammed with "invalid direntry size" messages.
+Ciao, Thorsten
 
-The following patch seems to fix the issue:
+> The following patch seems to fix the issue:
+> 
+> --- /tmp/temp/linux-6.17/fs/qnx6/dir.c    2025-09-28 23:39:22.000000000
+> +0200
+> +++ ./dir.c    2026-02-13 18:52:56.000000000 +0100
+> @@ -138,8 +138,8 @@
+>              ctx->pos = (n + 1) << PAGE_SHIFT;
+>              return PTR_ERR(kaddr);
+>          }
+> -        de = (struct qnx6_dir_entry *)(kaddr + offset);
+> -        limit = kaddr + last_entry(inode, n);
+> +        de = ((struct qnx6_dir_entry *)kaddr) + offset;
+> +        limit = kaddr + last_entry(inode, n) * QNX6_DIR_ENTRY_SIZE;
+>          for (; (char *)de < limit; de++, ctx->pos +=
+> QNX6_DIR_ENTRY_SIZE) {
+>              int size = de->de_size;
+>              u32 no_inode = fs32_to_cpu(sbi, de->de_inode);
+> 
+> I can test any further changes on real QNX6 fs images if necessary.
 
---- /tmp/temp/linux-6.17/fs/qnx6/dir.c    2025-09-28 23:39:22.000000000 
-+0200
-+++ ./dir.c    2026-02-13 18:52:56.000000000 +0100
-@@ -138,8 +138,8 @@
-              ctx->pos = (n + 1) << PAGE_SHIFT;
-              return PTR_ERR(kaddr);
-          }
--        de = (struct qnx6_dir_entry *)(kaddr + offset);
--        limit = kaddr + last_entry(inode, n);
-+        de = ((struct qnx6_dir_entry *)kaddr) + offset;
-+        limit = kaddr + last_entry(inode, n) * QNX6_DIR_ENTRY_SIZE;
-          for (; (char *)de < limit; de++, ctx->pos += 
-QNX6_DIR_ENTRY_SIZE) {
-              int size = de->de_size;
-              u32 no_inode = fs32_to_cpu(sbi, de->de_inode);
-
-I can test any further changes on real QNX6 fs images if necessary.
-
-BR,
-Oleg
+#regzbot introduced: b2aa61556fcfa8
+#regzbot title: qnx6: dir scanning broken
+#regzbot dup:
+https://lore.kernel.org/all/20260310102233.391113-1-arpithk@nvidia.com/
