@@ -1,118 +1,114 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [185.244.194.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70F48175A60
-	for <regressions@lists.linux.dev>; Wed, 27 May 2026 07:48:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B89173DB318
+	for <regressions@lists.linux.dev>; Wed, 27 May 2026 08:24:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.244.194.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779868105; cv=none; b=KH+kppgPoNEteL1+6yT9bjvLveBmwmsonvtfmEPTn+LVuKJA4wQupEBjDPd7eQIrTRBcEHosP0VDUmuGWxM5CHCyJkoPuqqOAbLnexEoAs08xxCWZFeoh59cOXHJHkcqUbAAomxEkdqWMjirdwk9ddHKeyujWVjZGkv8scuhS2o=
+	t=1779870295; cv=none; b=i9X8UAAKJc7PTNm93h3Tc35cXr5Cg01FCaA/iy3GCAIcRftxvjVprx3e/LLCMQaQjuAp/EtCnGSD/LczgX38ZeTLa7OKgZ+cYbZPikgj2VFYyOpNVguAWT4tDx689MZDw5pIykz8soV1n5rgIFQhJ/3xfXsFAcWurx00cRY+0L4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779868105; c=relaxed/simple;
-	bh=tMPQ8gRw1l2kxM7BJtqHRx/Gs89K25JdPZuV9UiK7Zk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r0sUQHyMg5bDQEkzLdkV9k0o2XtUjoY6iXvqCXO37892zqFlwmYWoAqpV+RQQNBjv9TzLCjk0ABHBYmONrVYhK9NHna6gtUOaXAc5Tj+zJD4JJh++41DRF0eYiC9wZGOExmVW5hrrSusLfLfIyurm1+2canO7k44d/Eq2eKzmSk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=c+uRvcLT; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1779870295; c=relaxed/simple;
+	bh=LhmivWCxmv3D6rHVzIUcmcgTSUS6b48gTMM/vLL1kKE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kzJOKv9FfpvX6ts1d2pnZDBLHacUb4FPhj1XgYXAYn0HUnfWgnVicZKP95Dktuo7y8q2jdk6tvYUycQ2OY5eFQmXrmDsZMv0OJUou+KQk0dwPheWp6lUvPTxIwm5+vsIA1bwS/Za/6Fq+L1q01h54JKHHEfzRfGPsTV/W5hOX5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=MBwCs88Z; arc=none smtp.client-ip=185.244.194.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="c+uRvcLT"
-Received: from killaraus.ideasonboard.com (62-193-63-110.as16211.net [62.193.63.110])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 66FCD55;
-	Wed, 27 May 2026 09:48:01 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1779868081;
-	bh=tMPQ8gRw1l2kxM7BJtqHRx/Gs89K25JdPZuV9UiK7Zk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=c+uRvcLTPMULSnB1WDUNYogb9UkGUTr6ZzQdeAFZiu/G6etu+W1vMuj1Kq/AxL6Qy
-	 I++qKxJnUbiPgYpTJe0MGU581aOgvCepf8ZOC4FfQkYY2VgqDxV1Vi2fuStGpBm+g2
-	 ReYFjqAEJzFGjwtV5uIANwR23Ye3Y8hXg5R0m6dM=
-Date: Wed, 27 May 2026 09:48:17 +0200
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-	Jacopo Mondi <jacopo.mondi@ideasonboard.com>,
-	Linux kernel regressions list <regressions@lists.linux.dev>,
-	Hans Verkuil <hans@jjverkuil.nl>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>
-Subject: Re: [PATCH v2 2/2] Revert "media: renesas: vsp1: brx: Fix format
- propagation"
-Message-ID: <20260527074817.GA468138@killaraus.ideasonboard.com>
-References: <20260506215650.1897177-1-laurent.pinchart+renesas@ideasonboard.com>
- <20260506215650.1897177-3-laurent.pinchart+renesas@ideasonboard.com>
- <0977c2c0-79ea-4435-9e1c-f54ca5e18342@leemhuis.info>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="MBwCs88Z"
+Received: from relay01-mors.netcup.net (localhost [127.0.0.1])
+	by relay01-mors.netcup.net (Postfix) with ESMTPS id 4gQN2k2wwBz967v;
+	Wed, 27 May 2026 10:24:46 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1779870286;
+	bh=LhmivWCxmv3D6rHVzIUcmcgTSUS6b48gTMM/vLL1kKE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=MBwCs88ZbZBxCAS+4ut2KChQcrz4bq+HYywYB7kkmIN4UnnLU2B7Ryz7Q61dRddvN
+	 LVzT2M3r65D4gPi03E1gh1xmZqa0LSNqkTFrh3l+M0sTPW37+lAEykfpiutjSoHy+a
+	 yvnRW7VOb6wGwyVzxL1GXlsyGr/yOaIsiFt4c4JStlLWV2QSCOsEqmYW5z/KMYj6U8
+	 xMUYOy+sY6MTWCwtddp40m4UqMqB7aqGkAJzjAcIFudB2Pr7k3fY6gxvvTAK1yrWfr
+	 bhW8zX9LviJ6eCv0KqetEzUyozuaB0v6Ad0pd/weNZyPNssnPHlU6X2hgTZwmeObJX
+	 Q8omQ6Wejt1ZQ==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by relay01-mors.netcup.net (Postfix) with ESMTPS id 4gQN2k2Dgmz7wc3;
+	Wed, 27 May 2026 10:24:46 +0200 (CEST)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4gQN2j50kNz8sWT;
+	Wed, 27 May 2026 10:24:45 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id DB36860345;
+	Wed, 27 May 2026 10:24:44 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <7ad15680-e3c8-4547-86ec-ba4141a43e32@leemhuis.info>
+Date: Wed, 27 May 2026 10:24:44 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <0977c2c0-79ea-4435-9e1c-f54ca5e18342@leemhuis.info>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] sched/deadline: Hard lockup during CPU offline after
+ commit 14a857056466
+To: "juri.lelli@redhat.com" <juri.lelli@redhat.com>,
+ batcain <batcain@protonmail.com>
+Cc: "peterz@infradead.org" <peterz@infradead.org>,
+ "jstultz@google.com" <jstultz@google.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "stable@vger.kernel.org" <stable@vger.kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: 
+ <r16mBH1ydY4oK0PInLKwpYR2I5qZBsV5J0JsNLrXAh8OR_QC6z6lABKlcvpzgUiBuarTKtVTP977RLI4mqt64Ydtd2O3yfhRuRJkQ1JL8u8=@protonmail.com>
+ <agrDFlsPQxzWa9Xs@jlelli-thinkpadt14gen4.remote.csb>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <agrDFlsPQxzWa9Xs@jlelli-thinkpadt14gen4.remote.csb>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: <177987028520.4094728.3848410499576110885@mxe9fb.netcup.net>
+X-Rspamd-Server: rspamd-worker-8404
+X-Rspamd-Queue-Id: DB36860345
+X-NC-CID: NUW2FT8eYdg4IT6lRXnfZZxvpesDtvJzyIKp4VZWxN8TAOICt7Y=
 
-Hi Thorsten,
-
-On Wed, May 27, 2026 at 09:35:03AM +0200, Thorsten Leemhuis wrote:
-> On 5/6/26 23:56, Laurent Pinchart wrote:
-> > This reverts commit 937f3e6b51f1cea079be9ba642665f2bf8bcc31f.
-> > 
-> > The change to format propagation in the BRx broke configuration of the
-> > DRM pipeline. Revert it to fix the regression.
+On 5/18/26 09:43, juri.lelli@redhat.com wrote:
+> On 16/05/26 03:07, batcain wrote:
+>> [1.] One line summary of the problem:sched/deadline: Hard lockup
+>> during CPU offline/migration due to frozen rq_clock loop in
+>> update_dl_revised_wakeup()
+>> [...]
+>> However, under the stop_machine() noirq phase, the runqueue clock is
+>> stale/frozen. Since the clock does not progress across iterations
+>> within the enqueue loop, the mathematical state stalls. Consequently,
+>> dl_entity_overflow() continuously evaluates to true, trapping the
+>> processor core in an infinite loop inside the enqueue path, resulting
+>> in a system-wide hard lockup.
 > 
-> Laurent, is this still on your radar? From the outside it looks like
-> this fix for the 7.1 regression should ideally go to Linus this week, as
-> he ideally wants all known regression fixed by -rc6.
+> I cannot immediately see how this issue can affect dl-server(s), as they
+> cannot migrate and are de-activated on CPUs going offline.
 > 
-> But it's easy to miss things from the outside, so if this is not a
-> proper regression, the revert obsolete, or something like that, just
-> mention it.
+> [...]
+>> [8.] Environment description (Hardware, distribution, etc.): Hardware:
+>> Confirmed on both AMD Zen 2 (Renoir) and AMD Zen 4 (Phoenix)
+>> platforms. Distribution: Arch Linux (using official
+>> extra/linux-hardened kernel package).
+> 
+> Also cannot reproduce at my end.
+So how to move on here?
 
-Thank you for the reminder. Hans, Mauro, this series seems to not have
-been merged in the media fixes branch. Could you pick it up ?
+Side note: linux-hardened uses hardening patches, which raises the
+question if those are the problem. Batcain did you do the bisection with
+vanilla?
 
-> > The original commit was meant to fix a v4l2-compliance failure, with no
-> > known userspace applications being affected beside test tools. Reverting
-> > is the simplest option, a more comprehensive fix can be developed (and
-> > tested more thoroughly) later.
-> > 
-> > Reported-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > Closes: https://lore.kernel.org/linux-media/CA+V-a8t481xuwava0nb7uY9CUPqFWZ_8EP0xrK3BgumP7HDcLg@mail.gmail.com
-> > Fixes: 937f3e6b51f1 ("media: renesas: vsp1: brx: Fix format propagation")
-> > Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-> > ---
-> >  drivers/media/platform/renesas/vsp1/vsp1_brx.c | 10 ++--------
-> >  1 file changed, 2 insertions(+), 8 deletions(-)
-> > 
-> > diff --git a/drivers/media/platform/renesas/vsp1/vsp1_brx.c b/drivers/media/platform/renesas/vsp1/vsp1_brx.c
-> > index b1a2c68e9944..9d93cb8b8e82 100644
-> > --- a/drivers/media/platform/renesas/vsp1/vsp1_brx.c
-> > +++ b/drivers/media/platform/renesas/vsp1/vsp1_brx.c
-> > @@ -156,20 +156,14 @@ static int brx_set_format(struct v4l2_subdev *subdev,
-> >  		compose->height = format->height;
-> >  	}
-> >  
-> > -	/*
-> > -	 * Propagate the format code to all pads, and the whole format to the
-> > -	 * source pad.
-> > -	 */
-> > +	/* Propagate the format code to all pads. */
-> >  	if (fmt->pad == BRX_PAD_SINK(0)) {
-> >  		unsigned int i;
-> >  
-> > -		for (i = 0; i < brx->entity.source_pad; ++i) {
-> > +		for (i = 0; i <= brx->entity.source_pad; ++i) {
-> >  			format = v4l2_subdev_state_get_format(state, i);
-> >  			format->code = fmt->format.code;
-> >  		}
-> > -
-> > -		format = v4l2_subdev_state_get_format(state, i);
-> > -		*format = fmt->format;
-> >  	}
-> >  
-> >  done:
+Another side note: a fix for the patch is the changelog was posted,
+wonder if it might be related (reminder: not my area of expertise, so IO
+might be misleading everyone here by mentioning it):
 
--- 
-Regards,
+sched/deadline: Use revised wakeup rule only for running dl_server
+https://lore.kernel.org/lkml/20260522125833.264145-1-gmonaco@redhat.com/
 
-Laurent Pinchart
+Ciao, Thorsten
