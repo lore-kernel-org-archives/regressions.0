@@ -1,136 +1,134 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [185.244.194.184])
+Received: from mail-106121.protonmail.ch (mail-106121.protonmail.ch [79.135.106.121])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C206407598;
-	Thu, 28 May 2026 18:17:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.244.194.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9512E3F8707
+	for <regressions@lists.linux.dev>; Thu, 28 May 2026 18:27:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.121
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779992224; cv=none; b=SC6/LBqia/qOqb/HbReEK8E7n3d4k2m1oYL4532swnT/eCRgM+Iz9DdUPXt6X7GjcpVfXCZ8lyaCbPofZwKrYzfgA5GbsZMSZuQustE6KMRN0KDE/Gk8Kz5DY9OFsgzh7RrhgjzhYmgQ12V7FszGeYqME7sC3ckPkqPRGjg3LLc=
+	t=1779992860; cv=none; b=Y6btigMQHmqxJqpj/fUemi7jwcoMyyNOA0r4LB2Y7lMZRfbd3YDPI9ojqlrvJfn2xocefRvxs3SmK8yRTn18wQIzJxBcFIMH9zDBomgvIRO3HT/8a7TgKY5TG1xRdHoDXVvhRMGnkxCpHoWqVan54syLEq4yGG2RWUrMET+5PXA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779992224; c=relaxed/simple;
-	bh=XvHoutqyoCvvmHbt31I71MjafoJIIZtNHSPVtBcA8v8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=avYgfyDWWdDr3r444IVn2Rfl2bDp66IytCiTQngO1io3hDY9LVlNntZu652jcxCF8MEecu+n4TQmVSWSChQEzkY4PH+Muj10l7Pe5Vkh5bSnHen2Fd8i447nrTjbA98rZR3j2awDs6gfF3z6LiTp1fHwmqTOQ6oyJfNSJBrnqF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=fsc93otj; arc=none smtp.client-ip=185.244.194.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1779992860; c=relaxed/simple;
+	bh=35vlO/li2m5ji7uyijtwGKL1X4FBfkjyHmTboXJgc70=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pQleFQZK6IYBPG5c+/5esfjrTmORntaZcdADx5H+hv0ZovkdHpWTCLII7qhF5zBLXFuR2S/7X2eZaDwpXW+cUiz2Is6KWhLcOJ06hx/BIfdVVEai30JhYoV3ScClRqXNOD/qTajKFLoj2HU9lE/XkjtISG531iMFvbqG83HZTS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=PACAlLdM; arc=none smtp.client-ip=79.135.106.121
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="fsc93otj"
-Received: from relay01-mors.netcup.net (localhost [127.0.0.1])
-	by relay01-mors.netcup.net (Postfix) with ESMTPS id 4gRF7c5vs3z92gv;
-	Thu, 28 May 2026 20:17:00 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1779992220;
-	bh=XvHoutqyoCvvmHbt31I71MjafoJIIZtNHSPVtBcA8v8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=fsc93otjfd0OcAJXZLmGXWIyrX7eR2rDBGgSEmjkDND35p571vc+ev0q4nCm98djW
-	 iFU6u0sJ/wH5gXgQZa8rikVJD8+bMY+P9rdEAA5Ya0w9J+tFmYkJG/fhk8vjyVA/yb
-	 FYkgdbs7fDyXqeqn04ZCDEoxhJXoNiZOxJQO2E+wU3fl8oexuwlubnRBgzcA7AQx8+
-	 BODFYQdUQndmSOlHblKJwgvQnqPtUtS2jXCqIo9e+eqRk+QmSe+p3mVS+SWIPhQDnB
-	 JQJ5xH+er4Wm16E6kAnj4KxvnwOrjdD8602QP2ahiDSqvWLiVDbEpMW49GKEPuN1q+
-	 4TnSc7LzyWDZw==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by relay01-mors.netcup.net (Postfix) with ESMTPS id 4gRF7N36Vkz7ylg;
-	Thu, 28 May 2026 20:16:48 +0200 (CEST)
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4gRF7L2Mz3z8sZP;
-	Thu, 28 May 2026 20:16:46 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 58E586173B;
-	Thu, 28 May 2026 20:16:45 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <021fb6d9-fb2a-42ac-9e50-06471fa76383@leemhuis.info>
-Date: Thu, 28 May 2026 20:16:44 +0200
+	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="PACAlLdM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+	s=protonmail3; t=1779992856; x=1780252056;
+	bh=+pUflfRGv1ueockabyn+TCgvNLDD1SJth6rKb3rh+sQ=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=PACAlLdMKEugfoWH1X7smsAeCzoCDPJTw2FJ3sefk86eYRwKwnYuMBcjS9f5V4eAW
+	 z0kbryqt7MH78eDBEfmsFaIJgyHQ9xXVHHO/WyDZppGhQvkgppgwYo8rGKew04VzDg
+	 z+rqnhD8eJVta1Q79hcqR2qrKvooWIFR4xYinS8iecrjG7By7Aw8V6NxsCHF2YMjcH
+	 vKNmI6fOHLpD3Jc5xjXVnkQfnX5gFkBLKDwSLkB2FN+EfRjO9g7tBzbAxOuj+3XKUv
+	 ZcfsZ5SVuXYG43IvZGQyS/OBEZpTR6phrTtoI/jXx+SmeKIOAY2WK/KGSrEgmnsam8
+	 JSwMlCii5GTlw==
+Date: Thu, 28 May 2026 18:27:30 +0000
+To: Takashi Iwai <tiwai@suse.de>
+From: Mike Karcic <mikekarcic@protonmail.com>
+Cc: Sean Rhodes <sean@starlabs.systems>, "stable@vger.kernel.org" <stable@vger.kernel.org>, "regressions@lists.linux.dev" <regressions@lists.linux.dev>, "linux-sound@vger.kernel.org" <linux-sound@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [REGRESSION] Speaker pop/chirp on Meteor Lake ALC287 (17aa:231e) -- 6.12.73 to 6.12.85
+Message-ID: <bibLdgyll9YOEDANdCBy8WOqeOeJry1SnahLR-EhoGkttJ6BE2srDZ9jv0gjkt0bA19aKivruQs3nkMQWbdEXPaOrLT80xjzF4KJvDcB-IU=@protonmail.com>
+In-Reply-To: <87mrxjsk52.wl-tiwai@suse.de>
+References: <O6pYAi7yf23du9ivLsL0QqrnTmodj2lDTL7Wviv7I_nhjVtvllO7Y5Ban0TeTqrastb1RWhJtlkqrM3quLMWSriai-YjjGy312MTcEhxyWs=@protonmail.com> <CABtds-3GOyBr1H=c5aFV1uzfkhO3d1NHMPuon_cWDq0V=pFwUA@mail.gmail.com> <wZmYozyav1sNx53nFr4ShKmcdLFVJp5bdUOJgUq1I57MX6kgyq7n8XvH-MWG9Fi4q2x4CQqjEQ3Q8ok5MClut8hNixnhVmVtXkhcOzH1sw8=@protonmail.com> <87eciwukvy.wl-tiwai@suse.de> <RfzfjlzeaeMgNNWNST_Zzx1v49rYjM63MvAV6O5_fFIoZJ73GcN69FDLJcwhJ3s6fl9TVD2l45YBh2n3hy95LM7rhLhoVt8dU9stMkuVJvE=@protonmail.com> <87mrxjsk52.wl-tiwai@suse.de>
+Feedback-ID: 22946815:user:proton
+X-Pm-Message-ID: d0933fc08046c310953c0d471acf6570fb912ad3
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] soc: imx8m: Fix match data lookup for soc device
-To: Frank Li <Frank.li@nxp.com>,
- Alexander Stein <alexander.stein@ew.tq-group.com>,
- Francesco Dolcini <francesco@dolcini.it>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rob Herring (Arm)" <robh@kernel.org>,
- Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
- "Peng Fan (OSS)" <peng.fan@oss.nxp.com>, imx@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- Peng Fan <peng.fan@nxp.com>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <20260427-soc-imx8m-fix-v1-1-1fe5b43d8090@nxp.com>
- <177816879666.299775.3947960528231798400.b4-ty@nxp.com>
- <3cc57464-a10f-4b8c-9080-8d6f65a0d42f@leemhuis.info>
- <ahhxtz94pX9ujv25@lizhi-Precision-Tower-5810>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <ahhxtz94pX9ujv25@lizhi-Precision-Tower-5810>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: 
- <177999220591.1352586.10954214462288242738@mxe9fb.netcup.net>
-X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: 58E586173B
-X-NC-CID: Sgv4i8IrLrGndGPNw8vK7slwLPYMtNLjy/L9JFtz4eDsqIYAq1I=
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-[+Alexander +Francesco]
+Yes, I can confirm the patched kernel is running, and commenting out that l=
+ine fixes the problem completely.
 
-On 5/28/26 18:47, Frank Li wrote:
-> On Thu, May 28, 2026 at 12:55:34PM +0200, Thorsten Leemhuis wrote:
->> On 5/7/26 17:46, Frank Li wrote:
->>>
->>> On Mon, 27 Apr 2026 09:01:48 +0800, Peng Fan (OSS) wrote:
->>>> The i.MX8M soc device is registered via platform_device_register_simple(),
->>>> so it is not associated with a Device Tree node and the imx8m_soc_driver
->>>> has no of_match_table.
->>>>
->>>> As a result, device_get_match_data() always returns NULL when probing
->>>> the soc device.
->>>>
->>>> [...]
->>>
->>> Applied, thanks!
->>>
->>> [1/1] soc: imx8m: Fix match data lookup for soc device
->>>       commit: 2c6821657ce3b3c85f92719ea81ec9f9ff27df11
->>
->> Just wondering: are you planning to sent this towards mainline this
->> cycle? The regression this fixes was introduced this cycle, so I guess
->> it's something that should be merged before -rc6, as that's when Linus
->> wants all known regression ideally fixed. But from the name of the
->> branch it sounds more like this is scheduled to be merged in the next
->> merge window (but I might easily mistaken there -- if I am: sorry!)
+Below is output with the added debug lines as requested:
+
+$ uname -r
+6.12.90-debug-no-discoefs
+
+$ sudo dmesg | grep -i "alc287_alc1318"
+[  453.823528] snd_hda_codec_realtek ehdaudio0D0: alc287_alc1318_playback_p=
+cm_hook called action=3D0
+[  453.871577] snd_hda_codec_realtek ehdaudio0D0: alc287_alc1318_playback_p=
+cm_hook called action=3D1
+[  459.605379] snd_hda_codec_realtek ehdaudio0D0: alc287_alc1318_playback_p=
+cm_hook called action=3D2
+[  459.605497] snd_hda_codec_realtek ehdaudio0D0: alc287_alc1318_playback_p=
+cm_hook called action=3D3
+
+$ grep -n -A5 -B2 "alc_process_coef_fw.*dis_coefs" sound/pci/hda/patch_real=
+tek.c
+7918-           return;
+7919-   alc_update_coef_idx(codec, 0x10, 1<<11, 1<<11);
+7920:   /* alc_process_coef_fw(codec, dis_coefs); */ /* commented out for t=
+esting */
+7921-   alc_process_coef_fw(codec, coefs);
+7922-   spec->power_hook =3D alc287_s4_power_gpio3_default;
+7923-   spec->gen.pcm_playback_hook =3D alc287_alc1318_playback_pcm_hook;
+7924-}
+
+
+
+Sent with Proton Mail secure email.
+
+On Thursday, May 28th, 2026 at 10:07 AM, Takashi Iwai <tiwai@suse.de> wrote=
+:
+
+> On Thu, 28 May 2026 15:38:54 +0200,
+> Mike Karcic wrote:
+> >
+> > I did test 46c862f5419e on 6.12.90. Chirp still present.
+> >
+> > I'm also on a ThinkPad X1 Carbon Gen 12 with ALC287 (17aa:231e),
+> > same as the original reporter. The fix resolved it for them but
+> > not for me.
+> >
+> > Only a full revert of 630fbc6e870e resolves the issue.
+> >
+> > Verification on the running kernel:
+> >
+> >   $ grep -c "dis_coefs" sound/pci/hda/patch_realtek.c
+> >   2
+> >
+> >   $ grep -c "en_coefs" sound/pci/hda/patch_realtek.c
+> >   0
+> >
+> >   $ sed -n '/alc287_alc1318_playback_pcm_hook/,/^}/p' sound/pci/hda/pat=
+ch_realtek.c
+> >   static void alc287_alc1318_playback_pcm_hook(struct hda_pcm_stream *h=
+info,
+> >                                      struct hda_codec *codec,
+> >                                      struct snd_pcm_substream *substrea=
+m,
+> >                                      int action)
+> >   {
+> >           switch (action) {
+> >           case HDA_GEN_PCM_ACT_OPEN:
+> >                   alc_write_coefex_idx(codec, 0x5a, 0x00, 0x954f);
+> >                   break;
+> >           case HDA_GEN_PCM_ACT_CLOSE:
+> >                   alc_write_coefex_idx(codec, 0x5a, 0x00, 0x554f);
+> >                   break;
+> >           }
+> >   }
+> >
+> > Happy to test further patches.
+>=20
+> Just to be sure, could you verify that you've tested really the
+> patched kernel, e.g. by adding a debug print, etc?
+> If yes and the problem is seen even with the patch, try to comment out
+>   alc_process_coef_fw(codec, dis_coefs);
+> and confirm that this fixes the problem.
+>=20
+>=20
+> Takashi
 > 
-> Thanks reminders. I intent to send for 7.1. But second look, not sure any
-> big impact although it is regression.
-> 
-> commmit message have not show what impact.
-
-Yup, there ideally should have been Link: tags to the problem reports,
-as explained by our docs. At least if that patch fixes the problems
-linked to below (looks like it, but I'm not totally sure):
-
-> I checked code, look like only
-> missed some soc informaiton. Let me know if I am wrong.
-
-Alexander reported problems here:
-https://lore.kernel.org/lkml/6593091.DvuYhMxLoT@steina-w/
-That mentions a warning and problems with soc_id and serial_number
-
-Francesco jumped in a little later:
-https://lore.kernel.org/lkml/20260427064704.GA17710@francesco-nb/
-This mentions "CAAM is not working"
-
-Not sure what the impact is, but from the outside it looks a bit like
-"better fix this now to ensure those problems never enter a proper release"
-
-Ciao, Thorsten
