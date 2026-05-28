@@ -1,178 +1,136 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [185.244.194.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E6313AF677
-	for <regressions@lists.linux.dev>; Thu, 28 May 2026 17:21:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C206407598;
+	Thu, 28 May 2026 18:17:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.244.194.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779988913; cv=none; b=TCz4OaHS3GpGlCywiRJK4avkWyCklEiMnByOqKS6YGirm9o67liEYAw6XL8CcEaqDAzHU1QDP6aP9kEdMBNqJLo/8PbS69Cw5LkSrYsiQ9x56tjxhP0yU42Izr9PQxCloHACcdWO3KZkvdyYjted0M/MrNxdEc+RhHxQ0DJzb54=
+	t=1779992224; cv=none; b=SC6/LBqia/qOqb/HbReEK8E7n3d4k2m1oYL4532swnT/eCRgM+Iz9DdUPXt6X7GjcpVfXCZ8lyaCbPofZwKrYzfgA5GbsZMSZuQustE6KMRN0KDE/Gk8Kz5DY9OFsgzh7RrhgjzhYmgQ12V7FszGeYqME7sC3ckPkqPRGjg3LLc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779988913; c=relaxed/simple;
-	bh=dxjGa4Ml/1nUz3iyV2bVpKp0Bs3I+Oa92VnSJh4r/nU=;
-	h=From:To:Cc:Subject:Message-ID:In-Reply-To:References:MIME-Version:
-	 Date:Content-Type; b=jg5G0e20pV8bKOoIVuFNRXNb08d+g3eUNBGiM1w0Sudr9xQ9aCfr7hKZJwF2+25AjWI1bSV8hfvO1189ENlKlHGm8heW4DzrUrvIcuWJ+kM91UixYN/grU3xSiwTJXxQU2swz2j1SJl2+7ow31Xk0kTNP0toQ5r3pZtH36+x/Rw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iGeObKDa; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1779992224; c=relaxed/simple;
+	bh=XvHoutqyoCvvmHbt31I71MjafoJIIZtNHSPVtBcA8v8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=avYgfyDWWdDr3r444IVn2Rfl2bDp66IytCiTQngO1io3hDY9LVlNntZu652jcxCF8MEecu+n4TQmVSWSChQEzkY4PH+Muj10l7Pe5Vkh5bSnHen2Fd8i447nrTjbA98rZR3j2awDs6gfF3z6LiTp1fHwmqTOQ6oyJfNSJBrnqF8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=fsc93otj; arc=none smtp.client-ip=185.244.194.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iGeObKDa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1779988911;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Pywxf73FJiXqSIfDtx3gAd9zS23OPZ8h3KQxDbqt9dA=;
-	b=iGeObKDakEC0a4XZlAHyexmWmhucoJBihTPj7sb3JiYHOngfLldB28uwg4nuNCKT4iY2I/
-	U/Mok7YQMr+Xp/0g53e36K12RC9oneJeFQdr/Wthy7zJIrT0sBPycB+RzIjac8F1sep2D5
-	tr0T3SBpxk9uWgAVyp6te8wwQDSv39k=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-597-O1__4miaPfalbhoI23hNjQ-1; Thu, 28 May 2026 13:21:49 -0400
-X-MC-Unique: O1__4miaPfalbhoI23hNjQ-1
-X-Mimecast-MFC-AGG-ID: O1__4miaPfalbhoI23hNjQ_1779988908
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-43d789cebcfso8711393f8f.1
-        for <regressions@lists.linux.dev>; Thu, 28 May 2026 10:21:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779988907; x=1780593707;
-        h=date:content-transfer-encoding:mime-version:organization:references
-         :in-reply-to:message-id:subject:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0IAWVLrtIzQ5xVgTvqwLoqJOfqrR7MpH88SIQQGUoj4=;
-        b=WLq+ljM6aOiFQ51RkH3CKMdyotvV3T9AA8Ke7MiJl35lYDuYChUhBcYVIpDfcVICBa
-         +bso1OjbFWMYe1DYWH0aGSNNCUPsMdTx7SkRUhIhUPt/ytyzKRpKe4f/GBX+m6xPD6M/
-         p2WSXh8wGkdCHr8gmpD0ZV2Z4WbSLUXaDABQwJGuRZVSkx1M3pUPvdXT8oEgKNrB/Pnc
-         cwbOmycGyU+ocUWdfG4NWVXa9ItHjiaG7mVCDeyovfFOfsCR79sBMtHG41uplq7GXwvz
-         j4YMeq1t65pgG6C4XXAWDU7h9b/usrw86kwBXdNSQhrpIz/64CHFfn2dFsaqG4IjKOq1
-         0Cug==
-X-Forwarded-Encrypted: i=1; AFNElJ8hoJpt+dwiWwYnVCm1TVspdaXwLEo4GtxSM5rnA2dg6BJTVbC8jSYW910/3sJN0pWcp3FQvy/gjiVe/Q==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzZ/+0Vke4GwJL9n0d3G0Xs9bSQZoOthwVqxNE7wksqe2w9oVpC
-	VB8ABZ6kHS8Pv8TLiH8/Pqy09ghMbZsOWNq31PyK/Q9zkBUKGGlfelwWCfRWrY+z167bQwfh51X
-	Fi/CoQRaVxoOdZRBaFfDjZf0x2d1sF93JTWf+HWdgrEymg337PB1NhjXN4R3fdOXZ
-X-Gm-Gg: Acq92OHlSqEHPeDXAk/ojL96HZ/DDZ0OBwePSUKiu6s0pWu5Wa0MFvzM9ryk8tph4G2
-	+f3pSzXVz9PGZ8nWWe3kWq5AErZqEV81nUVo4gy641EpUz9xlMnemSzKHAhtzgwlARbw4A0h8Tf
-	PN/qcIeJG+2uJZN2scIvDHrTS6s0LQk4beyqgmnTavcvUA5N3Ym5CAGmYm8WX9Zeg2+Q+xBxb/1
-	3IR7Xs3UCiL8YQweJHwUYf2IBcN1R7UrlV+x6UEcbDdvTOb31L6OJyWca+84vRlcsEWIeWfsL/U
-	0joUPHKFZU6yAZTjNNyUprB3Am3irwxxOYG6YaVXl4aNrjcvu4dcknBOXGxpKBkrj64eCmXoQ7x
-	N9h3LhFgEI1tGTIujL0lqilFOMF4vC1As4Hr7oldCba0=
-X-Received: by 2002:a05:600c:5359:b0:488:a502:8955 with SMTP id 5b1f17b1804b1-49094777acdmr30132185e9.4.1779988907504;
-        Thu, 28 May 2026 10:21:47 -0700 (PDT)
-X-Received: by 2002:a05:600c:5359:b0:488:a502:8955 with SMTP id 5b1f17b1804b1-49094777acdmr30131815e9.4.1779988907012;
-        Thu, 28 May 2026 10:21:47 -0700 (PDT)
-Received: from maya.myfinge.rs (ifcgrfdd.trafficplex.cloud. [2a10:fc81:a806:d6a9::1])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-45edb5b19aasm15998612f8f.25.2026.05.28.10.21.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2026 10:21:46 -0700 (PDT)
-From: Stefano Brivio <sbrivio@redhat.com>
-To: Beniamino Galvani <bgalvani@redhat.com>
-Cc: =?UTF-8?B?w43DsWlnbw==?= Huguet <ihuguet@redhat.com>, Thorsten Leemhuis
- <regressions@leemhuis.info>, Fernando Fernandez Mancera <fmancera@suse.de>,
- Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org, Yumei Huang
- <yuhuang@redhat.com>, Ido Schimmel <idosch@idosch.org>, Justin Iurman
- <justin.iurman@gmail.com>, David Ahern <dsahern@kernel.org>, David Gibson
- <david@gibson.dropbear.id.au>, Linux kernel regressions list
- <regressions@lists.linux.dev>
-Subject: Re: Problem with IPv6 privacy addresses in 7.0
-Message-ID: <20260528192143.31c9e9ea@elisabeth>
-In-Reply-To: <ahhm1-XfnsWyIWDV@tp>
-References: <675083b4-e015-4ff3-836c-798e0a971194@suse.de>
-	<20260528073849.759da84a@elisabeth>
-	<baba855a-7cc9-409e-9c20-6e50f35d255a@suse.de>
-	<20260528131250.1352ab48@elisabeth>
-	<b21c598b-879c-4f6a-9dc8-27e5c362803b@suse.de>
-	<bd669eaf-64dc-4217-bae0-4a531e473762@leemhuis.info>
-	<20260528153202.14900687@elisabeth>
-	<CACT4ouf5ZqGgb=RO8_7NovLCvYKLKL4vD70dEe6xUODT1UEcSA@mail.gmail.com>
-	<20260528165320.15b90ded@elisabeth>
-	<CACT4oue2EMM9Kfsm9Jii2rG9ooi=D37PK=8886cpLuBkwhrOxw@mail.gmail.com>
-	<ahhm1-XfnsWyIWDV@tp>
-Organization: Red Hat
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.49; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="fsc93otj"
+Received: from relay01-mors.netcup.net (localhost [127.0.0.1])
+	by relay01-mors.netcup.net (Postfix) with ESMTPS id 4gRF7c5vs3z92gv;
+	Thu, 28 May 2026 20:17:00 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1779992220;
+	bh=XvHoutqyoCvvmHbt31I71MjafoJIIZtNHSPVtBcA8v8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=fsc93otjfd0OcAJXZLmGXWIyrX7eR2rDBGgSEmjkDND35p571vc+ev0q4nCm98djW
+	 iFU6u0sJ/wH5gXgQZa8rikVJD8+bMY+P9rdEAA5Ya0w9J+tFmYkJG/fhk8vjyVA/yb
+	 FYkgdbs7fDyXqeqn04ZCDEoxhJXoNiZOxJQO2E+wU3fl8oexuwlubnRBgzcA7AQx8+
+	 BODFYQdUQndmSOlHblKJwgvQnqPtUtS2jXCqIo9e+eqRk+QmSe+p3mVS+SWIPhQDnB
+	 JQJ5xH+er4Wm16E6kAnj4KxvnwOrjdD8602QP2ahiDSqvWLiVDbEpMW49GKEPuN1q+
+	 4TnSc7LzyWDZw==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by relay01-mors.netcup.net (Postfix) with ESMTPS id 4gRF7N36Vkz7ylg;
+	Thu, 28 May 2026 20:16:48 +0200 (CEST)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4gRF7L2Mz3z8sZP;
+	Thu, 28 May 2026 20:16:46 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 58E586173B;
+	Thu, 28 May 2026 20:16:45 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <021fb6d9-fb2a-42ac-9e50-06471fa76383@leemhuis.info>
+Date: Thu, 28 May 2026 20:16:44 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Date: Thu, 28 May 2026 19:21:45 +0200 (CEST)
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: fwclA0E3gUFMsxK4G3GICB0BD_rt_0uYvY79PpSg9rI_1779988908
-X-Mimecast-Originator: redhat.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] soc: imx8m: Fix match data lookup for soc device
+To: Frank Li <Frank.li@nxp.com>,
+ Alexander Stein <alexander.stein@ew.tq-group.com>,
+ Francesco Dolcini <francesco@dolcini.it>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rob Herring (Arm)" <robh@kernel.org>,
+ Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
+ "Peng Fan (OSS)" <peng.fan@oss.nxp.com>, imx@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Peng Fan <peng.fan@nxp.com>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <20260427-soc-imx8m-fix-v1-1-1fe5b43d8090@nxp.com>
+ <177816879666.299775.3947960528231798400.b4-ty@nxp.com>
+ <3cc57464-a10f-4b8c-9080-8d6f65a0d42f@leemhuis.info>
+ <ahhxtz94pX9ujv25@lizhi-Precision-Tower-5810>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <ahhxtz94pX9ujv25@lizhi-Precision-Tower-5810>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: 
+ <177999220591.1352586.10954214462288242738@mxe9fb.netcup.net>
+X-Rspamd-Server: rspamd-worker-8404
+X-Rspamd-Queue-Id: 58E586173B
+X-NC-CID: Sgv4i8IrLrGndGPNw8vK7slwLPYMtNLjy/L9JFtz4eDsqIYAq1I=
 
-On Thu, 28 May 2026 18:01:27 +0200
-Beniamino Galvani <bgalvani@redhat.com> wrote:
+[+Alexander +Francesco]
 
-> On Thu, May 28, 2026 at 05:24:28PM +0200, =C3=8D=C3=B1igo Huguet wrote:
-> > On Thu, May 28, 2026 at 4:53=E2=80=AFPM Stefano Brivio <sbrivio@redhat.=
-com> wrote: =20
-> > > I think what's considered UAPI in this case isn't so clear-cut. I gue=
-ss
-> > > it would have been pretty hard for anybody not familiar with
-> > > NetworkManager's codebase to imagine that an application would rely o=
-n
-> > > IPv6 addresses (and only IPv6) to be returned in the reverse order. =
-=20
-> >=20
-> > IMHO it's not because an application would rely on the order. It's
-> > because the order matters, as the first one is considered the primary.
+On 5/28/26 18:47, Frank Li wrote:
+> On Thu, May 28, 2026 at 12:55:34PM +0200, Thorsten Leemhuis wrote:
+>> On 5/7/26 17:46, Frank Li wrote:
+>>>
+>>> On Mon, 27 Apr 2026 09:01:48 +0800, Peng Fan (OSS) wrote:
+>>>> The i.MX8M soc device is registered via platform_device_register_simple(),
+>>>> so it is not associated with a Device Tree node and the imx8m_soc_driver
+>>>> has no of_match_table.
+>>>>
+>>>> As a result, device_get_match_data() always returns NULL when probing
+>>>> the soc device.
+>>>>
+>>>> [...]
+>>>
+>>> Applied, thanks!
+>>>
+>>> [1/1] soc: imx8m: Fix match data lookup for soc device
+>>>       commit: 2c6821657ce3b3c85f92719ea81ec9f9ff27df11
+>>
+>> Just wondering: are you planning to sent this towards mainline this
+>> cycle? The regression this fixes was introduced this cycle, so I guess
+>> it's something that should be merged before -rc6, as that's when Linus
+>> wants all known regression ideally fixed. But from the name of the
+>> branch it sounds more like this is scheduled to be merged in the next
+>> merge window (but I might easily mistaken there -- if I am: sorry!)
+> 
+> Thanks reminders. I intent to send for 7.1. But second look, not sure any
+> big impact although it is regression.
+> 
+> commmit message have not show what impact.
 
-Yes, that's also the case, but:
+Yup, there ideally should have been Link: tags to the problem reports,
+as explained by our docs. At least if that patch fixes the problems
+linked to below (looks like it, but I'm not totally sure):
 
-> > This is not NetworkManager specific. Or I am mistaken? I'm speaking by
-> > memory
+> I checked code, look like only
+> missed some soc informaiton. Let me know if I am wrong.
 
-...from what I understood of the issue at hand there's a part that's
-specific to NetworkManager here, because NetworkManager replaces /
-deletes the Privacy Extensions addresses, instead of different
-addresses, because it relies on that specific (reversed) order.
+Alexander reported problems here:
+https://lore.kernel.org/lkml/6593091.DvuYhMxLoT@steina-w/
+That mentions a warning and problems with soc_id and serial_number
 
-Anyway, yes, I see your point about UAPI now.
+Francesco jumped in a little later:
+https://lore.kernel.org/lkml/20260427064704.GA17710@francesco-nb/
+This mentions "CAAM is not working"
 
-> Yes, exactly. If you do:
->=20
->  ip addr add dev X 3fff::1/64
->  ip addr dev dev X 3fff::2/64
->=20
-> then the old kernel chooses the address that was added last as source
-> address for outgoing communications. With the new kernel it chooses
-> the address that was added first.
->=20
-> I think that any script or network management tool that cares about
-> the source address selection is impacted. Indeed, the commit had
-> effects on one of the selftests, which had to be modified to change
-> the order of iproute2 invocations.
-> =20
-> > > > If the fix must be in NetworkManager, we only need to parse them in
-> > > > non-reverse order like IPv4, I guess. =20
-> > >
-> > > But that would then require some form of detection, and, at least
-> > > according to Fernando, isn't the most robust option anyway, as ideall=
-y
-> > > NetworkManager shouldn't rely on the order at all. =20
-> >=20
-> > True =20
->=20
-> Correct, if the new behavior is considered better, there should be a
-> way to detect which order must be used. Otherwise userspace tools
-> won't be able to maintain the same behavior with different kernels.
+Not sure what the impact is, but from the outside it looks a bit like
+"better fix this now to ensure those problems never enter a proper release"
 
-My remark here is about whether NetworkManager needs to detect this at
-all. If it used timestamps to detect recent / older addresses, as
-Fernando mentioned, then you wouldn't need any detection at all, right?
-Or is there something else we're missing?
-
-By the way, if really needed, one could detect that with the equivalent
-of:
-
-  ip a a ::2 dev lo && ip a a ::3 dev lo && [ $(ip -6 -j a | jq -rM '.[] .a=
-ddr_info[0].local') =3D ::3 ] && echo wrong || echo right
-
-...depending on the application, that's not necessarily practical, but
-so far we have no evidence of any application needing to do that at all.
-
---=20
-Stefano
-
+Ciao, Thorsten
