@@ -1,237 +1,189 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from DUZPR83CU001.outbound.protection.outlook.com (mail-northeuropeazon11012043.outbound.protection.outlook.com [52.101.66.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5BA232694F
-	for <regressions@lists.linux.dev>; Thu, 28 May 2026 18:50:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779994259; cv=none; b=unciGXvc3N5apCfIwp4AT6S8GPrrYMDsdAUkD7pu9nDdHp677umwD3jMOUdocnqyIZ363z9KrU8N3/1pi2kn0dBSzxY80R5lZKxaVVEu4xU82EYOo3dyURHCDc64AV9V7wNhagmH1MP8tI2fjJ7d9ujtvhdoIY8AVddUF2/x2DA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779994259; c=relaxed/simple;
-	bh=L1pLkxy8UqO8Vh5rkJ8qmcLYO698M1tU8okP8V8J28Y=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=ZcBR7QXXxo0CSOnHzVhO+FB1BZleLmxDMuvbRjt+fXooZSlQQI/opcrkQqPRG3lMR3MlzDJqU4fY091ee5n0z3a8I6uVJeIX1srxj12oycdasV4+WQxMbxslOB7U+KpyAKAjFBlP5knBnT1MVHcLwgYLbqaJZ6O7PkkVsPTjO2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=JO/Sy55d; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ptLeS0kf; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=0L6eBG9v; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=G4ns8Rw7; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A6AC313E31;
+	Thu, 28 May 2026 19:09:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.66.43
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779995388; cv=fail; b=JnpOjoNXB0ZbIuYsCCN/uDFae5n0gPEiRUZ9DHTSc1LFpdLceD3dUmWvbevf5ySdI7sjcw89eS+mT+qcc3tTMr72QVEvKgCTQFsiaiRUtnscuThzLmMaPp1iC+w8WNKMawiA9e5M2HmTQ7ETVY75HUuQ2MbPPnGc5wowjcR4m4o=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779995388; c=relaxed/simple;
+	bh=uNFlH7zxhpD3U2Jf6XTAtXofAirCxZUPf0Y9UHUUv7o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=dJnbPY3a0Q9r4o59e/Nhg/KrBdz9MOe5TSIFyzlxOW1t1n537WJqSKJM2KGG38U0xnN0kLsfdcyDAtaarJeCJIKsb88kl6VPDA82m+e2J+Xh/673XqQ9++2V/Dn/6vYIVoUPQpLEX6JGaUqB3tseYQXU2wbp+xBEFWZB56VK3mM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=nSR5AK0b; arc=fail smtp.client-ip=52.101.66.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="JO/Sy55d";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ptLeS0kf";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="0L6eBG9v";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="G4ns8Rw7"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 3640266EA8;
-	Thu, 28 May 2026 18:50:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1779994256; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dq4FnlG1+s6CGYrNOgZyOD9bctSjJVctedFloN8niGw=;
-	b=JO/Sy55d6NkFn2FX+JOPineU4noEcsLQ+E/2Y3ejg1UMj7kCwA7BtOHyApQ0K5WFTS9kUQ
-	wJ6PtCLzCTMf28AJU3rng7O2KL8Sled0/Ocihv3prA3BGBLuZvwpuh2wqJsbEabEuC4KKM
-	YWH6UDgh2/9TWEYuOI3YxLVQRXMSq0g=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1779994256;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dq4FnlG1+s6CGYrNOgZyOD9bctSjJVctedFloN8niGw=;
-	b=ptLeS0kfaBHnI1yWu0SRY0sLZYxHaC0f+Y3g5OgyeaE0RGJr4JaDQ1FMIUpwtLk0Vy49Po
-	PXHBGQQSj+Vm40Dw==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1779994254; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dq4FnlG1+s6CGYrNOgZyOD9bctSjJVctedFloN8niGw=;
-	b=0L6eBG9v7jfjO0v8hd4V9S5kT6T8feGznAnivwdk4+Wdgp6v9fdWok2RIghFcHW70oW8Mo
-	FctiVRHqZOW+xt+IM4ZJkXrNjb7ev2bAwUOaFbxgy9TFgGhnoQPj7TIXCpCxow2B8w0U3O
-	s3TNSpk2j2Z8HZhN4+TqPgDdrXMGJrY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1779994254;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dq4FnlG1+s6CGYrNOgZyOD9bctSjJVctedFloN8niGw=;
-	b=G4ns8Rw7Cw0klpgw/F27i7Mwd9jQ9KBc5gwie5PUEriHQUcvfj7O4x8iV95h2n0fMalgVO
-	8zlEHhQ1EBhRGFCA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 803F35AF2A;
-	Thu, 28 May 2026 18:50:53 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 51M5HI2OGGq0BQAAD6G6ig
-	(envelope-from <fmancera@suse.de>); Thu, 28 May 2026 18:50:53 +0000
-Message-ID: <e91507d6-cbfc-447c-8236-d9b3d91f18c5@suse.de>
-Date: Thu, 28 May 2026 20:50:48 +0200
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="nSR5AK0b"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Gd4p5Rs+1cqfZe6O7OU7THUl9AZST2OeW4wY6PKO/wzlL4PM7ynsn9p1r6/wxAA+rxT76+C4o+369aCqDYRfuS1pP7GlGFgvhT7cg1O3heFnZ0vthE4pehxDABd7DAF19SzQBxVSurgKhTybbV2yyx4Lgb6OSpkOY8pSrJ/PCsnomEsYGPsROfLxDSkduTLfLFDHWVJuRlt82+/w0rNToN6bVQeJhn0MzSlumeHdmW1FsHPAWpKjgNKPCxT0n7mtI9cF8gcbzUNvQUWwzOwULJ7AIwOBOPKVFtpmz2F31h+XP0Q6gZRBBQOSUXcw8c+YB5Y/scZKOUuVcabL1GN62Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=8980CRW+gtXkIey8A7SUzHGS67o5JUfgg8OpWnRZ5o8=;
+ b=ThjgFK4C1oIY3QWQuac/MgCMmSFcmnGWYnrXOHLNpECSKuPexYJoUEk0Ojg0Vbt3GxjPoArh7O7Trv33JItyCoxya0cxImFins/srXjEvj6NIe9Wm6OGmWx3dwdQsmskNhe/Sg+9krqINdtHihRSeoyzjFYpoVmfh4lKlcnHHVZGEi6h8GnOrWydnrFyItJmDYaLuvpnjn4kWdnbfph2g1zJPdkcfrL8IDTpjkHaGDUJpo94xMl1Hh0v3v5owL93cmFac4Jli8QdkNn4yn6/IJZBPpi2Faui0iQnwhgE41BU1kyHBoz0dY9UbMHSytSC80htN3awZbC2iUjCObwztw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8980CRW+gtXkIey8A7SUzHGS67o5JUfgg8OpWnRZ5o8=;
+ b=nSR5AK0bl7xgALFRThM6IesvRTVy1X9jI1/toHiVYbZVeZqB/Axb/89dwSFo8k0Qi1gQGnKLPn6EtxuW2xAC79hwVmHWQwtmsRJMHepvY/m5YUTui0gBNIkv7T+8EMWX1cpj9hSV2d7/Xxo6WVGHEnPBHXRMNGSinAlXB55BFai53xcQ5PYGekZ3rpa8y+wypZziSVjMJqWM5XU5NjhwU1d5QaNqUw3HfMOuPYjmJUrIpYpYAw2yZoHc1U8iEdu6FZfvUfTvBa6tiucZ67kAOIapORWn+7EKeCU373E4TTQttsNuJT+dzCZkpy1/bPj7buFtkxJ7GqjX1eQMq5bfVQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PA4PR04MB9366.eurprd04.prod.outlook.com (2603:10a6:102:2a9::8)
+ by PAXPR04MB9007.eurprd04.prod.outlook.com (2603:10a6:102:20f::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9870.25; Thu, 28 May
+ 2026 19:09:42 +0000
+Received: from PA4PR04MB9366.eurprd04.prod.outlook.com
+ ([fe80::75e4:8143:ddbc:6588]) by PA4PR04MB9366.eurprd04.prod.outlook.com
+ ([fe80::75e4:8143:ddbc:6588%3]) with mapi id 15.21.0071.011; Thu, 28 May 2026
+ 19:09:42 +0000
+Date: Thu, 28 May 2026 15:09:36 -0400
+From: Frank Li <Frank.li@nxp.com>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Alexander Stein <alexander.stein@ew.tq-group.com>,
+	Francesco Dolcini <francesco@dolcini.it>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rob Herring (Arm)" <robh@kernel.org>,
+	Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
+	"Peng Fan (OSS)" <peng.fan@oss.nxp.com>, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Peng Fan <peng.fan@nxp.com>,
+	Linux kernel regressions list <regressions@lists.linux.dev>
+Subject: Re: [PATCH] soc: imx8m: Fix match data lookup for soc device
+Message-ID: <ahiS8B2j51ztTaBn@lizhi-Precision-Tower-5810>
+References: <20260427-soc-imx8m-fix-v1-1-1fe5b43d8090@nxp.com>
+ <177816879666.299775.3947960528231798400.b4-ty@nxp.com>
+ <3cc57464-a10f-4b8c-9080-8d6f65a0d42f@leemhuis.info>
+ <ahhxtz94pX9ujv25@lizhi-Precision-Tower-5810>
+ <021fb6d9-fb2a-42ac-9e50-06471fa76383@leemhuis.info>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <021fb6d9-fb2a-42ac-9e50-06471fa76383@leemhuis.info>
+X-ClientProxiedBy: SN7PR04CA0079.namprd04.prod.outlook.com
+ (2603:10b6:806:121::24) To PA4PR04MB9366.eurprd04.prod.outlook.com
+ (2603:10a6:102:2a9::8)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Problem with IPv6 privacy addresses in 7.0
-From: Fernando Fernandez Mancera <fmancera@suse.de>
-To: Stefano Brivio <sbrivio@redhat.com>,
- Beniamino Galvani <bgalvani@redhat.com>
-Cc: =?UTF-8?B?w43DsWlnbyBIdWd1ZXQ=?= <ihuguet@redhat.com>,
- Thorsten Leemhuis <regressions@leemhuis.info>,
- Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
- Yumei Huang <yuhuang@redhat.com>, Ido Schimmel <idosch@idosch.org>,
- Justin Iurman <justin.iurman@gmail.com>, David Ahern <dsahern@kernel.org>,
- David Gibson <david@gibson.dropbear.id.au>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <675083b4-e015-4ff3-836c-798e0a971194@suse.de>
- <20260528073849.759da84a@elisabeth>
- <baba855a-7cc9-409e-9c20-6e50f35d255a@suse.de>
- <20260528131250.1352ab48@elisabeth>
- <b21c598b-879c-4f6a-9dc8-27e5c362803b@suse.de>
- <bd669eaf-64dc-4217-bae0-4a531e473762@leemhuis.info>
- <20260528153202.14900687@elisabeth>
- <CACT4ouf5ZqGgb=RO8_7NovLCvYKLKL4vD70dEe6xUODT1UEcSA@mail.gmail.com>
- <20260528165320.15b90ded@elisabeth>
- <CACT4oue2EMM9Kfsm9Jii2rG9ooi=D37PK=8886cpLuBkwhrOxw@mail.gmail.com>
- <ahhm1-XfnsWyIWDV@tp> <20260528192143.31c9e9ea@elisabeth>
- <ed954836-742a-44c3-8c2d-65dd06c3514e@suse.de>
-Content-Language: en-US
-In-Reply-To: <ed954836-742a-44c3-8c2d-65dd06c3514e@suse.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Flag: NO
-X-Spam-Score: -2.80
-X-Spam-Level: 
-X-Spamd-Result: default: False [-2.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	TAGGED_RCPT(0.00)[];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	TO_DN_SOME(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[redhat.com,leemhuis.info,kernel.org,vger.kernel.org,idosch.org,gmail.com,gibson.dropbear.id.au,lists.linux.dev];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:mid]
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PA4PR04MB9366:EE_|PAXPR04MB9007:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4e82655b-e471-4780-063d-08debcecac88
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|19092799006|7416014|376014|1800799024|52116014|366016|11063799006|38350700014|56012099006|18002099003|22082099003|4143699003;
+X-Microsoft-Antispam-Message-Info:
+	tTJjoxpBJjyWE3PVBDzzNsGIW30m/zz/k75YgrPCXlP0ZWyFogZJqUN8Pwul9xG6XceLK+iLkiQnOCkKkhmOy/PjzwcBa7odm/pYfyG5K98F2bLeZmyWrqzdFU0Qn1fxR8j43433b0PuQxy43GFoTWXuH1ly7k8ILKhKmU5oXHOGrS+oeef/ak8W37ZYNBibwW5NB4vOLCnOeSZnPcCcwwhd0NYv0XpW1p+VO4WE7eLU0WRVzwX49mWwFO49aGOnqwu97Ckz1+XOopicB0yPDy478aUwETxQ9HjPhSgN7WmEoVXwGy2/oylCcoeBcNtsTkjHig59yGVpbYnkYkKyAHil6ZKpLuonlXgH3Q+61nq0OS4yVuVLqHEvTpj1yPNoDDj/cZ/7XkXyMKu/j3spFFv8FPsrjTdk3N/U6gxBXgqfIKmcul1j/z/pE7oUfvan/UrgnLzBjTZFbT+oGNPkYQyj4C2MrLd8t4z2+62++EpfKnoP5JHpqjFNt7SJ55eMZfPmrpSXrlbYVHfbopHIFdQq+szTOc2grNBbqNlfW5F5hOAo7CJCyfZ3rjn0RyBv1IkHKunoI+nvEXVsxDlBYvz87tpr6PxNe6nciohYHp+Fv3+SRi5cUauEJL2iYcvLZjp4ma8UlBPKQ8cPjWY8iz4qxwqKO6l1AmqM5Rzd5i1/u/bBKQO8mQRBCQ7058efOXhitDtiFZ1a9979lEiZ3qcFPd783ydwSLoI2P2LMbxH7Ic/duYVhvlXgHS38/E+
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR04MB9366.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(19092799006)(7416014)(376014)(1800799024)(52116014)(366016)(11063799006)(38350700014)(56012099006)(18002099003)(22082099003)(4143699003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?ykzgUxlFDvaJZrjVKvi1mxcWpBTQOtMFFXSLenYYKYnK5yTx8yWn+jLssENf?=
+ =?us-ascii?Q?m0gqHFViWi22jWEFbp9tBEeDK43KjpKfqhKbACdP2+Wh972TwgxvAdNmERMs?=
+ =?us-ascii?Q?cqHFTNLkAdF67QPeZ9NyTQ0oz+09H7LFcWiMKPEi+gc4V5oqwUYNez6eqq+5?=
+ =?us-ascii?Q?LuRIHByI5Dj3RmX6YBLWOMVlggSrVpUjrAMyXDQkAuv0OI+BliM9bIrawiUM?=
+ =?us-ascii?Q?sbNYUTxRxtREnNbTB/EAcKSaQY5obWXVVrLkfTYSy7yBC2tNmQrzMbx0CL2Y?=
+ =?us-ascii?Q?rNCXsDqWGjn5cUMPAqgN5+xoJqlQvlyOJcJ9Yz5H7i4RXm6OtuOtM4Sf6ahg?=
+ =?us-ascii?Q?/B32fs/GY2ow0DbXdk+g1UQUpuVhnBwNMMfGfJzaPPPfb90WQRxnKaDPVkXe?=
+ =?us-ascii?Q?mbtzDLaQb61h3mnZ62hAkp3xqMZl0SOwxlF/B0R01oikLtQj1xDDSX0I93Si?=
+ =?us-ascii?Q?2r3X4H1nRBCl5sdZkkigpI8owhNkcONzKyd0UFCpuhHkgFxLr979HWA9q8SM?=
+ =?us-ascii?Q?pA2QUJ44ALFqaPa0Se0vfKZbfYwNoJROqyBgJ56yXy5bzYSxYX2Lh5loMQMR?=
+ =?us-ascii?Q?KFAu7Gr8+8HUNP1KiJQuhHH7/DMmqJYZDbwGVrurvGK3jY0/j59w739VqgI4?=
+ =?us-ascii?Q?eOSlzomWg+fADx4jtMiX7Jz7DQxD3M6qghOignwHLbakoZm3tBwZJPeF9+0F?=
+ =?us-ascii?Q?HA3S3fnFH9Is6Y5vdMBXHqgxZWcbf27am8+z3YRd1D78oj/mJRzmmF+clT2s?=
+ =?us-ascii?Q?OqgwqmhdgMLkecajFvr4qSsCm+yQm+PDc3HHJMUbo/LSaEiBUeiNBScZfr+w?=
+ =?us-ascii?Q?EQELhBlCbmd5aNypR7epzg5RnorXjnP06aznLMIUQHBYxsVt/Wcthi64V4rC?=
+ =?us-ascii?Q?bm+ux2iGMpxBHsT1vAlzm1xeA7U2jMx0EfAf7j8r9gPU7FbenAxa7N6N7J5s?=
+ =?us-ascii?Q?u5Qvq8FVjka75FWD+5SNiB1xl8SCGsth/h7OJVdHW5I/MbNKsfoW++gScymR?=
+ =?us-ascii?Q?yIIgoL07DtRLBftEbRngc1TkiND/ZWiUMdSqbhK/svohOVvKrUIGDmNc6NyY?=
+ =?us-ascii?Q?6ulwU/LZ1ZTyntEHohOgSqY6s0YbSlUiCpdCv7hqExhngAdVUaW5ME2+DQdq?=
+ =?us-ascii?Q?1XeDP6fzjn4iy20bSjBEBo+sIgKJcHtfZ8sPc2hUIq/6sPEs2UoKzkg9GmUY?=
+ =?us-ascii?Q?oj2Wm59E7Ro0FckEvWvrR/gMnk7rk9AVIa5LlgF9R1fuZXFddOTM0ekctKy5?=
+ =?us-ascii?Q?0A133vnkD7B8twssqZWykbPRwfdZ1Fjnjn8yYIuqfCOi//BmErpoGbrC2j7d?=
+ =?us-ascii?Q?HQYFfoaxkEzxeHF4NEniSrRk25I5ETe1TTcPdBCPuAgFH7XP3B56pey/P/+y?=
+ =?us-ascii?Q?z99HRDmCkOfdP4iCBdro5yv7vj5SBTQaxClp6lMZ9a3AM6vWOING8RmJ4Z4X?=
+ =?us-ascii?Q?FBpJspl/3nms+WFevaiNK4wD935soa36UI3LXbMIVY6ZlgCWp4TydaSO9LyD?=
+ =?us-ascii?Q?f9ExiFqrKzcz+1FHW33qiHPSgGpUHbrxod+4bV5lSv0ReVrPFZoyef2Uvem0?=
+ =?us-ascii?Q?p1+bp7wpPHVgjMjRyZ/Mc6C5C9skOeot1cOZJ+laOsYXLbRvyEgbg+qKWjqN?=
+ =?us-ascii?Q?Y4BuQtlZ4kZ+EkkvDHhMcjAK5SBq5/HkeWQS+z1psrDlvxm05GiV9lmnNKD2?=
+ =?us-ascii?Q?lKNUKKZs/FbJdPtuhzCE9PPa9WtMuunxMwb3IWopSDucT09R?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4e82655b-e471-4780-063d-08debcecac88
+X-MS-Exchange-CrossTenant-AuthSource: PA4PR04MB9366.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 May 2026 19:09:42.7500
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 6niROkxSHn0myvyC/NaQJUiRSWOL1qxQFTvl/dItlDzZ1tM2cxng0WCtBoCZyiamxt8IC4hqvpDsff2njvFJ/w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB9007
 
+On Thu, May 28, 2026 at 08:16:44PM +0200, Thorsten Leemhuis wrote:
+> [+Alexander +Francesco]
+>
+> On 5/28/26 18:47, Frank Li wrote:
+> > On Thu, May 28, 2026 at 12:55:34PM +0200, Thorsten Leemhuis wrote:
+> >> On 5/7/26 17:46, Frank Li wrote:
+> >>>
+> >>> On Mon, 27 Apr 2026 09:01:48 +0800, Peng Fan (OSS) wrote:
+> >>>> The i.MX8M soc device is registered via platform_device_register_simple(),
+> >>>> so it is not associated with a Device Tree node and the imx8m_soc_driver
+> >>>> has no of_match_table.
+> >>>>
+> >>>> As a result, device_get_match_data() always returns NULL when probing
+> >>>> the soc device.
+> >>>>
+> >>>> [...]
+> >>>
+> >>> Applied, thanks!
+> >>>
+> >>> [1/1] soc: imx8m: Fix match data lookup for soc device
+> >>>       commit: 2c6821657ce3b3c85f92719ea81ec9f9ff27df11
+> >>
+> >> Just wondering: are you planning to sent this towards mainline this
+> >> cycle? The regression this fixes was introduced this cycle, so I guess
+> >> it's something that should be merged before -rc6, as that's when Linus
+> >> wants all known regression ideally fixed. But from the name of the
+> >> branch it sounds more like this is scheduled to be merged in the next
+> >> merge window (but I might easily mistaken there -- if I am: sorry!)
+> >
+> > Thanks reminders. I intent to send for 7.1. But second look, not sure any
+> > big impact although it is regression.
+> >
+> > commmit message have not show what impact.
+>
+> Yup, there ideally should have been Link: tags to the problem reports,
+> as explained by our docs. At least if that patch fixes the problems
+> linked to below (looks like it, but I'm not totally sure):
+>
+> > I checked code, look like only
+> > missed some soc informaiton. Let me know if I am wrong.
+>
+> Alexander reported problems here:
+> https://lore.kernel.org/lkml/6593091.DvuYhMxLoT@steina-w/
+> That mentions a warning and problems with soc_id and serial_number
+>
+> Francesco jumped in a little later:
+> https://lore.kernel.org/lkml/20260427064704.GA17710@francesco-nb/
+> This mentions "CAAM is not working"
 
+Thank you point it. I just sent fixes pull-request to soc maintainer.
 
-On 5/28/26 8:42 PM, Fernando Fernandez Mancera wrote:
-> On 5/28/26 7:21 PM, Stefano Brivio wrote:
->> On Thu, 28 May 2026 18:01:27 +0200 Beniamino Galvani
->> <bgalvani@redhat.com> wrote:
->>
->>> On Thu, May 28, 2026 at 05:24:28PM +0200, Íñigo Huguet wrote:
->>>> On Thu, May 28, 2026 at 4:53 PM Stefano Brivio
->>>> <sbrivio@redhat.com> wrote:
->>>>> I think what's considered UAPI in this case isn't so clear-
->>>>> cut. I guess it would have been pretty hard for anybody not
->>>>> familiar with NetworkManager's codebase to imagine that an
->>>>> application would rely on IPv6 addresses (and only IPv6) to be
->>>>> returned in the reverse order.
->>>>
->>>> IMHO it's not because an application would rely on the order.
->>>> It's because the order matters, as the first one is considered
->>>> the primary.
->>
->> Yes, that's also the case, but:
->>
->>>> This is not NetworkManager specific. Or I am mistaken? I'm
->>>> speaking by memory
->>
->> ...from what I understood of the issue at hand there's a part that's 
->> specific to NetworkManager here, because NetworkManager replaces / 
->> deletes the Privacy Extensions addresses, instead of different 
->> addresses, because it relies on that specific (reversed) order.
->>
->> Anyway, yes, I see your point about UAPI now.
->>
->>> Yes, exactly. If you do:
->>>
->>> ip addr add dev X 3fff::1/64 ip addr dev dev X 3fff::2/64
->>>
->>> then the old kernel chooses the address that was added last as
->>> source address for outgoing communications. With the new kernel it
->>> chooses the address that was added first.
->>>
->>> I think that any script or network management tool that cares
->>> about the source address selection is impacted. Indeed, the commit
->>> had effects on one of the selftests, which had to be modified to
->>> change the order of iproute2 invocations.
->>>
->>>>>> If the fix must be in NetworkManager, we only need to parse
->>>>>> them in non-reverse order like IPv4, I guess.
->>>>>
->>>>> But that would then require some form of detection, and, at
->>>>> least according to Fernando, isn't the most robust option
->>>>> anyway, as ideally NetworkManager shouldn't rely on the order
->>>>> at all.
->>>>
->>>> True
->>>
->>> Correct, if the new behavior is considered better, there should be
->>> a way to detect which order must be used. Otherwise userspace
->>> tools won't be able to maintain the same behavior with different
->>> kernels.
->>
->> My remark here is about whether NetworkManager needs to detect this
->> at all. If it used timestamps to detect recent / older addresses, as 
->> Fernando mentioned, then you wouldn't need any detection at all,
->> right? Or is there something else we're missing?
->>
-> 
-> Ohno. Now that Beniamino and Iñigo mentioned it, this will likely break
-> many other environments. In essence, many tools relies on the previous 
-> ordering to identify which address is the primary one.
-> 
-> E.g cloud tooling communicating with the metadata server via IMDS(v2) to 
-> configure IPv6 primary and secondary addresses. They are likely relying 
-> on the ordering for that.
-> 
-> So maybe we could fix whatever is wrong with NetworkManager and 
-> temporary addresses order but I don't think this will scale for the 
-> cloud tooling with the primary/secondary issue.
-> 
->> By the way, if really needed, one could detect that with the
->> equivalent of:
->>
->> ip a a ::2 dev lo && ip a a ::3 dev lo && [ $(ip -6 -j a | jq -rM '.
->> [] .addr_info[0].local') = ::3 ] && echo wrong || echo right
->>
->> ...depending on the application, that's not necessarily practical,
->> but so far we have no evidence of any application needing to do that
->> at all.
->>
-> 
-> Plenty of tools (NetworkManager included) uses netlink so this isn't 
-> useful for them.
-> 
-> For now I am more in favor of the revert and to look for an alternative 
-> for pasta situation (like using a flag or something). But I am not a 
-> maintainer so it isn't my call :)
+Frank
 
-*facepalm* I just noticed the "with the equivalent of", disregard this 
-last part tho.
-
+>
+> Not sure what the impact is, but from the outside it looks a bit like
+> "better fix this now to ensure those problems never enter a proper release"
+>
+> Ciao, Thorsten
