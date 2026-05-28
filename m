@@ -1,235 +1,223 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EAE331E825
-	for <regressions@lists.linux.dev>; Thu, 28 May 2026 19:22:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 435A32F8E83
+	for <regressions@lists.linux.dev>; Thu, 28 May 2026 20:20:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779996141; cv=none; b=GIcah7wqoUspyu3xQSZuZbjnBOa7XNyco1doh8ZkLRZo4I6OCzdOajar99R7PV+QQqhC5KJFfM8kZkhLrJLO3SG1SxRB/nkJIEF4B7PYk8p37WBA69Xi/W5P0YO4UoWVklckOpAeOOei/qBN+7U5aGYjT9WsMO7qTtIweKdOaOU=
+	t=1779999601; cv=none; b=gZeL+nVNDIRsWPr1YO76qIs4S17gIkWNmQLk7OEKSrG0imX9aayPuE/mKbj8H7UOzwQRe+WBGDRODJxha5BVDupj9swHT/1OM/0umMgg8qNgBF4CRsqA82gJwsjidWaqivxQPEW/N9S/YhF6vBtObKqaxI4OiHgMtxt9nqm2TL4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779996141; c=relaxed/simple;
-	bh=u/Nf5wwZ1Y2ZoGMDhtOo0BSYQu4fhwGyzdJoJEWlzQg=;
-	h=From:To:Cc:Subject:Message-ID:In-Reply-To:References:MIME-Version:
-	 Date:Content-Type; b=tVZFJRpzdAy2NL38DbOzV3WZQls7Ifv4GAmLK7v2hEDHhvuVOQaiGt9IYzYQQ9rSVcIDueX9VUNfLmlz4qeClbLAHyMr805kqD/g1XcGnb7cc9GHnVOZkUNxAdehCUyoG3cR1lu02DlTVEHEld5LKMmhIhTDvy4ODn1Cu3MimM8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Bk5kGlNx; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1779999601; c=relaxed/simple;
+	bh=EyaF5sza5IMpxxJN0yXgScztt2GHZPfz3Y5a8lhsI7Q=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jWQYq8leyVj2MmR08hDXVEcDMoniG4C33bAN4d9mWffIbc9prse9gQ7v6W3taggbnZRyG6gGWFWNRwa5F7EEbXhR4RXc+aqsTp2BYt9Ab7N40jSxjgURPFGJDtf8L5DDePZ+jsoCg6cuxHVA7bCvdoRCyRJcblxRGRLrwwEIVwI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=bgFkNz3Q; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=lHqh/w/V; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=bgFkNz3Q; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=lHqh/w/V; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Bk5kGlNx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1779996139;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="bgFkNz3Q";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="lHqh/w/V";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="bgFkNz3Q";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="lHqh/w/V"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 764876AA02;
+	Thu, 28 May 2026 20:19:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1779999598; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=QJM22Y+VfZuCTRHYr0LnFqAHk1a3xks2PK09mYhWGF0=;
-	b=Bk5kGlNxW67k8kZ2fV67uPQEXdJNQeURQEO1ITa8Gpv6ZoFa8hFOl+JxchdS550+XHSOQE
-	5h5qx3eNjmQ5ORFCQD7UhT1+agX2qgdItvCK3Eb2iZ9YAl1PqyZ4RxqhgljGxiTQoqOPXX
-	KJRL0iKC6UWeKyB5Q/oRSfl2YBqLdS8=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-590-jCjmYzicNnuquuBtRQMC4g-1; Thu, 28 May 2026 15:22:18 -0400
-X-MC-Unique: jCjmYzicNnuquuBtRQMC4g-1
-X-Mimecast-MFC-AGG-ID: jCjmYzicNnuquuBtRQMC4g_1779996137
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-49058295985so36123795e9.2
-        for <regressions@lists.linux.dev>; Thu, 28 May 2026 12:22:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779996137; x=1780600937;
-        h=date:content-transfer-encoding:mime-version:organization:references
-         :in-reply-to:message-id:subject:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=dx/6eLItiucIm4A2R0ZnASp+ymf3y4PKplbSYqHwDcA=;
-        b=pBlpEEbul6xE93In0WH1hxUWvv6oQAnuLuYGDuEPxWYdjgGUzfs4quNFXzK+BLvxbe
-         E3VMUBHG+IVA+4L9DFtmNckei1U1R+HLJJrrmYeiJYDxVDF+2QLN+jMSR1xT7EiyNAbS
-         aAyN7D52MXejz44K4QtewH8XhLaSsJOBVLr/LkRo2e62+Xov8YciOw37KObt76b/8kgg
-         BGp10QKBMGts8vQa+8nN0r+BROs08PjPiI1tcbRKiDY0D4jGV4Id1QFFkVbBf/p2JQcu
-         aqq1R9KMuYPqF9Hkm3Et7m9wRCn8rPQtH/IRFqMJqVy1Ks6FWzAo5+53TKsum0iV7DH/
-         oIJg==
-X-Forwarded-Encrypted: i=1; AFNElJ+Qsu+J9ARs06FVSUsOBoiMgNai1RReG6lD3+19twYNMpIQ8c1evAgdUqXzR/aYw7PBluT5UV8i5fFT/g==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxgLiB9CsTzNWjo5ZToy7WADuuiXdl/zWH5ry0r8L4/iHo8lnVK
-	fG5Hdgecjl7oekhMyAmFgl+7bOEaEyFw/gQ1qZ1r93O6R0blaXr3wm+7BD31sD/7xn9FPfYnCMd
-	QX+8aXVbyFAVsCJtY5r4heHWXYlzzsOdLSVnp+KNJnS6cAEJrgWhuglXDxmUWgflz
-X-Gm-Gg: Acq92OF3/XrbWJu5MzyNNpZXB9Khfnf8d9hfEtuj0mlxFOK6l3GH1+gGIBwKr7s9N0T
-	V9xiFv9TaYPButB7lAvAxWivQjVNKLFqgUpw603DHcHGI82cOZqg4pSJgq+8E0uqa2Z6jxzE6Uq
-	FtKjRYcM0JX+eZ5pa1+HIq9XOKzA9kgN2V3+DFEVir7a2HNHMcR7GwDpYmJUN7Z1eUA8Nyveh7U
-	1H7p8M51lLbMEPbCbgy6gxCuoRaRU6+mQ6AO4vRXUpyRf/+BFGoPkBcJYHtNkAchDbkBD4fxjzq
-	yXHqaz/QgfXVS8OyxYkshHecepHcwHKFjqafapgWXnAkSzm6QiDvHA3mC6RGSkTuyu8xdLWOcRU
-	FILgFeLnrSThFQEjYUNyGqQv2cAUv64bVoq6R/+Y76+NoR0zFVCwhtw/DRJIJ
-X-Received: by 2002:a05:600c:35c8:b0:490:44eb:c1e7 with SMTP id 5b1f17b1804b1-49044ebc2d5mr519116575e9.30.1779996136513;
-        Thu, 28 May 2026 12:22:16 -0700 (PDT)
-X-Received: by 2002:a05:600c:35c8:b0:490:44eb:c1e7 with SMTP id 5b1f17b1804b1-49044ebc2d5mr519115935e9.30.1779996135923;
-        Thu, 28 May 2026 12:22:15 -0700 (PDT)
-Received: from maya.myfinge.rs (ifcgrfdd.trafficplex.cloud. [176.103.220.4])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4909bba94aasm374245e9.16.2026.05.28.12.22.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2026 12:22:15 -0700 (PDT)
-From: Stefano Brivio <sbrivio@redhat.com>
-To: Fernando Fernandez Mancera <fmancera@suse.de>
-Cc: Beniamino Galvani <bgalvani@redhat.com>, =?UTF-8?B?w43DsWlnbw==?= Huguet
- <ihuguet@redhat.com>, Thorsten Leemhuis <regressions@leemhuis.info>, Jakub
- Kicinski <kuba@kernel.org>, netdev@vger.kernel.org, Yumei Huang
- <yuhuang@redhat.com>, Ido Schimmel <idosch@idosch.org>, Justin Iurman
- <justin.iurman@gmail.com>, David Ahern <dsahern@kernel.org>, David Gibson
- <david@gibson.dropbear.id.au>, Linux kernel regressions list
- <regressions@lists.linux.dev>
-Subject: Re: Problem with IPv6 privacy addresses in 7.0
-Message-ID: <20260528212213.4aa613f8@elisabeth>
-In-Reply-To: <e91507d6-cbfc-447c-8236-d9b3d91f18c5@suse.de>
-References: <675083b4-e015-4ff3-836c-798e0a971194@suse.de>
-	<20260528073849.759da84a@elisabeth>
-	<baba855a-7cc9-409e-9c20-6e50f35d255a@suse.de>
-	<20260528131250.1352ab48@elisabeth>
-	<b21c598b-879c-4f6a-9dc8-27e5c362803b@suse.de>
-	<bd669eaf-64dc-4217-bae0-4a531e473762@leemhuis.info>
-	<20260528153202.14900687@elisabeth>
-	<CACT4ouf5ZqGgb=RO8_7NovLCvYKLKL4vD70dEe6xUODT1UEcSA@mail.gmail.com>
-	<20260528165320.15b90ded@elisabeth>
-	<CACT4oue2EMM9Kfsm9Jii2rG9ooi=D37PK=8886cpLuBkwhrOxw@mail.gmail.com>
-	<ahhm1-XfnsWyIWDV@tp>
-	<20260528192143.31c9e9ea@elisabeth>
-	<ed954836-742a-44c3-8c2d-65dd06c3514e@suse.de>
-	<e91507d6-cbfc-447c-8236-d9b3d91f18c5@suse.de>
-Organization: Red Hat
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.49; x86_64-pc-linux-gnu)
+	bh=I5GrZ1dC2WN36VrGiN+f99vKFGciKlAxwcEXaNXFk6g=;
+	b=bgFkNz3QCcRD5LWgNWQOuBfDoA/W0BcNp86FV+F40uTLk6BM+DeWqxl3Gr+LNnoAjjyjQI
+	j+QV2hk8azHZ7+0hK4SyHBn7GwLg0svMTR2skBrpmgWv78rV32riqeHSjAKeX9gIT6MhvE
+	jDnAfPuNEpyhd2Ws76g2F5XNpej1nyQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1779999598;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=I5GrZ1dC2WN36VrGiN+f99vKFGciKlAxwcEXaNXFk6g=;
+	b=lHqh/w/VJcHyyr8A642eJhNJyoI8heQFmxZ6azwIk/lFqvUGNkuSXYfnSnU3/c4mmCnyL3
+	ZlvamLy2AqvtklDA==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=bgFkNz3Q;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="lHqh/w/V"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1779999598; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=I5GrZ1dC2WN36VrGiN+f99vKFGciKlAxwcEXaNXFk6g=;
+	b=bgFkNz3QCcRD5LWgNWQOuBfDoA/W0BcNp86FV+F40uTLk6BM+DeWqxl3Gr+LNnoAjjyjQI
+	j+QV2hk8azHZ7+0hK4SyHBn7GwLg0svMTR2skBrpmgWv78rV32riqeHSjAKeX9gIT6MhvE
+	jDnAfPuNEpyhd2Ws76g2F5XNpej1nyQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1779999598;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=I5GrZ1dC2WN36VrGiN+f99vKFGciKlAxwcEXaNXFk6g=;
+	b=lHqh/w/VJcHyyr8A642eJhNJyoI8heQFmxZ6azwIk/lFqvUGNkuSXYfnSnU3/c4mmCnyL3
+	ZlvamLy2AqvtklDA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 358DB5AF83;
+	Thu, 28 May 2026 20:19:58 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id r1xZC26jGGrKWwAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Thu, 28 May 2026 20:19:58 +0000
+Date: Thu, 28 May 2026 22:19:57 +0200
+Message-ID: <87cxyfs2vm.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Mike Karcic <mikekarcic@protonmail.com>
+Cc: Kailang Yang <kailang@realtek.com>,
+    Takashi Iwai <tiwai@suse.de>,
+	Sean Rhodes <sean@starlabs.systems>,
+	"stable@vger.kernel.org" <stable@vger.kernel.org>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+	"linux-sound@vger.kernel.org" <linux-sound@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [REGRESSION] Speaker pop/chirp on Meteor Lake ALC287 (17aa:231e) -- 6.12.73 to 6.12.85
+In-Reply-To: <bibLdgyll9YOEDANdCBy8WOqeOeJry1SnahLR-EhoGkttJ6BE2srDZ9jv0gjkt0bA19aKivruQs3nkMQWbdEXPaOrLT80xjzF4KJvDcB-IU=@protonmail.com>
+References: <O6pYAi7yf23du9ivLsL0QqrnTmodj2lDTL7Wviv7I_nhjVtvllO7Y5Ban0TeTqrastb1RWhJtlkqrM3quLMWSriai-YjjGy312MTcEhxyWs=@protonmail.com>
+	<CABtds-3GOyBr1H=c5aFV1uzfkhO3d1NHMPuon_cWDq0V=pFwUA@mail.gmail.com>
+	<wZmYozyav1sNx53nFr4ShKmcdLFVJp5bdUOJgUq1I57MX6kgyq7n8XvH-MWG9Fi4q2x4CQqjEQ3Q8ok5MClut8hNixnhVmVtXkhcOzH1sw8=@protonmail.com>
+	<87eciwukvy.wl-tiwai@suse.de>
+	<RfzfjlzeaeMgNNWNST_Zzx1v49rYjM63MvAV6O5_fFIoZJ73GcN69FDLJcwhJ3s6fl9TVD2l45YBh2n3hy95LM7rhLhoVt8dU9stMkuVJvE=@protonmail.com>
+	<87mrxjsk52.wl-tiwai@suse.de>
+	<bibLdgyll9YOEDANdCBy8WOqeOeJry1SnahLR-EhoGkttJ6BE2srDZ9jv0gjkt0bA19aKivruQs3nkMQWbdEXPaOrLT80xjzF4KJvDcB-IU=@protonmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/30.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Date: Thu, 28 May 2026 21:22:14 +0200 (CEST)
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: sc9qgRF56-byr6NQthNhqUqSt4oQJSxisbuTyPsnxqI_1779996137
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Rspamd-Queue-Id: 764876AA02
+X-Spam-Flag: NO
+X-Spam-Score: -3.51
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FREEMAIL_TO(0.00)[protonmail.com];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	ARC_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[protonmail.com];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	DKIM_TRACE(0.00)[suse.de:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:dkim,suse.de:email,suse.de:mid]
 
-On Thu, 28 May 2026 20:50:48 +0200
-Fernando Fernandez Mancera <fmancera@suse.de> wrote:
+On Thu, 28 May 2026 20:27:30 +0200,
+Mike Karcic wrote:
+> 
+> Yes, I can confirm the patched kernel is running, and commenting out that line fixes the problem completely.
+> 
+> Below is output with the added debug lines as requested:
+> 
+> $ uname -r
+> 6.12.90-debug-no-discoefs
+> 
+> $ sudo dmesg | grep -i "alc287_alc1318"
+> [  453.823528] snd_hda_codec_realtek ehdaudio0D0: alc287_alc1318_playback_pcm_hook called action=0
+> [  453.871577] snd_hda_codec_realtek ehdaudio0D0: alc287_alc1318_playback_pcm_hook called action=1
+> [  459.605379] snd_hda_codec_realtek ehdaudio0D0: alc287_alc1318_playback_pcm_hook called action=2
+> [  459.605497] snd_hda_codec_realtek ehdaudio0D0: alc287_alc1318_playback_pcm_hook called action=3
+> 
+> $ grep -n -A5 -B2 "alc_process_coef_fw.*dis_coefs" sound/pci/hda/patch_realtek.c
+> 7918-           return;
+> 7919-   alc_update_coef_idx(codec, 0x10, 1<<11, 1<<11);
+> 7920:   /* alc_process_coef_fw(codec, dis_coefs); */ /* commented out for testing */
+> 7921-   alc_process_coef_fw(codec, coefs);
+> 7922-   spec->power_hook = alc287_s4_power_gpio3_default;
+> 7923-   spec->gen.pcm_playback_hook = alc287_alc1318_playback_pcm_hook;
+> 7924-}
 
-> On 5/28/26 8:42 PM, Fernando Fernandez Mancera wrote:
-> > On 5/28/26 7:21 PM, Stefano Brivio wrote: =20
-> >> On Thu, 28 May 2026 18:01:27 +0200 Beniamino Galvani
-> >> <bgalvani@redhat.com> wrote:
-> >> =20
-> >>> On Thu, May 28, 2026 at 05:24:28PM +0200, =C3=8D=C3=B1igo Huguet wrot=
-e: =20
-> >>>> On Thu, May 28, 2026 at 4:53=E2=80=AFPM Stefano Brivio
-> >>>> <sbrivio@redhat.com> wrote: =20
-> >>>>> I think what's considered UAPI in this case isn't so clear-
-> >>>>> cut. I guess it would have been pretty hard for anybody not
-> >>>>> familiar with NetworkManager's codebase to imagine that an
-> >>>>> application would rely on IPv6 addresses (and only IPv6) to be
-> >>>>> returned in the reverse order. =20
-> >>>>
-> >>>> IMHO it's not because an application would rely on the order.
-> >>>> It's because the order matters, as the first one is considered
-> >>>> the primary. =20
-> >>
-> >> Yes, that's also the case, but:
-> >> =20
-> >>>> This is not NetworkManager specific. Or I am mistaken? I'm
-> >>>> speaking by memory =20
-> >>
-> >> ...from what I understood of the issue at hand there's a part that's=
-=20
-> >> specific to NetworkManager here, because NetworkManager replaces /=20
-> >> deletes the Privacy Extensions addresses, instead of different=20
-> >> addresses, because it relies on that specific (reversed) order.
-> >>
-> >> Anyway, yes, I see your point about UAPI now.
-> >> =20
-> >>> Yes, exactly. If you do:
-> >>>
-> >>> ip addr add dev X 3fff::1/64 ip addr dev dev X 3fff::2/64
-> >>>
-> >>> then the old kernel chooses the address that was added last as
-> >>> source address for outgoing communications. With the new kernel it
-> >>> chooses the address that was added first.
-> >>>
-> >>> I think that any script or network management tool that cares
-> >>> about the source address selection is impacted. Indeed, the commit
-> >>> had effects on one of the selftests, which had to be modified to
-> >>> change the order of iproute2 invocations.
-> >>> =20
-> >>>>>> If the fix must be in NetworkManager, we only need to parse
-> >>>>>> them in non-reverse order like IPv4, I guess. =20
-> >>>>>
-> >>>>> But that would then require some form of detection, and, at
-> >>>>> least according to Fernando, isn't the most robust option
-> >>>>> anyway, as ideally NetworkManager shouldn't rely on the order
-> >>>>> at all. =20
-> >>>>
-> >>>> True =20
-> >>>
-> >>> Correct, if the new behavior is considered better, there should be
-> >>> a way to detect which order must be used. Otherwise userspace
-> >>> tools won't be able to maintain the same behavior with different
-> >>> kernels. =20
-> >>
-> >> My remark here is about whether NetworkManager needs to detect this
-> >> at all. If it used timestamps to detect recent / older addresses, as=
-=20
-> >> Fernando mentioned, then you wouldn't need any detection at all,
-> >> right? Or is there something else we're missing?
-> >> =20
-> >=20
-> > Ohno. Now that Beniamino and I=C3=B1igo mentioned it, this will likely =
-break
-> > many other environments. In essence, many tools relies on the previous=
-=20
-> > ordering to identify which address is the primary one.
-> >=20
-> > E.g cloud tooling communicating with the metadata server via IMDS(v2) t=
-o=20
-> > configure IPv6 primary and secondary addresses. They are likely relying=
-=20
-> > on the ordering for that.
+Hm, then the previous fix doesn't seem working, obviously.
+Kailang, could you check this in your side?
 
-I haven't seen any tool specifically relying on insertion order for
-this so far and I'm having a hard time believing this kind of tooling
-wouldn't rely explicitly on home / care-of addresses or different
-labels -- see RFC 5014 and RFC 6724 Section 5. (or, perhaps clearer,
-the examples in section 10.1, in particular rule 4. and rule 6.
+Maybe we should apply the AMP-silence-detection disablement
+conditionally to certain models?
 
-But I'll look for more convincing examples in a bit (maybe you have some
-at hand?)
 
-This is all implemented by __ipv6_dev_get_saddr() and friends, by the way.
+thanks,
 
-> > So maybe we could fix whatever is wrong with NetworkManager and=20
-> > temporary addresses order but I don't think this will scale for the=20
-> > cloud tooling with the primary/secondary issue.
-> >  =20
-> >> By the way, if really needed, one could detect that with the
-> >> equivalent of:
-> >>
-> >> ip a a ::2 dev lo && ip a a ::3 dev lo && [ $(ip -6 -j a | jq -rM '.
-> >> [] .addr_info[0].local') =3D ::3 ] && echo wrong || echo right
-> >>
-> >> ...depending on the application, that's not necessarily practical,
-> >> but so far we have no evidence of any application needing to do that
-> >> at all.
-> >=20
-> > Plenty of tools (NetworkManager included) uses netlink so this isn't=20
-> > useful for them.
-> >=20
-> > For now I am more in favor of the revert and to look for an alternative=
-=20
-> > for pasta situation (like using a flag or something). But I am not a=20
-> > maintainer so it isn't my call :)
+Takashi
 
-One question I started wondering about later is: should the flag affect
-insertion or reporting, in case? I think we would need one for
-insertion, otherwise it's not really generic / functional.
-
-> *facepalm* I just noticed the "with the equivalent of", disregard this=20
-> last part tho.
-
-Right, yeah, having a netlink implementation makes that a bit more
-convenient. :)
-
---=20
-Stefano
-
+> 
+> 
+> 
+> Sent with Proton Mail secure email.
+> 
+> On Thursday, May 28th, 2026 at 10:07 AM, Takashi Iwai <tiwai@suse.de> wrote:
+> 
+> > On Thu, 28 May 2026 15:38:54 +0200,
+> > Mike Karcic wrote:
+> > >
+> > > I did test 46c862f5419e on 6.12.90. Chirp still present.
+> > >
+> > > I'm also on a ThinkPad X1 Carbon Gen 12 with ALC287 (17aa:231e),
+> > > same as the original reporter. The fix resolved it for them but
+> > > not for me.
+> > >
+> > > Only a full revert of 630fbc6e870e resolves the issue.
+> > >
+> > > Verification on the running kernel:
+> > >
+> > >   $ grep -c "dis_coefs" sound/pci/hda/patch_realtek.c
+> > >   2
+> > >
+> > >   $ grep -c "en_coefs" sound/pci/hda/patch_realtek.c
+> > >   0
+> > >
+> > >   $ sed -n '/alc287_alc1318_playback_pcm_hook/,/^}/p' sound/pci/hda/patch_realtek.c
+> > >   static void alc287_alc1318_playback_pcm_hook(struct hda_pcm_stream *hinfo,
+> > >                                      struct hda_codec *codec,
+> > >                                      struct snd_pcm_substream *substream,
+> > >                                      int action)
+> > >   {
+> > >           switch (action) {
+> > >           case HDA_GEN_PCM_ACT_OPEN:
+> > >                   alc_write_coefex_idx(codec, 0x5a, 0x00, 0x954f);
+> > >                   break;
+> > >           case HDA_GEN_PCM_ACT_CLOSE:
+> > >                   alc_write_coefex_idx(codec, 0x5a, 0x00, 0x554f);
+> > >                   break;
+> > >           }
+> > >   }
+> > >
+> > > Happy to test further patches.
+> > 
+> > Just to be sure, could you verify that you've tested really the
+> > patched kernel, e.g. by adding a debug print, etc?
+> > If yes and the problem is seen even with the patch, try to comment out
+> >   alc_process_coef_fw(codec, dis_coefs);
+> > and confirm that this fixes the problem.
+> > 
+> > 
+> > Takashi
+> >
