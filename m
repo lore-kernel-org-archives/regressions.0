@@ -1,51 +1,55 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [185.244.194.184])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [46.38.247.119])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 626423B27E8;
-	Thu, 28 May 2026 10:57:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.244.194.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 234A4358D3D
+	for <regressions@lists.linux.dev>; Thu, 28 May 2026 11:17:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.38.247.119
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779965831; cv=none; b=QsxmbOH4aTxnzZFrL4ONslxKbIJNUP3sLtWl3/xwjHBuKvdeqxDU7er65TwxPWlSPTuX5emJI29BfaidDWGyhuMcU316LAK43HD1g3/9CY2ASUJJTRcXBd+G76Ch88AYm/nIDnXaKtS6KuNyYWGftp9txQFNkmlD4SORNigZmCU=
+	t=1779967043; cv=none; b=SoqPxYkXo8TUIZ+y4h3k/+VG4yd7An/pxMxu79nT9eLX5Uauh10Dzt40+oCIYTyyop4akf7RB+dq0LycV5FkB0Q+AP0x5J6uO8yX8GsGB2hSnMhBA+R7cswqgpMnCiVZRAkQSELm8mvkAjcg5c7fGOslAEx8zgFKytPVXug8+4I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779965831; c=relaxed/simple;
-	bh=G0KapeKXmvQX/sgfK8epwRg6t7LWI1FB4ylibSq8TAM=;
+	s=arc-20240116; t=1779967043; c=relaxed/simple;
+	bh=t4MwfkzG0d4WtyKv3QbXG+UR8CR6zeiN3ZL2lNK0h4Q=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tQ2uqcuvvvOqtNlOugWJTeg927/3TEo+joU11+BMgcJl5AqMYJCdKKL4Ls4YhmSbvFg/vRhUZiRM/n6pT9EsSoq7lO4j5Q2Qey3C1NMsJcp29jPAbJn1c4Y8jIKRnXL0WgkrBftDA8JsOQqFfG0YlfzRKb2T8eM7A458z0uw+w0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=hBAttNoC; arc=none smtp.client-ip=185.244.194.184
+	 In-Reply-To:Content-Type; b=kCtPGfP7DoNu/eIX2tQWbhddlJW+kWcCbSSLLkCDiT0izMGErBCIWZTBY83fd6iCbuNSdh7cxSaLtGagBcyUPJQcLx3BKmMf0uEmZtfjTQ0ESRWR9e3I+63zBWWeiJ1dKuSjRY1Ieg/uXCJYiZMmwUL9+uKDxOGQP6WDDWfDAPI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=VpmNhuTd; arc=none smtp.client-ip=46.38.247.119
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="hBAttNoC"
-Received: from relay01-mors.netcup.net (localhost [127.0.0.1])
-	by relay01-mors.netcup.net (Postfix) with ESMTPS id 4gR3Mw3VFNz93ms;
-	Thu, 28 May 2026 12:57:00 +0200 (CEST)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="VpmNhuTd"
+Received: from mors-relay-8404.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4gR3q80p7Dz86j3;
+	Thu, 28 May 2026 13:17:08 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1779965820;
-	bh=G0KapeKXmvQX/sgfK8epwRg6t7LWI1FB4ylibSq8TAM=;
+	s=key2; t=1779967028;
+	bh=t4MwfkzG0d4WtyKv3QbXG+UR8CR6zeiN3ZL2lNK0h4Q=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=hBAttNoCv0VKT8PUqfDK1OuzlkocyztP+jLFhQYe+oQ/l4VioIhiGfhTvm6nP3uJM
-	 CmUe8udWAbiKjkK4rnFsyOHa+BvJv14toby3vQg2gjxsvy3k33Ep2KBBNjSAPZu4al
-	 qSvhUU04JhEpXwD7vjoNiYmg+IAgD5sdSHVWYwMicm3eN17uUCSHtXucEJpvbiwOoJ
-	 6mWEmdwQ0L8kwaWT0DL3Qf+mOMXXG3nagDFGWAVRjDsBzuARWv9gcK2RPpzrEKGyJD
-	 hyMcUbVxn4ZurJ0jnZJdsuOq7iq0Zg/ltck0jXgaQ+2z5HVkbcC0ybX5Q60BHNdyCD
-	 kduw6NQQU2e7A==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by relay01-mors.netcup.net (Postfix) with ESMTPS id 4gR3LL6JXXz7xkT;
-	Thu, 28 May 2026 12:55:38 +0200 (CEST)
+	b=VpmNhuTdoynqjYo8z5kExba4HwusEPqN+HQTRLp07KrzZgQ9ZVzgsjEEAWVy0k4ru
+	 BUszghD7KR/zSz66QtgiJjjgRHFJWz93SRQVTpUdKItBPU4yo+aFK4XrZz5SkUPw6y
+	 hWkFGXtKtk7JoiO2wiEsG+A47yeegUQ7vKJdS4laXHitWrEQityopn6MuAfaI/K9LE
+	 huLdGV7uo8mFkJcv8+szyDueRFCcP9sFi4UJCV+SNB6BOVOVxPnKxWQoNOHh4f2mOq
+	 91LLZ5p0oMHZ5PmGc3AaIQQnudB3jtjdmYd9UaBdhIzzhaeWRgJdbOW1FVQYlzFlQh
+	 mOW8iLYdHzTcg==
+Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4gR3q80568z4xYl;
+	Thu, 28 May 2026 13:17:08 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
+X-Spam-Flag: NO
+X-Spam-Score: -2.898
+X-Spam-Level: 
 Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4gR3LK22P8z8sgw;
-	Thu, 28 May 2026 12:55:37 +0200 (CEST)
+	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4gR3q66FRMz8tbj;
+	Thu, 28 May 2026 13:17:06 +0200 (CEST)
 Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 1F02761805;
-	Thu, 28 May 2026 12:55:36 +0200 (CEST)
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 07DB460150;
+	Thu, 28 May 2026 13:17:05 +0200 (CEST)
 Authentication-Results: mxe9fb;
         spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
 Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <3cc57464-a10f-4b8c-9080-8d6f65a0d42f@leemhuis.info>
-Date: Thu, 28 May 2026 12:55:34 +0200
+Message-ID: <1c522568-1d5e-4210-8f25-1aa96e0d3c3a@leemhuis.info>
+Date: Thu, 28 May 2026 13:17:05 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -53,19 +57,18 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] soc: imx8m: Fix match data lookup for soc device
-To: Frank Li <Frank.Li@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rob Herring (Arm)" <robh@kernel.org>,
- Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>,
- "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Cc: imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, Peng Fan <peng.fan@nxp.com>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <20260427-soc-imx8m-fix-v1-1-1fe5b43d8090@nxp.com>
- <177816879666.299775.3947960528231798400.b4-ty@nxp.com>
+Subject: Re: [External Mail] Re: Test result / finding of "drm/amd/display:
+ Consult MCCS FreeSync cap only if requested & supported"
+To: =?UTF-8?Q?Michel_D=C3=A4nzer?= <michel.daenzer@mailbox.org>,
+ Pei-Hsin Yang <peihsiny@valvesoftware.com>
+Cc: "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ Alex Deucher <alexander.deucher@amd.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+References: <44069eb146824aa195312f5b02c49287@valvesoftware.com>
+ <7a9021cd-fd78-4b0d-846b-135d0d72224e@mailbox.org>
+ <16231b1742004f848af243ce398281ec@valvesoftware.com>
+ <ce51243c-3b98-4f99-911f-70dd0b860da0@mailbox.org>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
 Content-Language: de-DE, en-US
 X-Enigmail-Draft-Status: N11222
@@ -112,36 +115,41 @@ Autocrypt: addr=linux@leemhuis.info; keydata=
  8zG721N4hWyyLALtGUKIVWZvBVKQIGQRPtNC7s9NVeLIMqoH7qeDfkf10XL9tvSSDY6KVl1n
  K0gzPCKcBaJ2pA1xd4pQTjf4jAHHM4diztaXqnh4OFsu3HOTAJh1ZtLvYVj5y9GFCq2azqTD
  pPI3FGMkRipwxdKGAO7tJVzM7u+/+83RyUjgAbkkkD1doWIl+iGZ4s/Jxejw1yRH0R5/uTaB MEK4
-In-Reply-To: <177816879666.299775.3947960528231798400.b4-ty@nxp.com>
+In-Reply-To: <ce51243c-3b98-4f99-911f-70dd0b860da0@mailbox.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <177996573663.3727056.7438450775576394687@mxe9fb.netcup.net>
-X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: 1F02761805
-X-NC-CID: +7uTo/v0kmeWSu5vm1gUOBG1dT1AsJ+WtuCKIWOmreW9xLGlKjQ=
+Content-Transfer-Encoding: 8bit
+X-PPP-Message-ID: 
+ <177996702631.3775691.10510101217118724061@mxe9fb.netcup.net>
+X-NC-CID: VT+3wFD0GlzxeSD2mIUc2r9Ft2dbk6T9azLuPB/KJWJySk6S9N4=
 
-On 5/7/26 17:46, Frank Li wrote:
-> 
-> On Mon, 27 Apr 2026 09:01:48 +0800, Peng Fan (OSS) wrote:
->> The i.MX8M soc device is registered via platform_device_register_simple(),
->> so it is not associated with a Device Tree node and the imx8m_soc_driver
->> has no of_match_table.
->>
->> As a result, device_get_match_data() always returns NULL when probing
->> the soc device.
->>
->> [...]
-> 
-> Applied, thanks!
-> 
-> [1/1] soc: imx8m: Fix match data lookup for soc device
->       commit: 2c6821657ce3b3c85f92719ea81ec9f9ff27df11
+[+Alex +Christian]
 
-Just wondering: are you planning to sent this towards mainline this
-cycle? The regression this fixes was introduced this cycle, so I guess
-it's something that should be merged before -rc6, as that's when Linus
-wants all known regression ideally fixed. But from the name of the
-branch it sounds more like this is scheduled to be merged in the next
-merge window (but I might easily mistaken there -- if I am: sorry!)
+On 5/21/26 09:09, Michel Dänzer wrote:
+> On 5/20/26 17:54, Pei-Hsin Yang wrote:
+>>
+>>> Tested with 3 HDMI sinks with different FreeSync/HDMI VRR capabilities.  I saw one case that a FreeSync sink (Dell S2721HS) with E6h VCP code supported was detected as FreeSync capable at beginning but identified as not FreeSync capable later – after do_mccs is changed from true to false.
+>>
+>>>> And that doesn't happen without my patch applied?
+>>
+>> There are other issues without your patch applied.   One issue is that if a FreeSync capable sink with MCCS VCP Code = 0 (mostly are TVs), it will be detected as not FreeSync supported and VRR will be disabled.
+> 
+> That sounds similar to https://gitlab.freedesktop.org/drm/amd/-/work_items/5286 .
+>
+> I was wondering if the specific issue you described above with Dell S2721HS is reproducible without my patch though, in which case it might be a separate regression (and wouldn't speak against merging my patch).
+> 
+> 
+>>>> TBH I don't really want to be fixing the regression I hit, I'd prefer the AMD display team to handle it.
+>>
+>> Yes, agreed.  As FreeSync MCCS support has immediate impacts to Valve's Steam devices, I will work with AMD display team to handle it.   HDMI 2.1 VRR and VTEM packet sending support need to be included as well.
+> 
+> Note that some kind of short-term solution is needed for the regression(s) in 7.1-rc.
+
+Yeah, that would be good. Makes me wonder how the rough plan to realize
+this looks like? Sounds like Michael's patch[1] that was discussed here
+is not a good option? Reminder, Linus ideally wants known regression
+fixed by -rc6, which is why I'm asking.
 
 Ciao, Thorsten
+
+[1]
+https://lore.kernel.org/amd-gfx/20260518154809.660061-1-michel@daenzer.net/
