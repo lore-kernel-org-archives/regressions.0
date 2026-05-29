@@ -1,178 +1,165 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2945340409
-	for <regressions@lists.linux.dev>; Fri, 29 May 2026 08:40:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CA6B3BF692
+	for <regressions@lists.linux.dev>; Fri, 29 May 2026 09:42:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780044038; cv=none; b=SdN9pakonkSudzVVJYt4e1+sagRbpH/7Hcg0ygzPi1c4lOWhDWmW2WYlfWeHhGnY6D87znt12A/Z3kt7sj03OJXde4mS4Bq8DzPIp4KGiDv8JASq2ApPliAJRrM5pwm7vJ2Kr6qqXFy/KcxVxgKOSZUzRJoLv2D4HtxqZM/xZoQ=
+	t=1780047781; cv=none; b=l9OU7W7RANYjzYj9UVftV+a6DpY/8YPMs7IiX8jUpltHTmJO2Ed00p2FcplkYTL+7wb919bBwsfmgPxlOfaCvc6wEEhtRuwCY6kt2kN3N27zTBmC2HRVoAlo7pCzs74wlbW1V4v9YDqiU+jvNgl9UBU6eOM9JbNO2FN+L8gynO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780044038; c=relaxed/simple;
-	bh=DWbR6E/vwDX7rj4/4Wy1ycd7hPVUc6e5Q2qPcgbZOis=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 In-Reply-To:Content-Type:Content-Disposition; b=P9MACKwcr/o3cQCOh5avHG9vX5dOeZnaZIv43epBKB8ZdNb5uRcghBwz12MmnYHEiKJLQQZz1EW6nJqVYkasZ2QViUEM9e8hH+5JNXb5K9Zs2sTUxp+w+hIfm0B7QYbinYp22a7DNT8zlmvljCXM1oOEGuXtGM/gkDbuuD47lJo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dl+Mc6XC; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1780047781; c=relaxed/simple;
+	bh=8i5kslBP4UkVIDkpzXWUkO4oDalssyVZFJ0q0C8PHxc=;
+	h=From:To:Cc:Subject:Message-ID:In-Reply-To:References:MIME-Version:
+	 Date:Content-Type; b=JafLsCpiy9qMc5+SEQERG3bL/T3kpAS/MXUa6TW6vTjtg7KOYHUIQ5uz7e5tU7K23O5wU7Ii+FWPz2cQsiWUrKEAl50aKSUbU3UZgcuB7iYwyGOEXGFBB2WODUsuu9+bRwPSp8QPsfxeedadYEKdbyr98yVGOizPLPDOiQp5u9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Dnar5NhW; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dl+Mc6XC"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Dnar5NhW"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1780044035;
+	s=mimecast20190719; t=1780047777;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=E5a0+aTAcs0DOSWUfCr2mbaAPWI9oAKfxBvUlJLFiE8=;
-	b=dl+Mc6XCO5vZdiBxhmBkzqdTMr1hO+5Gz8wOeun9WiYf2OdOfbPvmMEa11Lt6LtU0Y9ovl
-	8Br6YHD/e3RVzKlvQiVXsgygkH+7YIzpx7RjMIZp9B2AXEeo8UdNAWJzgwEak5XbUQocOz
-	AkEp2lVvwXHZD1gJL0DrG+EZDYOMxE8=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=6EbJwg6UPsr1q8ilCkgLnamP733UEvzVj8vn7lhyNGU=;
+	b=Dnar5NhWYKZcexX4sSe+LEvhuLcqxRNi+sGMoXDkBX2OJSymcEzbBulg8OGqIk1yz4hHnx
+	0mnqZewoPq8QjD0LSw2I+B4BICmkmA5xQFE+mFYrbcTTsTX1O3tyUKTfh8oYeRmtxHE8pm
+	fXFOqWv7bUNb7gg4mXb4xdqRYKnh+N8=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-543-0tI7yoUsO2G7AfRzyDq3jw-1; Fri, 29 May 2026 04:40:34 -0400
-X-MC-Unique: 0tI7yoUsO2G7AfRzyDq3jw-1
-X-Mimecast-MFC-AGG-ID: 0tI7yoUsO2G7AfRzyDq3jw_1780044033
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-43fdf766b70so724368f8f.1
-        for <regressions@lists.linux.dev>; Fri, 29 May 2026 01:40:34 -0700 (PDT)
+ us-mta-680-_C4kAYRtNJy4hkFNU-qv6w-1; Fri, 29 May 2026 05:42:55 -0400
+X-MC-Unique: _C4kAYRtNJy4hkFNU-qv6w-1
+X-Mimecast-MFC-AGG-ID: _C4kAYRtNJy4hkFNU-qv6w_1780047775
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-4909deb82d0so3363245e9.1
+        for <regressions@lists.linux.dev>; Fri, 29 May 2026 02:42:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780044033; x=1780648833;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
+        d=1e100.net; s=20251104; t=1780047774; x=1780652574;
+        h=date:content-transfer-encoding:mime-version:organization:references
+         :in-reply-to:message-id:subject:cc:to:from:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=E5a0+aTAcs0DOSWUfCr2mbaAPWI9oAKfxBvUlJLFiE8=;
-        b=s9lhTL4wehRszN1DKrocJxnaFr1bQTaBZ7V66x0yZyNOy/o6fzRd9TuInfGbtPOMmH
-         kElrpEpsDPvEu1ZB9Wl4K+tDPNyrCIpUPRFtLAP3GF/sPBsci4eVy2ibO5tf34bj2D9T
-         mtuWhNh1nGBdlADcfz9L4GMePTXxbMjvLt2CF5QBj2ksopijkj33Epz9F7AjW6MHgLJ7
-         bc6Aie666IVw/uFq4XqKxcAXj8lnnp/DaKpw0iw9VSMfGe/3mB/nuCuAqHrvgL7NfP3/
-         S/tE0rN2+R01THs5fCPGIkFijgYS378D/HweAl7xrckh89/sTuVZ/Nqo5njM4BjHsxou
-         PgWA==
-X-Forwarded-Encrypted: i=1; AFNElJ/DaveGZOykxr0F2oWov4DXtYzMN71EQSVwGf8zX3FEN05To5Pnw6tiIPVYDMR7EJeR8x9iCMKoW4lHGw==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwiOGKR7Q9WisAmcdPv/taXaO0xxbcLhcZJxgSSSVVZXxZvWcN6
-	DVa/x2M9Tbz6PA/lDUrR0oKhFGyLlJaFL1BBRzm8ieH/WA0vYWH4nPHe5XQkWZHveEeNwsrbzdT
-	HCluqjX2TvnkgJHZuaN5ZKwOjKZ2EI7c/GGVJAfCZk3poqQMvS8r99aYY+gPgt+0=
-X-Gm-Gg: Acq92OEbaV0eBUNjnQ5Uazu03yXZy2k0LrD6DmSuxwW4UytnLo7MDNV716QyXajK9lC
-	mWjRoFP/jzoP/0A7wkyNwsZuIXyBwtNe3KrfCiCFPoSVQNnnBqvnOIeFYjgEOFWXUkWmj+3Go2t
-	Szpjx5eUkXaIyCiGHQK2GyVM6uwozljYv6aD4RpgLwEHQEA2UGjgTInyUNdevDvWr6HvGsNfzJJ
-	vsltXK+8eZvzfvbIQjuFXK1Twnu0oz5j2GCzgm2VK1RBSMX2nYHlrywgArrtob//Dvil8LRAOPT
-	CYlVN8O0O6YaS1qa5QJvYfKFDi2rJYIqslJwJaR+fGYF/oU5sSBt0OxeU1G4XCFabruxdfpDdx0
-	34UxkyaEt3zrFKlfgKmQyqw==
-X-Received: by 2002:a05:6000:4615:b0:45d:c3ad:b623 with SMTP id ffacd0b85a97d-45ef1459cc5mr1418010f8f.3.1780044032637;
-        Fri, 29 May 2026 01:40:32 -0700 (PDT)
-X-Received: by 2002:a05:6000:4615:b0:45d:c3ad:b623 with SMTP id ffacd0b85a97d-45ef1459cc5mr1417971f8f.3.1780044032015;
-        Fri, 29 May 2026 01:40:32 -0700 (PDT)
-Received: from tp ([2a02:29e1:404:f800:9fbc:ecd8:5c1a:509c])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-45ef34a0403sm2024984f8f.6.2026.05.29.01.40.30
+        bh=6EbJwg6UPsr1q8ilCkgLnamP733UEvzVj8vn7lhyNGU=;
+        b=muxCec+OVydZ5EmCtoHFTyDdj72Qlm22DQh8w3BOwG3khO35DGHos7eAUED0QzQF2t
+         cKSrmhmbyhDlPFkMjN3/DszxQFMY2gwMqyCfCbrgSEmf9f3102gy+h4/Lwhr3yY/xs88
+         GKNWEjUHdsBSj4bGuGneV8evhcvQO3BL7dTZ6SZS6YY63QrJI2MGTQaNqUD8GThrcmnF
+         417wcapOJhoHmEQC+5j1G/SOhoAYZiGPrYPEBgfp+nFuOXwyvHQ85HTHO78/qGg8Prhq
+         6uJ3z6KlKK7dGpMhzHJLW+eRCKyrNIvyv1ibAW+goWsjlmIWGKqglDdEYFFt7Dj6AN0p
+         AnAA==
+X-Forwarded-Encrypted: i=1; AFNElJ83CiiPapDggQHkqlfl3Cp8c/ryY4ow+xGpE4RM/qUTDiYrz8LcT2Lhk7WtvMvHgUs7OHsNH1xTaHnUYw==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yw8pRZymdXjMFpmhQBHJTrsYptdLaCwFdPgdZq4gKG4Q1dL9dgM
+	o8h3oBm+mHKvc2V/x2T4uXWYabKLt7ktkxIMvhNEzPEFWRn1pzaMRVKRSuyCtUgJdJYfqyieIzV
+	5BOS4i+rd4VE4Ye/clTayQprqMHOVE9mDacq5z4U4cvq4qehu5WGLyZUxbXyvcaVg
+X-Gm-Gg: Acq92OHH3cFkHRIKUX+rqkZxwFkSW2x6wvXiVS20ObWxEfUz1NcK6H8Jfph8F+nF6Qd
+	FskG/CmooSbbr9G/PRFKJxQw0eXGlpzNgysyQy6DGEMd0BR0SoisYG7aeXjVGjsjkiWJzVVKSO4
+	5/KJ6QakTS+bkM1O+dCA/0E5PSt6wRbjufq5dkQ8wv2Z6TrElx2BgTBDVrc62cqqMGHmhsOSAv6
+	/IHBq417GinNdlM7TOfGoFgLhunWP1RfT4Gut2MNwpD5dEDQ1z+1JSc1FJhO4u+sSPp9RfbGBFO
+	aE7FPRocIfdbcoh5wguo6FiPpcwItSD9pg9NcsCQl4jjhb3RPAAkpLYJNBVStxXf78wbaARjZKx
+	iUELPmU7oMRLuIqRHIAx8X19hAS9yTydd8mh3jZChBeGCewJ/uAQ7inVFVYYU
+X-Received: by 2002:a05:600c:2d0c:b0:490:388f:1c0d with SMTP id 5b1f17b1804b1-4909c079375mr22909015e9.5.1780047774334;
+        Fri, 29 May 2026 02:42:54 -0700 (PDT)
+X-Received: by 2002:a05:600c:2d0c:b0:490:388f:1c0d with SMTP id 5b1f17b1804b1-4909c079375mr22908515e9.5.1780047773644;
+        Fri, 29 May 2026 02:42:53 -0700 (PDT)
+Received: from maya.myfinge.rs (ifcgrfdd.trafficplex.cloud. [176.103.220.4])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4909c123406sm13320755e9.5.2026.05.29.02.42.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2026 01:40:31 -0700 (PDT)
-Date: Fri, 29 May 2026 10:40:29 +0200
-From: Beniamino Galvani <bgalvani@redhat.com>
-To: Stefano Brivio <sbrivio@redhat.com>
-Cc: Fernando Fernandez Mancera <fmancera@suse.de>,
-	=?iso-8859-1?B?zfFpZ28=?= Huguet <ihuguet@redhat.com>,
-	Thorsten Leemhuis <regressions@leemhuis.info>,
-	Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-	Yumei Huang <yuhuang@redhat.com>, Ido Schimmel <idosch@idosch.org>,
-	Justin Iurman <justin.iurman@gmail.com>,
-	David Ahern <dsahern@kernel.org>,
-	David Gibson <david@gibson.dropbear.id.au>,
-	Linux kernel regressions list <regressions@lists.linux.dev>
+        Fri, 29 May 2026 02:42:53 -0700 (PDT)
+From: Stefano Brivio <sbrivio@redhat.com>
+To: David Gibson <david@gibson.dropbear.id.au>
+Cc: Andrew Lunn <andrew@lunn.ch>, Thorsten Leemhuis
+ <regressions@leemhuis.info>, Fernando Fernandez Mancera <fmancera@suse.de>,
+ Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org, Yumei Huang
+ <yuhuang@redhat.com>, Ido Schimmel <idosch@idosch.org>, Justin Iurman
+ <justin.iurman@gmail.com>, David Ahern <dsahern@kernel.org>,
+ ihuguet@redhat.com, Linux kernel regressions list
+ <regressions@lists.linux.dev>, Beniamino Galvani <bgalvani@redhat.com>
 Subject: Re: Problem with IPv6 privacy addresses in 7.0
-Message-ID: <ahlQ_YFS0s_8B03q@tp>
-References: <bd669eaf-64dc-4217-bae0-4a531e473762@leemhuis.info>
- <20260528153202.14900687@elisabeth>
- <CACT4ouf5ZqGgb=RO8_7NovLCvYKLKL4vD70dEe6xUODT1UEcSA@mail.gmail.com>
- <20260528165320.15b90ded@elisabeth>
- <CACT4oue2EMM9Kfsm9Jii2rG9ooi=D37PK=8886cpLuBkwhrOxw@mail.gmail.com>
- <ahhm1-XfnsWyIWDV@tp>
- <20260528192143.31c9e9ea@elisabeth>
- <ed954836-742a-44c3-8c2d-65dd06c3514e@suse.de>
- <e91507d6-cbfc-447c-8236-d9b3d91f18c5@suse.de>
- <20260528212213.4aa613f8@elisabeth>
+Message-ID: <20260529114216.2e42c4dd@elisabeth>
+In-Reply-To: <ahkar8tE5M6u0_zZ@zatzit>
+References: <20260527215135.GB16443@cmadams.net>
+	<675083b4-e015-4ff3-836c-798e0a971194@suse.de>
+	<20260528073849.759da84a@elisabeth>
+	<baba855a-7cc9-409e-9c20-6e50f35d255a@suse.de>
+	<20260528131250.1352ab48@elisabeth>
+	<b21c598b-879c-4f6a-9dc8-27e5c362803b@suse.de>
+	<bd669eaf-64dc-4217-bae0-4a531e473762@leemhuis.info>
+	<20260528153202.14900687@elisabeth>
+	<178a1a95-65bd-475b-a035-c4ebdc5ec325@lunn.ch>
+	<20260528171710.1a5f6b6b@elisabeth>
+	<ahkar8tE5M6u0_zZ@zatzit>
+Organization: Red Hat
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.49; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <20260528212213.4aa613f8@elisabeth>
+Date: Fri, 29 May 2026 11:42:52 +0200 (CEST)
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: gE8DwccxkGuvr0N7MMQJPon2yAT7O_KZuHerZ0GbtK0_1780044033
+X-Mimecast-MFC-PROC-ID: nKlGGBhaLkAqDmJQdu9j4mX5ua3Bx8LosheFFQphjGM_1780047775
 X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, May 28, 2026 at 09:22:14PM +0200, Stefano Brivio wrote:
-> > >>> about the source address selection is impacted. Indeed, the commit
-> > >>> had effects on one of the selftests, which had to be modified to
-> > >>> change the order of iproute2 invocations.
-> > >>>  
-> > >>>>>> If the fix must be in NetworkManager, we only need to parse
-> > >>>>>> them in non-reverse order like IPv4, I guess.  
-> > >>>>>
-> > >>>>> But that would then require some form of detection, and, at
-> > >>>>> least according to Fernando, isn't the most robust option
-> > >>>>> anyway, as ideally NetworkManager shouldn't rely on the order
-> > >>>>> at all.  
-> > >>>>
-> > >>>> True  
-> > >>>
-> > >>> Correct, if the new behavior is considered better, there should be
-> > >>> a way to detect which order must be used. Otherwise userspace
-> > >>> tools won't be able to maintain the same behavior with different
-> > >>> kernels.  
-> > >>
-> > >> My remark here is about whether NetworkManager needs to detect this
-> > >> at all. If it used timestamps to detect recent / older addresses, as 
-> > >> Fernando mentioned, then you wouldn't need any detection at all,
-> > >> right? Or is there something else we're missing?
+On Fri, 29 May 2026 14:48:47 +1000
+David Gibson <david@gibson.dropbear.id.au> wrote:
 
-The problem arises from how NetworkManager handles updates (e.g. after
-receiving a Router Advertisement). At each update NM determines the
-list of addresses to configure and checks if the addresses are already
-in the right order in the kernel. If they aren't, NM removes and
-re-adds them in reverse to achieve the desired order. Since kernel
-7.0+, the order changed and the addresses always appear in the reverse
-order.
-
-This creates 2 negative effects. First, it breaks source preference:
-if users configured a profile with addr1=A, addr2=B because they
-wanted A to be preferred, now B is preferred. This is not
-NetworkManager-specific, it affects also simple scripts that add two
-addresses (like the selftest that had to be changed in the commit).
-
-But most importantly, at each commit NM detects that the order is
-wrong and constantly removes and re-adds the addresses. This
-continuous cycle is what causes the bug that Chris reported.
-
-BTW, NM doesn't touch the temporary addresses directly; they are
-automatically removed when the corresponding SLAAC address is
-removed. Since the problem is not only about temporary addresses we
-can't rely on timestamps.
-
-> > > Ohno. Now that Beniamino and Iñigo mentioned it, this will likely break
-> > > many other environments. In essence, many tools relies on the previous 
-> > > ordering to identify which address is the primary one.
+> On Thu, May 28, 2026 at 05:17:11PM +0200, Stefano Brivio wrote:
+> > On Thu, 28 May 2026 16:34:02 +0200
+> > Andrew Lunn <andrew@lunn.ch> wrote:
+> >   
+> > > > Actually, an eventually fixed version of NetworkManager doesn't need to
+> > > > know the behaviour of the kernel: it can just order addresses by
+> > > > timestamps instead, as Fernando mentioned.    
 > > > 
-> > > E.g cloud tooling communicating with the metadata server via IMDS(v2) to 
-> > > configure IPv6 primary and secondary addresses. They are likely relying 
-> > > on the ordering for that.
+> > > Can pasta also use this scheme to order the addresses? Is there a way
+> > > pasta can be independent of the order?  
+> > 
+> > pasta itself doesn't even care, it just inserts (copies) addresses one
+> > by one as returned. The kernel cares, because it preferentially picks
+> > the first one, as stored, within a given scope.
+> > 
+> > The problem is that they are inserted in the opposite order than one
+> > would expect (that is, opposite to what's used by the kernel to select
+> > them, and opposite to what's done for IPv4).
+> > 
+> > This (with an older kernel version) is quite "funny" (pasta by default
+> > copies everything it finds to the inner namespace):  
 > 
-> I haven't seen any tool specifically relying on insertion order for
-> this so far and I'm having a hard time believing this kind of tooling
-> wouldn't rely explicitly on home / care-of addresses or different
-> labels -- see RFC 5014 and RFC 6724 Section 5. (or, perhaps clearer,
-> the examples in section 10.1, in particular rule 4. and rule 6.
+> Fwiw, a hypothetical tool which copied network configuration from one
+> namespace to an independent one - or which saved network configuration
+> to restore it later - would likely hit the same issue.
 
-I'm not familiar with home addresses, reading the RFC it seems that
-setting the flag might have effect not only on source address
-selection but also on other aspects?
+It's not even hypothetical: iproute2 has that functionality (ip address
+save / restore) and addresses are restored in the wrong order on kernel
+versions without this change:
 
-> But I'll look for more convincing examples in a bit (maybe you have some
-> at hand?)
+# ip a a ::2 dev x && ip a a ::3 dev x
+# ip a s x
+2: x: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN group default qlen 1000
+    link/ether c2:72:d1:7b:ac:26 brd ff:ff:ff:ff:ff:ff
+    inet6 ::3/128 scope global tentative 
+       valid_lft forever preferred_lft forever
+    inet6 ::2/128 scope global tentative 
+       valid_lft forever preferred_lft forever
 
-I remember we had users reporting issues about the ordering of IPv6
-addresses, I'll try to find links to them.
+# ip -6 a save dev x > dump
+# ip a f x
 
-Beniamino
+# ip a restore < dump
+# ip a s x
+2: x: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN group default qlen 1000
+    link/ether c2:72:d1:7b:ac:26 brd ff:ff:ff:ff:ff:ff
+    inet6 ::2/128 scope global tentative 
+       valid_lft forever preferred_lft forever
+    inet6 ::3/128 scope global tentative 
+       valid_lft forever preferred_lft forever
+
+So scripts using this are anyway broken (well, they would get the order
+right on every other save/restore, which makes the breakage even more
+subtle).
+
+-- 
+Stefano
 
