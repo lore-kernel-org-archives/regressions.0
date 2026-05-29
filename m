@@ -1,318 +1,234 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.162])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29925239E7E
-	for <regressions@lists.linux.dev>; Fri, 29 May 2026 16:15:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.162
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A25B38F250
+	for <regressions@lists.linux.dev>; Fri, 29 May 2026 17:40:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780071346; cv=none; b=IPsLZzNkIc/9a4uQKW9VDizWTdOZRrNbBBjz4cWYcDavwJVLnmzJBHH98QW1udCu9SIAKy8sO2P2fMEo4gRTany6QPKmcvb4+P76Zw7YnKkCJD6drS0sBF5FxpVl9ZPRhmTSoDIqZvNDbYNMDzgF7tC70O1ZfpHXK7AnAsfZhyI=
+	t=1780076412; cv=none; b=P3BLTPXZ3xzSo0YMedam2Dz/OxgvWS2LCt+GsILLcYOBRsxNPNpyzpXAIeWtjWWfD1QRMVetkwle/9SEUJu05SsKXdy/Lrj+hgtjzxuf3bgnEc2ytBJsCdG/CTnX0fXLRvCifzU53jt7yvP7Y5MJxRTFoHh233q58/+apYgR3zU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780071346; c=relaxed/simple;
-	bh=uLoFhemdE9sxJb5bs7yz2anKljzcJfuwrkqyVVkeQi4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
-	 In-Reply-To:Content-Type; b=WeobhDEhsMCpPu4uw0jhjMG+Qy4gKJA7J+mEzBB4L+cNXycYCzM+oCiDsXlLfxux3O8S0V6nsvO2cAKP3GH+tNFWkOJBMSsORKelp/motr4Nd6+T/Wp2ovikxu4OlJd5QPD54b/Iq1Q1DiJ0t/NjzzeAQHuvxy70v/U+uMVuNJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=G4GXk5lr; arc=none smtp.client-ip=188.68.63.162
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1780076412; c=relaxed/simple;
+	bh=alAGwcJ93SnzJoX0kjp63rQqGpDJFeHiWW8c2wOmfbA=;
+	h=From:To:Cc:Subject:Message-ID:In-Reply-To:References:MIME-Version:
+	 Date:Content-Type; b=VTegs+q0GeqmfVF2VF3hrlEBvLO91LVvlAeyymJOFMeysrKZFgm/TE6JlCWZYureJqf77UO85etf0VZRvEyc1u10ZHwiflgFzCiH2SWLkHucFBHp8KIgXYoGF1uBGmrBZOkvS5g0BYVoPW353OcoRDBx9vLWmKExL1FVG3c3UNo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XiNbwWbG; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="G4GXk5lr"
-Received: from mors-relay-8201.netcup.net (localhost [127.0.0.1])
-	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4gRp9h2qm4z3p8L;
-	Fri, 29 May 2026 18:05:44 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1780070744;
-	bh=uLoFhemdE9sxJb5bs7yz2anKljzcJfuwrkqyVVkeQi4=;
-	h=Date:Subject:To:References:From:Cc:In-Reply-To:From;
-	b=G4GXk5lr4alfXFCl3u39l6NIGN0fWX+9hwxG1U9gImn35IiaYGn6s6xQgCV1BxlTC
-	 gHN4y7WDT3EsG8Nep/NzaiURRrnAhWl0sATsDQba7t44imMyrmQDX7Ik2ONT3Mal0f
-	 bafJd1/m1OstfXfrBtdvVDJ3OJBClHVRJfpUW7e9fR1EWwT1ybp5nv/yG1hK0KKmme
-	 dxCr8+VBHvSY7hCF3+GcDXW/5i1Bn3UmJ3T7elEHzUdw9kgLaArnWWVFFUtu8yzzL3
-	 44uXNzFXVW6H9HKr6JzOVZ53A+ZbPRmZtZAuUoYa11VrlcNK88DDAjheQjwvZnCJjB
-	 RaEz9YBYCg0Jw==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4gRp923sbKz3wKM;
-	Fri, 29 May 2026 18:05:10 +0200 (CEST)
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4gRp916QmFz8sZP;
-	Fri, 29 May 2026 18:05:09 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 0AB0B6179C;
-	Fri, 29 May 2026 18:05:09 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <3b4e5f3c-4b55-4c28-a018-e306bf8a807d@leemhuis.info>
-Date: Fri, 29 May 2026 18:05:07 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XiNbwWbG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1780076410;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Md1fiZJsQaCCXzqr9uMkYXu9HqcRzV5ZGwEq117oTpo=;
+	b=XiNbwWbG2f3DMH/umqPagkLbGA6LmvvehIsecyOvuBZY7SLaXj/5UNQILe75JaDUgW4FrC
+	oJfwOcTk4ZSbsXPHZC/WU6p59OaA3lUOdlhTva8XiNsj1++jDD2/sTXFtGIesocP1vVh2u
+	D1i+7DRLhRMEGlV0YQRp/JVKWHwz0cM=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-339-1lKBcfjfNp6myjd8jqNY0w-1; Fri, 29 May 2026 13:40:08 -0400
+X-MC-Unique: 1lKBcfjfNp6myjd8jqNY0w-1
+X-Mimecast-MFC-AGG-ID: 1lKBcfjfNp6myjd8jqNY0w_1780076407
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-49041d39887so58391635e9.2
+        for <regressions@lists.linux.dev>; Fri, 29 May 2026 10:40:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780076407; x=1780681207;
+        h=date:content-transfer-encoding:mime-version:organization:references
+         :in-reply-to:message-id:subject:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mROXqwjM1FYjjL5btqEYHboTKDCZibxVmrYJ4MK4Oso=;
+        b=hw+ec6cMA3qfFQQ7PAhoNKQorgldCl2DTlraROSRFMsXwomKmauOthZItOdx1/Srmz
+         r3lAPmetlcyPzpKl+ZxHK2IT5mAzSoFTwAkHNpmejf61HhbSVj8vUxThYtzwQzMckEMe
+         MavviQxoclBeujADv+sj10t8glHpPHnp8FqpwjJAA267QWPfGQAK4ry6PnKZO8wrJqbw
+         Hb8UQXPLnDAPlf/HfsIhHC1hwQWWJ8xaicjHBq7NJOTUeQyxrz8a/wIdf3uC8RCKSQ73
+         FiA3dX0qMtg44YCM7uYUfB49OpEU7zLKTM0GMQSw+wlYc66jM6etUFqWPoC+jrSjo3Ps
+         OnaQ==
+X-Forwarded-Encrypted: i=1; AFNElJ9wUiGRWin60Kx+BrBP85OyRrgcaBKQb+25neiyq5QC1hIBbAvhi5ZLY18HURnWyA0Uakg7doHHrSvvOA==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yzx9rLGPjucFhs/p9qqlKkcXpLacey3/SuKwQh/euurZNuw4AeC
+	X1/pWoqtrv9gNlPX9GOQvE+MH3wN2roF/RrXAXAiJm0smI/cVFJqT2GxEfpX4SkAqa8zTjXX1Ca
+	+msCpLVhPKHRaEQP0GWHx/7wy9Q5LwmMzxM+m1WjNoDfuD3u13HzNN3lwwVYdEbJ2
+X-Gm-Gg: Acq92OHI5vFb1CPKmgZK+LsfhTzxDzf0MFPi2I9v9Qf7ei8J6wUqPt8nBmQNsuH2bgJ
+	QGeNv+eFQtclgsbNTPVpqBUiOHl5faU9qLdmX/yczJ8Qyt8VP7IqTRfCrFPALds4WBeUi1x4hEp
+	bGaqrjJ3FYg7uL3xR8trUA9YGCGlE0gw9mlN+TG4kPSwO2Qhtmyjq4wcqOX5OpcAEBskXH6wSZF
+	PV97iYILcOHw46woK3VAKhhvzhR4PIZCH3oOdcgI9rNvYOqyAd5cu8rynMRK+jESGkg/vZ88LI/
+	U9nHaMDe+1RvLaQ0geKNACf7ct9uik5maqNgVF/4MnDSiCCqRfKoEQd5y7NJqcuMUDrdysnG4Vv
+	1dJHMCG4x0GA9EyzWjhmA7VQiwNcQSqNQtEX507QW1qnT09qoCwSGU1g0QV/H
+X-Received: by 2002:a05:600d:8654:10b0:48e:5d91:cfe3 with SMTP id 5b1f17b1804b1-490a29121b8mr8995615e9.1.1780076407252;
+        Fri, 29 May 2026 10:40:07 -0700 (PDT)
+X-Received: by 2002:a05:600d:8654:10b0:48e:5d91:cfe3 with SMTP id 5b1f17b1804b1-490a29121b8mr8995135e9.1.1780076406689;
+        Fri, 29 May 2026 10:40:06 -0700 (PDT)
+Received: from maya.myfinge.rs (ifcgrfdd.trafficplex.cloud. [176.103.220.4])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4909c0b896csm49925345e9.1.2026.05.29.10.40.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 May 2026 10:40:06 -0700 (PDT)
+From: Stefano Brivio <sbrivio@redhat.com>
+To: Beniamino Galvani <bgalvani@redhat.com>
+Cc: Fernando Fernandez Mancera <fmancera@suse.de>, =?UTF-8?B?w43DsWlnbw==?=
+ Huguet <ihuguet@redhat.com>, Thorsten Leemhuis <regressions@leemhuis.info>,
+ Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org, Yumei Huang
+ <yuhuang@redhat.com>, Ido Schimmel <idosch@idosch.org>, Justin Iurman
+ <justin.iurman@gmail.com>, David Ahern <dsahern@kernel.org>, David Gibson
+ <david@gibson.dropbear.id.au>, Linux kernel regressions list
+ <regressions@lists.linux.dev>
+Subject: Re: Problem with IPv6 privacy addresses in 7.0
+Message-ID: <20260529194003.776fd26d@elisabeth>
+In-Reply-To: <ahlQ_YFS0s_8B03q@tp>
+References: <bd669eaf-64dc-4217-bae0-4a531e473762@leemhuis.info>
+	<20260528153202.14900687@elisabeth>
+	<CACT4ouf5ZqGgb=RO8_7NovLCvYKLKL4vD70dEe6xUODT1UEcSA@mail.gmail.com>
+	<20260528165320.15b90ded@elisabeth>
+	<CACT4oue2EMM9Kfsm9Jii2rG9ooi=D37PK=8886cpLuBkwhrOxw@mail.gmail.com>
+	<ahhm1-XfnsWyIWDV@tp>
+	<20260528192143.31c9e9ea@elisabeth>
+	<ed954836-742a-44c3-8c2d-65dd06c3514e@suse.de>
+	<e91507d6-cbfc-447c-8236-d9b3d91f18c5@suse.de>
+	<20260528212213.4aa613f8@elisabeth>
+	<ahlQ_YFS0s_8B03q@tp>
+Organization: Red Hat
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.49; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: regressions report as of Linux 7.1-rc5 post (was: Linux 7.1-rc5)
-To: Linus Torvalds <torvalds@linux-foundation.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: 
- <CAHk-=wjt1NiKOdyAMz_DT7NmZ++SizPOhRSi492ukdTnpDzHQw@mail.gmail.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: de-DE, en-US
-X-Enigmail-Draft-Status: N11222
-Autocrypt: addr=linux@leemhuis.info; keydata=
- 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 MEK4
-Cc: Linux kernel regressions list <regressions@lists.linux.dev>
-In-Reply-To: 
- <CAHk-=wjt1NiKOdyAMz_DT7NmZ++SizPOhRSi492ukdTnpDzHQw@mail.gmail.com>
+Date: Fri, 29 May 2026 19:40:04 +0200 (CEST)
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: LvQo288wFbT22y8d-I7HNNGwt2Cw3aEC8AdENW-TDX0_1780076407
+X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <178007070947.284924.9260792749029725062@mxe9fb.netcup.net>
-X-NC-CID: sytg+xQjuk75wRH1s+6I5m0hPcETeu6gOq58ySYBttNnWUiC7sg=
+Content-Transfer-Encoding: quoted-printable
 
-Hi Linus!
+On Fri, 29 May 2026 10:40:29 +0200
+Beniamino Galvani <bgalvani@redhat.com> wrote:
 
-On 5/24/26 23:07, Linus Torvalds wrote:
->
-> So I think I'll start being a bit more hardnosed about this kind of
-> unnecessary churn this late in the game. We are supposed to look for
-> *regressions*. Non-critical fixes to long-standing issues are simply
-> not appropriate for this late in the release cycle.
+> On Thu, May 28, 2026 at 09:22:14PM +0200, Stefano Brivio wrote:
+> > > >>> about the source address selection is impacted. Indeed, the commi=
+t
+> > > >>> had effects on one of the selftests, which had to be modified to
+> > > >>> change the order of iproute2 invocations.
+> > > >>>   =20
+> > > >>>>>> If the fix must be in NetworkManager, we only need to parse
+> > > >>>>>> them in non-reverse order like IPv4, I guess.   =20
+> > > >>>>>
+> > > >>>>> But that would then require some form of detection, and, at
+> > > >>>>> least according to Fernando, isn't the most robust option
+> > > >>>>> anyway, as ideally NetworkManager shouldn't rely on the order
+> > > >>>>> at all.   =20
+> > > >>>>
+> > > >>>> True   =20
+> > > >>>
+> > > >>> Correct, if the new behavior is considered better, there should b=
+e
+> > > >>> a way to detect which order must be used. Otherwise userspace
+> > > >>> tools won't be able to maintain the same behavior with different
+> > > >>> kernels.   =20
+> > > >>
+> > > >> My remark here is about whether NetworkManager needs to detect thi=
+s
+> > > >> at all. If it used timestamps to detect recent / older addresses, =
+as=20
+> > > >> Fernando mentioned, then you wouldn't need any detection at all,
+> > > >> right? Or is there something else we're missing? =20
+>=20
+> The problem arises from how NetworkManager handles updates (e.g. after
+> receiving a Router Advertisement). At each update NM determines the
+> list of addresses to configure and checks if the addresses are already
+> in the right order in the kernel. If they aren't, NM removes and
+> re-adds them in reverse to achieve the desired order. Since kernel
+> 7.0+, the order changed and the addresses always appear in the reverse
+> order.
 
-Speaking of regressions: I got the feeling the weekly regression reports
-made way more work then they were worth it up to -rc5. But we are
-approaching -rc6, so let me give you an overview about some unresolved
-regressions.
+Oh, I see now, thanks for explaining. That's a bit more than just
+relying on a given order. On the other hand, it sounds like you have a
+possible detection mechanism already implemented. :)
 
+> This creates 2 negative effects. First, it breaks source preference:
+> if users configured a profile with addr1=3DA, addr2=3DB because they
+> wanted A to be preferred, now B is preferred. This is not
+> NetworkManager-specific, it affects also simple scripts that add two
+> addresses (like the selftest that had to be changed in the commit).
 
-###########################################################################
-Unresolved regressions from this cycle that could easily get fixed for
--rc6 -- but might or might not:
+At the same time, it fixes the kernel behaviour for anything that might
+expect the same outcome as IPv4, or relying on iproute2's save /
+restore functionality, as I'm showing here:
 
----
-media: renesas: vsp1: brx: configuration of the DRM pipeline broken
-https://lore.kernel.org/linux-media/CA%2BV-a8t481xuwava0nb7uY9CUPqFWZ_8EP0xrK3BgumP7HDcLg@mail.gmail.com/
+  https://lore.kernel.org/all/20260529114216.2e42c4dd@elisabeth/
 
-Known for 6 weeks. A patch-series to fix this with reverts is sitting on
-the list for three weeks now. Prodded there Wednesday, but maintainers
-did not yet pick things up. Laurent sent a PR on Friday to get them to
-act, maybe that will do the trick:
-https://lore.kernel.org/linux-media/20260529102955.GA675012@killaraus.ideasonboard.com/
+...one might argue that it's more likely to break things than fixing
+them at this point. I'm not sure.
 
----
-drm/i915: backlight problems
-https://lore.kernel.org/lkml/CADo9pHjr-zZ9C3%2B026y5%2BXOGPSeRzSJMCHof27TVPtAUNgTc8A@mail.gmail.com/
-aka https://gitlab.freedesktop.org/drm/i915/kernel/-/work_items/16015
-https://gitlab.freedesktop.org/drm/i915/kernel/-/issues/16043
-https://lore.kernel.org/lkml/d2de7933-e650-4b19-8d88-90d66693dcfc@message-id.googlemail.com/
-aka https://gitlab.freedesktop.org/drm/i915/kernel/-/work_items/16097
+> But most importantly, at each commit NM detects that the order is
+> wrong and constantly removes and re-adds the addresses. This
+> continuous cycle is what causes the bug that Chris reported.
+>=20
+> BTW, NM doesn't touch the temporary addresses directly; they are
+> automatically removed when the corresponding SLAAC address is
+> removed. Since the problem is not only about temporary addresses we
+> can't rely on timestamps.
 
-Known since -rc1 and fixed by a revert that sits in -next as
-f30fddb4402313 ("Revert "drm/i915/backlight: Remove
-try_vesa_interface"") [next-20260520] -- looks a bit like it's destined
-to be merged in the next merge window, but with all those cherry-picking
-in the drm subsystem I might easily be wrong. Asked for the plans on
-Thursday, no reply yet:
-https://gitlab.freedesktop.org/drm/i915/kernel/-/work_items/16043#note_3492668
+So if the kernel change is not reverted you would need to have a
+detection mechanism and change NetworkManager's behaviour according to
+the detected kernel behaviour, correct? I guess it's nasty / ugly? But
+doable?
 
----
-soc: imx8m: warning and serial id data missing
-https://lore.kernel.org/lkml/6593091.DvuYhMxLoT@steina-w/
+> > > > Ohno. Now that Beniamino and I=C3=B1igo mentioned it, this will lik=
+ely break
+> > > > many other environments. In essence, many tools relies on the previ=
+ous=20
+> > > > ordering to identify which address is the primary one.
+> > > >=20
+> > > > E.g cloud tooling communicating with the metadata server via IMDS(v=
+2) to=20
+> > > > configure IPv6 primary and secondary addresses. They are likely rel=
+ying=20
+> > > > on the ordering for that. =20
+> >=20
+> > I haven't seen any tool specifically relying on insertion order for
+> > this so far and I'm having a hard time believing this kind of tooling
+> > wouldn't rely explicitly on home / care-of addresses or different
+> > labels -- see RFC 5014 and RFC 6724 Section 5. (or, perhaps clearer,
+> > the examples in section 10.1, in particular rule 4. and rule 6. =20
+>=20
+> I'm not familiar with home addresses, reading the RFC it seems that
+> setting the flag might have effect not only on source address
+> selection but also on other aspects?
 
-Known for 9 weeks. The fix was sitting on the list and in next
-(2c6821657ce3b3 ("soc: imx8m: Fix match data lookup for soc device"))
-for a while; I prodded on Thursday and it's supposed to be en route to
-mainline now.
+In theory yes, that should affect the destination address as well in
+the sense that getaddrinfo() should prefer the same type (home or
+care-of) of address as the candidate source address, but I'm not aware
+of any C library for Linux supporting ai_eflags / AI_EXTFLAGS that
+would be needed for this (RFC 5014 section 11. discusses the
+requirement).
 
+As far as I know those flags are commonly used just to prefer a given
+source address. I'm not sure if it's used by IMDSv2 tooling, I couldn't
+find any evidence so far.
 
-###########################################################################
-Unresolved regressions from this cycle that are unlikely to get fixed
-for -rc6:
+> > But I'll look for more convincing examples in a bit (maybe you have som=
+e
+> > at hand?) =20
+>=20
+> I remember we had users reporting issues about the ordering of IPv6
+> addresses, I'll try to find links to them.
 
----
-drm: amdgpu: handling FreeSync via MCCS broke VRR
-https://gitlab.freedesktop.org/drm/amd/-/issues/5286
+I'm currently asking around about IMDSv2 cases. I think it would be
+really interesting to see what users might have reported around
+NetworkManager over the years, in one sense or another.
 
-Known for 17 days and reporter proposed a fix shortly afterwards; I
-prodded the maintainers on Thursday and they want to look into things
-and get something into next weeks -fixes pull:
-https://lore.kernel.org/amd-gfx/20260518154809.660061-1-michel@daenzer.net/
-https://lore.kernel.org/amd-gfx/BL1PR12MB51447AB016BB28843BAD0216F7092@BL1PR12MB5144.namprd12.prod.outlook.com/
+As to an hypothetical NLM_F_INSERT_LAST flag, I think that would be
+fine for pasta(1) and containers, because the same "buggy" behaviour
+that one might have on a host / parent namespace would be replicated to
+other namespaces, and we're mostly interested in consistency.
 
----
-cpufreq/amd-pstate: switching to performance profile broke
-https://bugzilla.kernel.org/show_bug.cgi?id=221505
+The effect of keeping the "wrong" behaviour as default looks rather
+problematic to me (see the iproute2 example) but we could also "fix"
+iproute2 by setting the flag and maybe propose that as default after a
+number of years.
 
-Known for 18 days, culprit unknown. Mario and colleagues fixed a few
-bugs in this area in the past few weeks, but seems one problem that
-affects at least two people on Asus laptops remains -- a fix or a revert
-to resolve this is sadly not in sight
-(https://bugzilla.kernel.org/show_bug.cgi?id=221505#c22).
-
----
-loop: loop drive broken due to some race exposed by an unknown change
-https://lore.kernel.org/lkml/69e2ca14.a00a0220.1bd0ca.0031.GAE@google.com/
-
-Known since 6 weeks. People are busy trying to get this resolved.
-
-
-#########################################################################
-Unresolved regressions from the previous cycle that could easily get
-fixed for -rc6 -- but might or might not:
-
----
-ARM: at91: finding rootfs on raw nand on sam9x60 broken
-https://lore.kernel.org/lkml/20260423-stoke-ocean-139dbe306256@thorsis.com/
-
-Known for 5 weeks. Fix was sitting in -next as 754d60ad1c9189 ("memory:
-atmel-ebi: Allow deferred probing") since next-20260504; prodded on
-Thursday, now en route to mainline.
-
----
-drm/amd/display: screen goes black halfway through the booting proces
-https://gitlab.freedesktop.org/drm/amd/-/issues/5272
-
-Known for 19 days. Hope the fix will make it to mainline soon:
-08236c3ef284cd ("drm/amd/display: Write REFCLK to 48MHz on DCN21")
-[next-20260528]
-
----
-serial: 8250: BREAK + SysRq dispatch broken
-https://lore.kernel.org/lkml/5efe9e03-4d86-43a0-9ec2-e610ff31095d@free.fr/
-
-Known for 17 days. Hope the fix will make it to mainline soon:
-71f42b2149a130 ("serial: 8250: dispatch SysRq character in
-serial8250_handle_irq()") [next-20260525 (pending-fixes)]
-
----
-accel/amdxdna: AMD PMC causes hard hang on s2idle suspend
-https://gitlab.freedesktop.org/drm/amd/-/issues/5319
-
-Known for 10 days. Hope the fix will make it to mainline soon:
-a8878e19d2f520 ("accel/amdxdna: Block running when IOMMU is off")
-[next-20260522 (pending-fixes)]
-
----
-ipv6: SSH session gets dropped, usually several times, in the first hour
-or so https://lore.kernel.org/all/20260521135310.GC977@cmadams.net/
-
-Known for 8 days. Revert under lively discussion, see thread above and:
-https://lore.kernel.org/all/20260529112357.5079-1-fmancera@suse.de/
-https://lore.kernel.org/all/20260528111123.4667-1-fmancera@suse.de/
-
-
-#########################################################################
-Unresolved regressions from even earlier cycles that could easily get
-fixed for -rc6, but that's unlikely to happen from what I see:
-
----
-e1000e: "Unstable ethernet connection on Dell Pro 16" as well as "PC10
-in runtime idle in newer systems prevented"
-https://lore.kernel.org/all/20260417104330.3031987-1-dima.ruinskiy@intel.com/
-https://lists.osuosl.org/pipermail/intel-wired-lan/Week-of-Mon-20250623/048860.html
-
-Known for 5 months, and a fix exists, but Intel claims it needs more time:
-https://lore.kernel.org/all/20260417104330.3031987-1-dima.ruinskiy@intel.com/
-https://lore.kernel.org/all/56f5f3da-31b8-4847-b274-ce140bf39617@intel.com/
-
----
-scsi: massive resource usage that can lead to kernel crashes
-https://lore.kernel.org/lkml/773ba972-433b-44b4-89d2-295bd9f5de38@huawei.com/
-https://lore.kernel.org/linux-scsi/20260415204850.799431-1-mwilck@suse.com/
-
-Known for 9 weeks. Fixes exists for weeks, but discussion is slow. hch
-recently ACKed it:
-https://lore.kernel.org/linux-scsi/20260513174236.430465-1-mwilck@suse.com/
-
----
-rtl8xxxu: RTL8188FTV (0bda:f179) fails to authenticate/configure since 6.19
-https://bugzilla.kernel.org/show_bug.cgi?id=221394
-https://lore.kernel.org/linux-wireless/8a4c664f-231f-437e-b010-b741c7ed7be8@leemhuis.info/
-
-Known for 6 weeks. A fix is sitting in a sub-sub-subsystem tree for a
-while now that is not even in -next -- and it looks like the developers
-are unwilling to merge the fix this cycle:
-https://lore.kernel.org/linux-wireless/c57de68e-5d57-4c26-898f-8a284bb25381@gmail.com/
-
----
-x86/fpu: applications that construct signal frames in userspace broke
-(such as CRIU and gVisor)
-https://lore.kernel.org/lkml/20260429000623.3356606-1-avagin@google.com/
-
-Known for 4 weeks. A revert was proposed a month ago (see above), but
-didn't make any progress; a newer revert was posted this week:
-https://lore.kernel.org/lkml/20260526205047.3339490-2-avagin@google.com/
-
----
-NFSv4: mkdir(2) on an NFSv4 mount occasional returns -EEXIST
-https://lore.kernel.org/lkml/20260429104938.1776671-1-igor.raits@gmail.com/
-
-Known for 4 weeks. A fix exists, but maintainers didn't reply yet and
-recent prodding by yours truly did not help:
-https://lore.kernel.org/lkml/20260429104938.1776671-1-igor.raits@gmail.com/
-
-
-#########################################################################
-Unresolved regressions from even earlier cycles that could easily get
-fixed for -rc6 -- but might or might not:
-
----
-parport: race leading to a NULL pointer dereference and a panic
-https://lore.kernel.org/lkml/6ba903ad-9897-42bb-8c2d-337385cc3746@molgen.mpg.de/
-https://bugzilla.kernel.org/show_bug.cgi?id=221526
-
-Known for 6 months now. Culprit is very old, but seems the problem
-somehow happens more often since some time ago. Hope the fix will make
-it to mainline soon: ef15ccbb3e8640 ("parport: Fix race between port and
-client registration") [next-20260525 (pending-fixes)]
-
----
-usb: typec: ucsi: laptop does not enter suspend anymore
-https://lore.kernel.org/lkml/agvqqMt9x0df-WXS@google.com/
-
-Known for 10 days. Hope the fix will make it to mainline soon:
-d98d413ca65d07 ("usb: typec: ucsi: Don't update power_supply on power
-role change if not connected")
+--=20
+Stefano
 
