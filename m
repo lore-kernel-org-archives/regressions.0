@@ -1,165 +1,122 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CA6B3BF692
-	for <regressions@lists.linux.dev>; Fri, 29 May 2026 09:42:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C9203C7DE1
+	for <regressions@lists.linux.dev>; Fri, 29 May 2026 10:30:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780047781; cv=none; b=l9OU7W7RANYjzYj9UVftV+a6DpY/8YPMs7IiX8jUpltHTmJO2Ed00p2FcplkYTL+7wb919bBwsfmgPxlOfaCvc6wEEhtRuwCY6kt2kN3N27zTBmC2HRVoAlo7pCzs74wlbW1V4v9YDqiU+jvNgl9UBU6eOM9JbNO2FN+L8gynO0=
+	t=1780050645; cv=none; b=LTKRW+i/Xz25GYCjpSa0UiXwI7gHRYsWglVW98nSuzkfMZWbLzK4BGWEk6zMaAwwMiQAi6t4c9sZJC8HfrBvBwhNS80hkNeoXD+K6r5j4bBxDoIMGHf9Z1DVFR41aWMJTrK3SdEpmT2PdJX10fYa6fXBJoMf3PfvksKcwZAkiLw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780047781; c=relaxed/simple;
-	bh=8i5kslBP4UkVIDkpzXWUkO4oDalssyVZFJ0q0C8PHxc=;
-	h=From:To:Cc:Subject:Message-ID:In-Reply-To:References:MIME-Version:
-	 Date:Content-Type; b=JafLsCpiy9qMc5+SEQERG3bL/T3kpAS/MXUa6TW6vTjtg7KOYHUIQ5uz7e5tU7K23O5wU7Ii+FWPz2cQsiWUrKEAl50aKSUbU3UZgcuB7iYwyGOEXGFBB2WODUsuu9+bRwPSp8QPsfxeedadYEKdbyr98yVGOizPLPDOiQp5u9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Dnar5NhW; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1780050645; c=relaxed/simple;
+	bh=NdIG7Ww5G0F8LZX380aJn8V319Vfxe4XWWMwSLvoH8g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cF3QqszJUn0UFeFy8neQRgRQf95UjvMD3OCBZFC6qOSGxmqCLRMKoabhdyDaTFZ4GT7zotfKQNdxMkJWepesjWLfo/ixHWHIGXGG1TizFmjLndhRCJcVdBAE1T4CgKNcgi1NzHAT2gwNlqol6rmJkp9j1/t4VbC2ULhf8ijNrmg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=KU3zG31W; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Dnar5NhW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1780047777;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6EbJwg6UPsr1q8ilCkgLnamP733UEvzVj8vn7lhyNGU=;
-	b=Dnar5NhWYKZcexX4sSe+LEvhuLcqxRNi+sGMoXDkBX2OJSymcEzbBulg8OGqIk1yz4hHnx
-	0mnqZewoPq8QjD0LSw2I+B4BICmkmA5xQFE+mFYrbcTTsTX1O3tyUKTfh8oYeRmtxHE8pm
-	fXFOqWv7bUNb7gg4mXb4xdqRYKnh+N8=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-680-_C4kAYRtNJy4hkFNU-qv6w-1; Fri, 29 May 2026 05:42:55 -0400
-X-MC-Unique: _C4kAYRtNJy4hkFNU-qv6w-1
-X-Mimecast-MFC-AGG-ID: _C4kAYRtNJy4hkFNU-qv6w_1780047775
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-4909deb82d0so3363245e9.1
-        for <regressions@lists.linux.dev>; Fri, 29 May 2026 02:42:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780047774; x=1780652574;
-        h=date:content-transfer-encoding:mime-version:organization:references
-         :in-reply-to:message-id:subject:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6EbJwg6UPsr1q8ilCkgLnamP733UEvzVj8vn7lhyNGU=;
-        b=muxCec+OVydZ5EmCtoHFTyDdj72Qlm22DQh8w3BOwG3khO35DGHos7eAUED0QzQF2t
-         cKSrmhmbyhDlPFkMjN3/DszxQFMY2gwMqyCfCbrgSEmf9f3102gy+h4/Lwhr3yY/xs88
-         GKNWEjUHdsBSj4bGuGneV8evhcvQO3BL7dTZ6SZS6YY63QrJI2MGTQaNqUD8GThrcmnF
-         417wcapOJhoHmEQC+5j1G/SOhoAYZiGPrYPEBgfp+nFuOXwyvHQ85HTHO78/qGg8Prhq
-         6uJ3z6KlKK7dGpMhzHJLW+eRCKyrNIvyv1ibAW+goWsjlmIWGKqglDdEYFFt7Dj6AN0p
-         AnAA==
-X-Forwarded-Encrypted: i=1; AFNElJ83CiiPapDggQHkqlfl3Cp8c/ryY4ow+xGpE4RM/qUTDiYrz8LcT2Lhk7WtvMvHgUs7OHsNH1xTaHnUYw==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yw8pRZymdXjMFpmhQBHJTrsYptdLaCwFdPgdZq4gKG4Q1dL9dgM
-	o8h3oBm+mHKvc2V/x2T4uXWYabKLt7ktkxIMvhNEzPEFWRn1pzaMRVKRSuyCtUgJdJYfqyieIzV
-	5BOS4i+rd4VE4Ye/clTayQprqMHOVE9mDacq5z4U4cvq4qehu5WGLyZUxbXyvcaVg
-X-Gm-Gg: Acq92OHH3cFkHRIKUX+rqkZxwFkSW2x6wvXiVS20ObWxEfUz1NcK6H8Jfph8F+nF6Qd
-	FskG/CmooSbbr9G/PRFKJxQw0eXGlpzNgysyQy6DGEMd0BR0SoisYG7aeXjVGjsjkiWJzVVKSO4
-	5/KJ6QakTS+bkM1O+dCA/0E5PSt6wRbjufq5dkQ8wv2Z6TrElx2BgTBDVrc62cqqMGHmhsOSAv6
-	/IHBq417GinNdlM7TOfGoFgLhunWP1RfT4Gut2MNwpD5dEDQ1z+1JSc1FJhO4u+sSPp9RfbGBFO
-	aE7FPRocIfdbcoh5wguo6FiPpcwItSD9pg9NcsCQl4jjhb3RPAAkpLYJNBVStxXf78wbaARjZKx
-	iUELPmU7oMRLuIqRHIAx8X19hAS9yTydd8mh3jZChBeGCewJ/uAQ7inVFVYYU
-X-Received: by 2002:a05:600c:2d0c:b0:490:388f:1c0d with SMTP id 5b1f17b1804b1-4909c079375mr22909015e9.5.1780047774334;
-        Fri, 29 May 2026 02:42:54 -0700 (PDT)
-X-Received: by 2002:a05:600c:2d0c:b0:490:388f:1c0d with SMTP id 5b1f17b1804b1-4909c079375mr22908515e9.5.1780047773644;
-        Fri, 29 May 2026 02:42:53 -0700 (PDT)
-Received: from maya.myfinge.rs (ifcgrfdd.trafficplex.cloud. [176.103.220.4])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4909c123406sm13320755e9.5.2026.05.29.02.42.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2026 02:42:53 -0700 (PDT)
-From: Stefano Brivio <sbrivio@redhat.com>
-To: David Gibson <david@gibson.dropbear.id.au>
-Cc: Andrew Lunn <andrew@lunn.ch>, Thorsten Leemhuis
- <regressions@leemhuis.info>, Fernando Fernandez Mancera <fmancera@suse.de>,
- Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org, Yumei Huang
- <yuhuang@redhat.com>, Ido Schimmel <idosch@idosch.org>, Justin Iurman
- <justin.iurman@gmail.com>, David Ahern <dsahern@kernel.org>,
- ihuguet@redhat.com, Linux kernel regressions list
- <regressions@lists.linux.dev>, Beniamino Galvani <bgalvani@redhat.com>
-Subject: Re: Problem with IPv6 privacy addresses in 7.0
-Message-ID: <20260529114216.2e42c4dd@elisabeth>
-In-Reply-To: <ahkar8tE5M6u0_zZ@zatzit>
-References: <20260527215135.GB16443@cmadams.net>
-	<675083b4-e015-4ff3-836c-798e0a971194@suse.de>
-	<20260528073849.759da84a@elisabeth>
-	<baba855a-7cc9-409e-9c20-6e50f35d255a@suse.de>
-	<20260528131250.1352ab48@elisabeth>
-	<b21c598b-879c-4f6a-9dc8-27e5c362803b@suse.de>
-	<bd669eaf-64dc-4217-bae0-4a531e473762@leemhuis.info>
-	<20260528153202.14900687@elisabeth>
-	<178a1a95-65bd-475b-a035-c4ebdc5ec325@lunn.ch>
-	<20260528171710.1a5f6b6b@elisabeth>
-	<ahkar8tE5M6u0_zZ@zatzit>
-Organization: Red Hat
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.49; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="KU3zG31W"
+Received: from killaraus.ideasonboard.com (184.31.0.109.rev.sfr.net [109.0.31.184])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 10CFB741;
+	Fri, 29 May 2026 12:30:23 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1780050623;
+	bh=NdIG7Ww5G0F8LZX380aJn8V319Vfxe4XWWMwSLvoH8g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KU3zG31WChpN6/Uwk7EOnE90REjap9ximnKtS6PqoKZs4MzmqucMfDPKLu6GO73I/
+	 gwdahIgWHTitHJg652lJhsOM+JZyDXzSlb4B+Z4tdxsxDm3PrTLm20JADiemyDj3ar
+	 V51D931fwwofA5wK35bLB6BLdgPxG9JtIf9Ukbk4=
+Date: Fri, 29 May 2026 12:30:42 +0200
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+	Jacopo Mondi <jacopo.mondi@ideasonboard.com>,
+	Linux kernel regressions list <regressions@lists.linux.dev>,
+	Hans Verkuil <hans@jjverkuil.nl>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>
+Subject: Re: [PATCH v2 2/2] Revert "media: renesas: vsp1: brx: Fix format
+ propagation"
+Message-ID: <20260529103042.GA680101@killaraus.ideasonboard.com>
+References: <20260506215650.1897177-1-laurent.pinchart+renesas@ideasonboard.com>
+ <20260506215650.1897177-3-laurent.pinchart+renesas@ideasonboard.com>
+ <0977c2c0-79ea-4435-9e1c-f54ca5e18342@leemhuis.info>
+ <20260527074817.GA468138@killaraus.ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Date: Fri, 29 May 2026 11:42:52 +0200 (CEST)
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: nKlGGBhaLkAqDmJQdu9j4mX5ua3Bx8LosheFFQphjGM_1780047775
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260527074817.GA468138@killaraus.ideasonboard.com>
 
-On Fri, 29 May 2026 14:48:47 +1000
-David Gibson <david@gibson.dropbear.id.au> wrote:
-
-> On Thu, May 28, 2026 at 05:17:11PM +0200, Stefano Brivio wrote:
-> > On Thu, 28 May 2026 16:34:02 +0200
-> > Andrew Lunn <andrew@lunn.ch> wrote:
-> >   
-> > > > Actually, an eventually fixed version of NetworkManager doesn't need to
-> > > > know the behaviour of the kernel: it can just order addresses by
-> > > > timestamps instead, as Fernando mentioned.    
+On Wed, May 27, 2026 at 09:48:17AM +0200, Laurent Pinchart wrote:
+> On Wed, May 27, 2026 at 09:35:03AM +0200, Thorsten Leemhuis wrote:
+> > On 5/6/26 23:56, Laurent Pinchart wrote:
+> > > This reverts commit 937f3e6b51f1cea079be9ba642665f2bf8bcc31f.
 > > > 
-> > > Can pasta also use this scheme to order the addresses? Is there a way
-> > > pasta can be independent of the order?  
+> > > The change to format propagation in the BRx broke configuration of the
+> > > DRM pipeline. Revert it to fix the regression.
 > > 
-> > pasta itself doesn't even care, it just inserts (copies) addresses one
-> > by one as returned. The kernel cares, because it preferentially picks
-> > the first one, as stored, within a given scope.
+> > Laurent, is this still on your radar? From the outside it looks like
+> > this fix for the 7.1 regression should ideally go to Linus this week, as
+> > he ideally wants all known regression fixed by -rc6.
 > > 
-> > The problem is that they are inserted in the opposite order than one
-> > would expect (that is, opposite to what's used by the kernel to select
-> > them, and opposite to what's done for IPv4).
-> > 
-> > This (with an older kernel version) is quite "funny" (pasta by default
-> > copies everything it finds to the inner namespace):  
+> > But it's easy to miss things from the outside, so if this is not a
+> > proper regression, the revert obsolete, or something like that, just
+> > mention it.
 > 
-> Fwiw, a hypothetical tool which copied network configuration from one
-> namespace to an independent one - or which saved network configuration
-> to restore it later - would likely hit the same issue.
+> Thank you for the reminder. Hans, Mauro, this series seems to not have
+> been merged in the media fixes branch. Could you pick it up ?
 
-It's not even hypothetical: iproute2 has that functionality (ip address
-save / restore) and addresses are restored in the wrong order on kernel
-versions without this change:
+I have sent a pull request:
 
-# ip a a ::2 dev x && ip a a ::3 dev x
-# ip a s x
-2: x: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN group default qlen 1000
-    link/ether c2:72:d1:7b:ac:26 brd ff:ff:ff:ff:ff:ff
-    inet6 ::3/128 scope global tentative 
-       valid_lft forever preferred_lft forever
-    inet6 ::2/128 scope global tentative 
-       valid_lft forever preferred_lft forever
+https://lore.kernel.org/linux-media/20260529102955.GA675012@killaraus.ideasonboard.com
 
-# ip -6 a save dev x > dump
-# ip a f x
-
-# ip a restore < dump
-# ip a s x
-2: x: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN group default qlen 1000
-    link/ether c2:72:d1:7b:ac:26 brd ff:ff:ff:ff:ff:ff
-    inet6 ::2/128 scope global tentative 
-       valid_lft forever preferred_lft forever
-    inet6 ::3/128 scope global tentative 
-       valid_lft forever preferred_lft forever
-
-So scripts using this are anyway broken (well, they would get the order
-right on every other save/restore, which makes the breakage even more
-subtle).
+> > > The original commit was meant to fix a v4l2-compliance failure, with no
+> > > known userspace applications being affected beside test tools. Reverting
+> > > is the simplest option, a more comprehensive fix can be developed (and
+> > > tested more thoroughly) later.
+> > > 
+> > > Reported-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > > Closes: https://lore.kernel.org/linux-media/CA+V-a8t481xuwava0nb7uY9CUPqFWZ_8EP0xrK3BgumP7HDcLg@mail.gmail.com
+> > > Fixes: 937f3e6b51f1 ("media: renesas: vsp1: brx: Fix format propagation")
+> > > Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+> > > ---
+> > >  drivers/media/platform/renesas/vsp1/vsp1_brx.c | 10 ++--------
+> > >  1 file changed, 2 insertions(+), 8 deletions(-)
+> > > 
+> > > diff --git a/drivers/media/platform/renesas/vsp1/vsp1_brx.c b/drivers/media/platform/renesas/vsp1/vsp1_brx.c
+> > > index b1a2c68e9944..9d93cb8b8e82 100644
+> > > --- a/drivers/media/platform/renesas/vsp1/vsp1_brx.c
+> > > +++ b/drivers/media/platform/renesas/vsp1/vsp1_brx.c
+> > > @@ -156,20 +156,14 @@ static int brx_set_format(struct v4l2_subdev *subdev,
+> > >  		compose->height = format->height;
+> > >  	}
+> > >  
+> > > -	/*
+> > > -	 * Propagate the format code to all pads, and the whole format to the
+> > > -	 * source pad.
+> > > -	 */
+> > > +	/* Propagate the format code to all pads. */
+> > >  	if (fmt->pad == BRX_PAD_SINK(0)) {
+> > >  		unsigned int i;
+> > >  
+> > > -		for (i = 0; i < brx->entity.source_pad; ++i) {
+> > > +		for (i = 0; i <= brx->entity.source_pad; ++i) {
+> > >  			format = v4l2_subdev_state_get_format(state, i);
+> > >  			format->code = fmt->format.code;
+> > >  		}
+> > > -
+> > > -		format = v4l2_subdev_state_get_format(state, i);
+> > > -		*format = fmt->format;
+> > >  	}
+> > >  
+> > >  done:
 
 -- 
-Stefano
+Regards,
 
+Laurent Pinchart
