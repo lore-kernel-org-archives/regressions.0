@@ -1,69 +1,68 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mx1.mythic-beasts.com (mx1.mythic-beasts.com [46.235.224.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07AEB3A2E00;
-	Sat, 30 May 2026 10:25:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58B0C3A8745
+	for <regressions@lists.linux.dev>; Sat, 30 May 2026 12:20:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.224.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780136750; cv=none; b=S+RGZr7sJ/enLp1S312Wbw1gcydCOBAAzOOnlYQvA2nEZis6qJ7qShNtvuDBhK6JtQ8ZcPLUajGz+FxBZbrxhHsrnYgjdcRzSfe4v6X0Z3tR2u1/PbZpaOY3Tg8975aVOSMgokx/1AwtkbvA6FCSmMt31mDHiS1HfV7E6IXLJK8=
+	t=1780143640; cv=none; b=AaPf6He9NAXhCaxxrmYER5zwTWbbaOrSl66Qu7xLZloxkjaawF0Nf6+OmnaGyd+CFKWKcOU2C10OFIZA1oGl5rXzET3lxQXMbQnE8n9PSkqV/GsIqkkJbNQWoNn8G38o3HrlJGs4YRdUxOFSe5w2uO3gkIys3DQk6/OFs6aBkps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780136750; c=relaxed/simple;
-	bh=mt7ZttxH+Yv6wq+D/satUAPHqEtgTosD0YnAm1KJWNw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Nn/v+5YyFjLiBakxfEP+DSs6kEUj5+ozcNl+7HI1m/8hgwTr9kAYYIft6ZfaWZSmu8mwHmtTM1OTg1Ssr32HoZhw/Pr3BD+4Orf3LySdGVggH9L28sQuGHaFSLpPxzISEfr/tF5i8gYiJGYUmsdJlX/a2LjPHMpVTJL8gua3oug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=mrvfEhiI; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780143640; c=relaxed/simple;
+	bh=z9TGfrh25gMJK60Ksr3hjdWAAv+YD9PAsiqQbrfdCck=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eydqSd7gesYC//ouSEW2V+mg3HHiha1t+Jupj2TqqdJov7Rflo0B201IkdGOes1M+sP9d7U1kTlosp9RayH2CRZQNEu13IeOKXQd0rhE2DACQ/gxxyOi7IzzotqM1Ed7+HshUF8OsW3fW0E5v3nTBaC2A/rbpea1v/LCy6Gl82o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pelago.org.uk; spf=pass smtp.mailfrom=pelago.org.uk; dkim=pass (2048-bit key) header.d=pelago.org.uk header.i=@pelago.org.uk header.b=lRvwPj3L; arc=none smtp.client-ip=46.235.224.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pelago.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pelago.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="mrvfEhiI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF7791F00898;
-	Sat, 30 May 2026 10:25:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxfoundation.org;
-	s=korg; t=1780136748;
-	bh=du2UQIBk27uRjDOmWlfy0vHAxBBXOy9k3qobz5d1ZE4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=mrvfEhiIOxtZPbh/7MIv4/G8fTmiwH4ZOPM42IAZBwhLjlsowHRSkvWOYf0PZmzdj
-	 q+SodRoI8nuf+5CpGkWxz15cDXF2FPJGugq1s4ChqOG0hwhoRTMTWOfGw85glDO4oA
-	 8rXwTHXevWmJkU4xIxDg+O/0Cx6VI6lCvjVsoh8U=
-Date: Sat, 30 May 2026 07:36:24 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux kernel regressions list <regressions@lists.linux.dev>
-Subject: Re: regressions report as of Linux 7.1-rc5 post (was: Linux 7.1-rc5)
-Message-ID: <2026053050-diary-extinct-5f42@gregkh>
-References: <CAHk-=wjt1NiKOdyAMz_DT7NmZ++SizPOhRSi492ukdTnpDzHQw@mail.gmail.com>
- <3b4e5f3c-4b55-4c28-a018-e306bf8a807d@leemhuis.info>
+	dkim=pass (2048-bit key) header.d=pelago.org.uk header.i=@pelago.org.uk header.b="lRvwPj3L"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=pelago.org.uk; s=mythic-beasts-k1; h=From:To:Subject:Date;
+	bh=z9TGfrh25gMJK60Ksr3hjdWAAv+YD9PAsiqQbrfdCck=; b=lRvwPj3LrPFmr+AX5sy96DlrZC
+	xTuqgI5gAt36etkVxW+9Cf87LbucvOxkdG9J1F49Tdd3AkPtwq5QTbGYwwdykRsRq93jKyXfeWJPC
+	32tMFXgeCwx1qj5ltXnaeJhcjPp+NDiJc2v+JHYBRCNHOFwwGOlON7r3ubduXyi6MGFuCLek9j8ch
+	fmPhjtYBvNcJ9llgyxbWbZJoR72GVWpmgX9FbbKpir9lxXAaiTbvQxhNxZv7yTsvCT0sYTKei6lIy
+	NGjC+3cO8CR/LBVcBoKHLJsGO1WqbVQ2/q4yghMrDmuOhuQ2265bfPyyvcISWs+IIcsZAkT2eVZfa
+	QdfId1UA==;
+Received: by mailhub-cam-d.mythic-beasts.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <john-linux@pelago.org.uk>)
+	id 1wTIfz-009gDs-35;
+	Sat, 30 May 2026 13:20:28 +0100
+Message-ID: <bc9d5258-d4df-46a1-bba9-de3486f722ab@pelago.org.uk>
+Date: Sat, 30 May 2026 13:19:58 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3b4e5f3c-4b55-4c28-a018-e306bf8a807d@leemhuis.info>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] Toshiba Fn keys + lidswitch
+To: "Rafael J. Wysocki" <rafael@kernel.org>, Nick <nick@kousu.ca>
+Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+ regressions@lists.linux.dev, linux-acpi@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+ todd.e.brandt@linux.intel.com, xi.pardee@linux.intel.com,
+ platform-driver-x86@vger.kernel.org, stable@vger.kernel.org
+References: <E2OXET.4X5GTP37VTNC3@kousu.ca>
+ <CAJZ5v0jVQyWYqPo_MiUwNQb7FLNR_Q_++Xq=xA1owcHpcjN=OA@mail.gmail.com>
+Content-Language: en-GB
+From: John Veness <john-linux@pelago.org.uk>
+In-Reply-To: <CAJZ5v0jVQyWYqPo_MiUwNQb7FLNR_Q_++Xq=xA1owcHpcjN=OA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-BlackCat-Spam-Score: 0
 
-On Fri, May 29, 2026 at 06:05:07PM +0200, Thorsten Leemhuis wrote:
-> ---
-> serial: 8250: BREAK + SysRq dispatch broken
-> https://lore.kernel.org/lkml/5efe9e03-4d86-43a0-9ec2-e610ff31095d@free.fr/
-> 
-> Known for 17 days. Hope the fix will make it to mainline soon:
-> 71f42b2149a130 ("serial: 8250: dispatch SysRq character in
-> serial8250_handle_irq()") [next-20260525 (pending-fixes)]
+On 19/05/2026 15:08, Rafael J. Wysocki wrote:
+> Thanks for reporting!
+>
+> I think that the problem is acpi_setup_gpe_for_wake() doing too much,
+> I'll send you a patch to test later today.
 
-Will be sent to Linus later today.
+Hi, can you release the test patch publicly? I'd like to test it here,
+as I have several Toshiba laptops whose Fn+keys don't work (apart from
+vol+/vol-).
 
-> ---
-> usb: typec: ucsi: laptop does not enter suspend anymore
-> https://lore.kernel.org/lkml/agvqqMt9x0df-WXS@google.com/
-> 
-> Known for 10 days. Hope the fix will make it to mainline soon:
-> d98d413ca65d07 ("usb: typec: ucsi: Don't update power_supply on power
-> role change if not connected")
+John
 
-Also will be sent later today.
-
-thanks,
-
-greg k-h
