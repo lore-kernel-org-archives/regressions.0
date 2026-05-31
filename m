@@ -1,71 +1,96 @@
-Received: from mailout3.hostsharing.net (mailout3.hostsharing.net [144.76.133.104])
+Received: from comms.kousu.ca (comms.kousu.ca [46.23.90.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D76E33438A8
-	for <regressions@lists.linux.dev>; Sun, 31 May 2026 20:48:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.76.133.104
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01C0F36B07B
+	for <regressions@lists.linux.dev>; Sun, 31 May 2026 20:55:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.23.90.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780260535; cv=none; b=sBILNkfAnL04mSYbZizPHULGmnBTU0qiBJJz9rqtUZnsfQxrlMOiyR2XI1l0wAuJQ3rGOC6OtlWRq8pMY8ulFdVKBFYyOA4wPgCHTy882pCr24NrxyUg4DyLD2QsJnvEs8ZheUBYKmdHMSk4Ck89iZ01/0L0Wn0sESVPKejnVB4=
+	t=1780260954; cv=none; b=hMGhpBot6XM1tAIprODLyaP8hQTb0C3bMZZL2ZBvc24EfJ6GBf/DQfTqwPp70e83aCu9JOMofl1mn/90o9Ts3Gxg+Pauw1QLL+QBAvZbMH7fbp6tDKr8SkTLnrCo8PMGRD10QvTf1e2lRW+nEar25/hq21nSdXZt8vmrxYBSrfo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780260535; c=relaxed/simple;
-	bh=A/3Ndw/QNFZQki1U23VUVmD30t5e7rQNDVkmvPlwrHM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KLhga0bC81vjCCFa7zEzAGIVAejflHr0/MkT8fi05ZR16vHKv4MtS2Mxlo71YZFx9W1gA2TylBlekol9P9WU24aL/a1qXzE/CDIngkLEqwFrP0fcxEunmAp3nwIaFJr2t0oJ8N4SPCsvgnJNJHfhY0b2+TEvCZC7j/NrLX6TohU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=pass smtp.mailfrom=wunner.de; arc=none smtp.client-ip=144.76.133.104
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wunner.de
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature ECDSA (secp384r1) server-digest SHA384
-	 client-signature ECDSA (secp384r1) client-digest SHA384)
-	(Client CN "*.hostsharing.net", Issuer "GlobalSign GCC R6 AlphaSSL CA 2025" (verified OK))
-	by mailout3.hostsharing.net (Postfix) with ESMTPS id 91D1DC07;
-	Sun, 31 May 2026 22:48:44 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 4E93E601807C; Sun, 31 May 2026 22:48:44 +0200 (CEST)
-Date: Sun, 31 May 2026 22:48:44 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Filippe Duke <fduke@greennet.ua>
-Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-	"superm1@kernel.org" <superm1@kernel.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"bhelgaas@google.com" <bhelgaas@google.com>,
-	"alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-	"tiwai@suse.com" <tiwai@suse.com>
-Subject: Re: [REGRESSION][BISECTED] HDA controller MMIO unreadable on Intel
- 5-series PCH (Ibex Peak) since v6.16
-Message-ID: <ahyerEqlBdIbQN9u@wunner.de>
-References: <5e54aea4a97f1cbbe866d9d8f3f25f9f2958e1c9.camel@greennet.ua>
- <cf379972-6b2d-42e5-9660-32d031516862@kernel.org>
- <e05ab19cf41224661325a8acb5f10d31a1d8fbf0.camel@greennet.ua>
+	s=arc-20240116; t=1780260954; c=relaxed/simple;
+	bh=jbTNWhwRndBe/mVL+d70N8jfHasPnypOTPoQZy75zdA=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=a3FShDTZcPYOT8MqnyNSqZLJc8IZ3k2hgjcJVZ3sUaqyenmmtsuc7FhEQhZ9pB+OHB2lhwLOd1fG2Yz8Y2ZhqTAzLM2zjL0alzMpM7OmC4YQJsS9kXZSEFAZCUN5Q/szR2nK8n6wjK5NQLWTp7wkA35W2Feb9Geoepxj9J/hpcs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kousu.ca; spf=pass smtp.mailfrom=kousu.ca; dkim=permerror (0-bit key) header.d=kousu.ca header.i=@kousu.ca header.b=CpA7w6gB; dkim=pass (2048-bit key) header.d=kousu.ca header.i=@kousu.ca header.b=ONJ2JNJ2; arc=none smtp.client-ip=46.23.90.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=kousu.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kousu.ca
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=permerror (0-bit key) header.d=kousu.ca header.i=@kousu.ca header.b="CpA7w6gB";
+	dkim=pass (2048-bit key) header.d=kousu.ca header.i=@kousu.ca header.b="ONJ2JNJ2"
+DKIM-Signature: v=1; a=ed25519-sha256; c=simple/simple; s=ed25519; bh=jbTNWhwR
+	ndBe/mVL+d70N8jfHasPnypOTPoQZy75zdA=; h=references:in-reply-to:
+	subject:cc:to:from:date; d=kousu.ca; b=CpA7w6gB2JlTc5jTyd+RffjydzAeIN1
+	dOseUah03OXLKGGdvaa8JaiN13/TLtcrh7qGuy1E8djTQQ5RKrJsMAA==
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; s=rsa; bh=jbTNWhwRndBe/mVL
+	+d70N8jfHasPnypOTPoQZy75zdA=; h=references:in-reply-to:subject:cc:to:
+	from:date; d=kousu.ca; b=ONJ2JNJ28HFs2UWnALkXu9hXPsOd3JwCDmgSYe+FmxKRy
+	vKfk6j5os6PEkcezplTMJAUrrmDJ6G2FzY7WpdjFVclqCZFd8jA+amQhaTcL/2uPp1C/P9
+	rysnEtyhlys+3mwXQ+wsfQCBaJb+NTN0aqHBm2biDlQf9367TcBTTqP6PmhL+S0Y7ZABOE
+	Fkv5NpDc4OMNCIsmPmBAkN9yluOtii+WtY6N3QxApB7Cq8h57ddW0jwhd17hhWlqXFhoC/
+	NUuSOCmMGbwDmIEwP+i/2Mz2Vxe/QyFMKGhUB9l8EJmw0o8mZDAwNUMuRDPik79XsiuIjn
+	WPQsRFQg2tENmJcuw==
+Received: from comms.kousu.ca (localhost [127.0.0.1])
+	by comms.kousu.ca (OpenSMTPD) with ESMTP id 6e368829;
+	Sun, 31 May 2026 22:29:06 +0200 (CEST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e05ab19cf41224661325a8acb5f10d31a1d8fbf0.camel@greennet.ua>
+Date: Sun, 31 May 2026 16:29:06 -0400
+From: Nick <nick@kousu.ca>
+To: linux-acpi@vger.kernel.org
+Cc: johannes.goede@oss.qualcomm.com, "Rafael J. Wysocki"
+ <rafael@kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+ regressions@lists.linux.dev, John Veness <john-linux@pelago.org.uk>,
+ linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [REGRESSION] Toshiba Fn keys + lidswitch
+In-Reply-To: <75398536-2ca8-4205-9205-18afc5227397@pelago.org.uk>
+References: <E2OXET.4X5GTP37VTNC3@kousu.ca>
+ <CAJZ5v0jVQyWYqPo_MiUwNQb7FLNR_Q_++Xq=xA1owcHpcjN=OA@mail.gmail.com>
+ <bc9d5258-d4df-46a1-bba9-de3486f722ab@pelago.org.uk>
+ <8503d297-68ca-4bfe-bbdf-537a85890d86@oss.qualcomm.com>
+ <75398536-2ca8-4205-9205-18afc5227397@pelago.org.uk>
+Message-ID: <eddc6acd74abcea6131f3cfc606bc596@kousu.ca>
+X-Sender: nick@kousu.ca
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Sun, May 31, 2026 at 07:49:59PM +0000, Filippe Duke wrote:
-> 00:1b.0 Audio device: Intel Corporation 5 Series/3400 Series Chipset High Definition Audio (rev 05) (prog-if 00 [HDA compatible])
-> 	Subsystem: Acer Incorporated [ALI] Device 0357
-> 	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
-> 	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-> 	Latency: 0
-> 	Interrupts: pin B disabled, MSI(X) routed to IRQ 34
-> 	Region 0: Memory at cc100000 (64-bit, non-prefetchable) [size=16K]
-> 	Capabilities: [50] Power Management version 2
-> 		Flags: PMEClk- DSI- D1- D2- AuxCurrent=55mA PME(D0+,D1-,D2-,D3hot+,D3cold+)
-> 		Status: D0 NoSoftRst- PME-Enable- DSel=0 DScale=0 PME-
-> 	Capabilities: [60] MSI: Enable+ Count=1/1 Maskable- 64bit+
-> 		Address: 0000000000000000  Data: 0000
+On 2026-05-31 11:17, John Veness wrote:
+> On 30/05/2026 14:34, johannes.goede@oss.qualcomm.com wrote:
+>> In case you've not seen it yet, Rafael send out the test patch
+>> publicly later that day in another email in this thread:
+>> 
+>> https://lore.kernel.org/linux-acpi/12896447.O9o76ZdvQC@rafael.j.wysocki/
+>> 
+>> Regards,
+>> 
+>> Hans
+> 
+> Thanks for the pointer, and sorry for missing that! I had only been
+> looking in the archives of platform-driver-x86@vger.kernel.org which 
+> for
+> some reason didn't receive the patch.
+> 
+> John
 
-MSI is enabled but address is zeroed.  Please provide "sudo lspci -vvv"
-output of a working kernel so that we can see whether there's no MSI
-address configured there either.
+On 2026-05-31 11:25, John Veness wrote:
+> I'm not Nick, but I have tested the patch here on my old Toshiba Tecra 
+> Z50-A
+> and it seems to have worked - I now have Fn+keys working fine, after 
+> losing them
+> in a recent kernel update (apart from Fn+3 for volume down, and Fn+4 
+> for volume up,
+> which for some reason continued to work when the others didn't).
+> 
+> John
 
-Thanks,
+Same here. All my Fn keys work except for Esc through F8. Glad Rafael's 
+patch worked for you too! There's a newer copy of it at 
+https://lore.kernel.org/linux-acpi/2046403.PYKUYFuaPT@rafael.j.wysocki/T/#t 
+by the way.
 
-Lukas
+- Nick
