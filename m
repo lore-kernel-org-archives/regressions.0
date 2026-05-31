@@ -1,74 +1,160 @@
-Received: from mx1.mythic-beasts.com (mx1.mythic-beasts.com [46.235.224.141])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 112A3392838
-	for <regressions@lists.linux.dev>; Sun, 31 May 2026 15:26:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.224.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9485A29B8D0
+	for <regressions@lists.linux.dev>; Sun, 31 May 2026 16:51:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780241193; cv=none; b=TH6c0t1csxMPzg7JFpOrB3PuhZuCkZhAmJm39UdjzfgfEPjdficrRXTi/gnlzUUdROpVKCumtIGuVi7D38au557maJ6yK84L2tYpcV2IOgjND/O+VUgojy4crQR69Mm36V8seEkOOy0/y9Bs1gGxWTFBwet+LrliR+2qMhvjtf0=
+	t=1780246306; cv=none; b=smPUHg+DhAFMCY0liUg2Q8m2OAWTUgGQ85AOt1KVN4/Nm/mWFipQgoGvbprFnGxmrDOv0IwWrRwcpNNU6A20whq7KjoTc4k5mwHXQtasMw+U88hzoh17HXQPyoXNOvTsRfUnim3vbZloMnqWR3/roVZPZdy1S1VD7e6Yho6LqLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780241193; c=relaxed/simple;
-	bh=yuNMze+dYwvKQyRxEsXD5OjRpU3KKGaFmtu7/zO4kJc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FuZq7J06fFyMO/asPDJx1NNSqxAihO6aAbwskSnBOywY111Pll9NnXo9XS4ifNL8WRnUfxYdvn99jnuwjONXLpyQKVLa++j7eWNxjBqz3svrDxdZZgudyRJRIY3mR/Rk0UVriS0UL0APywQgehhBPM6Q80NpaR4Q896ufifPErI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pelago.org.uk; spf=pass smtp.mailfrom=pelago.org.uk; dkim=pass (2048-bit key) header.d=pelago.org.uk header.i=@pelago.org.uk header.b=HlUkKbb9; arc=none smtp.client-ip=46.235.224.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pelago.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pelago.org.uk
+	s=arc-20240116; t=1780246306; c=relaxed/simple;
+	bh=Nl4VK9dmupFjmdL4GIawfNy9HRaWx7gbhvzNn9cpBgc=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=CxUR0RihaIH3I6M/ch45RjC9t3AJULpMxz5DsOm3iSKovapJvY7kNlQ5B9FBy751tjd8+fJHpCY98JOoGR3eMayPw6ug09VSJpbAmUyFr/u5gz3/3TAtoLVbiMhpawRW1EkpIiz7H36yOaJclmWNgi311nhamVWYIcfVCzkfxeM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f5APzlsR; arc=none smtp.client-ip=209.85.208.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pelago.org.uk header.i=@pelago.org.uk header.b="HlUkKbb9"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=pelago.org.uk; s=mythic-beasts-k1; h=From:To:Subject:Date;
-	bh=yuNMze+dYwvKQyRxEsXD5OjRpU3KKGaFmtu7/zO4kJc=; b=HlUkKbb9coiqPNfi9kdkJHNKGU
-	8E7LdVqMAh9uG1M2ztJ+SVc+uQQy3qC6PWe6S5GLt7vNDaf0Yk8kucF2WZt04pZMuG0QmXd89Svkd
-	vFrMPHoydtX9j+gh5ihSPhlfP26DxV9qfFh8Kqi8CC9c7Tpbwf3OIDefBrVOD5r9TsUmxkK40SEoX
-	R0TvrXr6Y/q3cZ71S4oiO9tESdBJ+iKDVQXC/ET88BzldJKBGhCk4HyCDscxAsQdUXnvjWuAABrTq
-	x1PNve/p7vuPADtWHB940UODu4MZThhvqxR1R1ixjCdN4drK3snF3HPI13ht5ewMOW7kTMDIG2+GB
-	rnXsMvlw==;
-Received: by mailhub-cam-d.mythic-beasts.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <john@pelago.org.uk>)
-	id 1wTi3F-00DfGw-0A;
-	Sun, 31 May 2026 16:26:09 +0100
-Message-ID: <2238f0ea-e479-4946-971d-9fbfc9170ec4@pelago.org.uk>
-Date: Sun, 31 May 2026 16:25:53 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f5APzlsR"
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-39677234558so7085271fa.1
+        for <regressions@lists.linux.dev>; Sun, 31 May 2026 09:51:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1780246304; x=1780851104; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=QIx7P3SxsjvmsybJQknN3YKzUv+gi0wfBofWFUKoMZ4=;
+        b=f5APzlsR/h8HaipBTDJEP45m3xItflkdzYudq0gHreQr7t+gaJ7UbRKcu9P33Ss/M4
+         UT78i+myQjgZxJEsM7z9xatRxk/5y46DZe0tauvcqvv69QB7xUPrmlcv7qX0xoXOr+u9
+         QJ/vGR+wvJ1r+s32MowzFwPBZ9J7gg0qyPfcH0JJVBomj0cJmn6RVPs4gkpECFVQM7O7
+         irYbbHeV4nqyLaJNynSUYff0BNvjd1HGma2F2J348j54yENx9a6GL0Z2Z2VcgYyIvWTU
+         6vYhgGWoHQNg4vUgmg7/UJLmrPlNasOWzli9PWjx1s5XcG8UDy3AAh4X/X+MXYjFInXJ
+         ZZ/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780246304; x=1780851104;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=QIx7P3SxsjvmsybJQknN3YKzUv+gi0wfBofWFUKoMZ4=;
+        b=MUoc0sMCX4nIsWfmesWuYCuGLeeJcijrCbZKkWy1aDuQLgIY8kRBWnX++CuqIMyw6K
+         BRF1cQVK9/EMNJMuZAS516MX8MNoxB7MuV8a1sk3Ttwt2+TYFdo8QYrjonjikzDwg9wE
+         /LcygD7dwSLAo4C6Mrfp/fQeO7DaF4LxWA6llux7TubUw3Vkk404n9hASZENFhuZ9b8B
+         bJCr8obo5LORRk5UDCtM/hfqqTIvTPCI3tHgAbM+qVWABJRElNAOTtoCy8rw4q5CQEsZ
+         08cXLn5UfLCyEfXsYev0WZNpOHKofv6WjhbNq+IM7jmh1QuPSqDNpYiC1+nDXFpgp1Rh
+         KCfA==
+X-Gm-Message-State: AOJu0YyS8wjzJ4ubcyZJ8onkBcG7IUPBhAtBwR3cm8rBSbu5FKxgo9eu
+	m1QycGkHd7KSVIiwnVLA+FWKzcp9dj05ZqJ7Xk38OPuXXN0AspnL37iHyroBzw==
+X-Gm-Gg: Acq92OFWMF9E5FRUO21JgwjiEoKLNRLqNNGwI+WvPle6Id9wWqiU7qXwgjrm0mObVht
+	/EAn+YDfFcNW/UT4wF28ZYPNayLDdQm4yiLs1xAuS1WnyjCWooFtfpZjeP97aGKbZGFXRIblkuU
+	4aDb0ik2TE11zYsXbwdLecIhoStxaOOAuv8PPU8/HhVeWRvw+mde2e8R9pYlmcGxdech+zHeS13
+	AWe/GxX9G8ZAdFpe2vHE/lf75RnFRaWy1+FClIWyAkgNA8eEz1d0AEDf602YthSX1tZ/J0GBrdK
+	Z9J5XglR6fqnCh2nHS4pvy6bhs4T+e0jPegEvPoobCPOXzdGyApXwpLbSAKBjtk32fdgYdZ0USR
+	0bbyoGjbGdULFpL7OaJgwq14rr/AAbrdnC3FRES4T8H9M+joj0E3cEyTbS9lO+IH7d4PWz7NJ6O
+	Mfut30F8+/4qr7mLEYB2Yj1FOAqOsG+TJ9TKCMQY5630FwwIc3+WZlfTOLe1QY4kBRo2ZloEY=
+X-Received: by 2002:a2e:aa13:0:b0:394:472e:e430 with SMTP id 38308e7fff4ca-39664f114d6mr11110711fa.18.1780246303566;
+        Sun, 31 May 2026 09:51:43 -0700 (PDT)
+Received: from ik5070.localdomain (85-253-35-150.ip.elisa.ee. [85.253.35.150])
+        by smtp.googlemail.com with ESMTPSA id 38308e7fff4ca-39659de42e2sm16481951fa.26.2026.05.31.09.51.40
+        for <regressions@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 31 May 2026 09:51:41 -0700 (PDT)
+From: Indrek Kruusa <indrek.kruusa@gmail.com>
+To: regressions@lists.linux.dev
+Subject: [REGRESSION][BISECTED] Boot hangs on Allwinner D1 RISC-V board
+Date: Sun, 31 May 2026 19:51:38 +0300
+Message-ID: <20260531165138.2696250-1-indrek.kruusa@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] Toshiba Fn keys + lidswitch
-To: "Rafael J. Wysocki" <rafael@kernel.org>, Nick <nick@kousu.ca>
-Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
- regressions@lists.linux.dev, linux-acpi@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
- platform-driver-x86@vger.kernel.org
-References: <E2OXET.4X5GTP37VTNC3@kousu.ca>
- <CAJZ5v0jVQyWYqPo_MiUwNQb7FLNR_Q_++Xq=xA1owcHpcjN=OA@mail.gmail.com>
- <12896447.O9o76ZdvQC@rafael.j.wysocki>
-Content-Language: en-GB
-From: John Veness <john@pelago.org.uk>
-In-Reply-To: <12896447.O9o76ZdvQC@rafael.j.wysocki>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-BlackCat-Spam-Score: 0
+Content-Transfer-Encoding: 8bit
 
-On 19/05/2026 18:15, Rafael J. Wysocki wrote:
-> So please let me know if the patch below fixes the problem for you.
->
-> In either case, please grep the dmesg output for "ACPI GPE" and let me know
-> the result.
->
-> Thanks!
-Hi Rafael, thanks for the quick patch! I'm not Nick, but I have tested
-the patch here on my old Toshiba Tecra Z50-A and it seems to have worked
-- I now have Fn+keys working fine, after losing them in a recent kernel
-update (apart from Fn+3 for volume down, and Fn+4 for volume up, which
-for some reason continued to work when the others didn't).
+Hi!
 
-dmesg|grep "ACPI GPE" since applying the patch gives:
+I have an Allwinner D1 based board whose boot process hangs before the root filesystem is mounted. The issue has been present since v7.1-rc1.
 
-[ 0.197248] [ T1] acpi (null): ACPI GPE enabled for PNP0C0C
+A git bisect points to:
+ff1c0c5d07028 Merge branch 'timers/urgent' into timers/core
 
-John
+The board boots normally if I revert the changes in kernel/time/clockevents.c back to commit 09c04714cb455 (patch included below to speed up the testing).
+
+This platform has a history of requiring special quirks ([1], [2]).
+
+I originally reported this issue here [3]
+
+[1] https://lore.kernel.org/lkml/20240817081218.2985171-1-apatel@ventanamicro.com/
+[2] https://lore.kernel.org/linux-riscv/20260525182124.19402-2-jtaubepe@redhat.com/
+[3] https://lore.kernel.org/linux-riscv/CA+fTLhgLmTY+exGujKf8OYYQvcEW5X5NJ_5sLq2AYL6zER2c0A@mail.gmail.com/
+
+Best regards,
+Indrek
+
+
+diff --git a/kernel/time/clockevents.c b/kernel/time/clockevents.c
+index 5e22697b098d8..83712aa1d385c 100644
+--- a/kernel/time/clockevents.c
++++ b/kernel/time/clockevents.c
+@@ -94,9 +94,6 @@ static int __clockevents_switch_state(struct clock_event_device *dev,
+ 	if (dev->features & CLOCK_EVT_FEAT_DUMMY)
+ 		return 0;
+ 
+-	/* On state transitions clear the forced flag unconditionally */
+-	dev->next_event_forced = 0;
+-
+ 	/* Transition with new state-specific callbacks */
+ 	switch (state) {
+ 	case CLOCK_EVT_STATE_DETACHED:
+@@ -175,7 +172,6 @@ void clockevents_shutdown(struct clock_event_device *dev)
+ {
+ 	clockevents_switch_state(dev, CLOCK_EVT_STATE_SHUTDOWN);
+ 	dev->next_event = KTIME_MAX;
+-	dev->next_event_forced = 0;
+ }
+ 
+ /**
+@@ -340,6 +336,7 @@ int clockevents_program_event(struct clock_event_device *dev, ktime_t expires, b
+ {
+ 	int64_t delta;
+ 	u64 cycles;
++	int rc;
+ 
+ 	if (WARN_ON_ONCE(expires < 0))
+ 		return -ETIME;
+@@ -361,29 +358,16 @@ int clockevents_program_event(struct clock_event_device *dev, ktime_t expires, b
+ 		return 0;
+ 
+ 	delta = ktime_to_ns(ktime_sub(expires, ktime_get()));
++	if (delta <= 0)
++		return force ? clockevents_program_min_delta(dev) : -ETIME;
+ 
+-	/* Required for tick_periodic() during early boot */
+-	if (delta <= 0 && !force)
+-		return -ETIME;
++	delta = min(delta, (int64_t) dev->max_delta_ns);
++	delta = max(delta, (int64_t) dev->min_delta_ns);
+ 
+-	if (delta > (int64_t)dev->min_delta_ns) {
+-		delta = min(delta, (int64_t) dev->max_delta_ns);
+-		cycles = ((u64)delta * dev->mult) >> dev->shift;
+-		if (!dev->set_next_event((unsigned long) cycles, dev)) {
+-			dev->next_event_forced = 0;
+-			return 0;
+-		}
+-	}
++	cycles = ((u64)delta * dev->mult) >> dev->shift;
++	rc = dev->set_next_event((unsigned long) cycles, dev);
+ 
+-	if (dev->next_event_forced)
+-		return 0;
+-
+-	if (dev->set_next_event(dev->min_delta_ticks, dev)) {
+-		if (!force || clockevents_program_min_delta(dev))
+-			return -ETIME;
+-	}
+-	dev->next_event_forced = 1;
+-	return 0;
++	return (rc && force) ? clockevents_program_min_delta(dev) : rc;
+ }
+ 
+ /*
