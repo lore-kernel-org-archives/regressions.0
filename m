@@ -1,83 +1,128 @@
-Received: from smtpo49.interia.pl (smtpo49.interia.pl [217.74.67.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 852F031354F
-	for <regressions@lists.linux.dev>; Sun, 31 May 2026 12:42:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.74.67.49
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780231333; cv=none; b=NkGZgSrXaAZ7JdlaF/KoIHLaL04I8miSKBasG4RWMsZqlUtNwodEl8szOSeRPUUaFZVN612ZNX7qWP6exDD8Bvp9pdR5SM3+jTrXZBoFxc9ZiA+YdYXL6ysqpr1Af+UFOJu6uSPsLhH4DSbtt9kh2yRShe759LrM01/2oXJNXOk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780231333; c=relaxed/simple;
-	bh=pS+k3CeeXU1/L2vUay196gVe1o2FqBsuIBkN9x/+JAI=;
-	h=From:To:Cc:References:In-Reply-To:Subject:Date:Message-ID:
-	 MIME-Version:Content-Type; b=PB7+oXZ7e425x2XKK7+kccQ1zwfNwcqzgaBaQBsgEb0NVVFkGmKXiFeA4EEk1/DRet28N9M15woOJZNRbtiCddbloss0jdUD1XU9ffxdhCqwmM3N9gU0Lf0ckP4n3Cfx5mAsEYbO0K/Hz4Dc4qnrWV29lnG8IoflNfEyZmIv78s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=poczta.fm; spf=pass smtp.mailfrom=poczta.fm; dkim=pass (1024-bit key) header.d=poczta.fm header.i=@poczta.fm header.b=A45h48hc; arc=none smtp.client-ip=217.74.67.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=poczta.fm
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=poczta.fm
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=poczta.fm header.i=@poczta.fm header.b="A45h48hc"
-Received: from Stacjonarny (62-133-144-026.dynamicip.ostnet.pl [62.133.144.26])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by www.poczta.fm (INTERIA.PL) with ESMTPSA;
-	Sun, 31 May 2026 14:42:08 +0200 (CEST)
-From: "Artur Chlebek" <achlebek@poczta.fm>
-To: "'Greg KH'" <gregkh@linuxfoundation.org>
-Cc: <amd-gfx@lists.freedesktop.org>,
-	<regressions@lists.linux.dev>,
-	<stable@vger.kernel.org>
-References: <002901dcf0eb$9472e210$bd58a630$@poczta.fm> <2026053159-unread-disagree-0da7@gregkh> 
-In-Reply-To: 
-Subject: RE: 7.0.9 vs 7.0.10/7.1 Radeon 260X regression
-Date: Sun, 31 May 2026 14:42:08 +0200
-Message-ID: <003901dcf0fa$e5315ce0$af9416a0$@poczta.fm>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29AB054763;
+	Sun, 31 May 2026 13:21:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780233678; cv=none; b=ccY+B7BLQTAwxSCZ8vpy8uqemk+Iskg/nKH3fdNGK7PKYG/gHDM6gGxdzTAe2xjrZ2fqE1ZWAvCleY03xpms/p5eBdrXNgRZCINrsBiitTH6ms6+xkR/NOQb3QZwj7XIezfPJcLAruhWIZRQrKFiQqy8SN3gFneqFvArj+JzLMw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780233678; c=relaxed/simple;
+	bh=D2b96bpT//bRq15xL4d2iEh1wwnmcO9QOqblE0YyH98=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NERFRGBfIkwAntonRko3bKrEu78IoE7OXxuw+W8eQmiZyqzF70PN5GwnN4eeA2jx7uX7pvP62LJGlNeAaCp/PEzdx0vEvBDdiYmeygwcoGH3iXwnc/fCenAAJ9eUJzP7z/BdhV2SOAD+o4SmjNxOYsuds9A5ErRNSfyoi4FDqG0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H2Ghbqlb; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H2Ghbqlb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A5CC1F00893;
+	Sun, 31 May 2026 13:21:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780233676;
+	bh=ucei/Km5pTxeBW0GqGAGxBN/tmGyfgYst8kZ8KmZjaQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=H2GhbqlbA4jVp+/XBpaAJWcxUhFfRoJi9+gKEit8tscC/y1lF2Vt1DVIa8avsg9yi
+	 ZV3i3WfprvWXekEeWWWvofPCJngCFGRHbNTrZKmvsQYNVG6trArcYERMREnzK+IOWg
+	 KsJNJfLeMfjap/QwcEcBtFbEPrV4ltGGP+RGV3b89QkqqQ5lILu6Wh/j0EO24q3x1t
+	 RrQBzDMXPHee5/A9BXxOgIwiqZv+OdHF9SoHgl5bvcL7sm/iF6qeJN3cajL5rxkI2U
+	 CRuVqXQMLjKeAsV7fjLCP2G5Fyaen336T4FmjVjJCGVEfEasGxfhPeHSBgvpFNkodf
+	 UxfQ9w5u3JzZw==
+Message-ID: <cf379972-6b2d-42e5-9660-32d031516862@kernel.org>
+Date: Sun, 31 May 2026 15:21:13 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain;
-	charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQFDUGtZMJYvTWCxG+Cy9+QRqeP05ADRSPyrAmjEVgO3QYPi8A==
-Content-Language: pl
-X-IPL-Priority-Group: 0-0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=poczta.fm; s=dk;
-	t=1780231329; bh=aQxHIfR0Wt2sOg4MkPcCIB7mzg9EaFBUOuncs0GU2l8=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
-	b=A45h48hc9sRiVQUTQ1VwRafd6Kuh75w372Llu0owqL1tHlxHvBoPGF3ABeRgTDaQj
-	 UAjPvLnzO92AaNvUPDEZR3UtD0WsE6ldC4G12fRMAB2zF9sqZ70PjOdSbEyKhGokyt
-	 4IQOnNA9Bdnn21V/HKtRYH1ElCe5K3jlGmOrXvhk=
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION][BISECTED] HDA controller MMIO unreadable on Intel
+ 5-series PCH (Ibex Peak) since v6.16
+Content-Language: en-US
+To: Filippe Duke <fduke@greennet.ua>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+ "bhelgaas@google.com" <bhelgaas@google.com>,
+ "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+ "tiwai@suse.com" <tiwai@suse.com>
+References: <5e54aea4a97f1cbbe866d9d8f3f25f9f2958e1c9.camel@greennet.ua>
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <5e54aea4a97f1cbbe866d9d8f3f25f9f2958e1c9.camel@greennet.ua>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
------Original Message-----
-From: Greg KH <gregkh@linuxfoundation.org>
-Sent: Sunday, May 31, 2026 1:43 PM
-To: Artur Chlebek <achlebek@poczta.fm>
-Cc: amd-gfx@lists.freedesktop.org; regressions@lists.linux.dev;
-stable@vger.kernel.org
-Subject: Re: 7.0.9 vs 7.0.10/7.1 Radeon 260X regression
 
-On Sun, May 31, 2026 at 12:52:30PM +0200, Artur Chlebek wrote:
->> Hi, I have 5x fps drop on amdgpu Radeon 260X 1GB between kernel 7.0.9 
->> and
->> 7.0.10 or 7.1rc
->> 
->> Original sparse mail got flagged as spam so let me elaborate:
->> Newest vanilla Fedora with Plasma, Gigabyte GA-H97-D3H, looked into 
->> things like clocks, PM, ASPM, tried flags, GTTSIZE, .dc=0 - all seems 
->> fine nothing helps.
+
+On 5/29/26 20:26, Filippe Duke wrote:
+> #regzbot introduced: 4d4c10f763d7
 > 
-> Can you use 'git bisect' to find the offending commit?
+> Hi,
 > 
-> thanks,
+> The HDA controller on old Intel 5-series PCH (Ibex  Peak) becomes non- 
+> functional since 6.16.
+> PCI configuration space is ok;
+> PCI function power state appears to be D0;
+> However MMIO always reads 0xFFFF, causing CORB timeouts;
+> ALC269VB codec enumeration fails (no AFG/MFG node found).
+> HW works on v6.15.x and earlier and works under WinPE on the same machine.
 > 
-> greg k-h
+> Bisected to first bad commit:
+> 4d4c10f763d7 PCI: Explicitly put devices into D0 when initializing
+> 
+> On top of v6.16, commenting out the single call to
+> |pci_pm_power_up_and_verify_state(dev)| in |pci_pm_init()| (drivers/pci/ 
+> pci.c:3273)
+> is sufficient to restore working audio. The one-line diff is attached.
+> 
+> HW:
+> ---
+> DMI:  Acer Aspire 4745G / JV41_CP, BIOS V1.25 03/16/2011 (Insyde)
+> CPU: Intel Core i7 M 640
+> PCH: Intel 5-series (Ibex Peak)
+> HDA: 0000:00:1b.0 [8086:3b56] rev 05, SSID [1025:0357]
+> Codec: Realtek ALC269VB
+> GPU: Switchable:  Intel HD (Ironlake, 8086:0046) +
+> AMD Radeon HD Cedar (1002:68e0, 01:00.0)
+> 
+> Symptom (dmesg):
+> ---
+> snd_hda_intel 0000:00:1b.0: enabling device (0000 -> 0002)
+> snd_hda_intel 0000:00:1b.0: bound 0000:00:02.0 (ops 
+> intel_audio_component_bind_ops [i915])
+> snd_hda_intel 0000:00:1b.0: number of I/O streams is 30, forcing 
+> separate stream tags
+> snd_hda_intel 0000:00:1b.0: CORB reset timeout#2, CORBRP = 65535
+> hdaudio hdaudioC0D0: no AFG or MFG node found
+> hdaudio hdaudioC0D1: no AFG or MFG node found
+> hdaudio hdaudioC0D2: no AFG or MFG node found
+> hdaudio hdaudioC0D3: no AFG or MFG node found
+> snd_hda_intel 0000:00:1b.0: no codecs initialized
+> 
+> Hence the sound device is missing from ALSA.
+> HDMI audio on AMD (01:00.1) is not affected by the issue.
+> Attaching you lshw, lspci, DSDT, dmesg and diff.
+> 
+> Best regards
+> 
+> -- 
+> 
+> Filippe Duke
+> System Engineer
+> 
+> GREENNET
+> Kyiv, 7B Lesi Ukrainky St.,
+> Cell.: +380672772879
+> Email: fduke@greennet.ua
+> Web: https://greennet.ua
+> 
 
-I'm sorry I'm not familiar with git at all, and very new to Linux. I can do
-some local tests if led by hand...
+There have been a few commits that have adjusted the behavior due to the 
+commit you identified.  So I believe it's potentially the tip of the 
+iceberg.
 
-PS: I can confirm that 7.0.9-205 is 25fps in Unigine Heaven, and 7.0.10-200
-(or 7.1 since beginning of rc availability) is 3-5fps.
+Can you please see if this issue still exists on 7.1-rc5?
 
+This is the most recent commit (from 7.1-rc3) that I know of changing it.
+
+https://git.kernel.org/torvalds/c/909f7bf9b080c
+
+Thanks!
