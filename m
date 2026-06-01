@@ -1,103 +1,156 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E7C83769EE
-	for <regressions@lists.linux.dev>; Mon,  1 Jun 2026 12:13:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD21F3ABDA5
+	for <regressions@lists.linux.dev>; Mon,  1 Jun 2026 13:35:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780315987; cv=none; b=nAHQZT63OJt8/BMO1RM6VXBELeGfFt0/J8WFwCUHLYYeQvEPUzQ/FA2U0aiPGCH0jVFL8NS5QCL7o5drJUm3jrNePQD20pHXUC9SoIjRyIpwhzQMMVQ9B6WHuuT9XNUd0gymzgvtqwPWH9iVOyVFY96I1fcr7jKY2UpXL1NcIJ0=
+	t=1780320936; cv=none; b=UO2FDPOeNU6yyTPFbEJdbk9NAlrcrEUat5WxOjlymAvD6flD1UjMbYVSG91DuE2pkkrOqV1P1J81mSHSAEidJW3+K/UReogLeInGhkFQCX7Nx3XllPS2Lr6t74Ps1wfwmzbkSv6kiFxAMDLTjAljlTaM5NJFUHS/5GPAFmB8+hA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780315987; c=relaxed/simple;
-	bh=EE8zdxlLBdtyKVtNHQ/sE40G22wZ24fiw+1NNUBUNpE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=He2jaD3sO6UMId9IPupXmMXIYi/I6jOTbZJYp4qSBXDtUzcvB6lHPYRbffpuYbOEMjOLltuqouNjyO3zO2QymDvSi+3HrgAe21fzqlXnuMKhOieKoJJdU3P35A4lT2OfSlMMo4VzveJy5nLnaoNQMwGeyppxD6HE8j91dkLUrMw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H2qU3NBt; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780320936; c=relaxed/simple;
+	bh=lp/ptwOz8oBpXlR0XAK87MgxzNA2RgBiY99KrvD5giU=;
+	h=From:To:Cc:Subject:Message-ID:In-Reply-To:References:MIME-Version:
+	 Date:Content-Type; b=fktUs44hHVR7uFfpf5kDTG/d7jXIqfvT1jyqPTRmKmoieysIl6POz21GXMy741dMbN6cOLEJmXYMOllLuauuBdRKCh/GGHWSWJXvUlIACVtdQz+QYb2DdWsxSemPe6CiAhFVaIbgc7g91ri+/DLSzpihzgNlr1tNR/Pajtdysx0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MiJ1Z8tQ; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H2qU3NBt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2660D1F0089B
-	for <regressions@lists.linux.dev>; Mon,  1 Jun 2026 12:13:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780315986;
-	bh=EE8zdxlLBdtyKVtNHQ/sE40G22wZ24fiw+1NNUBUNpE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=H2qU3NBtM/mlzuAdg6nLaOMgdeAdLKOaLMRVE4Aru6bbdHooNwDd7oind7K6DaIEq
-	 BLTNKgeOI4prrqPiQtgd6yPrqcQ4+pGeomwtLHXSeAWARs1rtjNfy7AR0Aw2V7fuqo
-	 A4If/KdC6/28etvsDNvSbE5enOTnEiF1wKmjQi+ZU96FPltzntpaEM5xpp4O7a440t
-	 Gvi6OZbAmemC1nw6MCIZMNa1GDPbN5Kf/bRdKLAF07q9aSM0+Mmz+xVmoyuCs0rKwR
-	 W/ApjlKFsxNS+PQpNWWYsA49NEvusAFeCv3+TpOwk887BV7Cgh2RFsiVwgKWi7kahv
-	 h4pXsWkZwjTIw==
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-5aa68e66128so1187522e87.2
-        for <regressions@lists.linux.dev>; Mon, 01 Jun 2026 05:13:06 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ+5TWbzmkidZlgjkYl9OLq6dgM0uu0eLVdBMAOw9Ybkj7JMQf1acdanux2llzmnOzMYlvsoRCqZ4UdCTA==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yz9HzJUNXyw1306vVCd0AxEeDRGW2YIAxdKs9P9N4j9Cu7YFV2z
-	+EOozuLr1qrztT3vWcRJsRR57T4V8CgALblgVnbsrtA2icoipdWJKbpPNl9WSDjchkU3orlwqZI
-	x4Fzcp0sgh8VESaKxyMm9C9Xpp94/HV0=
-X-Received: by 2002:a05:6512:b0f:b0:5aa:b6a:6028 with SMTP id
- 2adb3069b0e04-5aa60a737f2mr2825770e87.45.1780315984633; Mon, 01 Jun 2026
- 05:13:04 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MiJ1Z8tQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1780320934;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nW2y5EELGA92Nmgu/h+V2tbcAAK8XuFhP0KJ13qmAlI=;
+	b=MiJ1Z8tQZE4Dst/7Kku1LrOAa86eWKYrUZCBshMzlQ+I9J1ihl2QYVAZMqMWONZzlA4qmm
+	C8u/pz/GERjdke/Bj6GEFklbGrqXl3JllVfX0e16TwUYSpMm9kev3QecFNihP1EYTSyEcO
+	+1hlDCWIobLWQDYNB6R+B7HjhYt1GsA=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-141-ZUzhXLwvP-6zDkODh0VcfQ-1; Mon, 01 Jun 2026 09:35:30 -0400
+X-MC-Unique: ZUzhXLwvP-6zDkODh0VcfQ-1
+X-Mimecast-MFC-AGG-ID: ZUzhXLwvP-6zDkODh0VcfQ_1780320929
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-45ef55779d1so1587913f8f.0
+        for <regressions@lists.linux.dev>; Mon, 01 Jun 2026 06:35:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780320929; x=1780925729;
+        h=date:content-transfer-encoding:mime-version:organization:references
+         :in-reply-to:message-id:subject:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=nW2y5EELGA92Nmgu/h+V2tbcAAK8XuFhP0KJ13qmAlI=;
+        b=W1Spux/9QTDSy7nCCd/Uiq8tpL8M9XhiF26lqmwEOPD9OXSgVKiQM53jUzvGkww9sZ
+         k8Mlm9FoA2rTerhE5gFZy9LVZUAjypxZgwh+8gR/rfYg/PJjaYKSdaSmaNrN0tImMRgh
+         UhKNk4roD+iw5OGGE6BHQMDk6CfU0U9e4w+bo7hyv9UJQkswVklHBvO71/djsS404xZg
+         Rrws1r1MJNY4sIzYZLN6VJEED3Sh6VXlkB+dgK6rmtV81iQ4eRR211d125oWFyhV35Rw
+         1X+lWUT6prJOriHB4/lI4Jp6VkeDJ5zNZIlVSGWAY8wkqs4FXhVikTuKmRRN7JNFFghk
+         Hucg==
+X-Forwarded-Encrypted: i=1; AFNElJ/M1usqdT+4ExOlDUQyw3UAd6dUk7CC+BkLlHl6QMr9HW/L+2/V/8OLj49enKUz3ALhKT6CKAhBiccYhg==@lists.linux.dev
+X-Gm-Message-State: AOJu0YyxInu2lGDhEs+mHVHWFlrZmU/5C8pG2Fxf5QaExnOxWJRo+2Ym
+	sj+UDM/Ke7eaY6Eh2G1OXISs3lf+gzvIKmTR0a/Lsz5A+gDSD7tcWtupohhaA+VS8ZhGanOUpKx
+	JrVGGF1xnbP8GeeCyat+olHIcsalM9aFypB+mWSsTNG8eK8Osq6zTbmpbbZ5vU/8V
+X-Gm-Gg: Acq92OEEojTan9/KOh69VpfeTnHGiSLP0codKnkr5IdT1s3JAQRbWxvT68aHK/ceA44
+	qdEiw4B7wesIutyNyvpn3j5gR6Ao4CDJ77dkei0ZMegX+Do6kv1hmj3Csdpb7xQYDNbPcpE+DQp
+	3r/HH8c3FY7ajW/hVs0iRpCX2g4a3tsG2wtdGw/Ac//B1r1w1bMS2qQvFI0hF+vgqGegztMMy0S
+	OGrW+f1FMi011JMzNRy2LyqqN2GHTgUA+ozWmJ9CHV+CF+IQoQhZYhMvCDEH2DnaECQeBNcOyBt
+	Ce8gw3Q4NWnR/hBQM4Q9X+E/2qUzefscHLvTkZd8ZUIrSoSOo74u4Ya4GqFY+5h/sX7S/KhmZtJ
+	x4ryWalaC+iROMfP5ayHBOmvvz7m5yBtTGmaZ7m14HvB/hffJVZaVTN9OG+0y
+X-Received: by 2002:adf:fad1:0:b0:43b:5b25:67f8 with SMTP id ffacd0b85a97d-45ef6b6b608mr14976902f8f.20.1780320928612;
+        Mon, 01 Jun 2026 06:35:28 -0700 (PDT)
+X-Received: by 2002:adf:fad1:0:b0:43b:5b25:67f8 with SMTP id ffacd0b85a97d-45ef6b6b608mr14976832f8f.20.1780320927919;
+        Mon, 01 Jun 2026 06:35:27 -0700 (PDT)
+Received: from maya.myfinge.rs (ifcgrfdd.trafficplex.cloud. [176.103.220.4])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-45ef34a090dsm24806726f8f.3.2026.06.01.06.35.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Jun 2026 06:35:27 -0700 (PDT)
+From: Stefano Brivio <sbrivio@redhat.com>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: Fernando Fernandez Mancera <fmancera@suse.de>, netdev@vger.kernel.org,
+ yuhuang@redhat.com, justin.iurman@gmail.com, horms@kernel.org,
+ pabeni@redhat.com, kuba@kernel.org, edumazet@google.com,
+ davem@davemloft.net, idosch@nvidia.com, dsahern@kernel.org, Chris Adams
+ <linux@cmadams.net>, David Gibson <david@gibson.dropbear.id.au>, Beniamino
+ Galvani <bgalvani@redhat.com>, Thorsten Leemhuis
+ <regressions@leemhuis.info>, Andrew Lunn <andrew@lunn.ch>,
+ ihuguet@redhat.com, regressions@lists.linux.dev
+Subject: Re: [PATCH net v2] Revert "ipv6: preserve insertion order for
+ same-scope addresses"
+Message-ID: <20260601153525.546746a8@elisabeth>
+In-Reply-To: <5079261a-79e5-421b-bf6a-a511acaaeca4@kernel.org>
+References: <20260529112357.5079-1-fmancera@suse.de>
+	<20260529134045.56330243@elisabeth>
+	<5079261a-79e5-421b-bf6a-a511acaaeca4@kernel.org>
+Organization: Red Hat
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.49; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <E2OXET.4X5GTP37VTNC3@kousu.ca> <CAJZ5v0jVQyWYqPo_MiUwNQb7FLNR_Q_++Xq=xA1owcHpcjN=OA@mail.gmail.com>
- <bc9d5258-d4df-46a1-bba9-de3486f722ab@pelago.org.uk> <8503d297-68ca-4bfe-bbdf-537a85890d86@oss.qualcomm.com>
- <75398536-2ca8-4205-9205-18afc5227397@pelago.org.uk> <eddc6acd74abcea6131f3cfc606bc596@kousu.ca>
-In-Reply-To: <eddc6acd74abcea6131f3cfc606bc596@kousu.ca>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Mon, 1 Jun 2026 14:12:50 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0hR2b81+0FWAn3s_HJNWwweRSVk35KczPBKNabb-H91kg@mail.gmail.com>
-X-Gm-Features: AVHnY4K_Z822qHW2vwRtmAL8a7QwaDE3vDxsro5_34x72v0jljpMM1KGU6NiT_I
-Message-ID: <CAJZ5v0hR2b81+0FWAn3s_HJNWwweRSVk35KczPBKNabb-H91kg@mail.gmail.com>
-Subject: Re: [REGRESSION] Toshiba Fn keys + lidswitch
-To: Nick <nick@kousu.ca>, John Veness <john-linux@pelago.org.uk>
-Cc: linux-acpi@vger.kernel.org, johannes.goede@oss.qualcomm.com, 
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, regressions@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
-	platform-driver-x86@vger.kernel.org, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Date: Mon, 01 Jun 2026 15:35:26 +0200 (CEST)
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: TwaW0CVxzjxUtegyGWwhcN-Y0P0xigLeqvjgloxivTE_1780320929
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Sun, May 31, 2026 at 10:35=E2=80=AFPM Nick <nick@kousu.ca> wrote:
->
-> On 2026-05-31 11:17, John Veness wrote:
-> > On 30/05/2026 14:34, johannes.goede@oss.qualcomm.com wrote:
-> >> In case you've not seen it yet, Rafael send out the test patch
-> >> publicly later that day in another email in this thread:
-> >>
-> >> https://lore.kernel.org/linux-acpi/12896447.O9o76ZdvQC@rafael.j.wysock=
-i/
-> >>
-> >> Regards,
-> >>
-> >> Hans
-> >
-> > Thanks for the pointer, and sorry for missing that! I had only been
-> > looking in the archives of platform-driver-x86@vger.kernel.org which
-> > for
-> > some reason didn't receive the patch.
-> >
-> > John
->
-> On 2026-05-31 11:25, John Veness wrote:
-> > I'm not Nick, but I have tested the patch here on my old Toshiba Tecra
-> > Z50-A
-> > and it seems to have worked - I now have Fn+keys working fine, after
-> > losing them
-> > in a recent kernel update (apart from Fn+3 for volume down, and Fn+4
-> > for volume up,
-> > which for some reason continued to work when the others didn't).
-> >
-> > John
->
-> Same here. All my Fn keys work except for Esc through F8. Glad Rafael's
-> patch worked for you too! There's a newer copy of it at
-> https://lore.kernel.org/linux-acpi/2046403.PYKUYFuaPT@rafael.j.wysocki/T/=
-#t
-> by the way.
+On Mon, 1 Jun 2026 12:03:59 +1000
+Matthieu Baerts <matttbe@kernel.org> wrote:
 
-Thank you both for testing!
+> Hi Stefano,
+> 
+> On 29/05/2026 21:41, Stefano Brivio wrote:
+> > On Fri, 29 May 2026 13:23:57 +0200
+> > Fernando Fernandez Mancera <fmancera@suse.de> wrote:
+> >   
+> >> Chris Adams reported that preserving insertion order for same-scope
+> >> addresses is causing SSH connections to be dropped after stopping a VM
+> >> while running NetworkManager.
+> >>
+> >> NetworkManager caches the IPv6 address configuration, when a RA arrives,
+> >> it determines the list of addresses to configure and checks if the
+> >> addresses are already in the right order in the kernel. If they aren't,
+> >> NetworkManager removes and re-adds them to achieve the desired order.
+> >>
+> >> As the order changes, NetworkManager is confused and reconfigures the
+> >> addresses on every update. In addition, this would also affect to cloud
+> >> tooling that relies on IPv6 addresses order to identify primary and
+> >> secondaries addresses.  
+> > 
+> > By the way, I'm still looking into this part, trying to find
+> > "problematic" examples.
+> > 
+> > And I couldn't find any, yet, because it looks like there's always a
+> > _single_ IPv6 address being used as a secondary for a primary IPv4
+> > address.  
+> 
+> FYI, the order change also affected some specific scripts, e.g. here
+> with MPTCP and packetdrill:
+> 
+>   https://github.com/multipath-tcp/packetdrill/commit/1b7cd4482ce8
+> 
+> Because the order was not "natural" before, and different from IPv4, a
+> workaround was needed to keep the same order. I was happy to remove it,
+> but now it looks like I need to re-apply it :)
 
-The patch is there in 7.1-rc6, so it should propagate to -stable
-kernels over time.
+Ouch. :) We were are also pondering about some kind of workaround like
+that (https://bugs.passt.top/show_bug.cgi?id=175#c9) but fixing the
+kernel looked simpler and the right thing to do... until last week.
+
+> It would be nice to get the "natural" order back without breaking the
+> userspace (or with a way to choose the order).
+
+I was thinking that if we implement a label like NLM_F_INSERT_LAST
+(David's proposal for the name), we could patch iproute2 to set it on
+'ip address restore' at least, other than using it in pasta(1).
+
+But that wouldn't be enough for your case. At the same time always
+adding it for RTM_NEWADDR requests in iproute2 could break somebody
+else's scripts. I guess a reasonable solution could be to add an
+additional parameter for ip-address... 'insert_last'? 'last'?
+
+-- 
+Stefano
+
