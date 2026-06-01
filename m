@@ -1,94 +1,103 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.102])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8F1538E8B0
-	for <regressions@lists.linux.dev>; Mon,  1 Jun 2026 09:09:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.102
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E7C83769EE
+	for <regressions@lists.linux.dev>; Mon,  1 Jun 2026 12:13:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780304997; cv=none; b=agZaGReZM9wkdO7/G/Tg+4k3rM9BCZitxA6/XfvujRTm0/SqqC81zabWrLx7kBiUC52i9N98aa1SSpgNxNfu44IP3nyL12nXrbA/m0zQIq46rdWbmIIMT3tRQsX50fA9Bo396cp8KRZuN7qa160gPjDbrK0vmGbAg9bc3d0ETk8=
+	t=1780315987; cv=none; b=nAHQZT63OJt8/BMO1RM6VXBELeGfFt0/J8WFwCUHLYYeQvEPUzQ/FA2U0aiPGCH0jVFL8NS5QCL7o5drJUm3jrNePQD20pHXUC9SoIjRyIpwhzQMMVQ9B6WHuuT9XNUd0gymzgvtqwPWH9iVOyVFY96I1fcr7jKY2UpXL1NcIJ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780304997; c=relaxed/simple;
-	bh=G1Vmlr5olhz3CffWXDK7kFa2IR/+qT5rmCvOC9xgj0Q=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=flK3wFzLEwxBA4QnUEIXepO8fz5FG7x83xVHQsEhMCUNGxe9Ejc2G4niGKRPuSANM3NnYfYfBGBOfySjTmMZaqT+aqFgodpCh0tLAotpoEiWI8l660Be3ABziu1OlMnABq5vYwHlqAc93pOuWm1Gd2muqc/hIL4dn4jIzNnmMAo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=TeKghVtg; arc=none smtp.client-ip=188.68.63.102
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1780315987; c=relaxed/simple;
+	bh=EE8zdxlLBdtyKVtNHQ/sE40G22wZ24fiw+1NNUBUNpE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=He2jaD3sO6UMId9IPupXmMXIYi/I6jOTbZJYp4qSBXDtUzcvB6lHPYRbffpuYbOEMjOLltuqouNjyO3zO2QymDvSi+3HrgAe21fzqlXnuMKhOieKoJJdU3P35A4lT2OfSlMMo4VzveJy5nLnaoNQMwGeyppxD6HE8j91dkLUrMw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H2qU3NBt; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="TeKghVtg"
-Received: from mors-relay-2502.netcup.net (localhost [127.0.0.1])
-	by mors-relay-2502.netcup.net (Postfix) with ESMTPS id 4gTSpJ4RFyz6B7c
-	for <regressions@lists.linux.dev>; Mon,  1 Jun 2026 11:09:44 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1780304984;
-	bh=G1Vmlr5olhz3CffWXDK7kFa2IR/+qT5rmCvOC9xgj0Q=;
-	h=Date:Subject:From:To:References:In-Reply-To:From;
-	b=TeKghVtgpqK7QX48gjDx8NPEdoIO+FVzGeEleyB+i2XBqO7T7wpRAPJIbV9o/ywRz
-	 oLL4vLKlX1e0thR5iTJTliVbgguh9ujOds1KEKjJS8s+tQWxV5dwAqU3ozPFF6t/PU
-	 Rn4YjPw0FjrpdJ/1d6FL7hpfSUDRqw3/B+V2zLtrr964nqp5KiKSZ2pKHf/3qB7Ug2
-	 Av5w0iUYSlPgh0+g4vupy9OYKrjqT7BCXrGJsNcbr4b3+OptnDE78jDprkbRvvp5y9
-	 ZhsGXWeytsFk7h9ecrkRiGF61XHlf6D+g75klBLnORzxTACJQf3tTLmVDRoUi1VVnN
-	 myPSTnT8X9BSw==
-Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-2502.netcup.net (Postfix) with ESMTPS id 4gTSn74HK2z4ymG
-	for <regressions@lists.linux.dev>; Mon,  1 Jun 2026 11:08:43 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
-X-Spam-Flag: NO
-X-Spam-Score: -2.901
-X-Spam-Level: 
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4gTSn713gRz8tb3
-	for <regressions@lists.linux.dev>; Mon,  1 Jun 2026 11:08:42 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 87FBD6031E
-	for <regressions@lists.linux.dev>; Mon,  1 Jun 2026 11:08:42 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <2482fed3-9b30-483a-bdf3-31f507390fda@leemhuis.info>
-Date: Mon, 1 Jun 2026 11:08:40 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H2qU3NBt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2660D1F0089B
+	for <regressions@lists.linux.dev>; Mon,  1 Jun 2026 12:13:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780315986;
+	bh=EE8zdxlLBdtyKVtNHQ/sE40G22wZ24fiw+1NNUBUNpE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=H2qU3NBtM/mlzuAdg6nLaOMgdeAdLKOaLMRVE4Aru6bbdHooNwDd7oind7K6DaIEq
+	 BLTNKgeOI4prrqPiQtgd6yPrqcQ4+pGeomwtLHXSeAWARs1rtjNfy7AR0Aw2V7fuqo
+	 A4If/KdC6/28etvsDNvSbE5enOTnEiF1wKmjQi+ZU96FPltzntpaEM5xpp4O7a440t
+	 Gvi6OZbAmemC1nw6MCIZMNa1GDPbN5Kf/bRdKLAF07q9aSM0+Mmz+xVmoyuCs0rKwR
+	 W/ApjlKFsxNS+PQpNWWYsA49NEvusAFeCv3+TpOwk887BV7Cgh2RFsiVwgKWi7kahv
+	 h4pXsWkZwjTIw==
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-5aa68e66128so1187522e87.2
+        for <regressions@lists.linux.dev>; Mon, 01 Jun 2026 05:13:06 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ+5TWbzmkidZlgjkYl9OLq6dgM0uu0eLVdBMAOw9Ybkj7JMQf1acdanux2llzmnOzMYlvsoRCqZ4UdCTA==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yz9HzJUNXyw1306vVCd0AxEeDRGW2YIAxdKs9P9N4j9Cu7YFV2z
+	+EOozuLr1qrztT3vWcRJsRR57T4V8CgALblgVnbsrtA2icoipdWJKbpPNl9WSDjchkU3orlwqZI
+	x4Fzcp0sgh8VESaKxyMm9C9Xpp94/HV0=
+X-Received: by 2002:a05:6512:b0f:b0:5aa:b6a:6028 with SMTP id
+ 2adb3069b0e04-5aa60a737f2mr2825770e87.45.1780315984633; Mon, 01 Jun 2026
+ 05:13:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <178030492274.470212.15919390879682664188@mxe9fb.netcup.net>
-X-NC-CID: 4zAImWa/5Z4kwk9vhc+oCdoSCkM/sTFzqbO3YLCfF/k3DaUFX+E=
+References: <E2OXET.4X5GTP37VTNC3@kousu.ca> <CAJZ5v0jVQyWYqPo_MiUwNQb7FLNR_Q_++Xq=xA1owcHpcjN=OA@mail.gmail.com>
+ <bc9d5258-d4df-46a1-bba9-de3486f722ab@pelago.org.uk> <8503d297-68ca-4bfe-bbdf-537a85890d86@oss.qualcomm.com>
+ <75398536-2ca8-4205-9205-18afc5227397@pelago.org.uk> <eddc6acd74abcea6131f3cfc606bc596@kousu.ca>
+In-Reply-To: <eddc6acd74abcea6131f3cfc606bc596@kousu.ca>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Mon, 1 Jun 2026 14:12:50 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0hR2b81+0FWAn3s_HJNWwweRSVk35KczPBKNabb-H91kg@mail.gmail.com>
+X-Gm-Features: AVHnY4K_Z822qHW2vwRtmAL8a7QwaDE3vDxsro5_34x72v0jljpMM1KGU6NiT_I
+Message-ID: <CAJZ5v0hR2b81+0FWAn3s_HJNWwweRSVk35KczPBKNabb-H91kg@mail.gmail.com>
+Subject: Re: [REGRESSION] Toshiba Fn keys + lidswitch
+To: Nick <nick@kousu.ca>, John Veness <john-linux@pelago.org.uk>
+Cc: linux-acpi@vger.kernel.org, johannes.goede@oss.qualcomm.com, 
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, regressions@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
+	platform-driver-x86@vger.kernel.org, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Sun, May 31, 2026 at 10:35=E2=80=AFPM Nick <nick@kousu.ca> wrote:
+>
+> On 2026-05-31 11:17, John Veness wrote:
+> > On 30/05/2026 14:34, johannes.goede@oss.qualcomm.com wrote:
+> >> In case you've not seen it yet, Rafael send out the test patch
+> >> publicly later that day in another email in this thread:
+> >>
+> >> https://lore.kernel.org/linux-acpi/12896447.O9o76ZdvQC@rafael.j.wysock=
+i/
+> >>
+> >> Regards,
+> >>
+> >> Hans
+> >
+> > Thanks for the pointer, and sorry for missing that! I had only been
+> > looking in the archives of platform-driver-x86@vger.kernel.org which
+> > for
+> > some reason didn't receive the patch.
+> >
+> > John
+>
+> On 2026-05-31 11:25, John Veness wrote:
+> > I'm not Nick, but I have tested the patch here on my old Toshiba Tecra
+> > Z50-A
+> > and it seems to have worked - I now have Fn+keys working fine, after
+> > losing them
+> > in a recent kernel update (apart from Fn+3 for volume down, and Fn+4
+> > for volume up,
+> > which for some reason continued to work when the others didn't).
+> >
+> > John
+>
+> Same here. All my Fn keys work except for Esc through F8. Glad Rafael's
+> patch worked for you too! There's a newer copy of it at
+> https://lore.kernel.org/linux-acpi/2046403.PYKUYFuaPT@rafael.j.wysocki/T/=
+#t
+> by the way.
 
+Thank you both for testing!
 
-On 3/9/24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
-
-#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=221505
-#regzbot dup: https://bugzilla.kernel.org/show_bug.cgi?id=221473
-#regzbot fix: cpufreq/amd-pstate: Fix setting EPP in performance mode
-#regzbot monitor:
-https://lore.kernel.org/all/20260530154121.1670781-1-superm1@kernel.org/
-
-#regzbot report:
-https://lore.kernel.org/all/20260601085136.3124646-1-zhanxusheng@xiaomi.com/
-#regzbot introduced: a5242d37c83a
-#regzbot title: erofs: read error/EFSCORRUPTED on multi-algorithm images
-#regzbot fix: erofs: fix EFSCORRUPTED on multi-algorithm images in
-z_erofs_map_sanity_check()
-
-
-
+The patch is there in 7.1-rc6, so it should propagate to -stable
+kernels over time.
