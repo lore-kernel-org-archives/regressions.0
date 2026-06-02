@@ -1,43 +1,43 @@
-Received: from mail-10629.protonmail.ch (mail-10629.protonmail.ch [79.135.106.29])
+Received: from mail-24418.protonmail.ch (mail-24418.protonmail.ch [109.224.244.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B97D2382F1D
-	for <regressions@lists.linux.dev>; Tue,  2 Jun 2026 11:24:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.29
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FE9E3C9ECF
+	for <regressions@lists.linux.dev>; Tue,  2 Jun 2026 11:26:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780399450; cv=none; b=WAMMUCpCVj0NAXMa4EDB/GWZOTiCvpQcP/YuJDLbXgzKcLLBzQ4ejJd4WKvpyNN9RpYIBcc3sFH6pXBwdBTCTHRTT/J+SMNWuv0bO2Y0JMDs4olq76OTd2fdSAL8IO+40jVT7ueGiw6eZ+LT0tquR2C7rOxhWYwJi8KJ8dD8i1s=
+	t=1780399566; cv=none; b=YI7wBD6mdPqiQ7gqFgmxpXG2wO2vB3nHlRLlvUN7tW/mg3DLW413IXNANFk5ayd2wMLnGGKlcnrzFccwXxioTdet5aNTz4YmGhWL95TIIc7Z6T96IWdXTApjQHqn4ElqzXaCoot2RHjKeDCJhLQFiDJf30tmvrQdTpaCoXMEMfo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780399450; c=relaxed/simple;
-	bh=A5Y6PN1bspB+29ZXobNqASvZtb7ARzqH/4rIDMEU9eU=;
+	s=arc-20240116; t=1780399566; c=relaxed/simple;
+	bh=Pz62QgA5sydDrg/K6JTj/fvfr0i81/qK2+zQrnMrFeY=;
 	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ILYi4hANid5vn+afJs+R6RovaTxhCfD1HlQWd9hPUO5XwC0OrikPLKWFPAd5sIjTWkhBxx8UicMtxC65EPpdVuRKto0tK51KDV80pS/J75Xtei3Q/cVnNHHHNDPgq7jpKbpRU7iVBJo4dCCkHR4Wzh6B6pPrku6fv2ekT38/na0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=d05zKxK4; arc=none smtp.client-ip=79.135.106.29
+	 MIME-Version:Content-Type; b=XAcUpCyTYfEQt6ZBUPPukiNlc56L7Y3XDR1TNw1j8mmoA/3VRhL+NTrVJy9cvPDHhb1tV+nez1/33fS4OFbhdmsFpP7hWnKYAiio/GE5loEAdR/puMjtskT7Tysb+STtKRAEidWlaFqrO2kfPOzsoudKMuHxjMzDBcnYRS6QA/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=LBfNWYS2; arc=none smtp.client-ip=109.224.244.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="d05zKxK4"
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="LBfNWYS2"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1780399442; x=1780658642;
-	bh=a9fgN7nmhBc6vLl3TBFAXIuSjCzaskI50tzfoiuYcAQ=;
+	s=protonmail; t=1780399557; x=1780658757;
+	bh=Pz62QgA5sydDrg/K6JTj/fvfr0i81/qK2+zQrnMrFeY=;
 	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
 	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
 	 Message-ID:BIMI-Selector;
-	b=d05zKxK4I6mNSuKZe5/9uDirCkpaxM+npMK7dGREn0n2wIRn1cXCk9XgK7fPSCRty
-	 uejEtqudYvCl6R34paU5naihVnqGNAyBoJbfaUzkHHuXSkNNiPYm7G5iC2M/3ShEtc
-	 MbYsOosEDt0DSC03PgYA3C4eft9Nxk6M7xgV/PQT7DBouQV5g4SATcRCVleWTEDCHQ
-	 qStpqHvIf5JnFZMUYQRFGhcvoCOZxUZUdHXugzJaUtfkquW4BkFKR8QBqXX6dqEM7L
-	 jZ4rw6HFY7jlzNvR5lplsLdfHYFzk169tUhZtCQLV0lu+83yycLxmXtMq+SvrXlv36
-	 FZMDJR+d/zl3w==
-Date: Tue, 02 Jun 2026 11:23:57 +0000
+	b=LBfNWYS2Fh/wtB/Iu3e4+/JfZHsiOCawsX2MJO+YiVz3uczNAfhpjcrHB0YnTRrWO
+	 GBYeIxl7bMvkJ9mgg0zhp24QFpIEKVPSTnIhz2sEb+Gv080S+dvg2WVD3zK8B1Ow2g
+	 KGnddv202TByvv/Tdf8lun6LP4EFtshdnoHKa4ZJWLkEZCkXU8nB+8/xcKTCPjk0qX
+	 IpCOnUBpO862HD1XdPyrVbm7UJTRzI+U9Kj9ZHhN7Un/f7sICPU45R+zAaV7BtBoLp
+	 5tlkoAE753vRNER1VRhu2CjqI6BdziiPX2u2iJnaRN2Z3r1b5TpBwOD2XlDlkXvVS4
+	 kYOGc9aMefvoQ==
+Date: Tue, 02 Jun 2026 11:25:52 +0000
 To: Thorsten Leemhuis <regressions@leemhuis.info>, regressions@lists.linux.dev
 From: Tj <tj.iam.tj@proton.me>
-Cc: amd-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org, =?utf-8?Q?Timur_Krist=C3=B3f?= <timur.kristof@gmail.com>, Alex Deucher <alexander.deucher@amd.com>, =?utf-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-Subject: Re: [REGRESSION] RIP: 0010:vce_v1_0_set_powergating_state+0x5b8/0x600 [amdgpu]
-Message-ID: <43123501-2119-4ac6-b1cd-e59dfe6dca89@proton.me>
-In-Reply-To: <59f38ae7-2d5a-4dcf-bff9-7e58c36f36d4@leemhuis.info>
-References: <ah6q-k5wvRbW6k6e@mail.iam.tj> <59f38ae7-2d5a-4dcf-bff9-7e58c36f36d4@leemhuis.info>
+Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org, Rafael Passos <rafael@rcpassos.me>
+Subject: Re: [REGRESSION] RIP: 0010:hidinput_setup_battery.isra.0+0x6d/0x370 [hid]
+Message-ID: <21e69916-1cf1-462a-9578-145918a07de4@proton.me>
+In-Reply-To: <b84a408c-b12c-40e5-b44b-62aa072cb285@leemhuis.info>
+References: <ah6vRH9J9LSvnKWW@mail.iam.tj> <b84a408c-b12c-40e5-b44b-62aa072cb285@leemhuis.info>
 Feedback-ID: 113488376:user:proton
-X-Pm-Message-ID: 39e7211d699ec92de7dbeb1ae2dd89066f898786
+X-Pm-Message-ID: b930cfe45a05467e32eade3f4c0a9f3c5e328cfb
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -47,39 +47,18 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-v7.1-rc6 +=C2=A0 "drm/amdgpu: Align amdgpu_gtt_mgr entries to TLB size on a=
-ll=20
-SI" and confirmed resolves this issue. Thank-you.
-On 02/06/2026 10:22, Thorsten Leemhuis wrote:
-> On 6/2/26 12:06, Tj wrote:
->> Repeatedly hit this with 7.1-rc6. I haven't yet got time to do a bisect.
->>
->> $ lspci -nnk -d ::0300
->> 0a:00.0 VGA compatible controller [0300]: Advanced Micro Devices, Inc. [=
-AMD/ATI] Cape Verde GL [FirePro W4100] [1002:682c]
->>          Subsystem: Dell Device [1028:2b1e]
->>          Kernel driver in use: amdgpu
->>          Kernel modules: radeon, amdgpu
->>
->> $ journalctl --boot 5e39a2d49af2432c8f14f2a866a6b275 --priority=3Dwarnin=
-g
->> ...
->> Jun 02 09:25:11 sunny kernel: Linux version 7.1.0-rc6+debian+tj (linux@i=
-am.tj) (gcc (Debian 14.2.0-19) 14.2.0, GNU ld (GNU Binutils for Debian) 2.4=
-4) #446 SMP PREEMPT_DYNAMIC Mon Jun  1 07:32:2>
->> ...
->> Jun 02 09:25:11 sunny kernel: WARNING: drivers/gpu/drm/amd/amdgpu/vce_v1=
-_0.c:329 at vce_v1_0_set_powergating_state+0x5b8/0x600 [amdgpu], CPU#8: (ud=
-ev-worker)/251
-> Thx for reporting this. This is not my area of expertise, but from a
-> very quick look that seems to be the issue
-> https://gitlab.freedesktop.org/drm/amd/-/work_items/5336
-> for which Timur sent a fix:
+v7.1-rc6 + "HID: Input: Add battery list cleanup with devm action"=20
+confirmed fixes the hidinput/bluetooth issues. Thank-you.
+
+On 02/06/2026 10:54, Thorsten Leemhuis wrote:
+> On 6/2/26 12:24, Tj wrote:
+>> Hitting this repeatedly with v7.1-rc6. Do not have time right now to
+>> bisect it (and there are two other regressions at the same time).
+> Again, not my area of expertise, but this looks somewhat similar (but
+> also somewhat different!) to this recent regression report from Rafael:
+> https://lore.kernel.org/all/20260602011949.2825852-1-rafael@rcpassos.me/
 >
-> drm/amdgpu: Align amdgpu_gtt_mgr entries to TLB size on all SI
-> https://lore.kernel.org/all/20260525112204.12604-1-timur.kristof@gmail.co=
-m/
->
-> According to Alex it's making it's way through the ranks. Consider
-> testing it to ensure it really is the same problem.
+> Rafael (CCed) sent a fix for it already applied:
+> HID: Input: Add battery list cleanup with devm action
+> https://lore.kernel.org/all/20260602030519.3097058-1-rafael@rcpassos.me/
 
