@@ -1,203 +1,248 @@
-Received: from CH4PR04CU002.outbound.protection.outlook.com (mail-northcentralusazon11013026.outbound.protection.outlook.com [40.107.201.26])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BAED3264DA
-	for <regressions@lists.linux.dev>; Tue,  2 Jun 2026 13:21:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.201.26
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780406504; cv=fail; b=HDsE6tcwl6ww1ThVmbYelKrl0VEsAgoKUjR9mLYbiFqWl9LSksUFhnqbDuciLgjU8MnEHgnKQUQ+luimrZpOQ9KvPfSjXlJvK4be++fDb5o9zv6e3/ZXMQlPpDhCOoluOJKo+OOH4g4Mi++xvgAW4YXSE2SP5ouGvEauFcoI+Aw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780406504; c=relaxed/simple;
-	bh=9zqtNl7a9/tLNY2Y5BEKCg/OV2fxBsObvwcM/pjHrc8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=osFlH2eFbY4fnF8UBrzaURTsTtrWPOgKtQzrhFY69sxWTKchY1Twglr8YOKU48oHNFaymjc/ssIxi+/gBkxziCPO5gNGmuviYyuahKQxc4WDZZFwta6nYZ4sNsfDEyUNJwMoKCVLuLmgF5/0jGxH32MY2jLZQxghqxiGBJAz5F8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Nm5k1jQ5; arc=fail smtp.client-ip=40.107.201.26
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 511F83FC5C1
+	for <regressions@lists.linux.dev>; Tue,  2 Jun 2026 17:45:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780422322; cv=none; b=r0xtuDvdIzB3YVbIIgl8XhvbILKIrpNvvgiCA95bzdGgLMalnTLTxYa+YFG81TiMIXF8N/A8wiI+LLJxWVu6ag8y/F57oOTs4652dWfyH+j2J4R6qI4RiK2H2PPlWsT9Sex4Qu2wGJlYmPRAZK5+HWlcDP3hQe3GxYTfsaI8mgQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780422322; c=relaxed/simple;
+	bh=xts6qQ534694Mm/S4A1BHBCd21Jsj+ab9M4kr0sTKIY=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=HgFiJTqHGoVqW2CswsNaNJcJ5LOlE0lsTOLW75XYREXVteGAewbKV71ONH3lgyDeyy51iDWkFhtgWFw17+LFim7ag8HmEl8j9F3u4vpsSaE6TygplDTcvrqBfpcxPCHknokOvrNvamSLHmItedsCdp217EVgQxtcc9WDGSudRGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=EEyDlwlh; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=qXhKCi2j; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Ze3PPXkR; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=RUAAcjtK; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Nm5k1jQ5"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=jzlEU25+Rm4RI8U+kgD47PWK5P+jE36NlnMyouGlVRlSo7t7ZNrTl1ER+egAnycSOvJZ8fs0cYuAACMsv3UFwbdeThYYMM+OAz2RuP+LLBbALL3F0OQJ1F1Xf2ufZ5FZO6pFGLHHb1rKxKVU4zFtXZSBnfu56H1HDBb9izedE3G0ZKeVnYMqn86ISW8gOZ0GqXCmbx5qdhi+n23UNXf1A2jGyd+l+8pG9Ocb3hfkav4OoqxjLadlcX19A/VyajVlQOX1c0IxlRf6WO36okTQhd5SPTRKY4TJh2yrdkDJImDt6lREoVZTZT0DLvczPw659ZQPIIlMACuqh0P9IPAJBg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=GPQYRG7//VYXwFJvW7QIv2Lda1Pnk1pM45bESsjr5Ko=;
- b=Xb3aQ20SNBd8Ih0x/FB5p2FADdaRIcmxf1xGr7FuVci6zFareJHxZq0XQVLvQFs7cdA3KlgMjHuiohghweo1fq4l/ny/MAJ7ezucurMBQCv/RsKe3adaJ387OGE6qt2ahoh2QimKN9KAAbAIiNIpdaIkJSyvL1aqa8LKyBlvXNxf2/5EJttpRhGcBGF3cGQ/GvDmQP6dp5zWfUo6/onw6/6qDcegHLXhcu+bO3PTqG1G2J73qaNXfQ2pXQ4uB3E82CCaVh8WxlibxuYsvrmTO9iitG8Nc4KVqHCUfHF2Vew1Z0Z4kQ8nzufW8tZlPGMg5t1kPb+/Ay3lFHmzbNXBuQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GPQYRG7//VYXwFJvW7QIv2Lda1Pnk1pM45bESsjr5Ko=;
- b=Nm5k1jQ5tRdh7KpAF6O1warDYbzGSsD225UlISom/xLuHbilaCoBnAuFqQhTT8VajcPZXpgn2YwAEsoGdXFJ0aTFgI2BLUcnN7OKM5NPJI00v9pKtMsaYjjxo0yhAbWn2SKPltzb1jnPJzhMaBHCOpagdyfDNe1hrrhCr1gx3n3oRLplzCX2DMi7EvHGRPKi1VvJX7BzSnRXiepoQgMa/5teQbDFmXnkeJb6sJP1RMtylpedT2zOXtBQoBhxy0QPhtkqR5dvjq9Jpi9AOWLeTbTPS2528eU/viXdB2h3ImBcuNCoDD8yvTS6URakEM5nudMA42vDFEXJzKNUYxxnhw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from SA3PR12MB7901.namprd12.prod.outlook.com (2603:10b6:806:306::12)
- by DM4PR12MB7670.namprd12.prod.outlook.com (2603:10b6:8:105::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.71.16; Tue, 2 Jun 2026
- 13:21:31 +0000
-Received: from SA3PR12MB7901.namprd12.prod.outlook.com
- ([fe80::6f7f:5844:f0f7:acc2]) by SA3PR12MB7901.namprd12.prod.outlook.com
- ([fe80::6f7f:5844:f0f7:acc2%6]) with mapi id 15.21.0092.006; Tue, 2 Jun 2026
- 13:21:28 +0000
-Date: Tue, 2 Jun 2026 16:21:18 +0300
-From: Ido Schimmel <idosch@nvidia.com>
-To: David Gibson <david@gibson.dropbear.id.au>
-Cc: Stefano Brivio <sbrivio@redhat.com>,
-	Fernando Fernandez Mancera <fmancera@suse.de>,
-	netdev@vger.kernel.org, yuhuang@redhat.com, justin.iurman@gmail.com,
-	horms@kernel.org, pabeni@redhat.com, kuba@kernel.org,
-	edumazet@google.com, davem@davemloft.net, dsahern@kernel.org,
-	Chris Adams <linux@cmadams.net>,
-	Beniamino Galvani <bgalvani@redhat.com>,
-	Thorsten Leemhuis <regressions@leemhuis.info>,
-	Andrew Lunn <andrew@lunn.ch>, ihuguet@redhat.com,
-	regressions@lists.linux.dev
-Subject: Re: IPv6 address insertion order (was Re: [PATCH net v2] Revert
- "ipv6: preserve insertion order for same-scope addresses")
-Message-ID: <20260602132118.GA508395@shredder>
-References: <20260529112357.5079-1-fmancera@suse.de>
- <20260529134045.56330243@elisabeth>
- <ah57wxGjL7JBORR1@zatzit>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ah57wxGjL7JBORR1@zatzit>
-X-ClientProxiedBy: TLZP290CA0001.ISRP290.PROD.OUTLOOK.COM
- (2603:1096:950:9::14) To SA3PR12MB7901.namprd12.prod.outlook.com
- (2603:10b6:806:306::12)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="EEyDlwlh";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="qXhKCi2j";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Ze3PPXkR";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="RUAAcjtK"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id EDA976C009;
+	Tue,  2 Jun 2026 17:45:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1780422313; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lu4UfJ/uxJdMYzOhZ1NYp7qD1lKEW76JZx60l7/sK4s=;
+	b=EEyDlwlhGRvG66ZJ+71nKOi4fgg53huF/vLT6gNAAJ6/urwXTSqlwy660R4bcirBOMIprx
+	lt6Ksf9el5Khb4dr2lQA1/it5z/tpShIbiyjZO8CuXPe1MhJuP1eQRpM2X3M+pl7oMxuv2
+	ogtVGdh2xLJYkTq20JjXONNCFUPbPhM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1780422313;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lu4UfJ/uxJdMYzOhZ1NYp7qD1lKEW76JZx60l7/sK4s=;
+	b=qXhKCi2jM6o++1h7BocoQCByvoUy9F1tFVCrRhXE7nI89lVLSTm0Vyorx4cqUvnAQ2IvXs
+	TZKbqGSTuh25IABQ==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1780422312; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lu4UfJ/uxJdMYzOhZ1NYp7qD1lKEW76JZx60l7/sK4s=;
+	b=Ze3PPXkR6RVjekLzy+QxL15Rumtx/D5omtpOR/2evHMkXFf2EAOTZR9A/qw1MVlt1TG03A
+	zQIxdwT0/f3/itVEeoXTT6c2dIN3ButzuktSZfKxEQFHE9b1e8Av9BkhzFBf/la4aFiTZc
+	+ISCiIrhGA/dTrnigCC6D0jjRiUKeD0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1780422312;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lu4UfJ/uxJdMYzOhZ1NYp7qD1lKEW76JZx60l7/sK4s=;
+	b=RUAAcjtKnb3rnFMOUQSIkywATnSX0wnFlPLdmVVps312lJuVhQaQStWlKKctPoxWQarMrw
+	slI6CphqsSdb2mAg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B306A779A7;
+	Tue,  2 Jun 2026 17:45:12 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 2hRlKqgWH2qiMgAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Tue, 02 Jun 2026 17:45:12 +0000
+Date: Tue, 02 Jun 2026 19:45:12 +0200
+Message-ID: <87wlwgygyf.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Kailang <kailang@realtek.com>
+Cc: Takashi Iwai <tiwai@suse.de>,
+	Mike Karcic <mikekarcic@protonmail.com>,
+	Sean Rhodes <sean@starlabs.systems>,
+	"stable@vger.kernel.org"
+	<stable@vger.kernel.org>,
+	"regressions@lists.linux.dev"
+	<regressions@lists.linux.dev>,
+	"linux-sound@vger.kernel.org"
+	<linux-sound@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [REGRESSION] Speaker pop/chirp on Meteor Lake ALC287 (17aa:231e) -- 6.12.73 to 6.12.85
+In-Reply-To: <833d600fdebd4aaeab6706185ce854e6@realtek.com>
+References: <O6pYAi7yf23du9ivLsL0QqrnTmodj2lDTL7Wviv7I_nhjVtvllO7Y5Ban0TeTqrastb1RWhJtlkqrM3quLMWSriai-YjjGy312MTcEhxyWs=@protonmail.com>
+	<CABtds-3GOyBr1H=c5aFV1uzfkhO3d1NHMPuon_cWDq0V=pFwUA@mail.gmail.com>
+	<wZmYozyav1sNx53nFr4ShKmcdLFVJp5bdUOJgUq1I57MX6kgyq7n8XvH-MWG9Fi4q2x4CQqjEQ3Q8ok5MClut8hNixnhVmVtXkhcOzH1sw8=@protonmail.com>
+	<87eciwukvy.wl-tiwai@suse.de>
+	<RfzfjlzeaeMgNNWNST_Zzx1v49rYjM63MvAV6O5_fFIoZJ73GcN69FDLJcwhJ3s6fl9TVD2l45YBh2n3hy95LM7rhLhoVt8dU9stMkuVJvE=@protonmail.com>
+	<87mrxjsk52.wl-tiwai@suse.de>
+	<bibLdgyll9YOEDANdCBy8WOqeOeJry1SnahLR-EhoGkttJ6BE2srDZ9jv0gjkt0bA19aKivruQs3nkMQWbdEXPaOrLT80xjzF4KJvDcB-IU=@protonmail.com>
+	<87cxyfs2vm.wl-tiwai@suse.de>
+	<833d600fdebd4aaeab6706185ce854e6@realtek.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/30.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA3PR12MB7901:EE_|DM4PR12MB7670:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4c54ad8d-d79d-4c65-efc7-08dec0a9da53
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|376014|7416014|6133799003|22082099003|18002099003|56012099006|11063799006|4143699003|5023799004;
-X-Microsoft-Antispam-Message-Info:
-	kSZHcM4dxWmoFxNRqS679vfp0r1IqHK/l34YcSzMicxSJ2UYcLWqgvc7G2zzTHItXByruuG0xQ0Hf2knSIBuAGeIVkownG4WQ5LdDpGUDbIkymOGo1SoYZ2G5P4qEg7XjRov8EgHwh3wypdmEPjMJyjA+jXfAWNBkC82Ljz1upQbv20tOuYtMOwhSW0Ky/kH/ck6Lokr8D+JJ56ORkmjQPbsALX1AWC14ZTRF491q8XG8OXL6Vg4Zj4fG8X4glwLvEW827EOv06xYl3zNHInrj9UlesG5B46giSMYongCZVVysUWRAoWNUU81YDkTV1xrDCef2q5NO9Z+p2EhyBRNabN8kZuJX+HpBQLfTT8xMzoDSK6EvEGYSrgyqv2taUo55CfgOcZt1YoFYVmLuRMnQQeQulcKxU1OBa4OlzJ6QXFm39FUmtAocVykR89seszTFDmsbk5/E/dFaDsHckFDtTna1hQLpqPyQTugOWl8xxakXHil+/DRoduR9QdN9JfAu77ClRrs6zzNDyDyvFO6KxhE0BYORnHxwELXRO7Soo/NXotsT/HZA7yTWtiM6ySkNEqxV6jLyqYTIhlT0atWP2N4+LZSp/GHgPoVJfPeq1JzDo5apq2CVMEMpwDjwGWQzeQ76T1WfjuIKFTGd2GrgDm6AwdNnrTm19RhIrrul07CwGjxiJ0CJa9PEswfDkt6SmOGbn243odzEPAm3uU7A==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA3PR12MB7901.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(6133799003)(22082099003)(18002099003)(56012099006)(11063799006)(4143699003)(5023799004);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?5y9jUkO6Cz9bkH2W/xgSlvFkyCDR7BTEycm5dzw4rzU7uwGRmBju9YJPYymr?=
- =?us-ascii?Q?ld0HaptE0WiBd5LYRk23f39uTZFpSwnqta1st35N+A2lOGaZoW9fHVgr+buY?=
- =?us-ascii?Q?CiN1tgVxaALl+3g7QixGAbWqn3K++0d9kLHzimLqYiT+hLKF4PP9Wt3occcM?=
- =?us-ascii?Q?8DFZLz4nw2Qlj7oAw4j8B+f7lMpEnbkYaHbppnMs18ElY+gdW6ceNsmJtfLU?=
- =?us-ascii?Q?GP51cLOvNGv0kNH60tG7rr/2Hnh6M5lJp+cFEE/mi4Mtgi0xI/rE6hLB7mMu?=
- =?us-ascii?Q?BBXPIdHW9bXax2FWD1PRDOMGMKUO9tiBOnxnuAn8EEu4AlsttRuKqut+OOHf?=
- =?us-ascii?Q?xeutjkG/c1UFwL54/OgQTyAtcxpC5n+NGAvQNQRZGBTusH06dYdGJ4l1Ok0B?=
- =?us-ascii?Q?OgWTOgT9+TyJQ2IY4JsupmaoawcEgXAOPmcRGRJsyJ0ALQCMTcxtl1Nh5Dgk?=
- =?us-ascii?Q?atJWHD/PteG5tQBM0WM2mbY5CVRGdTzTIQax+eQngUUtPYw2MLUiANgECO7j?=
- =?us-ascii?Q?6ymzLBINk0pLc1DUOj2ouE8qpQswo6ZZuJBcPKv24Ge0uyTRghKQksVMss7d?=
- =?us-ascii?Q?KRdp9APavAdF2yBU6+lUyDuM9WqP/lT0QdOe9NBrUdl6Ip7SYChU/xv3L6zX?=
- =?us-ascii?Q?dBIgS0lUtL4FkEZYLF4dlDu7mrB+MSg08mlD2LhhKEUxYUiB92Y0TdC+MTkX?=
- =?us-ascii?Q?b3zX8W3Ga7o47Fwemgrf560z5/r2enzNc4Zd0rnQd0tyfWXkhdGWF74UPx6T?=
- =?us-ascii?Q?+7Ps9a9Hs0KfPSdQFSSvK/3ejFrST9sOprlNrgdEPUs36UdIUb86jldtmPUD?=
- =?us-ascii?Q?WBWK7MpKQtwF4F7UwRSVsRhOpJVfYCZyJ+LpCZyLEOjT/d+kpZlkGJ+k0OgT?=
- =?us-ascii?Q?ZGA8QYQQvYhVOMkUEWH2S+amtNKx1bHqQojBPbkMjIMrIRSBp0qUeRA4Hted?=
- =?us-ascii?Q?WTC8WORcOyB+jaUasYX13rJZN3uCIO7b31SttV2wFHU/AaTSO5GUqsy8gVX8?=
- =?us-ascii?Q?VPq1j2C3QU8kLgTnFiImjiA8jlt7+PF6f/Gbwz/6wTIgIuHyUKq1eLQjK4NC?=
- =?us-ascii?Q?0ZPZNmq6qVvHmFZCQTpFFZt8hp3O8W/3Q6r4XFpOKjmjAbWdoh7OFQHPB2+/?=
- =?us-ascii?Q?nKO11XWwKdGIp9KWKUJINs3z4gv9RNvTgCig5TniKSUvWVmlkpZSgBYtFz30?=
- =?us-ascii?Q?9BouXwXPvzMbTiYGOGEZhdZlIiRRDV2aTUoSiV2jmRrcGN4q4ROb1m08U0O1?=
- =?us-ascii?Q?f2zxzRgDlORNO3jQXBuBc9DIu+QFZxwC3Bn99XSXqrCb2Yz0yz83To56uqa6?=
- =?us-ascii?Q?S29ACs/HD8Qa3lWn0b935e10RZyUsj0XMDeIC/gr8NxdiJqxDSK0cTNNa35j?=
- =?us-ascii?Q?CGIZ4asgkWuqa1a27ygejU077MDRgDd/eT1FrLBlS85ojH1OLbWShSuOFKLV?=
- =?us-ascii?Q?NlbBG9Y48d6bC/zRAv2L7kyt6ig5611DDyfvuGqKEcCHuSIhdEntnqahoBoP?=
- =?us-ascii?Q?Evm3tojYVW4+aXg51wCY1bj+mQAzsvax2GR8Qib06bOmRBm/ErPbvD4FYlsq?=
- =?us-ascii?Q?3ALxD1LdRqVfkfr0oSxN9a2/FHd7Q7e40jb7wVkaBQbXYjMP956rCa5xsVGH?=
- =?us-ascii?Q?UJ9SKkuyZOsFtjwoxkYuiN18l4XqmirOtKMlOWUkNueHKBt/DF6DFWczeVFp?=
- =?us-ascii?Q?PjiFb2Hknsqtw+EUQGrVT1OssvsMxudQfTp0ZKnjcipAqUIU?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4c54ad8d-d79d-4c65-efc7-08dec0a9da53
-X-MS-Exchange-CrossTenant-AuthSource: SA3PR12MB7901.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jun 2026 13:21:28.1257
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: /TtzeIO/47gZA1qTkcABIjnKmJd5DTqgABYao64YkpUjdzcW7SP2gXFXlmKcV0kk/VQdtt58WPRJXVhX2rWdpA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB7670
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Flag: NO
+X-Spam-Score: -3.30
+X-Spamd-Result: default: False [-3.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_TLS_ALL(0.00)[];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	FREEMAIL_ENVRCPT(0.00)[protonmail.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[suse.de,protonmail.com,starlabs.systems,vger.kernel.org,lists.linux.dev];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:mid,protonmail.com:email,linux.dev:email,imap1.dmz-prg2.suse.org:helo]
+X-Spam-Level: 
 
-On Tue, Jun 02, 2026 at 04:44:19PM +1000, David Gibson wrote:
-> I get the impression there's a rough consensus that the best we can do
-> now is revert this change (already done), and make a new patch which
-> changes the insertion order to the "correct" one conditional on a new
-> flag.
+On Tue, 02 Jun 2026 08:14:14 +0200,
+Kailang wrote:
 > 
-> Stefano has enough other fires to fight, so I'm taking a look at
-> implementing that.  Some initial thoughts, that I'm soliciting
-> feedback on:
 > 
-> 1) I'm assuming the idea here is to add the new flag to nlmsg_flags in
->    nlmsghdr
-> 
-> ifa_flags in ifaddrmsg would be the other candidate, but it looks like
-> it's encoding properties of the address itself, not about the action
-> of inserting it.  Plus all its bits are allocated, anyway.
-> 
-> 2) Could we re-use NLM_F_APPEND?
-> 
-> The short description of this existing flag in linux/uapi/netlink.h is
-> "Add to end of list" which sounds like the right thing.  Looking
-> closer, however, it seems like what is' used for so far is things
-> where the entity added with the NEW<whatever> operation is itself a
-> list, and NLM_F_APPEND causes it to be added to rather than replaced.
-> It's not used for addresses at present, AFAICT the list of addresses
-> is a semantic level above the address entity itself.
-> 
-> So maybe re-using it for the thing I tentatively called
-> NLM_F_INSERT_LAST would be confusing?
-> 
-> On the other hand, it's not used for addresses at the moment, so
-> AFAICT there's nothing actually preventing us reusing it for this
-> purpose. That would save a bit - we only have 2 general and 4 NEW
-> specific bits left, by the looks of it.
+> There were the same SSID for two different symptoms.
+> But this project was from 2025. This machine maybe didn't in our site.
 
-This is not really viable. Even if the kernel is not using NLM_F_APPEND
-for RTM_NEWADDR, but not rejecting its presence either, then we can
-create a change in behavior for a user space that is currently setting
-it (intentionally or not).
+Aha, that can explain the difference of the behavior, then.
+Do both of them have the same codec ID and SSID, too?
 
-Example:
 
-https://lore.kernel.org/netdev/27c249d80c346a258cfbf32f1d131ad4fe64e77c.camel@debian.org/
+Takashi
 
 > 
-> 3) What other things might need changing to take advantage of the
->    kernel change
+> -----Original Message-----
+> From: Takashi Iwai <tiwai@suse.de> 
+> Sent: Friday, May 29, 2026 4:20 AM
+> To: Mike Karcic <mikekarcic@protonmail.com>
+> Cc: Kailang <kailang@realtek.com>; Takashi Iwai <tiwai@suse.de>; Sean Rhodes <sean@starlabs.systems>; stable@vger.kernel.org; regressions@lists.linux.dev; linux-sound@vger.kernel.org; linux-kernel@vger.kernel.org
+> Subject: Re: [REGRESSION] Speaker pop/chirp on Meteor Lake ALC287 (17aa:231e) -- 6.12.73 to 6.12.85
 > 
-> My innitial testing suggests that unknown nlmsg_flags bits are
-> currently ignored by the kernel.
-
-Which is a problem... From the looks of it, the same is true for
-ifa_flags.
-
-> That means that tools for which the new behviour is desirable, but not
-> essential may be able to avoid probing - they can set the bit and
-> hope.  I think that includes passt/pasta and also iproute's
-> save/restore functionality.
 > 
-> That said, things which might want updating:
->  - iproute2 to use this for save/restore
->  - netlink(7) man page to detail the new flag / new flag semantics
->  - passt/pasta
->  - network-manager, here we require the exact behaviour be maintained,
->    so it would have to attempt the new flag, then apply the existing
->    workaround (reversing the order itself) if that fails.  Maybe more
->    trouble that it's worth?
+> External mail : This email originated from outside the organization. Do not reply, click links, or open attachments unless you recognize the sender and know the content is safe.
 > 
-> Any others people can think of?
-
-The safest route is probably a new attribute and a corresponding keyword
-in iproute2. Note that new iproute2 versions need to be able to work
-with old kernels, so iproute2 cannot use the new attribute by default
-(it will be rejected by old kernels).
+> 
+> 
+> On Thu, 28 May 2026 20:27:30 +0200,
+> Mike Karcic wrote:
+> >
+> > Yes, I can confirm the patched kernel is running, and commenting out that line fixes the problem completely.
+> >
+> > Below is output with the added debug lines as requested:
+> >
+> > $ uname -r
+> > 6.12.90-debug-no-discoefs
+> >
+> > $ sudo dmesg | grep -i "alc287_alc1318"
+> > [  453.823528] snd_hda_codec_realtek ehdaudio0D0: 
+> > alc287_alc1318_playback_pcm_hook called action=0 [  453.871577] 
+> > snd_hda_codec_realtek ehdaudio0D0: alc287_alc1318_playback_pcm_hook 
+> > called action=1 [  459.605379] snd_hda_codec_realtek ehdaudio0D0: 
+> > alc287_alc1318_playback_pcm_hook called action=2 [  459.605497] 
+> > snd_hda_codec_realtek ehdaudio0D0: alc287_alc1318_playback_pcm_hook 
+> > called action=3
+> >
+> > $ grep -n -A5 -B2 "alc_process_coef_fw.*dis_coefs" sound/pci/hda/patch_realtek.c
+> > 7918-           return;
+> > 7919-   alc_update_coef_idx(codec, 0x10, 1<<11, 1<<11);
+> > 7920:   /* alc_process_coef_fw(codec, dis_coefs); */ /* commented out for testing */
+> > 7921-   alc_process_coef_fw(codec, coefs);
+> > 7922-   spec->power_hook = alc287_s4_power_gpio3_default;
+> > 7923-   spec->gen.pcm_playback_hook = alc287_alc1318_playback_pcm_hook;
+> > 7924-}
+> 
+> Hm, then the previous fix doesn't seem working, obviously.
+> Kailang, could you check this in your side?
+> 
+> Maybe we should apply the AMP-silence-detection disablement conditionally to certain models?
+> 
+> 
+> thanks,
+> 
+> Takashi
+> 
+> >
+> >
+> >
+> > Sent with Proton Mail secure email.
+> >
+> > On Thursday, May 28th, 2026 at 10:07 AM, Takashi Iwai <tiwai@suse.de> wrote:
+> >
+> > > On Thu, 28 May 2026 15:38:54 +0200,
+> > > Mike Karcic wrote:
+> > > >
+> > > > I did test 46c862f5419e on 6.12.90. Chirp still present.
+> > > >
+> > > > I'm also on a ThinkPad X1 Carbon Gen 12 with ALC287 (17aa:231e), 
+> > > > same as the original reporter. The fix resolved it for them but 
+> > > > not for me.
+> > > >
+> > > > Only a full revert of 630fbc6e870e resolves the issue.
+> > > >
+> > > > Verification on the running kernel:
+> > > >
+> > > >   $ grep -c "dis_coefs" sound/pci/hda/patch_realtek.c
+> > > >   2
+> > > >
+> > > >   $ grep -c "en_coefs" sound/pci/hda/patch_realtek.c
+> > > >   0
+> > > >
+> > > >   $ sed -n '/alc287_alc1318_playback_pcm_hook/,/^}/p' sound/pci/hda/patch_realtek.c
+> > > >   static void alc287_alc1318_playback_pcm_hook(struct hda_pcm_stream *hinfo,
+> > > >                                      struct hda_codec *codec,
+> > > >                                      struct snd_pcm_substream *substream,
+> > > >                                      int action)
+> > > >   {
+> > > >           switch (action) {
+> > > >           case HDA_GEN_PCM_ACT_OPEN:
+> > > >                   alc_write_coefex_idx(codec, 0x5a, 0x00, 0x954f);
+> > > >                   break;
+> > > >           case HDA_GEN_PCM_ACT_CLOSE:
+> > > >                   alc_write_coefex_idx(codec, 0x5a, 0x00, 0x554f);
+> > > >                   break;
+> > > >           }
+> > > >   }
+> > > >
+> > > > Happy to test further patches.
+> > >
+> > > Just to be sure, could you verify that you've tested really the 
+> > > patched kernel, e.g. by adding a debug print, etc?
+> > > If yes and the problem is seen even with the patch, try to comment out
+> > >   alc_process_coef_fw(codec, dis_coefs); and confirm that this fixes 
+> > > the problem.
+> > >
+> > >
+> > > Takashi
+> > >
