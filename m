@@ -1,43 +1,43 @@
-Received: from mail-07.mail-europe.com (mail-07.mail-europe.com [188.165.51.139])
+Received: from mail-10629.protonmail.ch (mail-10629.protonmail.ch [79.135.106.29])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6060F394463
-	for <regressions@lists.linux.dev>; Tue,  2 Jun 2026 11:07:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.165.51.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B97D2382F1D
+	for <regressions@lists.linux.dev>; Tue,  2 Jun 2026 11:24:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.29
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780398447; cv=none; b=FyAfcwia9HsY6NvakqxjvW/jIi7fXvts/V40Q9tldT3p5a9TxIM7sfAnNQA91rqmZ7KS2HLbGSLvFn87nzMAlcyk+1CIzjko0xTNZ6iOmNI/tTmLwXsUfGog+hz1ud/muaGzd948qPrxGR/PvsoiLSkIZ7H+4AS2pn3ROgj2wTo=
+	t=1780399450; cv=none; b=WAMMUCpCVj0NAXMa4EDB/GWZOTiCvpQcP/YuJDLbXgzKcLLBzQ4ejJd4WKvpyNN9RpYIBcc3sFH6pXBwdBTCTHRTT/J+SMNWuv0bO2Y0JMDs4olq76OTd2fdSAL8IO+40jVT7ueGiw6eZ+LT0tquR2C7rOxhWYwJi8KJ8dD8i1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780398447; c=relaxed/simple;
-	bh=1qzmhBhHc1ChB3XRzqrfwnaRoNmEoaSKgqyZdZ8pq7A=;
+	s=arc-20240116; t=1780399450; c=relaxed/simple;
+	bh=A5Y6PN1bspB+29ZXobNqASvZtb7ARzqH/4rIDMEU9eU=;
 	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oQ24L/xh9XB9FpHrAxQnIJxdmX/G8bF4STdV4ATrap7ukQFBexNEF2z4wnB6zO2h9an22R6akXCiAf+4rhCZJQERHQDN5889vSLwvEiy8pvX/ISYj74UvnwCkm1Tp3vAiGFKqdBqTbokjKVGY/ZgofHGGN/BXfHgGYEqyO3yzs8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=Onb5kYr6; arc=none smtp.client-ip=188.165.51.139
+	 MIME-Version:Content-Type; b=ILYi4hANid5vn+afJs+R6RovaTxhCfD1HlQWd9hPUO5XwC0OrikPLKWFPAd5sIjTWkhBxx8UicMtxC65EPpdVuRKto0tK51KDV80pS/J75Xtei3Q/cVnNHHHNDPgq7jpKbpRU7iVBJo4dCCkHR4Wzh6B6pPrku6fv2ekT38/na0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=d05zKxK4; arc=none smtp.client-ip=79.135.106.29
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="Onb5kYr6"
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="d05zKxK4"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1780398427; x=1780657627;
-	bh=v01/alylbHJjCYWLYbLJhhJYmKJQqRdAcaqyreYlIBE=;
+	s=protonmail; t=1780399442; x=1780658642;
+	bh=a9fgN7nmhBc6vLl3TBFAXIuSjCzaskI50tzfoiuYcAQ=;
 	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
 	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
 	 Message-ID:BIMI-Selector;
-	b=Onb5kYr6fsrAHNBSDvHgHAPk9/DpLjHij88k/GKEHL3m0NWrXsuGqPSvA5S+ga+vZ
-	 uQlZsbLYY4WsbAmz6t772dZqCzqsRl6JcuiZKnknss9+rBzj3+A1DhLNnSAlfGrLn7
-	 yvtyJkktbGe/Isz/dIntljGQXtLq29qQg9wY4SrgHgY5rpWfzWNOuYwDkbj15w3anX
-	 1ch/n689fC9gZ2XzF2PwE2SRWHY8/yz2o1QunR23//IC9D5eV1oljNwPNZ8VBr8LB0
-	 t3DDyrf3sLdfCMrGKnQssfY4TMqwobVl9YSyiI1/Y5FL8We8Nq/kAm9k2BT2jjg/Ty
-	 Qz8zWQ5U5GnRA==
-Date: Tue, 02 Jun 2026 11:07:03 +0000
+	b=d05zKxK4I6mNSuKZe5/9uDirCkpaxM+npMK7dGREn0n2wIRn1cXCk9XgK7fPSCRty
+	 uejEtqudYvCl6R34paU5naihVnqGNAyBoJbfaUzkHHuXSkNNiPYm7G5iC2M/3ShEtc
+	 MbYsOosEDt0DSC03PgYA3C4eft9Nxk6M7xgV/PQT7DBouQV5g4SATcRCVleWTEDCHQ
+	 qStpqHvIf5JnFZMUYQRFGhcvoCOZxUZUdHXugzJaUtfkquW4BkFKR8QBqXX6dqEM7L
+	 jZ4rw6HFY7jlzNvR5lplsLdfHYFzk169tUhZtCQLV0lu+83yycLxmXtMq+SvrXlv36
+	 FZMDJR+d/zl3w==
+Date: Tue, 02 Jun 2026 11:23:57 +0000
 To: Thorsten Leemhuis <regressions@leemhuis.info>, regressions@lists.linux.dev
 From: Tj <tj.iam.tj@proton.me>
-Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org, Rafael Passos <rafael@rcpassos.me>
-Subject: Re: [REGRESSION] RIP: 0010:hidinput_setup_battery.isra.0+0x6d/0x370 [hid]
-Message-ID: <9fb130e7-29ab-485f-81aa-e3ecfd9eb1de@proton.me>
-In-Reply-To: <b84a408c-b12c-40e5-b44b-62aa072cb285@leemhuis.info>
-References: <ah6vRH9J9LSvnKWW@mail.iam.tj> <b84a408c-b12c-40e5-b44b-62aa072cb285@leemhuis.info>
+Cc: amd-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org, =?utf-8?Q?Timur_Krist=C3=B3f?= <timur.kristof@gmail.com>, Alex Deucher <alexander.deucher@amd.com>, =?utf-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+Subject: Re: [REGRESSION] RIP: 0010:vce_v1_0_set_powergating_state+0x5b8/0x600 [amdgpu]
+Message-ID: <43123501-2119-4ac6-b1cd-e59dfe6dca89@proton.me>
+In-Reply-To: <59f38ae7-2d5a-4dcf-bff9-7e58c36f36d4@leemhuis.info>
+References: <ah6q-k5wvRbW6k6e@mail.iam.tj> <59f38ae7-2d5a-4dcf-bff9-7e58c36f36d4@leemhuis.info>
 Feedback-ID: 113488376:user:proton
-X-Pm-Message-ID: b3a3ad67b3807b3c9f8b2c7939da36ecb4947666
+X-Pm-Message-ID: 39e7211d699ec92de7dbeb1ae2dd89066f898786
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -47,187 +47,39 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-Thanks once again! That does look likely. Added this and the amdgpu=20
-patch and doing a build now. Will report back for both if any progress,
-
-On 02/06/2026 10:54, Thorsten Leemhuis wrote:
-> On 6/2/26 12:24, Tj wrote:
->> Hitting this repeatedly with v7.1-rc6. Do not have time right now to
->> bisect it (and there are two other regressions at the same time).
-> Again, not my area of expertise, but this looks somewhat similar (but
-> also somewhat different!) to this recent regression report from Rafael:
-> https://lore.kernel.org/all/20260602011949.2825852-1-rafael@rcpassos.me/
+v7.1-rc6 +=C2=A0 "drm/amdgpu: Align amdgpu_gtt_mgr entries to TLB size on a=
+ll=20
+SI" and confirmed resolves this issue. Thank-you.
+On 02/06/2026 10:22, Thorsten Leemhuis wrote:
+> On 6/2/26 12:06, Tj wrote:
+>> Repeatedly hit this with 7.1-rc6. I haven't yet got time to do a bisect.
+>>
+>> $ lspci -nnk -d ::0300
+>> 0a:00.0 VGA compatible controller [0300]: Advanced Micro Devices, Inc. [=
+AMD/ATI] Cape Verde GL [FirePro W4100] [1002:682c]
+>>          Subsystem: Dell Device [1028:2b1e]
+>>          Kernel driver in use: amdgpu
+>>          Kernel modules: radeon, amdgpu
+>>
+>> $ journalctl --boot 5e39a2d49af2432c8f14f2a866a6b275 --priority=3Dwarnin=
+g
+>> ...
+>> Jun 02 09:25:11 sunny kernel: Linux version 7.1.0-rc6+debian+tj (linux@i=
+am.tj) (gcc (Debian 14.2.0-19) 14.2.0, GNU ld (GNU Binutils for Debian) 2.4=
+4) #446 SMP PREEMPT_DYNAMIC Mon Jun  1 07:32:2>
+>> ...
+>> Jun 02 09:25:11 sunny kernel: WARNING: drivers/gpu/drm/amd/amdgpu/vce_v1=
+_0.c:329 at vce_v1_0_set_powergating_state+0x5b8/0x600 [amdgpu], CPU#8: (ud=
+ev-worker)/251
+> Thx for reporting this. This is not my area of expertise, but from a
+> very quick look that seems to be the issue
+> https://gitlab.freedesktop.org/drm/amd/-/work_items/5336
+> for which Timur sent a fix:
 >
-> Rafael (CCed) sent a fix for it already applied:
-> HID: Input: Add battery list cleanup with devm action
-> https://lore.kernel.org/all/20260602030519.3097058-1-rafael@rcpassos.me/
+> drm/amdgpu: Align amdgpu_gtt_mgr entries to TLB size on all SI
+> https://lore.kernel.org/all/20260525112204.12604-1-timur.kristof@gmail.co=
+m/
 >
-> Might be worth trying.
->
-> Ciao, Thorsten
->
->> Symptom is unable to use the Bluetooth keyboard.
->>
->> It *seems* to be related to the Bluetooth keyboard - trying to shutdown
->> hangs for 6 minutes whilst systemd tries to kill bluetooth.service but f=
-ails
->> and then fails to power-off (see end of log extracts).
->>
->> I'm not sure why I see 'samsung_probe' in the call trace since neither t=
-he Bluetooth host
->> adapter nor the keyboard are Samsung but maybe some change related to
->> that is causing this.
->>
->> Jun 02 09:25:54 sunny kernel: BUG: unable to handle page fault for addre=
-ss: ffffffffffffffe4
->> Jun 02 09:25:54 sunny kernel: #PF: supervisor read access in kernel mode
->> Jun 02 09:25:54 sunny kernel: #PF: error_code(0x0000) - not-present page
->> Jun 02 09:25:54 sunny kernel: Oops: Oops: 0000 [#1] SMP NOPTI
->> Jun 02 09:25:54 sunny kernel: CPU: 11 UID: 0 PID: 4009 Comm: (udev-worke=
-r) Tainted: G        W  OE       7.1.0-rc6+debian+tj #446 PREEMPT(lazy)
->> Jun 02 09:25:54 sunny kernel: Tainted: [W]=3DWARN, [O]=3DOOT_MODULE, [E]=
-=3DUNSIGNED_MODULE
->> Jun 02 09:25:54 sunny kernel: Hardware name: System manufacturer System =
-Product Name/PRIME X370-PRO, BIOS 6254 01/05/2026
->> Jun 02 09:25:54 sunny kernel: RIP: 0010:hidinput_setup_battery.isra.0+0x=
-6d/0x370 [hid]
->> Jun 02 09:25:54 sunny kernel: Code: 48 ab 48 8b 42 68 48 8b 95 18 1c 00 =
-00 8b 48 30 48 39 d3 74 45 48 8d 42 c8 eb 0f 66 90 48 8b 50 38 48 8d 42 c8 =
-48 39 d3 74 30 <3b> 48 1c 75 ee 48 85 c0 74 26>
->> Jun 02 09:25:54 sunny kernel: RSP: 0018:ffffceacce2c7628 EFLAGS: 0001028=
-6
->> Jun 02 09:25:54 sunny kernel: RAX: ffffffffffffffc8 RBX: ffff8b4856a83c1=
-8 RCX: 0000000000000003
->> Jun 02 09:25:54 sunny kernel: RDX: 0000000000000000 RSI: 000000000000000=
-0 RDI: ffffceacce2c7680
->> Jun 02 09:25:54 sunny kernel: RBP: ffff8b4856a82000 R08: ffffceacce2c773=
-0 R09: ffffceacce2c772c
->> Jun 02 09:25:54 sunny kernel: R10: ffff8b488f290488 R11: ffff8b478bec900=
-0 R12: ffffceacce2c7650
->> Jun 02 09:25:54 sunny kernel: R13: 0000000000000000 R14: 000000000000000=
-0 R15: ffff8b47e6307b00
->> Jun 02 09:25:54 sunny kernel: FS:  00007f6ee16439c0(0000) GS:ffff8b4ed8f=
-d0000(0000) knlGS:0000000000000000
->> Jun 02 09:25:54 sunny kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 000000008=
-0050033
->> Jun 02 09:25:54 sunny kernel: CR2: ffffffffffffffe4 CR3: 000000010b1c100=
-0 CR4: 0000000000350ef0
->> Jun 02 09:25:54 sunny kernel: Call Trace:
->> Jun 02 09:25:54 sunny kernel:  <TASK>
->> Jun 02 09:25:54 sunny kernel:  ? srso_return_thunk+0x5/0x5f
->> Jun 02 09:25:54 sunny kernel:  ? dev_set_name+0x5c/0x80
->> Jun 02 09:25:54 sunny kernel:  hidinput_connect+0x935/0x5fb0 [hid]
->> Jun 02 09:25:54 sunny kernel:  hid_connect+0x3d5/0x6a0 [hid]
->> Jun 02 09:25:54 sunny kernel:  ? srso_return_thunk+0x5/0x5f
->> Jun 02 09:25:54 sunny kernel:  ? __wake_up_common+0x78/0xa0
->> Jun 02 09:25:54 sunny kernel:  hid_hw_start+0x40/0x70 [hid]
->> Jun 02 09:25:54 sunny kernel:  samsung_probe+0x31/0x70 [hid_samsung]
->> Jun 02 09:25:54 sunny kernel:  ? srso_return_thunk+0x5/0x5f
->> Jun 02 09:25:54 sunny kernel:  hid_device_probe+0x18d/0x220 [hid]
->> Jun 02 09:25:54 sunny kernel:  ? __pfx___device_attach_driver+0x10/0x10
->> Jun 02 09:25:54 sunny kernel:  really_probe+0xde/0x380
->> Jun 02 09:25:54 sunny kernel:  ? srso_return_thunk+0x5/0x5f
->> Jun 02 09:25:54 sunny kernel:  __driver_probe_device+0x84/0x150
->> Jun 02 09:25:54 sunny kernel:  driver_probe_device+0x1f/0xa0
->> Jun 02 09:25:54 sunny kernel:  __device_attach_driver+0x89/0x130
->> Jun 02 09:25:54 sunny kernel:  bus_for_each_drv+0x97/0xf0
->> Jun 02 09:25:54 sunny kernel:  __device_attach+0xaf/0x1c0
->> Jun 02 09:25:54 sunny kernel:  ? __pfx___hid_bus_reprobe_drivers+0x10/0x=
-10 [hid]
->> Jun 02 09:25:54 sunny kernel:  device_reprobe+0x4e/0x90
->> Jun 02 09:25:54 sunny kernel:  ? __hid_bus_reprobe_drivers+0x3c/0x60 [hi=
-d]
->> Jun 02 09:25:54 sunny kernel:  bus_for_each_dev+0x8e/0xe0
->> Jun 02 09:25:54 sunny kernel:  ? __pfx___hid_bus_driver_added+0x10/0x10 =
-[hid]
->> Jun 02 09:25:54 sunny kernel:  __hid_bus_driver_added+0x2f/0x40 [hid]
->> Jun 02 09:25:54 sunny kernel:  bus_for_each_drv+0x97/0xf0
->> Jun 02 09:25:54 sunny kernel:  __hid_register_driver+0x74/0x80 [hid]
->> Jun 02 09:25:54 sunny kernel:  ? __pfx_samsung_driver_init+0x10/0x10 [hi=
-d_samsung]
->> Jun 02 09:25:54 sunny kernel:  do_one_initcall+0x5c/0x320
->> Jun 02 09:25:54 sunny kernel:  do_init_module+0x60/0x250
->> Jun 02 09:25:54 sunny kernel:  init_module_from_file+0xd6/0x130
->> Jun 02 09:25:54 sunny kernel:  idempotent_init_module+0x114/0x310
->> Jun 02 09:25:54 sunny kernel:  __x64_sys_finit_module+0x71/0xe0
->> Jun 02 09:25:54 sunny kernel:  do_syscall_64+0xea/0x640
->> Jun 02 09:25:54 sunny kernel:  ? srso_return_thunk+0x5/0x5f
->> Jun 02 09:25:54 sunny kernel:  ? do_fault+0x341/0x530
->> Jun 02 09:25:54 sunny kernel:  ? srso_return_thunk+0x5/0x5f
->> Jun 02 09:25:54 sunny kernel:  ? __handle_mm_fault+0x977/0xf80
->> Jun 02 09:25:54 sunny kernel:  ? __memcg_slab_free_hook+0x16d/0x1c0
->> Jun 02 09:25:54 sunny kernel:  ? srso_return_thunk+0x5/0x5f
->> Jun 02 09:25:54 sunny kernel:  ? count_memcg_events+0xe5/0x1b0
->> Jun 02 09:25:54 sunny kernel:  ? srso_return_thunk+0x5/0x5f
->> Jun 02 09:25:54 sunny kernel:  ? __seccomp_filter+0x42/0x5d0
->> Jun 02 09:25:54 sunny kernel:  ? handle_mm_fault+0x1e2/0x2e0
->> Jun 02 09:25:54 sunny kernel:  ? srso_return_thunk+0x5/0x5f
->> Jun 02 09:25:54 sunny kernel:  ? do_syscall_64+0x9f/0x640
->> Jun 02 09:25:54 sunny kernel:  entry_SYSCALL_64_after_hwframe+0x76/0x7e
->>
->> Jun 02 09:25:54 sunny kernel: RIP: 0033:0x7f6ee111a7b9
->> Jun 02 09:25:54 sunny kernel: Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 =
-0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b =
-4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48>
->> Jun 02 09:25:54 sunny kernel: RSP: 002b:00007ffe6dd96398 EFLAGS: 0000024=
-6 ORIG_RAX: 0000000000000139
->> Jun 02 09:25:54 sunny kernel: RAX: ffffffffffffffda RBX: 0000556830869b9=
-0 RCX: 00007f6ee111a7b9
->> Jun 02 09:25:54 sunny kernel: RDX: 0000000000000004 RSI: 00007f6ee16ed44=
-d RDI: 0000000000000012
->> Jun 02 09:25:54 sunny kernel: RBP: 0000000000000004 R08: 000000000000000=
-0 R09: 0000556830667bd0
->> Jun 02 09:25:54 sunny kernel: R10: 0000000000000000 R11: 000000000000024=
-6 R12: 00007f6ee16ed44d
->> Jun 02 09:25:54 sunny kernel: R13: 0000000000020000 R14: 00005568307db67=
-0 R15: 0000000000000000
->> Jun 02 09:25:54 sunny kernel:  </TASK>
->> Jun 02 09:25:54 sunny kernel: Modules linked in: hid_samsung(+) snd_seq_=
-dummy snd_hrtimer snd_seq snd_seq_device uinput rpcsec_gss_krb5 nfsv4 dns_r=
-esolver nfs netfs rdma_ucm ib_uverbs rdma_cm i>
->> Jun 02 09:25:54 sunny kernel:  uvcvideo wmi_bmof watchdog snd_timer igb =
-rfkill uas mii pcspkr mxm_wmi videobuf2_vmalloc snd ccp k10temp uvc i2c_pii=
-x4 dca videobuf2_memops soundcore videobuf2_v4>
->> Jun 02 09:25:54 sunny kernel: CR2: ffffffffffffffe4
->> Jun 02 09:25:54 sunny kernel: ---[ end trace 0000000000000000 ]---
->> Jun 02 09:25:54 sunny kernel: RIP: 0010:hidinput_setup_battery.isra.0+0x=
-6d/0x370 [hid]
->> Jun 02 09:25:54 sunny kernel: Code: 48 ab 48 8b 42 68 48 8b 95 18 1c 00 =
-00 8b 48 30 48 39 d3 74 45 48 8d 42 c8 eb 0f 66 90 48 8b 50 38 48 8d 42 c8 =
-48 39 d3 74 30 <3b> 48 1c 75 ee 48 85 c0 74 26>
->> Jun 02 09:25:54 sunny kernel: RSP: 0018:ffffceacce2c7628 EFLAGS: 0001028=
-6
->> Jun 02 09:25:54 sunny kernel: RAX: ffffffffffffffc8 RBX: ffff8b4856a83c1=
-8 RCX: 0000000000000003
->> Jun 02 09:25:54 sunny kernel: RDX: 0000000000000000 RSI: 000000000000000=
-0 RDI: ffffceacce2c7680
->> Jun 02 09:25:54 sunny kernel: RBP: ffff8b4856a82000 R08: ffffceacce2c773=
-0 R09: ffffceacce2c772c
->> Jun 02 09:25:54 sunny kernel: R10: ffff8b488f290488 R11: ffff8b478bec900=
-0 R12: ffffceacce2c7650
->> Jun 02 09:25:54 sunny kernel: R13: 0000000000000000 R14: 000000000000000=
-0 R15: ffff8b47e6307b00
->> Jun 02 09:25:54 sunny kernel: FS:  00007f6ee16439c0(0000) GS:ffff8b4ed8f=
-d0000(0000) knlGS:0000000000000000
->> Jun 02 09:25:54 sunny kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 000000008=
-0050033
->> Jun 02 09:25:54 sunny kernel: CR2: ffffffffffffffe4 CR3: 000000010b1c100=
-0 CR4: 0000000000350ef0
->> Jun 02 09:25:54 sunny systemd-udevd[1703]: 0005:04E8:7021.0006: Worker [=
-4009] terminated by signal 9 (KILL).
->>
->> Jun 02 09:29:16 sunny rpc.idmapd[3093]: exiting on signal 15
->> Jun 02 09:30:45 sunny systemd[1]: bluetooth.service: State 'stop-sigterm=
-' timed out. Killing.
->> Jun 02 09:32:15 sunny systemd[1]: bluetooth.service: Processes still aro=
-und after SIGKILL. Ignoring.
->> Jun 02 09:33:45 sunny systemd[1]: bluetooth.service: State 'final-sigter=
-m' timed out. Killing.
->> Jun 02 09:35:15 sunny systemd[1]: bluetooth.service: Processes still aro=
-und after final SIGKILL. Entering failed mode.
->> Jun 02 09:35:15 sunny systemd[1]: bluetooth.service: Failed with result =
-'timeout'.
->>
->>
-
+> According to Alex it's making it's way through the ranks. Consider
+> testing it to ensure it really is the same problem.
 
