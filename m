@@ -1,74 +1,73 @@
-Received: from fhigh-a3-smtp.messagingengine.com (fhigh-a3-smtp.messagingengine.com [103.168.172.154])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A853392829
-	for <regressions@lists.linux.dev>; Mon,  1 Jun 2026 23:43:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DF7B2D2382;
+	Tue,  2 Jun 2026 06:14:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780357409; cv=none; b=pTY3yEtWFLjoduPW+hLjaB0v/EXiHLUpMZPJjYWz+a1rXuuEdzEi7RHvvRp9mWaZzpBjw38ZDzZvgA/D4leZ8eCNvO1S4HSjyLsLOEmkGrs0KLAs9KUZQQqhsXGIHeexhrkRZFD6xXdUe9tUXOjzlggfOgB8vqcUXKzNfz7flwY=
+	t=1780380862; cv=none; b=D3My+yeiwMxk42ANTJP5eCxzud/YKAnz6642clOyaNVc5vpR5DKaB2Tt4EazJ/VXm1v6eXp7omNXv4tMO02RwTz6UA8QcA9ffpmAfDI1Gfwhln1Stxlj1xxptx6mBZ2AYHxzNIWep82RHZ429e01XceR5/7RItZWjmEK9/8cYVc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780357409; c=relaxed/simple;
-	bh=qv8kLPuufFADTUcF8iyp3kPRmFJYcjTNoBsImOw28ts=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=j1PfhAAkvGenvmYZG0MpwvE/kgmrwOd+Q3H02KkJt0OQjYYwapQf8POX5S/pOJOnNIQ8mlDgbb1P+JxthsFEcSTI6upIDUdjJ6QQemWZDzCaQqb4P1ng1fnCM1FUAWaDkjkGBSR8+zsu6gL5qTphBEuDXCBn5swilPSpEwIUNx8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=B+rYC+lM; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=GA/6HcLy; arc=none smtp.client-ip=103.168.172.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
+	s=arc-20240116; t=1780380862; c=relaxed/simple;
+	bh=ZZloKfi+BZkzFML4nwkLNn6PsJRRhLCXqfaYA3b9NT0=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=L+hBRjD4lp4N/ehgJUXoOeXwQyW+liIN5Hx6NcyeErriEr6T46eXk+W6jd4bt9mbCMDZ5XcUi/pxZ7lcTu6L/6hA/AvnpszUb8UivB43E4fPRC6iqhXgTTXSuBOUNgx5X6KDZ4b6BPBBesJUXycw5krcPmnrfoJQxAsbGNf/Gxw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=pass (2048-bit key) header.d=realtek.com header.i=@realtek.com header.b=CKa0STd9; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="B+rYC+lM";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="GA/6HcLy"
-Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id D66D2140019B;
-	Mon,  1 Jun 2026 19:43:26 -0400 (EDT)
-Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-05.internal (MEProxy); Mon, 01 Jun 2026 19:43:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to; s=fm1; t=
-	1780357406; x=1780443806; bh=3RSdncHsJoggitGQbQQkVYbi7CF3RBF2qDs
-	a24fBKgs=; b=B+rYC+lMZt2wros8paF/qaHZgMU1NitjaF4Hn8H4dHYj+g1XaIz
-	HEhmOo7wdZr0ksjdPZZqGpHnXHp3z+Iv6pUwtIGoOyNtrRpk1UI82CGckdYfjt4N
-	5saad/cH/queR5DF8KwniiPa9H9h2JhM1+G9xFzY+EZmd13y/2er0PB866lfuEMd
-	KkNNAOjFA41zDASKjazA6B62f2/vKWeQRfET0LgA+llecNJIHY67N5d1qaHUoigL
-	yC6ZTT3xqz2KNQOaQtXeC0aL7sHPgb7020srHLl7gAA6QsGe4erlarwFOF1V+MTK
-	Dozy3x5DnRtJ2Zc6H2hACSEJDYd4rMk50xA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1780357406; x=
-	1780443806; bh=3RSdncHsJoggitGQbQQkVYbi7CF3RBF2qDsa24fBKgs=; b=G
-	A/6HcLyszpIeqSTcFqHseAYcuqiJ6KuDi050oDygYbcZHv/ppDqejoItcX6MsY1S
-	t/Pzq57Amb0P+UFsPwlqgOnEf7F6Z5h7oRM7GRLvBXc24i78I4SJ/Y7z5kxtGq70
-	5xf0UbSEdtajirDP9FbDJVwh1F0koOSMo3Uq6hjekjnN1noKVr8M7+0xGpKK2cyX
-	sXjw8oBsP9AFCVO8lG6fkTRY8Y5+7tNr/1pVdqKmZpjK8FuyjIt18Zfl6KcYBsIq
-	LJhQLjpCHR5tnTLNddY9NexXiGqtfo/7fcmRTjUttv7+Bbjgvw4hBpmhWq6zqp+k
-	5aSP04HH8WIHrEpbbluMA==
-X-ME-Sender: <xms:HhkeasQPXuEnK40pPTw32_Nq_0RovQd2pcr0PPOt98nPTSWJSv138g>
-    <xme:Hhkeaiso4_s2_N4deOVUydzZS3C-zAQBQqdNmxG2fBIClpcysqDoTdsmClbecYW4Z
-    1tZ5XEx1k7x2NuK0NS6ksxvQRrdL6VYxRTHLEih1wZQ0dLdIg>
-X-ME-Received: <xmr:HhkealYErP0TkFsGJumQ9I4dL0VAYnp8RvWoOtM174vFf0GSpqaEgeCgZZ5Wm0hJNw>
-X-ME-Proxy-Cause: dmFkZTGq388y7o6qMfj/puJc0j8bHXpjDiBbiPdQ6+dcvMQl6g11EVR+kvR7NHeAb3mDTJ
-    dHP26YrJofaD69qcRmrf6zhOxgbHWzsUB1DzZa3EC55DoM21BY9v109kZw1PPBrzFg77Fc
-    Dbhk+8NcMdoFnxUXNdYqXn/pJ1/brf26lMM+L8giOwu7kC3kmpeGfw8WaHVAxyG/dSthyX
-    S5kH3GVmAvu79gLOqLlBKewWaRZ0TR5RuWjp+Or5GQPxwYKesrXkyaeYG9g/A4VJNaLb3d
-    Iuf3cmwZO6O6BhK8dhaus03IwuRMiE5yN1CtgWNA6IVEr3KQmZY4Ml25B2bkydfep5RKFk
-    ARbpw2OBrWWL8uY4ufOhr4Z7O0OIZilktJdt/BLu1U/c7x1PQiejOy2gdjQp8FelY2CgAh
-    3wXT3cv1WD7WujGLu5gMw+7Qxe6hFedePoEl7X+GI5q4UrTXP/I4G14FlqEJYWfA8u/fgd
-    IsMMsH3OmfQZz9sBlHKNhz436o0tqGNtNn2/RK2SXENjynnLWJP/T4qrz4wyrw5PxhRjmb
-    BUH77dWWM7zkTBFcLGNskuCrn0vTRohzqdpwd5bxslVYXB+JBCBgtFUzG+/Brv8HHaqnCU
-    IycOKeTyRepwqjSUGH6sx3+oijK/VLK4mOMPM/N8qcgEFuyUm9IbaPA4VUuw
-X-ME-Proxy: <xmx:HhkeagFe3BjqywCdfQ5s3JwvhMHxM0GGYrkRtKhgXGSj2qrBqHteVg>
-    <xmx:HhkeahxH-GEB0OLS74NMQ3FdBrNXOGoMSC0__mYASZ7sIPyJTcWYJw>
-    <xmx:HhkeaqneVoDL1j8iwLPhU1hJB7iIyRw4TVRYVjcYKmKD6WS-KOODpw>
-    <xmx:HhkeailzSunYYMHdlMr3sEWq4DHlVjCSpSXFJJfKIdcwXrmRBhdlWw>
-    <xmx:Hhkeat3tA5afLBiyMDPqounHdt7NbahxpcpszCigSnRhY1PxNuS9UdSG>
-Feedback-ID: i9d664b8f:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 1 Jun 2026 19:43:24 -0400 (EDT)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=realtek.com header.i=@realtek.com header.b="CKa0STd9"
+X-SpamFilter-By: ArmorX SpamTrap 5.80 with qID 6526EF4G02716836, This message is accepted by code: ctloc85258
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=realtek.com; s=dkim;
+	t=1780380855; bh=ilJXk8Qu02sYQ2BxQLxa2OOTW7Tl/jc1dpPk5iv8ogA=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding:MIME-Version;
+	b=CKa0STd9u6ScnEPUz8jVq0wgeAT9Mpd8kCQdFAFA+P5LdMm0aBWl1bbR4GnTL8gqU
+	 2Pam4TuHemHZ+DSOQYegzXS81rbLzXlfCgZVekZyj3DiIQzFl6Eo/iDtEpDtVkDjoU
+	 Qwd0sEc2YYWJiIN4DvdO/KKji+Y2wX5oiuiW+UFHWiY95tYnGakiIO/2/YkTKyI5rH
+	 zFjDvQDjZVNvK/rgLG3TPLHaATDwTWu+1kO2HKEXC958tzAm/ekFr+gGLrIcBNDKCB
+	 21f+UsVPm6gkPU/Pj4pI14I4MB3dy/PdO6uVPF9Obxn4TQxOQd+Wo3sMiZd4w84rJ/
+	 AzwceZWJpKn9g==
+Received: from mail.realtek.com (rtkexhmbs04.realtek.com.tw[10.21.1.54])
+	by rtits2.realtek.com.tw (8.15.2/3.28/5.94) with ESMTPS id 6526EF4G02716836
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 2 Jun 2026 14:14:15 +0800
+Received: from RTKEXHMBS05.realtek.com.tw (10.21.1.55) by
+ RTKEXHMBS04.realtek.com.tw (10.21.1.54) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.17; Tue, 2 Jun 2026 14:14:15 +0800
+Received: from RTKEXHMBS06.realtek.com.tw (10.21.1.56) by
+ RTKEXHMBS05.realtek.com.tw (10.21.1.55) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.17; Tue, 2 Jun 2026 14:14:15 +0800
+Received: from RTKEXHMBS06.realtek.com.tw ([::1]) by
+ RTKEXHMBS06.realtek.com.tw ([fe80::e6fd:5a3f:8946:92c4%10]) with mapi id
+ 15.02.2562.017; Tue, 2 Jun 2026 14:14:15 +0800
+From: Kailang <kailang@realtek.com>
+To: Takashi Iwai <tiwai@suse.de>, Mike Karcic <mikekarcic@protonmail.com>
+CC: Sean Rhodes <sean@starlabs.systems>, "stable@vger.kernel.org"
+	<stable@vger.kernel.org>, "regressions@lists.linux.dev"
+	<regressions@lists.linux.dev>, "linux-sound@vger.kernel.org"
+	<linux-sound@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: RE: [REGRESSION] Speaker pop/chirp on Meteor Lake ALC287 (17aa:231e)
+ -- 6.12.73 to 6.12.85
+Thread-Topic: [REGRESSION] Speaker pop/chirp on Meteor Lake ALC287 (17aa:231e)
+ -- 6.12.73 to 6.12.85
+Thread-Index: AQHc7t9eJfAz3yPaB0G+XZXqEzNDFrYqzh7Q
+Date: Tue, 2 Jun 2026 06:14:14 +0000
+Message-ID: <833d600fdebd4aaeab6706185ce854e6@realtek.com>
+References: <O6pYAi7yf23du9ivLsL0QqrnTmodj2lDTL7Wviv7I_nhjVtvllO7Y5Ban0TeTqrastb1RWhJtlkqrM3quLMWSriai-YjjGy312MTcEhxyWs=@protonmail.com>
+	<CABtds-3GOyBr1H=c5aFV1uzfkhO3d1NHMPuon_cWDq0V=pFwUA@mail.gmail.com>
+	<wZmYozyav1sNx53nFr4ShKmcdLFVJp5bdUOJgUq1I57MX6kgyq7n8XvH-MWG9Fi4q2x4CQqjEQ3Q8ok5MClut8hNixnhVmVtXkhcOzH1sw8=@protonmail.com>
+	<87eciwukvy.wl-tiwai@suse.de>
+	<RfzfjlzeaeMgNNWNST_Zzx1v49rYjM63MvAV6O5_fFIoZJ73GcN69FDLJcwhJ3s6fl9TVD2l45YBh2n3hy95LM7rhLhoVt8dU9stMkuVJvE=@protonmail.com>
+	<87mrxjsk52.wl-tiwai@suse.de>
+	<bibLdgyll9YOEDANdCBy8WOqeOeJry1SnahLR-EhoGkttJ6BE2srDZ9jv0gjkt0bA19aKivruQs3nkMQWbdEXPaOrLT80xjzF4KJvDcB-IU=@protonmail.com>
+ <87cxyfs2vm.wl-tiwai@suse.de>
+In-Reply-To: <87cxyfs2vm.wl-tiwai@suse.de>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
@@ -76,140 +75,124 @@ List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: NeilBrown <neilb@ownmail.net>
-To: "Miklos Szeredi" <miklos@szeredi.hu>
-Cc: =?utf-8?b?0JDRgNGC0LXQvCDQm9Cw0LHQsNC30L7Qsg==?= <123321artyom@gmail.com>,
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
- regressions@lists.linux.dev
-Subject: Re: PROBLEM: FUSE_NOTIFY_INVAL_ENTRY leaves stale negative dentry
- after c9ba789dad15
-In-reply-to:
- <CAJfpegsCJnMfn_BzzTK7m9ndCGVsnPit8ZsT0fzAhYoY+yOsKQ@mail.gmail.com>
-References:
- <CAFbF8N7++zopZuEcsKRxBV_sgOGCbzCY0hOyMw1SiGAtuzGhyQ@mail.gmail.com>
-  <CAJfpegsCJnMfn_BzzTK7m9ndCGVsnPit8ZsT0fzAhYoY+yOsKQ@mail.gmail.com>
-Date: Tue, 02 Jun 2026 09:43:20 +1000
-Message-id: <178035740095.2923901.5908691318688917347@noble.neil.brown.name>
-Reply-To: NeilBrown <neil@brown.name>
-
-On Mon, 01 Jun 2026, Miklos Szeredi wrote:
-> [Cc: Neil]
->=20
-> On Sun, 31 May 2026 at 03:12, =D0=90=D1=80=D1=82=D0=B5=D0=BC =D0=9B=D0=B0=
-=D0=B1=D0=B0=D0=B7=D0=BE=D0=B2 <123321artyom@gmail.com> wrote:
-> >
-> > Hi,
-> >
-> > I am reporting a FUSE/VFS regression introduced by:
-> >
-> >   c9ba789dad15ba65662bba17595c0aeaa0cfcf1c
-> >   VFS: introduce start_creating_noperm() and start_removing_noperm()
-> >
-> > After a FUSE filesystem returns a cached negative lookup for a name, then
-> > later makes that name visible and sends FUSE_NOTIFY_INVAL_ENTRY for it,
-> > readdir() can list the entry while stat()/open() on the same path still
-> > returns ENOENT.
-> >
-> > Bisect result:
-> >
-> >   good: v6.17
-> >   bad:  v6.19
-> >
-> >   first bad commit:
-> >     c9ba789dad15ba65662bba17595c0aeaa0cfcf1c
-> >     VFS: introduce start_creating_noperm() and start_removing_noperm()
-> >
-> > Adjacent commits:
-> >
-> >   bd6ede8a06e89ca5a94a8b51cea792705d1b8ca2 GOOD
-> >   c9ba789dad15ba65662bba17595c0aeaa0cfcf1c BAD
-> >
-> > The bad commit changes fs/fuse/dir.c:fuse_reverse_inval_entry() to use
-> > start_removing_noperm().
-> >
-> > I attached a minimal libfuse3 reproducer. It does:
-> >
-> >   1. lookup("config") returns ino=3D0 with non-zero entry_timeout, causing
-> >      the kernel to cache a negative dentry.
-> >   2. The filesystem makes "config" visible.
-> >   3. It calls fuse_lowlevel_notify_inval_entry(root, "config").
-> >   4. The test checks whether readdir lists "config" and stat("config")
-> >      succeeds.
->=20
-> Yeah, issue is that start_removing_* all work on a POSITIVE dentry.
->=20
-> FUSE_NOTIFY_INVAL_ENTRY works on both positive and negative dentries,
-> doesn't care about the inode (or lack of it) at all.
->=20
-> I've not dug myself into this work, so not sure what the concept here
-> is, or how this should be fixed, but this is definitely not (just) a
-> removal op.
-
-This code is quite unique.  It is interactive with the dcache, not the
-backing store - which makes sense for fuse but is unlike other
-filesystems.
-It doesn't do a lookup - just finds things in the dcache which is then
-invalidates.
-
-This means the positive an negative cases are quite different and I
-think it works well to treat them separately.
-
-For a negative dentry, we can use ->d_lock to avoid races with the
-dentry becoming positive.  d_invalidate() becomes __d_drop() for a
-negative dentry, so everything we need to do is atomic.
-
-For a positive dentry we still need to get the directory lock, and
-start_removing_dentry() works find in that case.
-
-So the following patch is what I would suggest.  It probably deserves to
-have some comments sprinkled through to make it clear what is happening.
-
-If people could review/test then if I get positive feedback I can make a
-proper patch.
-
-Thanks,
-NeilBrown
 
 
-diff --git a/fs/fuse/dir.c b/fs/fuse/dir.c
-index b658b6baf72f..3f16ecbc358e 100644
---- a/fs/fuse/dir.c
-+++ b/fs/fuse/dir.c
-@@ -1605,13 +1605,29 @@ int fuse_reverse_inval_entry(struct fuse_conn *fc, u6=
-4 parent_nodeid,
- 		struct dentry *child =3D try_lookup_noperm(name, dir);
- 		if (!child || IS_ERR(child))
- 			goto put_parent;
--		entry =3D start_removing_dentry(dir, child);
--		dput(child);
--		if (IS_ERR(entry))
--			goto put_parent;
--		if (!d_same_name(entry, dir, name)) {
--			end_removing(entry);
--			entry =3D NULL;
-+		if (d_really_is_negative(child)) {
-+			spin_lock(&child->d_lock);
-+			if (d_really_is_negative(child)) {
-+				fuse_dir_changed(parent);
-+				if (!(flags & FUSE_EXPIRE_ONLY))
-+					__d_drop(entry);
-+				fuse_invalidate_entry_cache(entry);
-+				spin_unlock(&child->d_lock);
-+				dput(child);
-+				err =3D 0;
-+				goto put_parent;
-+			}
-+			spin_unlock(&child->d_lock);
-+			dput(child);
-+		} else {
-+			entry =3D start_removing_dentry(dir, child);
-+			dput(child);
-+			if (IS_ERR(entry))
-+				goto put_parent;
-+			if (!d_same_name(entry, dir, name)) {
-+				end_removing(entry);
-+				entry =3D NULL;
-+			}
- 		}
- 	}
-=20
+There were the same SSID for two different symptoms.
+But this project was from 2025. This machine maybe didn't in our site.
+
+-----Original Message-----
+From: Takashi Iwai <tiwai@suse.de>=20
+Sent: Friday, May 29, 2026 4:20 AM
+To: Mike Karcic <mikekarcic@protonmail.com>
+Cc: Kailang <kailang@realtek.com>; Takashi Iwai <tiwai@suse.de>; Sean Rhode=
+s <sean@starlabs.systems>; stable@vger.kernel.org; regressions@lists.linux.=
+dev; linux-sound@vger.kernel.org; linux-kernel@vger.kernel.org
+Subject: Re: [REGRESSION] Speaker pop/chirp on Meteor Lake ALC287 (17aa:231=
+e) -- 6.12.73 to 6.12.85
+
+
+External mail : This email originated from outside the organization. Do not=
+ reply, click links, or open attachments unless you recognize the sender an=
+d know the content is safe.
+
+
+
+On Thu, 28 May 2026 20:27:30 +0200,
+Mike Karcic wrote:
+>
+> Yes, I can confirm the patched kernel is running, and commenting out that=
+ line fixes the problem completely.
+>
+> Below is output with the added debug lines as requested:
+>
+> $ uname -r
+> 6.12.90-debug-no-discoefs
+>
+> $ sudo dmesg | grep -i "alc287_alc1318"
+> [  453.823528] snd_hda_codec_realtek ehdaudio0D0:=20
+> alc287_alc1318_playback_pcm_hook called action=3D0 [  453.871577]=20
+> snd_hda_codec_realtek ehdaudio0D0: alc287_alc1318_playback_pcm_hook=20
+> called action=3D1 [  459.605379] snd_hda_codec_realtek ehdaudio0D0:=20
+> alc287_alc1318_playback_pcm_hook called action=3D2 [  459.605497]=20
+> snd_hda_codec_realtek ehdaudio0D0: alc287_alc1318_playback_pcm_hook=20
+> called action=3D3
+>
+> $ grep -n -A5 -B2 "alc_process_coef_fw.*dis_coefs" sound/pci/hda/patch_re=
+altek.c
+> 7918-           return;
+> 7919-   alc_update_coef_idx(codec, 0x10, 1<<11, 1<<11);
+> 7920:   /* alc_process_coef_fw(codec, dis_coefs); */ /* commented out for=
+ testing */
+> 7921-   alc_process_coef_fw(codec, coefs);
+> 7922-   spec->power_hook =3D alc287_s4_power_gpio3_default;
+> 7923-   spec->gen.pcm_playback_hook =3D alc287_alc1318_playback_pcm_hook;
+> 7924-}
+
+Hm, then the previous fix doesn't seem working, obviously.
+Kailang, could you check this in your side?
+
+Maybe we should apply the AMP-silence-detection disablement conditionally t=
+o certain models?
+
+
+thanks,
+
+Takashi
+
+>
+>
+>
+> Sent with Proton Mail secure email.
+>
+> On Thursday, May 28th, 2026 at 10:07 AM, Takashi Iwai <tiwai@suse.de> wro=
+te:
+>
+> > On Thu, 28 May 2026 15:38:54 +0200,
+> > Mike Karcic wrote:
+> > >
+> > > I did test 46c862f5419e on 6.12.90. Chirp still present.
+> > >
+> > > I'm also on a ThinkPad X1 Carbon Gen 12 with ALC287 (17aa:231e),=20
+> > > same as the original reporter. The fix resolved it for them but=20
+> > > not for me.
+> > >
+> > > Only a full revert of 630fbc6e870e resolves the issue.
+> > >
+> > > Verification on the running kernel:
+> > >
+> > >   $ grep -c "dis_coefs" sound/pci/hda/patch_realtek.c
+> > >   2
+> > >
+> > >   $ grep -c "en_coefs" sound/pci/hda/patch_realtek.c
+> > >   0
+> > >
+> > >   $ sed -n '/alc287_alc1318_playback_pcm_hook/,/^}/p' sound/pci/hda/p=
+atch_realtek.c
+> > >   static void alc287_alc1318_playback_pcm_hook(struct hda_pcm_stream =
+*hinfo,
+> > >                                      struct hda_codec *codec,
+> > >                                      struct snd_pcm_substream *substr=
+eam,
+> > >                                      int action)
+> > >   {
+> > >           switch (action) {
+> > >           case HDA_GEN_PCM_ACT_OPEN:
+> > >                   alc_write_coefex_idx(codec, 0x5a, 0x00, 0x954f);
+> > >                   break;
+> > >           case HDA_GEN_PCM_ACT_CLOSE:
+> > >                   alc_write_coefex_idx(codec, 0x5a, 0x00, 0x554f);
+> > >                   break;
+> > >           }
+> > >   }
+> > >
+> > > Happy to test further patches.
+> >
+> > Just to be sure, could you verify that you've tested really the=20
+> > patched kernel, e.g. by adding a debug print, etc?
+> > If yes and the problem is seen even with the patch, try to comment out
+> >   alc_process_coef_fw(codec, dis_coefs); and confirm that this fixes=20
+> > the problem.
+> >
+> >
+> > Takashi
+> >
