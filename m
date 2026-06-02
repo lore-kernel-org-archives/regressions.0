@@ -1,93 +1,54 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.166])
+Received: from sendmail.purelymail.com (sendmail.purelymail.com [34.202.193.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD15E3C199A
-	for <regressions@lists.linux.dev>; Tue,  2 Jun 2026 11:54:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.166
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA7AB36F905
+	for <regressions@lists.linux.dev>; Tue,  2 Jun 2026 12:38:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=34.202.193.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780401282; cv=none; b=ZCai0gZQRLUPQF0JC/2iN5tmHmVj6ZIxWkD7mxiH/XfWJW0LjRl1+Sty8B+2rRY2X71EJ0f7F44rQXKQkWY1QKHqSyuS1RkarzeeyA+7axpJV3iWmR/Hfpr7LGmDaE3PuURh1+IciOHB1mJKovqHgNfvZXdUEo7yFRBM2OXZ8I0=
+	t=1780403932; cv=none; b=HL3+lS7zUMnCF31uGBIxU66YVCS135bVdwS2JJHom0xzOTwJnHlWGSfnX7Lwon/yRQyZwcxok3GEmqXpIiW3BEjdycgR0ckwvVWijWslbuvXQcjP7xy+MatqBMcnyhMBBl+otfwR5kuEJrW302L48RwvqMi0X/rmSSdfyKP5oHw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780401282; c=relaxed/simple;
-	bh=l0lB7zCjgrnzIkIRpJpfrjpB3RpBNdOqJmrQEWLjo74=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=PBNyxsxDqCUJbh//nRcLc52WWxHretNVN+mdVZ8oUOlz9f9GYKRghLvsbmPAGtXoRzlWamSOAnG5hUVsph3HSG5A47NGRD/QyFU8Ea3vBm5u3t3Brgq6aBntlxosPVWV9vApOTmV7uPfjKlJKu7HwYQCE2onuzGih5/lvv34g/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=Xc26mxEm; arc=none smtp.client-ip=188.68.63.166
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1780403932; c=relaxed/simple;
+	bh=lu5tSh8Ee+jXc9uOSO8vngE0xJlDVhetA2CAqpz25og=;
+	h=Content-Type:Date:Message-Id:From:To:Cc:Subject:Mime-Version:
+	 References:In-Reply-To; b=GUi16BlYtLV7x5DwRdgwAGj1P3MM8xEsTLMX0GHSO9AO+eVL0AwzUg5RfaYcSspdSqTgeGTAukTz0yUlwHgmTw8SykhqHNCIKutg8hQHZajhfqCaiZ6yRPiejWwoHp5NN9LYYurvoBvOXz+rWB6mPX1WbXHNDwbJg56/5jzVkSk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rcpassos.me; spf=pass smtp.mailfrom=rcpassos.me; dkim=pass (2048-bit key) header.d=rcpassos.me header.i=@rcpassos.me header.b=W/mBKrs+; dkim=pass (2048-bit key) header.d=purelymail.com header.i=@purelymail.com header.b=SpGK8avQ; arc=none smtp.client-ip=34.202.193.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rcpassos.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rcpassos.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="Xc26mxEm"
-Received: from mors-relay-8202.netcup.net (localhost [127.0.0.1])
-	by mors-relay-8202.netcup.net (Postfix) with ESMTPS id 4gV8Py1tsxz3wDf
-	for <regressions@lists.linux.dev>; Tue,  2 Jun 2026 13:54:30 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1780401270;
-	bh=l0lB7zCjgrnzIkIRpJpfrjpB3RpBNdOqJmrQEWLjo74=;
-	h=Date:Subject:From:To:References:In-Reply-To:From;
-	b=Xc26mxEmBHjBebqEW1xj7U99nr55iSCjOrXbQ/Lh3CtBH/9CLqnZmrijd6fF8xW9+
-	 Kmi4hyROKYrdyKECJPkKZMcesdYBEWYqMDuGc2MflIQZts7ARlm9ZzNAfXciAn3OkD
-	 xmwxd03VY+GwuHDW1gTYbi/ksjDF9vy10LCNdY2l0Ur88vX2hAkI2waEyDQeTruDNP
-	 EV1pYI8tmBQvObhy4DBwhAuHCtVf4EZoXYwSWF6GLLE4T6QCAjvuWhvhgOTLkqj9i2
-	 iCz6hZt/7A57u/CF0aISa7huic7RZ+A68jjyUwZ0OPiDAoW9W8J+W1H3hjEE7znTGa
-	 cX1eYwDewG5Ow==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-8202.netcup.net (Postfix) with ESMTPS id 4gV8Py17pMz3vQP
-	for <regressions@lists.linux.dev>; Tue,  2 Jun 2026 13:54:30 +0200 (CEST)
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4gV8Px6V61z8svb
-	for <regressions@lists.linux.dev>; Tue,  2 Jun 2026 13:54:29 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id D595560345
-	for <regressions@lists.linux.dev>; Tue,  2 Jun 2026 13:54:28 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <871573a0-79e7-4d0e-95f5-00bbda58238c@leemhuis.info>
-Date: Tue, 2 Jun 2026 13:54:23 +0200
+	dkim=pass (2048-bit key) header.d=rcpassos.me header.i=@rcpassos.me header.b="W/mBKrs+";
+	dkim=pass (2048-bit key) header.d=purelymail.com header.i=@purelymail.com header.b="SpGK8avQ"
+Authentication-Results: purelymail.com; auth=pass
+DKIM-Signature: a=rsa-sha256; b=W/mBKrs+FSjVi57N44vta6jyWW5/cMbbtkuZ177rNfQKq/T6iEy0axw2Mi0A7KPY5q9q0jI8MD/4a2YhmM1JTdsyFsLq9SBva3gqBhJC7BuGXB3hDPClUT5YcU/3zTDjb38URb52rvvlDzm1H2IKIwn95c7tBctbjdhiSxhR+lR3QwHDjkvofczI2ns9zNcNVnB+vklGd4WEp0l2GmHi9oRBFRxNZpJYs4qld3TSAxNEpWzF6aEsXjjwHZmZxr925G+FYj/IUeMhtjNzwnwF6M7cBRr5E69b/8XC1Ause0D1P4lFIt4CRLmIbrx9d5Ge9OgX87set8vapn0pkXvqQA==; s=purelymail1; d=rcpassos.me; v=1; bh=lu5tSh8Ee+jXc9uOSO8vngE0xJlDVhetA2CAqpz25og=; h=Received:Date:From:To:Subject;
+DKIM-Signature: a=rsa-sha256; b=SpGK8avQHfH+YWvRbrBk8wLSdHcVtHiad7blAaJQyF+hC/6qFT3FiMy3azWMLtawZf/F32gkljFt7k2S4nBRDEacAHH73kt5gpGec5i3TaUnMEP8mZacqxITe1923Fxqm1RZWBdChbhHuVYuacHbhFoFGdQmqYkRQpYli6M0Eu0PHhB2MVLO4MFmgTB9R2sExh98soQ/ionxT7CfmMW67KVuKKbCQAAaWmG7L3srnM47DvYb96S3S5j9N+V9xy69DgPVMF+IZ9k+DdZSA2ESWZGoUyslhqfgSnvgEZ+3LKKwGLFuyvx4l3CkJlKdiMIDx2unGpiCGD/rc3oTVQWkig==; s=purelymail1; d=purelymail.com; v=1; bh=lu5tSh8Ee+jXc9uOSO8vngE0xJlDVhetA2CAqpz25og=; h=Feedback-ID:Received:Date:From:To:Subject;
+Feedback-ID: 45355:7809:null:purelymail
+X-Pm-Original-To: regressions@lists.linux.dev
+Received: by smtp.purelymail.com (Purelymail SMTP) with ESMTPSA id -1194002695;
+          (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
+          Tue, 02 Jun 2026 12:38:48 +0000 (UTC)
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 02 Jun 2026 09:39:31 -0300
+Message-Id: <DIYKJ99R2CS5.1F1C9UITYXE3D@rcpassos.me>
+From: "Rafael Passos" <rafael@rcpassos.me>
+To: <regressions@lists.linux.dev>
+Cc: <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-bluetooth@vger.kernel.org>, "Rafael Passos" <rafael@rcpassos.me>
+Subject: Re: [REGRESSION] RIP: 0010:hidinput_setup_battery.isra.0+0x6d/0x370
+ [hid]
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <178040126905.4083151.572435402380696237@mxe9fb.netcup.net>
-X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: D595560345
-X-NC-CID: eWEAvKAsLLHLGbeEQDfR/+4iJFpvHnf2yoUSdErsBQKA00Slllc=
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: aerc 0.21.0
+References: <ah6vRH9J9LSvnKWW@mail.iam.tj>
+ <b84a408c-b12c-40e5-b44b-62aa072cb285@leemhuis.info>
+In-Reply-To: <b84a408c-b12c-40e5-b44b-62aa072cb285@leemhuis.info>
 
+I'm really happy it helped!
 
-
-On 3/9/24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
-
-#regzbot report:
-https://lore.kernel.org/all/20260602011949.2825852-1-rafael@rcpassos.me/
-#regzbot introduced: 4a58ae85c3f9
-#regzbot title: HID: input: Oops during boot
-#regzbot dup: https://lore.kernel.org/all/ah6vRH9J9LSvnKWW@mail.iam.tj/
-#regzbot fix: HID: Input: Add battery list cleanup with devm action
-#regzbot monitor:
-https://lore.kernel.org/all/20260602030519.3097058-1-rafael@rcpassos.me/
-
-#regzbot report: https://gitlab.freedesktop.org/drm/amd/-/work_items/5336
-#regzbot introduced: 66a80158aa2a
-#regzbot title: drm: amd: warning and suspend problems
-#regzbot dup: https://lore.kernel.org/all/ah6q-k5wvRbW6k6e@mail.iam.tj/
-#regzbot fix: drm/amdgpu: Align amdgpu_gtt_mgr entries to TLB size on all SI
-#regzbot monitor:
-https://lore.kernel.org/all/20260525112204.12604-1-timur.kristof@gmail.com/
+Cheers!
+Rafael Passos,
+Software Engineer
+S=C3=A3o Paulo, Brasil
