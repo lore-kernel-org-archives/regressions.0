@@ -1,54 +1,78 @@
-Received: from sendmail.purelymail.com (sendmail.purelymail.com [34.202.193.197])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA7AB36F905
-	for <regressions@lists.linux.dev>; Tue,  2 Jun 2026 12:38:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=34.202.193.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14AD2305E28;
+	Tue,  2 Jun 2026 12:46:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780403932; cv=none; b=HL3+lS7zUMnCF31uGBIxU66YVCS135bVdwS2JJHom0xzOTwJnHlWGSfnX7Lwon/yRQyZwcxok3GEmqXpIiW3BEjdycgR0ckwvVWijWslbuvXQcjP7xy+MatqBMcnyhMBBl+otfwR5kuEJrW302L48RwvqMi0X/rmSSdfyKP5oHw=
+	t=1780404391; cv=none; b=sMLjVBiCCfJJ30pHLYYa7x6GNqptiWipI2TvRi7FXS2kx5pG5NTyrY3NyZdBQo/eunIVYhU0hMi2cmtbi1lf1FpRrP3czVKzM/Iur58pja1bABnuE72htStPuGl5zHckWaY8AJSmAdhbzHCf63iVIkOJch2sI2lcN7aSkwwf/Jw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780403932; c=relaxed/simple;
-	bh=lu5tSh8Ee+jXc9uOSO8vngE0xJlDVhetA2CAqpz25og=;
-	h=Content-Type:Date:Message-Id:From:To:Cc:Subject:Mime-Version:
-	 References:In-Reply-To; b=GUi16BlYtLV7x5DwRdgwAGj1P3MM8xEsTLMX0GHSO9AO+eVL0AwzUg5RfaYcSspdSqTgeGTAukTz0yUlwHgmTw8SykhqHNCIKutg8hQHZajhfqCaiZ6yRPiejWwoHp5NN9LYYurvoBvOXz+rWB6mPX1WbXHNDwbJg56/5jzVkSk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rcpassos.me; spf=pass smtp.mailfrom=rcpassos.me; dkim=pass (2048-bit key) header.d=rcpassos.me header.i=@rcpassos.me header.b=W/mBKrs+; dkim=pass (2048-bit key) header.d=purelymail.com header.i=@purelymail.com header.b=SpGK8avQ; arc=none smtp.client-ip=34.202.193.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rcpassos.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rcpassos.me
+	s=arc-20240116; t=1780404391; c=relaxed/simple;
+	bh=YZPOmdO/aMZIbz179qmFYbqzfLLT8Uj2LUHzLm7foeI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lZBIZTDMUAab/X5hESZ9UYxdFYzOI9c+UWpGrIQV/S/NE7igNch17tiJYeniN9sNq7AHgTG6PiYOzdmTpwUb42gqMGvCwSi8HvRdWf4ILHB/AjV64Ipu5HVDrqaVgiH6J9tqvRP+tf6wbkIDVyD9AJB95nv9qDuTZ5NvbSIc5yQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=QdBfcOBi; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rcpassos.me header.i=@rcpassos.me header.b="W/mBKrs+";
-	dkim=pass (2048-bit key) header.d=purelymail.com header.i=@purelymail.com header.b="SpGK8avQ"
-Authentication-Results: purelymail.com; auth=pass
-DKIM-Signature: a=rsa-sha256; b=W/mBKrs+FSjVi57N44vta6jyWW5/cMbbtkuZ177rNfQKq/T6iEy0axw2Mi0A7KPY5q9q0jI8MD/4a2YhmM1JTdsyFsLq9SBva3gqBhJC7BuGXB3hDPClUT5YcU/3zTDjb38URb52rvvlDzm1H2IKIwn95c7tBctbjdhiSxhR+lR3QwHDjkvofczI2ns9zNcNVnB+vklGd4WEp0l2GmHi9oRBFRxNZpJYs4qld3TSAxNEpWzF6aEsXjjwHZmZxr925G+FYj/IUeMhtjNzwnwF6M7cBRr5E69b/8XC1Ause0D1P4lFIt4CRLmIbrx9d5Ge9OgX87set8vapn0pkXvqQA==; s=purelymail1; d=rcpassos.me; v=1; bh=lu5tSh8Ee+jXc9uOSO8vngE0xJlDVhetA2CAqpz25og=; h=Received:Date:From:To:Subject;
-DKIM-Signature: a=rsa-sha256; b=SpGK8avQHfH+YWvRbrBk8wLSdHcVtHiad7blAaJQyF+hC/6qFT3FiMy3azWMLtawZf/F32gkljFt7k2S4nBRDEacAHH73kt5gpGec5i3TaUnMEP8mZacqxITe1923Fxqm1RZWBdChbhHuVYuacHbhFoFGdQmqYkRQpYli6M0Eu0PHhB2MVLO4MFmgTB9R2sExh98soQ/ionxT7CfmMW67KVuKKbCQAAaWmG7L3srnM47DvYb96S3S5j9N+V9xy69DgPVMF+IZ9k+DdZSA2ESWZGoUyslhqfgSnvgEZ+3LKKwGLFuyvx4l3CkJlKdiMIDx2unGpiCGD/rc3oTVQWkig==; s=purelymail1; d=purelymail.com; v=1; bh=lu5tSh8Ee+jXc9uOSO8vngE0xJlDVhetA2CAqpz25og=; h=Feedback-ID:Received:Date:From:To:Subject;
-Feedback-ID: 45355:7809:null:purelymail
-X-Pm-Original-To: regressions@lists.linux.dev
-Received: by smtp.purelymail.com (Purelymail SMTP) with ESMTPSA id -1194002695;
-          (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
-          Tue, 02 Jun 2026 12:38:48 +0000 (UTC)
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 02 Jun 2026 09:39:31 -0300
-Message-Id: <DIYKJ99R2CS5.1F1C9UITYXE3D@rcpassos.me>
-From: "Rafael Passos" <rafael@rcpassos.me>
-To: <regressions@lists.linux.dev>
-Cc: <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-bluetooth@vger.kernel.org>, "Rafael Passos" <rafael@rcpassos.me>
-Subject: Re: [REGRESSION] RIP: 0010:hidinput_setup_battery.isra.0+0x6d/0x370
- [hid]
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="QdBfcOBi"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=+ybPQ++oUNcvi5fNihznikvCl2CDujyBnu9XjvptCzY=; b=QdBfcOBiSdJAnhbwGar/sXfXP2
+	4vk6nxkrfdtcWiiXhUox3OnqdIIiCPh3Ffh1hEeF2Axa8QSvkwWQRws4qDSebXRJ/AysOgB2CrsgJ
+	awQ4oQE/tO5MD/N/PMihS+f7gH4MmL9Bq2rNsVkcqH0LWg3hHEofBpRYXZt0++Vtl12M=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1wUOVi-005giA-9C; Tue, 02 Jun 2026 14:46:22 +0200
+Date: Tue, 2 Jun 2026 14:46:22 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: David Gibson <david@gibson.dropbear.id.au>
+Cc: Stefano Brivio <sbrivio@redhat.com>,
+	Fernando Fernandez Mancera <fmancera@suse.de>,
+	netdev@vger.kernel.org, yuhuang@redhat.com, justin.iurman@gmail.com,
+	horms@kernel.org, pabeni@redhat.com, kuba@kernel.org,
+	edumazet@google.com, davem@davemloft.net, idosch@nvidia.com,
+	dsahern@kernel.org, Chris Adams <linux@cmadams.net>,
+	Beniamino Galvani <bgalvani@redhat.com>,
+	Thorsten Leemhuis <regressions@leemhuis.info>, ihuguet@redhat.com,
+	regressions@lists.linux.dev
+Subject: Re: IPv6 address insertion order (was Re: [PATCH net v2] Revert
+ "ipv6: preserve insertion order for same-scope addresses")
+Message-ID: <da080bf1-fa2b-402a-a249-ee5ac004fb05@lunn.ch>
+References: <20260529112357.5079-1-fmancera@suse.de>
+ <20260529134045.56330243@elisabeth>
+ <ah57wxGjL7JBORR1@zatzit>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: aerc 0.21.0
-References: <ah6vRH9J9LSvnKWW@mail.iam.tj>
- <b84a408c-b12c-40e5-b44b-62aa072cb285@leemhuis.info>
-In-Reply-To: <b84a408c-b12c-40e5-b44b-62aa072cb285@leemhuis.info>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ah57wxGjL7JBORR1@zatzit>
 
-I'm really happy it helped!
+On Tue, Jun 02, 2026 at 04:44:19PM +1000, David Gibson wrote:
+> I get the impression there's a rough consensus that the best we can do
+> now is revert this change (already done), and make a new patch which
+> changes the insertion order to the "correct" one conditional on a new
+> flag.
+> 
+> Stefano has enough other fires to fight, so I'm taking a look at
+> implementing that.  Some initial thoughts, that I'm soliciting
+> feedback on:
 
-Cheers!
-Rafael Passos,
-Software Engineer
-S=C3=A3o Paulo, Brasil
+I've only been partially reading along...
+
+Are we talking about RTM_NEWADDR?
+
+I've never worked on the code dealing with addresses. But in general,
+if you want to add new functionality to a netlink message, you add a
+new attribute to the message.
+
+https://elixir.bootlin.com/linux/v7.0.10/source/include/uapi/linux/if_addr.h#L26
+
+	Andrew
