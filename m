@@ -1,55 +1,55 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.166])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 169A944BC9F
-	for <regressions@lists.linux.dev>; Wed,  3 Jun 2026 10:05:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.166
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44995383985
+	for <regressions@lists.linux.dev>; Wed,  3 Jun 2026 10:38:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780481120; cv=none; b=iE/Pai5KXwuEb/D0pQcEsr7FmDXWoNStJPViHC7Ikc4D5Bp4fuSwFNq2FddR+52GVxrI/aihuahePqmUVfvRC3hLbIQgFw42G0DacGsYbdi+RkVdCpwFLSw5y/pwBGpSAEofLwtxlDUqAzdAF/lCNRveHz1bKmos6ImzwrDV45Y=
+	t=1780483103; cv=none; b=Egk0IXk0Iday0NJpttjVWS/wHLGnP8o1CKzpGwZ4R/Zsoyb77ioswn0HUoqbuXrcmTLR+jEgOTFlZ1a9iEFV03Gk+uhoWclV2nZJ1gMFJkKQCe5eO12O3ZUeQC/4U600CtbXCmH/rTZlWvnV3sOeNkStyYSnAQJoyCt9kHC/tyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780481120; c=relaxed/simple;
-	bh=pPdgNJnhX2PrU1X4qnCxIVn7py/OIeTqDE4or41kmYg=;
+	s=arc-20240116; t=1780483103; c=relaxed/simple;
+	bh=Gzj0QkdwEtprZHRxKJVS3Guel7KlNxme7gyx1LSz1to=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=c1JtsUHmeZ1up0WIDDk7lczPNm+G0sGTgkjQy1ueGIcTOgk77VGfLSPmU34bKGdUHKjVNqyQFHvcVyd/TB38yAjwDfLk7+WkXOad4EU+NSss5n9yArGj6FyTlazZz42MzTvqu61akdDSdRK/WYE0npU3z+UwtZZCge66RO/fObk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=lJVV++GO; arc=none smtp.client-ip=188.68.63.166
+	 In-Reply-To:Content-Type; b=fWDCit0eMJS7sE0ieNoqIHSJ9U5ErKkYHvfWLblIkmk4806foyfL+qL4Vt5/3wppXShJoE24H7L3OdRVz40RUWyaCFPnD06YBnJG2gkESZdnLcIXCUmvWuDy4K+vuZ7ZK9d3EXhrEA6YgNYcvcfTUSfL+C1QpPjCbUxzpTH9nFU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=XEa9GDO0; arc=none smtp.client-ip=188.68.63.98
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="lJVV++GO"
-Received: from mors-relay-8202.netcup.net (localhost [127.0.0.1])
-	by mors-relay-8202.netcup.net (Postfix) with ESMTPS id 4gVjxS0Prhz41qj;
-	Wed,  3 Jun 2026 12:05:16 +0200 (CEST)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="XEa9GDO0"
+Received: from mors-relay-2501.netcup.net (localhost [127.0.0.1])
+	by mors-relay-2501.netcup.net (Postfix) with ESMTPS id 4gVkQy1z4Rz63J2;
+	Wed,  3 Jun 2026 12:27:22 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1780481116;
-	bh=pPdgNJnhX2PrU1X4qnCxIVn7py/OIeTqDE4or41kmYg=;
+	s=key2; t=1780482442;
+	bh=Gzj0QkdwEtprZHRxKJVS3Guel7KlNxme7gyx1LSz1to=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=lJVV++GOVSYt7b90Y4lHdWNNN/nVk7GrgSQtnDAqDFjxwreWHBvCu2X2ZBuqcHxai
-	 E5FGkWkMnALXy8Z7uHWnsaWmUlEchCG8M90hcYLPrvjh+T9IOgFdxulRvoYVaFjjqL
-	 flUkKVaaOFxNQbJRESLlVQAeuqCbcnsTxWwp/RHmzBxWq599quImmbtM7UdJ62QAby
-	 yaPGYf+8LM6s/OzJeR1YVN1vlzTE2GeDTWP97PKKU8vt/JW4FHxLgxntwNI9l2A4Tq
-	 n/5t4o6SW9wgy1voHxwGhz7uchnXs/m6LIfaOc30N8IY4Wl+B9xa6D6DdcmfhJHV1Z
-	 3DIQjzSrMekOg==
+	b=XEa9GDO0xF0VTcLKHyqz1JOaBYeXkQ07VLBtIcEoBNzCb7KkNJPyes7ZthBk1yrqR
+	 +b9IsFWBEaarLdoYWA5FlJTBC/yVJz868jLmzqnG5XR5O0GsCSAdW5ZHCI/PEumRNi
+	 UiNyY4da1HapPJjzk8mL8x2Gup0xGUuPCtceHEIwtLSV/iWNTQvb0d8w6z/8zAPer/
+	 hmkVSol7ggOK/nrvsBDCbTMXJgXa9i/jfIR5S4I4k4lyLlxMlvyi5ws084NpjNezS/
+	 l6rmkNy46ZuWx6OsTUC9ciTo7VefhgZoiE5Ot6SlU2MmJ0BA15YubG1qJ1gfKKOCz8
+	 wuncI9Ijgtp2g==
 Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-8202.netcup.net (Postfix) with ESMTPS id 4gVjxR6mb4z3xJ6;
-	Wed,  3 Jun 2026 12:05:15 +0200 (CEST)
+	by mors-relay-2501.netcup.net (Postfix) with ESMTPS id 4gVkQy1FD6z4whb;
+	Wed,  3 Jun 2026 12:27:22 +0200 (CEST)
 X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
 X-Spam-Flag: NO
-X-Spam-Score: -2.899
+X-Spam-Score: -2.901
 X-Spam-Level: 
 Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4gVjxQ2YYJz8tZd;
-	Wed,  3 Jun 2026 12:05:14 +0200 (CEST)
+	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4gVkQx21qPz8tcJ;
+	Wed,  3 Jun 2026 12:27:21 +0200 (CEST)
 Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id D3F2B5FA20;
-	Wed,  3 Jun 2026 11:56:15 +0200 (CEST)
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 6EEE85F96B;
+	Wed,  3 Jun 2026 12:27:20 +0200 (CEST)
 Authentication-Results: mxe9fb;
         spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
 Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <114b9be8-1fca-4762-822e-1d53838d5de5@leemhuis.info>
-Date: Wed, 3 Jun 2026 11:56:15 +0200
+Message-ID: <59207b24-4fc1-45ec-b34d-359e1d247c54@leemhuis.info>
+Date: Wed, 3 Jun 2026 12:27:19 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -57,19 +57,17 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] Resolutions broken after "drm/msm: dsi: fix PLL init
- in bonded mode"
-To: neil.armstrong@linaro.org, Mohit Dsor <mohit.dsor@oss.qualcomm.com>,
- Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
- freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- vishnu.saini@qualcomm.oss.com,
+Subject: Re: CL37 autonegotiation not working on amd-xgbe
+To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+ Jakub Kicinski <kuba@kernel.org>, PrashanthKumar.K.R@amd.com,
+ Madhu.Banavara@amd.com
+Cc: Patrick Oppenlander <patrick.oppenlander@gmail.com>,
+ netdev@vger.kernel.org,
  Linux kernel regressions list <regressions@lists.linux.dev>
 References: 
- <20251027-topic-sm8x50-fix-dsi-bonded-v1-1-a477cd3f907d@linaro.org>
- <ae07cef84AmXK43H@hu-mdsor-hyd.qualcomm.com>
- <wrhuksrzlxw2pjlvjm37dwjuztcv7qs5t6mqiav4ujecwqdkwj@ozbfxpbgaimt>
- <CAJfMnmEVwUwt=wMJ-8HKH1yz9+erWLrRGB+6wVYCdSGDK+_T_Q@mail.gmail.com>
+ <CAEg67GmFS0Q4oSZkz8zWdOzckSth9_vBPiOy6a7-d697C2w2Xg@mail.gmail.com>
+ <20260427162839.350135c8@kernel.org>
+ <fa98f520-7539-42c0-a8f4-1858553946fe@amd.com>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
 Content-Language: de-DE, en-US
 X-Enigmail-Draft-Status: N11222
@@ -116,79 +114,33 @@ Autocrypt: addr=linux@leemhuis.info; keydata=
  8zG721N4hWyyLALtGUKIVWZvBVKQIGQRPtNC7s9NVeLIMqoH7qeDfkf10XL9tvSSDY6KVl1n
  K0gzPCKcBaJ2pA1xd4pQTjf4jAHHM4diztaXqnh4OFsu3HOTAJh1ZtLvYVj5y9GFCq2azqTD
  pPI3FGMkRipwxdKGAO7tJVzM7u+/+83RyUjgAbkkkD1doWIl+iGZ4s/Jxejw1yRH0R5/uTaB MEK4
-In-Reply-To: 
- <CAJfMnmEVwUwt=wMJ-8HKH1yz9+erWLrRGB+6wVYCdSGDK+_T_Q@mail.gmail.com>
+In-Reply-To: <fa98f520-7539-42c0-a8f4-1858553946fe@amd.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-PPP-Message-ID: 
- <178048057627.3107155.17534295353220760642@mxe9fb.netcup.net>
-X-NC-CID: z1MsFiVcCJunZd2oROBxLRLnrgFD6ue7Cr/uOXVEQD7T8aZ1lCM=
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: <178048244075.3176975.4222387635817759165@mxe9fb.netcup.net>
+X-NC-CID: PA3D8pYHFeY2MIVhENuKQGGPYslo2rPwJVrRO6DpG1DxwmHMn34=
 
-On 5/4/26 22:09, Mohit Dsor wrote:
-> Sorry for the late reply. I am attaching clk_summary and reg_dump in
-> working and non working case. Lilliput is just a normal display working
-> with hdmi and has 720p as preferred mode. Yes, I was talking about RB3
-> Gen2 only.
+On 5/6/26 05:55, Shyam Sundar S K wrote:
+> On 4/28/2026 04:58, Jakub Kicinski wrote:
+>> On Thu, 23 Apr 2026 10:18:49 +1000 Patrick Oppenlander wrote:
+>>> A recent change [1]
 
-Neil, Dmitry, and Mohit: what's the status here? From the outside it
-looks like this regression is still unfixed with nothing happening for
-weeks now. Or has progress been made and I just missed it?
+FWIW, that was 42fd432fe6d320 ("amd-xgbe: align CL37 AN sequence as per
+databook") [v6.16-rc5]
+
+>>> stopped CL37 autonegotiation from working on amd-xgbe hardware.
+>>
+>> Hi Raju! Are you looking into this report?
+> 
+> Dropping Raju as he is no longer with AMD.
+> 
+> Thanks for the bug report. Prashanth will maintain this driver going
+> forward.
+> 
+> Prashanth, can you address this bug? Also, please update the
+> MAINTAINERS list by dropping Raju's name.
+Any progress? It looks like nothing happened to fix this regression
+since above mail, but I'm looking at things from the outside and there
+it's easy to miss something, so please tell me if that's the case.
 
 Ciao, Thorsten
-
-> On Sun, Apr 26, 2026 at 4:14 AM Dmitry Baryshkov
-> <dmitry.baryshkov@oss.qualcomm.com
-> <mailto:dmitry.baryshkov@oss.qualcomm.com>> wrote:
-> 
->     On Sun, Apr 26, 2026 at 03:38:49AM +0530, Mohit Dsor wrote:
->     > Hi Neil, all,
->     >
->     > We are seeing a regression after:
->     >
->     > drm/msm: dsi: fix PLL init in bonded mode
->     > https://lore.kernel.org/r/20251027-topic-sm8x50-fix-dsi-bonded-
->     v1-1-a477cd3f907d@linaro.org <https://lore.kernel.org/r/20251027-
->     topic-sm8x50-fix-dsi-bonded-v1-1-a477cd3f907d@linaro.org>
->     >
->     > Issue:
->     > - Resolutions are broken after this change. Like if we try to run
->     720p60 it will be 720p30.
->     >   Even though the byte_clk is set correctly, the bridge is
->     receiving half the byte clock.
->     >   Some divider is getting set which is causing the byte_clk to get
->     half, ultimately fps to
->     >   get half. Some other resolutions may or may not be broken
-> 
->     Please provide necessary excerpts from /sys/kernel/debug/clk/clk_summary
->     for the working and for the broken cases. Also if there is a difference
->     in DSI PHY registers, please capture those (see
->     /sys/kernel/debug/dri/*/kms, provide necessary DSI PHY regs).
-> 
->     > Reproduction:
->     > - Used QNX RB3Gen2 Core kit with lilliput display and lt9611uxc
->     dsi to hdmi bridge.
-> 
->     What is lilliput? What is QNX RB3 Gen2? Is it the normal Thundercomm's
->     RB3 Gen2 or some other board sold with the same name?
-> 
->     > - Run 720p60 usecase on hdmi with dsi to hdmi bridge.
->     >
->     > Expected behavior:
->     > - Display should support the expected resolutions correctly.
->     >
->     > Actual behavior:
->     > - No display on lilliput display.
->     >
->     > Additional details:
->     > - Reverting this change locally avoids the issue.
->     >
->     > Could you please take a look?
->     >
->     > Thanks,
->     > Mohit
-> 
->     -- 
->     With best wishes
->     Dmitry
-> 
-
