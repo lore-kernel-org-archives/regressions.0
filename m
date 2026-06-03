@@ -1,143 +1,135 @@
-Received: from SN4PR2101CU001.outbound.protection.outlook.com (mail-southcentralusazon11012049.outbound.protection.outlook.com [40.93.195.49])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0702407CC0
-	for <regressions@lists.linux.dev>; Wed,  3 Jun 2026 08:00:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.195.49
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780473640; cv=fail; b=clnH6uJzfz3elztcmHFNjHys+fXY10i/CHW5E+70y2p4ks3ZNQi9auDpSud/7rXRHZcwnehFo/tzTqgGgKRvv84MvMht/MtyjDyXpe8r+GIrTRAi0Quc/oytrEGDtoKj5qEcnj5C5fAKECMYgRGDihxExdc/p1wrTVUAdb9YQwA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780473640; c=relaxed/simple;
-	bh=9VUEhwB9dmuQW7mtm2n5RiTS41vzPux5zK64BxvyKt0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=KczDih/8isEp11TX7W8mN1irSF4Sk2aBY4xR2IsKwUTy3XMB/7QUZDPoNMeLE+AD5aZ3kh9R3IsAMUCttOW57p8OjsT950/eZ/lo7NqXABpT59u8miZPiV9pPumxOYgScG0nQLrKOTypA9T+/dlFfJiI+lqHNv4f7l9svE+TNCM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=t3a+0p9f; arc=fail smtp.client-ip=40.93.195.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46EA5402428
+	for <regressions@lists.linux.dev>; Wed,  3 Jun 2026 08:02:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780473731; cv=none; b=Q58UrFAALbXcGA681Z52h3xqK4VbMRSiW8NVlXFExwlsUsO2E+6WezylEqXksMHa3WodN2XOBtxFIec3TXXNHnSRn61kK2y9MHFj9E26Wl7G4Z7jHpq11AeIxmpddrLHTKLUZ25EiBd6JY0RIDan5lyLSPZpkAn0E+uWQLje+gE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780473731; c=relaxed/simple;
+	bh=FhEX2C5U1e2rLZE3qf3v81ODJ4nqrFQu116VRK2H89s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sOv57UyKlYuw/IKye+c/F7MgZu4dhOi9LgRfx2uZRPlb9ETsTViOMXXSCsajr8t2QccKt3BZyzCNP+iCMOqnO1SSmdtbvo96U6Qc2GHtaeBqwk5Tjq9z3K9Hha60GCQeD7/yKxz1S7PLZL82pUcCZ7iucPVH0bZmPwGatOTbvVk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gibson.dropbear.id.au; spf=pass smtp.mailfrom=gandalf.ozlabs.org; dkim=pass (2048-bit key) header.d=gibson.dropbear.id.au header.i=@gibson.dropbear.id.au header.b=LnPVNuzo; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gibson.dropbear.id.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gandalf.ozlabs.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="t3a+0p9f"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=PtWXgASZ7P/6BSRZTqRglk5n7F+YmOXe5I4Bc96gGnaAkiRGTN4nWbp67dq76PPfb0sBM48cyYfWUxO0kpJgFQznSPXYz69fIhxbuTi7linIVbPbpOVZZST85uacSw6jJ03CovcoIE5yl/BBJYf95TtBbSqkD5WGreMHs1Z/XlS4mYa4AJBHANgmHz1BVCCb2rcUHBm4545h+PfstVF6xdh6icyBQkNd2U+xk6wQyq6Nz1AMl7sb4Lo4oSeb4BWkUzhsDv9/9WSs4vtcoEcaj7gZZOla8ASY3+o2zgRIa/YPG7D1rSXR8RDjEj2vnOdxI2cs+LZj0GWh3HJHqeiQJQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=9VUEhwB9dmuQW7mtm2n5RiTS41vzPux5zK64BxvyKt0=;
- b=B7jXcQg5rYG8sn6GEsVmbPyAAQ/nIndhvE/MBrxQoFgIPADYedTaVEbU+PW0a+hkFjQ96Ecs7OdMS782orFVVHZq218BksTBaWjNFV/oRQiMDb7EdLk8BHe5VIBUUL0V3tHrwG8ExbZT3v3+TCwXDKH0XX7jQA47fZWA9ogK8lgRZfsodyo/6srqT5tlgvarXLIfX6H8LxJcbYePvY43PL0UqXK8jrMaoHpxd4f9HsCYs0u+wbIVHU8zAqNMuxYuCZzjYaGs6PLRbObxJFve9bg59xZ1x8UxahzmK0NiT7tMsXVVrT6v/CIpQRPhCHphUVQiDO8j/56NtbKTvW/Xug==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9VUEhwB9dmuQW7mtm2n5RiTS41vzPux5zK64BxvyKt0=;
- b=t3a+0p9fpiQCFWUDZ9n42zi2Vo08+6+XN4wtbSaTje5ooknBVK8XO1MkAQ0pPpt0giqpcFad8YyWuV1NU2N46i87OAdQDgBLFPGqqizfxP+nU/9lW9ynYtiOP2afnoTp2l4sIprNllcurhliE73zEl4cw32KZzvSnPODU+FEbqaQIxN9db2+ouHdV83YH5ag02+MWUgiGAX8bnrGi1yvC9E0whL6GsyzsSBH+qg1jsPVuXwZMXhF73ZBYj+SOfbTBI/1tSirLUHLc77t2K8q/QMb1TWASYsO44caGHJAkla0tf9Wk5fNdsAbTy68xSr2+33s25RsCMwA0CsRoAm80Q==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from SA3PR12MB7901.namprd12.prod.outlook.com (2603:10b6:806:306::12)
- by BL1PR12MB5945.namprd12.prod.outlook.com (2603:10b6:208:398::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.71.16; Wed, 3 Jun 2026
- 08:00:34 +0000
-Received: from SA3PR12MB7901.namprd12.prod.outlook.com
- ([fe80::6f7f:5844:f0f7:acc2]) by SA3PR12MB7901.namprd12.prod.outlook.com
- ([fe80::6f7f:5844:f0f7:acc2%6]) with mapi id 15.21.0092.006; Wed, 3 Jun 2026
- 08:00:33 +0000
-Date: Wed, 3 Jun 2026 11:00:23 +0300
-From: Ido Schimmel <idosch@nvidia.com>
-To: Fernando Fernandez Mancera <fmancera@suse.de>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
-	=?iso-8859-1?B?zfFpZ28=?= Huguet <ihuguet@redhat.com>,
-	Matthieu Baerts <matttbe@kernel.org>,
-	Stefano Brivio <sbrivio@redhat.com>, netdev@vger.kernel.org,
-	yuhuang@redhat.com, justin.iurman@gmail.com, horms@kernel.org,
-	pabeni@redhat.com, kuba@kernel.org, edumazet@google.com,
-	davem@davemloft.net, dsahern@kernel.org,
-	Chris Adams <linux@cmadams.net>,
-	David Gibson <david@gibson.dropbear.id.au>,
+	dkim=pass (2048-bit key) header.d=gibson.dropbear.id.au header.i=@gibson.dropbear.id.au header.b="LnPVNuzo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=gibson.dropbear.id.au; s=202602; t=1780473727;
+	bh=CS2AOn/tJ0mhXVuSowRo5F86TzuTj5U20PzZdWlsqc4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LnPVNuzo3iGFLrZWRaHrS4RFAlNoXR3F9EgxxKcZnGS8Bp9+mTPwKRmW5vNxXmaiH
+	 vddTm3+IlpL7FZQaPNxCnEmAsDZiOMzpkmVrx9o4Uc9cBvVX74qE8MEXNWw8us0+1F
+	 Xw/XKoiPbZj41WfrAYMBl5Mdg0fYNVvw8znO+sD4LjhKASxWBTQy2g8/u93a8n/8JM
+	 iAJ+v3WBhAVly6/E1GrmugM1utf/jhcacZrMjgIHEXpJdaJdEUTOYBG6bjimhjHwzw
+	 fbi3Z1M0Khsq3r0AkveT6nWqL64Owvz3ziZX9oDZIYfhOwD70vq1y68jx1jOJJiQ3X
+	 sR6acvVyuFGew==
+Received: by gandalf.ozlabs.org (Postfix, from userid 1007)
+	id 4gVgCM39K2z4wxG; Wed, 03 Jun 2026 18:02:07 +1000 (AEST)
+Date: Wed, 3 Jun 2026 18:02:02 +1000
+From: David Gibson <david@gibson.dropbear.id.au>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: =?iso-8859-1?B?zfFpZ28=?= Huguet <ihuguet@redhat.com>,
+	Stefano Brivio <sbrivio@redhat.com>,
+	Fernando Fernandez Mancera <fmancera@suse.de>,
+	netdev@vger.kernel.org, yuhuang@redhat.com, justin.iurman@gmail.com,
+	horms@kernel.org, pabeni@redhat.com, kuba@kernel.org,
+	edumazet@google.com, davem@davemloft.net, idosch@nvidia.com,
+	dsahern@kernel.org, Chris Adams <linux@cmadams.net>,
 	Beniamino Galvani <bgalvani@redhat.com>,
+	Thorsten Leemhuis <regressions@leemhuis.info>,
 	Andrew Lunn <andrew@lunn.ch>, regressions@lists.linux.dev
 Subject: Re: [PATCH net v2] Revert "ipv6: preserve insertion order for
  same-scope addresses"
-Message-ID: <20260603080023.GA575206@shredder>
+Message-ID: <ah_fejZd-lPr6AqM@zatzit>
 References: <20260529112357.5079-1-fmancera@suse.de>
  <20260529134045.56330243@elisabeth>
  <5079261a-79e5-421b-bf6a-a511acaaeca4@kernel.org>
  <20260601153525.546746a8@elisabeth>
  <CACT4oueDv=KRZmJw=1N58EN7eoFz5AqbBBMP8FE4=+rQ99oFEg@mail.gmail.com>
  <8e9cbf0a-caff-4575-afb7-fe852df8a51a@kernel.org>
- <CACT4oueJ3GsVvnWcZHgYVL-fCjpt5nOw+2=0BTmiz-9xKY4B0w@mail.gmail.com>
- <eba11df5-3ae6-4bc4-bbe7-be358a0d4717@leemhuis.info>
- <ee2b92e5-6d95-4c36-9fa8-6cd2a1572556@suse.de>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ee2b92e5-6d95-4c36-9fa8-6cd2a1572556@suse.de>
-X-ClientProxiedBy: TL2P290CA0008.ISRP290.PROD.OUTLOOK.COM
- (2603:1096:950:2::11) To SA3PR12MB7901.namprd12.prod.outlook.com
- (2603:10b6:806:306::12)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA3PR12MB7901:EE_|BL1PR12MB5945:EE_
-X-MS-Office365-Filtering-Correlation-Id: 52814d34-7af8-4bd3-4cc1-08dec1463023
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|376014|1800799024|7416014|56012099006|18002099003|22082099003|4143699003|11063799006;
-X-Microsoft-Antispam-Message-Info:
-	yISLtu40VavjS2tGOFNbLP2g4l9OGxlvocGFSyMSti3UPMg5JMN8sdY7lXuOciwTvNVsxynYyPk7+pqnNJMSSu4SALphmF3u3qQgL8ZNWUAjcME7fXdYasLF6qduVMQJqn2R36DLVcgh4QK3GHbMHRJJNllbUU/nVs/drEFmIcEl1MzTx3d8GhrQXOPCsvvBujtAhbe8SUVP1Yxqa0Z05IXVdx/pqaW5s70+JfFTDwtENR8z1o6VsH22Ux51+WGdL+dy4RCaGOhP76vlPgRrGQao6l+5lrYZOCcMY4HoA3gr6ccJNxUQh2DpCqV0kxFIaPA6TUIamEryPNf00Xy/hHjgMd9xMVdudYrZ9SQbiSmZsTpj0OYgW3oTq9WNAXAjuEQN4z8Fts/eGTZo9EO26gfLnEK0fZTzLWXeni86OPzCUgNvdQMCwHRQwOkRF8YYhfN+Rs66VRmAzlfwwb+mMw/+YoiO4yCnaHNZI/K43RvUkMD5XbMykKDzWxHls9bk2Aifp+3px48xahs6oskHx1EgyewECgukazGTaPK/h+BsMv1kSj0sq7r2A+K0NiYVeedFHkGHBvB7ZzSaWiCU4gJfeevTaz92wcUIIskf0RUPfGUW7KGIDoBgTMuQg3CfR4QatdOVisqTD5ayi71RtBZYUB9S2cV1hbJ/MjmbeqgPgezqMW12+p4/7Y3XUzyI
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA3PR12MB7901.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(7416014)(56012099006)(18002099003)(22082099003)(4143699003)(11063799006);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?KfTg6Y5ryefYH09yOIwnaRxHJAB6YIYNFFiMRJ6fh6heBzfimofVwb96N6EA?=
- =?us-ascii?Q?Fq+5rraIpwS1q735hjI/tUSWhUfATfI8XMSc2YwhND1p4LyTvY1XFMmprs7M?=
- =?us-ascii?Q?E2zA5ETzFkFbPLUFRXHQMUFXIe7o4pRSeoNYP54f/27+/yj4KLGxmvay2lMQ?=
- =?us-ascii?Q?ue7MfQvM3m9BVWW3pNX8hrVy+CUS20mdfw1SfiO/AQBQV6Blcli16w20ZSM/?=
- =?us-ascii?Q?oYEgRt6gDYJ2PyvvBjW/2qKRdd0ssYTFCtwj1k6imvs4hu4PGXBB/y46GNvJ?=
- =?us-ascii?Q?Y0KJkTwLS3fLoxmuu7t62nnefWIzisweW7uueV1PtGmlnS3Aj6m50SO+rtwo?=
- =?us-ascii?Q?OjsU9djAynP4PLk+s96Sq69IgONl/uUOUnvbLYu2ZS8gsQs0P/46Ub8n5JSK?=
- =?us-ascii?Q?im6a4c5njRtN6KTXUdRJMQtdYJOfyNzy9gVt0GKZ7mhUJchnoYoOYRxpTxDK?=
- =?us-ascii?Q?/mmbKglBT4rBSxvlDYAvSg7zgvF2/ILfQZHCNNFbcPRAIg9FIDmjSsLq5sdG?=
- =?us-ascii?Q?JnkgnClGBocVEBVEp19WlywHpwAxml8RGsvD4El8z1v+yefnjrY4ASl3E25t?=
- =?us-ascii?Q?vb80bAzb7v4dtPp7LLhIgeaRV3TkAUIyNLOiUOwK0xmKkReyw9GgZhJMg/NQ?=
- =?us-ascii?Q?E99P4ksQggxdrYJbaCOlxoTcTGilELCiP9U7nME2eafWy4dc1ZCWOLaJ871E?=
- =?us-ascii?Q?+/Pe6K+r9C04ATfZtOiHJa9SMR2xoxMsoFgca9LF/o3L96c7ZqhCeJIRDUxP?=
- =?us-ascii?Q?glquAPwZtqxYty3q2fQqWkxcNqfrIsUOVFBJ2loB2KhujwNA//lUDMQZ2Ejc?=
- =?us-ascii?Q?G0ZTRJOfCjHWC6Ye2yhP9aYatNeHEOBEpyrgrfEmMPE9HCgt+JcO00ImTeer?=
- =?us-ascii?Q?ydmFmul9/jDFcQEZAOYGIOyog0T0cmLnCuzULkPi/5omDf0jUhgb+Z0HuyhH?=
- =?us-ascii?Q?JKhB1eFTka1K0dMcAa94+fcwkAEHjvpxMT5fscs2DDJKg/MV/biF3St36UCu?=
- =?us-ascii?Q?DQQors9tPOTQrYGShCVaBGjsOvztqQjjR2A4BT3GC+JjrwNSXzYxnmc9ppBT?=
- =?us-ascii?Q?hQBos5tQtSEZwTwCBdmIQ/WCKCg4HexaucRkbXmVw1b3+lsE6gDwqGK7Mxw/?=
- =?us-ascii?Q?bpSbHC2i08YaKL1CxssyItxUMuAKF831HnfcKFGCjE6CNgHxbsfUaJe4Yahx?=
- =?us-ascii?Q?gZabUc8HcwQwIyj7LY2e326jtjLFgv46RTRUgDSrj/kcdOQfotfqV5mk1XiV?=
- =?us-ascii?Q?X/AAUnpQLLAgvva/lCYsPihkxoMYTczJjynw0VTKWifDBdOg+QsMX8MuiY6Z?=
- =?us-ascii?Q?r3gxdz15tDS7pR80b8nTCTF8eImexkKo3500R0SBaTftGJEuT5SYhQraooXz?=
- =?us-ascii?Q?VCZRF9e2ey/OzRjePd4cqLJ9Xg+Swtvmg0CWAr+tpjE2BIawizYAXVlsXvTD?=
- =?us-ascii?Q?CVgNbWaj5Lkvy7R48qwv1oF0Klqsce7ruIBU25yJ9OS5ZnEdJZ29fpMWYSql?=
- =?us-ascii?Q?haYfaFwr8RVPPejFIB77w9csKugo35mhHC1qUEszoCKW9MaXnRwYyY632a4f?=
- =?us-ascii?Q?ODSSN6HMXXmIDdLiHS5GrzAUocWsva9zLaFAADcWDpysnK3FDs+PS+KRyOnI?=
- =?us-ascii?Q?NmQAQOwtI8b1ttqqbHNryKsVOhGZtubMjtBTVNXzS0+EhC9jWrX+4D6CeIk/?=
- =?us-ascii?Q?K3cICLA+ZZpsfKwfDyzkHylWUT+Zr0fJR/2onxJWs62bM6po?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 52814d34-7af8-4bd3-4cc1-08dec1463023
-X-MS-Exchange-CrossTenant-AuthSource: SA3PR12MB7901.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jun 2026 08:00:33.3933
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 1dW/3m453y5YKSB+if21JzjGAqwdvKtcTlC6XFc66pNQ3KrKPa6ySdGVgAMOmQfwNM6slADj1fYEwZtnvTmNlQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5945
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="2hgDZo9YJcACAqqN"
+Content-Disposition: inline
+In-Reply-To: <8e9cbf0a-caff-4575-afb7-fe852df8a51a@kernel.org>
 
-On Wed, Jun 03, 2026 at 09:29:55AM +0200, Fernando Fernandez Mancera wrote:
-> We should document that the order matters, no that it is "random" because it
-> isn't.
 
-Did you consider writing a kernel selftest for this? Unlikely that the
-order will change again when we are explicitly testing for a certain
-order.
+--2hgDZo9YJcACAqqN
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Jun 03, 2026 at 03:46:14PM +1000, Matthieu Baerts wrote:
+>=20
+>=20
+> On 02/06/2026 00:01, =C3=8D=C3=B1igo Huguet wrote:
+> > On Mon, Jun 1, 2026 at 3:35=E2=80=AFPM Stefano Brivio <sbrivio@redhat.c=
+om> wrote:
+> >> I was thinking that if we implement a label like NLM_F_INSERT_LAST
+> >> (David's proposal for the name), we could patch iproute2 to set it on
+> >> 'ip address restore' at least, other than using it in pasta(1).
+>=20
+> (...)
+>=20
+> > What if we reapply the patch and add a NLM_F_INSERT_FIRST /
+> > NLM_F_PREPEND option instead? This will break UAPI, which is bad, but
+> > probably not too bad per the conversations in this and the other
+> > thread.=20
+>=20
+> I guess it is safer not to break UAPI and not reapplying the patch,
+> especially when there is no clear way to know which order is taken by
+> the kernel.
+
+I think =C3=8D=C3=B1igo wasn't suggesting reapplying the patch as is, but a
+modified version that only makes the behavioural change when userspace
+sets a new attribute/flag/whatever.
+
+> What about clearly stating that the default order is "random", except
+> when an additional flag is set to sort them chronologically or the
+> opposite?
+
+We could, but since userspace relying on the existing behaviour is
+already out there, I'm not sure what it buys us.  The insertion order
+also isn't random - it's sorted by scope at least.  Theoretically
+there could be other (existing) sorting criteria for other address
+types (I haven't looked beyong IPv4 and IPv6).  The problem arises
+because IPv4 and IPv6 have different behaviours when inserting
+something where the order isn't defined - IPv4 inserts after existing
+entries of the same scope, IPv6 puts it before existing entries of the
+same scope - it's literally a < versus a <=3D.
+
+--=20
+David Gibson (he or they)	| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you, not the other way
+				| around.
+http://www.ozlabs.org/~dgibson
+
+--2hgDZo9YJcACAqqN
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEEO+dNsU4E3yXUXRK2zQJF27ox2GcFAmof320ACgkQzQJF27ox
+2GdT4Q/+Pdyv4ttbRv9/hxDynh1JFBvIDwN77zvrMD9D9VZNFWTzFrSWI3fzkw1J
++narmMh4NtYObu26YzltRw2hq4pKMEkUYw14Tgx0okBBMX/kHzymNrSADC3GGJKG
+MvHcTP03r/7pD+cnPF7d8DToYQDC3WfCsMKSg79OXmDOy9fdy3/8K21JtYv+m820
+bPiQv77nbXBElhBnGENR6Oy4k7uyM7ga0TQFTxWWbzYeJSaVnHju33Fit+qdulnI
+vZVX2Aj+g7MPdzHzF+wvA6+xp/vLKALA0Sut1uLzWiQAF5NRHKEoc9xO5QCl6N8l
+r6XICQZN3/KwL5it+WLXgJkwVsahBjIwLE91hxWAtRI38gpSIPyDmmTqHRL9beTq
+XfRb/fuuFVLT2TNs55G+iG0S7pstcoqzBhMIPUbh3K8kFVpRYx5B2Vhv/1DGNR0t
+3emeU5M9kRXkH/VQpFshfeO7rNYQtlqtE+dssUQhpX3saNUczO4vfTnJlM9sYyT6
+BoGzVGPlAImatDuJWwUGh1WiO4ceD1UfVQ/wJm0+dhadWabI5SWj/D5Cy2k/+rJv
+EUOmUl+7a6j9fIrPkn7M+PFNnQKIi2r/fyvRqDmII4a3JMAGuGf8upziK3Xmf0a2
+tjj7MgiG1AXcxBgogthYG9KXicHMhhiLtX+O2U0CnqCkWUXeUdk=
+=0PGq
+-----END PGP SIGNATURE-----
+
+--2hgDZo9YJcACAqqN--
