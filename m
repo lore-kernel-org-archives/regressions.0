@@ -1,51 +1,81 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [194.59.206.189])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B142320CD3
-	for <regressions@lists.linux.dev>; Wed,  3 Jun 2026 07:18:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.59.206.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E24F33FE640
+	for <regressions@lists.linux.dev>; Wed,  3 Jun 2026 07:30:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780471104; cv=none; b=IiykWsvRLChcHgmAJO4y2mlO6iKgMo0YvNVCeIeq6bWP4DHKDg9ypgRylKZV/n3PJkWuj/DodpifKOPEtNwzH9dl1QPTiqYpNdz3wEySpFJi9i4HSPMILTYKbn0iW3dDy7HkPyI9wfCilUSxVMQMgSFgOIRlWecBWA3SsC13tOY=
+	t=1780471810; cv=none; b=TlaOMLXP78bWlzuUuU9mR9R37jfSYjsHDU3ziI+bC2sWSlEvcAR6BFGuCawdAkZMq3SKz8HyLdTNU9hyL+IVfg6FbYJn5Qk80S5veP9wyIOAc/d4GUxwDd1oAdFJuZcCwC3BivCsYBayYZHI9wjPEVUsNHGvR8q3ZgGtiHwJyyY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780471104; c=relaxed/simple;
-	bh=6AZli0waDkqPPv4RYfw4UTCBZr6umj22h0dhXR1Jr4Y=;
+	s=arc-20240116; t=1780471810; c=relaxed/simple;
+	bh=YxzoIVHbPr3oQc1nQVQasy2iwxvsuBJgEY4HXVBZmqU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=M4P4LYaFwPgMKFmUBCD9FCeCy7OuNfPYklExcWFewMEDGWBYXormECXzBdAZDK4kPT7S06qz0IrqvQnEKK8fI3BiZNrZ1DRUqI6OdGs1rpiFhAuRld1RdIvr//6H5kzmoNccwUkw7TxF7NvVP6EyWvhSkblmMyHZYMVNPuTaUkw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=PZo8u9ES; arc=none smtp.client-ip=194.59.206.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	 In-Reply-To:Content-Type; b=jjVxTxH8gbcQla61zeBmqAxo58H5/twBO4HL23qZEgub5wnwCqzJAOqKT35Bru/PZWKHR7fex13BOUThGmgVCxtMVHchCb+FPB6Mho+M9kJ8TAEUISoCDBvUwVaDVmHlaUMFI1N1r9ydDgnZb9HV9ATY4kbF8MkwVb+YjqgIjVA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=xSWk3Sjf; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=uGZE9rWZ; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=xSWk3Sjf; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=uGZE9rWZ; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="PZo8u9ES"
-Received: from relay02-mors.netcup.net (localhost [127.0.0.1])
-	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4gVfDK1zM1z44TC;
-	Wed,  3 Jun 2026 09:17:53 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1780471073;
-	bh=6AZli0waDkqPPv4RYfw4UTCBZr6umj22h0dhXR1Jr4Y=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=PZo8u9ES/eDEnOLUv4zPK5PT0RYgcx0DzP3CNid17so5QbcNr4mNP3zXV7GzevQph
-	 jVeen7yRdabS2ngfW2VxsarG4/o4Uqu+NFfdRrUz685pLJLrlDhsZHajvG1pT9ONwL
-	 F14AMkiodK4oLDhlXLdPdowPukLu3HYDYzTvFUEvTfMyrERizr8mBWVR5igbwVKzMi
-	 tiQeFAqy82C7jKLXGFEiMG8aR2mvOAVJNuCm4xCPSpBeC3CzG+FHBjCqtYU5qG01yG
-	 fWCEwji0RQk7SGUGK+46P7BXUzjROEIkYn+O3G+FTw4sqpFvLQyNtSwiaFhJCSC40g
-	 1+Zwi6fLifhbg==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4gVfDK1FmZz7x8R;
-	Wed,  3 Jun 2026 09:17:53 +0200 (CEST)
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="xSWk3Sjf";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="uGZE9rWZ";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="xSWk3Sjf";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="uGZE9rWZ"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4gVfDF24yqz8sb8;
-	Wed,  3 Jun 2026 09:17:49 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id E18645F96B;
-	Wed,  3 Jun 2026 09:17:47 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <eba11df5-3ae6-4bc4-bbe7-be358a0d4717@leemhuis.info>
-Date: Wed, 3 Jun 2026 09:17:46 +0200
+	by smtp-out1.suse.de (Postfix) with ESMTPS id D687E6A814;
+	Wed,  3 Jun 2026 07:30:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1780471804; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TpNk53TJJJrI1vhGNmcCweBe5RxuqLMJWxMWBJp5NUs=;
+	b=xSWk3SjfyEUHYnV8RixbV41okdrSBJUTo6bjowgwWEFdhysxlVoiwnQf84p9V+9NCtGJOW
+	11gwNYNBpssT0wX4veHWrgIojW9B2+HHf7kf4N44WbbSx+MtYxbWVrbwUAcq6If88KSvZU
+	eB+tf+HZmxo2UHrjc3bRYRq/j+mMa3c=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1780471804;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TpNk53TJJJrI1vhGNmcCweBe5RxuqLMJWxMWBJp5NUs=;
+	b=uGZE9rWZF4DQreq5id8Rvv6DiS246Lf7vaPhPxHYTVzxPZ9+qUoNKxBKVys+mba9rFAF5T
+	2fP61wqpw5XNIqBA==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=xSWk3Sjf;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=uGZE9rWZ
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1780471804; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TpNk53TJJJrI1vhGNmcCweBe5RxuqLMJWxMWBJp5NUs=;
+	b=xSWk3SjfyEUHYnV8RixbV41okdrSBJUTo6bjowgwWEFdhysxlVoiwnQf84p9V+9NCtGJOW
+	11gwNYNBpssT0wX4veHWrgIojW9B2+HHf7kf4N44WbbSx+MtYxbWVrbwUAcq6If88KSvZU
+	eB+tf+HZmxo2UHrjc3bRYRq/j+mMa3c=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1780471804;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TpNk53TJJJrI1vhGNmcCweBe5RxuqLMJWxMWBJp5NUs=;
+	b=uGZE9rWZF4DQreq5id8Rvv6DiS246Lf7vaPhPxHYTVzxPZ9+qUoNKxBKVys+mba9rFAF5T
+	2fP61wqpw5XNIqBA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E4F52779A7;
+	Wed,  3 Jun 2026 07:30:03 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id piMwNfvXH2pkVQAAD6G6ig
+	(envelope-from <fmancera@suse.de>); Wed, 03 Jun 2026 07:30:03 +0000
+Message-ID: <ee2b92e5-6d95-4c36-9fa8-6cd2a1572556@suse.de>
+Date: Wed, 3 Jun 2026 09:29:55 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -55,10 +85,10 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH net v2] Revert "ipv6: preserve insertion order for
  same-scope addresses"
-To: =?UTF-8?B?w43DsWlnbyBIdWd1ZXQ=?= <ihuguet@redhat.com>,
+To: Thorsten Leemhuis <regressions@leemhuis.info>,
+ =?UTF-8?B?w43DsWlnbyBIdWd1ZXQ=?= <ihuguet@redhat.com>,
  Matthieu Baerts <matttbe@kernel.org>
-Cc: Stefano Brivio <sbrivio@redhat.com>,
- Fernando Fernandez Mancera <fmancera@suse.de>, netdev@vger.kernel.org,
+Cc: Stefano Brivio <sbrivio@redhat.com>, netdev@vger.kernel.org,
  yuhuang@redhat.com, justin.iurman@gmail.com, horms@kernel.org,
  pabeni@redhat.com, kuba@kernel.org, edumazet@google.com,
  davem@davemloft.net, idosch@nvidia.com, dsahern@kernel.org,
@@ -72,37 +102,85 @@ References: <20260529112357.5079-1-fmancera@suse.de>
  <CACT4oueDv=KRZmJw=1N58EN7eoFz5AqbBBMP8FE4=+rQ99oFEg@mail.gmail.com>
  <8e9cbf0a-caff-4575-afb7-fe852df8a51a@kernel.org>
  <CACT4oueJ3GsVvnWcZHgYVL-fCjpt5nOw+2=0BTmiz-9xKY4B0w@mail.gmail.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: 
- <CACT4oueJ3GsVvnWcZHgYVL-fCjpt5nOw+2=0BTmiz-9xKY4B0w@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+ <eba11df5-3ae6-4bc4-bbe7-be358a0d4717@leemhuis.info>
+Content-Language: en-US
+From: Fernando Fernandez Mancera <fmancera@suse.de>
+In-Reply-To: <eba11df5-3ae6-4bc4-bbe7-be358a0d4717@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-PPP-Message-ID: 
- <178047106860.2884229.11167975002197488257@mxe9fb.netcup.net>
-X-NC-CID: oXfrpjjwOSKR5sEbKrJBTtL/u+qg0NyG0cVHx0QSERX9DU+6VGE=
+X-Spam-Flag: NO
+X-Rspamd-Action: no action
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.01 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCPT_COUNT_TWELVE(0.00)[19];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	RCVD_TLS_ALL(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[redhat.com,vger.kernel.org,gmail.com,kernel.org,google.com,davemloft.net,nvidia.com,cmadams.net,gibson.dropbear.id.au,lunn.ch,lists.linux.dev];
+	MID_RHS_MATCH_FROM(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	DKIM_TRACE(0.00)[suse.de:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.de:mid,suse.de:dkim]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: D687E6A814
+X-Spam-Score: -3.01
 
-On 6/3/26 08:53, Íñigo Huguet wrote:
-> Stating that the order is "random" implies that someone will change
-> the default insertion order in the future, as the documentation says
-> that it's not UAPI. So they'll cause the UAPI breakage that we are
-> trying to avoid now. Moreover, if we consider the default order
-> "random" and state that userspace programs must not rely on it, why
-> can't we change it now?
+On 6/3/26 9:17 AM, Thorsten Leemhuis wrote:
+> On 6/3/26 08:53, Íñigo Huguet wrote:
+>> Stating that the order is "random" implies that someone will change
+>> the default insertion order in the future, as the documentation says
+>> that it's not UAPI. So they'll cause the UAPI breakage that we are
+>> trying to avoid now. Moreover, if we consider the default order
+>> "random" and state that userspace programs must not rely on it, why
+>> can't we change it now?
+> 
+> Because the UAPI is only indirectly important, as it's "something that
+> used to work doesn't anymore" is what matters; you in fact can break the
+> UAPI all you want, as long as everything continues to work. Or to quote
+> Linus from:
+> 
 
-Because the UAPI is only indirectly important, as it's "something that
-used to work doesn't anymore" is what matters; you in fact can break the
-UAPI all you want, as long as everything continues to work. Or to quote
-Linus from:
+I agree with Thorsten here. We must not break the UAPI. Is the current 
+order kind of weird? Yes. But software that is running on real systems 
+depends on it.
 
-https://www.kernel.org/doc/html/latest/process/handling-regressions.html#on-what-qualifies-as-userspace-interface-abi-api-documented-interfaces-etc
+AFAICS, it is not only NetworkManager but systemd-networkd, cloud 
+tooling and any other script that uses netlink. I think we must stick to 
+the rule of not breaking userspace and the argument of consistency with 
+IPv4 is not appealing to me because that isn't a goal of IPv6, plenty is 
+different when you compared both protocols.
 
-"I just wanted to point out that the argument about whether it's an ABI
-change or not is irrelevant. If it turns out that some program - not a
-test script, but something with relevance to conscious user expectations
-~ depended on the old broken behavior, then it needs to be done some
-other way.""
+We should document that the order matters, no that it is "random" 
+because it isn't.
 
-Yes, he talks about ABIs here, but it's the same for APIs.
+> https://www.kernel.org/doc/html/latest/process/handling-regressions.html#on-what-qualifies-as-userspace-interface-abi-api-documented-interfaces-etc
+> 
+> "I just wanted to point out that the argument about whether it's an ABI
+> change or not is irrelevant. If it turns out that some program - not a
+> test script, but something with relevance to conscious user expectations
+> ~ depended on the old broken behavior, then it needs to be done some
+> other way.""
+> 
+> Yes, he talks about ABIs here, but it's the same for APIs.
+> 
+> Ciao, Thorsten
 
-Ciao, Thorsten
