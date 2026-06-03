@@ -1,127 +1,194 @@
-Received: from mail-dy1-f175.google.com (mail-dy1-f175.google.com [74.125.82.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.166])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EC50223DE7
-	for <regressions@lists.linux.dev>; Wed,  3 Jun 2026 09:40:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.175
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780479602; cv=pass; b=ffnI/hIxpBNlNhXi2ZYl+7dnamY6fmoAlObS0Ws46/t4a57ZZtai2m3HlE1kiMIINc9i/vkra9uAsLtNomq2FpxJvJZaIoHLfr5/7TRt3wS6pPLE6xVGaMRroZK1KX3P2X/9vR2y2z7nQVc1AJ1wyIN2ItccscC8yMsHJHW4cFI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780479602; c=relaxed/simple;
-	bh=1IeoGmyXKCHF+vazqnzxSivC66X9NGYz6nKU75EaHt4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uoDkVhQmp85NsTXxmTkINs6TnpEIEdFFXHizF38ZgcMg2dR3vq6ag22WnOECTKzBCMGM26FrhxsVCjfaYkVd/2DTnycu8x0S0oIpfDg974hp3UgyeDxKxD8daGJNwTiLIUPWf6066e22y466RnrD2Vz8pecOBwwWjS8sOh3HaH8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=A1DKPhgR; arc=pass smtp.client-ip=74.125.82.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 169A944BC9F
+	for <regressions@lists.linux.dev>; Wed,  3 Jun 2026 10:05:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.166
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780481120; cv=none; b=iE/Pai5KXwuEb/D0pQcEsr7FmDXWoNStJPViHC7Ikc4D5Bp4fuSwFNq2FddR+52GVxrI/aihuahePqmUVfvRC3hLbIQgFw42G0DacGsYbdi+RkVdCpwFLSw5y/pwBGpSAEofLwtxlDUqAzdAF/lCNRveHz1bKmos6ImzwrDV45Y=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780481120; c=relaxed/simple;
+	bh=pPdgNJnhX2PrU1X4qnCxIVn7py/OIeTqDE4or41kmYg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=c1JtsUHmeZ1up0WIDDk7lczPNm+G0sGTgkjQy1ueGIcTOgk77VGfLSPmU34bKGdUHKjVNqyQFHvcVyd/TB38yAjwDfLk7+WkXOad4EU+NSss5n9yArGj6FyTlazZz42MzTvqu61akdDSdRK/WYE0npU3z+UwtZZCge66RO/fObk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=lJVV++GO; arc=none smtp.client-ip=188.68.63.166
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="A1DKPhgR"
-Received: by mail-dy1-f175.google.com with SMTP id 5a478bee46e88-3074adb8fcaso340010eec.0
-        for <regressions@lists.linux.dev>; Wed, 03 Jun 2026 02:40:00 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1780479600; cv=none;
-        d=google.com; s=arc-20240605;
-        b=C45uexOjlXj0wUCxlcCmK+73XlxkaJXBrXW1ePwKrNPHWMCPJCFQ64PbbenBN8DIKq
-         H3cbFb4YJMqyOLQTvWewV/drOLtPbVgZsgCgWIUO90m67ATvLC11uBbip0NUGzUfO5v1
-         LUDtg+WoHRWnNALDpf4fWpdLsbVOD53+TdWtG0yJEN0oQHQ3mYRovFlCxRKxFCf1uTwW
-         0ySNLzNPnPHdn0LBkVxdDATFxpkJBMIkUr3wT7rL0mFWedNOeX0L0eOStp5A/21KtC9K
-         7Z0w1mt5AAkXBdehdjbeVWwwQ9dvGWXv+LN9t9awapis2Vgtwh7sCGb5e9/YufTcCmIu
-         +dTA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=1ehSj23IfCmzPZngwG8XDa8t9FB4fozxZd1s0Ny6Ia4=;
-        fh=DzxMhaj5K6C6OAdxw2s4GVvnaqKifoYSPWDlURBbWWw=;
-        b=HbAVa5/pB+kcmTr5fV9Eo37RG/KFkoraEovULe5FaAdJQQGmxw6Tyd9+KNRgRm0pf8
-         QwCP0FobpEEDsKaIS+QeUcsRLj8A2cSiYfslPDR537O0efEILWs45QELFlEoa56HXbLE
-         G1VSZtckNPIjxdEgZUeGbcvoW/TpY1LeacXhTIVNUmnG1EC01h9a1EPgLjN2VifPJYjp
-         Z1W/Z/Hzza1psg5EQxnW7DgFiLtxZbgZ4J2+TuCd27xsQJF7JYXX3hOLmJkKRRRDWa7H
-         rdjFhXbmwfZJoC+fGTtEADSPcQmCSXj3qQLJ2Ha3DJBy8XzHqqCtvSyORkVbaD+8A5sV
-         PO6g==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google; t=1780479600; x=1781084400; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=1ehSj23IfCmzPZngwG8XDa8t9FB4fozxZd1s0Ny6Ia4=;
-        b=A1DKPhgR6S8Bxghy7RqiJJNuzY+QQbStL6goonpuUe7Gbd3z3J/crP6ZyFBd6IH5rF
-         N920wI51Oi1paDwYnMhONg43MI8IqpoQA8KwO21s85blWPsKox26vvyqazRl8w76yjw3
-         5myMYktAIo067xs6GepSEiX5JavQn2ig1XITQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780479600; x=1781084400;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1ehSj23IfCmzPZngwG8XDa8t9FB4fozxZd1s0Ny6Ia4=;
-        b=T5Spnsw8LzhqvwqWQgJPt+OCoFlFP14pSdQTRNdPsjFEXzYPug+n7VX0dvGiPbP+ab
-         xv86PDZG4qlNFvewfeyBLynJ90YYurkJcHSTLREJSPj32KA/9iPWnp4/gVjm8qbDiYyw
-         9oPQTwCtBR1+OrbVDHZZLjuq4TQ2pOhAzJZ1+FTY5yJnQiiL3cCugLP1kJ5JyyJUQkaz
-         wmOm9U8rLkVm1RPRY3tDwmwdJ/h7Zm9/8ft7LZaXpDpyqF0tIl8Q3nP/4tB30gQMNBWV
-         2pYma0cc9Ukfd3igs+J1QH9BTYSj1y6Ox8mGr7DD4IRHdjK9JxXe23jgOfPdIuRPna2Q
-         nJRg==
-X-Forwarded-Encrypted: i=1; AFNElJ8eqwBRO8FobCQ6+0w5Rtt0x0htQWxRVw9GnlezTE9vq91NsR0Oigprf9Sh3UdV5avwpv/s0bYndHlkew==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzJ8T+UJCVWYua+J5H2qWXuxEhR9CsmQFDnU78P9uC1hYtxg9Oj
-	DXV/j6Mv09dUYo1LY/q3nI/FzLzVIEA4rtDsIe1J1WenhAt3ghdSzh5hB8EtD6tsGc53NVkBCBg
-	q+ZBCegGAWkGV6QQOiAjqn7HiMrxJSTkSz973a6FO/g==
-X-Gm-Gg: Acq92OFuxaDdt8rQN6Z/mSf5LTnUHaRlaqYimDc9jg+eSxwpdGSmyNqymrlwR1uIoZb
-	HroKPfxOxj9/qCby/w73UYiPVa5+tp4WY9hO14OAdf0P2sE+qDfpPCuOz8YjCToWZPWW4Ox/xLw
-	zY7h4FioDXp1cfOWUKq0DRPMMb509fsimgoekKQngO+8nfJNsniAkDQYaquf9ShwMa8WXYR675z
-	9hO0KakpaASLH2WMAjKvbdbkn2GZj/8LM8nR1Xx3MCsRoQkBSDBiYkYjDJq67MwiYOgUtm/q5y0
-	C+0CnRTUVHdZh9BTYlx3qVGZdcFKqdW0+F8+lQ+ZkFMEwRc=
-X-Received: by 2002:a05:7300:72cb:b0:2e2:3381:2fba with SMTP id
- 5a478bee46e88-3074fa5579dmr1310275eec.3.1780479600262; Wed, 03 Jun 2026
- 02:40:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="lJVV++GO"
+Received: from mors-relay-8202.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8202.netcup.net (Postfix) with ESMTPS id 4gVjxS0Prhz41qj;
+	Wed,  3 Jun 2026 12:05:16 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1780481116;
+	bh=pPdgNJnhX2PrU1X4qnCxIVn7py/OIeTqDE4or41kmYg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=lJVV++GOVSYt7b90Y4lHdWNNN/nVk7GrgSQtnDAqDFjxwreWHBvCu2X2ZBuqcHxai
+	 E5FGkWkMnALXy8Z7uHWnsaWmUlEchCG8M90hcYLPrvjh+T9IOgFdxulRvoYVaFjjqL
+	 flUkKVaaOFxNQbJRESLlVQAeuqCbcnsTxWwp/RHmzBxWq599quImmbtM7UdJ62QAby
+	 yaPGYf+8LM6s/OzJeR1YVN1vlzTE2GeDTWP97PKKU8vt/JW4FHxLgxntwNI9l2A4Tq
+	 n/5t4o6SW9wgy1voHxwGhz7uchnXs/m6LIfaOc30N8IY4Wl+B9xa6D6DdcmfhJHV1Z
+	 3DIQjzSrMekOg==
+Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8202.netcup.net (Postfix) with ESMTPS id 4gVjxR6mb4z3xJ6;
+	Wed,  3 Jun 2026 12:05:15 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
+X-Spam-Flag: NO
+X-Spam-Score: -2.899
+X-Spam-Level: 
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4gVjxQ2YYJz8tZd;
+	Wed,  3 Jun 2026 12:05:14 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id D3F2B5FA20;
+	Wed,  3 Jun 2026 11:56:15 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <114b9be8-1fca-4762-822e-1d53838d5de5@leemhuis.info>
+Date: Wed, 3 Jun 2026 11:56:15 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAFbF8N7++zopZuEcsKRxBV_sgOGCbzCY0hOyMw1SiGAtuzGhyQ@mail.gmail.com>
- <CAJfpegsCJnMfn_BzzTK7m9ndCGVsnPit8ZsT0fzAhYoY+yOsKQ@mail.gmail.com> <178035740095.2923901.5908691318688917347@noble.neil.brown.name>
-In-Reply-To: <178035740095.2923901.5908691318688917347@noble.neil.brown.name>
-From: Miklos Szeredi <miklos@szeredi.hu>
-Date: Wed, 3 Jun 2026 11:39:46 +0200
-X-Gm-Features: AVHnY4IoGOIZC3vvhezDGQYniFFeuDo0XpHHJxBiuhhHmBWXiQF3cxck0JH7m5w
-Message-ID: <CAJfpegt=DphJP3pYHL6ZMzbYD4Yfmo_G+DAm496Ar57L0RzymA@mail.gmail.com>
-Subject: Re: PROBLEM: FUSE_NOTIFY_INVAL_ENTRY leaves stale negative dentry
- after c9ba789dad15
-To: NeilBrown <neil@brown.name>
-Cc: =?UTF-8?B?0JDRgNGC0LXQvCDQm9Cw0LHQsNC30L7Qsg==?= <123321artyom@gmail.com>, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] Resolutions broken after "drm/msm: dsi: fix PLL init
+ in bonded mode"
+To: neil.armstrong@linaro.org, Mohit Dsor <mohit.dsor@oss.qualcomm.com>,
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ vishnu.saini@qualcomm.oss.com,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: 
+ <20251027-topic-sm8x50-fix-dsi-bonded-v1-1-a477cd3f907d@linaro.org>
+ <ae07cef84AmXK43H@hu-mdsor-hyd.qualcomm.com>
+ <wrhuksrzlxw2pjlvjm37dwjuztcv7qs5t6mqiav4ujecwqdkwj@ozbfxpbgaimt>
+ <CAJfMnmEVwUwt=wMJ-8HKH1yz9+erWLrRGB+6wVYCdSGDK+_T_Q@mail.gmail.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+X-Enigmail-Draft-Status: N11222
+Autocrypt: addr=linux@leemhuis.info; keydata=
+ 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 MEK4
+In-Reply-To: 
+ <CAJfMnmEVwUwt=wMJ-8HKH1yz9+erWLrRGB+6wVYCdSGDK+_T_Q@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-PPP-Message-ID: 
+ <178048057627.3107155.17534295353220760642@mxe9fb.netcup.net>
+X-NC-CID: z1MsFiVcCJunZd2oROBxLRLnrgFD6ue7Cr/uOXVEQD7T8aZ1lCM=
 
-On Tue, 2 Jun 2026 at 01:43, NeilBrown <neilb@ownmail.net> wrote:
+On 5/4/26 22:09, Mohit Dsor wrote:
+> Sorry for the late reply. I am attaching clk_summary and reg_dump in
+> working and non working case. Lilliput is just a normal display working
+> with hdmi and has 720p as preferred mode. Yes, I was talking about RB3
+> Gen2 only.
 
-> diff --git a/fs/fuse/dir.c b/fs/fuse/dir.c
-> index b658b6baf72f..3f16ecbc358e 100644
-> --- a/fs/fuse/dir.c
-> +++ b/fs/fuse/dir.c
-> @@ -1605,13 +1605,29 @@ int fuse_reverse_inval_entry(struct fuse_conn *fc, u64 parent_nodeid,
->                 struct dentry *child = try_lookup_noperm(name, dir);
->                 if (!child || IS_ERR(child))
->                         goto put_parent;
-> -               entry = start_removing_dentry(dir, child);
-> -               dput(child);
-> -               if (IS_ERR(entry))
-> -                       goto put_parent;
-> -               if (!d_same_name(entry, dir, name)) {
-> -                       end_removing(entry);
-> -                       entry = NULL;
-> +               if (d_really_is_negative(child)) {
-> +                       spin_lock(&child->d_lock);
-> +                       if (d_really_is_negative(child)) {
-> +                               fuse_dir_changed(parent);
-> +                               if (!(flags & FUSE_EXPIRE_ONLY))
-> +                                       __d_drop(entry);
-> +                               fuse_invalidate_entry_cache(entry);
+Neil, Dmitry, and Mohit: what's the status here? From the outside it
+looks like this regression is still unfixed with nothing happening for
+weeks now. Or has progress been made and I just missed it?
 
-s/entry/child/ for the above two lines
+Ciao, Thorsten
 
-Otherwise looks good and tests OK.
+> On Sun, Apr 26, 2026 at 4:14 AM Dmitry Baryshkov
+> <dmitry.baryshkov@oss.qualcomm.com
+> <mailto:dmitry.baryshkov@oss.qualcomm.com>> wrote:
+> 
+>     On Sun, Apr 26, 2026 at 03:38:49AM +0530, Mohit Dsor wrote:
+>     > Hi Neil, all,
+>     >
+>     > We are seeing a regression after:
+>     >
+>     > drm/msm: dsi: fix PLL init in bonded mode
+>     > https://lore.kernel.org/r/20251027-topic-sm8x50-fix-dsi-bonded-
+>     v1-1-a477cd3f907d@linaro.org <https://lore.kernel.org/r/20251027-
+>     topic-sm8x50-fix-dsi-bonded-v1-1-a477cd3f907d@linaro.org>
+>     >
+>     > Issue:
+>     > - Resolutions are broken after this change. Like if we try to run
+>     720p60 it will be 720p30.
+>     >   Even though the byte_clk is set correctly, the bridge is
+>     receiving half the byte clock.
+>     >   Some divider is getting set which is causing the byte_clk to get
+>     half, ultimately fps to
+>     >   get half. Some other resolutions may or may not be broken
+> 
+>     Please provide necessary excerpts from /sys/kernel/debug/clk/clk_summary
+>     for the working and for the broken cases. Also if there is a difference
+>     in DSI PHY registers, please capture those (see
+>     /sys/kernel/debug/dri/*/kms, provide necessary DSI PHY regs).
+> 
+>     > Reproduction:
+>     > - Used QNX RB3Gen2 Core kit with lilliput display and lt9611uxc
+>     dsi to hdmi bridge.
+> 
+>     What is lilliput? What is QNX RB3 Gen2? Is it the normal Thundercomm's
+>     RB3 Gen2 or some other board sold with the same name?
+> 
+>     > - Run 720p60 usecase on hdmi with dsi to hdmi bridge.
+>     >
+>     > Expected behavior:
+>     > - Display should support the expected resolutions correctly.
+>     >
+>     > Actual behavior:
+>     > - No display on lilliput display.
+>     >
+>     > Additional details:
+>     > - Reverting this change locally avoids the issue.
+>     >
+>     > Could you please take a look?
+>     >
+>     > Thanks,
+>     > Mohit
+> 
+>     -- 
+>     With best wishes
+>     Dmitry
+> 
 
-Agree about the need for comments.
-
-Thanks,
-Miklos
