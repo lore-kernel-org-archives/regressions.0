@@ -1,97 +1,136 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.174])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FEDF40245D
-	for <regressions@lists.linux.dev>; Wed,  3 Jun 2026 10:57:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3B873B3BF4
+	for <regressions@lists.linux.dev>; Wed,  3 Jun 2026 11:02:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780484232; cv=none; b=W1fmPQbfpGlr7rFLNXvQyptGEhiAUuQP6VchgjuP6GFFG0X8MuXhiSy4sLVtgdjv5UuihbZsKTZc4w1/8p21ZsF88yzQ7GA53MstUCEuAs5Bg06Zwwi1CBioSyxj977k7hiBpaDw7rWpirFxiu4H3cynKuDHI9Aep54PeTtji9c=
+	t=1780484544; cv=none; b=mxMOx9o3laZW4HUyhv36cOv8v5PsyzvxNHFaUMtQanVvvv0AkmzFPPdefXUuWso78jtPuZPsR4T5aEdEYCi9akVkZitpqpU3qeyYOAmJBq+6xgEXpyF0suHk9VZQeuduxnxSQd+ef8OEa4WrqIAkagZZaBz7ztMhbz8IgGSmspI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780484232; c=relaxed/simple;
-	bh=F4ABWkUBVfta7JTJNNecxQGRT8zVlO7NRsASmfjMk2Q=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=UQOmwguPWoTYrXVNU5iw7jtOcFp2prckTTMh8gk2D4KI80NCicfTEzYjrPwO6uqUaHS0k1xb4k+2GOiggs62DOevnYqGQEeIaCSwEIGvKf+RSonyUofDvoxt2LVV/3f/a4TmBwRKp6hhw9kZJ5zkPYPH5e1UE29QX516nQEUesQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=WeOdQxoZ; arc=none smtp.client-ip=188.68.63.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1780484544; c=relaxed/simple;
+	bh=Op4ACPRjaqg9oLNvvhM0/wfayJOU2I2KpzeW6QPK7GM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ixRf9Ok9XPFHzIvrdHoKGkBhSKObemjbBIhiqmCaWMcFc4rZ1Yvrob38PF/JFnNmteniD4LGvlq7G/zIcPUKmYVHITWnoeOWZ3liziSc6Ckj33+sBCMaK2I0CLLZRvzCrbAVDrObS/7bs6cAXLZQnW6xp1sYj2GfDWWJCsSTcVc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=HErMaEFR; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="WeOdQxoZ"
-Received: from mors-relay8204.netcup.net (localhost [127.0.0.1])
-	by mors-relay8204.netcup.net (Postfix) with ESMTPS id 4gVl5D2FW1z8ht4
-	for <regressions@lists.linux.dev>; Wed,  3 Jun 2026 10:57:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1780484224;
-	bh=F4ABWkUBVfta7JTJNNecxQGRT8zVlO7NRsASmfjMk2Q=;
-	h=Date:Subject:From:To:References:In-Reply-To:From;
-	b=WeOdQxoZzLN9KAZoBNJdxbDp+mT7DyEqe2BFOsjeo4mB65E6IAbY/2X3Mh+XD1za+
-	 j3AZbwjPCHfO5JiVjmwovqcS++e5W/VmrXlmOGwFcG1Nc4VtTOOZxvm1EbK+8lsdi0
-	 JTFxV9uX0zfGO2+qCVx1UAXOJA968xe8Hi3PQGqg9GXo48AZGjvkU7zPerdH8jl2wt
-	 RZV1HLWp/tcAAL8TyoqFtT8s+QKlSmho+lI+7PunLNuIyn7ZzMmPFXlp4+ZgYR8zia
-	 eVkTfXNrBqQMXOT9Hx0P0AbNqkKEpvRmzBDeBQg4z6AsQKW+WdxvlIpQR8zd/WrfTx
-	 RySdEE4cArERg==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay8204.netcup.net (Postfix) with ESMTPS id 4gVl5D1X7vz8hrn
-	for <regressions@lists.linux.dev>; Wed,  3 Jun 2026 10:57:04 +0000 (UTC)
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4gVl5C6p2Bz8sZd
-	for <regressions@lists.linux.dev>; Wed,  3 Jun 2026 12:57:03 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 016FE5F96B
-	for <regressions@lists.linux.dev>; Wed,  3 Jun 2026 12:57:02 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <3d9b583d-39e8-49b3-970b-044e71a45ece@leemhuis.info>
-Date: Wed, 3 Jun 2026 12:57:02 +0200
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="HErMaEFR"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 652JNCpN3001044;
+	Wed, 3 Jun 2026 11:02:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=J1srkxi/63O13pXhsJZVUq5FoJnp+hf98QMaB6fry
+	OM=; b=HErMaEFRYW0BVln+0X4d4a2JtoQki+RarT1F+igMOlEd6ozfELhZpuB5X
+	9aBpJCXvBygOsJvoYFnzYjmVSQV5uAJ5yVr59N4sFSCIjwZqsrZVYOKVjNyL1KUF
+	srgXXFjHeDUdcVbd1W/Iy/+9KFeRFp4SXmasjlBnM2UnqMbsjnrpcwtJLQ0Ec5mB
+	d1P6GStuOiR6n0pDp25z8QkxxQKogtqwQCampm5swQy/Z5FHDr6SOUCHfmYWbtk8
+	eNieJxoY69zIn/hDq5+n/U2F/Mr7EpyYT09AwHYu63ps1+w4hgMC4qnXf9H5xlrD
+	VUYLTYOekrk2Gt1CnRV9DTe25hT7w==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4efpaea1dk-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 03 Jun 2026 11:02:19 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 653AsCJd014438;
+	Wed, 3 Jun 2026 11:02:19 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4egbqhfqkp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 03 Jun 2026 11:02:19 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 653B2H2C47645132
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 3 Jun 2026 11:02:17 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0700A2005A;
+	Wed,  3 Jun 2026 11:02:17 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D3A872004B;
+	Wed,  3 Jun 2026 11:02:16 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.87.85.9])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed,  3 Jun 2026 11:02:16 +0000 (GMT)
+From: Jan Polensky <japo@linux.ibm.com>
+To: Namjae Jeon <linkinjeon@kernel.org>, linux-fsdevel@vger.kernel.org
+Cc: Sungjong Seo <sj1557.seo@samsung.com>, Yuezhang Mo <yuezhang.mo@sony.com>,
+        Christoph Hellwig <hch@lst.de>, "Darrick J . Wong" <djwong@kernel.org>,
+        linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
+        japo@linux.ibm.com (Jan Polensky)
+Subject: [REGRESSION] exfat: swapon(2) fails with EINVAL after iomap conversion
+Date: Wed,  3 Jun 2026 13:02:12 +0200
+Message-ID: <20260603110212.3020276-1-japo@linux.ibm.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <178048422317.3198808.8596667389755904524@mxe9fb.netcup.net>
-X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: 016FE5F96B
-X-NC-CID: gUSVlnY946bhSdAuCiAiUv10hA2uXSZKcTBaRMiEFOnl0JXLBYk=
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=Zt3d7d7G c=1 sm=1 tr=0 ts=6a2009bb cx=c_pps
+ a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
+ a=FelO9ux0wxsA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
+ a=V8glGbnc2Ofi9Qvn3v5h:22 a=VwQbUJbxAAAA:8 a=UqCG9HQmAAAA:8
+ a=CfmqdEj8fnphjIFZbAgA:9
+X-Proofpoint-GUID: 5h60-jHlynUaOHWDhHCQXth9Fs96fp28
+X-Proofpoint-ORIG-GUID: 5h60-jHlynUaOHWDhHCQXth9Fs96fp28
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjAzMDEwMiBTYWx0ZWRfX311xZlJaHM1A
+ MPTQn4SeLBBLOP/lbSUnKSEEGWprG1adiJPSXqupLGUp/JmQMn71GNC0aJKgDuXIMAL5+hYBzNB
+ 0QxWqtfE7TUQMkoolZnea7LAAp6/ZD8hVDNi0K6T9Y6fL1EKdYTbofucNrWdhiGlGuZ6RDEPjzu
+ fHn4zxmoSTtpTL7TwG9YwJbXcOjZFCT3b8+lG84nh0QkPTqZYgEzU+5qKJI0vZ9OAXIAerO8Zzl
+ hDOvDPHgBCFe4sHozCa7uJVBZVZD76iLncqddPooTlDC08g2c1/Ijb0KmbGsUioQJsy1kAgbGhI
+ 9jIHe7TOh2OMi9jDqjasxDlmCD5PzTBgsFyjnef31Bw/PeF8STScdMhv02A1753qF1TBrSIJD8S
+ KQvH3QBicKxEjneWLva5ShmRtLLwzGD8aKEF9yMV5hCO3U6wrd7oweptQtpKWnQN97K4JI4z18X
+ Gt9k2wV868mvstao2CQ==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
+ definitions=2026-06-03_04,2026-05-28_03,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 suspectscore=0 priorityscore=1501 bulkscore=0 clxscore=1011
+ phishscore=0 spamscore=0 malwarescore=0 adultscore=0 lowpriorityscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2605210000 definitions=main-2606030102
 
+Hi,
 
+we are seeing a regression on linux-next after commit
 
-On 3/9/24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
+  614f71ca1bdfaa2f25a6f147fe22f3ad031f8e2b
+  ("exfat: add iomap buffered I/O support")
 
-#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=221606
-#regzbot introduced: 9ab94a32af704fa9c873094283ae8744a07baf25
-#regzbot title: net: r8169: PCIe AER errors and recovery failure after
-recent driver changes
+With this change, swapon(2) on an exfat swapfile fails with EINVAL.
 
-#regzbot report:
-https://lore.kernel.org/lkml/3f4567fc.f496.19e3b2b297b.Coremail.23020251154299@stu.xmu.edu.cn/
-#regzbot resolve: reporter does not consider it a performance regression
-anymore
+Observed fallout in LTP:
+  swapoff01
+  swapoff02
+  swapon01
+  swapon02
+  swapon03
 
-#regzbot report: https://gitlab.freedesktop.org/drm/amd/-/issues/5336
-#regzbot introduced: 71aec08f80e706
+Example failure:
 
-#regzbot report:
-https://lore.kernel.org/stable/20260310102233.391113-1-arpithk@nvidia.com/
-#regzbot fix: fs/qnx6: fix pointer arithmetic in directory iteration
+  tst_test.c:1980: TINFO: === Testing on exfat ===
+  tst_test.c:1291: TINFO: Formatting /dev/loop0 with exfat opts='' extra opts=''
+  tst_test.c:1303: TINFO: Mounting /dev/loop0 to /tmp/LTP_swaKmkGVo/mntpoint fstyp=exfat flags=0
+  tse_swap.c:196: TINFO: create a swapfile size of 1 megabytes (MB)
+  tst_ioctl.c:26: TINFO: FIBMAP ioctl is supported
+  tse_swap.c:228: TFAIL: swapon() on exfat failed: EINVAL (22)
 
-#regzbot report:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?h=master&id=64c79dfbc458
-#regzbot fix: serial: 8250: fix use-after-free in IRQ chain handling
+and from swapon02:
+
+  swapon02.c:56: TWARN: swapon(alreadyused) failed: EINVAL (22)
+  swapon02.c:73: TFAIL: swapon(2) fail with File already used expected EBUSY: EINVAL (22)
+
+The iomap conversion changes exfat_aops to iomap based callbacks, but does not add a
+.swap_activate handler. The VFS documentation says that ->swap_activate() should call
+add_swap_extent(), or the helper iomap_swapfile_activate().
+
+So this looks like an exfat swap activation regression triggered by the iomap buffered I/O conversion.
+
+#regzbot introduced: 614f71ca1bdfaa2f25a6f147fe22f3ad031f8e2b
+#regzbot monitor: https://lore.kernel.org/all/PUZPR04MB63168E8C2FB92B80F9F6476581002@PUZPR04MB6316.apcprd04.prod.outlook.com/
+
+Thanks
+Jan
