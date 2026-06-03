@@ -1,213 +1,142 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1783A3D34A2
-	for <regressions@lists.linux.dev>; Wed,  3 Jun 2026 15:45:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBF6F3D79F0
+	for <regressions@lists.linux.dev>; Wed,  3 Jun 2026 15:47:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780501547; cv=none; b=hvDNW92jCzo+VZhN9HLV2hlH0v0v6uES5Qi2wcT4p9wllmcQMt1pBzRbh7PZpuMyP6aGhSyzhzBZ+xSNz71f1kxwm5/BbNJhp+kRUtVm0oajY5WpnNYrEwOwxifXXMQe4qs+irdhWXRo9q+Rr1YhpEHkouQHoedGu0XS/0ooQ0U=
+	t=1780501652; cv=none; b=g8bA1zwVncvRvte2Ig24Gtj+xIXH8M6MZnw0LwG5yMoWHPLXc9riXlgh4JndWTqI4J8pmCZ2HN7TvHjhIri8gm+1YY/KHXlU2nYjW8kWGdA0gGzFBoL04DiHRsa2zEFNTjd9QyvwyjXFvPz0k3ei6Tk1YGZgjVj1vJNKbRbpITs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780501547; c=relaxed/simple;
-	bh=lzW7exR1kNCxPyuPkHgqBWbInC7o9p5ohCfDidT6udo=;
-	h=From:To:Cc:Subject:Message-ID:In-Reply-To:References:MIME-Version:
-	 Date:Content-Type; b=s6BpRH/PWcg/YWqZFjP8n+YsJldkYejc808ShGx0gXmkgCt4/0J4tM9n0DY/BwJzidztT0Yx6GoCY4WOnYAzdKBPtaHcFZBlJmtWakG2PbmRsKBwLHu+Mu+Ex2pU6bZlTiAvWf46Z04uungevFAbQdTpT3xvy1sr6tyOuseM7NU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=C0YtNVu6; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1780501652; c=relaxed/simple;
+	bh=i6wogL21CbsgPEm9Df8TIq0H5sBHUuDGOKcgdmKYPjU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gWmGjzS3lXgIAjZzRng+sZGcwk3s7UVUICvUXjXMCvBizgHw+di/lsDTAmAEdKM/ZPCD7yb7CN5GCetRcI46NSDCfEeTSX6EOlSBnWSqT1WyIi4k7xeqUQ+mcKtyQs9Jo3hagg2z+5CPxFtTfHv/tXEIuWsKbWFO6j0w0fKrrNI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=6wind.com; spf=pass smtp.mailfrom=6wind.com; dkim=pass (2048-bit key) header.d=6wind.com header.i=@6wind.com header.b=j+cRkN2p; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=6wind.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=6wind.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="C0YtNVu6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1780501544;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=T5PBr/5K2c7sLCGfLZpy7whhqK6W/Z0MTaU2ybEk/CQ=;
-	b=C0YtNVu6EsetkJMeRdjD+WRi6LgOoqbY6uNh8RYJyyQuhnZxVNeMR6fjJos64bGXd2lN7n
-	69Ftq9vi/CbllajwLRlxIk1SyqRD6fWo+gqL3K284vXFKQNKY0h8XjPFmCYELsXO17XW2s
-	kcehva2Vkt0o5e64U+7Dy28v0YL2XvM=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-119-HfByh3yrPneQdAsAmuZHXQ-1; Wed, 03 Jun 2026 11:45:43 -0400
-X-MC-Unique: HfByh3yrPneQdAsAmuZHXQ-1
-X-Mimecast-MFC-AGG-ID: HfByh3yrPneQdAsAmuZHXQ_1780501542
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-490afe64f26so4809245e9.0
-        for <regressions@lists.linux.dev>; Wed, 03 Jun 2026 08:45:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=6wind.com header.i=@6wind.com header.b="j+cRkN2p"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-490791a3e92so7844525e9.0
+        for <regressions@lists.linux.dev>; Wed, 03 Jun 2026 08:47:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=6wind.com; s=google; t=1780501648; x=1781106448; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:organization:content-language
+         :from:references:cc:to:subject:reply-to:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=QnTS72uQESQmGGPpF458k/vWeMpB7iWHvTRpj4KwHO8=;
+        b=j+cRkN2pPyTa+x5WADapG9vicwjmQKTFQrGRV/6/I3hLxB01gykpcNm4BoUKrP5PrL
+         V9BDjim4SbK50sz29Hs7rCXC5NXvqpf2r1zSieOTtpt3T87viAFmIU7lV8gVf/TKnyAd
+         YDAT+hS5gyx5nrea8fjEJ7CsAvT+koxkBynS0g9JGZUPz8mgx14j/NsC+pa8hAOCryvG
+         kcE+mJeFN9mUlkPsjlu5+7npSJe2b/W9cRNBO/TkQlw0PXSgLtx4lsUqDQeaBY60dv9r
+         GgIYhEiemLZXqGY/iYu7Jihs0wbO8N8JVApUF+Zso3+eOoe4rESsvbfCBDAZxUH0lDEf
+         8Lxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780501542; x=1781106342;
-        h=date:content-transfer-encoding:mime-version:organization:references
-         :in-reply-to:message-id:subject:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=T5PBr/5K2c7sLCGfLZpy7whhqK6W/Z0MTaU2ybEk/CQ=;
-        b=KD/0gz2tp5nmkUYPbzEY+/cINP7DYDBeJBIrKTX1bPheq0/KDqO5y/Ki2W8d+tWtTy
-         cWP6wjdCbPvtlGAcgAESO8KfcGdE8qEYeGt0UYDwLmXJ1wulGiGv4vgSTFdklUqMcEP1
-         KgvWjCpw+T0AX587NFN19zzKTIY+aEBY8/v62jz9o9xSBwnr8jCNB4wLG2YOlsMYBNFp
-         V6w99w3BpcvfTvMJNrLCVoHzsmUpc85ls+rGYfiWYM46DUYieKHeXP4NTHR0Tiici2Sc
-         Jlm4eVF0yWYpNwNllYLIgyyGW4x1drv/U8KeLjWM3WmGxkGsrIYovdjHkJ+/tKPTdiB6
-         /Vuw==
-X-Forwarded-Encrypted: i=1; AFNElJ+kOZp/CqBCf7GI2RhdhfwfQLirFFH4dj5AJ1FuuRov/HwG+obBSMiGSVFC0iOPpVakOeh0m4ayCcm27w==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxzjAN0ijZ6rhlkYyXybtONtg8ua3geJfu0UteOAA79DEyKKs5d
-	aSh9ry5qvkWj3/AyNIRbVzDSR0erqd7Xem/gpGY1ken7MSkJt974B1ukaNhQnuo987S4mArZPP3
-	H5eKVpORGkIi3TMMHu5hOQQHc8CkutyKlY08D79HBLQ+8prIXxCdZrFsVxYTXkf2N
-X-Gm-Gg: Acq92OEqkB2ti3K/G3ZZillCLEEADE8b4tYveddpjZgJXBdrLN8Etgpki01foWJJlRq
-	LY8vLjbknBT7GUjKs82Etv+GnnRgW/ZyX3BMxysWf6DB8T/ZZOq2coDjj15blY3CYJB9MkhAQW3
-	LtbrLgqP8h83VQC7KjbyuBMiA/VtNVCFoEH17bsHqXoaRzKa7qPDw1MK3EHzQ08WAaW2PMiOEI9
-	jpQqDZkCYoBDv+s52y78OaMyJocgAqfH/qOMb3YPrNqRE10lSR88dk085xCcF49zR8oN329ryWN
-	z+j8jSGYtKqDMFPmVdgUsFoA15kxPFj6SJwjL/5LlCm7YBeH0MqAztJtX0VDg8KkPJNDnQqVdvu
-	UO2hE8kCVMlsQcNlpFgAP+BD7n0qCja/C/XyM1lu/iKlp4CN+d79m0GbLJwdj
-X-Received: by 2002:a05:600c:8184:b0:490:ad1e:1846 with SMTP id 5b1f17b1804b1-490b613f158mr48109475e9.9.1780501541696;
-        Wed, 03 Jun 2026 08:45:41 -0700 (PDT)
-X-Received: by 2002:a05:600c:8184:b0:490:ad1e:1846 with SMTP id 5b1f17b1804b1-490b613f158mr48108945e9.9.1780501541151;
-        Wed, 03 Jun 2026 08:45:41 -0700 (PDT)
-Received: from maya.myfinge.rs (ifcgrfdd.trafficplex.cloud. [176.103.220.4])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-490bc3c183asm974145e9.6.2026.06.03.08.45.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jun 2026 08:45:40 -0700 (PDT)
-From: Stefano Brivio <sbrivio@redhat.com>
-To: Ido Schimmel <idosch@nvidia.com>
-Cc: David Gibson <david@gibson.dropbear.id.au>, Fernando Fernandez Mancera
- <fmancera@suse.de>, netdev@vger.kernel.org, yuhuang@redhat.com,
- justin.iurman@gmail.com, horms@kernel.org, pabeni@redhat.com,
- kuba@kernel.org, edumazet@google.com, davem@davemloft.net,
- dsahern@kernel.org, Chris Adams <linux@cmadams.net>, Beniamino Galvani
- <bgalvani@redhat.com>, Thorsten Leemhuis <regressions@leemhuis.info>,
- Andrew Lunn <andrew@lunn.ch>, ihuguet@redhat.com,
- regressions@lists.linux.dev
-Subject: Re: IPv6 address insertion order (was Re: [PATCH net v2] Revert
- "ipv6: preserve insertion order for same-scope addresses")
-Message-ID: <20260603174538.5454bb93@elisabeth>
-In-Reply-To: <20260603074717.GA569921@shredder>
-References: <20260529112357.5079-1-fmancera@suse.de>
-	<20260529134045.56330243@elisabeth>
-	<ah57wxGjL7JBORR1@zatzit>
-	<20260602132118.GA508395@shredder>
-	<ah-SvHdPRrYXX6lx@zatzit>
-	<20260603074717.GA569921@shredder>
-Organization: Red Hat
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.49; x86_64-pc-linux-gnu)
+        d=1e100.net; s=20251104; t=1780501648; x=1781106448;
+        h=content-transfer-encoding:in-reply-to:organization:content-language
+         :from:references:cc:to:subject:reply-to:user-agent:mime-version:date
+         :message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QnTS72uQESQmGGPpF458k/vWeMpB7iWHvTRpj4KwHO8=;
+        b=MLcoiWfCA6KDxcsBPe5zyEcYS6ToVj8+HBxHw53lE6uwTu8rfpCbFCIzm5Wys53mBT
+         AKWLM9lxzOzGKT9uUWER8St28XbmLHF6xn8Ivd1VTRnJRsfBechY5w/wYl7DCBFZJm1R
+         EQTLf90YFMODQOvv5OLqHuLm7BziwC7iBesAb+Z5GoWcdZ3EmdrjSzKoux4yME9Ufyz2
+         PLQ4C3wIqRHj+VKnh2V8L7ryInzLGI1qrZaIhuWDyGL8dLosxJQ9f8wtwrcyPv0x8cTp
+         GGvAWbuVSDSsnm8r9HXCO4VVbbud5752iQCUUWquTOYbdO3ZrgNGaGi1sXda5xVW8zq/
+         JohA==
+X-Forwarded-Encrypted: i=1; AFNElJ8oOgTu0umIdP9vcbTARqjo5qf3US2/9KOOqpZIorkU+N5e3tztY70JVsH/lGKcC0XdMsxUopSwzf+feA==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxpuxuKQBak0/ciME+26F3IWZ84l75TGKqoTzyH+UW+TL9W3A6V
+	NqODOzEkJqSeEdVIP2pIyrNf67t/iBk5ntzvD9J3QfJTMYwSJL6Kd5PaUjFGMKdI+b3cU7R5laf
+	FSHPm6aXPdg==
+X-Gm-Gg: Acq92OFCZ+/+8sN7wmWumfiB8pGHC1vBPmFWJf8wy6jAql4TlaPvdLFp5t9LvuZZKuA
+	JYghLhQeJ4L4bLwAwzPro4ErUhtygdROOM02BL49yejjni3kYfxsCw8+d2N2/kC1190qcsY6y/b
+	NITP1j7I3RYeakNE0jjC6GzN9oICFsXNsk+2fNDIVgXNmu20SUC8wrtjZuqQzOjI70qEJuWYBD8
+	DquhcaXhVHCdl23TNCKSHkqEfE0xPWdPMxwBWSW1Tv0U5wg52BOq4R+c0t6MERx2Ifd1etDRUdV
+	4KjEO5A9qjT/6lXpUf3DgjAXP2RQBphEBVbkx0p7668/FTmbpD7Yp/hepnkcJ1YIWv/jFeOrqOI
+	WDVe4NzONnUE4kwkO2NhwJLfSjX9IBFyvtAlaKMhdtsRSvfMr46NP2H+hu5JIKJEsejgPb/wHxU
+	rJCm4iceQPR4BJRgRNNeJuAHm2L8NPVIBhMFFMpwQiyqszNaIsYLH4rKsggDFZN0xBXiNLQ7m1l
+	T+MTpp1hXPSQ18=
+X-Received: by 2002:a05:600c:3153:b0:490:bc36:9b2b with SMTP id 5b1f17b1804b1-490bc369c56mr883585e9.2.1780501647991;
+        Wed, 03 Jun 2026 08:47:27 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:ab7:2110:6a1d:efff:fe52:1959? ([2a01:e0a:ab7:2110:6a1d:efff:fe52:1959])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-490bc40716bsm499655e9.12.2026.06.03.08.47.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 03 Jun 2026 08:47:27 -0700 (PDT)
+Message-ID: <446021ea-94f1-4df7-8016-c8d98bd7e723@6wind.com>
+Date: Wed, 3 Jun 2026 17:47:26 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Date: Wed, 03 Jun 2026 17:45:39 +0200 (CEST)
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: V7Tt3Zc3K0tcgWB5tS7Ioi69aK8A_ZWw2yDn2gSgEbM_1780501542
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Reply-To: nicolas.dichtel@6wind.com
+Subject: Re: IPv6 address insertion order (was Re: [PATCH net v2] Revert
+ "ipv6: preserve insertion order for same-scope addresses")
+To: Ido Schimmel <idosch@nvidia.com>,
+ David Gibson <david@gibson.dropbear.id.au>
+Cc: Stefano Brivio <sbrivio@redhat.com>,
+ Fernando Fernandez Mancera <fmancera@suse.de>, netdev@vger.kernel.org,
+ yuhuang@redhat.com, justin.iurman@gmail.com, horms@kernel.org,
+ pabeni@redhat.com, kuba@kernel.org, edumazet@google.com,
+ davem@davemloft.net, dsahern@kernel.org, Chris Adams <linux@cmadams.net>,
+ Beniamino Galvani <bgalvani@redhat.com>,
+ Thorsten Leemhuis <regressions@leemhuis.info>, Andrew Lunn <andrew@lunn.ch>,
+ ihuguet@redhat.com, regressions@lists.linux.dev
+References: <20260529112357.5079-1-fmancera@suse.de>
+ <20260529134045.56330243@elisabeth> <ah57wxGjL7JBORR1@zatzit>
+ <20260602132118.GA508395@shredder> <ah-SvHdPRrYXX6lx@zatzit>
+ <20260603074717.GA569921@shredder>
+From: Nicolas Dichtel <nicolas.dichtel@6wind.com>
+Content-Language: en-US
+Organization: 6WIND
+In-Reply-To: <20260603074717.GA569921@shredder>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, 3 Jun 2026 10:47:17 +0300
-Ido Schimmel <idosch@nvidia.com> wrote:
 
+
+Le 03/06/2026 à 09:47, Ido Schimmel a écrit :
 > On Wed, Jun 03, 2026 at 12:34:36PM +1000, David Gibson wrote:
-> > On Tue, Jun 02, 2026 at 04:21:18PM +0300, Ido Schimmel wrote:  
-> > > On Tue, Jun 02, 2026 at 04:44:19PM +1000, David Gibson wrote:  
-> > > > I get the impression there's a rough consensus that the best we can do
-> > > > now is revert this change (already done), and make a new patch which
-> > > > changes the insertion order to the "correct" one conditional on a new
-> > > > flag.
-> > > > 
-> > > > Stefano has enough other fires to fight, so I'm taking a look at
-> > > > implementing that.  Some initial thoughts, that I'm soliciting
-> > > > feedback on:
-> > > > 
-> > > > 1) I'm assuming the idea here is to add the new flag to nlmsg_flags in
-> > > >    nlmsghdr
-> > > > 
-> > > > ifa_flags in ifaddrmsg would be the other candidate, but it looks like
-> > > > it's encoding properties of the address itself, not about the action
-> > > > of inserting it.  Plus all its bits are allocated, anyway.
-> > > > 
-> > > > 2) Could we re-use NLM_F_APPEND?
-> > > > 
-> > > > The short description of this existing flag in linux/uapi/netlink.h is
-> > > > "Add to end of list" which sounds like the right thing.  Looking
-> > > > closer, however, it seems like what is' used for so far is things
-> > > > where the entity added with the NEW<whatever> operation is itself a
-> > > > list, and NLM_F_APPEND causes it to be added to rather than replaced.
-> > > > It's not used for addresses at present, AFAICT the list of addresses
-> > > > is a semantic level above the address entity itself.
-> > > > 
-> > > > So maybe re-using it for the thing I tentatively called
-> > > > NLM_F_INSERT_LAST would be confusing?
-> > > > 
-> > > > On the other hand, it's not used for addresses at the moment, so
-> > > > AFAICT there's nothing actually preventing us reusing it for this
-> > > > purpose. That would save a bit - we only have 2 general and 4 NEW
-> > > > specific bits left, by the looks of it.  
-> > > 
-> > > This is not really viable. Even if the kernel is not using NLM_F_APPEND
-> > > for RTM_NEWADDR, but not rejecting its presence either, then we can
-> > > create a change in behavior for a user space that is currently setting
-> > > it (intentionally or not).
-> > >
-> > > Example:
-> > > 
-> > > https://lore.kernel.org/netdev/27c249d80c346a258cfbf32f1d131ad4fe64e77c.camel@debian.org/  
-> > 
-> > Hmm.  So, in this example case we have a known, widely deployed
-> > userspace that was broken by the change.  Similarly with the
-> > original now-reverted "fix" for the ordering, we have a known, widely
-> > deployed userspace that was broken.  
+>> On Tue, Jun 02, 2026 at 04:21:18PM +0300, Ido Schimmel wrote:
+>>> On Tue, Jun 02, 2026 at 04:44:19PM +1000, David Gibson wrote:
+
+[snip]
+
+>>>> 2) Could we re-use NLM_F_APPEND?
+>>>>
+>>>> The short description of this existing flag in linux/uapi/netlink.h is
+>>>> "Add to end of list" which sounds like the right thing.  Looking
+>>>> closer, however, it seems like what is' used for so far is things
+>>>> where the entity added with the NEW<whatever> operation is itself a
+>>>> list, and NLM_F_APPEND causes it to be added to rather than replaced.
+>>>> It's not used for addresses at present, AFAICT the list of addresses
+>>>> is a semantic level above the address entity itself.
+>>>>
+>>>> So maybe re-using it for the thing I tentatively called
+>>>> NLM_F_INSERT_LAST would be confusing?
+>>>>
+>>>> On the other hand, it's not used for addresses at the moment, so
+>>>> AFAICT there's nothing actually preventing us reusing it for this
+>>>> purpose. That would save a bit - we only have 2 general and 4 NEW
+>>>> specific bits left, by the looks of it.
+>>>
+>>> This is not really viable. Even if the kernel is not using NLM_F_APPEND
+>>> for RTM_NEWADDR, but not rejecting its presence either, then we can
+>>> create a change in behavior for a user space that is currently setting
+>>> it (intentionally or not).
+>>>
+>>> Example:
+>>>
+>>> https://lore.kernel.org/netdev/27c249d80c346a258cfbf32f1d131ad4fe64e77c.camel@debian.org/
+>>
+>> Hmm.  So, in this example case we have a known, widely deployed
+>> userspace that was broken by the change.  Similarly with the
+>> original now-reverted "fix" for the ordering, we have a known, widely
+>> deployed userspace that was broken.
 > 
 > It was also reported over three years after the kernel change went in.
 > Point is that we have no way of knowing how user space is using these
 > flags. Suddenly giving them meaning when we simply ignored them before
 > is risky.
-
-I think that's a very different type of issue because, there, *another*
-existing flag (NLM_F_EXCL) was suddenly given a meaning, as it happened
-to have the same value as NLM_F_BULK, and that's what broke libvirt.
-Not support for NLM_F_BULK itself.
-
-Here, NLM_F_APPEND doesn't share its value with any other flag, and it
-really is documented as "Add to end of list", but we don't do that.
-That's a bug.
-
-I think it's actually more likely that some bits of userspace are
-currently broken and causing subtle issues because the author expected
-NLM_F_APPEND to actually do what it promises, but maybe they only
-tested that with IPv4.
-
-Allow me to draw a parallel that looks more fitting to me: in commit 
-1e47b4837f3b ("ipv6: Dump route exceptions if requested") I happened to
-fix a two-year old issue that made 'ip -6 route list cache' show no
-output and 'ip -6 route flush cache' have no effect.
-
-You could take this to the extreme and say that it was risky to fix
-that because some userspace application could meanwhile have started
-relying on the fact that 'ip -6 route list cache' returned no output.
-I guess we agree it was a good idea to fix that, though.
-
-Of course there are several degrees of UAPI expectations in between,
-but *not* allowing to use NLM_F_APPEND to append objects because
-userspace might rely on NLM_F_APPEND to *not* append objects sounds
-a bit like this extreme to me, or at least closer to it than the
-NLM_F_BULK kind of breakage.
-
-> > That's a different case from a hypothetical userspace that incorrectly
-> > used NLM_F_APPEND on RTM_NEWADDR.  Moreover, to be broken it would
-> > need to incorrectly use NLM_F_APPEND on RTM_NEWADDR *and also* rely on
-> > the counterintuitive and inconsistent insertion order for IPv6
-> > addresses.  Absent a concrete example of something meeting both those
-> > conditions, I'm inclined to breaking that hypothetical case when the
-> > payoff is an easier route to get known cases working with the
-> > preferred insertion semantics.
-> > 
-> > Fwiw, I did look at the most likely candidates: iproute2,
-> > network-manager and libvirt, and I see no signs that they're misusing
-> > NLM_F_APPEND in this way.  
-> 
-> See above. I don't like this approach. IMO, it's not worth making it
-> slightly a bit easier for some user space programs to adopt when the
-> risk is breaking other programs and repeating this ordeal.
-
-Another fact we shouldn't ignore is that, compared to the NLM_F_BULK
-incident, we're actively surveying userspace before touching this.
-
--- 
-Stefano
-
++1
