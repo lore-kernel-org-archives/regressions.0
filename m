@@ -1,137 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f175.google.com (mail-dy1-f175.google.com [74.125.82.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D67D395DB9;
-	Wed,  3 Jun 2026 09:27:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780478849; cv=none; b=dbjORhxRaWg08Jsne8ZVfLLVQ56MPnvVd525oTsPP52t8Bh/jsbmvFQNYOfOT/8Va1+y5DweWuYS/WCz9PGuXogeAYH9XWUotikEtqU42tslzXiH9ZCkx58GWMDoXlBThczf2jxGZKsH3XsmlbzcNsYL2Fc2rzUU6r4d3a9oz+s=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780478849; c=relaxed/simple;
-	bh=odWU+nMmgrZPsGI6Xf9THDXw3O7NLl9Nsnlu+uV4Uo8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Whm9k/ES4NvSbAkaqN0xPP6mUTwKqwVZb7cUiXllGLeH+IhPiClbVSGfwjpiBu96W+jfBigJ8dj3hnvL2Mrc/QAxKalYBuF6oedRpMYUIP1e4knyvd9CxJB5NjjQOuC0odRk+ibmpmve2m+L1Dc8ppPIQyPW/1obhl8tHJw7UtY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TKILIWfd; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EC50223DE7
+	for <regressions@lists.linux.dev>; Wed,  3 Jun 2026 09:40:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.175
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780479602; cv=pass; b=ffnI/hIxpBNlNhXi2ZYl+7dnamY6fmoAlObS0Ws46/t4a57ZZtai2m3HlE1kiMIINc9i/vkra9uAsLtNomq2FpxJvJZaIoHLfr5/7TRt3wS6pPLE6xVGaMRroZK1KX3P2X/9vR2y2z7nQVc1AJ1wyIN2ItccscC8yMsHJHW4cFI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780479602; c=relaxed/simple;
+	bh=1IeoGmyXKCHF+vazqnzxSivC66X9NGYz6nKU75EaHt4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uoDkVhQmp85NsTXxmTkINs6TnpEIEdFFXHizF38ZgcMg2dR3vq6ag22WnOECTKzBCMGM26FrhxsVCjfaYkVd/2DTnycu8x0S0oIpfDg974hp3UgyeDxKxD8daGJNwTiLIUPWf6066e22y466RnrD2Vz8pecOBwwWjS8sOh3HaH8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=A1DKPhgR; arc=pass smtp.client-ip=74.125.82.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TKILIWfd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 718561F00898;
-	Wed,  3 Jun 2026 09:27:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780478847;
-	bh=D2Vmo6upMxKY5OWoPHtpqjiCYXj8F/9MoHUlPOVDBmw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=TKILIWfd3KWnP8EFTrzOWIFHzUt1wYdP6k7N24Xi7uchwZMrvB5IB5Sy8tSV+8iN6
-	 ABLqVv8R4iKCtYYlY7onZjCm1LVhN2oRjA8oFGOUA6YIR+j6lMX6Ajwzx4YrdZvt0a
-	 WxlvY/ztjkWns1xEXkxu01vkAsI6dLLCpUpRBIWFXFmDUMqPgRCwAVhaMMbAUQAiZO
-	 uCpJWBnml8k1p0vmY/EygAPnTnNssrQZj/UDDFgq7MBL71faLUifaOKrnu6XqGqxye
-	 jgGN7uCn4nO29K2ZY2W78aZQ0/DDsqbyFV+Nb9A8H90o8EHSlg0tH574n2SyV3ax5P
-	 sln/A4MS74phg==
-Message-ID: <f0df3ca1-793d-4985-995c-50227fd5123d@kernel.org>
-Date: Wed, 3 Jun 2026 19:27:17 +1000
+	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="A1DKPhgR"
+Received: by mail-dy1-f175.google.com with SMTP id 5a478bee46e88-3074adb8fcaso340010eec.0
+        for <regressions@lists.linux.dev>; Wed, 03 Jun 2026 02:40:00 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1780479600; cv=none;
+        d=google.com; s=arc-20240605;
+        b=C45uexOjlXj0wUCxlcCmK+73XlxkaJXBrXW1ePwKrNPHWMCPJCFQ64PbbenBN8DIKq
+         H3cbFb4YJMqyOLQTvWewV/drOLtPbVgZsgCgWIUO90m67ATvLC11uBbip0NUGzUfO5v1
+         LUDtg+WoHRWnNALDpf4fWpdLsbVOD53+TdWtG0yJEN0oQHQ3mYRovFlCxRKxFCf1uTwW
+         0ySNLzNPnPHdn0LBkVxdDATFxpkJBMIkUr3wT7rL0mFWedNOeX0L0eOStp5A/21KtC9K
+         7Z0w1mt5AAkXBdehdjbeVWwwQ9dvGWXv+LN9t9awapis2Vgtwh7sCGb5e9/YufTcCmIu
+         +dTA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=1ehSj23IfCmzPZngwG8XDa8t9FB4fozxZd1s0Ny6Ia4=;
+        fh=DzxMhaj5K6C6OAdxw2s4GVvnaqKifoYSPWDlURBbWWw=;
+        b=HbAVa5/pB+kcmTr5fV9Eo37RG/KFkoraEovULe5FaAdJQQGmxw6Tyd9+KNRgRm0pf8
+         QwCP0FobpEEDsKaIS+QeUcsRLj8A2cSiYfslPDR537O0efEILWs45QELFlEoa56HXbLE
+         G1VSZtckNPIjxdEgZUeGbcvoW/TpY1LeacXhTIVNUmnG1EC01h9a1EPgLjN2VifPJYjp
+         Z1W/Z/Hzza1psg5EQxnW7DgFiLtxZbgZ4J2+TuCd27xsQJF7JYXX3hOLmJkKRRRDWa7H
+         rdjFhXbmwfZJoC+fGTtEADSPcQmCSXj3qQLJ2Ha3DJBy8XzHqqCtvSyORkVbaD+8A5sV
+         PO6g==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google; t=1780479600; x=1781084400; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=1ehSj23IfCmzPZngwG8XDa8t9FB4fozxZd1s0Ny6Ia4=;
+        b=A1DKPhgR6S8Bxghy7RqiJJNuzY+QQbStL6goonpuUe7Gbd3z3J/crP6ZyFBd6IH5rF
+         N920wI51Oi1paDwYnMhONg43MI8IqpoQA8KwO21s85blWPsKox26vvyqazRl8w76yjw3
+         5myMYktAIo067xs6GepSEiX5JavQn2ig1XITQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780479600; x=1781084400;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1ehSj23IfCmzPZngwG8XDa8t9FB4fozxZd1s0Ny6Ia4=;
+        b=T5Spnsw8LzhqvwqWQgJPt+OCoFlFP14pSdQTRNdPsjFEXzYPug+n7VX0dvGiPbP+ab
+         xv86PDZG4qlNFvewfeyBLynJ90YYurkJcHSTLREJSPj32KA/9iPWnp4/gVjm8qbDiYyw
+         9oPQTwCtBR1+OrbVDHZZLjuq4TQ2pOhAzJZ1+FTY5yJnQiiL3cCugLP1kJ5JyyJUQkaz
+         wmOm9U8rLkVm1RPRY3tDwmwdJ/h7Zm9/8ft7LZaXpDpyqF0tIl8Q3nP/4tB30gQMNBWV
+         2pYma0cc9Ukfd3igs+J1QH9BTYSj1y6Ox8mGr7DD4IRHdjK9JxXe23jgOfPdIuRPna2Q
+         nJRg==
+X-Forwarded-Encrypted: i=1; AFNElJ8eqwBRO8FobCQ6+0w5Rtt0x0htQWxRVw9GnlezTE9vq91NsR0Oigprf9Sh3UdV5avwpv/s0bYndHlkew==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzJ8T+UJCVWYua+J5H2qWXuxEhR9CsmQFDnU78P9uC1hYtxg9Oj
+	DXV/j6Mv09dUYo1LY/q3nI/FzLzVIEA4rtDsIe1J1WenhAt3ghdSzh5hB8EtD6tsGc53NVkBCBg
+	q+ZBCegGAWkGV6QQOiAjqn7HiMrxJSTkSz973a6FO/g==
+X-Gm-Gg: Acq92OFuxaDdt8rQN6Z/mSf5LTnUHaRlaqYimDc9jg+eSxwpdGSmyNqymrlwR1uIoZb
+	HroKPfxOxj9/qCby/w73UYiPVa5+tp4WY9hO14OAdf0P2sE+qDfpPCuOz8YjCToWZPWW4Ox/xLw
+	zY7h4FioDXp1cfOWUKq0DRPMMb509fsimgoekKQngO+8nfJNsniAkDQYaquf9ShwMa8WXYR675z
+	9hO0KakpaASLH2WMAjKvbdbkn2GZj/8LM8nR1Xx3MCsRoQkBSDBiYkYjDJq67MwiYOgUtm/q5y0
+	C+0CnRTUVHdZh9BTYlx3qVGZdcFKqdW0+F8+lQ+ZkFMEwRc=
+X-Received: by 2002:a05:7300:72cb:b0:2e2:3381:2fba with SMTP id
+ 5a478bee46e88-3074fa5579dmr1310275eec.3.1780479600262; Wed, 03 Jun 2026
+ 02:40:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net v2] Revert "ipv6: preserve insertion order for
- same-scope addresses"
-Content-Language: fr
-To: =?UTF-8?B?w43DsWlnbyBIdWd1ZXQ=?= <ihuguet@redhat.com>
-Cc: Stefano Brivio <sbrivio@redhat.com>,
- Fernando Fernandez Mancera <fmancera@suse.de>, netdev@vger.kernel.org,
- yuhuang@redhat.com, justin.iurman@gmail.com, horms@kernel.org,
- pabeni@redhat.com, kuba@kernel.org, edumazet@google.com,
- davem@davemloft.net, idosch@nvidia.com, dsahern@kernel.org,
- Chris Adams <linux@cmadams.net>, David Gibson <david@gibson.dropbear.id.au>,
- Beniamino Galvani <bgalvani@redhat.com>,
- Thorsten Leemhuis <regressions@leemhuis.info>, Andrew Lunn <andrew@lunn.ch>,
- regressions@lists.linux.dev
-References: <20260529112357.5079-1-fmancera@suse.de>
- <20260529134045.56330243@elisabeth>
- <5079261a-79e5-421b-bf6a-a511acaaeca4@kernel.org>
- <20260601153525.546746a8@elisabeth>
- <CACT4oueDv=KRZmJw=1N58EN7eoFz5AqbBBMP8FE4=+rQ99oFEg@mail.gmail.com>
- <8e9cbf0a-caff-4575-afb7-fe852df8a51a@kernel.org>
- <CACT4oueJ3GsVvnWcZHgYVL-fCjpt5nOw+2=0BTmiz-9xKY4B0w@mail.gmail.com>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
- YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
- c7SPFMpMesgpcu1xFt0F6bcxE+0ojRtSCZ5HDElKlHJNYtD1uwY4UYVGWUGCF/+cY1YLmtfb
- WdNb/SFo+Mp0HItfBC12qtDIXYvbfNUGVnA5jXeWMEyYhSNktLnpDL2gBUCsdbkov5VjiOX7
- CRTkX0UgNWRjyFZwThaZADEvAOo12M5uSBk7h07yJ97gqvBtcx45IsJwfUJE4hy8qZqsA62A
- nTRflBvp647IXAiCcwWsEgE5AXKwA3aL6dcpVR17JXJ6nwHHnslVi8WesiqzUI9sbO/hXeXw
- TDSB+YhErbNOxvHqCzZEnGAAFf6ges26fRVyuU119AzO40sjdLV0l6LE7GshddyazWZf0iac
- nEhX9NKxGnuhMu5SXmo2poIQttJuYAvTVUNwQVEx/0yY5xmiuyqvXa+XT7NKJkOZSiAPlNt6
- VffjgOP62S7M9wDShUghN3F7CPOrrRsOHWO/l6I/qJdUMW+MHSFYPfYiFXoLUZyPvNVCYSgs
- 3oQaFhHapq1f345XBtfG3fOYp1K2wTXd4ThFraTLl8PHxCn4ywARAQABzSRNYXR0aGlldSBC
- YWVydHMgPG1hdHR0YmVAa2VybmVsLm9yZz7CwZEEEwEIADsCGwMFCwkIBwIGFQoJCAsCBBYC
- AwECHgECF4AWIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZUDpDAIZAQAKCRD2t4JPQmmgcz33
- EACjROM3nj9FGclR5AlyPUbAq/txEX7E0EFQCDtdLPrjBcLAoaYJIQUV8IDCcPjZMJy2ADp7
- /zSwYba2rE2C9vRgjXZJNt21mySvKnnkPbNQGkNRl3TZAinO1Ddq3fp2c/GmYaW1NWFSfOmw
- MvB5CJaN0UK5l0/drnaA6Hxsu62V5UnpvxWgexqDuo0wfpEeP1PEqMNzyiVPvJ8bJxgM8qoC
- cpXLp1Rq/jq7pbUycY8GeYw2j+FVZJHlhL0w0Zm9CFHThHxRAm1tsIPc+oTorx7haXP+nN0J
- iqBXVAxLK2KxrHtMygim50xk2QpUotWYfZpRRv8dMygEPIB3f1Vi5JMwP4M47NZNdpqVkHrm
- jvcNuLfDgf/vqUvuXs2eA2/BkIHcOuAAbsvreX1WX1rTHmx5ud3OhsWQQRVL2rt+0p1DpROI
- 3Ob8F78W5rKr4HYvjX2Inpy3WahAm7FzUY184OyfPO/2zadKCqg8n01mWA9PXxs84bFEV2mP
- VzC5j6K8U3RNA6cb9bpE5bzXut6T2gxj6j+7TsgMQFhbyH/tZgpDjWvAiPZHb3sV29t8XaOF
- BwzqiI2AEkiWMySiHwCCMsIH9WUH7r7vpwROko89Tk+InpEbiphPjd7qAkyJ+tNIEWd1+MlX
- ZPtOaFLVHhLQ3PLFLkrU3+Yi3tXqpvLE3gO3LM7BTQRV4/npARAA5+u/Sx1n9anIqcgHpA7l
- 5SUCP1e/qF7n5DK8LiM10gYglgY0XHOBi0S7vHppH8hrtpizx+7t5DBdPJgVtR6SilyK0/mp
- 9nWHDhc9rwU3KmHYgFFsnX58eEmZxz2qsIY8juFor5r7kpcM5dRR9aB+HjlOOJJgyDxcJTwM
- 1ey4L/79P72wuXRhMibN14SX6TZzf+/XIOrM6TsULVJEIv1+NdczQbs6pBTpEK/G2apME7vf
- mjTsZU26Ezn+LDMX16lHTmIJi7Hlh7eifCGGM+g/AlDV6aWKFS+sBbwy+YoS0Zc3Yz8zrdbi
- Kzn3kbKd+99//mysSVsHaekQYyVvO0KD2KPKBs1S/ImrBb6XecqxGy/y/3HWHdngGEY2v2IP
- Qox7mAPznyKyXEfG+0rrVseZSEssKmY01IsgwwbmN9ZcqUKYNhjv67WMX7tNwiVbSrGLZoqf
- Xlgw4aAdnIMQyTW8nE6hH/Iwqay4S2str4HZtWwyWLitk7N+e+vxuK5qto4AxtB7VdimvKUs
- x6kQO5F3YWcC3vCXCgPwyV8133+fIR2L81R1L1q3swaEuh95vWj6iskxeNWSTyFAVKYYVskG
- V+OTtB71P1XCnb6AJCW9cKpC25+zxQqD2Zy0dK3u2RuKErajKBa/YWzuSaKAOkneFxG3LJIv
- Hl7iqPF+JDCjB5sAEQEAAcLBXwQYAQIACQUCVeP56QIbDAAKCRD2t4JPQmmgc5VnD/9YgbCr
- HR1FbMbm7td54UrYvZV/i7m3dIQNXK2e+Cbv5PXf19ce3XluaE+wA8D+vnIW5mbAAiojt3Mb
- 6p0WJS3QzbObzHNgAp3zy/L4lXwc6WW5vnpWAzqXFHP8D9PTpqvBALbXqL06smP47JqbyQxj
- Xf7D2rrPeIqbYmVY9da1KzMOVf3gReazYa89zZSdVkMojfWsbq05zwYU+SCWS3NiyF6QghbW
- voxbFwX1i/0xRwJiX9NNbRj1huVKQuS4W7rbWA87TrVQPXUAdkyd7FRYICNW+0gddysIwPoa
- KrLfx3Ba6Rpx0JznbrVOtXlihjl4KV8mtOPjYDY9u+8x412xXnlGl6AC4HLu2F3ECkamY4G6
- UxejX+E6vW6Xe4n7H+rEX5UFgPRdYkS1TA/X3nMen9bouxNsvIJv7C6adZmMHqu/2azX7S7I
- vrxxySzOw9GxjoVTuzWMKWpDGP8n71IFeOot8JuPZtJ8omz+DZel+WCNZMVdVNLPOd5frqOv
- mpz0VhFAlNTjU1Vy0CnuxX3AM51J8dpdNyG0S8rADh6C8AKCDOfUstpq28/6oTaQv7QZdge0
- JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <CACT4oueJ3GsVvnWcZHgYVL-fCjpt5nOw+2=0BTmiz-9xKY4B0w@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <CAFbF8N7++zopZuEcsKRxBV_sgOGCbzCY0hOyMw1SiGAtuzGhyQ@mail.gmail.com>
+ <CAJfpegsCJnMfn_BzzTK7m9ndCGVsnPit8ZsT0fzAhYoY+yOsKQ@mail.gmail.com> <178035740095.2923901.5908691318688917347@noble.neil.brown.name>
+In-Reply-To: <178035740095.2923901.5908691318688917347@noble.neil.brown.name>
+From: Miklos Szeredi <miklos@szeredi.hu>
+Date: Wed, 3 Jun 2026 11:39:46 +0200
+X-Gm-Features: AVHnY4IoGOIZC3vvhezDGQYniFFeuDo0XpHHJxBiuhhHmBWXiQF3cxck0JH7m5w
+Message-ID: <CAJfpegt=DphJP3pYHL6ZMzbYD4Yfmo_G+DAm496Ar57L0RzymA@mail.gmail.com>
+Subject: Re: PROBLEM: FUSE_NOTIFY_INVAL_ENTRY leaves stale negative dentry
+ after c9ba789dad15
+To: NeilBrown <neil@brown.name>
+Cc: =?UTF-8?B?0JDRgNGC0LXQvCDQm9Cw0LHQsNC30L7Qsg==?= <123321artyom@gmail.com>, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Íñigo,
+On Tue, 2 Jun 2026 at 01:43, NeilBrown <neilb@ownmail.net> wrote:
 
-On 03/06/2026 16:53, Íñigo Huguet wrote:
-> On Wed, Jun 3, 2026 at 7:46 AM Matthieu Baerts <matttbe@kernel.org> wrote:
->> I guess it is safer not to break UAPI and not reapplying the patch,
->> especially when there is no clear way to know which order is taken by
->> the kernel.
->>
->> What about clearly stating that the default order is "random", except
->> when an additional flag is set to sort them chronologically or the opposite?
-> 
-> Stating that the order is "random" implies that someone will change
-> the default insertion order in the future, as the documentation says
-> that it's not UAPI. So they'll cause the UAPI breakage that we are
-> trying to avoid now. Moreover, if we consider the default order
-> "random" and state that userspace programs must not rely on it, why
-> can't we change it now?
+> diff --git a/fs/fuse/dir.c b/fs/fuse/dir.c
+> index b658b6baf72f..3f16ecbc358e 100644
+> --- a/fs/fuse/dir.c
+> +++ b/fs/fuse/dir.c
+> @@ -1605,13 +1605,29 @@ int fuse_reverse_inval_entry(struct fuse_conn *fc, u64 parent_nodeid,
+>                 struct dentry *child = try_lookup_noperm(name, dir);
+>                 if (!child || IS_ERR(child))
+>                         goto put_parent;
+> -               entry = start_removing_dentry(dir, child);
+> -               dput(child);
+> -               if (IS_ERR(entry))
+> -                       goto put_parent;
+> -               if (!d_same_name(entry, dir, name)) {
+> -                       end_removing(entry);
+> -                       entry = NULL;
+> +               if (d_really_is_negative(child)) {
+> +                       spin_lock(&child->d_lock);
+> +                       if (d_really_is_negative(child)) {
+> +                               fuse_dir_changed(parent);
+> +                               if (!(flags & FUSE_EXPIRE_ONLY))
+> +                                       __d_drop(entry);
+> +                               fuse_invalidate_entry_cache(entry);
 
-I was only suggesting "random", simply to force userspace programs to
-ask for a specific order when the order matters. But also to avoid
-having to describe the current order, which is different in v4 and v6
-for entries of the same scope.
+s/entry/child/ for the above two lines
 
-I know the order is not random, and even if it is confusing, I don't
-think we can change it without breaking stuff.
+Otherwise looks good and tests OK.
 
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
+Agree about the need for comments.
 
+Thanks,
+Miklos
