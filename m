@@ -1,136 +1,106 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3B873B3BF4
-	for <regressions@lists.linux.dev>; Wed,  3 Jun 2026 11:02:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6906B3955E7
+	for <regressions@lists.linux.dev>; Wed,  3 Jun 2026 11:10:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780484544; cv=none; b=mxMOx9o3laZW4HUyhv36cOv8v5PsyzvxNHFaUMtQanVvvv0AkmzFPPdefXUuWso78jtPuZPsR4T5aEdEYCi9akVkZitpqpU3qeyYOAmJBq+6xgEXpyF0suHk9VZQeuduxnxSQd+ef8OEa4WrqIAkagZZaBz7ztMhbz8IgGSmspI=
+	t=1780485022; cv=none; b=rRPcMyuma+/3386MrZbZbRI2dt7oAJBwa0lRfckcjOcDL87fVRf5SqM9veHwhl/eZTEZL1CTpRmQ2lDQoZDewa9c3Hn0XtiBBtSJvhSq0VYb+TRiBp7Abl9/Zyh482sxMV9zxxc7AEvo3aA+tqpbPYeXrqPSnuf5oJLWYRunLzo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780484544; c=relaxed/simple;
-	bh=Op4ACPRjaqg9oLNvvhM0/wfayJOU2I2KpzeW6QPK7GM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ixRf9Ok9XPFHzIvrdHoKGkBhSKObemjbBIhiqmCaWMcFc4rZ1Yvrob38PF/JFnNmteniD4LGvlq7G/zIcPUKmYVHITWnoeOWZ3liziSc6Ckj33+sBCMaK2I0CLLZRvzCrbAVDrObS/7bs6cAXLZQnW6xp1sYj2GfDWWJCsSTcVc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=HErMaEFR; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1780485022; c=relaxed/simple;
+	bh=8SbDU2OlhnhxrGUXLIg2aQlLpy6y3WsK4EJfe8WYJxc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bzFy7YyqIP9wjVS2vf2oJvXfJ1H1ijfzm4R+8P349v82TjGCU3aSWUe8nuCOEiVrfo0p2wIE6exsnH7DygEsmZ2E1BLbewSb7QPlm6zzdf0q/02QiQbRCYApueBvchDy0HOJwPbi/2NJ1pxzdwAugePefIgxUZq0yF03EM2TLs8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P0gyBqnI; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="HErMaEFR"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 652JNCpN3001044;
-	Wed, 3 Jun 2026 11:02:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pp1; bh=J1srkxi/63O13pXhsJZVUq5FoJnp+hf98QMaB6fry
-	OM=; b=HErMaEFRYW0BVln+0X4d4a2JtoQki+RarT1F+igMOlEd6ozfELhZpuB5X
-	9aBpJCXvBygOsJvoYFnzYjmVSQV5uAJ5yVr59N4sFSCIjwZqsrZVYOKVjNyL1KUF
-	srgXXFjHeDUdcVbd1W/Iy/+9KFeRFp4SXmasjlBnM2UnqMbsjnrpcwtJLQ0Ec5mB
-	d1P6GStuOiR6n0pDp25z8QkxxQKogtqwQCampm5swQy/Z5FHDr6SOUCHfmYWbtk8
-	eNieJxoY69zIn/hDq5+n/U2F/Mr7EpyYT09AwHYu63ps1+w4hgMC4qnXf9H5xlrD
-	VUYLTYOekrk2Gt1CnRV9DTe25hT7w==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4efpaea1dk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 03 Jun 2026 11:02:19 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 653AsCJd014438;
-	Wed, 3 Jun 2026 11:02:19 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4egbqhfqkp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 03 Jun 2026 11:02:19 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 653B2H2C47645132
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 3 Jun 2026 11:02:17 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0700A2005A;
-	Wed,  3 Jun 2026 11:02:17 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D3A872004B;
-	Wed,  3 Jun 2026 11:02:16 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.87.85.9])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed,  3 Jun 2026 11:02:16 +0000 (GMT)
-From: Jan Polensky <japo@linux.ibm.com>
-To: Namjae Jeon <linkinjeon@kernel.org>, linux-fsdevel@vger.kernel.org
-Cc: Sungjong Seo <sj1557.seo@samsung.com>, Yuezhang Mo <yuezhang.mo@sony.com>,
-        Christoph Hellwig <hch@lst.de>, "Darrick J . Wong" <djwong@kernel.org>,
-        linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
-        japo@linux.ibm.com (Jan Polensky)
-Subject: [REGRESSION] exfat: swapon(2) fails with EINVAL after iomap conversion
-Date: Wed,  3 Jun 2026 13:02:12 +0200
-Message-ID: <20260603110212.3020276-1-japo@linux.ibm.com>
-X-Mailer: git-send-email 2.53.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P0gyBqnI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F6F31F0089B
+	for <regressions@lists.linux.dev>; Wed,  3 Jun 2026 11:10:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780485021;
+	bh=Nd5refc15GJrELtVphbXBTfZyjkxiEauqcgyfGIdZCM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=P0gyBqnIAivd0otXXfLKGPVVSqpFGx8Co+1hJYgJ7ETvhyPjZkzeUCfsr7dNDcYdl
+	 yA7FPl24zmMyfk7twX7Qpj0gJP2KgaGkXNqhCK7KRzazRI0xc9DKfeivD81nB+A4pD
+	 DtI4guogas+aii6VF9v+0NzEuQ2axinOClRh3zcvVmc2aWGYYZWYDSJ36wcRVP2pfz
+	 GIHju/8Zb9oRX+ctGomMSDscdAS5nmnUTDDr/xloncwX6sEMQo68M8IDUciKZ6Lho4
+	 vo4tuBEMcuyoLjEUSpL0X2sgI1J/ZS146LnrDfJTrAIV89oU9hcoAm1YvYc+8sv/bo
+	 B3bIvNqO30e4g==
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-bec4639953dso658451566b.1
+        for <regressions@lists.linux.dev>; Wed, 03 Jun 2026 04:10:21 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ8cCK8yb4KkqOhkkV2oWR930BlCAEorRETjTQzVTHZ2tlIqooqoKm4ifBtT3GzwlHUbVlO1X+6BO0cilQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzNu7mftEdafrJBd7j0jrszVcctWsTWB4gUOkvo3WQq5eNX/o2m
+	Mp/Ark8wvnIkb0JH9qjBD3+KY3IoOmQ+wsWV3LcsYRf7DF726EnXPAO1yZogH+dj68R7A7S4o8Q
+	C455/Vp0sjiLdp89uItphWtP377DsNJE=
+X-Received: by 2002:a17:907:68a9:b0:bd9:a087:730d with SMTP id
+ a640c23a62f3a-bf0b0fdc6bfmr92480666b.8.1780485020039; Wed, 03 Jun 2026
+ 04:10:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=Zt3d7d7G c=1 sm=1 tr=0 ts=6a2009bb cx=c_pps
- a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
- a=FelO9ux0wxsA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=V8glGbnc2Ofi9Qvn3v5h:22 a=VwQbUJbxAAAA:8 a=UqCG9HQmAAAA:8
- a=CfmqdEj8fnphjIFZbAgA:9
-X-Proofpoint-GUID: 5h60-jHlynUaOHWDhHCQXth9Fs96fp28
-X-Proofpoint-ORIG-GUID: 5h60-jHlynUaOHWDhHCQXth9Fs96fp28
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjAzMDEwMiBTYWx0ZWRfX311xZlJaHM1A
- MPTQn4SeLBBLOP/lbSUnKSEEGWprG1adiJPSXqupLGUp/JmQMn71GNC0aJKgDuXIMAL5+hYBzNB
- 0QxWqtfE7TUQMkoolZnea7LAAp6/ZD8hVDNi0K6T9Y6fL1EKdYTbofucNrWdhiGlGuZ6RDEPjzu
- fHn4zxmoSTtpTL7TwG9YwJbXcOjZFCT3b8+lG84nh0QkPTqZYgEzU+5qKJI0vZ9OAXIAerO8Zzl
- hDOvDPHgBCFe4sHozCa7uJVBZVZD76iLncqddPooTlDC08g2c1/Ijb0KmbGsUioQJsy1kAgbGhI
- 9jIHe7TOh2OMi9jDqjasxDlmCD5PzTBgsFyjnef31Bw/PeF8STScdMhv02A1753qF1TBrSIJD8S
- KQvH3QBicKxEjneWLva5ShmRtLLwzGD8aKEF9yMV5hCO3U6wrd7oweptQtpKWnQN97K4JI4z18X
- Gt9k2wV868mvstao2CQ==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
- definitions=2026-06-03_04,2026-05-28_03,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 suspectscore=0 priorityscore=1501 bulkscore=0 clxscore=1011
- phishscore=0 spamscore=0 malwarescore=0 adultscore=0 lowpriorityscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2605210000 definitions=main-2606030102
+References: <20260603110212.3020276-1-japo@linux.ibm.com>
+In-Reply-To: <20260603110212.3020276-1-japo@linux.ibm.com>
+From: Namjae Jeon <linkinjeon@kernel.org>
+Date: Wed, 3 Jun 2026 20:10:07 +0900
+X-Gmail-Original-Message-ID: <CAKYAXd80+UfzKaCR9YRK8dAQq9S+kEp_VVwr_p3dj1tEeyqUQA@mail.gmail.com>
+X-Gm-Features: AVHnY4I-kSxHzCEyAjofTAvp9GqFmh54EvAmNsdlbztot0ApYQRsxVtPxG38L3M
+Message-ID: <CAKYAXd80+UfzKaCR9YRK8dAQq9S+kEp_VVwr_p3dj1tEeyqUQA@mail.gmail.com>
+Subject: Re: [REGRESSION] exfat: swapon(2) fails with EINVAL after iomap conversion
+To: Jan Polensky <japo@linux.ibm.com>
+Cc: linux-fsdevel@vger.kernel.org, Sungjong Seo <sj1557.seo@samsung.com>, 
+	Yuezhang Mo <yuezhang.mo@sony.com>, Christoph Hellwig <hch@lst.de>, 
+	"Darrick J . Wong" <djwong@kernel.org>, linux-kernel@vger.kernel.org, 
+	regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
-
-we are seeing a regression on linux-next after commit
-
-  614f71ca1bdfaa2f25a6f147fe22f3ad031f8e2b
-  ("exfat: add iomap buffered I/O support")
-
-With this change, swapon(2) on an exfat swapfile fails with EINVAL.
-
-Observed fallout in LTP:
-  swapoff01
-  swapoff02
-  swapon01
-  swapon02
-  swapon03
-
-Example failure:
-
-  tst_test.c:1980: TINFO: === Testing on exfat ===
-  tst_test.c:1291: TINFO: Formatting /dev/loop0 with exfat opts='' extra opts=''
-  tst_test.c:1303: TINFO: Mounting /dev/loop0 to /tmp/LTP_swaKmkGVo/mntpoint fstyp=exfat flags=0
-  tse_swap.c:196: TINFO: create a swapfile size of 1 megabytes (MB)
-  tst_ioctl.c:26: TINFO: FIBMAP ioctl is supported
-  tse_swap.c:228: TFAIL: swapon() on exfat failed: EINVAL (22)
-
-and from swapon02:
-
-  swapon02.c:56: TWARN: swapon(alreadyused) failed: EINVAL (22)
-  swapon02.c:73: TFAIL: swapon(2) fail with File already used expected EBUSY: EINVAL (22)
-
-The iomap conversion changes exfat_aops to iomap based callbacks, but does not add a
-.swap_activate handler. The VFS documentation says that ->swap_activate() should call
-add_swap_extent(), or the helper iomap_swapfile_activate().
-
-So this looks like an exfat swap activation regression triggered by the iomap buffered I/O conversion.
-
-#regzbot introduced: 614f71ca1bdfaa2f25a6f147fe22f3ad031f8e2b
-#regzbot monitor: https://lore.kernel.org/all/PUZPR04MB63168E8C2FB92B80F9F6476581002@PUZPR04MB6316.apcprd04.prod.outlook.com/
-
-Thanks
-Jan
+On Wed, Jun 3, 2026 at 8:02=E2=80=AFPM Jan Polensky <japo@linux.ibm.com> wr=
+ote:
+>
+> Hi,
+>
+> we are seeing a regression on linux-next after commit
+>
+>   614f71ca1bdfaa2f25a6f147fe22f3ad031f8e2b
+>   ("exfat: add iomap buffered I/O support")
+>
+> With this change, swapon(2) on an exfat swapfile fails with EINVAL.
+>
+> Observed fallout in LTP:
+>   swapoff01
+>   swapoff02
+>   swapon01
+>   swapon02
+>   swapon03
+>
+> Example failure:
+>
+>   tst_test.c:1980: TINFO: =3D=3D=3D Testing on exfat =3D=3D=3D
+>   tst_test.c:1291: TINFO: Formatting /dev/loop0 with exfat opts=3D'' extr=
+a opts=3D''
+>   tst_test.c:1303: TINFO: Mounting /dev/loop0 to /tmp/LTP_swaKmkGVo/mntpo=
+int fstyp=3Dexfat flags=3D0
+>   tse_swap.c:196: TINFO: create a swapfile size of 1 megabytes (MB)
+>   tst_ioctl.c:26: TINFO: FIBMAP ioctl is supported
+>   tse_swap.c:228: TFAIL: swapon() on exfat failed: EINVAL (22)
+>
+> and from swapon02:
+>
+>   swapon02.c:56: TWARN: swapon(alreadyused) failed: EINVAL (22)
+>   swapon02.c:73: TFAIL: swapon(2) fail with File already used expected EB=
+USY: EINVAL (22)
+>
+> The iomap conversion changes exfat_aops to iomap based callbacks, but doe=
+s not add a
+> .swap_activate handler. The VFS documentation says that ->swap_activate()=
+ should call
+> add_swap_extent(), or the helper iomap_swapfile_activate().
+>
+> So this looks like an exfat swap activation regression triggered by the i=
+omap buffered I/O conversion.
+You have already suggested a solution. Could you please provide a
+patch for this ?
+Thanks for the report.
