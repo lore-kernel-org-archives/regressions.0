@@ -1,99 +1,52 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA572406278
-	for <regressions@lists.linux.dev>; Wed,  3 Jun 2026 08:06:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D67D395DB9;
+	Wed,  3 Jun 2026 09:27:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780474010; cv=none; b=dtBHuOqryZJgKC5VeFixK52W/koK4SexYWzhFR1NZcvmDDv+oVa2fB2ZPrLby64xAMQXwsAj6CKNOU1++2Sm7/BPNemviCJiNyemF4W7lSuAHHVOMz2kvVI9mRqM+HVYdT1QerxYAvp/jc7CkK7pyK+UjpP0XqnLAY0IOI64CKo=
+	t=1780478849; cv=none; b=dbjORhxRaWg08Jsne8ZVfLLVQ56MPnvVd525oTsPP52t8Bh/jsbmvFQNYOfOT/8Va1+y5DweWuYS/WCz9PGuXogeAYH9XWUotikEtqU42tslzXiH9ZCkx58GWMDoXlBThczf2jxGZKsH3XsmlbzcNsYL2Fc2rzUU6r4d3a9oz+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780474010; c=relaxed/simple;
-	bh=uNLmpf/k3Ziojy6QPrnaI3HjQUJYLRWSA+Yhe4miGK8=;
+	s=arc-20240116; t=1780478849; c=relaxed/simple;
+	bh=odWU+nMmgrZPsGI6Xf9THDXw3O7NLl9Nsnlu+uV4Uo8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZgXJd3qs8Na3h16TbS1y5qTBOvLMli0FUP7UX6jkonxIxVKkokz98Pi+5d8qhMwCH63FrDZORZ2dzEALtccomwEqu8a2aXkstYY9fxx8UX29VMaL5eWWYhqh/YXvK438zyWYi/ZJLUz+I6puMh8Q9tLorTwUKAUyUjO1bPDSbi8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Z8HEmMBD; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Ikfok4Ji; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Z8HEmMBD; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Ikfok4Ji; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	 In-Reply-To:Content-Type; b=Whm9k/ES4NvSbAkaqN0xPP6mUTwKqwVZb7cUiXllGLeH+IhPiClbVSGfwjpiBu96W+jfBigJ8dj3hnvL2Mrc/QAxKalYBuF6oedRpMYUIP1e4knyvd9CxJB5NjjQOuC0odRk+ibmpmve2m+L1Dc8ppPIQyPW/1obhl8tHJw7UtY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TKILIWfd; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Z8HEmMBD";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Ikfok4Ji";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Z8HEmMBD";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Ikfok4Ji"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 1B92B6A85D;
-	Wed,  3 Jun 2026 08:06:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1780474007; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PS7RSJTXsuBLhvU6DXs2m5xgrYaSH9R03tpC93168TM=;
-	b=Z8HEmMBDA58cRYv1o67pfeOIMwKfRVZDDrZYPlVOlMxy53Y0kKa9wbR3rMLHhaqfr6sr80
-	a3w7fQ1SI1bAfKw5sbws87aJPFXoWNXzjWYp8Dksw6V7hU6GYqmENJsxjkkvoFynjSW0Cy
-	msR7/v0t+SollDbWh+IJDVUr+Wdrjo8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1780474007;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PS7RSJTXsuBLhvU6DXs2m5xgrYaSH9R03tpC93168TM=;
-	b=Ikfok4JiZCo0053fk6f6XYUJXYzeT3QS1o1aqwQVSeAfgmpcxfs8fhTXXi+fe+GbicCf0G
-	JbWsdWgdnWY1fUCA==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=Z8HEmMBD;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=Ikfok4Ji
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1780474007; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PS7RSJTXsuBLhvU6DXs2m5xgrYaSH9R03tpC93168TM=;
-	b=Z8HEmMBDA58cRYv1o67pfeOIMwKfRVZDDrZYPlVOlMxy53Y0kKa9wbR3rMLHhaqfr6sr80
-	a3w7fQ1SI1bAfKw5sbws87aJPFXoWNXzjWYp8Dksw6V7hU6GYqmENJsxjkkvoFynjSW0Cy
-	msR7/v0t+SollDbWh+IJDVUr+Wdrjo8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1780474007;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PS7RSJTXsuBLhvU6DXs2m5xgrYaSH9R03tpC93168TM=;
-	b=Ikfok4JiZCo0053fk6f6XYUJXYzeT3QS1o1aqwQVSeAfgmpcxfs8fhTXXi+fe+GbicCf0G
-	JbWsdWgdnWY1fUCA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id F0A13593AC;
-	Wed,  3 Jun 2026 08:06:45 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id hGPQN5XgH2plCAAAD6G6ig
-	(envelope-from <fmancera@suse.de>); Wed, 03 Jun 2026 08:06:45 +0000
-Message-ID: <30906ad5-43b8-4192-946a-8c2533f976ff@suse.de>
-Date: Wed, 3 Jun 2026 10:06:41 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TKILIWfd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 718561F00898;
+	Wed,  3 Jun 2026 09:27:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780478847;
+	bh=D2Vmo6upMxKY5OWoPHtpqjiCYXj8F/9MoHUlPOVDBmw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=TKILIWfd3KWnP8EFTrzOWIFHzUt1wYdP6k7N24Xi7uchwZMrvB5IB5Sy8tSV+8iN6
+	 ABLqVv8R4iKCtYYlY7onZjCm1LVhN2oRjA8oFGOUA6YIR+j6lMX6Ajwzx4YrdZvt0a
+	 WxlvY/ztjkWns1xEXkxu01vkAsI6dLLCpUpRBIWFXFmDUMqPgRCwAVhaMMbAUQAiZO
+	 uCpJWBnml8k1p0vmY/EygAPnTnNssrQZj/UDDFgq7MBL71faLUifaOKrnu6XqGqxye
+	 jgGN7uCn4nO29K2ZY2W78aZQ0/DDsqbyFV+Nb9A8H90o8EHSlg0tH574n2SyV3ax5P
+	 sln/A4MS74phg==
+Message-ID: <f0df3ca1-793d-4985-995c-50227fd5123d@kernel.org>
+Date: Wed, 3 Jun 2026 19:27:17 +1000
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
+User-Agent: Mozilla Thunderbird Beta
 Subject: Re: [PATCH net v2] Revert "ipv6: preserve insertion order for
  same-scope addresses"
-To: Ido Schimmel <idosch@nvidia.com>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
- =?UTF-8?B?w43DsWlnbyBIdWd1ZXQ=?= <ihuguet@redhat.com>,
- Matthieu Baerts <matttbe@kernel.org>, Stefano Brivio <sbrivio@redhat.com>,
- netdev@vger.kernel.org, yuhuang@redhat.com, justin.iurman@gmail.com,
- horms@kernel.org, pabeni@redhat.com, kuba@kernel.org, edumazet@google.com,
- davem@davemloft.net, dsahern@kernel.org, Chris Adams <linux@cmadams.net>,
- David Gibson <david@gibson.dropbear.id.au>,
- Beniamino Galvani <bgalvani@redhat.com>, Andrew Lunn <andrew@lunn.ch>,
+Content-Language: fr
+To: =?UTF-8?B?w43DsWlnbyBIdWd1ZXQ=?= <ihuguet@redhat.com>
+Cc: Stefano Brivio <sbrivio@redhat.com>,
+ Fernando Fernandez Mancera <fmancera@suse.de>, netdev@vger.kernel.org,
+ yuhuang@redhat.com, justin.iurman@gmail.com, horms@kernel.org,
+ pabeni@redhat.com, kuba@kernel.org, edumazet@google.com,
+ davem@davemloft.net, idosch@nvidia.com, dsahern@kernel.org,
+ Chris Adams <linux@cmadams.net>, David Gibson <david@gibson.dropbear.id.au>,
+ Beniamino Galvani <bgalvani@redhat.com>,
+ Thorsten Leemhuis <regressions@leemhuis.info>, Andrew Lunn <andrew@lunn.ch>,
  regressions@lists.linux.dev
 References: <20260529112357.5079-1-fmancera@suse.de>
  <20260529134045.56330243@elisabeth>
@@ -102,61 +55,83 @@ References: <20260529112357.5079-1-fmancera@suse.de>
  <CACT4oueDv=KRZmJw=1N58EN7eoFz5AqbBBMP8FE4=+rQ99oFEg@mail.gmail.com>
  <8e9cbf0a-caff-4575-afb7-fe852df8a51a@kernel.org>
  <CACT4oueJ3GsVvnWcZHgYVL-fCjpt5nOw+2=0BTmiz-9xKY4B0w@mail.gmail.com>
- <eba11df5-3ae6-4bc4-bbe7-be358a0d4717@leemhuis.info>
- <ee2b92e5-6d95-4c36-9fa8-6cd2a1572556@suse.de>
- <20260603080023.GA575206@shredder>
-Content-Language: en-US
-From: Fernando Fernandez Mancera <fmancera@suse.de>
-In-Reply-To: <20260603080023.GA575206@shredder>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Flag: NO
-X-Rspamd-Action: no action
-X-Spam-Level: 
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	ARC_NA(0.00)[];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	RCPT_COUNT_TWELVE(0.00)[19];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	RCVD_TLS_ALL(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[leemhuis.info,redhat.com,kernel.org,vger.kernel.org,gmail.com,google.com,davemloft.net,cmadams.net,gibson.dropbear.id.au,lunn.ch,lists.linux.dev];
-	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	DKIM_TRACE(0.00)[suse.de:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,suse.de:dkim,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: 1B92B6A85D
-X-Spam-Score: -3.01
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <CACT4oueJ3GsVvnWcZHgYVL-fCjpt5nOw+2=0BTmiz-9xKY4B0w@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 6/3/26 10:00 AM, Ido Schimmel wrote:
-> On Wed, Jun 03, 2026 at 09:29:55AM +0200, Fernando Fernandez Mancera wrote:
->> We should document that the order matters, no that it is "random" because it
->> isn't.
+Hi Íñigo,
+
+On 03/06/2026 16:53, Íñigo Huguet wrote:
+> On Wed, Jun 3, 2026 at 7:46 AM Matthieu Baerts <matttbe@kernel.org> wrote:
+>> I guess it is safer not to break UAPI and not reapplying the patch,
+>> especially when there is no clear way to know which order is taken by
+>> the kernel.
+>>
+>> What about clearly stating that the default order is "random", except
+>> when an additional flag is set to sort them chronologically or the opposite?
 > 
-> Did you consider writing a kernel selftest for this? Unlikely that the
-> order will change again when we are explicitly testing for a certain
-> order.
-> 
+> Stating that the order is "random" implies that someone will change
+> the default insertion order in the future, as the documentation says
+> that it's not UAPI. So they'll cause the UAPI breakage that we are
+> trying to avoid now. Moreover, if we consider the default order
+> "random" and state that userspace programs must not rely on it, why
+> can't we change it now?
 
-That is a good idea yes, I am adding it to my TO-DO list.
+I was only suggesting "random", simply to force userspace programs to
+ask for a specific order when the order matters. But also to avoid
+having to describe the current order, which is different in v4 and v6
+for entries of the same scope.
 
-Thanks,
-Fernando.
+I know the order is not random, and even if it is confusing, I don't
+think we can change it without breaking stuff.
+
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
+
