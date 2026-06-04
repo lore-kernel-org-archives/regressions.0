@@ -1,157 +1,123 @@
-Received: from us-smtp-delivery-172.mimecast.com (us-smtp-delivery-172.mimecast.com [170.10.133.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dl1-f42.google.com (mail-dl1-f42.google.com [74.125.82.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D22323B8407
-	for <regressions@lists.linux.dev>; Thu,  4 Jun 2026 17:21:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A41E44C9561
+	for <regressions@lists.linux.dev>; Thu,  4 Jun 2026 17:59:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780593684; cv=none; b=pkNIh4/QyXYC7xWc5KMGpGz75DJRenWCulGwRedJaO/YSolRv/DGv4RBfg34rhxAVF5vPf5AhfdtAIwaFfxlrjMTxcavj9eH4NP3DNxrZ11yLA2fYv1Q1KjpPT8nURUR9UQjk5lHk9wE9JAryOL6ncaksHVRF2JySSMIKV0MOLE=
+	t=1780595946; cv=none; b=m51JvP13VO2qgnv54qeZuZw3fdr1PPTfEGHRUQoaN3XvcfZ7apXTc2MvElBxV+Fqrb5kPtUUzgM1o2NIwtrJSPmuXYyVa+FVRxhDU4zFL9EgQ/WnSzLoZz8MspB4v657oWCMdiNc3zwOZvLL29u4SvjUTMjm0FOSm/tOAxIrt9E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780593684; c=relaxed/simple;
-	bh=tZAZYCtRlc8SNcehVszFyDOwikU59Ywhqv6lyqh0UPM=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 MIME-Version:Content-Type; b=tauudWWOYpacl7HI3fODoubZsryQ4/ipBz+u6FXy2zesnFnxlU97qJHuMgA9CPteBBBs3WmGLLw0Al4TE/lSUDoZ6ePjs6EVqwbYaBVlvcjkVju5AM5+6YT2AzBiPt9zcCDj8vyV4iB8fOr4tU+T7UnoyF8y+q2sjyktbV2kWes=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=valvesoftware.com; spf=pass smtp.mailfrom=valvesoftware.com; dkim=pass (1024-bit key) header.d=valvesoftware.com header.i=@valvesoftware.com header.b=EzYF49oQ; arc=none smtp.client-ip=170.10.133.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=valvesoftware.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=valvesoftware.com
+	s=arc-20240116; t=1780595946; c=relaxed/simple;
+	bh=nfK8RylvLKuEzFpYXFoSYWUzV/VO6lZO9BXznBVS5HE=;
+	h=Content-Type:MIME-Version:Subject:From:To:Cc:Date:Message-ID; b=PTVwnlHMQdG1Prc38F7Mzh+8m/HVi4qGspufaMtb+V6BYvmb1lXwSobDkGm5JVMpvoLcdczEspSf/sjrHOyIKWDCaJnNmrlBTbBcdqrPlluUuPQh97rlU3s4gi1qRTq5hgTEns5r6/evzWARIbVVeaLj1DuShOew2FU5E70x1zk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kernelci.org; spf=pass smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci.org header.i=@kernelci.org header.b=KDI46Qav; arc=none smtp.client-ip=74.125.82.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kernelci.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernelci.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=valvesoftware.com header.i=@valvesoftware.com header.b="EzYF49oQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=valvesoftware.com;
-	s=mc20150811; t=1780593680;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tZAZYCtRlc8SNcehVszFyDOwikU59Ywhqv6lyqh0UPM=;
-	b=EzYF49oQfPAWOoBdhXj+cKorj2WNKcqm9uvMdSC0jDt9L6RVvJU809bRS00f/cR2t/hqN+
-	xZwCRRPL1DIfdj0iGUzZ9C5S9pM/SyGkFCafPx6B848qYIUP/AAJnAW+fHg0hFFu5xhnG3
-	3BQwsIJpuN1+p+LCQB5Vby5CixvoqvQ=
-Received: from smtp-01-tuk3.valvesoftware.com
- (smtp-01-tuk3.valvesoftware.com [208.64.203.181]) by relay.mimecast.com
- with ESMTP with STARTTLS (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384)
- id us-mta-622-dtYl4ijGPE-Q90E6WBiOOw-1; Thu, 04 Jun 2026 13:21:17 -0400
-X-MC-Unique: dtYl4ijGPE-Q90E6WBiOOw-1
-X-Mimecast-MFC-AGG-ID: dtYl4ijGPE-Q90E6WBiOOw_1780593677
-Received: from antispam.valve.org ([172.16.1.107])
-	by smtp-01-tuk3.valvesoftware.com with esmtp (Exim 4.97)
-	(envelope-from <peihsiny@valvesoftware.com>)
-	id 1wVBkq-00000008XsK-3iTz
-	for regressions@lists.linux.dev;
-	Thu, 04 Jun 2026 10:21:16 -0700
-Received: from antispam.valve.org (127.0.0.1) id h46q0o0171sa for <regressions@lists.linux.dev>; Thu, 4 Jun 2026 10:21:16 -0700 (envelope-from <peihsiny@valvesoftware.com>)
-Received: from mail2.valvemail.org ([172.16.144.23])
-	by antispam.valve.org ([172.16.1.107]) (SonicWall 10.0.15.7233)
-	with ESMTP id o202606041721160053737-5; Thu, 04 Jun 2026 10:21:16 -0700
-Received: from mail2.valvemail.org (172.16.144.23) by mail2.valvemail.org
- (172.16.144.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Thu, 4 Jun
- 2026 10:21:16 -0700
-Received: from mail2.valvemail.org ([::1]) by mail2.valvemail.org ([::1]) with
- mapi id 15.02.2562.017; Thu, 4 Jun 2026 10:21:16 -0700
-From: Pei-Hsin Yang <peihsiny@valvesoftware.com>
-To: =?utf-8?B?TWljaGVsIETDpG56ZXI=?= <michel.daenzer@mailbox.org>, "Alex
- Deucher" <alexdeucher@gmail.com>
-CC: "Deucher, Alexander" <Alexander.Deucher@amd.com>, Thorsten Leemhuis
-	<regressions@leemhuis.info>, "Wentland, Harry" <Harry.Wentland@amd.com>, "Li,
- Sun peng (Leo)" <Sunpeng.Li@amd.com>, "amd-gfx@lists.freedesktop.org"
-	<amd-gfx@lists.freedesktop.org>, Linux kernel regressions list
-	<regressions@lists.linux.dev>, "Koenig, Christian" <Christian.Koenig@amd.com>
-Subject: RE: [External Mail] Re: Test result / finding of "drm/amd/display:
- Consult MCCS FreeSync cap only if requested & supported"
-Thread-Topic: [External Mail] Re: Test result / finding of "drm/amd/display:
- Consult MCCS FreeSync cap only if requested & supported"
-Thread-Index: AdznyYW5KuL81IotTPmWr+1olc6y4wAnk9yAAAH0cTAALvV0AAForM+AABaOgIABQfl5gAAL1UIAAAFNC4AACERGsA==
-Date: Thu, 4 Jun 2026 17:21:16 +0000
-Message-ID: <399d0170414b4304823e866b04ab518a@valvesoftware.com>
-References: <44069eb146824aa195312f5b02c49287@valvesoftware.com>
- <7a9021cd-fd78-4b0d-846b-135d0d72224e@mailbox.org>
- <16231b1742004f848af243ce398281ec@valvesoftware.com>
- <ce51243c-3b98-4f99-911f-70dd0b860da0@mailbox.org>
- <1c522568-1d5e-4210-8f25-1aa96e0d3c3a@leemhuis.info>
- <BL1PR12MB51447AB016BB28843BAD0216F7092@BL1PR12MB5144.namprd12.prod.outlook.com>
- <af4dff0f-0c62-4a7d-9a3f-fc029c8757f4@mailbox.org>
- <CADnq5_O9xMagapKQSO-6waXtmmFkDV-47ExVaNuiZd2xVdhefw@mail.gmail.com>
- <39ff584f-66ed-421a-918b-347d020a393a@mailbox.org>
-In-Reply-To: <39ff584f-66ed-421a-918b-347d020a393a@mailbox.org>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
+	dkim=pass (2048-bit key) header.d=kernelci.org header.i=@kernelci.org header.b="KDI46Qav"
+Received: by mail-dl1-f42.google.com with SMTP id a92af1059eb24-137eed84fc6so2727398c88.0
+        for <regressions@lists.linux.dev>; Thu, 04 Jun 2026 10:59:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci.org; s=google; t=1780595945; x=1781200745; darn=lists.linux.dev;
+        h=message-id:date:reply-to:cc:to:from:subject
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SyEsaSsaYhlOCnUozjrxNOzw6jzmnNaVQY0+GszbH9k=;
+        b=KDI46QavnVJhF9fq6+5Y3UohyhjhWwruBx9zsVjOsXgqw3NUQ4m3txJYM6KoMJHoWC
+         7idopvPiU/apktmskYpOYDN4wz/NjH5wvCwJSOp5gZOlJMXXhjiO8Zgpw5cphbLjq2TH
+         aG4BdZYgVToNDuJNr8VhR7zP5MEiKHlRtl+UnORXBV0J7xOHy6Ivq/653b0CMBl/DKgz
+         srN+WAn0w6dc8q/4CCyqX/weKbK2LlxAGGtwDsAcKL6q1wgwVanJoJ00n3lSSe9D3BYl
+         bNkbURiUFFHujB93ln8svd8TXSY7sgWwjmYm3DUjgEY3bWUhuzmIWDpMjroYoc6Dvd5d
+         rTog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780595945; x=1781200745;
+        h=message-id:date:reply-to:cc:to:from:subject
+         :content-transfer-encoding:mime-version:x-gm-gg:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=SyEsaSsaYhlOCnUozjrxNOzw6jzmnNaVQY0+GszbH9k=;
+        b=bkAr7450cCfotzKDAnylCQWxTbbtG0yBetM7tfY+58s4bdu9OiMnmanA2bh/tWWeLn
+         ZFuHV2HHLKiW8szBa1Jcmvfa5aO5nXo30EpD7I93k+YAyRK08CuwzNXK9JjFxdet6hz3
+         sfTPZ0/P37TFUgbpcnPLp2aO+Vy7Gkm7/1gM0VhTwyZxsdEw6xIy3zP0BO3qzxrFFXq1
+         29ExiSQPX8HfJ0BFVwB63Am0KpTJvOnhWhT2jlEKwma69KZ5z0k5bKJ49ruk0IXxSZqu
+         G77iljIS5SjMgRHkbwGRVcT2vd3eGXh5lozKPO9xIOyL6osn4dBDnAnfSANNT99u0ZI0
+         M4WQ==
+X-Gm-Message-State: AOJu0YxmQTsnUAsMGQfeFMjR/UDe7mo1A3f6eb9a1Q/B4GBRww/TtPOz
+	YXRnkI3WIjpeo7PgR0F0KHJIy2SORLh+DeXA+rwIxrh8Yx3XQkQYj+kqW6i8XkqcNtU=
+X-Gm-Gg: Acq92OEMsUesLf2jP6/bSBYG4xgBV2icb3/Z1FepcBWj9KOwNpC4fWfcOuAzDzmRtEh
+	KIIzXVYDXSG1PDXIifjjORk9gDwcOm+e1JXsH5aynhXpYEFIHfmu3dsqYBoCQvsONlLGuGkosyk
+	v1uP+eYNYBl3vra0m/lsnOwvaTl2ssr61wQk8KZAnelzumB90k2xDSFEQY98059UysPUCXOAlH2
+	O9M0JLzfZ6poQpWocu0Ek3vwyX5i0LcEMS/KHRFiNfdCEvVMPI4aDt5OHZq5P3iZYEYofUnbhAS
+	VoR/LFAk7/TqG7uaXgZNnGUSu/SaqlXiLyxR012hM+iYiCe68yUJmglPUvjmqJPMl+yKiaahl+T
+	vvWr1IKjepsldKYXfdGAX3AJ7angeOHc4hdP/NHpTTJOmkieAs23pPUZ/xZJdPgvOgWugH7doBl
+	WcPp/O4Yje9Xf3mLvWKJVF6dTNfgo=
+X-Received: by 2002:a05:7022:62a3:b0:138:36f:4288 with SMTP id a92af1059eb24-138066d54e0mr72818c88.15.1780595944696;
+        Thu, 04 Jun 2026 10:59:04 -0700 (PDT)
+Received: from 330cfa3079ca ([20.38.40.137])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-137f5539035sm4387471c88.11.2026.06.04.10.59.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jun 2026 10:59:04 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mlf-DSE-Version: 6871
-X-Mlf-Rules-Version: s20260603144725; ds20230628172248;
-	di20260526173604; ri20160318003319; fs20260604170745
-X-Mlf-Smartnet-Version: 20210917223710
-X-Mlf-Envelope-From: peihsiny@valvesoftware.com
-X-Mlf-Version: 10.0.15.7233
-X-Mlf-License: BSV_C_AP_T_R
-X-Mlf-UniqueId: o202606041721160053737
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: X-On-IZV6nHom8nYBvfrIZ8xMuMswQgmbNR4xiV-e48_1780593677
-X-Mimecast-Originator: valvesoftware.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 7bit
+Subject: [REGRESSION] next/master: (build) stack frame size (2088) exceeds
+ limit (2048)
+ in 'dml31_ModeSupport...
+From: KernelCI bot <bot@kernelci.org>
+To: kernelci-results@groups.io
+Cc: regressions@lists.linux.dev, gus@collabora.com, linux-next@vger.kernel.org
+Reply-To: kernelci@lists.linux.dev
+Date: Thu, 04 Jun 2026 17:59:04 -0000
+Message-ID: <178059594388.10259.8984887956034576074@330cfa3079ca>
 
-SGkgTWljaGVsLA0KDQo+IE5vdGUgdGhhdCBQZWktSHNpbiByZXBvcnRlZCBhbiBpc3N1ZSB3aGVu
-IHJ1bm5pbmcgd2l0aCBteSBmaXggYXQgdGhlIHN0YXJ0IG9mIHRoaXMgdGhyZWFkLCB1bmZvcnR1
-bmF0ZWx5IGl0J3Mgc3RpbGwgdW5jbGVhciBpZiB0aGF0J3MgYSByZWdyZXNzaW9uIG9mID4gbXkg
-Zml4IG9yIGhhcHBlbnMgZXZlbiB3aXRob3V0IGl0IChpbiB3aGljaCBjYXNlIGl0IG1pZ2h0IGJl
-IGFub3RoZXIgcmVncmVzc2lvbiBvZiB0aGUgTUNDUyByZWxhdGVkIGNoYW5nZXMgZm9yIDcuMSku
-DQoNCkFzIEkgaGF2ZSBtZW50aW9uZWQgZWFybGllciwgbXkgdGVzdGluZyBvZiB5b3VyIHBhdGNo
-IGNvbmZpcm1zIHRoYXQgaXQgaXMgYSByZWdyZXNzaW9uIGV2ZW4gd2l0aG91dCB5b3VyIHBhdGNo
-Lg0KDQpUaGVyZSBhcmUgdHdvIHJlbGlhYmlsaXR5IG1hdHRlcnMgaW4gbW9zdCByZWNlbnQgRnJl
-ZVN5bmMgLyBNQ0NTIGltcGxlbWVudGF0aW9uIG5lZWQgZnVydGhlciBjbGFyaWZpY2F0aW9uIGZy
-b20gdGhlIEFNRCB0ZWFtLiAgZnJlZXN5bmNfY2FwYWJsZSBvciBNQ0NTIHN1cHBvcnQgYXJlIGlu
-YWR2ZXJ0ZW50bHkgZGlzYWJsZWQgb24gc29tZSBvY2Nhc2lvbnMsIGZvciBleGFtcGxlLCBhZnRl
-ciBIRE1JIGNhYmxlIGhvdCBwbHVnLg0KDQoxLiBBTUQgVlNEQiBFRElEIHBhcnNpbmcgdmlhIGlu
-dGVybmFsIGRtdWIgY29tbXVuaWNhdGlvbi4NCjIuIEFNRCBNQ0NTIFZDUCBDb2RlIGhlbHBlcnMu
-DQoNCk5PVEU6IEkgZm91bmQgdGhlc2UgaXNzdWVzIGFmdGVyIGJhY2twb3J0aW5nIGZyb20gYXNk
-biA3LnggdG8gU3RlYW1PUyA2LjE2LzYuMTguICBJdCBpcyB2ZXJpZmllZCBvbiBTdGVhbSBNYWNo
-aW5lLg0KDQpUaGFua3MsDQpQZWktSHNpbg0KDQoNCi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0t
-DQpGcm9tOiBNaWNoZWwgRMOkbnplciA8bWljaGVsLmRhZW56ZXJAbWFpbGJveC5vcmc+IA0KU2Vu
-dDogVGh1cnNkYXksIEp1bmUgNCwgMjAyNiA2OjU4IEFNDQpUbzogQWxleCBEZXVjaGVyIDxhbGV4
-ZGV1Y2hlckBnbWFpbC5jb20+DQpDYzogRGV1Y2hlciwgQWxleGFuZGVyIDxBbGV4YW5kZXIuRGV1
-Y2hlckBhbWQuY29tPjsgVGhvcnN0ZW4gTGVlbWh1aXMgPHJlZ3Jlc3Npb25zQGxlZW1odWlzLmlu
-Zm8+OyBQZWktSHNpbiBZYW5nIDxwZWloc2lueUB2YWx2ZXNvZnR3YXJlLmNvbT47IFdlbnRsYW5k
-LCBIYXJyeSA8SGFycnkuV2VudGxhbmRAYW1kLmNvbT47IExpLCBTdW4gcGVuZyAoTGVvKSA8U3Vu
-cGVuZy5MaUBhbWQuY29tPjsgYW1kLWdmeEBsaXN0cy5mcmVlZGVza3RvcC5vcmc7IExpbnV4IGtl
-cm5lbCByZWdyZXNzaW9ucyBsaXN0IDxyZWdyZXNzaW9uc0BsaXN0cy5saW51eC5kZXY+OyBLb2Vu
-aWcsIENocmlzdGlhbiA8Q2hyaXN0aWFuLktvZW5pZ0BhbWQuY29tPg0KU3ViamVjdDogW0V4dGVy
-bmFsIE1haWxdIFJlOiBUZXN0IHJlc3VsdCAvIGZpbmRpbmcgb2YgImRybS9hbWQvZGlzcGxheTog
-Q29uc3VsdCBNQ0NTIEZyZWVTeW5jIGNhcCBvbmx5IGlmIHJlcXVlc3RlZCAmIHN1cHBvcnRlZCIN
-Cg0KT24gNi80LzI2IDE1OjIwLCBBbGV4IERldWNoZXIgd3JvdGU6DQo+IE9uIFRodSwgSnVuIDQs
-IDIwMjYgYXQgMzo1OeKAr0FNIE1pY2hlbCBEw6RuemVyIDxtaWNoZWwuZGFlbnplckBtYWlsYm94
-Lm9yZz4gd3JvdGU6DQo+PiBPbiA1LzI5LzI2IDAwOjAyLCBEZXVjaGVyLCBBbGV4YW5kZXIgd3Jv
-dGU6DQo+Pj4+IEZyb206IFRob3JzdGVuIExlZW1odWlzIDxyZWdyZXNzaW9uc0BsZWVtaHVpcy5p
-bmZvPiBPbiA1LzIxLzI2IA0KPj4+PiAwOTowOSwgTWljaGVsIETDpG56ZXIgd3JvdGU6DQo+Pj4+
-Pg0KPj4+Pj4gTm90ZSB0aGF0IHNvbWUga2luZCBvZiBzaG9ydC10ZXJtIHNvbHV0aW9uIGlzIG5l
-ZWRlZCBmb3IgdGhlIA0KPj4+Pj4gcmVncmVzc2lvbihzKSBpbg0KPj4+PiA3LjEtcmMuDQo+Pj4+
-DQo+Pj4+IFllYWgsIHRoYXQgd291bGQgYmUgZ29vZC4gTWFrZXMgbWUgd29uZGVyIGhvdyB0aGUg
-cm91Z2ggcGxhbiB0byANCj4+Pj4gcmVhbGl6ZSB0aGlzIGxvb2tzIGxpa2U/IFNvdW5kcyBsaWtl
-IE1pY2hhZWwncyBwYXRjaFsxXSB0aGF0IHdhcyANCj4+Pj4gZGlzY3Vzc2VkIGhlcmUgaXMgbm90
-IGEgZ29vZCBvcHRpb24/IFJlbWluZGVyLCBMaW51cyBpZGVhbGx5IHdhbnRzIA0KPj4+PiBrbm93
-biByZWdyZXNzaW9uIGZpeGVkIGJ5IC1yYzYsIHdoaWNoIGlzIHdoeSBJJ20gYXNraW5nLg0KPj4+
-DQo+Pj4gQFdlbnRsYW5kLCBIYXJyeSBjYW4geW91IHNvcnQgdGhpcyBvdXQgZm9yIG5leHQgd2Vl
-aydzIC1maXhlcyBQUj8NCj4+DQo+PiBMb29rcyBsaWtlIHRoaXMgcmVncmVzc2lvbiB3aWxsIG1h
-a2UgaXQgdG8gNy4xIGZpbmFsPw0KPj4NCj4+IEkgZmlsZWQgaHR0cHM6Ly9naXRsYWIuZnJlZWRl
-c2t0b3Aub3JnL2RybS9hbWQvLS93b3JrX2l0ZW1zLzUyODYgMyB3ZWVrcyBhZ28sIGFuZCBwcm9w
-b3NlZCBhIGZpeCB0aGUgZm9sbG93aW5nIHdlZWsuIFRoZXJlJ3MgYmVlbiBubyByZWFjdGlvbiBi
-eSBhbnkgQU1EIGRpc3BsYXkgZGV2ZWxvcGVyLg0KPj4NCj4+IFRoaXMgaXMgcHJldHR5IHNhZC4N
-Cj4gDQo+IEBXZW50bGFuZCwgSGFycnkgLCBATGVvIChTdW5wZW5nKSBMaSBjb21lIG9uIGd1eXMh
-ICBJJ3ZlIHBpY2tlZCB1cCANCj4gTWljaGVsJ3MgcGF0Y2ggYW5kIEknbGwgc2VuZCBhbiB1cGRh
-dGUgLVBSIHRvZGF5Lg0KDQpUaGFua3MgQWxleC4NCg0KDQpOb3RlIHRoYXQgUGVpLUhzaW4gcmVw
-b3J0ZWQgYW4gaXNzdWUgd2hlbiBydW5uaW5nIHdpdGggbXkgZml4IGF0IHRoZSBzdGFydCBvZiB0
-aGlzIHRocmVhZCwgdW5mb3J0dW5hdGVseSBpdCdzIHN0aWxsIHVuY2xlYXIgaWYgdGhhdCdzIGEg
-cmVncmVzc2lvbiBvZiBteSBmaXggb3IgaGFwcGVucyBldmVuIHdpdGhvdXQgaXQgKGluIHdoaWNo
-IGNhc2UgaXQgbWlnaHQgYmUgYW5vdGhlciByZWdyZXNzaW9uIG9mIHRoZSBNQ0NTIHJlbGF0ZWQg
-Y2hhbmdlcyBmb3IgNy4xKS4NCg0KQW4gYWx0ZXJuYXRpdmUgd291bGQgYmUgcmV2ZXJ0aW5nIHRo
-ZSA0IGNvbW1pdHMgZDQ5MDg2NDkxYmNiLi44ZGM4OGM2YTU5NDguDQoNCg0KLS0gDQpFYXJ0aGxp
-bmcgTWljaGVsIETDpG56ZXIgICAgICAgXCAgICAgICAgR05PTUUgLyBYd2F5bGFuZCAvIE1lc2Eg
-ZGV2ZWxvcGVyDQpodHRwczovL3JlZGhhdC5jb20gICAgICAgICAgICAgXCAgICAgICAgICAgICAg
-IExpYnJlIHNvZnR3YXJlIGVudGh1c2lhc3QNCg0K
 
+
+
+
+Hello,
+
+New build issue found on next/master:
+
+---
+ stack frame size (2088) exceeds limit (2048) in 'dml31_ModeSupportAndSystemConfigurationFull' [-Werror,-Wframe-larger-than] in drivers/gpu/drm/amd/amdgpu/../display/dc/dml/dcn31/display_mode_vba_31.o (drivers/gpu/drm/amd/amdgpu/../display/dc/dml/dcn31/display_mode_vba_31.c) [logspec:kbuild,kbuild.compiler.error]
+---
+
+- dashboard: https://d.kernelci.org/i/maestro:96417cd30041ab8f3153128d0120c6cd70782d99
+- giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+- commit HEAD:  b99ae45861eccff1e1d8c7b05a13650be805d437
+- tags: next-20260604
+
+Please include the KernelCI tag when submitting a fix:
+
+Reported-by: kernelci.org bot <bot@kernelci.org>
+
+
+Log excerpt:
+=====================================================
+/tmp/kci/linux/drivers/gpu/drm/amd/amdgpu/../display/dc/dml/dcn31/display_mode_vba_31.c:3872:6: error: stack frame size (2088) exceeds limit (2048) in 'dml31_ModeSupportAndSystemConfigurationFull' [-Werror,-Wframe-larger-than]
+ 3872 | void dml31_ModeSupportAndSystemConfigurationFull(struct display_mode_lib *mode_lib)
+      |      ^
+1 error generated.
+
+=====================================================
+
+
+# Builds where the incident occurred:
+
+## x86_64_defconfig+kselftest+x86-board on (x86_64):
+- compiler: clang-21
+- config: None
+- dashboard: https://d.kernelci.org/build/maestro:6a21abf22cc72b6e94bf3c60
+
+
+#kernelci issue maestro:96417cd30041ab8f3153128d0120c6cd70782d99
+
+--
+This is an experimental report format. Please send feedback in!
+Talk to us at kernelci@lists.linux.dev
+
+Made with love by the KernelCI team - https://kernelci.org
