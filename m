@@ -1,270 +1,96 @@
-Received: from fout-b6-smtp.messagingengine.com (fout-b6-smtp.messagingengine.com [202.12.124.149])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [46.38.247.119])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A88ED30DEA6
-	for <regressions@lists.linux.dev>; Thu,  4 Jun 2026 09:43:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.149
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 968853FFAB6
+	for <regressions@lists.linux.dev>; Thu,  4 Jun 2026 09:57:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.38.247.119
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780566203; cv=none; b=nItG/TaLFdTc/LeAMp8RPyVIGKP5G1mQ0PwKLsCv31tfDQ6Eb59xgtB4F3Ydyg/CAQz4wP3u75ShJlQW3vIp0uk0465yuMsmVWfEfv5xPHMZZvwh/x6+VLDXX0F5qWibU5Dvwmb8Eqa7j6munr5OIl3ZEx5D5DpEyJkAXKiTC78=
+	t=1780567030; cv=none; b=jy6c37RA+/vZvqmDNBDBopCo60H5k2NTEuu40H6bhLVDBCakv/4uqppSpaIEAMW27NLQZ+wmfNzLbKO0d+Kf2Y0EjTcjetCtWXFiohgmvsOG+eQY++sptv6lWVANlh3++TeLH7eOXDoQLzTnITZbQJy4lIqcQ7ErlqY0vyERHEk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780566203; c=relaxed/simple;
-	bh=LhawOvyRtRMMXBTHxHHd0oa3qymcQE0gXD1YImAXXXE=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=pVnNuku7hq8y8R29+m3Fb9AV86jmdxYcWKgQ5fly8WwwzfPEr2jMfdAj/5KVIqnDJhT8hpIiYFI+GqaXFFKejbggMrCDoCfzdPSb3OkkWD8P5DHp/71N1H3Mm7kTNv+TSCuv1TIKljJ322JUUmO3KFGyiAge42jiJnYFsv7aTbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=bbR4k5Dc; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=WUBKS/UP; arc=none smtp.client-ip=202.12.124.149
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
+	s=arc-20240116; t=1780567030; c=relaxed/simple;
+	bh=/t0fH7CSsqN3Z8W61gfD8/q5D/eoypecWQpfWAS6+ok=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=mZyRx0JLpvPAIxf7l7NrF/HcOUyljcnlqlBle1Iy/Sc34hm5IfrGHOGo9OxJ+B/YouAK53oQzT2t8mpUk3T5Hq6BKYcIPfgwyipZRn9uDSS15gObyQ2zifm+KRh2I7syl9mFrS0/pbCPBW1wif6jlOlumFmxcUNfeLP6s5/pL8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=AHfg/2Qz; arc=none smtp.client-ip=46.38.247.119
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="bbR4k5Dc";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="WUBKS/UP"
-Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
-	by mailfout.stl.internal (Postfix) with ESMTP id C80701D000D5;
-	Thu,  4 Jun 2026 05:43:20 -0400 (EDT)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-05.internal (MEProxy); Thu, 04 Jun 2026 05:43:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to; s=fm1; t=
-	1780566200; x=1780652600; bh=Vwtnw06eLMAyNpnezM4yOLQvIVtwS6o86OX
-	sctV/SNQ=; b=bbR4k5DcDGg6dhP0DTZ8rCLxErBIHZja/7RSn/8wku7k1yE8B9n
-	7274T+Iad+g3Q2L9g5X01yC0W0A1ThCv4Xsj6/y4ZFf2+FHh6h/OpKRr+59CwWa2
-	qy2cGZiwRNSk80DVgzoskPdAWu+ctp1wqu/p1BQpQxckdTF6IcIuQeKpmZHWnfOV
-	AHW/gdH0A+58qSN+wB/ApHLPuawaUroraixVfLh6PMMzUe7ZjET9Rsqj0pgpGOQg
-	9nSWCxDWLHHrNC6a/gPg4DqKmvzBCsNUBWoN8karHXkZpfHL0sDfeu7E+9JHJ3vS
-	kLu9FYrKIbGQDml0m5iaJi1ntutixRnnSVw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1780566200; x=
-	1780652600; bh=Vwtnw06eLMAyNpnezM4yOLQvIVtwS6o86OXsctV/SNQ=; b=W
-	UBKS/UPuVXl5sYa0O1tLmn5ggFYuHaVRkxz3D2jUNflt4QQSRxpX44df0+Z51pJg
-	wOBEbIfk43zUGwINDAwe6gh+CnnXdatwx0r0cTfmEAXGSRSMTy0AQB1Kz5BILkr7
-	BQGSHjwVXEwQNB9vwEg3LsgWIoRqWx7FVUymD+7hxlkSWUY8y+7X0S53A1LCLh8H
-	UU5O6rv1gZLuLH5YQdH/YHs4DbW1XZEqSorqQgg/ZL+b2kJmKG01FE9iJm4SdvCZ
-	D2tVvSxwghlNej8Q7+BIwXST9eB7nufrX3p0EI3HspQUTSikbbTE9K50zUAZbvv5
-	S2WtmHcMZC48MMe46O7/g==
-X-ME-Sender: <xms:uEghauB34Iq30TMphY90WAFqB19lFnUJ0QT1IkWdaGwdppq-ZdjTKg>
-    <xme:uEghahekwpOrYKWda1ojnwjshwn9gZEyQy2Mf71cpomI7ZimMsJxOjSHFga46NVhG
-    AlT7gpG2-JVT5O2dSR6pQDREkr_cQxTI6RtJul38Wbm3TGQ>
-X-ME-Received: <xmr:uEghatLPuVYG7AI0_pAF2Huabo1agfWEEZflQxPaIUmGiPrjKxACzr2Qd7phyJd2eNmqKzdG6ANjAA0GYp1oCi5tDQxohlk>
-X-ME-Proxy-Cause: dmFkZTFoRNuElNb44XKJIPfoa+ZURoUK/BHTmQiRxgVF5le6it5Iams2pMXG5A9Uhb8SlL
-    rvFGL59n+ZqkYbg5zsQcYO+rirt6OtR2YvJMF0nTygdv+/PGtZtmFv8hRTXUSuZ4zh2e4L
-    zsVDnKKZT3ichNR9Ogx5TYYBk+vxFAHXsG04HM1TVBGGOVOh32UKewv72Kxwa9KDjv1jAR
-    HijN9yONIGez8XR3h1iBzdD/JTgDxCd/vUKYOvSTEjOgGRq0g1isUBB+vWu5WHiw1aSx++
-    N03b+prHm/wQYrJ7RuxWsffm4mk0BROY8TTrI1/oMZADMj33F8IACN9aTfALQVEnDvj7sR
-    4bAoJ3j4M6Jl2/GYCzVe3dGXEvxnOyXh2bj8t3VIVrGVO1A+3Ol0FUpNG4OeTQomEc8oTg
-    smnY8LiqDRWkaCN5xW+rtnsNA9yKsqmurPg5GWE9oGk7u7fUh/3TncK0e8HlFlk/nyx0zL
-    vCwpDgFnn+eMsa8r+uE5bFICytofGVPhnYDeFQdb1SVZct/e4NVRUfx1tKnPDQwfrOT1T7
-    kUAwteN3r0eqGO+qqSO9FinyhqwhSg5OxqteAt8qz7SEEBw9+rBgGUJZVBUrFTCaX3jRAW
-    XlKdp7ZJ6iRe91wyUgATiNTkj527oBuQvRfsr7twOw9JSDfnLcaUbpV1Fyfg
-X-ME-Proxy: <xmx:uEghas1p3YY9d_I0XIyFDPKkZLOrPdBwV7TLHUgT0HLdd0yRas7rDQ>
-    <xmx:uEghaviUE_HjaOd8XhvbkS66D0VMBk5cq9bOGbLkHuJe9QCrQyprHQ>
-    <xmx:uEghalWtuoU67OW4cxfjpE3W5-iASWziabcL_yVF5fN0-KPOCtu9yQ>
-    <xmx:uEghamX6B4_iOQNEGVAa1zCyn7t_OuqR86xcsVOXZqHdMClk8BYKxg>
-    <xmx:uEghailUfEVZwvKvdLAyUmadATAa8gm2g9Xz07NWwPqBBtgslPIZ1lr5>
-Feedback-ID: i9d664b8f:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 4 Jun 2026 05:43:18 -0400 (EDT)
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="AHfg/2Qz"
+Received: from mors-relay-8404.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4gWKVy03XVz89Dg
+	for <regressions@lists.linux.dev>; Thu,  4 Jun 2026 11:47:54 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1780566474;
+	bh=/t0fH7CSsqN3Z8W61gfD8/q5D/eoypecWQpfWAS6+ok=;
+	h=Date:Subject:From:To:References:In-Reply-To:From;
+	b=AHfg/2QznQv7QfDi5AG116Dnat/Hbhnp5Q9oLYfbU02qBf8XMabOkAXngJ0Z8GTEj
+	 5VxfXFlvskGI70K7RZ8Z10ghwZiaqqhlF2vZ+0AU88O84EkJpDYu8+zfw0Es0GMXh9
+	 R2ogf4QcVE5fSbjr317REdzWUNC5NNEEgXmG4fP+GyJI7P+i4pTP0FgK9l/SVcySdX
+	 LPIBoX7V/X2JM/X1fUTj/yJVb5QB0lC/gPMYMRR8Dy4kXYdOE2JT6ymbQfmb5fme3I
+	 JQt8INi8kjhOofLHpNrD74lTrOaXttAcnQLD7NpzJtHdtwu56ZHfqWThuU2L0aRxXZ
+	 whWrnxg/6K0Sg==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4gWKVx6TnNz4xPR
+	for <regressions@lists.linux.dev>; Thu,  4 Jun 2026 11:47:53 +0200 (CEST)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4gWKVx4wg9z8sh8
+	for <regressions@lists.linux.dev>; Thu,  4 Jun 2026 11:47:53 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 102696184C
+	for <regressions@lists.linux.dev>; Thu,  4 Jun 2026 11:47:53 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <10a1a9bb-8bde-4e5f-a538-cdfe48b6f2df@leemhuis.info>
+Date: Thu, 4 Jun 2026 11:47:50 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: NeilBrown <neilb@ownmail.net>
-To: "Miklos Szeredi" <miklos@szeredi.hu>
-Cc: =?utf-8?b?0JDRgNGC0LXQvCDQm9Cw0LHQsNC30L7Qsg==?= <123321artyom@gmail.com>,
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
- regressions@lists.linux.dev
-Subject: Re: PROBLEM: FUSE_NOTIFY_INVAL_ENTRY leaves stale negative dentry
- after c9ba789dad15
-In-reply-to:
- <CAJfpegswAZv8OmDAcK-5u8kssAF1vZKe4gdDB2XPErAnoGFSYg@mail.gmail.com>
-References:
- <CAFbF8N7++zopZuEcsKRxBV_sgOGCbzCY0hOyMw1SiGAtuzGhyQ@mail.gmail.com>
-  <CAJfpegsCJnMfn_BzzTK7m9ndCGVsnPit8ZsT0fzAhYoY+yOsKQ@mail.gmail.com>
-  <178035740095.2923901.5908691318688917347@noble.neil.brown.name>
-  <CAJfpegswAZv8OmDAcK-5u8kssAF1vZKe4gdDB2XPErAnoGFSYg@mail.gmail.com>
-Date: Thu, 04 Jun 2026 19:43:14 +1000
-Message-id: <178056619459.3392745.3091041855723132411@noble.neil.brown.name>
-Reply-To: NeilBrown <neil@brown.name>
-
-On Thu, 04 Jun 2026, Miklos Szeredi wrote:
-> On Tue, 2 Jun 2026 at 01:43, NeilBrown <neilb@ownmail.net> wrote:
->=20
-> > +               if (d_really_is_negative(child)) {
-> > +                       spin_lock(&child->d_lock);
-> > +                       if (d_really_is_negative(child)) {
-> > +                               fuse_dir_changed(parent);
-> > +                               if (!(flags & FUSE_EXPIRE_ONLY))
-> > +                                       __d_drop(entry);
-> > +                               fuse_invalidate_entry_cache(entry);
-> > +                               spin_unlock(&child->d_lock);
-> > +                               dput(child);
-> > +                               err =3D 0;
-> > +                               goto put_parent;
-> > +                       }
-> > +                       spin_unlock(&child->d_lock);
-> > +                       dput(child);
-> > +               } else {
-> > +                       entry =3D start_removing_dentry(dir, child);
-> > +                       dput(child);
-> > +                       if (IS_ERR(entry))
-> > +                               goto put_parent;
->=20
-> There are still races (move out from dir, unlink) that result in
-> EINVAL and ENOENT respectively, but AFAICS these cases need to be
-> retried instead of faling.  Rather convoluted.
-
-Yes, error from start_remove_dentry() should go around the loop again
-rather than failing.
-Also I think we do need a parent lock for the negative dentry case.  I
-was thinking of protecting this code, but to protect other code that
-might instantiate the dentry, we need a proper lock.
-
->=20
-> Can you explain why exactly is this needed?
-
-It isn't clear to me what "this" you are referring to.
-
-My guess is you refer to the need for retry-on-error.
-I need that design so that locking can be pushed closer to the
-filesystem and ultimately, in some cases, removed.
-It is a lot like the reason that we often use cmp-xchg loops instead of
-holding a spinlock while performing a simple operation.  The code is
-more complex but it scales better.
-
-Thanks for the on going review!
-
-This is my current thought about how to fix this code.
-
-Thanks,
-NeilBrown
+User-Agent: Mozilla Thunderbird
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: <178056647323.2334715.3204720677551583221@mxe9fb.netcup.net>
+X-Rspamd-Server: rspamd-worker-8404
+X-Rspamd-Queue-Id: 102696184C
+X-NC-CID: k6co30jzdJtmOz4AaY9J6CLIaQZItHTGmXgKMPXp+C1tIRj1rzY=
 
 
 
-diff --git a/fs/fuse/dir.c b/fs/fuse/dir.c
-index 70948fe385da..7d744c7b923a 100644
---- a/fs/fuse/dir.c
-+++ b/fs/fuse/dir.c
-@@ -1601,55 +1601,74 @@ int fuse_reverse_inval_entry(struct fuse_conn *fc, u6=
-4 parent_nodeid,
- 	dir =3D d_find_alias(parent);
- 	if (!dir)
- 		goto put_parent;
--	while (!entry) {
--		struct dentry *child =3D try_lookup_noperm(name, dir);
--		if (!child || IS_ERR(child))
--			goto put_parent;
--		entry =3D start_removing_dentry(dir, child);
--		dput(child);
--		if (IS_ERR(entry))
--			goto put_parent;
-+
-+do_lookup:
-+	if (IS_DEADDIR(parent))
-+		goto put_parent;
-+	entry =3D try_lookup_noperm(name, dir);
-+	if (!entry || IS_ERR(entry))
-+		goto put_parent;
-+	/*
-+	 * We need to lock against concurrent create/rename/etc whether
-+	 * entry is negative or positive, so use whichever of
-+	 * start_creating_dentry() and start_removing_dentry() works.
-+	 */
-+	if (d_really_is_negative(entry) &&
-+	    !IS_ERR(start_creating_dentry(dir, entry))) {
-+		/* entry is negative, it cannot have been renamed */
-+		fuse_dir_changed(parent);
-+		if (!(flags & FUSE_EXPIRE_ONLY))
-+			d_invalidate(entry);
-+		fuse_invalidate_entry_cache(entry);
-+		end_creating(entry);
-+		err =3D 0;
-+	} else if (!IS_ERR(start_removing_dentry(dir, entry))) {
-+		/* entry is positive */
-+
- 		if (!d_same_name(entry, dir, name)) {
- 			end_removing(entry);
--			entry =3D NULL;
-+			dput(entry);
-+			goto do_lookup;
- 		}
--	}
-=20
--	fuse_dir_changed(parent);
--	if (!(flags & FUSE_EXPIRE_ONLY))
--		d_invalidate(entry);
--	fuse_invalidate_entry_cache(entry);
--
--	if (child_nodeid !=3D 0) {
--		inode_lock(d_inode(entry));
--		if (get_node_id(d_inode(entry)) !=3D child_nodeid) {
--			err =3D -ENOENT;
--			goto badentry;
--		}
--		if (d_mountpoint(entry)) {
--			err =3D -EBUSY;
--			goto badentry;
--		}
--		if (d_is_dir(entry)) {
--			shrink_dcache_parent(entry);
--			if (!simple_empty(entry)) {
--				err =3D -ENOTEMPTY;
-+		fuse_dir_changed(parent);
-+		if (!(flags & FUSE_EXPIRE_ONLY))
-+			d_invalidate(entry);
-+		fuse_invalidate_entry_cache(entry);
-+		err =3D 0;
-+		if (child_nodeid !=3D 0) {
-+			inode_lock(d_inode(entry));
-+			if (get_node_id(d_inode(entry)) !=3D child_nodeid) {
-+				err =3D -ENOENT;
- 				goto badentry;
- 			}
--			d_inode(entry)->i_flags |=3D S_DEAD;
-+			if (d_mountpoint(entry)) {
-+				err =3D -EBUSY;
-+				goto badentry;
-+			}
-+			if (d_is_dir(entry)) {
-+				shrink_dcache_parent(entry);
-+				if (!simple_empty(entry)) {
-+					err =3D -ENOTEMPTY;
-+					goto badentry;
-+				}
-+				d_inode(entry)->i_flags |=3D S_DEAD;
-+			}
-+			dont_mount(entry);
-+			clear_nlink(d_inode(entry));
-+		badentry:
-+			inode_unlock(d_inode(entry));
-+			if (!err)
-+				d_delete(entry);
- 		}
--		dont_mount(entry);
--		clear_nlink(d_inode(entry));
--		err =3D 0;
-- badentry:
--		inode_unlock(d_inode(entry));
--		if (!err)
--			d_delete(entry);
-+
-+		end_removing(entry);
- 	} else {
--		err =3D 0;
-+		/* must have raced with rename before we got the lock */
-+		dput(entry);
-+		goto do_lookup;
- 	}
--
--	end_removing(entry);
-+	dput(entry);
-  put_parent:
- 	dput(dir);
- 	iput(parent);
+On 3/9/24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
+
+#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=221579
+#regzbot fix: serial: 8250: fix use-after-free in IRQ chain handling
+
+#regzbot report:
+https://lore.kernel.org/all/CAN2cbVe79oj0O9==m4+4x3v+O+qzRagA=2=wkrp9i9=CqYvyZA@mail.gmail.com/
+#regzbot introduced: 2f9761a94bae
+#regzbot title: net/sched: HFSC + fq_codel stall
+
+#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=221473
+#regzbot monitor:
+https://lore.kernel.org/all/20260603082143.11215-1-scardracs@disroot.org/
+
+#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=221606
+#regzbot monitor:
+https://lore.kernel.org/all/b1bda1da-8231-4f05-94a7-7511041ae489@gmail.com/
+
+
+
+
