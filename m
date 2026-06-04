@@ -1,236 +1,177 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from SJ2PR03CU001.outbound.protection.outlook.com (mail-westusazon11012071.outbound.protection.outlook.com [52.101.43.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 273E525B08F
-	for <regressions@lists.linux.dev>; Thu,  4 Jun 2026 01:28:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780536491; cv=none; b=Wt0zrTjDMc0iFVcfGeaKz02zcGauwXnLqouPIvJc0aKLQzICrKWGjsyz8r3xCBesc2cDh5l8oagtjRNQCeoT/h3maIPaNSUoD8XySi1CmUS0Nvec1Q+D2d30j1lHLHxiIYgYo5OfSUs+UP9pkH4y5CHSSlfWilouGUNxuTf4rf0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780536491; c=relaxed/simple;
-	bh=2fEcU29Ulxu8w13YHxPVFYYYAP49xmwNvpY1X0g7OYI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UYmyAMAwDa335vU2MwQH/vf14RflCBMTnhnpZ1/KYrNRh3Tuy715Jvq6AT6DMgQTtGgMKP1rkEiEfx+lEtFTlrR0xO7SUnPK8s9WACUHychQzsZfSuOjAEqLRVnmCZLS3tmsu8ETO1wvO5QdJTv/At5jfIOvA9OGGJSfP7bjm6Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gibson.dropbear.id.au; spf=pass smtp.mailfrom=gandalf.ozlabs.org; dkim=pass (2048-bit key) header.d=gibson.dropbear.id.au header.i=@gibson.dropbear.id.au header.b=gr47qIwA; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gibson.dropbear.id.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gandalf.ozlabs.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BA523DA5C7
+	for <regressions@lists.linux.dev>; Thu,  4 Jun 2026 06:51:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.43.71
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780555879; cv=fail; b=Whpp+uX6DWyBea8i1U48GPfZShR67nMux3OqWXIpVKfChfDuxkKiVUAPPiHzud8tZGSwAYX9VQ18JYdfjV7ByEZU7E9LyjnJMkI2GFB/ddERWs9NDtf7+AAFJzY4mzDEXveJyVbGwGYKLflDSQY6z/bRmaLmHPKgUPX7HBUFYlM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780555879; c=relaxed/simple;
+	bh=IO6zFjQ70VfWCgqHtqWJpqybI35kLMSPnxO5qOBnCZI=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=uBvaHmBeMPiSw57LXErtD5CMI3YViK3luU8IUBi2P/lU3MB+BKkIBHMZk/T2Sq56qJ84Tt1YUdOo1voRCEP7L5iwyLeqvaW3dR9J6K50EYbAY68DTkcZdvHXs0lMorWlmx9CAhVK4yjU0hhROqQwveYuSP9xITTwqrcdzS7wqP8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=2R/8AbAg; arc=fail smtp.client-ip=52.101.43.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gibson.dropbear.id.au header.i=@gibson.dropbear.id.au header.b="gr47qIwA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=gibson.dropbear.id.au; s=202602; t=1780536486;
-	bh=qmc+aIeVLzapfjJy5dGL3NPue98zdQLZBSV6ljb0IBw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gr47qIwAZA5yCWnBpvroQT0aBB+A5Pbp4Y9TLFSQhfHH8WsQMpCFmT6RKIzqREdfD
-	 hkXxr3W6TBCqmO56veQEFbSVxthjXO7aCyZi6hR0H4nhAD61p5dGWrjxRvMhyM3PBl
-	 2i6j/cT5kUq6Cv3mAyFxEfHjMYoahzdicnZ+VA48/GgmQoFSG641123z46cobinBNx
-	 gKAL7F3zJTwMbyLhs1FS4kukRGNkH48kd3hV5d9fFsV7iEhD2db/38H/JnwOxLJ+73
-	 NdWNSr6C7FOzygXMPokQGIxQ/XkaLuOGCiHOrXg4AJ8lcH1UJBW1v/gXDpnxk2DJ6K
-	 Bjsqh1kS0qhAg==
-Received: by gandalf.ozlabs.org (Postfix, from userid 1007)
-	id 4gW6QG1R0Sz4wvg; Thu, 04 Jun 2026 11:28:06 +1000 (AEST)
-Date: Thu, 4 Jun 2026 11:26:08 +1000
-From: David Gibson <david@gibson.dropbear.id.au>
-To: Stefano Brivio <sbrivio@redhat.com>
-Cc: Ido Schimmel <idosch@nvidia.com>,
-	Fernando Fernandez Mancera <fmancera@suse.de>,
-	netdev@vger.kernel.org, yuhuang@redhat.com, justin.iurman@gmail.com,
-	horms@kernel.org, pabeni@redhat.com, kuba@kernel.org,
-	edumazet@google.com, davem@davemloft.net, dsahern@kernel.org,
-	Chris Adams <linux@cmadams.net>,
-	Beniamino Galvani <bgalvani@redhat.com>,
-	Thorsten Leemhuis <regressions@leemhuis.info>,
-	Andrew Lunn <andrew@lunn.ch>, ihuguet@redhat.com,
-	regressions@lists.linux.dev
-Subject: Re: IPv6 address insertion order (was Re: [PATCH net v2] Revert
- "ipv6: preserve insertion order for same-scope addresses")
-Message-ID: <aiDUMHKi2Sn1_dYD@zatzit>
-References: <20260529112357.5079-1-fmancera@suse.de>
- <20260529134045.56330243@elisabeth>
- <ah57wxGjL7JBORR1@zatzit>
- <20260602132118.GA508395@shredder>
- <ah-SvHdPRrYXX6lx@zatzit>
- <20260603074717.GA569921@shredder>
- <20260603174538.5454bb93@elisabeth>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="2R/8AbAg"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ZBl+/wPZgIc2s8gtcElrSqFYPOsP9sRrhe9MrnyTyyuo1AGqqEMkDyZNKne8EAT7N7h/31QDKikzyzp6U98MBcn4CdbT/kdKkfma9blewW6h7AKQYHBAefLLuIEa05XMK4Jxm/XAJRDFrjmsqcdJ8b00Ymk1JKlZs4MMtL12gw3XMxj5oVNkPWpY2CIaFRplrTW1oMBV2MER33fryJic+sgLA1PdnpWt8cXnwW0mRzuZMOrDkpdOjerco2SP7S8SqH63KVZRzq89XM3LZqB54Ksoe9nmhVFnPGBvwu/bcet2PXbd5jTQzTcumNGr44IMJC/zYKweWOjN20T3qo9JOQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=IO6zFjQ70VfWCgqHtqWJpqybI35kLMSPnxO5qOBnCZI=;
+ b=AwdGjuVu5I5I0ciwqFi6O53x7ta1OkfqCbo/MLUg5p93AaZ4ypXHgzWnYnak7QASD+bjVKpKLxyPv2d6gUbmkKCYQ7lu61vOt1HlsnCFSwl246/6ZdYYlSAH5nFcB8uPTvUTtMshOC7tKvxGA59Mqlesc6eu4KrdmNFubl4AizW7bS8gaZArr5Mb8dY5UxBmly8wdnvlpQh05JDCre+mEet6YqFfoCScbsBGHQthMreOzGWQk2GrtGyOc1QppKJEKzldJ81QiUitPP0esMmzFuHH5smvV3cpicNBWFaD0edyLxLznXWjZ2qOYnO7jgVFP+5JjySznoNFcO42jmI5iQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IO6zFjQ70VfWCgqHtqWJpqybI35kLMSPnxO5qOBnCZI=;
+ b=2R/8AbAgb+pnFIE0yMPMeN3yncN3wA4HCfTRhSBCnzZ6y0PwA6YvPe2RDj1KrCpIzo8/xc6NfUouHvLNiLJ8J47ehEbifyx71via1ZnenYH3ZF3xKDlwJEH+g8wOeESfm5IGy8QIaS6xMpGUF1MhZETW/SruZL5jgxvMUbGZsiY=
+Received: from MN6PR12MB8513.namprd12.prod.outlook.com (2603:10b6:208:472::13)
+ by DS7PR12MB6237.namprd12.prod.outlook.com (2603:10b6:8:97::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.92.7; Thu, 4 Jun 2026
+ 06:51:13 +0000
+Received: from MN6PR12MB8513.namprd12.prod.outlook.com
+ ([fe80::d5a7:a7f1:94c8:1c62]) by MN6PR12MB8513.namprd12.prod.outlook.com
+ ([fe80::d5a7:a7f1:94c8:1c62%6]) with mapi id 15.21.0071.011; Thu, 4 Jun 2026
+ 06:51:13 +0000
+From: "K.R, Prashanth Kumar" <PrashanthKumar.K.R@amd.com>
+To: Thorsten Leemhuis <regressions@leemhuis.info>, "S-k, Shyam-sundar"
+	<Shyam-sundar.S-k@amd.com>, Jakub Kicinski <kuba@kernel.org>, "Banavara,
+ Madhu" <Madhu.Banavara@amd.com>
+CC: Patrick Oppenlander <patrick.oppenlander@gmail.com>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>, Linux kernel regressions
+ list <regressions@lists.linux.dev>
+Subject: RE: CL37 autonegotiation not working on amd-xgbe
+Thread-Topic: CL37 autonegotiation not working on amd-xgbe
+Thread-Index: AQHc3Qw4caePuwbso0y3KhLOwGoE6rYszQSAgAFTAnA=
+Date: Thu, 4 Jun 2026 06:51:13 +0000
+Message-ID:
+ <MN6PR12MB8513D5386E2A586BE4FC68D7CF102@MN6PR12MB8513.namprd12.prod.outlook.com>
+References:
+ <CAEg67GmFS0Q4oSZkz8zWdOzckSth9_vBPiOy6a7-d697C2w2Xg@mail.gmail.com>
+ <20260427162839.350135c8@kernel.org>
+ <fa98f520-7539-42c0-a8f4-1858553946fe@amd.com>
+ <59207b24-4fc1-45ec-b34d-359e1d247c54@leemhuis.info>
+In-Reply-To: <59207b24-4fc1-45ec-b34d-359e1d247c54@leemhuis.info>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_198e8dea-a4f3-4850-b16a-fd6d2b1302b4_Enabled=True;MSIP_Label_198e8dea-a4f3-4850-b16a-fd6d2b1302b4_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;MSIP_Label_198e8dea-a4f3-4850-b16a-fd6d2b1302b4_SetDate=2026-06-04T06:40:40.0000000Z;MSIP_Label_198e8dea-a4f3-4850-b16a-fd6d2b1302b4_Name=AMD
+ General
+ v26;MSIP_Label_198e8dea-a4f3-4850-b16a-fd6d2b1302b4_ContentBits=3;MSIP_Label_198e8dea-a4f3-4850-b16a-fd6d2b1302b4_Method=Standard
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: MN6PR12MB8513:EE_|DS7PR12MB6237:EE_
+x-ms-office365-filtering-correlation-id: c65f27af-7450-4734-8116-08dec205ab2c
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|366016|376014|1800799024|38070700021|18002099003|22082099003|56012099006|4143699003|11063799006|5023799004;
+x-microsoft-antispam-message-info:
+ 5N809zjfkOeNoXESooB6u6qT0KXFLiq9nUV+Xzj2pkeJ32dHqrsj978OI3R2d7RZH0+stWlP5yQXvawPuT92JwIjSCV+wSBsvXJP/yaZ5rXgzE+b4mYTiK0PYPP8E4wMRKY7au/qt7ZijuZG2n0u4z/CMKMsBjKoHaaxgnYouQZe2u/n7ooqfZuxJeRe7EJTH+LRk7WI218FDcxQavBWK5SBri2U9FjyoSGvsYm7JjcMwGEU1TsSo9rtBt/d6PpLmOTNybh5fRmfr5IJQS9CngcCKDOEAxYDKBU1+dqZoiUymunFUYaBa//0umOGtehaUONYBScK7mm6ifn5pccYH/xV1knewYCZ+b99DitU1M4hhJI14BoVAPMwQzQBxTc+2El5InBU72guN+J7GaS35b2CnwntxLzggT7kyP7R43RiwxpNdkmjdlOOTNWG/hK/XcDKoHB8cLwr0jdV4sEACtxbKMtlcI/eOkLt6fRs5SFtRHMjzYT1QIJvVe+gDsftREkuEIvmcP0y6yFJEU5TJ3pfa/I0trFonDMrUtyIrXKi3YKmeJJ2CdWAx5wwr9jCyEyfdkb9LoopbPTke60PTXfDX4maV+TJ5ExjfyeKWvatvmBpV1N8+zUmJ5pZ/cJDgr4QnuaZtpQ2Zo4+Iah8ESu1yO/WSQymc/vm4iiwm8JQrXJx3JEFxb1aGl8EbJOE1NimNliet8fAzbpFnO/LpwwTxBHYmSE9/GzUhv/UYRZ4OM++llnrOXoc5id73yRW
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN6PR12MB8513.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(38070700021)(18002099003)(22082099003)(56012099006)(4143699003)(11063799006)(5023799004);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?Z1dtaHdCSVVWVk5sRnVReWp0N2J2NUU3QnZsZWk0REJvekRPUEJZWCtDTERF?=
+ =?utf-8?B?RzhtdzRmZk1hK2RIRmhWSFBsSWFsWTFQU2d0cmVYYlFNc2NLUGVQWllsT1NW?=
+ =?utf-8?B?UVdxaXArK3NHRWE4U0lpVjhFdTJ1bWxXSUNRRTZ3UTlUS0xxbzNCMFIyN3ZQ?=
+ =?utf-8?B?REhzbWw0Mkg1ekl3NXNGMWYvem5GaDg0YlNjSEkyTmZFd01FTU9RUXNhZ2JI?=
+ =?utf-8?B?dnRTaVZUbUJ1blhSUVRvSFdOeHIxU2U3ZFRxL2poc2RtS2NLTFozNFQyVGJE?=
+ =?utf-8?B?T29sWlBnYjhJQlA4OTh5Um53dzVRaS9RTGZqTi9kejlGY2RDK1h6WG1WK3Br?=
+ =?utf-8?B?Mk1CTnpscGNHU1J0SHdPQUl0ZncvUkhpeDZvLzRhODIyS0pDc1lSWUd1eXpU?=
+ =?utf-8?B?Mlg2RHhsM21qWW0yT21PT0QwaHdZVmIveVp5dk5zVndKNVpWMVg4a0FyOUVG?=
+ =?utf-8?B?Sng0dUJwZ2tubi9saEo3NUxudUxUTzllazB5aXJIc2M0N3N0VWlvTTFnQnlu?=
+ =?utf-8?B?ZnM3TTR4aWYxa29mYmhCc1N3MDJSYXhXVm80WmlLNmN3eHpSV1JIQmdFdW5F?=
+ =?utf-8?B?UnVob2srL0hOcC9xdGJGSGZ3WjlvNWxiQ2NJSmFrY0tacmRtbVdUTHNlVFl6?=
+ =?utf-8?B?RHhwdXh1VjZYdEpwMEc0SU1rQ3dHeE5lT2Q5cXdjUjdTS1NMVVdZZVYyZVdi?=
+ =?utf-8?B?WngwWDV4ZVJmYS9wZ0R1VDQxanJnbVpFbzBvbFFWbW9xMDM1OU1TSVhFRTdn?=
+ =?utf-8?B?NWpVa3czb1Q2TjFOQ2hPQmlYQ1A5Q2ZsT3hWUzUxMVRjOGRhOWJVUExNRU1w?=
+ =?utf-8?B?ZFU3Sk5mMElESGxUR1RwQjY0Ukp5OVp0VTVHakgwTU5ScHhsZ1Jla1dxYTZ0?=
+ =?utf-8?B?ZzVob0NjdnZ3MDlTTzBXTXIvbnh0U0lJNEN3ZElmZHRZNDRUMWVFS09udHAy?=
+ =?utf-8?B?ME9pRDZwSGZvYXJlT0lPbnJudWZQNThWVy8vTUlZWHVzWVJ1RU5BRm5ITUpX?=
+ =?utf-8?B?bW9Mem12eWxDYi80c1dUd1owRHhVd1JKRk9KakVKcnBTcFh6dlNZckphRVNq?=
+ =?utf-8?B?eEFoRDI0V2dkWnRXZmNEOW9VeHUydi9lV3JxR25wYWc1SFRROEtEVUxNUVo2?=
+ =?utf-8?B?bDJIUk5YbnE1Q2NPbHNlVXRlbWtEcnM4WnBYSkxHUUg2bmdCT0l4SXcwVit6?=
+ =?utf-8?B?aC9TRzZORDZ6NCs3UUF1MzczZXUvWlVRSmZXSlY4ZSswUm9oTVJmTWI1RExM?=
+ =?utf-8?B?M2ZCRzRVMlcvVUxIenV1bkNFMU96RXNVbnAyYW5DQ0hVSml5Sm1aL0MyUGZl?=
+ =?utf-8?B?dFE0azdCbDR5c09zTmxlemVqVlBiZVM1cWVmM0Vxb0ZZdTNNK0I0SXJCZHoy?=
+ =?utf-8?B?RWlURCtPTXFtMTM2MURxcVIxNUVXajJjejhtVjlQRXRSclU0Y3hqY0hRL1NY?=
+ =?utf-8?B?UWNacWRSVzQrUWFxODN6TGI1SXR6SVlnNTd2UE9oU1Q0L3FmOFZGZkNPdWVO?=
+ =?utf-8?B?MUg2NlhRM09OYVVnSXdqREphQjVWUS9QZTI5UHp4bFZzaG1lUVdlWlIrdEwr?=
+ =?utf-8?B?bTR0Z1YxR3N4V0pqYTduZ3Vwc0E1bjRSYmtLeGdtMURBeW9YQjV3QmdpY1Bl?=
+ =?utf-8?B?NHYxc1lkdzh0U2hNdk5yL25kcjRVdGVKMUZKR1hrcmJGVzVJUUVSRm80TjIz?=
+ =?utf-8?B?Mmd5OXpGNVpmVGxsSVNlOUZucE9MaFo2OE9aMkRKYm84MUo1TXFjUkJaMmhl?=
+ =?utf-8?B?aGFrYUx6eE9nWDg3djFFMFViQnEwdjNGMkJBb3pLTnlQdjh5clA4L01vVGlq?=
+ =?utf-8?B?VnE3dzMzYXM5N0kybkZuMjhLekdlUVU0UGNTNGhFRjlsM25xSjYrd0JKNFdn?=
+ =?utf-8?B?VDU1SW1yQUNtTldWd3lpcVBDS0txbnd4NkZYR1RUbDJodGNsRkVLaHJ1dGF5?=
+ =?utf-8?B?cXVpNlhaakZrUkVRendkN2RWTjYrRXpVS29qalVBbnRybC9rT29XUGVDNDFG?=
+ =?utf-8?B?Z2NFd0JTTmMwMzBERkJiZWJqV1RGK0VTNDVBSW9OcFplaTFoRTd5UFg2eWtT?=
+ =?utf-8?B?YzZXRmgyR3NlcUNWMXByNFNZanRtQmJXUUJwRUVSZTN6Zm13c2huMmZpdEtY?=
+ =?utf-8?B?d2YzR3ZDUlhJbHlvVjNBZ29ZMUlYREh5N1NKYmpBOVhaNXdhblR1WWhOdVZy?=
+ =?utf-8?B?RzBKOW9iWDJCVDFEOHhUd2IxbitYdU94WDZtU1kvTmVXTUxqWWxRS2E4dUxh?=
+ =?utf-8?B?anArdWVnUGJ1b0RUejJkYXNuay9sY1pjYjI5UHZNaGNxdVVQVVlpeEhNaXRH?=
+ =?utf-8?Q?Jo/BpxCf5Xgrvw6pcQ?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="NcKP958AVt6R3vlt"
-Content-Disposition: inline
-In-Reply-To: <20260603174538.5454bb93@elisabeth>
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MN6PR12MB8513.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c65f27af-7450-4734-8116-08dec205ab2c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Jun 2026 06:51:13.5601
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: eoAWB0Y5IWkxdux8/zFAv7fKUObr90GclOLiHJkpD0S48rHYe1ahfbJ2kA6Y8FLN
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB6237
 
-
---NcKP958AVt6R3vlt
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Jun 03, 2026 at 05:45:39PM +0200, Stefano Brivio wrote:
-> On Wed, 3 Jun 2026 10:47:17 +0300
-> Ido Schimmel <idosch@nvidia.com> wrote:
->=20
-> > On Wed, Jun 03, 2026 at 12:34:36PM +1000, David Gibson wrote:
-> > > On Tue, Jun 02, 2026 at 04:21:18PM +0300, Ido Schimmel wrote: =20
-> > > > On Tue, Jun 02, 2026 at 04:44:19PM +1000, David Gibson wrote: =20
-> > > > > I get the impression there's a rough consensus that the best we c=
-an do
-> > > > > now is revert this change (already done), and make a new patch wh=
-ich
-> > > > > changes the insertion order to the "correct" one conditional on a=
- new
-> > > > > flag.
-> > > > >=20
-> > > > > Stefano has enough other fires to fight, so I'm taking a look at
-> > > > > implementing that.  Some initial thoughts, that I'm soliciting
-> > > > > feedback on:
-> > > > >=20
-> > > > > 1) I'm assuming the idea here is to add the new flag to nlmsg_fla=
-gs in
-> > > > >    nlmsghdr
-> > > > >=20
-> > > > > ifa_flags in ifaddrmsg would be the other candidate, but it looks=
- like
-> > > > > it's encoding properties of the address itself, not about the act=
-ion
-> > > > > of inserting it.  Plus all its bits are allocated, anyway.
-> > > > >=20
-> > > > > 2) Could we re-use NLM_F_APPEND?
-> > > > >=20
-> > > > > The short description of this existing flag in linux/uapi/netlink=
-=2Eh is
-> > > > > "Add to end of list" which sounds like the right thing.  Looking
-> > > > > closer, however, it seems like what is' used for so far is things
-> > > > > where the entity added with the NEW<whatever> operation is itself=
- a
-> > > > > list, and NLM_F_APPEND causes it to be added to rather than repla=
-ced.
-> > > > > It's not used for addresses at present, AFAICT the list of addres=
-ses
-> > > > > is a semantic level above the address entity itself.
-> > > > >=20
-> > > > > So maybe re-using it for the thing I tentatively called
-> > > > > NLM_F_INSERT_LAST would be confusing?
-> > > > >=20
-> > > > > On the other hand, it's not used for addresses at the moment, so
-> > > > > AFAICT there's nothing actually preventing us reusing it for this
-> > > > > purpose. That would save a bit - we only have 2 general and 4 NEW
-> > > > > specific bits left, by the looks of it. =20
-> > > >=20
-> > > > This is not really viable. Even if the kernel is not using NLM_F_AP=
-PEND
-> > > > for RTM_NEWADDR, but not rejecting its presence either, then we can
-> > > > create a change in behavior for a user space that is currently sett=
-ing
-> > > > it (intentionally or not).
-> > > >
-> > > > Example:
-> > > >=20
-> > > > https://lore.kernel.org/netdev/27c249d80c346a258cfbf32f1d131ad4fe64=
-e77c.camel@debian.org/ =20
-> > >=20
-> > > Hmm.  So, in this example case we have a known, widely deployed
-> > > userspace that was broken by the change.  Similarly with the
-> > > original now-reverted "fix" for the ordering, we have a known, widely
-> > > deployed userspace that was broken. =20
-> >=20
-> > It was also reported over three years after the kernel change went in.
-> > Point is that we have no way of knowing how user space is using these
-> > flags. Suddenly giving them meaning when we simply ignored them before
-> > is risky.
->=20
-> I think that's a very different type of issue because, there, *another*
-> existing flag (NLM_F_EXCL) was suddenly given a meaning, as it happened
-> to have the same value as NLM_F_BULK, and that's what broke libvirt.
-> Not support for NLM_F_BULK itself.
->=20
-> Here, NLM_F_APPEND doesn't share its value with any other flag, and it
-> really is documented as "Add to end of list", but we don't do that.
-> That's a bug.
-
-Eh.. that's the short description in the header.  But looking at how
-it's actually used it generally means "append as opposed to replace"
-(which is not relevant for addresses) rather than "append as opposed
-to prepend".  So in that sense we would be assigning a new meaning.
-
-> I think it's actually more likely that some bits of userspace are
-> currently broken and causing subtle issues because the author expected
-> NLM_F_APPEND to actually do what it promises, but maybe they only
-> tested that with IPv4.
-
-That's possible, although I'd guess far less likely that simply
-expecting insert last behaviour without any extra flag.
-
-> Allow me to draw a parallel that looks more fitting to me: in commit=20
-> 1e47b4837f3b ("ipv6: Dump route exceptions if requested") I happened to
-> fix a two-year old issue that made 'ip -6 route list cache' show no
-> output and 'ip -6 route flush cache' have no effect.
->=20
-> You could take this to the extreme and say that it was risky to fix
-> that because some userspace application could meanwhile have started
-> relying on the fact that 'ip -6 route list cache' returned no output.
-> I guess we agree it was a good idea to fix that, though.
->=20
-> Of course there are several degrees of UAPI expectations in between,
-> but *not* allowing to use NLM_F_APPEND to append objects because
-> userspace might rely on NLM_F_APPEND to *not* append objects sounds
-> a bit like this extreme to me, or at least closer to it than the
-> NLM_F_BULK kind of breakage.
->=20
-> > > That's a different case from a hypothetical userspace that incorrectly
-> > > used NLM_F_APPEND on RTM_NEWADDR.  Moreover, to be broken it would
-> > > need to incorrectly use NLM_F_APPEND on RTM_NEWADDR *and also* rely on
-> > > the counterintuitive and inconsistent insertion order for IPv6
-> > > addresses.  Absent a concrete example of something meeting both those
-> > > conditions, I'm inclined to breaking that hypothetical case when the
-> > > payoff is an easier route to get known cases working with the
-> > > preferred insertion semantics.
-> > >=20
-> > > Fwiw, I did look at the most likely candidates: iproute2,
-> > > network-manager and libvirt, and I see no signs that they're misusing
-> > > NLM_F_APPEND in this way. =20
-> >=20
-> > See above. I don't like this approach. IMO, it's not worth making it
-> > slightly a bit easier for some user space programs to adopt when the
-> > risk is breaking other programs and repeating this ordeal.
->=20
-> Another fact we shouldn't ignore is that, compared to the NLM_F_BULK
-> incident, we're actively surveying userspace before touching this.
-
-So, I second Stefano's arguments for the most part, as well as
-re-iterating that being broken by this change would require the
-intersection of two unlikely conditions (misusing NLM_F_APPEND *and*
-expecting the "wrong" order).
-
-That said, Ido, if you're still not convinced I can do this as an
-attribute.  It's more hassle, but I can make it work.
-
---=20
-David Gibson (he or they)	| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you, not the other way
-				| around.
-http://www.ozlabs.org/~dgibson
-
---NcKP958AVt6R3vlt
-Content-Type: application/pgp-signature; name=signature.asc
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEEO+dNsU4E3yXUXRK2zQJF27ox2GcFAmog1CAACgkQzQJF27ox
-2GcIEQ/9HvCxKHY+qShIsybFXcsNTmuJQBwiHEgB4kOnvDYdlL1PYFVkbXlq8u7Z
-Y8GlDV7JSh3tcz+HFpxtRTiLUb0T3SogSgb3FjVHj/IL21TdbQUJBKZcq1Lb0mm7
-vroiH3EH449v6txTnQn1Su2B6OAZS3nwBXgOq875Na6LIcWj+YxuSX98AOmrDtOf
-NsGg9Y56rAudOXF3dYqaVRFFtvJjdwl5gZFC9gzlktXVU7lCAFBRKfwOUFju0Maz
-IMmJ4BI54WA96MLq2TdZa7wxJaGj35mKCUuH7nex/pk3DgwEBQzfr0WDhf3vuFSH
-OqWaZnr0LiCFOHsdHacmD2X79an6bdSPD2wbvplNFT8zpJnWt23Qy5A56kLdc8mR
-el+JM+LrNj9qlJsh82hXLCMW/YRDCDOQMe9ha3E8WMlE8x1vX4Fa/j9q4ECNIq1H
-FiKyvp+9slBbbdqRQzartGZMx/6dgfXj29+nQCkk2CyXlmObpvx3wqw/7X7fz+N1
-+XgnPo6BI4j2IOcBlsXc46J06WPGs18GodOl5VBGTIch8nnsSZPBDaok5Thar8OC
-68ZbpVijyTPeH+/8F2aoCqPBmXd6km5ieTglfJWq7oeEkcUUUHox8SVI3AyQlJI5
-v7KoRS3k5FZnyBUJXTDvNsWpfJqdcjvPOqmFE34FePG9FzK+JxI=
-=YqG1
------END PGP SIGNATURE-----
-
---NcKP958AVt6R3vlt--
+QU1EIEdlbmVyYWwNCg0KLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCkZyb206IFRob3JzdGVu
+IExlZW1odWlzIDxyZWdyZXNzaW9uc0BsZWVtaHVpcy5pbmZvPg0KU2VudDogV2VkbmVzZGF5LCBK
+dW5lIDMsIDIwMjYgMzo1NyBQTQ0KVG86IFMtaywgU2h5YW0tc3VuZGFyIDxTaHlhbS1zdW5kYXIu
+Uy1rQGFtZC5jb20+OyBKYWt1YiBLaWNpbnNraSA8a3ViYUBrZXJuZWwub3JnPjsgSy5SLCBQcmFz
+aGFudGggS3VtYXIgPFByYXNoYW50aEt1bWFyLksuUkBhbWQuY29tPjsgQmFuYXZhcmEsIE1hZGh1
+IDxNYWRodS5CYW5hdmFyYUBhbWQuY29tPg0KQ2M6IFBhdHJpY2sgT3BwZW5sYW5kZXIgPHBhdHJp
+Y2sub3BwZW5sYW5kZXJAZ21haWwuY29tPjsgbmV0ZGV2QHZnZXIua2VybmVsLm9yZzsgTGludXgg
+a2VybmVsIHJlZ3Jlc3Npb25zIGxpc3QgPHJlZ3Jlc3Npb25zQGxpc3RzLmxpbnV4LmRldj4NClN1
+YmplY3Q6IFJlOiBDTDM3IGF1dG9uZWdvdGlhdGlvbiBub3Qgd29ya2luZyBvbiBhbWQteGdiZQ0K
+DQpDYXV0aW9uOiBUaGlzIG1lc3NhZ2Ugb3JpZ2luYXRlZCBmcm9tIGFuIEV4dGVybmFsIFNvdXJj
+ZS4gVXNlIHByb3BlciBjYXV0aW9uIHdoZW4gb3BlbmluZyBhdHRhY2htZW50cywgY2xpY2tpbmcg
+bGlua3MsIG9yIHJlc3BvbmRpbmcuDQoNCg0KT24gNS82LzI2IDA1OjU1LCBTaHlhbSBTdW5kYXIg
+UyBLIHdyb3RlOg0KPiBPbiA0LzI4LzIwMjYgMDQ6NTgsIEpha3ViIEtpY2luc2tpIHdyb3RlOg0K
+Pj4gT24gVGh1LCAyMyBBcHIgMjAyNiAxMDoxODo0OSArMTAwMCBQYXRyaWNrIE9wcGVubGFuZGVy
+IHdyb3RlOg0KPj4+IEEgcmVjZW50IGNoYW5nZSBbMV0NCg0KRldJVywgdGhhdCB3YXMgNDJmZDQz
+MmZlNmQzMjAgKCJhbWQteGdiZTogYWxpZ24gQ0wzNyBBTiBzZXF1ZW5jZSBhcyBwZXINCmRhdGFi
+b29rIikgW3Y2LjE2LXJjNV0NCg0KPj4+IHN0b3BwZWQgQ0wzNyBhdXRvbmVnb3RpYXRpb24gZnJv
+bSB3b3JraW5nIG9uIGFtZC14Z2JlIGhhcmR3YXJlLg0KPj4NCj4+IEhpIFJhanUhIEFyZSB5b3Ug
+bG9va2luZyBpbnRvIHRoaXMgcmVwb3J0Pw0KPg0KPiBEcm9wcGluZyBSYWp1IGFzIGhlIGlzIG5v
+IGxvbmdlciB3aXRoIEFNRC4NCj4NCj4gVGhhbmtzIGZvciB0aGUgYnVnIHJlcG9ydC4gUHJhc2hh
+bnRoIHdpbGwgbWFpbnRhaW4gdGhpcyBkcml2ZXIgZ29pbmcNCj4gZm9yd2FyZC4NCj4NCj4gUHJh
+c2hhbnRoLCBjYW4geW91IGFkZHJlc3MgdGhpcyBidWc/IEFsc28sIHBsZWFzZSB1cGRhdGUgdGhl
+DQo+IE1BSU5UQUlORVJTIGxpc3QgYnkgZHJvcHBpbmcgUmFqdSdzIG5hbWUuDQpBbnkgcHJvZ3Jl
+c3M/IEl0IGxvb2tzIGxpa2Ugbm90aGluZyBoYXBwZW5lZCB0byBmaXggdGhpcyByZWdyZXNzaW9u
+IHNpbmNlIGFib3ZlIG1haWwsIGJ1dCBJJ20gbG9va2luZyBhdCB0aGluZ3MgZnJvbSB0aGUgb3V0
+c2lkZSBhbmQgdGhlcmUgaXQncyBlYXN5IHRvIG1pc3Mgc29tZXRoaW5nLCBzbyBwbGVhc2UgdGVs
+bCBtZSBpZiB0aGF0J3MgdGhlIGNhc2UuDQoNCkNpYW8sIFRob3JzdGVuDQoNClRoYW5rcyBmb3Ig
+dGhlIGZvbGxvdy11cC4NCkEgZml4IGhhcyBiZWVuIGlkZW50aWZpZWQgYW5kIGEgcGF0Y2ggaXMg
+cHJlcGFyZWQuIFdlIGFyZSBjdXJyZW50bHkgcnVubmluZyByZWdyZXNzaW9uIHRlc3RpbmcgdG8g
+ZW5zdXJlIHRoZSBmaXggZG9lcyBub3QgaW50cm9kdWNlIGFueSB1bmludGVuZGVkIGlzc3Vlcy4g
+V2Ugd2lsbCBzaGFyZSB0aGUgcGF0Y2ggb24gdGhlIG1haWxpbmcgbGlzdCBvbmNlIHJlZ3Jlc3Np
+b24gdmFsaWRhdGlvbiBpcyBjb21wbGV0ZS4NCg0KVGhhbmtzIGZvciB5b3VyIHBhdGllbmNlLg0K
+DQpSZWdhcmRzLA0KUHJhc2hhbnRoDQoNCuKchSBZb3UgY2FuIHVzZSB0aGlzIGRyYWZ0IGRpcmVj
+dGx5IGluIE91dGxvb2sgYW5kIHR3ZWFrIHRvbmUgaWYgbmVlZGVkIChlLmcuLCBtb3JlIHRlY2hu
+aWNhbCBkZXRhaWwgb3IgYWRkaW5nIGNvbW1pdCByZWZlcmVuY2UpLg0K
