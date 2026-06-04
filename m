@@ -1,247 +1,157 @@
-Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-172.mimecast.com (us-smtp-delivery-172.mimecast.com [170.10.133.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 917C3421EF4
-	for <regressions@lists.linux.dev>; Thu,  4 Jun 2026 13:59:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.222.175
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780581569; cv=pass; b=EDLBMpsBrWrw80hegmbJmlhmP3nQngH3RenMrQqLayMl3X9UA4nJjiSy2w7nxjrDRchO5XV5ZwyXX/Bs9WwimvAEaUMAUMepheMKPHYlj0SQjl2Ikg2ovjdpQnv0EUHADlolvRzcHQOjcWwpUH49yO3Iqljln2kejbIePu0VpdM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780581569; c=relaxed/simple;
-	bh=GcsfMUg3yCMfT0aO2UCldG9cwALVHJ0VJOEmJlH5r50=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gaY+IcOUZDMQfF2UI/MJUMcT7MIlWyd+ee75GKfuPWBUc8oQ9ygkZ4S5VL0eFu/bhZ+NT8jTFAtTBpedu3rVicatV4XWGtfCymA1Jf9HuNkTAr+IxUZ3mXVdoIPeeywWbWD1Qjtu8cdZwXCQIPDYSPbsugCVYzLmkw4xXE2zeVQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=U2OQE2aA; arc=pass smtp.client-ip=209.85.222.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D22323B8407
+	for <regressions@lists.linux.dev>; Thu,  4 Jun 2026 17:21:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780593684; cv=none; b=pkNIh4/QyXYC7xWc5KMGpGz75DJRenWCulGwRedJaO/YSolRv/DGv4RBfg34rhxAVF5vPf5AhfdtAIwaFfxlrjMTxcavj9eH4NP3DNxrZ11yLA2fYv1Q1KjpPT8nURUR9UQjk5lHk9wE9JAryOL6ncaksHVRF2JySSMIKV0MOLE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780593684; c=relaxed/simple;
+	bh=tZAZYCtRlc8SNcehVszFyDOwikU59Ywhqv6lyqh0UPM=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 MIME-Version:Content-Type; b=tauudWWOYpacl7HI3fODoubZsryQ4/ipBz+u6FXy2zesnFnxlU97qJHuMgA9CPteBBBs3WmGLLw0Al4TE/lSUDoZ6ePjs6EVqwbYaBVlvcjkVju5AM5+6YT2AzBiPt9zcCDj8vyV4iB8fOr4tU+T7UnoyF8y+q2sjyktbV2kWes=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=valvesoftware.com; spf=pass smtp.mailfrom=valvesoftware.com; dkim=pass (1024-bit key) header.d=valvesoftware.com header.i=@valvesoftware.com header.b=EzYF49oQ; arc=none smtp.client-ip=170.10.133.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=valvesoftware.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=valvesoftware.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="U2OQE2aA"
-Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-91550f68089so79830285a.2
-        for <regressions@lists.linux.dev>; Thu, 04 Jun 2026 06:59:26 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1780581565; cv=none;
-        d=google.com; s=arc-20240605;
-        b=HgeD3e7PyvP1JY6iey2c5BsVZ1A6QH4PKybYM+3a0fiSM212TAht97UAOkKOoy2ySy
-         c7LYpWfqD5S08LI88uOx8r/jIFD0i1wUxyu2/c0ThBlzLED/KyV1ITGj/aA+iKixugyA
-         TgfNAR3RNdXGXp78EkGZS7GkQtHVgmkNKhus6peqUdLuKXVogwKLrA7RAh+sDUO8jq+X
-         6mZrmYZh97gVZat0bvq7C+FmnYddYSKbt+T6pnuyF5OUwDZOqWOL9hBY4yM5cnO/ITrP
-         nwF4XGLUqfvO0D5YU3KAqIx8i7hWdfn2vXYxTZZ0j8bv5w0/ZDdgNbeRdXpR/nwZrXUl
-         EvsQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=iJGxeXrrW2oLpAUFkW48W6w5shufffcNZYyapXzoAqM=;
-        fh=YGMzRBjObLljzH6ZoWBllewG5771R46s7AK1x42dHpw=;
-        b=IqUzC1i0f6f+Vj23gJYeKntXd7ScJKxypYKEW3Bjbzu+fGlk0ATSBucnokLJM0ZDJb
-         MITmleL1njd2cyecwNXFpDUKA2j953G91SI7WF30tQAw5J2oxxLYssTsBczr5O2oN/uI
-         1j712Yu7//OPRedL9h9S5hRibI6bb30TNEj+iWzq4HIJY1+KgPFIjvywtQ+Un8NoivCI
-         5zv2ZxS55cumi9v9WZkUUi5Bf4AodJk81i8Y0ctU/2cOyXQOjFwv9vAY0aSTLcEqQbni
-         RrQ/+K2d48yYIylhbAoIlxQDnndcFUMaVH9MP14fgfnTJMLrLMN/698qr7iSJUoAulAh
-         Wvyw==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google; t=1780581565; x=1781186365; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=iJGxeXrrW2oLpAUFkW48W6w5shufffcNZYyapXzoAqM=;
-        b=U2OQE2aA4QqDtsQ1bpOW7hQiCx7o77qf+a2bpJFaacR80jEad3lpgnCB9EUa/AIFRE
-         rFpoEunG51CFOhky5CP4dK/z/kzFKFUKdGVY5Hl74x2BWxavumRsI/Emjz+H9u+/VR2D
-         Lz52iFfwIJk03TFxqOj1yogXYONbWOoquwT5A=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780581565; x=1781186365;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iJGxeXrrW2oLpAUFkW48W6w5shufffcNZYyapXzoAqM=;
-        b=jUPWf+vIpGHCeq7DVFfflrimSra7RbZz1SG6yuRrnIt2kJqDuvtq5DfOYxYV7UBVqr
-         r0fd90/rCXOoWmRtiBVOXobY38OL3zNdKZOtU+HmZVtdDsVcslCilff/bXxkbGQs/LfV
-         1UBG22tt+1ZN6RoYVhVxAMOdKYkQUcbvbBSk/jqA738r5nHnQLxGeugsHarz3gP821K5
-         OqRhWhVl7M2dSvPbT3Kt69Wtzv4eN7tjLgd1XSIrP7VWSVTNbwSU98aWplumS3i3KA22
-         Tla3NSMa6r6bywIIaUHpsTxbIGlmpQBTp2zsTmcfxkyeSH1PMmzLFh2jeGvTlaQsPx7V
-         8O0Q==
-X-Forwarded-Encrypted: i=1; AFNElJ9RGhqtIu8RS3QNfZcrq1TC6gOrGseIv47cAaqY9aib6mDueRJ0vz8TgHZpQtIa59cNmRQftDzA138bcQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yw+j+SANGhpn2vAgyMdhH81HCUKoa9FL1InsVM50uGlJjqDcpmW
-	U4u20J7wEol51MD/fArnkEYxD7kZpKYfBM1ZJjPuNSa+GiTd/bD9GO/4aycoZnjmV5Zc9dsZL1D
-	bSL9w4lm3M9qroeNJAK9ttTpq2l+I4xZJ75/qSdTPkA==
-X-Gm-Gg: Acq92OEPi7KtYRg5XpDr6gH1MzjOsjSANI/T71rZ1jpavOgDJHQ0WchyKTTGPU2ZP6N
-	d0hESALTAKte9VE7Od4SbQwpija1jT9HIFWGNQAkDwIVeQBrkuVektynLDvmw3MFgRtlROpnJVB
-	R/7xgfIcOXA+g7gecEvJusJUy48HB16paZdTOVSCnJOM/JIo6ClTY0YjME8fg4g7zKk9ZpVmJJy
-	0gZUD8qacKQl6Bb0wupzvSnw5xnofYtGWMfXXbFW0lDEjtK0+YcO78kMd2HcmGxWyC9pmjalEX6
-	kUoonzU5fcxQJVjdeAS+dLMPxUS8u/JyPZtCIWO5IJ6LyPw=
-X-Received: by 2002:ac8:7d8f:0:b0:517:29c1:2b5c with SMTP id
- d75a77b69052e-51778781e85mr116546621cf.60.1780581565419; Thu, 04 Jun 2026
- 06:59:25 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=valvesoftware.com header.i=@valvesoftware.com header.b="EzYF49oQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=valvesoftware.com;
+	s=mc20150811; t=1780593680;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=tZAZYCtRlc8SNcehVszFyDOwikU59Ywhqv6lyqh0UPM=;
+	b=EzYF49oQfPAWOoBdhXj+cKorj2WNKcqm9uvMdSC0jDt9L6RVvJU809bRS00f/cR2t/hqN+
+	xZwCRRPL1DIfdj0iGUzZ9C5S9pM/SyGkFCafPx6B848qYIUP/AAJnAW+fHg0hFFu5xhnG3
+	3BQwsIJpuN1+p+LCQB5Vby5CixvoqvQ=
+Received: from smtp-01-tuk3.valvesoftware.com
+ (smtp-01-tuk3.valvesoftware.com [208.64.203.181]) by relay.mimecast.com
+ with ESMTP with STARTTLS (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384)
+ id us-mta-622-dtYl4ijGPE-Q90E6WBiOOw-1; Thu, 04 Jun 2026 13:21:17 -0400
+X-MC-Unique: dtYl4ijGPE-Q90E6WBiOOw-1
+X-Mimecast-MFC-AGG-ID: dtYl4ijGPE-Q90E6WBiOOw_1780593677
+Received: from antispam.valve.org ([172.16.1.107])
+	by smtp-01-tuk3.valvesoftware.com with esmtp (Exim 4.97)
+	(envelope-from <peihsiny@valvesoftware.com>)
+	id 1wVBkq-00000008XsK-3iTz
+	for regressions@lists.linux.dev;
+	Thu, 04 Jun 2026 10:21:16 -0700
+Received: from antispam.valve.org (127.0.0.1) id h46q0o0171sa for <regressions@lists.linux.dev>; Thu, 4 Jun 2026 10:21:16 -0700 (envelope-from <peihsiny@valvesoftware.com>)
+Received: from mail2.valvemail.org ([172.16.144.23])
+	by antispam.valve.org ([172.16.1.107]) (SonicWall 10.0.15.7233)
+	with ESMTP id o202606041721160053737-5; Thu, 04 Jun 2026 10:21:16 -0700
+Received: from mail2.valvemail.org (172.16.144.23) by mail2.valvemail.org
+ (172.16.144.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Thu, 4 Jun
+ 2026 10:21:16 -0700
+Received: from mail2.valvemail.org ([::1]) by mail2.valvemail.org ([::1]) with
+ mapi id 15.02.2562.017; Thu, 4 Jun 2026 10:21:16 -0700
+From: Pei-Hsin Yang <peihsiny@valvesoftware.com>
+To: =?utf-8?B?TWljaGVsIETDpG56ZXI=?= <michel.daenzer@mailbox.org>, "Alex
+ Deucher" <alexdeucher@gmail.com>
+CC: "Deucher, Alexander" <Alexander.Deucher@amd.com>, Thorsten Leemhuis
+	<regressions@leemhuis.info>, "Wentland, Harry" <Harry.Wentland@amd.com>, "Li,
+ Sun peng (Leo)" <Sunpeng.Li@amd.com>, "amd-gfx@lists.freedesktop.org"
+	<amd-gfx@lists.freedesktop.org>, Linux kernel regressions list
+	<regressions@lists.linux.dev>, "Koenig, Christian" <Christian.Koenig@amd.com>
+Subject: RE: [External Mail] Re: Test result / finding of "drm/amd/display:
+ Consult MCCS FreeSync cap only if requested & supported"
+Thread-Topic: [External Mail] Re: Test result / finding of "drm/amd/display:
+ Consult MCCS FreeSync cap only if requested & supported"
+Thread-Index: AdznyYW5KuL81IotTPmWr+1olc6y4wAnk9yAAAH0cTAALvV0AAForM+AABaOgIABQfl5gAAL1UIAAAFNC4AACERGsA==
+Date: Thu, 4 Jun 2026 17:21:16 +0000
+Message-ID: <399d0170414b4304823e866b04ab518a@valvesoftware.com>
+References: <44069eb146824aa195312f5b02c49287@valvesoftware.com>
+ <7a9021cd-fd78-4b0d-846b-135d0d72224e@mailbox.org>
+ <16231b1742004f848af243ce398281ec@valvesoftware.com>
+ <ce51243c-3b98-4f99-911f-70dd0b860da0@mailbox.org>
+ <1c522568-1d5e-4210-8f25-1aa96e0d3c3a@leemhuis.info>
+ <BL1PR12MB51447AB016BB28843BAD0216F7092@BL1PR12MB5144.namprd12.prod.outlook.com>
+ <af4dff0f-0c62-4a7d-9a3f-fc029c8757f4@mailbox.org>
+ <CADnq5_O9xMagapKQSO-6waXtmmFkDV-47ExVaNuiZd2xVdhefw@mail.gmail.com>
+ <39ff584f-66ed-421a-918b-347d020a393a@mailbox.org>
+In-Reply-To: <39ff584f-66ed-421a-918b-347d020a393a@mailbox.org>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAFbF8N7++zopZuEcsKRxBV_sgOGCbzCY0hOyMw1SiGAtuzGhyQ@mail.gmail.com>
- <CAJfpegsCJnMfn_BzzTK7m9ndCGVsnPit8ZsT0fzAhYoY+yOsKQ@mail.gmail.com>
- <178035740095.2923901.5908691318688917347@noble.neil.brown.name>
- <CAJfpegswAZv8OmDAcK-5u8kssAF1vZKe4gdDB2XPErAnoGFSYg@mail.gmail.com> <178056619459.3392745.3091041855723132411@noble.neil.brown.name>
-In-Reply-To: <178056619459.3392745.3091041855723132411@noble.neil.brown.name>
-From: Miklos Szeredi <miklos@szeredi.hu>
-Date: Thu, 4 Jun 2026 15:59:13 +0200
-X-Gm-Features: AVHnY4KXWHwA2rDtnMrlahBdYAmljXDTPRnUfVXdC8XkTG3_P3UeGgO6ZIixP0I
-Message-ID: <CAJfpeguDUS_3X-AFZD6XCJB1SjVkFGu2aJ+p1BK574Scu-ASdA@mail.gmail.com>
-Subject: Re: PROBLEM: FUSE_NOTIFY_INVAL_ENTRY leaves stale negative dentry
- after c9ba789dad15
-To: NeilBrown <neil@brown.name>
-Cc: =?UTF-8?B?0JDRgNGC0LXQvCDQm9Cw0LHQsNC30L7Qsg==?= <123321artyom@gmail.com>, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+X-Mlf-DSE-Version: 6871
+X-Mlf-Rules-Version: s20260603144725; ds20230628172248;
+	di20260526173604; ri20160318003319; fs20260604170745
+X-Mlf-Smartnet-Version: 20210917223710
+X-Mlf-Envelope-From: peihsiny@valvesoftware.com
+X-Mlf-Version: 10.0.15.7233
+X-Mlf-License: BSV_C_AP_T_R
+X-Mlf-UniqueId: o202606041721160053737
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: X-On-IZV6nHom8nYBvfrIZ8xMuMswQgmbNR4xiV-e48_1780593677
+X-Mimecast-Originator: valvesoftware.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 
-On Thu, 4 Jun 2026 at 11:43, NeilBrown <neilb@ownmail.net> wrote:
+SGkgTWljaGVsLA0KDQo+IE5vdGUgdGhhdCBQZWktSHNpbiByZXBvcnRlZCBhbiBpc3N1ZSB3aGVu
+IHJ1bm5pbmcgd2l0aCBteSBmaXggYXQgdGhlIHN0YXJ0IG9mIHRoaXMgdGhyZWFkLCB1bmZvcnR1
+bmF0ZWx5IGl0J3Mgc3RpbGwgdW5jbGVhciBpZiB0aGF0J3MgYSByZWdyZXNzaW9uIG9mID4gbXkg
+Zml4IG9yIGhhcHBlbnMgZXZlbiB3aXRob3V0IGl0IChpbiB3aGljaCBjYXNlIGl0IG1pZ2h0IGJl
+IGFub3RoZXIgcmVncmVzc2lvbiBvZiB0aGUgTUNDUyByZWxhdGVkIGNoYW5nZXMgZm9yIDcuMSku
+DQoNCkFzIEkgaGF2ZSBtZW50aW9uZWQgZWFybGllciwgbXkgdGVzdGluZyBvZiB5b3VyIHBhdGNo
+IGNvbmZpcm1zIHRoYXQgaXQgaXMgYSByZWdyZXNzaW9uIGV2ZW4gd2l0aG91dCB5b3VyIHBhdGNo
+Lg0KDQpUaGVyZSBhcmUgdHdvIHJlbGlhYmlsaXR5IG1hdHRlcnMgaW4gbW9zdCByZWNlbnQgRnJl
+ZVN5bmMgLyBNQ0NTIGltcGxlbWVudGF0aW9uIG5lZWQgZnVydGhlciBjbGFyaWZpY2F0aW9uIGZy
+b20gdGhlIEFNRCB0ZWFtLiAgZnJlZXN5bmNfY2FwYWJsZSBvciBNQ0NTIHN1cHBvcnQgYXJlIGlu
+YWR2ZXJ0ZW50bHkgZGlzYWJsZWQgb24gc29tZSBvY2Nhc2lvbnMsIGZvciBleGFtcGxlLCBhZnRl
+ciBIRE1JIGNhYmxlIGhvdCBwbHVnLg0KDQoxLiBBTUQgVlNEQiBFRElEIHBhcnNpbmcgdmlhIGlu
+dGVybmFsIGRtdWIgY29tbXVuaWNhdGlvbi4NCjIuIEFNRCBNQ0NTIFZDUCBDb2RlIGhlbHBlcnMu
+DQoNCk5PVEU6IEkgZm91bmQgdGhlc2UgaXNzdWVzIGFmdGVyIGJhY2twb3J0aW5nIGZyb20gYXNk
+biA3LnggdG8gU3RlYW1PUyA2LjE2LzYuMTguICBJdCBpcyB2ZXJpZmllZCBvbiBTdGVhbSBNYWNo
+aW5lLg0KDQpUaGFua3MsDQpQZWktSHNpbg0KDQoNCi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0t
+DQpGcm9tOiBNaWNoZWwgRMOkbnplciA8bWljaGVsLmRhZW56ZXJAbWFpbGJveC5vcmc+IA0KU2Vu
+dDogVGh1cnNkYXksIEp1bmUgNCwgMjAyNiA2OjU4IEFNDQpUbzogQWxleCBEZXVjaGVyIDxhbGV4
+ZGV1Y2hlckBnbWFpbC5jb20+DQpDYzogRGV1Y2hlciwgQWxleGFuZGVyIDxBbGV4YW5kZXIuRGV1
+Y2hlckBhbWQuY29tPjsgVGhvcnN0ZW4gTGVlbWh1aXMgPHJlZ3Jlc3Npb25zQGxlZW1odWlzLmlu
+Zm8+OyBQZWktSHNpbiBZYW5nIDxwZWloc2lueUB2YWx2ZXNvZnR3YXJlLmNvbT47IFdlbnRsYW5k
+LCBIYXJyeSA8SGFycnkuV2VudGxhbmRAYW1kLmNvbT47IExpLCBTdW4gcGVuZyAoTGVvKSA8U3Vu
+cGVuZy5MaUBhbWQuY29tPjsgYW1kLWdmeEBsaXN0cy5mcmVlZGVza3RvcC5vcmc7IExpbnV4IGtl
+cm5lbCByZWdyZXNzaW9ucyBsaXN0IDxyZWdyZXNzaW9uc0BsaXN0cy5saW51eC5kZXY+OyBLb2Vu
+aWcsIENocmlzdGlhbiA8Q2hyaXN0aWFuLktvZW5pZ0BhbWQuY29tPg0KU3ViamVjdDogW0V4dGVy
+bmFsIE1haWxdIFJlOiBUZXN0IHJlc3VsdCAvIGZpbmRpbmcgb2YgImRybS9hbWQvZGlzcGxheTog
+Q29uc3VsdCBNQ0NTIEZyZWVTeW5jIGNhcCBvbmx5IGlmIHJlcXVlc3RlZCAmIHN1cHBvcnRlZCIN
+Cg0KT24gNi80LzI2IDE1OjIwLCBBbGV4IERldWNoZXIgd3JvdGU6DQo+IE9uIFRodSwgSnVuIDQs
+IDIwMjYgYXQgMzo1OeKAr0FNIE1pY2hlbCBEw6RuemVyIDxtaWNoZWwuZGFlbnplckBtYWlsYm94
+Lm9yZz4gd3JvdGU6DQo+PiBPbiA1LzI5LzI2IDAwOjAyLCBEZXVjaGVyLCBBbGV4YW5kZXIgd3Jv
+dGU6DQo+Pj4+IEZyb206IFRob3JzdGVuIExlZW1odWlzIDxyZWdyZXNzaW9uc0BsZWVtaHVpcy5p
+bmZvPiBPbiA1LzIxLzI2IA0KPj4+PiAwOTowOSwgTWljaGVsIETDpG56ZXIgd3JvdGU6DQo+Pj4+
+Pg0KPj4+Pj4gTm90ZSB0aGF0IHNvbWUga2luZCBvZiBzaG9ydC10ZXJtIHNvbHV0aW9uIGlzIG5l
+ZWRlZCBmb3IgdGhlIA0KPj4+Pj4gcmVncmVzc2lvbihzKSBpbg0KPj4+PiA3LjEtcmMuDQo+Pj4+
+DQo+Pj4+IFllYWgsIHRoYXQgd291bGQgYmUgZ29vZC4gTWFrZXMgbWUgd29uZGVyIGhvdyB0aGUg
+cm91Z2ggcGxhbiB0byANCj4+Pj4gcmVhbGl6ZSB0aGlzIGxvb2tzIGxpa2U/IFNvdW5kcyBsaWtl
+IE1pY2hhZWwncyBwYXRjaFsxXSB0aGF0IHdhcyANCj4+Pj4gZGlzY3Vzc2VkIGhlcmUgaXMgbm90
+IGEgZ29vZCBvcHRpb24/IFJlbWluZGVyLCBMaW51cyBpZGVhbGx5IHdhbnRzIA0KPj4+PiBrbm93
+biByZWdyZXNzaW9uIGZpeGVkIGJ5IC1yYzYsIHdoaWNoIGlzIHdoeSBJJ20gYXNraW5nLg0KPj4+
+DQo+Pj4gQFdlbnRsYW5kLCBIYXJyeSBjYW4geW91IHNvcnQgdGhpcyBvdXQgZm9yIG5leHQgd2Vl
+aydzIC1maXhlcyBQUj8NCj4+DQo+PiBMb29rcyBsaWtlIHRoaXMgcmVncmVzc2lvbiB3aWxsIG1h
+a2UgaXQgdG8gNy4xIGZpbmFsPw0KPj4NCj4+IEkgZmlsZWQgaHR0cHM6Ly9naXRsYWIuZnJlZWRl
+c2t0b3Aub3JnL2RybS9hbWQvLS93b3JrX2l0ZW1zLzUyODYgMyB3ZWVrcyBhZ28sIGFuZCBwcm9w
+b3NlZCBhIGZpeCB0aGUgZm9sbG93aW5nIHdlZWsuIFRoZXJlJ3MgYmVlbiBubyByZWFjdGlvbiBi
+eSBhbnkgQU1EIGRpc3BsYXkgZGV2ZWxvcGVyLg0KPj4NCj4+IFRoaXMgaXMgcHJldHR5IHNhZC4N
+Cj4gDQo+IEBXZW50bGFuZCwgSGFycnkgLCBATGVvIChTdW5wZW5nKSBMaSBjb21lIG9uIGd1eXMh
+ICBJJ3ZlIHBpY2tlZCB1cCANCj4gTWljaGVsJ3MgcGF0Y2ggYW5kIEknbGwgc2VuZCBhbiB1cGRh
+dGUgLVBSIHRvZGF5Lg0KDQpUaGFua3MgQWxleC4NCg0KDQpOb3RlIHRoYXQgUGVpLUhzaW4gcmVw
+b3J0ZWQgYW4gaXNzdWUgd2hlbiBydW5uaW5nIHdpdGggbXkgZml4IGF0IHRoZSBzdGFydCBvZiB0
+aGlzIHRocmVhZCwgdW5mb3J0dW5hdGVseSBpdCdzIHN0aWxsIHVuY2xlYXIgaWYgdGhhdCdzIGEg
+cmVncmVzc2lvbiBvZiBteSBmaXggb3IgaGFwcGVucyBldmVuIHdpdGhvdXQgaXQgKGluIHdoaWNo
+IGNhc2UgaXQgbWlnaHQgYmUgYW5vdGhlciByZWdyZXNzaW9uIG9mIHRoZSBNQ0NTIHJlbGF0ZWQg
+Y2hhbmdlcyBmb3IgNy4xKS4NCg0KQW4gYWx0ZXJuYXRpdmUgd291bGQgYmUgcmV2ZXJ0aW5nIHRo
+ZSA0IGNvbW1pdHMgZDQ5MDg2NDkxYmNiLi44ZGM4OGM2YTU5NDguDQoNCg0KLS0gDQpFYXJ0aGxp
+bmcgTWljaGVsIETDpG56ZXIgICAgICAgXCAgICAgICAgR05PTUUgLyBYd2F5bGFuZCAvIE1lc2Eg
+ZGV2ZWxvcGVyDQpodHRwczovL3JlZGhhdC5jb20gICAgICAgICAgICAgXCAgICAgICAgICAgICAg
+IExpYnJlIHNvZnR3YXJlIGVudGh1c2lhc3QNCg0K
 
-> My guess is you refer to the need for retry-on-error.
-> I need that design so that locking can be pushed closer to the
-> filesystem and ultimately, in some cases, removed.
-
-Aha, but this is filesystem code, we don't need or want to move it
-closer to the filesystem, it's already there.
-
-> It is a lot like the reason that we often use cmp-xchg loops instead of
-> holding a spinlock while performing a simple operation.  The code is
-> more complex but it scales better.
-
-Okay, so this is about making VFS more scalable?  Can't we just leave
-filesystem code alone in that case?
-
-Thanks,
-Miklos
-
-
-
-
-
-> Thanks for the on going review!
->
-> This is my current thought about how to fix this code.
->
-> Thanks,
-> NeilBrown
->
->
->
-> diff --git a/fs/fuse/dir.c b/fs/fuse/dir.c
-> index 70948fe385da..7d744c7b923a 100644
-> --- a/fs/fuse/dir.c
-> +++ b/fs/fuse/dir.c
-> @@ -1601,55 +1601,74 @@ int fuse_reverse_inval_entry(struct fuse_conn *fc, u64 parent_nodeid,
->         dir = d_find_alias(parent);
->         if (!dir)
->                 goto put_parent;
-> -       while (!entry) {
-> -               struct dentry *child = try_lookup_noperm(name, dir);
-> -               if (!child || IS_ERR(child))
-> -                       goto put_parent;
-> -               entry = start_removing_dentry(dir, child);
-> -               dput(child);
-> -               if (IS_ERR(entry))
-> -                       goto put_parent;
-> +
-> +do_lookup:
-> +       if (IS_DEADDIR(parent))
-> +               goto put_parent;
-> +       entry = try_lookup_noperm(name, dir);
-> +       if (!entry || IS_ERR(entry))
-> +               goto put_parent;
-> +       /*
-> +        * We need to lock against concurrent create/rename/etc whether
-> +        * entry is negative or positive, so use whichever of
-> +        * start_creating_dentry() and start_removing_dentry() works.
-> +        */
-> +       if (d_really_is_negative(entry) &&
-> +           !IS_ERR(start_creating_dentry(dir, entry))) {
-> +               /* entry is negative, it cannot have been renamed */
-> +               fuse_dir_changed(parent);
-> +               if (!(flags & FUSE_EXPIRE_ONLY))
-> +                       d_invalidate(entry);
-> +               fuse_invalidate_entry_cache(entry);
-> +               end_creating(entry);
-> +               err = 0;
-> +       } else if (!IS_ERR(start_removing_dentry(dir, entry))) {
-> +               /* entry is positive */
-> +
->                 if (!d_same_name(entry, dir, name)) {
->                         end_removing(entry);
-> -                       entry = NULL;
-> +                       dput(entry);
-> +                       goto do_lookup;
->                 }
-> -       }
->
-> -       fuse_dir_changed(parent);
-> -       if (!(flags & FUSE_EXPIRE_ONLY))
-> -               d_invalidate(entry);
-> -       fuse_invalidate_entry_cache(entry);
-> -
-> -       if (child_nodeid != 0) {
-> -               inode_lock(d_inode(entry));
-> -               if (get_node_id(d_inode(entry)) != child_nodeid) {
-> -                       err = -ENOENT;
-> -                       goto badentry;
-> -               }
-> -               if (d_mountpoint(entry)) {
-> -                       err = -EBUSY;
-> -                       goto badentry;
-> -               }
-> -               if (d_is_dir(entry)) {
-> -                       shrink_dcache_parent(entry);
-> -                       if (!simple_empty(entry)) {
-> -                               err = -ENOTEMPTY;
-> +               fuse_dir_changed(parent);
-> +               if (!(flags & FUSE_EXPIRE_ONLY))
-> +                       d_invalidate(entry);
-> +               fuse_invalidate_entry_cache(entry);
-> +               err = 0;
-> +               if (child_nodeid != 0) {
-> +                       inode_lock(d_inode(entry));
-> +                       if (get_node_id(d_inode(entry)) != child_nodeid) {
-> +                               err = -ENOENT;
->                                 goto badentry;
->                         }
-> -                       d_inode(entry)->i_flags |= S_DEAD;
-> +                       if (d_mountpoint(entry)) {
-> +                               err = -EBUSY;
-> +                               goto badentry;
-> +                       }
-> +                       if (d_is_dir(entry)) {
-> +                               shrink_dcache_parent(entry);
-> +                               if (!simple_empty(entry)) {
-> +                                       err = -ENOTEMPTY;
-> +                                       goto badentry;
-> +                               }
-> +                               d_inode(entry)->i_flags |= S_DEAD;
-> +                       }
-> +                       dont_mount(entry);
-> +                       clear_nlink(d_inode(entry));
-> +               badentry:
-> +                       inode_unlock(d_inode(entry));
-> +                       if (!err)
-> +                               d_delete(entry);
->                 }
-> -               dont_mount(entry);
-> -               clear_nlink(d_inode(entry));
-> -               err = 0;
-> - badentry:
-> -               inode_unlock(d_inode(entry));
-> -               if (!err)
-> -                       d_delete(entry);
-> +
-> +               end_removing(entry);
->         } else {
-> -               err = 0;
-> +               /* must have raced with rename before we got the lock */
-> +               dput(entry);
-> +               goto do_lookup;
->         }
-> -
-> -       end_removing(entry);
-> +       dput(entry);
->   put_parent:
->         dput(dir);
->         iput(parent);
