@@ -1,146 +1,219 @@
-Received: from mail-dy1-f174.google.com (mail-dy1-f174.google.com [74.125.82.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.162])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05EF73C1419
-	for <regressions@lists.linux.dev>; Thu,  4 Jun 2026 13:21:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.174
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780579268; cv=pass; b=ixENb9CAsboof55gm6mGBDtwlKmvNmiMDh3PB6U2jrVRAy/HsYTWwQc06pQIA6z/UDILI+C7Fk4qQU99TGgR2r56cQgVUTT25D9km50R/8G5n2+QNyzTKb/rMqWV9ojg1XdZ+Z+E/NQbbzVsfNhEdDhZ35mrdH/fKfrlcAUfVbU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780579268; c=relaxed/simple;
-	bh=3rdgR2Y6FcAHyIpn2ALYcOO9wTP8eCbVk8JvWb1onCo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=P3Hzjvrc5ACCslOASCbD+5qmEggDqy3Eu+GbBfkgI9zlcq+tl8LBdK6ZgNf2WiDie5X299RBiU6SgUTT1QZM7POd99S1sRoiDUYXyiJfFeGJezyr0DZAMEmFw0t6t3tI9b8Y+ddUsmLEv3oFHUHrx7Lq4mGx7T3Fcq3Tl7r7Pgs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mKT10xNQ; arc=pass smtp.client-ip=74.125.82.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30A30421EF4
+	for <regressions@lists.linux.dev>; Thu,  4 Jun 2026 13:57:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.162
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780581426; cv=none; b=i7CP2k5X51g8o4urbMst+CymogBYWiwFxdL5+i8bnO/p/KJAeAgpEWa2i4tBxNdoo3flFQmeDccoRgRKF/j3GkN7xoJvyX0j9opvpA9tNT7Eb4Nod2qZ1zXkt/QK8DNdvlLK7HTCZD72GjC7dfJKqP9pfqwaLhwsziDEVX6Ot8A=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780581426; c=relaxed/simple;
+	bh=/mG7+3rgszWjpHH0CboT06IapJJ148p8+UhZJhdUQeY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Z/btK/0xDv5+WoJRVEFq3I1C6yEf1IJYQdaO+unv0EezUunZFRr2RLHp/8wxW2ZiALsxim3/tZiWwA+YhKoi15cffGsagpf0C8Fyjyq2fvvaUo2qd+Jp0WFBt13d8s5z3PNCwp+ItL+2FqaZCQpFyEePOSFCRBWN9lCPRF4wdQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=FQc46enO; arc=none smtp.client-ip=188.68.63.162
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mKT10xNQ"
-Received: by mail-dy1-f174.google.com with SMTP id 5a478bee46e88-304d2c56402so45018eec.0
-        for <regressions@lists.linux.dev>; Thu, 04 Jun 2026 06:21:06 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1780579266; cv=none;
-        d=google.com; s=arc-20240605;
-        b=lZ3reqBluiBH5bB+3Gy5HZqyR32CiRPHLJ5bbdhLkBDWG7ZgsobkiwWGTuxGOXOdEh
-         53pI9+SZaDXYn/s9PKq9Tti23td1JGXokyWBP28/a/qO7Ags6WaveKATBLGH+12ffS/4
-         Ted0mVx+NqszZzHfPQAxHoQnuzlhaEZlSs0Ca4dH2Z9vUF4tIHtgEYM+eCgg2g0qYveA
-         d26yCrocSq92cY1SeXminnHSYFb3uXqknZ/jHBJfKjn7fJtea27dDoozw2h9XWjCod6L
-         0v+I+VtduVq8XdobuWjtMfAB436m2WgaDb/76udTZ/iENJhJGB8YOP0sbL9n/G2J21qq
-         7Hyw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=GVpfbT32R/82qSV+18QDKxGtI3kc5zmvjXoLt5ITgqA=;
-        fh=89hUWHdfEscDWECVPY/8QqGvg56g6fWT0dyOCUa9MtI=;
-        b=gABVPLn1aSCpjHo4YBju2/PGUOUDhKsKmo63ImZt3B0qfT1FeDLHjQ/SrLCiFMzy7u
-         OTgCIraNCzriGpJk6Ab5WhwI6I/+MtL/JuWhbxN2J3NfCL/6fPxBkpU5f7TB+1byWfg3
-         aNbjcipVsMcj1vtdJys6yCPgoIttXSW6nsyORUa4KyWil4CAdPwo3apUYFpQbh0QptWZ
-         Zqtv2aTLGpPpdo0qeyy113Do3AJkNJd4V9GODxGKkN1T/mn1P168qrOeZP9mL+6dUoeG
-         BRChfp9bG18zO3jutos7uORqlz4Pw2t1Lvx1tfPzxytS0Y2QpJdLKUpNVaH2FTQYFLDB
-         xmng==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1780579266; x=1781184066; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GVpfbT32R/82qSV+18QDKxGtI3kc5zmvjXoLt5ITgqA=;
-        b=mKT10xNQbktzA/LW6UjqrvBrpKm1f7edRymAK4h0z8BAcJaGgCxbOQKkO1NQxt3z4w
-         AFXA70DorjncF7Oe0naZ1mtKpcT56FJWd6VDM3/pS2iIN4CYUMAQ0NfjSwDdJ3CJnreG
-         1MxJQq6oT1mV/Kf5tghXrCGYYuQaTeCrrRfHZFk7IR0Ern+YsoeftjNnCSg/i/1e8avd
-         RgKcwe3qhGPi9XZLYcqMucyqkc09R/6BqnMxTSNOre55WmgH8ngJ3KdgiDbtIw6gvur4
-         3voGF7pMgYntjb3BbIM1wWgqvu78dc3sGRBlWNMI5GsgZSJu3DVzHkv0CNQETh+sXITO
-         1IXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780579266; x=1781184066;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=GVpfbT32R/82qSV+18QDKxGtI3kc5zmvjXoLt5ITgqA=;
-        b=Vm62rzeGT7akhioU/uTQEa5BqziN8nvvI9ISAREJ0nCLDnZAh9CD5BD1R4C420mCnx
-         V9jhP6GMlM7BoTT5MMIPJv9yNqFG2J2pVgggfIeH6x8r/c5eOQ3LlO31KebRTMxVMpjy
-         Yr6Y+zjY7QdwS0Ole2+oJDzNPPcJJiGnwtiOCVzzM1AHAN+NhAR0UIGkTg2x6ZiyJzWr
-         kSlly8gM9Y2yFqPb86OD6Lc39W5eUrAO2OgCBkubEbXcCVEzHsIY2y/J1NWtL2z5wqg1
-         m6sGOKIK8WTLu64XJlcPC88D1zJRpG149EVlvu2lPfEmbvDWjqbXOEJ/yHHTW2gbgdQN
-         o+8Q==
-X-Forwarded-Encrypted: i=1; AFNElJ82x4brEQsHhB+IK+OcrDnoVV5M0orKfreEpSgPudF3f2EAJyv2z9nQyc+qb/8ghlh1Q/soQYzUbjEOwA==@lists.linux.dev
-X-Gm-Message-State: AOJu0YyIX4sXut+ndsNBmAhl+T1raYKKlPHMb7E0RaVBYHCke4gUeA1Q
-	egzHVAuY6J6rU2FhbP0cO/9Z8zH5aaH8IEvwz66kiUAKJ1E5X4r6btzV4h83DbUImKQEi4fOvmM
-	9JmuHug5/sAJfDdJTWrh3WnAPYnJUXuk=
-X-Gm-Gg: Acq92OEoaDvJ3LCEmL4KGJ2lqh5lRyInXOq8FBAtHHelz10SWwm5TutXgrVixL84keU
-	V46ueqAPVkFQqFSSaDprRsZPAG3gnF45aAH8oaFCiKkP7Uc1D7tXz4eWunRhUO23FHpHJMX98//
-	SBoreJAqS+/nDNMNEk9yxjpNvGWTvyMMvLnBKTMOkWWW8a0LAdb92zKsKR+U6McCcI5n9Cia4ht
-	IcnWOGlLYb8fgeQfjfDJ8hEaZaAcrFsd4Xe4RJUzR56WR9G6ZYkOoiQho57c057pFMra6OVgSTQ
-	IFicLfOAkaVOQWnz/egz3nsi9dJCJ7YFTMCSirHa3LB3wIjs7QjH2f4AmIplAIsBLEmLe9wva7I
-	ksV4r
-X-Received: by 2002:a05:7022:f9b:b0:135:1b3a:bffb with SMTP id
- a92af1059eb24-137ff5987ddmr544213c88.0.1780579266081; Thu, 04 Jun 2026
- 06:21:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="FQc46enO"
+Received: from mors-relay-8201.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4gWR1406Y9z3wnR;
+	Thu,  4 Jun 2026 15:55:52 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1780581352;
+	bh=/mG7+3rgszWjpHH0CboT06IapJJ148p8+UhZJhdUQeY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=FQc46enOsXYCpnbCJmx2moU2ysNxUR0N62GhBJNqofnrqiujLGeNKx/dw4/LaMTVY
+	 Q3NtEYdqw9h9A5EevWdp00AJAFzCHcIjgQ8d2eU3D9LwVMbS3eb8DAiBvjMyoajAad
+	 jmT7zSV+eRol3wUY2SES1DjYCL6veJ67yaCZbUMxwJfYAS5wTvF8usNJ6ELij+wOVQ
+	 ZUSVzITaY5FMgMN6MnyiXoSL4a/H1WuvWq+f6EuqVg908mwtTZXLd9PGBKKCTiyyPw
+	 VgLsmUm0GFIqdhWWVKDcmDuZxmmPobXYhEaumZwUVRrGgrbWKAsadFqREGc4RJjUu9
+	 1pHGMiTg0/ieg==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4gWR112hhMz41Rc;
+	Thu,  4 Jun 2026 15:55:49 +0200 (CEST)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4gWR102w2Xz8sb0;
+	Thu,  4 Jun 2026 15:55:48 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 410C160389;
+	Thu,  4 Jun 2026 15:55:47 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <53a2a8dd-d1b6-41c5-ade2-7ed870d074ac@leemhuis.info>
+Date: Thu, 4 Jun 2026 15:55:46 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <44069eb146824aa195312f5b02c49287@valvesoftware.com>
- <7a9021cd-fd78-4b0d-846b-135d0d72224e@mailbox.org> <16231b1742004f848af243ce398281ec@valvesoftware.com>
- <ce51243c-3b98-4f99-911f-70dd0b860da0@mailbox.org> <1c522568-1d5e-4210-8f25-1aa96e0d3c3a@leemhuis.info>
- <BL1PR12MB51447AB016BB28843BAD0216F7092@BL1PR12MB5144.namprd12.prod.outlook.com>
- <af4dff0f-0c62-4a7d-9a3f-fc029c8757f4@mailbox.org>
-In-Reply-To: <af4dff0f-0c62-4a7d-9a3f-fc029c8757f4@mailbox.org>
-From: Alex Deucher <alexdeucher@gmail.com>
-Date: Thu, 4 Jun 2026 09:20:54 -0400
-X-Gm-Features: AVHnY4LjJNxJVvMBj9GVxXTCQGY3mGJk_7vTLN-2s2YrwHEyFdbbXxgb1Bauqxo
-Message-ID: <CADnq5_O9xMagapKQSO-6waXtmmFkDV-47ExVaNuiZd2xVdhefw@mail.gmail.com>
-Subject: Re: Test result / finding of "drm/amd/display: Consult MCCS FreeSync
- cap only if requested & supported"
-To: =?UTF-8?Q?Michel_D=C3=A4nzer?= <michel.daenzer@mailbox.org>
-Cc: "Deucher, Alexander" <Alexander.Deucher@amd.com>, 
-	Thorsten Leemhuis <regressions@leemhuis.info>, Pei-Hsin Yang <peihsiny@valvesoftware.com>, 
-	"Wentland, Harry" <Harry.Wentland@amd.com>, "Li, Sun peng (Leo)" <Sunpeng.Li@amd.com>, 
-	"amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>, 
-	Linux kernel regressions list <regressions@lists.linux.dev>, 
-	"Koenig, Christian" <Christian.Koenig@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] Revert "drm/i915/backlight: Remove try_vesa_interface"
+To: Suraj Kandpal <suraj.kandpal@intel.com>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>,
+ Jani Nikula <jani.nikula@linux.intel.com>
+Cc: ankit.k.nautiyal@intel.com, arun.r.murthy@intel.com,
+ intel-gfx@lists.freedesktop.org, intel-xe@lists.freedesktop.org,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ ML dri-devel <dri-devel@lists.freedesktop.org>
+References: <20260515155340.1000997-1-suraj.kandpal@intel.com>
+ <20260517024709.1016121-1-suraj.kandpal@intel.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+X-Enigmail-Draft-Status: N11222
+Autocrypt: addr=linux@leemhuis.info; keydata=
+ xsFNBFJ4AQ0BEADCz16x4kl/YGBegAsYXJMjFRi3QOr2YMmcNuu1fdsi3XnM+xMRaukWby47
+ JcsZYLDKRHTQ/Lalw9L1HI3NRwK+9ayjg31wFdekgsuPbu4x5RGDIfyNpd378Upa8SUmvHik
+ apCnzsxPTEE4Z2KUxBIwTvg+snEjgZ03EIQEi5cKmnlaUynNqv3xaGstx5jMCEnR2X54rH8j
+ QPvo2l5/79Po58f6DhxV2RrOrOjQIQcPZ6kUqwLi6EQOi92NS9Uy6jbZcrMqPIRqJZ/tTKIR
+ OLWsEjNrc3PMcve+NmORiEgLFclN8kHbPl1tLo4M5jN9xmsa0OZv3M0katqW8kC1hzR7mhz+
+ Rv4MgnbkPDDO086HjQBlS6Zzo49fQB2JErs5nZ0mwkqlETu6emhxneAMcc67+ZtTeUj54K2y
+ Iu8kk6ghaUAfgMqkdIzeSfhO8eURMhvwzSpsqhUs7pIj4u0TPN8OFAvxE/3adoUwMaB+/plk
+ sNe9RsHHPV+7LGADZ6OzOWWftk34QLTVTcz02bGyxLNIkhY+vIJpZWX9UrfGdHSiyYThHCIy
+ /dLz95b9EG+1tbCIyNynr9TjIOmtLOk7ssB3kL3XQGgmdQ+rJ3zckJUQapLKP2YfBi+8P1iP
+ rKkYtbWk0u/FmCbxcBA31KqXQZoR4cd1PJ1PDCe7/DxeoYMVuwARAQABzSdUaG9yc3RlbiBM
+ ZWVtaHVpcyA8bGludXhAbGVlbWh1aXMuaW5mbz7CwZQEEwEKAD4CGwMFCwkIBwMFFQoJCAsF
+ FgIDAQACHgECF4AWIQSoq8a+lZZX4oPULXVytubvTFg9LQUCaOO74gUJHfEI0wAKCRBytubv
+ TFg9Lc4iD/4omf2z88yGmior2f1BCQTAWxI2Em3S4EJY2+Drs8ZrJ1vNvdWgBrqbOtxN6xHF
+ uvrpM6nbYIoNyZpsZrqS1mCA4L7FwceFBaT9CTlQsZLVV/vQvh2/3vbj6pQbCSi7iemXklF7
+ y6qMfA7rirvojSJZ2mi6tKIQnD2ndVhSsxmo/mAAJc4tiEL+wkdaX1p7bh2Ainp6sfxTqL6h
+ z1kYyjnijpnHaPgQ6GQeGG1y+TSQFKkb/FylDLj3b3efzyNkRjSohcauTuYIq7bniw7sI8qY
+ KUuUkrw8Ogi4e6GfBDgsgHDngDn6jUR2wDAiT6iR7qsoxA+SrJDoeiWS/SK5KRgiKMt66rx1
+ Jq6JowukzNxT3wtXKuChKP3EDzH9aD+U539szyKjfn5LyfHBmSfR42Iz0sofE4O89yvp0bYz
+ GDmlgDpYWZN40IFERfCSxqhtHG1X6mQgxS0MknwoGkNRV43L3TTvuiNrsy6Mto7rrQh0epSn
+ +hxwwS0bOTgJQgOO4fkTvto2sEBYXahWvmsEFdLMOcAj2t7gJ+XQLMsBypbo94yFYfCqCemJ
+ +zU5X8yDUeYDNXdR2veePdS3Baz23/YEBCOtw+A9CP0U4ImXzp82U+SiwYEEQIGWx+aVjf4n
+ RZ/LLSospzO944PPK+Na+30BERaEjx04MEB9ByDFdfkSbM7BTQRSeAENARAAzu/3satWzly6
+ +Lqi5dTFS9+hKvFMtdRb/vW4o9CQsMqL2BJGoE4uXvy3cancvcyodzTXCUxbesNP779JqeHy
+ s7WkF2mtLVX2lnyXSUBm/ONwasuK7KLz8qusseUssvjJPDdw8mRLAWvjcsYsZ0qgIU6kBbvY
+ ckUWkbJj/0kuQCmmulRMcaQRrRYrk7ZdUOjaYmjKR+UJHljxLgeregyiXulRJxCphP5migoy
+ ioa1eset8iF9fhb+YWY16X1I3TnucVCiXixzxwn3uwiVGg28n+vdfZ5lackCOj6iK4+lfzld
+ z4NfIXK+8/R1wD9yOj1rr3OsjDqOaugoMxgEFOiwhQDiJlRKVaDbfmC1G5N1YfQIn90znEYc
+ M7+Sp8Rc5RUgN5yfuwyicifIJQCtiWgjF8ttcIEuKg0TmGb6HQHAtGaBXKyXGQulD1CmBHIW
+ zg7bGge5R66hdbq1BiMX5Qdk/o3Sr2OLCrxWhqMdreJFLzboEc0S13BCxVglnPqdv5sd7veb
+ 0az5LGS6zyVTdTbuPUu4C1ZbstPbuCBwSwe3ERpvpmdIzHtIK4G9iGIR3Seo0oWOzQvkFn8m
+ 2k6H2/Delz9IcHEefSe5u0GjIA18bZEt7R2k8CMZ84vpyWOchgwXK2DNXAOzq4zwV8W4TiYi
+ FiIVXfSj185vCpuE7j0ugp0AEQEAAcLBfAQYAQoAJgIbDBYhBKirxr6Vllfig9QtdXK25u9M
+ WD0tBQJo47viBQkd8QjTAAoJEHK25u9MWD0tCH8P/1b+AZ8K3D4TCBzXNS0muN6pLnISzFa0
+ cWcylwxX2TrZeGpJkg14v2R0cDjLRre9toM44izLaz4SKyfgcBSj9XET0103cVXUKt6SgT1o
+ tevoEqFMKKp3vjDpKEnrcOSOCnfH9W0mXx/jDWbjlKbBlN7UBVoZD/FMM5Ul0KSVFJ9Uij0Z
+ S2WAg50NQi71NBDPcga21BMajHKLFzb4wlBWSmWyryXI6ouabvsbsLjkW3IYl2JupTbK3viH
+ pMRIZVb/serLqhJgpaakqgV7/jDplNEr/fxkmhjBU7AlUYXe2BRkUCL5B8KeuGGvG0AEIQR0
+ dP6QlNNBV7VmJnbU8V2X50ZNozdcvIB4J4ncK4OznKMpfbmSKm3t9Ui/cdEK+N096ch6dCAh
+ AeZ9dnTC7ncr7vFHaGqvRC5xwpbJLg3xM/BvLUV6nNAejZeAXcTJtOM9XobCz/GeeT9prYhw
+ 8zG721N4hWyyLALtGUKIVWZvBVKQIGQRPtNC7s9NVeLIMqoH7qeDfkf10XL9tvSSDY6KVl1n
+ K0gzPCKcBaJ2pA1xd4pQTjf4jAHHM4diztaXqnh4OFsu3HOTAJh1ZtLvYVj5y9GFCq2azqTD
+ pPI3FGMkRipwxdKGAO7tJVzM7u+/+83RyUjgAbkkkD1doWIl+iGZ4s/Jxejw1yRH0R5/uTaB MEK4
+In-Reply-To: <20260517024709.1016121-1-suraj.kandpal@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: 
+ <178058134763.3804850.10659488935368293709@mxe9fb.netcup.net>
+X-Rspamd-Server: rspamd-worker-8404
+X-Rspamd-Queue-Id: 410C160389
+X-NC-CID: sAbt7yi+0BVXAc/p+Pgjga09iS2ApN8achznqY1jKQIhrhTqm3g=
 
-On Thu, Jun 4, 2026 at 3:59=E2=80=AFAM Michel D=C3=A4nzer <michel.daenzer@m=
-ailbox.org> wrote:
->
-> On 5/29/26 00:02, Deucher, Alexander wrote:
-> >> From: Thorsten Leemhuis <regressions@leemhuis.info>
-> >> On 5/21/26 09:09, Michel D=C3=A4nzer wrote:
-> >>>
-> >>> Note that some kind of short-term solution is needed for the regressi=
-on(s) in
-> >> 7.1-rc.
-> >>
-> >> Yeah, that would be good. Makes me wonder how the rough plan to realiz=
-e
-> >> this looks like? Sounds like Michael's patch[1] that was discussed her=
-e is not a
-> >> good option? Reminder, Linus ideally wants known regression fixed by -=
-rc6,
-> >> which is why I'm asking.
-> >
-> > @Wentland, Harry can you sort this out for next week's -fixes PR?
->
-> Looks like this regression will make it to 7.1 final?
->
-> I filed https://gitlab.freedesktop.org/drm/amd/-/work_items/5286 3 weeks =
-ago, and proposed a fix the following week. There's been no reaction by any=
- AMD display developer.
->
-> This is pretty sad.
+On 5/17/26 04:47, Suraj Kandpal wrote:
+> This reverts commit 40d2f5820951dee818d05c14677277048bd85f9f.
+> 
+> Removing the try_vesa_interface gate caused a backlight regression on
+> panels whose VBT correctly reports INTEL_BACKLIGHT_DISPLAY_DDI and whose
+> PWM path is the actual backlight control, but whose DPCD optimistically
+> advertises DP_EDP_BACKLIGHT_AUX_ENABLE_CAP / _BRIGHTNESS_AUX_SET_CAP.
+> After the commit such panels silently bind to the VESA AUX backlight
+> funcs; AUX writes complete but the panel ignores them, leaving
+> brightness stuck (no-op backlight). Observed on at least KBL and TGL
+> eDP setups.
 
-@Wentland, Harry , @Leo (Sunpeng) Li come on guys!  I've picked up
-Michel's patch and I'll send an update -PR today.
+Lo! What's the status of this regression fix? It's a -next for two weeks
+now as f30fddb4402313 ("Revert "drm/i915/backlight: Remove
+try_vesa_interface""), but from the outside and checking
+https://gitlab.freedesktop.org/drm/i915/kernel/-/commits/drm-intel-fixes
+it looks like it's scheduled for merging in the next cycle.
 
-Alex
+But I think it should be merged this cycle (ideally before -rc7, as
+Linus wants all known regression fixed by -rc6), as it fixes a
+regression that is known since the -rc1 days. I already asked for the
+mainlining plans in gitlab tickets about a week ago (and since then
+affected users spoke up, too), but there was no conclusive answer for
+the plans, which is why I'm trying this way now.
 
->
->
-> --
-> Earthling Michel D=C3=A4nzer       \        GNOME / Xwayland / Mesa devel=
-oper
-> https://redhat.com             \               Libre software enthusiast
+Ciao, Thorsten
+
+
+> Signed-off-by: Suraj Kandpal <suraj.kandpal@intel.com>
+> ---
+>  .../drm/i915/display/intel_dp_aux_backlight.c | 19 ++++++++++++-------
+>  1 file changed, 12 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/i915/display/intel_dp_aux_backlight.c b/drivers/gpu/drm/i915/display/intel_dp_aux_backlight.c
+> index a8d56ebf06a2..7a6c07f6aaeb 100644
+> --- a/drivers/gpu/drm/i915/display/intel_dp_aux_backlight.c
+> +++ b/drivers/gpu/drm/i915/display/intel_dp_aux_backlight.c
+> @@ -691,10 +691,9 @@ int intel_dp_aux_init_backlight_funcs(struct intel_connector *connector)
+>  	struct intel_dp *intel_dp = intel_attached_dp(connector);
+>  	struct drm_device *dev = connector->base.dev;
+>  	struct intel_panel *panel = &connector->panel;
+> -	bool try_intel_interface = false;
+> +	bool try_intel_interface = false, try_vesa_interface = false;
+>  
+> -	/*
+> -	 * Check the VBT and user's module parameters to figure out which
+> +	/* Check the VBT and user's module parameters to figure out which
+>  	 * interfaces to probe
+>  	 */
+>  	switch (display->params.enable_dpcd_backlight) {
+> @@ -703,6 +702,7 @@ int intel_dp_aux_init_backlight_funcs(struct intel_connector *connector)
+>  	case INTEL_DP_AUX_BACKLIGHT_AUTO:
+>  		switch (panel->vbt.backlight.type) {
+>  		case INTEL_BACKLIGHT_VESA_EDP_AUX_INTERFACE:
+> +			try_vesa_interface = true;
+>  			break;
+>  		case INTEL_BACKLIGHT_DISPLAY_DDI:
+>  			try_intel_interface = true;
+> @@ -715,12 +715,20 @@ int intel_dp_aux_init_backlight_funcs(struct intel_connector *connector)
+>  		if (panel->vbt.backlight.type != INTEL_BACKLIGHT_VESA_EDP_AUX_INTERFACE)
+>  			try_intel_interface = true;
+>  
+> +		try_vesa_interface = true;
+> +		break;
+> +	case INTEL_DP_AUX_BACKLIGHT_FORCE_VESA:
+> +		try_vesa_interface = true;
+>  		break;
+>  	case INTEL_DP_AUX_BACKLIGHT_FORCE_INTEL:
+>  		try_intel_interface = true;
+>  		break;
+>  	}
+>  
+> +	/* For eDP 1.5 and above we are supposed to use VESA interface for brightness control */
+> +	if (intel_dp->edp_dpcd[0] >= DP_EDP_15)
+> +		try_vesa_interface = true;
+> +
+>  	/*
+>  	 * Since Intel has their own backlight control interface, the majority of machines out there
+>  	 * using DPCD backlight controls with Intel GPUs will be using this interface as opposed to
+> @@ -733,9 +741,6 @@ int intel_dp_aux_init_backlight_funcs(struct intel_connector *connector)
+>  	 * panel with Intel's OUI - which is also required for us to be able to detect Intel's
+>  	 * backlight interface at all. This means that the only sensible way for us to detect both
+>  	 * interfaces is to probe for Intel's first, and VESA's second.
+> -	 *
+> -	 * Also there is a chance some VBTs may advertise false Intel backlight support even if the
+> -	 * TCON DPCD says otherwise. This means we keep VESA interface as fallback in that case.
+>  	 */
+>  	if (try_intel_interface && intel_dp->edp_dpcd[0] <= DP_EDP_14b &&
+>  	    intel_dp_aux_supports_hdr_backlight(connector)) {
+> @@ -745,7 +750,7 @@ int intel_dp_aux_init_backlight_funcs(struct intel_connector *connector)
+>  		return 0;
+>  	}
+>  
+> -	if (intel_dp_aux_supports_vesa_backlight(connector)) {
+> +	if (try_vesa_interface && intel_dp_aux_supports_vesa_backlight(connector)) {
+>  		drm_dbg_kms(dev, "[CONNECTOR:%d:%s] Using VESA eDP backlight controls\n",
+>  			    connector->base.base.id, connector->base.name);
+>  		panel->backlight.funcs = &intel_dp_vesa_bl_funcs;
+
