@@ -1,215 +1,236 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEE6A37DAC2
-	for <regressions@lists.linux.dev>; Wed,  3 Jun 2026 18:04:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.13
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780509864; cv=fail; b=cnAMENw0YBfni0YtFMSOt6TDpKzUXcu/4D8BwHBQue80R98/pRmPLTpgnHZjFMzalCkB9UBK03Dlw/zpbvHT2lttrxk03n4kYKSV/awU7epYlNlqJyflhn1DeEnQO4yZZFS+kxTOSjrCgOM/a+IegZT8QAC+9MoLsu2AwKMh3os=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780509864; c=relaxed/simple;
-	bh=+47BiDFu21XY1Roqn3EutkzSQb6gwne2x4nv8i/RSME=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=ssJ0GgQddHRR/j7C2gb6ILDzC4zwANkyxJ2bMSIWRo+sSuNqjuM9e+rBGW0bjs+xTp42sTUDOdE2hsDE0TUEefFIi1JYI9cMIQ9R0WtKcJozuOy4tsZpoozIHTN0iUJXBIF8BRbTPMqxd6B5evv/o9UJkAE7IH94B0sBy/eHq28=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KYW1XNPO; arc=fail smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 273E525B08F
+	for <regressions@lists.linux.dev>; Thu,  4 Jun 2026 01:28:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780536491; cv=none; b=Wt0zrTjDMc0iFVcfGeaKz02zcGauwXnLqouPIvJc0aKLQzICrKWGjsyz8r3xCBesc2cDh5l8oagtjRNQCeoT/h3maIPaNSUoD8XySi1CmUS0Nvec1Q+D2d30j1lHLHxiIYgYo5OfSUs+UP9pkH4y5CHSSlfWilouGUNxuTf4rf0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780536491; c=relaxed/simple;
+	bh=2fEcU29Ulxu8w13YHxPVFYYYAP49xmwNvpY1X0g7OYI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UYmyAMAwDa335vU2MwQH/vf14RflCBMTnhnpZ1/KYrNRh3Tuy715Jvq6AT6DMgQTtGgMKP1rkEiEfx+lEtFTlrR0xO7SUnPK8s9WACUHychQzsZfSuOjAEqLRVnmCZLS3tmsu8ETO1wvO5QdJTv/At5jfIOvA9OGGJSfP7bjm6Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gibson.dropbear.id.au; spf=pass smtp.mailfrom=gandalf.ozlabs.org; dkim=pass (2048-bit key) header.d=gibson.dropbear.id.au header.i=@gibson.dropbear.id.au header.b=gr47qIwA; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gibson.dropbear.id.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gandalf.ozlabs.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KYW1XNPO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1780509862; x=1812045862;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=+47BiDFu21XY1Roqn3EutkzSQb6gwne2x4nv8i/RSME=;
-  b=KYW1XNPOlPvvPOTTR4LC7324OE/uoQdSVQBng66WUEcMu1/jnj1CBR22
-   FqHFHcTNNlJobAxi868c+WeXEhCdu4cypSzE+KWGJGhvtK3wJQ9jObzSW
-   N0qUMo3zcz7mR5R1UQ9RX0TGyNsvDEKxT7MSFc2JZz2X0CHAT5t5fFRoP
-   r6Otx6NywfEGLqRgZygul1g53d6AXviKaZebkPNZlZhX8S+lWbFKdIF4W
-   IBFfxNX1bVNzu0++bo5MCYSUbHN6nAH62iTS0tv56rzKCIIqcNUeN+f7d
-   P7k47mK51UqI7uy2dXE1GMGCMezkBkw8OOCJeJ2kzPF7EsJ3zUPcyazyR
-   A==;
-X-CSE-ConnectionGUID: iDLLgy8gTDC49cWK8STdOQ==
-X-CSE-MsgGUID: 8zD2LI6bRpe8m3PGvnwYdA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11806"; a="83908557"
-X-IronPort-AV: E=Sophos;i="6.24,185,1774335600"; 
-   d="scan'208";a="83908557"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2026 11:04:21 -0700
-X-CSE-ConnectionGUID: fearRayTRX+3L0QwwfgCkw==
-X-CSE-MsgGUID: uN7hcAR3SLeiBVnWX/pdXA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,185,1774335600"; 
-   d="scan'208";a="274550033"
-Received: from fmsmsx901.amr.corp.intel.com ([10.18.126.90])
-  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2026 11:04:20 -0700
-Received: from FMSMSX902.amr.corp.intel.com (10.18.126.91) by
- fmsmsx901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37; Wed, 3 Jun 2026 11:04:19 -0700
-Received: from fmsedg903.ED.cps.intel.com (10.1.192.145) by
- FMSMSX902.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37 via Frontend Transport; Wed, 3 Jun 2026 11:04:19 -0700
-Received: from BL2PR02CU003.outbound.protection.outlook.com (52.101.52.15) by
- edgegateway.intel.com (192.55.55.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37; Wed, 3 Jun 2026 11:04:18 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=wdruOvvzEEJYh4sx2Ocrg6ptGAEflztbZ+gASuzTgd1MxaNG7rq0FKsuTE7G4wAO0DsEm17MKAEwvNdRiO//1+c62RDUF0G4h1oKBuwBddpl92V7IiSAVDN0eQ1r1yTiMfa7da+4BPtlx5NZ2KVTylbkQ1hfXCk2eZLjLeFU2BGfWTin2XdYuOul/d4JBznMXzutETIYBvf7LuMHCJnhp3+Gxb6Y5z3xQJoFjbPi09jbK1FblZdW3vv5r9tDMwyBok45+/jR+BdDeyEqWY1tBhYzDyRcWdXGlEFoymn7Wigf8023wGDRRsYpbNARhtDeGfV7iuP7enhT+HscKHtMiQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=v7gtpduaHVp4RAdeerJGxE1dxnWC0WG5ygLsl8pHejI=;
- b=wkYntOSPr7XhEfS7ydlwu7RTL6CxPlr1SfFBw9AQ7BEPHGkc+F+e8gI/k+WxJ2iAOYlwwYcY0rCcKZo8htZ4HUew2Y4PBYNYeB/dQKUnl9FubwxIiVoe1h6UTunkF2xCNLNfFbpOkos/5YaWMDt+vrSghpfbU5jO/yLe9x2/KeybgfuvaOSbjXx6f4N8oukkMpc1NUzDT/vlj0hFBYAI2FiXb5J+rkv8jcqXFf50DKOqJHcHBy6TUXDyDZppoTL9SXtdOJDbFiuOjAyukhbqR6SymsGNoeftzmXOCm05bWr7aVNa/2eRY6bOVqIrzsMMM+NvP3+S8zMTK/wVXleHMQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DS0PR11MB8230.namprd11.prod.outlook.com (2603:10b6:8:158::21)
- by SJ1PR11MB6106.namprd11.prod.outlook.com (2603:10b6:a03:48b::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.71.16; Wed, 3 Jun 2026
- 18:04:10 +0000
-Received: from DS0PR11MB8230.namprd11.prod.outlook.com
- ([fe80::2592:f5a9:a751:be40]) by DS0PR11MB8230.namprd11.prod.outlook.com
- ([fe80::2592:f5a9:a751:be40%3]) with mapi id 15.21.0092.006; Wed, 3 Jun 2026
- 18:04:10 +0000
-Message-ID: <eca57807-b961-4930-84db-d8e9c5d18ee0@intel.com>
-Date: Wed, 3 Jun 2026 11:04:07 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Intel-wired-lan] [PATCH iwl-net v3] e1000e: Reconfigure PLL
- clock gate timeout and re-enable K1 on Meteor Lake
-To: Jacob Keller <jacob.e.keller@intel.com>, Thorsten Leemhuis
-	<regressions@leemhuis.info>, Dima Ruinskiy <dima.ruinskiy@intel.com>,
-	<intel-wired-lan@lists.osuosl.org>
-CC: Linux kernel regressions list <regressions@lists.linux.dev>, Andrew Lunn
-	<andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, "Eric
- Dumazet" <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
-	<pabeni@redhat.com>, netdev <netdev@vger.kernel.org>
-References: <20260417104330.3031987-1-dima.ruinskiy@intel.com>
- <b60a7ab8-dbab-4684-abf4-4dd2a9024f8d@leemhuis.info>
- <56f5f3da-31b8-4847-b274-ce140bf39617@intel.com>
- <2619ad91-e3c9-439c-86ed-4604c3f5d912@leemhuis.info>
- <f4e402c1-f60c-4349-8bcb-6c135aa3b45d@intel.com>
-Content-Language: en-US
-From: Tony Nguyen <anthony.l.nguyen@intel.com>
-In-Reply-To: <f4e402c1-f60c-4349-8bcb-6c135aa3b45d@intel.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MW4PR04CA0166.namprd04.prod.outlook.com
- (2603:10b6:303:85::21) To DS0PR11MB8230.namprd11.prod.outlook.com
- (2603:10b6:8:158::21)
+	dkim=pass (2048-bit key) header.d=gibson.dropbear.id.au header.i=@gibson.dropbear.id.au header.b="gr47qIwA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=gibson.dropbear.id.au; s=202602; t=1780536486;
+	bh=qmc+aIeVLzapfjJy5dGL3NPue98zdQLZBSV6ljb0IBw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gr47qIwAZA5yCWnBpvroQT0aBB+A5Pbp4Y9TLFSQhfHH8WsQMpCFmT6RKIzqREdfD
+	 hkXxr3W6TBCqmO56veQEFbSVxthjXO7aCyZi6hR0H4nhAD61p5dGWrjxRvMhyM3PBl
+	 2i6j/cT5kUq6Cv3mAyFxEfHjMYoahzdicnZ+VA48/GgmQoFSG641123z46cobinBNx
+	 gKAL7F3zJTwMbyLhs1FS4kukRGNkH48kd3hV5d9fFsV7iEhD2db/38H/JnwOxLJ+73
+	 NdWNSr6C7FOzygXMPokQGIxQ/XkaLuOGCiHOrXg4AJ8lcH1UJBW1v/gXDpnxk2DJ6K
+	 Bjsqh1kS0qhAg==
+Received: by gandalf.ozlabs.org (Postfix, from userid 1007)
+	id 4gW6QG1R0Sz4wvg; Thu, 04 Jun 2026 11:28:06 +1000 (AEST)
+Date: Thu, 4 Jun 2026 11:26:08 +1000
+From: David Gibson <david@gibson.dropbear.id.au>
+To: Stefano Brivio <sbrivio@redhat.com>
+Cc: Ido Schimmel <idosch@nvidia.com>,
+	Fernando Fernandez Mancera <fmancera@suse.de>,
+	netdev@vger.kernel.org, yuhuang@redhat.com, justin.iurman@gmail.com,
+	horms@kernel.org, pabeni@redhat.com, kuba@kernel.org,
+	edumazet@google.com, davem@davemloft.net, dsahern@kernel.org,
+	Chris Adams <linux@cmadams.net>,
+	Beniamino Galvani <bgalvani@redhat.com>,
+	Thorsten Leemhuis <regressions@leemhuis.info>,
+	Andrew Lunn <andrew@lunn.ch>, ihuguet@redhat.com,
+	regressions@lists.linux.dev
+Subject: Re: IPv6 address insertion order (was Re: [PATCH net v2] Revert
+ "ipv6: preserve insertion order for same-scope addresses")
+Message-ID: <aiDUMHKi2Sn1_dYD@zatzit>
+References: <20260529112357.5079-1-fmancera@suse.de>
+ <20260529134045.56330243@elisabeth>
+ <ah57wxGjL7JBORR1@zatzit>
+ <20260602132118.GA508395@shredder>
+ <ah-SvHdPRrYXX6lx@zatzit>
+ <20260603074717.GA569921@shredder>
+ <20260603174538.5454bb93@elisabeth>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR11MB8230:EE_|SJ1PR11MB6106:EE_
-X-MS-Office365-Filtering-Correlation-Id: ddb0e4b1-fca5-439e-cc4e-08dec19a82e9
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|11063799006|22082099003|18002099003|56012099006|4143699003;
-X-Microsoft-Antispam-Message-Info: aOXjEHEP+0AGEtOmYjBTGmaCUeeF3jwGSltDXS8nFoSIACZraQg0RGYic2aVWLfPVPZsgtjOoDqPWsD/yp6YPr0SpXZ1OHoz/mKUyAnfDZU8SuKroZ6iO7T7LLNN66nmf/wZtb8SimSlgak4pUp7ebUthYZyZ+vdflGl1n6adWsL64K6FbeMq/9Y1GCZnATSMz4iM6U/9zk8krY2qZyN9/dMaK8vLM0YySyIPNMW0e5ddKnyLQXkoq34eVIx1ASvDzl0ojdaFC/lppdTOKuaUuQivEsvWaSsjYmkTMMm6aA/xKECUljhzEWYqhPB1c6GddZfKdEXCSCWVC7vYLqRVvuMkLcErl9nk39Mc05lsLEBWHZrkMZfnWmBTFBMQn29s1f5QoP0Xd0B/ZSeoLWciddUWC8Um8QZZr0uAMPv0/OzfDOckd5UYw4T5rjjJEOBh7uv/9px9SxULm/7jN9PX4WmKc7iOKyUhk4XGWPDVPdCB1zGy/erE1EvCZd8AniPDWX08+LtWKv8ToEgsroKt+RtP6643/ZPnLzcS7vMqmYzetU5Bp5KF8BZehpNHxl2jJW/v0lAV6Q9t7yC7I85cbliANYR51GB/xvPY8FtIzHt0I3oe6q+bxkdIM2jFXud+vjzf6o2kAlZsUwWXgBPsxsdgz4fbNz/UYbnKhKKx+ap1v7I2d6LuPBp2bnR4FV0
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR11MB8230.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(11063799006)(22082099003)(18002099003)(56012099006)(4143699003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?SEE0UmFzRWdMUVNQS0VEMFo4WnREMHRpNjAweGtVTU5TbldTVUp3QWRvdXlm?=
- =?utf-8?B?ZU4vdTlDQW5wL044VkVVRkU4Mlp2em5Bdkc1WWVwTHVFakZsSnhqa2FFZldo?=
- =?utf-8?B?eC9MU1hMYUR5QlpZWTA5L1pTYUhDNUZzZ20ycFdEbzNoVDNzSFdhOWtrT0hi?=
- =?utf-8?B?eU5ucVJrUWpKcGhhY0xWSzRlYkpLWngxL3BSWGtBNzVSL2R5MTN5MWhFMFNh?=
- =?utf-8?B?blFZSEp4V0FxeFAweGtoNFNyTWJrOXQ0UnJmcUdINEo4TGFFNmRJa3hrZFNJ?=
- =?utf-8?B?aHJQclhCZkc1anYxZk9zQnlYNVVNSjhXUFdFTHRzMmdsYllSYmFEMmlNeFlG?=
- =?utf-8?B?T2k2WStGUjFueWRPQXB5UnlYYlI5bGtXWkJ5clFHWXhLSG1VQlF2czBxcWEv?=
- =?utf-8?B?UFhaTVRnTUhZenBubkNGekVZMGozTzIxem9LRnFPSCtjRUhCdGIxUHRqaDgr?=
- =?utf-8?B?U0NWUzRjWDFPNzZPM0E1VWxVK3lJcndpNm40eWpDbjhPdlZtdGcvZ25GVG43?=
- =?utf-8?B?KzVsWmFaWXlDVEtXWGNkSUE3T3g0MlpWSGlPR05RMDZxamJLaGd0UzBuTWZz?=
- =?utf-8?B?SXJrMXV4dE45bmFxN3EyM1BkNGZWZ2NMRW1hZDBhMTBwZjdjNmR5RTE4bWZp?=
- =?utf-8?B?QXFLQzBHNTBlS0ttV2ZISHpyVjNrN29VSjlIUEt2TFpFNTl2S2YxOVZzZG0x?=
- =?utf-8?B?dXJXdFIrRGtlNnA1N1pnS1VUb0NydGtpbHBQcFdXbmxtMm1nTFA2TGl3UEky?=
- =?utf-8?B?bmo3MVlNRFNRd3p1aTVjVGpIT2RnSGM3MTVhcDllb2ZweFJvYXdEOXR2dnVX?=
- =?utf-8?B?ZHFPeWlJdDB5eTZobkNmZVZqUEZJb0wzdEtkWWtQK2ErbzZpaytxTXRQWStY?=
- =?utf-8?B?L0dGVE9YK2FEUFVOc3hJWnYwblZLVHhmcVBtVnhVSndoTW4wUDNadkVYdFNv?=
- =?utf-8?B?TXpab2VqQnZoQmhKaTNhNnVJTlo0R0RIVkl6cjFlQzZjYWdEeEE3dXA3UlhB?=
- =?utf-8?B?dmZtb2ZscVhwZks4L1Zwb2xuTjlVUEE2Wm9JVEZwQ1RFZVZOOWxEc2NJbHI5?=
- =?utf-8?B?di9ZU3psWVMveGxBekNDYzdUL1U4VEthZWlZMUZDUzNzTGg4S2QvVERLOVZV?=
- =?utf-8?B?TzhTZk40VDhRbjRmdFgyMUxZSjA2Vis5NzU1MTlPWGZJbFplMnNYQkE5VVBp?=
- =?utf-8?B?U04raTZZOStPVDNzZjhPdjNJQ1pEOFZUbW14czViWUEzQ1crL2NFU0IxUFRE?=
- =?utf-8?B?bzN6eE1ZNHFlZkhPdE83NEtvMXF6ZFVFNlo2ZXV2ZmVXRnhzZTNPSDZzN2Rx?=
- =?utf-8?B?V21TL0M0a0h4a0J2ZWhkcTVEWEZWbHdydW9xOG10b3YwaHExQU9XVkZqZGRP?=
- =?utf-8?B?YWNjSXh5NERYRDlZMlRDMU96RlFQbmZwMHl2MkhHTGpsWTVaUnJYTldxYVZO?=
- =?utf-8?B?QVRoWm0wZklEZk1LUWIzdGQ2T1luT3o5aXNHN2F2eW8zK2hZUUJuNUJCaCs4?=
- =?utf-8?B?Um11TWFZT1JtZkd5WVV0ZG5ENmwxM0lKWkJSZGpDZjZPeDJlMWd2bUFrUUFP?=
- =?utf-8?B?VlNZVThtaUZSdmkvNUNWS0RWYWl1YVpXYnluZ3B4YXBsR09rQjVwUzZ5WmpO?=
- =?utf-8?B?S3Rvc2xOVG53dHZSV2MzNEd6czZwWFRLU2dpZVJTYVJzenNCcWJRZmJCeGlK?=
- =?utf-8?B?aU5uSHBic3RjOVBreG8vYkhtV3A3UmYzS29WZDlqUGRGTE1LTnhDUFhKNTUv?=
- =?utf-8?B?UXhSb2VKbS9aM05JdTdjcU5jMTN3QXpHYS9ZSmtVMWVjREhQOGdyb084Wlpr?=
- =?utf-8?B?eVVPMmdaZXJ4MlZJMmZna095YS8rOHFTWEw1SHhGaVpwRzJ3empURVc3KzJC?=
- =?utf-8?B?bThCM0ZCZEd5UHEzK1hRRVFLQWlpbUo3MkpMOE53ZHA2b0lEY29pcVlPbUhl?=
- =?utf-8?B?K2FhOUJXZTVnb3VDZTEvYm1TcUFWbGl6dWx3ZTBZZGM4YmhNeWhpR2tEUDZF?=
- =?utf-8?B?S3drSFhQZytVaEdOMTJEenJidUUyUmcxYXBRQ29WNjZjYit4QmtTUzJaU3VR?=
- =?utf-8?B?eEQ5R2RESVdCanZtcExCUVQ1c1RaVXBXdEswZEFEZTU2LzBmYXptS1pEN0R5?=
- =?utf-8?B?NmNqVmo0b2JuRTcwRWJGeTdnaUlXc3lYazhlOXZjYnFONmZTUDBoUEtXOTBp?=
- =?utf-8?B?RjJTS2pPSFJGRzVXMzNXV2xwUTNISG03Mmp2T2JidFNHSGxuajRDVWtOZE1B?=
- =?utf-8?B?Ri9TYWdvSzlLV0ZIeWQ1djJVd1RKOTdMUWlwUVQ0RCtWRVQ2YTEra1MrS001?=
- =?utf-8?B?Y0MrWDM1RVVIVGd6OExFRUFsWDR1NFNNQTBIb1g1cTloZHJhU3EwejJzRkNj?=
- =?utf-8?Q?EIDx2DVLM1493Dck=3D?=
-X-Exchange-RoutingPolicyChecked: r+p26zx86MZWbOmJz1k2h/5eg6+o4h8b0anq6pBc1RGIxwmUjHY2KCbXATFH+QxlAWSrSS0gtJBYged90GlCya+/5eJsHZmZlwxSqsGQ3suFcrDSWa+MehWp5Gq47TGTFeDx5h+rmi4UfGSX439vuY1TiQ0Xx2yFnHOesCNDBrUIHofpwcTBu6ykpRJJQOocLVAG+mk6hA9KsNQHxg5GrwpVACruPVDil5UaPaj882dkezvlWveGxUycy36417KDOL2cYCTes4FgSZ/1twQejFL0YebBYFJPy+scIgAPDk4BqufUJadwrbIlk4FBiwyY2ahewSLlCMl30eFef6zqJg==
-X-MS-Exchange-CrossTenant-Network-Message-Id: ddb0e4b1-fca5-439e-cc4e-08dec19a82e9
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR11MB8230.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jun 2026 18:04:10.3293
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Se/0JkG7dU0CvufiI3tambYki0/9HWOyHqkuzQfEtTZtaJigHdnZBS1WrzIvWc0CJi6YOqJVnR8yu/WidEpzCMgXMeYhafy0tYsozkjUmkw=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ1PR11MB6106
-X-OriginatorOrg: intel.com
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="NcKP958AVt6R3vlt"
+Content-Disposition: inline
+In-Reply-To: <20260603174538.5454bb93@elisabeth>
 
 
+--NcKP958AVt6R3vlt
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 6/3/2026 10:20 AM, Jacob Keller wrote:
-> On 6/3/2026 3:42 AM, Thorsten Leemhuis wrote:
->> On 5/6/26 22:13, Jacob Keller wrote:
->>> On 5/6/2026 2:59 AM, Thorsten Leemhuis wrote:
->>>> On 4/17/26 12:43, Dima Ruinskiy wrote:
->>>>> Commit 3c7bf5af21960 ("e1000e: Introduce private flag to disable K1")
->>>>> disabled K1 by default on Meteor Lake and newer systems due to packet
->>>>> loss observed on various platforms. However, disabling K1 caused an
->>>>> increase in power consumption.
->>>>>
->>>>> To mitigate this, reconfigure the PLL clock gate value so that K1 can
->>>>> remain enabled without incurring the additional power consumption.
->>>>> Re-enable K1 by default, but keep the private flag to support disabling
->>>>> it via ethtool. Additionally, introduce a DMI quirk table, so that K1 may
->>>>> be disabled by default on known problematic systems. Currently, this
->>>>> includes the Dell Pro 16 Plus, where the issue has been reported to persist
->>>>> despite the changes to the PLL lock timeout.
->>>>>
->>>>> Link: https://bugzilla.kernel.org/show_bug.cgi?id=220954
->>>>> Link: https://lists.osuosl.org/pipermail/intel-wired-lan/Week-of-Mon-20250623/048860.html
->>>>> Link: https://lists.osuosl.org/pipermail/intel-wired-lan/Week-of-Mon-20260330/054059.html
->>>>
->>>> What happened to this fix for a regression first reported in January? It
->>>> looks like it fell through the cracks. Or was some other solution found?
->>>>
->>> There has been a bunch of back and forth discussion and varying versions
->>> of a fix for this. Its still in the Intel Wired LAN queue, and is
->>> currently waiting for one the E1000E team to report testing completed.
->>
->> What's the status? Just wondering, as it looks like this didn't make any
->> progress, but it's easy to miss things from where I stand.
->>
->> Ciao, Thorsten
-> 
-> Pushing Tony to the To line so he won't miss it, since he's back running
-> the queue.
+On Wed, Jun 03, 2026 at 05:45:39PM +0200, Stefano Brivio wrote:
+> On Wed, 3 Jun 2026 10:47:17 +0300
+> Ido Schimmel <idosch@nvidia.com> wrote:
+>=20
+> > On Wed, Jun 03, 2026 at 12:34:36PM +1000, David Gibson wrote:
+> > > On Tue, Jun 02, 2026 at 04:21:18PM +0300, Ido Schimmel wrote: =20
+> > > > On Tue, Jun 02, 2026 at 04:44:19PM +1000, David Gibson wrote: =20
+> > > > > I get the impression there's a rough consensus that the best we c=
+an do
+> > > > > now is revert this change (already done), and make a new patch wh=
+ich
+> > > > > changes the insertion order to the "correct" one conditional on a=
+ new
+> > > > > flag.
+> > > > >=20
+> > > > > Stefano has enough other fires to fight, so I'm taking a look at
+> > > > > implementing that.  Some initial thoughts, that I'm soliciting
+> > > > > feedback on:
+> > > > >=20
+> > > > > 1) I'm assuming the idea here is to add the new flag to nlmsg_fla=
+gs in
+> > > > >    nlmsghdr
+> > > > >=20
+> > > > > ifa_flags in ifaddrmsg would be the other candidate, but it looks=
+ like
+> > > > > it's encoding properties of the address itself, not about the act=
+ion
+> > > > > of inserting it.  Plus all its bits are allocated, anyway.
+> > > > >=20
+> > > > > 2) Could we re-use NLM_F_APPEND?
+> > > > >=20
+> > > > > The short description of this existing flag in linux/uapi/netlink=
+=2Eh is
+> > > > > "Add to end of list" which sounds like the right thing.  Looking
+> > > > > closer, however, it seems like what is' used for so far is things
+> > > > > where the entity added with the NEW<whatever> operation is itself=
+ a
+> > > > > list, and NLM_F_APPEND causes it to be added to rather than repla=
+ced.
+> > > > > It's not used for addresses at present, AFAICT the list of addres=
+ses
+> > > > > is a semantic level above the address entity itself.
+> > > > >=20
+> > > > > So maybe re-using it for the thing I tentatively called
+> > > > > NLM_F_INSERT_LAST would be confusing?
+> > > > >=20
+> > > > > On the other hand, it's not used for addresses at the moment, so
+> > > > > AFAICT there's nothing actually preventing us reusing it for this
+> > > > > purpose. That would save a bit - we only have 2 general and 4 NEW
+> > > > > specific bits left, by the looks of it. =20
+> > > >=20
+> > > > This is not really viable. Even if the kernel is not using NLM_F_AP=
+PEND
+> > > > for RTM_NEWADDR, but not rejecting its presence either, then we can
+> > > > create a change in behavior for a user space that is currently sett=
+ing
+> > > > it (intentionally or not).
+> > > >
+> > > > Example:
+> > > >=20
+> > > > https://lore.kernel.org/netdev/27c249d80c346a258cfbf32f1d131ad4fe64=
+e77c.camel@debian.org/ =20
+> > >=20
+> > > Hmm.  So, in this example case we have a known, widely deployed
+> > > userspace that was broken by the change.  Similarly with the
+> > > original now-reverted "fix" for the ordering, we have a known, widely
+> > > deployed userspace that was broken. =20
+> >=20
+> > It was also reported over three years after the kernel change went in.
+> > Point is that we have no way of knowing how user space is using these
+> > flags. Suddenly giving them meaning when we simply ignored them before
+> > is risky.
+>=20
+> I think that's a very different type of issue because, there, *another*
+> existing flag (NLM_F_EXCL) was suddenly given a meaning, as it happened
+> to have the same value as NLM_F_BULK, and that's what broke libvirt.
+> Not support for NLM_F_BULK itself.
+>=20
+> Here, NLM_F_APPEND doesn't share its value with any other flag, and it
+> really is documented as "Add to end of list", but we don't do that.
+> That's a bug.
 
-It's waiting on testing results from our validation; we're checking with 
-them to see its status.
+Eh.. that's the short description in the header.  But looking at how
+it's actually used it generally means "append as opposed to replace"
+(which is not relevant for addresses) rather than "append as opposed
+to prepend".  So in that sense we would be assigning a new meaning.
 
-Thanks,
-Tony
+> I think it's actually more likely that some bits of userspace are
+> currently broken and causing subtle issues because the author expected
+> NLM_F_APPEND to actually do what it promises, but maybe they only
+> tested that with IPv4.
+
+That's possible, although I'd guess far less likely that simply
+expecting insert last behaviour without any extra flag.
+
+> Allow me to draw a parallel that looks more fitting to me: in commit=20
+> 1e47b4837f3b ("ipv6: Dump route exceptions if requested") I happened to
+> fix a two-year old issue that made 'ip -6 route list cache' show no
+> output and 'ip -6 route flush cache' have no effect.
+>=20
+> You could take this to the extreme and say that it was risky to fix
+> that because some userspace application could meanwhile have started
+> relying on the fact that 'ip -6 route list cache' returned no output.
+> I guess we agree it was a good idea to fix that, though.
+>=20
+> Of course there are several degrees of UAPI expectations in between,
+> but *not* allowing to use NLM_F_APPEND to append objects because
+> userspace might rely on NLM_F_APPEND to *not* append objects sounds
+> a bit like this extreme to me, or at least closer to it than the
+> NLM_F_BULK kind of breakage.
+>=20
+> > > That's a different case from a hypothetical userspace that incorrectly
+> > > used NLM_F_APPEND on RTM_NEWADDR.  Moreover, to be broken it would
+> > > need to incorrectly use NLM_F_APPEND on RTM_NEWADDR *and also* rely on
+> > > the counterintuitive and inconsistent insertion order for IPv6
+> > > addresses.  Absent a concrete example of something meeting both those
+> > > conditions, I'm inclined to breaking that hypothetical case when the
+> > > payoff is an easier route to get known cases working with the
+> > > preferred insertion semantics.
+> > >=20
+> > > Fwiw, I did look at the most likely candidates: iproute2,
+> > > network-manager and libvirt, and I see no signs that they're misusing
+> > > NLM_F_APPEND in this way. =20
+> >=20
+> > See above. I don't like this approach. IMO, it's not worth making it
+> > slightly a bit easier for some user space programs to adopt when the
+> > risk is breaking other programs and repeating this ordeal.
+>=20
+> Another fact we shouldn't ignore is that, compared to the NLM_F_BULK
+> incident, we're actively surveying userspace before touching this.
+
+So, I second Stefano's arguments for the most part, as well as
+re-iterating that being broken by this change would require the
+intersection of two unlikely conditions (misusing NLM_F_APPEND *and*
+expecting the "wrong" order).
+
+That said, Ido, if you're still not convinced I can do this as an
+attribute.  It's more hassle, but I can make it work.
+
+--=20
+David Gibson (he or they)	| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you, not the other way
+				| around.
+http://www.ozlabs.org/~dgibson
+
+--NcKP958AVt6R3vlt
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEEO+dNsU4E3yXUXRK2zQJF27ox2GcFAmog1CAACgkQzQJF27ox
+2GcIEQ/9HvCxKHY+qShIsybFXcsNTmuJQBwiHEgB4kOnvDYdlL1PYFVkbXlq8u7Z
+Y8GlDV7JSh3tcz+HFpxtRTiLUb0T3SogSgb3FjVHj/IL21TdbQUJBKZcq1Lb0mm7
+vroiH3EH449v6txTnQn1Su2B6OAZS3nwBXgOq875Na6LIcWj+YxuSX98AOmrDtOf
+NsGg9Y56rAudOXF3dYqaVRFFtvJjdwl5gZFC9gzlktXVU7lCAFBRKfwOUFju0Maz
+IMmJ4BI54WA96MLq2TdZa7wxJaGj35mKCUuH7nex/pk3DgwEBQzfr0WDhf3vuFSH
+OqWaZnr0LiCFOHsdHacmD2X79an6bdSPD2wbvplNFT8zpJnWt23Qy5A56kLdc8mR
+el+JM+LrNj9qlJsh82hXLCMW/YRDCDOQMe9ha3E8WMlE8x1vX4Fa/j9q4ECNIq1H
+FiKyvp+9slBbbdqRQzartGZMx/6dgfXj29+nQCkk2CyXlmObpvx3wqw/7X7fz+N1
++XgnPo6BI4j2IOcBlsXc46J06WPGs18GodOl5VBGTIch8nnsSZPBDaok5Thar8OC
+68ZbpVijyTPeH+/8F2aoCqPBmXd6km5ieTglfJWq7oeEkcUUUHox8SVI3AyQlJI5
+v7KoRS3k5FZnyBUJXTDvNsWpfJqdcjvPOqmFE34FePG9FzK+JxI=
+=YqG1
+-----END PGP SIGNATURE-----
+
+--NcKP958AVt6R3vlt--
