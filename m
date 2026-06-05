@@ -1,90 +1,103 @@
-Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E749347DF86
-	for <regressions@lists.linux.dev>; Fri,  5 Jun 2026 07:42:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A18BA3DD534
+	for <regressions@lists.linux.dev>; Fri,  5 Jun 2026 07:49:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780645348; cv=none; b=FoYEj0lj/8P9HJI+huFt+gX4gUuMmKlBztXcTx7RsB+buWimhl44OI0fuJP3uTp4vEuKfZu23rghPRWjSxiL+/7eDNTL76Nu38G0GtCIIz9DAa5Xk+6X7aef5RhxUVLCa7s9gzQRZjsSi1Tx1l8eAGl4I0tlC7NPHfwiL0dGXyw=
+	t=1780645779; cv=none; b=gBd+Z9PijjcQdBvid4e4g50LqOe2SHcCQlU6DuY/qiVH2L7Fg8fgI4OJWhBbIQ4DoR0aTJ8v03eSnwTwB5B1S3qAjr70Kv5TS3p2ByclkhDKA0kRd+5CBJ+HGa4eCx0WwwptZEtoTtklpXg7HZRb/4SWhDUx5SxyTCdu0P9KYvo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780645348; c=relaxed/simple;
-	bh=zGBQseIGQbruX3+uF9HVhd5pi/SISR7KNX7erelZICA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dQLGYTTtSaJoklEUHpUbD8Aw+ZNDeVYPFrEkTRW6c89YBesdD4GiSGhWlWWXDrVvjMfX1Ax8XDH135ifHKGFhYY8AJ6cESsMmwCCyBFJ0M4ksurTSoWIJ8l5Fp+c/QOmKsZ1lSeHxZcBNCT401p3lVlGo+7GcHbxASJhyP7u3c0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=BfZ9NUMX; arc=none smtp.client-ip=80.241.56.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+	s=arc-20240116; t=1780645779; c=relaxed/simple;
+	bh=9ZcttrwgpG72+2ylRbwEn2hBZtKnVp6k/7rporcsv+s=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=BAmqdFAiTBdktRb81dGFtUSk0YsUKrO/uR0tQUpVta00cmemINmnH4I9EWGDbCoDb/5EVMNobNg76QfdtssID1zH8v0mF54gjugeMQgSxEg8kRGLKf4uIDcskHPrMp9B3XWKNHj7EAl3Z/gN8gw5A00kejTk63B6DbtqFSeJaAY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=k+LpE5Py; arc=none smtp.client-ip=188.68.63.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="BfZ9NUMX"
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [10.196.197.2])
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="k+LpE5Py"
+Received: from mors-relay8204.netcup.net (localhost [127.0.0.1])
+	by mors-relay8204.netcup.net (Postfix) with ESMTPS id 4gWtqk5wFyz8fhR
+	for <regressions@lists.linux.dev>; Fri,  5 Jun 2026 07:49:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1780645762;
+	bh=9ZcttrwgpG72+2ylRbwEn2hBZtKnVp6k/7rporcsv+s=;
+	h=Date:Subject:From:To:References:In-Reply-To:From;
+	b=k+LpE5PyoeHV99/+RBPbz8d7EWhXKKprbIe8CuXg+gU8twNSepev1Bgwzp+ULrzUQ
+	 kZoaSTC54TtR20JnTss4MC+muuDFfBrtCE0KHn3rS2WdhiLwKhgLZaP11NaMSE2SoB
+	 5pE4carBBOWzY5qWHXRp4NzbGivXub6if9SWKluJ8DMWfCFjHLZ3/dOO4Lz1PTcRLB
+	 eZuciw3BUDsEVv4sCDLuF4PWoaakmbzKG2GpGuSLXU0y2Ckr+h6RgG39HsRly3BvkQ
+	 CklcooNPiPs5PAOjVFxoX9jes1ydQHMKghnZLUtJaMXNeaxb4/iMbb2k8EytkWowsh
+	 skFqofJwR+w6Q==
+Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay8204.netcup.net (Postfix) with ESMTPS id 4gWtpj6XVjz8bLT
+	for <regressions@lists.linux.dev>; Fri,  5 Jun 2026 07:48:29 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
+X-Spam-Flag: NO
+X-Spam-Score: -2.901
+X-Spam-Level: 
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4gWtgY2hmdz9tSw;
-	Fri,  5 Jun 2026 09:42:17 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1780645337;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HMgUcgbliuW0O9oKzyYh13yjBTCej89mTEZ41tXG0kE=;
-	b=BfZ9NUMXT7K805n+3uWei27aK+AtoE7V7H7m+WwOv4yQ/9XrKfvmhhEyVSKa3YMZQWiZKn
-	JP/TtSkRajgu/sO20Nz8nHoMT73qm0y6Lrxi0quudOVdGhDVernmVduw7ZbAocy8e6L06a
-	DgqDZ5QDorNaVyK7kevTzKLjgUJxZeZCNE7nUL37nxx0++5cIvXDYA4tBI9dgINYxLpP/J
-	QvxMZsmSU3YNZ+sckh1Z/0kq8vRqkddqRvpdRzHbg1P9aEXjUC3C7swH6PfUpwmTQ8VGrr
-	SkI+fQKuZ3UBsW8A0vgZwvtHt2rPQvMQXq8eK7i/JoFKKK48/RrzRxvar68DMA==
-Message-ID: <ebe757cd-59d2-4590-b2f8-1e75a789fdb8@mailbox.org>
-Date: Fri, 5 Jun 2026 09:42:14 +0200
+	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4gWtph0SPqz8tZs
+	for <regressions@lists.linux.dev>; Fri,  5 Jun 2026 09:48:28 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 5F82061822
+	for <regressions@lists.linux.dev>; Fri,  5 Jun 2026 09:48:27 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <218b7a4f-7cb4-4288-ac25-4742506b3579@leemhuis.info>
+Date: Fri, 5 Jun 2026 09:48:27 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Subject: Re: [External Mail] Re: Test result / finding of "drm/amd/display:
- Consult MCCS FreeSync cap only if requested & supported"
-To: Pei-Hsin Yang <peihsiny@valvesoftware.com>,
- Alex Deucher <alexdeucher@gmail.com>
-Cc: "Deucher, Alexander" <Alexander.Deucher@amd.com>,
- Thorsten Leemhuis <regressions@leemhuis.info>,
- "Wentland, Harry" <Harry.Wentland@amd.com>,
- "Li, Sun peng (Leo)" <Sunpeng.Li@amd.com>,
- "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- "Koenig, Christian" <Christian.Koenig@amd.com>
-References: <44069eb146824aa195312f5b02c49287@valvesoftware.com>
- <7a9021cd-fd78-4b0d-846b-135d0d72224e@mailbox.org>
- <16231b1742004f848af243ce398281ec@valvesoftware.com>
- <ce51243c-3b98-4f99-911f-70dd0b860da0@mailbox.org>
- <1c522568-1d5e-4210-8f25-1aa96e0d3c3a@leemhuis.info>
- <BL1PR12MB51447AB016BB28843BAD0216F7092@BL1PR12MB5144.namprd12.prod.outlook.com>
- <af4dff0f-0c62-4a7d-9a3f-fc029c8757f4@mailbox.org>
- <CADnq5_O9xMagapKQSO-6waXtmmFkDV-47ExVaNuiZd2xVdhefw@mail.gmail.com>
- <39ff584f-66ed-421a-918b-347d020a393a@mailbox.org>
- <399d0170414b4304823e866b04ab518a@valvesoftware.com>
-From: =?UTF-8?Q?Michel_D=C3=A4nzer?= <michel.daenzer@mailbox.org>
-Content-Language: en-CA
-In-Reply-To: <399d0170414b4304823e866b04ab518a@valvesoftware.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-MBO-RS-ID: 0821db636d736f4c1ad
-X-MBO-RS-META: c3s3twhtc95fn9umw8hbkuobwdexeiri
-
-On 6/4/26 19:21, Pei-Hsin Yang wrote:
-> 
->> Note that Pei-Hsin reported an issue when running with my fix at the start of this thread, unfortunately it's still unclear if that's a regression of > my fix or happens even without it (in which case it might be another regression of the MCCS related changes for 7.1).
-> 
-> As I have mentioned earlier, my testing of your patch confirms that it is a regression even without your patch.
-
-You previously wrote "There are other issues without your patch applied", I didn't see anything about whether or not the issue you reported in the post which started this thread happens without my fix though.
-
-Anyway, thanks for confirming that it's not a regression of my fix, that's a relief.
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: <178064570755.1264621.5857803197410720771@mxe9fb.netcup.net>
+X-Rspamd-Server: rspamd-worker-8404
+X-Rspamd-Queue-Id: 5F82061822
+X-NC-CID: eSY0dOefaPnxFEsbgoOrpXkn1ZmflntHVHRDYtPsBmHtQIScSBs=
 
 
-Alex, since the MCCS changes caused other regressions, it might be better to revert them for now anyway though?
+
+On 3/9/24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
+
+#regzbot report: https://lore.kernel.org/lkml/ahC8Pyuatu_AvnZp@google.com/
+#regzbot fix: PCI: qcom: Indicate broken L1ss exit during resume from
+system suspend
+
+#regzbot report: https://lore.kernel.org/all/ah726OtFX-Qw3U-R@gmail.com/
+#regzbot introduced: 850d9248d2ea
+#regzbot title: suspicious RCU usage lockdep splat
+#regzbot fix: b6197b386677
+
+#regzbot report:
+https://lore.kernel.org/all/20260508102403.4e2fb1bc@kemnade.info/
+#regzbot introduced: c34dbc5900b0
+#regzbot title: wifi: wlcore: warning endlessly repeated
+#regzbot fix: wifi: wlcore: enable the right set of ciphers
+#regzbot monitor:
+https://lore.kernel.org/all/20260604103316.377251-1-andreas@kemnade.info/
+
+#regzbot report: https://lore.kernel.org/all/aiHlPmeZq3WgMwoJ@kernel.org/
+#regzbot introduced: 18755b8c2f241
+#regzbot title: svcrdma: severely lower RDMA performance
 
 
--- 
-Earthling Michel Dänzer       \        GNOME / Xwayland / Mesa developer
-https://redhat.com             \               Libre software enthusiast
