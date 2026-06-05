@@ -1,37 +1,55 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [194.59.206.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D19A7524F;
-	Fri,  5 Jun 2026 04:23:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B389E43DA3A
+	for <regressions@lists.linux.dev>; Fri,  5 Jun 2026 07:00:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.59.206.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780633386; cv=none; b=ZhEcDe6Ie1lWDPlanKz9Q6ebPsr3hqBAiENkbnHhjckcI8mSPXWKRQuR6qW8Brc9xRSRLZQHk9WDR5H0/b56CslhMkCxJq/mSULA6wShFjCBL+EfZuFGx5sLZtiKufdgJd5grmq1bja2MuohppvCNVoK9Z2nu16V33kIM57pZCE=
+	t=1780642829; cv=none; b=glAuqhIHxidLod59eWULflKsKcxoYkB457Z6kl/WrpcqN1LZkSZCmQ/3QBEKp6i3hUPSkiojx6CcqmQu16ZEcnb3uWqd125LfILQS2PK5F8GeSMGIpC5nSYtvyakCdmNuWYtlPcrPXw6XB3VffG3KlE+0pfA5jbiChaLtlyaWy4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780633386; c=relaxed/simple;
-	bh=Y9pXhKSeWpYaSK5O6+IRrlanp8Yt3+dZaSbL9Mi9Dh4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QXXmdpgmQ2+5kY/8JCoPePaL85NBuX2DTOWAYl9ZPeCn6s7UB9agCBl+Cx12Y2i7uhrSBbeqMV8hXBlsXA43ODIuKF1zu9w1nplQUdSg2eFFKe27uABJjLzhE0Aa/d7Anda4cLxp0bTiRWbI1t64+JGBsEUH17JtF1D0wPwT8yo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=TBwu1x8y; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1780642829; c=relaxed/simple;
+	bh=C4LywOONUo9mM7SYCl9JaZ1nEcm3gsy9ldzredo9jW0=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=F5UNtsS+fji+3jijEHGh7KremIuI3+izbxoAi7YJtJLGWBQzvMyAjbif766Wtjy7zsrAofgq1Ehfsa7boJ8uxPWKTcykDZnX35tUxvcNgOuYQuZw55cdUprovYq7vj9B8zZYHP4eksQSMdnblPhn3Xf0X7gxuPhZu8LH8jR5vIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=kL+qe9jF; arc=none smtp.client-ip=194.59.206.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TBwu1x8y"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=6EbPTaXUn50Mv/Oae7oFClRjhC8wddU4zN9h8OrX1nw=; b=TBwu1x8yU9UDyLAPFlpnEuscmM
-	W96XUR4ez2PWBUiY9kKKvtFBXX9vZVlbLaOQHN45j+qn74YynNTa/PBzlWSp0ujGityihvjIylS+G
-	z8Ei7jc6ANhFZqKFnnx1z++7PLENDe7xSDYIIoVmIEuFPtGEZaWoLnA+OrKN2TkpqU2vhGmUoAIpo
-	RLh2orj5fNrQ48F6wdbvDAQ4Ckq/zHf73O53eJGfZIs8i3Ye1bJud9U6Sx4bqurvQxCfAYCYa3n9n
-	PNvEfMXkrsyoYJCMWOp/FgFYGxAy1h/h4gktDhJ7ukNCmoVt0jrRfcEzadg8/a7qrnb19PY7Fjoy8
-	hJ6oi7kg==;
-Received: from [50.53.43.113] (helo=[192.168.254.34])
-	by bombadil.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wVM5I-000000004Re-1rCD;
-	Fri, 05 Jun 2026 04:23:04 +0000
-Message-ID: <6bdbbc1b-9934-462c-b9aa-afaf0605c2a0@infradead.org>
-Date: Thu, 4 Jun 2026 21:23:03 -0700
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="kL+qe9jF"
+Received: from relay02-mors.netcup.net (localhost [127.0.0.1])
+	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4gWskw3pGWz4HNY;
+	Fri,  5 Jun 2026 09:00:08 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1780642808;
+	bh=C4LywOONUo9mM7SYCl9JaZ1nEcm3gsy9ldzredo9jW0=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=kL+qe9jFQlDIIFWazrdM9DPHT8ZxTESUvlVZ5eHBkQwY4fZJyPV4J/Csp8xt7zZFy
+	 XACWiPgKk8OtyQMUjwLIy5KrvZZvz6LoN9g8tljf4aHhAydHkLFGzSCzrFIJbcP4SS
+	 45Elvf7avy7ydyXoj3kTM6C/ZPUgcF6eX82AkWy6h2p94+uiGe1Cg1UP0lTTqBf4ls
+	 3BaNScqlouL3TNQa1GcTX8dn/4jcAmoKLqevI92Ayls7BJEnfbV7DATNj6bmh8V1mo
+	 +b+mSwKmcZAv/xf7WreQ3u3vIAgyUs/177aIu//SKSetVjXqnUP4EKBt0zuLpSIhNh
+	 e1uRHnOTYDUeA==
+Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
+	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4gWshp18Q2z7wPS;
+	Fri,  5 Jun 2026 08:58:18 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
+X-Spam-Flag: NO
+X-Spam-Score: -2.898
+X-Spam-Level: 
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4gWshl5Cl8z8tXj;
+	Fri,  5 Jun 2026 08:58:15 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 6D2A65F9DD;
+	Fri,  5 Jun 2026 08:58:14 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <ffac6caf-0376-4a0c-908e-b89cce48d28f@leemhuis.info>
+Date: Fri, 5 Jun 2026 08:58:13 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -39,70 +57,144 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] next/master: (build) stack frame size (2088) exceeds
- limit (2048) in 'dml31_ModeSupport...
-To: kernelci@lists.linux.dev, kernelci-results@groups.io,
- amd-gfx@lists.freedesktop.org
-Cc: regressions@lists.linux.dev, gus@collabora.com, linux-next@vger.kernel.org
-References: <178059594388.10259.8984887956034576074@330cfa3079ca>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <178059594388.10259.8984887956034576074@330cfa3079ca>
+Subject: Re: [PATCH] Revert "drm/i915/backlight: Remove try_vesa_interface"
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Tvrtko Ursulin <tursulin@igalia.com>, Dave Airlie <airlied@gmail.com>,
+ Simona Vetter <simona.vetter@ffwll.ch>
+Cc: ankit.k.nautiyal@intel.com, arun.r.murthy@intel.com,
+ intel-gfx@lists.freedesktop.org, intel-xe@lists.freedesktop.org,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ ML dri-devel <dri-devel@lists.freedesktop.org>,
+ Suraj Kandpal <suraj.kandpal@intel.com>,
+ Jani Nikula <jani.nikula@linux.intel.com>
+References: <20260515155340.1000997-1-suraj.kandpal@intel.com>
+ <20260517024709.1016121-1-suraj.kandpal@intel.com>
+ <53a2a8dd-d1b6-41c5-ade2-7ed870d074ac@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <53a2a8dd-d1b6-41c5-ade2-7ed870d074ac@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: <178064269494.1178932.8212265372479905459@mxe9fb.netcup.net>
+X-Rspamd-Server: rspamd-worker-8404
+X-Rspamd-Queue-Id: 6D2A65F9DD
+X-NC-CID: yZFu1qiK5+qb6kd4Rl2AdMorZ6t1O6HYlhAKMN1jnvJ0Ik1JIE4=
 
-[adding amd-gfx]
+On 6/4/26 15:55, Thorsten Leemhuis wrote:
+> On 5/17/26 04:47, Suraj Kandpal wrote:
+>> This reverts commit 40d2f5820951dee818d05c14677277048bd85f9f.
+>>
+>> Removing the try_vesa_interface gate caused a backlight regression on
+>> panels whose VBT correctly reports INTEL_BACKLIGHT_DISPLAY_DDI and whose
+>> PWM path is the actual backlight control, but whose DPCD optimistically
+>> advertises DP_EDP_BACKLIGHT_AUX_ENABLE_CAP / _BRIGHTNESS_AUX_SET_CAP.
+>> After the commit such panels silently bind to the VESA AUX backlight
+>> funcs; AUX writes complete but the panel ignores them, leaving
+>> brightness stuck (no-op backlight). Observed on at least KBL and TGL
+>> eDP setups.
+> 
+> Lo! What's the status of this regression fix? It's a -next for two weeks
+> now as f30fddb4402313 ("Revert "drm/i915/backlight: Remove
+> try_vesa_interface""), but from the outside and checking
+> https://gitlab.freedesktop.org/drm/i915/kernel/-/commits/drm-intel-fixes
+> it looks like it's scheduled for merging in the next cycle.
 
-On 6/4/26 10:59 AM, KernelCI bot wrote:
-> 
-> 
-> 
-> 
-> Hello,
-> 
-> New build issue found on next/master:
-> 
-> ---
->  stack frame size (2088) exceeds limit (2048) in 'dml31_ModeSupportAndSystemConfigurationFull' [-Werror,-Wframe-larger-than] in drivers/gpu/drm/amd/amdgpu/../display/dc/dml/dcn31/display_mode_vba_31.o (drivers/gpu/drm/amd/amdgpu/../display/dc/dml/dcn31/display_mode_vba_31.c) [logspec:kbuild,kbuild.compiler.error]
-> ---
-> 
-> - dashboard: https://d.kernelci.org/i/maestro:96417cd30041ab8f3153128d0120c6cd70782d99
-> - giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-> - commit HEAD:  b99ae45861eccff1e1d8c7b05a13650be805d437
-> - tags: next-20260604
-> 
-> Please include the KernelCI tag when submitting a fix:
-> 
-> Reported-by: kernelci.org bot <bot@kernelci.org>
-> 
-> 
-> Log excerpt:
-> =====================================================
-> /tmp/kci/linux/drivers/gpu/drm/amd/amdgpu/../display/dc/dml/dcn31/display_mode_vba_31.c:3872:6: error: stack frame size (2088) exceeds limit (2048) in 'dml31_ModeSupportAndSystemConfigurationFull' [-Werror,-Wframe-larger-than]
->  3872 | void dml31_ModeSupportAndSystemConfigurationFull(struct display_mode_lib *mode_lib)
->       |      ^
-> 1 error generated.
-> 
-> =====================================================
-> 
-> 
-> # Builds where the incident occurred:
-> 
-> ## x86_64_defconfig+kselftest+x86-board on (x86_64):
-> - compiler: clang-21
-> - config: None
-> - dashboard: https://d.kernelci.org/build/maestro:6a21abf22cc72b6e94bf3c60
-> 
-> 
-> #kernelci issue maestro:96417cd30041ab8f3153128d0120c6cd70782d99
-> 
-> --
-> This is an experimental report format. Please send feedback in!
-> Talk to us at kernelci@lists.linux.dev
-> 
-> Made with love by the KernelCI team - https://kernelci.org
-> 
+Resending to Tvrtko, who sent the i915 PR yesterday (which didn't
+contain that fix), as well as Dave and Simona.
 
--- 
-~Randy
+FWIW, due to the lack of response to various inquiries I'm considering
+to ask Linus to directly pick up the mentioned regression fix to ensure
+it makes it into rc7.
+
+In case anyone wonder what regression I'm talking about:
+
+* https://gitlab.freedesktop.org/drm/i915/kernel/-/issues/16015 /
+https://lore.kernel.org/lkml/CADo9pHjr-zZ9C3%2B026y5%2BXOGPSeRzSJMCHof27TVPtAUNgTc8A@mail.gmail.com/
+* https://gitlab.freedesktop.org/drm/i915/kernel/-/issues/16043
+* https://gitlab.freedesktop.org/drm/i915/kernel/-/work_items/16097 /
+https://lore.kernel.org/lkml/d2de7933-e650-4b19-8d88-90d66693dcfc@message-id.googlemail.com/
+
+Ciao, Thorsten
+
+> But I think it should be merged this cycle (ideally before -rc7, as
+> Linus wants all known regression fixed by -rc6), as it fixes a
+> regression that is known since the -rc1 days. I already asked for the
+> mainlining plans in gitlab tickets about a week ago (and since then
+> affected users spoke up, too), but there was no conclusive answer for
+> the plans, which is why I'm trying this way now.
+> 
+> Ciao, Thorsten
+> 
+> 
+>> Signed-off-by: Suraj Kandpal <suraj.kandpal@intel.com>
+>> ---
+>>  .../drm/i915/display/intel_dp_aux_backlight.c | 19 ++++++++++++-------
+>>  1 file changed, 12 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/drivers/gpu/drm/i915/display/intel_dp_aux_backlight.c b/drivers/gpu/drm/i915/display/intel_dp_aux_backlight.c
+>> index a8d56ebf06a2..7a6c07f6aaeb 100644
+>> --- a/drivers/gpu/drm/i915/display/intel_dp_aux_backlight.c
+>> +++ b/drivers/gpu/drm/i915/display/intel_dp_aux_backlight.c
+>> @@ -691,10 +691,9 @@ int intel_dp_aux_init_backlight_funcs(struct intel_connector *connector)
+>>  	struct intel_dp *intel_dp = intel_attached_dp(connector);
+>>  	struct drm_device *dev = connector->base.dev;
+>>  	struct intel_panel *panel = &connector->panel;
+>> -	bool try_intel_interface = false;
+>> +	bool try_intel_interface = false, try_vesa_interface = false;
+>>  
+>> -	/*
+>> -	 * Check the VBT and user's module parameters to figure out which
+>> +	/* Check the VBT and user's module parameters to figure out which
+>>  	 * interfaces to probe
+>>  	 */
+>>  	switch (display->params.enable_dpcd_backlight) {
+>> @@ -703,6 +702,7 @@ int intel_dp_aux_init_backlight_funcs(struct intel_connector *connector)
+>>  	case INTEL_DP_AUX_BACKLIGHT_AUTO:
+>>  		switch (panel->vbt.backlight.type) {
+>>  		case INTEL_BACKLIGHT_VESA_EDP_AUX_INTERFACE:
+>> +			try_vesa_interface = true;
+>>  			break;
+>>  		case INTEL_BACKLIGHT_DISPLAY_DDI:
+>>  			try_intel_interface = true;
+>> @@ -715,12 +715,20 @@ int intel_dp_aux_init_backlight_funcs(struct intel_connector *connector)
+>>  		if (panel->vbt.backlight.type != INTEL_BACKLIGHT_VESA_EDP_AUX_INTERFACE)
+>>  			try_intel_interface = true;
+>>  
+>> +		try_vesa_interface = true;
+>> +		break;
+>> +	case INTEL_DP_AUX_BACKLIGHT_FORCE_VESA:
+>> +		try_vesa_interface = true;
+>>  		break;
+>>  	case INTEL_DP_AUX_BACKLIGHT_FORCE_INTEL:
+>>  		try_intel_interface = true;
+>>  		break;
+>>  	}
+>>  
+>> +	/* For eDP 1.5 and above we are supposed to use VESA interface for brightness control */
+>> +	if (intel_dp->edp_dpcd[0] >= DP_EDP_15)
+>> +		try_vesa_interface = true;
+>> +
+>>  	/*
+>>  	 * Since Intel has their own backlight control interface, the majority of machines out there
+>>  	 * using DPCD backlight controls with Intel GPUs will be using this interface as opposed to
+>> @@ -733,9 +741,6 @@ int intel_dp_aux_init_backlight_funcs(struct intel_connector *connector)
+>>  	 * panel with Intel's OUI - which is also required for us to be able to detect Intel's
+>>  	 * backlight interface at all. This means that the only sensible way for us to detect both
+>>  	 * interfaces is to probe for Intel's first, and VESA's second.
+>> -	 *
+>> -	 * Also there is a chance some VBTs may advertise false Intel backlight support even if the
+>> -	 * TCON DPCD says otherwise. This means we keep VESA interface as fallback in that case.
+>>  	 */
+>>  	if (try_intel_interface && intel_dp->edp_dpcd[0] <= DP_EDP_14b &&
+>>  	    intel_dp_aux_supports_hdr_backlight(connector)) {
+>> @@ -745,7 +750,7 @@ int intel_dp_aux_init_backlight_funcs(struct intel_connector *connector)
+>>  		return 0;
+>>  	}
+>>  
+>> -	if (intel_dp_aux_supports_vesa_backlight(connector)) {
+>> +	if (try_vesa_interface && intel_dp_aux_supports_vesa_backlight(connector)) {
+>>  		drm_dbg_kms(dev, "[CONNECTOR:%d:%s] Using VESA eDP backlight controls\n",
+>>  			    connector->base.base.id, connector->base.name);
+>>  		panel->backlight.funcs = &intel_dp_vesa_bl_funcs;
+> 
 
