@@ -1,203 +1,240 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 022DE3F5BC5
-	for <regressions@lists.linux.dev>; Fri,  5 Jun 2026 10:13:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D4A73F1AA1
+	for <regressions@lists.linux.dev>; Fri,  5 Jun 2026 10:13:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780654415; cv=none; b=Js1RfMiEuEbA+RGvah1tYwEZNaYlyFhAxf/MqXz4eEtgWkbLB3hYeLaXhM41phT+TFyQUrZy54oAna/g2sDxEsmz4hhgDS52ICsNrpwgUz/gtPtDYwAJb8lyZf7+ryV82Faq885WbUArglLfIq5wt63vYtYVvg82R/NRZRhhtQQ=
+	t=1780654422; cv=none; b=MfSZd1doZYig04/00CqY/ehJBkTcYVOBXNLMsyyHg2jj6O0PpjphIXgQHCwf127AkDGWcPrI8se6RyN3oNBtlEc+eOuAfb+hAewjbU4+Iew4QdKAe5A5Iyyz73tM3S/+1fEFwEKYM6K1cLEAWDupYmD6ogc2kBFUsDkrWgzWdsM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780654415; c=relaxed/simple;
-	bh=rmrP0CKPuij0Mb95o8DBviq5T1C9biiS/sWkMpBJrqU=;
-	h=From:To:Cc:Subject:Message-ID:In-Reply-To:References:MIME-Version:
-	 Date:Content-Type; b=RH/4x9cAqvAnK3q5yT+COUAh8glAfVZGKKey/WrHqT5H6Zy2J1euY4YjMBKdeWOfXABtSu7PKYLnfkBpArPGmrW7KqLNW2moD0pyv7ZxozNArp8RjU/TXbXOAPteAWXSE6ym9tIJF05mIGtegKseBg32iqz+8kbpmP5vriWCZ/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JOtLhLiA; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1780654422; c=relaxed/simple;
+	bh=GISACGVJjB8PonOLHLzwsWqsNtbnREv9/qMGttA3IgE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tj75DGXNd65JCuuA9yTBjGQq+L+qRMJKrt94ATfX9QVxjRwaHxWMdHI7rNPsg1yzO5eX1kqZ33PQehGD/xwlOmix/CGPl0yz04gUI5VfoahkjnE1BJ065bXj1cVsBN9grXRbAdTG2so69FogHX/RVNsjJIWJMc+WH4pDtvhEjfc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=Si7tSzM5; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JOtLhLiA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1780654413;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CLB31a1gGAMdNDuc+HogbludLHSY28HNq/UbUahWglY=;
-	b=JOtLhLiADWDgHapt+08w6AGnhvsW+1lODE1uSbY540hGJe9lCWMXqk24I5tET6oKL3eNJH
-	u6jNOQeo6j0/UlCZiOszx+LLhh9yPytILUuPrVvirS4kRrs/+N2gOyXwauCiB7S1jb6joM
-	N60JIvsPxE6EcJJ25up1aFcKs/c9LQo=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-647-U76J0X2AP2yotBeHxJ52Qg-1; Fri, 05 Jun 2026 06:13:29 -0400
-X-MC-Unique: U76J0X2AP2yotBeHxJ52Qg-1
-X-Mimecast-MFC-AGG-ID: U76J0X2AP2yotBeHxJ52Qg_1780654409
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-490abeb7298so18190585e9.2
-        for <regressions@lists.linux.dev>; Fri, 05 Jun 2026 03:13:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780654408; x=1781259208;
-        h=date:content-transfer-encoding:mime-version:organization:references
-         :in-reply-to:message-id:subject:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CLB31a1gGAMdNDuc+HogbludLHSY28HNq/UbUahWglY=;
-        b=aC9bHPweCXjfwpbT9ZuCvBUt0nLXa8PZg4PgQ/IbjmM375xONdNsORSnZIYJmbT6Qj
-         TvoPfmQvLksTlCbqsN7D05uipYOdWs8XIrzm6UO4KIYGlPW+OINyKfAKO2ufSIII7KXv
-         MDPUqPyGDUiYjzXITzFddMu33xmuUeiApx2HCsjX9FLb3W7+p8+xUbCeLzEU/I3BlbRY
-         M4/OaxsifzqjL0jTUeWxTDSV5t6bCHmUBdt+pXEzAs46K9SjiK+XAvVGQUbKiAtahhoL
-         5JBsjlFUqhPSZz2777AfF2ToA2rmfDLoZvHY4ufk6OumumFRtf87NA9mJv5ll0jmGyxA
-         LiNg==
-X-Forwarded-Encrypted: i=1; AFNElJ8U1A15jxbIpQYOVHTU0N7vpbWU0HNZfXGl2W5DQ43AJDmNeR1DB3tawvH6pDFT9Ww8xSV4I0q3oexcUQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxfIvVKhLrpnFR+wCMzbv7RKvi45qAMTYLTxkUL4+XyfqVpLQAG
-	DbAFV6RsegraKcQTQqqcSxjMM/En+iMS4VVG9a/G+2iWIQLSKtUxLUi5m89yaDG1liruF9fEmdD
-	0IckFHL0wy18M5BmhANMvOow9P1LwxFoidb64nY45n0WWn9h+htBbK41lJW2RSuDh
-X-Gm-Gg: Acq92OHDRLBCVLaj4+YSmL2f1uBrRO6GbeBdjE4u+hTL1PUZAVXNElefLp8ojoBIViH
-	KW50SzzZSyIVSq6KHZJOP5WjD/900et7exoUvrBzJJ2sUd8GDIBtoWhr5v2YZ5BvrIRig9Ht79N
-	caQneMH+zaYlxU9IFgcRS7q1keOjE9aW+lEKXy+afCJVfi7nbHORlTnEPpWNemb01iSGY7XsGgo
-	O4uYAWYFWQm5gw6rU3ycxUvz40/r4YYSLJQmjnjsJ4rfBnIvM+E4CAPTjXhy/YpPK+Cb+sEtOSU
-	prG07L59d2w0zexxDapWsLvi+dQtf1AsiRF+V/Qc2HWFFZ/NHnbXSzRxe+WEMPBx6B0mwZ81Fku
-	o/aAP23u6slvwPTTjQP5XYtycTKxHK4G0cAvUr+NIsTE=
-X-Received: by 2002:a05:600c:c0d0:b0:490:c2a3:abae with SMTP id 5b1f17b1804b1-490c2a3abf2mr29040465e9.34.1780654408401;
-        Fri, 05 Jun 2026 03:13:28 -0700 (PDT)
-X-Received: by 2002:a05:600c:c0d0:b0:490:c2a3:abae with SMTP id 5b1f17b1804b1-490c2a3abf2mr29039905e9.34.1780654407854;
-        Fri, 05 Jun 2026 03:13:27 -0700 (PDT)
-Received: from maya.myfinge.rs (ifcgrfdd.trafficplex.cloud. [2a10:fc81:a806:d6a9::1])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4601f35fd33sm26336854f8f.35.2026.06.05.03.13.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Jun 2026 03:13:27 -0700 (PDT)
-From: Stefano Brivio <sbrivio@redhat.com>
-To: Ido Schimmel <idosch@nvidia.com>
-Cc: David Gibson <david@gibson.dropbear.id.au>, Fernando Fernandez Mancera
- <fmancera@suse.de>, netdev@vger.kernel.org, yuhuang@redhat.com,
- justin.iurman@gmail.com, horms@kernel.org, pabeni@redhat.com,
- kuba@kernel.org, edumazet@google.com, davem@davemloft.net,
- dsahern@kernel.org, Chris Adams <linux@cmadams.net>, Beniamino Galvani
- <bgalvani@redhat.com>, Thorsten Leemhuis <regressions@leemhuis.info>,
- Andrew Lunn <andrew@lunn.ch>, ihuguet@redhat.com,
- regressions@lists.linux.dev, Nicolas Dichtel <nicolas.dichtel@6wind.com>,
- Matthieu Baerts <matttbe@kernel.org>
-Subject: Re: IPv6 address insertion order (was Re: [PATCH net v2] Revert
- "ipv6: preserve insertion order for same-scope addresses")
-Message-ID: <20260605121325.3d426dc4@elisabeth>
-In-Reply-To: <20260604183909.GA877115@shredder>
-References: <20260529112357.5079-1-fmancera@suse.de>
-	<20260529134045.56330243@elisabeth>
-	<ah57wxGjL7JBORR1@zatzit>
-	<20260602132118.GA508395@shredder>
-	<ah-SvHdPRrYXX6lx@zatzit>
-	<20260603074717.GA569921@shredder>
-	<20260603174538.5454bb93@elisabeth>
-	<aiDUMHKi2Sn1_dYD@zatzit>
-	<20260604183909.GA877115@shredder>
-Organization: Red Hat
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.49; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="Si7tSzM5"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=olLqF1n1Cx/+v/Stbc0WTULGeRSHFc7JdDIug5kIWs8=; b=Si7tSzM5wzOFy8I36rwbvT4m3M
+	T+0IWTwfD0v7R7Nx8LAWHslqN1GM/WFjXppJ1H4JGiWgp4UlvqbrrTz5h7fdSCuVmnc5NgAhsJJUL
+	g7ZthKzM+C3dwwLaOeupTNVDhkWzV3GK19kzH6gp7nTH5oHsTe85VW1YBKDdTAIHdLv+vtDQKVA0C
+	AzLkttEpMMauDaDYB2JpMnYpec6+4Y8C0xgWIqRh/YRKxdlBn0T+RU+P3s5acZjUB1iQqBcj4rLOP
+	w3xHbF6RuiSQgNZJJJrMhYPY9O//6QZ//0XRX3cpNYIyoSmugu9lKtc6ctV0/bxFV8PfFH0EClErn
+	5zqhr0lw==;
+Received: from [90.240.106.137] (helo=[192.168.0.116])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1wVRYQ-00D5t9-Ub; Fri, 05 Jun 2026 12:13:30 +0200
+Message-ID: <990ab0a5-64c1-4f10-841f-2eac6332ec97@igalia.com>
+Date: Fri, 5 Jun 2026 11:13:29 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Date: Fri, 05 Jun 2026 12:13:26 +0200 (CEST)
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: Hypn1YKQ7L9idyI67h1GQ6JpB_DQ61cenAtDZJJYO-k_1780654409
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] Revert "drm/i915/backlight: Remove try_vesa_interface"
+To: "Kandpal, Suraj" <suraj.kandpal@intel.com>,
+ Thorsten Leemhuis <regressions@leemhuis.info>,
+ Tvrtko Ursulin <tursulin@igalia.com>, Dave Airlie <airlied@gmail.com>,
+ Simona Vetter <simona.vetter@ffwll.ch>
+Cc: "Nautiyal, Ankit K" <ankit.k.nautiyal@intel.com>,
+ "Murthy, Arun R" <arun.r.murthy@intel.com>,
+ "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+ "intel-xe@lists.freedesktop.org" <intel-xe@lists.freedesktop.org>,
+ "Vivi, Rodrigo" <rodrigo.vivi@intel.com>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ ML dri-devel <dri-devel@lists.freedesktop.org>,
+ Jani Nikula <jani.nikula@linux.intel.com>
+References: <20260515155340.1000997-1-suraj.kandpal@intel.com>
+ <20260517024709.1016121-1-suraj.kandpal@intel.com>
+ <53a2a8dd-d1b6-41c5-ade2-7ed870d074ac@leemhuis.info>
+ <ffac6caf-0376-4a0c-908e-b89cce48d28f@leemhuis.info>
+ <c7764bbd-7990-4d11-832e-ec7283c1a6c1@igalia.com>
+ <DS4PPFE901A304FD9E40779C9B78A29E661E3112@DS4PPFE901A304F.namprd11.prod.outlook.com>
+Content-Language: en-GB
+From: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
+In-Reply-To: <DS4PPFE901A304FD9E40779C9B78A29E661E3112@DS4PPFE901A304F.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On Thu, 4 Jun 2026 21:39:09 +0300
-Ido Schimmel <idosch@nvidia.com> wrote:
 
-> On Thu, Jun 04, 2026 at 11:26:08AM +1000, David Gibson wrote:
-> > So, I second Stefano's arguments for the most part, as well as
-> > re-iterating that being broken by this change would require the
-> > intersection of two unlikely conditions (misusing NLM_F_APPEND *and*
-> > expecting the "wrong" order).
-> > 
-> > That said, Ido, if you're still not convinced I can do this as an
-> > attribute.  It's more hassle, but I can make it work.  
+On 05/06/2026 11:04, Kandpal, Suraj wrote:
+>> -----Original Message-----
+>> From: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
+>> Sent: Friday, June 5, 2026 3:23 PM
+>> To: Thorsten Leemhuis <regressions@leemhuis.info>; Tvrtko Ursulin
+>> <tursulin@igalia.com>; Dave Airlie <airlied@gmail.com>; Simona Vetter
+>> <simona.vetter@ffwll.ch>; Kandpal, Suraj <suraj.kandpal@intel.com>
+>> Cc: Nautiyal, Ankit K <ankit.k.nautiyal@intel.com>; Murthy, Arun R
+>> <arun.r.murthy@intel.com>; intel-gfx@lists.freedesktop.org; intel-
+>> xe@lists.freedesktop.org; Vivi, Rodrigo <rodrigo.vivi@intel.com>; Linux kernel
+>> regressions list <regressions@lists.linux.dev>; ML dri-devel <dri-
+>> devel@lists.freedesktop.org>; Jani Nikula <jani.nikula@linux.intel.com>
+>> Subject: Re: [PATCH] Revert "drm/i915/backlight: Remove try_vesa_interface"
+>>
+>>
+>> Hi Suraj,
+>>
+>> On 05/06/2026 07:58, Thorsten Leemhuis wrote:
+>>> On 6/4/26 15:55, Thorsten Leemhuis wrote:
+>>>> On 5/17/26 04:47, Suraj Kandpal wrote:
+>>>>> This reverts commit 40d2f5820951dee818d05c14677277048bd85f9f.
+>>>>>
+>>>>> Removing the try_vesa_interface gate caused a backlight regression
+>>>>> on panels whose VBT correctly reports INTEL_BACKLIGHT_DISPLAY_DDI
+>>>>> and whose PWM path is the actual backlight control, but whose DPCD
+>>>>> optimistically advertises DP_EDP_BACKLIGHT_AUX_ENABLE_CAP /
+>> _BRIGHTNESS_AUX_SET_CAP.
+>>>>> After the commit such panels silently bind to the VESA AUX backlight
+>>>>> funcs; AUX writes complete but the panel ignores them, leaving
+>>>>> brightness stuck (no-op backlight). Observed on at least KBL and TGL
+>>>>> eDP setups.
+>>>>
+>>>> Lo! What's the status of this regression fix? It's a -next for two
+>>>> weeks now as f30fddb4402313 ("Revert "drm/i915/backlight: Remove
+>>>> try_vesa_interface""), but from the outside and checking
+>>>> https://gitlab.freedesktop.org/drm/i915/kernel/-/commits/drm-intel-fi
+>>>> xes it looks like it's scheduled for merging in the next cycle.
+>>>
+>>> Resending to Tvrtko, who sent the i915 PR yesterday (which didn't
+>>> contain that fix), as well as Dave and Simona.
+>>>
+>>> FWIW, due to the lack of response to various inquiries I'm considering
+>>> to ask Linus to directly pick up the mentioned regression fix to
+>>> ensure it makes it into rc7.
+>>>
+>>> In case anyone wonder what regression I'm talking about:
+>>>
+>>> * https://gitlab.freedesktop.org/drm/i915/kernel/-/issues/16015 /
+>>> https://lore.kernel.org/lkml/CADo9pHjr-
+>> zZ9C3%2B026y5%2BXOGPSeRzSJMCHof
+>>> 27TVPtAUNgTc8A@mail.gmail.com/
+>>> * https://gitlab.freedesktop.org/drm/i915/kernel/-/issues/16043
+>>> * https://gitlab.freedesktop.org/drm/i915/kernel/-/work_items/16097 /
+>>> https://lore.kernel.org/lkml/d2de7933-e650-4b19-8d88-90d66693dcfc@mess
+>>> age-id.googlemail.com/
+>>>
+>>> Ciao, Thorsten
+>>>
+>>>> But I think it should be merged this cycle (ideally before -rc7, as
+>>>> Linus wants all known regression fixed by -rc6), as it fixes a
+>>>> regression that is known since the -rc1 days. I already asked for the
+>>>> mainlining plans in gitlab tickets about a week ago (and since then
+>>>> affected users spoke up, too), but there was no conclusive answer for
+>>>> the plans, which is why I'm trying this way now.
+>>
+>> Was there a reason the revert was not marked with a Fixes: tag? Or in other
+>> words, any particular reason why it should *not* be picked up for drm-intel-
+>> fixes?
 > 
-> I appreciate the survey that Stefano and you conducted, but there is
-> still a non-zero chance of causing regressions by suddenly giving
-> NLM_F_APPEND a meaning in RTM_NEWADDR. We already tried the
-> "change-and-see-what-happens" methodology once with this feature and it
-> backfired, so it's going to be quite painful if we miss again.
+> There wasn't any particular reason.
+> Tbh I didn't think we would require it since this revert was fixing the issue caused by the patch in question being reverted.
+
+Okay then, thank you. I've cherry picked it and sent a new pull request. 
+The previous one hasn't been pulled yet so hopefully this is still in time.
+
+Regards,
+
+Tvrtko
+
+>>>> Ciao, Thorsten
+>>>>
+>>>>
+>>>>> Signed-off-by: Suraj Kandpal <suraj.kandpal@intel.com>
+>>>>> ---
+>>>>>    .../drm/i915/display/intel_dp_aux_backlight.c | 19 ++++++++++++-------
+>>>>>    1 file changed, 12 insertions(+), 7 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/gpu/drm/i915/display/intel_dp_aux_backlight.c
+>>>>> b/drivers/gpu/drm/i915/display/intel_dp_aux_backlight.c
+>>>>> index a8d56ebf06a2..7a6c07f6aaeb 100644
+>>>>> --- a/drivers/gpu/drm/i915/display/intel_dp_aux_backlight.c
+>>>>> +++ b/drivers/gpu/drm/i915/display/intel_dp_aux_backlight.c
+>>>>> @@ -691,10 +691,9 @@ int intel_dp_aux_init_backlight_funcs(struct
+>> intel_connector *connector)
+>>>>>    	struct intel_dp *intel_dp = intel_attached_dp(connector);
+>>>>>    	struct drm_device *dev = connector->base.dev;
+>>>>>    	struct intel_panel *panel = &connector->panel;
+>>>>> -	bool try_intel_interface = false;
+>>>>> +	bool try_intel_interface = false, try_vesa_interface = false;
+>>>>>
+>>>>> -	/*
+>>>>> -	 * Check the VBT and user's module parameters to figure out which
+>>>>> +	/* Check the VBT and user's module parameters to figure out which
+>>>>>    	 * interfaces to probe
+>>>>>    	 */
+>>>>>    	switch (display->params.enable_dpcd_backlight) { @@ -703,6 +702,7
+>>>>> @@ int intel_dp_aux_init_backlight_funcs(struct intel_connector
+>> *connector)
+>>>>>    	case INTEL_DP_AUX_BACKLIGHT_AUTO:
+>>>>>    		switch (panel->vbt.backlight.type) {
+>>>>>    		case INTEL_BACKLIGHT_VESA_EDP_AUX_INTERFACE:
+>>>>> +			try_vesa_interface = true;
+>>>>>    			break;
+>>>>>    		case INTEL_BACKLIGHT_DISPLAY_DDI:
+>>>>>    			try_intel_interface = true;
+>>>>> @@ -715,12 +715,20 @@ int intel_dp_aux_init_backlight_funcs(struct
+>> intel_connector *connector)
+>>>>>    		if (panel->vbt.backlight.type !=
+>> INTEL_BACKLIGHT_VESA_EDP_AUX_INTERFACE)
+>>>>>    			try_intel_interface = true;
+>>>>>
+>>>>> +		try_vesa_interface = true;
+>>>>> +		break;
+>>>>> +	case INTEL_DP_AUX_BACKLIGHT_FORCE_VESA:
+>>>>> +		try_vesa_interface = true;
+>>>>>    		break;
+>>>>>    	case INTEL_DP_AUX_BACKLIGHT_FORCE_INTEL:
+>>>>>    		try_intel_interface = true;
+>>>>>    		break;
+>>>>>    	}
+>>>>>
+>>>>> +	/* For eDP 1.5 and above we are supposed to use VESA interface for
+>> brightness control */
+>>>>> +	if (intel_dp->edp_dpcd[0] >= DP_EDP_15)
+>>>>> +		try_vesa_interface = true;
+>>>>> +
+>>>>>    	/*
+>>>>>    	 * Since Intel has their own backlight control interface, the majority of
+>> machines out there
+>>>>>    	 * using DPCD backlight controls with Intel GPUs will be using
+>>>>> this interface as opposed to @@ -733,9 +741,6 @@ int
+>> intel_dp_aux_init_backlight_funcs(struct intel_connector *connector)
+>>>>>    	 * panel with Intel's OUI - which is also required for us to be able to
+>> detect Intel's
+>>>>>    	 * backlight interface at all. This means that the only sensible way for us
+>> to detect both
+>>>>>    	 * interfaces is to probe for Intel's first, and VESA's second.
+>>>>> -	 *
+>>>>> -	 * Also there is a chance some VBTs may advertise false Intel backlight
+>> support even if the
+>>>>> -	 * TCON DPCD says otherwise. This means we keep VESA interface as
+>> fallback in that case.
+>>>>>    	 */
+>>>>>    	if (try_intel_interface && intel_dp->edp_dpcd[0] <= DP_EDP_14b &&
+>>>>>    	    intel_dp_aux_supports_hdr_backlight(connector)) { @@ -745,7
+>>>>> +750,7 @@ int intel_dp_aux_init_backlight_funcs(struct intel_connector
+>> *connector)
+>>>>>    		return 0;
+>>>>>    	}
+>>>>>
+>>>>> -	if (intel_dp_aux_supports_vesa_backlight(connector)) {
+>>>>> +	if (try_vesa_interface &&
+>>>>> +intel_dp_aux_supports_vesa_backlight(connector)) {
+>>>>>    		drm_dbg_kms(dev, "[CONNECTOR:%d:%s] Using VESA eDP
+>> backlight controls\n",
+>>>>>    			    connector->base.base.id, connector->base.name);
+>>>>>    		panel->backlight.funcs = &intel_dp_vesa_bl_funcs;
+>>>>
+>>>
 > 
-> As I see it, we have three options:
-
-Thanks for the helpful summary by the way.
-
-> 1. Use NLM_F_APPEND. Relatively easy change in both the kernel and user
-> space, but at the risk of reintroducing regressions.
-> 
-> 2. Add a new attribute (e.g., IFA_INSERT_MODE with DEFAULT/APPEND
-> options). Less risky than #1, at the cost of a bit more code in both the
-> kernel and user space.
-> 
-> 3. Do nothing. As I understand it, any production software (as opposed
-> to a test script) that cares about the in-scope order will have to
-> maintain a fallback anyway (e.g., iterating over IPv6 addresses in
-> reverse).
-
-It's not always enough, or needed, or practical, though:
-
-a. 'ip address restore' could be "fixed" to load the addresses in a
-   reversed order for IPv6, but what should 'ip address showdump' do at
-   that point?
-
-   Also reverse the order? Or not, because that's the order addresses
-   were dumped in? I'm fairly sure 'ip address save' shouldn't reverse
-   it. It would be more convenient for the other operations, but
-   definitely wrong, because the kernel is picking addresses in the
-   opposite order.
-
-   All these are doable, some look questionable, but any of the possible
-   workarounds looks hard to document, or even remember.
-
-b. as to pasta(1) and passt(1): the regression introduced by the revert
-   of the kernel change isn't a big one: after all, we had the right
-   behaviour for just a few months.
-
-   Similarly, if the kernel gives us a way to get it right, we would
-   just stick to it for the future and be done with it. Adding a
-   workaround for older kernels isn't a priority because there was no
-   regression.
-
-   Side note: the workaround would be rather impractical for us because
-   we don't use dynamic memory allocation, but we certainly can't blame
-   the kernel or anybody else for that.
-
-c. regardless of how addresses are dumped to userspace, there would be
-   no way to get the kernel to do what one reasonably expects it to do
-   (also from established IPv4 practice): *use* addresses in order of
-   insertion
-
-By the way of c., you're explicitly excluding test scripts as they are
-certainly less important, but does it really make sense to force people
-to to maintain the kind of workaround Matthieu mentioned? Reporting it
-here for convenience:
-
-  https://github.com/multipath-tcp/packetdrill/commit/1b7cd4482ce8
-
-> Therefore, the changes in #1 and #2 are not strictly
-> necessary, yet they are uAPI that the kernel will have to maintain
-> forever.
-> 
-> Given the above, my preference would be #3 -> #2 -> #1. The first two
-> options expose the same capability to user space, so #1 doesn't buy us
-> anything over #2, except a bit less code, but we risk introducing a
-> regression.
-> 
-> Between #2 and #3, production software can't drop the fallback even if
-> we implement #2, yet #2 requires us to maintain uAPI forever. I think we
-> should accept that the divergence between IPv4 and IPv6 is not ideal,
-> but at least it's predictable and dependable (Fernando is working on a
-> ksft and documentation).
-> 
-> That being said, you can send an RFC for #1 and see what others think
-> since at this point it's unclear who is still following the thread.
-
-I think there's general consensus against #1 ("abusing" NLM_F_APPEND),
-but still, I think #2 is very much needed and fundamentally harmless.
-
--- 
-Stefano
 
