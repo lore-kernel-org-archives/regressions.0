@@ -1,200 +1,227 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [194.59.206.189])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B389E43DA3A
-	for <regressions@lists.linux.dev>; Fri,  5 Jun 2026 07:00:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.59.206.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9880940242E;
+	Fri,  5 Jun 2026 07:02:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780642829; cv=none; b=glAuqhIHxidLod59eWULflKsKcxoYkB457Z6kl/WrpcqN1LZkSZCmQ/3QBEKp6i3hUPSkiojx6CcqmQu16ZEcnb3uWqd125LfILQS2PK5F8GeSMGIpC5nSYtvyakCdmNuWYtlPcrPXw6XB3VffG3KlE+0pfA5jbiChaLtlyaWy4=
+	t=1780642956; cv=none; b=AxpPWkefKKy+dq2waltTxVcPwEqKBhSxBY7luOms1YovhfTJ7P9ylI3lpaZq1xAH/nw2xES/d5w9F67sv0WPhR8iWNr2TF7S6lRLv9+KMW1pOjqn5yYZSCc/JUc/s2anfEcUvOnCQbbbNVPQSk9IZ/9B0qG3Z1LyCjGzHPe0Ofw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780642829; c=relaxed/simple;
-	bh=C4LywOONUo9mM7SYCl9JaZ1nEcm3gsy9ldzredo9jW0=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=F5UNtsS+fji+3jijEHGh7KremIuI3+izbxoAi7YJtJLGWBQzvMyAjbif766Wtjy7zsrAofgq1Ehfsa7boJ8uxPWKTcykDZnX35tUxvcNgOuYQuZw55cdUprovYq7vj9B8zZYHP4eksQSMdnblPhn3Xf0X7gxuPhZu8LH8jR5vIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=kL+qe9jF; arc=none smtp.client-ip=194.59.206.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1780642956; c=relaxed/simple;
+	bh=EFGeluncc9bSfyM5uQew0OqVIBlrOBxS+F68KlRdc1Q=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=h1ZZGOyzTHeRvIWa5UpXfne/PFZHPr+2DkQ11dACNcJ3KHWJt3QgKvNdR+1EBG2bc15GYrH4tP1b3lX7uktODltOdaHGj4q9CaUKq72WFznGurlS7ZDC/MHQH3s6Bi1dDu9aK8zyWAzQSPBlJz59l4tnfzIWiZk3dgWh2iOsdBE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=pass (2048-bit key) header.d=realtek.com header.i=@realtek.com header.b=KlO3B+Vp; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="kL+qe9jF"
-Received: from relay02-mors.netcup.net (localhost [127.0.0.1])
-	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4gWskw3pGWz4HNY;
-	Fri,  5 Jun 2026 09:00:08 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1780642808;
-	bh=C4LywOONUo9mM7SYCl9JaZ1nEcm3gsy9ldzredo9jW0=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=kL+qe9jFQlDIIFWazrdM9DPHT8ZxTESUvlVZ5eHBkQwY4fZJyPV4J/Csp8xt7zZFy
-	 XACWiPgKk8OtyQMUjwLIy5KrvZZvz6LoN9g8tljf4aHhAydHkLFGzSCzrFIJbcP4SS
-	 45Elvf7avy7ydyXoj3kTM6C/ZPUgcF6eX82AkWy6h2p94+uiGe1Cg1UP0lTTqBf4ls
-	 3BaNScqlouL3TNQa1GcTX8dn/4jcAmoKLqevI92Ayls7BJEnfbV7DATNj6bmh8V1mo
-	 +b+mSwKmcZAv/xf7WreQ3u3vIAgyUs/177aIu//SKSetVjXqnUP4EKBt0zuLpSIhNh
-	 e1uRHnOTYDUeA==
-Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
-	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4gWshp18Q2z7wPS;
-	Fri,  5 Jun 2026 08:58:18 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
-X-Spam-Flag: NO
-X-Spam-Score: -2.898
-X-Spam-Level: 
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4gWshl5Cl8z8tXj;
-	Fri,  5 Jun 2026 08:58:15 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 6D2A65F9DD;
-	Fri,  5 Jun 2026 08:58:14 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <ffac6caf-0376-4a0c-908e-b89cce48d28f@leemhuis.info>
-Date: Fri, 5 Jun 2026 08:58:13 +0200
+	dkim=pass (2048-bit key) header.d=realtek.com header.i=@realtek.com header.b="KlO3B+Vp"
+X-SpamFilter-By: ArmorX SpamTrap 5.80 with qID 65572TyfC1208320, This message is accepted by code: ctloc85258
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=realtek.com; s=dkim;
+	t=1780642949; bh=3RLzl/J92jZyUCnh0oN9f4vGr8dbHrP0TQA45xxI5Hw=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding:MIME-Version;
+	b=KlO3B+Vpp/lKIBLEvyIDDuQ23unqlcWlx4yIof8f/Ug99DDbP4UqTyBVETgyCKkq/
+	 WmPgwfPJe2IeYo46zfhVwjTuoUfx8kC8GARa007asCL/qXdz4rmI/ht9WpPtEq372K
+	 4YZz5LgKZuHQtsUj/oF8nxvTytw9KdRTGmdPMNnO2padUovOLZCquMvkSlhxm8G6PX
+	 CNz8hUMogDjZNSVQM0VVOvJ2OJdi492jkgQI3u3HDCxAAPTI8wsDyvgA5V4+UTvvVF
+	 8BXJR+zbwE7VkUVFxReJFImS4WbLuhDZiIvmFN6rody5R65HY5wwfhwIsehI3SXJMt
+	 QCnhv0AXaonyg==
+Received: from mail.realtek.com (rtkexhmbs03.realtek.com.tw[10.21.1.53])
+	by rtits2.realtek.com.tw (8.15.2/3.28/5.94) with ESMTPS id 65572TyfC1208320
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 5 Jun 2026 15:02:29 +0800
+Received: from RTKEXHMBS06.realtek.com.tw (10.21.1.56) by
+ RTKEXHMBS03.realtek.com.tw (10.21.1.53) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.17; Fri, 5 Jun 2026 15:02:29 +0800
+Received: from RTKEXHMBS06.realtek.com.tw ([::1]) by
+ RTKEXHMBS06.realtek.com.tw ([fe80::e6fd:5a3f:8946:92c4%10]) with mapi id
+ 15.02.2562.017; Fri, 5 Jun 2026 15:02:29 +0800
+From: Kailang <kailang@realtek.com>
+To: Takashi Iwai <tiwai@suse.de>
+CC: Mike Karcic <mikekarcic@protonmail.com>, Sean Rhodes
+	<sean@starlabs.systems>, "stable@vger.kernel.org" <stable@vger.kernel.org>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+	"linux-sound@vger.kernel.org" <linux-sound@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [REGRESSION] Speaker pop/chirp on Meteor Lake ALC287 (17aa:231e)
+ -- 6.12.73 to 6.12.85
+Thread-Topic: [REGRESSION] Speaker pop/chirp on Meteor Lake ALC287 (17aa:231e)
+ -- 6.12.73 to 6.12.85
+Thread-Index: AQHc7t9eJfAz3yPaB0G+XZXqEzNDFrYqzh7QgAA9JgCABITvsA==
+Date: Fri, 5 Jun 2026 07:02:29 +0000
+Message-ID: <330931ee49624f2486f66e510271d80a@realtek.com>
+References: <O6pYAi7yf23du9ivLsL0QqrnTmodj2lDTL7Wviv7I_nhjVtvllO7Y5Ban0TeTqrastb1RWhJtlkqrM3quLMWSriai-YjjGy312MTcEhxyWs=@protonmail.com>
+	<CABtds-3GOyBr1H=c5aFV1uzfkhO3d1NHMPuon_cWDq0V=pFwUA@mail.gmail.com>
+	<wZmYozyav1sNx53nFr4ShKmcdLFVJp5bdUOJgUq1I57MX6kgyq7n8XvH-MWG9Fi4q2x4CQqjEQ3Q8ok5MClut8hNixnhVmVtXkhcOzH1sw8=@protonmail.com>
+	<87eciwukvy.wl-tiwai@suse.de>
+	<RfzfjlzeaeMgNNWNST_Zzx1v49rYjM63MvAV6O5_fFIoZJ73GcN69FDLJcwhJ3s6fl9TVD2l45YBh2n3hy95LM7rhLhoVt8dU9stMkuVJvE=@protonmail.com>
+	<87mrxjsk52.wl-tiwai@suse.de>
+	<bibLdgyll9YOEDANdCBy8WOqeOeJry1SnahLR-EhoGkttJ6BE2srDZ9jv0gjkt0bA19aKivruQs3nkMQWbdEXPaOrLT80xjzF4KJvDcB-IU=@protonmail.com>
+	<87cxyfs2vm.wl-tiwai@suse.de>	<833d600fdebd4aaeab6706185ce854e6@realtek.com>
+ <87wlwgygyf.wl-tiwai@suse.de>
+In-Reply-To: <87wlwgygyf.wl-tiwai@suse.de>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Revert "drm/i915/backlight: Remove try_vesa_interface"
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Tvrtko Ursulin <tursulin@igalia.com>, Dave Airlie <airlied@gmail.com>,
- Simona Vetter <simona.vetter@ffwll.ch>
-Cc: ankit.k.nautiyal@intel.com, arun.r.murthy@intel.com,
- intel-gfx@lists.freedesktop.org, intel-xe@lists.freedesktop.org,
- Rodrigo Vivi <rodrigo.vivi@intel.com>,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- ML dri-devel <dri-devel@lists.freedesktop.org>,
- Suraj Kandpal <suraj.kandpal@intel.com>,
- Jani Nikula <jani.nikula@linux.intel.com>
-References: <20260515155340.1000997-1-suraj.kandpal@intel.com>
- <20260517024709.1016121-1-suraj.kandpal@intel.com>
- <53a2a8dd-d1b6-41c5-ade2-7ed870d074ac@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <53a2a8dd-d1b6-41c5-ade2-7ed870d074ac@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <178064269494.1178932.8212265372479905459@mxe9fb.netcup.net>
-X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: 6D2A65F9DD
-X-NC-CID: yZFu1qiK5+qb6kd4Rl2AdMorZ6t1O6HYlhAKMN1jnvJ0Ik1JIE4=
 
-On 6/4/26 15:55, Thorsten Leemhuis wrote:
-> On 5/17/26 04:47, Suraj Kandpal wrote:
->> This reverts commit 40d2f5820951dee818d05c14677277048bd85f9f.
->>
->> Removing the try_vesa_interface gate caused a backlight regression on
->> panels whose VBT correctly reports INTEL_BACKLIGHT_DISPLAY_DDI and whose
->> PWM path is the actual backlight control, but whose DPCD optimistically
->> advertises DP_EDP_BACKLIGHT_AUX_ENABLE_CAP / _BRIGHTNESS_AUX_SET_CAP.
->> After the commit such panels silently bind to the VESA AUX backlight
->> funcs; AUX writes complete but the panel ignores them, leaving
->> brightness stuck (no-op backlight). Observed on at least KBL and TGL
->> eDP setups.
-> 
-> Lo! What's the status of this regression fix? It's a -next for two weeks
-> now as f30fddb4402313 ("Revert "drm/i915/backlight: Remove
-> try_vesa_interface""), but from the outside and checking
-> https://gitlab.freedesktop.org/drm/i915/kernel/-/commits/drm-intel-fixes
-> it looks like it's scheduled for merging in the next cycle.
 
-Resending to Tvrtko, who sent the i915 PR yesterday (which didn't
-contain that fix), as well as Dave and Simona.
+Yes, it's the same codec and SSID. It's the same model of machine.
 
-FWIW, due to the lack of response to various inquiries I'm considering
-to ask Linus to directly pick up the mentioned regression fix to ensure
-it makes it into rc7.
+-----Original Message-----
+From: Takashi Iwai <tiwai@suse.de>=20
+Sent: Wednesday, June 3, 2026 1:45 AM
+To: Kailang <kailang@realtek.com>
+Cc: Takashi Iwai <tiwai@suse.de>; Mike Karcic <mikekarcic@protonmail.com>; =
+Sean Rhodes <sean@starlabs.systems>; stable@vger.kernel.org; regressions@li=
+sts.linux.dev; linux-sound@vger.kernel.org; linux-kernel@vger.kernel.org
+Subject: Re: [REGRESSION] Speaker pop/chirp on Meteor Lake ALC287 (17aa:231=
+e) -- 6.12.73 to 6.12.85
 
-In case anyone wonder what regression I'm talking about:
 
-* https://gitlab.freedesktop.org/drm/i915/kernel/-/issues/16015 /
-https://lore.kernel.org/lkml/CADo9pHjr-zZ9C3%2B026y5%2BXOGPSeRzSJMCHof27TVPtAUNgTc8A@mail.gmail.com/
-* https://gitlab.freedesktop.org/drm/i915/kernel/-/issues/16043
-* https://gitlab.freedesktop.org/drm/i915/kernel/-/work_items/16097 /
-https://lore.kernel.org/lkml/d2de7933-e650-4b19-8d88-90d66693dcfc@message-id.googlemail.com/
+External mail : This email originated from outside the organization. Do not=
+ reply, click links, or open attachments unless you recognize the sender an=
+d know the content is safe.
 
-Ciao, Thorsten
 
-> But I think it should be merged this cycle (ideally before -rc7, as
-> Linus wants all known regression fixed by -rc6), as it fixes a
-> regression that is known since the -rc1 days. I already asked for the
-> mainlining plans in gitlab tickets about a week ago (and since then
-> affected users spoke up, too), but there was no conclusive answer for
-> the plans, which is why I'm trying this way now.
-> 
-> Ciao, Thorsten
-> 
-> 
->> Signed-off-by: Suraj Kandpal <suraj.kandpal@intel.com>
->> ---
->>  .../drm/i915/display/intel_dp_aux_backlight.c | 19 ++++++++++++-------
->>  1 file changed, 12 insertions(+), 7 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/i915/display/intel_dp_aux_backlight.c b/drivers/gpu/drm/i915/display/intel_dp_aux_backlight.c
->> index a8d56ebf06a2..7a6c07f6aaeb 100644
->> --- a/drivers/gpu/drm/i915/display/intel_dp_aux_backlight.c
->> +++ b/drivers/gpu/drm/i915/display/intel_dp_aux_backlight.c
->> @@ -691,10 +691,9 @@ int intel_dp_aux_init_backlight_funcs(struct intel_connector *connector)
->>  	struct intel_dp *intel_dp = intel_attached_dp(connector);
->>  	struct drm_device *dev = connector->base.dev;
->>  	struct intel_panel *panel = &connector->panel;
->> -	bool try_intel_interface = false;
->> +	bool try_intel_interface = false, try_vesa_interface = false;
->>  
->> -	/*
->> -	 * Check the VBT and user's module parameters to figure out which
->> +	/* Check the VBT and user's module parameters to figure out which
->>  	 * interfaces to probe
->>  	 */
->>  	switch (display->params.enable_dpcd_backlight) {
->> @@ -703,6 +702,7 @@ int intel_dp_aux_init_backlight_funcs(struct intel_connector *connector)
->>  	case INTEL_DP_AUX_BACKLIGHT_AUTO:
->>  		switch (panel->vbt.backlight.type) {
->>  		case INTEL_BACKLIGHT_VESA_EDP_AUX_INTERFACE:
->> +			try_vesa_interface = true;
->>  			break;
->>  		case INTEL_BACKLIGHT_DISPLAY_DDI:
->>  			try_intel_interface = true;
->> @@ -715,12 +715,20 @@ int intel_dp_aux_init_backlight_funcs(struct intel_connector *connector)
->>  		if (panel->vbt.backlight.type != INTEL_BACKLIGHT_VESA_EDP_AUX_INTERFACE)
->>  			try_intel_interface = true;
->>  
->> +		try_vesa_interface = true;
->> +		break;
->> +	case INTEL_DP_AUX_BACKLIGHT_FORCE_VESA:
->> +		try_vesa_interface = true;
->>  		break;
->>  	case INTEL_DP_AUX_BACKLIGHT_FORCE_INTEL:
->>  		try_intel_interface = true;
->>  		break;
->>  	}
->>  
->> +	/* For eDP 1.5 and above we are supposed to use VESA interface for brightness control */
->> +	if (intel_dp->edp_dpcd[0] >= DP_EDP_15)
->> +		try_vesa_interface = true;
->> +
->>  	/*
->>  	 * Since Intel has their own backlight control interface, the majority of machines out there
->>  	 * using DPCD backlight controls with Intel GPUs will be using this interface as opposed to
->> @@ -733,9 +741,6 @@ int intel_dp_aux_init_backlight_funcs(struct intel_connector *connector)
->>  	 * panel with Intel's OUI - which is also required for us to be able to detect Intel's
->>  	 * backlight interface at all. This means that the only sensible way for us to detect both
->>  	 * interfaces is to probe for Intel's first, and VESA's second.
->> -	 *
->> -	 * Also there is a chance some VBTs may advertise false Intel backlight support even if the
->> -	 * TCON DPCD says otherwise. This means we keep VESA interface as fallback in that case.
->>  	 */
->>  	if (try_intel_interface && intel_dp->edp_dpcd[0] <= DP_EDP_14b &&
->>  	    intel_dp_aux_supports_hdr_backlight(connector)) {
->> @@ -745,7 +750,7 @@ int intel_dp_aux_init_backlight_funcs(struct intel_connector *connector)
->>  		return 0;
->>  	}
->>  
->> -	if (intel_dp_aux_supports_vesa_backlight(connector)) {
->> +	if (try_vesa_interface && intel_dp_aux_supports_vesa_backlight(connector)) {
->>  		drm_dbg_kms(dev, "[CONNECTOR:%d:%s] Using VESA eDP backlight controls\n",
->>  			    connector->base.base.id, connector->base.name);
->>  		panel->backlight.funcs = &intel_dp_vesa_bl_funcs;
-> 
 
+On Tue, 02 Jun 2026 08:14:14 +0200,
+Kailang wrote:
+>
+>
+> There were the same SSID for two different symptoms.
+> But this project was from 2025. This machine maybe didn't in our site.
+
+Aha, that can explain the difference of the behavior, then.
+Do both of them have the same codec ID and SSID, too?
+
+
+Takashi
+
+>
+> -----Original Message-----
+> From: Takashi Iwai <tiwai@suse.de>
+> Sent: Friday, May 29, 2026 4:20 AM
+> To: Mike Karcic <mikekarcic@protonmail.com>
+> Cc: Kailang <kailang@realtek.com>; Takashi Iwai <tiwai@suse.de>; Sean=20
+> Rhodes <sean@starlabs.systems>; stable@vger.kernel.org;=20
+> regressions@lists.linux.dev; linux-sound@vger.kernel.org;=20
+> linux-kernel@vger.kernel.org
+> Subject: Re: [REGRESSION] Speaker pop/chirp on Meteor Lake ALC287=20
+> (17aa:231e) -- 6.12.73 to 6.12.85
+>
+>
+> External mail : This email originated from outside the organization. Do n=
+ot reply, click links, or open attachments unless you recognize the sender =
+and know the content is safe.
+>
+>
+>
+> On Thu, 28 May 2026 20:27:30 +0200,
+> Mike Karcic wrote:
+> >
+> > Yes, I can confirm the patched kernel is running, and commenting out th=
+at line fixes the problem completely.
+> >
+> > Below is output with the added debug lines as requested:
+> >
+> > $ uname -r
+> > 6.12.90-debug-no-discoefs
+> >
+> > $ sudo dmesg | grep -i "alc287_alc1318"
+> > [  453.823528] snd_hda_codec_realtek ehdaudio0D0:
+> > alc287_alc1318_playback_pcm_hook called action=3D0 [  453.871577]=20
+> > snd_hda_codec_realtek ehdaudio0D0: alc287_alc1318_playback_pcm_hook=20
+> > called action=3D1 [  459.605379] snd_hda_codec_realtek ehdaudio0D0:
+> > alc287_alc1318_playback_pcm_hook called action=3D2 [  459.605497]=20
+> > snd_hda_codec_realtek ehdaudio0D0: alc287_alc1318_playback_pcm_hook=20
+> > called action=3D3
+> >
+> > $ grep -n -A5 -B2 "alc_process_coef_fw.*dis_coefs" sound/pci/hda/patch_=
+realtek.c
+> > 7918-           return;
+> > 7919-   alc_update_coef_idx(codec, 0x10, 1<<11, 1<<11);
+> > 7920:   /* alc_process_coef_fw(codec, dis_coefs); */ /* commented out f=
+or testing */
+> > 7921-   alc_process_coef_fw(codec, coefs);
+> > 7922-   spec->power_hook =3D alc287_s4_power_gpio3_default;
+> > 7923-   spec->gen.pcm_playback_hook =3D alc287_alc1318_playback_pcm_hoo=
+k;
+> > 7924-}
+>
+> Hm, then the previous fix doesn't seem working, obviously.
+> Kailang, could you check this in your side?
+>
+> Maybe we should apply the AMP-silence-detection disablement conditionally=
+ to certain models?
+>
+>
+> thanks,
+>
+> Takashi
+>
+> >
+> >
+> >
+> > Sent with Proton Mail secure email.
+> >
+> > On Thursday, May 28th, 2026 at 10:07 AM, Takashi Iwai <tiwai@suse.de> w=
+rote:
+> >
+> > > On Thu, 28 May 2026 15:38:54 +0200, Mike Karcic wrote:
+> > > >
+> > > > I did test 46c862f5419e on 6.12.90. Chirp still present.
+> > > >
+> > > > I'm also on a ThinkPad X1 Carbon Gen 12 with ALC287 (17aa:231e),=20
+> > > > same as the original reporter. The fix resolved it for them but=20
+> > > > not for me.
+> > > >
+> > > > Only a full revert of 630fbc6e870e resolves the issue.
+> > > >
+> > > > Verification on the running kernel:
+> > > >
+> > > >   $ grep -c "dis_coefs" sound/pci/hda/patch_realtek.c
+> > > >   2
+> > > >
+> > > >   $ grep -c "en_coefs" sound/pci/hda/patch_realtek.c
+> > > >   0
+> > > >
+> > > >   $ sed -n '/alc287_alc1318_playback_pcm_hook/,/^}/p' sound/pci/hda=
+/patch_realtek.c
+> > > >   static void alc287_alc1318_playback_pcm_hook(struct hda_pcm_strea=
+m *hinfo,
+> > > >                                      struct hda_codec *codec,
+> > > >                                      struct snd_pcm_substream *subs=
+tream,
+> > > >                                      int action)
+> > > >   {
+> > > >           switch (action) {
+> > > >           case HDA_GEN_PCM_ACT_OPEN:
+> > > >                   alc_write_coefex_idx(codec, 0x5a, 0x00, 0x954f);
+> > > >                   break;
+> > > >           case HDA_GEN_PCM_ACT_CLOSE:
+> > > >                   alc_write_coefex_idx(codec, 0x5a, 0x00, 0x554f);
+> > > >                   break;
+> > > >           }
+> > > >   }
+> > > >
+> > > > Happy to test further patches.
+> > >
+> > > Just to be sure, could you verify that you've tested really the=20
+> > > patched kernel, e.g. by adding a debug print, etc?
+> > > If yes and the problem is seen even with the patch, try to comment ou=
+t
+> > >   alc_process_coef_fw(codec, dis_coefs); and confirm that this=20
+> > > fixes the problem.
+> > >
+> > >
+> > > Takashi
+> > >
