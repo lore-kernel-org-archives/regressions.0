@@ -1,71 +1,68 @@
-Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazon11011065.outbound.protection.outlook.com [52.101.52.65])
+Received: from SA9PR02CU001.outbound.protection.outlook.com (mail-southcentralusazon11013056.outbound.protection.outlook.com [40.93.196.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80FC63EE1FA
-	for <regressions@lists.linux.dev>; Fri,  5 Jun 2026 18:46:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.52.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F0D73A4523
+	for <regressions@lists.linux.dev>; Fri,  5 Jun 2026 18:54:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.196.56
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780685167; cv=fail; b=ctiVoScIllB//UfnGEb3YQeEBO+akg28eoAzshlKGo++CcrcBLx2JRDLfnAzsCcPuhr136jN0aQwC0eyvECAuKeXGd/0JN80Fcfzh+8GUqFCZ2GijRKdF8Ni34ENjktXtqINKvKVWk/QcUyZSur0dETpqZ79WGIuf154PAihH7E=
+	t=1780685657; cv=fail; b=pwSOCPX6cnOdZ80UsCFk6OY+8SHI3qTpJh3R4kCqZcZ1OnzD5M9fhjGhEUqY1bgvHNna1wAxB+yZJ7uylPhGcAinwTIGNZcs3gHxn8UZ8lCGZSe5NhJ3GPqi39DAK2R1Uch2xGV/DOnZaRCK2gDqVDsLUBKvg4cO86dPhuwrTWQ=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780685167; c=relaxed/simple;
-	bh=lzjzoh75Vr8kRLbwuRQrr2gl5GVVQc38i+yGNm9iy5U=;
+	s=arc-20240116; t=1780685657; c=relaxed/simple;
+	bh=gydB5lThqnyD2C+O4gGGdvBASGR+NumKxiaWKT2UIZg=;
 	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=p5Dv74paG9GWaSefQSbBCzZAGDdj5sOfwdZVxwxvSW7wfIzFPGxBzAmOFa78qcMtrukPpu3vKzOytkXO2sm4ZXxr9GG8FTGd83Gvx/KGVnlA1BPLrk6tnnwkdlto0OsMGWsgLssHE2x1vUNH8nqNN9tBgydBJE2ZNT+XPWcEwUg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=EX7s1+XG; arc=fail smtp.client-ip=52.101.52.65
+	 Content-Type:MIME-Version; b=eagShESit7je4teZ2G8UYS+ecmloHesb+3tEq8Q+IO42sLfC4f4bGpkKuuye3iUcELZhnrAonNZCqWliexyGnuZo3iZPpKY1Az7gx6s6NWQo8clngLCUU6NHKSeYDF6dR6UmYQGfWBJy9kYayTPVXquZmKgd+xdjE7YcC4dGkjM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=BkCMcssl; arc=fail smtp.client-ip=40.93.196.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="EX7s1+XG"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="BkCMcssl"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=x980MLUYPh1r3ZIRNBUJbJ38bdY8NrVG2uo8VdQwlpYgyWf0p0c6f7QdHvPlINazrfm9tdoOzM5LRyL3Z485EZ42ypbFQdRyG9G02CTNQtl5bu/F7EvtyxhBluKrAYG7CEjVpOsO62yJ85t1AHLwVQS3n1+3Y1OdKnFvC0Ll7ud5ZBn+JUDgURLC8AbzykQkFySVpjYUnjE8IQcowLlYYtb9YS9WdXfMnpQCYe8QvvdBzG1IVksHymZMTRqmz0WzpdhZxYSl+XTKHoMqIXbwyYx1/FRWTDwZ4VNLt3K6yzw1xsmq75trbLsaft+AyddSVDABknayPvb15+Iewg5sKA==
+ b=s3oDVNkqZtkiNfxsF/8Ryb3lkWXiE8qoaPur1kns1gfhJ1+sgqqWg5J0TTu4rk0J+yXpwRWfwMmdtlVNguHYnP4jTslBRNjSlC9uQXZ7JjCXJ7Bw73ULw54pvHW6cs61L2C5vvN2nHaRMpgEpqlIfQKawmxPqxu64cHFqpR2ohqHFOBzTpWnVlgbpCZ5WwgGld5hro8yrEc3H+hFcH4/fh/h07B6tipe8B4F5cAc99w73sk4LOo+ayw4yCDUDrjqtL/lF/JW/kzZt4xh2yG0mePa7anMwUkIrSqFxV5dwsxMxxUiqQ3HneRhIGvYDdm8x/gUxHKU3tttZc0EXU0vqQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=QeoIYjcS88ozTwuVQ+N6aGWtq2TZqIUpirM6cdTNF1M=;
- b=pqI6MV5kVQV0jQ0rasrcFwsORtJB1d1XvolSUWc4QNknOaB0Cwk3YA3r4/mxCWqShIWlF1RAzSQnSlSk4wGIvdRsFTuGl8nzZA2bIDews39JtSnl3HSbat70G3NfsrGvyMBSDXF1tilycgFRKbC5ADJDdab+dYrEjBajkpu44mSaIoTtRNhFgJALT8FdhuXy3mJtY7+/UEdvvC3JcIc7akROeICbpat0f3juuMhLOCAgTeObAUzxwz1zGK3etxpq14z8xS+iclCfhT5TDDjQ20oqlcxapmy1PCjEU3H4X9vXeqtTY38OMPwf7d8MD+MzXNQT2Z9VM6/svWSjPeY2jA==
+ bh=qeNgUZXueu0V5ehY07VasiI+PWla3WQp6PLrbRsIpKQ=;
+ b=R1V9UZxHU5LN80PTqmQsV/r6yMdr3JcqGS56wBIObt1bdBWhIPL7+G88go5XM7l1LEkXwOblq6sOlEXbPLrGdYo/B4poLhiXyWrsXM3pUe5wLlSoHMnzl786NlPJJmuxYMdJ6Ik4XUVrVfzj5SsF3x4yflvmWrY2bfoKu1uCg1ZaDDO7gfbn+Fzt2lwYJ+atq81o3PjrcBwENnEfLivA2OrVkw5LTUMvOCyrVVnZitx/s391/Avlbt+lRMYvEiUin+e4FJ7Fq0V39aB9Sk/XwDzrOlepzzIP3Og+pFFXlLbI58djZ326zkkG6XifcRwdaSuWOrdHWYbIcZ7tBjU7zA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QeoIYjcS88ozTwuVQ+N6aGWtq2TZqIUpirM6cdTNF1M=;
- b=EX7s1+XGQjmY2CXxLocUR4hjCsqNdtRaKLbJgj5y6HP5yH3wfOllTBBvvyWK17srxV4gSh1XhushkVWjbHGTVs0kM3qtW7ZojgorB3fueiqDklK+sU9mVO/HF8+0JD+rrZOlZJRtIreYdfGDKmHky7LJY/fA1cYuO+fU11iedYs=
+ bh=qeNgUZXueu0V5ehY07VasiI+PWla3WQp6PLrbRsIpKQ=;
+ b=BkCMcsslIsB/hyUvtlW7IbuXimJvcs/sgE8yLp2s6XH9RJvdD8xY/VqIsFwoerwl/kl+tdZoaeLIAb2ucX200Yl8pKZBaIafNjZEctIsLzEaLOu+LRsPvsxfqz2O6t5Q+nuQR1XwPRmjv+fEXfabzsNcAAyWN4WLLTvtAiHSmaM=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from IA1PR12MB8517.namprd12.prod.outlook.com (2603:10b6:208:449::8)
- by DSVPR12MB999191.namprd12.prod.outlook.com (2603:10b6:8:496::9) with
+Received: from PH8PR12MB6914.namprd12.prod.outlook.com (2603:10b6:510:1cb::21)
+ by LV8PR12MB9183.namprd12.prod.outlook.com (2603:10b6:408:193::16) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.25.21; Fri, 5 Jun 2026
- 18:46:03 +0000
-Received: from IA1PR12MB8517.namprd12.prod.outlook.com
- ([fe80::c47e:c884:f06:1525]) by IA1PR12MB8517.namprd12.prod.outlook.com
- ([fe80::c47e:c884:f06:1525%5]) with mapi id 15.21.0092.006; Fri, 5 Jun 2026
- 18:46:03 +0000
-Message-ID: <c967565e-e68c-4881-8cc6-064b7a3c3397@amd.com>
-Date: Fri, 5 Jun 2026 13:46:00 -0500
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.92.9; Fri, 5 Jun 2026
+ 18:54:13 +0000
+Received: from PH8PR12MB6914.namprd12.prod.outlook.com
+ ([fe80::2893:177a:72b0:6000]) by PH8PR12MB6914.namprd12.prod.outlook.com
+ ([fe80::2893:177a:72b0:6000%6]) with mapi id 15.21.0092.007; Fri, 5 Jun 2026
+ 18:54:12 +0000
+Message-ID: <a413be63-f7fa-4d4f-9a3e-00abbfcd7824@amd.com>
+Date: Fri, 5 Jun 2026 13:54:10 -0500
 User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] drm/amdkfd: SVM split-tail remap regression causes
- SDMA0 permission fault on RX 7600 XT
-To: Gerhard Schwanzer <geschw@pm.me>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Cc: "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
- "stable@vger.kernel.org" <stable@vger.kernel.org>,
- "Deucher, Alexander" <Alexander.Deucher@amd.com>,
- "Yang, Philip" <Philip.Yang@amd.com>
-References: <2bfa2f1b-567a-429b-aee2-a8dcf7efd5aa@pm.me>
- <53c2ad43-091d-46e9-b825-9aaa1d7114e8@amd.com>
- <2145b14f-00e7-4565-b1da-9e08d2c89a49@pm.me>
- <d39183d3-b961-4c74-997f-885eb7a887e4@amd.com>
- <IA1PR12MB85172F7FE9157C092EDA46A0E3112@IA1PR12MB8517.namprd12.prod.outlook.com>
- <d30aa220-802d-4575-8ab0-058698e4ffbb@pm.me>
+Subject: Re: kernel NULL pointer dereference in
+ quirk_clear_strap_no_soft_reset_dev2_f0 -> amd_smn_read
 Content-Language: en-US
-From: "Chen, Xiaogang" <xiaogang.chen@amd.com>
-In-Reply-To: <d30aa220-802d-4575-8ab0-058698e4ffbb@pm.me>
+To: =?UTF-8?Q?Marek_Marczykowski-G=C3=B3recki?=
+ <marmarek@invisiblethingslab.com>
+Cc: Yazen Ghannam <yazen.ghannam@amd.com>,
+ "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+ "open list:AMD NODE DRIVER" <linux-kernel@vger.kernel.org>,
+ regressions@lists.linux.dev
+References: <aWWZb3eRfQdB4OsI@mail-itl>
+ <68d86871-12f2-4de1-81aa-dbc9e12b6f91@amd.com> <aiMIiOzJejNV1tCL@mail-itl>
+ <2535f876-adea-41f1-bf92-a2f15a1eb157@amd.com> <aiMLK1Hvk0Fmyimm@mail-itl>
+From: Mario Limonciello <mario.limonciello@amd.com>
+In-Reply-To: <aiMLK1Hvk0Fmyimm@mail-itl>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: CH0PR03CA0182.namprd03.prod.outlook.com
- (2603:10b6:610:e4::7) To IA1PR12MB8517.namprd12.prod.outlook.com
- (2603:10b6:208:449::8)
+X-ClientProxiedBy: CH0PR07CA0005.namprd07.prod.outlook.com
+ (2603:10b6:610:32::10) To PH8PR12MB6914.namprd12.prod.outlook.com
+ (2603:10b6:510:1cb::21)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -73,355 +70,128 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: IA1PR12MB8517:EE_|DSVPR12MB999191:EE_
-X-MS-Office365-Filtering-Correlation-Id: 287582eb-6884-49e3-a5b7-08dec332b18f
+X-MS-TrafficTypeDiagnostic: PH8PR12MB6914:EE_|LV8PR12MB9183:EE_
+X-MS-Office365-Filtering-Correlation-Id: a41634bb-3730-4b44-da7f-08dec333d57b
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|366016|1800799024|56012099006|18002099003|13003099007|22082099003|11063799006|4143699003;
+	BCL:0;ARA:13230040|366016|376014|1800799024|22082099003|18002099003|11063799006|4143699003|56012099006;
 X-Microsoft-Antispam-Message-Info:
-	nSa1hSMI7nOsbKMlNd+u54noJUmXKJlDNgY/r/6Zs4UG/0ZLIDdh2HkAxaSzFJs24VE2lvBXpebmwCdZuDuQVtZs6zOY1XEhR0b/pmuDJ0G9Y9rSQxDcPDOq3Oa8i4QZmVh/3lwUC2qTLJiuMmZHl0Mx5jpJbeCO88cxeHsLukR7+S9rLFEhCF/I0LiK+akYEGCdMKab+7Y+KWCJ341zzncCKvAOTbGyZniTn349o57qKim8w8zIpho98kxox8KqnKW896OioyaMj0+TH1y2MXkwtLy3vUHf2epzMEmHshgjYW3zwFq5ndZ+hiSHiGvgMPD6zBxEML8GMxMNqqlrxcagi2wirf7yzVHpGBKFYMuz0GkCDK1Sw2L67TjBzeqQ6l69UXrpoEQuFIffsJHGrtfRmC8Gj9guBG4x/Z4rHREVdF6m58127SjVY9jbv7CA9HNrbFHvz20m4pnK33x2eJ9AUM+eSEHrjeNfAwWmPb8SAxDtZJKKfp/A8pcARURAj59fVEhSCGszOC1lt7n0cmuyfqXebPNMroM1vlu8nYd2ycDwWi3VJ8XahCs6q+4Xu87rorcZBhrI4sxPp4KbcUQH3yWNteSqxc35aB/a8Xe8iLe9GeZFATgsHv8g4Su/uWG8BMtmHbNmI+oE6rUq8A==
+	sw3KvpxkoxCWrlEXiSADKL1e5hz2q0kWPtz97+ng8Tbu3dgoX9PfMDmmQRWnSjWNMXntTWYmmTD5WrQTmQ9XSJROtHl8a2W9mq0bt+dVRb9K+RkGnsflWnsG3tfPwe5mJqDk0RZm9PFTGuHclzuL8L6/bo4kvDxzX6pelUzMzPPADHJFqhmW8anF3vQQwWgLucXkVlAiv5hB8dh+NUKqmiVM9yRlVzRI2UfX8UACq+rVDdhZ4ATirybBdtHE5jefEUitQvY+w7Ca0DElJHz3HGeIvUPVRascSegNCaSpcuIzd6fXFvHQA+Ao15jGvCVMBhyaWWjCyo/MHCyQ1oZtitVGkz1b8pYQeW2cRMgMeTsHk6sae7oXhzCVNf6dH4wMtvWAnfXBwM0HOwIHzZW1GSw3XLpctED276qUXmCEJCwXkmdvtp0+MxJC8+cWj4AwNzO7OTwJFkg0m4zZ6V3vYXbPwP0ZtffGDb2nuGrOBjntAsQodz3aHK0hoBcLfa/J/HyUr4U64aTq9iCCVigK9nqeeLFLtli9j5gCp0xgbYRVxL7letoWX5aBg3zhOYJyCGOHZRRfW+Wtnk2j+yB/CkQwKAHtZtqgNf2ezfmuMYI0PCNloBO/SbWt0FyNjGjIslNcawkt6wLaZRXIT5G0fgozhFcnkkoTf57M4FfQSABRS3ja9gguAK3l3c+A4GcG
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR12MB8517.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(56012099006)(18002099003)(13003099007)(22082099003)(11063799006)(4143699003);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR12MB6914.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(22082099003)(18002099003)(11063799006)(4143699003)(56012099006);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?UEhnNjg5K2xlR3ptVnQyS3RQTURYN2dTUWFnVzh6SVhEV1pqRTlLSFRycUhB?=
- =?utf-8?B?ZnBsZUVQVHE2L2x2R3hsRXVnaEVaK3NpRHdxTXd5VFdTVXhJakcvTEdNR1dV?=
- =?utf-8?B?MEhaeEs4V2h5NUw2VER3R1RmUTk4bjBIbWU2RDJXbGZwKzdTUTVFWXZLMHJ0?=
- =?utf-8?B?SDE3T25rSUREOFRrQi91TTA0Z0FhajlTZ0J1RG90Y2plZlBsWUEveHVnVFFx?=
- =?utf-8?B?VW93Umo2VnhrZk96MlVrNlgrcFN5ZzNGVTBuVlhUbmVuQllUZTVyV25LZ3NL?=
- =?utf-8?B?OGNXd0ZwdTNxU3dyRTRHMlJmczZYdzF2L0FHOXlTK2ExaXpMWnVrZ25YWkhv?=
- =?utf-8?B?ME5ZK3FRWUl6WS9xZGZ4WTlDUmUzUGtDUjh1U095RGdWR3haUmFTRktaci82?=
- =?utf-8?B?OWFhZzdqYnpJczgyQlVHRDZiRWZwais3aHZJbUQ3S2NFRnBtRkVnTlpnR1VQ?=
- =?utf-8?B?M1NuZm1oSDlYZURaNnFWZVMrV2R1Z2hWeENEV2ttOGVFN3NzT0xzb05ySHVy?=
- =?utf-8?B?UTRvNmFJN3lQOEhnMzlVTjZPY1VUa0EvbGl5V2VBbHhENFF1K0dGRnlydFVO?=
- =?utf-8?B?aStCemludkVDMXlZc0VmWHNWU2JJZVQwbSt5NHNRYjFoVU1KNG5GcGM3U3h4?=
- =?utf-8?B?MmNTQ3ozb0dyZW1nZ254cXlhbUZwWEU1d1gycEM2bGZIaDJ0b0lQc09EMlFR?=
- =?utf-8?B?S1hjMWVKRWVsdU5QbGhPQWtDbXZvRzN3SVQrMVlTZ0pyd2w2SUhqcysyUndE?=
- =?utf-8?B?ZXJFckQvdldaYlNJSTdTUzl3d01xQ0pUQStIUVBXN2JKZUJzUUFoMWZaSHhM?=
- =?utf-8?B?Ry8vQVNPS09EbnVtNU5nUElzbFNNTWExVjVJY3RYL2NaNGUzcVJ2cGZFalEz?=
- =?utf-8?B?M1hjQW5aNk1aVjc0RXV5SUsyY2FPMWJLeTZhaWpFbnBCbldQd0RmK2U5ZDRI?=
- =?utf-8?B?V2t1OW9iNForWWErajh3NzVjc3p3QXRWU2MyT0tiOEthTmR1Q0ZWbEdwYlQ0?=
- =?utf-8?B?bjRFdHJ1N3hiNjBTM0h0TTFsUS9rZkhoR0RZQjR1eXlDS29UMjR1S1orMURu?=
- =?utf-8?B?RmVEZjZLTE5panIwWEpWcVg0RThHMkVXNmRpTkhVZmszK2swU1ZsYnFWck54?=
- =?utf-8?B?MTg5NWRvU2Ewa0JSTUxRNUVJdGxSN1pHdDY2cThIZ3F3Z1pQOE5YdG5mMGl3?=
- =?utf-8?B?blpwdzhSUGthUHdpMHF0Y0w2WjBoRjk2dW5HNDNLbWk4eUd6MDQ4ZTJKR0Uz?=
- =?utf-8?B?dFM5aDlCMEJMOGdra2N1dldUNDFvMFVSOVRBbnkvLytlNFBRaFpkREpvRkMy?=
- =?utf-8?B?L1g2K3cwRVpzMmJGRlVFSXhmN2lYVXRGaTg0RHZ1OVBYYjhPcnp6SVM1d0Fx?=
- =?utf-8?B?MDJwd3o3dU4vNHJLMHFweFROUTlGZWhvVkF6MHRXSEpHTThRMTdKYlM3aTRa?=
- =?utf-8?B?TktrRTkyKy9PY3BPSXZVU2Z1SU5ka3hkdkkyeVhMZjl3VmpDcklld0lkSzg3?=
- =?utf-8?B?aHlkS1NCNC90SENyYS94VlFRMTRmN2JHODQ0RW9wUmw3R25YWXlGZVBnNzd6?=
- =?utf-8?B?RzN6YXFSdTN5Wnh1TXNiRzAwdU9pbms5emtqZEdsd09sSzNmU09YOXNSWEox?=
- =?utf-8?B?ajd6aCs0VmtIclBIZzlSYTBXOG5uTk9qTFk2UHQzNlhhQXZlWmozUDlUd25o?=
- =?utf-8?B?K3ZTaWFSSHJ6YU1wYmw1ZUdCd0R0MkpLTTFBUlpnbkZiR3QyMVpoc3ZURkNv?=
- =?utf-8?B?RjEwOFZDLzljMzh6OXpUck9SM1dQcGJhU2ZkeitLU1E1YmVVN0JVTHM5c1hr?=
- =?utf-8?B?b0krenpLRXZXdTJ1TmUzWlhRWE1yVXY4azlRU0RQOUFIOE1LODVoUVN1aFNt?=
- =?utf-8?B?YmVma3Nta3ZRVFFlaGE4bm5keUI3Z0VVZXRyeVhhQisyZU56TXpQZVRLcUF5?=
- =?utf-8?B?d0pqbUJyRHVncWFkVVBacy9aSHFkVEZsS0FRa3l6U1JramdEVFNNckdoYTda?=
- =?utf-8?B?cVl2OWQzdW40YUxXbnlLZkd2V1NnZGYrUjFjUGRKNTBGbnQ2aWVva0x6Nm5t?=
- =?utf-8?B?UEt2WFgyendLM0JJQ2MrM2FTQUdYZUc4M2x2SWpNQWdmWktHVFl4bi9KcjVx?=
- =?utf-8?B?Vmp2NDh2WlRoWU13enkzRXplVmt2aWgrQ3NHWlUwTjA0WTRZNW9HdDZJanpG?=
- =?utf-8?B?M0VXOUZTaHRnbk1hVkp6QkdIblJjSytpckJ3d0ZmeGgvcjBKb1pJcm96dlIv?=
- =?utf-8?B?TjdsY2dtbUhqSWZ5RzNBallRQ2FYMzdUTXp1dTZOdHlZVUpQcUVRMGtrUG1W?=
- =?utf-8?Q?urdmrR4CBL5I1a32fz?=
+	=?utf-8?B?cmJ0emZxaDh6c0V1QjJhbnkwVHlGRDZMQzVjRmV5Y3JHcERHSEZQcmR6Zmc4?=
+ =?utf-8?B?UXhhay96aUVOY1BnNUNtTGhBY3ZvcytWQjVsVWt0SkVVR1ExdnczK21TeXNz?=
+ =?utf-8?B?ajhYaXY4RHRoV3NZeTg2UlVKNjhGUHJBc3ZIWG16Z1E4aW1iTnUwV2dpWDdD?=
+ =?utf-8?B?M0VCVldVNXhzQ1ZTSkRoZ3c5TmhSclhrVTlsRVFObjdoT0FlVytobFZZU1lu?=
+ =?utf-8?B?ZHlKRW4zUG1VYWdhMTRUa3ZHZDh0OVNJQ1JWa25hakxMc2k2TWsrenIyOG5w?=
+ =?utf-8?B?RW1sS0x4L241SkMrdkExYUFzaE1kRkZEWFR3b0t2Q0lmNzlyNHpjRENlY011?=
+ =?utf-8?B?L1lGakRMbUhtZFRCSGpxMmFQM0l5VUtaN080bnZ5RTZuUVU2Nks0cFg0ODZU?=
+ =?utf-8?B?cGhzenEwdTBvektkR0t1NFh1ait4d3R3ckpUSFRoTEt3cDkySFBaNkZUZjEx?=
+ =?utf-8?B?T1l1MDNJZVpmckJzMzgrSUErK1JFdi9jU1h4bUYxT3VNcEZRM3BJOUwvN1Rm?=
+ =?utf-8?B?R1JUeHU3WkVURlBkaTl4bFVQU2Q0M21hdEN0K0xKcG1idENjQlhxRnJtMHlN?=
+ =?utf-8?B?ZFZXdU45ZlZ1V3NnWXlrazc0cUNPYjNMQ3NkRUc4VlJsRnhNazd4RCszNlFC?=
+ =?utf-8?B?bVhBMXVOL3A1TmlqUHFBMTR3VmlYMTNWOUlFUHpsa1pCYkxpczlLSHU1VzFa?=
+ =?utf-8?B?cjc1OFYzSXdxeTBrQ1hqMjcwTlVqd0dWRVhSNy9zSXJYQ1FyeFA4SDlLZWJv?=
+ =?utf-8?B?VzU4Vk5Pb2IwZCt4aVpQOWExQmQ4L2d6MURCZFhmRFBKTTJJWUsxMSs5RVla?=
+ =?utf-8?B?THUvSW9YZ3o5N0xSZjVOVDdwbE1seEM0OUx1T2lqY1A0dTA0aEdoVkRRbExY?=
+ =?utf-8?B?TUZnNzF6TmpmdFRwM3F3eFQ0bkRIdGRkRG4rZytVVmFwU0hoZ1FyZDdsSFZQ?=
+ =?utf-8?B?RWRzblhZZGxxNWZLTDdYTEtBckFPblJWTzNXVXBnUVQ2QklUTWFXT1E0M1hM?=
+ =?utf-8?B?TUdFaHc5bzJ5K0tjbzlDN3V4Yzl2Wis0Q0J6UDVLS0tWUlZsR1ptc2xZWTRh?=
+ =?utf-8?B?V0tEYTloM0w1aXZBWERocmVFeVlWL2s2SE45TC9JNmRPL0FSL3J0TEJIMENm?=
+ =?utf-8?B?UlU2RzZ0eTdCRWRjNy83UjA2YzI1M2p4NnpBajlLbzk5L1Y4WnlvYVQyUy9w?=
+ =?utf-8?B?R3VXbzFraXo3bno3cnpqV1FjdGRNY3pJVUM2WkdIMmloQjQxWWM5bHdkN3N3?=
+ =?utf-8?B?R1l5YzVpQXVmcmorNW1rWWxBTW1SMGZMNlhLUXZXeEQxWjlyTnNuamZjV0ND?=
+ =?utf-8?B?UmdXQ205RVlNSjhUVDRmUGNtVm0rUVFVZ3FNb0lsWjFCemI2UDQ3U3JYbmlt?=
+ =?utf-8?B?M2FOa3hYM3ZXL1p2bVBVK0d3eHpiNUYrVkhKVjhXS2JnQTNrQnU5MVliMW5H?=
+ =?utf-8?B?Q053THA1K1RvNUl0bUlldzN0aExZbm9VRGk5RDdDbWFKSzFiWTUvVmdsY3Fw?=
+ =?utf-8?B?bHJCeU1IUzdHMi9kand0QlhQdzJxc3ZWWEsva25yZzRTWTMxa0MyRGprL3A5?=
+ =?utf-8?B?TXFRKzREM2krcDU4Y1VoL2cyUVU0SmhHSmZPREFJSTVVQWxNSFk0VUVuMGQz?=
+ =?utf-8?B?OU5FVDNXLzR3dmVzK0N4eVdMSVVqS2dmcTJ6TWVyZVBUczkzRDcySTVKOWpD?=
+ =?utf-8?B?WE5rNTBEUjQ1THRDbXdMclBsVkN0N1V2eFl5azg4UGdFWXhSanE2QzlPbngz?=
+ =?utf-8?B?cXVZcEl5TlZCZ3Z0d1h5NnNIR3Y1dkVSSEFhN2FNV3BwdndqdUVVVVVDZTJv?=
+ =?utf-8?B?bE01eGNBejZRbUJvdzI5SlpsbDRkVm0yZHZBS2NDd0JNdk9haWsyNHR4RDRx?=
+ =?utf-8?B?Q2hEQnhUbFM2OWEyaWE3U1BnRkFXSFliZE5MRkpqT0dsSU9weWZwWUpKeTlC?=
+ =?utf-8?B?MnNRNlFQYXhBcERueWtnSE53aU05bHhEZWJEWUtoMjc4WkxqNFdicnhSWUVL?=
+ =?utf-8?B?K1gvNW9QUWdEdXFYSUZ3MURXMldUZVdRTlp2VEVYczIvOTkrSXUwUGRFS0pr?=
+ =?utf-8?B?MzRGeGlDdERnZjRtcDF3K3M4WnlBckhVbnJMMjZXRUtvRzZ5aXA5UE54U1ph?=
+ =?utf-8?B?YXhVUWV3aVUxT3B5cUZvaVRXRHB1bVN3M3JkMFdqZHBDOW9DRUJYNDdiaGlM?=
+ =?utf-8?B?NDFsWnpVa3lkbWliYm5MMW81WDVTa0VmOUNkSmZyQTRRVlBIL0t3TUJDSDVJ?=
+ =?utf-8?B?Z0dHRmo0S21CMkRZeTlNMVdNUXFMeDEzUVJwY1RsbEIrc3dmZlFDSmdtNzYx?=
+ =?utf-8?Q?eatZIsr2lah3CSoXe8?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 287582eb-6884-49e3-a5b7-08dec332b18f
-X-MS-Exchange-CrossTenant-AuthSource: IA1PR12MB8517.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a41634bb-3730-4b44-da7f-08dec333d57b
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR12MB6914.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jun 2026 18:46:02.9866
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jun 2026 18:54:12.7756
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: F6DC8W9tnrw1o4D5wlvJwycqKh6Vp6uaoei9eBeFWfz0Fb4+pZs/XJCnbGqb54uK
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DSVPR12MB999191
+X-MS-Exchange-CrossTenant-UserPrincipalName: mb37JXn84IIodzTPTQmX4ny4LhCpKgEXuZsSDmybvnynj1+w3UrXtpA2BYh76PEk6HU8QHW/5G61JAHTh1yv6g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR12MB9183
 
-Thank you for the testing/confirming.
 
-Xiaogang
 
-On 6/5/2026 1:41 PM, Gerhard Schwanzer wrote:
-> Hi Xiaogang, Thanks. I tested your attached patch on my RX 7600 XT
-> system. Test setup:
-> -
-> kernel 7.0.11 with 448ee453/bf2084a7 active
-> -
-> local revert not applied
-> -
-> your attached candidate fix applied
-> -
-> same self-contained v2 reproducer source as before, unchanged sha256:
-> 33347b5a1915f7452417f776c85527e55f825078c146163470bfe3eacabe3b27
-> Command: ./kfd_svm_split_hsa_copy --upstream-ab Result:
-> -
-> 10/10 runs completed successfully
-> -
-> all HSA/SDMA D2H copies completed
-> -
-> no ROCr memory access fault
-> -
-> no new GCVM_L2_PROTECTION_FAULT_STATUS
-> -
-> no SDMA0 permission fault
-> -
-> no GPU page fault in the kernel log So your patch fixes the reproducer
-> on my system with the original reproducer unchanged. Please feel free to
-> add: Tested-by: Gerhard Schwanzer
-> geschw@pm.me
-> Thanks, Gerhard
->
->
-> On 05/06/26 at 19:59, Chen, Xiaogang wrote:
->> AMD General
->>
->>
->> Hi Gerhard:
->>
->> I think the cause is checking the last byte address of svm range for
->> 2MB alignment when decide possible huge page mapping. Your test case
->> has vm range that ends just one byte before alignment.
->>
->> I tested your app with the attachment, no page fault during sdma
->> operation. Please verify it.
->>
->> Thanks
->>
->> Xiaogang
->>
->> *From:*Chen, Xiaogang
->> *Sent:* Wednesday, June 3, 2026 5:51 PM
->> *To:* Gerhard Schwanzer <geschw@pm.me>; regressions@lists.linux.dev
->> *Cc:* amd-gfx@lists.freedesktop.org; stable@vger.kernel.org; Deucher,
->> Alexander <Alexander.Deucher@amd.com>; Yang, Philip <Philip.Yang@amd.com>
->> *Subject:* Re: [REGRESSION] drm/amdkfd: SVM split-tail remap
->> regression causes SDMA0 permission fault on RX 7600 XT
->>
->> Hi Gerhard:
->>
->> Thanks. I can build the app now. And I saw the regression. I am
->> triaging it.
->>
->> The purpose of this patch is to remap split svm ranges(head/tail) that
->> were mapped with huge page mapping(pmd), but cannot be mapped in huge
->> page mapping after split due to new svm ranges are not 2MB aligned. It
->> seems the remap decision misses case that both head and tail ranges
->> are from original range with huge page mappings were used. Will check....
->>
->> Regards
->>
->> Xiaogang
->>
->> On 6/3/2026 12:54 AM, Gerhard Schwanzer wrote:
->>
->>      [Some people who received this message don't often get email fromgeschw@pm.me. Learn why this is important athttps://aka.ms/LearnAboutSenderIdentification ]
->>
->>      Hi Xiaogang,
->>
->>      Sorry, you are right. The source I uploaded was not self-contained, it still
->>
->>      referenced trace_history_replay.inc from an older local replay mode.
->>
->>      I uploaded a self-contained v2 source to the GitLab report:
->>
->>      https://gitlab.freedesktop.org/-/project/4522/uploads/7395b8985ecd7c54183a7615d479c02c/kfd_svm_split_hsa_copy-v2.c
->>
->>      The --upstream-ab path does not use that replay table, but the missing
->>
->>      include
->>
->>      obviously broke fresh builds. The v2 source embeds the table and otherwise
->>
->>      preserves the same source.
->>
->>      I re-tested this v2 source before uploading:
->>
->>          - clean build from only kfd_svm_split_hsa_copy-v2.c: OK
->>
->>          - ./kfd_svm_split_hsa_copy --help: OK
->>
->>          - good/workaround kernel: --upstream-ab completed 10/10 runs, no new
->>
->>            GCVM/SDMA0/protection-fault messages in the test window
->>
->>          - broken kernel: --upstream-ab reproduced the SDMA0 permission fault;
->>
->>            the first kernel fault address matched the planned split-tail page
->>
->>      Validation summaries:
->>
->>      https://gitlab.freedesktop.org/-/project/4522/uploads/e6d0f31c0fda0df2c999439411f29dca/good-kernel-validation-summary.md
->>
->>      https://gitlab.freedesktop.org/-/project/4522/uploads/bdf8a3ac6786ddb88dd426b59edb32a9/broken-kernel-validation-summary.md
->>
->>      The intended triage command remains:
->>
->>          ./kfd_svm_split_hsa_copy --upstream-ab
->>
->>      Generic build shape is:
->>
->>          cc -O2 -g -Wall -Wextra -pthread \
->>
->>            -I/path/to/rocm/include -L/path/to/rocm/lib \
->>
->>            -o kfd_svm_split_hsa_copy kfd_svm_split_hsa_copy-v2.c \
->>
->>            -lhsa-runtime64
->>
->>      If you still prefer a binary, please tell me the target runtime/distro. A
->>
->>      binary built on my NixOS system is Nix-store linked and likely not
->>
->>      portable to
->>
->>      your test system.
->>
->>      One more thing that would help me test any replacement fix: do you know what
->>
->>      specific failure or workload 448ee453 was intended to fix? I would like to
->>
->>      avoid validating only the revert side while accidentally losing the original
->>
->>      fix.
->>
->>      Thanks for catching this, and thanks for taking a look.
->>
->>      Regards,
->>
->>      Gerhard
->>
->>      On 06/03/2026 Chen, Xiaogang wrote:
->>
->>          I cannot compile kfd_svm_split_hsa_copy.c, there is no
->>
->>          "trace_history_replay.inc".
->>
->>          Or can you  send the test binary?  That should be enough to triage the
->>
->>          issue since it is a regression as you mentioned.
->>
->>          Regards
->>
->>          Xiaogang
->>
->>          On 6/2/2026 5:04 AM, Gerhard Schwanzer wrote:
->>
->>              Hi,
->>
->>              I would like to make sure this AMDKFD SVM regression is tracked by the
->>
->>              Linux regression process.
->>
->>              GitLab report:
->>
->>                  https://gitlab.freedesktop.org/drm/amd/-/work_items/4914
->>
->>              The regression was originally reported on 2026-01-27. It was bisected
->>
->>              to the
->>
->>              same functional change that Alex Deucher's revert patch later targeted:
->>
->>                  448ee45353ef9fb1a34f5f26eb3f48923c6f0898
->>
->>                  drm/amdkfd: Use huge page size to check split svm range alignment
->>
->>              The affected kernel line I tested identifies the same change as:
->>
->>                  bf2084a7b1d75d093b6a79df4c10142d49fbaa0e
->>
->>              Alex's revert patch:
->>
->>              https://lists.freedesktop.org/archives/amd-gfx/2026-February/138824.html
->>
->>              A small C/HSA reproducer is now available in the GitLab report. It
->>
->>              does not
->>
->>              require PyTorch, ComfyUI, Docker, model files, or the original
->>
->>              workload. It
->>
->>              uses ROCr/HSA, an anonymous THP-advised host mapping, explicit KFD SVM
->>
->>              SET_ATTR ioctls, and an HSA SDMA D2H copy.
->>
->>              Single reproducer command, same binary on both kernels:
->>
->>                  ./kfd_svm_split_hsa_copy --upstream-ab
->>
->>              Same-machine A/B result on an RX 7600 XT:
->>
->>                  448ee453/bf2084a7 active:
->>
->>                    1/1 run faults with SDMA0 permission fault
->>
->>                    GCVM_L2_PROTECTION_FAULT_STATUS=0x00841A51
->>
->>                  448ee453/bf2084a7 locally reverted:
->>
->>                    10/10 runs complete
->>
->>                    no ROCr memory access fault
->>
->>                    no new GCVM/SDMA0 permission fault in dmesg
->>
->>              The bad fault page is inside the split tail and inside the SDMA copy
->>
->>              range:
->>
->>                  critical tail: [0x722429d61..0x722429dff]
->>
->>                  copy pages:    [0x722429b30..0x722429d70]
->>
->>                  fault page:    0x722429d65
->>
->>              A full ftrace/PTE run with the same C reproducer/SVM sequence also shows:
->>
->>                  split_tail ... current_remap=0 old_remap=1 missed=1
->>
->>                  MISSED_REMAP_CANDIDATE split=tail
->>
->>                  no amdgpu_vm_update_ptes covering the fault page after the marker
->>
->>              before
->>
->>                  the fault-side GET_ATTR
->>
->>              The suspected code issue is that the split-tail/head remap predicate
->>
->>              introduced
->>
->>              by 448ee453/bf2084a7 can miss tails inside the final 512-page block.
->>
->>              Since
->>
->>              prange->last is inclusive, ALIGN_DOWN(prange->last, 512) is the start
->>
->>              of the
->>
->>              final block, not an exclusive upper bound.
->>
->>              I also sent a short follow-up to amd-gfx with the reproducer/A-B
->>
->>              summary and
->>
->>              asked what original failure or workload 448ee453/bf2084a7 was intended
->>
->>              to fix:
->>
->>              https://lists.freedesktop.org/archives/amd-gfx/2026-June/145800.html
->>
->>              I can resend the reproducer source and summaries directly on-list if
->>
->>              preferred.
->>
->>              #regzbot introduced: 448ee45353ef9fb1a34f5f26eb3f48923c6f0898
->>
->>              #regzbot monitor:
->>
->>              https://gitlab.freedesktop.org/drm/amd/-/work_items/4914
->>
->>              Thanks,
->>
->>              Gerhard Schwanzer
->>
+On 6/5/26 12:45, Marek Marczykowski-Górecki wrote:
+> On Fri, Jun 05, 2026 at 12:36:29PM -0500, Mario Limonciello wrote:
+>>
+>>
+>> On 6/5/26 12:34, Marek Marczykowski-Górecki wrote:
+>>> On Mon, Jan 12, 2026 at 08:47:50PM -0600, Mario Limonciello wrote:
+>>>>
+>>>>
+>>>> On 1/12/2026 7:01 PM, Marek Marczykowski-Górecki wrote:
+>>>>> Hi,
+>>>>>
+>>>>> I've got a report that kernel 6.17.9 crashes when running a Xen HVM domU
+>>>>> with AMD Raphael/Granite Ridge USB controller passed through.
+>>>>> It worked correctly in 6.12.59. Between those versions, I don't see any
+>>>>> relevant change to quirk_clear_strap_no_soft_reset_dev2_f0() function,
+>>>>> but the AMD node driver did got some changes, so my guess is one of them
+>>>>> is to blame. I know the good-bad range is huge, but there aren't that
+>>>>> many changes to the AMD node driver in this range.
+>>>>
+>>>> Is this perhaps a case that only the USB controller was passed through but
+>>>> that the root controller wasn't?  That would lead to a case that
+>>>> amd_smn_init() was never called and thus amd_roots was not initialized
+>>>> properly.
+>>>>
+>>>> So it would be a NULL pointer deref.  If that's correct, something like this
+>>>> should work to avoid it.
+>>>>
+>>>> diff --git a/arch/x86/kernel/amd_node.c b/arch/x86/kernel/amd_node.c
+>>>> index 3d0a4768d603c..894823b444d47 100644
+>>>> --- a/arch/x86/kernel/amd_node.c
+>>>> +++ b/arch/x86/kernel/amd_node.c
+>>>> @@ -91,6 +91,11 @@ static int __amd_smn_rw(u8 i_off, u8 d_off, u16 node, u32
+>>>> address, u32 *value, b
+>>>>           if (node >= amd_num_nodes())
+>>>>                   return err;
+>>>>
+>>>> +       if (!amd_roots) {
+>>>> +               pr_warn("AMD SMN roots not initialized.\n");
+>>>> +               return err;
+>>>> +       }
+>>>> +
+>>>>           root = amd_roots[node];
+>>>>           if (!root)
+>>>>                   return err;
+>>>
+>>> Thanks, I finally got confirmation from affected user that this patch
+>>> fixes the issue. From what I understand, adbf61cc47cb ("x86/acpi/boot: Correct
+>>> acpi_is_processor_usable() check again") was not enough.
+>>>
+>>>>> Original report at (with full kernel log etc): https://forum.qubes-os.org/t/yet-another-usb-keyboard-thread/38355/8
+>>>
+>>
+>> There's another patch being discussed.  Could this help?
+>>
+>> https://lore.kernel.org/all/20260602184823.GKah8ld2QJLm28xoa9@fat_crate.local/
+> 
+> Especially with 2/2 patch there, yes, looks like it would help too.
+> 
+
+Can you try Boris' inline proposal specifically?
