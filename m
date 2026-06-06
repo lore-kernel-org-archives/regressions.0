@@ -1,113 +1,86 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B40851E7C23
-	for <regressions@lists.linux.dev>; Sat,  6 Jun 2026 01:59:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D7461C3318
+	for <regressions@lists.linux.dev>; Sat,  6 Jun 2026 12:11:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780711172; cv=none; b=bOcT5wyKgykQbRq1XYzKAFb1suT+4LU3/RXGh4oZTKBFuG21bbKfQ2c1km38B4eTpzpMePT/aG+rhTkkHkRkZ7iBanXbBm5YraG9ohWCYN2250bbDQ7WkoJ1KuqFc1FjXlESIlRhJRk8RcZJ2xrMn84oRQa4HKcxiopix0M4lVA=
+	t=1780747911; cv=none; b=LpRQ3HuN7+bLsokBkeWbcbbal8uTYvWj5+95Dmca6cn8lbKbqudueogRw7FNAkwkdB87M6fkvqQq+koCNOKcCBKWoHWj7peCVIUapyt8AyBa2uijyUV6VGQYnpzNZeBaU2kiLe3zMmadZa4JbZTmR4PO6zLlRTJ2Yw2VNiwH1d8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780711172; c=relaxed/simple;
-	bh=YSi9BTcIMr7E1FJZP7E7BBJNWVLRgF6RE5Hlpkqw7cY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IiDTmUGT/JP86zObRiImRdxfWxZmzwXsApG1eW5OOu3N3/v6fqBWyKVW1/Z7Q4rlREnafKDSynxFaX426NHj4V+a/JMyyVdQhJZ0jqZgZ7uOAO/tm1jwK0TIxoIpOsEB2VIJu867OhSWXM9jvUDvbKVuVgwmVwt74UC9IegiRpw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=fail (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=GoOc+G4I reason="signature verification failed"; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1780747911; c=relaxed/simple;
+	bh=HCcZashi+hb9YN97gVDSQpOQ1FXGBIKe2JlfkuynmZQ=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=qf7KkLj2FwQvGUGDbLZhr9yI6zZYGphWL6NBh4IsLN6Ak++zbriGfU++eax9ugT+oRKJNsBaFaGPKQxi/K9Mmlsf5hbIRzRjBIKkpxxnCVcXHkbbVq3tKP8rdZn/xy+khLsyZ7z1ESigy9ishwkdZXEKcMFPjXIq2MT7+bnzQ6Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=fGUdtqFP; arc=none smtp.client-ip=188.68.63.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="GoOc+G4I"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 8529440E0214;
-	Sat,  6 Jun 2026 01:59:28 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=fail (4096-bit key)
-	reason="fail (body has been altered)" header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id cUGdt4Jaeeb7; Sat,  6 Jun 2026 01:59:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1780711158; bh=CfkxmemuY7KxJE+g9mokLCZqAk99pzkJADRF5WRoYZQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GoOc+G4IlMPKsuusomaVp6gefDUmEFHoIOguYttq6YRxOgLOSG1/OP7szQDAeslg9
-	 NXaS9H7ynZOgaib+lcJFxjQGxq0X3taibjLQoNIiNdRvyy1Lk1EpXjwWdGZu42FzAm
-	 mgBXFsJ+Ix0VtuybcY6ch+1F2Vv54/z5olrL2iO6QNmd0zw2QUg5GtRuxt3Cn2IOh5
-	 Yx3C3apHx+SxB+8n7IrlyxfJgb5VPx7MHMvAoN0O4vV4KNC/VUbZ0lsz5vZh2AzYud
-	 Nw95SM81fM2DAwKSDdt90H8HLvGotLxhwzd3czwlNkIrNRqDyQmTnjeD2egWJ+Gvks
-	 PnSF2Ej+tVPMbA14BsqobK6f7UjC7RTxYI2W8jpHR8qXGiGILSFDdfgeSEsNocOJ4g
-	 XOzhZva4PffoEyizo28w5TfgJJNztukSoeSfz5Jp1/HrJxRWp6IK7ZRZdbuT/gdFhn
-	 Ye0owe3WlhKqnHSlRqmwJ1ajdmP9h9i4WExP7a/4T9zhBc1CLke+plCvao3bTluGlB
-	 atrb+55XlfLu6xNnLnRltm3DVDpkVXZ6GFGrmUFWicZIoNHaGkBiV7m9F18gOnrse1
-	 gOg4K5N58T30zjioMa3b2T6rER3DUpHwJWBwl+OSPOeT+WLgET/lcF+FgGDliIRuqq
-	 gfKlwrn4fGg/LCwvKfr7O000=
-Received: from stx.tnic (unknown [IPv6:2600:1700:38ca:c00::2b])
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="fGUdtqFP"
+Received: from mors-relay8203.netcup.net (localhost [127.0.0.1])
+	by mors-relay8203.netcup.net (Postfix) with ESMTPS id 4gXcNm3ttxz8cSD
+	for <regressions@lists.linux.dev>; Sat,  6 Jun 2026 12:02:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1780747320;
+	bh=HCcZashi+hb9YN97gVDSQpOQ1FXGBIKe2JlfkuynmZQ=;
+	h=Date:Subject:From:To:References:In-Reply-To:From;
+	b=fGUdtqFP7Xlpz7HLg1uB4wLhUMtbnZdmw1T/wbHsSxMXaFDf++AC7B8XVz/fVMLcf
+	 IIy8CjZ/FWpSm3ogb08QVzAD89qLT8Faia9GOpEy9aCk1xRf10blY4DvjHLmu6/Hj2
+	 psRIajZavrA5SuHQAFDYpWCXEmtc+iivk/2qhiOjt+Zu/wmNc64Fg3dEodVO+ONAyx
+	 Sofo4yI5I43mqkDD/PDbkTjIC3sdSKujcKij2jje3RiUd2Z24f1Te2fL2LP+OddZo7
+	 fbOC7P0FuNwrydB1aOs+U2aSyBOJBaqK0k2c2GsBY0fNgoR7y5bk99nw7up0DDKKhm
+	 tovSk7b59hlTQ==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay8203.netcup.net (Postfix) with ESMTPS id 4gXcNm39pJz8cRW
+	for <regressions@lists.linux.dev>; Sat,  6 Jun 2026 12:02:00 +0000 (UTC)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id BA22040E01F9;
-	Sat,  6 Jun 2026 01:59:11 +0000 (UTC)
-Date: Fri, 5 Jun 2026 18:59:07 -0700
-From: Borislav Petkov <bp@alien8.de>
-To: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
-Cc: Mario Limonciello <mario.limonciello@amd.com>,
-	Yazen Ghannam <yazen.ghannam@amd.com>,
-	"maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-	"open list:AMD NODE DRIVER" <linux-kernel@vger.kernel.org>,
-	regressions@lists.linux.dev
-Subject: Re: kernel NULL pointer dereference in
- quirk_clear_strap_no_soft_reset_dev2_f0 -> amd_smn_read
-Message-ID: <20260606015907.GCaiN-6_XN_kSXwnHV@fat_crate.local>
-References: <2535f876-adea-41f1-bf92-a2f15a1eb157@amd.com>
- <aiMLK1Hvk0Fmyimm@mail-itl>
- <a413be63-f7fa-4d4f-9a3e-00abbfcd7824@amd.com>
- <aiMwNrdwzlowZDNP@mail-itl>
- <20260605211543.GFaiM8f2Ee2r5hMYXW@fat_crate.local>
- <aiNF5HXO4CksO_NE@mail-itl>
- <20260605222648.GAaiNNKAr3mtWsMr7e@fat_crate.local>
- <aiNQVHXAvdVhZrZn@mail-itl>
- <20260605230949.GBaiNXPZ2ztjVL7DBg@fat_crate.local>
- <aiNdoGL2JCC1VIiW@mail-itl>
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4gXcNm1SGwz8sb8
+	for <regressions@lists.linux.dev>; Sat,  6 Jun 2026 14:02:00 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 382266172A
+	for <regressions@lists.linux.dev>; Sat,  6 Jun 2026 14:01:59 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <a42ecb48-0cfd-46c5-89d3-46cfcaf85f88@leemhuis.info>
+Date: Sat, 6 Jun 2026 14:01:53 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <aiNdoGL2JCC1VIiW@mail-itl>
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: <178074731940.998252.7046812776796034124@mxe9fb.netcup.net>
+X-Rspamd-Server: rspamd-worker-8404
+X-Rspamd-Queue-Id: 382266172A
+X-NC-CID: MeOYKaHs+ETMgMU4kdwWxZxzIqBY9oZ0S8uVRaRTliuAWMZ/enA=
 
-On Sat, Jun 06, 2026 at 01:37:03AM +0200, Marek Marczykowski-G=C3=B3recki=
- wrote:
-> Is it actually guaranteed to run before PCI fixups? They are done via
-> fs_initcall_sync.
 
-Yap, the sync initcalls run after the respective level initcalls.
 
-> IMO it would be safer to guard __amd_smn_rw() with something that would=
- also
-> detect calls before amd_smn_init() is called.  Like using smn_exclusive=
- in
-> the Penny's patch, or amd_roots in the Mario's patch.
+On 3/9/24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-I can do this if absolutely necessary:
+#regzbot report: https://gitlab.freedesktop.org/drm/amd/-/issues/5286
+#regzbot unmonitor:
+https://lore.kernel.org/amd-gfx/44069eb146824aa195312f5b02c49287@valvesoftware.com/
 
-static bool amd_node_off =3D true;
+#regzbot report:
+https://lore.kernel.org/all/CAHLWS5FJCx66GQ-O10pu%2BnEudEo_QgQAM9vt76T7vT0zGPPC1g@mail.gmail.com/
+#regzbot fix: aa2f4addab44407c7aa742321de5dc1914ab5762
 
-and then set it accordingly in the init function but I don't think that's
-needed.
 
-> That said, amd_smn_read() called before amd_smn_init() would (should?)
-> fail anyway, even in non-virtualized case. So, maybe this approach
-> (still crash on NULL ptr when called before amd_smn_init()) is
-> acceptable?
-
-Right, then we can hear about it and see who's doing what shenanigans.
-
-Thx.
-
---=20
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
