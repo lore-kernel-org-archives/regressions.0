@@ -1,86 +1,105 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D7461C3318
-	for <regressions@lists.linux.dev>; Sat,  6 Jun 2026 12:11:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E14123128D4
+	for <regressions@lists.linux.dev>; Sun,  7 Jun 2026 22:59:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780747911; cv=none; b=LpRQ3HuN7+bLsokBkeWbcbbal8uTYvWj5+95Dmca6cn8lbKbqudueogRw7FNAkwkdB87M6fkvqQq+koCNOKcCBKWoHWj7peCVIUapyt8AyBa2uijyUV6VGQYnpzNZeBaU2kiLe3zMmadZa4JbZTmR4PO6zLlRTJ2Yw2VNiwH1d8=
+	t=1780873147; cv=none; b=TnU39NLsG/dEXqqSjTQg9xBgEXWMomgxJIn87CsBRoWJT0pA1gQkkhCVX34FA9yZUYlm6EAp0+NTTqS0OwbU2MYRupu2Id7nAnqYz0GunPFWOVoMPDy1hYw1LvrotC/R3k7dwjEEcNW9JsPG/6sOdw0fsb601LhSa6FJqPwruPo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780747911; c=relaxed/simple;
-	bh=HCcZashi+hb9YN97gVDSQpOQ1FXGBIKe2JlfkuynmZQ=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=qf7KkLj2FwQvGUGDbLZhr9yI6zZYGphWL6NBh4IsLN6Ak++zbriGfU++eax9ugT+oRKJNsBaFaGPKQxi/K9Mmlsf5hbIRzRjBIKkpxxnCVcXHkbbVq3tKP8rdZn/xy+khLsyZ7z1ESigy9ishwkdZXEKcMFPjXIq2MT7+bnzQ6Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=fGUdtqFP; arc=none smtp.client-ip=188.68.63.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1780873147; c=relaxed/simple;
+	bh=cfocYRwzijt7Nsnz2DHKCAaHtlZuZ0wai49c+cNlqDw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YXB9nLt8dw3nnegWjK8SuGuexy+hRQRhIX6nJEVLpzlcRUVWezv2qZvH7TOf/PM6k6qmH1uUgveKHdtHcITdyv2MGsmfmQvDuzqDeAtcWu9WNOQ6vO/pyziaYGvU5JYWrqv799HBGHmVWHJm+OLTqAdtD6DTkAKe8zdehve7fvA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g8rNKtuw; arc=none smtp.client-ip=209.85.219.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="fGUdtqFP"
-Received: from mors-relay8203.netcup.net (localhost [127.0.0.1])
-	by mors-relay8203.netcup.net (Postfix) with ESMTPS id 4gXcNm3ttxz8cSD
-	for <regressions@lists.linux.dev>; Sat,  6 Jun 2026 12:02:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1780747320;
-	bh=HCcZashi+hb9YN97gVDSQpOQ1FXGBIKe2JlfkuynmZQ=;
-	h=Date:Subject:From:To:References:In-Reply-To:From;
-	b=fGUdtqFP7Xlpz7HLg1uB4wLhUMtbnZdmw1T/wbHsSxMXaFDf++AC7B8XVz/fVMLcf
-	 IIy8CjZ/FWpSm3ogb08QVzAD89qLT8Faia9GOpEy9aCk1xRf10blY4DvjHLmu6/Hj2
-	 psRIajZavrA5SuHQAFDYpWCXEmtc+iivk/2qhiOjt+Zu/wmNc64Fg3dEodVO+ONAyx
-	 Sofo4yI5I43mqkDD/PDbkTjIC3sdSKujcKij2jje3RiUd2Z24f1Te2fL2LP+OddZo7
-	 fbOC7P0FuNwrydB1aOs+U2aSyBOJBaqK0k2c2GsBY0fNgoR7y5bk99nw7up0DDKKhm
-	 tovSk7b59hlTQ==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay8203.netcup.net (Postfix) with ESMTPS id 4gXcNm39pJz8cRW
-	for <regressions@lists.linux.dev>; Sat,  6 Jun 2026 12:02:00 +0000 (UTC)
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4gXcNm1SGwz8sb8
-	for <regressions@lists.linux.dev>; Sat,  6 Jun 2026 14:02:00 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 382266172A
-	for <regressions@lists.linux.dev>; Sat,  6 Jun 2026 14:01:59 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <a42ecb48-0cfd-46c5-89d3-46cfcaf85f88@leemhuis.info>
-Date: Sat, 6 Jun 2026 14:01:53 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g8rNKtuw"
+Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-8cceb2ecc03so32614686d6.3
+        for <regressions@lists.linux.dev>; Sun, 07 Jun 2026 15:59:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1780873145; x=1781477945; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=cb3sWf+RWoizgQv6BHRmquqe3oZdi3qwiZN/K5InEJc=;
+        b=g8rNKtuwPSOwJ1oExQ/7eaHkufk/4XeKENf9+26LxcqL72AqFN5aXz+nEQoYrGS9jD
+         udzPjJ1+8ewvys7cEqPg/no9ZzwWxjlMZbXHWpMyqLIgUuzD64nTgudilxxMHGIeKW9u
+         h9/f1ZbdXwWeo8wEEeVyxCgXb+S5th7Z3dYCrRUKukN3hKGjTn60cyQyVSvoVB49iGui
+         RjxldEGR6oZcCJWJ6GMi2Sj7QnuHT8+jtT4etsXmCuzutpuurNN0HlVAHG5oS5timdhz
+         GdKLY3Z8Kff5FDOTR/pYkSWQ679eN2jA+Y1qMYY07RaP0FIo/6XrYTLagTj/bWIS9lVT
+         6b7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780873145; x=1781477945;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cb3sWf+RWoizgQv6BHRmquqe3oZdi3qwiZN/K5InEJc=;
+        b=YpbUzpp2JELbr64slMfZVPv8dbiYTSj9FMgoB1ydTvHNyufEoZ1FEyTZIdZQAgS42z
+         XoTAlNhX0gRlXr/k5k+cCk799ykPGmLVBAI5qQoCsQsILQvv+RGfJctKb5+h2KWM45AB
+         TXXeGqKtUQ0T459XAW/3KKt15f1PYREHAhmMGFgzVHA2tTduJHotoQYizBleLANJ99po
+         Jgo+uB+zu6WCzs0mVxwsibVOrHsaNQV03crZivcnLbfUvbUM3Yk7PayOm6K3YtW6lyyZ
+         i1J4OQEp2zwL7RvlCWacpA6w+2alKxrG3TIvJ6ClNF4om3XTrC6QiWMWkh0nBe/pCdS+
+         MuVA==
+X-Gm-Message-State: AOJu0YwfJjYSnK01ey5sTm9rggPPsgoQwUHaD6CRUxjdiQosaxfD+wk/
+	US2tKEC+am1H/n0ncGKlHQk34jW/7zVZDsnb++6O7aViwq+d09wkc65w
+X-Gm-Gg: Acq92OFYxDa8qUW9wO0BSj4tuu6G1OXvG966JrLcDfXv3moM15w7mdiTSFxw9uvyHSH
+	pSOXVlIcpfI5qscHxRpQ8hfY8I+B19PqQ9hup+0U2DXAVS3L/ryqxdqTNybLBE+RYe0ARNtesT9
+	ISHRIXBQ/Us9wztSgMWoSqY5LXMJvoLGuBJFpjVOX6lgSxrMtMBsv4Tr3Q/3UIVE/iAsn0iJTHf
+	34sA6oiIXKmncXeGOoZazi1vHE2z2wS0IrgYnfKICofCwwf/OIv57pjS1t5+jihcLuvC7O1ffTe
+	oMXYTjDIHt7nx9Wiub9KKK/+eAPyBGaPYeA2UqnW8b5yed/3QS1InPrIs8hgSYIxDTiJfILQqTy
+	e3ni7feeA95bzpcE4FZekobux6uYfZS75TZKvNSmdxyFwH1mkeojQYRNo+ksjDYCCcGLGdpu6yZ
+	HnsbODYbzQcsx8KbaYjfUCVSQOR3xfDFEiu9rj6WcJQnmXxI3up9RyzOAeuskZ6lMcFiqfDYnzR
+	o9Wr5xbjtdqeZVVkcbl8yg=
+X-Received: by 2002:a05:6214:54c7:b0:8cc:e14:9594 with SMTP id 6a1803df08f44-8cee6268478mr195954696d6.33.1780873144834;
+        Sun, 07 Jun 2026 15:59:04 -0700 (PDT)
+Received: from oklopfer.hsd1.ma.comcast.net (c-73-167-46-184.hsd1.ma.comcast.net. [73.167.46.184])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8ceccda2601sm144816226d6.6.2026.06.07.15.59.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 07 Jun 2026 15:59:04 -0700 (PDT)
+From: Oren Klopfer <oklopfer37@gmail.com>
+To: linux-rockchip@lists.infradead.org
+Cc: regressions@lists.linux.dev,
+	pbrobinson@gmail.com,
+	heiko@sntech.de,
+	guptarud@gmail.com,
+	megi@xff.cz
+Subject: [REGRESSION][BISECTED] wireless networking broken on Pinephone Pro
+Date: Sun,  7 Jun 2026 18:59:01 -0400
+Message-ID: <20260607225901.64019-1-oklopfer37@gmail.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <178074731940.998252.7046812776796034124@mxe9fb.netcup.net>
-X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: 382266172A
-X-NC-CID: MeOYKaHs+ETMgMU4kdwWxZxzIqBY9oZ0S8uVRaRTliuAWMZ/enA=
+Content-Transfer-Encoding: 8bit
 
+Apologies if this is not formatted properly, this is my first submission to the kernel mailing list. WiFi specifications were introduced into the Pinephone Pro device tree in 096bd8c679185f898cae9933c6a68650fa26ea4f, but this causes complete networking failure on some devices. The regression affects all versions v6.18-rc1..v7.1-rc6.
 
+An identical issue was reported for the Pinebook Pro at https://lore.kernel.org/all/aUKOlj-RvTYlrpiS@rock.grzadka/; the regression was reverted in 29d1f56c4f3001b7f547123e0a307c009ac717f8. The errors faced on the Pinephone Pro are exactly the same as were reported for the Pinebook Pro regression.
 
-On 3/9/24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
+A previous patch at https://lore.kernel.org/all/20260112-ppp_connectivity-v1-3-284d6e83b212@gmail.com/ attempted to resolve this issue but never ended up being merged.
 
-#regzbot report: https://gitlab.freedesktop.org/drm/amd/-/issues/5286
-#regzbot unmonitor:
-https://lore.kernel.org/amd-gfx/44069eb146824aa195312f5b02c49287@valvesoftware.com/
+Bisection:
+096bd8c679185f898cae9933c6a68650fa26ea4f is the first bad commit
+commit 096bd8c679185f898cae9933c6a68650fa26ea4f
+Author: Peter Robinson <pbrobinson@gmail.com>
+Date:   Fri Aug 29 12:38:24 2025 +0100
 
-#regzbot report:
-https://lore.kernel.org/all/CAHLWS5FJCx66GQ-O10pu%2BnEudEo_QgQAM9vt76T7vT0zGPPC1g@mail.gmail.com/
-#regzbot fix: aa2f4addab44407c7aa742321de5dc1914ab5762
+    arm64: dts: rockchip: Further describe the WiFi for the Pinephone Pro
+   
+    Update the wake-up pin and associated interupt details for the
+    Pinephone Pro WiFi module. Details obtained from the published
+    PinephonePro-Schematic-V1.0-20211127.pdf page 19.
+   
+    Signed-off-by: Peter Robinson <pbrobinson@gmail.com>
+    Link: https://lore.kernel.org/r/20250829113826.2029755-1-pbrobinson@gmail.com
+    Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 
+ arch/arm64/boot/dts/rockchip/rk3399-pinephone-pro.dts | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
+Reverting the commit allows wireless connection to function again. I am not really familiar with the process of submitting a revert patch, but I'd request that this be done on all of 6.18 (LTS), 7.0 (Stable), 7.1 (Mainline). Thanks!
+
+#regzbot introduced: 096bd8c679
