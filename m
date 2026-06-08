@@ -1,105 +1,114 @@
-Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E14123128D4
-	for <regressions@lists.linux.dev>; Sun,  7 Jun 2026 22:59:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 212BD16A395;
+	Mon,  8 Jun 2026 01:33:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780873147; cv=none; b=TnU39NLsG/dEXqqSjTQg9xBgEXWMomgxJIn87CsBRoWJT0pA1gQkkhCVX34FA9yZUYlm6EAp0+NTTqS0OwbU2MYRupu2Id7nAnqYz0GunPFWOVoMPDy1hYw1LvrotC/R3k7dwjEEcNW9JsPG/6sOdw0fsb601LhSa6FJqPwruPo=
+	t=1780882387; cv=none; b=tD0x1EYmFwxcxyXEa/figlN9O8k2mwMKy9LfZRh8Ha1ASjOHnacAGdG4SeQKth3WPcopgAGGEAcVvK7a4zHu1OAeO6TyKCoO/olkcKKG8VUxMTGbJJS24AqxqeG1/yE0vWYn1Nx7/ML3lB280R9v6KjD3phnV5SiMesyPWAkjMs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780873147; c=relaxed/simple;
-	bh=cfocYRwzijt7Nsnz2DHKCAaHtlZuZ0wai49c+cNlqDw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YXB9nLt8dw3nnegWjK8SuGuexy+hRQRhIX6nJEVLpzlcRUVWezv2qZvH7TOf/PM6k6qmH1uUgveKHdtHcITdyv2MGsmfmQvDuzqDeAtcWu9WNOQ6vO/pyziaYGvU5JYWrqv799HBGHmVWHJm+OLTqAdtD6DTkAKe8zdehve7fvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g8rNKtuw; arc=none smtp.client-ip=209.85.219.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1780882387; c=relaxed/simple;
+	bh=IRAXd5QTmF7gOvt55lmEu3hNBA86Qsolc+fvbcMghd0=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=VHzsiElKBJ0aUo/p4RPJxFDp8kh+DcKrT5cCrUZbj9JJhzbnN3bhx7AwyfhXXralweEHnUWOv2Xg0ZO7VME/UdqVxE1iietnlwDE2WlHz/mOuK/FcZduNNsrLFcgV7iaMC0Wk+iBa/KRPscVK6a1Jf1JBK/UUL4Dd4w9a7w8lbU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=pass (2048-bit key) header.d=realtek.com header.i=@realtek.com header.b=XN1rLv4r; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g8rNKtuw"
-Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-8cceb2ecc03so32614686d6.3
-        for <regressions@lists.linux.dev>; Sun, 07 Jun 2026 15:59:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1780873145; x=1781477945; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=cb3sWf+RWoizgQv6BHRmquqe3oZdi3qwiZN/K5InEJc=;
-        b=g8rNKtuwPSOwJ1oExQ/7eaHkufk/4XeKENf9+26LxcqL72AqFN5aXz+nEQoYrGS9jD
-         udzPjJ1+8ewvys7cEqPg/no9ZzwWxjlMZbXHWpMyqLIgUuzD64nTgudilxxMHGIeKW9u
-         h9/f1ZbdXwWeo8wEEeVyxCgXb+S5th7Z3dYCrRUKukN3hKGjTn60cyQyVSvoVB49iGui
-         RjxldEGR6oZcCJWJ6GMi2Sj7QnuHT8+jtT4etsXmCuzutpuurNN0HlVAHG5oS5timdhz
-         GdKLY3Z8Kff5FDOTR/pYkSWQ679eN2jA+Y1qMYY07RaP0FIo/6XrYTLagTj/bWIS9lVT
-         6b7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780873145; x=1781477945;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cb3sWf+RWoizgQv6BHRmquqe3oZdi3qwiZN/K5InEJc=;
-        b=YpbUzpp2JELbr64slMfZVPv8dbiYTSj9FMgoB1ydTvHNyufEoZ1FEyTZIdZQAgS42z
-         XoTAlNhX0gRlXr/k5k+cCk799ykPGmLVBAI5qQoCsQsILQvv+RGfJctKb5+h2KWM45AB
-         TXXeGqKtUQ0T459XAW/3KKt15f1PYREHAhmMGFgzVHA2tTduJHotoQYizBleLANJ99po
-         Jgo+uB+zu6WCzs0mVxwsibVOrHsaNQV03crZivcnLbfUvbUM3Yk7PayOm6K3YtW6lyyZ
-         i1J4OQEp2zwL7RvlCWacpA6w+2alKxrG3TIvJ6ClNF4om3XTrC6QiWMWkh0nBe/pCdS+
-         MuVA==
-X-Gm-Message-State: AOJu0YwfJjYSnK01ey5sTm9rggPPsgoQwUHaD6CRUxjdiQosaxfD+wk/
-	US2tKEC+am1H/n0ncGKlHQk34jW/7zVZDsnb++6O7aViwq+d09wkc65w
-X-Gm-Gg: Acq92OFYxDa8qUW9wO0BSj4tuu6G1OXvG966JrLcDfXv3moM15w7mdiTSFxw9uvyHSH
-	pSOXVlIcpfI5qscHxRpQ8hfY8I+B19PqQ9hup+0U2DXAVS3L/ryqxdqTNybLBE+RYe0ARNtesT9
-	ISHRIXBQ/Us9wztSgMWoSqY5LXMJvoLGuBJFpjVOX6lgSxrMtMBsv4Tr3Q/3UIVE/iAsn0iJTHf
-	34sA6oiIXKmncXeGOoZazi1vHE2z2wS0IrgYnfKICofCwwf/OIv57pjS1t5+jihcLuvC7O1ffTe
-	oMXYTjDIHt7nx9Wiub9KKK/+eAPyBGaPYeA2UqnW8b5yed/3QS1InPrIs8hgSYIxDTiJfILQqTy
-	e3ni7feeA95bzpcE4FZekobux6uYfZS75TZKvNSmdxyFwH1mkeojQYRNo+ksjDYCCcGLGdpu6yZ
-	HnsbODYbzQcsx8KbaYjfUCVSQOR3xfDFEiu9rj6WcJQnmXxI3up9RyzOAeuskZ6lMcFiqfDYnzR
-	o9Wr5xbjtdqeZVVkcbl8yg=
-X-Received: by 2002:a05:6214:54c7:b0:8cc:e14:9594 with SMTP id 6a1803df08f44-8cee6268478mr195954696d6.33.1780873144834;
-        Sun, 07 Jun 2026 15:59:04 -0700 (PDT)
-Received: from oklopfer.hsd1.ma.comcast.net (c-73-167-46-184.hsd1.ma.comcast.net. [73.167.46.184])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8ceccda2601sm144816226d6.6.2026.06.07.15.59.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 07 Jun 2026 15:59:04 -0700 (PDT)
-From: Oren Klopfer <oklopfer37@gmail.com>
-To: linux-rockchip@lists.infradead.org
-Cc: regressions@lists.linux.dev,
-	pbrobinson@gmail.com,
-	heiko@sntech.de,
-	guptarud@gmail.com,
-	megi@xff.cz
-Subject: [REGRESSION][BISECTED] wireless networking broken on Pinephone Pro
-Date: Sun,  7 Jun 2026 18:59:01 -0400
-Message-ID: <20260607225901.64019-1-oklopfer37@gmail.com>
-X-Mailer: git-send-email 2.53.0
+	dkim=pass (2048-bit key) header.d=realtek.com header.i=@realtek.com header.b="XN1rLv4r"
+X-SpamFilter-By: ArmorX SpamTrap 5.80 with qID 6581X1crC3192656, This message is accepted by code: ctloc85258
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=realtek.com; s=dkim;
+	t=1780882381; bh=IRAXd5QTmF7gOvt55lmEu3hNBA86Qsolc+fvbcMghd0=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding:MIME-Version;
+	b=XN1rLv4rA1RFugFgGtvkrxO15w0aLnNKOEXXiUGpxb2x6QgKTmXod/tpz+2eLtF7a
+	 leFjCl9shp1d1Ds3Cv4QegVnD5ZJM0A85rJ4vyFOkCnmgnY7v1So0Ncl3cixnMMpSh
+	 biMJN6ivVgpuZycF9Z+Lbtbmdzld1o0nyGFZWpgaecHLBbKueTdVSv9cKBla7jpnHr
+	 TFPTeKgHkE3NZ3bxeyMWDdCj30npodIgZYeoTsw1fTYKPntBi14cBvjbZ56ctS1zi2
+	 WJ7GjIdV94JcFbg3Xnfu1AxTxcDNqNBWgK9Gyure5XmiSE5DywprGBuiFxOozrz4zu
+	 cT2JUxPdBAy3g==
+Received: from mail.realtek.com (rtkexhmbs02.realtek.com.tw[172.21.6.41])
+	by rtits2.realtek.com.tw (8.15.2/3.28/5.94) with ESMTPS id 6581X1crC3192656
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 8 Jun 2026 09:33:01 +0800
+Received: from RTKEXHMBS05.realtek.com.tw (10.21.1.55) by
+ RTKEXHMBS02.realtek.com.tw (172.21.6.41) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.17; Mon, 8 Jun 2026 09:33:00 +0800
+Received: from RTKEXHMBS06.realtek.com.tw (10.21.1.56) by
+ RTKEXHMBS05.realtek.com.tw (10.21.1.55) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.17; Mon, 8 Jun 2026 09:32:59 +0800
+Received: from RTKEXHMBS06.realtek.com.tw ([::1]) by
+ RTKEXHMBS06.realtek.com.tw ([fe80::e6fd:5a3f:8946:92c4%10]) with mapi id
+ 15.02.2562.017; Mon, 8 Jun 2026 09:32:59 +0800
+From: Ping-Ke Shih <pkshih@realtek.com>
+To: Giovanni Santini <giovannisantini93@yahoo.it>, "stable@vger.kernel.org"
+	<stable@vger.kernel.org>, "linux-wireless@vger.kernel.org"
+	<linux-wireless@vger.kernel.org>
+CC: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: RE: rtw88: WiFi card is not offloaded properly when suspending the OS
+Thread-Topic: rtw88: WiFi card is not offloaded properly when suspending the
+ OS
+Thread-Index: AQHc9MfBVY8tNqpB4kyHWDTYuLp5JLYzXc0g
+Date: Mon, 8 Jun 2026 01:32:59 +0000
+Message-ID: <efae0a4db2ab4b6193922b393d3dcdd6@realtek.com>
+References: <10da4c45-74ed-4deb-8c88-6d0b803465ba.ref@yahoo.it>
+ <10da4c45-74ed-4deb-8c88-6d0b803465ba@yahoo.it>
+In-Reply-To: <10da4c45-74ed-4deb-8c88-6d0b803465ba@yahoo.it>
+Accept-Language: en-US, zh-TW
+Content-Language: zh-TW
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Apologies if this is not formatted properly, this is my first submission to the kernel mailing list. WiFi specifications were introduced into the Pinephone Pro device tree in 096bd8c679185f898cae9933c6a68650fa26ea4f, but this causes complete networking failure on some devices. The regression affects all versions v6.18-rc1..v7.1-rc6.
-
-An identical issue was reported for the Pinebook Pro at https://lore.kernel.org/all/aUKOlj-RvTYlrpiS@rock.grzadka/; the regression was reverted in 29d1f56c4f3001b7f547123e0a307c009ac717f8. The errors faced on the Pinephone Pro are exactly the same as were reported for the Pinebook Pro regression.
-
-A previous patch at https://lore.kernel.org/all/20260112-ppp_connectivity-v1-3-284d6e83b212@gmail.com/ attempted to resolve this issue but never ended up being merged.
-
-Bisection:
-096bd8c679185f898cae9933c6a68650fa26ea4f is the first bad commit
-commit 096bd8c679185f898cae9933c6a68650fa26ea4f
-Author: Peter Robinson <pbrobinson@gmail.com>
-Date:   Fri Aug 29 12:38:24 2025 +0100
-
-    arm64: dts: rockchip: Further describe the WiFi for the Pinephone Pro
-   
-    Update the wake-up pin and associated interupt details for the
-    Pinephone Pro WiFi module. Details obtained from the published
-    PinephonePro-Schematic-V1.0-20211127.pdf page 19.
-   
-    Signed-off-by: Peter Robinson <pbrobinson@gmail.com>
-    Link: https://lore.kernel.org/r/20250829113826.2029755-1-pbrobinson@gmail.com
-    Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-
- arch/arm64/boot/dts/rockchip/rk3399-pinephone-pro.dts | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
-
-Reverting the commit allows wireless connection to function again. I am not really familiar with the process of submitting a revert patch, but I'd request that this be done on all of 6.18 (LTS), 7.0 (Stable), 7.1 (Mainline). Thanks!
-
-#regzbot introduced: 096bd8c679
+R2lvdmFubmkgU2FudGluaSA8Z2lvdmFubmlzYW50aW5pOTNAeWFob28uaXQ+IHdyb3RlOg0KPiAN
+Cj4gSnVuIDAyIDE3OjI1OjMzIGFyY2hsaW51eC10dWcga2VybmVsOiBydHc4OF84ODIyY2UgMDAw
+MDowMzowMC4wOiBmYWlsZWQNCj4gdG8gc2VuZCBoMmMgY29tbWFuZA0KPiBKdW4gMDIgMTc6MjU6
+MzMgYXJjaGxpbnV4LXR1ZyBrZXJuZWw6IHJ0dzg4Xzg4MjJjZSAwMDAwOjAzOjAwLjA6IGZhaWxl
+ZA0KPiB0byBzZW5kIGgyYyBjb21tYW5kDQo+IEp1biAwMiAxNzoyNTozMyBhcmNobGludXgtdHVn
+IGtlcm5lbDogcnR3ODhfODgyMmNlIDAwMDA6MDM6MDAuMDogZmFpbGVkDQo+IHRvIHNlbmQgaDJj
+IGNvbW1hbmQNCj4gSnVuIDAyIDE3OjI1OjMzIGFyY2hsaW51eC10dWcga2VybmVsOiBydHc4OF84
+ODIyY2UgMDAwMDowMzowMC4wOiBmYWlsZWQNCj4gdG8gc2VuZCBoMmMgY29tbWFuZA0KPiBKdW4g
+MDIgMTc6MjU6MzYgYXJjaGxpbnV4LXR1ZyBrZXJuZWw6IHJ0dzg4Xzg4MjJjZSAwMDAwOjAzOjAw
+LjA6IGZhaWxlZA0KPiB0byBwb2xsIG9mZnNldD0weDUgbWFzaz0weDIgdmFsdWU9MHgwDQo+IEp1
+biAwMiAxNzoyNTozNiBhcmNobGludXgtdHVnIGtlcm5lbDogLS0tLS0tLS0tLS0tWyBjdXQgaGVy
+ZSBdLS0tLS0tLS0tLS0tDQo+IEp1biAwMiAxNzoyNTozNiBhcmNobGludXgtdHVnIGtlcm5lbDog
+ZmFpbGVkIHRvIHJlYWQgREJJIHJlZ2lzdGVyLA0KPiBhZGRyPTB4MDcxOQ0KDQpBZGQgdGhlc2Ug
+YmVsb3cgdG8gc2VlIGlmIGl0IGNhbiBoZWxwLiANCg0Kc3VkbyBuYW5vIC9ldGMvbW9kcHJvYmUu
+ZC9ydHc4OC5jb25mDQpvcHRpb25zIHJ0dzg4X2NvcmUgZGlzYWJsZV9scHNfZGVlcD15DQpvcHRp
+b25zIHJ0dzg4X3BjaSBkaXNhYmxlX2FzcG09eQ0KDQpBZnRlciBjb2xkIHJlYm9vdCwgY2hlY2sg
+L3N5cy9tb2R1bGVzL3J0dzg4XyovcGFyYW10ZXJzLyogdG8gc2VlIGlmDQp0aGUgbW9kaWZpY2F0
+aW9uIHRha2VzIGVmZmVjdC4NCg0KPiANCj4gSSdtIGF0dGFjaGluZyB0aGUgZnVsbCBib290IGxv
+ZywgaWYgeW91IG5lZWQgYSBmcmVzaCBvbmUgSSBjYW4gcHJvdmlkZSBpdC4NCg0KQmVmb3JlICJm
+YWlsZWQgdG8gcG9sbCAuLi4iIGxvZywgSSBhbHNvIHNlZSANCg0KSnVuIDAyIDE3OjI1OjAyIGFy
+Y2hsaW51eC10dWcga2VybmVsOiBydHc4OF84ODIyY2UgMDAwMDowMzowMC4wOiBBTUQtVmk6DQog
+RXZlbnQgbG9nZ2VkIFtJT19QQUdFX0ZBVUxUIGRvbWFpbj0weDAwMGUgYWRkcmVzcz0weGFlOTY2
+OGJjIGZsYWdzPTB4MDAwMF0NCg0KUGxlYXNlIHRyeSB0byB0dXJuIG9mZiBJT01NVSBieSBlZGl0
+aW5nIC9ldGMvZGVmYXVsdC9ncnViDQpHUlVCX0NNRExJTkVfTElOVVhfREVGQVVMVD0icXVpZXQg
+c3BsYXNoIGFtZF9pb21tdT1vZmYgaW9tbXU9b2ZmIg0KDQpBbmQgdGhlbiB1cGRhdGUtZ3J1Yg0K
+DQo+IA0KPiBJIHJ1biBBcmNoTGludXggd2l0aCBLREUgUGxhc21hLCBmb3IgbmV0d29ya2luZyBJ
+IHVzZSBOZXR3b3JrTWFuYWdlciBhbmQNCj4gd3BhX3N1cHBsaWNhbnQuDQo+IA0KPiBJZiB5b3Ug
+d291bGQgbGlrZSBtZSB0byBydW4gdGVzdHMgd2l0aCBlLmcuIGp1c3QgaXdkIEkgY2FuIGRvIHNv
+LCBqdXN0DQo+IGxldCBtZSBrbm93IHdoYXQgc2V0dXAgeW91IHdvdWxkIGxpa2UgbWUgdG8gaGF2
+ZS4NCj4gDQo+IEkgZG8gbm90IGhhdmUgdGhpcyBpc3N1ZSB3aXRoIHRoZSBMVFMga2VybmVsIDYu
+MTguMzQuIFRoaXMgYWZmZWN0cyA3LjANCj4gYW5kIDcuMS4NCj4gSSBiZWxpZXZlIHRoaXMgaXNz
+dWUgd2FzIG5vdCBwcmVzZW50IGluIDwgNyBrZXJuZWxzLCBidXQgSSBjYW5ub3QgZ3VhcmFudGVl
+Lg0KPiBJIGNhbiBob3dldmVyIGRvd25ncmFkZSB0byBwcmV2aW91cyBrZXJuZWxzIHRvIHVuZGVy
+c3RhbmQgd2hlcmUgdGhlDQo+IGlzc3VlIHdhcyBpbnRyb2R1Y2VkLg0KDQpUaGUgY29tbWl0cyBi
+ZXR3ZWVuIDYuMTguMzQgfiA3LjAuMTAgYXJlIHF1aXRlIGZldywgYW5kIEkgY2FuJ3QgZmluZCB0
+aGUgDQpvbmUgdGhhdCBjYW4gYWZmZWN0IHRoZSBiZWhhdmlvci4gUGxlYXNlIHN3aXRjaCB5b3Vy
+IGtlcm5lbCBiYWNrIHRvIDYuMTguMzQsDQphbmQgYXBwbHkgcnR3ODgncyBwYXRjaGVzIGFkZGVk
+IHVudGlsIDcuMC4xMC4NCg0KU2luY2UgdGhlIGxhc3QgY29tbWl0IG9mIDYuMTggaXMgZmNlNmZl
+ZTA4MTdiODg5OWUwZWUzOGFiNmI5OGYwZDdlOTM5Y2VlZA0KDQpQbGVhc2UgdXNlIGJlbG93IGNv
+bW1hbmRzIHRvIGdldCB0aGUgKDIwKSBwYXRjaGVzOg0KZHJpdmVycy9uZXQvd2lyZWxlc3MvcmVh
+bHRlay9ydHc4OCQgZ2l0IGZvcm1hdC1wYXRjaCB2Ny4wLjEwLi4uZmNlNmZlZTA4MTdiODg5OWUw
+ZWUzOGFiNmI5OGYwZDdlOTM5Y2VlZCAtLSAuLw0KDQpUaGVuIHlvdSBjYW4gYWRkIHRoZW0gb25l
+IGJ5IG9uZSB0byBzZWUgd2hpY2ggb25lIGlzIHRoZSBjYXVzZS4NCg0KVGhlIGdpdCByZXBvc2l0
+b3J5IHlvdSBuZWVkIGlzOg0KZ2l0Oi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51eC9rZXJu
+ZWwvZ2l0L3N0YWJsZS9saW51eC1zdGFibGUuZ2l0DQoNCg0KUGluZy1LZQ0KDQoNCg==
