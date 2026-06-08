@@ -1,50 +1,66 @@
-Received: from prod-mta-13.swg-srv.net (prod-mta-13.swg-srv.net [185.255.28.18])
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 703A83A2E12
-	for <regressions@lists.linux.dev>; Mon,  8 Jun 2026 10:35:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.255.28.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB434257452
+	for <regressions@lists.linux.dev>; Mon,  8 Jun 2026 10:57:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780914913; cv=none; b=mY+WH12vmuH9aEhcKQzB9dXK1/X+lf7TBFgJD078wbYNLhqKZo5J92M9gFucotZUuTNMWFnFJgX4evo9Q+C53hpw5zyF7xYe7iiVlZDLvZY+ojJKeqQ/ly8llEXSwPJOUnpM69SespkLA3qs2CuZAXn6h0+MLX28uj5hJWunuew=
+	t=1780916270; cv=none; b=SrdgIZXuJZz62619CjGotkub1gtzsEMgVdlRloc1OnnabH1wwTy3EEKbbu2d+AOHohoXw3jcBC5OZXHiiwjZURMw7j46QzTmuNYbbHWtZd+nGyjMiQsB5l8ykU63yR5pPzkUL8PtyNk8oajJGqO046zQqxjM/qpaG3VYSPpcFCI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780914913; c=relaxed/simple;
-	bh=KSdZgsdA0CVUjmOdg4lEpKebdC7WFt+gNkCOZ0X8Bdk=;
-	h=Message-ID:Date:MIME-Version:To:From:Subject:Cc:Content-Type; b=flW0Q88QWmuocc2WZU2X3qBrxcs/dK5m+x3KRD6RyNgxGbMtCAIwcFOmXI1+ShAv6x0oIgefJtWQDmBVcVti9b2UOLj7EWSuqY4QlAt71TXcXmVmZ1QhriebT/pG11ZNrWHK/TsL+LeVdsc7SjIY/2MnUztTz9Sa2UJ7jKs4/HY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=vates.tech; spf=pass smtp.mailfrom=swg.vates.tech; dkim=pass (2048-bit key) header.d=vates.tech header.i=@vates.tech header.b=IqmC/qQu; arc=none smtp.client-ip=185.255.28.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=vates.tech
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=swg.vates.tech
+	s=arc-20240116; t=1780916270; c=relaxed/simple;
+	bh=H9DOL/o9aLea2pHg1OX70F3vZ4vsfjUSxkft6MXXC5U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=O8qy0Pun516IoxR3ol4zZKU+QKjzO5VxWZv+YOBvdhKO1vXU+l87lK1ZprqBXkqeRO61F48qLve7QcTE7jrtIy0BhPd901fA4Uo7FfAokv3xfpqS6epA52Cl3+Gut6r+ZbOdTrrFzp5XhzAt8wdSQRshToIWnjubdPN/lhFT+Rc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=cWqaWtKI; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=vates.tech header.i=@vates.tech header.b="IqmC/qQu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vates.tech;
- q=dns/txt; s=selector1; bh=KSdZgsdA0CVUjmOdg4lEpKebdC7WFt+gNkCOZ0X8Bdk=;
- h=from:subject:date:message-id:to:cc:mime-version:content-type:feedback-id;
- b=IqmC/qQuDyy9NJS65m5lW6nkBdUwA0mrwdyL99f1lZScLq5dLczntXbkJcUcCU3818dF+V/zr
- GlxpLt7PSTWDfpKMiBccyN8VQQX999sguH73uvK6HfC4X0TNi9+ZMLm37eEIti9UHVdSHbo4VR0
- TSpoxKOJtNiIOSA95JMlJDP+G5X/IgNpChEcygtQvYQXLHvnGFbHRSXhv6VhQ0swFD8mE3FhnWn
- 5lv+KpdBkDhQDozEdvLZ4D2L76XwWXfDoJ/wfTyqFXjRJuP/h42aWqYRIlbch4zXNDB0cUL35nP
- nYTQm1axrObFuI5s0cesO5HBbfM/XaWlGfsc8o2mPVUg==
-Received: from mail2.vates.fr ([37.26.189.201] mail2.vates.fr)
- (Authenticated sender: 8631fc262581453bbf619ec5b2062170/smtp/7773de5a-2839-4720-82ee-e06722ae1d3e)
- by prod-mta-13.swg-srv.net (ZoneMTA - prod-mta-13) with ESMTPSA id 19ea6c8227b000701b.001
- for <regressions@lists.linux.dev>
- (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
- Mon, 08 Jun 2026 10:29:54 +0000
-X-Zone-Loop: 49b2262438e09c58be2c068170a2f5159539ba1cc23f
-x-campaign-type: default
-x-transaction-id: 645de423-a0c8-4d61-a3e2-bb190f95e0cc
-x-swg-uid: 01-4463f8a4-de7a-4b14-8c7a-7daaf8a4d604
-X-Mailer: Sweego
-Message-ID:
- <1780914594.8631fc262581453bbf619ec5b2062170.19ea6c8227b000701b@vates.tech>
-x-swg-bid: 1780914594.8631fc262581453bbf619ec5b2062170.19ea6c8227b000701b
-Feedback-ID: default:8631fc262581453bbf619ec5b2062170:Sweego
-x-campaign-id: default
-x-client-id: 8631fc262581453bbf619ec5b2062170
-Received: from [192.168.1.18] (88-188-240-210.subs.proxad.net [88.188.240.210])
-	(Authenticated sender: teddy.astie)
-	by mail2.vates.fr (Postfix) with ESMTPSA id B54E6870A8;
-	Mon,  8 Jun 2026 12:29:53 +0200 (CEST)
-Date: Mon, 8 Jun 2026 12:29:53 +0200
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="cWqaWtKI"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-bed19623d6eso500644666b.1
+        for <regressions@lists.linux.dev>; Mon, 08 Jun 2026 03:57:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1780916267; x=1781521067; darn=lists.linux.dev;
+        h=in-reply-to:autocrypt:from:content-language:references:cc:to
+         :subject:user-agent:mime-version:date:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=H9DOL/o9aLea2pHg1OX70F3vZ4vsfjUSxkft6MXXC5U=;
+        b=cWqaWtKIcZIsOG04lMXMTcyjBZEAX8rJykQWEGqBykTAzbKc02WSGCzn0p4f8Zf2n2
+         p8spERsH8iyXVFZgMr/O2PE7qPDOrdlRPzuu2LglqPQXwyOyPBhXQeXwBeu5zt9WvayZ
+         iV14EFiI2FGSLRCEEqrxZzBo5F+J12S20h5CI+nPZf3gptT1p9Y103eUum8OKu4qAXzX
+         PlKUd4Z1lEqAKHO/1OYEPzGUEe6+qK/hRJUYvMHLwmfKwwLER/CT/SBS2L4d4BqPNtgP
+         C0tZxQ6n5BOIdwvHlkwcdZm2AGVC9ueFPSmOfF4dO86ItM6yijmEJv9hJNX6aVmdaGqm
+         iPMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780916267; x=1781521067;
+        h=in-reply-to:autocrypt:from:content-language:references:cc:to
+         :subject:user-agent:mime-version:date:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=H9DOL/o9aLea2pHg1OX70F3vZ4vsfjUSxkft6MXXC5U=;
+        b=lW5bPRKIncUTu3PPFguCKhk1egqU/sAd/B8z2fvE26MsbN0aBY2M9bmXOlCZOuEaGp
+         kGfifKkve1jR5c1dfmbHv84WsQkKQDhiUTFMpKf7r9msQ80TtFnoTK1QB9GwKP/AUoUA
+         Ni4QYJdtqGozTkU2JJ9tboRpXMqmGYGso3ZSgEw3HOmNN03+l3cnAKX1pRoS6v8SdngZ
+         jmgTnn8lgq8u4sdvSExvpBr5ALv3TvErFt1h3yFWxCiL/0FBC6wcG4H3dthM6wugqu/q
+         2TSSmxZugu2sBUwr/wwJPt+R9yFl1hO8DSVjA8RYsb8goWg4Id5yiiQ3YylV6yW44BVV
+         CEdw==
+X-Forwarded-Encrypted: i=1; AFNElJ9GoTK5Nu5CdFnwtu60XhnqO3Kp4ZyWcDoudFJpAfqd2wlOa1KOAuMkbG6puLRF97iwznfRnZriFfI+Ig==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxklgnHtxmwNzpaaWEAlk3jZqJjvikTHlB6r7lrERyb2Y44Yvr5
+	ZB7IPv67pShca9wPa7xKPfuRwai/cavUcaEAWjng+rXr8bhhuu1H66QbXtIG0O3CeGA=
+X-Gm-Gg: Acq92OG5e9x1/H8wiZAEpDFEcqaScjacomy9PRKlxrdMJFgpi7E2F321NZeDsPdrGyG
+	NuMiWy2uOccXb3EShHPRi1V9naXPqhCBRXERPP5rE7WS+PVEQfM8mYiAyf59qPPwZJ+2QYGub3v
+	u3KRbJpqI7vMTn4wC9v86o8eJB/enLdr6gD1s69vHHr3RMI5CcUnqToW+w835KR9X5Vtq55mR1t
+	BZgEITMFD0c33+MMPFHyXtWzB8QXPIR9+Cvq7xHl82M67EVQQq/cNEI9MXTI1lco2HLjR3tdFCL
+	O23uPuopcy8Vylh53lJJNCnu3XGeKtpWPeQdWIbUi8RsNWCWJkTa3rimHNm/ICa31iBwQi4KgfP
+	5V8SfBSQ0SDbz+04alJ4n3dHoVpMVURgn/R0g3b6JLeehGrDNHT/W2JpE3C6iVSS584goSluflZ
+	Us/BecIm7muMTc+E8+RDlv0RQJQMngwwcxp9rMVrqOtOZuNyOjT0t0mSf1cCQYZVThzKel/eybi
+	RcHKO7qGUw8Ow25LjPvUfHFMAIbM73zHvu+gkDqWrvrXCNYfMtHGFuiYLFbKzuQ
+X-Received: by 2002:a17:907:7f89:b0:bb8:fd88:f400 with SMTP id a640c23a62f3a-bf370f6b0b1mr732997666b.21.1780916267018;
+        Mon, 08 Jun 2026 03:57:47 -0700 (PDT)
+Received: from ?IPV6:2a00:12d0:af5d:ad01:5d3f:14e6:9bcb:5112? (2a00-12d0-af5d-ad01-5d3f-14e6-9bcb-5112.ip.tng.de. [2a00:12d0:af5d:ad01:5d3f:14e6:9bcb:5112])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-bf055308063sm854822966b.48.2026.06.08.03.57.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 08 Jun 2026 03:57:46 -0700 (PDT)
+Message-ID: <8d17788d-c7cf-47ff-9216-41f920eea621@suse.com>
+Date: Mon, 8 Jun 2026 12:57:46 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -52,168 +68,181 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- regressions@lists.linux.dev
-From: Teddy Astie <teddy.astie@vates.tech>
-Subject: [REGRESSION][BISECTED] Long boot time with Xen HVM guests during PV
- spinlock initialization
-Autocrypt: addr=teddy.astie@vates.tech; keydata=
- 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
- x9fhaZEsniw8/bYgC3igkk5YJiOa
+Subject: Re: [REGRESSION][BISECTED] Long boot time with Xen HVM guests during
+ PV spinlock initialization
+To: Teddy Astie <teddy.astie@vates.tech>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ regressions@lists.linux.dev, Thomas Gleixner <tglx@linutronix.de>
 Cc: Xen-devel <xen-devel@lists.xenproject.org>,
  Olivier Lambert <olivier.lambert@vates.tech>
+References: <1780914594.8631fc262581453bbf619ec5b2062170.19ea6c8227b000701b@vates.tech>
+Content-Language: en-US
+From: Juergen Gross <jgross@suse.com>
+Autocrypt: addr=jgross@suse.com; keydata=
+ xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOB
+ ycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJve
+ dYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i1TXkH09XSSI8mEQ/ouNcMvIJ
+ NwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/BBLUVbDa4+gmzDC9ezlZkTZG2t14zWPvx
+ XP3FAp2pkW0xqG7/377qptDmrk42GlSKN4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEB
+ AAHNH0p1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT7CwHkEEwECACMFAlOMcK8CGwMH
+ CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRCw3p3WKL8TL8eZB/9G0juS/kDY9LhEXseh
+ mE9U+iA1VsLhgDqVbsOtZ/S14LRFHczNd/Lqkn7souCSoyWsBs3/wO+OjPvxf7m+Ef+sMtr0
+ G5lCWEWa9wa0IXx5HRPW/ScL+e4AVUbL7rurYMfwCzco+7TfjhMEOkC+va5gzi1KrErgNRHH
+ kg3PhlnRY0Udyqx++UYkAsN4TQuEhNN32MvN0Np3WlBJOgKcuXpIElmMM5f1BBzJSKBkW0Jc
+ Wy3h2Wy912vHKpPV/Xv7ZwVJ27v7KcuZcErtptDevAljxJtE7aJG6WiBzm+v9EswyWxwMCIO
+ RoVBYuiocc51872tRGywc03xaQydB+9R7BHPzsBNBFOMcBYBCADLMfoA44MwGOB9YT1V4KCy
+ vAfd7E0BTfaAurbG+Olacciz3yd09QOmejFZC6AnoykydyvTFLAWYcSCdISMr88COmmCbJzn
+ sHAogjexXiif6ANUUlHpjxlHCCcELmZUzomNDnEOTxZFeWMTFF9Rf2k2F0Tl4E5kmsNGgtSa
+ aMO0rNZoOEiD/7UfPP3dfh8JCQ1VtUUsQtT1sxos8Eb/HmriJhnaTZ7Hp3jtgTVkV0ybpgFg
+ w6WMaRkrBh17mV0z2ajjmabB7SJxcouSkR0hcpNl4oM74d2/VqoW4BxxxOD1FcNCObCELfIS
+ auZx+XT6s+CE7Qi/c44ibBMR7hyjdzWbABEBAAHCwF8EGAECAAkFAlOMcBYCGwwACgkQsN6d
+ 1ii/Ey9D+Af/WFr3q+bg/8v5tCknCtn92d5lyYTBNt7xgWzDZX8G6/pngzKyWfedArllp0Pn
+ fgIXtMNV+3t8Li1Tg843EXkP7+2+CQ98MB8XvvPLYAfW8nNDV85TyVgWlldNcgdv7nn1Sq8g
+ HwB2BHdIAkYce3hEoDQXt/mKlgEGsLpzJcnLKimtPXQQy9TxUaLBe9PInPd+Ohix0XOlY+Uk
+ QFEx50Ki3rSDl2Zt2tnkNYKUCvTJq7jvOlaPd6d/W0tZqpyy7KVay+K4aMobDsodB3dvEAs6
+ ScCnh03dDAFgIq5nsB11j3KPKdVoPlfucX2c7kGNH+LUMbzqV6beIENfNexkOfxHfw==
+In-Reply-To: <1780914594.8631fc262581453bbf619ec5b2062170.19ea6c8227b000701b@vates.tech>
 Content-Type: multipart/signed; micalg=pgp-sha256;
  protocol="application/pgp-signature";
- boundary="------------WKkEUcsBQ7WSRW0erHybh9j2"
-X-Bm-Milter-Handled: 4ffbd6c1-ee69-4e1b-aabd-f977039bd3e2
-X-Bm-Transport-Timestamp: 1780914593833
+ boundary="------------EJhgzHWGeNJ9mz6vTP1C080x"
 
 This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------WKkEUcsBQ7WSRW0erHybh9j2
-Content-Type: multipart/mixed; boundary="------------hWRCOMaiMnlf1PnELWG0Gg0i";
+--------------EJhgzHWGeNJ9mz6vTP1C080x
+Content-Type: multipart/mixed; boundary="------------tsXtAwWUSZsZg0hsalyZJhEB";
  protected-headers="v1"
-From: Teddy Astie <teddy.astie@vates.tech>
-To: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- regressions@lists.linux.dev
+From: Juergen Gross <jgross@suse.com>
+To: Teddy Astie <teddy.astie@vates.tech>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ regressions@lists.linux.dev, Thomas Gleixner <tglx@linutronix.de>
 Cc: Xen-devel <xen-devel@lists.xenproject.org>,
  Olivier Lambert <olivier.lambert@vates.tech>
-Message-ID: <fcb0b8c3-fe08-445a-86f9-2691cb77fe90@vates.tech>
-Subject: [REGRESSION][BISECTED] Long boot time with Xen HVM guests during PV
- spinlock initialization
+Message-ID: <8d17788d-c7cf-47ff-9216-41f920eea621@suse.com>
+Subject: Re: [REGRESSION][BISECTED] Long boot time with Xen HVM guests during
+ PV spinlock initialization
+References: <1780914594.8631fc262581453bbf619ec5b2062170.19ea6c8227b000701b@vates.tech>
+In-Reply-To: <1780914594.8631fc262581453bbf619ec5b2062170.19ea6c8227b000701b@vates.tech>
 
---------------hWRCOMaiMnlf1PnELWG0Gg0i
-Content-Type: multipart/mixed; boundary="------------LW1wKyaS2NsA5yXw7Q8geKiB"
+--------------tsXtAwWUSZsZg0hsalyZJhEB
+Content-Type: multipart/mixed; boundary="------------L6wly7QKGkrOWKkKyWHkEh4X"
 
---------------LW1wKyaS2NsA5yXw7Q8geKiB
+--------------L6wly7QKGkrOWKkKyWHkEh4X
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: base64
 
-SGVsbG8sDQoNCkluIDYuMTIuNSsga2VybmVscyBvbiBBTUQgQ1BVcywgd2Ugb2JzZXJ2ZSBh
-Ym5vcm1hbGx5IGxvbmcgYm9vdCB0aW1lcyANCndoZXJlIHRoZSBndWVzdCBpcyBzdHJ1Z2ds
-aW5nIG9uIFBWIHNwaW5sb2NrIGluaXRpYWxpemF0aW9uLg0KDQpUaGlzIG9jY3VycyBzdGFy
-dGluZyB3aXRoIDYuMTIuNSwgYW5kIGFsc28gb24gbW9yZSByZWNlbnQga2VybmVscyBvbiAN
-CkludGVsIHBsYXRmb3JtcywgYnV0IHRoYXQgaGFzbid0IGJlZW4gZnVsbHkgaW52ZXN0aWdh
-dGVkIGF0IHRoaXMgdGltZSANCihidXQgSSBhc3N1bWUgaXQncyBhIHZhcmlhbnQgb2YgdGhl
-IHNhbWUgaXNzdWUpLg0KDQpUaGlzIG9jY3VycyBzaW5jZSBhIGJhY2twb3J0IG9mIDc2MDMx
-ZDkgKCJjbG9ja3NvdXJjZTogTWFrZSBuZWdhdGl2ZSANCm1vdGlvbiBkZXRlY3Rpb24gbW9y
-ZSByb2J1c3QiKS4NCg0KU29tZSAoY2xhdWRlLWJhc2VkKSBhbmFseXNpcyBtYWRlIGFwcGVh
-cnMgdG8gcmVsYXRlIHRoYXQgdG8gdGhlIGxhY2sgb2YgDQpwcm9wZXIgbWF4X3Jhd19kZWx0
-YSBpbiB0aGUgamlmZmllcyBjbG9ja3NvdXJjZSB3aGljaCBhcHBlYXJzIHRvIG1ha2UgDQp0
-aGUgY2xvY2sgZmFpbCB0byBwcm9ncmVzcyBtZWFuaW5nZnVsbHkuDQoNCkhlcmUgaXMgYSBy
-YXcgc3VtbWFyeSBvZiB0aGUgYW5hbHlzaXMNCiA+IFdlIHRyYWNrZWQgaXQgZG93biB0byBh
-IHNpbmdsZSBzdGFibGUgYmFja3BvcnQgaW4gNi4xMi41OiBjb21taXQgDQoxYTY3OGY2ODI5
-YTggKCJjbG9ja3NvdXJjZTogTWFrZSBuZWdhdGl2ZSBtb3Rpb24gZGV0ZWN0aW9uIG1vcmUg
-cm9idXN0IiwgDQp1cHN0cmVhbSA3NjAzMWQ5NTM2YTApLiBJdCBpbnRyb2R1Y2VzIGEgbWF4
-X3Jhd19kZWx0YSBmaWVsZCBvbiBzdHJ1Y3QgDQpjbG9ja3NvdXJjZSBidXQgbmV2ZXIgaW5p
-dGlhbGl6ZXMgaXQgZm9yIHRoZSBkZWZhdWx0IGJvb3QgdGltZWtlZXBlciANCih0aGUgamlm
-ZmllcyBjbG9ja3NvdXJjZSksIHNvIGNsb2Nrc291cmNlX2RlbHRhKCkgY2xhbXBzIGV2ZXJ5
-IGRlbHRhIHRvIA0KMCBhbmQgQ0xPQ0tfTU9OT1RPTklDIGZyZWV6ZXMgd2hpbGUgdGhhdCBj
-bG9ja3NvdXJjZSBpcyBhY3RpdmUuIE9uIHRoaXMgDQpIVk0gZ3Vlc3QsIFNNUCBicmluZy11
-cCBydW5zIHdoaWxlIHRoZSBqaWZmaWVzIGNsb2Nrc291cmNlIGlzIHN0aWxsIHRoZSANCnRp
-bWVrZWVwZXIsIGFuZCB0aGUgWGVuIHNpbmdsZSBzaG90IChoaWdoIHJlc29sdXRpb24pIHRp
-Y2sgdGhlbiBhZHZhbmNlcyANCmppZmZpZXMgZmFyIHRvbyBzbG93bHksIHNvIHRoZSBzZWNv
-bmRhcnkgQ1BVcyBidXJuIHNlY29uZHMgaW4gDQpjYWxpYnJhdGVfZGVsYXkoKS4NCg0KVGVk
-ZHkNCg==
---------------LW1wKyaS2NsA5yXw7Q8geKiB
-Content-Type: application/pgp-keys; name="OpenPGP_0x660FA9D102CBCFD0.asc"
-Content-Disposition: attachment; filename="OpenPGP_0x660FA9D102CBCFD0.asc"
+QWRkIFRob21hcyBHbGVpeG5lciAoYXV0aG9yIG9mIHRoZSBwYXRjaCBpbnRyb2R1Y2luZyB0
+aGUgcmVncmVzc2lvbikuDQoNCg0KSnVlcmdlbg0KDQpPbiAwOC4wNi4yNiAxMjoyOSwgVGVk
+ZHkgQXN0aWUgd3JvdGU6DQo+IEhlbGxvLA0KPiANCj4gSW4gNi4xMi41KyBrZXJuZWxzIG9u
+IEFNRCBDUFVzLCB3ZSBvYnNlcnZlIGFibm9ybWFsbHkgbG9uZyBib290IHRpbWVzIHdoZXJl
+IHRoZSANCj4gZ3Vlc3QgaXMgc3RydWdnbGluZyBvbiBQViBzcGlubG9jayBpbml0aWFsaXph
+dGlvbi4NCj4gDQo+IFRoaXMgb2NjdXJzIHN0YXJ0aW5nIHdpdGggNi4xMi41LCBhbmQgYWxz
+byBvbiBtb3JlIHJlY2VudCBrZXJuZWxzIG9uIEludGVsIA0KPiBwbGF0Zm9ybXMsIGJ1dCB0
+aGF0IGhhc24ndCBiZWVuIGZ1bGx5IGludmVzdGlnYXRlZCBhdCB0aGlzIHRpbWUgKGJ1dCBJ
+IGFzc3VtZSANCj4gaXQncyBhIHZhcmlhbnQgb2YgdGhlIHNhbWUgaXNzdWUpLg0KPiANCj4g
+VGhpcyBvY2N1cnMgc2luY2UgYSBiYWNrcG9ydCBvZiA3NjAzMWQ5ICgiY2xvY2tzb3VyY2U6
+IE1ha2UgbmVnYXRpdmUgbW90aW9uIA0KPiBkZXRlY3Rpb24gbW9yZSByb2J1c3QiKS4NCj4g
+DQo+IFNvbWUgKGNsYXVkZS1iYXNlZCkgYW5hbHlzaXMgbWFkZSBhcHBlYXJzIHRvIHJlbGF0
+ZSB0aGF0IHRvIHRoZSBsYWNrIG9mIHByb3BlciANCj4gbWF4X3Jhd19kZWx0YSBpbiB0aGUg
+amlmZmllcyBjbG9ja3NvdXJjZSB3aGljaCBhcHBlYXJzIHRvIG1ha2UgdGhlIGNsb2NrIGZh
+aWwgdG8gDQo+IHByb2dyZXNzIG1lYW5pbmdmdWxseS4NCj4gDQo+IEhlcmUgaXMgYSByYXcg
+c3VtbWFyeSBvZiB0aGUgYW5hbHlzaXMNCj4gID4gV2UgdHJhY2tlZCBpdCBkb3duIHRvIGEg
+c2luZ2xlIHN0YWJsZSBiYWNrcG9ydCBpbiA2LjEyLjU6IGNvbW1pdCAxYTY3OGY2ODI5YTgg
+DQo+ICgiY2xvY2tzb3VyY2U6IE1ha2UgbmVnYXRpdmUgbW90aW9uIGRldGVjdGlvbiBtb3Jl
+IHJvYnVzdCIsIHVwc3RyZWFtIA0KPiA3NjAzMWQ5NTM2YTApLiBJdCBpbnRyb2R1Y2VzIGEg
+bWF4X3Jhd19kZWx0YSBmaWVsZCBvbiBzdHJ1Y3QgY2xvY2tzb3VyY2UgYnV0IA0KPiBuZXZl
+ciBpbml0aWFsaXplcyBpdCBmb3IgdGhlIGRlZmF1bHQgYm9vdCB0aW1la2VlcGVyICh0aGUg
+amlmZmllcyBjbG9ja3NvdXJjZSksIA0KPiBzbyBjbG9ja3NvdXJjZV9kZWx0YSgpIGNsYW1w
+cyBldmVyeSBkZWx0YSB0byAwIGFuZCBDTE9DS19NT05PVE9OSUMgZnJlZXplcyB3aGlsZSAN
+Cj4gdGhhdCBjbG9ja3NvdXJjZSBpcyBhY3RpdmUuIE9uIHRoaXMgSFZNIGd1ZXN0LCBTTVAg
+YnJpbmctdXAgcnVucyB3aGlsZSB0aGUgDQo+IGppZmZpZXMgY2xvY2tzb3VyY2UgaXMgc3Rp
+bGwgdGhlIHRpbWVrZWVwZXIsIGFuZCB0aGUgWGVuIHNpbmdsZSBzaG90IChoaWdoIA0KPiBy
+ZXNvbHV0aW9uKSB0aWNrIHRoZW4gYWR2YW5jZXMgamlmZmllcyBmYXIgdG9vIHNsb3dseSwg
+c28gdGhlIHNlY29uZGFyeSBDUFVzIA0KPiBidXJuIHNlY29uZHMgaW4gY2FsaWJyYXRlX2Rl
+bGF5KCkuDQo+IA0KPiBUZWRkeQ0KDQo=
+--------------L6wly7QKGkrOWKkKyWHkEh4X
+Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
+Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
 Content-Description: OpenPGP public key
 Content-Transfer-Encoding: quoted-printable
 
 -----BEGIN PGP PUBLIC KEY BLOCK-----
 
-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
-x9fhaZEsniw8/bYgC3igkk5YJiOa
-=3DlUIA
+xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjri
+oyspZKOBycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2
+kaV2KL9650I1SJvedYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i
+1TXkH09XSSI8mEQ/ouNcMvIJNwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/B
+BLUVbDa4+gmzDC9ezlZkTZG2t14zWPvxXP3FAp2pkW0xqG7/377qptDmrk42GlSK
+N4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEBAAHNHEp1ZXJnZW4gR3Jvc3Mg
+PGpnQHBmdXBmLm5ldD7CwHkEEwECACMFAlOMcBYCGwMHCwkIBwMCAQYVCAIJCgsE
+FgIDAQIeAQIXgAAKCRCw3p3WKL8TL0KdB/93FcIZ3GCNwFU0u3EjNbNjmXBKDY4F
+UGNQH2lvWAUy+dnyThpwdtF/jQ6j9RwE8VP0+NXcYpGJDWlNb9/JmYqLiX2Q3Tye
+vpB0CA3dbBQp0OW0fgCetToGIQrg0MbD1C/sEOv8Mr4NAfbauXjZlvTj30H2jO0u
++6WGM6nHwbh2l5O8ZiHkH32iaSTfN7Eu5RnNVUJbvoPHZ8SlM4KWm8rG+lIkGurq
+qu5gu8q8ZMKdsdGC4bBxdQKDKHEFExLJK/nRPFmAuGlId1E3fe10v5QL+qHI3EIP
+tyfE7i9Hz6rVwi7lWKgh7pe0ZvatAudZ+JNIlBKptb64FaiIOAWDCx1SzR9KdWVy
+Z2VuIEdyb3NzIDxqZ3Jvc3NAc3VzZS5jb20+wsB5BBMBAgAjBQJTjHCvAhsDBwsJ
+CAcDAgEGFQgCCQoLBBYCAwECHgECF4AACgkQsN6d1ii/Ey/HmQf/RtI7kv5A2PS4
+RF7HoZhPVPogNVbC4YA6lW7DrWf0teC0RR3MzXfy6pJ+7KLgkqMlrAbN/8Dvjoz7
+8X+5vhH/rDLa9BuZQlhFmvcGtCF8eR0T1v0nC/nuAFVGy+67q2DH8As3KPu0344T
+BDpAvr2uYM4tSqxK4DURx5INz4ZZ0WNFHcqsfvlGJALDeE0LhITTd9jLzdDad1pQ
+SToCnLl6SBJZjDOX9QQcyUigZFtCXFst4dlsvddrxyqT1f17+2cFSdu7+ynLmXBK
+7abQ3rwJY8SbRO2iRulogc5vr/RLMMlscDAiDkaFQWLoqHHOdfO9rURssHNN8WkM
+nQfvUewRz80hSnVlcmdlbiBHcm9zcyA8amdyb3NzQG5vdmVsbC5jb20+wsB5BBMB
+AgAjBQJTjHDXAhsDBwsJCAcDAgEGFQgCCQoLBBYCAwECHgECF4AACgkQsN6d1ii/
+Ey8PUQf/ehmgCI9jB9hlgexLvgOtf7PJnFOXgMLdBQgBlVPO3/D9R8LtF9DBAFPN
+hlrsfIG/SqICoRCqUcJ96Pn3P7UUinFG/I0ECGF4EvTE1jnDkfJZr6jrbjgyoZHi
+w/4BNwSTL9rWASyLgqlA8u1mf+c2yUwcGhgkRAd1gOwungxcwzwqgljf0N51N5Jf
+VRHRtyfwq/ge+YEkDGcTU6Y0sPOuj4Dyfm8fJzdfHNQsWq3PnczLVELStJNdapwP
+OoE+lotufe3AM2vAEYJ9rTz3Cki4JFUsgLkHFqGZarrPGi1eyQcXeluldO3m91NK
+/1xMI3/+8jbO0tsn1tqSEUGIJi7ox80eSnVlcmdlbiBHcm9zcyA8amdyb3NzQHN1
+c2UuZGU+wsB5BBMBAgAjBQJTjHDrAhsDBwsJCAcDAgEGFQgCCQoLBBYCAwECHgEC
+F4AACgkQsN6d1ii/Ey+LhQf9GL45eU5vOowA2u5N3g3OZUEBmDHVVbqMtzwlmNC4
+k9Kx39r5s2vcFl4tXqW7g9/ViXYuiDXb0RfUpZiIUW89siKrkzmQ5dM7wRqzgJpJ
+wK8Bn2MIxAKArekWpiCKvBOB/Cc+3EXE78XdlxLyOi/NrmSGRIov0karw2RzMNOu
+5D+jLRZQd1Sv27AR+IP3I8U4aqnhLpwhK7MEy9oCILlgZ1QZe49kpcumcZKORmzB
+TNh30FVKK1EvmV2xAKDoaEOgQB4iFQLhJCdP1I5aSgM5IVFdn7v5YgEYuJYx37Io
+N1EblHI//x/e2AaIHpzK5h88NEawQsaNRpNSrcfbFmAg987ATQRTjHAWAQgAyzH6
+AOODMBjgfWE9VeCgsrwH3exNAU32gLq2xvjpWnHIs98ndPUDpnoxWQugJ6MpMncr
+0xSwFmHEgnSEjK/PAjppgmyc57BwKII3sV4on+gDVFJR6Y8ZRwgnBC5mVM6JjQ5x
+Dk8WRXljExRfUX9pNhdE5eBOZJrDRoLUmmjDtKzWaDhIg/+1Hzz93X4fCQkNVbVF
+LELU9bMaLPBG/x5q4iYZ2k2ex6d47YE1ZFdMm6YBYMOljGkZKwYde5ldM9mo45mm
+we0icXKLkpEdIXKTZeKDO+Hdv1aqFuAcccTg9RXDQjmwhC3yEmrmcfl0+rPghO0I
+v3OOImwTEe4co3c1mwARAQABwsBfBBgBAgAJBQJTjHAWAhsMAAoJELDendYovxMv
+Q/gH/1ha96vm4P/L+bQpJwrZ/dneZcmEwTbe8YFsw2V/Buv6Z4Mysln3nQK5ZadD
+534CF7TDVft7fC4tU4PONxF5D+/tvgkPfDAfF77zy2AH1vJzQ1fOU8lYFpZXTXIH
+b+559UqvIB8AdgR3SAJGHHt4RKA0F7f5ipYBBrC6cyXJyyoprT10EMvU8VGiwXvT
+yJz3fjoYsdFzpWPlJEBRMedCot60g5dmbdrZ5DWClAr0yau47zpWj3enf1tLWaqc
+suylWsviuGjKGw7KHQd3bxALOknAp4dN3QwBYCKuZ7AddY9yjynVaD5X7nF9nO5B
+jR/i1DG86lem3iBDXzXsZDn8R3/CwO0EGAEIACAWIQSFEmdy6PYElKXQl/ew3p3W
+KL8TLwUCWt3w0AIbAgCBCRCw3p3WKL8TL3YgBBkWCAAdFiEEUy2wekH2OPMeOLge
+gFxhu0/YY74FAlrd8NAACgkQgFxhu0/YY75NiwD/fQf/RXpyv9ZX4n8UJrKDq422
+bcwkujisT6jix2mOOwYBAKiip9+mAD6W5NPXdhk1XraECcIspcf2ff5kCAlG0DIN
+aTUH/RIwNWzXDG58yQoLdD/UPcFgi8GWtNUp0Fhc/GeBxGipXYnvuWxwS+Qs1Qay
+7/Nbal/v4/eZZaWs8wl2VtrHTS96/IF6q2o0qMey0dq2AxnZbQIULiEndgR625EF
+RFg+IbO4ldSkB3trsF2ypYLij4ZObm2casLIP7iB8NKmQ5PndL8Y07TtiQ+Sb/wn
+g4GgV+BJoKdDWLPCAlCMilwbZ88Ijb+HF/aipc9hsqvW/hnXC2GajJSAY3Qs9Mib
+4Hm91jzbAjmp7243pQ4bJMfYHemFFBRaoLC7ayqQjcsttN2ufINlqLFPZPR/i3IX
+kt+z4drzFUyEjLM1vVvIMjkUoJs=3D
+=3DeeAB
 -----END PGP PUBLIC KEY BLOCK-----
 
---------------LW1wKyaS2NsA5yXw7Q8geKiB--
+--------------L6wly7QKGkrOWKkKyWHkEh4X--
 
---------------hWRCOMaiMnlf1PnELWG0Gg0i--
+--------------tsXtAwWUSZsZg0hsalyZJhEB--
 
---------------WKkEUcsBQ7WSRW0erHybh9j2
+--------------EJhgzHWGeNJ9mz6vTP1C080x
 Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
 Content-Description: OpenPGP digital signature
 Content-Disposition: attachment; filename="OpenPGP_signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-wsD5BAABCAAjFiEEGAIew9LzHY3pdrqtZg+p0QLLz9AFAmommaEFAwAAAAAACgkQZg+p0QLLz9Dp
-KQwAoMrJWZgNTP6C30II34gUK3f+q1u+It7m5LrXITvEAWiJKvyNOBIyy/RiLrqoVXvA8juoYVL5
-k9Qp/A/2IJxDgiIDHOW2/GrnDWbOIpdmc6Ct8mCLH4ZNn5bGnqslFLFwrbCDqVamAv/rEZ5mkdpI
-5XBfqxTOQVr7L0jKg/3nKGhqsYZAg9DvorJ+69wNhaGDH2lMpTdtRWIXf5IEP8kv+T1F0HRs5tsR
-ZSqNisOIw9JrMGGMoaLVtvAvWDQn/Yl8whrgZ8p/BTwS6VzlySpryepBFGpvGYDG/ej2BjHqCWIa
-kGqDAsqIFY7OBNLvoV+Teo2/rjD80ILZjP/GXC1zjPd+Z8M0k5vtMAtNoBPyACWVdviW9tflAwc4
-ZE0ay+QvC2vvuBtvhNEk/ngtiSfLf60+E/jJubc/Jrzbm+OkCse/9N109/IgnOK1/coGnubC5GxK
-DmdY1eVQRfifngzc5QZL0WR/6d13oO9klxMJRxA+5n+RPDv7RAzhI9ZBV2IP
-=cR7M
+wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmomoCoFAwAAAAAACgkQsN6d1ii/Ey8y
+6wf+OG96gAV1ZcRnq8/dlt9Jje0fZQEXvS3qKFdnHSXZuE7J2l/hCL8Mmsu/0zrLOofq+OqzH/5P
+eVcZU7/To0S7vr/W21V7u2DooWhAX7jdKtZzcaTY8KMFhnay6ySi7CakSgD8IOEaqbgAfjD2rRfs
+cIe5jvQ5IarH+wtyEM0tb47YaOB8YI1KaAFbcvHlAaDxMVp2NyeN7NbwC1/y+4TJmLrKX4MqoSiB
+Mj47/Em8mkKhPI5bCvVoxR1qy0lzcRWx/9oUNtVMYdOdiBDzh9ZMOBgSb+lvSuHlleVSWhUZJu4J
+It+jwYi9R1vftcBufTT8sPGJhzYgyuvp7IFS+pHBhQ==
+=h4Ky
 -----END PGP SIGNATURE-----
 
---------------WKkEUcsBQ7WSRW0erHybh9j2--
+--------------EJhgzHWGeNJ9mz6vTP1C080x--
