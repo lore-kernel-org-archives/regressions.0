@@ -1,136 +1,98 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0355E3DD512
-	for <regressions@lists.linux.dev>; Mon,  8 Jun 2026 15:32:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE7C939D6F2;
+	Mon,  8 Jun 2026 21:29:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780932761; cv=none; b=UsZX6Bepfjhs2A64nwQi32I/nSGyDkk9mlPU6GavXeau81QxHPJb8cRpQEM2uNl1GB2uj+CQlKckY4OaFA5iIGyadJIsK3+/2EWrlGt+mnj99br5W2R8hfWdlNJB8dp6pbwkthTUmO8BV5+q9tDJCNw1sfL+N73tCMgtRQOi4FE=
+	t=1780954199; cv=none; b=rQDJQedTOAqdMVUehTGiALCQKD95+khJfkE3gyEE6NwYg3tQJXkRuPw67+HgxUW+dZr6KyfjrtR+mt/k7cC894UAfoePVjDE8lfIZr9mbWED0lj3VVhF2jET1rvyDAw7eGGRMZ9+XlN4L/japMQRUcdaXMoKoOK8UIOrp+Am0go=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780932761; c=relaxed/simple;
-	bh=2x1TJNv4KL692wYDiKWxcw17UfjfTVPybB5+iFsmBg8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AFg45UczWtFhp09YXtq+RwnbPX/jBp1yRRjOLWTU0ThuZXCx6a8wBCTvLr16VxbBtaaCTHuqPZy3i3hCFtnBmjSC8QOPH6UlSbwQyxUtQEoYA4WosZXp4+nyfxnWLFuuNzxsMzq3S4PfRSZMghl5Q1ItWgKAr/v1n6HhqxO7sE0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=NrlSIk+h; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1780954199; c=relaxed/simple;
+	bh=scxepYKdw+DdMG/57kQ0cW6RtzFBbrAT08eO1lr5yxI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=S6TueXRXw4d/AteXT83nI7UaFGDYhxeOJeeNmh0h8u/Ax2VLJa6MOENAscNv0aQVM5zrfXbLc0/adJt3n4H+L0tCEWDnWuQpvJ/tTjLG1YKPCM/EA/DOu4Aa5FsqEaXOdR4bgzgnC9GoyaRBfCP82QODR7/Dmx9vvTWhg0CZlVI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cHotO+HY; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="NrlSIk+h"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6588xM0j3159944;
-	Mon, 8 Jun 2026 15:32:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=SCpPv7
-	JVtlx0M+VEYudc0GKqlb6+J5xmQEMVBPeEAD0=; b=NrlSIk+hGj7UkFgyHF7CVC
-	QAdTpz5tdKmJRS09/9wYu3QVcySUSL+7pcLouwywsGhbd0AjH/mV4Xn2Ls1eSUpz
-	WGBNK/Zdv+J44Rx2aEPxpsRqpszxqO8EKj1pXwQSwEGpqjmNA3ktPqOWBvuDG+wK
-	Z+cwdrQkRrS1ANNvSRcZR8C9659qVU9MxMqLlSL28GuYuUedvcj/Jozsi+X1utWy
-	X7IA9tTFcLpjELxnARQZ5MJWJMcfI4zeE8FjzZ0BK9jzgRoQ5ge/5XGSq5K42BrX
-	CHV83Rah2toY3GPLgOIbLjxEjURrMvk4KVRAm4RanuV9JZmeHq8ruWMhS8sJIj1A
-	==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4em9ye00ec-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 08 Jun 2026 15:32:36 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 658FJhb1003696;
-	Mon, 8 Jun 2026 15:32:36 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4emx8vx1rg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 08 Jun 2026 15:32:36 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 658FWY8F47710472
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 8 Jun 2026 15:32:34 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 318F120040;
-	Mon,  8 Jun 2026 15:32:34 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 991252004B;
-	Mon,  8 Jun 2026 15:32:33 +0000 (GMT)
-Received: from li-276bd24c-2dcc-11b2-a85c-945b6f05615c.ibm.com (unknown [9.87.135.117])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Mon,  8 Jun 2026 15:32:33 +0000 (GMT)
-Date: Mon, 8 Jun 2026 17:32:31 +0200
-From: Jan Polensky <japo@linux.ibm.com>
-To: Namjae Jeon <linkinjeon@kernel.org>
-Cc: djwong@kernel.org, hch@lst.de, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
-        sj1557.seo@samsung.com, yuezhang.mo@sony.com
-Subject: Re: [PATCH] exfat: add swap_activate support
-Message-ID: <aibgj6XWdE2VIPiR@li-276bd24c-2dcc-11b2-a85c-945b6f05615c.ibm.com>
-References: <CAKYAXd80+UfzKaCR9YRK8dAQq9S+kEp_VVwr_p3dj1tEeyqUQA@mail.gmail.com>
- <20260603131950.321858-1-japo@linux.ibm.com>
- <CAKYAXd-mLHaF6VeREroNfUXYYhqLObr=8Lmv9JqVZ7qu5XO0Dw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cHotO+HY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0BEC1F00893;
+	Mon,  8 Jun 2026 21:29:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780954198;
+	bh=10Ge8gkdRT2r2MB4nZOmsq7A7oBUPMVrH/EAt53EHDw=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date;
+	b=cHotO+HYT6KnftYtwqtcC1eOb0CiIjpQDNAtr0eiW9Spfg+ZKZoEsPPnjzbyBsnvl
+	 3aO7kALqnRkhd9MuYISWiOJsWqEl33m8z7H9e3tLQ8kIiNaTwe7yoTRbRBpAQoQTGY
+	 aLBTbHiJ2o73r9gx5sAyHcHiQCzsYEmDsORsQ4IUhxPpN5Ed8M+DyVyqa5nEuijFqP
+	 K0XjdaxMc6d5Nm/JjrnVeHqYH6ID6h/SbThmr9fNmZc8FP6U0ONRKmVBi7Ch3l64Ds
+	 w8sYstQvc3bmYUv+HI/uC6qG/9l/Dfcq5n0fdimIWtTMYDeSn4S41bVAN1C0/2U2Cr
+	 /CO2im1u1GyyA==
+From: Thomas Gleixner <tglx@kernel.org>
+To: Teddy Astie <teddy.astie@vates.tech>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>, regressions@lists.linux.dev
+Cc: Xen-devel <xen-devel@lists.xenproject.org>, Olivier Lambert
+ <olivier.lambert@vates.tech>
+Subject: Re: [REGRESSION][BISECTED] Long boot time with Xen HVM guests
+ during PV spinlock initialization
+In-Reply-To: <87ldcp3w16.ffs@fw13>
+References: <1780914594.8631fc262581453bbf619ec5b2062170.19ea6c8227b000701b@vates.tech>
+ <87ldcp3w16.ffs@fw13>
+Date: Mon, 08 Jun 2026 23:29:55 +0200
+Message-ID: <87ik7s4t64.ffs@fw13>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAKYAXd-mLHaF6VeREroNfUXYYhqLObr=8Lmv9JqVZ7qu5XO0Dw@mail.gmail.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjA4MDE0NCBTYWx0ZWRfX/ab9J9Ud2s4R
- aBQ3FD2EOWsFzOdh4vr87wGPMTgWcGOFpe17Bv7XUECemwZNvEQuUhrtliF1PLyoyGrL2YYr4n9
- Nv6BJ42QevJvLBKSF3BYWNYgXdaev35oqG8m4kE6bktj1P8a7oDqnwq5O+EyoFJyS3TFww5fCqI
- GF+xzueMNpLkh2MhXEITMfnX8vxA7UNv6I8QN6fVgA8qsImvxTKou4Rv19t5EXHO5WBXMVqgGb4
- fEQqP4T+l2eGHXyMMfDd0wZ1IUXdct2lRD5EymDCQ6V0L22VOPv1FENMZvhAWCsKtG9kxCbMpEP
- xo7hkWQW40jtYjKaj+GRCc0RG5ZRjbHt3Xf9WsRJEIUyXQm1BgVJl0J7IKpD85kZB3N2TlMS3Kh
- OMbqJEwlAnOKEfWbZ2Wtg5mOdknQDz2p+svEy9KIB5jzBmzILfvnsQKpm3W46ZoR6DpUmlY7oKi
- 3d3YyCWvwCAcs30UCsg==
-X-Authority-Analysis: v=2.4 cv=QKhYgALL c=1 sm=1 tr=0 ts=6a26e094 cx=c_pps
- a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
- a=IkcTkHD0fZMA:10 a=FelO9ux0wxsA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=V8glGbnc2Ofi9Qvn3v5h:22 a=VwQbUJbxAAAA:8
- a=VnNF1IyMAAAA:8 a=BAQqc3zLvjUhQZapDGMA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: DAYNeHlEW1HnFEN-cIxTQ5QVPWGCfAWM
-X-Proofpoint-ORIG-GUID: DAYNeHlEW1HnFEN-cIxTQ5QVPWGCfAWM
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
- definitions=2026-06-08_04,2026-06-05_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 lowpriorityscore=0 bulkscore=0 adultscore=0 phishscore=0
- malwarescore=0 impostorscore=0 suspectscore=0 spamscore=0 clxscore=1015
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2605210000 definitions=main-2606080144
+Content-Type: text/plain
 
-On Wed, Jun 03, 2026 at 11:34:55PM +0900, Namjae Jeon wrote:
-> On Wed, Jun 3, 2026 at 10:20 PM Jan Polensky <japo@linux.ibm.com> wrote:
-> >
-> > Commit 614f71ca1bdf ("exfat: add iomap buffered I/O support")
-> > converted exfat buffered I/O to iomap, but did not add a
-> > .swap_activate handler to the address_space_operations.
-> >
-> > swapon(2) on an exfat swapfile then fails with EINVAL, which causes
-> > LTP swap tests to fail.
-> >
-> > Add exfat_iomap_swap_activate() and hook it into exfat_aops so exfat
-> > uses iomap_swapfile_activate() for swapfile activation.
-> >
-> > Fixes: 614f71ca1bdf ("exfat: add iomap buffered I/O support")
-> > Closes: https://lore.kernel.org/all/20260603110212.3020276-1-japo@linux.ibm.com/
-> > Signed-off-by: Jan Polensky <japo@linux.ibm.com>
-> Applied it to #dev.
-> Thanks!
+On Mon, Jun 08 2026 at 17:13, Thomas Gleixner wrote:
+> On Mon, Jun 08 2026 at 12:29, Teddy Astie wrote:
+>> In 6.12.5+ kernels on AMD CPUs, we observe abnormally long boot times 
+>> where the guest is struggling on PV spinlock initialization.
+>>
+>> This occurs starting with 6.12.5, and also on more recent kernels on 
+>> Intel platforms, but that hasn't been fully investigated at this time 
+>> (but I assume it's a variant of the same issue).
+>>
+>> This occurs since a backport of 76031d9 ("clocksource: Make negative 
+>> motion detection more robust").
+>>
+>> Some (claude-based) analysis made appears to relate that to the lack of 
+>> proper max_raw_delta in the jiffies clocksource which appears to make 
+>> the clock fail to progress meaningfully.
+>>
+>> Here is a raw summary of the analysis
+>>  > We tracked it down to a single stable backport in 6.12.5: commit 
+>> 1a678f6829a8 ("clocksource: Make negative motion detection more robust", 
+>> upstream 76031d9536a0). It introduces a max_raw_delta field on struct 
+>> clocksource but never initializes it for the default boot timekeeper 
+>> (the jiffies clocksource), so clocksource_delta() clamps every delta to 
+>> 0 and CLOCK_MONOTONIC freezes while that clocksource is active.
+>
+> Bah. jiffies clocksource is registered way _after_ timekeeping started to
+> use it.
+>
+> The untested below should fix that.
 
-Hi Namjae,
+That obviously needs to be:
 
-I think one line might have been missed when applying my patch:
-
-    .swap_activate = exfat_iomap_swap_activate,
-
-I checked linux-next (master and next-20260604 / next-20260605),
-and the issue is still present there.
-
-Link:
-https://lore.kernel.org/all/20260603131950.321858-1-japo@linux.ibm.com/
-
-Could you please take a look?
-
-Thanks,
-Jan
+--- a/kernel/time/jiffies.c
++++ b/kernel/time/jiffies.c
+@@ -60,15 +60,9 @@ EXPORT_SYMBOL(get_jiffies_64);
+ 
+ EXPORT_SYMBOL(jiffies);
+ 
+-static int __init init_jiffies_clocksource(void)
+-{
+-	return __clocksource_register(&clocksource_jiffies);
+-}
+-
+-core_initcall(init_jiffies_clocksource);
+-
+ struct clocksource * __init __weak clocksource_default_clock(void)
+ {
++	__clocksource_register(&clocksource_jiffies);
+ 	return &clocksource_jiffies;
+ }
+ 
