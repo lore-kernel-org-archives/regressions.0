@@ -1,98 +1,162 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE7C939D6F2;
-	Mon,  8 Jun 2026 21:29:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C12E13A258;
+	Tue,  9 Jun 2026 00:32:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780954199; cv=none; b=rQDJQedTOAqdMVUehTGiALCQKD95+khJfkE3gyEE6NwYg3tQJXkRuPw67+HgxUW+dZr6KyfjrtR+mt/k7cC894UAfoePVjDE8lfIZr9mbWED0lj3VVhF2jET1rvyDAw7eGGRMZ9+XlN4L/japMQRUcdaXMoKoOK8UIOrp+Am0go=
+	t=1780965165; cv=none; b=cfnIm1N1gKFOkKPN5Y77SPy+H7vppT8SVH1VnZiqwaUNTxgnXCZMF+/nhjjlu7kTtPGpQItxqKEkDDoDhQ6ExIJ2sm+6YnlQLKN13xrdLYIxezc/z8PokJ8H4zHpTM2xw5h4FA0ZBXgnAtMmgDHvg9YHfIZZaEOkGHB1h2XUL/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780954199; c=relaxed/simple;
-	bh=scxepYKdw+DdMG/57kQ0cW6RtzFBbrAT08eO1lr5yxI=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=S6TueXRXw4d/AteXT83nI7UaFGDYhxeOJeeNmh0h8u/Ax2VLJa6MOENAscNv0aQVM5zrfXbLc0/adJt3n4H+L0tCEWDnWuQpvJ/tTjLG1YKPCM/EA/DOu4Aa5FsqEaXOdR4bgzgnC9GoyaRBfCP82QODR7/Dmx9vvTWhg0CZlVI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cHotO+HY; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780965165; c=relaxed/simple;
+	bh=8t5HE1DLdIUEFSwA61TFs0DG6Iv1WK6pOKa5bnHPuic=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FosrpShJz9tAs+NJwPWB3Nw33hSEDPIsNVyFJTcmGcQ1r1R2/xd4igHx3TcHzoeCjIp7K6U0iYDNlQ2v76T8HiyzJtpE16N4MGNkaYV82RAZxLZx72h9L4BLl9BC8thMBYCkCBGNFHW7LhaiMAs63o+El90qUjJyf2H99H3v1h8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iC0V95KY; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cHotO+HY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0BEC1F00893;
-	Mon,  8 Jun 2026 21:29:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iC0V95KY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41ECB1F00893;
+	Tue,  9 Jun 2026 00:32:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780954198;
-	bh=10Ge8gkdRT2r2MB4nZOmsq7A7oBUPMVrH/EAt53EHDw=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date;
-	b=cHotO+HYT6KnftYtwqtcC1eOb0CiIjpQDNAtr0eiW9Spfg+ZKZoEsPPnjzbyBsnvl
-	 3aO7kALqnRkhd9MuYISWiOJsWqEl33m8z7H9e3tLQ8kIiNaTwe7yoTRbRBpAQoQTGY
-	 aLBTbHiJ2o73r9gx5sAyHcHiQCzsYEmDsORsQ4IUhxPpN5Ed8M+DyVyqa5nEuijFqP
-	 K0XjdaxMc6d5Nm/JjrnVeHqYH6ID6h/SbThmr9fNmZc8FP6U0ONRKmVBi7Ch3l64Ds
-	 w8sYstQvc3bmYUv+HI/uC6qG/9l/Dfcq5n0fdimIWtTMYDeSn4S41bVAN1C0/2U2Cr
-	 /CO2im1u1GyyA==
-From: Thomas Gleixner <tglx@kernel.org>
-To: Teddy Astie <teddy.astie@vates.tech>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, regressions@lists.linux.dev
-Cc: Xen-devel <xen-devel@lists.xenproject.org>, Olivier Lambert
- <olivier.lambert@vates.tech>
-Subject: Re: [REGRESSION][BISECTED] Long boot time with Xen HVM guests
- during PV spinlock initialization
-In-Reply-To: <87ldcp3w16.ffs@fw13>
-References: <1780914594.8631fc262581453bbf619ec5b2062170.19ea6c8227b000701b@vates.tech>
- <87ldcp3w16.ffs@fw13>
-Date: Mon, 08 Jun 2026 23:29:55 +0200
-Message-ID: <87ik7s4t64.ffs@fw13>
+	s=k20260515; t=1780965163;
+	bh=AWqrUcAU/dt3Yzxo/R4IB34ld94Wfxn8b7jvT0dbAR0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=iC0V95KY4ScnH68l4HJawJ7OVP+VZbg+jO22tdeMTc+tE3J2rXsQomUEWBDN97mkP
+	 cNGwSbxlEqSjPnipuOzPbdHBkPy2kejeOsMZKFVHOo1gyNc10B+S8vH4vNQ/uI4IY7
+	 DHHqh1mDA4+XS8bluWat2bI5d9tUATl8R2oDysK+wIO0mRyE0Q53Vl80ZSK4CPoq4j
+	 5/zhQ0bOM+gOww0m7KM/3CyQAKfYZPq1hq1Jtp2hbr4kSlTf9vxxshGc6nQZM4QBvm
+	 5CS3weUw/0szJ6rN7YhoBh0I2zWai8X1w/WB3zomAMLmvEvZgscNJdNs21/zXpwgLZ
+	 kZzpBTNUkdRRA==
+Date: Mon, 8 Jun 2026 17:32:38 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: kernelci-results@groups.io, regressions@lists.linux.dev,
+	kernelci@lists.linux.dev, gus@collabora.com,
+	linux-next@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
+	amd-gfx@lists.freedesktop.org,
+	Gaghik Khachatrian <gaghik.khachatrian@amd.com>,
+	James Lin <pinglei.lin@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>, llvm@lists.linux.dev
+Subject: Re: [REGRESSION] next/master: (build) stack frame size (2088)
+ exceeds limit (2048) in 'dml31_ModeSupport...
+Message-ID: <20260609003238.GA3576576@ax162>
+References: <178059594388.10259.8984887956034576074@330cfa3079ca>
+ <6bdbbc1b-9934-462c-b9aa-afaf0605c2a0@infradead.org>
+ <5f2d4707-ae11-44f3-ad09-1c0580abde91@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <5f2d4707-ae11-44f3-ad09-1c0580abde91@leemhuis.info>
 
-On Mon, Jun 08 2026 at 17:13, Thomas Gleixner wrote:
-> On Mon, Jun 08 2026 at 12:29, Teddy Astie wrote:
->> In 6.12.5+ kernels on AMD CPUs, we observe abnormally long boot times 
->> where the guest is struggling on PV spinlock initialization.
->>
->> This occurs starting with 6.12.5, and also on more recent kernels on 
->> Intel platforms, but that hasn't been fully investigated at this time 
->> (but I assume it's a variant of the same issue).
->>
->> This occurs since a backport of 76031d9 ("clocksource: Make negative 
->> motion detection more robust").
->>
->> Some (claude-based) analysis made appears to relate that to the lack of 
->> proper max_raw_delta in the jiffies clocksource which appears to make 
->> the clock fail to progress meaningfully.
->>
->> Here is a raw summary of the analysis
->>  > We tracked it down to a single stable backport in 6.12.5: commit 
->> 1a678f6829a8 ("clocksource: Make negative motion detection more robust", 
->> upstream 76031d9536a0). It introduces a max_raw_delta field on struct 
->> clocksource but never initializes it for the default boot timekeeper 
->> (the jiffies clocksource), so clocksource_delta() clamps every delta to 
->> 0 and CLOCK_MONOTONIC freezes while that clocksource is active.
->
-> Bah. jiffies clocksource is registered way _after_ timekeeping started to
-> use it.
->
-> The untested below should fix that.
+On Mon, Jun 08, 2026 at 01:24:32PM +0200, Thorsten Leemhuis wrote:
+> On 6/5/26 06:23, Randy Dunlap wrote:
+> > [adding amd-gfx]
+> 
+> [+Nathan -- I'm also wondering if we should CC the amdgpu maintainers,
+> but lets wait with that for a moment]
 
-That obviously needs to be:
+Thanks for the CC. Bringing in more folks based on my bisect below.
 
---- a/kernel/time/jiffies.c
-+++ b/kernel/time/jiffies.c
-@@ -60,15 +60,9 @@ EXPORT_SYMBOL(get_jiffies_64);
- 
- EXPORT_SYMBOL(jiffies);
- 
--static int __init init_jiffies_clocksource(void)
--{
--	return __clocksource_register(&clocksource_jiffies);
--}
--
--core_initcall(init_jiffies_clocksource);
--
- struct clocksource * __init __weak clocksource_default_clock(void)
- {
-+	__clocksource_register(&clocksource_jiffies);
- 	return &clocksource_jiffies;
- }
- 
+> Nathan afaics saw this problem a few weeks ago already and filed and
+> issue for tracking: https://github.com/ClangBuiltLinux/linux/issues/2161
+> 
+> To quote from there: ""After LLVM commit 8ac9461e48e0 ("[SLP] Reject
+> 2-element vectorization when vector inst count exceeds scalar",
+> 2026-04-11), I am seeing two new -Wframe-larger-than instances from
+> drivers/gpu/drm/amd/display […]""
+> 
+> Side note: I wonder if that LLVM commit somehow made it to the KernelCI
+> env, or if something in the amdgpu code in -next changed and made the
+> problem worse.
+
+So I think these are two separate but perhaps related issues (i.e., the
+latter of the "side note" comment), as that LLVM commit is only in LLVM
+main (currently 23.0.0) but this instance that KernelCI flags is visible
+with clang-21.
+
+With clang-22 and a distribution configuration, I see:
+
+  drivers/gpu/drm/amd/amdgpu/../display/dc/dml/dcn30/display_mode_vba_30.c:3381:6: warning: stack frame size (2312) exceeds limit (2048) in 'dml30_ModeSupportAndSystemConfigurationFull' [-Wframe-larger-than]
+   3381 | void dml30_ModeSupportAndSystemConfigurationFull(struct display_mode_lib *mode_lib)
+        |      ^
+  1 warning generated.
+  drivers/gpu/drm/amd/amdgpu/../display/dc/dml/dcn31/display_mode_vba_31.c:3800:6: warning: stack frame size (2128) exceeds limit (2048) in 'dml31_ModeSupportAndSystemConfigurationFull' [-Wframe-larger-than]
+   3800 | void dml31_ModeSupportAndSystemConfigurationFull(struct display_mode_lib *mode_lib)
+        |      ^
+  1 warning generated.
+  drivers/gpu/drm/amd/amdgpu/../display/dc/dml/dcn314/display_mode_vba_314.c:3892:6: warning: stack frame size (2136) exceeds limit (2048) in 'dml314_ModeSupportAndSystemConfigurationFull' [-Wframe-larger-than]
+   3892 | void dml314_ModeSupportAndSystemConfigurationFull(struct display_mode_lib *mode_lib)
+        |      ^
+  1 warning generated.
+
+My bisect lands on commit faaeeecef94a ("drm/amd/display: Fix type
+mismatches in DML and normalize loop bounds") in -next, which makes
+sense. I have not looked into this super closely but I suspect that
+change makes it easier for LLVM to inline or unroll loops, which can
+result in more stack usage (especially as this code has some functions
+with many tens of parameters). It is rather hard to look at and modify
+this drm/amd/display code so I have not prioritized it...
+
+I wonder if
+
+  https://github.com/llvm/llvm-project/issues/115862
+  https://github.com/llvm/llvm-project/issues/143908
+
+are related, even if KASAN is not enabled here.
+
+> > On 6/4/26 10:59 AM, KernelCI bot wrote:
+> >> Hello,
+> >>
+> >> New build issue found on next/master:
+> >>
+> >> ---
+> >>  stack frame size (2088) exceeds limit (2048) in 'dml31_ModeSupportAndSystemConfigurationFull' [-Werror,-Wframe-larger-than] in drivers/gpu/drm/amd/amdgpu/../display/dc/dml/dcn31/display_mode_vba_31.o (drivers/gpu/drm/amd/amdgpu/../display/dc/dml/dcn31/display_mode_vba_31.c) [logspec:kbuild,kbuild.compiler.error]
+> >> ---
+> >>
+> >> - dashboard: https://d.kernelci.org/i/maestro:96417cd30041ab8f3153128d0120c6cd70782d99
+> >> - giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+> >> - commit HEAD:  b99ae45861eccff1e1d8c7b05a13650be805d437
+> >> - tags: next-20260604
+> >>
+> >> Please include the KernelCI tag when submitting a fix:
+> >>
+> >> Reported-by: kernelci.org bot <bot@kernelci.org>
+> >>
+> >>
+> >> Log excerpt:
+> >> =====================================================
+> >> /tmp/kci/linux/drivers/gpu/drm/amd/amdgpu/../display/dc/dml/dcn31/display_mode_vba_31.c:3872:6: error: stack frame size (2088) exceeds limit (2048) in 'dml31_ModeSupportAndSystemConfigurationFull' [-Werror,-Wframe-larger-than]
+> >>  3872 | void dml31_ModeSupportAndSystemConfigurationFull(struct display_mode_lib *mode_lib)
+> >>       |      ^
+> >> 1 error generated.
+> >>
+> >> =====================================================
+> >>
+> >>
+> >> # Builds where the incident occurred:
+> >>
+> >> ## x86_64_defconfig+kselftest+x86-board on (x86_64):
+> >> - compiler: clang-21
+> >> - config: None
+> >> - dashboard: https://d.kernelci.org/build/maestro:6a21abf22cc72b6e94bf3c60
+> >>
+> >>
+> >> #kernelci issue maestro:96417cd30041ab8f3153128d0120c6cd70782d99
+> >>
+> >> --
+> >> This is an experimental report format. Please send feedback in!
+> >> Talk to us at kernelci@lists.linux.dev
+> >>
+> >> Made with love by the KernelCI team - https://kernelci.org
+> >>
+> > 
+> 
+
+-- 
+Cheers,
+Nathan
