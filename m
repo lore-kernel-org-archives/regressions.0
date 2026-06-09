@@ -1,162 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C12E13A258;
-	Tue,  9 Jun 2026 00:32:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE8F634388E
+	for <regressions@lists.linux.dev>; Tue,  9 Jun 2026 07:21:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780965165; cv=none; b=cfnIm1N1gKFOkKPN5Y77SPy+H7vppT8SVH1VnZiqwaUNTxgnXCZMF+/nhjjlu7kTtPGpQItxqKEkDDoDhQ6ExIJ2sm+6YnlQLKN13xrdLYIxezc/z8PokJ8H4zHpTM2xw5h4FA0ZBXgnAtMmgDHvg9YHfIZZaEOkGHB1h2XUL/E=
+	t=1780989664; cv=none; b=PVZDtIyxlomo5tm72zx0vrd4nNyO2v9gLf5L13BWRoY0bn99nyTjlta85e7oKC2HmBLL0YADbY8hMqxeFStuXezCT+Uh4hqlm0KuO/sYStPLOt0EcVase3ksdT0nmL8F/7J71kowx9cjzKgW2Dl1D59EzkN8Oq1fKazq14MR+OQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780965165; c=relaxed/simple;
-	bh=8t5HE1DLdIUEFSwA61TFs0DG6Iv1WK6pOKa5bnHPuic=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FosrpShJz9tAs+NJwPWB3Nw33hSEDPIsNVyFJTcmGcQ1r1R2/xd4igHx3TcHzoeCjIp7K6U0iYDNlQ2v76T8HiyzJtpE16N4MGNkaYV82RAZxLZx72h9L4BLl9BC8thMBYCkCBGNFHW7LhaiMAs63o+El90qUjJyf2H99H3v1h8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iC0V95KY; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780989664; c=relaxed/simple;
+	bh=fKEqPA46U7wItKyxqTW7C068MTDL7gWhH7Kml7P4M6A=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=u83FfxZtKgnQpy/cHscRMj9WtAYDy4LkWOR5dUZVmx0XHlDr5I0Rsk8z95jL7ToahemRqH4Mp+1nxyT9LhOh0eEdbPv2mbSed5c5qDdHlO+jZp8auGEn4ZzMJzQTUAWZQsgB0RaEKtsvwxFZfV2hfK4l4BF/f6moNFbc8/6jiY0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=QnLymR2k; arc=none smtp.client-ip=188.68.63.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iC0V95KY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41ECB1F00893;
-	Tue,  9 Jun 2026 00:32:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780965163;
-	bh=AWqrUcAU/dt3Yzxo/R4IB34ld94Wfxn8b7jvT0dbAR0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=iC0V95KY4ScnH68l4HJawJ7OVP+VZbg+jO22tdeMTc+tE3J2rXsQomUEWBDN97mkP
-	 cNGwSbxlEqSjPnipuOzPbdHBkPy2kejeOsMZKFVHOo1gyNc10B+S8vH4vNQ/uI4IY7
-	 DHHqh1mDA4+XS8bluWat2bI5d9tUATl8R2oDysK+wIO0mRyE0Q53Vl80ZSK4CPoq4j
-	 5/zhQ0bOM+gOww0m7KM/3CyQAKfYZPq1hq1Jtp2hbr4kSlTf9vxxshGc6nQZM4QBvm
-	 5CS3weUw/0szJ6rN7YhoBh0I2zWai8X1w/WB3zomAMLmvEvZgscNJdNs21/zXpwgLZ
-	 kZzpBTNUkdRRA==
-Date: Mon, 8 Jun 2026 17:32:38 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: kernelci-results@groups.io, regressions@lists.linux.dev,
-	kernelci@lists.linux.dev, gus@collabora.com,
-	linux-next@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
-	amd-gfx@lists.freedesktop.org,
-	Gaghik Khachatrian <gaghik.khachatrian@amd.com>,
-	James Lin <pinglei.lin@amd.com>,
-	Alex Deucher <alexander.deucher@amd.com>, llvm@lists.linux.dev
-Subject: Re: [REGRESSION] next/master: (build) stack frame size (2088)
- exceeds limit (2048) in 'dml31_ModeSupport...
-Message-ID: <20260609003238.GA3576576@ax162>
-References: <178059594388.10259.8984887956034576074@330cfa3079ca>
- <6bdbbc1b-9934-462c-b9aa-afaf0605c2a0@infradead.org>
- <5f2d4707-ae11-44f3-ad09-1c0580abde91@leemhuis.info>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="QnLymR2k"
+Received: from mors-relay-2501.netcup.net (localhost [127.0.0.1])
+	by mors-relay-2501.netcup.net (Postfix) with ESMTPS id 4gZL1236G3z6F2T
+	for <regressions@lists.linux.dev>; Tue,  9 Jun 2026 09:20:54 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1780989654;
+	bh=fKEqPA46U7wItKyxqTW7C068MTDL7gWhH7Kml7P4M6A=;
+	h=Date:Subject:From:To:References:In-Reply-To:From;
+	b=QnLymR2ku5gza1IYgzKeEg+pzzuJVgGldZShoyCs6MaHBWSCjs/jDz2rDY9eHYE2f
+	 jdOFYXbIIcvFbWj41j3up5ybFd6TlJFIQK9TnOQ5r9BXwtt6nW3ASpkFHXDuIi48hq
+	 a1/M1nVnmMH+54EkIh7YiVrdV87n6Cw/iAB6vmEEQ8HiLDJCYBDanBuw1+eSH9cpCZ
+	 KrGYdGiSbvTKZx1Jf/DLTol6s5AYjE/MiCWrRLXE1vsnsyO0ipQA7E5WrwP7Dub9d7
+	 EIIkXWI7B24HS9/FF19czTeIbo1Lus9OKqQk2ckReRkM2iGpWsu5EOJjj63rWbMX/d
+	 Y9T7TcWuo1sBg==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-2501.netcup.net (Postfix) with ESMTPS id 4gZL122LvNz4xQT
+	for <regressions@lists.linux.dev>; Tue,  9 Jun 2026 09:20:54 +0200 (CEST)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4gZL120czsz8sbF
+	for <regressions@lists.linux.dev>; Tue,  9 Jun 2026 09:20:53 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 5B0BD60389
+	for <regressions@lists.linux.dev>; Tue,  9 Jun 2026 09:20:53 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <4c8ecbe5-7036-41d2-b1d4-91970d9c565a@leemhuis.info>
+Date: Tue, 9 Jun 2026 09:20:51 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <5f2d4707-ae11-44f3-ad09-1c0580abde91@leemhuis.info>
+User-Agent: Mozilla Thunderbird
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: 
+ <178098965353.2421841.17081490887366629105@mxe9fb.netcup.net>
+X-NC-CID: 95vUGQ/W4XLQQ1wtp5KFCI1y75XJnNLzaWDo99uKfUfqhJu9Qn0=
 
-On Mon, Jun 08, 2026 at 01:24:32PM +0200, Thorsten Leemhuis wrote:
-> On 6/5/26 06:23, Randy Dunlap wrote:
-> > [adding amd-gfx]
-> 
-> [+Nathan -- I'm also wondering if we should CC the amdgpu maintainers,
-> but lets wait with that for a moment]
 
-Thanks for the CC. Bringing in more folks based on my bisect below.
 
-> Nathan afaics saw this problem a few weeks ago already and filed and
-> issue for tracking: https://github.com/ClangBuiltLinux/linux/issues/2161
-> 
-> To quote from there: ""After LLVM commit 8ac9461e48e0 ("[SLP] Reject
-> 2-element vectorization when vector inst count exceeds scalar",
-> 2026-04-11), I am seeing two new -Wframe-larger-than instances from
-> drivers/gpu/drm/amd/display […]""
-> 
-> Side note: I wonder if that LLVM commit somehow made it to the KernelCI
-> env, or if something in the amdgpu code in -next changed and made the
-> problem worse.
+On 3/9/24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-So I think these are two separate but perhaps related issues (i.e., the
-latter of the "side note" comment), as that LLVM commit is only in LLVM
-main (currently 23.0.0) but this instance that KernelCI flags is visible
-with clang-21.
+#regzbot report:
+https://lore.kernel.org/linux-nfs/aiHlPmeZq3WgMwoJ@kernel.org/
+#regzbot fix: svcrdma: Cap Read sink allocations at PAGE_ALLOC_COSTLY_ORDER
+#regzbot monitor:
+https://lore.kernel.org/all/20260606035722.83175-1-cel@kernel.org/
 
-With clang-22 and a distribution configuration, I see:
+#regzbot report:
+https://lore.kernel.org/stable/2bfa2f1b-567a-429b-aee2-a8dcf7efd5aa@pm.me/
+#regzbot fix: drm/amdkfd: Use last + 1 of vm range to check 2MB huge
+page alignment
 
-  drivers/gpu/drm/amd/amdgpu/../display/dc/dml/dcn30/display_mode_vba_30.c:3381:6: warning: stack frame size (2312) exceeds limit (2048) in 'dml30_ModeSupportAndSystemConfigurationFull' [-Wframe-larger-than]
-   3381 | void dml30_ModeSupportAndSystemConfigurationFull(struct display_mode_lib *mode_lib)
-        |      ^
-  1 warning generated.
-  drivers/gpu/drm/amd/amdgpu/../display/dc/dml/dcn31/display_mode_vba_31.c:3800:6: warning: stack frame size (2128) exceeds limit (2048) in 'dml31_ModeSupportAndSystemConfigurationFull' [-Wframe-larger-than]
-   3800 | void dml31_ModeSupportAndSystemConfigurationFull(struct display_mode_lib *mode_lib)
-        |      ^
-  1 warning generated.
-  drivers/gpu/drm/amd/amdgpu/../display/dc/dml/dcn314/display_mode_vba_314.c:3892:6: warning: stack frame size (2136) exceeds limit (2048) in 'dml314_ModeSupportAndSystemConfigurationFull' [-Wframe-larger-than]
-   3892 | void dml314_ModeSupportAndSystemConfigurationFull(struct display_mode_lib *mode_lib)
-        |      ^
-  1 warning generated.
-
-My bisect lands on commit faaeeecef94a ("drm/amd/display: Fix type
-mismatches in DML and normalize loop bounds") in -next, which makes
-sense. I have not looked into this super closely but I suspect that
-change makes it easier for LLVM to inline or unroll loops, which can
-result in more stack usage (especially as this code has some functions
-with many tens of parameters). It is rather hard to look at and modify
-this drm/amd/display code so I have not prioritized it...
-
-I wonder if
-
-  https://github.com/llvm/llvm-project/issues/115862
-  https://github.com/llvm/llvm-project/issues/143908
-
-are related, even if KASAN is not enabled here.
-
-> > On 6/4/26 10:59 AM, KernelCI bot wrote:
-> >> Hello,
-> >>
-> >> New build issue found on next/master:
-> >>
-> >> ---
-> >>  stack frame size (2088) exceeds limit (2048) in 'dml31_ModeSupportAndSystemConfigurationFull' [-Werror,-Wframe-larger-than] in drivers/gpu/drm/amd/amdgpu/../display/dc/dml/dcn31/display_mode_vba_31.o (drivers/gpu/drm/amd/amdgpu/../display/dc/dml/dcn31/display_mode_vba_31.c) [logspec:kbuild,kbuild.compiler.error]
-> >> ---
-> >>
-> >> - dashboard: https://d.kernelci.org/i/maestro:96417cd30041ab8f3153128d0120c6cd70782d99
-> >> - giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-> >> - commit HEAD:  b99ae45861eccff1e1d8c7b05a13650be805d437
-> >> - tags: next-20260604
-> >>
-> >> Please include the KernelCI tag when submitting a fix:
-> >>
-> >> Reported-by: kernelci.org bot <bot@kernelci.org>
-> >>
-> >>
-> >> Log excerpt:
-> >> =====================================================
-> >> /tmp/kci/linux/drivers/gpu/drm/amd/amdgpu/../display/dc/dml/dcn31/display_mode_vba_31.c:3872:6: error: stack frame size (2088) exceeds limit (2048) in 'dml31_ModeSupportAndSystemConfigurationFull' [-Werror,-Wframe-larger-than]
-> >>  3872 | void dml31_ModeSupportAndSystemConfigurationFull(struct display_mode_lib *mode_lib)
-> >>       |      ^
-> >> 1 error generated.
-> >>
-> >> =====================================================
-> >>
-> >>
-> >> # Builds where the incident occurred:
-> >>
-> >> ## x86_64_defconfig+kselftest+x86-board on (x86_64):
-> >> - compiler: clang-21
-> >> - config: None
-> >> - dashboard: https://d.kernelci.org/build/maestro:6a21abf22cc72b6e94bf3c60
-> >>
-> >>
-> >> #kernelci issue maestro:96417cd30041ab8f3153128d0120c6cd70782d99
-> >>
-> >> --
-> >> This is an experimental report format. Please send feedback in!
-> >> Talk to us at kernelci@lists.linux.dev
-> >>
-> >> Made with love by the KernelCI team - https://kernelci.org
-> >>
-> > 
-> 
-
--- 
-Cheers,
-Nathan
+#regzbot report:
+https://lore.kernel.org/all/99caeafd-edf5-44a4-8742-4eada5d0f5d1@yeah.net/
+#regzbot introduced: 165573e41f2f66ef98940cf65f838b2cb575d9d1
+#regzbot title: tcp: secure_seq: significant TCP performance regression
+(QPS drop)
