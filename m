@@ -1,100 +1,166 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.61.103])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1B5A348896
-	for <regressions@lists.linux.dev>; Tue,  9 Jun 2026 09:29:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D3F63563EB
+	for <regressions@lists.linux.dev>; Tue,  9 Jun 2026 10:05:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.61.103
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780997375; cv=none; b=p6oLHBzBQqmmZPVpXLIW+0gLIsWid8dyINXQLkZjU++GXWp7l+XYhOV5/4EQ34e/MQ/2AhsLBrLg1zU/AsUMTC/q54thvfhJz/ebG+ZLroPHAeb5EKcpKRoNEu3t6HX/UXG2KG+eBJShitYXBL5iV4Nc55lYH8bHsQsTRzJUc9M=
+	t=1780999513; cv=none; b=jj2PQbTDGsQv9u3ps5icq+hJWfKqX34vy95R4f06b20gH7hL7YL5xYcFWywPKl30nRXfNalGUq4FZJm4Yntz7StxdaEkUDbIpayQMrrRo8AuLsw0Pak9eMzn4d8RBsXvRFvpTwVhbVT2OPQyQGn1CZSizYrk+L7LuvCE8kCrBTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780997375; c=relaxed/simple;
-	bh=V2pizV5FL3+v/pUXwob1d22DuXvbRGZ/QZQK4MiVfA8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CCvn364sHb6m1U5k9+LmKF8N5+sPJbEX+gdJkmEXX0cNhEkSjzbFFdC75thj98SUKL1Sq87NzFAnDhJEbG+AF/oxvBFSmZZAttcgC4TWIwIhPndwujcNAXExkTzQAx5r0iPHChUVVTXwD/A2xrgvCs2UOfwCAXIpG79kfIKeGwo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HGv/7TSF; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780999513; c=relaxed/simple;
+	bh=QFWyBeqeXsXODEh72YQTER2tbPIg1Y7V0Lk+AAPpN5k=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=TViMfMWW5dBu3I32EfSuzLLJ2qb38BF+1xnNhjzrQ40ucQMzrmgAwi/UtTpBY2VD/pyiKEPYNtWJVchW97UtDCyWLhN6mcxtmJTBXEdCSWWyfbyk9fRmcY6EkLXzrp7+c04IgXWPwUQOTOK/nW+D792XPXlUD4UVNIdVxZnN3Jw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=Hmtsl0zj; arc=none smtp.client-ip=188.68.61.103
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HGv/7TSF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A81AD1F0089C
-	for <regressions@lists.linux.dev>; Tue,  9 Jun 2026 09:29:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780997374;
-	bh=0yKUatVn4kkXWaYGNElZeA4eFQRcGLv0dVl4gXBmTUU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=HGv/7TSFLXkv/UDrmr8KL9JsjRwvks3xr7qylPz2QV+fW2anDe1xscw1d9TBpGhEr
-	 MThGVi1PwiDVAq0yJwX9fMLAoNusLPt597I0BSZuy+MmWQhEhHj1VLyqfIn/gPUnSb
-	 T1H3YMh7SW04NhxR5sRw3aNT1Kjl7ko6umhhjU2zZaIIevhyqVZ9Tw2KH3Ga5eKIDB
-	 /4vS6qMHU3pbnwCoQiE09UfG65nqCodMSfuzFSsIxbsUzysoxTfxfS87R95FfGtDGI
-	 x8XtW77PzRqCYF8YaG3/RtyLdbFX0SDflqS+ZhQomICdrOoRLQ1XDTjRHBNO+eDVqi
-	 ldvnlbQK8y3BA==
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-beb1bee8c16so689202966b.0
-        for <regressions@lists.linux.dev>; Tue, 09 Jun 2026 02:29:34 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ8jHp6W4LoKzlmJhppNhyUVjmvslLYgvBbC9wxsF2y/1YvmnDKznWf+0+bszZ9kHZyeBxhv95OcwwJOcg==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwhBiXhxroQPMU0tMIBoTTLYalSaERoxI+DUXTDNXjQTxlN4GU2
-	mjAZlLA6+9ZWb/Jk+Vr6QNOaiBGJAUVsHRb5/xZpWNOynopbHuUMKYA+KP089nwjkv1gfRqFaj7
-	zdmzwhH0EbizNNtwBhUAouLT4oqiEmQE=
-X-Received: by 2002:a17:907:8d8e:b0:bed:15ff:5fe2 with SMTP id
- a640c23a62f3a-bf3a8c05094mr764622166b.17.1780997373174; Tue, 09 Jun 2026
- 02:29:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="Hmtsl0zj"
+Received: from mors-relay-8403.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4gZPfY4nJlz8CSR;
+	Tue,  9 Jun 2026 12:05:09 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1780999509;
+	bh=QFWyBeqeXsXODEh72YQTER2tbPIg1Y7V0Lk+AAPpN5k=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=Hmtsl0zjZJ04zsZoHoHnHUpdL3e1xT+qdq+SxPxaAOnrfmRgAilEQH6v5oKEFPsQN
+	 n1B0qnqDxuE5Emq4OfBYs7VyGlRAsK/BNeaPWjx0lVk6TMxwQcEIMfdAEqO5EWqAu+
+	 KqVQotgz1ju+Hhj9hMU7jvZGzmzRCwaVHh6iy/YHe9JJwRFPODKRdB1fk0WYsPh7iu
+	 Na9vKAfnGRwMQoXhu8zCmPheVlePzUMBA2hLwfe9/Rao2SGxtfj9hIRvpd6vPtUYEH
+	 5rnRW/cfmUuXjldLgrSz45mgAC3qC0yi30AxegOBhatuT77KaHBp2Z9PMqwOUiBIDO
+	 6qxKc5VqL6SQA==
+Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4gZPfY447dz8Bgj;
+	Tue,  9 Jun 2026 12:05:09 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
+X-Spam-Flag: NO
+X-Spam-Score: -2.898
+X-Spam-Level: 
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4gZPfX4HwNz8t4T;
+	Tue,  9 Jun 2026 12:05:08 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id C18135F96B;
+	Tue,  9 Jun 2026 12:05:07 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <5cbf8431-e3c4-41d9-afcd-fb121dc12395@leemhuis.info>
+Date: Tue, 9 Jun 2026 12:05:06 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAKYAXd80+UfzKaCR9YRK8dAQq9S+kEp_VVwr_p3dj1tEeyqUQA@mail.gmail.com>
- <20260603131950.321858-1-japo@linux.ibm.com> <CAKYAXd-mLHaF6VeREroNfUXYYhqLObr=8Lmv9JqVZ7qu5XO0Dw@mail.gmail.com>
- <aibgj6XWdE2VIPiR@li-276bd24c-2dcc-11b2-a85c-945b6f05615c.ibm.com>
-In-Reply-To: <aibgj6XWdE2VIPiR@li-276bd24c-2dcc-11b2-a85c-945b6f05615c.ibm.com>
-From: Namjae Jeon <linkinjeon@kernel.org>
-Date: Tue, 9 Jun 2026 18:29:21 +0900
-X-Gmail-Original-Message-ID: <CAKYAXd8sB-a17A7AtfVm2BzoEU1oKUik1fu4=eeDCTq8T3r9tQ@mail.gmail.com>
-X-Gm-Features: AVVi8CeFUWDyJyP1VKaY8-b928lSrvpleqBk47O2G1CtuvaRUlgm9xcCjiVRR2U
-Message-ID: <CAKYAXd8sB-a17A7AtfVm2BzoEU1oKUik1fu4=eeDCTq8T3r9tQ@mail.gmail.com>
-Subject: Re: [PATCH] exfat: add swap_activate support
-To: Jan Polensky <japo@linux.ibm.com>
-Cc: djwong@kernel.org, hch@lst.de, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev, 
-	sj1557.seo@samsung.com, yuezhang.mo@sony.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] NFSv4: clear exception state on successful mkdir retry
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Trond Myklebust <trondmy@kernel.org>, NeilBrown <neil@brown.name>,
+ Anna Schumaker <anna@kernel.org>, Igor Raits <igor.raits@gmail.com>
+Cc: =?UTF-8?B?SmFuIMSMw61wYQ==?= <jan.cipa@gooddata.com>,
+ linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <177745671692.1474915.5018486129724109553@noble.neil.brown.name>
+ <20260429104938.1776671-1-igor.raits@gmail.com>
+ <971ecb6c-2687-429f-af86-fc980c2d04f9@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <971ecb6c-2687-429f-af86-fc980c2d04f9@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-PPP-Message-ID: 
+ <178099950819.2754868.10331645572987338434@mxe9fb.netcup.net>
+X-NC-CID: hk1XyinkLA2SwZHbK5SCpGsD7vDqiQfNWsmxs+25BdLmQbHAp7Y=
 
-On Tue, Jun 9, 2026 at 12:32=E2=80=AFAM Jan Polensky <japo@linux.ibm.com> w=
-rote:
->
-> On Wed, Jun 03, 2026 at 11:34:55PM +0900, Namjae Jeon wrote:
-> > On Wed, Jun 3, 2026 at 10:20=E2=80=AFPM Jan Polensky <japo@linux.ibm.co=
-m> wrote:
-> > >
-> > > Commit 614f71ca1bdf ("exfat: add iomap buffered I/O support")
-> > > converted exfat buffered I/O to iomap, but did not add a
-> > > .swap_activate handler to the address_space_operations.
-> > >
-> > > swapon(2) on an exfat swapfile then fails with EINVAL, which causes
-> > > LTP swap tests to fail.
-> > >
-> > > Add exfat_iomap_swap_activate() and hook it into exfat_aops so exfat
-> > > uses iomap_swapfile_activate() for swapfile activation.
-> > >
-> > > Fixes: 614f71ca1bdf ("exfat: add iomap buffered I/O support")
-> > > Closes: https://lore.kernel.org/all/20260603110212.3020276-1-japo@lin=
-ux.ibm.com/
-> > > Signed-off-by: Jan Polensky <japo@linux.ibm.com>
-> > Applied it to #dev.
-> > Thanks!
->
-> Hi Namjae,
->
-> I think one line might have been missed when applying my patch:
->
->     .swap_activate =3D exfat_iomap_swap_activate,
->
-> I checked linux-next (master and next-20260604 / next-20260605),
-> and the issue is still present there.
->
-> Link:
-> https://lore.kernel.org/all/20260603131950.321858-1-japo@linux.ibm.com/
->
-> Could you please take a look?
-Sorry about that, my bad. Your patch wasn't being applied properly, so
-I tried to update it manually and made a mistake. Anyway, I have just
-fixed it. Thank you very much for pointing it out!
+On 5/13/26 09:18, Thorsten Leemhuis wrote:
+> [top-posting to facilitate processing]
+> 
+> @NFSv4 maintainers, just wondering, did this patch maybe fall through
+> the cracks? It fixes a regression, that's why it's on my radar. Or was
+> there some progress and I missed it?
+
+Still no progress afaics. Feels like I'm missing something obvious or
+like I'm totally of track.
+
+Igor, Neil, is that the case? Or are you also waiting for the fix to
+make progress?
+
+Ciao, Thorsten
+
+> On 4/29/26 12:49, Igor Raits wrote:
+>> After a server returns NFS4ERR_DELAY for an NFSv4 CREATE issued by
+>> mkdir(2), the client correctly waits and retries.  When the retry
+>> succeeds, however, mkdir(2) can still surface -EEXIST to userspace
+>> even though the directory was just created on the server.
+>>
+>> Reproducer (random 16-hex names so collisions are not the cause)
+>> against an in-kernel Linux nfsd; reproduces under both NFSv4.0 and
+>> NFSv4.2:
+>>
+>>   N=2000000; base=/var/gdc/export
+>>   for ((i=1; i<=N; i++)); do
+>>       d=$base/$(openssl rand -hex 8)
+>>       mkdir "$d" 2>/dev/null || echo "$(date +%T) failed loop=$i $d"
+>>       rmdir "$d" 2>/dev/null
+>>   done
+>>
+>> Failures cluster at the cadence at which the server-side auth/export
+>> cache refresh path causes nfsd to return NFS4ERR_DELAY for CREATE.
+>>
+>> A wire trace of one failure (the three CREATE RPCs all come from a
+>> single mkdir(2), generated by the do-while in nfs4_proc_mkdir()):
+>>
+>>   client -> server  CREATE name=...  -> NFS4ERR_DELAY
+>>   ~100 ms later
+>>   client -> server  CREATE name=...  -> NFS4_OK         (dir created)
+>>   ~80 us later
+>>   client -> server  CREATE name=...  -> NFS4ERR_EXIST   (correct)
+>>
+>> Since commit dd862da61e91 ("nfs: fix incorrect handling of large-number
+>> NFS errors in nfs4_do_mkdir()"), nfs4_handle_exception() is called only
+>> when _nfs4_proc_mkdir() returned an error.  That gate breaks retry-state
+>> hygiene: nfs4_do_handle_exception() resets exception.{delay,recovering,
+>> retry} to 0 on entry, so calling it on success is what previously
+>> cleared the retry flag set by the preceding NFS4ERR_DELAY iteration.
+>> With the gate in place, exception.retry stays at 1 after the successful
+>> retry, the loop runs once more, and the resulting CREATE for an
+>> already-created name yields NFS4ERR_EXIST -> -EEXIST to userspace.
+>>
+>> Drop the conditional and call nfs4_handle_exception() unconditionally,
+>> matching every other do-while in fs/nfs/nfs4proc.c (nfs4_proc_symlink(),
+>> nfs4_proc_link(), etc.).  The dentry/status separation introduced by
+>> that commit is preserved.
+>>
+>> Fixes: dd862da61e91 ("nfs: fix incorrect handling of large-number NFS errors in nfs4_do_mkdir()")
+>> Reported-and-tested-by: Jan Čípa <jan.cipa@gooddata.com>
+>> Closes: https://lore.kernel.org/linux-nfs/CA+9S74hSp_tJu2Ffe2BPNC2T25gfkhgjjDkdgSsF5c2rnJq_wA@mail.gmail.com/
+>> Reviewed-by: NeilBrown <neil@brown.name>
+>> Cc: stable@vger.kernel.org
+>> Signed-off-by: Igor Raits <igor.raits@gmail.com>
+>> ---
+>>  fs/nfs/nfs4proc.c | 5 ++---
+>>  1 file changed, 2 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+>> index a0885ae55abc..ffd14141ea1d 100644
+>> --- a/fs/nfs/nfs4proc.c
+>> +++ b/fs/nfs/nfs4proc.c
+>> @@ -5393,10 +5393,9 @@ static struct dentry *nfs4_proc_mkdir(struct inode *dir, struct dentry *dentry,
+>>  	do {
+>>  		alias = _nfs4_proc_mkdir(dir, dentry, sattr, label, &err);
+>>  		trace_nfs4_mkdir(dir, &dentry->d_name, err);
+>> +		err = nfs4_handle_exception(NFS_SERVER(dir), err, &exception);
+>>  		if (err)
+>> -			alias = ERR_PTR(nfs4_handle_exception(NFS_SERVER(dir),
+>> -							      err,
+>> -							      &exception));
+>> +			alias = ERR_PTR(err);
+>>  	} while (exception.retry);
+>>  	nfs4_label_release_security(label);
+>>  
+> 
+
