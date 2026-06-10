@@ -1,110 +1,192 @@
-Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBBDB3FF1D6
-	for <regressions@lists.linux.dev>; Wed, 10 Jun 2026 11:07:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.219.47
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781089674; cv=pass; b=Gm53u5Tcvp5QWE0IsalKGBBBv6gxOY/wFT8JJKvKmSpSIyuETWwJW9yU9h/1dVPvjkmakvpbJzRyBEjczLQmuQHcWWFoI1xxdNb0DjwOeuhr14whkrwN7afkr2EZbb4Xi+BLn8pASGY5SfabxFsikrXBtijkKO+DoQvDYiBO38U=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781089674; c=relaxed/simple;
-	bh=8mXpNYNPgECtkzr8AGdyU4Fcoy173GBePp5Ov1p4bmk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=m7BxmDV1Wdvbz45d7ZuacVO3mjdL6vIZ344AEBIT0UlYuELyI2afpSIJzlRCmcptQYm7oFrhIGkNhZLV0J3y35RIy+ZxDT4NfViJLuOMrrKkLYPg/rz0f3bO5WMbKz/KNLf+ub1w2WcL2svGhnCwTsF1IWsd4a7La9STSEfkM6k=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=P4Zxfody; arc=pass smtp.client-ip=209.85.219.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABD9633E345
+	for <regressions@lists.linux.dev>; Wed, 10 Jun 2026 14:28:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1781101715; cv=none; b=XHsTJ0XJk62m+B++fzV7sQMoua/n0NSw6+iY2QbrcfbN+b9LBkHnIgzcvCiBWInDQhFo/mhmpaTTX9f40waBK/T9kIQjjlo8GcfTa/4LRcZMJWXPXRKclbRYDrNzMOmkNd6qGoDF2RHEXJdXnOkLf1ZKhP/CixfZ7jwQNqBQdyE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1781101715; c=relaxed/simple;
+	bh=+bmwZAtHHEshgOQRjN5qxE4tw/GFszAT5/dc2pPV7X4=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=BW1ajHpeEI61t7AUCi6q2znLCIMF6KiMA4Z4tfSd3G+QjZV8vnNPgxIo8XdusA0q9wBv48y9wgsiD4KW0UGsr/8Ipx2+AMM1XnCJJBJhNArvn8+QuYAV2QKy6huVvj5BVY7TPBxI/1ulaPGNnWCIGtqoqgQrnkUeMT09L57+oFU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cBahSpXs; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="P4Zxfody"
-Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-8ce9df49c5fso89826096d6.1
-        for <regressions@lists.linux.dev>; Wed, 10 Jun 2026 04:07:45 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1781089664; cv=none;
-        d=google.com; s=arc-20240605;
-        b=RIFON6oSsZZUm3FqsBiuatXRHIYFQMzTwQa+9TH3rHXQ5C//A5qwHyAbAISXKro1E8
-         995OPrd8VPd3oLHbKWm4H/WglvDlcwRQOJZTRaiWPvG/3hzulsornF+MCOFAl0nU0tt6
-         UW7V/WrLf0kVB5VJ+X7Ae3rYV8vwrqdbvZdcWIi9htvs+NWD9uYgcv8pIBc18d5RC8Oo
-         Y2k7Kamsjop8r2m1oaknNkgi51TeqSqms6lwyP1b2jy00KWpCWLVbjq6T5QTHNY2U+P9
-         Yo+X7DCpSfxvWT8QK8QKKSXgi7kemn7UhhWTtuyQockbt+O3vJeDXbTi1B+WkzrkYDgo
-         h2SQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=FfooajCCb5qkkr/DDxFEIC/q5Pcqtx/WOj5PoiifL7s=;
-        fh=n/OiBYWy83mKNIc1F5OEYo4EDd4uiZjv9WRx9QmlhGE=;
-        b=V3lJdolHGauxbxIuZgMSzPFBtH9FQL62PeEcqqfPa/f+S+OIiq+zGhxGKo6Q67JX2p
-         H8SHDEiE7IdNfTs3ReqAwMGXnbN5A5HUSFbZlVmbAkpuXrN9/Y3lSVN2Ci7pcug9NfT+
-         VMosFPnZhQ79D8vfQryF6OI4N31AriBjAPaqWC9grVJoqWxnIItAIy0APyYkjbQT82+l
-         /4XsDLSjpb+5MiYNaMOOgQkWy3IrNrx/iANGx2HZd8rFvlWpGnuQN4Uf8j/amF3WyDMt
-         driy4cGdetjTK5qPjzPyztmawA82NjoBHICR08S/FEkNLinL+3aFdPJA8Cqs9Q4VyKtH
-         J2CA==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google; t=1781089664; x=1781694464; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=FfooajCCb5qkkr/DDxFEIC/q5Pcqtx/WOj5PoiifL7s=;
-        b=P4ZxfodyGn+W39DAk9lxjvJclk87Oh0/nr/dpsg96/n3PHEwzp3YHj9BSdvgBwOmz1
-         vt/lcMkZsEiNchXp6MwSQlRYUk666qKUKB62/k7kp0Y7SjQqNfrJWty4tATK2fs/23zz
-         4aPCza5G7k5i5bVBAJh9L0KtE4U6PnA65mjWg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781089664; x=1781694464;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FfooajCCb5qkkr/DDxFEIC/q5Pcqtx/WOj5PoiifL7s=;
-        b=cLWjBZ45B6Q0lkN6QxPPKIvt50jg2k2MtsF1pZCkAbkquB234G9MLTfBv8qhWZmuPg
-         594MHjJGqWCuMIsWT85UPWDlYSWSIIKaxx/tQ05+IDRFdfPoD/gKIfHgSnYdbT//yPGB
-         c7F9SlofpV8/WSDxZAYX3oWv5YZsaLO+8IWkd+GgZRvKcLwsRCq4noMm2RmY9SHvya95
-         CvXJDmrsaxrdnXKZ1C5L1kb9vTe9CPCdhj7zUud2b+F45XMflJJS9MfAKjJT2yElwKDe
-         8ioDufUYlYGNi1AQBqPoffpCFJb+Y9KShzW2J4xmFtq/EQjkALnB963vM/v+gmMEk4xC
-         hleA==
-X-Forwarded-Encrypted: i=1; AFNElJ+GDYMdI0Rnv7+Gc7KQlqzkQ34avzBauEb+wpm2Nu3ICSEU1jl1rfjBPOcJf5ImBz0S8lQsM04rSn0pDw==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yz8M7hh88fL3rCIVr2T7DAga5Fo+0qzRsWxgkjIPvSNo634m2ON
-	9rGU7FsI6JOX6plBpY0BrhBlfMH9Joyp08kervIG7UHwxfJh5a8gUMJ061Q6MeMIaMTzSKbs5Ca
-	OBBB8bZ4kFIQrW4x/62ehy3FvhOashSWmvNJfeYfdsw==
-X-Gm-Gg: Acq92OEkjJGhACvL3WgUDQMtqUIk/C4u1mo7QP071nqCDclcM1ZEiWkqL5dSanRwwss
-	ZDgfsQR+9VyUHTXR/Qp8/Bbpc0E2ALkaDM7qu4Ib0jLbKm1+nLktEnhofg7M8u+NRIsqvOiYypa
-	Lk8eVm0jx7vUvRMWHFRjVLk+orRUEtm3zNbfYri+fyLD7fyJdmx4sQ25KUzNHzABatRK59SYPGP
-	ZNQw1WqlfXdMCz1M2EXk+6BSS/FmujkGh91b0cNLqRBoI/gndcRToCn3qzT/1/DPT49HRxpSe3/
-	NdbLAfV5vCJu0HEDJKD6PtJSrVhtmVecPiTGaPT9L+L7XjGj70U=
-X-Received: by 2002:a05:622a:47ce:b0:514:5d67:7a30 with SMTP id
- d75a77b69052e-51795c74e62mr337766041cf.43.1781089664278; Wed, 10 Jun 2026
- 04:07:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cBahSpXs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DEE71F00899;
+	Wed, 10 Jun 2026 14:28:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1781101713;
+	bh=usz09gXUhRAO92R6pHZAh8vlZ5c7zZWYbZMrAGM/zYA=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject;
+	b=cBahSpXs+rj+EGmSTxpFTUCH8GDXFZCSj4IZSZ/gCSFI73GFQ7SGh9/+6WRIbFUZs
+	 6BE9hAU4zELw1P7OGX5s3lDw0HmUFnKgiIJCEPdVaBlwG+Go8cC9svNjeuDSMAQ2Lp
+	 MADs5BUjctJCHIDvyjjhPIXHHXPk8RKiKAMicLUStNmnz5Eoq9l7QbWeKmPEprS3jc
+	 4pCD9Q2sYeD6Cw1eq9h4pDldHsbcsm/rfX2QaM3CBmiegeqJZZARz9DvKR1uUdV2/E
+	 1NsOY3NUgCr96zj/8L9WqnHX4L4B+Eq41X0jpRqO9L0cVH8MF+ddeLe5GdXFVPXhD4
+	 xAsPG9TzeKNCg==
+Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 68381F40097;
+	Wed, 10 Jun 2026 10:28:32 -0400 (EDT)
+Received: from phl-imap-04 ([10.202.2.82])
+  by phl-compute-02.internal (MEProxy); Wed, 10 Jun 2026 10:28:32 -0400
+X-ME-Sender: <xms:kHQpaoAXPlsGYf7BA0x6NXH9wFMjKkfePfpWauGCNT7b4pUsG_GXeg>
+    <xme:kHQpalXVGyjIKAjCueY5GEOkMeoPfCBok9DEQqIRmSY0rE4VekZJJS9M9J_6iuVeh
+    Zx5Mnswt7Ei7sBZ8TvWxW2ypO5i9P-1lbG-fsWgJE5vsNStTogsbJ1H>
+X-ME-Proxy-Cause: dmFkZTFug49oVC+lYOXXANZTytnInRE9GA76nwoLHANdW1h4FSdQOMVIi2Dymb/z1aE5No
+    xZKQIbjnzTYfq7ejRHdCJF1jIUuB9IlOof13D10/4NF0R9QciAC0asuUdWaJjK131BpGn3
+    i5hm55tRIiyCZrr8R0ZeikhrVD5KwusATQgwuOPAUwtxiPtDZmvcVKm1rDgwYn76oZhUNh
+    qg5JwsFejSx41++L/9ehtHuJQD2uA3Cm/XhJ8XBAPpagAgytpUMmGr6r/48tyXkq+A3PCA
+    MNCvHFNMTbbP6GqTQFQSQTQkK4sh7+SGWp9bV7ca0yDDaYrZ/8Uvj45ugsCoX1v1IaEpVU
+    SobUmEuTZj0qtx6DleyDOjNnsXea8OlWtt7cCva6LacDDgbBA//YiZq3mXW2y6mR0j8mvI
+    hlX8iV3D4Yayabg1tLXhwRuvANRpsqJf0U1CR2/5n3s8xVK+spzL9uP8k49GATLCSnv9Ow
+    yLLVPoWhdHBCEsruCPk/TfNeGAL7dswDyWd4jXg7ErIN27+1OP9tf3vIJ6N6Cg94SbRx4Z
+    yRuJEIl4GGJDqSeEPpIotC3NdWRTTv42HNQvHbJvMH6K+ji8wAE5hI8BngVNOb+Mo6H2jI
+    SmQQLSOKxKwfhLAxKQPML3JvCs4kzJZCSbVc7/bq3V+6MPTEi1knp7C1eQOA
+X-ME-Proxy: <xmx:kHQpaji7R4ldspZ8pkiH02PWa6TN_cdMXuNnA2ZPuZHmTlcRU38D6g>
+    <xmx:kHQpajEI1D2_AWeSTHKDwLqrr2M4G3zNNeqYu2NL7l-Zzae5_y5rpA>
+    <xmx:kHQpatta7Tntfodk21szWht8uHbz1Y6aTE7cM2Jx0fMwqQ6IjkI91w>
+    <xmx:kHQpasfolm4qs7Jppr9FP7Qcyp6F3lDd8w-mpr-5G5WaBmQr4azAhg>
+    <xmx:kHQparlPmGjgobJpBteMuKD6iXYolGxTa3kn5NiNGnIkEFNYxYyyavmq>
+Feedback-ID: i20964851:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 408D4B60070; Wed, 10 Jun 2026 10:28:32 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAFbF8N7++zopZuEcsKRxBV_sgOGCbzCY0hOyMw1SiGAtuzGhyQ@mail.gmail.com>
- <CAJfpegsCJnMfn_BzzTK7m9ndCGVsnPit8ZsT0fzAhYoY+yOsKQ@mail.gmail.com>
- <178035740095.2923901.5908691318688917347@noble.neil.brown.name>
- <CAJfpegswAZv8OmDAcK-5u8kssAF1vZKe4gdDB2XPErAnoGFSYg@mail.gmail.com>
- <178056619459.3392745.3091041855723132411@noble.neil.brown.name> <CAJfpeguDUS_3X-AFZD6XCJB1SjVkFGu2aJ+p1BK574Scu-ASdA@mail.gmail.com>
-In-Reply-To: <CAJfpeguDUS_3X-AFZD6XCJB1SjVkFGu2aJ+p1BK574Scu-ASdA@mail.gmail.com>
-From: Miklos Szeredi <miklos@szeredi.hu>
-Date: Wed, 10 Jun 2026 13:07:33 +0200
-X-Gm-Features: AVVi8CcPOrZk3LFY7g50zlOcX2XYfioeMe0IQAA6vK7TOfH2w2RnMqNOAT5Kh5Q
-Message-ID: <CAJfpegt4mAXDFOr47XaYPgeN1LFm_BNC_8SX-2A8kHEztWdNHw@mail.gmail.com>
-Subject: Re: PROBLEM: FUSE_NOTIFY_INVAL_ENTRY leaves stale negative dentry
- after c9ba789dad15
-To: NeilBrown <neil@brown.name>
-Cc: =?UTF-8?B?0JDRgNGC0LXQvCDQm9Cw0LHQsNC30L7Qsg==?= <123321artyom@gmail.com>, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+X-ThreadId: A7DWBoyFEMmk
+Date: Wed, 10 Jun 2026 10:28:10 -0400
+From: "Anna Schumaker" <anna@kernel.org>
+To: "Thorsten Leemhuis" <regressions@leemhuis.info>,
+ "Trond Myklebust" <trondmy@kernel.org>, NeilBrown <neil@brown.name>,
+ "Igor Raits" <igor.raits@gmail.com>
+Cc: =?UTF-8?Q?Jan_=C4=8C=C3=ADpa?= <jan.cipa@gooddata.com>,
+ linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org,
+ "Linux kernel regressions list" <regressions@lists.linux.dev>
+Message-Id: <fa68fbe1-466e-4fa3-8245-8eb61243b409@app.fastmail.com>
+In-Reply-To: <5cbf8431-e3c4-41d9-afcd-fb121dc12395@leemhuis.info>
+References: <177745671692.1474915.5018486129724109553@noble.neil.brown.name>
+ <20260429104938.1776671-1-igor.raits@gmail.com>
+ <971ecb6c-2687-429f-af86-fc980c2d04f9@leemhuis.info>
+ <5cbf8431-e3c4-41d9-afcd-fb121dc12395@leemhuis.info>
+Subject: Re: [PATCH] NFSv4: clear exception state on successful mkdir retry
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 4 Jun 2026 at 15:59, Miklos Szeredi <miklos@szeredi.hu> wrote:
+Hi Thorsten,
 
-> Okay, so this is about making VFS more scalable?  Can't we just leave
-> filesystem code alone in that case?
+On Tue, Jun 9, 2026, at 6:05 AM, Thorsten Leemhuis wrote:
+> On 5/13/26 09:18, Thorsten Leemhuis wrote:
+>> [top-posting to facilitate processing]
+>>=20
+>> @NFSv4 maintainers, just wondering, did this patch maybe fall through
+>> the cracks? It fixes a regression, that's why it's on my radar. Or was
+>> there some progress and I missed it?
 
-Unless there are strong objections I'm going to revert commit
-cab012375122 ("fuse: fix conversion of fuse_reverse_inval_entry() to
-start_removing()") and revert the fuse part of commit c9ba789dad15
-("VFS: introduce start_creating_noperm() and
-start_removing_noperm()").
+The patch is in my linux-next branch here: https://git.linux-nfs.org/?p=3D=
+anna/linux-nfs.git;a=3Dcommit;h=3D238e9b51aa29f48b6243212a3b75c8e48d6b96=
+fd
 
-Thanks,
-Miklos
+It'll be included when the merge window opens this weekend.
+
+Anna
+
+>
+> Still no progress afaics. Feels like I'm missing something obvious or
+> like I'm totally of track.
+>
+> Igor, Neil, is that the case? Or are you also waiting for the fix to
+> make progress?
+>
+> Ciao, Thorsten
+>
+>> On 4/29/26 12:49, Igor Raits wrote:
+>>> After a server returns NFS4ERR_DELAY for an NFSv4 CREATE issued by
+>>> mkdir(2), the client correctly waits and retries.  When the retry
+>>> succeeds, however, mkdir(2) can still surface -EEXIST to userspace
+>>> even though the directory was just created on the server.
+>>>
+>>> Reproducer (random 16-hex names so collisions are not the cause)
+>>> against an in-kernel Linux nfsd; reproduces under both NFSv4.0 and
+>>> NFSv4.2:
+>>>
+>>>   N=3D2000000; base=3D/var/gdc/export
+>>>   for ((i=3D1; i<=3DN; i++)); do
+>>>       d=3D$base/$(openssl rand -hex 8)
+>>>       mkdir "$d" 2>/dev/null || echo "$(date +%T) failed loop=3D$i $=
+d"
+>>>       rmdir "$d" 2>/dev/null
+>>>   done
+>>>
+>>> Failures cluster at the cadence at which the server-side auth/export
+>>> cache refresh path causes nfsd to return NFS4ERR_DELAY for CREATE.
+>>>
+>>> A wire trace of one failure (the three CREATE RPCs all come from a
+>>> single mkdir(2), generated by the do-while in nfs4_proc_mkdir()):
+>>>
+>>>   client -> server  CREATE name=3D...  -> NFS4ERR_DELAY
+>>>   ~100 ms later
+>>>   client -> server  CREATE name=3D...  -> NFS4_OK         (dir creat=
+ed)
+>>>   ~80 us later
+>>>   client -> server  CREATE name=3D...  -> NFS4ERR_EXIST   (correct)
+>>>
+>>> Since commit dd862da61e91 ("nfs: fix incorrect handling of large-num=
+ber
+>>> NFS errors in nfs4_do_mkdir()"), nfs4_handle_exception() is called o=
+nly
+>>> when _nfs4_proc_mkdir() returned an error.  That gate breaks retry-s=
+tate
+>>> hygiene: nfs4_do_handle_exception() resets exception.{delay,recoveri=
+ng,
+>>> retry} to 0 on entry, so calling it on success is what previously
+>>> cleared the retry flag set by the preceding NFS4ERR_DELAY iteration.
+>>> With the gate in place, exception.retry stays at 1 after the success=
+ful
+>>> retry, the loop runs once more, and the resulting CREATE for an
+>>> already-created name yields NFS4ERR_EXIST -> -EEXIST to userspace.
+>>>
+>>> Drop the conditional and call nfs4_handle_exception() unconditionall=
+y,
+>>> matching every other do-while in fs/nfs/nfs4proc.c (nfs4_proc_symlin=
+k(),
+>>> nfs4_proc_link(), etc.).  The dentry/status separation introduced by
+>>> that commit is preserved.
+>>>
+>>> Fixes: dd862da61e91 ("nfs: fix incorrect handling of large-number NF=
+S errors in nfs4_do_mkdir()")
+>>> Reported-and-tested-by: Jan =C4=8C=C3=ADpa <jan.cipa@gooddata.com>
+>>> Closes: https://lore.kernel.org/linux-nfs/CA+9S74hSp_tJu2Ffe2BPNC2T2=
+5gfkhgjjDkdgSsF5c2rnJq_wA@mail.gmail.com/
+>>> Reviewed-by: NeilBrown <neil@brown.name>
+>>> Cc: stable@vger.kernel.org
+>>> Signed-off-by: Igor Raits <igor.raits@gmail.com>
+>>> ---
+>>>  fs/nfs/nfs4proc.c | 5 ++---
+>>>  1 file changed, 2 insertions(+), 3 deletions(-)
+>>>
+>>> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+>>> index a0885ae55abc..ffd14141ea1d 100644
+>>> --- a/fs/nfs/nfs4proc.c
+>>> +++ b/fs/nfs/nfs4proc.c
+>>> @@ -5393,10 +5393,9 @@ static struct dentry *nfs4_proc_mkdir(struct =
+inode *dir, struct dentry *dentry,
+>>>  	do {
+>>>  		alias =3D _nfs4_proc_mkdir(dir, dentry, sattr, label, &err);
+>>>  		trace_nfs4_mkdir(dir, &dentry->d_name, err);
+>>> +		err =3D nfs4_handle_exception(NFS_SERVER(dir), err, &exception);
+>>>  		if (err)
+>>> -			alias =3D ERR_PTR(nfs4_handle_exception(NFS_SERVER(dir),
+>>> -							      err,
+>>> -							      &exception));
+>>> +			alias =3D ERR_PTR(err);
+>>>  	} while (exception.retry);
+>>>  	nfs4_label_release_security(label);
+>>> =20
+>>
