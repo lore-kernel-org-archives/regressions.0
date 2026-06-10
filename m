@@ -1,112 +1,98 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.61.107])
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7828E33438F
-	for <regressions@lists.linux.dev>; Wed, 10 Jun 2026 09:35:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.61.107
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80A6B3EDE76
+	for <regressions@lists.linux.dev>; Wed, 10 Jun 2026 10:22:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781084110; cv=none; b=heFmLYx/Q8leUy0SffAk15J8R4NSdqoJYmaQM0LW+uJTI/DO5IRv6XdoJaK40QxMK6hDlRWFKAFZGu8B6vH48ozgwdpsgf1dH/W6DeOJ9Uh9xWlE/jsDkfYPrPh9iHbyirlu+ZhvYx70lt2mkOLh/xLiUOhdLM480zyj/JHy8Ew=
+	t=1781086923; cv=none; b=hrIqHGuQhzYGv3p7ywms8TFLyfrINV/bKUMpDZnXuu5QjSKCgjP+V9OePmBAzFWyowmJaVCApyY8Tu9OPcwzTK0g1MAA2ghaGv2sAQZHmrF3sbsYAtnOzgU6JM+AHTa6FJjjst3wCLQpwqo7GVICw0R/SIZ/NFai6IUtKwMqEWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781084110; c=relaxed/simple;
-	bh=S0M2Cth8pZwQfQOa7dmLVKP+EcyGu6sVDYt/ZnaQcSc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fq3bqsp0dJe7U4Hu8EYLpS19gK/t/3/FBIgVidzkxZ7qqQh44JYQO+6IdLYbHRVMT5yJ04EwyKOlFpVGh/L0fs1l0B1DfFgr2F0b35dq3p+x+TwVoycjNzpyK/okAE7rvawBfYsvgPQW5b0IkkWPxG5i1xPCEblPpiRj/hrjnqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=PthFqRAb; arc=none smtp.client-ip=188.68.61.107
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1781086923; c=relaxed/simple;
+	bh=okPcpkHPEcFFZ3Wjg9fvdzD1vVnZuDAoGCK7cgalCaY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WJrzNbzdJASE7yHKrOzO0j3gJm0TqTyrGoyTyKA0VjZTq3JGNM/7ssyF2GXsiw78FJ2i7SdP+kfFD8jPiitwoGdfDqpyUT2XrBPXnjQD1AGuE8IgPWqzy3/sGcZ1eph/elzxzELxsO7F1nuzFH9m9vl2UU14JltuDnKd2aWlSeo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=NBbmW+Nb; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="PthFqRAb"
-Received: from mors-relay-8405.netcup.net (localhost [127.0.0.1])
-	by mors-relay-8405.netcup.net (Postfix) with ESMTPS id 4gb0nM317Dz71ql;
-	Wed, 10 Jun 2026 11:28:07 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1781083687;
-	bh=S0M2Cth8pZwQfQOa7dmLVKP+EcyGu6sVDYt/ZnaQcSc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=PthFqRAbFCgu4w0YctJ28a79BiD0jHo44vb3aRdFy0oxvPiGZ4/OPJc9lM3KyfpyR
-	 B9dl7EJvDuwFTJ7SVN3Cl3FJJZ+SbL5aAeEbaY6cPBpCmEYh6QMZGeMD11gjpRs7AM
-	 nw/01HbLpBv7LqR8SR0SIxQCulNJL1uiMx4S2sQkIxmi1+x6rKy1KbQTZqf963Hh5T
-	 s3uvfXdICsBnupmROfLlFIFpox5/lHMg837kCp+oLwJ1I6lg143bd2w9GY/j36nGbu
-	 W8O/mHZSldgYnsVvN3zjvzYG6mxWCM5OBoRfVcgZuJlc4H+D2xUnlny8Qi41I5ow12
-	 z5CYdkvwRuXIg==
-Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-8405.netcup.net (Postfix) with ESMTPS id 4gb0nM2KCMz71q3;
-	Wed, 10 Jun 2026 11:28:07 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
-X-Spam-Flag: NO
-X-Spam-Score: -2.901
-X-Spam-Level: 
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4gb0nK1J2Bz8tdc;
-	Wed, 10 Jun 2026 11:28:05 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id BFF8861834;
-	Wed, 10 Jun 2026 11:28:03 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <b68dc2ab-ab54-435f-a4e5-05b1b8397505@leemhuis.info>
-Date: Wed, 10 Jun 2026 11:28:03 +0200
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="NBbmW+Nb"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
+	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Reply-To;
+	bh=W1xAQ3kxXWEPxj+qDrh+a29AP/hJ8tSPkUteLT00sjA=; b=NBbmW+NbmS3pkIic+2TuPDqcoo
+	t2jUBrBIgVIx6LJ8uC9jB9//B/SrpqbhMSLq+LUbvWvy7fGD/JTWiubTYAqoq5s21K85bVvQ1iY98
+	lNRl9Fb9Q02gwBrCs5wKnYoCcQsorqPmobTs4tCS1FHfQ0dTNfI0Xsv5Vhb29OscdaSIhvjDfGGDw
+	FA4njdisxO4Ym2HEofLetBXTvVX4UYZNEGffSqgqZ7yfEZ8+4xR7wKOUw72J25jrm4GWJLTUlGZjr
+	1lKz89WxeufpcbkmlXxZ0yWMXsijMMvsGkzxXwo10SACxDaC/wabpw+1jVEnMuiNGnC8ac757E2aj
+	D28giIvQ==;
+From: Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
+To: Oren Klopfer <oklopfer37@gmail.com>, linux-rockchip@lists.infradead.org,
+ Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: regressions@lists.linux.dev, pbrobinson@gmail.com, guptarud@gmail.com,
+ megi@xff.cz
+Subject:
+ Re: [REGRESSION][BISECTED] wireless networking broken on Pinephone Pro
+Date: Wed, 10 Jun 2026 12:21:50 +0200
+Message-ID: <3761289.R56niFO833@diego>
+In-Reply-To: <b68dc2ab-ab54-435f-a4e5-05b1b8397505@leemhuis.info>
+References:
+ <20260607225901.64019-1-oklopfer37@gmail.com>
+ <b68dc2ab-ab54-435f-a4e5-05b1b8397505@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION][BISECTED] wireless networking broken on Pinephone
- Pro
-To: Oren Klopfer <oklopfer37@gmail.com>, linux-rockchip@lists.infradead.org
-Cc: regressions@lists.linux.dev, pbrobinson@gmail.com, heiko@sntech.de,
- guptarud@gmail.com, megi@xff.cz
-References: <20260607225901.64019-1-oklopfer37@gmail.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <20260607225901.64019-1-oklopfer37@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: 
- <178108368414.1890399.13005960660434409860@mxe9fb.netcup.net>
-X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: BFF8861834
-X-NC-CID: 598cZP64CGrnjzi48ziqCffhEELqW7MMqIF991CvHUWGt+Cmwdc=
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 
-On 6/8/26 00:59, Oren Klopfer wrote:
-> Apologies if this is not formatted properly, this is my first
-> submission to the kernel mailing list. WiFi specifications were
-> introduced into the Pinephone Pro device tree in
-> 096bd8c679185f898cae9933c6a68650fa26ea4f, but this causes complete
-> networking failure on some devices. The regression affects all
-> versions v6.18-rc1..v7.1-rc6.
-> 
-> An identical issue was reported for the Pinebook Pro at https://
-> lore.kernel.org/all/aUKOlj-RvTYlrpiS@rock.grzadka/; the regression
-> was reverted in 29d1f56c4f3001b7f547123e0a307c009ac717f8. The errors
-> faced on the Pinephone Pro are exactly the same as were reported for
-> the Pinebook Pro regression.
-> 
-> A previous patch at https://lore.kernel.org/all/20260112-
-> ppp_connectivity-v1-3-284d6e83b212@gmail.com/ attempted to resolve
-> this issue but never ended up being merged.
-> 
-> 096bd8c679185f898cae9933c6a68650fa26ea4f is the first bad commit
-> commit 096bd8c679185f898cae9933c6a68650fa26ea4f
-> Author: Peter Robinson <pbrobinson@gmail.com>
-> Date:   Fri Aug 29 12:38:24 2025 +0100
-> 
->     arm64: dts: rockchip: Further describe the WiFi for the Pinephone Pro
-> [...]
-> 
-> Reverting the commit allows wireless connection to function again. I
-> am not really familiar with the process of submitting a revert
-> patch, but I'd request that this be done on all of 6.18 (LTS), 7.0
-> (Stable), 7.1 (Mainline). Thanks!
-Thx for the report. Sounds like a revert is the right course of action
-here. Could you submit one with a stable tag to ensure backporting? That
-might be the fastest way to resolve this, as that makes it easy to
-process for the maintainers to process this.
+Am Mittwoch, 10. Juni 2026, 11:28:03 Mitteleurop=C3=A4ische Sommerzeit schr=
+ieb Thorsten Leemhuis:
+> On 6/8/26 00:59, Oren Klopfer wrote:
+> > Apologies if this is not formatted properly, this is my first
+> > submission to the kernel mailing list. WiFi specifications were
+> > introduced into the Pinephone Pro device tree in
+> > 096bd8c679185f898cae9933c6a68650fa26ea4f, but this causes complete
+> > networking failure on some devices. The regression affects all
+> > versions v6.18-rc1..v7.1-rc6.
+> >=20
+> > An identical issue was reported for the Pinebook Pro at https://
+> > lore.kernel.org/all/aUKOlj-RvTYlrpiS@rock.grzadka/; the regression
+> > was reverted in 29d1f56c4f3001b7f547123e0a307c009ac717f8. The errors
+> > faced on the Pinephone Pro are exactly the same as were reported for
+> > the Pinebook Pro regression.
+> >=20
+> > A previous patch at https://lore.kernel.org/all/20260112-
+> > ppp_connectivity-v1-3-284d6e83b212@gmail.com/ attempted to resolve
+> > this issue but never ended up being merged.
+> >=20
+> > 096bd8c679185f898cae9933c6a68650fa26ea4f is the first bad commit
+> > commit 096bd8c679185f898cae9933c6a68650fa26ea4f
+> > Author: Peter Robinson <pbrobinson@gmail.com>
+> > Date:   Fri Aug 29 12:38:24 2025 +0100
+> >=20
+> >     arm64: dts: rockchip: Further describe the WiFi for the Pinephone P=
+ro
+> > [...]
+> >=20
+> > Reverting the commit allows wireless connection to function again. I
+> > am not really familiar with the process of submitting a revert
+> > patch, but I'd request that this be done on all of 6.18 (LTS), 7.0
+> > (Stable), 7.1 (Mainline). Thanks!
+> Thx for the report. Sounds like a revert is the right course of action
+> here. Could you submit one with a stable tag to ensure backporting? That
+> might be the fastest way to resolve this, as that makes it easy to
+> process for the maintainers to process this.
 
-Ciao, Thorsten
+Was confused for like 5 minutes because "didn't we do that just recently",
+until realizing, that it's the Pinephone this time, not the Pinebook.
+
+So we'd need a similar one to
+https://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git/commit/?h=3Dfor=
+=2Dnext&id=3D29d1f56c4f3001b7f547123e0a307c009ac717f8
+
+
+Heiko
+
+
