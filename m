@@ -1,175 +1,144 @@
-Received: from sonic303-20.consmr.mail.ir2.yahoo.com (sonic303-20.consmr.mail.ir2.yahoo.com [77.238.178.201])
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EC59403B16
-	for <regressions@lists.linux.dev>; Thu, 11 Jun 2026 13:42:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=77.238.178.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8DD6946A;
+	Fri, 12 Jun 2026 00:30:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781185375; cv=none; b=JNRZ+y/mfPvAzceaerqTx4x5xnX1cm9a9h9iJX+qLD476A0K3p4hy6Fte6bHzzkIyfsYGScTsKRKFtcNTuFIY269EhYJ1fKHYhCfDl34oQDDfoQ7EKvwhaNAVFtv0nbpSVS9jChdwmWcrLmy2tcIOVmlBYD4XgBJj+5Dl9ft8sc=
+	t=1781224226; cv=none; b=jizyp90P2wFRBUr/1J7qcvJjOoVvz+bX40PmR6kPw5qXtQ0+VlHN+8Mpxe0RCWZ4rXtjq5Xefneqy4Fq4zKc2OUD9LROrs0xW6Z1XuUWT7CtbK2XPS4cWpiyo0l7ybkybRe5ehVXjTF8WHlpsRc3D2+Fu51zKWfKs2XqBgLK2Kk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781185375; c=relaxed/simple;
-	bh=QinLdydYFFzhfzCwGWVsMabc9s7iP5QrwIHt7oRNp5U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jPssLW3c8jyOlChzudNW/sbWmC+JbMAAqP3eAw81e3rfF+4C4+QHS2B3aWPEupDzDDjOj6i/4PTLrBMAhx4Gz093Ln+PejNabvj2CQiz4vxQ6kvir8gRFhOg6dNkH69ZMAC0CwCjvWR3ci3JQJ0xpRh6iHBdQB5YYo3jbdfpXVg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.it; spf=pass smtp.mailfrom=yahoo.it; dkim=pass (2048-bit key) header.d=yahoo.it header.i=@yahoo.it header.b=BKr8/pgn; arc=none smtp.client-ip=77.238.178.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yahoo.it
+	s=arc-20240116; t=1781224226; c=relaxed/simple;
+	bh=sl6TUBBBCoIQnTU7GsgG5is62CkRYeza+L8accszNvo=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=rAR3RWak4Pk6rK587p7rTAbZD2jM/k90KiqKMOnYLtX50rX9C2vg0jWLAv6DugEmjuqEzdQMEIKcQh7Za66+6YlAxKrQf+NFe/OtFaeGePWAzulMEYsix/ygPDSVr0QED59saj1Qb4Bv/PQS/Hy4eOww7Y37MDosOGCTU0yXcRk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=pass (2048-bit key) header.d=realtek.com header.i=@realtek.com header.b=LhGbktSK; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.it header.i=@yahoo.it header.b="BKr8/pgn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.it; s=s2048; t=1781185371; bh=aVPPymS4lmAww1BY+GTvl9Z2HVdq0OQBfTx60YXSaGA=; h=Date:Subject:To:Cc:References:From:In-Reply-To:From:Subject:Reply-To; b=BKr8/pgnTgUNxiq8w78BxxghnwyQHdNRuMahEQvX2o8o2stLwsR4WIMt0B7LAn0mAhZMF088/HIzs0EvQswVp8X+Ym8si0eCC6+e1zCxzti3im8qnMqJCyCW6Vf6+RME5NCnAuoYfaEidyurVoAO43LLfcC6hkz+DAsnyftI3D5gXSdI3culDgjb7Va6HplufBBq9VsSPDlAZkd5F63fsS9SiURxD8MXy2gy5gEZaZrACJR5UE5Qp4KSaI4xFl3Oo/vxf3zUvWxNYu1//fjZ7TbY4fLNB1NgMViueu91HAvCnKzVavpWXbmA3YVAc6EdhjtiH+6GyU5Bs+qEwENsjg==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1781185371; bh=9fR+A1XUHrykL97A1sSrQPfzFwcn31brn+183U2MGSD=; h=X-Sonic-MF:Date:Subject:To:From:From:Subject; b=dTYON3jSQljKRxZ+sC/toy5f80e+QAzgK3j1nFCYySKmJWZ7ahDHmRI0YzYcLG4r7CsSf9lgozxxWLw/8ijG25NxXzWvcelSJ4wFkSK5H9GleuQsRotvG+1K/C2eKUx+S1vU90xO/PIZGmCPR/xLDGNOeWdFO1vpQVBwSEWeNwnITI+jIOTt6UK7aHxDQ9kV8fUPqOlavcUv0Z2PC2R2pfUnAWGilAfM6Rg8K60ylkqdfUjJqZ+gnVX74LvCNtkk0No1xl8jtoUqinmkg1ZnxpeEYRp9MQdBAd9ddG/AuettiEXchcxIzFVW6dJw9Hy0AjgEprpM6FkNUh2DRei55A==
-X-YMail-OSG: SrEcXyYVM1lFX3z1r73VM_ycb7gDGeEIp_Mph53lqH9BEDhFPAPgXZwGJyO9Dxa
- lOsaS96VL5wCBA7izgjkPpszO4tpa.b4pQ79ZAjemLy8Y357ebaA.utd2LIyxEBKKxXpbc1b7.W.
- Mq3AlpX8hqh2aPPS4pSMT2m1p1IDZbcfvlf5Qz5SqJQAfVsXKIsPlkP4v9sHebWEDDiTB1oQuf8e
- 0XbNTUTEJsRg.GlrDFbUzGgfcbMHHvksfWf8YUhQZCNBY2jfi5EyfhVJEmLA7NbpYs8Q0Wlz6xbY
- A8yE7db48ArCxGCUmx7gWU.FPeXkUT4Yrhc8Byf6wKpkYoPIpmxaCpFxuhLtV2i7gCGcK5k_Klft
- B3dsBUoZYCBAYeYWs8r37HudBiZcZM.uULVYHXQ6udiioAy68txzH_lSB.p_0G2xX0eCVTAimqqO
- lhwFtz1VAo8xsryXQxFbk2TapoRboHuUE0QRa6MF99ry81BF8vACUWxeo8K5uvWLr4PlyPgQmi0W
- VwAxj7NOliJbFNARsJQWiFBhAw9kRMkhhEhy2QT1j0IoQdcYqitnl3VTd5ArNvPoKzYEQV4ai13w
- TyDMoZJnEz2dHXTyDh0FQ1TbPL7tjLcWyVctfM3enfN0KuenMlLB.30xOCnW9JZHrGP3yNG.pzHO
- iPPqTleSCdwvOq.gT8Gmgww1TQsTji1KQT9rjS84nQH3BgfuII8GnHvNZKqDrVufjFVnUyNx2cjJ
- uzZdbR4tj0zGR.d4y2NlJAfg0yZDqKTMZdAm0LfqQD8ut.F_P6Q52kJytsmbU6w2AMyS5Z7aQWuv
- x1JySvyhbbXzQNxgpKWFjlWOmPahJUtcw1TiHeaj35uBiCBuDT3oEGWvXNaGLCsXwhiYhuTN8fgZ
- J9ZetMmaUVeX3.9Ks2MMaJxst6MozsI1TZZHP5c_M882hKT1vBgqU2WvR8bTiNocEb9ktOLuF4Ou
- KsulfHWBrCSY7hGQYtEjUd7B95De5Gkgp2.UKZH8eVLjyvj9v7vgtRjutbaYoAzOlXwosb.Hu2wc
- vwirXTFDRJSCJk0Xrcd1loJkqFguASeKHiLmRnMEy6l4epcQ2K.jvrch2GBdgTGzwf6EaJ8uSWAJ
- 1gKvr7T2y6eqwBZsdvfBByKhFe7UQiSirj54LeTNIFhbe6ijKlWa09NMBBNMcYh8QirWGrOKUTDT
- 4fXAZaeRqS0C2vnJ8mVN3JRhAFv86Z1vH3rkugaC2VEdhvoj2WshsQWRjjkwY68Osuxm_t.B.ZGN
- DdOWDlaHa_.OStV8S24VD3G4FZTneuuU64cC5CjXwZ.CmjMMDd6NA.cd7suz05j5NyAM.ta3pynn
- CEdrvOTPj_gEAqmlzm51d2VTuzX.jEJZzadUWLJrkpFhtNUyBbq851YyWtgGc.ELU2.qpwAHiifx
- idl3PubAb_Z_BmVos4P8tV5FRYMWNLvdHsx1oVV03ACnv6pEnAoxMizxKo09IToCG5lBhl5P47Ym
- VRBK7Du4l7lcXytotGXlzlXZkskHmk9GCn6iMpGgxy5PGVi1m2odmZYONaFS67urnZZqVGRhzPEt
- SsTUe1qSCE79yvUT4Y.BLnyIGbo1cgvR5ImHVWwL5yGcTBesiu505JMHKmiuNqB88zf7r4ee6Xwb
- .rDYEKokTOsNfKP3nBtEndRNSPXSkoJBUdzNEGg7YIOlvTfg4zOTG3up6.DSc98Wnl4Vco7ocK88
- tEJcq5YxVOCSNAZZ46n63AJOGGFvMvZvSX52TO.HZNBdYnkDPcbHVtgzAOwO1uY9kvYcsYhmbApf
- 5nU51aNl2qHQHMwiO5y5uEfYsvPQIODgUs31y3kk7MWeid4vvIFdMxeZzXY5JRaFqel4gAtFBO2v
- 3A53IF9u.OnhpS2iUzZ.W5py2CMMxW.btEMUb9TddX4n9bhL1y7pCAVCRJ8w0sNK60PrWE9yUFL1
- euwT1Tv6lIBbbkepbIQCSW.axbdrqaPCFL8bGFu0O_EnnbvZ66dLbe2xJPwZbLl005fMjPKohEtB
- 1josW5v.akdn6i1YaTo1fSy.8YImDYVREnGAmflR2MumRA36jUIKabe2Ms0.9I5Hh23ezMoxCRjM
- AsSiPbHoTYhjhcop8umObPBPevxjnvoOYQmWPQqhrTm7Q1BQa_y3heBG7wKVjHsbza5jNJzwCt3R
- 3gNDEuRF4qtSdu4LxK.FqM.6z3tVzly4Qm8ywWzypwPr2lfthvdKEpHouhLnGXojyEf7Ov.swD3B
- GCjlQerwjBhprGJEMxgz.odYDk0mOAoaUOH5742WKgvUTwXSYquAJthQQtK.1168i5pP5Rozc5Ge
- WeGP7A79.DKRzArohqFY-
-X-Sonic-MF: <giovannisantini93@yahoo.it>
-X-Sonic-ID: dabd766f-5f74-40af-bf73-06a68c4b29e2
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic303.consmr.mail.ir2.yahoo.com with HTTP; Thu, 11 Jun 2026 13:42:51 +0000
-Received: by hermes--production-ir2-89844b765-gkszj (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID c4171e10cdbfd69951135a50765e3e49;
-          Thu, 11 Jun 2026 13:11:27 +0000 (UTC)
-Message-ID: <02e09f1a-2807-4fec-aacf-1bc4bbb1ccd1@yahoo.it>
-Date: Thu, 11 Jun 2026 15:11:26 +0200
+	dkim=pass (2048-bit key) header.d=realtek.com header.i=@realtek.com header.b="LhGbktSK"
+X-SpamFilter-By: ArmorX SpamTrap 5.80 with qID 65C0UKrI42321161, This message is accepted by code: ctloc85258
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=realtek.com; s=dkim;
+	t=1781224220; bh=sl6TUBBBCoIQnTU7GsgG5is62CkRYeza+L8accszNvo=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding:MIME-Version;
+	b=LhGbktSKfddXCX7iFwvvPZR/BHqIWRd+MzmUlLWaa4CWtox3QkbyosUqahZUGHRBB
+	 4m0fFvz7ntdnaHfbRVP1N2/Z3o0Z9uWkKn4e8FZdjaQfF2BIHJL4egU1/2EzePSnZn
+	 WjjKJruVU1+qxM2K3bvYIYlhk4tX0isyw9jW9HAtbfY4i5b0E/L5hn3+H1K07LQsYn
+	 RzeoYEk+iKcVxAX0SYBjVINYRlF2t74DT4JHau0jNA5S5rk9LTnjdPu1IF+RrQsmOU
+	 rLZQTU3rEwJG9pVuyDxWYqIaD6CGmVAFSsgfssLLYqs30LbtJHxWt6flaiJHVJ7r29
+	 kBVHZoVrqRT5A==
+Received: from mail.realtek.com (rtkexhmbs02.realtek.com.tw[172.21.6.41])
+	by rtits2.realtek.com.tw (8.15.2/3.29/5.94) with ESMTPS id 65C0UKrI42321161
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 12 Jun 2026 08:30:20 +0800
+Received: from RTKEXHMBS06.realtek.com.tw (10.21.1.56) by
+ RTKEXHMBS02.realtek.com.tw (172.21.6.41) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.17; Fri, 12 Jun 2026 08:30:20 +0800
+Received: from RTKEXHMBS06.realtek.com.tw (10.21.1.56) by
+ RTKEXHMBS06.realtek.com.tw (10.21.1.56) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.17; Fri, 12 Jun 2026 08:30:20 +0800
+Received: from RTKEXHMBS06.realtek.com.tw ([::1]) by
+ RTKEXHMBS06.realtek.com.tw ([fe80::e6fd:5a3f:8946:92c4%10]) with mapi id
+ 15.02.2562.017; Fri, 12 Jun 2026 08:30:20 +0800
+From: Ping-Ke Shih <pkshih@realtek.com>
+To: Giovanni Santini <giovannisantini93@yahoo.it>, "stable@vger.kernel.org"
+	<stable@vger.kernel.org>, "linux-wireless@vger.kernel.org"
+	<linux-wireless@vger.kernel.org>
+CC: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: RE: rtw88: WiFi card is not offloaded properly when suspending the OS
+Thread-Topic: rtw88: WiFi card is not offloaded properly when suspending the
+ OS
+Thread-Index: AQHc9MfBVY8tNqpB4kyHWDTYuLp5JLYzXc0ggAV6JACAAT8YUA==
+Date: Fri, 12 Jun 2026 00:30:20 +0000
+Message-ID: <b3d2c32150884cdcae21b3bec5062864@realtek.com>
+References: <10da4c45-74ed-4deb-8c88-6d0b803465ba.ref@yahoo.it>
+ <10da4c45-74ed-4deb-8c88-6d0b803465ba@yahoo.it>
+ <efae0a4db2ab4b6193922b393d3dcdd6@realtek.com>
+ <02e09f1a-2807-4fec-aacf-1bc4bbb1ccd1@yahoo.it>
+In-Reply-To: <02e09f1a-2807-4fec-aacf-1bc4bbb1ccd1@yahoo.it>
+Accept-Language: en-US, zh-TW
+Content-Language: zh-TW
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: rtw88: WiFi card is not offloaded properly when suspending the OS
-To: Ping-Ke Shih <pkshih@realtek.com>,
- "stable@vger.kernel.org" <stable@vger.kernel.org>,
- "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>
-References: <10da4c45-74ed-4deb-8c88-6d0b803465ba.ref@yahoo.it>
- <10da4c45-74ed-4deb-8c88-6d0b803465ba@yahoo.it>
- <efae0a4db2ab4b6193922b393d3dcdd6@realtek.com>
-Content-Language: en-US
-From: Giovanni Santini <giovannisantini93@yahoo.it>
-Autocrypt: addr=giovannisantini93@yahoo.it; keydata=
- xjMEaH5G6BYJKwYBBAHaRw8BAQdAZnF+SJD511cVwFnagEObR10TvHEDWiUkXn55qPW4mEPN
- LUdpb3Zhbm5pIFNhbnRpbmkgPGdpb3Zhbm5pc2FudGluaTkzQHlhaG9vLml0PsKTBBMWCgA7
- AhsDBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAFiEEsZlH+Qx7w0bL59UyBjXtZomc07YFAmh+
- UU4CGQEACgkQBjXtZomc07aqRAD/dTapfdaiXcED3umK46Ef4oj+4yMmgvILQvAzbTWCW8oB
- AMbcBT7PaB6GuHTLiM0mZwLaB8koObNKxw3XtV7kMw4HzjgEaH5G6BIKKwYBBAGXVQEFAQEH
- QI7SNDV1L0Dq0IjkhOsUDwU7Wzr+AunkhuOy1hUDbY1UAwEIB8J4BBgWCgAgFiEEsZlH+Qx7
- w0bL59UyBjXtZomc07YFAmh+RugCGwwACgkQBjXtZomc07YxZQD9GgcfEawEgJeUijTqZtoq
- /knXol2L++0rMJkdr1SODwYA/07vSweYeVzo00XbyjcQ1le1Y852Ktp6A7O+DZsQJZoG
-In-Reply-To: <efae0a4db2ab4b6193922b393d3dcdd6@realtek.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Mailer: WebService/1.1.25942 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
 
-Hi Ping-Ke,
-
-In short I should build the LTS kernel using the provided source with 
-all the module patches applied one by one, correct?
-
-If so, should I also set the modprobe.d options plus disable IOMMU?
-
-After I know this I can start testing.
-
-
-Small update: the .35 LTS kernel has no issues for me, while 7.0.11 works.
-
-I was able to get my laptop to sleep a few times, but at a certain point 
-the issue happened.
-
-It is a bit hard to replicate the issue, so I will try my best.
-
-
-On 2026-06-08 03:32, Ping-Ke Shih wrote:
-> Giovanni Santini <giovannisantini93@yahoo.it> wrote:
->> Jun 02 17:25:33 archlinux-tug kernel: rtw88_8822ce 0000:03:00.0: failed
->> to send h2c command
->> Jun 02 17:25:33 archlinux-tug kernel: rtw88_8822ce 0000:03:00.0: failed
->> to send h2c command
->> Jun 02 17:25:33 archlinux-tug kernel: rtw88_8822ce 0000:03:00.0: failed
->> to send h2c command
->> Jun 02 17:25:33 archlinux-tug kernel: rtw88_8822ce 0000:03:00.0: failed
->> to send h2c command
->> Jun 02 17:25:36 archlinux-tug kernel: rtw88_8822ce 0000:03:00.0: failed
->> to poll offset=0x5 mask=0x2 value=0x0
->> Jun 02 17:25:36 archlinux-tug kernel: ------------[ cut here ]------------
->> Jun 02 17:25:36 archlinux-tug kernel: failed to read DBI register,
->> addr=0x0719
-> Add these below to see if it can help.
->
-> sudo nano /etc/modprobe.d/rtw88.conf
-> options rtw88_core disable_lps_deep=y
-> options rtw88_pci disable_aspm=y
->
-> After cold reboot, check /sys/modules/rtw88_*/paramters/* to see if
-> the modification takes effect.
->
->> I'm attaching the full boot log, if you need a fresh one I can provide it.
-> Before "failed to poll ..." log, I also see
->
-> Jun 02 17:25:02 archlinux-tug kernel: rtw88_8822ce 0000:03:00.0: AMD-Vi:
->   Event logged [IO_PAGE_FAULT domain=0x000e address=0xae9668bc flags=0x0000]
->
-> Please try to turn off IOMMU by editing /etc/default/grub
-> GRUB_CMDLINE_LINUX_DEFAULT="quiet splash amd_iommu=off iommu=off"
->
-> And then update-grub
->
->> I run ArchLinux with KDE Plasma, for networking I use NetworkManager and
->> wpa_supplicant.
->>
->> If you would like me to run tests with e.g. just iwd I can do so, just
->> let me know what setup you would like me to have.
->>
->> I do not have this issue with the LTS kernel 6.18.34. This affects 7.0
->> and 7.1.
->> I believe this issue was not present in < 7 kernels, but I cannot guarantee.
->> I can however downgrade to previous kernels to understand where the
->> issue was introduced.
-> The commits between 6.18.34 ~ 7.0.10 are quite few, and I can't find the
-> one that can affect the behavior. Please switch your kernel back to 6.18.34,
-> and apply rtw88's patches added until 7.0.10.
->
-> Since the last commit of 6.18 is fce6fee0817b8899e0ee38ab6b98f0d7e939ceed
->
-> Please use below commands to get the (20) patches:
-> drivers/net/wireless/realtek/rtw88$ git format-patch v7.0.10...fce6fee0817b8899e0ee38ab6b98f0d7e939ceed -- ./
->
-> Then you can add them one by one to see which one is the cause.
->
-> The git repository you need is:
-> git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git
->
->
-> Ping-Ke
->
->
--- 
-Giovanni Santini
-
+Ly8gbm90IHRvcCBwb3N0aW5nLg0KDQpHaW92YW5uaSBTYW50aW5pIDxnaW92YW5uaXNhbnRpbmk5
+M0B5YWhvby5pdD4gd3JvdGU6DQo+IE9uIDIwMjYtMDYtMDggMDM6MzIsIFBpbmctS2UgU2hpaCB3
+cm90ZToNCj4gPiBHaW92YW5uaSBTYW50aW5pIDxnaW92YW5uaXNhbnRpbmk5M0B5YWhvby5pdD4g
+d3JvdGU6DQo+ID4+IEp1biAwMiAxNzoyNTozMyBhcmNobGludXgtdHVnIGtlcm5lbDogcnR3ODhf
+ODgyMmNlIDAwMDA6MDM6MDAuMDogZmFpbGVkDQo+ID4+IHRvIHNlbmQgaDJjIGNvbW1hbmQNCj4g
+Pj4gSnVuIDAyIDE3OjI1OjMzIGFyY2hsaW51eC10dWcga2VybmVsOiBydHc4OF84ODIyY2UgMDAw
+MDowMzowMC4wOiBmYWlsZWQNCj4gPj4gdG8gc2VuZCBoMmMgY29tbWFuZA0KPiA+PiBKdW4gMDIg
+MTc6MjU6MzMgYXJjaGxpbnV4LXR1ZyBrZXJuZWw6IHJ0dzg4Xzg4MjJjZSAwMDAwOjAzOjAwLjA6
+IGZhaWxlZA0KPiA+PiB0byBzZW5kIGgyYyBjb21tYW5kDQo+ID4+IEp1biAwMiAxNzoyNTozMyBh
+cmNobGludXgtdHVnIGtlcm5lbDogcnR3ODhfODgyMmNlIDAwMDA6MDM6MDAuMDogZmFpbGVkDQo+
+ID4+IHRvIHNlbmQgaDJjIGNvbW1hbmQNCj4gPj4gSnVuIDAyIDE3OjI1OjM2IGFyY2hsaW51eC10
+dWcga2VybmVsOiBydHc4OF84ODIyY2UgMDAwMDowMzowMC4wOiBmYWlsZWQNCj4gPj4gdG8gcG9s
+bCBvZmZzZXQ9MHg1IG1hc2s9MHgyIHZhbHVlPTB4MA0KPiA+PiBKdW4gMDIgMTc6MjU6MzYgYXJj
+aGxpbnV4LXR1ZyBrZXJuZWw6IC0tLS0tLS0tLS0tLVsgY3V0IGhlcmUgXS0tLS0tLS0tLS0tLQ0K
+PiA+PiBKdW4gMDIgMTc6MjU6MzYgYXJjaGxpbnV4LXR1ZyBrZXJuZWw6IGZhaWxlZCB0byByZWFk
+IERCSSByZWdpc3RlciwNCj4gPj4gYWRkcj0weDA3MTkNCj4gPiBBZGQgdGhlc2UgYmVsb3cgdG8g
+c2VlIGlmIGl0IGNhbiBoZWxwLg0KPiA+DQo+ID4gc3VkbyBuYW5vIC9ldGMvbW9kcHJvYmUuZC9y
+dHc4OC5jb25mDQo+ID4gb3B0aW9ucyBydHc4OF9jb3JlIGRpc2FibGVfbHBzX2RlZXA9eQ0KPiA+
+IG9wdGlvbnMgcnR3ODhfcGNpIGRpc2FibGVfYXNwbT15DQo+ID4NCj4gPiBBZnRlciBjb2xkIHJl
+Ym9vdCwgY2hlY2sgL3N5cy9tb2R1bGVzL3J0dzg4XyovcGFyYW10ZXJzLyogdG8gc2VlIGlmDQo+
+ID4gdGhlIG1vZGlmaWNhdGlvbiB0YWtlcyBlZmZlY3QuDQo+ID4NCj4gPj4gSSdtIGF0dGFjaGlu
+ZyB0aGUgZnVsbCBib290IGxvZywgaWYgeW91IG5lZWQgYSBmcmVzaCBvbmUgSSBjYW4gcHJvdmlk
+ZSBpdC4NCj4gPiBCZWZvcmUgImZhaWxlZCB0byBwb2xsIC4uLiIgbG9nLCBJIGFsc28gc2VlDQo+
+ID4NCj4gPiBKdW4gMDIgMTc6MjU6MDIgYXJjaGxpbnV4LXR1ZyBrZXJuZWw6IHJ0dzg4Xzg4MjJj
+ZSAwMDAwOjAzOjAwLjA6IEFNRC1WaToNCj4gPiAgIEV2ZW50IGxvZ2dlZCBbSU9fUEFHRV9GQVVM
+VCBkb21haW49MHgwMDBlIGFkZHJlc3M9MHhhZTk2NjhiYyBmbGFncz0weDAwMDBdDQo+ID4NCj4g
+PiBQbGVhc2UgdHJ5IHRvIHR1cm4gb2ZmIElPTU1VIGJ5IGVkaXRpbmcgL2V0Yy9kZWZhdWx0L2dy
+dWINCj4gPiBHUlVCX0NNRExJTkVfTElOVVhfREVGQVVMVD0icXVpZXQgc3BsYXNoIGFtZF9pb21t
+dT1vZmYgaW9tbXU9b2ZmIg0KPiA+DQo+ID4gQW5kIHRoZW4gdXBkYXRlLWdydWINCj4gPg0KPiA+
+PiBJIHJ1biBBcmNoTGludXggd2l0aCBLREUgUGxhc21hLCBmb3IgbmV0d29ya2luZyBJIHVzZSBO
+ZXR3b3JrTWFuYWdlciBhbmQNCj4gPj4gd3BhX3N1cHBsaWNhbnQuDQo+ID4+DQo+ID4+IElmIHlv
+dSB3b3VsZCBsaWtlIG1lIHRvIHJ1biB0ZXN0cyB3aXRoIGUuZy4ganVzdCBpd2QgSSBjYW4gZG8g
+c28sIGp1c3QNCj4gPj4gbGV0IG1lIGtub3cgd2hhdCBzZXR1cCB5b3Ugd291bGQgbGlrZSBtZSB0
+byBoYXZlLg0KPiA+Pg0KPiA+PiBJIGRvIG5vdCBoYXZlIHRoaXMgaXNzdWUgd2l0aCB0aGUgTFRT
+IGtlcm5lbCA2LjE4LjM0LiBUaGlzIGFmZmVjdHMgNy4wDQo+ID4+IGFuZCA3LjEuDQo+ID4+IEkg
+YmVsaWV2ZSB0aGlzIGlzc3VlIHdhcyBub3QgcHJlc2VudCBpbiA8IDcga2VybmVscywgYnV0IEkg
+Y2Fubm90IGd1YXJhbnRlZS4NCj4gPj4gSSBjYW4gaG93ZXZlciBkb3duZ3JhZGUgdG8gcHJldmlv
+dXMga2VybmVscyB0byB1bmRlcnN0YW5kIHdoZXJlIHRoZQ0KPiA+PiBpc3N1ZSB3YXMgaW50cm9k
+dWNlZC4NCj4gPiBUaGUgY29tbWl0cyBiZXR3ZWVuIDYuMTguMzQgfiA3LjAuMTAgYXJlIHF1aXRl
+IGZldywgYW5kIEkgY2FuJ3QgZmluZCB0aGUNCj4gPiBvbmUgdGhhdCBjYW4gYWZmZWN0IHRoZSBi
+ZWhhdmlvci4gUGxlYXNlIHN3aXRjaCB5b3VyIGtlcm5lbCBiYWNrIHRvIDYuMTguMzQsDQo+ID4g
+YW5kIGFwcGx5IHJ0dzg4J3MgcGF0Y2hlcyBhZGRlZCB1bnRpbCA3LjAuMTAuDQo+ID4NCj4gPiBT
+aW5jZSB0aGUgbGFzdCBjb21taXQgb2YgNi4xOCBpcyBmY2U2ZmVlMDgxN2I4ODk5ZTBlZTM4YWI2
+Yjk4ZjBkN2U5MzljZWVkDQo+ID4NCj4gPiBQbGVhc2UgdXNlIGJlbG93IGNvbW1hbmRzIHRvIGdl
+dCB0aGUgKDIwKSBwYXRjaGVzOg0KPiA+IGRyaXZlcnMvbmV0L3dpcmVsZXNzL3JlYWx0ZWsvcnR3
+ODgkIGdpdCBmb3JtYXQtcGF0Y2gNCj4gdjcuMC4xMC4uLmZjZTZmZWUwODE3Yjg4OTllMGVlMzhh
+YjZiOThmMGQ3ZTkzOWNlZWQgLS0gLi8NCj4gPg0KPiA+IFRoZW4geW91IGNhbiBhZGQgdGhlbSBv
+bmUgYnkgb25lIHRvIHNlZSB3aGljaCBvbmUgaXMgdGhlIGNhdXNlLg0KPiA+DQo+ID4gVGhlIGdp
+dCByZXBvc2l0b3J5IHlvdSBuZWVkIGlzOg0KPiA+IGdpdDovL2dpdC5rZXJuZWwub3JnL3B1Yi9z
+Y20vbGludXgva2VybmVsL2dpdC9zdGFibGUvbGludXgtc3RhYmxlLmdpdA0KPiA+DQo+IA0KPiBJ
+biBzaG9ydCBJIHNob3VsZCBidWlsZCB0aGUgTFRTIGtlcm5lbCB1c2luZyB0aGUgcHJvdmlkZWQg
+c291cmNlIHdpdGgNCj4gYWxsIHRoZSBtb2R1bGUgcGF0Y2hlcyBhcHBsaWVkIG9uZSBieSBvbmUs
+IGNvcnJlY3Q/DQoNClllcywgeW91IGNhbiB1c2UgTFRTIGtlcm5lbCBvciBkaXN0cm8gcmVsZWFz
+ZSB2ZXJzaW9uLCBhbmQgb25seSByZS1idWlsZA0KYW5kIHJlcGxhY2UgZHJpdmVyLg0KDQo+IA0K
+PiBJZiBzbywgc2hvdWxkIEkgYWxzbyBzZXQgdGhlIG1vZHByb2JlLmQgb3B0aW9ucyBwbHVzIGRp
+c2FibGUgSU9NTVU/DQo+IA0KPiBBZnRlciBJIGtub3cgdGhpcyBJIGNhbiBzdGFydCB0ZXN0aW5n
+Lg0KDQpUd28gZGlyZWN0aW9uczoNCg0KMS4gdHJ5IHRvIGZpeCBvbiAocHJvYmxlbWF0aWMpIDcu
+MC4xMA0KDQogICBUcnkgbW9kcHJvYmUuZCBvcHRpb25zIGFuZC9vciBkaXNhYmxlIElPTU1VLg0K
+DQoyLiBzdGFydCBmcm9tICh3b3JrYWJsZSkgNi4xOA0KDQogICBQaWNrIGFuZCBhcHBseSBwYXRj
+aGVzIGZyb20gNi4xOCB0byA3LjAuMTAgb25lIGJ5IG9uZSB0byBmaW5kIHRoZSBjYXVzZS4NCg0K
+ICAgQnV0IGFzIEkgbWVudGlvbmVkLCBJIGNhbid0IGZpbmQgd2hhdCBjYW4gYWZmZWN0IHRoZSBi
+ZWhhdmlvciB5b3UgZW5jb3VudGVyZWQuDQoNCj4gDQo+IFNtYWxsIHVwZGF0ZTogdGhlIC4zNSBM
+VFMga2VybmVsIGhhcyBubyBpc3N1ZXMgZm9yIG1lLCB3aGlsZSA3LjAuMTEgd29ya3MuDQoNCkRp
+ZCB5b3UgbWVhbiA3LjAuMTAgZG9lc24ndCB3b3JrIHRvIHlvdSwgYnV0IDcuMC4xMSB3b3JrcyB3
+ZWxsPw0KDQpIb3dldmVyLCB0aGUgcnR3ODggZHJpdmVyIGhhcyBubyBjaGFuZ2UgYmV0d2VlbiA3
+LjAuMTAgYW5kIDcuMC4xMS4NCkkgZmVlbCB0aGUgY2F1c2UgbWlnaHQgYmUgY2hhbmdlcyBvZiBQ
+Q0kgaG9zdCwgYnV0IGRyaXZlcnMvcGNpLyBoYXMgbm8gY2hhbmdlcw0KbmVpdGhlci4gTm8gb2J2
+aW91cyBpZGVhIGZvciBub3cuDQoNCj4gDQo+IEkgd2FzIGFibGUgdG8gZ2V0IG15IGxhcHRvcCB0
+byBzbGVlcCBhIGZldyB0aW1lcywgYnV0IGF0IGEgY2VydGFpbiBwb2ludA0KPiB0aGUgaXNzdWUg
+aGFwcGVuZWQuDQo+IA0KPiBJdCBpcyBhIGJpdCBoYXJkIHRvIHJlcGxpY2F0ZSB0aGUgaXNzdWUs
+IHNvIEkgd2lsbCB0cnkgbXkgYmVzdC4NCg0KSSBzdWdnZXN0IHRoYXQgeW91IGNhbiBnbyBiYWNr
+IHRvIDcuMC4xMCBhbmQgdHJ5IDEwIG9yIDIwIHRpbWVzLCBhbmQgdGhlbg0KY29tcGFyZSB0aGUg
+cmVzdWx0cyBiZXR3ZWVuIDcuMC4xMCBhbmQgNy4wLjExLg0KDQpQaW5nLUtlDQoNCg==
