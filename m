@@ -1,144 +1,94 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.6bit.com (www.6bit.com [66.228.49.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8DD6946A;
-	Fri, 12 Jun 2026 00:30:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05D3A32ED27
+	for <regressions@lists.linux.dev>; Fri, 12 Jun 2026 01:15:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.228.49.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781224226; cv=none; b=jizyp90P2wFRBUr/1J7qcvJjOoVvz+bX40PmR6kPw5qXtQ0+VlHN+8Mpxe0RCWZ4rXtjq5Xefneqy4Fq4zKc2OUD9LROrs0xW6Z1XuUWT7CtbK2XPS4cWpiyo0l7ybkybRe5ehVXjTF8WHlpsRc3D2+Fu51zKWfKs2XqBgLK2Kk=
+	t=1781226929; cv=none; b=Lai9gH2vXX9URw37mI6X2fSkmtGY4A0sAhPQ0rL5unCMo+/Dwi/4psl7VM9oQNyIOaqzHDAfZQQ4Y6h1X1QKvTbckH4CImigm+ylKq5orS5F/jro17SCFC2to1c2oVKUX7YsUKSY9kYsFY8e89xtc1TjSt1fWE0Fu4XcQSk8Sdc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781224226; c=relaxed/simple;
-	bh=sl6TUBBBCoIQnTU7GsgG5is62CkRYeza+L8accszNvo=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=rAR3RWak4Pk6rK587p7rTAbZD2jM/k90KiqKMOnYLtX50rX9C2vg0jWLAv6DugEmjuqEzdQMEIKcQh7Za66+6YlAxKrQf+NFe/OtFaeGePWAzulMEYsix/ygPDSVr0QED59saj1Qb4Bv/PQS/Hy4eOww7Y37MDosOGCTU0yXcRk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=pass (2048-bit key) header.d=realtek.com header.i=@realtek.com header.b=LhGbktSK; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+	s=arc-20240116; t=1781226929; c=relaxed/simple;
+	bh=D2EVce6TIMiWfURdmqZ0DLPM5kJjXsnUmdjcT7l8h9U=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=QSDhGqfFWOaifiO4A+fAd42cqFCa/6UYePDD6xcujzJWLAE/NOdb+m5sleGsRRRoh8QoFJG52TlBLHd5uMHCxsKHHDhuHh4XDBFRNRE1QVKr0tv5SErttBUH6hyIuIY47iS0fac7giGAl8k7O6QgcVNAK/JB68lHzp/WaCieQhE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=6bit.com; spf=pass smtp.mailfrom=6bit.com; dkim=pass (1024-bit key) header.d=6bit.com header.i=@6bit.com header.b=RKWInkeM; arc=none smtp.client-ip=66.228.49.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=6bit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=6bit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=realtek.com header.i=@realtek.com header.b="LhGbktSK"
-X-SpamFilter-By: ArmorX SpamTrap 5.80 with qID 65C0UKrI42321161, This message is accepted by code: ctloc85258
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=realtek.com; s=dkim;
-	t=1781224220; bh=sl6TUBBBCoIQnTU7GsgG5is62CkRYeza+L8accszNvo=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding:MIME-Version;
-	b=LhGbktSKfddXCX7iFwvvPZR/BHqIWRd+MzmUlLWaa4CWtox3QkbyosUqahZUGHRBB
-	 4m0fFvz7ntdnaHfbRVP1N2/Z3o0Z9uWkKn4e8FZdjaQfF2BIHJL4egU1/2EzePSnZn
-	 WjjKJruVU1+qxM2K3bvYIYlhk4tX0isyw9jW9HAtbfY4i5b0E/L5hn3+H1K07LQsYn
-	 RzeoYEk+iKcVxAX0SYBjVINYRlF2t74DT4JHau0jNA5S5rk9LTnjdPu1IF+RrQsmOU
-	 rLZQTU3rEwJG9pVuyDxWYqIaD6CGmVAFSsgfssLLYqs30LbtJHxWt6flaiJHVJ7r29
-	 kBVHZoVrqRT5A==
-Received: from mail.realtek.com (rtkexhmbs02.realtek.com.tw[172.21.6.41])
-	by rtits2.realtek.com.tw (8.15.2/3.29/5.94) with ESMTPS id 65C0UKrI42321161
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 12 Jun 2026 08:30:20 +0800
-Received: from RTKEXHMBS06.realtek.com.tw (10.21.1.56) by
- RTKEXHMBS02.realtek.com.tw (172.21.6.41) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.17; Fri, 12 Jun 2026 08:30:20 +0800
-Received: from RTKEXHMBS06.realtek.com.tw (10.21.1.56) by
- RTKEXHMBS06.realtek.com.tw (10.21.1.56) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.17; Fri, 12 Jun 2026 08:30:20 +0800
-Received: from RTKEXHMBS06.realtek.com.tw ([::1]) by
- RTKEXHMBS06.realtek.com.tw ([fe80::e6fd:5a3f:8946:92c4%10]) with mapi id
- 15.02.2562.017; Fri, 12 Jun 2026 08:30:20 +0800
-From: Ping-Ke Shih <pkshih@realtek.com>
-To: Giovanni Santini <giovannisantini93@yahoo.it>, "stable@vger.kernel.org"
-	<stable@vger.kernel.org>, "linux-wireless@vger.kernel.org"
-	<linux-wireless@vger.kernel.org>
-CC: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: RE: rtw88: WiFi card is not offloaded properly when suspending the OS
-Thread-Topic: rtw88: WiFi card is not offloaded properly when suspending the
- OS
-Thread-Index: AQHc9MfBVY8tNqpB4kyHWDTYuLp5JLYzXc0ggAV6JACAAT8YUA==
-Date: Fri, 12 Jun 2026 00:30:20 +0000
-Message-ID: <b3d2c32150884cdcae21b3bec5062864@realtek.com>
-References: <10da4c45-74ed-4deb-8c88-6d0b803465ba.ref@yahoo.it>
- <10da4c45-74ed-4deb-8c88-6d0b803465ba@yahoo.it>
- <efae0a4db2ab4b6193922b393d3dcdd6@realtek.com>
- <02e09f1a-2807-4fec-aacf-1bc4bbb1ccd1@yahoo.it>
-In-Reply-To: <02e09f1a-2807-4fec-aacf-1bc4bbb1ccd1@yahoo.it>
-Accept-Language: en-US, zh-TW
-Content-Language: zh-TW
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	dkim=pass (1024-bit key) header.d=6bit.com header.i=@6bit.com header.b="RKWInkeM"
+Received: from [10.22.241.53] (unknown [74.253.16.1])
+	by mail.6bit.com (Postfix) with ESMTPSA id 5DDEB945CD;
+	Thu, 11 Jun 2026 19:07:24 -0600 (MDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=6bit.com; s=dkim;
+	t=1781226445; bh=D2EVce6TIMiWfURdmqZ0DLPM5kJjXsnUmdjcT7l8h9U=;
+	h=Date:To:Cc:From:Subject;
+	b=RKWInkeMCGeNrVZoVyjL0Eqx/qBF5+A+bJ9QnjNNrdETHs7i9QSyW7wBe2bhiwhD+
+	 Qa2JMeQXEV0J1vQ17f44zdTpW2LGexlUTTDictdgnet4Bpc8uprMAq+LXcBYfRODAj
+	 St0LxapnKhkQg93GX+9wgTx2EPRd9bBoQiZ38IqE=
+Message-ID: <d4aaa5e8-7366-461c-94b1-ccf3631c8bf9@6bit.com>
+Date: Thu, 11 Jun 2026 19:07:23 -0600
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: mario.limonciello@amd.com, bhelgaas@google.com
+Cc: hkallweit1@gmail.com, nic_swsd@realtek.com, rafael@kernel.org,
+ linux-pci@vger.kernel.org, netdev@vger.kernel.org,
+ regressions@lists.linux.dev
+From: Josh Perry <josh@6bit.com>
+Subject: =?UTF-8?Q?=5BREGRESSION_6=2E16=5D_r8169_RTL8168h/8111h_fails_to_pro?=
+ =?UTF-8?Q?be_=E2=80=94_=22Unable_to_change_power_state_from_D3cold_to_D0=22?=
+ =?UTF-8?Q?_=E2=80=94_bisected_to_4d4c10f763d7?=
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Ly8gbm90IHRvcCBwb3N0aW5nLg0KDQpHaW92YW5uaSBTYW50aW5pIDxnaW92YW5uaXNhbnRpbmk5
-M0B5YWhvby5pdD4gd3JvdGU6DQo+IE9uIDIwMjYtMDYtMDggMDM6MzIsIFBpbmctS2UgU2hpaCB3
-cm90ZToNCj4gPiBHaW92YW5uaSBTYW50aW5pIDxnaW92YW5uaXNhbnRpbmk5M0B5YWhvby5pdD4g
-d3JvdGU6DQo+ID4+IEp1biAwMiAxNzoyNTozMyBhcmNobGludXgtdHVnIGtlcm5lbDogcnR3ODhf
-ODgyMmNlIDAwMDA6MDM6MDAuMDogZmFpbGVkDQo+ID4+IHRvIHNlbmQgaDJjIGNvbW1hbmQNCj4g
-Pj4gSnVuIDAyIDE3OjI1OjMzIGFyY2hsaW51eC10dWcga2VybmVsOiBydHc4OF84ODIyY2UgMDAw
-MDowMzowMC4wOiBmYWlsZWQNCj4gPj4gdG8gc2VuZCBoMmMgY29tbWFuZA0KPiA+PiBKdW4gMDIg
-MTc6MjU6MzMgYXJjaGxpbnV4LXR1ZyBrZXJuZWw6IHJ0dzg4Xzg4MjJjZSAwMDAwOjAzOjAwLjA6
-IGZhaWxlZA0KPiA+PiB0byBzZW5kIGgyYyBjb21tYW5kDQo+ID4+IEp1biAwMiAxNzoyNTozMyBh
-cmNobGludXgtdHVnIGtlcm5lbDogcnR3ODhfODgyMmNlIDAwMDA6MDM6MDAuMDogZmFpbGVkDQo+
-ID4+IHRvIHNlbmQgaDJjIGNvbW1hbmQNCj4gPj4gSnVuIDAyIDE3OjI1OjM2IGFyY2hsaW51eC10
-dWcga2VybmVsOiBydHc4OF84ODIyY2UgMDAwMDowMzowMC4wOiBmYWlsZWQNCj4gPj4gdG8gcG9s
-bCBvZmZzZXQ9MHg1IG1hc2s9MHgyIHZhbHVlPTB4MA0KPiA+PiBKdW4gMDIgMTc6MjU6MzYgYXJj
-aGxpbnV4LXR1ZyBrZXJuZWw6IC0tLS0tLS0tLS0tLVsgY3V0IGhlcmUgXS0tLS0tLS0tLS0tLQ0K
-PiA+PiBKdW4gMDIgMTc6MjU6MzYgYXJjaGxpbnV4LXR1ZyBrZXJuZWw6IGZhaWxlZCB0byByZWFk
-IERCSSByZWdpc3RlciwNCj4gPj4gYWRkcj0weDA3MTkNCj4gPiBBZGQgdGhlc2UgYmVsb3cgdG8g
-c2VlIGlmIGl0IGNhbiBoZWxwLg0KPiA+DQo+ID4gc3VkbyBuYW5vIC9ldGMvbW9kcHJvYmUuZC9y
-dHc4OC5jb25mDQo+ID4gb3B0aW9ucyBydHc4OF9jb3JlIGRpc2FibGVfbHBzX2RlZXA9eQ0KPiA+
-IG9wdGlvbnMgcnR3ODhfcGNpIGRpc2FibGVfYXNwbT15DQo+ID4NCj4gPiBBZnRlciBjb2xkIHJl
-Ym9vdCwgY2hlY2sgL3N5cy9tb2R1bGVzL3J0dzg4XyovcGFyYW10ZXJzLyogdG8gc2VlIGlmDQo+
-ID4gdGhlIG1vZGlmaWNhdGlvbiB0YWtlcyBlZmZlY3QuDQo+ID4NCj4gPj4gSSdtIGF0dGFjaGlu
-ZyB0aGUgZnVsbCBib290IGxvZywgaWYgeW91IG5lZWQgYSBmcmVzaCBvbmUgSSBjYW4gcHJvdmlk
-ZSBpdC4NCj4gPiBCZWZvcmUgImZhaWxlZCB0byBwb2xsIC4uLiIgbG9nLCBJIGFsc28gc2VlDQo+
-ID4NCj4gPiBKdW4gMDIgMTc6MjU6MDIgYXJjaGxpbnV4LXR1ZyBrZXJuZWw6IHJ0dzg4Xzg4MjJj
-ZSAwMDAwOjAzOjAwLjA6IEFNRC1WaToNCj4gPiAgIEV2ZW50IGxvZ2dlZCBbSU9fUEFHRV9GQVVM
-VCBkb21haW49MHgwMDBlIGFkZHJlc3M9MHhhZTk2NjhiYyBmbGFncz0weDAwMDBdDQo+ID4NCj4g
-PiBQbGVhc2UgdHJ5IHRvIHR1cm4gb2ZmIElPTU1VIGJ5IGVkaXRpbmcgL2V0Yy9kZWZhdWx0L2dy
-dWINCj4gPiBHUlVCX0NNRExJTkVfTElOVVhfREVGQVVMVD0icXVpZXQgc3BsYXNoIGFtZF9pb21t
-dT1vZmYgaW9tbXU9b2ZmIg0KPiA+DQo+ID4gQW5kIHRoZW4gdXBkYXRlLWdydWINCj4gPg0KPiA+
-PiBJIHJ1biBBcmNoTGludXggd2l0aCBLREUgUGxhc21hLCBmb3IgbmV0d29ya2luZyBJIHVzZSBO
-ZXR3b3JrTWFuYWdlciBhbmQNCj4gPj4gd3BhX3N1cHBsaWNhbnQuDQo+ID4+DQo+ID4+IElmIHlv
-dSB3b3VsZCBsaWtlIG1lIHRvIHJ1biB0ZXN0cyB3aXRoIGUuZy4ganVzdCBpd2QgSSBjYW4gZG8g
-c28sIGp1c3QNCj4gPj4gbGV0IG1lIGtub3cgd2hhdCBzZXR1cCB5b3Ugd291bGQgbGlrZSBtZSB0
-byBoYXZlLg0KPiA+Pg0KPiA+PiBJIGRvIG5vdCBoYXZlIHRoaXMgaXNzdWUgd2l0aCB0aGUgTFRT
-IGtlcm5lbCA2LjE4LjM0LiBUaGlzIGFmZmVjdHMgNy4wDQo+ID4+IGFuZCA3LjEuDQo+ID4+IEkg
-YmVsaWV2ZSB0aGlzIGlzc3VlIHdhcyBub3QgcHJlc2VudCBpbiA8IDcga2VybmVscywgYnV0IEkg
-Y2Fubm90IGd1YXJhbnRlZS4NCj4gPj4gSSBjYW4gaG93ZXZlciBkb3duZ3JhZGUgdG8gcHJldmlv
-dXMga2VybmVscyB0byB1bmRlcnN0YW5kIHdoZXJlIHRoZQ0KPiA+PiBpc3N1ZSB3YXMgaW50cm9k
-dWNlZC4NCj4gPiBUaGUgY29tbWl0cyBiZXR3ZWVuIDYuMTguMzQgfiA3LjAuMTAgYXJlIHF1aXRl
-IGZldywgYW5kIEkgY2FuJ3QgZmluZCB0aGUNCj4gPiBvbmUgdGhhdCBjYW4gYWZmZWN0IHRoZSBi
-ZWhhdmlvci4gUGxlYXNlIHN3aXRjaCB5b3VyIGtlcm5lbCBiYWNrIHRvIDYuMTguMzQsDQo+ID4g
-YW5kIGFwcGx5IHJ0dzg4J3MgcGF0Y2hlcyBhZGRlZCB1bnRpbCA3LjAuMTAuDQo+ID4NCj4gPiBT
-aW5jZSB0aGUgbGFzdCBjb21taXQgb2YgNi4xOCBpcyBmY2U2ZmVlMDgxN2I4ODk5ZTBlZTM4YWI2
-Yjk4ZjBkN2U5MzljZWVkDQo+ID4NCj4gPiBQbGVhc2UgdXNlIGJlbG93IGNvbW1hbmRzIHRvIGdl
-dCB0aGUgKDIwKSBwYXRjaGVzOg0KPiA+IGRyaXZlcnMvbmV0L3dpcmVsZXNzL3JlYWx0ZWsvcnR3
-ODgkIGdpdCBmb3JtYXQtcGF0Y2gNCj4gdjcuMC4xMC4uLmZjZTZmZWUwODE3Yjg4OTllMGVlMzhh
-YjZiOThmMGQ3ZTkzOWNlZWQgLS0gLi8NCj4gPg0KPiA+IFRoZW4geW91IGNhbiBhZGQgdGhlbSBv
-bmUgYnkgb25lIHRvIHNlZSB3aGljaCBvbmUgaXMgdGhlIGNhdXNlLg0KPiA+DQo+ID4gVGhlIGdp
-dCByZXBvc2l0b3J5IHlvdSBuZWVkIGlzOg0KPiA+IGdpdDovL2dpdC5rZXJuZWwub3JnL3B1Yi9z
-Y20vbGludXgva2VybmVsL2dpdC9zdGFibGUvbGludXgtc3RhYmxlLmdpdA0KPiA+DQo+IA0KPiBJ
-biBzaG9ydCBJIHNob3VsZCBidWlsZCB0aGUgTFRTIGtlcm5lbCB1c2luZyB0aGUgcHJvdmlkZWQg
-c291cmNlIHdpdGgNCj4gYWxsIHRoZSBtb2R1bGUgcGF0Y2hlcyBhcHBsaWVkIG9uZSBieSBvbmUs
-IGNvcnJlY3Q/DQoNClllcywgeW91IGNhbiB1c2UgTFRTIGtlcm5lbCBvciBkaXN0cm8gcmVsZWFz
-ZSB2ZXJzaW9uLCBhbmQgb25seSByZS1idWlsZA0KYW5kIHJlcGxhY2UgZHJpdmVyLg0KDQo+IA0K
-PiBJZiBzbywgc2hvdWxkIEkgYWxzbyBzZXQgdGhlIG1vZHByb2JlLmQgb3B0aW9ucyBwbHVzIGRp
-c2FibGUgSU9NTVU/DQo+IA0KPiBBZnRlciBJIGtub3cgdGhpcyBJIGNhbiBzdGFydCB0ZXN0aW5n
-Lg0KDQpUd28gZGlyZWN0aW9uczoNCg0KMS4gdHJ5IHRvIGZpeCBvbiAocHJvYmxlbWF0aWMpIDcu
-MC4xMA0KDQogICBUcnkgbW9kcHJvYmUuZCBvcHRpb25zIGFuZC9vciBkaXNhYmxlIElPTU1VLg0K
-DQoyLiBzdGFydCBmcm9tICh3b3JrYWJsZSkgNi4xOA0KDQogICBQaWNrIGFuZCBhcHBseSBwYXRj
-aGVzIGZyb20gNi4xOCB0byA3LjAuMTAgb25lIGJ5IG9uZSB0byBmaW5kIHRoZSBjYXVzZS4NCg0K
-ICAgQnV0IGFzIEkgbWVudGlvbmVkLCBJIGNhbid0IGZpbmQgd2hhdCBjYW4gYWZmZWN0IHRoZSBi
-ZWhhdmlvciB5b3UgZW5jb3VudGVyZWQuDQoNCj4gDQo+IFNtYWxsIHVwZGF0ZTogdGhlIC4zNSBM
-VFMga2VybmVsIGhhcyBubyBpc3N1ZXMgZm9yIG1lLCB3aGlsZSA3LjAuMTEgd29ya3MuDQoNCkRp
-ZCB5b3UgbWVhbiA3LjAuMTAgZG9lc24ndCB3b3JrIHRvIHlvdSwgYnV0IDcuMC4xMSB3b3JrcyB3
-ZWxsPw0KDQpIb3dldmVyLCB0aGUgcnR3ODggZHJpdmVyIGhhcyBubyBjaGFuZ2UgYmV0d2VlbiA3
-LjAuMTAgYW5kIDcuMC4xMS4NCkkgZmVlbCB0aGUgY2F1c2UgbWlnaHQgYmUgY2hhbmdlcyBvZiBQ
-Q0kgaG9zdCwgYnV0IGRyaXZlcnMvcGNpLyBoYXMgbm8gY2hhbmdlcw0KbmVpdGhlci4gTm8gb2J2
-aW91cyBpZGVhIGZvciBub3cuDQoNCj4gDQo+IEkgd2FzIGFibGUgdG8gZ2V0IG15IGxhcHRvcCB0
-byBzbGVlcCBhIGZldyB0aW1lcywgYnV0IGF0IGEgY2VydGFpbiBwb2ludA0KPiB0aGUgaXNzdWUg
-aGFwcGVuZWQuDQo+IA0KPiBJdCBpcyBhIGJpdCBoYXJkIHRvIHJlcGxpY2F0ZSB0aGUgaXNzdWUs
-IHNvIEkgd2lsbCB0cnkgbXkgYmVzdC4NCg0KSSBzdWdnZXN0IHRoYXQgeW91IGNhbiBnbyBiYWNr
-IHRvIDcuMC4xMCBhbmQgdHJ5IDEwIG9yIDIwIHRpbWVzLCBhbmQgdGhlbg0KY29tcGFyZSB0aGUg
-cmVzdWx0cyBiZXR3ZWVuIDcuMC4xMCBhbmQgNy4wLjExLg0KDQpQaW5nLUtlDQoNCg==
+#regzbot introduced: 4d4c10f763d7
+
+Since v6.16 one of two onboard RTL8168h/8111h NICs on this board fails 
+to probe on boot; the device drops to D3cold and the driver can't bring 
+it back:
+
+   r8169 0000:02:00.0 eth0: RTL8168h/8111h, 00:2b:67:48:40:01, XID 541, 
+IRQ 137
+   r8169 0000:04:00.0: Unable to change power state from D3cold to D0, 
+device inaccessible
+   r8169 0000:04:00.0: Mem-Wr-Inval unavailable
+   r8169 0000:04:00.0: error -EIO: PCI read failed
+   r8169 0000:04:00.0: probe with driver r8169 failed with error -5
+
+The board has two identical RTL8168h NICs (both XID 541): 0000:02:00.0 
+and 0000:04:00.0. Only 04:00.0 fails — its sibling 02:00.0, on a 
+different root port, probes and works normally on the very same kernel 
+and boot. The failing NIC then does not appear (no enp4s0), taking the 
+machine's WAN offline. This strongly suggests the problem is 
+port/topology-specific rather than device- or driver-specific: the 
+upstream port behind 04:00.0 is placed in D3cold and the endpoint cannot 
+be resumed to D0.
+
+Hardware: RTL8168h/8111h, XID 541, PCI 04:00.0 (onboard 1GbE).
+Platform: Lenovo ThinkCentre M90n-1 (11AHS0B200), BIOS M2AKT49A 
+(2026-03-25, latest available). Firmware is current, so this is not a 
+platform-firmware issue.
+
+Bisection: v6.15 good, v6.16 bad (verified by booting both). I then 
+reverted 4d4c10f763d7 ("PCI: Explicitly put devices into D0 when 
+initializing") together with its follow-up 907a7a2e5bf4 ("PCI/PM: Set up 
+runtime PM even for devices without PCI PM") on top of 6.16.7: the NIC 
+probes and links at 1Gbps/Full normally, with no workaround:
+
+   r8169 0000:04:00.0 eth1: RTL8168h/8111h, 00:2b:67:48:40:02, XID 541, 
+IRQ 138
+   r8169 0000:04:00.0 enp4s0: Link is Up - 1Gbps/Full - flow control rx/tx
+
+Workaround: booting an unmodified v6.16+ kernel with pcie_port_pm=off 
+also restores the NIC, which is consistent with the upstream port being 
+placed in D3cold and the device failing to resume to D0 after the 
+explicit-D0 init change.
+
+The follow-up 907a7a2e5bf4 does not fix this resume case: v6.18.33 is 
+still affected (retested today on current firmware).
+
+Happy to test patches or provide full dmesg / lspci.
