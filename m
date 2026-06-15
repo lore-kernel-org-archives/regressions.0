@@ -1,331 +1,264 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f178.google.com (mail-dy1-f178.google.com [74.125.82.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2D8B3F2101;
-	Mon, 15 Jun 2026 12:50:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C2BB4071C5
+	for <regressions@lists.linux.dev>; Mon, 15 Jun 2026 15:59:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781527858; cv=none; b=g0XSM0jrAB/VFtMpC0N4r3TS67GqqdTCd0jsiHDr89/J6e81EHe1UXN508jI1SkWC5kINO//2ba9r791iFobnT/UKAikLqL7PtJgEjgo1mf6oXn5B8VZmNbNjztfOSwhxHG7jOkCffgN7jdEqPg5x4Ftvp9wU2P4smWSKctFG/A=
+	t=1781539146; cv=none; b=cQjKJrIigXrelGJB3TqiSZK41wXvBlgGhunKhL6h6yeeu9QFmcclQtvqlrlhkUkdFrK7z60sS1+3XGeQHYeP8Izvbosh1zg0h6mABiPXpg6chx32SYD23fW0a8NBvMh3HTVgDvizJ+5nNsUAoAWCU9RbAhYYgXzqmb5zQT8DIKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781527858; c=relaxed/simple;
-	bh=LgRr811AidPC7U3MxiWhWmV+JqyoCtcdb2Dn3kuwJZE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=My5S6f9gtkZ83o58+8AHUxPEwLd1YECB+UVCUCHGpefpnc7qBXGpghkobSoGVEtje0KhWfaejhPrzMrLK8lvbF1t0AePOYnTn/CpLLromKedpCDqSeRoZiil+2L/oK8PV4AxI8O9KQFoK0oUx7kqjj3p878bOp14qgUnJjOQoUo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=OciTq0lu; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+	s=arc-20240116; t=1781539146; c=relaxed/simple;
+	bh=sfSIGQwStiORChwPt2I2iWkzmw7drQjhPcfEXA8xOCQ=;
+	h=Content-Type:MIME-Version:Subject:From:To:Cc:Date:Message-ID; b=EiVrS4Jx4mdQmNdy2lTPTRijnbdG0oM6gd2fsKHoG2lr0bvkEosR40DqEULc5QDupQVDuDdemEvtMmIsOv25emCvlPrS6fVWbZzZ2pRzQSU7CFU5LVn9bDHLv8FQjU6HN4Ui+WeeQIscn79XkRQoXtpNTxZznPjSL583/kZIE8s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kernelci.org; spf=pass smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci.org header.i=@kernelci.org header.b=LfNNgbb2; arc=none smtp.client-ip=74.125.82.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kernelci.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernelci.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="OciTq0lu"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=Content-Type:MIME-Version:Message-ID:Subject:From:Date:From
-	:Subject; bh=M1+d1+h6ftWSJpClSN8ye1EBWvGR1c4fB7lrTrfGH5Q=; b=OciTq0luBVQPA8hu
-	x7DOlrDStBsgm+NTQnsdXBRdNQbuNkWFrFRJki1Vge6Dm8NwOR5l05PDtzQzL1HmKIgMXOH6o+S3W
-	/pv37x+rxwGo/cxg9Xml0GCbCyUQdEyYVFVUcs9WP0emQrrHBXcoLkxW5hrr6wjUrxMXbdvphNp8T
-	aTZrkJn6BJ68JnFgvlVJEzmj7pHH7najihiJ8V4H7l1//OOwQ28WZt9qCOEEhZDRSL9wHPe51ZacV
-	NamAqjaNKu2ov+kPZh6gNjkRCBylk6Hj5OyIIt2bB0sM5rV/Uq7nwSsy5BilL1fkiR1KjnmjFJHZU
-	cbvyzEVdM88LdhBoqQ==;
-Received: from dg by mx.treblig.org with local (Exim 4.98.2)
-	(envelope-from <dg@treblig.org>)
-	id 1wZ6mD-00000007jAT-0zcd;
-	Mon, 15 Jun 2026 12:50:53 +0000
-Date: Mon, 15 Jun 2026 12:50:53 +0000
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
-To: Thorsten Leemhuis <regressions@leemhuis.info>, kbusch@kernel.org,
-	vklimovs@gmail.com, trnka@scm.com
-Cc: linux-block@vger.kernel.org, dm-devel@lists.linux.dev,
-	Linux kernel regressions list <regressions@lists.linux.dev>
-Subject: Re: Repeatable, raid1+O_DIRECT, hang/warn
-Message-ID: <ai_1LYtofh1fwD-N@gallifrey>
-References: <ai7rnH20IYeSmY8s@gallifrey>
- <165d3195-c81d-4760-870b-23a9a3b3b72c@leemhuis.info>
+	dkim=pass (2048-bit key) header.d=kernelci.org header.i=@kernelci.org header.b="LfNNgbb2"
+Received: by mail-dy1-f178.google.com with SMTP id 5a478bee46e88-30b9e755555so628329eec.1
+        for <regressions@lists.linux.dev>; Mon, 15 Jun 2026 08:59:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci.org; s=google; t=1781539144; x=1782143944; darn=lists.linux.dev;
+        h=message-id:date:reply-to:cc:to:from:subject
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=e0jP4D1/37egeflgroPA1/DBL/OYpZeu+j81uQV7tLA=;
+        b=LfNNgbb2N/5HIOhB2j9u0GEUEjwF9n5E0SvUHjPwzlDnUSIBjCxw4LbL/bbQjoYKhX
+         2kzgjCocT6RSRXRKUBQ57VVI9JgvZmAVJkIt1kTTUIM0SGQnHf0cPKbG1OOb73zebis4
+         z30SUIkSw/1CCthqIpbgVqpAKn9zbA/HxlukR9Vy0NSQyvhrsckeNtTjwRwhLT6T/sXl
+         AEq8XE64IeAv/ROJSG7SY9ylnzExMhzhxUJmkYGie6Nv4f8tvFJlFQAwhnwtQHKgxzq0
+         P6aCOQJuHKDaXjhSAUHwRxW5rEh2foeXvPRe2lc2qNLSIhEmiFqwFE8BKKmPlXKpfHni
+         fZYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781539144; x=1782143944;
+        h=message-id:date:reply-to:cc:to:from:subject
+         :content-transfer-encoding:mime-version:x-gm-gg:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=e0jP4D1/37egeflgroPA1/DBL/OYpZeu+j81uQV7tLA=;
+        b=BPcVZjd5D1INL1HriQZcPO7wPvx2SAVZ1+Hdp76RwnXZqTy8fD2C07e0kIywTON9QG
+         6yDG4HxU9RIscCp4hpN76Pa84H/cFaUzQAXr2/vOHpWl/0GVD2mxGz6obeSIbpihCAsu
+         gNCBN0eYffVHFJ/9+SkizAAgjxpq1642i56Ybqth644EITExvtDmgn4AZ98ylwCuAJBY
+         pSpzCJlQke5DU8morx6fh+1LHkI4s7f26fPLxV3LoexORPcGKEeSwetrw/xA9HBpYA7k
+         nWs5fjL1l2KN7N5w3Jz9mCVhPkx/8fceO1WyKEHSr/6TOClIFuG+txR0rn932sZRDj9X
+         KQRw==
+X-Gm-Message-State: AOJu0YxEJg13MyKmj/5IUCsS8VTUqnOg70ioofdy+vhSvprFK4ckXXLm
+	i+HJj91HkIOEvHimYx8Yg+HVv8ig3Pgt3ll/8Ko6YJGzNA8G2y70jDgj9CIu9EgjEUg=
+X-Gm-Gg: Acq92OFXXxz6zxRwF4RjLwZWDBN6NwHwBCafHh3AC1rFbR3bN9gui2Ewxmi5eMU2wGB
+	goRATa210Q3960GzgT97VFhkk5qCkHvw4DUHKqMnuIR3Q8/TWNdgH7RzeXX1PUxf1WuH288/fif
+	a9BbQMtewRVnxaZqysoUjLjkmAcEYIYD02FOihlLR/GsQqsdzKoKChZmvxs3hFreQYMIZnYT1eO
+	SBLjQPWQa0mipxBf6HpYIhH084XuOM8Ea4MKJYD3IuT0MnS88O94E4iEQu4UiDf3uvQcXIZKzw/
+	V+PWE8BWENnY+bkaS9k+q5CvFd6S+c8HYKYz2YtmcG7zS6tOR4lPI51ucJM2pGYQ4mTc15SrXsK
+	3+P4L7R9zHtecJ9akJRznsbXkHwDdTwOkuwHxtx5NhlyheVVIh/WGVOZZs8dh3dLfiIdXN4kRc0
+	T9TKVXhVP/+766sSFV
+X-Received: by 2002:a05:7301:5f02:b0:304:ab8:f899 with SMTP id 5a478bee46e88-309395a7d3bmr5560958eec.8.1781539143930;
+        Mon, 15 Jun 2026 08:59:03 -0700 (PDT)
+Received: from 330cfa3079ca ([20.38.40.137])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-3081e5d810fsm15632538eec.12.2026.06.15.08.59.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 Jun 2026 08:59:03 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <165d3195-c81d-4760-870b-23a9a3b3b72c@leemhuis.info>
-X-Chocolate: 70 percent or better cocoa solids preferably
-X-Operating-System: Linux/6.12.88+deb13-amd64 (x86_64)
-X-Uptime: 12:32:40 up 30 days, 15:45,  2 users,  load average: 0.06, 0.06,
- 0.01
-User-Agent: Mutt/2.2.13 (2024-03-09)
+Subject: 
+ =?utf-8?q?=5BREGRESSION=5D_next/master=3A_=28build=29_passing_argument_1_of_?=
+ =?utf-8?q?=E2=80=98=5F=5Fdo=5Fkmalloc=5Fnode=E2=80=99_makes_pointer_from_in?=
+ =?utf-8?q?teg=2E=2E=2E?=
+From: KernelCI bot <bot@kernelci.org>
+To: kernelci-results@groups.io
+Cc: regressions@lists.linux.dev, gus@collabora.com, linux-next@vger.kernel.org
+Reply-To: kernelci@lists.linux.dev
+Date: Mon, 15 Jun 2026 15:59:03 -0000
+Message-ID: <178153914312.15282.16457445640645228189@330cfa3079ca>
 
-* Thorsten Leemhuis (regressions@leemhuis.info) wrote:
-> On 6/14/26 19:57, Dr. David Alan Gilbert wrote:
-> >
-> >   I've got a repeatable raid hang/warn and would appreciate some pointers
-> > as where to debug.
-> >   (I've been logging stuff on  https://bugzilla.kernel.org/show_bug.cgi?id=221535 )
-> 
-> Note: not my area of expertise, so I might be sending you totally
-> off-track with this comment. Feel free to ignore it. But FWIW:
 
-Hi Thorsten,
-  Thanks for the reply - these do seem to be related!
-(So copying in Keith, Vjaceslavs, and Tomáš )
-(Not my area either).
 
-> Have you seen these reports?
-> https://lore.kernel.org/all/2982107.4sosBPzcNG@electra/
-> https://lore.kernel.org/all/CAC_j7i1R7oy+nRhxEjCTba=DUgn02w9X+p94DCu0aHv5+5tKnQ@mail.gmail.com/
 
-I hadn't!  Those are both the problem I originally was trying to debug
-and stumbled into the WARN/BUG/hang with my test program.
 
-> The former lead to a fix in the mdraid code that should be in the kernel
-> version you are using. But in a reply to the latter report the repoter
-> claimed that that fix is not enough (claiming "this was obvious" and
-> also using dm), but things then stalled there.
+Hello,
 
-Yeh I see my world has Keith's f7b24c7b41f23
+New build issue found on next/master:
 
-I think the problem I'm seeing is zero length requests coming from somewhere.
+---
+ passing argument 1 of ‘__do_kmalloc_node’ makes pointer from integer without a cast [-Wint-conversion] in mm/slub.o (mm/slub.c) [logspec:kbuild,kbuild.compiler.error]
+---
 
-The WARN I'm seeing in 7.1.0-rc7+ is:
+- dashboard: https://d.kernelci.org/i/maestro:54c89979f71a499b7aae008163ebb25cc99f6565
+- giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+- commit HEAD:  700f8f17ac2c84f94b7cf4420f306a23a5ddfd24
 
-[ 2681.597042] device-mapper: raid1: Mirror read failed from 252:25. Trying alternative device.
-[ 2681.631933] ------------[ cut here ]------------
-[ 2681.631939] WARNING: block/bio.c:1044 at bio_add_page+0x18b/0x250, CPU#22: kworker/22:0/18929
 
-1039 int bio_add_page(struct bio *bio, struct page *page,
-1040                  unsigned int len, unsigned int offset)
-1041 {
-1042         if (WARN_ON_ONCE(bio_flagged(bio, BIO_CLONED)))
-1043                 return 0;
-1044         if (WARN_ON_ONCE(len == 0))
-1045                 return 0;
+Please include the KernelCI tag when submitting a fix:
 
-So it's the ' if (WARN_ON_ONCE(len == 0))'
+Reported-by: kernelci.org bot <bot@kernelci.org>
 
-and the warn I got on the older 7.0.8 was:
-[Sun May 17 17:22:52 2026] WARNING: drivers/scsi/scsi_lib.c:1140 at scsi_alloc_sgtables+0x38a/0x400, CPU#28: kworker/28:1H/3943
 
-which I *think* corresponds to:
-1164         if (WARN_ON_ONCE(!nr_segs))
-1165                 return BLK_STS_IOERR;
+Log excerpt:
+=====================================================
+mm/slub.c:5552:42: error: passing argument 1 of ‘__do_kmalloc_node’ makes pointer from integer without a cast [-Wint-conversion]
+ 5552 |                 return __do_kmalloc_node(size, NULL, flags, node,
+      |                                          ^~~~
+      |                                          |
+      |                                          size_t {aka long unsigned int}
+mm/slub.c:5340:39: note: expected ‘struct kmem_cache * (*)[14]’ but argument is of type ‘size_t’ {aka ‘long unsigned int’}
+ 5340 | void *__do_kmalloc_node(kmem_buckets *b, gfp_t flags, int node,
+      |                         ~~~~~~~~~~~~~~^
+In file included from ./include/uapi/linux/posix_types.h:5,
+                 from ./include/uapi/linux/types.h:14,
+                 from ./include/linux/types.h:5,
+                 from ./include/linux/kasan-checks.h:5,
+                 from ./include/asm-generic/rwonce.h:26,
+                 from ./arch/arm64/include/asm/rwonce.h:81,
+                 from ./include/linux/compiler.h:369,
+                 from ./include/asm-generic/bug.h:5,
+                 from ./arch/arm64/include/asm/bug.h:26,
+                 from ./include/linux/bug.h:5,
+                 from ./include/linux/mmdebug.h:5,
+                 from ./include/linux/mm.h:7,
+                 from mm/slub.c:15:
+./include/linux/stddef.h:8:14: error: passing argument 2 of ‘__do_kmalloc_node’ makes integer from pointer without a cast [-Wint-conversion]
+    8 | #define NULL ((void *)0)
+      |              ^~~~~~~~~~~
+      |              |
+      |              void *
+mm/slub.c:5552:48: note: in expansion of macro ‘NULL’
+ 5552 |                 return __do_kmalloc_node(size, NULL, flags, node,
+      |                                                ^~~~
+mm/slub.c:5340:48: note: expected ‘gfp_t’ {aka ‘unsigned int’} but argument is of type ‘void *’
+ 5340 | void *__do_kmalloc_node(kmem_buckets *b, gfp_t flags, int node,
+      |                                          ~~~~~~^~~~~
+mm/slub.c:5552:61: error: incompatible type for argument 4 of ‘__do_kmalloc_node’
+ 5552 |                 return __do_kmalloc_node(size, NULL, flags, node,
+      |                                                             ^~~~
+      |                                                             |
+      |                                                             int
+mm/slub.c:5341:41: note: expected ‘kmalloc_token_t’ but argument is of type ‘int’
+ 5341 |                         kmalloc_token_t token, struct slab_alloc_context *ac)
+      |                         ~~~~~~~~~~~~~~~~^~~~~
+In file included from ./include/linux/mm.h:34:
+./include/linux/slab.h:520:41: error: incompatible type for argument 5 of ‘__do_kmalloc_node’
+  520 | #define PASS_TOKEN_PARAM(_token)        ((kmalloc_token_t){})
+      |                                         ^~~~~~~~~~~~~~~~~~~~~
+      |                                         |
+      |                                         kmalloc_token_t
+mm/slub.c:5553:33: note: in expansion of macro ‘PASS_TOKEN_PARAM’
+ 5553 |                                 PASS_TOKEN_PARAM(token), &ac);
+      |                                 ^~~~~~~~~~~~~~~~
+mm/slub.c:5341:75: note: expected ‘struct slab_alloc_context *’ but argument is of type ‘kmalloc_token_t’
+ 5341 |                         kmalloc_token_t token, struct slab_alloc_context *ac)
+      |                                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~^~
+mm/slub.c:5552:24: error: too many arguments to function ‘__do_kmalloc_node’
+ 5552 |                 return __do_kmalloc_node(size, NULL, flags, node,
+      |                        ^~~~~~~~~~~~~~~~~
+mm/slub.c:5340:7: note: declared here
+ 5340 | void *__do_kmalloc_node(kmem_buckets *b, gfp_t flags, int node,
+      |       ^~~~~~~~~~~~~~~~~
+  CC      lib/sys_info.o
+mm/slub.c:5558:1: error: control reaches end of non-void function [-Werror=return-type]
+ 5558 | }
+      | ^
+cc1: some warnings being treated as errors
+  CC      arch/arm64/kvm/hyp/nvhe/../pgtable.nvhe.o
 
-so it sounds like we need to find where zero length requests are coming from??
+=====================================================
 
-Thanks again,
 
-Dave
+# Builds where the incident occurred:
 
-> Ciao, Thorsten
-> 
-> >   This started off as debugging a case where I'd get my RAID1 (on the host)
-> > getting a reliable 'rescheduling sector'/disk failure while running the qemu block test suite
-> > during a qemu build, but then I tried to build a smaller discrete
-> > test, and now I've got a simply triggerable warn and test hang.
-> > There's no errors from the underlying SATA layer on the storage,
-> > everything resyncs just fine.
-> > 
-> > I've got an existing LVM vg ('main') with two mirrors on sda2, and sdb2
-> > which are SATA disks.
-> > 
-> > # lvcreate --type mirror --mirrors 1 -L 1G main /dev/sda2 /dev/sdb2
-> > # mkfs.ext4 /dev/mapper/main-lvol0
-> > # mount /dev/mapper/main-lvol0 /mnt/tmp/
-> > # chmod a+rwx /mnt/tmp
-> > 
-> > $ dd if=/dev/zero of=/mnt/tmp/testfile bs=1024k count=1
-> > 
-> > (I then wait for the IO to stop)
-> > 
-> > then we've got this little test program:
-> > 
-> > <--><--><--><--><--><--><--><--><--><--><--><--><--><--><--><--><--><-->
-> > #include <errno.h>
-> > #include <fcntl.h>             
-> > #include <asm-generic/fcntl.h>
-> > #include <stdio.h> 
-> > #include <unistd.h>
-> > 
-> > 
-> > const char* path="/mnt/tmp/testfile";
-> > static char buf[8192];
-> > 
-> > int main()                                       
-> > {
-> >   int fd=open(path, O_RDWR|O_DIRECT|O_CLOEXEC);
-> >     
-> >   errno=0;
-> >   int res3=pread(fd, buf, 4096, 0);
-> >   printf("pread of 4096 said: %d (%m)\n", res3);
-> > 
-> > }
-> > <--><--><--><--><--><--><--><--><--><--><--><--><--><--><--><--><--><-->
-> > 
-> > running that, either hangs or gets a 'pread of 4096 said: -1 (Input/output error)'
-> > when it hangs it's unkillable.
-> > 
-> > at the moment (on 7.1.0-rc7) this is giving:
-> > Jun 14 18:08:32 dalek kernel: device-mapper: raid1: Mirror read failed from 252:24. Trying alternative device.
-> > Jun 14 18:08:32 dalek kernel: ------------[ cut here ]------------
-> > Jun 14 18:08:32 dalek dmeventd[1010]: Primary mirror device 252:24 read failed.
-> > Jun 14 18:08:32 dalek kernel: WARNING: block/bio.c:1044 at bio_add_page+0x18b/0x250, CPU#15: kworker/15:1/369
-> > 
-> > (full backtrace below)
-> > (Note there is a moan in there about sdb IO error - repeated a lot - but
-> > again, there's no SATA level errors, and the drive is fine on smart, and
-> > I can read the whole of the underlying lvm mirrors, so I don't think it's
-> > physically there).
-> > 
-> > I did a blktrace, although that gives me a 23G blkparse output, hmm
-> > (I see each event repeated a lot - maybe per thread?)
-> > 
-> > 252,26  15        1     0.000000000  3435  Q  RS 264192 + 8 [dbf]
-> >   252,26 is /dev/mapper/main-lvol0
-> > 252,24  15        1     0.000005501  3435  A  RS 264192 + 8 <- (252,26) 264192
-> >   252,24 is main-lvol0_mimage_0
-> > 252,24  15        2     0.000005761  3435  Q  RS 264192 + 8 [dbf]
-> >   8,0   15        1     0.000008646  3435  A  RS 71634944 + 8 <- (252,24) 264192
-> >     so that's sda 
-> >   8,0   15        2     0.000008787  3435  A  RS 73734144 + 8 <- (8,2) 71634944
-> >     I guess mapping down from sda2 to sda
-> >   8,0   15        3     0.000009037  3435  Q  RS 73734144 + 8 [dbf]
-> >   8,0   15        4     0.000009809  3435  C  RS 73734144 + 8 [65514]
-> >       ??? Hmm what's the 65514 there?
-> > 252,24  15        3     0.000010320  3435  C  RS 264192 + 8 [65514]
-> > 252,25  15        1     0.000290384   369  Q   R 264192 + 8 [kworker/15:1]
-> >    252,25 is main-lvol0_mimage_1
-> > 
-> > and at this point I'm a bit lost as to what I'm looking for.
-> > 
-> > Hints appreciated!
-> > 
-> > (I don't believe this is a regression - or at least not recent)
-> > 
-> > Dave
-> > 
-> > 
-> > 
-> > 
-> > Jun 14 18:08:32 dalek kernel: device-mapper: raid1: Mirror read failed from 252:24. Trying alternative device.
-> > Jun 14 18:08:32 dalek kernel: ------------[ cut here ]------------
-> > Jun 14 18:08:32 dalek dmeventd[1010]: Primary mirror device 252:24 read failed.
-> > Jun 14 18:08:32 dalek kernel: WARNING: block/bio.c:1044 at bio_add_page+0x18b/0x250, CPU#15: kworker/15:1/369
-> > Jun 14 18:08:32 dalek dmeventd[1010]: main-lvol0 is now in-sync.
-> > Jun 14 18:08:32 dalek kernel: Modules linked in: nft_masq nft_reject_ipv4 act_csum cls_u32 sch_htb nf_nat_tftp nf_conntrack_tftp bridge stp llc rfkill nft_fib_inet nft_fib_ipv4 nft_fib_ipv6 nft_fib nft_reject_inet nf_reject_ipv4 nf_reje>
-> > Jun 14 18:08:32 dalek kernel:  drm_panel_backlight_quirks gpu_sched drm_suballoc_helper video nvme drm_display_helper nvme_core cec nvme_keyring sp5100_tco nvme_auth wmi serio_raw fuse scsi_dh_alua i2c_dev scsi_dh_rdac scsi_dh_emc
-> > Jun 14 18:08:32 dalek kernel: CPU: 15 UID: 0 PID: 369 Comm: kworker/15:1 Not tainted 7.1.0-rc7+ #786 PREEMPT(lazy) 
-> > Jun 14 18:08:32 dalek kernel: Hardware name: To Be Filled By O.E.M. To Be Filled By O.E.M./X570 Pro4, BIOS P3.10 07/13/2020
-> > Jun 14 18:08:32 dalek kernel: Workqueue: kmirrord do_mirror
-> > Jun 14 18:08:32 dalek kernel: RIP: 0010:bio_add_page+0x18b/0x250
-> > Jun 14 18:08:32 dalek kernel: Code: 24 10 4c 8b 04 24 84 c0 0f 85 c9 00 00 00 41 0f b7 40 78 48 8b 74 24 08 8b 4c 24 14 e9 b4 fe ff ff 0f 0b 31 c0 e9 55 d1 af 00 <0f> 0b eb f5 48 8b 7f 08 83 7f 60 05 0f 85 00 ff ff ff 49 8b 3b 4c
-> > Jun 14 18:08:32 dalek kernel: RSP: 0018:ffffd1fb8176fc10 EFLAGS: 00010246
-> > Jun 14 18:08:32 dalek kernel: RAX: 0000000000000000 RBX: ffffd1fb8176fd18 RCX: 0000000000000000
-> > Jun 14 18:08:32 dalek kernel: RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff8d1a8eb28b00
-> > Jun 14 18:08:32 dalek kernel: RBP: 0000000000000000 R08: ffffd1fb8176fc38 R09: ffffd1fb8176fc40
-> > Jun 14 18:08:32 dalek kernel: R10: ffffd1fb8176fc34 R11: 0000000000000000 R12: 0000000000000000
-> > Jun 14 18:08:32 dalek kernel: R13: ffffd1fb8176fd90 R14: 0000000000000001 R15: ffff8d1a8eb28b00
-> > Jun 14 18:08:32 dalek kernel: FS:  0000000000000000(0000) GS:ffff8d29d161f000(0000) knlGS:0000000000000000
-> > Jun 14 18:08:32 dalek kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > Jun 14 18:08:32 dalek kernel: CR2: 00007f0ddcd7b9d0 CR3: 000000023dcbf000 CR4: 0000000000350ef0
-> > Jun 14 18:08:32 dalek kernel: Call Trace:
-> > Jun 14 18:08:32 dalek kernel:  <TASK>
-> > Jun 14 18:08:32 dalek kernel:  do_region+0x227/0x2a0
-> > Jun 14 18:08:32 dalek kernel:  dispatch_io+0xf1/0x150
-> > Jun 14 18:08:32 dalek kernel:  ? __pfx_bio_get_page+0x10/0x10
-> > Jun 14 18:08:32 dalek kernel:  ? __pfx_bio_next_page+0x10/0x10
-> > Jun 14 18:08:32 dalek kernel:  ? __pfx_read_callback+0x10/0x10
-> > Jun 14 18:08:32 dalek kernel:  dm_io+0x169/0x2d0
-> > Jun 14 18:08:32 dalek kernel:  ? __pfx_bio_get_page+0x10/0x10
-> > Jun 14 18:08:32 dalek kernel:  ? __pfx_bio_next_page+0x10/0x10
-> > Jun 14 18:08:32 dalek kernel:  do_reads+0x149/0x230
-> > Jun 14 18:08:32 dalek kernel:  ? __pfx_read_callback+0x10/0x10
-> > Jun 14 18:08:32 dalek kernel:  do_mirror+0x11a/0x2b0
-> > Jun 14 18:08:32 dalek kernel:  process_one_work+0x19e/0x390
-> > Jun 14 18:08:32 dalek kernel:  worker_thread+0x1a6/0x310
-> > Jun 14 18:08:32 dalek kernel:  ? __pfx_worker_thread+0x10/0x10
-> > Jun 14 18:08:32 dalek kernel:  kthread+0xe4/0x120
-> > Jun 14 18:08:32 dalek kernel:  ? __pfx_kthread+0x10/0x10
-> > Jun 14 18:08:32 dalek kernel:  ret_from_fork+0x1a1/0x270
-> > Jun 14 18:08:32 dalek kernel:  ? __pfx_kthread+0x10/0x10
-> > Jun 14 18:08:32 dalek kernel:  ret_from_fork_asm+0x1a/0x30
-> > Jun 14 18:08:32 dalek kernel:  </TASK>
-> > Jun 14 18:08:32 dalek kernel: ---[ end trace 0000000000000000 ]---
-> > Jun 14 18:08:32 dalek kernel: ------------[ cut here ]------------
-> > Jun 14 18:08:32 dalek kernel: WARNING: drivers/scsi/scsi_lib.c:1164 at scsi_alloc_sgtables+0x38a/0x400, CPU#15: kworker/15:1/369
-> > Jun 14 18:08:32 dalek kernel: Modules linked in: nft_masq nft_reject_ipv4 act_csum cls_u32 sch_htb nf_nat_tftp nf_conntrack_tftp bridge stp llc rfkill nft_fib_inet nft_fib_ipv4 nft_fib_ipv6 nft_fib nft_reject_inet nf_reject_ipv4 nf_reje>
-> > Jun 14 18:08:32 dalek kernel:  drm_panel_backlight_quirks gpu_sched drm_suballoc_helper video nvme drm_display_helper nvme_core cec nvme_keyring sp5100_tco nvme_auth wmi serio_raw fuse scsi_dh_alua i2c_dev scsi_dh_rdac scsi_dh_emc
-> > Jun 14 18:08:32 dalek kernel: CPU: 15 UID: 0 PID: 369 Comm: kworker/15:1 Tainted: G        W           7.1.0-rc7+ #786 PREEMPT(lazy) 
-> > Jun 14 18:08:32 dalek kernel: Tainted: [W]=WARN
-> > Jun 14 18:08:32 dalek kernel: Hardware name: To Be Filled By O.E.M. To Be Filled By O.E.M./X570 Pro4, BIOS P3.10 07/13/2020
-> > Jun 14 18:08:32 dalek kernel: Workqueue: kmirrord do_mirror
-> > Jun 14 18:08:32 dalek kernel: RIP: 0010:scsi_alloc_sgtables+0x38a/0x400
-> > Jun 14 18:08:32 dalek kernel: Code: 8b 3d ba 2d a9 01 e9 d1 fd ff ff 48 8b 75 00 48 8d bb f0 fe ff ff e8 15 b7 b0 ff 48 89 ab e0 00 00 00 89 45 08 e9 30 ff ff ff <0f> 0b 4c 8b 6c 24 30 b8 0a 00 00 00 e9 21 ff ff ff b8 09 00 00 00
-> > Jun 14 18:08:32 dalek kernel: RSP: 0018:ffffd1fb8176f7f0 EFLAGS: 00010246
-> > Jun 14 18:08:32 dalek kernel: RAX: 0000000000000000 RBX: ffff8d1aedad0110 RCX: 0000000000000009
-> > Jun 14 18:08:32 dalek kernel: RDX: 0000000000000000 RSI: ffffffff99c15960 RDI: ffff8d1aedad0110
-> > Jun 14 18:08:32 dalek kernel: RBP: ffff8d1a93d17000 R08: ffff8d1aedad0110 R09: ffff8d1a818fa800
-> > Jun 14 18:08:32 dalek kernel: R10: 7020676e69736961 R11: 0000000000000000 R12: 0000000000000000
-> > Jun 14 18:08:32 dalek kernel: R13: 0000000000000000 R14: ffff8d1a93394000 R15: ffff8d1a93d17000
-> > Jun 14 18:08:32 dalek kernel: FS:  0000000000000000(0000) GS:ffff8d29d161f000(0000) knlGS:0000000000000000
-> > Jun 14 18:08:32 dalek kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > Jun 14 18:08:32 dalek kernel: CR2: 00007f0ddcd7b9d0 CR3: 000000023dcbf000 CR4: 0000000000350ef0
-> > Jun 14 18:08:32 dalek kernel: Call Trace:
-> > Jun 14 18:08:32 dalek kernel:  <TASK>
-> > Jun 14 18:08:32 dalek kernel:  ? srso_return_thunk+0x5/0x5f
-> > Jun 14 18:08:32 dalek kernel:  sd_setup_read_write_cmnd+0x9d/0x740
-> > Jun 14 18:08:32 dalek kernel:  ? srso_return_thunk+0x5/0x5f
-> > Jun 14 18:08:32 dalek kernel:  scsi_queue_rq+0x4d2/0x890
-> > Jun 14 18:08:32 dalek kernel:  blk_mq_dispatch_rq_list+0x241/0x530
-> > Jun 14 18:08:32 dalek kernel:  ? srso_return_thunk+0x5/0x5f
-> > Jun 14 18:08:32 dalek kernel:  ? sbitmap_get+0x61/0x100
-> > Jun 14 18:08:32 dalek kernel:  __blk_mq_do_dispatch_sched+0x330/0x340
-> > Jun 14 18:08:32 dalek kernel:  __blk_mq_sched_dispatch_requests+0x143/0x180
-> > Jun 14 18:08:32 dalek kernel:  blk_mq_sched_dispatch_requests+0x2d/0x70
-> > Jun 14 18:08:32 dalek kernel:  blk_mq_run_hw_queue+0x2bf/0x350
-> > Jun 14 18:08:32 dalek kernel:  ? srso_return_thunk+0x5/0x5f
-> > Jun 14 18:08:32 dalek kernel:  blk_mq_dispatch_list+0x172/0x350
-> > Jun 14 18:08:32 dalek kernel:  blk_mq_flush_plug_list+0x51/0x1a0
-> > Jun 14 18:08:32 dalek kernel:  ? blk_mq_submit_bio+0x71c/0x9f0
-> > Jun 14 18:08:32 dalek kernel:  __blk_flush_plug+0x112/0x180
-> > Jun 14 18:08:32 dalek kernel:  ? srso_return_thunk+0x5/0x5f
-> > Jun 14 18:08:32 dalek kernel:  __submit_bio+0x19c/0x260
-> > Jun 14 18:08:32 dalek kernel:  __submit_bio_noacct+0x8e/0x210
-> > Jun 14 18:08:32 dalek kernel:  do_region+0x14c/0x2a0
-> > Jun 14 18:08:32 dalek kernel:  dispatch_io+0xf1/0x150
-> > Jun 14 18:08:32 dalek kernel:  ? __pfx_bio_get_page+0x10/0x10
-> > Jun 14 18:08:32 dalek kernel:  ? __pfx_bio_next_page+0x10/0x10
-> > Jun 14 18:08:32 dalek kernel:  ? __pfx_read_callback+0x10/0x10
-> > Jun 14 18:08:32 dalek kernel:  dm_io+0x169/0x2d0
-> > Jun 14 18:08:32 dalek kernel:  ? __pfx_bio_get_page+0x10/0x10
-> > Jun 14 18:08:32 dalek kernel:  ? __pfx_bio_next_page+0x10/0x10
-> > Jun 14 18:08:32 dalek kernel:  do_reads+0x149/0x230
-> > Jun 14 18:08:32 dalek kernel:  ? __pfx_read_callback+0x10/0x10
-> > Jun 14 18:08:32 dalek kernel:  do_mirror+0x11a/0x2b0
-> > Jun 14 18:08:32 dalek kernel:  process_one_work+0x19e/0x390
-> > Jun 14 18:08:32 dalek kernel:  worker_thread+0x1a6/0x310
-> > Jun 14 18:08:32 dalek kernel:  ? __pfx_worker_thread+0x10/0x10
-> > Jun 14 18:08:32 dalek kernel:  kthread+0xe4/0x120
-> > Jun 14 18:08:32 dalek kernel:  ? __pfx_kthread+0x10/0x10
-> > Jun 14 18:08:32 dalek kernel:  ret_from_fork+0x1a1/0x270
-> > Jun 14 18:08:32 dalek kernel:  ? __pfx_kthread+0x10/0x10
-> > Jun 14 18:08:32 dalek kernel:  ret_from_fork_asm+0x1a/0x30
-> > Jun 14 18:08:32 dalek kernel:  </TASK>
-> > Jun 14 18:08:32 dalek kernel: ---[ end trace 0000000000000000 ]---
-> > Jun 14 18:08:32 dalek kernel: I/O error, dev sdb, sector 50606087 op 0x0:(READ) flags 0x0 phys_seg 0 prio class 2
-> > Jun 14 18:08:32 dalek kernel: I/O error, dev sdb, sector 50606087 op 0x0:(READ) flags 0x0 phys_seg 0 prio class 2
-> > Jun 14 18:08:32 dalek kernel: I/O error, dev sdb, sector 50606087 op 0x0:(READ) flags 0x0 phys_seg 0 prio class 2
-> > Jun 14 18:08:32 dalek kernel: I/O error, dev sdb, sector 50606087 op 0x0:(READ) flags 0x0 phys_seg 0 prio class 2
-> > Jun 14 18:08:32 dalek kernel: I/O error, dev sdb, sector 50606087 op 0x0:(READ) flags 0x0 phys_seg 0 prio class 2
-> > Jun 14 18:08:32 dalek kernel: I/O error, dev sdb, sector 50606087 op 0x0:(READ) flags 0x0 phys_seg 0 prio class 2
-> > Jun 14 18:08:32 dalek kernel: I/O error, dev sdb, sector 50606087 op 0x0:(READ) flags 0x0 phys_seg 0 prio class 2
-> > Jun 14 18:08:32 dalek kernel: I/O error, dev sdb, sector 50606087 op 0x0:(READ) flags 0x0 phys_seg 0 prio class 2
-> > Jun 14 18:08:32 dalek kernel: I/O error, dev sdb, sector 50606087 op 0x0:(READ) flags 0x0 phys_seg 0 prio class 2
-> > Jun 14 18:08:32 dalek kernel: I/O error, dev sdb, sector 50606087 op 0x0:(READ) flags 0x0 phys_seg 0 prio class 2
-> > Jun 14 18:08:37 dalek kernel: blk_print_req_error: 241000 callbacks suppressed
-> > Jun 14 18:08:37 dalek kernel: I/O error, dev sdb, sector 50606087 op 0x0:(READ) flags 0x0 phys_seg 0 prio class 2
-> > 
-> > 
-> 
--- 
- -----Open up your eyes, open up your mind, open up your code -------   
-/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
-\        dave @ treblig.org |                               | In Hex /
- \ _________________________|_____ http://www.treblig.org   |_______/
+## 32r2el_defconfig on (mips):
+- compiler: gcc-14
+- config: https://files.kernelci.org/kbuild-gcc-14-mips-build-only-6a301bb2a1ade4ad5d1095a7/.config
+- dashboard: https://d.kernelci.org/build/maestro:6a301bb2a1ade4ad5d1095a7
+
+## 32r2el_defconfig+allnoconfig on (mips):
+- compiler: gcc-14
+- config: https://files.kernelci.org/kbuild-gcc-14-mips-allnoconfig-6a301baea1ade4ad5d10946c/.config
+- dashboard: https://d.kernelci.org/build/maestro:6a301baea1ade4ad5d10946c
+
+## allnoconfig on (i386):
+- compiler: gcc-14
+- config: https://files.kernelci.org/kbuild-gcc-14-i386-allnoconfig-6a301b9ea1ade4ad5d10944b/.config
+- dashboard: https://d.kernelci.org/build/maestro:6a301b9ea1ade4ad5d10944b
+
+## defconfig on (riscv):
+- compiler: gcc-14
+- config: None
+- dashboard: https://d.kernelci.org/build/maestro:6a301bbaa1ade4ad5d1095b7
+
+## defconfig+allnoconfig+lab-setup+kselftest on (arm64):
+- compiler: gcc-14
+- config: None
+- dashboard: https://d.kernelci.org/build/maestro:6a301b62a1ade4ad5d108f4a
+
+## defconfig+arm64-chromebook+CONFIG_RANDOMIZE_BASE=y on (arm64):
+- compiler: gcc-14
+- config: None
+- dashboard: https://d.kernelci.org/build/maestro:6a301b74a1ade4ad5d10938b
+
+## defconfig+kcidebug+x86-board on (i386):
+- compiler: gcc-14
+- config: https://files.kernelci.org/kbuild-gcc-14-x86-kcidebug-6a301bcba1ade4ad5d1095ca/.config
+- dashboard: https://d.kernelci.org/build/maestro:6a301bcba1ade4ad5d1095ca
+
+## defconfig+lab-setup+arm64-chromebook+CONFIG_MODULE_COMPRESS=n+CONFIG_MODULE_COMPRESS_NONE=y on (arm64):
+- compiler: gcc-14
+- config: https://files.kernelci.org/kbuild-gcc-14-arm64-chromebook-6a301af9a1ade4ad5d108d3f/.config
+- dashboard: https://d.kernelci.org/build/maestro:6a301af9a1ade4ad5d108d3f
+
+## i386_defconfig on (i386):
+- compiler: gcc-14
+- config: https://files.kernelci.org/kbuild-gcc-14-i386-build-only-6a301ba2a1ade4ad5d10944e/.config
+- dashboard: https://d.kernelci.org/build/maestro:6a301ba2a1ade4ad5d10944e
+
+## multi_v7_defconfig+allnoconfig on (arm):
+- compiler: gcc-14
+- config: None
+- dashboard: https://d.kernelci.org/build/maestro:6a301b35a1ade4ad5d108e29
+
+## multi_v7_defconfig+CONFIG_CPU_BIG_ENDIAN=y on (arm):
+- compiler: gcc-14
+- config: None
+- dashboard: https://d.kernelci.org/build/maestro:6a301b39a1ade4ad5d108e3b
+
+## multi_v7_defconfig+CONFIG_EFI=y+CONFIG_ARM_LPAE=y on (arm):
+- compiler: gcc-14
+- config: None
+- dashboard: https://d.kernelci.org/build/maestro:6a301b41a1ade4ad5d108e7a
+
+## multi_v7_defconfig+CONFIG_THUMB2_KERNEL=y on (arm):
+- compiler: gcc-14
+- config: None
+- dashboard: https://d.kernelci.org/build/maestro:6a301b45a1ade4ad5d108e7d
+
+## multi_v7_defconfig+kselftest on (arm):
+- compiler: gcc-14
+- config: None
+- dashboard: https://d.kernelci.org/build/maestro:6a301b4da1ade4ad5d108e8b
+
+## x86_64_defconfig+allnoconfig+x86-board on (x86_64):
+- compiler: gcc-14
+- config: None
+- dashboard: https://d.kernelci.org/build/maestro:6a301bd8a1ade4ad5d1095d3
+
+## x86_64_defconfig+aws-ec2 on (x86_64):
+- compiler: gcc-14
+- config: None
+- dashboard: https://d.kernelci.org/build/maestro:6a301bc3a1ade4ad5d1095bd
+
+## x86_64_defconfig+kselftest+x86-board on (x86_64):
+- compiler: gcc-14
+- config: None
+- dashboard: https://d.kernelci.org/build/maestro:6a301bd4a1ade4ad5d1095d0
+
+
+#kernelci issue maestro:54c89979f71a499b7aae008163ebb25cc99f6565
+
+--
+This is an experimental report format. Please send feedback in!
+Talk to us at kernelci@lists.linux.dev
+
+Made with love by the KernelCI team - https://kernelci.org
