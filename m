@@ -1,397 +1,511 @@
-Received: from mail-4322.protonmail.ch (mail-4322.protonmail.ch [185.70.43.22])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9240E30C617
-	for <regressions@lists.linux.dev>; Mon, 15 Jun 2026 19:40:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.22
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781552439; cv=none; b=OotyRNzBOhf/9IZI0OtzOSl5znAzkxgXjELpbq96JrEkWEvn5xnp34DBUE5hb9ipOCPdlM1NvhWfOqeVBkMUgrBN2lVa8iyGoTdJfPu2YwsLoMNwfiSZmo5Xwpcy0R6dtd/BUSvVJpg6u4LrynJljo/vxdzmk8NErz8nnrO/+q0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781552439; c=relaxed/simple;
-	bh=XbX98VF243K959kI6PqKJek+IfDNsD+hvt3VGbGUvug=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HnQeZ1Jz7YhdNTJGTBNwFjstgcnkbjZw6YqmJwPezS6EENijBtj/CPYd9VPyv5FJveGoiDFflA6ocoZbB0nr5I6EFIamYFXTR6KV/7uC6zwBLdb8llw/JB89B4NV6vehhy6prCHGQt6ix9CViDgTX3mxQ8DTJd8NJerPz16q/8o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me; spf=pass smtp.mailfrom=pm.me; dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b=aia2AVyp; arc=none smtp.client-ip=185.70.43.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pm.me
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E1F0239E6C
+	for <regressions@lists.linux.dev>; Mon, 15 Jun 2026 23:16:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.167.51
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1781565389; cv=pass; b=NlDGMTC20PwNnY4ALb80a5T1jNXIxBLxfkoV777wjlKW5qv/m/c+G55qqwxpMLkJx+k6LaTcvt7ggtFhfsPrqckRy7zJIUuvqL0PluTg8kB0bdkBZlUTSM1H3EhF9lB6xA9rc7Ed+SJtqIldaOt6NDTsWtO9OOZUxjtAtEyta7Q=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1781565389; c=relaxed/simple;
+	bh=wvQ6Who5f5/PwoZcQSQoi1VfOrOT4U5B3Hmg/+ZNTlQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=u5C9F37T19xejvl7pySTnxvAC7l3Nv1NvTJeGAI+t3gqnFerfALlLMWbUm7Plm8VborB45CrRlU3X7htConK8QOaxS7YlJcIran9WXcLyXD6EasKKGsHvVwuxWdErXPSU85RX3/opG49WnmxoQC1nSWSYY/3FiYOyRXj9Zt0ne8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EkP7jml9; arc=pass smtp.client-ip=209.85.167.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="aia2AVyp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
-	s=protonmail3; t=1781552435; x=1781811635;
-	bh=iKLpruD2vYR217WSTMGZepHjfmy50IW25hwqxjF1ZAA=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=aia2AVypiaGJkC7QquhaOhvMWalzj8VIJ9WzW42kJZzLIkQ54gkpVVXLqHuiQiErn
-	 TdxotGRumn1ychbF+Z/pzokQRxZuWiTxaQTvllaFUfEWFhuYFXB0jqHM3ck68OY8fv
-	 eZNTyv3SUdEt6btNrdqM3yG4plaGwTNHCfR+So7Op8TZ80PKVr+YCb24jOpPGseX6o
-	 B/aSBwKNK+nw9o7Wb+khxLjiMPznSkvglkT1qJih+vEYbQq+Qv1F1bye/3p+qVNyQn
-	 NBO4qQCOZjPQFQ/Lt9U1QWIeyOE4lbR0d3tm9qRrQ6pKRwYQPVSTI/mdGMQWmjS6q7
-	 f55J81DkxU18g==
-Date: Mon, 15 Jun 2026 19:40:31 +0000
-To: "Chen, Xiaogang" <xiaogang.chen@amd.com>, "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-From: Gerhard Schwanzer <geschw@pm.me>
-Cc: "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>, "stable@vger.kernel.org" <stable@vger.kernel.org>, "Deucher, Alexander" <Alexander.Deucher@amd.com>, "Yang, Philip" <Philip.Yang@amd.com>
-Subject: Re: [REGRESSION] drm/amdkfd: SVM split-tail remap regression causes SDMA0 permission fault on RX 7600 XT
-Message-ID: <d8ef0670-8ff1-41d9-ad99-6cc0a754c5b0@pm.me>
-In-Reply-To: <c967565e-e68c-4881-8cc6-064b7a3c3397@amd.com>
-References: <2bfa2f1b-567a-429b-aee2-a8dcf7efd5aa@pm.me> <53c2ad43-091d-46e9-b825-9aaa1d7114e8@amd.com> <2145b14f-00e7-4565-b1da-9e08d2c89a49@pm.me> <d39183d3-b961-4c74-997f-885eb7a887e4@amd.com> <IA1PR12MB85172F7FE9157C092EDA46A0E3112@IA1PR12MB8517.namprd12.prod.outlook.com> <d30aa220-802d-4575-8ab0-058698e4ffbb@pm.me> <c967565e-e68c-4881-8cc6-064b7a3c3397@amd.com>
-Feedback-ID: 110185885:user:proton
-X-Pm-Message-ID: c06aa69d8bc3aff53393e8e4350d5361b20f16be
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EkP7jml9"
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-5ad2e029a65so212390e87.3
+        for <regressions@lists.linux.dev>; Mon, 15 Jun 2026 16:16:27 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1781565385; cv=none;
+        d=google.com; s=arc-20240605;
+        b=GLd7J5G/8tv14bbzJrB9Bh9gt/Fe8OKRsNrvNf0eOuUyHdVsKN+TvtuvM50Sjb/Tet
+         PoKTJySy0ORIzk1rnJZqX8W9s8phF2ekEOEn5H9acMrvvAHBDElgz4BWhic7sIuqLY96
+         iq9BAx3/D5uRoa/UBO7+dbfMMf72bhlWNIJqjoSNRBCFsb1M5HBo13xNl4EqyOmmyQun
+         TUEgTEINRBumomtmQV+6WGtUoLW4K4J/pT0o46PmJzgV8FlwiNH5F+Qns5TFIN2ywH3V
+         PhkDDCVqlnKYzzV4ZwCPOdkQhxebBeIytSNVkVXvc3IGL8Xhik3/XPz2fPY6dW/oUI3E
+         p5nQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=BEHqr5lJOBe8zsjJYuzGFelY0YDO4v08iAMpMi8m0uo=;
+        fh=0LDnOljiqvHTzAKaWzbQBgadHFWenFnXInPDwaj+6Ik=;
+        b=Dq0pRGFgYUbbZZeyQEQi89mKBy55AgyV65ksoZyTacGbeTzDT3iisEz8pYDncP4cv5
+         AvPdPgmcyccKc7N9FovZaIO3P7ia6RllWDSrFqr0vDkF5EWpdlW8wDPeC+khkhDSvcIu
+         2VlE5DC2rHJYFj2AZfulSZQLwDAXyp7CM4qvpnZwgmZpyJZHAk0eLCmn8sDe1dQZqa7A
+         6WP4S3pkIrf9x6CRw3cn1vrUoYhyFVwyuf/h3NwwkYg+KrsHkjzwrV9lezlZLLAVLCjL
+         DEENmGsScVYLICkKVLWR092pT1MCY3JZsN5tX3uShhWauYzZi8uwBaNOyGcyZQu6XF4l
+         1ODA==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1781565385; x=1782170185; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BEHqr5lJOBe8zsjJYuzGFelY0YDO4v08iAMpMi8m0uo=;
+        b=EkP7jml96P5cx2fLkzfkIbzY4TzsxAmt1ixsAJgy/Gukx97t4Sl4ecQd4JVIAfCSG1
+         dOxQ3WW8EFTzPLs37WLvsF8upE6M8VGezFjLuX5EkAVP04kEhcFfv50WCI7CtMgLsPAO
+         LmoyHIas3F4V13wOmNjUc7eC36rs/Mfl4nTzwPexDo/HqDCl9yYmwekbaaIY34JnEXqM
+         LOzMFPqNEts2VhCwbIi3X0tR4N3V/BhqRgBdsTPGkOWMk+iXZMDMe8BVP8D7kxyo83Ky
+         mN+giuP+UR8tnm2w4QY0UWNBgt3H3/U1akwhfiBRbxYjmFL28BIbfxIaxWk8xGNcJeE1
+         fO0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781565385; x=1782170185;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=BEHqr5lJOBe8zsjJYuzGFelY0YDO4v08iAMpMi8m0uo=;
+        b=g8gSBlj+ARz52EOl3qfnm9a3ang9cCd1nEcedmeShLpZNWMJ1diwekf7EFkw6+urV1
+         25Cinv6g3aEOvWQXRGcq7bHJDg0sfCayRuClNGDaqZrjzsrPoGALNuij8nAEzWiz4T3S
+         S0k0nKAtX4tZcdkEt09Uj0s+Q26mBJ3tK+KXY3DK4mXSjyFD1DtPw7R4BBkDCUDCu4KR
+         F1b2fpcmsSP7/9cfWfIk569/tuQwtoQMLLQ896tgmb+TTQ5r10hcv1QgAi3H2gDez6QN
+         5wjGKjATiTQlOvryi2IVFvKZdFlH+UtkMIEdRH1Pv3qqWOaMdP5qecZ+IjN9P200AmGU
+         2IJw==
+X-Forwarded-Encrypted: i=1; AFNElJ+vU8qfmRATJNkkpgaycbrAxmFwgIbYuSVz7etEdeFyyj5zlGooGpZTL9NpX7J1BtgbQNXK6wyGsL6eHg==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwEg9qvE+5wa23rM0/IoXjp6id7tmlHiWuf4P2c3Cmj8+usrjgS
+	gzEeN5uO1j9cIFukplYbBS5GeUmTnpppkqmKyfHqLqeh55QGIKYZ5mKUXGlDSAOTwmSWFBMEN8L
+	CCyAh+4SNEURvel+CoIVPc2diCYd6LTE=
+X-Gm-Gg: Acq92OHNjBMqiLNo54pyD7D0tZnL8R++tyI1Qyh6B4jZ/sK9kXGdOdc69dGqzsBqRzj
+	/5O5t98UIxyl/JANbhY6fTeJuudfzy3ERMbpb5DxGNGdnn1iMFBvVdYt8DPLabnCEwWopluQDBj
+	aBMhktuPNYMzSJ2BkXkDbjlYV8E1a9U8Y1Mir7HVLvaTtphbzz2YvQqVSINkCjNmJK9sFxTUPnH
+	3U83MsmEKBA00Zs75TbSu/XHKKPGJUbNQClGrvMPXMNXtr2ezojc5xdV0lcQFPBZ/3TPrdXJWD0
+	pr0Gn3qBczHEV2ZQZtn0PR1QYReq4kHIB7bQFJLI
+X-Received: by 2002:a05:6512:3e2a:b0:5ad:2e00:c596 with SMTP id
+ 2adb3069b0e04-5ad2e00c659mr2386705e87.0.1781565385064; Mon, 15 Jun 2026
+ 16:16:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+References: <ai7rnH20IYeSmY8s@gallifrey> <165d3195-c81d-4760-870b-23a9a3b3b72c@leemhuis.info>
+ <ai_1LYtofh1fwD-N@gallifrey>
+In-Reply-To: <ai_1LYtofh1fwD-N@gallifrey>
+From: Vjaceslavs Klimovs <vklimovs@gmail.com>
+Date: Mon, 15 Jun 2026 16:16:12 -0700
+X-Gm-Features: AVVi8CfOdTH2vROH_Juv4k7g3x3u4qhSt8PkqDE04glOQSK6GtfS63sTG69O_x0
+Message-ID: <CAC_j7i0eDccVWzPeRafM50mZEOFHPz2cwd=RZqqx6TK2EVRFvw@mail.gmail.com>
+Subject: Re: Repeatable, raid1+O_DIRECT, hang/warn
+To: "Dr. David Alan Gilbert" <linux@treblig.org>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>, kbusch@kernel.org, trnka@scm.com, 
+	linux-block@vger.kernel.org, dm-devel@lists.linux.dev, 
+	Linux kernel regressions list <regressions@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Xiaogang, Alex, gentle ping on the tested candidate fix for this=20
-regression. The candidate change fixed the reproducer here (10/10=20
-clean), and regzbot now tracks it as "fix incoming". Do you plan to send=20
-the formal patch, or would it help if I send a patch based on the public=20
-candidate fix? Thanks, Gerhard
+Hi Dave, all,
 
-On 05/06/26 at 20:46, Chen, Xiaogang wrote:
+I'm one of the original reporters and very much a user, not a block/dm
+developer, so please sanity-check all of this.
 
-> Thank you for the testing/confirming.
+Your trace looks like what the two earlier reports hit: a read reaching
+a leaf device with sectors > 0 but phys_seg 0 (an empty bio). One aside
+that may help read the trace: blk_io_trace.error is a __u16, so the
+bracketed values on your C lines are errnos as u16 (65514 =3D -EINVAL,
+65531 =3D -EIO).
+
+The WARN itself is new, the bad bio isn't. bio_add_page() only started
+rejecting len =3D=3D 0 in 643893647cac ("block: reject zero length in
+bio_add_page()", v7.1-rc1); on 7.0.8 the same empty bio tripped
+scsi_alloc_sgtables()'s !nr_segs instead, which matches what you saw.
+That fits your "not a recent regression": the condition is older, v7.1
+just made it loud.
+
+For Tomas's and my reports (QEMU O_DIRECT to the LV block device) the
+origin looks like 5ff3f74e145a ("block: simplify direct io validity
+check", v6.18): blkdev_dio_invalid() now checks only aggregate
+ki_pos | count alignment and dropped the per-segment
+bdev_iter_is_aligned() walk, so a degenerate or misaligned O_DIRECT no
+longer gets -EINVAL at the fops boundary. But your reproducer reads a
+file, which goes through the filesystem O_DIRECT path and never calls
+blkdev_dio_invalid(), and still makes the empty bio. So it isn't only
+that one entry point.
+
+dm-mirror then hangs because Keith's f7b24c7b41f2 only covers md
+raid1/raid10; legacy dm-mirror (dm-raid1.c) has no equivalent and
+rebuilds the empty read onto the other leg. Note the leg's status isn't
+even consistent (your SATA path returns BLK_STS_IOERR, not
+BLK_STS_INVAL), so copying that status check into dm-mirror probably
+wouldn't catch every case.
+
+For what it's worth, that points me toward rejecting the empty or
+misaligned bio once, at submission, with -EINVAL, rather than teaching
+each consumer to tolerate it. But you'll know the tradeoffs far better
+than I do.
+
+I have a small QEMU + LVM raid1/mirror setup that reproduces the
+block-device variant and bisects to 5ff3f74e. Happy to run your file
+reproducer with some instrumentation at the dm-mirror read entry
+(bi_size vs bio_sectors vs bvec lengths) to see whether the bio is
+already empty on arrival or built that way on the retry, and to test
+any patch.
+
+Thanks,
+Vjaceslavs
+
+
+On Mon, Jun 15, 2026 at 5:50=E2=80=AFAM Dr. David Alan Gilbert
+<linux@treblig.org> wrote:
 >
-> Xiaogang
+> * Thorsten Leemhuis (regressions@leemhuis.info) wrote:
+> > On 6/14/26 19:57, Dr. David Alan Gilbert wrote:
+> > >
+> > >   I've got a repeatable raid hang/warn and would appreciate some poin=
+ters
+> > > as where to debug.
+> > >   (I've been logging stuff on  https://bugzilla.kernel.org/show_bug.c=
+gi?id=3D221535 )
+> >
+> > Note: not my area of expertise, so I might be sending you totally
+> > off-track with this comment. Feel free to ignore it. But FWIW:
 >
-> On 6/5/2026 1:41 PM, Gerhard Schwanzer wrote:
->> Hi Xiaogang, Thanks. I tested your attached patch on my RX 7600 XT
->> system. Test setup:
->> -
->> kernel 7.0.11 with 448ee453/bf2084a7 active
->> -
->> local revert not applied
->> -
->> your attached candidate fix applied
->> -
->> same self-contained v2 reproducer source as before, unchanged sha256:
->> 33347b5a1915f7452417f776c85527e55f825078c146163470bfe3eacabe3b27
->> Command: ./kfd_svm_split_hsa_copy --upstream-ab Result:
->> -
->> 10/10 runs completed successfully
->> -
->> all HSA/SDMA D2H copies completed
->> -
->> no ROCr memory access fault
->> -
->> no new GCVM_L2_PROTECTION_FAULT_STATUS
->> -
->> no SDMA0 permission fault
->> -
->> no GPU page fault in the kernel log So your patch fixes the reproducer
->> on my system with the original reproducer unchanged. Please feel free to
->> add: Tested-by: Gerhard Schwanzer
->> geschw@pm.me
->> Thanks, Gerhard
->>
->>
->> On 05/06/26 at 19:59, Chen, Xiaogang wrote:
->>> AMD General
->>>
->>>
->>> Hi Gerhard:
->>>
->>> I think the cause is checking the last byte address of svm range for
->>> 2MB alignment when decide possible huge page mapping. Your test case
->>> has vm range that ends just one byte before alignment.
->>>
->>> I tested your app with the attachment, no page fault during sdma
->>> operation. Please verify it.
->>>
->>> Thanks
->>>
->>> Xiaogang
->>>
->>> *From:*Chen, Xiaogang
->>> *Sent:* Wednesday, June 3, 2026 5:51 PM
->>> *To:* Gerhard Schwanzer <geschw@pm.me>; regressions@lists.linux.dev
->>> *Cc:* amd-gfx@lists.freedesktop.org; stable@vger.kernel.org; Deucher,
->>> Alexander <Alexander.Deucher@amd.com>; Yang, Philip <Philip.Yang@amd.co=
-m>
->>> *Subject:* Re: [REGRESSION] drm/amdkfd: SVM split-tail remap
->>> regression causes SDMA0 permission fault on RX 7600 XT
->>>
->>> Hi=C2=A0Gerhard:
->>>
->>> Thanks. I can build the app now. And I saw the regression. I am
->>> triaging it.
->>>
->>> The purpose of this patch is to remap split svm ranges(head/tail) that
->>> were mapped with huge page mapping(pmd), but cannot be mapped in huge
->>> page mapping after split due to new svm ranges are not 2MB aligned. It
->>> seems the remap decision misses case that both head and tail ranges
->>> are from original range with huge page mappings were used. Will check..=
-..
->>>
->>> Regards
->>>
->>> Xiaogang
->>>
->>> On 6/3/2026 12:54 AM, Gerhard Schwanzer wrote:
->>>
->>>       [Some people who received this message don't often get email from=
-geschw@pm.me. Learn why this is important athttps://aka.ms/LearnAboutSender=
-Identification ]
->>>
->>>       Hi Xiaogang,
->>>
->>>       Sorry, you are right. The source I uploaded was not self-containe=
-d, it still
->>>
->>>       referenced trace_history_replay.inc from an older local replay mo=
-de.
->>>
->>>       I uploaded a self-contained v2 source to the GitLab report:
->>>
->>>       https://gitlab.freedesktop.org/-/project/4522/uploads/7395b8985ec=
-d7c54183a7615d479c02c/kfd_svm_split_hsa_copy-v2.c
->>>
->>>       The --upstream-ab path does not use that replay table, but the mi=
-ssing
->>>
->>>       include
->>>
->>>       obviously broke fresh builds. The v2 source embeds the table and =
-otherwise
->>>
->>>       preserves the same source.
->>>
->>>       I re-tested this v2 source before uploading:
->>>
->>>        =C2=A0=C2=A0 - clean build from only kfd_svm_split_hsa_copy-v2.c=
-: OK
->>>
->>>        =C2=A0=C2=A0 - ./kfd_svm_split_hsa_copy --help: OK
->>>
->>>        =C2=A0=C2=A0 - good/workaround kernel: --upstream-ab completed 1=
-0/10 runs, no new
->>>
->>>        =C2=A0=C2=A0=C2=A0=C2=A0 GCVM/SDMA0/protection-fault messages in=
- the test window
->>>
->>>        =C2=A0=C2=A0 - broken kernel: --upstream-ab reproduced the SDMA0=
- permission fault;
->>>
->>>        =C2=A0=C2=A0=C2=A0=C2=A0 the first kernel fault address matched =
-the planned split-tail page
->>>
->>>       Validation summaries:
->>>
->>>       https://gitlab.freedesktop.org/-/project/4522/uploads/e6d0f31c0fd=
-a0df2c999439411f29dca/good-kernel-validation-summary.md
->>>
->>>       https://gitlab.freedesktop.org/-/project/4522/uploads/bdf8a3ac678=
-6ddb88dd426b59edb32a9/broken-kernel-validation-summary.md
->>>
->>>       The intended triage command remains:
->>>
->>>        =C2=A0=C2=A0 ./kfd_svm_split_hsa_copy --upstream-ab
->>>
->>>       Generic build shape is:
->>>
->>>        =C2=A0=C2=A0 cc -O2 -g -Wall -Wextra -pthread \
->>>
->>>        =C2=A0=C2=A0=C2=A0=C2=A0 -I/path/to/rocm/include -L/path/to/rocm=
-/lib \
->>>
->>>        =C2=A0=C2=A0=C2=A0=C2=A0 -o kfd_svm_split_hsa_copy kfd_svm_split=
-_hsa_copy-v2.c \
->>>
->>>        =C2=A0=C2=A0=C2=A0=C2=A0 -lhsa-runtime64
->>>
->>>       If you still prefer a binary, please tell me the target runtime/d=
-istro. A
->>>
->>>       binary built on my NixOS system is Nix-store linked and likely no=
-t
->>>
->>>       portable to
->>>
->>>       your test system.
->>>
->>>       One more thing that would help me test any replacement fix: do yo=
-u know what
->>>
->>>       specific failure or workload 448ee453 was intended to fix? I woul=
-d like to
->>>
->>>       avoid validating only the revert side while accidentally losing t=
-he original
->>>
->>>       fix.
->>>
->>>       Thanks for catching this, and thanks for taking a look.
->>>
->>>       Regards,
->>>
->>>       Gerhard
->>>
->>>       On 06/03/2026 Chen, Xiaogang wrote:
->>>
->>>           I cannot compile kfd_svm_split_hsa_copy.c, there is no
->>>
->>>           "trace_history_replay.inc".
->>>
->>>           Or can you=C2=A0 send the test binary?=C2=A0 That should be e=
-nough to triage the
->>>
->>>           issue since it is a regression as you mentioned.
->>>
->>>           Regards
->>>
->>>           Xiaogang
->>>
->>>           On 6/2/2026 5:04 AM, Gerhard Schwanzer wrote:
->>>
->>>               Hi,
->>>
->>>               I would like to make sure this AMDKFD SVM regression is t=
-racked by the
->>>
->>>               Linux regression process.
->>>
->>>               GitLab report:
->>>
->>>                   https://gitlab.freedesktop.org/drm/amd/-/work_items/4=
-914
->>>
->>>               The regression was originally reported on 2026-01-27. It =
-was bisected
->>>
->>>               to the
->>>
->>>               same functional change that Alex Deucher's revert patch l=
-ater targeted:
->>>
->>>                =C2=A0=C2=A0 448ee45353ef9fb1a34f5f26eb3f48923c6f0898
->>>
->>>                =C2=A0=C2=A0 drm/amdkfd: Use huge page size to check spl=
-it svm range alignment
->>>
->>>               The affected kernel line I tested identifies the same cha=
-nge as:
->>>
->>>                =C2=A0=C2=A0 bf2084a7b1d75d093b6a79df4c10142d49fbaa0e
->>>
->>>               Alex's revert patch:
->>>
->>>               https://lists.freedesktop.org/archives/amd-gfx/2026-Febru=
-ary/138824.html
->>>
->>>               A small C/HSA reproducer is now available in the GitLab r=
-eport. It
->>>
->>>               does not
->>>
->>>               require PyTorch, ComfyUI, Docker, model files, or the ori=
-ginal
->>>
->>>               workload. It
->>>
->>>               uses ROCr/HSA, an anonymous THP-advised host mapping, exp=
-licit KFD SVM
->>>
->>>               SET_ATTR ioctls, and an HSA SDMA D2H copy.
->>>
->>>               Single reproducer command, same binary on both kernels:
->>>
->>>                =C2=A0=C2=A0 ./kfd_svm_split_hsa_copy --upstream-ab
->>>
->>>               Same-machine A/B result on an RX 7600 XT:
->>>
->>>                =C2=A0=C2=A0 448ee453/bf2084a7 active:
->>>
->>>                =C2=A0=C2=A0=C2=A0=C2=A0 1/1 run faults with SDMA0 permi=
-ssion fault
->>>
->>>                =C2=A0=C2=A0=C2=A0=C2=A0 GCVM_L2_PROTECTION_FAULT_STATUS=
-=3D0x00841A51
->>>
->>>                =C2=A0=C2=A0 448ee453/bf2084a7 locally reverted:
->>>
->>>                =C2=A0=C2=A0=C2=A0=C2=A0 10/10 runs complete
->>>
->>>                =C2=A0=C2=A0=C2=A0=C2=A0 no ROCr memory access fault
->>>
->>>                =C2=A0=C2=A0=C2=A0=C2=A0 no new GCVM/SDMA0 permission fa=
-ult in dmesg
->>>
->>>               The bad fault page is inside the split tail and inside th=
-e SDMA copy
->>>
->>>               range:
->>>
->>>                =C2=A0=C2=A0 critical tail: [0x722429d61..0x722429dff]
->>>
->>>                =C2=A0=C2=A0 copy pages:=C2=A0=C2=A0=C2=A0 [0x722429b30.=
-.0x722429d70]
->>>
->>>                =C2=A0=C2=A0 fault page:=C2=A0=C2=A0=C2=A0 0x722429d65
->>>
->>>               A full ftrace/PTE run with the same C reproducer/SVM sequ=
-ence also shows:
->>>
->>>                =C2=A0=C2=A0 split_tail ... current_remap=3D0 old_remap=
-=3D1 missed=3D1
->>>
->>>                =C2=A0=C2=A0 MISSED_REMAP_CANDIDATE split=3Dtail
->>>
->>>                =C2=A0=C2=A0 no amdgpu_vm_update_ptes covering the fault=
- page after the marker
->>>
->>>               before
->>>
->>>                =C2=A0=C2=A0 the fault-side GET_ATTR
->>>
->>>               The suspected code issue is that the split-tail/head rema=
-p predicate
->>>
->>>               introduced
->>>
->>>               by 448ee453/bf2084a7 can miss tails inside the final 512-=
-page block.
->>>
->>>               Since
->>>
->>>               prange->last is inclusive, ALIGN_DOWN(prange->last, 512) =
-is the start
->>>
->>>               of the
->>>
->>>               final block, not an exclusive upper bound.
->>>
->>>               I also sent a short follow-up to amd-gfx with the reprodu=
-cer/A-B
->>>
->>>               summary and
->>>
->>>               asked what original failure or workload 448ee453/bf2084a7=
- was intended
->>>
->>>               to fix:
->>>
->>>               https://lists.freedesktop.org/archives/amd-gfx/2026-June/=
-145800.html
->>>
->>>               I can resend the reproducer source and summaries directly=
- on-list if
->>>
->>>               preferred.
->>>
->>>               #regzbot introduced: 448ee45353ef9fb1a34f5f26eb3f48923c6f=
-0898
->>>
->>>               #regzbot monitor:
->>>
->>>               https://gitlab.freedesktop.org/drm/amd/-/work_items/4914
->>>
->>>               Thanks,
->>>
->>>               Gerhard Schwanzer
->>>
-
+> Hi Thorsten,
+>   Thanks for the reply - these do seem to be related!
+> (So copying in Keith, Vjaceslavs, and Tom=C3=A1=C5=A1 )
+> (Not my area either).
+>
+> > Have you seen these reports?
+> > https://lore.kernel.org/all/2982107.4sosBPzcNG@electra/
+> > https://lore.kernel.org/all/CAC_j7i1R7oy+nRhxEjCTba=3DDUgn02w9X+p94DCu0=
+aHv5+5tKnQ@mail.gmail.com/
+>
+> I hadn't!  Those are both the problem I originally was trying to debug
+> and stumbled into the WARN/BUG/hang with my test program.
+>
+> > The former lead to a fix in the mdraid code that should be in the kerne=
+l
+> > version you are using. But in a reply to the latter report the repoter
+> > claimed that that fix is not enough (claiming "this was obvious" and
+> > also using dm), but things then stalled there.
+>
+> Yeh I see my world has Keith's f7b24c7b41f23
+>
+> I think the problem I'm seeing is zero length requests coming from somewh=
+ere.
+>
+> The WARN I'm seeing in 7.1.0-rc7+ is:
+>
+> [ 2681.597042] device-mapper: raid1: Mirror read failed from 252:25. Tryi=
+ng alternative device.
+> [ 2681.631933] ------------[ cut here ]------------
+> [ 2681.631939] WARNING: block/bio.c:1044 at bio_add_page+0x18b/0x250, CPU=
+#22: kworker/22:0/18929
+>
+> 1039 int bio_add_page(struct bio *bio, struct page *page,
+> 1040                  unsigned int len, unsigned int offset)
+> 1041 {
+> 1042         if (WARN_ON_ONCE(bio_flagged(bio, BIO_CLONED)))
+> 1043                 return 0;
+> 1044         if (WARN_ON_ONCE(len =3D=3D 0))
+> 1045                 return 0;
+>
+> So it's the ' if (WARN_ON_ONCE(len =3D=3D 0))'
+>
+> and the warn I got on the older 7.0.8 was:
+> [Sun May 17 17:22:52 2026] WARNING: drivers/scsi/scsi_lib.c:1140 at scsi_=
+alloc_sgtables+0x38a/0x400, CPU#28: kworker/28:1H/3943
+>
+> which I *think* corresponds to:
+> 1164         if (WARN_ON_ONCE(!nr_segs))
+> 1165                 return BLK_STS_IOERR;
+>
+> so it sounds like we need to find where zero length requests are coming f=
+rom??
+>
+> Thanks again,
+>
+> Dave
+>
+> > Ciao, Thorsten
+> >
+> > >   This started off as debugging a case where I'd get my RAID1 (on the=
+ host)
+> > > getting a reliable 'rescheduling sector'/disk failure while running t=
+he qemu block test suite
+> > > during a qemu build, but then I tried to build a smaller discrete
+> > > test, and now I've got a simply triggerable warn and test hang.
+> > > There's no errors from the underlying SATA layer on the storage,
+> > > everything resyncs just fine.
+> > >
+> > > I've got an existing LVM vg ('main') with two mirrors on sda2, and sd=
+b2
+> > > which are SATA disks.
+> > >
+> > > # lvcreate --type mirror --mirrors 1 -L 1G main /dev/sda2 /dev/sdb2
+> > > # mkfs.ext4 /dev/mapper/main-lvol0
+> > > # mount /dev/mapper/main-lvol0 /mnt/tmp/
+> > > # chmod a+rwx /mnt/tmp
+> > >
+> > > $ dd if=3D/dev/zero of=3D/mnt/tmp/testfile bs=3D1024k count=3D1
+> > >
+> > > (I then wait for the IO to stop)
+> > >
+> > > then we've got this little test program:
+> > >
+> > > <--><--><--><--><--><--><--><--><--><--><--><--><--><--><--><--><--><=
+-->
+> > > #include <errno.h>
+> > > #include <fcntl.h>
+> > > #include <asm-generic/fcntl.h>
+> > > #include <stdio.h>
+> > > #include <unistd.h>
+> > >
+> > >
+> > > const char* path=3D"/mnt/tmp/testfile";
+> > > static char buf[8192];
+> > >
+> > > int main()
+> > > {
+> > >   int fd=3Dopen(path, O_RDWR|O_DIRECT|O_CLOEXEC);
+> > >
+> > >   errno=3D0;
+> > >   int res3=3Dpread(fd, buf, 4096, 0);
+> > >   printf("pread of 4096 said: %d (%m)\n", res3);
+> > >
+> > > }
+> > > <--><--><--><--><--><--><--><--><--><--><--><--><--><--><--><--><--><=
+-->
+> > >
+> > > running that, either hangs or gets a 'pread of 4096 said: -1 (Input/o=
+utput error)'
+> > > when it hangs it's unkillable.
+> > >
+> > > at the moment (on 7.1.0-rc7) this is giving:
+> > > Jun 14 18:08:32 dalek kernel: device-mapper: raid1: Mirror read faile=
+d from 252:24. Trying alternative device.
+> > > Jun 14 18:08:32 dalek kernel: ------------[ cut here ]------------
+> > > Jun 14 18:08:32 dalek dmeventd[1010]: Primary mirror device 252:24 re=
+ad failed.
+> > > Jun 14 18:08:32 dalek kernel: WARNING: block/bio.c:1044 at bio_add_pa=
+ge+0x18b/0x250, CPU#15: kworker/15:1/369
+> > >
+> > > (full backtrace below)
+> > > (Note there is a moan in there about sdb IO error - repeated a lot - =
+but
+> > > again, there's no SATA level errors, and the drive is fine on smart, =
+and
+> > > I can read the whole of the underlying lvm mirrors, so I don't think =
+it's
+> > > physically there).
+> > >
+> > > I did a blktrace, although that gives me a 23G blkparse output, hmm
+> > > (I see each event repeated a lot - maybe per thread?)
+> > >
+> > > 252,26  15        1     0.000000000  3435  Q  RS 264192 + 8 [dbf]
+> > >   252,26 is /dev/mapper/main-lvol0
+> > > 252,24  15        1     0.000005501  3435  A  RS 264192 + 8 <- (252,2=
+6) 264192
+> > >   252,24 is main-lvol0_mimage_0
+> > > 252,24  15        2     0.000005761  3435  Q  RS 264192 + 8 [dbf]
+> > >   8,0   15        1     0.000008646  3435  A  RS 71634944 + 8 <- (252=
+,24) 264192
+> > >     so that's sda
+> > >   8,0   15        2     0.000008787  3435  A  RS 73734144 + 8 <- (8,2=
+) 71634944
+> > >     I guess mapping down from sda2 to sda
+> > >   8,0   15        3     0.000009037  3435  Q  RS 73734144 + 8 [dbf]
+> > >   8,0   15        4     0.000009809  3435  C  RS 73734144 + 8 [65514]
+> > >       ??? Hmm what's the 65514 there?
+> > > 252,24  15        3     0.000010320  3435  C  RS 264192 + 8 [65514]
+> > > 252,25  15        1     0.000290384   369  Q   R 264192 + 8 [kworker/=
+15:1]
+> > >    252,25 is main-lvol0_mimage_1
+> > >
+> > > and at this point I'm a bit lost as to what I'm looking for.
+> > >
+> > > Hints appreciated!
+> > >
+> > > (I don't believe this is a regression - or at least not recent)
+> > >
+> > > Dave
+> > >
+> > >
+> > >
+> > >
+> > > Jun 14 18:08:32 dalek kernel: device-mapper: raid1: Mirror read faile=
+d from 252:24. Trying alternative device.
+> > > Jun 14 18:08:32 dalek kernel: ------------[ cut here ]------------
+> > > Jun 14 18:08:32 dalek dmeventd[1010]: Primary mirror device 252:24 re=
+ad failed.
+> > > Jun 14 18:08:32 dalek kernel: WARNING: block/bio.c:1044 at bio_add_pa=
+ge+0x18b/0x250, CPU#15: kworker/15:1/369
+> > > Jun 14 18:08:32 dalek dmeventd[1010]: main-lvol0 is now in-sync.
+> > > Jun 14 18:08:32 dalek kernel: Modules linked in: nft_masq nft_reject_=
+ipv4 act_csum cls_u32 sch_htb nf_nat_tftp nf_conntrack_tftp bridge stp llc =
+rfkill nft_fib_inet nft_fib_ipv4 nft_fib_ipv6 nft_fib nft_reject_inet nf_re=
+ject_ipv4 nf_reje>
+> > > Jun 14 18:08:32 dalek kernel:  drm_panel_backlight_quirks gpu_sched d=
+rm_suballoc_helper video nvme drm_display_helper nvme_core cec nvme_keyring=
+ sp5100_tco nvme_auth wmi serio_raw fuse scsi_dh_alua i2c_dev scsi_dh_rdac =
+scsi_dh_emc
+> > > Jun 14 18:08:32 dalek kernel: CPU: 15 UID: 0 PID: 369 Comm: kworker/1=
+5:1 Not tainted 7.1.0-rc7+ #786 PREEMPT(lazy)
+> > > Jun 14 18:08:32 dalek kernel: Hardware name: To Be Filled By O.E.M. T=
+o Be Filled By O.E.M./X570 Pro4, BIOS P3.10 07/13/2020
+> > > Jun 14 18:08:32 dalek kernel: Workqueue: kmirrord do_mirror
+> > > Jun 14 18:08:32 dalek kernel: RIP: 0010:bio_add_page+0x18b/0x250
+> > > Jun 14 18:08:32 dalek kernel: Code: 24 10 4c 8b 04 24 84 c0 0f 85 c9 =
+00 00 00 41 0f b7 40 78 48 8b 74 24 08 8b 4c 24 14 e9 b4 fe ff ff 0f 0b 31 =
+c0 e9 55 d1 af 00 <0f> 0b eb f5 48 8b 7f 08 83 7f 60 05 0f 85 00 ff ff ff 4=
+9 8b 3b 4c
+> > > Jun 14 18:08:32 dalek kernel: RSP: 0018:ffffd1fb8176fc10 EFLAGS: 0001=
+0246
+> > > Jun 14 18:08:32 dalek kernel: RAX: 0000000000000000 RBX: ffffd1fb8176=
+fd18 RCX: 0000000000000000
+> > > Jun 14 18:08:32 dalek kernel: RDX: 0000000000000000 RSI: 000000000000=
+0000 RDI: ffff8d1a8eb28b00
+> > > Jun 14 18:08:32 dalek kernel: RBP: 0000000000000000 R08: ffffd1fb8176=
+fc38 R09: ffffd1fb8176fc40
+> > > Jun 14 18:08:32 dalek kernel: R10: ffffd1fb8176fc34 R11: 000000000000=
+0000 R12: 0000000000000000
+> > > Jun 14 18:08:32 dalek kernel: R13: ffffd1fb8176fd90 R14: 000000000000=
+0001 R15: ffff8d1a8eb28b00
+> > > Jun 14 18:08:32 dalek kernel: FS:  0000000000000000(0000) GS:ffff8d29=
+d161f000(0000) knlGS:0000000000000000
+> > > Jun 14 18:08:32 dalek kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 000000=
+0080050033
+> > > Jun 14 18:08:32 dalek kernel: CR2: 00007f0ddcd7b9d0 CR3: 000000023dcb=
+f000 CR4: 0000000000350ef0
+> > > Jun 14 18:08:32 dalek kernel: Call Trace:
+> > > Jun 14 18:08:32 dalek kernel:  <TASK>
+> > > Jun 14 18:08:32 dalek kernel:  do_region+0x227/0x2a0
+> > > Jun 14 18:08:32 dalek kernel:  dispatch_io+0xf1/0x150
+> > > Jun 14 18:08:32 dalek kernel:  ? __pfx_bio_get_page+0x10/0x10
+> > > Jun 14 18:08:32 dalek kernel:  ? __pfx_bio_next_page+0x10/0x10
+> > > Jun 14 18:08:32 dalek kernel:  ? __pfx_read_callback+0x10/0x10
+> > > Jun 14 18:08:32 dalek kernel:  dm_io+0x169/0x2d0
+> > > Jun 14 18:08:32 dalek kernel:  ? __pfx_bio_get_page+0x10/0x10
+> > > Jun 14 18:08:32 dalek kernel:  ? __pfx_bio_next_page+0x10/0x10
+> > > Jun 14 18:08:32 dalek kernel:  do_reads+0x149/0x230
+> > > Jun 14 18:08:32 dalek kernel:  ? __pfx_read_callback+0x10/0x10
+> > > Jun 14 18:08:32 dalek kernel:  do_mirror+0x11a/0x2b0
+> > > Jun 14 18:08:32 dalek kernel:  process_one_work+0x19e/0x390
+> > > Jun 14 18:08:32 dalek kernel:  worker_thread+0x1a6/0x310
+> > > Jun 14 18:08:32 dalek kernel:  ? __pfx_worker_thread+0x10/0x10
+> > > Jun 14 18:08:32 dalek kernel:  kthread+0xe4/0x120
+> > > Jun 14 18:08:32 dalek kernel:  ? __pfx_kthread+0x10/0x10
+> > > Jun 14 18:08:32 dalek kernel:  ret_from_fork+0x1a1/0x270
+> > > Jun 14 18:08:32 dalek kernel:  ? __pfx_kthread+0x10/0x10
+> > > Jun 14 18:08:32 dalek kernel:  ret_from_fork_asm+0x1a/0x30
+> > > Jun 14 18:08:32 dalek kernel:  </TASK>
+> > > Jun 14 18:08:32 dalek kernel: ---[ end trace 0000000000000000 ]---
+> > > Jun 14 18:08:32 dalek kernel: ------------[ cut here ]------------
+> > > Jun 14 18:08:32 dalek kernel: WARNING: drivers/scsi/scsi_lib.c:1164 a=
+t scsi_alloc_sgtables+0x38a/0x400, CPU#15: kworker/15:1/369
+> > > Jun 14 18:08:32 dalek kernel: Modules linked in: nft_masq nft_reject_=
+ipv4 act_csum cls_u32 sch_htb nf_nat_tftp nf_conntrack_tftp bridge stp llc =
+rfkill nft_fib_inet nft_fib_ipv4 nft_fib_ipv6 nft_fib nft_reject_inet nf_re=
+ject_ipv4 nf_reje>
+> > > Jun 14 18:08:32 dalek kernel:  drm_panel_backlight_quirks gpu_sched d=
+rm_suballoc_helper video nvme drm_display_helper nvme_core cec nvme_keyring=
+ sp5100_tco nvme_auth wmi serio_raw fuse scsi_dh_alua i2c_dev scsi_dh_rdac =
+scsi_dh_emc
+> > > Jun 14 18:08:32 dalek kernel: CPU: 15 UID: 0 PID: 369 Comm: kworker/1=
+5:1 Tainted: G        W           7.1.0-rc7+ #786 PREEMPT(lazy)
+> > > Jun 14 18:08:32 dalek kernel: Tainted: [W]=3DWARN
+> > > Jun 14 18:08:32 dalek kernel: Hardware name: To Be Filled By O.E.M. T=
+o Be Filled By O.E.M./X570 Pro4, BIOS P3.10 07/13/2020
+> > > Jun 14 18:08:32 dalek kernel: Workqueue: kmirrord do_mirror
+> > > Jun 14 18:08:32 dalek kernel: RIP: 0010:scsi_alloc_sgtables+0x38a/0x4=
+00
+> > > Jun 14 18:08:32 dalek kernel: Code: 8b 3d ba 2d a9 01 e9 d1 fd ff ff =
+48 8b 75 00 48 8d bb f0 fe ff ff e8 15 b7 b0 ff 48 89 ab e0 00 00 00 89 45 =
+08 e9 30 ff ff ff <0f> 0b 4c 8b 6c 24 30 b8 0a 00 00 00 e9 21 ff ff ff b8 0=
+9 00 00 00
+> > > Jun 14 18:08:32 dalek kernel: RSP: 0018:ffffd1fb8176f7f0 EFLAGS: 0001=
+0246
+> > > Jun 14 18:08:32 dalek kernel: RAX: 0000000000000000 RBX: ffff8d1aedad=
+0110 RCX: 0000000000000009
+> > > Jun 14 18:08:32 dalek kernel: RDX: 0000000000000000 RSI: ffffffff99c1=
+5960 RDI: ffff8d1aedad0110
+> > > Jun 14 18:08:32 dalek kernel: RBP: ffff8d1a93d17000 R08: ffff8d1aedad=
+0110 R09: ffff8d1a818fa800
+> > > Jun 14 18:08:32 dalek kernel: R10: 7020676e69736961 R11: 000000000000=
+0000 R12: 0000000000000000
+> > > Jun 14 18:08:32 dalek kernel: R13: 0000000000000000 R14: ffff8d1a9339=
+4000 R15: ffff8d1a93d17000
+> > > Jun 14 18:08:32 dalek kernel: FS:  0000000000000000(0000) GS:ffff8d29=
+d161f000(0000) knlGS:0000000000000000
+> > > Jun 14 18:08:32 dalek kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 000000=
+0080050033
+> > > Jun 14 18:08:32 dalek kernel: CR2: 00007f0ddcd7b9d0 CR3: 000000023dcb=
+f000 CR4: 0000000000350ef0
+> > > Jun 14 18:08:32 dalek kernel: Call Trace:
+> > > Jun 14 18:08:32 dalek kernel:  <TASK>
+> > > Jun 14 18:08:32 dalek kernel:  ? srso_return_thunk+0x5/0x5f
+> > > Jun 14 18:08:32 dalek kernel:  sd_setup_read_write_cmnd+0x9d/0x740
+> > > Jun 14 18:08:32 dalek kernel:  ? srso_return_thunk+0x5/0x5f
+> > > Jun 14 18:08:32 dalek kernel:  scsi_queue_rq+0x4d2/0x890
+> > > Jun 14 18:08:32 dalek kernel:  blk_mq_dispatch_rq_list+0x241/0x530
+> > > Jun 14 18:08:32 dalek kernel:  ? srso_return_thunk+0x5/0x5f
+> > > Jun 14 18:08:32 dalek kernel:  ? sbitmap_get+0x61/0x100
+> > > Jun 14 18:08:32 dalek kernel:  __blk_mq_do_dispatch_sched+0x330/0x340
+> > > Jun 14 18:08:32 dalek kernel:  __blk_mq_sched_dispatch_requests+0x143=
+/0x180
+> > > Jun 14 18:08:32 dalek kernel:  blk_mq_sched_dispatch_requests+0x2d/0x=
+70
+> > > Jun 14 18:08:32 dalek kernel:  blk_mq_run_hw_queue+0x2bf/0x350
+> > > Jun 14 18:08:32 dalek kernel:  ? srso_return_thunk+0x5/0x5f
+> > > Jun 14 18:08:32 dalek kernel:  blk_mq_dispatch_list+0x172/0x350
+> > > Jun 14 18:08:32 dalek kernel:  blk_mq_flush_plug_list+0x51/0x1a0
+> > > Jun 14 18:08:32 dalek kernel:  ? blk_mq_submit_bio+0x71c/0x9f0
+> > > Jun 14 18:08:32 dalek kernel:  __blk_flush_plug+0x112/0x180
+> > > Jun 14 18:08:32 dalek kernel:  ? srso_return_thunk+0x5/0x5f
+> > > Jun 14 18:08:32 dalek kernel:  __submit_bio+0x19c/0x260
+> > > Jun 14 18:08:32 dalek kernel:  __submit_bio_noacct+0x8e/0x210
+> > > Jun 14 18:08:32 dalek kernel:  do_region+0x14c/0x2a0
+> > > Jun 14 18:08:32 dalek kernel:  dispatch_io+0xf1/0x150
+> > > Jun 14 18:08:32 dalek kernel:  ? __pfx_bio_get_page+0x10/0x10
+> > > Jun 14 18:08:32 dalek kernel:  ? __pfx_bio_next_page+0x10/0x10
+> > > Jun 14 18:08:32 dalek kernel:  ? __pfx_read_callback+0x10/0x10
+> > > Jun 14 18:08:32 dalek kernel:  dm_io+0x169/0x2d0
+> > > Jun 14 18:08:32 dalek kernel:  ? __pfx_bio_get_page+0x10/0x10
+> > > Jun 14 18:08:32 dalek kernel:  ? __pfx_bio_next_page+0x10/0x10
+> > > Jun 14 18:08:32 dalek kernel:  do_reads+0x149/0x230
+> > > Jun 14 18:08:32 dalek kernel:  ? __pfx_read_callback+0x10/0x10
+> > > Jun 14 18:08:32 dalek kernel:  do_mirror+0x11a/0x2b0
+> > > Jun 14 18:08:32 dalek kernel:  process_one_work+0x19e/0x390
+> > > Jun 14 18:08:32 dalek kernel:  worker_thread+0x1a6/0x310
+> > > Jun 14 18:08:32 dalek kernel:  ? __pfx_worker_thread+0x10/0x10
+> > > Jun 14 18:08:32 dalek kernel:  kthread+0xe4/0x120
+> > > Jun 14 18:08:32 dalek kernel:  ? __pfx_kthread+0x10/0x10
+> > > Jun 14 18:08:32 dalek kernel:  ret_from_fork+0x1a1/0x270
+> > > Jun 14 18:08:32 dalek kernel:  ? __pfx_kthread+0x10/0x10
+> > > Jun 14 18:08:32 dalek kernel:  ret_from_fork_asm+0x1a/0x30
+> > > Jun 14 18:08:32 dalek kernel:  </TASK>
+> > > Jun 14 18:08:32 dalek kernel: ---[ end trace 0000000000000000 ]---
+> > > Jun 14 18:08:32 dalek kernel: I/O error, dev sdb, sector 50606087 op =
+0x0:(READ) flags 0x0 phys_seg 0 prio class 2
+> > > Jun 14 18:08:32 dalek kernel: I/O error, dev sdb, sector 50606087 op =
+0x0:(READ) flags 0x0 phys_seg 0 prio class 2
+> > > Jun 14 18:08:32 dalek kernel: I/O error, dev sdb, sector 50606087 op =
+0x0:(READ) flags 0x0 phys_seg 0 prio class 2
+> > > Jun 14 18:08:32 dalek kernel: I/O error, dev sdb, sector 50606087 op =
+0x0:(READ) flags 0x0 phys_seg 0 prio class 2
+> > > Jun 14 18:08:32 dalek kernel: I/O error, dev sdb, sector 50606087 op =
+0x0:(READ) flags 0x0 phys_seg 0 prio class 2
+> > > Jun 14 18:08:32 dalek kernel: I/O error, dev sdb, sector 50606087 op =
+0x0:(READ) flags 0x0 phys_seg 0 prio class 2
+> > > Jun 14 18:08:32 dalek kernel: I/O error, dev sdb, sector 50606087 op =
+0x0:(READ) flags 0x0 phys_seg 0 prio class 2
+> > > Jun 14 18:08:32 dalek kernel: I/O error, dev sdb, sector 50606087 op =
+0x0:(READ) flags 0x0 phys_seg 0 prio class 2
+> > > Jun 14 18:08:32 dalek kernel: I/O error, dev sdb, sector 50606087 op =
+0x0:(READ) flags 0x0 phys_seg 0 prio class 2
+> > > Jun 14 18:08:32 dalek kernel: I/O error, dev sdb, sector 50606087 op =
+0x0:(READ) flags 0x0 phys_seg 0 prio class 2
+> > > Jun 14 18:08:37 dalek kernel: blk_print_req_error: 241000 callbacks s=
+uppressed
+> > > Jun 14 18:08:37 dalek kernel: I/O error, dev sdb, sector 50606087 op =
+0x0:(READ) flags 0x0 phys_seg 0 prio class 2
+> > >
+> > >
+> >
+> --
+>  -----Open up your eyes, open up your mind, open up your code -------
+> / Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \
+> \        dave @ treblig.org |                               | In Hex /
+>  \ _________________________|_____ http://www.treblig.org   |_______/
