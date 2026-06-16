@@ -1,140 +1,292 @@
-Received: from mail-4322.protonmail.ch (mail-4322.protonmail.ch [185.70.43.22])
+Received: from mail.aminvakil.com (mail.aminvakil.com [178.63.189.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33616211A14
-	for <regressions@lists.linux.dev>; Tue, 16 Jun 2026 10:56:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75E1537756E
+	for <regressions@lists.linux.dev>; Tue, 16 Jun 2026 11:51:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.63.189.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781607381; cv=none; b=QWW1adqh1AN+G/C65YUaCF8yZk+pqpQUcvGfWO0t8nEUn9N/mc9jktErGZokgjHt8iktSVxlmZgiz/tivAlST5GgmH1N/P4C5s/V7NHAHwkS/LXG2JsJJwT1gqTr52US71+UkmVLYcAcqtzb0ai1k8qrpUefdwGoJqytLlV6FGw=
+	t=1781610710; cv=none; b=nPSuyRv2AgQNmJIfZbGC+CJWmJaxrbVYW8X2HSqEicupJSUEcGnRisGj4Nw6mkoNH1usBCrny7+TOJZVMygzieSBhpsoMWrFSIXwDHHgN23JRUNj01/3zzWUFo6ZwNA/0md0n2lWmgBg6EAmFNkFZfq8MjdQ5qJEAAmKDSmJV/Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781607381; c=relaxed/simple;
-	bh=7KJelSdKYrRVYGrQtbsVNW2yVwoTfBvJGZej3c3yJ6M=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ek+kGsZfk8RGcjPbYL228al08t4fxMSDfjcCZvyU8yiDu6rkgNMK8k/k/9HP8c/6XYkFzMXsw2MVLEuRUt88SHYI/OpZYTAlcOLsXbw0KtxDCoWfjjWbPVuo9siWPP/YpNKuO9aeStEtdtpFLhEzm6ayOZ8xHpScmnkmgu6/aOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me; spf=pass smtp.mailfrom=pm.me; dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b=qwvS5XvE; arc=none smtp.client-ip=185.70.43.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pm.me
+	s=arc-20240116; t=1781610710; c=relaxed/simple;
+	bh=0SdBZ44YYB2ulRTXnjUIhiBm2+uRb4JXN6bYd3z2LH0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YMQc7P0WyzlupbGVXk2vDAEU5bXQwfI71zmtm6tP94PCnmSSwgIQyU+ExP9OiEqEG8LlOA1MfTXbyMqjx37YYBwnFRy06QfhPUVOc77rC+lKipDqJUnzpSMkQ8RrvFQnIhJ0iwk7HrvGaL9DYmdJYLOps5CfT9XBKJ8/cemlZ90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=aminvakil.com; spf=pass smtp.mailfrom=aminvakil.com; dkim=pass (2048-bit key) header.d=aminvakil.com header.i=@aminvakil.com header.b=WNDZtry5; arc=none smtp.client-ip=178.63.189.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=aminvakil.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aminvakil.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="qwvS5XvE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
-	s=protonmail3; t=1781607371; x=1781866571;
-	bh=do+xM1SWjPjLOlVlRqJ9yLYHrp4GONBqxZljStn6UVs=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=qwvS5XvERtFswiyzxUAcN+Beu/XHh6rvVzyJ2ahysjV60++dzTKacCWFKHlSUJNaa
-	 CSI6WpvEKwMigRI7NzyhIBYa19/An96/1h4lDDiheHE3VV+MLhVjP6UDcsb5830jbi
-	 kH4DXPhnjizt4T6prC+7l9qo3WrCK5zrmWRUWsYTvgtzhNVVsU2CuJBvStSwDB99Z6
-	 CxQqwWDhISpFQGmym688j2Obgc3Mr+W1qPCgIm78RKW8CFb3BR8l7wxVg5Qhz7J5Di
-	 puVd14MpXYsQuIMqV9B/4qpD0IXUM50vnn5VVe3hZmS4BJ/5NPzmbRpec05/wjiHD5
-	 pyzB0qzu0+dYg==
-Date: Tue, 16 Jun 2026 10:56:06 +0000
-To: amd-gfx@lists.freedesktop.org
-From: Gerhard Schwanzer <geschw@pm.me>
-Cc: Felix Kuehling <Felix.Kuehling@amd.com>, Alex Deucher <alexander.deucher@amd.com>, =?utf-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Xiaogang Chen <xiaogang.chen@amd.com>, Philip Yang <Philip.Yang@amd.com>, regressions@lists.linux.dev, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] drm/amdkfd: Use exclusive bounds for SVM split alignment checks
-Message-ID: <20260616105553.13062-1-geschw@pm.me>
-In-Reply-To: <20260616091050.110064-1-geschw@pm.me>
-References: <20260616091050.110064-1-geschw@pm.me>
-Feedback-ID: 110185885:user:proton
-X-Pm-Message-ID: 1d22fdbfda11a879d55aefe475533cc416384fe6
+	dkim=pass (2048-bit key) header.d=aminvakil.com header.i=@aminvakil.com header.b="WNDZtry5"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 4B0BE4529E;
+	Tue, 16 Jun 2026 15:21:43 +0330 (+0330)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aminvakil.com;
+	s=dkim; t=1781610706;
+	h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-language:in-reply-to:references:autocrypt;
+	bh=0SdBZ44YYB2ulRTXnjUIhiBm2+uRb4JXN6bYd3z2LH0=;
+	b=WNDZtry5TiKk5QpdzrEvN7Cs7qI8VNm9KyBdSvKjPvdaDgNhqpCsVsTlRvjSFuSLW6bkBk
+	/i4OKfFt/FkrArxcnuhw4joEued6QGn3lyPI4/eaHLxfgxaLlyUyzsdyloPWweOtElmKXN
+	3Uo/Z1LQfux+8GnyB5CQJYmOqQTH5M2QgBg2qQHzlc4o0/ofyniO1m01LIdQ0A/+hEcmqb
+	jHyv5J2XquYi7G1q985uUDadaeZ9R9gcFOdJ158b7X7kj5C3svl04OtzErKWVKahnwZSUT
+	yzcpOXnVMHOguH6podJWjLrCzUpjWjkWOdB/Oe6sF0WPe8fDVzCZdwdgz4RDvQ==
+Message-ID: <5036fee2-4d00-4ca0-aeed-400da64d7872@aminvakil.com>
+Date: Tue, 16 Jun 2026 15:21:41 +0330
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] usb: core: interrupt-IN wBytesPerInterval fixup
+ (727d045d064b) breaks RTL8153 in Lenovo dock
+To: Thorsten Leemhuis <regressions@leemhuis.info>, linux-usb@vger.kernel.org
+Cc: Michal Pecio <michal.pecio@gmail.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Alan Stern <stern@rowland.harvard.edu>, Tao Xue <xuetao09@huawei.com>,
+ regressions@lists.linux.dev
+References: <cbdeb118-58c7-48a7-94a0-15e5cdb5879c@aminvakil.com>
+ <35d2b455-382e-470e-acf4-1ab60770da90@leemhuis.info>
+Content-Language: en-US
+From: Amin Vakil <info@aminvakil.com>
+Autocrypt: addr=info@aminvakil.com; keydata=
+ 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
+ +78sXChAfE9n44i0gJHzV8BhCsQG4+k=
+In-Reply-To: <35d2b455-382e-470e-acf4-1ab60770da90@leemhuis.info>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------iMF7MbOQfv5b32euEVw0dnZL"
+X-Last-TLS-Session-Version: TLSv1.3
+
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------iMF7MbOQfv5b32euEVw0dnZL
+Content-Type: multipart/mixed; boundary="------------3z1p9JiKC2gmqmEYKNJfkrO1";
+ protected-headers="v1"; hp="clear"
+Message-ID: <5036fee2-4d00-4ca0-aeed-400da64d7872@aminvakil.com>
+Date: Tue, 16 Jun 2026 15:21:41 +0330
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] usb: core: interrupt-IN wBytesPerInterval fixup
+ (727d045d064b) breaks RTL8153 in Lenovo dock
+To: Thorsten Leemhuis <regressions@leemhuis.info>, linux-usb@vger.kernel.org
+Cc: Michal Pecio <michal.pecio@gmail.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Alan Stern <stern@rowland.harvard.edu>, Tao Xue <xuetao09@huawei.com>,
+ regressions@lists.linux.dev
+References: <cbdeb118-58c7-48a7-94a0-15e5cdb5879c@aminvakil.com>
+ <35d2b455-382e-470e-acf4-1ab60770da90@leemhuis.info>
+Content-Language: en-US
+From: Amin Vakil <info@aminvakil.com>
+Autocrypt: addr=info@aminvakil.com; keydata=
+ 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
+ +78sXChAfE9n44i0gJHzV8BhCsQG4+k=
+In-Reply-To: <35d2b455-382e-470e-acf4-1ab60770da90@leemhuis.info>
+
+--------------3z1p9JiKC2gmqmEYKNJfkrO1
+Content-Type: multipart/mixed; boundary="------------et0BGF130QSoF7OtnsaB4viY"
+
+--------------et0BGF130QSoF7OtnsaB4viY
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
+
+T24gNi8xNi8yNiAxOjU4IFBNLCBUaG9yc3RlbiBMZWVtaHVpcyB3cm90ZToNCj4gT24gNi8x
+Ni8yNiAxMTo0OSwgQW1pbiBWYWtpbCB3cm90ZToNCj4+DQo+PiBUaGUgZm9sbG93aW5nIGNo
+YW5nZSwgYmFja3BvcnRlZCB0byB0aGUgNy4wLnggc3RhYmxlIHNlcmllcywgaW50cm9kdWNl
+cw0KPj4gYSByZWdyZXNzaW9uIHRoYXQgZGlzYWJsZXMgdGhlIHdpcmVkIGV0aGVybmV0IG9m
+IGEgTGVub3ZvIFVTQi1DLw0KPj4gVGh1bmRlcmJvbHQgZG9jazoNCj4+DQo+PiAgwqAgY29t
+bWl0IDcyN2QwNDVkMDY0YjdjOWEyNGRiM2JjZTljMDQ4NWEzODJjYjc2OGINCj4+ICDCoCB1
+c2I6IGNvcmU6IEZpeCB1cCBJbnRlcnJ1cHQgSU4gZW5kcG9pbnRzIHdpdGggYm9ndXMgd0J5
+dGVzUGVySW50ZXJ2YWwNCj4gDQo+IElzIDcuMSBhZmZlY3RlZCBhcyB3ZWxsPyBJZGVhbGx5
+IHRyeSB1c2luZyBhIG5vbi1oYXJkZW5lZCBrZXJuZWwgdG8ga2VlcA0KPiB0aGUgZG93bnN0
+cmVhbSBwYXRjaGVzIG91dCBvZiB0aGUgd2F5Lg0KPiANCj4gQ2lhbywgVGhvcnN0ZW4NCj4g
+DQoNCmxpbnV4IDcuMSBpcyBub3QgYXZhaWxhYmxlIG9uIG9mZmljaWFsIEFyY2ggTGludXgg
+cmVwb3NpdG9yaWVzLCBnaXZlIG1lIA0KYSBjb3VwbGUgb2YgaG91cnMgdG8gY29tcGlsZSBh
+bmQgdGVzdCwgSSdsbCB1c2Ugbm9uLWhhcmRlbmVkIGtlcm5lbCBhcyANCndlbGwsIEknbGwg
+cHJvcG9zZSBhIHBhdGNoIGVuc3VyaW5nIGlzc3VlIGhhcyBiZWVuIGZpeGVkIGFzIHdlbGws
+IGlmIA0KdGhhdCdzIE9LLg0KDQpCZXN0IFJlZ2FyZHMsDQpBbWluIFZha2lsDQoNCj4+IEhh
+cmR3YXJlOiBMZW5vdm8gZG9jayBidWlsdC1pbiBSZWFsdGVrIFJUTDgxNTMsIGVudW1lcmF0
+aW5nIGFzIFVTQiBJRA0KPj4gMTdlZjo3MjFlIChMZW5vdm8gcmVicmFuZCBvZiAwYmRhOjgx
+NTMpLCBkcml2ZW4gYnkgcjgxNTIgdGhyb3VnaCByODE1Mi0NCj4+IGNmZ3NlbGVjdG9yLiBI
+b3N0IGlzIGFuIEludGVsIGxhcHRvcCB3aXRoIHhoY2lfaGNkLg0KPj4NCj4+IFN5bXB0b206
+IG9uIHRoZSBwYXRjaGVkIGtlcm5lbCB0aGUgTklDIGVudW1lcmF0ZXMsIHI4MTUyIGJpbmRz
+IGFuZCB0aGUNCj4+IG5ldGRldiBpcyBjcmVhdGVkLCB0aGVuIGFib3V0IG9uZSBzZWNvbmQg
+bGF0ZXIgdGhlIGRldmljZSBpcyBVU0ItDQo+PiBkaXNjb25uZWN0ZWQgYnkgcjgxNTItY2Zn
+c2VsZWN0b3IgYW5kIG5ldmVyIHJldHVybnMuIE5vIGV0aGVybmV0DQo+PiBpbnRlcmZhY2Ug
+cmVtYWlucy4gVVNCLCBIRE1JIGFuZCB0aGUgcmVzdCBvZiB0aGUgZG9jayBrZWVwIHdvcmtp
+bmcsIGFuZA0KPj4gcGx1Z2dpbmcgdGhlIGNhYmxlIHN0cmFpZ2h0IGludG8gdGhlIGxhcHRv
+cCBidWlsdC1pbiBOSUMgaXMgdW5hZmZlY3RlZC4NCj4+DQo+PiBBZmZlY3RlZCB2cyB3b3Jr
+aW5nIChBcmNoIGxpbnV4LWhhcmRlbmVkKTogNy4wLjExLmhhcmRlbmVkMiB3b3JrcywNCj4+
+IDcuMC4xMi5oYXJkZW5lZDEgaXMgYnJva2VuLiBUaGlzIGNvbW1pdCBpcyB0aGUgb25seSBS
+VEw4MTUzL1VTQi1jb3JlDQo+PiBjaGFuZ2UgaW4gdGhhdCBkZWx0YSwgYW5kIGl0IGFjdGl2
+YXRlcyBhIGNvZGUgcGF0aCB0aGF0IGRpZCBub3QgcnVuDQo+PiBiZWZvcmUgb24gdGhpcyBk
+ZXZpY2UgKG5vdGUgdGhlIG5ldyB3Qnl0ZXNQZXJJbnRlcnZhbCBtZXNzYWdlIGluIHRoZQ0K
+Pj4gZG1lc2cgYmVsb3csIGFic2VudCBvbiA3LjAuMTEpLg0KPj4NCj4+IFdoeSB0aGlzIGNv
+bW1pdDogY29uZmlndXJhdGlvbiAyIChDREMpIG9mIHRoZSBkZXZpY2UgaGFzIGFuIGludGVy
+cnVwdCBJTg0KPj4gZW5kcG9pbnQgKEVQIDB4ODMpIHdpdGggd01heFBhY2tldFNpemU9MTYg
+YW5kIHdCeXRlc1BlckludGVydmFsPTguIFRoZQ0KPj4gbmV3IGNvbmRpdGlvbiAod0J5dGVz
+UGVySW50ZXJ2YWwgPCB3TWF4UGFja2V0U2l6ZSBvbiBhbiBpbnRlcnJ1cHQgSU4NCj4+IGVu
+ZHBvaW50KSBub3cgZmlyZXMgYW5kIHJld3JpdGVzIHdCeXRlc1BlckludGVydmFsIGZyb20g
+OCB0byAxNi4gT24gdGhpcw0KPj4gZG9jayBwbHVzIHhIQ0kgaG9zdCB0aGF0IHJld3JpdGUg
+YXBwZWFycyB0byBtYWtlIHRoZSBkZXZpY2UgZmFsbCBvZmYgdGhlDQo+PiBidXMgcmlnaHQg
+YWZ0ZXIgdGhlIGNmZ3NlbGVjdG9yIHJlc2V0Lg0KPj4NCj4+IGRtZXNnIChicm9rZW4ga2Vy
+bmVsIDcuMC4xMi5oYXJkZW5lZDEpOg0KPj4gIMKgIHVzYiAyLTEuMTogTmV3IFVTQiBkZXZp
+Y2UgZm91bmQsIGlkVmVuZG9yPTE3ZWYsIGlkUHJvZHVjdD03MjFlLA0KPj4gYmNkRGV2aWNl
+PTMxLjAzDQo+PiAgwqAgdXNiIDItMS4xOiBJbnQgZW5kcG9pbnQgd2l0aCB3Qnl0ZXNQZXJJ
+bnRlcnZhbCBvZiA4IGluIGNvbmZpZyAyDQo+PiBpbnRlcmZhY2UgMCBhbHRzZXR0aW5nIDAg
+ZXAgMTMxOiBzZXR0aW5nIHRvIDE2DQo+PiAgwqAgcjgxNTItY2Znc2VsZWN0b3IgMi0xLjE6
+IHJlc2V0IFN1cGVyU3BlZWQgVVNCIGRldmljZSBudW1iZXIgMyB1c2luZw0KPj4geGhjaV9o
+Y2QNCj4+ICDCoCByODE1MiAyLTEuMToxLjAgKHVubmFtZWQgbmV0X2RldmljZSkgKHVuaW5p
+dGlhbGl6ZWQpOiBJbnZhbGlkIGhlYWRlcg0KPj4gd2hlbiByZWFkaW5nIHBhc3MtdGhydSBN
+QUMgYWRkcg0KPj4gIMKgIHI4MTUyIDItMS4xOjEuMCBlbnAwczEzZjB1MXUxOiByZW5hbWVk
+IGZyb20gZXRoMA0KPj4gIMKgIHI4MTUyLWNmZ3NlbGVjdG9yIDItMS4xOiBVU0IgZGlzY29u
+bmVjdCwgZGV2aWNlIG51bWJlciAzDQo+Pg0KPj4gUmVsZXZhbnQgZGVzY3JpcHRvcnMgKGxz
+dXNiIC12IC1kIDE3ZWY6NzIxZSwgY2FwdHVyZWQgb24gdGhlIHdvcmtpbmcNCj4+IDcuMC4x
+MSBrZXJuZWwpOiBjb25maWd1cmF0aW9uIDIgKENEQyksIGVuZHBvaW50IDB4ODMgSU4gSW50
+ZXJydXB0IGhhcw0KPj4gd01heFBhY2tldFNpemU9MHgwMDEwICgxNiBieXRlcyksIGJJbnRl
+cnZhbD04LCBiTWF4QnVyc3Q9MCwNCj4+IHdCeXRlc1BlckludGVydmFsPTggKHJld3JpdHRl
+biB0byAxNiBieSB0aGUgbmV3IGZpeHVwKS4gQ29uZmlndXJhdGlvbiAxLA0KPj4gdGhlIHZl
+bmRvciBjb25maWcgdGhhdCByODE1MiBhY3R1YWxseSB1c2VzLCBoYXMgaXRzIGludGVycnVw
+dCBlbmRwb2ludA0KPj4gMHg4MyB3aXRoIHdNYXhQYWNrZXRTaXplPTIgYW5kIHdCeXRlc1Bl
+ckludGVydmFsPTIsIHdoaWNoIGlzIG5vdCBhZmZlY3RlZC4NCj4+DQo+PiBSZXZlcnRpbmcg
+dGhpcyBjb21taXQgKG9yIGp1c3QgdGhlIG5ldyBpbnRlcnJ1cHQgSU4gYnJhbmNoIGluIGRy
+aXZlcnMvDQo+PiB1c2IvY29yZS9jb25maWcuYykgc2hvdWxkIHJlc3RvcmUgdGhlIGRldmlj
+ZS4gSSBhbSBoYXBweSB0byBidWlsZCBhbmQNCj4+IGNvbmZpcm0gYSByZXZlcnQsIGFuZCB0
+byB0ZXN0IGFueSBwcm9wb3NlZCBmaXguIEEgcXVpcmsgdG8gc2tpcCB0aGUNCj4+IGludGVy
+cnVwdCBJTiBmaXh1cCBmb3IgdGhlIFJUTDgxNTMgQ0RDIGNvbmZpZ3VyYXRpb24sIG9yIG90
+aGVyd2lzZQ0KPj4gbmFycm93aW5nIHRoZSBuZXcgY29uZGl0aW9uLCBzZWVtcyBsaWtlIHRo
+ZSByaWdodCBkaXJlY3Rpb24uDQo+Pg0KPj4gSSBjYW4gcHJvdmlkZSB0aGUgZnVsbCBkbWVz
+ZyBhbmQgZnVsbCBsc3VzYiAtdiBvdXRwdXQgb24gcmVxdWVzdC4NCj4+DQo+PiAjcmVnemJv
+dCBpbnRyb2R1Y2VkOiA3MjdkMDQ1ZDA2NGI3YzlhMjRkYjNiY2U5YzA0ODVhMzgyY2I3Njhi
+DQo+Pg0KPj4gQmVzdCBSZWdhcmRzLA0KPj4gQW1pbiBWYWtpbA0KPiANCg0K
+--------------et0BGF130QSoF7OtnsaB4viY
+Content-Type: application/pgp-keys; name="OpenPGP_0x1EFC1864E9D9E56B.asc"
+Content-Disposition: attachment; filename="OpenPGP_0x1EFC1864E9D9E56B.asc"
+Content-Description: OpenPGP public key
 Content-Transfer-Encoding: quoted-printable
 
-SVM ranges use inclusive page indices: prange->last is the last page in
-the range. The split-remap logic introduced by commit 448ee45353ef
-("drm/amdkfd: Use huge page size to check split svm range alignment")
-uses ALIGN_DOWN(prange->last, 512) to determine whether the original
-range can contain a 2MB huge-page mapping.
+-----BEGIN PGP PUBLIC KEY BLOCK-----
 
-That aligns the last page itself down. Thus a range ending one page
-before the next 2MB boundary is classified as if the final 2MB block did
-not exist. When such a range is split inside that final block, the
-split head or tail can be left off the remap list even though it was
-derived from an original range that may have PMD mappings.
+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
++78sXChAfE9n44i0gJHzV8BhCsQG4+k=3D
+=3DGHsk
+-----END PGP PUBLIC KEY BLOCK-----
 
-Use prange->last + 1 as the exclusive upper bound when computing the
-original range's last 2MB-aligned boundary. Then use the actual split
-boundary for the head and tail alignment checks: tail->start for a tail
-split, and new_start for a head split. new_start is equivalent to
-head->last + 1 and directly names the exclusive end of the split head.
+--------------et0BGF130QSoF7OtnsaB4viY--
 
-Using head->last for the head-side check can both remap a head that ends
-exactly one page before a 2MB boundary and miss a head whose split
-boundary is one page after such a boundary. Philip Yang pointed out in
-the review of the original change that this condition should use
-head->last + 1 or new_start.
+--------------3z1p9JiKC2gmqmEYKNJfkrO1--
 
-Xiaogang Chen identified the inclusive-last cause and posted the
-candidate fix in the regression thread. With the culprit change active
-and the local revert not applied, the unchanged C/HSA reproducer
-completes 10/10 runs with this change on an RX 7600 XT.
+--------------iMF7MbOQfv5b32euEVw0dnZL
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature.asc"
 
-Fixes: 448ee45353ef ("drm/amdkfd: Use huge page size to check split svm ran=
-ge alignment")
-Cc: stable@vger.kernel.org
-Closes: https://gitlab.freedesktop.org/drm/amd/-/work_items/4914
-Link: https://lore.kernel.org/stable/IA1PR12MB85172F7FE9157C092EDA46A0E3112=
-@IA1PR12MB8517.namprd12.prod.outlook.com/
-Link: https://lore.kernel.org/all/32ce2b72-aa16-4202-9f99-92e3cd4408bc@amd.=
-com/
-Suggested-by: Xiaogang Chen <xiaogang.chen@amd.com>
-Signed-off-by: Gerhard Schwanzer <geschw@pm.me>
----
-Changes in v2:
-- Use new_start for the head-side split-boundary checks, matching Philip
-  Yang's original v4 review guidance and avoiding aligned-head false
-  positives / unaligned-head false negatives.
-- Keep the tail-side last + 1 exclusive-bound fix from Xiaogang's public
-  candidate, which fixes the reproduced RX 7600 XT SDMA0 fault.
+-----BEGIN PGP SIGNATURE-----
 
- drivers/gpu/drm/amd/amdkfd/kfd_svm.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+wsD5BAABCAAjFiEEhGrABIXlXG/0vJ9THvwYZOnZ5WsFAmoxOM0FAwAAAAAACgkQHvwYZOnZ5WsC
+Qgv7B/6uvRkElb4KOwcAZkvw2nMyUSig0muQcg64DAx6qMrKyVYOxlHTxlBSJDM0DFaRhuEgSLcy
+xafZSOYX+SJpm0aOHXv/EpYpMw2rfN6KQlr2MhksbaVSi+DrXXI4ZgXW/yPDoatoKtAa8y6eK4/q
+kMSqtl5baDVPeQI0Ht8qiitGoGuEb87oOpAHHsRcQYCxpKnUj9mmP5T2RcqoXsWgx8+fh4nzEEfr
+v2bK4xOvg0vAppiV2rfDpu899egvm1K3pCmZ6OYVg6qc4y8RaCpmHmR9iLYLCO9ZwJKte7FB0i6j
+n0Uj0aHw39vT54/CEQc8t9flxKzMwEsLXUbreTut1VV7sp9Uwps5a46GX7aik3SJgoODbib6LDEH
+XiYdZKPgPI8YezsLUROySLadvcN4QrlUzX+gBQjCeLUoS90DWnSo56vmD2YdVhEdzVqJ+4yDhzEI
+Ypntg17tbRpu2fRkuvlRKuGotPa6Q0R6GkdcpgiEqlYQikdxmXGyCkAQWaSJ
+=wYNf
+-----END PGP SIGNATURE-----
 
-diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_svm.c b/drivers/gpu/drm/amd/amd=
-kfd/kfd_svm.c
-index 72cfb4a..59b15d5 100644
---- a/drivers/gpu/drm/amd/amdkfd/kfd_svm.c
-+++ b/drivers/gpu/drm/amd/amdkfd/kfd_svm.c
-@@ -1144,7 +1144,7 @@ static int
- svm_range_split_tail(struct svm_range *prange, uint64_t new_last,
- =09=09     struct list_head *insert_list, struct list_head *remap_list)
- {
--=09unsigned long last_align_down =3D ALIGN_DOWN(prange->last, 512);
-+=09unsigned long last_align_down =3D ALIGN_DOWN(prange->last + 1, 512);
- =09unsigned long start_align =3D ALIGN(prange->start, 512);
- =09bool huge_page_mapping =3D last_align_down > start_align;
- =09struct svm_range *tail =3D NULL;
-@@ -1168,7 +1168,7 @@ static int
- svm_range_split_head(struct svm_range *prange, uint64_t new_start,
- =09=09     struct list_head *insert_list, struct list_head *remap_list)
- {
--=09unsigned long last_align_down =3D ALIGN_DOWN(prange->last, 512);
-+=09unsigned long last_align_down =3D ALIGN_DOWN(prange->last + 1, 512);
- =09unsigned long start_align =3D ALIGN(prange->start, 512);
- =09bool huge_page_mapping =3D last_align_down > start_align;
- =09struct svm_range *head =3D NULL;
-@@ -1181,8 +1181,8 @@ svm_range_split_head(struct svm_range *prange, uint64=
-_t new_start,
-=20
- =09list_add(&head->list, insert_list);
-=20
--=09if (huge_page_mapping && head->last + 1 > start_align &&
--=09    head->last + 1 < last_align_down && (!IS_ALIGNED(head->last, 512)))
-+=09if (huge_page_mapping && new_start > start_align &&
-+=09    new_start < last_align_down && !IS_ALIGNED(new_start, 512))
- =09=09list_add(&head->update_list, remap_list);
-=20
- =09return 0;
-
-base-commit: 2c7d5b0a5ec0fc713a7f350806553643e87e6f43
---=20
-2.54.0
-
-
+--------------iMF7MbOQfv5b32euEVw0dnZL--
