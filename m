@@ -1,139 +1,301 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.aminvakil.com (mail.aminvakil.com [178.63.189.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 742A54779BF
-	for <regressions@lists.linux.dev>; Tue, 16 Jun 2026 16:36:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD32D47AF75
+	for <regressions@lists.linux.dev>; Tue, 16 Jun 2026 16:52:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.63.189.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781627813; cv=none; b=FCtkHqXDwT3Q3TV+lLjLB/NxFZkVltcetEBoaTbBEaqHX68Ipc4LAxPBX4sEyr9gfz0IqKiKoexQ91sQL1YO8NJ6mvWJUvaQpmThFiYMsXfAg2aeMKQ3jPQXyzGsx/Yvr3YE5rhC5+XW0MXfqTK6fGR+N/4hS/8PxB+OuwMLy7A=
+	t=1781628749; cv=none; b=AMd9DYtWABKIevIKs+0d+32w4HVEMQSzDO5/uuaHeo4MdbH3B+60XE2CXVfAC7VQIn2Mk5GqdOj6Lowo0cvDY410ihGGMn3j717gKOzaJx2b17AJGb6NKkStJeHixR6vFNWphkD1ObnMPPxhVOxxfR++gurH1xybqj1cr57ryJ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781627813; c=relaxed/simple;
-	bh=KWyR6lLbfsKyvj+2Veq9+Tz9SdQtZ+iqwrafWa+Suds=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IQfcFBI1cMYPUWVEX/mA9q4FBxj0o3XoyKpuzaCL7JWOIs4GzhZB+ot4TrD9Te43+ACjr5DEdYOus/aDb3Hx5pZW0dFKjqftm/H/5rrCUYkk9oz2AUElp6+vLV2eo2/wuVjw8A68w6roqvFS4UyN5INMR6wJavTLs6ATmq7u3/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AFqo+bu+; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1781628749; c=relaxed/simple;
+	bh=Pmmnvi2C5IbgmBENY6Y1klpbi8m+N50NmhW+cKVsqBg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OasuVJokq4EaipJneuM556sxGLvAIWJ/+8GCcYl0UrnQBpNcO1ETrikIzhbRFl822Z+dh2g2EDhy9k6vw/gfPttIXXaFREwxNI734sVIEqRRiFlaeh10NUyaur7HjlIDnYhsStEDMiCT75iENtMNlvBKrMlzVymZHu9tYgu3jnE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=aminvakil.com; spf=pass smtp.mailfrom=aminvakil.com; dkim=pass (2048-bit key) header.d=aminvakil.com header.i=@aminvakil.com header.b=LII4wH1C; arc=none smtp.client-ip=178.63.189.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=aminvakil.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aminvakil.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AFqo+bu+"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4905529b933so47141725e9.0
-        for <regressions@lists.linux.dev>; Tue, 16 Jun 2026 09:36:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1781627811; x=1782232611; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HFaNAqinUgkXjh92IVLXqIUVWHUv/aOY2jo/+DQ3enI=;
-        b=AFqo+bu+MmbToHKqDKD9AU0EtRtO1PO5FH3wZMT5nhUVB0MPcPROh3E6Lebr6cT9MY
-         CG5D3fvx3tGCqIUl1c/zXbbRJeLey1p/j/8n28h3OIrlo+/w+ztyIIn6txifXX7ymolL
-         X01vACTMTm3BliFimsgUu1eluEeDPMpNFNVgdvr50ZyeAOjAE/Su1+jg71k/rf4z+CrZ
-         SUq2dlbPfSr4IqjO3dMvNFefhuWpQ3YizyG8+KYF5VorAeurbg09UESDpDhDg+A/imWX
-         loxauGjKftKRCM52Gg4+Rw/etxMAzaDUHt9QaswSt4mFnpVYt3D72jrF/Tu6WWf0/Qpw
-         b+WA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781627811; x=1782232611;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=HFaNAqinUgkXjh92IVLXqIUVWHUv/aOY2jo/+DQ3enI=;
-        b=TsBpA+ocJlDwCXfNZVeN3B8KoQb+OBgix/WuB+VfmFmsIMMKHrdoyEYlT09TRp7Bmx
-         kM+lasgKSeTi3qMwGezHumX0l9NQVvzhj2JaTvpv2E2qoJqt4A00WYGbgcr2erLYHbc4
-         LiEZ/7UrYzTCRTKwOLp6Wd0vrttKmTfy2I3kfl9WIv285QK7DOzmZ9uYOg1lzDKoz0bb
-         PArUKjQnuHB5oqh9p8iYE6sYh6f5AYNjP4dtoo4Doxwt04UL7JkyOsfG3+BhoxLi+rBF
-         bTxEXwUpThUsjq7d3Q9OrPLka/mryAcW9A50ITaytCg9xi5fqojErFREfRurVaxAOT5Z
-         yxrQ==
-X-Forwarded-Encrypted: i=1; AFNElJ9/WYBOG+QG08AdYwrtXhRBLvHAQvIoHLTrLCWj306sZ2wdeHqvMbxivV9qCAoOrkrGMyI//3+t4V9J/g==@lists.linux.dev
-X-Gm-Message-State: AOJu0YyYdUOO/DUCwaX5b1gQ6TU8f6yuR063UvU3dKCq5h9CPP90gROz
-	C11pUTaL2/YANolEUCROSUEsM+08QLF1olMFwsGFTQFfR7Nqxh2n33vs8Pzoxg==
-X-Gm-Gg: Acq92OF4lU6wVBW8ZpI8omVdRM/Ilv3JB+geoP2/EiUyjjJs55bf90cKIAxn3tCP0W3
-	UvYkoZPD3YHY5lcNYEWx8G5bXuE5kSuJyalkoAo3q7rtRNKahZtzDaCjt6W2xcxdiI3D0g8CpvL
-	1xNRf+584QdYbir3qjBRsMogw7LCpJh7DjE8mBLGFsY1xu7t7TEvbef2bIBksgSnuQvSE8sXlRv
-	/Ys7hzfVRIPeWJpZh0zMJ+tZ3pxIYayN72GvzR+HdIPSlYHrzBQoaXw0kg7dBkZZ0cqT5h00VoL
-	tXtAjxauMyrNgUOZz/DF99jPrBeD/j3kEOX/nOiCuWT45v5PuaPpgRUbelD1qefeWnDFtDVUh0r
-	20y/89SNWCKZycbSaYTc3nitVb4pPnWppFsNLlgfEWTIbLszWcW9RuhR1uQ6WUGeslahdMZqHL6
-	myt6J2kQjfZ/35tG9l/Shyk5It3lax9rk3
-X-Received: by 2002:a05:600c:19d3:b0:492:2100:aba2 with SMTP id 5b1f17b1804b1-492333ba311mr4589965e9.4.1781627810369;
-        Tue, 16 Jun 2026 09:36:50 -0700 (PDT)
-Received: from foxbook (bfg19.neoplus.adsl.tpnet.pl. [83.28.44.19])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4606f26f309sm42606551f8f.14.2026.06.16.09.36.49
-        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
-        Tue, 16 Jun 2026 09:36:50 -0700 (PDT)
-Date: Tue, 16 Jun 2026 18:36:46 +0200
-From: Michal Pecio <michal.pecio@gmail.com>
-To: Amin Vakil <info@aminvakil.com>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
- linux-usb@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Alan Stern <stern@rowland.harvard.edu>, Tao Xue <xuetao09@huawei.com>,
- regressions@lists.linux.dev
-Subject: Re: [REGRESSION] usb: core: interrupt-IN wBytesPerInterval fixup
- (727d045d064b) breaks RTL8153 in Lenovo dock
-Message-ID: <20260616183646.4798516b.michal.pecio@gmail.com>
-In-Reply-To: <573bbb08-0ba7-4f00-8996-819cc1d9cc48@aminvakil.com>
-References: <cbdeb118-58c7-48a7-94a0-15e5cdb5879c@aminvakil.com>
-	<35d2b455-382e-470e-acf4-1ab60770da90@leemhuis.info>
-	<5036fee2-4d00-4ca0-aeed-400da64d7872@aminvakil.com>
-	<573bbb08-0ba7-4f00-8996-819cc1d9cc48@aminvakil.com>
+	dkim=pass (2048-bit key) header.d=aminvakil.com header.i=@aminvakil.com header.b="LII4wH1C"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id A7A90453ED;
+	Tue, 16 Jun 2026 20:22:21 +0330 (+0330)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aminvakil.com;
+	s=dkim; t=1781628745;
+	h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-language:in-reply-to:references:autocrypt;
+	bh=Pmmnvi2C5IbgmBENY6Y1klpbi8m+N50NmhW+cKVsqBg=;
+	b=LII4wH1CqEHSGUx7QBvZjXZscS+JfCEkam+u6gzgpjnJkFPTSmjpz6Idvh9AjAoRoL5kBk
+	QGJXvwUnFi8oIkb0D8MC0s7cqYXxMpRt8YD40XgFv4afvCVl0rBP6sUh2SXcnUW9kdLT8/
+	zIy0HaZolaX70vokajuMAb6eykYSzjZzAcoyi9UtrtrDFYSDyf0hd3Enx1xzflhIT2ZbMI
+	bxGefw5SKjAaMj7yBnyuJyC1/Wxp2vWtdx6wOeAL8xjXIj9MdWmLk6N1hdnofTgVsREk44
+	YsBfBeqI/DylFU3oaOo5oiXMDZkos/nmYVMldurYJwmuFINnjFvO+cdM3XLMEA==
+Message-ID: <8f862eb6-adfb-43a9-b4f5-8f9232333b51@aminvakil.com>
+Date: Tue, 16 Jun 2026 20:22:19 +0330
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] usb: core: interrupt-IN wBytesPerInterval fixup
+ (727d045d064b) breaks RTL8153 in Lenovo dock
+To: Michal Pecio <michal.pecio@gmail.com>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>, linux-usb@vger.kernel.org,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Alan Stern <stern@rowland.harvard.edu>, Tao Xue <xuetao09@huawei.com>,
+ regressions@lists.linux.dev
+References: <cbdeb118-58c7-48a7-94a0-15e5cdb5879c@aminvakil.com>
+ <35d2b455-382e-470e-acf4-1ab60770da90@leemhuis.info>
+ <5036fee2-4d00-4ca0-aeed-400da64d7872@aminvakil.com>
+ <573bbb08-0ba7-4f00-8996-819cc1d9cc48@aminvakil.com>
+ <20260616183646.4798516b.michal.pecio@gmail.com>
+Content-Language: en-US
+From: Amin Vakil <info@aminvakil.com>
+Autocrypt: addr=info@aminvakil.com; keydata=
+ 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
+ +78sXChAfE9n44i0gJHzV8BhCsQG4+k=
+In-Reply-To: <20260616183646.4798516b.michal.pecio@gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------DD3awKhZkdKoIHEuCSYOPkbf"
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Tue, 16 Jun 2026 17:38:32 +0330, Amin Vakil wrote:
-> I can confirm 7.1 mainline (installed from AUR) still has the problem:
-> 
-> dmesg (kernel 7.1.0)
-> 
->    usb 2-1.1: New USB device found, idVendor=17ef, idProduct=721e, 
-> bcdDevice=31.03
->    usbcore: registered new device driver r8152-cfgselector
->    r8152-cfgselector 2-1.1: reset SuperSpeed USB device number 3 using 
-> xhci_hcd
->    r8152 2-1.1:1.0 (unnamed net_device) (uninitialized): Invalid header 
-> when reading pass-thru MAC addr
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------DD3awKhZkdKoIHEuCSYOPkbf
+Content-Type: multipart/mixed; boundary="------------SnqF6jRORrHkalnuYnouvcF2";
+ protected-headers="v1"; hp="clear"
+Message-ID: <8f862eb6-adfb-43a9-b4f5-8f9232333b51@aminvakil.com>
+Date: Tue, 16 Jun 2026 20:22:19 +0330
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] usb: core: interrupt-IN wBytesPerInterval fixup
+ (727d045d064b) breaks RTL8153 in Lenovo dock
+To: Michal Pecio <michal.pecio@gmail.com>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>, linux-usb@vger.kernel.org,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Alan Stern <stern@rowland.harvard.edu>, Tao Xue <xuetao09@huawei.com>,
+ regressions@lists.linux.dev
+References: <cbdeb118-58c7-48a7-94a0-15e5cdb5879c@aminvakil.com>
+ <35d2b455-382e-470e-acf4-1ab60770da90@leemhuis.info>
+ <5036fee2-4d00-4ca0-aeed-400da64d7872@aminvakil.com>
+ <573bbb08-0ba7-4f00-8996-819cc1d9cc48@aminvakil.com>
+ <20260616183646.4798516b.michal.pecio@gmail.com>
+Content-Language: en-US
+From: Amin Vakil <info@aminvakil.com>
+Autocrypt: addr=info@aminvakil.com; keydata=
+ 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
+ +78sXChAfE9n44i0gJHzV8BhCsQG4+k=
+In-Reply-To: <20260616183646.4798516b.michal.pecio@gmail.com>
 
-Was this junk always here?
+--------------SnqF6jRORrHkalnuYnouvcF2
+Content-Type: multipart/mixed; boundary="------------klMQ4J2GMVQT9i7R4CvHhsvO"
 
->    usbcore: registered new interface driver r8152
->    r8152 2-1.1:1.0 enp0s13f0u1u1: renamed from eth0
->    r8152-cfgselector 2-1.1: USB disconnect, device number 3
->
-> >>> Hardware: Lenovo dock built-in Realtek RTL8153, enumerating as
-> >>> USB ID 17ef:721e (Lenovo rebrand of 0bda:8153), driven by r8152
-> >>> through r8152- cfgselector. Host is an Intel laptop with xhci_hcd.
-> >>>
-> >>> Symptom: on the patched kernel the NIC enumerates, r8152 binds
-> >>> and the netdev is created, then about one second later the device
-> >>> is USB- disconnected by r8152-cfgselector and never returns. No
-> >>> ethernet interface remains. USB, HDMI and the rest of the dock
-> >>> keep working, and plugging the cable straight into the laptop
-> >>> built-in NIC is unaffected.
-> >>>
-> >>> Affected vs working (Arch linux-hardened): 7.0.11.hardened2 works,
-> >>> 7.0.12.hardened1 is broken. This commit is the only
-> >>> RTL8153/USB-core change in that delta, and it activates a code
-> >>> path that did not run before on this device (note the new
-> >>> wBytesPerInterval message in the dmesg below, absent on 7.0.11).
+--------------klMQ4J2GMVQT9i7R4CvHhsvO
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
 
-RTL8153 was one of the chips specifically targeted by this fix, but
-it affects the CDC configuration which you don't seem to be using.
+T24gNi8xNi8yNiA4OjA2IFBNLCBNaWNoYWwgUGVjaW8gd3JvdGU6DQo+IE9uIFR1ZSwgMTYg
+SnVuIDIwMjYgMTc6Mzg6MzIgKzAzMzAsIEFtaW4gVmFraWwgd3JvdGU6DQo+PiBJIGNhbiBj
+b25maXJtIDcuMSBtYWlubGluZSAoaW5zdGFsbGVkIGZyb20gQVVSKSBzdGlsbCBoYXMgdGhl
+IHByb2JsZW06DQo+Pg0KPj4gZG1lc2cgKGtlcm5lbCA3LjEuMCkNCj4+DQo+PiAgICAgdXNi
+IDItMS4xOiBOZXcgVVNCIGRldmljZSBmb3VuZCwgaWRWZW5kb3I9MTdlZiwgaWRQcm9kdWN0
+PTcyMWUsDQo+PiBiY2REZXZpY2U9MzEuMDMNCj4+ICAgICB1c2Jjb3JlOiByZWdpc3RlcmVk
+IG5ldyBkZXZpY2UgZHJpdmVyIHI4MTUyLWNmZ3NlbGVjdG9yDQo+PiAgICAgcjgxNTItY2Zn
+c2VsZWN0b3IgMi0xLjE6IHJlc2V0IFN1cGVyU3BlZWQgVVNCIGRldmljZSBudW1iZXIgMyB1
+c2luZw0KPj4geGhjaV9oY2QNCj4+ICAgICByODE1MiAyLTEuMToxLjAgKHVubmFtZWQgbmV0
+X2RldmljZSkgKHVuaW5pdGlhbGl6ZWQpOiBJbnZhbGlkIGhlYWRlcg0KPj4gd2hlbiByZWFk
+aW5nIHBhc3MtdGhydSBNQUMgYWRkcg0KPiANCj4gV2FzIHRoaXMganVuayBhbHdheXMgaGVy
+ZT8NCg0KWWVzLCBkbyB5b3Ugd2FudCBtZSB0byBsb29rIGZvciBvbGRlciBib290cz8NCg0K
+JCBzdWRvIGpvdXJuYWxjdGwgLWIgLU9MREVSIHwgZ3JlcCAtRSAicjgxNTIiDQprZXJuZWw6
+IExpbnV4IHZlcnNpb24gNy4wLjgtaGFyZGVuZWQxLTEtaGFyZGVuZWQgDQoobGludXgtaGFy
+ZGVuZWRAYXJjaGxpbnV4KSAoZ2NjIChHQ0MpIDE2LjEuMSAyMDI2MDQzMCwgR05VIGxkIChH
+TlUgDQpCaW51dGlscykgMi40Ni4wKSAjMSBTTVAgUFJFRU1QVF9EWU5BTUlDIEZyaSwgMTUg
+TWF5IDIwMjYgMTU6NDQ6MDkgKzAwMDANCmtlcm5lbDogdXNiY29yZTogcmVnaXN0ZXJlZCBu
+ZXcgZGV2aWNlIGRyaXZlciByODE1Mi1jZmdzZWxlY3Rvcg0Ka2VybmVsOiByODE1Mi1jZmdz
+ZWxlY3RvciAyLTEuMTogcmVzZXQgU3VwZXJTcGVlZCBVU0IgZGV2aWNlIG51bWJlciAzIA0K
+dXNpbmcgeGhjaV9oY2QNCmtlcm5lbDogcjgxNTIgMi0xLjE6MS4wICh1bm5hbWVkIG5ldF9k
+ZXZpY2UpICh1bmluaXRpYWxpemVkKTogSW52YWxpZCANCmhlYWRlciB3aGVuIHJlYWRpbmcg
+cGFzcy10aHJ1IE1BQyBhZGRyDQprZXJuZWw6IHVzYmNvcmU6IHJlZ2lzdGVyZWQgbmV3IGlu
+dGVyZmFjZSBkcml2ZXIgcjgxNTINCmtlcm5lbDogcjgxNTIgMi0xLjE6MS4wIGVucDBzMTNm
+MHUxdTE6IHJlbmFtZWQgZnJvbSBldGgwDQprZXJuZWw6IHI4MTUyIDItMS4xOjEuMCBlbnAw
+czEzZjB1MXUxOiBjYXJyaWVyIG9uDQoNCj4gDQo+PiAgICAgdXNiY29yZTogcmVnaXN0ZXJl
+ZCBuZXcgaW50ZXJmYWNlIGRyaXZlciByODE1Mg0KPj4gICAgIHI4MTUyIDItMS4xOjEuMCBl
+bnAwczEzZjB1MXUxOiByZW5hbWVkIGZyb20gZXRoMA0KPj4gICAgIHI4MTUyLWNmZ3NlbGVj
+dG9yIDItMS4xOiBVU0IgZGlzY29ubmVjdCwgZGV2aWNlIG51bWJlciAzDQo+Pg0KPj4+Pj4g
+SGFyZHdhcmU6IExlbm92byBkb2NrIGJ1aWx0LWluIFJlYWx0ZWsgUlRMODE1MywgZW51bWVy
+YXRpbmcgYXMNCj4+Pj4+IFVTQiBJRCAxN2VmOjcyMWUgKExlbm92byByZWJyYW5kIG9mIDBi
+ZGE6ODE1MyksIGRyaXZlbiBieSByODE1Mg0KPj4+Pj4gdGhyb3VnaCByODE1Mi0gY2Znc2Vs
+ZWN0b3IuIEhvc3QgaXMgYW4gSW50ZWwgbGFwdG9wIHdpdGggeGhjaV9oY2QuDQo+Pj4+Pg0K
+Pj4+Pj4gU3ltcHRvbTogb24gdGhlIHBhdGNoZWQga2VybmVsIHRoZSBOSUMgZW51bWVyYXRl
+cywgcjgxNTIgYmluZHMNCj4+Pj4+IGFuZCB0aGUgbmV0ZGV2IGlzIGNyZWF0ZWQsIHRoZW4g
+YWJvdXQgb25lIHNlY29uZCBsYXRlciB0aGUgZGV2aWNlDQo+Pj4+PiBpcyBVU0ItIGRpc2Nv
+bm5lY3RlZCBieSByODE1Mi1jZmdzZWxlY3RvciBhbmQgbmV2ZXIgcmV0dXJucy4gTm8NCj4+
+Pj4+IGV0aGVybmV0IGludGVyZmFjZSByZW1haW5zLiBVU0IsIEhETUkgYW5kIHRoZSByZXN0
+IG9mIHRoZSBkb2NrDQo+Pj4+PiBrZWVwIHdvcmtpbmcsIGFuZCBwbHVnZ2luZyB0aGUgY2Fi
+bGUgc3RyYWlnaHQgaW50byB0aGUgbGFwdG9wDQo+Pj4+PiBidWlsdC1pbiBOSUMgaXMgdW5h
+ZmZlY3RlZC4NCj4+Pj4+DQo+Pj4+PiBBZmZlY3RlZCB2cyB3b3JraW5nIChBcmNoIGxpbnV4
+LWhhcmRlbmVkKTogNy4wLjExLmhhcmRlbmVkMiB3b3JrcywNCj4+Pj4+IDcuMC4xMi5oYXJk
+ZW5lZDEgaXMgYnJva2VuLiBUaGlzIGNvbW1pdCBpcyB0aGUgb25seQ0KPj4+Pj4gUlRMODE1
+My9VU0ItY29yZSBjaGFuZ2UgaW4gdGhhdCBkZWx0YSwgYW5kIGl0IGFjdGl2YXRlcyBhIGNv
+ZGUNCj4+Pj4+IHBhdGggdGhhdCBkaWQgbm90IHJ1biBiZWZvcmUgb24gdGhpcyBkZXZpY2Ug
+KG5vdGUgdGhlIG5ldw0KPj4+Pj4gd0J5dGVzUGVySW50ZXJ2YWwgbWVzc2FnZSBpbiB0aGUg
+ZG1lc2cgYmVsb3csIGFic2VudCBvbiA3LjAuMTEpLg0KPiANCj4gUlRMODE1MyB3YXMgb25l
+IG9mIHRoZSBjaGlwcyBzcGVjaWZpY2FsbHkgdGFyZ2V0ZWQgYnkgdGhpcyBmaXgsIGJ1dA0K
+PiBpdCBhZmZlY3RzIHRoZSBDREMgY29uZmlndXJhdGlvbiB3aGljaCB5b3UgZG9uJ3Qgc2Vl
+bSB0byBiZSB1c2luZy4NCj4gDQo+IEkgaGF2ZSB0cmllZCBsaW51eC1oYXJkZW5lZC03LjAu
+MTIuaGFyZGVuZWQxLTEteDg2XzY0IGZyb20gQXJjaCByZXBvDQo+IGFzIHdlbGwgYXMgbXkg
+b3duIGJ1aWxkIG9mIDcuMS1yYzYsIGFuZCBteSBSVEw4MTUzICgwYmRhOjgxNTMpIGluIGEN
+Cj4gZGlmZmVyZW50IGtpbmQgb2YgVVNCLUMgZG9jayBzdGlsbCB3b3JrcyB3aXRoIGEgZmV3
+IHhIQ0kgY29udHJvbGxlcnMuDQo+IA0KPiBTbyBpdCdzIHNvbWUgd2VpcmQgcHJvYmxlbSBu
+YXJyb3dseSBzcGVjaWZpYyB0byB5b3VyIHN5c3RlbS4gTm93IHRoYXQNCj4geW91IGhhdmUg
+YnVpbHQgeW91ciBvd24ga2VybmVsLCBwbGVhc2UgYWxzbyByZXZlcnQgdGhlIHN1c3BlY3Qg
+cGF0Y2gNCj4gdG8gdmVyaWZ5IGlmIHRoYXQncyByZWFsbHkgaXQuDQoNCkhvbmVzdGx5IEkn
+dmUgdHJpZWQgcGF0Y2hpbmcgaXQgbXlzZWxmIDopDQoNCmJ5IGNoYW5naW5nDQoNCihsZTE2
+X3RvX2NwdShkZXNjLT53Qnl0ZXNQZXJJbnRlcnZhbCkgPCB1c2JfZW5kcG9pbnRfbWF4cCgm
+ZXAtPmRlc2MpICYmDQoNCnRvDQoNCihsZTE2X3RvX2NwdShkZXNjLT53Qnl0ZXNQZXJJbnRl
+cnZhbCkgPT0gMCAmJg0KDQppbiBsaW5lIDE4NyBvZiBkcml2ZXJzL3VzYi9jb3JlL2NvbmZp
+Zy5jIHRvIHNlZSBpZiB0aGF0IGZpeGVzIHRoZSBpc3N1ZSANCmFuZCBpdCBkaWQgbm90LCBi
+dXQgSSBkaWRuJ3Qgc3BlY2lmaWNhbGx5IHJldmVydGVkIHRoZSBjb21taXQgdG8gc2VlIGlm
+IA0KdGhhdCBmaXhlcyB0aGUgaXNzdWUuDQoNCkkgd2lsbCByZXZlcnQgdGhlIGV4YWN0IGNv
+bW1pdCBhbmQgcmVwb3J0IGJhY2suDQo+IA0KPj4+Pj4gSSBjYW4gcHJvdmlkZSB0aGUgZnVs
+bCBkbWVzZyBhbmQgZnVsbCBsc3VzYiAtdiBvdXRwdXQgb24gcmVxdWVzdC4NCj4gDQo+IGxz
+dXNiIC12IG9mIHRoZSBOSUMgbWF5IGJlIHVzZWZ1bCBpbiBjYXNlIGl0J3MgZGlmZmVyZW50
+IGZyb20gbWluZS4NCj4gbHN1c2IgLXR2IG9mIHRoZSB3aG9sZSBkb2NrLCBiZWNhdXNlIHRo
+ZXJlIGFyZSBvdGhlciByZWNlbnQgcGF0Y2hlcw0KPiBmb3IgTGVub3ZvIGRvY2tzIGFuZCBJ
+J20gbm90IHN1cmUgaWYgdGhleSBhcHBseSB0byB5b3Vycy4NCj4gDQoNClN1cmUsIEkgZG8g
+bm90IGhhdmUgdGhlIGRvY2sgd2l0aCBtZSBub3csIEknbGwgc2VuZCB0aGlzIHRvbW9ycm93
+IGFzIHdlbGwuDQoNCkJlc3QgUmVnYXJkcywNCkFtaW4gVmFraWwNCg0KPiBSZWdhcmRzLA0K
+PiBNaWNoYWwNCg0K
+--------------klMQ4J2GMVQT9i7R4CvHhsvO
+Content-Type: application/pgp-keys; name="OpenPGP_0x1EFC1864E9D9E56B.asc"
+Content-Disposition: attachment; filename="OpenPGP_0x1EFC1864E9D9E56B.asc"
+Content-Description: OpenPGP public key
+Content-Transfer-Encoding: quoted-printable
 
-I have tried linux-hardened-7.0.12.hardened1-1-x86_64 from Arch repo
-as well as my own build of 7.1-rc6, and my RTL8153 (0bda:8153) in a
-different kind of USB-C dock still works with a few xHCI controllers.
+-----BEGIN PGP PUBLIC KEY BLOCK-----
 
-So it's some weird problem narrowly specific to your system. Now that
-you have built your own kernel, please also revert the suspect patch
-to verify if that's really it.
+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
++78sXChAfE9n44i0gJHzV8BhCsQG4+k=3D
+=3DGHsk
+-----END PGP PUBLIC KEY BLOCK-----
 
-> >>> I can provide the full dmesg and full lsusb -v output on request.
+--------------klMQ4J2GMVQT9i7R4CvHhsvO--
 
-lsusb -v of the NIC may be useful in case it's different from mine.
-lsusb -tv of the whole dock, because there are other recent patches
-for Lenovo docks and I'm not sure if they apply to yours.
+--------------SnqF6jRORrHkalnuYnouvcF2--
 
-Regards,
-Michal
+--------------DD3awKhZkdKoIHEuCSYOPkbf
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+wsD5BAABCAAjFiEEhGrABIXlXG/0vJ9THvwYZOnZ5WsFAmoxf0MFAwAAAAAACgkQHvwYZOnZ5Wv+
+2wwAkjYKZD77bxiZ1Ga1Q52xaTnTi3ODL1BRSQqcZVqK0fNBROu/kFGSvhOUnNtDgfpoSvN6bE++
+41QQp1d4KdkNmDvnu7bVx3iTmx0EnPtT/egl7kyD0mUAmXM8ctWGfl9Kth1dQ4BjeZou/1nqtJvw
+zMVSMfaME9p4tw0f9usP+zam6QclIFL3n/0jCwqCrZPe8C4EVJ7q5oWUVdOcSeAJ0QAy/YN199h0
+TFEY4FIrf+nmFVz/IfR8djADL8LkHq6vcVsPyrYpb4XNrJuhtwAgwT6JjE5Ie62uts1ZzhpOMlkH
+6TJ7drRX3sIoccJbggajUI+guMU7hBQ2IU303dVijuVuT7AK3opIMnG5PC3IpbOSesdYXNwE7VpZ
+d+ExLHt7lkGa0NqwZqjIM5OeS6CzCgR+5ov5xX9/RHv/n50opg/NYuRKyG8JGaVQxfzeTZzd539w
+gdBwSbVPQQYC9OZLBmoacLiLsFmBOzv6yimJ3HafeDVRrrKoAn4gIgRQkkdy
+=GlTt
+-----END PGP SIGNATURE-----
+
+--------------DD3awKhZkdKoIHEuCSYOPkbf--
