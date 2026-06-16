@@ -1,292 +1,153 @@
-Received: from mail.aminvakil.com (mail.aminvakil.com [178.63.189.195])
+Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75E1537756E
-	for <regressions@lists.linux.dev>; Tue, 16 Jun 2026 11:51:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.63.189.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79BBF357D11;
+	Tue, 16 Jun 2026 12:57:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781610710; cv=none; b=nPSuyRv2AgQNmJIfZbGC+CJWmJaxrbVYW8X2HSqEicupJSUEcGnRisGj4Nw6mkoNH1usBCrny7+TOJZVMygzieSBhpsoMWrFSIXwDHHgN23JRUNj01/3zzWUFo6ZwNA/0md0n2lWmgBg6EAmFNkFZfq8MjdQ5qJEAAmKDSmJV/Y=
+	t=1781614675; cv=none; b=IF3lj1mfLDHe+JNueoMc7Uv3xNrhVFloxW3lvX8mb6FNDO7p15o8SpKj6LmYHI7YjYYzZQ2ApTJlxicKWWEy0VqO9U2HCZvP33AmC56Kb0P9kbHVKHrC8mDhypz5uqWcUSnZ7Ood/+mpeX7oHzQxLNnRTULuTUw+69gQPh8TK5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781610710; c=relaxed/simple;
-	bh=0SdBZ44YYB2ulRTXnjUIhiBm2+uRb4JXN6bYd3z2LH0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YMQc7P0WyzlupbGVXk2vDAEU5bXQwfI71zmtm6tP94PCnmSSwgIQyU+ExP9OiEqEG8LlOA1MfTXbyMqjx37YYBwnFRy06QfhPUVOc77rC+lKipDqJUnzpSMkQ8RrvFQnIhJ0iwk7HrvGaL9DYmdJYLOps5CfT9XBKJ8/cemlZ90=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=aminvakil.com; spf=pass smtp.mailfrom=aminvakil.com; dkim=pass (2048-bit key) header.d=aminvakil.com header.i=@aminvakil.com header.b=WNDZtry5; arc=none smtp.client-ip=178.63.189.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=aminvakil.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aminvakil.com
+	s=arc-20240116; t=1781614675; c=relaxed/simple;
+	bh=zM6yyQduHzlBSbyi1O/QFeT0kfbgG1s5FfvjQ9Bm/y8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RTdOEqIDtHxGo3jk6GQxknzikX4MBOsRqOE9aDFEklhHLy5klpCuCnq2DKV5XU+8uyTqGQoB0NtKbdOxywBgPT58+ATCdHo61nGzCX8qo7ddyxJfoZODf52c6CwOolUJ4QWeo8hJtbvxZ4c0WICRDxox1fKSN9vtTtvOyRvpexg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=UeeXQpZY; arc=none smtp.client-ip=46.235.229.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=aminvakil.com header.i=@aminvakil.com header.b="WNDZtry5"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 4B0BE4529E;
-	Tue, 16 Jun 2026 15:21:43 +0330 (+0330)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aminvakil.com;
-	s=dkim; t=1781610706;
-	h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-language:in-reply-to:references:autocrypt;
-	bh=0SdBZ44YYB2ulRTXnjUIhiBm2+uRb4JXN6bYd3z2LH0=;
-	b=WNDZtry5TiKk5QpdzrEvN7Cs7qI8VNm9KyBdSvKjPvdaDgNhqpCsVsTlRvjSFuSLW6bkBk
-	/i4OKfFt/FkrArxcnuhw4joEued6QGn3lyPI4/eaHLxfgxaLlyUyzsdyloPWweOtElmKXN
-	3Uo/Z1LQfux+8GnyB5CQJYmOqQTH5M2QgBg2qQHzlc4o0/ofyniO1m01LIdQ0A/+hEcmqb
-	jHyv5J2XquYi7G1q985uUDadaeZ9R9gcFOdJ158b7X7kj5C3svl04OtzErKWVKahnwZSUT
-	yzcpOXnVMHOguH6podJWjLrCzUpjWjkWOdB/Oe6sF0WPe8fDVzCZdwdgz4RDvQ==
-Message-ID: <5036fee2-4d00-4ca0-aeed-400da64d7872@aminvakil.com>
-Date: Tue, 16 Jun 2026 15:21:41 +0330
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="UeeXQpZY"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
+	; s=bytemarkmx; h=Content-Type:MIME-Version:Message-ID:Subject:From:Date:From
+	:Subject; bh=F8hE4z9JRLxnrtDhuXfJ4p9jf50xX0zsN8ROHlQ6TS4=; b=UeeXQpZYKg97XZvH
+	M18cNKrMUYbo0B6GubiAAvJ479yrV7Mi2fiAsR7jfCHZq7UHCXT8Wbr4s9nQ/jgik1oxDIUKWOAni
+	5tsTZmdTaTtZwCiowYpv4grzhJuIJoMRhrq2pKCKkmqeMk/n2/nZvec77kEpNVcuMqjjatViBZAT8
+	i7mfiMPifX2iRN0azuIatVl4sQgAZuk4fv3+qNfM5BVThHFiOoZ9OwASt2Ju4OWqQqI6SUR1k6L0B
+	k4PE5tJ0mz7628AYDxrrm4THBZvgUwS63VecUxBdCYY0dlDzvMfnP97WjXWPp6BE5KnjOP4qApULK
+	imM0xdttLURW28Pgyg==;
+Received: from dg by mx.treblig.org with local (Exim 4.98.2)
+	(envelope-from <dg@treblig.org>)
+	id 1wZTMO-000000082VY-2zNa;
+	Tue, 16 Jun 2026 12:57:44 +0000
+Date: Tue, 16 Jun 2026 12:57:44 +0000
+From: "Dr. David Alan Gilbert" <dave@treblig.org>
+To: Keith Busch <kbusch@kernel.org>
+Cc: Vjaceslavs Klimovs <vklimovs@gmail.com>,
+	Thorsten Leemhuis <regressions@leemhuis.info>, trnka@scm.com,
+	linux-block@vger.kernel.org, dm-devel@lists.linux.dev,
+	Linux kernel regressions list <regressions@lists.linux.dev>
+Subject: Re: Repeatable, raid1+O_DIRECT, hang/warn
+Message-ID: <ajFISH9bvyWjLOM6@gallifrey>
+References: <ai7rnH20IYeSmY8s@gallifrey>
+ <165d3195-c81d-4760-870b-23a9a3b3b72c@leemhuis.info>
+ <ai_1LYtofh1fwD-N@gallifrey>
+ <CAC_j7i0eDccVWzPeRafM50mZEOFHPz2cwd=RZqqx6TK2EVRFvw@mail.gmail.com>
+ <ajCTaUaACV9eNmWo@kbusch-mbp>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] usb: core: interrupt-IN wBytesPerInterval fixup
- (727d045d064b) breaks RTL8153 in Lenovo dock
-To: Thorsten Leemhuis <regressions@leemhuis.info>, linux-usb@vger.kernel.org
-Cc: Michal Pecio <michal.pecio@gmail.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Alan Stern <stern@rowland.harvard.edu>, Tao Xue <xuetao09@huawei.com>,
- regressions@lists.linux.dev
-References: <cbdeb118-58c7-48a7-94a0-15e5cdb5879c@aminvakil.com>
- <35d2b455-382e-470e-acf4-1ab60770da90@leemhuis.info>
-Content-Language: en-US
-From: Amin Vakil <info@aminvakil.com>
-Autocrypt: addr=info@aminvakil.com; keydata=
- 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
- +78sXChAfE9n44i0gJHzV8BhCsQG4+k=
-In-Reply-To: <35d2b455-382e-470e-acf4-1ab60770da90@leemhuis.info>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------iMF7MbOQfv5b32euEVw0dnZL"
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+In-Reply-To: <ajCTaUaACV9eNmWo@kbusch-mbp>
+X-Chocolate: 70 percent or better cocoa solids preferably
+X-Operating-System: Linux/6.12.88+deb13-amd64 (x86_64)
+X-Uptime: 12:47:27 up 31 days, 16:00,  2 users,  load average: 0.00, 0.02,
+ 0.00
+User-Agent: Mutt/2.2.13 (2024-03-09)
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------iMF7MbOQfv5b32euEVw0dnZL
-Content-Type: multipart/mixed; boundary="------------3z1p9JiKC2gmqmEYKNJfkrO1";
- protected-headers="v1"; hp="clear"
-Message-ID: <5036fee2-4d00-4ca0-aeed-400da64d7872@aminvakil.com>
-Date: Tue, 16 Jun 2026 15:21:41 +0330
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] usb: core: interrupt-IN wBytesPerInterval fixup
- (727d045d064b) breaks RTL8153 in Lenovo dock
-To: Thorsten Leemhuis <regressions@leemhuis.info>, linux-usb@vger.kernel.org
-Cc: Michal Pecio <michal.pecio@gmail.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Alan Stern <stern@rowland.harvard.edu>, Tao Xue <xuetao09@huawei.com>,
- regressions@lists.linux.dev
-References: <cbdeb118-58c7-48a7-94a0-15e5cdb5879c@aminvakil.com>
- <35d2b455-382e-470e-acf4-1ab60770da90@leemhuis.info>
-Content-Language: en-US
-From: Amin Vakil <info@aminvakil.com>
-Autocrypt: addr=info@aminvakil.com; keydata=
- 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
- +78sXChAfE9n44i0gJHzV8BhCsQG4+k=
-In-Reply-To: <35d2b455-382e-470e-acf4-1ab60770da90@leemhuis.info>
+* Keith Busch (kbusch@kernel.org) wrote:
+> On Mon, Jun 15, 2026 at 04:16:12PM -0700, Vjaceslavs Klimovs wrote:
+> > Your trace looks like what the two earlier reports hit: a read reaching
+> > a leaf device with sectors > 0 but phys_seg 0 (an empty bio). One aside
+> > that may help read the trace: blk_io_trace.error is a __u16, so the
+> > bracketed values on your C lines are errnos as u16 (65514 = -EINVAL,
+> > 65531 = -EIO).
+> > 
+> > The WARN itself is new, the bad bio isn't. bio_add_page() only started
+> > rejecting len == 0 in 643893647cac ("block: reject zero length in
+> > bio_add_page()", v7.1-rc1); on 7.0.8 the same empty bio tripped
+> > scsi_alloc_sgtables()'s !nr_segs instead, which matches what you saw.
+> > That fits your "not a recent regression": the condition is older, v7.1
+> > just made it loud.
+> > 
+> > For Tomas's and my reports (QEMU O_DIRECT to the LV block device) the
+> > origin looks like 5ff3f74e145a ("block: simplify direct io validity
+> > check", v6.18): blkdev_dio_invalid() now checks only aggregate
+> > ki_pos | count alignment and dropped the per-segment
+> > bdev_iter_is_aligned() walk, so a degenerate or misaligned O_DIRECT no
+> > longer gets -EINVAL at the fops boundary. But your reproducer reads a
+> > file, which goes through the filesystem O_DIRECT path and never calls
+> > blkdev_dio_invalid(), and still makes the empty bio. So it isn't only
+> > that one entry point.
+> > 
+> > dm-mirror then hangs because Keith's f7b24c7b41f2 only covers md
+> > raid1/raid10; legacy dm-mirror (dm-raid1.c) has no equivalent and
+> > rebuilds the empty read onto the other leg. Note the leg's status isn't
+> > even consistent (your SATA path returns BLK_STS_IOERR, not
+> > BLK_STS_INVAL), so copying that status check into dm-mirror probably
+> > wouldn't catch every case.
+> > 
+> > For what it's worth, that points me toward rejecting the empty or
+> > misaligned bio once, at submission, with -EINVAL, rather than teaching
+> > each consumer to tolerate it. But you'll know the tradeoffs far better
+> > than I do.
+> > 
+> > I have a small QEMU + LVM raid1/mirror setup that reproduces the
+> > block-device variant and bisects to 5ff3f74e. Happy to run your file
+> > reproducer with some instrumentation at the dm-mirror read entry
+> > (bi_size vs bio_sectors vs bvec lengths) to see whether the bio is
+> > already empty on arrival or built that way on the retry, and to test
+> > any patch.
+> 
+> Thanks for following up here. I didn't initially see your follow-up
+> until Thorsten linked it. I apologize for missing that, this feature is
+> important so I don't want to see anything regress for it.
+> 
+> There is a known bug fix I think future tests should include:
+> 
+>   https://lore.kernel.org/linux-block/20260612223205.465913-1-kbusch@meta.com/
 
---------------3z1p9JiKC2gmqmEYKNJfkrO1
-Content-Type: multipart/mixed; boundary="------------et0BGF130QSoF7OtnsaB4viY"
+> This likely isn't the fix you're looking for, but including it rules out
+> conditions that are not important here.
+> 
+> After that, can we try this suggestion and see if the hang goes away?
+> 
+>   https://lore.kernel.org/linux-block/ajBb8tK-0aJBpIgF@kbusch-mbp/
 
---------------et0BGF130QSoF7OtnsaB4viY
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+With just that one in, the machine survives - thanks!
 
-T24gNi8xNi8yNiAxOjU4IFBNLCBUaG9yc3RlbiBMZWVtaHVpcyB3cm90ZToNCj4gT24gNi8x
-Ni8yNiAxMTo0OSwgQW1pbiBWYWtpbCB3cm90ZToNCj4+DQo+PiBUaGUgZm9sbG93aW5nIGNo
-YW5nZSwgYmFja3BvcnRlZCB0byB0aGUgNy4wLnggc3RhYmxlIHNlcmllcywgaW50cm9kdWNl
-cw0KPj4gYSByZWdyZXNzaW9uIHRoYXQgZGlzYWJsZXMgdGhlIHdpcmVkIGV0aGVybmV0IG9m
-IGEgTGVub3ZvIFVTQi1DLw0KPj4gVGh1bmRlcmJvbHQgZG9jazoNCj4+DQo+PiAgwqAgY29t
-bWl0IDcyN2QwNDVkMDY0YjdjOWEyNGRiM2JjZTljMDQ4NWEzODJjYjc2OGINCj4+ICDCoCB1
-c2I6IGNvcmU6IEZpeCB1cCBJbnRlcnJ1cHQgSU4gZW5kcG9pbnRzIHdpdGggYm9ndXMgd0J5
-dGVzUGVySW50ZXJ2YWwNCj4gDQo+IElzIDcuMSBhZmZlY3RlZCBhcyB3ZWxsPyBJZGVhbGx5
-IHRyeSB1c2luZyBhIG5vbi1oYXJkZW5lZCBrZXJuZWwgdG8ga2VlcA0KPiB0aGUgZG93bnN0
-cmVhbSBwYXRjaGVzIG91dCBvZiB0aGUgd2F5Lg0KPiANCj4gQ2lhbywgVGhvcnN0ZW4NCj4g
-DQoNCmxpbnV4IDcuMSBpcyBub3QgYXZhaWxhYmxlIG9uIG9mZmljaWFsIEFyY2ggTGludXgg
-cmVwb3NpdG9yaWVzLCBnaXZlIG1lIA0KYSBjb3VwbGUgb2YgaG91cnMgdG8gY29tcGlsZSBh
-bmQgdGVzdCwgSSdsbCB1c2Ugbm9uLWhhcmRlbmVkIGtlcm5lbCBhcyANCndlbGwsIEknbGwg
-cHJvcG9zZSBhIHBhdGNoIGVuc3VyaW5nIGlzc3VlIGhhcyBiZWVuIGZpeGVkIGFzIHdlbGws
-IGlmIA0KdGhhdCdzIE9LLg0KDQpCZXN0IFJlZ2FyZHMsDQpBbWluIFZha2lsDQoNCj4+IEhh
-cmR3YXJlOiBMZW5vdm8gZG9jayBidWlsdC1pbiBSZWFsdGVrIFJUTDgxNTMsIGVudW1lcmF0
-aW5nIGFzIFVTQiBJRA0KPj4gMTdlZjo3MjFlIChMZW5vdm8gcmVicmFuZCBvZiAwYmRhOjgx
-NTMpLCBkcml2ZW4gYnkgcjgxNTIgdGhyb3VnaCByODE1Mi0NCj4+IGNmZ3NlbGVjdG9yLiBI
-b3N0IGlzIGFuIEludGVsIGxhcHRvcCB3aXRoIHhoY2lfaGNkLg0KPj4NCj4+IFN5bXB0b206
-IG9uIHRoZSBwYXRjaGVkIGtlcm5lbCB0aGUgTklDIGVudW1lcmF0ZXMsIHI4MTUyIGJpbmRz
-IGFuZCB0aGUNCj4+IG5ldGRldiBpcyBjcmVhdGVkLCB0aGVuIGFib3V0IG9uZSBzZWNvbmQg
-bGF0ZXIgdGhlIGRldmljZSBpcyBVU0ItDQo+PiBkaXNjb25uZWN0ZWQgYnkgcjgxNTItY2Zn
-c2VsZWN0b3IgYW5kIG5ldmVyIHJldHVybnMuIE5vIGV0aGVybmV0DQo+PiBpbnRlcmZhY2Ug
-cmVtYWlucy4gVVNCLCBIRE1JIGFuZCB0aGUgcmVzdCBvZiB0aGUgZG9jayBrZWVwIHdvcmtp
-bmcsIGFuZA0KPj4gcGx1Z2dpbmcgdGhlIGNhYmxlIHN0cmFpZ2h0IGludG8gdGhlIGxhcHRv
-cCBidWlsdC1pbiBOSUMgaXMgdW5hZmZlY3RlZC4NCj4+DQo+PiBBZmZlY3RlZCB2cyB3b3Jr
-aW5nIChBcmNoIGxpbnV4LWhhcmRlbmVkKTogNy4wLjExLmhhcmRlbmVkMiB3b3JrcywNCj4+
-IDcuMC4xMi5oYXJkZW5lZDEgaXMgYnJva2VuLiBUaGlzIGNvbW1pdCBpcyB0aGUgb25seSBS
-VEw4MTUzL1VTQi1jb3JlDQo+PiBjaGFuZ2UgaW4gdGhhdCBkZWx0YSwgYW5kIGl0IGFjdGl2
-YXRlcyBhIGNvZGUgcGF0aCB0aGF0IGRpZCBub3QgcnVuDQo+PiBiZWZvcmUgb24gdGhpcyBk
-ZXZpY2UgKG5vdGUgdGhlIG5ldyB3Qnl0ZXNQZXJJbnRlcnZhbCBtZXNzYWdlIGluIHRoZQ0K
-Pj4gZG1lc2cgYmVsb3csIGFic2VudCBvbiA3LjAuMTEpLg0KPj4NCj4+IFdoeSB0aGlzIGNv
-bW1pdDogY29uZmlndXJhdGlvbiAyIChDREMpIG9mIHRoZSBkZXZpY2UgaGFzIGFuIGludGVy
-cnVwdCBJTg0KPj4gZW5kcG9pbnQgKEVQIDB4ODMpIHdpdGggd01heFBhY2tldFNpemU9MTYg
-YW5kIHdCeXRlc1BlckludGVydmFsPTguIFRoZQ0KPj4gbmV3IGNvbmRpdGlvbiAod0J5dGVz
-UGVySW50ZXJ2YWwgPCB3TWF4UGFja2V0U2l6ZSBvbiBhbiBpbnRlcnJ1cHQgSU4NCj4+IGVu
-ZHBvaW50KSBub3cgZmlyZXMgYW5kIHJld3JpdGVzIHdCeXRlc1BlckludGVydmFsIGZyb20g
-OCB0byAxNi4gT24gdGhpcw0KPj4gZG9jayBwbHVzIHhIQ0kgaG9zdCB0aGF0IHJld3JpdGUg
-YXBwZWFycyB0byBtYWtlIHRoZSBkZXZpY2UgZmFsbCBvZmYgdGhlDQo+PiBidXMgcmlnaHQg
-YWZ0ZXIgdGhlIGNmZ3NlbGVjdG9yIHJlc2V0Lg0KPj4NCj4+IGRtZXNnIChicm9rZW4ga2Vy
-bmVsIDcuMC4xMi5oYXJkZW5lZDEpOg0KPj4gIMKgIHVzYiAyLTEuMTogTmV3IFVTQiBkZXZp
-Y2UgZm91bmQsIGlkVmVuZG9yPTE3ZWYsIGlkUHJvZHVjdD03MjFlLA0KPj4gYmNkRGV2aWNl
-PTMxLjAzDQo+PiAgwqAgdXNiIDItMS4xOiBJbnQgZW5kcG9pbnQgd2l0aCB3Qnl0ZXNQZXJJ
-bnRlcnZhbCBvZiA4IGluIGNvbmZpZyAyDQo+PiBpbnRlcmZhY2UgMCBhbHRzZXR0aW5nIDAg
-ZXAgMTMxOiBzZXR0aW5nIHRvIDE2DQo+PiAgwqAgcjgxNTItY2Znc2VsZWN0b3IgMi0xLjE6
-IHJlc2V0IFN1cGVyU3BlZWQgVVNCIGRldmljZSBudW1iZXIgMyB1c2luZw0KPj4geGhjaV9o
-Y2QNCj4+ICDCoCByODE1MiAyLTEuMToxLjAgKHVubmFtZWQgbmV0X2RldmljZSkgKHVuaW5p
-dGlhbGl6ZWQpOiBJbnZhbGlkIGhlYWRlcg0KPj4gd2hlbiByZWFkaW5nIHBhc3MtdGhydSBN
-QUMgYWRkcg0KPj4gIMKgIHI4MTUyIDItMS4xOjEuMCBlbnAwczEzZjB1MXUxOiByZW5hbWVk
-IGZyb20gZXRoMA0KPj4gIMKgIHI4MTUyLWNmZ3NlbGVjdG9yIDItMS4xOiBVU0IgZGlzY29u
-bmVjdCwgZGV2aWNlIG51bWJlciAzDQo+Pg0KPj4gUmVsZXZhbnQgZGVzY3JpcHRvcnMgKGxz
-dXNiIC12IC1kIDE3ZWY6NzIxZSwgY2FwdHVyZWQgb24gdGhlIHdvcmtpbmcNCj4+IDcuMC4x
-MSBrZXJuZWwpOiBjb25maWd1cmF0aW9uIDIgKENEQyksIGVuZHBvaW50IDB4ODMgSU4gSW50
-ZXJydXB0IGhhcw0KPj4gd01heFBhY2tldFNpemU9MHgwMDEwICgxNiBieXRlcyksIGJJbnRl
-cnZhbD04LCBiTWF4QnVyc3Q9MCwNCj4+IHdCeXRlc1BlckludGVydmFsPTggKHJld3JpdHRl
-biB0byAxNiBieSB0aGUgbmV3IGZpeHVwKS4gQ29uZmlndXJhdGlvbiAxLA0KPj4gdGhlIHZl
-bmRvciBjb25maWcgdGhhdCByODE1MiBhY3R1YWxseSB1c2VzLCBoYXMgaXRzIGludGVycnVw
-dCBlbmRwb2ludA0KPj4gMHg4MyB3aXRoIHdNYXhQYWNrZXRTaXplPTIgYW5kIHdCeXRlc1Bl
-ckludGVydmFsPTIsIHdoaWNoIGlzIG5vdCBhZmZlY3RlZC4NCj4+DQo+PiBSZXZlcnRpbmcg
-dGhpcyBjb21taXQgKG9yIGp1c3QgdGhlIG5ldyBpbnRlcnJ1cHQgSU4gYnJhbmNoIGluIGRy
-aXZlcnMvDQo+PiB1c2IvY29yZS9jb25maWcuYykgc2hvdWxkIHJlc3RvcmUgdGhlIGRldmlj
-ZS4gSSBhbSBoYXBweSB0byBidWlsZCBhbmQNCj4+IGNvbmZpcm0gYSByZXZlcnQsIGFuZCB0
-byB0ZXN0IGFueSBwcm9wb3NlZCBmaXguIEEgcXVpcmsgdG8gc2tpcCB0aGUNCj4+IGludGVy
-cnVwdCBJTiBmaXh1cCBmb3IgdGhlIFJUTDgxNTMgQ0RDIGNvbmZpZ3VyYXRpb24sIG9yIG90
-aGVyd2lzZQ0KPj4gbmFycm93aW5nIHRoZSBuZXcgY29uZGl0aW9uLCBzZWVtcyBsaWtlIHRo
-ZSByaWdodCBkaXJlY3Rpb24uDQo+Pg0KPj4gSSBjYW4gcHJvdmlkZSB0aGUgZnVsbCBkbWVz
-ZyBhbmQgZnVsbCBsc3VzYiAtdiBvdXRwdXQgb24gcmVxdWVzdC4NCj4+DQo+PiAjcmVnemJv
-dCBpbnRyb2R1Y2VkOiA3MjdkMDQ1ZDA2NGI3YzlhMjRkYjNiY2U5YzA0ODVhMzgyY2I3Njhi
-DQo+Pg0KPj4gQmVzdCBSZWdhcmRzLA0KPj4gQW1pbiBWYWtpbA0KPiANCg0K
---------------et0BGF130QSoF7OtnsaB4viY
-Content-Type: application/pgp-keys; name="OpenPGP_0x1EFC1864E9D9E56B.asc"
-Content-Disposition: attachment; filename="OpenPGP_0x1EFC1864E9D9E56B.asc"
-Content-Description: OpenPGP public key
-Content-Transfer-Encoding: quoted-printable
+It does give:
 
------BEGIN PGP PUBLIC KEY BLOCK-----
+[  505.208354] device-mapper: raid1: Mirror read failed from 252:24. Trying alternative device.
+[  505.239376] device-mapper: raid1: All sides of mirror have failed.
+[  505.239389] device-mapper: raid1: Read failure on mirror device 252:25.  Failing I/O.
+[  505.239394] device-mapper: raid1: Mirror read failed.
 
-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
-+78sXChAfE9n44i0gJHzV8BhCsQG4+k=3D
-=3DGHsk
------END PGP PUBLIC KEY BLOCK-----
+Although as far as I can tell the RAID hasn't errored and is still in sync.
 
---------------et0BGF130QSoF7OtnsaB4viY--
+If I turn the test case into a write (just s/pread/pwrite/ ) - the machine
+still survives but then it does lose raid sync, and the raid resync
+seems to stick until I do a 'lvchange --refresh main/lvol0'
+which recovers after having spat out a:
 
---------------3z1p9JiKC2gmqmEYKNJfkrO1--
+[  865.319527] Buffer I/O error on dev dm-26, logical block 262128, async page read
 
---------------iMF7MbOQfv5b32euEVw0dnZL
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
+> I expect the original test case to still return an error (and I think it
+> was designed to), but it shouldn't produce the warn or bug splats with a
+> stuck uninterruptable task.
 
------BEGIN PGP SIGNATURE-----
+It's not clear to me if it was designed to fail or not; I've not had
+a chance to rerun the original qemu block tests yet, and I don't know
+if old kernels succesfully used O_DIRECT in this case.
 
-wsD5BAABCAAjFiEEhGrABIXlXG/0vJ9THvwYZOnZ5WsFAmoxOM0FAwAAAAAACgkQHvwYZOnZ5WsC
-Qgv7B/6uvRkElb4KOwcAZkvw2nMyUSig0muQcg64DAx6qMrKyVYOxlHTxlBSJDM0DFaRhuEgSLcy
-xafZSOYX+SJpm0aOHXv/EpYpMw2rfN6KQlr2MhksbaVSi+DrXXI4ZgXW/yPDoatoKtAa8y6eK4/q
-kMSqtl5baDVPeQI0Ht8qiitGoGuEb87oOpAHHsRcQYCxpKnUj9mmP5T2RcqoXsWgx8+fh4nzEEfr
-v2bK4xOvg0vAppiV2rfDpu899egvm1K3pCmZ6OYVg6qc4y8RaCpmHmR9iLYLCO9ZwJKte7FB0i6j
-n0Uj0aHw39vT54/CEQc8t9flxKzMwEsLXUbreTut1VV7sp9Uwps5a46GX7aik3SJgoODbib6LDEH
-XiYdZKPgPI8YezsLUROySLadvcN4QrlUzX+gBQjCeLUoS90DWnSo56vmD2YdVhEdzVqJ+4yDhzEI
-Ypntg17tbRpu2fRkuvlRKuGotPa6Q0R6GkdcpgiEqlYQikdxmXGyCkAQWaSJ
-=wYNf
------END PGP SIGNATURE-----
+It still feels that my pwrite case above shouldn't cause a raid de-sync
+(especially since a normal user can do it).
 
---------------iMF7MbOQfv5b32euEVw0dnZL--
+Dave
+-- 
+ -----Open up your eyes, open up your mind, open up your code -------   
+/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
+\        dave @ treblig.org |                               | In Hex /
+ \ _________________________|_____ http://www.treblig.org   |_______/
