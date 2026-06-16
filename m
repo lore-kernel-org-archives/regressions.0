@@ -1,141 +1,140 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.102])
+Received: from mail-4322.protonmail.ch (mail-4322.protonmail.ch [185.70.43.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 128AD42883D
-	for <regressions@lists.linux.dev>; Tue, 16 Jun 2026 10:29:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.102
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33616211A14
+	for <regressions@lists.linux.dev>; Tue, 16 Jun 2026 10:56:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781605778; cv=none; b=T2pYzEOlVumanMFjyARPezPvMP2OXbvcxbLSkhNl9+1dY1Svo3q2DLF6A4VPiyZqtdPy6KhAyvs4UfTiEGfO8b7UUGTk3UqqEf14M8GZAhYwo7/eLwqTrzqcRJimmmVXsOZsbC3Rot3ehPVfIiGk6rEVZGt8p5ZSmL+PSQADypk=
+	t=1781607381; cv=none; b=QWW1adqh1AN+G/C65YUaCF8yZk+pqpQUcvGfWO0t8nEUn9N/mc9jktErGZokgjHt8iktSVxlmZgiz/tivAlST5GgmH1N/P4C5s/V7NHAHwkS/LXG2JsJJwT1gqTr52US71+UkmVLYcAcqtzb0ai1k8qrpUefdwGoJqytLlV6FGw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781605778; c=relaxed/simple;
-	bh=7VBa7DLB1t5uNYwn/OgNiCf5jxlEZWt2OCgRh8iCWgE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=n+djePYL8rr3UJYYqNnj59ijWRdpceQfpEQPa5ljdKV4+7rIqcS6GFuXINg02GQk/OlhpjJ1WXes7HR3ThGK5g1ciB2pYqSHrZGUjhXhzVFoeYJVLHKzzquEzlvQpGpXP8TxaHneVj2SJi05v9l3Enuq72T3mHDp0AX0b1g+pko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=ew2gaL0p; arc=none smtp.client-ip=188.68.63.102
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1781607381; c=relaxed/simple;
+	bh=7KJelSdKYrRVYGrQtbsVNW2yVwoTfBvJGZej3c3yJ6M=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Ek+kGsZfk8RGcjPbYL228al08t4fxMSDfjcCZvyU8yiDu6rkgNMK8k/k/9HP8c/6XYkFzMXsw2MVLEuRUt88SHYI/OpZYTAlcOLsXbw0KtxDCoWfjjWbPVuo9siWPP/YpNKuO9aeStEtdtpFLhEzm6ayOZ8xHpScmnkmgu6/aOU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me; spf=pass smtp.mailfrom=pm.me; dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b=qwvS5XvE; arc=none smtp.client-ip=185.70.43.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pm.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="ew2gaL0p"
-Received: from mors-relay-2502.netcup.net (localhost [127.0.0.1])
-	by mors-relay-2502.netcup.net (Postfix) with ESMTPS id 4gfjsB5xH8z66sY;
-	Tue, 16 Jun 2026 12:29:18 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1781605758;
-	bh=7VBa7DLB1t5uNYwn/OgNiCf5jxlEZWt2OCgRh8iCWgE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ew2gaL0pHA8ck5ZbPeIK4vMovGTtYb9GiZ2p+fwWv/xIpWXen8Ot5I7GbjvIGd+cS
-	 8uLTI86aVqr3SNVvRsRep7eChuBNZJc6cwLhDKk1Jqr4L9zmC4QzRbUDVhnZeXzSmJ
-	 yBTlcJaq41Lcf/0DFtkgU9FXmu5cpUbp988Ws1NmWxY5lCocAF9TRE49DosRIikYSr
-	 5mKzJHYSCSkWpwC6/Ax1O0LCFMr0TjAQPJEzm86W++jYpx7LL/n0r1UEf798P+FHjq
-	 VgggVxTHBMkvMXENmyK/IVLPkcTfpxEFGaJcW8fG6NjDGpYCZr4Bx8dR2cwzyfcfl4
-	 mgkhJav0g+FjQ==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-2502.netcup.net (Postfix) with ESMTPS id 4gfjr42kSSz4xln;
-	Tue, 16 Jun 2026 12:28:20 +0200 (CEST)
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4gfjr32k8Lz8sbB;
-	Tue, 16 Jun 2026 12:28:19 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id AA54461841;
-	Tue, 16 Jun 2026 12:28:18 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <35d2b455-382e-470e-acf4-1ab60770da90@leemhuis.info>
-Date: Tue, 16 Jun 2026 12:28:17 +0200
+	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="qwvS5XvE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
+	s=protonmail3; t=1781607371; x=1781866571;
+	bh=do+xM1SWjPjLOlVlRqJ9yLYHrp4GONBqxZljStn6UVs=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=qwvS5XvERtFswiyzxUAcN+Beu/XHh6rvVzyJ2ahysjV60++dzTKacCWFKHlSUJNaa
+	 CSI6WpvEKwMigRI7NzyhIBYa19/An96/1h4lDDiheHE3VV+MLhVjP6UDcsb5830jbi
+	 kH4DXPhnjizt4T6prC+7l9qo3WrCK5zrmWRUWsYTvgtzhNVVsU2CuJBvStSwDB99Z6
+	 CxQqwWDhISpFQGmym688j2Obgc3Mr+W1qPCgIm78RKW8CFb3BR8l7wxVg5Qhz7J5Di
+	 puVd14MpXYsQuIMqV9B/4qpD0IXUM50vnn5VVe3hZmS4BJ/5NPzmbRpec05/wjiHD5
+	 pyzB0qzu0+dYg==
+Date: Tue, 16 Jun 2026 10:56:06 +0000
+To: amd-gfx@lists.freedesktop.org
+From: Gerhard Schwanzer <geschw@pm.me>
+Cc: Felix Kuehling <Felix.Kuehling@amd.com>, Alex Deucher <alexander.deucher@amd.com>, =?utf-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Xiaogang Chen <xiaogang.chen@amd.com>, Philip Yang <Philip.Yang@amd.com>, regressions@lists.linux.dev, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] drm/amdkfd: Use exclusive bounds for SVM split alignment checks
+Message-ID: <20260616105553.13062-1-geschw@pm.me>
+In-Reply-To: <20260616091050.110064-1-geschw@pm.me>
+References: <20260616091050.110064-1-geschw@pm.me>
+Feedback-ID: 110185885:user:proton
+X-Pm-Message-ID: 1d22fdbfda11a879d55aefe475533cc416384fe6
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] usb: core: interrupt-IN wBytesPerInterval fixup
- (727d045d064b) breaks RTL8153 in Lenovo dock
-To: Amin Vakil <info@aminvakil.com>, linux-usb@vger.kernel.org
-Cc: Michal Pecio <michal.pecio@gmail.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Alan Stern <stern@rowland.harvard.edu>, Tao Xue <xuetao09@huawei.com>,
- regressions@lists.linux.dev
-References: <cbdeb118-58c7-48a7-94a0-15e5cdb5879c@aminvakil.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <cbdeb118-58c7-48a7-94a0-15e5cdb5879c@aminvakil.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-PPP-Message-ID: 
- <178160569901.1920135.13090269485935992869@mxe9fb.netcup.net>
-X-NC-CID: nkmXxmyC12p5Evd3Vnfm8/kF5Y1EfXoxHL3B/HmyEa5zrt52gdk=
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 6/16/26 11:49, Amin Vakil wrote:
-> 
-> The following change, backported to the 7.0.x stable series, introduces
-> a regression that disables the wired ethernet of a Lenovo USB-C/
-> Thunderbolt dock:
-> 
->   commit 727d045d064b7c9a24db3bce9c0485a382cb768b
->   usb: core: Fix up Interrupt IN endpoints with bogus wBytesPerInterval
+SVM ranges use inclusive page indices: prange->last is the last page in
+the range. The split-remap logic introduced by commit 448ee45353ef
+("drm/amdkfd: Use huge page size to check split svm range alignment")
+uses ALIGN_DOWN(prange->last, 512) to determine whether the original
+range can contain a 2MB huge-page mapping.
 
-Is 7.1 affected as well? Ideally try using a non-hardened kernel to keep
-the downstream patches out of the way.
+That aligns the last page itself down. Thus a range ending one page
+before the next 2MB boundary is classified as if the final 2MB block did
+not exist. When such a range is split inside that final block, the
+split head or tail can be left off the remap list even though it was
+derived from an original range that may have PMD mappings.
 
-Ciao, Thorsten
+Use prange->last + 1 as the exclusive upper bound when computing the
+original range's last 2MB-aligned boundary. Then use the actual split
+boundary for the head and tail alignment checks: tail->start for a tail
+split, and new_start for a head split. new_start is equivalent to
+head->last + 1 and directly names the exclusive end of the split head.
 
-> Hardware: Lenovo dock built-in Realtek RTL8153, enumerating as USB ID
-> 17ef:721e (Lenovo rebrand of 0bda:8153), driven by r8152 through r8152-
-> cfgselector. Host is an Intel laptop with xhci_hcd.
-> 
-> Symptom: on the patched kernel the NIC enumerates, r8152 binds and the
-> netdev is created, then about one second later the device is USB-
-> disconnected by r8152-cfgselector and never returns. No ethernet
-> interface remains. USB, HDMI and the rest of the dock keep working, and
-> plugging the cable straight into the laptop built-in NIC is unaffected.
-> 
-> Affected vs working (Arch linux-hardened): 7.0.11.hardened2 works,
-> 7.0.12.hardened1 is broken. This commit is the only RTL8153/USB-core
-> change in that delta, and it activates a code path that did not run
-> before on this device (note the new wBytesPerInterval message in the
-> dmesg below, absent on 7.0.11).
-> 
-> Why this commit: configuration 2 (CDC) of the device has an interrupt IN
-> endpoint (EP 0x83) with wMaxPacketSize=16 and wBytesPerInterval=8. The
-> new condition (wBytesPerInterval < wMaxPacketSize on an interrupt IN
-> endpoint) now fires and rewrites wBytesPerInterval from 8 to 16. On this
-> dock plus xHCI host that rewrite appears to make the device fall off the
-> bus right after the cfgselector reset.
-> 
-> dmesg (broken kernel 7.0.12.hardened1):
->   usb 2-1.1: New USB device found, idVendor=17ef, idProduct=721e,
-> bcdDevice=31.03
->   usb 2-1.1: Int endpoint with wBytesPerInterval of 8 in config 2
-> interface 0 altsetting 0 ep 131: setting to 16
->   r8152-cfgselector 2-1.1: reset SuperSpeed USB device number 3 using
-> xhci_hcd
->   r8152 2-1.1:1.0 (unnamed net_device) (uninitialized): Invalid header
-> when reading pass-thru MAC addr
->   r8152 2-1.1:1.0 enp0s13f0u1u1: renamed from eth0
->   r8152-cfgselector 2-1.1: USB disconnect, device number 3
-> 
-> Relevant descriptors (lsusb -v -d 17ef:721e, captured on the working
-> 7.0.11 kernel): configuration 2 (CDC), endpoint 0x83 IN Interrupt has
-> wMaxPacketSize=0x0010 (16 bytes), bInterval=8, bMaxBurst=0,
-> wBytesPerInterval=8 (rewritten to 16 by the new fixup). Configuration 1,
-> the vendor config that r8152 actually uses, has its interrupt endpoint
-> 0x83 with wMaxPacketSize=2 and wBytesPerInterval=2, which is not affected.
-> 
-> Reverting this commit (or just the new interrupt IN branch in drivers/
-> usb/core/config.c) should restore the device. I am happy to build and
-> confirm a revert, and to test any proposed fix. A quirk to skip the
-> interrupt IN fixup for the RTL8153 CDC configuration, or otherwise
-> narrowing the new condition, seems like the right direction.
-> 
-> I can provide the full dmesg and full lsusb -v output on request.
-> 
-> #regzbot introduced: 727d045d064b7c9a24db3bce9c0485a382cb768b
-> 
-> Best Regards,
-> Amin Vakil
+Using head->last for the head-side check can both remap a head that ends
+exactly one page before a 2MB boundary and miss a head whose split
+boundary is one page after such a boundary. Philip Yang pointed out in
+the review of the original change that this condition should use
+head->last + 1 or new_start.
+
+Xiaogang Chen identified the inclusive-last cause and posted the
+candidate fix in the regression thread. With the culprit change active
+and the local revert not applied, the unchanged C/HSA reproducer
+completes 10/10 runs with this change on an RX 7600 XT.
+
+Fixes: 448ee45353ef ("drm/amdkfd: Use huge page size to check split svm ran=
+ge alignment")
+Cc: stable@vger.kernel.org
+Closes: https://gitlab.freedesktop.org/drm/amd/-/work_items/4914
+Link: https://lore.kernel.org/stable/IA1PR12MB85172F7FE9157C092EDA46A0E3112=
+@IA1PR12MB8517.namprd12.prod.outlook.com/
+Link: https://lore.kernel.org/all/32ce2b72-aa16-4202-9f99-92e3cd4408bc@amd.=
+com/
+Suggested-by: Xiaogang Chen <xiaogang.chen@amd.com>
+Signed-off-by: Gerhard Schwanzer <geschw@pm.me>
+---
+Changes in v2:
+- Use new_start for the head-side split-boundary checks, matching Philip
+  Yang's original v4 review guidance and avoiding aligned-head false
+  positives / unaligned-head false negatives.
+- Keep the tail-side last + 1 exclusive-bound fix from Xiaogang's public
+  candidate, which fixes the reproduced RX 7600 XT SDMA0 fault.
+
+ drivers/gpu/drm/amd/amdkfd/kfd_svm.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_svm.c b/drivers/gpu/drm/amd/amd=
+kfd/kfd_svm.c
+index 72cfb4a..59b15d5 100644
+--- a/drivers/gpu/drm/amd/amdkfd/kfd_svm.c
++++ b/drivers/gpu/drm/amd/amdkfd/kfd_svm.c
+@@ -1144,7 +1144,7 @@ static int
+ svm_range_split_tail(struct svm_range *prange, uint64_t new_last,
+ =09=09     struct list_head *insert_list, struct list_head *remap_list)
+ {
+-=09unsigned long last_align_down =3D ALIGN_DOWN(prange->last, 512);
++=09unsigned long last_align_down =3D ALIGN_DOWN(prange->last + 1, 512);
+ =09unsigned long start_align =3D ALIGN(prange->start, 512);
+ =09bool huge_page_mapping =3D last_align_down > start_align;
+ =09struct svm_range *tail =3D NULL;
+@@ -1168,7 +1168,7 @@ static int
+ svm_range_split_head(struct svm_range *prange, uint64_t new_start,
+ =09=09     struct list_head *insert_list, struct list_head *remap_list)
+ {
+-=09unsigned long last_align_down =3D ALIGN_DOWN(prange->last, 512);
++=09unsigned long last_align_down =3D ALIGN_DOWN(prange->last + 1, 512);
+ =09unsigned long start_align =3D ALIGN(prange->start, 512);
+ =09bool huge_page_mapping =3D last_align_down > start_align;
+ =09struct svm_range *head =3D NULL;
+@@ -1181,8 +1181,8 @@ svm_range_split_head(struct svm_range *prange, uint64=
+_t new_start,
+=20
+ =09list_add(&head->list, insert_list);
+=20
+-=09if (huge_page_mapping && head->last + 1 > start_align &&
+-=09    head->last + 1 < last_align_down && (!IS_ALIGNED(head->last, 512)))
++=09if (huge_page_mapping && new_start > start_align &&
++=09    new_start < last_align_down && !IS_ALIGNED(new_start, 512))
+ =09=09list_add(&head->update_list, remap_list);
+=20
+ =09return 0;
+
+base-commit: 2c7d5b0a5ec0fc713a7f350806553643e87e6f43
+--=20
+2.54.0
+
 
