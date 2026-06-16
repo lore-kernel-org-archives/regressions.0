@@ -1,301 +1,207 @@
-Received: from mail.aminvakil.com (mail.aminvakil.com [178.63.189.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f172.google.com (mail-dy1-f172.google.com [74.125.82.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD32D47AF75
-	for <regressions@lists.linux.dev>; Tue, 16 Jun 2026 16:52:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.63.189.195
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781628749; cv=none; b=AMd9DYtWABKIevIKs+0d+32w4HVEMQSzDO5/uuaHeo4MdbH3B+60XE2CXVfAC7VQIn2Mk5GqdOj6Lowo0cvDY410ihGGMn3j717gKOzaJx2b17AJGb6NKkStJeHixR6vFNWphkD1ObnMPPxhVOxxfR++gurH1xybqj1cr57ryJ0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781628749; c=relaxed/simple;
-	bh=Pmmnvi2C5IbgmBENY6Y1klpbi8m+N50NmhW+cKVsqBg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OasuVJokq4EaipJneuM556sxGLvAIWJ/+8GCcYl0UrnQBpNcO1ETrikIzhbRFl822Z+dh2g2EDhy9k6vw/gfPttIXXaFREwxNI734sVIEqRRiFlaeh10NUyaur7HjlIDnYhsStEDMiCT75iENtMNlvBKrMlzVymZHu9tYgu3jnE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=aminvakil.com; spf=pass smtp.mailfrom=aminvakil.com; dkim=pass (2048-bit key) header.d=aminvakil.com header.i=@aminvakil.com header.b=LII4wH1C; arc=none smtp.client-ip=178.63.189.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=aminvakil.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aminvakil.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B5CC47B435
+	for <regressions@lists.linux.dev>; Tue, 16 Jun 2026 18:54:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.172
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1781636088; cv=pass; b=d11ZH7o+SH/2cYAdLIL0bo3wFp7ygIDkGgQFC19vcpBkJnfYabtBhOhOMUaQzmblyRVFO/5+xwbk1VitAl+rYTq3at95vEO367uI9lKDiX6iRlO40gTolcCrqtayiK3JkkSdGciGi2Jjf45CBe55sLaTaRSE1CKR7OQ57CDhUyw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1781636088; c=relaxed/simple;
+	bh=t5rv3SdG7+S7uEuSR6RT+I/PPMa/4tgLkyRZEbA+g/8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=oQfOWKb6iFKmH2YiALP0oslPBe9p356jPboGbr1UO0R3Tt+vde3CMSDX78NL6LeibyvHLstlBMR96X58X6Zal/S6N/yguaYmESZFIX6IqsWoQgTRFS7NHpSDP4nR6o7hp3cvFfQDndYMD3TD1QKh4zv+JxYlGG5BHuuF4Z8Oms4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aohNwX5W; arc=pass smtp.client-ip=74.125.82.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=aminvakil.com header.i=@aminvakil.com header.b="LII4wH1C"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id A7A90453ED;
-	Tue, 16 Jun 2026 20:22:21 +0330 (+0330)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aminvakil.com;
-	s=dkim; t=1781628745;
-	h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-language:in-reply-to:references:autocrypt;
-	bh=Pmmnvi2C5IbgmBENY6Y1klpbi8m+N50NmhW+cKVsqBg=;
-	b=LII4wH1CqEHSGUx7QBvZjXZscS+JfCEkam+u6gzgpjnJkFPTSmjpz6Idvh9AjAoRoL5kBk
-	QGJXvwUnFi8oIkb0D8MC0s7cqYXxMpRt8YD40XgFv4afvCVl0rBP6sUh2SXcnUW9kdLT8/
-	zIy0HaZolaX70vokajuMAb6eykYSzjZzAcoyi9UtrtrDFYSDyf0hd3Enx1xzflhIT2ZbMI
-	bxGefw5SKjAaMj7yBnyuJyC1/Wxp2vWtdx6wOeAL8xjXIj9MdWmLk6N1hdnofTgVsREk44
-	YsBfBeqI/DylFU3oaOo5oiXMDZkos/nmYVMldurYJwmuFINnjFvO+cdM3XLMEA==
-Message-ID: <8f862eb6-adfb-43a9-b4f5-8f9232333b51@aminvakil.com>
-Date: Tue, 16 Jun 2026 20:22:19 +0330
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aohNwX5W"
+Received: by mail-dy1-f172.google.com with SMTP id 5a478bee46e88-304d3d3d8f8so614372eec.2
+        for <regressions@lists.linux.dev>; Tue, 16 Jun 2026 11:54:47 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1781636086; cv=none;
+        d=google.com; s=arc-20240605;
+        b=ao+YVl8ik1Prn8bBNt/EIXyHMJRf+WqEwj8q4k3FSNnHTe5K1SjYCDl3GoL9W7KwNw
+         PElftN7Yn5K+hHi//Ya7te+0JQ9yjC6WMcHe+m2EXZ36lGNLxM3ixeLm+hMqpi4lq3CD
+         ITr3NYU1WWkc6f6+2lt6BnqXg3M6li7bFWQGlShzFheOaep9bi6saMUIPFgbj1W99zcW
+         B5ENeczpLKMU2iyj4Ro1lDgS2+4w0pOKqLBgqE/WgrJ6GhdzdQAC4sQnJs5CHweuiYmj
+         zaGElpKrTiQjudk0+Af7iav+ro6/yF0EPNKrDzjJJzfVP6gDxwBSfxWnsSA2Sne1CEYD
+         yW3Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=MCOSiee7KXjPkCFlHhQFxxSs4KWMyl8PnWZ0V0RhntI=;
+        fh=UUMANgy09801LM3ZnK09mMrZo/OQVGqPg3ubh8ceK84=;
+        b=JFJLAVsi67Ji5J31aV/nMbznMsWPFXtZgHaj1pnBo/+Y2Mw7f1houPdK4vVvwwfkWx
+         dt8fqyKL5VpB2RwW7PuRgTGia9PNMRemfJJoUdx3hciQvbtoa/xVgWZXf2Tz3uAmt4JE
+         ohMnlzSo6hXLfipLb+7hBsaQWlubEWdRjd/SVjLvcJdCkvL6HbzTMVCl0LlYESmTC6OF
+         7u53cfn17slJflqFC/iiwodE1ztblmZG2Rzlu40aWkty20t7a476Bf0th7NIT7FmDMJL
+         odMYD4fhldHNeQnyoHR/RZ9VeJ0D1qeVCkWsE00ESlQvTQPixPigTYGv5k0M+yPBfVeq
+         IYuw==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1781636086; x=1782240886; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MCOSiee7KXjPkCFlHhQFxxSs4KWMyl8PnWZ0V0RhntI=;
+        b=aohNwX5WDdFwgyYgzia5UTVBB4lJpsNyzUvnJC+wiJocAOkyTJpEA2Bzo1iIrfjOkk
+         vVDCbptMfVTO9DYDvIIfngQKHIzg9g75iC8PjRHnF9enK7qNBPsx+DOXn9xdWVK7KeUR
+         xeO9k8hKgVRCjRxFEto1eWLi5rjJxQub+vDlJA/NCl8375VaDPJrzZrHKIrlQGu8hL7D
+         1ePJsshQixVmihdtnEIByN6s1XQOmnu6tJfs0ABPdZoQ4zad/aeBKAnOcANsZH9Q4uRQ
+         PzqDIhwN/gt17aEPHcPw9qciio/s+iuSN0bbV+UaTRjzPj31rP0C9sJ0gHSHZkIEbcj/
+         qwvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781636086; x=1782240886;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=MCOSiee7KXjPkCFlHhQFxxSs4KWMyl8PnWZ0V0RhntI=;
+        b=IcWuwMuFhxpqPy0ao5wOpjG4O1cRNWaXZ6dbhGMZLKvDgEr6V4TUXiKpqgSIf8RkXz
+         MqB94DHTjCn5CRk7fhWCv+/Wicdduyum1Okeofi2ICUPcNiglFFJk0r4f/jwInUgKLjB
+         CZUeAWLo8gc9T626CGVQXdisGrC7RlAadfqNfY9pAhZBeiiLpg+xQ7lr31YTTZAXg0w6
+         9y5bUT7SrMbE1M4w4S+OsFiPUAnpcLBSceNq3Q0Mv/dVLMtEDnnbHjkQkEiOAO8GO1w7
+         EudKKWDoDuMuPNKwKGtRfrqpuGavDnRfe1RqRv2gz4vo0B7q3hMIMRpMhZACsgfDb94I
+         4jFQ==
+X-Forwarded-Encrypted: i=1; AFNElJ8a5yC1YNzz1o8CfuCfFcT7Q0muA6DKOmmzKH6BN4dsMeMqx8Oy9KHOms/UxdewDu1E938R31A7mYla0w==@lists.linux.dev
+X-Gm-Message-State: AOJu0YyoGxf7INblMg8ucN5iRYaa/btnr+ZJpQFxlbN/NBrink2chzWB
+	zPQUEvVzpyfEzoWTrbbebYYyX93sADNqnuzgmCs+DN9+eHi90cbYdHMWPMRmFgTeNVKxQFRyLPn
+	DI5+YHqGji2fgKe836bFG0qM03wsM+Ko=
+X-Gm-Gg: Acq92OFvFLllttLSN16W6K2pGkyOHfEV37o4zVo4kiYknAKlcpNxAGDTTbLSyYKj4bV
+	hnJeM1MXgCqb0jnr5LQx5nazbTkJryOdUFTxy1Uo9bCbfq1Y5doZmHNNb/8IbasTiVeyF4gY+HO
+	h3ToLGNBt8/b+B0IZ5y2M77VYnjyMmz8UMC/sJf6bkPn2IY2LWBtorvCGXbnAiJ2rmEFNs0Twx5
+	97xjNi+cOV3ztEGVjzenGoFxlBVvdVfKHb1xZMr3/v3YnMM+qcCUrKn2UWlSJ8IIJ8hhxzSgLU2
+	YQIM6cYxa9gPCawV4GNmLbT2ly3ijnQedIYO+zBJsVIpoX9acVtOgG0h6HzE5N1f30MPpw==
+X-Received: by 2002:a05:7022:6981:b0:138:3432:4f6 with SMTP id
+ a92af1059eb24-1398f6c603emr40953c88.6.1781636086410; Tue, 16 Jun 2026
+ 11:54:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] usb: core: interrupt-IN wBytesPerInterval fixup
- (727d045d064b) breaks RTL8153 in Lenovo dock
-To: Michal Pecio <michal.pecio@gmail.com>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>, linux-usb@vger.kernel.org,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Alan Stern <stern@rowland.harvard.edu>, Tao Xue <xuetao09@huawei.com>,
- regressions@lists.linux.dev
-References: <cbdeb118-58c7-48a7-94a0-15e5cdb5879c@aminvakil.com>
- <35d2b455-382e-470e-acf4-1ab60770da90@leemhuis.info>
- <5036fee2-4d00-4ca0-aeed-400da64d7872@aminvakil.com>
- <573bbb08-0ba7-4f00-8996-819cc1d9cc48@aminvakil.com>
- <20260616183646.4798516b.michal.pecio@gmail.com>
-Content-Language: en-US
-From: Amin Vakil <info@aminvakil.com>
-Autocrypt: addr=info@aminvakil.com; keydata=
- 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
- +78sXChAfE9n44i0gJHzV8BhCsQG4+k=
-In-Reply-To: <20260616183646.4798516b.michal.pecio@gmail.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------DD3awKhZkdKoIHEuCSYOPkbf"
-X-Last-TLS-Session-Version: TLSv1.3
-
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------DD3awKhZkdKoIHEuCSYOPkbf
-Content-Type: multipart/mixed; boundary="------------SnqF6jRORrHkalnuYnouvcF2";
- protected-headers="v1"; hp="clear"
-Message-ID: <8f862eb6-adfb-43a9-b4f5-8f9232333b51@aminvakil.com>
-Date: Tue, 16 Jun 2026 20:22:19 +0330
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] usb: core: interrupt-IN wBytesPerInterval fixup
- (727d045d064b) breaks RTL8153 in Lenovo dock
-To: Michal Pecio <michal.pecio@gmail.com>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>, linux-usb@vger.kernel.org,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Alan Stern <stern@rowland.harvard.edu>, Tao Xue <xuetao09@huawei.com>,
- regressions@lists.linux.dev
-References: <cbdeb118-58c7-48a7-94a0-15e5cdb5879c@aminvakil.com>
- <35d2b455-382e-470e-acf4-1ab60770da90@leemhuis.info>
- <5036fee2-4d00-4ca0-aeed-400da64d7872@aminvakil.com>
- <573bbb08-0ba7-4f00-8996-819cc1d9cc48@aminvakil.com>
- <20260616183646.4798516b.michal.pecio@gmail.com>
-Content-Language: en-US
-From: Amin Vakil <info@aminvakil.com>
-Autocrypt: addr=info@aminvakil.com; keydata=
- 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
- +78sXChAfE9n44i0gJHzV8BhCsQG4+k=
-In-Reply-To: <20260616183646.4798516b.michal.pecio@gmail.com>
-
---------------SnqF6jRORrHkalnuYnouvcF2
-Content-Type: multipart/mixed; boundary="------------klMQ4J2GMVQT9i7R4CvHhsvO"
-
---------------klMQ4J2GMVQT9i7R4CvHhsvO
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
-
-T24gNi8xNi8yNiA4OjA2IFBNLCBNaWNoYWwgUGVjaW8gd3JvdGU6DQo+IE9uIFR1ZSwgMTYg
-SnVuIDIwMjYgMTc6Mzg6MzIgKzAzMzAsIEFtaW4gVmFraWwgd3JvdGU6DQo+PiBJIGNhbiBj
-b25maXJtIDcuMSBtYWlubGluZSAoaW5zdGFsbGVkIGZyb20gQVVSKSBzdGlsbCBoYXMgdGhl
-IHByb2JsZW06DQo+Pg0KPj4gZG1lc2cgKGtlcm5lbCA3LjEuMCkNCj4+DQo+PiAgICAgdXNi
-IDItMS4xOiBOZXcgVVNCIGRldmljZSBmb3VuZCwgaWRWZW5kb3I9MTdlZiwgaWRQcm9kdWN0
-PTcyMWUsDQo+PiBiY2REZXZpY2U9MzEuMDMNCj4+ICAgICB1c2Jjb3JlOiByZWdpc3RlcmVk
-IG5ldyBkZXZpY2UgZHJpdmVyIHI4MTUyLWNmZ3NlbGVjdG9yDQo+PiAgICAgcjgxNTItY2Zn
-c2VsZWN0b3IgMi0xLjE6IHJlc2V0IFN1cGVyU3BlZWQgVVNCIGRldmljZSBudW1iZXIgMyB1
-c2luZw0KPj4geGhjaV9oY2QNCj4+ICAgICByODE1MiAyLTEuMToxLjAgKHVubmFtZWQgbmV0
-X2RldmljZSkgKHVuaW5pdGlhbGl6ZWQpOiBJbnZhbGlkIGhlYWRlcg0KPj4gd2hlbiByZWFk
-aW5nIHBhc3MtdGhydSBNQUMgYWRkcg0KPiANCj4gV2FzIHRoaXMganVuayBhbHdheXMgaGVy
-ZT8NCg0KWWVzLCBkbyB5b3Ugd2FudCBtZSB0byBsb29rIGZvciBvbGRlciBib290cz8NCg0K
-JCBzdWRvIGpvdXJuYWxjdGwgLWIgLU9MREVSIHwgZ3JlcCAtRSAicjgxNTIiDQprZXJuZWw6
-IExpbnV4IHZlcnNpb24gNy4wLjgtaGFyZGVuZWQxLTEtaGFyZGVuZWQgDQoobGludXgtaGFy
-ZGVuZWRAYXJjaGxpbnV4KSAoZ2NjIChHQ0MpIDE2LjEuMSAyMDI2MDQzMCwgR05VIGxkIChH
-TlUgDQpCaW51dGlscykgMi40Ni4wKSAjMSBTTVAgUFJFRU1QVF9EWU5BTUlDIEZyaSwgMTUg
-TWF5IDIwMjYgMTU6NDQ6MDkgKzAwMDANCmtlcm5lbDogdXNiY29yZTogcmVnaXN0ZXJlZCBu
-ZXcgZGV2aWNlIGRyaXZlciByODE1Mi1jZmdzZWxlY3Rvcg0Ka2VybmVsOiByODE1Mi1jZmdz
-ZWxlY3RvciAyLTEuMTogcmVzZXQgU3VwZXJTcGVlZCBVU0IgZGV2aWNlIG51bWJlciAzIA0K
-dXNpbmcgeGhjaV9oY2QNCmtlcm5lbDogcjgxNTIgMi0xLjE6MS4wICh1bm5hbWVkIG5ldF9k
-ZXZpY2UpICh1bmluaXRpYWxpemVkKTogSW52YWxpZCANCmhlYWRlciB3aGVuIHJlYWRpbmcg
-cGFzcy10aHJ1IE1BQyBhZGRyDQprZXJuZWw6IHVzYmNvcmU6IHJlZ2lzdGVyZWQgbmV3IGlu
-dGVyZmFjZSBkcml2ZXIgcjgxNTINCmtlcm5lbDogcjgxNTIgMi0xLjE6MS4wIGVucDBzMTNm
-MHUxdTE6IHJlbmFtZWQgZnJvbSBldGgwDQprZXJuZWw6IHI4MTUyIDItMS4xOjEuMCBlbnAw
-czEzZjB1MXUxOiBjYXJyaWVyIG9uDQoNCj4gDQo+PiAgICAgdXNiY29yZTogcmVnaXN0ZXJl
-ZCBuZXcgaW50ZXJmYWNlIGRyaXZlciByODE1Mg0KPj4gICAgIHI4MTUyIDItMS4xOjEuMCBl
-bnAwczEzZjB1MXUxOiByZW5hbWVkIGZyb20gZXRoMA0KPj4gICAgIHI4MTUyLWNmZ3NlbGVj
-dG9yIDItMS4xOiBVU0IgZGlzY29ubmVjdCwgZGV2aWNlIG51bWJlciAzDQo+Pg0KPj4+Pj4g
-SGFyZHdhcmU6IExlbm92byBkb2NrIGJ1aWx0LWluIFJlYWx0ZWsgUlRMODE1MywgZW51bWVy
-YXRpbmcgYXMNCj4+Pj4+IFVTQiBJRCAxN2VmOjcyMWUgKExlbm92byByZWJyYW5kIG9mIDBi
-ZGE6ODE1MyksIGRyaXZlbiBieSByODE1Mg0KPj4+Pj4gdGhyb3VnaCByODE1Mi0gY2Znc2Vs
-ZWN0b3IuIEhvc3QgaXMgYW4gSW50ZWwgbGFwdG9wIHdpdGggeGhjaV9oY2QuDQo+Pj4+Pg0K
-Pj4+Pj4gU3ltcHRvbTogb24gdGhlIHBhdGNoZWQga2VybmVsIHRoZSBOSUMgZW51bWVyYXRl
-cywgcjgxNTIgYmluZHMNCj4+Pj4+IGFuZCB0aGUgbmV0ZGV2IGlzIGNyZWF0ZWQsIHRoZW4g
-YWJvdXQgb25lIHNlY29uZCBsYXRlciB0aGUgZGV2aWNlDQo+Pj4+PiBpcyBVU0ItIGRpc2Nv
-bm5lY3RlZCBieSByODE1Mi1jZmdzZWxlY3RvciBhbmQgbmV2ZXIgcmV0dXJucy4gTm8NCj4+
-Pj4+IGV0aGVybmV0IGludGVyZmFjZSByZW1haW5zLiBVU0IsIEhETUkgYW5kIHRoZSByZXN0
-IG9mIHRoZSBkb2NrDQo+Pj4+PiBrZWVwIHdvcmtpbmcsIGFuZCBwbHVnZ2luZyB0aGUgY2Fi
-bGUgc3RyYWlnaHQgaW50byB0aGUgbGFwdG9wDQo+Pj4+PiBidWlsdC1pbiBOSUMgaXMgdW5h
-ZmZlY3RlZC4NCj4+Pj4+DQo+Pj4+PiBBZmZlY3RlZCB2cyB3b3JraW5nIChBcmNoIGxpbnV4
-LWhhcmRlbmVkKTogNy4wLjExLmhhcmRlbmVkMiB3b3JrcywNCj4+Pj4+IDcuMC4xMi5oYXJk
-ZW5lZDEgaXMgYnJva2VuLiBUaGlzIGNvbW1pdCBpcyB0aGUgb25seQ0KPj4+Pj4gUlRMODE1
-My9VU0ItY29yZSBjaGFuZ2UgaW4gdGhhdCBkZWx0YSwgYW5kIGl0IGFjdGl2YXRlcyBhIGNv
-ZGUNCj4+Pj4+IHBhdGggdGhhdCBkaWQgbm90IHJ1biBiZWZvcmUgb24gdGhpcyBkZXZpY2Ug
-KG5vdGUgdGhlIG5ldw0KPj4+Pj4gd0J5dGVzUGVySW50ZXJ2YWwgbWVzc2FnZSBpbiB0aGUg
-ZG1lc2cgYmVsb3csIGFic2VudCBvbiA3LjAuMTEpLg0KPiANCj4gUlRMODE1MyB3YXMgb25l
-IG9mIHRoZSBjaGlwcyBzcGVjaWZpY2FsbHkgdGFyZ2V0ZWQgYnkgdGhpcyBmaXgsIGJ1dA0K
-PiBpdCBhZmZlY3RzIHRoZSBDREMgY29uZmlndXJhdGlvbiB3aGljaCB5b3UgZG9uJ3Qgc2Vl
-bSB0byBiZSB1c2luZy4NCj4gDQo+IEkgaGF2ZSB0cmllZCBsaW51eC1oYXJkZW5lZC03LjAu
-MTIuaGFyZGVuZWQxLTEteDg2XzY0IGZyb20gQXJjaCByZXBvDQo+IGFzIHdlbGwgYXMgbXkg
-b3duIGJ1aWxkIG9mIDcuMS1yYzYsIGFuZCBteSBSVEw4MTUzICgwYmRhOjgxNTMpIGluIGEN
-Cj4gZGlmZmVyZW50IGtpbmQgb2YgVVNCLUMgZG9jayBzdGlsbCB3b3JrcyB3aXRoIGEgZmV3
-IHhIQ0kgY29udHJvbGxlcnMuDQo+IA0KPiBTbyBpdCdzIHNvbWUgd2VpcmQgcHJvYmxlbSBu
-YXJyb3dseSBzcGVjaWZpYyB0byB5b3VyIHN5c3RlbS4gTm93IHRoYXQNCj4geW91IGhhdmUg
-YnVpbHQgeW91ciBvd24ga2VybmVsLCBwbGVhc2UgYWxzbyByZXZlcnQgdGhlIHN1c3BlY3Qg
-cGF0Y2gNCj4gdG8gdmVyaWZ5IGlmIHRoYXQncyByZWFsbHkgaXQuDQoNCkhvbmVzdGx5IEkn
-dmUgdHJpZWQgcGF0Y2hpbmcgaXQgbXlzZWxmIDopDQoNCmJ5IGNoYW5naW5nDQoNCihsZTE2
-X3RvX2NwdShkZXNjLT53Qnl0ZXNQZXJJbnRlcnZhbCkgPCB1c2JfZW5kcG9pbnRfbWF4cCgm
-ZXAtPmRlc2MpICYmDQoNCnRvDQoNCihsZTE2X3RvX2NwdShkZXNjLT53Qnl0ZXNQZXJJbnRl
-cnZhbCkgPT0gMCAmJg0KDQppbiBsaW5lIDE4NyBvZiBkcml2ZXJzL3VzYi9jb3JlL2NvbmZp
-Zy5jIHRvIHNlZSBpZiB0aGF0IGZpeGVzIHRoZSBpc3N1ZSANCmFuZCBpdCBkaWQgbm90LCBi
-dXQgSSBkaWRuJ3Qgc3BlY2lmaWNhbGx5IHJldmVydGVkIHRoZSBjb21taXQgdG8gc2VlIGlm
-IA0KdGhhdCBmaXhlcyB0aGUgaXNzdWUuDQoNCkkgd2lsbCByZXZlcnQgdGhlIGV4YWN0IGNv
-bW1pdCBhbmQgcmVwb3J0IGJhY2suDQo+IA0KPj4+Pj4gSSBjYW4gcHJvdmlkZSB0aGUgZnVs
-bCBkbWVzZyBhbmQgZnVsbCBsc3VzYiAtdiBvdXRwdXQgb24gcmVxdWVzdC4NCj4gDQo+IGxz
-dXNiIC12IG9mIHRoZSBOSUMgbWF5IGJlIHVzZWZ1bCBpbiBjYXNlIGl0J3MgZGlmZmVyZW50
-IGZyb20gbWluZS4NCj4gbHN1c2IgLXR2IG9mIHRoZSB3aG9sZSBkb2NrLCBiZWNhdXNlIHRo
-ZXJlIGFyZSBvdGhlciByZWNlbnQgcGF0Y2hlcw0KPiBmb3IgTGVub3ZvIGRvY2tzIGFuZCBJ
-J20gbm90IHN1cmUgaWYgdGhleSBhcHBseSB0byB5b3Vycy4NCj4gDQoNClN1cmUsIEkgZG8g
-bm90IGhhdmUgdGhlIGRvY2sgd2l0aCBtZSBub3csIEknbGwgc2VuZCB0aGlzIHRvbW9ycm93
-IGFzIHdlbGwuDQoNCkJlc3QgUmVnYXJkcywNCkFtaW4gVmFraWwNCg0KPiBSZWdhcmRzLA0K
-PiBNaWNoYWwNCg0K
---------------klMQ4J2GMVQT9i7R4CvHhsvO
-Content-Type: application/pgp-keys; name="OpenPGP_0x1EFC1864E9D9E56B.asc"
-Content-Disposition: attachment; filename="OpenPGP_0x1EFC1864E9D9E56B.asc"
-Content-Description: OpenPGP public key
+References: <20260616091050.110064-1-geschw@pm.me> <20260616105553.13062-1-geschw@pm.me>
+In-Reply-To: <20260616105553.13062-1-geschw@pm.me>
+From: Alex Deucher <alexdeucher@gmail.com>
+Date: Tue, 16 Jun 2026 14:54:35 -0400
+X-Gm-Features: AVVi8CcMitJrUy-JihCbkDqEzdH6bqLbZvkER3aP95k0NiRN5BGB7OhOK604isU
+Message-ID: <CADnq5_PV0BF9RkrG7ZN-OBOr2YQ=TdtvknkuDpBnwqswLNiZBg@mail.gmail.com>
+Subject: Re: [PATCH v2] drm/amdkfd: Use exclusive bounds for SVM split
+ alignment checks
+To: Gerhard Schwanzer <geschw@pm.me>
+Cc: amd-gfx@lists.freedesktop.org, Felix Kuehling <Felix.Kuehling@amd.com>, 
+	Alex Deucher <alexander.deucher@amd.com>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Xiaogang Chen <xiaogang.chen@amd.com>, Philip Yang <Philip.Yang@amd.com>, regressions@lists.linux.dev, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
------BEGIN PGP PUBLIC KEY BLOCK-----
+On Tue, Jun 16, 2026 at 6:56=E2=80=AFAM Gerhard Schwanzer <geschw@pm.me> wr=
+ote:
+>
+> SVM ranges use inclusive page indices: prange->last is the last page in
+> the range. The split-remap logic introduced by commit 448ee45353ef
+> ("drm/amdkfd: Use huge page size to check split svm range alignment")
+> uses ALIGN_DOWN(prange->last, 512) to determine whether the original
+> range can contain a 2MB huge-page mapping.
+>
+> That aligns the last page itself down. Thus a range ending one page
+> before the next 2MB boundary is classified as if the final 2MB block did
+> not exist. When such a range is split inside that final block, the
+> split head or tail can be left off the remap list even though it was
+> derived from an original range that may have PMD mappings.
+>
+> Use prange->last + 1 as the exclusive upper bound when computing the
+> original range's last 2MB-aligned boundary. Then use the actual split
+> boundary for the head and tail alignment checks: tail->start for a tail
+> split, and new_start for a head split. new_start is equivalent to
+> head->last + 1 and directly names the exclusive end of the split head.
+>
+> Using head->last for the head-side check can both remap a head that ends
+> exactly one page before a 2MB boundary and miss a head whose split
+> boundary is one page after such a boundary. Philip Yang pointed out in
+> the review of the original change that this condition should use
+> head->last + 1 or new_start.
+>
+> Xiaogang Chen identified the inclusive-last cause and posted the
+> candidate fix in the regression thread. With the culprit change active
+> and the local revert not applied, the unchanged C/HSA reproducer
+> completes 10/10 runs with this change on an RX 7600 XT.
+>
+> Fixes: 448ee45353ef ("drm/amdkfd: Use huge page size to check split svm r=
+ange alignment")
+> Cc: stable@vger.kernel.org
+> Closes: https://gitlab.freedesktop.org/drm/amd/-/work_items/4914
+> Link: https://lore.kernel.org/stable/IA1PR12MB85172F7FE9157C092EDA46A0E31=
+12@IA1PR12MB8517.namprd12.prod.outlook.com/
+> Link: https://lore.kernel.org/all/32ce2b72-aa16-4202-9f99-92e3cd4408bc@am=
+d.com/
+> Suggested-by: Xiaogang Chen <xiaogang.chen@amd.com>
+> Signed-off-by: Gerhard Schwanzer <geschw@pm.me>
 
-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
-+78sXChAfE9n44i0gJHzV8BhCsQG4+k=3D
-=3DGHsk
------END PGP PUBLIC KEY BLOCK-----
+Sorry, I missed this patch earlier.
+Acked-by: Alex Deucher <alexander.deucher@amd.com>
 
---------------klMQ4J2GMVQT9i7R4CvHhsvO--
+Applied.  thanks.
 
---------------SnqF6jRORrHkalnuYnouvcF2--
+Alex
 
---------------DD3awKhZkdKoIHEuCSYOPkbf
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-wsD5BAABCAAjFiEEhGrABIXlXG/0vJ9THvwYZOnZ5WsFAmoxf0MFAwAAAAAACgkQHvwYZOnZ5Wv+
-2wwAkjYKZD77bxiZ1Ga1Q52xaTnTi3ODL1BRSQqcZVqK0fNBROu/kFGSvhOUnNtDgfpoSvN6bE++
-41QQp1d4KdkNmDvnu7bVx3iTmx0EnPtT/egl7kyD0mUAmXM8ctWGfl9Kth1dQ4BjeZou/1nqtJvw
-zMVSMfaME9p4tw0f9usP+zam6QclIFL3n/0jCwqCrZPe8C4EVJ7q5oWUVdOcSeAJ0QAy/YN199h0
-TFEY4FIrf+nmFVz/IfR8djADL8LkHq6vcVsPyrYpb4XNrJuhtwAgwT6JjE5Ie62uts1ZzhpOMlkH
-6TJ7drRX3sIoccJbggajUI+guMU7hBQ2IU303dVijuVuT7AK3opIMnG5PC3IpbOSesdYXNwE7VpZ
-d+ExLHt7lkGa0NqwZqjIM5OeS6CzCgR+5ov5xX9/RHv/n50opg/NYuRKyG8JGaVQxfzeTZzd539w
-gdBwSbVPQQYC9OZLBmoacLiLsFmBOzv6yimJ3HafeDVRrrKoAn4gIgRQkkdy
-=GlTt
------END PGP SIGNATURE-----
-
---------------DD3awKhZkdKoIHEuCSYOPkbf--
+> ---
+> Changes in v2:
+> - Use new_start for the head-side split-boundary checks, matching Philip
+>   Yang's original v4 review guidance and avoiding aligned-head false
+>   positives / unaligned-head false negatives.
+> - Keep the tail-side last + 1 exclusive-bound fix from Xiaogang's public
+>   candidate, which fixes the reproduced RX 7600 XT SDMA0 fault.
+>
+>  drivers/gpu/drm/amd/amdkfd/kfd_svm.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_svm.c b/drivers/gpu/drm/amd/a=
+mdkfd/kfd_svm.c
+> index 72cfb4a..59b15d5 100644
+> --- a/drivers/gpu/drm/amd/amdkfd/kfd_svm.c
+> +++ b/drivers/gpu/drm/amd/amdkfd/kfd_svm.c
+> @@ -1144,7 +1144,7 @@ static int
+>  svm_range_split_tail(struct svm_range *prange, uint64_t new_last,
+>                      struct list_head *insert_list, struct list_head *rem=
+ap_list)
+>  {
+> -       unsigned long last_align_down =3D ALIGN_DOWN(prange->last, 512);
+> +       unsigned long last_align_down =3D ALIGN_DOWN(prange->last + 1, 51=
+2);
+>         unsigned long start_align =3D ALIGN(prange->start, 512);
+>         bool huge_page_mapping =3D last_align_down > start_align;
+>         struct svm_range *tail =3D NULL;
+> @@ -1168,7 +1168,7 @@ static int
+>  svm_range_split_head(struct svm_range *prange, uint64_t new_start,
+>                      struct list_head *insert_list, struct list_head *rem=
+ap_list)
+>  {
+> -       unsigned long last_align_down =3D ALIGN_DOWN(prange->last, 512);
+> +       unsigned long last_align_down =3D ALIGN_DOWN(prange->last + 1, 51=
+2);
+>         unsigned long start_align =3D ALIGN(prange->start, 512);
+>         bool huge_page_mapping =3D last_align_down > start_align;
+>         struct svm_range *head =3D NULL;
+> @@ -1181,8 +1181,8 @@ svm_range_split_head(struct svm_range *prange, uint=
+64_t new_start,
+>
+>         list_add(&head->list, insert_list);
+>
+> -       if (huge_page_mapping && head->last + 1 > start_align &&
+> -           head->last + 1 < last_align_down && (!IS_ALIGNED(head->last, =
+512)))
+> +       if (huge_page_mapping && new_start > start_align &&
+> +           new_start < last_align_down && !IS_ALIGNED(new_start, 512))
+>                 list_add(&head->update_list, remap_list);
+>
+>         return 0;
+>
+> base-commit: 2c7d5b0a5ec0fc713a7f350806553643e87e6f43
+> --
+> 2.54.0
+>
+>
