@@ -1,183 +1,308 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+Received: from mail.aminvakil.com (mail.aminvakil.com [178.63.189.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58E713195FC;
-	Tue, 16 Jun 2026 14:04:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4EF033342C
+	for <regressions@lists.linux.dev>; Tue, 16 Jun 2026 14:08:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.63.189.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781618696; cv=none; b=Zy2R2z8VjTQIp2jt5Q7SYN80cxzo6TiYapgSLLovcj+pYnxnj53k3145sh/mxdJAjPQ13m82INGHEhqQSFhulNLcpd0fze04T1npSaQM8ye183gXSbrMovenVDcIH61iJPe/jxSAYjnlbujBNaY5WTF8U1iHmwetFR0NVPgGxnA=
+	t=1781618920; cv=none; b=i9BYFqizVq6S9qG3VZLxTYMFAUAk//phkK9+9G9q0fVHH6rzxSZcApUSMSKhpU4xG4nxwAF/wq4+HcllmMwhpBOEdQ/pCSGNMqE1RXVyhCptn2UvZGaVhbrRp7yvVKrADBT1IAy7kJPYgo8I7qClV1JnHudpquh7KGYhl2DBXsg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781618696; c=relaxed/simple;
-	bh=+XTM8HComuJp9mJb67vhcrqpaS2S9NvMCqXH7vYR8eI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gfJHp0MJ4XkJzmiKs42ae+erAlJadf2iEGK+JoT0H46FtmdCiX2wd0oWv4OWpLM3g9Xj1nDwmw60TEGCqmyw4iL4kfHmH2LI3/gmI+qlK7OYHaE8eQrviy14zLe3pNV+UF/vIZZGjmyT7uWaCfkcV2KoynssDNLTU8O34QtOexY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=jwArWyVr; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+	s=arc-20240116; t=1781618920; c=relaxed/simple;
+	bh=o+k41eSYPC3u7g+lG6VMLFp7ka1IlrwdmaaUEOH1+ZA=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=UJ98OqIEbZK0evU009ctiumm6jZ/8TRtaXYQlW4QL1WyPcQABUOweqY1UU3k2DqAcNAWOCr/AU1v97nWmDzwVIzI/dTpSU4nu6YLoJpIoRv5joKsNfdF+lMpOUjyhBqdoSsVgsX/9tJ9YbLEls2PuWxv5UwjtraUpaxY84ztl9w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=aminvakil.com; spf=pass smtp.mailfrom=aminvakil.com; dkim=pass (2048-bit key) header.d=aminvakil.com header.i=@aminvakil.com header.b=jPihClf0; arc=none smtp.client-ip=178.63.189.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=aminvakil.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aminvakil.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="jwArWyVr"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=Content-Type:MIME-Version:Message-ID:Subject:From:Date:From
-	:Subject; bh=NrDzEHkU9UH4S6zMhq+Z1fXZcTmNTi2n2kGbaEHw6z8=; b=jwArWyVrukc0iLRZ
-	0IdBCNCF4kbizVtJx+sz6D9P9hrRrcdiUMxY+wM3+o3vqXi5dYs+XHa1grUvcoPgECIZM9uPFH8DC
-	mpFz7yKQv5O20U3vCc9lPAeXP3dfREI+kDrw6McjU1MWy6kCZIjbDZ6byyLTQibwfi75WHSfhHpPY
-	9KeiCV9Z52RhoGTYxLFT6iHSaTruS6O3Vkn6hqoPfdxRtvRsJX4tirUJNuMnB+OuiJYmP1wE+SOty
-	AMiWgYxUQmhOweU53n8IIJDYabq7jAldxxoFurc+LHhbxhEfx6eXMZqj7XY1mz0k8KiDGfP3jX1LO
-	kRFZegY5/Bkkw64YmQ==;
-Received: from dg by mx.treblig.org with local (Exim 4.98.2)
-	(envelope-from <dg@treblig.org>)
-	id 1wZUPJ-000000083nK-298a;
-	Tue, 16 Jun 2026 14:04:49 +0000
-Date: Tue, 16 Jun 2026 14:04:49 +0000
-From: "Dr. David Alan Gilbert" <dave@treblig.org>
-To: Keith Busch <kbusch@kernel.org>, zkabelac@redhat.com
-Cc: Vjaceslavs Klimovs <vklimovs@gmail.com>,
-	Thorsten Leemhuis <regressions@leemhuis.info>, trnka@scm.com,
-	linux-block@vger.kernel.org, dm-devel@lists.linux.dev,
-	Linux kernel regressions list <regressions@lists.linux.dev>
-Subject: Re: Repeatable, raid1+O_DIRECT, hang/warn
-Message-ID: <ajFYAeItZkyZ9Imi@gallifrey>
-References: <ai7rnH20IYeSmY8s@gallifrey>
- <165d3195-c81d-4760-870b-23a9a3b3b72c@leemhuis.info>
- <ai_1LYtofh1fwD-N@gallifrey>
- <CAC_j7i0eDccVWzPeRafM50mZEOFHPz2cwd=RZqqx6TK2EVRFvw@mail.gmail.com>
- <ajCTaUaACV9eNmWo@kbusch-mbp>
- <ajFISH9bvyWjLOM6@gallifrey>
- <ajFK5NXkxd6jU5zu@gallifrey>
+	dkim=pass (2048-bit key) header.d=aminvakil.com header.i=@aminvakil.com header.b="jPihClf0"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id BAC594206C;
+	Tue, 16 Jun 2026 17:38:33 +0330 (+0330)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aminvakil.com;
+	s=dkim; t=1781618916;
+	h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-language:in-reply-to:references:autocrypt;
+	bh=o+k41eSYPC3u7g+lG6VMLFp7ka1IlrwdmaaUEOH1+ZA=;
+	b=jPihClf0m64CrrPPh/WK/4bbVHW7K6dlNBjl92VXOvVmwwiS/46UpvTlS3Yu3bFYvyDH1A
+	rpf4cH01KdJ7V+C+IBdgl4eKqg8vSMCgWz8QpaaU6s2VPJ3H4+smKHXa1KaM3JIWiYvb7c
+	7My+FUNGwPetzwzmHJVmdhsWn8b0nw7kMrlz4FD6KxAa9YLSECVcoUQ9I9gdfpqVPFmMwO
+	+NpBK0W30bTJSnFNZuqcfeXRcEjat6mOpGL5Ix1n8YMtFuazZTBee2NnB4uPplneOhLRQ4
+	Z3PNQE4PP8ze92ffu/uJqd471mcx7TeBdrVi3zXAV7ccKkalIKgE6GWGJEitvw==
+Message-ID: <573bbb08-0ba7-4f00-8996-819cc1d9cc48@aminvakil.com>
+Date: Tue, 16 Jun 2026 17:38:32 +0330
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-In-Reply-To: <ajFK5NXkxd6jU5zu@gallifrey>
-X-Chocolate: 70 percent or better cocoa solids preferably
-X-Operating-System: Linux/6.12.88+deb13-amd64 (x86_64)
-X-Uptime: 14:03:37 up 31 days, 17:16,  2 users,  load average: 0.15, 0.06,
- 0.02
-User-Agent: Mutt/2.2.13 (2024-03-09)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] usb: core: interrupt-IN wBytesPerInterval fixup
+ (727d045d064b) breaks RTL8153 in Lenovo dock
+From: Amin Vakil <info@aminvakil.com>
+To: Thorsten Leemhuis <regressions@leemhuis.info>, linux-usb@vger.kernel.org
+Cc: Michal Pecio <michal.pecio@gmail.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Alan Stern <stern@rowland.harvard.edu>, Tao Xue <xuetao09@huawei.com>,
+ regressions@lists.linux.dev
+References: <cbdeb118-58c7-48a7-94a0-15e5cdb5879c@aminvakil.com>
+ <35d2b455-382e-470e-acf4-1ab60770da90@leemhuis.info>
+ <5036fee2-4d00-4ca0-aeed-400da64d7872@aminvakil.com>
+Content-Language: en-US
+Autocrypt: addr=info@aminvakil.com; keydata=
+ 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
+ +78sXChAfE9n44i0gJHzV8BhCsQG4+k=
+In-Reply-To: <5036fee2-4d00-4ca0-aeed-400da64d7872@aminvakil.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------BufKtsfy02k51ZV9Awkde7pg"
+X-Last-TLS-Session-Version: TLSv1.3
 
-* Dr. David Alan Gilbert (dave@treblig.org) wrote:
-> * Dr. David Alan Gilbert (dave@treblig.org) wrote:
-> > * Keith Busch (kbusch@kernel.org) wrote:
-> > > On Mon, Jun 15, 2026 at 04:16:12PM -0700, Vjaceslavs Klimovs wrote:
-> > > > Your trace looks like what the two earlier reports hit: a read reaching
-> > > > a leaf device with sectors > 0 but phys_seg 0 (an empty bio). One aside
-> > > > that may help read the trace: blk_io_trace.error is a __u16, so the
-> > > > bracketed values on your C lines are errnos as u16 (65514 = -EINVAL,
-> > > > 65531 = -EIO).
-> > > > 
-> > > > The WARN itself is new, the bad bio isn't. bio_add_page() only started
-> > > > rejecting len == 0 in 643893647cac ("block: reject zero length in
-> > > > bio_add_page()", v7.1-rc1); on 7.0.8 the same empty bio tripped
-> > > > scsi_alloc_sgtables()'s !nr_segs instead, which matches what you saw.
-> > > > That fits your "not a recent regression": the condition is older, v7.1
-> > > > just made it loud.
-> > > > 
-> > > > For Tomas's and my reports (QEMU O_DIRECT to the LV block device) the
-> > > > origin looks like 5ff3f74e145a ("block: simplify direct io validity
-> > > > check", v6.18): blkdev_dio_invalid() now checks only aggregate
-> > > > ki_pos | count alignment and dropped the per-segment
-> > > > bdev_iter_is_aligned() walk, so a degenerate or misaligned O_DIRECT no
-> > > > longer gets -EINVAL at the fops boundary. But your reproducer reads a
-> > > > file, which goes through the filesystem O_DIRECT path and never calls
-> > > > blkdev_dio_invalid(), and still makes the empty bio. So it isn't only
-> > > > that one entry point.
-> > > > 
-> > > > dm-mirror then hangs because Keith's f7b24c7b41f2 only covers md
-> > > > raid1/raid10; legacy dm-mirror (dm-raid1.c) has no equivalent and
-> > > > rebuilds the empty read onto the other leg. Note the leg's status isn't
-> > > > even consistent (your SATA path returns BLK_STS_IOERR, not
-> > > > BLK_STS_INVAL), so copying that status check into dm-mirror probably
-> > > > wouldn't catch every case.
-> > > > 
-> > > > For what it's worth, that points me toward rejecting the empty or
-> > > > misaligned bio once, at submission, with -EINVAL, rather than teaching
-> > > > each consumer to tolerate it. But you'll know the tradeoffs far better
-> > > > than I do.
-> > > > 
-> > > > I have a small QEMU + LVM raid1/mirror setup that reproduces the
-> > > > block-device variant and bisects to 5ff3f74e. Happy to run your file
-> > > > reproducer with some instrumentation at the dm-mirror read entry
-> > > > (bi_size vs bio_sectors vs bvec lengths) to see whether the bio is
-> > > > already empty on arrival or built that way on the retry, and to test
-> > > > any patch.
-> > > 
-> > > Thanks for following up here. I didn't initially see your follow-up
-> > > until Thorsten linked it. I apologize for missing that, this feature is
-> > > important so I don't want to see anything regress for it.
-> > > 
-> > > There is a known bug fix I think future tests should include:
-> > > 
-> > >   https://lore.kernel.org/linux-block/20260612223205.465913-1-kbusch@meta.com/
-> > 
-> > > This likely isn't the fix you're looking for, but including it rules out
-> > > conditions that are not important here.
-> > > 
-> > > After that, can we try this suggestion and see if the hang goes away?
-> > > 
-> > >   https://lore.kernel.org/linux-block/ajBb8tK-0aJBpIgF@kbusch-mbp/
-> > 
-> > With just that one in, the machine survives - thanks!
-> > 
-> > It does give:
-> > 
-> > [  505.208354] device-mapper: raid1: Mirror read failed from 252:24. Trying alternative device.
-> > [  505.239376] device-mapper: raid1: All sides of mirror have failed.
-> > [  505.239389] device-mapper: raid1: Read failure on mirror device 252:25.  Failing I/O.
-> > [  505.239394] device-mapper: raid1: Mirror read failed.
-> > 
-> > Although as far as I can tell the RAID hasn't errored and is still in sync.
-> > 
-> > If I turn the test case into a write (just s/pread/pwrite/ ) - the machine
-> > still survives but then it does lose raid sync, and the raid resync
-> > seems to stick until I do a 'lvchange --refresh main/lvol0'
-> > which recovers after having spat out a:
-> > 
-> > [  865.319527] Buffer I/O error on dev dm-26, logical block 262128, async page read
-> > 
-> > > I expect the original test case to still return an error (and I think it
-> > > was designed to), but it shouldn't produce the warn or bug splats with a
-> > > stuck uninterruptable task.
-> > 
-> > It's not clear to me if it was designed to fail or not; I've not had
-> > a chance to rerun the original qemu block tests yet, and I don't know
-> > if old kernels succesfully used O_DIRECT in this case.
-> > 
-> > It still feels that my pwrite case above shouldn't cause a raid de-sync
-> > (especially since a normal user can do it).
-> 
-> Just to follow up on that;  if I use the modern lvm mode 
-> ( lvcreate  -m 1 -L 1G main /dev/sda2 /dev/sdb2 ) rather than
-> the old mirror with the same patch, then:
-> 
->   a) I get no log errors with either read or write
->   b) read still gives EIO
->   c) write apparently succeeds ?!
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------BufKtsfy02k51ZV9Awkde7pg
+Content-Type: multipart/mixed; boundary="------------01s8XXgMqKHJOZPMwVJRTfgY";
+ protected-headers="v1"; hp="clear"
+Message-ID: <573bbb08-0ba7-4f00-8996-819cc1d9cc48@aminvakil.com>
+Date: Tue, 16 Jun 2026 17:38:32 +0330
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] usb: core: interrupt-IN wBytesPerInterval fixup
+ (727d045d064b) breaks RTL8153 in Lenovo dock
+From: Amin Vakil <info@aminvakil.com>
+To: Thorsten Leemhuis <regressions@leemhuis.info>, linux-usb@vger.kernel.org
+Cc: Michal Pecio <michal.pecio@gmail.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Alan Stern <stern@rowland.harvard.edu>, Tao Xue <xuetao09@huawei.com>,
+ regressions@lists.linux.dev
+References: <cbdeb118-58c7-48a7-94a0-15e5cdb5879c@aminvakil.com>
+ <35d2b455-382e-470e-acf4-1ab60770da90@leemhuis.info>
+ <5036fee2-4d00-4ca0-aeed-400da64d7872@aminvakil.com>
+Content-Language: en-US
+Autocrypt: addr=info@aminvakil.com; keydata=
+ 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
+ +78sXChAfE9n44i0gJHzV8BhCsQG4+k=
+In-Reply-To: <5036fee2-4d00-4ca0-aeed-400da64d7872@aminvakil.com>
 
-One more confirmation; running qemu's 'make check' during build passes
-with no log errors (whether it skipped any tests due to it's detection
-code I don't know).
+--------------01s8XXgMqKHJOZPMwVJRTfgY
+Content-Type: multipart/mixed; boundary="------------N1KaZMVWTXTh5FQ2hFcJSwAt"
 
-Dave
+--------------N1KaZMVWTXTh5FQ2hFcJSwAt
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
 
-> Dave
-> 
-> > Dave
-> > -- 
-> >  -----Open up your eyes, open up your mind, open up your code -------   
-> > / Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
-> > \        dave @ treblig.org |                               | In Hex /
-> >  \ _________________________|_____ http://www.treblig.org   |_______/
-> -- 
->  -----Open up your eyes, open up your mind, open up your code -------   
-> / Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
-> \        dave @ treblig.org |                               | In Hex /
->  \ _________________________|_____ http://www.treblig.org   |_______/
--- 
- -----Open up your eyes, open up your mind, open up your code -------   
-/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
-\        dave @ treblig.org |                               | In Hex /
- \ _________________________|_____ http://www.treblig.org   |_______/
+T24gNi8xNi8yNiAzOjIxIFBNLCBBbWluIFZha2lsIHdyb3RlOg0KPiBPbiA2LzE2LzI2IDE6
+NTggUE0sIFRob3JzdGVuIExlZW1odWlzIHdyb3RlOg0KPj4gT24gNi8xNi8yNiAxMTo0OSwg
+QW1pbiBWYWtpbCB3cm90ZToNCj4+Pg0KPj4+IFRoZSBmb2xsb3dpbmcgY2hhbmdlLCBiYWNr
+cG9ydGVkIHRvIHRoZSA3LjAueCBzdGFibGUgc2VyaWVzLCBpbnRyb2R1Y2VzDQo+Pj4gYSBy
+ZWdyZXNzaW9uIHRoYXQgZGlzYWJsZXMgdGhlIHdpcmVkIGV0aGVybmV0IG9mIGEgTGVub3Zv
+IFVTQi1DLw0KPj4+IFRodW5kZXJib2x0IGRvY2s6DQo+Pj4NCj4+PiDCoMKgIGNvbW1pdCA3
+MjdkMDQ1ZDA2NGI3YzlhMjRkYjNiY2U5YzA0ODVhMzgyY2I3NjhiDQo+Pj4gwqDCoCB1c2I6
+IGNvcmU6IEZpeCB1cCBJbnRlcnJ1cHQgSU4gZW5kcG9pbnRzIHdpdGggYm9ndXMgd0J5dGVz
+UGVySW50ZXJ2YWwNCj4+DQo+PiBJcyA3LjEgYWZmZWN0ZWQgYXMgd2VsbD8gSWRlYWxseSB0
+cnkgdXNpbmcgYSBub24taGFyZGVuZWQga2VybmVsIHRvIGtlZXANCj4+IHRoZSBkb3duc3Ry
+ZWFtIHBhdGNoZXMgb3V0IG9mIHRoZSB3YXkuDQo+Pg0KPj4gQ2lhbywgVGhvcnN0ZW4NCj4+
+DQo+IA0KPiBsaW51eCA3LjEgaXMgbm90IGF2YWlsYWJsZSBvbiBvZmZpY2lhbCBBcmNoIExp
+bnV4IHJlcG9zaXRvcmllcywgZ2l2ZSBtZSANCj4gYSBjb3VwbGUgb2YgaG91cnMgdG8gY29t
+cGlsZSBhbmQgdGVzdCwgSSdsbCB1c2Ugbm9uLWhhcmRlbmVkIGtlcm5lbCBhcyANCj4gd2Vs
+bCwgSSdsbCBwcm9wb3NlIGEgcGF0Y2ggZW5zdXJpbmcgaXNzdWUgaGFzIGJlZW4gZml4ZWQg
+YXMgd2VsbCwgaWYgDQo+IHRoYXQncyBPSy4NCj4gDQo+IEJlc3QgUmVnYXJkcywNCj4gQW1p
+biBWYWtpbA0KPiANCkkgY2FuIGNvbmZpcm0gNy4xIG1haW5saW5lIChpbnN0YWxsZWQgZnJv
+bSBBVVIpIHN0aWxsIGhhcyB0aGUgcHJvYmxlbToNCg0KZG1lc2cgKGtlcm5lbCA3LjEuMCkN
+Cg0KICAgdXNiIDItMS4xOiBOZXcgVVNCIGRldmljZSBmb3VuZCwgaWRWZW5kb3I9MTdlZiwg
+aWRQcm9kdWN0PTcyMWUsIA0KYmNkRGV2aWNlPTMxLjAzDQogICB1c2Jjb3JlOiByZWdpc3Rl
+cmVkIG5ldyBkZXZpY2UgZHJpdmVyIHI4MTUyLWNmZ3NlbGVjdG9yDQogICByODE1Mi1jZmdz
+ZWxlY3RvciAyLTEuMTogcmVzZXQgU3VwZXJTcGVlZCBVU0IgZGV2aWNlIG51bWJlciAzIHVz
+aW5nIA0KeGhjaV9oY2QNCiAgIHI4MTUyIDItMS4xOjEuMCAodW5uYW1lZCBuZXRfZGV2aWNl
+KSAodW5pbml0aWFsaXplZCk6IEludmFsaWQgaGVhZGVyIA0Kd2hlbiByZWFkaW5nIHBhc3Mt
+dGhydSBNQUMgYWRkcg0KICAgdXNiY29yZTogcmVnaXN0ZXJlZCBuZXcgaW50ZXJmYWNlIGRy
+aXZlciByODE1Mg0KICAgcjgxNTIgMi0xLjE6MS4wIGVucDBzMTNmMHUxdTE6IHJlbmFtZWQg
+ZnJvbSBldGgwDQogICByODE1Mi1jZmdzZWxlY3RvciAyLTEuMTogVVNCIGRpc2Nvbm5lY3Qs
+IGRldmljZSBudW1iZXIgMw0KDQoNCj4+PiBIYXJkd2FyZTogTGVub3ZvIGRvY2sgYnVpbHQt
+aW4gUmVhbHRlayBSVEw4MTUzLCBlbnVtZXJhdGluZyBhcyBVU0IgSUQNCj4+PiAxN2VmOjcy
+MWUgKExlbm92byByZWJyYW5kIG9mIDBiZGE6ODE1MyksIGRyaXZlbiBieSByODE1MiB0aHJv
+dWdoIHI4MTUyLQ0KPj4+IGNmZ3NlbGVjdG9yLiBIb3N0IGlzIGFuIEludGVsIGxhcHRvcCB3
+aXRoIHhoY2lfaGNkLg0KPj4+DQo+Pj4gU3ltcHRvbTogb24gdGhlIHBhdGNoZWQga2VybmVs
+IHRoZSBOSUMgZW51bWVyYXRlcywgcjgxNTIgYmluZHMgYW5kIHRoZQ0KPj4+IG5ldGRldiBp
+cyBjcmVhdGVkLCB0aGVuIGFib3V0IG9uZSBzZWNvbmQgbGF0ZXIgdGhlIGRldmljZSBpcyBV
+U0ItDQo+Pj4gZGlzY29ubmVjdGVkIGJ5IHI4MTUyLWNmZ3NlbGVjdG9yIGFuZCBuZXZlciBy
+ZXR1cm5zLiBObyBldGhlcm5ldA0KPj4+IGludGVyZmFjZSByZW1haW5zLiBVU0IsIEhETUkg
+YW5kIHRoZSByZXN0IG9mIHRoZSBkb2NrIGtlZXAgd29ya2luZywgYW5kDQo+Pj4gcGx1Z2dp
+bmcgdGhlIGNhYmxlIHN0cmFpZ2h0IGludG8gdGhlIGxhcHRvcCBidWlsdC1pbiBOSUMgaXMg
+dW5hZmZlY3RlZC4NCj4+Pg0KPj4+IEFmZmVjdGVkIHZzIHdvcmtpbmcgKEFyY2ggbGludXgt
+aGFyZGVuZWQpOiA3LjAuMTEuaGFyZGVuZWQyIHdvcmtzLA0KPj4+IDcuMC4xMi5oYXJkZW5l
+ZDEgaXMgYnJva2VuLiBUaGlzIGNvbW1pdCBpcyB0aGUgb25seSBSVEw4MTUzL1VTQi1jb3Jl
+DQo+Pj4gY2hhbmdlIGluIHRoYXQgZGVsdGEsIGFuZCBpdCBhY3RpdmF0ZXMgYSBjb2RlIHBh
+dGggdGhhdCBkaWQgbm90IHJ1bg0KPj4+IGJlZm9yZSBvbiB0aGlzIGRldmljZSAobm90ZSB0
+aGUgbmV3IHdCeXRlc1BlckludGVydmFsIG1lc3NhZ2UgaW4gdGhlDQo+Pj4gZG1lc2cgYmVs
+b3csIGFic2VudCBvbiA3LjAuMTEpLg0KPj4+DQo+Pj4gV2h5IHRoaXMgY29tbWl0OiBjb25m
+aWd1cmF0aW9uIDIgKENEQykgb2YgdGhlIGRldmljZSBoYXMgYW4gaW50ZXJydXB0IElODQo+
+Pj4gZW5kcG9pbnQgKEVQIDB4ODMpIHdpdGggd01heFBhY2tldFNpemU9MTYgYW5kIHdCeXRl
+c1BlckludGVydmFsPTguIFRoZQ0KPj4+IG5ldyBjb25kaXRpb24gKHdCeXRlc1BlckludGVy
+dmFsIDwgd01heFBhY2tldFNpemUgb24gYW4gaW50ZXJydXB0IElODQo+Pj4gZW5kcG9pbnQp
+IG5vdyBmaXJlcyBhbmQgcmV3cml0ZXMgd0J5dGVzUGVySW50ZXJ2YWwgZnJvbSA4IHRvIDE2
+LiBPbiB0aGlzDQo+Pj4gZG9jayBwbHVzIHhIQ0kgaG9zdCB0aGF0IHJld3JpdGUgYXBwZWFy
+cyB0byBtYWtlIHRoZSBkZXZpY2UgZmFsbCBvZmYgdGhlDQo+Pj4gYnVzIHJpZ2h0IGFmdGVy
+IHRoZSBjZmdzZWxlY3RvciByZXNldC4NCj4+Pg0KPj4+IGRtZXNnIChicm9rZW4ga2VybmVs
+IDcuMC4xMi5oYXJkZW5lZDEpOg0KPj4+IMKgwqAgdXNiIDItMS4xOiBOZXcgVVNCIGRldmlj
+ZSBmb3VuZCwgaWRWZW5kb3I9MTdlZiwgaWRQcm9kdWN0PTcyMWUsDQo+Pj4gYmNkRGV2aWNl
+PTMxLjAzDQo+Pj4gwqDCoCB1c2IgMi0xLjE6IEludCBlbmRwb2ludCB3aXRoIHdCeXRlc1Bl
+ckludGVydmFsIG9mIDggaW4gY29uZmlnIDINCj4+PiBpbnRlcmZhY2UgMCBhbHRzZXR0aW5n
+IDAgZXAgMTMxOiBzZXR0aW5nIHRvIDE2DQo+Pj4gwqDCoCByODE1Mi1jZmdzZWxlY3RvciAy
+LTEuMTogcmVzZXQgU3VwZXJTcGVlZCBVU0IgZGV2aWNlIG51bWJlciAzIHVzaW5nDQo+Pj4g
+eGhjaV9oY2QNCj4+PiDCoMKgIHI4MTUyIDItMS4xOjEuMCAodW5uYW1lZCBuZXRfZGV2aWNl
+KSAodW5pbml0aWFsaXplZCk6IEludmFsaWQgaGVhZGVyDQo+Pj4gd2hlbiByZWFkaW5nIHBh
+c3MtdGhydSBNQUMgYWRkcg0KPj4+IMKgwqAgcjgxNTIgMi0xLjE6MS4wIGVucDBzMTNmMHUx
+dTE6IHJlbmFtZWQgZnJvbSBldGgwDQo+Pj4gwqDCoCByODE1Mi1jZmdzZWxlY3RvciAyLTEu
+MTogVVNCIGRpc2Nvbm5lY3QsIGRldmljZSBudW1iZXIgMw0KPj4+DQo+Pj4gUmVsZXZhbnQg
+ZGVzY3JpcHRvcnMgKGxzdXNiIC12IC1kIDE3ZWY6NzIxZSwgY2FwdHVyZWQgb24gdGhlIHdv
+cmtpbmcNCj4+PiA3LjAuMTEga2VybmVsKTogY29uZmlndXJhdGlvbiAyIChDREMpLCBlbmRw
+b2ludCAweDgzIElOIEludGVycnVwdCBoYXMNCj4+PiB3TWF4UGFja2V0U2l6ZT0weDAwMTAg
+KDE2IGJ5dGVzKSwgYkludGVydmFsPTgsIGJNYXhCdXJzdD0wLA0KPj4+IHdCeXRlc1Blcklu
+dGVydmFsPTggKHJld3JpdHRlbiB0byAxNiBieSB0aGUgbmV3IGZpeHVwKS4gQ29uZmlndXJh
+dGlvbiAxLA0KPj4+IHRoZSB2ZW5kb3IgY29uZmlnIHRoYXQgcjgxNTIgYWN0dWFsbHkgdXNl
+cywgaGFzIGl0cyBpbnRlcnJ1cHQgZW5kcG9pbnQNCj4+PiAweDgzIHdpdGggd01heFBhY2tl
+dFNpemU9MiBhbmQgd0J5dGVzUGVySW50ZXJ2YWw9Miwgd2hpY2ggaXMgbm90IA0KPj4+IGFm
+ZmVjdGVkLg0KPj4+DQo+Pj4gUmV2ZXJ0aW5nIHRoaXMgY29tbWl0IChvciBqdXN0IHRoZSBu
+ZXcgaW50ZXJydXB0IElOIGJyYW5jaCBpbiBkcml2ZXJzLw0KPj4+IHVzYi9jb3JlL2NvbmZp
+Zy5jKSBzaG91bGQgcmVzdG9yZSB0aGUgZGV2aWNlLiBJIGFtIGhhcHB5IHRvIGJ1aWxkIGFu
+ZA0KPj4+IGNvbmZpcm0gYSByZXZlcnQsIGFuZCB0byB0ZXN0IGFueSBwcm9wb3NlZCBmaXgu
+IEEgcXVpcmsgdG8gc2tpcCB0aGUNCj4+PiBpbnRlcnJ1cHQgSU4gZml4dXAgZm9yIHRoZSBS
+VEw4MTUzIENEQyBjb25maWd1cmF0aW9uLCBvciBvdGhlcndpc2UNCj4+PiBuYXJyb3dpbmcg
+dGhlIG5ldyBjb25kaXRpb24sIHNlZW1zIGxpa2UgdGhlIHJpZ2h0IGRpcmVjdGlvbi4NCj4+
+Pg0KPj4+IEkgY2FuIHByb3ZpZGUgdGhlIGZ1bGwgZG1lc2cgYW5kIGZ1bGwgbHN1c2IgLXYg
+b3V0cHV0IG9uIHJlcXVlc3QuDQo+Pj4NCj4+PiAjcmVnemJvdCBpbnRyb2R1Y2VkOiA3Mjdk
+MDQ1ZDA2NGI3YzlhMjRkYjNiY2U5YzA0ODVhMzgyY2I3NjhiDQo+Pj4NCj4+PiBCZXN0IFJl
+Z2FyZHMsDQo+Pj4gQW1pbiBWYWtpbA0KPj4NCj4gDQoNCg==
+--------------N1KaZMVWTXTh5FQ2hFcJSwAt
+Content-Type: application/pgp-keys; name="OpenPGP_0x1EFC1864E9D9E56B.asc"
+Content-Disposition: attachment; filename="OpenPGP_0x1EFC1864E9D9E56B.asc"
+Content-Description: OpenPGP public key
+Content-Transfer-Encoding: quoted-printable
+
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+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
++78sXChAfE9n44i0gJHzV8BhCsQG4+k=3D
+=3DGHsk
+-----END PGP PUBLIC KEY BLOCK-----
+
+--------------N1KaZMVWTXTh5FQ2hFcJSwAt--
+
+--------------01s8XXgMqKHJOZPMwVJRTfgY--
+
+--------------BufKtsfy02k51ZV9Awkde7pg
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+wsD5BAABCAAjFiEEhGrABIXlXG/0vJ9THvwYZOnZ5WsFAmoxWOAFAwAAAAAACgkQHvwYZOnZ5Wtj
+dgwAskVwnsLYI6uaVf1jk9xXqTlzSF80OJDxe93V4hRyqqPvr7hl2BieBdkxIlE4xQZ7quwMUWfY
+GMnT/eDenrojcNlKVbM4wPqMQe5mmBHy48HYzO3zus9Ke+daNti1zPmAVR1jtbWkzY6/iFLFLoOY
+zIT9i/yb3H7vHQ92T0IzZYzEQqwTw2oe+vuZ6YcqUsxTO3r/ETYtcwh/l5jnktuFjIhpJJq+6clZ
+BL5+cs9Z6Sf+6ouJ+ykemNk/U13PmzymHcJgQQrrp9FIgB+CeJv3djZ5/QOk2FRbK2hHOb9hGO7v
+AHOfCkgjcqktVDWraCm80g6G21ikNPFEYx/O+RKalWoQrlthDJa4uw1V64PDeQ9dBtnEW7CAY22o
+MQcumnCgHLDmtM8cbybLNRvEnaa+dx7kaIEqUiq3UBI9GFYWMTxU7FyWpHf1hd07NB+gj8/hqs5z
+2K4cgVcOyUq48aIFgPdRCJglrQdjKdcTAUdrQ7/DZbYvixgZe3uzvilgnbVf
+=QKgA
+-----END PGP SIGNATURE-----
+
+--------------BufKtsfy02k51ZV9Awkde7pg--
