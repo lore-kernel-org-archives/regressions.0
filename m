@@ -1,33 +1,51 @@
-Received: from mail.aminvakil.com (mail.aminvakil.com [178.63.189.195])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.102])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33384413D99
-	for <regressions@lists.linux.dev>; Tue, 16 Jun 2026 10:02:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.63.189.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 128AD42883D
+	for <regressions@lists.linux.dev>; Tue, 16 Jun 2026 10:29:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.102
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781604155; cv=none; b=TOsliFQUQ0vv4bp0fS9bBVOjzdcSP/rZIB83Ey17hCjfcFEfJFjIFOl4YJMH4rmjQWMxCN7tbuNbesjXV3elVUL6nj4UJCit42jgixX3/4FSducwaWtE8JO1VNUIB/LC0vqMwMbLkNObZWTgRYSqL2aU1g6GAN+gwEWvqf0w9iY=
+	t=1781605778; cv=none; b=T2pYzEOlVumanMFjyARPezPvMP2OXbvcxbLSkhNl9+1dY1Svo3q2DLF6A4VPiyZqtdPy6KhAyvs4UfTiEGfO8b7UUGTk3UqqEf14M8GZAhYwo7/eLwqTrzqcRJimmmVXsOZsbC3Rot3ehPVfIiGk6rEVZGt8p5ZSmL+PSQADypk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781604155; c=relaxed/simple;
-	bh=wHODkk4a9qafcNwfYVBegR44dsh/+B3sn441wVCN2e4=;
-	h=Message-ID:Date:MIME-Version:From:To:Cc:Subject:Content-Type; b=eC8EhqGcqwyjuXPNW2wDHmWG7ebW6Fv5Xgeb6d2uuA//iqUEESukqtb3iRJUPn2V1Zrhao0vqLpXlMK8w8VfpxpHC/cL5jbycD4zENnD/YNpK3s64FWougKsuZWxiomPMmW2CAW2JNtcbnvE/e/BTzXL7un3E2FnwSBV2n/9LXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=aminvakil.com; spf=pass smtp.mailfrom=aminvakil.com; dkim=pass (2048-bit key) header.d=aminvakil.com header.i=@aminvakil.com header.b=Tn7Ty9mS; arc=none smtp.client-ip=178.63.189.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=aminvakil.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aminvakil.com
+	s=arc-20240116; t=1781605778; c=relaxed/simple;
+	bh=7VBa7DLB1t5uNYwn/OgNiCf5jxlEZWt2OCgRh8iCWgE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=n+djePYL8rr3UJYYqNnj59ijWRdpceQfpEQPa5ljdKV4+7rIqcS6GFuXINg02GQk/OlhpjJ1WXes7HR3ThGK5g1ciB2pYqSHrZGUjhXhzVFoeYJVLHKzzquEzlvQpGpXP8TxaHneVj2SJi05v9l3Enuq72T3mHDp0AX0b1g+pko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=ew2gaL0p; arc=none smtp.client-ip=188.68.63.102
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=aminvakil.com header.i=@aminvakil.com header.b="Tn7Ty9mS"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 4EC8A453AC;
-	Tue, 16 Jun 2026 13:19:27 +0330 (+0330)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aminvakil.com;
-	s=dkim; t=1781603370;
-	h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-language:autocrypt; bh=wHODkk4a9qafcNwfYVBegR44dsh/+B3sn441wVCN2e4=;
-	b=Tn7Ty9mSsbDMoB7WMMRrSCazYyPre6LEz9CxbE9dffkHGrPEiudehYP/pMAl9tF0gxmvyQ
-	pLXCPJhmOAzkwqA13Ko0mC6byKvPsyEjMQE3h9uCONZVhO/HjKpxK5EUtUnTVC0fX/Do11
-	CIyWIkmCHDFnwT38/LIfR4X85AA4nRtCXLQNJtJd5L6i3g44eb0LJecpFngiHFFz4/hake
-	1dyg4klX/UsNg19GTp/6jZhgnQ8izVhlYP2rs9cvrh0ygLCChHXHUV2iqHCuZz9IbsZsrO
-	/xb+HHaCD4x2a61Tq31RfygobxdgOQtmsxgXdfJmci7mMCsVR2ktrWBi0c0+Zw==
-Message-ID: <cbdeb118-58c7-48a7-94a0-15e5cdb5879c@aminvakil.com>
-Date: Tue, 16 Jun 2026 13:19:25 +0330
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="ew2gaL0p"
+Received: from mors-relay-2502.netcup.net (localhost [127.0.0.1])
+	by mors-relay-2502.netcup.net (Postfix) with ESMTPS id 4gfjsB5xH8z66sY;
+	Tue, 16 Jun 2026 12:29:18 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1781605758;
+	bh=7VBa7DLB1t5uNYwn/OgNiCf5jxlEZWt2OCgRh8iCWgE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ew2gaL0pHA8ck5ZbPeIK4vMovGTtYb9GiZ2p+fwWv/xIpWXen8Ot5I7GbjvIGd+cS
+	 8uLTI86aVqr3SNVvRsRep7eChuBNZJc6cwLhDKk1Jqr4L9zmC4QzRbUDVhnZeXzSmJ
+	 yBTlcJaq41Lcf/0DFtkgU9FXmu5cpUbp988Ws1NmWxY5lCocAF9TRE49DosRIikYSr
+	 5mKzJHYSCSkWpwC6/Ax1O0LCFMr0TjAQPJEzm86W++jYpx7LL/n0r1UEf798P+FHjq
+	 VgggVxTHBMkvMXENmyK/IVLPkcTfpxEFGaJcW8fG6NjDGpYCZr4Bx8dR2cwzyfcfl4
+	 mgkhJav0g+FjQ==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-2502.netcup.net (Postfix) with ESMTPS id 4gfjr42kSSz4xln;
+	Tue, 16 Jun 2026 12:28:20 +0200 (CEST)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4gfjr32k8Lz8sbB;
+	Tue, 16 Jun 2026 12:28:19 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id AA54461841;
+	Tue, 16 Jun 2026 12:28:18 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <35d2b455-382e-470e-acf4-1ab60770da90@leemhuis.info>
+Date: Tue, 16 Jun 2026 12:28:17 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -35,239 +53,89 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-From: Amin Vakil <info@aminvakil.com>
-To: linux-usb@vger.kernel.org
+Subject: Re: [REGRESSION] usb: core: interrupt-IN wBytesPerInterval fixup
+ (727d045d064b) breaks RTL8153 in Lenovo dock
+To: Amin Vakil <info@aminvakil.com>, linux-usb@vger.kernel.org
 Cc: Michal Pecio <michal.pecio@gmail.com>,
  Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
  Alan Stern <stern@rowland.harvard.edu>, Tao Xue <xuetao09@huawei.com>,
  regressions@lists.linux.dev
-Subject: [REGRESSION] usb: core: interrupt-IN wBytesPerInterval fixup
- (727d045d064b) breaks RTL8153 in Lenovo dock
-Content-Language: en-US
-Autocrypt: addr=info@aminvakil.com; keydata=
- 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
- +78sXChAfE9n44i0gJHzV8BhCsQG4+k=
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------i1qEqzBiwb5AaDlsa0KxvAov"
-X-Last-TLS-Session-Version: TLSv1.3
+References: <cbdeb118-58c7-48a7-94a0-15e5cdb5879c@aminvakil.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <cbdeb118-58c7-48a7-94a0-15e5cdb5879c@aminvakil.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-PPP-Message-ID: 
+ <178160569901.1920135.13090269485935992869@mxe9fb.netcup.net>
+X-NC-CID: nkmXxmyC12p5Evd3Vnfm8/kF5Y1EfXoxHL3B/HmyEa5zrt52gdk=
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------i1qEqzBiwb5AaDlsa0KxvAov
-Content-Type: multipart/mixed; boundary="------------vXrSaXNpGwM75T0pXOKEYIBc";
- protected-headers="v1"; hp="clear"
-Message-ID: <cbdeb118-58c7-48a7-94a0-15e5cdb5879c@aminvakil.com>
-Date: Tue, 16 Jun 2026 13:19:25 +0330
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Amin Vakil <info@aminvakil.com>
-To: linux-usb@vger.kernel.org
-Cc: Michal Pecio <michal.pecio@gmail.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Alan Stern <stern@rowland.harvard.edu>, Tao Xue <xuetao09@huawei.com>,
- regressions@lists.linux.dev
-Subject: [REGRESSION] usb: core: interrupt-IN wBytesPerInterval fixup
- (727d045d064b) breaks RTL8153 in Lenovo dock
-Content-Language: en-US
-Autocrypt: addr=info@aminvakil.com; keydata=
- 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
- +78sXChAfE9n44i0gJHzV8BhCsQG4+k=
+On 6/16/26 11:49, Amin Vakil wrote:
+> 
+> The following change, backported to the 7.0.x stable series, introduces
+> a regression that disables the wired ethernet of a Lenovo USB-C/
+> Thunderbolt dock:
+> 
+>   commit 727d045d064b7c9a24db3bce9c0485a382cb768b
+>   usb: core: Fix up Interrupt IN endpoints with bogus wBytesPerInterval
 
---------------vXrSaXNpGwM75T0pXOKEYIBc
-Content-Type: multipart/mixed; boundary="------------UFz104XrkaPXcciaV5OLK0Ev"
+Is 7.1 affected as well? Ideally try using a non-hardened kernel to keep
+the downstream patches out of the way.
 
---------------UFz104XrkaPXcciaV5OLK0Ev
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+Ciao, Thorsten
 
-SGVsbG8gZXZlcnlvbmUsDQoNClRoZSBmb2xsb3dpbmcgY2hhbmdlLCBiYWNrcG9ydGVkIHRv
-IHRoZSA3LjAueCBzdGFibGUgc2VyaWVzLCBpbnRyb2R1Y2VzIA0KYSByZWdyZXNzaW9uIHRo
-YXQgZGlzYWJsZXMgdGhlIHdpcmVkIGV0aGVybmV0IG9mIGEgTGVub3ZvIA0KVVNCLUMvVGh1
-bmRlcmJvbHQgZG9jazoNCg0KICAgY29tbWl0IDcyN2QwNDVkMDY0YjdjOWEyNGRiM2JjZTlj
-MDQ4NWEzODJjYjc2OGINCiAgIHVzYjogY29yZTogRml4IHVwIEludGVycnVwdCBJTiBlbmRw
-b2ludHMgd2l0aCBib2d1cyB3Qnl0ZXNQZXJJbnRlcnZhbA0KDQpIYXJkd2FyZTogTGVub3Zv
-IGRvY2sgYnVpbHQtaW4gUmVhbHRlayBSVEw4MTUzLCBlbnVtZXJhdGluZyBhcyBVU0IgSUQg
-DQoxN2VmOjcyMWUgKExlbm92byByZWJyYW5kIG9mIDBiZGE6ODE1MyksIGRyaXZlbiBieSBy
-ODE1MiB0aHJvdWdoIA0KcjgxNTItY2Znc2VsZWN0b3IuIEhvc3QgaXMgYW4gSW50ZWwgbGFw
-dG9wIHdpdGggeGhjaV9oY2QuDQoNClN5bXB0b206IG9uIHRoZSBwYXRjaGVkIGtlcm5lbCB0
-aGUgTklDIGVudW1lcmF0ZXMsIHI4MTUyIGJpbmRzIGFuZCB0aGUgDQpuZXRkZXYgaXMgY3Jl
-YXRlZCwgdGhlbiBhYm91dCBvbmUgc2Vjb25kIGxhdGVyIHRoZSBkZXZpY2UgaXMgDQpVU0It
-ZGlzY29ubmVjdGVkIGJ5IHI4MTUyLWNmZ3NlbGVjdG9yIGFuZCBuZXZlciByZXR1cm5zLiBO
-byBldGhlcm5ldCANCmludGVyZmFjZSByZW1haW5zLiBVU0IsIEhETUkgYW5kIHRoZSByZXN0
-IG9mIHRoZSBkb2NrIGtlZXAgd29ya2luZywgYW5kIA0KcGx1Z2dpbmcgdGhlIGNhYmxlIHN0
-cmFpZ2h0IGludG8gdGhlIGxhcHRvcCBidWlsdC1pbiBOSUMgaXMgdW5hZmZlY3RlZC4NCg0K
-QWZmZWN0ZWQgdnMgd29ya2luZyAoQXJjaCBsaW51eC1oYXJkZW5lZCk6IDcuMC4xMS5oYXJk
-ZW5lZDIgd29ya3MsIA0KNy4wLjEyLmhhcmRlbmVkMSBpcyBicm9rZW4uIFRoaXMgY29tbWl0
-IGlzIHRoZSBvbmx5IFJUTDgxNTMvVVNCLWNvcmUgDQpjaGFuZ2UgaW4gdGhhdCBkZWx0YSwg
-YW5kIGl0IGFjdGl2YXRlcyBhIGNvZGUgcGF0aCB0aGF0IGRpZCBub3QgcnVuIA0KYmVmb3Jl
-IG9uIHRoaXMgZGV2aWNlIChub3RlIHRoZSBuZXcgd0J5dGVzUGVySW50ZXJ2YWwgbWVzc2Fn
-ZSBpbiB0aGUgDQpkbWVzZyBiZWxvdywgYWJzZW50IG9uIDcuMC4xMSkuDQoNCldoeSB0aGlz
-IGNvbW1pdDogY29uZmlndXJhdGlvbiAyIChDREMpIG9mIHRoZSBkZXZpY2UgaGFzIGFuIGlu
-dGVycnVwdCBJTiANCmVuZHBvaW50IChFUCAweDgzKSB3aXRoIHdNYXhQYWNrZXRTaXplPTE2
-IGFuZCB3Qnl0ZXNQZXJJbnRlcnZhbD04LiBUaGUgDQpuZXcgY29uZGl0aW9uICh3Qnl0ZXNQ
-ZXJJbnRlcnZhbCA8IHdNYXhQYWNrZXRTaXplIG9uIGFuIGludGVycnVwdCBJTiANCmVuZHBv
-aW50KSBub3cgZmlyZXMgYW5kIHJld3JpdGVzIHdCeXRlc1BlckludGVydmFsIGZyb20gOCB0
-byAxNi4gT24gdGhpcyANCmRvY2sgcGx1cyB4SENJIGhvc3QgdGhhdCByZXdyaXRlIGFwcGVh
-cnMgdG8gbWFrZSB0aGUgZGV2aWNlIGZhbGwgb2ZmIHRoZSANCmJ1cyByaWdodCBhZnRlciB0
-aGUgY2Znc2VsZWN0b3IgcmVzZXQuDQoNCmRtZXNnIChicm9rZW4ga2VybmVsIDcuMC4xMi5o
-YXJkZW5lZDEpOg0KICAgdXNiIDItMS4xOiBOZXcgVVNCIGRldmljZSBmb3VuZCwgaWRWZW5k
-b3I9MTdlZiwgaWRQcm9kdWN0PTcyMWUsIA0KYmNkRGV2aWNlPTMxLjAzDQogICB1c2IgMi0x
-LjE6IEludCBlbmRwb2ludCB3aXRoIHdCeXRlc1BlckludGVydmFsIG9mIDggaW4gY29uZmln
-IDIgDQppbnRlcmZhY2UgMCBhbHRzZXR0aW5nIDAgZXAgMTMxOiBzZXR0aW5nIHRvIDE2DQog
-ICByODE1Mi1jZmdzZWxlY3RvciAyLTEuMTogcmVzZXQgU3VwZXJTcGVlZCBVU0IgZGV2aWNl
-IG51bWJlciAzIHVzaW5nIA0KeGhjaV9oY2QNCiAgIHI4MTUyIDItMS4xOjEuMCAodW5uYW1l
-ZCBuZXRfZGV2aWNlKSAodW5pbml0aWFsaXplZCk6IEludmFsaWQgaGVhZGVyIA0Kd2hlbiBy
-ZWFkaW5nIHBhc3MtdGhydSBNQUMgYWRkcg0KICAgcjgxNTIgMi0xLjE6MS4wIGVucDBzMTNm
-MHUxdTE6IHJlbmFtZWQgZnJvbSBldGgwDQogICByODE1Mi1jZmdzZWxlY3RvciAyLTEuMTog
-VVNCIGRpc2Nvbm5lY3QsIGRldmljZSBudW1iZXIgMw0KDQpSZWxldmFudCBkZXNjcmlwdG9y
-cyAobHN1c2IgLXYgLWQgMTdlZjo3MjFlLCBjYXB0dXJlZCBvbiB0aGUgd29ya2luZyANCjcu
-MC4xMSBrZXJuZWwpOiBjb25maWd1cmF0aW9uIDIgKENEQyksIGVuZHBvaW50IDB4ODMgSU4g
-SW50ZXJydXB0IGhhcyANCndNYXhQYWNrZXRTaXplPTB4MDAxMCAoMTYgYnl0ZXMpLCBiSW50
-ZXJ2YWw9OCwgYk1heEJ1cnN0PTAsIA0Kd0J5dGVzUGVySW50ZXJ2YWw9OCAocmV3cml0dGVu
-IHRvIDE2IGJ5IHRoZSBuZXcgZml4dXApLiBDb25maWd1cmF0aW9uIDEsIA0KdGhlIHZlbmRv
-ciBjb25maWcgdGhhdCByODE1MiBhY3R1YWxseSB1c2VzLCBoYXMgaXRzIGludGVycnVwdCBl
-bmRwb2ludCANCjB4ODMgd2l0aCB3TWF4UGFja2V0U2l6ZT0yIGFuZCB3Qnl0ZXNQZXJJbnRl
-cnZhbD0yLCB3aGljaCBpcyBub3QgYWZmZWN0ZWQuDQoNClJldmVydGluZyB0aGlzIGNvbW1p
-dCAob3IganVzdCB0aGUgbmV3IGludGVycnVwdCBJTiBicmFuY2ggaW4gDQpkcml2ZXJzL3Vz
-Yi9jb3JlL2NvbmZpZy5jKSBzaG91bGQgcmVzdG9yZSB0aGUgZGV2aWNlLiBJIGFtIGhhcHB5
-IHRvIA0KYnVpbGQgYW5kIGNvbmZpcm0gYSByZXZlcnQsIGFuZCB0byB0ZXN0IGFueSBwcm9w
-b3NlZCBmaXguIEEgcXVpcmsgdG8gDQpza2lwIHRoZSBpbnRlcnJ1cHQgSU4gZml4dXAgZm9y
-IHRoZSBSVEw4MTUzIENEQyBjb25maWd1cmF0aW9uLCBvciANCm90aGVyd2lzZSBuYXJyb3dp
-bmcgdGhlIG5ldyBjb25kaXRpb24sIHNlZW1zIGxpa2UgdGhlIHJpZ2h0IGRpcmVjdGlvbi4N
-Cg0KSSBjYW4gcHJvdmlkZSB0aGUgZnVsbCBkbWVzZyBhbmQgZnVsbCBsc3VzYiAtdiBvdXRw
-dXQgb24gcmVxdWVzdC4NCg0KI3JlZ3pib3QgaW50cm9kdWNlZDogNzI3ZDA0NWQwNjRiN2M5
-YTI0ZGIzYmNlOWMwNDg1YTM4MmNiNzY4Yg0KDQpCZXN0IFJlZ2FyZHMsDQpBbWluIFZha2ls
-DQo=
---------------UFz104XrkaPXcciaV5OLK0Ev
-Content-Type: application/pgp-keys; name="OpenPGP_0x1EFC1864E9D9E56B.asc"
-Content-Disposition: attachment; filename="OpenPGP_0x1EFC1864E9D9E56B.asc"
-Content-Description: OpenPGP public key
-Content-Transfer-Encoding: quoted-printable
+> Hardware: Lenovo dock built-in Realtek RTL8153, enumerating as USB ID
+> 17ef:721e (Lenovo rebrand of 0bda:8153), driven by r8152 through r8152-
+> cfgselector. Host is an Intel laptop with xhci_hcd.
+> 
+> Symptom: on the patched kernel the NIC enumerates, r8152 binds and the
+> netdev is created, then about one second later the device is USB-
+> disconnected by r8152-cfgselector and never returns. No ethernet
+> interface remains. USB, HDMI and the rest of the dock keep working, and
+> plugging the cable straight into the laptop built-in NIC is unaffected.
+> 
+> Affected vs working (Arch linux-hardened): 7.0.11.hardened2 works,
+> 7.0.12.hardened1 is broken. This commit is the only RTL8153/USB-core
+> change in that delta, and it activates a code path that did not run
+> before on this device (note the new wBytesPerInterval message in the
+> dmesg below, absent on 7.0.11).
+> 
+> Why this commit: configuration 2 (CDC) of the device has an interrupt IN
+> endpoint (EP 0x83) with wMaxPacketSize=16 and wBytesPerInterval=8. The
+> new condition (wBytesPerInterval < wMaxPacketSize on an interrupt IN
+> endpoint) now fires and rewrites wBytesPerInterval from 8 to 16. On this
+> dock plus xHCI host that rewrite appears to make the device fall off the
+> bus right after the cfgselector reset.
+> 
+> dmesg (broken kernel 7.0.12.hardened1):
+>   usb 2-1.1: New USB device found, idVendor=17ef, idProduct=721e,
+> bcdDevice=31.03
+>   usb 2-1.1: Int endpoint with wBytesPerInterval of 8 in config 2
+> interface 0 altsetting 0 ep 131: setting to 16
+>   r8152-cfgselector 2-1.1: reset SuperSpeed USB device number 3 using
+> xhci_hcd
+>   r8152 2-1.1:1.0 (unnamed net_device) (uninitialized): Invalid header
+> when reading pass-thru MAC addr
+>   r8152 2-1.1:1.0 enp0s13f0u1u1: renamed from eth0
+>   r8152-cfgselector 2-1.1: USB disconnect, device number 3
+> 
+> Relevant descriptors (lsusb -v -d 17ef:721e, captured on the working
+> 7.0.11 kernel): configuration 2 (CDC), endpoint 0x83 IN Interrupt has
+> wMaxPacketSize=0x0010 (16 bytes), bInterval=8, bMaxBurst=0,
+> wBytesPerInterval=8 (rewritten to 16 by the new fixup). Configuration 1,
+> the vendor config that r8152 actually uses, has its interrupt endpoint
+> 0x83 with wMaxPacketSize=2 and wBytesPerInterval=2, which is not affected.
+> 
+> Reverting this commit (or just the new interrupt IN branch in drivers/
+> usb/core/config.c) should restore the device. I am happy to build and
+> confirm a revert, and to test any proposed fix. A quirk to skip the
+> interrupt IN fixup for the RTL8153 CDC configuration, or otherwise
+> narrowing the new condition, seems like the right direction.
+> 
+> I can provide the full dmesg and full lsusb -v output on request.
+> 
+> #regzbot introduced: 727d045d064b7c9a24db3bce9c0485a382cb768b
+> 
+> Best Regards,
+> Amin Vakil
 
------BEGIN PGP PUBLIC KEY BLOCK-----
-
-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
-+78sXChAfE9n44i0gJHzV8BhCsQG4+k=3D
-=3DGHsk
------END PGP PUBLIC KEY BLOCK-----
-
---------------UFz104XrkaPXcciaV5OLK0Ev--
-
---------------vXrSaXNpGwM75T0pXOKEYIBc--
-
---------------i1qEqzBiwb5AaDlsa0KxvAov
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-wsD5BAABCAAjFiEEhGrABIXlXG/0vJ9THvwYZOnZ5WsFAmoxHCUFAwAAAAAACgkQHvwYZOnZ5Wu3
-DQwAuALMvt2//FJgk4igXwIoLl8UlnU2B0difBaN+rzPD8H7Cv2g7b2kufpUnVUgVFdozIZDk35g
-IQnQGYnLqV3sqfTxGm9bwNPiLWhPMIEnFooCMr9svCd0AmPLm1m00V+0ZKC09jftKBMbXnhrdpsF
-syyDL5V0WQLYxfovvYuOZLZh1SA/FgfLTaamEfS/6w/DOWR/yP+xNYJ2HBFNl3fP3E0eVdB17Stt
-DG14918q2G3/PE3HvFq67/NA+z/y8bAvvDYHesGjzfr7A9VKwQsbTwZUUShOOHzPbGjmk/faY4yg
-UaOtkUPQ4OJndXZNhG3Et6/f6/dHG2T/zYg7p2S0Yk/sdfe3+SptiU9xNF/jQNRshONKAP1yoVAL
-X6m/xO0qoI5OkeyTTpkzPGhYXWCiVz2UW6it98EdKxZtYqqI3SAsmdSMqsopHVR4gDmLYO29MlVG
-8qDPYXUpUTwmL8xamTSFoSDELHYi5YHNfFymIMsz/ihceI6mYA3ayetQfc94
-=aOj2
------END PGP SIGNATURE-----
-
---------------i1qEqzBiwb5AaDlsa0KxvAov--
