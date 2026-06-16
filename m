@@ -1,121 +1,273 @@
-Received: from mail-106120.protonmail.ch (mail-106120.protonmail.ch [79.135.106.120])
+Received: from mail.aminvakil.com (mail.aminvakil.com [178.63.189.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C799940FDB7
-	for <regressions@lists.linux.dev>; Tue, 16 Jun 2026 09:11:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.120
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33384413D99
+	for <regressions@lists.linux.dev>; Tue, 16 Jun 2026 10:02:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.63.189.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781601072; cv=none; b=Bf9cxzzw4gd+ZP2EJ3M/fclzG5qMVbZ7IsD2dSwjv0vx26iKC9yX2e6LVGrQB3xtdLjnYuDfsb/9R9EP37bwa//yj751vp3DXXToj8ZmmMD1qB2cPWHp56aJWWJW4DqKAcokMBjGJhxfHcRDHkIuVPSiE0POdf+hdLB0bg1YmZk=
+	t=1781604155; cv=none; b=TOsliFQUQ0vv4bp0fS9bBVOjzdcSP/rZIB83Ey17hCjfcFEfJFjIFOl4YJMH4rmjQWMxCN7tbuNbesjXV3elVUL6nj4UJCit42jgixX3/4FSducwaWtE8JO1VNUIB/LC0vqMwMbLkNObZWTgRYSqL2aU1g6GAN+gwEWvqf0w9iY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781601072; c=relaxed/simple;
-	bh=F+3VetDhpCnYMksCvjLvtVsz9h1IypHSwMy0ngjTd6A=;
-	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=soHih3hANQT1TRrTgyWA8NA+bLsd1Z2Tn8vuloDQY4Zhfl0QzyLst9/q4++tYv5Tz025a52ZrCqeXwlpibc8xjX9OXiWfm20tFK6znVK5N45oQO70C5aR6f/44wB320vtlDkUnSJ1E1PELOruYvHbPaCX2b1oNGXfgWkumXWxhc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me; spf=pass smtp.mailfrom=pm.me; dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b=qWmwIP52; arc=none smtp.client-ip=79.135.106.120
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pm.me
+	s=arc-20240116; t=1781604155; c=relaxed/simple;
+	bh=wHODkk4a9qafcNwfYVBegR44dsh/+B3sn441wVCN2e4=;
+	h=Message-ID:Date:MIME-Version:From:To:Cc:Subject:Content-Type; b=eC8EhqGcqwyjuXPNW2wDHmWG7ebW6Fv5Xgeb6d2uuA//iqUEESukqtb3iRJUPn2V1Zrhao0vqLpXlMK8w8VfpxpHC/cL5jbycD4zENnD/YNpK3s64FWougKsuZWxiomPMmW2CAW2JNtcbnvE/e/BTzXL7un3E2FnwSBV2n/9LXk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=aminvakil.com; spf=pass smtp.mailfrom=aminvakil.com; dkim=pass (2048-bit key) header.d=aminvakil.com header.i=@aminvakil.com header.b=Tn7Ty9mS; arc=none smtp.client-ip=178.63.189.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=aminvakil.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aminvakil.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="qWmwIP52"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
-	s=protonmail3; t=1781601067; x=1781860267;
-	bh=S+6be2btIBiv/YTcyjYWr+pF8QqliJqsOq0sfn5hBtg=;
-	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
-	b=qWmwIP52Rh1VNKN6DFoStkdrIFLwhTnfUEahM9MOBDmm1F7S7vu3X37uOxjhy1Ogu
-	 BSwsAc+8zvu1mRq77woScNznlPq0Y/UkYvDzgNnTb3ALwviTCfNIQ0WXbbEwn42gqf
-	 4esIpCoRiqIMsp32C6R3IBwFX5TYMQActrI53Dm7q0SLkGhXvg5iMOvX1Y8jE89Pgl
-	 nMXiEpz9GG/YWR6kmUUQKwYxDisF0p8HAP8z3JpN2F+Ce+u3gEQFb/zIqZrSnWfRkV
-	 YnvPKLc4slmoKPIsM0JMNW0orYGlN/VEo14TkiOy7trZbtDA7L3Ac3ECQCGkuq/7Qy
-	 JfW7DDtiTTIeg==
-Date: Tue, 16 Jun 2026 09:11:01 +0000
-To: amd-gfx@lists.freedesktop.org
-From: Gerhard Schwanzer <geschw@pm.me>
-Cc: Felix Kuehling <Felix.Kuehling@amd.com>, Alex Deucher <alexander.deucher@amd.com>, =?utf-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Xiaogang Chen <xiaogang.chen@amd.com>, Philip Yang <Philip.Yang@amd.com>, regressions@lists.linux.dev, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/amdkfd: Use last + 1 of vm range to check 2MB huge page alignment
-Message-ID: <20260616091050.110064-1-geschw@pm.me>
-Feedback-ID: 110185885:user:proton
-X-Pm-Message-ID: 6cd50045133fa6b4bcf7839c16fc7869883bc537
+	dkim=pass (2048-bit key) header.d=aminvakil.com header.i=@aminvakil.com header.b="Tn7Ty9mS"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 4EC8A453AC;
+	Tue, 16 Jun 2026 13:19:27 +0330 (+0330)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aminvakil.com;
+	s=dkim; t=1781603370;
+	h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-language:autocrypt; bh=wHODkk4a9qafcNwfYVBegR44dsh/+B3sn441wVCN2e4=;
+	b=Tn7Ty9mSsbDMoB7WMMRrSCazYyPre6LEz9CxbE9dffkHGrPEiudehYP/pMAl9tF0gxmvyQ
+	pLXCPJhmOAzkwqA13Ko0mC6byKvPsyEjMQE3h9uCONZVhO/HjKpxK5EUtUnTVC0fX/Do11
+	CIyWIkmCHDFnwT38/LIfR4X85AA4nRtCXLQNJtJd5L6i3g44eb0LJecpFngiHFFz4/hake
+	1dyg4klX/UsNg19GTp/6jZhgnQ8izVhlYP2rs9cvrh0ygLCChHXHUV2iqHCuZz9IbsZsrO
+	/xb+HHaCD4x2a61Tq31RfygobxdgOQtmsxgXdfJmci7mMCsVR2ktrWBi0c0+Zw==
+Message-ID: <cbdeb118-58c7-48a7-94a0-15e5cdb5879c@aminvakil.com>
+Date: Tue, 16 Jun 2026 13:19:25 +0330
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+User-Agent: Mozilla Thunderbird
+From: Amin Vakil <info@aminvakil.com>
+To: linux-usb@vger.kernel.org
+Cc: Michal Pecio <michal.pecio@gmail.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Alan Stern <stern@rowland.harvard.edu>, Tao Xue <xuetao09@huawei.com>,
+ regressions@lists.linux.dev
+Subject: [REGRESSION] usb: core: interrupt-IN wBytesPerInterval fixup
+ (727d045d064b) breaks RTL8153 in Lenovo dock
+Content-Language: en-US
+Autocrypt: addr=info@aminvakil.com; keydata=
+ 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
+ +78sXChAfE9n44i0gJHzV8BhCsQG4+k=
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------i1qEqzBiwb5AaDlsa0KxvAov"
+X-Last-TLS-Session-Version: TLSv1.3
+
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------i1qEqzBiwb5AaDlsa0KxvAov
+Content-Type: multipart/mixed; boundary="------------vXrSaXNpGwM75T0pXOKEYIBc";
+ protected-headers="v1"; hp="clear"
+Message-ID: <cbdeb118-58c7-48a7-94a0-15e5cdb5879c@aminvakil.com>
+Date: Tue, 16 Jun 2026 13:19:25 +0330
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+From: Amin Vakil <info@aminvakil.com>
+To: linux-usb@vger.kernel.org
+Cc: Michal Pecio <michal.pecio@gmail.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Alan Stern <stern@rowland.harvard.edu>, Tao Xue <xuetao09@huawei.com>,
+ regressions@lists.linux.dev
+Subject: [REGRESSION] usb: core: interrupt-IN wBytesPerInterval fixup
+ (727d045d064b) breaks RTL8153 in Lenovo dock
+Content-Language: en-US
+Autocrypt: addr=info@aminvakil.com; keydata=
+ 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
+ +78sXChAfE9n44i0gJHzV8BhCsQG4+k=
+
+--------------vXrSaXNpGwM75T0pXOKEYIBc
+Content-Type: multipart/mixed; boundary="------------UFz104XrkaPXcciaV5OLK0Ev"
+
+--------------UFz104XrkaPXcciaV5OLK0Ev
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
+
+SGVsbG8gZXZlcnlvbmUsDQoNClRoZSBmb2xsb3dpbmcgY2hhbmdlLCBiYWNrcG9ydGVkIHRv
+IHRoZSA3LjAueCBzdGFibGUgc2VyaWVzLCBpbnRyb2R1Y2VzIA0KYSByZWdyZXNzaW9uIHRo
+YXQgZGlzYWJsZXMgdGhlIHdpcmVkIGV0aGVybmV0IG9mIGEgTGVub3ZvIA0KVVNCLUMvVGh1
+bmRlcmJvbHQgZG9jazoNCg0KICAgY29tbWl0IDcyN2QwNDVkMDY0YjdjOWEyNGRiM2JjZTlj
+MDQ4NWEzODJjYjc2OGINCiAgIHVzYjogY29yZTogRml4IHVwIEludGVycnVwdCBJTiBlbmRw
+b2ludHMgd2l0aCBib2d1cyB3Qnl0ZXNQZXJJbnRlcnZhbA0KDQpIYXJkd2FyZTogTGVub3Zv
+IGRvY2sgYnVpbHQtaW4gUmVhbHRlayBSVEw4MTUzLCBlbnVtZXJhdGluZyBhcyBVU0IgSUQg
+DQoxN2VmOjcyMWUgKExlbm92byByZWJyYW5kIG9mIDBiZGE6ODE1MyksIGRyaXZlbiBieSBy
+ODE1MiB0aHJvdWdoIA0KcjgxNTItY2Znc2VsZWN0b3IuIEhvc3QgaXMgYW4gSW50ZWwgbGFw
+dG9wIHdpdGggeGhjaV9oY2QuDQoNClN5bXB0b206IG9uIHRoZSBwYXRjaGVkIGtlcm5lbCB0
+aGUgTklDIGVudW1lcmF0ZXMsIHI4MTUyIGJpbmRzIGFuZCB0aGUgDQpuZXRkZXYgaXMgY3Jl
+YXRlZCwgdGhlbiBhYm91dCBvbmUgc2Vjb25kIGxhdGVyIHRoZSBkZXZpY2UgaXMgDQpVU0It
+ZGlzY29ubmVjdGVkIGJ5IHI4MTUyLWNmZ3NlbGVjdG9yIGFuZCBuZXZlciByZXR1cm5zLiBO
+byBldGhlcm5ldCANCmludGVyZmFjZSByZW1haW5zLiBVU0IsIEhETUkgYW5kIHRoZSByZXN0
+IG9mIHRoZSBkb2NrIGtlZXAgd29ya2luZywgYW5kIA0KcGx1Z2dpbmcgdGhlIGNhYmxlIHN0
+cmFpZ2h0IGludG8gdGhlIGxhcHRvcCBidWlsdC1pbiBOSUMgaXMgdW5hZmZlY3RlZC4NCg0K
+QWZmZWN0ZWQgdnMgd29ya2luZyAoQXJjaCBsaW51eC1oYXJkZW5lZCk6IDcuMC4xMS5oYXJk
+ZW5lZDIgd29ya3MsIA0KNy4wLjEyLmhhcmRlbmVkMSBpcyBicm9rZW4uIFRoaXMgY29tbWl0
+IGlzIHRoZSBvbmx5IFJUTDgxNTMvVVNCLWNvcmUgDQpjaGFuZ2UgaW4gdGhhdCBkZWx0YSwg
+YW5kIGl0IGFjdGl2YXRlcyBhIGNvZGUgcGF0aCB0aGF0IGRpZCBub3QgcnVuIA0KYmVmb3Jl
+IG9uIHRoaXMgZGV2aWNlIChub3RlIHRoZSBuZXcgd0J5dGVzUGVySW50ZXJ2YWwgbWVzc2Fn
+ZSBpbiB0aGUgDQpkbWVzZyBiZWxvdywgYWJzZW50IG9uIDcuMC4xMSkuDQoNCldoeSB0aGlz
+IGNvbW1pdDogY29uZmlndXJhdGlvbiAyIChDREMpIG9mIHRoZSBkZXZpY2UgaGFzIGFuIGlu
+dGVycnVwdCBJTiANCmVuZHBvaW50IChFUCAweDgzKSB3aXRoIHdNYXhQYWNrZXRTaXplPTE2
+IGFuZCB3Qnl0ZXNQZXJJbnRlcnZhbD04LiBUaGUgDQpuZXcgY29uZGl0aW9uICh3Qnl0ZXNQ
+ZXJJbnRlcnZhbCA8IHdNYXhQYWNrZXRTaXplIG9uIGFuIGludGVycnVwdCBJTiANCmVuZHBv
+aW50KSBub3cgZmlyZXMgYW5kIHJld3JpdGVzIHdCeXRlc1BlckludGVydmFsIGZyb20gOCB0
+byAxNi4gT24gdGhpcyANCmRvY2sgcGx1cyB4SENJIGhvc3QgdGhhdCByZXdyaXRlIGFwcGVh
+cnMgdG8gbWFrZSB0aGUgZGV2aWNlIGZhbGwgb2ZmIHRoZSANCmJ1cyByaWdodCBhZnRlciB0
+aGUgY2Znc2VsZWN0b3IgcmVzZXQuDQoNCmRtZXNnIChicm9rZW4ga2VybmVsIDcuMC4xMi5o
+YXJkZW5lZDEpOg0KICAgdXNiIDItMS4xOiBOZXcgVVNCIGRldmljZSBmb3VuZCwgaWRWZW5k
+b3I9MTdlZiwgaWRQcm9kdWN0PTcyMWUsIA0KYmNkRGV2aWNlPTMxLjAzDQogICB1c2IgMi0x
+LjE6IEludCBlbmRwb2ludCB3aXRoIHdCeXRlc1BlckludGVydmFsIG9mIDggaW4gY29uZmln
+IDIgDQppbnRlcmZhY2UgMCBhbHRzZXR0aW5nIDAgZXAgMTMxOiBzZXR0aW5nIHRvIDE2DQog
+ICByODE1Mi1jZmdzZWxlY3RvciAyLTEuMTogcmVzZXQgU3VwZXJTcGVlZCBVU0IgZGV2aWNl
+IG51bWJlciAzIHVzaW5nIA0KeGhjaV9oY2QNCiAgIHI4MTUyIDItMS4xOjEuMCAodW5uYW1l
+ZCBuZXRfZGV2aWNlKSAodW5pbml0aWFsaXplZCk6IEludmFsaWQgaGVhZGVyIA0Kd2hlbiBy
+ZWFkaW5nIHBhc3MtdGhydSBNQUMgYWRkcg0KICAgcjgxNTIgMi0xLjE6MS4wIGVucDBzMTNm
+MHUxdTE6IHJlbmFtZWQgZnJvbSBldGgwDQogICByODE1Mi1jZmdzZWxlY3RvciAyLTEuMTog
+VVNCIGRpc2Nvbm5lY3QsIGRldmljZSBudW1iZXIgMw0KDQpSZWxldmFudCBkZXNjcmlwdG9y
+cyAobHN1c2IgLXYgLWQgMTdlZjo3MjFlLCBjYXB0dXJlZCBvbiB0aGUgd29ya2luZyANCjcu
+MC4xMSBrZXJuZWwpOiBjb25maWd1cmF0aW9uIDIgKENEQyksIGVuZHBvaW50IDB4ODMgSU4g
+SW50ZXJydXB0IGhhcyANCndNYXhQYWNrZXRTaXplPTB4MDAxMCAoMTYgYnl0ZXMpLCBiSW50
+ZXJ2YWw9OCwgYk1heEJ1cnN0PTAsIA0Kd0J5dGVzUGVySW50ZXJ2YWw9OCAocmV3cml0dGVu
+IHRvIDE2IGJ5IHRoZSBuZXcgZml4dXApLiBDb25maWd1cmF0aW9uIDEsIA0KdGhlIHZlbmRv
+ciBjb25maWcgdGhhdCByODE1MiBhY3R1YWxseSB1c2VzLCBoYXMgaXRzIGludGVycnVwdCBl
+bmRwb2ludCANCjB4ODMgd2l0aCB3TWF4UGFja2V0U2l6ZT0yIGFuZCB3Qnl0ZXNQZXJJbnRl
+cnZhbD0yLCB3aGljaCBpcyBub3QgYWZmZWN0ZWQuDQoNClJldmVydGluZyB0aGlzIGNvbW1p
+dCAob3IganVzdCB0aGUgbmV3IGludGVycnVwdCBJTiBicmFuY2ggaW4gDQpkcml2ZXJzL3Vz
+Yi9jb3JlL2NvbmZpZy5jKSBzaG91bGQgcmVzdG9yZSB0aGUgZGV2aWNlLiBJIGFtIGhhcHB5
+IHRvIA0KYnVpbGQgYW5kIGNvbmZpcm0gYSByZXZlcnQsIGFuZCB0byB0ZXN0IGFueSBwcm9w
+b3NlZCBmaXguIEEgcXVpcmsgdG8gDQpza2lwIHRoZSBpbnRlcnJ1cHQgSU4gZml4dXAgZm9y
+IHRoZSBSVEw4MTUzIENEQyBjb25maWd1cmF0aW9uLCBvciANCm90aGVyd2lzZSBuYXJyb3dp
+bmcgdGhlIG5ldyBjb25kaXRpb24sIHNlZW1zIGxpa2UgdGhlIHJpZ2h0IGRpcmVjdGlvbi4N
+Cg0KSSBjYW4gcHJvdmlkZSB0aGUgZnVsbCBkbWVzZyBhbmQgZnVsbCBsc3VzYiAtdiBvdXRw
+dXQgb24gcmVxdWVzdC4NCg0KI3JlZ3pib3QgaW50cm9kdWNlZDogNzI3ZDA0NWQwNjRiN2M5
+YTI0ZGIzYmNlOWMwNDg1YTM4MmNiNzY4Yg0KDQpCZXN0IFJlZ2FyZHMsDQpBbWluIFZha2ls
+DQo=
+--------------UFz104XrkaPXcciaV5OLK0Ev
+Content-Type: application/pgp-keys; name="OpenPGP_0x1EFC1864E9D9E56B.asc"
+Content-Disposition: attachment; filename="OpenPGP_0x1EFC1864E9D9E56B.asc"
+Content-Description: OpenPGP public key
 Content-Transfer-Encoding: quoted-printable
 
-SVM ranges use inclusive page indices: prange->last is the last page in
-the range. The split-remap logic introduced by commit 448ee45353ef
-("drm/amdkfd: Use huge page size to check split svm range alignment")
-uses ALIGN_DOWN(prange->last, 512) to determine whether the original
-range can contain a 2MB huge-page mapping.
+-----BEGIN PGP PUBLIC KEY BLOCK-----
 
-That aligns the last page itself down. Thus a range ending one page
-before the next 2MB boundary is classified as if the final 2MB block did
-not exist. When such a range is split inside that final block, the
-split head or tail can be left off the remap list even though it was
-derived from an original range that may have PMD mappings.
+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
++78sXChAfE9n44i0gJHzV8BhCsQG4+k=3D
+=3DGHsk
+-----END PGP PUBLIC KEY BLOCK-----
 
-Use prange->last + 1 as the exclusive upper bound when computing the
-original range's last 2MB-aligned boundary. For the head-side remap
-check, compare the inclusive head->last directly against that exclusive
-aligned boundary; this catches a split head ending one page before the
-boundary while preserving the existing alignment check.
+--------------UFz104XrkaPXcciaV5OLK0Ev--
 
-Xiaogang Chen identified this cause and posted the candidate fix in the
-regression thread. With the culprit change active and the local revert not
-applied, the unchanged C/HSA reproducer completes 10/10 runs with this
-change on an RX 7600 XT.
+--------------vXrSaXNpGwM75T0pXOKEYIBc--
 
-Fixes: 448ee45353ef ("drm/amdkfd: Use huge page size to check split svm ran=
-ge alignment")
-Cc: stable@vger.kernel.org
-Closes: https://gitlab.freedesktop.org/drm/amd/-/work_items/4914
-Link: https://lore.kernel.org/stable/IA1PR12MB85172F7FE9157C092EDA46A0E3112=
-@IA1PR12MB8517.namprd12.prod.outlook.com/
-Suggested-by: Xiaogang Chen <xiaogang.chen@amd.com>
-Signed-off-by: Gerhard Schwanzer <geschw@pm.me>
----
- drivers/gpu/drm/amd/amdkfd/kfd_svm.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+--------------i1qEqzBiwb5AaDlsa0KxvAov
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature.asc"
 
-diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_svm.c b/drivers/gpu/drm/amd/amd=
-kfd/kfd_svm.c
-index 72cfb4a..30693ed 100644
---- a/drivers/gpu/drm/amd/amdkfd/kfd_svm.c
-+++ b/drivers/gpu/drm/amd/amdkfd/kfd_svm.c
-@@ -1144,7 +1144,7 @@ static int
- svm_range_split_tail(struct svm_range *prange, uint64_t new_last,
- =09=09     struct list_head *insert_list, struct list_head *remap_list)
- {
--=09unsigned long last_align_down =3D ALIGN_DOWN(prange->last, 512);
-+=09unsigned long last_align_down =3D ALIGN_DOWN(prange->last + 1, 512);
- =09unsigned long start_align =3D ALIGN(prange->start, 512);
- =09bool huge_page_mapping =3D last_align_down > start_align;
- =09struct svm_range *tail =3D NULL;
-@@ -1168,7 +1168,7 @@ static int
- svm_range_split_head(struct svm_range *prange, uint64_t new_start,
- =09=09     struct list_head *insert_list, struct list_head *remap_list)
- {
--=09unsigned long last_align_down =3D ALIGN_DOWN(prange->last, 512);
-+=09unsigned long last_align_down =3D ALIGN_DOWN(prange->last + 1, 512);
- =09unsigned long start_align =3D ALIGN(prange->start, 512);
- =09bool huge_page_mapping =3D last_align_down > start_align;
- =09struct svm_range *head =3D NULL;
-@@ -1181,8 +1181,8 @@ svm_range_split_head(struct svm_range *prange, uint64=
-_t new_start,
-=20
- =09list_add(&head->list, insert_list);
-=20
--=09if (huge_page_mapping && head->last + 1 > start_align &&
--=09    head->last + 1 < last_align_down && (!IS_ALIGNED(head->last, 512)))
-+=09if (huge_page_mapping && head->last > start_align &&
-+=09    head->last < last_align_down && (!IS_ALIGNED(head->last, 512)))
- =09=09list_add(&head->update_list, remap_list);
-=20
- =09return 0;
+-----BEGIN PGP SIGNATURE-----
 
-base-commit: 2c7d5b0a5ec0fc713a7f350806553643e87e6f43
---=20
-2.54.0
+wsD5BAABCAAjFiEEhGrABIXlXG/0vJ9THvwYZOnZ5WsFAmoxHCUFAwAAAAAACgkQHvwYZOnZ5Wu3
+DQwAuALMvt2//FJgk4igXwIoLl8UlnU2B0difBaN+rzPD8H7Cv2g7b2kufpUnVUgVFdozIZDk35g
+IQnQGYnLqV3sqfTxGm9bwNPiLWhPMIEnFooCMr9svCd0AmPLm1m00V+0ZKC09jftKBMbXnhrdpsF
+syyDL5V0WQLYxfovvYuOZLZh1SA/FgfLTaamEfS/6w/DOWR/yP+xNYJ2HBFNl3fP3E0eVdB17Stt
+DG14918q2G3/PE3HvFq67/NA+z/y8bAvvDYHesGjzfr7A9VKwQsbTwZUUShOOHzPbGjmk/faY4yg
+UaOtkUPQ4OJndXZNhG3Et6/f6/dHG2T/zYg7p2S0Yk/sdfe3+SptiU9xNF/jQNRshONKAP1yoVAL
+X6m/xO0qoI5OkeyTTpkzPGhYXWCiVz2UW6it98EdKxZtYqqI3SAsmdSMqsopHVR4gDmLYO29MlVG
+8qDPYXUpUTwmL8xamTSFoSDELHYi5YHNfFymIMsz/ihceI6mYA3ayetQfc94
+=aOj2
+-----END PGP SIGNATURE-----
 
-
+--------------i1qEqzBiwb5AaDlsa0KxvAov--
