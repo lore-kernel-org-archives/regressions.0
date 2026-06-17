@@ -1,128 +1,136 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.162])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58D782882C5
-	for <regressions@lists.linux.dev>; Tue, 16 Jun 2026 21:20:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9B6E3D8909
+	for <regressions@lists.linux.dev>; Wed, 17 Jun 2026 08:32:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.162
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781644833; cv=none; b=LOfnZnALkrNCB9vwmekRo/d/tdcMZidaWXnZszSWd2jKOFGelfSpUXNyrtmipOIG2Q26iTnmO50wxmgq42iKbqY2AbLUlpnPtjvMHoMOFlPWhdwefOJzVXekFOMPDDg94HhIwHPJ4skzaa5bwUJpCWg7b0Ska1i3dZ6QRvzG2/8=
+	t=1781685165; cv=none; b=FZi+9vyRibs6lDW58m5iPiMcrvivbq9towXFSWZJILzKzIaiSLkhR58qOfDokjt/gwKjHYcRTSIsbriddc6kREhDx+ogxfdpOPmwS6ogRvKxo33rDn1Q1aIc6SiLCnNCTKxP2rn9Nh4V3/92dVQsIm8AL56gT+ldqMNbVWqTUGk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781644833; c=relaxed/simple;
-	bh=wapozlZ15SwnLYwG2dp/kT2sgJSViUjoDMIJaS/HsFg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ub6owIyGEv7T5KskHt+rAUd2ba4Acatwx0Js6ao9J732CNqcJGCgatlSIkQwx1kx+6v6f9QxIHfcRhvzFQg6R09/k2pBMknAo39e8Zf1MNlAylZZDBaxuUe+YqscsSeOGY7mUGMMvzMlIneIJzSel6nGz+09/7SnNBH1lYX68lI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mEaH9wAM; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1781685165; c=relaxed/simple;
+	bh=kf0PmLbyKQ/2blQwIF/Rjt3LWgLL2BsA0cxPmPPS0R8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=t4NT66iUdyiCulmz77pxdZvPVAhOyznnH+AYR9AasdoEs2aG3jHfz4xlzZoKv9wMQYF131Il+u/fmjyLCiR+I1kPXDnt4MXTKCXXjBoht8cv4wfNle5bYUnlPD8ls7KDVsm3DC0zDucZNw34gIeTaQ+gICXOwcixM0jDKm796sg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=K95+fDAB; arc=none smtp.client-ip=188.68.63.162
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mEaH9wAM"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4903d730b1fso63146005e9.2
-        for <regressions@lists.linux.dev>; Tue, 16 Jun 2026 14:20:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1781644831; x=1782249631; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=g0MLk7EFjFyUhInKOQGFIRVTa7n3SV8FUkqmtHf663Y=;
-        b=mEaH9wAMi/XkbyCHgn8SSu+r/iHPER7b1SO4Ntt3lKChtTsNOps4pkoLCqU9+zsjN3
-         0ryeYRUWJ9TXCpB9bVdMiG3rn7wLJ/n6LCbIoYO+6V01PPgoA+iHGNzUvY9bPy2JCTim
-         QiEdLy4BrewirKdyvJGm6ByDQWhVYkeu+VP8ZLueLA5U67MbJaPH7ofYPWRoSLEBPA8+
-         cJKRBmujpZGX3NOHOs22teNLrIvhk5bWS50QPjg+6IcgeqlIsOkcXhn+4H2UAxApplWR
-         aI+fmX2fT9qtu0+YJuK198iRhcCxf2jDQVmCJ9sPNgri1BBCyk77lBKuM2+XkzwxIvAz
-         LVDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781644831; x=1782249631;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=g0MLk7EFjFyUhInKOQGFIRVTa7n3SV8FUkqmtHf663Y=;
-        b=HTuANd49tsb62CNhYnlbNYKChUNmKDnAK66ImxwTZLL+L3l0ftIiZAFC9vdSdMTxTz
-         r5TzqnjwmV6AN2byLZ0YB7NDGQ9SnG0TSKDt0GJh4yBr7OUvzy6+IzbVO5kwwgXiTuVb
-         p3MaiIfi+i/UWohZicuuXtoTjC6ozkG/uOVLzCbXrQa/+Q6zajwOibyesjQDz/mwGC/c
-         r9XSl62bBqnClKyxLdfF5KayyOMu3NpzerKDZKpa7WcKgUlUfBqxtCIIEyCb3h8f3iSW
-         CySFwCR/xPoHGYnhENZe/KY0JhlcyphEV//uI7SUDLL2uLUziMUX0+o43diFL2Dy7eWY
-         WWXw==
-X-Forwarded-Encrypted: i=1; AFNElJ95EnV8vehfwRrZnOMZUdzC0Uu+XhOhEIv+1a4/fxBCmvyEYer+/7zKmSoOGoaZ4KRRjlEppQ7U7vzGAg==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxA7NxdC3M1vbllry9ZXdbtGd2WLXK8IWlwIWqML0QgtTOV8SrL
-	57aGZamgi1D/MPjgF+UugkTSUnZp4keUtKBQE7Pq9hmxA6+eVn0NPrtW
-X-Gm-Gg: Acq92OFlWyy0/3strTCfaBisv3eORY3qEyd38rHnDft0x3v9Y/rpb7zx+zPAv1dNFpq
-	bNjh30sCJp0lT49s0c/RGZrPThYmn5lW80+8wDGF8yXtjzpCsJsCud4aPrt0drMEBqe/AbG0w6R
-	yyCY3L2TWC+vhxJ2iMiG0orAk2CK48izsrIFA1RVuTWB5ni7YyyaWbdiih47bt2L+CWvN9f1ycC
-	tqqBPhdxQc7+InPdWohxfw+kcn3bJnTUkbLLq00nckSuQLZ+PGJ8DtjPX/uhUz+xj7adEE3y4+G
-	kQGpBhrdGfwf2HPol4S6j7usKampx44Z5zG8i5LZjmbaL09zIo1sL9JCF1PkiW03dUHSFbK10F2
-	IVwDiuOI+1yb8YaBksoewZq2hYPQ2zQtLOc61tR+Gv0C+3GRm5zhe3MTx4A1cYuCDNdKDADg3mr
-	zIUp7sjHqBkIMVBAw7LzxHNmJI4phwHpmn
-X-Received: by 2002:a05:600c:e548:20b0:490:e5c1:b8c0 with SMTP id 5b1f17b1804b1-492333a1565mr13531725e9.5.1781644830555;
-        Tue, 16 Jun 2026 14:20:30 -0700 (PDT)
-Received: from foxbook (bfg19.neoplus.adsl.tpnet.pl. [83.28.44.19])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4619fb12edbsm10569658f8f.17.2026.06.16.14.20.29
-        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
-        Tue, 16 Jun 2026 14:20:30 -0700 (PDT)
-Date: Tue, 16 Jun 2026 23:20:27 +0200
-From: Michal Pecio <michal.pecio@gmail.com>
-To: Amin Vakil <info@aminvakil.com>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
- linux-usb@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Alan Stern <stern@rowland.harvard.edu>, Tao Xue <xuetao09@huawei.com>,
- regressions@lists.linux.dev
-Subject: Re: [REGRESSION] usb: core: interrupt-IN wBytesPerInterval fixup
- (727d045d064b) breaks RTL8153 in Lenovo dock
-Message-ID: <20260616232027.10ba0415.michal.pecio@gmail.com>
-In-Reply-To: <8f862eb6-adfb-43a9-b4f5-8f9232333b51@aminvakil.com>
-References: <cbdeb118-58c7-48a7-94a0-15e5cdb5879c@aminvakil.com>
-	<35d2b455-382e-470e-acf4-1ab60770da90@leemhuis.info>
-	<5036fee2-4d00-4ca0-aeed-400da64d7872@aminvakil.com>
-	<573bbb08-0ba7-4f00-8996-819cc1d9cc48@aminvakil.com>
-	<20260616183646.4798516b.michal.pecio@gmail.com>
-	<8f862eb6-adfb-43a9-b4f5-8f9232333b51@aminvakil.com>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="K95+fDAB"
+Received: from mors-relay-8201.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4ggHCr24H6z43BL;
+	Wed, 17 Jun 2026 10:32:24 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1781685144;
+	bh=kf0PmLbyKQ/2blQwIF/Rjt3LWgLL2BsA0cxPmPPS0R8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=K95+fDABLkOFcRSwnw7IYzQO5KxOWdsSwnx/3+YDwJsB9LuYzIDBPWn1ufZVIwmUT
+	 +SDIhHI86cneq2fquMx/R96153VpKIDl35Hpvu8ubOM4LCaSq4UIXaL0b0JpxSkRAv
+	 7nB9VoaSPZLiN7zKKeAMTGKyWEab5hZHT9LS0xzya2pRw9Xx3ObCUE+64iJLzssA9F
+	 91NPhDMby6/e2+Q0S72gIgbvD21ajhzPSZxdFRW9dg9LkOXEx64V+i3FC7emFqjlgS
+	 EExFdEMgW1Dz2ssnoh6nNHda1R9awye0KLbEBlWAff2eJCizqRu6d/GomeM8t504ty
+	 QTI4M2i5VUJtg==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4ggHCr1J5rz3tLF;
+	Wed, 17 Jun 2026 10:32:24 +0200 (CEST)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4ggHCq3pr2z8sZP;
+	Wed, 17 Jun 2026 10:32:23 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id AB7595FBFB;
+	Wed, 17 Jun 2026 10:32:22 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <e8acc151-19f3-4823-83a1-e0906dd9f0f0@leemhuis.info>
+Date: Wed, 17 Jun 2026 10:32:20 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: =?UTF-8?Q?Re=3A_=5BREGRESSION_6=2E16=5D_r8169_RTL8168h/8111h_fails_?=
+ =?UTF-8?Q?to_probe_=E2=80=94_=22Unable_to_change_power_state_from_D3cold_to?=
+ =?UTF-8?Q?_D0=22_=E2=80=94_bisected_to_4d4c10f763d7?=
+To: Josh Perry <josh@6bit.com>, mario.limonciello@amd.com, bhelgaas@google.com
+Cc: hkallweit1@gmail.com, nic_swsd@realtek.com, rafael@kernel.org,
+ linux-pci@vger.kernel.org, netdev@vger.kernel.org,
+ regressions@lists.linux.dev
+References: <d4aaa5e8-7366-461c-94b1-ccf3631c8bf9@6bit.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <d4aaa5e8-7366-461c-94b1-ccf3631c8bf9@6bit.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-PPP-Message-ID: 
+ <178168514307.1060164.16093719345392338025@mxe9fb.netcup.net>
+X-NC-CID: EU+0w11D1L2EjVOiB5djiD1sGtVkwq3AXnplGM6FJ6HIeoK/8fI=
 
-On Tue, 16 Jun 2026 20:22:19 +0330, Amin Vakil wrote:
-> On 6/16/26 8:06 PM, Michal Pecio wrote:
-> > RTL8153 was one of the chips specifically targeted by this fix, but
-> > it affects the CDC configuration which you don't seem to be using.
-> > 
-> > I have tried linux-hardened-7.0.12.hardened1-1-x86_64 from Arch repo
-> > as well as my own build of 7.1-rc6, and my RTL8153 (0bda:8153) in a
-> > different kind of USB-C dock still works with a few xHCI controllers.
-> > 
-> > So it's some weird problem narrowly specific to your system. Now that
-> > you have built your own kernel, please also revert the suspect patch
-> > to verify if that's really it.  
+On 6/12/26 03:07, Josh Perry wrote:
+> #regzbot introduced: 4d4c10f763d7
 > 
-> Honestly I've tried patching it myself :)
-> 
-> by changing
-> 
-> (le16_to_cpu(desc->wBytesPerInterval) < usb_endpoint_maxp(&ep->desc) &&
-> 
-> to
-> 
-> (le16_to_cpu(desc->wBytesPerInterval) == 0 &&
-> 
-> in line 187 of drivers/usb/core/config.c to see if that fixes the issue 
-> and it did not, but I didn't specifically reverted the commit to see if 
-> that fixes the issue.
+> Since v6.16 one of two onboard RTL8168h/8111h NICs on this board fails
+> to probe on boot; the device drops to D3cold and the driver can't bring
+> it back:
 
-This should be enough to prevent overriding wBytesPerInterval on
-RTL8153 (and get rid of the new log message).
+FWIW, that commit is 4d4c10f763d780 ("PCI: Explicitly put devices into
+D0 when initializing") [v6.16-rc1] from Mario, who is already CCed, but
+looks like might be on holiday or something due to inactivity on the
+lists in the recent days. So it might take a few days before this moves on.
 
-If the message goes away but the device still doesn't work, the problem
-must be somewhere else.
+Josh, this is not my area of expertise, but there are two things I guess
+might be helpful:
 
-I would start with userspace - if you haven't already, downgrade to
-some kernel package which worked in the past. See if it still works.
-Or check if 9ddb9c0deca48d2c2a22ebf4d2f35c925a520328 applies to your
-dock and try reverting it if it does.
+* retry with 7.1
+* upload "dmesg" and "sudo lspci -vvv" output from working and broken
+kernels somewhere (like bugzilla.kernel.org).
 
-Otherwise, no idea, besides git-bisect I guess.
+Ciao, Thorsten
 
-Regards,
-Michal
+>   r8169 0000:02:00.0 eth0: RTL8168h/8111h, 00:2b:67:48:40:01, XID 541,
+> IRQ 137
+>   r8169 0000:04:00.0: Unable to change power state from D3cold to D0,
+> device inaccessible
+>   r8169 0000:04:00.0: Mem-Wr-Inval unavailable
+>   r8169 0000:04:00.0: error -EIO: PCI read failed
+>   r8169 0000:04:00.0: probe with driver r8169 failed with error -5
+> 
+> The board has two identical RTL8168h NICs (both XID 541): 0000:02:00.0
+> and 0000:04:00.0. Only 04:00.0 fails — its sibling 02:00.0, on a
+> different root port, probes and works normally on the very same kernel
+> and boot. The failing NIC then does not appear (no enp4s0), taking the
+> machine's WAN offline. This strongly suggests the problem is port/
+> topology-specific rather than device- or driver-specific: the upstream
+> port behind 04:00.0 is placed in D3cold and the endpoint cannot be
+> resumed to D0.
+> 
+> Hardware: RTL8168h/8111h, XID 541, PCI 04:00.0 (onboard 1GbE).
+> Platform: Lenovo ThinkCentre M90n-1 (11AHS0B200), BIOS M2AKT49A
+> (2026-03-25, latest available). Firmware is current, so this is not a
+> platform-firmware issue.
+> 
+> Bisection: v6.15 good, v6.16 bad (verified by booting both). I then
+> reverted 4d4c10f763d7 ("PCI: Explicitly put devices into D0 when
+> initializing") together with its follow-up 907a7a2e5bf4 ("PCI/PM: Set up
+> runtime PM even for devices without PCI PM") on top of 6.16.7: the NIC
+> probes and links at 1Gbps/Full normally, with no workaround:
+> 
+>   r8169 0000:04:00.0 eth1: RTL8168h/8111h, 00:2b:67:48:40:02, XID 541,
+> IRQ 138
+>   r8169 0000:04:00.0 enp4s0: Link is Up - 1Gbps/Full - flow control rx/tx
+> 
+> Workaround: booting an unmodified v6.16+ kernel with pcie_port_pm=off
+> also restores the NIC, which is consistent with the upstream port being
+> placed in D3cold and the device failing to resume to D0 after the
+> explicit-D0 init change.
+> 
+> The follow-up 907a7a2e5bf4 does not fix this resume case: v6.18.33 is
+> still affected (retested today on current firmware).
+> 
+> Happy to test patches or provide full dmesg / lspci.
+> 
+
