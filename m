@@ -1,271 +1,241 @@
-Received: from mail.aminvakil.com (mail.aminvakil.com [178.63.189.195])
+Received: from MM0P280CU010.outbound.protection.outlook.com (mail-swedensouthazon11022078.outbound.protection.outlook.com [52.101.77.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F18C83769FB
-	for <regressions@lists.linux.dev>; Wed, 17 Jun 2026 17:49:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.63.189.195
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781718595; cv=none; b=QvMJlUNcb9MjmRla9022EL/58dslMQ4SxvfdlDf9hg/GI2tqGVk9xL7HCyvEUAJE6LxMueNs+miIhA49ut7nz8lPHMi4ZNOdCj5Vom8X/1hsIT8oMmFAnX+24MnQgJ1oZxR1dpTlVsfBT7sDTRpKZq3PQXWSU+3aV0UoSjaomlQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781718595; c=relaxed/simple;
-	bh=BUQ5fAcTvWgAZiYPIQYU4r67Wx7j/uI9npS1gIVmOJE=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=SbOAys99QHQvTfMYpa2SvRnlQIcdr5lH+OexzhP0YIwsvyGcMRyNqZ5gD3Qyj/3xz9xMF+X2N2NDAgYbeWB5bR4SsACj24XzWkw05zQ6tCNPpSONZNZeY/IM9b7UNNBHxG5eEDAbpPwNyvKUuEov+zrfAUJxG2/TpGu8tJbwQt0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=aminvakil.com; spf=pass smtp.mailfrom=aminvakil.com; dkim=pass (2048-bit key) header.d=aminvakil.com header.i=@aminvakil.com header.b=LH3cr6Ic; arc=none smtp.client-ip=178.63.189.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=aminvakil.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aminvakil.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFF9F22F388
+	for <regressions@lists.linux.dev>; Thu, 18 Jun 2026 05:53:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.77.78
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1781761991; cv=fail; b=lCnNJg2jgiVwLjYj/mNFIyf2xamrdtyjHuFRloqcoJ8fK4ekoX13EjB6Oz+Gln90u0uIFMuCTMrYmCFaN3z9HytfnUSuZ/IoW5zzuw2gipd093xo3wdNDy8W+HxrlWC4ddcwhGvNvqMxog/II6aqJk2edm7y+CZYXfT7SNo063g=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1781761991; c=relaxed/simple;
+	bh=YRgYwQFF/+TmaTB5QUEw4ckivpDhzWDdkqQ5Ic+SUXs=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=nIg4GxCSinEvJEIR9MIf3hzqJT0d3LOCfsJnJzCamENvMqcBBxO7iwfRUNTYwTLr0rxcXnXEcgawxRK7/dmiHFlcue5qTSkihecCFYPVbmOBQKa7WKdcJuoPABQtmlt8800h8ijx7V2KKYwLoCWuqZw1TB8M4E62tNMKNugp8SU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=permerror header.from=gaisler.com; spf=pass smtp.mailfrom=gaisler.com; dkim=pass (2048-bit key) header.d=gaisler.com header.i=@gaisler.com header.b=VgLyQyQi; arc=fail smtp.client-ip=52.101.77.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=permerror header.from=gaisler.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gaisler.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=aminvakil.com header.i=@aminvakil.com header.b="LH3cr6Ic"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 4E8EE4206C;
-	Wed, 17 Jun 2026 21:19:39 +0330 (+0330)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aminvakil.com;
-	s=dkim; t=1781718584;
-	h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-language:in-reply-to:references:autocrypt;
-	bh=BUQ5fAcTvWgAZiYPIQYU4r67Wx7j/uI9npS1gIVmOJE=;
-	b=LH3cr6Icq76VJMJ3HNIVm1Ru2d+n/xd9DA4mV5t7FmEjxPjGGRF/s5EQmApqlA/wpZIZ8b
-	ewd8I2zt30oHrvP6ohg51cKBbcVB2+9fXmCfpwCPVRqhzhlb4y+3mH4xzXnpyCW69ZkEAP
-	e1BwsCVHezhDFASZUSylG75vSFvLPlOHYHp5JXc+EryKmp8bSse0lGz2L0c/hEf83LemG1
-	a6U7K1QcuKpiOXeSKj5sjYJAF6H9vppJlCG/DVMbEgpVs1LvZoOLWO/nrT+fETTX9RK8f/
-	PpC3gA9QVV2QorTVav9JI/CmzsppIkEfAXEy18uRWUBOnTRsMTm10MopJr68MA==
-Message-ID: <4e45e34d-31d4-4117-9277-36799e63e6f8@aminvakil.com>
-Date: Wed, 17 Jun 2026 21:19:37 +0330
+	dkim=pass (2048-bit key) header.d=gaisler.com header.i=@gaisler.com header.b="VgLyQyQi"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Uva+FmGUkGSnEeZTvKIn/QjZBnCnpcWiMSOVkqpJ7ODiFnKONAD+J4ieqnSw+NXjOd9TyezdYk98JZnxr+eR5SVF9XrOsEhneU5xE6ZtIFDsrW2DH00LWgQ3Kn2IwQLgg6a0gO3VzCdzdVE1RNn1Xpa/iZJVp5QeTrqoiojMn+arzxu1CJy6/sMkgdj7tS+KfuWmLTAF9yKzxBMHSwJJW830HCi5bVmcoggmmHpr3tVN0ibHBDXgtBVoSo55yiNgnAs/uHLfd0WRdEeyoU5wyGqK+H33zuweDb4Pe6WliUwwts55fXGIg+wCtDT0rBm1hXZ9DKkGe9jJ9O6k2cFoew==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=lnBDNH/xxIRicVJO2jx3URmKg1AbvQFoMohQvwQrVYo=;
+ b=kcQ7mWTFVd1ziHzuHK/qAeqqFayHM3+4OAFMZWiFKLsCBLf59EcUUuQEb8U3qH5pp36eclTijpiYo6e4eT7vXvoAekWNrfJAmqVDYyaSNp110HDQ5m9GvXoqh1McSLzMwX+deF3JF+rrGWYkeVyjTVichh7Zk3pukTRhR4hH0Pdew4ELGiKjYXoZOckPEMQ2+gqLfnmooTTZb6NVNGk9oZgz1AGMy+hEdsvJbRFRyYeuEFuEG+SKQN3NvgczuGH5IDsQViy2h4+t3uyEhozZD7MGORGVyfj6drEfmUrVLfHhMWwUc+9NQRfJM+MvzzPMZGZVur1QeKsTOpmI5zUOgQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=gaisler.com; dmarc=pass action=none header.from=gaisler.com;
+ dkim=pass header.d=gaisler.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gaisler.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lnBDNH/xxIRicVJO2jx3URmKg1AbvQFoMohQvwQrVYo=;
+ b=VgLyQyQiQ011rb5Qt9x41VAwWFt+AM3oHtamOfHjsrRYphRtQZ0Dj8CD9yYxwJSVWlNUff19aN3RdHhwtwMEO+p6xuJo74UwKWuWi+TwriZup+7sHYDzKh8f2+39z9Y7mltS8K6JKT3pcAxrYd//3YhBNl6hjHD4pa1CHtGluPfKhqkNlfCMbQaKPVrGgGzkcrP4FUGf16q9DwhLPcJjrpsT3ItRCWGUUmJcOJWA1dhj0GZcjKARir+sfRhQp+jWQJG5laJ3SCPOmoTI/R9LUUpXKBR5DI0wUYr/VN7Mao1cUidxDMAm8SVk3e5cVGHd1NHD+CHYGX/7NwZDiCLSCA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=gaisler.com;
+Received: from GVYP280MB1290.SWEP280.PROD.OUTLOOK.COM (2603:10a6:150:195::18)
+ by GVZP280MB1657.SWEP280.PROD.OUTLOOK.COM (2603:10a6:150:234::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.139.14; Thu, 18 Jun
+ 2026 05:53:03 +0000
+Received: from GVYP280MB1290.SWEP280.PROD.OUTLOOK.COM
+ ([fe80::be76:7636:f4ac:6773]) by GVYP280MB1290.SWEP280.PROD.OUTLOOK.COM
+ ([fe80::be76:7636:f4ac:6773%6]) with mapi id 15.21.0139.009; Thu, 18 Jun 2026
+ 05:53:03 +0000
+Message-ID: <d634e2f2-daf0-4328-bf16-7f5bff6fe851@gaisler.com>
+Date: Thu, 18 Jun 2026 07:53:02 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] sparc64: unify thread stack sizing and add explicit
+ 32KB stack
+To: David Laight <david.laight.linux@gmail.com>,
+ Andreas Larsson <andreas.larsson@gaisler.com>
+Cc: Tony Rodriguez <unixpro1970@gmail.com>, davem@davemloft.net,
+ sparclinux@vger.kernel.org, linux-kernel@vger.kernel.org, thuth@redhat.com,
+ regressions@lists.linux.dev, glaubitz@physik.fu-berlin.de
+References: <20260519075809.8993-1-unixpro1970@gmail.com>
+ <20260519075809.8993-2-unixpro1970@gmail.com>
+ <03111ac5-0055-425f-a7f2-54d4f2bb4988@gaisler.com>
+ <20260616205851.428ca70c@pumpkin>
+Content-Language: en-US
+From: Andreas Larsson <andreas@gaisler.com>
+In-Reply-To: <20260616205851.428ca70c@pumpkin>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: GVZP280CA0096.SWEP280.PROD.OUTLOOK.COM
+ (2603:10a6:150:275::14) To GVYP280MB1290.SWEP280.PROD.OUTLOOK.COM
+ (2603:10a6:150:195::18)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Amin Vakil <info@aminvakil.com>
-Subject: Re: [REGRESSION] usb: core: interrupt-IN wBytesPerInterval fixup
- (727d045d064b) breaks RTL8153 in Lenovo dock
-To: Michal Pecio <michal.pecio@gmail.com>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>, linux-usb@vger.kernel.org,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Alan Stern <stern@rowland.harvard.edu>, Tao Xue <xuetao09@huawei.com>,
- regressions@lists.linux.dev
-References: <cbdeb118-58c7-48a7-94a0-15e5cdb5879c@aminvakil.com>
- <35d2b455-382e-470e-acf4-1ab60770da90@leemhuis.info>
- <5036fee2-4d00-4ca0-aeed-400da64d7872@aminvakil.com>
- <573bbb08-0ba7-4f00-8996-819cc1d9cc48@aminvakil.com>
- <20260616183646.4798516b.michal.pecio@gmail.com>
- <8f862eb6-adfb-43a9-b4f5-8f9232333b51@aminvakil.com>
- <20260616232027.10ba0415.michal.pecio@gmail.com>
-Content-Language: en-US
-Autocrypt: addr=info@aminvakil.com; keydata=
- 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
- +78sXChAfE9n44i0gJHzV8BhCsQG4+k=
-In-Reply-To: <20260616232027.10ba0415.michal.pecio@gmail.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------0ahHicsa034BYqVTiQLNPonz"
-X-Last-TLS-Session-Version: TLSv1.3
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: GVYP280MB1290:EE_|GVZP280MB1657:EE_
+X-MS-Office365-Filtering-Correlation-Id: c58da915-7d3a-4420-6ec0-08deccfddc80
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|1800799024|23010399003|366016|4143699003|56012099006|6133799003|18002099003|22082099003;
+X-Microsoft-Antispam-Message-Info:
+	eICLzA+DxrkUJ20y4t/IJZ5uQ1Bo87WHhiGlrYVxCNl2zZZsw7egleDMyuc3ZYAslCCFQkkkEyJZ0XcEZYWXXmFaHPLS36MB1Yc8oNOKNZxMGbw4E6YEFv3j7p1ibFhwKbilpXkVx1Bqh+S+J+vG9G9E5wRkqVUmwIBvvio6aUgdQuWAgf3uIq82Nd+1aGdv3b8aOkRJ+4XXASWvxWSVUNaXfaAD+2BlQHT/K3aDQrnOGCHtnOe1l79bA8S4PMSate8zMYFllvdJeD/ffS1L1sfM73GQ3a7J4wD6y50lS79Jm7htIPh5mgeptkPFVhN3kWFaCoFRYM7ZwFP8HonpgO6IaLPuvOkh+dq4GBzCGRh5y2o13dzgtk60TPBB46sc52zG+4mwsAXvckM03DUg3PCFYCEEVXlO5ZtaUDpQruQfJB6rX0RDEAcs9AUazayWtTuArpjtxWImo+/DffwhrHwpuIlPAIQR0ZvptqVRjVD4ibPp46x/J6PcL0d1U6kbJoYznWreHy7pyRPOSDbRA54MW5rTgeaGEwnFt8cMII2fjUqkNzpDBNgx8yGWlHzcFav2v3yDwcA33t5JeoA6DwbkqtahEk2oxPjTXNpJE3zJNazkW/85PigklLlPUC8uNRDzvstBQp+MjFBSjSfWC0C5HoGqtgEDiMS9EIPH3pLA55dwuz+G20ZHdS7h/WrN
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GVYP280MB1290.SWEP280.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(23010399003)(366016)(4143699003)(56012099006)(6133799003)(18002099003)(22082099003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?QUdrN3NJYW9ITWdsQnBXaVRwWFJud0YrOWt0Sk9jM21nclIrTXU3aFBQNG9h?=
+ =?utf-8?B?WmRGNUswOU94dGlOZmxyaEdqY0thS21GUElrMGFpV3kvbkNLUkpXSjZMRklI?=
+ =?utf-8?B?MEZ6b1VGcCtld1R3MDhLUEUwcFozVDJRMzY5RVkyVlRiQi9pQTArWGZNa0VE?=
+ =?utf-8?B?dTB4VE50R1BQem5mWWo1bk9tcHNSYVlmcm1zeUNmQm1KdkJXaTF1WEVLZFp6?=
+ =?utf-8?B?WVBUQm9RL1E1bG0reHlDYlJlVEZLTGFpL1FhL0haRnptdDlrUHQ5d2FHbWha?=
+ =?utf-8?B?NXcrMzNvd0wwYUpndG94MzZNYnBPVVFBMWJ3V0xlTEplOEMxL2wrbHFMVlFR?=
+ =?utf-8?B?ZElMYWpWazBQUnFWSHV1dUpiNWdHSUZBM2FMU1JrdGVmTHYvelVpWG9XZG5v?=
+ =?utf-8?B?dGkvQnJLcjdSd3JxcTR4MU4wdEhvc2RmdXVvSUgyakNjNEM2b1JCaGdqTFlP?=
+ =?utf-8?B?OGhsMVNzQ3BiRnZHSDArV0RVVTFWRkdpeXJKckJCNFYwYUJhVXo3cWMvNmho?=
+ =?utf-8?B?QjB2TDZlNTRBdTlCN1lWYk80NTMxUHliaWNPVnBWVE5iamZaeVh1ZE44SE1r?=
+ =?utf-8?B?NjZMWFU3NjhWQUgyU0tKdGRkcWRjdjVZYnJwUVhLcEFHZ0g3Q3BucHIrYmJw?=
+ =?utf-8?B?NEQyTDR4UUVRbEpaVGM2WWZ0aEdQWHBuemFtUXVrZ3NLZTl6NzJQN0NBa2E1?=
+ =?utf-8?B?UXNJc0NETGloU3lBazRWL01uN0k2Z1VjNCtQWXNIOGVnck1UMW1vVzhHaEVT?=
+ =?utf-8?B?WnY4ZHh1SE0zV3VUaDAyU3lrWTVGZFRxNEswdjMxS2RYN1Z1b29rSGt2a2kz?=
+ =?utf-8?B?M1VNbmhDUHZYcWtIaXkrWkRucXY4Z1UyWmtNMHB3M1V1b0lXNkJVQWtDUWpP?=
+ =?utf-8?B?QUFtcHVkZ0wvQVVmWHdjdVQ5cGJWNUFBMGd4UEo1SkJscVVLaU1GZmM3VTFS?=
+ =?utf-8?B?dUd2ajFUY0NDL3VwMG1MWXcwQmJGUnNaQXQwSm9vaTI0QjUxUjFHblVKaUh3?=
+ =?utf-8?B?cjdDUlFiVUgyUHBJL1l5eTBxcWRlbFo1KzhMUzBBNXhmNU83MlFYeEpEcW9D?=
+ =?utf-8?B?bnpOaE8vTGtCYW5PSzh3R0tCaHRsNkF5NUdDbGZLSXMrUHN4M0dsUm5hL3p0?=
+ =?utf-8?B?eDJGMml0U0RkU0RkNzBQeVhmOUdkbzBERm5zVUFLdHR0Q0dEZHVvbmFjMU1J?=
+ =?utf-8?B?NDlMK2RyaUR1TWU2UW1KSy80TS9sSVpUVDNPOWV2RnAyRUM5TFQ3SFFWMzdJ?=
+ =?utf-8?B?MWszUllZS0V2MlRsOVBNd2NJbHE1K2ExWnhaTlRwVmlkM3ROeVBMWUFjVEhW?=
+ =?utf-8?B?UzVWRFFzbHphclIyaVlBU1o5RzJ2eUVlQXZHQ3Y0VTFDd0E2bVVRMG1EQW5s?=
+ =?utf-8?B?ZTlQV0pQL2psWFordHdDaTBFeVIyVFhUQ0hhalYzbVdYQ05tNGhZNXpLOEZv?=
+ =?utf-8?B?T25iaStodkl0YUlDYnduNWtQcUQ3bWlnUFEvbW5tdUNWTTVtYVZET244c3Fa?=
+ =?utf-8?B?T3BCZTZmZ2k4SkdhVTI1RkRlZjJvdFBRNngxajBIZ1E2L0R2dmNOWWludEdK?=
+ =?utf-8?B?YllLRlFWQlduVHY5dW5pSTh6RHJGL3BMRE5zcGd2Q0RTcXVGOUVRQXhaMzBX?=
+ =?utf-8?B?cm1xeG0ra0ZadDRJdnBlZjIvbWlqOEUzaUxZUWN1dWxJQVZJNHc1OG40RWR0?=
+ =?utf-8?B?UDRUenJsMmRWWXRXMTZMdi9Ld21paXBHOXJYcXUyM2p6RkZ4RWkrREZ3cVZF?=
+ =?utf-8?B?c2s1b2VKNTQ3dzhaMjBpeURmNXd1OFlrVHJFcW5xWDVFSGxRZ0w0RGdhMWNr?=
+ =?utf-8?B?bHF1ZGxlV3YyUlhsbGp4ZUFRd2ZDNkozVnkzbkZsOGdqZEtpYkY0OTNRZjcw?=
+ =?utf-8?B?d0JaN1RHRExnRzNTL3ZtYXRqdUJPazl2aDF2MHVzT01YT2tlRnU0Q0J6SW5z?=
+ =?utf-8?B?djlQVUtTd2ZEbDA3Q3B5a0RBSnM3OUNHQUdWWVBOWVk0ZHVnYnlaZ2dlc09z?=
+ =?utf-8?B?c1MrMkNEQnpzRkFMOUd3OTlBR1JSV01NZ0xYR0tJNjZGVnZVYTFFL0ZJKzM4?=
+ =?utf-8?B?TXhJOUlRUkJqSDdYakdxcFJBM1IyMkx4ZVZSRXFoSS9vcEpxM29pNmNKQ0Vx?=
+ =?utf-8?B?YnRwRWd5WHVzN0pjTHhtNE9iNnhMNk1BMlVKUGh4WjlFTW1ncWlXOHhyZzRI?=
+ =?utf-8?B?Y3doTTBNUFpuZU5RZWlGclUxeEhVZU1VdHNRWnFNYVplWHlLR2pMaHRhZFNW?=
+ =?utf-8?B?R05yNVBsYjk1WjExZDBZU3dqdG5EUm9HeXVZSkt3NTVCT3RkQ1c2NkxVQzVX?=
+ =?utf-8?B?NWhmQzNsZTdlaUhmSlhmVGR4YVNnbDFhV29CSTdPZXZXL2JtWEp6cVIyOGVz?=
+ =?utf-8?Q?iuWFl5xQt4GGYmoE=3D?=
+X-OriginatorOrg: gaisler.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c58da915-7d3a-4420-6ec0-08deccfddc80
+X-MS-Exchange-CrossTenant-AuthSource: GVYP280MB1290.SWEP280.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jun 2026 05:53:03.2667
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 91fa4a59-2167-458a-8318-e45d80469d7e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: x6Y9EDbyHIzTKCxBVADW6/Kn+X6DiAjVHsSVzAv2ZSgChYXpwXyVluiddmfAHrga4qMRH3s6AoH/3xNh5yd4LGQcvuYctLXiWVL+jRtO8VU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GVZP280MB1657
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------0ahHicsa034BYqVTiQLNPonz
-Content-Type: multipart/mixed; boundary="------------Ip0AH7mFLWWLgJZHdRvFJknP";
- protected-headers="v1"; hp="clear"
-Message-ID: <4e45e34d-31d4-4117-9277-36799e63e6f8@aminvakil.com>
-Date: Wed, 17 Jun 2026 21:19:37 +0330
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Amin Vakil <info@aminvakil.com>
-Subject: Re: [REGRESSION] usb: core: interrupt-IN wBytesPerInterval fixup
- (727d045d064b) breaks RTL8153 in Lenovo dock
-To: Michal Pecio <michal.pecio@gmail.com>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>, linux-usb@vger.kernel.org,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Alan Stern <stern@rowland.harvard.edu>, Tao Xue <xuetao09@huawei.com>,
- regressions@lists.linux.dev
-References: <cbdeb118-58c7-48a7-94a0-15e5cdb5879c@aminvakil.com>
- <35d2b455-382e-470e-acf4-1ab60770da90@leemhuis.info>
- <5036fee2-4d00-4ca0-aeed-400da64d7872@aminvakil.com>
- <573bbb08-0ba7-4f00-8996-819cc1d9cc48@aminvakil.com>
- <20260616183646.4798516b.michal.pecio@gmail.com>
- <8f862eb6-adfb-43a9-b4f5-8f9232333b51@aminvakil.com>
- <20260616232027.10ba0415.michal.pecio@gmail.com>
-Content-Language: en-US
-Autocrypt: addr=info@aminvakil.com; keydata=
- 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
- +78sXChAfE9n44i0gJHzV8BhCsQG4+k=
-In-Reply-To: <20260616232027.10ba0415.michal.pecio@gmail.com>
+On 2026-06-16 21:58, David Laight wrote:
+> On Tue, 16 Jun 2026 16:18:33 +0200
+> Andreas Larsson <andreas.larsson@gaisler.com> wrote:
+> 
+>> On 2026-05-19 09:57, Tony Rodriguez wrote:
+>>> This patch restructures the thread‑stack sizing logic into a single
+>>> if / elif / else chain and introduces an explicit 32KB kernel stack
+>>> for SPARC64. The previous implementation relied on nested conditionals
+>>> and PAGE_SHIFT‑dependent behavior, which produced 8KB or 16KB stacks
+>>> depending on configuration. SPARC64 requires a larger,
+>>> architecture‑specific stack due to its trapframe size, register‑window
+>>> behavior, and deeper call paths.
+>>>
+>>> A reproducible failure case occurs when usbcore is enabled: USB hub
+>>> enumeration (usb_new_device(), hub_port_connect(), PM/QoS helpers)
+>>> allocates large on‑stack structures and recurses through several
+>>> layers of device‑model code. Combined with SPARC64’s trapframe and
+>>> register‑window overhead, this reliably exhausts a 16KB stack and
+>>> results in early‑boot panics.  A 32KB stack eliminates these failures.
+>>>
+>>> The new logic is:
+>>>     SPARC64:
+>>>         THREAD_SIZE = 4 * PAGE_SIZE (32KB)
+>>>         THREAD_SHIFT = PAGE_SHIFT + 2 (log₂(32KB))
+>>>         THREAD_SIZE_ORDER = 2 (4 contiguous pages)  
+>>
+>> Yes
+>>
+>>>     Non‑SPARC64 with PAGE_SHIFT == 13:
+>>>         Retains the existing 16KB stack behavior
+>>>     Fallback:
+>>>         Retains the existing 8KB stack behavior  
+>>
+>> No, not to my understanding, see comments below.
+>>
+>>>
+>>> Signed-off-by: Tony Rodriguez <unixpro1970@gmail.com>
+>>> ---
+>>>  arch/sparc/include/asm/thread_info_64.h | 28 ++++++++++++-------------
+>>>  1 file changed, 14 insertions(+), 14 deletions(-)
+>>>
+>>> diff --git a/arch/sparc/include/asm/thread_info_64.h b/arch/sparc/include/asm/thread_info_64.h
+>>> index c8a73dff27f8..6b12a2b66385 100644
+>>> --- a/arch/sparc/include/asm/thread_info_64.h
+>>> +++ b/arch/sparc/include/asm/thread_info_64.h
+>>> @@ -99,13 +99,20 @@ struct thread_info {
+>>>  #define FAULT_CODE_BLKCOMMIT	0x10	/* Use blk-commit ASI in copy_page */
+>>>  #define	FAULT_CODE_BAD_RA	0x20	/* Bad RA for sun4v		   */
+>>>
+>>> -#if PAGE_SHIFT == 13
+>>> -#define THREAD_SIZE (2*PAGE_SIZE)
+>>> -#define THREAD_SHIFT (PAGE_SHIFT + 1)
+>>> -#else /* PAGE_SHIFT == 13 */
+>>> -#define THREAD_SIZE PAGE_SIZE
+>>> -#define THREAD_SHIFT PAGE_SHIFT
+>>> -#endif /* PAGE_SHIFT == 13 */
+>>> +/* thread information allocation */
+>>> +#ifdef CONFIG_SPARC64
+>>> +	#define THREAD_SIZE (4 * PAGE_SIZE)
+>>> +	#define THREAD_SHIFT (PAGE_SHIFT + 2)
+>>> +	#define THREAD_SIZE_ORDER 2  
+>>
+>> As far as I can see, given that this header is included by
+>>
+>> #if defined(__sparc__) && defined(__arch64__)
+>> #include <asm/thread_info_64.h>
+>> #else
+>> #include <asm/thread_info_32.h>
+>> #endif
+>>
+>> the code above is the only code that will ever be compiled, while leaving...
+>>
+>>> +#elif PAGE_SHIFT == 13
+>>> +	#define THREAD_SIZE (2 * PAGE_SIZE)
+>>> +	#define THREAD_SHIFT (PAGE_SHIFT + 1)
+>>> +	#define THREAD_SIZE_ORDER 1
+>>> +#else
+>>> +	#define THREAD_SIZE PAGE_SIZE
+>>> +	#define THREAD_SHIFT PAGE_SHIFT
+>>> +	#define THREAD_SIZE_ORDER 0
+>>> +#endif  
+>>
+>> ...this code dead, where the else branch code already was dead (but then
+>> in two separate else braches).
+>>
+>> I'd rather see the else branch here and the else branch below cleaned up
+>> by a separate patch with a fixup tag for commit 15b9350a177b ("sparc64:
+>> Only support 4MB huge pages and 8KB base pages.") that as far as I can
+>> see should have removed the else branch. The else branches was to use
+>> only one page when the page size was _larger_ than 8 KiB when that was
+>> an option.
+> 
+> That whole logic is impenetrable.
+> Why not set the 'desired thread size' in kB, then work out how many
+> pages that ends up being based on the page size, and finally get the actual
+> stack size.
+> I'm not sure, but with vmalloc()ed stacks and 8k pages can't you have 24kB?
 
---------------Ip0AH7mFLWWLgJZHdRvFJknP
-Content-Type: multipart/mixed; boundary="------------PNfzgZ1I0ZHLxjargavQvI0e"
+No, the next step up is 32 KiB as the stack allocation is sized by
+THREAD_SIZE_ORDER.
 
---------------PNfzgZ1I0ZHLxjargavQvI0e
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+Cheers,
+Andreas
 
-T24gNi8xNy8yNiAxMjo1MCBBTSwgTWljaGFsIFBlY2lvIHdyb3RlOg0KPiBPbiBUdWUsIDE2
-IEp1biAyMDI2IDIwOjIyOjE5ICswMzMwLCBBbWluIFZha2lsIHdyb3RlOg0KPj4gT24gNi8x
-Ni8yNiA4OjA2IFBNLCBNaWNoYWwgUGVjaW8gd3JvdGU6DQo+Pj4gUlRMODE1MyB3YXMgb25l
-IG9mIHRoZSBjaGlwcyBzcGVjaWZpY2FsbHkgdGFyZ2V0ZWQgYnkgdGhpcyBmaXgsIGJ1dA0K
-Pj4+IGl0IGFmZmVjdHMgdGhlIENEQyBjb25maWd1cmF0aW9uIHdoaWNoIHlvdSBkb24ndCBz
-ZWVtIHRvIGJlIHVzaW5nLg0KPj4+DQo+Pj4gSSBoYXZlIHRyaWVkIGxpbnV4LWhhcmRlbmVk
-LTcuMC4xMi5oYXJkZW5lZDEtMS14ODZfNjQgZnJvbSBBcmNoIHJlcG8NCj4+PiBhcyB3ZWxs
-IGFzIG15IG93biBidWlsZCBvZiA3LjEtcmM2LCBhbmQgbXkgUlRMODE1MyAoMGJkYTo4MTUz
-KSBpbiBhDQo+Pj4gZGlmZmVyZW50IGtpbmQgb2YgVVNCLUMgZG9jayBzdGlsbCB3b3JrcyB3
-aXRoIGEgZmV3IHhIQ0kgY29udHJvbGxlcnMuDQo+Pj4NCj4+PiBTbyBpdCdzIHNvbWUgd2Vp
-cmQgcHJvYmxlbSBuYXJyb3dseSBzcGVjaWZpYyB0byB5b3VyIHN5c3RlbS4gTm93IHRoYXQN
-Cj4+PiB5b3UgaGF2ZSBidWlsdCB5b3VyIG93biBrZXJuZWwsIHBsZWFzZSBhbHNvIHJldmVy
-dCB0aGUgc3VzcGVjdCBwYXRjaA0KPj4+IHRvIHZlcmlmeSBpZiB0aGF0J3MgcmVhbGx5IGl0
-Lg0KPj4NCj4+IEhvbmVzdGx5IEkndmUgdHJpZWQgcGF0Y2hpbmcgaXQgbXlzZWxmIDopDQo+
-Pg0KPj4gYnkgY2hhbmdpbmcNCj4+DQo+PiAobGUxNl90b19jcHUoZGVzYy0+d0J5dGVzUGVy
-SW50ZXJ2YWwpIDwgdXNiX2VuZHBvaW50X21heHAoJmVwLT5kZXNjKSAmJg0KPj4NCj4+IHRv
-DQo+Pg0KPj4gKGxlMTZfdG9fY3B1KGRlc2MtPndCeXRlc1BlckludGVydmFsKSA9PSAwICYm
-DQo+Pg0KPj4gaW4gbGluZSAxODcgb2YgZHJpdmVycy91c2IvY29yZS9jb25maWcuYyB0byBz
-ZWUgaWYgdGhhdCBmaXhlcyB0aGUgaXNzdWUNCj4+IGFuZCBpdCBkaWQgbm90LCBidXQgSSBk
-aWRuJ3Qgc3BlY2lmaWNhbGx5IHJldmVydGVkIHRoZSBjb21taXQgdG8gc2VlIGlmDQo+PiB0
-aGF0IGZpeGVzIHRoZSBpc3N1ZS4NCj4gDQo+IFRoaXMgc2hvdWxkIGJlIGVub3VnaCB0byBw
-cmV2ZW50IG92ZXJyaWRpbmcgd0J5dGVzUGVySW50ZXJ2YWwgb24NCj4gUlRMODE1MyAoYW5k
-IGdldCByaWQgb2YgdGhlIG5ldyBsb2cgbWVzc2FnZSkuDQo+IA0KPiBJZiB0aGUgbWVzc2Fn
-ZSBnb2VzIGF3YXkgYnV0IHRoZSBkZXZpY2Ugc3RpbGwgZG9lc24ndCB3b3JrLCB0aGUgcHJv
-YmxlbQ0KPiBtdXN0IGJlIHNvbWV3aGVyZSBlbHNlLg0KPiANCj4gSSB3b3VsZCBzdGFydCB3
-aXRoIHVzZXJzcGFjZSAtIGlmIHlvdSBoYXZlbid0IGFscmVhZHksIGRvd25ncmFkZSB0bw0K
-PiBzb21lIGtlcm5lbCBwYWNrYWdlIHdoaWNoIHdvcmtlZCBpbiB0aGUgcGFzdC4gU2VlIGlm
-IGl0IHN0aWxsIHdvcmtzLg0KPiBPciBjaGVjayBpZiA5ZGRiOWMwZGVjYTQ4ZDJjMmEyMmVi
-ZjRkMmYzNWM5MjVhNTIwMzI4IGFwcGxpZXMgdG8geW91cg0KPiBkb2NrIGFuZCB0cnkgcmV2
-ZXJ0aW5nIGl0IGlmIGl0IGRvZXMuDQo+IA0KPiBPdGhlcndpc2UsIG5vIGlkZWEsIGJlc2lk
-ZXMgZ2l0LWJpc2VjdCBJIGd1ZXNzLg0KDQpUaGUgcHJvYmxlbSBpcyBzb21ldGhpbmcgd2l0
-aCB1c2JndWFyZCBhbGwgdGhlIHdheSA6KQ0KDQpEaXNhYmxpbmcgdXNiZ3VhcmQgZml4ZWQg
-dGhlIGlzc3VlIGFuZCBpdCdzIG5vdyB3b3JraW5nIG9uIDcuMSANCmNvcnJlY3RseS4gU29y
-cnkgZm9yIHRoZSBub2lzZS4NCg0KVGhlIHByb2JsZW0gd2FzIGEgc3RhbGUgdXNiZ3VhcmQg
-cG9saWN5IGJsb2NraW5nIHRoZSBodWIsIHVwZGF0aW5nIA0KdXNiZ3VhcmQgcG9saWN5IHdp
-dGggbmV3IGhhc2ggZml4ZWQgdGhhdCBhcyB3ZWxsLg0KDQpBZ2FpbiBJJ20gc29ycnkgZm9y
-IHRoZSBub2lzZSBhbmQgdGhhbmsgeW91IGZvciB0aW1lLg0KDQo+IFJlZ2FyZHMsDQo+IE1p
-Y2hhbA0KDQoNCg==
---------------PNfzgZ1I0ZHLxjargavQvI0e
-Content-Type: application/pgp-keys; name="OpenPGP_0x1EFC1864E9D9E56B.asc"
-Content-Disposition: attachment; filename="OpenPGP_0x1EFC1864E9D9E56B.asc"
-Content-Description: OpenPGP public key
-Content-Transfer-Encoding: quoted-printable
-
------BEGIN PGP PUBLIC KEY BLOCK-----
-
-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
-+78sXChAfE9n44i0gJHzV8BhCsQG4+k=3D
-=3DGHsk
------END PGP PUBLIC KEY BLOCK-----
-
---------------PNfzgZ1I0ZHLxjargavQvI0e--
-
---------------Ip0AH7mFLWWLgJZHdRvFJknP--
-
---------------0ahHicsa034BYqVTiQLNPonz
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-wsD5BAABCAAjFiEEhGrABIXlXG/0vJ9THvwYZOnZ5WsFAmoy3jEFAwAAAAAACgkQHvwYZOnZ5WuO
-wgwAkzMOTn/mtDzBPIoZpt64RvGC8FrIxm4Vzr+S7USqh2surNsCrBqVOddwEtqr6xec5WlL0NfU
-sRfUXrdH/Biz7eGhPC7OAouEL8TrHipzk8aGwRzhcl1DKkb2N87m8J6d9gKCNV+GLTLI7a8TuLMM
-e9oxj37/tdfRoHLDfjA4wEwEPyPrVQVqpgKqdEDI8W+A1wkP4weF6yfIaDATyBSyak6GNnA+57CO
-uYpEEIZ+lB1OrQT9kdPN/gX/MvoUvnDWluYfjsBoihQu1UboeXfEe0nnrIeb+bhe10beqdFh3UJ/
-gg1sENVJA1IshC5Ik9m+2BT3zDvHGZWJzF5qRjOiaj3qGQd/1lY+OTiNA/K7gGF0Jt7P9wNw4WjV
-Dnwz4+IdCRLoMHfElj0KAmIUKN9p08VgoDmV+xhLe5gg+KEZVI0y0cuwS2vO4aa16XrwYURf6fJ/
-X+PmrF9HWzJ41pwJESiVrtRJCaNpklflfNylpnfQAfniuKZnHRpkLydg0peA
-=tT4M
------END PGP SIGNATURE-----
-
---------------0ahHicsa034BYqVTiQLNPonz--
