@@ -1,110 +1,83 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [46.38.247.119])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA96535838A
-	for <regressions@lists.linux.dev>; Thu, 18 Jun 2026 10:32:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4823B3148C5
+	for <regressions@lists.linux.dev>; Fri, 19 Jun 2026 06:13:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.38.247.119
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781778757; cv=none; b=DG0BlSH2Ta9CV5Cx3p6VsjHm6QAlW20MBOhmPdIhve+1CVTobfyJ+5ucHo1ogpjCN69QVgrviJXgWTUfbzf/QOlydrNxc7DASV9fboE3wpH5VJvYYac1NGJ7Al46ZvgOOIp7LOhGkXTLZIiCsbzKM41jiedXs7BNffKB1WZcXxQ=
+	t=1781849612; cv=none; b=JFIdWH4zJlXirk4/IkD+19SEnJJtYo54I/oDlcI3ZsMM48zL/w0kBysm//aeGv1yjpOkgK0CRCmsJxrsVcITHxw/8Rmiq1/WnD7zNFgLIQ+tTWRRrKtYyJycMd0m5/kn0x162jng5IN+NirM3tIwR7SP0Tc7qEBPQfx9RnyeDtU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781778757; c=relaxed/simple;
-	bh=vwsitVN7ozdKpgBSF4h9WVQoKxMhPysr7paPs2RYr+E=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MYMYF6xR7H0viJlf9RKmV8lf7yZ/W/N9938Q62yNGZ29RViUYBMNEAhdgGeqRtkB4CID5XPDQne6WjPgN0yMUf+gGqDVcxbTZqgB0rDG154RKZ5IhU6vHKTpfQrUXdbBfmsUag6wBaE2+0zYblOU4aUrJlH1ZJPZ9txBhflCTVw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EfZVGCgs; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1781849612; c=relaxed/simple;
+	bh=czHk8w3aW0ot0ieg7/97cVBD3UZziSY+VYYFIALRKGY=;
+	h=Message-ID:Date:MIME-Version:From:To:Cc:Subject:Content-Type; b=ZAKxNK/4Gf0EXd4TkaJEGwJFgWi/alwKdfbZfdm+chVH7bdEfiNy+uFBHH9xMYhVAisRs1R9NN8LsCShzd6ZSO0l4+KuGeQVTXbQ/YqQEeuo3GXS6oH+YKF45b8ixW4XXRI39+ACUDDqnJ6GMj+JuhbU/ZrzHaXaTdTDkyMkxyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=IdKmgC6e; arc=none smtp.client-ip=46.38.247.119
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EfZVGCgs"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4903d730b1fso8612335e9.2
-        for <regressions@lists.linux.dev>; Thu, 18 Jun 2026 03:32:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1781778752; x=1782383552; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=inqN7YwVEl5wZ+Codcae/bocVL29CD4f5KlLdUvEZRU=;
-        b=EfZVGCgsaU7DHZyTzc82IvyHH0mBVLEXugWjNoxkYzHd8jIZ3t5jLr0QGcqfuCRq4b
-         RB6ZB4JT85XaqkuRHV1gOYDttzyx/J+uqNs3fFaYLRyVoKW0zOlaZ7ErpeOU3MEJdS05
-         htT8dMgIw+z3X5jS04XK7EvwoNJ5dzAcu4yMJShvNMBqVyojcYC3LGb1Cyv3n3iLOo/W
-         Vf0U4HmRxd3RkYMXW32vkVfwKbb3p01aGayzVAQbimmYiKvMt8rM6t5W2pJ9+3ATxZdv
-         5hTnJsGpfMsAqe4OJBgCtPQBXAT2etokilPj3DJxA7d5yaxnmB2t2/4768fKbjtFwq21
-         Jiww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781778752; x=1782383552;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=inqN7YwVEl5wZ+Codcae/bocVL29CD4f5KlLdUvEZRU=;
-        b=DHaQYvsrRXcEWodq+878gNTfnftvuripzGg0FB0FprSlp4BbvzU3myOmW48og2jmuE
-         GM8OESmDlovaaJJl1QgldlN+3URKcOkXnf90CX7uKWOKfcVeXTVxxFzfQOLxBwQGSIsQ
-         k22vu606RumSAl9aqTfts9NQdoppr6oD+96SkE6CqeOIKZ1RKIBz+tuLrgC7wn0QwOFV
-         pLZz3YEBWrofTZ8D8ibERmXBPJd9rHh8XhwehA/t15lGC/UYjYikdYWWd2mSIBfmgPG2
-         TJDi729daNlASn6tuMOyMUFWvYSuZQzS2PtiBAsy7cbCmBjTigwGkLs9xuIGYfsx2Voq
-         33AQ==
-X-Forwarded-Encrypted: i=1; AFNElJ/7sr/8Z6YqizANxed5dA0mSMlF90CXRWBM95zF9Of2uluU+4Rd/QCUmitBIdoc4+RX6qY0kTrN8gQ4lA==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yw81pbig3lZrEyrQiugHkfAWQk7J431yeBm9KvFhzFPnON4Gaew
-	xog9gH8vW6Fed5tPK+BNyIhxNvObd1by+enKOz7NJPq0skxwz0j+h9ZC
-X-Gm-Gg: AfdE7cmh/2coR5OvwckeNmTSvNBUZveBdHKqmmaMBNbqvqxNeZM1Qc+KRpcxn0H6k0V
-	p5bWrXSjJYO/4D6uFQFFUTXGOEgsJejriPJCAcp+1idyE/JVF+LPyAF3cxBKJD7tOL6B5Vy/MC6
-	8vla8hZ4H8hICCPoaXwcNqTuzwPbJDHglfPXZxQE6mei3f08B8FjD2J2qCbKCqE4tJ05i5gLveC
-	FL7U8DFdT/KCfBQVy/tyQSzOgDiJGbPhqltTscJm3T56yEhNamcW6qe+A+Nf4+vSaRnpT8YkIz0
-	AyX7pSR8CEyT7rMwrUfzQGpjrcbea2FUYikGX8qzyjzzCIFQQ+hC5TL7zzdhNoI0f4bvLP2jSQg
-	086jRUyQdxi2RIScP0/FkANI6YTHn6KmKTcR8PJOl0Pp1Sbgc2NceHM3ByC/zUWqYLmjEJg4k8k
-	cQGSJrGr6cFdZ8dSEqD2uOIiFsiifXPhUBbocGkZzK8Y9NKmGDPVEpyMw3redy
-X-Received: by 2002:a05:600c:e547:20b0:490:3c15:7146 with SMTP id 5b1f17b1804b1-49238226380mr33567315e9.19.1781778751719;
-        Thu, 18 Jun 2026 03:32:31 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4922fa3a4easm266778845e9.3.2026.06.18.03.32.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jun 2026 03:32:31 -0700 (PDT)
-Date: Thu, 18 Jun 2026 11:32:29 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: Andreas Larsson <andreas@gaisler.com>
-Cc: Andreas Larsson <andreas.larsson@gaisler.com>, Tony Rodriguez
- <unixpro1970@gmail.com>, davem@davemloft.net, sparclinux@vger.kernel.org,
- linux-kernel@vger.kernel.org, thuth@redhat.com,
- regressions@lists.linux.dev, glaubitz@physik.fu-berlin.de
-Subject: Re: [PATCH 1/1] sparc64: unify thread stack sizing and add explicit
- 32KB stack
-Message-ID: <20260618113229.7f1e51b3@pumpkin>
-In-Reply-To: <d634e2f2-daf0-4328-bf16-7f5bff6fe851@gaisler.com>
-References: <20260519075809.8993-1-unixpro1970@gmail.com>
-	<20260519075809.8993-2-unixpro1970@gmail.com>
-	<03111ac5-0055-425f-a7f2-54d4f2bb4988@gaisler.com>
-	<20260616205851.428ca70c@pumpkin>
-	<d634e2f2-daf0-4328-bf16-7f5bff6fe851@gaisler.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="IdKmgC6e"
+Received: from mors-relay-8404.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4ghRrQ1JYbz8KK5;
+	Fri, 19 Jun 2026 08:04:38 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1781849078;
+	bh=czHk8w3aW0ot0ieg7/97cVBD3UZziSY+VYYFIALRKGY=;
+	h=Date:From:To:Cc:Subject:From;
+	b=IdKmgC6eWDAMvV8+xO8QU63CA3Satz5GDObqUQNIInA3X0pwrrINL7MO3Z7wZFm10
+	 Ql/27DNyMpwFcTigbC9wRCSuGEjFZLR+Dn0saSszq2n9BvLoUzB3Dpr9oSDSoM/85H
+	 RzwAjL+hjKed1tdPfmfVpce4z+XS807XM2hPlx018LY1X+dXII3m0eceGrcWZj/SVI
+	 RIKxbISF2CJKWxDNRo0IWV5S8tWqgfYMaBOmL997gzUuBUgc7IXvSGU59CyUi551IR
+	 U2bkagK9x0LQYnNNsxyPNqcySMuvLq6yJuyEGPqzS80cgkcv7SPgqVu1lrw62CDDbe
+	 fBDJP5s8tywBA==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4ghRrQ0bkxz4xBv;
+	Fri, 19 Jun 2026 08:04:38 +0200 (CEST)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4ghRrP1VCcz8sWT;
+	Fri, 19 Jun 2026 08:04:37 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 6C40F603E6;
+	Fri, 19 Jun 2026 08:04:36 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <91281f28-eccf-4681-8f62-faaa8a3ba529@leemhuis.info>
+Date: Fri, 19 Jun 2026 08:04:35 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+To: Greg KH <gregkh@linuxfoundation.org>, Sasha Levin <sashal@kernel.org>
+Cc: Linux kernel regressions list <regressions@lists.linux.dev>,
+ "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Some 7.1-post fixes that might be worth picking up rather sooner than
+ later
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: <178184907669.3850665.2040641172586175528@mxe9fb.netcup.net>
+X-Rspamd-Server: rspamd-worker-8404
+X-Rspamd-Queue-Id: 6C40F603E6
+X-NC-CID: zuL8hai15E4PBgNtliaoXe0FH4QXsqTcOhOBY6r79lFmYMhdcGs=
 
-On Thu, 18 Jun 2026 07:53:02 +0200
-Andreas Larsson <andreas@gaisler.com> wrote:
+Hi Stable Team! From the regressions point I think it might be nice to
+pick up the following changes for the next round of stable updates (e.g.
+7.1.2), as they seem to fix regressions I've seen multiple people report
+with 7.1:
 
-> On 2026-06-16 21:58, David Laight wrote:
-...
-> > That whole logic is impenetrable.
-> > Why not set the 'desired thread size' in kB, then work out how many
-> > pages that ends up being based on the page size, and finally get the actual
-> > stack size.
-> > I'm not sure, but with vmalloc()ed stacks and 8k pages can't you have 24kB?  
-> 
-> No, the next step up is 32 KiB as the stack allocation is sized by
-> THREAD_SIZE_ORDER.
+* 426e5846eba75f ("HID: Input: Add battery list cleanup with devm action")
+* 12f58a6caad3be ("drm/amd/display: Fix Color Manager (3DLUT, Shaper,
+Blend)") [v7.1-post]
+* 342981fff32802 ("drm/amdgpu: drop retry loop in
+amdgpu_hmm_range_get_pages") [v7.1-post] (Alex provided a backport for
+this in
+https://lore.kernel.org/all/20260616130531.738887-1-alexander.deucher@amd.com/
+- this one affects 7.0.12, too)
 
-Maybe, but there is probably no reason why that has to be the case.
-I'm sure I've seem other architectures increasing the stack size by 4k.
-
-	David
-
-> 
-> Cheers,
-> Andreas
-> 
-
+Ciao, Thorsten
