@@ -1,138 +1,119 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sonic308-17.consmr.mail.ir2.yahoo.com (sonic308-17.consmr.mail.ir2.yahoo.com [77.238.178.145])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE048397B02
-	for <regressions@lists.linux.dev>; Mon, 22 Jun 2026 12:22:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA5F6399000
+	for <regressions@lists.linux.dev>; Mon, 22 Jun 2026 13:36:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=77.238.178.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782130941; cv=none; b=uYlBaFlv4cWhElTSPwX5s4Was44eafJJzCk8yLFqjytfRaU7z2E5YP5hkcEblSePrQbyTl4VmLGnQ054qwjCrp0khvGSITCAovL+7IAyxYTvAXiGA02Mf62PrM336gDvu+QAY49XrNhBco6+68JGZifjH0fFWBAHPqblMqMKrEI=
+	t=1782135380; cv=none; b=G1nSlmBMLtbj62QE0DE1OxjgxypehHzWmJHW6SOyI5o6LW8a/dkWR4U6H/K33552hvHVyzgfCqPlKb7/yuA8/3vONAomHTWLKfVXAFeKNoXLkYINENwwIHF+6VunCQ7wlxOZyv6VzsAo/Om2NYNYk/gGL49dTGVAXA/MYFIN148=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782130941; c=relaxed/simple;
-	bh=ROjtMhAJVqAplE9ZCKI+gepuDwCOm8vYUnpYF87scYo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 In-Reply-To:Content-Type:Content-Disposition; b=tQLydMSqxdNV8GPegTTWotUCBLpz8om57PT/i71y5v0gzXZrtGtpmm+rUP4eaS5m2q/VCXE9nR4BnqTDkRKMfwirpiBEgoCvb/W1rWJf8YBtSuZDQ4ekk/RbKwA4gsFPt2mfQrb/MV6wOYdf2HdoTTQfmAktLLjhcx8hegCtk6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UGA/fVkZ; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1782135380; c=relaxed/simple;
+	bh=HkEzbJxQMOsi3KXpm0Z6tUB/wzFJRDYvcWcIy5jiifI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WfCuRBU5hM6n4u1JCpwbarlJPL4vM67WKW08j1GZhvCzv1k145HxszAMexeDgJLqbLM4qvDbC2X+1siO7SNV+WCKBXab1Gs+HFFTNca1L/p3HwmNNff8AGvlVNR9j4c8i4rstkOmcukxHAwHUVOUkPC9GzJepl6swamRjBDLxiE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.it; spf=pass smtp.mailfrom=yahoo.it; dkim=pass (2048-bit key) header.d=yahoo.it header.i=@yahoo.it header.b=rqj7j2RK; arc=none smtp.client-ip=77.238.178.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yahoo.it
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UGA/fVkZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1782130939;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NE61WDsqzyH4+WIlfYLsAL+lHpKgDOSKscv3FLr3jxs=;
-	b=UGA/fVkZuoG+nTf4hGUN13LAJ4FCpakLu6lVW6RJX6AbmO202MKS1JqsywVKn48gCqczJn
-	cRxxgtIiGgM1GYjTfc4HCTnBd++eYdG0qlxDfpDDgJgdQdHVTsC8EB+uEs2yNLETxb4LI8
-	ZoKtgu9NZbOpaBoJqG+NhpAGH3Noonw=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-423-XtNwgbcHMYe6esCH4N1F7g-1; Mon, 22 Jun 2026 08:22:17 -0400
-X-MC-Unique: XtNwgbcHMYe6esCH4N1F7g-1
-X-Mimecast-MFC-AGG-ID: XtNwgbcHMYe6esCH4N1F7g_1782130936
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-490b5d2e394so28993185e9.3
-        for <regressions@lists.linux.dev>; Mon, 22 Jun 2026 05:22:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782130936; x=1782735736;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NE61WDsqzyH4+WIlfYLsAL+lHpKgDOSKscv3FLr3jxs=;
-        b=kbzzeh1TY3WJ0zMefrEdDq3useEtD7oqDL/sXq9VE3glrtrVNTmm28BZ9Pg623F2+r
-         MFqwCDgjawk/okjJG/+Z+fCcbmDZfr8FOiUSdyDeVUK4CsUsXTV4PQzckWH8zjvy1O0a
-         HFAB/X6+CZ1+bxLOnORu0RZ2P4ZwKa9bDM4/n1EH3lUh+9Yr7ptrxk7+yok5eZTryfuQ
-         JMjRqNpC2PL7/0IVBHthYwlgCqHWfS/aFfXOZlArLleihsKf5Y16pVCeeTGLrUhA6J7s
-         iMHg3IgR5VzihENAmpS3UqRGheKfYfkmZyy4yHWoRIAZLVfk0N3KD9Pdx0t58RK+EzEL
-         N/5Q==
-X-Forwarded-Encrypted: i=1; AFNElJ//BdgowQW8HT1/wO0ZzuXRa9BqnJlW1Hej6/FA0GAm1L7Zx+Ii5zr/h/3S47xKloVrwKKOXxK0uZAa9Q==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yx+247LZcOGWTvVGAyyjTf+DYv0Gqgzl6LwnHtxasOSdBz2focg
-	Kg4Q6WMFT5AXwkxs26ouad08KSDocyX2G4ZD1nnS8Pwm+yaHQx3vYGddrAyTg1M7reoeedotDx0
-	tAaqxvG4Kc95JX7NejuXNXKrnVTFged6+/hALQ2suKh3EzZ6r7r4WnMgpK0SkEfaO
-X-Gm-Gg: AfdE7clu/dXSJFJPWhmzxxjDNrz+m2z9D63Hoz6S7Z2Y22rqS4DI13RpGVaAY6j8Fyd
-	t13wR/5SiTXqqvMQIdnr8zD14MdXICdc/ciUbarCBFudpyBYuuPvEv+I5Rj0070ZHc5FfY91CcS
-	GrCAYaWPHD5tKzR9qDl6O2g6fuWk2gq/Zy78juQvX8njkK9SAy047L0Mrq1AAn+SeBfwhVDXf5n
-	QIPP2qClf5gm38TKGlMPxNQGOyCcH05dzRMYMRKxLBkI/EFr7d9KD5Yevwu/v+JmOnibjr3Xvrj
-	LGPrb/2ayC1XbUtNnG4QwR9Tm6MDP+mfY4qqgAIK72gwuZYGuVFjHnk5HRJgcNfEjnRZ3LpZxDf
-	geC+qj3JiSU3BEy/ppmnUpOimw5TuIcUDbVxVqWRm51qSN/kHzy4bSvOZlhk8
-X-Received: by 2002:a05:600c:1c1c:b0:490:b724:507d with SMTP id 5b1f17b1804b1-49240e40a01mr263798045e9.11.1782130936114;
-        Mon, 22 Jun 2026 05:22:16 -0700 (PDT)
-X-Received: by 2002:a05:600c:1c1c:b0:490:b724:507d with SMTP id 5b1f17b1804b1-49240e40a01mr263797255e9.11.1782130935490;
-        Mon, 22 Jun 2026 05:22:15 -0700 (PDT)
-Received: from sgarzare-redhat (host-82-53-135-12.retail.telecomitalia.it. [82.53.135.12])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-466667881bfsm27415740f8f.22.2026.06.22.05.22.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jun 2026 05:22:14 -0700 (PDT)
-Date: Mon, 22 Jun 2026 14:22:10 +0200
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: Brien Oberstein <brienpub@gmail.com>
-Cc: netdev@vger.kernel.org, regressions@lists.linux.dev, 
-	stable@vger.kernel.org
-Subject: Re: [REGRESSION 6.12.90 -> 6.12.94] vsock/virtio: large AF_VSOCK
- transfers reset under backpressure
-Message-ID: <ajkmjgGdJp9Dj6em@sgarzare-redhat>
-References: <467b01dd017b$733792d0$59a6b870$@gmail.com>
- <ajkAlpiyPWmNPWfx@sgarzare-redhat>
- <618701dd023e$063de350$12b9a9f0$@gmail.com>
+	dkim=pass (2048-bit key) header.d=yahoo.it header.i=@yahoo.it header.b="rqj7j2RK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.it; s=s2048; t=1782135377; bh=hoeKuPJuZTU4yzEZeRi9SnV0/wIqpGVR8s8vVGwSILo=; h=Date:Subject:To:Cc:References:From:In-Reply-To:From:Subject:Reply-To; b=rqj7j2RKON6cspsyEQkBdFoxVRnKt7orsOsknvoMXpouQY4owhzcKXIWAevD61io5G74/82wLXKuF3iYZlcaAcbrq0qkn5lPUBlW9pX3p9SCDJaILQjr4JESjP3fVyDX96Y4A9nhlc227bLZNoNCTIpeMkd4QZL35ZgFHWpfKfpetkpS78jd75aFWjAS+/w4Vw2D8wn1bTNUmM9UMnGjs6/TU3Lg/qpW6khkMQbtvoqStBti0mtnkZBFCoijI9u9SkCHB33QZF6a58rvbeUsaqeqnQhPmRnlkMe1j8knsc78c7DwVIOoBmjGEazdqKp6awom816wKfiD3mNwAzI4nw==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1782135377; bh=04Bg8jxV7Pdj/Fn0+y5eOnAN+JVLLrpIfUwfVA6kfTg=; h=X-Sonic-MF:Date:Subject:To:From:From:Subject; b=PBP4O2+zQGKWi780BGr5wk6lKlOWPt/pTpxo/VdkDutvE1TyZ2K1r4Nm1PKjr6EpAAAfp7fAgdHlWRyNHwyxY+Pfu3TDMHA2/yTiKc28D1UohFw1BScqiNwEjMTQIXWc/bPnEF/qKm2TVJyyjtJcvNjra91mQZIkgoNs6OZCbEwMq0p2JNzuGnUc9SQxDFQLOUB/4lNRCLEjQqPfpE2MAuiQdnHYZCHoSNREQMkr5xaVTPb46kKJX+sffHhltr3rPbMzw/CigBNKTnR4Da1JVGsHOfynbJw/jlKL/ZdplcHfL7hNgYOmXAiyUJlU1mU14nDoJDdtYnBMHbQO+ZgNNw==
+X-YMail-OSG: YY9d42kVM1kRe15fftSJB0NE9zxHS06QFILjmQg_0QktxybksgxclF1S.uKk1sr
+ pMcxrXiWbKJdPInPq3SvFcDKJNNALbU75xDCU29PwS1V3hcZk8o36sb8mvrRw.ic2Y5tRfpnTzoS
+ V1YhYn1it1O37N9s2G.wZ.kC7n049ESzTTu6oMmI6uwDLRBzc3CFp7G5N7djKWKUwQp3ZEPyYGfR
+ Ojg51lFNqhEYlCfoDlHIqdmmSEN3gNxS8RmKAR3LiD8q8AkAKQXDUJrP_fSkpl7fCeVw9nef66Qq
+ xdEObw3TWf3n.Csj02Gj8x.zGpwgGPDldrKqLhpbgntdz4nKaCMR6w8Truof05cQMy8pCpJyhHq2
+ safw0uftemwU0GGhcXcHAbpFS7RxQIhLKT7AYM7SuWjM2d8qZ.dPB7L0O3rr3MjnmpzF85rwZDiq
+ 7NbgrGpJtGhtJH_d81Yc65aD3agDjLCa3m_omTZTi4Dht2qzhPpp48sdAdUU_yluR6RWlXrGxhoz
+ yKKFK_UWePNe3tInF3U_Tfg1FK_yLvvxdRovsk7SXMILoI12ZM9jfcoAUwavFA.5ynWGdQ1HSgKx
+ YLV_SucnKSCTuG16ido43pcPqMaIXwineR.51cpj2j..d.Fc8Ml0PRz11IexhZelh4osWFeVCmfE
+ yex6AEugmwDEVlOAJazEtmHJaper3pabm7S42qL0N.L2PS0TeM9upL4nffcN5s0.rV2A1TlHEd04
+ c5ALJmndS5.SUHx0TEGaVAwcuM5WOtttqG3wUgqBLa1ZwVLiE_RfA9Q7B.Wa2jRwxtmWtj0k8lQ.
+ Ls7JjuvVNiEBCIxvxM10.cXTt5v91h.YhQcyURbu14QymTDGe13fWRxHxfXLRcr5d4Zl.Q4pmuQg
+ VFMGmisuL9_V4vC8BwwZaNu5x1bvU2bFGTpprVHwZ8d408LTSpY.GTyCPOlxnTNgM4vrmyw2hDLK
+ w.3CVNm.njAChvtji0nL4pjvj43o7KNJ0q6h9tEn2wxvUs41QPtj4hcabaHisrjZDV7FB3fr1cH5
+ UxBNAF0BUC0jqo2HFLPxrWGSC189pHG0C1HDsrc92rXYHJws56H3yiv8x2IopeO7MRVxYFIfxueT
+ Rrs9iCL36hR2k.7MmbdHO9Y8ShJds3Hrt1YAwJAey3qLWAy.dn8htEY0UNH78sE_NE5WJ2SJhJ_Z
+ 3GN4xrrIrvQ4jIS8WaUwkvPmqZjxm25vnawwtX63wiPw2b0Ugce_Bos5cbsSzia2XJpFVoifKIqC
+ mk1C1zKKUvE321xNjfd9Fxujjk0aTX0JqmNbcgHGRGBk.uOIQysVZVuuN0RHenryK8DWs7knjy08
+ Tog_e3BBC_KhTB2RZcuAjIeXZ93s_VYRGzHf7Px4gKQlnUVB4JhvhbzcvnxL7hdyK_AT6jKGN24k
+ RImQiPqx9SKYjaeQsXp5yQo4qTmE_IyYebTDkmb8R2wT2znzPqnLuF3l6d8Ds4OEJAQvhcXieSnQ
+ _9S6QSEqZHtvE29jNfKIEICgAC_yzbUsL2SuU3Rh3pIb20Q2YxzDMbliqlPYRIJ88s4ckNpTq1mi
+ 9010ws1V.OTlxexH0DVA0IsTE7ejv0WH8YjeXNxC6S3yvdDkZJxHBO7P5wd8UuJvjvoOkDA_MKhw
+ ptk9B5yAl6TZO8B9UwFrG_XMSFcrsMF6Y56O8zsERTfiMAeB9BiCK_oUcz0Klq9NH3VcpkZb2Akr
+ hO8pUlEh9UmPArF6APAC7sRI7LIcRfizZ9ao2L7iHwCDsUIPPuwE2MivoDTDlNyVYDa7ZgZSYMhP
+ sdzJaaP_vRNpRFbluE3ncBXug3qGJs.WGO_39sJuOzlOb04VHcK1IrshIfkpwXk9jz2UJ0wC6se7
+ z1YAAOwRRMStjGK4gXe9i09KWzzVVgjFbDaMRM8PtAV6sOrqKelp8pVF0zcUfT42kYrCcvKqV88i
+ 31W77cMqaFJ58LWeQpJWlPJ4IsVDhswpJ6w3OuA9VQ.4wWH6EaA2uG0VvTjbbjieZrajAOsIJdpE
+ AY7cyOJVik7cwDZCcQOn8nEzTos6v3_2BtJ8KIbzV_eCHubKUoHIV7Bpn2XWiElgM4bL_5TH1nJ7
+ b1f6SHEA66AY4LXhf8mhIcl2KQzXO9sxoKJvCGABTU1Ybehs1Ki1LRK2rAbqWy03192D3oKxqun4
+ NCeI8XgPJKZOMXCkgJIGh6mELqsQ6J19k3nqbavRxDaJHa_un6UQwoh0vXkukyHU_S0YDtTRvoXX
+ Wnj5rB1lGDJN7HififSWR0vZtiH8t5bxfrs6fJtdZHixm7I_yzynu1dvOuAWEJLodeDiTV7o-
+X-Sonic-MF: <giovannisantini93@yahoo.it>
+X-Sonic-ID: 18b50555-74d5-45da-8030-189559142278
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic308.consmr.mail.ir2.yahoo.com with HTTP; Mon, 22 Jun 2026 13:36:17 +0000
+Received: by hermes--production-ir2-89844b765-tm5pb (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 32028e6f0f53486183f93035dfd9b18e;
+          Mon, 22 Jun 2026 13:15:33 +0000 (UTC)
+Message-ID: <745a32ea-0b17-431f-9aa4-f4388f9cbf10@yahoo.it>
+Date: Mon, 22 Jun 2026 15:15:32 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <618701dd023e$063de350$12b9a9f0$@gmail.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: V3ROJeVcOLW6Dr_9ewxowIiId0aAvf37MNDn2L2OC8g_1782130936
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: rtw88: WiFi card is not offloaded properly when suspending the OS
+To: Ping-Ke Shih <pkshih@realtek.com>,
+ "stable@vger.kernel.org" <stable@vger.kernel.org>,
+ "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>
+References: <10da4c45-74ed-4deb-8c88-6d0b803465ba.ref@yahoo.it>
+ <10da4c45-74ed-4deb-8c88-6d0b803465ba@yahoo.it>
+ <efae0a4db2ab4b6193922b393d3dcdd6@realtek.com>
+ <02e09f1a-2807-4fec-aacf-1bc4bbb1ccd1@yahoo.it>
+ <b3d2c32150884cdcae21b3bec5062864@realtek.com>
+Content-Language: en-US
+From: Giovanni Santini <giovannisantini93@yahoo.it>
+Autocrypt: addr=giovannisantini93@yahoo.it; keydata=
+ xjMEaH5G6BYJKwYBBAHaRw8BAQdAZnF+SJD511cVwFnagEObR10TvHEDWiUkXn55qPW4mEPN
+ LUdpb3Zhbm5pIFNhbnRpbmkgPGdpb3Zhbm5pc2FudGluaTkzQHlhaG9vLml0PsKTBBMWCgA7
+ AhsDBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAFiEEsZlH+Qx7w0bL59UyBjXtZomc07YFAmh+
+ UU4CGQEACgkQBjXtZomc07aqRAD/dTapfdaiXcED3umK46Ef4oj+4yMmgvILQvAzbTWCW8oB
+ AMbcBT7PaB6GuHTLiM0mZwLaB8koObNKxw3XtV7kMw4HzjgEaH5G6BIKKwYBBAGXVQEFAQEH
+ QI7SNDV1L0Dq0IjkhOsUDwU7Wzr+AunkhuOy1hUDbY1UAwEIB8J4BBgWCgAgFiEEsZlH+Qx7
+ w0bL59UyBjXtZomc07YFAmh+RugCGwwACgkQBjXtZomc07YxZQD9GgcfEawEgJeUijTqZtoq
+ /knXol2L++0rMJkdr1SODwYA/07vSweYeVzo00XbyjcQ1le1Y852Ktp6A7O+DZsQJZoG
+In-Reply-To: <b3d2c32150884cdcae21b3bec5062864@realtek.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Mailer: WebService/1.1.26016 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
 
-On Mon, Jun 22, 2026 at 07:55:30AM -0400, Brien Oberstein wrote:
->Hi Stefano,
+On 2026-06-12 02:30, Ping-Ke Shih wrote:
+> Did you mean 7.0.10 doesn't work to you, but 7.0.11 works well?
 >
->Thanks, that matches what I'm seeing: large transfers reset mid-stream
->instead of the sender being throttled (reliable above ~1.5 MB, fine below
->~90 KB).
+> However, the rtw88 driver has no change between 7.0.10 and 7.0.11.
+> I feel the cause might be changes of PCI host, but drivers/pci/ has no changes
+> neither. No obvious idea for now.
 >
->The bind for me: it's not just this mail bridge -- I use AF_VSOCK for a few
->host/guest services, some of which open their own sockets, so the per-socket
->buffer workaround can't cover them all. That leaves pinning 6.12.90 (losing
->the DoS fix and further kernel updates) as the only blanket option.
-
-Okay, but in that case did it work?
-
+> ...
 >
->A few quick questions:
->
->1. Is a -stable backport of the merging fix likely, and roughly when?
+> Ping-Ke
 
-We don't have a fix yet.
+Hello,
 
->2. Could a smaller interim land in -stable sooner (e.g. more default
->   headroom) without reopening the DoS?
+After some research, it looked that it could be an hardware issue.
 
-What we've merged so far is the best we can do for now, but anyone who 
-wants to help improve the situation is welcome to submit patches.
+I've opened my laptop, cleaned it and re-inserted the WiFi card.
 
->3. Will the fix guarantee backpressure for any packet size, or just widen
->   the margin?
+As of now, the issue seems gone, although I've been using my laptop much 
+less recently.
 
-It should fix STREAM sockets for any packet size.
-SEQPACKET/DGRAM is a bit different since we need to keep boundaries, so 
-it will come later if needed.
+I will monitor the situation a bit longer and write here again if the 
+issue comes back.
 
->
->Happy to test any patch
+Bests!
 
-THanks, I'll ask you to test.
-
->I have a solid reproducer and can turn it around
->in a day. I'll also file this as a tracked regression so it's not lost.
-
-Unfortunately, it's always been partially broken, using more memory than 
-specified, so I don't know if this is actually a full regression, but I 
-understand.
-
-Thanks,
-Stefano
+-- 
+Giovanni Santini
 
