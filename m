@@ -1,161 +1,230 @@
-Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com [209.85.210.41])
+Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6F4824BBEB
-	for <regressions@lists.linux.dev>; Mon, 22 Jun 2026 07:27:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.210.41
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782113222; cv=pass; b=ZSXfcVUTARwCYUldMpTCmHmRSyENYio8HGmyFzZtCuBmOAfIGst0BM/rXvY50uGf7ytrsyZ3lN7Dygty33ZVp46Zy4kARG26Ggsr0MgMRrqSHFVHTeeFepcXEYs4upN93AolnVyEHtZTx0j9Cb7KZ2mHn+Ti/CMKTznVPtrLp7w=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782113222; c=relaxed/simple;
-	bh=oXwlQ4YdLFj3+t4xX23sSp0+z3dvUlQuSXprlsPnsSM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ud8kURdlDFimTYEM/dtZejJZIuoZkSmrfyrycnfRPEt7nEN7KNjEdy3vMG747DFcajR9DAITpirLn/gcX7sRnKqgvsSAyDIgAMRj9O2N1auvAMo3h4+4tMtLVzB4sci6C4rOcYvD2n+zTdRxjHygcWZJUG0bf3Mj1isxji362S8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e7RG9qDR; arc=pass smtp.client-ip=209.85.210.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50CF62DC79A
+	for <regressions@lists.linux.dev>; Mon, 22 Jun 2026 11:55:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782129333; cv=none; b=cfifyQgV0NSFO0WRtQv+wvN+ouSLP2DF4YifZpAv9ACL3TVvZX6n5cuYv2bzLTCM+K4vn1NKYSqUgHncJXgDBZ9Y0eq/9aEBIhJP8MdheWCIcuXpWD3gPhsX0Pl3+NBVAYeTZzHfwcrF3yPLrGV0YGelZ7UB3ijwjANcn3pDVbM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782129333; c=relaxed/simple;
+	bh=PrVUMGsRNDpIJ/UshiJYTdB0TRQ987SpJrx5TNYpco0=;
+	h=From:To:Cc:References:In-Reply-To:Subject:Date:Message-ID:
+	 MIME-Version:Content-Type; b=YbfBvKIjd1tJLt01fwe1u/rbM4jHwka+WSH1TccmALxJPx4QkPrD/+FC7J3GX6sHCrXUcBckmDr0KOCmWgCskH7HB1mpNl/ashl8A8cb2lAqNWFDykIdw/rr2iFkXq+x8CN+wiYLzuYngJueTWr7r/xU+MwKytTibE9wI839oUU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OW5oi9sZ; arc=none smtp.client-ip=209.85.128.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e7RG9qDR"
-Received: by mail-ot1-f41.google.com with SMTP id 46e09a7af769-7e92cb77209so2091874a34.3
-        for <regressions@lists.linux.dev>; Mon, 22 Jun 2026 00:27:00 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1782113220; cv=none;
-        d=google.com; s=arc-20240605;
-        b=JEkBIm34OBnpVSZyO1B8vTPo5Qn77YPSlmowIJi25gmwJJE2EOltArlYMOV9qlmhKw
-         5x2FKljKLztL7MeElJj2+pZ/xBoffkDEDFYKvHlPfllaBHX2Rp3vIhSk1BCZcQn7mwsn
-         zToSZ3mQvHvBCkzVNRKsA8EGUkY2bL5/rByaDNkqF7YHcT4WW9Y/TnVb9RGNMeudvp8q
-         bGC/AaOUOsam5lesFu7wdMQMLS9hs6RO6aVE43TEbxWsbc3cRX4mRZxbH380yfxiFN2x
-         AsgWTW49/qKS7ZWHTLUlKpNDoVrOQXIvkQON8VVbwVjLTU/29eA+Y5tZqXthnizG97i8
-         0SLg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=b7FQ1aR5OdpNqu3r0SBRqrV7xGbQqLLo0aQcbDX73CQ=;
-        fh=zbHY3D43mWmFOkUwR9Yjra+ea+txJuz9AI2FJN6mV6g=;
-        b=YG/o3i5I2Q1lZYF4PFbautjm+cwU+UFsIEL55TJy8tP9Ghisc37J0JUlGaRjaEqx/2
-         yoe4AaQEORftmLuK7hQQFQNWwtqZJIZiopV7wlo13hRyE+GLv8eF5A380lNH0W32x3cp
-         F84LiRlA9hZIfZ5XEDKbTPuwRiN2qrljP9Q96qeybhaj7wmfiTTUq7OPFF5klfDahU8C
-         mnqtdU4OnQdE/NzuABCLQMnkK5c8TyWaMSiHxsKaHJf3D8m+ZkbvO2TMTiGywwkBW9qW
-         8fXefsiqPz7vLK6AH1CIwkGQhtY21Fo+QkHm+Q9RVPIWv9G09aNQXIsCI1gciPWtI35n
-         asvA==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OW5oi9sZ"
+Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-7dd5a8dc8a2so30233277b3.0
+        for <regressions@lists.linux.dev>; Mon, 22 Jun 2026 04:55:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1782113220; x=1782718020; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=b7FQ1aR5OdpNqu3r0SBRqrV7xGbQqLLo0aQcbDX73CQ=;
-        b=e7RG9qDRJeNmxup4YHmT8wrM74PckIn5ju+Gsd0vgNiOq2NdEs0mNn6Q5f7PdwKVyy
-         17nDkBwj/+4ac4h/LqXtzSeF07CYvzTj7rO2Hug2+EYUnRiVyxNb2PSoS2yH6n485y/z
-         3fq+ToAwH496dLg+YO/rEeF2Pq6vbd/kYkVKzyzg0VmCzrEV0li5gDRoy+W8dA5uZhNs
-         cMw2TEye2YSSmItM/Tqe1EEySkFPmr1CYfKojnjXlTN8IKaCJ1U9brk2KYmQAXmZLX7G
-         hTHO8O956VFjGYS9s9uo10mHFw/pPGiRw0gL90nst+q1GYfK/WdQkt1Kj/MN4CALmaUu
-         am0A==
+        d=gmail.com; s=20251104; t=1782129331; x=1782734131; darn=lists.linux.dev;
+        h=content-language:thread-index:content-transfer-encoding
+         :mime-version:message-id:date:subject:in-reply-to:references:cc:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=AjtVZE+G6ZNdvtmmDJa7f0CJF6c7p8Zb+gTkGkKohN4=;
+        b=OW5oi9sZz2Qhp/458O/hv1nP1PDedVVILU9lXe+sGd5+E+n0HC8rAfvBp730yX8jc+
+         VxbNykwUveMYWz+XwTVYIFOXs0H25ol34XqpcSpPNZ6mdBhnnvP1QuxMC4FZJHTbGuC/
+         kCPBAwHov/19+Zl1ROt9B7qHwCf9UYQaJKRjAUX9tHoAU4jv2tgIhCw2ikT5lBY87VR0
+         OLCQVtbMJUrV1yysmUXyhXq1TDT4KNCOxbb8x9yuPAXxLtHhpmtALtad28XBBFMSC/PZ
+         YgpxNwad0uGqpOk/dJoHA6s9F//qsfSdStUowOLbep2SuSw592y3MWwDZv4UGMY+dQYv
+         TFDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782113220; x=1782718020;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=b7FQ1aR5OdpNqu3r0SBRqrV7xGbQqLLo0aQcbDX73CQ=;
-        b=OdPuXgA7kx/bsqklObWfgQpmUMQDmZ0WIvAiXz4KLRAA0XtMhDMUPsSXVM49QraO0X
-         7UlJOha7TuJMS6qM5Ui00tGG8sQ2Zqy7FeTHKnH8NFYLag1f6kb/uFDml4QCE0dIW1Jp
-         eiyiUX+DXDBWsTX7YIzlOjDTiuAc5bSd59biPR5LUE7ibMrJFEtUI6HsTIaObpF0Pazo
-         NxoCZVZ2ieEmKz3+QgvSxLQzZUIAnZCYL5N7BOOSmLxejJqOndJcmHvGaFFf9UhjIEfH
-         dP7KcJOBGCOsuECr6Hlq0UPfXHjdhFlsEjv+eM9RFjUXtQbytFPLwoy4b+3nDW9Gdoa6
-         d9ZA==
-X-Forwarded-Encrypted: i=1; AFNElJ9aGO20+esvnygWUFiJyUD+dR5YmZfmD5WR3V/LKKLtTdSAe91dwQ2XGYTlhI9I4O9HSPw5F9Q+KJYTCg==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwoHt9/KlIUs9Xs2vGkoznPHykmWx5grVhX3Bre6oZKkeKmkNAF
-	KYXJxy+gdW/k4FztnGQcafBSUntgAh0R3E7LE8QFyC5EzAFt4D8aijfTkfmJVJ+7cOfGy6eEnUv
-	ybMCE/zSAhLW2/e2mjlRqmRR67jc2zXE=
-X-Gm-Gg: AfdE7cnQn+hvy1KaDeP0TDYvx7VHljklwJkbD9HmnnTT2OOBilQnWexxO4KA4FQAUKX
-	yO8ShSphUcrWbM91ApTkTzCsx138oKdK5UefVqOvXchKG+Y5+HS1fi8+JLWDwtE6dO7fD8taoyB
-	NcbabKv3u0zChStNViV/yDdACgnjhPisTD+1Zzfr0awVbi9/YP1TSCh6OykUkwrcKR/XN/3GP/n
-	1m9yBtrnCzH6ImKc4Y/Q2z/+EJkEcb2P+++ZlaA3gIFDzEhRdsOZT6SiphD/x0oYvZ05iz4aCA=
-X-Received: by 2002:a05:6830:3493:b0:7e1:f7e9:327e with SMTP id
- 46e09a7af769-7e9323e5412mr11396887a34.22.1782113219802; Mon, 22 Jun 2026
- 00:26:59 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1782129331; x=1782734131;
+        h=content-language:thread-index:content-transfer-encoding
+         :mime-version:message-id:date:subject:in-reply-to:references:cc:to
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AjtVZE+G6ZNdvtmmDJa7f0CJF6c7p8Zb+gTkGkKohN4=;
+        b=FAo3JJlHOo+Vl6R8h+JnxEvXFc9rOJPbPkzU7tSQ7ZjxPPKPija72fga1yafnUh1Ui
+         HWfdVDpESzBTWnunD7+E/Ou0SljeLzgVMIiFtpDofQRqM2e5F4CwEMMJl9UHmJCPrnY+
+         J0pXbv2nHyEKPkFVYnwx+QNIGhVN5/yMvrgc4KePq9ZVcbG0B5VvwloA9WkrOy7Cjta5
+         5qYNfp6JPBhT1Zt0roHCjdXv90S1Jsb7uqXLo8m1YhUKt5U33ACOV3Fcjl+a1Ye9Ynqg
+         lYFrXhZx/R5vxb+l3rRGRwsD+vtozRtttE9RcbjipZd0PoAgc2htULJ0VW0X92tPf77N
+         cnRA==
+X-Forwarded-Encrypted: i=1; AHgh+RpK6haNB+KZhGTINuAGQgb6peyGnaRNx7JCke9fJYOP1xUCFGMIf6Ujp5BNsnmMetZbPjl/0TyTeucnUw==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzfpjTDKh8Fs8rX/xmTAab77brkZxctBcE0+tcXWcdMKgLEfxoX
+	Fhgz4hCje5f+4HmShNVUPxWnSVU6VZOi7PPe7r3wmqrVYfHO3K4SrLgM
+X-Gm-Gg: AfdE7cmyvvv66vIOaYbAhagFKbZJ/Bn64wy9WXKntZUOx9nBoab7ek/5Ri8FmDZY5Fl
+	EvZAT+S1gBJH13OfHbMBwi1pLwWJRrCsQ9sj7nPFmQ2aMBafPViy40bcZAaXHjwIbzlE83PnTVZ
+	xTsp8IrQFbLmIvEXJfC17cck6yWOzmcwnB5Ka3PIdoohPeSD27kZAJIFtxic7XXDhnOECWDOHW8
+	6Sh+9WLH2yMspR+dHNgE+NpcbGIt99fOKGx1TWPotbl36gfOaVm59UPP77GqWnI69N3+SgfexgH
+	RnwYXXkx0QqvwCIUGJkBafO6vIZEADvgJRBr6wbTORCxVnGdQBgivPv+I5qksy2wEUrNXOH4eUh
+	6OkoXCv755EKQ4SlPLFvuJTyb04oYYR/7mEK23gbu+nGv/wHYOKJBdiV+5qy2r/y7jdRP5jXfYz
+	a1N0k6CNKKRt5/9PtsnCS9EVNGoOU7vt7V/7q2jCAsXg16+ZH2aZdjjgmb1OQP5wX75CcvIBbOl
+	D/v
+X-Received: by 2002:a05:690c:6706:b0:7bb:11a4:2e70 with SMTP id 00721157ae682-80130b0b8cdmr125913627b3.14.1782129331028;
+        Mon, 22 Jun 2026 04:55:31 -0700 (PDT)
+Received: from WIN6DK41G9CSL2 (c-73-56-149-95.hsd1.fl.comcast.net. [73.56.149.95])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-802606a918bsm29833007b3.43.2026.06.22.04.55.30
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 22 Jun 2026 04:55:30 -0700 (PDT)
+From: "Brien Oberstein" <brienpub@gmail.com>
+To: "'Stefano Garzarella'" <sgarzare@redhat.com>
+Cc: <netdev@vger.kernel.org>,
+	<regressions@lists.linux.dev>,
+	<stable@vger.kernel.org>
+References: <467b01dd017b$733792d0$59a6b870$@gmail.com> <ajkAlpiyPWmNPWfx@sgarzare-redhat>
+In-Reply-To: <ajkAlpiyPWmNPWfx@sgarzare-redhat>
+Subject: RE: [REGRESSION 6.12.90 -> 6.12.94] vsock/virtio: large AF_VSOCK transfers reset under backpressure
+Date: Mon, 22 Jun 2026 07:55:30 -0400
+Message-ID: <618701dd023e$063de350$12b9a9f0$@gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CABXGCsOuCXr4R+WW60KNuWNS2MqzE9w6iv-t_ykbwmhqDSABAQ@mail.gmail.com>
- <c084c555-e4f4-48a6-9fad-175932acda01@gmx.de>
-In-Reply-To: <c084c555-e4f4-48a6-9fad-175932acda01@gmx.de>
-From: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Date: Mon, 22 Jun 2026 12:26:48 +0500
-X-Gm-Features: AVVi8CdL5HCS6SzL7JevAxlu8t7MCcOBjE3b4wSUAQVcGGIU9Sqd3fb5ZlnE_Hw
-Message-ID: <CABXGCsNAEapxA3gZis6XCg_KWxzRGsxiwR9-A7Dh-+iDNGpaNQ@mail.gmail.com>
-Subject: Re: [REGRESSION 7.2] drm/amdgpu: ~275 SDMA jobs per sparse VA bind
- since 4cdbba5a (RE Requiem 90->4 fps)
-To: Natalie Vock <natalie.vock@gmx.de>
-Cc: =?UTF-8?Q?Christian_K=C3=B6nig?= <Christian.Koenig@amd.com>, 
-	"Deucher, Alexander" <Alexander.Deucher@amd.com>, amd-gfx list <amd-gfx@lists.freedesktop.org>, 
-	Linux List Kernel Mailing <linux-kernel@vger.kernel.org>, 
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+	charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQGzlm2Q3QdtCPSkkHXQpTkeFGbfJwIutksBtovYSHA=
+Content-Language: en-us
 
-On Mon, Jun 22, 2026 at 10:44=E2=80=AFAM Natalie Vock <natalie.vock@gmx.de>=
- wrote:
+Hi Stefano,
+
+Thanks, that matches what I'm seeing: large transfers reset mid-stream
+instead of the sender being throttled (reliable above ~1.5 MB, fine =
+below
+~90 KB).
+
+The bind for me: it's not just this mail bridge -- I use AF_VSOCK for a =
+few
+host/guest services, some of which open their own sockets, so the =
+per-socket
+buffer workaround can't cover them all. That leaves pinning 6.12.90 =
+(losing
+the DoS fix and further kernel updates) as the only blanket option.
+
+A few quick questions:
+
+1. Is a -stable backport of the merging fix likely, and roughly when?
+2. Could a smaller interim land in -stable sooner (e.g. more default
+   headroom) without reopening the DoS?
+3. Will the fix guarantee backpressure for any packet size, or just =
+widen
+   the margin?
+
+Happy to test any patch -- I have a solid reproducer and can turn it =
+around
+in a day. I'll also file this as a tracked regression so it's not lost.
+
+Thanks again,
+Brien
+
+#regzbot introduced: v6.12.90..v6.12.94
+
+-----Original Message-----
+From: Stefano Garzarella <sgarzare@redhat.com>=20
+Sent: Monday, June 22, 2026 6:08 AM
+To: Brien Oberstein <brienpub@gmail.com>
+Cc: edumazet@google.com
+Subject: Re: [REGRESSION 6.12.90 -> 6.12.94] vsock/virtio: large =
+AF_VSOCK transfers reset under backpressure
+
+On Sun, Jun 21, 2026 at 08:42:41AM -0400, Brien Oberstein wrote:
+>Hi Stefano, Eric,
+
+Hi Brien,
+
 >
-> On 6/21/26 22:55, Mikhail Gavrilov wrote:
-> > Hi Christian, Alex,
-> >
-> > git bisect points to
-> >
-> >    4cdbba5a16aa ("drm/amdgpu: restructure VM state machine v4")
-> >
-> > as the first bad commit (its parent tests fine) for a severe
-> > interactivity regression.
-> >
-> > It was merged during the current 7.2 merge window; it is not in any
-> > released kernel yet and will first appear in 7.2-rc1.
-> >
-> > Symptom: Resident Evil Requiem (re9.exe under VKD3D-Proton, RADV, RX
-> > 7900 XTX / Navi31, gfx11) drops from ~90 to 3-4 fps the instant the
-> > camera moves; still scenes are fine. The previous bisect point
-> > d352990bcaab is smooth.
+>I'm hitting a regression in the 6.12.y stable series: a bulk transfer=20
+>over
+>AF_VSOCK is torn down mid-stream once the message is large enough to
+>exercise receiver-side backpressure. By stable version it lands on
+>6.12.94; 6.12.90 is fine.
 >
-> I already fixed this in a patchset[1] that should be on its way - seems
-> like it didn't make it into rc1 at least?
+>Setup
+>-----
+>A host process mails a guest's postfix over an AF_VSOCK bridge:
 >
-> Christian, Alex, can you make sure that the first patch from that set,
-> "drm/amdgpu: Only set bo->moved when the BO was actually moved", is
-> included in a -fixes PR for 7.2?
+>  host msmtp --(unix sock)--> socat --(AF_VSOCK: host CID 2 ->
+>    guest CID 101, port 20025)--> [guest] socat --(TCP 127.0.0.1:25)-->
+>    postfix
 >
-> For the record, I intentionally did not include a Fixes: tag in this
-> patchset, because the commit was not merged anywhere but
-> amd-staging-drm-next at the point of writing, and the same commits in
-> amd-staging-drm-next and upstream have different SHAs. AFAIU, this also
-> prevents me from telling regzbot that a proper fix is underway for now.
-> Not sure if there's a workaround for this?
+>postfix (TLS-terminating, then writing to its queue) drains the stream
+>slower than the host writes it, so the per-socket vsock buffer fills
+>during a large message.
 >
-> Best,
-> Natalie
+>Symptom (guest, 6.12.94)
+>------------------------
+>The guest-side socat exits status=3D1 mid-transfer and postfix logs:
 >
-> [1]
-> https://lore.kernel.org/amd-gfx/20260529153051.973261-1-natalie.vock@gmx.=
-de/
+>  postfix/smtpd: NNN: lost connection after DATA (153330 bytes)
+>    from localhost[127.0.0.1]
+>  postfix/smtpd: disconnect ... data=3D0/1 commands=3D5/6
+>
+>On the host, msmtp reports:
+>
+>  msmtp: cannot write to TLS connection: The TLS connection was
+>    non-properly terminated.        (sendmail exit 74 / EX_TEMPFAIL)
+>
+>So the AF_VSOCK connection is dropped while data is still flowing, =
+rather
+>than the sender being throttled by the credit-based flow control.
+>
+>Reproduction
+>------------
+>Send messages of increasing size through the bridge:
+>
+>  body <=3D ~88 KB : always succeeds
+>  body ~354 KB   : intermittent failure
+>  body >=3D 1.5 MB : fails 12/12
+>
+>On 6.12.90 the identical test passes 20/20, including 1.5 MB x12,
+>2.4 MB x3, 4 MB x3 and 8 MB x2. The only variable is the guest kernel.
+>
+>Bisection
+>---------
+>6.12.91, .92 and .93 carry no vsock changes. 6.12.94 pulled in three
+>vsock/virtio commits:
+>
+>  1eca304f  vsock/virtio: fix potential unbounded skb queue
+>  f3bf0f3b  vsock/virtio: fix skb overhead accounting to preserve
+>            full buf_alloc
+>  149205a1  vsock/virtio: fix skb overhead overflow on 32-bit builds
+>
+>The behaviour (drop/reset under a fast sender + slow receiver instead =
+of
+>applying backpressure) makes 1eca304f the prime suspect, but I have =
+only
+>A/B tested whole stable releases, not the individual commits.
 
-Thanks, Natalie. I applied that first patch ("drm/amdgpu: Only set
-bo->moved when the BO was actually moved") on top of ef0c9f75a195 and
-the regression is gone -- camera movement is back to ~90 fps.
+Yep, I'm working on a followup to improve the status.
 
-Tested-by: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Basically, the memory management in AF_VSOCK has always been broken. The =
 
-Re regzbot: since I opened the regression, I can link your fix from
-here without a Fixes: tag or a matching SHA -- monitor just takes the
-thread URL:
+patches you mentioned are designed to prevent one peer from consuming=20
+all of the other peer=E2=80=99s memory.
+Instead of counting only the payload bytes, we now also take the packet=20
+metadata into account, using a socket buffer that is double the size set =
 
-#regzbot monitor:
-https://lore.kernel.org/amd-gfx/20260529153051.973261-1-natalie.vock@gmx.de=
-/
+(default 256 KB).
 
-Later, once the fix lands upstream, the entry can be closed with a
-regzbot "fixed-by" on that commit's SHA.
+So if your system is sending small packets, then this is likely hitting=20
+this issue.
 
---=20
+My advice for now is to increase the socket buffer size. Thanks to=20
+VMware, AF_VSOCK have specific sockopts :-(:
+- SO_VM_SOCKETS_BUFFER_SIZE (0)
+- SO_VM_SOCKETS_BUFFER_MAX_SIZE (2)
+
+I suggest to set both to 16 MB (MAX should be set first).
+I tried this with socat and seems to work:
+   socat =
+VSOCK-LISTEN:4242,setsockopt=3D40:2:x0000000001000000,setsockopt=3D40:0:x=
+0000000001000000
+
+Hope this helps.
+
+In the mean time, I'm working on a follow-up for net-next to ensure that =
+
+packets are merged when we exceed a threshold; we might be able to=20
+backport this to stable, but I'm not sure.
+
 Thanks,
-Mikhail.
+Stefano
+
+
