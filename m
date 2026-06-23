@@ -1,230 +1,127 @@
-Received: from posta.ukf.sk (posta.ukf.sk [193.87.12.33])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC7443D7D64
-	for <regressions@lists.linux.dev>; Tue, 23 Jun 2026 15:11:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.87.12.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A92F32F7F03
+	for <regressions@lists.linux.dev>; Tue, 23 Jun 2026 15:38:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782227496; cv=none; b=Sq9HCVqB/1sQVpg/ZPqzCq+XPfdmmEzyYHED49UqZ6oVuQiRdmo3XZSnT2VDxQXDBGVAk+nyO9z7LfiU8IN9rPa9TZmq6KlSyAYr9lqPjt9TaUuCkRFzhkud4aDkrVCk30QSLYIFn4b5v/2TVd1UJfTdDn4j/P3MkY149sQ345s=
+	t=1782229129; cv=none; b=PRJ6hcgEeNGUBkuFauYB9sChdQiI9bRETku954It55XkxvLBaQtpX8YBb0pGJ98HG46KkvHD4IyDUHBqfyalU3MMSkjD8bW3rHzdS6xo6txxdIDo2XxHPpQHGEK1RPcLdKizo4GEmypiNlaWu2D8tMUT+oNjSwuNYFT80zKvvwk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782227496; c=relaxed/simple;
-	bh=8Pmf9XvSRAto0fGDLAf9dBGFpjll1k7hApWWpM8bsYY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MCwEc7LTYw/f/AvypSntVzAnEMy5IE6KiucAIi1Fy2FO8/DmgU7bRvc2kaf9CwRCKC3JgRYg6R+WRzA1cMWCrRKcKHvwl7ZVl2aVF4s2valvDYOXgFkE3XUGax/OMzm89/gpxRGNixCgHLzOodDCBYCvDgNLfcQ1OQ7YHhlme1o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ukf.sk; spf=pass smtp.mailfrom=ukf.sk; dkim=pass (1024-bit key) header.d=ukf.sk header.i=@ukf.sk header.b=kHWH8d20; arc=none smtp.client-ip=193.87.12.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ukf.sk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ukf.sk
+	s=arc-20240116; t=1782229129; c=relaxed/simple;
+	bh=DlpC8iX9i2ChGTTTisRm8lz+5j3ZuPlZnjNXuGq91ak=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TTT37qjg7uKnzakMplvk3AIyilJsBpmxxEVedQdUr/fyWCZz0fLYT0iq+m9XZW2AIzZpPxEFJ0G/+FkMC7Nj7+Ohog0t1Ny8W9GaZf6uihdcCOcRNPZhZiNYeesPBoASwAKiNPJjmhc5A4gX3lHodzfFap07Z89Jra07PdBQ+uQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=AD3aDmyJ; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ukf.sk header.i=@ukf.sk header.b="kHWH8d20"
-Received: from localhost (localhost [127.0.0.1])
-	by posta.ukf.sk (Postfix) with ESMTP id 0673B42327B;
-	Tue, 23 Jun 2026 17:11:27 +0200 (CEST)
-Received: from posta.ukf.sk ([127.0.0.1])
-	by localhost (posta1.ukf.sk [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id wLVp9ctadZOm; Tue, 23 Jun 2026 17:11:26 +0200 (CEST)
-Received: from [10.8.1.254] (unknown [10.8.1.254])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by posta.ukf.sk (Postfix) with ESMTPSA id 3AAF142325B;
-	Tue, 23 Jun 2026 17:11:24 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ukf.sk; s=2022;
-	t=1782227486; bh=8Pmf9XvSRAto0fGDLAf9dBGFpjll1k7hApWWpM8bsYY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=kHWH8d201Us2PYKk1D0OW3Jy9AKnROZbvhZGz5Wx22W0+YaNsPS0ZDlJOoatmLN0K
-	 2P5+439g5SCDt5Q7RjvfmzBnoUCtZ/hY/ixTmBxm0+XE+2H7FtCRMl9EC2V/sHjGSP
-	 dyGp2bhrbF+DRY4GzkNDH/JjSwL4IY0X4nZfx+DE=
-Message-ID: <cd45c7c8-4df9-4963-b847-02cf72bcc039@ukf.sk>
-Date: Tue, 23 Jun 2026 17:11:19 +0200
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="AD3aDmyJ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=tahpwPBsIqkK2DZXP8CbqTvt8ELiLk3+QbKeYnv5Rw0=; b=AD3aDmyJQtwixoR95Xhyg0WCc9
+	9fboEQpzfsnSSfjiRXif78aiTQrsDaww8+Q4LG/LJMNueJCAAFI6dZqANp7mmWeFCoK4A3arszi8L
+	oOvfKOArleat0APyUrZWh3nRSgx6vzhLkkfC1QXxWf5xBFwnforLgEg7HWMTEjGzqenLpaBFUDZzV
+	sO/MjO8hBqS0Wm3EzgY4keURCWUyNg3J87az3a6vcQona/V+8B2zl/Xs94OuNRZ2aTkQwkbZ7ntY2
+	rO2au2j365TWeLohb8WvndDgP5a8b7cj6sraKH3jcIt0Bl7y6FVrsj5byA8+/hFBAOA6y8Di+AyQI
+	/18RaMGw==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:44252)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.98.2)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1wc3Cz-000000006zt-2r9l;
+	Tue, 23 Jun 2026 16:38:41 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.98.2)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1wc3Cy-0000000005w-1Acs;
+	Tue, 23 Jun 2026 16:38:40 +0100
+Date: Tue, 23 Jun 2026 16:38:40 +0100
+From: Russell King <linux@armlinux.org.uk>
+To: Linus Walleij <linusw@kernel.org>
+Cc: slipher <slipher@protonmail.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"stable@vger.kernel.org" <stable@vger.kernel.org>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Subject: Re: [REGRESSION] 32-bit ARM's BKPT instruction no longer works
+Message-ID: <ajqogLBBgupJuD8A@shell.armlinux.org.uk>
+References: <kJqktbpLphg_Pk5I5SPptgTLjl3E3eq5mN5UzCslyFj7Q1Irp-wDid4mj5eQVd2iZtRGXgeZd8goq195EkXdjyt864YMc8mVb2B9NGH91NQ=@protonmail.com>
+ <ajhHYKyvL9nCUvG5@shell.armlinux.org.uk>
+ <zbEOoL4_phCCh7td7DwqQtyhleFJ_G3yRBc8AFjT5hwIwcRipRMsjtIVJgLi3t5vJk5QsuKjY9c8I91nuVSYk4-xlzrAqigMWIE0iNMc9PM=@protonmail.com>
+ <ajhof3cRtiN0Hk7k@shell.armlinux.org.uk>
+ <ajhyyq_SscBAOFFY@shell.armlinux.org.uk>
+ <DUmi3WqfISs6WPqSP0CfEAYosyWQN5F7owhotvDcuyyv7WFoloOeHyoatIx6TKimecbF_OFncDikItB-0ubyO5doBOvsIhEKMQsT2wHyeuE=@protonmail.com>
+ <ajpWaTW9uXWqX1OA@shell.armlinux.org.uk>
+ <CAD++jL=C0mnn-PCqZB4zg7y1=u-W4mEOt+NR3OQFzpdwSR-9Og@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] x86/power: only verify usable RAM regions during
- hibernation E820 check
-To: "Rafael J. Wysocki" <rafael@kernel.org>,
- Marco Scardovi <scardracs@disroot.org>
-Cc: pavel@kernel.org, tglx@kernel.org, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
- crecklin@redhat.com, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
- regressions@leemhuis.info, regressions@lists.linux.dev
-References: <20260620081548.14143-1-scardracs@disroot.org>
- <20260620081548.14143-2-scardracs@disroot.org>
- <CAJZ5v0jmOj0WBtMTvbnaD+2b0bTFowA=JWrqRzaaCYpHpai1Nw@mail.gmail.com>
-Content-Language: sk-SK-Ascii, en-US
-From: Milan Oravec <moravec@ukf.sk>
-Organization: CIKT UKF Nitra
-In-Reply-To: <CAJZ5v0jmOj0WBtMTvbnaD+2b0bTFowA=JWrqRzaaCYpHpai1Nw@mail.gmail.com>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-512; boundary="------------ms030109040103050406090705"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAD++jL=C0mnn-PCqZB4zg7y1=u-W4mEOt+NR3OQFzpdwSR-9Og@mail.gmail.com>
+Sender: "Russell King,,," <linux@armlinux.org.uk>
 
-This is a cryptographically signed message in MIME format.
+On Tue, Jun 23, 2026 at 03:35:05PM +0200, Linus Walleij wrote:
+> On Tue, Jun 23, 2026 at 11:48 AM Russell King <linux@armlinux.org.uk> wrote:
+> 
+> > Let me also be clear: I expect Linus W to fix this
+> 
+> I'll try!
+> 
+> I guess the offending commit is:
+> commit c3f89986fde7bb9ccc86a901bf28e1f7d69fc3b3
+> "ARM: 9391/2: hw_breakpoint: Handle CFI breakpoints"
+> 
+> > I suspect that the CFI fault code was a decision by compiler authors,
+> > but I can't say because I don't have a setup that generates the code
+> > for CFI.
+> 
+> Yep, the LLVM implementers chose breakpoint code 0x03:
+> I think it comes from here:
+> https://llvm.org/doxygen/ARMAsmPrinter_8cpp_source.html
+> Line 1536-37:
+> unsigned AddrIndex = TRI->getEncodingValue(AddrReg);
+> unsigned ESR = 0x8000 | (31 << 5) | (AddrIndex & 31);
 
---------------ms030109040103050406090705
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+Presumably it's actually line 1618:
 
-SGVsbG/CoFJhZmFlbC4gT0ssIHdoYXQgaXMgcHJvcGVyIHNvbHV0aW9uIGZvciB0aGUgSGli
-ZXJuYXRlIGluY29uc2lzdGVudCANCm1lbW9yeSBtYXAgZGV0ZWN0ZWQhIHByb2JsZW0/DQoN
-ClRoYW5rIHlvdSwNCg0KYmVzdCByZWdhcmRzLA0KDQpNaWxhbiBPcmF2ZWMNCg0KQ0lLVCBV
-S0YgTml0cmENCk1vYmlsL1NpZ25hbDogKzQyMTkwNzY3MDI3MA0KZW1haWw6IG1vcmF2ZWNA
-dWtmLnNrDQoNCi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQoNClR1dG8gc3ByYXZ1IG5lcHJldmVyaWwgemlh
-ZG55IGFudGl2aXJ1cyAtIG5lYm9sbyB0cmViYS4uLg0KDQpPbiA2LzIzLzI2IDE0OjU5LCBS
-YWZhZWwgSi4gV3lzb2NraSB3cm90ZToNCj4gT24gU2F0LCBKdW4gMjAsIDIwMjYgYXQgMTA6
-MTbigK9BTSBNYXJjbyBTY2FyZG92aSA8c2NhcmRyYWNzQGRpc3Jvb3Qub3JnPiB3cm90ZToN
-Cj4+IE9uIHNvbWUgVUVGSSBwbGF0Zm9ybXMgKHN1Y2ggYXMgdGhlIEhQIE9tbmlCb29rIFgg
-RmxpcCksIHJlc3VtaW5nIGZyb20NCj4+IGhpYmVybmF0aW9uIGZhaWxzIHdpdGggJ0hpYmVy
-bmF0ZSBpbmNvbnNpc3RlbnQgbWVtb3J5IG1hcCBkZXRlY3RlZCEnDQo+PiBldmVuIHRob3Vn
-aCB0aGUgdXNhYmxlIHN5c3RlbSBSQU0gY29uZmlndXJhdGlvbiBpcyBpZGVudGljYWwuDQo+
-IFRoYXQgbWF5IG5vdCBiZSBzdWZmaWNpZW50IGZvciB0aGUgaW1hZ2Uga2VybmVsIHRvIHdv
-cmsgYWZ0ZXIgcmVzdW1pbmcgdGhvdWdoLg0KPg0KPj4gVGhpcyBoYXBwZW5zIGJlY2F1c2Ug
-dGhlIFVFRkkgZmlybXdhcmUgb3IgYm9vdGxvYWRlciAobGlrZSBHUlVCKSBtYWtlcw0KPj4g
-bm9uLWRldGVybWluaXN0aWMgYWxsb2NhdGlvbnMgb3Igc2hpZnRzIHJlc2VydmVkL0FDUEkg
-bWVtb3J5IHJlZ2lvbnMNCj4+IGR5bmFtaWNhbGx5IGFjcm9zcyBib290cywNCj4gVGhlIGJv
-b3QgbG9hZGVyIGhhcyBub3RoaW5nIHRvIGRvIHdpdGggdGhpcywgdGhlIG1lbW9yeSBtYXAg
-Y29tZXMgZnJvbQ0KPiB0aGUgVUVGSSBmaXJtd2FyZS4NCj4NCj4+IHdoaWNoIGNoYW5nZXMg
-dGhlIENSQzMyIGNoZWNrc3VtIGNvbXB1dGVkDQo+PiBvdmVyIHRoZSBlbnRpcmUgRTgyMCB0
-YWJsZSAod2hpY2ggaW5jbHVkZXMgbm9uLVJBTSB0eXBlcyBsaWtlIHJlc2VydmVkLA0KPj4g
-QUNQSSwgTlZTLCBhbmQgdW51c2FibGUgbWVtb3J5KS4NCj4+DQo+PiBGaXggdGhpcyBieSBt
-b2RpZnlpbmcgY29tcHV0ZV9lODIwX2NyYzMyKCkgdG8gb25seSBjYWxjdWxhdGUgdGhlDQo+
-PiBjaGVja3N1bSBvdmVyIG1lbW9yeSBtYXAgZW50cmllcyBvZiB0eXBlIEU4MjBfVFlQRV9S
-QU0uIFVzYWJsZSBzeXN0ZW0NCj4+IFJBTSBsYXlvdXQgaXMgc3RpbGwgdmVyaWZpZWQgdG8g
-ZW5zdXJlIGRhdGEgc2FmZXR5LCBidXQgZHluYW1pYyBzaGlmdHMNCj4+IGluIEFDUEkgYW5k
-IG90aGVyIHJlc2VydmVkIHJhbmdlcyBhcmUgaWdub3JlZC4NCj4gV2hpY2ggaXMgcmlza3kg
-YmVjYXVzZSB0aGUgaW1hZ2Uga2VybmVsIG1heSBhY2Nlc3Mgc3R1ZmYgbG9jYXRlZCBpbg0K
-PiB0aG9zZSBub24tUkFNIG1lbW9yeSByZWdpb25zIChmb3IgaW5zdGFuY2UsIEFDUEkgdGFi
-bGVzLCBBTUwgb3BlcmF0aW9uDQo+IHJlZ2lvbnMsIFVFRkkgcnVudGltZSB2YXJpYWJsZXMs
-IGV0Yy4pLg0KPg0KPiBIaWJlcm5hdGlvbiBpbiBMaW51eCBzaW1wbHkgY2Fubm90IGNvcGUg
-d2l0aCBhIGNoYW5naW5nIG1lbW9yeSBtYXAgaW4NCj4gZ2VuZXJhbCwgc29ycnkgYWJvdXQg
-dGhhdC4NCj4NCj4+IENsb3NlczogaHR0cHM6Ly9idWd6aWxsYS5rZXJuZWwub3JnL3Nob3df
-YnVnLmNnaT9pZD0yMjE1NjkNCj4+IEZpeGVzOiBmNWQxNDk5YWUyMDkgKCJQTTogaGliZXJu
-YXRlOiB4ODY6IFVzZSBjcmMzMiBpbnN0ZWFkIG9mIG1kNSBmb3IgaGliZXJuYXRpb24gZTgy
-MCBpbnRlZ3JpdHkgY2hlY2siKQ0KPj4gQXNzaXN0ZWQtYnk6IEFudGlncmF2aXR5OmdlbWlu
-aS0zLjUtZmxhc2gNCj4+IFNpZ25lZC1vZmYtYnk6IE1hcmNvIFNjYXJkb3ZpIDxzY2FyZHJh
-Y3NAZGlzcm9vdC5vcmc+DQo+PiAtLS0NCj4+ICAgYXJjaC94ODYvcG93ZXIvaGliZXJuYXRl
-LmMgfCAxNSArKysrKysrKysrKy0tLS0NCj4+ICAgMSBmaWxlIGNoYW5nZWQsIDExIGluc2Vy
-dGlvbnMoKyksIDQgZGVsZXRpb25zKC0pDQo+Pg0KPj4gZGlmZiAtLWdpdCBhL2FyY2gveDg2
-L3Bvd2VyL2hpYmVybmF0ZS5jIGIvYXJjaC94ODYvcG93ZXIvaGliZXJuYXRlLmMNCj4+IGlu
-ZGV4IGEyMjk0YzE2NDlmNi4uNzUyYTQ5MGJjM2QyIDEwMDY0NA0KPj4gLS0tIGEvYXJjaC94
-ODYvcG93ZXIvaGliZXJuYXRlLmMNCj4+ICsrKyBiL2FyY2gveDg2L3Bvd2VyL2hpYmVybmF0
-ZS5jDQo+PiBAQCAtNzAsMTIgKzcwLDE5IEBAIHN0cnVjdCByZXN0b3JlX2RhdGFfcmVjb3Jk
-IHsNCj4+ICAgICoNCj4+ICAgICogUmV0dXJuOiB0aGUgcmVzdWx0aW5nIGNoZWNrc3VtDQo+
-PiAgICAqLw0KPj4gLXN0YXRpYyBpbmxpbmUgdTMyIGNvbXB1dGVfZTgyMF9jcmMzMihzdHJ1
-Y3QgZTgyMF90YWJsZSAqdGFibGUpDQo+PiArc3RhdGljIHUzMiBjb21wdXRlX2U4MjBfY3Jj
-MzIoc3RydWN0IGU4MjBfdGFibGUgKnRhYmxlKQ0KPj4gICB7DQo+PiAtICAgICAgIGludCBz
-aXplID0gb2Zmc2V0b2Yoc3RydWN0IGU4MjBfdGFibGUsIGVudHJpZXMpICsNCj4+IC0gICAg
-ICAgICAgICAgICBzaXplb2Yoc3RydWN0IGU4MjBfZW50cnkpICogdGFibGUtPm5yX2VudHJp
-ZXM7DQo+PiArICAgICAgIHUzMiBjcmMgPSB+MDsNCj4+ICsgICAgICAgaW50IGk7DQo+PiAr
-DQo+PiArICAgICAgIGZvciAoaSA9IDA7IGkgPCB0YWJsZS0+bnJfZW50cmllczsgaSsrKSB7
-DQo+PiArICAgICAgICAgICAgICAgaWYgKHRhYmxlLT5lbnRyaWVzW2ldLnR5cGUgPT0gRTgy
-MF9UWVBFX1JBTSkgew0KPj4gKyAgICAgICAgICAgICAgICAgICAgICAgY3JjID0gY3JjMzJf
-bGUoY3JjLCAodW5zaWduZWQgY2hhciBjb25zdCAqKSZ0YWJsZS0+ZW50cmllc1tpXSwNCj4+
-ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHNpemVvZihzdHJ1Y3Qg
-ZTgyMF9lbnRyeSkpOw0KPj4gKyAgICAgICAgICAgICAgIH0NCj4+ICsgICAgICAgfQ0KPj4N
-Cj4+IC0gICAgICAgcmV0dXJuIH5jcmMzMl9sZSh+MCwgKHVuc2lnbmVkIGNoYXIgY29uc3Qg
-Kil0YWJsZSwgc2l6ZSk7DQo+PiArICAgICAgIHJldHVybiB+Y3JjOw0KPj4gICB9DQo+Pg0K
-Pj4gICAjaWZkZWYgQ09ORklHX1g4Nl82NA0KPj4gLS0NCj4+IDIuNTQuMA0KPj4NCj4+DQo=
+  EmitToStreamer(*OutStreamer, MCInstBuilder(ARM::UDF).addImm(ESR));
 
+and if ARM::UDF happens to be BKPT rather than the UDF instruction
+(maybe this is configurable? Can you check what this is and whether
+it is?)
 
---------------ms030109040103050406090705
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
+If LLVM is also using the BKPT instruction, then we have a compiler
+binary interface vs userspace program using BKPT issue...
 
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgMFADCABgkqhkiG9w0BBwEAAKCC
-DfAwggbmMIIEzqADAgECAhAxAnDUNb6bJJr4VtDh4oVJMA0GCSqGSIb3DQEBDAUAMIGIMQsw
-CQYDVQQGEwJVUzETMBEGA1UECBMKTmV3IEplcnNleTEUMBIGA1UEBxMLSmVyc2V5IENpdHkx
-HjAcBgNVBAoTFVRoZSBVU0VSVFJVU1QgTmV0d29yazEuMCwGA1UEAxMlVVNFUlRydXN0IFJT
-QSBDZXJ0aWZpY2F0aW9uIEF1dGhvcml0eTAeFw0yMDAyMTgwMDAwMDBaFw0zMzA1MDEyMzU5
-NTlaMEYxCzAJBgNVBAYTAk5MMRkwFwYDVQQKExBHRUFOVCBWZXJlbmlnaW5nMRwwGgYDVQQD
-ExNHRUFOVCBQZXJzb25hbCBDQSA0MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEA
-s0riIl4nW+kEWxQENTIgFK600jFAxs1QwB6hRMqvnkphfy2Q3mKbM2otpELKlgE8/3AQPYBo
-7p7yeORuPMnAuA+oMGRb2wbeSaLcZbpwXgfCvnKxmq97/kQkOFX706F9O7/h0yehHhDjUdyM
-yT0zMs4AMBDRrAFn/b2vR3j0BSYgoQs16oSqadM3p+d0vvH/YrRMtOhkvGpLuzL8m+LTAQWv
-QJ92NwCyKiHspoP4mLPJvVpEpDMnpDbRUQdftSpZzVKTNORvPrGPRLnJ0EEVCHR82LL6oz91
-5WkrgeCY9ImuulBn4uVsd9ZpubCgM/EXvVBlViKqusChSsZEn7juIsGIiDyaIhhLsd3amm8B
-S3bgK6AxdSMROND6hiHT182Lmf8C+gRHxQG9McvG35uUvRu8v7bPZiJRaT7ZC2f50P4lTlnb
-LvWpXv5yv7hheO8bMXltiyLweLB+VNvg+GnfL6TW3Aq1yF1yrZAZzR4MbpjTWdEdSLKvz8+0
-wCwscQ81nbDOwDt9vyZ+0eJXbRkWZiqScnwAg5/B1NUD4TrYlrI4n6zFp2pyYUOiuzP+as/A
-Znz63GvjFK69WODR2W/TK4D7VikEMhg18vhuRf4hxnWZOy0vhfDR/g3aJbdsGac+diahjEwz
-yB+UKJOCyzvecG8bZ/u/U8PsEMZg07iIPi8CAwEAAaOCAYswggGHMB8GA1UdIwQYMBaAFFN5
-v1qqK0rPVIDh2JvAnfKyA2bLMB0GA1UdDgQWBBRpAKHHIVj44MUbILAK3adRvxPZ5DAOBgNV
-HQ8BAf8EBAMCAYYwEgYDVR0TAQH/BAgwBgEB/wIBADAdBgNVHSUEFjAUBggrBgEFBQcDAgYI
-KwYBBQUHAwQwOAYDVR0gBDEwLzAtBgRVHSAAMCUwIwYIKwYBBQUHAgEWF2h0dHBzOi8vc2Vj
-dGlnby5jb20vQ1BTMFAGA1UdHwRJMEcwRaBDoEGGP2h0dHA6Ly9jcmwudXNlcnRydXN0LmNv
-bS9VU0VSVHJ1c3RSU0FDZXJ0aWZpY2F0aW9uQXV0aG9yaXR5LmNybDB2BggrBgEFBQcBAQRq
-MGgwPwYIKwYBBQUHMAKGM2h0dHA6Ly9jcnQudXNlcnRydXN0LmNvbS9VU0VSVHJ1c3RSU0FB
-ZGRUcnVzdENBLmNydDAlBggrBgEFBQcwAYYZaHR0cDovL29jc3AudXNlcnRydXN0LmNvbTAN
-BgkqhkiG9w0BAQwFAAOCAgEACgVOew2PHxM5AP1v7GLGw+3tF6rjAcx43D9Hl110Q+BABABg
-lkrPkES/VyMZsfuds8fcDGvGE3o5UfjSno4sij0xdKut8zMazv8/4VMKPCA3EUS0tDUoL01u
-gDdqwlyXuYizeXyH2ICAQfXMtS+raz7mf741CZvO50OxMUMxqljeRfVPDJQJNHOYi2pxuxgj
-KDYx4hdZ9G2o+oLlHhu5+anMDkE8g0tffjRKn8I1D1BmrDdWR/IdbBOj6870abYvqys1qYlP
-otv5N5dm+XxQ8vlrvY7+kfQaAYeO3rP1DM8BGdpEqyFVa+I0rpJPhaZkeWW7cImDQFerHW9b
-KzBrCC815a3WrEhNpxh72ZJZNs1HYJ+29NTB6uu4NJjaMxpk+g2puNSm4b9uVjBbPO9V6sFS
-G+IBqE9ckX/1XjzJtY8Grqoo4SiRb6zcHhp3mxj3oqWi8SKNohAOKnUc7RIP6ss1hqIFyv0x
-XZor4N9tnzD0Fo0JDIURjDPEgo5WTdti/MdGTmKFQNqxyZuT9uSI2Xvhz8p+4pCYkiZqpahZ
-lHqMFxdw9XRZQgrP+cgtOkWEaiNkRBbvtvLdp7MCL2OsQhQEdEbUvDM9slzZXdI7NjJokVBq
-3O4pls3VD2z3L/bHVBe0rBERjyM2C/HSIh84rfmAqBgklzIOqXhd+4RzadUwggcCMIIE6qAD
-AgECAhBaNFgxeGkgh2ZZg7n0Nh9IMA0GCSqGSIb3DQEBDAUAMEYxCzAJBgNVBAYTAk5MMRkw
-FwYDVQQKExBHRUFOVCBWZXJlbmlnaW5nMRwwGgYDVQQDExNHRUFOVCBQZXJzb25hbCBDQSA0
-MB4XDTIzMDgwMjAwMDAwMFoXDTI2MDgwMTIzNTk1OVowgZQxIDAeBgNVBAkTF1RyaWVkYSBB
-bmRyZWphIEhsaW5rdSAxMRgwFgYDVQQIEw9OaXRyaWFuc2t5IGtyYWoxCzAJBgNVBAYTAlNL
-MTIwMAYDVQQKDClVbml2ZXJ6aXRhIEtvbsWhdGFudMOtbmEgRmlsb3pvZmEgdiBOaXRyZTEV
-MBMGA1UEAxMMTWlsYW4gT3JhdmVjMIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEA
-q1KI/4Kzb4KoaDY5H4zzPvosZ0Boil4ZXvH3+2DYGQlXvsh/Deg8ljQko+b6V0Z4Q4sWdefq
-OUmfhqEVf2fXfkSfNT4w2zB3B7pH/NQMdoSvo90XnLJ2L6XaoRsH/Tq7u2JYwcEvWeady2Dt
-xDsAXHknqwQ6nkKQFc94XF2OmiSVuTAvGj9LMrpKPjVSmyoxibRZ4MX1pm4xVZP+Pc5MJUFU
-UPcTo1CaV7DtqnGxcRgCZIL70DN33Tn2l/E+A/KNckaCVU7H8ZH526Z4QzJQrrK3QuoqyWsI
-clCMKRiwrNTD+wseWb9GSMT/i+Ad7jdMIA5tcl3wOLKn1Kw5LY6QMBCHx/S9HaGvcn7ogMRO
-WDl5INN3Zp/9Pq9J32l+8Lud+wLvXs4FSw5aXHf0ZaO4r2M5UnWPqEn+Xi7MuR9wmCp2ffCQ
-jrU9oZ26xxk1hodVb1+iBtaY7DrcZEeQnpwZvytLfoDCp4JSQExC4tUHvoeUZx0XEwFIa05B
-QM8raY50nty6LuoAgz5hQWjQpwHUEh6zXjm7GVsTkv0zIpPhAeSbzyxUS5Dc+lPzmzaj6sz2
-tikcT7C75sdHVD2nfW/3Xw5u9Lix0rCA6Yt0z25tcNDdi5ELq4nlWbAfLP67UcKZY4d07i3+
-yrlwOzrsaHi/xLcxx4FTozB0N+CAHhBDDDsCAwEAAaOCAZswggGXMB8GA1UdIwQYMBaAFGkA
-occhWPjgxRsgsArdp1G/E9nkMB0GA1UdDgQWBBR3a7VTiE53dtbMFAlcqdc1Y9expzAOBgNV
-HQ8BAf8EBAMCBaAwDAYDVR0TAQH/BAIwADAdBgNVHSUEFjAUBggrBgEFBQcDBAYIKwYBBQUH
-AwIwPwYDVR0gBDgwNjA0BgsrBgEEAbIxAQICTzAlMCMGCCsGAQUFBwIBFhdodHRwczovL3Nl
-Y3RpZ28uY29tL0NQUzBCBgNVHR8EOzA5MDegNaAzhjFodHRwOi8vR0VBTlQuY3JsLnNlY3Rp
-Z28uY29tL0dFQU5UUGVyc29uYWxDQTQuY3JsMHgGCCsGAQUFBwEBBGwwajA9BggrBgEFBQcw
-AoYxaHR0cDovL0dFQU5ULmNydC5zZWN0aWdvLmNvbS9HRUFOVFBlcnNvbmFsQ0E0LmNydDAp
-BggrBgEFBQcwAYYdaHR0cDovL0dFQU5ULm9jc3Auc2VjdGlnby5jb20wGQYDVR0RBBIwEIEO
-bW9yYXZlY0B1a2Yuc2swDQYJKoZIhvcNAQEMBQADggIBAJ0zDjgaIyOlAnyN7aAb2Mf+N4op
-qCIh6Hep3o20nKfBWMgCM1xmnPaaEPwi6h0CMZW5GKZYGw0MpHNhSCtddznr5JZAkY07xsnT
-4gn8fQRi8n2LB3nEJSh7pT2+89KBFmee2k6vV25HsZ0YBIq4CRXrC7y21Bpy2WB8SQdNuCbY
-L5JByP4wfPBLKT7zPmdNWBTjJHpBzhANc0Vc6LzaKz75oK0g+GLUi84fS/S4sMyMqPbn7Xqp
-oMnCW4hqorhfubne1hlvdM/sU/VX1aUWWoSnPnN2HKRlrIiDjMmybJpTrE70jTsboR3Y15ti
-8mrRVN3iKKY5LRvDYlPJ9wYDPUSrJBUCDZarg8Er24a394TqmMSi+NyoKfR4UB6gMzXxUbvg
-jxkEhlgs0tI4Xd+m1eFgfeKIQ0ARtUVEHasXuWcI4BLwN4vjfvdPAjlqxUJHP51a9XI/VczC
-olQZnVkreJmZSG6DNFbBPy1zIfVZJHoM0d5ITKUBiadnF5GDH1mopIvqi1gH0oKRse/KnjKh
-gNzbMzGZfeLZjVlw7aO9w4Zm+EBTRhMdHnfKTBYZCoIcK+Dou1cyqMCxsysPDKldm6bwCLxX
-xRU4WtHq5KFs81cW4Rbs4ZXtxF23eIHJ8NgAHr3SPS7zzWwAJ+LMY6voi7/J+tK31UNz7xoT
-3avZsCqlMYIFRTCCBUECAQEwWjBGMQswCQYDVQQGEwJOTDEZMBcGA1UEChMQR0VBTlQgVmVy
-ZW5pZ2luZzEcMBoGA1UEAxMTR0VBTlQgUGVyc29uYWwgQ0EgNAIQWjRYMXhpIIdmWYO59DYf
-SDANBglghkgBZQMEAgMFAKCCArwwGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG
-9w0BCQUxDxcNMjYwNjIzMTUxMTE5WjBPBgkqhkiG9w0BCQQxQgRAH8FhmFJahnCI70hZpZbM
-3IYhI4Iqg8c8OF5kmcixyBE7sGkWOm9FsuPojawofRCM1bsCm/js/hWDSEix7UA6CjBpBgkr
-BgEEAYI3EAQxXDBaMEYxCzAJBgNVBAYTAk5MMRkwFwYDVQQKExBHRUFOVCBWZXJlbmlnaW5n
-MRwwGgYDVQQDExNHRUFOVCBQZXJzb25hbCBDQSA0AhBaNFgxeGkgh2ZZg7n0Nh9IMGsGCyqG
-SIb3DQEJEAILMVygWjBGMQswCQYDVQQGEwJOTDEZMBcGA1UEChMQR0VBTlQgVmVyZW5pZ2lu
-ZzEcMBoGA1UEAxMTR0VBTlQgUGVyc29uYWwgQ0EgNAIQWjRYMXhpIIdmWYO59DYfSDCCAVcG
-CSqGSIb3DQEJDzGCAUgwggFEMAsGCWCGSAFlAwQBKjALBglghkgBZQMEAQIwCgYIKoZIhvcN
-AwcwDQYIKoZIhvcNAwICAQUwDQYIKoZIhvcNAwICAQUwBwYFKw4DAgcwDQYIKoZIhvcNAwIC
-AQUwBwYFKw4DAhowCwYJYIZIAWUDBAIBMAsGCWCGSAFlAwQCAjALBglghkgBZQMEAgMwCwYJ
-YIZIAWUDBAIEMAsGCWCGSAFlAwQCBzALBglghkgBZQMEAggwCwYJYIZIAWUDBAIJMAsGCWCG
-SAFlAwQCCjALBgkqhkiG9w0BAQEwCwYJK4EFEIZIPwACMAgGBiuBBAELADAIBgYrgQQBCwEw
-CAYGK4EEAQsCMAgGBiuBBAELAzALBgkrgQUQhkg/AAMwCAYGK4EEAQ4AMAgGBiuBBAEOATAI
-BgYrgQQBDgIwCAYGK4EEAQ4DMA0GCSqGSIb3DQEBAQUABIICADpSH/xaLjANncZzbU8f8Apr
-c48wgiFR5pyCwniSmJDes90Lzj/QGZ1EdFAOhPGUW9PSH+7ehs4NGgwcgeXaog2qlgqtLFAn
-RLe5FocYReDh88x9ZrW2I8LGOT8DZtXVB+ZZwyg67kYy9uTzPdmbGz5wPGdmrvJyPLh6d7SA
-+QEVJR8MpQZ3CM628N1wSLUkgM4fRu0C4upWbX1Clw2cyxv3n91qbYDOp7GD1duCfw/c4qI1
-NHeMphcOX5l1OVAtJboLAvROYVpmbnDW3P2cfQ4SuxzsiXN465KeRiv8oijMnEglTS2kkgxo
-rLKExVZokEPHB05sraVDmgYyDoaPe2HN/+vx+4WAvE9JW7l+VyBFHlOjk5n2fC38MZ+v7NvU
-5XjBUoTwqwc0K9l7JhXDSBN3gvCsfHntJnwA6CIodwGgwFV9L/iiPOcyu/a+4tD/VisyOBMd
-E+pv5nexXBfHodzfZj9aKHp7+U3CUYAyMopimMSXkf9OeaqqMFXdfX44Hjh9Bzkb3Jnrer0u
-kOe49Ql+1QDbwFAI18Ru4Owd6/FYpUs+PcawqvuRhigSl7F65QUa/xrXoz7dV20m/0ukyTS1
-gfl7J5qtY4x7mN+yJJ7S/WCdb8AefpjTMT1D+udObAOMldKYAc0AdvZ8kMHxYwlx/GstMUwl
-KBw/QkqQTnVaAAAAAAAA
---------------ms030109040103050406090705--
+Given the "no regressions" rule, this means we can't ever support the
+LLVM CFI BKPT usage unless LLVM changes... and that creates a
+regression for the compiler people, because they have to care about
+more than just the Linux kernel and one userspace program.
+
+I don't see a clean solution to this, other than saying "No!" to
+LLVM people and backing out your change.
+
+Maybe our nameless regressionreporter can find out which BKPT
+instruction(s) is/are actually being used (it takes an immediate
+value.)
+
+This makes me want the old days of Acorn Computers back, because
+*they* were sensible when it comes to instruction sets and fields
+such as the immediate in SWI/SVC - they had the foresight to state
+that the immediate would be broken up into fields which included an
+OS identifier, effectively separating the numberspace so that
+different OS etc avoid clashing with that instruction. Linux had
+a time when it supported running Acorn RISC OS programs natively
+as a result of that in the days of OABI. Seems to me the computer
+industry just goes backwards. :/
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
