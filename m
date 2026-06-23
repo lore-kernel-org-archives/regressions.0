@@ -1,127 +1,230 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A92F32F7F03
-	for <regressions@lists.linux.dev>; Tue, 23 Jun 2026 15:38:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69A7B3090E8
+	for <regressions@lists.linux.dev>; Tue, 23 Jun 2026 15:52:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782229129; cv=none; b=PRJ6hcgEeNGUBkuFauYB9sChdQiI9bRETku954It55XkxvLBaQtpX8YBb0pGJ98HG46KkvHD4IyDUHBqfyalU3MMSkjD8bW3rHzdS6xo6txxdIDo2XxHPpQHGEK1RPcLdKizo4GEmypiNlaWu2D8tMUT+oNjSwuNYFT80zKvvwk=
+	t=1782229977; cv=none; b=h9mKq6V2Cd4R/nwGV5sfF8kkgMCpL7Jj28jGZEXYV3Qk0QMhDKVctKBKIC1pippRFSPYgkXiLsC8yuW7/VSMON314srEnDFj2Bq/vam2lPlX9azZG65dgUgmu9neuF+feoK7rzpJ838EWYN2Tq3NjUkcpx7IN/yeQsE0CroLKxM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782229129; c=relaxed/simple;
-	bh=DlpC8iX9i2ChGTTTisRm8lz+5j3ZuPlZnjNXuGq91ak=;
+	s=arc-20240116; t=1782229977; c=relaxed/simple;
+	bh=WQDow0WLVA3ZnjHUzwfTbEElyS6EUFHR4+V0+8XTdPI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TTT37qjg7uKnzakMplvk3AIyilJsBpmxxEVedQdUr/fyWCZz0fLYT0iq+m9XZW2AIzZpPxEFJ0G/+FkMC7Nj7+Ohog0t1Ny8W9GaZf6uihdcCOcRNPZhZiNYeesPBoASwAKiNPJjmhc5A4gX3lHodzfFap07Z89Jra07PdBQ+uQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=AD3aDmyJ; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	 Content-Type:Content-Disposition:In-Reply-To; b=DOH93/CXZvA/ZkRs25HcalCsgrtgE7WzcsCC4Jg4tthq8cWGvPmIRlHeSmRALGOSicgAavmLkfM/Wt5cXwbRbYKxE/uS6/+huQKIhEOglI+BVUK4RACCRslu6ogZIPasSRbVqz852XeKwWESeCqEX3NQB78yJ9VKzbq8KPvhSqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HYEIStaw; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="AD3aDmyJ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=tahpwPBsIqkK2DZXP8CbqTvt8ELiLk3+QbKeYnv5Rw0=; b=AD3aDmyJQtwixoR95Xhyg0WCc9
-	9fboEQpzfsnSSfjiRXif78aiTQrsDaww8+Q4LG/LJMNueJCAAFI6dZqANp7mmWeFCoK4A3arszi8L
-	oOvfKOArleat0APyUrZWh3nRSgx6vzhLkkfC1QXxWf5xBFwnforLgEg7HWMTEjGzqenLpaBFUDZzV
-	sO/MjO8hBqS0Wm3EzgY4keURCWUyNg3J87az3a6vcQona/V+8B2zl/Xs94OuNRZ2aTkQwkbZ7ntY2
-	rO2au2j365TWeLohb8WvndDgP5a8b7cj6sraKH3jcIt0Bl7y6FVrsj5byA8+/hFBAOA6y8Di+AyQI
-	/18RaMGw==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:44252)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.98.2)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1wc3Cz-000000006zt-2r9l;
-	Tue, 23 Jun 2026 16:38:41 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.98.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1wc3Cy-0000000005w-1Acs;
-	Tue, 23 Jun 2026 16:38:40 +0100
-Date: Tue, 23 Jun 2026 16:38:40 +0100
-From: Russell King <linux@armlinux.org.uk>
-To: Linus Walleij <linusw@kernel.org>
-Cc: slipher <slipher@protonmail.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: Re: [REGRESSION] 32-bit ARM's BKPT instruction no longer works
-Message-ID: <ajqogLBBgupJuD8A@shell.armlinux.org.uk>
-References: <kJqktbpLphg_Pk5I5SPptgTLjl3E3eq5mN5UzCslyFj7Q1Irp-wDid4mj5eQVd2iZtRGXgeZd8goq195EkXdjyt864YMc8mVb2B9NGH91NQ=@protonmail.com>
- <ajhHYKyvL9nCUvG5@shell.armlinux.org.uk>
- <zbEOoL4_phCCh7td7DwqQtyhleFJ_G3yRBc8AFjT5hwIwcRipRMsjtIVJgLi3t5vJk5QsuKjY9c8I91nuVSYk4-xlzrAqigMWIE0iNMc9PM=@protonmail.com>
- <ajhof3cRtiN0Hk7k@shell.armlinux.org.uk>
- <ajhyyq_SscBAOFFY@shell.armlinux.org.uk>
- <DUmi3WqfISs6WPqSP0CfEAYosyWQN5F7owhotvDcuyyv7WFoloOeHyoatIx6TKimecbF_OFncDikItB-0ubyO5doBOvsIhEKMQsT2wHyeuE=@protonmail.com>
- <ajpWaTW9uXWqX1OA@shell.armlinux.org.uk>
- <CAD++jL=C0mnn-PCqZB4zg7y1=u-W4mEOt+NR3OQFzpdwSR-9Og@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HYEIStaw"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-842848fd613so71736b3a.3
+        for <regressions@lists.linux.dev>; Tue, 23 Jun 2026 08:52:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1782229975; x=1782834775; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=RJl8ykoXp1RKpkOh2VAdRwHq3C+PGwNauXslsgelo7o=;
+        b=HYEIStawLTLjR+TRffEN5gxsDJ6DzbnkwAe6zI8bMMUufj2HJyuOzbgH17FyhQz3c6
+         W+VW2+DLUsvS42//KOB48IyIPeX2i7H617OXkArR/5JDQq+vpPKlSSAG7NQKupwqCaG2
+         C9mel+sBjN/m+ZLsuuJeM+jOs3Ql2R7JnMNUyzvtuG9b1r0IQU4Cwmc76i55cciQPkMv
+         mPKlJA1T5CwMoSZ9oygf6li1FfU5wAfGU8liM6Vzmafb8+0wP9C0ZSLweenIt/e2ni2W
+         VUYh59Kq84mXz16GAFkz3LhVzJGkCjOQd3sDUAKbDJQgnzRlobLACsS2of72VIyHEVpj
+         3oyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782229975; x=1782834775;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RJl8ykoXp1RKpkOh2VAdRwHq3C+PGwNauXslsgelo7o=;
+        b=Gk7syEXcipiUPiPIpgnreYmbwKblxrmMc8mF457mjKu7Pay+AwEPYN8Lbzyaemgg4S
+         1B31IgS+9HPnqcq8R2hDxI9k0nKyKTX5ZEsmYalchjhKhLl6KSCg7cTrxSd6pcVCw60B
+         ihATV9fVnJ77SfmBNsFdfIaWXcAfBRuUjma2pKizd7Fczr/mGem2Il7hUXTDHmYg3ZCt
+         JSBqOX2Epa0Yq6ThvHAxV+37KU1WGfCdTFrjl+5aDHrO/kocBFaIPFrd3TMFKTNfRljC
+         K994t4N3UXJipnQsCVcCWACC+Uf2TIL1U0HOZO7uKnuE/MBf19PJzLCpDcGrt3rsO9n1
+         +JTQ==
+X-Forwarded-Encrypted: i=1; AFNElJ8eKQDlxyXFInc/M47EwhPORdks71S/169T9rQLPRnvwpSksDRXERjwnAEUrgzSLS1YTXtn4wIPvCcqSg==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yzqq5S5+gUe8Ri4Esk1zIXiWeB3jhMXu4iYbfMX3M7XRQe4sff6
+	ELhaSJC8ljUUmLD1hsg3i3PStpqOsWQIH1fPiGGdnHxCh/T1ceaWtWLR
+X-Gm-Gg: AfdE7clUDN/PSSly1VkDYiRaFmhglnYK1xzjoO60mM+Pl6umpGiC6pBlu/NqYym9SjS
+	brslSNTXtjRAivcA0ZfCFcfi6XgtKpf9LXBhtbjqWayb4YsHgIjo8bFVRcDNZB9Un6IJfesEeG9
+	/0yrlhZiI+QivGbvk7Z2AntZKqbU+H9SDOFlRPbh8Xt1mgjO6PCdI9g9w66zA9GTZgN2pWSJlVV
+	XW6pln1nxvxaPQENYhchuaFKfXtqpmSyj5dPEUUgMt6DZaRk+GbGhPl+YLaQ/3M4zvpjsT7UZCW
+	vrp6xWLxQT9YrkFSpqmN8sWF5ZLIMjza7XcIw/CzL96RpeDXJVRTMI5tK20yNLCm045h9ElsMEN
+	ZYcL5bhLL8gdQkYuK9kQVTt6WkvT58A4HM5i4kOayllhcwuqeyPuVo1M/6ohCNj6tLB2uv/HtPQ
+	f3VjpgDwo4LlLo7O0fl8TPpIzXQzUTURl+8MywDxDtNQFbSDLJff2Qv1RWrQmUM54B4tFhD7dXN
+	86r4aN4lw==
+X-Received: by 2002:a05:6a00:b95:b0:842:4f20:5402 with SMTP id d2e1a72fcca58-8456253555amr17070230b3a.21.1782229975367;
+        Tue, 23 Jun 2026 08:52:55 -0700 (PDT)
+Received: from archlinux ([2405:201:1b:20ef:268a:fa82:9f05:61a5])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-84564ea72d7sm10960015b3a.46.2026.06.23.08.52.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jun 2026 08:52:54 -0700 (PDT)
+Date: Tue, 23 Jun 2026 21:22:49 +0530
+From: Krishna Chomal <krishna.chomal108@gmail.com>
+To: Marco Scardovi <scardracs@disroot.org>
+Cc: moravec@ukf.sk, hansg@kernel.org, ilpo.jarvinen@linux.intel.com, 
+	eliadevito@gmail.com, emreleno@gmail.com, rafael@kernel.org, 
+	linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org, regressions@leemhuis.info, 
+	regressions@lists.linux.dev
+Subject: Re: [PATCH 1/1] platform/x86: hp-wmi: fix platform profile issues on
+ generic HP laptops
+Message-ID: <ajqgkq_elUlMC0Ep@archlinux>
+References: <20260619220911.7542-1-scardracs@disroot.org>
+ <20260619220911.7542-2-scardracs@disroot.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAD++jL=C0mnn-PCqZB4zg7y1=u-W4mEOt+NR3OQFzpdwSR-9Og@mail.gmail.com>
-Sender: "Russell King,,," <linux@armlinux.org.uk>
+In-Reply-To: <20260619220911.7542-2-scardracs@disroot.org>
 
-On Tue, Jun 23, 2026 at 03:35:05PM +0200, Linus Walleij wrote:
-> On Tue, Jun 23, 2026 at 11:48 AM Russell King <linux@armlinux.org.uk> wrote:
-> 
-> > Let me also be clear: I expect Linus W to fix this
-> 
-> I'll try!
-> 
-> I guess the offending commit is:
-> commit c3f89986fde7bb9ccc86a901bf28e1f7d69fc3b3
-> "ARM: 9391/2: hw_breakpoint: Handle CFI breakpoints"
-> 
-> > I suspect that the CFI fault code was a decision by compiler authors,
-> > but I can't say because I don't have a setup that generates the code
-> > for CFI.
-> 
-> Yep, the LLVM implementers chose breakpoint code 0x03:
-> I think it comes from here:
-> https://llvm.org/doxygen/ARMAsmPrinter_8cpp_source.html
-> Line 1536-37:
-> unsigned AddrIndex = TRI->getEncodingValue(AddrReg);
-> unsigned ESR = 0x8000 | (31 << 5) | (AddrIndex & 31);
+On Sat, Jun 20, 2026 at 12:09:11AM +0200, Marco Scardovi wrote:
+>On generic (non-Omen/non-Victus) HP laptops supported by the
+>hp-wmi driver, the platform_profile sysfs operations could fail,
+>leading to 'platform_profile: Failed to get profile for handler hp-wmi'
+>errors and preventing userspace power profile management from working
+>correctly.
+>
+>The driver was blindly registering all 4 profiles (quiet, cool,
+>balanced, performance) without checking which ones were actually
+>supported by the BIOS. Furthermore, when userspace switched profiles,
+>hp_wmi_platform_profile_get() was called, which queried the BIOS
+>using thermal_profile_get(). If the BIOS query returned an error or
+>returned a value not in the recognized cases, the get call failed,
+>throwing an error.
+>
+>Fix this by:
+>1. Dynamically probing which thermal profiles are supported by the BIOS
+>   during driver registration by temporarily setting each profile and
+>   checking the return code, then restoring the original profile.
+>2. Initializing and updating active_platform_profile to cache the
+>   last set/boot profile.
+>3. Falling back to the cached active_platform_profile in
+>   hp_wmi_platform_profile_get() if the BIOS query fails or returns
+>   an invalid/unmapped value, rather than returning an error.
+>
+>Closes: https://bugzilla.kernel.org/show_bug.cgi?id=220008
 
-Presumably it's actually line 1618:
+Is the patch tested by them?
 
-  EmitToStreamer(*OutStreamer, MCInstBuilder(ARM::UDF).addImm(ESR));
+>Closes: https://bugzilla.kernel.org/show_bug.cgi?id=221569
+>Closes: https://lore.kernel.org/platform-driver-x86/a3b137df-1b21-4460-b003-58c5ca2d59d4@ukf.sk/
+>Fixes: 4296f679ca50 ("platform/x86: hp-wmi: add platform profile support")
+>Assisted-by: Antigravity:gemini-3.5-flash
+>Signed-off-by: Marco Scardovi <scardracs@disroot.org>
+>---
+> drivers/platform/x86/hp/hp-wmi.c | 53 +++++++++++++++++++++++++++++---
+> 1 file changed, 48 insertions(+), 5 deletions(-)
+>
+>diff --git a/drivers/platform/x86/hp/hp-wmi.c b/drivers/platform/x86/hp/hp-wmi.c
+>index 8ba286ed8721..93df269445eb 100644
+>--- a/drivers/platform/x86/hp/hp-wmi.c
+>+++ b/drivers/platform/x86/hp/hp-wmi.c
+>@@ -1662,8 +1662,11 @@ static int hp_wmi_platform_profile_get(struct device *dev,
+> 	int tp;
+>
+> 	tp = thermal_profile_get();
+>-	if (tp < 0)
+>-		return tp;
+>+	if (tp < 0) {
+>+		guard(mutex)(&active_platform_profile_lock);
+>+		*profile = active_platform_profile;
+>+		return 0;
+>+	}
 
-and if ARM::UDF happens to be BKPT rather than the UDF instruction
-(maybe this is configurable? Can you check what this is and whether
-it is?)
+This does silence the error but I don't think that's a wise decision
+since it effectively makes userspace blind to any WMI failure. Ideally,
+if thermal_profile_get() fails then the board isn't supposed to be using
+HPWMI_THERMAL_PROFILE_QUERY.
 
-If LLVM is also using the BKPT instruction, then we have a compiler
-binary interface vs userspace program using BKPT issue...
+>
+> 	switch (tp) {
+> 	case HP_THERMAL_PROFILE_PERFORMANCE:
+>@@ -1679,7 +1682,9 @@ static int hp_wmi_platform_profile_get(struct device *dev,
+> 		*profile = PLATFORM_PROFILE_QUIET;
+> 		break;
+> 	default:
+>-		return -EINVAL;
+>+		guard(mutex)(&active_platform_profile_lock);
+>+		*profile = active_platform_profile;
+>+		break;
+> 	}
+>
+> 	return 0;
+>@@ -1707,10 +1712,14 @@ static int hp_wmi_platform_profile_set(struct device *dev,
+> 		return -EOPNOTSUPP;
+> 	}
+>
+>+	guard(mutex)(&active_platform_profile_lock);
+>+
+> 	err = thermal_profile_set(tp);
+> 	if (err)
+> 		return err;
+>
+>+	active_platform_profile = profile;
+>+
+> 	return 0;
+> }
+>
+>@@ -2017,8 +2026,23 @@ static int hp_wmi_platform_profile_probe(void *drvdata, unsigned long *choices)
+> 		/* Adding an equivalent to HP Omen software ECO mode: */
+> 		set_bit(PLATFORM_PROFILE_LOW_POWER, choices);
+> 	} else {
+>-		set_bit(PLATFORM_PROFILE_QUIET, choices);
+>-		set_bit(PLATFORM_PROFILE_COOL, choices);
+>+		int current_tp = thermal_profile_get();
+>+
+>+		if (current_tp < 0)
+>+			return current_tp;
+>+
+>+		if (thermal_profile_set(HP_THERMAL_PROFILE_QUIET) == 0)
+>+			set_bit(PLATFORM_PROFILE_QUIET, choices);
+>+		if (thermal_profile_set(HP_THERMAL_PROFILE_COOL) == 0)
+>+			set_bit(PLATFORM_PROFILE_COOL, choices);
+>+		if (thermal_profile_set(HP_THERMAL_PROFILE_DEFAULT) == 0)
+>+			set_bit(PLATFORM_PROFILE_BALANCED, choices);
+>+		if (thermal_profile_set(HP_THERMAL_PROFILE_PERFORMANCE) == 0)
+>+			set_bit(PLATFORM_PROFILE_PERFORMANCE, choices);
 
-Given the "no regressions" rule, this means we can't ever support the
-LLVM CFI BKPT usage unless LLVM changes... and that creates a
-regression for the compiler people, because they have to care about
-more than just the Linux kernel and one userspace program.
+Probing for HP_THERMAL_PROFILE_DEFAULT and HP_THERMAL_PROFILE_PERFORMANCE
+seem redundant since those bits are unconditionally set in this function
+after the if-else blocks.
 
-I don't see a clean solution to this, other than saying "No!" to
-LLVM people and backing out your change.
-
-Maybe our nameless regressionreporter can find out which BKPT
-instruction(s) is/are actually being used (it takes an immediate
-value.)
-
-This makes me want the old days of Acorn Computers back, because
-*they* were sensible when it comes to instruction sets and fields
-such as the immediate in SWI/SVC - they had the foresight to state
-that the immediate would be broken up into fields which included an
-OS identifier, effectively separating the numberspace so that
-different OS etc avoid clashing with that instruction. Linux had
-a time when it supported running Acorn RISC OS programs natively
-as a result of that in the days of OABI. Seems to me the computer
-industry just goes backwards. :/
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+>+
+>+		/* Restore the original thermal profile */
+>+		thermal_profile_set(current_tp);
+>+		return 0;
+> 	}
+>
+> 	set_bit(PLATFORM_PROFILE_BALANCED, choices);
+>@@ -2263,6 +2287,25 @@ static int thermal_profile_setup(struct platform_device *device)
+> 		if (err)
+> 			return err;
+>
+>+		/* Initialize active_platform_profile */
+>+		switch (tp) {
+>+		case HP_THERMAL_PROFILE_PERFORMANCE:
+>+			active_platform_profile = PLATFORM_PROFILE_PERFORMANCE;
+>+			break;
+>+		case HP_THERMAL_PROFILE_DEFAULT:
+>+			active_platform_profile = PLATFORM_PROFILE_BALANCED;
+>+			break;
+>+		case HP_THERMAL_PROFILE_COOL:
+>+			active_platform_profile = PLATFORM_PROFILE_COOL;
+>+			break;
+>+		case HP_THERMAL_PROFILE_QUIET:
+>+			active_platform_profile = PLATFORM_PROFILE_QUIET;
+>+			break;
+>+		default:
+>+			active_platform_profile = PLATFORM_PROFILE_BALANCED;
+>+			break;
+>+		}
+>+
+> 		ops = &hp_wmi_platform_profile_ops;
+> 	}
+>
+>-- 
+>2.54.0
+>
