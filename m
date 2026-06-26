@@ -1,147 +1,123 @@
-Received: from zg8tmtyylji0my4xnjqumte4.icoremail.net (zg8tmtyylji0my4xnjqumte4.icoremail.net [162.243.164.118])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE62234040A
-	for <regressions@lists.linux.dev>; Wed, 24 Jun 2026 17:28:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.243.164.118
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0A2C3CE0AE
+	for <regressions@lists.linux.dev>; Fri, 26 Jun 2026 12:54:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782322098; cv=none; b=CKFjOlPSwbn3GJEMKilzf0lurfegu19/LyUEEimfiYVAeG0unKt23IJLEOuWBit+Ge16rzAXtawqs3rO8/KV7GKuSn46y3W9sdgCcFG4o+SuMUV8L9bQ6oKvabTe6VN5lR9OpstNCKGdm159Im1BsJ3voTxicLF595I/L/RvUPo=
+	t=1782478452; cv=none; b=Yew0f2Trg12twgDE6Iukdjhw2+H8dJRSI3nDVwHJNIbcYyHCRlOsmvH8YnH+gEEAEOBM31EfnYcKq8GTg9la8iWATq0YFQBBQwqoeKGT4EQ18GbzbpRXI+xDP6u0t+C6Npy5zM7XV8Kce0tYU2jMg1OPk2OkNIEZ2dr7XP6L0T4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782322098; c=relaxed/simple;
-	bh=9yt2cY9pE3dm3tkL8c4ZlLVw+wQY0vfsyd4Rxw1wDgU=;
-	h=Date:From:To:Cc:Subject:Content-Type:MIME-Version:Message-ID; b=G570HxbGavxaWw8rSo8aZ3GxvWaM9Ktdkc+BmwcZ2p63B0X+hB+ygHzuKv8DYh45vQseYgucCw4msRgGo0mJa9sBBxC3Mi+T4LViuyBUhWWk92+851O0+02IH8C1qFifbfMmJwcLPknxQV+chUc1zpTU43S0W5Zmp/8KMZct0BY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stu.xmu.edu.cn; spf=pass smtp.mailfrom=stu.xmu.edu.cn; arc=none smtp.client-ip=162.243.164.118
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stu.xmu.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stu.xmu.edu.cn
-Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
-	by hzbj-icmmx-7 (Coremail) with SMTP id AQAAfwDHzZmmEzxq2V_uCw--.1965S2;
-	Thu, 25 Jun 2026 01:28:06 +0800 (CST)
-Received: from chengfenglin$stu.xmu.edu.cn ( [188.253.116.103] ) by
- ajax-webmail-mail (Coremail) ; Thu, 25 Jun 2026 01:28:04 +0800 (GMT+08:00)
-Date: Thu, 25 Jun 2026 01:28:04 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From: "Chengfeng Lin" <chengfenglin@stu.xmu.edu.cn>
-To: "Pedro Falcato" <pfalcato@suse.de>,
-	"Andrew Morton" <akpm@linux-foundation.org>, linux-mm@kvack.org
-Cc: "Liam R. Howlett" <liam@infradead.org>,
-	"Lorenzo Stoakes" <ljs@kernel.org>,
-	"Vlastimil Babka" <vbabka@kernel.org>,
-	"Jann Horn" <jannh@google.com>, linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: [REGRESSION] mm/mprotect: shared-dirty base-page toggle slower
- since v6.17
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version 2025.3-cmXT6 build
- 20260202(ad063891) Copyright (c) 2002-2026 www.mailtech.cn OP_ICM_ICMVM
-X-CM-CTRLMSGS: =?B?CpWOzTiH6nJ5xwDR7hwMki1N8jM=
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+	s=arc-20240116; t=1782478452; c=relaxed/simple;
+	bh=v/aB+4XObJl2hgdsV4eb6n+rU8/fCF9koyw0AyTg5GA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OSTFKcofBstsBvU30gdYxeKmm6XYOdibILjr1TwNQcmdgXgosuKJw7PypQlvvBXTK8kXFwsZzFazeL1m6HHmF8V4NYky4puW1f5Qcotadzes69ZyIbI2Wo5wnqb5fYQnVLbDTxTGrUrSBAHduCcAh5H6TPGULzpZ0+/TvpF3oCM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P5dqnI/z; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P5dqnI/z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5139C1F00A3E
+	for <regressions@lists.linux.dev>; Fri, 26 Jun 2026 12:54:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782478451;
+	bh=gOZngT+Ri4gGCfrzkPoShqljnzYJYp5zUHHKBBaWlgo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=P5dqnI/zegeuNH9Nt4PbfYssL9dYV9fSLDJgSoVAccD9VUg1Bbjud/5WCoBvJYDJ+
+	 mB9fBTHEY3nsEqY9C2JksyB0BjMyOozYcYEP+YtuL4z2/R+1dFlJoIbCAw+Pxi6QDv
+	 gkwmSd7tUc3lU1+jOyw6dDpiC8O4wWVOSc7nKr7Et7g7kQjSYaSegZzaba8bjpGCja
+	 K1qBEKyY73P/8n4T79T6jb/Km+yckkEC2AJ6jKpb5svp4VV38hlngcT/TJgmM+X4pK
+	 X8YNXYLuEr0GciW1VoIJKkAPlxCpLQP257Xdr/vcoIJjhQNyJ1g+Rlh7QbmAeZKl1k
+	 fs61s4/srWrxA==
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-5aea8c2e06bso394700e87.1
+        for <regressions@lists.linux.dev>; Fri, 26 Jun 2026 05:54:11 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AHgh+Roe85pjFS5jEgkM3Sd4jCmSaJgXR/vnNCMBRA9Uqm3elP+XKpotpRTFrT3jl4Q+UOhWQkSRy8oJu+zQHQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzZfCpjlxNzYjUvK4dfhm20PRgjn0W+0TpstVAtmKIKyB1/ie14
+	aJgvWmpoAS3OT8SK/hvqp5yKnx8qbKHpCx8reCp2IGrfxxWhI1gZNwnl3nC8PUsC2iJv01FkOJ4
+	uqWdjhRNAxi6HRmdlBTzAT+QVm8xMYdo=
+X-Received: by 2002:a05:6512:6712:b0:5ad:4ebc:e072 with SMTP id
+ 2adb3069b0e04-5aea1f293e2mr2033119e87.11.1782478450038; Fri, 26 Jun 2026
+ 05:54:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Message-ID: <7c9eeb21.1c04f.19efaacbb2f.Coremail.chengfenglin@stu.xmu.edu.cn>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:AQAAfwAXMvOkEzxq5UWWAA--.48682W
-X-CM-SenderInfo: astqjiysvrikiuszmqhvwxh5lpxovvfxof0/1tbiAQABEGoxsz4EX
-	gAGsa
-Authentication-Results: hzbj-icmmx-7; spf=neutral smtp.mail=chengfengl
-	in@stu.xmu.edu.cn;
-X-Coremail-Antispam: 1Uk129KBjvJXoWxCFyUCrWfJryrWF4rCr4DJwb_yoW7Jr43pF
-	WkCrZIkFs7tFykArZ7t3Wqqw4jyws7Kw45Wr1rKr1rZas8GFy2yr97tw48Zwsruws7t390
-	vr45tw1vgF9rWaDanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	DUYxn0WfASr-VFAU7a7-sFnT9fnUUIcSsGvfJ3UbIYCTnIWIevJa73UjIFyTuYvj4RJUUU
-	UUUUU
+References: <kJqktbpLphg_Pk5I5SPptgTLjl3E3eq5mN5UzCslyFj7Q1Irp-wDid4mj5eQVd2iZtRGXgeZd8goq195EkXdjyt864YMc8mVb2B9NGH91NQ=@protonmail.com>
+In-Reply-To: <kJqktbpLphg_Pk5I5SPptgTLjl3E3eq5mN5UzCslyFj7Q1Irp-wDid4mj5eQVd2iZtRGXgeZd8goq195EkXdjyt864YMc8mVb2B9NGH91NQ=@protonmail.com>
+From: Linus Walleij <linusw@kernel.org>
+Date: Fri, 26 Jun 2026 14:53:56 +0200
+X-Gmail-Original-Message-ID: <CAD++jL=YJGFf+9o8KV+OO_61EL+_z3b7P+eLK=6=r+GOuJiWAg@mail.gmail.com>
+X-Gm-Features: AVVi8Cf7mdL5Xz9eEcaUEG2_vqpf6O9ZpYfxv2z6UZl9xqnxBWGbraHskpl3Kmc
+Message-ID: <CAD++jL=YJGFf+9o8KV+OO_61EL+_z3b7P+eLK=6=r+GOuJiWAg@mail.gmail.com>
+Subject: Re: [REGRESSION] 32-bit ARM's BKPT instruction no longer works
+To: slipher <slipher@protonmail.com>, Nathan Chancellor <nathan@kernel.org>, 
+	Kees Cook <kees@kernel.org>, Sami Tolvanen <samitolvanen@google.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"stable@vger.kernel.org" <stable@vger.kernel.org>, 
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>, 
+	"linus.walleij@linaro.org" <linus.walleij@linaro.org>, 
+	"rmk+kernel@armlinux.org.uk" <rmk+kernel@armlinux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-SGksCgpJIGhhdmUgYSByZWZyZXNoZWQgYmFyZS1tZXRhbCByZXN1bHQgZm9yIHRoZSBzaGFyZWQt
-ZGlydHkgbXByb3RlY3QoKQpzbG93ZG93biBJIHJlcG9ydGVkIGVhcmxpZXIgZnJvbSBRRU1VL2xh
-YiB0ZXN0aW5nLgoKVGhlIHJlcHJvZHVjZXIgaXMgaW50ZW50aW9uYWxseSBuYXJyb3c6CgogIC0g
-TUFQX1NIQVJFRCB8IE1BUF9BTk9OWU1PVVMgbWFwcGluZwogIC0gNjQgTWlCIHJhbmdlLCB3cml0
-ZS1wcmVmYXVsdGVkIGJlZm9yZSB0aW1pbmcKICAtIHN0YXRlIGNoZWNrOiA0IEtpQiBiYXNlIHBh
-Z2VzLCBubyBUSFAgYmFja2luZwogIC0gcmVwZWF0ZWQgZnVsbC1yYW5nZSBtcHJvdGVjdChQUk9U
-X1JFQUQpCiAgLSByZXN0b3JlIHdpdGggbXByb3RlY3QoUFJPVF9SRUFEIHwgUFJPVF9XUklURSkK
-ICAtIHdyaXRlLXRvdWNoIGFmdGVyIGVhY2ggcHJvdGVjdC9yZXN0b3JlIGN5Y2xlCgpTbyB0aGlz
-IGlzIG5vdCBhIGdlbmVyaWMgbXByb3RlY3QoKSByZWdyZXNzaW9uIGNsYWltLiAgVGhlIHNjb3Bl
-IGlzIHRoZQpzaGFyZWQtZGlydHkgYmFzZS1wYWdlIFBURSBwZXJtaXNzaW9uLWNoYW5nZSBwYXRo
-LgoKVGhlIGJhcmUtbWV0YWwgbWFjaGluZSBpcyBhbiBJbnRlbCBDb3JlIGk3LTE0NzAwIHN5c3Rl
-bS4gIFRoZSB3b3JrbG9hZCBpcwpzaW5nbGUtdGhyZWFkZWQgYW5kIHBpbm5lZCB0byBvbmUgbG9n
-aWNhbCBDUFUgd2l0aCBgdGFza3NldCAtYyAyYC4gIFRoZSBwcmltYXJ5Cm1ldHJpYyBpcyBgaXRl
-cmF0aW9uX25zX3Blcl9wYWdlYCwgbG93ZXIgaXMgYmV0dGVyLiAgSXQgaXMgdGhlIHdhbGwtY2xv
-Y2sgdGltZQpmb3Igb25lIGZ1bGwgcHJvdGVjdC9yZXN0b3JlL3dyaXRlLXRvdWNoIGl0ZXJhdGlv
-biwgZGl2aWRlZCBieSB0aGUgbnVtYmVyIG9mCjQgS2lCIHBhZ2VzIGluIHRoZSByYW5nZS4gIEVh
-Y2ggYmVuY2htYXJrIHN0ZXAgdXNlZCA5IGV4dGVybmFsIHJvdW5kcywgMTAwMAppdGVyYXRpb25z
-LCBhbmQgMTAgd2FybXVwIGl0ZXJhdGlvbnMuCgpGaXJzdCwgdGhlIHY2LjEyIC0+IHY2LjE5IHJl
-c3VsdCBzdGlsbCByZXByb2R1Y2VzIG9uIGJhcmUgbWV0YWw6CgogIGtlcm5lbCAgICAgICAgICAg
-ICAgICAgICAgICAgICBpdGVyYXRpb25fbnNfcGVyX3BhZ2UKICB2Ni4xMi43NyAgICAgICAgICAg
-ICAgICAgICAgICAgMjYKICB2Ni4xOS45ICAgICAgICAgICAgICAgICAgICAgICAgMzcKCkkgdGhl
-biBuYXJyb3dlZCB0aGUgcmVsZWFzZSB3aW5kb3cgd2l0aCAzIGludGVybGVhdmVkIGJvb3QvcnVu
-IHN0ZXBzIHBlcgprZXJuZWw6CgogIGtlcm5lbCAgICAgICAgICAgICAgICAgICAgICAgICB2YWx1
-ZXMgICAgICAgICAgbWVhbgogIHY2LjE2ICAgICAgICAgICAgICAgICAgICAgICAgICAyNSAyNSAy
-NSAgICAgICAgMjUuMDAwCiAgdjYuMTcgICAgICAgICAgICAgICAgICAgICAgICAgIDM3IDM3IDM3
-ICAgICAgICAzNy4wMDAKICB2Ni4xOCAgICAgICAgICAgICAgICAgICAgICAgICAgMzggMzggMzgg
-ICAgICAgIDM4LjAwMAogIHY2LjE4LjE5ICAgICAgICAgICAgICAgICAgICAgICAzOCAzOCAzOCAg
-ICAgICAgMzguMDAwCiAgdjYuMTkuOSAgICAgICAgICAgICAgICAgICAgICAgIDM3IDM2IDM3ICAg
-ICAgICAzNi42NjcKCkkgYWxzbyBjaGVja2VkIGxhdGVyIGNvbnRleHQgd2l0aCB0aGUgc2FtZSBz
-dGFuZGFsb25lIGNvbW1hbmQ6CgogIGtlcm5lbCAgICAgICAgICAgICAgICAgICAgICAgICB2YWx1
-ZXMgICAgICAgICAgbWVhbgogIHY3LjAuOSAgICAgICAgICAgICAgICAgICAgICAgICAzNiAzNiAz
-NiAgICAgICAgMzYuMDAwCiAgdjYuMTkuOSArIFBlZHJvIHYzIHBhdGNoLW9ubHkgIDM5IDM5IDM5
-ICAgICAgICAzOS4wMDAKICB2Ny4xLjAtcmMzIG1tLXVuc3RhYmxlL1BlZHJvICAgMzkgMzkgMzkg
-ICAgICAgIDM5LjAwMAoKSSBkbyBub3QgdHJlYXQgdGhlIG1tLXVuc3RhYmxlIHJlc3VsdCBhcyBh
-IGNsZWFuIHJlbGVhc2Uta2VybmVsIGNvbXBhcmlzb24uCkl0IGlzIG9ubHkgYSBmb2xsb3ctdXAg
-Y2hlY2ssIGFuZCBpbiB0aGlzIHdvcmtsb2FkIGl0IGRpZCBub3QgaW1wcm92ZSB0aGUKc3RhbmRh
-bG9uZSByZXN1bHQuCgpBbGwgb2YgdGhlc2UgcnVucyByZXBvcnRlZCBgZXhwZWN0ZWRfbWF0Y2hf
-cmF0aW89MTAwYCBhbmQKYHVuZXhwZWN0ZWRfcmVzdWx0cz0wYC4gIFRoZSBzdGF0ZSBjaGVjayBp
-biB0aGUgc3RhbmRhbG9uZSBvdXRwdXQgc3RheXMgaW4gdGhlCnNhbWUgc2hhcGU6IDQgS2lCIHBh
-Z2VzLCBubyBUSFAuCgpUaGlzIHB1dHMgdGhlIHNsb3dkb3duIGluIHRoZSB2Ni4xNiAtPiB2Ni4x
-NyByZWxlYXNlIHdpbmRvdy4KCkFzIGFuIGF0dHJpYnV0aW9uIGNoZWNrLCBJIGFsc28gYnVpbHQg
-YSB2Ni4xNyBwcm9iZSBrZXJuZWwgdGhhdCBvbmx5IGNoYW5nZXMKdGhlIHByZXNlbnQtUFRFIHBh
-dGggaW4gYG1tL21wcm90ZWN0LmM6OmNoYW5nZV9wdGVfcmFuZ2UoKWAgZm9yIHRoaXMgd29ya2xv
-YWQKYmFjayB0byBhIHNpbmdsZS1QVEUgc3RhcnQvY29tbWl0L2ZsdXNoIHNoYXBlLiAgVGhhdCBp
-cyBub3QgYW4gdXBzdHJlYW0gcGF0Y2gKYW5kIG5vdCBhIGNsZWFuIHJlbGVhc2Uta2VybmVsIGNv
-bXBhcmlzb247IGl0IGlzIG9ubHkgYSBob3QtcGF0aCBwcm9iZS4KClRoZSByZXN1bHQgd2FzOgoK
-ICBrZXJuZWwgICAgICAgICAgICAgICAgICAgICAgICAgdmFsdWVzICAgICAgICAgIG1lYW4KICB2
-Ni4xNiAgICAgICAgICAgICAgICAgICAgICAgICAgMjUgMjUgMjUgICAgICAgIDI1LjAwMAogIHY2
-LjE3ICAgICAgICAgICAgICAgICAgICAgICAgICAzNyAzNyAzNyAgICAgICAgMzcuMDAwCiAgdjYu
-MTcgc2luZ2xlLVBURSBwcm9iZSAgICAgICAgIDI1IDI1IDI1ICAgICAgICAyNS4wMDAKClNvIHRo
-ZSB0YXJnZXRlZCBwcm9iZSBicmluZ3MgdjYuMTcgYmFjayB0byB0aGUgdjYuMTYgcmFuZ2UgZm9y
-IHRoaXMgd29ya2xvYWQuClRoYXQgcG9pbnRzIGF0IHRoZSB2Ni4xNyBQVEUtYmF0Y2hpbmcgc2hh
-cGUgaW4gYGNoYW5nZV9wdGVfcmFuZ2UoKWAgYXMgdGhlCm1haW4gY29zdCBmb3IgdGhpcyBzaGFy
-ZWQtZGlydHkgNCBLaUIgYmFzZS1wYWdlIGNhc2UuCgpJIGRvIG5vdCB3YW50IHRvIG92ZXJzdGF0
-ZSB0aGUgYXR0cmlidXRpb24uICBJIHRyaWVkIHJldmVyc2luZyB0aGUgb2ZmaWNpYWwKYGNhYzFk
-YjhjM2FhZCAoIm1tOiBvcHRpbWl6ZSBtcHJvdGVjdCgpIGJ5IFBURSBiYXRjaGluZyIpYCBwYXRj
-aCBvbnRvIG15CmxpbnV4LTYuMTcgdHJlZSwgYnV0IGl0IGRpZCBub3QgYXBwbHkgY2xlYW5seS4g
-IFRoYXQgbWVhbnMgdGhpcyBpcyBub3QgYW4KZXhhY3QgcmV2ZXJ0IHJlc3VsdC4gIEkgY2FuIG9u
-bHkgc2F5IHRoYXQgdGhlIHNsb3dkb3duIGFwcGVhcnMgaW4gdGhlCnY2LjE2IC0+IHY2LjE3IHdp
-bmRvdywgYW5kIHRoYXQgdGhpcyBmb2N1c2VkIHByb2JlIGJyaW5ncyB0aGUgdjYuMTcgcmVzdWx0
-CmJhY2sgdG8gdGhlIHY2LjE2IHJhbmdlLgoKRXZpZGVuY2UgYnVuZGxlOgoKICBodHRwczovL2dp
-dGh1Yi5jb20vbGNmMDM5OS9saW51eC1tbS1yZWdyZXNzaW9uLWV2aWRlbmNlL3RyZWUvYWNkN2Zl
-ZjBlMDI3NmFjMzYxOTcxYjA5NjBlNjYxMTgxMWVkZjViMy9tcHJvdGVjdC1zaGFyZWQtZGlydHkt
-dG9nZ2xlCgpTdGFuZGFsb25lIHJlcHJvZHVjZXI6CgogIGh0dHBzOi8vZ2l0aHViLmNvbS9sY2Yw
-Mzk5L2xpbnV4LW1tLXJlZ3Jlc3Npb24tZXZpZGVuY2UvdHJlZS9hY2Q3ZmVmMGUwMjc2YWMzNjE5
-NzFiMDk2MGU2NjExODExZWRmNWIzL21wcm90ZWN0LXNoYXJlZC1kaXJ0eS10b2dnbGUvcmVwcm9k
-dWNlcgoKRm9yIGVhY2ggaW5zdGFsbGVkIGtlcm5lbCwgdGhlIHN0YW5kYWxvbmUgcmVwcm9kdWNl
-ciB3YXMgcnVuIGFzOgoKICB0YXNrc2V0IC1jIDIgZW52IE1BUFBJTkdfTUI9NjQgSVRFUkFUSU9O
-Uz0xMDAwIFdBUk1VUD0xMCBcCiAgICBFWFRFUk5BTF9ST1VORFM9OSAuL3J1bl9tcHJvdGVjdF9z
-aGFyZWRfZGlydHlfcmVwcm9kdWNlci5zaAoKRm9yIHRoZSByZWxlYXNlLXdpbmRvdyBjaGVjaywg
-YSBzbWFsbCBzeXN0ZW1kL0dSVUIgcXVldWUgYm9vdGVkIGVhY2ggdGFyZ2V0Cmtlcm5lbCBiZWZv
-cmUgcnVubmluZyB0aGUgc2FtZSBjb21tYW5kLgoKQmFyZS1tZXRhbCBzdW1tYXJpZXMgYW5kIHJh
-dyBydW4gbG9nczoKCiAgaHR0cHM6Ly9naXRodWIuY29tL2xjZjAzOTkvbGludXgtbW0tcmVncmVz
-c2lvbi1ldmlkZW5jZS90cmVlL2FjZDdmZWYwZTAyNzZhYzM2MTk3MWIwOTYwZTY2MTE4MTFlZGY1
-YjMvbXByb3RlY3Qtc2hhcmVkLWRpcnR5LXRvZ2dsZS9iYXJlLW1ldGFsCgpSZWxlYXNlLXdpbmRv
-dyBuYXJyb3dpbmc6CgogIGh0dHBzOi8vZ2l0aHViLmNvbS9sY2YwMzk5L2xpbnV4LW1tLXJlZ3Jl
-c3Npb24tZXZpZGVuY2UvdHJlZS9hY2Q3ZmVmMGUwMjc2YWMzNjE5NzFiMDk2MGU2NjExODExZWRm
-NWIzL21wcm90ZWN0LXNoYXJlZC1kaXJ0eS10b2dnbGUvYmFyZS1tZXRhbC8yMDI2MDYyMy1uYXJy
-b3ctNi4xNi02LjE5LTNyb3VuZHMKCnY2LjE3IHNpbmdsZS1QVEUgcHJvYmU6CgogIGh0dHBzOi8v
-Z2l0aHViLmNvbS9sY2YwMzk5L2xpbnV4LW1tLXJlZ3Jlc3Npb24tZXZpZGVuY2UvdHJlZS9hY2Q3
-ZmVmMGUwMjc2YWMzNjE5NzFiMDk2MGU2NjExODExZWRmNWIzL21wcm90ZWN0LXNoYXJlZC1kaXJ0
-eS10b2dnbGUvYmFyZS1tZXRhbC8yMDI2MDYyNC02LjE3LXNpbmdsZXB0ZS1wcm9iZQoKUHJvYmUg
-cGF0Y2ggdXNlZCBmb3IgdGhhdCBhdHRyaWJ1dGlvbiBydW46CgogIGh0dHBzOi8vZ2l0aHViLmNv
-bS9sY2YwMzk5L2xpbnV4LW1tLXJlZ3Jlc3Npb24tZXZpZGVuY2UvYmxvYi9hY2Q3ZmVmMGUwMjc2
-YWMzNjE5NzFiMDk2MGU2NjExODExZWRmNWIzL21wcm90ZWN0LXNoYXJlZC1kaXJ0eS10b2dnbGUv
-YmFyZS1tZXRhbC8yMDI2MDYyNC02LjE3LXNpbmdsZXB0ZS1wcm9iZS8wMDAxLW1tLW1wcm90ZWN0
-LXByb2JlLTYuMTctc2luZ2xlLXB0ZS1ob3RwYXRoLnBhdGNoCgojcmVnemJvdCBpbnRyb2R1Y2Vk
-OiB2Ni4xNi4udjYuMTcKCkRvZXMgdGhpcyBzY29wZSBsb29rIHVzZWZ1bCB0byBpbnZlc3RpZ2F0
-ZSBmdXJ0aGVyPyAgSWYgeWVzLCBJIGNhbiB0cnkgYSBtb3JlCmV4YWN0IGNvbW1pdC1sZXZlbCBj
-aGVjayBvciB0ZXN0IGEgcGF0Y2ggeW91IHRoaW5rIGlzIHRoZSByaWdodCBkaXJlY3Rpb24uCgpU
-aGFua3MsCkNoZW5nZmVuZwoK
+[Adding Nathan and Kees so we can figure out how best to deal with this]
 
+On Sun, Jun 21, 2026 at 9:15=E2=80=AFPM slipher <slipher@protonmail.com> wr=
+ote:
+
+> Consider the C program for 32-bit ARM architectures:
+>
+>
+> int main() {
+>         __asm__ __volatile__ ("BKPT");
+>         return 0;
+> }
+>
+> Expected behavior is that this raises SIGTRAP. Since Linux 6.10 this no
+> longer happens; instead execution perpetually resumes at the same
+> instruction, using 100% of CPU. It does not matter whether GDB is
+> attached. I have tested with an armv7l CPU, but I imagine any other
+> variants with the BKPT instruction would be equally affected.
+>
+> I believe the culprit to be commit
+> c3f89986fde7bb9ccc86a901bf28e1f7d69fc3b3 "ARM: 9391/2: hw_breakpoint:
+> Handle CFI breakpoints".  The commit defines the method-of-entry code 3
+> as "ARM_ENTRY_CFI_BREAKPOINT", but this is the code used for any BKPT
+> instruction - see
+> https://developer.arm.com/documentation/ddi0379/a/Debug-Register-Referenc=
+e/Control-and-status-registers/Debug-Status-and-Control-Register--DSCR-?lan=
+g=3Den
+> "Method of Debug Entry (MOE), bits [5:2]". If the CFI option is disabled
+> in the kernel config,  hw_breakpoint_pending() returns 0 indicating the
+> breakpoint was handled, but takes no action. So breakpoints cannot be
+> used by user-space code, regardless of how CONFIG_CFI is set. The blog
+> post
+> https://www.jwhitham.org/2015/04/the-mystery-of-fifteen-millisecond.html
+> gives a nice overview of the control flow in older, working kernels.
+
+Does simply reverting the patch solve the issue?
+
+> The following Systemtap script can be used to demonstrate that the
+> ARM_ENTRY_CFI_BREAKPOINT path is used, when running the above C program.
+
+Yeah it's definitely that one causing it.
+
+I sent the naive solution to it, and before anyone point it out: no it does
+not allow custom breakpoints to be mixed with kernel CFI, but it
+probably makes legacy systems work on newer kernels since they
+probably don't select CFI.
+https://lore.kernel.org/linux-arm-kernel/20260626-arm32-cfi-bug-v1-1-a467b5=
+050c0b@kernel.org/T/#u
+
+I understand that this is not solving everything.
+
+If it is under all circumstances unacceptable to be able to construct
+a userspace which will change the user-facing behaviour of BKPT,
+I think we need to revert CFI breakpoint handling, back put the patch,
+disable CFI on ARM and wait for the compiler(s) to start behaving
+differently on ARM.
+
+CFI folks: any ideas on what we could do instead of BKPT
+when we hit a CFI snag? Any ideas from other architectures?
+
+Yours,
+Linus Walleij
