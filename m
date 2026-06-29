@@ -1,275 +1,246 @@
-Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
+Received: from posta.ukf.sk (posta.ukf.sk [193.87.12.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DC90352007
-	for <regressions@lists.linux.dev>; Sun, 28 Jun 2026 13:33:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.185
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86DBE40B6E2
+	for <regressions@lists.linux.dev>; Mon, 29 Jun 2026 13:04:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.87.12.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782653635; cv=none; b=BIFmJnkaa+zS034qDv60LBjenX0rAS45ltW9sBvh71gKGJQObR8IDYIm4dI6nIVN49oNJ2/arSDyCZtXwKM80FDHdZMx1E/zIjbuhwXwra7DhM6B94a8gJH1i84pUhFFEHKqpW8zDLZRDmp/tbfQt0u9L7dAslOin2mi8/scpRc=
+	t=1782738258; cv=none; b=Nfc+X0ADK4QydPANfnQM/Yvcd1f8ZrkUn2QeohGZD4j0AOoZenWwmQfA1uEB0p3vHnEK/OlbIPUwEuKpnMn3v4u1SvxHniVIWa+JfAsmw5ju3e4QDNW7YC59Zxj9PbJ9Wg6az1KUIkHm5t7G9N7e5T/cYVKt/fKpg2JLpHgwUcU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782653635; c=relaxed/simple;
-	bh=9nuzGLVWguEC2DamBNsR3nCzs9MaFwWFW59It73HJfk=;
+	s=arc-20240116; t=1782738258; c=relaxed/simple;
+	bh=zFMUEXAvfjvWgHOuNlgy9XKsmUQzN68pTJmfePCGCGs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JntDnk9TC0m3WN2Ubl792/rRDQLyxSbiVvTzmx03sL9nHhZAWfH/HVkGwfo5FYWzhhSU6SAEWLhq8mWyHjU+9rRCnVhg/E4L+CcSgo8a5RyAuxZOGsVonJXUHNaGoIKrX0gFLfb44sn7/MUGt0Sq3Qk22lkf3IpqmNS8DTuBK/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=czyUNaVK; arc=none smtp.client-ip=91.218.175.185
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 In-Reply-To:Content-Type; b=XnehJnhSIYSxzAJlxNHoIKo8lfW1WB4Y9zFCCoAVZoxe3oRo/gOPGz6RiAHRUb7YyHHd1Mn97xf54DMOYNxgE0tNfvvWuua9daDdljtHi4pQ4PHWZZ+9gErnXVcn42mqrCx6p5vds4ASYRynAz7xEkYYjz+y5S5B2LCur54vTK0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ukf.sk; spf=pass smtp.mailfrom=ukf.sk; dkim=pass (1024-bit key) header.d=ukf.sk header.i=@ukf.sk header.b=Kf/0ydq2; arc=none smtp.client-ip=193.87.12.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ukf.sk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ukf.sk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="czyUNaVK"
-Message-ID: <79787895-204f-4329-82dc-fada89c2ffa6@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1782653620;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9nuzGLVWguEC2DamBNsR3nCzs9MaFwWFW59It73HJfk=;
-	b=czyUNaVKm1qRZWHPws6kbxX65ScPl2Qe7j2fh7G+YwL7HIXH9s4VYvUKS2NkG4LUlo0Nxp
-	wAaZ+XGfsq4MkSC6iA2p2xrU46OZWKQdo7KS7jvgX6d+8wKTM3MA6nuDf/WZxNiNcolQLy
-	XyPX9b521z1j7FCqsrOysN2cxmymqC4=
-Date: Sun, 28 Jun 2026 15:33:37 +0200
+	dkim=pass (1024-bit key) header.d=ukf.sk header.i=@ukf.sk header.b="Kf/0ydq2"
+Received: from localhost (localhost [127.0.0.1])
+	by posta.ukf.sk (Postfix) with ESMTP id 6FCE24232BE;
+	Mon, 29 Jun 2026 15:04:06 +0200 (CEST)
+Received: from posta.ukf.sk ([127.0.0.1])
+	by localhost (posta1.ukf.sk [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id f6Ji2VNqaU5Q; Mon, 29 Jun 2026 15:04:05 +0200 (CEST)
+Received: from [10.8.1.254] (unknown [10.8.1.254])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by posta.ukf.sk (Postfix) with ESMTPSA id BD99E4232B9;
+	Mon, 29 Jun 2026 15:04:04 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ukf.sk; s=2022;
+	t=1782738245; bh=zFMUEXAvfjvWgHOuNlgy9XKsmUQzN68pTJmfePCGCGs=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Kf/0ydq2m/kcWMyw/UYD4xMoufmCo2uA3A6h4GZATt+EpoIT3Sqfvj+khinsyaoMS
+	 Ni3q6qkV5Y+DuzVo5socSpJFAeVE6Jc4QfBBZ9lusftijKYmi6IAd8v65Q5qU4LvYY
+	 UEAy0NnqX14Y4jCJ+pw8jGKjOqjdx352UKPrEK7Q=
+Message-ID: <4346170f-6685-40c6-8eeb-e3adab19275c@ukf.sk>
+Date: Mon, 29 Jun 2026 15:04:04 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Subject: Re: [REGRESSION] platform/x86: asus-wmi: charge_control_end_threshold
- returns -ENODATA at boot, breaking UPower/GNOME detection
-To: Travers Biddle <traversbiddle@gmail.com>, corentin.chary@gmail.com,
- luke@ljones.dev, hansg@kernel.org, ilpo.jarvinen@linux.intel.com
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
- regressions@lists.linux.dev
-References: <CABsFS_g+V_Owum6knLhenhM15EXJRrsF0FcLiw30WZxarsTpUA@mail.gmail.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Denis Benato <denis.benato@linux.dev>
-In-Reply-To: <CABsFS_g+V_Owum6knLhenhM15EXJRrsF0FcLiw30WZxarsTpUA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/4] PM: hibernate: Add relaxed_memmap option for x86
+ E820 integrity check
+To: Marco Scardovi <scardracs@disroot.org>
+Cc: bp@alien8.de, crecklin@redhat.com, dave.hansen@linux.intel.com,
+ hpa@zytor.com, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+ mingo@redhat.com, pavel@kernel.org, rafael@kernel.org,
+ regressions@leemhuis.info, regressions@lists.linux.dev, tglx@kernel.org,
+ x86@kernel.org
+References: <cd45c7c8-4df9-4963-b847-02cf72bcc039@ukf.sk>
+ <20260623165724.10753-1-scardracs@disroot.org>
+Content-Language: sk-SK-Ascii, en-US
+From: Milan Oravec <moravec@ukf.sk>
+Organization: CIKT UKF Nitra
+In-Reply-To: <20260623165724.10753-1-scardracs@disroot.org>
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-512; boundary="------------ms020601080005030000050108"
 
+This is a cryptographically signed message in MIME format.
 
-On 6/28/26 08:03, Travers Biddle wrote:
-> Hello,
->
-> I am seeing a regression on an ASUS V16 laptop where the GNOME Settings
-> "Preserve Battery Health" UI disappears after booting Linux v7.1. I reproduced
-> this with a kernel built from torvalds/linux tag v7.1.
->
-> I first noticed this after CachyOS updated linux-cachyos from
-> 7.0.12-1 to 7.1.1-2. The same machine still works as expected with
-> linux-cachyos-lts 6.18.36-1, where UPower reports charge threshold
-> support and GNOME shows the Battery Charging section.
->
-> The change that appears to expose this is:
->
->   186bf9031666 ("platform/x86: asus-wmi: do not enforce a battery charge threshold")
->
-> #regzbot introduced: 186bf9031666602d61b40832181b6b6fdc3ba4dc
->
-> Hardware:
->
->   DMI product: ASUS V16 V3607VH_V3607VH
->   Board:       V3607VH
->   BIOS:        V3607VH.303
->   Battery:     /sys/class/power_supply/BAT0
->   Battery model_name: X350052
->
-> Userspace:
->
->   Distro: CachyOS / Arch Linux
->   UPower: 1.91.2
->   systemd/udev: 261
->   Desktop: GNOME Settings power panel
->
-> The machine only exposes an end threshold:
->
->   /sys/class/power_supply/BAT0/charge_control_end_threshold
->
-> There is no charge_control_start_threshold node on this system.
->
-> On an unmodified build from torvalds/linux tag v7.1:
->
->   $ uname -r
->   7.1.0-asus-test-1
->
->   $ cat /proc/sys/kernel/tainted
->   0
->
->   $ cat /sys/class/power_supply/BAT0/charge_control_end_threshold
->   cat: /sys/class/power_supply/BAT0/charge_control_end_threshold: No data available
->
-> `udevadm test /sys/class/power_supply/BAT0` does not import CHARGE_LIMIT.
-> The relevant end of the properties list is:
->
->   Properties:
->     ACTION=add
->     DEVPATH=/devices/LNXSYSTM:00/LNXSYBUS:00/PNP0A08:00/PNP0C0A:03/power_supply/BAT0
->     DEVTYPE=power_supply
->     POWER_SUPPLY_CAPACITY=81
->     POWER_SUPPLY_CAPACITY_LEVEL=Normal
->     POWER_SUPPLY_CYCLE_COUNT=26
->     POWER_SUPPLY_ENERGY_FULL=60512000
->     POWER_SUPPLY_ENERGY_FULL_DESIGN=63041000
->     POWER_SUPPLY_ENERGY_NOW=49102000
->     POWER_SUPPLY_MANUFACTURER=OEM
->     POWER_SUPPLY_MODEL_NAME=X350052
->     POWER_SUPPLY_NAME=BAT0
->     POWER_SUPPLY_POWER_NOW=25216000
->     POWER_SUPPLY_PRESENT=1
->     POWER_SUPPLY_SERIAL_NUMBER=123456789
->     POWER_SUPPLY_STATUS=Charging
->     POWER_SUPPLY_TECHNOLOGY=Unknown
->     POWER_SUPPLY_TYPE=Battery
->     POWER_SUPPLY_VOLTAGE_MIN_DESIGN=11985000
->     POWER_SUPPLY_VOLTAGE_NOW=13118000
->     SUBSYSTEM=power_supply
->
-> UPower then does not expose the threshold values or threshold support:
->
->   $ upower -i /org/freedesktop/UPower/devices/battery_BAT0
->     native-path:          BAT0
->     vendor:               OEM
->     model:                X350052
->     serial:               123456789
->     power supply:         yes
->     battery
->       present:             yes
->       rechargeable:        yes
->       state:               charging
->       percentage:          81%
->       capacity:            95.9883%
->       charge-threshold-enabled:      yes
->       icon-name:          'battery-full-charging-symbolic'
->
-> In this state, GNOME Settings hides the Battery Charging section entirely.
->
-> I then tested a local demonstration change which does not reintroduce the
-> hardware write that 186bf9031666 removed. It only keeps the cached sysfs value
-> readable by initializing charge_end_threshold to 100 instead of -1.
->
-> With that demonstration change applied:
->
->   $ uname -r
->   7.1.0-asus-test-2-00001-g76935ee241bc
->
->   $ cat /sys/class/power_supply/BAT0/charge_control_end_threshold
->   80
->
-> `udevadm test /sys/class/power_supply/BAT0` imports the UPower hwdb limit:
->
->   BAT0: /usr/lib/udev/rules.d/60-upower-battery.rules:7 IMPORT{builtin}="hwdb 'battery:$kernel:$attr{model_name}:$attr{[dmi/id]modalias}'": Importing properties from results of builtin command "hwdb 'battery:BAT0:X350052:dmi:bvnAmericanMegatrendsInternational,LLC.:bvrV3607VH.303:bd04/29/2025:br5.27:efr3.16:svnASUSTeKCOMPUTERINC.:pnASUSV16V3607VH_V3607VH:pvr1.0:rvnASUSTeKCOMPUTERINC.:rnV3607VH:rvr1.0:cvnASUSTeKCOMPUTERINC.:ct10:cvr1.0:sku:pfaASUSV16:'".
->
->   Properties:
->     ACTION=add
->     CHARGE_LIMIT=75,80
->     DEVPATH=/devices/LNXSYSTM:00/LNXSYBUS:00/PNP0A08:00/PNP0C0A:03/power_supply/BAT0
->     DEVTYPE=power_supply
->     POWER_SUPPLY_CAPACITY=97
->     POWER_SUPPLY_CAPACITY_LEVEL=Normal
->     POWER_SUPPLY_CYCLE_COUNT=26
->     POWER_SUPPLY_ENERGY_FULL=60512000
->     POWER_SUPPLY_ENERGY_FULL_DESIGN=63041000
->     POWER_SUPPLY_ENERGY_NOW=58414000
->     POWER_SUPPLY_MANUFACTURER=OEM
->     POWER_SUPPLY_MODEL_NAME=X350052
->     POWER_SUPPLY_NAME=BAT0
->     POWER_SUPPLY_POWER_NOW=0
->     POWER_SUPPLY_PRESENT=1
->     POWER_SUPPLY_SERIAL_NUMBER=123456789
->     POWER_SUPPLY_STATUS=Not charging
->     POWER_SUPPLY_TECHNOLOGY=Unknown
->     POWER_SUPPLY_TYPE=Battery
->     POWER_SUPPLY_VOLTAGE_MIN_DESIGN=11985000
->     POWER_SUPPLY_VOLTAGE_NOW=13026000
->     SUBSYSTEM=power_supply
->
-> UPower then exposes threshold support again:
->
->   $ upower -i /org/freedesktop/UPower/devices/battery_BAT0
->     native-path:          BAT0
->     vendor:               OEM
->     model:                X350052
->     serial:               123456789
->     power supply:         yes
->     battery
->       present:             yes
->       rechargeable:        yes
->       state:               fully-charged
->       percentage:          97%
->       capacity:            95.9883%
->       charge-start-threshold:        75%
->       charge-end-threshold:          80%
->       charge-threshold-enabled:      yes
->       charge-threshold-supported:    yes
->       icon-name:          'battery-full-charged-symbolic'
->
-> GNOME Settings also shows the Battery Charging section again.
->
-> I am not asking for a plain revert. The part of 186bf9031666 that avoids
-> writing 100 to the hardware at boot seems important, since that write can
-> overwrite a charge limit retained by the firmware/platform.
->
-> I am mainly reporting this so you are aware of the userspace-visible
-> effect of returning -ENODATA here. On this end-threshold-only machine,
-> that makes the only threshold node unreadable during UPower's discovery,
-> so UPower and GNOME treat charge limiting as unsupported even though the
-> kernel write path still works.
->
-> It may be that UPower should handle this case differently; I have also
-> filed a UPower-side issue at:
-> https://gitlab.freedesktop.org/upower/upower/-/work_items/347
->
-> For completeness, here is a local diff applied to v7.1 that restored
-> functionality. I don't intend for it to be a final fix; only a demonstration
-> that keeping the cached sysfs value readable, while still avoiding the boot-time
-> hardware write, restores UPower/GNOME feature discovery on this machine.
->
-> ---
-> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-> index 80144c412b90..d376358b590c 100644
-> --- a/drivers/platform/x86/asus-wmi.c
-> +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -1582,11 +1582,11 @@ static int asus_wmi_battery_add(struct power_supply *battery, struct acpi_batter
->   return -ENODEV;
->  
->   /* The charge threshold is only reset when the system is power cycled,
-> - * and we can't read the current threshold, however the majority of
-> - * platforms retains it, therefore signal the threshold as unknown
-> - * until user explicitly sets it to a new value.
-> + * and we can't read the current threshold. Do not write a value to
-> + * hardware here, but keep the sysfs attribute readable so userspace
-> + * can discover charge threshold support and explicitly set a value.
->   */
-> - charge_end_threshold = -1;
-> + charge_end_threshold = 100;
->  
->   return 0;
->  }
-> ---
->
-> I have attached the dmesg from the reproducing v7.1 boot and the .config used
-> for the build.
->
-> Thanks,
-> Travers
->
-Hi Travers,
+--------------ms020601080005030000050108
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
 
-If you search that patch in the lkml you will see that I actually tested GNOME when I did this and I remember that I was able to change the threshold.
+SGVsbG8sIEkgd2FudGVkIHRvIHRyeSB0aGlzIG5ldyBzZXQgb2YgcGF0Y2hlcywgYnV0IEkg
+d2FzIHVuYWJsZSB0byANCmFwcGx5IHRoZW0uIFRlc3RlZCB3aXRoIDcuMS4yIGFuZCBtYXN0
+ZXIgdG9vLg0KDQptaWdvQG1pZ28tSFA6fi9idWlsZC9saW51eC10ZXN0L2xpbnV4JCBwYXRj
+aCAtcDEgPCAuLi9oaWJlcm5hdGUyLnBhdGNoDQpwYXRjaGluZyBmaWxlIGluY2x1ZGUvbGlu
+dXgvc3VzcGVuZC5oDQpwYXRjaGluZyBmaWxlIGtlcm5lbC9wb3dlci9oaWJlcm5hdGUuYw0K
+SHVuayAjMiBGQUlMRUQgYXQgMTQzMS4NCjEgb3V0IG9mIDIgaHVua3MgRkFJTEVEIC0tIHNh
+dmluZyByZWplY3RzIHRvIGZpbGUgDQprZXJuZWwvcG93ZXIvaGliZXJuYXRlLmMucmVqDQpw
+YXRjaGluZyBmaWxlIGFyY2gveDg2L3Bvd2VyL2hpYmVybmF0ZS5jDQpIdW5rICMxIEZBSUxF
+RCBhdCA2MS4NCkh1bmsgIzIgc3VjY2VlZGVkIGF0IDc4IHdpdGggZnV6eiAxLg0KSHVuayAj
+MyBGQUlMRUQgYXQgMTQ0Lg0KSHVuayAjNCBGQUlMRUQgYXQgMTY2Lg0KMyBvdXQgb2YgNCBo
+dW5rcyBGQUlMRUQgLS0gc2F2aW5nIHJlamVjdHMgdG8gZmlsZSANCmFyY2gveDg2L3Bvd2Vy
+L2hpYmVybmF0ZS5jLnJlag0KcGF0Y2hpbmcgZmlsZSBEb2N1bWVudGF0aW9uL2FkbWluLWd1
+aWRlL2tlcm5lbC1wYXJhbWV0ZXJzLnR4dA0KSHVuayAjMSBGQUlMRUQgYXQgMTk2Ny4NCjEg
+b3V0IG9mIDEgaHVuayBGQUlMRUQgLS0gc2F2aW5nIHJlamVjdHMgdG8gZmlsZSANCkRvY3Vt
+ZW50YXRpb24vYWRtaW4tZ3VpZGUva2VybmVsLXBhcmFtZXRlcnMudHh0LnJlag0KDQpUaGFu
+ayB5b3UsDQoNCk1pbGFuDQoNCnMgcG96ZHJhdm9tDQoNCk1pbGFuIE9yYXZlYw0KDQpDSUtU
+IFVLRiBOaXRyYQ0KTW9iaWwvU2lnbmFsOiArNDIxOTA3NjcwMjcwDQplbWFpbDogbW9yYXZl
+Y0B1a2Yuc2sNCg0KLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCg0KVHV0byBzcHJhdnUgbmVwcmV2ZXJpbCB6
+aWFkbnkgYW50aXZpcnVzIC0gbmVib2xvIHRyZWJhLi4uDQoNCk9uIDYvMjMvMjYgMTg6NDcs
+IE1hcmNvIFNjYXJkb3ZpIHdyb3RlOg0KPiBIaSBSYWZhZWwsIE1pbGFuLA0KPg0KPj4gLi4u
+DQo+Pg0KPj4gSGliZXJuYXRpb24gaW4gTGludXggc2ltcGx5IGNhbm5vdCBjb3BlIHdpdGgg
+YSBjaGFuZ2luZyBtZW1vcnkgbWFwIGluDQo+PiBnZW5lcmFsLCBzb3JyeSBhYm91dCB0aGF0
+Lg0KPiBZb3UgYXJlIHRvdGFsbHkgYWdyZWUuIFdoaWxlIG1pbmUgaXMgc3RpbGwgYSBzb2x1
+dGlvbiBmb3IgdGhlc2UgbGlrZSBATWlsYW4NCj4gd2l0aCBhIGJ1Z2d5IGZpcm13YXJlLCBp
+dCdzIG5vdCBhIHNvbHV0aW9uIHRvIG1ha2UgaXQgdW5jb25kaXRpb25hbCBmb3IgZXZlcnkN
+Cj4gZGV2aWNlIHNvIEkgY2FtZSB3aXRoIGEgc29sdXRpb24gdG8gaW50cm9kdWNlIHRoZSBi
+b290IGZsYWcNCj4gaHliZXJuYXRlPXJlbGF4ZWRfbWVtbWFwLiBUaGlzIGlzIHN0aWxsIGEg
+Yml0IGhhY2t5IGFuZCBJIGRvbid0IGxpa2UgaXQgYXQNCj4gYWxsIGF0IHRoZSBlbmQgb2Yg
+dGhlIGRheSBidXQgd29ya3MgYmV0dGVyIHRoYW4gbm90aGluZywgYXQgbGVhc3QgdW50aWwg
+SFANCj4gcmVsZWFzZXMgYSBwcm9wZXIgZmlybXdhcmUgd2l0aCBpdCBmaXhlZC4NCj4NCj4g
+VGhpcyB2MiBvZiB0aGUgcGF0Y2ggYWRkcmVzcyBoaWJlcm5hdGlvbiBFODIwIG1hcCBpbnRl
+Z3JpdHkgY2hlY2sgZmFpbHVyZXMNCj4gb24gVUVGSSBwbGF0Zm9ybXMgd2hlcmUgZmlybXdh
+cmUgZHluYW1pY2FsbHkgc2hpZnRzIHJlc2VydmVkIG9yIEFDUEkgbWVtb3J5DQo+IHJhbmdl
+cyBhY3Jvc3MgYm9vdHMgKHN1Y2ggYXMgdGhlIEhQIE9tbmlCb29rIFggRmxpcCkuDQo+DQo+
+IEluIHYxLCBJIGF0dGVtcHRlZCB0byByZXN0cmljdCB0aGUgaW50ZWdyaXR5IGNoZWNrIHRv
+IG9ubHkgRTgyMF9UWVBFX1JBTQ0KPiByYW5nZXMgYnkgZGVmYXVsdC4gQXMgcG9pbnRlZCBv
+dXQgYnkgUmFmYWVsLCB0aGlzIGlzIHJpc2t5IGJlY2F1c2UgdGhlDQo+IHJlc3VtZWQga2Vy
+bmVsIGNvdWxkIGF0dGVtcHQgdG8gYWNjZXNzIHNoaWZ0ZWQgQUNQSSB0YWJsZXMgb3IgVUVG
+SSBydW50aW1lDQo+IHNlcnZpY2VzIGF0IHN0YWxlIGFkZHJlc3NlcywgbGVhZGluZyB0byBw
+b3N0LXJlc3VtZSBjcmFzaGVzIG9yIGNvcnJ1cHRpb24uDQo+DQo+IFRvIGFkZHJlc3MgdGhp
+cyBmZWVkYmFjayB3aGlsZSBzdGlsbCBhbGxvd2luZyBoaWJlcm5hdGlvbiB0byBmdW5jdGlv
+biBvbg0KPiBhZmZlY3RlZCBwbGF0Zm9ybXMsIHYyIGludHJvZHVjZXMgdGhlICdoaWJlcm5h
+dGU9cmVsYXhlZF9tZW1tYXAnIGNvbW1hbmQtbGluZQ0KPiBwYXJhbWV0ZXIuDQo+DQo+IC0g
+UGF0Y2ggMTogRGVjbGFyZSB0aGUgJ2hpYmVybmF0ZV9yZWxheGVkX21lbW1hcCcgZmxhZyBp
+biB0aGUgUE0gY29yZSBoZWFkZXIuDQo+IC0gUGF0Y2ggMjogRGVmaW5lIHRoZSBmbGFnIGFu
+ZCBhZGQgcGFyc2luZyBsb2dpYyB0byBrZXJuZWwvcG93ZXIvaGliZXJuYXRlLmMuDQo+IC0g
+UGF0Y2ggMzogSW1wbGVtZW50IHRoZSByZWxheGVkIEU4MjAgbWVtb3J5IG1hcCBjaGVjayBv
+biB4ODYsIHdoaWNoIGNvbXBhcmVzDQo+ICAgICAgICAgICAgIGEgc2Vjb25kYXJ5IFJBTS1v
+bmx5IGNoZWNrc3VtIGlmIHRoZSBtYWluIGNoZWNrc3VtIG1pc21hdGNoZXMsDQo+ICAgICAg
+ICAgICAgIHdhcm5pbmcgdGhlIHVzZXIgYnV0IHByb2NlZWRpbmcgd2l0aCByZXN1bWUuDQo+
+IC0gUGF0Y2ggNDogRG9jdW1lbnQgdGhlIG9wdGlvbiBpbiBEb2N1bWVudGF0aW9uL2FkbWlu
+LWd1aWRlL2tlcm5lbC1wYXJhbWV0ZXJzLnR4dC4NCj4NCj4gMS4gQnkgZGVmYXVsdCwgdGhl
+IEU4MjAgY2hlY2tzdW0gdmVyaWZpY2F0aW9uIHJlbWFpbnMgc3RyaWN0IHRvIGVuc3VyZQ0K
+PiAgICAgc2FmZXR5IGZvciBhbGwgc3lzdGVtcy4NCj4gMi4gSWYgJ2hpYmVybmF0ZT1yZWxh
+eGVkX21lbW1hcCcgaXMgc3BlY2lmaWVkLCB0aGUga2VybmVsIHdpbGwgcGVyZm9ybQ0KPiAg
+ICAgYSBzZWNvbmRhcnkgY2hlY2sgb24gb25seSB0aGUgdXNhYmxlIFJBTSByZWdpb25zIChF
+ODIwX1RZUEVfUkFNKSBpZiB0aGUNCj4gICAgIG1haW4gRTgyMCBjaGVja3N1bSBtaXNtYXRj
+aGVzLg0KPiAgICAgLSBJZiB0aGUgUkFNIHJlZ2lvbnMgZGlmZmVyLCB0aGUgcmVzdW1lIGlz
+IGFib3J0ZWQgKHRvIHByZXZlbnQgZGlyZWN0IG1hcA0KPiAgICAgICBtaXNtYXRjaGVzIGFu
+ZCBrZXJuZWwgcGFnaW5nIGZhdWx0cyBkdXJpbmcgcGFnZSByZXN0b3JhdGlvbikuDQo+ICAg
+ICAtIElmIHRoZSBSQU0gcmVnaW9ucyBtYXRjaCwgdGhlIHJlc3VtZSBpcyBhbGxvd2VkIHRv
+IHByb2NlZWQgYW5kIGEgd2FybmluZw0KPiAgICAgICBpcyBsb2dnZWQgYWJvdXQgdGhlIG5v
+bi1SQU0gY2hhbmdlcy4NCj4NCj4gVG8gc3VwcG9ydCB0aGlzLCBhIHNlY29uZGFyeSAnZTgy
+MF9yYW1fY2hlY2tzdW0nIGZpZWxkIGlzIGFkZGVkIHRvIHRoZQ0KPiB4ODYtc3BlY2lmaWMg
+J3Jlc3RvcmVfZGF0YV9yZWNvcmQnLCBhbmQgJ1JFU1RPUkVfTUFHSUMnIGlzIGluY3JlbWVu
+dGVkIHRvDQo+IHNpZ25hbCB0aGUgaGVhZGVyIGxheW91dCBjaGFuZ2UuDQo+DQo+IE1hcmNv
+IFNjYXJkb3ZpICg0KToNCj4gICAgUE06IGhpYmVybmF0ZTogRGVjbGFyZSBoaWJlcm5hdGVf
+cmVsYXhlZF9tZW1tYXANCj4gICAgUE06IGhpYmVybmF0ZTogRGVmaW5lIGFuZCBwYXJzZSBo
+aWJlcm5hdGU9cmVsYXhlZF9tZW1tYXAgcGFyYW1ldGVyDQo+ICAgIHg4Ni9wb3dlcjogSW1w
+bGVtZW50IHJlbGF4ZWQgRTgyMCBtZW1vcnkgbWFwIGludGVncml0eSBjaGVjaw0KPiAgICBE
+b2N1bWVudGF0aW9uOiBEb2N1bWVudCBoaWJlcm5hdGU9cmVsYXhlZF9tZW1tYXAgcGFyYW1l
+dGVyIG9wdGlvbg0KPg0KPiAgIC4uLi9hZG1pbi1ndWlkZS9rZXJuZWwtcGFyYW1ldGVycy50
+eHQgICAgICAgICB8ICA1ICsrKw0KPiAgIGFyY2gveDg2L3Bvd2VyL2hpYmVybmF0ZS5jICAg
+ICAgICAgICAgICAgICAgICB8IDQwICsrKysrKysrKysrKysrKysrLS0NCj4gICBpbmNsdWRl
+L2xpbnV4L3N1c3BlbmQuaCAgICAgICAgICAgICAgICAgICAgICAgfCAgMSArDQo+ICAga2Vy
+bmVsL3Bvd2VyL2hpYmVybmF0ZS5jICAgICAgICAgICAgICAgICAgICAgIHwgIDMgKysNCj4g
+ICA0IGZpbGVzIGNoYW5nZWQsIDQ1IGluc2VydGlvbnMoKyksIDQgZGVsZXRpb25zKC0pDQo+
+DQo=
 
-Moreover I also opened a discussion on Upower for this specifically (you can find in closed merge requests) https://gitlab.freedesktop.org/upower/upower/-/merge_requests but sadly right now the merge request of freedesktop is whining about undisclosed errors.
+--------------ms020601080005030000050108
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
 
-Anyway I think that either upower forgot to ship the updated rule or there is a regression in upower.
-
-Given that setting battery to 100% would mean charging the laptop while it boots and certain people don't want this (and it's not a good practice to do that) I am not happy having to revert this change, albeit if upower doesn't solve this issue I'll probably need to.
-
-Moreover if I remember correctly another possible workaround to have upower work is to define a fixed start_charge_threshold.
-
-While it's possible to add it would be useless and not mapped to the hardware in any way thus simply being an hack.
-
-Ilpo, what do we do in these cases? What's the usual procedure for these?
-
-Regards,
-Denis
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgMFADCABgkqhkiG9w0BBwEAAKCC
+DfAwggbmMIIEzqADAgECAhAxAnDUNb6bJJr4VtDh4oVJMA0GCSqGSIb3DQEBDAUAMIGIMQsw
+CQYDVQQGEwJVUzETMBEGA1UECBMKTmV3IEplcnNleTEUMBIGA1UEBxMLSmVyc2V5IENpdHkx
+HjAcBgNVBAoTFVRoZSBVU0VSVFJVU1QgTmV0d29yazEuMCwGA1UEAxMlVVNFUlRydXN0IFJT
+QSBDZXJ0aWZpY2F0aW9uIEF1dGhvcml0eTAeFw0yMDAyMTgwMDAwMDBaFw0zMzA1MDEyMzU5
+NTlaMEYxCzAJBgNVBAYTAk5MMRkwFwYDVQQKExBHRUFOVCBWZXJlbmlnaW5nMRwwGgYDVQQD
+ExNHRUFOVCBQZXJzb25hbCBDQSA0MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEA
+s0riIl4nW+kEWxQENTIgFK600jFAxs1QwB6hRMqvnkphfy2Q3mKbM2otpELKlgE8/3AQPYBo
+7p7yeORuPMnAuA+oMGRb2wbeSaLcZbpwXgfCvnKxmq97/kQkOFX706F9O7/h0yehHhDjUdyM
+yT0zMs4AMBDRrAFn/b2vR3j0BSYgoQs16oSqadM3p+d0vvH/YrRMtOhkvGpLuzL8m+LTAQWv
+QJ92NwCyKiHspoP4mLPJvVpEpDMnpDbRUQdftSpZzVKTNORvPrGPRLnJ0EEVCHR82LL6oz91
+5WkrgeCY9ImuulBn4uVsd9ZpubCgM/EXvVBlViKqusChSsZEn7juIsGIiDyaIhhLsd3amm8B
+S3bgK6AxdSMROND6hiHT182Lmf8C+gRHxQG9McvG35uUvRu8v7bPZiJRaT7ZC2f50P4lTlnb
+LvWpXv5yv7hheO8bMXltiyLweLB+VNvg+GnfL6TW3Aq1yF1yrZAZzR4MbpjTWdEdSLKvz8+0
+wCwscQ81nbDOwDt9vyZ+0eJXbRkWZiqScnwAg5/B1NUD4TrYlrI4n6zFp2pyYUOiuzP+as/A
+Znz63GvjFK69WODR2W/TK4D7VikEMhg18vhuRf4hxnWZOy0vhfDR/g3aJbdsGac+diahjEwz
+yB+UKJOCyzvecG8bZ/u/U8PsEMZg07iIPi8CAwEAAaOCAYswggGHMB8GA1UdIwQYMBaAFFN5
+v1qqK0rPVIDh2JvAnfKyA2bLMB0GA1UdDgQWBBRpAKHHIVj44MUbILAK3adRvxPZ5DAOBgNV
+HQ8BAf8EBAMCAYYwEgYDVR0TAQH/BAgwBgEB/wIBADAdBgNVHSUEFjAUBggrBgEFBQcDAgYI
+KwYBBQUHAwQwOAYDVR0gBDEwLzAtBgRVHSAAMCUwIwYIKwYBBQUHAgEWF2h0dHBzOi8vc2Vj
+dGlnby5jb20vQ1BTMFAGA1UdHwRJMEcwRaBDoEGGP2h0dHA6Ly9jcmwudXNlcnRydXN0LmNv
+bS9VU0VSVHJ1c3RSU0FDZXJ0aWZpY2F0aW9uQXV0aG9yaXR5LmNybDB2BggrBgEFBQcBAQRq
+MGgwPwYIKwYBBQUHMAKGM2h0dHA6Ly9jcnQudXNlcnRydXN0LmNvbS9VU0VSVHJ1c3RSU0FB
+ZGRUcnVzdENBLmNydDAlBggrBgEFBQcwAYYZaHR0cDovL29jc3AudXNlcnRydXN0LmNvbTAN
+BgkqhkiG9w0BAQwFAAOCAgEACgVOew2PHxM5AP1v7GLGw+3tF6rjAcx43D9Hl110Q+BABABg
+lkrPkES/VyMZsfuds8fcDGvGE3o5UfjSno4sij0xdKut8zMazv8/4VMKPCA3EUS0tDUoL01u
+gDdqwlyXuYizeXyH2ICAQfXMtS+raz7mf741CZvO50OxMUMxqljeRfVPDJQJNHOYi2pxuxgj
+KDYx4hdZ9G2o+oLlHhu5+anMDkE8g0tffjRKn8I1D1BmrDdWR/IdbBOj6870abYvqys1qYlP
+otv5N5dm+XxQ8vlrvY7+kfQaAYeO3rP1DM8BGdpEqyFVa+I0rpJPhaZkeWW7cImDQFerHW9b
+KzBrCC815a3WrEhNpxh72ZJZNs1HYJ+29NTB6uu4NJjaMxpk+g2puNSm4b9uVjBbPO9V6sFS
+G+IBqE9ckX/1XjzJtY8Grqoo4SiRb6zcHhp3mxj3oqWi8SKNohAOKnUc7RIP6ss1hqIFyv0x
+XZor4N9tnzD0Fo0JDIURjDPEgo5WTdti/MdGTmKFQNqxyZuT9uSI2Xvhz8p+4pCYkiZqpahZ
+lHqMFxdw9XRZQgrP+cgtOkWEaiNkRBbvtvLdp7MCL2OsQhQEdEbUvDM9slzZXdI7NjJokVBq
+3O4pls3VD2z3L/bHVBe0rBERjyM2C/HSIh84rfmAqBgklzIOqXhd+4RzadUwggcCMIIE6qAD
+AgECAhBaNFgxeGkgh2ZZg7n0Nh9IMA0GCSqGSIb3DQEBDAUAMEYxCzAJBgNVBAYTAk5MMRkw
+FwYDVQQKExBHRUFOVCBWZXJlbmlnaW5nMRwwGgYDVQQDExNHRUFOVCBQZXJzb25hbCBDQSA0
+MB4XDTIzMDgwMjAwMDAwMFoXDTI2MDgwMTIzNTk1OVowgZQxIDAeBgNVBAkTF1RyaWVkYSBB
+bmRyZWphIEhsaW5rdSAxMRgwFgYDVQQIEw9OaXRyaWFuc2t5IGtyYWoxCzAJBgNVBAYTAlNL
+MTIwMAYDVQQKDClVbml2ZXJ6aXRhIEtvbsWhdGFudMOtbmEgRmlsb3pvZmEgdiBOaXRyZTEV
+MBMGA1UEAxMMTWlsYW4gT3JhdmVjMIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEA
+q1KI/4Kzb4KoaDY5H4zzPvosZ0Boil4ZXvH3+2DYGQlXvsh/Deg8ljQko+b6V0Z4Q4sWdefq
+OUmfhqEVf2fXfkSfNT4w2zB3B7pH/NQMdoSvo90XnLJ2L6XaoRsH/Tq7u2JYwcEvWeady2Dt
+xDsAXHknqwQ6nkKQFc94XF2OmiSVuTAvGj9LMrpKPjVSmyoxibRZ4MX1pm4xVZP+Pc5MJUFU
+UPcTo1CaV7DtqnGxcRgCZIL70DN33Tn2l/E+A/KNckaCVU7H8ZH526Z4QzJQrrK3QuoqyWsI
+clCMKRiwrNTD+wseWb9GSMT/i+Ad7jdMIA5tcl3wOLKn1Kw5LY6QMBCHx/S9HaGvcn7ogMRO
+WDl5INN3Zp/9Pq9J32l+8Lud+wLvXs4FSw5aXHf0ZaO4r2M5UnWPqEn+Xi7MuR9wmCp2ffCQ
+jrU9oZ26xxk1hodVb1+iBtaY7DrcZEeQnpwZvytLfoDCp4JSQExC4tUHvoeUZx0XEwFIa05B
+QM8raY50nty6LuoAgz5hQWjQpwHUEh6zXjm7GVsTkv0zIpPhAeSbzyxUS5Dc+lPzmzaj6sz2
+tikcT7C75sdHVD2nfW/3Xw5u9Lix0rCA6Yt0z25tcNDdi5ELq4nlWbAfLP67UcKZY4d07i3+
+yrlwOzrsaHi/xLcxx4FTozB0N+CAHhBDDDsCAwEAAaOCAZswggGXMB8GA1UdIwQYMBaAFGkA
+occhWPjgxRsgsArdp1G/E9nkMB0GA1UdDgQWBBR3a7VTiE53dtbMFAlcqdc1Y9expzAOBgNV
+HQ8BAf8EBAMCBaAwDAYDVR0TAQH/BAIwADAdBgNVHSUEFjAUBggrBgEFBQcDBAYIKwYBBQUH
+AwIwPwYDVR0gBDgwNjA0BgsrBgEEAbIxAQICTzAlMCMGCCsGAQUFBwIBFhdodHRwczovL3Nl
+Y3RpZ28uY29tL0NQUzBCBgNVHR8EOzA5MDegNaAzhjFodHRwOi8vR0VBTlQuY3JsLnNlY3Rp
+Z28uY29tL0dFQU5UUGVyc29uYWxDQTQuY3JsMHgGCCsGAQUFBwEBBGwwajA9BggrBgEFBQcw
+AoYxaHR0cDovL0dFQU5ULmNydC5zZWN0aWdvLmNvbS9HRUFOVFBlcnNvbmFsQ0E0LmNydDAp
+BggrBgEFBQcwAYYdaHR0cDovL0dFQU5ULm9jc3Auc2VjdGlnby5jb20wGQYDVR0RBBIwEIEO
+bW9yYXZlY0B1a2Yuc2swDQYJKoZIhvcNAQEMBQADggIBAJ0zDjgaIyOlAnyN7aAb2Mf+N4op
+qCIh6Hep3o20nKfBWMgCM1xmnPaaEPwi6h0CMZW5GKZYGw0MpHNhSCtddznr5JZAkY07xsnT
+4gn8fQRi8n2LB3nEJSh7pT2+89KBFmee2k6vV25HsZ0YBIq4CRXrC7y21Bpy2WB8SQdNuCbY
+L5JByP4wfPBLKT7zPmdNWBTjJHpBzhANc0Vc6LzaKz75oK0g+GLUi84fS/S4sMyMqPbn7Xqp
+oMnCW4hqorhfubne1hlvdM/sU/VX1aUWWoSnPnN2HKRlrIiDjMmybJpTrE70jTsboR3Y15ti
+8mrRVN3iKKY5LRvDYlPJ9wYDPUSrJBUCDZarg8Er24a394TqmMSi+NyoKfR4UB6gMzXxUbvg
+jxkEhlgs0tI4Xd+m1eFgfeKIQ0ARtUVEHasXuWcI4BLwN4vjfvdPAjlqxUJHP51a9XI/VczC
+olQZnVkreJmZSG6DNFbBPy1zIfVZJHoM0d5ITKUBiadnF5GDH1mopIvqi1gH0oKRse/KnjKh
+gNzbMzGZfeLZjVlw7aO9w4Zm+EBTRhMdHnfKTBYZCoIcK+Dou1cyqMCxsysPDKldm6bwCLxX
+xRU4WtHq5KFs81cW4Rbs4ZXtxF23eIHJ8NgAHr3SPS7zzWwAJ+LMY6voi7/J+tK31UNz7xoT
+3avZsCqlMYIFRTCCBUECAQEwWjBGMQswCQYDVQQGEwJOTDEZMBcGA1UEChMQR0VBTlQgVmVy
+ZW5pZ2luZzEcMBoGA1UEAxMTR0VBTlQgUGVyc29uYWwgQ0EgNAIQWjRYMXhpIIdmWYO59DYf
+SDANBglghkgBZQMEAgMFAKCCArwwGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG
+9w0BCQUxDxcNMjYwNjI5MTMwNDA0WjBPBgkqhkiG9w0BCQQxQgRAGfrF6MaxrCweMktoiTAI
+qHpvKyo1wgqCGzfJAvCAXOmwYTsNbPHhrGxK+Uvfo85VgfYkl4+SD6C9wAYeE14N8DBpBgkr
+BgEEAYI3EAQxXDBaMEYxCzAJBgNVBAYTAk5MMRkwFwYDVQQKExBHRUFOVCBWZXJlbmlnaW5n
+MRwwGgYDVQQDExNHRUFOVCBQZXJzb25hbCBDQSA0AhBaNFgxeGkgh2ZZg7n0Nh9IMGsGCyqG
+SIb3DQEJEAILMVygWjBGMQswCQYDVQQGEwJOTDEZMBcGA1UEChMQR0VBTlQgVmVyZW5pZ2lu
+ZzEcMBoGA1UEAxMTR0VBTlQgUGVyc29uYWwgQ0EgNAIQWjRYMXhpIIdmWYO59DYfSDCCAVcG
+CSqGSIb3DQEJDzGCAUgwggFEMAsGCWCGSAFlAwQBKjALBglghkgBZQMEAQIwCgYIKoZIhvcN
+AwcwDQYIKoZIhvcNAwICAQUwDQYIKoZIhvcNAwICAQUwBwYFKw4DAgcwDQYIKoZIhvcNAwIC
+AQUwBwYFKw4DAhowCwYJYIZIAWUDBAIBMAsGCWCGSAFlAwQCAjALBglghkgBZQMEAgMwCwYJ
+YIZIAWUDBAIEMAsGCWCGSAFlAwQCBzALBglghkgBZQMEAggwCwYJYIZIAWUDBAIJMAsGCWCG
+SAFlAwQCCjALBgkqhkiG9w0BAQEwCwYJK4EFEIZIPwACMAgGBiuBBAELADAIBgYrgQQBCwEw
+CAYGK4EEAQsCMAgGBiuBBAELAzALBgkrgQUQhkg/AAMwCAYGK4EEAQ4AMAgGBiuBBAEOATAI
+BgYrgQQBDgIwCAYGK4EEAQ4DMA0GCSqGSIb3DQEBAQUABIICAHFXZQ0IDODB+C68cNygOPhE
+f8fehXBJVD9DayW0dbXEwkGs0G7l2zdrvkaO2nvnhs1JRUa5LplLae0rCrnttgWxXg5K5+vT
+77LB1NZa6cDbgghaAmuWXkrCQv1oOtx7tI4v9nUqjx/HB7m2ucr/T9nfxvsRS/Fs4VqT2944
+iK1rvkQr+jjo6VM9MvYtzfxWTFebcIvLlep8UGb4dFWEXtCwN6feBJZ2rM2Oo8/+WB3znL90
+3aV/aFLT6Lc0nJ821q0VNeETtwf6WQKFogt52HmLZ/Ymtr97y+QVHZtSj4kUJybQK7kj+0bh
+QgsC6FPmkd1zJzoGd4iZ8L2b3ylUes6zFoV8QItOc7bG1HwWP2TCuFmzd0eJxO+9JiydKzDi
+4VRUggK4Aq65erxn+c0D+HM/yPEVnOe/jZiCUe+MoxnyCX+SWIMgYaFC1oO59ln3g/wM1Ffw
+Od+hV9RFOeeaMOJha9rwbewMHsQ4buUU/x8bt+K0R0N8i2uuseYUI4SyO4ezSGtc+cVmoQSZ
+2rt7p7qA2G0pH4umR0UmwuWxnbBllRezoiepObijF0ITVeYPsZweTn1dF1tUHHA7sGtWLb73
+ZlkTML7zv93Tp50EU2DkB6cpy480A6HcygnVxivgVQ0SymW6ijlp9SNFv1BMW4vaS3lL4lQY
+0K09SQxtAJDpAAAAAAAA
+--------------ms020601080005030000050108--
