@@ -1,246 +1,208 @@
-Received: from posta.ukf.sk (posta.ukf.sk [193.87.12.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86DBE40B6E2
-	for <regressions@lists.linux.dev>; Mon, 29 Jun 2026 13:04:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.87.12.33
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782738258; cv=none; b=Nfc+X0ADK4QydPANfnQM/Yvcd1f8ZrkUn2QeohGZD4j0AOoZenWwmQfA1uEB0p3vHnEK/OlbIPUwEuKpnMn3v4u1SvxHniVIWa+JfAsmw5ju3e4QDNW7YC59Zxj9PbJ9Wg6az1KUIkHm5t7G9N7e5T/cYVKt/fKpg2JLpHgwUcU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782738258; c=relaxed/simple;
-	bh=zFMUEXAvfjvWgHOuNlgy9XKsmUQzN68pTJmfePCGCGs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XnehJnhSIYSxzAJlxNHoIKo8lfW1WB4Y9zFCCoAVZoxe3oRo/gOPGz6RiAHRUb7YyHHd1Mn97xf54DMOYNxgE0tNfvvWuua9daDdljtHi4pQ4PHWZZ+9gErnXVcn42mqrCx6p5vds4ASYRynAz7xEkYYjz+y5S5B2LCur54vTK0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ukf.sk; spf=pass smtp.mailfrom=ukf.sk; dkim=pass (1024-bit key) header.d=ukf.sk header.i=@ukf.sk header.b=Kf/0ydq2; arc=none smtp.client-ip=193.87.12.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ukf.sk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ukf.sk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ukf.sk header.i=@ukf.sk header.b="Kf/0ydq2"
-Received: from localhost (localhost [127.0.0.1])
-	by posta.ukf.sk (Postfix) with ESMTP id 6FCE24232BE;
-	Mon, 29 Jun 2026 15:04:06 +0200 (CEST)
-Received: from posta.ukf.sk ([127.0.0.1])
-	by localhost (posta1.ukf.sk [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id f6Ji2VNqaU5Q; Mon, 29 Jun 2026 15:04:05 +0200 (CEST)
-Received: from [10.8.1.254] (unknown [10.8.1.254])
+Received: from mail-dy1-f180.google.com (mail-dy1-f180.google.com [74.125.82.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by posta.ukf.sk (Postfix) with ESMTPSA id BD99E4232B9;
-	Mon, 29 Jun 2026 15:04:04 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ukf.sk; s=2022;
-	t=1782738245; bh=zFMUEXAvfjvWgHOuNlgy9XKsmUQzN68pTJmfePCGCGs=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Kf/0ydq2m/kcWMyw/UYD4xMoufmCo2uA3A6h4GZATt+EpoIT3Sqfvj+khinsyaoMS
-	 Ni3q6qkV5Y+DuzVo5socSpJFAeVE6Jc4QfBBZ9lusftijKYmi6IAd8v65Q5qU4LvYY
-	 UEAy0NnqX14Y4jCJ+pw8jGKjOqjdx352UKPrEK7Q=
-Message-ID: <4346170f-6685-40c6-8eeb-e3adab19275c@ukf.sk>
-Date: Mon, 29 Jun 2026 15:04:04 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 978963E4C94
+	for <regressions@lists.linux.dev>; Mon, 29 Jun 2026 14:34:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.180
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782743693; cv=none; b=P71Kp7ozcrqt0bPRrIDU/qhNb/XbDNL95zdylOYqevYir4hFYuN7VmJ1/DhiU0YnyPQcYAR/q7ZUBZf4Tc8LxEUoFaeYdTE302SgMDb4qR23PuAH5K/fcpjSxs5GeKm+qCGJwyQydzFqQm5QXiy6+pgVsTN6YfGfaeYhjbdhdDY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782743693; c=relaxed/simple;
+	bh=nQgj+GFBH/eooOxlxhaBazNeK+nly5tw28MqdrnZ7fE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=W5IANaAa6tB1lw/9XMq/pvx1p5SbTBDANt3t0It2RmJPreQ8zhJ4/A7WrgIRLWlBF6CzGmysTAA9yKdpxFYRNg830H9oJ4aYT/TtTjDjdP8r6kyJJDDAumdNWcwTjlkiVWhBBsC2/Kpzg9hLT/MUzbxJuVQx+gUOMNofd6203YU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dizCSomj; arc=none smtp.client-ip=74.125.82.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dizCSomj"
+Received: by mail-dy1-f180.google.com with SMTP id 5a478bee46e88-30b9e755555so5763068eec.1
+        for <regressions@lists.linux.dev>; Mon, 29 Jun 2026 07:34:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1782743691; x=1783348491; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=UisZIj9SAq+/iU2iNCfWWIml1oT3ijfALHSO5VDxq/M=;
+        b=dizCSomjfuoLKA46Q9yj+pzPfsEWpBPzkI2jqhc91L2gH99z3fCaOPNrdi/ei+b15s
+         9lwywIDv8fKKYdrBW/wmim4cAGtcYCv3Q0dYC2sQ8N1TmfejZ+5A0wWE8RRBR0yeJaE5
+         tQwpeOA8+0vO91oRCNwcjvwrsoaOPPi7QSsrEmKX4wO20fttwvJGhQr4ymuJvgvm7dcp
+         TmogUM0bxEJMa1FOg0V6WHTeYeeY0kD7zZhNjropg7a1qzbcceQOqUhcTcC49yPYH1fj
+         08MuULAtCR9YLcggMTsg6c7fdnMq9TG3h59EpUMNGlTURJGpoiu9iKYVjRgiV7lQOf2e
+         Zj6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782743691; x=1783348491;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UisZIj9SAq+/iU2iNCfWWIml1oT3ijfALHSO5VDxq/M=;
+        b=f8duV54HbeinXw1HYUHhdTdRJiUOzq0F1jYlNR4e4CvcR95FC9Ck2V83Ligkc2A65d
+         A7XawZFrQp07LuMLjlMMa1oyxA5KYezBoGzfZ0W7HGL+s4j/xdlx7X+T+aHhe8pxntwn
+         yu3aIuF/wfpP5FDWzvFTv0FIoQCDKCKRCEpDG9MaIR7SNatuPGm/O6F+EyXpvjFNev2Q
+         bbmB9SKHU6L0PjEFvSVG2LISn6NaKbHYos/CIvZJ3C82q+AhMu5hsafYKcaE9ujeFAJf
+         IU7IFDE6OOpfVCWBghA/Sc7xEeKEgx/1ASvBcrjBzZpEedG79Uz5xkaoZJ69A1GqWtD6
+         ks7A==
+X-Forwarded-Encrypted: i=1; AHgh+RpppEKU6cnfcx+KBG+kVkPQZ5CMAfLXN2CQg00oPN9PpAkOkQd6q48aNlloS4cZpAruwBN6hi+3aLEO2g==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yw9ekv1mM2itO5ODASESygyfnkdcKiR5r4/Zxw2g983iyX2a6AA
+	VhFvIo5uVhj8eOdgDQqYE+jihbqgdUZtmteTIKb+WGAAQMxECtbkbR4z
+X-Gm-Gg: AfdE7cmcv85jv7r0a0/6hLkx0pzve7QuBCVq2SKHYH3Qf53VNdpVeYAg7blG5zFCCOz
+	1HO8UwAgyU5W6BQ1GU071bu0puE4wL7CtyKwepsaLDCgnN4utPmF1GOee1gfSFx2yjd+BLPzeKG
+	GOHnsJT4VmB8CTeHw43WB0b6/heSRsvjrnkFI2atxDiWdOeYhsVjbatDvhjRqWJVKi+KaIAHArK
+	9oAbiryYDZ6L6Q0+hTNSEchVrunBKOlfCKB8Ke+ocHPUh1ku3vdl9uIAnJbzvQQ8W0+JR3goZHx
+	m2G9/AKRLulOoux4wynKfjGDDald0xffgtrfjE6+edpcNFEw2E3fihhcw2PgnTMU2ujGAw0rM7z
+	3cC7CF/PBbkaKRpGVVodp3oNTpWScie+pV7knel0axlWCURCy1lk54NxSEjvjtnwEr5DSI2oZKu
+	K0GwtAoaNqKnkXBtT0pdOQAbLvzUDbjf4L7kEa5Ts+ouc1QSQg3JL80s8GPj5B6BHrkeILttR6F
+	V5unm8Y
+X-Received: by 2002:a05:693c:62d0:b0:30c:536e:3a95 with SMTP id 5a478bee46e88-30c84b94ff5mr10920163eec.2.1782743690538;
+        Mon, 29 Jun 2026 07:34:50 -0700 (PDT)
+Received: from leonardoc-nb ([67.159.246.222])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-30edffa26afsm176604eec.4.2026.06.29.07.34.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2026 07:34:50 -0700 (PDT)
+From: Leonardo Costa <leoreis.costa@gmail.com>
+To: robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	Frank.Li@nxp.com,
+	s.hauer@pengutronix.de,
+	kernel@pengutronix.de,
+	festevam@gmail.com
+Cc: leonardo.costa@toradex.com,
+	devicetree@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: [REGRESSION] mainline/master: Apalis iMX6 no longer boots
+Date: Mon, 29 Jun 2026 11:34:32 -0300
+Message-ID: <20260629143439.361560-1-leoreis.costa@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/4] PM: hibernate: Add relaxed_memmap option for x86
- E820 integrity check
-To: Marco Scardovi <scardracs@disroot.org>
-Cc: bp@alien8.de, crecklin@redhat.com, dave.hansen@linux.intel.com,
- hpa@zytor.com, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
- mingo@redhat.com, pavel@kernel.org, rafael@kernel.org,
- regressions@leemhuis.info, regressions@lists.linux.dev, tglx@kernel.org,
- x86@kernel.org
-References: <cd45c7c8-4df9-4963-b847-02cf72bcc039@ukf.sk>
- <20260623165724.10753-1-scardracs@disroot.org>
-Content-Language: sk-SK-Ascii, en-US
-From: Milan Oravec <moravec@ukf.sk>
-Organization: CIKT UKF Nitra
-In-Reply-To: <20260623165724.10753-1-scardracs@disroot.org>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-512; boundary="------------ms020601080005030000050108"
+Content-Transfer-Encoding: 8bit
 
-This is a cryptographically signed message in MIME format.
+Hello,
 
---------------ms020601080005030000050108
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+We are seeing a regression on Apalis iMX6 where the kernel doesn't boot in the
+newest v7.2-rc1 (it was working before, in v7.1). The device tree being used is the imx6q-apalis-eval.dtb. The kernel
+configuration used is the one shown below:
 
-SGVsbG8sIEkgd2FudGVkIHRvIHRyeSB0aGlzIG5ldyBzZXQgb2YgcGF0Y2hlcywgYnV0IEkg
-d2FzIHVuYWJsZSB0byANCmFwcGx5IHRoZW0uIFRlc3RlZCB3aXRoIDcuMS4yIGFuZCBtYXN0
-ZXIgdG9vLg0KDQptaWdvQG1pZ28tSFA6fi9idWlsZC9saW51eC10ZXN0L2xpbnV4JCBwYXRj
-aCAtcDEgPCAuLi9oaWJlcm5hdGUyLnBhdGNoDQpwYXRjaGluZyBmaWxlIGluY2x1ZGUvbGlu
-dXgvc3VzcGVuZC5oDQpwYXRjaGluZyBmaWxlIGtlcm5lbC9wb3dlci9oaWJlcm5hdGUuYw0K
-SHVuayAjMiBGQUlMRUQgYXQgMTQzMS4NCjEgb3V0IG9mIDIgaHVua3MgRkFJTEVEIC0tIHNh
-dmluZyByZWplY3RzIHRvIGZpbGUgDQprZXJuZWwvcG93ZXIvaGliZXJuYXRlLmMucmVqDQpw
-YXRjaGluZyBmaWxlIGFyY2gveDg2L3Bvd2VyL2hpYmVybmF0ZS5jDQpIdW5rICMxIEZBSUxF
-RCBhdCA2MS4NCkh1bmsgIzIgc3VjY2VlZGVkIGF0IDc4IHdpdGggZnV6eiAxLg0KSHVuayAj
-MyBGQUlMRUQgYXQgMTQ0Lg0KSHVuayAjNCBGQUlMRUQgYXQgMTY2Lg0KMyBvdXQgb2YgNCBo
-dW5rcyBGQUlMRUQgLS0gc2F2aW5nIHJlamVjdHMgdG8gZmlsZSANCmFyY2gveDg2L3Bvd2Vy
-L2hpYmVybmF0ZS5jLnJlag0KcGF0Y2hpbmcgZmlsZSBEb2N1bWVudGF0aW9uL2FkbWluLWd1
-aWRlL2tlcm5lbC1wYXJhbWV0ZXJzLnR4dA0KSHVuayAjMSBGQUlMRUQgYXQgMTk2Ny4NCjEg
-b3V0IG9mIDEgaHVuayBGQUlMRUQgLS0gc2F2aW5nIHJlamVjdHMgdG8gZmlsZSANCkRvY3Vt
-ZW50YXRpb24vYWRtaW4tZ3VpZGUva2VybmVsLXBhcmFtZXRlcnMudHh0LnJlag0KDQpUaGFu
-ayB5b3UsDQoNCk1pbGFuDQoNCnMgcG96ZHJhdm9tDQoNCk1pbGFuIE9yYXZlYw0KDQpDSUtU
-IFVLRiBOaXRyYQ0KTW9iaWwvU2lnbmFsOiArNDIxOTA3NjcwMjcwDQplbWFpbDogbW9yYXZl
-Y0B1a2Yuc2sNCg0KLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCg0KVHV0byBzcHJhdnUgbmVwcmV2ZXJpbCB6
-aWFkbnkgYW50aXZpcnVzIC0gbmVib2xvIHRyZWJhLi4uDQoNCk9uIDYvMjMvMjYgMTg6NDcs
-IE1hcmNvIFNjYXJkb3ZpIHdyb3RlOg0KPiBIaSBSYWZhZWwsIE1pbGFuLA0KPg0KPj4gLi4u
-DQo+Pg0KPj4gSGliZXJuYXRpb24gaW4gTGludXggc2ltcGx5IGNhbm5vdCBjb3BlIHdpdGgg
-YSBjaGFuZ2luZyBtZW1vcnkgbWFwIGluDQo+PiBnZW5lcmFsLCBzb3JyeSBhYm91dCB0aGF0
-Lg0KPiBZb3UgYXJlIHRvdGFsbHkgYWdyZWUuIFdoaWxlIG1pbmUgaXMgc3RpbGwgYSBzb2x1
-dGlvbiBmb3IgdGhlc2UgbGlrZSBATWlsYW4NCj4gd2l0aCBhIGJ1Z2d5IGZpcm13YXJlLCBp
-dCdzIG5vdCBhIHNvbHV0aW9uIHRvIG1ha2UgaXQgdW5jb25kaXRpb25hbCBmb3IgZXZlcnkN
-Cj4gZGV2aWNlIHNvIEkgY2FtZSB3aXRoIGEgc29sdXRpb24gdG8gaW50cm9kdWNlIHRoZSBi
-b290IGZsYWcNCj4gaHliZXJuYXRlPXJlbGF4ZWRfbWVtbWFwLiBUaGlzIGlzIHN0aWxsIGEg
-Yml0IGhhY2t5IGFuZCBJIGRvbid0IGxpa2UgaXQgYXQNCj4gYWxsIGF0IHRoZSBlbmQgb2Yg
-dGhlIGRheSBidXQgd29ya3MgYmV0dGVyIHRoYW4gbm90aGluZywgYXQgbGVhc3QgdW50aWwg
-SFANCj4gcmVsZWFzZXMgYSBwcm9wZXIgZmlybXdhcmUgd2l0aCBpdCBmaXhlZC4NCj4NCj4g
-VGhpcyB2MiBvZiB0aGUgcGF0Y2ggYWRkcmVzcyBoaWJlcm5hdGlvbiBFODIwIG1hcCBpbnRl
-Z3JpdHkgY2hlY2sgZmFpbHVyZXMNCj4gb24gVUVGSSBwbGF0Zm9ybXMgd2hlcmUgZmlybXdh
-cmUgZHluYW1pY2FsbHkgc2hpZnRzIHJlc2VydmVkIG9yIEFDUEkgbWVtb3J5DQo+IHJhbmdl
-cyBhY3Jvc3MgYm9vdHMgKHN1Y2ggYXMgdGhlIEhQIE9tbmlCb29rIFggRmxpcCkuDQo+DQo+
-IEluIHYxLCBJIGF0dGVtcHRlZCB0byByZXN0cmljdCB0aGUgaW50ZWdyaXR5IGNoZWNrIHRv
-IG9ubHkgRTgyMF9UWVBFX1JBTQ0KPiByYW5nZXMgYnkgZGVmYXVsdC4gQXMgcG9pbnRlZCBv
-dXQgYnkgUmFmYWVsLCB0aGlzIGlzIHJpc2t5IGJlY2F1c2UgdGhlDQo+IHJlc3VtZWQga2Vy
-bmVsIGNvdWxkIGF0dGVtcHQgdG8gYWNjZXNzIHNoaWZ0ZWQgQUNQSSB0YWJsZXMgb3IgVUVG
-SSBydW50aW1lDQo+IHNlcnZpY2VzIGF0IHN0YWxlIGFkZHJlc3NlcywgbGVhZGluZyB0byBw
-b3N0LXJlc3VtZSBjcmFzaGVzIG9yIGNvcnJ1cHRpb24uDQo+DQo+IFRvIGFkZHJlc3MgdGhp
-cyBmZWVkYmFjayB3aGlsZSBzdGlsbCBhbGxvd2luZyBoaWJlcm5hdGlvbiB0byBmdW5jdGlv
-biBvbg0KPiBhZmZlY3RlZCBwbGF0Zm9ybXMsIHYyIGludHJvZHVjZXMgdGhlICdoaWJlcm5h
-dGU9cmVsYXhlZF9tZW1tYXAnIGNvbW1hbmQtbGluZQ0KPiBwYXJhbWV0ZXIuDQo+DQo+IC0g
-UGF0Y2ggMTogRGVjbGFyZSB0aGUgJ2hpYmVybmF0ZV9yZWxheGVkX21lbW1hcCcgZmxhZyBp
-biB0aGUgUE0gY29yZSBoZWFkZXIuDQo+IC0gUGF0Y2ggMjogRGVmaW5lIHRoZSBmbGFnIGFu
-ZCBhZGQgcGFyc2luZyBsb2dpYyB0byBrZXJuZWwvcG93ZXIvaGliZXJuYXRlLmMuDQo+IC0g
-UGF0Y2ggMzogSW1wbGVtZW50IHRoZSByZWxheGVkIEU4MjAgbWVtb3J5IG1hcCBjaGVjayBv
-biB4ODYsIHdoaWNoIGNvbXBhcmVzDQo+ICAgICAgICAgICAgIGEgc2Vjb25kYXJ5IFJBTS1v
-bmx5IGNoZWNrc3VtIGlmIHRoZSBtYWluIGNoZWNrc3VtIG1pc21hdGNoZXMsDQo+ICAgICAg
-ICAgICAgIHdhcm5pbmcgdGhlIHVzZXIgYnV0IHByb2NlZWRpbmcgd2l0aCByZXN1bWUuDQo+
-IC0gUGF0Y2ggNDogRG9jdW1lbnQgdGhlIG9wdGlvbiBpbiBEb2N1bWVudGF0aW9uL2FkbWlu
-LWd1aWRlL2tlcm5lbC1wYXJhbWV0ZXJzLnR4dC4NCj4NCj4gMS4gQnkgZGVmYXVsdCwgdGhl
-IEU4MjAgY2hlY2tzdW0gdmVyaWZpY2F0aW9uIHJlbWFpbnMgc3RyaWN0IHRvIGVuc3VyZQ0K
-PiAgICAgc2FmZXR5IGZvciBhbGwgc3lzdGVtcy4NCj4gMi4gSWYgJ2hpYmVybmF0ZT1yZWxh
-eGVkX21lbW1hcCcgaXMgc3BlY2lmaWVkLCB0aGUga2VybmVsIHdpbGwgcGVyZm9ybQ0KPiAg
-ICAgYSBzZWNvbmRhcnkgY2hlY2sgb24gb25seSB0aGUgdXNhYmxlIFJBTSByZWdpb25zIChF
-ODIwX1RZUEVfUkFNKSBpZiB0aGUNCj4gICAgIG1haW4gRTgyMCBjaGVja3N1bSBtaXNtYXRj
-aGVzLg0KPiAgICAgLSBJZiB0aGUgUkFNIHJlZ2lvbnMgZGlmZmVyLCB0aGUgcmVzdW1lIGlz
-IGFib3J0ZWQgKHRvIHByZXZlbnQgZGlyZWN0IG1hcA0KPiAgICAgICBtaXNtYXRjaGVzIGFu
-ZCBrZXJuZWwgcGFnaW5nIGZhdWx0cyBkdXJpbmcgcGFnZSByZXN0b3JhdGlvbikuDQo+ICAg
-ICAtIElmIHRoZSBSQU0gcmVnaW9ucyBtYXRjaCwgdGhlIHJlc3VtZSBpcyBhbGxvd2VkIHRv
-IHByb2NlZWQgYW5kIGEgd2FybmluZw0KPiAgICAgICBpcyBsb2dnZWQgYWJvdXQgdGhlIG5v
-bi1SQU0gY2hhbmdlcy4NCj4NCj4gVG8gc3VwcG9ydCB0aGlzLCBhIHNlY29uZGFyeSAnZTgy
-MF9yYW1fY2hlY2tzdW0nIGZpZWxkIGlzIGFkZGVkIHRvIHRoZQ0KPiB4ODYtc3BlY2lmaWMg
-J3Jlc3RvcmVfZGF0YV9yZWNvcmQnLCBhbmQgJ1JFU1RPUkVfTUFHSUMnIGlzIGluY3JlbWVu
-dGVkIHRvDQo+IHNpZ25hbCB0aGUgaGVhZGVyIGxheW91dCBjaGFuZ2UuDQo+DQo+IE1hcmNv
-IFNjYXJkb3ZpICg0KToNCj4gICAgUE06IGhpYmVybmF0ZTogRGVjbGFyZSBoaWJlcm5hdGVf
-cmVsYXhlZF9tZW1tYXANCj4gICAgUE06IGhpYmVybmF0ZTogRGVmaW5lIGFuZCBwYXJzZSBo
-aWJlcm5hdGU9cmVsYXhlZF9tZW1tYXAgcGFyYW1ldGVyDQo+ICAgIHg4Ni9wb3dlcjogSW1w
-bGVtZW50IHJlbGF4ZWQgRTgyMCBtZW1vcnkgbWFwIGludGVncml0eSBjaGVjaw0KPiAgICBE
-b2N1bWVudGF0aW9uOiBEb2N1bWVudCBoaWJlcm5hdGU9cmVsYXhlZF9tZW1tYXAgcGFyYW1l
-dGVyIG9wdGlvbg0KPg0KPiAgIC4uLi9hZG1pbi1ndWlkZS9rZXJuZWwtcGFyYW1ldGVycy50
-eHQgICAgICAgICB8ICA1ICsrKw0KPiAgIGFyY2gveDg2L3Bvd2VyL2hpYmVybmF0ZS5jICAg
-ICAgICAgICAgICAgICAgICB8IDQwICsrKysrKysrKysrKysrKysrLS0NCj4gICBpbmNsdWRl
-L2xpbnV4L3N1c3BlbmQuaCAgICAgICAgICAgICAgICAgICAgICAgfCAgMSArDQo+ICAga2Vy
-bmVsL3Bvd2VyL2hpYmVybmF0ZS5jICAgICAgICAgICAgICAgICAgICAgIHwgIDMgKysNCj4g
-ICA0IGZpbGVzIGNoYW5nZWQsIDQ1IGluc2VydGlvbnMoKyksIDQgZGVsZXRpb25zKC0pDQo+
-DQo=
+    https://gist.github.com/lcosta37/53efdb2fb6e6e0fc05437c7e53b47737
 
---------------ms020601080005030000050108
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
+The kernel logs stop almost immediately as the board starts to boot, and I 
+don't notice any difference in the logs that points to the cause.
 
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgMFADCABgkqhkiG9w0BBwEAAKCC
-DfAwggbmMIIEzqADAgECAhAxAnDUNb6bJJr4VtDh4oVJMA0GCSqGSIb3DQEBDAUAMIGIMQsw
-CQYDVQQGEwJVUzETMBEGA1UECBMKTmV3IEplcnNleTEUMBIGA1UEBxMLSmVyc2V5IENpdHkx
-HjAcBgNVBAoTFVRoZSBVU0VSVFJVU1QgTmV0d29yazEuMCwGA1UEAxMlVVNFUlRydXN0IFJT
-QSBDZXJ0aWZpY2F0aW9uIEF1dGhvcml0eTAeFw0yMDAyMTgwMDAwMDBaFw0zMzA1MDEyMzU5
-NTlaMEYxCzAJBgNVBAYTAk5MMRkwFwYDVQQKExBHRUFOVCBWZXJlbmlnaW5nMRwwGgYDVQQD
-ExNHRUFOVCBQZXJzb25hbCBDQSA0MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEA
-s0riIl4nW+kEWxQENTIgFK600jFAxs1QwB6hRMqvnkphfy2Q3mKbM2otpELKlgE8/3AQPYBo
-7p7yeORuPMnAuA+oMGRb2wbeSaLcZbpwXgfCvnKxmq97/kQkOFX706F9O7/h0yehHhDjUdyM
-yT0zMs4AMBDRrAFn/b2vR3j0BSYgoQs16oSqadM3p+d0vvH/YrRMtOhkvGpLuzL8m+LTAQWv
-QJ92NwCyKiHspoP4mLPJvVpEpDMnpDbRUQdftSpZzVKTNORvPrGPRLnJ0EEVCHR82LL6oz91
-5WkrgeCY9ImuulBn4uVsd9ZpubCgM/EXvVBlViKqusChSsZEn7juIsGIiDyaIhhLsd3amm8B
-S3bgK6AxdSMROND6hiHT182Lmf8C+gRHxQG9McvG35uUvRu8v7bPZiJRaT7ZC2f50P4lTlnb
-LvWpXv5yv7hheO8bMXltiyLweLB+VNvg+GnfL6TW3Aq1yF1yrZAZzR4MbpjTWdEdSLKvz8+0
-wCwscQ81nbDOwDt9vyZ+0eJXbRkWZiqScnwAg5/B1NUD4TrYlrI4n6zFp2pyYUOiuzP+as/A
-Znz63GvjFK69WODR2W/TK4D7VikEMhg18vhuRf4hxnWZOy0vhfDR/g3aJbdsGac+diahjEwz
-yB+UKJOCyzvecG8bZ/u/U8PsEMZg07iIPi8CAwEAAaOCAYswggGHMB8GA1UdIwQYMBaAFFN5
-v1qqK0rPVIDh2JvAnfKyA2bLMB0GA1UdDgQWBBRpAKHHIVj44MUbILAK3adRvxPZ5DAOBgNV
-HQ8BAf8EBAMCAYYwEgYDVR0TAQH/BAgwBgEB/wIBADAdBgNVHSUEFjAUBggrBgEFBQcDAgYI
-KwYBBQUHAwQwOAYDVR0gBDEwLzAtBgRVHSAAMCUwIwYIKwYBBQUHAgEWF2h0dHBzOi8vc2Vj
-dGlnby5jb20vQ1BTMFAGA1UdHwRJMEcwRaBDoEGGP2h0dHA6Ly9jcmwudXNlcnRydXN0LmNv
-bS9VU0VSVHJ1c3RSU0FDZXJ0aWZpY2F0aW9uQXV0aG9yaXR5LmNybDB2BggrBgEFBQcBAQRq
-MGgwPwYIKwYBBQUHMAKGM2h0dHA6Ly9jcnQudXNlcnRydXN0LmNvbS9VU0VSVHJ1c3RSU0FB
-ZGRUcnVzdENBLmNydDAlBggrBgEFBQcwAYYZaHR0cDovL29jc3AudXNlcnRydXN0LmNvbTAN
-BgkqhkiG9w0BAQwFAAOCAgEACgVOew2PHxM5AP1v7GLGw+3tF6rjAcx43D9Hl110Q+BABABg
-lkrPkES/VyMZsfuds8fcDGvGE3o5UfjSno4sij0xdKut8zMazv8/4VMKPCA3EUS0tDUoL01u
-gDdqwlyXuYizeXyH2ICAQfXMtS+raz7mf741CZvO50OxMUMxqljeRfVPDJQJNHOYi2pxuxgj
-KDYx4hdZ9G2o+oLlHhu5+anMDkE8g0tffjRKn8I1D1BmrDdWR/IdbBOj6870abYvqys1qYlP
-otv5N5dm+XxQ8vlrvY7+kfQaAYeO3rP1DM8BGdpEqyFVa+I0rpJPhaZkeWW7cImDQFerHW9b
-KzBrCC815a3WrEhNpxh72ZJZNs1HYJ+29NTB6uu4NJjaMxpk+g2puNSm4b9uVjBbPO9V6sFS
-G+IBqE9ckX/1XjzJtY8Grqoo4SiRb6zcHhp3mxj3oqWi8SKNohAOKnUc7RIP6ss1hqIFyv0x
-XZor4N9tnzD0Fo0JDIURjDPEgo5WTdti/MdGTmKFQNqxyZuT9uSI2Xvhz8p+4pCYkiZqpahZ
-lHqMFxdw9XRZQgrP+cgtOkWEaiNkRBbvtvLdp7MCL2OsQhQEdEbUvDM9slzZXdI7NjJokVBq
-3O4pls3VD2z3L/bHVBe0rBERjyM2C/HSIh84rfmAqBgklzIOqXhd+4RzadUwggcCMIIE6qAD
-AgECAhBaNFgxeGkgh2ZZg7n0Nh9IMA0GCSqGSIb3DQEBDAUAMEYxCzAJBgNVBAYTAk5MMRkw
-FwYDVQQKExBHRUFOVCBWZXJlbmlnaW5nMRwwGgYDVQQDExNHRUFOVCBQZXJzb25hbCBDQSA0
-MB4XDTIzMDgwMjAwMDAwMFoXDTI2MDgwMTIzNTk1OVowgZQxIDAeBgNVBAkTF1RyaWVkYSBB
-bmRyZWphIEhsaW5rdSAxMRgwFgYDVQQIEw9OaXRyaWFuc2t5IGtyYWoxCzAJBgNVBAYTAlNL
-MTIwMAYDVQQKDClVbml2ZXJ6aXRhIEtvbsWhdGFudMOtbmEgRmlsb3pvZmEgdiBOaXRyZTEV
-MBMGA1UEAxMMTWlsYW4gT3JhdmVjMIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEA
-q1KI/4Kzb4KoaDY5H4zzPvosZ0Boil4ZXvH3+2DYGQlXvsh/Deg8ljQko+b6V0Z4Q4sWdefq
-OUmfhqEVf2fXfkSfNT4w2zB3B7pH/NQMdoSvo90XnLJ2L6XaoRsH/Tq7u2JYwcEvWeady2Dt
-xDsAXHknqwQ6nkKQFc94XF2OmiSVuTAvGj9LMrpKPjVSmyoxibRZ4MX1pm4xVZP+Pc5MJUFU
-UPcTo1CaV7DtqnGxcRgCZIL70DN33Tn2l/E+A/KNckaCVU7H8ZH526Z4QzJQrrK3QuoqyWsI
-clCMKRiwrNTD+wseWb9GSMT/i+Ad7jdMIA5tcl3wOLKn1Kw5LY6QMBCHx/S9HaGvcn7ogMRO
-WDl5INN3Zp/9Pq9J32l+8Lud+wLvXs4FSw5aXHf0ZaO4r2M5UnWPqEn+Xi7MuR9wmCp2ffCQ
-jrU9oZ26xxk1hodVb1+iBtaY7DrcZEeQnpwZvytLfoDCp4JSQExC4tUHvoeUZx0XEwFIa05B
-QM8raY50nty6LuoAgz5hQWjQpwHUEh6zXjm7GVsTkv0zIpPhAeSbzyxUS5Dc+lPzmzaj6sz2
-tikcT7C75sdHVD2nfW/3Xw5u9Lix0rCA6Yt0z25tcNDdi5ELq4nlWbAfLP67UcKZY4d07i3+
-yrlwOzrsaHi/xLcxx4FTozB0N+CAHhBDDDsCAwEAAaOCAZswggGXMB8GA1UdIwQYMBaAFGkA
-occhWPjgxRsgsArdp1G/E9nkMB0GA1UdDgQWBBR3a7VTiE53dtbMFAlcqdc1Y9expzAOBgNV
-HQ8BAf8EBAMCBaAwDAYDVR0TAQH/BAIwADAdBgNVHSUEFjAUBggrBgEFBQcDBAYIKwYBBQUH
-AwIwPwYDVR0gBDgwNjA0BgsrBgEEAbIxAQICTzAlMCMGCCsGAQUFBwIBFhdodHRwczovL3Nl
-Y3RpZ28uY29tL0NQUzBCBgNVHR8EOzA5MDegNaAzhjFodHRwOi8vR0VBTlQuY3JsLnNlY3Rp
-Z28uY29tL0dFQU5UUGVyc29uYWxDQTQuY3JsMHgGCCsGAQUFBwEBBGwwajA9BggrBgEFBQcw
-AoYxaHR0cDovL0dFQU5ULmNydC5zZWN0aWdvLmNvbS9HRUFOVFBlcnNvbmFsQ0E0LmNydDAp
-BggrBgEFBQcwAYYdaHR0cDovL0dFQU5ULm9jc3Auc2VjdGlnby5jb20wGQYDVR0RBBIwEIEO
-bW9yYXZlY0B1a2Yuc2swDQYJKoZIhvcNAQEMBQADggIBAJ0zDjgaIyOlAnyN7aAb2Mf+N4op
-qCIh6Hep3o20nKfBWMgCM1xmnPaaEPwi6h0CMZW5GKZYGw0MpHNhSCtddznr5JZAkY07xsnT
-4gn8fQRi8n2LB3nEJSh7pT2+89KBFmee2k6vV25HsZ0YBIq4CRXrC7y21Bpy2WB8SQdNuCbY
-L5JByP4wfPBLKT7zPmdNWBTjJHpBzhANc0Vc6LzaKz75oK0g+GLUi84fS/S4sMyMqPbn7Xqp
-oMnCW4hqorhfubne1hlvdM/sU/VX1aUWWoSnPnN2HKRlrIiDjMmybJpTrE70jTsboR3Y15ti
-8mrRVN3iKKY5LRvDYlPJ9wYDPUSrJBUCDZarg8Er24a394TqmMSi+NyoKfR4UB6gMzXxUbvg
-jxkEhlgs0tI4Xd+m1eFgfeKIQ0ARtUVEHasXuWcI4BLwN4vjfvdPAjlqxUJHP51a9XI/VczC
-olQZnVkreJmZSG6DNFbBPy1zIfVZJHoM0d5ITKUBiadnF5GDH1mopIvqi1gH0oKRse/KnjKh
-gNzbMzGZfeLZjVlw7aO9w4Zm+EBTRhMdHnfKTBYZCoIcK+Dou1cyqMCxsysPDKldm6bwCLxX
-xRU4WtHq5KFs81cW4Rbs4ZXtxF23eIHJ8NgAHr3SPS7zzWwAJ+LMY6voi7/J+tK31UNz7xoT
-3avZsCqlMYIFRTCCBUECAQEwWjBGMQswCQYDVQQGEwJOTDEZMBcGA1UEChMQR0VBTlQgVmVy
-ZW5pZ2luZzEcMBoGA1UEAxMTR0VBTlQgUGVyc29uYWwgQ0EgNAIQWjRYMXhpIIdmWYO59DYf
-SDANBglghkgBZQMEAgMFAKCCArwwGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG
-9w0BCQUxDxcNMjYwNjI5MTMwNDA0WjBPBgkqhkiG9w0BCQQxQgRAGfrF6MaxrCweMktoiTAI
-qHpvKyo1wgqCGzfJAvCAXOmwYTsNbPHhrGxK+Uvfo85VgfYkl4+SD6C9wAYeE14N8DBpBgkr
-BgEEAYI3EAQxXDBaMEYxCzAJBgNVBAYTAk5MMRkwFwYDVQQKExBHRUFOVCBWZXJlbmlnaW5n
-MRwwGgYDVQQDExNHRUFOVCBQZXJzb25hbCBDQSA0AhBaNFgxeGkgh2ZZg7n0Nh9IMGsGCyqG
-SIb3DQEJEAILMVygWjBGMQswCQYDVQQGEwJOTDEZMBcGA1UEChMQR0VBTlQgVmVyZW5pZ2lu
-ZzEcMBoGA1UEAxMTR0VBTlQgUGVyc29uYWwgQ0EgNAIQWjRYMXhpIIdmWYO59DYfSDCCAVcG
-CSqGSIb3DQEJDzGCAUgwggFEMAsGCWCGSAFlAwQBKjALBglghkgBZQMEAQIwCgYIKoZIhvcN
-AwcwDQYIKoZIhvcNAwICAQUwDQYIKoZIhvcNAwICAQUwBwYFKw4DAgcwDQYIKoZIhvcNAwIC
-AQUwBwYFKw4DAhowCwYJYIZIAWUDBAIBMAsGCWCGSAFlAwQCAjALBglghkgBZQMEAgMwCwYJ
-YIZIAWUDBAIEMAsGCWCGSAFlAwQCBzALBglghkgBZQMEAggwCwYJYIZIAWUDBAIJMAsGCWCG
-SAFlAwQCCjALBgkqhkiG9w0BAQEwCwYJK4EFEIZIPwACMAgGBiuBBAELADAIBgYrgQQBCwEw
-CAYGK4EEAQsCMAgGBiuBBAELAzALBgkrgQUQhkg/AAMwCAYGK4EEAQ4AMAgGBiuBBAEOATAI
-BgYrgQQBDgIwCAYGK4EEAQ4DMA0GCSqGSIb3DQEBAQUABIICAHFXZQ0IDODB+C68cNygOPhE
-f8fehXBJVD9DayW0dbXEwkGs0G7l2zdrvkaO2nvnhs1JRUa5LplLae0rCrnttgWxXg5K5+vT
-77LB1NZa6cDbgghaAmuWXkrCQv1oOtx7tI4v9nUqjx/HB7m2ucr/T9nfxvsRS/Fs4VqT2944
-iK1rvkQr+jjo6VM9MvYtzfxWTFebcIvLlep8UGb4dFWEXtCwN6feBJZ2rM2Oo8/+WB3znL90
-3aV/aFLT6Lc0nJ821q0VNeETtwf6WQKFogt52HmLZ/Ymtr97y+QVHZtSj4kUJybQK7kj+0bh
-QgsC6FPmkd1zJzoGd4iZ8L2b3ylUes6zFoV8QItOc7bG1HwWP2TCuFmzd0eJxO+9JiydKzDi
-4VRUggK4Aq65erxn+c0D+HM/yPEVnOe/jZiCUe+MoxnyCX+SWIMgYaFC1oO59ln3g/wM1Ffw
-Od+hV9RFOeeaMOJha9rwbewMHsQ4buUU/x8bt+K0R0N8i2uuseYUI4SyO4ezSGtc+cVmoQSZ
-2rt7p7qA2G0pH4umR0UmwuWxnbBllRezoiepObijF0ITVeYPsZweTn1dF1tUHHA7sGtWLb73
-ZlkTML7zv93Tp50EU2DkB6cpy480A6HcygnVxivgVQ0SymW6ijlp9SNFv1BMW4vaS3lL4lQY
-0K09SQxtAJDpAAAAAAAA
---------------ms020601080005030000050108--
+Is this known? We are seeing this behavior on all Apalis iMX6 modules, though
+we don't see it on Colibri iMX6, so it is not SoC-specific.
+
+Logs from v7.2-rc1 (not working, printing stops after the last line pasted
+here):
+
+    [    0.000000] Booting Linux on physical CPU 0x0
+    [    0.000000] Linux version 7.2.0-rc1-0.0.0-devel (oe-user@oe-host) (arm-tdx-linux-gnueabi-gcc (GCC) 16.1.0, GNU ld (GNU Binutils) 2.46.1) #1 SMP PREEMPT Sun Jun 28 19:01:31 UTC 2026
+    [    0.000000] CPU: ARMv7 Processor [412fc09a] revision 10 (ARMv7), cr=10c5387d
+    [    0.000000] CPU: PIPT / VIPT nonaliasing data cache, VIPT aliasing instruction cache
+    [    0.000000] OF: fdt: Machine model: Toradex Apalis iMX6Q/D Module on Apalis Evaluation Board
+    [    0.000000] Memory policy: Data cache writealloc
+    [    0.000000] cma: Reserved 256 MiB at 0x40000000
+    [    0.000000] OF: reserved mem: Reserved memory: No reserved-memory node in the DT
+    [    0.000000] Zone ranges:
+    [    0.000000]   Normal   [mem 0x0000000010000000-0x000000003fffffff]
+    [    0.000000]   HighMem  [mem 0x0000000040000000-0x000000004fffffff]
+    [    0.000000] Movable zone start for each node
+    [    0.000000] Early memory node ranges
+    [    0.000000]   node   0: [mem 0x0000000010000000-0x000000004fffffff]
+    [    0.000000] Initmem setup node 0 [mem 0x0000000010000000-0x000000004fffffff]
+    [    0.000000] percpu: Embedded 15 pages/cpu s28684 r8192 d24564 u61440
+    [    0.000000] Kernel command line: root=PARTUUID=adb2cea1-02 ro rootwait console=tty1 console=ttymxc0,115200
+    [    0.000000] printk: log buffer data + meta data: 131072 + 409600 = 540672 bytes
+    [    0.000000] Dentry cache hash table entries: 131072 (order: 7, 524288 bytes, linear)
+    [    0.000000] Inode-cache hash table entries: 65536 (order: 6, 262144 bytes, linear)
+    [    0.000000] Built 1 zonelists, mobility grouping on.  Total pages: 262144
+    [    0.000000] mem auto-init: stack:all(zero), heap alloc:off, heap free:off
+    [    0.000000] SLUB: HWalign=32, Order=0-3, MinObjects=0, CPUs=4, Nodes=1
+    [    0.000000] rcu: Preemptible hierarchical RCU implementation.
+    [    0.000000] rcu:     RCU event tracing is enabled.
+    [    0.000000]  Trampoline variant of Tasks RCU enabled.
+    [    0.000000]  Tracing variant of Tasks RCU enabled.
+    [    0.000000] rcu: RCU calculated value of scheduler-enlistment delay is 10 jiffies.
+    [    0.000000] RCU Tasks: Setting shift to 2 and lim to 1 rcu_task_cb_adjust=1 rcu_task_cpu_ids=4.
+    [    0.000000] NR_IRQS: 16, nr_irqs: 16, preallocated irqs: 16
+    [    0.000000] L2C-310 errata 752271 769419 enabled
+    [    0.000000] L2C-310 enabling early BRESP for Cortex-A9
+    [    0.000000] L2C-310 full line of zeros enabled for Cortex-A9
+    [    0.000000] L2C-310 ID prefetch enabled, offset 16 lines
+
+
+Logs from v7.1 (working) (full logs here: https://paste.debian.net/hidden/0f65ae5f)
+
+    [    0.000000] Booting Linux on physical CPU 0x0
+    [    0.000000] Linux version 7.1.0-0.0.0-devel (oe-user@oe-host) (arm-tdx-linux-gnueabi-gcc (GCC) 16.1.0, GNU ld (GNU Binutils) 2.46.1) #1 SMP PREEMPT Wed Jun 24 01:36:41 UTC 2026
+    [    0.000000] CPU: ARMv7 Processor [412fc09a] revision 10 (ARMv7), cr=10c5387d
+    [    0.000000] CPU: PIPT / VIPT nonaliasing data cache, VIPT aliasing instruction cache
+    [    0.000000] OF: fdt: Machine model: Toradex Apalis iMX6Q/D Module on Apalis Evaluation Board
+    [    0.000000] Memory policy: Data cache writealloc
+    [    0.000000] cma: Reserved 256 MiB at 0x40000000
+    [    0.000000] OF: reserved mem: Reserved memory: No reserved-memory node in the DT
+    [    0.000000] Zone ranges:
+    [    0.000000]   Normal   [mem 0x0000000010000000-0x000000003fffffff]
+    [    0.000000]   HighMem  [mem 0x0000000040000000-0x000000004fffffff]
+    [    0.000000] Movable zone start for each node
+    [    0.000000] Early memory node ranges
+    [    0.000000]   node   0: [mem 0x0000000010000000-0x000000004fffffff]
+    [    0.000000] Initmem setup node 0 [mem 0x0000000010000000-0x000000004fffffff]
+    [    0.000000] percpu: Embedded 15 pages/cpu s28684 r8192 d24564 u61440
+    [    0.000000] pcpu-alloc: s28684 r8192 d24564 u61440 alloc=15*4096
+    [    0.000000] pcpu-alloc: [0] 0 [0] 1 [0] 2 [0] 3
+    [    0.000000] Kernel command line: root=PARTUUID=4ce4ba92-02 ro rootwait console=tty1 console=ttymxc0,115200
+    [    0.000000] printk: log buffer data + meta data: 131072 + 409600 = 540672 bytes
+    [    0.000000] Dentry cache hash table entries: 131072 (order: 7, 524288 bytes, linear)
+    [    0.000000] Inode-cache hash table entries: 65536 (order: 6, 262144 bytes, linear)
+    [    0.000000] Built 1 zonelists, mobility grouping on.  Total pages: 262144
+    [    0.000000] mem auto-init: stack:all(zero), heap alloc:off, heap free:off
+    [    0.000000] SLUB: HWalign=32, Order=0-3, MinObjects=0, CPUs=4, Nodes=1
+    [    0.000000] rcu: Preemptible hierarchical RCU implementation.
+    [    0.000000] rcu:     RCU event tracing is enabled.
+    [    0.000000]  Trampoline variant of Tasks RCU enabled.
+    [    0.000000]  Tracing variant of Tasks RCU enabled.
+    [    0.000000] rcu: RCU calculated value of scheduler-enlistment delay is 10 jiffies.
+    [    0.000000] RCU Tasks: Setting shift to 2 and lim to 1 rcu_task_cb_adjust=1 rcu_task_cpu_ids=4.
+    [    0.000000] NR_IRQS: 16, nr_irqs: 16, preallocated irqs: 16
+    [    0.000000] L2C-310 errata 752271 769419 enabled
+    [    0.000000] L2C-310 enabling early BRESP for Cortex-A9
+    [    0.000000] L2C-310 full line of zeros enabled for Cortex-A9
+    [    0.000000] L2C-310 ID prefetch enabled, offset 16 lines
+    [    0.000000] L2C-310 dynamic clock gating enabled, standby mode enabled
+    [    0.000000] L2C-310 cache controller enabled, 16 ways, 1024 kB
+    [    0.000000] L2C-310: CACHE_ID 0x410000c7, AUX_CTRL 0x76470001
+    [    0.000000] rcu: srcu_init: Setting srcu_struct sizes based on contention.
+    [    0.000000] clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 19112604462750000 ns
+    [    0.000000] Switching to timer-based delay loop, resolution 333ns
+    [    0.000001] sched_clock: 32 bits at 3000kHz, resolution 333ns, wraps every 715827882841ns
+    [    0.000018] clocksource: mxc_timer1: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 637086815595 ns
+    [    0.001910] Console: colour dummy device 80x30
+    [    0.001926] printk: legacy console [tty1] enabled
+    [    0.002519] Calibrating delay loop (skipped), value calculated using timer frequency.. 6.00 BogoMIPS (lpj=30000)
+    [    0.002561] CPU: Testing write buffer coherency: ok
+    [    0.002627] CPU0: Spectre v2: using BPIALL workaround
+    [    0.002650] pid_max: default: 32768 minimum: 301
+    [    0.002989] Mount-cache hash table entries: 2048 (order: 1, 8192 bytes, linear)
+    [    0.003038] Mountpoint-cache hash table entries: 2048 (order: 1, 8192 bytes, linear)
+    [    0.003430] VFS: Finished mounting rootfs on nullfs
+    [    0.004538] CPU0: thread -1, cpu 0, socket 0, mpidr 80000000
+    [    0.006552] Setting up static identity map for 0x10100000 - 0x10100060
+    [    0.006835] rcu: Hierarchical SRCU implementation.
+    [    0.006864] rcu:     Max phase no-delay instances is 1000.
+    [    0.007320] Timer migration: 1 hierarchy levels; 8 children per group; 1 crossnode level
+    [    0.008854] smp: Bringing up secondary CPUs ...
+    [    0.010035] CPU1: thread -1, cpu 1, socket 0, mpidr 80000001
+    [    0.010218] CPU1: Spectre v2: using BPIALL workaround
+    [    0.011412] CPU2: thread -1, cpu 2, socket 0, mpidr 80000002
+    [    0.011581] CPU2: Spectre v2: using BPIALL workaround
+    [    0.012747] CPU3: thread -1, cpu 3, socket 0, mpidr 80000003
+    [    0.012917] CPU3: Spectre v2: using BPIALL workaround
+    [    0.013109] smp: Brought up 1 node, 4 CPUs
+    ...
+
