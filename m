@@ -1,208 +1,371 @@
-Received: from mail-dy1-f180.google.com (mail-dy1-f180.google.com [74.125.82.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 978963E4C94
-	for <regressions@lists.linux.dev>; Mon, 29 Jun 2026 14:34:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D5993B42CE
+	for <regressions@lists.linux.dev>; Mon, 29 Jun 2026 15:09:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782743693; cv=none; b=P71Kp7ozcrqt0bPRrIDU/qhNb/XbDNL95zdylOYqevYir4hFYuN7VmJ1/DhiU0YnyPQcYAR/q7ZUBZf4Tc8LxEUoFaeYdTE302SgMDb4qR23PuAH5K/fcpjSxs5GeKm+qCGJwyQydzFqQm5QXiy6+pgVsTN6YfGfaeYhjbdhdDY=
+	t=1782745802; cv=none; b=UYYGrsqTVJhoOwMmK4ut+8Wujdnnzzhyg+mlyjPWUV9OZ1Dmk6TYFfX5wTvxIumYandMtIyetZ66E81M2vzPLRKY86rY7yV6ildITesIIopv2Zwlv5TOmgopbjSWqCi98c1AIh/CYaSbJUCEIYdODgUdtxHMJSAkeC15Trrdw84=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782743693; c=relaxed/simple;
-	bh=nQgj+GFBH/eooOxlxhaBazNeK+nly5tw28MqdrnZ7fE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=W5IANaAa6tB1lw/9XMq/pvx1p5SbTBDANt3t0It2RmJPreQ8zhJ4/A7WrgIRLWlBF6CzGmysTAA9yKdpxFYRNg830H9oJ4aYT/TtTjDjdP8r6kyJJDDAumdNWcwTjlkiVWhBBsC2/Kpzg9hLT/MUzbxJuVQx+gUOMNofd6203YU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dizCSomj; arc=none smtp.client-ip=74.125.82.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1782745802; c=relaxed/simple;
+	bh=klVUrquG5HzETXVQiLH2GUi0E7kCMnUpe7oJc0jZzkg=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=ZsQk1U0Gl6bW4Bzwt8a7gSlyfHOXc6Z7EvXPg/p1PwYtHc3wS3DY/JUnugx9uvnrvvHWDGOM0hgcMtxbLaBSN+b9cdbww9zS0oQhrZFID6gE/24bUxKMYaWJOyuYVwioqPXLY5DxfJN7t/O0NEQgtWg+W1aK8VX0sjaEmCGCyz0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bDhM2b+M; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dizCSomj"
-Received: by mail-dy1-f180.google.com with SMTP id 5a478bee46e88-30b9e755555so5763068eec.1
-        for <regressions@lists.linux.dev>; Mon, 29 Jun 2026 07:34:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1782743691; x=1783348491; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=UisZIj9SAq+/iU2iNCfWWIml1oT3ijfALHSO5VDxq/M=;
-        b=dizCSomjfuoLKA46Q9yj+pzPfsEWpBPzkI2jqhc91L2gH99z3fCaOPNrdi/ei+b15s
-         9lwywIDv8fKKYdrBW/wmim4cAGtcYCv3Q0dYC2sQ8N1TmfejZ+5A0wWE8RRBR0yeJaE5
-         tQwpeOA8+0vO91oRCNwcjvwrsoaOPPi7QSsrEmKX4wO20fttwvJGhQr4ymuJvgvm7dcp
-         TmogUM0bxEJMa1FOg0V6WHTeYeeY0kD7zZhNjropg7a1qzbcceQOqUhcTcC49yPYH1fj
-         08MuULAtCR9YLcggMTsg6c7fdnMq9TG3h59EpUMNGlTURJGpoiu9iKYVjRgiV7lQOf2e
-         Zj6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782743691; x=1783348491;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UisZIj9SAq+/iU2iNCfWWIml1oT3ijfALHSO5VDxq/M=;
-        b=f8duV54HbeinXw1HYUHhdTdRJiUOzq0F1jYlNR4e4CvcR95FC9Ck2V83Ligkc2A65d
-         A7XawZFrQp07LuMLjlMMa1oyxA5KYezBoGzfZ0W7HGL+s4j/xdlx7X+T+aHhe8pxntwn
-         yu3aIuF/wfpP5FDWzvFTv0FIoQCDKCKRCEpDG9MaIR7SNatuPGm/O6F+EyXpvjFNev2Q
-         bbmB9SKHU6L0PjEFvSVG2LISn6NaKbHYos/CIvZJ3C82q+AhMu5hsafYKcaE9ujeFAJf
-         IU7IFDE6OOpfVCWBghA/Sc7xEeKEgx/1ASvBcrjBzZpEedG79Uz5xkaoZJ69A1GqWtD6
-         ks7A==
-X-Forwarded-Encrypted: i=1; AHgh+RpppEKU6cnfcx+KBG+kVkPQZ5CMAfLXN2CQg00oPN9PpAkOkQd6q48aNlloS4cZpAruwBN6hi+3aLEO2g==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yw9ekv1mM2itO5ODASESygyfnkdcKiR5r4/Zxw2g983iyX2a6AA
-	VhFvIo5uVhj8eOdgDQqYE+jihbqgdUZtmteTIKb+WGAAQMxECtbkbR4z
-X-Gm-Gg: AfdE7cmcv85jv7r0a0/6hLkx0pzve7QuBCVq2SKHYH3Qf53VNdpVeYAg7blG5zFCCOz
-	1HO8UwAgyU5W6BQ1GU071bu0puE4wL7CtyKwepsaLDCgnN4utPmF1GOee1gfSFx2yjd+BLPzeKG
-	GOHnsJT4VmB8CTeHw43WB0b6/heSRsvjrnkFI2atxDiWdOeYhsVjbatDvhjRqWJVKi+KaIAHArK
-	9oAbiryYDZ6L6Q0+hTNSEchVrunBKOlfCKB8Ke+ocHPUh1ku3vdl9uIAnJbzvQQ8W0+JR3goZHx
-	m2G9/AKRLulOoux4wynKfjGDDald0xffgtrfjE6+edpcNFEw2E3fihhcw2PgnTMU2ujGAw0rM7z
-	3cC7CF/PBbkaKRpGVVodp3oNTpWScie+pV7knel0axlWCURCy1lk54NxSEjvjtnwEr5DSI2oZKu
-	K0GwtAoaNqKnkXBtT0pdOQAbLvzUDbjf4L7kEa5Ts+ouc1QSQg3JL80s8GPj5B6BHrkeILttR6F
-	V5unm8Y
-X-Received: by 2002:a05:693c:62d0:b0:30c:536e:3a95 with SMTP id 5a478bee46e88-30c84b94ff5mr10920163eec.2.1782743690538;
-        Mon, 29 Jun 2026 07:34:50 -0700 (PDT)
-Received: from leonardoc-nb ([67.159.246.222])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-30edffa26afsm176604eec.4.2026.06.29.07.34.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2026 07:34:50 -0700 (PDT)
-From: Leonardo Costa <leoreis.costa@gmail.com>
-To: robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	Frank.Li@nxp.com,
-	s.hauer@pengutronix.de,
-	kernel@pengutronix.de,
-	festevam@gmail.com
-Cc: leonardo.costa@toradex.com,
-	devicetree@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: [REGRESSION] mainline/master: Apalis iMX6 no longer boots
-Date: Mon, 29 Jun 2026 11:34:32 -0300
-Message-ID: <20260629143439.361560-1-leoreis.costa@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bDhM2b+M"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1782745801; x=1814281801;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=klVUrquG5HzETXVQiLH2GUi0E7kCMnUpe7oJc0jZzkg=;
+  b=bDhM2b+MkMj3k5bB9eCEWlF5e1hW66tIW8fTYlOoIbv/r4xyoHjMk167
+   Wy8lCCDGoK8/L79P8hjJ58n5kGlNPy1/16Cfg/toKv11ac9A7I+45dj1W
+   MbfhI0wlJ+CmzPYR9Ci2mIQSDAyqbTwb4KO9qviLrgRp6t1bYSGMl+jME
+   3LKIGMfhbIRiwWHv4mY1PMvN6/EEBNk9GwNNEPSY2V2quQ2dlV4OxReTH
+   jzmPjNmdhDyjUTt44Ijz6xSLbon9i1M0x9IQaiOXO2ZzbtrJJ7VM00iDk
+   JIsOBQn7N88C5B8/Q/Jmf9BOVmRncZEcwRqxnwnnLf2Nm+5mp0ywJQGlw
+   Q==;
+X-CSE-ConnectionGUID: 2e4SK530Tr698EwftyXlCg==
+X-CSE-MsgGUID: X7JDHMy7TSShAuQ8qN2FdQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11832"; a="93789500"
+X-IronPort-AV: E=Sophos;i="6.24,232,1774335600"; 
+   d="scan'208";a="93789500"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2026 08:10:00 -0700
+X-CSE-ConnectionGUID: 66V/L2wgQQ6puCwgc0CtMw==
+X-CSE-MsgGUID: utwKVrqmTnuevh8eUW10cg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,232,1774335600"; 
+   d="scan'208";a="290105331"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.42])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2026 08:09:56 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 29 Jun 2026 18:09:53 +0300 (EEST)
+To: Denis Benato <denis.benato@linux.dev>
+cc: Travers Biddle <traversbiddle@gmail.com>, corentin.chary@gmail.com, 
+    luke@ljones.dev, Hans de Goede <hansg@kernel.org>, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    regressions@lists.linux.dev
+Subject: Re: [REGRESSION] platform/x86: asus-wmi: charge_control_end_threshold
+ returns -ENODATA at boot, breaking UPower/GNOME detection
+In-Reply-To: <79787895-204f-4329-82dc-fada89c2ffa6@linux.dev>
+Message-ID: <bc6a3bb4-6e5e-1d91-b1bd-3d5508aa28b0@linux.intel.com>
+References: <CABsFS_g+V_Owum6knLhenhM15EXJRrsF0FcLiw30WZxarsTpUA@mail.gmail.com> <79787895-204f-4329-82dc-fada89c2ffa6@linux.dev>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/mixed; boundary="8323328-1706428708-1782745793=:1167"
 
-Hello,
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-We are seeing a regression on Apalis iMX6 where the kernel doesn't boot in the
-newest v7.2-rc1 (it was working before, in v7.1). The device tree being used is the imx6q-apalis-eval.dtb. The kernel
-configuration used is the one shown below:
+--8323328-1706428708-1782745793=:1167
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-    https://gist.github.com/lcosta37/53efdb2fb6e6e0fc05437c7e53b47737
+On Sun, 28 Jun 2026, Denis Benato wrote:
+> On 6/28/26 08:03, Travers Biddle wrote:
+> > Hello,
+> >
+> > I am seeing a regression on an ASUS V16 laptop where the GNOME Settings
+> > "Preserve Battery Health" UI disappears after booting Linux v7.1. I rep=
+roduced
+> > this with a kernel built from torvalds/linux tag v7.1.
+> >
+> > I first noticed this after CachyOS updated linux-cachyos from
+> > 7.0.12-1 to 7.1.1-2. The same machine still works as expected with
+> > linux-cachyos-lts 6.18.36-1, where UPower reports charge threshold
+> > support and GNOME shows the Battery Charging section.
+> >
+> > The change that appears to expose this is:
+> >
+> > =C2=A0 186bf9031666 ("platform/x86: asus-wmi: do not enforce a battery =
+charge threshold")
+> >
+> > #regzbot introduced: 186bf9031666602d61b40832181b6b6fdc3ba4dc
+> >
+> > Hardware:
+> >
+> > =C2=A0 DMI product: ASUS V16 V3607VH_V3607VH
+> > =C2=A0 Board: =C2=A0 =C2=A0 =C2=A0 V3607VH
+> > =C2=A0 BIOS: =C2=A0 =C2=A0 =C2=A0 =C2=A0V3607VH.303
+> > =C2=A0 Battery: =C2=A0 =C2=A0 /sys/class/power_supply/BAT0
+> > =C2=A0 Battery model_name: X350052
+> >
+> > Userspace:
+> >
+> > =C2=A0 Distro: CachyOS / Arch Linux
+> > =C2=A0 UPower: 1.91.2
+> > =C2=A0 systemd/udev: 261
+> > =C2=A0 Desktop: GNOME Settings power panel
+> >
+> > The machine only exposes an end threshold:
+> >
+> > =C2=A0 /sys/class/power_supply/BAT0/charge_control_end_threshold
+> >
+> > There is no charge_control_start_threshold node on this system.
+> >
+> > On an unmodified build from torvalds/linux tag v7.1:
+> >
+> > =C2=A0 $ uname -r
+> > =C2=A0 7.1.0-asus-test-1
+> >
+> > =C2=A0 $ cat /proc/sys/kernel/tainted
+> > =C2=A0 0
+> >
+> > =C2=A0 $ cat /sys/class/power_supply/BAT0/charge_control_end_threshold
+> > =C2=A0 cat: /sys/class/power_supply/BAT0/charge_control_end_threshold: =
+No data available
+> >
+> > `udevadm test /sys/class/power_supply/BAT0` does not import CHARGE_LIMI=
+T.
+> > The relevant end of the properties list is:
+> >
+> > =C2=A0 Properties:
+> > =C2=A0 =C2=A0 ACTION=3Dadd
+> > =C2=A0 =C2=A0 DEVPATH=3D/devices/LNXSYSTM:00/LNXSYBUS:00/PNP0A08:00/PNP=
+0C0A:03/power_supply/BAT0
+> > =C2=A0 =C2=A0 DEVTYPE=3Dpower_supply
+> > =C2=A0 =C2=A0 POWER_SUPPLY_CAPACITY=3D81
+> > =C2=A0 =C2=A0 POWER_SUPPLY_CAPACITY_LEVEL=3DNormal
+> > =C2=A0 =C2=A0 POWER_SUPPLY_CYCLE_COUNT=3D26
+> > =C2=A0 =C2=A0 POWER_SUPPLY_ENERGY_FULL=3D60512000
+> > =C2=A0 =C2=A0 POWER_SUPPLY_ENERGY_FULL_DESIGN=3D63041000
+> > =C2=A0 =C2=A0 POWER_SUPPLY_ENERGY_NOW=3D49102000
+> > =C2=A0 =C2=A0 POWER_SUPPLY_MANUFACTURER=3DOEM
+> > =C2=A0 =C2=A0 POWER_SUPPLY_MODEL_NAME=3DX350052
+> > =C2=A0 =C2=A0 POWER_SUPPLY_NAME=3DBAT0
+> > =C2=A0 =C2=A0 POWER_SUPPLY_POWER_NOW=3D25216000
+> > =C2=A0 =C2=A0 POWER_SUPPLY_PRESENT=3D1
+> > =C2=A0 =C2=A0 POWER_SUPPLY_SERIAL_NUMBER=3D123456789
+> > =C2=A0 =C2=A0 POWER_SUPPLY_STATUS=3DCharging
+> > =C2=A0 =C2=A0 POWER_SUPPLY_TECHNOLOGY=3DUnknown
+> > =C2=A0 =C2=A0 POWER_SUPPLY_TYPE=3DBattery
+> > =C2=A0 =C2=A0 POWER_SUPPLY_VOLTAGE_MIN_DESIGN=3D11985000
+> > =C2=A0 =C2=A0 POWER_SUPPLY_VOLTAGE_NOW=3D13118000
+> > =C2=A0 =C2=A0 SUBSYSTEM=3Dpower_supply
+> >
+> > UPower then does not expose the threshold values or threshold support:
+> >
+> > =C2=A0 $ upower -i /org/freedesktop/UPower/devices/battery_BAT0
+> > =C2=A0 =C2=A0 native-path: =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0BAT0
+> > =C2=A0 =C2=A0 vendor: =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+OEM
+> > =C2=A0 =C2=A0 model: =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0X350052
+> > =C2=A0 =C2=A0 serial: =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+123456789
+> > =C2=A0 =C2=A0 power supply: =C2=A0 =C2=A0 =C2=A0 =C2=A0 yes
+> > =C2=A0 =C2=A0 battery
+> > =C2=A0 =C2=A0 =C2=A0 present: =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ yes
+> > =C2=A0 =C2=A0 =C2=A0 rechargeable: =C2=A0 =C2=A0 =C2=A0 =C2=A0yes
+> > =C2=A0 =C2=A0 =C2=A0 state: =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 charging
+> > =C2=A0 =C2=A0 =C2=A0 percentage: =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A081%
+> > =C2=A0 =C2=A0 =C2=A0 capacity: =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A095.9883%
+> > =C2=A0 =C2=A0 =C2=A0 charge-threshold-enabled: =C2=A0 =C2=A0 =C2=A0yes
+> > =C2=A0 =C2=A0 =C2=A0 icon-name: =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0'batt=
+ery-full-charging-symbolic'
+> >
+> > In this state, GNOME Settings hides the Battery Charging section entire=
+ly.
+> >
+> > I then tested a local demonstration change which does not reintroduce t=
+he
+> > hardware write that 186bf9031666 removed. It only keeps the cached sysf=
+s value
+> > readable by initializing charge_end_threshold to 100 instead of -1.
+> >
+> > With that demonstration change applied:
+> >
+> > =C2=A0 $ uname -r
+> > =C2=A0 7.1.0-asus-test-2-00001-g76935ee241bc
+> >
+> > =C2=A0 $ cat /sys/class/power_supply/BAT0/charge_control_end_threshold
+> > =C2=A0 80
+> >
+> > `udevadm test /sys/class/power_supply/BAT0` imports the UPower hwdb lim=
+it:
+> >
+> > =C2=A0 BAT0: /usr/lib/udev/rules.d/60-upower-battery.rules:7 IMPORT{bui=
+ltin}=3D"hwdb 'battery:$kernel:$attr{model_name}:$attr{[dmi/id]modalias}'":=
+ Importing properties from results of builtin command "hwdb 'battery:BAT0:X=
+350052:dmi:bvnAmericanMegatrendsInternational,LLC.:bvrV3607VH.303:bd04/29/2=
+025:br5.27:efr3.16:svnASUSTeKCOMPUTERINC.:pnASUSV16V3607VH_V3607VH:pvr1.0:r=
+vnASUSTeKCOMPUTERINC.:rnV3607VH:rvr1.0:cvnASUSTeKCOMPUTERINC.:ct10:cvr1.0:s=
+ku:pfaASUSV16:'".
+> >
+> > =C2=A0 Properties:
+> > =C2=A0 =C2=A0 ACTION=3Dadd
+> > =C2=A0 =C2=A0 CHARGE_LIMIT=3D75,80
+> > =C2=A0 =C2=A0 DEVPATH=3D/devices/LNXSYSTM:00/LNXSYBUS:00/PNP0A08:00/PNP=
+0C0A:03/power_supply/BAT0
+> > =C2=A0 =C2=A0 DEVTYPE=3Dpower_supply
+> > =C2=A0 =C2=A0 POWER_SUPPLY_CAPACITY=3D97
+> > =C2=A0 =C2=A0 POWER_SUPPLY_CAPACITY_LEVEL=3DNormal
+> > =C2=A0 =C2=A0 POWER_SUPPLY_CYCLE_COUNT=3D26
+> > =C2=A0 =C2=A0 POWER_SUPPLY_ENERGY_FULL=3D60512000
+> > =C2=A0 =C2=A0 POWER_SUPPLY_ENERGY_FULL_DESIGN=3D63041000
+> > =C2=A0 =C2=A0 POWER_SUPPLY_ENERGY_NOW=3D58414000
+> > =C2=A0 =C2=A0 POWER_SUPPLY_MANUFACTURER=3DOEM
+> > =C2=A0 =C2=A0 POWER_SUPPLY_MODEL_NAME=3DX350052
+> > =C2=A0 =C2=A0 POWER_SUPPLY_NAME=3DBAT0
+> > =C2=A0 =C2=A0 POWER_SUPPLY_POWER_NOW=3D0
+> > =C2=A0 =C2=A0 POWER_SUPPLY_PRESENT=3D1
+> > =C2=A0 =C2=A0 POWER_SUPPLY_SERIAL_NUMBER=3D123456789
+> > =C2=A0 =C2=A0 POWER_SUPPLY_STATUS=3DNot charging
+> > =C2=A0 =C2=A0 POWER_SUPPLY_TECHNOLOGY=3DUnknown
+> > =C2=A0 =C2=A0 POWER_SUPPLY_TYPE=3DBattery
+> > =C2=A0 =C2=A0 POWER_SUPPLY_VOLTAGE_MIN_DESIGN=3D11985000
+> > =C2=A0 =C2=A0 POWER_SUPPLY_VOLTAGE_NOW=3D13026000
+> > =C2=A0 =C2=A0 SUBSYSTEM=3Dpower_supply
+> >
+> > UPower then exposes threshold support again:
+> >
+> > =C2=A0 $ upower -i /org/freedesktop/UPower/devices/battery_BAT0
+> > =C2=A0 =C2=A0 native-path: =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0BAT0
+> > =C2=A0 =C2=A0 vendor: =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+OEM
+> > =C2=A0 =C2=A0 model: =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0X350052
+> > =C2=A0 =C2=A0 serial: =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+123456789
+> > =C2=A0 =C2=A0 power supply: =C2=A0 =C2=A0 =C2=A0 =C2=A0 yes
+> > =C2=A0 =C2=A0 battery
+> > =C2=A0 =C2=A0 =C2=A0 present: =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ yes
+> > =C2=A0 =C2=A0 =C2=A0 rechargeable: =C2=A0 =C2=A0 =C2=A0 =C2=A0yes
+> > =C2=A0 =C2=A0 =C2=A0 state: =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 fully-charged
+> > =C2=A0 =C2=A0 =C2=A0 percentage: =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A097%
+> > =C2=A0 =C2=A0 =C2=A0 capacity: =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A095.9883%
+> > =C2=A0 =C2=A0 =C2=A0 charge-start-threshold: =C2=A0 =C2=A0 =C2=A0 =C2=
+=A075%
+> > =C2=A0 =C2=A0 =C2=A0 charge-end-threshold: =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A080%
+> > =C2=A0 =C2=A0 =C2=A0 charge-threshold-enabled: =C2=A0 =C2=A0 =C2=A0yes
+> > =C2=A0 =C2=A0 =C2=A0 charge-threshold-supported: =C2=A0 =C2=A0yes
+> > =C2=A0 =C2=A0 =C2=A0 icon-name: =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0'batt=
+ery-full-charged-symbolic'
+> >
+> > GNOME Settings also shows the Battery Charging section again.
+> >
+> > I am not asking for a plain revert. The part of 186bf9031666 that avoid=
+s
+> > writing 100 to the hardware at boot seems important, since that write c=
+an
+> > overwrite a charge limit retained by the firmware/platform.
+> >
+> > I am mainly reporting this so you are aware of the userspace-visible
+> > effect of returning -ENODATA here. On this end-threshold-only machine,
+> > that makes the only threshold node unreadable during UPower's discovery=
+,
+> > so UPower and GNOME treat charge limiting as unsupported even though th=
+e
+> > kernel write path still works.
+> >
+> > It may be that UPower should handle this case differently; I have also
+> > filed a UPower-side issue at:
+> > https://gitlab.freedesktop.org/upower/upower/-/work_items/347
+> >
+> > For completeness, here is a local diff applied to v7.1 that restored
+> > functionality. I don't intend for it to be a final fix; only a demonstr=
+ation
+> > that keeping the cached sysfs value readable, while still avoiding the =
+boot-time
+> > hardware write, restores UPower/GNOME feature discovery on this machine=
+=2E
+> >
+> > ---
+> > diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asu=
+s-wmi.c
+> > index 80144c412b90..d376358b590c 100644
+> > --- a/drivers/platform/x86/asus-wmi.c
+> > +++ b/drivers/platform/x86/asus-wmi.c
+> > @@ -1582,11 +1582,11 @@ static int asus_wmi_battery_add(struct power_su=
+pply *battery, struct acpi_batter
+> > =C2=A0 return -ENODEV;
+> > =C2=A0
+> > =C2=A0 /* The charge threshold is only reset when the system is power c=
+ycled,
+> > - * and we can't read the current threshold, however the majority of
+> > - * platforms retains it, therefore signal the threshold as unknown
+> > - * until user explicitly sets it to a new value.
+> > + * and we can't read the current threshold. Do not write a value to
+> > + * hardware here, but keep the sysfs attribute readable so userspace
+> > + * can discover charge threshold support and explicitly set a value.
+> > =C2=A0 */
+> > - charge_end_threshold =3D -1;
+> > + charge_end_threshold =3D 100;
+> > =C2=A0
+> > =C2=A0 return 0;
+> > =C2=A0}
+> > ---
+> >
+> > I have attached the dmesg from the reproducing v7.1 boot and the .confi=
+g used
+> > for the build.
+> >
+> > Thanks,
+> > Travers
+> >
+> Hi Travers,
+>=20
+> If you search that patch in the lkml you will see that I actually tested=
+=20
+> GNOME when I did this and I remember that I was able to change the=20
+> threshold.
+>=20
+> Moreover I also opened a discussion on Upower for this specifically (you=
+=20
+> can find in closed merge requests)=20
+> https://gitlab.freedesktop.org/upower/upower/-/merge_requests but sadly=
+=20
+> right now the merge request of freedesktop is whining about undisclosed=
+=20
+> errors.
+>=20
+> Anyway I think that either upower forgot to ship the updated rule or=20
+> there is a regression in upower.
+>=20
+> Given that setting battery to 100% would mean charging the laptop while=
+=20
+> it boots and certain people don't want this (and it's not a good=20
+> practice to do that) I am not happy having to revert this change, albeit=
+=20
+> if upower doesn't solve this issue I'll probably need to.
+>=20
+> Moreover if I remember correctly another possible workaround to have=20
+> upower work is to define a fixed start_charge_threshold.
+>=20
+> While it's possible to add it would be useless and not mapped to the=20
+> hardware in any way thus simply being an hack.
+>=20
+> Ilpo, what do we do in these cases? What's the usual procedure for these?
 
-The kernel logs stop almost immediately as the board starts to boot, and I 
-don't notice any difference in the logs that points to the cause.
+Hi,
 
-Is this known? We are seeing this behavior on all Apalis iMX6 modules, though
-we don't see it on Colibri iMX6, so it is not SoC-specific.
+As you probably know, the usual procedure is to not cause user-space=20
+visible regressions. But this is complicated by the fact that nobody
+(I assume) really wants the old behavior either.
 
-Logs from v7.2-rc1 (not working, printing stops after the last line pasted
-here):
+It would always be possible to take a timeout and revert it for now, and=20
+apply the change again later once the upower situation is (hopefully)=20
+sorted out. That's what is sometimes done for troublesome changes to give=
+=20
+time to sort out the problems properly without constant time pressure.
 
-    [    0.000000] Booting Linux on physical CPU 0x0
-    [    0.000000] Linux version 7.2.0-rc1-0.0.0-devel (oe-user@oe-host) (arm-tdx-linux-gnueabi-gcc (GCC) 16.1.0, GNU ld (GNU Binutils) 2.46.1) #1 SMP PREEMPT Sun Jun 28 19:01:31 UTC 2026
-    [    0.000000] CPU: ARMv7 Processor [412fc09a] revision 10 (ARMv7), cr=10c5387d
-    [    0.000000] CPU: PIPT / VIPT nonaliasing data cache, VIPT aliasing instruction cache
-    [    0.000000] OF: fdt: Machine model: Toradex Apalis iMX6Q/D Module on Apalis Evaluation Board
-    [    0.000000] Memory policy: Data cache writealloc
-    [    0.000000] cma: Reserved 256 MiB at 0x40000000
-    [    0.000000] OF: reserved mem: Reserved memory: No reserved-memory node in the DT
-    [    0.000000] Zone ranges:
-    [    0.000000]   Normal   [mem 0x0000000010000000-0x000000003fffffff]
-    [    0.000000]   HighMem  [mem 0x0000000040000000-0x000000004fffffff]
-    [    0.000000] Movable zone start for each node
-    [    0.000000] Early memory node ranges
-    [    0.000000]   node   0: [mem 0x0000000010000000-0x000000004fffffff]
-    [    0.000000] Initmem setup node 0 [mem 0x0000000010000000-0x000000004fffffff]
-    [    0.000000] percpu: Embedded 15 pages/cpu s28684 r8192 d24564 u61440
-    [    0.000000] Kernel command line: root=PARTUUID=adb2cea1-02 ro rootwait console=tty1 console=ttymxc0,115200
-    [    0.000000] printk: log buffer data + meta data: 131072 + 409600 = 540672 bytes
-    [    0.000000] Dentry cache hash table entries: 131072 (order: 7, 524288 bytes, linear)
-    [    0.000000] Inode-cache hash table entries: 65536 (order: 6, 262144 bytes, linear)
-    [    0.000000] Built 1 zonelists, mobility grouping on.  Total pages: 262144
-    [    0.000000] mem auto-init: stack:all(zero), heap alloc:off, heap free:off
-    [    0.000000] SLUB: HWalign=32, Order=0-3, MinObjects=0, CPUs=4, Nodes=1
-    [    0.000000] rcu: Preemptible hierarchical RCU implementation.
-    [    0.000000] rcu:     RCU event tracing is enabled.
-    [    0.000000]  Trampoline variant of Tasks RCU enabled.
-    [    0.000000]  Tracing variant of Tasks RCU enabled.
-    [    0.000000] rcu: RCU calculated value of scheduler-enlistment delay is 10 jiffies.
-    [    0.000000] RCU Tasks: Setting shift to 2 and lim to 1 rcu_task_cb_adjust=1 rcu_task_cpu_ids=4.
-    [    0.000000] NR_IRQS: 16, nr_irqs: 16, preallocated irqs: 16
-    [    0.000000] L2C-310 errata 752271 769419 enabled
-    [    0.000000] L2C-310 enabling early BRESP for Cortex-A9
-    [    0.000000] L2C-310 full line of zeros enabled for Cortex-A9
-    [    0.000000] L2C-310 ID prefetch enabled, offset 16 lines
+--=20
+ i.
 
-
-Logs from v7.1 (working) (full logs here: https://paste.debian.net/hidden/0f65ae5f)
-
-    [    0.000000] Booting Linux on physical CPU 0x0
-    [    0.000000] Linux version 7.1.0-0.0.0-devel (oe-user@oe-host) (arm-tdx-linux-gnueabi-gcc (GCC) 16.1.0, GNU ld (GNU Binutils) 2.46.1) #1 SMP PREEMPT Wed Jun 24 01:36:41 UTC 2026
-    [    0.000000] CPU: ARMv7 Processor [412fc09a] revision 10 (ARMv7), cr=10c5387d
-    [    0.000000] CPU: PIPT / VIPT nonaliasing data cache, VIPT aliasing instruction cache
-    [    0.000000] OF: fdt: Machine model: Toradex Apalis iMX6Q/D Module on Apalis Evaluation Board
-    [    0.000000] Memory policy: Data cache writealloc
-    [    0.000000] cma: Reserved 256 MiB at 0x40000000
-    [    0.000000] OF: reserved mem: Reserved memory: No reserved-memory node in the DT
-    [    0.000000] Zone ranges:
-    [    0.000000]   Normal   [mem 0x0000000010000000-0x000000003fffffff]
-    [    0.000000]   HighMem  [mem 0x0000000040000000-0x000000004fffffff]
-    [    0.000000] Movable zone start for each node
-    [    0.000000] Early memory node ranges
-    [    0.000000]   node   0: [mem 0x0000000010000000-0x000000004fffffff]
-    [    0.000000] Initmem setup node 0 [mem 0x0000000010000000-0x000000004fffffff]
-    [    0.000000] percpu: Embedded 15 pages/cpu s28684 r8192 d24564 u61440
-    [    0.000000] pcpu-alloc: s28684 r8192 d24564 u61440 alloc=15*4096
-    [    0.000000] pcpu-alloc: [0] 0 [0] 1 [0] 2 [0] 3
-    [    0.000000] Kernel command line: root=PARTUUID=4ce4ba92-02 ro rootwait console=tty1 console=ttymxc0,115200
-    [    0.000000] printk: log buffer data + meta data: 131072 + 409600 = 540672 bytes
-    [    0.000000] Dentry cache hash table entries: 131072 (order: 7, 524288 bytes, linear)
-    [    0.000000] Inode-cache hash table entries: 65536 (order: 6, 262144 bytes, linear)
-    [    0.000000] Built 1 zonelists, mobility grouping on.  Total pages: 262144
-    [    0.000000] mem auto-init: stack:all(zero), heap alloc:off, heap free:off
-    [    0.000000] SLUB: HWalign=32, Order=0-3, MinObjects=0, CPUs=4, Nodes=1
-    [    0.000000] rcu: Preemptible hierarchical RCU implementation.
-    [    0.000000] rcu:     RCU event tracing is enabled.
-    [    0.000000]  Trampoline variant of Tasks RCU enabled.
-    [    0.000000]  Tracing variant of Tasks RCU enabled.
-    [    0.000000] rcu: RCU calculated value of scheduler-enlistment delay is 10 jiffies.
-    [    0.000000] RCU Tasks: Setting shift to 2 and lim to 1 rcu_task_cb_adjust=1 rcu_task_cpu_ids=4.
-    [    0.000000] NR_IRQS: 16, nr_irqs: 16, preallocated irqs: 16
-    [    0.000000] L2C-310 errata 752271 769419 enabled
-    [    0.000000] L2C-310 enabling early BRESP for Cortex-A9
-    [    0.000000] L2C-310 full line of zeros enabled for Cortex-A9
-    [    0.000000] L2C-310 ID prefetch enabled, offset 16 lines
-    [    0.000000] L2C-310 dynamic clock gating enabled, standby mode enabled
-    [    0.000000] L2C-310 cache controller enabled, 16 ways, 1024 kB
-    [    0.000000] L2C-310: CACHE_ID 0x410000c7, AUX_CTRL 0x76470001
-    [    0.000000] rcu: srcu_init: Setting srcu_struct sizes based on contention.
-    [    0.000000] clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 19112604462750000 ns
-    [    0.000000] Switching to timer-based delay loop, resolution 333ns
-    [    0.000001] sched_clock: 32 bits at 3000kHz, resolution 333ns, wraps every 715827882841ns
-    [    0.000018] clocksource: mxc_timer1: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 637086815595 ns
-    [    0.001910] Console: colour dummy device 80x30
-    [    0.001926] printk: legacy console [tty1] enabled
-    [    0.002519] Calibrating delay loop (skipped), value calculated using timer frequency.. 6.00 BogoMIPS (lpj=30000)
-    [    0.002561] CPU: Testing write buffer coherency: ok
-    [    0.002627] CPU0: Spectre v2: using BPIALL workaround
-    [    0.002650] pid_max: default: 32768 minimum: 301
-    [    0.002989] Mount-cache hash table entries: 2048 (order: 1, 8192 bytes, linear)
-    [    0.003038] Mountpoint-cache hash table entries: 2048 (order: 1, 8192 bytes, linear)
-    [    0.003430] VFS: Finished mounting rootfs on nullfs
-    [    0.004538] CPU0: thread -1, cpu 0, socket 0, mpidr 80000000
-    [    0.006552] Setting up static identity map for 0x10100000 - 0x10100060
-    [    0.006835] rcu: Hierarchical SRCU implementation.
-    [    0.006864] rcu:     Max phase no-delay instances is 1000.
-    [    0.007320] Timer migration: 1 hierarchy levels; 8 children per group; 1 crossnode level
-    [    0.008854] smp: Bringing up secondary CPUs ...
-    [    0.010035] CPU1: thread -1, cpu 1, socket 0, mpidr 80000001
-    [    0.010218] CPU1: Spectre v2: using BPIALL workaround
-    [    0.011412] CPU2: thread -1, cpu 2, socket 0, mpidr 80000002
-    [    0.011581] CPU2: Spectre v2: using BPIALL workaround
-    [    0.012747] CPU3: thread -1, cpu 3, socket 0, mpidr 80000003
-    [    0.012917] CPU3: Spectre v2: using BPIALL workaround
-    [    0.013109] smp: Brought up 1 node, 4 CPUs
-    ...
-
+--8323328-1706428708-1782745793=:1167--
