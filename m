@@ -1,40 +1,55 @@
-Received: from posta.ukf.sk (posta.ukf.sk [193.87.12.33])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.166])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADDE3271443
-	for <regressions@lists.linux.dev>; Tue, 30 Jun 2026 06:52:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.87.12.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E8603F39EB
+	for <regressions@lists.linux.dev>; Tue, 30 Jun 2026 10:32:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.166
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782802356; cv=none; b=EF0fTaRt9SUs/srMmsbCSeGTc1DdeV5nttIV8csIhNVSQhqm9r+6BiVFJ7KvLIzp88O2p0UmezzaAk03vEQdOradUJ0CAJglPGSY33KQcOnSXe4ANSfOjoB0/1hq6QbzAlqL3rn/ybwVqTQmC5mLpJu6gYH02+2wCiF4Y9cx/jM=
+	t=1782815526; cv=none; b=fwwsTYXlE0kM8Og46MZrhFPXvKcq9COJeJ7zHNEUhPhXXwr2RWJpAlb5zC0CBoZjV4tzKhxSfhLlcx/aai/oPb3ZAmGJCi5XWnwuVLMNJyiCHeEzdEHVdEI6q0h2QUqA324Xe6gtgshLSNsBhehpIOP1ZOaN7XPHu037jeZ2Wlg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782802356; c=relaxed/simple;
-	bh=dtqfvd8ig/IvbzQztfRLUYZLHAzLTMpZXzdpOMiYklI=;
+	s=arc-20240116; t=1782815526; c=relaxed/simple;
+	bh=dMKciSBThW0e2xkPZQlDrg/wfU9MCZS/KNgoTfIDdKg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qBxO1g5eYg2I4SlGvG7PDxZUtPKRns22M4LxnYC/sjvIm+OMwPxsj0mg72yVOaCSKDDeii4RylkhU5zhUtK7fEXllk0+uGM8SnaIjlnfpwU4tjD6rciZbuu/5kOgcwz5VrRs+y4BK/ns9No+9yVjQ+31tTNgLy/zHvzKyG1sVxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ukf.sk; spf=pass smtp.mailfrom=ukf.sk; dkim=pass (1024-bit key) header.d=ukf.sk header.i=@ukf.sk header.b=JCpllXtz; arc=none smtp.client-ip=193.87.12.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ukf.sk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ukf.sk
+	 In-Reply-To:Content-Type; b=M5isRgmaiz5RolgZCj2rtm/57SHs/dZXYhrmvepsvmqeQF2Sxw5f3vdI3nQQE4liogsbzV/QDpeprXQA7QlfrB9nqO3McWS9H6VldFyf7mNieyeTCxbO1YcE4IxhkxnzkwhaA1QWPU6w4eRaXL9L5FASwXw4kwOktWrllA7/6Ic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=fMyjjTFK; arc=none smtp.client-ip=188.68.63.166
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ukf.sk header.i=@ukf.sk header.b="JCpllXtz"
-Received: from localhost (localhost [127.0.0.1])
-	by posta.ukf.sk (Postfix) with ESMTP id 8307D4232AD;
-	Tue, 30 Jun 2026 08:52:29 +0200 (CEST)
-Received: from posta.ukf.sk ([127.0.0.1])
-	by localhost (posta1.ukf.sk [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 47QBJjDEDk5J; Tue, 30 Jun 2026 08:52:29 +0200 (CEST)
-Received: from [10.8.1.254] (unknown [10.8.1.254])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by posta.ukf.sk (Postfix) with ESMTPSA id 855454232A8;
-	Tue, 30 Jun 2026 08:52:28 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ukf.sk; s=2022;
-	t=1782802349; bh=dtqfvd8ig/IvbzQztfRLUYZLHAzLTMpZXzdpOMiYklI=;
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="fMyjjTFK"
+Received: from mors-relay-8202.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8202.netcup.net (Postfix) with ESMTPS id 4gqK7g5T7Sz47qr;
+	Tue, 30 Jun 2026 12:26:39 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1782815199;
+	bh=dMKciSBThW0e2xkPZQlDrg/wfU9MCZS/KNgoTfIDdKg=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=JCpllXtztBl15HsQKzClfukimqmWQPyRNzajxZYNaE23rYvXhkYQIdMHYJ/LZSwpx
-	 Y8q6yhaxh79jMXKvr011Qk7bjaVAXKeGSENg7J37ZcKmzS23rrcrLQf0OCwQKdYjnZ
-	 hm7dg8AoiAD0GIK4QkR48sHaInPgaykUyso/8jNk=
-Message-ID: <10a377de-b0f2-4b99-ba2a-32e70dac2ebf@ukf.sk>
-Date: Tue, 30 Jun 2026 08:52:28 +0200
+	b=fMyjjTFK2GcceH+HI+4s/b8NR7Yswy3WNWLbwMz7BOyWrPXQcTPHkGRrUlSQHBSxc
+	 3exK5a2S/rxtxdlhsluULW3Vf/5b1YunxQ2fjv5bM2B3y3k5hQPip/4asYRtXBZ7+U
+	 abx2C8jJMY+nEJWzPDODr+ShiP1f6W726X8bQSJFPeNeQezZT3dOIQcp60pSYuYq2P
+	 9ivFTlHFTOfqmu6H4qnkisfWvQbBRII34OQ6VUgtEJiDR3/pXXe8c6gq4F4eZvrtxb
+	 xOpuqzHmv3pb/nb+xHJGhsFZMHgtv6y8RKaVJodmqTorTNIRHrvSDQ9iwkgqvrirV6
+	 VCpG6pUSkBXuw==
+Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8202.netcup.net (Postfix) with ESMTPS id 4gqK7g4jjRz47qh;
+	Tue, 30 Jun 2026 12:26:39 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
+X-Spam-Flag: NO
+X-Spam-Score: -2.901
+X-Spam-Level: 
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4gqK7f4TgJz8tfK;
+	Tue, 30 Jun 2026 12:26:38 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id B2DB46037D;
+	Tue, 30 Jun 2026 12:26:37 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <b8fcdb5e-f2be-4bd0-914d-d03e87af9630@leemhuis.info>
+Date: Tue, 30 Jun 2026 12:26:36 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -42,169 +57,50 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/4] PM: hibernate: Add relaxed_memmap option for x86
- E820 integrity check
-To: Marco Scardovi <scardracs@disroot.org>
-Cc: bp@alien8.de, crecklin@redhat.com, dave.hansen@linux.intel.com,
- hpa@zytor.com, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
- mingo@redhat.com, pavel@kernel.org, rafael@kernel.org,
- regressions@leemhuis.info, regressions@lists.linux.dev, tglx@kernel.org,
- x86@kernel.org
-References: <cd45c7c8-4df9-4963-b847-02cf72bcc039@ukf.sk>
- <20260623165724.10753-1-scardracs@disroot.org>
- <4346170f-6685-40c6-8eeb-e3adab19275c@ukf.sk>
- <2_MjK2gjTYawu-VEuCwZxw@disroot.org>
-Content-Language: sk-SK-Ascii, en-US
-From: Milan Oravec <moravec@ukf.sk>
-Organization: CIKT UKF Nitra
-In-Reply-To: <2_MjK2gjTYawu-VEuCwZxw@disroot.org>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-512; boundary="------------ms010008080508010200010900"
+Subject: Re: [PATCH] scsi: megaraid_sas: fix PRP list out-of-bounds write
+To: "Martin K. Petersen" <martin.petersen@oracle.com>, me@magik.net
+Cc: "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+ Kashyap Desai <kashyap.desai@broadcom.com>,
+ Sumit Saxena <sumit.saxena@broadcom.com>,
+ Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
+ Chandrakanth patil <chandrakanth.patil@broadcom.com>,
+ "megaraidlinux.pdl@broadcom.com" <megaraidlinux.pdl@broadcom.com>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ Mats Topstad / Intility AS <Mats.topstad@intility.no>,
+ Daniel Fernau <mail@danielfernau.com>
+References: 
+ <GPhsSM0vkgyIrs0DIZ62qeUZX7X4RxwQXVKiuvMx-lHQVSPDxpztUyQOGS0xikqvJ-Z94hMV-dW_5KN_0CX2hsfV7kTf_t0MTf6vdAAaSEc=@magik.net>
+ <yq15x5lowt9.fsf@ca-mkp.ca.oracle.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <yq15x5lowt9.fsf@ca-mkp.ca.oracle.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: <178281519817.745337.5466260878205555068@mxe9fb.netcup.net>
+X-Rspamd-Server: rspamd-worker-8404
+X-Rspamd-Queue-Id: B2DB46037D
+X-NC-CID: J/fvpLEl0oyuy9951LYTB1aCKdUOiN/U2rz1xrvOmS8W2ZJUiFM=
 
-This is a cryptographically signed message in MIME format.
+On 4/21/26 04:47, Martin K. Petersen wrote:
+> 
+>> megasas_make_prp_nvme() builds NVMe PRP lists in cmd->sg_frame,
+>> which is a DMA-pool allocation sized by instance->max_chain_frame_sz.
+> 
+> Broadcom: Please comment and review!
 
---------------ms010008080508010200010900
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+Martin, do you know if someone there ever looked into this regression
+and the proposed fix? I'm wondering because Daniel and Mats reported
+problems under the same subject line (in new threads), but also didn't
+get a reply. So together with the one from Lukasz aka "me" we afaics
+have three reports now:
 
-SGVsbG8gTWFyY28sIHRoYW5rIHlvdSBmb3IgeW91ciBlZmZvcnQgYW5kIGhlbHAuIFVuZm9y
-dHVuYXRlbHkgbm8gDQpzb2x1dGlvbiBmb3IgbXkgc3lzdGVtLiA6KA0KDQpCZXN0IHJlZ2Fy
-ZHMsDQoNCk1pbGFuDQoNCnMgcG96ZHJhdm9tDQoNCk1pbGFuIE9yYXZlYw0KDQpDSUtUIFVL
-RiBOaXRyYQ0KTW9iaWwvU2lnbmFsOiArNDIxOTA3NjcwMjcwDQplbWFpbDogbW9yYXZlY0B1
-a2Yuc2sNCg0KLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCg0KVHV0byBzcHJhdnUgbmVwcmV2ZXJpbCB6aWFk
-bnkgYW50aXZpcnVzIC0gbmVib2xvIHRyZWJhLi4uDQoNCk9uIDYvMjkvMjYgMjE6NTMsIE1h
-cmNvIFNjYXJkb3ZpIHdyb3RlOg0KPiBJbiBkYXRhIGx1bmVkw6wgMjkgZ2l1Z25vIDIwMjYg
-MTU6MDQ6MDQgT3JhIGxlZ2FsZSBkZWxs4oCZRXVyb3BhIGNlbnRyYWxlLCBNaWxhbiBPcmF2
-ZWMgaGEgc2NyaXR0bzoNCj4+IEhlbGxvLCBJIHdhbnRlZCB0byB0cnkgdGhpcyBuZXcgc2V0
-IG9mIHBhdGNoZXMsIGJ1dCBJIHdhcyB1bmFibGUgdG8NCj4+IGFwcGx5IHRoZW0uIFRlc3Rl
-ZCB3aXRoIDcuMS4yIGFuZCBtYXN0ZXIgdG9vLg0KPj4NCj4+IG1pZ29AbWlnby1IUDp+L2J1
-aWxkL2xpbnV4LXRlc3QvbGludXgkIHBhdGNoIC1wMSA8IC4uL2hpYmVybmF0ZTIucGF0Y2gN
-Cj4+IHBhdGNoaW5nIGZpbGUgaW5jbHVkZS9saW51eC9zdXNwZW5kLmgNCj4+IHBhdGNoaW5n
-IGZpbGUga2VybmVsL3Bvd2VyL2hpYmVybmF0ZS5jDQo+PiBIdW5rICMyIEZBSUxFRCBhdCAx
-NDMxLg0KPj4gMSBvdXQgb2YgMiBodW5rcyBGQUlMRUQgLS0gc2F2aW5nIHJlamVjdHMgdG8g
-ZmlsZQ0KPj4ga2VybmVsL3Bvd2VyL2hpYmVybmF0ZS5jLnJlag0KPj4gcGF0Y2hpbmcgZmls
-ZSBhcmNoL3g4Ni9wb3dlci9oaWJlcm5hdGUuYw0KPj4gSHVuayAjMSBGQUlMRUQgYXQgNjEu
-DQo+PiBIdW5rICMyIHN1Y2NlZWRlZCBhdCA3OCB3aXRoIGZ1enogMS4NCj4+IEh1bmsgIzMg
-RkFJTEVEIGF0IDE0NC4NCj4+IEh1bmsgIzQgRkFJTEVEIGF0IDE2Ni4NCj4+IDMgb3V0IG9m
-IDQgaHVua3MgRkFJTEVEIC0tIHNhdmluZyByZWplY3RzIHRvIGZpbGUNCj4+IGFyY2gveDg2
-L3Bvd2VyL2hpYmVybmF0ZS5jLnJlag0KPj4gcGF0Y2hpbmcgZmlsZSBEb2N1bWVudGF0aW9u
-L2FkbWluLWd1aWRlL2tlcm5lbC1wYXJhbWV0ZXJzLnR4dA0KPj4gSHVuayAjMSBGQUlMRUQg
-YXQgMTk2Ny4NCj4+IDEgb3V0IG9mIDEgaHVuayBGQUlMRUQgLS0gc2F2aW5nIHJlamVjdHMg
-dG8gZmlsZQ0KPj4gRG9jdW1lbnRhdGlvbi9hZG1pbi1ndWlkZS9rZXJuZWwtcGFyYW1ldGVy
-cy50eHQucmVqDQo+Pg0KPj4gVGhhbmsgeW91LA0KPj4NCj4+IE1pbGFuDQo+Pg0KPiBIaSBN
-aWxhbiwNCj4gdGhhdCdzIHByb2JhYmx5IGJlY2F1c2UgYWxsIHRoZSBwYXRjaGVzIEkgd3Jp
-dGUgYXJlIGFnYWluc3QgbGludXgtbmV4dCBhbmQNCj4gbm90IGEgc3BlY2lmaWMgbGludXgg
-dmVyc2lvbi4gSW4gdGhhdCBjYXNlIGxpbnV4LW5leHQgY29udGFpbiBbMV0gd2hpY2gNCj4g
-aXMgbm90IG9uIHN0YWJsZSB2ZXJzaW9uLCBtYWtpbmcgdGhlIHBhdGNoIG5vbiB3b3JraW5n
-IGZvciB5b3UuDQo+DQo+IFRvIGJlIGhvbmVzdCBJJ20gbm90IGdvbm5hIHJlbGVhc2UgYSBu
-ZXcgcGF0Y2ggc3BlY2lmaWNhbGx5IGZvciBrZXJuZWwgNy4xOg0KPiBpdCdzIGEgd2FzdGUg
-b2YgZWZmb3J0IHRvIHRhcmdldCBhIHNwZWNpZmljIHZlcnNpb24gYXMgdGhlIHBhdGNoIHdp
-bGwgYmUgbWVyZ2VkDQo+IChpZiByYWZhZWwgd2lsbCBhZ3JlZSB3aXRoIGl0KSBpbiBhIGZ1
-dHVyZSB2ZXJzaW9uLiBTYWlkIHRoYXQsIEknbSBub3QgZXZlbg0KPiBzdXJlIGl0IHdpbGwg
-YmUgbWVyZ2VkIGZvciB0aGUgcG9pbnRzIHN0YXRlZCBieSBSYWZhZWwsIHdoaWNoIEkgdW5k
-ZXJzdGFuZA0KPiBhbmQgYWdyZWUuDQo+DQo+IFsxXSBodHRwczovL2dpdC5rZXJuZWwub3Jn
-L3B1Yi9zY20vbGludXgva2VybmVsL2dpdC9uZXh0L2xpbnV4LW5leHQuZ2l0L2NvbW1pdC9r
-ZXJuZWwvcG93ZXIvaGliZXJuYXRlLmM/aD1uZXh0LTIwMjYwNjI5JmlkPTc4M2M4MTA5ODQ0
-NTAzYmQxYzM1ZGFiNDFiNmQ1ZmQwNzRhOWYxMzENCj4NCj4gV2l0aCBiZXN0IHJlZ2FyZHMs
-DQo+IE1hcmNvDQo+DQo+DQo=
+https://lore.kernel.org/all/GPhsSM0vkgyIrs0DIZ62qeUZX7X4RxwQXVKiuvMx-lHQVSPDxpztUyQOGS0xikqvJ-Z94hMV-dW_5KN_0CX2hsfV7kTf_t0MTf6vdAAaSEc=@magik.net/
+https://lore.kernel.org/all/0CFE3F49-179D-4735-86E2-B6C1EE2FDD2A@danielfernau.com/
+https://lore.kernel.org/all/4FE725D3-0702-425C-AAC5-4E0AF86E5EA1@intility.no/
 
---------------ms010008080508010200010900
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
+Side note: I still wonders if we somehow could fix this by reverting
+something, but none of the reports afaics references which change
+introduced the problem. And given that the problem already exists in
+6.18 a clean and quick revert is unlikely anayway. :-/
 
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgMFADCABgkqhkiG9w0BBwEAAKCC
-DfAwggbmMIIEzqADAgECAhAxAnDUNb6bJJr4VtDh4oVJMA0GCSqGSIb3DQEBDAUAMIGIMQsw
-CQYDVQQGEwJVUzETMBEGA1UECBMKTmV3IEplcnNleTEUMBIGA1UEBxMLSmVyc2V5IENpdHkx
-HjAcBgNVBAoTFVRoZSBVU0VSVFJVU1QgTmV0d29yazEuMCwGA1UEAxMlVVNFUlRydXN0IFJT
-QSBDZXJ0aWZpY2F0aW9uIEF1dGhvcml0eTAeFw0yMDAyMTgwMDAwMDBaFw0zMzA1MDEyMzU5
-NTlaMEYxCzAJBgNVBAYTAk5MMRkwFwYDVQQKExBHRUFOVCBWZXJlbmlnaW5nMRwwGgYDVQQD
-ExNHRUFOVCBQZXJzb25hbCBDQSA0MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEA
-s0riIl4nW+kEWxQENTIgFK600jFAxs1QwB6hRMqvnkphfy2Q3mKbM2otpELKlgE8/3AQPYBo
-7p7yeORuPMnAuA+oMGRb2wbeSaLcZbpwXgfCvnKxmq97/kQkOFX706F9O7/h0yehHhDjUdyM
-yT0zMs4AMBDRrAFn/b2vR3j0BSYgoQs16oSqadM3p+d0vvH/YrRMtOhkvGpLuzL8m+LTAQWv
-QJ92NwCyKiHspoP4mLPJvVpEpDMnpDbRUQdftSpZzVKTNORvPrGPRLnJ0EEVCHR82LL6oz91
-5WkrgeCY9ImuulBn4uVsd9ZpubCgM/EXvVBlViKqusChSsZEn7juIsGIiDyaIhhLsd3amm8B
-S3bgK6AxdSMROND6hiHT182Lmf8C+gRHxQG9McvG35uUvRu8v7bPZiJRaT7ZC2f50P4lTlnb
-LvWpXv5yv7hheO8bMXltiyLweLB+VNvg+GnfL6TW3Aq1yF1yrZAZzR4MbpjTWdEdSLKvz8+0
-wCwscQ81nbDOwDt9vyZ+0eJXbRkWZiqScnwAg5/B1NUD4TrYlrI4n6zFp2pyYUOiuzP+as/A
-Znz63GvjFK69WODR2W/TK4D7VikEMhg18vhuRf4hxnWZOy0vhfDR/g3aJbdsGac+diahjEwz
-yB+UKJOCyzvecG8bZ/u/U8PsEMZg07iIPi8CAwEAAaOCAYswggGHMB8GA1UdIwQYMBaAFFN5
-v1qqK0rPVIDh2JvAnfKyA2bLMB0GA1UdDgQWBBRpAKHHIVj44MUbILAK3adRvxPZ5DAOBgNV
-HQ8BAf8EBAMCAYYwEgYDVR0TAQH/BAgwBgEB/wIBADAdBgNVHSUEFjAUBggrBgEFBQcDAgYI
-KwYBBQUHAwQwOAYDVR0gBDEwLzAtBgRVHSAAMCUwIwYIKwYBBQUHAgEWF2h0dHBzOi8vc2Vj
-dGlnby5jb20vQ1BTMFAGA1UdHwRJMEcwRaBDoEGGP2h0dHA6Ly9jcmwudXNlcnRydXN0LmNv
-bS9VU0VSVHJ1c3RSU0FDZXJ0aWZpY2F0aW9uQXV0aG9yaXR5LmNybDB2BggrBgEFBQcBAQRq
-MGgwPwYIKwYBBQUHMAKGM2h0dHA6Ly9jcnQudXNlcnRydXN0LmNvbS9VU0VSVHJ1c3RSU0FB
-ZGRUcnVzdENBLmNydDAlBggrBgEFBQcwAYYZaHR0cDovL29jc3AudXNlcnRydXN0LmNvbTAN
-BgkqhkiG9w0BAQwFAAOCAgEACgVOew2PHxM5AP1v7GLGw+3tF6rjAcx43D9Hl110Q+BABABg
-lkrPkES/VyMZsfuds8fcDGvGE3o5UfjSno4sij0xdKut8zMazv8/4VMKPCA3EUS0tDUoL01u
-gDdqwlyXuYizeXyH2ICAQfXMtS+raz7mf741CZvO50OxMUMxqljeRfVPDJQJNHOYi2pxuxgj
-KDYx4hdZ9G2o+oLlHhu5+anMDkE8g0tffjRKn8I1D1BmrDdWR/IdbBOj6870abYvqys1qYlP
-otv5N5dm+XxQ8vlrvY7+kfQaAYeO3rP1DM8BGdpEqyFVa+I0rpJPhaZkeWW7cImDQFerHW9b
-KzBrCC815a3WrEhNpxh72ZJZNs1HYJ+29NTB6uu4NJjaMxpk+g2puNSm4b9uVjBbPO9V6sFS
-G+IBqE9ckX/1XjzJtY8Grqoo4SiRb6zcHhp3mxj3oqWi8SKNohAOKnUc7RIP6ss1hqIFyv0x
-XZor4N9tnzD0Fo0JDIURjDPEgo5WTdti/MdGTmKFQNqxyZuT9uSI2Xvhz8p+4pCYkiZqpahZ
-lHqMFxdw9XRZQgrP+cgtOkWEaiNkRBbvtvLdp7MCL2OsQhQEdEbUvDM9slzZXdI7NjJokVBq
-3O4pls3VD2z3L/bHVBe0rBERjyM2C/HSIh84rfmAqBgklzIOqXhd+4RzadUwggcCMIIE6qAD
-AgECAhBaNFgxeGkgh2ZZg7n0Nh9IMA0GCSqGSIb3DQEBDAUAMEYxCzAJBgNVBAYTAk5MMRkw
-FwYDVQQKExBHRUFOVCBWZXJlbmlnaW5nMRwwGgYDVQQDExNHRUFOVCBQZXJzb25hbCBDQSA0
-MB4XDTIzMDgwMjAwMDAwMFoXDTI2MDgwMTIzNTk1OVowgZQxIDAeBgNVBAkTF1RyaWVkYSBB
-bmRyZWphIEhsaW5rdSAxMRgwFgYDVQQIEw9OaXRyaWFuc2t5IGtyYWoxCzAJBgNVBAYTAlNL
-MTIwMAYDVQQKDClVbml2ZXJ6aXRhIEtvbsWhdGFudMOtbmEgRmlsb3pvZmEgdiBOaXRyZTEV
-MBMGA1UEAxMMTWlsYW4gT3JhdmVjMIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEA
-q1KI/4Kzb4KoaDY5H4zzPvosZ0Boil4ZXvH3+2DYGQlXvsh/Deg8ljQko+b6V0Z4Q4sWdefq
-OUmfhqEVf2fXfkSfNT4w2zB3B7pH/NQMdoSvo90XnLJ2L6XaoRsH/Tq7u2JYwcEvWeady2Dt
-xDsAXHknqwQ6nkKQFc94XF2OmiSVuTAvGj9LMrpKPjVSmyoxibRZ4MX1pm4xVZP+Pc5MJUFU
-UPcTo1CaV7DtqnGxcRgCZIL70DN33Tn2l/E+A/KNckaCVU7H8ZH526Z4QzJQrrK3QuoqyWsI
-clCMKRiwrNTD+wseWb9GSMT/i+Ad7jdMIA5tcl3wOLKn1Kw5LY6QMBCHx/S9HaGvcn7ogMRO
-WDl5INN3Zp/9Pq9J32l+8Lud+wLvXs4FSw5aXHf0ZaO4r2M5UnWPqEn+Xi7MuR9wmCp2ffCQ
-jrU9oZ26xxk1hodVb1+iBtaY7DrcZEeQnpwZvytLfoDCp4JSQExC4tUHvoeUZx0XEwFIa05B
-QM8raY50nty6LuoAgz5hQWjQpwHUEh6zXjm7GVsTkv0zIpPhAeSbzyxUS5Dc+lPzmzaj6sz2
-tikcT7C75sdHVD2nfW/3Xw5u9Lix0rCA6Yt0z25tcNDdi5ELq4nlWbAfLP67UcKZY4d07i3+
-yrlwOzrsaHi/xLcxx4FTozB0N+CAHhBDDDsCAwEAAaOCAZswggGXMB8GA1UdIwQYMBaAFGkA
-occhWPjgxRsgsArdp1G/E9nkMB0GA1UdDgQWBBR3a7VTiE53dtbMFAlcqdc1Y9expzAOBgNV
-HQ8BAf8EBAMCBaAwDAYDVR0TAQH/BAIwADAdBgNVHSUEFjAUBggrBgEFBQcDBAYIKwYBBQUH
-AwIwPwYDVR0gBDgwNjA0BgsrBgEEAbIxAQICTzAlMCMGCCsGAQUFBwIBFhdodHRwczovL3Nl
-Y3RpZ28uY29tL0NQUzBCBgNVHR8EOzA5MDegNaAzhjFodHRwOi8vR0VBTlQuY3JsLnNlY3Rp
-Z28uY29tL0dFQU5UUGVyc29uYWxDQTQuY3JsMHgGCCsGAQUFBwEBBGwwajA9BggrBgEFBQcw
-AoYxaHR0cDovL0dFQU5ULmNydC5zZWN0aWdvLmNvbS9HRUFOVFBlcnNvbmFsQ0E0LmNydDAp
-BggrBgEFBQcwAYYdaHR0cDovL0dFQU5ULm9jc3Auc2VjdGlnby5jb20wGQYDVR0RBBIwEIEO
-bW9yYXZlY0B1a2Yuc2swDQYJKoZIhvcNAQEMBQADggIBAJ0zDjgaIyOlAnyN7aAb2Mf+N4op
-qCIh6Hep3o20nKfBWMgCM1xmnPaaEPwi6h0CMZW5GKZYGw0MpHNhSCtddznr5JZAkY07xsnT
-4gn8fQRi8n2LB3nEJSh7pT2+89KBFmee2k6vV25HsZ0YBIq4CRXrC7y21Bpy2WB8SQdNuCbY
-L5JByP4wfPBLKT7zPmdNWBTjJHpBzhANc0Vc6LzaKz75oK0g+GLUi84fS/S4sMyMqPbn7Xqp
-oMnCW4hqorhfubne1hlvdM/sU/VX1aUWWoSnPnN2HKRlrIiDjMmybJpTrE70jTsboR3Y15ti
-8mrRVN3iKKY5LRvDYlPJ9wYDPUSrJBUCDZarg8Er24a394TqmMSi+NyoKfR4UB6gMzXxUbvg
-jxkEhlgs0tI4Xd+m1eFgfeKIQ0ARtUVEHasXuWcI4BLwN4vjfvdPAjlqxUJHP51a9XI/VczC
-olQZnVkreJmZSG6DNFbBPy1zIfVZJHoM0d5ITKUBiadnF5GDH1mopIvqi1gH0oKRse/KnjKh
-gNzbMzGZfeLZjVlw7aO9w4Zm+EBTRhMdHnfKTBYZCoIcK+Dou1cyqMCxsysPDKldm6bwCLxX
-xRU4WtHq5KFs81cW4Rbs4ZXtxF23eIHJ8NgAHr3SPS7zzWwAJ+LMY6voi7/J+tK31UNz7xoT
-3avZsCqlMYIFRTCCBUECAQEwWjBGMQswCQYDVQQGEwJOTDEZMBcGA1UEChMQR0VBTlQgVmVy
-ZW5pZ2luZzEcMBoGA1UEAxMTR0VBTlQgUGVyc29uYWwgQ0EgNAIQWjRYMXhpIIdmWYO59DYf
-SDANBglghkgBZQMEAgMFAKCCArwwGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG
-9w0BCQUxDxcNMjYwNjMwMDY1MjI4WjBPBgkqhkiG9w0BCQQxQgRAVhyInyykeqmBNpWtGJWr
-R78xRpSRO/MvvuE9wlEqxardD6dMEPJUvRJAa7hdmmDtQjQFnqDfivJvQ+jqUvTasjBpBgkr
-BgEEAYI3EAQxXDBaMEYxCzAJBgNVBAYTAk5MMRkwFwYDVQQKExBHRUFOVCBWZXJlbmlnaW5n
-MRwwGgYDVQQDExNHRUFOVCBQZXJzb25hbCBDQSA0AhBaNFgxeGkgh2ZZg7n0Nh9IMGsGCyqG
-SIb3DQEJEAILMVygWjBGMQswCQYDVQQGEwJOTDEZMBcGA1UEChMQR0VBTlQgVmVyZW5pZ2lu
-ZzEcMBoGA1UEAxMTR0VBTlQgUGVyc29uYWwgQ0EgNAIQWjRYMXhpIIdmWYO59DYfSDCCAVcG
-CSqGSIb3DQEJDzGCAUgwggFEMAsGCWCGSAFlAwQBKjALBglghkgBZQMEAQIwCgYIKoZIhvcN
-AwcwDQYIKoZIhvcNAwICAQUwDQYIKoZIhvcNAwICAQUwBwYFKw4DAgcwDQYIKoZIhvcNAwIC
-AQUwBwYFKw4DAhowCwYJYIZIAWUDBAIBMAsGCWCGSAFlAwQCAjALBglghkgBZQMEAgMwCwYJ
-YIZIAWUDBAIEMAsGCWCGSAFlAwQCBzALBglghkgBZQMEAggwCwYJYIZIAWUDBAIJMAsGCWCG
-SAFlAwQCCjALBgkqhkiG9w0BAQEwCwYJK4EFEIZIPwACMAgGBiuBBAELADAIBgYrgQQBCwEw
-CAYGK4EEAQsCMAgGBiuBBAELAzALBgkrgQUQhkg/AAMwCAYGK4EEAQ4AMAgGBiuBBAEOATAI
-BgYrgQQBDgIwCAYGK4EEAQ4DMA0GCSqGSIb3DQEBAQUABIICAI+m09Lwz63aj4suczPAegqm
-C4FgT64LDvWbXwZFb74Lqv1mkWhltDJnB6QOk9LKyqXbMAM8io2jMQuOwFvu2Czt9LLLcYJ9
-Fqh1YmjKTWH6z8530qvHZZ09FVL0BR+x/VHapcBzo4P84hRSh9a4KbXeZSopRdeL8gMPjXqt
-yL2xzjBqgWtVQu5kzEOZz+8ziermiZ6nmNklPEKVUQetZrLJPXATK3EtFfbf2IP1+odl5xRD
-bkqwvYb1Du0kce86ghVoKE5EIIwOizGtwFckejEUqC24P6pJLmc61fusI7+wa7I3pBsnefbx
-n9VSwTAegO7oqcnmlPcjjXwqF5A957d7GUC0zk86ewasJXeaazb420t2U0CGsWRfcLHiFhc5
-eG7UjHOhAjtuLwQVFhUtHpVn/TLdCFu+M5WZOwLnD/5xNWfPoBHKkGq3/v3h8IKabFBWxWC8
-iBQd28n8nd0ArVnWhRf5uai0fsSoCUs1HiFqLhsGuwGMis/gr0BQmREdDtGE4PtYFgJ/Q8AM
-6IsJVlXzH7MnBRiX/CxkX96/2WY7SSZC4In49gtn1kt+OmccP+z/YhhWoLKGvq6Kjc/ibDdV
-i011J/iHmKE9LL1zG0rWn/zg4c9XvtMOR3bJzDOFDHp0oBNQRT/QcE9rOYB92Zk7l/8Ost9C
-TiX4eMRYE5MEAAAAAAAA
---------------ms010008080508010200010900--
+Ciao, Thorsten
