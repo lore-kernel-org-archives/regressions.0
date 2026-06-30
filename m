@@ -1,189 +1,176 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.166])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5460D26F2B0
-	for <regressions@lists.linux.dev>; Tue, 30 Jun 2026 12:18:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.166
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782821896; cv=none; b=a/pJswPpHYwAQamqnRaaemgnZShCiVeUCfrh/cqpGvLPihbkfZ/lnTeB05Cx7ObfcRx2xRQRYnpFkDPVAiisJlhcgXdL498lqkvDZacZDB38f7spOROTypTBWy371uuf7BdGzCi2S5zjcctluwpuq5Eb+gGcw5eJVWaNM72+m/U=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782821896; c=relaxed/simple;
-	bh=BpwuphocXYevRit1ClmG1CfXi7L38DAgRk4wITc6+Ns=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=D0e/pel6gTiRViXpRqr35YbMd+F5GEMvVW9RZsEywibcM/cChfZ3SBsFQSm/LfeAQLvcR7gViE6ufUJrMhr0pBHecKICYF49G1O5TmdmWXZ92ujGi8W5QZu6je3VaAK8Hbv0uK3QJkMWLR+4hWknQWPEmh49h+tLMiPjeM5F6os=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=aRNscDFs; arc=none smtp.client-ip=188.68.63.166
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0598B2D7DC8
+	for <regressions@lists.linux.dev>; Tue, 30 Jun 2026 21:03:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.167.43
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782853411; cv=pass; b=Da/zy2+OuD6y4uA1L1GdaUslupgNfin4ZoK9YKhysA5q8fc+ePBl1C+GDjG/HvW0oo1451Pfw/ofDcXAlfeSjv3xQzbV9/kdXyCVN6izob7Jp1MHl2XJZMLYD6G5D2d0Yu/nlKeH/gd5YmVDUVzg6YloDbcFcim47BRbIiLcy8U=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782853411; c=relaxed/simple;
+	bh=q7JoXzPTuey5MTxrK590E54YxP0efCGYmeHmx7RdAY0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=r2fZr3xc0WwK7+bSpVDqINTiIuj+MxQgV9F9TRnopmdc2YXAZzlWU5RZrFvFcwtuL2B54n+xA/ekAj/SMZe2xqnBUxN26CV87DhpDX4Xp+M1f4hR8EFHnVN/I40SXmitE76C/Z7h+GWpfKkod9WuZqmd/4kQiAso7MMZstvde+w=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kjQ8P4Ha; arc=pass smtp.client-ip=209.85.167.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="aRNscDFs"
-Received: from mors-relay-8202.netcup.net (localhost [127.0.0.1])
-	by mors-relay-8202.netcup.net (Postfix) with ESMTPS id 4gqMbj6xCPz41HZ;
-	Tue, 30 Jun 2026 14:17:37 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1782821858;
-	bh=BpwuphocXYevRit1ClmG1CfXi7L38DAgRk4wITc6+Ns=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=aRNscDFsL6qBnLrFZ4zc9Orw+fUJYxzOQNAPtzZfV8TfgFg1TSViysFI/kEwqae1B
-	 Svq63kSeKChXtyBDbCz30Gtji6ek/fWOnhTZfFZd+qwtbT0II5in1EuwnxKRt9rLmS
-	 k5iSt6K01B9qccOXb1sBAO5/MdCswrvm/cu1iomXBM+U8/XChnZgCDwJQZrNdteqIZ
-	 vBdqu95k570cKTdhWZkd1nzwrCtt7TiPHJ9MQYU3CXV07GM7uCJe7+h6uMktj64MEI
-	 L7Lfh0yMaNOktJfGy1IymH18xhslJez8V860JzftTpgJW3qrAR3ULSjI+BsmtA1W9V
-	 KgEh5UYVZKv3A==
-Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-8202.netcup.net (Postfix) with ESMTPS id 4gqMbY5bd0z3xhV;
-	Tue, 30 Jun 2026 14:17:29 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
-X-Spam-Flag: NO
-X-Spam-Score: -2.901
-X-Spam-Level: 
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4gqMbV70mBz8tb3;
-	Tue, 30 Jun 2026 14:17:26 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id BA1B25F961;
-	Tue, 30 Jun 2026 14:17:25 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <173df064-f373-4cce-b35f-e52f728be263@leemhuis.info>
-Date: Tue, 30 Jun 2026 14:17:25 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kjQ8P4Ha"
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-5aebf9a509eso1137680e87.3
+        for <regressions@lists.linux.dev>; Tue, 30 Jun 2026 14:03:29 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1782853408; cv=none;
+        d=google.com; s=arc-20260327;
+        b=Y69F4TScxsavQRTb2v/nV5jclFTE+hW9fEFkjWFuaaeW0qpE7V/ItccPOLj+pOec3p
+         OiXu8jWFk4C4rGoXCF5laX8Vh/KXSi7Or2jNd1CmuJFwjGEz+42IOvTs4oeXRym/tiIS
+         kgfYd6QRO/BucQIrSNuYOAqo80GJ26tAJXLEdfzT3Q3FcK7YObKl12c+OnNLSY75iAvv
+         qbLSVUR2MZ6f0SeyUFpf3BDUXjFzGke4K1bkQhs/XeklZF7abuCJ9HFYgd95plH86GMq
+         HyHwsUmFhf3cbuv0GFD/LnEBEDS+5OW3RwsVHf7PqEl27zc5Hr6nRUKkKmCd3Wu/XEQh
+         GWWA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=q7JoXzPTuey5MTxrK590E54YxP0efCGYmeHmx7RdAY0=;
+        fh=ve6saSlm19lmnzlr7XOsNCbdc1NhS2kfidNTA/BJHaE=;
+        b=EW7eG057hl4ZDw/tpbO9ILkqu6TsmvjcCOS4/lZ+B6RxuU2DObbt/IagfTR4C7pdyE
+         geCbDDzrBkabu9AEdux3OhZ06P42AZXrX2/o950G4QoTulvvjvcJkuu+YFw9p94y7kiw
+         jYhxejIz94cQJ7FSKw2s6Orswxch6IJ+aGJizMCLpmAZyZ3HATTJbfed5JfzEnJCM0eD
+         OWeBECQDZ17eKGlGk9tmmYEtcUqm3b+SD5UNgFtYjefEwWGCrmmvwb3t349F3XTDQGU+
+         VhBbjMEEBJsWsbiZ0ohG8KE/zIFd2k2VeFQLEfepRb4yexy86KXD4F7QfeClayCHh0IX
+         2ACg==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1782853408; x=1783458208; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=q7JoXzPTuey5MTxrK590E54YxP0efCGYmeHmx7RdAY0=;
+        b=kjQ8P4HaDf5eY6/UuHcd/dJGXVxX7sWsRZfc19HsEOHSIepUUV3BU0DtZlSURWoZ10
+         JWTayrM9nImu7ASID0kwGnPvtWtsTYE4jV9megnpjXTF0T79y3q9GEqouiPm7cfrWdIM
+         O3wchXSUqMDqR286tQKVAGlnYin4JtUdM+ddit8CH+ZDsVh1YQOArRbBJmbNJwr/VLw/
+         uPi0stmNhG1y0pACaoUT7tCc+NOwHsqFJN6FkM9dphqYDtz2evQH1fyfjNPPAKGRYBvZ
+         wOKscC5TF+OK8jxv8cV7kwMWS+cpRcSuPXI9vxgols17HykQLWna3p22dCDlJnzsMMOt
+         kUnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782853408; x=1783458208;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=q7JoXzPTuey5MTxrK590E54YxP0efCGYmeHmx7RdAY0=;
+        b=HXx0G8tpdRTb25Gw0qrqiZXjaVXHdOVU8SfiuFgjWrwL+BFGMEnOntcEbAwsjDfww/
+         a5ogFlnH2hZS0Gs2anx6bRpABrbx+Ic55Bb34tgPsO1OYO9+cjduWBpFmJ1y9WmYMVSm
+         /uDEi75T6TY/obw+AtycrCbXknbFl5vxbzfuwZ4IO58ukLwIn/UtEiH9FrWmCbdTT7RO
+         V0fozl87fiowUciS4/luXCD8atr8GXNnhILymiTfAwMjD56xcBOeoAJa5rG1//KsrHEB
+         p0FQJvUKQvQgjhQ4CevSjJNCAW+gIBVLrD2BU9VLGTPoM9IO7ErKehbQm4OsqQ/+bPSn
+         DZ9Q==
+X-Forwarded-Encrypted: i=1; AHgh+Rqk5pdoKBf/QSfGLLXaXh/cyqsbGdswsAAWHTfjb9n49EpAyMPLSXUu+2ewpSPo3y3D7urn6Fqnpm8o8Q==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yz+koe9Dvz0AfGSZDt1tt0KCUk0txVzjOiZLAkIPQaVm27hhfBb
+	dBlZQkC7ir6rNQRRXCeprPcSwoN5WoN+BRCPK3FIIM1+hcD+c0DcUlgMQRwSe/hwTurDuSmsTz1
+	TfGu96z98QFGDEg6PmmXsvsZW6yITgWQ=
+X-Gm-Gg: AfdE7ckr447CkpEll1BilrcuswUnhb4zDaXq2iF40XxV8RGrq69GkgNOspRUP+xL94p
+	eSnhRCEJeF+HbbJyB6VtCgjGWeYdHfAZRQuK4kfmcrlMNaFHs5X4lyUipP0YlWp1CjKd1lR5ngw
+	VV/YMKRggb+i4R3N7+Gr47q5STqrFccmmNJsaQDnogIV6U61u3C2Xq25DxGRAwA4LR1eKQ5QJQf
+	zzKaQEkX7G9bstBD5bsRAFGdjQrrfvn1FjF+qe8GHeN11EUaLgjq9H+3aK6SMnofreMnNXYSzCL
+	34RTx3hB5doJYaeTqPjy3eE+ohONt19/4+3+hyz4HxdrwOwNBq44y3+n39QuwCUAE9MCQujhOP9
+	95CgCwxpOaJbkai7L500NQMwEHkE=
+X-Received: by 2002:a05:6512:618c:b0:5ae:a9ec:9fc4 with SMTP id
+ 2adb3069b0e04-5aebdbc70a5mr1360054e87.63.1782853408064; Tue, 30 Jun 2026
+ 14:03:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH wireless-next] wifi: mt76: fix of_get_mac_address error
- handling
-To: Rosen Penev <rosenp@gmail.com>, Felix Fietkau <nbd@nbd.name>
-Cc: linux-wireless@vger.kernel.org, Lorenzo Bianconi <lorenzo@kernel.org>,
- Ryder Lee <ryder.lee@mediatek.com>, Shayne Chen <shayne.chen@mediatek.com>,
- Sean Wang <sean.wang@mediatek.com>, Matthias Brugger
- <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- "open list:ARM/Mediatek SoC support" <linux-kernel@vger.kernel.org>,
- "moderated list:ARM/Mediatek SoC support"
- <linux-arm-kernel@lists.infradead.org>,
- "moderated list:ARM/Mediatek SoC support"
- <linux-mediatek@lists.infradead.org>,
- Tobias Klausmann <klausman@schwarzvogel.de>,
- Klara Modin <klarasmodin@gmail.com>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <20260427051746.954704-1-rosenp@gmail.com>
- <ajRmlyx_AEGybykL@soda.int.kasm.eu>
+References: <20260427051746.954704-1-rosenp@gmail.com> <ajRmlyx_AEGybykL@soda.int.kasm.eu>
  <CAKxU2N-gfH8Tq29-j2MArogLZuO7JEqtN5LNPVygJzrAERa3cg@mail.gmail.com>
- <ajSDtsJCmYnMNJSD@parmesan.int.kasm.eu>
- <DJCNDEE8JMPL.1DL49X1EUDFCE@gmail.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: de-DE, en-US
-X-Enigmail-Draft-Status: N11222
-Autocrypt: addr=linux@leemhuis.info; keydata=
- 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 MEK4
-In-Reply-To: <DJCNDEE8JMPL.1DL49X1EUDFCE@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-PPP-Message-ID: 
- <178282184634.1121394.13787131785166675291@mxe9fb.netcup.net>
-X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: BA1B25F961
-X-NC-CID: dauv+6SHUg8f+sTb+5NAFrUSplXnN2iU3ySVkhwlkYqYaOolX/Y=
+ <ajSDtsJCmYnMNJSD@parmesan.int.kasm.eu> <DJCNDEE8JMPL.1DL49X1EUDFCE@gmail.com>
+ <173df064-f373-4cce-b35f-e52f728be263@leemhuis.info>
+In-Reply-To: <173df064-f373-4cce-b35f-e52f728be263@leemhuis.info>
+From: Rosen Penev <rosenp@gmail.com>
+Date: Tue, 30 Jun 2026 14:03:13 -0700
+X-Gm-Features: AVVi8CdKSeWNxVJXoQWTYXgaetJpdvlliSZ-GmhRr-ByVwdKSQxkvdocgc7yH_E
+Message-ID: <CAKxU2N9hw6bUNA+rZC_jfZVzi7bMXe96jzLWdL9F3P4=rYnmUQ@mail.gmail.com>
+Subject: Re: [PATCH wireless-next] wifi: mt76: fix of_get_mac_address error handling
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Felix Fietkau <nbd@nbd.name>, linux-wireless@vger.kernel.org, 
+	Lorenzo Bianconi <lorenzo@kernel.org>, Ryder Lee <ryder.lee@mediatek.com>, 
+	Shayne Chen <shayne.chen@mediatek.com>, Sean Wang <sean.wang@mediatek.com>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	"open list:ARM/Mediatek SoC support" <linux-kernel@vger.kernel.org>, 
+	"moderated list:ARM/Mediatek SoC support" <linux-arm-kernel@lists.infradead.org>, 
+	"moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, 
+	Tobias Klausmann <klausman@schwarzvogel.de>, Klara Modin <klarasmodin@gmail.com>, 
+	Linux kernel regressions list <regressions@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 6/19/26 03:50, Rosen Penev wrote:
-> On Thu Jun 18, 2026 at 4:51 PM PDT, Klara Modin wrote:
->> On 2026-06-18 16:01:45 -0700, Rosen Penev wrote:
->>> On Thu, Jun 18, 2026 at 2:47 PM Klara Modin <klarasmodin@gmail.com> wrote:
->>>> On 2026-04-26 22:17:46 -0700, Rosen Penev wrote:
->>>>> Check return value instead of is_valid_ether_addr. The latter is handled
->>>>> by the former.
->>>>>
->>>>> Signed-off-by: Rosen Penev <rosenp@gmail.com>
->>>>> [...]
->>>>>>>> Recently I have started to see randomized MAC-addresses on my
-x86 laptop
->>>> with a MT7922 and the above message printed in the kernel log. I have
->>>> CONFIG_OF turned on, but since this is an ACPI system the device is not
->>>> described by any device tree and the earlier of_get_mac_address() likely
->>>> fails with -ENODEV. Looking at the !CONFIG_OF stub for
->>>> of_get_mac_address it always returns -ENODEV, meaning this will always
->>>> randomize the mac in that case too.
->>
->>> IIRC, the normal device_get_mac_address supports nvmem now. Does that
->>> fix your use case?
->>
->> I tried this:
->> [...]
->> but I still get a random MAC.
-> Then the original patch should be reverted. Unfortunate that it doesn't
-> workq
-
-Happens, no worries, but seems nobody submitted such a revert yet since
-you posted that. Unless I'm missing something -- if so, please do not
-hesitate to tell me!
-
-But if no revert is in the works, could you please submit one, given
-that it was your change that cause the problem?
-
-Side note: Tobias (now CCed) ran into the same problem, too:
-https://lore.kernel.org/all/30a90714-02d8-45f2-a7f1-4cfe0627d50b@skade.local/
-
-Makes me wonder if more people are affected by this and if we should try
-to mainline the revert rather sooner than later.
-
-Ciao, Thorsten
-
->>>>
->>>> Reverting this patch fixes the issue and the correct MAC address is
->>>> used. I'm not sure if there is any case where of_get_mac_addres() could
->>>> fail in a way that results in a valid MAC address but it seems unlikely
->>>> to me.
->>>>
->>>> Regards,
->>>> Klara Modin
-> 
-> 
-
+On Tue, Jun 30, 2026 at 5:18=E2=80=AFAM Thorsten Leemhuis
+<regressions@leemhuis.info> wrote:
+>
+> On 6/19/26 03:50, Rosen Penev wrote:
+> > On Thu Jun 18, 2026 at 4:51 PM PDT, Klara Modin wrote:
+> >> On 2026-06-18 16:01:45 -0700, Rosen Penev wrote:
+> >>> On Thu, Jun 18, 2026 at 2:47=E2=80=AFPM Klara Modin <klarasmodin@gmai=
+l.com> wrote:
+> >>>> On 2026-04-26 22:17:46 -0700, Rosen Penev wrote:
+> >>>>> Check return value instead of is_valid_ether_addr. The latter is ha=
+ndled
+> >>>>> by the former.
+> >>>>>
+> >>>>> Signed-off-by: Rosen Penev <rosenp@gmail.com>
+> >>>>> [...]
+> >>>>>>>> Recently I have started to see randomized MAC-addresses on my
+> x86 laptop
+> >>>> with a MT7922 and the above message printed in the kernel log. I hav=
+e
+> >>>> CONFIG_OF turned on, but since this is an ACPI system the device is =
+not
+> >>>> described by any device tree and the earlier of_get_mac_address() li=
+kely
+> >>>> fails with -ENODEV. Looking at the !CONFIG_OF stub for
+> >>>> of_get_mac_address it always returns -ENODEV, meaning this will alwa=
+ys
+> >>>> randomize the mac in that case too.
+> >>
+> >>> IIRC, the normal device_get_mac_address supports nvmem now. Does that
+> >>> fix your use case?
+> >>
+> >> I tried this:
+> >> [...]
+> >> but I still get a random MAC.
+> > Then the original patch should be reverted. Unfortunate that it doesn't
+> > workq
+>
+> Happens, no worries, but seems nobody submitted such a revert yet since
+> you posted that. Unless I'm missing something -- if so, please do not
+> hesitate to tell me!
+>
+> But if no revert is in the works, could you please submit one, given
+> that it was your change that cause the problem?
+https://lore.kernel.org/linux-wireless/20260630210215.400379-1-rosenp@gmail=
+.com/T/#u
+>
+> Side note: Tobias (now CCed) ran into the same problem, too:
+> https://lore.kernel.org/all/30a90714-02d8-45f2-a7f1-4cfe0627d50b@skade.lo=
+cal/
+>
+> Makes me wonder if more people are affected by this and if we should try
+> to mainline the revert rather sooner than later.
+>
+> Ciao, Thorsten
+>
+> >>>>
+> >>>> Reverting this patch fixes the issue and the correct MAC address is
+> >>>> used. I'm not sure if there is any case where of_get_mac_addres() co=
+uld
+> >>>> fail in a way that results in a valid MAC address but it seems unlik=
+ely
+> >>>> to me.
+> >>>>
+> >>>> Regards,
+> >>>> Klara Modin
+> >
+> >
+>
