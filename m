@@ -1,55 +1,51 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.98])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.162])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D555E34751E
-	for <regressions@lists.linux.dev>; Tue, 30 Jun 2026 11:37:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 646E9408631;
+	Tue, 30 Jun 2026 12:06:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.162
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782819437; cv=none; b=H/ZVM7SM92+0Zf/YqSseqOyuz7ww3QcXxgTHrH7sGB25+IYnUtr4rQhdXtCTNh8NnSGh3PRxbLfcdMSS8TKxbs2Ds2MmnOtQKYIMjrqK9CootW5UJ4tGxho9YRFbMYoekVmiCxvfpHVphvHhD+in+DIwmj3Rq1ffTcl+Dk4AMH8=
+	t=1782821217; cv=none; b=kC+zCSzQ+m5F6oRv7h6DPXgfw8TlV61d9iGIVbqcpzmx6ZtcP1Y0AL+xtt+z872Ww6/QqLgz3Bc5Wt5fsvcI8CDjEUpI1Crz7E7rZbAaMyh5UYt8KYHFdKbAZRFwOdE2XiSZyEIBkUJnRMi+K4RG4NyZlutFpXa8K4KGeXoODfA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782819437; c=relaxed/simple;
-	bh=bND4nmC52SsdVbchgWHn53BVqAbA6/MYoTfwdivb9iU=;
+	s=arc-20240116; t=1782821217; c=relaxed/simple;
+	bh=LGUC9N6dVaFtlLE612P6N/M6GpBTL5aRGEzwEqORrlY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=d5doV67ivnOnyIt0R3CWyy0oaX7d+JXzwMRP+S20E5jz3oueE23yHSuCdgRjkRR9lT/yL/uVEq1Wtp6ZFAfmTx4jPEG7eIxolN4RLjlgsRQcAR3dXaMy0XMnyTaZTzB0G8eeczvGFDNymJxTNkEdOG+ybswA/TskwJ1XQ/C1sFA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=is9Pq9It; arc=none smtp.client-ip=188.68.63.98
+	 In-Reply-To:Content-Type; b=LK3eB2S4YT/d6hU2S9VLGwZSfCrcq62mc/Svs5ZvPnXgktvLFRZQMlNAIG1/PAgltFLieEDCISEkYiCbZdkX5kiJtrVLObhaFEPtpZmpWIIRw+uorhvvl3f6vJcKu7O30QbtPT+CsdQmlR66/qbcOPkfvT+Pi8gEvzS2LZsgvwU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=iidsFbJW; arc=none smtp.client-ip=188.68.63.162
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="is9Pq9It"
-Received: from mors-relay-2501.netcup.net (localhost [127.0.0.1])
-	by mors-relay-2501.netcup.net (Postfix) with ESMTPS id 4gqLXt10tcz68bK;
-	Tue, 30 Jun 2026 13:30:06 +0200 (CEST)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="iidsFbJW"
+Received: from mors-relay-8201.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4gqMLf6ntgz40y4;
+	Tue, 30 Jun 2026 14:06:18 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1782819006;
-	bh=bND4nmC52SsdVbchgWHn53BVqAbA6/MYoTfwdivb9iU=;
+	s=key2; t=1782821179;
+	bh=LGUC9N6dVaFtlLE612P6N/M6GpBTL5aRGEzwEqORrlY=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=is9Pq9ItxwkIslCPKQiyVXINTZo2e0qhaFUi1k0wqbGfVvVQ8DLphx7r6ho4fyQ+E
-	 R14uV3uADzX76+1OH1LNcHYeQB2IXH1CBTniT9ByFBamngmPxO4bI3IeBv4Hh9+Qos
-	 TSt+b+iS0TrUZBuVypc9JpRldu4aEq6tifHYMbRU/qo1sO6KXZmKoa93AlC0WCwSM+
-	 2F39VWLk0ffi0bw5oOH/5t/x+85csWB1rV/qjnhKCVXRLU6p/aWgsu8ODS4D1J4VCC
-	 Ie3lCsaclNsmDD1XXGT9KOIYjn9/3lhwlZIwqm1cJiSbsidlDIZUUpCWlvW8FsDYe/
-	 C9sFaJITwyWig==
-Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-2501.netcup.net (Postfix) with ESMTPS id 4gqLXt0H1jz4xLr;
-	Tue, 30 Jun 2026 13:30:06 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
-X-Spam-Flag: NO
-X-Spam-Score: -2.898
-X-Spam-Level: 
+	b=iidsFbJWKHihcFI+ixf0sM1k17MITwXDRq2klCgmcDI4rXOlBH+ixLofdzsOZU2Xv
+	 hSi4qcwF0S3zaJ6nKsZu456ucEouSJhCbQoTQSXgLMGHK/gw+QpCi+Bso9LZEx9/AO
+	 lvzyUxAWzjNkiC5Kr2UBaZwePd0i4eCVs2zmt2oKwSonJr39b7dTxlGiJPIbIUO6uD
+	 y8F+N/Kyjk55YW+MINwOXiJAR0ADLxJiD8nOQGCdopJ8zCNA1tdEJpCl1A6LY9Tz4e
+	 yc9/NajOFSe08Akg4UvDCSyUam1dq1ckGHTEh91EqfTzPoNIhrUP2vnwsAJAKsTu5c
+	 oyCMB29I4kz4A==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4gqMLf61VSz40wT;
+	Tue, 30 Jun 2026 14:06:18 +0200 (CEST)
 Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4gqLXf19t2z8tZB;
-	Tue, 30 Jun 2026 13:29:54 +0200 (CEST)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4gqMLd3Q24z8sgS;
+	Tue, 30 Jun 2026 14:06:17 +0200 (CEST)
 Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 2DA965FC41;
-	Tue, 30 Jun 2026 13:29:53 +0200 (CEST)
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 6927A60320;
+	Tue, 30 Jun 2026 14:06:11 +0200 (CEST)
 Authentication-Results: mxe9fb;
         spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
 Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <b143b62e-ca11-4f00-ad60-f71ae55213b9@leemhuis.info>
-Date: Tue, 30 Jun 2026 13:29:51 +0200
+Message-ID: <ef53342b-7c63-4681-8c5d-de86d9ee5541@leemhuis.info>
+Date: Tue, 30 Jun 2026 14:06:11 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -57,17 +53,19 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] wifi: mt76: add wcid publish check in mt76_sta_add
-To: Jiajia Liu <liujiajia@kylinos.cn>, Felix Fietkau <nbd@nbd.name>,
- Lorenzo Bianconi <lorenzo@kernel.org>, Ryder Lee <ryder.lee@mediatek.com>,
- Shayne Chen <shayne.chen@mediatek.com>, Sean Wang <sean.wang@mediatek.com>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Ming Yen Hsieh <mingyen.hsieh@mediatek.com>, Leon Yen <leon.yen@mediatek.com>
-Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+Subject: Re: [PATCH] drm/vblank: Don't arm vblank timer with invalid frame
+ duration
+To: Roman Ilin <me@romanilin.is>
+Cc: Louis Chauvet <louis.chauvet@bootlin.com>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Thomas Zimmermann <tzimmermann@suse.de>, Maxime Ripard <mripard@kernel.org>,
+ Javier Martinez Canillas <javierm@redhat.com>,
+ Dmitry Osipenko <dmitry.osipenko@collabora.com>,
+ dri-devel@lists.freedesktop.org, virtualization@lists.linux.dev,
+ linux-kernel@vger.kernel.org, Peter Arnesen <peter.m.arnesen@gmail.com>,
  Linux kernel regressions list <regressions@lists.linux.dev>
-References: <20260528033814.46418-1-liujiajia@kylinos.cn>
+References: <20260613224434.96501-1-me@romanilin.is>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
 Content-Language: de-DE, en-US
 X-Enigmail-Draft-Status: N11222
@@ -114,84 +112,125 @@ Autocrypt: addr=linux@leemhuis.info; keydata=
  8zG721N4hWyyLALtGUKIVWZvBVKQIGQRPtNC7s9NVeLIMqoH7qeDfkf10XL9tvSSDY6KVl1n
  K0gzPCKcBaJ2pA1xd4pQTjf4jAHHM4diztaXqnh4OFsu3HOTAJh1ZtLvYVj5y9GFCq2azqTD
  pPI3FGMkRipwxdKGAO7tJVzM7u+/+83RyUjgAbkkkD1doWIl+iGZ4s/Jxejw1yRH0R5/uTaB MEK4
-In-Reply-To: <20260528033814.46418-1-liujiajia@kylinos.cn>
+In-Reply-To: <20260613224434.96501-1-me@romanilin.is>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <178281899374.842439.7183806903184206113@mxe9fb.netcup.net>
-X-NC-CID: kHJGrrkTMORIpTtCI7QdXFhTPxpnjuYc1xCuYWft9J8OiKDCI30=
+X-PPP-Message-ID: <178282117199.964836.384779074584851132@mxe9fb.netcup.net>
+X-Rspamd-Server: rspamd-worker-8404
+X-Rspamd-Queue-Id: 6927A60320
+X-NC-CID: PEHjDG9j4m07s+AFumvcLECsmuNmFAU8/YnJczSQRwGqdMQNJ8g=
 
-On 5/28/26 05:38, Jiajia Liu wrote:
-> Since mt7925_mac_sta_add publishes wcid, add publish check in mt76_sta_add
-> to avoid reinitializing the wcid->poll_list.
-> 
-> Found dev->sta_poll_list corruption when using mt7925 and 7.1-rc4.
+On 6/14/26 00:44, Roman Ilin wrote:
+> When a CRTC's display mode carries a too small pixel clock,
+> drm_calc_timestamping_constants() computes a frame duration that
+> exceeds INT_MAX. drm_vblank_crtc.framedur_ns becomes negative.
+> drm_crtc_vblank_start_timer() then arms the vblank hrtimer with this
+> interval, after which vblank events are no longer delivered. Pending
+> page flips never complete and the display appears frozen.
 
-Jiajia Liu, Felox: given that the problem seems to be in 7.1, should we
-ask the stable team to pick this regression fix up, as this change was
-mainlined (as 20b126920a259d ("wifi: mt76: add wcid publish check in
-mt76_sta_add") [v7.2-rc1]), but lacks both a Fixes and a Stable tag?
+Roman, what's the status here? Does the problem still happen with
+7.2-rc1? Sounds like it likely will, just want to make sure before
+prodding Thomas about it, who authored and committed the change that
+causes this regression.
 
+Side note: CCing Peter Arnesen, who seems to be affected as well.
+Quoting a message that was CCed to the regression list, but apparently
+was rejected there:
+
+"""
+Hi everyone,
+
+I am experiencing a similar Wayland display freeze on Kernel 7.0
+described in Roman Ilin's recent patch thread ("drm/vblank: Don't arm
+vblank timer with invalid frame duration").
+
+Since my laptop consistently reproduces this freeze on boot, I am
+reaching out to offer my hardware for testing if you need verification
+that this patch resolves the issue on the newer Ryzen AI architectures.
+
+My System:
+* CPU / iGPU: AMD Ryzen AI 9 HX
+* dGPU: NVIDIA GeForce RTX 5070
+* OS: Fedora 44, Kubuntu 26.04 and Nobara Linux (Fedora-based) / Wayland
+* Regression Status: Works perfectly on Kernel 6.19. Fails on Kernel 7.0.
+* Tested Workarounds: Kernel parameters amdgpu.dcdebugmask=0x10, 0x410,
+and amdgpu.sg_display=0 do not bypass the freeze.
+
+Please let me know if you need me to pull specific dmesg logs or similar
+from the frozen state, or if there is a specific patched branch you
+would like me to compile and boot to verify the fix.
+
+Regards
+
+Peter
+"""
+
+Peter, would be great if you could test 7.2-rc1, too. And if you really
+think the problem is the same, it might be worth trying Roman's patch.
 Ciao, Thorsten
 
-> According to the corruption information, prev->next was changed to itself.
+> This could be triggered on virtio-gpu guests that have dynamic resolution
+> enabled: when the SPICE agent or the X server resizes the output, it
+> submits a mode whose pixel clock is off by a factor of 1000, e.g.:
 > 
-> wlan0: disconnect from AP 90:fb:5d:94:8b:e3 for new auth to 90:fb:5d:94:8b:e2
-> wlan0: authenticate with 90:fb:5d:94:8b:e2 (local address=84:9e:56:9c:7e:6b)
-> wlan0: send auth to 90:fb:5d:94:8b:e2 (try 1/3)
->  slab kmalloc-8k start ffff8c80958a6000 pointer offset 4160 size 8192
-> list_add corruption. prev->next should be next (ffff8c808a7488f8), but was ffff8c80958a7040. (prev=ffff8c80958a7040).
+>     clock = 406 kHz, htotal = 3152, vtotal = 2148
 > 
->  mt76_wcid_add_poll+0x95/0xd0 [mt76]
->  mt7925_mac_add_txs.part.0+0xa5/0xe0 [mt7925_common]
->  mt7925_rx_check+0xa7/0xc0 [mt7925_common]
->  mt76_dma_rx_poll+0x50d/0x790 [mt76]
->  mt792x_poll_rx+0x52/0xe0 [mt792x_lib]
+>     framedur_ns = 3152 * 2148 * 1000000 / 406 = 16675852216 ns (~16.7 s)
 > 
-> Signed-off-by: Jiajia Liu <liujiajia@kylinos.cn>
+> 16675852216 does not fit into an int and wraps to roughly -504000000.
+> ns_to_ktime() then yields a negative interval and the timer stops working.
+> 
+> Found by bisection, which pointed at commit a036f5fceedb ("drm/virtgpu:
+> Use vblank timer"). That commit merely made virtio-gpu use the vblank
+> timer and thereby exposed the pre-existing problem in the timer setup
+> added by commit 74afeb812850 ("drm/vblank: Add vblank timer").
+> 
+> Reject a non-positive frame duration in drm_crtc_vblank_start_timer() and
+> return an error. enable_vblank then fails and the driver falls back to
+> sending the vblank event immediately, as it did before the vblank timer
+> was introduced. Valid modes are unaffected, and the timer self-heals on
+> the next mode that has a sane clock.
+> 
+> Fixes: 74afeb812850 ("drm/vblank: Add vblank timer")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Roman Ilin <me@romanilin.is>
 > ---
+> Notes:
 > 
-> Changes in v2:
->   - use dev->wcid table instead of adding MT_WCID_FLAG_DRV_PUBLSH for
->     wcid publish check suggested by Sean
->   - subject and commit message update
+> Based on v7.1-rc7. Tested on 6.19 and 7.1-rc7.
 > 
-> ---
->  drivers/net/wireless/mediatek/mt76/mac80211.c | 15 ++++++++++++---
->  1 file changed, 12 insertions(+), 3 deletions(-)
+> Open questions:
 > 
-> diff --git a/drivers/net/wireless/mediatek/mt76/mac80211.c b/drivers/net/wireless/mediatek/mt76/mac80211.c
-> index 4ae5e4715a9c..b78b4cd206e0 100644
-> --- a/drivers/net/wireless/mediatek/mt76/mac80211.c
-> +++ b/drivers/net/wireless/mediatek/mt76/mac80211.c
-> @@ -1576,6 +1576,7 @@ mt76_sta_add(struct mt76_phy *phy, struct ieee80211_vif *vif,
->  {
->  	struct mt76_wcid *wcid = (struct mt76_wcid *)sta->drv_priv;
->  	struct mt76_dev *dev = phy->dev;
-> +	struct mt76_wcid *published;
->  	int ret;
->  	int i;
+> This relies on the int overflow producing a negative value. The deeper
+> issue is that drm_calc_timestamping_constants() truncates framedur_ns to
+> int. Would you prefer to widen framedur_ns to s64, or to bound the
+> interval here (e.g. reject framedur_ns above one second) so that any
+> bogus interval is rejected regardless of sign?
+> 
+> Should virtio-gpu additionally sanitize the user-supplied clock in its
+> atomic_check (similar to vmwgfx for the clock==0 case) so the
+> vblank-timer throttling is preserved for these resizes, instead of
+> falling back to immediate events?
+> 
+>  drivers/gpu/drm/drm_vblank.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/drm_vblank.c b/drivers/gpu/drm/drm_vblank.c
+> index f78bf37f1..557cd0bc8 100644
+> --- a/drivers/gpu/drm/drm_vblank.c
+> +++ b/drivers/gpu/drm/drm_vblank.c
+> @@ -2235,7 +2235,13 @@ int drm_crtc_vblank_start_timer(struct drm_crtc *crtc)
 >  
-> @@ -1595,11 +1596,19 @@ mt76_sta_add(struct mt76_phy *phy, struct ieee80211_vif *vif,
->  		mtxq->wcid = wcid->idx;
->  	}
+>  	drm_calc_timestamping_constants(crtc, &crtc->mode);
 >  
-> -	ewma_signal_init(&wcid->rssi);
-> -	rcu_assign_pointer(dev->wcid[wcid->idx], wcid);
-> +	published = rcu_dereference_protected(dev->wcid[wcid->idx],
-> +					      lockdep_is_held(&dev->mutex));
-> +	if (published != wcid) {
-> +		WARN_ON_ONCE(published);
-> +		ewma_signal_init(&wcid->rssi);
-> +		rcu_assign_pointer(dev->wcid[wcid->idx], wcid);
-> +		mt76_wcid_init(wcid, phy->band_idx);
-> +	} else {
-> +		wcid->phy_idx = phy->band_idx;
-> +	}
+> +	/*
+> +	 * Return an error so the driver falls back to sending vblank events
+> +	 * when a small mode clock yields a frame duration exceeding INT_MAX.
+> +	 */
+> +	if (vblank->framedur_ns <= 0)
+> +		return -EINVAL;
 > +
->  	phy->num_sta++;
->  
-> -	mt76_wcid_init(wcid, phy->band_idx);
->  out:
->  	mutex_unlock(&dev->mutex);
->  
+>  	spin_lock_irqsave(&vtimer->interval_lock, flags);
+>  	vtimer->interval = ns_to_ktime(vblank->framedur_ns);
+>  	spin_unlock_irqrestore(&vtimer->interval_lock, flags);
 
