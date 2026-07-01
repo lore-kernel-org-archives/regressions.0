@@ -1,138 +1,143 @@
-Received: from fout-b1-smtp.messagingengine.com (fout-b1-smtp.messagingengine.com [202.12.124.144])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0FF2274FD0
-	for <regressions@lists.linux.dev>; Tue, 30 Jun 2026 23:31:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.144
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4385F376A01
+	for <regressions@lists.linux.dev>; Wed,  1 Jul 2026 05:39:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782862264; cv=none; b=Nkd55Im/lrCEAW3uQOK1dNU0V12VBxOHzrHZ8JuanhdP1yM5N//S4YcKQli7a0SypuebviXPlrUFt72q0Sx2/8btV7C7aT+bEcUgIrPuFILnuMSkrqpW27khxPeIZWG62CltqrusRfvGSNcxogfc48ZOSKSFuk7ZyP4HfnrAruU=
+	t=1782884397; cv=none; b=OOf2Uqk85qJI9uMqiypB7X3ySUp0IBRrvlOKA3b07huEaIveSCw8rGBipEHu0pykaG2GuWL7xOESF2gUiUPa/0JaZ+nwVLrz7lg1Xf3zA8PfjvA5F7n9pydK1GsraPiE5bB/4OPMdmE924+1m16C55M4D9ejsoQMeUnDcpxjnUU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782862264; c=relaxed/simple;
-	bh=nmum7b6E4ThNuBAAdyTQN0WMwuwlJI0AauIO5UVtdIU=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=W5yTCaM98qRJn1wWw590kfgsQsTeDPxTbpkwW4eKiq2cIcoMsEPWOFUAYXqsxPKESCWGhV8We3PcUduEmLiC/0cW4IhEMLp4LBvmOE7JqioCb+wKM9pvf5l+qfOJuzgoi4b3iDvPEnThxqJK4LCpCN/r1QDyxOJGJe5tuhpW9u8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; spf=pass smtp.mailfrom=ownmail.net; dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b=f/SOD/M3; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=RGki0XLy; arc=none smtp.client-ip=202.12.124.144
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ownmail.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ownmail.net header.i=@ownmail.net header.b="f/SOD/M3";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="RGki0XLy"
-Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
-	by mailfout.stl.internal (Postfix) with ESMTP id 343EB1D00100;
-	Tue, 30 Jun 2026 19:31:02 -0400 (EDT)
-Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-05.internal (MEProxy); Tue, 30 Jun 2026 19:31:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to; s=fm1; t=
-	1782862262; x=1782948662; bh=HC3rX9aewZEqOlQDOIhJ49d2y+me05A1l3L
-	MXf3ayxU=; b=f/SOD/M3AWchs5RHZQRloOwx4RPHyI8CPEZU7eYZm+QmIlTIvRr
-	D6uCo2OcNbjbaPDiKoNAZmjgUQ0aRM6rlMeYQ5H7MRMXt6hofmWFY9lW7x3wmpnW
-	smU6dAJo6oB7Vt29rKaistws5ngCbj7Hq/GE8FdgQk4inclqx2PRnI6z4EwfYamu
-	nW2fGB5h5hwvTzcEIKcCAK90nC+pded/vgcKWtIgtRkuMbrZ6MF13IeDJ+KhXGNE
-	I8ALSYBZ5jjSIuRv1gd8gdtt3MwPPuQWEsTvDWB76k22MP0Mu80R/RT7VludM/cX
-	jETnkvE8xVPvdRhoBpXl6q6BqoVlQ1ohU9A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1782862262; x=
-	1782948662; bh=HC3rX9aewZEqOlQDOIhJ49d2y+me05A1l3LMXf3ayxU=; b=R
-	Gki0XLyJFcdaxGQErHAdlMBJvq77ky2TbBe6RT7mJynXNQyZn4QaSAowD0uGMLbi
-	Twmg7gdeLvb46KUvKtLFvxFkLyYhOYcwg9ROBxgwZ5qQzV5WxXhpNRdqOK2rLCIB
-	EnZoF8ZWnfrEpm8OEvTwGKon0dT6F+ZIvzxSS1CvEulMmixI98sB6pRzRsJ0psGl
-	GKSVLUTvFDpzJVgOBuDyry+7vUoooBq9pWH7EUE1RuLDmyBU+jyXjnbg0justEwx
-	4HyzDscPgkVG1fKig1E9Fmh2Gf4aiy1nK3x1yxLuQpdfbwRBQGxRuJL6EKUXIaXc
-	Nz4VIiJMhTzm9tIp3ARmQ==
-X-ME-Sender: <xms:tVFEagueoKrrWe4SlOsxUq8pyjlKK9yc1b_oWILLi7yee58qlb3cyw>
-    <xme:tVFEamaGgTR5YXzTucoxD5YUhAiQD6eIjDM0sanYHPF97juTzLIhCu96lJte99KDu
-    Uib2S-gHgCJCjEn_d-84eTc8FbpLKO-eIkdU6yy_jgzqfvAKA>
-X-ME-Received: <xmr:tVFEanUlJ2r5pJF7vSD596Koo0YBoSTHldvEAPyw9x9gU_4e2mKXh3_mVX76F70FHz49pN7igDJhApbRw9GeCvgAD0T93_8>
-X-ME-Proxy-Cause: dmFkZTFd7dJuxJk5EJFZXd4B37RWxuI3t196xFcOklBw5G9dOdPyD8bg9jUn1ZyZ9nCVBJ
-    Ec9ReMjCZWgey70bA673/xDU0x4XRXlpZY9D7cqXRIpyYhP0O39vBsJXFS4LcQQZn2zAbO
-    P7a8tTWMVLvGDXa91UU8cXVDmevT1ZyHa458O/l8vN4YVMbTA1EnvFT8/QHLWvEncJ5j9N
-    oO5R3qzSxnm0X3vFYmyjXVsmJupMhNrQF7mtkYn7lUWT7HqnHHWXHiZnE0NTCAOtWGf1NH
-    eL13vi4ymALcmorQgGJErnTWq2NczzSaBsOC7ZRNA+0beoGH1n3L0EvNyTuAkkEr8BS5g4
-    brL5BL8T16/xy8haJp7loi+8XdnNhq4N9Dg9OaITGTuUIjBJf0kobPVXeeYIh/xGwRqLLU
-    y98Llco1WsiZxJkNLLmhsz3Dw2hw/5SM2bV75dBj+RPVZqrFvH7bYxsjCVngSIAT0af0j3
-    GjimMHOjcPRhfqr1Q6IncRkGPAk9IVSliy71Nmexn/dhokZdxRbOkbeZxRxneqd5I/u8Ue
-    QmkiO7MOd5Ci1Xt46cH1l/lzZhaDTbR1+SwfJGRSoqaCzg13BGw5/E+t7jau9Q1mZuNhUv
-    0W3GKiy6dYrhPGAJHxToAII+xWSYwkDPEVl/sSvwUyMbj4J6FtaeVv18UF2g
-X-ME-Proxy: <xmx:tVFEajRSn1PlnkqA1vIBD756iLuh9XVmFpPHDWafaqRaUZ0p435fNg>
-    <xmx:tVFEatMSZOdftkBt8yWC-EpE_L1tIRKyL1hKqgBz3mMYqt86KMfwpQ>
-    <xmx:tVFEapQF96azsKLawLxTAwWoEinixA0-qMcRyr0o73V5jcY_cJQ8iQ>
-    <xmx:tVFEajgnFulqeLOY-7pbVYnYA71nsnYIB0Y9BHv_enGGY3uP93ljVg>
-    <xmx:tlFEarBQ4zM78LtgpgOwvvP730YrbDg4hsb886wJ5VG2xoM-PSZUThCF>
-Feedback-ID: i9d664b8f:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 30 Jun 2026 19:30:59 -0400 (EDT)
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+	s=arc-20240116; t=1782884397; c=relaxed/simple;
+	bh=KPRpV2OTQV3O3chkhczkOkVXwXH4v+G0/WQS95RV7Dk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Qq+mslrUTMDKyJCjIXjDdmjNEX44zUgtKY9wY/yYOOHwMQr3g0pD8UfBIdOv058VQxaHKH98dZEmYcR1rSUDwHrQyheGpT6pwg8Lub9hykxQPvfG/cyXXz7r/Af57UUGsWvqcywUci5AKIF+NolK1YxAKDN3GaH225934yIkkxA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 442ae94e750f11f1aa26b74ffac11d73-20260701
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.3.12,REQID:f37576a9-a375-4c7f-ad87-6d3dd921d54d,IP:0,U
+	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:0
+X-CID-META: VersionHash:e7bac3a,CLOUDID:0e3cee1c3040dfdb058ab0416684d043,BulkI
+	D:nil,BulkQuantity:0,Recheck:0,SF:80|81|82|83|102|865|898,TC:nil,Content:0
+	|15|50,EDM:-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,O
+	SI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 2,SSN|SDN
+X-CID-BAS: 2,SSN|SDN,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
+X-UUID: 442ae94e750f11f1aa26b74ffac11d73-20260701
+X-User: liujiajia@kylinos.cn
+Received: from nature [(10.44.16.150)] by mailgw.kylinos.cn
+	(envelope-from <liujiajia@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
+	with ESMTP id 1450260893; Wed, 01 Jul 2026 13:39:45 +0800
+Date: Wed, 1 Jul 2026 13:39:42 +0800
+From: Jiajia Liu <liujiajia@kylinos.cn>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Felix Fietkau <nbd@nbd.name>, Lorenzo Bianconi <lorenzo@kernel.org>,
+	Ryder Lee <ryder.lee@mediatek.com>,
+	Shayne Chen <shayne.chen@mediatek.com>,
+	Sean Wang <sean.wang@mediatek.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Ming Yen Hsieh <mingyen.hsieh@mediatek.com>,
+	Leon Yen <leon.yen@mediatek.com>, linux-wireless@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	Linux kernel regressions list <regressions@lists.linux.dev>
+Subject: Re: [PATCH v2] wifi: mt76: add wcid publish check in mt76_sta_add
+Message-ID: <akSoHk-BozrpWPmZ@nature>
+References: <20260528033814.46418-1-liujiajia@kylinos.cn>
+ <b143b62e-ca11-4f00-ad60-f71ae55213b9@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: NeilBrown <neilb@ownmail.net>
-To: "Miklos Szeredi" <miklos@szeredi.hu>
-Cc: =?utf-8?b?0JDRgNGC0LXQvCDQm9Cw0LHQsNC30L7Qsg==?= <123321artyom@gmail.com>,
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
- regressions@lists.linux.dev
-Subject: Re: PROBLEM: FUSE_NOTIFY_INVAL_ENTRY leaves stale negative dentry
- after c9ba789dad15
-In-reply-to:
- <CAJfpeguDUS_3X-AFZD6XCJB1SjVkFGu2aJ+p1BK574Scu-ASdA@mail.gmail.com>
-References:
- <CAFbF8N7++zopZuEcsKRxBV_sgOGCbzCY0hOyMw1SiGAtuzGhyQ@mail.gmail.com>
-  <CAJfpegsCJnMfn_BzzTK7m9ndCGVsnPit8ZsT0fzAhYoY+yOsKQ@mail.gmail.com>
-  <178035740095.2923901.5908691318688917347@noble.neil.brown.name>
-  <CAJfpegswAZv8OmDAcK-5u8kssAF1vZKe4gdDB2XPErAnoGFSYg@mail.gmail.com>
-  <178056619459.3392745.3091041855723132411@noble.neil.brown.name>
-  <CAJfpeguDUS_3X-AFZD6XCJB1SjVkFGu2aJ+p1BK574Scu-ASdA@mail.gmail.com>
-Date: Wed, 01 Jul 2026 09:30:55 +1000
-Message-id: <178286225519.27465.210364797855970767@noble.neil.brown.name>
-Reply-To: NeilBrown <neil@brown.name>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b143b62e-ca11-4f00-ad60-f71ae55213b9@leemhuis.info>
 
-On Thu, 04 Jun 2026, Miklos Szeredi wrote:
-> On Thu, 4 Jun 2026 at 11:43, NeilBrown <neilb@ownmail.net> wrote:
+On Tue, Jun 30, 2026 at 01:29:51PM +0200, Thorsten Leemhuis wrote:
+> On 5/28/26 05:38, Jiajia Liu wrote:
+> > Since mt7925_mac_sta_add publishes wcid, add publish check in mt76_sta_add
+> > to avoid reinitializing the wcid->poll_list.
+> > 
+> > Found dev->sta_poll_list corruption when using mt7925 and 7.1-rc4.
 > 
-> > My guess is you refer to the need for retry-on-error.
-> > I need that design so that locking can be pushed closer to the
-> > filesystem and ultimately, in some cases, removed.
+> Jiajia Liu, Felox: given that the problem seems to be in 7.1, should we
+> ask the stable team to pick this regression fix up, as this change was
+> mainlined (as 20b126920a259d ("wifi: mt76: add wcid publish check in
+> mt76_sta_add") [v7.2-rc1]), but lacks both a Fixes and a Stable tag?
+
+Yes. It seems to be related to cbf5e61da660 ("wifi: mt76: initialize
+more wcid fields mt76_wcid_init") [v6.14-rc1]. But I didn't reproduce
+when I checked it out and tested. So Fixes was not added.
+
 > 
-> Aha, but this is filesystem code, we don't need or want to move it
-> closer to the filesystem, it's already there.
+> Ciao, Thorsten
 > 
-> > It is a lot like the reason that we often use cmp-xchg loops instead of
-> > holding a spinlock while performing a simple operation.  The code is
-> > more complex but it scales better.
-> 
-> Okay, so this is about making VFS more scalable?  Can't we just leave
-> filesystem code alone in that case?
-
-yes and no...
-
-Some things in filesystems do need to change - particularly some uses of
-d_drop() and all of d_rehash(), though they don't apply here.
-And as I am changing what inode_lock() protects for directories I
-needed to review all uses.  As I was providing new interfaces I wanted
-to be sure those interfaces were capable of handling all use-cases, so
-my goal was to convert all uses of inode_lock() on directories.
-
-However I did take that too far here.  As you helpfully point out, I
-don't need to change this code at all.  It only involves fuse code
-taking locks on a fuse filesystem, and this usage isn't problematic for
-the new scheme (as it would be if, for example, d_alloc_parallel() was
-called while the directory was locked).
-
-So I now see that I don't need to make any changes here - thanks for
-helping me see that.
-
-Thanks for fixing the mess I made.
-
-NeilBrown
-(with apologies for the long delay in replying).
-
+> > According to the corruption information, prev->next was changed to itself.
+> > 
+> > wlan0: disconnect from AP 90:fb:5d:94:8b:e3 for new auth to 90:fb:5d:94:8b:e2
+> > wlan0: authenticate with 90:fb:5d:94:8b:e2 (local address=84:9e:56:9c:7e:6b)
+> > wlan0: send auth to 90:fb:5d:94:8b:e2 (try 1/3)
+> >  slab kmalloc-8k start ffff8c80958a6000 pointer offset 4160 size 8192
+> > list_add corruption. prev->next should be next (ffff8c808a7488f8), but was ffff8c80958a7040. (prev=ffff8c80958a7040).
+> > 
+> >  mt76_wcid_add_poll+0x95/0xd0 [mt76]
+> >  mt7925_mac_add_txs.part.0+0xa5/0xe0 [mt7925_common]
+> >  mt7925_rx_check+0xa7/0xc0 [mt7925_common]
+> >  mt76_dma_rx_poll+0x50d/0x790 [mt76]
+> >  mt792x_poll_rx+0x52/0xe0 [mt792x_lib]
+> > 
+> > Signed-off-by: Jiajia Liu <liujiajia@kylinos.cn>
+> > ---
+> > 
+> > Changes in v2:
+> >   - use dev->wcid table instead of adding MT_WCID_FLAG_DRV_PUBLSH for
+> >     wcid publish check suggested by Sean
+> >   - subject and commit message update
+> > 
+> > ---
+> >  drivers/net/wireless/mediatek/mt76/mac80211.c | 15 ++++++++++++---
+> >  1 file changed, 12 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/drivers/net/wireless/mediatek/mt76/mac80211.c b/drivers/net/wireless/mediatek/mt76/mac80211.c
+> > index 4ae5e4715a9c..b78b4cd206e0 100644
+> > --- a/drivers/net/wireless/mediatek/mt76/mac80211.c
+> > +++ b/drivers/net/wireless/mediatek/mt76/mac80211.c
+> > @@ -1576,6 +1576,7 @@ mt76_sta_add(struct mt76_phy *phy, struct ieee80211_vif *vif,
+> >  {
+> >  	struct mt76_wcid *wcid = (struct mt76_wcid *)sta->drv_priv;
+> >  	struct mt76_dev *dev = phy->dev;
+> > +	struct mt76_wcid *published;
+> >  	int ret;
+> >  	int i;
+> >  
+> > @@ -1595,11 +1596,19 @@ mt76_sta_add(struct mt76_phy *phy, struct ieee80211_vif *vif,
+> >  		mtxq->wcid = wcid->idx;
+> >  	}
+> >  
+> > -	ewma_signal_init(&wcid->rssi);
+> > -	rcu_assign_pointer(dev->wcid[wcid->idx], wcid);
+> > +	published = rcu_dereference_protected(dev->wcid[wcid->idx],
+> > +					      lockdep_is_held(&dev->mutex));
+> > +	if (published != wcid) {
+> > +		WARN_ON_ONCE(published);
+> > +		ewma_signal_init(&wcid->rssi);
+> > +		rcu_assign_pointer(dev->wcid[wcid->idx], wcid);
+> > +		mt76_wcid_init(wcid, phy->band_idx);
+> > +	} else {
+> > +		wcid->phy_idx = phy->band_idx;
+> > +	}
+> > +
+> >  	phy->num_sta++;
+> >  
+> > -	mt76_wcid_init(wcid, phy->band_idx);
+> >  out:
+> >  	mutex_unlock(&dev->mutex);
+> >
