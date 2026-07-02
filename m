@@ -1,37 +1,37 @@
 Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.61.107])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4322F39DBFA
-	for <regressions@lists.linux.dev>; Thu,  2 Jul 2026 07:44:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 183D33C6A2B
+	for <regressions@lists.linux.dev>; Thu,  2 Jul 2026 07:51:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.61.107
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782978271; cv=none; b=cPw2s433A4r6bPQZ5dxJMaqrR/Z4NyAYXSHG5u/Xcpi5ySL0RaPNOHrDlkEGgIBPj60ztxgf9UpoWZqjpOuRwX8OhM1FMjPDNNfWMWcMRri7Qqvt7dcaDLlMgLglOnM0JgM5L0pM0CgJeudtIKNnEQ/+weOZveR6d3CpGEum7ZY=
+	t=1782978672; cv=none; b=LPZLjgSpi5G+bUqa1hVg0aqDd1HcZ3qjHTlK98xYV/REOqwYloLT2nUyJv9UPV7O5QhVfh0y+IFVP849kDrVBfORoAam5CYmdZR+owcu5Ntx0a6jC69gqLa/jvraS6MS78WltsfQ/5JxlN1s2b2irpG6/fierSIUOniBLs+/LZ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782978271; c=relaxed/simple;
-	bh=TsN6WMMBCEo3X7M+PaHTEiPe/r/MX65+aVkikPoZo+8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
-	 In-Reply-To:Content-Type; b=GdHy2/wA2xyK9i+qNzxLLo7H448SLM6vMZaLytKru6F1mg1/EDu4RpGaGlIoG6kSkh4kLr7yflxSMK9ZStW+n59SqH53ie/J9ngDQ9HVyXyWGnA+LxH/1aIk3CjaSUAjDXDiOi2NNKZqSL9BGuty6frRYIToPgN3R2ynq3nzy0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=TjtJ1wMw; arc=none smtp.client-ip=188.68.61.107
+	s=arc-20240116; t=1782978672; c=relaxed/simple;
+	bh=CiyjAyTeTghQKzTHyi70V0h5uCjSatSdqCmN8rM95eI=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=KFVP8ZZS65IVBdW08WqZGQItUNa0xC//r6+UXCWeBLf7MU6WOTiTtt5rNgv6tTAP3x/NkC6wIqh5ab3SuYr/Os7QgnzRRgrTo34xq7NoJ+jtOso6Ohq7It9RMqrkl8AMWFo6Qx8gPU+nD1VB0qvYd3GrL+ytTclWT44OXWWgWow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=aFP4QPpy; arc=none smtp.client-ip=188.68.61.107
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="TjtJ1wMw"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="aFP4QPpy"
 Received: from mors-relay-8405.netcup.net (localhost [127.0.0.1])
-	by mors-relay-8405.netcup.net (Postfix) with ESMTPS id 4grTRT0yj5z78xf;
-	Thu,  2 Jul 2026 09:44:21 +0200 (CEST)
+	by mors-relay-8405.netcup.net (Postfix) with ESMTPS id 4grTb82hw7z768b
+	for <regressions@lists.linux.dev>; Thu,  2 Jul 2026 09:51:00 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1782978261;
-	bh=TsN6WMMBCEo3X7M+PaHTEiPe/r/MX65+aVkikPoZo+8=;
-	h=Date:Subject:To:References:From:Cc:In-Reply-To:From;
-	b=TjtJ1wMwyQhbAj5p3WcdecFKurKvL1gKgOZBAFY7bOfBZpq7hogycwScebDww3mTi
-	 SEjfzI7PBhKif6OHy6RC2pR8cm6hObzSgIhJgn5n0SX5Ps9wcYHjvOHGDh7iQD3KGW
-	 q6m7bEHFEPxQ+4Eqyci7OJgHSzMWDDvRg46UIX9qK3t+yFiSAZomCJDrccs4014Sio
-	 bvmkdw4r88FNxN9R8Oga14/X3X0tDHtOCsh7eSGZjzEeL2W54VJUQfiOv0Ufdo58pO
-	 1WmFrpF5xzXENt1jiSpgyVPvra+Jtq6gXQcwAEUChK9xnEQm4y6aGdzPGR4Knzd0+b
-	 dCZNlHSOXtQYA==
+	s=key2; t=1782978660;
+	bh=CiyjAyTeTghQKzTHyi70V0h5uCjSatSdqCmN8rM95eI=;
+	h=Date:Subject:From:To:References:In-Reply-To:From;
+	b=aFP4QPpy9iK40rLA3D3ccq+djlUPJ97DwrI41jbI/7HFJtg4jDYMBNd0DKoypP1rY
+	 P6QSJGB8yGgndocNhWZ+bngKW1mOD9rgZcmVT9F3IJTFBfMOAFwyvVtiR0/c+DlEtp
+	 n0ppdT575SXWGH73ZumzNCh2mYdnmC03xBZ/z1qeJgTj1p0qTeIJwtx2cgb9vlU1sa
+	 mJxZbiHAYLrEDYZeS8Av3EtmiD1gMUKiCW+BXSvsuOjk5LUnss5ItyeSj5hnK3l+0z
+	 jhAVdjlR+gM876ihrtwPvRelTsCLJSoou6RPDCzJZcizMuOMyO8QeNHSX1QMjEeWnw
+	 yPasxIX8KgpXQ==
 Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-8405.netcup.net (Postfix) with ESMTPS id 4grTRT0Gcvz78xd;
-	Thu,  2 Jul 2026 09:44:21 +0200 (CEST)
+	by mors-relay-8405.netcup.net (Postfix) with ESMTPS id 4grTb821Drz7680
+	for <regressions@lists.linux.dev>; Thu,  2 Jul 2026 09:51:00 +0200 (CEST)
 X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
 X-Spam-Flag: NO
 X-Spam-Score: -2.901
@@ -40,16 +40,16 @@ Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4grTRR5mvhz8tYM;
-	Thu,  2 Jul 2026 09:44:19 +0200 (CEST)
+	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4grTb75KC4z8tXR
+	for <regressions@lists.linux.dev>; Thu,  2 Jul 2026 09:50:59 +0200 (CEST)
 Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id A4244603E0;
-	Thu,  2 Jul 2026 09:44:18 +0200 (CEST)
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id EBFB0603F3
+	for <regressions@lists.linux.dev>; Thu,  2 Jul 2026 09:50:58 +0200 (CEST)
 Authentication-Results: mxe9fb;
         spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
 Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <64546a50-5593-4083-aaa7-6f772f8c81b5@leemhuis.info>
-Date: Thu, 2 Jul 2026 09:44:17 +0200
+Message-ID: <a229a113-a235-4f9e-9f7f-be36fb14beee@leemhuis.info>
+Date: Thu, 2 Jul 2026 09:50:58 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -57,84 +57,55 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [BUG] linux-firmware-amdgpu 20260622 prevents clean poweroff on
- AMD RX 6800
-To: IT4roundtheW0rd <IT4roundtheW0rd@protonmail.com>,
- "linux-firmware@kernel.org" <linux-firmware@kernel.org>
-References: 
- <q7ZKOKwwFDcWVkxZpaMuCo3xjbQ0XzrMZfuVec--VZXX94D5vdqLIRMR6xMaoGI27_uGJ-ILsWrXlXwbfGLf2ozY5bz8QV0Al3JUH7y3f4o=@protonmail.com>
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
 From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
 Content-Language: de-DE, en-US
-Cc: Linux kernel regressions list <regressions@lists.linux.dev>,
- Alex Deucher <alexander.deucher@amd.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>
-In-Reply-To: 
- <q7ZKOKwwFDcWVkxZpaMuCo3xjbQ0XzrMZfuVec--VZXX94D5vdqLIRMR6xMaoGI27_uGJ-ILsWrXlXwbfGLf2ozY5bz8QV0Al3JUH7y3f4o=@protonmail.com>
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 X-PPP-Message-ID: 
- <178297825897.3306651.13862513967389606757@mxe9fb.netcup.net>
-X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: A4244603E0
-X-NC-CID: WQUHJuKIRcozFvv2yzdqCWxTh1SrywKG3JrO4uvjTbwvR5T3U8o=
+ <178297865912.3308733.12157339201812300914@mxe9fb.netcup.net>
+X-NC-CID: N7IFnVb3LtjLWFXpznQGgvVw6kBiRL/pyQIg6GnoVtoa+hoD3bU=
 
-[adding a few people to the CC]
 
-On 6/27/26 02:42, IT4roundtheW0rd wrote:
-> 
-> I'd like to report a regression in linux-firmware-amdgpu introduced with
-> the 20260622 release.
-> 
-> *System:*
-> - Distro: CachyOS
-> - Kernel: 7.1.1-2-cachyos
-> - GPU: AMD RX 6800-series
-> - Bootloader: GRUB
-> 
-> *Problem:*
-> After updating linux-firmware-amdgpu from 1:20260519-1 to 1:20260622-1,
-> the system no longer shuts down completely when running `poweroff`.
-> Fans, keyboard LEDs, and power button LED remain active after the
-> shutdown sequence. The system hangs after "Sending SIGTERM to remaining
-> processes..." and never reaches full power-off (ACPI *S5).*
 
-A few questions:
+On 3/9/24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-* Which firmware files does your GPU use exactly (a full dmesg log
-should answer this)
-* Does the problem happen with a vanilla kernel as well (it most likely
-will, but would be good to confirm, as heavily patched vendor kernels
-can lead to all sort of issues).
+#regzbot report:
+https://lore.kernel.org/all/akVnoOYQOrt8k-Gu@karahi.librecast.net/
+#regzbot introduced: 1d6e569b7d0c0b2736636749e4be0a27f3cefcb3
+#regzbot title: tun/tap & vhost-net: multi-threaded network performance
 
-Ciao, Thorsten
+#regzbot report:
+https://lore.kernel.org/oe-lkp/202603112240.f7605968-lkp@intel.com/
+#regzbot introduced: f9a48549a15a
+#regzbot title: btrfs: 22.6% regression of fio.write_iops
+#regzbot fix: btrfs: replace writeback inhibition xarray with a fixed
+inline buffer
+#regzbot monitor:
+https://lore.kernel.org/all/12d3c3f07b8610ca13b0f3f792d420541afb7b33.1782949130.git.loemra.dev@gmail.com/
 
-> *Relevant log excerpt (journalctl -b -1):*
-> 
->     Jun 27 02:04:14 cachyos systemd-shutdown[1]: Sending SIGTERM to
-> remaining processes...
-> 
-> (no further entries — system hangs here)
-> 
-> *Workaround:*
-> Downgrading to linux-firmware-amdgpu 1:20260519-1 resolves the issue
-> completely.
-> 
-> *Steps to reproduce:*
-> 1. Update linux-firmware-amdgpu to 1:20260622-1
-> 2. Run `poweroff`
-> 3. System hangs — power is not cut
-> 
-> *Additional notes:*
-> The root cause appears to be that the new firmware blob prevents the
-> amdgpu driver from cleanly releasing the GPU before the ACPI S5 power
-> state transition. No other packages were updated in the same transaction
-> that could explain this behavior.
-> 
-> This issue was researched and this report was drafted with the
-> assistance of Claude (Anthropic AI).
-> 
-> Best regards,
-> 
-> Benjamin Maas 
+#regzbot report:
+https://lore.kernel.org/all/6eccafaaaa60651ef091257c3439c46b@stwm.de/
+#regzbot introduced: 95f9eb19d5e6
+#regzbot title: nfs: soft lockup
+
+#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=221704
+#regzbot introduced: v7.1..v7.2-rc1
+#regzbot title: ftrace: sys_enter_sched_getaffinity and
+sys_enter_sched_setaffinity have a broken format
+
+#regzbot report:
+https://lore.kernel.org/all/cb287e3d-3066-4820-b464-6208b947974b@mailbox.org/
+#regzbot introduced: d1e280334b7f
+#regzbot title: usb: core: Dock stopped working
+
+
 
