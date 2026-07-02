@@ -1,156 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67A68318BB3
-	for <regressions@lists.linux.dev>; Thu,  2 Jul 2026 18:48:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6956D3B9D94
+	for <regressions@lists.linux.dev>; Thu,  2 Jul 2026 19:59:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783018094; cv=none; b=Y7n0KPoh2iKO2p/qa5d9C/6LwBqiPVUEUSzRyGg8QW18wsO3NXFghmeLPYkL+J/OQbA7vO9phCa6Z5emDB+r200Jn1wNNyHJsGKfurA3oFYhq6LAd1lOn70dO5Ubn0FAaje0taIjEvHU5tqe7XF9PGRigdSc76wJgcB82Tzw8pM=
+	t=1783022348; cv=none; b=nxgyb6vdc1FR/1tt6nk/8NikfLO36kMceDY+T2xI3B6TnTP2viH+XFp1bTLRhL+5MK7fYtW3h6WraEQBwh8wIHqB53ITeeAc2HryUK3s61+OmBoPmbmd6b5O8NWkVeORZKLhR8/ZkMlR/tSD3dopmBjFbZ22ddYXgspXU7vOaaA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783018094; c=relaxed/simple;
-	bh=raUo+CGpWrD67s/afmyf9SkDsqorM7yqCwPQdnHoa6g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VL0FS5LomS4dGTw6KGIQ5vw0hxBFVuilL9cmSVinQDV4OZ/Rm8je2ImQOMTuvf1z35B3Lo8WlwBwqK6Q5hq/263xi+RY4fwhu0HAxRpI/1Xn3sHKn1m68s2ph+7N/75vBrx23Z8kjfDoRmZuKLh7hVPal0Bh87fvY2LJnc79Y6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jgf4F1rX; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1783022348; c=relaxed/simple;
+	bh=N7sMNYyCdCft2/HVgtIUsYBlO8H6aWGUMR71m1Io/8E=;
+	h=Content-Type:MIME-Version:Subject:From:To:Cc:Date:Message-ID; b=MgPJ6SnvXXHBlQMjfQrm0s4c71reZtUci9Lp5zhECtLHSDyB8v4YWEKDYZO2zHeJFrJ2taGf5cVYXsBJsHdrrTvezD3z8+/Vuj8xmVeYKP1Ij8Y0VFjN11cefpfsQs4/eSJ0iCSQsGO94WYRmAd70Emh6iux42Z4k0s1jiOZMZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kernelci.org; spf=pass smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci.org header.i=@kernelci.org header.b=WGF6/v7t; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kernelci.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernelci.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jgf4F1rX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 104FC1F00A3E
-	for <regressions@lists.linux.dev>; Thu,  2 Jul 2026 18:48:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783018092;
-	bh=BOSDrMobB0ZVHldvBgJMtIG2Yo9lUzWbeajnzMUjwWU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=jgf4F1rXBmXB3IlDNjmjHmBkJnalYubKskpOuxf7GVMIP7kub2x/LHPZNXSv4hKQV
-	 LYPCW/IWn9aZy1QDlvux0AG/JuZUYSgu3hnDDPMGBHdiXdSfZfhh+6eGegrZ9u2d96
-	 //hH5t7KUZjGeq/IxDQGHJFyJFklo36H0QvmlkJv8MI44lmnMpVxtJ/C7xEhvFTcnU
-	 ZjOO2b/G1MGbS68Lg9AValFwpRcKFZODFpXgMrj5BrC5GtN9Qg1tpG8tNaN9QBaY2H
-	 S3z1R8RHmp/hwC0QwqfOipA/mydQzJnL2MT35lpjru19g7B1uJ6Z6VxhzQqPzBVUzs
-	 MRkehqNfbKjRQ==
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-5aec5675c46so2191068e87.1
-        for <regressions@lists.linux.dev>; Thu, 02 Jul 2026 11:48:11 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AHgh+RoG3Fp5Wd7bitAcrUL4u9BVHx163dxKEZmbQI+Mx6XVw5pUzvXuiVAKLx6tcyn2mePYcDzJV7Vg9XREnw==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxxVHmLSGIQCJgFY0APYa3fytTFa0Fqil+FAGnWi86nbBdox8El
-	ejcABjAyjj/qXjhDxf3OiDdzdGDvvuUMTSi6jP08l8hGEG/CvLbELPz01QE/xIJ+AkM4T90f52P
-	lOWKEtiGj5PFT+bQ0JcOBvRqNNWEG0zI=
-X-Received: by 2002:a05:6512:290a:b0:5ae:b887:19a with SMTP id
- 2adb3069b0e04-5aec7435728mr1365955e87.64.1783018090521; Thu, 02 Jul 2026
- 11:48:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernelci.org header.i=@kernelci.org header.b="WGF6/v7t"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-84592b55832so1922514b3a.3
+        for <regressions@lists.linux.dev>; Thu, 02 Jul 2026 12:59:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci.org; s=google; t=1783022345; x=1783627145; darn=lists.linux.dev;
+        h=message-id:date:reply-to:cc:to:from:subject
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=//smDyZLyaODru6WgzI4bTaPmxdDqgn7r/y5mi+8QsA=;
+        b=WGF6/v7tYmVve77gwkks4y8yxJn/vDlpdhuHIXd5vr7286KxGTcQYHHjYBcn+US9pi
+         wE7Kg0WLQ6FyzcUeoSOVEfMl4Bm6T89v17uTUv08gH4+3y0TcJgVIYnhxT9uiJlv3yuk
+         WWeRTsY+E5DKDOHQ3j4WzkUtA8J8PKW4dxsfKBIq0279OxlAlTkxFjfde2fntGke9E6N
+         04oXHsfX7WVnUE48rjCvhRDxG9CK70iY4owOtoaWaSgg8LMQ6ibMxcYXfbyWyGtzH6nJ
+         DhiBop7pb5wa6+v3xSdQI6svXT098A4/5E6xkviKYvPUfKaww39CO0SRckx93XY49maX
+         vXwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783022345; x=1783627145;
+        h=message-id:date:reply-to:cc:to:from:subject
+         :content-transfer-encoding:mime-version:x-gm-gg:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=//smDyZLyaODru6WgzI4bTaPmxdDqgn7r/y5mi+8QsA=;
+        b=BDNGAqok2pSBOm7DeBmL1Akg2ba2j0q2ApvgiARDlM3oFEFm1SIM8pnZtyn3TUsAGA
+         nt8wAmKCfQqR6+g+fsJ0Lbs8D7zvdHu4GiMjNJeh5UIi9HgMi/dNuKyNnUB0QiFjFzVv
+         0HSxw24ZCXhbDb3MYJytdLNCg2ktAO71yP0XQZCfidQdK5Gi1RIKkHXbyPA6v3LBMoow
+         SNVYGc08hXwjDdIut8P4bewI3F31tfGUPFUtTAi13EDJlk28RpXhxouZnUIk/Lrsx5+G
+         Az4IdvE6UojwGl0YPld9VnLIEZpTTAtexivnTJkZ3bCCbBS7zACZM7y8A1Fbun188Dwe
+         0Ddw==
+X-Gm-Message-State: AOJu0YwgDJo/KZqMjkVwzAGW10C3tLiyF1iMHBAOFdxii5hb8oLf5O1G
+	WJjam4OK9dQvufEYQ5z1oJOsBA86DoS4kHOV6CC2vlxwXJov2nFXN9vLNvRsZR/uy6Y=
+X-Gm-Gg: AfdE7clydqe9Lf1wG1tt5IPfAABz7VlTz25Y0H4o5SdQspdR53ZbYj2fEKezSLgdRE6
+	uQ1lNqburzOVdFhJuCCF0tx5Pp1ZlCS1zAseJbWlK012owIb6U8BAeGI0Tt4vNT7AFMMxO1P/kb
+	u8TJPna3l0cmUY1vfaZz3TEn3H0PrKxrJ1Bjn+TiwDE0Um1cXQrMWhAbubvvESXLMio8pTsxKXR
+	2kg/4w8BYa/tVVYdGC/ZGqmRI5vugUoZGzEBZynwosNP1MD6UHUjzUqCmgmsS61gK4Vr9eBUHWu
+	vyABE24X0hQXGpFWC3Fu9SWfHRwTT6GdQVczXL54nNA/nJODVevfEDz9pV7SsYwjPVGm1PPoga7
+	OgulQsEhWb4Qb/GgmsmWVHkRa2TjzhWSXvlKWGIlKgeM2w8XOI4JCNnrXUSr9oqHMbYCjNx5WRh
+	p2mYZe5A==
+X-Received: by 2002:a05:6a21:4d92:b0:3bf:96c6:78c3 with SMTP id adf61e73a8af0-3bfed1c58d8mr8829772637.8.1783022345300;
+        Thu, 02 Jul 2026 12:59:05 -0700 (PDT)
+Received: from 963b246bc1b3 ([20.38.40.137])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-30f0bb84405sm17531963eec.17.2026.07.02.12.59.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jul 2026 12:59:04 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <096b42fa-107f-450d-b3b1-03bcad3f1e04@oracle.com>
-In-Reply-To: <096b42fa-107f-450d-b3b1-03bcad3f1e04@oracle.com>
-From: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>
-Date: Thu, 2 Jul 2026 20:47:56 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0g+SkTxuP5fqUMisQAh19v-JzpmRZHiKtYzJH1sVt656g@mail.gmail.com>
-X-Gm-Features: AVVi8CedlYXA0cjFr29OOGiAldizVnflJnoGqgjlKD8GSDj2RqBcLRpqvDs1bNk
-Message-ID: <CAJZ5v0g+SkTxuP5fqUMisQAh19v-JzpmRZHiKtYzJH1sVt656g@mail.gmail.com>
-Subject: Re: [REGRESSION] sched/idle: Sysbench threads regression after f4c31b07b136
-To: Joseph Salisbury <joseph.salisbury@oracle.com>
-Cc: rafael.j.wysocki@intel.com, Ingo Molnar <mingo@redhat.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, 
-	Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
-	christian.loehle@arm.com, frederic@kernel.org, linux-pm@vger.kernel.org, 
-	LKML <linux-kernel@vger.kernel.org>, regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+Subject: [REGRESSION] next/master: (build) module random32_kunit uses symbol
+ prandom_warmup from namespace EX...
+From: KernelCI bot <bot@kernelci.org>
+To: kernelci-results@groups.io
+Cc: regressions@lists.linux.dev, linux-next@vger.kernel.org
+Reply-To: kernelci@lists.linux.dev
+Date: Thu, 02 Jul 2026 19:59:04 -0000
+Message-ID: <178302234435.4082.10623859604470804974@kernelci.org>
 
-Hi,
-
-On Thu, Jul 2, 2026 at 6:30=E2=80=AFPM Joseph Salisbury
-<joseph.salisbury@oracle.com> wrote:
->
-> Hi Rafael,
->
-> We are seeing a reproducible MySQL Sysbench threads regression.  A
-> bisect indicated the following commit as the first bad commit:
-> f4c31b07b136 ("sched: idle: Consolidate the handling of two special cases=
-")
->
-> The regression was found in Oracle kernel performance testing on OCI VM
-> shapes:
->
-> VM Details:
-> * VM.Standard2.1:
->        x86 OCI VM shape, 1 OCPU / 2 hardware threads, about 14.5 GB RAM
->
->   * VM.Standard.A1.Flex.2:
->        Arm/Ampere A1 flexible VM shape, 2 vCPU threads, about 10.9 GB RAM
->
->
-> The ResultsDB runs show the regression in the Sysbench threads metric:
->
->    - VM.Standard2.1:       333 -> 236  (-29.1%)
->    - VM.Standard.A1.Flex.2: 1286 -> 1152 (-10.4%)
->
-> A test kernel was built with f4c31b07b136 reverted and the performance
-> regression was recovered.
->
->  From the code, it is possible the regression is due to the new
-> previous-wakeup heuristic in the special idle cases.  Before the commit:
->
->    - no cpuidle driver:
->        tick_nohz_idle_stop_tick()
->        default_idle_call()
->
->    - one idle state:
->        tick_nohz_idle_retain_tick()
->        cpuidle state 0
-
-I think that this is your case and the tick stops for you sometimes
-now while it had never stopped before.
-
-Can you confirm?
-
-Overall, it would be good to know the idle state lists for both the VM
-and the host.
-
-> After the commit, both paths use:
->
->    idle_call_stop_or_retain_tick(got_tick)
->
-> Here, got_tick is true if the CPU was woken from the previous idle-loop
-> iteration by the scheduler tick, and false otherwise. On this
-> workload/platform combination, using that previous wakeup source to
-> decide whether to stop or retain the tick appears to change NOHZ
-> behavior enough to regress this wakeup-heavy threaded workload.
->
-> Do you have any thoughts on whether this is an expected tradeoff of the
-> new heuristic,
-
-For the second case, yes.  It is expected that stopping the tick more
-often may cause performance to drop.
-
-> or whether the special cases need a narrower condition?
-
-Let's first identify the case this happens in.
-
-> For our stable kernels, the immediate candidate fix is to revert the
-> backport, but before doing that I wanted to ask whether upstream would
-> prefer a targeted adjustment.
->
-> I can collect additional data if useful, for example cpuidle
-> driver/state information, timer interrupt counts, idle residency, perf
-> stat, or scheduler trace data from the affected OCI shapes.
-
-So instead of reverting the commit, please try the appended change
-(modulo gmail-induced whitespace breakage).
+New build issue found on next/master:
 
 ---
- kernel/sched/idle.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ module random32_kunit uses symbol prandom_warmup from namespace EXPORTED_FOR_KUNIT_TESTING, but does not import it. in Module.symvers (/tmp/kci/linux/scripts/Makefile.modpost:147) [logspec:kbuild,kbuild.modpost]
+---
 
---- a/kernel/sched/idle.c
-+++ b/kernel/sched/idle.c
-@@ -250,7 +250,7 @@ static void cpuidle_idle_call(bool stop_
-          */
-         cpuidle_reflect(dev, entered_state);
-     } else {
--        idle_call_stop_or_retain_tick(stop_tick);
-+        idle_call_stop_or_retain_tick(false);
+Log excerpt:
+=====================================================
+ERROR: modpost: module random32_kunit uses symbol prandom_warmup from namespace EXPORTED_FOR_KUNIT_TESTING, but does not import it.
 
-         /*
-          * If there is only a single idle state (or none), there is
+=====================================================
+
+When fixing this issue, please attribute this report according to the
+patch submission rules:
+
+Reported-by: kernelci.org bot <bot@kernelci.org>
+Link: https://lore.kernel.org/all/178302234435.4082.10623859604470804974@kernelci.org/
+
+For complete logs and details about the environment used, see the issue
+on the KernelCI dashboard:
+
+- dashboard: https://d.kernelci.org/i/maestro:e1cd3f9474953bfa22c13e3e3b216ed721272880
+- giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+- commit HEAD:  6eb8711ece2ce27e52e327a5b7a628ed39b97f45
+- tags: next-20260702
+
+# Builds where the incident occurred:
+
+## ppc64le_defconfig on (powerpc):
+- compiler: gcc-14
+- config: None
+- dashboard: https://d.kernelci.org/build/maestro:6a46b0edbb83f6a3e87f2264
+
+#regzbot introduced: 7de6ae9e12207ec146f2f3f1e58d1a99317e88bc..6eb8711ece2ce27e52e327a5b7a628ed39b97f45
+#regzbot link: https://d.kernelci.org/i/maestro:e1cd3f9474953bfa22c13e3e3b216ed721272880
+
+#kernelci issue maestro:e1cd3f9474953bfa22c13e3e3b216ed721272880
+
+--
+This is an experimental report format. Please send feedback in!
+Talk to us at kernelci@lists.linux.dev
+
+Made with love by the KernelCI team - https://kernelci.org
