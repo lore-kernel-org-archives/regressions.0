@@ -1,51 +1,50 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [185.244.194.184])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [46.38.247.119])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4309C285CB3;
-	Fri,  3 Jul 2026 05:52:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.244.194.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A701E2652A2
+	for <regressions@lists.linux.dev>; Fri,  3 Jul 2026 06:34:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.38.247.119
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783057979; cv=none; b=WaDKBYzDi9cwi4K6qv79TIbGXsrKRINNGVc1rBdWqY/AYxj6GteM49/RBFOC3P7uBPI3ZAQJUt27KudXzhWY+mZkldDAeEuKUBUcIVfEN/qePepDy3uJFCBQGoFa5GKWMPKoyiNsA92cn4kkmz9YM9QltiCdNPfBWZF1wtjL2Jg=
+	t=1783060462; cv=none; b=DS5+tk17tL5CjqE6OYf23/Zzu8xtHVkuH2M+qAXgSCZMDYoYQi3SFvGtS4gVXZh6Pnau5FkpyIP1K4lVPwRyNk/FGdkZpdtwkoxtTzy9T0DG6r2N9gWztXE3FccMUzkpm2CC7cbAl8r7k1DzBXPMdhajIBt2Vd4aPwuYIRBIXfU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783057979; c=relaxed/simple;
-	bh=m/qZuQvTawhZWpiQo1uUxcklC0JPgU8JaIUdESWQfMU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gJiUnMWztFq7g7OkS4b4epol/2x5adw+7OUhnNsxfFPeiKDv2FVG0CuzyMtGbcvg2T/BBIuIyYAmBBC9ZED7xj+tNOrX5+171vyO1TlGvfQmCs542HosZ1omyloSgfTIi4dHLh06FgvL7uznKQs1OhDZQPH2F1QXmvHc7+Yg528=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=SQpg2wUD; arc=none smtp.client-ip=185.244.194.184
+	s=arc-20240116; t=1783060462; c=relaxed/simple;
+	bh=wquMac3iXj0ao4VbxcoVDw1jeCiQnyRzUPYephGxJWI=;
+	h=Message-ID:Date:MIME-Version:From:To:Cc:Subject:Content-Type; b=IpiUHF3v5kXOpdIdp9rEl3bDfROo5ezyhaIp6jAiu5iY2K8Af6Q1o9tqcfGwExyhxKaazcdW/G/6mK9V1KhPBGDGB8R9NXLUbnPQVaEnN14elLO4Ci1hLdpOUrvgRjiRo2dEHnC3woxSBLt2P1FLbgr3RECgq3vZ1rR/iv1AOU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=jO+neQFa; arc=none smtp.client-ip=46.38.247.119
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="SQpg2wUD"
-Received: from relay01-mors.netcup.net (localhost [127.0.0.1])
-	by relay01-mors.netcup.net (Postfix) with ESMTPS id 4gs2nB53bNz993H;
-	Fri,  3 Jul 2026 07:46:38 +0200 (CEST)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="jO+neQFa"
+Received: from mors-relay-8404.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4gs3r35lNTz87WN;
+	Fri,  3 Jul 2026 08:34:11 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1783057598;
-	bh=m/qZuQvTawhZWpiQo1uUxcklC0JPgU8JaIUdESWQfMU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=SQpg2wUDSEJnU1+Ia4z68NtFCqpiyhqi7rGS0LwZNopO/7fSEhPTC0dxXOLaVnmro
-	 tKb1nE1lbG8L1NVEOadMLTQgz02AWiJ5LgVPo4wGN54COcVqB+G0CIFu/hpECqCBJ+
-	 CAQMO8J35ZomwJHb8aifrESE5b15sKYzYoHHmjLakM6amaO8+A+Ql3b6HFNu0TC0Zq
-	 nUlDYDJXWV17X2EVxot3H1MaRYUKArJcep86XupZa4PXNFxwY5wyHp8J4rXVn/nFEl
-	 gr+bO5P6MgCMNXP2EfXfsBHyoTniUj4uUDGSRL4ojWMF4CrKzET+hndiI9pbwnLmVm
-	 oFBscwfoBKK2Q==
+	s=key2; t=1783060451;
+	bh=wquMac3iXj0ao4VbxcoVDw1jeCiQnyRzUPYephGxJWI=;
+	h=Date:From:To:Cc:Subject:From;
+	b=jO+neQFag7qS8Cgf8KU1wj+x/nI53fFdkKDx2K8wqjmvGTh7jm1rGT15FxgM09CWL
+	 KT/1vzPjkCpWSEWIyDOBHn9+xkbPCWaWj2L074CoeXe4vP5Z89olWEj9vUqtU0n6n7
+	 siMKD/UVZpHP3Z1C5JRpGbtvhnCa3CgbbRUKr7Xrucp0sXePPaIdyDTnYKLNwnEYX5
+	 gI4WKp/0rWO3R7+61Z5srPavtLa3eU3f9HYt8Zw5JR9zZX293rIvlfaBtJU7ZZAZDs
+	 ld4vsP+ngYqwswTfWq4winj3H6cJZS0YJvHxq7t/CfovPF4YxeheQVNPxjRuX74K33
+	 Xp50OszJwfVmw==
 Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by relay01-mors.netcup.net (Postfix) with ESMTPS id 4gs2nB4Mbdz80DW;
-	Fri,  3 Jul 2026 07:46:38 +0200 (CEST)
+	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4gs3r352PZz4y3R;
+	Fri,  3 Jul 2026 08:34:11 +0200 (CEST)
 Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4gs2nB1Yssz8sbF;
-	Fri,  3 Jul 2026 07:46:38 +0200 (CEST)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4gs3r30D8pz8sbF;
+	Fri,  3 Jul 2026 08:34:10 +0200 (CEST)
 Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 6394660320;
-	Fri,  3 Jul 2026 07:46:37 +0200 (CEST)
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id A9DAC5F9DD;
+	Fri,  3 Jul 2026 08:34:09 +0200 (CEST)
 Authentication-Results: mxe9fb;
         spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
 Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <49839b36-f984-43e0-8ce1-b311704e481d@leemhuis.info>
-Date: Fri, 3 Jul 2026 07:46:36 +0200
+Message-ID: <7ea1c4a0-d38f-413b-993b-7846b2b7debd@leemhuis.info>
+Date: Fri, 3 Jul 2026 08:34:04 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -53,30 +52,94 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] next/master: (build) module random32_kunit uses
- symbol prandom_warmup from namespace EX...
-To: kernelci@lists.linux.dev, kernelci-results@groups.io
-Cc: regressions@lists.linux.dev, linux-next@vger.kernel.org
-References: <178302234435.4082.10623859604470804974@kernelci.org>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
 Content-Language: de-DE, en-US
-In-Reply-To: <178302234435.4082.10623859604470804974@kernelci.org>
+To: Chris Lu <chris.lu@mediatek.com>, Sean Wang <sean.wang@mediatek.com>
+Cc: Linux kernel regressions list <regressions@lists.linux.dev>,
+ linux-mediatek <linux-mediatek@lists.infradead.org>,
+ linux-kernel <linux-kernel@vger.kernel.org>,
+ linux-bluetooth <linux-bluetooth@vger.kernel.org>,
+ "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: btmtk: regression in 6.6.142: NULL pointer dereference in
+ btmtk_usb_hci_wmt_sync during resume from S4
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <178305759765.2409209.5852938382093485915@mxe9fb.netcup.net>
+Content-Transfer-Encoding: 8bit
+X-PPP-Message-ID: <178306045006.2570955.4688252285094479308@mxe9fb.netcup.net>
 X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: 6394660320
-X-NC-CID: lbNsawCV5ZGZsqRVDDDAlj1VRO/vSfVSqm/MZBKbPpun9qO4Ejc=
+X-Rspamd-Queue-Id: A9DAC5F9DD
+X-NC-CID: VbNHS0oX1QXCKViIOo6Fnmu8ywTSde/sFR4qjOaanBJLN0ZeUKo=
 
+Hi Chris & Sean! I noticed a report about a regression with btmtk that
+happens in 6.6.y series. This strictly speaking is the domain of the
+stable team, but maybe you want to take a look nevertheless:
 
+https://bugzilla.kernel.org/show_bug.cgi?id=221696
 
-On 7/2/26 21:59, KernelCI bot wrote:
-> New build issue found on next/master:
-> 
-> ---
->  module random32_kunit uses symbol prandom_warmup from namespace EXPORTED_FOR_KUNIT_TESTING, but does not import it. in Module.symvers (/tmp/kci/linux/scripts/Makefile.modpost:147) [logspec:kbuild,kbuild.modpost]
-akpm dropped the patch that causes this:
-https://lore.kernel.org/all/20260702211236.705B71F000E9@smtp.kernel.org/
+To quote:
+"""
+I have a problem that appeared in the 6.6.y series recently, I believe
+in or around f0457842215438786e2e205ad06a4fbb8ab63cd0, although I
+haven't bisected. The problem did not exist in 6.6.140 but does exist in
+6.6.142 and 6.6.143.
 
-#regzbot resolve: culprit was dropped from -next
+The problem — during resume from hibernation (platform S4) I see this
+NULL pointer dereference in the kernel log:
 
+BUG: kernel NULL pointer dereference, address: 0000000000000219
+#PF: supervisor read access in kernel mode
+#PF: error_code(0x0000) - not-present page
+PGD 0 P4D 0
+Oops: 0000 [#1] SMP
+CPU: 7 PID: 214 Comm: kworker/u33:0 Not tainted 6.6.143-gentoo #1
+Hardware name: Framework Laptop 16 (AMD Ryzen 7040 Series)/FRANMZCP09,
+BIOS 04.03 12/22/2025
+Workqueue: hci0 hci_power_on
+RIP: 0010:__pm_runtime_resume+0x15/0x80
+Code: 55 fe ff ff 83 e0 02 45 31 e4 e9 45 fd ff ff 66 0f 1f 44 00 00 f3
+0f 1e fa 41 54 55 53 48 89 fb 48 83 ec…
+RSP: 0018:ffffc90004a37c18 EFLAGS: 00010246
+RAX: ffff88810bdcd4f8 RBX: 0000000000000050 RCX: 0000000000000000
+RDX: 0000000000000035 RSI: 0000000000000004 RDI: 0000000000000050
+RBP: 0000000000000035 R08: ffff888fdfde6bd0 R09: ffff888101338a40
+R10: 0000000000000001 R11: 0000000000000040 R12: ffff888101338a40
+R13: ffffc90004a37cc0 R14: 000000000000003a R15: ffffc90004a37cb4
+FS:  0000000000000000(0000) GS:ffff888fdfdc0000(0000) knlGS:0000000000000000
+GS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000000219 CR3: 0000000003e11000 CR4: 0000000000750ee0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ usb_autopm_get_interface+0x1a/0x50
+ btmtk_usb_hci_wmt_sync+0xb8/0x480
+ ? btmtk_usb_wmt_recv+0x240/0x240
+ btmtk_setup_firmware_79xx+0x1a4/0x360
+ btusb_mtk_setup+0x45b/0x690
+ hci_dev_open_sync+0xdd/0xa40
+ ? try_to_wake_up+0x235/0x510
+ hci_power_on+0x69/0x2b0
+ ? lock_timer_base+0x6a/0x90
+ process_one_work+0x154/0x2f0
+ ? process_one_work+0x2f0/0x2f0
+ worker_thread+0x18b/0x310
+ kthread+0xe0/0x110
+ ? kthread_complete_and_exit+0x30/0x30
+ ret_from_fork+0x2c/0x40
+ ? kthread_complete_and_exit+0x30/0x30
+ ret_from_frok_asm+0x11/0x20
+ </TASK>
+CR2: 0000000000000219
+---[ end trace 0000000000000000 ]---
+
+The BUG dump appears while the system is waiting for me to enter my LUKS
+passphrase — i.e., *before* the initramfs writes the swap device
+major:minor to /sys/power/resume to initiate resume from hibernation.
+
+I am still running kernel 6.6.140 in my current session. In other words,
+a 6.6.143 kernel is booting to resume a suspended session that is
+running a 6.6.140 kernel.
+"""
+
+This does not happen in mainline -- apparently it is fixed by
+"Bluetooth: btmtk: move btusb_mtk_[setup, shutdown] to btmtk.c"
+
+Ciao, Thorsten
