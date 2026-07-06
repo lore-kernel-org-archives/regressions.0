@@ -1,131 +1,267 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [46.38.247.119])
+Received: from mail5.mxpn1.infra.improvmx.com (mail5.mxpn1.infra.improvmx.com [131.153.154.102])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00DF43016E1
-	for <regressions@lists.linux.dev>; Mon,  6 Jul 2026 11:59:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.38.247.119
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB92B3148BF
+	for <regressions@lists.linux.dev>; Mon,  6 Jul 2026 13:37:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=131.153.154.102
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783339166; cv=none; b=CLP4wk/afbVq2Yp7f2JnMSdeVgau7lFaBpeUj/ZNFvzCgV39aPs++BhJ/z6GtzvVrOwIP/Tfqe6OamEji6qDtG+Z9+6A558rcUvsjyFDlwvMPHX98eVAftxAhTVDQfartS6FMfq4WSqwUCk7isSj7IXjROM7GN2H2VDdI3pnN/0=
+	t=1783345079; cv=none; b=LJBFsFKo0Rj6wEx4BShOuYNW8Iodgq7G1ydZoSFsr5y2lN7TMp5dTE+w+p950V7CwHJSeXOO6yOGTNnIMZeR7Enn1qaOzTg5KiPV5HxRtlIBC+mWCiN4HKPv3F+7dVKzJd3M5JzcQtJaWg0vjI4NKlFBedMfF4sKctMhYH2S9XU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783339166; c=relaxed/simple;
-	bh=HGK/U9ardbzvTPqX0Y/kJtQeRhhskbvRZgCKe+Eey1w=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=gwzatOmjcmiTgppEBmd4dypRlvHDev1gOtewtvPcTpBKRLE2jtcuIcb7Xlbo/AGulIyt+TaHaJwT51o2HpjFY7d++DN343+p1wYY75MimJaWgpalbEnZujM+t3m2wjSUjsuiNCoz3ZOydyyy7QwGGo4QoY/MCy/15JsEwxU3ypQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=DmsVAmNd; arc=none smtp.client-ip=46.38.247.119
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1783345079; c=relaxed/simple;
+	bh=GnfcAdvE9UZzYP6EkLD2qNKn2Mi1J1RaHP0mx0T/6XQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bmQ+Woid8ypuSBfLDo3FEUCrJU1Jgb+dzPISrFR31dGe5rbu7EfMN6OQXnJXLREsRNs1+ZAmViZgghfBXBBaEavs93aBjaDaiiSe6JlI+/o0vwqpKzMQiGiaZ8K67MHc5FWXGx5WL/HaDftnqK93cNLzwurZFjdP0jSGdSZWZOQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=msbs.com; spf=pass smtp.mailfrom=msbs.com; dkim=pass (2048-bit key) header.d=msbs.com header.i=@msbs.com header.b=npPmiikH; arc=none smtp.client-ip=131.153.154.102
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=msbs.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=msbs.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="DmsVAmNd"
-Received: from mors-relay-8404.netcup.net (localhost [127.0.0.1])
-	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4gv2vv3cNzz8D3F
-	for <regressions@lists.linux.dev>; Mon,  6 Jul 2026 13:59:23 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1783339163;
-	bh=HGK/U9ardbzvTPqX0Y/kJtQeRhhskbvRZgCKe+Eey1w=;
-	h=Date:Subject:From:To:References:In-Reply-To:From;
-	b=DmsVAmNdshBTkhReZZjxhrsE2tYsxUp0apTQprN9ZNaShBi2dNFcb48E7ncQlbvqr
-	 sLtHoWUSk0PiwxzEnDPayEKv0JLDJ5lGeIazlLfNdw3vCxDYBaly+cb5KJBvJl7t3p
-	 1xujLC5nKA8adO5Zt4DQF2Wcl/cgc4mNJf6N29Ja233RPnNL4kkTUPd9RkKkpahF2P
-	 Snadxgx/WqLv9m5RKrnSekSGcmerksOz5ddnQaxc63d9w21oDIEvmzIGgjJeQArkd2
-	 Lt1WwaXapbExPmau9/M4hgkzOtPEXWqOrYnjP3mKAkm/4FfNq0jFxtkupNiXoOXPU5
-	 o+cIM7cQBg7ew==
-Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4gv2vv2wY8z4xWb
-	for <regressions@lists.linux.dev>; Mon,  6 Jul 2026 13:59:23 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
-X-Spam-Flag: NO
-X-Spam-Score: -2.901
-X-Spam-Level: 
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4gv2vt6df8z8tZN
-	for <regressions@lists.linux.dev>; Mon,  6 Jul 2026 13:59:22 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 36B30603ED
-	for <regressions@lists.linux.dev>; Mon,  6 Jul 2026 13:59:22 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <2c22430b-c398-4b4a-aa4f-2f2857f22449@leemhuis.info>
-Date: Mon, 6 Jul 2026 13:59:21 +0200
+	dkim=pass (2048-bit key) header.d=msbs.com header.i=@msbs.com header.b="npPmiikH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=msbs.com;
+ i=@msbs.com; q=dns/txt; s=dkimprovmx2; t=1783344940; h=date : from :
+ to : subject : content-type : feedback-id : message-id;
+ bh=gOyY3jB+Y2NCzondxxMSYGagVbSGdU/7wCArocx8wpc=;
+ b=npPmiikHJdmU4SFMNr8d2xr89Spso+0ECiOqIIvAJsi3FzDsvrxdq5cZyFZ+1diyi32Yr
+ bvMcSc++qRRUXfG1kMElepqXpuE5akOpAtaSJ3uIREbRPQQsftIp9YDeD+XjzKLBwJy3zDF
+ zvBmifZ5FSbsXyS9CVknxEAbiFYOoT+CuBLTwvFbNZ2UnkaXRctS6a/RgXqnwIsP2Swyg40
+ 414JSsReJbEAQx5gTOXWHdGGQGvLFJRvXQh7Ib33JxuOjP7G6hR/EppYzQ+rUlkzAN2eO4y
+ TaV9DkGZawZH6Rvso6m0xbHJ1N23szTYd1FvgMxGxWhwx/nGX8Ub0H6JV1zg==
+X-Sending-Service: ImprovMX v3.0.0
+Feedback-ID: bXNicy5jb20=:send:ImprovMX
+X-ImprovMX-Server-Id: b459662
+X-ImprovMX-Session-Id:
+ 87d9bfb9-c189-4005-b9ce-6b5cbda4da9f
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com.
+ [209.85.208.169])
+    by mx1.improvmx.com with ESMTPSA (version=TLSv1.3
+ cipher=TLS_AES_256_GCM_SHA384 bits=256/256)
+    for <regressions@lists.linux.dev>;
+    Mon, 06 Jul 2026 13:35:40 -0000
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-3997a448ecbso30608351fa.0
+        for <regressions@lists.linux.dev>; Mon, 06 Jul 2026 06:35:39 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AHgh+RoxkJ4igoiEubWZcsV/X5qwIdvPp9I42VIX2xcQXRzk9VSRg+9QSg4NvCBAd4i23aSrC2SpWngEMH+bfw==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwO3WaHAdEI12nkTppIyWi/1gLPyH98n+f7f5IhLf16OYWFw1QA
+	m6ldlX9EzjyJlsVLX4zSjVvK0au5NOFkuxiC+bPwPfOhFwo0qX11sqM90E8KHeUKc0zGZFYLICr
+	nEB18Kz7ywNSIjHem4hY3ckuvuien2Bc=
+X-Received: by 2002:ac2:414c:0:b0:5ae:bab8:31dd with SMTP id
+ 2adb3069b0e04-5b007bc59c3mr99674e87.36.1783344939022; Mon, 06 Jul 2026
+ 06:35:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <178333916240.802943.3874293942974137963@mxe9fb.netcup.net>
-X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: 36B30603ED
-X-NC-CID: cUly1ZFvirtLb+v7QHL+aZ0BpML7ewsM60Z62QJZCvDgaBJhKfc=
+References: <CAPpkL-yLfeNwsePSGDK7m8ctzPLXTVto1HhrufHv12HO0+B1Vw@mail.gmail.com>
+In-Reply-To: <CAPpkL-yLfeNwsePSGDK7m8ctzPLXTVto1HhrufHv12HO0+B1Vw@mail.gmail.com>
+From: B X <brent@msbs.com>
+Date: Mon, 6 Jul 2026 09:35:26 -0400
+X-Gmail-Original-Message-ID: <CAPpkL-y54ySw8ftqeumccNEVatY0Zt6-Ag4PejYddK5WcsiV3A@mail.gmail.com>
+X-Gm-Features: AVVi8CeMUfLCRnSJBhxNKlMNPmkKkmpDL-PUwCF0q1KIKR_uiEpf2507oBkrD-o
+Message-ID: <CAPpkL-y54ySw8ftqeumccNEVatY0Zt6-Ag4PejYddK5WcsiV3A@mail.gmail.com>
+Subject: Re: [REGRESSION] mt7925e: fails to read EEPROM MAC on 7.2-rc2, falls
+ back to random MAC (worked on 7.1-rc7 and 7.0.x)
+To: linux-wireless@vger.kernel.org
+Cc: nbd@nbd.name, lorenzo@kernel.org, ryder.lee@mediatek.com, 
+	shayne.chen@mediatek.com, sean.wang@mediatek.com, regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+B X <brent@msbs.com>
+8:12=E2=80=AFAM (1 hour ago)
+to linux-wireless, nbd, lorenzo, ryder.lee, shayne.chen, sean.wang,
+regressions, Brent
+
+Hi,
+
+Reporting a regression in the mt7925e driver: on Linux 7.2.0-rc2 the adapte=
+r
+fails to read its stored (EEPROM/efuse) MAC address and substitutes a rando=
+m
+one. The same hardware read its real MAC correctly on every earlier kernel,
+including the immediately-preceding boot one day earlier on 7.0.0-22.
+
+Verified with Claude Code when my ATT fiber kept failing to pin IP on
+my Halo Strix
+
+Hardware
+--------
+MediaTek MT7925 (RZ717) Wi-Fi 7 160MHz
+PCI ID: [14c3:0717], driver mt7925e
+Platform: AMD "Strix Halo" (Ryzen AI Max) mini-PC
+linux-firmware: 20260319.git217ca6e4
+
+Symptom (kernel 7.2.0-rc2, 2026-07-06)
+--------------------------------------
+  mt7925e 0000:c3:00.0: enabling device (0000 -> 0002)
+  mt7925e 0000:c3:00.0: ASIC revision: 79250000
+  mt7925e 0000:c3:00.0: HW/SW Version: 0x8a108a10, Build Time: 202601061530=
+07a
+  mt7925e 0000:c3:00.0: WM Firmware Version: ____000000, Build Time:
+20260106153120
+  mt7925e 0000:c3:00.0: Invalid MAC address, using random address
+12:1f:34:c6:57:04
+  mt7925e 0000:c3:00.0 wlp195s0: renamed from wlan0
+
+The driver then brings the interface up with the random MAC 12:1f:34:c6:57:=
+04.
+
+Last known good (kernel 7.0.0-22, 2026-07-05, same machine, no MAC override=
+)
+---------------------------------------------------------------------------=
+-
+  mt7925e 0000:c3:00.0: ASIC revision: 79250000
+  mt7925e 0000:c3:00.0: HW/SW Version: 0x8a108a10, Build Time: 202601061530=
+07a
+  mt7925e 0000:c3:00.0: WM Firmware Version: ____000000, Build Time:
+20260106153120
+  ...
+  wlp195s0: authenticate with <ap> (local address=3Dac:f2:3c:35:31:15)
+
+i.e. the real MAC ac:f2:3c:35:31:15 was read straight off the adapter. Note
+the firmware init lines (ASIC revision, HW/SW Version, WM Firmware Version,
+build times) are byte-identical between the good and bad boots -- only the
+kernel differs, and only the MAC read fails. This rules out a firmware or
+bad-NVRAM cause: the same silicon read the MAC correctly ~24h earlier.
+
+Regression range
+----------------
+Confirmed good on: 7.0.0, 7.0.0-22, 7.0.0-27, 7.1.0-rc7 (dozens of boots,
+journal-verified, no "Invalid MAC address" line on any of them).
+First and only bad boot: 7.2.0-rc2.
+
+So the regression landed between 7.1-rc7 and 7.2-rc2. I have not bisected t=
+o
+the exact commit yet, but I can -- the machine builds kernels quickly -- if=
+ a
+bisect would help pin it down.
+
+Not reboot-type dependent: on the good kernels (7.0.0-22 / 7.0.0-27) the
+correct MAC was read reliably across both warm/clean reboots and cold/hard
+power cycles. The failure does not correlate with reboot type or chip power
+state -- it correlates only with the kernel version (7.2-rc2).
+
+Impact
+------
+The substituted MAC is random per boot, changing the adapter's L2 identity.
+This breaks router-side DHCP reservations / fixed-IP allocations keyed on M=
+AC:
+the host stops receiving its pinned address and lands on an arbitrary lease=
+.
+Any MT7925 user relying on MAC-based address pinning is affected. Current
+workaround here is forcing the real MAC via NetworkManager cloned-mac-addre=
+ss.
+
+#regzbot introduced: v7.1..v7.2-rc2
 
 
 
-On 3/9/24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
+Thanks,
 
-#regzbot report:
-https://lore.kernel.org/all/20260705-pci-rebar-root-bus-v1-1-55df70cbdd88@honeycomb.io/
-#regzbot introduced: 337b1b566db0
-#regzbot title: pci: amdgpu completely on the SolidRun HoneyComb LX
-#regzbot fix: PCI: Fix BAR resize for devices on a root bus
 
-#regzbot report:
-https://lore.kernel.org/all/20260427115804.134231-1-smoch@web.de/
-#regzbot introduced: 3a4e8302e72f
-#regzbot title: PCI: imx6: endpoints not received by iMSI-RX MSI controller
-#regzbot fix: PCI: imx6: Keep Root Port MSI capability also for i.MX6Q
+Brent Paine, AWS, CCNP
 
-#regzbot report:
-https://lore.kernel.org/all/20260627105725.9083-1-robert.mader@collabora.com/
-#regzbot introduced: 504e2b4ab97a
-#regzbot title: udmabuf: Ensure to perform cache synchronisation in
-begin_cpu_udmabuf()
-#regzbot fix: udmabuf: Ensure to perform cache synchronisation in
-begin_cpu_udmabuf()
+git bkpaine1
+Medium bkpaine1
 
-#regzbot report:
-https://lore.kernel.org/linux-usb/cb287e3d-3066-4820-b464-6208b947974b@mailbox.org/
-#regzbot resolve: inconclusive: likely a false alert due to usbguard
-blocking the USB3 hub
 
-#regzbot report:
-https://lore.kernel.org/linux-block/ai7rnH20IYeSmY8s@gallifrey/
-#regzbot fix: block: validate direct I/O memory alignment
-#regzbot monitor:
-https://lore.kernel.org/all/20260624170905.3972095-1-kbusch@meta.com/
-
-#regzbot report:
-https://lore.kernel.org/netdev/99caeafd-edf5-44a4-8742-4eada5d0f5d1@yeah.net/
-#regzbot fix: netfilter: nf_nat_masquerade: recalculate TCP TS offset
-when port is randomized
-#regzbot monitor:
-https://lore.kernel.org/all/20260629093408.3927103-1-xietangxin@h-partners.com/
-
-#regzbot report:
-https://lore.kernel.org/lkml/1780914594.8631fc262581453bbf619ec5b2062170.19ea6c8227b000701b@vates.tech/
-#regzbot fix: f24df84cbe05e44
-
-#regzbot report:
-https://lore.kernel.org/lkml/69e2ca14.a00a0220.1bd0ca.0031.GAE@google.com/
-#regzbot resolve: inconclusive: seems to be primarily a syzbot problem
-that is not worth tracking as regression
-
-#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=221661
-#regzbot fix: 20b126920a259df4d7dcae19fcfe2c57a74d6b
-
+On Mon, Jul 6, 2026 at 8:12=E2=80=AFAM B X <brent@msbs.com> wrote:
+>
+> Hi,
+>
+> Reporting a regression in the mt7925e driver: on Linux 7.2.0-rc2 the adap=
+ter
+> fails to read its stored (EEPROM/efuse) MAC address and substitutes a ran=
+dom
+> one. The same hardware read its real MAC correctly on every earlier kerne=
+l,
+> including the immediately-preceding boot one day earlier on 7.0.0-22.
+>
+> Verified with Claude Code when my ATT fiber kept failing to pin IP on my =
+Halo Strix
+>
+> Hardware
+> --------
+> MediaTek MT7925 (RZ717) Wi-Fi 7 160MHz
+> PCI ID: [14c3:0717], driver mt7925e
+> Platform: AMD "Strix Halo" (Ryzen AI Max) mini-PC
+> linux-firmware: 20260319.git217ca6e4
+>
+> Symptom (kernel 7.2.0-rc2, 2026-07-06)
+> --------------------------------------
+>   mt7925e 0000:c3:00.0: enabling device (0000 -> 0002)
+>   mt7925e 0000:c3:00.0: ASIC revision: 79250000
+>   mt7925e 0000:c3:00.0: HW/SW Version: 0x8a108a10, Build Time: 2026010615=
+3007a
+>   mt7925e 0000:c3:00.0: WM Firmware Version: ____000000, Build Time: 2026=
+0106153120
+>   mt7925e 0000:c3:00.0: Invalid MAC address, using random address 12:1f:3=
+4:c6:57:04
+>   mt7925e 0000:c3:00.0 wlp195s0: renamed from wlan0
+>
+> The driver then brings the interface up with the random MAC 12:1f:34:c6:5=
+7:04.
+>
+> Last known good (kernel 7.0.0-22, 2026-07-05, same machine, no MAC overri=
+de)
+> -------------------------------------------------------------------------=
+---
+>   mt7925e 0000:c3:00.0: ASIC revision: 79250000
+>   mt7925e 0000:c3:00.0: HW/SW Version: 0x8a108a10, Build Time: 2026010615=
+3007a
+>   mt7925e 0000:c3:00.0: WM Firmware Version: ____000000, Build Time: 2026=
+0106153120
+>   ...
+>   wlp195s0: authenticate with <ap> (local address=3Dac:f2:3c:35:31:15)
+>
+> i.e. the real MAC ac:f2:3c:35:31:15 was read straight off the adapter. No=
+te
+> the firmware init lines (ASIC revision, HW/SW Version, WM Firmware Versio=
+n,
+> build times) are byte-identical between the good and bad boots -- only th=
+e
+> kernel differs, and only the MAC read fails. This rules out a firmware or
+> bad-NVRAM cause: the same silicon read the MAC correctly ~24h earlier.
+>
+> Regression range
+> ----------------
+> Confirmed good on: 7.0.0, 7.0.0-22, 7.0.0-27, 7.1.0-rc7 (dozens of boots,
+> journal-verified, no "Invalid MAC address" line on any of them).
+> First and only bad boot: 7.2.0-rc2.
+>
+> So the regression landed between 7.1-rc7 and 7.2-rc2. I have not bisected=
+ to
+> the exact commit yet, but I can -- the machine builds kernels quickly -- =
+if a
+> bisect would help pin it down.
+>
+> Not reboot-type dependent: on the good kernels (7.0.0-22 / 7.0.0-27) the
+> correct MAC was read reliably across both warm/clean reboots and cold/har=
+d
+> power cycles. The failure does not correlate with reboot type or chip pow=
+er
+> state -- it correlates only with the kernel version (7.2-rc2).
+>
+> Impact
+> ------
+> The substituted MAC is random per boot, changing the adapter's L2 identit=
+y.
+> This breaks router-side DHCP reservations / fixed-IP allocations keyed on=
+ MAC:
+> the host stops receiving its pinned address and lands on an arbitrary lea=
+se.
+> Any MT7925 user relying on MAC-based address pinning is affected. Current
+> workaround here is forcing the real MAC via NetworkManager cloned-mac-add=
+ress.
+>
+> #regzbot introduced: v7.1..v7.2-rc2
+>
+>
+>
+> Thanks,
+>
+>
+> Brent Paine, AWS, CCNP
+>
+> git bkpaine1
+> Medium bkpaine1
