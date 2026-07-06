@@ -1,182 +1,180 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.61.103])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C0ED1F4C96;
-	Sun,  5 Jul 2026 17:11:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57CAC3E1CEF
+	for <regressions@lists.linux.dev>; Mon,  6 Jul 2026 07:23:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.61.103
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783271508; cv=none; b=cno2NhfSW7FZGqi0UORqPnM1ATFAxpmXPaLnztggCWu+1H4DWvzCcRpYip6uRl2e/ghQPGn8BkRt+UD0VN1B4a3+NkPhtgKp8ShicVpI4yCU+BSmpjkKEk5ekKWkh+Gi/XKNZdgxdZu8v+tATopLLVgH0g20cYZ76eAU3lIGwIc=
+	t=1783322624; cv=none; b=N0A966xYTHV7n8MO8SFV8cge3093RaebRBfLO3y2Q3enhT2DRR7rMvYFYxvMghWrhMnUQ1UwtW76lL0uWyrIkdrI2v9XOWHck/QK27HSzUdNHXrn2/iXQmJwHSf+OgSML9Zq1I17QnDCC0dnRUzmchLp4u1FOw7OmpZHIEMsOaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783271508; c=relaxed/simple;
-	bh=T2lhnNdkV4SpN9Uczb+KgNsko4p+UMaKpgAbeG7OU8g=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=L7KkuUu+u66x0YWlVuMoq1DsHnkEfgk9itaWxZbKAgO9DnGv6K6Co8lBOi2ZEhf68Y9LJ+azXoUhkVtravRS762dJiQtToMY5L2PdT4trLWqz2w06YinmIxoilWbvR7r0K68nRkoe0aEHVDU9iAwbswvr/7rFpF8z8Pr/0vPIx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KFPFwn2P; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1783322624; c=relaxed/simple;
+	bh=7BcUALbaQ0crsQznMwR03L85X/3Y7vchJUpjg0YxJ88=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HLTi0yuV4MF4pxcHZp3lII0hG9uI61o9HMRhhyHtM6hKl1PqNUQdp6M4axmDHSdO8UMnwWS5pRiIKGiV2pOvPt1zNLeXm7G7CdWeuig1aM/FSnpI5E78uDXGVMml0afGuI66uQ64IWAiqA6HH0FBy7x/91VGCslN4BvWtpm+oLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=D6td/E/M; arc=none smtp.client-ip=188.68.61.103
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KFPFwn2P"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 1DE66C2BCB8;
-	Sun,  5 Jul 2026 17:11:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1783271508;
-	bh=T2lhnNdkV4SpN9Uczb+KgNsko4p+UMaKpgAbeG7OU8g=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=KFPFwn2PXRi/EBw7e8pZ15X03rIbemVRROt0qP4aSCEGuwJh8AQS4xn5gGpAFMpnU
-	 z5VUWbOyu9273e2pO4SpAedbDVKMeGCxBWlFiCbcIQALy8JS1Gixj/U9CC9uXhJyOh
-	 vDzUFU5gQDB2cG/LwlhwXkHn51KpRW+7t/oYHJww3Hu5QJEyb7M4DUeR4NV9X0huaV
-	 9BR3xhWUmgUNYsB83dyWALAxa9XppsyfariMnFi3HeRnNJMWXobCECFXlovJpX7dvQ
-	 iXV7OuDWvo67iTq82y+BLSS6dflZzOl5Ib16YpVdCt/4bvLuPGney6bbz9JKoI24Vd
-	 vqbpelPK0tivA==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09B65C43458;
-	Sun,  5 Jul 2026 17:11:48 +0000 (UTC)
-From: Liz Fong-Jones via B4 Relay <devnull+lizf.honeycomb.io@kernel.org>
-Date: Sun, 05 Jul 2026 10:11:43 -0700
-Subject: [PATCH] PCI: Fix BAR resize for devices on a root bus
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="D6td/E/M"
+Received: from mors-relay-8403.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4gtwnV2DHtz83DZ;
+	Mon,  6 Jul 2026 09:23:26 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1783322606;
+	bh=7BcUALbaQ0crsQznMwR03L85X/3Y7vchJUpjg0YxJ88=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=D6td/E/MGunn50kBB5L2rSgdnxhKTqXeXsyhhT1qHrqKo2WwaVYqou4x/lE6HcOnk
+	 fKjFGrAfeq3nF1BbTfxSVF6UV9XaTYZW0pTCZZwuIpb4X0zVpb64uIjcCXZd1N2Xbe
+	 vwE6FviGxplf8+jHgpbAwe7eGR1o/ozwq0UIdRneKq4si1d6hV3KjBOqwUYsA1Jyu/
+	 o8zJe5gICB1t7UEbOLy/2YmRIylbDndC12k8ev4lGGny0IM3CpNP7UCVvbNQZ6Qbqx
+	 h3Mkf2boyEgkabmTxLm+EzlqI9zrbVQLfp4QuhQGrK8iJs5UZNRvXMVs8rtsmtb2za
+	 gvGlqB7EQdmCA==
+Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4gtwnV1TStz839R;
+	Mon,  6 Jul 2026 09:23:26 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
+X-Spam-Flag: NO
+X-Spam-Score: -2.898
+X-Spam-Level: 
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4gtwnS2ycRz8tfB;
+	Mon,  6 Jul 2026 09:23:24 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 1173E603B3;
+	Mon,  6 Jul 2026 09:23:22 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <036cc81d-115a-4c0e-9542-71ed2ee04e9b@leemhuis.info>
+Date: Mon, 6 Jul 2026 09:23:21 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH wireless-next] wifi: mt76: fix MAC address for non OF pcie
+ cards
+To: Rosen Penev <rosenp@gmail.com>, linux-wireless@vger.kernel.org
+Cc: Felix Fietkau <nbd@nbd.name>, Lorenzo Bianconi <lorenzo@kernel.org>,
+ Ryder Lee <ryder.lee@mediatek.com>, Shayne Chen <shayne.chen@mediatek.com>,
+ Sean Wang <sean.wang@mediatek.com>, Matthias Brugger
+ <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ "open list:ARM/Mediatek SoC support" <linux-kernel@vger.kernel.org>,
+ "moderated list:ARM/Mediatek SoC support"
+ <linux-arm-kernel@lists.infradead.org>,
+ "moderated list:ARM/Mediatek SoC support"
+ <linux-mediatek@lists.infradead.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ Klara Modin <klarasmodin@gmail.com>,
+ Tobias Klausmann <klausman@schwarzvogel.de>
+References: <20260630210215.400379-1-rosenp@gmail.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+X-Enigmail-Draft-Status: N11222
+Autocrypt: addr=linux@leemhuis.info; keydata=
+ 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 MEK4
+In-Reply-To: <20260630210215.400379-1-rosenp@gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260705-pci-rebar-root-bus-v1-1-55df70cbdd88@honeycomb.io>
-X-B4-Tracking: v=1; b=H4sIAE6QSmoC/yXMQQqEMAxA0atI1gbaOih4FXFha6pxYSXRYUC8u
- 3VcvsX/JygJk0JbnCD0ZeW0ZtiygDAP60TIYzY442rTmA9ugVHID4KS0o7+UIyVdVUka2JoIIe
- bUOTff9r1r/XwC4X9OcF13R/1e3F2AAAA
-X-Change-ID: 20260704-pci-rebar-root-bus-f3123fe10fc7
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
- regressions@lists.linux.dev, amd-gfx@lists.freedesktop.org, 
- Jon Nettleton <jon@solid-run.com>, Jon Nettleton <jon.nettleton@gmail.com>, 
- stable@vger.kernel.org, Liz Fong-Jones <lizf@honeycomb.io>
-X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4287; i=lizf@honeycomb.io;
- s=gpg; h=from:subject:message-id;
- bh=WjhPR946S5kQ2MM+7TqB/nQbZuHdNxuSaUo3YEdJ1dU=;
- b=owEBbQGS/pANAwAKAaXO1OOXra/CAcsmYgBqSpBT2VQkT7xS0DBT4bFs/PNduIzCpXSUdbhlx
- +BUdSUWfm+JATMEAAEKAB0WIQSfW1LPQ0gyJmoTHwelztTjl62vwgUCakqQUwAKCRClztTjl62v
- wuU9B/43wnUMX1r7OFzOUOLhs7jAFwO76sMfFglIIx4+jiZsAeECwbTO6vJ/B7uxJqWNBjoDBU5
- +qBnydr+Zy8aNRAgrClef7W2QitCPB9JyGuOSMQn6nlhA/9LSJvt2shilGGo28Ekw8JbeRehZE3
- YfEAbYPDNj6y66wpKdNAANSXa+Saj4YnmX5piKeTE2qv+qJwpMy7HZ69ov+iOg2lzmwHkjhTj9l
- TRcjq86rbWran3ghttXJsjZ77jyY2Iw22zBQfFrlX6QV/4purUnKtLqcQ0Wih9PW7OZ5veO0vYG
- QM53tH07CgWLmOwRFMHiVToYw4a/ZvH3h0+/9gm3H3ssJXYV
-X-Developer-Key: i=lizf@honeycomb.io; a=openpgp;
- fpr=1F7714D7EC3441D2CECC24606A3F8B00FBDDD2A4
-X-Endpoint-Received: by B4 Relay for lizf@honeycomb.io/gpg with auth_id=854
-X-Original-From: Liz Fong-Jones <lizf@honeycomb.io>
-Reply-To: lizf@honeycomb.io
+X-PPP-Message-ID: <178332260404.335435.16724517191704331600@mxe9fb.netcup.net>
+X-NC-CID: MBZYx3B8fq+hVNOQQyB10TWknSYHbMIMdxf5mTcosreFLKr2VrU=
 
-From: Liz Fong-Jones <lizf@honeycomb.io>
+On 6/30/26 23:02, Rosen Penev wrote:
+> If seems the check for err is wrong as the proper macaddr gets written
+> to from the EEPROM itself. Meaning checking err from of_get_mac_address is
+> wrong as the proper macaddr has been written by this point.
 
-pci_do_resource_release_and_resize() releases the device BARs that
-share a bridge window with the BAR being resized, but when the device
-sits directly on a root bus (pdev->bus->self == NULL) it then skips
-resource assignment entirely and returns success, leaving the BARs it
-just released unassigned (IORESOURCE_UNSET).
+By our submission guidelines and requests from Linus this afaics should
+also contain:
 
-Skipping pbus_reassign_bridge_resources() is correct in that case --
-there is no bridge window to adjust -- but the device BARs still have
-to be reassigned. Before the BAR release was consolidated into the PCI
-core, this case worked for amdgpu because the driver released the BARs
-itself and then called pci_assign_unassigned_bus_resources()
-unconditionally after the resize, which assigns unassigned device BARs
-also on a root bus. Commit db92e3fef53e ("drm/amdgpu: Remove driver
-side BAR release before resize") removed that call, so nothing assigns
-the released BARs anymore.
+Reported-by: Klara Modin <klarasmodin@gmail.com>
+Closes: https://lore.kernel.org/all/ajRmlyx_AEGybykL@soda.int.kasm.eu/
+Reported-by: Tobias Klausmann <klausman@schwarzvogel.de>
+Closes:
+https://lore.kernel.org/linux-wireless/30a90714-02d8-45f2-a7f1-4cfe0627d50b@skade.local/
 
-This breaks amdgpu completely on the SolidRun HoneyComb LX2 (NXP
-LX2160A, arm64, ACPI), where the GPU endpoint is enumerated directly
-on the root bus of its segment (there is no root port device, so
-pdev->bus->self is NULL):
+Both of them now CCed, too, to give them a chance to provide a "Tested-by:".
 
-  amdgpu 0004:01:00.0: BAR 0 [mem 0xa400000000-0xa40fffffff 64bit pref]: releasing
-  amdgpu 0004:01:00.0: BAR 2 [mem 0xa410000000-0xa4101fffff 64bit pref]: releasing
-  amdgpu 0004:01:00.0: sw_init of IP block <gmc_v8_0> failed -19
-  amdgpu 0004:01:00.0: amdgpu_device_ip_init failed
-  amdgpu 0004:01:00.0: Fatal error during GPU init
+> Fixes: 31ee1582717e ("wifi: mt76: fix of_get_mac_address error handling")
 
-No error is logged because the resize path reports success; amdgpu
-then finds BAR0 IORESOURCE_UNSET and bails out with -ENODEV.
+Given this and the reports linked above this afaics should also be
+tagged with "wireless", and not with "wireless-next", as this commit is
+in 7.2-rc1 -- and thus ideally should be fixed by now. See
+https://www.kernel.org/doc/html/latest/process/handling-regressions.html#on-how-quickly-regressions-should-be-fixed,
+which contains links to these quotes from Linus:
 
-Assign the released BARs directly from the root bus windows when there
-is no upstream bridge. On failure, roll back through the existing
-restore path exactly as in the bridged case.
+""But a user complaining should basically result in an immediate fix -
+possibly a "revert and rethink"."" and ""It's also worth noting that
+"immediate" obviously doesn't mean "right this *second* when the problem
+has been reported". But if it's a regression with a known commit that
+caused it, I think the rule of thumb should generally be "within a
+week", preferably before the next rc.""
 
-The root bus path also had a locking bug that any fix here necessarily
-touches: the old "goto out" jumped to up_read(&pci_bus_sem) without a
-matching down_read() (as does the "goto restore" taken when
-pci_dev_res_add_to_list() fails in the release loop). Take pci_bus_sem
-before the BAR release loop so every path through the function holds
-it exactly once.
+Ciao, Thorsten
 
-Fixes: 337b1b566db0 ("PCI: Fix restoring BARs on BAR resize rollback path")
-Cc: stable@vger.kernel.org # v6.19+
-Signed-off-by: Liz Fong-Jones <lizf@honeycomb.io>
----
-#regzbot introduced: 337b1b566db0
-
-Observed at runtime on Ubuntu's linux-hwe-7.0 (7.0.0-14, broken) vs
-linux-hwe-6.17 (working), but nothing here is distro-specific: Ubuntu
-carries this code unmodified, and the affected function is identical
-to current mainline. By source inspection the regression window is
-v6.18 (old code paths) to v6.19 (consolidation). Workaround for
-affected users: amdgpu.rebar=0.
----
- drivers/pci/setup-bus.c | 25 +++++++++++++++++++------
- 1 file changed, 19 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-index c0a949f2c995..9db1951f6e5c 100644
---- a/drivers/pci/setup-bus.c
-+++ b/drivers/pci/setup-bus.c
-@@ -2397,6 +2397,8 @@ int pci_do_resource_release_and_resize(struct pci_dev *pdev, int resno, int size
- 	if (ret)
- 		return ret;
- 
-+	down_read(&pci_bus_sem);
-+
- 	pci_dev_for_each_resource(pdev, r, i) {
- 		if (i >= PCI_BRIDGE_RESOURCES)
- 			break;
-@@ -2415,13 +2417,24 @@ int pci_do_resource_release_and_resize(struct pci_dev *pdev, int resno, int size
- 
- 	pci_resize_resource_set_size(pdev, resno, size);
- 
--	if (!bus->self)
--		goto out;
-+	if (bus->self) {
-+		ret = pbus_reassign_bridge_resources(bus, res, &saved);
-+		if (ret)
-+			goto restore;
-+	} else {
-+		/*
-+		 * A device on a root bus has no bridge windows to adjust.
-+		 * Assign the BARs released above directly from the root bus
-+		 * windows.
-+		 */
-+		list_for_each_entry(dev_res, &saved, list) {
-+			i = pci_resource_num(pdev, dev_res->res);
- 
--	down_read(&pci_bus_sem);
--	ret = pbus_reassign_bridge_resources(bus, res, &saved);
--	if (ret)
--		goto restore;
-+			ret = pci_assign_resource(pdev, i);
-+			if (ret)
-+				goto restore;
-+		}
-+	}
- 
- out:
- 	up_read(&pci_bus_sem);
-
----
-base-commit: 7404ce51637231382873d0b55edabc2f3b841a9d
-change-id: 20260704-pci-rebar-root-bus-f3123fe10fc7
-
-Best regards,
---  
-Liz Fong-Jones <lizf@honeycomb.io>
-
+> Signed-off-by: Rosen Penev <rosenp@gmail.com>
+> ---
+>  drivers/net/wireless/mediatek/mt76/eeprom.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/wireless/mediatek/mt76/eeprom.c b/drivers/net/wireless/mediatek/mt76/eeprom.c
+> index b99d7452800f..afdb73661866 100644
+> --- a/drivers/net/wireless/mediatek/mt76/eeprom.c
+> +++ b/drivers/net/wireless/mediatek/mt76/eeprom.c
+> @@ -181,7 +181,7 @@ mt76_eeprom_override(struct mt76_phy *phy)
+>  	if (err == -EPROBE_DEFER)
+>  		return err;
+>  
+> -	if (err) {
+> +	if (!is_valid_ether_addr(phy->macaddr)) {
+>  		eth_random_addr(phy->macaddr);
+>  		dev_info(dev->dev,
+>  			 "Invalid MAC address, using random address %pM\n",
 
