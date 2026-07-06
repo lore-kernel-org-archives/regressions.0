@@ -1,115 +1,150 @@
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19B794189D8
-	for <regressions@lists.linux.dev>; Mon,  6 Jul 2026 14:40:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 477C02EEE77
+	for <regressions@lists.linux.dev>; Mon,  6 Jul 2026 17:07:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783348815; cv=none; b=rCJga/GcTqHPQ1LO0IQUqN4ejTJA+XIl54IQ2hNUv5YBKw/KIvxGLf2IQ2RDASGATcmrRBj4+Vr3AkMn1dcs+My+vUHkFl8ZI2aiIYmII4ujcsZpebTgJ6TPEJRgB4jAMTBjuAe+7NODjKgH/K8qvahlxc0myd/0y4RhxZa3zhU=
+	t=1783357660; cv=none; b=DvhTd2mCaILA3GG31xWmD/wIuCjg6/kt3pUXkMhaq90z9TOX936PT8vgHcm5N2wJWU7GFNFpLUTHkxr2L1eW71cgeJ36ozzyqZJcJcWaUlEboX/ibvsp6RyCFcv3WzM/JoSiufMesxOWnjd36ALqQVVJBxP+opxFm/FlcYYFP5g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783348815; c=relaxed/simple;
-	bh=+HJRPXWUR5wKFR7fxw0fX+rLOu+JjhItliDTQTLZ/1U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D6Pk9TylBltsa8EIrof+4u0dHzozXb9nhFU1Xhss0JJ1uZpkp6r8EavMlVezpAP5k+A7YyB+7/T+z5ZAbAslmjQSsxK5fC7BjTHay5ZkUENZBpKqNAGOwa3o4MIyt3Qpr7sc+Ejur9kDIMA33aHzqBjFsuoZ2dLqBvojPFKmoFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hXcka3EL; arc=none smtp.client-ip=209.85.167.45
+	s=arc-20240116; t=1783357660; c=relaxed/simple;
+	bh=La52E/eiMRqbkoa9U+7aHtBFszAa88Y67rC6/ILJHpg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=GQuEbKp5vDrHCmszAXzm1mqYsqWPRhgi2ubiDnSYNQtDaWqIzWIuQvKkqJqM/aBI2dasB08HSyAFZXVo76FXIywpp5tFuDiYwjCIuoHn3dkdhWV0AFKndjMoVLdFDkM3drvevVoQPDEfcIN/EAHuLUkUYQ5eKRrXyKK9+sHIgM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XwBtk1P4; arc=none smtp.client-ip=209.85.167.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hXcka3EL"
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-5aeb11c7347so2317570e87.0
-        for <regressions@lists.linux.dev>; Mon, 06 Jul 2026 07:40:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XwBtk1P4"
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-5aeb6d00883so2705599e87.1
+        for <regressions@lists.linux.dev>; Mon, 06 Jul 2026 10:07:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1783348812; x=1783953612; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=YkycRqxvjty9WMrqLNNOLyHpGeUgcD9g+5kM6fU1uwM=;
-        b=hXcka3ELr6EbsyvaQEKkTXLW4sffPltIE8hIHb41u72D024htyb4sQpA20CldbWTrY
-         u07zoHNdLaGa5zLnyqNe24JAcvYO0VdP06z6Fd0pIoDIhvionhZuBn6dGzPVKbw7xPKi
-         a/VgxuTHX+iF3BLFVRwkNaSqSod15dx8hh98GskemUbtQmH5xl7eC8f4VeL1XAWGSREU
-         +vOdgbIT7QX+jwG49+nk6pRLH3DRwAP9BWpu0kio5OLZLBQU+Prt7AQqFZzuwTHMX2se
-         veSHGQ9wDYCXGZkUSnc0wolBYb+PbKRHYn/HG7Hcy5GGPfaDmgB2QkTG/ASlQscfHhM6
-         jSpA==
+        d=gmail.com; s=20251104; t=1783357657; x=1783962457; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=bTKln45GM0fk011qbQeayCXILczaZaZoSzdEKWSP20w=;
+        b=XwBtk1P4VshC/ncq84GQc4YfPvpa3cLacCcoiO72Kl/a3jvl1q857BTnI3Zu0PXl4E
+         53kNXS/GLTdnBrUyRuITVI0Vsu70CP4NBZjbZvi0fhAGtVjatfGQ+Ipi5artSpo1J6hr
+         UZe/AaNt6ZvXmJoM8JDYB7IoK8hwLd3lFPJh0I3MW7HKcMR73Se0bfhFBHcAKTVIZR+s
+         HPCZdOpGVUw/uM+KwkC5ucT0Rk7iv/cEuBlhd+Mj8K1ognSBc8LliGskQm6DSj2pRQJK
+         mkQrHdVZW6CyhQMFYPqOQ7LZyrWQcrCyTi0+l9E3d97F4ICryZT75eP7PngURlsFFdri
+         m04w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783348812; x=1783953612;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YkycRqxvjty9WMrqLNNOLyHpGeUgcD9g+5kM6fU1uwM=;
-        b=T8Oox8kpcZSzfctpa6DXYmRetN5krxqOhQ0jO15e2Oj3TNh6XhpSZH2RiGJ24ZDB6t
-         /CdRzwgaMATfAiNHiXQxfmUF24DCusO2MyEpwW1bwuHXftUJRt2SfoAjsKNZL5Aneb1K
-         OpMYOqC07tYBSjSRuOEwnS6rn+9IdzKGxSNx17uMbfctAB63K55+dlCFycfVYmavlDfJ
-         Dlz7/57Gjyo2vA041O151MKUOh0pMzkE3lbhzQKCWlro5UXnz3ukL2jQH/mPKkRgi39k
-         mweQYBQN4wCkZzJQhMc03/Y+K1OXiNpq+j5IHteF8KyIzcQa7iJg1vlS79UbnRSUN6Zi
-         Fz6w==
-X-Forwarded-Encrypted: i=1; AHgh+RpnLDmEcdYbPCTNPksstlskXZ2avnR+o+32wjt8cuAw5tYO37+ZOY/b0BnX0Tqc1XnmvUFBAAGxI0BkgA==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxlJdT+9EfgEwX2b1cMzyUEd0KxN64c//rOQvmRS3Kv00Qndm4J
-	CyGN2eMbl4i04q9ffeQQNkOu4Ed5MYiHMceAir7VDbptsCuszVyJsG8h
-X-Gm-Gg: AfdE7cnRD/jBtzMPpPw7yAb961WWfJ/Q+0FqqHUbEDBcEqP6993/a5owEb/tzI3Zu95
-	S5lm8SoZ2ase6RqElIJjKGa71LTZzkZF7uFHNyDuNRtQAATdT7qy/+LNtaIaxZTcqF1rIyQ3vjI
-	dEK5NncsWWF+9+RGk6q5DXco5loIVXKpSSJs4nv9WKe07ZXV9pNfHXdSTW4rd/G6uvV2H+qC4BW
-	792JRiyE0Wnd19qxHhTnuNOelaaX7oBNfUV6JuW0sr2EiR+2zurR36FA2kMR1dGv/TiVNlLBaVv
-	sONtUZG5zw2O+nOcZw0zoZHZh2DjXfdEyj/5mjnwTA0dTzEyfnWoF0GAklHqJmopbmfLD7wyZ42
-	cValVFSBvEOxx1uTzdJqnawirk5cqS8Kg144MeiGKfS8XAaEndtb8N/BnNBelKWvFVEWim9Pu6M
-	PBuhTGploAzwk+I6Jm+vAq9tFbTco=
-X-Received: by 2002:a05:6512:414d:b0:5ae:9de4:4907 with SMTP id 2adb3069b0e04-5b007bb9136mr132541e87.53.1783348811872;
-        Mon, 06 Jul 2026 07:40:11 -0700 (PDT)
-Received: from localhost (soda.int.kasm.eu. [2001:678:a5c:1202:7b92:9ac1:b9ef:5287])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5aed137705dsm2947841e87.32.2026.07.06.07.40.11
+        d=1e100.net; s=20251104; t=1783357657; x=1783962457;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=bTKln45GM0fk011qbQeayCXILczaZaZoSzdEKWSP20w=;
+        b=WcgSpgk3MAJYq3KBrh7i6EKi2TacN9OSkhqsTnt1xibVTvZ3oBggmneATs+coNyAaK
+         dKsQFkMQqq+gQm+UM+pJ3IpjujfgSpTQ9fdo1W79csq9cz5pj1StMuObB+LdoBKkP9qg
+         NW96CppdSQK/VWBPLvYAEel9O3o5UHsDTebK31755kxKsD2lhzOrbsrH6n0hqJFCF9V6
+         uV65lH3/goYgsKNWhEFwD6DE5jPRZ63mrLwxcrA9V/vP3DYnPVluGDjiS+tyBfHeyBrW
+         GsW/NXpeTCPGlO2I0Jwt7q+fhXPNDUvG6fjG7LwQ4mVcZgyTftVJ8ZNiyAJsPdvGlhL+
+         jvgg==
+X-Forwarded-Encrypted: i=1; AHgh+RoOzs1t4AqaMGItk0SPMKhyfriQAtjVaWof9i7vNudDtSpGm8fV/5QwCTQy/b087UWJVeiOXgsnFtAmbQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0YytT6MB8//J1mXMHZ5eupgXFnCnjsEFhUlMbIF6AnGPXsE6A3AV
+	RpEZdor/MdsjGdQiUz1N7CuNH7qUrdEqreJEmYzzoeB/WhC5QWrDDF6u
+X-Gm-Gg: AfdE7cn/e1kpJlNJ1yT0po5t1pc30dDSSY+qXjdpq3iMVmu/HC1hmMatDHG/A1XG5N0
+	OSAJTP6gXXg0ark/yheWOzLfDwUBvWWsSjHbG2hMPMfEeN2Ljh2LjPahZ4eluEV8sC2tQHIyH5Q
+	JLnWEH/qrDYev+jlFIE4B0mvYTbQuO8pzFThQVAodbGax6cVb448a3qG/TnYmBoLcpn6N6+XuIZ
+	p9QaevF+FKzXuII04n2NvruHt8ojRr9NyHzjQXKxiu+BUn49pygoKqlK5s+iZqEXstj2o27yTI2
+	XujzD4vMpay0paFfBUdwNlhMjNFb4yoFNL+krMdxrNMn3+kaxq010q3zHudqEZztRofh6dHtUhe
+	7UnJC0E537VRcRlvspCu78kQJBAeuwszjY9YMcm3kTi+dT6zAFORebB8NiUcvSzXx7HhCDS4Dq8
+	+aP0gc0wNtmY8sRHcFREsnbdMrX27qZxuPFQp+1PLxodwUWDNJRPOq3dKF9kyPBQP3lfYIfMDom
+	iiOCHTqaLefQABhFvt43cJaqt0=
+X-Received: by 2002:a05:6512:48cb:b0:5ae:ba8f:f9fa with SMTP id 2adb3069b0e04-5b007c0b9d4mr246661e87.18.1783357657394;
+        Mon, 06 Jul 2026 10:07:37 -0700 (PDT)
+Received: from buildhost.darklands.se (h-158-174-102-211.A469.priv.bahnhof.se. [158.174.102.211])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5aed13bb774sm3031918e87.48.2026.07.06.10.07.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jul 2026 07:40:11 -0700 (PDT)
-Date: Mon, 6 Jul 2026 16:40:10 +0200
-From: Klara Modin <klarasmodin@gmail.com>
-To: Rosen Penev <rosenp@gmail.com>
-Cc: linux-wireless@vger.kernel.org, Felix Fietkau <nbd@nbd.name>, 
-	Lorenzo Bianconi <lorenzo@kernel.org>, Ryder Lee <ryder.lee@mediatek.com>, 
-	Shayne Chen <shayne.chen@mediatek.com>, Sean Wang <sean.wang@mediatek.com>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	"open list:ARM/Mediatek SoC support" <linux-kernel@vger.kernel.org>, 
-	"moderated list:ARM/Mediatek SoC support" <linux-arm-kernel@lists.infradead.org>, 
-	"moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, Tobias Klausmann <klausman@schwarzvogel.de>, 
-	Thorsten Leemhuis <regressions@leemhuis.info>, Linux kernel regressions list <regressions@lists.linux.dev>
-Subject: Re: [PATCH wireless-next] wifi: mt76: fix MAC address for non OF
- pcie cards
-Message-ID: <aku9T5a__-8EqFM_@soda.int.kasm.eu>
-References: <20260630210215.400379-1-rosenp@gmail.com>
+        Mon, 06 Jul 2026 10:07:36 -0700 (PDT)
+From: Magnus Lindholm <linmag7@gmail.com>
+To: jannh@google.com
+Cc: arjan@linux.intel.com,
+	brauner@kernel.org,
+	ebiederm@xmission.com,
+	jack@suse.cz,
+	jake@lwn.net,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev,
+	stable@vger.kernel.org,
+	viro@zeniv.linux.org.uk
+Subject: Re: [PATCH] proc: protect ptrace_may_access() with exec_update_lock (part 1)
+Date: Mon,  6 Jul 2026 19:07:35 +0200
+Message-ID: <20260706170735.2941493-1-linmag7@gmail.com>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <20260518-procfs-lockfix-part1-v1-1-5c3d20e0ac33@google.com>
+References: <20260518-procfs-lockfix-part1-v1-1-5c3d20e0ac33@google.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260630210215.400379-1-rosenp@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On 2026-06-30 14:02:15 -0700, Rosen Penev wrote:
-> If seems the check for err is wrong as the proper macaddr gets written
-> to from the EEPROM itself. Meaning checking err from of_get_mac_address is
-> wrong as the proper macaddr has been written by this point.
-> 
-> Fixes: 31ee1582717e ("wifi: mt76: fix of_get_mac_address error handling")
-> Signed-off-by: Rosen Penev <rosenp@gmail.com>
+Hi,
 
-Tested-by: Klara Modin <klarasmodin@gmail.com>
+while testing my Alpha generic-entry series on top of v7.2-rc1, I noticed
+that several strace --pidns-translation tests started failing. The same
+generic-entry series on top of v7.1-rc1 passes these tests.
 
-> ---
->  drivers/net/wireless/mediatek/mt76/eeprom.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/wireless/mediatek/mt76/eeprom.c b/drivers/net/wireless/mediatek/mt76/eeprom.c
-> index b99d7452800f..afdb73661866 100644
-> --- a/drivers/net/wireless/mediatek/mt76/eeprom.c
-> +++ b/drivers/net/wireless/mediatek/mt76/eeprom.c
-> @@ -181,7 +181,7 @@ mt76_eeprom_override(struct mt76_phy *phy)
->  	if (err == -EPROBE_DEFER)
->  		return err;
->  
-> -	if (err) {
-> +	if (!is_valid_ether_addr(phy->macaddr)) {
->  		eth_random_addr(phy->macaddr);
->  		dev_info(dev->dev,
->  			 "Invalid MAC address, using random address %pM\n",
-> -- 
-> 2.55.0
-> 
+I bisected the regression between v7.1-rc1 and v7.2-rc1, always applying
+the same generic-entry series before testing, and the first bad commit is:
+
+  6650527444dadc63d84aa939d14ecba4fadb2f69
+  proc: protect ptrace_may_access() with exec_update_lock (part 1)
+
+Examples of failing strace tests include:
+
+  signal_receive--pidns-translation.gen.test
+  so_peercred--pidns-translation.gen.test
+  tgkill--pidns-translation.gen.test
+  tkill--pidns-translation.gen.test
+  fcntl--pidns-translation.gen.test
+  xet_robust_list--pidns-translation.gen.test
+  xetpgid--pidns-translation.gen.test
+  xetpriority--pidns-translation.gen.test
+
+One simple reproducer is:
+
+  cd strace/tests
+  ./xetpgid--pidns-translation.gen.test
+
+The failure looks like this:
+
+  ../../src/strace: NS_* ioctl commands are not supported by the kernel
+
+and the decoded output lacks the expected pidns translation comments, e.g.:
+
+  - getpgid(2 /* 6 in strace's PID NS */) = 0
+  + getpgid(2) = 0
+
+Looking at the patch, the relevant part seems to be the change in
+fs/proc/namespaces.c: proc_ns_get_link() and proc_ns_readlink() now take
+task->signal->exec_update_lock around the ptrace_may_access() check and
+namespace link/readlink handling. strace's --decode-pids=pidns code appears
+to rely on accessing /proc/<pid>/ns/pid for short-lived tracees in a nested
+PID namespace, so this looks like a plausible connection to the failure.
+
+The kernel has the relevant namespace options enabled:
+
+  CONFIG_NAMESPACES=y
+  CONFIG_USER_NS=y
+  CONFIG_PID_NS=y
+  CONFIG_CHECKPOINT_RESTORE=y
+  CONFIG_PROC_FS=y
+
+I also tested the basic nsfs ioctls with a small standalone program, both
+outside and inside "unshare -Urpf", and NS_GET_NSTYPE,
+NS_GET_PID_IN_PIDNS and NS_GET_PID_FROM_PIDNS all work there. So the failure
+does not look like missing namespace support or a simple ioctl-number issue;
+it seems specific to the proc/ns access pattern used by strace's pidns
+translation code.
+
+#regzbot introduced: 6650527444dadc63d84aa939d14ecba4fadb2f69
+
+Thanks,
+Magnus
