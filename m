@@ -1,156 +1,178 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.61.103])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1BF041B354
-	for <regressions@lists.linux.dev>; Mon,  6 Jul 2026 09:52:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9C41442136
+	for <regressions@lists.linux.dev>; Mon,  6 Jul 2026 10:16:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.61.103
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783331557; cv=none; b=OhdUeHn1kB0v+hiswxt4kbjxqMt8xdRrVPnriW2ay3vccc6qLQLhC/6B4qxff+rYlhFjZ8nE8GxHDjET+HvZ+LWXxtwV9PBd8m3dU0+i6cvcl0pL8SD7WaW6sVEHbATEclCiZW2f9KFb7EdAk5ISByC7PbZisyhEO/gsFTv5ziM=
+	t=1783333009; cv=none; b=O42W2t7YKzTiPZTg7DtNMu+276bGV982yveAT5/np5eekl4RucXRdys79lQZHu+Zdw9snWIKRFEn1goB8GsK5LDH/FAcQZRHTpee1iT5NacvOByv1tQ5YrZQkTSlGE0R/cwbz4YT8ooiDxSO99ijTFU89doebzdWGOObkwnfrvk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783331557; c=relaxed/simple;
-	bh=CT+6sTQWuPnhtOdpILmRJgYsA+lqXyqFq362sw8L9Uo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nBDXvmAyTidTm68aorPETiNM0V+axu6rzPexI4ZLFDz6n5B4fsAbDBipVch78e+Rcq6is8l59w4DfHTHup//lgVJQjeO0ft+DUEa6DGcXRIfLhRL9mpui2eBKbQa3hocOFWwXLvF/ZWS47Q/x0aFytv5p6jvR8H/t7oiN//5HOg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=k51dKZg9; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=B67sAHUN; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1783333009; c=relaxed/simple;
+	bh=O3HDA58hVYQ2UIV9LDldz/TAOxq4sg0yXPvgUB7pTJ8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Yk6EyWtqoP9ZIXuhCoHCWE8ZKbW5x1MQK74kO062oYez1XCYD5a3hYFhKbHkDIdCVCMbNMd4SHSRFQohXdDXaOPp7w9jv/BHhz6r4zXAnluwm8CwpHXDCj9P9z0pi8RCv0Xv3BybloGOQ6R87L3QQESRh/2AY2QMt0HtUGIlHc4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=JuWnDMjm; arc=none smtp.client-ip=188.68.61.103
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="k51dKZg9";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="B67sAHUN"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6669498S056982
-	for <regressions@lists.linux.dev>; Mon, 6 Jul 2026 09:52:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	ymiCvoZUHnvPV3UZWE3h9gNLgtym4Czr4Iw523eM3AQ=; b=k51dKZg9OvEZm8mO
-	V65Bh35rQB9pDW3pfKnt/YioF/TmIHOaEKTKmzXF2FoDqvSLG3JTaq82KuGMwVHh
-	f9DkDecvTmnLePdBr4MEtws+tq5rkHGfeiNF9lXYum61eyxXAcRbOVv2Ve2n+JfJ
-	me/L0UjjscMbH6T7acjPDd9gjG6/wiQTHBaMubgkhIpleQNmXLb+FZo2oKUmXn1J
-	C5jWoA8Z6VCEr9ddCWK/axrMY4Djo6Afz9Tq06TK98pqlkhtLw0URo8+C6cZPSid
-	9mhMD+SZQPiYIZBKwGDGRiEi6DBITGNoZMIW7Iqkfm4f4ZedsKJhLTdqw0UvAMCK
-	LLvukw==
-Received: from mail-pg1-f199.google.com (mail-pg1-f199.google.com [209.85.215.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4f87q7gn18-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <regressions@lists.linux.dev>; Mon, 06 Jul 2026 09:52:23 +0000 (GMT)
-Received: by mail-pg1-f199.google.com with SMTP id 41be03b00d2f7-c894c1c4aa9so4078797a12.0
-        for <regressions@lists.linux.dev>; Mon, 06 Jul 2026 02:52:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1783331542; x=1783936342; darn=lists.linux.dev;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ymiCvoZUHnvPV3UZWE3h9gNLgtym4Czr4Iw523eM3AQ=;
-        b=B67sAHUNwvnv9/VFO2f3eh6KEPMNWa0I8cJjuX498w7q1TeYPeVLx/PSeeF77PqyEC
-         uEVAcD0PWiQhjYrA8ROR52Hxciw81f5tvIr1zxLS2BF1/kFWuk8nXynlKQfsxtmKotr4
-         URIWKLK3G159y2VwzVA4EfR2Z6ouPriCrzVNEHvN1swG37wi6xnnsQBvYUloV4tmozo+
-         miWm7WnNvCH8dR+Q3fihlegDFCcuyrDDzAWKb888mQZfztW7wyw7oqqDvSgUdiuojOVc
-         Qdk5i5zJXL/SzVj+uCTvGLAjK8jilYXL5//V/EJb5Poj+FTSOOlo4a2NciEqEECG7kYZ
-         0TKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783331542; x=1783936342;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ymiCvoZUHnvPV3UZWE3h9gNLgtym4Czr4Iw523eM3AQ=;
-        b=XOaXHM+pderzU4S+4vGZDZzUkSSEC26Xg8Ac0ATb+lCC/aAokBzKw2cwJR1MXB6Rbl
-         SLIMCi1CwIuCk1zpWmVicopGgoUux9tNsnaUzFXtBXLmahWHdkyXYzgC26rWNL75pde8
-         NgKw85f8zY+ZRCy3ApGPsuS2LbxrcxAIZdh1K2BNeMiE3JlgZCSQrEzmzLD/b6R8nLNh
-         cPLumJt1Hpw9lLD4niFzw3MHao2yZojfAy3adnVqPFxHbkquBqhRfHzvS+9VrCdVbDLP
-         mab74XOGK90zx61xH5xqYQfJmnLH1s8PF8bvfechFD3ssiToBQX+88oTokUxQ1jBzLMB
-         5Msg==
-X-Forwarded-Encrypted: i=1; AHgh+Rr9RMe7X8TdI9WukAVjzGAiJdF0FZ01skSAwv+VSPQqm7K1tvD93NR65hU3NLUVqUxijxtfJZkp3KMxdQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yx9dDVjapY2Wh/ELeeiHu2FYXYNxGV7xCI/039CsMjzL/VVcW4q
-	qo0KaOtMkMWWiWVq4Ki+qGrE/9GbrF06sDia/5+oHV9KX8Oo7Di0tmSIam9F8r27LjcSHt66Ell
-	+dBwDA3v0vq+oQEFoxrJ7RKcH2GgmxcROXKV90I0Bseo0vZwY3Rp7nSLvZtcOOUo5sg==
-X-Gm-Gg: AfdE7cn8MiF2xYcGrCwbgJc7GE3fpnDRxVZCeeqFYTlGhSsfG56FJKWFkAkD+k0xG18
-	maM0pMvxRIdnm4itH9tGa2WE5KKKNm+U5iBp283cQDY/c720JpqFLZV+ddU3y50KPMjTO1PF7Fh
-	RLdAh4niT2psP/1/y5u7L3HYs/Mbtq0DPpaOiDOljRs6/uPSj5bLhneGtmLE5/Up4tXeTy4axTS
-	xQzEbdueFLtQikM6h88mnwcAOvL8Uq3TeQeX6Z88gb27ZqeN78hrktKqRoqBD3cFooVMdxThYVJ
-	k8IGuQEsmaWdTEF3UpilI8FL6Kd85uu1AHfqQHh20XYQLfF1tWSonKqU5lJQtvpZcujFBhwwqst
-	Drx4cTTqZdw5AFBF3uKHOmtTRqhDfEVCTyXxJ
-X-Received: by 2002:a05:6a20:72a0:b0:3bf:6c08:4ec6 with SMTP id adf61e73a8af0-3c03e52c6efmr10345060637.59.1783331542224;
-        Mon, 06 Jul 2026 02:52:22 -0700 (PDT)
-X-Received: by 2002:a05:6a20:72a0:b0:3bf:6c08:4ec6 with SMTP id adf61e73a8af0-3c03e52c6efmr10345031637.59.1783331541747;
-        Mon, 06 Jul 2026 02:52:21 -0700 (PDT)
-Received: from hu-mdsor-hyd.qualcomm.com ([202.46.22.19])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-30f0b7b9a1bsm52826858eec.3.2026.07.06.02.52.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jul 2026 02:52:21 -0700 (PDT)
-Date: Mon, 6 Jul 2026 15:22:15 +0530
-From: Mohit Dsor <mohit.dsor@oss.qualcomm.com>
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>, neil.armstrong@linaro.org,
-        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        vishnu.saini@qualcomm.oss.com,
-        Linux kernel regressions list <regressions@lists.linux.dev>
-Subject: Re: [REGRESSION] Resolutions broken after "drm/msm: dsi: fix PLL
- init in bonded mode"
-Message-ID: <akt6z1irWlXA5UIy@hu-mdsor-hyd.qualcomm.com>
-References: <20251027-topic-sm8x50-fix-dsi-bonded-v1-1-a477cd3f907d@linaro.org>
- <ae07cef84AmXK43H@hu-mdsor-hyd.qualcomm.com>
- <wrhuksrzlxw2pjlvjm37dwjuztcv7qs5t6mqiav4ujecwqdkwj@ozbfxpbgaimt>
- <CAJfMnmEVwUwt=wMJ-8HKH1yz9+erWLrRGB+6wVYCdSGDK+_T_Q@mail.gmail.com>
- <114b9be8-1fca-4762-822e-1d53838d5de5@leemhuis.info>
- <o64cxeq5f4ffqpdmbai5cvsmxei2cnw3p6acvu55xl3cj5w3z3@6o6kokszvng7>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="JuWnDMjm"
+Received: from mors-relay-8403.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4gv0dR0WZzz8CrY;
+	Mon,  6 Jul 2026 12:16:43 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1783333003;
+	bh=O3HDA58hVYQ2UIV9LDldz/TAOxq4sg0yXPvgUB7pTJ8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=JuWnDMjmbm9uc6WBo/iJg/eYbpNm53vDepAtcb7TVBiWfW6CXnlFafaYeex8jucij
+	 JHMlVUdXMhBTcH0Z1z705kFAXBwAMbJ2OMjWp6BgaugBlnuYS5gpKWLjxrQJBjBP6i
+	 xFrVLD0rEi7Hm+3YNUwiJKt4+Z9X6xwQzaNrE89ugFGU1wF9bde/nMrTS4rZ51R8rq
+	 twolQswST4td/JkJe0gmULNKcGA5piU9jpMB+Uj4rpCr0iqcfbxCrSZUJfPw4ZeloZ
+	 WghDQyuTPsSaEHnuLKc3VwCR2dTg7VrzI5SfpSxtUn4FU0xQj8tRIe7sdOl4yiN35a
+	 ZAakz8Xyf2FiA==
+Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4gv0dQ6w3zz8BSm;
+	Mon,  6 Jul 2026 12:16:42 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
+X-Spam-Flag: NO
+X-Spam-Score: -2.898
+X-Spam-Level: 
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4gv0dN6MWtz8sbk;
+	Mon,  6 Jul 2026 12:16:40 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 1472B60438;
+	Mon,  6 Jul 2026 12:16:40 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <f0d99b1a-e383-4d14-adb1-4ccab46efddb@leemhuis.info>
+Date: Mon, 6 Jul 2026 12:16:38 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <o64cxeq5f4ffqpdmbai5cvsmxei2cnw3p6acvu55xl3cj5w3z3@6o6kokszvng7>
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzA2MDA5OSBTYWx0ZWRfX1lbqjb+edRLn
- QOTzph+YSTlWk7TdrwkM9PwOmh1dChRRvpt3eDyZynLAwHbl8HnqS91fqrOx4vCtnsvQhgXGgxC
- zx2L7bd/q+Jyx2ZCXjmRMvMHp/o3orAwnk7gdrh+J81sY9Ej+lXD3NPBilw8GTAdk2ypz06rmw4
- pplyS7UJito150gKEPYoRq0PvTJSrnHxjUTJhHR+KRZ0h/tT9/IpcYB/w01d/gJBw1Az8Fgcn4Y
- 3W/fNJmQ3e4NDRNtkrVuNPPCZbEVxkVKfdnI53xCvZGIXl0K2wyFR2XSVEy1YV9TcWkmwkiRDOJ
- 5wWjfYmLZtWobk/O13uBJTMDr3xldiL2qLasoLeXdIGIFD23YtxhZ68nO6mJBQWt5HxehKgVIYB
- Xej5v5scEfuu+6Dd8xHEPDXW1Tazuk4b8ySY1ie/ec3wxVKOQXP5nn4SAa4glSh237+E+u64Jt7
- nk3drCGQ5jQKTnuZ2cQ==
-X-Proofpoint-ORIG-GUID: k2zHpwsHIY4I4RNYmf9T5riyILEaWMeS
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNzA2MDA5OSBTYWx0ZWRfXz4uPe8IawFtx
- xYd8v9tLLFvdBTr7TyE/84EhuqMGcX+6mq+fZkVkNsuNYFxitZVwrg38P8LExa5iJ/bxRaQpdDK
- dX9DmWef0utt1RdVfkoZi+KJATojnPU=
-X-Proofpoint-GUID: k2zHpwsHIY4I4RNYmf9T5riyILEaWMeS
-X-Authority-Analysis: v=2.4 cv=f9N4wuyM c=1 sm=1 tr=0 ts=6a4b7ad7 cx=c_pps
- a=Oh5Dbbf/trHjhBongsHeRQ==:117 a=fChuTYTh2wq5r3m49p7fHw==:17
- a=8nJEP1OIZ-IA:10 a=RAioF0-LDSMA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=rJkE3RaqiGZ5pbrm-msn:22
- a=X_DaoaUhr7fqxi3pwtIA:9 a=3ZKOabzyN94A:10 a=wPNLvfGTeEIA:10
- a=_Vgx9l1VpLgwpw_dHYaR:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
- definitions=2026-07-06_01,2026-07-03_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- lowpriorityscore=0 adultscore=0 impostorscore=0 bulkscore=0 suspectscore=0
- clxscore=1011 spamscore=0 phishscore=0 priorityscore=1501 malwarescore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607060099
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] drm/mediatek: mtk_dsi: enable hs clock during pre-enable
+To: Adam Thiede <me@adamthiede.com>, Gary Bisson <bisson.gary@gmail.com>
+Cc: Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+ Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <20260120-mtkdsi-v1-1-b0f4094f3ac3@gmail.com>
+ <42607fa4-485d-4142-b31c-7bfac71118d2@adamthiede.com> <ajka2220depklK1_@owl5>
+ <bac79214-050d-448b-be63-0586d45c807d@adamthiede.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+X-Enigmail-Draft-Status: N11222
+Autocrypt: addr=linux@leemhuis.info; keydata=
+ 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 MEK4
+In-Reply-To: <bac79214-050d-448b-be63-0586d45c807d@adamthiede.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: <178333300057.643948.6218888156290066716@mxe9fb.netcup.net>
+X-NC-CID: CjcezfaIEXrSstuGOSqS1Cqzufs3YbLMXdijf71d3Ds3mx8zQQM=
 
-On Wed, Jun 03, 2026 at 03:11:34PM +0300, Dmitry Baryshkov wrote:
-> On Wed, Jun 03, 2026 at 11:56:15AM +0200, Thorsten Leemhuis wrote:
-> > On 5/4/26 22:09, Mohit Dsor wrote:
-> > > Sorry for the late reply. I am attaching clk_summary and reg_dump in
-> > > working and non working case. Lilliput is just a normal display working
-> > > with hdmi and has 720p as preferred mode. Yes, I was talking about RB3
-> > > Gen2 only.
-> > 
-> > Neil, Dmitry, and Mohit: what's the status here? From the outside it
-> > looks like this regression is still unfixed with nothing happening for
-> > weeks now. Or has progress been made and I just missed it?
-> 
-> Thanks as a reminder. Unfortunately, it takes some more time (and I've
-> been a bit overloaded lately). Worst case I will send a revert soon.
+On 6/22/26 15:23, Adam Thiede wrote:
+> On 6/22/26 06:22, Gary Bisson wrote:
+>> On Thu, Jun 18, 2026 at 04:06:28PM -0500, Adam Thiede wrote:
+>>> On 1/20/26 05:36, Gary Bisson wrote:
+>>>> Some bridges, such as the TI SN65DSI83, require the HS clock to be
+>>>> running in order to lock its PLL during its own pre-enable function.
+>>>>
+>>>> Without this change, the bridge gives the following error:
+>>>> sn65dsi83 14-002c: failed to lock PLL, ret=-110
+>>>> sn65dsi83 14-002c: Unexpected link status 0x01
+>>>> sn65dsi83 14-002c: reset the pipe
+>>>> [...]
+>>>
+>>> This commit was part of 7.1 and caused a problem for me.
+>>> I'm running postmarketOS (basically Alpine Linux) on a Lenovo C330
+>>> chromebook with a Mediatek MT8173 processor.
+>>> The problem: when the display on my laptop powers off (via suspend or
+>>> idle,
+>>> like xset dpms off) the picture does not come back when the display
+>>> powers
+>>> back on (from resume). The display backlight comes on and brightness is
+>>> adjustable but there is no picture. The only fix is to reboot.
+>>>
+>>> Reverting this commit and applying it as a patch on top of 7.1
+>>> addresses the
+>>> issue for me.
+>>>
+>>> You can view the config I'm using here:
+>>> https://gitlab.postmarketos.org/postmarketOS/pmaports/-/
+>>> merge_requests/8819
+>>>
+>>> Is there any sort of testing or other debugging info I can provide to
+>>> help
+>>> address this issue?
+>>
+>> Thanks for reporting the issue, could you share some logs? Is the driver
+>> saying anything during resume? Also, what type of panel is used on that
+>> chromebook?
 >
-Just wanted to check if you had a chance to look into this issue and whether there's any update on the investigation from your side.
-> > 
+> The curious thing is that there are no real logs in dmesg or /var/log/
+> messages about this. This picture just fails to come back. If there are
+> some kernel params I can set to get deeper logging, that would help, but
+> I'm not aware of any.
 > 
-> -- 
-> With best wishes
-> Dmitry
+> I think the panel is a "BOE NV116WHM-T00" - I used this command to get
+> info: cat /sys/class/drm/card0-eDP-1/edid | edid-decode
+> 
+> Output: https://termbin.com/8nbd
+
+This looked stalled. If I'm mistaken here, please let me known; but if
+no solution is in sight, should we maybe just revert the change until a
+proper was found?
+
+Ciao, Thorsten
+
