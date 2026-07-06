@@ -1,51 +1,55 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.61.103])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.102])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFCD8390CAD
-	for <regressions@lists.linux.dev>; Mon,  6 Jul 2026 10:58:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.61.103
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2B17353A6B
+	for <regressions@lists.linux.dev>; Mon,  6 Jul 2026 11:04:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.102
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783335524; cv=none; b=ZFhMIPt7OZwcqmCQ44a6hvqlw83qjvNMElKaZG5c2XPHQG5gJcEQJJ5Utb20XRBPNmXSfUteKZTRk/eC7ufqJWUB6Ny6U/xGKANNVKcMi23PkZIAgrtYDYzgjPokDQWhyZVDO7CceOEaF61N7UsDNL8wKm6DWr9F3lFzhEDsfwE=
+	t=1783335874; cv=none; b=ppQrxvU2kz3R6prFTmgY5D3KnqwLMiM/R+JAf4JzjEw3iTMDFTDuLT6r3Uusp0p2ASVKxXfYzf4JpGwxb5X9/CWzCcm3p/pXFo/bkbtMwZSkXh58jtQR203afspA8yX9ojJRyeCuaAz1GKd7ZVH+nbo0dTYIRDLLntu6Fq5htRg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783335524; c=relaxed/simple;
-	bh=8JOUaJa/hcgHmhbsk1hR7PAGojXlkFe6TWE2qXkJcps=;
+	s=arc-20240116; t=1783335874; c=relaxed/simple;
+	bh=ZhHjS76EDOyMCf5zoYs4QB/MG761m5MsVg+3Ds7w/qo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DSJ/wQKNTvHI6xmXYT5mCo2sLECeXchenzhoRdnLkIbFncNw1hlUvXbglzGXVjo7Pwueq7OnoSGg2aa6Eevg/pnHid75zJaTl2EGLibvRleKZXj5gGcaUjeTanBFMqKdQVHBmvTOiSNXTFx962/6mXQWZjFo0PXvyIMf4dcYf94=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=lpi98BTI; arc=none smtp.client-ip=188.68.61.103
+	 In-Reply-To:Content-Type; b=peUPd2kPJYSyliJuzLpjx1gBinIzMp7rMUuW9spYPCcRdvcZBYM4Q1/3RwylXh8giljQcaEaNHEkWk6qLWkZb8JfQhDY36ZM7Uvj64WSlwy6+L0PeM8bpAN+KGgt7JnEVz4ZqCJNY6vTqKtj0DYi2ASzTlqnbmOgPNLKv7ZWvg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=OGcdM4XX; arc=none smtp.client-ip=188.68.63.102
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="lpi98BTI"
-Received: from mors-relay-8403.netcup.net (localhost [127.0.0.1])
-	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4gv1YJ02Jxz8F36;
-	Mon,  6 Jul 2026 12:58:12 +0200 (CEST)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="OGcdM4XX"
+Received: from mors-relay-2502.netcup.net (localhost [127.0.0.1])
+	by mors-relay-2502.netcup.net (Postfix) with ESMTPS id 4gv1gj5MkXz60yB;
+	Mon,  6 Jul 2026 13:03:45 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1783335492;
-	bh=8JOUaJa/hcgHmhbsk1hR7PAGojXlkFe6TWE2qXkJcps=;
+	s=key2; t=1783335825;
+	bh=ZhHjS76EDOyMCf5zoYs4QB/MG761m5MsVg+3Ds7w/qo=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=lpi98BTIeNCtddRtIKqYslBPst5+0PHkYA+ujiRLSn+crDuoeaFyV3zNotNUofpy2
-	 2dYnPJqBkRTYWivU16jwQU3C0uy8IhFBJz/DxtvWTZ0zdmbxe3i4ZbdO09dBKcMkRO
-	 AcJtOwPoqp5T11s3Icxq/hCgsf5kNGLKNAWyLDZ/LEuT882pfbNku0xLb2thLw+Kn0
-	 bPMw9P3cXGVojjZjmr4ZfHSj7szX+bbyfASsrD0V8/rceUNq7D4cSImmvFNlJdjJyG
-	 7dDKlMeHzABWHaVmlYbAj4uOrwv8/0sDUTU7hXTQrweC8ggZFGtlBy8F0X5vaGGEJi
-	 /QTGIemoNpSWw==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4gv1YH6Qjyz8F2p;
-	Mon,  6 Jul 2026 12:58:11 +0200 (CEST)
+	b=OGcdM4XXn3ezQZq6hccgb32L75EEkTpPiAM83GIoyGsCJj+179jNY+QiiZQOP6Hr0
+	 pXGu2ZTefK5v3xM9QOOe3i+u/wMX3CvdKvsB8yAXo7Gtq462WGCDO5P/7znbgR+WAu
+	 I+kHcJIknTsutWdqX5wNxq6lWUmND/KLL/HeYUEOXXVoGIoRcpktgTmyaTm5WhJHaz
+	 34iex8yG5eAMhsaagSv0sTOWjFCAhn2pT/G20BSW0THyMWd0DE5AT43jRjF2TT3UD3
+	 DW/45p8AstdKQSlfWStw/Nf0dKOel/kpi4BNIAPAvcWwtEYM4bD4SWwEMeXlnzKRBA
+	 1uk7PQgKRpYyQ==
+Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-2502.netcup.net (Postfix) with ESMTPS id 4gv1gj4fWbz4xc2;
+	Mon,  6 Jul 2026 13:03:45 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
+X-Spam-Flag: NO
+X-Spam-Score: -2.898
+X-Spam-Level: 
 Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4gv1YH1hT1z8svC;
-	Mon,  6 Jul 2026 12:58:10 +0200 (CEST)
+	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4gv1gf2fT5z8tXL;
+	Mon,  6 Jul 2026 13:03:42 +0200 (CEST)
 Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 0EDDD5F96B;
-	Mon,  6 Jul 2026 12:58:10 +0200 (CEST)
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id BEEB7603ED;
+	Mon,  6 Jul 2026 13:03:41 +0200 (CEST)
 Authentication-Results: mxe9fb;
         spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
 Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <edadb400-b2b0-469c-9aeb-9ae82dee13fd@leemhuis.info>
-Date: Mon, 6 Jul 2026 12:58:09 +0200
+Message-ID: <eb5bb7ba-d6f5-4989-8cdc-bd57059fda34@leemhuis.info>
+Date: Mon, 6 Jul 2026 13:03:41 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -53,178 +57,131 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] Speaker pop/chirp on Meteor Lake ALC287 (17aa:231e)
- -- 6.12.73 to 6.12.85
-To: Takashi Iwai <tiwai@suse.de>, Kailang <kailang@realtek.com>
-Cc: Mike Karcic <mikekarcic@protonmail.com>,
- Sean Rhodes <sean@starlabs.systems>,
- "stable@vger.kernel.org" <stable@vger.kernel.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- "linux-sound@vger.kernel.org" <linux-sound@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: 
- <O6pYAi7yf23du9ivLsL0QqrnTmodj2lDTL7Wviv7I_nhjVtvllO7Y5Ban0TeTqrastb1RWhJtlkqrM3quLMWSriai-YjjGy312MTcEhxyWs=@protonmail.com>
- <CABtds-3GOyBr1H=c5aFV1uzfkhO3d1NHMPuon_cWDq0V=pFwUA@mail.gmail.com>
- <wZmYozyav1sNx53nFr4ShKmcdLFVJp5bdUOJgUq1I57MX6kgyq7n8XvH-MWG9Fi4q2x4CQqjEQ3Q8ok5MClut8hNixnhVmVtXkhcOzH1sw8=@protonmail.com>
- <87eciwukvy.wl-tiwai@suse.de>
- <RfzfjlzeaeMgNNWNST_Zzx1v49rYjM63MvAV6O5_fFIoZJ73GcN69FDLJcwhJ3s6fl9TVD2l45YBh2n3hy95LM7rhLhoVt8dU9stMkuVJvE=@protonmail.com>
- <87mrxjsk52.wl-tiwai@suse.de>
- <bibLdgyll9YOEDANdCBy8WOqeOeJry1SnahLR-EhoGkttJ6BE2srDZ9jv0gjkt0bA19aKivruQs3nkMQWbdEXPaOrLT80xjzF4KJvDcB-IU=@protonmail.com>
- <87cxyfs2vm.wl-tiwai@suse.de> <833d600fdebd4aaeab6706185ce854e6@realtek.com>
- <87wlwgygyf.wl-tiwai@suse.de> <330931ee49624f2486f66e510271d80a@realtek.com>
- <87jysdv4qg.wl-tiwai@suse.de>
+Subject: Re: [Bug 221606] r8169: PCIe AER errors and recovery failure after
+ recent driver changes
+To: Lasse Bjerre <lasse@lgb.dk>, Javen <javen_xu@realsil.com.cn>
+Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+ Heiner Kallweit <hkallweit1@gmail.com>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <bug-221606-201211@https.bugzilla.kernel.org/>
+ <bug-221606-201211-LMiiKJhHhg@https.bugzilla.kernel.org/>
+ <b1bda1da-8231-4f05-94a7-7511041ae489@gmail.com>
+ <9b206f58d93b48d194980374cf0da7b1@realsil.com.cn>
+ <PA4PR02MB6991F71D748EE9A99191EEACDA1E2@PA4PR02MB6991.eurprd02.prod.outlook.com>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
 Content-Language: de-DE, en-US
-In-Reply-To: <87jysdv4qg.wl-tiwai@suse.de>
+X-Enigmail-Draft-Status: N11222
+Autocrypt: addr=linux@leemhuis.info; keydata=
+ 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 MEK4
+In-Reply-To: 
+ <PA4PR02MB6991F71D748EE9A99191EEACDA1E2@PA4PR02MB6991.eurprd02.prod.outlook.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <178333549067.691035.17694904032926316770@mxe9fb.netcup.net>
-X-NC-CID: cQj7Pm0GrDXa6gdRfors0hb5IfwYsCQ48gm4enipgAJEAZl7t1k=
+Content-Transfer-Encoding: 8bit
+X-PPP-Message-ID: <178333582208.734786.13573271730310934407@mxe9fb.netcup.net>
+X-NC-CID: Dz8q2ScuPMkR5wg978Cw6BuZlfVICEx7YH48LH/2tpGwle3ujdc=
 
-On 6/5/26 09:14, Takashi Iwai wrote:
-> On Fri, 05 Jun 2026 09:02:29 +0200,
-> Kailang wrote:
->> Yes, it's the same codec and SSID. It's the same model of machine.
-> Hrm, and still they show different behavior?  That's tough.
+On 6/10/26 19:58, Lasse Bjerre wrote:
+> 
+> Absolutely, I have attached a full dmesg from a fresh boot as well as
+> the output of lspci.
+> Important to note (should have done so earlier) that I have manually
+> turned on l1_1_aspm using a udev rule. It is not on by default, but has
+> worked flawlessly until the issue in question.
 
-TWIMC: I have this on the list of regressions I track, but seems things
-stalled -- and at the same time it's a tricky situation where fixing
-this regressions would cause another regression. Which is why I'll stop
-tracking this, unless this reminder bringt this thread back to life somehow.
+Hmm, seems nothing happened since then -- or was there progress and I
+just missed it? If not: is this intentional (due to manually enabling
+l1_1_aspm maybe?), or did this regression fall through the cracks?
 
 Ciao, Thorsten
-
->> -----Original Message-----
->> From: Takashi Iwai <tiwai@suse.de> 
->> Sent: Wednesday, June 3, 2026 1:45 AM
->> To: Kailang <kailang@realtek.com>
->> Cc: Takashi Iwai <tiwai@suse.de>; Mike Karcic <mikekarcic@protonmail.com>; Sean Rhodes <sean@starlabs.systems>; stable@vger.kernel.org; regressions@lists.linux.dev; linux-sound@vger.kernel.org; linux-kernel@vger.kernel.org
->> Subject: Re: [REGRESSION] Speaker pop/chirp on Meteor Lake ALC287 (17aa:231e) -- 6.12.73 to 6.12.85
->>
->>
->> External mail : This email originated from outside the organization. Do not reply, click links, or open attachments unless you recognize the sender and know the content is safe.
->>
->>
->>
->> On Tue, 02 Jun 2026 08:14:14 +0200,
->> Kailang wrote:
+> ------------------------------------------------------------------------
+> *From:* Javen <javen_xu@realsil.com.cn>
+> *Sent:* 04 June 2026 11:01
+> *To:* Heiner Kallweit <hkallweit1@gmail.com>
+> *Cc:* netdev@vger.kernel.org <netdev@vger.kernel.org>; Lasse Bjerre
+> <lasse@lgb.dk>
+> *Subject:* RE: [Bug 221606] r8169: PCIe AER errors and recovery failure
+> after recent driver changes
+>  
+>>On 03.06.2026 09:44, bugzilla-daemon@kernel.org wrote:
+>>> https://bugzilla.kernel.org/show_bug.cgi?id=221606 <https://
+> bugzilla.kernel.org/show_bug.cgi?id=221606>
 >>>
+>>> --- Comment #2 from lasse@lgb.dk ---
+>>> Commit 9ab94a32af704fa9c873094283ae8744a07baf25 (r8169: enable LTR
+>>> support) seems to be the issue. Running the commit before this doesn't
+>>> give me any AER errors and everything seems to behave normally.
 >>>
->>> There were the same SSID for two different symptoms.
->>> But this project was from 2025. This machine maybe didn't in our site.
->>
->> Aha, that can explain the difference of the behavior, then.
->> Do both of them have the same codec ID and SSID, too?
->>
->>
->> Takashi
->>
->>>
->>> -----Original Message-----
->>> From: Takashi Iwai <tiwai@suse.de>
->>> Sent: Friday, May 29, 2026 4:20 AM
->>> To: Mike Karcic <mikekarcic@protonmail.com>
->>> Cc: Kailang <kailang@realtek.com>; Takashi Iwai <tiwai@suse.de>; Sean 
->>> Rhodes <sean@starlabs.systems>; stable@vger.kernel.org; 
->>> regressions@lists.linux.dev; linux-sound@vger.kernel.org; 
->>> linux-kernel@vger.kernel.org
->>> Subject: Re: [REGRESSION] Speaker pop/chirp on Meteor Lake ALC287 
->>> (17aa:231e) -- 6.12.73 to 6.12.85
->>>
->>>
->>> External mail : This email originated from outside the organization. Do not reply, click links, or open attachments unless you recognize the sender and know the content is safe.
->>>
->>>
->>>
->>> On Thu, 28 May 2026 20:27:30 +0200,
->>> Mike Karcic wrote:
->>>>
->>>> Yes, I can confirm the patched kernel is running, and commenting out that line fixes the problem completely.
->>>>
->>>> Below is output with the added debug lines as requested:
->>>>
->>>> $ uname -r
->>>> 6.12.90-debug-no-discoefs
->>>>
->>>> $ sudo dmesg | grep -i "alc287_alc1318"
->>>> [  453.823528] snd_hda_codec_realtek ehdaudio0D0:
->>>> alc287_alc1318_playback_pcm_hook called action=0 [  453.871577] 
->>>> snd_hda_codec_realtek ehdaudio0D0: alc287_alc1318_playback_pcm_hook 
->>>> called action=1 [  459.605379] snd_hda_codec_realtek ehdaudio0D0:
->>>> alc287_alc1318_playback_pcm_hook called action=2 [  459.605497] 
->>>> snd_hda_codec_realtek ehdaudio0D0: alc287_alc1318_playback_pcm_hook 
->>>> called action=3
->>>>
->>>> $ grep -n -A5 -B2 "alc_process_coef_fw.*dis_coefs" sound/pci/hda/patch_realtek.c
->>>> 7918-           return;
->>>> 7919-   alc_update_coef_idx(codec, 0x10, 1<<11, 1<<11);
->>>> 7920:   /* alc_process_coef_fw(codec, dis_coefs); */ /* commented out for testing */
->>>> 7921-   alc_process_coef_fw(codec, coefs);
->>>> 7922-   spec->power_hook = alc287_s4_power_gpio3_default;
->>>> 7923-   spec->gen.pcm_playback_hook = alc287_alc1318_playback_pcm_hook;
->>>> 7924-}
->>>
->>> Hm, then the previous fix doesn't seem working, obviously.
->>> Kailang, could you check this in your side?
->>>
->>> Maybe we should apply the AMP-silence-detection disablement conditionally to certain models?
->>>
->>>
->>> thanks,
->>>
->>> Takashi
->>>
->>>>
->>>>
->>>>
->>>> Sent with Proton Mail secure email.
->>>>
->>>> On Thursday, May 28th, 2026 at 10:07 AM, Takashi Iwai <tiwai@suse.de> wrote:
->>>>
->>>>> On Thu, 28 May 2026 15:38:54 +0200, Mike Karcic wrote:
->>>>>>
->>>>>> I did test 46c862f5419e on 6.12.90. Chirp still present.
->>>>>>
->>>>>> I'm also on a ThinkPad X1 Carbon Gen 12 with ALC287 (17aa:231e), 
->>>>>> same as the original reporter. The fix resolved it for them but 
->>>>>> not for me.
->>>>>>
->>>>>> Only a full revert of 630fbc6e870e resolves the issue.
->>>>>>
->>>>>> Verification on the running kernel:
->>>>>>
->>>>>>   $ grep -c "dis_coefs" sound/pci/hda/patch_realtek.c
->>>>>>   2
->>>>>>
->>>>>>   $ grep -c "en_coefs" sound/pci/hda/patch_realtek.c
->>>>>>   0
->>>>>>
->>>>>>   $ sed -n '/alc287_alc1318_playback_pcm_hook/,/^}/p' sound/pci/hda/patch_realtek.c
->>>>>>   static void alc287_alc1318_playback_pcm_hook(struct hda_pcm_stream *hinfo,
->>>>>>                                      struct hda_codec *codec,
->>>>>>                                      struct snd_pcm_substream *substream,
->>>>>>                                      int action)
->>>>>>   {
->>>>>>           switch (action) {
->>>>>>           case HDA_GEN_PCM_ACT_OPEN:
->>>>>>                   alc_write_coefex_idx(codec, 0x5a, 0x00, 0x954f);
->>>>>>                   break;
->>>>>>           case HDA_GEN_PCM_ACT_CLOSE:
->>>>>>                   alc_write_coefex_idx(codec, 0x5a, 0x00, 0x554f);
->>>>>>                   break;
->>>>>>           }
->>>>>>   }
->>>>>>
->>>>>> Happy to test further patches.
->>>>>
->>>>> Just to be sure, could you verify that you've tested really the 
->>>>> patched kernel, e.g. by adding a debug print, etc?
->>>>> If yes and the problem is seen even with the patch, try to comment out
->>>>>   alc_process_coef_fw(codec, dis_coefs); and confirm that this 
->>>>> fixes the problem.
->>>>>
->>>>>
->>>>> Takashi
->>>>>
+>>Bisecting the reported issue points to one of your commits.
+>>Could you please check with the user?
 > 
+> Hi, Heiner, Lasse
+> 
+> Thanks for reporting this issue.
+> 
+> Currently, we haven't received any similar reports from our customers,
+> and I am unable to reproduce this AER error on my local test platforms.
+> 
+> Could you please provide some more detailed information? The full dmesg
+> log will help me check the exact AER error messages and the boot
+> context. Also the output of sudo lspci -vvv. I need this to check the
+> exact platform information, PCIe topology, and the LTR/ASPM capabilities
+> of both your Root Port and the Realtek NIC.
+> 
+> While reviewing the initialization flow, I noticed a potential logic
+> contradiction. If rtl_aspm_is_safe(tp) returns false, the driver
+> disables L1 at the PCIe core level, but tp->aspm_manageable might still
+> be set to true. This could cause the driver to incorrectly enable ASPM/
+> LTR in the MAC registers later, creating a hardware state mismatch (PCIe
+> L1 disabled, but MAC LTR enabled) which usually leads to AER.
+> 
+> Could you please test if the following patch fixes the AER error on your
+> side?
+> 
+> -       if (enable && tp->aspm_manageable) {
+> +       if (enable && tp->aspm_manageable && rtl_aspm_is_safe(tp)) {
+> 
+> Thanks,
+> BRs,
+> Javen
 
