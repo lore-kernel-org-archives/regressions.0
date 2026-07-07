@@ -1,194 +1,144 @@
-Received: from BN1PR04CU002.outbound.protection.outlook.com (mail-eastus2azon11010033.outbound.protection.outlook.com [52.101.56.33])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.102])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3FE63DD875
-	for <regressions@lists.linux.dev>; Tue,  7 Jul 2026 15:19:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.56.33
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783437557; cv=fail; b=SLsMLT97r+kbytKUeP+MA3KhOFkGQ0Yno3KvrTRhy7qF4036zMyEmqPf0sIUg3edHQXQgG0Hy2TTfKL93VA6yvZuDkUOT2YBPqsVkWWtuEOhSyNd6ygd7yUhZCEbXgybOwMU6NBIemIejikdKjJwrMsiqau6+69Wio/XtTHzkvI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783437557; c=relaxed/simple;
-	bh=vUH54eGphPLEeU5E5+9TwySmH1CFp8jmvqDfiWMf0a8=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=TqHJQvjlGTmkmBAZKC8fJE6dX6y2A5cv+q9BV4xj321paU9u5T+9YHmXVkiWeLdrxtXd7z5dI8SI0VqBnsM1i+0tcHT27qsng8u1kvYeo6ihxQgdkTfMlS/OmHvwst82MeF1jSB/UbwBeL65rAmVyzAuzeC6cP8HMwxs3wUGJ2Q=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=xe11Q7xk; arc=fail smtp.client-ip=52.101.56.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CBB842CAEE
+	for <regressions@lists.linux.dev>; Tue,  7 Jul 2026 15:29:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.102
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1783438167; cv=none; b=ZFhhcvxks3pp36PysGGbuLe6ltrM1IyR6vAJCxKWX91UT6/ypLdPtlqDpHuI6Xgw7pBqpWJ1phKzwoHzkadssxFXzVKWyCTza0CTZGYhSrMfWwqPQlD11LWxn4k1PumFHWSCohLAoAF6FtAxa6lA8WbZo3WAQs0fpwHt/zbGPKA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1783438167; c=relaxed/simple;
+	bh=REaOruDBCjhkNh9b2sAumrucOd66GndzoVphB3kYq8I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ipka8X4I0/cgmpT+lyJXh9/G1+tpL5wjp7DboD3T2R97QfvRyM1lBWyHOD8R0cssyLbmCZkFcE8Og1DCI1Wl5V/sz6zEPcrtUuGNnqvKj12m/xYqdCBfMmP04eqUSJ0yhj3xlv7AUS3/oq9bUOQmPSfjjlqyHt3PFew6Qb2lCsQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=g1D1lhvV; arc=none smtp.client-ip=188.68.63.102
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="xe11Q7xk"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=mWZk2c+wYxvniUBQtYNfUynJ3WJ7WEukuF90takhDYzqGCfg9Cr2qwbfDvRDaQMItvhIHJrpkEZjCWU7tfHibnYNZXTprQOZO9ZjdiFXFzcG1WTQQ8LZbQpcurD8iN6IhErZIpRm6jft2WgH32jtUrG5bY/X7w4afNgle2it3EKc1vGUKALDRd/4I9+QyI1omccPu3LYlW75en/QoWP+iiC41bwZ86peoiXdVIr5X7tXyi2fwX73IeYbSqZYRyY7XfqCNcTZy0FQSEKxcYVqTrf0dSQ/RLJDQtK/iyCUXHrVWqfgnb3eOP/32tdidCHyx0J6+t+zLHPWol2lzollsA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vUH54eGphPLEeU5E5+9TwySmH1CFp8jmvqDfiWMf0a8=;
- b=qURXNTJhjn5e+DxDa58iGmKmT8zlp1bHhi682yvV9StvEDkC17CSTEHLpWb0SzMn+uN7kqwBO/MZrDvQE59FN2478XZoxAeCWKhoHAdtrv4WAwwliWifxdZ+oDtyNW1DkA5/9b0100WhKc6gDUvoJJf6N8N4TQDl/ysBwmBB96YLaeWLoXh/UgdsgVm9nApKsGsvklqHg3xAmYTSUcdPZGAPfkyMM9v0OyL71k7QRrEiikvlC7U+PRFGTQFI4cj1f6MTIKGpQ4cRt/bkU+wad6lmhyIeoluorlpG2x1wZKdSFOJmMlPbyICaw9OkqlPhEABCxa0wh+lGvtuKUWmK2w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vUH54eGphPLEeU5E5+9TwySmH1CFp8jmvqDfiWMf0a8=;
- b=xe11Q7xkzT3huu83JjfABTesnAFamB/ReoP9n98qwn8nR3kDCDYMcyjc+2a0IhzrbyVlsdRlc6tewHfSb4qVKN9Z3wcP9ay25/LK5SUD58hn5oYHRwQWFEI54e+sUzcWR9TpyLPpv1OdrOCxAOyY6ABvgWJAaIrZ6JicrlPUV88=
-Received: from BN9PR12MB5146.namprd12.prod.outlook.com (2603:10b6:408:137::16)
- by DS0PR12MB7629.namprd12.prod.outlook.com (2603:10b6:8:13e::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.181.10; Tue, 7 Jul
- 2026 15:19:07 +0000
-Received: from BN9PR12MB5146.namprd12.prod.outlook.com
- ([fe80::535a:591e:27f6:c23]) by BN9PR12MB5146.namprd12.prod.outlook.com
- ([fe80::535a:591e:27f6:c23%3]) with mapi id 15.21.0181.012; Tue, 7 Jul 2026
- 15:19:07 +0000
-From: "Deucher, Alexander" <Alexander.Deucher@amd.com>
-To: Thorsten Leemhuis <regressions@leemhuis.info>, Greg KH
-	<gregkh@linuxfoundation.org>
-CC: Sasha Levin <sashal@kernel.org>, Linux kernel regressions list
-	<regressions@lists.linux.dev>, "stable@vger.kernel.org"
-	<stable@vger.kernel.org>, "Koenig, Christian" <Christian.Koenig@amd.com>,
-	Dave Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Linus
- Torvalds <torvalds@linux-foundation.org>
-Subject: RE: Some 7.1-post fixes that might be worth picking up rather sooner
- than later
-Thread-Topic: Some 7.1-post fixes that might be worth picking up rather sooner
- than later
-Thread-Index: AQHdDfoahSZTdNFtL0OBzo/QyKFBh7ZiK2UA
-Date: Tue, 7 Jul 2026 15:19:06 +0000
-Message-ID:
- <BN9PR12MB51469BC3FEC959A89AC9CB54F7F02@BN9PR12MB5146.namprd12.prod.outlook.com>
-References: <91281f28-eccf-4681-8f62-faaa8a3ba529@leemhuis.info>
- <2026061917-flinch-idealism-898f@gregkh>
- <2026062236-ludicrous-detached-6e20@gregkh>
- <d3d467d3-637c-49fe-8516-8da65cf4261b@leemhuis.info>
-In-Reply-To: <d3d467d3-637c-49fe-8516-8da65cf4261b@leemhuis.info>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
- MSIP_Label_2d0b1989-8fc8-4a69-bcac-d46889461ba5_Enabled=True;MSIP_Label_2d0b1989-8fc8-4a69-bcac-d46889461ba5_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;MSIP_Label_2d0b1989-8fc8-4a69-bcac-d46889461ba5_SetDate=2026-07-07T15:17:15.0000000Z;MSIP_Label_2d0b1989-8fc8-4a69-bcac-d46889461ba5_Name=AMD
- Public
- v26;MSIP_Label_2d0b1989-8fc8-4a69-bcac-d46889461ba5_ContentBits=3;MSIP_Label_2d0b1989-8fc8-4a69-bcac-d46889461ba5_Method=Privileged
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BN9PR12MB5146:EE_|DS0PR12MB7629:EE_
-x-ms-office365-filtering-correlation-id: c94ccdd6-7d0a-4e39-4f29-08dedc3b1662
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|23010399003|376014|366016|1800799024|38070700021|11063799006|22082099003|18002099003|4143699003|56012099006|5023799004;
-x-microsoft-antispam-message-info:
- pbPMeuxn6hyeFbYUTB3mcoZaDpd0N+W5CEuQBRhjxXMI1ckcKdG/AP4UpxwW/0ktHqy19zXJysJRWemx5cG3MJYLuPD58LXJxCqYzm2OzaJHWx0PVTe7/jgunh11bgK8vFhA5CmV5kWZhV5tl1V8vKZvVBDopWUwO0inDS0y2vRLKnof3MCTYTjh+cbX3oZXOTgguUdNTtuRbMCUwGHLqcvwPK7KXhexEkImeIM2GNXrJXx1d/U81WssXy3S2LW+eM1IZ5EUQHm4nyH5LDaQtlfFroroZwg5P2Fd6XtvRhz5Su0TeeILcPOQHLRpjsVsNy8LPxCtbjPwm31+ICLgdGNsocNdK5fj7CC77f2Ste8MfCdOokEjbiDWgOQntWu33R4mNjE72Gn5Xg8MIr13DIG23md94ZYmmCDi1l8tnKwt9oGaFj3mWIVkOVFPJjUn+orX8P1eslM0VKADQmBVLUTYLQchEG384EuWVq1TOXBe6P1KTRAj5yLiNT9YsD06N6B97kiXrHADfdOF8eUlbQ47sZEsz4/uOEYiH0O+/kxhfXDJwhV2asYVX2EABhUlSC4fS9pUp/X1r3muCZ78YyLmvAoNLDB9rXsq0d931SZexU3aOrLcnCPWjOey/DwzeWPMJeFjeE0UroAhv4ylAokcOu/EVhbM1eUtIyU6+aE=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR12MB5146.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(376014)(366016)(1800799024)(38070700021)(11063799006)(22082099003)(18002099003)(4143699003)(56012099006)(5023799004);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?TEREcjNCL2t2eFBZSHdwTGM2SzRyMnZPZnF3dEI5ZFVnelZzbDUzbi81eVNp?=
- =?utf-8?B?SThSbzJxdW5DM0JZVEpVMkJDYmliam9ab1FwbGpxcDBLNklTM05YcUR1aGk2?=
- =?utf-8?B?N3BVVTJOWnVlQVRQWDBkSWxkQVpZcGNsVGduNGdXUDRObnlHd3lYRmdVRS94?=
- =?utf-8?B?N0xLVFVBcCtraTlpN0djek1JMHlYOHlCOFI1MFBnZXp1Z2FnSzJEaUdlVnNa?=
- =?utf-8?B?eDBsRGxzaEhsbzRPL1FoeXdWZmhQc0xONXhRbFFIWndTbEJaZ0FlcTc5V1Jh?=
- =?utf-8?B?U0EvVTdHbDUrbUtMQjJiVXRMN2xoNXlCSVNkcjBzbXJ5RkJ5OGE3VktvRVFI?=
- =?utf-8?B?QzJmTnJlRnRlZUlkVkJlZUgvOGh1UFkxZk1kVjBRL0Z2c0RDSXVDSERKL1pN?=
- =?utf-8?B?YnkyVnZrTEF2R2FjYnVWbVdJTExFalJEZzg4bmdKTVRzalR5OGNka1pMaklr?=
- =?utf-8?B?K1RiMW12VW5EbnVlcXE3dnBWZS9Cdk9zOEJOd1lGaTV5TjJoL21LUE1lQ2VF?=
- =?utf-8?B?encyTmVueStCYjFOU051MUFTcmpWSjMvY3lFMnFtaktxOFIrNWN3dTNZVFZK?=
- =?utf-8?B?UFFFa1YrY1hTUWtWM3VoRFJPdzd5MDNlQ29NY0tzRUtobklZWFk2QUpPMng1?=
- =?utf-8?B?YktnV1RsNWt4eHUxQnFSWCtkUklxRk5Nd0FKV0xvQUJkamk4QllmV1p2WDZP?=
- =?utf-8?B?c1k2bWVpL2M0TzVCN29ZdWxzRXYwbmZRSjFjUVpuR0tXa0puWXMwc21CWmV4?=
- =?utf-8?B?UDFvYWRKbUF0OXo4VUpVQmR1QlVPTU01NG9xTGtBdDdZbkszR05oMkp0anhh?=
- =?utf-8?B?QWZ2T0xRVzJUS3pkcjg3WEUvNGVUenNrRlo5U0JBbFUzQzkybmhaSGorRmR4?=
- =?utf-8?B?M21ITk9uTGx0bUUwcGhWcngvYVVoNTNXT29yM1Z4YTZEemxFbkVHQUNBYW04?=
- =?utf-8?B?MTRMblg2QisxSDlyYUUvMUlHUVJiY0FhZy9EbDBvOXNqMWlzRFV2VTJNZXdi?=
- =?utf-8?B?S1YyV0g5LzJ3ck5KU1UwaUE1Qjlab0Z1VmtTOVI2cVBtTUtiWHh1L0dBdzYy?=
- =?utf-8?B?TGM1VlRsTXA2L2NtbmZwR0ZCVHAvUWdyL21IZWhEMnV5VDZibzJWcnpYeElI?=
- =?utf-8?B?eGdnQ1AyaGRSMEtIRE9QU1FhWkJsejNud1BtKzkzRHJlcTAvRGMvWWZHUUho?=
- =?utf-8?B?V0RWMlA0eS9vU1Y3emo4SlY5ekZSUWNYM3VzUWRzTmVnUW5tOUNia0RjbThW?=
- =?utf-8?B?S002ZzlMeVlUM1VOKzc4SHZzM0hVRzZpdDJ3RlpPeFBROERDRG9Gakw1a1V3?=
- =?utf-8?B?UDB4L1ZtYlU5RnZQKzBubU1sZGUwbnZsN0MwamJMNXN4QzF5R2hiWEVDeDFn?=
- =?utf-8?B?Q2N0WVdXemxyQ0YwampiVHpwdTQ4T0c4Qm50eFVUK2RQNzBycEpSRGhsbVQ1?=
- =?utf-8?B?SDlFSXRNT1p4NjhZQUF0c25Fc08yT3VxMTEzTm03QlAxL1hHbUFpSUVpQmxE?=
- =?utf-8?B?NUd0SkV4b2VPK2tVL2lLRE12UWt4VFlMaWNMeUVSNDZvUWpOUUdYMkljWGVG?=
- =?utf-8?B?bnlFZVhpR3VRT0tUYThRb3pjc205bHEvOVF2WUZFTDBVcnF6NDJmSzU0dnY1?=
- =?utf-8?B?RThBaXdNdWsxcDBjMEJUM1NxMm5TZWxZb2kzTjNiYlhGNm1uM3BQQnFsQTJU?=
- =?utf-8?B?SFlrZE9xSHAxMDMyZkJqMk0ycCtqcDVNK2d3WS9aQ2ptVDlRWngzQkYzK0tG?=
- =?utf-8?B?TXVBY3g4cnJZRFpPTWlLQWdRZUd5WFcySXRXSStRVlpaZXNYalUrQ2ExZTZ1?=
- =?utf-8?B?Q1hXQVFiQnk0RDlXNkYrdEFPckJ3Y1Y3d2hKUTUzTVFObjg1bXdVSVY5bjMx?=
- =?utf-8?B?TlU2d1Y1VEdNZGZsam92UmdNNDJsamRkMUdYU0FMRWdRSXJreTJrOHBxM1ZK?=
- =?utf-8?B?U0piZ1o3YzczcUZHTDN2NVBmenJVRTFvRXJldktVVk5LaWwyOG80aWthcldU?=
- =?utf-8?B?dG5jYzFjbHI3bEQwdm5OaGRyWWpPT0FCbjdSRW55ei9QM1gzVWdjdDlzeXlm?=
- =?utf-8?B?MFdxaUpzODREMVFtOGxhL1FsSjl2OXdjRHZBcnBrNGVFOFNpNkw4L1BFZGFQ?=
- =?utf-8?B?OU1rN05URTRoUWhUbWdVRnNuS2x2b2ZjT0RBWmpYNUtSSnUvMnNQSjNTa3RK?=
- =?utf-8?B?T0tzV1BOalo3NE00YUZKdjhFQkdHYTNDRmRqcmxyTmY5akdkRFllc1g1Z3Uv?=
- =?utf-8?B?WGRhZlhHdno1VWRJMVNGWTZIY3VFSjJqdXNKdHFzMVRWZW1KN1BzWnpNdDJ5?=
- =?utf-8?Q?UN/UyI8H4s5+d+Q5Ph?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="g1D1lhvV"
+Received: from mors-relay-2502.netcup.net (localhost [127.0.0.1])
+	by mors-relay-2502.netcup.net (Postfix) with ESMTPS id 4gvlW15N3bz63JZ;
+	Tue,  7 Jul 2026 17:28:45 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1783438125;
+	bh=REaOruDBCjhkNh9b2sAumrucOd66GndzoVphB3kYq8I=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=g1D1lhvVyb54kjVDB0ENPq+kRlmU65sBRPGgdNB72saJGsnMkxcr9vjkZ/QIPU2Ex
+	 /jTz3pHyUV8rGckdji2KsfFHieTgH/Fu2CjXgpknoaIn26X+CRe2stGjQxWrjysRmO
+	 ctoHIvhM7rLK0gYMCf711oHL7tahUT6PQbT9uiAPy66lFSfoiAQj/8QOAZ0rSGFNyA
+	 DJQES6q7CMUTzZChm4YfOrFRqZYmkJYP4vd/YzZB1jj1NeheUFP1T8Sm4FPbzC6LhM
+	 sXz+rcBspPdYOab0yTK3Rz09Rj8+cfl6aVZl6Acf9nnNaKpP9LRngK5ZIDv9DiBzhq
+	 BUbJmz13+a7FA==
+Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-2502.netcup.net (Postfix) with ESMTPS id 4gvlVy2Ccvz4xvX;
+	Tue,  7 Jul 2026 17:28:42 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
+X-Spam-Flag: NO
+X-Spam-Score: -2.898
+X-Spam-Level: 
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4gvlVx0PZCz8td4;
+	Tue,  7 Jul 2026 17:28:41 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 515CD5FC43;
+	Tue,  7 Jul 2026 17:28:40 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <4291a537-1380-4968-b079-b7bd4a5e688c@leemhuis.info>
+Date: Tue, 7 Jul 2026 17:28:38 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BN9PR12MB5146.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c94ccdd6-7d0a-4e39-4f29-08dedc3b1662
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Jul 2026 15:19:06.9309
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: F0AgLWXupY8ZEeaJ8K4S8QQDi4DVJmsNq4CBaUjzLw1x0qdjA/l2t1eCKi/EYI2+WHxOCX2Rce3QaRIezt/cyA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7629
+User-Agent: Mozilla Thunderbird
+Subject: Re: Some 7.1-post fixes that might be worth picking up rather sooner
+ than later
+To: "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+ Greg KH <gregkh@linuxfoundation.org>
+Cc: Sasha Levin <sashal@kernel.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ "stable@vger.kernel.org" <stable@vger.kernel.org>,
+ "Koenig, Christian" <Christian.Koenig@amd.com>,
+ Dave Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Linus Torvalds <torvalds@linux-foundation.org>
+References: <91281f28-eccf-4681-8f62-faaa8a3ba529@leemhuis.info>
+ <2026061917-flinch-idealism-898f@gregkh>
+ <2026062236-ludicrous-detached-6e20@gregkh>
+ <d3d467d3-637c-49fe-8516-8da65cf4261b@leemhuis.info>
+ <BN9PR12MB51469BC3FEC959A89AC9CB54F7F02@BN9PR12MB5146.namprd12.prod.outlook.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: 
+ <BN9PR12MB51469BC3FEC959A89AC9CB54F7F02@BN9PR12MB5146.namprd12.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: <178343812072.1558780.9000985482465768600@mxe9fb.netcup.net>
+X-NC-CID: aG4WSZhQ1hrK0agcCmggpiaN1BG/R1WIb54YRj3Xtlz7XO5/myo=
 
-UHVibGljDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogVGhvcnN0ZW4g
-TGVlbWh1aXMgPHJlZ3Jlc3Npb25zQGxlZW1odWlzLmluZm8+DQo+IFNlbnQ6IFR1ZXNkYXksIEp1
-bHkgNywgMjAyNiA2OjE5IEFNDQo+IFRvOiBHcmVnIEtIIDxncmVna2hAbGludXhmb3VuZGF0aW9u
-Lm9yZz4NCj4gQ2M6IFNhc2hhIExldmluIDxzYXNoYWxAa2VybmVsLm9yZz47IExpbnV4IGtlcm5l
-bCByZWdyZXNzaW9ucyBsaXN0DQo+IDxyZWdyZXNzaW9uc0BsaXN0cy5saW51eC5kZXY+OyBzdGFi
-bGVAdmdlci5rZXJuZWwub3JnOyBEZXVjaGVyLCBBbGV4YW5kZXINCj4gPEFsZXhhbmRlci5EZXVj
-aGVyQGFtZC5jb20+OyBLb2VuaWcsIENocmlzdGlhbg0KPiA8Q2hyaXN0aWFuLktvZW5pZ0BhbWQu
-Y29tPjsgRGF2ZSBBaXJsaWUgPGFpcmxpZWRAZ21haWwuY29tPjsgU2ltb25hDQo+IFZldHRlciA8
-c2ltb25hQGZmd2xsLmNoPjsgTGludXMgVG9ydmFsZHMgPHRvcnZhbGRzQGxpbnV4LWZvdW5kYXRp
-b24ub3JnPg0KPiBTdWJqZWN0OiBSZTogU29tZSA3LjEtcG9zdCBmaXhlcyB0aGF0IG1pZ2h0IGJl
-IHdvcnRoIHBpY2tpbmcgdXAgcmF0aGVyIHNvb25lcg0KPiB0aGFuIGxhdGVyDQo+DQo+IFtDQ2lu
-ZyBhIGZldyBwZW9wbGVdDQo+DQo+IE9uIDYvMjIvMjYgMDc6MzIsIEdyZWcgS0ggd3JvdGU6DQo+
-ID4gT24gRnJpLCBKdW4gMTksIDIwMjYgYXQgMTE6NDM6NDFBTSArMDIwMCwgR3JlZyBLSCB3cm90
-ZToNCj4gPj4gT24gRnJpLCBKdW4gMTksIDIwMjYgYXQgMDg6MDQ6MzVBTSArMDIwMCwgVGhvcnN0
-ZW4gTGVlbWh1aXMgd3JvdGU6DQo+ID4+PiBIaSBTdGFibGUgVGVhbSEgRnJvbSB0aGUgcmVncmVz
-c2lvbnMgcG9pbnQgSSB0aGluayBpdCBtaWdodCBiZSBuaWNlDQo+ID4+PiB0byBwaWNrIHVwIHRo
-ZSBmb2xsb3dpbmcgY2hhbmdlcyBmb3IgdGhlIG5leHQgcm91bmQgb2Ygc3RhYmxlIHVwZGF0ZXMg
-KGUuZy4NCj4gPj4+IDcuMS4yKSwgYXMgdGhleSBzZWVtIHRvIGZpeCByZWdyZXNzaW9ucyBJJ3Zl
-IHNlZW4gbXVsdGlwbGUgcGVvcGxlDQo+ID4+PiByZXBvcnQgd2l0aCA3LjE6DQo+ID4+PiBbLi4u
-XQ0KPiA+Pj4gKiAxMmY1OGE2Y2FhZDNiZSAoImRybS9hbWQvZGlzcGxheTogRml4IENvbG9yIE1h
-bmFnZXIgKDNETFVULA0KPiA+Pj4gU2hhcGVyLA0KPiA+Pj4gQmxlbmQpIikgW3Y3LjEtcG9zdF0N
-Cj4gPg0KPiA+IFRoaXMgZG9lc24ndCBhcHBseSB0byA3LjEueSwgYW5kIHdvdWxkIG5lZWQgYSB3
-b3JraW5nIGJhY2twb3J0Lg0KPiBKdXN0IGEgcXVpY2sgc3RhdHVzIHVwZGF0ZSB0d2ltYzoNCj4N
-Cj4gSSBwb2ludGVkIHRoYXQgb3V0IGluDQo+IGh0dHBzOi8vZ2l0bGFiLmZyZWVkZXNrdG9wLm9y
-Zy9kcm0vYW1kLy0vd29ya19pdGVtcy81Mzk2ICwgYnV0IG5vdGhpbmcNCj4gaGFwcGVuZWQgZnJv
-bSB0aGUgQU1EIHNpZGUgYWZhaWNzLiBUaGV5IGhhdmUgbXVjaCBvbiB0aGVpciBwbGF0ZSwgSSBm
-dWxseQ0KPiB1bmRlcnN0YW5kIHRoYXQsIEkgZ3Vlc3MgaXQgZmVsbCB0aHJvdWdoIHRoZSBjcmFj
-a3MgKG1heWJlIHRoaXMgbWFpbCBoZWxwcykuDQo+IFRoaW5nIGlzOiB0aGUgYmFja3BvcnQgb2Yg
-dGhlIHJldmVydCBpcyBxdWl0ZSBiaWcsIHNvIG5vYm9keSBlbHNlIChpbmNsdWRpbmcgbWUpDQo+
-IGRpZCB5ZXQgZGFyZSB0byBzdWJtaXQgaXQgdGhlbXNlbHZlcy4NCg0KSSd2ZSBwdXQgYSBiYWNr
-cG9ydCBvbiB0aGUgdGlja2V0LiAgSnVzdCB3YWl0aW5nIGZvciB2ZXJpZmljYXRpb24gZnJvbSB0
-aGUgYWZmZWN0ZWQgdXNlcnMuDQoNCkFsZXgNCg0KPg0KPiBTbyB0d28gd2Vla3MgbGF0ZXIgdGhl
-IHJlZ3Jlc3Npb24gY2F1c2VkIGJ5IGU1NmUzY2ZmMmExYmIyDQo+ICgiZHJtL2FtZC9kaXNwbGF5
-OiBTeW5jIGRjbjQyIHdpdGggREMgMy4yLjM3MyIpIFt2Ny4xLXJjMV0gaXMgc3RpbGwgdW5maXhl
-ZCBpbg0KPiA3LjEueSBhcyBmYXIgYXMgSSBjYW4gc2VlIGl0IC0tIGEgcmVncmVzc2lvbiB0aGF0
-IGlzIGtub3duIHNpbmNlIG1vcmUgdGhhbiB0d28NCj4gbW9udGhzIG5vdywgYXMgdGhlIHJldmVy
-dCB0byBmaXggaXQgKDEyZjU4YTZjYWFkM2JlLCBtZW50aW9uZWQgaW4gdGhlIHF1b3RlDQo+IGFi
-b3ZlKSB3YXMgc3VibWl0dGVkIGFscmVhZHkgb24gMjAyNi0wNC0yOSwgYnV0IG9ubHkgbWFkZSBp
-dCB0byBtYWlubGluZQ0KPiBkdXJpbmcgdGhlIG1lcmdlIHdpbmRvdyBmb3IgNy4yICh0aGlzIGlz
-IGFub3RoZXIgdGhpbmcgdGhhdCBhZmFpY3MgZmVsbCB0aHJvdWdoDQo+IHRoZSBjcmFja3M7IHNh
-ZGx5IEkgb25seSBiZWNhbWUgYXdhcmUgb2YgdGhlIHJlZ3Jlc3Npb24gYWZ0ZXIgNy4xIHdhcyBv
-dXQsDQo+IG90aGVyd2lzZSBJIHdvdWxkIGhhdmUgbWFkZSBub2lzZSBlYXJsaWVyIHRvIGdldCBp
-dCBpbmNsdWRlZCBpbiA3LjEpLg0KPg0KPiBUaGlzIGFsbCBzZWVtcyByYXRoZXIgdW5mb3J0dW5h
-dGUuDQo+DQo+IEx1Y2tpbHkgaXMgc2VlbXMgdGhlIEtERSBQbGFzbWEgZGV2ZWxvcGVyIHR1cm5l
-ZCBvZmYgc3VwcG9ydCBmb3IgdGhlIGNvbG9yDQo+IHBpcGVsaW5lIHN0dWZmIGluIEt3aW4gNi43
-LjENCj4gKGh0dHBzOi8vaW52ZW50LmtkZS5vcmcvcGxhc21hL2t3aW4vLQ0KPiAvY29tbWl0Lzkw
-NzlhNDE3YjgyMWY4MGMwZDllM2JjNTAxNGEzODhlMGUzNDBmODINCj4gKSwgd2hpY2ggYXBwYXJl
-bnRseSBhdm9pZHMgdGhlIHByb2JsZW0gZm9yIG1hbnkgdXNlcnMgKHNlZSB0aGUNCj4gZ2l0bGFi
-LmZyZWVkZXNrdG9wIHRpY2tldCBsaW5rZWQgZWFybGllcikuDQo+DQo+IENpYW8sIFRob3JzdGVu
-DQo=
+On 7/7/26 17:19, Deucher, Alexander wrote:
+>> -----Original Message-----
+>> From: Thorsten Leemhuis <regressions@leemhuis.info>
+>> Sent: Tuesday, July 7, 2026 6:19 AM
+>> To: Greg KH <gregkh@linuxfoundation.org>
+>> Cc: Sasha Levin <sashal@kernel.org>; Linux kernel regressions list
+>> <regressions@lists.linux.dev>; stable@vger.kernel.org; Deucher, Alexander
+>> <Alexander.Deucher@amd.com>; Koenig, Christian
+>> <Christian.Koenig@amd.com>; Dave Airlie <airlied@gmail.com>; Simona
+>> Vetter <simona@ffwll.ch>; Linus Torvalds <torvalds@linux-foundation.org>
+>> Subject: Re: Some 7.1-post fixes that might be worth picking up rather sooner
+>> than later
+>>
+>> [CCing a few people]
+>>
+>> On 6/22/26 07:32, Greg KH wrote:
+>>> On Fri, Jun 19, 2026 at 11:43:41AM +0200, Greg KH wrote:
+>>>> On Fri, Jun 19, 2026 at 08:04:35AM +0200, Thorsten Leemhuis wrote:
+>>>>> Hi Stable Team! From the regressions point I think it might be nice
+>>>>> to pick up the following changes for the next round of stable updates (e.g.
+>>>>> 7.1.2), as they seem to fix regressions I've seen multiple people
+>>>>> report with 7.1:
+>>>>> [...]
+>>>>> * 12f58a6caad3be ("drm/amd/display: Fix Color Manager (3DLUT,
+>>>>> Shaper,
+>>>>> Blend)") [v7.1-post]
+>>>
+>>> This doesn't apply to 7.1.y, and would need a working backport.
+>> Just a quick status update twimc:
+>>
+>> I pointed that out in
+>> https://gitlab.freedesktop.org/drm/amd/-/work_items/5396 , but nothing
+>> happened from the AMD side afaics. They have much on their plate, I fully
+>> understand that, I guess it fell through the cracks (maybe this mail helps).
+>> Thing is: the backport of the revert is quite big, so nobody else (including me)
+>> did yet dare to submit it themselves.
+> 
+> I've put a backport on the ticket.  Just waiting for verification from the affected users.
+
+Great, many thx!
+
+>> So two weeks later the regression caused by e56e3cff2a1bb2
+>> ("drm/amd/display: Sync dcn42 with DC 3.2.373") [v7.1-rc1] is still unfixed in
+>> 7.1.y as far as I can see it -- a regression that is known since more than two
+>> months now, as the revert to fix it (12f58a6caad3be, mentioned in the quote
+>> above) was submitted already on 2026-04-29, but only made it to mainline
+>> during the merge window for 7.2 (this is another thing that afaics fell through
+>> the cracks; sadly I only became aware of the regression after 7.1 was out,
+>> otherwise I would have made noise earlier to get it included in 7.1).
+>>
+>> This all seems rather unfortunate.
+>>
+>> Luckily is seems the KDE Plasma developer turned off support for the color
+>> pipeline stuff in Kwin 6.7.1
+>> (https://invent.kde.org/plasma/kwin/-
+>> /commit/9079a417b821f80c0d9e3bc5014a388e0e340f82
+>> ), which apparently avoids the problem for many users (see the
+>> gitlab.freedesktop ticket linked earlier).
+>>
+>> Ciao, Thorsten
+
