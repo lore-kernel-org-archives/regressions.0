@@ -1,126 +1,128 @@
-Received: from mail.kmu-office.ch (mail.kmu-office.ch [178.209.48.109])
+Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6998130D403
-	for <regressions@lists.linux.dev>; Tue,  7 Jul 2026 19:54:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.209.48.109
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E5F613FEE
+	for <regressions@lists.linux.dev>; Tue,  7 Jul 2026 21:13:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783454078; cv=none; b=UwbHKl3CZ3s8QYsK2kFMOQmVJRCnG5wWS7SQfaD1NKQrweaQxXl5N5baCr7gZYmblHXHUvKrbmD1Y+QDqxEkUmiyLlBBdKqXX+u7w/aXRsaLb3n5bQPr1wl5/Pch0lEWdebR8ssjOPmDcU8hnSezCM6vtKFnP2rKugSwkTjLe8w=
+	t=1783458836; cv=none; b=RiL4R6KS7czKRhuQ0eRAD+vAedxsk+ttQ0Q20esoFbnySPsXSuhFFLWuG8hJmoBaxusCpwoVLPdHEP2Mkb7F0aNegrgLDZcNncBbyPIUBN34jxerihmSsZIZfCmItvKKQxKLo2AOKzHfj8iZx7f3DigCADrmm/qv3kU1txcRzlM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783454078; c=relaxed/simple;
-	bh=LRY7jf5m1KSF/1e0niUt9o6AooBOSZaXqOJ04f0uDTY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SAt3WGXiyrmJZxLqhpeEs6cyRkvwljZvFfntu4VPSDXpM4yyP0ozBqrMdfzYEvyPJ0KELjjBj9XRH24Ghjkrpn1vONtGj0/8sOe/pCl1OQYtLLD8s4rEeyyE5FpR2BKyaYgvEfTyjnrBjXHuu3QsVOhHsjd6N32wyBaEgDHkl9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=agner.ch; spf=pass smtp.mailfrom=agner.ch; dkim=pass (1024-bit key) header.d=agner.ch header.i=@agner.ch header.b=jEWu6VgA; arc=none smtp.client-ip=178.209.48.109
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=agner.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=agner.ch
+	s=arc-20240116; t=1783458836; c=relaxed/simple;
+	bh=tkJFDun8ROmuLnNZ1rqcLbRSgaRN0Jp+2lE6McjBJVU=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
+	 Content-Type:References; b=g5sXfTQBCoQHc2OlV745zqNeS9OQ3arOks048vrOjgImm/GxBGftHjIQhZ3BD5+DAD8DnzPv0Y8VH2OFMHhmE+Zzsk1D7Pd8b1T+bZABMnvrS1ZHUcALUXDBgaB34uJ1T8f+V9lCWdKkbF5MouvjgcEJ50bhx0q+2J0e7yq1xy4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=g+Ed3nNy; arc=none smtp.client-ip=210.118.77.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=agner.ch header.i=@agner.ch header.b="jEWu6VgA"
-Received: from allenwind.lan (unknown [IPv6:2a02:169:3c38:10::3a0])
-	by mail.kmu-office.ch (Postfix) with ESMTPSA id 316905CD106;
-	Tue,  7 Jul 2026 21:54:34 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agner.ch; s=dkim;
-	t=1783454074;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Y3NpIc8JZ08lCs6TTHGP7X1cz/YqBmnc+QKbmFf0dIk=;
-	b=jEWu6VgA3R7UyzMjcKI1AAh9/uw2KVhDn2V3vKUuP3vWJgafj6du0Q8IQCV2IJiNJjlHT6
-	QH2cpRg9WpF1Csu9dbajDtM1xorXMuc+hFkCz7yn1/A4F1a9XXT7NnsSp1x7CHCQRtE3Zg
-	6YhopjV6+pbvB1b7ioeUOb2c54Eo1us=
-From: Stefan Agner <stefan@agner.ch>
-To: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>
-Cc: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
-	Maxime Chevallier <maxime.chevallier@bootlin.com>,
-	Ovidiu Panait <ovidiu.panait.rb@renesas.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	netdev@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="g+Ed3nNy"
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20260707211351euoutp0188d23ac2b01cbdf66627a3db772fedf2~AHlud8d1O0717707177euoutp01B
+	for <regressions@lists.linux.dev>; Tue,  7 Jul 2026 21:13:51 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20260707211351euoutp0188d23ac2b01cbdf66627a3db772fedf2~AHlud8d1O0717707177euoutp01B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1783458831;
+	bh=f6dDVyB9psyNYoQa6fpOddWiAy4i5cRkpJCqDed3Ch0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=g+Ed3nNyo5M80NkQfw4jAOTolFRfSoCAZrGKYdeQZ5srfwWVfaMd4reXeEstc1Azb
+	 b8L6XWcV9buiqK5GEAIf8XG0g+VolaZoBhzREGML5sQnoI+Cba6uTW/I6hsTE7c679
+	 gDI+2R5xkDNpwOoBSX5x36ODkRHE/2Cmwm/zxymY=
+Received: from eusmtip1.samsung.com (unknown [203.254.199.221]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+	20260707211350eucas1p2c7d585a2f5cdcfdc3f1d9f7bcb1759e1~AHlt4_tXc2809828098eucas1p2g;
+	Tue,  7 Jul 2026 21:13:50 +0000 (GMT)
+Received: from AMDC4622.eu.corp.samsungelectronics.net (unknown
+	[106.120.77.34]) by eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20260707211349eusmtip17f0e062b7abdf62ff97e46a43741acb5~AHlsxBQqi0242002420eusmtip1L;
+	Tue,  7 Jul 2026 21:13:49 +0000 (GMT)
+Date: Tue, 7 Jul 2026 23:13:46 +0200
+From: Jakub Raczynski <j.raczynski@samsung.com>
+To: Stefan Agner <stefan@agner.ch>
+Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+	<pabeni@redhat.com>, Andrew Lunn <andrew+netdev@lunn.ch>, "Russell King
+ (Oracle)" <rmk+kernel@armlinux.org.uk>, Maxime Chevallier
+	<maxime.chevallier@bootlin.com>, Ovidiu Panait
+	<ovidiu.panait.rb@renesas.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>, netdev@vger.kernel.org,
 	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	regressions@lists.linux.dev,
-	Stefan Agner <stefan@agner.ch>
-Subject: [PATCH net v2] net: stmmac: resume PHY before hardware setup when opening the interface
-Date: Tue,  7 Jul 2026 21:54:25 +0200
-Message-ID: <20260707195425.405989-1-stefan@agner.ch>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <message-id-of-your-v1-mail>
-References: <message-id-of-your-v1-mail>
+	linux-arm-kernel@lists.infradead.org, regressions@lists.linux.dev
+Subject: Re: [PATCH net v2] net: stmmac: resume PHY before hardware setup
+ when opening the interface
+Message-ID: <ak1rseUKTWFKzBib@AMDC4622.eu.corp.samsungelectronics.net>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+In-Reply-To: <20260707195425.405989-1-stefan@agner.ch>
+X-CMS-MailID: 20260707211350eucas1p2c7d585a2f5cdcfdc3f1d9f7bcb1759e1
+X-Msg-Generator: CA
+Content-Type: multipart/mixed;
+	boundary="----z0KHaxdBtqrNA0Il2CW.z4n_bpDWqNzZNiGZPVyhi_2U0Kf4=_8fd81_"
+X-RootMTR: 20260707211350eucas1p2c7d585a2f5cdcfdc3f1d9f7bcb1759e1
+X-EPHeader: CA
+X-CMS-RootMailID: 20260707211350eucas1p2c7d585a2f5cdcfdc3f1d9f7bcb1759e1
+References: <message-id-of-your-v1-mail>
+	<20260707195425.405989-1-stefan@agner.ch>
+	<CGME20260707211350eucas1p2c7d585a2f5cdcfdc3f1d9f7bcb1759e1@eucas1p2.samsung.com>
+
+------z0KHaxdBtqrNA0Il2CW.z4n_bpDWqNzZNiGZPVyhi_2U0Kf4=_8fd81_
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
 
-Since the referenced commit, changing the MTU on a running interface no
-longer disconnects and reconnects the PHY; __stmmac_release() merely
-stops phylink, which also suspends the PHY (BMCR power-down) when WoL
-is not enabled. __stmmac_open() then performs the DMA software reset in
-stmmac_hw_setup() before phylink_start() resumes the PHY again.
+Please read
+https://www.kernel.org/doc/html/latest/process/maintainer-netdev.html
+in this case 'don’t repost your patches within one 24h period'
 
-IEEE 802.3 22.2.4.1.5 allows a PHY to stop its receive clock while
-powered down, and stmmac requires a running receive clock for the DMA
-software reset to complete (the phylink config sets mac_requires_rxc).
-On such setups, e.g. the RK3566-based Home Assistant Green with an
-RTL8211F-VD PHY in RGMII mode, any runtime MTU change now times out and
-leaves the interface dead:
+Because:
+- you have two patches now processing and no changes requested yet,
+  nor did you get AI review that is currently employed
+  https://patchwork.kernel.org/project/netdevbpf/patch/20260707195425.405989-1-stefan@agner.ch/
+  and
+  https://patchwork.kernel.org/project/netdevbpf/patch/20260707162146.73823-1-stefan@agner.ch/
+- This change is actually broken - in previous patch rtnl_lock() was asserted
+  by dev_ioctl(), but in this version it is not asserted anywhere and will
+  trigger WARN_ONCE().
+- Full tests within an hour is possible, but no need to rush patches
+- Please spend time reviewing patches, as I spent few minutes to make sure
+  you (or rather Fable AI) is correct that rtnl_lock() was asserted, so my
+  review would be accurate (previous patch was ok, this is not).
+- Please respond yourself to comments, take time to understand codebase.
+  I would prefer not getting copy-paste answer from AI,
+  we have Sashiko review for that.
+- Missing link to previous thread, shown below
+- Moving code to other lines does not justify dropping "Assisted by AI"
 
-  rk_gmac-dwmac fe010000.ethernet end0: Failed to reset the dma
-  rk_gmac-dwmac fe010000.ethernet end0: stmmac_hw_setup: DMA engine initialization failed
-  rk_gmac-dwmac fe010000.ethernet end0: __stmmac_open: Hw setup failed
-  rk_gmac-dwmac fe010000.ethernet end0: failed reopening the interface after MTU change
+I am not maintainer, just random reviewer. Some maintainer will give input
+surely soon.
 
-In the field this is triggered by NetworkManager applying an MTU while
-activating the connection, breaking networking entirely.
+But rule of thumb, do not repost patches till your patch gets
+'Changes requested' in patchwork or like 2 weeks have passed
+(maybe during vacation even longer, as currently there are >600 patches
+pending review).
 
-Resume the PHY in __stmmac_open() before the hardware setup, making it
-the counterpart of the phylink_stop() in __stmmac_release(), like
-stmmac_resume() already does for the same reason. phylink_start() also
-resumes the PHY, but only after stmmac_hw_setup(), and it cannot be
-moved before the hardware setup since it may bring the link up
-immediately from a workqueue, racing with the initialization (see the
-comment in stmmac_resume()). For the regular ndo_open path the PHY has
-just been attached and is not suspended, in which case
-phylink_prepare_resume() does nothing.
+On Tue, Jul 07, 2026 at 09:54:25PM +0200, Stefan Agner wrote:
+> Changes in v2:
+> - Move the PHY resume from stmmac_change_mtu() into __stmmac_open() so
+>   that it also counters the PHY suspend caused by __stmmac_release()
+>   (suggested by Andrew Lunn), placed before stmmac_reset_queues_param()
+>   to match the ordering used in stmmac_resume()
 
-Fixes: db299a0c09e9 ("net: stmmac: move PHY handling out of __stmmac_open()/release()")
-Link: https://github.com/home-assistant/operating-system/issues/4858
-Signed-off-by: Stefan Agner <stefan@agner.ch>
----
-Changes in v2:
-- Move the PHY resume from stmmac_change_mtu() into __stmmac_open() so
-  that it also counters the PHY suspend caused by __stmmac_release()
-  (suggested by Andrew Lunn), placed before stmmac_reset_queues_param()
-  to match the ordering used in stmmac_resume()
+Missing link to previous thread
 
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+> 
+>  drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+>
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -4147,6 +4147,15 @@
- 			dma_conf->tx_queue[i].tbs = priv->dma_conf.tx_queue[i].tbs;
- 	memcpy(&priv->dma_conf, dma_conf, sizeof(*dma_conf));
- 
-+	/* The PHY is suspended when the interface is reopened without
-+	 * disconnecting the PHY, e.g. on MTU change. IEEE 802.3 allows PHYs
-+	 * to stop their receive clock while powered down, but the DMA
-+	 * software reset in stmmac_hw_setup() requires a running receive
-+	 * clock, and phylink_start() below resumes the PHY only after the
-+	 * hardware setup. Resume a suspended PHY here first.
-+	 */
-+	phylink_prepare_resume(priv->phylink);
-+
- 	stmmac_reset_queues_param(priv);
- 
- 	ret = stmmac_hw_setup(dev);
--- 
-2.49.0
+BR
+Jakub Raczynski 
+
+------z0KHaxdBtqrNA0Il2CW.z4n_bpDWqNzZNiGZPVyhi_2U0Kf4=_8fd81_
+Content-Type: text/plain; charset="utf-8"
+
+
+------z0KHaxdBtqrNA0Il2CW.z4n_bpDWqNzZNiGZPVyhi_2U0Kf4=_8fd81_--
