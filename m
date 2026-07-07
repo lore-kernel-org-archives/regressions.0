@@ -1,51 +1,66 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5128E13D53C
-	for <regressions@lists.linux.dev>; Tue,  7 Jul 2026 08:51:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20ED83932C9
+	for <regressions@lists.linux.dev>; Tue,  7 Jul 2026 09:24:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783414320; cv=none; b=Nxg2IuAxN1VQez/5G4r+DpdzOpTDd9xE+rM3kzCv34lqGDhSQUV749tkg/avBTvT2g/qHO2biMZ/IA4KO6IUNAOUTe0tviLBImzV4yrI8op6/NdWLcM9GwFWJsQBtat9CQQFGBjV0oOpuW9khg76xMtScKwGzwe2Z/B/vyB6gEE=
+	t=1783416266; cv=none; b=f/rkkIqHnoRR/Yq+1PsHIyn52Gv27MKpKOkUI+Et1jJCxITsvNCtvdC7t5JFWbBWL4MZ6sUMkYSMzIO+cNcQA+VvSUnlGYwffuZhgY153wySWVP7xLBxIyMJZUnMCdLZO+rqOfH5d5qAiOMAb6BDWDeX67eZ+DQS2Po+4RwqbdE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783414320; c=relaxed/simple;
-	bh=qAvw60k//6hFjyNyqu7YYOWF+8zLu93HZ24O0efrTCw=;
+	s=arc-20240116; t=1783416266; c=relaxed/simple;
+	bh=ZVtJ4KbMUVJNK2/wadQxyFFqB6KL45hueHArSxTZRWE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sM9bh75noZCTTxWLn55b5bBojsH0blfh11l3QUn1CgPup/KpP1GvHl/SJ6XA5sGar6wTaNRxaZ3TViNqt+z9XmFwEWlpqqaTGquxsMZFBE3Z8DxPFD0lV5flOHpJrpJ52bbjOCMAdqQRyym2kq+fDPafcvzY6gWYL9SoNK91h+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=YrgSOQBF; arc=none smtp.client-ip=188.68.63.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	 In-Reply-To:Content-Type; b=coWcKqjIgUAlfx7Ssl4XPfJSNkVxCpzIc5HY0XS0AQuVzt6mXV0O/dzeghwy4j1TbmmvHjdBIDUbDUVNrER1KlUXJWdIL31jzA5HbBfjfqFs9lUYAC1VIEnrcvgyK2G13CLj9vSpfkUhdqqyszo1IRKpTDVF0EKplhcz2TctwTg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=qLFOGbia; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="YrgSOQBF"
-Received: from mors-relay8204.netcup.net (localhost [127.0.0.1])
-	by mors-relay8204.netcup.net (Postfix) with ESMTPS id 4gvZj31W9Kz8n1M;
-	Tue,  7 Jul 2026 08:51:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1783414311;
-	bh=qAvw60k//6hFjyNyqu7YYOWF+8zLu93HZ24O0efrTCw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=YrgSOQBFmrjB93rhJpD2TtOEeloLXK1usWWnBgVS+BaWUwyLwPYLzd9F8Ab+8teti
-	 BBp5Vh9q9le4Sl7QlCAOAyDElu85XFUnda01s/AFn9AtJd7Lz0rDVVG7b26HvhdHKY
-	 ANPETsitGFWHsxpde9Q7b15mcvCHHY6JOE6/8P1aCvgp1zoa8QJAGwRJb3rW6Lst+m
-	 yyEtbzBM2Tul8PRFIHUP5DJ1uFCFwnVfr07rB00lwTqHebRoqw6tZyuMkvJ/jeyarM
-	 rZBO/DiU4+B0CtJk2W0XvxwMkVGrlFK4GG+5Bo8Dj1H5zhCDMjImmJ25+VnuQoybl+
-	 xUDXb4/9Q9tMQ==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay8204.netcup.net (Postfix) with ESMTPS id 4gvZj30ny2z8n0L;
-	Tue,  7 Jul 2026 08:51:51 +0000 (UTC)
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4gvZj157qlz8sWT;
-	Tue,  7 Jul 2026 10:51:49 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id C679A5FC3F;
-	Tue,  7 Jul 2026 10:51:48 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <84233951-ee22-4980-9f17-2af1df51fdbf@leemhuis.info>
-Date: Tue, 7 Jul 2026 10:51:47 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qLFOGbia"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2cace91f112so33736555ad.0
+        for <regressions@lists.linux.dev>; Tue, 07 Jul 2026 02:24:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1783416264; x=1784021064; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=LZMpYi0CMP8lLmjFdusnU2dVbBcxO0l5zFZNeINryrw=;
+        b=qLFOGbiaX4786QLGeVQTD50kxVK7QtuUtpsNbaUB7DI08kJNQLdUHK8Qlli2qwgUeL
+         lnFDUmluXKxsVHIpYViqkaqrA6bsQfnvaGXxHU1W3jvk82as9jtnePGaXVMjyQ01faS9
+         ZBGdUUgThaKDgg1Ls0F5hP7TYbOJRRZ/3ebHIyU7stnyzl+yBSEtJo4jhTh69E3XR5a0
+         J6xOZoj6DpFzm5SivlBR/PhKq1z4rz9uMkOReDBM+tRplVQdZ0bIF9UkhU5MiNPjaTyr
+         OTUmiVTlqDDRnVgriCzeVB7wYUUILsLgb43N4pWTgH1prZS4aALaAnCfIuapfjYk8UJ7
+         hmtQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783416264; x=1784021064;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LZMpYi0CMP8lLmjFdusnU2dVbBcxO0l5zFZNeINryrw=;
+        b=UXDnUQvnj8gxRBCPUF80BqAtMXjSffIx4kXWH+nxZ/q1rLzjGZV4s0dAYV8NVfO31u
+         Vmst89MP5TKrf4UA2nl8lENbGM1MDBrr2Q6yQZqGfG+MKSz2XyqPLobajrF9G/8E8Mi4
+         ebP3EsdjSpQHxrAsFrdBkQAMWWMpmJ7KV7YFsn4yKL34WnfcXQT6EtrHOyyk8PWPdB+Q
+         ZTmAhzkM+HHoWQDWwRuRQLbYx1K39aLU0TUL5AuNiHg/CQg371H0JZgUCFF5GJZKY0Rr
+         xanbONFKyuhBFCuKG0L4oWC8HrVYgiluiiTCQfynUntNBcSrYcr3q6VbIgDZ5rETDq+L
+         CxGA==
+X-Forwarded-Encrypted: i=1; AHgh+RpprEnDM2DQ9EDPwuS2RWBhnggmryblu1iFvcKpdwMfMENAaCkWMSxpkd1RgAjpwQT2pU4tW43Ok3j9zw==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yw2xwA1nmWLPJZChLkW4FQScrr1zPOVcsNWmGSlOOZDEaHt++SX
+	kI24Yd26u9rShYMc/UjQ+0lvDDZ/OmpOXpuyvoF38SWmrTRDO+j+R+io
+X-Gm-Gg: AfdE7cmyYpgG7UgAGf05m6nV8qvO0xzGVxUn1pU7bLtrOAyF7L1JEJOOeBUJDtNkedZ
+	EBj9s63MJda78iuARZepY8W9jbScdWavrRGlftEh6EaC8iK/zwBVdBQ/nF5hcBerA/mLWZvRRy6
+	H17ioB4UeSq/9Im7P1EnSpzqeqIiPnSt5Aly5Fhh8SMVsSbWpEua8A9JGLyhqkgDkSGrDzweKa2
+	A12vioPYXOZuk9q4gq9g475gTbKrtbsUsOB3JfDBzkvR8RF5CIZhC589M7ISfeC6G6X0UlVHqlq
+	6dIMVtcLdrXsAfDNsyuh5zQwDD7M2uOmVaJXlJVThUz6gnZNMwbHOmsvHZ+55yXeLnmcypKcBTr
+	doCgN4OKfYbDlMfanCjU5ystlpObUG1ujt9ms7sxrQ5mndvaULcrSZyFljp6n+RKaEQg+OJrjcG
+	JqR7svo7PIYbfqI/lhDTem6A==
+X-Received: by 2002:a17:902:d4c1:b0:2c6:9f6a:9f6f with SMTP id d9443c01a7336-2ccbed27822mr42950775ad.28.1783416264276;
+        Tue, 07 Jul 2026 02:24:24 -0700 (PDT)
+Received: from [192.168.89.2] ([175.235.236.90])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2ccc9bdb9a3sm8473225ad.13.2026.07.07.02.24.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Jul 2026 02:24:23 -0700 (PDT)
+Message-ID: <6c25fe1e-6a57-42d2-8be1-efd41892ae72@gmail.com>
+Date: Tue, 7 Jul 2026 18:24:21 +0900
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -53,115 +68,116 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm/mediatek: mtk_dsi: enable hs clock during pre-enable
-To: =?UTF-8?B?Q0sgSHUgKOiDoeS/iuWFiSk=?= <ck.hu@mediatek.com>,
- "me@adamthiede.com" <me@adamthiede.com>,
- "bisson.gary@gmail.com" <bisson.gary@gmail.com>
-Cc: "chunkuang.hu@kernel.org" <chunkuang.hu@kernel.org>,
- "simona@ffwll.ch" <simona@ffwll.ch>,
- "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- "airlied@gmail.com" <airlied@gmail.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
- "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
- "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <20260120-mtkdsi-v1-1-b0f4094f3ac3@gmail.com>
- <42607fa4-485d-4142-b31c-7bfac71118d2@adamthiede.com> <ajka2220depklK1_@owl5>
- <bac79214-050d-448b-be63-0586d45c807d@adamthiede.com>
- <f0d99b1a-e383-4d14-adb1-4ccab46efddb@leemhuis.info>
- <5baeb90d2c3736df67ad075ede4ac765bfeaed2d.camel@mediatek.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <5baeb90d2c3736df67ad075ede4ac765bfeaed2d.camel@mediatek.com>
+Subject: Re: [Bug 221721] New: prom21-xhci does not allow to use USB keyboard
+ in plymouth
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: bugzilla-daemon@kernel.org,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ linux-usb@vger.kernel.org, marx.tomasz@gmail.com
+References: <bug-221721-208809@https.bugzilla.kernel.org/>
+ <328d3158-8086-4de7-a96e-7c2a514e3018@leemhuis.info>
+Content-Language: en-US
+From: Jihong Min <hurryman2212@gmail.com>
+In-Reply-To: <328d3158-8086-4de7-a96e-7c2a514e3018@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-PPP-Message-ID: 
- <178341430939.3962464.17635774890868316574@mxe9fb.netcup.net>
-X-NC-CID: zdu5T8PV57LkUnyRdE7oTK/+a14nrtefMRsTmliu6xJM4NY6kzM=
+Content-Transfer-Encoding: 7bit
 
-On 7/7/26 04:20, CK Hu (胡俊光) wrote:
-> On Mon, 2026-07-06 at 12:16 +0200, Thorsten Leemhuis wrote:
->> On 6/22/26 15:23, Adam Thiede wrote:
->> > On 6/22/26 06:22, Gary Bisson wrote:
->> > > On Thu, Jun 18, 2026 at 04:06:28PM -0500, Adam Thiede wrote:
->> > > > On 1/20/26 05:36, Gary Bisson wrote:
->> > > > > Some bridges, such as the TI SN65DSI83, require the HS clock to be
->> > > > > running in order to lock its PLL during its own pre-enable function.
->> > > > > 
->> > > > > Without this change, the bridge gives the following error:
->> > > > > sn65dsi83 14-002c: failed to lock PLL, ret=-110
->> > > > > sn65dsi83 14-002c: Unexpected link status 0x01
->> > > > > sn65dsi83 14-002c: reset the pipe
->> > > > > [...]
->> > > > 
->> > > > This commit was part of 7.1 and caused a problem for me.
->> > > > I'm running postmarketOS (basically Alpine Linux) on a Lenovo C330
->> > > > chromebook with a Mediatek MT8173 processor.
->> > > > The problem: when the display on my laptop powers off (via suspend or
->> > > > idle,
->> > > > like xset dpms off) the picture does not come back when the display
->> > > > powers
->> > > > back on (from resume). The display backlight comes on and brightness is
->> > > > adjustable but there is no picture. The only fix is to reboot.
->> > > > 
->> > > > Reverting this commit and applying it as a patch on top of 7.1
->> > > > addresses the
->> > > > issue for me.
->> > > > 
->> > > > You can view the config I'm using here:
->> > > > https://urldefense.com/v3/__https://gitlab.postmarketos.org/postmarketOS/pmaports/-/__;!!CTRNKA9wMg0ARbw!jrsPDtSEUdaINzLlq92Li8gmsEBkTOxZ6WUzNHjvIN6CyOJjHiHkNSOhIRPXFTLPlaYlxU2uvryVkwjUAN9bmax5$
->> > > > merge_requests/8819
->> > > > 
->> > > > Is there any sort of testing or other debugging info I can provide to
->> > > > help
->> > > > address this issue?
->> > > 
->> > > Thanks for reporting the issue, could you share some logs? Is the driver
->> > > saying anything during resume? Also, what type of panel is used on that
->> > > chromebook?
->> > 
->> > The curious thing is that there are no real logs in dmesg or /var/log/
->> > messages about this. This picture just fails to come back. If there are
->> > some kernel params I can set to get deeper logging, that would help, but
->> > I'm not aware of any.
->> > 
->> > I think the panel is a "BOE NV116WHM-T00" - I used this command to get
->> > info: cat /sys/class/drm/card0-eDP-1/edid | edid-decode
->> > 
->> > Output: https://urldefense.com/v3/__https://termbin.com/8nbd__;!!CTRNKA9wMg0ARbw!jrsPDtSEUdaINzLlq92Li8gmsEBkTOxZ6WUzNHjvIN6CyOJjHiHkNSOhIRPXFTLPlaYlxU2uvryVkwjUAJooSyqL$
->> 
->> This looked stalled. If I'm mistaken here, please let me known; but if
->> no solution is in sight, should we maybe just revert the change until a
->> proper was found?
+Hi,
+
+One of the very first thing discussed during the review process of
+prom21-xhci commits was about correct loading of the module during
+initramfs stage.
+
+It was mainly about writing correct dependencies in Kconfig for USB host
+controller build.
+
+
+
+config USB_XHCI_PCI_PROM21
+	tristate
+	depends on USB_XHCI_PCI
+	default USB_XHCI_PCI if SENSORS_PROM21_XHCI != n
+	select AUXILIARY_BUS
+
+
+
+Maybe it was not enough? Can you perhaps check whether both xhci_pci and
+xhci_pci_prom21 are loaded at the plymouth stage?
+
+I also do use OPAL LUKS with dracut, but my setup uses TPM2 to auto
+unlock it. I will check the manual keyboard input during dracut
+initramfs LUKS unlock stage.
+
+
+Sincerely,
+Jihong Min
+
+
+On 7/7/26 17:03, Thorsten Leemhuis wrote:
+> [Switching to email, hope this will work]
 > 
-> It's welcome anyone to provide a revert patch,
-> but I would still wait for the fixup patch until 7.2-rc4.
-> If no fixup patch exist, then apply the revert patch.
-From my understanding of things the position in the devel cycle doesn't
-matter much in a case like this. To quote Linus statements from
-https://www.kernel.org/doc/html/latest/process/handling-regressions.html#on-how-quickly-regressions-should-be-fixed
+> Jihong Min, it seems a recent change of yours is causing trouble. See
+> below for details.
+> 
+> Side note, but not my area of expertise, so feel free to ignore this, as
+> I might be sending people in the wrong direction and it's just a hunch
+> anyway: wonder if this is another of those situations where the driver
+> needs to be in the initramfs. Tomasz, did you have SENSORS_PROM21_XHCI=m
+> when things were broken? And if yes: have you tried if adding it to the
+> initramfs or setting SENSORS_PROM21_XHCI=y helps?
+> 
+> Ciao, Thorsten
+> 
+> On 7/4/26 17:41, bugzilla-daemon@kernel.org wrote:
+>> https://bugzilla.kernel.org/show_bug.cgi?id=221721
+>>
+>>             Bug ID: 221721
+>>            Summary: prom21-xhci does not allow to use USB keyboard in
+>>                     plymouth
+>>            Product: Drivers
+>>            Version: 2.5
+>>           Hardware: AMD
+>>                 OS: Linux
+>>             Status: NEW
+>>           Severity: low
+>>           Priority: P3
+>>          Component: USB
+>>           Assignee: drivers_usb@kernel-bugs.kernel.org
+>>           Reporter: marx.tomasz@gmail.com
+>>         Regression: No
+>>
+>> Created attachment 310416
+>>   --> https://bugzilla.kernel.org/attachment.cgi?id=310416&action=edit
+>> output of "sudo lsusb -v"
+>>
+>> Hi,
+>>
+>> After update to 7.2-rc1 I was unable to type in LUKS password in plymouth. I
+>> tried both of my USB keyboards, but both of them just briefly lit up the LEDs
+>> and then seemed to turn off. Bisection pointed to
+>>
+>> commit 364f4a55c661641c02c86a849f0608d8fc3c0006
+>> Merge: e4b4bfaa5090 1c2b66a7d725
+>> Author: Linus Torvalds <torvalds@linux-foundation.org>
+>> Date:   Mon Jun 22 12:09:47 2026 -0700
+>>
+>>     Merge tag 'usb-7.2-rc1' of
+>> git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb
+>>
+>> and then
+>>
+>> commit 9e896b4a48c4e815956d28961448041c80ad5a19 (HEAD)
+>> Author: Jihong Min <hurryman2212@gmail.com>
+>> Date:   Tue May 19 09:07:31 2026 +0900
+>>
+>>     usb: xhci-pci: add AMD Promontory 21 PCI glue
+>>
+>> After setting SENSORS_PROM21_XHCI=n and compiling kernel again, I'm able to use
+>> my PC normally.
+>>
+>> CPU: AMD Ryzen 9 9900X
+>> Motherboard: X870I AORUS PRO ICE
+>> Output of "lsusb -v" provided in attachment.
+>>
+> 
 
-"""
-From 2026-01-22:
-
- But a user complaining should basically result in an immediate fix -
- possibly a "revert and rethink".
-
-With a later clarification on 2026-01-28:
-
- It's also worth noting that "immediate" obviously doesn't mean "right
- this *second* when the problem has been reported".
-
- But if it's a regression with a known commit that caused it, I think
- the rule of thumb should generally be "within a week", preferably
- before the next rc.
-"""
-
-Adam reported the problem about three weeks ago, so we are way past the
-"rule of thumb" timeframe Linus set.
-
-Ciao, Thorsten
