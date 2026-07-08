@@ -1,127 +1,157 @@
-Received: from mail3.out.flockmail.com (mail3.out.flockmail.com [18.215.190.59])
+Received: from mail.sonarnerd.net (rankki.sonarnerd.net [213.186.235.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97B563EE1E9
-	for <regressions@lists.linux.dev>; Wed,  8 Jul 2026 21:04:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.215.190.59
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B68BE2F3C19
+	for <regressions@lists.linux.dev>; Wed,  8 Jul 2026 22:34:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.186.235.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783544672; cv=none; b=oHp8rXruw7uV8BqUkOltKk9B0llfwyS+f2GQQHNebjd79v/OjeeQLQn8RMwH7c7y5WgeaY76amcf1fwuyklr0qSP19ic/LyU6pCMHNJcbUEB6S/Nolx5QAPmHvElGuI6QLkOFGT5ZrPauA94nKEcxuYEtjGBAQksLpu+4LKEbb4=
+	t=1783550069; cv=none; b=XyG1ZFV36ukCcbxWvvZptlpYDekbCYEFEPzVdZiJTskp7PByxddtqFpe5//DT9BPQmHA6Kap2lxY/7wCks3jcVNXkYPwvvKMDrI8xly6Oopv3XQzAqX+l0cM0neGCW/E3avS3Lop99rJ99kxdT/3SFlLQrzawPt1RkAVU0m2L0s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783544672; c=relaxed/simple;
-	bh=hB9tHs7LrO5CdpO4H99+r0fJywWQ3r1sTBAV3mPce7s=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=qCpOj2ZXCZA9gfkp0iZKVqseAjtSO2an2rcgfeucJCDeSIVFbIv9/3KLgqplYSv9iwfAX08/TFfNBrHR9HP75CbIa6p2d01pf2t/m0NoGsfw1Iclvhul0QwhxxbbnxOjfagrbDuwnWMjzq4y5Uyau4IJ2PuQk7515CDAdbpJCSM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chaudharilaw.com; spf=pass smtp.mailfrom=chaudharilaw.com; dkim=pass (1024-bit key) header.d=chaudharilaw.com header.i=@chaudharilaw.com header.b=JqMNwXGe; arc=none smtp.client-ip=18.215.190.59
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chaudharilaw.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chaudharilaw.com
+	s=arc-20240116; t=1783550069; c=relaxed/simple;
+	bh=lJCMvKbuwbG0zzJV14C1oceEEjy0QBMc3S2SWO7tPa0=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=daamsYrjh/P7Yd+z9stm6NqlEXEVzzEh+6lxPoe+sQ/eT+BWkAX8rwUy7Ky9BrwCMQfWX+bopFLUYzHAj/mrsyUfdxptfKa/YJx2hjHBiBEyXizN3tgNk4ckV1nL1P0Qu7Kf6yPKedhEvaK0dQ3nfRE5kwGCSV0pxaqkO5A37UQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=sonarnerd.net; spf=pass smtp.mailfrom=sonarnerd.net; dkim=pass (2048-bit key) header.d=sonarnerd.net header.i=@sonarnerd.net header.b=8YsOFpDo; arc=none smtp.client-ip=213.186.235.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=sonarnerd.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sonarnerd.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chaudharilaw.com header.i=@chaudharilaw.com header.b="JqMNwXGe"
-Received: from localhost (localhost [127.0.0.1])
-	by smtp-out.flockmail.com (Postfix) with ESMTP id 4gwVmx0Vg2z1xqj
-	for <regressions@lists.linux.dev>; Wed,  8 Jul 2026 20:58:25 +0000 (UTC)
-X-Titan-User-Uid: eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..9jRX5NB8EqzyKN9b.qttznb_HBi8jQSSpQhotnMzCy0khdlFo0LYRXwO2_0OIDxjIWSlx9Uf6TwHbrgloN0v9YOflzfYwYSFP5OhhQIWmIsg76XQquoObDeQT4O863HE.G8R5GpEUPXEK1o3y2GsRqw
-DKIM-Signature: a=rsa-sha256; bh=hB9tHs7LrO5CdpO4H99+r0fJywWQ3r1sTBAV3mPce7s=;
-	c=relaxed/relaxed; d=chaudharilaw.com;
-	h=mime-version:from:date:subject:message-id:to:from:to:subject:date:message-id:cc:in-reply-to:reply-to:references;
-	q=dns/txt; s=titan1; t=1783544304; v=1;
-	b=JqMNwXGe5chqGWd2nN/ZtOGG8TGZFQaOV10tSTUzmyVVPsJbJXI/bP17TLt82EJUSYTQvSro
-	eAGGHtxi5DBJEe6u8Y707l6twuV/AiqRWZDKC3eZ1QAKeWBc6lf+P7hGmjnDEsa17im3DFud2zd
-	LgypM09ZtHMtv5CFmkULUGbs=
-X-AuthUser: papool@chaudharilaw.com
-Received: from mail-yx1-f49.google.com (mail-yx1-f49.google.com [74.125.224.49])
-	by smtp-out.flockmail.com (Postfix) with ESMTPA id 4gwVmw64dkz1xrX
-	for <regressions@lists.linux.dev>; Wed,  8 Jul 2026 20:58:24 +0000 (UTC)
-Received: by mail-yx1-f49.google.com with SMTP id 956f58d0204a3-664e3ed58bcso354365d50.1
-        for <regressions@lists.linux.dev>; Wed, 08 Jul 2026 13:58:24 -0700 (PDT)
-X-Gm-Message-State: AOJu0Yz5zqvn682QuNgv+QxkHy3T4H+6kpyw7UgnJq9wSDdwtfKefqAV
-	sbnAZ7J7+01M8iYWpM4qPqVgdGn4jpnG0S5mrqRXkqyEEaz/tsGKqvQeI9Mt+hoE0mG/cVFi5nd
-	M7l0U1vpcGm63Kg8M2JvjGfg/0/Xdr2U=
-X-Received: by 2002:a05:690e:2402:b0:666:4cf:65b3 with SMTP id
- 956f58d0204a3-66788dd1bd9mr4682758d50.15.1783544304434; Wed, 08 Jul 2026
- 13:58:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=sonarnerd.net header.i=@sonarnerd.net header.b="8YsOFpDo"
+Received: from smtpclient.apple (unknown [213.186.235.123])
+	by mail.sonarnerd.net (Postfix) with ESMTPSA id A8C2C231138;
+	Thu, 09 Jul 2026 01:28:10 +0300 (EEST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.sonarnerd.net A8C2C231138
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sonarnerd.net;
+	s=dkim; t=1783549690;
+	bh=FqjxE4xFrVtuCRKim3xbqoI/9Sz1SAg0SWh0CexH1C4=;
+	h=Subject:From:In-Reply-To:Date:Cc:References:To;
+	b=8YsOFpDoYrgEYhAfU6WAJ3Ts8RZIl4N9IUH+rG41r6IcEazN0IEs7OMAW5TJFLfSm
+	 M5yD/xMBDV9Pp+I8Gwhl6QOXCK7du0F35n1F04lnbPY4COdEXCv+/dwgI48PIwUrHF
+	 /9InkhGkb/QnPs4jPNwCJ/AnJOyO4/5yF//dz9At23sDqaqfAvQ1VQsS3EI/nK3Bj7
+	 YVaaCSHtub/3nuCgqsaIv4hKEbAMr8UZzAQQYCmfeUap+xIN8moWOyQLMKg9FoGPJH
+	 B012r77BMC5FNIjigePa6hPSW8g7r5Fq1V4omZm9MzO+GmBq8+wiGqAPNhn3HqTfes
+	 mrP2YqJn9LJVQ==
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Feedback-ID: :Papool@chaudharilaw.com:chaudharilaw.com:flockmailId
-From: Papool Chaudhari <Papool@chaudharilaw.com>
-Date: Wed, 8 Jul 2026 14:58:10 -0600
-X-Gmail-Original-Message-ID: <CALcz8n5nB=H8CZza-Pw==GfQWRViJwWK8N5PgafE-4pdUJL-LA@mail.gmail.com>
-X-Gm-Features: AUfX_mxv3l0ZXP0i-v9OmQUYfyZTNplJ8xV13EIdgm_vADDdjIAgfS5h34LdRfE
-Message-ID: <CALcz8n5nB=H8CZza-Pw==GfQWRViJwWK8N5PgafE-4pdUJL-LA@mail.gmail.com>
-Subject: =?UTF-8?Q?=5BREGRESSION=5D_2017_Pixelbook_backlight_control_doesn?=
-	=?UTF-8?Q?=E2=80=99t_work_with_7=2E1_kernel?=
-To: regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3864.600.51.1.1\))
+Subject: Re: [REGRESSION] snd-usb-audio: commit da3a7efff64e ("ALSA:
+ usb-audio: Update for native DSD support quirks") breaks DSD playback on
+ Musical Fidelity M6s DAC (2772:0502), plays ~8.8% fast
+From: Jussi Laako <jussi@sonarnerd.net>
+In-Reply-To: <CAOdyq+qFaqCh=tK_wNnA64hv5pQuA1Y09ANxQ=xK8yR-t4mf9Q@mail.gmail.com>
+Date: Thu, 9 Jul 2026 01:28:00 +0300
+Cc: alsa-devel@alsa-project.org,
+ tiwai@suse.de,
+ regressions@lists.linux.dev
 Content-Transfer-Encoding: quoted-printable
-X-F-Verdict: SPFVALID
-X-Titan-Src-Out: 1783544304869136541.32333.4072343636285317868@prod-use1-smtp-out1003.
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.4 cv=etDvCIpX c=1 sm=1 tr=0 ts=6a4eb9f0
-	a=YFm/cWH0HiqiDP3rY6DHxA==:117 a=IkcTkHD0fZMA:10 a=RAioF0-LDSMA:10
-	a=CEWIc4RMnpUA:10 a=5KLPUuaC_9wA:10 a=9wnB493i9RuopMTSf4QA:9
-	a=QEXdDO2ut3YA:10
+Message-Id: <4A4C8B42-D8BB-44D1-BE0B-CB5B4617F29E@sonarnerd.net>
+References: <CAOdyq+qFaqCh=tK_wNnA64hv5pQuA1Y09ANxQ=xK8yR-t4mf9Q@mail.gmail.com>
+To: Salvador Blaya <tiniebla6@gmail.com>
+X-Mailer: Apple Mail (2.3864.600.51.1.1)
 
-Device: 2017 Google Pixelbook i5 (Google's own chromebook from 2017)
-Backlight: intel_backlight
-OS: Arch using KDE Plasma 6.7.2 (Wayland via Kwin)
-Firmware Type: RW_LEGACY firmware from MrChromeBox, updated to most
-recent version
-Internal storage type: SSD
+Hi,
 
-Summary of the Issue
-The Pixelbook has pretty much full functionality with linux, except
-for two needed tweaks. Once is a chromebook audio script to run, and
-the other is backlight.
+I don=E2=80=99t think we currently have exclusion method for devices =
+with buggy firmware, which claim to support native DSD, but do it =
+incorrectly. And reverting with device specific white-listing is not a =
+good approach for future maintenance. Having to device-specific =
+white-list each new device appearing on the market from the manufacturer =
+just because some old device is broken is not really a sustainable =
+model.
 
-Adjusting the backlight (using the slider in KDE) does not work
-without editing your GRUB file and putting in this line:
-GRUB_CMDLINE_LINUX=3D=E2=80=9Ci915.enable_dpcd_backlight=3D1=E2=80=9D
+So I would just suggest using PCM with the device if it=E2=80=99s DSD =
+implementation is buggy/broken, while it claims to have such. Or =
+alternatively update the firmware with a fixed one.
 
-This =E2=80=9Cfix=E2=80=9D has worked with any flavor of linux. I have pers=
-onally
-tested in Kubuntu, MX Linux, CachyOS, and now Arch.
+Newer MuFi devices work fine though, like for example the M3x DAC I have =
+for testing this, and the M6x you mention.
 
-The problem now is, something changed with the Linux 7.1 kernel where
-this doesn=E2=80=99t work anymore. Still works perfectly on 7.0.x kernel an=
-d
-below, but any 7.1 (or 7.2rc kernel) does not work and I=E2=80=99ve tried a
-million fixes, and nothing works. The million fixes include removing
-that line, changing the value to 0, 2, or 3.
+Additional challenge is that many manufacturers use the same USB =
+interface implementation with same VID:PID on multiple different =
+products. So it is not even necessarily possible to distinguish a =
+particular problematic product.
 
-Tried this, didn=E2=80=99t work:
-GRUB_CMDLINE_LINUX=3D=E2=80=9Ci915.enable_dpcd_backlight=3D1 i915.enable_ps=
-r=3D0
-i915.enable_fbc=3D0=E2=80=9D Also tried
-GRUB_CMDLINE_LINUX=3D=E2=80=9Cacpi_backlight=3Dnative=E2=80=9D
 
-I have tried the software brightnessctl, making changes with it has no
-effect. Also tried the software gammastep, doesn=E2=80=99t work. And other
-ones like =E2=80=9Ccolord=E2=80=9D (I think that=E2=80=99s what it is calle=
-d).
+Best regards,
 
-I've read the backlight section in arch wiki, nothing there that works
-to fix this.
+	- Jussi
 
-NOTHING changes the brightness if using 7.1 or newer kernel.
 
-Steps to Reproduce
-1.) Install RW_LEGACY MrChromebox firmware on Pixelbook and any flavor
-of Linux with kernel 7.1 or higher.
+> On 8. Jul 2026, at 19.33, Salvador Blaya <tiniebla6@gmail.com> wrote:
+>=20
+> To: alsa-devel@alsa-project.org
+> Cc: tiwai@suse.de, jussi@sonarnerd.net, regressions@lists.linux.dev
+> Subject: [REGRESSION] snd-usb-audio: commit da3a7ef ("ALSA: usb-audio:
+> Update for native DSD support quirks") breaks DSD playback on Musical
+> Fidelity M6s DAC (2772:0502), plays ~8.8% fast
+>=20
+> Hi,
+>=20
+> Commit da3a7efff64e ("ALSA: usb-audio: Update for native DSD support
+> quirks") added VENDOR_FLG(0x2772) with QUIRK_FLAG_DSD_RAW for Musical
+> Fidelity devices. This vendor-wide match also catches the (older,
+> discontinued) Musical Fidelity M6s DAC, USB ID 2772:0502, which =
+exposes
+> a UAC2 altsetting with bmFormats 0x80000000 (RAW_DATA, 32-bit) but
+> whose firmware cannot actually clock DSD playback correctly in any
+> mode. As a result, since this commit, applications like MPD prefer the
+> newly offered native DSD over DSD-to-PCM conversion and playback is
+> audibly broken (runs ~8.8% fast, raised pitch), where kernels without
+> the commit (e.g. 6.12.x) play correctly.
+>=20
+> Could 2772:0502 be excluded from the vendor flag (or the vendor flag
+> be narrowed to the specific products that support native DSD, such as
+> the newer M6x DAC)?
+>=20
+> Evidence gathered on Debian trixie, MPD, direct hw: access, no
+> resampling:
+>=20
+> 1) Native DSD (observed on 7.0.7 through 7.0.12): host side is correct
+>   - hw_params shows format DSD_U32_BE, rate 88200 (correct for DSD64)
+>   - but playback runs ~8.8% fast with raised pitch. A 4:41 track
+>   finishes in ~4:15, matching a 48 kHz-family clock (3.072 MHz)
+>   applied to a 2.8224 MHz DSD64 stream (ratio 1.0884).
+>=20
+> 2) DoP (6.12.9, MPD dop=3Dyes): host side again correct - hw_params
+>   shows S32_LE, rate 176400 - same ~8.8% fast playback. So the DAC's
+>   internal DSD decoding path is misclocked regardless of transport.
+>=20
+> 3) Control test: the same DSD64 track converted to PCM FLAC at
+>   176400 Hz plays at correct speed/pitch through the exact same path
+>   (S32_LE @ 176400). The 44.1 kHz rate family is fine for PCM; only
+>   DSD decoding inside the DAC is broken. This rules out any host-side
+>   rate issue.
+>=20
+> 4) The same fault has long been reported for this DAC on Windows 10
+>   with the official ASIO driver ("DSD via DoP plays noticeably
+>   faster"):
+>   =
+https://community.roonlabs.com/t/musical-fidelity-m6-sdac-dsd-issues/39450=
 
-2.) Edit GRUB_CMDLINE_LINUX=3D=E2=80=9Ci915.enable_dpcd_backlight=3D1=E2=80=
-=9D and update
-grub. This is the fix for backlight controls that works for kernel
-7.0.x and lower.
+>   including a follow-up for the successor model (M6sR). This is an
+>   OS-independent firmware defect that the manufacturer never fixed,
+>   which is presumably why this model was specified as DoP-only.
+>=20
+> Working configuration for reference (correct playback): MPD with
+> dop "no", MPD's dsd2pcm conversion to 352800 Hz - i.e. the behaviour
+> kernels without the commit provide by default for this device.
+>=20
+> Since these quirk updates tend to be backported to stable/LTS trees,
+> please consider the fix for stable as well, so that currently working
+> LTS kernels (e.g. 6.12.y) don't regress.
+>=20
+> Full lsusb -v output attached. Happy to test patches.
+>=20
+> #regzbot introduced: da3a7efff64ec0d63af4499eea3a46a2e13b5797
+>=20
+> Please CC me on replies, I'm not subscribed to the list.
+>=20
+> Best regards,
+>=20
+> S. Blaya
+> <m6sdac-lsusb.txt>
 
-3.) With 7.1 kernel or higher, this fix does not work, neither do any
-other known fixes for controlling backlight.
-
-Expected Behavior
-I should be able to use the slider in KDE for backlight/brightness and
-adjust the brightness, just as I can do with any kernel 7.0.x or
-lower. I have reached the conclusion that something changed in the 7.1
-kernel, but have no idea on how to get this fixed. Or if it is even
-possible. Perhaps I am stuck just using 7.0.x and below on this device
-until EOL.
