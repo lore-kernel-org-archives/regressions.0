@@ -1,40 +1,40 @@
-Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F147040913E
-	for <regressions@lists.linux.dev>; Wed,  8 Jul 2026 09:16:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.171.202.116
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05D933F4DC8
+	for <regressions@lists.linux.dev>; Wed,  8 Jul 2026 12:12:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783502172; cv=none; b=JyEfaGraFb6PVKpO1qnpTXWB3IskOOxtqWz1MWocGEpekHx/G3IU4QfCL8ve1tOVCjX2+6C1rm5kjUv89jbmzCm2Mr2jRxek+eDsUFnm9iIbqMDfy1x9ozfSqGPVuGmYo0C0nGeL068Suuo9TMu7TlgfOZfYtQ1lnZhCUPWbblk=
+	t=1783512753; cv=none; b=MNbFvmKmdEhHWjB5Mh6dHUQYN4HWZ5sQ2ObBxJIxIxvB8GhrZqjxLmIMkuWjj3YxpWMZls58HmAnv/90lBKt+9WTvjx2r88rZfma/BHQu+CT25Na1JWHbc36c39aee4yiXAn9fQJKIZUBqsxQrEbmHIPHSVvkOfFhVDybMDpkns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783502172; c=relaxed/simple;
-	bh=wfg0mXHJNXcM6eMr/sjVc2ZVkhsTW8b/GaVJ+8zp73I=;
+	s=arc-20240116; t=1783512753; c=relaxed/simple;
+	bh=LWzKAWbjXwRZm/8P259BKzlhUiJ6T2PGRVC7hN/IGTE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MOXDUnH1XKe0h963B4Ab8HKgCfVSvO3dQuDMUG7jaVxNf1Bdxta80hi3QUAGBpnIfzb0Ji71pD+ZdK0qetImjlRWyVz4cyH4EF+y3U+W1wrxBS8nPrQFlFJlrc4xK8ZLF2bzbOCmU5T2azYlq1Btw5oaymY6tiplrQdImb1E5/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ru94O26T; arc=none smtp.client-ip=185.171.202.116
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	 In-Reply-To:Content-Type; b=kfS+UxMpB4VISIzHjCCyiU9UhrQuYlsF6Btg6VDdcQpxNCQcakwFH6mOO7ywbj4HreuXYzN7nON0fxUPiJg/+OejENkpb3bip56hNqdXFkQw+yiYjKjssoUnSSVIn9oq1liTOJokp3JHnkN4pFdFz1EN966Mc/IqkvJ2cdEpMrY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=khi/t3Rn; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ru94O26T"
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-04.galae.net (Postfix) with ESMTPS id 06C91C8F445;
-	Wed,  8 Jul 2026 09:16:23 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 1BF8F60337;
-	Wed,  8 Jul 2026 09:16:09 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 83A6411BC0CFE;
-	Wed,  8 Jul 2026 11:16:02 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1783502168; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:content-language:in-reply-to:references;
-	bh=qOMFD/APDtG7nBqOMYfX/IhIsViQVFXVhI6H/yMdvHo=;
-	b=ru94O26T43mlxL2cIBX5lzUbVlmEHXENjSYkidWcZ4fB4BNAHeZORh+6LVllswrshyMRUK
-	g6u6c/gM9RhAgallDLmQti6HwsxELEQnBgJBybPJs3xohzndsgOBdfnCj0PjjDn+i0gCqU
-	xOKqt8v/5ye+ltJaHOKVGQeHGNAUcWIs1Tnbn4GDJ6dKyAo4Ys5Lj+Q0NI9y/GhJkQ5twI
-	M3/vuMt7PSK5rwxB1ZZQsGt1v0Dzz+FhCeMhgmBCTb+VGEgUsFI6/DK+Jirpz8G44nTq8H
-	LQv9+McURbD8FwAiF8+uG4UkjhFt9G1RiApWT4mIwi3DFKgsvUQEQkQw1Kt8xw==
-Message-ID: <c8cbf359-e224-44c6-8692-9e1d1527ae0c@bootlin.com>
-Date: Wed, 8 Jul 2026 11:16:01 +0200
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="khi/t3Rn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1783512750;
+	bh=LWzKAWbjXwRZm/8P259BKzlhUiJ6T2PGRVC7hN/IGTE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=khi/t3Rn7xuVoMQK1wZmJSqjU13hZ8VjC9Trgd3XIn6eOMPD6pcUnkVdIBhUWN/3N
+	 kTRZuDS4OM+fAXzDZgihCWwkiPmM1l72+SdSp4ZedCgpggoFTdwF50yzcOjlN1f1Ub
+	 jjLzAzV4lhmYA0vx3HYXEod5M4AN+3zpDt9YCNzr5tFmWGhvlFUoC8T01SL1LNMTDj
+	 SdeCysDTcbel7p4EpfA9Av1A/u1m2/ZSHSLBdNpD0MzuxGlcFUqJIw6CXOy4r2W6Fn
+	 CVRXhu0TVZvLErOJxH+HxzucljwRIa4HfBCOR1oamCcNVEMXM3Eo/RQhnA26HA2Cz+
+	 wBgg5s+g9CMrg==
+Received: from [100.64.1.21] (unknown [100.64.1.21])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id B78B317E0713;
+	Wed, 08 Jul 2026 14:12:29 +0200 (CEST)
+Message-ID: <956e84d2-728a-4e8c-8026-ae1a41e69171@collabora.com>
+Date: Wed, 8 Jul 2026 14:12:29 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -42,93 +42,145 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net v2] net: stmmac: resume PHY before hardware setup when
- opening the interface
-To: Stefan Agner <stefan@agner.ch>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Andrew Lunn <andrew+netdev@lunn.ch>
-Cc: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
- Ovidiu Panait <ovidiu.panait.rb@renesas.com>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>, netdev@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org, regressions@lists.linux.dev
-References: <message-id-of-your-v1-mail>
- <20260707195425.405989-1-stefan@agner.ch>
-From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+Subject: Re: [PATCH] drm/mediatek: mtk_dsi: enable hs clock during pre-enable
+To: Adam Thiede <me@adamthiede.com>,
+ Thorsten Leemhuis <regressions@leemhuis.info>,
+ =?UTF-8?B?Q0sgSHUgKOiDoeS/iuWFiSk=?= <ck.hu@mediatek.com>,
+ "bisson.gary@gmail.com" <bisson.gary@gmail.com>
+Cc: "chunkuang.hu@kernel.org" <chunkuang.hu@kernel.org>,
+ "simona@ffwll.ch" <simona@ffwll.ch>,
+ "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+ "airlied@gmail.com" <airlied@gmail.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
+ "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+ "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <20260120-mtkdsi-v1-1-b0f4094f3ac3@gmail.com>
+ <42607fa4-485d-4142-b31c-7bfac71118d2@adamthiede.com> <ajka2220depklK1_@owl5>
+ <bac79214-050d-448b-be63-0586d45c807d@adamthiede.com>
+ <f0d99b1a-e383-4d14-adb1-4ccab46efddb@leemhuis.info>
+ <5baeb90d2c3736df67ad075ede4ac765bfeaed2d.camel@mediatek.com>
+ <84233951-ee22-4980-9f17-2af1df51fdbf@leemhuis.info>
+ <6fed12a6-0c94-477f-8a2e-466c33ea2e29@collabora.com>
+ <dbc251f2-0c67-4970-a101-c19129055082@adamthiede.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 Content-Language: en-US
-In-Reply-To: <20260707195425.405989-1-stefan@agner.ch>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Last-TLS-Session-Version: TLSv1.3
+In-Reply-To: <dbc251f2-0c67-4970-a101-c19129055082@adamthiede.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Stefan,
+On 7/8/26 03:25, Adam Thiede wrote:
+> On 7/7/26 05:38, AngeloGioacchino Del Regno wrote:
+>> On 7/7/26 10:51, Thorsten Leemhuis wrote:
+>>> On 7/7/26 04:20, CK Hu (胡俊光) wrote:
+>>>> On Mon, 2026-07-06 at 12:16 +0200, Thorsten Leemhuis wrote:
+>>>>> On 6/22/26 15:23, Adam Thiede wrote:
+>>>>>> On 6/22/26 06:22, Gary Bisson wrote:
+>>>>>>> On Thu, Jun 18, 2026 at 04:06:28PM -0500, Adam Thiede wrote:
+>>>>>>>> On 1/20/26 05:36, Gary Bisson wrote:
+>>>>>>>>> Some bridges, such as the TI SN65DSI83, require the HS clock to be
+>>>>>>>>> running in order to lock its PLL during its own pre-enable function.
+>>>>>>>>>
+>>>>>>>>> Without this change, the bridge gives the following error:
+>>>>>>>>> sn65dsi83 14-002c: failed to lock PLL, ret=-110
+>>>>>>>>> sn65dsi83 14-002c: Unexpected link status 0x01
+>>>>>>>>> sn65dsi83 14-002c: reset the pipe
+>>>>>>>>> [...]
+>>>>>>>>
+>>>>>>>> This commit was part of 7.1 and caused a problem for me.
+>>>>>>>> I'm running postmarketOS (basically Alpine Linux) on a Lenovo C330
+>>>>>>>> chromebook with a Mediatek MT8173 processor.
+>>>>>>>> The problem: when the display on my laptop powers off (via suspend or
+>>>>>>>> idle,
+>>>>>>>> like xset dpms off) the picture does not come back when the display
+>>>>>>>> powers
+>>>>>>>> back on (from resume). The display backlight comes on and brightness is
+>>>>>>>> adjustable but there is no picture. The only fix is to reboot.
+>>>>>>>>
+>>>>>>>> Reverting this commit and applying it as a patch on top of 7.1
+>>>>>>>> addresses the
+>>>>>>>> issue for me.
+>>>>>>>>
+>>>>>>>> You can view the config I'm using here:
+>>>>>>>> https://urldefense.com/v3/__https://gitlab.postmarketos.org/ postmarketOS/ 
+>>>>>>>> pmaports/-/__;!!CTRNKA9wMg0ARbw! 
+>>>>>>>> jrsPDtSEUdaINzLlq92Li8gmsEBkTOxZ6WUzNHjvIN6CyOJjHiHkNSOhIRPXFTLPlaYlxU2uvryVkwjUAN9bmax5$
+>>>>>>>> merge_requests/8819
+>>>>>>>>
+>>>>>>>> Is there any sort of testing or other debugging info I can provide to
+>>>>>>>> help
+>>>>>>>> address this issue?
+>>>>>>>
+>>>>>>> Thanks for reporting the issue, could you share some logs? Is the driver
+>>>>>>> saying anything during resume? Also, what type of panel is used on that
+>>>>>>> chromebook?
+>>>>>>
+>>>>>> The curious thing is that there are no real logs in dmesg or /var/log/
+>>>>>> messages about this. This picture just fails to come back. If there are
+>>>>>> some kernel params I can set to get deeper logging, that would help, but
+>>>>>> I'm not aware of any.
+>>>>>>
+>>>>>> I think the panel is a "BOE NV116WHM-T00" - I used this command to get
+>>>>>> info: cat /sys/class/drm/card0-eDP-1/edid | edid-decode
+>>>>>>
+>>>>>> Output: https://urldefense.com/v3/__https://termbin.com/8nbd__;!! 
+>>>>>> CTRNKA9wMg0ARbw! 
+>>>>>> jrsPDtSEUdaINzLlq92Li8gmsEBkTOxZ6WUzNHjvIN6CyOJjHiHkNSOhIRPXFTLPlaYlxU2uvryVkwjUAJooSyqL$
+>>>>>
+>>>>> This looked stalled. If I'm mistaken here, please let me known; but if
+>>>>> no solution is in sight, should we maybe just revert the change until a
+>>>>> proper was found?
+>>>>
+>>>> It's welcome anyone to provide a revert patch,
+>>>> but I would still wait for the fixup patch until 7.2-rc4.
+>>>> If no fixup patch exist, then apply the revert patch.
+>>>  From my understanding of things the position in the devel cycle doesn't
+>>> matter much in a case like this. To quote Linus statements from
+>>> https://www.kernel.org/doc/html/latest/process/handling- regressions.html#on- 
+>>> how-quickly-regressions-should-be-fixed
+>>>
+>>> """
+>>>  From 2026-01-22:
+>>>
+>>>   But a user complaining should basically result in an immediate fix -
+>>>   possibly a "revert and rethink".
+>>>
+>>> With a later clarification on 2026-01-28:
+>>>
+>>>   It's also worth noting that "immediate" obviously doesn't mean "right
+>>>   this *second* when the problem has been reported".
+>>>
+>>>   But if it's a regression with a known commit that caused it, I think
+>>>   the rule of thumb should generally be "within a week", preferably
+>>>   before the next rc.
+>>> """
+>>>
+>>> Adam reported the problem about three weeks ago, so we are way past the
+>>> "rule of thumb" timeframe Linus set.
+>>>
+>>> Ciao, Thorsten
+>>
+>> This is a kind of odd situation here. The fix from Adam is actually correct, as in,
+>> the SN65DSI83 bridge gets broken without...
+>>
+>> ....but then, there's some more oddness going on: I tried to reproduce this on my
+>> MT8173 Elm device, but there I can resume the system just fine, and the display is
+>> up and running like normal?
+>>
+>> I'm not sure what to advice here at this point - just adding some info.
+>>
+>> Cheers,
+>> Angelo
+> Angelo, would you mind sharing your config, and the details of what you're running? 
+> It might be a configuration difference.
+> Thanks!
 
-On 7/7/26 21:54, Stefan Agner wrote:
-> Since the referenced commit, changing the MTU on a running interface no
-> longer disconnects and reconnects the PHY; __stmmac_release() merely
-> stops phylink, which also suspends the PHY (BMCR power-down) when WoL
-> is not enabled. __stmmac_open() then performs the DMA software reset in
-> stmmac_hw_setup() before phylink_start() resumes the PHY again.
-> 
-> IEEE 802.3 22.2.4.1.5 allows a PHY to stop its receive clock while
-> powered down, and stmmac requires a running receive clock for the DMA
-> software reset to complete (the phylink config sets mac_requires_rxc).
-> On such setups, e.g. the RK3566-based Home Assistant Green with an
-> RTL8211F-VD PHY in RGMII mode, any runtime MTU change now times out and
-> leaves the interface dead:
-> 
->   rk_gmac-dwmac fe010000.ethernet end0: Failed to reset the dma
->   rk_gmac-dwmac fe010000.ethernet end0: stmmac_hw_setup: DMA engine initialization failed
->   rk_gmac-dwmac fe010000.ethernet end0: __stmmac_open: Hw setup failed
->   rk_gmac-dwmac fe010000.ethernet end0: failed reopening the interface after MTU change
-> 
-> In the field this is triggered by NetworkManager applying an MTU while
-> activating the connection, breaking networking entirely.
-> 
-> Resume the PHY in __stmmac_open() before the hardware setup, making it
-> the counterpart of the phylink_stop() in __stmmac_release(), like
-> stmmac_resume() already does for the same reason. phylink_start() also
-> resumes the PHY, but only after stmmac_hw_setup(), and it cannot be
-> moved before the hardware setup since it may bring the link up
-> immediately from a workqueue, racing with the initialization (see the
-> comment in stmmac_resume()). For the regular ndo_open path the PHY has
-> just been attached and is not suspended, in which case
-> phylink_prepare_resume() does nothing.
-> 
-> Fixes: db299a0c09e9 ("net: stmmac: move PHY handling out of __stmmac_open()/release()")
-> Link: https://github.com/home-assistant/operating-system/issues/4858
-> Signed-off-by: Stefan Agner <stefan@agner.ch>
+Sure, here it is:
 
-I was able to reproduce the issue on imx8mp and socfpga. Adding this case to
-my periodic test list...
+https://gitlab.collabora.com/mediatek/aiot/linux/-/blob/mediatek-dev/arch/arm64/configs/defconfig?ref_type=heads
 
-Indeed the assymetry isn't very nice, OTOH there's not phylink counterpart
-for phylink_prepare_resume(). This helper was added for the suspend/resume
-case, and only for it as the doc states, it just happens to do exactly
-what we need to fix the issue :
-
-/**
- * phylink_prepare_resume() - prepare to resume a network device
- * @pl: a pointer to a &struct phylink returned from phylink_create()
- *
- * Optional, but if called must be called prior to phylink_resume().
- *
- * Prepare to resume a network device, preparing the PHY as necessary.
- */
-void phylink_prepare_resume(struct phylink *pl)
-
-I think this helper should be renamed and the doc updated, stmmac is the
-sole user, and it's really about controlling that rxc and not about
-suspend / resume. Resuming from suspend is just one of the cases where we
-need that RXC early on.
-
-So either something like 'phylink_prepare_start_or_resume' but it's long,
-or maybe we can be more explicit about it and simply call it:
-
-phylink_start_rxc(pl)
-
-(without a corresponding stop)
-
-Maxime
-
+Cheers,
+Angelo
