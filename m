@@ -1,216 +1,292 @@
-Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 722A11E9B3D
-	for <regressions@lists.linux.dev>; Wed,  8 Jul 2026 01:25:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783473956; cv=none; b=F8HAnaKHEjpqLjDXNIMVHN7nh7CChLhuUgeqPqu65bQOzqkL1xeZ3BkLlFJ+zyUdC/Cb3hfeH/hSXTIjgmtPHQYRkmWq+QPLKpmYI4D88Pz/9mmCeNlBAh/VAgd+rifiMW5qGODR5Y78oyIj+6RbLs6r1guiI+dwNVZ/OfmKY+0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783473956; c=relaxed/simple;
-	bh=vDXbFeiPA/uH1RIIZ4+4JYdEalrDIaTD9ccqlNbEja4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=apqwZHPTQd3ZAKvnuaVUG6mwFk/NZOVUvGAxcQf5mbVpnOFkm9eE1VPo8fJPu3GXlDCLHjkcsT1mzFb6XbWDXIZ83Iw9yf0Uigxpoon9c/a3I1XgrA0MKFHYZYYfK6mqyBmtvPkBQxQP8H0FcnzeRe9LF8XGrDr2+nY1qyUk5xE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=adamthiede.com; spf=pass smtp.mailfrom=adamthiede.com; dkim=pass (2048-bit key) header.d=adamthiede.com header.i=@adamthiede.com header.b=Cs8ehjxW; arc=none smtp.client-ip=80.241.56.161
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=adamthiede.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=adamthiede.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C0F83F0755
+	for <regressions@lists.linux.dev>; Wed,  8 Jul 2026 06:58:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.216.42
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1783493916; cv=pass; b=MociwIoGJn4/3aY5IkRecQ3KqDkhY72g8K/5CUvUIp0KJvEAuX39e/bZ4Z/gE+aDuzD7f/B5TfNGMNnskypOHMdSYujwgjvJKMYwJELIIoNVHi3rZdpdHhfrbaT2mZWe9qx/bGfexCQ9jEeBI3N4UFf5M4lLWV9frIN7fW1FDK4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1783493916; c=relaxed/simple;
+	bh=+3JOKZQTIXSiy7TPE+EiYNvh21Ntyyf/aSWG9sMXBzA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tanvv05UWHE/1okNxv7UgjtGFnefjtnUeNp4mi5qN3SSKkWkIheXw4EwpxaO5ldslCR0ulWVLwm2lSFoM9GKGOjKiDx0jjjZ6sQL1cGpPGALEdlqxeN+G3TKYYlcnDTMpYt2Z7qQhSLvA6HthPBk0jwk+94YyionBHEh3VE+4Fs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=okcWyqjA; arc=pass smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=adamthiede.com header.i=@adamthiede.com header.b="Cs8ehjxW"
-Received: from smtp202.mailbox.org (smtp202.mailbox.org [IPv6:2001:67c:2050:b231:465::202])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA512)
-	(No client certificate requested)
-	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4gw0ly2RnBzKmyK;
-	Wed, 08 Jul 2026 03:25:50 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=adamthiede.com;
-	s=MBO0001; t=1783473950;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=PuWChsb4E1cC29lK7Elvpm/ZqbcvbK/u7X5aWPVhl78=;
-	b=Cs8ehjxWZTm6YQKo5RjJY0pYmJZL9egmgNuBv+FZ3+yoXhvLMJN06rjHtXpjrtH0Uwab7y
-	1V8Io12Juoe8wIw1Eo0beU78PvwVwSv8k9pGzKo6It81Lnz5i+ruT2dPJw82DV3uOi3esZ
-	+dJCVLU5H46DAfqINzQ/A1kTJSdjRJBljEB/PxuJE1gUetMlYNByqdwzE32bgqO6IFncth
-	590JilTLXjMtD4yiDt+OKub9gxqI7faWK/LRNmE8TyHyJQc1oP9OD/rXH6Zjl4hRvNUbiW
-	QcP4Y0oG10vL6efjqKIcliQYi43ac9q8Jzye3/CqIHHOxth4x/MRkdAMigQNPA==
-Authentication-Results: outgoing_mbo_mout;
-	dkim=none;
-	spf=pass (outgoing_mbo_mout: domain of me@adamthiede.com designates 2001:67c:2050:b231:465::202 as permitted sender) smtp.mailfrom=me@adamthiede.com
-Message-ID: <dbc251f2-0c67-4970-a101-c19129055082@adamthiede.com>
-Date: Tue, 7 Jul 2026 20:25:41 -0500
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="okcWyqjA"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-38175907a56so1254780a91.0
+        for <regressions@lists.linux.dev>; Tue, 07 Jul 2026 23:58:24 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1783493902; cv=none;
+        d=google.com; s=arc-20260327;
+        b=JaIKyxcMe2XMpGBTs+WMCpqmBIy/GbZ2FU0j8mJzHdtnWOexuJo+wDA47zDddoBQ55
+         zmhjwU4sBF+XrYydVzAnK8RVNuS1qE9zl6KEiaRG4rntShh3aPAPa50J7hwW8VFQt6q0
+         O3shijIvuhXwnVFGSxqhIc/QNhmWcSSQG2tmrbs4pbuTGLBtXMeFVPPHw5cLDxqrv32G
+         VmUmGs5L21ngN24GzZQgRaA7y4a2QLK5pAfN5YuB9I94+mA1E3oRh7bIP4EuTc28Iw35
+         oqXEjax20+d1a7RHvYaFpFnKpgMVYJg96tvF1yo+JpkEytntuPbOsz2KmdRlljlvaIw8
+         mT5A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=++Np+i7QbYkMJq7srOxofh9iDJgIYXe+19kl+BTYoIk=;
+        fh=3qD043o7EsInR0YhqtkIj9SRWxEq7ugo5tt0dnbNizI=;
+        b=dBqdJaq6HvNif6S9xEmglxIi1hHL9qDPeQEE/VEv8Rxsab/5zppx5isL+RmWPzn58b
+         qJ5bdgrmd6pFU1XFhhzC/bZY0zX4R2qP68EqheGNeGIV1onDBPuRxlb+z47FazM1F8Jf
+         KK4HNeZDVGCzfR3+/pqXOTs/86tj5lcLrOhecUScwiaqfA3X5Yitn6IMM9HUrf4xdhHQ
+         EvPqdMiZ2GvXlKXhJZ/x89LT30FhrIG5Pa62M/Vx4+LIuKyttfhEQ5nWiqUpksdVm1dk
+         GULxpBVvDiBNNdy0Scpp03/BG90F8XGcHykeg/2mdtQPwn/ryUDRMJB2BLwhlU8WEET8
+         likA==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1783493902; x=1784098702; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=++Np+i7QbYkMJq7srOxofh9iDJgIYXe+19kl+BTYoIk=;
+        b=okcWyqjAr8hfGk5f5u2aUj7ba1OaYC4XsaKOjPAlavDHaUtIpjO2m5EwL1HaQRhbyi
+         GhSNVCm8QnAXnOeapQKlJ2FcisflGCGdCMPL6h4AsrxBzcpDFohJ/0Glgxew2w3yJeKd
+         10IQtTUVoY4v/axVpEAewYMhcvkfRy9p5MGjjzS4ltbd5f9ueVzYSly9tnBzW/Mq25qt
+         8n+GFPn15O6CJ7hkV8w67ApINfkPLr6oEL425fQEUXBA7KH8fWYmsamCc5dr6rlGVZDv
+         /ehPSxrmb/Pe+5oZwFTZhsFQXwwdj5/bwF3DmoeMWLaxQWxZbqWMVRsuiiCQem0TzNCa
+         cIhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783493902; x=1784098702;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=++Np+i7QbYkMJq7srOxofh9iDJgIYXe+19kl+BTYoIk=;
+        b=Il7P2TIVUshezjm5OXVIwi0ZAPdL/yX+zKD+Bd9tcAZcdtp0V8iJPZ2jmAHsXFe494
+         Ji7Y7sgurtT/WxdIArEVnMniOvGh4NEf0VA3WFYuhRZIUdpz6d8k0bG4buTuuCIlpE5B
+         900RTQukpEXORWSOfO/Esmabs61Ch4ElfAHB7j7VLQjvPG1M+r1ZhM/KQraaUoy4mUgX
+         ENYw2/KHg+TZ3dHbypu14q3AvCD2XtwFlBsTH7gZ1JDzWoPsxk2i8Th/F8eX0IkHM+Mw
+         wMLL9nkhh00XjfXb6VBZYsR/oD4lvuPG9/IH44cvdRoBJ9vmR5rxfWlkZUoPzROgT4we
+         tjhQ==
+X-Forwarded-Encrypted: i=1; AHgh+RoTwLnjk0hegIWggTijV1GNqQL1WRT7/qiOAOlfDMlm7dM+f9r1qgQkaW8+Owx71n36GmW7p/OxQooEdA==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzgQ4pOME4c4m4npBSceY7e2Z2tgMMJYVyluACYGp7BhM/okY8p
+	0TTAXFbigew2WHhEyA+KJC+abzlC27y46k/5BBtGsvU0lq4Alp0+S1O1zA2B4TrIj5sqpTW0c/w
+	5cBu/tp+LrgYOhesggVIoc3hhbn3j1gY=
+X-Gm-Gg: AfdE7cl9n1HBCJEb1R1XJJYZAsU4Rp2Nxn/g52Vb++6e3lrPgQDb+Ap4ysGyfhaujB1
+	70Xr6kA9+5v7y9ZIHOZ4C33kUIWJfjC4ld3/E1/Lt5cVJBABCm91ltW54n/o+a5Emm/ToZ7SWLf
+	9K2h7oT8TJEJfLaCKsumZ8OS9yuCbrF/eBhYQ3UDWl3yRt7NmL1OsDONRQJy2XpdxVTJi/TCMR6
+	DBPmFmasasHdJSyYC2mM3i/XjxGFh2XvgLoUzhyLXBrPAxo6viwK42G9tXs4t3FYoXrFp7Y
+X-Received: by 2002:a05:6a21:168b:b0:3b4:8c67:51d4 with SMTP id
+ adf61e73a8af0-3c09b4ab238mr8981970637.39.1783493901839; Tue, 07 Jul 2026
+ 23:58:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Subject: Re: [PATCH] drm/mediatek: mtk_dsi: enable hs clock during pre-enable
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Thorsten Leemhuis <regressions@leemhuis.info>,
- =?UTF-8?B?Q0sgSHUgKOiDoeS/iuWFiSk=?= <ck.hu@mediatek.com>,
- "bisson.gary@gmail.com" <bisson.gary@gmail.com>
-Cc: "chunkuang.hu@kernel.org" <chunkuang.hu@kernel.org>,
- "simona@ffwll.ch" <simona@ffwll.ch>,
- "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
- "airlied@gmail.com" <airlied@gmail.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
- "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
- "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <20260120-mtkdsi-v1-1-b0f4094f3ac3@gmail.com>
- <42607fa4-485d-4142-b31c-7bfac71118d2@adamthiede.com> <ajka2220depklK1_@owl5>
- <bac79214-050d-448b-be63-0586d45c807d@adamthiede.com>
- <f0d99b1a-e383-4d14-adb1-4ccab46efddb@leemhuis.info>
- <5baeb90d2c3736df67ad075ede4ac765bfeaed2d.camel@mediatek.com>
- <84233951-ee22-4980-9f17-2af1df51fdbf@leemhuis.info>
- <6fed12a6-0c94-477f-8a2e-466c33ea2e29@collabora.com>
-Content-Language: en-US
-From: Adam Thiede <me@adamthiede.com>
-Autocrypt: addr=me@adamthiede.com; keydata=
- xsBNBF+n+90BCAC2ZRLVcvdXDgfY7EppN05eNor3U7/eeiNCCEIWZkYLhikUEP1ReLGBkXpK
- Pc70hfnKAKkCoth3IwhDty9WXMNU+iLNei4ieb2luW+UqluR6xIUIA+txahMU9YcjVaQTKf/
- yZWO4yl6pfBPCxC2UdPZKBAdGoi5NnE0ABFNbhBETQhhBic533lZn33ByupfI3acECnQdjgQ
- llCUpDbw4I+S/N1iFiEHcbMXH7ZB00e3IYNorZ1E9v7p++5rDY1fQ9gXpieg1vFKwSq1NJWo
- 9xx336YjaTUbX0EwrdKd9l8AktA3yRjckaK5TAcwSQaDtHvhpbl4ebvPhtwHh699MroXABEB
- AAHNH0FkYW0gVGhpZWRlIDxtZUBhZGFtdGhpZWRlLmNvbT7CwI4EEwEIADgCGwMFCwkIBwIG
- FQoJCAsCBBYCAwECHgECF4AWIQQtG9pGQ7sz3tf8M/kC7fV9o/vRzgUCZL1HxQAKCRAC7fV9
- o/vRzgyRB/wLqRCvvWhQCMgvzeKvru9wcXquhb77K8H/ByLbfiT8YBuP3lZFVh0IQhgO9Ylk
- fIoOJE4V+jjxyOnO2d9xjGbvAmmR6yT0gfLzSVWqrC4k+V9MWLv43nrNzxt41dvo5j824FAl
- X+zaiRZCdO8Jtxg5Elpiop2SKLi1utX1Z8i6YZh+ccJZlchUBAGUTk+D4UjK7vUcjLWT96ya
- CtdtTfXyw36CvGOPEWfc6++Kkl/5sgej1i7biPYzu/r0vssaQYTXKSrv6Cfa3Maa89ASiTtv
- q4qmhLnJeCrPxWlRAf6LEizeBEkOasYni2u8sp4wBezEq45Ozu45sfPkqLpPolG7zsBNBF+n
- +90BCADBRt+vrToRBEG580n77S99qSEkbKD+oJtCVyovnjMNkg0K9UG68LIeCX/ezngiV1M8
- JISvw5iFOuUFqGX/1hLl9wgt/YpuIrgWOp8XxkotavTCloLDvQmufJPO1L8bnnA+WgP2YgVZ
- 5MJTj/t4DI+yQgysEjsH8aurHO2uuqgJE+xK+2dy6Cl/wskuGxObksSPmmFH5PH0Joziwrtl
- 61ouLE2XwKbkMgIGEKkbFgbfwz3/QuLZGBni+OOtLzXeZ9wNTW/AHUPy6S9U4F+5z6/09fVT
- tTH0cvrgAGjbASlYx2VqGONXAsxCfjulq6ryJBFlPLp949c/JTTgOojukCSbABEBAAHCwHYE
- GAEIACACGwwWIQQtG9pGQ7sz3tf8M/kC7fV9o/vRzgUCZL1H0gAKCRAC7fV9o/vRzlamCACs
- vHw+0heTm+BfC3S8DUST6889gidIIwdqBep1ByzetCph7Bq8Y8BlT5YTX0u/bSKkxCzFgeTm
- vC341Q09ST2XjLAl1ZTdzGhH9gcgYyOw34pr5fPQRJLB392mPzD8YReRzciNbhWzj+DLgeVe
- ouyfGajd6jDjkf4FEq+trQLGZhpfsKn3JnDbzBUs945D50l/vz9q/QN3qZO+H4F6g8ZeMnqo
- FOEFN26xVtdEDr+0DNFsbgKmEzs675kdAY78ZZdbEetX/FSknxJ+FK1ZW3J7Yswwulj34AXP
- LB49Mk8Ot7fo6mdt0DkV11JS9LmKxKvpY+KTlrKG+i7pVCSZvVUx
-In-Reply-To: <6fed12a6-0c94-477f-8a2e-466c33ea2e29@collabora.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 4gw0ly2RnBzKmyK
+References: <ab2yd35rm6OgZUmb@gpd4> <20260320222916.19987-1-boqun@kernel.org>
+ <CAJM55Z-hiNDuu5UwoBe7m0wq+_WJrRY0cwopALUgpG+r3ixj8g@mail.gmail.com>
+ <ajQPAk_ALP-84obp@MacBook-0RXW5> <CAJM55Z_15U7GssTOims1=J34CYSj=8CDE_di1kJYs5hE3=J53w@mail.gmail.com>
+ <ajlW4oSzEqav6gxc@MacBook-0RXW5> <CAJM55Z_7N40ARWGoZg04p-NnAy-w10v4=Em-e4Bx4+oNYMGBLg@mail.gmail.com>
+ <80773b89-f333-4c82-99b5-3fca44ea93b3@sifive.com> <CAJM55Z_aUzPieiGKPgr_iETovgyGB0EUFau+=tLxZksT9CkpYQ@mail.gmail.com>
+ <1a9a672d-914d-43c2-b1da-6a0deede4dac@leemhuis.info>
+In-Reply-To: <1a9a672d-914d-43c2-b1da-6a0deede4dac@leemhuis.info>
+From: Indrek Kruusa <indrek.kruusa@gmail.com>
+Date: Wed, 8 Jul 2026 09:58:08 +0300
+X-Gm-Features: AVVi8CcDPihGLFO6KDd2QFz3SBo9Xu3AC0vfTDbgAUFDI1HQZllfyXn0bskFxwc
+Message-ID: <CA+fTLhissp1Vrezd73iEzjrO808W1hrOF4ry-Tc0VrbqDsRKQw@mail.gmail.com>
+Subject: Re: [PATCH v2] rcu: Use an intermediate irq_work to start process_srcu()
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Emil Renner Berthing <emil.renner.berthing@canonical.com>, Boqun Feng <boqun@kernel.org>, 
+	Samuel Holland <samuel.holland@sifive.com>, Joel Fernandes <joelagnelf@nvidia.com>, 
+	"Paul E. McKenney" <paulmck@kernel.org>, Kumar Kartikeya Dwivedi <memxor@gmail.com>, 
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>, frederic@kernel.org, neeraj.iitr10@gmail.com, 
+	urezki@gmail.com, boqun.feng@gmail.com, rcu@vger.kernel.org, 
+	Tejun Heo <tj@kernel.org>, bpf@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, John Fastabend <john.fastabend@gmail.com>, 
+	Andrea Righi <arighi@nvidia.com>, Zqiang <qiang.zhang@linux.dev>, 
+	linux-riscv@lists.infradead.org, Sarah Emery <sarah.emery@canonical.com>, 
+	Linux kernel regressions list <regressions@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 7/7/26 05:38, AngeloGioacchino Del Regno wrote:
-> On 7/7/26 10:51, Thorsten Leemhuis wrote:
->> On 7/7/26 04:20, CK Hu (胡俊光) wrote:
->>> On Mon, 2026-07-06 at 12:16 +0200, Thorsten Leemhuis wrote:
->>>> On 6/22/26 15:23, Adam Thiede wrote:
->>>>> On 6/22/26 06:22, Gary Bisson wrote:
->>>>>> On Thu, Jun 18, 2026 at 04:06:28PM -0500, Adam Thiede wrote:
->>>>>>> On 1/20/26 05:36, Gary Bisson wrote:
->>>>>>>> Some bridges, such as the TI SN65DSI83, require the HS clock to be
->>>>>>>> running in order to lock its PLL during its own pre-enable 
->>>>>>>> function.
->>>>>>>>
->>>>>>>> Without this change, the bridge gives the following error:
->>>>>>>> sn65dsi83 14-002c: failed to lock PLL, ret=-110
->>>>>>>> sn65dsi83 14-002c: Unexpected link status 0x01
->>>>>>>> sn65dsi83 14-002c: reset the pipe
->>>>>>>> [...]
->>>>>>>
->>>>>>> This commit was part of 7.1 and caused a problem for me.
->>>>>>> I'm running postmarketOS (basically Alpine Linux) on a Lenovo C330
->>>>>>> chromebook with a Mediatek MT8173 processor.
->>>>>>> The problem: when the display on my laptop powers off (via 
->>>>>>> suspend or
->>>>>>> idle,
->>>>>>> like xset dpms off) the picture does not come back when the display
->>>>>>> powers
->>>>>>> back on (from resume). The display backlight comes on and 
->>>>>>> brightness is
->>>>>>> adjustable but there is no picture. The only fix is to reboot.
->>>>>>>
->>>>>>> Reverting this commit and applying it as a patch on top of 7.1
->>>>>>> addresses the
->>>>>>> issue for me.
->>>>>>>
->>>>>>> You can view the config I'm using here:
->>>>>>> https://urldefense.com/v3/__https://gitlab.postmarketos.org/ 
->>>>>>> postmarketOS/pmaports/-/__;!!CTRNKA9wMg0ARbw! 
->>>>>>> jrsPDtSEUdaINzLlq92Li8gmsEBkTOxZ6WUzNHjvIN6CyOJjHiHkNSOhIRPXFTLPlaYlxU2uvryVkwjUAN9bmax5$
->>>>>>> merge_requests/8819
->>>>>>>
->>>>>>> Is there any sort of testing or other debugging info I can 
->>>>>>> provide to
->>>>>>> help
->>>>>>> address this issue?
->>>>>>
->>>>>> Thanks for reporting the issue, could you share some logs? Is the 
->>>>>> driver
->>>>>> saying anything during resume? Also, what type of panel is used on 
->>>>>> that
->>>>>> chromebook?
->>>>>
->>>>> The curious thing is that there are no real logs in dmesg or /var/log/
->>>>> messages about this. This picture just fails to come back. If there 
->>>>> are
->>>>> some kernel params I can set to get deeper logging, that would 
->>>>> help, but
->>>>> I'm not aware of any.
->>>>>
->>>>> I think the panel is a "BOE NV116WHM-T00" - I used this command to get
->>>>> info: cat /sys/class/drm/card0-eDP-1/edid | edid-decode
->>>>>
->>>>> Output: https://urldefense.com/v3/__https://termbin.com/8nbd__;!! 
->>>>> CTRNKA9wMg0ARbw! 
->>>>> jrsPDtSEUdaINzLlq92Li8gmsEBkTOxZ6WUzNHjvIN6CyOJjHiHkNSOhIRPXFTLPlaYlxU2uvryVkwjUAJooSyqL$
->>>>
->>>> This looked stalled. If I'm mistaken here, please let me known; but if
->>>> no solution is in sight, should we maybe just revert the change until a
->>>> proper was found?
->>>
->>> It's welcome anyone to provide a revert patch,
->>> but I would still wait for the fixup patch until 7.2-rc4.
->>> If no fixup patch exist, then apply the revert patch.
->>  From my understanding of things the position in the devel cycle doesn't
->> matter much in a case like this. To quote Linus statements from
->> https://www.kernel.org/doc/html/latest/process/handling- 
->> regressions.html#on-how-quickly-regressions-should-be-fixed
->>
->> """
->>  From 2026-01-22:
->>
->>   But a user complaining should basically result in an immediate fix -
->>   possibly a "revert and rethink".
->>
->> With a later clarification on 2026-01-28:
->>
->>   It's also worth noting that "immediate" obviously doesn't mean "right
->>   this *second* when the problem has been reported".
->>
->>   But if it's a regression with a known commit that caused it, I think
->>   the rule of thumb should generally be "within a week", preferably
->>   before the next rc.
->> """
->>
->> Adam reported the problem about three weeks ago, so we are way past the
->> "rule of thumb" timeframe Linus set.
->>
->> Ciao, Thorsten
-> 
-> This is a kind of odd situation here. The fix from Adam is actually 
-> correct, as in,
-> the SN65DSI83 bridge gets broken without...
-> 
-> ....but then, there's some more oddness going on: I tried to reproduce 
-> this on my
-> MT8173 Elm device, but there I can resume the system just fine, and the 
-> display is
-> up and running like normal?
-> 
-> I'm not sure what to advice here at this point - just adding some info.
-> 
-> Cheers,
-> Angelo
-Angelo, would you mind sharing your config, and the details of what 
-you're running? It might be a configuration difference.
-Thanks!
+Kontakt Thorsten Leemhuis (<regressions@leemhuis.info>) kirjutas
+kuup=C3=A4eval E, 6. juuli 2026 kell 14:33:
+>
+> On 6/24/26 10:55, Emil Renner Berthing wrote:
+> > Quoting Samuel Holland (2026-06-23 17:53:19)
+> >> On 2026-06-23 4:34 AM, Emil Renner Berthing wrote:
+> >>> Quoting Boqun Feng (2026-06-22 17:38:10)
+> >>>> On Sat, Jun 20, 2026 at 05:25:25AM -0400, Emil Renner Berthing wrote=
+:
+> >>>>> Quoting Boqun Feng (2026-06-18 17:30:10)
+> >>>>>> On Thu, Jun 18, 2026 at 08:11:36AM -0500, Emil Renner Berthing wro=
+te:
+> >>>>>>> Quoting Boqun Feng (2026-03-20 23:29:16)
+> >>>>>>>> Since commit c27cea4416a3 ("rcu: Re-implement RCU Tasks Trace in=
+ terms
+> >>>>>>>> of SRCU-fast") we switched to SRCU in BPF. However as BPF instru=
+ment can
+> >>>>>>>> happen basically everywhere (including where a scheduler lock is=
+ held),
+> >>>>>>>> call_srcu() now needs to avoid acquiring scheduler lock because
+> >>>>>>>> otherwise it could cause deadlock [1]. Fix this by following wha=
+t the
+> >>>>>>>> previous RCU Tasks Trace did: using an irq_work to delay the que=
+uing of
+> >>>>>>>> the work to start process_srcu().
+> >>>>>>>>
+> >>>>>>>> [boqun: Apply Joel's feedback]
+> >>>>>>>> [boqun: Apply Andrea's test feedback]
+> >>>>>>>>
+> >>>>>>>> Reported-by: Andrea Righi <arighi@nvidia.com>
+> >>>>>>>> Closes: https://lore.kernel.org/all/abjzvz_tL_siV17s@gpd4/
+> >>>>>>>> Fixes: commit c27cea4416a3 ("rcu: Re-implement RCU Tasks Trace i=
+n terms of SRCU-fast")
+> >>>>>>>> Link: https://lore.kernel.org/rcu/3c4c5a29-24ea-492d-aeee-e0d960=
+5b4183@nvidia.com/ [1]
+> >>>>>>>> Suggested-by: Zqiang <qiang.zhang@linux.dev>
+> >>>>>>>> Tested-by: Andrea Righi <arighi@nvidia.com>
+> >>>>>>>> Signed-off-by: Boqun Feng <boqun@kernel.org>
+> >>>>>>>
+> >>>>>>> Thanks for the patch, which is now upstream as
+> >>>>>>> 7c405fb3279b ("rcu: Use an intermediate irq_work to start process=
+_srcu()")
+> >>>>>>>
+> >>>>>>> Unfortunately it seems to halt booting on the Allwinner D1 single=
+-core RISC-V
+> >>>>>>> SoC both on the 7.0 and 7.1 kernels:
+> >>>>>>>
+> >>>>>>
+> >>>>>> By "single-core", is it only one CPU in that system?
+> >>>>>>
+> >>>>>>> https://esmil.dk/d1-7.0.txt
+> >>>>>>> https://esmil.dk/d1-7.1.txt
+> >>>>>>>
+> >>>>>
+> >>>>> Yes, the SoC only has one CPU core capable of running Linux at leas=
+t.
+> >>>>>
+> >>>>>> From the callstack,
+> >>>>>>
+> >>>>>> [  243.002818] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" =
+disables this message.
+> >>>>>> [  243.010681] task:kworker/0:0     state:D stack:0     pid:9     =
+tgid:9     ppid:2      task_flags:0x4208060 flags:0x00000000
+> >>>>>> [  243.021858] Workqueue: device_link_wq device_link_release_fn
+> >>>>>> [  243.027587] Call Trace:
+> >>>>>> [  243.030079] [<ffffffff80745b66>] __schedule+0x232/0x530
+> >>>>>> [  243.035365] [<ffffffff80745e82>] schedule+0x1e/0x94
+> >>>>>> [  243.040298] [<ffffffff8074aa7a>] schedule_timeout+0x6e/0xa8
+> >>>>>> [  243.045929] [<ffffffff8004d6a0>] wakeup_preempt+0x8c/0x98
+> >>>>>> [  243.051380] [<ffffffff80746aee>] wait_for_completion+0x3a/0xb0
+> >>>>>> [  243.057267] [<ffffffff80087226>] __synchronize_srcu.part.0+0x4e=
+/0x60
+> >>>>>> [  243.063712] [<ffffffff80084414>] rcu_tasks_get_gp_data+0xc/0x10
+> >>>>>> [  243.069699] [<ffffffff80490898>] device_link_release_fn+0x14/0x=
+80
+> >>>>>> [  243.075850] [<ffffffff8003dbd0>] process_one_work+0xf8/0x1c8
+> >>>>>> [  243.081583] [<ffffffff8003e282>] worker_thread+0x11a/0x254
+> >>>>>> [  243.087127] [<ffffffff8003e164>] rescuer_thread+0x3a0/0x3a4
+> >>>>>> [  243.092755] [<ffffffff8003e164>] rescuer_thread+0x3a0/0x3a4
+> >>>>>> [  243.098381] [<ffffffff8004499e>] kthread+0xbe/0xe4
+> >>>>>> [  243.103231] [<ffffffff8001349e>] ret_from_fork_kernel+0x6/0xd0
+> >>>>>> [  243.109127] [<ffffffff800517a8>] schedule_tail+0x8/0xac
+> >>>>>> [  243.114410] [<ffffffff800448dc>] kthreads_online_cpu+0x0/0x4
+> >>>>>> [  243.120121] [<ffffffff8074be0a>] ret_from_fork_kernel_asm+0x12/=
+0x18
+> >>>>>>
+> >>>>>> I will guess for some reasons the irq_work was missed or the IPI n=
+ever
+> >>>>>> happened. Is it possible for you to enable trace points ipi_send_c=
+pu and
+> >>>>>> ipi_entry to get more information?
+> >>>>>
+> >>>>> I have to admit I've not used tracepoints before, but it seems like=
+ only
+> >>>>> ipi_send_cpu and ipi_send_cpumask is available on RISC-V.
+> >>>>> I've now added trace_event=3Dipi:* and tp_printk to the command lin=
+e, and this
+> >>>>
+> >>>> Thank you! Yeah, this is what I meant ;-)
+> >>>>
+> >>>>> is what I get:
+> >>>>> https://esmil.dk/d1-7.0-2.txt
+> >>>>>
+> >>>>
+> >>>>
+> >>>> [    0.071132] rcu:     Max phase no-delay instances is 1000.
+> >>>> [    0.077837] ipi_send_cpu: cpu=3D0 callsite=3Dirq_work_queue+0x22/=
+0x4c callback=3Dsrcu_irq_work+0x0/0x58
+> >>>>
+> >>>> Is this the last line you can see from your (serial?) console, or we=
+ are
+> >>>> missing a few more lines? Maybe it'll should the same hung task
+> >>>> messages?
+> >>>
+> >>> Yes, sorry for not being clear about that. This is the exact same bin=
+ary booted
+> >>> without the two extra command line parametrs:
+> >>> https://esmil.dk/d1-7.0-3.txt
+> >>>
+> >>> But with the two parameters added the board reboots before getting to=
+ the hung
+> >>> task messages. The bootloader enables the watchdog, so I think what h=
+appens is
+> >>> that the kernel halts earlier with the tracepoints enabled, and doesn=
+'t get to
+> >>> load the watchdog driver to keep the machine from rebooting.
+> >>>
+> >>> The same happens with just trace_event=3Dipi:* added, just without th=
+e last
+> >>> message above.
+> >>>
+> >>>>
+> >>>> The ipi_send_cpu message means RCU was able to send an IPI, now if t=
+here
+> >>>> is no ipi_handler between the send and the hung task, that would mea=
+n
+> >>>> the IPI was missed.
+> >>
+> >> Assuming that your OpenSBI version is exactly v1.3 per the boot log, a=
+nd not
+> >> "v1.3 + patches", then you would indeed not be receiving IPIs. You nee=
+d at least
+> >> this commit: https://github.com/riscv-software-src/opensbi/commit/446f=
+a65eb579
+> >> (included in v1.4) or alternatively to add the CLINT to the M-mode dev=
+icetree.
+> >
+> > So then we're in a situation similar to [1], where upgrading the kernel=
+ from
+> > 6.19 to 7.0 requires you to update the firmware first.
+>
+> Which normally should never happen to ensure users feel save to update
+> the kernel. But I wonder if that is relevant, as Indrek Kruusa reported
+> problems with that board, too -- and there is a fix that fixes it:
+> https://lore.kernel.org/linux-riscv/20260624220434.4183732-1-felixonmars@=
+archlinux.org/
+>
+> Does that maybe fix your problem, too (even if it was bisected to a
+> different commit, it might be related somehow, that's why I'm asking)?
+>
+> Ciao, Thorsten
+>
+
+I tend to think we have two different situations here. I am using
+newer OpenSBI (v1.8) and an experimental u-boot based on newer
+v2026.07-rc1 [1].
+So, my firmware is different, also the context Emil is pointing to is diffe=
+rent.
+
+Best regards,
+Indrek
+
+[1] https://github.com/ikruusa/u-boot/tree/v2026-07-rc1-thead-base-b1
+
+
+> > To me and from the thread
+> > that seems like a really obvious regression. So the question is, how ca=
+n we make
+> > the current kernel work like < 7.0 kernels worked?
+> >
+> > [1]: https://lore.kernel.org/all/87jzgjnh9z.ffs@tglx/#t
+>
+>
