@@ -1,154 +1,169 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB0313E4C70
-	for <regressions@lists.linux.dev>; Thu,  9 Jul 2026 07:33:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783582395; cv=none; b=qdWdD1rrgCIrPLsy7rEY0EUSlMRbl4elm7Gj4OcSRmc1+lFasiqCC/AUM4+7l+6ku2gobh9JE+9IRvD3MXhie73BjPsFnEF79Zu+Gexp8JXpF8tIpg+Q5XZ3QuEEq1FJs9MiMGle64paB9ePdzKnNb9V17LMb1vU22i8akH6UrE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783582395; c=relaxed/simple;
-	bh=wTLjXs0Nq8Y27Hc/+8MSmwGiya4rn1iB7UYpif8d5FY=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=i2CVLnW/AS0W98PT2rtk9/pkYX9zamt52j/tkJAw7lwEvNYco1BKb2LeFg1fVrL+Ep4topImAKF6idG2E+saaQKJnOKWx1rKIwUgCciZ9oY+Pj7PkXnCX79kgRAksAzWglrysoDrTy/Cs/DePL3PYQcO+qUIWMsUHzkin7s13HY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=zSme6V2x; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=DzEguJED; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Y6kdwrz8; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=PuEAcvji; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B82753DFC74
+	for <regressions@lists.linux.dev>; Thu,  9 Jul 2026 07:54:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.210.51
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1783583697; cv=pass; b=Kh4jEN/QRGiGTZbP9VwGPiIZrtPRZSM0b3Owe6sdWMzSa9O5GJi/ZY59DOXSyvjJK8IFAU40782KgPEws57fxIFri5DfroJnIJUsaz7nZCQYymBOjeGXdHvzVABXRE4wpp6KwINV0MRFRE3gYDI31AwWS4QQN+w+GOccxGyy11s=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1783583697; c=relaxed/simple;
+	bh=Ma9hZYGKmWu+c4bk/cBfQ6DPevX5CRoMpK8Z9/3dTjQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ohQBXQQXEaOmwTCpt7EvzitckgfAC4J3VhMUEnILiAAwZkn/9T6YHl0TWvtfwhTzVIhtObHVT0jr0xKH5asFziw0CyB7pkmx4NM/UIJEFVYcNz+yxFBv1zTIkiTC6ieGTwgnZn7DsdVQvvyhcC9ac4rahEpC5Epm3+1ZX1Yrids=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gbTcVFZe; arc=pass smtp.client-ip=209.85.210.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="zSme6V2x";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="DzEguJED";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Y6kdwrz8";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="PuEAcvji"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id CADAA75D54;
-	Thu,  9 Jul 2026 07:33:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1783582392; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Xz1L/hb9xwGVV1iOjLn7rr9iar5Ha7VOtnV+jCCHEe4=;
-	b=zSme6V2xv54SKNVxgFyc9fuXq6a3YNOWr1cvOz6S1kC9EZ8ulji52YxzNWgxFM21IbDjrl
-	CXpJdYxh2x6JRWBIbAVVwMop7sgGr2QJSIT9c93/m/HFCuKKOSB4gShXlem8eDQcOLt6ZE
-	BngvTTE4c0v/1F8nZwZdPdMPODBJ63A=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1783582392;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Xz1L/hb9xwGVV1iOjLn7rr9iar5Ha7VOtnV+jCCHEe4=;
-	b=DzEguJED/4VpYAKGuUCwblzJwahGxhOX9VnfSO1bTfUGYA4TLi50crTNUcSJuJSs9K2tmL
-	++BKg+jPEYEvFZCg==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1783582390; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Xz1L/hb9xwGVV1iOjLn7rr9iar5Ha7VOtnV+jCCHEe4=;
-	b=Y6kdwrz8XaCBezVCCYQm+Ne9CeLQ2H9LT5svEbV7IbLO4gVmBV3jHnAcUYAK0W0Cb2Q5vB
-	ZcZszbEgfUG7C5BXFZWFbzWM37qHNPwtYwIkEqDkk4Gioja8xCmlVLt75mKTt0EVIJyePG
-	8hTX96/qlQWhKdY530ho7pR5Mzp8tGM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1783582390;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Xz1L/hb9xwGVV1iOjLn7rr9iar5Ha7VOtnV+jCCHEe4=;
-	b=PuEAcvjib+0LKZabgB/6aACkTwdf6nhseHErdWyGethQDKUQl09lqOyd8VE1BfYYgr/i81
-	97QstGnPiSfHMLCA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A4839779AA;
-	Thu,  9 Jul 2026 07:33:10 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id wqdoJrZOT2pYTQAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Thu, 09 Jul 2026 07:33:10 +0000
-Date: Thu, 09 Jul 2026 09:33:10 +0200
-Message-ID: <87bjcg4nyh.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Jussi Laako <jussi@sonarnerd.net>
-Cc: Salvador Blaya <tiniebla6@gmail.com>,
-	alsa-devel@alsa-project.org,
-	regressions@lists.linux.dev
-Subject: Re: [REGRESSION] snd-usb-audio: commit da3a7efff64e ("ALSA: usb-audio: Update for native DSD support quirks") breaks DSD playback on Musical Fidelity M6s DAC (2772:0502), plays ~8.8% fast
-In-Reply-To: <4A4C8B42-D8BB-44D1-BE0B-CB5B4617F29E@sonarnerd.net>
-References: <CAOdyq+qFaqCh=tK_wNnA64hv5pQuA1Y09ANxQ=xK8yR-t4mf9Q@mail.gmail.com>
-	<4A4C8B42-D8BB-44D1-BE0B-CB5B4617F29E@sonarnerd.net>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/30.2 Mule/6.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gbTcVFZe"
+Received: by mail-ot1-f51.google.com with SMTP id 46e09a7af769-7e6b5737bb2so542883a34.1
+        for <regressions@lists.linux.dev>; Thu, 09 Jul 2026 00:54:55 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1783583694; cv=none;
+        d=google.com; s=arc-20260327;
+        b=kroGSrAKM2wZqnNnp5MBQBddFgooEXJyNNLdMMNZfO8j+vEVOmojdpbRQW40d4YhSQ
+         ggGpCbaFN94PflzN9i844Rjb+sBHEXSZbS13wfKW8wdUicleQGv2QewOaurH/r/3HSi6
+         7w22BuvWbJQk6i8f2LV7wSBKLDe5/ENjzr0Ir+KO8mT8Kc6RqF8MvJogF7QWX/W+8y6U
+         1WeoptyKiY2E1fXYJ4zI8kGx89ZS3Pisd0U+1oPMq8EJ/UF2iUn47bkGfZr2FCZUnnTY
+         l9hRUHJIY4Czer1Ijq81lRYVc8wYGiyhB2Evs15uY4ZmQSINeUz4FPjp+S1kA+bzd7nn
+         jDJw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=FX00PmUaBGhdxGjtEcp4ojX6h8tPyR/nQ8Y5AXR41uM=;
+        fh=hDuoOeOoYT+q45eo6YCPXnFwR9li1wrAtkEQJpzDsTU=;
+        b=EGh8MlXczWmWY6Abo5Vl2+gzOmcbQ85f2ZWYaaNJbCUPJ+BRFY8aHiiGSn9uL07hHO
+         GzGEvMY1n7oznExfKEM8ANMogJQHFCmyNG9zA8Wi21mhsMdxTS62irMCrmkPTUtAs/IS
+         4c+Vt1rqxywOqFobjqwb3cLS72610AHTvIrkG1eTkO6Z5SGLAjXb4kQk2BJqCPuifmez
+         zvPm2+kpIFaP33PVA8l1BYCnsJjmXW+zs2pOjC/lPvYb3mkaH+4vYBXGnElMQBw7iMw8
+         wD4+9xOXJ2WPm6hSH+vLhLna6sdrcQwco9CCPGAIm+LqIFBp4aMfJoE9Me6/xNBR/ZJK
+         /ETA==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1783583694; x=1784188494; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=FX00PmUaBGhdxGjtEcp4ojX6h8tPyR/nQ8Y5AXR41uM=;
+        b=gbTcVFZebwhPAMXghjKG9SJBjfu3mbNDWme77l0sZgeZuaxgEBRjHEAU+s7Zqj+04r
+         Kd2fxauOaUttMk4s+oCA4cZWwFPDZWA+Nys/LgTjI5O/lwDnk7g+D9ia3JmsC/BN1d5I
+         9dgaHqsiyEJgM1HdkiS18XnEcrSRKT7X1QXxQcxQA/+P73e8nAAhzVtbdt+SGy3nEcqE
+         obLik31pQz/DR9n44sp62tWxq+cMEZrFCU77aQOQ54XWB4XzLgMkZyimODEaVk0NjDK/
+         oLJywy9KcnLt7sYZp3W5U3rJLQ0YQb7PymFfp53s55RpmJ3Q6YPwVSTFWHJ7sddhW1mr
+         1goQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783583694; x=1784188494;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=FX00PmUaBGhdxGjtEcp4ojX6h8tPyR/nQ8Y5AXR41uM=;
+        b=G9CuqfgE6WxIR/RU4t1hu7LDzcYGT1ar3pOr+aADz9s6LKoZurx80GRjmEbB5KFsJ4
+         JyPfwDw12KT0wwoBS0viemibD093Ia6DqZM6G+c39foGbgVIyD/RaqENbPes7rK0qp+a
+         p1HZSkijD6VJZdnrxgeU3YKuBKrcYpAvaVBEDHM5L1sS7D0pB6Uh1SUoAg7nEUdkZn44
+         fdoGMk5zQNvbTQgNWXXz79M5/xN/BnSFXdW+jKW/zZYMDVi8txqTt6J6U8fPoAyAPSHO
+         MLmzNVmHM8rEZav/xZEPp5eG8BDRE1aljijjfiEnZHPuafMsd641PXEPjCY3NfflGEg9
+         2eOw==
+X-Forwarded-Encrypted: i=1; AFNElJ8Tad+qR8k5ZcwjiioW4MsDuD/8q0v7AP/kEQL+g5Xe3n0mMfO0H+RW9m/n/fg6z2LJt8ZmIg8tR1d3Lg==@lists.linux.dev
+X-Gm-Message-State: AOJu0YweaWzEf84wVCsbI+APLTVjzAZ5/irUBQ5JrBgnRxjZlPgjrvRO
+	ZiWVxCpS5CaReg7bk0iiDhrjsfT50gBwNyDIj7QmBxF0woWI3DGsBuWHtKfwc933GPOaAlxNxjQ
+	C39IlpqOjymWyj3HcbbF7sTWBahskpeg=
+X-Gm-Gg: AfdE7cmFITdfssp9G3ufjhx/S6WUSmGFn6cWl2zqKQJSNlvyOD7loHTeb5/URgFG3uf
+	XoH1t/BaWRlELUoQfCk2Z35rqkI75OgzhaHgHBXW39LGCEXrJZt/nU4EF6qt4ekHb52k7hzq3lz
+	0E2iNavYYVU8ZO4NS9nhUiYEr7+5qbvpOWqmy/H+BZHA0Lq5XV4aUut4b+bXGWov1PZy45cIOLC
+	Kim9tEdM1O0zfO1WvW1ZlS4fPTbdyHUTKCoypaFKyR6Yd5DRmBdtQMKvmIcCEYlgDV/7P9V1es=
+X-Received: by 2002:a05:6830:82a8:b0:7e9:c8e3:4473 with SMTP id
+ 46e09a7af769-7ebd02a39famr4920086a34.16.1783583694520; Thu, 09 Jul 2026
+ 00:54:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=ISO-8859-7
-Content-Transfer-Encoding: 8bit
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-3.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FREEMAIL_CC(0.00)[gmail.com,alsa-project.org,lists.linux.dev];
-	RCPT_COUNT_THREE(0.00)[4];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Level: 
-X-Spam-Score: -3.30
+MIME-Version: 1.0
+References: <CAOdyq+qFaqCh=tK_wNnA64hv5pQuA1Y09ANxQ=xK8yR-t4mf9Q@mail.gmail.com>
+ <4A4C8B42-D8BB-44D1-BE0B-CB5B4617F29E@sonarnerd.net> <87bjcg4nyh.wl-tiwai@suse.de>
+In-Reply-To: <87bjcg4nyh.wl-tiwai@suse.de>
+From: Salvador Blaya <tiniebla6@gmail.com>
+Date: Thu, 9 Jul 2026 09:54:43 +0200
+X-Gm-Features: AVVi8CdD75YylWj7sWl9WVm_PTcKz4gGLBge_a1BeaeSo4zknRXfOV8Ydp_BhoI
+Message-ID: <CAOdyq+ook_mDq_5wc_Na182bLvxZ1YJUJEchJ6MochU17QecQA@mail.gmail.com>
+Subject: Re: [REGRESSION] snd-usb-audio: commit da3a7efff64e ("ALSA:
+ usb-audio: Update for native DSD support quirks") breaks DSD playback on
+ Musical Fidelity M6s DAC (2772:0502), plays ~8.8% fast
+To: Takashi Iwai <tiwai@suse.de>
+Cc: Jussi Laako <jussi@sonarnerd.net>, alsa-devel@alsa-project.org, 
+	regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 09 Jul 2026 00:28:00 +0200,
-Jussi Laako wrote:
-> 
-> Hi,
-> 
-> I don¢t think we currently have exclusion method for devices with buggy firmware, which claim to support native DSD, but do it incorrectly. And reverting with device specific white-listing is not a good approach for future maintenance. Having to device-specific white-list each new device appearing on the market from the manufacturer just because some old device is broken is not really a sustainable model.
+Hi Takashi,
 
-While I fully agree that white-listing all needed devices won't scale,
-blacklisting the broken device might work.  We can an empty quirk
-entry for 2772:0502 for skipping the vendor match, something like
-below, as an ad hoc fix.
+Thank you - that approach would fit this case well, and the risks you
+mention are fortunately minimal here:
 
-Though, this blindly assumes that there aren't so many broken devices,
-and there will be no firmware fix or another model that works with the
-same ID.  If a model is relatively new and/or the vendor often updates
-the firmware, such an entry can be risky, too.
+- The M6s DAC has been discontinued for years and the defect was first
+  reported to the vendor (via their Windows ASIO driver users) back in
+  2018, with no firmware fix ever published. I have an inquiry open
+  with Musical Fidelity about firmware and will report back if
+  anything changes.
 
+- The only other model possibly sharing this ID, the M6sR successor,
+  exhibits the same defect per the Roon thread in my original report,
+  so an empty entry for 2772:0502 cannot break a working device. The
+  current MF models known to work with native DSD (M3x, M6x) already
+  worked before the vendor flag was added, so they use different IDs.
 
-thanks,
+I'm happy to test the patch on my unit - both that native DSD is no
+longer offered (MPD falling back to dsd2pcm as on 6.12.y) and that
+normal PCM playback is unaffected. Just let me know.
 
-Takashi
+Best regards,
 
--- 8< --
---- a/sound/usb/quirks.c
-+++ b/sound/usb/quirks.c
-@@ -2463,6 +2463,8 @@ static const struct usb_audio_quirk_flags_table quirk_flags_table[] = {
- 		   QUIRK_FLAG_DSD_RAW),
- 	DEVICE_FLG(0x2708, 0x0002, /* Audient iD14 */
- 		   QUIRK_FLAG_IGNORE_CTL_ERROR),
-+	DEVICE_FLG(0x2772, 0x0502, /* Musical Fidelity M6s DAC */
-+		   0), /* for avoiding QUIRK_FLAG_DSD_RAW with vendor match */
- 	DEVICE_FLG(0x2912, 0x30c8, /* Audioengine D1 */
- 		   QUIRK_FLAG_GET_SAMPLE_RATE),
- 	DEVICE_FLG(0x2a70, 0x1881, /* OnePlus Technology (Shenzhen) Co., Ltd. BE02T */
+Salvador
+
+El jue, 9 jul 2026 a las 9:33, Takashi Iwai (<tiwai@suse.de>) escribi=C3=B3=
+:
+>
+> On Thu, 09 Jul 2026 00:28:00 +0200,
+> Jussi Laako wrote:
+> >
+> > Hi,
+> >
+> > I don=E2=80=99t think we currently have exclusion method for devices wi=
+th buggy firmware, which claim to support native DSD, but do it incorrectly=
+. And reverting with device specific white-listing is not a good approach f=
+or future maintenance. Having to device-specific white-list each new device=
+ appearing on the market from the manufacturer just because some old device=
+ is broken is not really a sustainable model.
+>
+> While I fully agree that white-listing all needed devices won't scale,
+> blacklisting the broken device might work.  We can an empty quirk
+> entry for 2772:0502 for skipping the vendor match, something like
+> below, as an ad hoc fix.
+>
+> Though, this blindly assumes that there aren't so many broken devices,
+> and there will be no firmware fix or another model that works with the
+> same ID.  If a model is relatively new and/or the vendor often updates
+> the firmware, such an entry can be risky, too.
+>
+>
+> thanks,
+>
+> Takashi
+>
+> -- 8< --
+> --- a/sound/usb/quirks.c
+> +++ b/sound/usb/quirks.c
+> @@ -2463,6 +2463,8 @@ static const struct usb_audio_quirk_flags_table qui=
+rk_flags_table[] =3D {
+>                    QUIRK_FLAG_DSD_RAW),
+>         DEVICE_FLG(0x2708, 0x0002, /* Audient iD14 */
+>                    QUIRK_FLAG_IGNORE_CTL_ERROR),
+> +       DEVICE_FLG(0x2772, 0x0502, /* Musical Fidelity M6s DAC */
+> +                  0), /* for avoiding QUIRK_FLAG_DSD_RAW with vendor mat=
+ch */
+>         DEVICE_FLG(0x2912, 0x30c8, /* Audioengine D1 */
+>                    QUIRK_FLAG_GET_SAMPLE_RATE),
+>         DEVICE_FLG(0x2a70, 0x1881, /* OnePlus Technology (Shenzhen) Co., =
+Ltd. BE02T */
