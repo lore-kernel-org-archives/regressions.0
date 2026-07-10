@@ -1,162 +1,275 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mail.archlinux.org (mail.archlinux.org [95.216.189.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCBC83F58E9
-	for <regressions@lists.linux.dev>; Fri, 10 Jul 2026 12:31:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6C0920C00C
+	for <regressions@lists.linux.dev>; Fri, 10 Jul 2026 18:07:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.216.189.61
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783686679; cv=none; b=u8qkpc6k/H6GFRutDRd3YSLRiYJRSX5qRLcadd/DRfqPxX18+Kn7b/lbDfMvlKVmEAOamcvj4XTOPATDQKN4AP/NhUid+znYW1iSrK3q/MJxUdtszZhoQFT4FvvI8A5UBzTYvt675aEL2/oy+9M65lHP8ejtQzLCMLI26bZ2SlQ=
+	t=1783706859; cv=none; b=Q8RZpA8nIya2zdLLh8mZ+FiBqDbkmDUOtgJRIiiLQ0oATpLthpiPPRpZXntYwEofNAlzI/6J53RCT5671Dbb5nK15ild04qCYbweLPkLTJOfWoR8zG77iDOLMS6PAT45NUXWmlb/SSVsDrBpF+lUkEODqsKvnBNEq8zSoZQGmEQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783686679; c=relaxed/simple;
-	bh=fJQiBCYxAPgM6Wm8FMkCt5uuxtAmYrI+HaFJhT9sXD4=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=bp30zxVwcHi+bKfPNXcTmjvwqqE2DxswYcHcgK7Pk3bah005pxSDn3pi9i7mVVH0cF0/maWE0pGiIsz7NbkSv4xaVvjlKav+OQlTY62GSmNiC7EBi0ARcWzhzGP17TbXBtN6Wy1YolVAXCDHebTOsFOUR4FZ3r+ZovPXQqjSOBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=C6hHosFY; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1783706859; c=relaxed/simple;
+	bh=39h6QD+l+hFXPLtdb2AjCsJlPk3MPfFWMaRsDosbQkY=;
+	h=Message-ID:Date:MIME-Version:To:From:Subject:Cc:Content-Type; b=Pb0Fzehfel7w/HXm5UTT4mEJPZtUbR3kg3Ldz5+FEdnsxDOkFgfdudy5eUY73aXXndc8AeTdtjBMXxDv7+gycRV9mhENt8/bhVI40P/Rf0DWnuHRJda3oQiZjQZemCjGMw1z6KnMZbZ2FX+39T7uKczEPaqjvbeyCdxTF5fhoJc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=archlinux.org; spf=pass smtp.mailfrom=archlinux.org; dkim=pass (4096-bit key) header.d=archlinux.org header.i=@archlinux.org header.b=x4DaBxzg; dkim=permerror (0-bit key) header.d=archlinux.org header.i=@archlinux.org header.b=Kej11nkE; arc=none smtp.client-ip=95.216.189.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=archlinux.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=archlinux.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C6hHosFY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1783686678; x=1815222678;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=fJQiBCYxAPgM6Wm8FMkCt5uuxtAmYrI+HaFJhT9sXD4=;
-  b=C6hHosFYaZAlAx7wfeD4rk1bKKY8DS7mk7YsDjBgtNxBUCJVVag6ObiW
-   MCp6keQSniDEAGKqKQueA9FSM4Rcu6RtZaSjIgjg98cEMYkYinLaGVtDt
-   8JQ8l53TQIr6fqecM7M2ynGd91rxkmQQ30t7G7b4Q6r0ZtKT7RaaGKHC9
-   xm5/u6hVlmXk2C7BmFnPPZ8D61DpQISBaOOevi+goAbMgm8MvXs/nOVbb
-   gXA+dXtNoXMNZcZaf4C4PQqCCaW8BfPdl5xrKCvzo96h0CrrzQm+1v3Tv
-   0z9jtmWjn2oIDf63bQYw+panjxmGma4Chf/z+ybPlngq9CS18rHgdxvGM
-   A==;
-X-CSE-ConnectionGUID: ALNP+lTATZ2L3J44M2FEbQ==
-X-CSE-MsgGUID: 8zzqa5xCTbaMcRx8QS6IVQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11841"; a="84353574"
-X-IronPort-AV: E=Sophos;i="6.25,154,1779174000"; 
-   d="scan'208";a="84353574"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2026 05:31:17 -0700
-X-CSE-ConnectionGUID: +RUHRk5xTsiMS/zRKYgNRQ==
-X-CSE-MsgGUID: UkI6aFfbRkO+GmI5lirZpg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,154,1779174000"; 
-   d="scan'208";a="253145675"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.169])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2026 05:31:13 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 10 Jul 2026 15:31:08 +0300 (EEST)
-To: Denis Benato <denis.benato@linux.dev>
-cc: Salvatore Bonaccorso <carnil@debian.org>, Ponali <ponali2k@gmail.com>, 
-    Luke Jones <luke@ljones.dev>, Corentin Chary <corentin.chary@gmail.com>, 
-    Hans de Goede <hansg@kernel.org>, 1141604@bugs.debian.org, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
-    regressions@lists.linux.dev, stable@vger.kernel.org
-Subject: Re: Bug#1141604: linux-image-6.12.94+deb13-amd64: does not detect
- ScreenPad on ASUS VivoBook
-In-Reply-To: <98dc115b-1dec-4fbb-bab7-2588e8b74bf8@linux.dev>
-Message-ID: <0ff0385e-50b0-bfae-cedc-05cfe9c6cbc7@linux.intel.com>
-References: <178340264407.17924.10135409461303815312.reportbug@ananaspc> <178362762638.911488.8564892548331679884@eldamar.lan> <98dc115b-1dec-4fbb-bab7-2588e8b74bf8@linux.dev>
+	dkim=pass (4096-bit key) header.d=archlinux.org header.i=@archlinux.org header.b="x4DaBxzg";
+	dkim=permerror (0-bit key) header.d=archlinux.org header.i=@archlinux.org header.b="Kej11nkE"
+Message-ID: <8a2b1abf-3c8a-4242-82c5-fba9943cf8f4@archlinux.org>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=archlinux.org;
+	s=dkim-rsa; t=1783706854;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	to:to:cc:cc:mime-version:mime-version:content-type:content-type:autocrypt:autocrypt;
+	bh=39h6QD+l+hFXPLtdb2AjCsJlPk3MPfFWMaRsDosbQkY=;
+	b=x4DaBxzgobEdOEKeB+pmWa8AAQO86d+s6ptKr0aMaKGTLomVMPARuAPHWkHz26HK/CZejs
+	V/kTazdmfMLqmeizABKgWoeCnML5jyQvhGjDF284x0ZGpvYv8enA/t4OpmZS6TFv/gARqf
+	g+ADUlo7cDir/RXmdHsucKyMYB8Yr/p7OuTub1DEe2JC52/ihnRyqFX8XAq1GAfmM5hAG0
+	2rCBMTg2E2fZ48AMNzKUa/6YmPzkY4Faqwtw2MBfnA5qUWWSJ3+r3RCiipHy1DdGoszZ/X
+	zQdOcyJc639WSEWyq6bWF/ny6S1AIzSe9VZ8K8UHh+sbcgrMXNFqC1zVdAS11xVu1FAVSP
+	08MPYTM8+9F14Nq9tD8nYRdph9JLx9CbWAxOxQJRSvSG0DeeKOnqDxnmqZDq7z9n3t+qdk
+	nm+vGwg03gHbWtSeuh910vRVHugcfi7VxYF02hJ9MiaNfYtqKd7SDZuMFxBsGLrN5EJYTF
+	gomzQxrGDHDzgX6EwvzaS3Cfo5JqXlLJLytEEnd8C7fhTu0pBWSXq2b9rhYaGzVHCwFo4X
+	o68gFP+JoDBPoQNZ0f9wHdA0hhEWr1odwwlLNgk1yTO8aS9od6SSuUg+vhvnps5yGVZLhn
+	XUdm7auCg7z0hGn3qg6fevLpyW4GUk7x978W4qRRWoAZLXMBcWeV0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=archlinux.org;
+	s=dkim-ed25519; t=1783706854;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	to:to:cc:cc:mime-version:mime-version:content-type:content-type:autocrypt:autocrypt;
+	bh=39h6QD+l+hFXPLtdb2AjCsJlPk3MPfFWMaRsDosbQkY=;
+	b=Kej11nkESNPzYDkrw96KCEfzFRTTtiAWC+scaPptfGnYODTY5mW37BS28it0ZgpRASWmun
+	/C9VJo1GUYTRK2Cg==
+Authentication-Results: mail.archlinux.org;
+	auth=pass smtp.auth=svenstaro smtp.mailfrom=svenstaro@archlinux.org
+Date: Fri, 10 Jul 2026 20:07:32 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Language: en-US-large, de-DE
+To: Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>
+From: Sven-Hendrik Haase <svenstaro@archlinux.org>
+Subject: [REGRESSION] commit b520c4eef83d ("block: split bio_alloc_bioset more
+ clearly into a fast and slowpath") causes fsync to fail with pmem
+Autocrypt: addr=svenstaro@archlinux.org; keydata=
+ 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
+ 2+Dd0G7AznpgJHOb1rk=
+Cc: regressions@lists.linux.dev, linux-block@vger.kernel.org,
+ Li Chen <me@linux.beauty>, Joseph Qi <joseph.qi@linux.alibaba.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------YrHT8vHkbTdSGA3pB0SKvhJg"
 
-On Fri, 10 Jul 2026, Denis Benato wrote:
-> On 7/9/26 22:08, Salvatore Bonaccorso wrote:
-> > Control: forwarded -1 https://lore.kernel.org/regressions/178362762638.911488.8564892548331679884@eldamar.lan
-> > Control: tags -1 + upstream
-> >
-> > Hi,
-> >
-> > Ponali reported in Debian (https://bugs.debian.org/1141604) the
-> > following issue after updating from 6.12.90 to 6.12.94. First quoting
-> > the report:
-> >
-> > On Tue, Jul 07, 2026 at 07:37:24AM +0200, Ponali wrote:
-> >> Package: src:linux
-> >> Version: 6.12.94-1
-> >> Severity: normal
-> >> Tags: upstream, regression
-> >> X-Debbugs-Cc: ponali2k@gmail.com
-> >>
-> >> Last known working kernel: 6.12.90-1
-> >> First known broken kernel: 6.12.94-1
-> >>
-> >>
-> >> Dear Maintainer,
-> >>
-> >> I upgraded all my packages through apt, which also upgraded the linux image
-> >> from 6.12.90 to 6.12.94.
-> >>
-> >> I expected the ScreenPad display to continue to be detected and exposed as a
-> >> DRM output, like on 6.12.90. The ScreenPad being the trackpad with a screen,
-> >> which came with my computer (ASUS VivoBook X532FA_S532FA).
-> >>
-> >> After upgrading and rebooting, the new kernel caused a regression where the
-> >> display of the ScreenPad fails to get recognized by the kernel. The touchpad
-> >> functionality still works. Usually, the ScreenPad would appear as "HDMI-A-1".
-> >> The DRM connector for it still exists (/sys/class/drm/card0-HDMI-A-1), but
-> >> "status" reports "disabled"
-> >>
-> >> I could not get the ScreenPad display to be recognized again on the new kernel,
-> >> so I configured GRUB to automatically boot to the 6.12.90 kernel through the
-> >> "Advanced Options". The ScreenPad is recognized on older kernel versions, so I
-> >> am still able to use it (until a new LPE comes around).
-> >>
-> >> To replicate:
-> >> 1. Boot with 6.12.90. The ScreenPad display is detected as HDMI-A-1.
-> >> 2. Boot with 6.12.94 with the exact same hardware.
-> >> 3. The ScreenPad display is no longer usable.
-> >>
-> >>
-> >> My main display is eDP-1 (1920x1080), though it isn't essential. My GPU is an
-> >> integrated Intel iGPU, and the driver used for both screens is i915. I have
-> >> booted to the new kernel for reportbug to get all the information
-> >> automatically, but i will continue to use the old one until the appropriate
-> >> time.
-> > Now, Ponali did bisect the changes between 6.12.90 and 6.12.94 and
-> > found that the backport of the commit 8d95d1f4aa5c ("platform/x86:
-> > asus-wmi: fix screenpad brightness range") changed the behaviour.
-> > Bisect log is at: https://bugs.debian.org/1141604#22
-> >
-> > As this change was backported to other stable series as well I asked
-> > Ponali to please test 7.0.y and 7.1.y and confirmed that both 7.0.13
-> > and as well 7.1.3 show the hehaviour.
-> >
-> > #regzbot introduced: 8d95d1f4aa5c76202b0833a70998769384612488
-> > #regzbot link: https://bugs.debian.org/1141604
-> >
-> > Is there anything Ponali can report back to further debug the issue?
-> Hi Salvatore,
-> 
-> The commit incriminated is this one: https://lore.kernel.org/all/20260302174431.349816-3-denis.benato@linux.dev/
-> 
-> As you can see that commit changes min/max of the brightness range, but 
-> does not touch the detection at all, 
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------YrHT8vHkbTdSGA3pB0SKvhJg
+Content-Type: multipart/mixed; boundary="------------9k0lNiORNwXEmWZIzG3Cl0gd";
+ protected-headers="v1"; hp="clear"
+Message-ID: <8a2b1abf-3c8a-4242-82c5-fba9943cf8f4@archlinux.org>
+Date: Fri, 10 Jul 2026 20:07:32 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US-large, de-DE
+To: Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>
+From: Sven-Hendrik Haase <svenstaro@archlinux.org>
+Subject: [REGRESSION] commit b520c4eef83d ("block: split bio_alloc_bioset more
+ clearly into a fast and slowpath") causes fsync to fail with pmem
+Autocrypt: addr=svenstaro@archlinux.org; keydata=
+ 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
+ 2+Dd0G7AznpgJHOb1rk=
+Cc: regressions@lists.linux.dev, linux-block@vger.kernel.org,
+ Li Chen <me@linux.beauty>, Joseph Qi <joseph.qi@linux.alibaba.com>
 
-To be more precise, it DOES change read_screenpad_backlight_power() -> 
-asus_wmi_get_devstate_simple() but AFAICT that cannot make things worse 
-because asus_wmi_get_devstate_simple() used in both cases, so I was 
-left to wonder the same thing as you.
+--------------9k0lNiORNwXEmWZIzG3Cl0gd
+Content-Type: multipart/mixed; boundary="------------0oGzMl9l2W1Nlufk7EhgZxwh"
 
-That being said, it's hard to see how bisect could point this to a wrong 
-commit either because good/bad should be pretty obvious.
+--------------0oGzMl9l2W1Nlufk7EhgZxwh
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
 
-Did reverting the suspect commit on top of 6.12.94 result in a working 
-system?
+SGV5LA0KDQpGaXJzdCBvZiBhbGwsIEkgZG9uJ3QgZG8gYSBsb3Qgb2YgTGludXggZGV2ZWxv
+cG1lbnQgYW5kIHNvIEkgaG9wZSB0aGF0IA0KSSdtIHN1Ym1pdHRpbmcgdGhpcyBpc3N1ZSB0
+byB0aGUgcmlnaHQgcGVvcGxlIGFuZCBsaXN0cywgcGxlYXNlIGJlIGdlbnRsZS4NCg0KSSBu
+b3RpY2VkIHRoYXQgc3RhcnRpbmcgd2l0aCBMaW51eCA3LjEsIG15IHBtZW0gdm9sdW1lcyBp
+bnNpZGUgb2YgUUVNVSANCnN0b3BwZWQgd29ya2luZy4gTXkgdXNlIGNhc2UgaXMgdGhpczoN
+Cg0KcWVtdS1zeXN0ZW0teDg2XzY0IC4uLiB0b25zIG9mIFFFTVUgZmxhZ3MgLi4uDQotb2Jq
+ZWN0IA0KbWVtb3J5LWJhY2tlbmQtZmlsZSxpZD1wbWVtMCxzaGFyZT1vbixtZXJnZT1vbixk
+aXNjYXJkLWRhdGE9b24sbWVtLXBhdGg9L3BhdGgvcG1lbTAucG1lbSxzaXplPTEwMEcNCi1k
+ZXZpY2UgdmlydGlvLXBtZW0tcGNpLG1lbWRldj1wbWVtMCxpZD1udjANCg0KVGhpcyB1c2Vk
+IHRvIHdvcmsgYnV0IGluc2lkZSB0aGUgVk0gSSdkIGdldCB0aGlzIHdoZW4gcnVubmluZyBt
+a2ZzLmV4dDQgDQovZGV2L3BtZW0wIHdpdGggZ3Vlc3Qga2VybmVsIDcuMS4zOg0KDQo+IFty
+b290QGFyY2hsaW51eCB+XSMgbWtmcy5leHQ0IC9kZXYvcG1lbTANCj4gbWtlMmZzIDEuNDcu
+NCAoNi1NYXItMjAyNSkNCj4gQ3JlYXRpbmcgZmlsZXN5c3RlbSB3aXRoIDI2MjE0NDAwIDRr
+IGJsb2NrcyBhbmQgNjU1MzYwMCBpbm9kZXMNCj4gRmlsZXN5c3RlbSBVVUlEOiAxYTE0MDQ0
+Ni00M2U2LTQ1MDEtOTFkYi1jZmFhMjUwOTE2ZTUNCj4gU3VwZXJibG9jayBiYWNrdXBzIHN0
+b3JlZCBvbiBibG9ja3M6IA0KPiAgICAgMzI3NjgsIDk4MzA0LCAxNjM4NDAsIDIyOTM3Niwg
+Mjk0OTEyLCA4MTkyMDAsIDg4NDczNiwgMTYwNTYzMiwgMjY1NDIwOCwgDQo+ICAgICA0MDk2
+MDAwLCA3OTYyNjI0LCAxMTIzOTQyNCwgMjA0ODAwMDAsIDIzODg3ODcyDQo+IA0KPiBBbGxv
+Y2F0aW5nIGdyb3VwIHRhYmxlczogZG9uZSAgICAgICAgICAgICAgICAgICAgICAgICAgICAN
+Cj4gV3JpdGluZyBpbm9kZSB0YWJsZXM6IGRvbmUgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgDQo+IENyZWF0aW5nIGpvdXJuYWwgKDEzMTA3MiBibG9ja3MpOiBkb25lDQo+IFdyaXRp
+bmcgc3VwZXJibG9ja3MgYW5kIGZpbGVzeXN0ZW0gYWNjb3VudGluZyBpbmZvcm1hdGlvbjog
+bWtmcy5leHQ0OiBJbnB1dC9vdXRwdXQgZXJyb3Igd2hpbGUgd3JpdGluZyBvdXQgYW5kIGNs
+b3NpbmcgZmlsZSBzeXN0ZW0NCg0KSSBmaWd1cmVkIGl0IG11c3QndmUgYmVlbiBhIHJlY2Vu
+dCByZWdyZXNzaW9uIHNpbmNlIGl0IHdvcmtlZCB1bnRpbCANCjcuMC4xMyAodGhlIGxhdGVz
+dCB0aGF0IEkgdGVzdGVkIGluIHRoZSBWTSkuIEkgaW52ZXN0aWdhdGVkIGEgYml0IGFuZCAN
+CndhcyBhYmxlIHRvIHRyYWNrIGl0IGRvd24gdG8gYjUyMGM0ZWVmODNkIHdoZXJlIHNvbWUg
+a2luZCBvZiByZWZhY3RvciANCndhcyBjb21taXR0ZWQuIEl0IHNlZW1zIHRvIGNyZWF0ZSB0
+aGUgZmlsZXN5c3RlbSBmaW5lIHVudGlsIHRoZSBmbHVzaCBhdCANCnRoZSBlbmQuIEkgZGlk
+IGFub3RoZXIgdGVzdDoNCg0KTm8gZnN5bmMgZGQ6DQoNCj4gW3Jvb3RAYXJjaGxpbnV4IH5d
+IyBkZCBpZj0vZGV2L3plcm8gb2Y9L2Rldi9wbWVtMCBicz0xTSBjb3VudD0xMDAgICAgICAg
+ICAgIA0KPiAxMDArMCByZWNvcmRzIGluDQo+IDEwMCswIHJlY29yZHMgb3V0DQo+IDEwNDg1
+NzYwMCBieXRlcyAoMTA1IE1CLCAxMDAgTWlCKSBjb3BpZWQsIDAuMTk1MzI3IHMsIDUzNyBN
+Qi9zDQoNCmZzeW5jIGRkOg0KDQo+IFtyb290QGFyY2hsaW51eCB+XSMgZGQgaWY9L2Rldi96
+ZXJvIG9mPS9kZXYvcG1lbTAgYnM9MU0gY291bnQ9MTAwIGNvbnY9ZnN5bmMNCj4gZGQ6IGZz
+eW5jIGZhaWxlZCBmb3IgJy9kZXYvcG1lbTAnOiBJbnB1dC9vdXRwdXQgZXJyb3INCj4gMTAw
+KzAgcmVjb3JkcyBpbg0KPiAxMDArMCByZWNvcmRzIG91dA0KPiAxMDQ4NTc2MDAgYnl0ZXMg
+KDEwNSBNQiwgMTAwIE1pQikgY29waWVkLCAwLjQ0MjA4OSBzLCAyMzcgTUIvcw0KDQpOb3cs
+IEknbSBlbnRpcmVseSB1bmZhbWlsaWFyIHdpdGggdGhlIGJsb2NrIHN1YnN5c3RlbSBpbiBM
+aW51eCBidXQgSSANCnBva2VkIGF0IGl0IGEgbGl0dGxlIGFuZCB3YXMgYWJsZSB0byBwcm9k
+dWNlIGEgdGlueSBwYXRjaCB0aGF0IGZpeGVzIA0KdGhpcyBmb3IgbWUgYW5kIEknbSBhdHRh
+Y2hpbmcgaXQgdG8gdGhpcyBlbWFpbCBhcyBhIGRpc2N1c3Npb24gcG9pbnQuIA0KSG93ZXZl
+ciwgSSdtIG5vdCBzdWJtaXR0aW5nIGl0IGFzIGFuIG9mZmljaWFsIHBhdGNoIGJlY2F1c2Ug
+ZnJhbmtseSBJIA0KY2FuJ3QgZXhwbGFpbiBpdCB3ZWxsIGVub3VnaCBhbmQgSSBoYXZlbid0
+IGRvbmUgQyBpbiBhIGxvbmcgdGltZSwgSSBqdXN0IA0KbG9va2VkIGF0IHRoZSBvbGQgbG9n
+aWMgYW5kIHRoZSBuZXcgYW5kIHB1dCBhIGJ1bmNoIG9mIGRlYnVnIHByaW50cyBhbGwgDQpv
+dmVyIHRoZSBwbGFjZS4gQmFzaWNhbGx5IHRoaXMgaXMganVzdCBtZSBkb2luZyBteSBiZXN0
+IHRvIHRyeSB0byByZXBvcnQgDQp0aGlzIGlzc3VlLg0KDQpXaGlsZSBzY2FubmluZyBhcm91
+bmQsIEkgbm90aWNlZCB0aGF0IGp1c3QgeWVzdGVyZGF5LCBhIHN1c3BpY2lvdXNseSANCnNp
+bWlsYXIgdG9waWMgd2FzIHNlbnQgdG8gdGhlIE1MIFswXS4gVGhhdCBwYXRjaCBpcyBhIGxv
+dCBiaWdnZXIgdGhhbiANCm1pbmUsIHRob3VnaC4gQWxzbyBqdXN0IHdoZW4gSSB3YXMgYWJv
+dXQgdG8gc2VuZCB0aGlzIG1haWwsIEkgbm90aWNlZCANClsxXSB3aGljaCBzZWVtcyB0byBi
+ZSBleGFjdGx5IG15IGlzc3VlLg0KDQpBbGwgb2YgdGhpcyBtYWtlcyBtZSBldmVuIGxlc3Mg
+Y29uZmlkZW50IGluIG15IHBhdGNoIHNpbmNlIGFsbCBvZiB0aGVzZSANCnBhdGNoZXMgYXJl
+IHNvIG11Y2ggYmlnZ2VyIGFuZCBhdCBsZWFzdCBvbiB0aGUgc3VyZmFjZSBzZWVtIHRvIHRh
+Y2tsZSANCnRoZSBzYW1lIHByb2JsZW0gYnV0IG1heWJlIG15IHJlcG9ydCBjYW4gYWRkIHNv
+bWV0aGluZyBoZXJlLiBJZiBub3QsIA0Kc29ycnkgZm9yIHRoZSBub2lzZS4NCg0KI3JlZ3pi
+b3QgaW50cm9kdWNlZDogYjUyMGM0ZWVmODNkDQoNClswXSANCmh0dHBzOi8vbG9yZS5rZXJu
+ZWwub3JnL2xrbWwvMjAyNjA3MDkxMjQ0NTUuMTU0NzkxMi0xLWpvc2VwaC5xaUBsaW51eC5h
+bGliYWJhLmNvbS8NClsxXSBodHRwczovL2xvcmUua2VybmVsLm9yZy9sa21sLzIwMjYwNjMw
+MDkyMzM4LjIwOTQ2MjgtMS1tZUBsaW51eC5iZWF1dHkvDQo=
+--------------0oGzMl9l2W1Nlufk7EhgZxwh
+Content-Type: text/x-patch; charset=UTF-8; name="bio.patch"
+Content-Disposition: attachment; filename="bio.patch"
+Content-Transfer-Encoding: base64
 
---
- i.
+ZGlmZiAtLWdpdCBhL2Jsb2NrL2Jpby5jIGIvYmxvY2svYmlvLmMKaW5kZXggNWYxMDkwMGIz
+ZjQyLi45YTk0YjQ1MTM1YjcgMTAwNjQ0Ci0tLSBhL2Jsb2NrL2Jpby5jCisrKyBiL2Jsb2Nr
+L2Jpby5jCkBAIC01NTUsNiArNTU1LDggQEAgc3RydWN0IGJpbyAqYmlvX2FsbG9jX2Jpb3Nl
+dChzdHJ1Y3QgYmxvY2tfZGV2aWNlICpiZGV2LCB1bnNpZ25lZCBzaG9ydCBucl92ZWNzLAog
+CQliaW8gPSBiaW9fYWxsb2NfcGVyY3B1X2NhY2hlKGJzKTsKIAl9IGVsc2UgewogCQlvcGYg
+Jj0gflJFUV9BTExPQ19DQUNIRTsKKwl9CisJaWYgKCFiaW8pIHsKIAkJcCA9IGttZW1fY2Fj
+aGVfYWxsb2MoYnMtPmJpb19zbGFiLCBnZnApOwogCQlpZiAocCkKIAkJCWJpbyA9IHAgKyBi
+cy0+ZnJvbnRfcGFkOwo=
 
-> while the user is complaining about "the display of the ScreenPad fails to get recognised by the kernel" and I can only thing about two things:
-> - I got the range wrong and the kernel is rejecting the device due to wrong min/max
-> - It's not true that the kernel fails to recognise the device and instead it's userspace refusing to expose it (this happened recently with upower for the battery so it can very well be a possibility)
-> 
-> > From the dmesg logs I don't see kernel being angry and rejecting the 
-> > screenpad so I am leaning on the second option: may I ask for the user 
-> > to try identify the sysfs attribute responsible to control the 
-> > brightness and get me the range of min/max? Also I would be curious to 
-> > know if changing desktop like KDE or GNOME changes something. 
+--------------0oGzMl9l2W1Nlufk7EhgZxwh--
+
+--------------9k0lNiORNwXEmWZIzG3Cl0gd--
+
+--------------YrHT8vHkbTdSGA3pB0SKvhJg
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+wsF5BAABCAAjFiEEj8FaBklQqZ3RvRTdOeS4d+YuuRUFAmpRNOQFAwAAAAAACgkQOeS4d+YuuRWB
+Zg//dIH3vfsYsyLr7gikDujL+vtI62AgbiFsUrrZI6Jr4GKDuqII8A/5pmqUC0CS/tKdKgDubCNm
+hM9LGyoH8+bLPduvAZkyuNvrITv54t4mpmF07fZlBNkF6Vg7ckw+8dDltsxlUEFxW+KSFzuqtNwz
++4Im7ik3tjOqJyzjQAFZWoDy7qM70uklwCQ+wbuzuzwd7fFV14qddBl3FrPCXEx95RWkrZfzzV0Q
+2CZ56y647CL7LILhMAWcmoBn0zCFSBG333+pTPFJRbJ2Nxb7aHTRCHbMqZIFT8tdrtmykwpp0kHT
+UCl5a7qxFWV0LWmppQ5eRJHXqpLCi9B4p1C2I9sdgm/g1vvCr6iUS2T+1wmQIlN8EbNZ/yzD5Lw4
+aynQcMbCxZclloEN2XLxdK3FKc64PBnFuaTVeDlNLHgcev/LYEiBmUtSbLZDt+x8gzGvH5I8pOkh
+3VaI3s3o9ZCdcSGizv58pSZ1yyjvwrxvsNCQpTAzA1KlVQZEIgl4zrpp87YJ0vXi3ARIoMRw9yfu
+C8nDAndBrcgYnMOd5IPDyVQ7tShB8YllVgPc5bcRdE9849Hgb/+S3IzUeR6ovWW8Ywa5G9CRV01D
+DN/1sRxWn5N1P+nGl9SJiczdnQd8Irj0jrg33LWH5j0XoFvl7gk+PcN1NaFDziI28IUPFhwx19qw
+Rk8=
+=lyoF
+-----END PGP SIGNATURE-----
+
+--------------YrHT8vHkbTdSGA3pB0SKvhJg--
