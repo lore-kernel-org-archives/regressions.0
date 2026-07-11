@@ -1,171 +1,105 @@
-Received: from out-188.mta1.migadu.com (out-188.mta1.migadu.com [95.215.58.188])
+Received: from mail3.ecloud.global (mail3.ecloud.global [135.181.139.185])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA1563CC33F
-	for <regressions@lists.linux.dev>; Sat, 11 Jul 2026 16:46:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.188
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783788408; cv=none; b=mlOtlbzFEs1cMr8VYPF9YxPBSS+f625D4VHWOeWwOEH3ZYpRHdf9cpLvgwVfgdovMnT2L3J2lK2KAt9/TQeqCj74WD+5lSQS7tGJEOTFuJOReAx4k87C0ngiu8mx9INkIU0zMwdnYJCEQ0jge8+EFA7zAzyDeq4CKj66gG1zVTY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783788408; c=relaxed/simple;
-	bh=vOIyXFFZ7MUpU45xMYEk4ckdQRPhmCb+opV2ITDgs8c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ipd6AeREPBKOF7H0fLVmprLZiI2ODmAf5GGJQBey5nVOGpeU0nCIJYgwMZWIz6wmSeY5QxkteUuDPkOyZUPuc1kjHqEpoNwbgGDanlRXyra2Ov655MEbfpRE+Rw7744uskicl3+b3c0Ip5XKqWZS/aWCHq8VGyz2D24raynpbZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=FOTnwdLw; arc=none smtp.client-ip=95.215.58.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADC1782866
+	for <regressions@lists.linux.dev>; Sat, 11 Jul 2026 19:35:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=135.181.139.185
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1783798521; cv=pass; b=C4Q0QWqn15swwfr2N2YTkpQHYJKUkSqxOqDwwBAyrKntW7djZgm1XLz1IvXRmL5xastFk7SaqBM8RkVUYL6+faBaPSV+/c6mi0ycAh1uIk+tD3SDkb2Vnu3q5sGxhTN0dnBdZQdDy6RW4Q+W8Os1luSBlZoBL01hNUdZgpHQszk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1783798521; c=relaxed/simple;
+	bh=nk52B6LsWPq0Q6bJXFeYkejvb5+jkUL3FLl7q6l7jJI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 Content-Type:MIME-Version; b=uRA+GFnPYVBjJsDchnk42uR52X6nVmWwrlOEVOhlj3j365psfeB21Yz7g6ATKIJn1Lur1Xjy7yy4vPiwkBhSYwWwvHncWwcq7jJ5WgtUzDhx4I/wF3m7UQU8XIPteR0mVubnoxBtBT8g0t8C+Gf2l7BO5VDz/uMaWbb3bErDBRY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=murena.io; spf=pass smtp.mailfrom=murena.io; dkim=pass (1024-bit key) header.d=murena.io header.i=@murena.io header.b=2lJg0bz7; arc=pass smtp.client-ip=135.181.139.185
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=murena.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=murena.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="FOTnwdLw"
-Message-ID: <a7b0db75-439f-4ae8-8721-da1d5fe86123@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1783788400;
+	dkim=pass (1024-bit key) header.d=murena.io header.i=@murena.io header.b="2lJg0bz7"
+Received: from authenticated-user (mail3.ecloud.global [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail3.ecloud.global (Postfix) with ESMTPSA id 994B6883824;
+	Sat, 11 Jul 2026 19:35:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=murena.io; s=mail3;
+	t=1783798511;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=1/pvJPtukmUQ63EL9+PIQ+yeMrrp61W/YU2BycuLANQ=;
-	b=FOTnwdLwTPd7pzjtwfopqHKTpcDJvx37GCOQfJZI9VusltF+qYTRqsIRiLpLVfTbSuiIYI
-	cQNn3eKvCayRy86mYgijmMZ7MNO/e90a0a3iKDC8QI9voAfzBZW0iOACqWHF7IoC2zGyzn
-	k5yxYjQm6wslooU3ZyFDh2tlYs30aX0=
-Date: Sat, 11 Jul 2026 18:46:25 +0200
+	bh=QJ78cX5XhC2JGOtn0+rOIAZ6Qt08IpVtPC1zY7SfI3o=;
+	b=2lJg0bz78nUSBHePrHSlMDhb2Z9iv+zrFvBV0qEtKoZeNvkpwfv5lzzA8mX8uhMC3o2AxF
+	Xk8UPS8QJabfJYiQrjR9St2WFU+E/GiZ3R/dxMGekptYyIH/6HOP7fO04og8NVhJOclEB3
+	Q5GyNPj0cVgPlDw71Y4U+qG8HSMwU/s=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=murena.io;
+	s=mail3; t=1783798511;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QJ78cX5XhC2JGOtn0+rOIAZ6Qt08IpVtPC1zY7SfI3o=;
+	b=kWWI4e0tpln3TX7uPy/nctgHS64TM2QROzUARQYbiCZE+eYtc/XNWVZ1/TK3JWTO3ARrvm
+	t4zOaXa0qvDjcfYfzgls7yu0FupGnxodSom/L/ci0EHAf+AR2X3b4oHCo0CwdfZJsQCJ7x
+	HeR20LU+5bL3rDc34YfRXd0WI0bc+p0=
+ARC-Authentication-Results: i=1;
+	mail3.ecloud.global;
+	auth=pass smtp.mailfrom=lionso@murena.io
+ARC-Seal: i=1; s=mail3; d=murena.io; t=1783798511; a=rsa-sha256; cv=none;
+	b=A2fc5yr+2syBcEqMvEu7oMqfEnB0Vnfuonrh7F2+Q1zIi/Rt9jjUeEfqIdOMzi0QW6WcID
+	etqRafpnGavM3j7fkgMio0y/WPTrN1PMYMXaf3rpUqn2MrVABIYI9iWSNy+rb3WYvt1CWu
+	oPyoHZA++J5T9hL+Pqy/L2PzagklngU=
+From: Lionso Alejandro Pacheco Vacacela <lionso@murena.io>
+To: Timur =?utf-8?q?Krist=C3=B3f?= <timur.kristof@gmail.com>,
+ Alex Deucher <alexander.deucher@amd.com>
+Cc: amd-gfx@lists.freedesktop.org, regressions@lists.linux.dev,
+ Fangzhi Zuo <Jerry.Zuo@amd.com>, Chuanyu Tseng <Chuanyu.Tseng@amd.com>,
+ Wenjing Liu <wenjing.liu@amd.com>
+Subject: Re: [PATCH 1/2] drm/amd/display: Fix preferred link rate for NUTMEG
+In-Reply-To: <20260529090909.13206-1-timur.kristof@gmail.com>
+References: <20260529090909.13206-1-timur.kristof@gmail.com>
+Date: Sat, 11 Jul 2026 14:35:07 -0500
+Message-ID: <178379850751.8410.12007342378134020217@murena.io>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Subject: Re: Bug#1141604: linux-image-6.12.94+deb13-amd64: does not detect
- ScreenPad on ASUS VivoBook
-To: Salvatore Bonaccorso <carnil@debian.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Ponali <ponali2k@gmail.com>, Luke Jones <luke@ljones.dev>,
- Corentin Chary <corentin.chary@gmail.com>, Hans de Goede <hansg@kernel.org>,
- 1141604@bugs.debian.org, platform-driver-x86@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>, regressions@lists.linux.dev,
- stable@vger.kernel.org
-References: <178340264407.17924.10135409461303815312.reportbug@ananaspc>
- <178362762638.911488.8564892548331679884@eldamar.lan>
- <98dc115b-1dec-4fbb-bab7-2588e8b74bf8@linux.dev>
- <0ff0385e-50b0-bfae-cedc-05cfe9c6cbc7@linux.intel.com>
- <alE92R40JwcluApW@eldamar.lan>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Denis Benato <denis.benato@linux.dev>
-In-Reply-To: <alE92R40JwcluApW@eldamar.lan>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
+Hi,
 
-On 7/10/26 20:45, Salvatore Bonaccorso wrote:
-> Hi all,
->
-> On Fri, Jul 10, 2026 at 03:31:08PM +0300, Ilpo Järvinen wrote:
->> On Fri, 10 Jul 2026, Denis Benato wrote:
->>> On 7/9/26 22:08, Salvatore Bonaccorso wrote:
->>>> Control: forwarded -1 https://lore.kernel.org/regressions/178362762638.911488.8564892548331679884@eldamar.lan
->>>> Control: tags -1 + upstream
->>>>
->>>> Hi,
->>>>
->>>> Ponali reported in Debian (https://bugs.debian.org/1141604) the
->>>> following issue after updating from 6.12.90 to 6.12.94. First quoting
->>>> the report:
->>>>
->>>> On Tue, Jul 07, 2026 at 07:37:24AM +0200, Ponali wrote:
->>>>> Package: src:linux
->>>>> Version: 6.12.94-1
->>>>> Severity: normal
->>>>> Tags: upstream, regression
->>>>> X-Debbugs-Cc: ponali2k@gmail.com
->>>>>
->>>>> Last known working kernel: 6.12.90-1
->>>>> First known broken kernel: 6.12.94-1
->>>>>
->>>>>
->>>>> Dear Maintainer,
->>>>>
->>>>> I upgraded all my packages through apt, which also upgraded the linux image
->>>>> from 6.12.90 to 6.12.94.
->>>>>
->>>>> I expected the ScreenPad display to continue to be detected and exposed as a
->>>>> DRM output, like on 6.12.90. The ScreenPad being the trackpad with a screen,
->>>>> which came with my computer (ASUS VivoBook X532FA_S532FA).
->>>>>
->>>>> After upgrading and rebooting, the new kernel caused a regression where the
->>>>> display of the ScreenPad fails to get recognized by the kernel. The touchpad
->>>>> functionality still works. Usually, the ScreenPad would appear as "HDMI-A-1".
->>>>> The DRM connector for it still exists (/sys/class/drm/card0-HDMI-A-1), but
->>>>> "status" reports "disabled"
->>>>>
->>>>> I could not get the ScreenPad display to be recognized again on the new kernel,
->>>>> so I configured GRUB to automatically boot to the 6.12.90 kernel through the
->>>>> "Advanced Options". The ScreenPad is recognized on older kernel versions, so I
->>>>> am still able to use it (until a new LPE comes around).
->>>>>
->>>>> To replicate:
->>>>> 1. Boot with 6.12.90. The ScreenPad display is detected as HDMI-A-1.
->>>>> 2. Boot with 6.12.94 with the exact same hardware.
->>>>> 3. The ScreenPad display is no longer usable.
->>>>>
->>>>>
->>>>> My main display is eDP-1 (1920x1080), though it isn't essential. My GPU is an
->>>>> integrated Intel iGPU, and the driver used for both screens is i915. I have
->>>>> booted to the new kernel for reportbug to get all the information
->>>>> automatically, but i will continue to use the old one until the appropriate
->>>>> time.
->>>> Now, Ponali did bisect the changes between 6.12.90 and 6.12.94 and
->>>> found that the backport of the commit 8d95d1f4aa5c ("platform/x86:
->>>> asus-wmi: fix screenpad brightness range") changed the behaviour.
->>>> Bisect log is at: https://bugs.debian.org/1141604#22
->>>>
->>>> As this change was backported to other stable series as well I asked
->>>> Ponali to please test 7.0.y and 7.1.y and confirmed that both 7.0.13
->>>> and as well 7.1.3 show the hehaviour.
->>>>
->>>> #regzbot introduced: 8d95d1f4aa5c76202b0833a70998769384612488
->>>> #regzbot link: https://bugs.debian.org/1141604
->>>>
->>>> Is there anything Ponali can report back to further debug the issue?
->>> Hi Salvatore,
->>>
->>> The commit incriminated is this one: https://lore.kernel.org/all/20260302174431.349816-3-denis.benato@linux.dev/
->>>
->>> As you can see that commit changes min/max of the brightness range, but 
->>> does not touch the detection at all, 
->> To be more precise, it DOES change read_screenpad_backlight_power() -> 
->> asus_wmi_get_devstate_simple() but AFAICT that cannot make things worse 
->> because asus_wmi_get_devstate_simple() used in both cases, so I was 
->> left to wonder the same thing as you.
->>
->> That being said, it's hard to see how bisect could point this to a wrong 
->> commit either because good/bad should be pretty obvious.
->>
->> Did reverting the suspect commit on top of 6.12.94 result in a working 
->> system?
-> Ponali did test, and reported back in the Debian bug at
-> https://bugs.debian.org/1141604#60, quoting:
->
->> I have found the sysfs attribute for brightness control to be in
->> /sys/class/backlight/asus_screenpad, and it appears on both 6.12.90 and
->> 6.12.94.
->>
->> On 6.12.90, max_brightness reports 235.
->>
->> On 6.12.94, max_brightness reports 255.
->>
->>
->> I have checked out to v6.12.94, reverted the suspect commit, and found
->> the ScreenPad to be working as intended.
->>
-The only reason I see is the the minimum might be greater than the maximum
-or negative and the kernel is rejecting it.
+I independently hit this regression on a desktop Kaveri system and can
+confirm this patch fixes it:
 
-Can you also report back on the minimum?
+  - AMD A10-7850K (Kaveri, DCE 8.1), MSI A68HM-E33, VGA monitor on the
+    onboard output (NUTMEG DP-to-VGA bridge)
+  - Debian kernel 7.1.3 (amdgpu.cik_support=1): VGA monitor receives no
+    signal from KMS takeover on; dmesg shows
+    "[drm] enabling link 2 failed: 15" (DC_FAIL_DP_LINK_TRAINING).
+  - Applying just this patch (1/2) on top of v7.1.3 restores VGA output
+    with DC enabled: the link trains, the CRTC comes up at 1360x768@60,
+    and the fix survived three consecutive reboots.
 
-Also if you could print a few values that would be helpful since I am not really seeing much here.
->> Regards,
->>
->> Ponali
-> Regards,
-> Salvatore
+Tested-by: Lionso Alejandro Pacheco Vacacela <lionso@murena.io>
+
+Two notes:
+
+1. The Fixes: tag references b74322eea36b, but that hash does not exist
+   in mainline — it looks like an amd-staging-internal id. In Linus'
+   tree the offending commit is:
+
+     a62346043a89 ("drm/amd/display: Fix coding style issue")
+
+   It would be good to correct this before the patch is pushed so the
+   stable tooling can resolve the dependency.
+
+2. Since the offending commit shipped in v7.1, could this be annotated
+   Cc: stable@vger.kernel.org # 7.1.x (or nominated for 7.1.y once it
+   lands in mainline)? Every Kaveri/Kabini/Mullins system with a VGA
+   monitor loses display output on release kernels.
+
+Thanks,
+Lionso
