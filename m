@@ -1,73 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.166])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 442F723BCEE
-	for <regressions@lists.linux.dev>; Sat, 11 Jul 2026 05:32:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81FFC2DB7BE
+	for <regressions@lists.linux.dev>; Sat, 11 Jul 2026 05:49:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.166
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783747922; cv=none; b=XvBzD50wZDBbkWwWFIImVOKW1tBBG8l4I4T9cPoL+LazCbFP8KZiSxbq7bCAnyPIRFSq6DmOy9O1toP0jGrxkn8n22ilkWK5LDmT5K+p4QZEzQYtNOoGTQ2zi2NiMW82Kk5uBt2rYdTKdJe4ViKBlKRWS+ofVo9Bp1c8RquGeMI=
+	t=1783748951; cv=none; b=EmGYMGig/2waNM/dE24Je+sNF/TMc+S4lowNS1yQlE8RNEeqSFQxcVDdGDs4X0oCwFYPB6s7X8MEz26nJY4vmhNkw7TkQW6bUo5lA+dRWNel0JLXJjNWDqWFVaDQwflBo4TsL1UpyJPLNBdQrH7XrnFzvDRkQaluq0l7tQx1dFw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783747922; c=relaxed/simple;
-	bh=8nZuVfQgjPXtTwXHtHMz3so6FcOoi3iLjpCxYfJT7iM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QoY3WyvgnD+obDc1GxsuP2owIo6DXcR4gdrfbiCJcto75Vd/oiJ9kYyYimSpAwx6sHXz0Z8YCwwBURTYMy/y8haCe1QWKzZxSXrrcYu46axIC1SWdTPsn7UNpFSCX98nYlZXDaecV/p40kP0qvjeaKjpx5Ku4Lx3coX0kghG67A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=vFbT8Phi; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1783748951; c=relaxed/simple;
+	bh=SnFwFXYoSVcucBcoeZbL5mBq9HF+Y6BEibfsLBIsoH0=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=i5BjTdO1Nnv9xLqzhHe3RveFVGfaknmBwsOA95vzpxSpH7o6EvPamhcD2cjxM/TO6LiBXnkNQc9XGvyleh6uThQnU4lclgKjxHBrsTEAKzIilsve0sH1MgCxpktT5xSsK805bI7Cv37vtNajBvYDZC2aCQpV0P2KQ1noZUoxzXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=cNdY5+se; arc=none smtp.client-ip=188.68.63.166
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="vFbT8Phi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 803AD1F000E9;
-	Sat, 11 Jul 2026 05:32:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxfoundation.org;
-	s=korg; t=1783747920;
-	bh=Spsdb938LnV1UITEqY/XOEkuUS2npiCyYXgDuULo+iA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=vFbT8PhiRzmDNVUMW2Psa9MVYgO1EuSSFm6cWlCwtigTODSJJanD4xfnTMm5+84aj
-	 ADoBPpmNmERhx7kpCw/hawrvyBGdRAFwL9eK3UPjMUCibaR4YCDfNa1+qFWbxiaFc4
-	 D6adRSPxcVbuea4PNWtOlPgQp8WH/xHZPD4vp3uM=
-Date: Sat, 11 Jul 2026 07:31:56 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Papool Chaudhari <Papool@chaudharilaw.com>
-Cc: regressions@lists.linux.dev
-Subject: Re: [REGRESSION] 2017 =?utf-8?Q?Pixelbook_?=
- =?utf-8?Q?backlight_control_doesn=E2=80=99t?= work with 7.1 kernel
-Message-ID: <2026071109-armchair-civil-7b62@gregkh>
-References: <CALcz8n5nB=H8CZza-Pw==GfQWRViJwWK8N5PgafE-4pdUJL-LA@mail.gmail.com>
- <2026070936-geologist-yapping-31f4@gregkh>
- <CALcz8n6VtL5D20WCJEsiBRDRKOE6GsF+YPCc+XuS2xr-mqnSTg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="cNdY5+se"
+Received: from mors-relay-8202.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8202.netcup.net (Postfix) with ESMTPS id 4gxySJ00fPz42jy
+	for <regressions@lists.linux.dev>; Sat, 11 Jul 2026 07:49:04 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1783748944;
+	bh=SnFwFXYoSVcucBcoeZbL5mBq9HF+Y6BEibfsLBIsoH0=;
+	h=Date:Subject:From:To:References:In-Reply-To:From;
+	b=cNdY5+semcsbc/Wa2OeF1VRt5OtPmBY4Ah+HxJcMnPw5oULwsAAvvRrIFvfbIJJYQ
+	 pYYXlILJhs/8jpHNOwvsD4Cwo54QVm/FYFOFJ3S+cf5H7SNNeAKKZXlv6fDqA7EmrE
+	 81or0g/dYu6SFs4jIAzbw18QSkXwmsnruceQEPegza3U5Ge82tUd77iRhow7v9/3+R
+	 IttTGGXNOxoHmWpi5GSVwrSYrYQDsGvgZuNRk5pp9l0aATaJXJLZTicR2ioNlLFbKn
+	 VBKWDSwVk1NlXTyC4chZ7teC9LfIo5fIL9qaeRYFRA+dPW/h1crnj1hLpBpgSBr2Ht
+	 tPYQvKHmQ/kdw==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8202.netcup.net (Postfix) with ESMTPS id 4gxySH6Prpz42WN
+	for <regressions@lists.linux.dev>; Sat, 11 Jul 2026 07:49:03 +0200 (CEST)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4gxySH4Zd4z8sgT
+	for <regressions@lists.linux.dev>; Sat, 11 Jul 2026 07:49:03 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 0FCCC60305
+	for <regressions@lists.linux.dev>; Sat, 11 Jul 2026 07:49:03 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <e3e39afe-e1c7-4c7f-ab2b-9523370eadc2@leemhuis.info>
+Date: Sat, 11 Jul 2026 07:48:57 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALcz8n6VtL5D20WCJEsiBRDRKOE6GsF+YPCc+XuS2xr-mqnSTg@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: <178374894324.698591.6675381276611597759@mxe9fb.netcup.net>
+X-NC-CID: Ho3xAwPel00IJ5YuHrPAOcIn50uIfYjYczzVBzJ+iLcFEp6S/Kg=
 
-On Fri, Jul 10, 2026 at 11:09:34PM -0600, Papool Chaudhari wrote:
-> Greg,
-> 
-> I did git bisect and this is the offending commit:
-> 
-> b3793af3277f65d256d67f9949e760b434ff66dd is the first 'bad' commit
-> commit b3793af3277f65d256d67f9949e760b434ff66dd
-> Merge: 51cc1c427461 88919bedabb8
-> Author: Jiri Kosina <jikos@kernel.org>
-> Date: Thu Apr 16 21:08:14 2026 +0200
-> 
->    Merge branch 'for-7.1/intel-thc' into for-linus
-> 
->    - power management improvements to intel-thc-hid driver (Even Xu)
-> 
-> drivers/hid/intel-thc-hid/intel-quickspi/pci-quickspi.c | 16
-> ++++++++++------
-> drivers/hid/intel-thc-hid/intel-thc/intel-thc-dev.c | 47
-> +++++++++++++++++++++++++++++++++++++++++++++++
-> drivers/hid/intel-thc-hid/intel-thc/intel-thc-hw.h | 4 ++++
-> 3 files changed, 61 insertions(+), 6 deletions(-)
 
-Odd that a merge commit is the issue.  ANd if you revert that change,
-all is good?
 
-thanks,
+On 3/9/24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-greg k-h
+#regzbot report:
+https://lore.kernel.org/all/8a2b1abf-3c8a-4242-82c5-fba9943cf8f4@archlinux.org/
+#regzbot fix: block: try slab allocation in bio_alloc_bioset() before
+mempool
+
+#regzbot report:
+https://lore.kernel.org/all/CABsFS_g+V_Owum6knLhenhM15EXJRrsF0FcLiw30WZxarsTpUA@mail.gmail.com/
+#regzbot introduced: 186bf9031666
+#regzbot title: platform/x86: asus-wmi: charge_control_end_threshold
+returns -ENODATA at boot, breaking UPower/GNOME detection
+#regzbot fix: platform/x86: asus-wmi: temporarily revert to setting a
+charge limit
+
