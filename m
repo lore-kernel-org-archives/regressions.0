@@ -1,71 +1,204 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EBEC3B3BE5;
-	Sun, 12 Jul 2026 20:27:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C09F623393B;
+	Sun, 12 Jul 2026 21:49:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783888066; cv=none; b=qUlauKminBwWld+u36Mh5WpLUZmYLU4kPNnzPUPS/T3eErWu7mb4X0s+MBpNAPeUICra7hWiUvtvJbXbavBSxOVhhGmLl120F16EleHuRr+L3vwOR/GHGULJm6L4brnifISEN3aytrogs4EnN8k/WLmwfUl98dLKww9XLVfSStw=
+	t=1783892993; cv=none; b=o5N58GG6KsymVnw6C0Sxj+mrDs0rSgQXKtsrlnZD8ZtokNzY+MdLmt3Vg/ylzM6VLKHnJN3W67pvRZmTimhR8Sk6VTZ6gj7t3P8aGDXetVOr4bisqlndnYRJ7dw6QvKc2+QLrUApfhv/F1ZQD6DiLR4PSbfFK9A1bc6CJZWun0k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783888066; c=relaxed/simple;
-	bh=6dPdycQapETU/6FVZ4fM8K5f4LwmxSh3/NHEV6RVMsk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NCL0zWvJU9QJGWBUHZnAHxWKW7l1OVdlTXcv7YEXA1h4Cz7+SW9hBU85PoSCpkiB/tC7hGqtgOhmlwwdbkA74L7adtDy0R8uFKSr5Vw7XIGxD/uuL9wL9ENEP/GIQzhKeIwMgB3zjYsv10rfeFBMYu7kb2iyXViTLNCvpFpdtrs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mw8xIfP5; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1783892993; c=relaxed/simple;
+	bh=8yi6L47DUqwP0koj4WCyLUvHsfQeIY6bTQhI1L+9lOY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=HQzr3ptisL5qbh8VzXDQi5pu8Th7et9RgSEwwJMoUOWLahKSfzu7nAgczXxS+AtYUhzRQXbr+F8SQH8ATtIlYR2DOR9FlMSG1nTIC+4ARJD6oJTHf4LMo9JxDjHV8zsPHdsQSAsHRONNCfF1R3d15yp4EX20N0AGc5m/fq9aDMw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iHd/WqL4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mw8xIfP5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 360F11F00A3D;
-	Sun, 12 Jul 2026 20:27:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783888064;
-	bh=i6qM2ljPNBNtbIwvvR/qc0H9t7ATjbEWRi0LPPwUoqg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=mw8xIfP59+fjSKTkqX7mHUi+1ypyng9+KT0aKi+ftsEKwMtg9CdvtVWKhJtUuULLT
-	 Zy1bkPIFNgl8/7RFClUBW5UKVjn8L4TYK8o3Ila13Z8gwr0HT6ylvIOK5OIcBStuLr
-	 vBnA188h05vBLyc87asRmB0VXoGMrriFImXvdJcFRT2K1oFvTJ0DYzmaL4wgfLPWad
-	 GBiX2k/owxbaiRINTtKvhmJTcUxIFksliGWQIDq/Wnyr9ioInfbDWPDBX2TQW7NWPJ
-	 DuzVfrtAHWRAOx4ojDnTVNIq6o4yn1d8hZ7Ecr6HDMWVc1gWUVaVxcgNIsTEbP1EAv
-	 az/SCGhxYZfIQ==
-From: Sasha Levin <sashal@kernel.org>
-To: "jose.souza@intel.com" <jose.souza@intel.com>
-Cc: Sasha Levin <sashal@kernel.org>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-	"Danyil Demchenko (student)" <DO.Demchenko@student.han.nl>
-Subject: Re: [REGRESSION][BISECTED] drm/i915: GPU HANGs on v6.12.20+
-Date: Sun, 12 Jul 2026 16:27:38 -0400
-Message-ID: <20260712105304.agent5-0002@kernel.org>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <MRWPR01MB12852A981954ABE86057B04AEBBFB2@MRWPR01MB12852.eurprd01.prod.exchangelabs.com>
-References: <MRWPR01MB12852A981954ABE86057B04AEBBFB2@MRWPR01MB12852.eurprd01.prod.exchangelabs.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iHd/WqL4"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 7B536C2BCB7;
+	Sun, 12 Jul 2026 21:49:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1783892993;
+	bh=8yi6L47DUqwP0koj4WCyLUvHsfQeIY6bTQhI1L+9lOY=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=iHd/WqL4DAzFm4aCDIdIYpBDIx325w5h89Ve1dhLUCs2N2T4v8qvkItSmgmxvI446
+	 fZIg11S2ebSjdUveQSnDJvSjgj+vrfmH+CYiydVhhWVN8eyysGOWMWd7dy5Zbv1CYr
+	 GPLeNX3otNU4kdeV+tHYKVxaAdI8Yaf6WXC5vTrACCCP+qSt7KFBAXDKJjqBQV+F5H
+	 VwHQP1aCLV0/dRxFXJG5ncgsQKgBG34yQyr7jh5kcr4nME0UHizm8K4ro5xlGqWakX
+	 r9FeelKElJQBUiyrHtZWQX1SGDati569iY/LM9ZSoYRwh37852SpVBa0/m8BIfDQ/Q
+	 PSIoq+4ltAMIw==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68EDAC43458;
+	Sun, 12 Jul 2026 21:49:53 +0000 (UTC)
+From: Liz Fong-Jones via B4 Relay <devnull+lizf.honeycomb.io@kernel.org>
+Date: Sun, 12 Jul 2026 14:49:43 -0700
+Subject: [PATCH v2] PCI: Fix BAR resize for devices on a root bus
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+Message-Id: <20260712-pci-rebar-root-bus-v2-1-a1b9107a82dc@honeycomb.io>
+X-B4-Tracking: v=1; b=H4sIAPcLVGoC/22NQQ6CMBBFr0K6dkxbRIwr72FY0HYqYyJDpkAkh
+ LsLGHcuX/L/e7NKKIRJXbNZCY6UiNsV7CFTvqnbBwKFlZXV9qxLfYLOEwi6WkCYe3BDgpgbm0c
+ 0OvpSrcdOMNJ7l96rL6fBPdH3m2lbNJR6lmmvjmbb/QLFv8BowEBRhFhq70K4XG4Ntzh5frkjs
+ aqWZfkAikjFPckAAAA=
+X-Change-ID: 20260704-pci-rebar-root-bus-f3123fe10fc7
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ regressions@lists.linux.dev, amd-gfx@lists.freedesktop.org, 
+ Jon Nettleton <jon@solid-run.com>, Jon Nettleton <jon.nettleton@gmail.com>, 
+ stable@vger.kernel.org, Liz Fong-Jones <lizf@honeycomb.io>
+X-Mailer: b4 0.15.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5205; i=lizf@honeycomb.io;
+ s=gpg; h=from:subject:message-id;
+ bh=vBrFJX+DbiBY8ecJBWODKdSvo4Ut8q4cPC9VjlwNcjc=;
+ b=owEBbQGS/pANAwAKAaXO1OOXra/CAcsmYgBqVAwB7q+gSFs3pjbJ2WCjri1eHLPsZId7kMQ1J
+ p1bjXQXYTaJATMEAAEKAB0WIQSfW1LPQ0gyJmoTHwelztTjl62vwgUCalQMAQAKCRClztTjl62v
+ wskVCACGL5RiL2Qa8kFTuvYchIfyxr/n5SDdn9pybXUvVdvn0iRsV96Pvpz/XrLRYFi+Nh5VmgA
+ acSW3KZLMCZV7LKMz4FWo9H5rDFvBNTER0XSsWDIf6XJoaPkGLvKrgNSZhmUL8X4L02qovZzsXf
+ x687vJ7gI5tjXEaTx3FC4ynpeUOTqgNcREE+5SIU5CpdNETIcgulHRHbtDz26T53AntzCBNr3co
+ KNg+vfs2qIkLbNuQk9sReNI4A055VddZE+b6ozKWQWM72iYXgweVG91Xz8No7Bxojx5L17z0Nl9
+ 42h6lV7TFjRRGp1/BissKIF+YYRYoxa2UpBgDVgNA+NX7sIo
+X-Developer-Key: i=lizf@honeycomb.io; a=openpgp;
+ fpr=1F7714D7EC3441D2CECC24606A3F8B00FBDDD2A4
+X-Endpoint-Received: by B4 Relay for lizf@honeycomb.io/gpg with auth_id=854
+X-Original-From: Liz Fong-Jones <lizf@honeycomb.io>
+Reply-To: lizf@honeycomb.io
 
-> GPU hangs if i915_gem_mmap_gtt_version() returns 5. If set to return 4(as it was
->  in v6.12.19) no HANG occur. This happens on v6.12.20+ kernels ONLY, v6.6.x, v6.
-> 18.x, v7.1.3 and v6.12.19 are unaffected.
->
-> The actual commit introducing this is bfef148f3680e6b9d28e7fca46d9520f80c5e50e,
-> but it doesn't seem to affect any other kernel tree.
+From: Liz Fong-Jones <lizf@honeycomb.io>
 
-Thanks for the report and the bisection. This looks like a missing
-prerequisite rather than a bad commit: upstream merged the remap_io_sg()
-fix 2e0438f9c3d25e ("drm/i915: ensure segment offset never exceeds
-allowed max", v6.14-rc1) before it started advertising GTT mmap version
-5, but 6.12.y picked up only the version bump. That leaves userspace
-doing multiple partial mmaps against the unfixed remap path, which
-matches the wrong-PFN page fault and GPU hangs you're seeing. It also
-explains your version matrix: 6.6.x never got the bump, and 6.18.x/7.1.x
-have both the bump and the fix in their base.
+pci_do_resource_release_and_resize() releases the device BARs that
+share a bridge window with the BAR being resized, but when the device
+sits directly on a root bus (pdev->bus->self == NULL) it then skips
+resource assignment entirely and returns success, leaving the BARs it
+just released unassigned (IORESOURCE_UNSET).
 
-I've queued 2e0438f9c3d25e for 6.12, which keeps 6.12.y matching
-upstream instead of diverging via a revert.
+Skipping pbus_reassign_bridge_resources() is correct in that case --
+there is no bridge window to adjust -- but the device BARs still have
+to be reassigned. Before the BAR release was consolidated into the PCI
+core, this case worked for amdgpu because the driver released the BARs
+itself and then called pci_assign_unassigned_bus_resources()
+unconditionally after the resize, which assigns unassigned device BARs
+also on a root bus. Commit db92e3fef53e ("drm/amdgpu: Remove driver
+side BAR release before resize") removed that call, so nothing assigns
+the released BARs anymore.
 
--- 
-Thanks,
-Sasha
+This breaks amdgpu completely on the SolidRun HoneyComb LX2 (NXP
+LX2160A, arm64, ACPI), where the GPU endpoint is enumerated directly
+on the root bus of its segment (there is no root port device, so
+pdev->bus->self is NULL):
+
+  amdgpu 0004:01:00.0: BAR 0 [mem 0xa400000000-0xa40fffffff 64bit pref]: releasing
+  amdgpu 0004:01:00.0: BAR 2 [mem 0xa410000000-0xa4101fffff 64bit pref]: releasing
+  amdgpu 0004:01:00.0: sw_init of IP block <gmc_v8_0> failed -19
+  amdgpu 0004:01:00.0: amdgpu_device_ip_init failed
+  amdgpu 0004:01:00.0: Fatal error during GPU init
+
+No error is logged because the resize path reports success; amdgpu
+then finds BAR0 IORESOURCE_UNSET and bails out with -ENODEV.
+
+Assign the released BARs directly from the root bus windows when there
+is no upstream bridge. On failure, roll back through the existing
+restore path exactly as in the bridged case.
+
+The root bus path also had a locking bug that any fix here necessarily
+touches: the old "goto out" jumped to up_read(&pci_bus_sem) without a
+matching down_read() (as does the "goto restore" taken when
+pci_dev_res_add_to_list() fails in the release loop). Take pci_bus_sem
+before the BAR release loop so every path through the function holds
+it exactly once.
+
+Fixes: 337b1b566db0 ("PCI: Fix restoring BARs on BAR resize rollback path")
+Cc: stable@vger.kernel.org
+Link: https://bugs.launchpad.net/ubuntu/+source/linux-hwe-7.0/+bug/2159596
+Assisted-by: Claude:claude-fable-5 checkpatch
+Assisted-by: Claude:claude-sonnet-5
+Signed-off-by: Liz Fong-Jones <lizf@honeycomb.io>
+---
+#regzbot introduced: 337b1b566db0
+
+Observed at runtime on Ubuntu's linux-hwe-7.0 (7.0.0-14, broken) vs
+linux-hwe-6.17 (working), but nothing here is distro-specific: Ubuntu
+carries this code unmodified, and the affected function is identical
+to current mainline. By source inspection the regression window is
+v6.18 (old code paths) to v6.19 (consolidation). Workaround for
+affected users: amdgpu.rebar=0.
+---
+Changes in v2:
+- Add Assisted-by tags (missing from v1; required per
+  Documentation/process/coding-assistants.rst)
+- Add Link: to the corresponding Ubuntu bug report
+- Drop the "# v6.19+" annotation on Cc: stable; unnecessary noise
+  given the Fixes: tag already lets the stable team derive applicable
+  versions (per stable-kernel-rules.rst)
+- Link to v1: https://patch.msgid.link/20260705-pci-rebar-root-bus-v1-1-55df70cbdd88@honeycomb.io
+
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Cc: linux-pci@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: regressions@lists.linux.dev
+Cc: amd-gfx@lists.freedesktop.org
+Cc: Jon Nettleton <jon@solid-run.com>
+Cc: Jon Nettleton <jon.nettleton@gmail.com>
+---
+ drivers/pci/setup-bus.c | 25 +++++++++++++++++++------
+ 1 file changed, 19 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+index c0a949f2c995..9db1951f6e5c 100644
+--- a/drivers/pci/setup-bus.c
++++ b/drivers/pci/setup-bus.c
+@@ -2397,6 +2397,8 @@ int pci_do_resource_release_and_resize(struct pci_dev *pdev, int resno, int size
+ 	if (ret)
+ 		return ret;
+ 
++	down_read(&pci_bus_sem);
++
+ 	pci_dev_for_each_resource(pdev, r, i) {
+ 		if (i >= PCI_BRIDGE_RESOURCES)
+ 			break;
+@@ -2415,13 +2417,24 @@ int pci_do_resource_release_and_resize(struct pci_dev *pdev, int resno, int size
+ 
+ 	pci_resize_resource_set_size(pdev, resno, size);
+ 
+-	if (!bus->self)
+-		goto out;
++	if (bus->self) {
++		ret = pbus_reassign_bridge_resources(bus, res, &saved);
++		if (ret)
++			goto restore;
++	} else {
++		/*
++		 * A device on a root bus has no bridge windows to adjust.
++		 * Assign the BARs released above directly from the root bus
++		 * windows.
++		 */
++		list_for_each_entry(dev_res, &saved, list) {
++			i = pci_resource_num(pdev, dev_res->res);
+ 
+-	down_read(&pci_bus_sem);
+-	ret = pbus_reassign_bridge_resources(bus, res, &saved);
+-	if (ret)
+-		goto restore;
++			ret = pci_assign_resource(pdev, i);
++			if (ret)
++				goto restore;
++		}
++	}
+ 
+ out:
+ 	up_read(&pci_bus_sem);
+
+---
+base-commit: 7404ce51637231382873d0b55edabc2f3b841a9d
+change-id: 20260704-pci-rebar-root-bus-f3123fe10fc7
+
+Best regards,
+--  
+Liz Fong-Jones <lizf@honeycomb.io>
+
+
