@@ -1,55 +1,55 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.170])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.162])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20782343888
-	for <regressions@lists.linux.dev>; Mon, 13 Jul 2026 04:39:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8528A2ED870
+	for <regressions@lists.linux.dev>; Mon, 13 Jul 2026 07:14:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.162
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783917587; cv=none; b=lq9t6nbUeDq+rg1JPf51xGenqztARXLdrL6NorAVNFdOWkDr6qvtHs16LtgswYMYNVaCvANTkyTb2AVDIGHxdBTn4gOBp1D88Ut7aZ9KCuEMoQvfzwVCKlvmOE7jvhujfgVv3IJuuq9K3yZ6NxUC7da1NWzToPGXOp4WbGR3zEQ=
+	t=1783926900; cv=none; b=LD/vnxJIj7VziLc1DNEnIGxyCEzLW1vz8Ppif3pEluwhVne2GNxvd02Pt9KhXwonpl4ZsCEAjYf8zJGwGLVLyfpNBJ8oXB5ZA25vKddsNjcwtWsqJNtgDX+KPCxUo3iTDm0zpcg8w8y7Fl7y66m5PIpHjjDSistJq5PB4d67bS0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783917587; c=relaxed/simple;
-	bh=JHU7NYI7g0n2n+JJ6517Mq/qydLJ0J2KYKMPeDmzfw8=;
+	s=arc-20240116; t=1783926900; c=relaxed/simple;
+	bh=ft5/eljShbuYhVYHfb0X4qATRaHxv9WlJJ3lqFQIN2A=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bzfzidRxvdsxo0gDh2Jav9B+9c6gMKYf+UAmqWW7b1v0+QlhyuSOLYB03D26ll8IevHAEKEqUyzs5vRFv66U5cSIMTs7D7r5cgqoRHDJzrMD6ssOEhm/h+M/aNX7tUBy6rI81t4+LaSZdIxRCREfP6bcQ7ZdSAba3u8FXFjKvJE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=TwlA8ifm; arc=none smtp.client-ip=188.68.63.170
+	 In-Reply-To:Content-Type; b=Lux58siNrdcTRCq72KYQLMwaPpLvsR+k+UVhkH/hOZEHCK9HT7OYJUOlKSV4zxOeMdoa1OLUbdIURATZQcz1OfOi89d90ShS2Oh48VbZQhnVNZeIrQhWAWeOfAqC+IYr4y3tj+/9cpHtE9qdqYiknvl4vIWeykAQNMEYMt3gJ1c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=QXkWykl8; arc=none smtp.client-ip=188.68.63.162
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="TwlA8ifm"
-Received: from mors-relay8203.netcup.net (localhost [127.0.0.1])
-	by mors-relay8203.netcup.net (Postfix) with ESMTPS id 4gz8qB5WJ1z8gM7;
-	Mon, 13 Jul 2026 04:39:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="QXkWykl8"
+Received: from mors-relay-8201.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4gzDFF2YLdz41mt;
+	Mon, 13 Jul 2026 09:13:53 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1783917574;
-	bh=JHU7NYI7g0n2n+JJ6517Mq/qydLJ0J2KYKMPeDmzfw8=;
+	s=key2; t=1783926833;
+	bh=ft5/eljShbuYhVYHfb0X4qATRaHxv9WlJJ3lqFQIN2A=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=TwlA8ifmJK9Iy21ZeYYS9A0aLQKHYCrm/lkkwIjN/bk4iQt28sT10oNse28a1JeXF
-	 BE0YqDCqqnBymU2irG2H7VKhJ1FW9U3Th/RpVqjt6sShaOKewAqyo3k4O5EwcjcBzE
-	 7ezUfTHJAaJ6aRhjD2pUMg6p8zN5ELoannjufLGKaGxT+hvbQEFpHpZMwlqBEJlQkA
-	 DAAPFMpkFmf+p9WwIjRiF8yLidJYeQrXgVrNvZQLfn5J9kuiHRspyvpAYpw53r+B3S
-	 tEwX/kI11EeD+GKsyyYefy6fIIXrupRoz2D4oOy15pb5oYjQ0k6F2mvcwA9ksXSeP0
-	 V1v2I6kuIRN9g==
+	b=QXkWykl8hifEgutAY/lzyn35YKVwZWQWF3ZaqD7dFUropywiLUD+NzTU9FbrMS8Gb
+	 N7TxJzsyM0rLg1s/N6S+evPSuSWcZKd3S72/5H9dIgpUVrYW9zJfbJ/NJReuVi0hiA
+	 ZEdzy7+Yr2Yn2lwb9NaTOuQbP8Q03XImk0jOy1ds6DrsPXaCFjrUwgbNgeJU2W9foc
+	 IeTnObDohuNHv8HGeUgcPfb760bwn+7YdwIoW7B5laHHhvYjg6ZsQPAN7SCUtJNtAk
+	 XCKUKycfalhsqa+m1pOL8dSc8Pd5aec/KxZiGCDjsJndw0jrSY8Hn+zQwBmHhsLsgy
+	 IClFEYaqTfVJA==
 Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay8203.netcup.net (Postfix) with ESMTPS id 4gz8qB2sfhz8gGq;
-	Mon, 13 Jul 2026 04:39:34 +0000 (UTC)
+	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4gzDF31rC6z41vC;
+	Mon, 13 Jul 2026 09:13:43 +0200 (CEST)
 X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
 X-Spam-Flag: NO
-X-Spam-Score: -2.901
+X-Spam-Score: -2.898
 X-Spam-Level: 
 Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4gz8q95x9Hz8tZn;
-	Mon, 13 Jul 2026 06:39:33 +0200 (CEST)
+	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4gzDDz3Vhbz8tbl;
+	Mon, 13 Jul 2026 09:13:39 +0200 (CEST)
 Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 2484C5FC3D;
-	Mon, 13 Jul 2026 06:39:33 +0200 (CEST)
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 81FD66041D;
+	Mon, 13 Jul 2026 09:13:31 +0200 (CEST)
 Authentication-Results: mxe9fb;
         spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
 Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <7669b6bf-1c23-4261-9977-c13828e056ce@leemhuis.info>
-Date: Mon, 13 Jul 2026 06:39:31 +0200
+Message-ID: <ae5c29aa-3790-479a-bdfb-1b571eaab809@leemhuis.info>
+Date: Mon, 13 Jul 2026 09:13:30 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -57,49 +57,55 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: =?UTF-8?Q?Re=3A_=5BREGRESSION=5D_2017_Pixelbook_backlight_control_d?=
- =?UTF-8?Q?oesn=E2=80=99t_work_with_7=2E1_kernel?=
-To: Papool Chaudhari <Papool@chaudharilaw.com>
-Cc: regressions@lists.linux.dev, Greg KH <gregkh@linuxfoundation.org>
-References: 
- <CALcz8n5nB=H8CZza-Pw==GfQWRViJwWK8N5PgafE-4pdUJL-LA@mail.gmail.com>
- <2026070936-geologist-yapping-31f4@gregkh>
- <CALcz8n6VtL5D20WCJEsiBRDRKOE6GsF+YPCc+XuS2xr-mqnSTg@mail.gmail.com>
- <2026071109-armchair-civil-7b62@gregkh>
- <CALcz8n4XCt8GK0X=JTDOkMn32Z73HpHKRNaRCdSf=mzr3+r27A@mail.gmail.com>
- <2026071153-wrench-operating-e32d@gregkh>
- <CALcz8n7XoEvYK7PM+WWuQ2rBaWujc3YTQh1DWvLxoRHt3bAT9A@mail.gmail.com>
- <2026071254-resort-supervise-7d28@gregkh>
+Subject: Re: [resend] [regression] amdgpu carrizo: no display signal after
+ modeset
+To: Dianne Skoll <dianne@skoll.ca>, Jaak Ristioja <jaak@ristioja.ee>
+Cc: Mario Limonciello <mario.limonciello@amd.com>,
+ Salvatore Bonaccorso <carnil@debian.org>, Chris Park <chris.park@amd.com>,
+ Matthew Stewart <matthew.stewart2@amd.com>,
+ Dan Wheeler <daniel.wheeler@amd.com>,
+ Alex Deucher <alexander.deucher@amd.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Harry Wentland <harry.wentland@amd.com>, Leo Li <sunpeng.li@amd.com>,
+ Rodrigo Siqueira <siqueira@igalia.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ 1139950@bugs.debian.org, regressions@lists.linux.dev,
+ stable@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <9fba2020-24d1-4235-9869-319d4aab3a4c@ristioja.ee>
+ <178198613176.3658222.16247101620976737948@eldamar.lan>
+ <ajcLuO0YZCoPN7Xw@eldamar.lan> <e4f60b98-9bd8-491a-9703-a5a7a58a4ca0@amd.com>
+ <82b5026d-2dcc-4dcd-9094-2ccf70057964@ristioja.ee>
+ <6cf6be99-76c3-43b3-854f-96cae180318c@ristioja.ee>
+ <20260622153449.453b493e@gato.skoll.ca>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
 Content-Language: de-DE, en-US
-In-Reply-To: <2026071254-resort-supervise-7d28@gregkh>
+In-Reply-To: <20260622153449.453b493e@gato.skoll.ca>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <178391757339.3190664.2856584981283440816@mxe9fb.netcup.net>
-X-NC-CID: hzgeT4Ohe5hRKZcjN8D2U+uZ5jTa8ARZjWIpImmgLwH2kCx2Ttg=
+X-PPP-Message-ID: <178392681229.3442660.9578169747564647640@mxe9fb.netcup.net>
+X-Rspamd-Server: rspamd-worker-8404
+X-Rspamd-Queue-Id: 81FD66041D
+X-NC-CID: MzLG2tZMKB/ADR25837MhEmuu9VJVl40ek1ivkRoK5XTXQ/26lE=
 
-
-
-On 7/12/26 07:50, Greg KH wrote:
-> On Sat, Jul 11, 2026 at 12:38:02PM -0600, Papool Chaudhari wrote:
->> I tested both parent commits of the merge
->> b3793af3277f65d256d67f9949e760b434ff66dd on my 2017 i5 Pixelbook (Eve)
->> as requested, and unfortunately, neither side is bootable:
->>
->> Side A (51cc1c427461): Fails to boot. Completely hangs early at
->> "Loading initial ram disk".
->>
->> Side B (88919bedabb8): Fails to boot. Hangs at the exact same early
->> "Loading initial ram disk" stage.
+On 6/22/26 21:34, Dianne Skoll wrote:
+> On Mon, 22 Jun 2026 20:46:44 +0300
+> Jaak Ristioja <jaak@ristioja.ee> wrote:
 > 
-> That sounds like a different issue than the backlight, right?
+>> Reverting commit fee50077656 ("drm/amd/display: Bump the HDMI clock to 
+>> 340MHz") on top of v7.1.1 appears to resolve the issue, as I am now able 
+>> to get a picture.
 > 
-> Why not disable the ramdisk entirely for doing kernel build testing like
-> this?  It's not normally required unless you have some encrypted
-> partitions/disks.
-I also wonder if something went sideways with your build env and causes
-this, like some odd .config thing. Might be worth building a newer
-kernel once more that was known to work at least mostly in the past and
-check if that still works.
+> Unfortunately, reverting that commit will *break* it for me with my Dasung
+> E-Ink monitor. :(
+Jaak, was this ever resolved? It looks like this fell through the
+cracks, but maybe I missed something.
+
+If this is still unfixed, I think it likely is best if you report this
+to https://gitlab.freedesktop.org/drm/amd/-/work_items/ if you haven't
+done so already -- I suspect that is more likely to get the attention of
+the amdgpu maintainers. Please drop the link to the ticket here after
+submitting the issue.
 
 Ciao, Thorsten
