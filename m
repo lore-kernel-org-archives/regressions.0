@@ -1,108 +1,101 @@
-Received: from mail-07.mail-europe.com (mail-07.mail-europe.com [188.165.51.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E06AB33A9CB
-	for <regressions@lists.linux.dev>; Mon, 13 Jul 2026 21:08:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.165.51.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7ED428751B;
+	Tue, 14 Jul 2026 12:51:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783976894; cv=none; b=NxbjakFkA8CCarWarMdf8q1f17RTCPcy2cMX5VDx5asoTg1fyjj1ogY93Gafb5D1psoPu7AexG6rQFSSjXV57sCgHiUJu9LjaLFfqvOTy5zUFSiVhBkjDOxi1N2R1j5Rdtxnx6LxX31MamyGzQG8tTmofXOcFgtZyVaec0GG+Es=
+	t=1784033494; cv=none; b=n2dWwn7jC4oaWz+Qsox+6c8lYw+3Iia6SWbYcdkMQC9zWmNjfM7AEFb+SSqWdC+qO4Ha8mxUnfgDP62rMTMVL9w4auzml/9rLJn9mGRMej0yQH38lk017mtR2S793Vhd6rTTQDyxH/73AqhOMKqm4Em0VQzr5T/GWKRsOlQ1Au8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783976894; c=relaxed/simple;
-	bh=Qtl5fkFXLFfwI7Gp9rLKD5YocvNVBC8HOnIYuYlpkxs=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uASgT5ei2/Fz8ZQp+Q73pvW4gw3N7oXJ+qkhtQVsNS/Jxq7zey7iT4i4ZSprd1ltBMtEoHuGTQUHlavXNy0f7iX737/15l12aPhWUlxlOtiBYxCCJXCN1bT89ADoXbHg+nJymi8yJ+q2/L9LedOUi0b4Tg2L+UT1Q6qJIaBXCew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=danielfernau.com; spf=pass smtp.mailfrom=danielfernau.com; dkim=pass (2048-bit key) header.d=danielfernau.com header.i=@danielfernau.com header.b=MZRaI9Lf; arc=none smtp.client-ip=188.165.51.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=danielfernau.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=danielfernau.com
+	s=arc-20240116; t=1784033494; c=relaxed/simple;
+	bh=nQ+ncU7UGKu21UK4lHgqEVayZNUyoVYM/np/HNDLGmM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gZ50zdke1SEUwWUuXbZ+fylOPSuHL93PwzlLJ6yykOOarvxkHUbnKE7VdTLRDBGF2qmaD6Sw5PciDDkN/m47JyHTkagC3CSFI96zTH52le5SFddqeteZdYxiDb6Fd/efRkTk7p8EuQhm676SIp1IF264msyoNWwGNOIm1qb45/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=LetjRNiA; arc=none smtp.client-ip=217.194.8.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=danielfernau.com header.i=@danielfernau.com header.b="MZRaI9Lf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=danielfernau.com;
-	s=protonmail3; t=1783976873; x=1784236073;
-	bh=oATV7RVz7+2I28db7Ze02kZ11P/otyLyRcrwhNkRhso=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=MZRaI9LfzavR0QgifTDdCHN6/djt3lbXj04P+4Hmbdmjz/OuDEc4uRy/2yEsU4zf3
-	 kw8BKkxEn3cnRVxzNKpx4i8CGv7sTNBXljEDbGkqbzTSbVWBEjw75mJlmaaaVEyfL/
-	 MUkRARl9Q1C02DoxAVIPT2USdUsqdO4WN7Bo1LDxYkTdrm+LkOsGt5bmMiEl/rNUPp
-	 xyYZQGfDnLjTWmroTmwA5Q7i754Xj5fjgodpMlPOgkLvsSvtpgOTbQ0iAmXy4Q1b6h
-	 Gl24GPNjgPPs105OdTfk20R77ABbQr0BlpJOo7v/kk1ZcEQO95DwrCCo/lukcAom0g
-	 lRzj59Q7U2qRA==
-Date: Mon, 13 Jul 2026 21:07:48 +0000
-To: "Martin K. Petersen" <martin.petersen@oracle.com>
-From: Daniel Fernau <mail@danielfernau.com>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>, me@magik.net, "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>, Kashyap Desai <kashyap.desai@broadcom.com>, Sumit Saxena <sumit.saxena@broadcom.com>, Shivasharan S <shivasharan.srikanteshwara@broadcom.com>, Chandrakanth patil <chandrakanth.patil@broadcom.com>, "megaraidlinux.pdl@broadcom.com" <megaraidlinux.pdl@broadcom.com>, "regressions@lists.linux.dev" <regressions@lists.linux.dev>, Mats Topstad / Intility AS <Mats.topstad@intility.no>
-Subject: Re: [PATCH] scsi: megaraid_sas: fix PRP list out-of-bounds write
-Message-ID: <YKopBh5zwX7tXjDOqU7R0K9CQfVpd3r9_baFGNLwcZGgb4m0cddKjzuQwp0lWZJqixIfpiHm9YwjQfRvNJjBZwl1PaqtuuuCd7dJ4lmirSY=@danielfernau.com>
-In-Reply-To: <yq17bmzd5jr.fsf@ca-mkp.ca.oracle.com>
-References: <GPhsSM0vkgyIrs0DIZ62qeUZX7X4RxwQXVKiuvMx-lHQVSPDxpztUyQOGS0xikqvJ-Z94hMV-dW_5KN_0CX2hsfV7kTf_t0MTf6vdAAaSEc=@magik.net> <yq15x5lowt9.fsf@ca-mkp.ca.oracle.com> <b8fcdb5e-f2be-4bd0-914d-d03e87af9630@leemhuis.info> <yq17bmzd5jr.fsf@ca-mkp.ca.oracle.com>
-Feedback-ID: 131378921:user:proton
-X-Pm-Message-ID: e98a13889e7c7fadda74f80978dbb050068f867d
+	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="LetjRNiA"
+Received: from francesco-nb (248.201.173.83.static.wline.lns.sme.cust.swisscom.ch [83.173.201.248])
+	by mail11.truemail.it (Postfix) with ESMTPA id 627F01FF9F;
+	Tue, 14 Jul 2026 14:51:30 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
+	s=default; t=1784033490;
+	bh=F+IqgTtLqmU06ykzHWgWeMa4tUKRNkCPwK4lvVGqOqU=; h=From:To:Subject;
+	b=LetjRNiAcPEps21BsKobVJxmo29ova7pxzA5T2h/MQphr4TZv3QvAK3ixEWinBPN5
+	 jGlJ1muMpa3CSRWcKeP61tWn5jb3lz7ASa8j8geoYhY2w5DYeakKcKwo5kqIlSD+nS
+	 VDQ/kfMZR/k8gZqIZ9A3InAadDL0WVa7OfebuMq7zItC7o5+fP4d8+PGePI/8FBUz2
+	 9f183Hx1MzhU1t9iLAdE928d62/0Pz6cEmE4wFbV2Vu39y7HadnEiwHSOFdWcRPvfx
+	 xQ1f4OVlDgqnVpelthMVZG1S4qdBQUXarV9NuytG6ga+EnM9sx7vG6oF0H8raPUMvk
+	 TvwUMH6mRThDw==
+Date: Tue, 14 Jul 2026 14:51:26 +0200
+From: Francesco Dolcini <francesco@dolcini.it>
+To: bhelgaas@google.com, hongxing.zhu@oss.nxp.com,
+	linux-pci@vger.kernel.org, Richard Zhu <hongxing.zhu@nxp.com>
+Cc: frank.li@nxp.com, l.stach@pengutronix.de, lpieralisi@kernel.org,
+	kwilczynski@kernel.org, mani@kernel.org, robh@kernel.org,
+	s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: [PATCH v2] PCI: imx6: Fix i.MX6Q/DL boot hang by separating PHY
+ power and reference clock control
+Message-ID: <20260714125126.GA84291@francesco-nb>
+References: <20260708035928.580236-1-hongxing.zhu@oss.nxp.com>
+ <20260708035928.580236-2-hongxing.zhu@oss.nxp.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260708035928.580236-2-hongxing.zhu@oss.nxp.com>
 
-Hi all,
+Hello,
 
-Sorry for the late reply. I was unable to follow up on this earlier because=
- I had to prioritize other issues.
+On Wed, Jul 08, 2026 at 11:59:27AM +0800, hongxing.zhu@oss.nxp.com wrote:
+> From: Richard Zhu <hongxing.zhu@nxp.com>
+> 
+> Commit 610fa91d9863 ("PCI: imx6: Assert PERST# before enabling regulators")
+> introduced a boot hang on i.MX6Q/DL variants by changing the initialization
+> sequence.
+> 
+> The issue stems from coupling PHY power (TEST_PD) and reference clock
+> (REF_CLK_EN) control in imx6q_pcie_enable_ref_clk(). When these are
+> managed together, the timing between PHY power-up and reference clock
+> enablement cannot be properly controlled, leading to initialization
+> failures.
+> 
+> Fix this by separating the two concerns:
+> 
+> - Move PHY power control (TEST_PD) to imx6q_pcie_core_reset() where it
+>   logically belongs with reset operations. This ensures PHY power state
+>   is managed as part of the core reset sequence.
+> 
+> - Update imx6qp_pcie_core_reset() to call imx6q_pcie_core_reset() for
+>   shared PHY power management, avoiding code duplication.
+> 
+> - Make imx6q_pcie_enable_ref_clk() responsible only for reference clock
+>   (REF_CLK_EN) control, simplifying its purpose.
+> 
+> - Remove the 10us delay workaround from imx6q_pcie_enable_ref_clk() as
+>   proper sequencing is now handled by the core_reset functions.
+> 
+> This refactoring ensures PHY power is controlled during reset
+> operations, fixing the boot hang while improving code maintainability.
+> 
+> Fixes: 610fa91d9863 ("PCI: imx6: Assert PERST# before enabling regulators")
+> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
 
-In the meantime, we pinned our kernel to version 6.8.12-4-pve on Proxmox, w=
-hich has been stable for our use case and hardware. Given the recent 7.x re=
-lease, I will take another look this week and report back.
+What's the plan with this? 610fa91d9863 ("PCI: imx6: Assert PERST# before enabling regulators")
+introduces a severe regression with boards not booting at all.
 
-We are using KIOXIA NVMe SSDs, so we will see how it goes.
+As of now we are not able to test anything, and our CI is completely
+blind on any other issue that linux 7.2 might have introduced.
 
-Thanks,
-Daniel
+Is the plan to merge this, or to revert the commit? Any timeline?
+
+Francesco
 
 
-
-
-On Sunday, July 12th, 2026 at 8:16 PM, Martin K. Petersen <martin.petersen@=
-oracle.com> wrote:
-
->
-> Thorsten,
->
-> > Martin, do you know if someone there ever looked into this regression
-> > and the proposed fix? I'm wondering because Daniel and Mats reported
-> > problems under the same subject line (in new threads), but also didn't
-> > get a reply.
->
-> I think this problem is just an unfortunate side effect of the kernel
-> being able to build bigger I/Os by default.
->
-> Typically NVMe SSDs report fairly modest maximum I/O sizes compared to
-> SCSI devices. I suspect this is why we only see this issue with a few
-> select models. My hunch is that these drives advertise a fairly large
-> MDTS.
->
-> Since there appears to be no traction wrt. fixing the MR PRP vs. SGL
-> chaining logic, I wonder if the patch below is sufficient?
->
-> --
-> Martin K. Petersen
->
-> diff --git a/drivers/scsi/megaraid/megaraid_sas_base.c b/drivers/scsi/meg=
-araid/megaraid_sas_base.c
-> index ecd365d78ae3..b93a6d1180ff 100644
-> --- a/drivers/scsi/megaraid/megaraid_sas_base.c
-> +++ b/drivers/scsi/megaraid/megaraid_sas_base.c
-> @@ -1978,7 +1978,8 @@ megasas_set_nvme_device_properties(struct scsi_devi=
-ce *sdev,
->  =09mr_nvme_pg_size =3D max_t(u32, instance->nvme_page_size,
->  =09=09=09=09MR_DEFAULT_NVME_PAGE_SIZE);
->
-> -=09lim->max_hw_sectors =3D max_io_size / 512;
-> +=09lim->max_hw_sectors =3D
-> +=09=09min(SZ_2M >> SECTOR_SHIFT, max_io_size >> SECTOR_SHIFT);
->  =09lim->virt_boundary_mask =3D mr_nvme_pg_size - 1;
->  }
->
->
