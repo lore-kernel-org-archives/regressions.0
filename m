@@ -1,94 +1,69 @@
-Received: from mail-10699.protonmail.ch (mail-10699.protonmail.ch [79.135.106.99])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from d.mail.sonic.net (d.mail.sonic.net [64.142.111.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D32813CC7EC
-	for <regressions@lists.linux.dev>; Wed, 15 Jul 2026 21:20:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.99
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBFB9329C71
+	for <regressions@lists.linux.dev>; Wed, 15 Jul 2026 22:02:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.142.111.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784150441; cv=none; b=o0xBDhA+Ed2msBeZYJSSutj4Md4SR4Y9L/BsuWb+RrzRFUtQY4zinJuVEUgAg8+6bI5W+wLtPb46eOdwSqJOoToLrqpOaKoIyvtrzDiHicITKzLnTiKf3o9encCkhTXENbrrvYcoWn5NGwmz/TfzEmYAauX25viueI7BwH1Zvn4=
+	t=1784152980; cv=none; b=OIkqJHG8rMwd+dCM01fTHI+rwZdxJ5Vb/kvWeVIyz2/9aeKzwMbpYuiRuFr34jsV/S+y2k8Yl6nTHUmy2n0vUBVl2igATMIt6KdqEcknAyrTXYEokyaBpwfKZSjhuQIL5TRP1KKZZAIOIhG7jRLuqI9WdI3vT4wbD9Y/aKTVjqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784150441; c=relaxed/simple;
-	bh=JF5L/01d+U8TRMfJr4PhJNK5TqgM6rTRPXGecgTdUnI=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JRezV4eb7fo3P2tFz+k1ERqPxzeWhgEh5cwkuTr1phCO3HtuuqmRdTl3NMTBKlVbIVU8JQTHX13hWGMOkTUQPV6caj6KXvp8wUbj/aJJViyKaTrrE7l/GOt2aBuSDsmlOib4jajLrY2tQ1n3TKtz+e0so5sCWvSS0nNwkTmLDVM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=eLfH487C; arc=none smtp.client-ip=79.135.106.99
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="eLfH487C"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-	s=protonmail3; t=1784150430; x=1784409630;
-	bh=H/ZH1jIZHpyF6Chr6IwVrkgx+DUg//7CYU1Mql7/Q+g=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=eLfH487CKb7X4ejAlG4rJcMZcoOHh9r1rFJs9nZFNSgD8d7kk5+xT3GVL3LDkyRO/
-	 YZYf7pnVXDhVT1tiCSh1G7C/FTK30aKkrW8I062/W6Df0u43YG4CHrL9+6AMfP3Yuc
-	 rpgDGLouMXPyjZo+k5xeyC3O8AyL0PV3IsCVe0m2uk4WE35BXBNSYqyvGIuDNSA+WV
-	 lUGBWpLPM2eGHZC+kN7XFe/STG5ZCGZ696pxRHolGN7hgqqQwQ0YE5T5rnbNc+/ruc
-	 bns7IVPeLdB+AEgKSZD8N55HoHDwHXw4xETnmHKpCRRYJOz31Qft7F84SdUU0MBvS9
-	 MRF5y8bQFKGpw==
-Date: Wed, 15 Jul 2026 21:20:23 +0000
-To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-From: 70sp <70sp@protonmail.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "iommu@lists.linux.dev" <iommu@lists.linux.dev>, "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>, "regressions@leemhuis.info" <regressions@leemhuis.info>
-Subject: Re: [REGRESSION] GPU passes into VM improperly after c376a3456d8b or a98db518dde2
-Message-ID: <X7nc9tQqVxmuR76GYNJnMRkqUTwNVlXTWpH0wGvJeiAHlcLaibPZHRN037p0359GpdmopB_wI2tF2x6EqZF4oY9J697tcTGYwfYMK96FcUs=@protonmail.com>
-In-Reply-To: <82662a17-f9e2-46dd-9881-792412c1dc50@linux.intel.com>
-References: <z7Rkts0EsooZcnCjNfJaK6ursftFU8ubOkH0hcNjzxugEAwGsHLMblOdfoAx-gJzBZ-TMmeUtD7iWBngbFY5UCJCwdSmYqmCVMy-yhbirUk=@protonmail.com> <56ce85d5-e0b9-407c-9a86-708111a8a509@linux.intel.com> <C4BK-Bp_FII0EkxSHQxBS2wO-Age-UxFrp_KfmYzb8cnQ8ZndzBBIPD8S9T86wOifBP0tysQGCFtGQsBsBvG2IzIMw3jb3NF5HGbS3tsawA=@protonmail.com> <d6a7f70c-5a8a-4be6-abdd-5b3decbb602a@linux.intel.com> <7ec374cb-9a0a-4e30-8410-3a028e46cacd@linux.intel.com> <5bVscg7a2_H1PPW3HmVtrYv_Xwtti2hzjD065W4OdwsD9rC2gw7sGVEg-2U596VZn8O2LAEfhWeZklRk63ymqNW9220R6R_jjif7BaWol9o=@protonmail.com> <82662a17-f9e2-46dd-9881-792412c1dc50@linux.intel.com>
-Feedback-ID: 144929603:user:proton
-X-Pm-Message-ID: d0f33c660aa3b72aef5ea1abbea21fda3d488817
+	s=arc-20240116; t=1784152980; c=relaxed/simple;
+	bh=cw5QF35qg6YhL2y+sMOlUt0eovqOLHhwz4UuHZC3bPA=;
+	h=From:To:Cc:Subject:Date:Message-ID:References:In-Reply-To:
+	 MIME-Version:Content-Type; b=LDhWpyP4lk+wPy5kitjG6C6W3ntNnk9wqCuCISZnflr7VlJ5YpSATxfAPJEmmCNbRHOBXVUHLc8Tra7zipRZ9C2ivRcrvkw3RZKAA6OcW0/lfLAHAb39KYpQ/qH5Kp7ca9CjDUtn+ePT0Xi+ZbSAosuLs1AX8n14BmVSK2LuP9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kcat.cc; spf=pass smtp.mailfrom=kcat.cc; arc=none smtp.client-ip=64.142.111.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kcat.cc
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kcat.cc
+Received: from 192-184-190-95.static.sonic.net (192-184-190-95.static.sonic.net [192.184.190.95])
+	(authenticated bits=0)
+	by d.mail.sonic.net (8.16.1/8.16.1) with ESMTPA id 66FLnTvH007667;
+	Wed, 15 Jul 2026 14:49:29 -0700
+From: Forest <forestix@kcat.cc>
+To: Mathias Nyman <mathias.nyman@linux.intel.com>
+Cc: Forest <forestix@gaga.casa>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Stefan Eichenberger <stefan.eichenberger@toradex.com>,
+        Pawel Laszczak <pawell@cadence.com>, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: [REGRESSION][BISECTED] usb: hub: total system freeze after running adb
+Date: Wed, 15 Jul 2026 14:49:29 -0700
+Message-ID: <hlvf5ldeeqn6muboqnba6q09ak0oo0aadj@sonic.net>
+References: <qc0nhk9c6l0a08bkfeplrm3qjssgrjkvkp@sonic.net> <cc788286-c327-4b1f-adb4-8494c0145d74@linux.intel.com> <bu3vhk5i8pttoi6t8fan58lpe7l2eb12ib@sonic.net> <f8ee4a2f-6b95-4f91-9ffc-b7df45464d46@linux.intel.com> <fod4jk1tp199qsvqqlspl45nf29i5k3c0i@sonic.net> <7a6dfc17-12cc-4972-88d8-acf86e4fca45@linux.intel.com>
+In-Reply-To: <7a6dfc17-12cc-4972-88d8-acf86e4fca45@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Sonic-CAuth: UmFuZG9tSVb2wOlQegGF/lDhTtkPkUgYyjBWiGY3anw5kVlC0sdSgfgSIW8D0sRkL/v8S69wxmMxG3AkY/4+IRbl3ME9RGCu
+X-Sonic-ID: C;Hp45DpeA8RG7laLmcIitdA== M;XrpBDpeA8RG7laLmcIitdA==
+X-Spam-Flag: No
+X-Sonic-Spam-Details: 0.0/5.0 by cerberusd
 
-Hello,
+For the record, I (the reporter) have a new email address.
 
-this regression thread became abandoned unfortunately.
+It was: forestix@gaga.casa
+It is now: forestix@kcat.cc
 
-In case there's anybody who would like to help me (or generally) solve this=
- regression, I am sending all information about what I've found out.
 
-I had a private conversation with Lu Baolu regarding this issue and we foun=
-d out several new facts about this. I am currently working on creating and =
-testing my own patches to add backward compatibility for hardware affecting=
- this issue with my limited knowledge of C and IOMMU.
+On Fri, 5 Dec 2025 16:57:45 +0200, Mathias Nyman wrote:
 
-This issue consists of improper GPU passthrough into VM on a specific platf=
-orm (Haswell) or a specific GPU (NVIDIA Maxwell - GTX 970). I personally be=
-lieve (could be incorrect), that it is caused by the GPU being too old and =
-becoming unsupported by referenced commits. The GPU doesn't seem to be usin=
-g all levels of PTE properly and some data need to be trimmed for proper pa=
-ssthrough but the patches seem to remove (or alter) the trimming functional=
-ity.
+>> A screen photo once again shows newer timestamps than the file. I did not
+>> read every line in the photo to compare it with the log file, but the last
+>> dozen lines look the same. I suppose I can send you the photo if you like.
+>> 
+>
+>Yes please, small differences, ordering, and timing matter in this case
 
-The issue is caused by one of these commits:
-a98db518dde246e01ead53617dc0a30d6aaa3752
-c376a3456d8bef43ec556a98c0a04c35086c2737
+Mathias, I sent the screen shot directly to your intel email address
+back in December. (I sent it only to you, since I'm not sure binaries
+would be welcome on the list.)
 
-The IOMMU code changed a lot since these commits were merged.
+Did you get a chance to look it over?
 
-With IOMMU DebugFS enabled these messages appear in dmesg on affected kerne=
-ls:
-[  107.365019] DMAR: DRHD: handling fault status reg 3
-[  107.365021] DMAR: [DMA Read NO_PASID] Request device [01:00.0] fault add=
-r 0x37fff1000 [fault reason 0x0c] non-zero reserved fields in PTE
-[  107.365023] DMAR: Dump dmar1 table entries for IOVA 0x37fff1000
-[  107.365024] DMAR: root entry: 0x00000004034fc001
-[  107.365025] DMAR: context entry: hi 0x0000000000000202, low 0x000000008b=
-da5001
-[  107.365026] DMAR: pte level: 4, pte value: 0x00000000846ce403
-[  107.365027] DMAR: pte level: 3, pte value: 0x00000003c0000883
-
-I would be grateful for any useful information or help so I can finally for=
-get about this and freely use newer kernels. I also know that there are sev=
-eral other people experiencing this issue, and I would be happy if we solve=
-d this for everybody affected.
-
-Thanks to everybody,
-70sp
+Forest
