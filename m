@@ -1,37 +1,44 @@
-Received: from d.mail.sonic.net (d.mail.sonic.net [64.142.111.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBFB9329C71
-	for <regressions@lists.linux.dev>; Wed, 15 Jul 2026 22:02:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.142.111.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30D0F3C3439;
+	Wed, 15 Jul 2026 23:47:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784152980; cv=none; b=OIkqJHG8rMwd+dCM01fTHI+rwZdxJ5Vb/kvWeVIyz2/9aeKzwMbpYuiRuFr34jsV/S+y2k8Yl6nTHUmy2n0vUBVl2igATMIt6KdqEcknAyrTXYEokyaBpwfKZSjhuQIL5TRP1KKZZAIOIhG7jRLuqI9WdI3vT4wbD9Y/aKTVjqE=
+	t=1784159259; cv=none; b=dPBzY7FPY0d0zwdvzVecXEmRQnmovtzNhNGtvH07cPMKigrwxOxxeEccApTDlXpNus6IUOovREG8Td6CTNOHTzO3L0oXBqRXSOp48GdKvtO+m40KYENnoyZVnispwJqz2tVBBKAzRwVJ4JCT8HGqJAap+nmeS44oahM/ScQhYNI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784152980; c=relaxed/simple;
-	bh=cw5QF35qg6YhL2y+sMOlUt0eovqOLHhwz4UuHZC3bPA=;
-	h=From:To:Cc:Subject:Date:Message-ID:References:In-Reply-To:
-	 MIME-Version:Content-Type; b=LDhWpyP4lk+wPy5kitjG6C6W3ntNnk9wqCuCISZnflr7VlJ5YpSATxfAPJEmmCNbRHOBXVUHLc8Tra7zipRZ9C2ivRcrvkw3RZKAA6OcW0/lfLAHAb39KYpQ/qH5Kp7ca9CjDUtn+ePT0Xi+ZbSAosuLs1AX8n14BmVSK2LuP9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kcat.cc; spf=pass smtp.mailfrom=kcat.cc; arc=none smtp.client-ip=64.142.111.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kcat.cc
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kcat.cc
-Received: from 192-184-190-95.static.sonic.net (192-184-190-95.static.sonic.net [192.184.190.95])
-	(authenticated bits=0)
-	by d.mail.sonic.net (8.16.1/8.16.1) with ESMTPA id 66FLnTvH007667;
-	Wed, 15 Jul 2026 14:49:29 -0700
-From: Forest <forestix@kcat.cc>
-To: Mathias Nyman <mathias.nyman@linux.intel.com>
-Cc: Forest <forestix@gaga.casa>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Stefan Eichenberger <stefan.eichenberger@toradex.com>,
-        Pawel Laszczak <pawell@cadence.com>, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: [REGRESSION][BISECTED] usb: hub: total system freeze after running adb
-Date: Wed, 15 Jul 2026 14:49:29 -0700
-Message-ID: <hlvf5ldeeqn6muboqnba6q09ak0oo0aadj@sonic.net>
-References: <qc0nhk9c6l0a08bkfeplrm3qjssgrjkvkp@sonic.net> <cc788286-c327-4b1f-adb4-8494c0145d74@linux.intel.com> <bu3vhk5i8pttoi6t8fan58lpe7l2eb12ib@sonic.net> <f8ee4a2f-6b95-4f91-9ffc-b7df45464d46@linux.intel.com> <fod4jk1tp199qsvqqlspl45nf29i5k3c0i@sonic.net> <7a6dfc17-12cc-4972-88d8-acf86e4fca45@linux.intel.com>
-In-Reply-To: <7a6dfc17-12cc-4972-88d8-acf86e4fca45@linux.intel.com>
+	s=arc-20240116; t=1784159259; c=relaxed/simple;
+	bh=ykq24m3qu7/gh46GyCdkk0cF4WWRLU9U63Gh81Ezk9c=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=pu7owIyGwrbNOJBSjcoB9jyDM3YwWStm01E0K8VeDOSxtBoxtUBg23vwnSZMrGINpyqb388yNx4kqwAaHTkx1X1cCHo3TPJreIvPXJI42uehQLMc7437Qjq2FIu2ED4sqHbsJ3+/2zvs4sAhlvkIh1EgKBiiJc5xxGuVobLUE9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T+t9BbyH; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T+t9BbyH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1D4A1F000E9;
+	Wed, 15 Jul 2026 23:47:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1784159257;
+	bh=Bl5lk7GtKJUn87j4SLMbzfc5HjmGwGRh3/zLnBPvIAQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To;
+	b=T+t9BbyH/xH5eCUFOoC7kkJIlgvKdo+Ku+RFk+UbSXqwismvztyU1uJjx/qICqmS8
+	 QvO7B8sM5QeI2opwEKmvQC4yPbOmdP4N6cKRYX7vRjwwL3NcMIvpepZIETJDV1zpgP
+	 XmDE8ft22lJBNGenY9+yBXmAEA0HGqFaMiTzCoHJy1sjHckpdK11yfAx9JHKDCETQN
+	 m4LhxZHVyK/oCyCApXzQZFHgzprgyE8EMCfcsPBNWMSBD+94e8rxS6o2cMc48iE2pe
+	 DUFzXLoPeCMpVK88aihoRHaxPaeAOdJ2tYluLtlJkN3BWNgG/yMkvjz/L0PyEEYYHf
+	 DlaDnDB+4R8yQ==
+Date: Wed, 15 Jul 2026 18:47:36 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Leonardo Costa <leoreis.costa@gmail.com>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+	Frank.Li@nxp.com, s.hauer@pengutronix.de, kernel@pengutronix.de,
+	festevam@gmail.com, leonardo.costa@toradex.com,
+	devicetree@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev, Sherry Sun <sherry.sun@nxp.com>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	Richard Zhu <hongxing.zhu@nxp.com>, linux-pci@vger.kernel.org
+Subject: Re: [REGRESSION] mainline/master: Apalis iMX6 no longer boots
+Message-ID: <20260715234736.GA288957@bhelgaas>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -39,31 +46,36 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Sonic-CAuth: UmFuZG9tSVb2wOlQegGF/lDhTtkPkUgYyjBWiGY3anw5kVlC0sdSgfgSIW8D0sRkL/v8S69wxmMxG3AkY/4+IRbl3ME9RGCu
-X-Sonic-ID: C;Hp45DpeA8RG7laLmcIitdA== M;XrpBDpeA8RG7laLmcIitdA==
-X-Spam-Flag: No
-X-Sonic-Spam-Details: 0.0/5.0 by cerberusd
+Content-Disposition: inline
+In-Reply-To: <20260629143439.361560-1-leoreis.costa@gmail.com>
 
-For the record, I (the reporter) have a new email address.
+[+cc Sherry, author of 610fa91d9863, Richard, Mani, linux-pci]
 
-It was: forestix@gaga.casa
-It is now: forestix@kcat.cc
+On Mon, Jun 29, 2026 at 11:34:32AM -0300, Leonardo Costa wrote:
+> Hello,
+> 
+> We are seeing a regression on Apalis iMX6 where the kernel doesn't boot in the
+> newest v7.2-rc1 (it was working before, in v7.1). The device tree being used is the imx6q-apalis-eval.dtb. The kernel
+> configuration used is the one shown below:
+> 
+>     https://gist.github.com/lcosta37/53efdb2fb6e6e0fc05437c7e53b47737
+> 
+> The kernel logs stop almost immediately as the board starts to boot, and I 
+> don't notice any difference in the logs that points to the cause.
+> 
+> Is this known? We are seeing this behavior on all Apalis iMX6 modules, though
+> we don't see it on Colibri iMX6, so it is not SoC-specific.
 
+This regression is listed on
+https://linux-regtracking.leemhuis.info/regzbot/mainline/ as being
+caused by
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?h=master&id=610fa91d9863
+("PCI: imx6: Assert PERST# before enabling regulators") but I can't
+find any bisect or other report that specifically points to
+610fa91d9863.
 
-On Fri, 5 Dec 2025 16:57:45 +0200, Mathias Nyman wrote:
+Can somebody confirm that reverting 610fa91d9863 fixes this
+regression, or at least that 610fa91d9863^ works and 610fa91d9863
+fails?
 
->> A screen photo once again shows newer timestamps than the file. I did not
->> read every line in the photo to compare it with the log file, but the last
->> dozen lines look the same. I suppose I can send you the photo if you like.
->> 
->
->Yes please, small differences, ordering, and timing matter in this case
-
-Mathias, I sent the screen shot directly to your intel email address
-back in December. (I sent it only to you, since I'm not sure binaries
-would be welcome on the list.)
-
-Did you get a chance to look it over?
-
-Forest
+Bjorn
