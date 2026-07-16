@@ -1,94 +1,83 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from shout02.mail.de (shout02.mail.de [62.201.172.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DB3C438468;
-	Thu, 16 Jul 2026 17:28:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2837331327A
+	for <regressions@lists.linux.dev>; Thu, 16 Jul 2026 20:20:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.201.172.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784222941; cv=none; b=YWOg7oF9OwHLWfUERJRowwBIJcpIjTPUOO+bKhyvvhGiCXx3YHoOAa0pimzV3Vqj9XmjZrj3zvosHqBvkZnq6BGvtBqDzuabKiv9OMZM5HiLKQPWJhQ4mTGFl5b2ikRJNgIG5EUNDEHP5RibDbxN/BthPSdlZJWk0E1XNJP0uqU=
+	t=1784233209; cv=none; b=DGve+wGuQMXEI8sM6l9QeIjPmE3GfHrqNhjoIe44xjC/IWt3/8dsF2vVZkJZfsknhcW2cyM0mwhI3zCzIrDowgMPpYdIuccLNl7q586vNOhVmXUFOqpq4l/QUKt7Ypc0EUSphrxz6ofHsQ9doYy8f17KK4Ybsy9M5eFi7zQ5ux8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784222941; c=relaxed/simple;
-	bh=I/TzkBfeAxM+lITwY/O8nsMP46+tzv3HAYIn803AHK0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=V6jHCukqKZ0qQw4sERw77BVIsXNUeLCUrkGn1Al73tjCmIe9+CqSZ2U6h9LskJ/4Xw0J1aotj6JYs/AUCEcYslvb1th0NRBryguY5++yD4pNIqZ0sXN+MhIRFnsN7SuDHbjfJLXCICP2fXa/2xPnO8Buvmw6pp7hpRqQ0BtWDCw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aEitLXbM; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1784233209; c=relaxed/simple;
+	bh=yqKHlv9fWd4h17KQD4PutewV/S2KDnnvLqVuks27CXk=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:Content-Type; b=qd+2lfiEmiih82Cc1kLqXVebhJX1Ed8MTQ4GPA2bX1MLHOlyVjAp1qfLi/kAOPdihfEXA2VC/VWVOtbpkR3GKxw6IPJJGI4M7EfMN2urmmyXw3zWAxetNQN0e/g16CFfJukprUYoBIFI2pNKyP4Wb/XUmI09OewRZmvQ3AcNAis=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mail.de; spf=pass smtp.mailfrom=mail.de; dkim=pass (2048-bit key) header.d=mail.de header.i=@mail.de header.b=h4VYYG5/; arc=none smtp.client-ip=62.201.172.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mail.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mail.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aEitLXbM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85F411F000E9;
-	Thu, 16 Jul 2026 17:28:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784222939;
-	bh=DfTFlvTuJ9NehD+xuHhlkvJ5W5X3RAJvY9aSf5a6Rik=;
-	h=Date:From:To:Cc:Subject:In-Reply-To;
-	b=aEitLXbMPF+ZDmNzgzoeO2ISIaNS2tPrWwnLNqK8ednlZh1BFUnWStIW8u4B0nKBj
-	 5DudZuSLRPdkENxkGz99NrkGQp/tgvpXWlOqP4HT2p0dHQr9xABISKJdOrfKWjgPN3
-	 lh2/GE38DWMY7oVEtIknNPklQTVqmZf2DFvoqjwY2yJbqtKPNJEz6oWV8KWY8Z/LDP
-	 5d0vO7bLRd7pGsSlzxHtcig3H+Bk5PxNnfYtudQR1J1Z4pj3LQ2qv03vf14m6d95lJ
-	 rC53fTeCKYe5utGbr6GKS76/cdxmGjUKSIU814FPBcsVINFDSYVaZz2KPyBArCglEh
-	 +dAxPGR80lyvg==
-Date: Thu, 16 Jul 2026 12:28:58 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: "Hongxing Zhu (OSS)" <hongxing.zhu@oss.nxp.com>,
-	Leonardo Costa <leoreis.costa@gmail.com>,
-	"robh@kernel.org" <robh@kernel.org>,
-	"krzk+dt@kernel.org" <krzk+dt@kernel.org>,
-	"conor+dt@kernel.org" <conor+dt@kernel.org>,
-	Frank Li <frank.li@nxp.com>,
-	"s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-	"kernel@pengutronix.de" <kernel@pengutronix.de>,
-	"festevam@gmail.com" <festevam@gmail.com>,
-	"leonardo.costa@toradex.com" <leonardo.costa@toradex.com>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"imx@lists.linux.dev" <imx@lists.linux.dev>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-	Sherry Sun <sherry.sun@nxp.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Hongxing Zhu <hongxing.zhu@nxp.com>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: Re: [REGRESSION] mainline/master: Apalis iMX6 no longer boots
-Message-ID: <20260716172858.GA111215@bhelgaas>
+	dkim=pass (2048-bit key) header.d=mail.de header.i=@mail.de header.b="h4VYYG5/"
+Received: from postfix02.mail.de (postfix02.bt.mail.de [10.0.121.126])
+	by shout02.mail.de (Postfix) with ESMTP id 123B9240650;
+	Thu, 16 Jul 2026 22:10:27 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mail.de;
+	s=mailde202009; t=1784232627;
+	bh=yqKHlv9fWd4h17KQD4PutewV/S2KDnnvLqVuks27CXk=;
+	h=Message-ID:Date:From:Subject:To:Cc:From:To:CC:Subject:Reply-To;
+	b=h4VYYG5/hKlCU4Db7Fv59zRusGtyqOI7jFKVKSQKwA8wcObhpQx7AUxGkqkpd22GF
+	 2JJOA+7VJl89XQj5snSxYJ89rY4Cj1VzIebUvAQNHryUWaPrhEM1RlSkIQlL0hOmck
+	 1f/ntbuuHMhDR6P6RhjVxfKg6qz1uH0seTMRkh/P2k4UyWeBV8FT0Dh52OYk6yOGQu
+	 tVfhf41jlrPdO6ZJs/ik+NwZw/pB6MmJEVN12vnZjgz/do6+RIPlHretd++rb9rtKH
+	 pOdHpiTrebDH7b4Q4Ycc1VJTy9CHKRHnMpCF/HUNAHmQTQqdi8C6QDV4wem+9hWH58
+	 XGaf0fl1E2PXA==
+Received: from smtp01.mail.de (smtp01.bt.mail.de [10.0.121.211])
+	by postfix02.mail.de (Postfix) with ESMTP id E76E62400E1;
+	Thu, 16 Jul 2026 22:10:26 +0200 (CEST)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp01.mail.de (Postfix) with ESMTPSA id ED0B5240608;
+	Thu, 16 Jul 2026 22:10:25 +0200 (CEST)
+Message-ID: <7941d239-e5f5-43b5-ae0f-20398221e027@mail.de>
+Date: Thu, 16 Jul 2026 22:10:25 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <eb92c269-efa2-4f39-bd47-4d1ee36169ee@leemhuis.info>
+From: tresonic <tresonic@mail.de>
+Subject: [REGRESSION][BISECTED] stmmac: suspend hangs since 1b9707e6f1a9
+ ("net: stmmac: enable RPS and RBU interrupts")
+To: netdev@vger.kernel.org
+Content-Language: en-US
+Cc: regressions@lists.linux.dev, rmk+kernel@armlinux.org.uk, kuba@kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-purgate: clean
+X-purgate: This mail is considered clean (visit http://www.eleven.de for further information)
+X-purgate-type: clean
+X-purgate-Ad: Categorized by eleven eXpurgate (R) https://www.eleven.de
+X-purgate: This mail is considered clean (visit https://www.eleven.de for further information)
+X-purgate: clean
+X-purgate-size: 1058
+X-purgate-ID: 154282::1784232626-D8A428A6-53B54ED8/0/0
 
-On Thu, Jul 16, 2026 at 07:16:31PM +0200, Thorsten Leemhuis wrote:
-> On 7/16/26 18:40, Bjorn Helgaas wrote:
-> > On Thu, Jul 16, 2026 at 02:15:42AM +0000, Hongxing Zhu (OSS) wrote:
-> >>> On Mon, Jun 29, 2026 at 11:34:32AM -0300, Leonardo Costa wrote:
-> >>>> We are seeing a regression on Apalis iMX6 where the kernel
-> >>>> doesn't boot in the newest v7.2-rc1 (it was working before, in
-> >>>> v7.1). The device tree being used is the imx6q-apalis-eval.dtb.
-> >>>> The kernel configuration
-> >>>> used is the one shown below:
-> >> ...
-> > 
-> >>> Can somebody confirm that reverting 610fa91d9863 fixes this
-> >>> regression, or at least that 610fa91d9863^ works and 610fa91d9863
-> >>> fails?
-> >>
-> >> Sorry for this severe regression. I have posted a fix that has been
-> >> tested on my i.MX6Q SabreSD board:
-> >>
-> >> https://lore.kernel.org/imx/20260708035928.580236-2-hongxing.zhu@oss.nxp.com/
-> > 
-> > My question was whether somebody had actually bisected to 610fa91d9863
-> > ("PCI: imx6: Assert PERST# before enabling regulators").  I don't see
-> > anything specific on the mailing list, so I don't know how
-> > 610fa91d9863 got blamed for the regression.
-> 
-> That was me and might have been a stupid idea. I normally wouldn't have
-> added this, but a earlier message from Hongxing Zhu sounded a pretty
-> convincingly like something along the lines of  "this is the problem I
-> already have a fix for there" -- and then I took the commit-id from there.
+Hello,
+Please bear with me, this is my first time writing to a mailing list...
 
-Ah, ok, that explains it, thanks!  Hopefully we can get some clear
-connection in the patch that eventually gets merged.
+Since commit 1b9707e6f1a9, suspend (systemctl suspend) causes a full system freeze on my laptop. Fans and keyboard backlight stay powered; the machine is completely unresponsive and requires a hard power-off (holding the power button) to recover. I could not get any kernel output from the hang.
+
+- Reproduces on current master
+- git revert 1b9707e6f1a9... on top of master fixes the issue
+- Workaround: sudo ip link set eno1 down before suspend avoids the hang entirely; with the interface down, suspend/resume works normally even on the bad commit
+
+Hardware:
+
+64:00.0 Ethernet controller: Motorcomm Microelectronics. YT6801 Gigabit Ethernet Controller (rev 01)
+Kernel driver in use: dwmac-motorcomm
+
+[    5.672548] YT8531S Gigabit Ethernet stmmac-6400:00: attached PHY driver (mii_bus:phy_addr=stmmac-6400:00, irq=POLL)
+[    5.890940] dwmac-motorcomm 0000:64:00.0 eno1: PHY [stmmac-6400:00] driver [YT8531S Gigabit Ethernet] (irq=POLL)
+
+Thank you,
+tresonic
