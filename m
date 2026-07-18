@@ -1,178 +1,146 @@
-Received: from shout02.mail.de (shout02.mail.de [62.201.172.25])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B2D4348C79
-	for <regressions@lists.linux.dev>; Sat, 18 Jul 2026 07:35:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.201.172.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FE402E3B12
+	for <regressions@lists.linux.dev>; Sat, 18 Jul 2026 08:29:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784360148; cv=none; b=MYgvQNKNceXJIHMcPpyK28nK7G8MJ5BCHhbp1Nfl41307pHIqiD+iqthAikdU3kWougLiBqLa2mGycVrWTMbbJ1wAYvZSloBEz2tI1Q+nmOrBq7dKyjcWYI8TCZGZQybo7Ww0DKugZm6m6rEsFo3uXipEx7OrYJTBBAalxM8Bxk=
+	t=1784363364; cv=none; b=F9f1QfS1vttl94Qfvw91nnGk+S6e/Et881nGTPeqiY18scmogNeKZu0aV2epIzyry/dHUpnBiBFbLpk7nj6AvP96sw86ZHxL+C1VyU8mne6RfpBUGKybr+B2V2mQswNz6cIe+FIci2UI3g6pCdJkEiHBux3h+3aXs3bSR3cpt6s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784360148; c=relaxed/simple;
-	bh=dq62vZ7x72Lt9eZ4YiM9fHmYGcZcxSHkxrEZsXPNFm4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nR98OQfJJuMksokbAUUT+TPorgKXP8CMW55v6HHruwTq+E5peJi8A4nUVSeZZuK+CvN6HdheZHlfJIVZfC52/6UB3JXENiScKQUFRCXv9o5wbsX0qqn/lgH23oJOPJAngjGW6N7hI/aWQ79Be/2lhYbWPCSXjEymyXxEWi/q66E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mail.de; spf=pass smtp.mailfrom=mail.de; dkim=pass (2048-bit key) header.d=mail.de header.i=@mail.de header.b=i7vIN3lt; arc=none smtp.client-ip=62.201.172.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mail.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mail.de
+	s=arc-20240116; t=1784363364; c=relaxed/simple;
+	bh=bwKJTQJCKMd9LGy69EDnfYFH0Jeh5NUlf7jASPN03u0=;
+	h=Message-ID:Date:MIME-Version:Subject:References:To:Cc:From:
+	 In-Reply-To:Content-Type; b=uJiMsxslZ9U3XK2C2B1ZXC0WiswaXFe++7zpsXRailjhR1AXgBNdKI9AC3eOygpXlT0ChF50cYZFXwTEYwVTZTOnqfdzlU9m39rdFlo1PtbezHEzpj1Sp+7bErB2THgtMVCl4CTRVOdSEIEn3sbU+U2YhiZMnxKoxiSGyw5amDI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BM6gUVbx; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mail.de header.i=@mail.de header.b="i7vIN3lt"
-Received: from postfix01.mail.de (postfix01.bt.mail.de [10.0.121.125])
-	by shout02.mail.de (Postfix) with ESMTP id B63C62407CA;
-	Sat, 18 Jul 2026 09:35:44 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mail.de;
-	s=mailde202009; t=1784360144;
-	bh=dq62vZ7x72Lt9eZ4YiM9fHmYGcZcxSHkxrEZsXPNFm4=;
-	h=Message-ID:Date:Subject:To:Cc:From:From:To:CC:Subject:Reply-To;
-	b=i7vIN3ltR/Sa3AFPDL1an5rRPJIJkytZ+SiQhKwmEdYDjLQ3DkMCAS8uz56DTKVNS
-	 LmbUxesbDmSB4fGg9Cb640cNJmsbmXVBAgx5AKFFT1q7wb6HLvy0siX01CaI8qfhUa
-	 DN0dwqL3C2XthgtqAQvB6+u8aqiWKYatsFjAM9t2aNT1TIhIeCn3D/3VtQgg5/C4Rc
-	 uLWjFfdMrTGiWa4/cV6OsyBbptF8BpfsxDPjF96RkPPrLaTvPotRaWjgYh48opem2l
-	 nfybyKeQtFkeLwnVfe4P8UHSAXo8xXDYy2PlrfVvx2V+fk5ewGF5xmfRzVXmj1gUnd
-	 5XpuVjdy0Ocpw==
-Received: from smtp01.mail.de (smtp03.bt.mail.de [10.0.121.213])
-	by postfix01.mail.de (Postfix) with ESMTP id 98779240564;
-	Sat, 18 Jul 2026 09:35:44 +0200 (CEST)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp01.mail.de (Postfix) with ESMTPSA id 0D9D0240660;
-	Sat, 18 Jul 2026 09:35:42 +0200 (CEST)
-Message-ID: <97d803a5-ca6e-4d4a-adc2-f97cabfded65@mail.de>
-Date: Sat, 18 Jul 2026 09:35:42 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BM6gUVbx"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-49546c690ffso14842845e9.2
+        for <regressions@lists.linux.dev>; Sat, 18 Jul 2026 01:29:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1784363361; x=1784968161; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:in-reply-to:from:cc:to
+         :references:content-language:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=Q97TUmV2DQk8THGELBHc6YQIVtcyBA12wZnwktioMfo=;
+        b=BM6gUVbxm4iwMXurkXwcaSXrr+2/ibfq5Dp/u9+grbytHf7Bj5y7pc+I6wpwdSOfgU
+         JObvQjxAOIAAlqsyzai+zQ4rmL6z4MN/72x1RlE8t/mxed7d4tRwT0rJJ1D+W3F5z435
+         1y37DcmlQdceW/LqI3BJYuSrOZ7Xf4341Ov6G/6IBJzdP7k/3PXFa5WfIKzWAktSOfiA
+         nBAm5nKzlCkn6kvTnE6KjcveeRPSs3iftwmEZg80pM2tkL/4E5v8KxqThPYPtDo9bGHn
+         tI8DcIYAYVGAtdMUd2/MjwAUJqoQnWQ+fkPxf+I5l92+SKXtRqWl8QW2pvT7shctFWcI
+         qYQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1784363361; x=1784968161;
+        h=content-transfer-encoding:content-type:in-reply-to:from:cc:to
+         :references:content-language:subject:user-agent:mime-version:date
+         :message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=Q97TUmV2DQk8THGELBHc6YQIVtcyBA12wZnwktioMfo=;
+        b=HaFN+a4tRVfxjOYWb+YKxwv+w4pyV68Q7Vd6lK91kmmQJeJY31Cv4EOGxBmSyR1ZHC
+         o+S5Oj/l3szP0/LJqvEQO/2bAyFZHreO4lXSlFpu3/v576iEvqvKlIgAveBG6zr/VVL0
+         96zefvl+oRVZPJfpJXmV86CJRpV52fTU4EGLz7g+vKLU9+GQ5V5b3j/XPzFh5TWOn6ZF
+         JdBbMgEtBy3xWKTVqA+9t+Osl3rwvX8UQjcE00HmlWdnA0/iGpP9nQtIrfYBn7F5sAm/
+         a2FodJcGYyF9iTS040RR1fK56lNvzngwjMyZOSH3ueu46pt5G72eeHevAhH0+rFkqs5g
+         kG4g==
+X-Gm-Message-State: AOJu0Yz5bhVQFc5eVHOLyGB4FTO09ASjBnsGgEXJcI1BAfBmGPR9HjwZ
+	bZXnO47TF8zklxr5t0USm/EkFbYTAA4aEijCGptErJZaHTO4Jr8uTaiLqkTydhQJ
+X-Gm-Gg: AfdE7cnr3KfFY9Imn7ZSCqFJpZetr+WWk3uifkSwBLN2N39JJ+1/0J6d6wb9/g4131a
+	h6PORqpod5GFKByPv1sTW6rAW5umxc0Aaex+GfyhU2XKY6jgrpGbzXRlJzh+KRFvR1PeGB9Nv9D
+	MYL7tIcZJPftO5OICSQxifFNkAoGZNuAPiTFih70PBmzLW0Y3LymH28pJDh0HwBG5hgE3S0wg/2
+	rS/vQBPfF9o2+r0C56byVf6viJARA/J4I8ZKIpAwSGDERccgkZcysfZkl83cA5ophLZjoDYNYeG
+	6zht24/tAOovrgs0U74zuc9LyQXMDHeS400kJj5lytJ0AV4z84N5vb6Bac17EKVJCWnsa2DOqK0
+	uieWrtDKHMbw6nEx38pAA3z8KjVKFnV+MfJWTeJqN9IhdDDJIIUccdLmesKJHuZt8N+E/yyuWec
+	zDTfidCBxLaL9eEQ==
+X-Received: by 2002:a05:600c:c494:b0:495:4df2:b8c1 with SMTP id 5b1f17b1804b1-4954df2c89cmr39549365e9.35.1784363361134;
+        Sat, 18 Jul 2026 01:29:21 -0700 (PDT)
+Received: from [192.168.68.67] ([82.65.196.100])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4954995b78dsm73741625e9.0.2026.07.18.01.29.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 18 Jul 2026 01:29:20 -0700 (PDT)
+Message-ID: <5e456d33-7e8f-4e54-9149-ac3cff229445@gmail.com>
+Date: Sat, 18 Jul 2026 10:29:17 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Subject: Re: [REGRESSION][BISECTED] stmmac: suspend hangs since 1b9707e6f1a9
- ("net: stmmac: enable RPS and RBU interrupts")
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: netdev@vger.kernel.org, regressions@lists.linux.dev,
- rmk+kernel@armlinux.org.uk, kuba@kernel.org,
- Maxime Chevallier <maxime.chevallier@bootlin.com>
-References: <7941d239-e5f5-43b5-ae0f-20398221e027@mail.de>
- <17ebe5ba-16a5-4b3a-94cd-e9707c88df3e@lunn.ch>
- <72b91ec7-202c-4301-bcd8-b818cf8d72a0@mail.de>
- <21068662-c44b-4266-b634-24e5eac8cd96@lunn.ch>
- <8f6aca6d-6619-401c-bed7-8d42732d166a@mail.de>
- <09ee8651-4f29-4ae0-8e82-a32a1f7ad04a@lunn.ch>
+User-Agent: Mozilla Thunderbird
+Subject: Fwd: linux-image-6.12.94+deb13-amd64: does not detect ScreenPad on
+ ASUS VivoBook
 Content-Language: en-US
-From: tresonic <tresonic@mail.de>
-In-Reply-To: <09ee8651-4f29-4ae0-8e82-a32a1f7ad04a@lunn.ch>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-purgate: clean
-X-purgate: This mail is considered clean (visit http://www.eleven.de for further information)
-X-purgate-type: clean
-X-purgate-Ad: Categorized by eleven eXpurgate (R) https://www.eleven.de
-X-purgate: This mail is considered clean (visit https://www.eleven.de for further information)
-X-purgate: clean
-X-purgate-size: 4494
-X-purgate-ID: 154282::1784360144-EF6E9C36-31FD0AD6/0/0
-
-Thank you for you explanations!
-
-> The interrupt is being enabled in the init_chan call in
-> stmmac_dma_ops. Ideally, it should be disabled in a mirror function,
-> which currently does not exist. So maybe deinit_chan() needs
-> adding. But where to call it from? init_chan() is called from
-> stmmac_init_dma_engine(), from stmmac_hw_setup(). stmmac_resume() does
-> call this. So we need something in stmmac_suspend(). Maybe in
-> stmmac_stop_all_dma()?
-> 
-> stmmac is messy, there are often not mirror functions. If there is a
-> stmmac_init_dma_engine() there should be
-> stmmac_deinit_dma_engine(). If there is stmmac_hw_setup() there should
-> be stmmac_hw_tairdown(). But none of these seem to exist. 
-> 
-> Anyway, do you want to try to implement deinit_chan() and call it from
-> stmmac_stop_all_dma()?
-Yes I'd really like to implement a solution here.
-This is my try, but I still have some questions:
-- is it ok to disable all interrupts on deinit_chan()?
-- maybe the interrupt could also just be disabled in stop_rx?
-
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c
-index 829a23bdad01..65c243fb829f 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c
-@@ -125,6 +125,17 @@ static void dwmac410_dma_init_channel(struct stmmac_priv *priv,
- 	       ioaddr + DMA_CHAN_INTR_ENA(dwmac4_addrs, chan));
- }
- 
-+static void dwmac410_dma_deinit_channel(struct stmmac_priv *priv,
-+					void __iomem *ioaddr, u32 chan)
-+{
-+	const struct dwmac4_addrs *dwmac4_addrs = priv->plat->dwmac4_addrs;
-+	u32 value;
-+
-+	value = readl(ioaddr + DMA_CHAN_INTR_ENA(dwmac4_addrs, chan));
-+	value &= ~DMA_CHAN_INTR_DEFAULT_MASK_4_10;
-+	writel(value, ioaddr + DMA_CHAN_INTR_ENA(dwmac4_addrs, chan));
-+}
-+
- static void dwmac4_dma_init(void __iomem *ioaddr,
- 			    struct stmmac_dma_cfg *dma_cfg)
- {
-@@ -577,6 +588,7 @@ const struct stmmac_dma_ops dwmac410_dma_ops = {
- 	.reset = dwmac4_dma_reset,
- 	.init = dwmac4_dma_init,
- 	.init_chan = dwmac410_dma_init_channel,
-+	.deinit_chan = dwmac410_dma_deinit_channel,
- 	.init_rx_chan = dwmac4_dma_init_rx_chan,
- 	.init_tx_chan = dwmac4_dma_init_tx_chan,
- 	.axi = dwmac4_dma_axi,
-diff --git a/drivers/net/ethernet/stmicro/stmmac/hwif.h b/drivers/net/ethernet/stmicro/stmmac/hwif.h
-index e6317b94fff7..04dafec021b4 100644
---- a/drivers/net/ethernet/stmicro/stmmac/hwif.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/hwif.h
-@@ -170,6 +170,8 @@ struct stmmac_dma_ops {
- 	void (*init)(void __iomem *ioaddr, struct stmmac_dma_cfg *dma_cfg);
- 	void (*init_chan)(struct stmmac_priv *priv, void __iomem *ioaddr,
- 			  struct stmmac_dma_cfg *dma_cfg, u32 chan);
-+	void (*deinit_chan)(struct stmmac_priv *priv, void __iomem *ioaddr,
-+			    u32 chan);
- 	void (*init_rx_chan)(struct stmmac_priv *priv, void __iomem *ioaddr,
- 			     struct stmmac_dma_cfg *dma_cfg,
- 			     dma_addr_t phy, u32 chan);
-@@ -235,6 +237,8 @@ struct stmmac_dma_ops {
- 	stmmac_do_void_callback(__priv, dma, init, __args)
- #define stmmac_init_chan(__priv, __args...) \
- 	stmmac_do_void_callback(__priv, dma, init_chan, __priv, __args)
-+#define stmmac_deinit_chan(__priv, __args...) \
-+	stmmac_do_void_callback(__priv, dma, deinit_chan, __priv, __args)
- #define stmmac_init_rx_chan(__priv, __args...) \
- 	stmmac_do_void_callback(__priv, dma, init_rx_chan, __priv, __args)
- #define stmmac_init_tx_chan(__priv, __args...) \
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index 2a0d7eff88d3..8504ecc3dbeb 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -2560,13 +2560,16 @@ static void stmmac_stop_all_dma(struct stmmac_priv *priv)
- {
- 	u8 rx_channels_count = priv->plat->rx_queues_to_use;
- 	u8 tx_channels_count = priv->plat->tx_queues_to_use;
-+	u8 max_chan = max(rx_channels_count, tx_channels_count);
- 	u8 chan;
- 
--	for (chan = 0; chan < rx_channels_count; chan++)
--		stmmac_stop_rx_dma(priv, chan);
--
--	for (chan = 0; chan < tx_channels_count; chan++)
--		stmmac_stop_tx_dma(priv, chan);
-+	for (chan = 0; chan < max_chan; chan++) {
-+		if (chan < rx_channels_count)
-+			stmmac_stop_rx_dma(priv, chan);
-+		if (chan < tx_channels_count)
-+			stmmac_stop_tx_dma(priv, chan);
-+		stmmac_deinit_chan(priv, priv->ioaddr, chan);
-+	}
- }
- 
- /**
+References: <0dd06508-cb74-4152-8798-9fc5f1c4999b@gmail.com>
+To: regressions@lists.linux.dev, regressions@leemhuis.info
+Cc: 1141604@bugs.debian.org, luke@ljones.dev, corentin.chary@gmail.com,
+ hansg@kernel.org
+From: Ponali <ponali2k@gmail.com>
+In-Reply-To: <0dd06508-cb74-4152-8798-9fc5f1c4999b@gmail.com>
+X-Forwarded-Message-Id: <0dd06508-cb74-4152-8798-9fc5f1c4999b@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
 
-tresonic
+
+
+-------- Forwarded Message --------
+Subject: 	linux-image-6.12.94+deb13-amd64: does not detect ScreenPad on 
+ASUS VivoBook
+Date: 	Sat, 11 Jul 2026 19:43:19 +0200
+From: 	Ponali <ponali2k@gmail.com>
+To: 	1141604@bugs.debian.org
+
+
+
+Hi,
+
+
+I have made a list of everything that the sysfs attribute can return in 
+6.12.90:
+
+
+actual_brightness: 70
+bl_power: 4
+brightness: 70
+max_brightness: 235
+scale: unknown
+type: raw
+device/driver_override: (null)
+device/modalias: platform:asus-nb-wmi
+device/uevent: DRIVER=asus-nb-wmi
+                MODALIAS=platform:asus-nb-wmi
+power/async: disabled
+power/control: auto
+power/runtime_active_kids: 0
+power/runtime_active_time: 0
+power/runtime_enabled: disabled
+power/runtime_status: unsupported
+power/runtime_suspended_time: 0
+power/runtime_usage: 0
+
+
+In 6.12.94, only these files change:
+
+bl_power: 0
+
+max_brightness: 255
+
+
+These files do not report any information:
+
+uevent: [Blank file]
+device/cpufv: [Permission denied]
+power/autosuspend_delay_ms: [Input/output error]
+
+
+For both kernels, setting the brightness to 0 has both brightness and 
+actual_brightness report 0.
+
+I cannot check the minimum brightness through uevent because it shows up 
+as blank.
+
+
+Regards,
+
+Ponali
 
