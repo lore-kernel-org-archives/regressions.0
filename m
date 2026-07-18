@@ -1,41 +1,57 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from shout01.mail.de (shout01.mail.de [62.201.172.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DE11242D88;
-	Sat, 18 Jul 2026 14:11:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F02E53403FA
+	for <regressions@lists.linux.dev>; Sat, 18 Jul 2026 15:33:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.201.172.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784383905; cv=none; b=OPCWWg0Pm53RCycRjy1nIFMEHpnN1MdJFo75xL/xJGUznjQm7q/uF7LYM1LSgOGVp3lyk66jI9NVsBYluloH826oeYem1NXoIqARBBPTqvcVbOmZbyOKKGgDWVkP+Bs7au44Mya8rCvKxNLNsVtSGzm1FCKGkbgP+/itxJfwsIk=
+	t=1784388782; cv=none; b=oTKZA1ZcujXHGwkCJVUggGHAQyy0JIbIdWI2Hwa/x7kDVG4iL5+BRLgryDCEJGBHgUObIipLKFsTWmbZreoe0z+Up2uwE2rx01aCz6CRG00oN4w3HzmNVS5LLsXZcdks6EhUGTM9Cl9z95zAzbV6eEvnqKZgY13344W9wRsing0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784383905; c=relaxed/simple;
-	bh=zcl9LKq8pjhBh4RrRGyYK5ctdqdeFIv13OkEhSMRo18=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V8cUxHscLa7V7ET47XSSDVF2Tr9obfwZ83XKf8CEKaoa3ZGZiB98e5zmnrdT1wy1oh4GlrMFKh9JDHF0VFZKNHfX9/aNTg+2SOLp+wUaLsvOXaOat0w2HF8P3Yj4ZgV+uAynL++rn3Kwtahyz8sCmt0/xb+gu4TeaRD/LqXcLjE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=xWpzv42w; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1784388782; c=relaxed/simple;
+	bh=mL3ezG/p8I0SnvZhwQumvt4nAc1t5cPnYddgX++tRIk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TN4QxRMrp003mLBhHl8wJGrZXbl8meMBnvYToRRC0BRWfY/YOmoQgEmKueiFMWcL+m5GuxfpqZYWDGIapN2SJk18q7yxsZfilFvlpI5jXjTkkjVe6vq8iXL4i6DmG9mEOIp2p5OodNw8aBvS8QFMRMPSV0AAhj6ZURHwFDyFWz4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mail.de; spf=pass smtp.mailfrom=mail.de; dkim=pass (2048-bit key) header.d=mail.de header.i=@mail.de header.b=YdnYNGan; arc=none smtp.client-ip=62.201.172.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mail.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mail.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="xWpzv42w"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=2pwakpXnKK3TWqol+7rA8TT2J1dLUNUKBR7V6X6RgX0=; b=xWpzv42wTclDI5T44ap4bG3z9r
-	Td04QSugNUSAqFZm+2l4GwmwS4Aj0qTPq0YZkkaEPCSkXCC8J3vRQISeWQaisHZ6O7/NvQDERVho6
-	jwzG/NuFhLsXJkZk4XeEHi3llOn/VtMtY89VHlCC3+VJwxkhkc1xGcduT4ZizKfZpfrU=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1wl5lU-00Cx1n-DE; Sat, 18 Jul 2026 16:11:40 +0200
-Date: Sat, 18 Jul 2026 16:11:40 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: tresonic <tresonic@mail.de>
-Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
-	netdev@vger.kernel.org, regressions@lists.linux.dev,
-	rmk+kernel@armlinux.org.uk, kuba@kernel.org
+	dkim=pass (2048-bit key) header.d=mail.de header.i=@mail.de header.b="YdnYNGan"
+Received: from postfix02.mail.de (postfix02.bt.mail.de [10.0.121.126])
+	by shout01.mail.de (Postfix) with ESMTP id EA5722408B0;
+	Sat, 18 Jul 2026 17:32:58 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mail.de;
+	s=mailde202009; t=1784388778;
+	bh=mL3ezG/p8I0SnvZhwQumvt4nAc1t5cPnYddgX++tRIk=;
+	h=Message-ID:Date:Subject:To:Cc:From:From:To:CC:Subject:Reply-To;
+	b=YdnYNGan2nfpP1PrAkn6D0MgCB+7lsQVO4kHPrBXjeGk5whKTfnCYV/3+NFLoR4ur
+	 9CcgQmZgXZGHj5aru6O13gRGQ4cTGeP5GLuzxOiAWuIF7B6XO+iMKAbc+MTtVZ7FwY
+	 /IyCUt36VEpintbjPB3KWlzdSxneEldQVyYiMxYJWROjxjUfebV+hgBabTrGe5FzIz
+	 3R9gzT44kcO98x7s+aYExdi8ZrSWl+Z9YmfqtLTG1FIwltDp4RhC4JYG2JD5DxjECX
+	 eEaQXFsrJxZRKcYyRSLX/OgHwtqZy2pQZdE635YPp7vJUG9COYnvf0hrFwrCl+vw7J
+	 7b0W/ZbFEmV4g==
+Received: from smtp01.mail.de (smtp01.bt.mail.de [10.0.121.211])
+	by postfix02.mail.de (Postfix) with ESMTP id B1D282405BE;
+	Sat, 18 Jul 2026 17:32:58 +0200 (CEST)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp01.mail.de (Postfix) with ESMTPSA id D13E324064D;
+	Sat, 18 Jul 2026 17:32:57 +0200 (CEST)
+Message-ID: <045bafd3-45be-4e7d-b828-77f9fcf6beab@mail.de>
+Date: Sat, 18 Jul 2026 17:32:57 +0200
+Precedence: bulk
+X-Mailing-List: regressions@lists.linux.dev
+List-Id: <regressions.lists.linux.dev>
+List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
+List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
 Subject: Re: [REGRESSION][BISECTED] stmmac: suspend hangs since 1b9707e6f1a9
  ("net: stmmac: enable RPS and RBU interrupts")
-Message-ID: <36957839-b03a-4403-b08e-12bbadd8bc0c@lunn.ch>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
+ netdev@vger.kernel.org, regressions@lists.linux.dev,
+ rmk+kernel@armlinux.org.uk, kuba@kernel.org
 References: <7941d239-e5f5-43b5-ae0f-20398221e027@mail.de>
  <17ebe5ba-16a5-4b3a-94cd-e9707c88df3e@lunn.ch>
  <72b91ec7-202c-4301-bcd8-b818cf8d72a0@mail.de>
@@ -45,39 +61,37 @@ References: <7941d239-e5f5-43b5-ae0f-20398221e027@mail.de>
  <97d803a5-ca6e-4d4a-adc2-f97cabfded65@mail.de>
  <46e90a47-4507-40fe-b74e-efef932e9b62@bootlin.com>
  <54128253-eb77-48f5-a673-94fb65edb78f@mail.de>
-Precedence: bulk
-X-Mailing-List: regressions@lists.linux.dev
-List-Id: <regressions.lists.linux.dev>
-List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
-List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <54128253-eb77-48f5-a673-94fb65edb78f@mail.de>
+ <36957839-b03a-4403-b08e-12bbadd8bc0c@lunn.ch>
+Content-Language: en-US
+From: tresonic <tresonic@mail.de>
+In-Reply-To: <36957839-b03a-4403-b08e-12bbadd8bc0c@lunn.ch>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-purgate: clean
+X-purgate: This mail is considered clean (visit http://www.eleven.de for further information)
+X-purgate-type: clean
+X-purgate-Ad: Categorized by eleven eXpurgate (R) https://www.eleven.de
+X-purgate: This mail is considered clean (visit https://www.eleven.de for further information)
+X-purgate: clean
+X-purgate-size: 641
+X-purgate-ID: 154282::1784388778-4AD848A6-A8C9B97D/0/0
 
-> Sorry for the noob question, how would I submit this fix?
+On 7/18/26 4:11 PM, Andrew Lunn wrote:
 
-There are two documents for you to read:
+> There are two documents for you to read:
+> 
+> https://docs.kernel.org/process/submitting-patches.html
+> 
+> https://www.kernel.org/doc/html/latest/process/maintainer-netdev.html
+> 
+> Since this is a fix, please use the net tree. And include a Fixes: tag
+> indicating the patch which broke it.
+> 
+>> Just commit and separately git send-email to netdev@vger.kernel.org?
+> 
+> ./scripts/get_maintainer.pl will give you a list of email addresses.
+I did your suggested change, read through the documents and hope to have
+sent everything correctly :)
 
-https://docs.kernel.org/process/submitting-patches.html
-
-https://www.kernel.org/doc/html/latest/process/maintainer-netdev.html
-
-Since this is a fix, please use the net tree. And include a Fixes: tag
-indicating the patch which broke it.
-
-> Just commit and separately git send-email to netdev@vger.kernel.org?
-
-./scripts/get_maintainer.pl will give you a list of email addresses.
-
-Or take a look at
-
-https://b4.docs.kernel.org/en/latest/contributor/prep.html
-
-b4 automates some of the steps in producing patches, keeping track of
-versions, working out who to send to etc.
-
-Often with the kernel, the code is easy. Getting the processes correct
-is harder. But we are here to help.
-
-	  Andrew
+Thanks for your help,
+Luis/tresonic
