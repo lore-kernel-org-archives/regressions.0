@@ -1,122 +1,123 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.102])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB1E73914E1
-	for <regressions@lists.linux.dev>; Tue, 21 Jul 2026 14:15:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.102
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8862B42EEB8
+	for <regressions@lists.linux.dev>; Tue, 21 Jul 2026 21:59:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784643334; cv=none; b=e0yFI3Dd2PZ2Z1hH1KI3vEqo8LLhBky9HWhf5exQK1eE1b8XwrYWZfOorlxHEi36HenRW4gsZaZHf7NoLcyqrQYwznQDMvR7A2VocjP3F+MUd4ws1CT0P8ZTi3zDDAEXCgfeuToQ7SmdTmsuJ0EZ8o86EXe/+mOT8ZNAhLpvGVk=
+	t=1784671150; cv=none; b=SpDDfsPehmCB6BewVNEZGXFkBXBhdzq3uUxn4dJjlNi3xoKNi5G6k5L/+vQ5oLAnlAm+uVNCdPHcrXITXbdyEUsgL54Zp5RC4NAARyq6BUwIkC5Vn0jcy/MY7fBf+r0cw2q552jhmn0ar/DKJj2Etu5K8WoGJDMBK6nylARG/Mw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784643334; c=relaxed/simple;
-	bh=EjVbTYXxzUb2PCoEveAXBNPmkFItvYp8i6ujJLTjwz4=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=kM/z6Eap+1XbXzrX3rDcbjYLi9y/4GLu9lYEBLs7HEdkvUchAH7x0adJl1/bm4kf3qKkj4lWaomyy4t+SF9bMUHOVE5mCN9xz7OOX8hmb4Ws+6lJ6lKGERSmU3qNh4yvrxlRRyA3ZYF1J9+HWvzlrc3YFUwZ8EGBufMMTa+bHU8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=OWv1AxGw; arc=none smtp.client-ip=188.68.63.102
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1784671150; c=relaxed/simple;
+	bh=+CSJzWCektwp0qDxnnaIRAU7cRgqQ7Em/RxSSsREdq8=;
+	h=Content-Type:MIME-Version:Subject:From:To:Cc:Date:Message-ID; b=nm8i17vz+kLBG0KpD5o3xc3aLiXLcYxdOXkc6XNknhE8J3dt5ziOc9kmDdPzI5FMhtDV5BIkUjxzOs5A/C197VgdtPQU9OSGL73//g/Jz9J5Xf/AYA3d4tczvVSEop72xwxevpKJBPnTQCETC1S/hyWd8F4REeqB2R/783/FDWA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kernelci.org; spf=pass smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci.org header.i=@kernelci.org header.b=AdNEt0wd; arc=none smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kernelci.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernelci.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="OWv1AxGw"
-Received: from mors-relay-2502.netcup.net (localhost [127.0.0.1])
-	by mors-relay-2502.netcup.net (Postfix) with ESMTPS id 4h4KCw2plhz6G0T
-	for <regressions@lists.linux.dev>; Tue, 21 Jul 2026 16:15:24 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1784643324;
-	bh=EjVbTYXxzUb2PCoEveAXBNPmkFItvYp8i6ujJLTjwz4=;
-	h=Date:Subject:From:To:References:In-Reply-To:From;
-	b=OWv1AxGwDCeOtne7u+h4m+LK5PH2RqpfBHMXTx8SflVAqJfiGQpOVo/kia8QS2ITx
-	 mP2gwM5Hz9iuOwomJqOyNy2TZTqQqOgNlP8e+SqID5Df7e3HKdOtgcqwccYEyTw+F7
-	 PinrjJFbpNBDaiKwC3uGuvM69Uo+en313qCJ0QfQ1rWrmx2E319kgzPEae1ZOfAH3p
-	 PxyH1XpYTYNiw+HSiSVKYYewcL9urRublBaVE4R4iitAzhs96KFxslD4KMua8DhQ+X
-	 FsPbbfQ1NMS53mVrRApnuzYzqTHGYeT6dqVTCj3wbhY1dzIKW484FjtP9E3x4t1LRS
-	 8znfVOTe8dZNQ==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-2502.netcup.net (Postfix) with ESMTPS id 4h4KCw25mTz4xjG
-	for <regressions@lists.linux.dev>; Tue, 21 Jul 2026 16:15:24 +0200 (CEST)
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4h4KCw0CGLz8tH7
-	for <regressions@lists.linux.dev>; Tue, 21 Jul 2026 16:15:23 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 851B55FC73
-	for <regressions@lists.linux.dev>; Tue, 21 Jul 2026 16:15:23 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <087dfb52-7ae5-4ad6-8e07-19e4f1834381@leemhuis.info>
-Date: Tue, 21 Jul 2026 16:15:23 +0200
+	dkim=pass (2048-bit key) header.d=kernelci.org header.i=@kernelci.org header.b="AdNEt0wd"
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-381216921aaso11221814a91.1
+        for <regressions@lists.linux.dev>; Tue, 21 Jul 2026 14:59:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci.org; s=google; t=1784671147; x=1785275947; darn=lists.linux.dev;
+        h=message-id:date:reply-to:cc:to:from:subject
+         :content-transfer-encoding:mime-version:content-type:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=BfGeGlENFxpuCxR7FjO+oWKfmw8fNbeR6VheNQhmhAk=;
+        b=AdNEt0wdkepBN79Lt5ZlSqmIr3qY/P35GflLjgYv3K976dwV6ZlMbS3VOWfD3ErpHQ
+         Jnsf1bPTnz0ONX54fkoc5wMMWdsS6+9MRRnwGRrpM+3grY5pKcrGSp+T4Zwt4T0yUPF/
+         VKa3z86CtWYpW8RDWp9X19xK1vtu8z0N4Dp/38mTIS4Z0zkAu7Tw2qpKr8gqxGSDHffL
+         4RppcvRPxvj/J2B1J18b2iJEYDARYWg5XMRZqnlYc2VefWl35IHKWyQxAWc4GIXw1c5L
+         wuJIsL/OlMORn/XaRy3qQQKZeZqmzUtkiSnNn/vEw5m5jFhP8cjVk0hMkqHj6lCo5/aL
+         KT5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1784671147; x=1785275947;
+        h=message-id:date:reply-to:cc:to:from:subject
+         :content-transfer-encoding:mime-version:content-type:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=BfGeGlENFxpuCxR7FjO+oWKfmw8fNbeR6VheNQhmhAk=;
+        b=jO/fX8Z5CEDuNW3g+pD2qPssLEsPCY5hhmI606XEZvDMTRF2jiEI82KwWSMTI9REyr
+         ZYPFnZkpffOLY05Y5FEnbqtkCy/451/XxqdjntT49bZHrTjoNrAEr4iHqx4EQ5mbM98V
+         lVnHrStaKEemOjcw9Su8B2rk2y2cc7N+HktfesG3e3Cv2RZD6JtWwuRJD33VAb8Spp4t
+         1QZV5yNvfnPq8e5s3JVd+CTEF/mEZXnWV9kiO7jM6vCmFkAbaCVl97POK1YZ4mq9WKui
+         bN/nhcZ5l26mlgctR3g9QL4kLVtKMUb3Kp8d704JemRiXcVlSX07KyBxjbtEO9Vzs5xl
+         Beqw==
+X-Gm-Message-State: AOJu0Ywy4ArMZ1/odevh8SuTGYxhdfLlUxLbUPRcG9Aj0VrHFtwSF6Hq
+	gFegGU6StjdOXWCEpaBLp5Sq49Ur01xfiALX2cefYWD/cMs6wmpkI2p59STPUGvT6ec=
+X-Gm-Gg: AR+sD12RjFHmDQZkiaQENhK0vjeqWZomeaa5rq2rX5IvTzbHrSm6NwW+O+9+InzVp4g
+	TVCQ/3vquv2/yTTAH2z/6h/ySo2NDr52R969pAQs9rdJj/9LhqEjDMkxn3H9KPU1gkRGEgu4Y7l
+	SR40qLQiQ/nW93aYOdcgg43V5/lUE3TB6gptCK6VkZQpRQjY3AkpsJ1S7k3NKAA7dS+UrxXMPND
+	qK5RKkFnNvSZEU+eKOTfs05+AaCbokpS01G4AXbhYb5yR1L9xnznHVaASvqsWdX6PBhJ3iPiG9P
+	Jmq1eeGS8/ab4ZpXiWJQEVvZGhX14RIkRK5fbJO/8tcAYTR1hMDnWAHYpxAJZd36jsk95rS4RRY
+	+oU95cfhDxT4A0KpXXCU6DHBqvCEz0FG4JQWfebRbmR4V7EC76iN8FfjraG5MgJF/eP/GM/Q=
+X-Received: by 2002:a17:90a:d2cb:b0:37f:ad36:8fc5 with SMTP id 98e67ed59e1d1-38e4b515bfamr20944909a91.23.1784671146655;
+        Tue, 21 Jul 2026 14:59:06 -0700 (PDT)
+Received: from 4104846f2ebf ([20.38.40.137])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-13ce2cbb7c5sm42923449c88.10.2026.07.21.14.59.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jul 2026 14:59:05 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: 
- <178464332370.2685325.17147036172040631602@mxe9fb.netcup.net>
-X-NC-CID: 3WxKiTzBAVRLeuuEcykXmfTWvoA1szN1M6gRx9bqenKv3MoZWhM=
+Content-Transfer-Encoding: 8bit
+Subject: 
+ =?utf-8?b?W1JFR1JFU1NJT05dIG5leHQvbWFzdGVyOiAoYnVpbGQpIGluIGV4cGFuc2lvbiBv?=
+ =?utf-8?b?ZiBtYWNybyDigJh4ZnNfbG9nX3J0c2LigJkgaW4gZnMveGZzL2xpYnhmcy94ZnNf?=
+ =?utf-8?b?c2IubyAoZnMuLi4=?=
+From: KernelCI bot <bot@kernelci.org>
+To: kernelci-results@groups.io
+Cc: regressions@lists.linux.dev, linux-next@vger.kernel.org
+Reply-To: kernelci@lists.linux.dev
+Date: Tue, 21 Jul 2026 21:59:05 -0000
+Message-ID: <178467114526.1316.13205923514031471873@kernelci.org>
 
+New build issue found on next/master:
 
+---
+ in expansion of macro ‘xfs_log_rtsb’ in fs/xfs/libxfs/xfs_sb.o (fs/xfs/libxfs/xfs_sb.c) [logspec:kbuild,kbuild.compiler.note]
+---
 
-On 3/9/24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
+Log excerpt:
+=====================================================
+/tmp/kci/linux/fs/xfs/libxfs/xfs_sb.c:1483:17: note: in expansion of macro ‘xfs_log_rtsb’
+ 1483 |                 xfs_log_rtsb(tp, bp);
+      |                 ^~~~~~~~~~~~
+cc1: all warnings being treated as errors
 
-#regzbot report:
-https://lore.kernel.org/lkml/20260427115804.134231-1-smoch@web.de/
-#regzbot introduced: f5cd8a929c825
+=====================================================
 
-#regzbot report: dc1ec4fa86b2
-#regzbot introduced:
-https://lore.kernel.org/all/ae3f4f58-0326-45a2-bbee-b71ec44cd28a@ethicsbowl.ca/
-#regzbot title: bitland-mifs-wmi: low-power profile stopped working
+When fixing this issue, please attribute this report according to the
+patch submission rules:
 
-#regzbot report:
-https://lore.kernel.org/all/CAKTNdwH_ZMQa-97h+tqdsWqXKtorkFF9wHAMn60-8ZGKuze_Mg@mail.gmail.com/
-#regzbot introduced: 0b31f297557f
-#regzbot title: phy: rockchip: naneng-combphy: USB3 operation on RK3576
-#regzbot fix: phy: rockchip: naneng-combphy: Always configure SSC spread
-direction
+Reported-by: kernelci.org bot <bot@kernelci.org>
+Link: https://lore.kernel.org/all/178467114526.1316.13205923514031471873@kernelci.org/
 
-#regzbot report:
-https://lore.kernel.org/all/PH8PR12MB7279ACE40040268C9A48F484F9F82@PH8PR12MB7279.namprd12.prod.outlook.com/
-#regzbot introduced: 1296423bf23c7a
-#regzbot title: drm: amd: get_ss_info_from_atombios() crashes in 7.1.2
+For complete logs and details about the environment used, see the issue
+on the KernelCI dashboard:
 
-#regzbot report: https://lore.kernel.org/all/87wlvazrdy.fsf@igel.home/
-#regzbot introduced: bee25f97ad24
-#regzbot title: powerpc/970: booting broke on PowerMac G5 (PowerMac7,3)
-#regzbot fix: powerpc/970: fix nap return address corruption on async
-interrupt exit
+- dashboard: https://d.kernelci.org/i/maestro:09e03f60e36b4243ba595281bf22987cb72d812d
+- giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+- commit HEAD:  290aaf24a551d5a0dce037e3fab30820f9113a10
+- tags: next-20260721
 
-#regzbot report:
-https://lore.kernel.org/linux-sound/95c21574-97d5-4311-9263-9e174d22d22c@opensource.cirrus.com/T/#u
+# Builds where the incident occurred:
 
-#regzbot introduced:e496112529006
-#regzbot title: ASoC: cs35l56: no sound card on 7.2-rc3
-#regzbot fix: ASoC: cs35l56: Fix possible probe() deadlock
+## x86_64_defconfig+aws-ec2 on (x86_64):
+- compiler: gcc-14
+- config: None
+- dashboard: https://d.kernelci.org/build/maestro:6a5fae5b75cb84fb21705422
 
-#regzbot report:
-https://lore.kernel.org/all/7941d239-e5f5-43b5-ae0f-20398221e027@mail.de/
-#regzbot introduced: 1b9707e6f1a9d5
-#regzbot title: net: stmmac: suspend hangs
-#regzbot fix: net: stmmac: dwmac4: mask interrupts when stopping DMA in
-suspend
-#regzbot monitor:
-https://lore.kernel.org/all/20260720111534.163416-1-luis.la@mail.de/
+#regzbot introduced: 3fe08b9796f36ef437ab9328e7dd1e5ff2d66603..290aaf24a551d5a0dce037e3fab30820f9113a10
+#regzbot link: https://d.kernelci.org/i/maestro:09e03f60e36b4243ba595281bf22987cb72d812d
 
-#regzbot report:
-https://lore.kernel.org/lkml/0f6d921f-1026-4d9a-bad5-7e5b9485c4a2@breiteneder.me/
-#regzbot fix: wifi: rtw89: correct drop logic for malformed AMPDU frames
+#kernelci issue maestro:09e03f60e36b4243ba595281bf22987cb72d812d
+
+--
+This is an experimental report format. Please send feedback in!
+Talk to us at kernelci@lists.linux.dev
+
+Made with love by the KernelCI team - https://kernelci.org
