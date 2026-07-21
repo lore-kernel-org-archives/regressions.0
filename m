@@ -1,94 +1,236 @@
-Received: from zg8tmtyylji0my4xnjqumte4.icoremail.net (zg8tmtyylji0my4xnjqumte4.icoremail.net [162.243.164.118])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2382821255A
-	for <regressions@lists.linux.dev>; Tue, 21 Jul 2026 12:39:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.243.164.118
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.61.103])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00EF737BE87
+	for <regressions@lists.linux.dev>; Tue, 21 Jul 2026 14:02:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.61.103
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784637554; cv=none; b=PlbVaHdmuab5sPH4wPNBIeLDfT6hp8y1LacCq0SKJh9kYRYH4QiIk+Sj50ssu00D/hn0Qp6yZt6Q+XUsO9HBrH8bKdfQEuigvkLUDCCxMZQhkvm3qFbayZWf4i0KDJoXHWzW/P/BGhLwnK1mKVYgoDMflAMLS3KqEh53rVg7S/0=
+	t=1784642530; cv=none; b=MwmYrjSdWFfpk/ve2tcIEutsizhSzaqTUapQ++fa/z8j+xkkv+HYklmQCytSjmS1lGlQXOvuaOGWs464QtQZdBRFIzgluVwSWYuZ7hntAM96uSfVtH7T0oclalUYEZiNgU+3rAtap2kJxhqzul0Xj3p5xGNI9qp4aDCMNsKlaAo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784637554; c=relaxed/simple;
-	bh=J9o7MHeYrhqvMtTxAxjODO81wUU1IlSjmrdACYphAuk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=grXXc1GOJMDZHQ7KLvUqMC8E/IEwjr+ojlfpI3S09P8uGZE8y796ufEil2xwT5tW7Abnhf8u7jGncBVQCUKJj/J6vSw6VwQF8c8n9ZcQqsP6ubUOieFqyq0ekvJ6SANVavDYsRL3RVPcVETb0cvYuQb8sTJACVKwJH6clyXtoCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stu.xmu.edu.cn; spf=pass smtp.mailfrom=stu.xmu.edu.cn; arc=none smtp.client-ip=162.243.164.118
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stu.xmu.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stu.xmu.edu.cn
-Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
-	by hzbj-icmmx-7 (Coremail) with UTF8SMTP id AQAAfwAX+UFpaF9qCBUjAQ--.40501S2;
-	Tue, 21 Jul 2026 20:39:05 +0800 (CST)
-Received: from chengfenglin$stu.xmu.edu.cn ( [23.249.17.80] ) by
- ajax-webmail-mail (Coremail) ; Tue, 21 Jul 2026 20:39:01 +0800 (GMT+08:00)
-Date: Tue, 21 Jul 2026 20:39:01 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From: "Chengfeng Lin" <chengfenglin@stu.xmu.edu.cn>
-To: "Pedro Falcato" <pfalcato@suse.de>,
-	"Andrew Morton" <akpm@linux-foundation.org>, linux-mm@kvack.org
-Cc: "Liam R. Howlett" <liam@infradead.org>,
-	"Lorenzo Stoakes" <ljs@kernel.org>,
-	"Vlastimil Babka" <vbabka@kernel.org>,
-	"Jann Horn" <jannh@google.com>, linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: Re: [REGRESSION] mm/mprotect: shared-dirty base-page toggle slower
- since v6.17
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version 2025.3-cmXT6 build
- 20260202(ad063891) Copyright (c) 2002-2026 www.mailtech.cn OP_ICM_ICMVM
-In-Reply-To: <433d619a.1e8a6.19f1d4d1be6.Coremail.chengfenglin@stu.xmu.edu.cn>
-References: <7c9eeb21.1c04f.19efaacbb2f.Coremail.chengfenglin@stu.xmu.edu.cn>
- <433d619a.1e8a6.19f1d4d1be6.Coremail.chengfenglin@stu.xmu.edu.cn>
-X-CM-CTRLMSGS: =?B?+TW9bjiH6nJ5xwDR7hwMki1N8jM=
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+	s=arc-20240116; t=1784642530; c=relaxed/simple;
+	bh=9q4hEDJwnjbwsRow6xuQwL7e3ZD3pKxUYZLSk9ynxSU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dXZCo49uZtDUbsXXawXFVj3oFP4iOFmgsvWzgTqPKA5qtRn70/BhBleFg46T0c6bB8eZ7z3tYv1TPmfW0Zylgk3VWvIrumDuQP0mWQV35jDES9ZH5pNqTP8NQBNsqhtmjlJr7d7mcW5o7Vj74feQptN8VXrUcUXXzqmujHxIdjM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=NTK3GR3F; arc=none smtp.client-ip=188.68.61.103
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="NTK3GR3F"
+Received: from mors-relay-8403.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4h4Jk91yqzz87j3;
+	Tue, 21 Jul 2026 15:53:05 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1784641985;
+	bh=9q4hEDJwnjbwsRow6xuQwL7e3ZD3pKxUYZLSk9ynxSU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=NTK3GR3FcIsS7rOGbAv7rhONsLHUTi97PuceDtcdep07/eJja3Ng7F4EhrKucuMQD
+	 BSRxRFYIQs3mwY9PP9MH11pDkLAH7hkHjlBVgkley/Tr8wr7dGsgHVOZwHfZAmWZEw
+	 Cdx85GB82quTzAm54zwOBZp9JpUuVct6vVMI2Xdj/Ck2Heqo1TgugOoPGORUbDP7Bt
+	 nkmYQKthnE+Iyz9oBkJUzGwC3Onbkrz/NV3Je2PCSL0DzeJ66BJYBojxL2AWverHML
+	 Ok5iUgPv2wiVVXzQy34uPe+wVHnk0qgVV5/t++k9XMiG1tRlv5RExZ8gomHUc1wZjC
+	 ZWKeks0MbDJIg==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4h4Jk91FMvz8FgP;
+	Tue, 21 Jul 2026 15:53:05 +0200 (CEST)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4h4Jk81NXDz8sbB;
+	Tue, 21 Jul 2026 15:53:04 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 4FCE85FB8F;
+	Tue, 21 Jul 2026 15:53:03 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <02595315-7971-4ec5-9d5d-d5b567ed52af@leemhuis.info>
+Date: Tue, 21 Jul 2026 15:53:02 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Message-ID: <6c8d9b6c.24a8b.19f84afccdd.Coremail.chengfenglin@stu.xmu.edu.cn>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:AQAAfwAXMvNlaF9qBIjCAA--.14436W
-X-CM-SenderInfo: astqjiysvrikiuszmqhvwxh5lpxovvfxof0/1tbiAQALEGpZQDgCZ
-	QAFsz
-Authentication-Results: hzbj-icmmx-7; spf=neutral smtp.mail=chengfengl
-	in@stu.xmu.edu.cn;
-X-Coremail-Antispam: 1Uk129KBjvJXoW7uw1DWry7WF1rXw17Gw4rXwb_yoW8Cw1DpF
-	ZxCry5Gr4kCw1jy392van7WrWrCr93Ja15Jrs5K34xZas8GF9FyrWSy3W8ZF4jgr10v34Y
-	vrs8Kw17Jrs8uaUanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	DUYxn0WfASr-VFAU7a7-sFnT9fnUUIcSsGvfJ3UbIYCTnIWIevJa73UjIFyTuYvj4RJUUU
-	UUUUU
+User-Agent: Mozilla Thunderbird
+Subject: Re: Bug#1141604: linux-image-6.12.94+deb13-amd64: does not detect
+ ScreenPad on ASUS VivoBook
+To: Denis Benato <denis.benato@linux.dev>,
+ Salvatore Bonaccorso <carnil@debian.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Ponali <ponali2k@gmail.com>, Luke Jones <luke@ljones.dev>,
+ Corentin Chary <corentin.chary@gmail.com>, Hans de Goede <hansg@kernel.org>,
+ 1141604@bugs.debian.org, platform-driver-x86@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>, regressions@lists.linux.dev,
+ stable@vger.kernel.org
+References: <178340264407.17924.10135409461303815312.reportbug@ananaspc>
+ <178362762638.911488.8564892548331679884@eldamar.lan>
+ <98dc115b-1dec-4fbb-bab7-2588e8b74bf8@linux.dev>
+ <0ff0385e-50b0-bfae-cedc-05cfe9c6cbc7@linux.intel.com>
+ <alE92R40JwcluApW@eldamar.lan>
+ <a7b0db75-439f-4ae8-8721-da1d5fe86123@linux.dev>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <a7b0db75-439f-4ae8-8721-da1d5fe86123@linux.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-PPP-Message-ID: 
+ <178464198374.2561815.11447565488880481093@mxe9fb.netcup.net>
+X-NC-CID: zYBHvL3LGbW3ro8tYT5vmokDcXDs2Uvpm2U+SKxCbzqcAUMprJk=
 
-SGksCgpKdXN0IGEgZ2VudGxlIHBpbmcsIHdpdGggcmVzdWx0cyBmcm9tIGFuIGV4YWN0IGNvbW1p
-dC1sZXZlbCBjaGVjay4KCkkgdGVzdGVkIGNhYzFkYjhjM2FhZCAoIm1tOiBvcHRpbWl6ZSBtcHJv
-dGVjdCgpIGJ5IFBURSBiYXRjaGluZyIpCmFnYWluc3QgaXRzIGRpcmVjdCBwYXJlbnQgNDUxOTlm
-NzE1Yjc0LiBFYWNoIHBvaW50IHVzZWQgYSBmcmVzaCBib290OgoKICA0NTE5OWY3MTViNzQgcGFy
-ZW50IEEgLT4gY2FjMWRiOGMzYWFkIGNoaWxkIC0+CiAgNDUxOTlmNzE1Yjc0IHBhcmVudCBCCgpJ
-IHVzZWQgdGhlIHNhbWUgbmFycm93IDY0IE1pQiBzaGFyZWQtZGlydHkgNCBLaUIgYmFzZS1wYWdl
-IHRvZ2dsZQp3b3JrbG9hZCBmcm9tIHRoZSByZXBvcnQuIEVhY2ggcG9pbnQgaGFkIDMgd2FybS11
-cCBwcm9jZXNzZXMgYW5kCjE1IG1lYXN1cmVkIHByb2Nlc3Nlcy4gRWFjaCBtZWFzdXJlZCBwcm9j
-ZXNzIHJhbiAxLDAwMCBpdGVyYXRpb25zLgpUaGUgcHJpbWFyeSByZXN1bHQsIGl0ZXJhdGlvbl9u
-c19wZXJfcGFnZSAobG93ZXIgaXMgYmV0dGVyKSwgd2FzOgoKICBwb2ludCAgICAgICBtZWFuIG5z
-L3BhZ2UgICAgU0QKICBwYXJlbnQgQSAgICAgICAgICAzOC4xMzMgIDAuNzQzCiAgY2hpbGQgICAg
-ICAgICAgICAgNTMuNTMzICAwLjUxNgogIHBhcmVudCBCICAgICAgICAgIDM4LjQ2NyAgMC42NDAK
-ClRoZSBwYXJlbnQgbWlkcG9pbnQgd2FzIDM4LjMwMCBucy9wYWdlLiBUaGUgY2hpbGQgd2FzIDM5
-Ljc3JSBzbG93ZXIsCndoaWxlIHBhcmVudCBCIGRpZmZlcmVkIGZyb20gcGFyZW50IEEgYnkgb25s
-eSAwLjg3JS4gRHJvcHBpbmcgdGhlIGZpcnN0Cm1lYXN1cmVkIHByb2Nlc3MgZnJvbSBldmVyeSBw
-b2ludCBsZWZ0IGEgMzkuNTMlIGNoaWxkIGRlbHRhLgoKQWxsIDQ1IG1lYXN1cmVkIHByb2Nlc3Nl
-cyBwYXNzZWQgdGhlIHNlbWFudGljIGNoZWNrcyBhbmQgdXNlZCA0IEtpQgpwYWdlcyB3aXRoIG5v
-IFRIUC4gVGhlIHByb3RlY3QgYW5kIHJlc3RvcmUgY29tcG9uZW50cyBlYWNoIGluY3JlYXNlZApm
-cm9tIDEzIG5zL3BhZ2UgaW4gdGhlIHBhcmVudCBjb250cm9scyB0byAyMCBucy9wYWdlIGluIHRo
-ZSBjaGlsZC4KVGhlIHBvc3QtdG91Y2ggY29tcG9uZW50IHN0YXllZCBjbG9zZSB0byAxMiBucy9w
-YWdlLgoKVGhlIGV4YWN0IGNvbW1pdCBjaGFuZ2VzIG9ubHkgbW0vbXByb3RlY3QuYy4gQm90aCBr
-ZXJuZWxzIHdlcmUgYnVpbHQgZnJvbQp0aGUgZXhhY3QgY29tbWl0cyB3aXRoIHRoZSBzYW1lIG5v
-cm1hbGl6ZWQgY29uZmlnLCBHQ0MgMTUuMi4wLCBhbmQgS2J1aWxkCm1ldGFkYXRhLiBFdmVyeSBw
-b2ludCB1c2VkIHRoZSBzYW1lIENQVSBzZXR0aW5ncyBhbmQgcnVudGltZSBwcmVlbXB0PW5vbmUu
-CgpGb3IgdGhpcyBuYXJyb3cgd29ya2xvYWQsIHRoZSBleGFjdCBwYXJlbnQvY2hpbGQgcmVzdWx0
-IGlkZW50aWZpZXMKY2FjMWRiOGMzYWFkIGFzIHRoZSBzb3VyY2Ugb2YgdGhlIG1lYXN1cmVkIHNs
-b3dkb3duLiBJIGFtIG5vdCBjbGFpbWluZwphIGdlbmVyaWMgbXByb3RlY3QoKSBvciBhcHBsaWNh
-dGlvbi1sZXZlbCByZWdyZXNzaW9uLgoKRXZpZGVuY2U6CgogIGh0dHBzOi8vZ2l0aHViLmNvbS9s
-Y2YwMzk5L2xpbnV4LXJlZ3Jlc3Npb24tZXZpZGVuY2UvdHJlZS9hM2FlN2JmMWE1MGU0ZDg4YjU3
-MmM2MDA1YTAzNzY3OTUzMGM5YjFmL21wcm90ZWN0LXNoYXJlZC1kaXJ0eS10b2dnbGUvYmFyZS1t
-ZXRhbC8yMDI2MDcyMS1jYWMxZGI4YzNhYWQtZXhhY3QtYWIKCiNyZWd6Ym90IGludHJvZHVjZWQ6
-IGNhYzFkYjhjM2FhZDk3ZDZmZmI1NmNlZDg4NjhkNmNiYmJkMmJmYmUKCklmIHVzZWZ1bCwgSSBj
-YW4gc3RpbGwgY29sbGVjdCBhIHBlcmYgcHJvZmlsZSBvZiB0aGUgY2hpbGQgYXJvdW5kCmNoYW5n
-ZV9wdGVfcmFuZ2UoKS4KClRoYW5rcywKQ2hlbmdmZW5nCg==
+On 7/11/26 18:46, Denis Benato wrote:
+> On 7/10/26 20:45, Salvatore Bonaccorso wrote:
+>> On Fri, Jul 10, 2026 at 03:31:08PM +0300, Ilpo Järvinen wrote:
+>>> On Fri, 10 Jul 2026, Denis Benato wrote:
+>>>> On 7/9/26 22:08, Salvatore Bonaccorso wrote:
+>>>>> Control: forwarded -1 https://lore.kernel.org/regressions/178362762638.911488.8564892548331679884@eldamar.lan
+>>>>>
+>>>>> Ponali reported in Debian (https://bugs.debian.org/1141604) the
+>>>>> following issue after updating from 6.12.90 to 6.12.94. First quoting
+>>>>> the report:
+>>>>>
+>>>>> On Tue, Jul 07, 2026 at 07:37:24AM +0200, Ponali wrote:
+>>>>>> Package: src:linux
+>>>>>> Version: 6.12.94-1
+>>>>>> Severity: normal
+>>>>>> Tags: upstream, regression
+>>>>>> X-Debbugs-Cc: ponali2k@gmail.com
+>>>>>>
+>>>>>> Last known working kernel: 6.12.90-1
+>>>>>> First known broken kernel: 6.12.94-1
+>>>>>>
+>>>>>> I upgraded all my packages through apt, which also upgraded the linux image
+>>>>>> from 6.12.90 to 6.12.94.
+>>>>>>
+>>>>>> I expected the ScreenPad display to continue to be detected and exposed as a
+>>>>>> DRM output, like on 6.12.90. The ScreenPad being the trackpad with a screen,
+>>>>>> which came with my computer (ASUS VivoBook X532FA_S532FA).
+>>>>>>
+>>>>>> After upgrading and rebooting, the new kernel caused a regression where the
+>>>>>> display of the ScreenPad fails to get recognized by the kernel. The touchpad
+>>>>>> functionality still works. Usually, the ScreenPad would appear as "HDMI-A-1".
+>>>>>> The DRM connector for it still exists (/sys/class/drm/card0-HDMI-A-1), but
+>>>>>> "status" reports "disabled"
+>>>>>>
+>>>>>> I could not get the ScreenPad display to be recognized again on the new kernel,
+>>>>>> so I configured GRUB to automatically boot to the 6.12.90 kernel through the
+>>>>>> "Advanced Options". The ScreenPad is recognized on older kernel versions, so I
+>>>>>> am still able to use it (until a new LPE comes around).
+>>>>>>
+>>>>>> To replicate:
+>>>>>> 1. Boot with 6.12.90. The ScreenPad display is detected as HDMI-A-1.
+>>>>>> 2. Boot with 6.12.94 with the exact same hardware.
+>>>>>> 3. The ScreenPad display is no longer usable.
+>>>>>>
+>>>>>>
+>>>>>> My main display is eDP-1 (1920x1080), though it isn't essential. My GPU is an
+>>>>>> integrated Intel iGPU, and the driver used for both screens is i915. I have
+>>>>>> booted to the new kernel for reportbug to get all the information
+>>>>>> automatically, but i will continue to use the old one until the appropriate
+>>>>>> time.
+>>>>> Now, Ponali did bisect the changes between 6.12.90 and 6.12.94 and
+>>>>> found that the backport of the commit 8d95d1f4aa5c ("platform/x86:
+>>>>> asus-wmi: fix screenpad brightness range") changed the behaviour.
+>>>>> Bisect log is at: https://bugs.debian.org/1141604#22
+>>>>>
+>>>>> As this change was backported to other stable series as well I asked
+>>>>> Ponali to please test 7.0.y and 7.1.y and confirmed that both 7.0.13
+>>>>> and as well 7.1.3 show the hehaviour.
+>>>>>
+>>>>> #regzbot introduced: 8d95d1f4aa5c76202b0833a70998769384612488
+>>>>> #regzbot link: https://bugs.debian.org/1141604
+>>>>>
+>>>>> Is there anything Ponali can report back to further debug the issue?
+>>>> Hi Salvatore,
+>>>>
+>>>> The commit incriminated is this one: https://lore.kernel.org/all/20260302174431.349816-3-denis.benato@linux.dev/
+>>>>
+>>>> As you can see that commit changes min/max of the brightness range, but 
+>>>> does not touch the detection at all, 
+>>> To be more precise, it DOES change read_screenpad_backlight_power() -> 
+>>> asus_wmi_get_devstate_simple() but AFAICT that cannot make things worse 
+>>> because asus_wmi_get_devstate_simple() used in both cases, so I was 
+>>> left to wonder the same thing as you.
+>>>
+>>> That being said, it's hard to see how bisect could point this to a wrong 
+>>> commit either because good/bad should be pretty obvious.
+>>>
+>>> Did reverting the suspect commit on top of 6.12.94 result in a working 
+>>> system?
+>> Ponali did test, and reported back in the Debian bug at
+>> https://bugs.debian.org/1141604#60, quoting:
+>>
+>>> I have found the sysfs attribute for brightness control to be in
+>>> /sys/class/backlight/asus_screenpad, and it appears on both 6.12.90 and
+>>> 6.12.94.
+>>>
+>>> On 6.12.90, max_brightness reports 235.
+>>>
+>>> On 6.12.94, max_brightness reports 255.
+>>>
+>>>
+>>> I have checked out to v6.12.94, reverted the suspect commit, and found
+>>> the ScreenPad to be working as intended.
+>>>
+> The only reason I see is the the minimum might be greater than the maximum
+> or negative and the kernel is rejecting it.
+> 
+> Can you also report back on the minimum?
+> 
+> Also if you could print a few values that would be helpful since I am not really seeing much here.
+Ponali for some reason and afaics answered out-of-thread without you
+among the recipients:
+https://lore.kernel.org/all/5e456d33-7e8f-4e54-9149-ac3cff229445@gmail.com/
 
+To quote:
+
+"""
+I have made a list of everything that the sysfs attribute can return in
+6.12.90:
+
+
+actual_brightness: 70
+bl_power: 4
+brightness: 70
+max_brightness: 235
+scale: unknown
+type: raw
+device/driver_override: (null)
+device/modalias: platform:asus-nb-wmi
+device/uevent: DRIVER=asus-nb-wmi
+                MODALIAS=platform:asus-nb-wmi
+power/async: disabled
+power/control: auto
+power/runtime_active_kids: 0
+power/runtime_active_time: 0
+power/runtime_enabled: disabled
+power/runtime_status: unsupported
+power/runtime_suspended_time: 0
+power/runtime_usage: 0
+
+
+In 6.12.94, only these files change:
+
+bl_power: 0
+
+max_brightness: 255
+
+
+These files do not report any information:
+
+uevent: [Blank file]
+device/cpufv: [Permission denied]
+power/autosuspend_delay_ms: [Input/output error]
+
+
+For both kernels, setting the brightness to 0 has both brightness and
+actual_brightness report 0.
+
+I cannot check the minimum brightness through uevent because it shows up
+as blank.
+
+
+Regards,
+
+Ponali
+"""
