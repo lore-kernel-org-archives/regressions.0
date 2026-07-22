@@ -1,141 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CAD433F59D
-	for <regressions@lists.linux.dev>; Wed, 22 Jul 2026 13:48:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DF9C34BA42
+	for <regressions@lists.linux.dev>; Wed, 22 Jul 2026 13:54:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784728140; cv=none; b=echwozTyv8hEcxoSoS4qqPZlwMHVZDYpVnIHrE3pKaCbWtTchU3JPmGkPdh+OV5YYFAXxRAA7XfZatwF97Vez7ygRjW4Tai+GJskBchOSCOtSd0LpFkQB9YPOtnkfLy0l8MgF+AeZ4KQqH0FrRJBhTUI0DSGPVxcBdIYwU9m2u8=
+	t=1784728479; cv=none; b=C5L7JkA2pBnvSvghH3LXwcI2mlOAhpTbPLe8vO7HMcE+MrLeBNmhrDgsVvu5ZDQS85/PPqzmzMBTsyK84ZvKlMMBbheDq2TZpZyz9Tjfri92FwnOJlxNaNEm2mFFjp48EYF8EyHkq22kefU7u/PyGQhVVF4uPqSZl18SANDvelg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784728140; c=relaxed/simple;
-	bh=72aZ42nCrNBR8HBYkCKS3M0upwuiievg7V8XTKDpxKw=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=J6Fg/KUzkIfGs9D7Ub9saKPV5Bv82UOEniMAhrckhbi8bx1Pw/D7ZPrGpy4kvAtiOd3p2KJaoc/cq4jKlyaibzdbxMzVZUHzcl0d0I45aJM1j4WQrU0Z/X9opvlnb+gCRi1cg1wEzarbEXp+yof+YkTo/DsHDOIBPsSb4mTnqhI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TkCDidmz; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1784728479; c=relaxed/simple;
+	bh=kRlLh6vb8jx0/62iQUQi3I2/CfPEqiB5RJ3y9DVFQ5w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OcNXcDwPFf+7eDj9eUtvQxyMYlQMfyuOlHAzR3HQ/WZAx/8+Utig8XUkksiU6aUWNC+kMhyVTO81NhycgEGCpxp4/gKoRTLJ+kHVvm5xENPVmt00oJJmuyxAvNxjPx2AZkwgjOv0ss6ScfmzmxrCWeWSsg622S+CK2oSMxC/YfQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=arvW5y/g; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TkCDidmz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9EB061F00ADF;
-	Wed, 22 Jul 2026 13:48:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784728138;
-	bh=wjg2W6eO66GseJ/is+z4AClw1tXHM1Wd634LdHOzhlc=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject;
-	b=TkCDidmzTj8zYvYjfc32ytUuh7sbJOVcSd1t8hPZQumpOFdaTfqA13quIrvMQ+16c
-	 pIL0Yc+CbbsFwt6IJM0eKWJoINU3SToZFxxV8RFIhxVbSPogWuxswd8WdQleE2t4Hc
-	 yGv09wBig/TW+1hYc+1tcuEfi8MJZXDuLHSPQ5def1XGyXDj+vC1hVDK/4q9PcQ8rj
-	 Wk4rUFLMWY9UR9bBm4tIMblJIAe/LC3sWqtVpGImSWsDEO6HCkeGtBodnovmZy801K
-	 /LWA+1AUnawVaZyxGc/0CLQ1uRBAhkGGXJ1QWj26OkMTrq+0WMNdDLvkFabw2qNAMB
-	 ZuryqE4t7E7ag==
-Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 9EF85F4007C;
-	Wed, 22 Jul 2026 09:48:57 -0400 (EDT)
-Received: from phl-imap-15 ([10.202.2.104])
-  by phl-compute-10.internal (MEProxy); Wed, 22 Jul 2026 09:48:57 -0400
-X-ME-Sender: <xms:ScpgaqJY9zhJs9SXO6gH0hGognHXmU50XLgrZI5QBing0Tlj0zj2Kg>
-    <xme:Scpgas8c2YdGnyapWqnVHcSh4l9k9AJY8LN002hy6zaJRQyZkp-2mwfGbIPkHqKR4
-    Qh1BLKchuvAq2r_30-EoNs66oGkyf0BSYSO7-qVfKrsGEo176t0MoE>
-X-ME-Proxy-Cause: dmFkZTGC94Q8EPBhYiR7MMTYOusgRuT21HG/j/oSAnhV3QTHrC+wP+X4J00oDu3FoGe6ZU
-    KcFavrzTPJCrHY+1+VOrUaB/WiMMSPR6Yndq3T+UOIwjDAd6fLYUJQKJNAu6BJVX7BuhzR
-    VLCcg/i+20rxwlT7Q6EU/yyLm4hBZC7Nm90axeLcnLMG5FxL5OUdJo0rfoLPuY+q+cQ6gz
-    2NpXE9CvDO0H7iLtYYAE6TNz5aMAa5PeymlQmcdtsoAY97FBgOaMoJav6bZvJm3JoTicuK
-    hEwX3BIM/KGNlsUxpi2DZb1qZMN1Yylhus2ralHA4wXtjT2bzWX6xsI2ACV1l0EO35XIMG
-    bJO/Cg2Ewt95rWuLysyix0xX+Y/VxPGf4U1/beWiPkAahslC1ZcKyuC6/dz7y/bb1/NYFZ
-    xjgEzN2Pcf8WLYtC0EX9giE7BsZcvGk4iYSuQafmVN/rFIffnC5VFrNdvui3PQlG2wivuG
-    Qjew4LStntaiZmyIL7n9200tm3fAGY0UB8vD7BdAN029EsaFdLuDHCs+tjxenJOXY0d9T/
-    AeSSuIjahJEM8+r/0xfyxitPJGRGk0R3LGh8eXKI1/UJZUdlpBe0qQ4aErbV60Ws3sAtBi
-    pKxLtlJD1om+K5vyjDsIl4MoVGyl4+JnXbOmf15+X+8x/zKvmcCWYOdGC8HA
-X-ME-Proxy: <xmx:Scpgapar1D_HMDwTAGVNjhSRp0JuyJoOBQZL5uHr1HeiISRG-4Dn_g>
-    <xmx:Scpgag2Jn5OHjPRn2Mk7nkKXgH_IR2LDvTfZyY1MWFzFIuxaQ9HKkA>
-    <xmx:ScpgasoEEpdHuh0RK0bNZibTsJpl_9VDLSy_Kp1VkUC1Wun9VglaIg>
-    <xmx:ScpgavNs_ZDM3VyxIrUUXIZKfhCT37Nz0qPQ7yFb18w6pw5I33uX2g>
-    <xmx:Scpgalrucwn1eL9DSCEL7KIbQh1ufCBIZ_MBvECQXRxwEUHGJ9MK9Z84>
-Feedback-ID: ifa6e4810:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 7D944780070; Wed, 22 Jul 2026 09:48:57 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="arvW5y/g"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D06DA1595;
+	Wed, 22 Jul 2026 06:54:32 -0700 (PDT)
+Received: from [10.164.19.44] (unknown [10.164.19.44])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 251033F59E;
+	Wed, 22 Jul 2026 06:54:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1784728476; bh=kRlLh6vb8jx0/62iQUQi3I2/CfPEqiB5RJ3y9DVFQ5w=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=arvW5y/gsXMxgbhxLXOryhnBWf8VH6epu8Og1Rh33qwarIKtzEeiaQSfdtndZ8mVm
+	 yzen6khX4L3taHk3yud5zzvdHKeooFS30u1QNfZPFXb21I2Kdec/GrSiDuM/DejPtc
+	 9mu87ra/NbMsv7cZ9tIycWEXfr/wJS2J39n0JJyg=
+Message-ID: <03f91210-e0b7-43b9-9a95-755b986b3c40@arm.com>
+Date: Wed, 22 Jul 2026 19:24:31 +0530
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-ThreadId: A6eHHh02FZ7o
-Date: Wed, 22 Jul 2026 09:48:36 -0400
-From: "Chuck Lever" <cel@kernel.org>
-To: "Thorsten Leemhuis" <regressions@leemhuis.info>,
- "Jeff Layton" <jlayton@kernel.org>, NeilBrown <neil@brown.name>,
- "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <Dai.Ngo@oracle.com>,
- "Tom Talpey" <tom@talpey.com>
-Cc: linux-nfs@vger.kernel.org, "Wolfgang Walter" <linux@stwm.de>,
- "Linux kernel regressions list" <regressions@lists.linux.dev>
-Message-Id: <255376e5-9fba-4da1-ae0b-2b116ebf6fcb@app.fastmail.com>
-In-Reply-To: <0a0a98af-2004-4926-a7d8-1a0acb78df5a@leemhuis.info>
-References: <20260709-cel-v4-0-1d519d9be0cb@kernel.org>
- <20260709-cel-v4-1-1d519d9be0cb@kernel.org>
- <0a0a98af-2004-4926-a7d8-1a0acb78df5a@leemhuis.info>
-Subject: Re: [PATCH v4 1/9] NFSD: Prevent lock owner use-after-free during client
- teardown
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] mm/mprotect: shared-dirty base-page toggle slower
+ since v6.17
+To: Chengfeng Lin <chengfenglin@stu.xmu.edu.cn>
+Cc: Pedro Falcato <pfalcato@suse.de>,
+ Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+ "Liam R. Howlett" <liam@infradead.org>, Lorenzo Stoakes <ljs@kernel.org>,
+ Vlastimil Babka <vbabka@kernel.org>, Jann Horn <jannh@google.com>,
+ linux-kernel@vger.kernel.org, regressions@lists.linux.dev
+References: <7c9eeb21.1c04f.19efaacbb2f.Coremail.chengfenglin@stu.xmu.edu.cn>
+ <433d619a.1e8a6.19f1d4d1be6.Coremail.chengfenglin@stu.xmu.edu.cn>
+ <6c8d9b6c.24a8b.19f84afccdd.Coremail.chengfenglin@stu.xmu.edu.cn>
+ <dc402537-1527-4433-839e-960b6eb32bc4@arm.com>
+ <4dceab6f.24e3b.19f8966e8ed.Coremail.chengfenglin@stu.xmu.edu.cn>
+Content-Language: en-US
+From: Dev Jain <dev.jain@arm.com>
+In-Reply-To: <4dceab6f.24e3b.19f8966e8ed.Coremail.chengfenglin@stu.xmu.edu.cn>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
-On Wed, Jul 22, 2026, at 6:24 AM, Thorsten Leemhuis wrote:
-> On 7/9/26 19:40, Chuck Lever wrote:
->> __destroy_client() releases a client's open owners, but a lock owner
->> whose only reference is a blocked lock (nbl) stays on
->> cl_ownerstr_hashtbl.  client_has_state() does not count a bare owner,
->> so DESTROY_CLIENTID can reach __destroy_client() with such owners
->> present.
->>
->> [...]
->>
->> Reported-by: Wolfgang Walter <linux@stwm.de>
->> Closes: https://lore.kernel.org/linux-nfs/6eccafaaaa60651ef091257c3439c46b@stwm.de/
->> Fixes: 68ef3bc31664 ("nfsd: remove blocked locks on client teardown")
->
-> What's the plan to merge this change? From the outside it looks like a
-> fix for a user reported regression from this merge window, as Wolfgang
-> afaics blamed commit 516403d4d85607 ("Revert "NFSD: Defer sub-object
-> cleanup in export put callbacks""), which also made it to various stable
-> trees.
->
-> So shouldn't this change ideally be on it's way to Linus by now? Ideally
-> with a stable tag to ensure quick backporting? Or is it not a good idea
-> to have this in without the follow-up patches from this series?
->
-> Or did I get something totally wrong (which is easily possible from my
-> external point)?
 
-Thorsten, thanks for your attention to this issue.
+On 22/07/26 4:07 pm, Chengfeng Lin wrote:
+> Hi,
+> 
+> Sorry that my earlier message was difficult to follow.
+> 
+> The previous exact parent/child test showed that cac1db8c3aad slowed this
+> workload by 39.77%. To answer your question directly: no. In a separate
+> matched v7.1.3 patch-on/patch-off test, Pedro's full v3 series was 6.20%
+> slower than the no-v3 controls, so it did not reduce the slowdown in this
+> workload.
+> 
+> I also checked for an update. The latest public revision I found is still v3,
+> and it is already included in Linux v7.1.3.
+> 
+> To isolate the series, I used the same v7.1.3 source for both kernels. The
+> no-v3 kernel replaces only mm/mprotect.c with the exact pre-series file at
+> 19999e479c2a. The full-v3 kernel is unmodified v7.1.3 and matches the series
+> tip at 89e613bc0b2d. The normalized configs and all other build conditions
+> were the same.
+> 
+> I used a fresh boot for every point:
+> 
+>   point       mean ns/page
+>   no-v3 A          55.333
+>   full v3          58.200
+>   no-v3 B          54.267
+> 
+> The no-v3 midpoint was 54.800 ns/page. Full v3 was 6.20% slower than that
+> midpoint. The two controls drifted by -1.93%. Dropping the first measured run
+> from every point left the v3 delta at +6.18%.
+> 
+> This was the same narrow standalone workload: a 64 MiB shared anonymous
+> mapping, dirty 4 KiB pages, and repeated full-range read-only, restore, and
+> write-touch cycles. Each point had 3 warm-up processes and 15 measured
+> processes; each measured process ran 1,000 cycles. The benchmark was pinned to
+> one P-core with Turbo disabled and preempt=none.
+> 
+> All 45 measured processes passed the returned-value checks and stayed on 4 KiB
+> pages with no THP. The protect and restore phases were each about 23 ns/page
+> with v3 and 21 ns/page without v3. The later write-touch phase was unchanged.
+> 
+> So, for this specific microbenchmark on this machine, Pedro v3 did not reduce
+> the slowdown. It produced a small slowdown instead. I am not making a claim
+> about other mprotect patterns or application-level performance. My earlier
+> QEMU result that suggested a partial improvement should not be used.
 
-Here is the plan of record:
+I don't see why Pedro's patches should cause a slowdown. The only diff I can think
+of is the if (likely(nr_ptes == 1)) check.
 
-This commit is currently in nfsd-testing:
+But again, we have had these microbench regression discussions before. I think it
+is clear by now that vm_normal_folio() is bad on some systems. Best we can do
+here IMO is avoid that by doing something like
 
-https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git/commit/?h=nfsd-testing&id=3055ac7c996369876342aa22a33bcc68cd4abca1
+https://lore.kernel.org/all/20250506050056.59250-3-dev.jain@arm.com/
 
-It will matriculate to nfsd-next in a week or so and then be
-sent to Linus in the initial nfsd-7.3 pull request.
+> 
+> Thanks,
+> Chengfeng
+> 
 
-A stable tag is on this commit, so it will get picked up by
-stable automation as soon as Linus merges it. That will
-include 7.2.y, which will still be open at that point.
-
-Notes:
-
-The Fixes tag refers to a commit in v4.16. That makes it
-technically a fix for a bug that was introduced not in the
-most recent merge window.
-
-My general policy is to subject fixes to the same review
-and CI that is mandated for any other change regardless
-of urgency, since historically getting such fixes in
-quickly has been the source of defects in released
-kernels.
-
-Both CI and review latency are subject to forces outside
-of my control so I leave a lengthy window for both.
-
-
--- 
-Chuck Lever
