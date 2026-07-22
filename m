@@ -1,186 +1,147 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [46.38.247.119])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 054E534BA28
-	for <regressions@lists.linux.dev>; Wed, 22 Jul 2026 14:11:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9D06273D77
+	for <regressions@lists.linux.dev>; Wed, 22 Jul 2026 14:33:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.38.247.119
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784729500; cv=none; b=Kw6q/eX67HJVWCeL8n85qhOIKIKt3mjH/9de5DgLWutpNim43BhuNIKyr0d9rnDN0v22I7QtxF/EGhxEa/UF4Mjr5CvjFN/Lea4mjpjuQNSApA6MZ5RhTUdkCXCHUGDfxomTA8R7Vct+aI8sVSH2mtMXv67wPVyg9N5+MX260fk=
+	t=1784730828; cv=none; b=IuZI0ucuPI4IROFSVU5ukqK36V01vKl2LaV75AYoQihCQE9VxgxVmJ2oouQVB4FeGn4UH1xXwCBMKTWyGAAOcV5DM+A9RC9m7hoBg+VG3yfkgNcGJW0SFaB+Fv2LrSALaQ79aRYiWWCWNOw1CC5EYDVHBQssBFm5nFI/xs9fOr0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784729500; c=relaxed/simple;
-	bh=QWFbfdKOhnViM3dmLfszh+P7lBfRPS8MfC/o78FIeWE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Zp1EKc7XFoOrkC0zwxtJcj3crOjvaLC5BfN4mT1SMDaMvTrfbPFfX7ZXBFDapRkKcc7ucJHcjHx/nF9DEjjrk1202OuGqGGRFNrO/1MZLLQYk7H7U8u3Npa8nyePxGXNdnqLSOGMLByObZRZupWkr+dA/hwCbUU3mRx2DtTgl/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=xpRyxpJ6; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=paLVIxha; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=sFnXoS7k; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=0oIcZBox; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1784730828; c=relaxed/simple;
+	bh=+kOX3Xtu9EsNtk03iP5mLB76zlKk/UYMSTKMwWMCV/U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=twfBeyU2fLSOTeyrasjgJ4Hbjq8DWgZ2pJb+3CxCiZLC1zYKyWxOBP0AMjmdlBN5C2rZVNwILb201UUcjttiadFu/MhC1c5yMQdliPQNeIuly/dAp333I6nIZzbILGhfZQLDSeSCkvOhuVtiIhxVW6mEiYZDrV9rri3p/1HBFsI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=hj7Xq7rJ; arc=none smtp.client-ip=46.38.247.119
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="xpRyxpJ6";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="paLVIxha";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="sFnXoS7k";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="0oIcZBox"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="hj7Xq7rJ"
+Received: from mors-relay-8404.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4h4xZG5jnsz83yP;
+	Wed, 22 Jul 2026 16:33:26 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1784730806;
+	bh=+kOX3Xtu9EsNtk03iP5mLB76zlKk/UYMSTKMwWMCV/U=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=hj7Xq7rJWhsYgwx2JFIs40MJhSvuyoLDbO11l8eHOoSBmX9NJKf5+/eTHcKuSRCew
+	 Jf1KAvTEi2mcSsVi8gQjnXFsae1yDXmz+hpyzT8Hf/KLz3CVdt+JJUJwqPzEZE9nyR
+	 wD1eOH1pHuX8V7wFnB4IXQ2mKnqirTrcWX9prs536ZXkt3QXvC0phIaYBST4ief4bf
+	 uA2m+Idcba9UUodCOvvcjgvJ7PCbwXFNJbYN1REg4M7jtmV1r4zX/oB0BnO+iY/8Ci
+	 /bAiWyYMaI+SOBxf2ou4o7G0oyXtc0GKyyUkTNqYqe8wbaXZt/wZR0uS2qB8yX+nOE
+	 hhqdPjW2kVhPw==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4h4xZG50Vxz4y8q;
+	Wed, 22 Jul 2026 16:33:26 +0200 (CEST)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 355CE7AB1A;
-	Wed, 22 Jul 2026 14:11:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1784729497; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hkI7b3KzTTEbecciLZp7VpOs077wu87j0443+fnVSOA=;
-	b=xpRyxpJ6/1Io65Ocv49WPB22oI9cxtLRl2tOYwMTU8+YlQVVfqULvecE1DDLhleGcPbDsL
-	b+ZNgO1bA8p/+q+Usoy+k7G8HOZK+Dd1fsZVUXp0V4qy8Qle7AynC9r6jIX9xPsJF9AfTd
-	1KTYmv8Ahoj/xtg14K4jYQSib+0rzDg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1784729497;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hkI7b3KzTTEbecciLZp7VpOs077wu87j0443+fnVSOA=;
-	b=paLVIxhajQzCG2cSkVnmW/+WQAKxASK6HtCujduysZ900eKCstJkEQjqtpzvoPFsN01C+y
-	iYeWa3J0wpTBEGDQ==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1784729496; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hkI7b3KzTTEbecciLZp7VpOs077wu87j0443+fnVSOA=;
-	b=sFnXoS7kZOwTeETW90nA0EOl+wld74h9v+gnJpFCw1W5O/RwVh1EGcVLBNl+2kRI9mcxL5
-	SGzM8fNMXzWCMIoqchcnBL6zgr7Pt9k+TDKn+8CfjUCU0/Ox3e5h0nrQtqvPjJIyJ4xwjZ
-	X5o7lloXAcLc+2ZHLtzWJEMpzdpG/R8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1784729496;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hkI7b3KzTTEbecciLZp7VpOs077wu87j0443+fnVSOA=;
-	b=0oIcZBoxY07zLnwfUWWXoQmuKT5XR6hFNMSRvkm+pxHmHrF4GN2ulwrB+EC25iqdlY/usW
-	d7XjIXcwgjbVVkBQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 6E6EF779B0;
-	Wed, 22 Jul 2026 14:11:34 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 6RldHJbPYGqlWAAAD6G6ig
-	(envelope-from <pfalcato@suse.de>); Wed, 22 Jul 2026 14:11:34 +0000
-Date: Wed, 22 Jul 2026 15:11:32 +0100
-From: Pedro Falcato <pfalcato@suse.de>
-To: Dev Jain <dev.jain@arm.com>
-Cc: Chengfeng Lin <chengfenglin@stu.xmu.edu.cn>, 
-	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org, "Liam R. Howlett" <liam@infradead.org>, 
-	Lorenzo Stoakes <ljs@kernel.org>, Vlastimil Babka <vbabka@kernel.org>, 
-	Jann Horn <jannh@google.com>, linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: [REGRESSION] mm/mprotect: shared-dirty base-page toggle slower
- since v6.17
-Message-ID: <amDOXEjIQCQdOfb9@pedro-suse.lan>
-References: <7c9eeb21.1c04f.19efaacbb2f.Coremail.chengfenglin@stu.xmu.edu.cn>
- <433d619a.1e8a6.19f1d4d1be6.Coremail.chengfenglin@stu.xmu.edu.cn>
- <6c8d9b6c.24a8b.19f84afccdd.Coremail.chengfenglin@stu.xmu.edu.cn>
- <dc402537-1527-4433-839e-960b6eb32bc4@arm.com>
- <4dceab6f.24e3b.19f8966e8ed.Coremail.chengfenglin@stu.xmu.edu.cn>
- <03f91210-e0b7-43b9-9a95-755b986b3c40@arm.com>
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4h4xZF4qRlz8svW;
+	Wed, 22 Jul 2026 16:33:25 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 120275FA12;
+	Wed, 22 Jul 2026 16:33:25 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <27667adc-3dab-424d-9e6f-52c91c47a51d@leemhuis.info>
+Date: Wed, 22 Jul 2026 16:33:24 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <03f91210-e0b7-43b9-9a95-755b986b3c40@arm.com>
-X-Spam-Score: -4.30
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/9] NFSD: Prevent lock owner use-after-free during
+ client teardown
+To: Chuck Lever <cel@kernel.org>, Jeff Layton <jlayton@kernel.org>,
+ NeilBrown <neil@brown.name>, Olga Kornievskaia <okorniev@redhat.com>,
+ Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>
+Cc: linux-nfs@vger.kernel.org, Wolfgang Walter <linux@stwm.de>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <20260709-cel-v4-0-1d519d9be0cb@kernel.org>
+ <20260709-cel-v4-1-1d519d9be0cb@kernel.org>
+ <0a0a98af-2004-4926-a7d8-1a0acb78df5a@leemhuis.info>
+ <255376e5-9fba-4da1-ae0b-2b116ebf6fcb@app.fastmail.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <255376e5-9fba-4da1-ae0b-2b116ebf6fcb@app.fastmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: <178473080540.2236016.9044575877088627403@mxe9fb.netcup.net>
+X-NC-CID: NqT06h1UC4FBekCImEexrNokib539fM27ka7bgLMLlBCP/+JWJs=
 
-On Wed, Jul 22, 2026 at 07:24:31PM +0530, Dev Jain wrote:
+On 7/22/26 15:48, Chuck Lever wrote:
+> On Wed, Jul 22, 2026, at 6:24 AM, Thorsten Leemhuis wrote:
+>> On 7/9/26 19:40, Chuck Lever wrote:
+>>> __destroy_client() releases a client's open owners, but a lock owner
+>>> whose only reference is a blocked lock (nbl) stays on
+>>> cl_ownerstr_hashtbl.  client_has_state() does not count a bare owner,
+>>> so DESTROY_CLIENTID can reach __destroy_client() with such owners
+>>> present.
+>>>
+>>> [...]
+>>>
+>>> Reported-by: Wolfgang Walter <linux@stwm.de>
+>>> Closes: https://lore.kernel.org/linux-nfs/6eccafaaaa60651ef091257c3439c46b@stwm.de/
+>>> Fixes: 68ef3bc31664 ("nfsd: remove blocked locks on client teardown")
+>>
+>> What's the plan to merge this change? From the outside it looks like a
+>> fix for a user reported regression from this merge window, as Wolfgang
+>> afaics blamed commit 516403d4d85607 ("Revert "NFSD: Defer sub-object
+>> cleanup in export put callbacks""), which also made it to various stable
+>> trees.
+>>
+>> So shouldn't this change ideally be on it's way to Linus by now? Ideally
+>> with a stable tag to ensure quick backporting? Or is it not a good idea
+>> to have this in without the follow-up patches from this series?
+>>
+>> Or did I get something totally wrong (which is easily possible from my
+>> external point)?
 > 
+> Thorsten, thanks for your attention to this issue.
+
+Thank you for the answer!
+> Here is the plan of record:
 > 
-> On 22/07/26 4:07 pm, Chengfeng Lin wrote:
-> > Hi,
-> > 
-> > Sorry that my earlier message was difficult to follow.
-> > 
-> > The previous exact parent/child test showed that cac1db8c3aad slowed this
-> > workload by 39.77%. To answer your question directly: no. In a separate
-> > matched v7.1.3 patch-on/patch-off test, Pedro's full v3 series was 6.20%
-> > slower than the no-v3 controls, so it did not reduce the slowdown in this
-> > workload.
-> > 
-> > I also checked for an update. The latest public revision I found is still v3,
-> > and it is already included in Linux v7.1.3.
-> > 
-> > To isolate the series, I used the same v7.1.3 source for both kernels. The
-> > no-v3 kernel replaces only mm/mprotect.c with the exact pre-series file at
-> > 19999e479c2a. The full-v3 kernel is unmodified v7.1.3 and matches the series
-> > tip at 89e613bc0b2d. The normalized configs and all other build conditions
-> > were the same.
-> > 
-> > I used a fresh boot for every point:
-> > 
-> >   point       mean ns/page
-> >   no-v3 A          55.333
-> >   full v3          58.200
-> >   no-v3 B          54.267
-> > 
-> > The no-v3 midpoint was 54.800 ns/page. Full v3 was 6.20% slower than that
-> > midpoint. The two controls drifted by -1.93%. Dropping the first measured run
-> > from every point left the v3 delta at +6.18%.
-> > 
-> > This was the same narrow standalone workload: a 64 MiB shared anonymous
-> > mapping, dirty 4 KiB pages, and repeated full-range read-only, restore, and
-> > write-touch cycles. Each point had 3 warm-up processes and 15 measured
-> > processes; each measured process ran 1,000 cycles. The benchmark was pinned to
-> > one P-core with Turbo disabled and preempt=none.
-> > 
-> > All 45 measured processes passed the returned-value checks and stayed on 4 KiB
-> > pages with no THP. The protect and restore phases were each about 23 ns/page
-> > with v3 and 21 ns/page without v3. The later write-touch phase was unchanged.
-> > 
-> > So, for this specific microbenchmark on this machine, Pedro v3 did not reduce
-> > the slowdown. It produced a small slowdown instead. I am not making a claim
-> > about other mprotect patterns or application-level performance. My earlier
-> > QEMU result that suggested a partial improvement should not be used.
+> This commit is currently in nfsd-testing:
 > 
-> I don't see why Pedro's patches should cause a slowdown. The only diff I can think
-> of is the if (likely(nr_ptes == 1)) check.
+> https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git/commit/?h=nfsd-testing&id=3055ac7c996369876342aa22a33bcc68cd4abca1
 
-Agree. I don't really understand what this slowdown is about (nor have I had
-a proper look, to be fair).
+Ahh, I see, the change gained a stable tag somewhere along the way, great!
 
-> 
-> But again, we have had these microbench regression discussions before. I think it
-> is clear by now that vm_normal_folio() is bad on some systems. Best we can do
-> here IMO is avoid that by doing something like
+> It will matriculate to nfsd-next in a week or so and then be
+> sent to Linus in the initial nfsd-7.3 pull request.
 
-On my desktop the results were very clear: vm_normal_folio() didn't really
-make a difference.
+Hmmm. Just reread your reply to Wolfgang's report where you explain
+things in more detail:
+https://lore.kernel.org/stable/20260703160306.1651327-1-cel@kernel.org/
 
-Perhaps we're looking at microarchitectural differences here. I dunno.
+I now understand this better and it still feels to me like a situation
+where Linus would want the fix to be included in mainline quickly[1] --
+among others to not have another release with the bug[2] and because
+it's something a user reported[3]. Yes, the root of the problem might be
+in an older commit the Fixes: tag quoted above refers to -- but
+apparently something (maybe the change Wolfgang and you suspected) seems
+to have exposed the problem or made it happen more often at least in
+6.18.y.
 
--- 
-Pedro
+Anyway, if Wolfgang is the only one that seems to hit this and is happy
+with the state of things I guess it's not worth arguing further about.
+
+Thanks again for taking the time to answer my mail!
+
+Ciao, Thorsten
+
+[1] and Greg likely as well, as situations like that are the reason why
+stable kernels released during or shortly after the merge window have
+many hundreds of changes that have seen little testing (and we are
+currently at the point where it could get some testing before hitting a
+new release)
+
+[2]
+https://lore.kernel.org/all/CAHk-=wis_qQy4oDNynNKi5b7Qhosmxtoj1jxo5wmB6SRUwQUBQ@mail.gmail.com/
+
+[3]
+https://www.kernel.org/doc/html/latest/process/handling-regressions.html#on-how-quickly-regressions-should-be-fixed
