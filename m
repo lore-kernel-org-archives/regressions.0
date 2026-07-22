@@ -1,147 +1,65 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [46.38.247.119])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9D06273D77
-	for <regressions@lists.linux.dev>; Wed, 22 Jul 2026 14:33:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.38.247.119
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76FF7368D4D;
+	Wed, 22 Jul 2026 14:42:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784730828; cv=none; b=IuZI0ucuPI4IROFSVU5ukqK36V01vKl2LaV75AYoQihCQE9VxgxVmJ2oouQVB4FeGn4UH1xXwCBMKTWyGAAOcV5DM+A9RC9m7hoBg+VG3yfkgNcGJW0SFaB+Fv2LrSALaQ79aRYiWWCWNOw1CC5EYDVHBQssBFm5nFI/xs9fOr0=
+	t=1784731372; cv=none; b=nTW0Ws/ccURFS04ruOWzzGEK6QF9K4d2kllzRnf/o+dYlpUAazuQ6ptY+KBU9E18pnHc4UMKt4/OxGBa2cMuUWkyr/tHYUNXey1VfeI96Y62Vq/uFj1tQiAXYWcfWcO7GipGvYu7uTt6jUUgV/P1EwH+MQSw5wPZhebeiYMS23k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784730828; c=relaxed/simple;
-	bh=+kOX3Xtu9EsNtk03iP5mLB76zlKk/UYMSTKMwWMCV/U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=twfBeyU2fLSOTeyrasjgJ4Hbjq8DWgZ2pJb+3CxCiZLC1zYKyWxOBP0AMjmdlBN5C2rZVNwILb201UUcjttiadFu/MhC1c5yMQdliPQNeIuly/dAp333I6nIZzbILGhfZQLDSeSCkvOhuVtiIhxVW6mEiYZDrV9rri3p/1HBFsI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=hj7Xq7rJ; arc=none smtp.client-ip=46.38.247.119
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1784731372; c=relaxed/simple;
+	bh=0eSy7p26iHMPo22xtyM0VZCgk36/FxfA0Sd4vzmm5F8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kxNzNgonHgptt7VHBa56PxoZ+YzQWJne1A361Hq71NPAZP9Sw2vVepuUGDQKv/JWCkuhXR4Z/byhQN6CyH12+zK6RwTaM7hHe4Qgg4JAG6rj2C6z2SdsjtBksWWlvZ5X8ph7YHD8kjo3zNpVI+wQceHqys2TsMYTWu4HlaNJIcI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jbkBPGLa; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="hj7Xq7rJ"
-Received: from mors-relay-8404.netcup.net (localhost [127.0.0.1])
-	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4h4xZG5jnsz83yP;
-	Wed, 22 Jul 2026 16:33:26 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1784730806;
-	bh=+kOX3Xtu9EsNtk03iP5mLB76zlKk/UYMSTKMwWMCV/U=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=hj7Xq7rJWhsYgwx2JFIs40MJhSvuyoLDbO11l8eHOoSBmX9NJKf5+/eTHcKuSRCew
-	 Jf1KAvTEi2mcSsVi8gQjnXFsae1yDXmz+hpyzT8Hf/KLz3CVdt+JJUJwqPzEZE9nyR
-	 wD1eOH1pHuX8V7wFnB4IXQ2mKnqirTrcWX9prs536ZXkt3QXvC0phIaYBST4ief4bf
-	 uA2m+Idcba9UUodCOvvcjgvJ7PCbwXFNJbYN1REg4M7jtmV1r4zX/oB0BnO+iY/8Ci
-	 /bAiWyYMaI+SOBxf2ou4o7G0oyXtc0GKyyUkTNqYqe8wbaXZt/wZR0uS2qB8yX+nOE
-	 hhqdPjW2kVhPw==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4h4xZG50Vxz4y8q;
-	Wed, 22 Jul 2026 16:33:26 +0200 (CEST)
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4h4xZF4qRlz8svW;
-	Wed, 22 Jul 2026 16:33:25 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 120275FA12;
-	Wed, 22 Jul 2026 16:33:25 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <27667adc-3dab-424d-9e6f-52c91c47a51d@leemhuis.info>
-Date: Wed, 22 Jul 2026 16:33:24 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jbkBPGLa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 138511F000E9;
+	Wed, 22 Jul 2026 14:42:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1784731367;
+	bh=HfA1OHyoNK5FzbOdJuHu4i3K9EKRHzDoufrZr64MOwA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=jbkBPGLaDX3JXiyqNCDIBxFixmmYl6VfPzw/C9jgOh5v8WVqY3cc7Bk3idYic5Wa4
+	 v6NRkglYIjHt0eERQ+LrbHILNxnk7r1778vQLqne4u57+JzedVdTtuIBPZAzvt930I
+	 /AQaK/8O2rmiWEoBN684qf9YOwt432F5DuUHpZ1R/rL61P+/nFO7Ay1XJlREEyAjtB
+	 CmflNnxCqRthkHKaalM/qyKEr+wPAQGVK8hJIhHZ9gIOrhEh7kfDlKwYNOrYNJ7FDh
+	 MI+TIWlXOuBcjx4Qsi4XXX1H3uyZqcR40TxGNVzNk9QHWmsWjFI/JvOIAjABnlZ32N
+	 DLD3Ft16eRePA==
+Date: Wed, 22 Jul 2026 07:42:46 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Stefan Agner <stefan@agner.ch>
+Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Andrew Lunn
+ <andrew+netdev@lunn.ch>, "Russell King (Oracle)"
+ <rmk+kernel@armlinux.org.uk>, Maxime Chevallier
+ <maxime.chevallier@bootlin.com>, Ovidiu Panait
+ <ovidiu.panait.rb@renesas.com>, Maxime Coquelin
+ <mcoquelin.stm32@gmail.com>, Alexandre Torgue
+ <alexandre.torgue@foss.st.com>, netdev@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, regressions@lists.linux.dev
+Subject: Re: [PATCH net v2] net: stmmac: resume PHY before hardware setup
+ when opening the interface
+Message-ID: <20260722074246.689401d1@kernel.org>
+In-Reply-To: <20260707195425.405989-1-stefan@agner.ch>
+References: <message-id-of-your-v1-mail>
+	<20260707195425.405989-1-stefan@agner.ch>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/9] NFSD: Prevent lock owner use-after-free during
- client teardown
-To: Chuck Lever <cel@kernel.org>, Jeff Layton <jlayton@kernel.org>,
- NeilBrown <neil@brown.name>, Olga Kornievskaia <okorniev@redhat.com>,
- Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>
-Cc: linux-nfs@vger.kernel.org, Wolfgang Walter <linux@stwm.de>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <20260709-cel-v4-0-1d519d9be0cb@kernel.org>
- <20260709-cel-v4-1-1d519d9be0cb@kernel.org>
- <0a0a98af-2004-4926-a7d8-1a0acb78df5a@leemhuis.info>
- <255376e5-9fba-4da1-ae0b-2b116ebf6fcb@app.fastmail.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <255376e5-9fba-4da1-ae0b-2b116ebf6fcb@app.fastmail.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <178473080540.2236016.9044575877088627403@mxe9fb.netcup.net>
-X-NC-CID: NqT06h1UC4FBekCImEexrNokib539fM27ka7bgLMLlBCP/+JWJs=
 
-On 7/22/26 15:48, Chuck Lever wrote:
-> On Wed, Jul 22, 2026, at 6:24 AM, Thorsten Leemhuis wrote:
->> On 7/9/26 19:40, Chuck Lever wrote:
->>> __destroy_client() releases a client's open owners, but a lock owner
->>> whose only reference is a blocked lock (nbl) stays on
->>> cl_ownerstr_hashtbl.  client_has_state() does not count a bare owner,
->>> so DESTROY_CLIENTID can reach __destroy_client() with such owners
->>> present.
->>>
->>> [...]
->>>
->>> Reported-by: Wolfgang Walter <linux@stwm.de>
->>> Closes: https://lore.kernel.org/linux-nfs/6eccafaaaa60651ef091257c3439c46b@stwm.de/
->>> Fixes: 68ef3bc31664 ("nfsd: remove blocked locks on client teardown")
->>
->> What's the plan to merge this change? From the outside it looks like a
->> fix for a user reported regression from this merge window, as Wolfgang
->> afaics blamed commit 516403d4d85607 ("Revert "NFSD: Defer sub-object
->> cleanup in export put callbacks""), which also made it to various stable
->> trees.
->>
->> So shouldn't this change ideally be on it's way to Linus by now? Ideally
->> with a stable tag to ensure quick backporting? Or is it not a good idea
->> to have this in without the follow-up patches from this series?
->>
->> Or did I get something totally wrong (which is easily possible from my
->> external point)?
-> 
-> Thorsten, thanks for your attention to this issue.
+On Tue,  7 Jul 2026 21:54:25 +0200 Stefan Agner wrote:
+> Since the referenced commit, changing the MTU on a running interface no
+> longer disconnects and reconnects the PHY; __stmmac_release() merely
+> stops phylink, which also suspends the PHY (BMCR power-down) when WoL
+> is not enabled. __stmmac_open() then performs the DMA software reset in
+> stmmac_hw_setup() before phylink_start() resumes the PHY again.
 
-Thank you for the answer!
-> Here is the plan of record:
-> 
-> This commit is currently in nfsd-testing:
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git/commit/?h=nfsd-testing&id=3055ac7c996369876342aa22a33bcc68cd4abca1
-
-Ahh, I see, the change gained a stable tag somewhere along the way, great!
-
-> It will matriculate to nfsd-next in a week or so and then be
-> sent to Linus in the initial nfsd-7.3 pull request.
-
-Hmmm. Just reread your reply to Wolfgang's report where you explain
-things in more detail:
-https://lore.kernel.org/stable/20260703160306.1651327-1-cel@kernel.org/
-
-I now understand this better and it still feels to me like a situation
-where Linus would want the fix to be included in mainline quickly[1] --
-among others to not have another release with the bug[2] and because
-it's something a user reported[3]. Yes, the root of the problem might be
-in an older commit the Fixes: tag quoted above refers to -- but
-apparently something (maybe the change Wolfgang and you suspected) seems
-to have exposed the problem or made it happen more often at least in
-6.18.y.
-
-Anyway, if Wolfgang is the only one that seems to hit this and is happy
-with the state of things I guess it's not worth arguing further about.
-
-Thanks again for taking the time to answer my mail!
-
-Ciao, Thorsten
-
-[1] and Greg likely as well, as situations like that are the reason why
-stable kernels released during or shortly after the merge window have
-many hundreds of changes that have seen little testing (and we are
-currently at the point where it could get some testing before hitting a
-new release)
-
-[2]
-https://lore.kernel.org/all/CAHk-=wis_qQy4oDNynNKi5b7Qhosmxtoj1jxo5wmB6SRUwQUBQ@mail.gmail.com/
-
-[3]
-https://www.kernel.org/doc/html/latest/process/handling-regressions.html#on-how-quickly-regressions-should-be-fixed
+This patch is 2 weeks old now, which is the time horizon for most 
+of our systems. Please repost if it's still relevant.
