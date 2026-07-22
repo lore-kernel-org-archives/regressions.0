@@ -1,108 +1,149 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mail.lysator.liu.se (mail.lysator.liu.se [130.236.254.3])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A18640F726
-	for <regressions@lists.linux.dev>; Wed, 22 Jul 2026 11:08:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B222288AD
+	for <regressions@lists.linux.dev>; Wed, 22 Jul 2026 13:19:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.236.254.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784718529; cv=none; b=U3B/jynbz54ZlM6Ev0kewIM5poyozsVaNWSxsV/dw1dbaECnBg6Bt+iVreJqURPMEN2WWEQ/EXrDsDci5+HG1FF6XvgZOfsRBhhu3uZRzjSY1Ct1bozBVguR0zMAANM2LH2BQuhAH6ZXl3Fa5gmZRXvyQrwCOSEWuOs0LzK3OLE=
+	t=1784726359; cv=none; b=LtAAjuux7VPjlUEjdo4na2onY8k8YLi11EJQs0q2U65acFNsDa1GC6kBIBJYMBqittsczEYWftr28pmyKJ/EISvk6GuRrPJjPkZMKQBpLadFQCmuA5h/WF5oFzGJ9xjm+dnOKl0u7ZChKGU5RxgyJhY1zVtmK6Q2CQ4EA61WJrM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784718529; c=relaxed/simple;
-	bh=q9Vfp9+BUPgfM8McK/GKeoVJuJvwFGnq+DMLWcyhFRQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=i9EDLMuOeR4fN4t75cfvAaq7DPneLAPh/TTBezNxMx29eX66ak7Nmzu4j4LeeYQyvlNFJo0l0DCKGGAxWZJL7QH8iJC0V16e+/grekGZ2bIqC5jGNd/rUpqTs2keYsVhQxwnnnS+HbEQ3hYNrOqS0KLbcImq7CJs4ff9wbaUK1w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bhwfcgye; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1784726359; c=relaxed/simple;
+	bh=JSBkiNzFfavHvbp9/1HikK4JUTMwJSEzZ5l4BpJfcZc=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=kVkt086N66llDp98LLU3L6PfSnwqFjNZ2CN8Rtj4h2VbGszo9+7f3onAv5MeFgADDPUeWoeZH2mYs+s6kRERQNMJxMeH3N6a3e9lJhWLY7s3tu20Ec42iHwtrletZcpbcsKCAG01hHa0jBysY3QIGImALhRmOAD6XO4e1VY4U3E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lysator.liu.se; spf=pass smtp.mailfrom=lysator.liu.se; dkim=pass (2048-bit key) header.d=lysator.liu.se header.i=@lysator.liu.se header.b=l4gD4ogF; dkim=pass (2048-bit key) header.d=lysator.liu.se header.i=@lysator.liu.se header.b=l4gD4ogF; dkim=pass (2048-bit key) header.d=lysator.liu.se header.i=@lysator.liu.se header.b=q4EF+sV7; arc=none smtp.client-ip=130.236.254.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lysator.liu.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lysator.liu.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bhwfcgye"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0BE21F00A3A
-	for <regressions@lists.linux.dev>; Wed, 22 Jul 2026 11:08:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784718527;
-	bh=q9Vfp9+BUPgfM8McK/GKeoVJuJvwFGnq+DMLWcyhFRQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=Bhwfcgye4giAFIOokonXOk8ofx24Okh1ApRyP8QzBjqKWN/jKRvPuP97WfXky1Js5
-	 61Ic/jhWSxf/k84OXvhWt5SIU76rS/b0RXVtZh9FQOhc8xzEgQdEPfUvYXmfBYkaTf
-	 9nEHoXLEFftos+Dma4ghCIUdHk3yyYAhqHzh1GWFfzByUqTTMzv07ofxl0N+2/2a8z
-	 O65PSbWvwb/ruJzoPMCMIC7bazmIy26pccwOdKtoVNvyXSi1cBa1M0rD/cVGJJ7PGC
-	 GMZScOxraSh1jxn7wYdA37xZYDvSSfR5ZqvXPec8Q6BKQS1ejKYvV2H3zQBmNAwx5+
-	 m3yvJedd9bs3A==
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-5b2aa3be376so656997e87.0
-        for <regressions@lists.linux.dev>; Wed, 22 Jul 2026 04:08:47 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AHgh+RpMEkjn91Gj6doTgWXFAU3/x4RocnMNuV72HynFrGy75kIPpF4p2f3OnxZIU7hlZmn6vC9XVBuqPgaKHg==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yxm03qLGf4hwNDvADTZ3nScUOIu0c6jhlR11q3f8me1ZqiY9rI6
-	+34oa9p+IvsGSspClFsHjMu98JI69FpqDjDUkAx3ecAkJ8ES+BIYL1VtUvBLMoAHJPbshQurIja
-	WIJX29C+WZK8A1uuu4X4yz/WdtLarUIs=
-X-Received: by 2002:a05:6512:3f1a:b0:5ae:b99e:4c39 with SMTP id
- 2adb3069b0e04-5b28fac2266mr5856621e87.61.1784718526247; Wed, 22 Jul 2026
- 04:08:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=lysator.liu.se header.i=@lysator.liu.se header.b="l4gD4ogF";
+	dkim=pass (2048-bit key) header.d=lysator.liu.se header.i=@lysator.liu.se header.b="l4gD4ogF";
+	dkim=pass (2048-bit key) header.d=lysator.liu.se header.i=@lysator.liu.se header.b="q4EF+sV7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lysator.liu.se;
+	s=2026; t=1784726348;
+	bh=JSBkiNzFfavHvbp9/1HikK4JUTMwJSEzZ5l4BpJfcZc=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=l4gD4ogFoX+5+hl1I+YkbgoD62K6q/rVvJFMyvkBRsXodvV3541VV9a5MrWJNmp6O
+	 yesbigleRVB/9vpYSsqzHQFnSueO9cXYqYxfMiyrAsbqqX+0A9cOhiMUuEgfrGMEEO
+	 fX6lX0h4m2doQUSJ5EMVZvgiJvrK8K6fK08a+QRmCflDy5GcyqLHxUi4LoNVZkQ7mu
+	 9J83Rn2MTr4HTgFeBegAPKvswDOWGTu7lKCV1GOlkH6Ak6CZjrseF31eEy3/O6BU2b
+	 w8cL/j6+83r4E9SfKEiKNxBxOif+YTzaOopZaHHyZWtrIMgb65qBqnAZlA5PQCRwHR
+	 1Y0EODjuFfrGQ==
+Received: from mail.lysator.liu.se (localhost [127.0.0.1])
+	by mail.lysator.liu.se (Postfix) with ESMTP id 71F7917D5A
+	for <regressions@lists.linux.dev>; Wed, 22 Jul 2026 15:19:08 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lysator.liu.se;
+	s=2026; t=1784726348;
+	bh=JSBkiNzFfavHvbp9/1HikK4JUTMwJSEzZ5l4BpJfcZc=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=l4gD4ogFoX+5+hl1I+YkbgoD62K6q/rVvJFMyvkBRsXodvV3541VV9a5MrWJNmp6O
+	 yesbigleRVB/9vpYSsqzHQFnSueO9cXYqYxfMiyrAsbqqX+0A9cOhiMUuEgfrGMEEO
+	 fX6lX0h4m2doQUSJ5EMVZvgiJvrK8K6fK08a+QRmCflDy5GcyqLHxUi4LoNVZkQ7mu
+	 9J83Rn2MTr4HTgFeBegAPKvswDOWGTu7lKCV1GOlkH6Ak6CZjrseF31eEy3/O6BU2b
+	 w8cL/j6+83r4E9SfKEiKNxBxOif+YTzaOopZaHHyZWtrIMgb65qBqnAZlA5PQCRwHR
+	 1Y0EODjuFfrGQ==
+Received: by mail.lysator.liu.se (Postfix, from userid 1004)
+	id 5696017E2F; Wed, 22 Jul 2026 15:19:08 +0200 (CEST)
+X-Spam-Level: 
+X-Spam-Score: -1.1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lysator.liu.se;
+	s=2026; t=1784726345;
+	bh=JSBkiNzFfavHvbp9/1HikK4JUTMwJSEzZ5l4BpJfcZc=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=q4EF+sV7A+lJMdrdu4rEL8C4VV3XdvXWXorAJZdd9dLqSH/3Z1CEX8p5fiaKqWQMN
+	 NF7I116zpqSVn+jRDn5ajcLYeoKuu52cODMNQjiW89Irf8MmuCkgMMYKJjZBdr9iWR
+	 VCVJuxAp3rZiPW/6S2asqiNflIUb0JCvRK4z6+/bh3ZAeFJrPRYuQRJcSXSnuVCOGi
+	 jR1eOqiO4X7vAR6CtW/2AzzY9apijaM/s8FtovtBsAOIxUng/sZQ2EdSYVfiz/zCWj
+	 OEITOep3p4SENIxiFT3CaCCBFtKT9WG08kbdo4TteeLVAEEJsrdY68CW3y3KfUftQz
+	 WNl0kJjKz9K+Q==
+Received: from sara (unknown [IPv6:2001:9b1:efc:9600:3f5e:3c30:ddba:e325])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	(No client certificate requested)
+	by mail.lysator.liu.se (Postfix) with ESMTPSA id D57E317E2E;
+	Wed, 22 Jul 2026 15:19:04 +0200 (CEST)
+Date: Wed, 22 Jul 2026 15:19:04 +0200 (CEST)
+From: Peter Astrand <astrand@lysator.liu.se>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+cc: linux-wireless@vger.kernel.org, 
+    "stable@vger.kernel.org" <stable@vger.kernel.org>, 
+    Linux kernel regressions list <regressions@lists.linux.dev>
+Subject: Re: iw scan hangs in netlink ENOBUFS loop with kernel 6.6.99+
+In-Reply-To: <e2555ce7-0313-4fec-8bc4-739b51a009f3@leemhuis.info>
+Message-ID: <e12fc0b9-dfd2-ecfc-de54-d5f7d4532044@lysator.liu.se>
+References: <19b022d0-76ff-23cc-ba63-f00fedc65ed1@lysator.liu.se> <e2555ce7-0313-4fec-8bc4-739b51a009f3@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <69a1eaf0-4a58-47d5-ad94-2af958f84841@gmail.com> <cc383c33-d0ef-40fc-9c14-865a6d7f5d75@leemhuis.info>
-In-Reply-To: <cc383c33-d0ef-40fc-9c14-865a6d7f5d75@leemhuis.info>
-From: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>
-Date: Wed, 22 Jul 2026 13:08:33 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0iv0FpUN=QRWSwDT6zs5tP_n0jif1jMVdOb5AHMQGs-yQ@mail.gmail.com>
-X-Gm-Features: AUfX_mxrMFwyKjDfg9cxFfItcE_FULwSJ0DjeRl0pEylWNMudrviEz6jMynDFjk
-Message-ID: <CAJZ5v0iv0FpUN=QRWSwDT6zs5tP_n0jif1jMVdOb5AHMQGs-yQ@mail.gmail.com>
-Subject: =?UTF-8?Q?Re=3A_Regression=3A_Backlight_control_broken_on_HP_Omen_?=
-	=?UTF-8?Q?15=E2=80=91ax246nf_with_kernel_7=2E0=2E0=E2=80=9128=E2=80=91generic?=
-To: Thorsten Leemhuis <regressions@leemhuis.info>, harryblanc <garett26@gmail.com>
-Cc: linux-acpi@vger.kernel.org, 
-	Linux kernel regressions list <regressions@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+X-Virus-Scanned: ClamAV using ClamSMTP
 
-On Wed, Jul 22, 2026 at 7:26=E2=80=AFAM Thorsten Leemhuis
-<regressions@leemhuis.info> wrote:
->
-> On 7/18/26 11:05, harryblanc wrote:
-> >
-> > I would like to report a regression affecting backlight control on my H=
-P
-> > Omen laptop when using kernel 7.0.0=E2=80=9128=E2=80=91generic (Ubuntu =
-24.04 base, Linux
-> > Mint 22.3 XFCE).
->
-> Hi! Thx for your report. But this is a heavily patched vendor kernel and
-> also a series that is EOL. Please test latest vanilla 7.2-rc or and
-> report back. Ciao, Thorsten
 
-I was about to ask for that too, so thanks for mentioning it.
+On Tue, 21 Jul 2026, Thorsten Leemhuis wrote:
 
-> > Summary of the issue:
-> > With kernel 7.0, the screen backlight is stuck at maximum brightness.
-> > Brightness keys show the OSD and the slider moves, but the actual
-> > backlight does not change.
-> > With kernel 6.17, brightness works normally.
-> >
-> > Hardware:
-> > - HP Omen 15=E2=80=91ax246nf
-> > - Intel i5=E2=80=917300HQ
-> > - Intel HD Graphics 630 (i915)
-> > - Nvidia GTX 1050 Mobile (disabled via Optimus)
-> > - Linux Mint 22.3 XFCE (Ubuntu 24.04 base)
-> >
-> > Backlight controller:
-> > /sys/class/backlight/ =E2=86=92 intel_backlight
-> > acpi_video0 is no longer present under kernel 7.0.
-> >
-> > ACPI errors visible only with kernel 7.0:
-> > ACPI BIOS Error (bug): Attempt to CreateField of length zero
-> > ACPI Error: Aborting method \_SB.WMID.WQBK
-> > ACPI BIOS Error (bug): AE_AML_BUFFER_LIMIT
-> > ACPI Error: Aborting method \_SB.WMID.HWMC
-> > ACPI: video: [Firmware Bug]: ACPI(PEGP) defines _DOD but not _DOS
+> On 7/14/26 00:37, Peter Astrand wrote:
+> > 
+> > kernel 6.6.y
+> > iw 6.7
+> > libnl-genl-3-200 3.9.0
+> > mac80211_hwsim
+> > 
+> > With kernel 6.6.99 and later, "iw dev <device> scan" sometimes hangs in 
+> > busy loop:
+> 
+> Thanks for the report. We need to rule out if this is a 6.6.y specific
+> problem (like a broken or incomplete backport) or something general.
+> Could you please check if 7.2-rc is affected as well? Testing 6.18.y
+> might help, too, if it's easy for you to try. Maybe switching to that
+> might be the easies way to resolve the problem and a good idea in
+> general, as explained here:
+> http://www.kroah.com/log/blog/2018/08/24/what-stable-kernel-should-i-use/
 
-So it looks like 7.0 uses a different ACPI object as the video bus
-representation.
+Platform is NXP imx6ull. Forgot to mention that we are actually running 
+https://github.com/Freescale/linux-fslc/tree/6.6-2.2.x-imx rather than 
+upstream kernel. No changes to net/netlink though.
 
-Please send the output of "ls -l /sys/bus/auxiliary/devices/*/" from
-the failing kernel.
+We cannot easily test with 7.X, but I have tested 
+https://github.com/Freescale/linux-fslc/tree/6.18-2.0.x-imx and can 
+reproduce the same problem; this is 6.18.20. strace output is similar:
 
-If you are still able to boot the 6.17-based kernel on the affected
-machine, please send the output of "ls -l
-/sys/bus/acpi/drivers/video/" obtained while it is running.
+recvmsg(3, {msg_namelen=12}, 0)         = -1 ENOBUFS (No buffer space available)
+recvmsg(3, {msg_name={sa_family=AF_NETLINK, nl_pid=0, nl_groups=00000000}, msg_namelen=12, msg_iov=[{iov_base=[{nlmsg_len=48, nlmsg_type=NLMSG_ERROR, nlmsg_flags=0, nlmsg_seq=2510255223, nlmsg_pid=1468011032}, {error=-ENOBUFS, msg=[{nlmsg_len=28, nlmsg_type=0x1b /* NLMSG_??? */, nlmsg_flags=NLM_F_REQUEST|NLM_F_ACK|0x300, nlmsg_seq=2510255223, nlmsg_pid=1468011032}, "\x20\x00\x00\x00\x08\x00\x03\x00\x0d\x00\x00\x00"]}], iov_len=16384}], msg_iovlen=1, msg_controllen=0, msg_flags=0}, MSG_PEEK|MSG_TRUNC) = 48
+
+Br,
+Peter
+
+
+> 
+> Ciao, Thorsten
+> > recvmsg(3, {msg_namelen=12}, 0)         = -1 ENOBUFS (No buffer space available)
+> > recvmsg(3, {msg_name={sa_family=AF_NETLINK, nl_pid=0, nl_groups=00000000}, 
+> > msg_namelen=12, msg_iov=[{iov_base=[{nlmsg_len=48, nlmsg_type=NLMSG_ERROR, 
+> > nlmsg_flags=0, nlmsg_seq=2511084235, nlmsg_pid=-1866444344}, 
+> > {error=-ENOBUFS, msg=[{nlmsg_len=28, nlmsg_type=0x18 /* NLMSG_??? */, 
+> > nlmsg_flags=NLM_F_REQUEST|NLM_F_ACK|0x300, nlmsg_seq=2511084235, 
+> > nlmsg_pid=-1866444344}, 
+> > "\x20\x00\x00\x00\x08\x00\x03\x00\x0e\x00\x00\x00"]}], iov_len=16384}], 
+> > msg_iovlen=1, msg_controllen=0, msg_flags=0}, MSG_PEEK|MSG_TRUNC) = 48
+> > 
+> > This issue appears with kernel 6.6.99 and later, even latest version 
+> > 6.6.144. 
+> > 
+> > If I revert these commits:
+> > 
+> > 346c820ef513 netlink: avoid infinite retry looping in netlink_unicast()
+> > c31ee1695b6d netlink: make sure we allow at least one dump skb
+> > ce2ac2e46719 netlink: Fix rmem check in netlink_broadcast_deliver().
+> > 55baecb9eb90 netlink: Fix wraparounds of sk->sk_rmem_alloc.
+> > 
+> > ...then 6.6.144 works fine as well. Seems like there is a regression here. 
+> > Any ideas? 
+> > 
+> > Br,
+> > Peter Astrand
+> > 
+> 
+> 
+> 
