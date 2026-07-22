@@ -1,51 +1,33 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.102])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C81944AB91
-	for <regressions@lists.linux.dev>; Wed, 22 Jul 2026 05:26:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.102
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48DC02192FA
+	for <regressions@lists.linux.dev>; Wed, 22 Jul 2026 05:48:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784698008; cv=none; b=qOOeD+yFJaX9hGwFpAb1MDVx6GiX2jcIntwbH7qaibz0P+BGAtAM5m6aCzAt9YTxmfGMbdmnpkHCp/Mb1HTc09FW/ctwbnpH2EHRNr7mBT8MZeTIWkrHTOCX8u7RNvMFQdzlPUonydl92L133ItZqGt4TAb9OerMdrVu//W28wo=
+	t=1784699307; cv=none; b=IFCbz2p4H8Bqius13bdMZBB0IT+Sf3qBg+68JghFHtwR+4IrmnADpqHZS2bQ1fqkXZR/7Ptrk3jx9vmlbgeKmDCRLQK3imu3KLRoiyKF/Rm9BOSaWqloHNC7LO8Fe5FcF0mhAKlVLVVp5uyQUlCGCQzOjOnQDdtcB0HL4M0F7uk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784698008; c=relaxed/simple;
-	bh=NMst9Xf+v4STuaN1fx0zrwmvwT5Ra/WhR1fBpDJtJrU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
-	 In-Reply-To:Content-Type; b=lSAK01phSdimdI9Xp7qqxBFjD/34DKE7HwjGGSpWf/KdfhcWQ4vxrbxNb67l52oRNcUn5WO//37W4cLhJdkglEe6Gshmoz3xsAdJp7cOgvxCOHbzda6pJZGn+vrtUL2QUCNoDzc/M8FYq3IZbYMe1gxgoWbyMbczqhEplLtvej8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=WXsirBYH; arc=none smtp.client-ip=188.68.63.102
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1784699307; c=relaxed/simple;
+	bh=uuScNhPjiBHrt/gYpKP8cSsm20R1SEdWS+CAB7ZKWZ0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JAfW8AeeelM7SFOpz55XmHI+PhjtWHJXPtsBRwQojAtg5z49J46gbDoh5v4sxKEe0JQU9OL8x91ucdjUZR990C8Sp+jT4em7yG/3X43UkX0KoaUDEeufFixLeR9tvmQRzBLlI6UwamFpQ2TCxwqCgVdZuYliwz9eqYkzxvTsblo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=jX4VlVwl; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="WXsirBYH"
-Received: from mors-relay-2502.netcup.net (localhost [127.0.0.1])
-	by mors-relay-2502.netcup.net (Postfix) with ESMTPS id 4h4jRS2Gmzz6GtK;
-	Wed, 22 Jul 2026 07:26:44 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1784698004;
-	bh=NMst9Xf+v4STuaN1fx0zrwmvwT5Ra/WhR1fBpDJtJrU=;
-	h=Date:Subject:To:References:From:Cc:In-Reply-To:From;
-	b=WXsirBYHvzpCwsOsgdZZu00+qIo4Lad4dPKOmw4ce7r73iNbEg3dNntH/aBp90uyZ
-	 VNLV7Asc9lJyX4L3iSaq2hPA3N1/Ncf5Bysnj7IbqPzbHz6h5BsSr8v/iaoLMLhVKo
-	 JSoCm8inAZYd0+8B1I7IQeY7ZZBDEfcPmCTUOfAoD4sCu/mBNzrrMv97dAEd1QJ5Tg
-	 KkRdiTkYnxhnVeAVhVoTFN03Korx1BjM7/hebhL8It3ETi635qM1ohmDQdbpT1nK5q
-	 fUC1PcV/cAZAVZbZi6xHiT0WnjSYwbmE1A9QhV/aRw0SF1TNZ+5UiFdz+OnPtTtUQX
-	 yMGsQpd/hDIiA==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-2502.netcup.net (Postfix) with ESMTPS id 4h4jRS1Yczz4xQ8;
-	Wed, 22 Jul 2026 07:26:44 +0200 (CEST)
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4h4jRR5Kp6z8sch;
-	Wed, 22 Jul 2026 07:26:43 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 28D5F5F9DD;
-	Wed, 22 Jul 2026 07:26:43 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <cc383c33-d0ef-40fc-9c14-865a6d7f5d75@leemhuis.info>
-Date: Wed, 22 Jul 2026 07:26:42 +0200
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="jX4VlVwl"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 00C961595;
+	Tue, 21 Jul 2026 22:48:20 -0700 (PDT)
+Received: from [10.164.19.44] (unknown [10.164.19.44])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 79F383F66F;
+	Tue, 21 Jul 2026 22:48:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1784699304; bh=uuScNhPjiBHrt/gYpKP8cSsm20R1SEdWS+CAB7ZKWZ0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=jX4VlVwlJYchtykzWqygqSFJTy82MBKeE6A7CogVBz3+8u/HKwi+5xt/7itTlr4h4
+	 XoI7kHVSloRvXK7Rk+DpUSGj7RBDpiNoIwOsW9V0d6AfjoCNSpzSttZ4JdJK8Mnm/r
+	 bvNWID8sF+Xfj4F0+cEJhCeD6FBx7oOL2FbDf8xQ=
+Message-ID: <dc402537-1527-4433-839e-960b6eb32bc4@arm.com>
+Date: Wed, 22 Jul 2026 11:18:18 +0530
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -53,87 +35,77 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: =?UTF-8?Q?Re=3A_Regression=3A_Backlight_control_broken_on_HP_Omen_1?=
- =?UTF-8?B?NeKAkWF4MjQ2bmYgd2l0aCBrZXJuZWwgNy4wLjDigJEyOOKAkWdlbmVyaWM=?=
-To: harryblanc <garett26@gmail.com>, linux-acpi@vger.kernel.org
-References: <69a1eaf0-4a58-47d5-ad94-2af958f84841@gmail.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: de-DE, en-US
-Cc: Linux kernel regressions list <regressions@lists.linux.dev>
-In-Reply-To: <69a1eaf0-4a58-47d5-ad94-2af958f84841@gmail.com>
+Subject: Re: [REGRESSION] mm/mprotect: shared-dirty base-page toggle slower
+ since v6.17
+To: Chengfeng Lin <chengfenglin@stu.xmu.edu.cn>,
+ Pedro Falcato <pfalcato@suse.de>, Andrew Morton <akpm@linux-foundation.org>,
+ linux-mm@kvack.org
+Cc: "Liam R. Howlett" <liam@infradead.org>, Lorenzo Stoakes <ljs@kernel.org>,
+ Vlastimil Babka <vbabka@kernel.org>, Jann Horn <jannh@google.com>,
+ linux-kernel@vger.kernel.org, regressions@lists.linux.dev
+References: <7c9eeb21.1c04f.19efaacbb2f.Coremail.chengfenglin@stu.xmu.edu.cn>
+ <433d619a.1e8a6.19f1d4d1be6.Coremail.chengfenglin@stu.xmu.edu.cn>
+ <6c8d9b6c.24a8b.19f84afccdd.Coremail.chengfenglin@stu.xmu.edu.cn>
+Content-Language: en-US
+From: Dev Jain <dev.jain@arm.com>
+In-Reply-To: <6c8d9b6c.24a8b.19f84afccdd.Coremail.chengfenglin@stu.xmu.edu.cn>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-PPP-Message-ID: 
- <178469800339.4154715.10056306368639657873@mxe9fb.netcup.net>
-X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: 28D5F5F9DD
-X-NC-CID: 4yt6E9FuGj5qqMzVe5B2ZOW6LexO7L8/pIRP+dYnst7UcvMt7n8=
+Content-Transfer-Encoding: 7bit
 
-On 7/18/26 11:05, harryblanc wrote:
-> 
-> I would like to report a regression affecting backlight control on my HP
-> Omen laptop when using kernel 7.0.0‑28‑generic (Ubuntu 24.04 base, Linux
-> Mint 22.3 XFCE).
 
-Hi! Thx for your report. But this is a heavily patched vendor kernel and
-also a series that is EOL. Please test latest vanilla 7.2-rc or and
-report back. Ciao, Thorsten
-> Summary of the issue:
-> With kernel 7.0, the screen backlight is stuck at maximum brightness.
-> Brightness keys show the OSD and the slider moves, but the actual
-> backlight does not change.
-> With kernel 6.17, brightness works normally.
+
+On 21/07/26 6:09 pm, Chengfeng Lin wrote:
+> Hi,
 > 
-> Hardware:
-> - HP Omen 15‑ax246nf
-> - Intel i5‑7300HQ
-> - Intel HD Graphics 630 (i915)
-> - Nvidia GTX 1050 Mobile (disabled via Optimus)
-> - Linux Mint 22.3 XFCE (Ubuntu 24.04 base)
+> Just a gentle ping, with results from an exact commit-level check.
 > 
-> Backlight controller:
-> /sys/class/backlight/ → intel_backlight
-> acpi_video0 is no longer present under kernel 7.0.
+> I tested cac1db8c3aad ("mm: optimize mprotect() by PTE batching")
+> against its direct parent 45199f715b74. Each point used a fresh boot:
 > 
-> ACPI errors visible only with kernel 7.0:
-> ACPI BIOS Error (bug): Attempt to CreateField of length zero
-> ACPI Error: Aborting method \_SB.WMID.WQBK
-> ACPI BIOS Error (bug): AE_AML_BUFFER_LIMIT
-> ACPI Error: Aborting method \_SB.WMID.HWMC
-> ACPI: video: [Firmware Bug]: ACPI(PEGP) defines _DOD but not _DOS
+>   45199f715b74 parent A -> cac1db8c3aad child ->
+>   45199f715b74 parent B
 > 
-> Kernel version:
-> Linux 7.0.0-28-generic #28~24.04.1-Ubuntu SMP PREEMPT_DYNAMIC Wed Jul 1
-> 15:50:57 UTC 2024 x86_64 GNU/Linux
+> I used the same narrow 64 MiB shared-dirty 4 KiB base-page toggle
+> workload from the report. Each point had 3 warm-up processes and
+> 15 measured processes. Each measured process ran 1,000 iterations.
+> The primary result, iteration_ns_per_page (lower is better), was:
 > 
-> GPU information (inxi -Gxxx):
-> Device-1: Intel HD Graphics 630 driver: i915
-> Device-2: NVIDIA GTX 1050 Mobile driver: N/A (Optimus disabled)
-> Display: X11 driver: modesetting, iris
-> Monitor: eDP-1 1920x1080 LG Display
+>   point       mean ns/page    SD
+>   parent A          38.133  0.743
+>   child             53.533  0.516
+>   parent B          38.467  0.640
 > 
-> Hardware summary (lshw -short):
-> Intel(R) Core(TM) i5-7300HQ
-> HD Graphics 630
-> GeForce GTX 1050 Mobile (disabled)
-> 16 GiB DDR4
-> Samsung NVMe SSD + 1TB HDD
+> The parent midpoint was 38.300 ns/page. The child was 39.77% slower,
+> while parent B differed from parent A by only 0.87%. Dropping the first
+> measured process from every point left a 39.53% child delta.
 > 
-> Expected behavior:
-> Backlight should be adjustable via intel_backlight or acpi_video0, as in
-> kernel 6.17.
+> All 45 measured processes passed the semantic checks and used 4 KiB
+> pages with no THP. The protect and restore components each increased
+> from 13 ns/page in the parent controls to 20 ns/page in the child.
+> The post-touch component stayed close to 12 ns/page.
 > 
-> Observed behavior:
-> Backlight remains at maximum brightness regardless of ACPI events or
-> brightness keys.
+> The exact commit changes only mm/mprotect.c. Both kernels were built from
+> the exact commits with the same normalized config, GCC 15.2.0, and Kbuild
+> metadata. Every point used the same CPU settings and runtime preempt=none.
 > 
-> Steps to reproduce:
-> 1. Boot kernel 7.0.0‑28‑generic
-> 2. Attempt to change brightness
-> 3. Backlight does not change
+> For this narrow workload, the exact parent/child result identifies
+> cac1db8c3aad as the source of the measured slowdown. I am not claiming
+> a generic mprotect() or application-level regression.
 > 
-> This appears to be an ACPI/i915 regression introduced in kernel 7.0.
+> Evidence:
 > 
-> Thank you for your work.
+>   https://github.com/lcf0399/linux-regression-evidence/tree/a3ae7bf1a50e4d88b572c6005a037679530c9b1f/mprotect-shared-dirty-toggle/bare-metal/20260721-cac1db8c3aad-exact-ab
 > 
+> #regzbot introduced: cac1db8c3aad97d6ffb56ced8868d6cbbbd2bfbe
+> 
+> If useful, I can still collect a perf profile of the child around
+> change_pte_range().
+> 
+
+Sorry it is difficult for me to parse your report. So I didn't understand whether
+Pedro's patches helped you or not?
+
+
+> Thanks,
+> Chengfeng
 
