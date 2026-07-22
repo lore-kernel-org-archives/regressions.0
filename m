@@ -1,123 +1,139 @@
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.102])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8862B42EEB8
-	for <regressions@lists.linux.dev>; Tue, 21 Jul 2026 21:59:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C81944AB91
+	for <regressions@lists.linux.dev>; Wed, 22 Jul 2026 05:26:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.102
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784671150; cv=none; b=SpDDfsPehmCB6BewVNEZGXFkBXBhdzq3uUxn4dJjlNi3xoKNi5G6k5L/+vQ5oLAnlAm+uVNCdPHcrXITXbdyEUsgL54Zp5RC4NAARyq6BUwIkC5Vn0jcy/MY7fBf+r0cw2q552jhmn0ar/DKJj2Etu5K8WoGJDMBK6nylARG/Mw=
+	t=1784698008; cv=none; b=qOOeD+yFJaX9hGwFpAb1MDVx6GiX2jcIntwbH7qaibz0P+BGAtAM5m6aCzAt9YTxmfGMbdmnpkHCp/Mb1HTc09FW/ctwbnpH2EHRNr7mBT8MZeTIWkrHTOCX8u7RNvMFQdzlPUonydl92L133ItZqGt4TAb9OerMdrVu//W28wo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784671150; c=relaxed/simple;
-	bh=+CSJzWCektwp0qDxnnaIRAU7cRgqQ7Em/RxSSsREdq8=;
-	h=Content-Type:MIME-Version:Subject:From:To:Cc:Date:Message-ID; b=nm8i17vz+kLBG0KpD5o3xc3aLiXLcYxdOXkc6XNknhE8J3dt5ziOc9kmDdPzI5FMhtDV5BIkUjxzOs5A/C197VgdtPQU9OSGL73//g/Jz9J5Xf/AYA3d4tczvVSEop72xwxevpKJBPnTQCETC1S/hyWd8F4REeqB2R/783/FDWA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kernelci.org; spf=pass smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci.org header.i=@kernelci.org header.b=AdNEt0wd; arc=none smtp.client-ip=209.85.216.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kernelci.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernelci.org
+	s=arc-20240116; t=1784698008; c=relaxed/simple;
+	bh=NMst9Xf+v4STuaN1fx0zrwmvwT5Ra/WhR1fBpDJtJrU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
+	 In-Reply-To:Content-Type; b=lSAK01phSdimdI9Xp7qqxBFjD/34DKE7HwjGGSpWf/KdfhcWQ4vxrbxNb67l52oRNcUn5WO//37W4cLhJdkglEe6Gshmoz3xsAdJp7cOgvxCOHbzda6pJZGn+vrtUL2QUCNoDzc/M8FYq3IZbYMe1gxgoWbyMbczqhEplLtvej8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=WXsirBYH; arc=none smtp.client-ip=188.68.63.102
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci.org header.i=@kernelci.org header.b="AdNEt0wd"
-Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-381216921aaso11221814a91.1
-        for <regressions@lists.linux.dev>; Tue, 21 Jul 2026 14:59:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci.org; s=google; t=1784671147; x=1785275947; darn=lists.linux.dev;
-        h=message-id:date:reply-to:cc:to:from:subject
-         :content-transfer-encoding:mime-version:content-type:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=BfGeGlENFxpuCxR7FjO+oWKfmw8fNbeR6VheNQhmhAk=;
-        b=AdNEt0wdkepBN79Lt5ZlSqmIr3qY/P35GflLjgYv3K976dwV6ZlMbS3VOWfD3ErpHQ
-         Jnsf1bPTnz0ONX54fkoc5wMMWdsS6+9MRRnwGRrpM+3grY5pKcrGSp+T4Zwt4T0yUPF/
-         VKa3z86CtWYpW8RDWp9X19xK1vtu8z0N4Dp/38mTIS4Z0zkAu7Tw2qpKr8gqxGSDHffL
-         4RppcvRPxvj/J2B1J18b2iJEYDARYWg5XMRZqnlYc2VefWl35IHKWyQxAWc4GIXw1c5L
-         wuJIsL/OlMORn/XaRy3qQQKZeZqmzUtkiSnNn/vEw5m5jFhP8cjVk0hMkqHj6lCo5/aL
-         KT5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784671147; x=1785275947;
-        h=message-id:date:reply-to:cc:to:from:subject
-         :content-transfer-encoding:mime-version:content-type:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=BfGeGlENFxpuCxR7FjO+oWKfmw8fNbeR6VheNQhmhAk=;
-        b=jO/fX8Z5CEDuNW3g+pD2qPssLEsPCY5hhmI606XEZvDMTRF2jiEI82KwWSMTI9REyr
-         ZYPFnZkpffOLY05Y5FEnbqtkCy/451/XxqdjntT49bZHrTjoNrAEr4iHqx4EQ5mbM98V
-         lVnHrStaKEemOjcw9Su8B2rk2y2cc7N+HktfesG3e3Cv2RZD6JtWwuRJD33VAb8Spp4t
-         1QZV5yNvfnPq8e5s3JVd+CTEF/mEZXnWV9kiO7jM6vCmFkAbaCVl97POK1YZ4mq9WKui
-         bN/nhcZ5l26mlgctR3g9QL4kLVtKMUb3Kp8d704JemRiXcVlSX07KyBxjbtEO9Vzs5xl
-         Beqw==
-X-Gm-Message-State: AOJu0Ywy4ArMZ1/odevh8SuTGYxhdfLlUxLbUPRcG9Aj0VrHFtwSF6Hq
-	gFegGU6StjdOXWCEpaBLp5Sq49Ur01xfiALX2cefYWD/cMs6wmpkI2p59STPUGvT6ec=
-X-Gm-Gg: AR+sD12RjFHmDQZkiaQENhK0vjeqWZomeaa5rq2rX5IvTzbHrSm6NwW+O+9+InzVp4g
-	TVCQ/3vquv2/yTTAH2z/6h/ySo2NDr52R969pAQs9rdJj/9LhqEjDMkxn3H9KPU1gkRGEgu4Y7l
-	SR40qLQiQ/nW93aYOdcgg43V5/lUE3TB6gptCK6VkZQpRQjY3AkpsJ1S7k3NKAA7dS+UrxXMPND
-	qK5RKkFnNvSZEU+eKOTfs05+AaCbokpS01G4AXbhYb5yR1L9xnznHVaASvqsWdX6PBhJ3iPiG9P
-	Jmq1eeGS8/ab4ZpXiWJQEVvZGhX14RIkRK5fbJO/8tcAYTR1hMDnWAHYpxAJZd36jsk95rS4RRY
-	+oU95cfhDxT4A0KpXXCU6DHBqvCEz0FG4JQWfebRbmR4V7EC76iN8FfjraG5MgJF/eP/GM/Q=
-X-Received: by 2002:a17:90a:d2cb:b0:37f:ad36:8fc5 with SMTP id 98e67ed59e1d1-38e4b515bfamr20944909a91.23.1784671146655;
-        Tue, 21 Jul 2026 14:59:06 -0700 (PDT)
-Received: from 4104846f2ebf ([20.38.40.137])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-13ce2cbb7c5sm42923449c88.10.2026.07.21.14.59.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jul 2026 14:59:05 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="WXsirBYH"
+Received: from mors-relay-2502.netcup.net (localhost [127.0.0.1])
+	by mors-relay-2502.netcup.net (Postfix) with ESMTPS id 4h4jRS2Gmzz6GtK;
+	Wed, 22 Jul 2026 07:26:44 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1784698004;
+	bh=NMst9Xf+v4STuaN1fx0zrwmvwT5Ra/WhR1fBpDJtJrU=;
+	h=Date:Subject:To:References:From:Cc:In-Reply-To:From;
+	b=WXsirBYHvzpCwsOsgdZZu00+qIo4Lad4dPKOmw4ce7r73iNbEg3dNntH/aBp90uyZ
+	 VNLV7Asc9lJyX4L3iSaq2hPA3N1/Ncf5Bysnj7IbqPzbHz6h5BsSr8v/iaoLMLhVKo
+	 JSoCm8inAZYd0+8B1I7IQeY7ZZBDEfcPmCTUOfAoD4sCu/mBNzrrMv97dAEd1QJ5Tg
+	 KkRdiTkYnxhnVeAVhVoTFN03Korx1BjM7/hebhL8It3ETi635qM1ohmDQdbpT1nK5q
+	 fUC1PcV/cAZAVZbZi6xHiT0WnjSYwbmE1A9QhV/aRw0SF1TNZ+5UiFdz+OnPtTtUQX
+	 yMGsQpd/hDIiA==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-2502.netcup.net (Postfix) with ESMTPS id 4h4jRS1Yczz4xQ8;
+	Wed, 22 Jul 2026 07:26:44 +0200 (CEST)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4h4jRR5Kp6z8sch;
+	Wed, 22 Jul 2026 07:26:43 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 28D5F5F9DD;
+	Wed, 22 Jul 2026 07:26:43 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <cc383c33-d0ef-40fc-9c14-865a6d7f5d75@leemhuis.info>
+Date: Wed, 22 Jul 2026 07:26:42 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: =?UTF-8?Q?Re=3A_Regression=3A_Backlight_control_broken_on_HP_Omen_1?=
+ =?UTF-8?B?NeKAkWF4MjQ2bmYgd2l0aCBrZXJuZWwgNy4wLjDigJEyOOKAkWdlbmVyaWM=?=
+To: harryblanc <garett26@gmail.com>, linux-acpi@vger.kernel.org
+References: <69a1eaf0-4a58-47d5-ad94-2af958f84841@gmail.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+Cc: Linux kernel regressions list <regressions@lists.linux.dev>
+In-Reply-To: <69a1eaf0-4a58-47d5-ad94-2af958f84841@gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Subject: 
- =?utf-8?b?W1JFR1JFU1NJT05dIG5leHQvbWFzdGVyOiAoYnVpbGQpIGluIGV4cGFuc2lvbiBv?=
- =?utf-8?b?ZiBtYWNybyDigJh4ZnNfbG9nX3J0c2LigJkgaW4gZnMveGZzL2xpYnhmcy94ZnNf?=
- =?utf-8?b?c2IubyAoZnMuLi4=?=
-From: KernelCI bot <bot@kernelci.org>
-To: kernelci-results@groups.io
-Cc: regressions@lists.linux.dev, linux-next@vger.kernel.org
-Reply-To: kernelci@lists.linux.dev
-Date: Tue, 21 Jul 2026 21:59:05 -0000
-Message-ID: <178467114526.1316.13205923514031471873@kernelci.org>
+X-PPP-Message-ID: 
+ <178469800339.4154715.10056306368639657873@mxe9fb.netcup.net>
+X-Rspamd-Server: rspamd-worker-8404
+X-Rspamd-Queue-Id: 28D5F5F9DD
+X-NC-CID: 4yt6E9FuGj5qqMzVe5B2ZOW6LexO7L8/pIRP+dYnst7UcvMt7n8=
 
-New build issue found on next/master:
+On 7/18/26 11:05, harryblanc wrote:
+> 
+> I would like to report a regression affecting backlight control on my HP
+> Omen laptop when using kernel 7.0.0‑28‑generic (Ubuntu 24.04 base, Linux
+> Mint 22.3 XFCE).
 
----
- in expansion of macro ‘xfs_log_rtsb’ in fs/xfs/libxfs/xfs_sb.o (fs/xfs/libxfs/xfs_sb.c) [logspec:kbuild,kbuild.compiler.note]
----
+Hi! Thx for your report. But this is a heavily patched vendor kernel and
+also a series that is EOL. Please test latest vanilla 7.2-rc or and
+report back. Ciao, Thorsten
+> Summary of the issue:
+> With kernel 7.0, the screen backlight is stuck at maximum brightness.
+> Brightness keys show the OSD and the slider moves, but the actual
+> backlight does not change.
+> With kernel 6.17, brightness works normally.
+> 
+> Hardware:
+> - HP Omen 15‑ax246nf
+> - Intel i5‑7300HQ
+> - Intel HD Graphics 630 (i915)
+> - Nvidia GTX 1050 Mobile (disabled via Optimus)
+> - Linux Mint 22.3 XFCE (Ubuntu 24.04 base)
+> 
+> Backlight controller:
+> /sys/class/backlight/ → intel_backlight
+> acpi_video0 is no longer present under kernel 7.0.
+> 
+> ACPI errors visible only with kernel 7.0:
+> ACPI BIOS Error (bug): Attempt to CreateField of length zero
+> ACPI Error: Aborting method \_SB.WMID.WQBK
+> ACPI BIOS Error (bug): AE_AML_BUFFER_LIMIT
+> ACPI Error: Aborting method \_SB.WMID.HWMC
+> ACPI: video: [Firmware Bug]: ACPI(PEGP) defines _DOD but not _DOS
+> 
+> Kernel version:
+> Linux 7.0.0-28-generic #28~24.04.1-Ubuntu SMP PREEMPT_DYNAMIC Wed Jul 1
+> 15:50:57 UTC 2024 x86_64 GNU/Linux
+> 
+> GPU information (inxi -Gxxx):
+> Device-1: Intel HD Graphics 630 driver: i915
+> Device-2: NVIDIA GTX 1050 Mobile driver: N/A (Optimus disabled)
+> Display: X11 driver: modesetting, iris
+> Monitor: eDP-1 1920x1080 LG Display
+> 
+> Hardware summary (lshw -short):
+> Intel(R) Core(TM) i5-7300HQ
+> HD Graphics 630
+> GeForce GTX 1050 Mobile (disabled)
+> 16 GiB DDR4
+> Samsung NVMe SSD + 1TB HDD
+> 
+> Expected behavior:
+> Backlight should be adjustable via intel_backlight or acpi_video0, as in
+> kernel 6.17.
+> 
+> Observed behavior:
+> Backlight remains at maximum brightness regardless of ACPI events or
+> brightness keys.
+> 
+> Steps to reproduce:
+> 1. Boot kernel 7.0.0‑28‑generic
+> 2. Attempt to change brightness
+> 3. Backlight does not change
+> 
+> This appears to be an ACPI/i915 regression introduced in kernel 7.0.
+> 
+> Thank you for your work.
+> 
 
-Log excerpt:
-=====================================================
-/tmp/kci/linux/fs/xfs/libxfs/xfs_sb.c:1483:17: note: in expansion of macro ‘xfs_log_rtsb’
- 1483 |                 xfs_log_rtsb(tp, bp);
-      |                 ^~~~~~~~~~~~
-cc1: all warnings being treated as errors
-
-=====================================================
-
-When fixing this issue, please attribute this report according to the
-patch submission rules:
-
-Reported-by: kernelci.org bot <bot@kernelci.org>
-Link: https://lore.kernel.org/all/178467114526.1316.13205923514031471873@kernelci.org/
-
-For complete logs and details about the environment used, see the issue
-on the KernelCI dashboard:
-
-- dashboard: https://d.kernelci.org/i/maestro:09e03f60e36b4243ba595281bf22987cb72d812d
-- giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-- commit HEAD:  290aaf24a551d5a0dce037e3fab30820f9113a10
-- tags: next-20260721
-
-# Builds where the incident occurred:
-
-## x86_64_defconfig+aws-ec2 on (x86_64):
-- compiler: gcc-14
-- config: None
-- dashboard: https://d.kernelci.org/build/maestro:6a5fae5b75cb84fb21705422
-
-#regzbot introduced: 3fe08b9796f36ef437ab9328e7dd1e5ff2d66603..290aaf24a551d5a0dce037e3fab30820f9113a10
-#regzbot link: https://d.kernelci.org/i/maestro:09e03f60e36b4243ba595281bf22987cb72d812d
-
-#kernelci issue maestro:09e03f60e36b4243ba595281bf22987cb72d812d
-
---
-This is an experimental report format. Please send feedback in!
-Talk to us at kernelci@lists.linux.dev
-
-Made with love by the KernelCI team - https://kernelci.org
