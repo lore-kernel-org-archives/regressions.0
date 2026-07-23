@@ -1,163 +1,132 @@
-Received: from email.studentenwerk.mhn.de (email.studentenwerk.mhn.de [141.84.225.229])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30A5C4399FC
-	for <regressions@lists.linux.dev>; Thu, 23 Jul 2026 09:56:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.84.225.229
+Received: from zg8tmtyylji0my4xnjqumte4.icoremail.net (zg8tmtyylji0my4xnjqumte4.icoremail.net [162.243.164.118])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F259043E488
+	for <regressions@lists.linux.dev>; Thu, 23 Jul 2026 17:43:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.243.164.118
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784800610; cv=none; b=tEyLE9oKJX9MgtOrYq0HAZ6gmcZ8bJXpwRT7cSS00QXueZFyFccEiH3jp3FDu+MJaGdz544zJaWDGE3wwNlDHkeIVJyWT3SIGhyWABtbXZNpCG99z0lj9FBWmhAtyc5NeEupI863RwU0HONeD6epJEV4B2NE9qLxoBkR75dm3kE=
+	t=1784828632; cv=none; b=ZLJ9DTc4kzTRNVV+1r16ZQEkCAKsxPWfEdeyVVTTj2uSyS3N7x/RnW5solgzvzCf+3XyMhtYP/U5bzfC3AElfepza2GFt4m++Wl9SLZOVyX1dC0G6wdDRm4ylzts92bA+9RbJ9ViSsfg3inX33feI7Rh85FJCDyM/rcfhk07jD4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784800610; c=relaxed/simple;
-	bh=jhXZHrdVem/tdTftT1WzCi+U+6BNfJpt8ZY9pIQnduI=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=d80ulwKcD3IQu6lXNtlMlKboh/T0B6LAu+zqtZbmhXYEVNMjBaZpKbndNSHu4Mx5WKwZHtirkSGnKjl2KY0LcrpaE49eR+k2QUkjq9FAzb/8tSSW3lv3XtuxlqaArIWUoooUoOPDjrvhWLwF9AhIwyeJvGiRLoJrt8GBnVkOXTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=stwm.de; spf=pass smtp.mailfrom=stwm.de; dkim=pass (2048-bit key) header.d=stwm.de header.i=@stwm.de header.b=bOwnlwlf; arc=none smtp.client-ip=141.84.225.229
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=stwm.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stwm.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stwm.de header.i=@stwm.de header.b="bOwnlwlf"
-Received: from mailhub.studentenwerk.mhn.de (mailhub.studentenwerk.mhn.de [127.0.0.1])
-	by email.studentenwerk.mhn.de (Postfix) with ESMTPS id 4h5RC16Zn2zRhRh;
-	Thu, 23 Jul 2026 11:48:29 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stwm.de; s=stwm-20170627;
-	t=1784800109;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zNqfVl9aqOBcvUizsHiYDMuyMpSMH55YUWJhOb5PVlY=;
-	b=bOwnlwlfnGfX9eqpQNcwkZBz1xMVGZ0WBsx1meqLOKIfj1CEsjFzGc/O4byVsKqqxCv79i
-	Qv91nJneGLjiLi+oC6zRZfWtIyGPc8FbRvcipALSZUHW7ep05ThGGleGBJgl60utXmyzxk
-	gKG/ve9EMcP2xQkUiDwv9ULOlwjROcXEou1hqDNsXJCYi4M00LezcH6MRRz8kPM6VmtxYB
-	M04AbBzem/MHngX5im2od65awg3gOElHSueNzmY8zewm3Mt3QOLAWflYRiGHTwv7GponV3
-	oNi8I8zZ3yoqQdDILFzfHkklSrAnXzHlxzlwFsoGHqc4wEvBSyiCJqjVBe5/FQ==
+	s=arc-20240116; t=1784828632; c=relaxed/simple;
+	bh=u2ztcILl2aTcBDKu4FgKWIcqDEZIrdTwbJEIGB7kdcQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=u/K4xi+lvMLDA9fBclTyHlxHp/9GfY4FjukO0skVpOc1HwF91YxQ6l5ec9s4eRrWTdQ5BXUCOL+Vu4znwOeZcDSNcKgDveNN+3gLSICmmcEBC3yc9gF45HZmGwXpc/KV+R/7skRiE2pMYqNIUxFVLvtDEw5AyB+0S+CKBXq7+nY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stu.xmu.edu.cn; spf=pass smtp.mailfrom=stu.xmu.edu.cn; arc=none smtp.client-ip=162.243.164.118
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stu.xmu.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stu.xmu.edu.cn
+Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
+	by hzbj-icmmx-6 (Coremail) with UTF8SMTP id AQAAfwCnrvbFUmJqowNkAA--.21700S2;
+	Fri, 24 Jul 2026 01:43:33 +0800 (CST)
+Received: from chengfenglin$stu.xmu.edu.cn ( [23.249.17.30] ) by
+ ajax-webmail-mail (Coremail) ; Fri, 24 Jul 2026 01:43:31 +0800 (GMT+08:00)
+Date: Fri, 24 Jul 2026 01:43:31 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From: "Chengfeng Lin" <chengfenglin@stu.xmu.edu.cn>
+To: "Dev Jain" <dev.jain@arm.com>
+Cc: "Pedro Falcato" <pfalcato@suse.de>,
+	"Andrew Morton" <akpm@linux-foundation.org>, linux-mm@kvack.org,
+	"Liam R. Howlett" <liam@infradead.org>,
+	"Lorenzo Stoakes" <ljs@kernel.org>,
+	"Vlastimil Babka" <vbabka@kernel.org>,
+	"Jann Horn" <jannh@google.com>, linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: Re: [REGRESSION] mm/mprotect: shared-dirty base-page toggle slower
+ since v6.17
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version 2025.3-cmXT6 build
+ 20260202(ad063891) Copyright (c) 2002-2026 www.mailtech.cn OP_ICM_ICMVM
+In-Reply-To: <03f91210-e0b7-43b9-9a95-755b986b3c40@arm.com>
+References: <7c9eeb21.1c04f.19efaacbb2f.Coremail.chengfenglin@stu.xmu.edu.cn>
+ <433d619a.1e8a6.19f1d4d1be6.Coremail.chengfenglin@stu.xmu.edu.cn>
+ <6c8d9b6c.24a8b.19f84afccdd.Coremail.chengfenglin@stu.xmu.edu.cn>
+ <dc402537-1527-4433-839e-960b6eb32bc4@arm.com>
+ <4dceab6f.24e3b.19f8966e8ed.Coremail.chengfenglin@stu.xmu.edu.cn>
+ <03f91210-e0b7-43b9-9a95-755b986b3c40@arm.com>
+X-CM-CTRLMSGS: =?B?Hs6GYTiH6nJ5xwDR7hwMki1N8jM=
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Date: Thu, 23 Jul 2026 11:48:29 +0200
-From: Wolfgang Walter <linux@stwm.de>
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Chuck Lever <cel@kernel.org>, Jeff Layton <jlayton@kernel.org>,
- NeilBrown <neil@brown.name>, Olga Kornievskaia <okorniev@redhat.com>, Dai
- Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
- linux-nfs@vger.kernel.org, Linux kernel regressions list
- <regressions@lists.linux.dev>
-Subject: Re: [PATCH v4 1/9] NFSD: Prevent lock owner use-after-free during
- client teardown
-In-Reply-To: <27667adc-3dab-424d-9e6f-52c91c47a51d@leemhuis.info>
-References: <20260709-cel-v4-0-1d519d9be0cb@kernel.org>
- <20260709-cel-v4-1-1d519d9be0cb@kernel.org>
- <0a0a98af-2004-4926-a7d8-1a0acb78df5a@leemhuis.info>
- <255376e5-9fba-4da1-ae0b-2b116ebf6fcb@app.fastmail.com>
- <27667adc-3dab-424d-9e6f-52c91c47a51d@leemhuis.info>
-Message-ID: <eb5d774709b3cbb01f5ed081a587305c@stwm.de>
-X-Sender: linux@stwm.de
-Organization: =?UTF-8?Q?Studierendenwerk_M=C3=BCnchen_Oberbayern?=
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
+Message-ID: <6aa94b03.25351.19f90134c6a.Coremail.chengfenglin@stu.xmu.edu.cn>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:AQAAfwCXsfLEUmJqAmnOAA--.15800W
+X-CM-SenderInfo: astqjiysvrikiuszmqhvwxh5lpxovvfxof0/1tbiAQAQEGpf17YD4
+	QADs0
+Authentication-Results: hzbj-icmmx-6; spf=neutral smtp.mail=chengfengl
+	in@stu.xmu.edu.cn;
+X-Coremail-Antispam: 1Uk129KBjvJXoWxGF4DAw4xWr1fWw15Cw1kAFb_yoWrGryUpF
+	Zak3ZxJrWDGr1Iya48Aw4UXFWFkrs5Ja18XF1kGryfAa95CF1I9rZ3t3W0qFy3Gryvqa4F
+	vFs5C34kJFn8CaDanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	DUYxn0WfASr-VFAU7a7-sFnT9fnUUIcSsGvfJ3UbIYCTnIWIevJa73UjIFyTuYvj4RJUUU
+	UUUUU
 
-Hello Thorsten!
+SGksCgpUaGFua3MgZm9yIHRoZSBjb21tZW50cy4KCkZpcnN0LCB0aGUgZXhhY3QgZGlyZWN0IHBh
+cmVudC9jaGlsZCB0ZXN0IHNob3dlZCB0aGF0IGNhYzFkYjhjM2FhZAooIm1tOiBvcHRpbWl6ZSBt
+cHJvdGVjdCgpIGJ5IFBURSBiYXRjaGluZyIpIG1hZGUgdGhpcyB3b3JrbG9hZCAzOS43NyUgc2xv
+d2VyLgpBIHNlcGFyYXRlIG1hdGNoZWQgUGVkcm8gdjMgdGVzdCBkaWQgbm90IGhlbHA6IG9uIHY3
+LjEuMywgZnVsbC12MyB3YXMgNi4yMCUKc2xvd2VyIHRoYW4gdGhlIG1pZHBvaW50IG9mIHRoZSBu
+by12MyBjb250cm9scy4gSSBkbyBub3QgdHJlYXQgdGhhdCBzbWFsbApkaWZmZXJlbmNlIGFzIGEg
+c2VwYXJhdGUgcmVncmVzc2lvbi4KCkZvciBjb250ZXh0LCB0aGlzIHJlbWFpbnMgdGhlIHNhbWUg
+bmFycm93IHN5bnRoZXRpYyBtaWNyb2JlbmNobWFyazogYSA2NCBNaUIKc2hhcmVkIGFub255bW91
+cyBtYXBwaW5nLCBkaXJ0eSA0IEtpQiBiYXNlIHBhZ2VzIHdpdGggbm8gVEhQLCBhbmQgcmVwZWF0
+ZWQKZnVsbC1yYW5nZSBwcm90ZWN0LCByZXN0b3JlLCBhbmQgd3JpdGUtdG91Y2ggY3ljbGVzLgoK
+RXhhY3QtY29tbWl0IGRlY29tcG9zaXRpb24KLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KCkkg
+cmFuIGEgbmluZS1wb2ludCwgZnJlc2gtYm9vdCBuZXN0ZWQgYWJsYXRpb24gYXJvdW5kIHRoZSBl
+eGFjdCBwYXJlbnQvY2hpbGQKcGFpciwgcmV0dXJuaW5nIHRocm91Z2ggbWF0Y2hlZCBjb250cm9s
+cyB0byBsaW1pdCB0aW1lIGRyaWZ0LiBJdCByZXByb2R1Y2VkIGEKMzYuNTElIGNoaWxkIHNsb3dk
+b3duLiBNZWFzdXJlZCBhcyBhIGZyYWN0aW9uIG9mIHRoYXQgZ2FwOgoKICBkaWFnbm9zdGljIGNo
+YW5nZSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZ2FwIHJlY292ZXJlZAog
+IHBhcmVudC1zdHlsZSBzaW5nbGUtUFRFIHVwZGF0ZS9mbHVzaCBwYXRoICAgICAgICAgICAgICAg
+ICAgICAgIDQzLjA2JQogIHNraXAgbm9ybWFsLXBhdGggYmF0Y2ggZGlzY292ZXJ5ICAgICAgICAg
+ICAgICAgICAgIG5vIG1lYXN1cmFibGUgZWZmZWN0CiAgYWRkaXRpb25hbGx5IHNraXAgdGhlIG5v
+cm1hbC1wYXRoIGZvbGlvIGxvb2t1cCAgICAgICAgICAgICAgICAgNDQuNDclCiAgYWxsIHRocmVl
+IGRpYWdub3N0aWMgY2hhbmdlcyBjb21iaW5lZCAgICAgICAgICAgICAgICAgICAgICAgICAgODcu
+MjklCgpUaGUgZmlyc3QgZGlhZ25vc3RpYyBrZXB0IHRoZSBjaGlsZCdzIGxvb2t1cCBhbmQgYmF0
+Y2ggZGlzY292ZXJ5IHVuY2hhbmdlZCwKcmVzdG9yaW5nIHRoZSBwYXJlbnQtc3R5bGUgdXBkYXRl
+L2ZsdXNoIHBhdGggb25seSB3aGVuIGRpc2NvdmVyeSByZXR1cm5lZCBvbmUKUFRFLiBJdCByZWNv
+dmVyZWQgNDMuMDYlIG9mIHRoZSBnYXAsIHBsYWNpbmcgYSBzdWJzdGFudGlhbCBjb3N0IGFmdGVy
+CmRpc2NvdmVyeSBpbiB0aGUgZ2VuZXJpYyBzaW5nbGUtUFRFIGhhbmRsaW5nLCB0aG91Z2ggbm90
+IGF0IGEgc3BlY2lmaWMKaW5zdHJ1Y3Rpb24uIEluIHRoZSBuZXN0ZWQgc2VxdWVuY2UsIHRoZSBp
+bnRlcm1lZGlhdGUgZGlzY292ZXJ5IGJ5cGFzcyBoYWQKbm8gbWVhc3VyYWJsZSBlZmZlY3Q7IGFk
+ZGl0aW9uYWxseSBza2lwcGluZyB0aGUgbm9ybWFsLXBhdGggZm9saW8gbG9va3VwCnJlY292ZXJl
+ZCBhbm90aGVyIDQ0LjQ3JSwgc28gbG9va3VwIGNvbnRyaWJ1dGVzIGEgc2ltaWxhcmx5IGxhcmdl
+IHNoYXJlLgpUaGVzZSBjb3N0cyBvY2N1ciBpbiBzZXF1ZW5jZSwgYW5kIGJvdGggdGhlIHByb3Rl
+Y3QgYW5kIHJlc3RvcmUgd2Fsa3MgcGF5CmJvdGguCgpUaGUgY29tYmluZWQgcHJvYmUgd2FzIHN0
+aWxsIDQuNjQlIHNsb3dlciB0aGFuIHRoZSBwYXJlbnQsIGxlYXZpbmcgMTIuNzElIG9mCnRoZSBv
+cmlnaW5hbCBnYXAgdW5leHBsYWluZWQuIEFsbCAxMzUgbWVhc3VyZWQgcHJvY2Vzc2VzIHBhc3Nl
+ZCB0aGUgc2VtYW50aWMKYW5kIDQgS2lCL25vLVRIUCBjaGVja3M7IHRoZSBtYXhpbXVtIENWIHdh
+cyAxLjU2JS4KCnY3LjEuMyBsb29rdXAgc2FmZXR5IGNoZWNrCi0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tCgpUaGUgZXhhY3Qgc2VxdWVuY2UgYWJvdmUgdXNlcyB0aGUgY2FjMWRiOGMzYWFkIGNo
+aWxkLCB3aGljaCBjYWxscwp2bV9ub3JtYWxfZm9saW8oKS4gVGhpcyBzZXBhcmF0ZSBjaGVjayB1
+c2VzIHVubW9kaWZpZWQgdjcuMS4zLCB3aGVyZSB0aGUKY29ycmVzcG9uZGluZyBwYXRoIGNhbGxz
+IHZtX25vcm1hbF9wYWdlKCkgZm9sbG93ZWQgYnkgcGFnZV9mb2xpbygpOyBpdHMKcGVyY2VudGFn
+ZXMgYXJlIG5vdCBwYXJ0IG9mIHRoZSBleGFjdC1jb21taXQgZGVjb21wb3NpdGlvbi4KCkZvciBh
+IHNoYXJlZCwgbm9uLU5VTUEgUFRFIHdpdGggcHRlX2JhdGNoX2hpbnQoKSA9PSAxLCBhIGRpYWdu
+b3N0aWMgdGhhdCBza2lwcwp0aGUgY3VycmVudCBwYWdlL2ZvbGlvIGxvb2t1cCBhbmQgYmF0Y2gg
+ZGlzY292ZXJ5IHdhcyAxNy4zNiUgZmFzdGVyIG9uIHRoZQo0IEtpQiB3b3JrbG9hZC4gQSBwYWly
+ZWQgdHJhY2UgcmVtb3ZlZCBleGFjdGx5IDIsMDQ4IHZtX25vcm1hbF9wYWdlKCkgY2FsbHMsCmJ1
+dCB0aGlzIGlzIG5vdCBhIHN0YW5kYWxvbmUgdGltaW5nIG9mIHRoYXQgZnVuY3Rpb24uCgpUaGUg
+c2FtZSBkaWFnbm9zdGljIHdhcyA2NS44MCUgc2xvd2VyIGZvciBhIHZlcmlmaWVkIHNoYXJlZCAy
+IE1pQiBmb2xpbyBtYXBwZWQKYnkgNTEyIFBURXMsIGJlY2F1c2Ugb24geDg2IHRoZSBoaW50IGlz
+IGFsc28gb25lIGFuZCB0aGUgZGlhZ25vc3RpYyBkaXNhYmxlcwpmb2xpbyBiYXRjaGluZy4KCkFs
+bCB0ZXN0cyB1c2VkIGZyZXNoIGJvb3RzIG9uIGFuIGk3LTEyNzAwS0Ygd2l0aCAzMiBHaUIgUkFN
+LiBXaXRoaW4gZWFjaApjb21wYXJpc29uLCBidWlsZHMgdXNlZCBtYXRjaGVkIGNvbmZpZ3MgYW5k
+IEdDQyAxNS4yLjAuIFRoZSBiZW5jaG1hcmsgdXNlZApQLWNvcmUgQ1BVIDIsIHBlcmZvcm1hbmNl
+IGdvdmVybm9yIGFuZCBFUFAsIFR1cmJvIG9mZiwgYW5kIHByZWVtcHQ9bm9uZS4KClRodXMsIHRo
+ZSBnZW5lcmljIHNpbmdsZS1QVEUgdXBkYXRlL2ZsdXNoIHBhdGggYW5kIHRoZSBsb29rdXAgYWNj
+b3VudCBmb3IKYWJvdXQgODclIG9mIHRoZSBleGFjdC1jb21taXQgZ2FwLiBUaGUgdjcuMS4zIGJ5
+cGFzcyBpcyB1bnNhZmUgZm9yIFBURS1tYXBwZWQKbGFyZ2UgZm9saW9zLCBzbyBJIGFtIG5vdCBw
+cm9wb3NpbmcgaXQgYXMgYSBmaXguCgpQZWRybyBkaWQgbm90IG9ic2VydmUgdGhlIHNhbWUgbG9v
+a3VwIGNvc3Qgb24gaGlzIGRlc2t0b3AuIFRoYXQgZGlmZmVyZW5jZQptYXkgYmUgbWFjaGluZS1z
+cGVjaWZpYywgYnV0IEkgaGF2ZSBub3QgdGVzdGVkIGVub3VnaCBzeXN0ZW1zIHRvIGVzdGFibGlz
+aAp3aHkuIEkgaGF2ZSBhbHNvIG5vdCBtZWFzdXJlZCBhcHBsaWNhdGlvbi1sZXZlbCBpbXBhY3Qu
+CgpDb21wYWN0IGV2aWRlbmNlIGJ1bmRsZToKCiAgaHR0cHM6Ly9naXRodWIuY29tL2xjZjAzOTkv
+bGludXgtcmVncmVzc2lvbi1ldmlkZW5jZS90cmVlL2VhM2VjMmQ0MTcwMjUwMjMzNmI5ODU0Yjlk
+YTc4YzQzODQwYjg2ZTgvbXByb3RlY3Qtc2hhcmVkLWRpcnR5LXRvZ2dsZS9iYXJlLW1ldGFsCgpT
+dGFuZGFsb25lIHJlcHJvZHVjZXJzOgoKICBodHRwczovL2dpdGh1Yi5jb20vbGNmMDM5OS9saW51
+eC1yZWdyZXNzaW9uLWV2aWRlbmNlL3RyZWUvZWEzZWMyZDQxNzAyNTAyMzM2Yjk4NTRiOWRhNzhj
+NDM4NDBiODZlOC9tcHJvdGVjdC1zaGFyZWQtZGlydHktdG9nZ2xlL3JlcHJvZHVjZXIKClRoYW5r
+cywKQ2hlbmdmZW5nCgo=
 
-Am 2026-07-22 16:33, schrieb Thorsten Leemhuis:
-> On 7/22/26 15:48, Chuck Lever wrote:
->> On Wed, Jul 22, 2026, at 6:24 AM, Thorsten Leemhuis wrote:
->>> On 7/9/26 19:40, Chuck Lever wrote:
->>>> __destroy_client() releases a client's open owners, but a lock owner
->>>> whose only reference is a blocked lock (nbl) stays on
->>>> cl_ownerstr_hashtbl.  client_has_state() does not count a bare 
->>>> owner,
->>>> so DESTROY_CLIENTID can reach __destroy_client() with such owners
->>>> present.
->>>> 
->>>> [...]
->>>> 
->>>> Reported-by: Wolfgang Walter <linux@stwm.de>
->>>> Closes: 
->>>> https://lore.kernel.org/linux-nfs/6eccafaaaa60651ef091257c3439c46b@stwm.de/
->>>> Fixes: 68ef3bc31664 ("nfsd: remove blocked locks on client 
->>>> teardown")
->>> 
->>> What's the plan to merge this change? From the outside it looks like 
->>> a
->>> fix for a user reported regression from this merge window, as 
->>> Wolfgang
->>> afaics blamed commit 516403d4d85607 ("Revert "NFSD: Defer sub-object
->>> cleanup in export put callbacks""), which also made it to various 
->>> stable
->>> trees.
->>> 
->>> So shouldn't this change ideally be on it's way to Linus by now? 
->>> Ideally
->>> with a stable tag to ensure quick backporting? Or is it not a good 
->>> idea
->>> to have this in without the follow-up patches from this series?
->>> 
->>> Or did I get something totally wrong (which is easily possible from 
->>> my
->>> external point)?
->> 
->> Thorsten, thanks for your attention to this issue.
-> 
-> Thank you for the answer!
->> Here is the plan of record:
->> 
->> This commit is currently in nfsd-testing:
->> 
->> https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git/commit/?h=nfsd-testing&id=3055ac7c996369876342aa22a33bcc68cd4abca1
-> 
-> Ahh, I see, the change gained a stable tag somewhere along the way, 
-> great!
-> 
->> It will matriculate to nfsd-next in a week or so and then be
->> sent to Linus in the initial nfsd-7.3 pull request.
-> 
-> Hmmm. Just reread your reply to Wolfgang's report where you explain
-> things in more detail:
-> https://lore.kernel.org/stable/20260703160306.1651327-1-cel@kernel.org/
-> 
-> I now understand this better and it still feels to me like a situation
-> where Linus would want the fix to be included in mainline quickly[1] --
-> among others to not have another release with the bug[2] and because
-> it's something a user reported[3]. Yes, the root of the problem might 
-> be
-> in an older commit the Fixes: tag quoted above refers to -- but
-> apparently something (maybe the change Wolfgang and you suspected) 
-> seems
-> to have exposed the problem or made it happen more often at least in
-> 6.18.y.
-> 
-> Anyway, if Wolfgang is the only one that seems to hit this and is happy
-> with the state of things I guess it's not worth arguing further about.
-> 
-
-I'm very happy having this patch and especially that I got it so fast. 
-If I build a new version of a stable kernel I just rebase this patch on 
-top of it. Git makes carrying such patches very easy.
-
-So I'm pefectly fine if this goes into stable/lts a bit later.
-
-> Thanks again for taking the time to answer my mail!
-> 
-> Ciao, Thorsten
-> 
-> [1] and Greg likely as well, as situations like that are the reason why
-> stable kernels released during or shortly after the merge window have
-> many hundreds of changes that have seen little testing (and we are
-> currently at the point where it could get some testing before hitting a
-> new release)
-> 
-> [2]
-> https://lore.kernel.org/all/CAHk-=wis_qQy4oDNynNKi5b7Qhosmxtoj1jxo5wmB6SRUwQUBQ@mail.gmail.com/
-> 
-> [3]
-> https://www.kernel.org/doc/html/latest/process/handling-regressions.html#on-how-quickly-regressions-should-be-fixed
-
-Ciao,
--- 
-Wolfgang Walter
-Studierendenwerk München Oberbayern
-Anstalt des öffentlichen Rechts
