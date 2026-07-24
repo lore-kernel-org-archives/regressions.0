@@ -1,127 +1,108 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from flow-a4-smtp.messagingengine.com (flow-a4-smtp.messagingengine.com [103.168.172.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78E362931EE
-	for <regressions@lists.linux.dev>; Fri, 24 Jul 2026 01:03:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9C261A9F87
+	for <regressions@lists.linux.dev>; Fri, 24 Jul 2026 06:37:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784855018; cv=none; b=qAV1e0vbE7xbcQbEYQ9caH8RmpyuWb21u99kV4gEt4osaG86JWsSq5637mxXIYpPhQtJuFXLUqtD2rkwGbutSKaUBTOqxf4WinmFShQxDWv0RYjAojtBZ1MaaSzGMozYDIY9lJHZR+3WaCsMBS8/EkM+V+BVaEeTH//hTHnK4bs=
+	t=1784875028; cv=none; b=WrGW2cc8pljxY9fDFHV+IH4EMK7D18An/sQVOMeN/LNs1cAKRqSTwwCA74NSoP015j1GUvwTq6BpRbZVL5U8gUSY4rOjyqnaXK32GmALuaAD03ptXxHf/gltsLW/WNHuLcNegmmeQZDbGKDKRUEhmyfiJwvcPtbsUqb6H77DtSM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784855018; c=relaxed/simple;
-	bh=EYtGon2mOKRyQA+SWDxFLaacgRtfy4ZbfR/vRYaeE9U=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=rSj6srnsNPCalZnNSJUTJHgvI16JhG7f3W/4LTKiKgA4IvqJEeOv8HnTs3bydA6v+lH+DWJjPwqmpJ6KzfP3iuJ1b5kwGYTataZkvCMnKUpW8ShJFErF/FOgG9G57iLwp8EqitWNJj3MOCzaO1TvePRYNfncZ5+g+J7e38qiBfs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DhNEGgCb; arc=none smtp.client-ip=209.85.210.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1784875028; c=relaxed/simple;
+	bh=PL+cFJw+A1mVND9tcmXNWtL6i+LZP+ToNTcw6ge+K5o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ts+he5ViPSj9q9auFrY9qzJWJiLXNsCMA5kidRGWF4P9PsBuaYc/sLBL5Xo5deG7aRSL1RUhVt/czodXulVXZf7JLOa7Lx2QZoBrUFEfzwUz9G5YFHuXFLpTybKvkCwao/XlzN9HsAPyYTrcIcG29z9GpEPWCRv1XVMfcf0ALm0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com; spf=pass smtp.mailfrom=kroah.com; dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b=Xb3VqjiR; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=E4KRqURO; arc=none smtp.client-ip=103.168.172.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kroah.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DhNEGgCb"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-8485bd28dd0so1429298b3a.2
-        for <regressions@lists.linux.dev>; Thu, 23 Jul 2026 18:03:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1784855017; x=1785459817; darn=lists.linux.dev;
-        h=mime-version:user-agent:content-transfer-encoding:content-type
-         :references:in-reply-to:date:cc:to:from:subject:message-id:from:to
-         :cc:subject:date:message-id:reply-to:content-type;
-        bh=EYtGon2mOKRyQA+SWDxFLaacgRtfy4ZbfR/vRYaeE9U=;
-        b=DhNEGgCbTMNb4WZyjIcp7SkN/4pmnt2cB+yUtjA3tqBaJD+a1eVIGO16ES4FdR2MHG
-         SltFUY5C4h1VTwbVyNJJ1FeAgRHuiV2P8mRc9xmFG02gR+D6WSGtN8Jq4Ke3iPJ4WWcY
-         n+rp6EXZStim3lthXPTZGPZkmaOImM/Dz5w2iWdD6GzzHo10kYFzTriWREMzY5Od//RI
-         Et3d1voggLk0xnYarzKRD5xuwvTLgsg6fXwoqJGQHZ85xEJbbTMwKi1IjxHLNMqJqHDo
-         a1VR7UA5US0/ipl353EZyTriHs6qgvpKjErEvKvIZ7Y5kIvWThkYc/y5zvXVFyO8Cnnp
-         VTuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784855017; x=1785459817;
-        h=mime-version:user-agent:content-transfer-encoding:content-type
-         :references:in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=EYtGon2mOKRyQA+SWDxFLaacgRtfy4ZbfR/vRYaeE9U=;
-        b=NxoFl5PVQ+WhxxoKex/5Ylf9XBR+mRraGXCx7ZPK2OvhldHy4gb3zYvyjdB0APvk4q
-         FlnY01LfeFAF86O7C7g6Je+/uSYRMOILEgXXjd6zmOTeXhp/EEbG2daCWs5jeBkD6wWf
-         UIBsx+UYlI4RSJUc+me8DwECdNkiFJVYFvAXlJzF5GEeIyuAHAD7nD/GJxD/+MIxdS/e
-         1DqbZOSpSJ3xyMd2663ZDv9pIeEmRkJzD0pkutBvbbTZIchninDagonVvK5GByky4Oiz
-         wEYxkSyb8MKcpE6HpyH62rLPQFrZbiGfAdTCfUPCAKa22aiLmNyU/Oe6vBgyCwDYlJul
-         55aw==
-X-Forwarded-Encrypted: i=1; AHgh+RruV1wP81quZ+BcC9NK3LBTxRdAeG2f/AffPOh2vOOu7eW2FBLZ7RCPQr/M68kEU63khkrx8it1HGIoCQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0YyrOOo2m6fLFmhLjsrzBrAAjCRPlc7JrajeQooBOqnv5hscYRIx
-	sp+fDmuJ6kFNuWLysdT9m7Vtdh25nvSIq8rWpXMpnqZRRgn7tgNkexr5
-X-Gm-Gg: AR+sD13qtB81NRxieCos043LlmmGrvab3gq/ZkWBFkNRDHl4np0ASH7Kxrk52PeH4Uw
-	AdCMoWnjF8PFAhgEUT7YxYLm7xewJ34nepsx8FxGsmiW5XjRO3XUsv8AYSHmrfU2XUpNAIDZ3DD
-	EteBNeY2kH6SoIK4oLEvZp29mTE7WgwArFWuIAPqN5hEAVk5JUBYGkWoPyH5ToaRHrWUNMG/Oul
-	ArhtVP8cgmvBr0456AMgQlemNOjK4DMJ8NTO0oDc9OpJ5AYgudrRslSLa0w9vjV0Oe735Yn51Ys
-	LkxRE3mCQQ7vshpaSLU3bqnvlvrZJv10uMPNLLBO0RsiLtYdlB4BBReIDEDJJALkWpKgy07Dmb4
-	kauB/vfkFVhTD9lcTRTo6elpVRgY4xkWEB7J+OcM2XlQ0f+tlkVD4bWlQhA5PZF61EJZRsTD9FJ
-	sONT59BT/ZhfGN5PZleRoo9CqXtQjoMSbnsLaQcfxKH7Rdmr0t8PDWKxMWsLI=
-X-Received: by 2002:a05:6a21:2d46:b0:3c3:83e8:c211 with SMTP id adf61e73a8af0-3c44b25397fmr6112121637.63.1784855016691;
-        Thu, 23 Jul 2026 18:03:36 -0700 (PDT)
-Received: from ?IPv6:2a03:83e0:115c:1:c221:d012:6e37:77f9? ([2620:10d:c090:500::2:8dac])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-3147dc9f2f0sm25307955eec.13.2026.07.23.18.03.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jul 2026 18:03:36 -0700 (PDT)
-Message-ID: <4fc7fef5d38839b5f01e80b05de908d95af8f3c8.camel@gmail.com>
-Subject: Re: [RESEND][REGRESSION][SECURITY] bpf, s390: verifier/JIT mismatch
- allows unprivileged kernel memory access
-From: Eduard Zingerman <eddyz87@gmail.com>
-To: Min-gyu Kim <gimm78064@gmail.com>, Alexei Starovoitov <ast@kernel.org>, 
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko
- <andrii@kernel.org>, Kumar Kartikeya Dwivedi	 <memxor@gmail.com>, Ilya
- Leoshkevich <iii@linux.ibm.com>, Heiko Carstens	 <hca@linux.ibm.com>,
- Vasily Gorbik <gor@linux.ibm.com>
-Cc: bpf@vger.kernel.org, linux-s390@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
- security@kernel.org
-Date: Thu, 23 Jul 2026 18:03:34 -0700
-In-Reply-To: <71f6059ecc89d0b16f8542d73ad8b183a2a4db92.camel@gmail.com>
-References: 
-	<CAGKGUv=sOuqQtA1Ub-5JXfA4FPosJFYKAQE4B79cK+P1erxqtg@mail.gmail.com>
-	 <71f6059ecc89d0b16f8542d73ad8b183a2a4db92.camel@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.60.1 (3.60.1-1.fc44) 
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="Xb3VqjiR";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="E4KRqURO"
+Received: from phl-compute-12.internal (phl-compute-12.internal [10.202.2.52])
+	by mailflow.phl.internal (Postfix) with ESMTP id 0305713800E3;
+	Fri, 24 Jul 2026 02:37:06 -0400 (EDT)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-12.internal (MEProxy); Fri, 24 Jul 2026 02:37:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm2; t=1784875025; x=1784882225; bh=PL+cFJw+A1
+	mVND9tcmXNWtL6i+LZP+ToNTcw6ge+K5o=; b=Xb3VqjiR6ggHWM6NVPVt0/BKjK
+	bXhw8MVXE53YORvHsKkzqFzUo0IXSWczqFvOIWbSRPiwBhh46d2l0+z+48E9jAqH
+	bxe7UetM5rYAxFCSSENb+AqeMCfRX/vMsrPbK9esDop/Y8j4NJNvnVZ/z3g0dcT0
+	L2+pH16ElKFfxaRZa6JWMmCiUVARPMBID0lnFdr4BJNAu47ej/Zc4a2QaQdoB6Gl
+	J2xEZ/u/cipp0ccjwklA+tNT4ScF2nDFkMuszDtZkFZp3wRp8pJm6YNz3cHYLg8j
+	gFrxXGM41jq+Q7ns2NY7rQlvB/4cmUxhTjnwcgLeh/cm7wpJRl2QV8LjJ5OA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
+	1784875025; x=1784882225; bh=PL+cFJw+A1mVND9tcmXNWtL6i+LZP+ToNTc
+	w6ge+K5o=; b=E4KRqUROThBmzor2t/zYxQJPB0ip9oJCkwPIx7cIxB9Ker+R+Cn
+	N5Qhu+Px3qugUOgFYhTi1FeLsql8Ia7evopSC0nShTfPNGF6WUOM0YsZjbcrR5tT
+	T81nmIkrQZb6Ke4YWb2yQksAPjjSD8bZOvlpm61vSSjusYSklXtqDFfZbcxDXqDa
+	SrJC/zFzC+SldTBgkkefxcFfcpipLKfvr0z/Rw+0jC4GoBmW38pOmBoC+XuCDvE3
+	iN9/DKnMKgVXZblyIWkWPBZvtgTgaMozBLRBdPDW1d1cTWcG3v+x2rWsEzN6qRno
+	qLPLV55uDV95wFR0kEu1tTQRZyYyfGvoQpA==
+X-ME-Sender: <xms:EQhjajIahRpDyx59YVAOkO9j9BUpR9uxdf4NYmtzk1PkrESKBsCdyA>
+    <xme:EQhjauHNIWSuwlIHsO6uzb7ivHVBZoemkAjWhePEi6brT-Uf-ZGGzNBKMW50p8xYF
+    qPz89Bhiw7xrvpSdBHTLPfVZ5ZZ-fJ_4fjIu9lmwqFLDiNK>
+X-ME-Received: <xmr:EQhjakoEPLUhORWZwQ_c-AwNC_8xjyXi11gYR8EY2Qqy7l8h3PyRGhtHyOLOrsc-CR_SEeeBu1q-xLerES5QGQd5KA>
+X-ME-Proxy-Cause: dmFkZTFX5iPjis1+08aMQAfG2anV+zBI8zmH41Y47VAyCiJWTyfwZ7ELMO3BhcMlLZKfMW
+    fDTWyOy+PZWlS7Kx0pAXG7czUqKvrgCi4q51xKfz5cJLLsvJYphO9ETeTeFDNZQdXHYgVe
+    im9wGVk+RJ1YLmeL6ZP/396+9lUxfFYoPLWLGBYHqgNXSvw/ruBoPyxVtLKOQH5nhRPvdR
+    fPHAtRIJhLDkZXwHO0SBQfKq71gLj6p7ksc4llFPpIUa4UxdRtbYrMBU2cLrxeU9FSZFR6
+    T/Dl/+RyngkiZN++qOZL1XZFDdA87kiubCGqiBzUY50/fHnnxgbpsi5T71PF1j+rW+aWe4
+    U+RWmDRzPaaUjDb67h3Hud9a8QHWQXPzNYpCRWV0gfiL0b36vn73tyFYXyLtZYxf83lYex
+    BAYrhOEH2yZOV45k1hcrx4tL58/D8YLiPf3UX+jOKhtBVEig5hCZkJNc3xbnIlmN0alFY3
+    wTvD8qtj/WfpTIXxH4MRj27kg+Fl4lyOH244mmo+idDPzQvNCNCOiCZWcZEOdpBnCLG0OI
+    7EnbERLSfCi5pK3SzHsEvYSN6XmziCBTZ749fxUlpBbovtejWaVQHI6IuL6sGiv+sVlwOq
+    rZs4nn01uxi611kMHRlCXh1MR+K5xAior7grBjFf5EjOl6Es80nyEMChUgEg
+X-ME-Proxy: <xmx:EQhjakNHbpMmHIZHJawQiTeRof7s-JdEiu5ucVVYtVXP7Oaw7YrObQ>
+    <xmx:EQhjakpsS4MslApj7D75HsFHPWK_7d12Z9JvFaPFyahEUKvzLRLgoQ>
+    <xmx:EQhjaqnYAKr85uSFUQ5G6PT_zyUwMPJ0HXTlHLpJiecCpxUogLlgAg>
+    <xmx:EQhjakw00X7KtRLLhmGIgmuXgLfVGeh3u-g_-BfU5q9hJUYEBHj7NQ>
+    <xmx:EQhjauW8KJG8te-aYgxBMw9UXPqEx0i5V_L5rEes977ufK1ky-lM76Yy>
+Feedback-ID: i787e41f1:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 24 Jul 2026 02:37:05 -0400 (EDT)
+Date: Fri, 24 Jul 2026 08:35:42 +0200
+From: Greg KH <greg@kroah.com>
+To: Min-gyu Kim <gimm78064@gmail.com>
+Cc: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+	Ilya Leoshkevich <iii@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>, bpf@vger.kernel.org,
+	linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev, security@kernel.org
+Subject: Re: [REGRESSION][SECURITY] bpf, s390: verifier/JIT mismatch allows
+ unprivileged kernel memory access
+Message-ID: <2026072436-carload-untaken-585d@gregkh>
+References: <CAGKGUvm6sC9ay98zsYJS1xwB9+qUwverqAsAAwpVOpmqFpEy5A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAGKGUvm6sC9ay98zsYJS1xwB9+qUwverqAsAAwpVOpmqFpEy5A@mail.gmail.com>
 
-On Thu, 2026-07-23 at 02:05 -0700, Eduard Zingerman wrote:
-> On Thu, 2026-07-23 at 17:16 +0900, Min-gyu Kim wrote:
->=20
-> ...
->=20
-> > Root cause
-> >=20
-> > The verifier records an ALU32 definition in subreg_def. A later 64-bit =
-read
-> > causes mark_insn_zext() to mark that instruction for explicit zero exte=
-nsion.
-> > Before 107e16979905, a cache hit in is_state_visited() propagated the 6=
-4-bit
-> > read to the alternate path's ALU32 definition.
->=20
-> Hi Min-gyu,
->=20
-> Thank you for the report.
->=20
-> > Commit 107e16979905 removed that propagation when register-chain livene=
-ss was
-> > replaced with static liveness. The static live-register mask does not t=
-rack
-> > read width or path-specific subreg_def information. In current states.c=
-,
-> > regs_exact() compares only fields before id, while subreg_def follows i=
-d in
-> > struct bpf_reg_state.
->=20
-> Hm, the stack is tracked with 32-bit granularity and it should be easy
-> to adjust compute_live_registers() to track the width. I'll give it a try=
-.
+On Thu, Jul 23, 2026 at 04:55:12PM +0900, Min-gyu Kim wrote:
+> I have not yet tested a patch.
 
-I figured out the repro and am working on the fix.
-The plan is to extend compute_live_registers() to statically infer
-which upper 32-bit subregisters are alive and use this information
-to fixup zero extensions, and drop the reg->subreg_def altogether.
+As you have a reproducer, please create a proposed patch that solves the
+issue for you for us to work off of, as our security documentation asks
+for.
 
-...
+Also, as you cc:ed public mailing lists, there's no need to get
+security@kernel.org involved here.
+
+thanks,
+
+greg k-h
