@@ -1,132 +1,127 @@
-Received: from zg8tmtyylji0my4xnjqumte4.icoremail.net (zg8tmtyylji0my4xnjqumte4.icoremail.net [162.243.164.118])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F259043E488
-	for <regressions@lists.linux.dev>; Thu, 23 Jul 2026 17:43:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.243.164.118
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78E362931EE
+	for <regressions@lists.linux.dev>; Fri, 24 Jul 2026 01:03:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784828632; cv=none; b=ZLJ9DTc4kzTRNVV+1r16ZQEkCAKsxPWfEdeyVVTTj2uSyS3N7x/RnW5solgzvzCf+3XyMhtYP/U5bzfC3AElfepza2GFt4m++Wl9SLZOVyX1dC0G6wdDRm4ylzts92bA+9RbJ9ViSsfg3inX33feI7Rh85FJCDyM/rcfhk07jD4=
+	t=1784855018; cv=none; b=qAV1e0vbE7xbcQbEYQ9caH8RmpyuWb21u99kV4gEt4osaG86JWsSq5637mxXIYpPhQtJuFXLUqtD2rkwGbutSKaUBTOqxf4WinmFShQxDWv0RYjAojtBZ1MaaSzGMozYDIY9lJHZR+3WaCsMBS8/EkM+V+BVaEeTH//hTHnK4bs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784828632; c=relaxed/simple;
-	bh=u2ztcILl2aTcBDKu4FgKWIcqDEZIrdTwbJEIGB7kdcQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=u/K4xi+lvMLDA9fBclTyHlxHp/9GfY4FjukO0skVpOc1HwF91YxQ6l5ec9s4eRrWTdQ5BXUCOL+Vu4znwOeZcDSNcKgDveNN+3gLSICmmcEBC3yc9gF45HZmGwXpc/KV+R/7skRiE2pMYqNIUxFVLvtDEw5AyB+0S+CKBXq7+nY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stu.xmu.edu.cn; spf=pass smtp.mailfrom=stu.xmu.edu.cn; arc=none smtp.client-ip=162.243.164.118
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stu.xmu.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stu.xmu.edu.cn
-Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
-	by hzbj-icmmx-6 (Coremail) with UTF8SMTP id AQAAfwCnrvbFUmJqowNkAA--.21700S2;
-	Fri, 24 Jul 2026 01:43:33 +0800 (CST)
-Received: from chengfenglin$stu.xmu.edu.cn ( [23.249.17.30] ) by
- ajax-webmail-mail (Coremail) ; Fri, 24 Jul 2026 01:43:31 +0800 (GMT+08:00)
-Date: Fri, 24 Jul 2026 01:43:31 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From: "Chengfeng Lin" <chengfenglin@stu.xmu.edu.cn>
-To: "Dev Jain" <dev.jain@arm.com>
-Cc: "Pedro Falcato" <pfalcato@suse.de>,
-	"Andrew Morton" <akpm@linux-foundation.org>, linux-mm@kvack.org,
-	"Liam R. Howlett" <liam@infradead.org>,
-	"Lorenzo Stoakes" <ljs@kernel.org>,
-	"Vlastimil Babka" <vbabka@kernel.org>,
-	"Jann Horn" <jannh@google.com>, linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: Re: [REGRESSION] mm/mprotect: shared-dirty base-page toggle slower
- since v6.17
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version 2025.3-cmXT6 build
- 20260202(ad063891) Copyright (c) 2002-2026 www.mailtech.cn OP_ICM_ICMVM
-In-Reply-To: <03f91210-e0b7-43b9-9a95-755b986b3c40@arm.com>
-References: <7c9eeb21.1c04f.19efaacbb2f.Coremail.chengfenglin@stu.xmu.edu.cn>
- <433d619a.1e8a6.19f1d4d1be6.Coremail.chengfenglin@stu.xmu.edu.cn>
- <6c8d9b6c.24a8b.19f84afccdd.Coremail.chengfenglin@stu.xmu.edu.cn>
- <dc402537-1527-4433-839e-960b6eb32bc4@arm.com>
- <4dceab6f.24e3b.19f8966e8ed.Coremail.chengfenglin@stu.xmu.edu.cn>
- <03f91210-e0b7-43b9-9a95-755b986b3c40@arm.com>
-X-CM-CTRLMSGS: =?B?Hs6GYTiH6nJ5xwDR7hwMki1N8jM=
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+	s=arc-20240116; t=1784855018; c=relaxed/simple;
+	bh=EYtGon2mOKRyQA+SWDxFLaacgRtfy4ZbfR/vRYaeE9U=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=rSj6srnsNPCalZnNSJUTJHgvI16JhG7f3W/4LTKiKgA4IvqJEeOv8HnTs3bydA6v+lH+DWJjPwqmpJ6KzfP3iuJ1b5kwGYTataZkvCMnKUpW8ShJFErF/FOgG9G57iLwp8EqitWNJj3MOCzaO1TvePRYNfncZ5+g+J7e38qiBfs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DhNEGgCb; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DhNEGgCb"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-8485bd28dd0so1429298b3a.2
+        for <regressions@lists.linux.dev>; Thu, 23 Jul 2026 18:03:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1784855017; x=1785459817; darn=lists.linux.dev;
+        h=mime-version:user-agent:content-transfer-encoding:content-type
+         :references:in-reply-to:date:cc:to:from:subject:message-id:from:to
+         :cc:subject:date:message-id:reply-to:content-type;
+        bh=EYtGon2mOKRyQA+SWDxFLaacgRtfy4ZbfR/vRYaeE9U=;
+        b=DhNEGgCbTMNb4WZyjIcp7SkN/4pmnt2cB+yUtjA3tqBaJD+a1eVIGO16ES4FdR2MHG
+         SltFUY5C4h1VTwbVyNJJ1FeAgRHuiV2P8mRc9xmFG02gR+D6WSGtN8Jq4Ke3iPJ4WWcY
+         n+rp6EXZStim3lthXPTZGPZkmaOImM/Dz5w2iWdD6GzzHo10kYFzTriWREMzY5Od//RI
+         Et3d1voggLk0xnYarzKRD5xuwvTLgsg6fXwoqJGQHZ85xEJbbTMwKi1IjxHLNMqJqHDo
+         a1VR7UA5US0/ipl353EZyTriHs6qgvpKjErEvKvIZ7Y5kIvWThkYc/y5zvXVFyO8Cnnp
+         VTuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1784855017; x=1785459817;
+        h=mime-version:user-agent:content-transfer-encoding:content-type
+         :references:in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=EYtGon2mOKRyQA+SWDxFLaacgRtfy4ZbfR/vRYaeE9U=;
+        b=NxoFl5PVQ+WhxxoKex/5Ylf9XBR+mRraGXCx7ZPK2OvhldHy4gb3zYvyjdB0APvk4q
+         FlnY01LfeFAF86O7C7g6Je+/uSYRMOILEgXXjd6zmOTeXhp/EEbG2daCWs5jeBkD6wWf
+         UIBsx+UYlI4RSJUc+me8DwECdNkiFJVYFvAXlJzF5GEeIyuAHAD7nD/GJxD/+MIxdS/e
+         1DqbZOSpSJ3xyMd2663ZDv9pIeEmRkJzD0pkutBvbbTZIchninDagonVvK5GByky4Oiz
+         wEYxkSyb8MKcpE6HpyH62rLPQFrZbiGfAdTCfUPCAKa22aiLmNyU/Oe6vBgyCwDYlJul
+         55aw==
+X-Forwarded-Encrypted: i=1; AHgh+RruV1wP81quZ+BcC9NK3LBTxRdAeG2f/AffPOh2vOOu7eW2FBLZ7RCPQr/M68kEU63khkrx8it1HGIoCQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0YyrOOo2m6fLFmhLjsrzBrAAjCRPlc7JrajeQooBOqnv5hscYRIx
+	sp+fDmuJ6kFNuWLysdT9m7Vtdh25nvSIq8rWpXMpnqZRRgn7tgNkexr5
+X-Gm-Gg: AR+sD13qtB81NRxieCos043LlmmGrvab3gq/ZkWBFkNRDHl4np0ASH7Kxrk52PeH4Uw
+	AdCMoWnjF8PFAhgEUT7YxYLm7xewJ34nepsx8FxGsmiW5XjRO3XUsv8AYSHmrfU2XUpNAIDZ3DD
+	EteBNeY2kH6SoIK4oLEvZp29mTE7WgwArFWuIAPqN5hEAVk5JUBYGkWoPyH5ToaRHrWUNMG/Oul
+	ArhtVP8cgmvBr0456AMgQlemNOjK4DMJ8NTO0oDc9OpJ5AYgudrRslSLa0w9vjV0Oe735Yn51Ys
+	LkxRE3mCQQ7vshpaSLU3bqnvlvrZJv10uMPNLLBO0RsiLtYdlB4BBReIDEDJJALkWpKgy07Dmb4
+	kauB/vfkFVhTD9lcTRTo6elpVRgY4xkWEB7J+OcM2XlQ0f+tlkVD4bWlQhA5PZF61EJZRsTD9FJ
+	sONT59BT/ZhfGN5PZleRoo9CqXtQjoMSbnsLaQcfxKH7Rdmr0t8PDWKxMWsLI=
+X-Received: by 2002:a05:6a21:2d46:b0:3c3:83e8:c211 with SMTP id adf61e73a8af0-3c44b25397fmr6112121637.63.1784855016691;
+        Thu, 23 Jul 2026 18:03:36 -0700 (PDT)
+Received: from ?IPv6:2a03:83e0:115c:1:c221:d012:6e37:77f9? ([2620:10d:c090:500::2:8dac])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-3147dc9f2f0sm25307955eec.13.2026.07.23.18.03.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Jul 2026 18:03:36 -0700 (PDT)
+Message-ID: <4fc7fef5d38839b5f01e80b05de908d95af8f3c8.camel@gmail.com>
+Subject: Re: [RESEND][REGRESSION][SECURITY] bpf, s390: verifier/JIT mismatch
+ allows unprivileged kernel memory access
+From: Eduard Zingerman <eddyz87@gmail.com>
+To: Min-gyu Kim <gimm78064@gmail.com>, Alexei Starovoitov <ast@kernel.org>, 
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko
+ <andrii@kernel.org>, Kumar Kartikeya Dwivedi	 <memxor@gmail.com>, Ilya
+ Leoshkevich <iii@linux.ibm.com>, Heiko Carstens	 <hca@linux.ibm.com>,
+ Vasily Gorbik <gor@linux.ibm.com>
+Cc: bpf@vger.kernel.org, linux-s390@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
+ security@kernel.org
+Date: Thu, 23 Jul 2026 18:03:34 -0700
+In-Reply-To: <71f6059ecc89d0b16f8542d73ad8b183a2a4db92.camel@gmail.com>
+References: 
+	<CAGKGUv=sOuqQtA1Ub-5JXfA4FPosJFYKAQE4B79cK+P1erxqtg@mail.gmail.com>
+	 <71f6059ecc89d0b16f8542d73ad8b183a2a4db92.camel@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.60.1 (3.60.1-1.fc44) 
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Message-ID: <6aa94b03.25351.19f90134c6a.Coremail.chengfenglin@stu.xmu.edu.cn>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:AQAAfwCXsfLEUmJqAmnOAA--.15800W
-X-CM-SenderInfo: astqjiysvrikiuszmqhvwxh5lpxovvfxof0/1tbiAQAQEGpf17YD4
-	QADs0
-Authentication-Results: hzbj-icmmx-6; spf=neutral smtp.mail=chengfengl
-	in@stu.xmu.edu.cn;
-X-Coremail-Antispam: 1Uk129KBjvJXoWxGF4DAw4xWr1fWw15Cw1kAFb_yoWrGryUpF
-	Zak3ZxJrWDGr1Iya48Aw4UXFWFkrs5Ja18XF1kGryfAa95CF1I9rZ3t3W0qFy3Gryvqa4F
-	vFs5C34kJFn8CaDanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	DUYxn0WfASr-VFAU7a7-sFnT9fnUUIcSsGvfJ3UbIYCTnIWIevJa73UjIFyTuYvj4RJUUU
-	UUUUU
 
-SGksCgpUaGFua3MgZm9yIHRoZSBjb21tZW50cy4KCkZpcnN0LCB0aGUgZXhhY3QgZGlyZWN0IHBh
-cmVudC9jaGlsZCB0ZXN0IHNob3dlZCB0aGF0IGNhYzFkYjhjM2FhZAooIm1tOiBvcHRpbWl6ZSBt
-cHJvdGVjdCgpIGJ5IFBURSBiYXRjaGluZyIpIG1hZGUgdGhpcyB3b3JrbG9hZCAzOS43NyUgc2xv
-d2VyLgpBIHNlcGFyYXRlIG1hdGNoZWQgUGVkcm8gdjMgdGVzdCBkaWQgbm90IGhlbHA6IG9uIHY3
-LjEuMywgZnVsbC12MyB3YXMgNi4yMCUKc2xvd2VyIHRoYW4gdGhlIG1pZHBvaW50IG9mIHRoZSBu
-by12MyBjb250cm9scy4gSSBkbyBub3QgdHJlYXQgdGhhdCBzbWFsbApkaWZmZXJlbmNlIGFzIGEg
-c2VwYXJhdGUgcmVncmVzc2lvbi4KCkZvciBjb250ZXh0LCB0aGlzIHJlbWFpbnMgdGhlIHNhbWUg
-bmFycm93IHN5bnRoZXRpYyBtaWNyb2JlbmNobWFyazogYSA2NCBNaUIKc2hhcmVkIGFub255bW91
-cyBtYXBwaW5nLCBkaXJ0eSA0IEtpQiBiYXNlIHBhZ2VzIHdpdGggbm8gVEhQLCBhbmQgcmVwZWF0
-ZWQKZnVsbC1yYW5nZSBwcm90ZWN0LCByZXN0b3JlLCBhbmQgd3JpdGUtdG91Y2ggY3ljbGVzLgoK
-RXhhY3QtY29tbWl0IGRlY29tcG9zaXRpb24KLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KCkkg
-cmFuIGEgbmluZS1wb2ludCwgZnJlc2gtYm9vdCBuZXN0ZWQgYWJsYXRpb24gYXJvdW5kIHRoZSBl
-eGFjdCBwYXJlbnQvY2hpbGQKcGFpciwgcmV0dXJuaW5nIHRocm91Z2ggbWF0Y2hlZCBjb250cm9s
-cyB0byBsaW1pdCB0aW1lIGRyaWZ0LiBJdCByZXByb2R1Y2VkIGEKMzYuNTElIGNoaWxkIHNsb3dk
-b3duLiBNZWFzdXJlZCBhcyBhIGZyYWN0aW9uIG9mIHRoYXQgZ2FwOgoKICBkaWFnbm9zdGljIGNo
-YW5nZSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZ2FwIHJlY292ZXJlZAog
-IHBhcmVudC1zdHlsZSBzaW5nbGUtUFRFIHVwZGF0ZS9mbHVzaCBwYXRoICAgICAgICAgICAgICAg
-ICAgICAgIDQzLjA2JQogIHNraXAgbm9ybWFsLXBhdGggYmF0Y2ggZGlzY292ZXJ5ICAgICAgICAg
-ICAgICAgICAgIG5vIG1lYXN1cmFibGUgZWZmZWN0CiAgYWRkaXRpb25hbGx5IHNraXAgdGhlIG5v
-cm1hbC1wYXRoIGZvbGlvIGxvb2t1cCAgICAgICAgICAgICAgICAgNDQuNDclCiAgYWxsIHRocmVl
-IGRpYWdub3N0aWMgY2hhbmdlcyBjb21iaW5lZCAgICAgICAgICAgICAgICAgICAgICAgICAgODcu
-MjklCgpUaGUgZmlyc3QgZGlhZ25vc3RpYyBrZXB0IHRoZSBjaGlsZCdzIGxvb2t1cCBhbmQgYmF0
-Y2ggZGlzY292ZXJ5IHVuY2hhbmdlZCwKcmVzdG9yaW5nIHRoZSBwYXJlbnQtc3R5bGUgdXBkYXRl
-L2ZsdXNoIHBhdGggb25seSB3aGVuIGRpc2NvdmVyeSByZXR1cm5lZCBvbmUKUFRFLiBJdCByZWNv
-dmVyZWQgNDMuMDYlIG9mIHRoZSBnYXAsIHBsYWNpbmcgYSBzdWJzdGFudGlhbCBjb3N0IGFmdGVy
-CmRpc2NvdmVyeSBpbiB0aGUgZ2VuZXJpYyBzaW5nbGUtUFRFIGhhbmRsaW5nLCB0aG91Z2ggbm90
-IGF0IGEgc3BlY2lmaWMKaW5zdHJ1Y3Rpb24uIEluIHRoZSBuZXN0ZWQgc2VxdWVuY2UsIHRoZSBp
-bnRlcm1lZGlhdGUgZGlzY292ZXJ5IGJ5cGFzcyBoYWQKbm8gbWVhc3VyYWJsZSBlZmZlY3Q7IGFk
-ZGl0aW9uYWxseSBza2lwcGluZyB0aGUgbm9ybWFsLXBhdGggZm9saW8gbG9va3VwCnJlY292ZXJl
-ZCBhbm90aGVyIDQ0LjQ3JSwgc28gbG9va3VwIGNvbnRyaWJ1dGVzIGEgc2ltaWxhcmx5IGxhcmdl
-IHNoYXJlLgpUaGVzZSBjb3N0cyBvY2N1ciBpbiBzZXF1ZW5jZSwgYW5kIGJvdGggdGhlIHByb3Rl
-Y3QgYW5kIHJlc3RvcmUgd2Fsa3MgcGF5CmJvdGguCgpUaGUgY29tYmluZWQgcHJvYmUgd2FzIHN0
-aWxsIDQuNjQlIHNsb3dlciB0aGFuIHRoZSBwYXJlbnQsIGxlYXZpbmcgMTIuNzElIG9mCnRoZSBv
-cmlnaW5hbCBnYXAgdW5leHBsYWluZWQuIEFsbCAxMzUgbWVhc3VyZWQgcHJvY2Vzc2VzIHBhc3Nl
-ZCB0aGUgc2VtYW50aWMKYW5kIDQgS2lCL25vLVRIUCBjaGVja3M7IHRoZSBtYXhpbXVtIENWIHdh
-cyAxLjU2JS4KCnY3LjEuMyBsb29rdXAgc2FmZXR5IGNoZWNrCi0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tCgpUaGUgZXhhY3Qgc2VxdWVuY2UgYWJvdmUgdXNlcyB0aGUgY2FjMWRiOGMzYWFkIGNo
-aWxkLCB3aGljaCBjYWxscwp2bV9ub3JtYWxfZm9saW8oKS4gVGhpcyBzZXBhcmF0ZSBjaGVjayB1
-c2VzIHVubW9kaWZpZWQgdjcuMS4zLCB3aGVyZSB0aGUKY29ycmVzcG9uZGluZyBwYXRoIGNhbGxz
-IHZtX25vcm1hbF9wYWdlKCkgZm9sbG93ZWQgYnkgcGFnZV9mb2xpbygpOyBpdHMKcGVyY2VudGFn
-ZXMgYXJlIG5vdCBwYXJ0IG9mIHRoZSBleGFjdC1jb21taXQgZGVjb21wb3NpdGlvbi4KCkZvciBh
-IHNoYXJlZCwgbm9uLU5VTUEgUFRFIHdpdGggcHRlX2JhdGNoX2hpbnQoKSA9PSAxLCBhIGRpYWdu
-b3N0aWMgdGhhdCBza2lwcwp0aGUgY3VycmVudCBwYWdlL2ZvbGlvIGxvb2t1cCBhbmQgYmF0Y2gg
-ZGlzY292ZXJ5IHdhcyAxNy4zNiUgZmFzdGVyIG9uIHRoZQo0IEtpQiB3b3JrbG9hZC4gQSBwYWly
-ZWQgdHJhY2UgcmVtb3ZlZCBleGFjdGx5IDIsMDQ4IHZtX25vcm1hbF9wYWdlKCkgY2FsbHMsCmJ1
-dCB0aGlzIGlzIG5vdCBhIHN0YW5kYWxvbmUgdGltaW5nIG9mIHRoYXQgZnVuY3Rpb24uCgpUaGUg
-c2FtZSBkaWFnbm9zdGljIHdhcyA2NS44MCUgc2xvd2VyIGZvciBhIHZlcmlmaWVkIHNoYXJlZCAy
-IE1pQiBmb2xpbyBtYXBwZWQKYnkgNTEyIFBURXMsIGJlY2F1c2Ugb24geDg2IHRoZSBoaW50IGlz
-IGFsc28gb25lIGFuZCB0aGUgZGlhZ25vc3RpYyBkaXNhYmxlcwpmb2xpbyBiYXRjaGluZy4KCkFs
-bCB0ZXN0cyB1c2VkIGZyZXNoIGJvb3RzIG9uIGFuIGk3LTEyNzAwS0Ygd2l0aCAzMiBHaUIgUkFN
-LiBXaXRoaW4gZWFjaApjb21wYXJpc29uLCBidWlsZHMgdXNlZCBtYXRjaGVkIGNvbmZpZ3MgYW5k
-IEdDQyAxNS4yLjAuIFRoZSBiZW5jaG1hcmsgdXNlZApQLWNvcmUgQ1BVIDIsIHBlcmZvcm1hbmNl
-IGdvdmVybm9yIGFuZCBFUFAsIFR1cmJvIG9mZiwgYW5kIHByZWVtcHQ9bm9uZS4KClRodXMsIHRo
-ZSBnZW5lcmljIHNpbmdsZS1QVEUgdXBkYXRlL2ZsdXNoIHBhdGggYW5kIHRoZSBsb29rdXAgYWNj
-b3VudCBmb3IKYWJvdXQgODclIG9mIHRoZSBleGFjdC1jb21taXQgZ2FwLiBUaGUgdjcuMS4zIGJ5
-cGFzcyBpcyB1bnNhZmUgZm9yIFBURS1tYXBwZWQKbGFyZ2UgZm9saW9zLCBzbyBJIGFtIG5vdCBw
-cm9wb3NpbmcgaXQgYXMgYSBmaXguCgpQZWRybyBkaWQgbm90IG9ic2VydmUgdGhlIHNhbWUgbG9v
-a3VwIGNvc3Qgb24gaGlzIGRlc2t0b3AuIFRoYXQgZGlmZmVyZW5jZQptYXkgYmUgbWFjaGluZS1z
-cGVjaWZpYywgYnV0IEkgaGF2ZSBub3QgdGVzdGVkIGVub3VnaCBzeXN0ZW1zIHRvIGVzdGFibGlz
-aAp3aHkuIEkgaGF2ZSBhbHNvIG5vdCBtZWFzdXJlZCBhcHBsaWNhdGlvbi1sZXZlbCBpbXBhY3Qu
-CgpDb21wYWN0IGV2aWRlbmNlIGJ1bmRsZToKCiAgaHR0cHM6Ly9naXRodWIuY29tL2xjZjAzOTkv
-bGludXgtcmVncmVzc2lvbi1ldmlkZW5jZS90cmVlL2VhM2VjMmQ0MTcwMjUwMjMzNmI5ODU0Yjlk
-YTc4YzQzODQwYjg2ZTgvbXByb3RlY3Qtc2hhcmVkLWRpcnR5LXRvZ2dsZS9iYXJlLW1ldGFsCgpT
-dGFuZGFsb25lIHJlcHJvZHVjZXJzOgoKICBodHRwczovL2dpdGh1Yi5jb20vbGNmMDM5OS9saW51
-eC1yZWdyZXNzaW9uLWV2aWRlbmNlL3RyZWUvZWEzZWMyZDQxNzAyNTAyMzM2Yjk4NTRiOWRhNzhj
-NDM4NDBiODZlOC9tcHJvdGVjdC1zaGFyZWQtZGlydHktdG9nZ2xlL3JlcHJvZHVjZXIKClRoYW5r
-cywKQ2hlbmdmZW5nCgo=
+On Thu, 2026-07-23 at 02:05 -0700, Eduard Zingerman wrote:
+> On Thu, 2026-07-23 at 17:16 +0900, Min-gyu Kim wrote:
+>=20
+> ...
+>=20
+> > Root cause
+> >=20
+> > The verifier records an ALU32 definition in subreg_def. A later 64-bit =
+read
+> > causes mark_insn_zext() to mark that instruction for explicit zero exte=
+nsion.
+> > Before 107e16979905, a cache hit in is_state_visited() propagated the 6=
+4-bit
+> > read to the alternate path's ALU32 definition.
+>=20
+> Hi Min-gyu,
+>=20
+> Thank you for the report.
+>=20
+> > Commit 107e16979905 removed that propagation when register-chain livene=
+ss was
+> > replaced with static liveness. The static live-register mask does not t=
+rack
+> > read width or path-specific subreg_def information. In current states.c=
+,
+> > regs_exact() compares only fields before id, while subreg_def follows i=
+d in
+> > struct bpf_reg_state.
+>=20
+> Hm, the stack is tracked with 32-bit granularity and it should be easy
+> to adjust compute_live_registers() to track the width. I'll give it a try=
+.
 
+I figured out the repro and am working on the fix.
+The plan is to extend compute_live_registers() to statically infer
+which upper 32-bit subregisters are alive and use this information
+to fixup zero extensions, and drop the reg->subreg_def altogether.
+
+...
