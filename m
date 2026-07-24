@@ -1,108 +1,140 @@
-Received: from flow-a4-smtp.messagingengine.com (flow-a4-smtp.messagingengine.com [103.168.172.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9C261A9F87
-	for <regressions@lists.linux.dev>; Fri, 24 Jul 2026 06:37:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.139
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784875028; cv=none; b=WrGW2cc8pljxY9fDFHV+IH4EMK7D18An/sQVOMeN/LNs1cAKRqSTwwCA74NSoP015j1GUvwTq6BpRbZVL5U8gUSY4rOjyqnaXK32GmALuaAD03ptXxHf/gltsLW/WNHuLcNegmmeQZDbGKDKRUEhmyfiJwvcPtbsUqb6H77DtSM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784875028; c=relaxed/simple;
-	bh=PL+cFJw+A1mVND9tcmXNWtL6i+LZP+ToNTcw6ge+K5o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ts+he5ViPSj9q9auFrY9qzJWJiLXNsCMA5kidRGWF4P9PsBuaYc/sLBL5Xo5deG7aRSL1RUhVt/czodXulVXZf7JLOa7Lx2QZoBrUFEfzwUz9G5YFHuXFLpTybKvkCwao/XlzN9HsAPyYTrcIcG29z9GpEPWCRv1XVMfcf0ALm0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com; spf=pass smtp.mailfrom=kroah.com; dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b=Xb3VqjiR; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=E4KRqURO; arc=none smtp.client-ip=103.168.172.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kroah.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E038139A4A7
+	for <regressions@lists.linux.dev>; Fri, 24 Jul 2026 06:53:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.215.169
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1784876037; cv=pass; b=pfGdruG+BsA4x8z6ybt7h2EwOwuhmB/cOMxuwfclMtWeXPAZS1RfjXrab00h61cQK5s49+girsoVplFvuxy0wOyCGgnQp6c7BUul2FlO7jEz8WPPk+xo6ForxEtIsGJYNEXxi7LiG/iTCEC77N2YxqD2cZiMH7TZBSQ2qB74aMk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1784876037; c=relaxed/simple;
+	bh=1qBivE5gHnpwRsnieTy4VVDr8iEogrx6wD8+ggW6J2M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=I089wtfdOE5ruB3WYL20yfDGRGynD7bJt6Fbv8vAp7KBActisQI6/OFzXSoDHAXFFpLIaoD4ma2wIHcv2O2c54lublaW9wOb+nBikkyhaWibatnAvCWJ6+7zo0cxDxM2e7xawXEzWhThraT+klhHHWIiTGzbRgA9fL/Tqx4d9nU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Kq0yIyd+; arc=pass smtp.client-ip=209.85.215.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="Xb3VqjiR";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="E4KRqURO"
-Received: from phl-compute-12.internal (phl-compute-12.internal [10.202.2.52])
-	by mailflow.phl.internal (Postfix) with ESMTP id 0305713800E3;
-	Fri, 24 Jul 2026 02:37:06 -0400 (EDT)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-12.internal (MEProxy); Fri, 24 Jul 2026 02:37:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm2; t=1784875025; x=1784882225; bh=PL+cFJw+A1
-	mVND9tcmXNWtL6i+LZP+ToNTcw6ge+K5o=; b=Xb3VqjiR6ggHWM6NVPVt0/BKjK
-	bXhw8MVXE53YORvHsKkzqFzUo0IXSWczqFvOIWbSRPiwBhh46d2l0+z+48E9jAqH
-	bxe7UetM5rYAxFCSSENb+AqeMCfRX/vMsrPbK9esDop/Y8j4NJNvnVZ/z3g0dcT0
-	L2+pH16ElKFfxaRZa6JWMmCiUVARPMBID0lnFdr4BJNAu47ej/Zc4a2QaQdoB6Gl
-	J2xEZ/u/cipp0ccjwklA+tNT4ScF2nDFkMuszDtZkFZp3wRp8pJm6YNz3cHYLg8j
-	gFrxXGM41jq+Q7ns2NY7rQlvB/4cmUxhTjnwcgLeh/cm7wpJRl2QV8LjJ5OA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
-	1784875025; x=1784882225; bh=PL+cFJw+A1mVND9tcmXNWtL6i+LZP+ToNTc
-	w6ge+K5o=; b=E4KRqUROThBmzor2t/zYxQJPB0ip9oJCkwPIx7cIxB9Ker+R+Cn
-	N5Qhu+Px3qugUOgFYhTi1FeLsql8Ia7evopSC0nShTfPNGF6WUOM0YsZjbcrR5tT
-	T81nmIkrQZb6Ke4YWb2yQksAPjjSD8bZOvlpm61vSSjusYSklXtqDFfZbcxDXqDa
-	SrJC/zFzC+SldTBgkkefxcFfcpipLKfvr0z/Rw+0jC4GoBmW38pOmBoC+XuCDvE3
-	iN9/DKnMKgVXZblyIWkWPBZvtgTgaMozBLRBdPDW1d1cTWcG3v+x2rWsEzN6qRno
-	qLPLV55uDV95wFR0kEu1tTQRZyYyfGvoQpA==
-X-ME-Sender: <xms:EQhjajIahRpDyx59YVAOkO9j9BUpR9uxdf4NYmtzk1PkrESKBsCdyA>
-    <xme:EQhjauHNIWSuwlIHsO6uzb7ivHVBZoemkAjWhePEi6brT-Uf-ZGGzNBKMW50p8xYF
-    qPz89Bhiw7xrvpSdBHTLPfVZ5ZZ-fJ_4fjIu9lmwqFLDiNK>
-X-ME-Received: <xmr:EQhjakoEPLUhORWZwQ_c-AwNC_8xjyXi11gYR8EY2Qqy7l8h3PyRGhtHyOLOrsc-CR_SEeeBu1q-xLerES5QGQd5KA>
-X-ME-Proxy-Cause: dmFkZTFX5iPjis1+08aMQAfG2anV+zBI8zmH41Y47VAyCiJWTyfwZ7ELMO3BhcMlLZKfMW
-    fDTWyOy+PZWlS7Kx0pAXG7czUqKvrgCi4q51xKfz5cJLLsvJYphO9ETeTeFDNZQdXHYgVe
-    im9wGVk+RJ1YLmeL6ZP/396+9lUxfFYoPLWLGBYHqgNXSvw/ruBoPyxVtLKOQH5nhRPvdR
-    fPHAtRIJhLDkZXwHO0SBQfKq71gLj6p7ksc4llFPpIUa4UxdRtbYrMBU2cLrxeU9FSZFR6
-    T/Dl/+RyngkiZN++qOZL1XZFDdA87kiubCGqiBzUY50/fHnnxgbpsi5T71PF1j+rW+aWe4
-    U+RWmDRzPaaUjDb67h3Hud9a8QHWQXPzNYpCRWV0gfiL0b36vn73tyFYXyLtZYxf83lYex
-    BAYrhOEH2yZOV45k1hcrx4tL58/D8YLiPf3UX+jOKhtBVEig5hCZkJNc3xbnIlmN0alFY3
-    wTvD8qtj/WfpTIXxH4MRj27kg+Fl4lyOH244mmo+idDPzQvNCNCOiCZWcZEOdpBnCLG0OI
-    7EnbERLSfCi5pK3SzHsEvYSN6XmziCBTZ749fxUlpBbovtejWaVQHI6IuL6sGiv+sVlwOq
-    rZs4nn01uxi611kMHRlCXh1MR+K5xAior7grBjFf5EjOl6Es80nyEMChUgEg
-X-ME-Proxy: <xmx:EQhjakNHbpMmHIZHJawQiTeRof7s-JdEiu5ucVVYtVXP7Oaw7YrObQ>
-    <xmx:EQhjakpsS4MslApj7D75HsFHPWK_7d12Z9JvFaPFyahEUKvzLRLgoQ>
-    <xmx:EQhjaqnYAKr85uSFUQ5G6PT_zyUwMPJ0HXTlHLpJiecCpxUogLlgAg>
-    <xmx:EQhjakw00X7KtRLLhmGIgmuXgLfVGeh3u-g_-BfU5q9hJUYEBHj7NQ>
-    <xmx:EQhjauW8KJG8te-aYgxBMw9UXPqEx0i5V_L5rEes977ufK1ky-lM76Yy>
-Feedback-ID: i787e41f1:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 24 Jul 2026 02:37:05 -0400 (EDT)
-Date: Fri, 24 Jul 2026 08:35:42 +0200
-From: Greg KH <greg@kroah.com>
-To: Min-gyu Kim <gimm78064@gmail.com>
-Cc: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Kumar Kartikeya Dwivedi <memxor@gmail.com>,
-	Ilya Leoshkevich <iii@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>, bpf@vger.kernel.org,
-	linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev, security@kernel.org
-Subject: Re: [REGRESSION][SECURITY] bpf, s390: verifier/JIT mismatch allows
- unprivileged kernel memory access
-Message-ID: <2026072436-carload-untaken-585d@gregkh>
-References: <CAGKGUvm6sC9ay98zsYJS1xwB9+qUwverqAsAAwpVOpmqFpEy5A@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kq0yIyd+"
+Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-c9c26a5fb98so71731a12.0
+        for <regressions@lists.linux.dev>; Thu, 23 Jul 2026 23:53:54 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1784876033; cv=none;
+        d=google.com; s=arc-20260327;
+        b=MhpdKDLX97QTCNDIQ9QlOmmZdPX2LVqtjFK4NoyYofStykg7AyhKfrYACBKtDJweOJ
+         m1pR5cR9B+XIMgxfrq8EszR/+d/VzSeA21b701ACvnUFpu9v7w/f3HaT9qEtr+E5k9fk
+         2MwGeWJjdnYXMReu9RF7L3avJ9xvv5yDG9jSEF+liyxdWPBHAfO1ilWVKH2fFoef40ys
+         fUKT/CLd0GfRI1WDKh1F+ZOAWU8gM0fCLBBiMEZGJcO3nzMQrN29azt4tBAKQ1IEem9O
+         asGg1+Lrr84jpXFlJFXGEhb/U9VBFROniV4+IA43b26HFwXP1b3Z7uwob7EJ2WCI9VC3
+         jbRQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=1qBivE5gHnpwRsnieTy4VVDr8iEogrx6wD8+ggW6J2M=;
+        fh=e6/uaBbfAYecK++b2dGrEFQXG/b8G/9BfZpYqao+o3A=;
+        b=XDOZTmDJp3L8JSoJChzHGn09AuMSMiJYxtJnijfK1Nw80U7AiosDtxk8w9vooDY3DX
+         aNvPeFNKn7aBshKj0xdT77XaWNtCslQqZymwdGjGbbTHXwZUpTsPU6WI8oD+hK35y3ii
+         VWnOyI8JJSQ1/xNRn9wC+CDc3niQaCtbw/udFNeTWj8V7TZu74qpcVVQUWjwhO2koQAw
+         oLmpW9yMxs3nKnOk1gxNfXUKmgUSHpkol9vEw/izFtXrg7znSlETRzEDLwLIz4sXopFs
+         Ai4Z4lQOVTicWacM3OKyvQbSSmY+37sPTFXMAbjgysb+hWbyfAm232IUf6eUbkIrwKpe
+         32Zw==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1784876033; x=1785480833; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=1qBivE5gHnpwRsnieTy4VVDr8iEogrx6wD8+ggW6J2M=;
+        b=Kq0yIyd+hM4WENRZCINz/rMZAG41j4OhB3zI/5i/krbWFvvcPndcbFcJNysHPs6aXP
+         GVXoOlkr7zn3m0c/PQ69151v20vYbOepELxl1in+FfUpNAWPTnYgSyQOWJeJQIR1OBpd
+         m+9HKWT8RIs7WgE/B1fuP4c6wDfN0p2+Z46zRwx7S+shIKmq2eRzSbo5WB96kklHjmKi
+         U/xr4yhc4JxbLach9boVn8hiAZ1ywPECDf6a8YSWMH/qCjyA+r20NN1H7Q5h9hh6sDTK
+         xTH3Xr69XgLP/TQNfgSSJRW4CneMT8zcjFPHLsOc3vdoSdkXiFNw8Y/gu+KCsYHADE6G
+         2fdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1784876033; x=1785480833;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=1qBivE5gHnpwRsnieTy4VVDr8iEogrx6wD8+ggW6J2M=;
+        b=qukl+G3KMrXrQOAbJmjCHRw+2PGnZ69eCdEcP5cclByBIcq0T5H69GyKbc+lDVhak1
+         AmjsIhpuwUsROocjYe2nlj4mt5ofOXI4XlkDwC3RVaw6LHa8y2vd2iW27C2VNMxl77cP
+         LZ1EN06zzJW9rea3XcUF/7ZDZd3sx95RSDgBkbB3XAIQVj3VIdKj49l6b+IJS7kgH8s+
+         CUL/XNt80/58E2qANG+PMlRkF2Yhs5PfjbJ39a9Hv3xTmq8O6CHJh6iumilMJLq+4XhL
+         nHUPCU0DPtBQItLmEMdEC9gnLsxufbvuQUmuRjGoGDRTX9OSnT89GqV/Se99+Mr3q9Ar
+         DYOA==
+X-Forwarded-Encrypted: i=1; AHgh+RoAmcK4HpSMTF00OKMTKcq5A1URPeq6H0g5aeiGwbBOk9CJqXMHOJMlYgLXyZbh9jYFb8cixqS2Gmh7TA==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwZsieTjSRVVOcoC32tOl0woLgCruqK5R16D25iq1F8AtANL1UR
+	3rxZT1UnGNec0BuoIwMDpYU6nQJQzaKx453NL97Ynrs+zt8pznSH2H3tvCUssD8CpM5aTxihYft
+	W7RqTSOwEWyzwxhvUmYnEO2g8ccFZlUg=
+X-Gm-Gg: AR+sD12p8E2EKn0/X3NAQWntaDmc59FS2mj+jV6FkCOpq264y0MK6IU/B7DYU0Q+Hq4
+	GmXugRfHMgJF2uTEsEzoDVeVzvXEL3hRw00cud/zCYXICGNJnutZrPcYW2Mv4trGiSQo5F6tqDN
+	SCJU6+guuk3Po5R4J/SSFanwClXFxC3yZ+RWcgCEYM3VOKMhT3Kvxm9C/Lq2f7cx7hcDXSUJX7c
+	Bd+191jJFiIxlq0auCgO/LnisXsbtLH1piF17G2OiYblzlImNxCDrFn14TSWn/277TBHl67AlM=
+X-Received: by 2002:a05:6a20:6a1d:b0:398:76d4:c7e9 with SMTP id
+ adf61e73a8af0-3c44ccfad68mr6602250637.35.1784876033443; Thu, 23 Jul 2026
+ 23:53:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAGKGUvm6sC9ay98zsYJS1xwB9+qUwverqAsAAwpVOpmqFpEy5A@mail.gmail.com>
+References: <CAGKGUvm6sC9ay98zsYJS1xwB9+qUwverqAsAAwpVOpmqFpEy5A@mail.gmail.com>
+ <2026072436-carload-untaken-585d@gregkh>
+In-Reply-To: <2026072436-carload-untaken-585d@gregkh>
+From: Min-gyu Kim <gimm78064@gmail.com>
+Date: Fri, 24 Jul 2026 15:53:41 +0900
+X-Gm-Features: AUfX_my_818fZNEZbBLLr1Xn5hBLUxeeu8JcRW55Az57jmjGZCViGOAZ8x97MLQ
+Message-ID: <CAGKGUvk6sOo4kMV0z20Vaq-eAAJn2t79Hgfhuc_sYLoC+rvqTw@mail.gmail.com>
+Subject: Re: [REGRESSION][SECURITY] bpf, s390: verifier/JIT mismatch allows
+ unprivileged kernel memory access
+To: Greg KH <greg@kroah.com>
+Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>, 
+	Kumar Kartikeya Dwivedi <memxor@gmail.com>, Ilya Leoshkevich <iii@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, 
+	Vasily Gorbik <gor@linux.ibm.com>, bpf@vger.kernel.org, linux-s390@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jul 23, 2026 at 04:55:12PM +0900, Min-gyu Kim wrote:
-> I have not yet tested a patch.
+Hi Greg, Eduard,
 
-As you have a reproducer, please create a proposed patch that solves the
-issue for you for us to work off of, as our security documentation asks
-for.
+Thank you.
 
-Also, as you cc:ed public mailing lists, there's no need to get
-security@kernel.org involved here.
+Eduard has reproduced the issue and is already working on a fix that extend=
+s
+compute_live_registers() to track upper 32-bit subregister liveness and rem=
+oves
+the dependency on reg->subreg_def.
 
-thanks,
+Once the patch is posted, I can test it against my reproducer in
+the s390x QEMU environment, run the relevant BPF selftests, and report the
+results. I can also help prepare or test the regression test if that would =
+be
+useful.
 
-greg k-h
+I can additionally test older kernels to help determine whether the issue i=
+s
+triggerable before v6.18, as Eduard suggested.
+
+Best regards,
+Min-gyu Kim
+
+2026=EB=85=84 7=EC=9B=94 24=EC=9D=BC (=EA=B8=88) =EC=98=A4=ED=9B=84 3:37, G=
+reg KH <greg@kroah.com>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
+>
+> On Thu, Jul 23, 2026 at 04:55:12PM +0900, Min-gyu Kim wrote:
+> > I have not yet tested a patch.
+>
+> As you have a reproducer, please create a proposed patch that solves the
+> issue for you for us to work off of, as our security documentation asks
+> for.
+>
+> Also, as you cc:ed public mailing lists, there's no need to get
+> security@kernel.org involved here.
+>
+> thanks,
+>
+> greg k-h
