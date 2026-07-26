@@ -1,185 +1,115 @@
-Received: from mail.lysator.liu.se (mail.lysator.liu.se [130.236.254.3])
+Received: from mx1.heh.ee (heh.ee [213.35.143.160])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BC9434B1A3
-	for <regressions@lists.linux.dev>; Sun, 26 Jul 2026 18:39:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.236.254.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E635379C5A
+	for <regressions@lists.linux.dev>; Sun, 26 Jul 2026 20:31:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.35.143.160
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785091162; cv=none; b=nm6mv6IsH/WUb7Ebq7TLBGCMc4Q1ytN+DHW1T7lrXY7WPMzjR5csAfoP43EbsexXZ7qxjW7+N8b8VmlufXICJDrnpmj49hFqW2+y+x6/KJhQtslfll7Jq5TRI9nSqjORWysStMPlzrVK/OkvDFJYcOpyVX+wxpdQ0Xv2FDc8krk=
+	t=1785097883; cv=none; b=Cn+aN3yim+eyhs9Udhom7fJ4IzTPs9Ck+M6S9Iyczh+F0aDzcd5v9LXf/NsYiWC8jKC9swtUUCrmmqczFBNA8zciKCzGvlYK1ITIJ83NzRQAahy7V1/D3dndfKzjLGL8fcE/coB+srM1w7escGidBb7Nh8G0d3jS31G4LqcC4O4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785091162; c=relaxed/simple;
-	bh=rkAs+vxc5zkurPkS0xvNVIkcjwtWTeHIyGJnYfnUwuA=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=FZyjONGX7NsTkVWF6sCyiifiJ1qXBEXDYYYIE35QAUYInkvITZ2buecFmZCywoVfKlFeg8rSHLARXPIZM8tm4QBoFBgA26fjV7DTrKww/PAuPkeKx5rpmd7gFXIottqGObyGUha2CQ/IRpDjvJwIvoP61Abh4UjFsdwMBIaIdOk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lysator.liu.se; spf=pass smtp.mailfrom=lysator.liu.se; dkim=pass (2048-bit key) header.d=lysator.liu.se header.i=@lysator.liu.se header.b=F9XVCFgm; dkim=pass (2048-bit key) header.d=lysator.liu.se header.i=@lysator.liu.se header.b=F9XVCFgm; dkim=pass (2048-bit key) header.d=lysator.liu.se header.i=@lysator.liu.se header.b=P3AxJJVT; arc=none smtp.client-ip=130.236.254.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lysator.liu.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lysator.liu.se
+	s=arc-20240116; t=1785097883; c=relaxed/simple;
+	bh=TfWJv0fgE715k2ZENzRy58oVW+9/qdgQZmOc3B+VXec=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Zbf5n8YyonNX69ta/Eb6fN2Oe5c3nqx+FswHRmTVqWHXBl7wASJ+jHl225qCCUm5hOIFLBAv/UZTGpRj/vas+Hg1fh40+U88rYzuMjWLgFesu3vJ+MychkJc5HXglJ141TgbHUxywWEfGiyX+HzcJBXd/ArJ2x6DgdYNVdeHplY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ristioja.ee; spf=pass smtp.mailfrom=ristioja.ee; dkim=pass (1024-bit key) header.d=ristioja.ee header.i=@ristioja.ee header.b=NT6X7Pvx; arc=none smtp.client-ip=213.35.143.160
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ristioja.ee
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ristioja.ee
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lysator.liu.se header.i=@lysator.liu.se header.b="F9XVCFgm";
-	dkim=pass (2048-bit key) header.d=lysator.liu.se header.i=@lysator.liu.se header.b="F9XVCFgm";
-	dkim=pass (2048-bit key) header.d=lysator.liu.se header.i=@lysator.liu.se header.b="P3AxJJVT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lysator.liu.se;
-	s=2026; t=1785091151;
-	bh=rkAs+vxc5zkurPkS0xvNVIkcjwtWTeHIyGJnYfnUwuA=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=F9XVCFgmGjQu2d6Cx0EYgJoy/C2Ym9DkHducbWg9O7lL8kZIWuKMI8ETCHRhTS2gB
-	 PVoGr378V9VUKl3V96QtZmIzu1IRb7y81P6pSV4AKVYjzvA8mc4yzTFeATkKVw+p+O
-	 JVbqDEaYArqU2wA0JkSMM3YyVtZ+g0ShR7Zs8ZTeOsoFaQ01NCs1xmam4G/HExGQAr
-	 l5QFzQ3aSvOMokVey3UtEeAXYIJKmuwI/4M9UlcVxgeh2IKG0HFr0qjALjPK8WT97I
-	 k3MuzJfJNZQQ22d3YOyNcRPq2fr7V7NVTpdjV5vMg1MaJF68noiyH5uB/1AQRE4vPd
-	 +T2wzplcDffvQ==
-Received: from mail.lysator.liu.se (localhost [127.0.0.1])
-	by mail.lysator.liu.se (Postfix) with ESMTP id 44F15C35
-	for <regressions@lists.linux.dev>; Sun, 26 Jul 2026 20:39:11 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lysator.liu.se;
-	s=2026; t=1785091151;
-	bh=rkAs+vxc5zkurPkS0xvNVIkcjwtWTeHIyGJnYfnUwuA=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=F9XVCFgmGjQu2d6Cx0EYgJoy/C2Ym9DkHducbWg9O7lL8kZIWuKMI8ETCHRhTS2gB
-	 PVoGr378V9VUKl3V96QtZmIzu1IRb7y81P6pSV4AKVYjzvA8mc4yzTFeATkKVw+p+O
-	 JVbqDEaYArqU2wA0JkSMM3YyVtZ+g0ShR7Zs8ZTeOsoFaQ01NCs1xmam4G/HExGQAr
-	 l5QFzQ3aSvOMokVey3UtEeAXYIJKmuwI/4M9UlcVxgeh2IKG0HFr0qjALjPK8WT97I
-	 k3MuzJfJNZQQ22d3YOyNcRPq2fr7V7NVTpdjV5vMg1MaJF68noiyH5uB/1AQRE4vPd
-	 +T2wzplcDffvQ==
-Received: by mail.lysator.liu.se (Postfix, from userid 1004)
-	id 078ACBC9; Sun, 26 Jul 2026 20:39:10 +0200 (CEST)
-X-Spam-Level: 
-X-Spam-Score: -1.1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lysator.liu.se;
-	s=2026; t=1785091147;
-	bh=rkAs+vxc5zkurPkS0xvNVIkcjwtWTeHIyGJnYfnUwuA=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=P3AxJJVTebjb1vObmHNPan4wohLsJCg84HKIvrIqw/ldldUuO75gM5v2TWCCMptIj
-	 HpDb8KPhcCxjazMUniyMu0VZoIDhRPgiTAZYP+JVkmN643QfyMOXGUVwm4gY1Zf6Pt
-	 AUQR68JeV2AFHyi+2YTLuLasMfIey6+5YMiSner6eGoc8u3oBxWtvAU212GA5DpStZ
-	 d/zbiCjEArAIJur6XaVf0rF5aWXvDQJTxEdmXajpC9VRPfuq5zW5Qt1LVre3r/r1LX
-	 aOhWjXaMDVKLDYIKBxBGsiSpLQ3qtsH57tPDss/EX1WuSBNQI0eODKEMWWvRHZy3Y2
-	 xjzSPoYTNFPaw==
-Received: from sara (unknown [IPv6:2001:9b1:efc:9600:e20d:7ad8:ae65:24eb])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
-	(No client certificate requested)
-	by mail.lysator.liu.se (Postfix) with ESMTPSA id 739C0C9B;
-	Sun, 26 Jul 2026 20:39:07 +0200 (CEST)
-Date: Sun, 26 Jul 2026 20:39:06 +0200 (CEST)
-From: Peter Astrand <astrand@lysator.liu.se>
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-cc: linux-wireless@vger.kernel.org, 
-    "stable@vger.kernel.org" <stable@vger.kernel.org>, 
-    Linux kernel regressions list <regressions@lists.linux.dev>
-Subject: Re: iw scan hangs in netlink ENOBUFS loop with kernel 6.6.99+
-In-Reply-To: <e12fc0b9-dfd2-ecfc-de54-d5f7d4532044@lysator.liu.se>
-Message-ID: <0ccdd2d2-2325-6ead-bd19-2a4f7916df02@lysator.liu.se>
-References: <19b022d0-76ff-23cc-ba63-f00fedc65ed1@lysator.liu.se> <e2555ce7-0313-4fec-8bc4-739b51a009f3@leemhuis.info> <e12fc0b9-dfd2-ecfc-de54-d5f7d4532044@lysator.liu.se>
+	dkim=pass (1024-bit key) header.d=ristioja.ee header.i=@ristioja.ee header.b="NT6X7Pvx"
+Received: by mx1.heh.ee (Hehee) id 31ACD11268D;
+	Sun, 26 Jul 2026 23:21:15 +0300 (EEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=ristioja.ee; s=mail;
+	t=1785097275; bh=TfWJv0fgE715k2ZENzRy58oVW+9/qdgQZmOc3B+VXec=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=NT6X7PvxY7JXG4AXQ9pue9GkhMp6ITjKClApNSIQSFh+wBj3/3nJVjFe7stxhZ8GG
+	 QUo2oSvNsHWsIFVjYMmPIa798NrCnnl/k46LOllEuT6SgpWSUFeDVQHpY3NqJ0W4tJ
+	 YkT1eBlUAe73VEKf/W65LBCXsRJM77RH903drfB8=
+Message-ID: <925d5179-289a-4d1e-85a5-09cf0998bf88@ristioja.ee>
+Date: Sun, 26 Jul 2026 23:22:14 +0300
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Virus-Scanned: ClamAV using ClamSMTP
+User-Agent: Mozilla Thunderbird
+Subject: Re: [resend] [regression] amdgpu carrizo: no display signal after
+ modeset
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Mario Limonciello <mario.limonciello@amd.com>,
+ Salvatore Bonaccorso <carnil@debian.org>, Chris Park <chris.park@amd.com>,
+ Matthew Stewart <matthew.stewart2@amd.com>,
+ Dan Wheeler <daniel.wheeler@amd.com>,
+ Alex Deucher <alexander.deucher@amd.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Harry Wentland <harry.wentland@amd.com>, Leo Li <sunpeng.li@amd.com>,
+ Rodrigo Siqueira <siqueira@igalia.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ 1139950@bugs.debian.org, regressions@lists.linux.dev,
+ stable@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ Dianne Skoll <dianne@skoll.ca>
+References: <9fba2020-24d1-4235-9869-319d4aab3a4c@ristioja.ee>
+ <178198613176.3658222.16247101620976737948@eldamar.lan>
+ <ajcLuO0YZCoPN7Xw@eldamar.lan> <e4f60b98-9bd8-491a-9703-a5a7a58a4ca0@amd.com>
+ <82b5026d-2dcc-4dcd-9094-2ccf70057964@ristioja.ee>
+ <6cf6be99-76c3-43b3-854f-96cae180318c@ristioja.ee>
+ <20260622153449.453b493e@gato.skoll.ca>
+ <ae5c29aa-3790-479a-bdfb-1b571eaab809@leemhuis.info>
+Content-Language: et-EE
+From: Jaak Ristioja <jaak@ristioja.ee>
+Autocrypt: addr=jaak@ristioja.ee; keydata=
+ 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
+In-Reply-To: <ae5c29aa-3790-479a-bdfb-1b571eaab809@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
+Hi, I don't have any new updates on this yet. As suggested, I've 
+reported the issue to the amdgpu maintainers here:
 
-On Wed, 22 Jul 2026, Peter Astrand wrote:
-> 
-> On Tue, 21 Jul 2026, Thorsten Leemhuis wrote:
-> 
-> > On 7/14/26 00:37, Peter Astrand wrote:
-> > > 
-> > > kernel 6.6.y
-> > > iw 6.7
-> > > libnl-genl-3-200 3.9.0
-> > > mac80211_hwsim
-> > > 
-> > > With kernel 6.6.99 and later, "iw dev <device> scan" sometimes hangs in 
-> > > busy loop:
-> > 
-> > Thanks for the report. We need to rule out if this is a 6.6.y specific
-> > problem (like a broken or incomplete backport) or something general.
-> > Could you please check if 7.2-rc is affected as well? Testing 6.18.y
-> > might help, too, if it's easy for you to try. Maybe switching to that
-> > might be the easies way to resolve the problem and a good idea in
-> > general, as explained here:
-> > http://www.kroah.com/log/blog/2018/08/24/what-stable-kernel-should-i-use/
-> 
-> Platform is NXP imx6ull. Forgot to mention that we are actually running 
-> https://github.com/Freescale/linux-fslc/tree/6.6-2.2.x-imx rather than 
-> upstream kernel. No changes to net/netlink though.
-> 
-> We cannot easily test with 7.X, but I have tested 
-> https://github.com/Freescale/linux-fslc/tree/6.18-2.0.x-imx and can 
-> reproduce the same problem; this is 6.18.20. strace output is similar:
-> 
-> recvmsg(3, {msg_namelen=12}, 0)         = -1 ENOBUFS (No buffer space available)
-> recvmsg(3, {msg_name={sa_family=AF_NETLINK, nl_pid=0, nl_groups=00000000}, msg_namelen=12, msg_iov=[{iov_base=[{nlmsg_len=48, nlmsg_type=NLMSG_ERROR, nlmsg_flags=0, nlmsg_seq=2510255223, nlmsg_pid=1468011032}, {error=-ENOBUFS, msg=[{nlmsg_len=28, nlmsg_type=0x1b /* NLMSG_??? */, nlmsg_flags=NLM_F_REQUEST|NLM_F_ACK|0x300, nlmsg_seq=2510255223, nlmsg_pid=1468011032}, "\x20\x00\x00\x00\x08\x00\x03\x00\x0d\x00\x00\x00"]}], iov_len=16384}], msg_iovlen=1, msg_controllen=0, msg_flags=0}, MSG_PEEK|MSG_TRUNC) = 48
+   https://gitlab.freedesktop.org/drm/amd/-/work_items/5531
 
-Claude created a patch (against 6.6.y, but applies to master as well):
-
---- a/net/netlink/af_netlink.c
-+++ b/net/netlink/af_netlink.c
-@@ -1219,7 +1219,7 @@ int netlink_attachskb(struct sock *sk, struct 
-sk_buff *skb,
-        nlk = nlk_sk(sk);
-        rmem = atomic_add_return(skb->truesize, &sk->sk_rmem_alloc);
- 
--       if ((rmem == skb->truesize || rmem <= READ_ONCE(sk->sk_rcvbuf)) &&
-+       if (rmem - skb->truesize <= READ_ONCE(sk->sk_rcvbuf) &&
-            !test_bit(NETLINK_S_CONGESTED, &nlk->state)) {
-                netlink_skb_set_owner_r(skb, sk);
-                return 0;
-@@ -1395,7 +1395,7 @@ static int netlink_broadcast_deliver(struct sock 
-*sk, struct sk_buff *skb)
-        rmem = atomic_add_return(skb->truesize, &sk->sk_rmem_alloc);
-        rcvbuf = READ_ONCE(sk->sk_rcvbuf);
- 
--       if ((rmem == skb->truesize || rmem <= rcvbuf) &&
-+       if (rmem - skb->truesize <= rcvbuf &&
-            !test_bit(NETLINK_S_CONGESTED, &nlk->state)) {
-                netlink_skb_set_owner_r(skb, sk);
-                __netlink_sendskb(sk, skb);
-@@ -2232,7 +2232,7 @@ static int netlink_dump(struct sock *sk, bool 
-lock_taken)
- 
-        rcvbuf = READ_ONCE(sk->sk_rcvbuf);
-        rmem = atomic_add_return(skb->truesize, &sk->sk_rmem_alloc);
--       if (rmem != skb->truesize && rmem >= rcvbuf) {
-+       if (rmem - skb->truesize >= rcvbuf) {
-                atomic_sub(skb->truesize, &sk->sk_rmem_alloc);
-                goto errout_skb;
-        }
-
-
-It also created this commit message:
-
-    netlink: restore pre-add admission-control boundary
-    
-    Commit 55baecb9eb90 ("netlink: Fix wraparounds of sk->sk_rmem_alloc.")
-    moved the sk_rmem_alloc admission check in netlink_attachskb(),
-    netlink_broadcast_deliver() and netlink_dump() from "queue was already
-    under budget before this skb" (checked BEFORE adding truesize) to
-    "queue is still under budget after this skb" (checked AFTER adding
-    truesize). That's a strictly stricter boundary: a message that would
-    push the queue from just-under to just-over sk_rcvbuf is now rejected
-    outright, where before it was admitted.
-    
-    For slow-draining or MSG_PEEK-based readers (e.g. iw/libnl doing
-    netlink dumps), a message can hit this new, stricter ceiling every
-    time it's retried, turning what used to be a transient ENOBUFS into
-    a permanent one for that message size -- causing indefinite retry
-    loops in userspace (iw scan hanging).
-    
-    Fix by keeping atomic_add_return()-based accounting (needed for the
-    actual wraparound fix), but comparing against the pre-add value:
-    rmem is guaranteed >= skb->truesize since it's the value just
-    returned by adding truesize, so `rmem - skb->truesize` can't
-    underflow and stays unsigned throughout, preserving the wraparound
-    fix while restoring the original admission boundary.
-
-
-The patch seems to solve my issues. However, since I don't understand this 
-code well, I cannot really say if the patch is correct. 
-
-Br,
-Peter
-
+Cheers,
+Jaak
