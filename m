@@ -1,55 +1,55 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.170])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [46.38.247.119])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5629F353A9D
-	for <regressions@lists.linux.dev>; Mon, 27 Jul 2026 06:44:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD46037DAD7
+	for <regressions@lists.linux.dev>; Mon, 27 Jul 2026 08:14:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.38.247.119
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785134658; cv=none; b=Wk9jviSJ+YQcq7Ydg0yWC7k7zSjss0hLEIZVvVbq3aBlDP4e/pBddm5aI/SKSz3O7Z62NXnop9jNA13Xf0UqISYwL70LI0FXv+Fl6RDzFjtSxQ48rX8uXm7ppJsqRITuQto2zRYGPDZYsocOzdEEMTmvXLTHc9Vq0oD8I31VyBk=
+	t=1785140080; cv=none; b=XkiXWvED0KFQYes9n8UgNUYAJ/rhdTejZ9Z5v/rqTZBRYeBIUDmcTj/uFwXNK8NSfT9YVfOYIjBtCgUEyxUmlSMSviytDG6wm6Il5/uRcvoM3cboIKf+kj8rKZw4Sb8N1JqwC/NkJJsLGaB19ObhthaXQlNwLlqH+TBia91cLwA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785134658; c=relaxed/simple;
-	bh=jl79Lc3XXYQSpnkh8ayGR71/Kpn4u3ExNM8zgC1h/H0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=sgVepCNhsYzvAB8BLu42JSw8K59PTTJdnBMlKaZ3xSFFqMxw7WGa1rUJcGQXJCo461l++30hICA0Fb9aI1V54cJA78c4ivEm+GBQPsu4SNH4bC+WfFPlMKwAw6hZtcrbC8Y45qv+GH5IeEi9Fw5KqaBaA4pUe2aSGQxrjK0mnL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=YhadP1F2; arc=none smtp.client-ip=188.68.63.170
+	s=arc-20240116; t=1785140080; c=relaxed/simple;
+	bh=pWMDmLyLKpVCD6cQdAcb0ozDPKiIrpriRsiPCEF7RPA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hfAdi9CXK9ypY82Afp/++k1cRZ6zJJ+fXG+iN9++vwTV+cAHDS+CcwxRK31qd6kWOFSGY3TgNB2CW4wCT7XDVJvkKaKjnr7SfGVgWGyzaM6kuDcugTsiSU9xVv+nOwMYUxjmrsRXqWsa5Fwe1UVa9vvvctcG8UEeS6JwGMzrT6w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=VVHnMaEJ; arc=none smtp.client-ip=46.38.247.119
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="YhadP1F2"
-Received: from mors-relay8203.netcup.net (localhost [127.0.0.1])
-	by mors-relay8203.netcup.net (Postfix) with ESMTPS id 4h7pwQ1248z8jrB;
-	Mon, 27 Jul 2026 06:44:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="VVHnMaEJ"
+Received: from mors-relay-8404.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4h7rwh2MKnz87wG;
+	Mon, 27 Jul 2026 10:14:28 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1785134646;
-	bh=jl79Lc3XXYQSpnkh8ayGR71/Kpn4u3ExNM8zgC1h/H0=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=YhadP1F2RxCe3RqfEGzJ3sNK73YthmsKnKAId0n2T2nPHDROMtoQZte4yCqzSGez4
-	 pxfVI8ttN0dlKd4J26SZaZIptp9OG8Fw+bymwFxVlLsDcXc0+ZN7smBRDo9AqSo7dv
-	 2lfUxRA1Jl45zTuFWOXAEZR89y7Xx0gomWyE0oTiXT7XBG5ymh057APqWUBLIwZpr9
-	 OGPCaeYhbU0yQ6hctxwcE42USJMPutNFjcUtYdHqFjAzBuGmDBcCe39hYdCgyc40uV
-	 /DhdA39AExNPbEgBaZDfKNIfKcvw0le60pzt6eNOYOnQTgjwiPDOp8gftw3dmx2YK7
-	 /RWuRLTZLFMdg==
+	s=key2; t=1785140068;
+	bh=pWMDmLyLKpVCD6cQdAcb0ozDPKiIrpriRsiPCEF7RPA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=VVHnMaEJxQm+ChlUNsWn7X0gclc1iXOHASdKzDTY45sHVudu1xuNiSRf0r6y+LqA9
+	 MCyH8UnzeH6a5GtlqADYVBmKkOvBjNihU8x0L1qpdUEOFR8aS+m5PcZra4Xh9/EyYI
+	 SZer5UraItiSeFCXu0dGUpMrkULlJErUcZzfwmsEEm5K+h2TA8ZuP0s6qG4hASjdYG
+	 xKhSCn/v7dbmk1AwtyrNwf11RsQZgWmk5Sw5X3P9YAnE7mpXoK/qLuG54yQLn1VwVi
+	 Tp+8+ChE52ufVYZOR/wpYEZZX4taMMl1b+3wrtNEKuW/mXgACWVjwkrK0nb2bJ/htL
+	 /TWjsnAebpt/g==
 Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay8203.netcup.net (Postfix) with ESMTPS id 4h7pwQ0JcVz8jql;
-	Mon, 27 Jul 2026 06:44:06 +0000 (UTC)
+	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4h7rwh1g8hz4xK5;
+	Mon, 27 Jul 2026 10:14:28 +0200 (CEST)
 X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
 X-Spam-Flag: NO
-X-Spam-Score: -2.898
+X-Spam-Score: -2.901
 X-Spam-Level: 
 Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4h7pwP1RRHz8sbc;
-	Mon, 27 Jul 2026 08:44:05 +0200 (CEST)
+	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4h7rwg39Bfz8tZd;
+	Mon, 27 Jul 2026 10:14:27 +0200 (CEST)
 Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 85C655FB98;
-	Mon, 27 Jul 2026 08:44:00 +0200 (CEST)
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id D35785FBA6;
+	Mon, 27 Jul 2026 10:14:26 +0200 (CEST)
 Authentication-Results: mxe9fb;
         spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
 Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <00c2bf41-f3a6-4e43-89a7-c7a59f36a832@leemhuis.info>
-Date: Mon, 27 Jul 2026 08:43:55 +0200
+Message-ID: <6dc6ac56-3126-4266-9e43-ec67a3203b34@leemhuis.info>
+Date: Mon, 27 Jul 2026 10:14:26 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -57,47 +57,60 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] No physical display brightness control on kernel
- 7.1.x
-To: anon <anon90372@gmail.com>, regressions@lists.linux.dev
+Subject: Re: Backport patch that wasn't dropped, but not applied in the actual
+ stable release
+To: "sashal@kernel.org" <sashal@kernel.org>,
+ Greg KH <gregkh@linuxfoundation.org>
+Cc: "Alex L." <lkstl7@proton.me>,
+ "stable@vger.kernel.org" <stable@vger.kernel.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
 References: 
- <CAPu26+sy2awkTJ3=abmDXzuaBBaC_LM8_QZm8kmhVBHLkmMMwQ@mail.gmail.com>
+ <Dwu6EPhoqrm1RQ9cqVTWmxbiSKyzKQLg9BXcfdVDrUiF2_MAdSlmA6gU9EOdv0PaX6vysSJUVsVSOMu6aNnppuA3sfg7Z8M3rYdaf75KkO0=@proton.me>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
 Content-Language: de-DE, en-US
 In-Reply-To: 
- <CAPu26+sy2awkTJ3=abmDXzuaBBaC_LM8_QZm8kmhVBHLkmMMwQ@mail.gmail.com>
+ <Dwu6EPhoqrm1RQ9cqVTWmxbiSKyzKQLg9BXcfdVDrUiF2_MAdSlmA6gU9EOdv0PaX6vysSJUVsVSOMu6aNnppuA3sfg7Z8M3rYdaf75KkO0=@proton.me>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <178513464072.662762.194582056550671015@mxe9fb.netcup.net>
-X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: 85C655FB98
-X-NC-CID: VUO/V+ulEc9H9e+sIC3clCRXZEH5lQaJZ1BcoPxrA4jE0tx8KFs=
+X-PPP-Message-ID: <178514006713.943031.17031930286996130963@mxe9fb.netcup.net>
+X-NC-CID: NI14b1O3ZmDCnnGQyzmPUHHSx/V6pANNF5TKFeQPqpFYWXQ4iUk=
 
-On 7/25/26 22:04, anon wrote:
-> Device model: Google Pixelbook 2017 i7 (EVE)
-> OS: Fedora 44 KDE
-> Kernel: 7.1.4
-> Firmware: MrChromebox UEFI full ROM (https://docs.mrchromebox.tech/)
+On 7/21/26 20:51, Alex L. wrote:
+> Hello, I'm writing with regards to drm-amd-display-fix-ism-dc_lock-
+> deadlock-during-susp.patch that can be found in the stable-queue
+> repo, under releases/7.1.3/ on the master branch. (https://
+> git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git/tree/
+> releases/7.1.3/drm-amd-display-fix-ism-dc_lock-deadlock-during-
+> susp.patch)
 > 
-> Hi. I'm experiencing an issue on the above system where adjusting
-> brightness values via the DE UI doesn't affect the physical brightness
-> of the display itself. The problem began following a recent system
-> update.
+> Despite being under the releases directory to this date, this patch
+> wasn't actually applied in the 7.1.3 release upon inspection of the
+> stable tree. It also wasn't included in the release announcement for
+> 7.1.3 nor the diffstat within. It wasn't even included in the RC's
+> for 7.1.3. I have searched the stable mailing list and the stable-
+> queue repo's commit histories to establish whether the patch was
+> dropped later for some reason - to my knowledge, this doesn't appear
+> to be the case.
+> 
+> On further investigation I found that the commit that first
+> introduced this patch to stable-queue's queue-7.1/ added the patch
+> file to the directory, but did not add it to the queue-7.1/series
+> file. (https://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-
+> queue.git/commit/?id=76522806dbfb58941f6fa4b6116b891b66689613)
+> 
+> Could this be an accidental omission of the patch due to it not
+> being on the series file, or was there some other reason that the
+> patch was not included? As a user who's affected by the regression
+> that the patch addresses, I would very much appreciate it being
+> included in future 7.1.y releases.
+Greg, Sasha, from a quick look this analysis seems correct. Did some
+script do something odd? Or did Alex and I miss something:
 
-This sounds a bit like a known problem (see
-https://gitlab.freedesktop.org/drm/i915/kernel/-/work_items/16507 ) that
-is fixed by a411ea4a871628 ("drm/i915/backlight: Remove
-DP_EDP_BACKLIGHT_AUX_ENABLE_CAP check for DPCD backlight") [v7.2-rc5].
-This likely will be backported to 7.1.y sooner or later, but if you
-could confirm that applying this to 7.1.y fixes your issue then we could
-speed things up by asking the stable team to pick this up.
+Reminder, it was Sasha that queued the patch for 7.1:
+https://lore.kernel.org/all/stable-reply-item001-amd-ism-71-20260628203053@kernel.org/
+
+Sashiko shortly afterwards (see thread) complained about two things, but
+those were pre-existing issues (without any fixes in mainline, at least
+I did not spon any references for it).
 
 Ciao, Thorsten
-
-> Admittedly, I haven't done the work myself to verify that this is a
-> kernel regression, though I believe it probable due to this forum
-> discussion: (https://forum.chrultrabook.com/t/2017-pixelbook-backlight-control-doesnt-work-with-7-1-kernel/8954),
-> the efforts of the OP in that discussion and the fact that I also own
-> a Kubuntu system running kernel 7.0.x without issue.
-
-
