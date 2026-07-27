@@ -1,55 +1,51 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.162])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [46.38.247.119])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 089A62F7F14
-	for <regressions@lists.linux.dev>; Mon, 27 Jul 2026 14:09:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.162
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FE4037D13D
+	for <regressions@lists.linux.dev>; Mon, 27 Jul 2026 14:24:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.38.247.119
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785161382; cv=none; b=ieK5npAfbfBtr82lG54LcaN/6Ga9KwwLgVwTCDUoU3ckVcYA3Nn3jhMEa6GXN1Q3rvnw1dlqW13OsrKx1Bqe+tlHbtzuL4j7y1DjPeNS5DjdL9zB5dtD8FuSdZboYE0iMWoFCXjOWsYtGv2dMZpITnSrCjjHGCP9KyzVnOfcuAc=
+	t=1785162243; cv=none; b=bEwIA8CZEv2KWWzDHC5neuKrLdX7toIdTBWgrVNUQORNSj+kM6XC661YQXh6MHnkfsXUjuGDagIg+W3FW6PYfTX4LbMbji3MlWWah4rbgtU7S37xBeoyIp0JwjRm3GMkijmzuSPV8208oNtOLunyLhfmqtOCmDT8lRG2YYQFaVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785161382; c=relaxed/simple;
-	bh=rYB2jqHBbf3CmttTSzm06I1wVc0yb814ZQGOjz/QX+g=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=OHjoaaWcNvFkGhGpCRSMgOkdJlMSRiuGBEXsusom4Q+GG8Vs73+U2tlVgzGu6O7ohg6/v2IQTHqzvpNBof+4NIR8dqkzetjxX6KlKuqD2zWWpc9nJ60j9Q9Sh9WX2c/nLhqI14En4ourlypa4acHRjKSuIqJlSiR2K2oDkcdQlM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=kH0KSDit; arc=none smtp.client-ip=188.68.63.162
+	s=arc-20240116; t=1785162243; c=relaxed/simple;
+	bh=JBhZ+LwoQ70+qErV2cTCemtVryLVM0RxTuEG+2Y3/co=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AGLfM/uZ0G/Npu1oHJUI2PqbCNdi1UvzzwDtKLsTZw8255jXcdQdcXJpjZNqiJa0sUxM0vRrSlcNbsNhEGiqpG9knmoIP7+FXi4b+B0xj19yY1/I8PxOPXVFR5P5APV/BsX34rOY7IGIoUwkfkzyvQNcmvpbC2dPtPGR8CCkO1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=f2/2sxdF; arc=none smtp.client-ip=46.38.247.119
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="kH0KSDit"
-Received: from mors-relay-8201.netcup.net (localhost [127.0.0.1])
-	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4h80nj5FySz44qc
-	for <regressions@lists.linux.dev>; Mon, 27 Jul 2026 16:08:57 +0200 (CEST)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="f2/2sxdF"
+Received: from mors-relay-8404.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4h816M5wNBz8CwK;
+	Mon, 27 Jul 2026 16:23:23 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1785161337;
-	bh=rYB2jqHBbf3CmttTSzm06I1wVc0yb814ZQGOjz/QX+g=;
-	h=Date:Subject:From:To:References:In-Reply-To:From;
-	b=kH0KSDituOjf1AXpzIKzqED/pgAa+q2AKoydULZNxzN3QPhDqc/8VlLQo5xNHgAKR
-	 NV7Z7mPUgXWSOQz3ADk6+fm8ITUF24xhwrDkM99kA4CW/R16IentmsS1QFZvcFQMAU
-	 tsDTjRZRgAeWB150j1h5aNCcTT48GongDlzc74JBxdA83aWH76hOjxShBsE20YXKW8
-	 8PSyvU8/5sGfdqBlC1FsGUo/HFFFPu+c7GfhHnfgiHs9PzEHKOpg6zO+vCmwLibGOU
-	 ExfRfJ7zNb8Tk5r/4CT1kP2wb8G0Ng6z30kf3mt87h1VJqo93TQ8BNnWyfhzXDfTua
-	 mM89vET7SQ6NA==
-Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4h80nj4Z8Rz44jG
-	for <regressions@lists.linux.dev>; Mon, 27 Jul 2026 16:08:57 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
-X-Spam-Flag: NO
-X-Spam-Score: -2.898
-X-Spam-Level: 
+	s=key2; t=1785162203;
+	bh=JBhZ+LwoQ70+qErV2cTCemtVryLVM0RxTuEG+2Y3/co=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=f2/2sxdFVhE94wwd/yWnIycOJh85rGDGpXQf71t2SYYDe4U+iSLNHJd8sUrzcZmaB
+	 HPIoqQvSKphfyTmKBJXpjXOBTYrYKmi7JsliX2RN8lwJUA/wl6rTMT1oXG8Drs8hKB
+	 rB3xT8wfUN2oOH9lSje2PQkTXmJngjvF5qrUxXM2cumLdwjWoViQWpwJtMCMiWnb0T
+	 wanxcSKA98IMuBPfNroyvvV/dD7Qp1GRQthFvDNiat7NqEw02qPj8YhcfUmLn10s96
+	 JIG8vb0OjwjevlH0ml8bPMHAydxfektsxPewXwXBbIzjLTp++CQgWc+zs7/XoKxHhZ
+	 w23KkSOKbfZSQ==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4h816M5BSGz4xtW;
+	Mon, 27 Jul 2026 16:23:23 +0200 (CEST)
 Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4h80nh5Vs0z8t3r
-	for <regressions@lists.linux.dev>; Mon, 27 Jul 2026 16:08:56 +0200 (CEST)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4h816K0sHxz8svG;
+	Mon, 27 Jul 2026 16:23:21 +0200 (CEST)
 Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id DCBDA5FA76
-	for <regressions@lists.linux.dev>; Mon, 27 Jul 2026 16:08:51 +0200 (CEST)
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 1FA265FA76;
+	Mon, 27 Jul 2026 16:23:16 +0200 (CEST)
 Authentication-Results: mxe9fb;
         spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
 Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <fad82c4b-e89d-4c86-8166-7757cc67911a@leemhuis.info>
-Date: Mon, 27 Jul 2026 16:08:50 +0200
+Message-ID: <1826ddd9-6edd-4481-a31d-6cbb083b3a56@leemhuis.info>
+Date: Mon, 27 Jul 2026 16:23:15 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -57,37 +53,75 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
+Subject: Re: [PATCH] drm/mediatek: mtk_dsi: enable hs clock during pre-enable
+To: Gary Bisson <bisson.gary@gmail.com>
+Cc: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Chun-Kuang Hu <chunkuang.hu@kernel.org>, Esben Haabendal <esben@geanix.com>,
+ Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Matthias Brugger <matthias.bgg@gmail.com>,
+ dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ Adam Thiede <me@adamthiede.com>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <20260120-mtkdsi-v1-1-b0f4094f3ac3@gmail.com>
+ <8733xko1ms.fsf@geanix.com>
+ <0f719c00-3cf5-4403-afbf-713b07255981@collabora.com> <aleM9Wy9otpd6Je3@owl5>
+ <aRN3_2FHX8XmTcwduTAPwz4UFde4B0tbB09ajyeUg5qZxiIYMmbvMkG7CPoNTl4iySYMZawbLMWijO47R22gkg==@protonmail.internalid>
+ <65558ccc-4f2c-492d-8c74-627d27dce864@collabora.com>
+ <87h5m0mkca.fsf@geanix.com> <alpTEPsy-SIQv_Oc@owl5>
+ <b26a4890-12e9-4995-a71d-d0b7458b1570@leemhuis.info> <amdTnudq48tZUTG2@owl5>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
 Content-Language: de-DE, en-US
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+In-Reply-To: <amdTnudq48tZUTG2@owl5>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: 
- <178516133206.2672463.11782473335638397254@mxe9fb.netcup.net>
+X-PPP-Message-ID: <178516219658.2742281.2869505277937587540@mxe9fb.netcup.net>
 X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: DCBDA5FA76
-X-NC-CID: U8DVuEiaDImjDklw1gpFOj1TfO2LslpJBvf1txyLz8f1ZY+m1IY=
+X-Rspamd-Queue-Id: 1FA265FA76
+X-NC-CID: 43uR6QNMyemn/nPkJoEiLbUEjzWk0VHzRbV5Th599RFa0TAAe38=
 
+On 7/27/26 14:48, Gary Bisson wrote:
+> On Mon, Jul 27, 2026 at 02:28:56PM +0200, Thorsten Leemhuis wrote:
+>> [top-posting to facilitate]
+>>
+>> Gary, Angelo, what's the status here? It looks like this fell through
+>> the cracks -- or was this issue fixed in between somehow? If yes: great!
+>> If not: Would be good to finally resolve this, as we are long past "fix
+>> within a week" rule of thumb from Linus:
+>> https://www.kernel.org/doc/html/latest/process/handling-regressions.html#on-how-quickly-regressions-should-be-fixed
+> 
+> Not much happened I'm afraid. The status as I see is:
+> - this patch is necessary to have TI SN65DSI83 working
+> - this patch also follows the DRM guidelines saying that HS clock must
+>   be enabled during pre_enable (see previous answer / [1])
+> - this patch has been successfully tested against MIPI-DSI panels (by
+>   Angelo) and LVDS panels via TI bridge (by myself)
+> - Adam reported an issue with another bridge (PS8640) where resume is
+>   broken
+> - Esben offered a patch to the TI bridge that would fix the issue we
+>   were seeing in the first place.
+> 
+> But for the last two points, I'm not sure this calls for a revert yet:
+> - enabling HS clock in pre_enable still is what should be done [1]
+> - maybe the issue Adam is facing is due to the bridge driver instead as
+>   it could not be reproduced with another setup
+> - Esben patch would break the SN65DSI83 init sequence, suggesting that
+>   the culprit really is the MIPI bridge for not following the HS clock
+>   requirement in pre_enable instead [2]
+It's tricky, yes, but I suspect the right time for a revert was weeks
+ago. What Linus afaics basically wants in situations like this (espe.
+with two reporters) boils down to "something broke recently, no fix was
+found within a week or maybe two, so we go back to the previous state to
+restart from there -- and this is nothing bad, that's just done to buy
+us time."
 
+If something is right by some hardware or DRM specs often doesn't matter
+much. What makes this tricky is the fact that the revert might cause a
+regression for those that relied on the functionally the change brought.
+But I suspect even then Linus prefers a revert, as it's a recent change
+that only went into 7.1. The quoted from Linus on this page cover this iirc:
+https://www.kernel.org/doc/html/latest/process/handling-regressions.html#quotes-from-linus-about-regression
 
-On 3/9/24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
+If we can't agree on this, we maybe should ask Simona or Airlied for advice.
 
-#regzbot report: https://gitlab.freedesktop.org/drm/amd/-/work_items/5531
-#regzbot dup: https://gitlab.freedesktop.org/drm/amd/-/work_items/5531
-
-#regzbot report:
-https://lore.kernel.org/all/CANn89iJkmTwbHkTJ0LgHvhF8PN3zkXmK7A8bydXh-B7yE4K6Rw@mail.gmail.com/#regzbot
-resolve: inconclusive: reporter MIA
-
-#regzbot report:
-https://lore.kernel.org/lkml/42607fa4-485d-4142-b31c-7bfac71118d2@adamthiede.com/
-#regzbot dup: https://lore.kernel.org/lkml/8733xko1ms.fsf@geanix.com/
-
+Ciao, Thorsten
