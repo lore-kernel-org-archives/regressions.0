@@ -1,55 +1,50 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [46.38.247.119])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.61.103])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD46037DAD7
-	for <regressions@lists.linux.dev>; Mon, 27 Jul 2026 08:14:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.38.247.119
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 994C631714F
+	for <regressions@lists.linux.dev>; Mon, 27 Jul 2026 08:43:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.61.103
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785140080; cv=none; b=XkiXWvED0KFQYes9n8UgNUYAJ/rhdTejZ9Z5v/rqTZBRYeBIUDmcTj/uFwXNK8NSfT9YVfOYIjBtCgUEyxUmlSMSviytDG6wm6Il5/uRcvoM3cboIKf+kj8rKZw4Sb8N1JqwC/NkJJsLGaB19ObhthaXQlNwLlqH+TBia91cLwA=
+	t=1785141833; cv=none; b=HHdIUeNuHBGfP8NkHPclN+o3bXlGfFdr5HdPb8OPnbIyu9IzJyNywtfTDOSThdymdspBT6jvRNHQZEQ/3jx/HTjWnEi2PLPlIWLiRChSdeeqVIy46hVZoOJIsEIARblB7uIDMIY+HHRz8uIVT6+vIIKOwWqAf5a1BEkHIr2hqwE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785140080; c=relaxed/simple;
-	bh=pWMDmLyLKpVCD6cQdAcb0ozDPKiIrpriRsiPCEF7RPA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hfAdi9CXK9ypY82Afp/++k1cRZ6zJJ+fXG+iN9++vwTV+cAHDS+CcwxRK31qd6kWOFSGY3TgNB2CW4wCT7XDVJvkKaKjnr7SfGVgWGyzaM6kuDcugTsiSU9xVv+nOwMYUxjmrsRXqWsa5Fwe1UVa9vvvctcG8UEeS6JwGMzrT6w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=VVHnMaEJ; arc=none smtp.client-ip=46.38.247.119
+	s=arc-20240116; t=1785141833; c=relaxed/simple;
+	bh=dg2PdX38sKrE/AgiN98q4bIDUpM5WsUPGpi34yki+0w=;
+	h=Message-ID:Date:MIME-Version:From:To:Cc:Subject:Content-Type; b=nS01RJEYt99RMx2efoPhTT+33hPkQjV5pbaM1jStB9Tr4xVhcVW1nKSB70jmM+NmmDuP20+wqYr+TGfe2034smqngOP2L96FFmlHwnpo07cD0vD8R8/+MPCujpKvx6n4dRIW1LDAWh2YU4XJDnResvuMsKu8BSXvUHlMnPrP1Rc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=fWHg+giy; arc=none smtp.client-ip=188.68.61.103
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="VVHnMaEJ"
-Received: from mors-relay-8404.netcup.net (localhost [127.0.0.1])
-	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4h7rwh2MKnz87wG;
-	Mon, 27 Jul 2026 10:14:28 +0200 (CEST)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="fWHg+giy"
+Received: from mors-relay-8403.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4h7sXz5wWlz85yT;
+	Mon, 27 Jul 2026 10:42:27 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1785140068;
-	bh=pWMDmLyLKpVCD6cQdAcb0ozDPKiIrpriRsiPCEF7RPA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=VVHnMaEJxQm+ChlUNsWn7X0gclc1iXOHASdKzDTY45sHVudu1xuNiSRf0r6y+LqA9
-	 MCyH8UnzeH6a5GtlqADYVBmKkOvBjNihU8x0L1qpdUEOFR8aS+m5PcZra4Xh9/EyYI
-	 SZer5UraItiSeFCXu0dGUpMrkULlJErUcZzfwmsEEm5K+h2TA8ZuP0s6qG4hASjdYG
-	 xKhSCn/v7dbmk1AwtyrNwf11RsQZgWmk5Sw5X3P9YAnE7mpXoK/qLuG54yQLn1VwVi
-	 Tp+8+ChE52ufVYZOR/wpYEZZX4taMMl1b+3wrtNEKuW/mXgACWVjwkrK0nb2bJ/htL
-	 /TWjsnAebpt/g==
-Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4h7rwh1g8hz4xK5;
-	Mon, 27 Jul 2026 10:14:28 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
-X-Spam-Flag: NO
-X-Spam-Score: -2.901
-X-Spam-Level: 
+	s=key2; t=1785141747;
+	bh=dg2PdX38sKrE/AgiN98q4bIDUpM5WsUPGpi34yki+0w=;
+	h=Date:From:To:Cc:Subject:From;
+	b=fWHg+giyCHnqiclmqOW/FRjJRYDY/7x6tQEUjJ1iy/f/uF1vK7f34hyYdBjWdzb1j
+	 5Tc+5V4m4CVP+AtoIQWkLSkzjvRgnDS4Unr5wpPq1ggsJLfdFjLG8GOoOoYAFKlxcH
+	 wH1dfD4KC/q8Pikf+CB9PtvuygoFutPZsKNyIxfh1zy+mlajPYfsNLHxySnuDJ0n1o
+	 lkeHdlmfj37+Ymv2UN8vWan+WLzTDQIIaOp2oxqnsXkuCiEItqER7P514q3ZZ28gnS
+	 Gmkim0v3caz6OlMwFqTwOAwqXNaATXnIYbobJEzaC3B3wYNCrF5yX3FkLoIXcRArEb
+	 FLxNuQwmpl4Ug==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4h7sXz5CtLz85yB;
+	Mon, 27 Jul 2026 10:42:27 +0200 (CEST)
 Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4h7rwg39Bfz8tZd;
-	Mon, 27 Jul 2026 10:14:27 +0200 (CEST)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4h7sXy24Yzz8sch;
+	Mon, 27 Jul 2026 10:42:26 +0200 (CEST)
 Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id D35785FBA6;
-	Mon, 27 Jul 2026 10:14:26 +0200 (CEST)
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 851D35FBA6;
+	Mon, 27 Jul 2026 10:42:25 +0200 (CEST)
 Authentication-Results: mxe9fb;
         spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
 Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <6dc6ac56-3126-4266-9e43-ec67a3203b34@leemhuis.info>
-Date: Mon, 27 Jul 2026 10:14:26 +0200
+Message-ID: <f7fe5959-f0c6-430c-8404-927d7944c836@leemhuis.info>
+Date: Mon, 27 Jul 2026 10:42:25 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -57,60 +52,56 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Backport patch that wasn't dropped, but not applied in the actual
- stable release
-To: "sashal@kernel.org" <sashal@kernel.org>,
- Greg KH <gregkh@linuxfoundation.org>
-Cc: "Alex L." <lkstl7@proton.me>,
- "stable@vger.kernel.org" <stable@vger.kernel.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: 
- <Dwu6EPhoqrm1RQ9cqVTWmxbiSKyzKQLg9BXcfdVDrUiF2_MAdSlmA6gU9EOdv0PaX6vysSJUVsVSOMu6aNnppuA3sfg7Z8M3rYdaf75KkO0=@proton.me>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
 Content-Language: de-DE, en-US
-In-Reply-To: 
- <Dwu6EPhoqrm1RQ9cqVTWmxbiSKyzKQLg9BXcfdVDrUiF2_MAdSlmA6gU9EOdv0PaX6vysSJUVsVSOMu6aNnppuA3sfg7Z8M3rYdaf75KkO0=@proton.me>
+To: Roger Pau Monne <roger.pau@citrix.com>
+Cc: Juergen Gross <jgross@suse.com>,
+ "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ yannick.martin+kernelorg@okazoo.eu
+Subject: [regression] Bug 221745 - PV DomU ballooning driver init issue
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <178514006713.943031.17031930286996130963@mxe9fb.netcup.net>
-X-NC-CID: NI14b1O3ZmDCnnGQyzmPUHHSx/V6pANNF5TKFeQPqpFYWXQ4iUk=
+X-PPP-Message-ID: <178514174583.976006.15917720183139081453@mxe9fb.netcup.net>
+X-NC-CID: fBr7XczVS2ya6Qqy17DIK86+ueCERFBW/JVA7MLO2EUsYNBv5Og=
 
-On 7/21/26 20:51, Alex L. wrote:
-> Hello, I'm writing with regards to drm-amd-display-fix-ism-dc_lock-
-> deadlock-during-susp.patch that can be found in the stable-queue
-> repo, under releases/7.1.3/ on the master branch. (https://
-> git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git/tree/
-> releases/7.1.3/drm-amd-display-fix-ism-dc_lock-deadlock-during-
-> susp.patch)
-> 
-> Despite being under the releases directory to this date, this patch
-> wasn't actually applied in the 7.1.3 release upon inspection of the
-> stable tree. It also wasn't included in the release announcement for
-> 7.1.3 nor the diffstat within. It wasn't even included in the RC's
-> for 7.1.3. I have searched the stable mailing list and the stable-
-> queue repo's commit histories to establish whether the patch was
-> dropped later for some reason - to my knowledge, this doesn't appear
-> to be the case.
-> 
-> On further investigation I found that the commit that first
-> introduced this patch to stable-queue's queue-7.1/ added the patch
-> file to the directory, but did not add it to the queue-7.1/series
-> file. (https://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-
-> queue.git/commit/?id=76522806dbfb58941f6fa4b6116b891b66689613)
-> 
-> Could this be an accidental omission of the patch due to it not
-> being on the series file, or was there some other reason that the
-> patch was not included? As a user who's affected by the regression
-> that the patch addresses, I would very much appreciate it being
-> included in future 7.1.y releases.
-Greg, Sasha, from a quick look this analysis seems correct. Did some
-script do something odd? Or did Alex and I miss something:
+Hi Roger! FYI, it seems your change 0949c646d64697 ("Partial revert
+"x86/xen: fix balloon target initialization for PVH dom0"") [v7.0-rc1]
+caued a regression. For details see
+https://bugzilla.kernel.org/show_bug.cgi?id=221745
 
-Reminder, it was Sasha that queued the patch for 7.1:
-https://lore.kernel.org/all/stable-reply-item001-amd-ism-71-20260628203053@kernel.org/
+To quote the initial comment:
 
-Sashiko shortly afterwards (see thread) complained about two things, but
-those were pre-existing issues (without any fixes in mainline, at least
-I did not spon any references for it).
+> Since commit db8c4b1 (Partial revert "x86/xen: fix balloon target initialization for PVH dom0"), xen ballooning fails to init correctly on domU (on amd64 arch) with the following configuration:
+> 
+> -- xl.cfg
+> ...
+> memory      = '2048'
+> maxmem      = '4096'
+> ...
+> --
+> 
+> -- domU balloon dmesg (init fails)
+> [    0.908337] xen:balloon: Initialising balloon driver
+> [    0.940721] Extra pages underflow current target
+> --
+
+db8c4b1 is the backport of the commit to 6.12.y; the reporter (CCed) in
+a later comment to the bug tracker confirmed that the problem happens
+with 7.2.0-rc3, too, and also stated:
+
+> The dmesg by itself is not relevant except:
+> [    1.105207] xen:balloon: Initialising balloon driver
+> [    1.222758] ------------[ cut here ]------------
+> [    1.222790] Extra pages underflow current target
+> [    1.222792] WARNING: at 0xffffffff8252a424, CPU#1: swapper/0/1
+> 
+> init exits on ERANGE handling:
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/xen/balloon.c?h=v7.2-rc4#n772
+> 
+> because of ERANGE:
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/xen/balloon.c?h=v7.2-rc4#n714
+> 
+> kernel thread xen-balloon does not exist on VM with kernel newer than 6.12.75 (on 6.12 branch) where the patch was merged.
 
 Ciao, Thorsten
