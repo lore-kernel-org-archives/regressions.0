@@ -1,147 +1,103 @@
-Received: from mail-oa1-f42.google.com (mail-oa1-f42.google.com [209.85.160.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67C371D86FF
-	for <regressions@lists.linux.dev>; Mon, 27 Jul 2026 00:43:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.42
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785113029; cv=pass; b=cZUmKxbUvNVCv/Pxg2uFvEAfy7usYZu2Ndc1pi3ne7mXJeZKzBepsyRebWqo+durPhJZVICghG4oBQ1ET2sXhnSRwpSnfFDCOgYA9nKSurtix29y/3rVMNVSB0x9QeufNdvT3aVoHhNdKpcbhZPKUAS+nALgAFp6ppjh6uoneDQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785113029; c=relaxed/simple;
-	bh=fYeRbG+akEzJxsykcbejVjCZASuJBXfbkdfHbwbP4jc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hfsEw861zn36icqfuyJqbXqcu/l2kVE6N7wEC4lQBP0BYHbaipHzkfKd4rzMc5OKQRalZJ3CZQK2UvBl9lOVeWELB8Kssna+6PLzjHk4oYeEQyAzsWchvY3utH4hjKlFL5fNeCzKcDDObPdVoU2o9tYVAu+sGuN8dvQ7xvlIwxk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=obets.net; spf=none smtp.mailfrom=obets.net; dkim=pass (1024-bit key) header.d=obets.net header.i=@obets.net header.b=ivaa118N; arc=pass smtp.client-ip=209.85.160.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=obets.net
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=obets.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5629F353A9D
+	for <regressions@lists.linux.dev>; Mon, 27 Jul 2026 06:44:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.170
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1785134658; cv=none; b=Wk9jviSJ+YQcq7Ydg0yWC7k7zSjss0hLEIZVvVbq3aBlDP4e/pBddm5aI/SKSz3O7Z62NXnop9jNA13Xf0UqISYwL70LI0FXv+Fl6RDzFjtSxQ48rX8uXm7ppJsqRITuQto2zRYGPDZYsocOzdEEMTmvXLTHc9Vq0oD8I31VyBk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1785134658; c=relaxed/simple;
+	bh=jl79Lc3XXYQSpnkh8ayGR71/Kpn4u3ExNM8zgC1h/H0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=sgVepCNhsYzvAB8BLu42JSw8K59PTTJdnBMlKaZ3xSFFqMxw7WGa1rUJcGQXJCo461l++30hICA0Fb9aI1V54cJA78c4ivEm+GBQPsu4SNH4bC+WfFPlMKwAw6hZtcrbC8Y45qv+GH5IeEi9Fw5KqaBaA4pUe2aSGQxrjK0mnL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=YhadP1F2; arc=none smtp.client-ip=188.68.63.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=obets.net header.i=@obets.net header.b="ivaa118N"
-Received: by mail-oa1-f42.google.com with SMTP id 586e51a60fabf-448b69cfc6dso1877436fac.3
-        for <regressions@lists.linux.dev>; Sun, 26 Jul 2026 17:43:47 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1785113026; cv=none;
-        d=google.com; s=arc-20260327;
-        b=UYepkIqc2DrM42UbQH7yjhSoojMy8+cN+Ud73QvfIKXfZ+mclYXyCzttKxF58J3ohn
-         CeHX2kYe6My3OhCTowFw8MYSYyIm/iTQc4RFWPFYnhFyLP5xtL6LCTDKg3ErjuhAEFSU
-         g7CS7ph7yjGZgf095QFSE7VGYaSEbjMaDO9qd2ELMkNfDDNTsHhSepJJGcrRlWu2K2BL
-         i4JlM6fPSItoAHmWyDJbAnS6HMruESkyBC4DUoAkcOW86tjBIssuEv91OvHQmg55eBzr
-         uA3A6ZDswD35JbcIuHdFtuWF1FG3c2uDGHQZigCPMtsI2IPlN/WsDRoiPC2avkIQWbzL
-         wwUw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=fYeRbG+akEzJxsykcbejVjCZASuJBXfbkdfHbwbP4jc=;
-        fh=I8yd6dD2wpl7HJsx0VYXkVlHkdCFM4C5cn7AS2s82/Y=;
-        b=aH6Qr9yhcxC8VlSC2cqfZt3t0PjEtrj2LeX92N54Hcv8+eLutQZIb71/ty4ETLDoBA
-         gNgKweqBup7+Cw4kFewNg1+txf7nTVpKrbwFBNmPPgyQK8z0Yxyc/gPWQgiUeWZnoU6M
-         ssAcUdEa9bUgZU9ZFGzd2krGr3O2hW/hVkKZs0SSupIsgK888B1MrKanjTicP87IRiuB
-         zmhW9Me7v+h26MorX1Lb0IGWt8J+JWiQ28hEMq2skK+Pk67qP1ICnOvmjZclKEKZGMso
-         rofSGrjsqCxDYX9pNKBDRDxaQfTwwIUQ0nd+3aKivbGSAaonfGWCaDdGNWFV21hqk4k+
-         VhjQ==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=obets.net; s=google; t=1785113026; x=1785717826; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=fYeRbG+akEzJxsykcbejVjCZASuJBXfbkdfHbwbP4jc=;
-        b=ivaa118NvBl3/zvKdQQUBlTlrzRisr467yJFMwjOyxNbESbeidSjncZTHWa5PVCKYD
-         nVRk+7dcEME3jjDBY4pYv+FX4V0uAaRZZAiyXkujvsSpYMS2r7NLbxrIQAXgoM8Nrr68
-         3rx2HjtsAnqY/XbJa6MMU3q7Q67AJalkdBikc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785113026; x=1785717826;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=fYeRbG+akEzJxsykcbejVjCZASuJBXfbkdfHbwbP4jc=;
-        b=ACoFjxOX+GnKRSQ/01g8NouV+7QKtvf+H/fU3MNY0KsXiZZQwx7B44TggTIfZt4DSI
-         Ug9SGo4rUrwU1VvLZW/FoYWHi4leYC9iQ45q87zEfkdh9veeNgKtkBK8jH6i1iQ7jiuB
-         l+C82jeZKSnC5y3ku1L1iWLcwF4jwQXyuX7OG+1tmzZFLAwgTedb8LHhd5gAdi89jsy5
-         dkJoKm7Q7NY5POpmBFVyqX4plJp/Gl9RZIe0cRhKep5w5rcRwiQddWqZf5uCH/6kgfEN
-         T8MRLYTag1lZefV732LYOgKkf6PLPwCF1j+KKzruhveZIdnBRhLbrpn1I1FCmRvGbQ9B
-         HhCw==
-X-Gm-Message-State: AOJu0YxRYgRMhquQ33Smnk0LVOTKAE1SIbkgXGmZOGI+XItA3GvGlKb9
-	6U7jpnyZGfj8KJP7DhbHccY7QErprPUyGUH5Y7zUR074cWKi4fZMdPKwUaPiJuAX1J+I380D7Cr
-	SjOIEpNmNEqzH5tomX3kJPK+VFrcUrAYXoZJmbdC0Y/8UfwfPiLKR7ZEXxQ==
-X-Gm-Gg: AR+sD11EHstXU8XPzJ3XXE0+LXBEnR8Alssawn3YX0SBY2fs+JYGHHRz59PccMdzvtL
-	co3FgJqSU3zNJQoHOm8Hv1D6WUkbYP/HIoPLgrauwbJ4iixrYfCD8r5Xw4q2cheUhlkm+hx/R9Y
-	c1iqBSAWXU8sDTvHH4tooyAI0UhKWmXnL1bPcQw87cNtv4/bgJMeDok2dGOpsFZv6bK1fP0HjTG
-	wDVZLXGEhj76ksz14WR/1uWyknQJU3Pn3IkwSvGzVxCQvwrZfnWC5YcrUd0ad28l/pP33BRHi7i
-	EuLdVq3b0PMEhFlaoNGN
-X-Received: by 2002:a05:6808:16a0:b0:487:6206:54f1 with SMTP id
- 5614622812f47-4ab6a254da6mr5848848b6e.39.1785113026107; Sun, 26 Jul 2026
- 17:43:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="YhadP1F2"
+Received: from mors-relay8203.netcup.net (localhost [127.0.0.1])
+	by mors-relay8203.netcup.net (Postfix) with ESMTPS id 4h7pwQ1248z8jrB;
+	Mon, 27 Jul 2026 06:44:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1785134646;
+	bh=jl79Lc3XXYQSpnkh8ayGR71/Kpn4u3ExNM8zgC1h/H0=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=YhadP1F2RxCe3RqfEGzJ3sNK73YthmsKnKAId0n2T2nPHDROMtoQZte4yCqzSGez4
+	 pxfVI8ttN0dlKd4J26SZaZIptp9OG8Fw+bymwFxVlLsDcXc0+ZN7smBRDo9AqSo7dv
+	 2lfUxRA1Jl45zTuFWOXAEZR89y7Xx0gomWyE0oTiXT7XBG5ymh057APqWUBLIwZpr9
+	 OGPCaeYhbU0yQ6hctxwcE42USJMPutNFjcUtYdHqFjAzBuGmDBcCe39hYdCgyc40uV
+	 /DhdA39AExNPbEgBaZDfKNIfKcvw0le60pzt6eNOYOnQTgjwiPDOp8gftw3dmx2YK7
+	 /RWuRLTZLFMdg==
+Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay8203.netcup.net (Postfix) with ESMTPS id 4h7pwQ0JcVz8jql;
+	Mon, 27 Jul 2026 06:44:06 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
+X-Spam-Flag: NO
+X-Spam-Score: -2.898
+X-Spam-Level: 
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4h7pwP1RRHz8sbc;
+	Mon, 27 Jul 2026 08:44:05 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 85C655FB98;
+	Mon, 27 Jul 2026 08:44:00 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <00c2bf41-f3a6-4e43-89a7-c7a59f36a832@leemhuis.info>
+Date: Mon, 27 Jul 2026 08:43:55 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CA+UyQRutDUHbSSDv=MeNNXzSoKc_AWfhBzON0vjQ7Q9TP-Ujvg@mail.gmail.com>
- <b601a4cb-4e63-4b7a-9ab6-2ce3b9549d65@leemhuis.info>
-In-Reply-To: <b601a4cb-4e63-4b7a-9ab6-2ce3b9549d65@leemhuis.info>
-From: Matthew Obets <matthew@obets.net>
-Date: Sun, 26 Jul 2026 19:43:35 -0500
-X-Gm-Features: AUfX_myWapigKDLDd4qwebyBYupsub4SqC6H6kqHIahF6LtPJH6LpZD2roXQC4E
-Message-ID: <CA+UyQRvsD=RxY+x88hzsASzLGoH7je6506MUbaDshspFi8UQTA@mail.gmail.com>
-Subject: Re: Pixelbook 2017 display backlight with 7.1.x
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] No physical display brightness control on kernel
+ 7.1.x
+To: anon <anon90372@gmail.com>, regressions@lists.linux.dev
+References: 
+ <CAPu26+sy2awkTJ3=abmDXzuaBBaC_LM8_QZm8kmhVBHLkmMMwQ@mail.gmail.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: 
+ <CAPu26+sy2awkTJ3=abmDXzuaBBaC_LM8_QZm8kmhVBHLkmMMwQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: <178513464072.662762.194582056550671015@mxe9fb.netcup.net>
+X-Rspamd-Server: rspamd-worker-8404
+X-Rspamd-Queue-Id: 85C655FB98
+X-NC-CID: VUO/V+ulEc9H9e+sIC3clCRXZEH5lQaJZ1BcoPxrA4jE0tx8KFs=
 
-Yes, this is the same hardware.
-I checked out master and it looks like the a411ea4a8716 commit is
-already included, so I built with commit 3dab139d4795.
+On 7/25/26 22:04, anon wrote:
+> Device model: Google Pixelbook 2017 i7 (EVE)
+> OS: Fedora 44 KDE
+> Kernel: 7.1.4
+> Firmware: MrChromebox UEFI full ROM (https://docs.mrchromebox.tech/)
+> 
+> Hi. I'm experiencing an issue on the above system where adjusting
+> brightness values via the DE UI doesn't affect the physical brightness
+> of the display itself. The problem began following a recent system
+> update.
 
-The display brightness is adjusting as expected with this version.
+This sounds a bit like a known problem (see
+https://gitlab.freedesktop.org/drm/i915/kernel/-/work_items/16507 ) that
+is fixed by a411ea4a871628 ("drm/i915/backlight: Remove
+DP_EDP_BACKLIGHT_AUX_ENABLE_CAP check for DPCD backlight") [v7.2-rc5].
+This likely will be backported to 7.1.y sooner or later, but if you
+could confirm that applying this to 7.1.y fixes your issue then we could
+speed things up by asking the stable team to pick this up.
 
-Thanks for the help,
-Matthew
+Ciao, Thorsten
 
-On Thu, Jul 23, 2026 at 1:17=E2=80=AFAM Thorsten Leemhuis
-<regressions@leemhuis.info> wrote:
->
-> On 7/23/26 03:27, Matthew Obets wrote:
-> > After upgrading to kernel 7.1 the display backlight brightness
-> > adjustment stopped working in KDE on my Google PixelBook 2017.
-> >
-> > Neither the keyboard brightness keys nor the brightness slider change
-> > the display's brightness.
-> >
-> > I'm currently running kernel version 7.1.4-202.fc44.x86_64
->
-> Thx for the report. There was a earlier similar one about a device like
-> yours:
-> https://lore.kernel.org/all/CALcz8n5nB%3DH8CZza-Pw%3D%3DGfQWRViJwWK8N5Pga=
-fE-4pdUJL-LA@mail.gmail.com/
-> It didn't get anywhere as the git bisection didn't work out.
->
-> And another one about a Pixelbook
-> https://gitlab.freedesktop.org/drm/i915/kernel/-/work_items/16507
->
-> Is that a device like yours? Then this should help:
-> https://gitlab.freedesktop.org/drm/i915/kernel/-/commit/a411ea4a87162898d=
-2a0547fdfb721ddb7626be3
->
-> It will hopefully land in mainline this week. Could you maybe try that?
->
-> If that doesn't help: Could you try latest 7.2-rc, as there is another
-> fix that always went into 7.2-rc1.
->
-> Ciao, Thorsten
-> > Please let me know if you need any additional information.
-> >
-> > Operating System: Ultramarine Linux 44
-> > KDE Plasma Version: 6.7.3
-> > KDE Frameworks Version: 6.28.0
-> > Qt Version: 6.11.1
-> > Kernel Version: 7.1.4-202.fc44.x86_64 (64-bit)
-> > Graphics Platform: Wayland
-> > Processors: 4 =C3=97 Intel=C2=AE Core=E2=84=A2 i5-7Y57 CPU @ 1.20GHz
-> > Memory: 8 GiB of RAM (7.6 GiB usable)
-> > Graphics Processor: Intel=C2=AE HD Graphics 615
-> > Manufacturer: Google
-> > Product Name: Eve
-> > System Version: 1.0
+> Admittedly, I haven't done the work myself to verify that this is a
+> kernel regression, though I believe it probable due to this forum
+> discussion: (https://forum.chrultrabook.com/t/2017-pixelbook-backlight-control-doesnt-work-with-7-1-kernel/8954),
+> the efforts of the OP in that discussion and the fact that I also own
+> a Kubuntu system running kernel 7.0.x without issue.
+
+
