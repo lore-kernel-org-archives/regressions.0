@@ -1,33 +1,51 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D996B346AC2
-	for <regressions@lists.linux.dev>; Tue, 28 Jul 2026 08:30:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [46.38.247.119])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA4A040D58B
+	for <regressions@lists.linux.dev>; Tue, 28 Jul 2026 08:43:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.38.247.119
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785227448; cv=none; b=MBMwvUhntRjPL8VVJXtH5tbwjwEAnt9V7nwCeRa+Jqf6gBm8rjuHEn8YGqwKtEObCUTkcWjZYbKHfeKh8brIY6UHTX7oE87mRYfSXilBdJ2wr/HgRYaoQvTrBpN7WRPsPIlFbtfYrivqJHc+5/CMilVdipSBY44U2W1OqHmcvfs=
+	t=1785228232; cv=none; b=PI/oB7nVOOjwErymLbiu061tPcII49vkLH5Lj++iq5rIAMX3ABtHfO/6kiQeXouser8GulJ2GSJ8N+iExy+0TPzP/ZDnGWIXZBF573NTUzHGPud9mtDFN6kaaxoBTnTrflkYaqOh4NIw4udt8GEyOqMG1GlKbRE67++ygIV19PE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785227448; c=relaxed/simple;
-	bh=1DhaFrMGu2dVoCXyx4GwAvYmLRjOUI1HXAe1hwbT1Yw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=l6ynMiXSnc0wX3upoHFX4KJow+TPXO0qPqkwqV3Ne9I9G7Q3C7pZ2xn3J+KU+XMzI23KVXKJdYe4yasFM14Ny/4bvVxbvwKWNYZPNcq5H2inEJOQXVabysuqv6GVU33Ppa85u35SG5W3nGxQrw+L229cKWYm0M1YbEo14XESfWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=vKPMUkNL; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	s=arc-20240116; t=1785228232; c=relaxed/simple;
+	bh=iOBUFBemG8NEe5V2MAgisOYGyy2Zcl52meNMunyOkoU=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:References:
+	 In-Reply-To:Content-Type; b=YFOuLFny/QBsAg85BmvXno4O6Va1wQwMSU+EUICflzEYD/6DPgoGkzARGBKQb+VnxTsV3NaTaBpasXeKzDme9gaQgqbfpi9LM3skxe4GxTGpaMrI7wHUH+koI10BZ5Hj+lO90AmOsBciS9z7TQZm23w/YOXVO6r4GTOuZ61PZJQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=b/wm/RkJ; arc=none smtp.client-ip=46.38.247.119
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="vKPMUkNL"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 170501A9A;
-	Tue, 28 Jul 2026 01:30:40 -0700 (PDT)
-Received: from [10.57.1.72] (unknown [10.57.1.72])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8F2513F86F;
-	Tue, 28 Jul 2026 01:30:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1785227444; bh=1DhaFrMGu2dVoCXyx4GwAvYmLRjOUI1HXAe1hwbT1Yw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=vKPMUkNLq/ZvE70GQE0Krb29tRW6ALs3kKwVRjK+mNR0rg+Jk4G66EDJRdh0Vzm11
-	 jRoZ2EwJIALVu6bTSwQgigZpunlD3RT/Yxz/vyLcZvU+EAH7lZzB5kwl+6MS8P5Q3t
-	 LHv1UBeZFxPjUcCQ5BvXAKj/w13kS2+evy7Genno=
-Message-ID: <774c3a68-6a6b-4e2e-a347-03e36953b750@arm.com>
-Date: Tue, 28 Jul 2026 09:30:39 +0100
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="b/wm/RkJ"
+Received: from mors-relay-8404.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4h8TWx2kj2z88pD
+	for <regressions@lists.linux.dev>; Tue, 28 Jul 2026 10:43:41 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1785228221;
+	bh=iOBUFBemG8NEe5V2MAgisOYGyy2Zcl52meNMunyOkoU=;
+	h=Date:From:Subject:To:References:In-Reply-To:From;
+	b=b/wm/RkJygv+9ZBevRfGfbmJ0LOV9AroyrJtEG3Wo7Uy2l9/NVIXq4aGp8M4/Z4t0
+	 aKq5vuz8E+m0hZBMpFsmIhvYBYLj0bzYsX/T+mHxGX6FarEx+JPBp2pz/7KkUAG5DJ
+	 9cnF9+nKEYaxdg71lZiJkU22XAFLAPgZTMlvyLMZggkstfNpGRp/YbsGfL9rGDUSe8
+	 wPWPJ4o0NoQb5xyhCSuI+qJ70WEIY8MUh0Ob1eXXOkjGGXiAoFXwnXl+Hmdlj/zf8x
+	 +mJ+KvFlIBDt+3X1uJAT/2YEHXToJazzRu48Z/tgqLdo69ZmaZg+wDZimOnHvWyn3f
+	 8kr3MUa+pxElA==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4h8TWx22Zqz4yxt
+	for <regressions@lists.linux.dev>; Tue, 28 Jul 2026 10:43:41 +0200 (CEST)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4h8TWx0Vxqz8svF
+	for <regressions@lists.linux.dev>; Tue, 28 Jul 2026 10:43:40 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 61FBB5FBB4
+	for <regressions@lists.linux.dev>; Tue, 28 Jul 2026 10:43:40 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <c9e788ad-4a7a-470c-a847-8df24b240d5f@leemhuis.info>
+Date: Tue, 28 Jul 2026 10:43:39 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -35,159 +53,45 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] sched/idle: Sysbench threads regression after
- f4c31b07b136
-To: Joseph Salisbury <joseph.salisbury@oracle.com>,
- "Rafael J. Wysocki (Intel)" <rafael@kernel.org>
-Cc: rafael.j.wysocki@intel.com, Ingo Molnar <mingo@redhat.com>,
- Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>,
- Vincent Guittot <vincent.guittot@linaro.org>,
- Dietmar Eggemann <dietmar.eggemann@arm.com>, frederic@kernel.org,
- linux-pm@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- regressions@lists.linux.dev
-References: <096b42fa-107f-450d-b3b1-03bcad3f1e04@oracle.com>
- <CAJZ5v0g+SkTxuP5fqUMisQAh19v-JzpmRZHiKtYzJH1sVt656g@mail.gmail.com>
- <5f5cb821-92ae-4539-ae81-a43e33a7ded5@arm.com>
- <f5946a8a-43be-49d4-a827-25149112b21f@oracle.com>
-Content-Language: en-US
-From: Christian Loehle <christian.loehle@arm.com>
-In-Reply-To: <f5946a8a-43be-49d4-a827-25149112b21f@oracle.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: <178522822057.318687.7491698035965463302@mxe9fb.netcup.net>
+X-NC-CID: 4Uw0mrRYZIAqOxP5FZURJhdtMy5UtsQaqjTtlNxoHOZxheUo0y4=
 
-On 7/24/26 18:20, Joseph Salisbury wrote:
-> Hi Rafael, Christian,
-> 
-> On 7/6/26 10:29 AM, Christian Loehle wrote:
->> On 7/2/26 19:47, Rafael J. Wysocki (Intel) wrote:
->>> Hi,
->>>
->>> On Thu, Jul 2, 2026 at 6:30 PM Joseph Salisbury
->>> <joseph.salisbury@oracle.com> wrote:
->>>> Hi Rafael,
->>>>
->>>> We are seeing a reproducible MySQL Sysbench threads regression.  A
->>>> bisect indicated the following commit as the first bad commit:
->>>> f4c31b07b136 ("sched: idle: Consolidate the handling of two special cases")
->>>>
->>>> The regression was found in Oracle kernel performance testing on OCI VM
->>>> shapes:
->>>>
->>>> VM Details:
->>>> * VM.Standard2.1:
->>>>         x86 OCI VM shape, 1 OCPU / 2 hardware threads, about 14.5 GB RAM
->>>>
->>>>    * VM.Standard.A1.Flex.2:
->>>>         Arm/Ampere A1 flexible VM shape, 2 vCPU threads, about 10.9 GB RAM
->>>>
->>>>
->>>> The ResultsDB runs show the regression in the Sysbench threads metric:
->>>>
->>>>     - VM.Standard2.1:       333 -> 236  (-29.1%)
->>>>     - VM.Standard.A1.Flex.2: 1286 -> 1152 (-10.4%)
->>>>
->>>> A test kernel was built with f4c31b07b136 reverted and the performance
->>>> regression was recovered.
->>>>
->>>>   From the code, it is possible the regression is due to the new
->>>> previous-wakeup heuristic in the special idle cases.  Before the commit:
->>>>
->>>>     - no cpuidle driver:
->>>>         tick_nohz_idle_stop_tick()
->>>>         default_idle_call()
->>>>
->>>>     - one idle state:
->>>>         tick_nohz_idle_retain_tick()
->>>>         cpuidle state 0
->>> I think that this is your case and the tick stops for you sometimes
->>> now while it had never stopped before.
->>>
->>> Can you confirm?
-> The guest-visible data does not show the single-idle-state cpuidle case.
-> Both affected guests report:
-> 
-> /sys/devices/system/cpu/cpuidle/current_driver = none
-> /sys/devices/system/cpu/cpuidle/current_governor = menu
-> 
-> There are also no /sys/devices/system/cpu/cpu*/cpuidle entries on either guest.  So from the guest data, this looks like the no-cpuidle-driver special case rather than the one-idle-state case.
-> 
-> The full revert of f4c31b07b136 recovered the regression. I also tested Rafael's suggested one-line change, applied as:
-> 
->     -        idle_call_stop_or_retain_tick(stop_tick);
->    +        idle_call_stop_or_retain_tick(false);
-> 
-> That test kernel still showed regressed performance on VM.Standard2.1.
-> 
-> 
->>>
->>> Overall, it would be good to know the idle state lists for both the VM
->>> and the host.
-> For the VMs, there are no guest cpuidle state lists exposed because the cpuidle driver is "none".
-> 
-> I do not currently have the host-side idle-state lists from the OCI hosts.  I can try to get that data if it would still be useful.
->>>
->> +1, but also which HZ are you using?
-> VM.Standard2.1, x86_64:
-> 
-> CONFIG_HZ_1000=y
-> CONFIG_HZ=1000
-> 
-> VM.Standard.A1.Flex.2, aarch64:
-> 
-> CONFIG_HZ_250=y
-> CONFIG_HZ=250
-> 
->> Both systems reported have 2 logical CPUs then?
-> 
-> Yes:
-> 
-> VM.Standard2.1:
-> 
-> CPU(s): 2
-> Thread(s) per core: 2
-> Core(s) per socket: 1
-> Socket(s): 1
-> 
-> VM.Standard.A1.Flex.2:
-> 
-> CPU(s): 2
-> Thread(s) per core: 1
-> Core(s) per socket: 2
-> Socket(s): 1
-> 
->> Were higher core counts also
->> tested and how does it affect them?
-> Yes. Higher-core-count runs were checked. The regression appears limited to the smaller core-count shapes.
-> 
-> The current data shows regressions on:
-> 
-> - VM.Standard2.1
-> - VM.Standard.A1.Flex.2
-> - VM.Standard.E4.Flex.1
-> 
-> The larger tested shapes did not show the same regression pattern. The test runs use one sysbench thread per online CPU/core count as encoded in the metric name.
-> 
-> 
 
-Interesting, so your guests (no cpuidle) need the tick stopped at every
-idle entry to not regress, i.e. the below?
-Is there anything obvious that shows why that would be? Maybe in the
-hypervisor behaviour?
 
-----
+On 3/9/24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-diff --git a/kernel/sched/idle.c b/kernel/sched/idle.c
-index 052435f4d3e3..d91a102ef028 100644
---- a/kernel/sched/idle.c
-+++ b/kernel/sched/idle.c
-@@ -194,8 +194,7 @@ static void cpuidle_idle_call(bool stop_tick)
-        }
- 
-        if (cpuidle_not_available(drv, dev)) {
--               idle_call_stop_or_retain_tick(stop_tick);
--
-+               idle_call_stop_or_retain_tick(true);
-                default_idle_call();
-                goto exit_idle;
-        }
+#regzbot report:
+https://lore.kernel.org/lkml/178198613176.3658222.16247101620976737948@eldamar.lan/
+#regzbot dup: https://gitlab.freedesktop.org/drm/amd/-/work_items/5531
+
+#regzbot report:
+https://lore.kernel.org/all/CANn89iJkmTwbHkTJ0LgHvhF8PN3zkXmK7A8bydXh-B7yE4K6Rw@mail.gmail.com/
+#regzbot resolve: inconclusive: reporter MIA
+
+#regzbot report:
+https://lore.kernel.org/lkml/42607fa4-485d-4142-b31c-7bfac71118d2@adamthiede.com/
+#regzbot dup: https://lore.kernel.org/lkml/8733xko1ms.fsf@geanix.com/
+
+#regzbot report:
+https://lore.kernel.org/all/20260724151419.26014-1-spasswolf@web.de/
+#regzbot introduced: 13b7e6a96a00
+#regzbot title: wifi: mt76: mt792x: hang during shutdown
+#regzbot fix: wifi: mt76: mt792x: drop redundant napi_disable() in
+unregister path
+#regzbot monitor:
+https://lore.kernel.org/all/20260728002048.19351-1-mikhail.v.gavrilov@gmail.com/
+
 
