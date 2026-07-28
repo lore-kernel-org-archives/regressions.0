@@ -1,146 +1,111 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.162])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB1B442AFB1
-	for <regressions@lists.linux.dev>; Tue, 28 Jul 2026 11:40:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 056C0431E6D
+	for <regressions@lists.linux.dev>; Tue, 28 Jul 2026 11:59:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.162
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785238807; cv=none; b=kLg8ZZoukztGri8UHMbNdeW2Z0/oVEzZD63MHYmTpOh4EFTkiqLh7/KXcK6o4qWBv0JnZS4KexJIT7BqAGE4qdOL1c9rLiup4SIADxgao9TZBIlJFKa6fJWB5E/LIlzYMX1QotP1xYWYGTm3/d0YiNLj0IANZrkcJVwB8WM3dJA=
+	t=1785239996; cv=none; b=uqRQYfbPTST/DtSafee7mp87PjtWhYUujeVpYtm7m6BYxrK7IZ6wMFT9BkFJQ9I+13IHMQdD1s7YRgz+yvHofX3rKWJnP9Td7WcYOzrsLSXhuUNeiOrYr1TKC16SWekqr63CoHnVh0wLuCVxqUTz4+yqXzXOtlrcaNN5UA20+/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785238807; c=relaxed/simple;
-	bh=Y/CPBBFiaNGqgM4Cg6GBFvQs6LS/KRgBg2qDdkZixZA=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=n+1aAVnI9a+kXjXIomxxpWugRv/UJmufqX7P/GWYkUgwht2Tpxci4I7ZJwCkLeIBPuzDQly6OyFrRQ/+lDMfVUsfRDU9Oo+tWmwmkTTah3dsplYUlYxEnerS3KjxdNQsz/eS3P2mr6szeY5snKFEiDcA1flihf58q7dCM7y1B/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dojl3kVL; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1785239996; c=relaxed/simple;
+	bh=6iGHSb1YxFl+QTAiAng109nVByl/3q0N+OOEO3YYHTc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ivIesZIAU/a9pm1Itq4LtXGjlExa67xI0wOf8QegFJEy/h4XWl54MiuwVWBbmECAHjnIbqS+5vW5OJG/APiw4R5SF9AKes5IxxkCJHwZHu/XMuk8YzObPH8reCpBquUb5Plv0w2zSl/qijCMZvSFmXRqNE6vJL3Ab/dZEwe1osc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=ivO3MorK; arc=none smtp.client-ip=188.68.63.162
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dojl3kVL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1785238806; x=1816774806;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=Y/CPBBFiaNGqgM4Cg6GBFvQs6LS/KRgBg2qDdkZixZA=;
-  b=dojl3kVL3KGAZ0vmECAWj/2SS7E3nOzKKP8HnMeVuFGCeTLd+I31Q19Y
-   yOja+gU+XzbcfZ87E/rOe2U9pZn0DxBkouIA/gZX1+Wse/G6LpBJSKSll
-   7O7P875JDwRk3TkVeABNzr5f+M+4wLAS5dqBzZ/LuU2J5Bd/KoRyIt7dI
-   WOnhe4i8vueJ9jl6X64HHoLz6uBnu5WCH7SrPnURnnQwU2etBMI1xG+fQ
-   YNSQUH6wov5i3TQzVZLnybFuBp2OfzmAyuYLmg9UWrJ4OYnqJJKrEJvGo
-   UUIup/qNAeTVDbc17huHful4QoZ1MKykGx+GDdWgogM18xYeKCpPnSuyk
-   A==;
-X-CSE-ConnectionGUID: eXp1XyrATgOJqTKg7xDoEg==
-X-CSE-MsgGUID: EedvhWO+SiaVA8OstivqWg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11858"; a="89640604"
-X-IronPort-AV: E=Sophos;i="6.25,190,1779174000"; 
-   d="scan'208";a="89640604"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2026 04:39:59 -0700
-X-CSE-ConnectionGUID: alKLpivNRJ2igVrVxVRv3g==
-X-CSE-MsgGUID: YO8FTimqT/6v2aTDzR8Ehg==
-X-ExtLoop1: 1
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.129])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2026 04:39:57 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 28 Jul 2026 14:39:51 +0300 (EEST)
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-cc: Hans de Goede <hansg@kernel.org>, 
-    "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>, 
-    Linux kernel regressions list <regressions@lists.linux.dev>, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: Policy: "routed through for-next, ... unless introduced in the
- most recent cycle"
-In-Reply-To: <56f2c589-2133-417d-9bbd-2c0b11b83c87@leemhuis.info>
-Message-ID: <28ffe1e4-bbbd-3945-bb8f-f372d825d0ec@linux.intel.com>
-References: <56f2c589-2133-417d-9bbd-2c0b11b83c87@leemhuis.info>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="ivO3MorK"
+Received: from mors-relay-8201.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4h8Yt32zfzz40Yb;
+	Tue, 28 Jul 2026 13:59:39 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1785239979;
+	bh=6iGHSb1YxFl+QTAiAng109nVByl/3q0N+OOEO3YYHTc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ivO3MorKZVwDdIzVjNmzkSgJRsNc/eiihKry6Ma8FpPr31hLBQqr/wfC2fgirqxFv
+	 J3/pIMD40qMh8YBtPmacJ0bo+sIsTHo3sCAR6ERrTBTBOZ6ZyoS093+Vu3EV4P5KhL
+	 vdya0Rcy5LaRqlDW+HO39SVLYCcMlwovRI8N7vqpxYRjY+2wuhl2TitF7QIHVkOXGx
+	 dicuL8YtOL6y1Rl4AGHAb8wfudKkNeN6WjELGwkMIJJQJ8ozpYaaJbATSmEIP+FDWn
+	 yd4ej6h7IFCdKDzYpvjKWCy4jT+wB0+i1ZgHadKFMUCO1hUe4AuZhkEOC2gg1n4zel
+	 40N4s18W/5wZA==
+Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4h8Yt32DtXz40MT;
+	Tue, 28 Jul 2026 13:59:39 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
+X-Spam-Flag: NO
+X-Spam-Score: -2.901
+X-Spam-Level: 
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4h8Yt22jKCz8sbj;
+	Tue, 28 Jul 2026 13:59:38 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 1CC085FC55;
+	Tue, 28 Jul 2026 13:59:29 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <3c76ba49-4e19-4bb1-83f6-805dbfb5bcaa@leemhuis.info>
+Date: Tue, 28 Jul 2026 13:59:27 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: Policy: "routed through for-next, ... unless introduced in the
+ most recent cycle"
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Hans de Goede <hansg@kernel.org>,
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ LKML <linux-kernel@vger.kernel.org>
+References: <56f2c589-2133-417d-9bbd-2c0b11b83c87@leemhuis.info>
+ <28ffe1e4-bbbd-3945-bb8f-f372d825d0ec@linux.intel.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <28ffe1e4-bbbd-3945-bb8f-f372d825d0ec@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-PPP-Message-ID: <178523996943.624316.18411309507579081375@mxe9fb.netcup.net>
+X-NC-CID: 70wUwKT8QKDG6vffWw2RQl18uMbGxgS3TpBIbTC0JWt0agYzi0E=
 
-On Tue, 28 Jul 2026, Thorsten Leemhuis wrote:
-
-> Hi Ilpo! I stumbled about a few messages of yours where you apply a
-> commit for later mainlining were you wrote this:
+On 7/28/26 13:39, Ilpo Järvinen wrote:
+> On Tue, 28 Jul 2026, Thorsten Leemhuis wrote:
+>> Hi Ilpo! I stumbled about a few messages of yours where you apply a
+>> commit for later mainlining were you wrote this:
+>>
+>>> FYI [if applicable to your patch], as per Linus' policy change, also
+>>> fixes are mostly routed through for-next unless the fix is for a
+>>> commit introduced in the most recent cycle or is clearly a regression
+>>> fix.
+>>
+>> Could you point me to the source of "per Linus' policy change"? I really
+>> wonder if I missed something, as from what I know Linus wants fixes for
+>> regressions in all recent released merged quickly (e.g. in the current
+>> cycle), unless very dangerous or so. My knowledge is among others based
+>> on this statement from Linus:
+>> https://lore.kernel.org/all/CAHk-=wis_qQy4oDNynNKi5b7Qhosmxtoj1jxo5wmB6SRUwQUBQ@mail.gmail.com/
+> [...]
+> What I'm referring to is this policy change:
 > 
-> > FYI [if applicable to your patch], as per Linus' policy change, also
-> > fixes are mostly routed through for-next unless the fix is for a
-> > commit introduced in the most recent cycle or is clearly a regression
-> > fix.
+> https://lore.kernel.org/lkml/CAHk-=wjt1NiKOdyAMz_DT7NmZ++SizPOhRSi492ukdTnpDzHQw@mail.gmail.com/
 > 
-> Could you point me to the source of "per Linus' policy change"? I really
-> wonder if I missed something, as from what I know Linus wants fixes for
-> regressions in all recent released merged quickly (e.g. in the current
-> cycle), unless very dangerous or so. My knowledge is among others based
-> on this statement from Linus:
-> https://lore.kernel.org/all/CAHk-=wis_qQy4oDNynNKi5b7Qhosmxtoj1jxo5wmB6SRUwQUBQ@mail.gmail.com/
-> 
-> To quote:
-> 
-> """
-> And yes, I do consider "regression in an earlier release" to be a
-> regression that needs fixing.
-> 
-> There's obviously a time limit: if that "regression in an earlier
-> release" was a year or more ago, and just took forever for people to
-> notice, and it had semantic changes that now mean that fixing the
-> regression could cause a _new_ regression, then that can cause me to
-> go "Oh, now the new semantics are what we have to live with".
-> 
-> But something like this, where the regression was in the previous
-> release and it's just a clear fix with no semantic subtlety, I
-> consider to be just a regular regression that should be expedited -
-> partly to make it into stable, and partly to avoid having to put the
-> fix into _another_ stable kernel..
-> """
-> 
-> Is there something newer that invalidates this?
+> Perhaps it's just misunderstanding of my wording. [...]
 
-Hi Thorsten,
+Yeah, words is not as clear as math, and even the latter sometimes
+leaves room for interpretation if you are not careful. :-D
 
-What I'm referring to is this policy change:
+Many thanks for the detailed explanation, now I understand your intend
+better. It's just that "people queue fixes for recently user-reported
+regressions in for-next instead of mainlining them quickly" was one of
+the biggest problems I saw when I started regression tracking. It got
+better, but there is still a lot of room for improvement, which is why
+that short note got me wondering what the exact meaning was. But seems
+we are mostly in alignment here.
 
-https://lore.kernel.org/lkml/CAHk-=wjt1NiKOdyAMz_DT7NmZ++SizPOhRSi492ukdTnpDzHQw@mail.gmail.com/
-
-
-Perhaps it's just misunderstanding of my wording. My note says "unless". 
-So to qualify for fixes as per the new policy the fix has to be either 
-a) for something recently introduced (merged in this cycle) or b) a 
-proved/tested regression fix to "any" version (not some theoretical 
-regression somebody found with a tool or AI or reading the code; "any" is 
-somewhat subjective when it comes to very old regressions).
-
-The point of my note in that thank you email is not to set any policy but 
-to just explain why less patches are these days merged through fixes 
-branch. In pdx86 domain this largely relates to certain kind of patches:
-
-- .probe rollback path fixes (a platform driver probe can certainly fail, 
-but does it in practice?)
-- .remove fixes (well yeah, removing a platform driver is technically 
-possible, but why to do that?)
-- new HW additions which previously went through fixes branch
-
-Those issues tend to be quite old so they are not very critical and all 
-these can easily wait a few weeks more.
-
-I did differentiate based on criticality and complexity of a "fix" towards 
-the end of cycle even before Linus sent that note but now I'm just making 
-things easier to me and push most stuff through for-next (which leaves me 
-less conflicts to deal with as well). That being said, Rafael Wysocki 
-happened to add ACPI NULL checks to platform drivers (force match corner 
-case) in that very -rc linked above, so perhaps I'm in part of the reason 
-why Linus got tired of seeing so many "fixes". :-)
-
-
-The way I read your email is that your main concern is that according to 
-the new policy, only very recent regressions should be addressed through 
-fixes, but that's not what my note (nor Linus, AFAICT) is saying.
-
-I hope the link and explanation helped.
-
--- 
- i.
-
+Ciao, Thorsten
