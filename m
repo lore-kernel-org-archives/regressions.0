@@ -1,231 +1,237 @@
-Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com [209.85.221.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from OS5P279CU001.outbound.protection.outlook.com (mail-norwayeastazon11022115.outbound.protection.outlook.com [40.107.158.115])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F0003B71AC
-	for <regressions@lists.linux.dev>; Tue, 28 Jul 2026 12:55:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.170
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785243350; cv=none; b=Ir9YGKvQKtuGVTSjOrVsD/+23cuoYtVCIqz2zs2dQj2ZZZILtAknV4mY86MFqL5rIHgVhPVycPfu38Pp95b2F9kUzRc8r7JjUryTuUa7s6QvixaOD23hVGR34naYxdQGLNNVB2LBgCox92WV5I/lZCbLH7b3t7sZNptVFmRIwtY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785243350; c=relaxed/simple;
-	bh=O8WC6MkAjbjOGPhciENy/M68GTHA7aJo3luxOuToxzU=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=GN05yUJnZXYaKd7DJT618dlZMvql7qucCHnORvLtwHemmi5tq1NWq9sraHmg5N0Qx93c4LohFOD3dMsHh8avWmpxbXbJDlDd6l0tbVrJ59b1FJJCAx9H9yL5WELKmoQPbPjaaA8zuZsZrnOuusblIDFOGs65JC1Y/v3Rw5s0RNM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NvM+TKFc; arc=none smtp.client-ip=209.85.221.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03D8C442FD6
+	for <regressions@lists.linux.dev>; Tue, 28 Jul 2026 13:43:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.158.115
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1785246200; cv=fail; b=d2HYame37vGv0dYS/vNQmTQcfEwDCmSVbxfLyeJYSITGbSQCE/QwM8s90Q6w+TDdkHWHe5M/0H1SjmjWHqUyFD7FZLlzNCi7BZHOkBEPoEfW0sBNpXJIBOLjDxmbKPO2C7WEJrQXQBK2Hqiz4ORf5sarS8nz6ih9P8J/PSQNsTM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1785246200; c=relaxed/simple;
+	bh=DEE0Njye+MpQC5mwIMvR0gcAdoNasbT380H4zlc1OaQ=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=afJt+B0skmNmyJnlC9a9lH/CNbGenqDoPUyRxtGnziu/b9+WqgVnjd7Lkcn+HiYw70aXqvkdIq7yvlUpqB72W49QA5SssYEsXQhfp4fX5D+2lLThhDRdMiDQpk2EzsaxYSRDqFpBBBOGNbJpb71lGkzf5Xx1/1sxvoZ4JDh6R78=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=intility.no; spf=pass smtp.mailfrom=intility.no; dkim=pass (1024-bit key) header.d=intility.no header.i=@intility.no header.b=NsFSacPW; arc=fail smtp.client-ip=40.107.158.115
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=intility.no
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intility.no
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NvM+TKFc"
-Received: by mail-vk1-f170.google.com with SMTP id 71dfb90a1353d-5bfb3347ce0so1184064e0c.2
-        for <regressions@lists.linux.dev>; Tue, 28 Jul 2026 05:55:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1785243347; x=1785848147; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-type:in-reply-to:mime-version
-         :user-agent:date:message-id:from:references:cc:to:subject:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=vnkFDZWqR5ytpQ4iGipyAov7bXJjFdR1vjkKVJosivA=;
-        b=NvM+TKFcbKeiSwNOHaUyKY6SdA86WeEjPnt5j9zBrJ0RGDYaSfNAT/w5OA2+1Wj4RH
-         t8ojoUOB5ZaBdvygH1JV22qTPamXPTM3D+dv0dXsPcxgd7FdsxSMYiFMNnFJjvJnU+Zn
-         Cdq04cGnlCd2IlQDc08woKwtNZ9gg9QcWbF3XXVUeJjZyLC/uhWM1iz6tGraxb/7d7ys
-         cXeuHkZamGHwp3xrngCWGTIsYanexirKbeBMJgpwXBwsiQnktBcQqVEB2/o1+YRxgLbj
-         aqO2Zr0Qb4xJlO3g7Zp9E9udpZ4OaUSbOGFgoyQPd/UeVYJBoBcZwDjw/crWfg2Gc2+e
-         ZNkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785243347; x=1785848147;
-        h=content-transfer-encoding:content-type:in-reply-to:mime-version
-         :user-agent:date:message-id:from:references:cc:to:subject:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=vnkFDZWqR5ytpQ4iGipyAov7bXJjFdR1vjkKVJosivA=;
-        b=h47TlOBJHB+Hu5jA0DJTFIGOkikyd50fj6AyY2Z4YHgHoM7mqJi1O5cyS9fLvwXJI1
-         QvjUloScXjfIHZ9DtmbXNRalP5Qf/FgZBExolVT4z1T21VJQfAR9nXecHqap5dz0tBLO
-         si8eetYm3IDLqO5HpWnwdMLFbTVcRsIGNiIs9yQZjsYZo/FTTprhZzW/323VdhT5Kv72
-         CJM/pLFKth1uqP+lRBBHzkXaNm3xgUBefyPCvQ8lok9QUbVivMS1i5JCcmnoCflooS3o
-         8qPXHxLCZLmWbvpDGkueRCQSqWq5EvarW05NUsmGcIkKMR/AFUep0FErlAmt7cqXJ4fv
-         yymQ==
-X-Forwarded-Encrypted: i=1; AHgh+RpD9mFak3H/fHC1NjP2Cnz0OffXwQCtTpcf0VhkZu1S3AzbVDAX7DjR5YO0e1ioFjVJk6Y9Vq1iwCSVpQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwraK86WJ8xVXEX1B7d21wjpUtsbm4krtrg55ukv+tHcdef+K7J
-	BJ2Qu6jSy6EKrgkaete4woq7Z7MNLG98LXVbyaT58L7QoaqYDsGAEEiOKsMlNIY=
-X-Gm-Gg: AR+sD1012KIkPlHOpFOzMQc4i/zNg/3QO6EgaZf4fczB/8rMdG7i3YPn+Hc5YQasGQR
-	byYUpqaycAZ/3WbDmE6YkvYTwhSb0szL95Nxtal1PRoZjGemiyY5vh7AKIjuffLjQSyD2I7yBNM
-	Qk+NHO8+od8Cvzy/SfO311Vhb3sPAx6KW5+irIYhJaiWhk7y/WFuBWWibz0yzjN2DTTVueW8kin
-	JN/8sT6HSEyI5iQiPx+I+vJD2Vgi3GIQYDTDlqfzBgkNAbuNd+jDUg89fHGnLtxxWD3x21aKDrT
-	7G+Kq+7AAVDbkctoFbkcvza8qxvy4oW8f1toYGBOPEHWF72X4jkCurhsRWuJHLIPCslB8o17SJP
-	4/SlWdXbrtP/iEg4FtHrZzK6L8Kt9Nvr4xOLUDx5KIYHS0v2Rux3z0/nQWTjryHsRDf8hQjYTR6
-	zos07vE5yHapFHO7w1rPQji7gw2ap6GtLeirPW4V0r
-X-Received: by 2002:a05:6123:2c2:b0:5c1:2b9a:7cae with SMTP id 71dfb90a1353d-5c33f975e82mr766980e0c.6.1785243346896;
-        Tue, 28 Jul 2026 05:55:46 -0700 (PDT)
-Received: from [120.7.1.23] (135-23-94-154.cpe.pppoe.ca. [135.23.94.154])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5c3054a709esm9205840e0c.7.2026.07.28.05.55.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Jul 2026 05:55:46 -0700 (PDT)
-Subject: Re: [Regression] Kernel 7.2-rc : thunderbolt crash on startup
-To: Thorsten Leemhuis <regressions@leemhuis.info>,
- Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <784d45c6-1b96-825e-3686-074dbf8a2d58@gmail.com>
- <98b6d591-4b65-4b93-899d-77f27f2367ad@leemhuis.info>
-From: Woody Suwalski <terraluna977@gmail.com>
-Message-ID: <ee77d8e8-0d4f-fcb0-119e-1a9ac0e06884@gmail.com>
-Date: Tue, 28 Jul 2026 08:56:04 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101
- Firefox/140.0 SeaMonkey/2.53.24
+	dkim=pass (1024-bit key) header.d=intility.no header.i=@intility.no header.b="NsFSacPW"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=jBaDWD7Lv+z0gLnh0JdLZsXj0WHqPEVcTzIWavFsbaT2NoLiC6YnlX+O8sX3PFjOa7gUgi7VtOTZ51XwRojd5BV9vW5SKZWh9/X6a0qzAlB7J3Qfmar3Rbuyu/PAC4TiP0zTq+YsOxXdGKymlBQbNxB4eBsicGzsgxsrjQKTGgBNcRM+2uUsWziF03Enw70Xn4GyPTded3Z9kxyL18eM44WJoHoWxii3I6DFik3NluU5VBGM7kShnZ+axwML8U2+e+FamQ7fDxSkgxqKDbBTGWA2FRTYaQh+csaGAgNiGkiqtSLZbJMzN0tVVnnAjGVKy6N6ODEWbpgL92HWQcCy8w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=TaMWIJFtMNHXBzHvkNgDZ0Q18rmmNnVpV9cN3OkWqgM=;
+ b=rU2ILLp1zFtk+WQaWYU0Yu52ram/TRSTze23ehM/aoER7hMArVRGGkM3LJJFHbf8uVEjAQOy7YKrAP24qcQwepONixlX08A3qOyL0+PYkkDQgoL8xdhhciUlZIufiDIEcLFOyTcSxMQREJvPX3OWaHBWtkHBgpavsWD40FeWOtEi2qWKliI2qOtxfPHSct+4aPo1sawCg5aSJFheDuIOWVNv6fBisHSMAuRVchHJq9o0OoPdaPRFCxa99KT0C3+8bOudmzvJzwAJlo61y5dhPv3ZJDQbmuBIWMg/OpT+QPJVbSsIjx8BFa94hcd12TOAFxLzGk3l3Vc9WQndxWGKIw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intility.no; dmarc=pass action=none header.from=intility.no;
+ dkim=pass header.d=intility.no; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intility.no;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TaMWIJFtMNHXBzHvkNgDZ0Q18rmmNnVpV9cN3OkWqgM=;
+ b=NsFSacPWRLGnkl6I1JGkWHHPHKOCnalbr3aOJRXeiWWeVtxVDEZEJljkKp0cQtUWMGcOuRcF0/qgAM1QB+FWlngX5tdpCK07mb6jE9R0n4ywy+f+jB2tjffU527k+XeaTfIMK3gDkspuX1Z02e8UaX2/zZbY/VxqCd2N3zrp6kU=
+Received: from SV0P279MB0105.NORP279.PROD.OUTLOOK.COM (2603:10a6:f10:b::10) by
+ OL1P279MB0002.NORP279.PROD.OUTLOOK.COM (2603:10a6:e10:10::13) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.270.12; Tue, 28 Jul 2026 13:43:10 +0000
+Received: from SV0P279MB0105.NORP279.PROD.OUTLOOK.COM
+ ([fe80::8a8b:563d:c6df:ba43]) by SV0P279MB0105.NORP279.PROD.OUTLOOK.COM
+ ([fe80::8a8b:563d:c6df:ba43%5]) with mapi id 15.21.0245.012; Tue, 28 Jul 2026
+ 13:43:09 +0000
+From: Mats Topstad / Intility AS <Mats.topstad@intility.no>
+To: Daniel Fernau <mail@danielfernau.com>
+CC: "Martin K. Petersen" <martin.petersen@oracle.com>, Thorsten Leemhuis
+	<regressions@leemhuis.info>, "me@magik.net" <me@magik.net>,
+	"linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>, Kashyap Desai
+	<kashyap.desai@broadcom.com>, Sumit Saxena <sumit.saxena@broadcom.com>,
+	Shivasharan S <shivasharan.srikanteshwara@broadcom.com>, Chandrakanth patil
+	<chandrakanth.patil@broadcom.com>, "megaraidlinux.pdl@broadcom.com"
+	<megaraidlinux.pdl@broadcom.com>, "regressions@lists.linux.dev"
+	<regressions@lists.linux.dev>
+Subject: Re: [PATCH] scsi: megaraid_sas: fix PRP list out-of-bounds write
+Thread-Topic: [PATCH] scsi: megaraid_sas: fix PRP list out-of-bounds write
+Thread-Index: AQHdCHr1a5nXUO6qz0KZI2aX9dis4LZqymolgAE78ACAFxaxgA==
+Date: Tue, 28 Jul 2026 13:43:09 +0000
+Message-ID: <9900ABF6-01C5-4B9B-BEF3-BAB5A18C3F54@intility.no>
+References:
+ <GPhsSM0vkgyIrs0DIZ62qeUZX7X4RxwQXVKiuvMx-lHQVSPDxpztUyQOGS0xikqvJ-Z94hMV-dW_5KN_0CX2hsfV7kTf_t0MTf6vdAAaSEc=@magik.net>
+ <yq15x5lowt9.fsf@ca-mkp.ca.oracle.com>
+ <b8fcdb5e-f2be-4bd0-914d-d03e87af9630@leemhuis.info>
+ <yq17bmzd5jr.fsf@ca-mkp.ca.oracle.com>
+ <YKopBh5zwX7tXjDOqU7R0K9CQfVpd3r9_baFGNLwcZGgb4m0cddKjzuQwp0lWZJqixIfpiHm9YwjQfRvNJjBZwl1PaqtuuuCd7dJ4lmirSY=@danielfernau.com>
+In-Reply-To:
+ <YKopBh5zwX7tXjDOqU7R0K9CQfVpd3r9_baFGNLwcZGgb4m0cddKjzuQwp0lWZJqixIfpiHm9YwjQfRvNJjBZwl1PaqtuuuCd7dJ4lmirSY=@danielfernau.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intility.no;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SV0P279MB0105:EE_|OL1P279MB0002:EE_
+x-ms-office365-filtering-correlation-id: dc6a5074-9c5f-45c2-4fcd-08deecae297d
+x-intilityrouting: true
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|1800799024|376014|7416014|23010399003|366016|10070799003|11063799006|4143699003|10067099003|6133799003|56012099006|18002099003|22082099003|38070700021;
+x-microsoft-antispam-message-info:
+ nEDyPfpyBMFiZN04ZUeRqHQnzocv5LaMyChOrKLqjWgEyYX7hcGVMGMidAkXX0E0PVClkb4Ej/jgERBjeMsFAyJdiRDg7A1p5VvSBLNP+KaWgMXiifWc2O4CU2o/3ZCHnArNCNdcqKKREZiIeCo43/57IEwVIJArVKaxNUBvQnt+GIDVhwQ5ak8msXsnUqUb8gfCbRH+BTb/B7kpr7P9dy/h6+JGAgWvX6JSdPed39CMTSsEgf3rHqxlWBwqbi++Mcz73fdmYmTiY83vZqGFmGEtPPt7CDti7XGxE5o76mjkcwA3EUovlPVCOjdUDgGhOJTJn500onLiG1sD/DikD/+GVci5u6tL8XfEi88+6UIlFVW3gqVQVbljS1VNjzbEo2yXRxSKWGbHvcblApe9A8RHGpQvg99f3CivRoTB58PTf3j8Cj/qj1dvvIquJrJiHOc4g9EkGLZ4lRy3msDuZVGO/91STnb826o8qxdQSw9EdXKrfWKXBWAfXhQtR4S0+OipWPhsVkpdF/FM9WrEAkKb1Aij7nthjN9ksk9XSMKbNiXdKae8mQw2KQCXTvUUVsn2wct0Iyx6SaEhgMb1r1qHcZpsPORkjcsQoSwqq3U6Xaxmg8jrrYtRjE/7t341dHCIYNrFtUg6c95jIGkM0XNEKO7PNgu5u1JHUShCteT06u7GzaOM9LkwcjSxOUaA5CQqWOlyY6GJJYibj7LIEt7Ko5UltBHhZbmgl0pqfiw=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SV0P279MB0105.NORP279.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(23010399003)(366016)(10070799003)(11063799006)(4143699003)(10067099003)(6133799003)(56012099006)(18002099003)(22082099003)(38070700021);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?1EBeGhd20iqvgDok2AeEuKLBDG0/2y2mrqphB2hvsN6uOof5MqiBnvdHQJ5L?=
+ =?us-ascii?Q?uPmJUlYYAASpx6aWE6ZlsfJs/Hu583FAStX9evC3NId+LZk2xI1T3XS9lkMd?=
+ =?us-ascii?Q?2KJuxD7yPgZONtOZLECTnfGe/fVTpsPRVg9vTNjPHa6P+fH4WaOIBCVRE9g4?=
+ =?us-ascii?Q?5UsnT21E7dcYE/lmqtejNS4fS/ksaJ8TWgRNU3/t0xsWJ2ShBjP/wHXKbSgr?=
+ =?us-ascii?Q?j5Ag+vlsDLhva1se6dpbFniTOInz0Ve742U8SZZ0Pwcipm6i55/bEZ7U6NhW?=
+ =?us-ascii?Q?CrGCRdBxdy5qWjzIcQZreAAlpRk5tz7I3p/0r77KcleQnfZO1si50nimkC30?=
+ =?us-ascii?Q?mSdfJ2CPNxMbBQU7UqLoaHRdKcURKS8oIbjeVvVqZv481yrArCMTgHVbQqdU?=
+ =?us-ascii?Q?y7CQowF2AwEfMcMzrL0/IFojdpuxcM4KDz+ATlHA9HcOXEi1RVubo8tzX8W+?=
+ =?us-ascii?Q?NE40puZ3WPJwwCLk+Gt99o5UPfb1+NpdCBi+szSl0wd2arDj4Khk3f5mz8dv?=
+ =?us-ascii?Q?YGfbnttDwmZDwG2fzy0e0cbN7EhtfE5Ca6VBe+RWlWIF2dZCac+VzaJYkM3U?=
+ =?us-ascii?Q?sDj2hBI7KH7p2JvtVlGBruqFvgYc0v0YFGMomtZoMtC3PMydot71RmSvXmqg?=
+ =?us-ascii?Q?LRA/lcKxnBCzPfCFPqTAN0xeat8Oq0siKBYD4jUDdPmxCVFBM/KRB0qOjLvt?=
+ =?us-ascii?Q?TTbjJG2FPgLnTJ78sJgpGcy7rjYFr8JJa+Cq2qMMMfoHkDfKSCj1mAjbXfx4?=
+ =?us-ascii?Q?vNLl6/htGlAlVd/nXUnVslNyl8lVWeH3NSpfTLTWjeYahh0B8/9LbdDGr8mN?=
+ =?us-ascii?Q?k8uRIdxonPCGOEbG/LmwDYcw71WJQdBpTY2c5xMh+wJw7jvts71HlUPoGPxP?=
+ =?us-ascii?Q?S0JY3V7XGZYoEOgdqqs56J6nDIe2lMXt7PgwoqufFU+b+sl4RnYl0RHPFrAT?=
+ =?us-ascii?Q?a5SfRIIGVoNiNCAfUE7Od1sUL8hjiRiQRKOdb3GWd6IKP/4B+MxtHwROn65e?=
+ =?us-ascii?Q?ue+G6L1/FQXFsDblmQsriWUhx6Ggvg704I69cx56E1adCDGp8VA1s82YL15R?=
+ =?us-ascii?Q?yg46yu3CZGZW16l8fAd4O/XoaH6vreEd1mJtfCmbWGoSW3iKTKaiWUeIqBbH?=
+ =?us-ascii?Q?sze5khPXCdilGuZtuP2L8CyT3m83+EbCEPq2IC3aZsLbuWgeM2iZNOOzfhl0?=
+ =?us-ascii?Q?tA/RWTDicqHkT0bocInQgPqv2bzNur+j4PnEjNPYjDAl06ZCbKeXZsqpzfoM?=
+ =?us-ascii?Q?mItlM6guJjMMKBjr5SDGSJ7SwIhmjoD7mRokF3wbkwFdUI1R7Xsg7C5okQxp?=
+ =?us-ascii?Q?S6FdEuEx/Lv1GWM/57+n8+wJlvtr38hHfb0IEFfQzdrVOR1tBtyCelIPLc7V?=
+ =?us-ascii?Q?2TPozLQ857e+BBMCXLs9KrkL+gXEHN0Wv5/c0/AE3PDdZVrEbqkaFcdWvcai?=
+ =?us-ascii?Q?52Wtcb6vL6YCWRsxTmlHwhGGO4LBIKyLtjWo/V4JD882l5EbZPk3DX7kYH6r?=
+ =?us-ascii?Q?oPmmS+mkQFDO7pW6O3YIWemABQEmDu7hmOs3skjYjLhREOhd5H/MG3dceC/X?=
+ =?us-ascii?Q?7ucudN+A1w9Li8tJDblHZMAS5hedv1/aD0I6KX24CoukuudLi4mGlHvvit2+?=
+ =?us-ascii?Q?W0IpCxJe/qhDdSWSVY2yrOSQBY/Mbo04JvmXyjT4zLpbVQWp3NgMA1m3Awyy?=
+ =?us-ascii?Q?SjKMUouQFdcREg3IzI890ZTKq03hBo+9PqfXGghl2dc6B74Herpxet3nIeKW?=
+ =?us-ascii?Q?LGq3ptlE9/bX/gPPr+1ZGPQtC9ZQZymvN7hCwK8ZnnvDD4mM/ZtM?=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <3521D287AE273A448A125353DD0C8C53@NORP279.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <98b6d591-4b65-4b93-899d-77f27f2367ad@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: intility.no
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SV0P279MB0105.NORP279.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: dc6a5074-9c5f-45c2-4fcd-08deecae297d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Jul 2026 13:43:09.6936
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 9b5ff18e-53c0-45a2-8bc2-9c0c8f60b2c6
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: fQAyioH60/J18a7qV91fp7onurmcTFvw1WMJSbwRC6aoC8KsX1Y4WyHWhH12PlqBGqDc92iA1FK1RNNcGfh2QnbpIBXhKPFyI6MRWrWfs+g=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OL1P279MB0002
 
-Thorsten Leemhuis wrote:
-> On 7/8/26 22:09, Woody Suwalski wrote:
->> Re: commit f5cc545f59699549adbaa4084149f8247865a51d
->> Author: Mika Westerberg <mika.westerberg@linux.intel.com>
->> Date:   Wed Nov 19 12:53:58 2025 +0200
->>
->>      thunderbolt: Wait for tb_domain_release() to complete when driver is
->> removed
->>
->> ====================
->>
->> Mika, starting with7.2-rc1 the boot on an old Apple MacBookPro and
->> MacBook Air has been problematic - the thunderbolt driver crash may stop
->> boot or let it boot in somehow unstable state.
-> Seems this fell through the cracks (due to vacations or something I
-> assume -- so no worries!), but to ensure this is not totally forgotten:
->
-> Woddy, does this still happen with 7.2-rc5? And is the fix you proposed
-> still helping?
-> https://lore.kernel.org/lkml/62caf7f8-b403-d0dd-15bc-b31b56f71c28@gmail.com/
->
-> Ciao, Thorsten
->
-Hi Thorsten,
+Hi all,
 
-Mika is now back from holidays and we are starting to discuss the fix.
-So most likely it will now be cleared in an one or two rc releases :-)
+Adding a data point from an HPE ProLiant DL360 Gen11 with the MR408i-o Gen1=
+1
+controller (megaraid_sas), 960 GB SAS SSDs presented as sd*, running kernel
+6.18.32 (Talos Linux v1.12.8). Without a cap the node panics within seconds=
+ of
+sustained block I/O to the controller, with the same megasas_make_prp_nvme
+signature discussed in this thread.
 
-Thanks, Woody
->> The issue is the domain_release()/complete() crash as called during boot.
->>
->> Just disabling the
->>
->> complete(&nhi->domain_released);
->>
->> line will allow system to boot OK, however (as designed in your patch)
->> on shutdown system will hang waiting for completion.
->>
->> I am not sure if the workaround should be to detect that
->> domain_release() is called during startup, or perhaps to fix the problem
->> on the kernel scheduler level?
->>
->> If you have any ideas or patches, let me know...
->>
->> Thanks, Woody Suwalski
->> terraluna977@gmail.com
->>
->> =========================
->> [   10.531967] [   T2588] bcma-pci-bridge 0000:03:00.0: bus0: Core 2
->> found: PCIe (manuf 0x4BF, id 0x820, rev 0x1
->> 3, class 0x0)
->> [   10.570223] [   T2604] ACPI: bus type thunderbolt registered
->> [   10.580666] [   T2604] BUG: unable to handle page fault for address:
->> fffffffffffffff8
->> [   10.580745] [   T2604] #PF: supervisor read access in kernel mode
->> [   10.580796] [   T2604] #PF: error_code(0x0000) - not-present page
->> [   10.580844] [   T2604] PGD 2ec19067 P4D 2ec19067 PUD 2ec1b067 PMD 0
->> [   10.580915] [   T2604] Oops: Oops: 0000 [#1] SMP NOPTI
->> [   10.580929] [   T2603] acpi ACPI0001:00: SBS HC: offset = 0x20,
->> query_bit = 0x10
->> [   10.580968] [   T2604] CPU: 3 UID: 0 PID: 2604 Comm: (udev-worker)
->> Tainted: G S                  7.2-pingu #0~rc1 PREEMPT(full)
->> 9f8aaa247129d19aebb6b0d19f7b648b1f9f7f36
->> [   10.581126] [   T2604] Tainted: [S]=CPU_OUT_OF_SPEC
->> [   10.581165] [   T2604] Hardware name: Apple Inc. MacBookPro8,1/
->> Mac-94245B3640C91C81, BIOS MBP81.88Z.0050.B00.1804101331 04/10/18
->> [   10.581248] [   T2604] RIP: 0010:complete+0x3a/0x70
->> [   10.581301] [   T2604] Code: 61 c8 00 48 89 c5 8b 03 83 f8 ff 74 05
->> 83 c0 01 89 03 48 8b 53 10 48 8d 43 10 48 39 c2 74 29 48 8b 5b 10 31 d2
->> be 03 00 00 00 <48> 8b 7b f8 e8 4d e9 fd ff 48 8b 13 48 8b 43 08 48 89
->> 42 08 48 89
->> [   10.581441] [   T2604] RSP: 0018:ffff92720020ba98 EFLAGS: 00010046
->> [   10.581496] [   T2604] RAX: ffff8c82c6a2b3b0 RBX: 0000000000000000
->> RCX: 000000000000000c
->> [   10.581559] [   T2604] RDX: 0000000000000000 RSI: 0000000000000003
->> RDI: ffff8c82c6a2b3a8
->> [   10.581621] [   T2604] RBP: 0000000000000282 R08: 0000000000000000
->> R09: 0000000000000000
->> [   10.581681] [   T2604] R10: 0000000000000001 R11: ffff8c832ba20d80
->> R12: ffff8c82c6a2b3a8
->> [   10.581744] [   T2604] R13: ffff8c82c81f02b0 R14: 0000000000000000
->> R15: ffff8c82c6e53148
->> [   10.581808] [   T2604] FS:  00007ffaf52c99c0(0000)
->> GS:ffff8c839ad88000(0000) knlGS:0000000000000000
->> [   10.581881] [   T2604] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->> [   10.581935] [   T2604] CR2: fffffffffffffff8 CR3: 0000000105596002
->> CR4: 00000000000606f0
->> [   10.581999] [   T2604] Call Trace:
->> [   10.582032] [   T2604]  <TASK>
->> [   10.582061] [   T2604]  device_release+0x3a/0x90
->> [   10.582112] [   T2604]  kobject_put+0x8a/0x230
->> [   10.582166] [   T2604]  icm_probe+0xf2/0x550 [thunderbolt
->> 2f2c536023810e0da91d9b6d6a63a9f9bf553e73]
->> [   10.582415] [   T2604]  nhi_probe+0x196/0x390 [thunderbolt
->> 2f2c536023810e0da91d9b6d6a63a9f9bf553e73]
->> [   10.582620] [   T2604]  local_pci_probe+0x3c/0x90
->> [   10.582668] [   T2604]  pci_device_probe+0xb0/0x1d0
->> [   10.582715] [   T2604]  ? sysfs_do_create_link_sd+0x69/0xd0
->> [   10.582778] [   T2604]  really_probe+0xd1/0x3e0
->> [   10.582826] [   T2604]  ? __pfx___driver_attach+0x10/0x10
->> [   10.582878] [   T2604]  __driver_probe_device+0x80/0x180
->> [   10.582931] [   T2604]  driver_probe_device+0x1a/0x80
->> [   10.582983] [   T2604]  __driver_attach+0xca/0x1f0
->> [   10.583031] [   T2604]  bus_for_each_dev+0x6d/0xc0
->> [   10.583079] [   T2604]  bus_add_driver+0x11b/0x240
->> [   10.583128] [   T2604]  driver_register+0x50/0x100
->> [   10.583178] [   T2604]  ? __pfx_init_module+0x10/0x10 [thunderbolt
->> 2f2c536023810e0da91d9b6d6a63a9f9bf553e73]
->> [   10.583404] [   T2604]  nhi_init+0x30/0xff0 [thunderbolt
->> 2f2c536023810e0da91d9b6d6a63a9f9bf553e73]
->> [   10.583606] [   T2604]  ? __pfx_init_module+0x10/0x10 [thunderbolt
->> 2f2c536023810e0da91d9b6d6a63a9f9bf553e73]
->> [   10.583805] [   T2604]  do_one_initcall+0x6b/0x2c0
->> [   10.583851] [   T2604]  ? do_init_module+0x1d/0x270
->> [   10.583895] [   T2604]  do_init_module+0x5b/0x270
->> [   10.583935] [   T2604]  init_module_from_file+0xc3/0xe0
->> [   10.583982] [   T2604]  idempotent_init_module+0xf7/0x2e0
->> [   10.584029] [   T2604]  __x64_sys_finit_module+0x68/0xe0
->> [   10.584075] [   T2604]  do_syscall_64+0xc2/0x550
->> [   10.586162] [   T2604]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
->> [   10.588198] [   T2604] RIP: 0033:0x7ffaf5e277b9
->> [   10.590222] [   T2604] Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f
->> 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b
->> 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 27 66 0d 00 f7 d8
->> 64 89 01 48
->> [   10.594678] [   T2604] RSP: 002b:00007ffd1d772f38 EFLAGS: 00000246
->> ORIG_RAX: 0000000000000139
->> [   10.597004] [   T2604] RAX: ffffffffffffffda RBX: 0000561fac083800
->> RCX: 00007ffaf5e277b9
->> [   10.599213] [   T2604] RDX: 0000000000000000 RSI: 00007ffaf455a44d
->> RDI: 0000000000000027
->> [   10.601423] [   T2604] RBP: 0000000000000000 R08: 0000000000000000
->> R09: 0000561fac003030
->> [   10.603602] [   T2604] R10: 0000000000000000 R11: 0000000000000246
->> R12: 00007ffaf455a44d
->> [   10.605753] [   T2604] R13: 0000000000020000 R14: 0000561fac082060
->> R15: 0000000000000000
->> [   10.607706] [   T2604]  </TASK>
->> [   10.609330] [   T2604] Modules linked in: sbshc bcma(+)
->> thunderbolt(+) usb_common sg efi_pstore nvme_fabrics fuse configfs
->> efivarfs dmi_sysfs autofs4
->> [   10.610939] [   T2604] CR2: fffffffffffffff8
->> [   10.612390] [   T2604] ---[ end trace 0000000000000000 ]---
->> [   10.615077] [   T2588] bcma-pci-bridge 0000:03:00.0: bus0: Bus
->> registered
->>
->>
+Capping max_sectors_kb=3D1280 on the sd* devices resolves it on this contro=
+ller
+by itself. I pushed roughly 85 GB of dd bs=3D4M oflag=3Ddirect through it, =
+so every
+request is split at the 1280 KB boundary, with zero panics, where the uncap=
+ped
+case dies almost immediately. On the MR416i-o you found the cap necessary b=
+ut
+not sufficient because of a second problem in the SG advance path. I did no=
+t
+reach that second failure on the MR408i-o; the cap alone was enough here.
+
+Both of our worker nodes have now run on kernel 6.18 throughout this testin=
+g
+with the cap applied by a udev rule at device add:
+
+  ACTION=3D=3D"add|change", SUBSYSTEM=3D=3D"block", KERNEL=3D=3D"sd[a-z]", =
+DRIVERS=3D=3D"megaraid_sas", ATTR{queue/max_sectors_kb}=3D"1280"
+
+This lines up with Martin's suggestion to cap max_hw_sectors on the driver =
+side
+for NVMe behind MR. If a driver side patch would help, I am happy to build =
+and
+test it on this exact hardware and report back, and I can provide a full dm=
+esg
+or a serial panic capture from the uncapped case if that is useful.
+
+Thanks,
+Mats
+
+> On 13 Jul 2026, at 23:07, Daniel Fernau <mail@danielfernau.com> wrote:
+>=20
+> Hi all,
+>=20
+> Sorry for the late reply. I was unable to follow up on this earlier becau=
+se I had to prioritize other issues.
+>=20
+> In the meantime, we pinned our kernel to version 6.8.12-4-pve on Proxmox,=
+ which has been stable for our use case and hardware. Given the recent 7.x =
+release, I will take another look this week and report back.
+>=20
+> We are using KIOXIA NVMe SSDs, so we will see how it goes.
+>=20
+> Thanks,
+> Daniel
+>=20
+>=20
+>=20
+>=20
+> On Sunday, July 12th, 2026 at 8:16 PM, Martin K. Petersen <martin.peterse=
+n@oracle.com> wrote:
+>=20
+>>=20
+>> Thorsten,
+>>=20
+>>> Martin, do you know if someone there ever looked into this regression
+>>> and the proposed fix? I'm wondering because Daniel and Mats reported
+>>> problems under the same subject line (in new threads), but also didn't
+>>> get a reply.
+>>=20
+>> I think this problem is just an unfortunate side effect of the kernel
+>> being able to build bigger I/Os by default.
+>>=20
+>> Typically NVMe SSDs report fairly modest maximum I/O sizes compared to
+>> SCSI devices. I suspect this is why we only see this issue with a few
+>> select models. My hunch is that these drives advertise a fairly large
+>> MDTS.
+>>=20
+>> Since there appears to be no traction wrt. fixing the MR PRP vs. SGL
+>> chaining logic, I wonder if the patch below is sufficient?
+>>=20
+>> --
+>> Martin K. Petersen
+>>=20
+>> diff --git a/drivers/scsi/megaraid/megaraid_sas_base.c b/drivers/scsi/me=
+garaid/megaraid_sas_base.c
+>> index ecd365d78ae3..b93a6d1180ff 100644
+>> --- a/drivers/scsi/megaraid/megaraid_sas_base.c
+>> +++ b/drivers/scsi/megaraid/megaraid_sas_base.c
+>> @@ -1978,7 +1978,8 @@ megasas_set_nvme_device_properties(struct scsi_dev=
+ice *sdev,
+>> 	mr_nvme_pg_size =3D max_t(u32, instance->nvme_page_size,
+>> 				MR_DEFAULT_NVME_PAGE_SIZE);
+>>=20
+>> -	lim->max_hw_sectors =3D max_io_size / 512;
+>> +	lim->max_hw_sectors =3D
+>> +		min(SZ_2M >> SECTOR_SHIFT, max_io_size >> SECTOR_SHIFT);
+>> 	lim->virt_boundary_mask =3D mr_nvme_pg_size - 1;
+>> }
+>>=20
+>>=20
 
