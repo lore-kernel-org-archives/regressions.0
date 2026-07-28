@@ -1,117 +1,135 @@
-Received: from mail.xenproject.org (mail.xenproject.org [104.130.215.37])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 719C726B764
-	for <regressions@lists.linux.dev>; Mon, 27 Jul 2026 16:51:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=104.130.215.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B78130D40E;
+	Tue, 28 Jul 2026 02:26:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785171093; cv=none; b=o77kNir9AIo7HBc8ZV6RoaY7y66xWzrhq4rw/uX/Dlo4H8ruMWe5OCVT15C0/bQwd5dnwgDUPxit3WBC0mKkV8xgNbeu3E4p5EXbDEDYiZ5aepOSAoPM8hG3yTZyMZR2zGD6xE1DySU9X+stPanGwSNEK35VM5YnVVTYhRNvu3I=
+	t=1785205625; cv=none; b=JRZ7dkxIp/iLsftOvewpqhYxtS9hRe+7Z9p5ACFHQh5+jG7kLBH0ce9cTEVtHD6Mupl/iu9Ige5otk3Cy8KNyFt7VkzXyROZMPPvVEBB+wSA4zwWE9FPST5yOrlOV7zdWfsQ/m+gsmr5ks3+2dBJQcLN+F8ju6n8rG6OtIWqqDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785171093; c=relaxed/simple;
-	bh=q11Jkl7ykugtresnqGt7DAEKk2HbQUCNSXsZlrPN9pI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OquKJOsi/NbxxSeIerEQds1ehDIauIRHE7T6RTylGX5HtKyzmus3ZVyop/axUaGgWj69qbtpNM/9B+XgE9h0boedafCXvYFChQKGBtFy/veyjCp+OMW7/8PUxRFp1yRT5HuvcIAWv54ShswjgHK0nLznPtJytWcy0e1EpD3koQ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=reject dis=none) header.from=citrix.com; spf=fail smtp.mailfrom=citrix.com; arc=none smtp.client-ip=104.130.215.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=reject dis=none) header.from=citrix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=citrix.com
-Received: from xenbits.xenproject.org ([104.239.192.120])
-	by mail.xenproject.org with esmtp (Exim 4.96)
-	(envelope-from <roger.pau@citrix.com>)
-	id 1woOXx-00BgNb-1r;
-	Mon, 27 Jul 2026 16:51:21 +0000
-Received: from 224.pool85-54-217.dynamic.orange.es ([85.54.217.224] helo=localhost)
-	by xenbits.xenproject.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <roger.pau@citrix.com>)
-	id 1woOXw-00FxMZ-3B;
-	Mon, 27 Jul 2026 16:51:21 +0000
-Date: Mon, 27 Jul 2026 18:51:15 +0200
-From: Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Juergen Gross <jgross@suse.com>,
-	"xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-	Linux kernel regressions list <regressions@lists.linux.dev>,
-	yannick.martin+kernelorg@okazoo.eu
-Subject: Re: [regression] Bug 221745 - PV DomU ballooning driver init issue
-Message-ID: <ameMgwuUIhZbslHh@macbook.local>
-References: <f7fe5959-f0c6-430c-8404-927d7944c836@leemhuis.info>
+	s=arc-20240116; t=1785205625; c=relaxed/simple;
+	bh=mBnZqNs6JRbn8ZTHIehoByB0RFlPD7Xyr3hM4naS8lg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=G8guAAsgNV8NGCzLoFcAop8pkAvALYekKBgVudyEQlUIxrF/ATDsNMOXpvvvkYfd/PkrHvvcuwmRqJrbNxkZSaquCVqshnXFDAoRYX3g16x7GX2apsnZtLseJ8nJHF1YJv8OLIDPd0sHX+Dn4O1GyMk1ukuVvB1AZSyuokfjsTU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cohC8hKQ; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cohC8hKQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1785205619; x=1816741619;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=mBnZqNs6JRbn8ZTHIehoByB0RFlPD7Xyr3hM4naS8lg=;
+  b=cohC8hKQdaoAdjMzqf5xpDnhIu5eA5DCAuA8F93IcdtkWHGbJFQQnapU
+   qe79ZA5fiL4qR1eCQZHiNap8RxoCP/CpUcgangnOUVnS6SI+SLxrAaqHy
+   upneYqaJfaVp6nTH/nXEXWYx7aInD4pCSpahXmnp25AtLm8hyxLR8pU9h
+   u0bKqDUoHpI1L148eI2FsQoupXI9tv3qs6s8QG29iR9kHbetufHy+LnxH
+   3KzHrFW2awByjHiX/9hXaj13KZntJAqfcGKmObiLpWKUe0Fw3HNRiqjHc
+   vsDMNaoTzoX5XzHyLqeyU0r983+IuY3dPDIfX91ANKQ7k3bjGCkYEeQo2
+   w==;
+X-CSE-ConnectionGUID: Zfnig3KkTRC0rHf4Mc3WfA==
+X-CSE-MsgGUID: OZoNs4ciRSKYKMqpqoHM2Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11858"; a="103191408"
+X-IronPort-AV: E=Sophos;i="6.25,189,1779174000"; 
+   d="scan'208";a="103191408"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jul 2026 19:26:53 -0700
+X-CSE-ConnectionGUID: iXPpEx2/TC+DNrHRNLlCaw==
+X-CSE-MsgGUID: XEmm/+dZSgmdd5WlAsvn1w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,189,1779174000"; 
+   d="scan'208";a="256222764"
+Received: from allen-sbox.sh.intel.com (HELO [10.239.159.30]) ([10.239.159.30])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jul 2026 19:26:51 -0700
+Message-ID: <275dbe0d-0b2d-4ec4-9c8c-9bd7ddf06070@linux.intel.com>
+Date: Tue, 28 Jul 2026 10:25:00 +0800
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <f7fe5959-f0c6-430c-8404-927d7944c836@leemhuis.info>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] GPU passes into VM improperly after c376a3456d8b or
+ a98db518dde2
+To: 70sp <70sp@protonmail.com>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+ "regressions@leemhuis.info" <regressions@leemhuis.info>
+References: <z7Rkts0EsooZcnCjNfJaK6ursftFU8ubOkH0hcNjzxugEAwGsHLMblOdfoAx-gJzBZ-TMmeUtD7iWBngbFY5UCJCwdSmYqmCVMy-yhbirUk=@protonmail.com>
+ <56ce85d5-e0b9-407c-9a86-708111a8a509@linux.intel.com>
+ <C4BK-Bp_FII0EkxSHQxBS2wO-Age-UxFrp_KfmYzb8cnQ8ZndzBBIPD8S9T86wOifBP0tysQGCFtGQsBsBvG2IzIMw3jb3NF5HGbS3tsawA=@protonmail.com>
+ <d6a7f70c-5a8a-4be6-abdd-5b3decbb602a@linux.intel.com>
+ <7ec374cb-9a0a-4e30-8410-3a028e46cacd@linux.intel.com>
+ <5bVscg7a2_H1PPW3HmVtrYv_Xwtti2hzjD065W4OdwsD9rC2gw7sGVEg-2U596VZn8O2LAEfhWeZklRk63ymqNW9220R6R_jjif7BaWol9o=@protonmail.com>
+ <82662a17-f9e2-46dd-9881-792412c1dc50@linux.intel.com>
+ <X7nc9tQqVxmuR76GYNJnMRkqUTwNVlXTWpH0wGvJeiAHlcLaibPZHRN037p0359GpdmopB_wI2tF2x6EqZF4oY9J697tcTGYwfYMK96FcUs=@protonmail.com>
+Content-Language: en-US
+From: Baolu Lu <baolu.lu@linux.intel.com>
+In-Reply-To: <X7nc9tQqVxmuR76GYNJnMRkqUTwNVlXTWpH0wGvJeiAHlcLaibPZHRN037p0359GpdmopB_wI2tF2x6EqZF4oY9J697tcTGYwfYMK96FcUs=@protonmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jul 27, 2026 at 10:42:25AM +0200, Thorsten Leemhuis wrote:
-> Hi Roger! FYI, it seems your change 0949c646d64697 ("Partial revert
-> "x86/xen: fix balloon target initialization for PVH dom0"") [v7.0-rc1]
-> caued a regression. For details see
-> https://bugzilla.kernel.org/show_bug.cgi?id=221745
+On 7/16/26 05:20, 70sp wrote:
+> Hello,
 > 
-> To quote the initial comment:
+> this regression thread became abandoned unfortunately.
 > 
-> > Since commit db8c4b1 (Partial revert "x86/xen: fix balloon target initialization for PVH dom0"), xen ballooning fails to init correctly on domU (on amd64 arch) with the following configuration:
-> > 
-> > -- xl.cfg
-> > ...
-> > memory      = '2048'
-> > maxmem      = '4096'
-> > ...
-> > --
-> > 
-> > -- domU balloon dmesg (init fails)
-> > [    0.908337] xen:balloon: Initialising balloon driver
-> > [    0.940721] Extra pages underflow current target
+> In case there's anybody who would like to help me (or generally) solve this regression, I am sending all information about what I've found out.
+> 
+> I had a private conversation with Lu Baolu regarding this issue and we found out several new facts about this. I am currently working on creating and testing my own patches to add backward compatibility for hardware affecting this issue with my limited knowledge of C and IOMMU.
+> 
+> This issue consists of improper GPU passthrough into VM on a specific platform (Haswell) or a specific GPU (NVIDIA Maxwell - GTX 970). I personally believe (could be incorrect), that it is caused by the GPU being too old and becoming unsupported by referenced commits. The GPU doesn't seem to be using all levels of PTE properly and some data need to be trimmed for proper passthrough but the patches seem to remove (or alter) the trimming functionality.
+> 
+> The issue is caused by one of these commits:
+> a98db518dde246e01ead53617dc0a30d6aaa3752
+> c376a3456d8bef43ec556a98c0a04c35086c2737
+> 
+> The IOMMU code changed a lot since these commits were merged.
+> 
+> With IOMMU DebugFS enabled these messages appear in dmesg on affected kernels:
+> [  107.365019] DMAR: DRHD: handling fault status reg 3
+> [  107.365021] DMAR: [DMA Read NO_PASID] Request device [01:00.0] fault addr 0x37fff1000 [fault reason 0x0c] non-zero reserved fields in PTE
 
-Yeah, I'm afraid the original fix commit didn't fully fix the issues,
-so there's the following change (chunk below) that's needed
-additionally to cope with memory != maxmem on PV guests.
+VT-d hardware implementation reports a fault with reason 0x0c when,
 
-I've done some basic testing and it seems to solve the issue, could
-you give it a spin also?  (just to make sure I'm not missing anything
-else).
+[Table 30, VT-d specification]
+"When legacy mode (RTADDR_REG.TTM=00b) is enabled, a non-zero
+  reserved field in a second-stage paging entry (SS-PML5E, SS-PML4E, SS-
+  PDPE, SS-PDE, or SS-PTE) with at least one of the Read (R), or Write
+  (W) fields set."
 
-Thanks, Roger.
----
-diff --git a/drivers/xen/balloon.c b/drivers/xen/balloon.c
-index e7f1d4ca6d75..c20a1ff8292d 100644
---- a/drivers/xen/balloon.c
-+++ b/drivers/xen/balloon.c
-@@ -703,19 +703,26 @@ static int __init balloon_add_regions(void)
- 			balloon_append(pfn_to_page(pfn));
- 
- 		/*
--		 * Extra regions are accounted for in the physmap, but need
--		 * decreasing from current_pages and target_pages to balloon
--		 * down the initial allocation, because they are already
--		 * accounted for in total_pages.
-+		 * For HVM domains: extra regions are accounted for in the
-+		 * physmap, but need decreasing from current_pages and
-+		 * target_pages to balloon down the initial allocation, because
-+		 * they are already accounted for in total_pages.
-+		 *
-+		 * For PV domains: extra regions are not accounted for in the
-+		 * initial memory target, and hence need adding to the stats as
-+		 * additional unpopulated regions.
- 		 */
- 		pages = extra_pfn_end - start_pfn;
--		if (pages >= balloon_stats.current_pages ||
--		    pages >= balloon_stats.target_pages) {
-+		if (xen_pv_domain()) {
-+			balloon_stats.total_pages += pages;
-+		} else if (pages >= balloon_stats.current_pages ||
-+		           pages >= balloon_stats.target_pages) {
- 			WARN(1, "Extra pages underflow current target");
- 			return -ERANGE;
-+		} else {
-+			balloon_stats.current_pages -= pages;
-+			balloon_stats.target_pages -= pages;
- 		}
--		balloon_stats.current_pages -= pages;
--		balloon_stats.target_pages -= pages;
- 	}
- 
- 	return 0;
+In this case, VT-d blocks the transaction and returns UR for the read
+request, which probably could explain the passthrough failure.
+
+> [  107.365023] DMAR: Dump dmar1 table entries for IOVA 0x37fff1000
+> [  107.365024] DMAR: root entry: 0x00000004034fc001
+> [  107.365025] DMAR: context entry: hi 0x0000000000000202, low 0x000000008bda5001
+> [  107.365026] DMAR: pte level: 4, pte value: 0x00000000846ce403
+> [  107.365027] DMAR: pte level: 3, pte value: 0x00000003c0000883
+
+I checked the PTE values against the page-table format definition in
+Section 9.8, "Second-Stage Paging Entries" of the VT-d spec, but I did
+not find a clear violation.
+
+There is a similar report at:
+https://bugzilla.kernel.org/show_bug.cgi?id=221545
+
+That report also sees DMA faults with reason 0x0c, and was root-caused
+as:
+
+"... the BIOS DMAR tables contain reserved PTE fields, this generates
+  continuous DMAR faults (fault reason 0x0c) on device 00:1b.0, silently
+  dropping all DMA transfers from the HDA controller."
+
+> 
+> I would be grateful for any useful information or help so I can finally forget about this and freely use newer kernels. I also know that there are several other people experiencing this issue, and I would be happy if we solved this for everybody affected.
+> 
+> Thanks to everybody,
+> 70sp
+
+Thanks,
+baolu
