@@ -1,49 +1,49 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E8B343F8C4
-	for <regressions@lists.linux.dev>; Tue, 28 Jul 2026 14:08:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC61F41F37F
+	for <regressions@lists.linux.dev>; Tue, 28 Jul 2026 15:28:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785247685; cv=none; b=XIkyFzCznzk/mYTBI5zIFft8wVTc7g0EEhD66z2s+MGr0LVAP0PXdllr7mOIv07VJ0/lfrpCvYS6hD2i35IezGpHp9KKp82t56M2fSyJNkVvwNNsS+JpzgtQjpTFsdMFUzMgnAKDowVo/DqF63zR2cWu4ss1Z+4VcAwnP91r3QI=
+	t=1785252502; cv=none; b=Kkgo5qMtQKS9+5EwuSHeABN25/bftkCBSGodB3iVh8KJI4nF3vUKV5ktBgtKpJDUfFtHl0qEgqpH2Z+9muGUbOGu98QY956QSX218UQb2g6fdYlfbGlkBDmKGryuMeDyBymzpnQ3417Vey7iOQ9DI8wdbZUp9BKTiqSMSpzpgVg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785247685; c=relaxed/simple;
-	bh=p0So4y/barplVrx3qluBiammsXlH00tBB8f3bis6030=;
+	s=arc-20240116; t=1785252502; c=relaxed/simple;
+	bh=yvQAq5dg9qKMlTv+4zXdoNTqaOG2mDu2aw5XPte9F5s=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XcEA4kFBfByLov7f/5sDUliK4RvX/lTdPi4Zqh+i6nsQbXfhm8yLIhKTwEYuKXSGTGXXpgL3OpOYt0KUwPUt9GEitD/7Vy33vxbaexYE/g72YcWN02DUJzudxQfIN/kwvZHwBMaTTrNY/KOf8L3RhvXxL2ZsuqY296azU44DuQY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=AOjyqS7K; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	 In-Reply-To:Content-Type; b=pZNS7dPy7CQ6+YNqpwwXRfKRsTU5FkWA9OW/DSnQzLA+AkhAbA25erZPsB08XGg6ySXJV8gKjVYsZEe5h5DYOssypO0PtTXtzUELaO49O32Foi03R4IKKV2NAw/xCGqfjvLr0L9HhCWF1hbP3uMVCYxm7WM9F2Nq2DJj0TS4/tc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=adamthiede.com; spf=pass smtp.mailfrom=adamthiede.com; dkim=pass (2048-bit key) header.d=adamthiede.com header.i=@adamthiede.com header.b=Gv2mccAT; arc=none smtp.client-ip=80.241.56.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=adamthiede.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=adamthiede.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="AOjyqS7K"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1785247681;
-	bh=p0So4y/barplVrx3qluBiammsXlH00tBB8f3bis6030=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=AOjyqS7KOauFtQlydtCMP+bxZ9gbu2oRbgCIHdmyZVHxOT2BBpp+L/Z7wC34S8rmx
-	 rwK29zdstwwAxWIPf0p5L0swF8mEjFnuBjwzRUAEkeVMbAVblRw0s3rylIhKG2y7oN
-	 6pGTgTmNdPEql26tFL81U4yvjng12upMEntbYhWnwWZNnTbvB9jBPjaBK8/APBH1Aa
-	 H+UvZPiCAwvzD5cleIddHmcHeLrMqtdGmuriSxn/xcSzHOKcVZgukqmhOpnM7Nc7kl
-	 OXRY4YvdoeJlkXxL/oQM/+rpHDDFX3tDNUSyb2LAoH7hL9r44MFD0B1I5VjSRWrePy
-	 ih3vLNdceeyEw==
-Received: from [100.64.1.21] (unknown [100.64.1.21])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange x25519)
+	dkim=pass (2048-bit key) header.d=adamthiede.com header.i=@adamthiede.com header.b="Gv2mccAT"
+Received: from smtp102.mailbox.org (unknown [10.196.197.102])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 823A417E06EC;
-	Tue, 28 Jul 2026 16:08:00 +0200 (CEST)
-Message-ID: <6b344cc5-e07f-4a7e-b061-5f41d7ecfba1@collabora.com>
-Date: Tue, 28 Jul 2026 16:08:00 +0200
+	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4h8fVd3TZ9z8v1p;
+	Tue, 28 Jul 2026 17:28:09 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=adamthiede.com;
+	s=MBO0001; t=1785252489;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=q/ofy9c+vvaBdm9QGCAzkK8DUg6QZ4PHYy0Szqg3p54=;
+	b=Gv2mccATccfvmuJXOFMch5iahBraRgstG5CStwCEDyeuyW+ZNejEn34tEGMs7GLLNErgu4
+	dTI8E39NE7xEoot0ztEKDmT05LKU0XFkaO2VP1B4y3MN1MZhljZ6KL1ywz2zC7v9HZ+dFx
+	jT/Hlm0NCNaP91rLZAKWuHL6afOIQFBhnCPQ6W8/4OjRylFhT/DU9VqREI9s/I7ceOWBz8
+	nBi2+7nTwj6W2HIVAqOLdN0FbQIe90eM6m+sbjBgdP//ShTy36GhVJFxzfwOZG7mGKYNoM
+	rvskAB17r4/7nFhnn/5ACpemTzaWHQ1y4YKfm2PZ8GAzoq/sneoB8OWuIlQT7g==
+Message-ID: <ce8a8be3-920c-4361-bce2-a46fd99f14d4@adamthiede.com>
+Date: Tue, 28 Jul 2026 10:27:59 -0500
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH] drm/mediatek: mtk_dsi: enable hs clock during pre-enable
-To: Adam Thiede <me@adamthiede.com>,
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
  Thorsten Leemhuis <regressions@leemhuis.info>,
  Gary Bisson <bisson.gary@gmail.com>
 Cc: Chun-Kuang Hu <chunkuang.hu@kernel.org>,
@@ -63,160 +63,212 @@ References: <20260120-mtkdsi-v1-1-b0f4094f3ac3@gmail.com>
  <1826ddd9-6edd-4481-a31d-6cbb083b3a56@leemhuis.info>
  <5c7e81e7-28e1-4993-ac4e-724ec7664ebf@collabora.com>
  <806f042f-cf40-451a-8412-eb4a5e31963f@adamthiede.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+ <6b344cc5-e07f-4a7e-b061-5f41d7ecfba1@collabora.com>
 Content-Language: en-US
-In-Reply-To: <806f042f-cf40-451a-8412-eb4a5e31963f@adamthiede.com>
+From: Adam Thiede <me@adamthiede.com>
+Autocrypt: addr=me@adamthiede.com; keydata=
+ xsBNBF+n+90BCAC2ZRLVcvdXDgfY7EppN05eNor3U7/eeiNCCEIWZkYLhikUEP1ReLGBkXpK
+ Pc70hfnKAKkCoth3IwhDty9WXMNU+iLNei4ieb2luW+UqluR6xIUIA+txahMU9YcjVaQTKf/
+ yZWO4yl6pfBPCxC2UdPZKBAdGoi5NnE0ABFNbhBETQhhBic533lZn33ByupfI3acECnQdjgQ
+ llCUpDbw4I+S/N1iFiEHcbMXH7ZB00e3IYNorZ1E9v7p++5rDY1fQ9gXpieg1vFKwSq1NJWo
+ 9xx336YjaTUbX0EwrdKd9l8AktA3yRjckaK5TAcwSQaDtHvhpbl4ebvPhtwHh699MroXABEB
+ AAHNH0FkYW0gVGhpZWRlIDxtZUBhZGFtdGhpZWRlLmNvbT7CwI4EEwEIADgCGwMFCwkIBwIG
+ FQoJCAsCBBYCAwECHgECF4AWIQQtG9pGQ7sz3tf8M/kC7fV9o/vRzgUCZL1HxQAKCRAC7fV9
+ o/vRzgyRB/wLqRCvvWhQCMgvzeKvru9wcXquhb77K8H/ByLbfiT8YBuP3lZFVh0IQhgO9Ylk
+ fIoOJE4V+jjxyOnO2d9xjGbvAmmR6yT0gfLzSVWqrC4k+V9MWLv43nrNzxt41dvo5j824FAl
+ X+zaiRZCdO8Jtxg5Elpiop2SKLi1utX1Z8i6YZh+ccJZlchUBAGUTk+D4UjK7vUcjLWT96ya
+ CtdtTfXyw36CvGOPEWfc6++Kkl/5sgej1i7biPYzu/r0vssaQYTXKSrv6Cfa3Maa89ASiTtv
+ q4qmhLnJeCrPxWlRAf6LEizeBEkOasYni2u8sp4wBezEq45Ozu45sfPkqLpPolG7zsBNBF+n
+ +90BCADBRt+vrToRBEG580n77S99qSEkbKD+oJtCVyovnjMNkg0K9UG68LIeCX/ezngiV1M8
+ JISvw5iFOuUFqGX/1hLl9wgt/YpuIrgWOp8XxkotavTCloLDvQmufJPO1L8bnnA+WgP2YgVZ
+ 5MJTj/t4DI+yQgysEjsH8aurHO2uuqgJE+xK+2dy6Cl/wskuGxObksSPmmFH5PH0Joziwrtl
+ 61ouLE2XwKbkMgIGEKkbFgbfwz3/QuLZGBni+OOtLzXeZ9wNTW/AHUPy6S9U4F+5z6/09fVT
+ tTH0cvrgAGjbASlYx2VqGONXAsxCfjulq6ryJBFlPLp949c/JTTgOojukCSbABEBAAHCwHYE
+ GAEIACACGwwWIQQtG9pGQ7sz3tf8M/kC7fV9o/vRzgUCZL1H0gAKCRAC7fV9o/vRzlamCACs
+ vHw+0heTm+BfC3S8DUST6889gidIIwdqBep1ByzetCph7Bq8Y8BlT5YTX0u/bSKkxCzFgeTm
+ vC341Q09ST2XjLAl1ZTdzGhH9gcgYyOw34pr5fPQRJLB392mPzD8YReRzciNbhWzj+DLgeVe
+ ouyfGajd6jDjkf4FEq+trQLGZhpfsKn3JnDbzBUs945D50l/vz9q/QN3qZO+H4F6g8ZeMnqo
+ FOEFN26xVtdEDr+0DNFsbgKmEzs675kdAY78ZZdbEetX/FSknxJ+FK1ZW3J7Yswwulj34AXP
+ LB49Mk8Ot7fo6mdt0DkV11JS9LmKxKvpY+KTlrKG+i7pVCSZvVUx
+In-Reply-To: <6b344cc5-e07f-4a7e-b061-5f41d7ecfba1@collabora.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 7/27/26 18:34, Adam Thiede wrote:
-> On 7/27/26 10:54, AngeloGioacchino Del Regno wrote:
->> On 7/27/26 16:23, Thorsten Leemhuis wrote:
->>> On 7/27/26 14:48, Gary Bisson wrote:
->>>> On Mon, Jul 27, 2026 at 02:28:56PM +0200, Thorsten Leemhuis wrote:
->>>>> [top-posting to facilitate]
+On 7/28/26 09:08, AngeloGioacchino Del Regno wrote:
+> On 7/27/26 18:34, Adam Thiede wrote:
+>> On 7/27/26 10:54, AngeloGioacchino Del Regno wrote:
+>>> On 7/27/26 16:23, Thorsten Leemhuis wrote:
+>>>> On 7/27/26 14:48, Gary Bisson wrote:
+>>>>> On Mon, Jul 27, 2026 at 02:28:56PM +0200, Thorsten Leemhuis wrote:
+>>>>>> [top-posting to facilitate]
+>>>>>>
+>>>>>> Gary, Angelo, what's the status here? It looks like this fell through
+>>>>>> the cracks -- or was this issue fixed in between somehow? If yes: 
+>>>>>> great!
+>>>>>> If not: Would be good to finally resolve this, as we are long past 
+>>>>>> "fix
+>>>>>> within a week" rule of thumb from Linus:
+>>>>>> https://www.kernel.org/doc/html/latest/process/handling- 
+>>>>>> regressions.html#on- how-quickly-regressions-should-be-fixed
 >>>>>
->>>>> Gary, Angelo, what's the status here? It looks like this fell through
->>>>> the cracks -- or was this issue fixed in between somehow? If yes: great!
->>>>> If not: Would be good to finally resolve this, as we are long past "fix
->>>>> within a week" rule of thumb from Linus:
->>>>> https://www.kernel.org/doc/html/latest/process/handling- regressions.html#on- 
->>>>> how-quickly-regressions-should-be-fixed
+>>>>> Not much happened I'm afraid. The status as I see is:
+>>>>> - this patch is necessary to have TI SN65DSI83 working
+>>>>> - this patch also follows the DRM guidelines saying that HS clock must
+>>>>>    be enabled during pre_enable (see previous answer / [1])
+>>>>> - this patch has been successfully tested against MIPI-DSI panels (by
+>>>>>    Angelo) and LVDS panels via TI bridge (by myself)
+>>>>> - Adam reported an issue with another bridge (PS8640) where resume is
+>>>>>    broken
+>>>>> - Esben offered a patch to the TI bridge that would fix the issue we
+>>>>>    were seeing in the first place.
+>>>>>
+>>>>> But for the last two points, I'm not sure this calls for a revert yet:
+>>>>> - enabling HS clock in pre_enable still is what should be done [1]
+>>>>> - maybe the issue Adam is facing is due to the bridge driver 
+>>>>> instead as
+>>>>>    it could not be reproduced with another setup
+>>>>> - Esben patch would break the SN65DSI83 init sequence, suggesting that
+>>>>>    the culprit really is the MIPI bridge for not following the HS 
+>>>>> clock
+>>>>>    requirement in pre_enable instead [2]
+>>>> It's tricky, yes, but I suspect the right time for a revert was weeks
+>>>> ago. What Linus afaics basically wants in situations like this (espe.
+>>>> with two reporters) boils down to "something broke recently, no fix was
+>>>> found within a week or maybe two, so we go back to the previous 
+>>>> state to
+>>>> restart from there -- and this is nothing bad, that's just done to buy
+>>>> us time."
 >>>>
->>>> Not much happened I'm afraid. The status as I see is:
->>>> - this patch is necessary to have TI SN65DSI83 working
->>>> - this patch also follows the DRM guidelines saying that HS clock must
->>>>    be enabled during pre_enable (see previous answer / [1])
->>>> - this patch has been successfully tested against MIPI-DSI panels (by
->>>>    Angelo) and LVDS panels via TI bridge (by myself)
->>>> - Adam reported an issue with another bridge (PS8640) where resume is
->>>>    broken
->>>> - Esben offered a patch to the TI bridge that would fix the issue we
->>>>    were seeing in the first place.
+>>>> If something is right by some hardware or DRM specs often doesn't 
+>>>> matter
+>>>> much. What makes this tricky is the fact that the revert might cause a
+>>>> regression for those that relied on the functionally the change 
+>>>> brought.
+>>>> But I suspect even then Linus prefers a revert, as it's a recent change
+>>>> that only went into 7.1. The quoted from Linus on this page cover 
+>>>> this iirc:
+>>>> https://www.kernel.org/doc/html/latest/process/handling- 
+>>>> regressions.html#quotes-from-linus-about-regression
 >>>>
->>>> But for the last two points, I'm not sure this calls for a revert yet:
->>>> - enabling HS clock in pre_enable still is what should be done [1]
->>>> - maybe the issue Adam is facing is due to the bridge driver instead as
->>>>    it could not be reproduced with another setup
->>>> - Esben patch would break the SN65DSI83 init sequence, suggesting that
->>>>    the culprit really is the MIPI bridge for not following the HS clock
->>>>    requirement in pre_enable instead [2]
->>> It's tricky, yes, but I suspect the right time for a revert was weeks
->>> ago. What Linus afaics basically wants in situations like this (espe.
->>> with two reporters) boils down to "something broke recently, no fix was
->>> found within a week or maybe two, so we go back to the previous state to
->>> restart from there -- and this is nothing bad, that's just done to buy
->>> us time."
+>>>> If we can't agree on this, we maybe should ask Simona or Airlied for 
+>>>> advice.
+>>>>
+>>>> Ciao, Thorsten
 >>>
->>> If something is right by some hardware or DRM specs often doesn't matter
->>> much. What makes this tricky is the fact that the revert might cause a
->>> regression for those that relied on the functionally the change brought.
->>> But I suspect even then Linus prefers a revert, as it's a recent change
->>> that only went into 7.1. The quoted from Linus on this page cover this iirc:
->>> https://www.kernel.org/doc/html/latest/process/handling- 
->>> regressions.html#quotes-from-linus-about-regression
+>>> Thorsten,
+>>> I agree with you, and it's fine for me to get this commit reverted, 
+>>> for the sake
+>>> of following the rule (which is something I agree about: as a user, 
+>>> the last thing
+>>> that should happen is to be afraid of what breaks if I update my 
+>>> system!!!!),
+>>> even though reverting this actually breaks anything that is not PS8640.
 >>>
->>> If we can't agree on this, we maybe should ask Simona or Airlied for advice.
+>>> ......though......
 >>>
->>> Ciao, Thorsten
->>
->> Thorsten,
->> I agree with you, and it's fine for me to get this commit reverted, for the sake
->> of following the rule (which is something I agree about: as a user, the last thing
->> that should happen is to be afraid of what breaks if I update my system!!!!),
->> even though reverting this actually breaks anything that is not PS8640.
->>
->> ......though......
->>
->> Everyone, please, look at how fundamentally broken PS8640 is... Qualcomm people had
->> the same issue as what is currently happening here.
->>
->> They had to fix their DSI driver, as it was kind-of broken in a vagualy similar way
->> compared to MediaTek - and then they found out that they needed (and upstreamed) a
->> *hack* that had to be done specifically for the PS8640 Bridge [1]: their issue was
->> never really resolved, as then the same bridge started casually working for unknown
->> reasons (is it still working?), so they removed the hack [2] and called it a day.
->>
->> [1]: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux- next.git/commit/ 
->> drivers/gpu/drm/msm/dsi/dsi_manager.c? 
->> h=next-20260726&id=ec7981e6c614254937b37ce0af9eac09901c05c5
->> [2]: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux- next.git/commit/ 
->> drivers/gpu/drm/msm/dsi/dsi_manager.c? 
->> h=next-20260726&id=9e15123eca7942caa8a3e1f58ec0df7d088df149
->>
->> Especially in [2], the assmption from Dmitry sadly isn't correct, because this is
->> happening now on MediaTek, and here Runtime PM makes sure that the PS8640 is also
->> being enabled "a wee bit" earlier than DSI... but that doesn't seem to be enough.
->>
->>
->> Now, here I'm kind of shotgunning at the driver, but I wonder if anyone can try
->> the following patch before reverting this commit in mtk_dsi? Adam?
->>
->> ---
->>   drivers/gpu/drm/bridge/parade-ps8640.c | 1 +
->>   1 file changed, 1 insertion(+)
->>
->> diff --git a/drivers/gpu/drm/bridge/parade-ps8640.c b/drivers/gpu/drm/ bridge/ 
->> parade-ps8640.c
->> index 96332721cb69..54ebf2fc8d1c 100644
->> --- a/drivers/gpu/drm/bridge/parade-ps8640.c
->> +++ b/drivers/gpu/drm/bridge/parade-ps8640.c
->> @@ -665,6 +665,7 @@ static int ps8640_probe(struct i2c_client *client)
->>
->>       ps_bridge->bridge.of_node = dev->of_node;
->>       ps_bridge->bridge.type = DRM_MODE_CONNECTOR_eDP;
->> +    ps_bridge->bridge.pre_enable_prev_first = true;
->>
->>       /*
->>        * Get MIPI DSI resources early. These can return -EPROBE_DEFER so
-> This does not fix the issue. I built 7.1.5 with this patch applied, and without the 
-> revert.
-
-I think I know what's going on.
-
-This is just mediatek-drm calling the ddp_start() callback, which is needed to
-start enabling the DSI, but putting the lane_ready(), hs_mode() calls in the
-mtk_dsi_poweron() function is wrong, because that's enabling the HS clock way
-before DRM bridge callbacks are executed.
-
-I said multiple times that I wanted to remove that ddp_start() and ddp_stop()
-nonsense from mediatek-drm, and I think if what I think is happening is what
-is actually happening, I have one more reason to clean up that .. stuff (more
-than what I've just done with my more-than-50-commits of cleanup).
-
-Adam, one more test please. That's not shotgunning, and I'm fairly confident
-that this is going to work.
-
----
-  drivers/gpu/drm/mediatek/mtk_dsi.c | 5 +++--
-  1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
-index dc0c4e867179..c729a163bda6 100644
---- a/drivers/gpu/drm/mediatek/mtk_dsi.c
-+++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
-@@ -1165,8 +1165,6 @@ static int mtk_dsi_poweron(struct mtk_dsi *dsi)
-  		goto err_disable_dsi_and_digital_clk;
-
-  	mtk_dsi_set_interrupt_enable(dsi);
--	mtk_dsi_lane_ready(dsi);
--	mtk_dsi_clk_hs_mode(dsi, 1);
-
-  	return 0;
-
-@@ -1284,6 +1282,9 @@ static void mtk_dsi_bridge_atomic_pre_enable(struct 
-drm_bridge *bridge,
-  	ret = mtk_dsi_poweron(dsi);
-  	if (ret < 0)
-  		drm_err(drm, "failed to power on dsi\n");
-+
-+	mtk_dsi_lane_ready(dsi);
-+	mtk_dsi_clk_hs_mode(dsi, 1);
-  }
-
-  static void mtk_dsi_bridge_atomic_post_disable(struct drm_bridge *bridge,
--- 
-2.55.0
-
-
-
+>>> Everyone, please, look at how fundamentally broken PS8640 is... 
+>>> Qualcomm people had
+>>> the same issue as what is currently happening here.
+>>>
+>>> They had to fix their DSI driver, as it was kind-of broken in a 
+>>> vagualy similar way
+>>> compared to MediaTek - and then they found out that they needed (and 
+>>> upstreamed) a
+>>> *hack* that had to be done specifically for the PS8640 Bridge [1]: 
+>>> their issue was
+>>> never really resolved, as then the same bridge started casually 
+>>> working for unknown
+>>> reasons (is it still working?), so they removed the hack [2] and 
+>>> called it a day.
+>>>
+>>> [1]: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux- 
+>>> next.git/commit/ drivers/gpu/drm/msm/dsi/dsi_manager.c? 
+>>> h=next-20260726&id=ec7981e6c614254937b37ce0af9eac09901c05c5
+>>> [2]: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux- 
+>>> next.git/commit/ drivers/gpu/drm/msm/dsi/dsi_manager.c? 
+>>> h=next-20260726&id=9e15123eca7942caa8a3e1f58ec0df7d088df149
+>>>
+>>> Especially in [2], the assmption from Dmitry sadly isn't correct, 
+>>> because this is
+>>> happening now on MediaTek, and here Runtime PM makes sure that the 
+>>> PS8640 is also
+>>> being enabled "a wee bit" earlier than DSI... but that doesn't seem 
+>>> to be enough.
+>>>
+>>>
+>>> Now, here I'm kind of shotgunning at the driver, but I wonder if 
+>>> anyone can try
+>>> the following patch before reverting this commit in mtk_dsi? Adam?
+>>>
+>>> ---
+>>>   drivers/gpu/drm/bridge/parade-ps8640.c | 1 +
+>>>   1 file changed, 1 insertion(+)
+>>>
+>>> diff --git a/drivers/gpu/drm/bridge/parade-ps8640.c b/drivers/gpu/ 
+>>> drm/ bridge/ parade-ps8640.c
+>>> index 96332721cb69..54ebf2fc8d1c 100644
+>>> --- a/drivers/gpu/drm/bridge/parade-ps8640.c
+>>> +++ b/drivers/gpu/drm/bridge/parade-ps8640.c
+>>> @@ -665,6 +665,7 @@ static int ps8640_probe(struct i2c_client *client)
+>>>
+>>>       ps_bridge->bridge.of_node = dev->of_node;
+>>>       ps_bridge->bridge.type = DRM_MODE_CONNECTOR_eDP;
+>>> +    ps_bridge->bridge.pre_enable_prev_first = true;
+>>>
+>>>       /*
+>>>        * Get MIPI DSI resources early. These can return -EPROBE_DEFER so
+>> This does not fix the issue. I built 7.1.5 with this patch applied, 
+>> and without the revert.
+> 
+> I think I know what's going on.
+> 
+> This is just mediatek-drm calling the ddp_start() callback, which is 
+> needed to
+> start enabling the DSI, but putting the lane_ready(), hs_mode() calls in 
+> the
+> mtk_dsi_poweron() function is wrong, because that's enabling the HS 
+> clock way
+> before DRM bridge callbacks are executed.
+> 
+> I said multiple times that I wanted to remove that ddp_start() and 
+> ddp_stop()
+> nonsense from mediatek-drm, and I think if what I think is happening is 
+> what
+> is actually happening, I have one more reason to clean up that .. stuff 
+> (more
+> than what I've just done with my more-than-50-commits of cleanup).
+> 
+> Adam, one more test please. That's not shotgunning, and I'm fairly 
+> confident
+> that this is going to work.
+> 
+> ---
+>   drivers/gpu/drm/mediatek/mtk_dsi.c | 5 +++--
+>   1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/ 
+> mediatek/mtk_dsi.c
+> index dc0c4e867179..c729a163bda6 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
+> @@ -1165,8 +1165,6 @@ static int mtk_dsi_poweron(struct mtk_dsi *dsi)
+>           goto err_disable_dsi_and_digital_clk;
+> 
+>       mtk_dsi_set_interrupt_enable(dsi);
+> -    mtk_dsi_lane_ready(dsi);
+> -    mtk_dsi_clk_hs_mode(dsi, 1);
+> 
+>       return 0;
+> 
+> @@ -1284,6 +1282,9 @@ static void 
+> mtk_dsi_bridge_atomic_pre_enable(struct drm_bridge *bridge,
+>       ret = mtk_dsi_poweron(dsi);
+>       if (ret < 0)
+>           drm_err(drm, "failed to power on dsi\n");
+> +
+> +    mtk_dsi_lane_ready(dsi);
+> +    mtk_dsi_clk_hs_mode(dsi, 1);
+>   }
+> 
+>   static void mtk_dsi_bridge_atomic_post_disable(struct drm_bridge *bridge,
+This works - screen goes off and comes back on. Thank you!
