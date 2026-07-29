@@ -1,319 +1,152 @@
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [194.59.206.189])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53ECC404BE3
-	for <regressions@lists.linux.dev>; Wed, 29 Jul 2026 07:22:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.167.44
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785309743; cv=pass; b=TZWmgyRhS9o7BXKcqdD3YIJjSh1TzT5IqCD6kjl2+AC0UckDvdf/4rdYRThF58pY9sADDphlD6k+LwBFh1Hj0UmiH1asyp12+ZRN7fCUufoGFH5GlueDkZxkkYbtOJ+PS8QgipWEw3/JfZLT9disGnJ0e15iJfQ4dZulnlXXRWQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785309743; c=relaxed/simple;
-	bh=Ay8+sv6/4lBX+GsE1qrkhABbt8LsmqB3xe1G07IhnUg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YRcaQOkV4mtJxGLKsS72jQ1BT1PthUugtAR2IfIT53NobQYvo33JwB120mvOjYrFn9kNR8QRRN1jLZAcCQvcmMFvDb7xjQPZBZ68iV0EwECchmV7b2+qmqPFbeThnWiNnfQoYKET9oHmG9WcXBHcHocpapi1hAgksWH3BqbaR2s=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mfYKaJMl; arc=pass smtp.client-ip=209.85.167.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFDB043CEF7
+	for <regressions@lists.linux.dev>; Wed, 29 Jul 2026 08:58:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.59.206.189
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1785315491; cv=none; b=m9rx8N8vaMRNiuGIuM9l7PcJChlDf8RngKUJymu63cu7YmLQVi5LsBpA49/+OdIBIk6Bb+yfMtfeW2VxJvAzpMoB2hBu5TAVaOLwgRci+GeMopisqdNBDRH3zdVTt+2khSvi0/ST9hQgWCWEEN+O5KyoY6eSD7Qoj5t8HqittC8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1785315491; c=relaxed/simple;
+	bh=D7B3256nWbk1QykNJ2FhVMKZhQ1ZVjkrsICNSqbiOt0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YWZzD4au912NnwCLepyZyVaKnH+LWqIxlo+NoCyzqEBPRJG+Z/q12yRr5KMoFs96G2KPY5ayXHr/bB1ThNtc/Mr2PJhBzQ1RgxYmtgV04zxeKXO/nbBpsUIHA1fQmB8Tr54BlQ4VlIJRZUj3K/IgdQF5WHhT3ron80UVQlXZC3o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=PJXsGXOL; arc=none smtp.client-ip=194.59.206.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mfYKaJMl"
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-5aeb59d54b1so619169e87.1
-        for <regressions@lists.linux.dev>; Wed, 29 Jul 2026 00:22:12 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1785309730; cv=none;
-        d=google.com; s=arc-20260327;
-        b=qkFMcQd1WrFEjpWZWEP/Jumqp2IsyjH8PGiWIom0oHURGvAFh/Kt7kjggTJVvMYJkw
-         tb+3s/Hak6Q/6aqA8YVCkbpRYZhBzh8ahxNW/y7OsBm1NDUvJltu3zUY8WX6kdhZUEMN
-         i0RmlxwStsKTTO5zhhrd3YmtBl4MUREroxV8GJ3i3R4E05ea47AAiGU2C4RpPxI718q2
-         0akrMRK089cSCQWFE5Gk5oPwvo0GiStMR+ESu8a8gbHVfVbTx4xdEyZ/BeAtGUcOn9SA
-         2UPV6cVVzraDcDJsnchpZjl6HTazaMh72zUFYF7GuiZV3r9n23nC6GytK9kUSi7doSd5
-         oBwg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=3qT4Vz1MKpNr1zEAkpXZzSKAkJu2HpLA8tmiTX8tQCk=;
-        fh=3wmq/QTS2V+JzxzVKksti5on1r+jpnt9+jenCNPKc9Q=;
-        b=d1hSigJPuMUVcWAw7v278PX/XLNS0QjmUzEZkgmxUGSQWH9qxgMwjmPv+R7y5kXjOb
-         7lnm41ja7nNJ36Zw0j84/cjjmfYE3M2ERUP7jwT16GtL7ArZJ6Nkz+HinVJizNPGiRU7
-         lgcRakoDNVSy/hyxY0WmFjwCcJW8P+oFYzEi+Lb2pZh3iSt4ooQ1RKX5i4MeXTV59JQB
-         8JTwZZD/j7o8uNr6sP0FV/uwp+cPmSmACWnjjx3d0nUfMjtdEpz7yFuF+2CZ+qmknZ4N
-         vpxIrtUhP0+fz5nghXp/tlfJayrLF1iHaw/MoCFwZLjU2nbwg3C1o2ReDVe/6Vr0ipa5
-         0dVw==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1785309730; x=1785914530; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=3qT4Vz1MKpNr1zEAkpXZzSKAkJu2HpLA8tmiTX8tQCk=;
-        b=mfYKaJMlw+itQOO7i5HMWOvAeeH/TwoOuiijy67W0sxk4QLDSbBO5X1Xl0OeUG6EaW
-         PHbKuBHI4+sG/adtEjIDWdhZ6iltyETZEprWTGC7lVerO294CW/iTmvOxxobOISauZwQ
-         lVUTpPfZvuHFE/g129s2if/0uuokNt9KnmmMw4oaHVHyKzY517vEBaqHb/BIY1H1Zu5N
-         LYCbZqdB6QsguBXzUplpV0JITyaAJq+O+TNjHQI2s+rhXUTwgmR9eqlS0oAPIPXeHfBk
-         zhiIn8iY8Q3CGU93vl8wTLF8eZoXIMkOAGVgfNDtBpHjgdZs3VKNk5j9XD3CjJZlZWp9
-         VBMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785309730; x=1785914530;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=3qT4Vz1MKpNr1zEAkpXZzSKAkJu2HpLA8tmiTX8tQCk=;
-        b=VnpqUp3sO88jorJeuvFlS39XYWVZ68rV4jIXfHNuoXtR8JTG8Vzl2L3XeyaiH4yDNR
-         lFqAOBtNWqSNjlsWZXHCOuu27/mrX/3INdWR2gj0/deBgOx2AWfTg6mNWduAVp67vX/0
-         6cfpF02l7kDMp83ufqu4FBTwN+bmJpDbP60/p4euvgxFpupszFtPaNFcM9uGFeWkrthF
-         kL15HX8UehV1fwVQD8IqwbcSjVqtflgzK3/kNmjPU5JYxd437Lcs/c9R5oaOqR6nPrse
-         bReuVJV7WpNLlQXWNHUQPiknh+2E6Ctd45Jwwnm7XxxtDlNhrDsHVP1c8hYoRHml3Ol0
-         ilLA==
-X-Forwarded-Encrypted: i=1; AHgh+Rq9pd50xs7ZPPJ7PUSBwJdkTTAZywnfgUI7WwjWSS4EAwLf93ExfSh8B37nxsz6XxApxZp42gyYmXM8GA==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxnFwVhhsta1RgRSO+is6OPFcOmbEJLJTj5BxMPlsoamt5AfZTv
-	GKKpqqzt4aF7KlmNo14ElpkHXXLusRof7qQ7Gwfh/hoTyS7c9aKP4zlAIYDZeuTTDx9fCUOPBcC
-	8bKThMwMQs76aKrjS0DBCeORWyKmKPHI=
-X-Gm-Gg: AR+sD10KDocPt5uixOdEaXP7bodQgEAH9d6YXpuBL8gRT9oGVxQM5wuJhvUmDWnwFlq
-	FQqDiRmoY5SDpfJ5UzKempQhM8vw3OGQuFnVPU5KBDv5sHZIJDMWgXWMieXWqnTv6+aCChgJDUc
-	BRtsxH7kgFEDP7fpLrskpejnpapWPV1tR0ax/roe8aC4eQGPOg9b0B74buttc1MLU5qDLIMY9rm
-	UjkgHOryHyhOY3bauiGhLFD+Rve8uA0+gBi3DIPp5zw3sWXXxRNoiekB7zuQz1jdPwnewIyBZyH
-	TWHG/Qv5nHa/63TfOnEcwyRboSohVl2QvBL/BlwWlTGTOjnMnTYSiA==
-X-Received: by 2002:a05:6512:3996:b0:5ae:a9ec:9fc4 with SMTP id
- 2adb3069b0e04-5b2d0277768mr1283782e87.63.1785309729997; Wed, 29 Jul 2026
- 00:22:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="PJXsGXOL"
+Received: from relay02-mors.netcup.net (localhost [127.0.0.1])
+	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4h95nx4p0Dz4PbB;
+	Wed, 29 Jul 2026 10:57:57 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1785315477;
+	bh=D7B3256nWbk1QykNJ2FhVMKZhQ1ZVjkrsICNSqbiOt0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=PJXsGXOLov7aS6bmxA3ZAhd9E8hJSEibBhuzrM5wt5GFKgc2TqpUb1p6jy20rLCnC
+	 Z9Rxz6qGR5r+AAkFm23D36b+cL9jd/4wn0WeRpVGsozsGQW0Cghgq3fPqLqQvpsrKo
+	 AvvMgZxVm89xhSd9tgOpU2UDbsXR1E3nQC7PcKbDSFa30XY6nQer698C6CJ7apn/Un
+	 8pjI7U+pmQK6zg1a2aZ6hw+PwwzfuFLfCaFfQGWNPhwj0VOD2CxQSUf6Fn5VGjt4n+
+	 s3s1xnto+FJC791dKnSaLHi1cmTgUhDLKL/lrBMjCyQPsRR+GQG+pCA17U2WWHGF01
+	 wdKA2yszP76tw==
+Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
+	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4h95nx44Jgz82CC;
+	Wed, 29 Jul 2026 10:57:57 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
+X-Spam-Flag: NO
+X-Spam-Score: -2.898
+X-Spam-Level: 
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4h95nv4cXnz8tYZ;
+	Wed, 29 Jul 2026 10:57:55 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 264615FC5F;
+	Wed, 29 Jul 2026 10:57:54 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <67fd0bdf-237e-41d0-aa02-62ca2736942a@leemhuis.info>
+Date: Wed, 29 Jul 2026 10:57:53 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CANGjgd=RwMy=29OYG14b6kkoF1uBHz67jTGge5Nubb-XemMvBg@mail.gmail.com>
- <rbrddfiyruub77dds3hhsal2lyxen3kqybenrlitmdamnstqbt@ywzf5g5xgpjc>
-In-Reply-To: <rbrddfiyruub77dds3hhsal2lyxen3kqybenrlitmdamnstqbt@ywzf5g5xgpjc>
-From: Chengfeng Lin <lin2530632123@gmail.com>
-Date: Wed, 29 Jul 2026 15:21:56 +0800
-X-Gm-Features: AUfX_mxFMOoBYpqgt3cLodxaBIPibJGL0H8GSUwbC4ezKuqfEZrQiUxdFCEgfzA
-Message-ID: <CANGjgdno26kBChG0fyOZiwHJe+hLh9BsUqeY81HZen6FDHj-Ng@mail.gmail.com>
-Subject: Re: [REGRESSION] fsnotify: concurrent inotify watch add/remove slows
- after 94bd01253c3d
-To: Jan Kara <jack@suse.cz>
-Cc: Amir Goldstein <amir73il@gmail.com>, Christian Brauner <brauner@kernel.org>, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] powerpc/970: fix nap return address corruption on async
+ interrupt exit
+To: maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com
+Cc: thuth@redhat.com, "Mukesh Kumar Chaurasiya (IBM)" <mkchauras@gmail.com>,
+ mchauras@linux.ibm.com, linuxppc-dev@lists.ozlabs.org,
+ ruanjinjie@huawei.com, linux-kernel@vger.kernel.org,
+ Andreas Schwab <schwab@linux-m68k.org>,
+ John Ogness <john.ogness@linutronix.de>, chleroy@kernel.org,
+ sshegde@linux.ibm.com,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <20260707172430.790040-1-mkchauras@gmail.com>
+ <87fr1iq4fu.fsf@jogness.linutronix.de> <87h5lpq5x4.fsf@jogness.linutronix.de>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+X-Enigmail-Draft-Status: N11222
+Autocrypt: addr=linux@leemhuis.info; keydata=
+ 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 MEK4
+In-Reply-To: <87h5lpq5x4.fsf@jogness.linutronix.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: <178531547470.3920696.1454003865760787024@mxe9fb.netcup.net>
+X-NC-CID: ZM4BlkQm5JePw8eJDR5zuLxW+OLloQN2cipqRUaupCL2ugjiY2g=
 
-Hi Jan,
+On 7/23/26 13:52, John Ogness wrote:
+> On 2026-07-16, John Ogness <john.ogness@linutronix.de> wrote:
+>> On 2026-07-07, "Mukesh Kumar Chaurasiya (IBM)" <mkchauras@gmail.com> wrote:
+>>> On PowerMac G5 (PPC970, CONFIG_PPC_970_NAP) the system panics shortly
+>>> after boot with symptoms including instruction fetch faults, kernel data
+>>> access faults, and stack corruption, predominantly on SMP and always
+>>> somewhere inside softirq processing.
+>>> [...]
+>>> Fix this by calling nap_adjust_return() inside DEFINE_INTERRUPT_HANDLER_ASYNC
+>>> immediately before irq_exit_rcu(), ensuring _TLF_NAPPING is cleared and
+>>> regs->NIP is adjusted before any code that can re-enable interrupts or
+>>> invoke softirqs runs.  Move the explanatory comment into
+>>> nap_adjust_return() itself and remove it from arch_interrupt_async_exit_prepare().
+>>>
+>>> Fixes: bee25f97ad24 ("powerpc: Enable GENERIC_ENTRY feature")
+>>> Closes: https://lore.kernel.org/all/87wlvazrdy.fsf@igel.home/
+>>> Reported-by: Andreas Schwab <schwab@linux-m68k.org>
+>>> Signed-off-by: Mukesh Kumar Chaurasiya (IBM) <mkchauras@gmail.com>
+>>
+>> Tested-by: John Ogness <john.ogness@linutronix.de>
+> 
+> Is there a reason this is not being queued for 7.2? Without this fix,
+> PPC970 machines cannot boot 7.2.
+Wondering the same. Quick reminder: Linus afaik wants all regressions
+ideally be fixed by -rc6. So it would be good to get this mainlined
+within the next few days -- unless of course there is a reason why this
+fix is a bad idea. Is there?
 
-Yes, your understanding is correct. To be precise, all synthetic benchmark
-cases use one process. P1 has one worker thread, while P8 has eight worker
-threads in that same process.
-
-For the one-process, one-worker version of the same distinct-inode add/remo=
-ve
-workload, the exact parent -> child -> parent medians were:
-
-  1426.416 -> 1445.261 -> 1439.104 ns/watch
-
-The child differed from the two parent runs by +1.32% and +0.43%, with 0.89=
-%
-parent drift. This was below the pre-registered 5% threshold and was classi=
-fied
-as no material signal. P4 was also below the threshold (+2.08% and +0.36%).
-The stable slowdown first appeared at P6 and increased at P8.
-
-So the data supports your interpretation: this is a parallel scalability
-issue, not a measurable single-worker regression in this workload. I
-understand the trade-off. Thanks also for mentioning the rhashtable work; i=
-t
-sounds directly relevant to the contention observed here.
-
-Thanks,
-Chengfeng
-
-Jan Kara <jack@suse.cz> =E4=BA=8E2026=E5=B9=B47=E6=9C=8829=E6=97=A5=E5=91=
-=A8=E4=B8=89 04:04=E5=86=99=E9=81=93=EF=BC=9A
->
-> Hello!
->
-> On Tue 21-07-26 00:00:32, Chengfeng Lin wrote:
-> > I found a repeatable slowdown in a concurrent inotify workload. An exac=
-t
-> > bare-metal comparison points to:
-> >
-> >   94bd01253c3d ("fsnotify: Track inode connectors for a superblock")
-> >
-> > #regzbot introduced: 94bd01253c3d
-> > #regzbot title: fsnotify concurrent inotify watch add/remove slowdown
-> >
-> > This is a focused synthetic microbenchmark, not an application benchmar=
-k. It
-> > uses tmpfs, 96 separate inotify instances, and 96 files with different =
-inodes.
-> > Eight threads, each pinned to a different P-core, concurrently add one =
-watch
-> > for each instance/inode pair and then remove it.
->
-> Thanks for the detailed and throughout analysis! TL;DR for the ones too
-> lazy to read the whole report: Heavily parallel addition of inode marks t=
-o
-> distinct inodes contends on the superblock's inode_conn_list (and the
-> corresponding lock) which can reduce scalability of adding inode marks.
->
-> Just as a verification: Do I get it right that you observe no regression =
-for
-> a case where single process is adding inode marks?
->
-> If the single-threaded case indeed isn't measurably affected, then I'm no=
-t
-> seriously concerned. Adding inode watch is comparably rare, I would
-> consider workloads which intensively add inode marks as kind of
-> pathological and so a scalability regression is acceptable tradeoff in my
-> opinion (at least for the time being). That being said I have experimenta=
-l
-> patches sitting in my local tree which replace the list with rhashtable a=
-nd
-> avoid pinning inodes by inode marks. These patches should improve the
-> scalability as well as a side effect. But I have to find time to revive
-> them and push them to completion...
->
->                                                                 Honza
->
-> > The matched control uses the same instances and pathnames, but all path=
-names
-> > are hard links to one inode. A keeper watch keeps that inode's connecto=
-r alive
-> > during timing. The control therefore measures watch add/remove without
-> > connector creation and destruction.
-> >
-> > I used a fresh boot for each point:
-> >
-> >   6c790212c588 parent A -> 94bd01253c3d child -> 6c790212c588 parent B
-> >
-> > Each point had 2 warm-up rounds and 25 measured rounds. The kernels use=
-d the
-> > same normalized config, compiler, Kbuild metadata, module-signing key,
-> > preemption mode, and equal-length release strings.
-> >
-> > The machine was an Intel Core i7-12700KF system with 32 GiB RAM. The wo=
-rkers
-> > used CPUs 0,2,4,6,8,10,12,14. The CPU governor and EPP were set to perf=
-ormance,
-> > Turbo was disabled, and the runtime setting was preempt=3Dnone.
-> >
-> > The primary medians were (lower is better):
-> >
-> >   metric                         parent A      child   parent B
-> >   P8 distinct, aggregate worker ns/watch
-> >                                   4182.614   4920.865   4274.895
-> >   P8 distinct/shared ratio       0.248777   0.292725   0.240657
-> >
-> > P8 means eight workers. The first metric sums the time spent by all wor=
-kers
-> > adding and removing watches, then divides by 96; it is not wall-clock t=
-ime.
-> > The ratio compares each distinct-inode round with its matched shared-in=
-ode
-> > control round.
-> >
-> > Relative to parent A and parent B, the child was slower by 17.65% and 1=
-5.11%
-> > for the distinct-inode metric, and by 17.67% and 21.64% for the ratio. =
-Parent
-> > drift was 2.18% and 3.32%, respectively. All correctness and affinity c=
-hecks
-> > passed. Updating an existing watch mask and pathname lookup both change=
-d by
-> > less than 0.3%; the shared-inode control was slightly faster in the chi=
-ld.
-> >
-> > A second parent-child-parent sequence checked worker-count scaling. At =
-P6,
-> > the distinct-inode metric increased by 9.03% and 9.56%, and the ratio b=
-y
-> > 10.75% and 10.85%. At P8, the distinct-inode increases were 19.58% and
-> > 19.11%, and the ratio increases were 17.62% and 16.80%. Exact P1 and P4=
- tests
-> > stayed below the pre-registered 5% threshold. A 16-worker SMT run chang=
-ed in
-> > the same direction, but missed the variability gate and is not part of =
-the
-> > main result.
-> >
-> > I also tested two diagnostic variants at the child commit in this order=
-:
-> >
-> >   full -> lock-only -> full -> nolist -> full
-> >
-> > Full is the unmodified child. The reductions below are averages relativ=
-e to
-> > the full builds immediately before and after each probe:
-> >
-> >   build       list updates   list_lock   P8 distinct reduction   ratio =
-reduction
-> >   full        kept           kept        baseline                baseli=
-ne
-> >   lock-only   removed        kept        14.27%                  12.70%
-> >   nolist      removed        removed     21.43%                  20.46%
-> >
-> > The lock-only result shows a cost from the list updates or the extra ti=
-me they
-> > hold the lock. Removing the lock recovered about 7 percentage points mo=
-re.
-> > This suggests that lock acquisition and handoff also contribute. These =
-builds
-> > are diagnostic probes, not proposed fixes.
-> >
-> > Before sending this report, I checked v7.1.4, v7.2-rc4, Linus' master a=
-t
-> > 1590cf032971, next-20260717, and the linux-fs fsnotify, for_next, and f=
-or_linus
-> > branches. Connector creation and detach still use the list_lock and
-> > list_add()/list_del() operations introduced by 94bd. I found no equival=
-ent fix
-> > or matching report in the official linux-fsdevel and regressions archiv=
-es
-> > through July 20. The exact timing claim above remains limited to the di=
-rect
-> > parent/child comparison.
-> >
-> > As a topology check, I traced eight unmodified Ubuntu inotifywait proce=
-sses,
-> > each watching a different subtree of a Linux 7.1.3 source tree on one e=
-xt4
-> > filesystem. They created 4,177 directory watches. For each process, the=
- counts
-> > of fsnotify_add_mark_locked(), inode-connector allocations, and
-> > fsnotify_detach_connector_from_object() matched its watch count. Watch-=
-add
-> > events from all eight processes appeared in the same 1 ms interval. I s=
-tarted
-> > them together on purpose, so this trace shows that normal software can =
-create
-> > the tested topology; it does not measure application performance or how=
- often
-> > this concurrency occurs in normal use.
-> >
-> > I understand that a05fc7edd988 ("fsnotify: Use connector list for destr=
-oying
-> > inode marks") uses this list to avoid scanning all inodes during unmoun=
-t. I am
-> > therefore not asking to revert 94bd.
-> >
-> > Is the extra watch add/remove cost an expected trade-off? If not, would=
- it be
-> > useful to develop an optimization that preserves the connector list and=
- the
-> > current unmount behavior?
-> >
-> > Evidence bundle:
-> >
-> >   https://github.com/lcf0399/linux-regression-evidence/tree/245fec71aa0=
-5eb2dbd68f11e4c98729f22bbc541/fsnotify-concurrent-inotify-watch-setup
-> >
-> > Standalone reproducer:
-> >
-> >   https://github.com/lcf0399/linux-regression-evidence/tree/245fec71aa0=
-5eb2dbd68f11e4c98729f22bbc541/fsnotify-concurrent-inotify-watch-setup/repro=
-ducer
-> >
-> > Thanks,
-> > Chengfeng
-> --
-> Jan Kara <jack@suse.com>
-> SUSE Labs, CR
+Ciao, Thorsten
