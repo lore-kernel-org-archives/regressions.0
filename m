@@ -1,96 +1,124 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78F6C3EC82C;
-	Wed, 29 Jul 2026 14:59:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AA37396561
+	for <regressions@lists.linux.dev>; Wed, 29 Jul 2026 18:03:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785337142; cv=none; b=q7mB1Vz3eDLwjxeB8g5geVvnaJlb7D0vpmKwe8sM75lQr4T7/MjeisUFba/QAeBl85jjy6rvQizuM1xQT6EWejIvn8r6ur2mLeyTbbOA2JrE0HBvtNEXE8SGxYrb1OLm3GNTHFeOjFhDDWgdyzDRn39nXX2fIABgYiZhvZErzrI=
+	t=1785348234; cv=none; b=TyNY0aWJGuxiBRysscidjhZ31GXAx/BOnpOOpWidXNRxNjNfusQe9jGbqQME5v32bmWNPmqNumSuqL8quTMD/+J1ummgHCmy0o6KfmDXTjb7uX6Zry1NyBNjESnGFrjnSO8fhPc+ZuZTyHOtPfKOxYjQycGrIk0Bu1MYMVzg+eU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785337142; c=relaxed/simple;
-	bh=BC9DKDkbFpZIuwKBKE1cpLaKvpdwF7SPweVBu9sPbUg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DkL9Jk5X0ney8zaudtKK/cBtaAIjh77HQ3C8CVL5WRc6V2pHqNa63vHeBG8rUYGFB5oaZxF7PwvFhycOGP9ug0TX+0izAXV5MtyzZ3tGGyx9ncsWhny7apTaTkWwUfdV/dAMpneSQRSqvAS7mka11MNafxxkxk3K3d/W+9WOipI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=1WAxq061; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1785348234; c=relaxed/simple;
+	bh=gzy/ONRmCboL7cb1ke5GUu2h43Wjpa4lKEvXSsT3Duc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=byaqsJNv9I4uVyBiPcJWAV/bvXSGtSXyoAkUZ5Hn+bqhNazvtWf+5xPkPmN1s4Xn13+Xu1S7KFuj8ZuT5FU5lrk3nVm/Qko50LDxEFVxIxd2i2KwuIkmnPi22n7fsSUUvlPNz4jbHqE0Ig0AvOYrWJ9CH6P0P49I914eCosYcJQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Njz6St2S; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="1WAxq061"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D627B1F00A3A;
-	Wed, 29 Jul 2026 14:59:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxfoundation.org;
-	s=korg; t=1785337141;
-	bh=7RaxPzkFNolkG0Jn/Y9SXWpPiCVTq0rHihDR8xzPi3c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=1WAxq061NVZ0oM2CTVmHxuhlh9E/iEZ58U8SNZbC/j1zf4/nKwxqgttZ2JlfNQKvl
-	 ZBVqMqZUMIhuzJ9UUq30EhpmwKfFNCfCjLk9RK7yCne73r0gCnx20M+TLxVF1MfbRW
-	 F2wUBZ1dVLiZkmMvRAoDkNSVTCSJeFbQ5xEtUW5A=
-Date: Wed, 29 Jul 2026 16:58:48 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Jann Horn <jannh@google.com>
-Cc: Pasha Boroffski <hex.dec.bin.oct@gmail.com>,
-	stable <stable@vger.kernel.org>, Sasha Levin <sashal@kernel.org>,
-	regressions@lists.linux.dev, Christian Brauner <brauner@kernel.org>,
-	linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Subject: Re: regress caused by upstream commit
- 6650527444dadc63d84aa939d14ecba4fadb2f69
-Message-ID: <2026072933-widow-grouped-f9e4@gregkh>
-References: <CAHmU7G=Dsf31mJ1VH4+Tp-McSvXCg=GcO-eC+O52-_t5gc7Pyw@mail.gmail.com>
- <CAG48ez1UqV8E8nHGq50orS+3oqXbP80R6g7kVa3Hq-domHCSsQ@mail.gmail.com>
- <CAG48ez1tUk+8b7-eWw-fHh2x_bJA1n3CTANVWKQuPW=J+inCrQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Njz6St2S"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09F2C1F00A3E
+	for <regressions@lists.linux.dev>; Wed, 29 Jul 2026 18:03:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1785348233;
+	bh=LZQEpYzW38/4c2+O2OO4/H8UIofequmQXHhZSrs5Vg0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=Njz6St2SufDMIBkm4TanEDwswRmJZBu5D9ecpiw89jSJppr/A6y6gSPBC3b0SSsOW
+	 YByKzlH9gB8Zqm2C0DnAmTzzUpLPBBsUPKUj0c4iEl1s0trvcX30tt5LpgqMnJKuoe
+	 nzWL6RcDZXK0wQebQ2eqONdVELflIRSTrsSSwuZKa0QCRfSxl2JUlJX6jyPYwe2QXR
+	 5B0FG7EvC7ct9+XN7O87rv7WVi1K5/dGmf7Eft5EcUngFJpDfYagXeE/UETxyhEdA0
+	 PBSBJ5d39l5YA1btZmzrc9qP2say7TfpFd4iwJRad2XKkxxHcdR3k5//Sr2Mvm5ena
+	 5XucCNJhkFgxQ==
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-5b15dcaca31so1162158e87.0
+        for <regressions@lists.linux.dev>; Wed, 29 Jul 2026 11:03:52 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AHgh+RoR8CnLC+NC/eXVYqGdbXgYfM4NZs1rBx0gpwg0X6rucLdXAQO1MbsHpdIHqjKv61c9JmzGIHNmOrdUPA==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxP+hwDsUo6OnNlooPL3ewGD5ea16P5J5/KS54eNncVM6y4/us9
+	dEZzb2t+zG9s3XB9wNHf64fjH5K3k8dfQcBNEy48tPH9mvMInUzHZbQ2cdl0zey9xhAeREOKOHf
+	YmoNuP/LYDl9ZvdqFsnyNbQ/6AS948ao=
+X-Received: by 2002:a05:6512:3b20:b0:5ae:b6b6:c86c with SMTP id
+ 2adb3069b0e04-5b2d0274869mr1744660e87.63.1785348231268; Wed, 29 Jul 2026
+ 11:03:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAG48ez1tUk+8b7-eWw-fHh2x_bJA1n3CTANVWKQuPW=J+inCrQ@mail.gmail.com>
+References: <f5946a8a-43be-49d4-a827-25149112b21f@oracle.com>
+ <774c3a68-6a6b-4e2e-a347-03e36953b750@arm.com> <20260729022930.318742-1-zhanxusheng1024@gmail.com>
+In-Reply-To: <20260729022930.318742-1-zhanxusheng1024@gmail.com>
+From: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>
+Date: Wed, 29 Jul 2026 20:03:39 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0gnCh_jTnXsgA4pOmrCbPz3k0g1rz+oH6J+QoX2sucMMA@mail.gmail.com>
+X-Gm-Features: AUfX_myrtDKDg81XHABoWbXBaiyEaQ3WnC-AohOgxoM60LwHKuvOe85JUx7-b4I
+Message-ID: <CAJZ5v0gnCh_jTnXsgA4pOmrCbPz3k0g1rz+oH6J+QoX2sucMMA@mail.gmail.com>
+Subject: Re: [REGRESSION] sched/idle: Sysbench threads regression after f4c31b07b136
+To: Zhan Xusheng <zhanxusheng1024@gmail.com>
+Cc: christian.loehle@arm.com, joseph.salisbury@oracle.com, rafael@kernel.org, 
+	rafael.j.wysocki@intel.com, mingo@redhat.com, peterz@infradead.org, 
+	juri.lelli@redhat.com, vincent.guittot@linaro.org, dietmar.eggemann@arm.com, 
+	frederic@kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 29, 2026 at 03:59:18PM +0200, Jann Horn wrote:
-> On Wed, Jul 29, 2026 at 3:45 PM Jann Horn <jannh@google.com> wrote:
-> > On Wed, Jul 29, 2026 at 11:08 AM Pasha Boroffski
-> > <hex.dec.bin.oct@gmail.com> wrote:
-> > > Hello.
-> > > I believe 6650527444dadc63d84aa939d14ecba4fadb2f69 has a bug in it as it causes "kernel bug" with PREEMPT_RT enabled.
-> > > How to reproduce the bug:
-> > > i used 'find /proc/ | grep 123'. When scanning, the kernel triggers an "Oops".
-> > >
-> > >
-> > > [  344.465851][ T3715] BUG: kernel NULL pointer dereference, address: 00000000000000f8
-> > [...]
-> > [  344.465888][ T3715] CPU: 0 UID: 0 PID: 3715 Comm: find Tainted: G
-> >    D    O       6.12.98 #9
-> > [...]
-> > > [  344.465905][ T3715] RIP: 0010:down_read_killable+0x9/0x40
-> > [...]
-> > > [  344.465974][ T3715]  proc_map_files_readdir+0xc7/0x500
-> > [...]
-> > > I think calls
-> > > mm = mm_access(task, PTRACE_MODE_READ_FSCREDS);
-> > > if (IS_ERR(mm)) {
-> > >   result = ERR_CAST(mm);
-> > >   goto out_put_task;
-> > > }
-> > >
-> > > should be fixed like
-> > > mm = mm_access(task, PTRACE_MODE_READ_FSCREDS);
-> > > if (IS_ERR_OR_NULL(mm)) {
-> > >   result = ERR_CAST(mm);
-> > >   goto out_put_task;
-> > > }
-> >
-> > Ugh, yes. This is not an issue on mainline, but the API contract of
-> > mm_access() changed in commit cd3f8467afd4 ("mm: refactor mm_access()
-> > to not return NULL"), which landed in 6.13. So we'll need a
-> > stable-specific fixup for 6.12 and lower.
-> >
-> > I'll try to come up with a patch for stable later today.
-> 
-> I've reproduced this, triggering this NULL deref on 6.12.98 is as easy
-> as "ls /proc/2/map_files"
+On Wed, Jul 29, 2026 at 4:36=E2=80=AFAM Zhan Xusheng <zhanxusheng1024@gmail=
+.com> wrote:
+>
+> From: Zhan Xusheng <zhanxusheng1024@gmail.com>
+>
+> On Tue, Jul 28, 2026 at 09:30:39 +0100, Christian Loehle wrote:
+> > Interesting, so your guests (no cpuidle) need the tick stopped at every
+> > idle entry to not regress, i.e. the below?
+> > Is there anything obvious that shows why that would be? Maybe in the
+> > hypervisor behaviour?
+>
+> I think it lines up with the got_tick heuristic rather than anything
+> hypervisor-specific in the guest kernel path.
+>
+> do_idle() resets got_tick to false at the top of every idle episode and
+> passes it as stop_tick, so the first idle iteration always calls
+> idle_call_stop_or_retain_tick(false); tick_nohz_idle_enter() hasn't stopp=
+ed
+> the tick at that point, so that takes the retain branch. Only after the
+> tick fires once (got_tick becomes true) does a later iteration stop it.
+> So with f4c31b the no-driver path leaves the periodic tick armed at the
+> start of every idle episode, whereas the old code stopped it
+> unconditionally.
 
-Ugh, ok, let me go do some "quick" releases with just this fix in it
-right now, sorry about that!
+Sure.
 
-greg k-h
+That's an intentional modification on the premise that stopping the
+tick at the beginning of every idle episode would be more overhead
+that letting it run until it actually fires.
+
+> That also explains the test results: forcing (false) keeps the retain and
+> still regresses, while (true) / the direct tick_nohz_idle_stop_tick()
+> restores the old always-stop and recovers.
+
+No, by itself, it doesn't explain anything.  In particular, it doesn't
+explain why stopping the tick upfront in every idle episode leads to
+better performance.
+
+> The hypervisor is then where the consequence shows up: a guest that leave=
+s
+> its tick running keeps a ~1/HZ timer pending, so the host sees an imminen=
+t
+> timer and keeps waking/scheduling the vCPU instead of letting it idle.
+
+Right, but then why is performance better when the vCPU is put to
+sleep at the beginning of every idle episode?
+
+> That is at least consistent with the shapes - the x86 shape at HZ=3D1000 =
+regressed
+> more (-29%) than the arm shape at HZ=3D250 (-10%), i.e. more retained tic=
+ks,
+> more interference.
+
+What interference do you mean in particular?
+
+It looks like putting an idle vCPU to sleep upfront allows the other
+vCPUs to do more work: Is this what you mean?
+
+> For the no-driver bare halt there is no governor/state selection that a r=
+etained tick could help, so stopping
+> unconditionally is strictly better.
+
+Well, I'm not sure I can agree with this statement just yet.
