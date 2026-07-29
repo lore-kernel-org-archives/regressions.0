@@ -1,146 +1,219 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59D55283CAF
-	for <regressions@lists.linux.dev>; Wed, 29 Jul 2026 10:17:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785320253; cv=none; b=laJdcTTiFeVOWSKaEK7YpJBKdlwZHRXgQA2lcjfb8FSmGw7O8aRXP4KNIKfEQb3PKfGQOpb1wQToUIG80WCMs6Zh0Hm5H3xOx/UofpgkS2QyR3pBZ5eK9MrwWEJmH89u4nf728lLvhLxW8MKrXmSezKcqF0y+sz9vLuMBQFAyi8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785320253; c=relaxed/simple;
-	bh=W4f19jz/r+cFKn3QRm9z8nUis2Z3VkGlD7G3TaqagKg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pBHX7I6Esu/neAxKsJ3qyjbNQEFiFi65ZsDE+C3mR38YH34pltKL3CjxGnuVaLR576UvMIsspeJ+u1v1s9kv4ihHrvMvjPmaBAfj6peGPTnBf69aEIz60rxvlHYS5xH2H2uCgL8sg9YSCdZQTU0H6qt4Q2SsvArbJNoB7by+mKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Ucg4pDkU; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4829947DF9B
+	for <regressions@lists.linux.dev>; Wed, 29 Jul 2026 12:12:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.167.171
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1785327126; cv=pass; b=dCpBmi7qvrpFPNfG/lIzk+IF5TLHqlkJZ/OHRgG/gwCydbxK2oHQ3b9rIRV9Wefies73m2A4b3LbuRr1NSwaBGUXPO+1v32Lf7Pb2batTpFLZeQUSk4xkLd1kSi2aI+A6tWLH+pQcvM//6FM50fJPR6GjZSG63cnV2Mbddiu5bE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1785327126; c=relaxed/simple;
+	bh=0n/blMOwWRFN9h6O0n5KPzpTuqQ+pZ/IA41DQfT0tbE=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=u75GHrjYImdzR5+Rhcneik6kHh2/cEa0bAHjatCrC5CR+x1AKqhKepvqbMuiF9/kwtfIvgE6ZXUWyy/JvdmqcRsFogp8bGTnW3JUwmUYQbfOo5v6IYwj4dZWQyig5EUSGA90xewJ4R6prH2+XVmIhCyLJyRZSC/u8fPccSrWLlc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=avCO3NBn; arc=pass smtp.client-ip=209.85.167.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Ucg4pDkU"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 66T7mntm3508414;
-	Wed, 29 Jul 2026 10:16:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=HqWHD7
-	iB2RJSw+betsgj2zLmi6yCUWTQTezgrMsQtec=; b=Ucg4pDkUDEKYKXP3/uQUpG
-	vCGR0EhG8ka8c7GpFzXhI6jTY8JtFHm/unjSCjBwinJLPqkeGsLXlyu4mSeiT1et
-	ef43GPl8eqC2iSy+v+idUBkgIoKKD4oelhU5ZuM2hx5nUqKqr/letKTcdID7yvTw
-	LyJ+W3EftMaDPZ+UgohM+bFBqYa0mqw2a4fVTwESoJJY7ZgxZBy9o5RFLGLlJNDV
-	Cz1tUL4DvSYNEPntLshoV8wj63+nJA+6Irs9mpyNRgdmrpVu46ZNO2RX6JCzneNO
-	vQX76nALddLBD3Tqd6UHxYnyMyJUUcYM5yCAsHTybodmg4cUZV4cqvWA4V/BQ/Qw
-	==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4fmuyj9awh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 29 Jul 2026 10:16:57 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 66T9uJMm027022;
-	Wed, 29 Jul 2026 10:16:56 GMT
-Received: from smtprelay06.dal12v.mail.ibm.com ([172.16.1.8])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4fn8yhe4g8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 29 Jul 2026 10:16:56 +0000 (GMT)
-Received: from smtpav05.wdc07v.mail.ibm.com (smtpav05.wdc07v.mail.ibm.com [10.39.53.232])
-	by smtprelay06.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 66TAGtZB33817266
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 29 Jul 2026 10:16:55 GMT
-Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 40D8458043;
-	Wed, 29 Jul 2026 10:16:55 +0000 (GMT)
-Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id F1B9458053;
-	Wed, 29 Jul 2026 10:16:47 +0000 (GMT)
-Received: from [9.43.93.217] (unknown [9.43.93.217])
-	by smtpav05.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 29 Jul 2026 10:16:47 +0000 (GMT)
-Message-ID: <8dda7a5a-96ed-4a80-a6db-c01434ae897c@linux.ibm.com>
-Date: Wed, 29 Jul 2026 15:46:45 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="avCO3NBn"
+Received: by mail-oi1-f171.google.com with SMTP id 5614622812f47-4a4cb36ae00so494748b6e.0
+        for <regressions@lists.linux.dev>; Wed, 29 Jul 2026 05:12:02 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1785327120; cv=none;
+        d=google.com; s=arc-20260327;
+        b=NmtgmnsAbWFYMg4QZeTe2eGS31eX7M3wFbqDIE/EVUBgsF041MCQtl1IMC3OjMMlIq
+         DsQDSE76Zwdns8WKThvH4n3qdJZKLuBX31tKTkjBGn/tn6q6KO8BeKsle36vbE1XAjRG
+         bo9LOoaiCYaCP/DI+ooZ7IPKYZV8B97J9bJXWkmairRWKrHNpfex+VhdyN8WvpB2NM1u
+         lN0+FBAOgPqu0FLwQDPFAKR+mdUCZP0sgndHu8jx+ozKWJtCoaKCHKFQd/PY0OL8GvQt
+         5i0igMPxJbue3rx6Yy64lnKL8VaKYEuRfVD/2v106CPK6S3pDfxW/Tj6j5fc3eY6MlhR
+         Jrvg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=to:subject:message-id:date:from:mime-version:dkim-signature;
+        bh=qaklyrUuDyugQr83OnTK+2WorDJTsMlIt9kYQCGcItg=;
+        fh=Hi51YWuPkGPl+o+QQFCkEuCgNPef+ggQN7GkeY6Y8Uo=;
+        b=WT6NoRF6YWFgs5qR4iZA+TiKE1krjQiZQA7oxD/M5F0+Ng3ScEPP+2HPeBxK4Zks/T
+         0EHCyp39MqdJJWuou0lAlE4ErHbYy3X/Q0szpANzrhTBC+V/orF3au7YuCr3/wclyePo
+         R+Hl8KEZ1N25MwXEyZEN79M8Uhg49MNJsdKIdjmBsrpYVY8PYEFALreaCy4vDsPrBc0j
+         VjIkA9U6vgsy2X84TE7im2/oWOnw4Qd2j+P6++WTmnXJosQ6Z0yRYi5hlLwZIiZYNbb0
+         rWLYHSRygI/Qp1KbQGMgQM4CfPWAN4OrogIJ7pzhvt4J/MFBpEIr6SYB9n7d78U3cd9D
+         co7g==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1785327120; x=1785931920; darn=lists.linux.dev;
+        h=content-type:to:subject:message-id:date:from:mime-version:from:to
+         :cc:subject:date:message-id:reply-to:content-type;
+        bh=qaklyrUuDyugQr83OnTK+2WorDJTsMlIt9kYQCGcItg=;
+        b=avCO3NBnhkywJSQ4H3wRHds8+9f49/fHTGU+OMOBluHcGjgqrWRlNb3gq/YfvvXkBd
+         GwDJbXFjItUJXh9XRl6pnaKZBL71oDvCXj723z2yTdHcu5zrjHSdQMCE9K5BJ1+H78x2
+         Spq2Xz6n1qY3XPr6xYn2M1uZRcTg2gZrFVyXxwFnmofxPTSle44ntAcj6N4ouquoyNJh
+         b+7qDoFquIy+PGeABnWYiXGh0TbKYuVcBO+WCfna0wI/zwLQmiTdNRqt/q5wT9tROyAA
+         vOLEse1izirB7w5m0RzY7Z/csbWEXCyzNhr8d1tGF4eGIymoID9Nxsw3NQkyW/3l2Pq7
+         AngA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1785327120; x=1785931920;
+        h=content-type:to:subject:message-id:date:from:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=qaklyrUuDyugQr83OnTK+2WorDJTsMlIt9kYQCGcItg=;
+        b=UeNfj+qWHw7j75u4e/Lz13HvAPFv7T5MpFfdINJoPJG9gjy6ARjSmTtkFbsOTorjKg
+         owgtXXq9qsyeho7J+xW2uyBTUu7PsEcYSvNY+tyLx998jC4E91KfcFVG5Uy/ub/e45dz
+         cUtA05tij/7h8vELeCn34qlo49/b4ycpIglOu3HonJJQz5pUDH4WcgLAw7I7aSGMw98Z
+         I5UP1qLn0rYA5BxAK2wmlMKdx2HBV/d96GyIEetW3FfuMDyuCzq5P4qIwKzKZxTEJzAY
+         TT5cAKdee/+V/RpKQHe5HDlCAtFwjsMoS4t0JcNh0t4ZMxTW3wiea1k6YqL1c+DS8obV
+         2jIw==
+X-Gm-Message-State: AOJu0YwxQgh9QQspsasrY6E27HsP8bnRll6bG4FLTYa14wtMkPQjca8t
+	jVXBSFKEZT3YMzseeYpBmBUHm9nhBp6MIUjffJ8crPOd99DZbvyHW6znNL4Q7AYZqnUkTxEWyJj
+	EgKcgn87giMEh4VnWATVBd5InwY0eMCryWx4B/nSUqg==
+X-Gm-Gg: AR+sD13V0tWZia3TYU0CWABXQ2dBDrupKSMmmk0qY7IC9h9DjtDQQRUylxXRQ9XR0u6
+	bEyXikhBIM1G1wTrBjUBF7WQdpxBjGRrm1CdB2Cf5rLK0DPT0mR84RQlW/ieZIh9M8tR9llquzd
+	qPFP3dC3RFeKX3uQ7MKQAG2JmQxtOP7II7KOrcL4MUZWrFB7U/TbWqAya4W2woQ2JyaRVZcKQ1c
+	UwlnYgaMX8X2tZZkX8PCSIKejc9qESAVFPNgRq7bA8nzZGiWUWd8Pp1860Mc6axsxZXAN2R7Xa4
+	N0AdnX8+7mPSCZJwZGn5IhSUhMdoK7gIu0SElXeUEiOdCJg=
+X-Received: by 2002:a05:6808:6412:b0:496:233:3c3a with SMTP id
+ 5614622812f47-4ad5bb28d18mr3593013b6e.22.1785327119719; Wed, 29 Jul 2026
+ 05:11:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] powerpc/970: fix nap return address corruption on async
- interrupt exit
-To: Thorsten Leemhuis <regressions@leemhuis.info>, mpe@ellerman.id.au,
-        npiggin@gmail.com
-Cc: thuth@redhat.com, "Mukesh Kumar Chaurasiya (IBM)" <mkchauras@gmail.com>,
-        mchauras@linux.ibm.com, linuxppc-dev@lists.ozlabs.org,
-        ruanjinjie@huawei.com, linux-kernel@vger.kernel.org,
-        Andreas Schwab <schwab@linux-m68k.org>,
-        John Ogness <john.ogness@linutronix.de>, chleroy@kernel.org,
-        sshegde@linux.ibm.com,
-        Linux kernel regressions list <regressions@lists.linux.dev>
-References: <20260707172430.790040-1-mkchauras@gmail.com>
- <87fr1iq4fu.fsf@jogness.linutronix.de> <87h5lpq5x4.fsf@jogness.linutronix.de>
- <67fd0bdf-237e-41d0-aa02-62ca2736942a@leemhuis.info>
-Content-Language: en-US
-From: Madhavan Srinivasan <maddy@linux.ibm.com>
-In-Reply-To: <67fd0bdf-237e-41d0-aa02-62ca2736942a@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNzI5MDA4MCBTYWx0ZWRfX1oWG6KpaOO4p
- HTDJO7VNOHX15N4Ucl0MdYqhhdcbrrz9IR+uJJnEj7ebSk+PXIn1hRe/jBZ1O3vDnJ4Ul7lw8y3
- nT0CDLnIXJ2tlzarDwJ5kCUwwMZqT3Q=
-X-Proofpoint-GUID: 7Hboy94Y4Ck0oYSENYbI1NMCcQoGDA2m
-X-Proofpoint-ORIG-GUID: lzw0ZbpeEKtXZ69xUbTD4D8wvA1zWI6h
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzI5MDA4MCBTYWx0ZWRfXzTi0LTZI7IWl
- SYZ9m15CPs90T6e0eCSN9NZ+gJZcxYe6SkU5bm9M/DWAc4orXYmz9yvJ+Li39WsblizBgk7hhxc
- IGPIpHwthTOmo5lkK+S57f05W/1WCtLx/zXim9a8vDOCaQFSdhS3SFq0F1TOzW33PY3pic50HXY
- W6Pb9gtWTBvXJStpq6iFSdho6KC5PDG9idylIZDz/HwrGpv7mDPaU30TmMdXQIzxJw+gg8bRdtF
- hYtpSd9347LheiALFTKBpp1ygd1kpRA8M9d6SqgeZXy33rxlERT82QG5+DfcFx6H9rztOP1yZwo
- AghhkL7LVxOtVxwopNqjb4oxGSDjWAYjq85IPCWYgIFs+TWueDwUz6F1qHHT/NN3P/jmjnPE1+y
- XJhPx5FtS4IRQTct/ASceUqdARbAF0fuop0FcTbcsrlj9hwZJKGISJyncIxTN3f0jajv3UbiIQ2
- L2DEzjuF/55O7ALQFtw==
-X-Authority-Analysis: v=2.4 cv=X5Vi7mTe c=1 sm=1 tr=0 ts=6a69d319 cx=c_pps
- a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
- a=IkcTkHD0fZMA:10 a=RAioF0-LDSMA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=Y2IxJ9c9Rs8Kov3niI8_:22 a=VwQbUJbxAAAA:8
- a=pGLkceISAAAA:8 a=tBb2bbeoAAAA:8 a=htZlTOaOdGbwrN_0Y0cA:9 a=QEXdDO2ut3YA:10
- a=Oj-tNtZlA1e06AYgeCfH:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-07-29_03,2026-07-28_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1011 impostorscore=0 lowpriorityscore=0 phishscore=0
- priorityscore=1501 malwarescore=0 spamscore=0 suspectscore=0 bulkscore=0
- adultscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2606150000
- definitions=main-2607290080
+From: Pasha Boroffski <hex.dec.bin.oct@gmail.com>
+Date: Wed, 29 Jul 2026 17:11:48 +0500
+X-Gm-Features: AUfX_mxWBBAGVQ0pxTgfjqiWbRCzjOFWYAvTfkDlkiWuYQLzdOzacs6csKsN15Q
+Message-ID: <CAHmU7GkfHNdA-sph9mBf-s+a=9m22KcGTq6r=78=qSf5BKBgag@mail.gmail.com>
+Subject: Bug caused by upstream commit 6650527444dadc63d84aa939d14ecba4fadb2f69
+To: regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+
+Hello.
+I believe 6650527444dadc63d84aa939d14ecba4fadb2f69 (proc: protect
+ptrace_may_access() with exec_update_lock (part 1)) causes a "kernel
+bug".
+My kernel is 6.12.98 #9 SMP PREEMPT_RT x86_64 merged with
+6650527444dadc63d84aa939d14ecba4fadb2f69. PREEMPT_RT preemption does
+not matter, PREEMPT/PREEMPT_DYNAMIC behaves the same.
+To reproduce the bug I used 'find /proc/ | grep 123'. When scanning,
+the kernel triggers an "Oops".
+
+[  344.465851][ T3715] BUG: kernel NULL pointer dereference, address:
+00000000000000f8
+[  344.465862][ T3715] #PF: supervisor read access in kernel mode
+[  344.465867][ T3715] #PF: error_code(0x0000) - not-present page
+[  344.465871][ T3715] PGD 0 P4D 0
+[  344.465879][ T3715] Oops: Oops: 0000 [#3] PREEMPT_RT SMP PTI
+[  344.465888][ T3715] CPU: 0 UID: 0 PID: 3715 Comm: find Tainted: G
+   D    O       6.12.98 #9
+[  344.465899][ T3715] Tainted: [D]=DIE, [O]=OOT_MODULE
+[  344.465901][ T3715] Hardware name: ADLINK Technology Inc.
+nanoX-BT/To be filled by O.E.M., BIOS 17/04/2025
+[  344.465905][ T3715] RIP: 0010:down_read_killable+0x9/0x40
+[  344.465920][ T3715] Code: ff ff ff c3 cc cc cc cc 66 0f 1f 84 00 00
+00 00 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa
+0f 1f 44 00 00 <8b> 07 85 c0 79 10 8d 50 01 f0 0f b1 17 75 f3 31 c0 c3
+cc cc cc cc
+[  344.465926][ T3715] RSP: 0018:ffffb4f2c0937db0 EFLAGS: 00010202
+[  344.465932][ T3715] RAX: 00000000000000f8 RBX: ffffb4f2c0937ee0
+RCX: 0000561d401b989d
+[  344.465937][ T3715] RDX: 0000000080000001 RSI: 0000000000000009
+RDI: 00000000000000f8
+[  344.465940][ T3715] RBP: ffffa242601b0dc0 R08: 00007ffffffff000
+R09: 0000000000000004
+[  344.465944][ T3715] R10: 0000000000000000 R11: 0000000000000001
+R12: ffffffffa50c2df0
+[  344.465948][ T3715] R13: ffffa2425c16a988 R14: ffffa2425b916400
+R15: ffffb4f2c0937df0
+[  344.465952][ T3715] FS:  00007fdb493a2780(0000)
+GS:ffffa242b7400000(0000) knlGS:0000000000000000
+[  344.465958][ T3715] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  344.465962][ T3715] CR2: 00000000000000f8 CR3: 000000001bb06000
+CR4: 00000000001006f0
+[  344.465966][ T3715] Call Trace:
+[  344.465971][ T3715]  <TASK>
+[  344.465974][ T3715]  proc_map_files_readdir+0xc7/0x500
+[  344.465986][ T3715]  ? _copy_to_user+0x36/0x50
+[  344.465996][ T3715]  ? cp_new_stat+0x136/0x170
+[  344.466008][ T3715]  ? __do_sys_newfstatat+0x50/0x80
+[  344.466016][ T3715]  iterate_dir+0x99/0x160
+[  344.466025][ T3715]  ? fdget_pos+0x9b/0x160
+[  344.466034][ T3715]  __x64_sys_getdents64+0x8a/0x130
+[  344.466042][ T3715]  ? __pfx_filldir64+0x10/0x10
+[  344.466050][ T3715]  do_syscall_64+0x54/0x120
+[  344.466058][ T3715]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+[  344.466066][ T3715] RIP: 0033:0x7fdb49555b4e
+[  344.466073][ T3715] Code: 87 43 04 ff c8 7e 08 48 89 ef e8 48 59 fc
+ff 5b 4c 89 e0 5d 41 5c c3 b8 ff ff ff 7f 48 39 c2 48 0f 47 d0 b8 d9
+00 00 00 0f 05 <48> 3d 00 f0 ff ff 76 10 48 8b 15 9b 92 0d 00 f7 d8 64
+89 02 48 83
+[  344.466077][ T3715] RSP: 002b:00007ffc5adeff48 EFLAGS: 00000293
+ORIG_RAX: 00000000000000d9
+[  344.466084][ T3715] RAX: ffffffffffffffda RBX: 0000561d401b9840
+RCX: 00007fdb49555b4e
+[  344.466088][ T3715] RDX: 0000000000008000 RSI: 0000561d401b9870
+RDI: 0000000000000005
+[  344.466091][ T3715] RBP: 0000000000000001 R08: 0000000000000001
+R09: 0000000000000000
+[  344.466095][ T3715] R10: 0000000001000000 R11: 0000000000000293
+R12: 0000561d401b9844
+[  344.466098][ T3715] R13: ffffffffffffff80 R14: 0000000000000000
+R15: 0000561d401b9870
+[  344.466104][ T3715]  </TASK>
+[  344.466106][ T3715] Modules linked in: iptable_mangle iptable_nat
+nf_nat nf_conntrack nf_defrag_ipv4 vfio_pci vfio_pci_core irqbypass
+vfio igb i2c_algo_bit overlay btrfs libcrc32c xor lzo_compress
+zlib_defla
+te zstd_compress raid6_pq at24 regmap_i2c [last unloaded: axi_dev(O)]
+[  344.466147][ T3715] CR2: 00000000000000f8
+[  344.466176][ T3715] ---[ end trace 0000000000000000 ]---
+[  344.512192][ T3715] RIP: 0010:down_read_killable+0x9/0x40
+[  344.512211][ T3715] Code: ff ff ff c3 cc cc cc cc 66 0f 1f 84 00 00
+00 00 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa
+0f 1f 44 00 00 <8b> 07 85 c0 79 10 8d 50 01 f0 0f b1 17 75 f3 31 c0 c3
+cc cc cc cc
+[  344.512217][ T3715] RSP: 0018:ffffb4f2c0c4fdb0 EFLAGS: 00010202
+[  344.512224][ T3715] RAX: 00000000000000f8 RBX: ffffb4f2c0c4fee0
+RCX: 00005602c548641d
+[  344.512229][ T3715] RDX: 0000000080000001 RSI: 0000000000000009
+RDI: 00000000000000f8
+[  344.512232][ T3715] RBP: ffffa242601b0dc0 R08: 00007ffffffff000
+R09: 0000000000000004
+[  344.512236][ T3715] R10: 0000000000000000 R11: 0000000000000001
+R12: ffffffffa50c2df0
+[  344.512240][ T3715] R13: ffffa2425c16a988 R14: ffffa2425b8a1100
+R15: ffffb4f2c0c4fdf0
+[  344.512244][ T3715] FS:  00007fdb493a2780(0000)
+GS:ffffa242b7400000(0000) knlGS:0000000000000000
+[  344.512249][ T3715] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  344.512253][ T3715] CR2: 00000000000000f8 CR3: 000000001bb06000
+CR4: 00000000001006f0
 
 
-On 7/29/26 2:27 PM, Thorsten Leemhuis wrote:
-> On 7/23/26 13:52, John Ogness wrote:
->> On 2026-07-16, John Ogness <john.ogness@linutronix.de> wrote:
->>> On 2026-07-07, "Mukesh Kumar Chaurasiya (IBM)" <mkchauras@gmail.com> wrote:
->>>> On PowerMac G5 (PPC970, CONFIG_PPC_970_NAP) the system panics shortly
->>>> after boot with symptoms including instruction fetch faults, kernel data
->>>> access faults, and stack corruption, predominantly on SMP and always
->>>> somewhere inside softirq processing.
->>>> [...]
->>>> Fix this by calling nap_adjust_return() inside DEFINE_INTERRUPT_HANDLER_ASYNC
->>>> immediately before irq_exit_rcu(), ensuring _TLF_NAPPING is cleared and
->>>> regs->NIP is adjusted before any code that can re-enable interrupts or
->>>> invoke softirqs runs.  Move the explanatory comment into
->>>> nap_adjust_return() itself and remove it from arch_interrupt_async_exit_prepare().
->>>>
->>>> Fixes: bee25f97ad24 ("powerpc: Enable GENERIC_ENTRY feature")
->>>> Closes: https://lore.kernel.org/all/87wlvazrdy.fsf@igel.home/
->>>> Reported-by: Andreas Schwab <schwab@linux-m68k.org>
->>>> Signed-off-by: Mukesh Kumar Chaurasiya (IBM) <mkchauras@gmail.com>
->>> Tested-by: John Ogness <john.ogness@linutronix.de>
->> Is there a reason this is not being queued for 7.2? Without this fix,
->> PPC970 machines cannot boot 7.2.
-> Wondering the same. Quick reminder: Linus afaik wants all regressions
-> ideally be fixed by -rc6. So it would be good to get this mainlined
-> within the next few days -- unless of course there is a reason why this
-> fix is a bad idea. Is there?
-I have added this to my fixes-test and will pull this as part of 
-upcoming fixes PR
-Maddy
->
-> Ciao, Thorsten
+I think it is because
+mm = mm_access(task, PTRACE_MODE_READ_FSCREDS);
+is checked for IS_ERR(mm) only and not checked for NULL (IS_ERR_OR_NULL(mm))
+
+Loaded drivers (lsmod | awk '{print $1}'):
+
+iptable_mangle
+iptable_nat
+nf_nat
+nf_conntrack
+nf_defrag_ipv4
+vfio_pci
+vfio_pci_core
+irqbypass
+vfio
+igb
+i2c_algo_bit
+overlay
+btrfs
+libcrc32c
+xor
+lzo_compress
+zlib_deflate
+zstd_compress
+raid6_pq
+at24
+regmap_i2c
+
+Best regards,
+Pavel Borovskikh
