@@ -1,150 +1,208 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E32164499AC
-	for <regressions@lists.linux.dev>; Thu, 30 Jul 2026 18:00:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785434404; cv=none; b=JONBnYdnn8w1H+XeQy8FGZbTBaMxuV49UpSW1d3FQOMO3pm+jLPe2nAI2waAEx4jBiS8U+jsX+3UhtBNvghhL7PKzqhtFuMRy46e8srKrMuSVfj6TnzfDI0nNPF9JCIoleXg9qHlYfdfLICc9r0M3BkJDC+RBW6ulFj8AzaHmt4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785434404; c=relaxed/simple;
-	bh=Xl/KBklYTTrLCNDdvWQxbvELY1eguSQbqDgfYkn8y9Y=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E154A3A0B36
+	for <regressions@lists.linux.dev>; Thu, 30 Jul 2026 19:28:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.216.54
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1785439706; cv=pass; b=NZJfXgkzitlgI3HnzE7iNVKWONMeE4pP4yVoBpL6dv3kBvL+5PN3JB1SXErYuoLLuPIdBmpBv+OJ6CjTOwsjWdA+Wi0DiCreF9B62ghgvhVbzHkTaUoxw0ynS/UwF+dsmkhmhbeEQPUakCSqPxYwhakZ75cqSrfFU5fSGGm7nkQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1785439706; c=relaxed/simple;
+	bh=ll/FaK04GC8vCwFkBBQHSFd/0rrd11opybKM/RHi/Cc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SzN/x/5rOnYeudDqknWWmObSXj7mXt3WQcNrKS6kw7xbDvBinC82CBv1Xi2ciRBaIYAfkVsvEQ0JC2/EHCLA/VUR2WjMK8MuTJv/EDB3Ud7xK0Dzy40qu8/1NoY5W+M6BMs5gCFrE0LZo1gipX8nhDv5+MtBXMziKnu6rliMt+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nqzXaZjD; arc=none smtp.client-ip=100.103.45.18
+	 To:Cc:Content-Type; b=Ydb1yHa5isyPCCeZp59riybOJwNCXLChQJ5EDZP/AvjhnCQImMhKYCALHwglMC1zhUzNkVVeb5oEfoyB3VVxC+eqqvsJRSyyMT2fMZXb9PXNUXP+LsqiyTTcWtT0o7t+qdx4df0gfeRFhEwE/92LwB2p9GtpvgOZUIFaNpiLQto=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JDZXwIpW; arc=pass smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nqzXaZjD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A30F91F00A3E
-	for <regressions@lists.linux.dev>; Thu, 30 Jul 2026 18:00:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785434402;
-	bh=ggMb29DTDO03PyVm6GwHOcbMPnV/eDpnqYpVTLhUtME=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=nqzXaZjDAD76c2M1C1utCNdMGpms3uugm7B1M4h1WJfR3kh4VqkUKSSaTij0GALLl
-	 rjv1r2YXJ3P1zDZ192Bav/MOqb6oSLr72gY3qL35OnRw0GD6tbCHKQ6h0xLBHviPa8
-	 gDd9WOz/ilpN3jY3f9S4dQGBfVhIx78XeVzdGUtHmjq84ZJAoGbGIOVAYS3HQOGaI8
-	 dH9CcE9xCz3mjyPoYxpL1wenhbaYlTKBEExlt+P8J74a3qagc0qm6j/6KFRnJvgEst
-	 0hq3A85/480+9wI9epEyYGX5iPIzs7aXN9sCh1OdIbvYpSDwfbZFB9q9dDc4yq2559
-	 /0/GIlGNAC/7w==
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-5b011edaf7dso59594e87.2
-        for <regressions@lists.linux.dev>; Thu, 30 Jul 2026 11:00:02 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AHgh+RoHeStMvkmaBQS6KtzmgiAorHZh8IFcmpp62ErdvGfHqr13k+30KP+P6tkwbPRLDHxcE7fPHLYTXHRqZQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxawXWhorkAL9F2O9/0EL/RUe7QtOyaXm46dBw3XoufF0DeCgoK
-	sskrsHhnSpLINLBErkfP/H68F3JOIWzbq97A8xeR1rE5aYQ0JKgMOd7mzYqr5GDa1NMxeODhSoy
-	2oIvrYf4EXbf1tNhe4EDt18SBAhR6ZRc=
-X-Received: by 2002:a05:6512:39c2:b0:5b0:1108:c575 with SMTP id
- 2adb3069b0e04-5b2db3457a7mr700029e87.7.1785434400246; Thu, 30 Jul 2026
- 11:00:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JDZXwIpW"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-38101f85591so959861a91.1
+        for <regressions@lists.linux.dev>; Thu, 30 Jul 2026 12:28:17 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1785439695; cv=none;
+        d=google.com; s=arc-20260327;
+        b=FkQZ8JJLeLym8jcyTg50oBXbBSP7b7BOspT8iJUQQnbHHwhLMjwgH+QrTiDv1UaNVu
+         KvWsKG1dmtxOvqd/16FlfZvDJNYFb1w/auTGpK26XQTv9PGeSp6G0zb9pnRFiDm5uuBV
+         5nYX7zS9sE9QXzveywfsFJmx+B/UiWv5/92QhLlJwJg81vO/+6NsrUZWtdqx8xBxoxMq
+         dRgNMEYQEncxqK5DXy0G1PfUxiE6HbGnLIHqWfgTzvgWuJvKEOm8FCfo0UVVDXXBZioA
+         vbLORFkkfzaPiwIStp5RvcrIM6lHo71l+zN29Cj//hOup4ERqhuX4YytDnLe6lcDNVty
+         8DNg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=hs3O7+0+O1BzynlCu6bABVAxk2P74JiftgV+5qL8qh8=;
+        fh=xJLctwGnR5Tzcr1BFfqK7PrtHda5dlULXID1XjWnmkc=;
+        b=oYjYjxlQ6L49yQzaHH4tS+QfcvarPOVUXscKW2nab4PXnxx251hwuRG23/eye6+f5W
+         e8VuztVY8kbXWQvNw4hpVVgDkln6UFv1gjNBnjW9z6vGFrMjmtQ1ceClVm84cBjzsCc6
+         qT/wk39+JxUje+6IoMrd6cmvp2vzruXIAK24RR87SJODQiwIPo2Xrr55tXYm2ZpEW2u2
+         VtNCOs58X0gLEO1HI4N/dgkDS5X+h1Tjqjd6BdmRdigUwcZj8v7HJQG5zKHxCor1r9pS
+         yIbDo42UXgS8VeBVxpFoJ+l7yjR1Lf7E86AD6vr9+7rCI9h/hJK0M4hIZpuuozErT3d2
+         49Ag==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1785439695; x=1786044495; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=hs3O7+0+O1BzynlCu6bABVAxk2P74JiftgV+5qL8qh8=;
+        b=JDZXwIpWVFgqz5e9tyqqGWW7ZeTmKkSsklW8yhwc/dx/J04iSqMBYf4vVTZI573O0P
+         w9uAQgk6Lc2pJd4AjpiHl5xNXpyhiqsOIF1e11aLAbiS0b0PV/Wdw83eeuQKGE0xe+Ov
+         x1pZ2z9P9u3P6cdYcgad0GmX1ORc+Y9CtPjwjsgkvfUAQB+W9kxJTL/pjqM8qLaFRVTd
+         cql0M9rL5pwfeJoy7Iic0pKrpvXoUNxv5mC5qcANaWlOXkQQeZZe2WJWcqBYbD8LAFi+
+         eLsuA4Ok04H9FK4XEEtYWOcdw4uxCB2WRUOXGpousOQUQiBTRLKjuKJS9o/+eInlSf0Y
+         Pb2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1785439695; x=1786044495;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=hs3O7+0+O1BzynlCu6bABVAxk2P74JiftgV+5qL8qh8=;
+        b=dI8CRkVba7+4pRCA/9jGEkSmL5kx08VH+GgVvcNt2oL6wP5a9Yes05nRi1RFXAae6r
+         /MAqtg0x++u+5WC9jr9JhnkwiWfkK7xace/1wvuPIBc2PLrm++4gISzZYtr4s9Pu0wnY
+         sVkd8iZTXVWuBOh54JC8WxKEXX0GahLwbQUgN5QNc4ux2jXdOeGGvbncY+tDrtYmY4qG
+         w4G4iDCkq4tyclh9qKEki1xj+LGB5WVi1kIEPVFxJdjrC1QqtrfO4nTIkBVQATrEMe6s
+         QDOBQiPuXXghMWXQkpm/c/HXWN5bzyL6H5Y7IKDEN/fSUmT00nlvJfqtOUZvKPzOAKRG
+         sNIA==
+X-Gm-Message-State: AOJu0Yzy0xuBQl+S0Zrkc6PXu8u3yfEswjdk9riB4G06jzO/GVbIQ1AJ
+	S68pNqxZITllfayPSD1VbEV5Twx7MA8oG5KZHC7Uwv005qtlvF4SYSv5rMi780y8OIhMKUq1uI+
+	seNuzNFFn55g4AR+NLlyccqlXwDQ/XYg=
+X-Gm-Gg: AR+sD105ZkA6JZ3+69iGhTCqsx6b9z6pVtUrK2LieojqiIDVGcYCzuO0NMMlaGLdVyL
+	iMjgJdtoBpQwjWEv2Y12HN7Aw/u7Gwvo9+jogkVubjsF7ZocZqilBHiYNxBSeFlirP/Z1BcXXBj
+	AAHUCFUv20nM2g1+3v1MkNWlA/zOcG2sPBfQOW0BZaeD4x2mFqHDbsOXx1qEhPxdYLC+E/vxgAu
+	FAowvmC1H37LIOWU5clT8gJochgmPrbgGxRdOVU89ZaJQ/tDJCby4EQwv0aiDp7xG5riQG3rgc8
+	YoAi4ZgT3kUrZHFblw5If8psgUiEZipwi8UIjDIv7W3SIzLBItAbRRz+pGtN3aNoJXweoNSjF3s
+	AJJqO4KIfeD/k8EaLK9MjQMKa8J4=
+X-Received: by 2002:a17:90b:4c85:b0:387:d5bd:622e with SMTP id
+ 98e67ed59e1d1-38fa7824b05mr937031a91.17.1785439695076; Thu, 30 Jul 2026
+ 12:28:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cafd8af9-c6e9-4bf2-b496-23e796fbc9a6@linux.dev>
- <CAJZ5v0hWDKHXO5d-rgp_TMiS48fHY-cTxf5r5rGg2eBNpNtVig@mail.gmail.com> <fe8a69c9-83a4-48aa-8904-73ce70ef7a62@gmx.de>
-In-Reply-To: <fe8a69c9-83a4-48aa-8904-73ce70ef7a62@gmx.de>
-From: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>
-Date: Thu, 30 Jul 2026 19:59:47 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0jHQhbVDeZZGraNE3h0kzLog3Xq2x6Z=BxOTqsGJoyQwQ@mail.gmail.com>
-X-Gm-Features: AUfX_mwaI3GLhLzRMWwWSa46p2a1j7z_xihXD4nSf0wLudvoKINpvxcrHBNqeH4
-Message-ID: <CAJZ5v0jHQhbVDeZZGraNE3h0kzLog3Xq2x6Z=BxOTqsGJoyQwQ@mail.gmail.com>
-Subject: Re: [REGRESSION] thermal: per-zone hwmon names break Steam Deck fan control
-To: Armin Wolf <W_Armin@gmx.de>
-Cc: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>, Matthew Schwartz <matthew.schwartz@linux.dev>, 
-	regressions@lists.linux.dev, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, 
-	Linux PM <linux-pm@vger.kernel.org>, linux-hwmon@vger.kernel.org, 
-	stable@vger.kernel.org
+References: <CABWMpWQiSEKMkROgKZJ6nV8GXYgr7E=-SmsatQie4eK8b3F9Xw@mail.gmail.com>
+In-Reply-To: <CABWMpWQiSEKMkROgKZJ6nV8GXYgr7E=-SmsatQie4eK8b3F9Xw@mail.gmail.com>
+From: Jamie Stephens <jamie.stephens@gmail.com>
+Date: Thu, 30 Jul 2026 15:28:02 -0400
+X-Gm-Features: AUfX_mz_8J7N5cSdJsnEi7DuUMOyhEc8gY0WtMhugK0SpmdWDoQhR3Drz3IuJAo
+Message-ID: <CABWMpWR7Law_vHdeAMsOcY28VBcvX2jYSqq2SpksJSiLFcXhuw@mail.gmail.com>
+Subject: Re: [REGRESSION] CyberPower LE1000DG (0764:0501) USB HID regression
+ on x86
+To: jikos@kernel.org, bentiss@kernel.org
+Cc: regressions@lists.linux.dev, gregkh@linuxfoundation.org, 
+	stern@rowland.harvard.edu, linux-usb@vger.kernel.org, 
+	linux-input@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jul 30, 2026 at 6:46=E2=80=AFPM Armin Wolf <W_Armin@gmx.de> wrote:
->
-> Am 30.07.26 um 11:33 schrieb Rafael J. Wysocki (Intel):
->
-> > Hi,
-> >
-> > On Wed, Jul 29, 2026 at 10:50=E2=80=AFPM Matthew Schwartz
-> > <matthew.schwartz@linux.dev> wrote:
-> >> Hello,
-> >>
-> >> After upgrading my Steam Deck OLED to a 7.2-rc kernel, the userspace f=
-an control daemon that I use stopped working. I bisected the regression to =
-d6323469bcfb ("thermal: hwmon: Register a hwmon device for each thermal zon=
-e").
-> >>
-> >> Before this commit, the ACPI thermal-zone hwmon name was acpitz, while=
- after the change it is now acpitz_0.
-> >>
-> >> The device profiles for fan control rely on the exact `acpitz` hwmon n=
-aming like the below code snippet:
-> >>
-> >> devices:
-> >>    - hwmon_name: acpitz
-> >>      nice_name: CPU
-> >>      max_temp: 90
-> >>      temp_hysteresis: 0
-> >>      sensor_name: temp1
-> >>
-> >> So now, the profile fails to load with:
-> >>
-> >> fancontrol.py[40528]: Warning: hwmons not fully loaded, retrying...
-> >> fancontrol.py[40528]: Warning: hwmons not fully loaded, retrying...
-> >> fancontrol.py[40528]: Warning: hwmons not fully loaded, retrying...
-> >> fancontrol.py[40528]: Traceback (most recent call last):
-> >> fancontrol.py[40528]:   File "/usr/share/jupiter-fan-control/fancontro=
-l.py", line 606, in <module>
-> >> fancontrol.py[40528]:     raise FileNotFoundError("Failed to load hwmo=
-ns after 10 attempts.")
-> >> fancontrol.py[40528]: FileNotFoundError: Failed to load hwmons after 1=
-0 attempts.
-> >>
-> >> Because initialization fails, the daemon never enters its fan-control =
-loop or writes the requested fan target.
-> >>
-> >> This change was also backported to Linux 7.1.5 as commit 996957016bc1,=
- so the regression is present there as well and has led to a userspace ABI =
-regression. I can look at accommodating the change on the userspace side, b=
-ut it still seemed worth reporting as a kernel regression.
-> >>
-> >> Thanks,
-> >> Matt
-> >>
-> >> #regzbot introduced: d6323469bcfbda91f0aa89b7b39ad45fe822ca5d
-> > Thanks for the report!
-> >
-> > I think that commit d6323469bcfb will need to be reverted.
->
-> Would it be possible to instead make the new behavior depend on a Kconfig=
- option?
+Hi,
 
-Yes, it would, but I'm not sure I want to go down that path.
+Per the recommendation on Proxmox Bugzilla #7850, I=E2=80=99m reporting wha=
+t
+appears to be a Linux USB/HID regression affecting a CyberPower
+LE1000DG UPS.
 
-There is a major weakness in the new scheme, which I didn't take into
-consideration, that it builds hwmon interface names using thermal zone
-IDs which span all of the thermal zones in the system, not just
-thermal zones of the same type, so what user space gets basically
-depends on the initialization ordering.  Granted, this can be fixed,
-but then is it really a good idea to register a hwmon class device
-under a thermal class device?
+Hardware
 
-I'm still thinking that in the future it would be good to give parents
-to thermal zones, in which case hwmon class devices should be
-registered under those parents.
+UPS
 
-> This way we would give userspace time to adapt to the new behavior. Remov=
-ing it completely
-> would mean that userspace will newer adapt.
+CyberPower LE1000DG
+USB VID:PID 0764:0501
 
-But IMV it would be better to ask them to adapt just once.  So if the
-plan is to arrange things to register thermal zones under specific
-parents, that is what user space will need to adapt to and
-intermediate adaptation episodes should be avoided, so to speak.
+Affected x86 platform
 
-In the interim though there is the bug causing thermal zone removal to
-deadlock due to the misdesigned hwmon interface which needs to be
-addressed in the short term, possibly without disturbing user space.
+Intel Tiger Lake-H USB 3.2 Gen 2 xHCI Host Controller
+PCI ID: 8086:43ed
 
-To that end, I'm thinking about creating a faux device called, say,
-thermal_sensors that will be used as the parent for all of the hwmon
-class devices created automatically by the thermal core.
+Problem
+
+When connected to the x86 system, the UPS enumerates successfully and
+is bound by the kernel to hid-generic.
+
+Kernel messages include:
+
+usb 1-3: New USB device found, idVendor=3D0764, idProduct=3D0501
+
+usb 1-3: Product: LE1000DG
+
+hid-generic 0003:0764:0501.0001: hiddev0,hidraw0:
+
+USB HID v1.11 Device [CPS LE1000DG]
+
+However,
+
+sudo lsusb -v -d 0764:0501
+
+reports:
+
+wDescriptorLength     504
+
+Warning: can't get report descriptor, LIBUSB_ERROR_PIPE
+
+cannot read device status, Resource temporarily unavailable (11)
+
+As a result, usbhid-ups is unable to reliably communicate with the
+device and NUT cannot reliably monitor UPS status.
+
+Kernels Tested
+
+The issue reproduces on:
+
+Proxmox VE kernel 7.0.14-5-pve
+Proxmox VE kernel 7.0.14-6-pve
+Ubuntu mainline 7.1.5-070105-generic
+
+Reproducing the issue on an Ubuntu mainline kernel indicates the
+behavior is not specific to Proxmox and appears to exist in upstream
+Linux as well.
+
+Comparison
+
+The identical UPS, USB cable, and NUT configuration were moved to a
+Raspberry Pi 5 running:
+
+Debian 13 (trixie)
+Linux 6.18.34+rpt-rpi-2712
+NUT 2.8.1
+
+On the Raspberry Pi:
+
+the device binds successfully to hid-generic
+usbhid-ups initializes successfully
+NUT communicates reliably
+upsc ups@localhost consistently returns complete UPS status, including
+charge, runtime, voltage, load, and other telemetry
+
+This behavior has remained reliable through repeated testing and reboots.
+
+For completeness, lsusb -v on the Raspberry Pi also reports the HID
+report descriptor as unavailable. Despite this, usbhid-ups
+communicates with the UPS reliably. The communication failure only
+occurs on the affected x86 platform.
+
+Troubleshooting Performed
+
+Tested multiple USB ports
+Tested USB 2.0 and USB 3.x ports
+Replaced the USB cable
+Tested NUT 2.8.1, 2.8.5, and current development master
+Tested as both root and the nut service user
+Verified udev permissions
+Verified USB VID:PID 0764:0501
+Reproduced the issue on Ubuntu mainline 7.1.5
+
+A Proxmox developer suggested this may require a USB HID device quirk
+and requested that the issue be reported upstream.
+
+Reference:
+
+Proxmox Bugzilla #7850: https://bugzilla.proxmox.com/show_bug.cgi?id=3D7850
+
+Please let me know if additional information would be helpful. I can
+provide complete dmesg, lsusb, and usbhid-upsdebug logs or perform
+additional testing if needed.
+
+Thank you,
+Jamie Stephens
