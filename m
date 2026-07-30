@@ -1,96 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f46.google.com (mail-oa1-f46.google.com [209.85.160.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59127389118
-	for <regressions@lists.linux.dev>; Thu, 30 Jul 2026 16:16:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1E0C44C4E3
+	for <regressions@lists.linux.dev>; Thu, 30 Jul 2026 16:22:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785428213; cv=none; b=V+PSaADgOeCGJrpJ36oLLsiOESSH2KxMXQgJtSHkzCMqPrFYTpUy5AQwfjdlGZtaAehfb5Gkn/RWVSV0nxS/KV21KURwmAeNsTbUjouPZT+jTNXsqutMpbhOEnPxvqs2aCqXgiIePIkfSdHPfjaoWm1QXGMsLpME/buR6opyeig=
+	t=1785428541; cv=none; b=hgrBiExXUz/dYHVEQZ4WmPk0+TJOVzb6lFBITsTk02McvI4UFaPq615eQ8NqKgy+lSoQbYSwE8vP79nGWOiheMrU6c6d7arYxicsEh3qTM20kB6kpojc6vaHOmguDJGidi/EVO2L5kDZBo9k4pgPcqb5RmXlzQHYGX82Y1DgLCM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785428213; c=relaxed/simple;
-	bh=vTL2CoCioo0C29r7W2+MFUas25/QqmMowB+wUM6mGTk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pR+GXoG8NZr1L2Vr41gumVJwcJXg5aLNNx/i0CBQtto+YTPQcalQtYYeg7aT1NVwRs3rG7ok8Unray+X3xyZ6oMespuLs5M/Ei17/CXDdwJE+56yw2dUew2GldQLisYv/DOKEkMv2mxkWrCEDImFhGY5v1rLMzfddrrahIxp2Z0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cr3yqEcT; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1785428541; c=relaxed/simple;
+	bh=LzrA83SNg0xwZHckZyesHpd9prkk7E8+AsPKLw0gsqQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hD8xttqtWhlDzYmk8V3i+0sJpPU1UvVmcKpAPgihbXpD5Glrbi8GEBOsPz2Qg7UtQYQSLp81OdlAHXmo72aIOKmrv09VIr0GCdTAxN5srTU1YWP/HG+BYrM3iAt5Otyv4Xre8kcmmJHAMDSezSKIoH9K01JwYCRrEFvyfSzRPDc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20251104.gappssmtp.com header.i=@kernel-dk.20251104.gappssmtp.com header.b=oeN1Yf36; arc=none smtp.client-ip=209.85.160.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cr3yqEcT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 679781F00AC4
-	for <regressions@lists.linux.dev>; Thu, 30 Jul 2026 16:16:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785428202;
-	bh=vTL2CoCioo0C29r7W2+MFUas25/QqmMowB+wUM6mGTk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=Cr3yqEcTRxQH2d/5SbtkUkWZVOvUBke2+iadHZ9YkFjwGzKgb/vSkKOiL8wPKXFHG
-	 hvjLQUlfs0S+CTUgKiU4hvFWJOHCd+T7saYlwC683eknvBgcj2KbwEix0z3tdGyXHV
-	 cnEKTvlLMgfPkc29MI/84cW+/eoqxCN969yPGe5uR8g8qciiKQ6ZWRwTS7ODRcFOXJ
-	 NmZ1wyszdXiLjhBSxYzE15C6cMspjPVa0LWi7yMrXKsQk3w+bEdGqj5YJUihK/EX1M
-	 tkFqxii+70ZAWBufXXj3RAdIjwJD78mpwjSFEUkt0lfMyFgP1uLpLl/T1p1uDt4KQe
-	 KJl63unhYwhiA==
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-5b0117d49dcso2793146e87.3
-        for <regressions@lists.linux.dev>; Thu, 30 Jul 2026 09:16:42 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AHgh+Rqv5r+FTO8wPJX3giJOOkVWtH0aTJj050JQ5bWJ5WiUvWNRAk4LfWYQ/YrEaXKy/tlbJraDHgKlnSBpWQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxiG3eba89KAJ6ed1lyCEfgjo+vZcrpv2C40cZ5gDXbzGm9zjpr
-	1wLZLH0of5Kb1AnNCP//pmylYp+Juhph3ykpy6vYGXd3WtNmkfoo7s+QfTc+lr+WU2uc9ZWNwdL
-	YfTDpEiUZry3Db6B+shnf4SoZ4mUEpXE=
-X-Received: by 2002:a05:6512:b95:b0:5ae:ba47:e7bb with SMTP id
- 2adb3069b0e04-5b2db36ff2fmr756325e87.36.1785428200820; Thu, 30 Jul 2026
- 09:16:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20251104.gappssmtp.com header.i=@kernel-dk.20251104.gappssmtp.com header.b="oeN1Yf36"
+Received: by mail-oa1-f46.google.com with SMTP id 586e51a60fabf-448b69cfc6dso21017fac.3
+        for <regressions@lists.linux.dev>; Thu, 30 Jul 2026 09:22:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20251104.gappssmtp.com; s=20251104; t=1785428538; x=1786033338; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=2TO7rhJEb0t2mz700nvgDIByTqbVS2Yz6f37I4sh7O8=;
+        b=oeN1Yf36kEhrrWIHGbUjBV2+eIOQVdifYUj49zh2Ju9LChTUicEbY88Cfj2HwtxpgU
+         YQKYItF2eK76v0NXHk/Hylg0nxbKpk1dfdqYhwvycgMpXCVJiPbx3X/k9uenIzBsnzwL
+         vFh+GT59cZ7KGCfV0dhAUP8kXwyFgVrASUxOyDxK6pk/IKuDWeHFlVXR8IZYd+AGTBJe
+         5bzZJouMfta5C4F6VklXn9m8y6lYlTGlE7ppF7DS2BQBtpyPbofzDSnse8qdI+ULFYKO
+         c70Zzt1zok7nGDpd4o5tP99b2o8kfyDO88n+u0FUjn5OmQIwUfaM6yfi3JqQmTE2YNpP
+         ASwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1785428538; x=1786033338;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=2TO7rhJEb0t2mz700nvgDIByTqbVS2Yz6f37I4sh7O8=;
+        b=H5GoUzvwkj1iNxlA4YL3/LFMUGsCZe8eDZlXpV2rz3cFqgfNhXb1QJPbdfZZJ4u1Xj
+         99o5ERYn8fdFMqWGfP9Kr43hrZc3vS93g2l7p/dklZ6P4XQDL1ZKh/Zenpviy13939v8
+         NWJQPMb+zso0arezy1LHYltBozm9eyY4HGFRQTy0vcCj1++yoFQHCP98UxhgagqBQl/F
+         6twxr6anIAi1MrWv09nKcKh7A+/PO3ALES3SApZdkPBDLjF2nM9HF/mBdT6lukvKr74S
+         gpksB1LPjJsGZa3VxzSDRWNVC81RqBb1NrOJYQQiiPyCMHmsdw+IHVxFXvmuhWwdxL7o
+         LH7Q==
+X-Forwarded-Encrypted: i=1; AHgh+RqM6alPA0TUb0bDrokiv1u6pOhGpniUCendwiBlcHhLnCM8fpm0x2H2c5o8ZObQj5Y+5KIEz6HMKiBlyg==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxcVmkBYLcobLup8BkLl6iXwRO0N1hl9RtWSIK/UoTTLFy0zgx7
+	ZgkFhGuaxUXdHL0PJX/N74oRGZ5w82zswlrwRTm0B4kB+Z0tCaokvqRicmpsgOP0AA4vEaXAb8L
+	7yry51IuM7w==
+X-Gm-Gg: AR+sD13MNZyjUVpmrNSQabBR6V0+371Oa14VJ51u8Xp3IJKxpH1aUTVWcDQQUXrF3+B
+	6v9isw6flBpJ508+vhpIRd16C7NRB3EkQOE4DKyhNWMTTTlRnY+gFQI4xZDdxWladfX/qeKoGVA
+	KqL3XLARn6SXDY6MJ1zxmrHNmtA5Tm9ar9z8Xa45ag4rDLv3UFZMxcZhTzKTGZgOH6LRs5WIFN4
+	vqXuO9eoeRZTiRn1U1OMbMDSvkKo/Bm/qyVa1HOpXr7RpV53hwvngNhwO5kUxGWN8D6hUYG/3nY
+	1T0eXraUHa638Q+3zO+uYZf4FtfwhUDK/HPUro7jKMd82AKE8qVynjBE21Y/BPAsynzs34hua0m
+	Xt43aKI4DSdsZ9DgMWQUzmSVnYS8ZtBy8eLDzMCKkAF7E+sipeoXIE1qIbBexlIM3XHudp92Wbn
+	OufDPlnjsPGg4IkXcR3utdjysmvr6NdjWY44SdJLBPsPL6L72mr6tmYGeTAr+IEW9qUkw68mVne
+	jVVDXFeY3ud6FQzwuVbIQ37RkmOyC8UyeQjBY5ykxHit0aQ0hiiv0AU
+X-Received: by 2002:a05:6870:d361:b0:456:4c3f:7e03 with SMTP id 586e51a60fabf-458c0e12897mr2206023fac.18.1785428537794;
+        Thu, 30 Jul 2026 09:22:17 -0700 (PDT)
+Received: from [192.168.1.102] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-458c257c4d0sm2482546fac.2.2026.07.30.09.22.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Jul 2026 09:22:17 -0700 (PDT)
+Message-ID: <e85ec957-d648-4d6a-bcfe-09dd2d21d090@kernel.dk>
+Date: Thu, 30 Jul 2026 10:22:15 -0600
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <3353bdf3-4f33-44b1-809b-b0378bee5816@gmail.com>
- <CAJZ5v0h1kqDEBYk0k05rv6f2SJ7g+TN4FhBDJYZSVUctu-0FdA@mail.gmail.com> <daf0bb9b-246d-437d-87ca-16706113b201@gmail.com>
-In-Reply-To: <daf0bb9b-246d-437d-87ca-16706113b201@gmail.com>
-From: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>
-Date: Thu, 30 Jul 2026 18:16:27 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0jByxtQ2tmNm_ZyyBnDMBNjuqQwD_367NRyGNzF7wQtRw@mail.gmail.com>
-X-Gm-Features: AUfX_mwZ5mGlfMgKYkJ4kGxNRS7Dq4qB-hx9LK75gZM3H9j-7RhwOVWynjj-T0w
-Message-ID: <CAJZ5v0jByxtQ2tmNm_ZyyBnDMBNjuqQwD_367NRyGNzF7wQtRw@mail.gmail.com>
-Subject: Re: [REGRESSION] usb controller fails to initialize on intel s1200btl
-To: Julian Silver <mendaxca@gmail.com>
-Cc: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>, rafael.j.wysocki@intel.com, 
-	linux-acpi@vger.kernel.org, linux-usb@vger.kernel.org, 
-	regressions@lists.linux.dev
-Content-Type: multipart/mixed; boundary="000000000000aeaf7f0657d665e7"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RESEND 0/5] block: validate direct I/O memory alignment
+To: Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>
+Cc: Keith Busch <kbusch@meta.com>, linux-block@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, dm-devel@lists.linux.dev, brauner@kernel.org,
+ djwong@kernel.org, viro@zeniv.linux.org.uk, regressions@lists.linux.dev,
+ torvalds@linux-foundation.org
+References: <20260720201057.1862857-1-kbusch@meta.com>
+ <ampRQyXDbGgeg49V@kbusch-mbp>
+ <fbe9e74d-c389-46f4-9874-3e9ffd9c91d3@kernel.dk>
+ <ampce7mxSmxAwAiu@kbusch-mbp> <20260730112626.GA24827@lst.de>
+ <amtJDCtczVyX1baB@kbusch-mbp>
+Content-Language: en-US
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <amtJDCtczVyX1baB@kbusch-mbp>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
---000000000000aeaf7f0657d665e7
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On 7/30/26 6:52 AM, Keith Busch wrote:
+> On Thu, Jul 30, 2026 at 01:26:26PM +0200, Christoph Hellwig wrote:
+>> On Wed, Jul 29, 2026 at 02:03:07PM -0600, Keith Busch wrote:
+>>>>> Hi Jens, have you had a chance to look at this one yet? This addresses
+>>>>> previous issues with certain device mappers under direct io.
+>>>>
+>>>> I they look fine, but at this point we should toss them into 7.3. Yes
+>>>> I know there are regressions around this, but from 6.1x days. And the
+>>>> series doesn't apply to the current block-7.2 anyway.
+>>>
+>>> This series is kind of old at this point, but yes, it's not fixing a new
+>>> regression either. I'm okay if this goes to the next window, and I will
+>>> handle the stable follow-up.
+>>
+>> Honestly, I think that'a a reall bad idea.  This is a regression in 6.18,
+>> and while it took a while for people to hit this with their a little
+>> more complicated lvm/md setups, it has stopped real systems from being
+>> used.  We need to fix this ASAP.
+> 
+> This should have gone in several weeks ago, IMO. You can most readily
+> hit a problem running qemu against one of those lvm setups. We're just
+> so late in this release cycle that I'm not pushing hard for 7.2, but I
+> would support that choice too.
 
-On Thu, Jul 30, 2026 at 5:32=E2=80=AFPM Julian Silver <mendaxca@gmail.com> =
-wrote:
->
-> On 2026-07-30 21:55:14, Rafael J. Wysocki (Intel) wrote:
-> > Does adding "intel_idle.max_cstate=3D1" to the kernel command line also
-> > help, by any chance?
->
-> Yes. "intel_idle.max_cstate=3D1" also helps (on kernel 7.1.5).
+Exactly, it's been floating for a bit, and the last week is surely on
+me. But merging at the time it was posted would've been late for fairly
+substantial changes.
 
-Thanks for checking.
+Hence why I think 7.3 is just the better choice. We're talking weeks in
+difference on when it gets to stable anyway, which is what matters.
 
-Can you please check if the attached patch (on top of the current
-mainline) helps?
-
---000000000000aeaf7f0657d665e7
-Content-Type: text/x-patch; charset="US-ASCII"; name="usb-ehci-pm-qos.patch"
-Content-Disposition: attachment; filename="usb-ehci-pm-qos.patch"
-Content-Transfer-Encoding: base64
-Content-ID: <f_ms7psosk0>
-X-Attachment-Id: f_ms7psosk0
-
-LS0tCiBkcml2ZXJzL3VzYi9ob3N0L2VoY2ktcGNpLmMgfCAgIDEwICsrKysrKysrKy0KIDEgZmls
-ZSBjaGFuZ2VkLCA5IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkKCi0tLSBhL2RyaXZlcnMv
-dXNiL2hvc3QvZWhjaS1wY2kuYworKysgYi9kcml2ZXJzL3VzYi9ob3N0L2VoY2ktcGNpLmMKQEAg
-LTM4MCw5ICszODAsMTcgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBlaGNpX2RyaXZlcl9vdmVycmlk
-ZQogCiBzdGF0aWMgaW50IGVoY2lfcGNpX3Byb2JlKHN0cnVjdCBwY2lfZGV2ICpwZGV2LCBjb25z
-dCBzdHJ1Y3QgcGNpX2RldmljZV9pZCAqaWQpCiB7CisJc3RydWN0IHBtX3Fvc19yZXF1ZXN0IHJl
-cTsKKwlpbnQgcmV0OworCiAJaWYgKGlzX2J5cGFzc2VkX2lkKHBkZXYpKQogCQlyZXR1cm4gLUVO
-T0RFVjsKLQlyZXR1cm4gdXNiX2hjZF9wY2lfcHJvYmUocGRldiwgJmVoY2lfcGNpX2hjX2RyaXZl
-cik7CisKKwljcHVfbGF0ZW5jeV9xb3NfYWRkX3JlcXVlc3QoJnJlcSwgMTApOworCXJldCA9IHVz
-Yl9oY2RfcGNpX3Byb2JlKHBkZXYsICZlaGNpX3BjaV9oY19kcml2ZXIpOworCWNwdV9sYXRlbmN5
-X3Fvc19yZW1vdmVfcmVxdWVzdCgmcmVxKTsKKworCXJldHVybiByZXQ7CiB9CiAKIHN0YXRpYyB2
-b2lkIGVoY2lfcGNpX3JlbW92ZShzdHJ1Y3QgcGNpX2RldiAqcGRldikK
---000000000000aeaf7f0657d665e7--
+-- 
+Jens Axboe
