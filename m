@@ -1,69 +1,68 @@
-Received: from mail-oa1-f46.google.com (mail-oa1-f46.google.com [209.85.160.46])
+Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com [209.85.167.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1E0C44C4E3
-	for <regressions@lists.linux.dev>; Thu, 30 Jul 2026 16:22:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE22A38910F
+	for <regressions@lists.linux.dev>; Thu, 30 Jul 2026 16:23:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785428541; cv=none; b=hgrBiExXUz/dYHVEQZ4WmPk0+TJOVzb6lFBITsTk02McvI4UFaPq615eQ8NqKgy+lSoQbYSwE8vP79nGWOiheMrU6c6d7arYxicsEh3qTM20kB6kpojc6vaHOmguDJGidi/EVO2L5kDZBo9k4pgPcqb5RmXlzQHYGX82Y1DgLCM=
+	t=1785428602; cv=none; b=HoNZuay1aCSNBJP3NXHo+IKrL2L0Z9GBIHhbokDta7Xs+D0t3/ptOJsTlS9c+TFOz3ZgqTb726qVYj42IjTypFONgE4igkuhaWKLlV6Es1PM+Z8gkoa4EJHHo8ZnLvzLr3y05gMhgUt6hdLvVOyY7e3hszzZqjXB19YsxU+1UxI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785428541; c=relaxed/simple;
-	bh=LzrA83SNg0xwZHckZyesHpd9prkk7E8+AsPKLw0gsqQ=;
+	s=arc-20240116; t=1785428602; c=relaxed/simple;
+	bh=JBBl12W5jAO3f1NQO9V6kLXpVGsPmJIXGnmgZPy1WWk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hD8xttqtWhlDzYmk8V3i+0sJpPU1UvVmcKpAPgihbXpD5Glrbi8GEBOsPz2Qg7UtQYQSLp81OdlAHXmo72aIOKmrv09VIr0GCdTAxN5srTU1YWP/HG+BYrM3iAt5Otyv4Xre8kcmmJHAMDSezSKIoH9K01JwYCRrEFvyfSzRPDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20251104.gappssmtp.com header.i=@kernel-dk.20251104.gappssmtp.com header.b=oeN1Yf36; arc=none smtp.client-ip=209.85.160.46
+	 In-Reply-To:Content-Type; b=jhGqGPDj9d0uTCT1XLVmONVf7pPAqwSYIbGh788HNeG/Fur2Mp3Lk4agVi832ZgSJ2lTA1+Pi+OiqNCPf8Z0g4jqKwz1Z0lQz40tDnBERbDcSOUWPuVgHwmCXSZngY/rwSxZJMp9jagwj7BRdpRrRTAetBlp4zOs6MaUwMEBw2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20251104.gappssmtp.com header.i=@kernel-dk.20251104.gappssmtp.com header.b=ZDrVixqe; arc=none smtp.client-ip=209.85.167.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20251104.gappssmtp.com header.i=@kernel-dk.20251104.gappssmtp.com header.b="oeN1Yf36"
-Received: by mail-oa1-f46.google.com with SMTP id 586e51a60fabf-448b69cfc6dso21017fac.3
-        for <regressions@lists.linux.dev>; Thu, 30 Jul 2026 09:22:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20251104.gappssmtp.com header.i=@kernel-dk.20251104.gappssmtp.com header.b="ZDrVixqe"
+Received: by mail-oi1-f173.google.com with SMTP id 5614622812f47-4ab70b882c5so28529b6e.2
+        for <regressions@lists.linux.dev>; Thu, 30 Jul 2026 09:23:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20251104.gappssmtp.com; s=20251104; t=1785428538; x=1786033338; darn=lists.linux.dev;
+        d=kernel-dk.20251104.gappssmtp.com; s=20251104; t=1785428600; x=1786033400; darn=lists.linux.dev;
         h=content-transfer-encoding:content-type:in-reply-to:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=2TO7rhJEb0t2mz700nvgDIByTqbVS2Yz6f37I4sh7O8=;
-        b=oeN1Yf36kEhrrWIHGbUjBV2+eIOQVdifYUj49zh2Ju9LChTUicEbY88Cfj2HwtxpgU
-         YQKYItF2eK76v0NXHk/Hylg0nxbKpk1dfdqYhwvycgMpXCVJiPbx3X/k9uenIzBsnzwL
-         vFh+GT59cZ7KGCfV0dhAUP8kXwyFgVrASUxOyDxK6pk/IKuDWeHFlVXR8IZYd+AGTBJe
-         5bzZJouMfta5C4F6VklXn9m8y6lYlTGlE7ppF7DS2BQBtpyPbofzDSnse8qdI+ULFYKO
-         c70Zzt1zok7nGDpd4o5tP99b2o8kfyDO88n+u0FUjn5OmQIwUfaM6yfi3JqQmTE2YNpP
-         ASwQ==
+        bh=+2vuxkBUmVJ6H+F0FBU1KBLH+mojm8weuh8i8FR4JAI=;
+        b=ZDrVixqet6NAOMRWHYoAmF4CrUOQhf2Ilk2GfjJrZXqqnGt0zs+NtgV5Yxhb5HH96j
+         0gXo6Ld5CnvvdG2Vb3o0w8Xtet6ohGq2bQM6MiTaeua+UGCD2ieCQ0UfRvfMcQVxStgW
+         DGt2mqWLJHytSblwqC+a5U3DqpvByesW9lnS5bl2Uq3/E1ayAoV6AIbh9AXxRUGIYqwZ
+         J9f3PH584XQVYAEraGBnVLlX8hs//K/tOxOaXjzXJzR5ZnnJjqD2p7bxAef8g0RHKUeY
+         CgPCP7SqHFhyrikWk+nJtUoNMCux76CTcvhSAcoE9kBgxi8Te58yx6to2lh9Ceue9q+J
+         qdHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785428538; x=1786033338;
+        d=1e100.net; s=20251104; t=1785428600; x=1786033400;
         h=content-transfer-encoding:content-type:in-reply-to:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=2TO7rhJEb0t2mz700nvgDIByTqbVS2Yz6f37I4sh7O8=;
-        b=H5GoUzvwkj1iNxlA4YL3/LFMUGsCZe8eDZlXpV2rz3cFqgfNhXb1QJPbdfZZJ4u1Xj
-         99o5ERYn8fdFMqWGfP9Kr43hrZc3vS93g2l7p/dklZ6P4XQDL1ZKh/Zenpviy13939v8
-         NWJQPMb+zso0arezy1LHYltBozm9eyY4HGFRQTy0vcCj1++yoFQHCP98UxhgagqBQl/F
-         6twxr6anIAi1MrWv09nKcKh7A+/PO3ALES3SApZdkPBDLjF2nM9HF/mBdT6lukvKr74S
-         gpksB1LPjJsGZa3VxzSDRWNVC81RqBb1NrOJYQQiiPyCMHmsdw+IHVxFXvmuhWwdxL7o
-         LH7Q==
-X-Forwarded-Encrypted: i=1; AHgh+RqM6alPA0TUb0bDrokiv1u6pOhGpniUCendwiBlcHhLnCM8fpm0x2H2c5o8ZObQj5Y+5KIEz6HMKiBlyg==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxcVmkBYLcobLup8BkLl6iXwRO0N1hl9RtWSIK/UoTTLFy0zgx7
-	ZgkFhGuaxUXdHL0PJX/N74oRGZ5w82zswlrwRTm0B4kB+Z0tCaokvqRicmpsgOP0AA4vEaXAb8L
-	7yry51IuM7w==
-X-Gm-Gg: AR+sD13MNZyjUVpmrNSQabBR6V0+371Oa14VJ51u8Xp3IJKxpH1aUTVWcDQQUXrF3+B
-	6v9isw6flBpJ508+vhpIRd16C7NRB3EkQOE4DKyhNWMTTTlRnY+gFQI4xZDdxWladfX/qeKoGVA
-	KqL3XLARn6SXDY6MJ1zxmrHNmtA5Tm9ar9z8Xa45ag4rDLv3UFZMxcZhTzKTGZgOH6LRs5WIFN4
-	vqXuO9eoeRZTiRn1U1OMbMDSvkKo/Bm/qyVa1HOpXr7RpV53hwvngNhwO5kUxGWN8D6hUYG/3nY
-	1T0eXraUHa638Q+3zO+uYZf4FtfwhUDK/HPUro7jKMd82AKE8qVynjBE21Y/BPAsynzs34hua0m
-	Xt43aKI4DSdsZ9DgMWQUzmSVnYS8ZtBy8eLDzMCKkAF7E+sipeoXIE1qIbBexlIM3XHudp92Wbn
-	OufDPlnjsPGg4IkXcR3utdjysmvr6NdjWY44SdJLBPsPL6L72mr6tmYGeTAr+IEW9qUkw68mVne
-	jVVDXFeY3ud6FQzwuVbIQ37RkmOyC8UyeQjBY5ykxHit0aQ0hiiv0AU
-X-Received: by 2002:a05:6870:d361:b0:456:4c3f:7e03 with SMTP id 586e51a60fabf-458c0e12897mr2206023fac.18.1785428537794;
-        Thu, 30 Jul 2026 09:22:17 -0700 (PDT)
+        bh=+2vuxkBUmVJ6H+F0FBU1KBLH+mojm8weuh8i8FR4JAI=;
+        b=mqpNRVFSqY6YqEtczF9Y4FcZ5QmjjmgJWW7Bw3oiYiPwWzimfvbIPymFj3LCCaj4mJ
+         JyraNGflzCWYB+mazNakFJ/f4sSZU3RpAoubNTtYzde+VNhB3oNEFojWOefPgo00oF4b
+         NoCtHWugjVr9mIFAJ4PoRQH2efWUGl2LQIqomIl3SI33+POcBkI7hC8KJ98uLIt2K6SE
+         0eL3cZMLXu6PNYTkHEs8MvdDiQYNbOjGW6g7aVQpTYPLD3rtM/6us+4u0gk5SbT9Rfyp
+         X4mVP+/ZYbh2+ZQyzYoW3PclfHBC2t6pKf0+KuhWy9gBNRpEoniIu94uQZw9ozvsbN0n
+         XO0A==
+X-Forwarded-Encrypted: i=1; AHgh+RoR9MMdfbtHC8t4zzDxvbmSsGpv/k5R5qnXbQbOENXNtsa1M8Hkq4gB9DQrEtsGkZKj78d2hK1PT7TAHw==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yyt1ImCwjepm2eWGZQq753MnLBKmiTz0ZO6tiAFFUdEt2MQPvxX
+	cJw31SiCQ2pEorxOCy9E8rScU0a4vrtTwfC4n2BgYPUN6u2/0KvILC0qtifvBEq/IME=
+X-Gm-Gg: AR+sD119ZZFclpZ5Gj+3vz/z2RAnhy58AYqS9mei6I6VAU6uvlppZhkr8YEySm3QQv0
+	AXGU4eOkfPnJWI3Qazg/exy/6A84Bu8cNsp3aFnpKi4vtZaBHieYk1NUPtphxj6Ysr9P7FrzZ9T
+	HGXnpKveQhNYw0TVfZfDqmVLpA1Fe6ByjlhgaHyuxcN9auvbPi5rd5MXK/iaFosUyyF1CtNnLUq
+	NjZgZ+4AF8C7oShhOU98AEg7vrv9nqb4mkPywFkBemcN+PMqpOw9nsV0bEV+UPnc9sk1W0VG0rC
+	iVltapJNniaZz/7i0N8Xi7YPAwMgWZ8YzEsagPsFnV+Q66u7JgEeeSx00wqvnSCkt20t/Ufdrpl
+	VRGEtxp/2eqBmUNz3ULNWpdX9ZSkGWcL5CHKl6S/+hYFwtTWGT6SvEZRZOqS/IxHaY4kWdhjpmh
+	w7/FN2gHt4sy5k47e++Yq745rXQawWi61rO5NT50osQ/XrdmvrV3JZ6gA10CqJhU+t6l0VSlafK
+	qzKrb8WDRMh0+jEDjtLFkLJzXdh04aOx7XH6yiIgCUZow==
+X-Received: by 2002:a05:6808:1246:b0:4a4:e11c:7b56 with SMTP id 5614622812f47-4ad87782f6amr2123750b6e.8.1785428599570;
+        Thu, 30 Jul 2026 09:23:19 -0700 (PDT)
 Received: from [192.168.1.102] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-458c257c4d0sm2482546fac.2.2026.07.30.09.22.16
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-4ad6ef595cfsm4494333b6e.10.2026.07.30.09.23.18
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Jul 2026 09:22:17 -0700 (PDT)
-Message-ID: <e85ec957-d648-4d6a-bcfe-09dd2d21d090@kernel.dk>
-Date: Thu, 30 Jul 2026 10:22:15 -0600
+        Thu, 30 Jul 2026 09:23:18 -0700 (PDT)
+Message-ID: <bd7249ff-d0a6-4a3b-8aec-3b5325f24b08@kernel.dk>
+Date: Thu, 30 Jul 2026 10:23:17 -0600
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -72,7 +71,8 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH RESEND 0/5] block: validate direct I/O memory alignment
-To: Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>
+To: Thorsten Leemhuis <regressions@leemhuis.info>,
+ Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@kernel.org>
 Cc: Keith Busch <kbusch@meta.com>, linux-block@vger.kernel.org,
  linux-fsdevel@vger.kernel.org, dm-devel@lists.linux.dev, brauner@kernel.org,
  djwong@kernel.org, viro@zeniv.linux.org.uk, regressions@lists.linux.dev,
@@ -81,15 +81,15 @@ References: <20260720201057.1862857-1-kbusch@meta.com>
  <ampRQyXDbGgeg49V@kbusch-mbp>
  <fbe9e74d-c389-46f4-9874-3e9ffd9c91d3@kernel.dk>
  <ampce7mxSmxAwAiu@kbusch-mbp> <20260730112626.GA24827@lst.de>
- <amtJDCtczVyX1baB@kbusch-mbp>
+ <00104e90-48b8-4419-90c4-ac0c4a2e1c44@leemhuis.info>
 Content-Language: en-US
 From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <amtJDCtczVyX1baB@kbusch-mbp>
+In-Reply-To: <00104e90-48b8-4419-90c4-ac0c4a2e1c44@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 7/30/26 6:52 AM, Keith Busch wrote:
-> On Thu, Jul 30, 2026 at 01:26:26PM +0200, Christoph Hellwig wrote:
+On 7/30/26 7:25 AM, Thorsten Leemhuis wrote:
+> On 7/30/26 13:26, Christoph Hellwig wrote:
 >> On Wed, Jul 29, 2026 at 02:03:07PM -0600, Keith Busch wrote:
 >>>>> Hi Jens, have you had a chance to look at this one yet? This addresses
 >>>>> previous issues with certain device mappers under direct io.
@@ -106,18 +106,25 @@ On 7/30/26 6:52 AM, Keith Busch wrote:
 >> and while it took a while for people to hit this with their a little
 >> more complicated lvm/md setups, it has stopped real systems from being
 >> used.  We need to fix this ASAP.
+> Thx for this, as I had been thinking along the same lines already and
+> was still considering if I wanted to speak up.
 > 
-> This should have gone in several weeks ago, IMO. You can most readily
-> hit a problem running qemu against one of those lvm setups. We're just
-> so late in this release cycle that I'm not pushing hard for 7.2, but I
-> would support that choice too.
+> 6.18 still qualifies as recent in my book, but YMMV. And it's not like
+> people "took forever to notice"[1], as they reported this for a while
+> now -- and there were a few attempts to fix this; it just took us some
+> time to see the full problem (@Keith: many thx for that and the fixes
+> for them). And some of the linked reports are quite recent, so people
+> really hit this.
+> 
+> Sure, as always there is the risk that this will cause other, bigger
+> regressions. Maybe that's why it's one of those situations where the
+> right approach is "submit this separately to Linus and let him decide",
+> unless of course he speaks up here.
 
-Exactly, it's been floating for a bit, and the last week is surely on
-me. But merging at the time it was posted would've been late for fairly
-substantial changes.
-
-Hence why I think 7.3 is just the better choice. We're talking weeks in
-difference on when it gets to stable anyway, which is what matters.
+Sorry that's nonsense, because how is Linus going to make that call if
+we can't. It's on us/me to make that call. We're not first-timers around
+here, we've been around and know how to make the call that we can stand
+by.
 
 -- 
 Jens Axboe
