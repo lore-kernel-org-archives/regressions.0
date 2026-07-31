@@ -1,190 +1,96 @@
-Received: from smtp-bc08.mail.infomaniak.ch (smtp-bc08.mail.infomaniak.ch [45.157.188.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9E5D322B87
-	for <regressions@lists.linux.dev>; Fri, 31 Jul 2026 12:22:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82A1735F61E
+	for <regressions@lists.linux.dev>; Fri, 31 Jul 2026 13:06:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785500569; cv=none; b=ZR8lUTFmQJs+xfW48c4BCftpcjjwoQSWhR4Cok4We1OBJZS/FcPsb/hYEt79tkn2f308dlQmW0oyDah5nhFY19FXoEBp1jnpA7kg3sTqKn7Ngwz8fYigSmrXVnPidjPUOrisAxy0d3FOHslYefJNrNtvPNQNw+t8a7k/PuIIsG4=
+	t=1785503184; cv=none; b=BcoSNQFTSCRAUz1dyOe+V7y90DCskvzSQrg9U1YyxMckQAh9DcA/MxlrKs4y0oyMFHdnf8730e8xcWMzIrJoaGDB+/cvC4LaMxMsWjIMmGfCSIHGZ9dZ9+m/eNm2lYZTlLrPxFXpeZkzSoWvzMrqzwJrDV516Zl6poO4R2zNVSk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785500569; c=relaxed/simple;
-	bh=B3gbOU1609xgQfTraAjHyxGAmIN+X3B+HfT1WcROsgs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Km1M36IqWzVHf7pvG+sdsp5B1YRgXGGnbykp8XYYGoj3axzZHZWXplG81mmHIkiK3E+TKZRbUruQyZYp/hHdUKLo6xW8BEY+hJc/386btA0fFyQh5TTpve/t/TsuNvN66Ed93nvR6np7kwzYXRczh5udMyoymHemFmo1qvsLaV0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=humanlearning.ch; spf=none smtp.mailfrom=humanlearning.ch; dkim=pass (2048-bit key) header.d=humanlearning.ch header.i=@humanlearning.ch header.b=B+ttijuO; arc=none smtp.client-ip=45.157.188.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=humanlearning.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=humanlearning.ch
+	s=arc-20240116; t=1785503184; c=relaxed/simple;
+	bh=/72SslYpy2PVQIMAAmadnePuVCvoy+6MWfdj9ZYOdZ0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bp11whkakNiHYDzUexVmG03Ow976EzA8jLolfDzABT+6HZ7udJSXfbnM0ilKWgbFUCmy6r4rgXcRqSz71eIdsg8JoIPLNQOgcvU0lE40WoH5744aBIXw4ghxr0d8Qic89pz/1zeO+udjAa245hBa4om/Xu/SOPsW35F7PfoiYrs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DpBd+KFs; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=humanlearning.ch header.i=@humanlearning.ch header.b="B+ttijuO"
-Received: from smtp-3-0000.mail.infomaniak.ch (unknown [IPv6:2001:1600:4:17::246b])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4hBQFC6NshznTC;
-	Fri, 31 Jul 2026 14:22:39 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=humanlearning.ch;
-	s=20250828; t=1785500559;
-	bh=qm9TKB413pUdh/ietlgH5F8e6i++Iz+1hU9IMjGeM2U=;
-	h=From:To:Cc:Subject:Date:From;
-	b=B+ttijuOv/F66fc14/JgbO4BIxjao9QnJhkFp0ej07xqHbm2P7VdBJwLQgsQnk9+P
-	 ne4rBOWNTV6W0oyANioi8EZWEX4oZhR2BoxEuaY52ACAYOnSEQ67nSnSNnjaOHvfjA
-	 XtZAnr05RCyNIwp4Oq/6k183q5lbHmHCf70Z6gideGQuhpP3vHqzLxg8h1t80X0vPE
-	 Tqy9oXt8pcotJ414ZusAMqUeOu45QpA/wuMSU+jUdn8WyqmiZKk3M8ihXLQaqIgbNq
-	 GAlQlK6fc1s83uNdfHq0DQFRhmCBrpCpI2WE7jtK3oI9E3jzpShx2P4RKgP5NUpNFX
-	 Y2flfzZtH8xSg==
-Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4hBQFB4F1pzkWR;
-	Fri, 31 Jul 2026 14:22:38 +0200 (CEST)
-From: franzelverbier <info@humanlearning.ch>
-To: Manivannan Sadhasivam <mani@kernel.org>,
-	Bartosz Golaszewski <brgl@kernel.org>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof Wilczynski <kwilczynski@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	regressions@lists.linux.dev,
-	linux-pci@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	franzelverbier <info@humanlearning.ch>
-Subject: [REGRESSION] PCIe/qcom: on-board WCN7850 link stuck in Polling on X1E80100 (Surface Pro 11)
-Date: Fri, 31 Jul 2026 14:22:25 +0200
-Message-ID: <20260731122233.18345-1-info@humanlearning.ch>
-X-Mailer: git-send-email 2.55.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DpBd+KFs"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2caed617615so11274985ad.3
+        for <regressions@lists.linux.dev>; Fri, 31 Jul 2026 06:06:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1785503183; x=1786107983; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=eWMr5EOxuzjVi5gwglHccB0LsO3CP+DoymMW6cwNef0=;
+        b=DpBd+KFs9rdsSu6EVZookRF8GOD2Tm+kGTFuZuoVxF/DWJhr057biXU++nvoXppblQ
+         obtBrf3B3xJz4CieuitvZVzG9N2LA3wQGmAwIZnnlkiW9sh7aJ9dvYLmaYhrUFXsVy/N
+         dFbUtQ7hc0/UVa577uCvpWaacfEVqAzSzJdSbccSAZ9fvclfsTf7MyDQDHPGVUZA/rF8
+         v03yE66NHbu1EGu0q4LCpORFtLHJXTLCMak5fSrBS1WC8aYg12PLLhIeZUxpMgpX9hOd
+         u4A8xGppp9Kb8drsgpo7Z0jaX7zMCzOrnL5SlvjCj//Robbh1aA7pktPW7U7F5PvxgLG
+         suSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1785503183; x=1786107983;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=eWMr5EOxuzjVi5gwglHccB0LsO3CP+DoymMW6cwNef0=;
+        b=MOiEQcJnyp6cvE/TkFX1Z2RzfgJI//QeW38y9yfPGoJbrRHSERTjYmjS7G8v8aHCI/
+         5h/eGc2UHQ2HEa7RSEyAOUo1Dy2CwgF/CRE7zdnsORZcX7kmz5By88YB+wTnXNMwWwme
+         z6rIGfb8kgP2K6EgsYh+x8J2nLAnKU+WtqpbvxmuWryNDZbsZ5sFHUkxHyrEOZqFfZEh
+         qOLESpXuwBKfiyRrULcpZ6UvFZZmO5YwJAhEbA/FmeKrlk5ADc9pvpKClTmBwKbFjXsg
+         vXLx7vfeo8LqtS2jJEnAb8ul6di8ZBlYlJqa7+edIzK9c6H+6AA4KRAKqUKqNim94jjQ
+         xOPA==
+X-Forwarded-Encrypted: i=1; AHgh+Rq9i4ZWjIEkir9rWVRY06xfyDjtutS8qt98yccFoc5qyBECEtNrwXTYQYbJVG0SMfWztPjHmXjRqdDDGw==@lists.linux.dev
+X-Gm-Message-State: AOJu0YyYDl6DvMioNnSOq7LEd8KYbtgZTTJj6COGSM8+Le5G2D4F3fOF
+	QydQxFWibH+2lE8x2162kn7S3hYRW+JNo1jRsyKaLXdjK9WtnRA7Yh8Y
+X-Gm-Gg: AR+sD103JS0kanl2erTAdN0kwmjlIpX5kI1hAD+YLWEoPVDLvZSuvCtgcyGEACXtjpl
+	r7+zv64r20TyZZEUCDkxckEGloiyMEA7H3OOMRgefjKaBal5WnSdpJCUvIlZiM2x7Vb3fcCr3QN
+	PrRHPJRHj5M6mjxUq63fMkBF//eUuSZEx3LWH4zRo/KvWTlCkq2gD8HikVtqe06LHbjwvpq/n8D
+	HO9rjJfmF2NKRhtjJ4jqxaz/c20L5eu0oKPmZBA5cEBVaX+Ua2hzwqtid76eI8yyLqzBQEI8IzN
+	1JyhOr6jQ8hvD57tW05eYJ1qX63g5+Hd7gb5x5/o3Nvrba3lh8Rg80w3A4SJSEPb6X/mhsTXZYt
+	EXxv90R6mA1AKOsXv57h0U/uhggY5/QqEw5qK0vdkgimOEOozzG/Cc5MjvRvxefMUJd7+GawP8O
+	dUY6sl0xa4SzDoSLL96CI0k/Zqjxm+zrHfd+K6j22s/JYhGVP+VeLeUOGk7w==
+X-Received: by 2002:a17:903:190:b0:2ca:ecf6:9104 with SMTP id d9443c01a7336-2d046d81079mr19211725ad.4.1785503182834;
+        Fri, 31 Jul 2026 06:06:22 -0700 (PDT)
+Received: from [10.10.0.5] ([59.152.127.200])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2d04b0eb491sm5193715ad.42.2026.07.31.06.06.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 31 Jul 2026 06:06:22 -0700 (PDT)
+Message-ID: <588c2e18-e6fb-4fc1-95d5-7a5dd0f556fe@gmail.com>
+Date: Fri, 31 Jul 2026 21:06:17 +0800
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Infomaniak-Routing: alpha
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] usb controller fails to initialize on intel s1200btl
+To: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>
+Cc: rafael.j.wysocki@intel.com, linux-acpi@vger.kernel.org,
+ linux-usb@vger.kernel.org, regressions@lists.linux.dev
+References: <3353bdf3-4f33-44b1-809b-b0378bee5816@gmail.com>
+ <CAJZ5v0h1kqDEBYk0k05rv6f2SJ7g+TN4FhBDJYZSVUctu-0FdA@mail.gmail.com>
+ <daf0bb9b-246d-437d-87ca-16706113b201@gmail.com>
+ <CAJZ5v0jByxtQ2tmNm_ZyyBnDMBNjuqQwD_367NRyGNzF7wQtRw@mail.gmail.com>
+ <7792f017-42b0-4a09-9941-5259138e21b1@gmail.com>
+ <CAJZ5v0jCFFNuG7WtCE2CG+hP=YNsYMdXH_945QgkgAUcr4Lryg@mail.gmail.com>
+ <37daa35f-06aa-49d0-bf0a-1b5ac9f44c89@gmail.com>
+ <CAJZ5v0jyy0+hqU3=gmBrgMzLBVhdUQwDj8d0_jGCqZwqyWT=_g@mail.gmail.com>
+Content-Language: en-US
+From: Julian Silver <mendaxca@gmail.com>
+In-Reply-To: <CAJZ5v0jyy0+hqU3=gmBrgMzLBVhdUQwDj8d0_jGCqZwqyWT=_g@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi,
+On 2026-07-31 19:58:32, Rafael J. Wysocki (Intel) wrote:
+> Please boot with "intel_idle.states_off=16" in the kernel command line
+> and see if the problem is still there.  If this doesn't help, please
+> also try "intel_idle.states_off=24".
 
-On a Microsoft Surface Pro 11 (Snapdragon X Elite, X1E80100, board
-x1e80100-microsoft-denali-oled), the on-board WCN7850 Wi-Fi PCIe link
-no longer trains on linux-next. It works on 6.17.
-
-  Good: v6.17
-  Bad:  next-20260721, next-20260723
-
-#regzbot introduced: v6.17..next-20260721
-#regzbot title: PCIe/qcom: WCN7850 link stuck in Polling on X1E80100
-
-The device sits behind PCIe controller 1c08000.pci (pcie4,
-qcom,pcie-x1e80100, gen3x2) and has no PERST# GPIO -- it is
-power-sequenced via wcn7850-pmu / pwrseq.
-
-Symptom
-=======
-
-  qcom-pcie 1c08000.pci: Device found, but not active
-  qcom-pcie 1c08000.pci: PCI host bridge to bus 0004:00
-
-dw_pcie_wait_for_link() finds the LTSSM in POLL_ACTIVE/POLL_COMPLIANCE
-and returns -EIO. The endpoint 0004:01:00.0 is never enumerated, ath12k
-never probes, and there is no wlan interface. On 6.17 the same
-controller trains at ~0.6 s and ath12k probes normally.
-
-Ruled out: the chip is powered, and power control is bound
-==========================================================
-
-- Bluetooth on the same WCN7850 (UART) comes up fine, so the PMU and
-  regulators are on.
-
-- pwrseq_qcom_wcn is loaded, and pci-pwrctrl-pwrseq is bound to the
-  platform device 1c08000.pci:pcie@0:wifi@0 (compatible pci17cb,1107 is
-  present in pwrseq_pwrctrl_of_match[]). The vddaon-supply
-  validate_device() check passes.
-
-Ruled out: not a device-tree regression
-=======================================
-
-The wifi@0, &pcie4 and &pcie4_phy nodes are equivalent between the 6.17
-and 7.2 device trees -- same supplies, same compatibles. The only
-difference in wifi@0 is "disable-rfkill;" (6.17), which is
-post-enumeration ath12k behaviour and cannot affect link training.
-
-What changed
-============
-
-qcom_pcie_host_init() was reworked around the pci-pwrctrl framework,
-and qcom_pcie_start_link() now calls qcom_pcie_common_set_equalization()
--- absent in 6.17 -- before enabling the LTSSM.
-
-Finding 1: Gen3 equalization prevents link training
-===================================================
-
-Forcing the port to Gen1 makes the link train and ath12k probe:
-
-  &pcie4 { max-link-speed = <1>; status = "okay"; };
-
-  qcom-pcie 1c08000.pci: PCIe Gen.1 x2 link up
-  ath12k_wifi7_pci 0004:01:00.0: Wi-Fi 7 Hardware name: wcn7850 hw2.0
-
-qcom_pcie_common_set_equalization() only programs GEN3_EQ_* for speeds
->= 8GT, so max-link-speed=<1> skips it entirely, reproducing the 6.17
-behaviour of no EQ programming.
-
-Note this is not a wrong preset value. The presets come from DT via
-of_pci_get_equalization_presets() and are applied by the DWC host core.
-In hamoa.dtsi:
-
-  pcie4  (pci@1c08000, gen3x2, on-board WCN7850)
-    eq-presets-8gts = /bits/ 16 <0x5555 0x5555>;
-
-  pcie6a (pci@1bf8000, NVMe, gen4x4)
-    eq-presets-8gts = /bits/ 16 <0x5555 0x5555 0x5555 0x5555>;
-
-Both use the same per-lane preset 0x5555. The NVMe port trains at Gen4
-fine; only the WCN7850 port fails. So the WCN7850 endpoint specifically
-cannot complete Gen3 equalization with these presets on this
-controller, while an NVMe SSD on the same SoC can.
-
-The board DTS (x1-microsoft-denali.dtsi, also in mainline) leaves
-&pcie4 as status = "okay" with no per-port override, so it inherits the
-SoC preset.
-
-Finding 2: an LTSSM re-kick does not recover the link
-=====================================================
-
-Even at Gen1, the link does not train on the first attempt at boot
-(~4 s); in one instance it only came up much later via a pciehp slot
-event. An experimental retry in qcom_pcie_start_link() toggling
-PARF_LTSSM.LTSSM_EN (clear/set) for up to 30 s never recovered the
-link.
-
-That suggests the endpoint needs a full power/reset re-sequence
-(pwrseq) to leave the failed state, not just an LTSSM restart -- i.e.
-the pwrseq power-on may be racing link bring-up at boot for PERST-less
-on-board devices.
-
-When the link does come up late (fragmented CMA, tight PCI windows),
-secondary symptoms appear that are absent on a clean boot-time
-bring-up:
-
-  ath12k ... qmi dma allocation failed
-  BAR 0 ... failed to assign
-  rfkill ... Hard blocked: yes
-
-Questions
-=========
-
-1. Are the qcom_pcie_common_set_equalization() Gen3 EQ presets expected
-   to be safe for a gen3x2 PHY driving an on-board WCN7850? They
-   prevent link training here, and skipping them (Gen1) works.
-
-2. Is pci-pwrctrl/pwrseq power-on racing link training at boot for
-   on-board devices with no PERST# GPIO, such that the endpoint is not
-   ready on the first LTSSM attempt and cannot be recovered by an LTSSM
-   re-kick?
-
-I have not bisected to a single commit yet -- the range above is v6.17
-to next-20260721. I am happy to bisect, test patches, or dump any
-register on this hardware; rebuilding is a short loop here.
-
-Environment
-===========
-
-linux-next next-20260723, CONFIG_PCIE_QCOM=y, CONFIG_CMA_SIZE_MBYTES=128,
-ath12k, board x1e80100-microsoft-denali-oled, Arch Linux ARM (aarch64).
-
-Thanks,
-franzelverbier
+"intel_idle.states_off=16" does not help.  "intel_idle.states_off=24" works.
+Note that the test is performed on vanilla kernel v7.2-rc5(without the patch).
