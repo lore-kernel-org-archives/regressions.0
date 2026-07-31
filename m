@@ -1,196 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 346154562B5;
-	Fri, 31 Jul 2026 16:24:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E1A244C50F
+	for <regressions@lists.linux.dev>; Fri, 31 Jul 2026 17:04:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785515067; cv=none; b=RtxOTEI2HyChANAa9FrxFBzapIqsJU7zkSdPo80v+ZuxcvD/Ef54tS+Ti4JvgZbjv9Zz2xt8MMkFFws1VReYzE3LvVKJoadiyYevYmaHAqA8RPI2pfQX0EMFtOPOrZ3IuwjOokzu0Z60AZRhN9BWRg69PxMrYlhJ4Yyd64bVzl8=
+	t=1785517500; cv=none; b=tMXQddaHMqZ8qPw+ovUPpE9wzRRNUToybXa2yaujepNjeJeFQ0j7kPyIx+HVY9s00RNTNi1vtrmBWOs6b2dLr9UYB0ZeuP8TtCOeKTSPJiWzD76gXTpMDgAU6IhDYbNhk/t6g4gs3TZuVR4xjr3ImwBolrWlYRFrYIGFeO2Qyqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785515067; c=relaxed/simple;
-	bh=jLy2oxYoq2BDoxhea619lXJyJFuuD2tinsJHp1GzKnE=;
+	s=arc-20240116; t=1785517500; c=relaxed/simple;
+	bh=8G22stH9+mabi49WnBtjC7Xjo+sg3VNSjxd7j6C5NtQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=AgkOB3Ge2PXZu4hwsn7ETCobUoNmbGUdlZfaHgoFeRneZGoRBxgUqBRtDnnFEdsdwgGsTdwhvak8wHOckQFJEzHo8pHilJ0eqGLT0+sw9jNLmGxJbrt07ztBAsiSMhBH60oH7HQn0+nut1bsUC9tWg+LBElWAUs3Yn+Ffb75dcI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dptk9Q8/; arc=none smtp.client-ip=100.103.45.18
+	 Content-Disposition; b=uvlhXa/TSqVsIqVHenlqxFL02UwOEcXAoZtBXZ0ZUFVM0PQNhSUfa58PZIrY7tq5dFT45GxXEkM8i1scJXxtsxCa9eYSxK3fFJal6lVFiutEm9dSPgHkW8TgnoHH4h+w9TGknZ56NW8FLXzF95gHc/vvCXtAvb6HX+upGujPmgA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KjgL8yDU; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dptk9Q8/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84FFE1F00ACF;
-	Fri, 31 Jul 2026 16:24:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785515065;
-	bh=y1YM1FtXEXTem+Rp2vWEYmY6TR2drUxiW8KEqcpWJqQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To;
-	b=dptk9Q8/V7jZUR2QsFwSRGzaaqmmDzkq7swlrDVs/bbqmKW5Vimm5mmi5wzoPN9AV
-	 /eeDWNAqUj9FAPZYxhehbk5XcNKpZbk5LW9A6ieKtUaxslcg0FEKUWE1eq5yvsXSeV
-	 MxHsPs8Qvempbe5kZaqpQSQA9I0wHQz6Hgz8cT/Wo63wqk97eDW89spNIFlkcsKbPt
-	 wX+A6sDl6JvyzUjg/7dUWZPOxduyP+B6Zzu7GECggJeDiq+CPD99Yx3oKaAItD9X4e
-	 aKnDfUU3+Pmkk5ho9GJa8wv/Sw88jFCo/5DLeGWHf0AG8Lezp2qOpMmtMgrphjhZo3
-	 oJK1DmDqH3qVQ==
-Date: Fri, 31 Jul 2026 11:24:24 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: lizf@honeycomb.io,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
-	amd-gfx@lists.freedesktop.org, Jon Nettleton <jon@solid-run.com>,
-	Jon Nettleton <jon.nettleton@gmail.com>, stable@vger.kernel.org
-Subject: Re: [PATCH v2] PCI: Fix BAR resize for devices on a root bus
-Message-ID: <20260731162424.GA1571989@bhelgaas>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KjgL8yDU"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-698ae09e356so2036994a12.2
+        for <regressions@lists.linux.dev>; Fri, 31 Jul 2026 10:04:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1785517497; x=1786122297; darn=lists.linux.dev;
+        h=content-disposition:content-type:mime-version:message-id:subject:cc
+         :to:from:date:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=K/G26UF84bxEx5MK97aH+lyUa5pLQNuqoVNWR4lJkkc=;
+        b=KjgL8yDUo2P8kACknBiplXxrPwd2b2EGDBETpwtynlu+i52lG3XiFN/T4Vgg5Q5Ncv
+         OktO8wAsoIOVsFgdO+sPJps4BLMLfwPU5isk42edV9yshgy5UPRfNH5DWFZVP/sFaY+J
+         PbQeQrW1+eVTXov1zE3nCVHkhMWOfuEiJd7GFe4spOqwdd12nUrfUzfw/Hxn+3PLJg6d
+         fJwZ6exPCr7oaRnUj9FU89JEOqnTiDnsK+AfwGlSf97rEGyBCEiBQojv+qK4elrAzXa2
+         /34EYDBVq7DKnG3Jdo6svgwQeyhSJvbeUzLfRI7kYDLIZHg1oMpyBVvB8gEGHppCN7Pn
+         G/uw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1785517497; x=1786122297;
+        h=content-disposition:content-type:mime-version:message-id:subject:cc
+         :to:from:date:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=K/G26UF84bxEx5MK97aH+lyUa5pLQNuqoVNWR4lJkkc=;
+        b=kBrNUpBwrzv4MSFvPkBIGF6FfQrCn3Jjbsj/q3QYhq/3t6sxE7PcqmDrL/PMWAZ5sF
+         duCpBiycM2hzAdttuM7v+VliCY+NCi91hOw5DrfHCU2GL7frCK369eE2NBnVA0S9h2Pz
+         IE4Qo1yMsa/xgKTnD0gApntmzqXxLR/7kO3YzOMwcNia+84lvvnf7yEox+xYAXJoGoUU
+         bMKi/yEPSh7zjlyJRWPxl1+K0X3FNrgerXerGDnFhz+V+lbnvPJC9bHO8aaJf80hy5EL
+         nuxOF0Z8DG/iGGr2yvH57LoXNJqNNVAjyOXKIduATo8lwmGHNxSrelCnadFyIG5aTwSG
+         3Hdw==
+X-Forwarded-Encrypted: i=1; AHgh+RpnWvAZc0Q6hcXYIwk+jQx2y0rGg3579cy8ytJTG5lYlGR9xlAUvQzR9SAGVVjW4SCdOMYkVvT5nP2k4A==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxlNFKN4zhGAwDRVRb+x8/BmGQW32xsJwugHJB0IfvxbR0y9Ly3
+	tLP9oLSgJujSc5mVGZNL9gsZMcoGRULvrO+k3unrAZFhHKFBjgDdVS0A
+X-Gm-Gg: AR+sD12z5TObYq5LKDBETmR089/diGEwOwDNWO19ZaSeLlrbNVBRtyQj9JyBH0lsgVW
+	rMQ17p4i65jeJ5dciAdPZzldr5AMzvxPiLMzpNderemxF5kLsaevJJRkEgBk4ANMnr2cP9IimY4
+	2ndqV4boQFvBDf6eK1Gt9fLL1IJDvVAstjj4OYJg+HRchB3a2fh7gu7KrhWuqtc9tjB8Pc1Yxja
+	aRKPqXElQJ4rImyrgN+4Itk1BnY+DEaPJvEUwCVOx2lHGkwUk4BgSydcMNX/jasTEP5J6KF3T00
+	Zh6lBfP9zePipAHt61aHCIhwc8Yp91g825RvA2EhRZULZ/zJOjDaVdrYqp6CUvXOyrRS4PLsvUB
+	d4MEOLykvdJ+zWRoMocmMVYj9YO87eoE1Z10m8cPazDvAUlxalZfjjcrvayLJW8xMbSS2ljBlDS
+	6fASlAZTbKtOmyO0lwCTZsGlzQwt9IEj1Q4YtImAbjKpWaMCJVG7b4Qvw1iXL2wxUbp6R7AoYM3
+	ROvk/9u
+X-Received: by 2002:a05:6402:44da:b0:69a:b38d:403c with SMTP id 4fb4d7f45d1cf-6a0a7c6b782mr264208a12.7.1785517496865;
+        Fri, 31 Jul 2026 10:04:56 -0700 (PDT)
+Received: from debian.local ([2a0a:ef40:e13:1601:a8d:2d:6c37:dbbd])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-47fd456a6besm6602316f8f.22.2026.07.31.10.04.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Jul 2026 10:04:56 -0700 (PDT)
+Date: Fri, 31 Jul 2026 18:04:54 +0100
+From: Chris Bainbridge <chris.bainbridge@gmail.com>
+To: emmanuel.grumbach@intel.com
+Cc: johannes.berg@intel.com, miriam.rachel.korenblit@intel.com,
+	linux-wireless@vger.kernel.org, regressions@lists.linux.dev
+Subject: [REGRESSION] iwlwifi IO_PAGE_FAULT and Master Disable Timed Out
+Message-ID: <amzVtgQb2p-_nShU@debian.local>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260712-pci-rebar-root-bus-v2-1-a1b9107a82dc@honeycomb.io>
 
-[cc->to: Ilpo, I think we need your review/ack for this]
+Hi,
 
-On Sun, Jul 12, 2026 at 02:49:43PM -0700, Liz Fong-Jones via B4 Relay wrote:
-> From: Liz Fong-Jones <lizf@honeycomb.io>
-> 
-> pci_do_resource_release_and_resize() releases the device BARs that
-> share a bridge window with the BAR being resized, but when the device
-> sits directly on a root bus (pdev->bus->self == NULL) it then skips
-> resource assignment entirely and returns success, leaving the BARs it
-> just released unassigned (IORESOURCE_UNSET).
-> 
-> Skipping pbus_reassign_bridge_resources() is correct in that case --
-> there is no bridge window to adjust -- but the device BARs still have
-> to be reassigned. Before the BAR release was consolidated into the PCI
-> core, this case worked for amdgpu because the driver released the BARs
-> itself and then called pci_assign_unassigned_bus_resources()
-> unconditionally after the resize, which assigns unassigned device BARs
-> also on a root bus. Commit db92e3fef53e ("drm/amdgpu: Remove driver
-> side BAR release before resize") removed that call, so nothing assigns
-> the released BARs anymore.
-> 
-> This breaks amdgpu completely on the SolidRun HoneyComb LX2 (NXP
-> LX2160A, arm64, ACPI), where the GPU endpoint is enumerated directly
-> on the root bus of its segment (there is no root port device, so
-> pdev->bus->self is NULL):
+0eaa1f245ac0 ("wifi: iwlwifi: mvm: don't support the reset handshake for
+old firmwares") introduced an intermittent boot regression on my laptop:
 
-Maybe this is a tangent, but I'm curious about this topology.  Is this
-running as a virtualized guest?  At the hardware level, a PCIe
-endpoint must have a Root Port somewhere, even if it isn't visible to
-the OS (as is often the case in virtualized guests).
+[   15.974991] iwlwifi 0000:01:00.0: AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x000a address=0xbe9f5000 flags=0x0000]
+[   15.976184] iwlwifi 0000:01:00.0: AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x000a address=0xbe9f5400 flags=0x0000]
+[   15.978501] iwlwifi 0000:01:00.0: Master Disable Timed Out, 100 usec
 
->   amdgpu 0004:01:00.0: BAR 0 [mem 0xa400000000-0xa40fffffff 64bit pref]: releasing
->   amdgpu 0004:01:00.0: BAR 2 [mem 0xa410000000-0xa4101fffff 64bit pref]: releasing
->   amdgpu 0004:01:00.0: sw_init of IP block <gmc_v8_0> failed -19
->   amdgpu 0004:01:00.0: amdgpu_device_ip_init failed
->   amdgpu 0004:01:00.0: Fatal error during GPU init
-> 
-> No error is logged because the resize path reports success; amdgpu
-> then finds BAR0 IORESOURCE_UNSET and bails out with -ENODEV.
-> 
-> Assign the released BARs directly from the root bus windows when there
-> is no upstream bridge. On failure, roll back through the existing
-> restore path exactly as in the bridged case.
-> 
-> The root bus path also had a locking bug that any fix here necessarily
-> touches: the old "goto out" jumped to up_read(&pci_bus_sem) without a
-> matching down_read() (as does the "goto restore" taken when
-> pci_dev_res_add_to_list() fails in the release loop). Take pci_bus_sem
-> before the BAR release loop so every path through the function holds
-> it exactly once.
-> 
-> Fixes: 337b1b566db0 ("PCI: Fix restoring BARs on BAR resize rollback path")
-> Cc: stable@vger.kernel.org
-> Link: https://bugs.launchpad.net/ubuntu/+source/linux-hwe-7.0/+bug/2159596
-> Assisted-by: Claude:claude-fable-5 checkpatch
-> Assisted-by: Claude:claude-sonnet-5
-> Signed-off-by: Liz Fong-Jones <lizf@honeycomb.io>
-> ---
-> #regzbot introduced: 337b1b566db0
-> 
-> Observed at runtime on Ubuntu's linux-hwe-7.0 (7.0.0-14, broken) vs
-> linux-hwe-6.17 (working), but nothing here is distro-specific: Ubuntu
-> carries this code unmodified, and the affected function is identical
-> to current mainline. By source inspection the regression window is
-> v6.18 (old code paths) to v6.19 (consolidation). Workaround for
-> affected users: amdgpu.rebar=0.
-> ---
-> Changes in v2:
-> - Add Assisted-by tags (missing from v1; required per
->   Documentation/process/coding-assistants.rst)
-> - Add Link: to the corresponding Ubuntu bug report
-> - Drop the "# v6.19+" annotation on Cc: stable; unnecessary noise
->   given the Fixes: tag already lets the stable team derive applicable
->   versions (per stable-kernel-rules.rst)
-> - Link to v1: https://patch.msgid.link/20260705-pci-rebar-root-bus-v1-1-55df70cbdd88@honeycomb.io
-> 
-> To: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-> Cc: linux-pci@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: regressions@lists.linux.dev
-> Cc: amd-gfx@lists.freedesktop.org
-> Cc: Jon Nettleton <jon@solid-run.com>
-> Cc: Jon Nettleton <jon.nettleton@gmail.com>
-> ---
->  drivers/pci/setup-bus.c | 25 +++++++++++++++++++------
->  1 file changed, 19 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-> index c0a949f2c995..9db1951f6e5c 100644
-> --- a/drivers/pci/setup-bus.c
-> +++ b/drivers/pci/setup-bus.c
-> @@ -2397,6 +2397,8 @@ int pci_do_resource_release_and_resize(struct pci_dev *pdev, int resno, int size
->  	if (ret)
->  		return ret;
->  
-> +	down_read(&pci_bus_sem);
-> +
->  	pci_dev_for_each_resource(pdev, r, i) {
->  		if (i >= PCI_BRIDGE_RESOURCES)
->  			break;
-> @@ -2415,13 +2417,24 @@ int pci_do_resource_release_and_resize(struct pci_dev *pdev, int resno, int size
->  
->  	pci_resize_resource_set_size(pdev, resno, size);
->  
-> -	if (!bus->self)
-> -		goto out;
-> +	if (bus->self) {
+The commit only contains:
 
-I think pci_upstream_bridge() would be better here.  Not that this
-device will be a VF (where pci_upstream_bridge() makes a difference),
-but just to be a little more generic.
++       /* Those firmware versions claim to support the fw_reset_handshake
++        * but they are buggy.
++        */
++       if (IWL_UCODE_MAJOR(mvm->fw->ucode_ver) <= 77)
++               trans->conf.fw_reset_handshake = false;
 
-> +		ret = pbus_reassign_bridge_resources(bus, res, &saved);
-> +		if (ret)
-> +			goto restore;
-> +	} else {
-> +		/*
-> +		 * A device on a root bus has no bridge windows to adjust.
-> +		 * Assign the BARs released above directly from the root bus
-> +		 * windows.
-> +		 */
-> +		list_for_each_entry(dev_res, &saved, list) {
-> +			i = pci_resource_num(pdev, dev_res->res);
->  
-> -	down_read(&pci_bus_sem);
-> -	ret = pbus_reassign_bridge_resources(bus, res, &saved);
-> -	if (ret)
-> -		goto restore;
-> +			ret = pci_assign_resource(pdev, i);
-> +			if (ret)
-> +				goto restore;
-> +		}
-> +	}
->  
->  out:
->  	up_read(&pci_bus_sem);
-> 
-> ---
-> base-commit: 7404ce51637231382873d0b55edabc2f3b841a9d
-> change-id: 20260704-pci-rebar-root-bus-f3123fe10fc7
-> 
-> Best regards,
-> --  
-> Liz Fong-Jones <lizf@honeycomb.io>
-> 
-> 
+The if condition is evaluating true on my laptop despite using firmware
+ty-a0-gf-a0-89.ucode. So I suspect this is not the correct way to check
+the firmware version?
+
+Also comment #21 on bugzilla.kernel.org bug #220600 (which this commit
+was supposed to fix) reports the same "Master Disable Timed Out" error
+(although no IO_PAGE_FAULTS, probably the bad memory access is not
+caught without iommu=strict).
+
+#regzbot introduced: 0eaa1f245ac03ed0c6394159360532726f666811
