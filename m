@@ -1,101 +1,143 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA5EE3F1AC4
-	for <regressions@lists.linux.dev>; Fri, 31 Jul 2026 13:42:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785505324; cv=none; b=Nxw8cjLURB+rrlmTE5/Sa/Inv3gG9cxrcAbmQo/oHATsCVvh+roxKpsC7GimQ3IKkkhmJB7afXDMJ34I+NziUXLA0myxZVYyQVbnpLwktb81leggB185w4JQPqVw42/F5c6NKsSJj3+vJkN9/3qNAlIwkepC3Cj9qKWkH6wZG70=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785505324; c=relaxed/simple;
-	bh=xulBkEBoW/Vipy84Mg1gXjd7RRHLkaEtxMYygUAymjE=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61548489873
+	for <regressions@lists.linux.dev>; Fri, 31 Jul 2026 13:49:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.182
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1785505745; cv=pass; b=e7vElWkGIdh/gjjokPGfCDTmNKuo1XrthwDjlHyDYVkLai2i79GcnjN6JQHiot2gj6ICEKiipbOKJX84uY2+fxNdi1SfvA94qNai4HpHwvol+IVQ25Sod133jhjPseMnTzTy+SQO0CBXDtg3APSOHxelup5T3tZU1TbV5PUor8w=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1785505745; c=relaxed/simple;
+	bh=+5Dx6O+22FOct7QvrPmHj/hYfyUYOlW+JktxcsApXa8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ARPeTQnJ87nBBVeemhrt9J8wDhx2PcTCpaQaEO6yFH9qQJwhLyXGtAzmn0+8AY241sflODEBIECal9YRzLyDzqGs8Gcy3dJglOiAbvA8+vxI0/qmoCpuD45Dnmgfc3dX3u2VaDga4C8V80PqWwwWQiBCLwzKOk5/xlZjsxrxleg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U1ojylSK; arc=none smtp.client-ip=100.103.45.18
+	 To:Cc:Content-Type; b=GtVgT1B3HT6kOK7yC0nQGEbM6muaaNjXTu2PTD9QI78Yq5Ac7f+mS8TCNJ7/k12RxlOcsD1yotAt1JG8Sp1CVvgvpw04qKVIyqMrk0oC+cOgDvY2R9R+fV1k+23Oyi9V7JF0/+IV6bBM0XRKwurNRVXm/oojQTPxWx2ZXNT2zmQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=rTua7f3x; arc=pass smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U1ojylSK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4026C1F00ACA
-	for <regressions@lists.linux.dev>; Fri, 31 Jul 2026 13:42:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785505323;
-	bh=ziwLSFeYv7qGbVdCZPRrsO565whIeVlucmgjj21mw1Q=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=U1ojylSKuWWLfky1GUKvMT2MZqtpbSzt4yMaqJGVjklzuNJ49wMPdFUdVyqSlxHSY
-	 pB7W0SJdpG5gwAoLV3Y+oaloPSfyGfXd9QjS3dbSQi3v8bz0Ak5ZxW+5LGpPUbtL9r
-	 4eno3/GVoAFCVZ2ywWFdzDdgKzcggT1EFMv/hcWaxelRGxoerbFrse+HsgEggpvrSv
-	 v9uxpYGA3H2y54UckUAYhH6/UYrUnKMWmBY/p6wCDL+0HFADoSYmSclzPhr6mcUO2c
-	 uMy0OOGn7y/UgZCS2dBPf6P6sg5nWQtbdvDEdFMi02rVrw9Poe1sNYRvm7UdAYxulT
-	 mWROV4CN0IC4g==
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-39f1ac13687so6858411fa.0
-        for <regressions@lists.linux.dev>; Fri, 31 Jul 2026 06:42:03 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AHgh+RopF5WocrIXzpTbNL8p1KKGPjrQmbIA1ZA+52wzF78Gn+FeduzJen55Qo0JfKkbM/Z3KBkeoYRdXAKOtQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwA25VWX3wgozmTgAR5kTjfMWwwCCXTwrgyzyi3WY+DMFUkX0Fb
-	IndH2KEsA/GueRTCHJp3fQ9qm6KC7rsCjWBwwNQGl3YopyAQ3zgz3lpxVgo3Wjh9dyd+RNBNiFY
-	dDBSjHDmp5SKKbh85ayMlsUAjAD/yNm0=
-X-Received: by 2002:a05:6512:251e:b0:5b1:6130:b83a with SMTP id
- 2adb3069b0e04-5b2e1ffe663mr473612e87.55.1785505321560; Fri, 31 Jul 2026
- 06:42:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rTua7f3x"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2d049069377so4442835ad.0
+        for <regressions@lists.linux.dev>; Fri, 31 Jul 2026 06:49:04 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1785505744; cv=none;
+        d=google.com; s=arc-20260327;
+        b=X5/fbQByaoX7hmypJY6muo02Xhp3KawlbuxkXXzwJUvPUdJuWzQB5YPy7Nh3utF1vD
+         QBXdxhPsqGNqKONZKqdTmNyxVLeYQ+aBm8JN862BLRFIzhpSVqSDluJs1lLpwboK9szt
+         /4wKtoa08cR++rZcrKa9Uc63h+fEFMFbbMjWLnDDR4oRWMqSIhlgF6jygLiq9ULmcwOp
+         LonHMB8YIkoVtSmQbGBADg4Joew1OoS57SUWN1QyswJzx9NoidIzyy1ASyTpixH04KsE
+         BHYJebya4PKFK+EMWNZ9BDb5MSb7VhPrNYRt8LucXhk1M+sksqM1wdPxvAvpr3eyT2I9
+         BI6A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:dkim-signature;
+        bh=IEgDxMWh9uDWWULdXcAAQHKrPjbSwPSpzBVVp3o/wCM=;
+        fh=Vmr5WoMbOoAvpXJOLR43E9HzVu+jYJqxGLDrsjJjUbs=;
+        b=Y8DbVZkYptVpqQuRniYhpOcqSG25GgwOt/xhSvklifZXVu1jkRq2YwC9s1N5kclcsE
+         0pADuFBAaXHYwnldpSlpja2yuW8a6LiN1PQ+0A1OyDZhEWU8+FzmTxvtlyOihXxKW9LV
+         hU8xVL66+UD5vv6fuhsiqLxXF5qOZ3J6R/De6wy/HLnkWkmEuFgu5AcddWvkyTShrSSi
+         H4C1jF87TTzAbKDy6bjDA98c7fblw5o7b3F9wY7g5BnDixg/G24Vzq/6qj8f6wjrwh12
+         jZryinRrz7a0L74gmGdshnCrU84PcIA0FllnVlSJl4HBCkip2npPhO5pEbTCACzDzdPJ
+         5c8Q==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1785505744; x=1786110544; darn=lists.linux.dev;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=IEgDxMWh9uDWWULdXcAAQHKrPjbSwPSpzBVVp3o/wCM=;
+        b=rTua7f3xTZ/aKfa3WJ+QelxL+iDluz8uYNn7ByrrRMAYvhQaBarsVe1TrE6sQpgdmr
+         ieyWPixAnokkU3nTViGKm8pjPii3HVMpYTXqTiI9Sg/cMfyAPH2lQWbegmtyM3vmoJXk
+         YWt2agFqWSezSb0tJlMSopI+k0Vz8ijWHoLaYPls/dpiZ/dEc6ZmAV2kTBhlAaYaMDju
+         Vipg1eU3rG/xZwW6gIJI6fjLGh7hFHGHHySfFpF4xCP0QXySK3NuLatjLrUBHHodz9El
+         VjPsqqZw2en8UNgzRlH+knrw6rRMJyFA5nDKGcq+YJEU+FOnk0tvmJthhGFtwWYo3J/0
+         /Q2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1785505744; x=1786110544;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=IEgDxMWh9uDWWULdXcAAQHKrPjbSwPSpzBVVp3o/wCM=;
+        b=B1e/m4LhZ7RzWBbQzP1bHYXtha6ssSPNlh6HELhn9d3uG/xjgf3OU7fYRQxcTBzHTs
+         +9irLkDiNVDxPXFietz0Z1l4hHXDVTlopzwt3fV+Rdj56v2S6SngX6q+cqQdQNgAspOx
+         VKdOORrbXmGpjXkQcBXuDn4rBZ2FkG/H1lrM1OgLNDH6I/5SdKOug4hHaRDkOngaBG33
+         tBQoTVA2c98e45EbDU1Vo+9E/BJ80WjvoGWwBc1pjPIumCd5wdZlOM7qrcumf8ZTi2V+
+         umFdJQq+8FrS4IreNIGScmb3aXfzQaR43vJqNMndeP+71tDx8b6xj3FieBOk6JnE04wa
+         kz4Q==
+X-Forwarded-Encrypted: i=1; AHgh+Ro+4PUmIPPPrlAl4J06R+v0DZGQ/iUgZ7iIBb3Rj/0rsNPaYfAp6escs+9RJBhXpXWdoN6gVoPbNUj7eA==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzVlxL+fFMSbq1Wb0FRZ8pLVhi2fyqWBFfr0IFUo6egCdjQQHID
+	RG1uJadm7R/h16q3lFXSuCYsRg7mPa1NckDBn8SRfRMyN53Ed+AxY79Sf9auWxHULS+OIaEFXXv
+	V9EUrAgGrla2Yh8qiUTeTJDcGL8IG2ak=
+X-Gm-Gg: AR+sD13owqsqTLz/IbOfAQ2QuMxnzbdmlpRHJ5deqtJr1xnPRExItgdYe66cZDacQne
+	4pD41fs9WVBvi/Wwx1n4CfdvyRiXp7dbw9a2nuKxZ08/q1npwcj1ntfwg2iVDxGIzMjdgMjGlQ3
+	hUYuIBMsC9462YrjqYcM41MP6+TVb1iStVjsMPeFA2y76oANdxVeP9xDtr2fKLjgifoBXrAzJOl
+	iDnCad8r/CMG7MvGIg7EIxiVQUCqR7ogA3f0gPWVsgQCSNPnrFgQySpK2zash8npKBPqPUGzVEQ
+	AWf/D70pj84CD0q74KDL920hDOWLJPjyIeIJxtShUNN93fFBjm56JNLeazlg5reV16oE+WwUbLr
+	/XbH7eyKdYYt0Zw6KHkNAWZ8h9lB8On7XkToKT7iSKrVVzhbfqBupIsHLIu4BbkUCUWpd52vdw/
+	sKBtiz0BCoromYUgBmF3C44roRdNxdqn9JnRLB7bjB
+X-Received: by 2002:a17:903:1aa3:b0:2ca:106c:7122 with SMTP id
+ d9443c01a7336-2d05219f5bemr1193585ad.9.1785505743504; Fri, 31 Jul 2026
+ 06:49:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <3353bdf3-4f33-44b1-809b-b0378bee5816@gmail.com>
- <CAJZ5v0h1kqDEBYk0k05rv6f2SJ7g+TN4FhBDJYZSVUctu-0FdA@mail.gmail.com>
- <daf0bb9b-246d-437d-87ca-16706113b201@gmail.com> <CAJZ5v0jByxtQ2tmNm_ZyyBnDMBNjuqQwD_367NRyGNzF7wQtRw@mail.gmail.com>
- <7792f017-42b0-4a09-9941-5259138e21b1@gmail.com> <CAJZ5v0jCFFNuG7WtCE2CG+hP=YNsYMdXH_945QgkgAUcr4Lryg@mail.gmail.com>
- <37daa35f-06aa-49d0-bf0a-1b5ac9f44c89@gmail.com> <CAJZ5v0jyy0+hqU3=gmBrgMzLBVhdUQwDj8d0_jGCqZwqyWT=_g@mail.gmail.com>
- <588c2e18-e6fb-4fc1-95d5-7a5dd0f556fe@gmail.com>
-In-Reply-To: <588c2e18-e6fb-4fc1-95d5-7a5dd0f556fe@gmail.com>
-From: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>
-Date: Fri, 31 Jul 2026 15:41:49 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0gXtKEaNDdSRqd57zg9GbFN-VDHrU5-=EEQPdSa9Zk-xw@mail.gmail.com>
-X-Gm-Features: AUfX_myny4EGedYcM4sa8xfU_VQjyCSaiBahOaU8wNq2oZCnensu24184gcoNy0
-Message-ID: <CAJZ5v0gXtKEaNDdSRqd57zg9GbFN-VDHrU5-=EEQPdSa9Zk-xw@mail.gmail.com>
-Subject: Re: [REGRESSION] usb controller fails to initialize on intel s1200btl
-To: Julian Silver <mendaxca@gmail.com>
-Cc: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>, rafael.j.wysocki@intel.com, 
-	linux-acpi@vger.kernel.org, linux-usb@vger.kernel.org, 
-	regressions@lists.linux.dev, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Alan Stern <stern@rowland.harvard.edu>
+References: <20260731122826.737703-1-spasswolf@web.de> <ae141e31-dcc0-46a0-9f3c-6bf7089722b0@leemhuis.info>
+In-Reply-To: <ae141e31-dcc0-46a0-9f3c-6bf7089722b0@leemhuis.info>
+From: Luna Jernberg <droidbittin@gmail.com>
+Date: Fri, 31 Jul 2026 15:48:50 +0200
+X-Gm-Features: AUfX_myN8on3SUdI8jMlZxUbEjpGjEbT6xoeXpoJPKe3im_O65fK3BFIAtWSHtk
+Message-ID: <CADo9pHi=w2OM__hqCNu4H-HCMER61Hiw76QrxG7B16ZnBsQp7Q@mail.gmail.com>
+Subject: Re: rust compile failure in next-20260730
+To: Thorsten Leemhuis <linux@leemhuis.info>, spasswolf@web.de, 
+	Luna Jernberg <droidbittin@gmail.com>
+Cc: Harry Yoo <harry@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-next@vger.kernel.org, Vlastimil Babka <vbabka@kernel.org>, 
+	Linux kernel regressions list <regressions@lists.linux.dev>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jul 31, 2026 at 3:06=E2=80=AFPM Julian Silver <mendaxca@gmail.com> =
-wrote:
+Noticed this too
+
+Den fre 31 juli 2026 kl 15:21 skrev Thorsten Leemhuis <linux@leemhuis.info>:
 >
-> On 2026-07-31 19:58:32, Rafael J. Wysocki (Intel) wrote:
-> > Please boot with "intel_idle.states_off=3D16" in the kernel command lin=
-e
-> > and see if the problem is still there.  If this doesn't help, please
-> > also try "intel_idle.states_off=3D24".
+> On 7/31/26 14:28, Bert Karwatzki wrote:
+> > With next-20260730 building a kernel with CONFIG_RUST=y fails with
+> > the following error:
 >
-> "intel_idle.states_off=3D16" does not help.  "intel_idle.states_off=3D24"=
- works.
-> Note that the test is performed on vanilla kernel v7.2-rc5(without the pa=
-tch).
-
-Yes, that's what I meant, thanks!
-
-The kernel command line switch that works causes idle states 3 and 4
-(C3 and C6) to be disabled by default.  These CPU idle states allow
-the processor to enter package idle states (PC2 or deeper), so what
-(most likely) happens is that the package idle states on this platform
-somehow interfere with EHCI probing (causing the latter time out).  It
-is basically a platform issue that was previously hidden.
-
-Note that you can re-enable idle states disabled by default by doing (as ro=
-ot)
-
-# echo 0 | tee /sys/devices/system/cpu/cpu*/cpuidle/state[3-4]/disable
-
-Before the commit in question EHCI was probed before the intel_idle
-initialization and so package idle states were not used at that time
-and before, but that was only due to the initialization ordering based
-on driver name (so fragile anyway).
-
-I'm not sure how to address this cleanly because moving the intel_idle
-initialization back to the device_initcall() level won't guarantee the
-working initialization ordering (for instance, if ehci-pci is a
-module), but let me send you one more debug patch.
+> Ran into this, too. Fixing this is discussed in this thread:
+> https://lore.kernel.org/all/20260731075644.20215-1-ojeda@kernel.org/
+>
+> >  RUSTC L rust/kernel.o
+> > error[E0308]: mismatched types
+> >      --> rust/kernel/sync/poll.rs:175:44
+> >       |
+> >   175 |         unsafe { bindings::kvfree_call_rcu((*ptr).rcu.get(), ptr.cast::<ffi::c_void>()) };
+> >       |                  ------------------------- ^^^^^^^^^^^^^^^^ expected `*mut kvfree_rcu_head`, found `*mut callback_head`
+> >       |                  |
+> >       |                  arguments to this function are incorrect
+> >       |
+> >       = note: expected raw pointer `*mut bindings::kvfree_rcu_head`
+> >                  found raw pointer `*mut bindings::callback_head`
+> > note: function defined here
+> >      --> /mnt/data/linux-forest/linux-next/rust/bindings/bindings_generated.rs:73708:12
+> >       |
+> > 73708 |     pub fn kvfree_call_rcu(head: *mut kvfree_rcu_head, ptr: *mut ffi::c_void);
+> >       |            ^^^^^^^^^^^^^^^
+> >
+> > error: aborting due to 1 previous error
+> >
+> > For more information about this error, try `rustc --explain E0308`.
+> > make[5]: *** [rust/Makefile:781: rust/kernel.o] Fehler 1
+> > make[4]: *** [Makefile:1420: prepare] Fehler 2
+> > make[3]: *** [debian/rules:80: build-arch] Fehler 2
+> >
+> > Reverting the following commits:
+> > ef32a74f8f6a ("mm/slab: introduce kfree_rcu_nolock()")
+> > bdd0cc9f0ffc ("mm/slab: introduce struct kvfree_rcu_head for kvfree_rcu batching")
+> >
+> > make the compilation work again.
+> >
+> > Bert Karwatzki
+>
+>
