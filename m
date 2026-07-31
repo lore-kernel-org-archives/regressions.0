@@ -1,157 +1,109 @@
-Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
+Received: from mail.kmu-office.ch (mail.kmu-office.ch [178.209.48.109])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9D833BC668
-	for <regressions@lists.linux.dev>; Fri, 31 Jul 2026 10:13:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.84.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B673040F72D
+	for <regressions@lists.linux.dev>; Fri, 31 Jul 2026 10:18:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.209.48.109
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785492801; cv=none; b=B0VULIyrDbo8PLGFFh7IXqF2Z7qQVmTdcE7mNss+7SNlKWAwijuPME936d3dyokHMxUUugnQfTnEUJLhv9OQPX34TCfMUTjmO4tOu0psxzhj1uuIK9sObioRzgMBfOtONYQa70aZ0MSpFaSfM9YCSSvgrW1z5++hBcMZw+/MDSw=
+	t=1785493100; cv=none; b=bGnIhEdXtKuCgcE0PRKAKSISYRTag4QBfGMnZxL8MAeXy9ZsFuMLEG6KwJUPgVsHHypUof3FEJAV5HQuRaZ0lIGPjjT3bjHKNHIGuwMMNIJA6v9EcKXk2GM8hxODdp1ht3AVcUGPpuWTiG0YhHd8oGLBJKu1Ue3WyWSsQrcboWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785492801; c=relaxed/simple;
-	bh=869HNCfp+r1RYyh03dhFh8Ehn4/mRguRJHaV6q+2I8o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PmnZG6cIdZ9NqA4Zc1AtQHHPt70ZuuJ7Rta/pDjBDOMsy6SXHo/D2re9VQ/ztDs85Xwg4r+3Fjg5JrHdJTauy/I3u7Viptos/ySBdjQEY9kR+23//wQVCEZYPnB4fgxGqoYhHF42GGmXXghyfC/HcpW8xLf2mEbTr1laBKzpuH4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=yLwMA7iy; arc=none smtp.client-ip=185.246.84.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1785493100; c=relaxed/simple;
+	bh=AKb0P876dPlJEu85flHgJKZhU+2+90AOd6wIoxtagGQ=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=FTlU6gh6xGyfqH0XfrdPQP9c68L0Q7uL5IlvIpUSr/fBvVZIu3xdk59iyWPFPpG/hv6l10C2kq0Mwj3Y78GGZu6vHI0UvoDUXLXM3oEJlgsqxc9f30n/ia+eoKuoo3/ezFOdK7I+D0GQT5mX0fDGf1VoiGS0wrgePBsmvta1ckM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=agner.ch; spf=pass smtp.mailfrom=agner.ch; dkim=pass (1024-bit key) header.d=agner.ch header.i=@agner.ch header.b=GYwNw3/j; arc=none smtp.client-ip=178.209.48.109
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=agner.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=agner.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="yLwMA7iy"
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-02.galae.net (Postfix) with ESMTPS id E30051A1353;
-	Fri, 31 Jul 2026 10:12:59 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id AD7BC6039A;
-	Fri, 31 Jul 2026 10:12:59 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id C3DC511C1668F;
-	Fri, 31 Jul 2026 12:12:49 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1785492774; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:content-language:in-reply-to:references;
-	bh=LaN13+7CpsbYTP/3/mBgmUw3PgfcWiL1ZfNR8mI434I=;
-	b=yLwMA7iyqgonpMGSYH9xJ1iK6F3trUXsGDkd3e6REYkL8WnvFAeIBRbV2K9utGY6DEuswU
-	a7qd/1sqgHCq+g9j0SRtnR+XcmSXkmbQEA7GLutHqCRoRagCh2EydQ+lVHP3C2hcOwo3rP
-	P2Kb07JyIxdwNY0gNhyuTHoBTaSKH/u0y+cjz772tYObuiou1HlkFpuQYd/PpMR2qBRAuO
-	MXHyermOE355ZIS78NJ3U889fdJPMLiuwh4+3V0WZzslfwifs+Mh6adZQEo9Xg10IceBRU
-	PgsP23Kw0BdsoswPmrRrTeJ5vLdv+QDR8VFFqnu5BEHO0SIA3FL5D20hVEJq/Q==
-Message-ID: <a31ca086-5feb-4602-9c5b-f0e74487c094@bootlin.com>
-Date: Fri, 31 Jul 2026 12:12:48 +0200
+	dkim=pass (1024-bit key) header.d=agner.ch header.i=@agner.ch header.b="GYwNw3/j"
+Received: from webmail.kmu-office.ch (unknown [IPv6:2a02:418:6a02::a3])
+	by mail.kmu-office.ch (Postfix) with ESMTPSA id 2A8995C2FCE;
+	Fri, 31 Jul 2026 12:18:08 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agner.ch; s=dkim;
+	t=1785493088;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8WvFlw83oU3ardfbEeUhO1Sko4VPKFXB5H/G+vZZef4=;
+	b=GYwNw3/jgqL5pPBLHw4ZhaBexSS1iEeY5I1u0EYDj2TLnehO1MigECOy3f8gxhtmlGdImw
+	zeDsgWuBDH7+gDv3b3yyoZDbwKIu0t+5ZkCtrU0WvgZSNil8Ga20WfJ0qt5AMVC6SRYR2K
+	nWL4S+ibCo9l+X1Kvb+/nCQb9rAzXaM=
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net v2] net: stmmac: resume PHY before hardware setup when
- opening the interface
-To: Stefan Agner <stefan@agner.ch>, Paolo Abeni <pabeni@redhat.com>
-Cc: "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Andrew Lunn <andrew+netdev@lunn.ch>,
- "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
- Ovidiu Panait <ovidiu.panait.rb@renesas.com>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+Date: Fri, 31 Jul 2026 12:18:08 +0200
+From: Stefan Agner <stefan@agner.ch>
+To: Jakub Raczynski <j.raczynski@samsung.com>
+Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+ <pabeni@redhat.com>, Andrew Lunn <andrew+netdev@lunn.ch>, "Russell King
+ (Oracle)" <rmk+kernel@armlinux.org.uk>, Maxime Chevallier
+ <maxime.chevallier@bootlin.com>, Ovidiu Panait
+ <ovidiu.panait.rb@renesas.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>,
  Alexandre Torgue <alexandre.torgue@foss.st.com>, netdev@vger.kernel.org,
  linux-stm32@st-md-mailman.stormreply.com,
  linux-arm-kernel@lists.infradead.org, regressions@lists.linux.dev
+Subject: Re: [PATCH net v2] net: stmmac: resume PHY before hardware setup when
+ opening the interface
+In-Reply-To: <ak1rseUKTWFKzBib@AMDC4622.eu.corp.samsungelectronics.net>
 References: <message-id-of-your-v1-mail>
  <20260707195425.405989-1-stefan@agner.ch>
- <c8cbf359-e224-44c6-8692-9e1d1527ae0c@bootlin.com>
- <2946c0f7-1c79-4890-a4b3-94141f42bc1a@redhat.com>
- <2f7fc28f777ce870e30e400640418c71@agner.ch>
-From: Maxime Chevallier <maxime.chevallier@bootlin.com>
-Content-Language: en-US
-In-Reply-To: <2f7fc28f777ce870e30e400640418c71@agner.ch>
+ <CGME20260707211350eucas1p2c7d585a2f5cdcfdc3f1d9f7bcb1759e1@eucas1p2.samsung.com>
+ <ak1rseUKTWFKzBib@AMDC4622.eu.corp.samsungelectronics.net>
+Message-ID: <9f7506a99b22293bae3f467f64506627@agner.ch>
+X-Sender: stefan@agner.ch
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Transfer-Encoding: 8bit
 
-Hi,
+Hi Jakub,
 
-On 7/31/26 12:03, Stefan Agner wrote:
-> Hi Paolo, hi Maxime,
+On 2026-07-07 23:13, Jakub Raczynski wrote:
+> Please read
+> https://www.kernel.org/doc/html/latest/process/maintainer-netdev.html
+> in this case 'don’t repost your patches within one 24h period'
 > 
-> On 2026-07-21 10:12, Paolo Abeni wrote:
->> Hi,
->>
->> On 7/8/26 11:16 AM, Maxime Chevallier wrote:
->>> On 7/7/26 21:54, Stefan Agner wrote:
->>>> Since the referenced commit, changing the MTU on a running interface no
->>>> longer disconnects and reconnects the PHY; __stmmac_release() merely
->>>> stops phylink, which also suspends the PHY (BMCR power-down) when WoL
->>>> is not enabled. __stmmac_open() then performs the DMA software reset in
->>>> stmmac_hw_setup() before phylink_start() resumes the PHY again.
->>>>
->>>> IEEE 802.3 22.2.4.1.5 allows a PHY to stop its receive clock while
->>>> powered down, and stmmac requires a running receive clock for the DMA
->>>> software reset to complete (the phylink config sets mac_requires_rxc).
->>>> On such setups, e.g. the RK3566-based Home Assistant Green with an
->>>> RTL8211F-VD PHY in RGMII mode, any runtime MTU change now times out and
->>>> leaves the interface dead:
->>>>
->>>>   rk_gmac-dwmac fe010000.ethernet end0: Failed to reset the dma
->>>>   rk_gmac-dwmac fe010000.ethernet end0: stmmac_hw_setup: DMA engine initialization failed
->>>>   rk_gmac-dwmac fe010000.ethernet end0: __stmmac_open: Hw setup failed
->>>>   rk_gmac-dwmac fe010000.ethernet end0: failed reopening the interface after MTU change
->>>>
->>>> In the field this is triggered by NetworkManager applying an MTU while
->>>> activating the connection, breaking networking entirely.
->>>>
->>>> Resume the PHY in __stmmac_open() before the hardware setup, making it
->>>> the counterpart of the phylink_stop() in __stmmac_release(), like
->>>> stmmac_resume() already does for the same reason. phylink_start() also
->>>> resumes the PHY, but only after stmmac_hw_setup(), and it cannot be
->>>> moved before the hardware setup since it may bring the link up
->>>> immediately from a workqueue, racing with the initialization (see the
->>>> comment in stmmac_resume()). For the regular ndo_open path the PHY has
->>>> just been attached and is not suspended, in which case
->>>> phylink_prepare_resume() does nothing.
->>>>
->>>> Fixes: db299a0c09e9 ("net: stmmac: move PHY handling out of __stmmac_open()/release()")
->>>> Link: https://github.com/home-assistant/operating-system/issues/4858
->>>> Signed-off-by: Stefan Agner <stefan@agner.ch>
->>>
->>> I was able to reproduce the issue on imx8mp and socfpga. Adding this case to
->>> my periodic test list...
->>>
->>> Indeed the assymetry isn't very nice, OTOH there's not phylink counterpart
->>> for phylink_prepare_resume(). This helper was added for the suspend/resume
->>> case, and only for it as the doc states, it just happens to do exactly
->>> what we need to fix the issue :
->>>
->>> /**
->>>  * phylink_prepare_resume() - prepare to resume a network device
->>>  * @pl: a pointer to a &struct phylink returned from phylink_create()
->>>  *
->>>  * Optional, but if called must be called prior to phylink_resume().
->>>  *
->>>  * Prepare to resume a network device, preparing the PHY as necessary.
->>>  */
->>> void phylink_prepare_resume(struct phylink *pl)
->>>
->>> I think this helper should be renamed and the doc updated, stmmac is the
->>> sole user, and it's really about controlling that rxc and not about
->>> suspend / resume. Resuming from suspend is just one of the cases where we
->>> need that RXC early on.
->>>
->>> So either something like 'phylink_prepare_start_or_resume' but it's long,
->>> or maybe we can be more explicit about it and simply call it:
->>>
->>> phylink_start_rxc(pl)
->>>
->>> (without a corresponding stop)
->> I read the above as a possible follow-up more than actual changes
->> requested to this patch, am I correct?
-> 
-> Since this fixes a bug, I'd prefer to keep the patch minimal to make it
-> easier to backport. Therefor I would prefer to do make such structural
-> changes as a follow-up change rather than part of this patch.
-> 
-> Does that work for you, Maxime?
+> Because:
+> - you have two patches now processing and no changes requested yet,
+>   nor did you get AI review that is currently employed
+>   https://patchwork.kernel.org/project/netdevbpf/patch/20260707195425.405989-1-stefan@agner.ch/
+>   and
+>   https://patchwork.kernel.org/project/netdevbpf/patch/20260707162146.73823-1-stefan@agner.ch/
 
-That works for me yeah, I agree we need that fixed.
+Isn't the definition of "repost" the same patch?
 
-Thanks Stefan,
+I took Andrew Lunn's comment as a change request, hence v2...
 
-Maxime
+> - This change is actually broken - in previous patch rtnl_lock() was asserted
+>   by dev_ioctl(), but in this version it is not asserted anywhere and will
+>   trigger WARN_ONCE().
+> - Full tests within an hour is possible, but no need to rush patches
+> - Please spend time reviewing patches, as I spent few minutes to make sure
+>   you (or rather Fable AI) is correct that rtnl_lock() was asserted, so my
+>   review would be accurate (previous patch was ok, this is not).
+> - Please respond yourself to comments, take time to understand codebase.
+>   I would prefer not getting copy-paste answer from AI,
+>   we have Sashiko review for that.
 
+I am guessing you allude to my response at
+https://patchwork.kernel.org/project/netdevbpf/patch/20260707162146.73823-1-stefan@agner.ch/#27051411
+
+Can I influence the prompt for Sashiko? From my point of view the
+response was for a specific architectural questions, which needed a
+specific prompt to get the answer for. I've clearly declared that I've
+used AI to aid for this discussion, is that no allowed?
+
+> - Missing link to previous thread, shown below
+> - Moving code to other lines does not justify dropping "Assisted by AI"
+
+Whoops, yeah those two are failure on my part. Sorry about that.
+
+Thanks for your help guiding me through the process! I intend to send
+out v3, which at this point looks to be pretty much v2 plus formal fixes
+and adding a tested by tag.
+
+--
+Stefan
