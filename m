@@ -1,143 +1,196 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EDB435A3BF
-	for <regressions@lists.linux.dev>; Fri, 31 Jul 2026 14:11:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 346154562B5;
+	Fri, 31 Jul 2026 16:24:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785507091; cv=none; b=rn7/lvWIvMrYM7mWO6d71xMV4MnfsWjXvWt+K7NjSaJMikm+TyXRWvwce3hHOp/1UYWfePTu8dLM23k034kFPap7nkn8yAEFEJWHMsQcQl4VBnTD8gzit5xRBu5S35/W2jSZxkMNgNPvYptH5G90TK937zqfdaUGtdp2b2uB0IA=
+	t=1785515067; cv=none; b=RtxOTEI2HyChANAa9FrxFBzapIqsJU7zkSdPo80v+ZuxcvD/Ef54tS+Ti4JvgZbjv9Zz2xt8MMkFFws1VReYzE3LvVKJoadiyYevYmaHAqA8RPI2pfQX0EMFtOPOrZ3IuwjOokzu0Z60AZRhN9BWRg69PxMrYlhJ4Yyd64bVzl8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785507091; c=relaxed/simple;
-	bh=oIVl5yyHOkMyIiFF5gmsaRw5ciJSHoF8XouXPm/HEMg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=o/tfCBtvBQtncklu7NBZSwwoPWjcutX8LEGgqmzE6v26gtl/8N6Bg+FOK1twfdD1dIgkvpXGLg8fB6un+1cy5EOCR4Cs0G8Rx3Zm5TOw86677WTgJUtjRzhktJf1ECy1vwmvOZJW5aQ1uiWawxZLW3foplJsqIEqzTo3vIAhRTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BgYxoHx6; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1785515067; c=relaxed/simple;
+	bh=jLy2oxYoq2BDoxhea619lXJyJFuuD2tinsJHp1GzKnE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=AgkOB3Ge2PXZu4hwsn7ETCobUoNmbGUdlZfaHgoFeRneZGoRBxgUqBRtDnnFEdsdwgGsTdwhvak8wHOckQFJEzHo8pHilJ0eqGLT0+sw9jNLmGxJbrt07ztBAsiSMhBH60oH7HQn0+nut1bsUC9tWg+LBElWAUs3Yn+Ffb75dcI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dptk9Q8/; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BgYxoHx6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C45481F00AC4
-	for <regressions@lists.linux.dev>; Fri, 31 Jul 2026 14:11:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dptk9Q8/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84FFE1F00ACF;
+	Fri, 31 Jul 2026 16:24:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785507089;
-	bh=3JvgrBY/v0Fqn3lj+FFekrTPJNyYtfXsLxJttJF3czs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=BgYxoHx6T3dVZjSSWGmyAc3CXqR2OE9px93Ar60YItANMTGBw9RysfVuSSdcQFvvJ
-	 cYcWqkHPkaIC7wpOFKHQ9YAbjv/WFkOh/JXI4yLiLEowhr+eecZgfyfPAPzuVY2aT4
-	 kCbDN4q1BlE6LSqSgZBhfFwMNh9Wrs6Xqm6GIOPU4Ljjatat84vgdtqRH3BuBVB9cj
-	 ZnNBXUXrjyIZmojqpXVZCKnheokrr7N7YORjFCyGYTEqqUfnb8x20dlSR5wdpZT78h
-	 M34g3HRuREFQ1V8ORg1sX9o/qr1fiAAUP0Emgi93sIXNABAe8plo7wHg14bvf5xKnj
-	 sJMWG7pRANz3Q==
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-5b015532f7bso899608e87.0
-        for <regressions@lists.linux.dev>; Fri, 31 Jul 2026 07:11:29 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AHgh+RpqrHaLldBFk2FGlI5GTJrZy6/0ksbuWBWhzSDcZjXxgIRdJzYrDwMNrnGv4krzpZHzDgvplKJ0bxPvmQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwfWDkznJCWYmW0RuycYnM3Msf3MdFMK97qajbmGc7AXBIZVPhU
-	KevdmFzOcFpU1jGisEw2sJR3zn/4jbSCZf33AQtlvyVNcOpeLR0s/zHuUxbXJRu0m+H9Wsb8E/i
-	daywUZ+vWsAYIk6cxHTxGAh4nkqUEtg8=
-X-Received: by 2002:a05:6512:114b:b0:5b2:8c97:b50d with SMTP id
- 2adb3069b0e04-5b2e1fc973amr512873e87.4.1785507088233; Fri, 31 Jul 2026
- 07:11:28 -0700 (PDT)
+	s=k20260515; t=1785515065;
+	bh=y1YM1FtXEXTem+Rp2vWEYmY6TR2drUxiW8KEqcpWJqQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To;
+	b=dptk9Q8/V7jZUR2QsFwSRGzaaqmmDzkq7swlrDVs/bbqmKW5Vimm5mmi5wzoPN9AV
+	 /eeDWNAqUj9FAPZYxhehbk5XcNKpZbk5LW9A6ieKtUaxslcg0FEKUWE1eq5yvsXSeV
+	 MxHsPs8Qvempbe5kZaqpQSQA9I0wHQz6Hgz8cT/Wo63wqk97eDW89spNIFlkcsKbPt
+	 wX+A6sDl6JvyzUjg/7dUWZPOxduyP+B6Zzu7GECggJeDiq+CPD99Yx3oKaAItD9X4e
+	 aKnDfUU3+Pmkk5ho9GJa8wv/Sw88jFCo/5DLeGWHf0AG8Lezp2qOpMmtMgrphjhZo3
+	 oJK1DmDqH3qVQ==
+Date: Fri, 31 Jul 2026 11:24:24 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: lizf@honeycomb.io,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
+	amd-gfx@lists.freedesktop.org, Jon Nettleton <jon@solid-run.com>,
+	Jon Nettleton <jon.nettleton@gmail.com>, stable@vger.kernel.org
+Subject: Re: [PATCH v2] PCI: Fix BAR resize for devices on a root bus
+Message-ID: <20260731162424.GA1571989@bhelgaas>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <3353bdf3-4f33-44b1-809b-b0378bee5816@gmail.com>
- <CAJZ5v0h1kqDEBYk0k05rv6f2SJ7g+TN4FhBDJYZSVUctu-0FdA@mail.gmail.com>
- <daf0bb9b-246d-437d-87ca-16706113b201@gmail.com> <CAJZ5v0jByxtQ2tmNm_ZyyBnDMBNjuqQwD_367NRyGNzF7wQtRw@mail.gmail.com>
- <7792f017-42b0-4a09-9941-5259138e21b1@gmail.com> <CAJZ5v0jCFFNuG7WtCE2CG+hP=YNsYMdXH_945QgkgAUcr4Lryg@mail.gmail.com>
- <37daa35f-06aa-49d0-bf0a-1b5ac9f44c89@gmail.com> <CAJZ5v0jyy0+hqU3=gmBrgMzLBVhdUQwDj8d0_jGCqZwqyWT=_g@mail.gmail.com>
- <588c2e18-e6fb-4fc1-95d5-7a5dd0f556fe@gmail.com> <CAJZ5v0gXtKEaNDdSRqd57zg9GbFN-VDHrU5-=EEQPdSa9Zk-xw@mail.gmail.com>
-In-Reply-To: <CAJZ5v0gXtKEaNDdSRqd57zg9GbFN-VDHrU5-=EEQPdSa9Zk-xw@mail.gmail.com>
-From: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>
-Date: Fri, 31 Jul 2026 16:11:15 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0g4ctzLpEro2Mu7EbSo8RNmYUCM6+J2p_ExCXseQAx13Q@mail.gmail.com>
-X-Gm-Features: AUfX_myW664gMqMcEBeuvJipnLG3Y1mOsLY3bnlaz8mTfvD7gvrst-uGLHH7cjQ
-Message-ID: <CAJZ5v0g4ctzLpEro2Mu7EbSo8RNmYUCM6+J2p_ExCXseQAx13Q@mail.gmail.com>
-Subject: Re: [REGRESSION] usb controller fails to initialize on intel s1200btl
-To: Julian Silver <mendaxca@gmail.com>
-Cc: rafael.j.wysocki@intel.com, linux-acpi@vger.kernel.org, 
-	linux-usb@vger.kernel.org, regressions@lists.linux.dev, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alan Stern <stern@rowland.harvard.edu>
-Content-Type: multipart/mixed; boundary="000000000000bd2bf00657e8c3e6"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260712-pci-rebar-root-bus-v2-1-a1b9107a82dc@honeycomb.io>
 
---000000000000bd2bf00657e8c3e6
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+[cc->to: Ilpo, I think we need your review/ack for this]
 
-On Fri, Jul 31, 2026 at 3:41=E2=80=AFPM Rafael J. Wysocki (Intel)
-<rafael@kernel.org> wrote:
->
-> On Fri, Jul 31, 2026 at 3:06=E2=80=AFPM Julian Silver <mendaxca@gmail.com=
-> wrote:
-> >
-> > On 2026-07-31 19:58:32, Rafael J. Wysocki (Intel) wrote:
-> > > Please boot with "intel_idle.states_off=3D16" in the kernel command l=
-ine
-> > > and see if the problem is still there.  If this doesn't help, please
-> > > also try "intel_idle.states_off=3D24".
-> >
-> > "intel_idle.states_off=3D16" does not help.  "intel_idle.states_off=3D2=
-4" works.
-> > Note that the test is performed on vanilla kernel v7.2-rc5(without the =
-patch).
->
-> Yes, that's what I meant, thanks!
->
-> The kernel command line switch that works causes idle states 3 and 4
-> (C3 and C6) to be disabled by default.  These CPU idle states allow
-> the processor to enter package idle states (PC2 or deeper), so what
-> (most likely) happens is that the package idle states on this platform
-> somehow interfere with EHCI probing (causing the latter time out).  It
-> is basically a platform issue that was previously hidden.
->
-> Note that you can re-enable idle states disabled by default by doing (as =
-root)
->
-> # echo 0 | tee /sys/devices/system/cpu/cpu*/cpuidle/state[3-4]/disable
->
-> Before the commit in question EHCI was probed before the intel_idle
-> initialization and so package idle states were not used at that time
-> and before, but that was only due to the initialization ordering based
-> on driver name (so fragile anyway).
->
-> I'm not sure how to address this cleanly because moving the intel_idle
-> initialization back to the device_initcall() level won't guarantee the
-> working initialization ordering (for instance, if ehci-pci is a
-> module), but let me send you one more debug patch.
+On Sun, Jul 12, 2026 at 02:49:43PM -0700, Liz Fong-Jones via B4 Relay wrote:
+> From: Liz Fong-Jones <lizf@honeycomb.io>
+> 
+> pci_do_resource_release_and_resize() releases the device BARs that
+> share a bridge window with the BAR being resized, but when the device
+> sits directly on a root bus (pdev->bus->self == NULL) it then skips
+> resource assignment entirely and returns success, leaving the BARs it
+> just released unassigned (IORESOURCE_UNSET).
+> 
+> Skipping pbus_reassign_bridge_resources() is correct in that case --
+> there is no bridge window to adjust -- but the device BARs still have
+> to be reassigned. Before the BAR release was consolidated into the PCI
+> core, this case worked for amdgpu because the driver released the BARs
+> itself and then called pci_assign_unassigned_bus_resources()
+> unconditionally after the resize, which assigns unassigned device BARs
+> also on a root bus. Commit db92e3fef53e ("drm/amdgpu: Remove driver
+> side BAR release before resize") removed that call, so nothing assigns
+> the released BARs anymore.
+> 
+> This breaks amdgpu completely on the SolidRun HoneyComb LX2 (NXP
+> LX2160A, arm64, ACPI), where the GPU endpoint is enumerated directly
+> on the root bus of its segment (there is no root port device, so
+> pdev->bus->self is NULL):
 
-The attached patch (on top of the current mainline) should prevent
-cpuidle governors from requesting idle states deeper than C1E when
-intel_idle is used until all of the device_initcall()s are done.
-Please see if this helps.
+Maybe this is a tangent, but I'm curious about this topology.  Is this
+running as a virtualized guest?  At the hardware level, a PCIe
+endpoint must have a Root Port somewhere, even if it isn't visible to
+the OS (as is often the case in virtualized guests).
 
---000000000000bd2bf00657e8c3e6
-Content-Type: text/x-patch; charset="US-ASCII"; name="intel-idle-pm-qos.patch"
-Content-Disposition: attachment; filename="intel-idle-pm-qos.patch"
-Content-Transfer-Encoding: base64
-Content-ID: <f_ms90p7260>
-X-Attachment-Id: f_ms90p7260
+>   amdgpu 0004:01:00.0: BAR 0 [mem 0xa400000000-0xa40fffffff 64bit pref]: releasing
+>   amdgpu 0004:01:00.0: BAR 2 [mem 0xa410000000-0xa4101fffff 64bit pref]: releasing
+>   amdgpu 0004:01:00.0: sw_init of IP block <gmc_v8_0> failed -19
+>   amdgpu 0004:01:00.0: amdgpu_device_ip_init failed
+>   amdgpu 0004:01:00.0: Fatal error during GPU init
+> 
+> No error is logged because the resize path reports success; amdgpu
+> then finds BAR0 IORESOURCE_UNSET and bails out with -ENODEV.
+> 
+> Assign the released BARs directly from the root bus windows when there
+> is no upstream bridge. On failure, roll back through the existing
+> restore path exactly as in the bridged case.
+> 
+> The root bus path also had a locking bug that any fix here necessarily
+> touches: the old "goto out" jumped to up_read(&pci_bus_sem) without a
+> matching down_read() (as does the "goto restore" taken when
+> pci_dev_res_add_to_list() fails in the release loop). Take pci_bus_sem
+> before the BAR release loop so every path through the function holds
+> it exactly once.
+> 
+> Fixes: 337b1b566db0 ("PCI: Fix restoring BARs on BAR resize rollback path")
+> Cc: stable@vger.kernel.org
+> Link: https://bugs.launchpad.net/ubuntu/+source/linux-hwe-7.0/+bug/2159596
+> Assisted-by: Claude:claude-fable-5 checkpatch
+> Assisted-by: Claude:claude-sonnet-5
+> Signed-off-by: Liz Fong-Jones <lizf@honeycomb.io>
+> ---
+> #regzbot introduced: 337b1b566db0
+> 
+> Observed at runtime on Ubuntu's linux-hwe-7.0 (7.0.0-14, broken) vs
+> linux-hwe-6.17 (working), but nothing here is distro-specific: Ubuntu
+> carries this code unmodified, and the affected function is identical
+> to current mainline. By source inspection the regression window is
+> v6.18 (old code paths) to v6.19 (consolidation). Workaround for
+> affected users: amdgpu.rebar=0.
+> ---
+> Changes in v2:
+> - Add Assisted-by tags (missing from v1; required per
+>   Documentation/process/coding-assistants.rst)
+> - Add Link: to the corresponding Ubuntu bug report
+> - Drop the "# v6.19+" annotation on Cc: stable; unnecessary noise
+>   given the Fixes: tag already lets the stable team derive applicable
+>   versions (per stable-kernel-rules.rst)
+> - Link to v1: https://patch.msgid.link/20260705-pci-rebar-root-bus-v1-1-55df70cbdd88@honeycomb.io
+> 
+> To: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+> Cc: linux-pci@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: regressions@lists.linux.dev
+> Cc: amd-gfx@lists.freedesktop.org
+> Cc: Jon Nettleton <jon@solid-run.com>
+> Cc: Jon Nettleton <jon.nettleton@gmail.com>
+> ---
+>  drivers/pci/setup-bus.c | 25 +++++++++++++++++++------
+>  1 file changed, 19 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+> index c0a949f2c995..9db1951f6e5c 100644
+> --- a/drivers/pci/setup-bus.c
+> +++ b/drivers/pci/setup-bus.c
+> @@ -2397,6 +2397,8 @@ int pci_do_resource_release_and_resize(struct pci_dev *pdev, int resno, int size
+>  	if (ret)
+>  		return ret;
+>  
+> +	down_read(&pci_bus_sem);
+> +
+>  	pci_dev_for_each_resource(pdev, r, i) {
+>  		if (i >= PCI_BRIDGE_RESOURCES)
+>  			break;
+> @@ -2415,13 +2417,24 @@ int pci_do_resource_release_and_resize(struct pci_dev *pdev, int resno, int size
+>  
+>  	pci_resize_resource_set_size(pdev, resno, size);
+>  
+> -	if (!bus->self)
+> -		goto out;
+> +	if (bus->self) {
 
-LS0tCiBkcml2ZXJzL2lkbGUvaW50ZWxfaWRsZS5jIHwgICAxMyArKysrKysrKysrKysrCiAxIGZp
-bGUgY2hhbmdlZCwgMTMgaW5zZXJ0aW9ucygrKQoKLS0tIGEvZHJpdmVycy9pZGxlL2ludGVsX2lk
-bGUuYworKysgYi9kcml2ZXJzL2lkbGUvaW50ZWxfaWRsZS5jCkBAIC01Myw2ICs1Myw3IEBACiAj
-aW5jbHVkZSA8bGludXgvbm90aWZpZXIuaD4KICNpbmNsdWRlIDxsaW51eC9jcHUuaD4KICNpbmNs
-dWRlIDxsaW51eC9tb2R1bGVwYXJhbS5oPgorI2luY2x1ZGUgPGxpbnV4L3BtX3Fvcy5oPgogI2lu
-Y2x1ZGUgPGxpbnV4L3N5c2ZzLmg+CiAjaW5jbHVkZSA8YXNtL2NwdWlkL2FwaS5oPgogI2luY2x1
-ZGUgPGFzbS9jcHVfZGV2aWNlX2lkLmg+CkBAIC0yODIyLDEyICsyODIzLDE3IEBAIGVycm9yOgog
-CXByX2luZm8oIkZhaWxlZCB0byBhZGp1c3QgQy1zdGF0ZXMgd2l0aCBkYXRhIGZyb20gJ2ludGVs
-X2lkbGUudGFibGUnXG4iKTsKIH0KIAorI2RlZmluZSBJTlRFTF9JRExFX0lOSVRfUU9TCTIwCitz
-dGF0aWMgc3RydWN0IHBtX3Fvc19yZXF1ZXN0IHFvc19yZXEgX19pbml0ZGF0YTsKKwogc3RhdGlj
-IGludCBfX2luaXQgaW50ZWxfaWRsZV9pbml0KHZvaWQpCiB7CiAJY29uc3Qgc3RydWN0IHg4Nl9j
-cHVfaWQgKmlkOwogCXVuc2lnbmVkIGludCBlYXgsIGVieCwgZWN4OwogCWludCByZXR2YWw7CiAK
-KwljcHVfbGF0ZW5jeV9xb3NfYWRkX3JlcXVlc3QoJnFvc19yZXEsIElOVEVMX0lETEVfSU5JVF9R
-T1MpOworCiAJLyogRG8gbm90IGxvYWQgaW50ZWxfaWRsZSBhdCBhbGwgZm9yIG5vdyBpZiBpZGxl
-PSBpcyBwYXNzZWQgKi8KIAlpZiAoYm9vdF9vcHRpb25faWRsZV9vdmVycmlkZSAhPSBJRExFX05P
-X09WRVJSSURFKQogCQlyZXR1cm4gLUVOT0RFVjsKQEAgLTI5MjIsNiArMjkyOCwxMyBAQCBpbml0
-X2RyaXZlcl9mYWlsOgogfQogc3Vic3lzX2luaXRjYWxsX3N5bmMoaW50ZWxfaWRsZV9pbml0KTsK
-IAorc3RhdGljIGludCBfX2luaXQgaW50ZWxfaWRsZV9pbml0X2NvbXBsZXRlKHZvaWQpCit7CisJ
-Y3B1X2xhdGVuY3lfcW9zX3JlbW92ZV9yZXF1ZXN0KCZxb3NfcmVxKTsKKwlyZXR1cm4gMDsKK30K
-K2RldmljZV9pbml0Y2FsbF9zeW5jKGludGVsX2lkbGVfaW5pdF9jb21wbGV0ZSk7CisKIC8qCiAg
-KiBXZSBhcmUgbm90IHJlYWxseSBtb2R1bGFyLCBidXQgd2UgdXNlZCB0byBzdXBwb3J0IHRoYXQu
-ICBNZWFuaW5nIHdlIGFsc28KICAqIHN1cHBvcnQgImludGVsX2lkbGUubWF4X2NzdGF0ZT0uLi4i
-IGF0IGJvb3QgYW5kIGFsc28gYSByZWFkLW9ubHkgZXhwb3J0IG9mCg==
---000000000000bd2bf00657e8c3e6--
+I think pci_upstream_bridge() would be better here.  Not that this
+device will be a VF (where pci_upstream_bridge() makes a difference),
+but just to be a little more generic.
+
+> +		ret = pbus_reassign_bridge_resources(bus, res, &saved);
+> +		if (ret)
+> +			goto restore;
+> +	} else {
+> +		/*
+> +		 * A device on a root bus has no bridge windows to adjust.
+> +		 * Assign the BARs released above directly from the root bus
+> +		 * windows.
+> +		 */
+> +		list_for_each_entry(dev_res, &saved, list) {
+> +			i = pci_resource_num(pdev, dev_res->res);
+>  
+> -	down_read(&pci_bus_sem);
+> -	ret = pbus_reassign_bridge_resources(bus, res, &saved);
+> -	if (ret)
+> -		goto restore;
+> +			ret = pci_assign_resource(pdev, i);
+> +			if (ret)
+> +				goto restore;
+> +		}
+> +	}
+>  
+>  out:
+>  	up_read(&pci_bus_sem);
+> 
+> ---
+> base-commit: 7404ce51637231382873d0b55edabc2f3b841a9d
+> change-id: 20260704-pci-rebar-root-bus-f3123fe10fc7
+> 
+> Best regards,
+> --  
+> Liz Fong-Jones <lizf@honeycomb.io>
+> 
+> 
