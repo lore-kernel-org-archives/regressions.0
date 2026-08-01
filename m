@@ -1,67 +1,68 @@
-Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com [209.85.167.177])
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED297361640
-	for <regressions@lists.linux.dev>; Sat,  1 Aug 2026 01:16:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70B602D592C
+	for <regressions@lists.linux.dev>; Sat,  1 Aug 2026 14:45:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785546964; cv=none; b=OwyuK534cZJZZg/6E8+QzeRU2VXq9uJCCodQkC+cIIRcGRELQdCkuQ8rg/7nzIFQJZcf1DGSIjengZxF9TbVYweTq5iGPMyBFWHO3oW0KzpW6nUW+jK+XwwwF/yhTpLm7h04/T32s7JeWMhICgK74PbvxnoYt1jXU3UFw5wcFj8=
+	t=1785595560; cv=none; b=LH2cNZnMMlBtcBa2cy08RtLS3pFZorUYObh6yJzlwb58/jk7KYSFLOyqLJ8zzAZiFCpp27lVcc39/rRYlBOgP9Nxvc1zW0QnwRjFCw6h8v50kUg3AQlt2iON1rI7QAT2x5rGKW5WRmxID5lfMXcUmZhpvQHfLWvOLG5QPLDAFqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785546964; c=relaxed/simple;
-	bh=P5DcjewuX8maw0JP6QOsw+RzcVQfrHT3SGrqsYsm8pc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oZsiWPiMiQ9becW5HqZyRNo82OeDfPTbwF2Bohq/cb9lV/aVqajXC5q8RB+KkS1pX0ECURh0AinNO5/n8A8QChgHkmvcWMOjRSOIpSReSxgSgv67uaGw3fumpsZa9wdbWXhqWsNsJgPoKEkwLh181FUPgfo9AMGcPUKCAlREGBM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lBTzTXvJ; arc=none smtp.client-ip=209.85.167.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1785595560; c=relaxed/simple;
+	bh=KQOed2pypt6Ma/meVK6i5cx6qB9B0YpNenFSdwTXauE=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=OC6RmwV/aCjzy2XPNLpgxL9Z1zepjU7Xg/Uslg9wicFis93hSn+DGEuewaTzogxlsOcj3mFxje7D2YfkH69cBIBhXRJukZkgTi2slEZJc1+m4DULivX9bk55vm5J9lz8G5tKwU1uohbuqhIbkM8zAZCWeyQue+I9eaQgyC8aKWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethicsbowl.ca; spf=pass smtp.mailfrom=ethicsbowl.ca; dkim=fail (0-bit key) header.d=ethicsbowl.ca header.i=@ethicsbowl.ca header.b=Pc+mmqxY reason="key not found in DNS"; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethicsbowl.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ethicsbowl.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lBTzTXvJ"
-Received: by mail-oi1-f177.google.com with SMTP id 5614622812f47-4a40bcc8d69so1032094b6e.3
-        for <regressions@lists.linux.dev>; Fri, 31 Jul 2026 18:16:02 -0700 (PDT)
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ethicsbowl.ca header.i=@ethicsbowl.ca header.b="Pc+mmqxY"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-84a2dcede83so2858219b3a.3
+        for <regressions@lists.linux.dev>; Sat, 01 Aug 2026 07:45:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1785546962; x=1786151762; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=P5DcjewuX8maw0JP6QOsw+RzcVQfrHT3SGrqsYsm8pc=;
-        b=lBTzTXvJLbHJTbCic/ZBupxqTfg4PZ8ybGhZYuicG07NLPtgIO77gBCR9xQ3aZfYQb
-         gqUm3lUGs2Tk15oo4F7i4Y/Ot1AlugCeblecWV13u62w+gsj7ed3M51rcvPJKRXfeEo5
-         QlGqarSxWcYGJJ76KQ8dXn8cv94ZLF9OLnKgrW9yAQGVHg8KMRClGnoASG3doQlkQuDn
-         kTAZaB5CdRtflhtTwfp2d56jwU/1LGrEAAmr2GHPHKqKrjqBmRubnJVXh6KrRbP6fZ8i
-         ULjm8jHAaChvgHbMFAl6dmBl4HiMF5b59fGuUkU2lXLyQ+Avs0b5CBnKe188Bl4btqib
-         rKtw==
+        d=ethicsbowl.ca; s=google; t=1785595558; x=1786200358; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:in-reply-to:content-language
+         :references:cc:to:subject:from:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=5QyIVdP2jnluVAcr0hBunwnf19HKMctrMwfdu/rLVKU=;
+        b=Pc+mmqxYQTbqGCWJkWHqGMqlQdfswMtLZZ3MD6R/UMJntX/6cXy9b6hfhIc7kOgf4P
+         CVFFGwjZWEjryK+exdz4MN3GuvMsxxxj7jU/krFJwNVRT8NcYdZXhq6M0DNtrJidOvLE
+         mIZooFwgoSIPbMGr2Jo3Dl50Yd3ORAhp+UUW8geXQogxerUXcP+1XUBIZScKHStU8BI4
+         ZMn9h9ASynQQo7by8Sd/hVp7US9wafVwlovHpSQ4eNMLwIpmgkIgAq/ZXjmKmVGkObEm
+         R8k8/78ON/8R907qPnlWOUDjjEwi0O6PqsgD0MXxcWE7NEXBCxGtvMxBy5yCBYedbThn
+         7rmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785546962; x=1786151762;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20251104; t=1785595558; x=1786200358;
+        h=content-transfer-encoding:content-type:in-reply-to:content-language
+         :references:cc:to:subject:from:user-agent:mime-version:date
+         :message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=P5DcjewuX8maw0JP6QOsw+RzcVQfrHT3SGrqsYsm8pc=;
-        b=fRh702FH97Q875lC1wYJIQXZCZGzqNPVWSicVznCNZQ8vvFxDgoFPk7YgM7BCk2O0t
-         BKGAFQP7S/JxOUJWF2uZ4gDeENYy4W6QLDuzCFOEgN3odjTiT8NzGGpJaUJK31Ijqk2+
-         coQQNVXi2i6WXbOygzptDRI7KzoSsX1FSASWvw7lcq+rk+ipXccqTASKxKYc8oFfUoFm
-         p8r7Z+xvO+xCtPprfgpQWlIn15/x9rXewLvvW7JkmkKQOQvJzhCTd5TEaihzk5jzdzti
-         YMvzbrxANo4AI1f1E6DQ2NVOnh/1FJ/aAdW1hP1MOfyby5bVw3Z1WbY4qKIRkDvh8tjP
-         gAfg==
-X-Forwarded-Encrypted: i=1; AHgh+RpkcZvjVe4GPTEJi0bKLMbFJq3RTXPVEiyAda5LehK/73in/BbGSt7dLUYfr7TbMcs9gfFH3v0bZfW45g==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwD9VXidK5Vja6jwA/1GWQqB9q86tdS9J7ZZGX/o+A4NFDDpcLQ
-	aNHG/NP5s3l/DTDrq33Lxc3qQNJ4FSo+pF5Vczje8SABlztnTXwjuLDu
-X-Gm-Gg: AR+sD113zMPhipgg3K0wrNqdQNVlimTmbNAGdmrBR8akOJhdibr9yFlWTaO6bareYwJ
-	udRzmxGc9RscNLvNnXkJuL+UQBPKpCP454FKWbY+/OFYuTC8oLOqi17zm/0YWZPI8aznAW+cYxb
-	CAtDNcVi8Rm3Wll04xp+AX5ftjqh/pkpaz2W+06VHLdxbH+DRrdU2RLJgTjYeG9fPCLmtuHCHHN
-	jAcl/6tvUnYMEHmULiXsWMVzaDXITEO+iAfbxQNfQBW3VZQGy2Sflc70LAkiPc1zUCslUaVqieZ
-	h138+aoH0xdQzHMtvsOUoO5e05hpovUTosTJpIe4m8ulR7RPSJlAaogXHdekdamuhBdGsABnGP6
-	G0TPV+sqK6l0o81lurbxAVNqNWSYpIXaJhiG8NvSjTjo670zgcijKX0vugwWRj/c391d1nCcN4V
-	Xh3D63SdKq/F5814FBLDdeMipHl8IhKP6e74YnTv+5Vkul7dLFM61DW+482g==
-X-Received: by 2002:a05:6808:384c:b0:4a3:f4b7:cbdf with SMTP id 5614622812f47-4af5e2725cemr4182772b6e.15.1785546961793;
-        Fri, 31 Jul 2026 18:16:01 -0700 (PDT)
-Received: from [10.10.0.5] ([59.152.127.200])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-4af58ce3e8esm1904627b6e.3.2026.07.31.18.15.58
+        bh=5QyIVdP2jnluVAcr0hBunwnf19HKMctrMwfdu/rLVKU=;
+        b=EI3s0KM9Mh6EINub8g6npYPGerD9LKgmdKmorVEfzOo7RvpgtL6r2hioSY/zfpYc9j
+         VJfXDY3vg2tlSag4sgmLgH9hgkF4Qz+hGsAeaTNxKQJ6nTIlvvWjdUftvImQeJA+Pyud
+         fhsUNDN6Ar+Gc8WXA7GdYWegLsTYJRlPRJJLl0M/ApMDfG1C+HM+Lk1DyI4CojCC4mI4
+         WUopOIc8h/29Oa1iYboiWWcP4ej+Krs01DUlEU+Jrlogljmpn4ZjDIfrRDieGRmtrG2o
+         DYwSk33EuDDwsH2kr2NQ8GWp6SwjlqnRA9GcNNkFH7BPSAMRmJdHa0vzSeYrpqiQ9Ohr
+         LXwA==
+X-Forwarded-Encrypted: i=1; AHgh+Rp4BSi2qrUoWjNGlMPaFqKu9QVROR/mNBbrbhW+F4z3HTs4ud62H+989AkJxj/OU9fgscgyc5dzVRGBnw==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yx1MBWpl0mzZL7APklOFgO+FTw3Xk7EMZdTWqSiF1t9pPi9A4Fc
+	kVhbKX+UlE9e4WJH3+kBIyltsutJbrPx8ezAvzidrzaimCX4Dt/TTBPu5ETODm6EaSNFnbW6eAz
+	shex3/cRZzA==
+X-Gm-Gg: AR+sD11JhKAny3zJxHGip877Tl+MNL4/0j9WvZiQcwyLf+pa7EDb/Bqm6whuT2qoIdB
+	LTKhf+MCf7Gc7PetraACt7JqvnPLgg6vmmMxidLeN370vxlIdmiR/wpXk0wxVRW6azaXzAtoQup
+	5UXbpb7MiI1+hmB2B+mHTrYcRf3t7WTMKJou07h8TpJXIF/iSqWF0mj83EgLMHdke20nmwpLiX9
+	jAttILbdlca5oAEBmb8A36AlYCmp4/OTRpuINtimx3EdOkHmj/1AGY6Be9HBdxRIfYCa6FSMr+7
+	QAhiSNkH6ou2FIg6WFXQ/Qy7pJsv1nRbvpihlJSnSoeRwxlqv/024VE+olam8GuG+Mk1QxlRo3H
+	RU0BAK4Uq7x6HZqWeIFs3dENTm9v/TwqYb17dxq45mtonwjdAqVFPNRjSKtBkQ6Pex9vRb7eChG
+	DZUEKes4Reg3gyUYv88Bi7DNEwqX0YqmaH27zxYmMRHTU8e1Ga5b1K9f/93N8JcIuNhWmdO1YU2
+	A==
+X-Received: by 2002:a05:6a00:4146:b0:845:44c7:5e28 with SMTP id d2e1a72fcca58-84ee4834c90mr3325978b3a.31.1785595557756;
+        Sat, 01 Aug 2026 07:45:57 -0700 (PDT)
+Received: from [192.168.1.90] ([64.180.107.235])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-cbe39e9f22fsm1739760a12.22.2026.08.01.07.45.52
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 Jul 2026 18:16:01 -0700 (PDT)
-Message-ID: <1da0b5a8-336c-455f-9098-a8c834721039@gmail.com>
-Date: Sat, 1 Aug 2026 09:15:55 +0800
+        Sat, 01 Aug 2026 07:45:56 -0700 (PDT)
+Message-ID: <977f3650-326d-4df9-843c-5e12194afc1f@ethicsbowl.ca>
+Date: Sat, 1 Aug 2026 07:44:52 -0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -69,34 +70,59 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] usb controller fails to initialize on intel s1200btl
-To: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>
-Cc: rafael.j.wysocki@intel.com, linux-acpi@vger.kernel.org,
- linux-usb@vger.kernel.org, regressions@lists.linux.dev,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Alan Stern <stern@rowland.harvard.edu>
-References: <3353bdf3-4f33-44b1-809b-b0378bee5816@gmail.com>
- <CAJZ5v0h1kqDEBYk0k05rv6f2SJ7g+TN4FhBDJYZSVUctu-0FdA@mail.gmail.com>
- <daf0bb9b-246d-437d-87ca-16706113b201@gmail.com>
- <CAJZ5v0jByxtQ2tmNm_ZyyBnDMBNjuqQwD_367NRyGNzF7wQtRw@mail.gmail.com>
- <7792f017-42b0-4a09-9941-5259138e21b1@gmail.com>
- <CAJZ5v0jCFFNuG7WtCE2CG+hP=YNsYMdXH_945QgkgAUcr4Lryg@mail.gmail.com>
- <37daa35f-06aa-49d0-bf0a-1b5ac9f44c89@gmail.com>
- <CAJZ5v0jyy0+hqU3=gmBrgMzLBVhdUQwDj8d0_jGCqZwqyWT=_g@mail.gmail.com>
- <588c2e18-e6fb-4fc1-95d5-7a5dd0f556fe@gmail.com>
- <CAJZ5v0gXtKEaNDdSRqd57zg9GbFN-VDHrU5-=EEQPdSa9Zk-xw@mail.gmail.com>
- <CAJZ5v0g4ctzLpEro2Mu7EbSo8RNmYUCM6+J2p_ExCXseQAx13Q@mail.gmail.com>
+From: Robert Munro <robert.munro@ethicsbowl.ca>
+Subject: Re: [REGRESSION] bitland-mifs-wmi: power-saver write is accepted but
+ profile remains balanced on Redmi Book Pro 14 2022
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Gladyshev Ilya <foxido@foxido.dev>, platform-driver-x86@vger.kernel.org,
+ Hans de Goede <hansg@kernel.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ regressions@lists.linux.dev, Mingyou Chen <qby140326@gmail.com>
+References: <ae3f4f58-0326-45a2-bbee-b71ec44cd28a@ethicsbowl.ca>
+ <e9fc777e-fccf-4173-a564-3846396ba6dd@leemhuis.info>
+ <036a5e30-1eee-4dca-8fd0-268a1d6536eb@gmail.com>
 Content-Language: en-US
-From: Julian Silver <mendaxca@gmail.com>
-In-Reply-To: <CAJZ5v0g4ctzLpEro2Mu7EbSo8RNmYUCM6+J2p_ExCXseQAx13Q@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <036a5e30-1eee-4dca-8fd0-268a1d6536eb@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 2026-07-31 22:11:15, Rafael J. Wysocki (Intel) wrote:
-> The attached patch (on top of the current mainline) should prevent
-> cpuidle governors from requesting idle states deeper than C1E when
-> intel_idle is used until all of the device_initcall()s are done.
-> Please see if this helps.
+On 2026-07-21, Thorsten Leemhuis wrote:
+> Side note: Robert, have you tried if latest 7.2-rc works any better?
 
-Thanks for the patch. There is no more -110 error after applying this.
-Feel free if you need other info or test.
+No. I have now reproduced the same failure on:
+
+     Kernel: 7.2.0-rc5-1-cachyos-rc
+     bitland_mifs_wmi srcversion: 9A432DB17D1453AA4DD476C
+     power-profiles-daemon: 0.30-3
+     kernel taint: 0
+
+Starting from balanced:
+
+     $ powerprofilesctl set power-saver
+     $ echo $?
+     0
+     $ powerprofilesctl get
+     balanced
+     $ cat /sys/firmware/acpi/platform_profile
+     balanced
+     $ cat 
+/sys/devices/system/cpu/cpufreq/policy0/energy_performance_preference
+     balance_power
+
+I polled platform_profile every 20 ms around the request, which took
+249 ms, and only observed "balanced"; it never transiently reported
+"low-power". All CPU policies reported "balance_power". No relevant
+kernel or power-profiles-daemon messages appeared.
+
+Unlike my 7.1.3 report, the EPP is now "balance_power" rather than
+"balance_performance", so the CPU-side behaviour is different. However,
+7.2-rc5 does not fix the platform-profile part of the regression: the
+request still returns success while platform_profile remains "balanced".
+
+I asked the sol-max agent what the standard way to report this issue was 
+and this mailing-list format is what it insisted I use. My apologies for 
+that.
+
+
+Regards,
+Robert Munro
