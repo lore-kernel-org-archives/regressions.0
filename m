@@ -1,140 +1,102 @@
-Received: from o1.ptr9745.em.honeycomb.io (o1.ptr9745.em.honeycomb.io [149.72.141.136])
+Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com [209.85.167.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E758F306B08
-	for <regressions@lists.linux.dev>; Sat,  1 Aug 2026 00:43:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=149.72.141.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED297361640
+	for <regressions@lists.linux.dev>; Sat,  1 Aug 2026 01:16:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785545029; cv=none; b=XFrCX+vETPhDijQZPzokRW47ecBDtN1PCyhrISPHj4VLsCyhLz+lBhaDLjkCaXQSPaEdG0wr/fqI0l214eLT2WXeb64e7J+3VcSQWkxGN7DRx3Bvk5IZx5J7rBOuqJS7hn6tre/aDkvdr0oEAA0hxdhk75Zumt7AFWBIO+rE9Z0=
+	t=1785546964; cv=none; b=OwyuK534cZJZZg/6E8+QzeRU2VXq9uJCCodQkC+cIIRcGRELQdCkuQ8rg/7nzIFQJZcf1DGSIjengZxF9TbVYweTq5iGPMyBFWHO3oW0KzpW6nUW+jK+XwwwF/yhTpLm7h04/T32s7JeWMhICgK74PbvxnoYt1jXU3UFw5wcFj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785545029; c=relaxed/simple;
-	bh=WLbDmhynmJRBzvC9VtSa8CA/TwQCDnMB1XDczh4z4q8=;
-	h=From:Subject:Date:Message-ID:In-Reply-To:References:MIME-Version:
-	 To:Cc:Content-Type; b=bCLwVbamRp9riqq/lpz59X827DMirGy3QeewFFP/j22qyxdwUTDAs4U2h+t67+TFFVMoFWQZI9FNkWtwbREK32RG4KKncUuj/xHAIJfJlj/YCeqBIeQOpV7Htq1m9ZpKfQXeuGDsaiqrtmx6pubsxXtjm1EFJQqQFC93Bm4axuA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=honeycomb.io; spf=pass smtp.mailfrom=em.honeycomb.io; dkim=pass (2048-bit key) header.d=honeycomb.io header.i=@honeycomb.io header.b=PDVRuyYe; arc=none smtp.client-ip=149.72.141.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=honeycomb.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=em.honeycomb.io
+	s=arc-20240116; t=1785546964; c=relaxed/simple;
+	bh=P5DcjewuX8maw0JP6QOsw+RzcVQfrHT3SGrqsYsm8pc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oZsiWPiMiQ9becW5HqZyRNo82OeDfPTbwF2Bohq/cb9lV/aVqajXC5q8RB+KkS1pX0ECURh0AinNO5/n8A8QChgHkmvcWMOjRSOIpSReSxgSgv67uaGw3fumpsZa9wdbWXhqWsNsJgPoKEkwLh181FUPgfo9AMGcPUKCAlREGBM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lBTzTXvJ; arc=none smtp.client-ip=209.85.167.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=honeycomb.io header.i=@honeycomb.io header.b="PDVRuyYe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=honeycomb.io;
-	h=from:subject:date:in-reply-to:references:mime-version:to:cc:
-	content-transfer-encoding:content-type:cc:content-type:date:from:subject:to;
-	s=s1; t=1785545025;
-	bh=4SwiOz+P6AlBXRHcbsCHn1Zsa4G7NoAJXzm3uhDPdUA=;
-	b=PDVRuyYent1tun5KWBF3vbAWgrwHjbnCcxSpnfdtJkTNrWuN0b3imKY0cA3aQ1JB28ku
-	4EoMxHhlnKg2vn6sOXJ7RnBit8j8GYrhuHbM85dW2OmH0rotouGWs3f+gPPYA36CdFbnQX
-	M5s6TEB0rWOdaHf/Xf2VodDUomlGqcPx/mI8roterZzJFZemeawBjkWFqmk7V1bIMe8dqk
-	xzcstw/KwQh4W7Fl8rukesRyIYngoo5DEVFytN40yyaeIJfnX0Zw5qutkKew7OKZP8ylqC
-	rcB+5htrvrZ1Td9oKUU81iwyXSnas8vGPRjhE1j+te8ewAeqSy7F7p+DQfxSapeA==
-Received: by recvd-d665d4899-9s8c2 with SMTP id recvd-d665d4899-9s8c2-1-6A6D4141-20
-	2026-08-01 00:43:45.526568514 +0000 UTC m=+280227.423264102
-Received: from daisy.dens.ffj.family (unknown)
-	by geopod-ismtpd-20 (SG)
-	with ESMTP
-	id pSmtPvnkSPWTzLuzNDcNbQ
-	Sat, 01 Aug 2026 00:43:45.325 +0000 (UTC)
-From: Liz Fong-Jones <lizf@honeycomb.io>
-Subject: Re: [PATCH v3] PCI: Fix BAR resize for devices on a root bus
-Date: Sat, 01 Aug 2026 00:43:45 +0000 (UTC)
-Message-ID: <20260801004343.9113-1-lizf@honeycomb.io>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <CABhMZUX+8tjN1Hz=tf6bm+K7BV4r=1RxctiN6W_UPz9+yxG+Qg@mail.gmail.com>
-References: <CABhMZUX+8tjN1Hz=tf6bm+K7BV4r=1RxctiN6W_UPz9+yxG+Qg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lBTzTXvJ"
+Received: by mail-oi1-f177.google.com with SMTP id 5614622812f47-4a40bcc8d69so1032094b6e.3
+        for <regressions@lists.linux.dev>; Fri, 31 Jul 2026 18:16:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1785546962; x=1786151762; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=P5DcjewuX8maw0JP6QOsw+RzcVQfrHT3SGrqsYsm8pc=;
+        b=lBTzTXvJLbHJTbCic/ZBupxqTfg4PZ8ybGhZYuicG07NLPtgIO77gBCR9xQ3aZfYQb
+         gqUm3lUGs2Tk15oo4F7i4Y/Ot1AlugCeblecWV13u62w+gsj7ed3M51rcvPJKRXfeEo5
+         QlGqarSxWcYGJJ76KQ8dXn8cv94ZLF9OLnKgrW9yAQGVHg8KMRClGnoASG3doQlkQuDn
+         kTAZaB5CdRtflhtTwfp2d56jwU/1LGrEAAmr2GHPHKqKrjqBmRubnJVXh6KrRbP6fZ8i
+         ULjm8jHAaChvgHbMFAl6dmBl4HiMF5b59fGuUkU2lXLyQ+Avs0b5CBnKe188Bl4btqib
+         rKtw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1785546962; x=1786151762;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=P5DcjewuX8maw0JP6QOsw+RzcVQfrHT3SGrqsYsm8pc=;
+        b=fRh702FH97Q875lC1wYJIQXZCZGzqNPVWSicVznCNZQ8vvFxDgoFPk7YgM7BCk2O0t
+         BKGAFQP7S/JxOUJWF2uZ4gDeENYy4W6QLDuzCFOEgN3odjTiT8NzGGpJaUJK31Ijqk2+
+         coQQNVXi2i6WXbOygzptDRI7KzoSsX1FSASWvw7lcq+rk+ipXccqTASKxKYc8oFfUoFm
+         p8r7Z+xvO+xCtPprfgpQWlIn15/x9rXewLvvW7JkmkKQOQvJzhCTd5TEaihzk5jzdzti
+         YMvzbrxANo4AI1f1E6DQ2NVOnh/1FJ/aAdW1hP1MOfyby5bVw3Z1WbY4qKIRkDvh8tjP
+         gAfg==
+X-Forwarded-Encrypted: i=1; AHgh+RpkcZvjVe4GPTEJi0bKLMbFJq3RTXPVEiyAda5LehK/73in/BbGSt7dLUYfr7TbMcs9gfFH3v0bZfW45g==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwD9VXidK5Vja6jwA/1GWQqB9q86tdS9J7ZZGX/o+A4NFDDpcLQ
+	aNHG/NP5s3l/DTDrq33Lxc3qQNJ4FSo+pF5Vczje8SABlztnTXwjuLDu
+X-Gm-Gg: AR+sD113zMPhipgg3K0wrNqdQNVlimTmbNAGdmrBR8akOJhdibr9yFlWTaO6bareYwJ
+	udRzmxGc9RscNLvNnXkJuL+UQBPKpCP454FKWbY+/OFYuTC8oLOqi17zm/0YWZPI8aznAW+cYxb
+	CAtDNcVi8Rm3Wll04xp+AX5ftjqh/pkpaz2W+06VHLdxbH+DRrdU2RLJgTjYeG9fPCLmtuHCHHN
+	jAcl/6tvUnYMEHmULiXsWMVzaDXITEO+iAfbxQNfQBW3VZQGy2Sflc70LAkiPc1zUCslUaVqieZ
+	h138+aoH0xdQzHMtvsOUoO5e05hpovUTosTJpIe4m8ulR7RPSJlAaogXHdekdamuhBdGsABnGP6
+	G0TPV+sqK6l0o81lurbxAVNqNWSYpIXaJhiG8NvSjTjo670zgcijKX0vugwWRj/c391d1nCcN4V
+	Xh3D63SdKq/F5814FBLDdeMipHl8IhKP6e74YnTv+5Vkul7dLFM61DW+482g==
+X-Received: by 2002:a05:6808:384c:b0:4a3:f4b7:cbdf with SMTP id 5614622812f47-4af5e2725cemr4182772b6e.15.1785546961793;
+        Fri, 31 Jul 2026 18:16:01 -0700 (PDT)
+Received: from [10.10.0.5] ([59.152.127.200])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-4af58ce3e8esm1904627b6e.3.2026.07.31.18.15.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 31 Jul 2026 18:16:01 -0700 (PDT)
+Message-ID: <1da0b5a8-336c-455f-9098-a8c834721039@gmail.com>
+Date: Sat, 1 Aug 2026 09:15:55 +0800
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-SG-EID: 
- =?us-ascii?Q?u001=2ECuH7N2XAoeMR1zrzr=2F6NZrhli2vbKPOHff5fJuZuba6ZIE8QPyIf9mn4Y?=
- =?us-ascii?Q?ezqeFFjUkh=2FeROy4LtnO7KN9jZmea+EGMmQ+7m8?=
- =?us-ascii?Q?q1YMDv9WRF2I0+Tf2E1B7irUgU3SAaJXuuqFSwt?=
- =?us-ascii?Q?Y4hB2Sh=2FFbMouJJVRl=2FYE7eebbo9KYuy5q512dV?=
- =?us-ascii?Q?Hx90X0PKHHZUcAXNUboVs5tY0gn=2FAC6wzhpMUn5?=
- =?us-ascii?Q?mumj4xKkvVbL15=2FvRFWmYITH1irAFzHfIZuEmcC?= =?us-ascii?Q?+GgZ?=
-To: bjorn.helgaas@gmail.com
-Cc: amd-gfx@lists.freedesktop.org, bhelgaas@google.com, bjorn@helgaas.com,
-	helgaas@kernel.org, ilpo.jarvinen@linux.intel.com, jacob.martin@canonical.com,
-	jon.nettleton@gmail.com, jon@solid-run.com, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, lizf@honeycomb.io, regressions@lists.linux.dev,
-	stable@vger.kernel.org
-X-Entity-ID: u001.GRlkmHQ+Ka/CKxmoC/CxTw==
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] usb controller fails to initialize on intel s1200btl
+To: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>
+Cc: rafael.j.wysocki@intel.com, linux-acpi@vger.kernel.org,
+ linux-usb@vger.kernel.org, regressions@lists.linux.dev,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Alan Stern <stern@rowland.harvard.edu>
+References: <3353bdf3-4f33-44b1-809b-b0378bee5816@gmail.com>
+ <CAJZ5v0h1kqDEBYk0k05rv6f2SJ7g+TN4FhBDJYZSVUctu-0FdA@mail.gmail.com>
+ <daf0bb9b-246d-437d-87ca-16706113b201@gmail.com>
+ <CAJZ5v0jByxtQ2tmNm_ZyyBnDMBNjuqQwD_367NRyGNzF7wQtRw@mail.gmail.com>
+ <7792f017-42b0-4a09-9941-5259138e21b1@gmail.com>
+ <CAJZ5v0jCFFNuG7WtCE2CG+hP=YNsYMdXH_945QgkgAUcr4Lryg@mail.gmail.com>
+ <37daa35f-06aa-49d0-bf0a-1b5ac9f44c89@gmail.com>
+ <CAJZ5v0jyy0+hqU3=gmBrgMzLBVhdUQwDj8d0_jGCqZwqyWT=_g@mail.gmail.com>
+ <588c2e18-e6fb-4fc1-95d5-7a5dd0f556fe@gmail.com>
+ <CAJZ5v0gXtKEaNDdSRqd57zg9GbFN-VDHrU5-=EEQPdSa9Zk-xw@mail.gmail.com>
+ <CAJZ5v0g4ctzLpEro2Mu7EbSo8RNmYUCM6+J2p_ExCXseQAx13Q@mail.gmail.com>
+Content-Language: en-US
+From: Julian Silver <mendaxca@gmail.com>
+In-Reply-To: <CAJZ5v0g4ctzLpEro2Mu7EbSo8RNmYUCM6+J2p_ExCXseQAx13Q@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset=us-ascii
 
-> I guess this must be the drivers/pci/controller/mobiveil/pcie-layerscape-gen4.c
-> driver.
+On 2026-07-31 22:11:15, Rafael J. Wysocki (Intel) wrote:
+> The attached patch (on top of the current mainline) should prevent
+> cpuidle governors from requesting idle states deeper than C1E when
+> intel_idle is used until all of the device_initcall()s are done.
+> Please see if this helps.
 
-Close, but not in this configuration -- that driver binds on the
-U-Boot/devicetree variant of this platform. This machine runs the
-UEFI/ACPI firmware variant (EDK II), where each PCIe controller is
-exposed as a plain PNP0A08 host bridge with standard ECAM (MCFG OEM
-"NXP LX2160", 2 entries, one per segment), so it goes through the
-generic ACPI ECAM path with no controller-specific driver and no MCFG
-quirk.
-
-> so the GPU is on bus 01, which isn't a nice round bus number like
-> root buses usually are.  The typical thing would be a root port on
-> bus 00 with a secondary bus 01, and amdgpu being on that bus 01.
-
-The firmware genuinely declares the root bus as 01: the host bridge
-_CRS bus range is [bus 01-ff], there is no bus 00 in the segment at
-all, and no root port device is visible anywhere -- the endpoint is
-enumerated directly on the root bus. Both segments follow the same
-pattern (NVMe on 0002:01:00.0, GPU on 0004:01:00.0). I'll defer to Jon
-(CC'd) on why the firmware hides the root port, but the OS-visible
-topology is unambiguous.
-
-> Can you share a dmesg log?
-
-Relevant excerpt below; happy to send the full log off-list or attach
-to the Launchpad bug. Note this boot is running with the
-amdgpu.rebar=0 workaround on a 7.0.0-28 distro kernel, so amdgpu
-initializes successfully (on the native 256MB BAR) -- the host bridge
-and topology enumeration is identical on the boots that fail.
-
-  ACPI: MCFG 0x00000000EBE28E98 00004C (v01 NXP    LX2160   000000FF INTL 20151124)
-  ...
-  ACPI: MCFG table detected, 2 entries
-  ...
-  ACPI: PCI Root Bridge [PCI0] (domain 0002 [bus 01-ff])
-  acpi PNP0A08:00: _OSC: OS supports [ExtendedConfig ASPM ClockPM Segments MSI EDR HPX-Type3]
-  acpi PNP0A08:00: _OSC: OS now controls [PCIeHotplug SHPCHotplug PME AER PCIeCapability LTR DPC]
-  acpi PNP0A08:00: ECAM area [mem 0x9000100000-0x900fffffff] reserved by PNP0C02:00
-  acpi PNP0A08:00: ECAM at [mem 0x9000100000-0x900fffffff] for [bus 01-ff]
-  PCI host bridge to bus 0002:01
-  pci_bus 0002:01: root bus resource [mem 0x9040000000-0x90ffffffff window] (bus address [0x40000000-0xffffffff])
-  pci_bus 0002:01: root bus resource [mem 0x9400000000-0x97ffffffff window]
-  pci_bus 0002:01: root bus resource [io  0x0000-0xffff window]
-  pci_bus 0002:01: root bus resource [bus 01-ff]
-  pci 0002:01:00.0: [144d:a808] type 00 class 0x010802 PCIe Endpoint
-  pci 0002:01:00.0: BAR 0 [mem 0x9400000000-0x9400003fff 64bit]
-  pci 0002:01:00.0: BAR 0 [mem 0x9400000000-0x9400003fff 64bit]: assigned
-  ACPI: PCI Root Bridge [PCI1] (domain 0004 [bus 01-ff])
-  acpi PNP0A08:01: _OSC: OS supports [ExtendedConfig ASPM ClockPM Segments MSI EDR HPX-Type3]
-  acpi PNP0A08:01: _OSC: OS now controls [PCIeHotplug SHPCHotplug PME AER PCIeCapability LTR DPC]
-  acpi PNP0A08:01: ECAM area [mem 0xa000100000-0xa00fffffff] reserved by PNP0C02:00
-  acpi PNP0A08:01: ECAM at [mem 0xa000100000-0xa00fffffff] for [bus 01-ff]
-  PCI host bridge to bus 0004:01
-  pci_bus 0004:01: root bus resource [mem 0xa040000000-0xa0ffffffff window] (bus address [0x40000000-0xffffffff])
-  pci_bus 0004:01: root bus resource [mem 0xa400000000-0xa7ffffffff window]
-  pci_bus 0004:01: root bus resource [io  0x10000-0x1ffff window] (bus address [0x0000-0xffff])
-  pci_bus 0004:01: root bus resource [bus 01-ff]
-  pci 0004:01:00.0: [1002:6981] type 00 class 0x030000 PCIe Legacy Endpoint
-  pci 0004:01:00.0: BAR 0 [mem 0xa400000000-0xa40fffffff 64bit pref]
-  pci 0004:01:00.0: BAR 2 [mem 0xa410000000-0xa4101fffff 64bit pref]
-  pci 0004:01:00.0: BAR 4 [io  0x10000-0x100ff]
-  pci 0004:01:00.0: BAR 5 [mem 0xa046000000-0xa04603ffff]
-  pci 0004:01:00.0: ROM [mem 0xa0fffe0000-0xa0ffffffff pref]
-  pci 0004:01:00.1: [1002:aae0] type 00 class 0x040300 PCIe Legacy Endpoint
-  pci 0004:01:00.1: BAR 0 [mem 0xa410200000-0xa410203fff 64bit]
-  pci 0004:01:00.0: BAR 0 [mem 0xa400000000-0xa40fffffff 64bit pref]: assigned
-  pci 0004:01:00.0: BAR 2 [mem 0xa410000000-0xa4101fffff 64bit pref]: assigned
-  pci 0004:01:00.0: BAR 5 [mem 0xa040000000-0xa04003ffff]: assigned
-  pci 0004:01:00.0: ROM [mem 0xa040040000-0xa04005ffff pref]: assigned
-  pci 0004:01:00.1: BAR 0 [mem 0xa410200000-0xa410203fff 64bit]: assigned
-  pci 0004:01:00.0: BAR 4 [io  0x10000-0x100ff]: assigned
-  pci_bus 0004:01: resource 4 [mem 0xa040000000-0xa0ffffffff window]
-  pci_bus 0004:01: resource 5 [mem 0xa400000000-0xa7ffffffff window]
-  pci_bus 0004:01: resource 6 [io  0x10000-0x1ffff window]
+Thanks for the patch. There is no more -110 error after applying this.
+Feel free if you need other info or test.
