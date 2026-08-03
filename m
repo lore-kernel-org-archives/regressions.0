@@ -1,119 +1,458 @@
-Received: from mail.kmu-office.ch (mail.kmu-office.ch [178.209.48.109])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 520323B895B
-	for <regressions@lists.linux.dev>; Mon,  3 Aug 2026 11:42:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.209.48.109
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD37D37702C;
+	Mon,  3 Aug 2026 11:59:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785757358; cv=none; b=Xneh3Qzhcmijy3qPm1irdt4zDVRCxcExxmINrco4VS8L75XAp5ZP98//y9eM3zvONpcxd6/E84PI8gPx7EHaJp+wopD2VIsrwZ74+p2SnpoYsHtUkXx0prBJz7/iy2YLcbq1kuacYHsLiQrtTAsy+D0lwdfTipg7gxyjOqOhuZA=
+	t=1785758349; cv=none; b=oTotPoz+S4lBBWt/UZjNJDcxK1JAeqIyrSD2D/zt8/NjlDIVzvVy7GjgZhkmt4h4Sp/aV8HOeoaco5yfnBsedIGrGeZZgc/9jTVnf4hIEbYVhf/52uYFQRVKyaTUTqFLw7TvUtigdxXH/jM9IreCUFw030H4V1DjQqv6oPw7x+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785757358; c=relaxed/simple;
-	bh=4uuhAPuJZKcdonDvxmDGk83ekrv0i9PRCcTLq7p0L1g=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=WUeelY4WlWYbH/QcW+7d8HcGfcjKPkMC0CHBS/Yma3Gi5OHoa6sljqacWWdYOEbl8J/QDU7XhETgQZInvd1TshgadajNtOByym522S/cip3deeLnLqABqlhZul+5OfkERMSIXhLC3hcfpMZj2i2j+3PMp+7STe4UoQDEoQAf+bs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=agner.ch; spf=pass smtp.mailfrom=agner.ch; dkim=pass (1024-bit key) header.d=agner.ch header.i=@agner.ch header.b=ONd7aAcB; arc=none smtp.client-ip=178.209.48.109
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=agner.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=agner.ch
+	s=arc-20240116; t=1785758349; c=relaxed/simple;
+	bh=ETuLQs0GQnYSP+YoG/BQl3TvwwKzgK5Z5R12J0q014E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GulvlLk1bGlJJke8+yv3rxm7oz2EuzLNh7SRUZVkcg+1Yo6dS0mvLWpmMeTDADGZVAYm2zp6/yTqQrM2/ZxA+eDy6D3kfOZWDnRMJ7CpyY7CN1StizpcWYHQXZnZZrfJ9Bx872+YWUkOCCACUCp0AI4QdEDYR7NZ26e9uUQHBfw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XFp+uKk+; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=agner.ch header.i=@agner.ch header.b="ONd7aAcB"
-Received: from webmail.kmu-office.ch (unknown [IPv6:2a02:418:6a02::a3])
-	by mail.kmu-office.ch (Postfix) with ESMTPSA id 965055C2478;
-	Mon,  3 Aug 2026 13:42:33 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agner.ch; s=dkim;
-	t=1785757353;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Z1DdxlBwrHhow3M3zV5emyY7loKO7p/X/7X6nqt7mAI=;
-	b=ONd7aAcB6Urqy1LY7slTlTyEmPDB/b9NLqK0THmD5GYDWNT6fZ4IP1xPuq1dFQ2vaYVIo5
-	zdjkLHFBzW3L8TPWq2Gxc03OfnbP7X2gX5JF9hkunRuVeTOm1DWmBNHuwl/UnjCclpbigx
-	0fYOxKgBNggJlDja79HWuyplyyWkhh0=
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XFp+uKk+"
+Received: by smtp.kernel.org (Postfix) with UTF8SMTPSA id B06721F000E9;
+	Mon,  3 Aug 2026 11:59:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1785758348;
+	bh=py9Wfg6+mJzL8UgldmGcNu1tzC+q6k7N7csbedRRRLQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=XFp+uKk+uM1Xe27Qmm4rtiAR+zHWhsesRa1QhM9rF26PIRJww6wyzKP3m/J8BsV2q
+	 B9Q4QEAH6b41frHbVhqgSaj33NpX0usXkQgHhNfwGk+6TdfTWxPp4gJbObSI4dfBYq
+	 7AHU0+LrMvIIxzMkY73FfNm+jRXfEikZm+tYEOHz89AghwnAXwvhUOCY5B38rr/nIt
+	 f04CYw98L2Gv3koWyPSfO0EPgeqz1hI8GucZ63Te/oDVBcEGVTK+3yLw75t/HmpGKx
+	 l7yf1psJp5uP2FjCflhoEpt0zdA9yj4IaR53zNC/w8fexGK+n89r1TFtzDJF0WFPs8
+	 F1gfQzLO7sdAQ==
+Date: Mon, 3 Aug 2026 14:59:03 +0300
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: Julien <julien82453@gmail.com>
+Cc: linux-integrity@vger.kernel.org, regressions@lists.linux.dev,
+	rafael.j.wysocki@intel.com
+Subject: Re: [REGRESSION] no TPM device after "tpm_crb: Convert ACPI driver
+ to a platform one"
+Message-ID: <anCCh9auNjBNJzlm@kernel.org>
+References: <CAJOGg3z6LJPDsdPNBxajgy8_wQxfhYBRxe4EiurZf3kPU5A5Bw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Date: Mon, 03 Aug 2026 13:42:31 +0200
-From: Stefan Agner <stefan@agner.ch>
-To: Maxime Chevallier <maxime.chevallier@bootlin.com>
-Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
- <pabeni@redhat.com>, Andrew Lunn <andrew+netdev@lunn.ch>, "Russell King
- (Oracle)" <rmk+kernel@armlinux.org.uk>, Jakub Raczynski
- <j.raczynski@samsung.com>, Alexander Stein
- <alexander.stein@ew.tq-group.com>, Ovidiu Panait
- <ovidiu.panait.rb@renesas.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>, netdev@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org, regressions@lists.linux.dev
-Subject: Re: [PATCH net v3] net: stmmac: resume PHY before hardware setup when
- opening the interface
-In-Reply-To: <2d2cdcea-4ae2-41e2-afcf-713c569da0d8@bootlin.com>
-References: <20260803095156.132827-1-stefan@agner.ch>
- <2d2cdcea-4ae2-41e2-afcf-713c569da0d8@bootlin.com>
-Message-ID: <4031d44e9ae41bd8be845538d27f41bd@agner.ch>
-X-Sender: stefan@agner.ch
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJOGg3z6LJPDsdPNBxajgy8_wQxfhYBRxe4EiurZf3kPU5A5Bw@mail.gmail.com>
 
-Hi Maxime,
-
-On 2026-08-03 12:36, Maxime Chevallier wrote:
-> Hi Stefan,
+On Sun, Aug 02, 2026 at 02:54:47PM +0200, Julien wrote:
+> Hello,
 > 
-> On 8/3/26 11:51, Stefan Agner wrote:
->> Since the referenced commit, changing the MTU on a running interface no
->> longer disconnects and reconnects the PHY; __stmmac_release() merely
->> stops phylink, which also suspends the PHY (BMCR power-down) when WoL
->> is not enabled. __stmmac_open() then performs the DMA software reset in
->> stmmac_hw_setup() before phylink_start() resumes the PHY again.
->> 
->> IEEE 802.3 22.2.4.1.5 allows a PHY to stop its receive clock while
->> powered down, and stmmac requires a running receive clock for the DMA
->> software reset to complete (the phylink config sets mac_requires_rxc).
->> On such setups, e.g. the RK3566-based Home Assistant Green with an
->> RTL8211F-VD PHY in RGMII mode, any runtime MTU change now times out and
->> leaves the interface dead:
->> 
->>   rk_gmac-dwmac fe010000.ethernet end0: Failed to reset the dma
->>   rk_gmac-dwmac fe010000.ethernet end0: stmmac_hw_setup: DMA engine initialization failed
->>   rk_gmac-dwmac fe010000.ethernet end0: __stmmac_open: Hw setup failed
->>   rk_gmac-dwmac fe010000.ethernet end0: failed reopening the interface after MTU change
->> 
->> In the field this is triggered by NetworkManager applying an MTU while
->> activating the connection, breaking networking entirely. The same
->> regression has also been reported on i.MX8MP and reproduced on SoCFPGA
->> based systems.
->> 
->> Resume the PHY in __stmmac_open() before the hardware setup, making it
->> the counterpart of the phylink_stop() in __stmmac_release(), like
->> stmmac_resume() already does for the same reason. phylink_start() also
->> resumes the PHY, but only after stmmac_hw_setup(), and it cannot be
->> moved before the hardware setup since it may bring the link up
->> immediately from a workqueue, racing with the initialization (see the
->> comment in stmmac_resume()). For the regular ndo_open path the PHY has
->> just been attached and is not suspended, in which case
->> phylink_prepare_resume() does nothing.
->> 
->> Fixes: db299a0c09e9 ("net: stmmac: move PHY handling out of __stmmac_open()/release()")
->> Link: https://github.com/home-assistant/operating-system/issues/4858
->> Tested-by: Alexander Stein <alexander.stein@ew.tq-group.com>
->> Assisted-by: Claude:claude-fable-5
->> Signed-off-by: Stefan Agner <stefan@agner.ch>
-> 
-> Tested-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
-> Reviewed-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+> Please keep in mind this is my first time reporting a Linux kernel regression.
 
-Thanks for reviewing and testing!
+Thanks I investigate this properly before answering. It's my first day
+after holiday so might take until Tue/Wed.
+
+BR, Jarkko
 
 > 
-> Do you feel confident following-up with the phylink renames, or should
-> I add that to my todolist ?
+> Since commit 48fe2cddc85c ("tpm_crb: Convert ACPI driver to a platform one"),
+> my TPM device is no longer available. Both /dev/tpm0 and /dev/tpmrm0 are
+> missing.
+> 
+> Log messages:
+> platform MSFT0101:00: failed to claim resource 1: [mem 0xfed40000-0xfed40fff]
+> acpi MSFT0101:00: platform device creation failed: -16
+> 
+> I added some debug logging:
+> ACPI resourcet[0] = [mem 0xfed40040-0xfed4103f flags 0x200]
+> ACPI resourcet[1] = [mem 0xfed40000-0xfed40fff flags 0x200]
+> 
+> I think the failure happens in kernel/resource.c: __insert_resource() because
+> of the two memory regions overlapping.
+> 
+> I am attaching the TPM SSDT and the SDDT defining PTTB ACPI variable address.
+> The value of PPTB
+> dd if=/dev/mem bs=1 skip=$((0x8AE5CFDC)) count=8 | hexdump -C
+> 40 00 d4 fe 00 00 00 00
+> 
+> Hardware information:
+>   Manufacturer: Acer
+>   Model: Aspire ES1-572
+>   BIOS vendor: Insyde Corp.
+>   BIOS version: V1.16
+>   BIOS date: 09/18/2018
+> 
+> Thanks
+> 
+> #regzbot introduced: 48fe2cddc85c
+> 
 
-It takes me quite a bit of time since I am not much into kernel
-development (anymore). I'd appreciate if you can do it.
+> /*
+>  * Intel ACPI Component Architecture
+>  * AML/ASL+ Disassembler version 20251212 (64-bit version)
+>  * Copyright (c) 2000 - 2025 Intel Corporation
+>  * 
+>  * Disassembling to symbolic ASL+ operators
+>  *
+>  * Disassembly of ssdt10.dat
+>  *
+>  * Original Table Header:
+>  *     Signature        "SSDT"
+>  *     Length           0x000004C8 (1224)
+>  *     Revision         0x02
+>  *     Checksum         0x69
+>  *     OEM ID           "ACRSYS"
+>  *     OEM Table ID     "ACRPRDCT"
+>  *     OEM Revision     0x00001000 (4096)
+>  *     Compiler ID      "1025"
+>  *     Compiler Version 0x00040000 (262144)
+>  */
+> DefinitionBlock ("", "SSDT", 2, "ACRSYS", "ACRPRDCT", 0x00001000)
+> {
+>     External (PTTB, UnknownObj)
+> 
+>     Scope (\_SB)
+>     {
+>         Device (TPM)
+>         {
+>             Name (_HID, "MSFT0101" /* TPM 2.0 Security Device */)  // _HID: Hardware ID
+>             Name (_STR, Unicode ("TPM 2.0 Device"))  // _STR: Description String
+>             Name (CRS, ResourceTemplate ()
+>             {
+>                 Memory32Fixed (ReadOnly,
+>                     0x00000000,         // Address Base
+>                     0x00001000,         // Address Length
+>                     _Y00)
+>                 Memory32Fixed (ReadOnly,
+>                     0xFED40000,         // Address Base
+>                     0x00001000,         // Address Length
+>                     )
+>             })
+>             Name (PTTA, 0xFED40000)
+>             Method (_CRS, 0, Serialized)  // _CRS: Current Resource Settings
+>             {
+>                 CreateDWordField (CRS, \_SB.TPM._Y00._BAS, CBAS)  // _BAS: Base Address
+>                 CBAS = PTTB /* External reference */
+>                 PTTA = PTTB /* External reference */
+>                 Return (CRS) /* \_SB_.TPM_.CRS_ */
+>             }
+> 
+>             OperationRegion (SMIP, SystemIO, 0xB2, One)
+>             Field (SMIP, ByteAcc, NoLock, Preserve)
+>             {
+>                 IOB2,   8
+>             }
+> 
+>             OperationRegion (TPMR, SystemMemory, PTTA, 0x1000)
+>             Field (TPMR, AnyAcc, NoLock, Preserve)
+>             {
+>                 Offset (0x44), 
+>                 FERR,   32, 
+>                 Offset (0x4C), 
+>                 STRT,   32
+>             }
+> 
+>             OperationRegion (FHCI, SystemMemory, 0xFED40000, 0x1000)
+>             Field (FHCI, AnyAcc, NoLock, Preserve)
+>             {
+>                 Offset (0x04), 
+>                 HERR,   32, 
+>                 Offset (0x40), 
+>                 CREQ,   32, 
+>                 CSTS,   32, 
+>                 Offset (0x4C), 
+>                 HCMD,   32
+>             }
+> 
+>             OperationRegion (TNVS, SystemMemory, 0x8AE4F000, 0x2B)
+>             Field (TNVS, AnyAcc, NoLock, Preserve)
+>             {
+>                 PPIN,   8, 
+>                 PPIP,   32, 
+>                 PPRP,   32, 
+>                 PPRQ,   32, 
+>                 PPRM,   32, 
+>                 LPPR,   32, 
+>                 FRET,   32, 
+>                 MCIN,   8, 
+>                 MCIP,   32, 
+>                 MORD,   32, 
+>                 MRET,   32
+>             }
+> 
+>             Method (PTS, 1, Serialized)
+>             {
+>                 If (((Arg0 < 0x06) && (Arg0 > 0x03)))
+>                 {
+>                     If (!(MORD & 0x10))
+>                     {
+>                         MCIP = 0x02
+>                         IOB2 = MCIN /* \_SB_.TPM_.MCIN */
+>                     }
+>                 }
+> 
+>                 Return (Zero)
+>             }
+> 
+>             Method (_STA, 0, NotSerialized)  // _STA: Status
+>             {
+>                 Return (0x0F)
+>             }
+> 
+>             Method (HINF, 3, Serialized)
+>             {
+>                 Switch (ToInteger (Arg1))
+>                 {
+>                     Case (Zero)
+>                     {
+>                         Return (Buffer (One)
+>                         {
+>                              0x03                                             // .
+>                         })
+>                     }
+>                     Case (One)
+>                     {
+>                         Name (TPMV, Package (0x02)
+>                         {
+>                             One, 
+>                             Package (0x02)
+>                             {
+>                                 One, 
+>                                 0x20
+>                             }
+>                         })
+>                         If ((_STA () == Zero))
+>                         {
+>                             Return (Package (0x01)
+>                             {
+>                                 Zero
+>                             })
+>                         }
+> 
+>                         Return (TPMV) /* \_SB_.TPM_.HINF.TPMV */
+>                     }
+>                     Default
+>                     {
+>                         BreakPoint
+>                     }
+> 
+>                 }
+> 
+>                 Return (Buffer (One)
+>                 {
+>                      0x00                                             // .
+>                 })
+>             }
+> 
+>             Name (TPM2, Package (0x02)
+>             {
+>                 Zero, 
+>                 Zero
+>             })
+>             Name (TPM3, Package (0x03)
+>             {
+>                 Zero, 
+>                 Zero, 
+>                 Zero
+>             })
+>             Method (TPPI, 3, Serialized)
+>             {
+>                 Switch (ToInteger (Arg1))
+>                 {
+>                     Case (Zero)
+>                     {
+>                         Return (Buffer (0x02)
+>                         {
+>                              0xFF, 0x01                                       // ..
+>                         })
+>                     }
+>                     Case (One)
+>                     {
+>                         Return ("1.2")
+>                     }
+>                     Case (0x02)
+>                     {
+>                         PPRQ = DerefOf (Arg2 [Zero])
+>                         PPIP = 0x02
+>                         IOB2 = PPIN /* \_SB_.TPM_.PPIN */
+>                         Return (FRET) /* \_SB_.TPM_.FRET */
+>                     }
+>                     Case (0x03)
+>                     {
+>                         TPM2 [One] = PPRQ /* \_SB_.TPM_.PPRQ */
+>                         Return (TPM2) /* \_SB_.TPM_.TPM2 */
+>                     }
+>                     Case (0x04)
+>                     {
+>                         Return (0x02)
+>                     }
+>                     Case (0x05)
+>                     {
+>                         PPIP = 0x05
+>                         IOB2 = PPIN /* \_SB_.TPM_.PPIN */
+>                         TPM3 [One] = LPPR /* \_SB_.TPM_.LPPR */
+>                         TPM3 [0x02] = PPRP /* \_SB_.TPM_.PPRP */
+>                         Return (TPM3) /* \_SB_.TPM_.TPM3 */
+>                     }
+>                     Case (0x06)
+>                     {
+>                         Return (0x03)
+>                     }
+>                     Case (0x07)
+>                     {
+>                         PPIP = 0x07
+>                         PPRQ = DerefOf (Arg2 [Zero])
+>                         PPRM = Zero
+>                         If ((PPRQ == 0x17))
+>                         {
+>                             PPRM = DerefOf (Arg2 [One])
+>                         }
+> 
+>                         IOB2 = PPIN /* \_SB_.TPM_.PPIN */
+>                         Return (FRET) /* \_SB_.TPM_.FRET */
+>                     }
+>                     Case (0x08)
+>                     {
+>                         PPIP = 0x08
+>                         PPRQ = DerefOf (Arg2 [Zero])
+>                         IOB2 = PPIN /* \_SB_.TPM_.PPIN */
+>                         Return (FRET) /* \_SB_.TPM_.FRET */
+>                     }
+>                     Default
+>                     {
+>                         BreakPoint
+>                     }
+> 
+>                 }
+> 
+>                 Return (One)
+>             }
+> 
+>             Method (TMCI, 3, Serialized)
+>             {
+>                 Switch (ToInteger (Arg1))
+>                 {
+>                     Case (Zero)
+>                     {
+>                         Return (Buffer (One)
+>                         {
+>                              0x03                                             // .
+>                         })
+>                     }
+>                     Case (One)
+>                     {
+>                         MORD = DerefOf (Arg2 [Zero])
+>                         MCIP = One
+>                         IOB2 = MCIN /* \_SB_.TPM_.MCIN */
+>                         Return (MRET) /* \_SB_.TPM_.MRET */
+>                     }
+>                     Default
+>                     {
+>                         BreakPoint
+>                     }
+> 
+>                 }
+> 
+>                 Return (One)
+>             }
+> 
+>             Method (TSMI, 3, Serialized)
+>             {
+>                 Name (WTME, Zero)
+>                 Switch (ToInteger (Arg1))
+>                 {
+>                     Case (Zero)
+>                     {
+>                         Return (Buffer (One)
+>                         {
+>                              0x03                                             // .
+>                         })
+>                     }
+>                     Case (One)
+>                     {
+>                         CREQ = One
+>                         While (((WTME <= 0xC8) && ((CREQ & One) != 
+>                             Zero)))
+>                         {
+>                             Sleep (One)
+>                             WTME++
+>                         }
+> 
+>                         HCMD = 0x02
+>                         Return (Zero)
+>                     }
+>                     Default
+>                     {
+>                         BreakPoint
+>                     }
+> 
+>                 }
+> 
+>                 Return (One)
+>             }
+> 
+>             Method (_DSM, 4, Serialized)  // _DSM: Device-Specific Method
+>             {
+>                 If ((Arg0 == ToUUID ("cf8e16a5-c1e8-4e25-b712-4f54a96702c8") /* TPM Hardware Information */))
+>                 {
+>                     Return (HINF (Arg1, Arg2, Arg3))
+>                 }
+> 
+>                 If ((Arg0 == ToUUID ("3dddfaa6-361b-4eb4-a424-8d10089d1653") /* Physical Presence Interface */))
+>                 {
+>                     Return (TPPI (Arg1, Arg2, Arg3))
+>                 }
+> 
+>                 If ((Arg0 == ToUUID ("376054ed-cc13-4675-901c-4756d7f2d45d") /* TPM Memory Clear */))
+>                 {
+>                     Return (TMCI (Arg1, Arg2, Arg3))
+>                 }
+> 
+>                 If ((Arg0 == ToUUID ("6bbf6cab-5463-4714-b7cd-f0203c0368d4") /* TPM Start Method */))
+>                 {
+>                     Return (TSMI (Arg1, Arg2, Arg3))
+>                 }
+> 
+>                 Return (Buffer (One)
+>                 {
+>                      0x00                                             // .
+>                 })
+>             }
+>         }
+>     }
+> }
+> 
 
---
-Stefan
+> /*
+>  * Intel ACPI Component Architecture
+>  * AML/ASL+ Disassembler version 20251212 (64-bit version)
+>  * Copyright (c) 2000 - 2025 Intel Corporation
+>  * 
+>  * Disassembling to symbolic ASL+ operators
+>  *
+>  * Disassembly of ssdt1.dat
+>  *
+>  * Original Table Header:
+>  *     Signature        "SSDT"
+>  *     Length           0x00000046 (70)
+>  *     Revision         0x02
+>  *     Checksum         0x01
+>  *     OEM ID           "ACRSYS"
+>  *     OEM Table ID     "ACRPRDCT"
+>  *     OEM Revision     0x00003000 (12288)
+>  *     Compiler ID      "1025"
+>  *     Compiler Version 0x00040000 (262144)
+>  */
+> DefinitionBlock ("", "SSDT", 2, "ACRSYS", "ACRPRDCT", 0x00003000)
+> {
+>     OperationRegion (MENV, SystemMemory, 0x8AE5CFD8, 0x000C)
+>     Field (MENV, AnyAcc, Lock, Preserve)
+>     {
+>         MERV,   32, 
+>         PTTB,   64
+>     }
+> }
+> 
+
