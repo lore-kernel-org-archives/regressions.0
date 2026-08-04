@@ -1,81 +1,79 @@
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D38FE46C838
-	for <regressions@lists.linux.dev>; Tue,  4 Aug 2026 14:04:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32075371072
+	for <regressions@lists.linux.dev>; Tue,  4 Aug 2026 14:28:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785852267; cv=none; b=bsTXncmZEDPXEpP28Rd1d2aSlXYa9Z2oefjYsXnFRfcLSp/tKMr1ez1Pu/wP9InYrOtwWye9j6ZsOPzO0CaoSsHjZm+Sg8H6Ver5g0Q4ctXxejHn9S7TMu8YuqsFca9xqwUAgIl3U4Hzv9K/14t35qybFCC2t0T/rIcSS45APtE=
+	t=1785853720; cv=none; b=AmeifjXfpChVzCEBgG9B0Twe+k6B6hglpn54o2woHz19PBNoJXqNqPyCR2mfQ0j7uzSym92sTkhxcbwhJXZu924T+G0nLSSna90vg5EyxglODiDOwWelK2/WvGYh2Kc/UbPxT3zCSVw0WXZgYfCTqHd1XS4w2UxFQblU+KxOp4A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785852267; c=relaxed/simple;
-	bh=wL00NWYR0qqOjvAw7M3DFDe7cB35AxOZNJLMdcw9+EQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nN+yDkAi+3CEfMS/k0OHpEgNXFdUWdYeQgbUylBTh4RpsxnGj6j0Aaq3Ye2UjTKMEFBozRb3PAcAemqKZ0pEQN1f18t7vVbHFmGyflomn7D7+ojDH5BTyafY8bpiQfLbeCBMKwOtl5147HOq3JcQFPDDx1VxM7T/iSQDDuAzHww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ng7iKQNE; arc=none smtp.client-ip=209.85.208.182
+	s=arc-20240116; t=1785853720; c=relaxed/simple;
+	bh=bsWjYObHJsXoFHI/HjZRmVWuqy426x5I9O0ER1ILobI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AVKQ9s7p9fBd5Do66nsQFIEiOtvLiY7W874ajbbqVIJG+uUrSP+EoRO947QQlRpgks31MO8g9endmhlJC5lTbJZcprZvFMoxZzEkBtD1z0JfRXF87rPsg9ssOSUt/dM/vktmSUZQZcl6khkX94kDznwNTcjy8dkGNcEbe54Qi1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ciKDGRkK; arc=none smtp.client-ip=209.85.167.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ng7iKQNE"
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-39f927721f2so18342031fa.0
-        for <regressions@lists.linux.dev>; Tue, 04 Aug 2026 07:04:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ciKDGRkK"
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-5aeb8c19017so6451924e87.0
+        for <regressions@lists.linux.dev>; Tue, 04 Aug 2026 07:28:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1785852264; x=1786457064; darn=lists.linux.dev;
+        d=gmail.com; s=20251104; t=1785853705; x=1786458505; darn=lists.linux.dev;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=0SIB9ZNDGWSkbhYbrVPXtpZTZPzNmn29odQM0RAb0dw=;
-        b=Ng7iKQNEvoKolNevtBNJFYFrdDrHiHX849I4MjV2jnjIFEELecl5cRnFGbiRNQg00o
-         wC1yqR5sJvzOw74lk+Nvdd9oxWEyzkvpuC0Aho+S27DSn9nH4gdyIbesscYiwKopOXp5
-         LEFHAu84AdRyh0xvyQvyO89bheJA3kob0UwsS2sn6Ec+N+Q0Sy52Vzu68AfP2rIPSb44
-         9kzjx1UM7JNsnLsRCtV+TU01V6JkI/vVl59wZJPHP+BqRFOME3jUAaLBA5ZYS3bp7PuD
-         ynJTt/wUN3nye6fsjRCUbdLY1aXbce1bjV6kI/VCAvKGfgXsw/8qBWCkTIunA6c3YWax
-         bfDg==
+        bh=gll1NPiGFUih/ZjZ/8FSJN48lAj1cn9L2KE3KQ17M6w=;
+        b=ciKDGRkKw1ve8QhFyKmRzkcF6Sja2Vhbfhg6LHveu9Yu8PqI+bQPt2GJZruFpwE3gu
+         5Wm9YcAp/Ab6A1jC6L0EDiW1g0KzfJCi0WN4W73uORcHGv7peUZ54L9N6sOZCg9caGSo
+         8LHDoMjLwKnDNx15GsOHpUk2Oe5GjWG714LoKdWbZ/mHMTvT9/5ic0qVirEe39bcHsx7
+         zMjvKiOMPoTLCE3e5i/yRgFqdYKsPoyrF1YsMOfqIz2YIX70turcudMCTHakOPcFxv+y
+         Yw8XDKIhIfqw97eZ2nkPjkPVcmShlTY+34CK3uU/+x+uGuQj3iSU9e4b7nM5DeE0NX7m
+         Y6mQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785852264; x=1786457064;
+        d=1e100.net; s=20251104; t=1785853705; x=1786458505;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=0SIB9ZNDGWSkbhYbrVPXtpZTZPzNmn29odQM0RAb0dw=;
-        b=VC19Ia5lm5GYzk21ELytRBOwvHNYOhep/wPYTb7VkKnLv/qy9ciLR2mEMZGHNxYoSG
-         CpWmhx/N085iU5zhAWSrm5Mm4L+DPdIx21onkUlogfaT1UGJr9EQMQNrxiu/po7Eh7PC
-         7kwx+eGniy5fQ5WvdGqLA1gXcXTwrNyHwsjgQjH71D+EWiS7hiLzvjWeGijPPYaPaJge
-         grALiDu4nCkMcbQMEA3tkBLv0llWNc6TI1lVjpTOZ4yL6ZbF+sgpzD4LItEqDWrQjsTk
-         vqRVCybO3UAHPZN/+DQGQBboPzA/d5wTJcvaw59JExmu9GBQtdjQRqQnyw0CItG4OFS3
-         ME/Q==
-X-Forwarded-Encrypted: i=1; AHgh+RpNAHPOh7yQWR1IvGDiRCOPWnj//v78RIxt3lF4B7mHxRpYtzOm0P49Sr8B944832mca50Gr4MwWPeemA==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yy6hSDYHol6AubvpPmrBx26RbyiNJw2e6XX1WYTUhgWgqfJgJol
-	8WhYaScBiVmzP+zZAs3qB7DO/FUAPEH4eUGrnnPcA6Duxlh3vS+UBg4r
-X-Gm-Gg: AR+sD1392LNcNbZEGpFyyGhrxHlUwbynIpbS2HSskozvgN78088k+LHFezt7Uk74Zmr
-	vhf2sTpOPSPKd/mW9fyBYu2jM4L9JRVqPwKApQSU8QMtKWpwIONbPyV96WrnwMWLI160ANv8jnx
-	o481CcDNYnvlM3sA/bTbpgQ4sazXhZHO9GJCxji2vhzw2FFxgvO0Sl1WlwLJ4o43xflp8GTknCw
-	e7kFU9C9BBfbjpBoWQPlnB1ilC1+XI+oMy7fQlNK1g0lawuHEG0+Rr2lVv1lniTWCgmiEhs95lA
-	Bu2O7OIm1NYa8PTP4JE4o1C6J4XrALXgw8Vt8tzr3r9CcFN0ehj3TfKe2GGxb4AF+IVHPyGrT+E
-	xgSDH0Wg1a0LaAjD+DuoSKT9MrUZ1CoKntr7RYU5xaaF3ET/FdikvPB/VegZpL08NreYWoxup+Z
-	Q+rvkmaI/HcV8tsM3gOpoc6eGNsKxvVRpf1TQ+IAbCTLujKgLl4CBmbC4dNyqwhb5/CEssZWSiw
-	5uIspvEAACEVphovMmnhFfS+vxv4ba2TND47nER
-X-Received: by 2002:a05:6512:39c3:b0:5b2:a396:1793 with SMTP id 2adb3069b0e04-5b2e4f76abemr2965624e87.37.1785852263358;
-        Tue, 04 Aug 2026 07:04:23 -0700 (PDT)
-Received: from kfastov-mac ([91.217.3.226])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5b2e245536dsm2669672e87.67.2026.08.04.07.04.21
+        bh=gll1NPiGFUih/ZjZ/8FSJN48lAj1cn9L2KE3KQ17M6w=;
+        b=c1DitmUGDgXWAoN8mIXo8mtGPyLMNL/IR5s+ea05WSswbIeWaPOqkgHs8gYRnuQkLm
+         z7PnYviWSjkActDcYXGZ86ELBDLVob/sdAKUD3KyFyxRbXXbUzDAWTsRORIxpaUlkkvv
+         HsTOld//QqC7x4MVgLnIBjZr5wOShxvmf3oIdWWihpt6BS6vMGFYhhof000ocWiIwPfD
+         43dBJRVWW81gqkcB2wNd1m2eR+Z8DtAT3XjaQfzp2EJkWISGJlftX3eFb9fok+O9++6N
+         YrmFs1axpqtxe95Fwn18TwN+ZNZsp2wWpcEkT5dbncErRvVQCyAURgJXcXUf4oG2T741
+         anQg==
+X-Forwarded-Encrypted: i=1; AHgh+RqPWi7pDOZIfDclxF9Wk6KYQVP6V1YNckov17TwWzwBQxCRV9VXaiZeW28BcGi4hFZQp6qFAjhCNZD2zg==@lists.linux.dev
+X-Gm-Message-State: AOJu0YyzcGy4J4PL1E/8SpielxWl3Px607DIW74rNNTBw8XLdow1xNXT
+	9LjqpnRFZVDtb84YPKZxQSmGf8wn2GK9we7HccSOGAeofhIBsBjP//tM
+X-Gm-Gg: AR+sD10HLW1gzDSQnAGkq4WKgp3glXM/dfFZ9MPpRbKycK10iEB/YqT6MQL8AWhU+R1
+	O75sg/D0EYnMzaQW31bJRNuqZAOcR0oesrQLL8NzwHasbIwiz6enir30RZRXPTn11YBX7B1iBeH
+	oWgtxurKuRuD26yEAbdi4AW90gee94qSIHVY7y0mKRIZWSvvAW7eSAYMPC3LU2Sf6J/9J2XSQvb
+	6Br5/1nJiEsJ+6qOl7PnynBxGhwm4JaZRqRnOdi3aGRy9BsA9LrfNXEfwv5Q800OqLBVb4b9h0h
+	g4W+i3OMDvFUObb5rJWqngT/WZtcAT5dgppMxervrG8r54GZy0tAtKjxPdHsL1F2xmwsVhR7qSS
+	cwVWywobpBJHscFApyaEvIHvNPUOOis28YavKVdB8JrnEAZGnTC8/sE9lXhbZFtImix08605Mun
+	gBLn6VfK9gOJaz1oYUa2fBRTEU/iLOahIjp1Vxl1RCcOdqMeiuVP/geyBORyy7WzjoT0fqpMo/9
+	/mIA1Cma9HmePmc
+X-Received: by 2002:a05:6512:3e03:b0:5b2:f437:2a88 with SMTP id 2adb3069b0e04-5b2f4372c35mr139220e87.36.1785853704781;
+        Tue, 04 Aug 2026 07:28:24 -0700 (PDT)
+Received: from NB-9797.corp.yadro.com ([89.207.88.244])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5b2e245c435sm2647990e87.82.2026.08.04.07.28.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Aug 2026 07:04:22 -0700 (PDT)
-From: Konstantin Fastov <kfastov@gmail.com>
-To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>
-Cc: David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@kernel.org>,
-	Boris Brezillon <boris.brezillon@collabora.com>,
-	dri-devel@lists.freedesktop.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
+        Tue, 04 Aug 2026 07:28:24 -0700 (PDT)
+From: Ilya Khomyakov <khomyakovilya@gmail.com>
+To: "Martin K . Petersen" <martin.petersen@oracle.com>
+Cc: Ranjan Kumar <ranjan.kumar@broadcom.com>,
+	"James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
+	Sathya Prakash Veerichetty <sathya.prakash@broadcom.com>,
+	Kashyap Desai <kashyap.desai@broadcom.com>,
+	Sumit Saxena <sumit.saxena@broadcom.com>,
+	Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
+	mpi3mr-linuxdrv.pdl@broadcom.com,
 	regressions@lists.linux.dev,
-	stable@vger.kernel.org,
-	Konstantin Fastov <kfastov@gmail.com>
-Subject: [PATCH] drm/gem-shmem: Install writable PTEs for write faults
-Date: Tue,  4 Aug 2026 17:04:03 +0300
-Message-ID: <20260804140403.16337-1-kfastov@gmail.com>
-X-Mailer: git-send-email 2.55.0
+	linux-scsi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Ilya Khomyakov <khomyakovilya@gmail.com>
+Subject: [PATCH] scsi: mpi3mr: use DevicePage0 link rate only for direct-attached targets
+Date: Tue,  4 Aug 2026 17:28:00 +0300
+Message-ID: <20260804142800.4326-1-khomyakovilya@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -84,154 +82,135 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Since the introduction of dirty tracking, drm_gem_shmem_vm_ops has a
-.pfn_mkwrite handler.  Its presence makes vma_wants_writenotify() true,
-so vma_set_page_prot() removes the write bit from vm_page_prot of
-shared mappings, and the vmf_insert_pfn() call in the fault handler now
-installs read-only PTEs even when serving a write fault.
+This patch fixes a regression in the Broadcom MPI3 Storage Controller
+driver under drivers/scsi/mpi3mr/.
 
-For regular CPU accesses this is transparent: the retried access faults
-again on the present read-only PTE, goes through wp_pfn_shared() into
-.pfn_mkwrite() and the PTE is upgraded to writable.  But consumers that
-resolve faults through fixup_user_fault() + follow_pfnmap_start()
-perform no such retry.  In particular KVM's hva_to_pfn_remapped(),
-after "successfully" handling a write fault, finds a present read-only
-PTE, treats it as KVM_PFN_ERR_RO_FAULT and fails the vcpu run with
-EFAULT.  Observed as AsahiLinux/linux#560: muvm/libkrun microVMs
-mapping virtio-gpu blob resources die with EFAULT on first GPU access.
-The traced failing sequence:
+Commit c273c14b0294 ("scsi: mpi3mr: Use negotiated link rate from
+DevicePage0") changed mpi3mr to prefer the cached DevicePage0 rate.
 
-  follow_pfnmap_start()        -> -EINVAL   (no PTE yet)
-  fixup_user_fault(WRITE)
-    drm_gem_shmem_fault()
-      vmf_insert_pfn()         -> NOPAGE    (read-only PTE installed)
-  fixup_user_fault()           -> 0         (fault "handled")
-  follow_pfnmap_start()        -> 0, !writable
-  hva_to_pfn()                 -> KVM_PFN_ERR_RO_FAULT
+DevicePage0 stores negotiated_link_rate as one standalone MPI3 SAS
+link-rate code, while SAS PHY Page 0 and SAS Expander Page 1 store logical
+and physical rates as two nibbles of one packed byte.
 
-Fix it the same way commit cb2a2a5b37ad ("drm/shmem_helper: Make sure
-PMD entries get the writeable upgrade") did for the PMD path: when the
-fault is a write fault, install a writable entry directly and record
-the write for dirty tracking, instead of relying on a refault that not
-every fault-resolution path performs.
+mpi3mr_get_sas_negotiated_logical_linkrate() currently sends both formats
+through the same high-nibble extraction at its common exit. A valid
+DevicePage0 value of 0x0b or 0x0c is therefore converted to zero. The later
+minimum-rate safeguard then publishes the value as 1.5 Gbit/s.
 
-To do that at PTE level, add vmf_insert_pfn_mkwrite(), the VM_PFNMAP
-counterpart of vmf_insert_mixed_mkwrite(): insert_pfn() already
-implements the mkwrite semantics, there was just no wrapper exposing it
-for pfn inserts with the default pgprot.
+For example:
 
-Fixes: 28e3918179aa ("drm/gem-shmem: Track folio accessed/dirty status in mmap")
-Cc: stable@vger.kernel.org
-Closes: https://github.com/AsahiLinux/linux/issues/560
-Assisted-by: Claude:claude-fable-5
-Signed-off-by: Konstantin Fastov <kfastov@gmail.com>
+  DevicePage0 value:            0x0b
+  packed-field extraction:      (0x0b & 0xf0) >> 4 = 0x00
+  minimum-rate substitution:    0x00 -> 0x08
+  Linux SAS transport result:   1.5 Gbit/s
+
+There is also a topology distinction. The caller uses the returned value to
+update the parent sas_phy. In an expander topology with the HBA-to-expander
+link limited to 12 Gbit/s, DevicePage0 reported 0x0b for every tested
+target, while Expander Page 1 reported 0xcc for several disk-facing PHYs
+that were operating at 22.5 Gbit/s. The cached target value therefore
+cannot unconditionally replace the local parent expander PHY value.
+
+The original failure was reproduced on an eHBA 9600 controller with a
+SAS4016 IOC and a 46-PHY Microchip expander. Before the fix, a target with
+DevicePage0 negotiated_link_rate 0x0b could remain visible in sysfs as
+1.5 Gbit/s when a replayed topology event contained current=0x0b and
+previous=0x0b and therefore skipped the Linux-side update.
+
+Validate the standalone DevicePage0 code and use it directly only for a
+directly attached target. For an expander-attached target, retain the
+existing Expander Page 1 path because it describes the local parent
+expander PHY being updated. Retain the SAS PHY Page 0 fallback when a
+directly attached cached value is invalid.
+
+The topology-aware variant was tested in an out-of-tree mpi3mr 8.17.1.0.
+build. After boot, Linux reported:
+
+  PHY 18: 12.0 Gbit/s
+  PHY 19: 12.0 Gbit/s
+  PHY 24: 22.5 Gbit/s
+  PHY 25: 22.5 Gbit/s
+  PHY 26: 22.5 Gbit/s
+  PHY 27: 22.5 Gbit/s
+  PHY 28: 12.0 Gbit/s
+  PHY 30: 22.5 Gbit/s
+
+No tested PHY was incorrectly reported as 1.5 Gbit/s, and the 22.5 Gbit/s
+disk-facing rates were preserved even though DevicePage0 contained 0x0b.
+
+Fixes: c273c14b0294 ("scsi: mpi3mr: Use negotiated link rate from DevicePage0")
+Signed-off-by: Ilya Khomyakov <khomyakovilya@gmail.com>
+
 ---
- drivers/gpu/drm/drm_gem_shmem_helper.c | 20 +++++++++++++-
- include/linux/mm.h                     |  2 ++
- mm/memory.c                            | 36 +++++++++++++++++++++++---
- 3 files changed, 54 insertions(+), 4 deletions(-)
+ drivers/scsi/mpi3mr/mpi3mr_transport.c | 46 ++++++++++++++++++++++----
+ 1 file changed, 39 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/gpu/drm/drm_gem_shmem_helper.c b/drivers/gpu/drm/drm_gem_shmem_helper.c
-index 545933c7f712..37662f6f6ed9 100644
---- a/drivers/gpu/drm/drm_gem_shmem_helper.c
-+++ b/drivers/gpu/drm/drm_gem_shmem_helper.c
-@@ -573,7 +573,25 @@ static vm_fault_t try_insert_pfn(struct vm_fault *vmf, unsigned int order,
- 				 unsigned long pfn)
- {
- 	if (!order) {
--		return vmf_insert_pfn(vmf->vma, vmf->address, pfn);
-+		vm_fault_t ret;
-+
-+		/* .pfn_mkwrite enables write-notify, so vm_page_prot lacks
-+		 * the write bit and a plain vmf_insert_pfn() would install
-+		 * a read-only PTE even for a write fault.  Not every fault
-+		 * resolver refaults into .pfn_mkwrite() to upgrade it (KVM
-+		 * doesn't), so install a writable PTE and record the write
-+		 * directly, like the PMD path below.
-+		 */
-+		if (vmf->flags & FAULT_FLAG_WRITE) {
-+			ret = vmf_insert_pfn_mkwrite(vmf->vma, vmf->address,
-+						     pfn);
-+			if (ret == VM_FAULT_NOPAGE)
-+				drm_gem_shmem_record_mkwrite(vmf);
-+		} else {
-+			ret = vmf_insert_pfn(vmf->vma, vmf->address, pfn);
-+		}
-+
-+		return ret;
- #ifdef CONFIG_ARCH_SUPPORTS_PMD_PFNMAP
- 	} else if (order == PMD_ORDER) {
- 		unsigned long paddr = pfn << PAGE_SHIFT;
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 80fce2515930..7b76a281bdd1 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -4551,6 +4551,8 @@ vm_fault_t vmf_insert_page_mkwrite(struct vm_fault *vmf, struct page *page,
- 			bool write);
- vm_fault_t vmf_insert_pfn(struct vm_area_struct *vma, unsigned long addr,
- 			unsigned long pfn);
-+vm_fault_t vmf_insert_pfn_mkwrite(struct vm_area_struct *vma,
-+		unsigned long addr, unsigned long pfn);
- vm_fault_t vmf_insert_pfn_prot(struct vm_area_struct *vma, unsigned long addr,
- 			unsigned long pfn, pgprot_t pgprot);
- vm_fault_t vmf_insert_mixed(struct vm_area_struct *vma, unsigned long addr,
-diff --git a/mm/memory.c b/mm/memory.c
-index 86a973119bd4..6562a0d8bb68 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -2751,8 +2751,9 @@ static vm_fault_t insert_pfn(struct vm_area_struct *vma, unsigned long addr,
-  * Context: Process context.  May allocate using %GFP_KERNEL.
-  * Return: vm_fault_t value.
-  */
--vm_fault_t vmf_insert_pfn_prot(struct vm_area_struct *vma, unsigned long addr,
--			unsigned long pfn, pgprot_t pgprot)
-+static vm_fault_t __vmf_insert_pfn_prot(struct vm_area_struct *vma,
-+		unsigned long addr, unsigned long pfn, pgprot_t pgprot,
-+		bool mkwrite)
- {
- 	/*
- 	 * Technically, architectures with pte_special can avoid all these
-@@ -2774,10 +2775,39 @@ vm_fault_t vmf_insert_pfn_prot(struct vm_area_struct *vma, unsigned long addr,
- 
- 	pfnmap_setup_cachemode_pfn(pfn, &pgprot);
- 
--	return insert_pfn(vma, addr, pfn, pgprot, false);
-+	return insert_pfn(vma, addr, pfn, pgprot, mkwrite);
-+}
-+
-+vm_fault_t vmf_insert_pfn_prot(struct vm_area_struct *vma, unsigned long addr,
-+			unsigned long pfn, pgprot_t pgprot)
-+{
-+	return __vmf_insert_pfn_prot(vma, addr, pfn, pgprot, false);
+diff --git a/drivers/scsi/mpi3mr/mpi3mr_transport.c b/drivers/scsi/mpi3mr/mpi3mr_transport.c
+index 240f67a..740fccc 100644
+--- a/drivers/scsi/mpi3mr/mpi3mr_transport.c
++++ b/drivers/scsi/mpi3mr/mpi3mr_transport.c
+@@ -587,6 +587,30 @@ static enum sas_linkrate mpi3mr_convert_phy_link_rate(u8 link_rate)
+ 	return rc;
  }
- EXPORT_SYMBOL(vmf_insert_pfn_prot);
  
 +/**
-+ * vmf_insert_pfn_mkwrite - insert single pfn into user vma, making it writable
-+ * @vma: user vma to map to
-+ * @addr: target user address of this page
-+ * @pfn: source kernel pfn
++ * mpi3mr_sas_link_rate_valid - validate a standalone SAS link-rate code
++ * @link_rate: MPI3 standalone SAS negotiated link-rate code
 + *
-+ * Similar to vmf_insert_pfn(), but the inserted PTE is made young, dirty and
-+ * writable (subject to the VMA's write permission).  For use by fault
-+ * handlers of write-notify VMAs (where vma->vm_page_prot has the write bit
-+ * removed) that serve a write fault and do their own dirty accounting, so
-+ * that a "handled" write fault always results in a writable PTE.  The
-+ * VM_PFNMAP counterpart of vmf_insert_mixed_mkwrite().
++ * DevicePage0 stores one plain negotiated link-rate code. Accept only
++ * negotiated data rates supported by the SAS transport conversion code;
++ * reserved or transitional values must use the existing PHY-page path.
 + *
-+ * Context: Process context.  May allocate using %GFP_KERNEL.
-+ * Return: vm_fault_t value.
++ * Return: true for a supported negotiated data rate, false otherwise.
 + */
-+vm_fault_t vmf_insert_pfn_mkwrite(struct vm_area_struct *vma,
-+		unsigned long addr, unsigned long pfn)
++static bool mpi3mr_sas_link_rate_valid(u8 link_rate)
 +{
-+	return __vmf_insert_pfn_prot(vma, addr, pfn, vma->vm_page_prot, true);
++	switch (link_rate) {
++	case MPI3_SAS_NEG_LINK_RATE_1_5:
++	case MPI3_SAS_NEG_LINK_RATE_3_0:
++	case MPI3_SAS_NEG_LINK_RATE_6_0:
++	case MPI3_SAS_NEG_LINK_RATE_12_0:
++	case MPI3_SAS_NEG_LINK_RATE_22_5:
++		return true;
++	default:
++		return false;
++	}
 +}
-+EXPORT_SYMBOL(vmf_insert_pfn_mkwrite);
 +
  /**
-  * vmf_insert_pfn - insert single pfn into user vma
-  * @vma: user vma to map to
--- 
-2.55.0
-
+  * mpi3mr_delete_sas_phy - Remove a single phy from port
+  * @mrioc: Adapter instance reference
+@@ -2292,18 +2316,26 @@ void mpi3mr_expander_remove(struct mpi3mr_ioc *mrioc, u64 sas_address,
+ static u8 mpi3mr_get_sas_negotiated_logical_linkrate(struct mpi3mr_ioc *mrioc,
+ 	struct mpi3mr_tgt_dev *tgtdev)
+ {
+-	u8 link_rate = MPI3_SAS_NEG_LINK_RATE_1_5, phy_number;
++	u8 cached_link_rate, link_rate = MPI3_SAS_NEG_LINK_RATE_1_5;
++	u8 phy_number;
+ 	struct mpi3_sas_expander_page1 expander_pg1;
+ 	struct mpi3_sas_phy_page0 phy_pg0;
+ 	u32 phynum_handle;
+ 	u16 ioc_status;
+ 
+-	/* First, try to use link rate from DevicePage0 (populated by firmware) */
+-	if (tgtdev->dev_spec.sas_sata_inf.negotiated_link_rate >=
+-	    MPI3_SAS_NEG_LINK_RATE_1_5) {
+-		link_rate = tgtdev->dev_spec.sas_sata_inf.negotiated_link_rate;
+-		goto out;
+-	}
++	cached_link_rate =
++		tgtdev->dev_spec.sas_sata_inf.negotiated_link_rate;
++
++	/*
++	 * For a directly attached target, DevicePage0 and the parent host PHY
++	 * describe the same link, so the standalone cached code can be used
++	 * without packed-field decoding. For an expander-attached target, the
++	 * caller updates the parent expander PHY and DevicePage0 can differ from
++	 * that local segment; retain the Expander Page 1 read in that case.
++	 */
++	if ((tgtdev->devpg0_flag & MPI3_DEVICE0_FLAGS_ATT_METHOD_DIR_ATTACHED) &&
++	    mpi3mr_sas_link_rate_valid(cached_link_rate))
++		return cached_link_rate;
+ 
+ 	/* Fallback to reading from phy pages if DevicePage0 value not available */
+ 	phy_number = tgtdev->dev_spec.sas_sata_inf.phy_id;
