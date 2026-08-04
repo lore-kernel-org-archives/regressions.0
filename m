@@ -1,55 +1,67 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [185.244.194.184])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 333913E5EC0
-	for <regressions@lists.linux.dev>; Tue,  4 Aug 2026 09:29:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.244.194.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 758B9449EB6
+	for <regressions@lists.linux.dev>; Tue,  4 Aug 2026 10:10:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785835766; cv=none; b=uHpy5MDuAuH1rgk38C+oX/xfjrh5KL+014N+POLISS9n8VPfLwQRLASaLOSxnxHJqC2NczUS5ffNk0lR0Z+aNbdbe1d7Z4ZCJ6tfyQ9OCkIKhJZirooR0WL07pLB5bMdCARrlhSfVrmm8VsVlwibGcYgHKw9PL694U8JcHu8TUU=
+	t=1785838232; cv=none; b=k1qTEK+3t1ws4nZBWTZ7cvZ072V5ty4Edt5JKjWtXGipxdb1YWUNGWYh5Wg2H6mACixUSsyuYyGgiJFTTkpgPs+yCiYhdQBBt6wjAAavdxT8o0SCzQbgD3nvKPoBepyTHhrVBG+mbRwVQ7i1+RyGSD+xqi8Vp5avbV2/naZAZbg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785835766; c=relaxed/simple;
-	bh=x1XVcDMZUV9+quk/8gTp2NTUj92dTgYU0xYw9qK8lc0=;
+	s=arc-20240116; t=1785838232; c=relaxed/simple;
+	bh=rQadTISyIyt+64+NYnKtupY0oo0nC4sKeX8xC6U+has=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KBVHfM0aSaRvdck5ftxanG+Hw4dGd850wQhjiSc/2WQ7u03zYvaYug6k4IzgBYXwwwZo4Dkql8wBZRTUgoT5ZzEcvBOTKrAqHB6jNGFrK7Wxpoz3puTmkNGoO4nFe/YW0AZo97wfRBsVW7ovik057x8GnXC5gvQS/WQ4+RMNZcc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=l3fMgsZe; arc=none smtp.client-ip=185.244.194.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	 In-Reply-To:Content-Type; b=hEki7GyYuCxIv4DWvvVq35xCRicTBUnk7Ofk3F/qh0U8Dx4aUdD0fiBYo94q7ZhXFamKmOQpyZShTK55B0IK3QkjNG+YEz/Gd8XD1rhH2rlTyJPGQ0S97egCe/Hxqp7PLLW7ISSnsJQxGGFAj7PeE6b25ycXoy+IbqAZghKSsS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZYefBp9E; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="l3fMgsZe"
-Received: from relay01-mors.netcup.net (localhost [127.0.0.1])
-	by relay01-mors.netcup.net (Postfix) with ESMTPS id 4hDpCN21N1z9G33;
-	Tue,  4 Aug 2026 11:29:20 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1785835760;
-	bh=x1XVcDMZUV9+quk/8gTp2NTUj92dTgYU0xYw9qK8lc0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=l3fMgsZeBecr23e1VsUro7PiQeL0I8gfM/t1RDNFrODmjSJXJqBPAv+PN99UfLVFa
-	 5AS+TBANNHd+NsMi2wB1VPra58DizBgHzDjZjhJTwa85dZxpzcP8C8m+qLCJDa8CG8
-	 ZswiPdwHgK/uXPVUwt9LlgJ4b5fobwXseaPY2R/VYFHcYRkOzHkNog6ARNjcns6+Yx
-	 n2Wub7bCx+po7CV3qmcobhCoD8DraW3H8Fe4tVjdWEb16Z61cZh1LgPW6TclhaGy9e
-	 lpsAwG2sp/XjjZPfT129nxWUr7iVuvgejd/KpYNd84pvHtB+l8AVacGh1kvqZOFweY
-	 mxOf1u2BOZRgg==
-Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
-	by relay01-mors.netcup.net (Postfix) with ESMTPS id 4hDpCN1JVXz7wJq;
-	Tue,  4 Aug 2026 11:29:20 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
-X-Spam-Flag: NO
-X-Spam-Score: -2.899
-X-Spam-Level: 
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4hDpCL5Fj9z8td2;
-	Tue,  4 Aug 2026 11:29:18 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id CB4125FB8D;
-	Tue,  4 Aug 2026 11:29:13 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=linux@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <013a295e-faf4-4930-a101-27cfbf252178@leemhuis.info>
-Date: Tue, 4 Aug 2026 11:29:11 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZYefBp9E"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-6a051b73866so7075278a12.0
+        for <regressions@lists.linux.dev>; Tue, 04 Aug 2026 03:10:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1785838228; x=1786443028; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=rQadTISyIyt+64+NYnKtupY0oo0nC4sKeX8xC6U+has=;
+        b=ZYefBp9Ea3uWl7OHW9sZP21LIN5wj1WP4qNfS5nZUaFntL6MKP1sYgQNukYABEjgZo
+         6fghz0wVGwndvjtenSWDBz1jtXMO2I6cstDJ2XfGnKOrge8LGck+ZB/n0RWQKNqKq6SQ
+         oZ67a1a5dNqmgOrlLwGguYB3v/w9APkFXrHtUVSuDl4lXISRG/mQ9vx0dYvz5eT8Od//
+         id7lLMOYJCV5L2gYKyIg6BMPhR7VbwBV8mOgl6NQX4kL2533cIPUShQzcTx9vbhLYGoB
+         Sk1f0dNEeYgc9W7hkygtTFh2NT/aT1kv/D+4QSqjeoF7YNE3iF8aVC2hMCGfHPe79klE
+         fmvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1785838228; x=1786443028;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=rQadTISyIyt+64+NYnKtupY0oo0nC4sKeX8xC6U+has=;
+        b=RSiaR9RXPopqCw4QlEqBT4QNF0Fyx4r/kC9WRIx63VbuSXZEJ9meQuK1wAN+0r4Osw
+         zEGU0ny/lH6dLicfi32RyTUAG90py8bjS05en+LDwJqLgRxEAMpTWzRn+cvjXanOoEqW
+         IuXDgwV9uyT6kYLV/7bImo2elt9j9U7aIyGEBVALv4Sr//L9kdUqzFIR7S+2b1VivPg5
+         a7iCoKEE/n0zP16HPFjDb+nAedGBb+rL3bocRnO2AO7++WC/Ak2O3CLs4u0mvgRfvFBv
+         +IrSOv7Il1N8h+ERVRUGwcUaW6cxBRIArF17rRctHeW78CiL4wMrkTnsVihdBwoBFkdL
+         kXhQ==
+X-Forwarded-Encrypted: i=1; AHgh+RpJnrq1qnYA8/JfzkYaAZxNZbjjRptMbc8Hp+HhSGaZaX/R65O0zc89ljyawy05YPYP6/p4VaKqkXrsDA==@lists.linux.dev
+X-Gm-Message-State: AOJu0YyuXHVsnREGSQcPT0+ygORFUkWWaVeJ0CxI80U0tGkODwV3klu3
+	bp4WTqywS9Gto9Ts156ep5Wd2g/UqS7ZFJah8tT/IdsnYFmDBVU+ago/O8vRcz0m
+X-Gm-Gg: AR+sD10q5z8koHVTQSyvzIa1bwx/e9RssYSS7raOl1YJ6k2RnY+xUj+LXBc1Cr7vtfo
+	kH01V8jakuAkrzu4n6CIDm374WuolyfhGE7sD+mTXXee+mz/3eSaSiD2xzTNibTGfxounNgbLKA
+	T3/ypjCVJg9X4aI2Qx4CJqKOxNdkRmYJHWTZHcJnmkbV/3ie6pTI92bspupYmpBRBFsfEvv/svj
+	9BfpypVrbj8o6nkuy6c/oyfcHOLnjLE4g1sfMZg9rrWaQSTBrPgR7msbdu0DxnRbUK0uL3DOggQ
+	yuCmh7pYrYJWFfRWN/Q9e7THXQ+G7/DyMRrBNjeiBUsX8qfPGPU7c+i6C9lT6mQaxFsGp8eTxE0
+	5IP1oQP3vt6wHSBJDA60queJJlqxIEzRGKjiT9RAoJcwY8vML3YRb4jGtdW1ikx7Gkue+L1iRKD
+	CcN9aKAc8ZrXiwERCDdFdVGaN/q+nmq72W77emAJpUGc/U9m7hYKg82VYi
+X-Received: by 2002:a05:6402:4591:b0:6a0:a492:1f46 with SMTP id 4fb4d7f45d1cf-6a0a7c61027mr11459221a12.8.1785838228405;
+        Tue, 04 Aug 2026 03:10:28 -0700 (PDT)
+Received: from [10.0.0.5] ([59.152.127.200])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6a09c63daf7sm6419448a12.18.2026.08.04.03.10.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Aug 2026 03:10:27 -0700 (PDT)
+Message-ID: <a532b34e-ec46-471b-b755-b60cb16a7dda@gmail.com>
+Date: Tue, 4 Aug 2026 18:10:20 +0800
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -57,95 +69,34 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mt76] wifi: mt76: mt792x: drop redundant napi_disable() in
- unregister path
-To: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,
- linux-wireless@vger.kernel.org
-Cc: Felix Fietkau <nbd@nbd.name>, Lorenzo Bianconi <lorenzo@kernel.org>,
- Ryder Lee <ryder.lee@mediatek.com>, Shayne Chen <shayne.chen@mediatek.com>,
- Sean Wang <sean.wang@mediatek.com>,
- Nicolas Cavallari <nicolas.cavallari@green-communications.fr>,
- Bert Karwatzki <spasswolf@web.de>, linux-kernel@vger.kernel.org,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <20260728002048.19351-1-mikhail.v.gavrilov@gmail.com>
-From: Thorsten Leemhuis <linux@leemhuis.info>
-Content-Language: de-DE, en-US
-Autocrypt: addr=linux@leemhuis.info; keydata=
- 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 MEK4
-In-Reply-To: <20260728002048.19351-1-mikhail.v.gavrilov@gmail.com>
+Subject: Re: [REGRESSION] usb controller fails to initialize on intel s1200btl
+To: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>
+Cc: rafael.j.wysocki@intel.com, linux-acpi@vger.kernel.org,
+ linux-usb@vger.kernel.org, regressions@lists.linux.dev,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Alan Stern <stern@rowland.harvard.edu>
+References: <3353bdf3-4f33-44b1-809b-b0378bee5816@gmail.com>
+ <CAJZ5v0h1kqDEBYk0k05rv6f2SJ7g+TN4FhBDJYZSVUctu-0FdA@mail.gmail.com>
+ <daf0bb9b-246d-437d-87ca-16706113b201@gmail.com>
+ <CAJZ5v0jByxtQ2tmNm_ZyyBnDMBNjuqQwD_367NRyGNzF7wQtRw@mail.gmail.com>
+ <7792f017-42b0-4a09-9941-5259138e21b1@gmail.com>
+ <CAJZ5v0jCFFNuG7WtCE2CG+hP=YNsYMdXH_945QgkgAUcr4Lryg@mail.gmail.com>
+ <37daa35f-06aa-49d0-bf0a-1b5ac9f44c89@gmail.com>
+ <CAJZ5v0jyy0+hqU3=gmBrgMzLBVhdUQwDj8d0_jGCqZwqyWT=_g@mail.gmail.com>
+ <588c2e18-e6fb-4fc1-95d5-7a5dd0f556fe@gmail.com>
+ <CAJZ5v0gXtKEaNDdSRqd57zg9GbFN-VDHrU5-=EEQPdSa9Zk-xw@mail.gmail.com>
+ <CAJZ5v0g4ctzLpEro2Mu7EbSo8RNmYUCM6+J2p_ExCXseQAx13Q@mail.gmail.com>
+ <1da0b5a8-336c-455f-9098-a8c834721039@gmail.com>
+ <CAJZ5v0g6He-X-C1Ctr4nsnL00mgLiD1mThwyX2jhUj9qKV12+A@mail.gmail.com>
+Content-Language: en-US
+From: Julian Silver <mendaxca@gmail.com>
+In-Reply-To: <CAJZ5v0g6He-X-C1Ctr4nsnL00mgLiD1mThwyX2jhUj9qKV12+A@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <178583575433.374203.8183962002696430590@mxe9fb.netcup.net>
-X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: CB4125FB8D
-X-NC-CID: 8ZL0WhRkqlDXVqBTDtVfsuldPsgnkn9cO8Dy0EiT5NQZypj/32I=
 
-On 7/28/26 02:20, Mikhail Gavrilov wrote:
-> Commit 13b7e6a96a00 ("wifi: mt76: Disable napi when removing device")
-> made mt76_dma_cleanup() disable every RX NAPI instance before deleting
-> it.  mt7921e_unregister_device() and mt7925e_unregister_device() already
-> disable the very same instances and only afterwards call
-> mt792x_dma_cleanup() -> mt76_dma_cleanup(), so each instance is now
-> disabled twice.
-> [...]
-> Fixes: 13b7e6a96a00 ("wifi: mt76: Disable napi when removing device")
-> Reported-by: Bert Karwatzki <spasswolf@web.de>
-> Closes: https://lore.kernel.org/all/20260724151419.26014-1-spasswolf@web.de/
-> Suggested-by: Nicolas Cavallari <nicolas.cavallari@green-communications.fr>
-> Signed-off-by: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-> ---
-> 
-> I hit the same hang on an ASRock B650I Lightning WiFi with MT7922
-> (mt7921e) and bisected it to the same commit.  mt7921e has the same
-> duplicated napi_disable() as mt7925e, so this covers both; it is
-> Nicolas' suggestion from [1] extended to mt7921e and with the now
-> unused 'int i' removed.
+On 2026-08-04 02:51:44, Rafael J. Wysocki (Intel) wrote:
+> https://lore.kernel.org/linux-pm/5120454.31r3eYUQgx@rafael.j.wysocki/
 
-TWIMC, there is another report about reboot/shutdown problems with mt76
-that was bisected to the commit mentioned above:
-https://bugzilla.kernel.org/show_bug.cgi?id=221818
+I have tested this on v7.2-rc6 and it looks good to me.
 
-Pointed the reporter to this proposed fix two days ago, but no reply yet.
-
-Ciao, Thorsten
+Thanks.
