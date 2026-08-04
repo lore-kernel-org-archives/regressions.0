@@ -1,53 +1,48 @@
-Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
+Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EB3C45FFD1
-	for <regressions@lists.linux.dev>; Tue,  4 Aug 2026 17:39:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FB48471415
+	for <regressions@lists.linux.dev>; Tue,  4 Aug 2026 18:51:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785865179; cv=none; b=bs3uql4kxKkX+Ms1b3r5kdN9lmfdZDj+1EmNHpWBq4pApeK+eP2hWz7EgsK8A8ag2l/85OsUs8Gncudu2W7Pgh80OYE+yxd1dChxvZPUkPxFSsJBL/XnOfr8ggjh+K+D2cmaBoear18ieZYfPjXDvUUN68GmnrBKdqE/IcduqFo=
+	t=1785869503; cv=none; b=RV3jlm5C14NyOqe+RZT56UG7BNxg9PAPhJeokTxDNa/WfRNQ7OYNs+4RK2TEgYAXcjcKyeJM2LprmOKLH+gqUB5hwnly2ti/9g6j/t4zeufklH88d570diPKGNpgNRU1hHVZ5aYFPsUoSM+JVct0n1Se3iTN65VM9gnskhgq9yI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785865179; c=relaxed/simple;
-	bh=JAPBxqHkelGcSiVMBuRG3cWm4XKFkI9ICYGuwQ7hfK0=;
+	s=arc-20240116; t=1785869503; c=relaxed/simple;
+	bh=/MzzPCUnDtjfXtg4gz1C+xzEwuEYtyQ/DlPeFZvVylM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iYzjz8TsQrAE1X84MVbr5m41goQztMSPQ6JaKvgi3hFMCrZasMIqBGIbH/+H2Sq5o4HB3CGJE6ZFc6SiGFne+SMr4iTHmEahIQZrHTL1nvyEcH0fj5Jh6jFE3jwjpUAE4npOkOHI/sLYTxnI2Whu8U8dmd3wJglOlB1e+90Hmwg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=justthetip.ca; spf=pass smtp.mailfrom=justthetip.ca; dkim=pass (2048-bit key) header.d=justthetip.ca header.i=@justthetip.ca header.b=SAU6lsCa; arc=none smtp.client-ip=91.218.175.179
+	 MIME-Version; b=LFu4CEVzN0ZjI+8JdfopR2ldSw8bOuLZZBpLVprZdYbV6cK9fcS7qbP/M/z17uR7X3vkpdCeAlytkZzdG+RuAxGprPBDatLhaahwIE9KRGgJb7trTdODQRE8tjPGs6ptQouBuOu8skWQ9nWOmweopFDhL3aDanF73FkPmRKQMMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=justthetip.ca; spf=pass smtp.mailfrom=justthetip.ca; dkim=pass (2048-bit key) header.d=justthetip.ca header.i=@justthetip.ca header.b=PcrxqVgg; arc=none smtp.client-ip=91.218.175.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=justthetip.ca
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=justthetip.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=justthetip.ca header.i=@justthetip.ca header.b="SAU6lsCa"
+	dkim=pass (2048-bit key) header.d=justthetip.ca header.i=@justthetip.ca header.b="PcrxqVgg"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=justthetip.ca;
-	s=key1; t=1785865174;
+	s=key1; t=1785869499;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=JAPBxqHkelGcSiVMBuRG3cWm4XKFkI9ICYGuwQ7hfK0=;
-	b=SAU6lsCaDOaezARoVe0EhVKNDu/GoMcvYyZnYf+srBUMpOhI4g8cgHcB2U7+ivdWbgq17/
-	nqRpMTd4S+C9+xk2WHN5no9Ku2d2c89it0vJze8pSBP0AiQy8C1DymtW2kTnOZKvSB08Jq
-	mPJOLhJ5RixfamGhugNMQrK9fvZ3VUH2CvfMrtWYGujsW/P0ZBshZDzZk350QOpc2JZ+Ko
-	gIjBkx/WwmXR9bj7kEnwxDRQ3uRxI0lLsiUCJ6R05csG5tTPcoZf78HkJag7IcuDXy8qR9
-	0jSQEnmmMIV+ss73kRFIZ5ibAx3jXqNgOdukkyhc2/tWEjIblRz1gAHxz+G7Xg==
+	bh=/MzzPCUnDtjfXtg4gz1C+xzEwuEYtyQ/DlPeFZvVylM=;
+	b=PcrxqVggSRYNSrpviVJLGoTW2gcT2pZYAg1c8iVJWyqZrYKu69NNARy6JZ8IdWHrmHArx8
+	TIMBE2oYA9aTG6MZhsX3ougThgJixZ1hZMCCoz7c0AwxIaTHTDuhvGKJhZgGXUs9pqab+h
+	TL2jY/ddssnzG4n6qfuIbZGBsZw//sV6hx3EB+Zsgf1um7OAS17EgDbHLz7fyV3N913wbR
+	mtm679bsw4Oxl82XcFRTDocl6uK3tjIe1qja5qdZIunXdAUigFeeNWLsfaH6DWoR1vigdb
+	Bkpm41WCZSv0Lmcx7EZhIIwMwiI7WdtbcSgNVebH9A7BfH9LL39pFaXklOTySg==
 From: Devin Wittmayer <lucid_duck@justthetip.ca>
-To: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Cc: linux-wireless@vger.kernel.org,
-	Felix Fietkau <nbd@nbd.name>,
-	Lorenzo Bianconi <lorenzo@kernel.org>,
-	Ryder Lee <ryder.lee@mediatek.com>,
-	Shayne Chen <shayne.chen@mediatek.com>,
-	Sean Wang <sean.wang@mediatek.com>,
-	Nicolas Cavallari <nicolas.cavallari@green-communications.fr>,
-	Bert Karwatzki <spasswolf@web.de>,
-	Eric Biggers <ebiggers@kernel.org>,
-	Thorsten Leemhuis <linux@leemhuis.info>,
-	regressions@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH wireless] Revert "wifi: mt76: Disable napi when removing device"
-Date: Tue,  4 Aug 2026 10:39:28 -0700
-Message-ID: <20260804173928.13547-1-lucid_duck@justthetip.ca>
-In-Reply-To: <20260804120004.523934-1-mikhail.v.gavrilov@gmail.com>
-References: <20260804120004.523934-1-mikhail.v.gavrilov@gmail.com>
+To: Felix Fietkau <nbd@nbd.name>,
+	Lorenzo Bianconi <lorenzo@kernel.org>
+Cc: JB Tsai <jb.tsai@mediatek.com>,
+	Charlie-cy Wu <Charlie-cy.Wu@mediatek.com>,
+	linux-wireless@vger.kernel.org,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
+	regressions@lists.linux.dev
+Subject: Re: [PATCH] wifi: mt76: mt7921: refactor regd update to fix recursive mutex deadlock
+Date: Tue,  4 Aug 2026 11:51:18 -0700
+Message-ID: <20260804185118.19705-1-lucid_duck@justthetip.ca>
+In-Reply-To: <20260629083543.153564-1-jb.tsai@mediatek.com>
+References: <20260629083543.153564-1-jb.tsai@mediatek.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -57,26 +52,29 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-The revert works here. Module unload, reboot and poweroff all work again
-on an MT7922 / mt7921e, and the USB path is unchanged.
+This one is still missing from mainline, and the bug it fixes is in 7.2.
+Could it go into a fixes pull before the release rather than waiting for
+7.3?
 
-Applied on top of 7.2-rc5 with PROVE_LOCKING on a second MT7922 /
-mt7921e machine, independently confirming your result. Before the revert
-the first rmmod never returns: D state, refcount -1, and the same stack
-you posted, taken from /proc/pid/stack and sysrq-w. With it applied, 40
-of 40 load and unload cycles finish with rmmod in 0.3-0.4 s, three more
-with the interface associated and receive traffic in flight all finish
-under a second, and a graceful reboot and a poweroff with the driver
-bound both complete normally.
+Current master still has mt7921_mcu_regd_update() taking dev->mutex
+unconditionally, and mt7921_regd_set_6ghz_power_type() still calling it
+from mt7921_mac_sta_add(), which runs with that same mutex already held
+by mt76_sta_state(). Any mt7921 station that associates to a 6 GHz AP
+self-deadlocks. It is not only a warning: wpa_supplicant blocks while
+holding the wiphy mutex, so NetworkManager, the cfg80211 workqueue and
+new ssh sessions pile up behind it and the machine has to be reset. The
+call site arrived in e88098133ed4, which is in v7.2-rc1 and not in v7.1,
+so nothing released is affected and no stable backport is needed, but
+7.2 would ship it.
 
-mt7921e disables the same instances in its suspend and reset paths as
-well, so I ran three cycles of each and unloaded after every one, to be
-sure those paths leave the instances in a state the remaining disable in
-mt7921e_unregister_device() still handles. They do. No warnings and no
-lockdep reports in any of these runs.
-
-Same host and kernel, USB control: mt7925u reaches mt76u_queues_deinit()
-rather than mt76_dma_cleanup(), and 10 of 10 cycles on each side of the
-revert behave the same.
+I reproduced it on 7.2-rc5 with lockdep on an MT7922, then applied this
+patch and repeated the same association. Before, the recursive acquire
+fires and the box is gone. After, it associates on 5975 MHz in four
+seconds with no splat and nothing left blocked. Nothing else changed
+between the two runs.
 
 Tested-by: Devin Wittmayer <lucid_duck@justthetip.ca>
+
+One small thing for whenever it moves: the Fixes tag cites dc2608cf5224,
+which is not a mainline commit. The mainline id for "wifi: mt76: mt7921:
+refactor regulatory notifier flow" is e88098133ed4.
