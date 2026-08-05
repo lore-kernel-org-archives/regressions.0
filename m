@@ -1,82 +1,82 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A0DD27B340
-	for <regressions@lists.linux.dev>; Tue,  4 Aug 2026 23:38:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7679F27AC48
+	for <regressions@lists.linux.dev>; Wed,  5 Aug 2026 00:01:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.169
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785886710; cv=pass; b=eObyJkAOGy1Etqz7+dTdwXXjjvLxuzp5BlnQLPiVLIr6fJh4JyPz0yufe51I/2GmVYATC6LRwcUDsYpqkOqISAqkPy7pBGrFFts5lssXZAAMn/xUXxhZcSb5X320Dk6Rl14kiM788KnJKX6JZaELO0FRd2bg+8mapfIDK5XzNDU=
+	t=1785888091; cv=pass; b=mJpZah84+svnvF5O7Er8wPW5sMcwbKe0qTD/RgUAKU3xI0Rju2NE5FPHdSSdsQGkE/0D4WBMMbpBZO0SuYgWOc/uqTDdecHU7qSdSeQFeFSgN4tveQnfLyWgLMsicP34uk1Jy99LISsDeBYRJi7GztyN7hNIP7MNQpjVLMDeQ3k=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785886710; c=relaxed/simple;
-	bh=meyU1YugnRxYeRLkXcqB88OhoXFWPWo27DjJ8y0AMj8=;
+	s=arc-20240116; t=1785888091; c=relaxed/simple;
+	bh=86K8uKiLATgTxa9IrfTr8hurJOunk82qbscdkmiHoXA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BYONp45/j1IL29b7w1KKvZbwhS5paB6BMP7noqU7Ug5WgWuTvsz8i3+WFQE8DfwHa/MsS050004qTz8O+z/aMmytzVywyNJLOovhDZd1AUWydBjBGrA8/Ln7FDqED2lkVVBVwLKHcf0YS1ykPB5fDNOCLVXVMNeLDyNp5NtdBX8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fJMjUitQ; arc=pass smtp.client-ip=209.85.214.174
+	 To:Cc:Content-Type; b=PaTuXrkbqd7V1VvKp/r3vpqCRtWjSsGTg1CBvEJw0yfxrIoW0f8qBdoNazRJubIQ+DmKcY7Y5TbDcjXk7BzpThugazDHAsjkc7n0plk9CMN3RgJpSPj4j1jGGUoVFUfGhlIPpnOv9h57SXyBcmocHeJEWdJTtPWk+aQEqcuQ1T8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=URmwGlYF; arc=pass smtp.client-ip=209.85.214.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fJMjUitQ"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2ce98cb8165so4876745ad.1
-        for <regressions@lists.linux.dev>; Tue, 04 Aug 2026 16:38:29 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1785886708; cv=none;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="URmwGlYF"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2ce87c7e3bbso4440355ad.1
+        for <regressions@lists.linux.dev>; Tue, 04 Aug 2026 17:01:29 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1785888089; cv=none;
         d=google.com; s=arc-20260327;
-        b=WmiDsUbzVZzQdZy4QktAxwvslGyydfuRliDbRIsyuUFDUDj5XcZUvLj1hiYrZIvucM
-         qBYRhgJT4/yeVI85R37N0eO2mgz4lr9gkXOFym5ItX2ZbNz465saVpgrLtss67W9OJqQ
-         O20HtbKK4p3m/Bl9Za5G65a10ixUB8Szmf9MOEtHOiu8YrbpX5qcmzKJX4ZhuGXkEIzj
-         QQOvAEFfHGHo7PKnO6Fq0oGK+FcXqyc936Mh0j04FNU6aUv2/TgWTdQ2LdIJIL08Slg7
-         0rjK7j1pCAtytL0vbvUHyCPedr88K3qGwfOINt4oaYEpGTxzG55GDUgAj4d8gGThWfgn
-         GU1g==
+        b=REVgEXDrGX1DGeaPGKb1C79Y5ruuBcEvukIvSslYH31LAtXEqNxMR5fq0ASHVLI8kz
+         u789bWclzBzHu3gAfDIXh0WnsnWENiFRi/BVIZzsGi8g15LejQS2PEbD58+C55K16AFy
+         fZb8heIzIfKNfCplR/Gomjlky4b/yIdAIqr47uuiERjA5gL7wUMKesSTioRLD6oJAcTE
+         0isyZp/yGujWfT5OBUSY1B095CXh2rNbhyGDYzIXSQSyxDYtrbAOIGnroGyzQJoJWzaY
+         XL8kVsY6hy95IVsFA84OWHyTW/jH11P8/vro5YyvTki83e4uyTspFVHZ1Gc6YZ6p+5eW
+         tjeQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=Vt3N6M6O4cWekc/iSM5RDUsHKKmq9c1umfQomKmQmSY=;
-        fh=j/s2+Liu6jy8a6HyiJ+KHgGp2/XdjuZ47RYb7tPkQ/k=;
-        b=Xedl25VKa2ax8zj+g2pVIfsiDPIw6bx+3ox3cUwLj3qs6pAFSqO7TtSOmOgALhPqRO
-         YQwU/sakGhwDFg+J/320dcVMeGH62mzapGeJxF25YbZo+88PDsQmIrfcgRRHzQb5wfqV
-         n30Uc9Snni/1T/mRV08bZ7yUh5dHiTLvz/1ERiGx/53ypRL2RIr9OhZ7udDdMJverk3I
-         JQjpK3WIxhP2aFCMMngr9by5yJDsHfaO3B8rl9+OI+BANvOdYCGwyG/6TxAK4D96cj+K
-         tMdbGIpGFEMzbsR1hJyeyOQ+ZW+WloCRN4YI85zYYSscySzrUy2GH4oKt3AT4eiPeW5l
-         PayA==;
+        bh=NsdZbLvlXG2ntN+KudJSI+VASQm9D9JFdAQ63Uw/9rg=;
+        fh=QvLCyr/EIQ+u4atGnOT/ns3rHT0uGlEBWbBTk2jAhGQ=;
+        b=qr+wmrvxlQYwrf15k67kJLS1j/YsYENQKHlEvN3UHXfRe9KOae0ayqFPwiMV789WJj
+         D9ID5gzbtpL/qI82m+QcxPTN6JSVdkvQ1cQqqlq18UiLF5JG/vjdNQyq0zi/BQ+E7hvG
+         Yg/vgXXXqSbF6L1Y9CHz/S2rStBuAlVuyB4FMZSb8osBtMlYVaDpwbZK+4oIdLyVX/45
+         H8gnMuxH+d31Ags0hKUjtNG92jw8Mo8KbmR/uwrHnajN1wjek/x3nCpjS2a3BB1LPjKc
+         sa4lzKgBqjN+ZFEsnPHTKE4eRnEPtt49OrLDR0+6AaREBfxkM6uE3a2C/Q6GZks4xoYo
+         D83w==;
         darn=lists.linux.dev
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1785886708; x=1786491508; darn=lists.linux.dev;
+        d=gmail.com; s=20251104; t=1785888089; x=1786492889; darn=lists.linux.dev;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=Vt3N6M6O4cWekc/iSM5RDUsHKKmq9c1umfQomKmQmSY=;
-        b=fJMjUitQqfNf5P+eWQLN65V22BUb+yPC1dxQpwlarmj8Jtr98yoWnmf6S4LotKNE7v
-         VhCXctBShq9X9GUCXRpOIZcqkoi0Tt6lhh8yWB8NHVHeBNxByJnUgCp3C1pHUYpzySSA
-         +LpbaqAaPq4BkAYlam1N2f1N+HAF8jezowFszS2I419v+Ky9ruhw1zkCEwPfGXz9qCfN
-         gWTI1fqcmLEkN2QLx/801QtSxOC7JPFemZRU+832ck1+DwCX6YSkpJ8ABesAoYmvwpif
-         Hlci0fZ2e3QaS8arDIJ5fbwR++stOxYOXc7/+Q0Rs1/77virwJkr5vQladV+9ZJ8vOov
-         gTkw==
+        bh=NsdZbLvlXG2ntN+KudJSI+VASQm9D9JFdAQ63Uw/9rg=;
+        b=URmwGlYFGplgSK5R4SumyA/+s0Bv5Vw8sGSFdN3pqqFwi1JNpE500mfWcTLU+ZoYts
+         QUZTc1U/Er7X4jvUzIgVc5OsJozHJQs9MJIUpg3wvRrtN1VWzQCyM9FxtScshYZguF6l
+         4H93wushIVH66wKipkhi4KLx13Uky//Axmvt29ABPcyx7yCWbQqpk9GSkQd1RXNqQsMb
+         LbVZPnwPfEo431M6J+pLFZcRSHIvMwklbpNid9cI3kb6Eem6q586TLPejrxH1plqfN6S
+         Hdm9T9iDhvB92c456XiDWQjb9vqpM8Vdc0GtJVSZwCAO0wwa5ZnUnIYJEXWetHbr+puu
+         NnFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785886708; x=1786491508;
+        d=1e100.net; s=20251104; t=1785888089; x=1786492889;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=Vt3N6M6O4cWekc/iSM5RDUsHKKmq9c1umfQomKmQmSY=;
-        b=cG7VrDHHEvJsHAbvussPrnYIHgEeSxs4OVvhUsVy/75VZWG4afpeL8tsRWIAivH/rm
-         L8mzRv4EVx6T1dSgEbUwdLUb+RIL2N+yQBurWBtV5SBcTULni4pZEsbuEVAe85NJfG9q
-         5u476DsE+8szz53peItghcNeQNnTy3N44Ut2TDbsxTnZk7zK1gusbJUhRnh9r7rqFkgb
-         qfS2iFirPeuFjqWLq8k70kTnkiNKnWdU1VY8K9vW1BnlDuJecbljW5F5ldmX3ADN/DBd
-         rRamm5en8jAFAGdJ5N5okeNskYmcJGwSQyYQLGWm4i2dUVcivAkbETERXr7eKro4FUCc
-         Yi5A==
-X-Forwarded-Encrypted: i=1; AHgh+RrbQhtlG0dM5rv5od2lqehxa7L+XxifyueyKkwfwXYS98X9vtaNxa9ff7C+KiZ/kNrWYUF62bQEPwbLyg==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yy6dCFs+1D2ar67R135KtxDL0VVVB+vQYIMlKUK+XKsD5EWns09
-	ngAbDfgEGN7PMdIdh2wcOOYaTMTIe56dqiwfUiqdWK/tqGUbyuqg7XyacpFdtOAVA4XjBHFWgE3
-	cgtfbheP4iHeDloXqvVDnMU2p7JTz9KOIhj+N
-X-Gm-Gg: AR+sD11HIsJvH815Tv+RO5FJaAvpuvmZD/CAAYYzPc+sankcklUvLeYjsB6U+YJYW+z
-	LOi85wpYCysAHO1q1n8TZ2QR7iW2k6OTbj7RAUz0YFWMgw1NRTg35qAI4faejGyI2TwUojo/Yve
-	ovZwdmj1BVb6pLG1s7mOHQKXDOYN4piq0udhWMSKrKOpihOq4XJnYMTlcYyHGvRJtXK3oumU01V
-	xnYm/5q2fLNHOcwNMxxiqENGaY/jxfMzptfsxvTXceY399VuQ9a3ZM8hbtU72pBt8lfvqyXuqg+
-	94N4lC9kY0Eu+E2I2ZmG0fm4R/IO450FXhw4sxPURb/DVDHzmwP5hUhM8qXrACMFU+IELiiKjTp
-	l3lgYZQFRvaQn+8hzsLxJehm6odhiKJd6MVtZafBqNIQBHq1QoI5OtvMsvLSD
-X-Received: by 2002:a17:902:d48f:b0:2cc:841d:cd7e with SMTP id
- d9443c01a7336-2d0c9b86e86mr12538535ad.21.1785886708417; Tue, 04 Aug 2026
- 16:38:28 -0700 (PDT)
+        bh=NsdZbLvlXG2ntN+KudJSI+VASQm9D9JFdAQ63Uw/9rg=;
+        b=HB+revg/FcO4sA+1v/2k7wYLC9FSTHidmWo5TTdGt28c8RiqVl0TWy1yV2lVol/CJG
+         /qvVW4mqBoGFvPeGq7W1t5/C2Hx7qPYjYQXgXZgVcjijxOX23qN5Cw/chDo9F2EIEOUK
+         XX3+78PmDyVi+cGi+QklwrlmmriMyhZOkvz8otNSgE1ZuKN9lP/EwyOHQ3TjXmW+c4UX
+         8WPeve+Dq66GlOhxDKvCm2np/8enjP73KcAmziQr/Uzs50S+0QqTrGOO7w40NwW7A+Sl
+         aGbA5PWdIDP4BnEsiDGisUyetnVoE/B4kwdKaJ74Uc7m8GJtF6tkn8PnU3X5yXpwuCrO
+         Gq+A==
+X-Forwarded-Encrypted: i=1; AHgh+Rp87idf5toGOlskN1pyxVjLipGPmIj198EGlrMsv993g8bKWuhIEctSMqV6tSMVNXKkHekL33dJvEZPog==@lists.linux.dev
+X-Gm-Message-State: AOJu0YyRcns6C4noIi1E+ylUSly/l+ct0/bvW0zIBPiMrhYhki6h+rls
+	ZWcXzlM7q+ESDaFK5C3jB6yc9hxPRzz4ReiCNs2P/gvfu3YDzV1XW7At89ZA0HZRxV/SSOqVejM
+	aM9gcwKPdzoZbgwkMZ9WvojA5gauWhyY=
+X-Gm-Gg: AR+sD11k/zKIDWbyr9GihRR37CNlR6Ik9/dKbOi0rrZu18HUhby7C4fPEMTyLwibWN4
+	VYlAw2U5qwcrEOvyHuAYy1r9EiPxpaJyMDBcJyq+/A96hRJS010kyI3BkYWuJE7B5XJoQuP9ZBs
+	55IdnxHYZeS6Qj2gUZ6ks7y6lxUme86eYhrRDOpSHazt7N5u+Mk6eDnAJ7SE4g5NS7Kc/OSuzF9
+	CCzOsO9wtkp3WVOrkO3Ow7aPJyYe6jisIQJdyXZ8VNpIt1ksoasK1GM1Tks0AXWwIXt20lDsF5Q
+	0XnWdEdduUguBZgcnx4dzBGO0K7HGdjxIHiKC6VIZ0PzCws6ltsxkWehcgvgR6l5DfJR2J4Mcow
+	kPo1/CAq62rAjegZR9R7wGbMn/9DNk/Z2HYhKfXWV+Q5QIim/wjm8QNDoHcC7
+X-Received: by 2002:a17:902:e84b:b0:2ca:e5c:7fcf with SMTP id
+ d9443c01a7336-2d0ca7b5490mr23513245ad.3.1785888088568; Tue, 04 Aug 2026
+ 17:01:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -87,9 +87,9 @@ References: <CABWMpWQiSEKMkROgKZJ6nV8GXYgr7E=-SmsatQie4eK8b3F9Xw@mail.gmail.com>
  <CABWMpWR7Law_vHdeAMsOcY28VBcvX2jYSqq2SpksJSiLFcXhuw@mail.gmail.com> <anIhyHL4Kl-DX2G_@eggarch>
 In-Reply-To: <anIhyHL4Kl-DX2G_@eggarch>
 From: Jamie Stephens <jamie.stephens@gmail.com>
-Date: Tue, 4 Aug 2026 19:38:16 -0400
-X-Gm-Features: AUfX_mwIpL4SdSZhVrTWRob8gN-UrqhpzPK2fLzyxy8e8UgeIOn18-toW5_0yT8
-Message-ID: <CABWMpWS=-xjdAHEuNKVF0Vs71zqtMG1n0hRBWk0gSn_NhYAeRA@mail.gmail.com>
+Date: Tue, 4 Aug 2026 20:01:16 -0400
+X-Gm-Features: AUfX_mxwyh_MML33tokD_7o_JuJogH0BhSC8wEjmWkVQTWtJhzWv662Egc00qSY
+Message-ID: <CABWMpWQEfycicrctrW3RD1yNf0rv1ZrioY9FcjoZZGEz4GAm_Q@mail.gmail.com>
 Subject: Re: [REGRESSION] CyberPower LE1000DG (0764:0501) USB HID regression
  on x86
 To: Lovekesh Solanki <lovekeshsolanki00@gmail.com>
@@ -101,48 +101,39 @@ Content-Transfer-Encoding: quoted-printable
 
 Hi Lovekesh,
 
-I tested 01-no-lpm.patch separately on Linux 7.1.5 with the
-CyberPower device 0764:0501.
+I have now tested 02-resume-reset.patch separately on Linux 7.1.5 with
+the CyberPower device 0764:0501.
 
-The patch did not resolve the problem.
+The patched kernel was active:
 
-On the first connection, enumeration failed with:
+  7.1.5-ups-reset-resume
 
-  string descriptor 0 read error: -75
-  can't set config #1, error -71
+The device was detected by lsusb, but USB initialization still failed:
 
-After disconnecting and reconnecting the USB cable, the device did
-enumerate and attach to hid-generic, but NUT still could not initialize
-it reliably. The service reported:
+  usb 1-3: new full-speed USB device number 4 using xhci_hcd
+  usb 1-3: New USB device found, idVendor=3D0764, idProduct=3D0501
+  usb 1-3: New USB device strings: Mfr=3D3, Product=3D1, SerialNumber=3D2
+  usb 1-3: can't set config #1, error -71
 
-  Can't initialize data from HID UPS
+The UPS therefore never attached to hid-generic and NUT could not use it.
 
-and later:
-
-  libusb1: Could not open any HID devices: insufficient permissions on
-everything
-  No matching HID UPS found
-
-Running usbhid-ups directly with debug output showed repeated invalid
-HID report descriptor lengths, for example:
-
-  Trying HID descriptor length 2053254698
-  HID descriptor too long 2053254698 (max 6144)
-
-It eventually reported:
-
-  Unable to get Report descriptor: Resource temporarily unavailable
-
-The manually run /usr/local usbhid-ups binary then terminated with a
-segmentation fault.
-
-I have returned the UPS to the PiAware NUT server, where it is again
-working normally with the same UPS and NUT 2.8.1:
+I then returned the same USB cable and UPS to the PiAware NUT server,
+where it immediately resumed working normally:
 
   ups.status: OL
+  battery.charge: 100
+  input.voltage: 122.0
+  output.voltage: 122.0
+  ups.load: 23
   driver.version.data: CyberPower HID 0.8
 
-I will now test 02-resume-reset.patch separately and report the result.
+Results so far:
+
+  01-no-lpm.patch: did not resolve the regression
+  02-resume-reset.patch: did not resolve the regression
+
+I will proceed with the requested git bisection unless you would like
+any additional targeted logs or tests first.
 
 Regards,
 Jamie Stephens
