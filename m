@@ -1,145 +1,549 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.98])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 370F246C848
-	for <regressions@lists.linux.dev>; Wed,  5 Aug 2026 12:03:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.98
+Received: from mail7.opoint.com (mail7.opoint.com [146.247.137.110])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C44C46D562
+	for <regressions@lists.linux.dev>; Wed,  5 Aug 2026 12:13:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=146.247.137.110
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785931433; cv=none; b=Bvz4RAB66lXF3cNLhV6EvlXdeQ2BAqXQeFYOGrQzBcWaBtvDz/fx5engl0ucwJXYssJKisd29ne6AmmI0gyFcz6M/2N1LO9l7I5mIj4epGX8fJ4jOggLS6xUWpAXwdlC/NrCOyhp6K/MQMqXDwO5Qst23UcfIS/t+iFQ8xvt82E=
+	t=1785931988; cv=none; b=e9O4Sv0EWYQDz3KD6A28y7qZq7h0Uxqxw3G1+qNJeeLVXthTk3N9/ZXO8yMOh/Uq6WOFb4TXlDTK2tztvE+NwgB6lHog2U6iLhvKza+5cNqp/4cdPOwouZ+Z+Rd5gy6apW9Z7TMLOwTPxuX3rkmdgrqriMCDWi21skcjAqtl6fw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785931433; c=relaxed/simple;
-	bh=iwltHe/TAqRvEnqEYoYJHLVKyPesrgrAtj7BUnMEfls=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:References:
-	 In-Reply-To:Content-Type; b=X31Xc94jEKXAdeDhfqTdVJRLYpGm8QOoC0zu5Q747LAQS6XAsT0521q/wan6qWO7hUJ1Iys8ZWrUfr055/SDCHGusMkMmZm4cK42gxl2PuT4iwVUWUF4uNR2QZnD0je9ePD7U0EIQTudTWXptENBjaLoxMrVJCHWMVTv/SvPfck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=axH0s7nP; arc=none smtp.client-ip=188.68.63.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1785931988; c=relaxed/simple;
+	bh=zDQqcjN2xcj4gGstJaqp7DTGK0GrDzRXSIPi4RG+IR8=;
+	h=From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:Date; b=XcHI3A9UkpoGZgSOOoV0L5b+NLqB6SVKCWi2z6Ey4eN2Akcb6AGq4tBOzSYM0JDSnxH0/5X/QimltUm7ZMN2BpCT8HvAwoJJ/O8whFsWs3CTSpV2QBD1L3ADEmibh0rWxBbiCNn1VSMCTZ6DvjOQlmQhYvrzx7IlX+RL+zqlIDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opoint.com; spf=pass smtp.mailfrom=opoint.com; dkim=pass (1024-bit key) header.d=opoint.com header.i=@opoint.com header.b=h1TyARy4; arc=none smtp.client-ip=146.247.137.110
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opoint.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opoint.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="axH0s7nP"
-Received: from mors-relay-2501.netcup.net (localhost [127.0.0.1])
-	by mors-relay-2501.netcup.net (Postfix) with ESMTPS id 4hFTYN0fvTz64YR
-	for <regressions@lists.linux.dev>; Wed,  5 Aug 2026 14:02:16 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1785931336;
-	bh=iwltHe/TAqRvEnqEYoYJHLVKyPesrgrAtj7BUnMEfls=;
-	h=Date:From:Subject:To:References:In-Reply-To:From;
-	b=axH0s7nPiUhVfwmFEP8D21aewpuSgMnHaeQdWz5VwaPFjc+PetLZGdLXKKuqkljn8
-	 T9twu7MZ5yX8zhQsPYfYfMLdxr2zYDZn+l9syydZZLa0kqR2WBWJ+RVxPfGF3R3dyS
-	 k8ceomTHwA1YdB0SFuMs7gM2d0/6MM7xw22IIcYFGGp5k97HobLa2WV4f5hqWBjuQ1
-	 HXpmJdIpypNM7yzttaBs3vpElCx74z+erhdr9CKZPi5T+qs+CmjFA45frBY0+1xuVq
-	 JLdFj0z7FC+3yauA284Jel7cB1E9d5rktNpubMjpyzqpqSovVuNlL6c7qAbSPZ69zs
-	 qWw3DNVly/sJg==
-Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-2501.netcup.net (Postfix) with ESMTPS id 4hFTYM74RDz4xW6
-	for <regressions@lists.linux.dev>; Wed,  5 Aug 2026 14:02:15 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
-X-Spam-Flag: NO
-X-Spam-Score: -2.898
-X-Spam-Level: 
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4hFTYM0vhsz8td9
-	for <regressions@lists.linux.dev>; Wed,  5 Aug 2026 14:02:15 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 8546E5F9DD
-	for <regressions@lists.linux.dev>; Wed,  5 Aug 2026 14:02:14 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <8e870293-813a-4fa4-855e-6206f31ccd2b@leemhuis.info>
-Date: Wed, 5 Aug 2026 14:02:13 +0200
+	dkim=pass (1024-bit key) header.d=opoint.com header.i=@opoint.com header.b="h1TyARy4"
+Received: from localhost (pythagoras.opoint.com [146.247.137.32])
+	by mail7.opoint.com (Postfix) with ESMTP id 57462103DD107E;
+	Wed, 05 Aug 2026 14:03:03 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail7.opoint.com 57462103DD107E
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=opoint.com;
+	s=default; t=1785931383;
+	bh=6Y9nG8cVicK0VstCoC8QG5661QfgL4hCyJFLFLvhFRs=;
+	h=From:To:Cc:Subject:Reply-To:Date:From;
+	b=h1TyARy46+nbn0ntJDG8MQFxSTlvEYJEb1Pe0kifyVMWuhV5kZ+5kjKiKq0JHnvlh
+	 9t7utE+GLzgfet52qDBwz+iJNWjQiniuu4IJuajOW9HU8BY5d/Tj8MEcTZtvV1TN+n
+	 PTCB/YVfirKMqgZArjMSac8LI6jWvg4BfIXwyMA8=
+From: Karl Erik Hofseth <karl.e.hofseth@opoint.com>
+To: linux-mm@kvack.org
+Cc: akpm@linux-foundation.org, qi.zheng@linux.dev, kasong@tencent.com,
+	shakeel.butt@linux.dev, baohua@kernel.org, axelrasmussen@google.com,
+	yuanchu@google.com, weixugc@google.com, hannes@cmpxchg.org,
+	mhocko@kernel.org, roman.gushchin@linux.dev, muchun.song@linux.dev,
+	david@kernel.org, ljs@kernel.org, cgroups@vger.kernel.org,
+	regressions@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: [REGRESSION] mm/memcg: folio/lruvec mismatch after cgroup offline:
+ lru_size underflow and list_del corruption (7.1)
+Message-ID: <anMmd1ADrDVwMO6v@work>
+Reply-To: Karl Erik Hofseth <karl.e.hofseth@opoint.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <178593133473.48761.326106372774468084@mxe9fb.netcup.net>
-X-NC-CID: Zt3h5f8WEYAn/ssQdMI5A704uCoC7Ms1MC51yrixwVBJgSrKOh8=
+Content-Type: multipart/mixed; boundary="fFUjYN/v7KuSJTup"
+Content-Disposition: inline
+Date: Wed, 05 Aug 2026 14:03:03 +0200 (CEST)
+
+--fFUjYN/v7KuSJTup
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+Hi,
+
+The following KASAN slab-use-after-free comes from a Fedora debug kernel
+build of 7.1.6 with de4660898b7a applied on top, provoked with the
+attached script. Further down are OOPSes generated by workloads in
+production on stock Fedora kernels. MGLRU on/off makes no difference.
+
+[  158.750285] BUG: KASAN: slab-use-after-free in __list_del_entry_valid_or_report+0x20c/0x280
+[  158.750306] Read of size 8 at addr ffff8881e2411330 by task python3/2855
+[  158.750325] CPU: 0 UID: 0 PID: 2855 Comm: python3 Kdump: loaded Tainted: G S      W           7.1.6-201.fc44.x86_64+debug #1 PREEMPT(lazy)
+[  158.750337] Tainted: [S]=CPU_OUT_OF_SPEC, [W]=WARN
+[  158.750340] Hardware name: HP ProLiant DL360 Gen9/ProLiant DL360 Gen9, BIOS P89 08/29/2024
+[  158.750345] Call Trace:
+[  158.750350]  <TASK>
+[  158.750438]  __list_del_entry_valid_or_report+0x20c/0x280
+[  158.750446]  lru_gen_del_folio+0x1fb/0x4f0
+[  158.750473]  folio_isolate_lru+0x344/0xbf0
+[  158.750483]  migrate_folio_add+0x1e3/0x620
+[  158.750493]  queue_folios_pte_range+0x7fa/0x960
+[  158.750528]  walk_pmd_range+0x31a/0x7d0
+[  158.750554]  walk_pud_range.isra.0+0x36f/0x770
+[  158.750593]  walk_p4d_range+0x2bf/0x460
+[  158.750606]  walk_pgd_range+0x1d4/0x600
+[  158.750618]  __walk_page_range+0x120/0x250
+[  158.750628]  walk_page_range_mm_unsafe+0x44a/0x8d0
+[  158.750655]  queue_pages_range+0xad/0x110
+[  158.750686]  migrate_to_node+0x1ce/0x320
+[  158.750745]  do_migrate_pages+0x2f8/0x3b0
+[  158.750778]  kernel_migrate_pages+0x655/0x7f0
+[  158.750821]  __x64_sys_migrate_pages+0x96/0x130
+[  158.750836]  do_syscall_64+0x11c/0x6d0
+[  158.750993]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+[  158.751087]  </TASK>
+
+[  158.751149] Allocated by task 2839:
+[  158.751190]  mem_cgroup_alloc+0x439/0xdf0
+[  158.751201]  mem_cgroup_css_alloc+0x4e/0x1060
+[  158.751210]  css_create+0x131/0x6f0
+[  158.751222]  cgroup_apply_control_enable+0x3d2/0x580
+[  158.751229]  cgroup_mkdir+0x1bd/0x510
+[  158.751237]  kernfs_iop_mkdir+0x112/0x1c0
+[  158.751248]  vfs_mkdir+0x2af/0x700
+[  158.751265]  __x64_sys_mkdir+0x68/0x90
+[  158.751273]  do_syscall_64+0x11c/0x6d0
+[  158.751281]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+
+[  158.751292] Freed by task 362:
+[  158.751327]  kfree+0x264/0x750
+[  158.751339]  __mem_cgroup_free+0xa3/0x390
+[  158.751347]  css_free_rwork_fn+0x118/0x790
+[  158.751354]  process_one_work+0x901/0x16a0
+[  158.751362]  worker_thread+0x601/0xff0
+[  158.751368]  kthread+0x36e/0x470
+[  158.751380]  ret_from_fork+0x5bf/0x910
+[  158.751387]  ret_from_fork_asm+0x1a/0x30
+
+[  158.751400] The buggy address belongs to the object at ffff8881e2411080
+                which belongs to the cache mem_cgroup_per_node of size 1984
+[  158.751408] The buggy address is located 688 bytes inside of
+                freed 1984-byte region [ffff8881e2411080, ffff8881e2411840)
+
+Same object, 96ms earlier, as the memcg was freed:
+
+[  158.654036] WARNING: mm/vmscan.c:5864 at lru_gen_exit_memcg+0x254/0x2e0, CPU#23: kworker/23:1/362
+[  158.654763] CPU: 23 UID: 0 PID: 362 Comm: kworker/23:1 Kdump: loaded Tainted: G S                  7.1.6-201.fc44.x86_64+debug #1 PREEMPT(lazy)
+[  158.654807] Workqueue: cgroup_free css_free_rwork_fn
+[  158.654836] RIP: 0010:lru_gen_exit_memcg+0x254/0x2e0
+[  158.654981] Call Trace:
+[  158.654991]  <TASK>
+[  158.655015]  mem_cgroup_css_free+0x86/0x130
+[  158.655045]  css_free_rwork_fn+0x118/0x790
+[  158.655070]  process_one_work+0x901/0x16a0
+[  158.655203]  worker_thread+0x601/0xff0
+[  158.655309]  kthread+0x36e/0x470
+[  158.655354]  ret_from_fork+0x5bf/0x910
+[  158.655548]  </TASK>
+
+The folio/lruvec mismatch is also caught directly, on both the add and the
+delete side:
+
+[  167.625209] page dumped because: VM_WARN_ON_ONCE_FOLIO(!folio_matches_lruvec(folio, lruvec))
+[  167.625265] WARNING: ./include/linux/mm_inline.h:351 at lru_add+0xbf5/0xf30, CPU#20: python3/2998
+[  167.625649] Call Trace:
+[  167.625654]  <TASK>
+[  167.625687]  folio_batch_move_lru+0x207/0x670
+[  167.625744]  __folio_batch_add_and_move+0x2c1/0xa90
+[  167.625768]  migrate_folio_move+0x492/0xb50
+[  167.625839]  migrate_pages_batch+0x1305/0x20d0
+[  167.625891]  migrate_pages_sync+0x12e/0x8c0
+[  167.625931]  migrate_pages+0x9d7/0x1000
+[  167.625989]  migrate_to_node+0x209/0x320
+[  167.626050]  do_migrate_pages+0x2f8/0x3b0
+[  167.626084]  kernel_migrate_pages+0x655/0x7f0
+[  167.626145]  __x64_sys_migrate_pages+0x96/0x130
+[  167.626160]  do_syscall_64+0x11c/0x6d0
+[  167.626412]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+
+[  223.039755] page dumped because: VM_WARN_ON_ONCE_FOLIO(!folio_matches_lruvec(folio, lruvec))
+[  223.039826] WARNING: ./include/linux/mm_inline.h:383 at folio_isolate_lru+0x777/0xbf0, CPU#47: python3/4440
+[  223.040401] Call Trace:
+[  223.040408]  <TASK>
+[  223.040421]  migrate_folio_add+0x1e3/0x620
+[  223.040695]  migrate_to_node+0x1ce/0x320
+[  223.040782]  do_migrate_pages+0x2f8/0x3b0
+[  223.040832]  kernel_migrate_pages+0x655/0x7f0
+[  223.040919]  __x64_sys_migrate_pages+0x96/0x130
+[  223.040941]  do_syscall_64+0x11c/0x6d0
 
 
+This following is the same kernel with MGLRU off:
 
-On 3/9/24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
+[  392.640729] ==================================================================
+[  392.640744] BUG: KASAN: slab-use-after-free in __list_del_entry_valid_or_report+0x20c/0x280
+[  392.640760] Read of size 8 at addr ffff8882322331d0 by task python3/2847
+[  392.640767]
+[  392.640775] CPU: 42 UID: 0 PID: 2847 Comm: python3 Kdump: loaded Tainted: G S                  7.1.6-201.fc44.x86_64+debug #1 PREEMPT(lazy)
+[  392.640783] Tainted: [S]=CPU_OUT_OF_SPEC
+[  392.640785] Hardware name: HP ProLiant DL360 Gen9/ProLiant DL360 Gen9, BIOS P89 08/29/2024
+[  392.640789] Call Trace:
+[  392.640793]  <TASK>
+[  392.640797]  dump_stack_lvl+0x84/0xd0
+[  392.640809]  print_address_description.constprop.0+0x70/0x2f0
+[  392.640821]  print_report+0xfc/0x1fe
+[  392.640826]  ? __virt_addr_valid+0x1de/0x410
+[  392.640838]  kasan_report+0xd9/0x100
+[  392.640845]  ? __list_del_entry_valid_or_report+0x20c/0x280
+[  392.640851]  ? __list_del_entry_valid_or_report+0x20c/0x280
+[  392.640858]  __list_del_entry_valid_or_report+0x20c/0x280
+[  392.640864]  folio_isolate_lru+0x56b/0xbf0
+[  392.640874]  migrate_folio_add+0x1e3/0x620
+[  392.640881]  queue_folios_pte_range+0x7fa/0x960
+[  392.640889]  ? __pfx_queue_folios_pte_range+0x10/0x10
+[  392.640896]  ? local_clock_noinstr+0xf/0x130
+[  392.640905]  walk_pmd_range+0x31a/0x7d0
+[  392.640916]  ? find_held_lock+0x2b/0x80
+[  392.640926]  walk_pud_range.isra.0+0x36f/0x770
+[  392.640933]  ? mt_find+0x588/0x700
+[  392.640941]  ? __pfx_walk_pud_range.isra.0+0x10/0x10
+[  392.640946]  ? __pfx_mt_find+0x10/0x10
+[  392.640953]  walk_p4d_range+0x2bf/0x460
+[  392.640962]  walk_pgd_range+0x1d4/0x600
+[  392.640970]  __walk_page_range+0x120/0x250
+[  392.640977]  walk_page_range_mm_unsafe+0x44a/0x8d0
+[  392.640985]  ? __pfx_walk_page_range_mm_unsafe+0x10/0x10
+[  392.640995]  queue_pages_range+0xad/0x110
+[  392.641004]  ? __pfx_queue_pages_range+0x10/0x10
+[  392.641013]  ? __asan_memset+0x27/0x50
+[  392.641018]  migrate_to_node+0x1ce/0x320
+[  392.641023]  ? local_clock+0x15/0x30
+[  392.641031]  ? __pfx_migrate_to_node+0x10/0x10
+[  392.641037]  ? __mutex_unlock_slowpath+0x17b/0x8b0
+[  392.641054]  ? bitmap_pos_to_ord+0x23/0x60
+[  392.641064]  do_migrate_pages+0x2f8/0x3b0
+[  392.641070]  ? __pfx_do_migrate_pages+0x10/0x10
+[  392.641080]  ? security_capable+0x87/0x150
+[  392.641087]  kernel_migrate_pages+0x655/0x7f0
+[  392.641097]  ? __pfx_kernel_migrate_pages+0x10/0x10
+[  392.641100]  ? do_swap_page+0xa5c/0x2cb0
+[  392.641114]  ? __x64_sys_migrate_pages+0x96/0x130
+[  392.641119]  __x64_sys_migrate_pages+0x96/0x130
+[  392.641124]  do_syscall_64+0x11c/0x6d0
+[  392.641133]  ? local_clock_noinstr+0xf/0x130
+[  392.641138]  ? local_clock+0x15/0x30
+[  392.641143]  ? __lock_acquire+0x506/0xbf0
+[  392.641150]  ? __pfx___css_rstat_updated+0x10/0x10
+[  392.641159]  ? lock_acquire.part.0+0xc7/0x280
+[  392.641163]  ? count_memcg_events_mm.constprop.0+0x22/0x130
+[  392.641170]  ? local_clock+0x15/0x30
+[  392.641175]  ? __lock_release.isra.0+0x1a2/0x370
+[  392.641182]  ? local_clock+0x15/0x30
+[  392.641187]  ? __lock_release.isra.0+0x1a2/0x370
+[  392.641195]  ? rcu_is_watching+0x15/0xe0
+[  392.641199]  ? rcu_is_watching+0x15/0xe0
+[  392.641203]  ? trace_hardirqs_on+0x18/0x1b0
+[  392.641212]  ? preempt_count_add+0x83/0x190
+[  392.641218]  ? do_syscall_64+0x9c/0x6d0
+[  392.641222]  ? do_syscall_64+0xcc/0x6d0
+[  392.641228]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
 
-#regzbot report:
-https://lore.kernel.org/lkml/20260724151419.26014-1-spasswolf@web.de/
-#regzbot fix: Revert "wifi: mt76: Disable napi when removing device"
+[  392.641337] Allocated by task 2815:
+[  392.641343]  kasan_save_stack+0x2f/0x50
+[  392.641348]  kasan_save_track+0x14/0x30
+[  392.641353]  __kasan_slab_alloc+0x64/0x80
+[  392.641358]  kmem_cache_alloc_node_noprof+0x28f/0x7e0
+[  392.641365]  mem_cgroup_alloc+0x439/0xdf0
+[  392.641375]  mem_cgroup_css_alloc+0x4e/0x1060
+[  392.641380]  css_create+0x131/0x6f0
+[  392.641390]  cgroup_apply_control_enable+0x3d2/0x580
+[  392.641395]  cgroup_mkdir+0x1bd/0x510
+[  392.641400]  kernfs_iop_mkdir+0x112/0x1c0
+[  392.641408]  vfs_mkdir+0x2af/0x700
+[  392.641413]  filename_mkdirat+0x3dc/0x510
+[  392.641420]  __x64_sys_mkdir+0x68/0x90
+[  392.641426]  do_syscall_64+0x11c/0x6d0
+[  392.641431]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+[  392.641436]
+[  392.641439] Freed by task 380:
+[  392.641443]  kasan_save_stack+0x2f/0x50
+[  392.641448]  kasan_save_track+0x14/0x30
+[  392.641452]  kasan_save_free_info+0x3b/0x70
+[  392.641459]  __kasan_slab_free+0x47/0x70
+[  392.641464]  kfree+0x264/0x750
+[  392.641473]  __mem_cgroup_free+0xa3/0x390
+[  392.641478]  css_free_rwork_fn+0x118/0x790
+[  392.641483]  process_one_work+0x901/0x16a0
+[  392.641489]  worker_thread+0x601/0xff0
+[  392.641494]  kthread+0x36e/0x470
+[  392.641503]  ret_from_fork+0x5bf/0x910
+[  392.641509]  ret_from_fork_asm+0x1a/0x30
+[  392.641516]
+[  392.641518] The buggy address belongs to the object at ffff888232233180
+ which belongs to the cache mem_cgroup_per_node of size 1984
+[  392.641524] The buggy address is located 80 bytes inside of
+ freed 1984-byte region [ffff888232233180, ffff888232233940)
 
-#regzbot report:
-https://lore.kernel.org/netdev/20260707073826.919541-1-ericwouds@gmail.com/
-#regzbot resolve: inconclusive: might now qualify as regression and
-likely not worth tracking
+[  392.682453] ------------[ cut here ]------------
+[  392.682472] mem_cgroup_update_lru_size(00000000b761c1c5, 0, -1): lru_size -1
+[  392.682488] WARNING: mm/memcontrol.c:1500 at mem_cgroup_update_lru_size+0xa8/0x170, CPU#25: python3/2849
+[  392.682512] Modules linked in: nf_conntrack_netbios_ns nf_conntrack_broadcast nft_fib_inet nft_fib_ipv4 nft_fib_ipv6 nft_fib nft_reject_inet nf_reject_ipv4 nf_reject_ipv6 nft_reject nft_ct nft_chain_nat nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 qrtr nf_tables nfnetlink rfkill mlx5_ib ib_uverbs macsec ib_core mlx5_fwctl fwctl sunrpc vfat fat intel_rapl_msr intel_rapl_common sb_edac raid0 x86_pkg_temp_thermal intel_powerclamp coretemp dm_raid raid456 kvm_intel iTCO_wdt async_raid6_recov intel_pmc_bxt async_memcpy async_pq async_xor async_tx kvm irqbypass rapl intel_cstate joydev mlx5_core intel_uncore ipmi_ssif pcspkr acpi_power_meter ipmi_si acpi_tad mlxfw acpi_ipmi tg3 ipmi_devintf i2c_i801 psample ipmi_msghandler i2c_smbus tls hpilo lpc_ich ioatdma dca fuse zram lz4hc_compress lz4_compress xfs uas usb_storage nvme nvme_core hpsa mgag200 nvme_keyring nvme_auth hpwdt i2c_algo_bit wmi scsi_transport_sas i2c_dev
+[  392.682907] CPU: 25 UID: 0 PID: 2849 Comm: python3 Kdump: loaded Tainted: G S  B               7.1.6-201.fc44.x86_64+debug #1 PREEMPT(lazy)
+[  392.682926] Tainted: [S]=CPU_OUT_OF_SPEC, [B]=BAD_PAGE
+[  392.682933] Hardware name: HP ProLiant DL360 Gen9/ProLiant DL360 Gen9, BIOS P89 08/29/2024
+[  392.682942] RIP: 0010:mem_cgroup_update_lru_size+0xb2/0x170
+[  392.682955] Code: f0 b8 48 83 c4 28 c3 cc cc cc cc 4d 8d 0c 10 4c 89 4c f0 b8 4d 85 c9 79 e9 48 8d 3d a8 c1 c5 05 48 c7 c6 60 de 27 b4 48 89 c2 <67> 48 0f b9 3a 0f 0b c3 cc cc cc cc 48 c7 c7 80 a8 12 b6 4c 89 44
+[  392.682966] RSP: 0018:ffffc9003c1ff088 EFLAGS: 00010086
+[  392.682979] RAX: ffff8881dc722148 RBX: ffffffffffffffff RCX: 0000000000000000
+[  392.682989] RDX: ffff8881dc722148 RSI: ffffffffb427de60 RDI: ffffffffb6defbf0
+[  392.682998] RBP: ffff8881dc722148 R08: ffffffffffffffff R09: ffffffffffffffff
+[  392.683006] R10: 1ffff1103b8e4502 R11: fffffbfff6db5c9d R12: 0000000000000002
+[  392.683014] R13: ffffc9003c1ff601 R14: 0000000000000000 R15: ffff88e07ffd4740
+[  392.683023] FS:  00007fe2750f0bc0(0000) GS:ffff88c744ae8000(0000) knlGS:0000000000000000
+[  392.683033] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  392.683042] CR2: 00007fe274d1bfa0 CR3: 00000002b02b6002 CR4: 00000000001726f0
+[  392.683052] Call Trace:
+[  392.683059]  <TASK>
+[  392.683069]  folio_isolate_lru+0x4ce/0xbf0
+[  392.683090]  migrate_folio_add+0x1e3/0x620
+[  392.683106]  queue_folios_pte_range+0x7fa/0x960
+[  392.683124]  ? __pfx_queue_folios_pte_range+0x10/0x10
+[  392.683135]  ? sched_balance_rq+0x1049/0x1d30
 
-#regzbot report:
-https://lore.kernel.org/dri-devel/0102019fba65882f-45046e0b-9860-445f-a179-c6a1d2acfd1c-000000@eu-west-1.amazonses.com/
-#regzbot monitor:
-https://lore.kernel.org/all/0102019fcb5d411c-e0a555b7-46da-43a1-bd9d-6cb120f58a7f-000000@eu-west-1.amazonses.com/
-#regzbot introduced: cc6ed470caa2
 
-#regzbot report:
-https://lore.kernel.org/kernelci/178467114526.1316.13205923514031471873@kernelci.org/
-#regzbot introduced: b9ad0b9891dd
-#regzbot resolve: patch not in -next anymore, updated one with a fix is
-being prepared
+[  392.684315] ------------[ cut here ]------------
+[  392.684321] kernel BUG at mm/memcontrol.c:1503!
+[  392.684443] Oops: invalid opcode: 0000 [#1] SMP KASAN PTI
+[  392.684502] CPU: 25 UID: 0 PID: 2849 Comm: python3 Kdump: loaded Tainted: G S  B   W           7.1.6-201.fc44.x86_64+debug #1 PREEMPT(lazy)
+[  392.684610] Tainted: [S]=CPU_OUT_OF_SPEC, [B]=BAD_PAGE, [W]=WARN
+[  392.684661] Hardware name: HP ProLiant DL360 Gen9/ProLiant DL360 Gen9, BIOS P89 08/29/2024
+[  392.684723] RIP: 0010:mem_cgroup_update_lru_size+0xb7/0x170
+[  392.684779] Code: 28 c3 cc cc cc cc 4d 8d 0c 10 4c 89 4c f0 b8 4d 85 c9 79 e9 48 8d 3d a8 c1 c5 05 48 c7 c6 60 de 27 b4 48 89 c2 67 48 0f b9 3a <0f> 0b c3 cc cc cc cc 48 c7 c7 80 a8 12 b6 4c 89 44 24 20 89 4c 24
+[  392.684910] RSP: 0018:ffffc9003c1ff088 EFLAGS: 00010086
+[  392.684964] RAX: ffff8881dc722148 RBX: ffffffffffffffff RCX: 0000000000000000
+[  392.685020] RDX: ffff8881dc722148 RSI: ffffffffb427de60 RDI: ffffffffb6defbf0
+[  392.685081] RBP: ffff8881dc722148 R08: ffffffffffffffff R09: ffffffffffffffff
+[  392.685138] R10: 1ffff1103b8e4502 R11: fffffbfff6db5c9d R12: 0000000000000002
+[  392.685195] R13: ffffc9003c1ff601 R14: 0000000000000000 R15: ffff88e07ffd4740
+[  392.685251] FS:  00007fe2750f0bc0(0000) GS:ffff88c744ae8000(0000) knlGS:0000000000000000
+[  392.685316] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  392.685368] CR2: 00007fe274d1bfa0 CR3: 00000002b02b6002 CR4: 00000000001726f0
+[  392.685424] Call Trace:
+[  392.685454]  <TASK>
+[  392.685485]  folio_isolate_lru+0x4ce/0xbf0
+[  392.685536]  migrate_folio_add+0x1e3/0x620
+[  392.685583]  queue_folios_pte_range+0x7fa/0x960
 
-#regzbot report: https://gitlab.freedesktop.org/drm/amd/-/work_items/5529
-#regzbot dup:
-https://lore.kernel.org/alsa-devel/MWHPR04MB1029801AFD77D790D33C53E1592CF2@MWHPR04MB10298.namprd04.prod.outlook.com/
-#regzbot introduced: df4148a5a3cf
 
-#regzbot report:
-https://lore.kernel.org/all/CADyY0-5M0+N1u45RVZN3Tf52iKaXcvKeUaqgdw-wP1B_4zuA0w@mail.gmail.com/
-#regzbot introduced: 105c4256
-#regzbot title: ata: ahci: JMicron JMB58x AHCI 32-bit DMA fallback
-triggers EEH freeze
+The attached script reproduces the crash by repeatedly creating a
+cgroup, faulting anon memory into it on one NUMA node, moving the task
+out so the memory stays charged to the cgroup, migrating that memory to
+the other node, and offlining the cgroup mid-migration. No memory
+pressure needed, only 4MB per cgroup, and reproduces within minutes.
 
-#regzbot report:
-https://lore.kernel.org/all/CAGQo=TJXef-QzbkFEpTcJ138j0k6WYnV4=tNY8Q7s3U7DUOY+Q@mail.gmail.com/
-#regzbot introduced: 8f5b7e2bec1c
-#regzbot title: usb: hub: total system freeze after running adb
+Crucially, the page migration cannot be allowed to complete before the
+cgroup is offlined, or the crash does not reproduce.
 
-#regzbot report:
-https://lore.kernel.org/all/CAMgFczCi2Z011dNf84Amc0Q-qnTt0+VUjWY+Y7zPyXdaH35Jvw@mail.gmail.com/
-#regzbot introduced: 231e9d447ea9
-#regzbot title: selinux: ~90% throughput drop in System V IPC (msg)
-#regzbot fix: selinux: check level category sets once at load time
-#regzbot monitor:
-https://lore.kernel.org/selinux/20260804135700.3713-1-stephen.smalley.work@gmail.com/
+The background is that I've been hitting a string of kernel oopses over
+the last two weeks across several machines. Post-oops, the system
+rapidly becomes locked up. I think I've had something like ten
+occurrences across 24 machines, with vmcores for four of them after
+turning on panic_on_oops. Digging into those led me to the reproduction
+script and from there to the above KASAN traces.
 
-#regzbot report:
-https://lore.kernel.org/all/20260804142800.4326-1-khomyakovilya@gmail.com/
-#regzbot introduced: c273c14b0294
-#regzbot title: scsi: mpi3mr: link rate set incorrectly
-#regzbot fix: scsi: mpi3mr: use DevicePage0 link rate only for
-direct-attached targets
+Running stock Fedora kernels:
+Linux version 7.1.4-200.fc44.x86_64 (mockbuild@0e799cccde284e4a829ae8b1987d7732) (gcc (GCC) 16.1.1 20260515 (Red Hat 16.1.1-2), GNU ld version 2.46.1-1.fc44) #1 SMP PREEMPT_DYNAMIC Sat Jul 18 19:16:16 UTC 2026
 
-#regzbot report:
-https://lore.kernel.org/all/20260804140403.16337-1-kfastov@gmail.com/
-#regzbot introduced: 28e3918179aa75
-#regzbot title: drm/gem-shmem: muvm GPU acceleration dies with KVM
-#regzbot fix: drm/shmem_helper: use vmf_insert_pfn_mkwrite()
+7.0.14 is unaffected, and downgrading to it has been the workaround on
+some of our fleet while I dug into it.
 
-#regzbot report:
-https://lore.kernel.org/all/20260804185118.19705-1-lucid_duck@justthetip.ca/
-#regzbot introduced: e88098133ed4
-#regzbot title: wifi: mt76: mt7921: sessions pile up due to
-self-deadlocks and the machine has to be reset
-#regzbot fix: wifi: mt76: mt7921: refactor regd update to fix recursive
-mutex deadlock
+The workload is SolrCloud hosting some 150TiB of data across 12 nodes
+with the whole setup duplicated on a similar set of 12 nodes, with a mix
+of Intel Xeon E5-2699A v4 and E5-2680 v3, 2 sockets, 44 or 24 cores, HT
+on for 88 or 48 threads on 2 NUMA nodes, 756GiB memory, 10 Solr JVMs on
+each box with an 8-disk 27TiB XFS volume. MGLRU on (Fedora default).
+Zram loaded as Fedora default, 8GiB swap. After enabling panic_on_oops
+across 12 nodes, I got one occurrence after ~4 days of uptime, then
+another three while shutting down the workloads and unmounting the xfs
+volume.
 
+[345615.015671]  slab mem_cgroup_per_node start ffff8b4d92609e00 pointer offset 376 size 1920
+[345615.015685] list_del corruption. next->prev should be fffffc0984845908, but was ffff8b4d92609f78. (next=ffff8b4d92609f78)
+[345615.015713] kernel BUG at lib/list_debug.c:65!
+[345615.015744] Oops: invalid opcode: 0000 [#1] SMP PTI
+[345615.015759] CPU: 10 UID: 1000 PID: 439607 Comm: qtp1321203216-1 Kdump: loaded Not tainted 7.1.4-200.fc44.x86_64 #1 PREEMPT(lazy)
+[345615.015780] Hardware name: HP ProLiant DL360 Gen9/ProLiant DL360 Gen9, BIOS P89 08/29/2024
+[345615.015794] RIP: 0010:__list_del_entry_valid_or_report+0x10a/0x110
+[345615.015959] Call Trace:
+[345615.015967]  <TASK>
+[345615.015975]  lru_gen_del_folio.constprop.0+0x197/0x3c0
+[345615.015993]  lru_activate+0x91/0x3e0
+[345615.016025]  folio_batch_move_lru+0xbb/0x1b0
+[345615.016035]  lru_add_drain+0x1c/0x40
+[345615.016045]  shrink_node+0x4cc/0x5f0
+[345615.016055]  shrink_zones.constprop.0+0x9f/0x2d0
+[345615.016066]  do_try_to_free_pages+0x4a/0x270
+[345615.016076]  try_to_free_pages+0xfb/0x240
+[345615.016088]  __alloc_pages_slowpath.constprop.0+0x275/0xb70
+[345615.016103]  __alloc_frozen_pages_noprof+0x31e/0x380
+[345615.016116]  alloc_pages_mpol+0xb2/0x180
+[345615.016127]  alloc_pages_noprof+0x59/0xe0
+[345615.016138]  get_free_pages_noprof+0x11/0x40
+[345615.016148]  __x64_sys_mincore+0x9f/0x240
+[345615.016171]  do_syscall_64+0xe2/0x560
+[345615.016715]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+[345615.018959]  </TASK>
+
+I have vmcores for four in vivo occurrences, as well as several
+synthetically provoked occurrences and can share data from them on
+request. They show three different entry points to the oops across four
+different machines:
+
+1) Comm: qtp.. (Solr), mincore -> direct reclaim -> lru_activate
+   slab mem_cgroup_per_node start ffff8b4d92609e00 pointer offset 376 size 1920
+   list_del corruption. next->prev should be fffffc0984845908, but was ffff8b4d92609f78. (next=ffff8b4d92609f78)
+2) Comm: kcompactd0, via isolate_migratepages_block:
+   slab mem_cgroup_per_node start ffff88c79b26b480 pointer offset 376 size 1920
+   list_del corruption. next->prev should be fffff1326e512f48, but was ffff88c79b26b5f8. (next=ffff88c79b26b5f8)
+3) Comm: umount, via truncate_inode_pages_range -> xfs_fs_evict_inode
+   slab mem_cgroup_per_node start ffff88daeca18000 pointer offset 856 size 1920
+   list_del corruption. prev->next should be fffffcc340724a08, but was ffff88daeca18358. (prev=ffff88daeca18358)
+4) Comm: umount, same path, different host:
+   slab mem_cgroup_per_node start ffff8b0513dd0780 pointer offset 856 size 1920
+   list_del corruption. prev->next should be ffffedc03be88e88, but was ffff8b0513dd0ad8. (prev=ffff8b0513dd0ad8)
+
+With the script, I have provoked crashes on 7.1.4-200.fc44,
+7.1.5-201.fc44, and 7.1.6-201.fc44 + de4660898b7a. I have also been
+seeing the premature OOMs mentioned in de4660898b7a on these and other
+servers in my stack, but that commit does not seem to fix this crash.
+
+I am happy to provide more information or test any patches.
+
+Thanks,
+Karl Erik Hofseth
+
+#regzbot introduced: v7.0..v7.1
+
+--fFUjYN/v7KuSJTup
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: attachment; filename=min-repro.py
+
+#!/usr/bin/env python3
+"""Minimal reproducer for the 7.1 MGLRU list_del corruption in lru_gen_del_folio().
+
+Each worker, repeatedly: fault MEM_MB of anon memory in inside a fresh cgroup,
+bounce it between two NUMA nodes with migrate_pages(2), and offline the cgroup
+while that migration is still in flight.
+
+A bottom-up search showed those three ingredients -- cross-node migration, in
+flight across the offline, mapping outliving the cgroup -- are each necessary;
+in particular, letting the migration finish before the rmdir does not reproduce.
+
+Expect "list_del corruption ... but was <X>. (next=<X>)"
+
+This is meant to produce an oops/panic, so be careful when you run it.
+"""
+import ctypes, mmap, os, signal, sys, time
+
+MEM_MB = int(os.environ.get("MEM_MB", 4))
+WORKERS = int(os.environ.get("WORKERS", 4))
+DWELL = float(os.environ.get("DWELL", 0.3))
+CG = "/sys/fs/cgroup/mglru-min"
+
+SYS_MIGRATE_PAGES = 256
+if os.uname().machine != "x86_64":
+    sys.exit(f"{os.uname().machine}: syscall {SYS_MIGRATE_PAGES} is migrate_pages(2) "
+             "on x86_64 only -- look up the number for this arch before running")
+
+libc = ctypes.CDLL(None, use_errno=True)
+libc.syscall.restype = ctypes.c_long
+libc.syscall.argtypes = [ctypes.c_long, ctypes.c_long, ctypes.c_ulong,
+                         ctypes.c_void_p, ctypes.c_void_p]
+
+
+def migrate(pid, src, dst):
+    """migrate_pages(2): move pid's pages from node src to node dst."""
+    a, b = ctypes.c_ulong(1 << src), ctypes.c_ulong(1 << dst)
+    return libc.syscall(SYS_MIGRATE_PAGES, pid, 64, ctypes.byref(a), ctypes.byref(b))
+
+
+def spawn(fn, *args):
+    pid = os.fork()
+    if pid:
+        return pid
+    try:
+        fn(*args)
+    finally:
+        os._exit(0)
+
+
+def reap(pid):
+    try:
+        os.kill(pid, signal.SIGKILL)
+        os.waitpid(pid, 0)
+    except OSError:
+        pass
+
+
+def rmdir(path):
+    try:
+        os.rmdir(path)
+    except OSError:
+        pass
+
+
+def hold(cg):
+    """Join the cgroup, fault the memory in, then wait to be killed."""
+    open(f"{cg}/cgroup.procs", "w").write(str(os.getpid()))
+    m = mmap.mmap(-1, MEM_MB << 20, flags=mmap.MAP_PRIVATE | mmap.MAP_ANONYMOUS)
+    for off in range(0, MEM_MB << 20, 4096):
+        m[off] = 1
+    signal.pause()
+
+
+def bounce(pid, src, dst):
+    """Keep migration in flight until killed."""
+    while migrate(pid, src, dst) >= 0:
+        src, dst = dst, src
+        time.sleep(0.01)
+
+
+def worker(idx, src, dst):
+    want, i = int(MEM_MB * 0.9) << 20, 0
+    while True:
+        i += 1
+        cg = f"{CG}/w{idx}-{i}"
+        os.mkdir(cg)
+        pid = spawn(hold, cg)
+        while int(open(f"{cg}/memory.current").read()) < want:
+            time.sleep(0.05)                       # until charged here
+        migrate(pid, dst, src)                     # deterministic starting point
+        open(f"{CG}/holding/cgroup.procs", "w").write(str(pid))
+        mig = spawn(bounce, pid, src, dst)         # in flight...
+        os.rmdir(cg)                               # ...across the offline
+        time.sleep(DWELL)
+        reap(mig)
+        reap(pid)                                  # walks the stale list
+        if i % 25 == 0:
+            print(f"worker {idx}: {i} iterations", flush=True)
+
+
+def main():
+    if os.geteuid():
+        sys.exit("need root")
+    nodes = sorted(int(d[4:]) for d in os.listdir("/sys/devices/system/node")
+                   if d.startswith("node") and d[4:].isdigit())
+    if len(nodes) < 2:
+        sys.exit(f"need >= 2 NUMA nodes (found {len(nodes)})")
+    src = int(os.environ.get("SRC", nodes[1]))
+    dst = int(os.environ.get("DST", nodes[0]))
+
+    os.makedirs(f"{CG}/holding", exist_ok=True)
+    open(f"{CG}/cgroup.subtree_control", "w").write("+memory")
+    print(f"node {src} -> {dst}; {WORKERS} workers x {MEM_MB}MB", flush=True)
+
+    kids = [spawn(worker, n, src, dst) for n in range(WORKERS)]
+    try:
+        os.waitpid(-1, 0)                          # they do not exit on their own
+    except (KeyboardInterrupt, OSError):
+        pass
+    finally:
+        for k in kids:
+            reap(k)
+        try:
+            for pid in open(f"{CG}/holding/cgroup.procs").read().split():
+                reap(int(pid))
+        except OSError:
+            pass
+        time.sleep(1)
+        for d in (os.listdir(CG) if os.path.isdir(CG) else []):
+            rmdir(f"{CG}/{d}")
+        rmdir(CG)
+
+
+if __name__ == "__main__":
+    main()
+
+--fFUjYN/v7KuSJTup--
