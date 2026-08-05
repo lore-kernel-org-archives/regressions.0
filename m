@@ -1,64 +1,69 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7151D38F94C;
-	Wed,  5 Aug 2026 16:35:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A1543CE0A2
+	for <regressions@lists.linux.dev>; Wed,  5 Aug 2026 17:22:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785947726; cv=none; b=JSwkcEPVdYky5JSm8taxBBo914xTTrQjS7MOMwyltDb7L4xiG6yVxxDwbVvhgccN6WmdLU9E3Pk8RZ/UtpSx8uDElaOJdNJOfP43wr9pcF3dqCM7G/XEb10e6J804IjuvBtGaHBxBqR2PKxi0CXvHpnEH+nJCq9swXpgTjlcgnc=
+	t=1785950576; cv=none; b=doQIh0mvPBuvK5X9yfXKBKJJXqBNG6yMSFmg0EWn6oiwjB2P/imZytMHaFKZ9B/WSNj00Dv318oCTO2KpONu5hhv8GHCAsXfFYohqUubGuc1uyDb7HCB/1XeWbd9XYEUOhqLdlRXNL655C6570pRvrkU/l27dy/XKEm1H5RuP5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785947726; c=relaxed/simple;
-	bh=vN7lkFzIpKLgtv3dZlM+g2oykOBGBp7GF3owi2TmKGE=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=TKSlaSNXDLR5H0sm1qdwr6Wr1yfN5VwBWRSWK6irtLXVr0ujekogvKNWNzvSRT0AQiT4FBuPdKqdtCgekUFGI7supfj1oDDLNJjcy8Yhjw9VnLdxNCawi0bgCrTSoSaCDhNNEok9sKC35t0WU/TOK2ULhCyf5BkQix/D+3fD45A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=TLCmxcFt; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1785950576; c=relaxed/simple;
+	bh=CGRZ0fGKrFPeIPk0wfJJU9CIAZZ1gq89y0dNmFgBWDw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kAcqqtPLHLYJjJDo2pONqgCJD4uIZaKyApDAq07GUDJWtGKnkW1puNXP7bLo46jaleeDFknGCHLgXsGMtTP1uAZb3SU0mupeqoAaVhgD36hWljsAJXro53+X49ao+aH5x367wxggfip1zDkM0gq3uGaxZ+ms4058VvMOGcM8THw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=sYPHyWKI; arc=none smtp.client-ip=91.218.175.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="TLCmxcFt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3506C1F000E9;
-	Wed,  5 Aug 2026 16:35:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux-foundation.org; s=korg; t=1785947723;
-	bh=B2IZsfPpsux+E527CUuTRqT8JGlvoLVPd2Xo1Wt0WcE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=TLCmxcFtPmKmJw3b6jjHmbr4CL+s1zDyuXlk6OFlCRwEhNIeNLHi35W7Ls7YE82EW
-	 W2p6+rK5IAg3hawJdr5lWGCY21Pj2UGg+57kqKrm+SqfUZJeBQvYI5o9Ut2TMonPTZ
-	 QKuBORqJS01zEJaSl245TvO96PhQnIC2dTJFe1rs=
-Date: Wed, 5 Aug 2026 09:35:22 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Karl Erik Hofseth <karl.e.hofseth@opoint.com>
-Cc: linux-mm@kvack.org, qi.zheng@linux.dev, kasong@tencent.com,
- shakeel.butt@linux.dev, baohua@kernel.org, axelrasmussen@google.com,
- yuanchu@google.com, weixugc@google.com, hannes@cmpxchg.org,
- mhocko@kernel.org, roman.gushchin@linux.dev, muchun.song@linux.dev,
- david@kernel.org, ljs@kernel.org, cgroups@vger.kernel.org,
- regressions@lists.linux.dev, linux-kernel@vger.kernel.org
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="sYPHyWKI"
+Date: Wed, 5 Aug 2026 10:22:45 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1785950571;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Dy/CNBOqcKFUjchmAdIYo5sPodHd+JUZpILf5uw/+yY=;
+	b=sYPHyWKIm4d/FYXyH6ZwuNq4kRuydrm2LDu31SsD2Bv8mG23+8S0tguoa3DqIR6jiogVRW
+	OaGgs8QqxUDCp9AvwiKSw5btQMsEFf9nvb+i+MGTogNi8vYQ6kUXS/vvyd2uQ2mdKDbnBf
+	pOLPP/KSZC3Ec5wIO4CjQTlIy0hQwZw=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Shakeel Butt <shakeel.butt@linux.dev>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Karl Erik Hofseth <karl.e.hofseth@opoint.com>, linux-mm@kvack.org, 
+	qi.zheng@linux.dev, kasong@tencent.com, baohua@kernel.org, axelrasmussen@google.com, 
+	yuanchu@google.com, weixugc@google.com, hannes@cmpxchg.org, mhocko@kernel.org, 
+	roman.gushchin@linux.dev, muchun.song@linux.dev, david@kernel.org, ljs@kernel.org, 
+	cgroups@vger.kernel.org, regressions@lists.linux.dev, linux-kernel@vger.kernel.org
 Subject: Re: [REGRESSION] mm/memcg: folio/lruvec mismatch after cgroup
  offline: lru_size underflow and list_del corruption (7.1)
-Message-Id: <20260805093522.e3ba46aca3a143207d68a65e@linux-foundation.org>
-In-Reply-To: <anMmd1ADrDVwMO6v@work>
+Message-ID: <anNxSMBgNeLytWOu@linux.dev>
 References: <anMmd1ADrDVwMO6v@work>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+ <20260805093522.e3ba46aca3a143207d68a65e@linux-foundation.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260805093522.e3ba46aca3a143207d68a65e@linux-foundation.org>
+X-Migadu-Flow: FLOW_OUT
 
-On Wed, 05 Aug 2026 14:03:03 +0200 (CEST) Karl Erik Hofseth <karl.e.hofseth@opoint.com> wrote:
+On Wed, Aug 05, 2026 at 09:35:22AM -0700, Andrew Morton wrote:
+> On Wed, 05 Aug 2026 14:03:03 +0200 (CEST) Karl Erik Hofseth <karl.e.hofseth@opoint.com> wrote:
+> 
+> > The following KASAN slab-use-after-free comes from a Fedora debug kernel
+> > build of 7.1.6 with de4660898b7a applied on top, provoked with the
+> > attached script. Further down are OOPSes generated by workloads in
+> > production on stock Fedora kernels. MGLRU on/off makes no difference.
+> 
+> Thanks.  It does appear to be a race between migration and memcg
+> removal.
+> 
+> Gemini provides some thoughts, although I've found these AI crash
+> interpretations to be a bit unreliable.
+> 
+> 	https://share.gemini.google/Y6dMvOlHIFuV
 
-> The following KASAN slab-use-after-free comes from a Fedora debug kernel
-> build of 7.1.6 with de4660898b7a applied on top, provoked with the
-> attached script. Further down are OOPSes generated by workloads in
-> production on stock Fedora kernels. MGLRU on/off makes no difference.
-
-Thanks.  It does appear to be a race between migration and memcg
-removal.
-
-Gemini provides some thoughts, although I've found these AI crash
-interpretations to be a bit unreliable.
-
-	https://share.gemini.google/Y6dMvOlHIFuV
-
+I am looking into the issue and will report back.
