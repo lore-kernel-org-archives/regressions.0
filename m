@@ -1,88 +1,147 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.162])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFF5F47ACFD;
-	Wed,  5 Aug 2026 15:45:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.162
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9CBC481656
+	for <regressions@lists.linux.dev>; Wed,  5 Aug 2026 16:01:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785944721; cv=none; b=g/eax8Zi6VlDEkiKZ+Yhcj80BH1CcUiwrls98ihioYjYZ67zLD+QSeSl7TDvA4JqMx0WdhrYjiW+NU1Tq476+GLutIwQeZhneksLZ+bi50JzeEcRbxS+y3LFzFs5jSo7msePnsXdD+Ax+UfNnq4+ljy3zGjUJ6JY+KOVy3aKGoE=
+	t=1785945710; cv=none; b=uHys6FF4vP29v8RVzz+nK/j9AbnULcfj0xkKxiljw5L/kZwwS8+jInNqKybSfDxMKr5LiZzUyB00ZXeMz4fXOVgsR3/fqXrP23q3KHp+h2QIe/5+P/Q/dSRXYyihBRcNGrvF6yNpxd2adzNTGJvaRZokf9PtZPIojTmD9P7o4Uk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785944721; c=relaxed/simple;
-	bh=e7XxFotGuFOBpsBqjcMVh3JT+Rft7GLqtR4Lq4n24L4=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=G1B45hfw8vqOVb8UPWE/uMXby1tZoZmQ/FNQlZFVGuPyRoe6aeCZXP26PfG3DGItBCic0y4dGwwXhdnqd/xzFQWjMJbDnjFpwOy/3TvCms7xWSNGw8JDDDBS8zh3DRbnBPzXtF5LLu0pLDq8rIeP3EgCQO1Lb6yPOVjWijGxQIY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=ley7J1mE; arc=none smtp.client-ip=188.68.63.162
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1785945710; c=relaxed/simple;
+	bh=xAbaVHxc2dMOzrDQrzk6m+BmC0sNBSR4flGgtHWvDMQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=a3xYKV7DU7Cdtie5BH/4r9M6ZmeamOMunYA0rYooh8U2mZ9ysV3DYs4NPs/2NWFLpjmDszSGeA4A44U9lnKXNoj66EWcZCVZxGfZNGjKRwP5vOQ15SAf1CjGWknywdfWrYOHYe/+Wy3vg58KL7hnQq9MXgADQ+DFsRQHjv4XGTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NCP3luce; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="ley7J1mE"
-Received: from mors-relay-8201.netcup.net (localhost [127.0.0.1])
-	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4hFZT7698Pz3vqh;
-	Wed,  5 Aug 2026 17:43:55 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1785944635;
-	bh=e7XxFotGuFOBpsBqjcMVh3JT+Rft7GLqtR4Lq4n24L4=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=ley7J1mEbqA3udJO3cZ8VtvW49dohCWytmxej9S+okpe2us7B7pm171QlnBUx9LxM
-	 q7V1JpVTQonhSvbdFwVtLEbn9vTN1OY/m+WAvKb6dtH52y7C2ulFjMsrwig9nERLgX
-	 SJgtqjOfzM7colZ6S37LkT2KAbm0F+VTXyIIBqquhGhMrq/W0BpykhOuPQJydWrvOn
-	 EAfwYUCfCFLBMFVGz+Thy8luN1gw+q4eh3T9jyfXMempGQWBX8Xt7ToVvdmlQIr28I
-	 4jtKbe/JfTr1Y8lUxkQe1W/V4bGCiStBYkowk1p9+KQ6G57IfQF1EbpyHZyVGXoKk0
-	 d4AVfj+t7i2oQ==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4hFZSk3xgYz3yKl;
-	Wed,  5 Aug 2026 17:43:34 +0200 (CEST)
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4hFZSj3Tt0z8sch;
-	Wed,  5 Aug 2026 17:43:33 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 78DCC5FC77;
-	Wed,  5 Aug 2026 17:43:28 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <25428915-b06b-4bdc-bc52-bc7f50e55db9@leemhuis.info>
-Date: Wed, 5 Aug 2026 17:43:27 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NCP3luce"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 733571F00A3E
+	for <regressions@lists.linux.dev>; Wed,  5 Aug 2026 16:01:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1785945696;
+	bh=GsmC6QA8gkvnd3hLSg9Klgxkzd6KUrmOUb1n5QfNqYY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=NCP3luceVZjP+YRbFN732Z8MY1iXD9lZIaDJx8RdmXDnrAA6aNbIN8x0D99bSwj+n
+	 X8cvaQNXEuKMGlZ0AQHEhMrGEQmWbz31y6CXhkKqnxkK/JPWfvFYTz+fTVB9r2RSmu
+	 PSUU3A7oJOAK0m5til5+4E8i9a2Zm+OQhLTY8d5NPHUM8i1CcZdu+XCSN1hDId51Z+
+	 ISAV6KFWshUdKl6IXXTCBcnZzKrTg42ZKwYCpHQRuJF+jfM3101e0kEitfAXZTNDm8
+	 Zr5TEyWfnueChba5yKvkL/RhF7Pa4x+NW1kbdlzj4CribtBZ0+LBcuFsT/o4QWwkQq
+	 tokZQdab3WBLw==
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5b01910b499so20175e87.0
+        for <regressions@lists.linux.dev>; Wed, 05 Aug 2026 09:01:36 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AHgh+Rp83d26cPk5DmUwecchGQcaptpQ6eZFzrHUikWs/nIY0zdjlAFdSAK9Xg7D4ieDVcKQ5rbntZEAKw3Kpw==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwovK9aZm60XC8It2Zl9yTudVkMuQtVmPN7onWZhJZRdOXk94Tk
+	i8HltZora0DjRpr6DWtIqEs9GbsgTSeet1vAPvAiL+TKJLBKwThwbapihqRnqonE9xrvWl2Vc1S
+	lSPDfcuGPJE/yYKWTA8uEBIkfY/9HBQ4=
+X-Received: by 2002:ac2:4c53:0:b0:5b2:aad1:7dc2 with SMTP id
+ 2adb3069b0e04-5b2fe7bec59mr27783e87.21.1785945694862; Wed, 05 Aug 2026
+ 09:01:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] next/master: (build) use of undeclared identifier
- 'check_vector_unaligned_access'; did ...
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: kernelci@lists.linux.dev, kernelci-results@groups.io
-Cc: regressions@lists.linux.dev, linux-next@vger.kernel.org
-References: <178543074351.4076.15027730787524065993@kernelci.org>
- <9d66c14c-5ef8-4e2e-aa1a-ece90901518c@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <9d66c14c-5ef8-4e2e-aa1a-ece90901518c@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <178594460877.2151836.6710921791439212242@mxe9fb.netcup.net>
-X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: 78DCC5FC77
-X-NC-CID: 9/f5E4Dv5k41ddZYOBQ8irrNBARcgK/N5Y76YMWpcM5JQ2FXInI=
+References: <CAJOGg3z6LJPDsdPNBxajgy8_wQxfhYBRxe4EiurZf3kPU5A5Bw@mail.gmail.com>
+ <f42cc94c-ff60-4999-b473-c2fc5b1b4199@intel.com>
+In-Reply-To: <f42cc94c-ff60-4999-b473-c2fc5b1b4199@intel.com>
+From: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>
+Date: Wed, 5 Aug 2026 18:01:21 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0j1Tucb0yzS8=3U_X1E4ziztjgOsiYrc_QfUUKZfScCPA@mail.gmail.com>
+X-Gm-Features: AUfX_myW7xu4tnlSo8vBz4hdbtZoOseDwqKUO260JwpnpQ0OYqDFe4bcn4eCJH4
+Message-ID: <CAJZ5v0j1Tucb0yzS8=3U_X1E4ziztjgOsiYrc_QfUUKZfScCPA@mail.gmail.com>
+Subject: Re: [REGRESSION] no TPM device after "tpm_crb: Convert ACPI driver to
+ a platform one"
+To: "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>
+Cc: Julien <julien82453@gmail.com>, regressions@lists.linux.dev, jarkko@kernel.org, 
+	linux-integrity@vger.kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
+Content-Type: multipart/mixed; boundary="000000000000bb187606584ee296"
 
-On 7/31/26 11:43, Thorsten Leemhuis wrote:
-> On 7/30/26 18:59, KernelCI bot wrote:
->> New build issue found on next/master:
-> 
-> Also reported by the "kernel test robot":
-> https://lore.kernel.org/oe-kbuild-all/202607301618.yrE3EKfS-lkp@intel.com/
-> 
-> Fix is under review:
-For the record, things were fixed differently in the end:
+--000000000000bb187606584ee296
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-#regzbot resolve: fix was squashed (broke during a conflict resolution)
+On Tue, Aug 4, 2026 at 9:08=E2=80=AFPM Wysocki, Rafael J
+<rafael.j.wysocki@intel.com> wrote:
+>
+> Hi,
+>
+> On 8/2/2026 2:54 PM, Julien wrote:
+> > Hello,
+> >
+> > Please keep in mind this is my first time reporting a Linux kernel
+> > regression.
+> >
+> > Since commit 48fe2cddc85c ("tpm_crb: Convert ACPI driver to a platform
+> > one"), my TPM device is no longer available. Both /dev/tpm0 and
+> > /dev/tpmrm0 are missing.
+> >
+> > Log messages:
+> > platform MSFT0101:00: failed to claim resource 1: [mem
+> > 0xfed40000-0xfed40fff]
+> > acpi MSFT0101:00: platform device creation failed: -16
+> >
+> So there's no platform device for the driver to bind to.
+>
+> I think that these messages have been present in the kernel logs for
+> quite some time, but previously they were not connected to any
+> functional issues.
+>
+>
+> > I added some debug logging:
+> > ACPI resourcet[0] =3D [mem 0xfed40040-0xfed4103f flags 0x200]
+> > ACPI resourcet[1] =3D [mem 0xfed40000-0xfed40fff flags 0x200]
+> >
+> > I think the failure happens in kernel/resource.c: __insert_resource()
+> > because of the two memory regions overlapping.
+> >
+> This is quite plausible, but if that's the case, it should be fixable.
+>
+> Let me figure out something.
 
-Full quote from
-https://lore.kernel.org/all/8d641414-87eb-af9c-5341-07d25efa6cb4@kernel.org/
+Please try the attached patch and let me know how it goes.
 
-""Thanks, looks like I broke this during conflict resolution.  Sorry
-about  that.  I squashed the fix into the original as you suggested.""
+It applies on top of the current mainline, but it may be adjusted to
+older kernels, so please let me know if you need that.
+
+--000000000000bb187606584ee296
+Content-Type: text/x-patch; charset="US-ASCII"; name="acpi-platform-adjust-resources.patch"
+Content-Disposition: attachment; 
+	filename="acpi-platform-adjust-resources.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_msg9rd8a0>
+X-Attachment-Id: f_msg9rd8a0
+
+LS0tCiBkcml2ZXJzL2FjcGkvYWNwaV9wbGF0Zm9ybS5jIHwgICAzOSArKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrLS0KIDEgZmlsZSBjaGFuZ2VkLCAzNyBpbnNlcnRpb25zKCsp
+LCAyIGRlbGV0aW9ucygtKQoKLS0tIGEvZHJpdmVycy9hY3BpL2FjcGlfcGxhdGZvcm0uYworKysg
+Yi9kcml2ZXJzL2FjcGkvYWNwaV9wbGF0Zm9ybS5jCkBAIC03MSw2ICs3MSwzOSBAQCBzdGF0aWMg
+c3RydWN0IG5vdGlmaWVyX2Jsb2NrIGFjcGlfcGxhdGZvCiAJLm5vdGlmaWVyX2NhbGwgPSBhY3Bp
+X3BsYXRmb3JtX2RldmljZV9yZW1vdmVfbm90aWZ5LAogfTsKIAorc3RhdGljIHZvaWQgYWNwaV9w
+bGF0Zm9ybV9hZGp1c3RfcmVzb3VyY2Uoc3RydWN0IGFjcGlfZGV2aWNlICphZGV2LAorCQkJCQkg
+IHN0cnVjdCByZXNvdXJjZSAqbmV3X3JlcywKKwkJCQkJICBjb25zdCBzdHJ1Y3QgcmVzb3VyY2Ug
+KnJlc291cmNlcywKKwkJCQkJICB1bnNpZ25lZCBpbnQgY291bnQpCit7CisJdW5zaWduZWQgaW50
+IGk7CisKKwlpZiAoIShuZXdfcmVzLT5mbGFncyAmIChJT1JFU09VUkNFX0lPIHwgSU9SRVNPVVJD
+RV9NRU0pKSkKKwkJcmV0dXJuOworCisJZm9yIChpID0gMDsgaSA8IGNvdW50OyBpKyspIHsKKwkJ
+Y29uc3Qgc3RydWN0IHJlc291cmNlICpyZXMgPSAmcmVzb3VyY2VzW2ldOworCisJCWlmIChyZXNv
+dXJjZV90eXBlKG5ld19yZXMpICE9IHJlc291cmNlX3R5cGUocmVzKSkKKwkJCWNvbnRpbnVlOwor
+CisJCWlmICghcmVzb3VyY2Vfb3ZlcmxhcHMobmV3X3JlcywgcmVzKSkKKwkJCWNvbnRpbnVlOwor
+CisJCWRldl9pbmZvKCZhZGV2LT5kZXYsICJBZGp1c3RpbmcgcmVzb3VyY2UgJXBSIHRvICVwUlxu
+IiwgbmV3X3JlcywgcmVzKTsKKwkJLyoKKwkJICogRXh0ZW5kIHRoZSBuZXcgcmVzb3VyY2UgdG8g
+aW5jbHVkZSB0aGUgb25lIHRoYXQgaGFzIGJlZW4KKwkJICogcHJvY2Vzc2VkIGFscmVhZHkgdG8g
+YXZvaWQgcmVzb3VyY2UgaW5zZXJ0aW9uIGZhaWx1cmVzIGR1cmluZworCQkgKiBwbGF0Zm9ybSBk
+ZXZpY2UgcmVnaXN0cmF0aW9uLgorCQkgKi8KKwkJaWYgKHJlcy0+c3RhcnQgPCBuZXdfcmVzLT5z
+dGFydCkKKwkJCW5ld19yZXMtPnN0YXJ0ID0gcmVzLT5zdGFydDsKKworCQlpZiAocmVzLT5lbmQg
+PiBuZXdfcmVzLT5lbmQpCisJCQluZXdfcmVzLT5lbmQgPSByZXMtPmVuZDsKKwl9Cit9CisKIHN0
+YXRpYyB2b2lkIGFjcGlfcGxhdGZvcm1fZmlsbF9yZXNvdXJjZShzdHJ1Y3QgYWNwaV9kZXZpY2Ug
+KmFkZXYsCiAJY29uc3Qgc3RydWN0IHJlc291cmNlICpzcmMsIHN0cnVjdCByZXNvdXJjZSAqZGVz
+dCkKIHsKQEAgLTE1MSwxMCArMTg0LDEyIEBAIHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKmFjcGlf
+Y3JlYXRlX3BsYXQKIAkJCQlyZXR1cm4gRVJSX1BUUigtRU5PTUVNKTsKIAkJCX0KIAkJCWNvdW50
+ID0gMDsKLQkJCWxpc3RfZm9yX2VhY2hfZW50cnkocmVudHJ5LCAmcmVzb3VyY2VfbGlzdCwgbm9k
+ZSkKKwkJCWxpc3RfZm9yX2VhY2hfZW50cnkocmVudHJ5LCAmcmVzb3VyY2VfbGlzdCwgbm9kZSkg
+eworCQkJCWFjcGlfcGxhdGZvcm1fYWRqdXN0X3Jlc291cmNlKGFkZXYsIHJlbnRyeS0+cmVzLAor
+CQkJCQkJCSAgICAgIHJlc291cmNlcywgY291bnQpOwogCQkJCWFjcGlfcGxhdGZvcm1fZmlsbF9y
+ZXNvdXJjZShhZGV2LCByZW50cnktPnJlcywKIAkJCQkJCQkgICAgJnJlc291cmNlc1tjb3VudCsr
+XSk7Ci0KKwkJCX0KIAkJCWFjcGlfZGV2X2ZyZWVfcmVzb3VyY2VfbGlzdCgmcmVzb3VyY2VfbGlz
+dCk7CiAJCX0KIAl9Cg==
+--000000000000bb187606584ee296--
