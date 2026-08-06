@@ -1,123 +1,80 @@
-Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23037471CFD
-	for <regressions@lists.linux.dev>; Thu,  6 Aug 2026 11:54:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.128.179
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786017297; cv=pass; b=IFvCqsT7z5YJR7CaVNsy/QAFn4Q/l+iqXvMrB4ptIByqZahcfpr3dja8wO6w9q79epFgl9jcODVI+5dUo9WtaDDO47JKJZdJ1AIlMdE1aBeqNxS3rPAy4ts4y8gIEfp+A3tIaf4o7id+cZUCAp7Ve7wSSPqzmQgtml+4uIdEjGw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786017297; c=relaxed/simple;
-	bh=R1a76pShyRpSs0tLIYL+mZr+MgkKX6Q/fW20vR3BpC8=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=G4neRLn4IbG37mEDzfOe1FzKEr/8CIuoXllEnoKHuoJfuAAwa5vpzNxYx2KMCQ9O2k9huP+1Z5D4jX5FNILlmE8PVdwgm2/O1GUJ/cUnP7GLMR7Ois1Va1Fuybr3swPg9+lvB9U29+2dBtn9YV7hX+nhUmc0Hesslm8Dc6l9Tyo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eAl+/aY4; arc=pass smtp.client-ip=209.85.128.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F021430318
+	for <regressions@lists.linux.dev>; Thu,  6 Aug 2026 19:58:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1786046296; cv=none; b=Fp6G4BKTkKvnGTG5xvA1u3a1lpg6xqoK2wvDOH7Nau0cnmNEIaPkxWr/dNk6aOEdY+T7/cOXwmhg+cCAwdWfM46hhma8UX6DhBwtN30H1pQOmyYXteMc2/5idcRuuyK6YTT1ZehxZ0O6/dN6vrHqi+20eGV2yUEnOvv57x5jE50=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1786046296; c=relaxed/simple;
+	bh=cvrZjprSvVyAfeTRkM1rk0twwLPXWjPPevuKbkeA0fI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=X2Zfg2qUdsZeoGnjdh1vKcD9zzbTkSp8tniNl/4S2VAjRxCfg1WYEbmFJyoWd5imRZ/6BiTc/OGhlVBvXjBNpHg1DfVrwGeb4fZSMSQBFmUNyVWJDqhc8ZHAvJ7qJtNbpdrbxh63B+juJJ8FEpC7QYboNUQOqhsJrsU1lToY65M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oHJU3FBr; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eAl+/aY4"
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-81ea0b7d137so18330947b3.2
-        for <regressions@lists.linux.dev>; Thu, 06 Aug 2026 04:54:55 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1786017295; cv=none;
-        d=google.com; s=arc-20260327;
-        b=GIjG4zUBKV5n6YoUXR/uxbofOXUufap2jd/Cu48454xYJuBHs/9mV3m1Rp7D7jFNny
-         EfpQydvL/eAB9nVVf1yIVy8GmREf6lIs1XsXFKTRmkUVQRPEgRaKagx8Z2yM7zYK2DTH
-         qUxJhfjqkZ1JX/Umf2nzLDfos3kpDGxddtJCweGFCANKUTxVmVpjQxGHNO06NwbvMLlD
-         9Z7Rsqu5z4AazzAb0jNI05Nn2nZexxovQHXLMaOKTUpc97w96ig8T+Iv3wF48GxUM42f
-         +Pl6mEGYGBvjeeKSGpYQgQmcqTTfinxQG0Ksv8Ev5ZoThg1Nkua9g/VXWyF4N6fq68Gl
-         DHpQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=cc:to:subject:message-id:date:from:reply-to:mime-version
-         :dkim-signature;
-        bh=R1a76pShyRpSs0tLIYL+mZr+MgkKX6Q/fW20vR3BpC8=;
-        fh=OWAw8onC+EhrRgylSl4+MWzE+Y4KXLmJdha07rEUP8U=;
-        b=m+GtKJCBnFjxLrQlOSm5jMjz1Nvk4R2huZaen8cl/Igm1J7BfbEfJG7tXFm9Ow7YHq
-         vQ+1BHXQe3H+w/OU98JS/mZzCunAW8EtRrBlJkyoOzI0zJa+meg6hs7LDx9YBDv+XZ4b
-         1OgCq5vXavWrdS757d5vc+ivXBBD00hu5c177tuaZZ6pGUaIcR2stfyWMXUfUaMiuDbJ
-         DRGzjq9pIvCD48igmjFRKm4Jajz9vPMcZa0ZSUr9g7xOX5lZV93qn2guQErrzUlouc8f
-         jG8m05lokCmPFl2TyfIK3KA+FzPfZUBwipdeO1OVPw/eXtHSHF3ykjnbJEI15JQ1NWBT
-         AZZg==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1786017295; x=1786622095; darn=lists.linux.dev;
-        h=content-type:cc:to:subject:message-id:date:from:reply-to
-         :mime-version:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=R1a76pShyRpSs0tLIYL+mZr+MgkKX6Q/fW20vR3BpC8=;
-        b=eAl+/aY4MNWB0LmRVm0ll2iVTh3n5jUetsCiVwLOIYS8cYebQ5GIoIbX5cyWi75tZJ
-         QoReb6Oup8LcMnHiJ0Nm1fXpW0jUtWbQinRSDdHrhS+mir8hcL7kyykmtxt7xCIiv90k
-         szVKf4W9jubf3GlByF0z5efJuiFER5JiaFvppcX7iG4fnc8VYpEYC9esyn5LGxIzZChy
-         C2beynpMhyzfh7TOYv4kiuNdJW8e6zW9aBsYS+vWTMWnTBc0M6AZxnE9F6Lm+DuWGj9m
-         JRa2vLbo2HypNkhacjOQSIUHRxupHL2wmEajkXW9aR7/0ulMAnEVMF52HoQEb6zDqyNE
-         Wulg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786017295; x=1786622095;
-        h=content-type:cc:to:subject:message-id:date:from:reply-to
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=R1a76pShyRpSs0tLIYL+mZr+MgkKX6Q/fW20vR3BpC8=;
-        b=ERiA2cs6kb0LUXM2EWRNyJ1RkQWjGopajQD7T5zL/dUvV2hddN8RPiuYP8lb9tqyz5
-         pSnG/2VLROMuwi5hZznWcRkRzhuzy2/y0G8SrOw4BP18JjJUQHORfqiDt48ugCcHQ1Iq
-         0/MScaDq35DqPVdSJ4L0BYKEx4lDRmEwi4O3hcdORW7n1ICuCs/Yk2Yxapk2SlmIEt1n
-         YFCLEhsksnMzbj6xeppLzLIvBqI5i5MYp0e+dWQvuoAJSAcpVKTnymcXwuEnE2Mh8X28
-         gVicI/oYgTWiRZ/47nxUGa/1AOPEvbr4QO+gfwbA48wLqnCG63UsR2h2zOf6Nh8yG7tY
-         5fIQ==
-X-Gm-Message-State: AOJu0YyVBx03DxOaZ+8nouWwsMxQNTI12PeWOfV8clXEATy8U7q76PJD
-	QCAcp+7fIyCtHfi6DFha48SEervfD1aLXtKRPXMBzBRxyhIKM5lFOjFRr7d7Z3wU+ltXPRBsMab
-	hFzQf34oWqyVYGYKC4EJq0urmhwglmZmiHsZjtkA=
-X-Gm-Gg: AR+sD13rf0WIuDmpmRQYvfrALq8snAJ6RCzR57NtR/hFHhxcBRzIstQq989cBdVbfla
-	swAgJE4bRQJE7PxucI/ZXKCmtBOej9A/NQ5vV/cGok9fZSPahWy9vkt40w54vExCKNOB2vlzESM
-	tfNq6UpZcK4hhNPvtD01vwFYhokH/9FO+LDHV9K3vXjGMY09RxfFH1boVzJyhf82SseLhXceXOY
-	d8MCLxmBDuam31GwO2pz4dUR9X3ceIkWu4AwfB9kzT4mIM4L1uIZsm8KzUJqGN49QBduThF1e57
-	agTPVhdw+vDdBnusOVWh4GgbQXOUZ8RKw9BNWSBjWFWPPGDaDfVeNwZDr3QyoqrHWVSIiOt7tEA
-	=
-X-Received: by 2002:a05:690c:f14:b0:80f:9998:e614 with SMTP id
- 00721157ae682-8202288040fmr80320427b3.28.1786017294938; Thu, 06 Aug 2026
- 04:54:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oHJU3FBr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AC741F00A3D
+	for <regressions@lists.linux.dev>; Thu,  6 Aug 2026 19:58:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786046295;
+	bh=cvrZjprSvVyAfeTRkM1rk0twwLPXWjPPevuKbkeA0fI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=oHJU3FBrEWgzEuRh+Sbjlz1LTofQ3qJN6bqZOy3/IoxrUoKEW1sPZygXGa9RuY6gP
+	 mqYOt/c7NApGv3t7WClUKdzkwV0JXixu72wr6qyhVO7kWxVUxWrq5XEQijdcqHAOw1
+	 cO1hGhLf6q69dwsgThmod4qeaxsdndORKiVNPMabnO/SCT23U2TYxNCfzcU/M2yGFa
+	 V9XjCXtUOoR0O0sFHLj9pdnaM+xpcEY0pNQFqjFJEQAWrJ2SQyNsuTrCD36NyJ8O3x
+	 qKbpGAtkOt0PG16Vazw7hG1PjBrcKFICphzkP4AZQajgVn3AtUiTM3LivZwyCf0cCA
+	 DvsfIMR6pPnrA==
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-5b29599b81cso3384802e87.1
+        for <regressions@lists.linux.dev>; Thu, 06 Aug 2026 12:58:15 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AHgh+RrpEXSKm6VIk7KGqoFCdfiaMrt4c19ms/63MqdMSXIU90aiLc2cBk0jaVNZ+jC2JNBatnMGScJMD8vIUg==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxLPPIIMEZltxLx26t2KobeNCGig9m+2PGKCLZ4jXk1ghdr8iAF
+	tMQeRTvQ4oLMgewCxMsPbfczbt4Ec/jWQd3TZiCmPgJw42novu1vaCnx3rV7Hc/F4UrvrT/6OZD
+	V0FrIBdH47cAsim5QDiAti10AAeTc8tU=
+X-Received: by 2002:ac2:4423:0:b0:5ae:c926:fc18 with SMTP id
+ 2adb3069b0e04-5b2f4cbf05dmr1941060e87.38.1786046293666; Thu, 06 Aug 2026
+ 12:58:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Reply-To: nomorsukses@gmail.com
-From: "nomorsukses@gmail.com" <nomorsukses@gmail.com>
-Date: Thu, 6 Aug 2026 18:54:18 +0700
-X-Gm-Features: AUfX_mx0icv07njgIQKLGWn9W8s0rNdLlrMaEnUq6i0pZcpohwAhqp1x9AT3OCc
-Message-ID: <CABHf4aQC__rWLKUJ5XgkCEdzC0dr1TGH1WP=UxOu3JmmU9VjLw@mail.gmail.com>
-Subject: [REGRESSION] Dell Latitude 7390 Intel UHD Graphics 620 display
- becomes extremely dim after kernel 7.x upgrade
-To: regressions@lists.linux.dev
-Cc: intel-gfx@lists.freedesktop.org
+References: <CAJOGg3z6LJPDsdPNBxajgy8_wQxfhYBRxe4EiurZf3kPU5A5Bw@mail.gmail.com>
+ <f42cc94c-ff60-4999-b473-c2fc5b1b4199@intel.com> <CAJZ5v0j1Tucb0yzS8=3U_X1E4ziztjgOsiYrc_QfUUKZfScCPA@mail.gmail.com>
+ <CAJOGg3zhEFner5pze-eX+6jh5D8nJppyWkNN5bWtg7MZ7cW9_Q@mail.gmail.com> <CAJZ5v0ib2YxyX-6j34=w+FEOH+fsGF_ShH9Q0YCEDkZvRP88EA@mail.gmail.com>
+In-Reply-To: <CAJZ5v0ib2YxyX-6j34=w+FEOH+fsGF_ShH9Q0YCEDkZvRP88EA@mail.gmail.com>
+From: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>
+Date: Thu, 6 Aug 2026 21:58:01 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0gySOkYRphXHbXcStFGiuMtni_OWXW2rTDoa_V2PRPnJw@mail.gmail.com>
+X-Gm-Features: AUfX_mxVKonPEmxE_6gVHTSbccc85x5H4GItoRc_G-pMzW1tYQCgFysLk2eR_Y4
+Message-ID: <CAJZ5v0gySOkYRphXHbXcStFGiuMtni_OWXW2rTDoa_V2PRPnJw@mail.gmail.com>
+Subject: Re: [REGRESSION] no TPM device after "tpm_crb: Convert ACPI driver to
+ a platform one"
+To: Julien <julien82453@gmail.com>
+Cc: "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>, regressions@lists.linux.dev, 
+	jarkko@kernel.org, linux-integrity@vger.kernel.org, 
+	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Thu, Aug 6, 2026 at 12:45=E2=80=AFPM Rafael J. Wysocki (Intel)
+<rafael@kernel.org> wrote:
+>
+> On Thu, Aug 6, 2026 at 11:55=E2=80=AFAM Julien <julien82453@gmail.com> wr=
+ote:
+> >
+> > > Please try the attached patch and let me know how it goes.
+> > >
+> > > It applies on top of the current mainline, but it may be adjusted to
+> > > older kernels, so please let me know if you need that.
+> >
+> > Thanks. The patch seems to be working. /dev/tpm0 and /dev/tpmrm0 are
+> > back and a command like tpm2_get_random 16 succeeds.
 
-I would like to report a possible kernel regression affecting the
-internal display brightness on my Dell Latitude 7390.
+Please test the v2 of the patch at:
 
-After upgrading from Linux kernel 6.14.x to Linux kernel 7.x, the
-internal display becomes extremely dim immediately after boot.
+https://lore.kernel.org/linux-acpi/12954206.O9o76ZdvQC@rafael.j.wysocki/
 
-Hardware:
-Dell Latitude 7390
-CPU: Intel Core i7-8650U
-GPU: Intel UHD Graphics 620
-Driver: i915
-
-Working kernel:
-6.14.0-29-generic
-
-Problematic kernel:
-7.x
-
-The issue happens on Ubuntu 24.04.4 LTS and Linux Mint 22.2.
-
-Booting back into kernel 6.14 restores normal brightness.
-
-This appears to be a regression between kernel 6.14 and 7.x, possibly
-related to Intel i915 backlight handling.
-
-I can provide logs if needed.
-
-Thank you.
+The v1 had an issue pointed out by Sashiko.
