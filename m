@@ -1,140 +1,91 @@
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11AD542A79E
-	for <regressions@lists.linux.dev>; Thu,  6 Aug 2026 10:33:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.171
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786012402; cv=pass; b=BMIMcMPu/H30lJoOhbe64W4QdN5pF5Kwag5PJbllC9nHi7WQzxTCH7E18Z6HB1VTLGf24lhhBh1auRdWJDvEA+HsEH/IAGQUM1Qa7CvHrDOfjozNujLE1VD/1Lls4gdp7rPIGr2n6wmssI+2PqTYqxRUcJqtQUpJflFqFNhAYI4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786012402; c=relaxed/simple;
-	bh=MhxpC1RiQz80rHHK008fiSrO8qNz1Ph79eRrr52KB6s=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07FDB3E5A0E
+	for <regressions@lists.linux.dev>; Thu,  6 Aug 2026 10:45:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1786013148; cv=none; b=tG9ZaXaNz2kO3w92RpXVqJnt0iiUH9LuUNa8lsdOxf0H/yScxc2xJqz/mmFyS5X8BAZ0xuWURqPhR2AN9yFeX0EV8+sol5grDvO2mxt03iPq2nxS2pV4YDV8lxaQ1SZ66sPdjZ1Yzx+JnEWErd9GFPTpaAjAQZL3wwNE55E4Z3M=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1786013148; c=relaxed/simple;
+	bh=Yy9NN6StTUGCHmz91It6CZkJiBh8nVeLjzA8N8S+Juw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Z8kzRXxO1nrI1NzBJuNXFEPdFY8bXybvfd/ZWBtQxTZX5R9Iql9UKQhlQZAitYzUauq+ALI0MOs/DBhuL/S1DYVKlIq2geCZR3uhVI1Zda/S4Fl8R/2NChdcjP+8gFFCCejj4D3b7/3vLzdxrHKPxGfKurT5HJWsKxypUX5fp+I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HBLPOk8n; arc=pass smtp.client-ip=209.85.160.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=OBvW6fA3Q6pgLHy+m+nAxTWtr8b27hSvpAm790o/5ODjJnOAIJqR0A4FiGAVhdtFNIbTIlq86JByXJHeoDDgQRKXfZm+dBSr7Dl+sLdMGoIf/iHofAfG7emGjSHijS9dx5ndasiy3kmmpD+8JZxntv6eIv4VWhVXTDb9ZJxUO1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SU4genYl; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HBLPOk8n"
-Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-51bfad59921so13697101cf.0
-        for <regressions@lists.linux.dev>; Thu, 06 Aug 2026 03:33:20 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1786012400; cv=none;
-        d=google.com; s=arc-20260327;
-        b=sLBrrBzDeY6snAlE1u3VlJ2yzVsXMQARHGSXesJ8/rMPnaf1JYjBABcy4X2A2OV8yG
-         nZ170g0T4d3/C9JnkvWXJkDylQvlUMA18Lgttd0NMgwfBB/bp8PIquKLLYoF9D7fZgKx
-         QFJbe26mtuWDBpcqMXNCQgvj+ewh3jZNBNWsZ7xkaCRbpYUVfIUqMW8drpxALCnlxyQW
-         omS8oON9lMd838UK+S5y4s730em3loxNVNJYp6RarFZHVbc6FDiba3jwfiOCw+ekL6dx
-         OG+PDcwBdFm+ZnRsFhuGAzx/zTzVcRYsn836GWnSDKSWkpVWD8Vhph5tuWkQ83OPd08c
-         3gNw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=3TbJec+AGct5ToiNCUExgxyz37rxNVU9OlXe/UQfwS0=;
-        fh=Uac2Nf76E40AaTz8XFk7gOh18vdkBQM15LFdvjtEPL0=;
-        b=czqwFjd+Dp+sszbMw0SfeWlx8AKzikjptYA02FMusgSfepougUzmMUyorrUop3kiEs
-         YiP110p1vxIrn5hin/T59A7t854G6eoP3K9Cd7Dqs3rYPGtygtJ1dpF9JKgJDCAFnpnm
-         rt8V3jfW+RhVnhw/owDrldGrGU5DoFzvvEFaONtRatdwuo5gFcmr1STNeoMAviR7UR38
-         kv0MKQIhsXS6UjTo4oNnud2Snr3ZcQpVW8qhWDoxePl/YC2bPMNo+dFdpCDq8YXn01uZ
-         A2+/UvbEbDohYXJlnFa1PqkdYRWRiKkDCp/jv9yC850iUhvhgu5qrQXmGDsCy5arzVyn
-         +kFw==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1786012400; x=1786617200; darn=lists.linux.dev;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=3TbJec+AGct5ToiNCUExgxyz37rxNVU9OlXe/UQfwS0=;
-        b=HBLPOk8nE80J9vQtFA3gwGRvYGbFLyccXm+e10i+IZLh13nuva3qFx/DGcMVnte+kf
-         yNvUYhXVhyOBwop/MLlAKBr3s8L2qR1ypymGq97VNd0G7g9YF7bZLoFRRxIgXGQPbYrR
-         D6mCAJ/jVyOlxijsdOkn2DxgFA7wSj0FJYfjBYUCQEnzO6+hLDULANvEJsjJreCQ5V1M
-         8Xg8gWQ+qSpnzE3nm9F/z2UE/hlSpA8REKyxCj3F5XEumvjzmEap+C8GbLzwZb3Ki2YR
-         a4bLqJ7TJsiv63HVpUDY+0BvxRprKJ+32c0KJFXpm3hYisAfSnjxzDVXJ6Jda5I5opZn
-         c5yQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786012400; x=1786617200;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=3TbJec+AGct5ToiNCUExgxyz37rxNVU9OlXe/UQfwS0=;
-        b=OqeWWxsumzep8pv+OWce8MixgvjZZJ2H8ZANPZl0r3xUd3PQYvAx50f9ffeAB4AZaW
-         hFVegPy7fTlwTr8EAadufQnnb3ybPBW82aOiwOJhItazPKJ+9oEBBCcWYYcSrAUxcg8V
-         RKEwYh5ZLjkncKrCYw9pkx26k51/7AyYBvaDQNZPt8DNRWaGSm2lNbIrzLMg8i6Aoe5t
-         1Eg/qgtZPvm3CdPbmU+JAcmUb0iMD/Y14euiUIbF86o2MyOvTtlZqON10DUCke3RSHwo
-         eeA9/lTkBlx6oysFiZHKFEu/hFozHM2iBIkaIglowjwLPTo0KdxLQLiYwJp88m8dr4WW
-         XbRg==
-X-Forwarded-Encrypted: i=1; AHgh+Rpy6SMOmrMQeZ/Nc+X1blU7X5eAV2Oj6FoU+7VWI5KofOY9CBhPNXailkiWYlAhyyLPfZKhRcpMpdBnCg==@lists.linux.dev
-X-Gm-Message-State: AOJu0Ywzd6xCIB6guBjy/0IY3h01jcXn9nb5BgiO5ngaqiz/1qb+4czB
-	SDTTG1WmYooUKGA0KQc++kbh4VnzCqNvttITiCHf1ZSyf/LGxsYvJYU2CfLb3vtErjEuBdjLzp5
-	gjn94orTwo9PZgp6Eyvvn8quOR1L/k+FRRiD36CA=
-X-Gm-Gg: AR+sD10G+iUzEqtPV0yhr4ND9HlUTJFaqzt5zCYNwCve3sOUy0n4U5E0+QtodcetjAc
-	GR22hXelDF7mCn6uxWHDoTy8yuoU7woynXCc3pY7HQNx8hoKncndeLhTIJqAU0GvpdwFHhH8gcr
-	Vrc8d2Gq1xOIA+FFZTz6pDmPEDVhItynJoMON4FzZUGf+4G+sUL0AakR7h/YfC4E57i0+oUL8+q
-	r/weOAtp8/srJB3iHCubz1MjmEEVAfg7T/ehTessX08VogJWFPnygI8UpoEdzkKeJwOPkeQYogu
-	3K+dhIBynR0yEwsCXdRaEwO4tg+ZAScr/bmyXLxSYdDHhzkiqqsTnq6MHkGMxGMosnO1Ox9FcNF
-	LzA==
-X-Received: by 2002:ac8:7c4b:0:b0:51c:f3:34df with SMTP id d75a77b69052e-52ce61b5dfbmr128479761cf.30.1786012399807;
- Thu, 06 Aug 2026 03:33:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SU4genYl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C190D1F00AC4
+	for <regressions@lists.linux.dev>; Thu,  6 Aug 2026 10:45:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786013146;
+	bh=djO7shqadaQTxX8yglnqE3eyXdYHTRIdQmx/SCl7J9c=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=SU4genYlY4b1vqOUfl/h63DjrfHgHIx7rXo5Rh2EFO1Pq373Aulebw8j0qGNFifKZ
+	 7gbk3aqd5dQ8Rb7ul5lAXbil2MfTzsnjkYaneLm3J33LZBTPW/WOdK1ctvBsLsTOAo
+	 h+J+Y8c8JwRkTRHYYEvF2WaMCSCZOlRrPz5IVRvqOpfhh4rXqhll2MQRqluTM14sWZ
+	 cKSjVlMI/6gy9k3BXu9gJda5hfWs6lIQXFFNoIvMwLMUF7DCbDGT4IO63Xq7fUmdiF
+	 fAOutbaSTzEkgmXpXDMQWECCYVN8Nmnb1wmfEdSD/asbh+vMvx6RounbLId0pTlXkQ
+	 eg4Rz799gUdQg==
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-5b013aa02b2so917180e87.0
+        for <regressions@lists.linux.dev>; Thu, 06 Aug 2026 03:45:46 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AHgh+RpW2fgwC/fVlv6tUiW57mdVK3PRAZrUY/guPkFhh0qVNhvNofbFY8/KouD6PPsrJIs2ZQrgdus2+n22BQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxrocZq9PWZjKhZd8e9Pnelo6FLSWuruD4zb4XDj3H97hIcDeuH
+	vZUHaUqtGex2MT187bdCvnVkU+1mCyFAGtWFQZBWyZCSFYQ4SjQRREkQfG8dkiZW0TWBfAMwTzR
+	TMBPqbVuId4Wn1tkhOQqhqK4xCh373oI=
+X-Received: by 2002:a05:6512:344b:b0:5b0:1e26:7751 with SMTP id
+ 2adb3069b0e04-5b2fe77f226mr647282e87.8.1786013145235; Thu, 06 Aug 2026
+ 03:45:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAEQ1D3kdA3mkQx7ei9Kq0gwky0qroJqCLKrkvgfkqgTbeu086A@mail.gmail.com>
- <871pcbg3wr.wl-tiwai@suse.de>
-In-Reply-To: <871pcbg3wr.wl-tiwai@suse.de>
-From: Gert Burger <gertburger@gmail.com>
-Date: Thu, 6 Aug 2026 11:33:07 +0100
-X-Gm-Features: AUfX_mxt4kDB4mldVeOy65_r-8cVF9zaHbjTtpOatqg1doG2ROIDL_QpomGKz38
-Message-ID: <CAEQ1D3ky_7+g6_1J7ymxGUq4DNrPyx8OCsQ8Z42j2-XncMW8ZQ@mail.gmail.com>
-Subject: Re: [REGRESSION] snd-usb-audio: SteelSeries Arctis Nova 5 mixer
- controls disabled as sticky
-To: Takashi Iwai <tiwai@suse.de>
-Cc: linux-sound@vger.kernel.org, regressions@lists.linux.dev
+References: <CAJOGg3z6LJPDsdPNBxajgy8_wQxfhYBRxe4EiurZf3kPU5A5Bw@mail.gmail.com>
+ <f42cc94c-ff60-4999-b473-c2fc5b1b4199@intel.com> <CAJZ5v0j1Tucb0yzS8=3U_X1E4ziztjgOsiYrc_QfUUKZfScCPA@mail.gmail.com>
+ <CAJOGg3zhEFner5pze-eX+6jh5D8nJppyWkNN5bWtg7MZ7cW9_Q@mail.gmail.com>
+In-Reply-To: <CAJOGg3zhEFner5pze-eX+6jh5D8nJppyWkNN5bWtg7MZ7cW9_Q@mail.gmail.com>
+From: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>
+Date: Thu, 6 Aug 2026 12:45:31 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0ib2YxyX-6j34=w+FEOH+fsGF_ShH9Q0YCEDkZvRP88EA@mail.gmail.com>
+X-Gm-Features: AUfX_mysbOj3-ytmwbj8ovVB7UBPb93RR777oXTytM1b6w815LEzfJ9MSkxI434
+Message-ID: <CAJZ5v0ib2YxyX-6j34=w+FEOH+fsGF_ShH9Q0YCEDkZvRP88EA@mail.gmail.com>
+Subject: Re: [REGRESSION] no TPM device after "tpm_crb: Convert ACPI driver to
+ a platform one"
+To: Julien <julien82453@gmail.com>
+Cc: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>, "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>, 
+	regressions@lists.linux.dev, jarkko@kernel.org, 
+	linux-integrity@vger.kernel.org, 
+	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 6 Aug 2026 at 07:27, Takashi Iwai <tiwai@suse.de> wrote:
+On Thu, Aug 6, 2026 at 11:55=E2=80=AFAM Julien <julien82453@gmail.com> wrot=
+e:
 >
-> On Wed, 05 Aug 2026 17:41:27 +0200,
-> Gert Burger wrote:
+> > Please try the attached patch and let me know how it goes.
 > >
-> >
-> > On archlinux, after I upgraded to kernel 7.1.5-arch1-2, the sound volume is
-> > significantly lower and seems to lack bass.
-> >
-> > Reported by someone else here:
-> > https://bbs.archlinux.org/viewtopic.php?id=314220
-> >
-> > Previous kernel was 7.0.14.arch1-1 (working)
-> >
-> > Attached is also-info.sh for 7.1.5-arch1-2 (broken) and 6.18.41-1-lts (as a
-> > workaround I installed an lts kernel, works)
-> >
-> > Device:
-> > Bus 005 Device 003: ID 1038:2232 SteelSeries ApS SteelSeries Arctis Nova 5
-> >
-> > Dmesg diff:
-> > Aug 05 16:22:19 framework kernel: usb 5-1.1: 9:0: sticky mixer values (-19712/
-> > 0/256 => 0), disabling
-> > Aug 05 16:22:19 framework kernel: usb 5-1.1: 10:0: sticky mixer values (-21248
-> > /0/256 => 0), disabling
-> >
-> > Can I need to provide anything else?
+> > It applies on top of the current mainline, but it may be adjusted to
+> > older kernels, so please let me know if you need that.
 >
-> Could you try 7.2 kernel?  I guess it's still broken, but then try to
-> pass the option "quirk_flags=1038:2232:mixer_get_cur_broken" to
-> snd-usb-audio module and retest?
+> Thanks. The patch seems to be working. /dev/tpm0 and /dev/tpmrm0 are
+> back and a command like tpm2_get_random 16 succeeds.
 >
+> > I think that these messages have been present in the kernel logs for
+> > quite some time, but previously they were not connected to any
+> > functional issues.
+>
+> You are right that the messages were already present before. I see
+> them in the commit before "tpm_crb: Convert ACPI driver to a platform
+> one".
+>
+> Here is what the logs say now:
+> acpi MSFT0101:00: Adjusting resource [mem 0xfed4000-0xfed40fff] to
+> [mem 0xfed40040-0xfed4103f]
+> tpm_crb_acpi MSFT0101:00: [Firmware Bug]: Bad ACPI memory layout
+>
+> The second message was already there before too.
+>
+> I'm sorry for sending multiple times the same email. I'm still learning.
 
-I tested with the `linux-mainline` package, currently on version 7.2rc5-1
-
-# cat /etc/modprobe.d/snd-usb-audio.conf
-options snd-usb-audio quirk_flags=1038:2232:mixer_get_cur_broken
-
-That seems to have "fixed" it.
-
-Thanks for the tip!
-
-Cheers
-Gert Burger
+No worries.  I sometimes do that too.
