@@ -1,218 +1,265 @@
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F32A1EF39E
-	for <regressions@lists.linux.dev>; Wed,  5 Aug 2026 23:45:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785973540; cv=none; b=eOuNorp/7isciDOa2MRH7VOHPJJJmUh/DY24y7WnHZEUMi12fVjuCBpTdGVP8HTX5BBc/If4ym2q/olaS03RntHjXt6pVuzuJzcOASjCmqVkKiY6Sed6es1H3BrcK13CBqUJ7JF10REn45wxkZVmoxAQgyiuN+xNj9/+LqsFT7s=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785973540; c=relaxed/simple;
-	bh=pH7dxdWyKhgYjTxrzmDhqHXUO8kKsgDrXDDIjMYz7XM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AlVTDYXCc+Oby7peyUZQ6Ggsyo17CIZGvqM0A0nC1gje4h6hn+bRKCmSDtt2NX4F4667PQCV0wTmGuqIpZsOq0tq60EAGa2QQpgmMhA0XQMhCXwqsk1SfK2rEUjfYE+2ASp7b1r4mIVfm1LRBe4pOCq1FD4Eg1RLVNBuBntv+FQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (4096-bit key) header.d=canonical.com header.i=@canonical.com header.b=HCc5+GK1; arc=none smtp.client-ip=185.125.188.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9037830EF6C
+	for <regressions@lists.linux.dev>; Thu,  6 Aug 2026 00:08:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.216.43
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1785974918; cv=pass; b=jKokzsyJJNyndTdZh5nSi1kb7b4jRLq/4+xoeq6gTyDTXyckXNulp0l8lC40H5OoOqU0qYR8DKL6T3Ry5k2dfKIJtip0oQpCVodP85I8OxS9rSLaP8CiZ0zG+3qwBI0x7dHJuqGqcUcQN7tho/AQCTlTVjgN/m0um2xSg3nrqXk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1785974918; c=relaxed/simple;
+	bh=1iu5d+I5/K4BVPrMkCaJZCHy0u+IaD5kCta9cXPqI9Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PBQXyBj7bIGxRSouGyw150nSf8/AkhuEnva3aVlNmxzgDBQuAj4R8+IkUUHU6PFRdzKpTvw2e4EvvMdYO14nQ+jkDi4S/9qJ3AWf/6YOg6M62qELvvl/hVlPjd3xgBlrLK34uKOPJ8RWzQ9At4jCgCmdoaE11+1NEdbSFnbxwh4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D4NU9Ub4; arc=pass smtp.client-ip=209.85.216.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=canonical.com header.i=@canonical.com header.b="HCc5+GK1"
-Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com [209.85.210.198])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 8A8C83F452
-	for <regressions@lists.linux.dev>; Wed,  5 Aug 2026 23:45:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20251003; t=1785973536;
-	bh=Xd2gB0iO8ZoT4UtJBbjUQuijskG434Qw0vWALETHor8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type;
-	b=HCc5+GK1aNUYWRK42KDZSkULCvxUkmFSGb0im4YrQqf0cu0uLrAsjOe74p1hfyr3m
-	 /ke+D9VJ9FYoChYuTtnLwN1q1eM4tdGPdN91Hx4VylG99YcQsGwaibZFqu6u1M3t90
-	 KbhoPCskp2JL0Rirdu1rIRGe56sI+hDyBGreeQwx6RfDhNsyKwWCsUGnmbxH1eM1CA
-	 uEE0HqhbJPIw85DTlX3TBifSy/aCRHhTOXEwvRNOviXBCGqfkBE4xaPti6tE53rVrP
-	 OLzT0vZye9EuzBjITvDzzhLY00s2p++Oh2VijvhL3pRelN0GWvTVZuGSfL6sioJ5GZ
-	 OuFdWccB6N060NHnTLZtUCs5foF1BnnODOeBmiEupb+KbvGaaODE1JOl63BVEMdBK8
-	 C262aAKaOmRaq8/ISXPSb1bZ4751YMeRzhtk2bw1fv9E4LgGQvDuYNsNbKm0jM6ZeS
-	 L8C5yqiTZ1EJU7mG3Xlm5r2dKw9YS1NsiSj+p0Q0odvs2AnF8nAXJqGZ9+K45UPhIi
-	 C6ZZ0h7f6CBz3O6kM5jkNxSj2h0CYTQQyQzs3/eZx1kH2lhZzYm5TnmOdZmXmwEm/v
-	 qKclvv0qBQw3S4i2BN8eaZUS5TUQiOVQxS8V2/uQHC6oJybiNtpkZKkXP3pe9Biz+A
-	 f4WuTSCnQISi5hx+NLPq7f0g=
-Received: by mail-pf1-f198.google.com with SMTP id d2e1a72fcca58-848474825ffso514133b3a.0
-        for <regressions@lists.linux.dev>; Wed, 05 Aug 2026 16:45:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D4NU9Ub4"
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-38dc4553f62so1733591a91.0
+        for <regressions@lists.linux.dev>; Wed, 05 Aug 2026 17:08:34 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1785974912; cv=none;
+        d=google.com; s=arc-20260327;
+        b=hU+4WZOZU+GkeS+yK+EpqiuPoH6IJE1TRZBZ1unKuCX3BA7m3PrU1GAycVKHtAUHEd
+         wveKUoPFrj9znb4mgbxofl1RZ4abGeAsHgS6uH2t3qfUcLvzHYO7BJrYZPmhImS65nM4
+         oCxxk/wnSI8DE35l1Ul0ERczBFcGanXjK9tR45ERNz0QNORziBhMxo3T2zhuLJrR7CTj
+         TTc6b/Kpnmt79mzNhyDm/5gB0L4JjdcBK+H9IQonvU5VFa/MedQjpxtpkJ1JdwbqBlaa
+         W7vzhgqEtaUTL9lPcBPtXUIzm+kWHPEiagMm1QLAEze8dZ+UCx3p4EOnbFo7Yt7YMr33
+         6niQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=5vW05tTD3g3Q72ERS87XMCcMXQMeuaxyt2ovrslKYZ4=;
+        fh=WbXiq8W4Vyna4dtR+Wc4MfZ5Okj3ZY8XReKi/P3HnW4=;
+        b=stOFRCtfGMuKSrb4mJKegWtd/tFhWLrEREMRw5ATAq/JIHLRTPjAVx9s/mcS415elg
+         wq/eiFC+XMOD35hviB30tpIWNkOzWnwWL15QAGQeA2FR9NqBzlZ7DzNk514KyEdPUdoy
+         Xc1785EOq+zQswRKmkcPmT8pC78Bb4wYiQ1QSzBwfU0njKOl3RB0yiXtJ6AUmoON0/wb
+         XowB4U/QJck7OgVa33ju23/bDl3+1BFW59sEPOuAUAtIzsz+GIIJLx1IiBbH69aBu3kK
+         PHw8OWdi6UIjDrt6Zwz6DSJB8p8DywvqRceWkTyvk27cdp9qjwIHDy+qEL2MSdia/Nkk
+         FCxg==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1785974912; x=1786579712; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=5vW05tTD3g3Q72ERS87XMCcMXQMeuaxyt2ovrslKYZ4=;
+        b=D4NU9Ub4a3dCd55boXgG8PIDGBFSu7HVwwfsPmVtNYPJq3z9t6hjA4l25J4mgHL9yl
+         J09P03VgRSQEaZqQJ7OMYGsVgheKZ7s9TOJ8lfSUXsAI02gSJv2uM95IM8HPc9I+fmvx
+         NHkPK5eq5EXAi5pTGCen2T65RvnJ75/wUZITiZS/j0NurkRSAZATVsljPZZuuvh27zhw
+         /5SmczrV84rXlxf8yx2r9WOiBSvMuADG/U4kIQROBHOkZx42FNgSTVEfAyUflLsQvGcb
+         FSHmCr+jJxbKV6wQ3mF+kCF6dyFcvRzNmL9zK43yMWoWh7hLlgbisXICuh0IC9VDwZn2
+         cpDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785973535; x=1786578335;
-        h=content-transfer-encoding:content-type:in-reply-to:organization
-         :autocrypt:from:content-language:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=Xd2gB0iO8ZoT4UtJBbjUQuijskG434Qw0vWALETHor8=;
-        b=HlD3vYyZJUi7l4Cf/JPXX50RAxq8b1FF34vvcSXoxWwtksJcnSIDvf2c+iF9d54PIA
-         0jJQBwLVsVw+V13BilT9tbfDnXmbzC4q4XYo1eKkT9pHBmCylLUFfm9CdWV8DgRmX/Oe
-         bzvm0eZzdQR0Lki/D7NC9mPSYrX3Y2ZOjnChNFjO/TqlsYpA7NWOV6wrqOPCM1m/a/YP
-         VHuOsrtjNiZjFdGwu9tZ5OBsd00EkVugLAY+5JDsQqfq8RPysQWKZzLc6xNEDD2MqAmM
-         mL6cwB1JiBycPgI4oeNO3C5o4lr8Nd0jwTG94y2qfN7FqqHtAScM+vnqkn6N3B1jiKOC
-         dhIg==
-X-Forwarded-Encrypted: i=1; AHgh+RoYEgzCAOC/sJ42XEla/3E6PVOar6/o2psUAZNiT9VHXp3YbYxyUnG9GFu+aJKFNpE76AcYBheJhYuUqA==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yy2lBf0s8gwYp+LtOJnaR/XjpGX5qMQpv/Rzmvgtjylnb/Dw3bx
-	aFGxG0Ivy9cgEgwqFJ0OKAxr90piUpKcWjrb1BSpjujGSLovIZvIHeI5xkApAF3jmUEaiR1yLlr
-	AjYtTKmv+mjGmFhxISJlIlLFOJmXeWKJLSyVmOasH53QFTpi/Dv1GPGlHpxN+L1H0u/3gfj+rJH
-	1XPSz0
-X-Gm-Gg: AR+sD13gerKPgsK844IQgpYWne6n/xIb/6txpys49YkkPPQtH8qzdMxjNsIWKsSS7cV
-	4yjMbDAvQCuHGgaGv1ICD0jvgYFuUTAIA3jqqYPJ4QsdlK6P9NMN/0Q+qVX8PkgayWQzjGXeotA
-	h+HWJRZmJCHCEnmyndHXpftxICsDCJiNAJvPBkQuFpci5v6adgggRFneUFzVho3EBwuDNfEC1wb
-	GPTRFatnglBU6eGeAS1QKb3Ehu8sJ5NWz8J1gWtbWXDpKuuX83hDofa+7pDTB69ys0dMLA3bIn2
-	eq0IFv9bLytUzx1IVgr4WrGVUN+BikFP4h73iwdMe+mymOGlBqcQlfuNiwF4D/VXoZDn4EYucQI
-	iIMf4txRXgInIH/Q=
-X-Received: by 2002:a05:6a00:1c82:b0:84e:242:4bb2 with SMTP id d2e1a72fcca58-84f47d119f4mr254410b3a.4.1785973535043;
-        Wed, 05 Aug 2026 16:45:35 -0700 (PDT)
-X-Received: by 2002:a05:6a00:1c82:b0:84e:242:4bb2 with SMTP id d2e1a72fcca58-84f47d119f4mr254365b3a.4.1785973534645;
-        Wed, 05 Aug 2026 16:45:34 -0700 (PDT)
-Received: from [192.168.192.71] ([50.47.147.90])
-        by smtp.googlemail.com with ESMTPSA id d2e1a72fcca58-84f45bc4c29sm143194b3a.52.2026.08.05.16.45.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Aug 2026 16:45:33 -0700 (PDT)
-Message-ID: <075aec24-cb7b-44ea-b3d8-be913a87c958@canonical.com>
-Date: Wed, 5 Aug 2026 16:45:32 -0700
+        d=1e100.net; s=20251104; t=1785974912; x=1786579712;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=5vW05tTD3g3Q72ERS87XMCcMXQMeuaxyt2ovrslKYZ4=;
+        b=iQuF691fM1SuCoEhNwlk0a7sM2r0V8v7H+oqvCvfsbISY2aTBfR19kFf1rZzxM2qEJ
+         hgjaLbdIFO72VHNWLpoweI0ZcOGZPNxAPFLeFBoNqtgXubczT5MTf8Ihv7PtWByt5Y+6
+         oJFiGv32DTx1wKswNsdMd2OpdyQ0ZEmdTwexc9ZCWeKLGMCvCDYIayvJcxXUv7UJI2q6
+         2taYhFMC1JieCjsVYYghxrzudajrUm9Qq7j+Lfw42VS9N66M350qNkr822kAvQdYSMzT
+         8HxhPIGksyDYlHYFbljBt5whqVj0W/0Wt0I1KCrOE/w4neKR2EsJB51ErLjNQ9+WWJ3n
+         xetQ==
+X-Forwarded-Encrypted: i=1; AHgh+RpXQh27z7PNxtuy3PDTi2Tcb5slBAvS+YYPPQgmCu3En6lunDViQp7c4BZYm7EbaNFW/UpZB0UN/5NMoQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0YyW+40M8zhSIM+cKZ4PcQNNLEWBPAjCLYg//DO5OiYqdiXXz5Nb
+	1Kxin68LUkAkUiFRpxvc3oqHRjuLoWz0Cm5CNBjLfgY3aR2Pj/ySYLdNbteOBNdD3jDaSMoX1Xx
+	LR5D3JNOf8Z6vk3330lsqw8985i2QQ8Q=
+X-Gm-Gg: AR+sD11khqLwGIvka9ewhU2OYlGaLgMY9t5/TyN6gv2sB0bpK0DK4ITMedkQcVwSfdV
+	AjH2bn6q7Jiu5I+UcR84yxu/wTXD5s8ImDHmVd4DqeUzURu1gSc1Fw3i38y1rrnSk6t5Miu6Kki
+	F/Ly2sC7JuoLVR8/cOHuNXYZIWGkW+6xxBJTsN1F1ViLXwDa2pvhivA+ZYM2xVN8nEbL6SD2JDq
+	LyYTtUQSqAk4/aziUfHpxBJ4+OgAEjKnw1JVxAVGLNdGHaFXMFuNpP4GShVq+ceW+YfRxgXqPM8
+	ZhfbsGzouVL9U0cNHFFo6fxZDLQ3iJGHC2+gzJOtxzad8LbFuuGcYsFGpQSfGDyxiTUai098aZ+
+	jHyAyPEzLSNHGyAlUDtRll+eew+Z96M06E1OP4aij818KEO57GQNhOZWFX+Q=
+X-Received: by 2002:a17:90b:3a8d:b0:38e:57a3:f218 with SMTP id
+ 98e67ed59e1d1-3903c5b9f70mr9408859a91.13.1785974911569; Wed, 05 Aug 2026
+ 17:08:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] apparmor: AF_UNIX datagram send slowdown after
- 6456ccbd2ff7
-To: Chengfeng Lin <lin2530632123@gmail.com>, georgia.garcia@canonical.com
-Cc: paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com,
- apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org,
- linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-References: <CANGjgdnoz4NdqzOV9+SZaYTc+O_GkNNn5NVp+ZpHUQbp5h-QVQ@mail.gmail.com>
-Content-Language: en-US
-From: John Johansen <john.johansen@canonical.com>
-Autocrypt: addr=john.johansen@canonical.com; keydata=
- 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 lT9Q
-Organization: Canonical
-In-Reply-To: <CANGjgdnoz4NdqzOV9+SZaYTc+O_GkNNn5NVp+ZpHUQbp5h-QVQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <CABWMpWQiSEKMkROgKZJ6nV8GXYgr7E=-SmsatQie4eK8b3F9Xw@mail.gmail.com>
+ <CABWMpWR7Law_vHdeAMsOcY28VBcvX2jYSqq2SpksJSiLFcXhuw@mail.gmail.com>
+ <anIhyHL4Kl-DX2G_@eggarch> <CABWMpWQEfycicrctrW3RD1yNf0rv1ZrioY9FcjoZZGEz4GAm_Q@mail.gmail.com>
+In-Reply-To: <CABWMpWQEfycicrctrW3RD1yNf0rv1ZrioY9FcjoZZGEz4GAm_Q@mail.gmail.com>
+From: Jamie Stephens <jamie.stephens@gmail.com>
+Date: Wed, 5 Aug 2026 20:08:19 -0400
+X-Gm-Features: AUfX_mzWccQa-XGJ0eOY4WMfNWGqgAW-Qd5A9IgdUUwdNC3nZgowQzhwzISJkns
+Message-ID: <CABWMpWTn3H7UKqYzr7JP9tkQCEJHsXX-F103nyyey_srn7mvHA@mail.gmail.com>
+Subject: Re: [REGRESSION] CyberPower LE1000DG (0764:0501) USB HID regression
+ on x86
+To: Lovekesh Solanki <lovekeshsolanki00@gmail.com>
+Cc: jikos@kernel.org, bentiss@kernel.org, regressions@lists.linux.dev, 
+	gregkh@linuxfoundation.org, stern@rowland.harvard.edu, 
+	linux-usb@vger.kernel.org, linux-input@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 8/5/26 10:33, Chengfeng Lin wrote:
-> Hi John and Georgia,
-> 
-> I found a repeatable AF_UNIX datagram send slowdown caused by the exact source
-> delta of 6456ccbd2ff7 ("apparmor: fix regression in fs based unix sockets when
-> using old abi"). In a bare-metal parent/child/parent test, a standalone
-> sendmmsg() workload was 15.30% slower after the change. An independent larger
-> runner reproduced the slowdown with both sendmmsg() and io_uring SEND, so this
-> is not specific to io_uring.
-> 
-> #regzbot introduced: 6456ccbd2ff7
-> #regzbot title: apparmor AF_UNIX datagram send slowdown
-> 
-> The standalone workload uses socketpair(AF_UNIX, SOCK_DGRAM). Each sendmmsg()
-> call sends 32 messages of 128 bytes. Peer draining and payload validation are
-> outside the timed region. Each point had 3 warm-up rounds followed by 15
-> measured rounds of 65,536 messages.
-> 
-> Because 6456ccbd2ff7 was part of an AppArmor series, I isolated its source
-> delta on one controlled baseline:
-> 
->    parent 0bfa1c2da7a8: AppArmor topic prefix through 50d56a1a366a
->    child  30cb02a874b4: parent plus only the exact two-file 6456ccbd2ff7 diff
-> 
-> The child tree matches the same baseline with the AppArmor prefix advanced
-> through 6456ccbd2ff7. I used a fresh boot for each point:
-> 
->    point       mean ns/message
->    parent A          343.382
->    child             395.831
->    parent B          343.259
-> 
-> The child was 15.295% slower than the parent midpoint. Dropping the first
-> measured round gave 15.289%; parent drift was -0.036%, and the maximum CV was
-> 0.137%. All 45 measured rows passed the payload, length, count, and empty-queue
-> checks.
-> 
-> The machine was an Intel Core i7-12700KF system with 32 GiB RAM. The workload
-> was pinned to P-core CPU 2, with governor and EPP set to performance and Turbo
-> disabled. All three runs used actual preempt=none and reported
-> /proc/self/attr/current as unconfined.
-> 
-> As a separate check, the larger original runner used matched actual
-> preempt=full. Its direct sendmmsg() profile was 14.841% slower, and its
-> io_uring SEND profile was 17.953% slower. I am keeping these results separate
-> from the standalone percentage.
-> 
-> A separate v6.16.12 -> v6.17.13 perf comparison was directionally consistent.
-> The children overhead reported for security_unix_may_send was 0.27% in both
-> v6.16.12 controls and 6.77% at v6.17.13. The latter included the path through
-> apparmor_unix_may_send(), aa_unix_peer_perm(), and unix_peer_perm(). This was
-> a release-endpoint comparison rather than the exact source pair above, so I
-> use it only as supporting path evidence, not as an internal decomposition of
-> the 15.295% slowdown.
-> 
-> I understand that 6456ccbd2ff7 fixes a real old AppArmor policy ABI issue,
-> so I am not suggesting a revert. Would it be possible to retain that fix while
-> avoiding the added cost on this unconfined AF_UNIX datagram send path?
-> 
+Thanks again for all of the suggestions. I wanted to provide an update
+after spending some more time testing.
 
-thanks for the report, we will have to investigate and get back to you on this,
-generally speaking we try to keep the mediation overhead for unconfined tasks
-to a minimum using early bailout and some caching. The referenced commit does
-look to be doing early bailout, so we are going to have to do some analysis, on
-where exactly the overhead is coming from.
+At this point I'm no longer convinced this is simply a kernel regression.
 
-I can't promise we can get it back to what it was before but we should be able
-to do better than the current regression.
+I've now tested the UPS across multiple kernel generations, including:
 
+- 6.0.x
 
+- 6.18.40
 
+- 7.0.2-6
 
-> Evidence bundle:
-> 
->    https://github.com/lcf0399/linux-regression-evidence/tree/7b9862c7ac2d5f9622725912d7f0df95011bcbfd/apparmor-af-unix-send-old-abi-6456cc
-> 
-> Thanks,
-> Chengfeng
+- 7.0.14-8
 
+- 7.2.x
+
+The behavior varies somewhat between versions=E2=80=947.0.2-6 gets the
+farthest=E2=80=94but none of them provide stable long-term communication wi=
+th
+the UPS.
+
+On 7.0.2-6, the driver successfully:
+
+- Claims interface 0
+
+- Reads the HID report descriptor
+
+- Detects the UPS correctly as a CyberPower LE1000DG (VID:PID 0764:0501)
+
+- Retrieves battery charge, runtime, voltage, load, and other values
+
+- Completes several successful polling/update cycles
+
+Eventually communication stops. At that point the running driver
+repeatedly logs:
+
+    libusb1: Could not open any HID devices: insufficient permissions
+on everything
+
+and upsd reports:
+
+    Data for UPS [ups] is stale - check driver
+
+One thing I find particularly interesting is that the UPS never
+disappears from the USB bus. Even after communication becomes stale it
+is still present in lsusb:
+
+    Bus 001 Device 007: ID 0764:0501 Cyber Power System LE1000DG
+
+There are also no USB disconnects, resets, xHCI errors, or other
+kernel USB errors after the device has initialized.
+
+What makes this especially confusing is that this does not appear to
+be a normal permissions problem. The driver clearly has permission to
+open the device initially=E2=80=94it successfully claims the interface, rea=
+ds
+the HID report descriptor, and communicates with the UPS for several
+polling cycles before failing. Once it enters this state, however, it
+repeatedly reports "insufficient permissions on everything" until the
+driver is restarted.
+
+Since I can reproduce essentially the same failure across 6.0, 6.18,
+7.0, and 7.2 kernels, I'm beginning to think the kernel version only
+affects how long the driver remains functional, rather than being the
+underlying cause.
+
+Over the next few days I plan to test the UPS using a dedicated PCIe
+USB controller based on an ASMedia chipset to determine whether the
+behavior is specific to the Intel xHCI controller. I'll report those
+results back to the list once I've completed that testing.
+
+Has anyone seen this pattern before, where usbhid-ups initializes
+successfully, polls normally for a short period, then loses
+communication and repeatedly reports:
+
+    libusb1: Could not open any HID devices: insufficient permissions
+on everything
+
+while the USB device itself remains present and enumerated?
+
+Thanks again for everyone's time and suggestions. I'll follow up once
+I've completed the additional USB controller testing.
+
+On Tue, Aug 4, 2026 at 8:01=E2=80=AFPM Jamie Stephens <jamie.stephens@gmail=
+.com> wrote:
+>
+> Hi Lovekesh,
+>
+> I have now tested 02-resume-reset.patch separately on Linux 7.1.5 with
+> the CyberPower device 0764:0501.
+>
+> The patched kernel was active:
+>
+>   7.1.5-ups-reset-resume
+>
+> The device was detected by lsusb, but USB initialization still failed:
+>
+>   usb 1-3: new full-speed USB device number 4 using xhci_hcd
+>   usb 1-3: New USB device found, idVendor=3D0764, idProduct=3D0501
+>   usb 1-3: New USB device strings: Mfr=3D3, Product=3D1, SerialNumber=3D2
+>   usb 1-3: can't set config #1, error -71
+>
+> The UPS therefore never attached to hid-generic and NUT could not use it.
+>
+> I then returned the same USB cable and UPS to the PiAware NUT server,
+> where it immediately resumed working normally:
+>
+>   ups.status: OL
+>   battery.charge: 100
+>   input.voltage: 122.0
+>   output.voltage: 122.0
+>   ups.load: 23
+>   driver.version.data: CyberPower HID 0.8
+>
+> Results so far:
+>
+>   01-no-lpm.patch: did not resolve the regression
+>   02-resume-reset.patch: did not resolve the regression
+>
+> I will proceed with the requested git bisection unless you would like
+> any additional targeted logs or tests first.
+>
+> Regards,
+> Jamie Stephens
+>
+> On Tue, Aug 4, 2026 at 2:56=E2=80=AFPM Lovekesh Solanki
+> <lovekeshsolanki00@gmail.com> wrote:
+> >
+> > Thanks for the report,
+> >
+> > On Thu, Jul 30, 2026 at 03:28:02PM -0400, Jamie Stephens wrote:
+> > > sudo lsusb -v -d 0764:0501
+> > >
+> > > reports:
+> > >
+> > > wDescriptorLength     504
+> > >
+> > > Warning: can't get report descriptor, LIBUSB_ERROR_PIPE
+> > >
+> > > cannot read device status, Resource temporarily unavailable (11)
+> > >
+> > > As a result, usbhid-ups is unable to reliably communicate with the
+> > > device and NUT cannot reliably monitor UPS status.
+> > The lsusb failure and NUT seem to be seperate, lsusb failure could
+> > simply be device property.
+> >
+> > Few possibilities I can think of worth testing:
+> > 1) It may be related to LPM, the device may be advertising this but may
+> > not be handling it properly.
+> > 2) Commit 8020c41b39f5 (usb: core: allow ACPI-managed hard-wired ports =
+to power off)
+> > lets acpi managed ports be powered off even if hub does not advertise
+> > power switching. The UPS may be sitting on such port and its power coul=
+d
+> > be cycled out and leave it in a stale state.
+> >
+> > I'm attaching two patches to see if they have any effect, please apply
+> > and test them seperatly and let us know the results.
+> > And, as per Thorsten's advice above, run git bisection regardless.
+> >
+> > Regards,
+> > Lovekesh
