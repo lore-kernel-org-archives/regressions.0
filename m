@@ -1,81 +1,40 @@
-Received: from mail-yx1-f44.google.com (mail-yx1-f44.google.com [74.125.224.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 454243FCB2F
-	for <regressions@lists.linux.dev>; Fri,  7 Aug 2026 12:26:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.224.44
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786105606; cv=pass; b=qNNsb+3dRbezqTZxUi1gfMRcSzXx0FH58ovuGY9FqYsmJIxJp09BgxnVY4vAvqlZgKFXL2Uj1FhzS7SYbVktBk+pveNMLd5TvtPo0dfnsmsRlZDPvoV3O6MWppp4Oy06CJEjfSdLJokLAcX1OPivcqBIPJRulmcTVT/sMixWSno=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786105606; c=relaxed/simple;
-	bh=6234D8LBfUC42DK7gXm/LmHnQDFcKbOyodSX133frx4=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C45D71A6839
+	for <regressions@lists.linux.dev>; Fri,  7 Aug 2026 12:46:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1786106798; cv=none; b=MX8PpCg51PkZ6V9sYFnjlzrLKIMfUFTy8EtDhczmLETTARTrPJyragr4KVr3zhiP+ny2fcBdvgDMghjgCYzobsDieNNJfXBYBOrSe2q6650hUFZKk+/Lf8BuQiJiOYLIR/++NNeCw4og5onTo77NR7+YD8L1sMstLIukN75jnJQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1786106798; c=relaxed/simple;
+	bh=F6Tctv836SPSJAwEgYMlIIQPj2TS9nWMi6OpfZuvdU4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CsyE2/qkVMUJJrlxQkZkScsMRTD8GOfa3JdlYBv3nLlqL7D/U8KqEO0wAXwY+adAxNd2QM9d86WkInh9qSFw4Q8d7E/3/FHD/O0hLjZ00y2ferDRr2tLFt95GGRGszPkYHNt0DZPMhAo/U7m9Tb07DdtBn2ucISpKh52wNz8Xb4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V4nxohxg; arc=pass smtp.client-ip=74.125.224.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=EB7QQS9vKlHEyMGsV7D2JOmWZEiChkmNT7PA5RqfYooRrycO7BJ7tUX3UDhiltJMmdr4OAM1cyzBWPO3GJ/CL8gAGU8R7uGuhB0I3YNR+e2hYcuqu3SyPVSq/acHrOFKy+vfR6iMZWQzE8xNp0jMiQ1Z69SlnF1jN/th918jC7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EdAU17uX; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V4nxohxg"
-Received: by mail-yx1-f44.google.com with SMTP id 956f58d0204a3-6688a2dceb8so2149570d50.3
-        for <regressions@lists.linux.dev>; Fri, 07 Aug 2026 05:26:36 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1786105592; cv=none;
-        d=google.com; s=arc-20260327;
-        b=BdizRlcw0PHEKPGV9cYBVT83apkYwZvhxWYXrE5qFwMEwRCR5z0keIncYFVWbp5+rt
-         Lcj/IKOi5jCi6wrabdNmcpSdav3bdTNWsqndrLSrEDDSbhyotcsRtNwT1+iQ+Uv+eF9N
-         MUHwcWYIoZkjY31mrVmBJn2FXCMNmcf/W3usiPl61+bLEqg/zj2PbGGMhFsB9ENGDOrz
-         RnVN1xRLJCVobxY6/FpyYQZVY2xEayhnZFvm1MzQ++vzjRbUsAZXxrcGJjol0QKstfAM
-         IN5NumIMMRdFAoa7b6xImovf3nkgfd5305VrvZKOhiRHT2yrHpJciwImbJfg4EVR+I9K
-         AKUw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=6234D8LBfUC42DK7gXm/LmHnQDFcKbOyodSX133frx4=;
-        fh=DUVZop+Ly59RvqALr8CU/DLsWpvrYqNFmo/2jqHhPUI=;
-        b=gZ8Rk4XOm/EKrgU/64mYvnpQ0pF8WndeMZcTX63hrlgkLuCD4Ad8AEaA50X3Tx2wkg
-         c9XlphzOhLmJH6fu6D6AUThShF7v1W7/aTrlK9xx4r40hp4QHKXfKWS9KqBr64LIEv+1
-         /tM+bFuobUV7bABOCIWATmqcDNPmiCJgpMkAPbyf7grj89tK6DfjIKvxRZH7d3aDZg4a
-         Jq+E5XXJJTK+fKJhN74I8m5BEaakDO8dVK9J589vRES6HPbNbExsZCiRT86HphG994T4
-         vEECh/ytFYsgdaXvl5zsdp2Cun4yqSGpEcjPuPka1msiM6ZwCBmgoS1GZjz1k1xd0aC4
-         GYog==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1786105592; x=1786710392; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=6234D8LBfUC42DK7gXm/LmHnQDFcKbOyodSX133frx4=;
-        b=V4nxohxgtYkA7nhZDydknMYfLYtfLbN8EXBjwDXx4tB3bwdvCAOKB0vy+EgR/GHmmn
-         A2iTtJAwYySpdrLBIB/NMtaBCyTB1W0AAwvRqxb99oy9hBZtGchfWmUXEZIIfyJU62UF
-         7S6XwDzKUuYWc++3ClVdZVQOhW/tIKBl5UXfvIJi4gGQQ3i7JdUJOXYxVfBtM64NIMRd
-         zgYyefAZhHWjhXBADtN78RDdkHMfUROpFA1dvxvKGbqt/bncHmcpt4rLz1ED3yPc1ajw
-         9U5UvLIqm25BsfL1ucSk8F4Z0K3mxfF77vQlGnMoXS5zwOVgqSzqzu+n/yNeGqiuLlYm
-         TY0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786105592; x=1786710392;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=6234D8LBfUC42DK7gXm/LmHnQDFcKbOyodSX133frx4=;
-        b=Yjn7inQE/yU8g8ib159N79D65qhS5uzV3gy3F4Ukx5TphLy53vH86dajOXwZbKtxCw
-         OiSQZf38mdtTQaLEdwpYp4vZbgb21vmf3t4g0Bs2HitffKVqhQ+PIUQRlxTjLeWTLxXY
-         fcpgoXn0jiXscRSbMi55pVL5A92MXcEME8TA/e3YU/oZI7hBPhWu0fsq3/mdQh/sTpYY
-         XAoA9yz7YYCDZYGWIgiJhGYHZ5S2ytPMj15cJSQVa3vixSa54ktVElP01NY/NYkA071o
-         5eIoetnlg5TbaVVcRH6f3AY+SoYVwBCstmJ0Z9CCC5BeTzxFh0f58bV5HgRrD7wtpoD+
-         Pzjw==
-X-Gm-Message-State: AOJu0YzYURGfRJ3ocO+FO2eS4x3c97OPCOEGgRN0wKGnCF1pxbIieMVV
-	hJJ/TeRYX7ixndP9pBNz7lkbCxDMVbj4vFxGPXUwZWktf9ONTxFIm6xkk/oVO3lfgvYDBq81ygC
-	cC4XB7jzk/RdKFwUryjKe44mC88i0SElgtULVIZU=
-X-Gm-Gg: AR+sD13GzY7n4IM0Bhb54rZCyZIUxRpmauIQOnjJrbITJzsaAC2DXGRjLFiWv7tjFer
-	ne8Symu0RPkyiqJhA7gspy+hXcS2qCMbCneCkx77K/ASTjZWZUpyYNjYodaZ9pX/V0zHj2aFDwV
-	9TiSZPW7XuAQ4YreI9V2LCaxFQOy1+sgHiPIqnc6qouGyfvK9tj2iXIcu/Dezp+5plGWVlB8nSN
-	5hfrBlr9owYLf9ZajggjYNxuykz6qAjmXNVAyeQkAtFyL8kvsndewvecZV2r/rizmlUsi5zOee+
-	H01E0EzN3mo9gOuPW2fmooELY4XdlfiGyv7D+SdZIMGC81TIBavwPcj0SVfuqQHUb3zWSp7gUuW
-	twvF8/EW+0XQ=
-X-Received: by 2002:a05:690e:480d:b0:668:90cd:8aef with SMTP id
- 956f58d0204a3-66acd2f1bf7mr1336478d50.25.1786105591669; Fri, 07 Aug 2026
- 05:26:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EdAU17uX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A19F1F000E9
+	for <regressions@lists.linux.dev>; Fri,  7 Aug 2026 12:46:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786106790;
+	bh=F6Tctv836SPSJAwEgYMlIIQPj2TS9nWMi6OpfZuvdU4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=EdAU17uXm8PPadZQKYRg6ExbG2upgh08SODyrchVvupjZTGqr3QKmamsm3HdQ2bfq
+	 aIgkadbs3KtdqaaipUEC5mW1WzonbfA9QWHFlVasiitd/AieTjHGwl6ZWsKRfIas2y
+	 NG97z6/GfRo+UIIVCanNoZEgH3eyFMMJWUhZub+2Vu//V3qGn5Yo3EufuycWaVZB7I
+	 SYoEJcWXPuUoVGgV4GI7FH7INKohur9LZsMkxO6lbKvRfFgqveP540zojw+2W95HB1
+	 fmrcBsDyvJksTyIQhaksMcrITgOLYSNb17jtGwsYA46sUCXzroqMO0Ma3/P+EBosjf
+	 HANzumM2fNIvg==
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5b015b2d792so3045893e87.3
+        for <regressions@lists.linux.dev>; Fri, 07 Aug 2026 05:46:30 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AHgh+RodI8HOefJmkdIzH8yE5uutocfh4W+8CcrhcHWkdQxjnnZ140ThN/TMki8m1wDBSQNlVoWZPvX7FekWKw==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yx9JuHC6Mr9SHas0/0XlABOrGkYO7NTj7rifsU7yUZdG9AtuDhx
+	gBAmHQIOm49MiHoMoSfhZoXijiokA5e4nIHGh05kcMCuIVBWCsYfiFpmHwJHWH1wbs73rYzMfZi
+	RVBwN3gIMsHs0mxUtlhAN19IGKvOO95U=
+X-Received: by 2002:a05:6512:1589:b0:5b2:dba4:d8ca with SMTP id
+ 2adb3069b0e04-5b2f4cd2967mr3457887e87.41.1786106788983; Fri, 07 Aug 2026
+ 05:46:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -86,33 +45,41 @@ References: <CAJOGg3z6LJPDsdPNBxajgy8_wQxfhYBRxe4EiurZf3kPU5A5Bw@mail.gmail.com>
  <f42cc94c-ff60-4999-b473-c2fc5b1b4199@intel.com> <CAJZ5v0j1Tucb0yzS8=3U_X1E4ziztjgOsiYrc_QfUUKZfScCPA@mail.gmail.com>
  <CAJOGg3zhEFner5pze-eX+6jh5D8nJppyWkNN5bWtg7MZ7cW9_Q@mail.gmail.com>
  <CAJZ5v0ib2YxyX-6j34=w+FEOH+fsGF_ShH9Q0YCEDkZvRP88EA@mail.gmail.com>
- <CAJZ5v0gySOkYRphXHbXcStFGiuMtni_OWXW2rTDoa_V2PRPnJw@mail.gmail.com> <CAJZ5v0i_AS1JzyM10yPfM5QsNVsQmQ3=haHCcTiM72FZm+G+Qg@mail.gmail.com>
-In-Reply-To: <CAJZ5v0i_AS1JzyM10yPfM5QsNVsQmQ3=haHCcTiM72FZm+G+Qg@mail.gmail.com>
-From: Julien <julien82453@gmail.com>
-Date: Fri, 7 Aug 2026 14:26:20 +0200
-X-Gm-Features: AUfX_mx9S7wOi18myqNhYzBSITOrslEjXCrKmoDPgcg1jNxB3zXGDhsWm_H5WQo
-Message-ID: <CAJOGg3wZvftfk-hZ_wXBYnXca9gf5ziSo0Uh1BouYvzoEyEVrg@mail.gmail.com>
+ <CAJZ5v0gySOkYRphXHbXcStFGiuMtni_OWXW2rTDoa_V2PRPnJw@mail.gmail.com>
+ <CAJZ5v0i_AS1JzyM10yPfM5QsNVsQmQ3=haHCcTiM72FZm+G+Qg@mail.gmail.com> <CAJOGg3wZvftfk-hZ_wXBYnXca9gf5ziSo0Uh1BouYvzoEyEVrg@mail.gmail.com>
+In-Reply-To: <CAJOGg3wZvftfk-hZ_wXBYnXca9gf5ziSo0Uh1BouYvzoEyEVrg@mail.gmail.com>
+From: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>
+Date: Fri, 7 Aug 2026 14:46:16 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0jrvdkjOm75CZSSZmK2ntaVvAN2ru=0yvgXV=twm8uFaA@mail.gmail.com>
+X-Gm-Features: AUfX_mx_NcFjnZwHGAaFGsUuUkbvqRdwTWBA3hLkOGAfTvMjhaP2pYzqyuX1vlw
+Message-ID: <CAJZ5v0jrvdkjOm75CZSSZmK2ntaVvAN2ru=0yvgXV=twm8uFaA@mail.gmail.com>
 Subject: Re: [REGRESSION] no TPM device after "tpm_crb: Convert ACPI driver to
  a platform one"
-To: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>
-Cc: regressions@lists.linux.dev, jarkko@kernel.org, 
+To: Julien <julien82453@gmail.com>
+Cc: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>, regressions@lists.linux.dev, jarkko@kernel.org, 
 	linux-integrity@vger.kernel.org, 
 	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Aug 7, 2026 at 12:45=E2=80=AFPM Rafael J. Wysocki (Intel)
-<rafael@kernel.org> wrote:
-> And there is a v3 already:
+On Fri, Aug 7, 2026 at 2:26=E2=80=AFPM Julien <julien82453@gmail.com> wrote=
+:
 >
-> https://lore.kernel.org/linux-acpi/12955541.O9o76ZdvQC@rafael.j.wysocki/
+> On Fri, Aug 7, 2026 at 12:45=E2=80=AFPM Rafael J. Wysocki (Intel)
+> <rafael@kernel.org> wrote:
+> > And there is a v3 already:
+> >
+> > https://lore.kernel.org/linux-acpi/12955541.O9o76ZdvQC@rafael.j.wysocki=
+/
+> >
+> > so please test this one if possible.
+> >
+> > Thanks!
 >
-> so please test this one if possible.
+> Yes it still works.
 >
-> Thanks!
+> The logs:
+> MSFT0101:00: [mem 0xfed40000-0xfed4103f] expanded to avoid overlap
+> tpm_crb_acpi MSFT0101:00: [Firmware Bug]: Bad ACPI memory layout
 
-Yes it still works.
-
-The logs:
-MSFT0101:00: [mem 0xfed40000-0xfed4103f] expanded to avoid overlap
-tpm_crb_acpi MSFT0101:00: [Firmware Bug]: Bad ACPI memory layout
+Thanks for the confirmation!
