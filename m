@@ -1,80 +1,65 @@
-Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF4B9388396
-	for <regressions@lists.linux.dev>; Sat,  8 Aug 2026 19:18:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2CED37DAAE
+	for <regressions@lists.linux.dev>; Sat,  8 Aug 2026 20:25:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786216703; cv=none; b=dkk3BhcdRSq6qnqqvkeaNWY23vCXp9X2uPurGzup6NjJef/FtIkoWbtXzWkArRsMp0jDz2fRBmoIklM4jm45CJH0ulZpNrqeGuJ9sNnn+pyYUTjqLcuy0YecHkYxjDqm0OHxupo210gbwAj+QvReoNW964k78b58igKehqcAG88=
+	t=1786220741; cv=none; b=iQdLePvZ4FuBftAJ6F8wiAqRbt+0Ze9HOnuL9N3TpRGUkwOdyMp36eRfbvx9FJMY15vnU+TfWiNSTAx1W9LTg3neE5JRBpWvhn5bCtQYuOfTmocdw7jHXbrtNGFuC0WOL6neqz0o8YGobW3+ZZdUuOK9YxLfMlPDbCzWiqCTW68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786216703; c=relaxed/simple;
-	bh=kItp9Z1e8JBemDwqeOPjo5Xxl2mgPRr4PDK1h4h3tHY=;
+	s=arc-20240116; t=1786220741; c=relaxed/simple;
+	bh=Ekdwg4c4KafmDiLEhSwzoAhPssdwN8TEhYtmp026hN4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FsE98Rh2Qt7ssO7rrPRtD7y7AI43zeu5tk2MoXRbqYFDmmIhv5pbJOy3zavgw8EuNLne/MjM+DWbeNb3cn+q1t1Ku9Yg700EbcFsi6XDxt68cTQXxwogzgMbJhIXLMBlz7SSIZAAiHYpBH18Kpou/NPdbPYKhXdSSO4VgUtxWV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu; spf=fail smtp.mailfrom=g.harvard.edu; dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b=CoYlmFy8; arc=none smtp.client-ip=209.85.219.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=g.harvard.edu
+	 Content-Type:Content-Disposition:In-Reply-To; b=NiDxbClfsdfImeq3kLDc2UN2InZLhmX0HzjX3J7x0MoEX4mDZddDiUn0bwfU/9YuIMWBIjXnP742kV2GOH79Jc38WAXtufKUXhrUAI4yjwjnkeVaCIqa37PDQb9rscUpmRnFLtDkHoG1B5xjQpnEd23G6zly1oxBJWnpiS90xZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bZUf/omR; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b="CoYlmFy8"
-Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-9063b380982so7432746d6.0
-        for <regressions@lists.linux.dev>; Sat, 08 Aug 2026 12:18:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rowland.harvard.edu; s=google; t=1786216701; x=1786821501; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=rLFxNt6cekVDYhRViYWogX3gp+Zn05f4HEhIaap8PSo=;
-        b=CoYlmFy87FTfI4/Ao1zcpePLFFVvliemVXS6HAlddiasKy+8C6ni7ghOF4o27Unw3D
-         bJKP0RPTJKxz6eNJ5DcJBXbXAZ4teymC80Cb/uj9noEsHC4vvHbLe58QbcHN2y2lBFaI
-         1Y04XKGBcPhbScQMm4BaPS9OJEF4TmcuVoVK6niXazvhQvqM2+I0AU02UgqQk8fUTfI2
-         eFarHQXa2ZPiKhGxW5tzaZHg5BLLMddP+WJUSR/wsh04l9zUFxUIQMM4N1FdXskixIBm
-         oE1M7e70UFJ6HMz5iY+xGr6OpK/jZPy/2KUNNt+a+mHv3dpgMx9Eom9RhIg+3NOPV6/p
-         I3Eg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786216701; x=1786821501;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=rLFxNt6cekVDYhRViYWogX3gp+Zn05f4HEhIaap8PSo=;
-        b=F8eMv1pcPWeyOW/GtStGOqzkh8N7r7I7RYtZs/Wxl0jZxrYg2kHtnZJ/gsn6sNuLqU
-         jV65WNmgmcz4AjeH2cEg9FcPeueEdMxnpdHq3MMJeEmf2rguB5V/LIGTjZupvXXLPj6f
-         /6gMTHK+YigP+SV9qISBWDIRKa/oQ14mlGmzfkTiMQX6+gABoJgWA7PP56YmofeLU3wE
-         dsuaCN3ne92ddzdpa8rbgxueYrWuzLHq0Hs1Q/Ob1y+4gaxxE+yBQneRgYuGpvxX4RCR
-         pxPrX6etl2HahBI2pLXnk2ScB0EWkKTby6OQCbc7VFqUqCyHB0e+mu462lNmoX0pQoO4
-         9zNw==
-X-Forwarded-Encrypted: i=1; AHgh+RrHBLxB+aFSB4U7PdUeXMbJ54oA1HTJAyjAdGvTO7vymx+wcSpt6cfWhycZCtPkwjS2lpwBuq4VIK/f2A==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzFyi9iFfGpzOdwz3zBOcGyPxlRDLdOdX/Fb+g1Au6N0mjvbeMJ
-	qeBma/K3Q2mMzMpmg2J4CuvVZHIBZCTgI1zpF+T56dhNqcXrZWusd7oJ0zrdRPKQ0Q==
-X-Gm-Gg: AR+sD12iVQx1cf9zmmm0eiOpogPZQ0xZ6PTKuhUOk497vFbaRVQcwBNpbFZUAZd/sAU
-	jkW73Ygi3BFOaoaMrWnLYkVvUi2CK39OZOo2glcLmWyK1sXtVIh0aTOWaBloJ7N2ikCzGJdM1/6
-	+wKK5tJ/LBWFY+RGvBT7PA9IzGzNtkij8wY/NHhGSHR/6Q9aMhNgCr6nroGglO0j6XI3iLOmfOP
-	SuNP4Flf95ptWQ19bUVDaEC4ucl2EOoIDmnwRaWvSiI3hv6jK+HZVXzIl5L8OywsjNBOpp60ZVz
-	iQp0UGqCiW+dzDV8oMJ/Bvtzz3L1IupEgPWPvGBFzW6dKQGTy6SEb5Q4bIcNQ6HqVq/uTvRmbf7
-	pUxg3Z2q65pUaCZUQuHZEXj1cLMKQbUIsT6N9WEjZqtepCYgvO0e5u7Jgylw4HCWkV0VaRbnk9a
-	7UMbfyKCIAALMhoRIJrB/+6aMNxgqrcEALoC2rZRYjUkDFlXA0QDFWvLYRe6j+uQ==
-X-Received: by 2002:a05:622a:609:b0:51c:1a11:75cf with SMTP id d75a77b69052e-52ce5f7ed9emr323594671cf.7.1786216700651;
-        Sat, 08 Aug 2026 12:18:20 -0700 (PDT)
-Received: from rowland.harvard.edu ([2601:19b:d01:d210::dfd8])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-908a92ff8d1sm36588246d6.25.2026.08.08.12.18.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 08 Aug 2026 12:18:19 -0700 (PDT)
-Date: Sat, 8 Aug 2026 15:18:17 -0400
-From: Alan Stern <stern@rowland.harvard.edu>
-To: Jamie Stephens <jamie.stephens@gmail.com>
-Cc: Lovekesh Solanki <lovekeshsolanki00@gmail.com>, jikos@kernel.org,
-	bentiss@kernel.org, regressions@lists.linux.dev,
-	gregkh@linuxfoundation.org, linux-usb@vger.kernel.org,
-	linux-input@vger.kernel.org
-Subject: Re: [REGRESSION] CyberPower LE1000DG (0764:0501) USB HID regression
- on x86
-Message-ID: <be3775ba-3e7f-4548-aa1b-4710711f8aed@rowland.harvard.edu>
-References: <CABWMpWQiSEKMkROgKZJ6nV8GXYgr7E=-SmsatQie4eK8b3F9Xw@mail.gmail.com>
- <CABWMpWR7Law_vHdeAMsOcY28VBcvX2jYSqq2SpksJSiLFcXhuw@mail.gmail.com>
- <anIhyHL4Kl-DX2G_@eggarch>
- <CABWMpWQEfycicrctrW3RD1yNf0rv1ZrioY9FcjoZZGEz4GAm_Q@mail.gmail.com>
- <CABWMpWTn3H7UKqYzr7JP9tkQCEJHsXX-F103nyyey_srn7mvHA@mail.gmail.com>
- <CABWMpWSkJgmoZACA4LYEbmsbEGJMYLyixwv2V3tZbneeKBxpWg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bZUf/omR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1786220739; x=1817756739;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Ekdwg4c4KafmDiLEhSwzoAhPssdwN8TEhYtmp026hN4=;
+  b=bZUf/omRevV9VbhNCGCkaj3gruVuaqudb0lV0TbwNLs4HxMSohx2s52/
+   0NR3eeXrmzzwYWVHfczhKkB7n41eA0haS+D6EWz+w1jhH1qZ+/etbbx7G
+   i4bn1YJQIA2UrrMh53LS1ksOjMu2wBAFeodSV6rOA4R1+u7WqDvYN7dlI
+   RJNgEhwCKD3mydgaQTmJtI0SwtQ3kRqDNVCOtALSa17wjTB/x2nZ660nn
+   RHqmZiTX91wTZOAorni+YNflVAXbasYfzfoJAG+I1iqkfwYW+iIvvqLR4
+   tZx7TRwSBNg6UqzN2+6aoGCKT/VtXvxhTp0gfB4lmMz6QUk9QgFWG7TLx
+   g==;
+X-CSE-ConnectionGUID: URRorBWURWmEDHFbD59MNQ==
+X-CSE-MsgGUID: cAsDD3YQSb6CUZwfXwxHiA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11869"; a="98155373"
+X-IronPort-AV: E=Sophos;i="6.25,212,1779174000"; 
+   d="scan'208";a="98155373"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Aug 2026 13:25:38 -0700
+X-CSE-ConnectionGUID: weSY3ktxTICZnBd2xVSvjg==
+X-CSE-MsgGUID: M4ApHUEFTsSeI90zVI56ug==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,212,1779174000"; 
+   d="scan'208";a="264667361"
+Received: from slindbla-desk.ger.corp.intel.com (HELO localhost) ([10.245.244.2])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Aug 2026 13:25:35 -0700
+Date: Sat, 8 Aug 2026 23:25:32 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Hardik Prakash <hardikprakash.official@gmail.com>
+Cc: Thorsten Leemhuis <linux@leemhuis.info>,
+	Andi Shyti <andi.shyti@kernel.org>, linux-i2c@vger.kernel.org,
+	linux-gpio@vger.kernel.org, wsa@kernel.org,
+	mario.limonciello@amd.com, brgl@bgdev.pl, basavaraj.natikar@amd.com,
+	linusw@kernel.org, nathan@kernel.org,
+	chaitanya.kumar.borah@intel.com,
+	Linux kernel regressions list <regressions@lists.linux.dev>
+Subject: Re: i2c designware change broke touchpad of a thinkpad (was: i2c:
+ designware: defer probe if child GpioInt controllers are not bound)
+Message-ID: <aneQvMN_Zet2b62n@ashevche-desk.local>
+References: <20260718054330.8975-2-hardikprakash.official@gmail.com>
+ <amhodWpAI3K6aeBH@zenone.zhora.eu>
+ <b4a4eadb-282f-464c-843a-19d415a34d0c@leemhuis.info>
+ <CANTFpSW+w1GZMbLXszuqZFCZjeVJfFG2bc1vJad+OMzsy-CPCg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -83,39 +68,90 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CABWMpWSkJgmoZACA4LYEbmsbEGJMYLyixwv2V3tZbneeKBxpWg@mail.gmail.com>
+In-Reply-To: <CANTFpSW+w1GZMbLXszuqZFCZjeVJfFG2bc1vJad+OMzsy-CPCg@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Sat, Aug 08, 2026 at 03:14:38PM -0400, Jamie Stephens wrote:
-> I also completed the test with a separate PCIe USB controller based on
-> the ASMedia ASM1042.
+On Sat, Aug 08, 2026 at 10:31:28PM +0530, Hardik Prakash wrote:
+> On Fri, 7 Aug 2026, Thorsten Leemhuis wrote:
+> > This became 0a4bb2abc3e56d ("i2c: designware: defer probe if child
+> > GpioInt controllers are not bound") and causes a regression for me: the
+> > Touchpad in my ThinkPad T14s Gen 4 (AMD) stopped working. From the
+> > kernel log:
+> >
+> > i2c_designware AMDI0010:01: i2c_dw_handle_tx_abort: lost arbitration
+> > i2c_designware AMDI0010:01: controller timed out
+> > i2c_hid_acpi i2c-SYNA8018:00: failed to fetch HID descriptor: -110
+> > i2c_hid_acpi i2c-SYNA8018:00: Failed to fetch the HID Descriptor
+> >
+> > Reverting this change in current mainline/master (f9a2394a23482) fixed
+> > things for me. Full dmesg of current master and master+revert can be
+> > found here:
+> >
+> > https://www.leemhuis.info/files/misc/dmesg-master
+> > https://www.leemhuis.info/files/misc/dmesg-master-plus_revert
 > 
-> The UPS enumerates normally on the ASMedia controller and the kernel
-> identifies it correctly as the CyberPower LE1000DG (0764:0501).
-> However, on this controller the failure mode is different.
+> Thanks for the report and both dmesg dumps, that's very helpful. Comparing
+> the two: the working log shows SYNA8018:00 probing cleanly around 2.33s
+> with no GPIO-related activity, while the broken log hits lost arbitration
+> on AMDI0010:01 at almost the same timestamp. Neither log has dynamic debug
+> enabled for the relevant code paths, so I can't yet tell what my dependency
+> check actually decided for AMDI0010:01's children on your machine.
 > 
-> The device and HID descriptors are readable, but the 504-byte HID
-> report descriptor is consistently unavailable. Ten consecutive runs
-> of:
+> Two things that would help narrow this down, whenever you have a moment:
 > 
->     lsusb -v -d 0764:0501
+> 1. A DSDT dump, to see what GpioInt resource (if any) AMDI0010:01's
+>    children declare, and what it points to:
 > 
-> all showed:
-> 
->     Report Descriptors:
->         ** UNAVAILABLE **
-> 
-> NUT behaves consistently with that result. usbhid-ups successfully
-> opens the device and claims interface 0, but then fails while
-> attempting to retrieve the HID report descriptor:
-> 
->     Unable to get HID descriptor (Pipe error)
->     HID descriptor length 504
->     Unable to get Report descriptor: Resource temporarily unavailable
->     No matching HID UPS found
-> 
-> There are no USB disconnects or xHCI errors in dmesg. The device
-> remains present and enumerated on the ASMedia controller.
+>    sudo cat /sys/firmware/acpi/tables/DSDT > dsdt.dat
+>    iasl -d dsdt.dat
 
-What shows up in usbmon (or equivalently, Wireshark)?
+Side note: It is better to collect with `acpidump -o tables.dat`, then
+`acpixtract tables.dat` followed by `iasl -d dsdt.dat`
 
-Alan Stern
+>    The resulting dsdt.dsl, or just the section under AMDI0010:01, should
+>    help.
+> 
+> 2. A dmesg with dynamic debug from a kernel built with the attached
+>    patch on top of current mainline/master (adds pr_info() tracing to
+>    the exact decision path, no functional changes):
+> 
+>    dmesg | grep i2c-dw-gpio-dbg
+> 
+> Both together should tell us whether the dependency check is finding a
+> GpioInt resource on your hardware and mishandling it, or whether
+> something else is going on. Appreciate you taking the time.
+
+> On Fri, 7 Aug 2026 at 19:37, Thorsten Leemhuis <linux@leemhuis.info> wrote:
+> > On 7/28/26 10:30, Andi Shyti wrote:
+> > > On Sat, Jul 18, 2026 at 11:13:31AM +0530, Hardik Prakash wrote:
+> > >> I2C controllers may have child devices with GpioInt resources that
+> > >> depend on GPIO controllers being fully initialized. If the I2C
+> > >> controller probes and enumerates children before the referenced GPIO
+> > >> controller has completed probe, GPIO interrupts may not be properly
+> > >> configured, leading to device failures.
+> > >>
+> > >> On Lenovo Yoga 7 14AGP11, the WACF2200 touchscreen (child of
+> > >> AMDI0010:02) has a GpioInt resource pointing to GPIO 157 on the
+> > >> pinctrl-amd controller (AMDI0030:00). When i2c-designware probes
+> > >> AMDI0010:02 before pinctrl-amd finishes initializing, I2C transactions
+> > >> fail with lost arbitration errors:
+> > >>
+> > >>   0.285952  amd_gpio_probe: registering gpiochip  <- GPIO chip visible
+> > >>   0.287121  amd_gpio_probe: requesting parent IRQ <- probe still running
+> > >>   0.301454  AMDI0010:02 dw_i2c_plat_probe: start  <- races here
+> > >>   2.348157  lost arbitration
+> > >>
+> > >> Add a dependency check that walks ACPI child devices and defers probe
+> > >> until any referenced GPIO controller is bound.
+
+[...]
+
+> > #regzbot introduced: 0a4bb2abc3e56d
+> > #regzbot title i2c: designware: ThinkPad touchpad broke
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
