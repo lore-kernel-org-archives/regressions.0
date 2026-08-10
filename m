@@ -1,308 +1,187 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [46.38.247.119])
+Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3149F3976A4
-	for <regressions@lists.linux.dev>; Mon, 10 Aug 2026 06:48:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.38.247.119
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5F352F39C7
+	for <regressions@lists.linux.dev>; Mon, 10 Aug 2026 08:28:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786344523; cv=none; b=B84mkk00U+G0eNmP9QU2BcWa2/fJqpsCUsVqZpyNgvnN+lyGou1hwIuUzobeNGxmcOU0SHBgLXLPv9BUmTlHSB+geTKNIO5ncEEglQm7o1ikDW4vGQ5/+437is+xS8nIXFigqTwhe+QKgpggjrrlD59YQqrIaPpdHV5vbCceyXA=
+	t=1786350504; cv=none; b=KKLL1uJuVif2h4vX+QoANtY8x8ZykUJhjGWNn4rXr0apB3IGdhwXnvSPwMwkDjwVyqmbvjLvBQUJEAxEl/ysuuluWeGQCX10Hsj9xfzw5eOTgQskXTgV+CM4a6XuRkWbHoD67dl1vsIfAAQeEfOD+hZXq/Oy0aBrT5NMar4aHm0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786344523; c=relaxed/simple;
-	bh=0YgfSDRWRvwm8JaNBzw6AVNCOHoavrNKZe+JEUOzA7c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lpF0eIslr/4GvjLqq0YjRI8LcS6AVhrHjKZlvvOic1mo5l6oVZ6aPtKuB+H27HZhGuwZMCL6Ezf/8YmjksD8Hn+I2xOwMBv+qA3Tt8Fbw8CrlvwB7YyG2ZdwKzeMHAlC7FFtbeMypW9thn+pHo1aUOrsTdsp3Om3vPTmRb1aL/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=F9oE9Wn0; arc=none smtp.client-ip=46.38.247.119
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1786350504; c=relaxed/simple;
+	bh=ldqOSfs+yOOLvTvAeLkNgY9UCg41jz+vPOLK4eT1X5k=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=gdlIp/7a31eaSdmaAeHdkjv3uDURQmRojRlzsItPf0bCJIRkqGxVy3te6BFbJ+O+cmqfB0XyLZn6g6B/Kc3GEO9HawnyXAAyIjJt7wcsy5mlw9VjYigWv1thkp4vdokOQatx6y0QEF78Ko7+VYIbegyXge+MtGbZvYb4Di9CLxU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=TO+sSvTH; arc=none smtp.client-ip=80.241.56.161
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="F9oE9Wn0"
-Received: from mors-relay-8404.netcup.net (localhost [127.0.0.1])
-	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4hJQLx69dPz8FcM;
-	Mon, 10 Aug 2026 08:48:25 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1786344505;
-	bh=0YgfSDRWRvwm8JaNBzw6AVNCOHoavrNKZe+JEUOzA7c=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=F9oE9Wn0BxsNeqDMBaNFuMySIxRaWvj6SFD5yvj6JZbTl14pHIE1P12PDCZ7WTdlK
-	 nZzn+gWrAqTYCEEXt5JdFGG/B0IepXsDKxximq0NwgtX0Jv3MOo3PXs2FAnBzeCsyg
-	 MaP245AsmJHB4kESfN1ij9a84lqf3EJbHfH0cy3q67ePCxUK21Qw9x6IfxEf2QLUX7
-	 gfweR41mfqsYcCQeqIH1N4xJvM79fqQ1sj79yvfeLvaimLW12vHe+lKDU+p9vhxVIt
-	 qaz33VoK5OrEvWjfxxrZgcooZaJipp56B4AyqCKhWBQt8rRHt+0eqBeosNHUJB2cap
-	 T+tyUlEo5NIOQ==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4hJQLx5S6Cz4xD1;
-	Mon, 10 Aug 2026 08:48:25 +0200 (CEST)
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="TO+sSvTH"
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:b231:465::2])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4hJQLx1sKWz8sZg;
-	Mon, 10 Aug 2026 08:48:25 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id E02AE5FB65;
-	Mon, 10 Aug 2026 08:48:19 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=linux@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <5a5f7f58-b35b-407f-a5e5-293a88cafcc0@leemhuis.info>
-Date: Mon, 10 Aug 2026 08:48:18 +0200
+	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4hJSZ56WRTzKnR3;
+	Mon, 10 Aug 2026 10:28:13 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1786350499; h=from:from:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9yu6LEk2UcyjL9r965P8ZavzTzFAgQo0BfGlpvZT/OE=;
+	b=TO+sSvTHYAlWYgEcUG/JQbXVlcu6tw7XIJZt+5rLQCLU39Iu2nwwzo0lAX2izkWGHYYgah
+	35eD3EGGny2IRS1Ysy0c0rJe8psXiYt2WRoRl3SiLkLVWI2g3YL6/a23swDOkuJjLSQtW7
+	ms3wADbqyooWyWXXalMEt9rrwn1BS7kfC3yjoY5bs2JhSHQhGkPwPPsrhNNBVxCj++R9Et
+	0Kzx7Si4k1XGQCRQJwQV/6Ldyik/Q65mOiNxOL9/gfZHaHZXAA+sRFfKDXafKQUsQTa2po
+	+9SbYoatX4JI51IqMIUOZKB44Qse6aPGJeF2PjN6A0o68NZhzH7R/79L2G4I0Q==
+Authentication-Results: outgoing_mbo_mout;
+	dkim=none;
+	spf=pass (outgoing_mbo_mout: domain of phasta@mailbox.org designates 2001:67c:2050:b231:465::2 as permitted sender) smtp.mailfrom=phasta@mailbox.org
+Message-ID: <cef49cf329737e0af12ef5a90dd21f31e113d4c3.camel@mailbox.org>
+Subject: Re: [REGRESSION] drm/sched: FAIR policy causes serious performance
+ degradation at max GPU load on 9070XT
+From: Philipp Stanner <phasta@mailbox.org>
+Reply-To: phasta@kernel.org
+To: Luke.Wildhardt@proton.me, "matthew.brost@intel.com"
+	 <matthew.brost@intel.com>, "dakr@kernel.org" <dakr@kernel.org>, 
+ "phasta@kernel.org"
+	 <phasta@kernel.org>, "ckoenig.leichtzumerken@gmail.com"
+	 <ckoenig.leichtzumerken@gmail.com>, "dri-devel@lists.freedesktop.org"
+	 <dri-devel@lists.freedesktop.org>
+Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>, 
+ "amd-gfx@lists.freedesktop.org"
+	 <amd-gfx@lists.freedesktop.org>, "linux-kernel@vger.kernel.org"
+	 <linux-kernel@vger.kernel.org>, Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
+Date: Mon, 10 Aug 2026 10:28:04 +0200
+In-Reply-To: <TfhgV1W0W5LI6RWUO6J35B3R8QIYH_FN3Eihzdo_9PH39hfn1AVByT-QBPHmWiAR-L0Kqi2sppM_EhFPKwZPGmb5pFgpF2MrzeFzkZDmpG8=@proton.me>
+References: 
+	<TfhgV1W0W5LI6RWUO6J35B3R8QIYH_FN3Eihzdo_9PH39hfn1AVByT-QBPHmWiAR-L0Kqi2sppM_EhFPKwZPGmb5pFgpF2MrzeFzkZDmpG8=@proton.me>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: i2c designware change broke touchpad of a thinkpad
-To: Hardik Prakash <hardikprakash.official@gmail.com>
-Cc: Andy Shevchenko <andriy.shevchenko@intel.com>,
- Andi Shyti <andi.shyti@kernel.org>, linux-i2c@vger.kernel.org,
- linux-gpio@vger.kernel.org, wsa@kernel.org, mario.limonciello@amd.com,
- brgl@bgdev.pl, basavaraj.natikar@amd.com, linusw@kernel.org,
- nathan@kernel.org, chaitanya.kumar.borah@intel.com,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <20260718054330.8975-2-hardikprakash.official@gmail.com>
- <amhodWpAI3K6aeBH@zenone.zhora.eu>
- <b4a4eadb-282f-464c-843a-19d415a34d0c@leemhuis.info>
- <CANTFpSW+w1GZMbLXszuqZFCZjeVJfFG2bc1vJad+OMzsy-CPCg@mail.gmail.com>
- <aneQvMN_Zet2b62n@ashevche-desk.local>
- <b5b95476-636f-40b1-8575-47918169b7bb@leemhuis.info>
- <CANTFpSWzV9tzMwc2cURCQBhpZmrv1SsZqnwBEu0jt=ZQWfvWgQ@mail.gmail.com>
- <1a209e14-05c6-4796-a8fc-d0c3a776520d@leemhuis.info>
- <CANTFpSWnTjoTS8hBOvVM_w3pWHyOiBhch_GXe_mG-d56WeF-0w@mail.gmail.com>
-From: Thorsten Leemhuis <linux@leemhuis.info>
-Content-Language: de-DE, en-US
-Autocrypt: addr=linux@leemhuis.info; keydata=
- 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 MEK4
-In-Reply-To: 
- <CANTFpSWnTjoTS8hBOvVM_w3pWHyOiBhch_GXe_mG-d56WeF-0w@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: 
- <178634450053.1965100.10858780517657452661@mxe9fb.netcup.net>
-X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: E02AE5FB65
-X-NC-CID: zMw+Bz0y/mBSyderzXH+Gc6zvvv0N4CG0N9BE6v7AaRWLj8EMio=
+X-MBO-RS-ID: 45f535531c94d2e02af
+X-MBO-RS-META: tgkpc1exkfrzt6o87it7isjs8m6bthoo
+X-Rspamd-Queue-Id: 4hJSZ56WRTzKnR3
 
-On 8/10/26 07:54, Hardik Prakash wrote:
-> On Sun, 9 Aug 2026, Thorsten Leemhuis wrote:
->> Sorry, picked the wrong file while preparing the mail, it's here:
->> https://www.leemhuis.info/files/misc/dmesg_patch_dyndbg
-> 
-> Thanks, that's the one. Full timeline from that boot:
-> 
->   0.619s  AMDI0010:00 and AMDI0010:01 defer (AMDI0030:00 not registered)
->   1.136s  Retry succeeds: device_is_bound()=true for AMDI0030:00,
->           confirmed for all three children (XXXX0000:00, SYNA8018:00,
->           NXP1001:00)
->   2.222s  lost arbitration on AMDI0010:01 (x3)
->   3.260s  controller timed out, HID descriptor fetch fails
-> 
-> The dependency check itself is behaving correctly here -- it defers,
-> then correctly confirms AMDI0030:00 is bound before letting probe
-> continue. The arbitration failure happens over a second *after* that,
-> when the touchpad attempts its actual first transaction.
-> 
-> So this doesn't look like a logic bug in the check itself. My read: by
-> delaying dw_i2c_plat_probe() by ~500ms (correctly, for GPIO's sake),
-> something else ends up contending for the AMDI0010:01 bus by the time
-> the touchpad's first transaction actually happens -- a window that
-> the original (undeferred, earlier) probe attempt apparently avoided.
-> 
-> Mario -- does this look like a known AMD I2C/PSP semaphore contention
-> pattern to you? Wondering if there's a shared bus/firmware consumer
-> that could explain a ~1s-later collision like this, independent of
-> the GPIO controller itself being ready.
-> 
-> Thorsten, if you have it handy: /proc/interrupts and lsmod from this
-> boot would help narrow down what else might be touching that bus
-> around the 2.2s mark.
++Cc Tvrtko
 
-Did a fresh boot and uploaded the dmesg again as well just in case:
+On Sat, 2026-08-08 at 23:33 +0000, Luke.Wildhardt@proton.me wrote:
+> Since the DRM scheduler default policy was switched to FAIR in 7.2, susta=
+ined 100% GPU load in-game on my RX 9070 XT causes severe performance degra=
+dation. In the example title running through Proton, Project Silverfish, th=
+e foreground application degrades to roughly 10 fps or freezes outright whi=
+le audio continues, and the KDE Plasma Wayland session can lock up entirely=
+, requiring a reboot or killing the compositor to recover. The problem is n=
+ot limited to games. Running the game in the background + alt tabbing, then=
+ playing a YouTube video can also cause the entire desktop to freeze.=20
+>=20
+> Then, if the game starts to stutter, either alt-tabbing, or opening up a =
+menu in game (which reduced the load on the GPU) immediately stops the stut=
+tering.=20
+>=20
+> The issue is reliably reproducible under sustained GPU saturation, althou=
+gh the time-to-failure varies. Increasing shadow load (which decreases in-g=
+ame frame rate) substantially shortens the time-to-failure.
+>=20
+> In game, MangoHud does not reveal any frametime discrepancy.=20
+>=20
+> Bisection / test matrix
+>=20
+> Reproducer: Project Silverfish (Proton) at settings that saturate the GPU=
+, with a second GPU client active (browser video). Other titles show the sa=
+me symptom under sustained load; I have not yet re-tested those specific ti=
+tles against the fix.
+>=20
+> Kernel	Result
+> torvalds/master stock	FAIR (default)	FAIL
+> same as above + reverts below	gpu_sched.sched_policy=3D2 (FAIR)	FAIL
+> same as above + reverts below	gpu_sched.sched_policy=3D1 (FIFO)	PASS
+> 7.1.5 release	PASS
+> drm-next	FAIR (default)	FAIL
+>=20
+> Reverted Commits:
+>=20
+> d09339388b77 drm/sched: Remove drm_sched_init_args->num_rqs
+> 2833a0512b4c drm/sched: Remove drm_sched_init_args->num_rqs usage
+> 16e7698bc04d drm/sched: Embed run queue singleton into the scheduler
+> 77a6809f1dc3 drm/sched: Remove FIFO and RR and simplify to a single run q=
+ueue
+> 45c211ddf92a drm/sched: Switch default policy to fair
+> 2462a0ce23b0 drm/amdgpu: Remove drm_sched_init_args->num_rqs usage
+>=20
+>=20
+>=20
+> Kernel (failing):=C2=A0 7.2.0-rc6 (stock), also current drm-next
+> Kernel (working):=C2=A0 7.2.0-rc6-default-revert-00006-g7e5de9b07e3d with=
+ sched_policy=3D1
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 7.1 release
+> Distro:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+ Arch Linux
+> Session:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 KDE =
+Plasma 6.7.4 / Wayland (KWin), Qt 6.11.1, KF 6.28.0
+> CPU:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 AMD Ryzen 9 9950X3D
+> RAM:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 64 GiB
+> GPU:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 Sapphire Pulse Radeon RX 9070 XT
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 03:00.0 [1002:7550] rev c0, subsys Sap=
+phire 1478
+> Motherboard:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ASUS (AM5 / 800-series c=
+hipset)
+> Mesa:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 26.1.6-arch1.1 (RADV, driverVersion 26.1.6)
+> Vulkan:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+ instance 1.4.357 / device 1.4.354
+>=20
+>=20
+>=20
+>=20
+> On the same reverted kernel build, changing only gpu_sched.sched_policy f=
+rom 2 (FAIR) to 1 (FIFO) changes the result from reliably failing to passin=
+g extended stress testing.
+>=20
+>=20
+>=20
+> Possible mitigation options
+>=20
+> Given that 7.2 is late in the release cycle and 77a6809f1dc3 removes FIFO=
+/RR as selectable policies, there is currently no runtime workaround for af=
+fected systems.
+>=20
+>=20
+> Revert 45c211ddf92a so FIFO remains the default while FAIR remains availa=
+ble for further testing.
 
-https://www.leemhuis.info/files/misc/dmesg_patch_dyndbg2
-https://www.leemhuis.info/files/misc/lsmod
-https://www.leemhuis.info/files/misc/interrupts
+That might be the wisest thing to do; but let's hear if Tvrtko has an
+idea for a hotfix first.
 
-Ciao, Thorsten
-> On Mon, 10 Aug 2026 at 11:06, Thorsten Leemhuis <linux@leemhuis.info> wrote:
->>
->> On 8/10/26 07:23, Hardik Prakash wrote:
->>> On Sat, 8 Aug 2026, Thorsten Leemhuis wrote:
->>>> https://www.leemhuis.info/files/misc/dmesg-master-plus_revert
->>>>
->>>> [    0.619018] i2c-dw-gpio-dbg: i2c_dw_check_gpio_dependencies(AMDI0010:00)
->>>> [...]
->>>> [    1.136010] i2c-dw-gpio-dbg: device_is_bound()=true for AMDI0030:00
->>>
->>> Thanks, this trace looks correct on its face (defer at 0.619s, retry
->>> succeeds at 1.122-1.136s), but the link above points to the same file
->>> you sent last round (the master+revert baseline, no debug patch, no
->>> i2c-dw-gpio-dbg lines in it at all) rather than this new capture.
->>>> Could you share the full, unfiltered dmesg from this exact boot (the
->>> one with the debug patch applied)? I need to see where
->>> "lost arbitration" falls relative to the trace above.
->>
->> Sorry, picked the wrong file while preparing the mail, it's here:
->> https://www.leemhuis.info/files/misc/dmesg_patch_dyndbg
->>
->> Ciao, Thorsten
->>
->>> Separately, from your DSDT: NFC1 (NXP1001), which shows up as a child
->>> of AMDI0010:01 in your trace, declares its _CRS as a raw resource
->>> buffer containing three GPIO resources referencing \_SB.GPIO -- one
->>> GpioIo and two separate GpioInt entries. Not sure yet if that's
->>> relevant, but it's a pattern I haven't seen on my hardware
->>> which I've tested against.
->>>
->>> Thanks,
->>> Hardik
->>>
->>> On Sun, 9 Aug 2026 at 21:49, Thorsten Leemhuis <linux@leemhuis.info> wrote:
->>>>
->>>> On 8/8/26 22:25, Andy Shevchenko wrote:
->>>>> On Sat, Aug 08, 2026 at 10:31:28PM +0530, Hardik Prakash wrote:
->>>>>> On Fri, 7 Aug 2026, Thorsten Leemhuis wrote:
->>>>>>> This became 0a4bb2abc3e56d ("i2c: designware: defer probe if child
->>>>>>> GpioInt controllers are not bound") and causes a regression for me: the
->>>>>>> Touchpad in my ThinkPad T14s Gen 4 (AMD) stopped working. From the
->>>>>>> kernel log:
->>>>>>>
->>>>>>> i2c_designware AMDI0010:01: i2c_dw_handle_tx_abort: lost arbitration
->>>>>>> i2c_designware AMDI0010:01: controller timed out
->>>>>>> i2c_hid_acpi i2c-SYNA8018:00: failed to fetch HID descriptor: -110
->>>>>>> i2c_hid_acpi i2c-SYNA8018:00: Failed to fetch the HID Descriptor
->>>>>>>
->>>>>>> Reverting this change in current mainline/master (f9a2394a23482) fixed
->>>>>>> things for me. Full dmesg of current master and master+revert can be
->>>>>>> found here:
->>>>>>>
->>>>>>> https://www.leemhuis.info/files/misc/dmesg-master
->>>>>>> https://www.leemhuis.info/files/misc/dmesg-master-plus_revert
->>>>>> [...]
->>>>>> Two things that would help narrow this down, whenever you have a moment:
->>>>
->>>> Thx for looking into this. Here we go:
->>>>
->>>>>> 1. A DSDT dump
->>>>
->>>> https://www.leemhuis.info/files/misc/dsdt.dsl
->>>>
->>>>>> 2. A dmesg with dynamic debug from a kernel built with the attached
->>>>>>    patch on top of current mainline/master
->>>>
->>>> https://www.leemhuis.info/files/misc/dmesg-master-plus_revert
->>>>
->>>> [    0.619018] i2c-dw-gpio-dbg: i2c_dw_check_gpio_dependencies(AMDI0010:00)
->>>> [    0.619018] i2c-dw-gpio-dbg: check_child_gpioint(adev=XXXX0000:00)
->>>> [    0.619076] i2c-dw-gpio-dbg: GpioInt resource_source=\_SB.GPIO (len=10)
->>>> [    0.619079] i2c-dw-gpio-dbg: acpi_fetch_acpi_dev() succeeded,
->>>> device=AMDI0030:00
->>>> [    0.619080] i2c-dw-gpio-dbg: gpio_device_find_by_fwnode() returned
->>>> NULL, deferring
->>>> [    0.619082] i2c-dw-gpio-dbg: check_child_gpioint ret=-517 (defer)
->>>> [    0.619102] i2c-dw-gpio-dbg: i2c_dw_check_gpio_dependencies(AMDI0010:01)
->>>> [    0.619104] i2c-dw-gpio-dbg: check_child_gpioint(adev=SYNA8018:00)
->>>> [    0.619159] i2c-dw-gpio-dbg: GpioInt resource_source=\_SB.GPIO (len=10)
->>>> [    0.619162] i2c-dw-gpio-dbg: acpi_fetch_acpi_dev() succeeded,
->>>> device=AMDI0030:00
->>>> [    0.619162] i2c-dw-gpio-dbg: gpio_device_find_by_fwnode() returned
->>>> NULL, deferring
->>>> [    0.619164] i2c-dw-gpio-dbg: check_child_gpioint ret=-517 (defer)
->>>> [    1.122517] i2c-dw-gpio-dbg: i2c_dw_check_gpio_dependencies(AMDI0010:00)
->>>> [    1.122523] i2c-dw-gpio-dbg: check_child_gpioint(adev=XXXX0000:00)
->>>> [    1.122625] i2c-dw-gpio-dbg: GpioInt resource_source=\_SB.GPIO (len=10)
->>>> [    1.122636] i2c-dw-gpio-dbg: acpi_fetch_acpi_dev() succeeded,
->>>> device=AMDI0030:00
->>>> [    1.122639] i2c-dw-gpio-dbg: gpio_device_find_by_fwnode() succeeded
->>>> [    1.122642] i2c-dw-gpio-dbg: device_is_bound()=true for AMDI0030:00
->>>> [    1.135894] i2c-dw-gpio-dbg: i2c_dw_check_gpio_dependencies(AMDI0010:01)
->>>> [    1.135898] i2c-dw-gpio-dbg: check_child_gpioint(adev=SYNA8018:00)
->>>> [    1.135976] i2c-dw-gpio-dbg: GpioInt resource_source=\_SB.GPIO (len=10)
->>>> [    1.135980] i2c-dw-gpio-dbg: acpi_fetch_acpi_dev() succeeded,
->>>> device=AMDI0030:00
->>>> [    1.135983] i2c-dw-gpio-dbg: gpio_device_find_by_fwnode() succeeded
->>>> [    1.135985] i2c-dw-gpio-dbg: device_is_bound()=true for AMDI0030:00
->>>> [    1.135987] i2c-dw-gpio-dbg: check_child_gpioint(adev=NXP1001:00)
->>>> [    1.136005] i2c-dw-gpio-dbg: GpioInt resource_source=\_SB.GPIO (len=10)
->>>> [    1.136008] i2c-dw-gpio-dbg: acpi_fetch_acpi_dev() succeeded,
->>>> device=AMDI0030:00
->>>> [    1.136009] i2c-dw-gpio-dbg: gpio_device_find_by_fwnode() succeeded
->>>> [    1.136010] i2c-dw-gpio-dbg: device_is_bound()=true for AMDI0030:00
->>>>
->>>> HTH, Ciao, Thorsten
->>>>
->>>>>> On Fri, 7 Aug 2026 at 19:37, Thorsten Leemhuis <linux@leemhuis.info> wrote:
->>>>>>> On 7/28/26 10:30, Andi Shyti wrote:
->>>>>>>> On Sat, Jul 18, 2026 at 11:13:31AM +0530, Hardik Prakash wrote:
->>>>>>>>> I2C controllers may have child devices with GpioInt resources that
->>>>>>>>> depend on GPIO controllers being fully initialized. If the I2C
->>>>>>>>> controller probes and enumerates children before the referenced GPIO
->>>>>>>>> controller has completed probe, GPIO interrupts may not be properly
->>>>>>>>> configured, leading to device failures.
->>>>>>>>>
->>>>>>>>> On Lenovo Yoga 7 14AGP11, the WACF2200 touchscreen (child of
->>>>>>>>> AMDI0010:02) has a GpioInt resource pointing to GPIO 157 on the
->>>>>>>>> pinctrl-amd controller (AMDI0030:00). When i2c-designware probes
->>>>>>>>> AMDI0010:02 before pinctrl-amd finishes initializing, I2C transactions
->>>>>>>>> fail with lost arbitration errors:
->>>>>>>>>
->>>>>>>>>   0.285952  amd_gpio_probe: registering gpiochip  <- GPIO chip visible
->>>>>>>>>   0.287121  amd_gpio_probe: requesting parent IRQ <- probe still running
->>>>>>>>>   0.301454  AMDI0010:02 dw_i2c_plat_probe: start  <- races here
->>>>>>>>>   2.348157  lost arbitration
->>>>>>>>>
->>>>>>>>> Add a dependency check that walks ACPI child devices and defers probe
->>>>>>>>> until any referenced GPIO controller is bound.
->>>>>
->>>>> [...]
->>>>>
->>>>>>> #regzbot introduced: 0a4bb2abc3e56d
->>>>>>> #regzbot title i2c: designware: ThinkPad touchpad broke
->>>>>
->>>>
->>>
->>
-> 
 
+>=20
+> If necessary, also revert 77a6809f1dc3 and dependent changes to restore r=
+untime policy selection.
+>=20
+> Alternatively, fix the underlying FAIR regression if a suitable fix can b=
+e identified in time for 7.2.
+>=20
+>=20
+> I mention the revert options because the justification for removing FIFO/=
+RR included the absence of known regressions relative to those policies. Th=
+is report appears to provide at least one counterexample.
+>=20
+>=20
+> I am willing to test patches responsively and collect data if necessary.=
+=C2=A0=20
+
+
+Thanks for your effort and help. I had dared to hope that we could get
+this one through without a regression, but reality always catches up..
+
+P.
