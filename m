@@ -1,49 +1,43 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mail-10630.protonmail.ch (mail-10630.protonmail.ch [79.135.106.30])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67BA12F28EA;
-	Mon, 10 Aug 2026 15:34:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EDF72DF3EA
+	for <regressions@lists.linux.dev>; Mon, 10 Aug 2026 16:40:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786376097; cv=none; b=K97vrpNwDFTW4wDNuehLPO47RAgY8wKGE0iJ4T/bQmor2YQXct/IVDLSxUVHinNO5DkBtlDYYdvTQfW0S9G+TeB9xCGNwZvppgZyCtmxU6FQIGQPlxzVJL1IXTbr6HuGJSa9hvqNsIfkOf/N8jHf9RQD3L4l3iJ3k3IMOokql+k=
+	t=1786380061; cv=none; b=QdYjPHoC3UYU9Fq9nl7MgDkaMBHuMyYHPpMH77DfXw77BDnbUupc2D+IzcF9w69yEvkgULiMVaKDs3VAgvgrNDhL/5cyXqgvCyIhKO1ZZRq331a176XypxTiu0dWbTkh8orGL9fdz9JapTXBQhIlYw1Q74l9rAq+e82mTxzwZHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786376097; c=relaxed/simple;
-	bh=XG4g1w8x6iXaGHz+7sN/FVmWukP9PtSHG9YwnSKO4Ps=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dSl3Wl2NbynshojZqqE4LKu7MAPq1Q7bcXT/KdZVdFL4nX0E0L5PCPHycWB+5ATACyTqWI1lQ4qtWj9KiHPB1Di1NBiqCRQBdGgVNr8qlzaTJPg4vsCNKk0HV32IvV8R9hlG+yiqCg9k/OXZMQw9s2VMnNBW4HuxLpTAAz5Q6qY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kid8BZQP; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1786380061; c=relaxed/simple;
+	bh=O5jCfkoJY0H4PdQhix+wbkevzWgpLvmwylGYlo1nJ4U=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WoUDpCwnNQhrYVLAq+7w65DhlY8/ruA7VKqigaOY3uwKxxPwV7DvHOktjZPrTkBHAPeZpT3a9nskTRUjHs+NMUqp2kmr9ME5RX9KlV/KCN2Ul36B/KlzJhDNdvz6qgFCaDhY46esjyHfFpF+78GIBwF5CZc685qWObtt5l7wXeY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=FFJVgUKV; arc=none smtp.client-ip=79.135.106.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kid8BZQP"
-Received: by smtp.kernel.org (Postfix) with UTF8SMTPSA id 331951F000E9;
-	Mon, 10 Aug 2026 15:34:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786376095;
-	bh=vUujcqeU9RqDzup5mObSb/OwPHUwpjOJh1YpNI6f5Ew=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=Kid8BZQPM3JAy53XAQ2Jb6n87I4y9Sz47gHcXyujzS/4AMH2oQtJ79Z4B70t8AJF6
-	 WadPGQtF+6IZzCbOfozXD0wpKbTZH580Kkx0as9hWFW0YMsUi2VAnkXV+yJHayg+9c
-	 yXNnleB4GEmKn3sY7PARxJ9HGRb8pCgvLFYimNxv56V0C/2XTg/skVz5P31GrpFbLE
-	 dgr5kuQ3MJAMNCR5pjRsgHTlqZ4rONgIOkXmFRBWC9ctaDcIezthtcqgPJgwE7/iCN
-	 +9R68mD3hxBzR33knPSOEZYuj5qPBNhYaATSmAlGZItV51WltWz/Bt8DvyJX33rfa9
-	 FKlmtshgoI4zw==
-Date: Mon, 10 Aug 2026 18:34:52 +0300
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>
-Cc: Julien <julien82453@gmail.com>, regressions@lists.linux.dev,
-	linux-integrity@vger.kernel.org,
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
-Subject: Re: [REGRESSION] no TPM device after "tpm_crb: Convert ACPI driver
- to a platform one"
-Message-ID: <annvnLOa1fSKCXMZ@kernel.org>
-References: <CAJOGg3z6LJPDsdPNBxajgy8_wQxfhYBRxe4EiurZf3kPU5A5Bw@mail.gmail.com>
- <f42cc94c-ff60-4999-b473-c2fc5b1b4199@intel.com>
- <CAJZ5v0j1Tucb0yzS8=3U_X1E4ziztjgOsiYrc_QfUUKZfScCPA@mail.gmail.com>
- <CAJOGg3zhEFner5pze-eX+6jh5D8nJppyWkNN5bWtg7MZ7cW9_Q@mail.gmail.com>
- <CAJZ5v0ib2YxyX-6j34=w+FEOH+fsGF_ShH9Q0YCEDkZvRP88EA@mail.gmail.com>
- <CAJZ5v0gySOkYRphXHbXcStFGiuMtni_OWXW2rTDoa_V2PRPnJw@mail.gmail.com>
- <CAJZ5v0i_AS1JzyM10yPfM5QsNVsQmQ3=haHCcTiM72FZm+G+Qg@mail.gmail.com>
- <CAJOGg3wZvftfk-hZ_wXBYnXca9gf5ziSo0Uh1BouYvzoEyEVrg@mail.gmail.com>
- <CAJZ5v0jrvdkjOm75CZSSZmK2ntaVvAN2ru=0yvgXV=twm8uFaA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="FFJVgUKV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1786380051; x=1786639251;
+	bh=O5jCfkoJY0H4PdQhix+wbkevzWgpLvmwylGYlo1nJ4U=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=FFJVgUKVpAgNN4QiEV4aTabD26nDmpu7izKtqlAbAGe7PwC8W7l2rwjnCq7jI+bF7
+	 5f2SDD1rn3oMtMnXWGxjxGC+M4n564ZjNPUmFpeRKlgTwgZ0THsBEncEX1J0v8+IIv
+	 dZgvzf+jQfuRflWXBlzWwo2oSTzEpkxBJx/qwz+ZKoSOXrWL3RB7MHSu5OONTxlMbY
+	 a0rp4L6mKiZ5/061FSMBQr9a8345xK9lwWp28QUpdLoexnEUBhzQfYu8MZZP43+P8b
+	 alOo5ai1cYLGGRmjWl8Bm9i9hIQ1qI25B+yskNHpwWD3ycl/8eSQ6i3rIuSzI04p8s
+	 PEl7bxHueo1Dw==
+Date: Mon, 10 Aug 2026 16:40:43 +0000
+To: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
+From: Luke.Wildhardt@proton.me
+Cc: Danilo Krummrich <dakr@kernel.org>, Philipp Stanner <phasta@mailbox.org>, phasta@kernel.org, "matthew.brost@intel.com" <matthew.brost@intel.com>, "ckoenig.leichtzumerken@gmail.com" <ckoenig.leichtzumerken@gmail.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "regressions@lists.linux.dev" <regressions@lists.linux.dev>, "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [REGRESSION] drm/sched: FAIR policy causes serious performance degradation at max GPU load on 9070XT
+Message-ID: <enK0t0JrZ3lr9gmgPwE_YaVJDy7K355Bs0xy0YNoVwujLHCGWNRXCjDOhYfiHNGN3pPDSlEUIz3_UkXmFNAJNXxrJOIwvzAG-k8_p_D5FOQ=@proton.me>
+In-Reply-To: <6e2a207e-4db6-4d47-b1f6-9cb13b8d6eeb@igalia.com>
+References: <TfhgV1W0W5LI6RWUO6J35B3R8QIYH_FN3Eihzdo_9PH39hfn1AVByT-QBPHmWiAR-L0Kqi2sppM_EhFPKwZPGmb5pFgpF2MrzeFzkZDmpG8=@proton.me> <cef49cf329737e0af12ef5a90dd21f31e113d4c3.camel@mailbox.org> <DKL9VAWD2Y98.RBQPQUL7Y47F@kernel.org> <6e2a207e-4db6-4d47-b1f6-9cb13b8d6eeb@igalia.com>
+Feedback-ID: 214028577:user:proton
+X-Pm-Message-ID: 956e93293421320c46863540605e532c2bf0367a
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -51,32 +45,64 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJZ5v0jrvdkjOm75CZSSZmK2ntaVvAN2ru=0yvgXV=twm8uFaA@mail.gmail.com>
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Aug 07, 2026 at 02:46:16PM +0200, Rafael J. Wysocki (Intel) wrote:
-> On Fri, Aug 7, 2026 at 2:26 PM Julien <julien82453@gmail.com> wrote:
-> >
-> > On Fri, Aug 7, 2026 at 12:45 PM Rafael J. Wysocki (Intel)
-> > <rafael@kernel.org> wrote:
-> > > And there is a v3 already:
-> > >
-> > > https://lore.kernel.org/linux-acpi/12955541.O9o76ZdvQC@rafael.j.wysocki/
-> > >
-> > > so please test this one if possible.
-> > >
-> > > Thanks!
-> >
-> > Yes it still works.
-> >
-> > The logs:
-> > MSFT0101:00: [mem 0xfed40000-0xfed4103f] expanded to avoid overlap
-> > tpm_crb_acpi MSFT0101:00: [Firmware Bug]: Bad ACPI memory layout
-> 
-> Thanks for the confirmation!
+Oops, forgot to reply all in my last message.
 
-I'll check your patch asap. Sorry for latency, it's the holiday season
-in Finland.
+I did a quick test of the patch before I left this morning, the freezing se=
+ems to gone, but when the GPU is under the same condition, the stuttering i=
+s more uniform if that makes sense. Granted this was only a 5 minute test b=
+ut the freeze was rather reliable before, I can do more testing later.
 
-BR, Jarkko
+I know these things can be hard to describe, if that helps. If there's any =
+profiling I could do or detailed logging that would help don't hesitate to =
+ask.
+
+
+
+-------- Original Message --------
+On Monday, 08/10/26 at 06:48 Tvrtko Ursulin <tvrtko.ursulin@igalia.com> wro=
+te:
+
+On 10/08/2026 13:45, Danilo Krummrich wrote:
+> On Mon Aug 10, 2026 at 10:28 AM CEST, Philipp Stanner wrote:
+>>> Reverted Commits:
+>>>
+>>> d09339388b77 drm/sched: Remove drm_sched_init_args->num_rqs
+>>> 2833a0512b4c drm/sched: Remove drm_sched_init_args->num_rqs usage
+>>> 16e7698bc04d drm/sched: Embed run queue singleton into the scheduler
+>>> 77a6809f1dc3 drm/sched: Remove FIFO and RR and simplify to a single run=
+ queue
+>>> 45c211ddf92a drm/sched: Switch default policy to fair
+>>> 2462a0ce23b0 drm/amdgpu: Remove drm_sched_init_args->num_rqs usage
+>
+> [...]
+>
+>> That might be the wisest thing to do; but let's hear if Tvrtko has an id=
+ea for
+>> a hotfix first.
+>
+> -rc7 was released yesterday; even with a working hotfix today it'd be tri=
+cky to
+> ensure the hotfix does not regress other drivers or workloads with 7.2 be=
+ing
+> just a few days ahead.
+>
+> I suggest to not wait and get the reverts ready.
+
+Yes reverts would be safer. I have them in a branch at
+people.freedesktop.org/~tursulin/drm-intel drm-sched-fair-reverts,
+mostly straightforward apart from one easy conflict in
+amdgpu_xcp_release_sched. Smoke tested on Steam Deck looks fine.
+
+Having said that, the fix for min_vruntime handling I provided earlier
+in the thread also looks fine in my testing and is simple. No
+regressions found with synthetic unit test workloads or messing around
+on the Steam Deck. But we need to wait to hear from Luke since I haven't
+been able to repro his report locally yet.
+
+Regards,
+
+Tvrtko
+
+
