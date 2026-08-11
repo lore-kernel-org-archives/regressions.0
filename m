@@ -1,99 +1,214 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.61.103])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0356C411661;
-	Tue, 11 Aug 2026 08:10:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D272D41DEC8
+	for <regressions@lists.linux.dev>; Tue, 11 Aug 2026 09:11:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.61.103
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786435825; cv=none; b=prctf4AgwWFpUtrcQIJTHMrJE26RSF2pVqSswhnfg+2Z7zY/5iWaNFEAQ1gTo8dbRwzCVnid7F4uWbc3ggxPHfsmr6lvZ+Ozr1wnOWw9RspwXoXJ4nxIjn3xTZo+Z0M2kQGIe0BJkd++MLPhoyAseMtpmbOVnjOITy9NejNHQjw=
+	t=1786439505; cv=none; b=He5AwBr1TlO2PE9P+kvJU6A1IwmfL0hl50VzKve6kkmqzVORfitrT6xuWpxaz5AJg21vZtqmTg5LK45AQ/85K/Zh9ijR794KCO6jE1evZLhP3hbYp7jAt585NEpRYsuhrDMCGtveKkez/SmD7pge6/b3FfWEh1stN6PtMTLItTk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786435825; c=relaxed/simple;
-	bh=5f0/Ny667ZzYZJ47DRAO1p+MRHOT6lkQS+0YRaORdLA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MA2F3Udm4SdHWt1RGVTTY+MJJWQqaYwFFqBrZnmWiaQrEHSSZAaSQ6tN1bl57RPC4XgZw88d+hhXzhUDt7AEcgP8ugbi3XXmW4GXhyL5sjc+2ky4xBeRC8GMy/WzrC4TQOsWJjv8MJlMDwvVxePg2oOeq2ZWo2tY/LwHj/4dznI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=2UU/DQpj; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1786439505; c=relaxed/simple;
+	bh=pduLq0xfM1j5vFXj++w3Ljq3jSAnaaIYmtcTGSCxgjo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=R4WFSSbGgIx8RML0/AeCHR0o2wSl3DTWjfR/s52bysxIVEW2gEkOs2V61RL7o3IK3VyEcRTTBKmsCQvOQtjOVdRF78Xw3QnLVfo77qem3+JtqxxjHDnFsaRb1E4terc+fUV3bnUfKXgL0I+dVX2128Ry0XkY4R3g+pUFUKDmyds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=hgx0TiHl; arc=none smtp.client-ip=188.68.61.103
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="2UU/DQpj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B544C1F00A3A;
-	Tue, 11 Aug 2026 08:10:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxfoundation.org;
-	s=korg; t=1786435823;
-	bh=Qia2GBLa3uGfOENajCCh3ErjQV0Nz7IBPzM4Q9K25uU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=2UU/DQpjA9BD4KjeO3nbAmvwmTDS3PNec+0I0gKwYZ5aTXFT/s/4h5FmCLXz2Mlm6
-	 g346zWPl2Y8TnuNFGH4TebaylOsUmN3aXVKKH/0VRbDjCSiYpCZV2iyvIm4urFkG66
-	 4EmUvS0jq29JGY3qXu7xX7u5N2V+iSZQcQXG7b94=
-Date: Tue, 11 Aug 2026 17:08:49 +0900
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Sergio Callegari <sergio.callegari@gmail.com>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>, stable@vger.kernel.org,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Linux kernel regressions list <regressions@lists.linux.dev>,
-	"amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	George Zhang <george.zhang@amd.com>
-Subject: Re: [REGRESSION] Please revert 1191285ecb42 from 7.1.y
-Message-ID: <2026081151-reabsorb-calamari-7442@gregkh>
-References: <9c6acb62-4080-48e6-9ba2-d1c457c4ec88@gmail.com>
- <2026081106-pebbly-cahoots-37a7@gregkh>
- <23db5f95-c2d6-4712-856e-28f647e184f7@leemhuis.info>
- <1caea72e-b9c8-452b-a3ff-5690d948b4fc@gmail.com>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="hgx0TiHl"
+Received: from mors-relay-8403.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4hK5Tf0lLrz8G6W;
+	Tue, 11 Aug 2026 11:11:34 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1786439494;
+	bh=pduLq0xfM1j5vFXj++w3Ljq3jSAnaaIYmtcTGSCxgjo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=hgx0TiHlkbXSyFXHiLFytZ0ReEpk6pT6L2OzuA8Gcl1qMhPJgLMXPK2bGjDFNpbBQ
+	 ni50h2NCD1GYhKhG/OESQrtrdarRs/BxlVDMb6nyc7Dizun+K0UDoW99eXMTvlar5h
+	 FOcwNEJ3oOiAHe8FDkmliPeAn+hpMPQOva9+xAQxdEOuq0GFrbD9AWOXVPnd9SCUgQ
+	 tGlJQ3PoYBqVEi+993k2evfTXVn6UqxzUS+5+dlm4x+FC3/8VEeXm17vQ7wgfReNOY
+	 VzKdYKkXAY5SYgBJZEQBFSA4hdlddzEuqOBbiRaDqokmCC2nQ805mkHQZHZa3QkuSk
+	 NlR8hT+dyMSbw==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4hK5Tf00Ttz8FsC;
+	Tue, 11 Aug 2026 11:11:34 +0200 (CEST)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4hK5Td1RYRz8sb9;
+	Tue, 11 Aug 2026 11:11:33 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 49F0B5FB9F;
+	Tue, 11 Aug 2026 11:11:32 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <18b018d0-7f7d-4975-b0b3-5e3c9f413698@leemhuis.info>
+Date: Tue, 11 Aug 2026 11:11:31 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1caea72e-b9c8-452b-a3ff-5690d948b4fc@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH wireless] Revert "wifi: mt76: Disable napi when removing
+ device"
+To: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,
+ linux-wireless@vger.kernel.org
+Cc: Felix Fietkau <nbd@nbd.name>, Lorenzo Bianconi <lorenzo@kernel.org>,
+ Ryder Lee <ryder.lee@mediatek.com>, Shayne Chen <shayne.chen@mediatek.com>,
+ Sean Wang <sean.wang@mediatek.com>,
+ Nicolas Cavallari <nicolas.cavallari@green-communications.fr>,
+ Bert Karwatzki <spasswolf@web.de>, Devin Wittmayer
+ <lucid_duck@justthetip.ca>, Eric Biggers <ebiggers@kernel.org>,
+ regressions@lists.linux.dev, linux-kernel@vger.kernel.org,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <20260804120004.523934-1-mikhail.v.gavrilov@gmail.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+X-Enigmail-Draft-Status: N11222
+Autocrypt: addr=linux@leemhuis.info; keydata=
+ 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 MEK4
+In-Reply-To: <20260804120004.523934-1-mikhail.v.gavrilov@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: <178643949291.1778080.8629527780920957825@mxe9fb.netcup.net>
+X-NC-CID: uzt+PSFyfq7cjCp0QSeR89ltQkT0z8wf4jqMtxuhVJK9Vra3dw4=
 
-On Tue, Aug 11, 2026 at 09:28:52AM +0200, Sergio Callegari wrote:
-> On 11/08/2026 07:24, Thorsten Leemhuis wrote:
-> >
-> > And yes, 6.18.y seems affected, too, according to a comment in the
-> > ticket linked below.
-> >
+On 8/4/26 14:00, Mikhail Gavrilov wrote:
+> This reverts commit 13b7e6a96a005c656d38f3da51581deaf9866375.
 > 
-> Yes, my bad I only mentioned 7.1.6 to be quick. My actual concern is that
-> the troublesome commit got to the LTS kernels, which I think is the biggest
-> issue right now. People may find their display completely black or almost
-> black as soon as their DE starts. Getting to the conclusion that they need
-> to /reduce/ the brightness to recover is not totally obvious and is not
-> applicable at all if you have a system that is touchscreen only (since you
-> won't be able to see where to press).
+> That commit made mt76_dma_cleanup() disable every RX NAPI instance before
+> deleting it, to silence WARNs in __netif_napi_del_locked() and
+> page_pool_disable_direct_recycling() seen when unloading mt7915e with an
+> MT7916.
 > 
-> >> It needs to be reverted in Linus's tree first, otherwise the regression
-> >> will be hit when you update to 7.2.
+> On mt7921e and mt7925e the same instances are already disabled earlier,
+> in mt7921e_unregister_device() and mt7925e_unregister_device(), which
+> only afterwards call mt792x_dma_cleanup() -> mt76_dma_cleanup().  Each
+> instance is therefore disabled twice, and napi_disable() is not
+> idempotent: on return it leaves NAPIF_STATE_SCHED and NAPIF_STATE_NPSVC
+> set, so the second call spins in usleep_range() forever, waiting for bits
+> that nobody will clear.
 > 
-> Indeed, but I think the biggest issue is with the LTS kernels right now.
+> mt7921_pci_shutdown() and mt7925_pci_shutdown() reuse the remove path, so
+> this is hit on every reboot, poweroff and module unload.  It is silent:
+> the stuck task keeps sleeping and rescheduling, so neither the hung task
+> detector nor the lockup detectors fire, and the last line on the console
+> is "systemd-shutdown[1]: Rebooting."
+> [...]> Dropping the two driver-side loops instead was tried and
+rejected: with
+> them gone, the RX poll can reach mt76_token_release() via
+> PKT_TYPE_TXRX_NOTIFY and mt7921_mac_tx_free() while
+> mt76_connac2_tx_token_put() is running idr_destroy(&dev->token) outside
+> token_lock, which is a use-after-free rather than a hang [1].
 > 
-> > Normally I'd agree, but according to one reporter that problem does not
-> > happen with 7.2-rc:
-> > https://gitlab.freedesktop.org/drm/amd/-/work_items/5562#note_3603131
-> 
-> I'll see if I can try myself the 7.2 RCn series. From my superficial
-> analysis of the commits that brought us to the current situation, the
-> troublesome commit actually tried to patch on a true issue, namely that the
-> user facing brightness data is not mapped symmetrically to the hardware
-> data, but that the correct solution involves some more thorough rework of
-> the brightness coordinate system. So there may well be some larger activity
-> on it on upstream.
-> >
-> > Given all that I wonder if dropping that commit for now might be the
-> > best move.
-> 
-> Personally, I think that dropping on the stable series would be beneficial,
-> unless upstream can now offer a correct solution to pick. Behavior you get
-> by dropping is not 100% ideal but certainly not as bad as what you get with
-> the problematic commit.
+> Revert for now, so that reboot, poweroff and module unload work again.
+> The WARNs on mt7915e are a less severe problem than an unbootable
+> machine, and fixing them belongs in the drivers that delete the NAPI
+> instances, where each one can pick a point that is safe for its own
+> teardown order, rather than in the shared mt76_dma_cleanup().
 
-We aim to be "bug compatible" with Linus's branch, otherwise the
-"pressure" to fix those bugs goes down.  But I defer to the maintainers
-of the code involved if it is being worked on, and they want it
-reverted, great, we can do that.  Otherwise we prefer to leave it as-is.
+What's the status of this? Looks like things stalled.
 
-thanks,
+> Reported-by: Bert Karwatzki <spasswolf@web.de>
+> Closes: https://lore.kernel.org/all/20260724151419.26014-1-spasswolf@web.de/
+> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=221818
 
-greg k-h
+FWIW, I think it would be good to get this revert into 7.2 final, as
+there were more reports about this:
+
+https://bugzilla.kernel.org/show_bug.cgi?id=221848
+https://bugzilla.kernel.org/show_bug.cgi?id=221862
+
+And this is likely the same issue, too:
+https://bugzilla.kernel.org/show_bug.cgi?id=221831
+
+I've also seen multiple people mention it in a matrix channel dedicated
+to Fedora's kernel.
+
+Ciao, Thorsten
+
+> Link: https://lore.kernel.org/all/20260730050428.GA73812@sol/ [1]
+> Signed-off-by: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+> ---
+> 
+> Sending this because the regression is now in its second week with four
+> independent reporters, and the two-part alternative (this revert plus
+> napi_disable() added inside mt7915_unregister_device()) needs MT7916
+> hardware that I do not have.  I deliberately left the mt7915 side out;
+> Nicolas is best placed to do it, since MT7916 is what he reported
+> against.
+>  
+> Verified on 7.2.0-rc5 with KASAN and lockdep enabled, MT7922 / mt7921e:
+> before the revert 'modprobe -r mt7921e' hangs (backtrace above, taken
+> with sysrq-w) and the machine never gets past "Rebooting."; after it,
+> module unload and reload, reboot and poweroff all work again.
+>  
+> The hang was independently bisected to the same commit by Bert Karwatzki
+> on MT7925 and reproduced by Devin Wittmayer on MT7927 and MT7922, and
+> Eric Biggers saw it on mt7925e as well.
+> 
+>  drivers/net/wireless/mediatek/mt76/dma.c | 5 +----
+>  1 file changed, 1 insertion(+), 4 deletions(-)
+> 
+> diff --git a/drivers/net/wireless/mediatek/mt76/dma.c b/drivers/net/wireless/mediatek/mt76/dma.c
+> index 322041859217..f8c2fe5f2f58 100644
+> --- a/drivers/net/wireless/mediatek/mt76/dma.c
+> +++ b/drivers/net/wireless/mediatek/mt76/dma.c
+> @@ -1189,10 +1189,7 @@ void mt76_dma_cleanup(struct mt76_dev *dev)
+>  	mt76_for_each_q_rx(dev, i) {
+>  		struct mt76_queue *q = &dev->q_rx[i];
+>  
+> -		if (!mt76_queue_is_wed_rro(q)) {
+> -			napi_disable(&dev->napi[i]);
+> -			netif_napi_del(&dev->napi[i]);
+> -		}
+> +		netif_napi_del(&dev->napi[i]);
+>  		mt76_dma_rx_cleanup(dev, q);
+>  
+>  		page_pool_destroy(q->page_pool);
+
