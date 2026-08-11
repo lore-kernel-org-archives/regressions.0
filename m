@@ -1,120 +1,99 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C7DE3B19B9;
-	Tue, 11 Aug 2026 07:49:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0356C411661;
+	Tue, 11 Aug 2026 08:10:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786434582; cv=none; b=qOKf//sOt2/FkjRGgVpTAgb0NjZ36Rgfn4ddnVdcUKLSa3mtFAdhiFkUcA6RF1AawqpQVDY7U5c2ntuIRlfOmg2UTxGkig981xuBbcUPOMdElD+nvcdpS8uwfkt1MzwLgl988lVcS3t5oxnE6Ku2l6SHxeuV6Qanzy2KIqBvcgk=
+	t=1786435825; cv=none; b=prctf4AgwWFpUtrcQIJTHMrJE26RSF2pVqSswhnfg+2Z7zY/5iWaNFEAQ1gTo8dbRwzCVnid7F4uWbc3ggxPHfsmr6lvZ+Ozr1wnOWw9RspwXoXJ4nxIjn3xTZo+Z0M2kQGIe0BJkd++MLPhoyAseMtpmbOVnjOITy9NejNHQjw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786434582; c=relaxed/simple;
-	bh=Hx9xtnhr8kBwmqFDt5qP8gaHBwNvZMrsamwk/lVcQ7s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=j1iRMZgLx7MKkiISCQhDW4YFh2i4LWYGk1cNRpCkBbseaaIc2FfeO7Vj4/edGk/4teY88HYoTnlRrQuDHs3MbLkTkPdymssGG5c9JyJ6CTJIMY907hHHUS2jJ4eu9bZK7Y4a0nv9oXzwBHcio0EAsNIkP0jWB/1HhWux4hmgxpk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=cyUgvD/m; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1786435825; c=relaxed/simple;
+	bh=5f0/Ny667ZzYZJ47DRAO1p+MRHOT6lkQS+0YRaORdLA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MA2F3Udm4SdHWt1RGVTTY+MJJWQqaYwFFqBrZnmWiaQrEHSSZAaSQ6tN1bl57RPC4XgZw88d+hhXzhUDt7AEcgP8ugbi3XXmW4GXhyL5sjc+2ky4xBeRC8GMy/WzrC4TQOsWJjv8MJlMDwvVxePg2oOeq2ZWo2tY/LwHj/4dznI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=2UU/DQpj; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="cyUgvD/m"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:From:Cc:To:Subject:
-	MIME-Version:Date:Message-ID:From:Reply-To;
-	bh=4DJzo5COey13Dn5ANrWbZ1iE0e1NUUeeF45LhlAujg4=; b=cyUgvD/maIBhij+vR77ntQ6pUX
-	ldzrKYZdtAcGqzt4axERrxxPO2sFsaDEim4GNFy3Lc6eQGJ2KvqVujnPe1OOLHG5bqblR9ov/uHI0
-	a+3ZhOPTYea8ao7y1kpNr0vqZDH9rZWVu5x0PZIe94X3hY7AhyMomu/JX7nTtWxTU13wvJqe9FRLW
-	L1xXFOwe3kvHKVBHfjGKC/l54AU8udNO3UQkS8PWK8QPJmUgEX0a44aguMjD9ZQRC/ORbXDynaJAA
-	9dpjdqpNQipgpFfZouKISMIVIet0ElmT8HRGZiA6TGlOPyMJToGra5Dkm6uGdAtdtI01V1P3Kp/cz
-	K67C6IUA==;
-Received: from [90.249.211.112] (helo=[192.168.0.116])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1wthEV-00GxYo-Py; Tue, 11 Aug 2026 09:49:11 +0200
-Message-ID: <3e3ae169-6313-42dc-b82d-cfaf85370aa7@igalia.com>
-Date: Tue, 11 Aug 2026 08:49:10 +0100
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="2UU/DQpj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B544C1F00A3A;
+	Tue, 11 Aug 2026 08:10:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxfoundation.org;
+	s=korg; t=1786435823;
+	bh=Qia2GBLa3uGfOENajCCh3ErjQV0Nz7IBPzM4Q9K25uU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=2UU/DQpjA9BD4KjeO3nbAmvwmTDS3PNec+0I0gKwYZ5aTXFT/s/4h5FmCLXz2Mlm6
+	 g346zWPl2Y8TnuNFGH4TebaylOsUmN3aXVKKH/0VRbDjCSiYpCZV2iyvIm4urFkG66
+	 4EmUvS0jq29JGY3qXu7xX7u5N2V+iSZQcQXG7b94=
+Date: Tue, 11 Aug 2026 17:08:49 +0900
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Sergio Callegari <sergio.callegari@gmail.com>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>, stable@vger.kernel.org,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Linux kernel regressions list <regressions@lists.linux.dev>,
+	"amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	George Zhang <george.zhang@amd.com>
+Subject: Re: [REGRESSION] Please revert 1191285ecb42 from 7.1.y
+Message-ID: <2026081151-reabsorb-calamari-7442@gregkh>
+References: <9c6acb62-4080-48e6-9ba2-d1c457c4ec88@gmail.com>
+ <2026081106-pebbly-cahoots-37a7@gregkh>
+ <23db5f95-c2d6-4712-856e-28f647e184f7@leemhuis.info>
+ <1caea72e-b9c8-452b-a3ff-5690d948b4fc@gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] drm/sched: FAIR policy causes serious performance
- degradation at max GPU load on 9070XT
-To: Luke.Wildhardt@proton.me
-Cc: Danilo Krummrich <dakr@kernel.org>, Philipp Stanner <phasta@mailbox.org>,
- phasta@kernel.org, "matthew.brost@intel.com" <matthew.brost@intel.com>,
- "ckoenig.leichtzumerken@gmail.com" <ckoenig.leichtzumerken@gmail.com>,
- "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <TfhgV1W0W5LI6RWUO6J35B3R8QIYH_FN3Eihzdo_9PH39hfn1AVByT-QBPHmWiAR-L0Kqi2sppM_EhFPKwZPGmb5pFgpF2MrzeFzkZDmpG8=@proton.me>
- <cef49cf329737e0af12ef5a90dd21f31e113d4c3.camel@mailbox.org>
- <DKL9VAWD2Y98.RBQPQUL7Y47F@kernel.org>
- <6e2a207e-4db6-4d47-b1f6-9cb13b8d6eeb@igalia.com>
- <enK0t0JrZ3lr9gmgPwE_YaVJDy7K355Bs0xy0YNoVwujLHCGWNRXCjDOhYfiHNGN3pPDSlEUIz3_UkXmFNAJNXxrJOIwvzAG-k8_p_D5FOQ=@proton.me>
-Content-Language: en-GB
-From: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
-In-Reply-To: <enK0t0JrZ3lr9gmgPwE_YaVJDy7K355Bs0xy0YNoVwujLHCGWNRXCjDOhYfiHNGN3pPDSlEUIz3_UkXmFNAJNXxrJOIwvzAG-k8_p_D5FOQ=@proton.me>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1caea72e-b9c8-452b-a3ff-5690d948b4fc@gmail.com>
 
+On Tue, Aug 11, 2026 at 09:28:52AM +0200, Sergio Callegari wrote:
+> On 11/08/2026 07:24, Thorsten Leemhuis wrote:
+> >
+> > And yes, 6.18.y seems affected, too, according to a comment in the
+> > ticket linked below.
+> >
+> 
+> Yes, my bad I only mentioned 7.1.6 to be quick. My actual concern is that
+> the troublesome commit got to the LTS kernels, which I think is the biggest
+> issue right now. People may find their display completely black or almost
+> black as soon as their DE starts. Getting to the conclusion that they need
+> to /reduce/ the brightness to recover is not totally obvious and is not
+> applicable at all if you have a system that is touchscreen only (since you
+> won't be able to see where to press).
+> 
+> >> It needs to be reverted in Linus's tree first, otherwise the regression
+> >> will be hit when you update to 7.2.
+> 
+> Indeed, but I think the biggest issue is with the LTS kernels right now.
+> 
+> > Normally I'd agree, but according to one reporter that problem does not
+> > happen with 7.2-rc:
+> > https://gitlab.freedesktop.org/drm/amd/-/work_items/5562#note_3603131
+> 
+> I'll see if I can try myself the 7.2 RCn series. From my superficial
+> analysis of the commits that brought us to the current situation, the
+> troublesome commit actually tried to patch on a true issue, namely that the
+> user facing brightness data is not mapped symmetrically to the hardware
+> data, but that the correct solution involves some more thorough rework of
+> the brightness coordinate system. So there may well be some larger activity
+> on it on upstream.
+> >
+> > Given all that I wonder if dropping that commit for now might be the
+> > best move.
+> 
+> Personally, I think that dropping on the stable series would be beneficial,
+> unless upstream can now offer a correct solution to pick. Behavior you get
+> by dropping is not 100% ideal but certainly not as bad as what you get with
+> the problematic commit.
 
-On 10/08/2026 17:40, Luke.Wildhardt@proton.me wrote:
-> Oops, forgot to reply all in my last message.
-> 
-> I did a quick test of the patch before I left this morning, the freezing seems to gone, but when the GPU is under the same condition, the stuttering is more uniform if that makes sense. Granted this was only a 5 minute test but the freeze was rather reliable before, I can do more testing later.
-> 
-> I know these things can be hard to describe, if that helps. If there's any profiling I could do or detailed logging that would help don't hesitate to ask.
+We aim to be "bug compatible" with Linus's branch, otherwise the
+"pressure" to fix those bugs goes down.  But I defer to the maintainers
+of the code involved if it is being worked on, and they want it
+reverted, great, we can do that.  Otherwise we prefer to leave it as-is.
 
-I am assuming this more uniform stuttering is something not present with 
-FIFO? Would it be possible to make two short videos, one before the 
-regression kicks in, and one after. And for both cases a snapshot of 
-gputop (from igt-gpu-tools) output before and after.
+thanks,
 
-Regards,
-
-Tvrtko
-
-> -------- Original Message --------
-> On Monday, 08/10/26 at 06:48 Tvrtko Ursulin <tvrtko.ursulin@igalia.com> wrote:
-> 
-> On 10/08/2026 13:45, Danilo Krummrich wrote:
->> On Mon Aug 10, 2026 at 10:28 AM CEST, Philipp Stanner wrote:
->>>> Reverted Commits:
->>>>
->>>> d09339388b77 drm/sched: Remove drm_sched_init_args->num_rqs
->>>> 2833a0512b4c drm/sched: Remove drm_sched_init_args->num_rqs usage
->>>> 16e7698bc04d drm/sched: Embed run queue singleton into the scheduler
->>>> 77a6809f1dc3 drm/sched: Remove FIFO and RR and simplify to a single run queue
->>>> 45c211ddf92a drm/sched: Switch default policy to fair
->>>> 2462a0ce23b0 drm/amdgpu: Remove drm_sched_init_args->num_rqs usage
->>
->> [...]
->>
->>> That might be the wisest thing to do; but let's hear if Tvrtko has an idea for
->>> a hotfix first.
->>
->> -rc7 was released yesterday; even with a working hotfix today it'd be tricky to
->> ensure the hotfix does not regress other drivers or workloads with 7.2 being
->> just a few days ahead.
->>
->> I suggest to not wait and get the reverts ready.
-> 
-> Yes reverts would be safer. I have them in a branch at
-> people.freedesktop.org/~tursulin/drm-intel drm-sched-fair-reverts,
-> mostly straightforward apart from one easy conflict in
-> amdgpu_xcp_release_sched. Smoke tested on Steam Deck looks fine.
-> 
-> Having said that, the fix for min_vruntime handling I provided earlier
-> in the thread also looks fine in my testing and is simple. No
-> regressions found with synthetic unit test workloads or messing around
-> on the Steam Deck. But we need to wait to hear from Luke since I haven't
-> been able to repro his report locally yet.
-> 
-> Regards,
-> 
-> Tvrtko
-> 
-> 
-
+greg k-h
