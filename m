@@ -1,51 +1,24 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [46.38.247.119])
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9970839CCEC
-	for <regressions@lists.linux.dev>; Tue, 11 Aug 2026 09:34:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.38.247.119
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 655163264F1
+	for <regressions@lists.linux.dev>; Tue, 11 Aug 2026 09:34:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.126.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786440844; cv=none; b=rQZYPGdRLnpuAQnxqaQnw3lhuNIRtfbQuHUUMskry5MLTA7rxw/Ks7r4M4PqiKdfroDfyHxqZDHfUDx53Bi7mI15fAJzVJEyvQQNiOr/yxGdSYnRFDATJi93nI9iU28A4wzl5WUz9b/yhKvMzCSQhVQxAutKJpgcYQuMJvHWGaI=
+	t=1786440864; cv=none; b=MXKPnhmNEbHtbmeucixHimyOZ6mnsUSaWPha9nA3+PqRoJIWU7LUYquqRrAyk4AX+4wi7EWWXJs0wP0wQaffH1EKC42JntcBpp/wGe2PQMghLE00WT7P78sUq7WuUQaO1ci6o8FWsBCvvrjCve+YoAgsSoPITlsogXho+1RlboQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786440844; c=relaxed/simple;
-	bh=nDYZar3caSc1NdI9WToFmjkpplTb7VWMaYkMoJrDNnc=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=DAV9OZK7Mc/aMW4UIf5a1OumCLCJQA7f/xyRnpyx8pIswELNpkrNmKGrJWB1Rqr1vtUNt+Gh0Z+QqLQZZKaeEGlYd6j9IoQAsSU9lqAsF9SQO1lqAHh8rrFqBol1gPy8F8uJ1A0g+LNV14Qt4upz97pidN5su/hGe4OoNOM0ML8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=YQDLvXxJ; arc=none smtp.client-ip=46.38.247.119
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="YQDLvXxJ"
-Received: from mors-relay-8404.netcup.net (localhost [127.0.0.1])
-	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4hK5zQ6dHzz86HN
-	for <regressions@lists.linux.dev>; Tue, 11 Aug 2026 11:33:54 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1786440834;
-	bh=nDYZar3caSc1NdI9WToFmjkpplTb7VWMaYkMoJrDNnc=;
-	h=Date:Subject:From:To:References:In-Reply-To:From;
-	b=YQDLvXxJQrCdtkuNSFvKEYxE5yNn5NcrKE+LDB1HuDDCg4ff8Kef0Asnkab1FK1gj
-	 SxgJW1fJw8GKOP4TYjxSXrwwYLemPClkoYKUZwMvUldE2xH3qHQHrR30ewNd4Bojlv
-	 qzXITCWxXU21mRXlJdwgaQwW3xyyANUq/swwLe8soETNcKnYdxvU+LTDMkKvbg5jwT
-	 lMSrt7V3GGt9k8HK4hEFUtPJhLtcyA22jBgaUxganjkUTgK8PPf2e0QD17ZY1y8zkY
-	 0IPwoykH1dWDFJk+4oVrQPix/Ce9pYapbdfKbEe4RVjYCzaRcdoHICIU7O8TkTbGqC
-	 2mD/yHsdc72SQ==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4hK5zQ5wCzz4xJ5
-	for <regressions@lists.linux.dev>; Tue, 11 Aug 2026 11:33:54 +0200 (CEST)
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4hK5zQ4TCHz8sbs
-	for <regressions@lists.linux.dev>; Tue, 11 Aug 2026 11:33:54 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 11A155FA60
-	for <regressions@lists.linux.dev>; Tue, 11 Aug 2026 11:33:54 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <83b430b4-ba70-41ac-80f1-31fab93cbcd5@leemhuis.info>
-Date: Tue, 11 Aug 2026 11:33:52 +0200
+	s=arc-20240116; t=1786440864; c=relaxed/simple;
+	bh=ewllke0+EmgPXnALcqXSDT0heDfgtIqzqxEjHmxLcU0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BYg/tdHz7ZbsjfYd7bI+JcAcRXvf/J6Ihp8bfbg1Cy7QIAmV55w2ICoL8F5tigOsrc8hXALxetFiTOTbo9QNgLfOSj3B6cyb5lzsddyRYv4MzqzUOr81SfN2af4bPrbdv6aHS/rpJW82Ou/9lhx1Zt125Bz4BjZwMkKGccqbR7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=green-communications.fr; spf=pass smtp.mailfrom=green-communications.fr; arc=none smtp.client-ip=212.227.126.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=green-communications.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=green-communications.fr
+Received: from client.hidden.invalid by mrelayeu.kundenserver.de (mreue011
+ [213.165.67.103]) with ESMTPSA (Nemesis) id 1MOQyE-1wW0oo37gk-00OMHc; Tue, 11
+ Aug 2026 11:34:08 +0200
+Message-ID: <ad56e2b3-c3f7-4461-b963-e56fa4212ed8@green-communications.fr>
+Date: Tue, 11 Aug 2026 11:34:06 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -53,37 +26,135 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <178644083425.1807683.6301337611289252998@mxe9fb.netcup.net>
-X-NC-CID: IkjZ15/2YuM6MPSZyW1nANQQ74TUa9G0Br/pNmlCtzmOV4RWEpU=
+Subject: Re: [PATCH wireless] Revert "wifi: mt76: Disable napi when removing
+ device"
+To: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,
+ linux-wireless@vger.kernel.org
+Cc: Felix Fietkau <nbd@nbd.name>, Lorenzo Bianconi <lorenzo@kernel.org>,
+ Ryder Lee <ryder.lee@mediatek.com>, Shayne Chen <shayne.chen@mediatek.com>,
+ Sean Wang <sean.wang@mediatek.com>, Bert Karwatzki <spasswolf@web.de>,
+ Devin Wittmayer <lucid_duck@justthetip.ca>,
+ Eric Biggers <ebiggers@kernel.org>, Thorsten Leemhuis <linux@leemhuis.info>,
+ regressions@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20260804120004.523934-1-mikhail.v.gavrilov@gmail.com>
+Content-Language: fr
+From: Nicolas Cavallari <nicolas.cavallari@green-communications.fr>
+In-Reply-To: <20260804120004.523934-1-mikhail.v.gavrilov@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:07XwSLwzLwf9lYP71SE9qaK9SNl9jMQf4BS755L/Ixu9GeoJxUo
+ faCo2hnaLauG/fmlPkK7C1n8lKAM4hD553SC6YCDH1XAGakcO9zN8HsaoK8hcjGR/Vim4Ll
+ YvLqtVEfI5FlvmixxARVoGFfwx0piaA2xFCT23Cu1jVFrgD9HC4YmFpmPRO7KYx4XeJNhBK
+ 4fuV7cNUEDDiohHScyVNg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:M8MPQUp3ipc=;5ROrDF27cJsBp1kvUPjnlAByMRL
+ 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
+ =
 
+Le 04/08/2026 à 14:00, Mikhail Gavrilov a écrit :
+> This reverts commit 13b7e6a96a005c656d38f3da51581deaf9866375.
+> 
+> That commit made mt76_dma_cleanup() disable every RX NAPI instance before
+> deleting it, to silence WARNs in __netif_napi_del_locked() and
+> page_pool_disable_direct_recycling() seen when unloading mt7915e with an
+> MT7916.
+> 
+> On mt7921e and mt7925e the same instances are already disabled earlier,
+> in mt7921e_unregister_device() and mt7925e_unregister_device(), which
+> only afterwards call mt792x_dma_cleanup() -> mt76_dma_cleanup().  Each
+> instance is therefore disabled twice, and napi_disable() is not
+> idempotent: on return it leaves NAPIF_STATE_SCHED and NAPIF_STATE_NPSVC
+> set, so the second call spins in usleep_range() forever, waiting for bits
+> that nobody will clear.
+> 
+> mt7921_pci_shutdown() and mt7925_pci_shutdown() reuse the remove path, so
+> this is hit on every reboot, poweroff and module unload.  It is silent:
+> the stuck task keeps sleeping and rescheduling, so neither the hung task
+> detector nor the lockup detectors fire, and the last line on the console
+> is "systemd-shutdown[1]: Rebooting."
+> 
+>    task:modprobe        state:D stack:25720 pid:7954  tgid:7954
+>    Call Trace:
+>     <TASK>
+>     __schedule+0x11b8/0x26d0
+>     schedule+0xe7/0x2f0
+>     schedule_hrtimeout_range_clock+0x218/0x330
+>     usleep_range_state+0x133/0x1b0
+>     napi_disable_locked+0x37d/0x5f0
+>     napi_disable+0x43/0x80
+>     mt76_dma_cleanup+0x2b4/0x860 [mt76]
+>     mt7921_pci_remove+0x17f/0x350 [mt7921e]
+>     pci_device_remove+0xb6/0x1e0
+>     device_release_driver_internal+0x38d/0x540
+>     driver_detach+0xd0/0x1b0
+>     bus_remove_driver+0x127/0x2d0
+>     pci_unregister_driver+0x2a/0x280
+>     __do_sys_delete_module+0x36a/0x5b0
+>     do_syscall_64+0x11c/0x6d0
+>     entry_SYSCALL_64_after_hwframe+0x76/0x7e
+>     </TASK>
+> 
+> Dropping the two driver-side loops instead was tried and rejected: with
+> them gone, the RX poll can reach mt76_token_release() via
+> PKT_TYPE_TXRX_NOTIFY and mt7921_mac_tx_free() while
+> mt76_connac2_tx_token_put() is running idr_destroy(&dev->token) outside
+> token_lock, which is a use-after-free rather than a hang [1].
+> 
+> Revert for now, so that reboot, poweroff and module unload work again.
+> The WARNs on mt7915e are a less severe problem than an unbootable
+> machine, and fixing them belongs in the drivers that delete the NAPI
+> instances, where each one can pick a point that is safe for its own
+> teardown order, rather than in the shared mt76_dma_cleanup().
+> 
+> Reported-by: Bert Karwatzki <spasswolf@web.de>
+> Closes: https://lore.kernel.org/all/20260724151419.26014-1-spasswolf@web.de/
+> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=221818
+> Link: https://lore.kernel.org/all/20260730050428.GA73812@sol/ [1]
+> Signed-off-by: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Acked-by: Nicolas Cavallari <nicolas.cavallari@green-communications.fr>
 
+Sorry for the trouble.
 
-On 3/9/24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
+For what is it worth, wifibot reports: "Series targets non-next tree, 
+but doesn't contain any Fixes tags"
 
-#regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=221827
-#regzbot dup:
-https://lore.kernel.org/all/9c6acb62-4080-48e6-9ba2-d1c457c4ec88@gmail.com/
+https://patchwork.kernel.org/project/linux-wireless/patch/20260804120004.523934-1-mikhail.v.gavrilov@gmail.com/
 
-#regzbot report:
-https://lore.kernel.org/lkml/OS3PR01MB8827AC846F82A406D22E3FB7DECB2@OS3PR01MB8827.jpnprd01.prod.outlook.com/
-#regzbot resolve: was likely a false-positive
+Fixes: 13b7e6a96a00 ("wifi: mt76: Disable napi when removing device")
 
-#regzbot report:
-https://lore.kernel.org/all/20260807091047.9264-1-qby140326@gmail.com/
-#regzbot dup: https://gitlab.freedesktop.org/drm/amd/-/work_items/5529
+> Sending this because the regression is now in its second week with four
+> independent reporters, and the two-part alternative (this revert plus
+> napi_disable() added inside mt7915_unregister_device()) needs MT7916
+> hardware that I do not have.  I deliberately left the mt7915 side out;
+> Nicolas is best placed to do it, since MT7916 is what he reported
+> against.
 
-#regzbot report: https://gitlab.freedesktop.org/drm/amd/-/work_items/5447
-#regzbot fix: drm/amdgpu: Prefer default discovery offset
+Did that here: 
+https://patchwork.kernel.org/project/linux-wireless/patch/20260810154923.32546-1-nicolas.cavallari@green-communications.fr/
