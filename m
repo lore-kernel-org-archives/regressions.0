@@ -1,158 +1,285 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-10628.protonmail.ch (mail-10628.protonmail.ch [79.135.106.28])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 221ED46D2CF
-	for <regressions@lists.linux.dev>; Wed, 12 Aug 2026 14:50:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.216.53
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786546206; cv=pass; b=HpTrA0NnY/pjpZcn2VgmmIcyOl4Ng808pd5yMYwJcYK+KMJEtebjq/+j2X4VwHfnNSt10Ydx7PuQMTVWvWOsmhiVR/zQVd29c2MOvGWIFKA34j4cnp1Z9qyOpEpRaGn8i8Ha+RnH3xveCKyzeoZGev5lNC2lgklFjkyp5aNPxY8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786546206; c=relaxed/simple;
-	bh=9++DEyhWIDbR7vGF1FPZPJTciFPAbeer9QqFVsQum9U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ons+f4ssx1QcS/uDzWZsLuk/tb0rdFQA4dsnBuFwdRUZ35icr5zm4ESp2roidI88qh1XUAuC+mMAVZz4wq5qWWZGvGD0uJ1cYfmS4ZyyemtSnhlvbswpzuVA5m8ZZjddxUmAUk3DHz5b6F+8TtZxe/CBinCF0s5xIddb4moMb44=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jXrWmYJI; arc=pass smtp.client-ip=209.85.216.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE93A456299
+	for <regressions@lists.linux.dev>; Wed, 12 Aug 2026 15:12:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.28
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1786547573; cv=none; b=VIdp83cLUr2NdTwGAkEeE2J9mWt+yP5c2LzAZcxEq3th0l91BBfKP+yd3jtyU/M+4phHRfsqqvCi4AO8RI2Dphtt13j7tJwPHJmc6eFqkveojY2z2nK5DK8B8FvhB7h11QSt48NlT+jXSWWz5ETRph4a1liiUiRJ0w/HDAc3BxU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1786547573; c=relaxed/simple;
+	bh=bOuBvIxHPbSPwBh5R8vx9r91OGOUU+cQDnXuXA5GgGg=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GnqYQbl22RBKBvuXb6TMnwqxggPRwLcruf6P/VJF3bNxWjuo5bfsGdtbaJLyfA0pjRvTYE3HiXGf1Kdi42ttX4wkoWBBDeATNYEWaOKfaOEfhE5GB/AWrbmMznR6qV1iPCtLf8ZFhF+kzZpZ+ef7ncC32Kc+6zo7J3ZRUUwaeqQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=OrLzWmro; arc=none smtp.client-ip=79.135.106.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jXrWmYJI"
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-37f9e2642deso168817a91.1
-        for <regressions@lists.linux.dev>; Wed, 12 Aug 2026 07:49:59 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1786546196; cv=none;
-        d=google.com; s=arc-20260327;
-        b=VZgLD818b7S4SE6Q4J1y4OsFhBD7JL7Plrj3fAN5+hkte4xmUYncDOylsXKWIR4DiG
-         p9j3bUWXIyH6kosHP1wu7o+1yPeg9zeOB04RR/3oZ4NN4zPcy9DX7PAqYehh3QHZcbON
-         OSByUNt5qBZs9QBSJW+kVJdOvtd7RzecyPN7WvsakixN3HNgoIPIj9+4vh6Bnx5kfT4I
-         OwS+4RRjXB3S9vg0iJfwJ3x48MMeq8XHMw8WYGvIgKri5qz9YbxOZyv+CFK7UW8dGviJ
-         kjTkcW9x6A7MWedshkFI2sKBNspAJzSZhwD8433Ovw7p52eOXeNkfMTOPAuVSTT4/Rb7
-         TNRQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=ot/f134CaNd2ZZh1uYzIr3IyXzUgXu59DTxBXmvb+90=;
-        fh=sfMCJZhuEwyeKmjqw5CPur9TP9Tj4brK4rYi5mWTCzw=;
-        b=mp2UjGPUKh8cPAV5Onkqn6x7/hCHhz6HbOidYwSUVFFPm7v50u0IjHUU7qLa/UnrPA
-         FBpg8Hnyzi3NL6kmsyngOVi6LRw0tmi6yjsxZAnpYW+N+muvhMPzpYQKWVygXHXLk1ZD
-         kpzUH1GhQXP+KF8ND/JvVncB+sC7+OxoTLAT8qiAXhQugBbr7ZhKxUxNVbRj2SUdmvSk
-         i4EcyQFbCSstPvUXgdvtQcEglF5gwiZjLUrgjZ42oFLUg0XL5lEH3vdFcWMjoqb27e3w
-         7/SF/tu37WRuWixvGB+A30vzFaaoMFs4boKsQsOnQJKVscv6BfyU068qnXx7ckO5V6/t
-         JnvA==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1786546196; x=1787150996; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=ot/f134CaNd2ZZh1uYzIr3IyXzUgXu59DTxBXmvb+90=;
-        b=jXrWmYJIHFewCTMJJGkJs4EuJFTjiJET+F/Xlm5NDrVSDVYb3ZawHOM0CVAeVlToMP
-         8M4g6PLdGws/67bCsg+nnO6czn4EIozkBms/ncOZFueJTygAMr/GIXkBHE0kSAR8o2Cm
-         rBIvD7huW4/16zdjwkHzjvVaHKbGlSE9M+yQnATHN/bSCj113FyxGcWtQr8Ts5viSs78
-         Ol8NJk3F20VW0VCgUD7jLntBJn/iYyhL/eQnnV7Dnkobf1bJ0H8vpJWKC3CUUZgRoiHq
-         Xlp9xD8E9dA6O8VCZYnQfB8WhwawL28+yqnHVeakyWOpt1HGYIdmiOuMjhUuG6jJS13y
-         bzcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786546196; x=1787150996;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=ot/f134CaNd2ZZh1uYzIr3IyXzUgXu59DTxBXmvb+90=;
-        b=BaE+hgbmAnz6EovB6DgOFZ6kELxQZMb+NGNVys8cW773h0MNi8BDAt0hOCd+Hhz3fM
-         QSHvz+qJDjjDuS9a+mZGGZeJv/ZRqLsH7dCXhow1dUnB9vIt5bMpw2EXJzjJZqCp2CEv
-         rGw9Kcg48Xr3XmUgwA7SAbQ9z4jsWT+x0hvid+YmFIr8a6ut7bHj0rFLCr5VPwa37zX7
-         dDEX+HBNNh6izUHv4JsZHCC+F0Aqc3BArL3QVnhvgPlCPlGUkkW4IVs2VWRbhjIb1QEi
-         xcxGmjbC790PzNkXOTHgaqgmcrTH96vTJMEigT+hwsSirgJgNrkYtrKhVA4vkQWOInkt
-         gmrg==
-X-Forwarded-Encrypted: i=1; AHgh+RoRGGmgtsyljHtZGde038zjpOmSTSvAXEDgzWs1AiZRs9wmrGBt/Oe04vhFAasmo9qXQRiQsOx9zeXxHw==@lists.linux.dev
-X-Gm-Message-State: AOJu0YyJD/2ccIVQ0pisjUknnIqhPADkwa3X8pJJRa8hEDiDmxJVw9cC
-	rpoi7OHO+OK6bPdo1Zoi+IKGqorurOL1niuncIvVh9/0Bg+1MnM5fbVwv7ksDYTHo4IMCukWasV
-	RwOlKiF/mokZE9SVLShr4unZarkJD1XQ=
-X-Gm-Gg: AR+sD10Uidx4xjTcj5OyyInzzQWsqIDs6ddTvYts3+WxRN3etmCy/6mNWCvMBNRE5wo
-	5KmbtKpXlobQnEJb0kGvWqmXOV6oNIGKefQ+vmWt74SWUe9EK8GsbILeNJ6mSBBepA+aph/Wkh3
-	jLzPiZhfLLws6frs95qvP791s2tcTWGmEGLhgQXYFP5HooRxLzOVn1mQvusmfdSZg9cOVJIpNnI
-	vMMZa/MB/ULtU4SfzRM+KdBeot163ObOgqXjG2GirCSrfZClzPanAlwt3Ek0/fC9UXLwh1PgaFe
-	VVbAdhE5tjRBpD9humtufvsJ/0PNLAIGhW06ycCHg5dcIjsGrkIbpSUB6jdhXFpKGap9Rd2kpw3
-	sfnpaK8uWUA1xb1el5lfKqChHJpUvGQ0=
-X-Received: by 2002:a17:90b:1c87:b0:38e:76f8:fcbb with SMTP id
- 98e67ed59e1d1-3930165d7ebmr4278871a91.4.1786546196340; Wed, 12 Aug 2026
- 07:49:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="OrLzWmro"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1786547557; x=1786806757;
+	bh=xNCW83yPuxMoB3OuRzgqvTYPcVSsCWORfbzZHwzCWmQ=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=OrLzWmrouhD0RmVRzWKZ0upY4xunqfWrY4/Hdb+JRrvAI0zJMuodlzbltGu32wSXm
+	 pWvb3gzktrP+x9nkoaCNeMpBuHhpQFRrGdHzWGVWPibrNZxGUOVD5RVy0ycTpfcYsZ
+	 gQVl8EzQzQSw3Nw90FWJAIyccz2LSFGIIyw74QOeIpDE+W/e6E6ZeX06ibvzUmw/DE
+	 +4KFOfJ7jbuYN5nwvBmNyTyZU4cs9F/qrlh//ENcPG+roZYTGbArUiHw9y6PepZC/C
+	 J3Si+yXucLn+bNaQ2r6JpDip7j5v2q0MOtzTAApvAiHQqbPc2A73KzhsrgJFT8K2vF
+	 LvkwNLBR6vnxQ==
+Date: Wed, 12 Aug 2026 15:12:32 +0000
+To: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
+From: Luke.Wildhardt@proton.me
+Cc: Danilo Krummrich <dakr@kernel.org>, Philipp Stanner <phasta@mailbox.org>, phasta@kernel.org, "matthew.brost@intel.com" <matthew.brost@intel.com>, "ckoenig.leichtzumerken@gmail.com" <ckoenig.leichtzumerken@gmail.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "regressions@lists.linux.dev" <regressions@lists.linux.dev>, "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [REGRESSION] drm/sched: FAIR policy causes serious performance degradation at max GPU load on 9070XT
+Message-ID: <Wgbhe0iRVno6QTXUasXAw96sdk1GzzJ8DW_Yw8EyCtxvwV4-EfRTaUdaF9vYeMYsMyfLVVTmXBOB1Br_d-l8b87D_2CMFyYSJi34eaaGGW4=@proton.me>
+In-Reply-To: <a9ee4edb-e763-4fd7-a510-32191df0cf8f@igalia.com>
+References: <TfhgV1W0W5LI6RWUO6J35B3R8QIYH_FN3Eihzdo_9PH39hfn1AVByT-QBPHmWiAR-L0Kqi2sppM_EhFPKwZPGmb5pFgpF2MrzeFzkZDmpG8=@proton.me> <cef49cf329737e0af12ef5a90dd21f31e113d4c3.camel@mailbox.org> <DKL9VAWD2Y98.RBQPQUL7Y47F@kernel.org> <6e2a207e-4db6-4d47-b1f6-9cb13b8d6eeb@igalia.com> <enK0t0JrZ3lr9gmgPwE_YaVJDy7K355Bs0xy0YNoVwujLHCGWNRXCjDOhYfiHNGN3pPDSlEUIz3_UkXmFNAJNXxrJOIwvzAG-k8_p_D5FOQ=@proton.me> <4OmZej9WiJ6-rsJ_lFcrmwtClAwMdN4oHXWH0p8FkIrhAn4LKS4O3q36wrdZrvjZHBNS8PZsvaIvR-1aFZfF2tDiy1cdMzTYNylcbGDQN68=@proton.me> <a9ee4edb-e763-4fd7-a510-32191df0cf8f@igalia.com>
+Feedback-ID: 214028577:user:proton
+X-Pm-Message-ID: fb4e49e4b3c188d7504d3c23bb821a7845a7cbb5
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <9c6acb62-4080-48e6-9ba2-d1c457c4ec88@gmail.com>
- <2026081106-pebbly-cahoots-37a7@gregkh> <23db5f95-c2d6-4712-856e-28f647e184f7@leemhuis.info>
- <1caea72e-b9c8-452b-a3ff-5690d948b4fc@gmail.com> <2026081151-reabsorb-calamari-7442@gregkh>
- <8a0fad2d-788a-403f-a880-2f97c6708275@gmail.com> <CADnq5_Pb=ox3nWfdpb3Qeo_eSQayuc7UqUOnm0x+WS+EQTVWjA@mail.gmail.com>
- <2026081216-goon-nicotine-6d62@gregkh>
-In-Reply-To: <2026081216-goon-nicotine-6d62@gregkh>
-From: Alex Deucher <alexdeucher@gmail.com>
-Date: Wed, 12 Aug 2026 10:49:44 -0400
-X-Gm-Features: AUfX_mzj2HCarj37nq6qUUz4-f_2TcoeI2QeBqGSJvYG-vDLTLtMkqvEmu0fq64
-Message-ID: <CADnq5_OySMeizELEwN7Okjc-SKRJMvO6dN7X-zwPp_eQuz67hA@mail.gmail.com>
-Subject: Re: [REGRESSION] Please revert 1191285ecb42 from 7.1.y
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Sergio Callegari <sergio.callegari@gmail.com>, 
-	Thorsten Leemhuis <regressions@leemhuis.info>, stable@vger.kernel.org, 
-	Mario Limonciello <mario.limonciello@amd.com>, Alex Deucher <alexander.deucher@amd.com>, 
-	Linux kernel regressions list <regressions@lists.linux.dev>, 
-	"amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>, 
-	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	George Zhang <george.zhang@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Aug 11, 2026 at 8:13=E2=80=AFPM Greg KH <gregkh@linuxfoundation.org=
-> wrote:
+I will test this later tonight when I get home and report my findings.
+
+If all is well, I do have a 6900XT I can dig out and cross validate.
+
+
+Also, I attempted to find a synthetic way to induce the condition; the only=
+ slight way I found to do so was running furmark tail, but the desktop neve=
+r froze, only the desktop seemed to get mildly choppy. I have not yet check=
+ed against the FIFO scheduler.  I was trying to find a more objective way t=
+o trigger the issue, but it appears in my case I got rather (un)lucky with =
+the specific game I was playing the reproduces it so well.
+
+No problem for helping, I reported the issue and since I am capable of help=
+ing at the very least test a fix and reporting on it, I feel I have an obli=
+gation to, especially since you haven't been able to reproduce the issue on=
+ your end.
+
+-------- Original Message --------
+On Wednesday, 08/12/26 at 04:38 Tvrtko Ursulin <tvrtko.ursulin@igalia.com> =
+wrote:
+
+On 11/08/2026 18:59, Luke.Wildhardt@proton.me wrote:
+> I want to be very clear here, I was working with Claude Opus on debugging=
+ this issue. I am not a good programmer and work in on the hardware side of=
+ things, so this is only code I've tested and not of my creation, just hopi=
+ng to be helpful.
+
+It is really helpful and appreciated! Both that you found the regression
+and that you are helping debug and fix it.
+
+> It appears the freezing (and maybe what I'll call micro freezing instead =
+of stuttering) was resolved after an issue was potentially identified in dr=
+ivers/gpu/drm/scheduler/sched_rq.c
 >
-> On Tue, Aug 11, 2026 at 01:25:14PM -0400, Alex Deucher wrote:
-> > On Tue, Aug 11, 2026 at 11:25=E2=80=AFAM Sergio Callegari
-> > <sergio.callegari@gmail.com> wrote:
-> > >
-> > > On 11/08/2026 10:08, Greg KH wrote:
-> > > > We aim to be "bug compatible" with Linus's branch, otherwise the
-> > > > "pressure" to fix those bugs goes down.  But I defer to the maintai=
-ners
-> > > > of the code involved if it is being worked on, and they want it
-> > > > reverted, great, we can do that.  Otherwise we prefer to leave it a=
-s-is.
-> > >
-> > > I understand. Sorry for asking about things that might be obvious to
-> > > most people here. My expectation was that only a selected subset of t=
+> I did a 20m play session attempting to reproduce the issue but was not ab=
+le to. Previously, I could reproduce this on-demand.
+>
+> I will copy the writeup it created and the testing we did below. I am onl=
+y claiming that the freezing had been seemingly resolved, not a particular =
+fitness or correct identification of the issue, that is for developers to j=
+udge.
+>
+> Quotations are an output of a summery I had Claude create.
+>
+> "
+> THE INVARIANT
+>
+> drm_sched_entity_stats::vruntime is held absolute while the entity is lin=
+ked
+> in the run queue tree, and relative to min_vruntime while it is idle.
+> save_vruntime() converts one way on the way out, restore_vruntime() the o=
+ther
+> on the way back in. drm_sched_rq_add_entity() calls restore unconditional=
+ly,
+> which is only correct if the entity has definitely been through save.
+>
+>
+> THE WINDOW
+>
+> drm_sched_entity_pop_job():
+>
+>      spsc_queue_pop(&entity->job_queue);      /* queue now empty */
+>
+>      drm_sched_rq_pop_entity(entity);         /* takes entity->lock insid=
+e */
+>
+> No lock held across those two lines. A concurrent push seeing the queue e=
+mpty
+> gets first =3D=3D true, calls add_entity, and restores a vruntime that ha=
+s not yet
+> been saved -- adding min_vruntime to an already-absolute value. If the en=
+tity
+> is leftmost, get_min_vruntime() returns its own vruntime and it doubles.
+>
+> It persists: pop_entity then finds the pushed job, takes the next_job bra=
+nch,
+> and update_vruntime() carries the inflated value forward. The entity sits=
+ far
+> right in the tree and is not selected until min_vruntime catches up, whic=
+h
+> under sustained load may be effectively never.
+>
+>
+> EVIDENCE
+>
+> WARN_ON_ONCE(!RB_EMPTY_NODE(&entity->rb_tree_node)) at the top of
+> add_entity(), after the rq lock, fires reproducibly.
+>
+> That condition should be unreachable. add_entity() is reached only from t=
 he
-> > > patches on the Linus' tree were to enter in stable, so do we really n=
-eed
-> > > to have stable "bug compatible" wrt this bug? The original behavior w=
-as
-> > > not free of issues, but they were rather minor (a reporting issue). N=
-ow
-> > > we have this very bad behavior where the display remains dark.
-> > >
-> > > To make the matter worse, on systems that have encrypted root the scr=
-een
-> > > remains dark also on that password prompt (observed with plymouth).
-> > >
-> > > In any case, I managed testing 7.2.0RC7 and it is fine again.
-> > >
-> > > Looks like the Linus' tree has more changes wrt backlight, and the
-> > > interesting ones are probably those in the cumulative fix
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/co=
-mmit/?id=3D973fd9493ec21f12e760fbbedeb7b0b2317c02f4.
-> > >
-> >
-> > Thanks for testing.  It sounds like we should revert the change from
-> > stable.  There must be some dependency we are missing in stable.
+> "first job" branch of push_job(), and first is true only when the SPSC qu=
+eue
+> was empty. A linked entity implies its last pop_entity() peeked non-empty=
+.
+> Empty queue and still linked cannot both hold in any ordered execution. F=
+resh
+> entities are excluded -- entity_init() calls RB_CLEAR_NODE() unconditiona=
+lly.
 >
-> Great, can someone send a revert?
+> Instrumented as a counter instead, with ring and comm logged:
 >
-
-Just sent.  Thanks.
-
-Alex
-
-> thanks,
+>    idle 10s:      0 races /  5662 restores
+>    gameplay 60s:  8 races / 43315 restores
 >
-> greg k-h
+>    [ 192.754604] vruntime race on ring gfx_0.0.0 (comm kwin_wayla:cs0)
+>    [ 226.882135] vruntime race on ring gfx_0.0.0 (comm kwin_wayla:cs0)
+>    [ 292.226032] vruntime race on ring gfx_0.0.0 (comm kwin_wayla:cs0)
+>
+> plus Xwayland:cs0 and vkd3d_queue on gfx, and many more on sdma0/sdma1. T=
+he
+> gfx_0.0.0 / kwin_wayla:cs0 entries are the compositor submission thread o=
+n the
+> graphics ring -- the process that dies when the desktop freezes.
+>
+>
+> CHANGE
+>
+> The principled fix is presumably to close the window by holding entity->l=
+ock
+> across the pop, which needs a _locked variant of drm_sched_rq_pop_entity(=
+).
+> I did not attempt that. What I tested checks the invariant instead: a sti=
+ll-
+> linked entity never left, so its vruntime is already absolute and its tre=
+e
+> position valid.
+>
+> --- a/drivers/gpu/drm/scheduler/sched_rq.c
+> +++ b/drivers/gpu/drm/scheduler/sched_rq.c
+> @@ drm_sched_rq_add_entity
+> -=09ts =3D drm_sched_rq_get_min_vruntime(rq);
+> -=09ts =3D drm_sched_entity_restore_vruntime(entity, ts, rq->head_prio);
+> -=09drm_sched_rq_update_tree_locked(entity, rq, ts);
+> +=09if (RB_EMPTY_NODE(&entity->rb_tree_node)) {
+> +=09=09ts =3D drm_sched_rq_get_min_vruntime(rq);
+> +=09=09ts =3D drm_sched_entity_restore_vruntime(entity, ts,
+> +=09=09=09=09=09=09       rq->head_prio);
+> +=09=09drm_sched_rq_update_tree_locked(entity, rq, ts);
+> +=09}
+>
+> On stock 7.2-rc7 with this applied, freezes are gone against a trigger th=
+at
+> previously reproduced on demand, and perceptible hitching appears gone to=
+o.
+> The race counter keeps incrementing (35 in the last session against 29574=
+4
+> restores), so the window still opens at the same rate and is now absorbed=
+ --
+> the timing has not merely shifted. Extended soak in progress.
+> "
+
+Good find! I almost feel obsolete. Perhaps our new AI overlords should
+make a pension fund out of the proceeds obtained by training their
+models on the decades of our work so us old programmers can safely retire.
+
+Jokes aside, I agree with the above analysis that a better fix would be
+to pull things under the lock, and interestingly, Philipp had a lock
+widening patch not so long ago but I don't remember what happened it or
+how exactly did it look. It would possibly have fixed this problem.
+
+Anyway, I have prepared a branch with the two fixes if you would be kind
+enough to give it a spin:
+
+https://cgit.freedesktop.org/~tursulin/drm-intel/log/?h=3Ddrm-sched-fair-fi=
+xes
+
+In my testing it all looks good. Fingers crossed.
+
+Regards,
+
+Tvrtko
+
+> On Monday, August 10th, 2026 at 9:40 AM, Luke.Wildhardt@proton.me <Luke.W=
+ildhardt@proton.me> wrote:
+>
+>> Oops, forgot to reply all in my last message.
+>>
+>> I did a quick test of the patch before I left this morning, the freezing=
+ seems to gone, but when the GPU is under the same condition, the stutterin=
+g is more uniform if that makes sense. Granted this was only a 5 minute tes=
+t but the freeze was rather reliable before, I can do more testing later.
+>>
+>> I know these things can be hard to describe, if that helps. If there's a=
+ny profiling I could do or detailed logging that would help don't hesitate =
+to ask.
+>>
+>>
+>>
+>> -------- Original Message --------
+>> On Monday, 08/10/26 at 06:48 Tvrtko Ursulin <tvrtko.ursulin@igalia.com> =
+wrote:
+>>
+>> On 10/08/2026 13:45, Danilo Krummrich wrote:
+>>> On Mon Aug 10, 2026 at 10:28 AM CEST, Philipp Stanner wrote:
+>>>>> Reverted Commits:
+>>>>>
+>>>>> d09339388b77 drm/sched: Remove drm_sched_init_args->num_rqs
+>>>>> 2833a0512b4c drm/sched: Remove drm_sched_init_args->num_rqs usage
+>>>>> 16e7698bc04d drm/sched: Embed run queue singleton into the scheduler
+>>>>> 77a6809f1dc3 drm/sched: Remove FIFO and RR and simplify to a single r=
+un queue
+>>>>> 45c211ddf92a drm/sched: Switch default policy to fair
+>>>>> 2462a0ce23b0 drm/amdgpu: Remove drm_sched_init_args->num_rqs usage
+>>>
+>>> [...]
+>>>
+>>>> That might be the wisest thing to do; but let's hear if Tvrtko has an =
+idea for
+>>>> a hotfix first.
+>>>
+>>> -rc7 was released yesterday; even with a working hotfix today it'd be t=
+ricky to
+>>> ensure the hotfix does not regress other drivers or workloads with 7.2 =
+being
+>>> just a few days ahead.
+>>>
+>>> I suggest to not wait and get the reverts ready.
+>>
+>> Yes reverts would be safer. I have them in a branch at
+>> people.freedesktop.org/~tursulin/drm-intel drm-sched-fair-reverts,
+>> mostly straightforward apart from one easy conflict in
+>> amdgpu_xcp_release_sched. Smoke tested on Steam Deck looks fine.
+>>
+>> Having said that, the fix for min_vruntime handling I provided earlier
+>> in the thread also looks fine in my testing and is simple. No
+>> regressions found with synthetic unit test workloads or messing around
+>> on the Steam Deck. But we need to wait to hear from Luke since I haven't
+>> been able to repro his report locally yet.
+>>
+>> Regards,
+>>
+>> Tvrtko
+>>
+>>
+
+
