@@ -1,140 +1,231 @@
-Received: from mail.cs.umu.se (mail.cs.umu.se [130.239.40.25])
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D905737E5C4
-	for <regressions@lists.linux.dev>; Wed, 12 Aug 2026 08:11:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.239.40.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7426D41F5F5;
+	Wed, 12 Aug 2026 11:38:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786522305; cv=none; b=HDFNJlp7yh1AvqyEXr8Uz9tuPsbP4x1PB9xrV0iv1CXZErsnwxkiefSPEtsVjF1hSTsy3Wy7t4ax5LYFY2gvxa8UlSdcF79rKmF/stcD1NNSTBgTx88mSUkJb601r9lLb/8bCdun3J2cufPWJSqWAZZ+xzu910wU+sMUIQ4nx/o=
+	t=1786534708; cv=none; b=q1Uuv6ZxcZyGu85LwzWEWlJN0FoiabCqVVCcIKQSd1Uojz/z1vf0ECqPNrjh0jQbCQ2npIhCfxeWVwPC6Bqkf/1lh4fnxjdLSBAUucppbQvd+7T2FBJA9IrMFGBijyfcIvVxheOO7HvXuQKk9Fwh9of4eyrvQ+nJKP4kD/sh5fo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786522305; c=relaxed/simple;
-	bh=xW9ZMoYBeKafn0p84RZA5pYECw33ih6ciERBSSF4w3Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=l7I4sWQii07ous41tPuoP3jpSDG8NIW/CXyKnl3Znq11sp3ZEgRN7rHy1slbrvrCx31BZE2thHc+MQzTiQTa4bat9gpZklnuRYwxiNitoDte6K/h+jjuZcxafoyws7QA+73sjqYnYe9baUAMGvvk9DBnABifKzHmCFp7h/oi3LI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cs.umu.se; spf=pass smtp.mailfrom=cs.umu.se; dkim=pass (2048-bit key) header.d=cs.umu.se header.i=@cs.umu.se header.b=KmCW2S4h; dkim=pass (2048-bit key) header.d=cs.umu.se header.i=@cs.umu.se header.b=mW/+IxEt; arc=none smtp.client-ip=130.239.40.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cs.umu.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cs.umu.se
+	s=arc-20240116; t=1786534708; c=relaxed/simple;
+	bh=cFKzfovtQngHtnsV1kymz9tZy6DTUWgLZThX7fPwLkA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=idTdkg5HM5RVh5ooE8KOBPLQ2qzmcz5C5c+bvSTzigjLeMtDhRxNVyffwrtGkR55rdJNAsziLTHK6x0/FVFDlhnw99VU7bSHJSRYa4gghxLbYIgaEEdjAJxvMf3HuvaQKUIXmCP6gavtb+xvknrHVVU2DO8vBaERoMS+3OHE9UI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=L4IwcYtp; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cs.umu.se header.i=@cs.umu.se header.b="KmCW2S4h";
-	dkim=pass (2048-bit key) header.d=cs.umu.se header.i=@cs.umu.se header.b="mW/+IxEt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cs.umu.se; s=dkim;
-	t=1786521783; bh=xRGQdgSKljfrW4uvKs52zlEfeenXY3xamy4HFZTkOiY=;
-	h=Date:From:To:Cc:Subject:From;
-	b=KmCW2S4hLvAIum0K/ZYTBR6L1snTXXHXZYlMcMfkA5eBqw+0+nvdlbq5OnF5PlayD
-	 e8COC5UnUY9iQfDMAxNwkILRJA8OtCQLaN1GwhI2OwAFRDQPFdvFBRUB2+3Uy2U6HP
-	 0MVyStU/GcstrM6rqqqtpGiwBg31w/0Yk8VZ8+IP2W/o9+4Qi5hl69PuwEyJrUOCEd
-	 6CQCIRaEsT3TZ1QgZd02e2QpPxDEDk2z3oOJ4BFjZGcUyQF2ODqf5ZkVk3zeGgJNGE
-	 6Tsey2g6BFWHDeqzgIqh7Ve6pFNfRFJXYRzFmNgrqWwGXU4PwXN9QXK9QWmycShdlY
-	 ay90pQ34Hl+WA==
-Received: from localhost (localhost [127.0.0.1])
-	by amavisd-new (Postfix) with ESMTP id 4hKgw75kBcz3D;
-	Wed, 12 Aug 2026 10:03:03 +0200 (CEST)
-X-Virus-Scanned: Debian amavis at cs.umu.se
-Received: from mail.cs.umu.se ([127.0.0.1])
- by localhost (mail-vm2.cs.umu.se [127.0.0.1]) (amavis, port 10024) with LMTP
- id ovcg_ptwD5Ke; Wed, 12 Aug 2026 10:03:01 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cs.umu.se; s=dkim;
-	t=1786521781; bh=xRGQdgSKljfrW4uvKs52zlEfeenXY3xamy4HFZTkOiY=;
-	h=Date:From:To:Cc:Subject:From;
-	b=mW/+IxEt229eYM3zXro57LrT/UPqM/tTtqkzsEoG9wiFgPp7BAeyUOJLCuehaqs0p
-	 qBSKf9OSFZHqH46gCxxmDw8IfXyBMcOEmNzaFQHMC54CrKOkQHFDwjektYnBLd/K+8
-	 QtU0Q7/VR2D2SBAuY9T0Phs77Cb1LoHTmek4h3tKVBxuAgvymU4TZ3fDFmCo5P2Izh
-	 WCOyNTcvPLD5kou+pZgs3ejM6piXG8AamT/AjWI8jFM3dYxsZpkMedWnDbufgfOFlu
-	 I4OOFHivkvU4MSoYBuI68UCnUXzwEARjOvNa4cMwJ5EMoY7osboDsMXb3XhGwPa0n4
-	 KeNgc0N3qcPug==
-Received: from cs.umu.se (luna.cs.umu.se [IPv6:2001:6b0:e:4036::88])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature ECDSA (prime256v1) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: mattiasa)
-	by mail.cs.umu.se (Postfix) with ESMTPSA id 4hKgw52Znhz2k;
-	Wed, 12 Aug 2026 10:03:01 +0200 (CEST)
-Date: Wed, 12 Aug 2026 10:03:00 +0200
-From: Mattias =?iso-8859-1?Q?=C5sander?= <mattiasa@cs.umu.se>
-To: Ryan Lee <ryan.lee@canonical.com>,
-	John Johansen <john.johansen@canonical.com>
-Cc: regressions@lists.linux.dev, linux-security-module@vger.kernel.org,
-	linux-kernel@vger.kernel.org, stric@cs.umu.se
-Subject: [REGRESSION] Apparmor deadlock in 6.12.101 in complain mode
-Message-ID: <anwotItY2-0WMbfn@cs.umu.se>
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="L4IwcYtp"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:From:Cc:To:Subject:
+	MIME-Version:Date:Message-ID:From:Reply-To;
+	bh=FOsbDIiKv0vNOMkm31uIgCuQq87hGoNH63/OPIvWnp8=; b=L4IwcYtpjpcItMyTTkTS0w69AT
+	+VPySXaN21UEv0G0CAUayUPEZAeYjM/0cAcnfWdiJyrj1K9smN/9fB+SOCsDCd+C5rg71JryxHU6M
+	Dq3ZfnKK/NGoIxDEikZvBLUfuNW7CSe0w3E/bgdvibFfiDnfJcv92oR2AfLs3pCYvru5cLO0vOD/y
+	7cfaccZtri5WzLdkQHSDe8q3pUIUGfwVAZymSXw3odABPdRZC/pUOWNWNVlPpkKPbuTLl7SMrI+F/
+	oBqZtiAJQgS0Y7rDIb31BUkR1z1QjMa1myKmoDgcxh9M+gkjHRuoo6sHLd/ZONHI/y5m0dp6/xDWi
+	NeYWpdug==;
+Received: from [81.79.79.1] (helo=[192.168.0.116])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1wu7HO-0000dF-GU; Wed, 12 Aug 2026 13:37:54 +0200
+Message-ID: <a9ee4edb-e763-4fd7-a510-32191df0cf8f@igalia.com>
+Date: Wed, 12 Aug 2026 12:37:53 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-Hello
-
-With the 6.12.101 kernel on debian13 we suddenly got frequent deadlocks in apparmor for our Apache webservers.
-
-It appears to be caused by the commit "apparmor: grab ns lock and refresh when looking up changehat child profiles"
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=32e92764d6f8d251c1bca62be33793287b453a81
-
-As of that commit the function change_hat() now takes the ns->lock mutex, and later with the lock held it calls a function that also takes the same namespace lock, causing a deadlock.
-
-So, security/apparmor/domain.c:change_hat() calls security/apparmor/domain.c:build_change_hat(), and in complain-mode that calls security/apparmor/policy.c:aa_new_learning_profile(),
-which also tries to takes the profile->ns->lock mutex.
-
-###########
-INFO: task /usr/sbin/apach:125024 blocked for more than 120 seconds.
-      Not tainted 6.12.101+deb13-amd64 #1 Debian 6.12.101-1
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-task:/usr/sbin/apach state:D stack:0     pid:125024 tgid:125024 ppid:2366   flags:0x00004006
-Call Trace:
- <TASK>
- __schedule+0x505/0xc00
- schedule+0x27/0xc0
- schedule_preempt_disabled+0x15/0x30
- __mutex_lock.constprop.0+0x41b/0x720
- ? srso_alias_return_thunk+0x5/0xfbef5
- aa_new_learning_profile+0x149/0x1e0
- build_change_hat+0x28b/0x3a0
- change_hat.isra.0+0x60e/0xd90
- aa_change_hat+0x301/0x620
- aa_setprocattr_changehat+0xf8/0x230
- do_setattr+0x2d1/0x380
- proc_pid_attr_write+0xe0/0x150
- vfs_write+0xf5/0x440
- ? __pte_offset_map+0x1b/0x180
- ? srso_alias_return_thunk+0x5/0xfbef5
- ? mutex_lock+0x12/0x30
- ? srso_alias_return_thunk+0x5/0xfbef5
- ksys_write+0x6d/0xf0
- do_syscall_64+0x87/0x1b0
- ? srso_alias_return_thunk+0x5/0xfbef5
- ? __count_memcg_events+0x53/0xf0
- ? srso_alias_return_thunk+0x5/0xfbef5
- ? count_memcg_events.constprop.0+0x1a/0x30
- ? srso_alias_return_thunk+0x5/0xfbef5
- ? handle_mm_fault+0x1bb/0x2c0
- ? srso_alias_return_thunk+0x5/0xfbef5
- ? do_user_addr_fault+0x36c/0x620
- ? srso_alias_return_thunk+0x5/0xfbef5
- ? arch_exit_to_user_mode_prepare.isra.0+0x16/0xa0
- entry_SYSCALL_64_after_hwframe+0x76/0x7e
-RIP: 0033:0x7f4719c279ee
-RSP: 002b:00007ffdb983ec48 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-RAX: ffffffffffffffda RBX: 00007f4719b15c00 RCX: 00007f4719c279ee
-RDX: 00000000000000d3 RSI: 00005610b4669ce0 RDI: 000000000000008c
-RBP: 00005610b4669ce0 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000000000d3
-R13: 00005610b4669ce0 R14: 00007f4719a8c660 R15: 00007f4719acd054
- </TASK>
-###########
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] drm/sched: FAIR policy causes serious performance
+ degradation at max GPU load on 9070XT
+To: Luke.Wildhardt@proton.me
+Cc: Danilo Krummrich <dakr@kernel.org>, Philipp Stanner <phasta@mailbox.org>,
+ phasta@kernel.org, "matthew.brost@intel.com" <matthew.brost@intel.com>,
+ "ckoenig.leichtzumerken@gmail.com" <ckoenig.leichtzumerken@gmail.com>,
+ "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <TfhgV1W0W5LI6RWUO6J35B3R8QIYH_FN3Eihzdo_9PH39hfn1AVByT-QBPHmWiAR-L0Kqi2sppM_EhFPKwZPGmb5pFgpF2MrzeFzkZDmpG8=@proton.me>
+ <cef49cf329737e0af12ef5a90dd21f31e113d4c3.camel@mailbox.org>
+ <DKL9VAWD2Y98.RBQPQUL7Y47F@kernel.org>
+ <6e2a207e-4db6-4d47-b1f6-9cb13b8d6eeb@igalia.com>
+ <enK0t0JrZ3lr9gmgPwE_YaVJDy7K355Bs0xy0YNoVwujLHCGWNRXCjDOhYfiHNGN3pPDSlEUIz3_UkXmFNAJNXxrJOIwvzAG-k8_p_D5FOQ=@proton.me>
+ <4OmZej9WiJ6-rsJ_lFcrmwtClAwMdN4oHXWH0p8FkIrhAn4LKS4O3q36wrdZrvjZHBNS8PZsvaIvR-1aFZfF2tDiy1cdMzTYNylcbGDQN68=@proton.me>
+Content-Language: en-GB
+From: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
+In-Reply-To: <4OmZej9WiJ6-rsJ_lFcrmwtClAwMdN4oHXWH0p8FkIrhAn4LKS4O3q36wrdZrvjZHBNS8PZsvaIvR-1aFZfF2tDiy1cdMzTYNylcbGDQN68=@proton.me>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
 
-Some more background on how the issue gets triggered for us:
-We run apache with MPM-prefork and apparmor has it in complain-mode, and a bunch of different vhosts configured with their own profiles in /etc/apparmor.d/apache2.d/,
-everything is fine as long as you call a vhost with a matching apparmor profile, but calling it with a hostname that does not have a explicit profile (ex the ip-address) causes an immediate deadlock.
-So with ex a vhost as "SiteName example.org":
-curl http://example.org <- works, no issues
-curl http://127.0.0.1 <- deadlock
+On 11/08/2026 18:59, Luke.Wildhardt@proton.me wrote:
+> I want to be very clear here, I was working with Claude Opus on debugging this issue. I am not a good programmer and work in on the hardware side of things, so this is only code I've tested and not of my creation, just hoping to be helpful.
 
-A quick workaround for our issue in Apache is to define AADefaultHatName globally so that it avoids the aa_new_learning_profile code-path,
-we have it set to "AADefaultHatName DEFAULT_URI" as that hat/profile was available by default in the shipped /etc/apparmor.d/usr.sbin.apache2 ruleset in debian13.
+It is really helpful and appreciated! Both that you found the regression 
+and that you are helping debug and fix it.
 
-Best Regards
-//Mattias
+> It appears the freezing (and maybe what I'll call micro freezing instead of stuttering) was resolved after an issue was potentially identified in drivers/gpu/drm/scheduler/sched_rq.c
+> 
+> I did a 20m play session attempting to reproduce the issue but was not able to. Previously, I could reproduce this on-demand.
+> 
+> I will copy the writeup it created and the testing we did below. I am only claiming that the freezing had been seemingly resolved, not a particular fitness or correct identification of the issue, that is for developers to judge.
+> 
+> Quotations are an output of a summery I had Claude create.
+> 
+> "
+> THE INVARIANT
+> 
+> drm_sched_entity_stats::vruntime is held absolute while the entity is linked
+> in the run queue tree, and relative to min_vruntime while it is idle.
+> save_vruntime() converts one way on the way out, restore_vruntime() the other
+> on the way back in. drm_sched_rq_add_entity() calls restore unconditionally,
+> which is only correct if the entity has definitely been through save.
+> 
+> 
+> THE WINDOW
+> 
+> drm_sched_entity_pop_job():
+> 
+>      spsc_queue_pop(&entity->job_queue);      /* queue now empty */
+> 
+>      drm_sched_rq_pop_entity(entity);         /* takes entity->lock inside */
+> 
+> No lock held across those two lines. A concurrent push seeing the queue empty
+> gets first == true, calls add_entity, and restores a vruntime that has not yet
+> been saved -- adding min_vruntime to an already-absolute value. If the entity
+> is leftmost, get_min_vruntime() returns its own vruntime and it doubles.
+> 
+> It persists: pop_entity then finds the pushed job, takes the next_job branch,
+> and update_vruntime() carries the inflated value forward. The entity sits far
+> right in the tree and is not selected until min_vruntime catches up, which
+> under sustained load may be effectively never.
+> 
+> 
+> EVIDENCE
+> 
+> WARN_ON_ONCE(!RB_EMPTY_NODE(&entity->rb_tree_node)) at the top of
+> add_entity(), after the rq lock, fires reproducibly.
+> 
+> That condition should be unreachable. add_entity() is reached only from the
+> "first job" branch of push_job(), and first is true only when the SPSC queue
+> was empty. A linked entity implies its last pop_entity() peeked non-empty.
+> Empty queue and still linked cannot both hold in any ordered execution. Fresh
+> entities are excluded -- entity_init() calls RB_CLEAR_NODE() unconditionally.
+> 
+> Instrumented as a counter instead, with ring and comm logged:
+> 
+>    idle 10s:      0 races /  5662 restores
+>    gameplay 60s:  8 races / 43315 restores
+> 
+>    [ 192.754604] vruntime race on ring gfx_0.0.0 (comm kwin_wayla:cs0)
+>    [ 226.882135] vruntime race on ring gfx_0.0.0 (comm kwin_wayla:cs0)
+>    [ 292.226032] vruntime race on ring gfx_0.0.0 (comm kwin_wayla:cs0)
+> 
+> plus Xwayland:cs0 and vkd3d_queue on gfx, and many more on sdma0/sdma1. The
+> gfx_0.0.0 / kwin_wayla:cs0 entries are the compositor submission thread on the
+> graphics ring -- the process that dies when the desktop freezes.
+> 
+> 
+> CHANGE
+> 
+> The principled fix is presumably to close the window by holding entity->lock
+> across the pop, which needs a _locked variant of drm_sched_rq_pop_entity().
+> I did not attempt that. What I tested checks the invariant instead: a still-
+> linked entity never left, so its vruntime is already absolute and its tree
+> position valid.
+> 
+> --- a/drivers/gpu/drm/scheduler/sched_rq.c
+> +++ b/drivers/gpu/drm/scheduler/sched_rq.c
+> @@ drm_sched_rq_add_entity
+> -	ts = drm_sched_rq_get_min_vruntime(rq);
+> -	ts = drm_sched_entity_restore_vruntime(entity, ts, rq->head_prio);
+> -	drm_sched_rq_update_tree_locked(entity, rq, ts);
+> +	if (RB_EMPTY_NODE(&entity->rb_tree_node)) {
+> +		ts = drm_sched_rq_get_min_vruntime(rq);
+> +		ts = drm_sched_entity_restore_vruntime(entity, ts,
+> +						       rq->head_prio);
+> +		drm_sched_rq_update_tree_locked(entity, rq, ts);
+> +	}
+> 
+> On stock 7.2-rc7 with this applied, freezes are gone against a trigger that
+> previously reproduced on demand, and perceptible hitching appears gone too.
+> The race counter keeps incrementing (35 in the last session against 295744
+> restores), so the window still opens at the same rate and is now absorbed --
+> the timing has not merely shifted. Extended soak in progress.
+> "
+
+Good find! I almost feel obsolete. Perhaps our new AI overlords should 
+make a pension fund out of the proceeds obtained by training their 
+models on the decades of our work so us old programmers can safely retire.
+
+Jokes aside, I agree with the above analysis that a better fix would be 
+to pull things under the lock, and interestingly, Philipp had a lock 
+widening patch not so long ago but I don't remember what happened it or 
+how exactly did it look. It would possibly have fixed this problem.
+
+Anyway, I have prepared a branch with the two fixes if you would be kind 
+enough to give it a spin:
+
+https://cgit.freedesktop.org/~tursulin/drm-intel/log/?h=drm-sched-fair-fixes
+
+In my testing it all looks good. Fingers crossed.
+
+Regards,
+
+Tvrtko
+
+> On Monday, August 10th, 2026 at 9:40 AM, Luke.Wildhardt@proton.me <Luke.Wildhardt@proton.me> wrote:
+> 
+>> Oops, forgot to reply all in my last message.
+>>
+>> I did a quick test of the patch before I left this morning, the freezing seems to gone, but when the GPU is under the same condition, the stuttering is more uniform if that makes sense. Granted this was only a 5 minute test but the freeze was rather reliable before, I can do more testing later.
+>>
+>> I know these things can be hard to describe, if that helps. If there's any profiling I could do or detailed logging that would help don't hesitate to ask.
+>>
+>>
+>>
+>> -------- Original Message --------
+>> On Monday, 08/10/26 at 06:48 Tvrtko Ursulin <tvrtko.ursulin@igalia.com> wrote:
+>>
+>> On 10/08/2026 13:45, Danilo Krummrich wrote:
+>>> On Mon Aug 10, 2026 at 10:28 AM CEST, Philipp Stanner wrote:
+>>>>> Reverted Commits:
+>>>>>
+>>>>> d09339388b77 drm/sched: Remove drm_sched_init_args->num_rqs
+>>>>> 2833a0512b4c drm/sched: Remove drm_sched_init_args->num_rqs usage
+>>>>> 16e7698bc04d drm/sched: Embed run queue singleton into the scheduler
+>>>>> 77a6809f1dc3 drm/sched: Remove FIFO and RR and simplify to a single run queue
+>>>>> 45c211ddf92a drm/sched: Switch default policy to fair
+>>>>> 2462a0ce23b0 drm/amdgpu: Remove drm_sched_init_args->num_rqs usage
+>>>
+>>> [...]
+>>>
+>>>> That might be the wisest thing to do; but let's hear if Tvrtko has an idea for
+>>>> a hotfix first.
+>>>
+>>> -rc7 was released yesterday; even with a working hotfix today it'd be tricky to
+>>> ensure the hotfix does not regress other drivers or workloads with 7.2 being
+>>> just a few days ahead.
+>>>
+>>> I suggest to not wait and get the reverts ready.
+>>
+>> Yes reverts would be safer. I have them in a branch at
+>> people.freedesktop.org/~tursulin/drm-intel drm-sched-fair-reverts,
+>> mostly straightforward apart from one easy conflict in
+>> amdgpu_xcp_release_sched. Smoke tested on Steam Deck looks fine.
+>>
+>> Having said that, the fix for min_vruntime handling I provided earlier
+>> in the thread also looks fine in my testing and is simple. No
+>> regressions found with synthetic unit test workloads or messing around
+>> on the Steam Deck. But we need to wait to hear from Luke since I haven't
+>> been able to repro his report locally yet.
+>>
+>> Regards,
+>>
+>> Tvrtko
+>>
+>>
+
