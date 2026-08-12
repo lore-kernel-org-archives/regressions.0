@@ -1,110 +1,116 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [185.244.194.184])
+Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8250441A504
-	for <regressions@lists.linux.dev>; Wed, 12 Aug 2026 11:58:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.244.194.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A3112C0F6D
+	for <regressions@lists.linux.dev>; Wed, 12 Aug 2026 11:59:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786535912; cv=none; b=PRdaYcoqkEK5o1fc5/BjMAvy5PRZsWN2s11w5rfwviYdWP5FzL5DKmRXE/Fducuvkgr93mO53f9ZnjArUWeGr9+acU+1/U5s4tLWm/ipIgMgWIlYjLK6TzirIWk4l/rfQ6oC3h6f4otOPncsnU6P7VV3Eb7vGAfBJuktWhguRKs=
+	t=1786535948; cv=none; b=VvfwhVDPqvWIshFr3UJainlV3qZj79E4h4fyuQdI4J6OWpaPTwo3W3THtz1858J+rCkW/o4zdQVojn09n7hD7SRRXIzDuSZqsWSFXWpHS/7GgEf8YbQAgX4dnSRdld3+mMtHCqJdMQGu1yIl/kA78A1kbO6Y1N0AWb/S3d5TwXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786535912; c=relaxed/simple;
-	bh=bvmb/TiVePQoacyNeg/EPqKiK1zhRGjv56Pw0yKl1ro=;
-	h=Message-ID:Date:MIME-Version:From:Subject:Cc:To:Content-Type; b=gmZ3tF+05/U4xIySdO3YDbrCnKlFNKEvWBh/2WN0BZcLrxzNS+cZ45NnMqxNTWqn3gXyvSD1fd8Fsyqmpt/+RUFKolaM6Ik6reFMo+Z1h4SIosMK/glr3r1M7SfdOnYM9qteaD8BXkqRiGgIRTU54qBHvdWP6diQz2hrR2xzigw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=dGO+XS8p; arc=none smtp.client-ip=185.244.194.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="dGO+XS8p"
-Received: from relay01-mors.netcup.net (localhost [127.0.0.1])
-	by relay01-mors.netcup.net (Postfix) with ESMTPS id 4hKn6y71pDz975C;
-	Wed, 12 Aug 2026 13:57:46 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1786535867;
-	bh=bvmb/TiVePQoacyNeg/EPqKiK1zhRGjv56Pw0yKl1ro=;
-	h=Date:From:Subject:Cc:To:From;
-	b=dGO+XS8pj4A9/os5e6AyArwGHyKLPUo3EmyqtG5lmEWNGAr2/LUeAZkdc2dIuLirH
-	 EoM4YhRh7hQeh79a8k6p0XRjA0M8zF0IPJmchegA2V9QK7g8H5FXW8ahS++JK5YUia
-	 kDmCa+l9NWZ13KanM7NNT8aczltPUsmbJ9dthgpPTspVMnl656CXHPrtm15hZl8a/Y
-	 uqSy6FzOclUlAmLNVyJ+f828dbIvWzQ8ljlpr3EXyM9OX8uZgF2T+w3N5VCgYNNOlG
-	 aGwHC3ZlxlshfUD4e94M+B8SxrFn2+YDIO4IBTHHoNB5W2yBmQ8HNXiYw4bm5Lr1Yb
-	 nT/MM1Fx/1ebQ==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by relay01-mors.netcup.net (Postfix) with ESMTPS id 4hKn6y6JDVz7xHY;
-	Wed, 12 Aug 2026 13:57:46 +0200 (CEST)
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	s=arc-20240116; t=1786535948; c=relaxed/simple;
+	bh=ab/dspLni/b4dv8Ay9tnmQw141OhuiHs+HpEf0JrbD4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=eQ/OUz1brsS7YXrHXm8LeFK7e4bSapN3iXyvraYpYiOPuCJjdL4SkhkF6MQKUf3xjBttQsvI+KSKZPs7VUI23/jTZvvRAdl3eJ8wL7cMmgHfpLpu9D3IoSZhvV8uAn+8He/jSJO7l4Tlzcy5FqtEwvBfNPlJxYiWAHDBA0ag9M0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; arc=none smtp.client-ip=80.241.56.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+Received: from smtp202.mailbox.org (smtp202.mailbox.org [10.196.197.202])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4hKn6x5YWHz8sZg;
-	Wed, 12 Aug 2026 13:57:45 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 7C2555F960;
-	Wed, 12 Aug 2026 13:57:40 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <7e66ca09-fa70-4a3c-948a-0c46b268655c@leemhuis.info>
-Date: Wed, 12 Aug 2026 13:57:38 +0200
+	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4hKn8L1qlzzKvxn;
+	Wed, 12 Aug 2026 13:58:58 +0200 (CEST)
+Message-ID: <932892b196f7bbba7f5e9bff22f9b484854aaccc.camel@mailbox.org>
+Subject: Re: [REGRESSION] drm/sched: FAIR policy causes serious performance
+ degradation at max GPU load on 9070XT
+From: Philipp Stanner <phasta@mailbox.org>
+Reply-To: phasta@kernel.org
+To: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>, Luke.Wildhardt@proton.me
+Cc: Danilo Krummrich <dakr@kernel.org>, phasta@kernel.org, 
+ "matthew.brost@intel.com"
+	 <matthew.brost@intel.com>, "ckoenig.leichtzumerken@gmail.com"
+	 <ckoenig.leichtzumerken@gmail.com>, "dri-devel@lists.freedesktop.org"
+	 <dri-devel@lists.freedesktop.org>, "regressions@lists.linux.dev"
+	 <regressions@lists.linux.dev>, "amd-gfx@lists.freedesktop.org"
+	 <amd-gfx@lists.freedesktop.org>, "linux-kernel@vger.kernel.org"
+	 <linux-kernel@vger.kernel.org>
+Date: Wed, 12 Aug 2026 13:58:54 +0200
+In-Reply-To: <a9ee4edb-e763-4fd7-a510-32191df0cf8f@igalia.com>
+References: 
+	<TfhgV1W0W5LI6RWUO6J35B3R8QIYH_FN3Eihzdo_9PH39hfn1AVByT-QBPHmWiAR-L0Kqi2sppM_EhFPKwZPGmb5pFgpF2MrzeFzkZDmpG8=@proton.me>
+	 <cef49cf329737e0af12ef5a90dd21f31e113d4c3.camel@mailbox.org>
+	 <DKL9VAWD2Y98.RBQPQUL7Y47F@kernel.org>
+	 <6e2a207e-4db6-4d47-b1f6-9cb13b8d6eeb@igalia.com>
+	 <enK0t0JrZ3lr9gmgPwE_YaVJDy7K355Bs0xy0YNoVwujLHCGWNRXCjDOhYfiHNGN3pPDSlEUIz3_UkXmFNAJNXxrJOIwvzAG-k8_p_D5FOQ=@proton.me>
+	 <4OmZej9WiJ6-rsJ_lFcrmwtClAwMdN4oHXWH0p8FkIrhAn4LKS4O3q36wrdZrvjZHBNS8PZsvaIvR-1aFZfF2tDiy1cdMzTYNylcbGDQN68=@proton.me>
+	 <a9ee4edb-e763-4fd7-a510-32191df0cf8f@igalia.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: de-DE, en-US
-Subject: wifi fixes that might be good to have in 7.2 final
-Cc: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,
- Nicolas Cavallari <nicolas.cavallari@green-communications.fr>,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- LKML <linux-kernel@vger.kernel.org>,
- "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
- netdev <netdev@vger.kernel.org>, Devin Wittmayer <lucid_duck@justthetip.ca>
-To: Eric Dumazet <edumazet@google.com>, "David S. Miller"
- <davem@davemloft.net>, Johannes Berg <johannes@sipsolutions.net>,
- Paolo Abeni <pabeni@redhat.com>, Jakub Kicinski <kuba@kernel.org>,
- Felix Fietkau <nbd@nbd.name>, Lorenzo Bianconi <lorenzo@kernel.org>,
- Ryder Lee <ryder.lee@mediatek.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: 
- <178653586107.1439299.11653628339469674671@mxe9fb.netcup.net>
-X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: 7C2555F960
-X-NC-CID: 1NwMoK8I3ZVzD21OQrVtGqKGwuDzwniGHhZtSLj/0tLP6qHZePQ=
+X-MBO-RS-ID: c458c48d41946d84b5f
+X-MBO-RS-META: 4gth8jcm81u5wkqkmj6m45i1ad48gjpj
 
-Hi nt76, wifi driver and net maintainers, just a quick FYI:
+On Wed, 2026-08-12 at 12:37 +0100, Tvrtko Ursulin wrote:
+> Jokes aside, I agree with the above analysis that a better fix would be=
+=20
+> to pull things under the lock, and interestingly, Philipp had a lock=20
+> widening patch not so long ago but I don't remember what happened it or=
+=20
+> how exactly did it look. It would possibly have fixed this problem.
 
-I think it would be good if the following revert from Mikhail (CCed)
-could make it to 7.2, as the 7.2-rc regression it fixes was reported
-multiple times over the past few weeks -- at least seven times iirc:
+https://lore.kernel.org/dri-devel/a0d969408a5a55dfb6d0b3e65906fd7bbf3eee1c.=
+camel@mailbox.org/
 
-Revert "wifi: mt76: Disable napi when removing device"
-https://lore.kernel.org/lkml/20260804120004.523934-1-mikhail.v.gavrilov@gmail.com/
-https://patchwork.kernel.org/project/linux-wireless/patch/20260804120004.523934-1-mikhail.v.gavrilov@gmail.com/
+TBH I got discouraged and increasingly dissatisfied with the state of
+our community, because whenever I try to fix things that are
+*obviously* broken and incorrect (and which were usually not broken by
+me), with relatively simple patches, I have to work uphill and only
+receive pushback.
 
-See that lore thread linked above for the details. The revert is sitting
-on the list for a week now afaics; there was an earlier attempt to fix
-this, but it was abandoned due to problems.
+Reviewers and supporters are usually absent unless they want to have
+more features or performance-hacks added, though it is apparent that
+many indeed read what we are doing.
 
-Note, as mentioned by Mikhail in that thread: that revert apparently
-reintroduces some WARNs which a separate patch is supposed to fix that
-Nicolas posted yesterday after coming back from vacation:
+Should things get better it's usually not acknowledged, and should
+things go wrong one runs danger of getting blamed with hindsight-bias.
 
-https://patchwork.kernel.org/project/linux-wireless/patch/20260810154923.32546-1-nicolas.cavallari@green-communications.fr/
+Had my patch landed and (speculatively) prevented this regression, no
+one would have noticed, but Phoronix would write some nice article
+about the FPS gain in video games, achieved by Tvrtko Ursulin :)
 
-Ciao, Thorsten
+Ah well.
+
+My vision for drm_sched has been that we absolutely need to start
+establishing strict computer science standards and have to prioritze
+formal correctness, simplicity and documentation over features and
+*especially* performance.
+
+Though I maybe should have tried to be more polite and diplomatic about
+it, the evidence that I see is that the DRM community does not actually
+want the above. At least I have to conclude that from the lack of
+encouraging participation and the presence of discouragement.=C2=A0
+
+So if I want to add a spinlock for something obviously broken, the
+burden of proof is on me, not on the one who broke it. If I want to
+prevent someone from adding a 4th drm_sched_start_x() function for
+performance-reasons, then I receive not-so-nice emails.
+
+Folks here seem to want to continue like they did for the last 15
+years.
+
+If anyone here reads this who *doesn't* want to continue like we did
+for the last 15 years, then I would kindly ask for public participation
+and help with moving things towards the right direction. Simple emails
+with "I support this idea, +1", would almost be enough.
 
 
-P.S.: I wonder if "wifi: mt76: mt7921: refactor regd update to fix
-recursive mutex deadlock") (which is as 1f83a8378eb26c in net-next /
-https://lore.kernel.org/linux-wireless/20260629083543.153564-1-jb.tsai@mediatek.com/
-) would be good to have in 7.2, too. From the description of the 7.2-rc
-regression Devin Wittmayer gave in
-https://lore.kernel.org/linux-wireless/20260804185118.19705-1-lucid_duck@justthetip.ca/
-it sounds a lot like it might be wise to have in 7.2. To quote:
+It would seem that these recent event might proof that I was right
+about our fundamental issues.
 
-> [...] wpa_supplicant blocks while
-> holding the wiphy mutex, so NetworkManager, the cfg80211 workqueue and
-> new ssh sessions pile up behind it and the machine has to be reset
+
+P.
