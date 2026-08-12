@@ -1,81 +1,112 @@
-Received: from mta0.migadu.com (out-78.mta0.migadu.com [91.218.175.78])
+Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A7BE472F63
-	for <regressions@lists.linux.dev>; Wed, 12 Aug 2026 15:58:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.78
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786550300; cv=none; b=RzsWmxIjoT0fbGqKARsM8m5Su2WEhlCd6uEVTWyqf9kfwXbvleyjL/Tt3IIWABo8XeMmaIU4PvqpmBXG2lkAcodrqAVWLBSVHthGQm6D9Z2zye24LouNXm/kts2Ecc2uvI+rIc41LC2ZzyVTZWDbC4/84BSQI7ZI7ctFu0Qt5+Q=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786550300; c=relaxed/simple;
-	bh=6Om2oyAaZk+iPjfVlIinvElzTUwWq7tFMyDXcSXpRl4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LvVQ8qWhCVdMUQYNz0Wn+4ayYdItNG0YSrDNIx/z7lscTZqMiv4k+NHVWS0Gi9El8kRgt07aKKLh2yxD8uJXugWOlxlzrZcAgHrs/vuprxNqNngLUmlugyVZCW664dOZUqPgPwHWTE5C6KIWO2GiljZKtvzQ2Ta3+M0nKjwiHIY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=justthetip.ca; spf=pass smtp.mailfrom=justthetip.ca; dkim=pass (2048-bit key) header.d=justthetip.ca header.i=@justthetip.ca header.b=AjuvSxgl; arc=none smtp.client-ip=91.218.175.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=justthetip.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=justthetip.ca
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23556397E8E
+	for <regressions@lists.linux.dev>; Wed, 12 Aug 2026 18:08:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.128.178
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1786558130; cv=pass; b=dSKQBDMa99KfYCwZfedBGqwp33o5HAOa5c8JZWcM78T7N4xco3p1BDFZ9iovVQE1yVaoZsUhrKvbrdEN9oxDzDmNo2hQkHBeiBESkdmMvAyNxFjkYgHg3mTC4YLeGrWSb67JQsK4y9ji41J0nwX0mqbImwtSuRksxUZlxgUUeBs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1786558130; c=relaxed/simple;
+	bh=tDAznMRjGGoRXEXLcatNnbfYk03GES+TYl5AHVXiJEA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cNbOLRrl0SWyTBMoqWYclMnhUbHfVHvwjTOLq3zHXQI4mZ+Sf2KpYPWS1ezZAe4JydsIgAkRKGZr9qsFP3g5Rq7sQOVGN5/wi99sjEdHr3ipbgiBAuecCDBnQ81oABy9EnPjT/T112GhNsGrliwNXpn8oWJ8TJMgaclBpGyuIvU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c9FXoycp; arc=pass smtp.client-ip=209.85.128.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=justthetip.ca header.i=@justthetip.ca header.b="AjuvSxgl"
-X-Envelope-To: regressions@lists.linux.dev
-DKIM-Signature: a=rsa-sha256; bh=6Om2oyAaZk+iPjfVlIinvElzTUwWq7tFMyDXcSXpRl4=;
- c=simple/simple; d=justthetip.ca;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1786550296; v=1; x=1787155096;
- b=AjuvSxglkZEOnt/kOKtWUDoLzw1uZi3t6RFYCWmZIv4rqT+DOKE0suU5kKnDKR3foFWjXnVM
- nK/Prp9z9zMEiiSSqS+SJ/Ax7uRkhBRFCrXxKYv2k0NrZceaQEBExu6iesc/jXIs+qb8Kk4uEQ1
- d8ybjyM+xuCZtRK2m4I8GbDxfUtyhfz+w2yuV+YEKnQKnY7RvtxUkPjPtWetmTNWOhUPhKJT6US
- 9l6VHK5AxHTxzY1qonDoDS6HqPy94bY1Wx/Pk7G78n9ZLnv4BuIUII6CxDEVB5mlSzJVmtBbSYI
- hcnJHnqaEcmys1MrE6TLZ0WSyGIGkt8QGoW/QDXsCP9xg==
-X-Envelope-To: regressions@lists.linux.dev
-Received: from fedora (2001:569:be59:c500:b340:3f2c:4486:21c1)
-	by smtp.migadu.com with ESMTPS id 6eb947314bb2fb15;
-	Wed, 12 Aug 2026 15:58:16 +0000
-X-Migadu-Flow: FLOW_OUT
-From: Devin Wittmayer <lucid_duck@justthetip.ca>
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Eric Dumazet <edumazet@google.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Felix Fietkau <nbd@nbd.name>,
-	Lorenzo Bianconi <lorenzo@kernel.org>,
-	Ryder Lee <ryder.lee@mediatek.com>,
-	JB Tsai <jb.tsai@mediatek.com>,
-	Charlie-cy Wu <Charlie-cy.Wu@mediatek.com>,
-	Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,
-	Nicolas Cavallari <nicolas.cavallari@green-communications.fr>,
-	linux-wireless@vger.kernel.org,
-	netdev@vger.kernel.org,
-	regressions@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: wifi fixes that might be good to have in 7.2 final
-Date: Wed, 12 Aug 2026 08:58:11 -0700
-Message-ID: <20260812155811.10950-1-lucid_duck@justthetip.ca>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <7e66ca09-fa70-4a3c-948a-0c46b268655c@leemhuis.info>
-References: <7e66ca09-fa70-4a3c-948a-0c46b268655c@leemhuis.info>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c9FXoycp"
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-81eaf3709b4so17776547b3.0
+        for <regressions@lists.linux.dev>; Wed, 12 Aug 2026 11:08:48 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1786558128; cv=none;
+        d=google.com; s=arc-20260327;
+        b=KkdvfDXFRTI+Kd+baK50JM7LnbqxHqrspWdkhHrZhPmA3MgSU/VC8T+zeYfYLh9K0b
+         WagBN4sMkEA93l3ORr7PCxAy4YrbRiKoE9x60fVMbP0tf69YiYOZ3pLyc0nu5daLY5u+
+         LbHThKU1xMp2nV8Beriro67QbBJctKo0ioHU/xQsyOeit736MP6i34rQpkCCOe8CzD7N
+         hvVAMJT0EbR88mEzGnfJb+l9BtYtPC+8/A34L66kHm9L3iBYZLFGyTPA1T1OBh2OTzcz
+         mlYE6MVxxgUflMs9H/bCmcMb3k9zl7/FbU6rHuCnPz+GT/3GQHmVnLpNRr5ebWZbaVPf
+         iQjw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=tDAznMRjGGoRXEXLcatNnbfYk03GES+TYl5AHVXiJEA=;
+        fh=FJb0w15yvkjR6ozclqjnEl9YpaDMXC/kQt6ekfN05Lo=;
+        b=DccsdPIelmv+2QjUkPWfMPNHC2B+UZDRZtoMjc7bB1xaQ8pFGsg7Q1jz2FYl7rnhUJ
+         w3VF/IgrtT1IEJ710fdYjVvFBT6d9dQoWff3Nejgkc37nlmE4JnZFXYWefulUUBPk8w4
+         Xs4kDKQlIYkdFR/HIkH7oagq9DBHO4LHa7ymaHiccw/RqKyKfsBxLrKl1mtlTePmpbst
+         UaLF1x7gy3Wqicmy/Cfe0pOIWNig+YYsQmyj0gqK6PYxKIUrFob8H+1rFwLhocf6Ed2V
+         H4yBhq2A9PoOd/BXW0tceHH5Z12/MlcDgz7ClEzUtizgA13x9SuEwNVvRm/CD09A7E9A
+         wV0g==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1786558128; x=1787162928; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=tDAznMRjGGoRXEXLcatNnbfYk03GES+TYl5AHVXiJEA=;
+        b=c9FXoycpiJmCjGKHmX582Gfq2D4VZj+qbtZ5FccMzdMsLYJWdso16dK4SjrckkK47K
+         Fit8cIvWa55Jbc3tAH6ivCrz/waRNyNLGsBanlWew0G6iZ/94UeaDL8J/Jvt6YUiWi8z
+         W5qDeDlOj+ybL3e6tshQwt3iFFb3RxE0aOxo7rb3huah5Hurc1cx6ugP2w+aM4KyFA26
+         1Ed2fLGE+QC0PL0sXkHvzT3u1pM87KnS3VTPYhusmznprfSlrdtQbrAQ8hacw172b7YD
+         0KcXNMtITtc4UYxGPrzqj2wXBrm3jEIEsVh6KKJw7+RHi0hDU5CokMQsQ31tcyEGbqo3
+         0rMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786558128; x=1787162928;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=tDAznMRjGGoRXEXLcatNnbfYk03GES+TYl5AHVXiJEA=;
+        b=sNOSqCZuZleW8Y7ffLUDhSor+F6Np0JCanz7bhuNQ4Sa/we7Ez8Act5BYBvYmJ3RBT
+         0+8+mt28iR2NRVTYjlxJ2PfDqNNoHjCdVtNKtVYNm1V3YhXm6+OdCnr2537zbJ7Ys4S1
+         Adb/5SFfVbghb4kopldprTRfSYcJxQxS7elyMG7J//vaAbmvTNs6jq3RYTHavzauD1lt
+         x0Y8eUFuOdW5mmMbgilW4PGRM0UpGB/UNreS+L/IeTgVBIqxV1JxG/b3QseRAAU0L/9m
+         TXcIyvV3I/p5YoHzpS0jXkZgvqIVouKg7PfEkaXOzuDKyk72NrAfM8wYrClZM27jmKWn
+         VxqQ==
+X-Forwarded-Encrypted: i=1; AHgh+RopO1cOcdgOZ4SLryFmYjBL7s60/l+ngK51DA7uq0gZx37dxx1LqUHgqGR/dssfNJbM8DfOZpvcVP9Rkw==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxO/3MYxQfIGT+W7ysAw8lW2uUYA4SgyOcaM+pIVe3MQYE4l+Yj
+	/H+QPSw0eVinBrGo6/KAH5+x7NJDcqkMthSZVLOKnVmc/SUeCgCsVAE47K4zP64A2xH4SWlTbaC
+	OyZm+xlOxTHXgR5k07WoTrLbqZ1ggGFs=
+X-Gm-Gg: AR+sD12uY4iBhz8TMYF3OvR3UerkJ4CgkboF4ljRxmnOjnJo0T1WUIGGRtPaM6tKxZd
+	pxzBpBCsjAZVYsVe3RhRc4CA0ztxFPr9uHi4qdVeZ1wnEAipIwGAdGlKaCCEzP5i0lScDwF0oEv
+	KbQpJkuRdqPP3zDivJtE5iIjjuwyGv/eQ9YIl4slOpZwMzZ2LAAPVHSLxhuolwnBcR776E0XKZO
+	DmitYZpewcbwtQ6CXFrvRym/c4LWj15tAMDZWGA5bAJyhjZksBFXt6R2tbXp/jPD3gB79Mf4NIl
+	eMZIA9BFq/3pz1gB3jYasmd2aapaofpq4MaivcYs4MVqO7ixAf1Lp/+l9J44YWpITYpaNotAVce
+	g
+X-Received: by 2002:a05:690c:f08:b0:80d:c24f:b790 with SMTP id
+ 00721157ae682-83103c1b43amr32915937b3.5.1786558127896; Wed, 12 Aug 2026
+ 11:08:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAJOGg3z6LJPDsdPNBxajgy8_wQxfhYBRxe4EiurZf3kPU5A5Bw@mail.gmail.com>
+ <annvXXwcLfD2NQDU@kernel.org>
+In-Reply-To: <annvXXwcLfD2NQDU@kernel.org>
+From: Julien <julien82453@gmail.com>
+Date: Wed, 12 Aug 2026 20:08:35 +0200
+X-Gm-Features: AUfX_mwsjbdH1Tfa1xTcWeM-qjIO-NMhf6HDOGI-dyH3wm8OSe-uzSuRj50grMw
+Message-ID: <CAJOGg3yt-0NxFtD1JHEuVwKhuMDBVDc3wyV-p+ZGkk_C_WU=Fw@mail.gmail.com>
+Subject: Re: [REGRESSION] no TPM device after "tpm_crb: Convert ACPI driver to
+ a platform one"
+To: Jarkko Sakkinen <jarkko@kernel.org>
+Cc: linux-integrity@vger.kernel.org, regressions@lists.linux.dev, 
+	rafael.j.wysocki@intel.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 12/08/2026 13:57, Thorsten Leemhuis wrote:
-> P.S.: I wonder if "wifi: mt76: mt7921: refactor regd update to fix
-> recursive mutex deadlock") (which is as 1f83a8378eb26c in net-next [...]
-> ) would be good to have in 7.2, too.
+On Mon, Aug 10, 2026 at 5:33=E2=80=AFPM Jarkko Sakkinen <jarkko@kernel.org>=
+ wrote:
+>
+> I'm coming from holidays and catching up with matters.
+>
+> Is the issue still valid?
+>
+> And don't worry about be first timer if you have actual problems.
+>
+> BR, Jarkko
 
-It is the same bug, and that patch fixes it. I ran it A/B on an MT7922
-with mt7921e, swapping only mt7921-common.ko: stock deadlocks on a 6 GHz
-association, patched associates at 5975 MHz in four seconds with no splats.
-
-The fix is in wireless-next, not in wireless.git. v7.2-rc7 still takes
-dev->mutex unconditionally in mt7921_mcu_regd_update(), so 7.2 ships the
-deadlock unless it moves trees.
-
-Nothing is owed to stable: e88098133ed4 is in v7.2-rc1 and not in v7.1.
-
-Devin
+Yes it was still in the mainline kernel I tested a week ago.
