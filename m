@@ -1,117 +1,140 @@
-Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.cs.umu.se (mail.cs.umu.se [130.239.40.25])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10C572FFDFC
-	for <regressions@lists.linux.dev>; Wed, 12 Aug 2026 07:23:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.210.53
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786519431; cv=pass; b=XRgtjzkzj+Vw3eP44tSQtENjbW1lef7G4DQOew4HWqd5Z+b2sd9i/l328jjiKN8srekoV66/LTDiPyX2XNgTJqzJp3l/e4pZXWdenYHdc7g0IO0vQZI+dBS6ZsGxu4YN1ksvPiXgCdRQ0G7wpkc8YpOkfzzr5xUz/6/lex2QbVA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786519431; c=relaxed/simple;
-	bh=lPE2CLxAbZbntiAzIEzsCiAb8fZRvxGUGyest/89SrU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SKSDLG/YmDN52Mf+BWK3EySdiX8iw1OTmi5O5bj8e28fQVR1LZk1iKkddnuzOWmhUmCbh752bBI+2amn2i6YkMZVNmmWPnfhdAiRr73ZAS2mCHU14cGowRZW/dI+fgzrea4PkRds22mziRs5h84KhaevmBd8WNXtiPu0EVvWX2Y=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UStUYuhw; arc=pass smtp.client-ip=209.85.210.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D905737E5C4
+	for <regressions@lists.linux.dev>; Wed, 12 Aug 2026 08:11:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.239.40.25
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1786522305; cv=none; b=HDFNJlp7yh1AvqyEXr8Uz9tuPsbP4x1PB9xrV0iv1CXZErsnwxkiefSPEtsVjF1hSTsy3Wy7t4ax5LYFY2gvxa8UlSdcF79rKmF/stcD1NNSTBgTx88mSUkJb601r9lLb/8bCdun3J2cufPWJSqWAZZ+xzu910wU+sMUIQ4nx/o=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1786522305; c=relaxed/simple;
+	bh=xW9ZMoYBeKafn0p84RZA5pYECw33ih6ciERBSSF4w3Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=l7I4sWQii07ous41tPuoP3jpSDG8NIW/CXyKnl3Znq11sp3ZEgRN7rHy1slbrvrCx31BZE2thHc+MQzTiQTa4bat9gpZklnuRYwxiNitoDte6K/h+jjuZcxafoyws7QA+73sjqYnYe9baUAMGvvk9DBnABifKzHmCFp7h/oi3LI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cs.umu.se; spf=pass smtp.mailfrom=cs.umu.se; dkim=pass (2048-bit key) header.d=cs.umu.se header.i=@cs.umu.se header.b=KmCW2S4h; dkim=pass (2048-bit key) header.d=cs.umu.se header.i=@cs.umu.se header.b=mW/+IxEt; arc=none smtp.client-ip=130.239.40.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cs.umu.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cs.umu.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UStUYuhw"
-Received: by mail-ot1-f53.google.com with SMTP id 46e09a7af769-7eb61bbeb25so583446a34.1
-        for <regressions@lists.linux.dev>; Wed, 12 Aug 2026 00:23:49 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1786519429; cv=none;
-        d=google.com; s=arc-20260327;
-        b=mLF5OThCUI0fOACrF8/sCtZrYh7PU9yRF6OcD4DaIAcbouuRZnp/u0PgiOOnsNeJQG
-         9t2C+zT5kyQkGn+AGTGF/fhO8kPSPZrLKvr0LjNWQc+eLmZ8BQXWZu7LOQ9NDgxK5dJS
-         JRnG4Z6J2L9eRzHwaxvGV0r/38JT1y6s1M+5c7Hc02e8o39855Wb8pwIy05PT6PAJz4E
-         +3tXlC4z5DTHy68lljU553dL0q93C++htDNs/Ir6jW1O1AEGJkwMh4lHc48soVs1yQAa
-         g6yMmPM0mX4FrVfrSz+XDnw2mZJN11PhAEZcMR27wQcYhjJyvRlc8M1wqsPJkRrCJsgx
-         bgVA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=lPE2CLxAbZbntiAzIEzsCiAb8fZRvxGUGyest/89SrU=;
-        fh=FFpPSLVu3mz5Rc946f7j5JLly+o59+NerHxnq6GWl9U=;
-        b=dgwkh6ORDQYQBQW29yJTPudV489Wk6Jfa6lQzHIOKL22tv5M5FYQmq6vwwxQRg4HeW
-         Aw6jCvEDH/eKOkbNG1y+LGhT2kgMukfD+FXrrHfxs3eUHCFLbJCObY3QacEXNVAHUCPG
-         9x6QRGJbbM440y/wm72abPfFOIwOM5FGkE2V4Qnhut96TLAY8afE65S0UHqI6ZGmecdn
-         3c5VBsBbqAg5gA89aZZ0XSB4A5BOuYO/AQ3UPiDjU3suTqn2c60d3Bq0o757IC8ZKE4s
-         urMaM8PTVh2N+w+jAf8+od7eNHof+YKaigrJelnVZPdKXvdG7lTvxnz296N65BdQaJx1
-         Jgsg==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1786519429; x=1787124229; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=lPE2CLxAbZbntiAzIEzsCiAb8fZRvxGUGyest/89SrU=;
-        b=UStUYuhwVjqyIVU6Vv9pI6KhcyyKZjWgwD2qnBMyrSvtaig8Hk+v15YeM1KKWcbqzF
-         7jRpY/2fSH/haPkp/y3B/t/OfyllBDWrK/SPqazgUQSHVXZYETI/gkwkyTFkbzIUhIsO
-         0RqSPtE1NBzxoye/mPoWWMH6W/ZOSd3Z8TLqj3CssF0xJ2J0EPnhrbowMObATnQWiFcQ
-         PbNnI4GcVe0aalMsoyjdrXxy6TRGvPKYYbpJy6uPxbBPlmXI95vhuuYprYG6YfFMcGJh
-         J6oP2GtDSi4SbUIvYYWG70hexMtspPwDl6UX/epSBeuT++9IxkwFDZjaUJrBrjnCJb0W
-         lRyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786519429; x=1787124229;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=lPE2CLxAbZbntiAzIEzsCiAb8fZRvxGUGyest/89SrU=;
-        b=tVpWSbzRqu/oQC19xj8Xe4uqW7vytapV+0zRc96RSoTsbL1lAiPWMdZiSlbhfi9cgr
-         Pk/jI+5eUaGXepsgH/RsyApQbs492pumL3YgFssD6c8+x/+N376WPyae2pbcqweh9H+Q
-         Vd6cSlQpWIUkkhCr1JrVUcRxHpCTpV2TD24WNu4xVdL+fjPC3qgcd/ReyibrBfav6gds
-         TM1avz3A2DdmalLiuIAz21SUZ6lQ5vLAa4t7RBeHpGC0ZLiEmGLz7Vvt6d3XdstHv4Ki
-         NC/te0sBYkNjYJH00cF38yep13aA0GCwKhA/wMFGqksMHGFU4nzTr76Y235ujQtrwVUc
-         yVaA==
-X-Forwarded-Encrypted: i=1; AHgh+Rp9Hb70fsrp6/y3AujvhBSy8gNSw3hCNsU6BKJt+dDVV8GmHU9G9dr+G+IExW09yx+P8nxRCF8qwpnUoQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yy2eG6XatorkTy3VWZJd1TZZRhJjVV0/KXHXyb50okrfSUkq68c
-	AzNnb7/LB66I1kwpy/0I7g4oC8zoPWAVEIPro+8TxORAk27wFj4ML4LD83PuKE/RFZywmRYQ276
-	DAccsAsIPaSCbqx+0NgLYayAq2e8rdic=
-X-Gm-Gg: AR+sD11dyDYF9CyufFy/scKpaS4xKdkpGxfvj2/BFBJ2G1eLPioe9piC4jtfW3JTA/2
-	LASOz9loG/KiReWeBdqu82i0tpOWxtL4J+SOh2jnvNgsyfcY1Fqr+X/hSyB820/jq6n5mNJNd9l
-	HqL/vCRuGwp/XqJw6QqcwLVZUEUUnWrhnljtczCMar+BiZMQcDW1SMvpMhc6HjOd1qdB+q2CMrU
-	UpLXQ/ldvgOS731gHx546JCRhnZFLf56272OGK25sgONgnstx55i6CgnQm/3d0dfbXZuhL+jPls
-	wUWvXoM0+MQhVmwYsv8tm4PxiL2gDg84j0u16ANYvhhw0ToadKfkn4KjTStzjKuiT5SNv1GWjRJ
-	QJlqGdvyXU193PNbjf4p1dEjEojH/JyUGfGy6
-X-Received: by 2002:a05:6830:6a99:b0:7e9:d4b5:8004 with SMTP id
- 46e09a7af769-7f3b7703ea6mr3313972a34.5.1786519428838; Wed, 12 Aug 2026
- 00:23:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=cs.umu.se header.i=@cs.umu.se header.b="KmCW2S4h";
+	dkim=pass (2048-bit key) header.d=cs.umu.se header.i=@cs.umu.se header.b="mW/+IxEt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cs.umu.se; s=dkim;
+	t=1786521783; bh=xRGQdgSKljfrW4uvKs52zlEfeenXY3xamy4HFZTkOiY=;
+	h=Date:From:To:Cc:Subject:From;
+	b=KmCW2S4hLvAIum0K/ZYTBR6L1snTXXHXZYlMcMfkA5eBqw+0+nvdlbq5OnF5PlayD
+	 e8COC5UnUY9iQfDMAxNwkILRJA8OtCQLaN1GwhI2OwAFRDQPFdvFBRUB2+3Uy2U6HP
+	 0MVyStU/GcstrM6rqqqtpGiwBg31w/0Yk8VZ8+IP2W/o9+4Qi5hl69PuwEyJrUOCEd
+	 6CQCIRaEsT3TZ1QgZd02e2QpPxDEDk2z3oOJ4BFjZGcUyQF2ODqf5ZkVk3zeGgJNGE
+	 6Tsey2g6BFWHDeqzgIqh7Ve6pFNfRFJXYRzFmNgrqWwGXU4PwXN9QXK9QWmycShdlY
+	 ay90pQ34Hl+WA==
+Received: from localhost (localhost [127.0.0.1])
+	by amavisd-new (Postfix) with ESMTP id 4hKgw75kBcz3D;
+	Wed, 12 Aug 2026 10:03:03 +0200 (CEST)
+X-Virus-Scanned: Debian amavis at cs.umu.se
+Received: from mail.cs.umu.se ([127.0.0.1])
+ by localhost (mail-vm2.cs.umu.se [127.0.0.1]) (amavis, port 10024) with LMTP
+ id ovcg_ptwD5Ke; Wed, 12 Aug 2026 10:03:01 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cs.umu.se; s=dkim;
+	t=1786521781; bh=xRGQdgSKljfrW4uvKs52zlEfeenXY3xamy4HFZTkOiY=;
+	h=Date:From:To:Cc:Subject:From;
+	b=mW/+IxEt229eYM3zXro57LrT/UPqM/tTtqkzsEoG9wiFgPp7BAeyUOJLCuehaqs0p
+	 qBSKf9OSFZHqH46gCxxmDw8IfXyBMcOEmNzaFQHMC54CrKOkQHFDwjektYnBLd/K+8
+	 QtU0Q7/VR2D2SBAuY9T0Phs77Cb1LoHTmek4h3tKVBxuAgvymU4TZ3fDFmCo5P2Izh
+	 WCOyNTcvPLD5kou+pZgs3ejM6piXG8AamT/AjWI8jFM3dYxsZpkMedWnDbufgfOFlu
+	 I4OOFHivkvU4MSoYBuI68UCnUXzwEARjOvNa4cMwJ5EMoY7osboDsMXb3XhGwPa0n4
+	 KeNgc0N3qcPug==
+Received: from cs.umu.se (luna.cs.umu.se [IPv6:2001:6b0:e:4036::88])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature ECDSA (prime256v1) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: mattiasa)
+	by mail.cs.umu.se (Postfix) with ESMTPSA id 4hKgw52Znhz2k;
+	Wed, 12 Aug 2026 10:03:01 +0200 (CEST)
+Date: Wed, 12 Aug 2026 10:03:00 +0200
+From: Mattias =?iso-8859-1?Q?=C5sander?= <mattiasa@cs.umu.se>
+To: Ryan Lee <ryan.lee@canonical.com>,
+	John Johansen <john.johansen@canonical.com>
+Cc: regressions@lists.linux.dev, linux-security-module@vger.kernel.org,
+	linux-kernel@vger.kernel.org, stric@cs.umu.se
+Subject: [REGRESSION] Apparmor deadlock in 6.12.101 in complain mode
+Message-ID: <anwotItY2-0WMbfn@cs.umu.se>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260804120004.523934-1-mikhail.v.gavrilov@gmail.com>
- <18b018d0-7f7d-4975-b0b3-5e3c9f413698@leemhuis.info> <CABXGCsMhfR-fOwUgKuQrojM8jEpdco_m9aYA9ph_EOrCfaPxeA@mail.gmail.com>
- <b308aff2-422b-4ac1-84d8-f066aa17f5fe@green-communications.fr>
-In-Reply-To: <b308aff2-422b-4ac1-84d8-f066aa17f5fe@green-communications.fr>
-From: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Date: Wed, 12 Aug 2026 12:23:37 +0500
-X-Gm-Features: AUfX_mxZLwD3AKWIfDqBi4-P_dTiG6Fu-Md1DdgkQNdMk5RKTm8G9CoEhj7fBUk
-Message-ID: <CABXGCsNYLoE8OSxEbbYJPV34H=8s1QzLjvc2pjQSwiK2VjHdfA@mail.gmail.com>
-Subject: Re: [PATCH wireless] Revert "wifi: mt76: Disable napi when removing device"
-To: Nicolas Cavallari <nicolas.cavallari@green-communications.fr>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>, linux-wireless@vger.kernel.org, 
-	Felix Fietkau <nbd@nbd.name>, Lorenzo Bianconi <lorenzo@kernel.org>, Ryder Lee <ryder.lee@mediatek.com>, 
-	Shayne Chen <shayne.chen@mediatek.com>, Sean Wang <sean.wang@mediatek.com>, 
-	Bert Karwatzki <spasswolf@web.de>, Devin Wittmayer <lucid_duck@justthetip.ca>, 
-	Eric Biggers <ebiggers@kernel.org>, linux-kernel@vger.kernel.org, 
-	Linux kernel regressions list <regressions@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Wed, Aug 12, 2026 at 12:13=E2=80=AFPM Nicolas Cavallari
-<nicolas.cavallari@green-communications.fr> wrote:
->
-> Depending on the patchwork configuration, you might be able to change
-> the status of your own patch if you register an account. I'm not sure if
-> patchwork.kernel.org allows it, through.
+Hello
 
-Marked it Superseded, thanks - patchwork.kernel.org does let the
-submitter change state on their own patches.
+With the 6.12.101 kernel on debian13 we suddenly got frequent deadlocks in apparmor for our Apache webservers.
 
---=20
-Thanks,
-Mikhail Gavrilov.
+It appears to be caused by the commit "apparmor: grab ns lock and refresh when looking up changehat child profiles"
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=32e92764d6f8d251c1bca62be33793287b453a81
+
+As of that commit the function change_hat() now takes the ns->lock mutex, and later with the lock held it calls a function that also takes the same namespace lock, causing a deadlock.
+
+So, security/apparmor/domain.c:change_hat() calls security/apparmor/domain.c:build_change_hat(), and in complain-mode that calls security/apparmor/policy.c:aa_new_learning_profile(),
+which also tries to takes the profile->ns->lock mutex.
+
+###########
+INFO: task /usr/sbin/apach:125024 blocked for more than 120 seconds.
+      Not tainted 6.12.101+deb13-amd64 #1 Debian 6.12.101-1
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+task:/usr/sbin/apach state:D stack:0     pid:125024 tgid:125024 ppid:2366   flags:0x00004006
+Call Trace:
+ <TASK>
+ __schedule+0x505/0xc00
+ schedule+0x27/0xc0
+ schedule_preempt_disabled+0x15/0x30
+ __mutex_lock.constprop.0+0x41b/0x720
+ ? srso_alias_return_thunk+0x5/0xfbef5
+ aa_new_learning_profile+0x149/0x1e0
+ build_change_hat+0x28b/0x3a0
+ change_hat.isra.0+0x60e/0xd90
+ aa_change_hat+0x301/0x620
+ aa_setprocattr_changehat+0xf8/0x230
+ do_setattr+0x2d1/0x380
+ proc_pid_attr_write+0xe0/0x150
+ vfs_write+0xf5/0x440
+ ? __pte_offset_map+0x1b/0x180
+ ? srso_alias_return_thunk+0x5/0xfbef5
+ ? mutex_lock+0x12/0x30
+ ? srso_alias_return_thunk+0x5/0xfbef5
+ ksys_write+0x6d/0xf0
+ do_syscall_64+0x87/0x1b0
+ ? srso_alias_return_thunk+0x5/0xfbef5
+ ? __count_memcg_events+0x53/0xf0
+ ? srso_alias_return_thunk+0x5/0xfbef5
+ ? count_memcg_events.constprop.0+0x1a/0x30
+ ? srso_alias_return_thunk+0x5/0xfbef5
+ ? handle_mm_fault+0x1bb/0x2c0
+ ? srso_alias_return_thunk+0x5/0xfbef5
+ ? do_user_addr_fault+0x36c/0x620
+ ? srso_alias_return_thunk+0x5/0xfbef5
+ ? arch_exit_to_user_mode_prepare.isra.0+0x16/0xa0
+ entry_SYSCALL_64_after_hwframe+0x76/0x7e
+RIP: 0033:0x7f4719c279ee
+RSP: 002b:00007ffdb983ec48 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007f4719b15c00 RCX: 00007f4719c279ee
+RDX: 00000000000000d3 RSI: 00005610b4669ce0 RDI: 000000000000008c
+RBP: 00005610b4669ce0 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000000000d3
+R13: 00005610b4669ce0 R14: 00007f4719a8c660 R15: 00007f4719acd054
+ </TASK>
+###########
+
+
+Some more background on how the issue gets triggered for us:
+We run apache with MPM-prefork and apparmor has it in complain-mode, and a bunch of different vhosts configured with their own profiles in /etc/apparmor.d/apache2.d/,
+everything is fine as long as you call a vhost with a matching apparmor profile, but calling it with a hostname that does not have a explicit profile (ex the ip-address) causes an immediate deadlock.
+So with ex a vhost as "SiteName example.org":
+curl http://example.org <- works, no issues
+curl http://127.0.0.1 <- deadlock
+
+A quick workaround for our issue in Apache is to define AADefaultHatName globally so that it avoids the aa_new_learning_profile code-path,
+we have it set to "AADefaultHatName DEFAULT_URI" as that hat/profile was available by default in the shipped /etc/apparmor.d/usr.sbin.apache2 ruleset in debian13.
+
+Best Regards
+//Mattias
