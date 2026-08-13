@@ -1,401 +1,185 @@
-Received: from mail-yx1-f41.google.com (mail-yx1-f41.google.com [74.125.224.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-24417.protonmail.ch (mail-24417.protonmail.ch [109.224.244.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE88F3E171E
-	for <regressions@lists.linux.dev>; Thu, 13 Aug 2026 05:30:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.224.41
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786599056; cv=pass; b=X7gSjZkS10tVJm9BXX9rY1VNhaXPbdMYsWeEZs2Gg27x9u4K6NBz5O/NN/z2xb3iTUxCZDIFf0f4YIhzNKqQk8V7OLcOw3MlCw1TZk7rCzUKWRo67o/ZQJxI3UiaVzjwLYIKe9tEu4uUzwSQV36s+p3R2EC5ygrtV0dLQ26CplQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786599056; c=relaxed/simple;
-	bh=dzJjrTrL7q78P1sOU0UsteKSCr6rLQkmNDTn82utLzE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BzVYzldkf4pPGlyv8vV+u4l28+2CsVdLoECddZDAIhs4lHj+ycdsWG3HrCR4DBy+FvecuV3AyFrLxkkUMZidBcqm6xRJSvADz6zvtd/OzrYi/7PLa2y/hzA3J2dtFUTBXFqmpzmS7xJEzVY2EzfcG0Jm/hes0zeZpJoX20F5vLY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Exc+Nx7o; arc=pass smtp.client-ip=74.125.224.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1EB34266B9
+	for <regressions@lists.linux.dev>; Thu, 13 Aug 2026 06:43:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.17
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1786603391; cv=none; b=YKcMvZOzdNHSRTWgxxiwlfFQpalwdk+TcE+tNKygB4qw+hQ4ev/JU8BfBepfBn4khygxttWiB/5HR3GvymI2JOqf2/sW/mtMxw450YOnQPfEqglts7bj0A8VLa+FU+PpEBkvC8BYdE8zm72yclMtzvhGSQW71k92C7UNenI/TM4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1786603391; c=relaxed/simple;
+	bh=yN2Q4v3UuYwM741GalwdSuiCBfdkA29xJaYcSHt3/Qk=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=MHpPIzFe+mSeQq++OYSel9YAivZxopybR33pz2YVisKh76+ujwrs9uKBn9dlmq12Cd+CKoJIHUxVoN+YFdl63YpNNG6W/Jz6RaY6/xCcek0T9YIvNn4SY/HwtShEpSkB72sNi7MzKVhlUVHzwI/pWgIM3wGIKhO18AwRoD+v5L4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=W3y4RnPo; arc=none smtp.client-ip=109.224.244.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Exc+Nx7o"
-Received: by mail-yx1-f41.google.com with SMTP id 956f58d0204a3-66804667af2so1709084d50.0
-        for <regressions@lists.linux.dev>; Wed, 12 Aug 2026 22:30:48 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1786599046; cv=none;
-        d=google.com; s=arc-20260327;
-        b=GqG2yf51ZUojHK1X19YQeGa2z3Lv4Lx2qG2scszcjfXFefwCVj/pKoox7qWfH5DPIM
-         cvzeIYj3cQGkuhFVstMjdNbI8jCo8jECV/z/qKRGpkGJLrxgpPnykGTsTUMOQpN1UGnN
-         vT0Apnj9rUiWe26BRoxGHN2DdkKwDd6v2HrMQpb3A9riKdYOZe0F18I1BW6vwn0W7Ihm
-         xMSWXyA5hbkPUY0rxi28pgDAMX858y9dxEI6730vWN10ZDGfiCwD35SKgOQ1G0eM92Q7
-         VNZFW7AYFvQwICNjOGfdxn8azz2cwKLewclOGSCtJIZ8pB0F9ThbxVczyHprG8whI4Q0
-         NEUQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=EnCyToIZKjxCTEuJy0awJOyY8tLkpBgGARkr2UgLJmw=;
-        fh=CFe9UrVWDCGSvBmD0G1Rt/At8QHP11qb1ViGU31IDVk=;
-        b=e0oXCHfI6jDLZ+yWSZ3BQsSJzchhjg0WrGouBPxwivpQmsugmm/9K/qaFJjp7hUexy
-         EMpuy+s6tcu3FkJb7DX8tRm+MT1MVJNdKXoX4Zg61Vg6M+vMS1uCp6xdnE0XiLFMuC81
-         QB7VrJ/O5l4YHC06uUOgBR5HRhr12kI5rKGapTQgI4FgOjz5wiRmofRBHFMXbRNxVghE
-         fj13jW9pwQvRemLLL3Y+SIQGUGX3vPTt0mTZ4KDM5ThxlLyDbNh5DuE395BhwA+Ze44g
-         0txwyOKWenzfRmMJ/BV4HqaCqMZLnD/BPoGWYs3Oiso8J2Qd8V9mq8bhm1ZHuL592W+3
-         XVZg==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1786599046; x=1787203846; darn=lists.linux.dev;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=EnCyToIZKjxCTEuJy0awJOyY8tLkpBgGARkr2UgLJmw=;
-        b=Exc+Nx7ogdcuEJ4wa1n1m8uGFts95Os4PSWlYRF+OwlY1cnM3vYp1q+6JaNdsUEevG
-         4Z111dOjn1Mdz9efwVzbY9RcU+/6uzQGw6/ftKrvSjBrdrgLUg935nJCv8gK5eAxT3Uz
-         IrdZ/Fsyq81SYLptcPRewKV8VM6xLc7kIBtRLkEnSf2gPQlS2SJ/V7HjK82YnLoR8dB/
-         FN1Nogm+QaAy+knK9julX0DT+7eZ2hiRvEZjokb/0zTmNNsxITQ9YXUJRDiWxm7m1g8X
-         ma6I1kX5bItNH6GrKWzrYiTpe5jCM8lUUQIku+/dNU8wQH8xFZ3hh2/zjjCAi9kYpti6
-         BSyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786599046; x=1787203846;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=EnCyToIZKjxCTEuJy0awJOyY8tLkpBgGARkr2UgLJmw=;
-        b=L+Bwsvs7Ci5QtmJk0Blcw57bgUSDvKE1lS6240pys0SP2RuzPH0Z4iSptun41F6lsk
-         1DPh2RUKjLhBoMt+HHIUm+DQlarGbzLk02bYaTHW7++sZAvbnz68Apd0T3q54tYi/137
-         LhgkTXqdYT++JEmNZfHQFYu7pAyR/fusaz5HbLjGyOugORozdpcJaGPyhgoZBc3jHShK
-         p9mMgzcMncxgSAA5ltDAtUm814sXud6pN7FtNTMygFhNchFKYAGyoUhB8RU6fyVb4+vv
-         wfuxhjbVKeZACAUP7suB5ss7RJR/+jRG+kXTTeJdZdAmpKcJMiutDNMl0bAw5zlaadrO
-         x60Q==
-X-Forwarded-Encrypted: i=1; AHgh+RpXju9W8BHw+j9elQDpwvqEnzlxI/4iYI87ni9yP6XN3tHb23ff8DZklVlM7urWbOBPuSt8X0eWFLWC8Q==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxAV2b1/+NwU6xhLy8dTEE5788/XJkfmwhFKygk1Dc/4EidhNPF
-	9APgwCrLbpaixpf9+qQQQcKWZt7DqFQ7Y+0dZPZ3P9+ETb4s8833Gaij3mHLL5vzejmrEtaGpqr
-	iX/46SCkCYVZsBSvEyb2rCdaFdLHVAR0=
-X-Gm-Gg: AR+sD121t1bT6y0HxPzUOVVnrIKrEm1PoHOU40+asi7aPjWRHXjgbox506SUlSeLT9X
-	P9V44cZfl0gVx6M0pu6mdmYTHbGfZ6k37xoKkuIV1xr8Qbn+aEzpWlQ7p+ZibSN0yATf9DGLX2v
-	W2StQVpcmhEAO4EK1Xr5kkaYvfCt9QlPTitjmY8rxR0ZpRffvE0Aa+4NrROsOdmwRLM3S3bPnBF
-	V1PS3hL6JuFFYX8G7nI5WTd9b1iT3q+QWzWbBVi87JLDUjJiw0ttxudVGTq8AhsowTCacWZOAli
-	tLtP0RpxRX6fkaG6SjttuRgXNf+DGivVe0JvvHkfZ2xPKqYUmRSQEY9G2tacqlhHl94Hkbyf1i5
-	tr7EdxXK+A59MednESfPh4Rv5Tp89Y1LRfCovsh5NWhFqkAHGyYUoybb+YJZeS3jQPdNgHfW2FH
-	KrLkd0rGH43Ahe7xQJ6uoQ
-X-Received: by 2002:a53:ab52:0:b0:667:89c0:71b1 with SMTP id
- 956f58d0204a3-66c515731admr1274510d50.31.1786599046144; Wed, 12 Aug 2026
- 22:30:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="W3y4RnPo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1786603373; x=1786862573;
+	bh=7xKIxKwgEarei6Pw6wTpHCiSVuYHwsPGanMujYMxrE8=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=W3y4RnPoxcqhXMCFAdTlP82ubBGWURml8waKEYKN2IpMA6ylf3zmBQNg02THKq5Ex
+	 AUPizjFVKqXEToXeKC6A9X2u3yiI7os3aEjRazTWA8B2+44UT4m5xE1qlwldjj+WxV
+	 hZYTCQ/8pguoWO/+msVEPFoZV0pqHzTeR6/SolPlW0KWGNrr+/rwRcNVDGwiQEUg+w
+	 qxBNncX5CBNY3Ai972u07iR/KaRgKGY9KbEw6vN2YjGk/NrvCL4Mxyz6+Y4paRcq0I
+	 VApBV4jYyWtA0xbmFwmJm8QQbcQW+GN7PQ1AN+T9jTYfwH0QR9Rt/4h/cGanPxnLQv
+	 ZP8kWQmhfQ8Hw==
+Date: Thu, 13 Aug 2026 06:42:47 +0000
+To: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
+From: Luke.Wildhardt@proton.me
+Cc: Danilo Krummrich <dakr@kernel.org>, Philipp Stanner <phasta@mailbox.org>, phasta@kernel.org, "matthew.brost@intel.com" <matthew.brost@intel.com>, "ckoenig.leichtzumerken@gmail.com" <ckoenig.leichtzumerken@gmail.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "regressions@lists.linux.dev" <regressions@lists.linux.dev>, "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [REGRESSION] drm/sched: FAIR policy causes serious performance degradation at max GPU load on 9070XT
+Message-ID: <ylme_dYqb7yeNvmFl3ZeH3v8d_46-oAWr6t95wEZTYGiLMdbNTzXBFoV1zueOeHcKXcFrMMsoF0s_57Hzj0wwEfxDRjPhmu-xquKmeXKehg=@proton.me>
+In-Reply-To: <Wgbhe0iRVno6QTXUasXAw96sdk1GzzJ8DW_Yw8EyCtxvwV4-EfRTaUdaF9vYeMYsMyfLVVTmXBOB1Br_d-l8b87D_2CMFyYSJi34eaaGGW4=@proton.me>
+References: <TfhgV1W0W5LI6RWUO6J35B3R8QIYH_FN3Eihzdo_9PH39hfn1AVByT-QBPHmWiAR-L0Kqi2sppM_EhFPKwZPGmb5pFgpF2MrzeFzkZDmpG8=@proton.me> <cef49cf329737e0af12ef5a90dd21f31e113d4c3.camel@mailbox.org> <DKL9VAWD2Y98.RBQPQUL7Y47F@kernel.org> <6e2a207e-4db6-4d47-b1f6-9cb13b8d6eeb@igalia.com> <enK0t0JrZ3lr9gmgPwE_YaVJDy7K355Bs0xy0YNoVwujLHCGWNRXCjDOhYfiHNGN3pPDSlEUIz3_UkXmFNAJNXxrJOIwvzAG-k8_p_D5FOQ=@proton.me> <4OmZej9WiJ6-rsJ_lFcrmwtClAwMdN4oHXWH0p8FkIrhAn4LKS4O3q36wrdZrvjZHBNS8PZsvaIvR-1aFZfF2tDiy1cdMzTYNylcbGDQN68=@proton.me> <a9ee4edb-e763-4fd7-a510-32191df0cf8f@igalia.com> <Wgbhe0iRVno6QTXUasXAw96sdk1GzzJ8DW_Yw8EyCtxvwV4-EfRTaUdaF9vYeMYsMyfLVVTmXBOB1Br_d-l8b87D_2CMFyYSJi34eaaGGW4=@proton.me>
+Feedback-ID: 214028577:user:proton
+X-Pm-Message-ID: 4a33c407371550b30197b9dc2dd5b0bdf83de5fe
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260718054330.8975-2-hardikprakash.official@gmail.com>
- <amhodWpAI3K6aeBH@zenone.zhora.eu> <b4a4eadb-282f-464c-843a-19d415a34d0c@leemhuis.info>
- <CANTFpSW+w1GZMbLXszuqZFCZjeVJfFG2bc1vJad+OMzsy-CPCg@mail.gmail.com>
- <aneQvMN_Zet2b62n@ashevche-desk.local> <b5b95476-636f-40b1-8575-47918169b7bb@leemhuis.info>
- <CANTFpSWzV9tzMwc2cURCQBhpZmrv1SsZqnwBEu0jt=ZQWfvWgQ@mail.gmail.com>
- <1a209e14-05c6-4796-a8fc-d0c3a776520d@leemhuis.info> <CANTFpSWnTjoTS8hBOvVM_w3pWHyOiBhch_GXe_mG-d56WeF-0w@mail.gmail.com>
- <5a5f7f58-b35b-407f-a5e5-293a88cafcc0@leemhuis.info> <CANTFpSWTkwmb3F9UnZmeaLizH-cC6evXD=kd1eNwJWkCfyj8DQ@mail.gmail.com>
- <a23375c9-d188-4737-bfa0-f10e66ae7f08@leemhuis.info> <CANTFpSWhqkw4735EFyQ4XoSEiqsgCKt4jTxH4SDO-m3=ybwccw@mail.gmail.com>
- <444caa3c-01ae-4516-b63a-576e095fef94@amd.com>
-In-Reply-To: <444caa3c-01ae-4516-b63a-576e095fef94@amd.com>
-From: Hardik Prakash <hardikprakash.official@gmail.com>
-Date: Thu, 13 Aug 2026 11:00:34 +0530
-X-Gm-Features: AUfX_my538K7HpetEsWzkCNKan89Uhq93sMW4xN3w8ng6VWsxdRZzh0FG90L81w
-Message-ID: <CANTFpSWoJGQu43BVnyyyy=QUEF1j3yrH8WBJHj-cJeXdrFbTRQ@mail.gmail.com>
-Subject: Re: i2c designware change broke touchpad of a thinkpad
-To: Mario Limonciello <mario.limonciello@amd.com>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>, 
-	Andy Shevchenko <andriy.shevchenko@intel.com>, Andi Shyti <andi.shyti@kernel.org>, 
-	linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org, wsa@kernel.org, 
-	brgl@bgdev.pl, basavaraj.natikar@amd.com, linusw@kernel.org, 
-	nathan@kernel.org, chaitanya.kumar.borah@intel.com, 
-	Linux kernel regressions list <regressions@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 12 Aug 2026, Mario Limonciello wrote:
-> This is a fairly similar issue as was seen that led to this commit:
-> https://git.kernel.org/torvalds/c/7d62beb102d6f
+Ok, after a lot of A/B testing, it appears that trying your "drm-intel/drm-=
+sched-fair-fixed" branch, the stuttering is still there. It's definitely pa=
+ced differently though, I will attach a video. It's "choppier" when it happ=
+ens. I tested in a few different areas / times of day, in case you notice t=
+he scenery isn't the same; this is representative of what I experienced in =
+other places. I will note, that I tried playing 4 times, 3/4 times, shortly=
+ after boot. 1/4 times I left my desktop to idle for about 30 minutes while=
+ I did something else, and I didn't encounter the issue at all in 10 minute=
+s. Not sure how significant that is, or if it's just noise.
 
-That fits well -- Thorsten's failure is on i2c_hid_acpi's first Get
-Descriptor call specifically, the same transaction that commit ties
-to the EC standdown _DSM.
+https://www.youtube.com/watch?v=3DGWyIVEuhooM
 
-One thing I can't narrow down: my check adds a delay (bound confirmed
-at 1.136s), but the actual failure isn't until 2.222s -- over a
-second later. A delay landing things later should only cause contention
-if crossing some threshold matters, e.g. an EC failsafe that reclaims
-the bus if the OS driver hasn't checked in within some window, or
-periodic EC polling that our new timing happens to land on top of.
-Is either of those a known behavior on this class of hardware? If so
-that would explain why earlier (unpatched) timing avoided it and
-later (patched) timing doesn't.
+To make sure I wasn't insane, I went back to the patch Claude gave me, appl=
+ied against a clean 7.2.0-rc7. At least again in a few sessions after boot,=
+ no issue. I'll post that exact code below.
 
-If the fix isn't in my dependency check itself, I'm open to hearing
-where it should live instead.
+If you need any other info from me let me know.=20
 
-Thanks,
-Hardik
 
-On Wed, 12 Aug 2026 at 18:05, Mario Limonciello
-<mario.limonciello@amd.com> wrote:
->
->
->
-> On 8/12/26 00:45, Hardik Prakash wrote:
-> > On Wed, 12 Aug 2026, Thorsten Leemhuis wrote:
-> >> While we wait for Mario a quick question: Should we revert
-> >> the culprit for 7.2 and reapply it later once we sorted this out? Of
-> >> course I'll continue to help debugging this.
-> >>
-> >> If it was just me I'd say "don't bother", but these kind of Thinkpads
-> >> are what some Linux users frequently buy, so I fear that other people
-> >> will run into this if the culprit makes it into 7.2.
-> >
-> > I agreed, I'd rather have this reverted than ship a known regression.
-> >
-> > Andi, WSA -- given 7.2 is close, could this go out as a revert now? I'll
-> > keep working the AMD bus-timing angle with Thorsten and Mario, and
-> > we can resubmit a corrected fix for a later release once it's actually
-> > understood.
->
-> Let's please revert for 7.2 final and keep working at this.
->
-> I've got a /hunch/ what's going on.
->
-> For both Dell and Lenovo I know a lot of designs have these I2C buses
-> that have both the EC and the APU connected to them.  "Both" the EC and
-> APU "can" operate as master.
->
-> The reason that this exists is so that when the system is in pre-boot
-> the EC acts as master.  This lets you use the touchpad in the BIOS menus
-> for example.  When the OS boots up there is some ASL called which sends
-> an EC command that tells the EC to stand down.  At this point the APU
-> takes over and acts as master.
->
-> So my theory here is that by changing this ordering the _DSM is not
-> called at the right timing anymore.
->
-> This is a fairly similar issue as was seen that led to this commit:
->
-> https://git.kernel.org/torvalds/c/7d62beb102d6f
-> >
-> > Thanks,
-> > Hardik
-> >
-> > On Wed, 12 Aug 2026 at 10:51, Thorsten Leemhuis
-> > <regressions@leemhuis.info> wrote:
-> >>
-> >> On 8/12/26 06:59, Hardik Prakash wrote:
-> >>> On Mon, 10 Aug 2026, Thorsten Leemhuis wrote:
-> >>>> Did a fresh boot and uploaded the dmesg again as well just in case:
-> >>>> https://www.leemhuis.info/files/misc/dmesg_patch_dyndbg2
-> >>>> https://www.leemhuis.info/files/misc/lsmod
-> >>>> https://www.leemhuis.info/files/misc/interrupts
-> >>>
-> >>> Thanks. Second boot reproduces the identical pattern: device_is_bound()
-> >>> =true at 1.132s, lost arbitration at 2.139s -- same ~1s gap as the first
-> >>> capture, so this is consistent and reproducible, not a one-off.
-> >>>
-> >>> interrupts rules out simple IRQ-line sharing: AMDI0010:01 has its own
-> >>> dedicated line (IRQ 11), separate from AMDI0010:00 (IRQ 10) and every
-> >>> amd_gpio ACPI:Event line. psp-1 exists (IR-PCI-MSIX-0000:c3:00.2) but
-> >>> shows zero recorded activity on any CPU.
-> >>>
-> >>> Since lost arbitration means an actual SDA/SCL-level collision (not an
-> >>> IRQ conflict), and there's no shared IRQ or visible PSP activity, if
-> >>> something else is touching this bus it's happening below what Linux's
-> >>> interrupt accounting can see -- which is why I wanted your take, Mario.
-> >>> Does this match a known pattern of firmware (PSP/EC) briefly taking
-> >>> this bus during boot on AMD platforms?
-> >>
-> >> Thx again. While we wait for Mario a quick question: Should we revert
-> >> the culprit for 7.2 and reapply it later once we sorted this out? Of
-> >> course I'll continue to help debugging this.
-> >>
-> >> If it was just me I'd say "don't bother", but these kind of Thinkpads
-> >> are what some Linux users frequently buy, so I fear that other people
-> >> will run into this if the culprit makes it into 7.2.
-> >>
-> >> Ciao, Thorsten
-> >>
-> >>> On Mon, 10 Aug 2026 at 12:18, Thorsten Leemhuis <linux@leemhuis.info> wrote:
-> >>>>
-> >>>> On 8/10/26 07:54, Hardik Prakash wrote:
-> >>>>> On Sun, 9 Aug 2026, Thorsten Leemhuis wrote:
-> >>>>>> Sorry, picked the wrong file while preparing the mail, it's here:
-> >>>>>> https://www.leemhuis.info/files/misc/dmesg_patch_dyndbg
-> >>>>>
-> >>>>> Thanks, that's the one. Full timeline from that boot:
-> >>>>>
-> >>>>>    0.619s  AMDI0010:00 and AMDI0010:01 defer (AMDI0030:00 not registered)
-> >>>>>    1.136s  Retry succeeds: device_is_bound()=true for AMDI0030:00,
-> >>>>>            confirmed for all three children (XXXX0000:00, SYNA8018:00,
-> >>>>>            NXP1001:00)
-> >>>>>    2.222s  lost arbitration on AMDI0010:01 (x3)
-> >>>>>    3.260s  controller timed out, HID descriptor fetch fails
-> >>>>>
-> >>>>> The dependency check itself is behaving correctly here -- it defers,
-> >>>>> then correctly confirms AMDI0030:00 is bound before letting probe
-> >>>>> continue. The arbitration failure happens over a second *after* that,
-> >>>>> when the touchpad attempts its actual first transaction.
-> >>>>>
-> >>>>> So this doesn't look like a logic bug in the check itself. My read: by
-> >>>>> delaying dw_i2c_plat_probe() by ~500ms (correctly, for GPIO's sake),
-> >>>>> something else ends up contending for the AMDI0010:01 bus by the time
-> >>>>> the touchpad's first transaction actually happens -- a window that
-> >>>>> the original (undeferred, earlier) probe attempt apparently avoided.
-> >>>>>
-> >>>>> Mario -- does this look like a known AMD I2C/PSP semaphore contention
-> >>>>> pattern to you? Wondering if there's a shared bus/firmware consumer
-> >>>>> that could explain a ~1s-later collision like this, independent of
-> >>>>> the GPIO controller itself being ready.
-> >>>>>
-> >>>>> Thorsten, if you have it handy: /proc/interrupts and lsmod from this
-> >>>>> boot would help narrow down what else might be touching that bus
-> >>>>> around the 2.2s mark.
-> >>>>
-> >>>> Did a fresh boot and uploaded the dmesg again as well just in case:
-> >>>>
-> >>>> https://www.leemhuis.info/files/misc/dmesg_patch_dyndbg2
-> >>>> https://www.leemhuis.info/files/misc/lsmod
-> >>>> https://www.leemhuis.info/files/misc/interrupts
-> >>>>
-> >>>> Ciao, Thorsten
-> >>>>> On Mon, 10 Aug 2026 at 11:06, Thorsten Leemhuis <linux@leemhuis.info> wrote:
-> >>>>>>
-> >>>>>> On 8/10/26 07:23, Hardik Prakash wrote:
-> >>>>>>> On Sat, 8 Aug 2026, Thorsten Leemhuis wrote:
-> >>>>>>>> https://www.leemhuis.info/files/misc/dmesg-master-plus_revert
-> >>>>>>>>
-> >>>>>>>> [    0.619018] i2c-dw-gpio-dbg: i2c_dw_check_gpio_dependencies(AMDI0010:00)
-> >>>>>>>> [...]
-> >>>>>>>> [    1.136010] i2c-dw-gpio-dbg: device_is_bound()=true for AMDI0030:00
-> >>>>>>>
-> >>>>>>> Thanks, this trace looks correct on its face (defer at 0.619s, retry
-> >>>>>>> succeeds at 1.122-1.136s), but the link above points to the same file
-> >>>>>>> you sent last round (the master+revert baseline, no debug patch, no
-> >>>>>>> i2c-dw-gpio-dbg lines in it at all) rather than this new capture.
-> >>>>>>>> Could you share the full, unfiltered dmesg from this exact boot (the
-> >>>>>>> one with the debug patch applied)? I need to see where
-> >>>>>>> "lost arbitration" falls relative to the trace above.
-> >>>>>>
-> >>>>>> Sorry, picked the wrong file while preparing the mail, it's here:
-> >>>>>> https://www.leemhuis.info/files/misc/dmesg_patch_dyndbg
-> >>>>>>
-> >>>>>> Ciao, Thorsten
-> >>>>>>
-> >>>>>>> Separately, from your DSDT: NFC1 (NXP1001), which shows up as a child
-> >>>>>>> of AMDI0010:01 in your trace, declares its _CRS as a raw resource
-> >>>>>>> buffer containing three GPIO resources referencing \_SB.GPIO -- one
-> >>>>>>> GpioIo and two separate GpioInt entries. Not sure yet if that's
-> >>>>>>> relevant, but it's a pattern I haven't seen on my hardware
-> >>>>>>> which I've tested against.
-> >>>>>>>
-> >>>>>>> Thanks,
-> >>>>>>> Hardik
-> >>>>>>>
-> >>>>>>> On Sun, 9 Aug 2026 at 21:49, Thorsten Leemhuis <linux@leemhuis.info> wrote:
-> >>>>>>>>
-> >>>>>>>> On 8/8/26 22:25, Andy Shevchenko wrote:
-> >>>>>>>>> On Sat, Aug 08, 2026 at 10:31:28PM +0530, Hardik Prakash wrote:
-> >>>>>>>>>> On Fri, 7 Aug 2026, Thorsten Leemhuis wrote:
-> >>>>>>>>>>> This became 0a4bb2abc3e56d ("i2c: designware: defer probe if child
-> >>>>>>>>>>> GpioInt controllers are not bound") and causes a regression for me: the
-> >>>>>>>>>>> Touchpad in my ThinkPad T14s Gen 4 (AMD) stopped working. From the
-> >>>>>>>>>>> kernel log:
-> >>>>>>>>>>>
-> >>>>>>>>>>> i2c_designware AMDI0010:01: i2c_dw_handle_tx_abort: lost arbitration
-> >>>>>>>>>>> i2c_designware AMDI0010:01: controller timed out
-> >>>>>>>>>>> i2c_hid_acpi i2c-SYNA8018:00: failed to fetch HID descriptor: -110
-> >>>>>>>>>>> i2c_hid_acpi i2c-SYNA8018:00: Failed to fetch the HID Descriptor
-> >>>>>>>>>>>
-> >>>>>>>>>>> Reverting this change in current mainline/master (f9a2394a23482) fixed
-> >>>>>>>>>>> things for me. Full dmesg of current master and master+revert can be
-> >>>>>>>>>>> found here:
-> >>>>>>>>>>>
-> >>>>>>>>>>> https://www.leemhuis.info/files/misc/dmesg-master
-> >>>>>>>>>>> https://www.leemhuis.info/files/misc/dmesg-master-plus_revert
-> >>>>>>>>>> [...]
-> >>>>>>>>>> Two things that would help narrow this down, whenever you have a moment:
-> >>>>>>>>
-> >>>>>>>> Thx for looking into this. Here we go:
-> >>>>>>>>
-> >>>>>>>>>> 1. A DSDT dump
-> >>>>>>>>
-> >>>>>>>> https://www.leemhuis.info/files/misc/dsdt.dsl
-> >>>>>>>>
-> >>>>>>>>>> 2. A dmesg with dynamic debug from a kernel built with the attached
-> >>>>>>>>>>     patch on top of current mainline/master
-> >>>>>>>>
-> >>>>>>>> https://www.leemhuis.info/files/misc/dmesg-master-plus_revert
-> >>>>>>>>
-> >>>>>>>> [    0.619018] i2c-dw-gpio-dbg: i2c_dw_check_gpio_dependencies(AMDI0010:00)
-> >>>>>>>> [    0.619018] i2c-dw-gpio-dbg: check_child_gpioint(adev=XXXX0000:00)
-> >>>>>>>> [    0.619076] i2c-dw-gpio-dbg: GpioInt resource_source=\_SB.GPIO (len=10)
-> >>>>>>>> [    0.619079] i2c-dw-gpio-dbg: acpi_fetch_acpi_dev() succeeded,
-> >>>>>>>> device=AMDI0030:00
-> >>>>>>>> [    0.619080] i2c-dw-gpio-dbg: gpio_device_find_by_fwnode() returned
-> >>>>>>>> NULL, deferring
-> >>>>>>>> [    0.619082] i2c-dw-gpio-dbg: check_child_gpioint ret=-517 (defer)
-> >>>>>>>> [    0.619102] i2c-dw-gpio-dbg: i2c_dw_check_gpio_dependencies(AMDI0010:01)
-> >>>>>>>> [    0.619104] i2c-dw-gpio-dbg: check_child_gpioint(adev=SYNA8018:00)
-> >>>>>>>> [    0.619159] i2c-dw-gpio-dbg: GpioInt resource_source=\_SB.GPIO (len=10)
-> >>>>>>>> [    0.619162] i2c-dw-gpio-dbg: acpi_fetch_acpi_dev() succeeded,
-> >>>>>>>> device=AMDI0030:00
-> >>>>>>>> [    0.619162] i2c-dw-gpio-dbg: gpio_device_find_by_fwnode() returned
-> >>>>>>>> NULL, deferring
-> >>>>>>>> [    0.619164] i2c-dw-gpio-dbg: check_child_gpioint ret=-517 (defer)
-> >>>>>>>> [    1.122517] i2c-dw-gpio-dbg: i2c_dw_check_gpio_dependencies(AMDI0010:00)
-> >>>>>>>> [    1.122523] i2c-dw-gpio-dbg: check_child_gpioint(adev=XXXX0000:00)
-> >>>>>>>> [    1.122625] i2c-dw-gpio-dbg: GpioInt resource_source=\_SB.GPIO (len=10)
-> >>>>>>>> [    1.122636] i2c-dw-gpio-dbg: acpi_fetch_acpi_dev() succeeded,
-> >>>>>>>> device=AMDI0030:00
-> >>>>>>>> [    1.122639] i2c-dw-gpio-dbg: gpio_device_find_by_fwnode() succeeded
-> >>>>>>>> [    1.122642] i2c-dw-gpio-dbg: device_is_bound()=true for AMDI0030:00
-> >>>>>>>> [    1.135894] i2c-dw-gpio-dbg: i2c_dw_check_gpio_dependencies(AMDI0010:01)
-> >>>>>>>> [    1.135898] i2c-dw-gpio-dbg: check_child_gpioint(adev=SYNA8018:00)
-> >>>>>>>> [    1.135976] i2c-dw-gpio-dbg: GpioInt resource_source=\_SB.GPIO (len=10)
-> >>>>>>>> [    1.135980] i2c-dw-gpio-dbg: acpi_fetch_acpi_dev() succeeded,
-> >>>>>>>> device=AMDI0030:00
-> >>>>>>>> [    1.135983] i2c-dw-gpio-dbg: gpio_device_find_by_fwnode() succeeded
-> >>>>>>>> [    1.135985] i2c-dw-gpio-dbg: device_is_bound()=true for AMDI0030:00
-> >>>>>>>> [    1.135987] i2c-dw-gpio-dbg: check_child_gpioint(adev=NXP1001:00)
-> >>>>>>>> [    1.136005] i2c-dw-gpio-dbg: GpioInt resource_source=\_SB.GPIO (len=10)
-> >>>>>>>> [    1.136008] i2c-dw-gpio-dbg: acpi_fetch_acpi_dev() succeeded,
-> >>>>>>>> device=AMDI0030:00
-> >>>>>>>> [    1.136009] i2c-dw-gpio-dbg: gpio_device_find_by_fwnode() succeeded
-> >>>>>>>> [    1.136010] i2c-dw-gpio-dbg: device_is_bound()=true for AMDI0030:00
-> >>>>>>>>
-> >>>>>>>> HTH, Ciao, Thorsten
-> >>>>>>>>
-> >>>>>>>>>> On Fri, 7 Aug 2026 at 19:37, Thorsten Leemhuis <linux@leemhuis.info> wrote:
-> >>>>>>>>>>> On 7/28/26 10:30, Andi Shyti wrote:
-> >>>>>>>>>>>> On Sat, Jul 18, 2026 at 11:13:31AM +0530, Hardik Prakash wrote:
-> >>>>>>>>>>>>> I2C controllers may have child devices with GpioInt resources that
-> >>>>>>>>>>>>> depend on GPIO controllers being fully initialized. If the I2C
-> >>>>>>>>>>>>> controller probes and enumerates children before the referenced GPIO
-> >>>>>>>>>>>>> controller has completed probe, GPIO interrupts may not be properly
-> >>>>>>>>>>>>> configured, leading to device failures.
-> >>>>>>>>>>>>>
-> >>>>>>>>>>>>> On Lenovo Yoga 7 14AGP11, the WACF2200 touchscreen (child of
-> >>>>>>>>>>>>> AMDI0010:02) has a GpioInt resource pointing to GPIO 157 on the
-> >>>>>>>>>>>>> pinctrl-amd controller (AMDI0030:00). When i2c-designware probes
-> >>>>>>>>>>>>> AMDI0010:02 before pinctrl-amd finishes initializing, I2C transactions
-> >>>>>>>>>>>>> fail with lost arbitration errors:
-> >>>>>>>>>>>>>
-> >>>>>>>>>>>>>    0.285952  amd_gpio_probe: registering gpiochip  <- GPIO chip visible
-> >>>>>>>>>>>>>    0.287121  amd_gpio_probe: requesting parent IRQ <- probe still running
-> >>>>>>>>>>>>>    0.301454  AMDI0010:02 dw_i2c_plat_probe: start  <- races here
-> >>>>>>>>>>>>>    2.348157  lost arbitration
-> >>>>>>>>>>>>>
-> >>>>>>>>>>>>> Add a dependency check that walks ACPI child devices and defers probe
-> >>>>>>>>>>>>> until any referenced GPIO controller is bound.
-> >>>>>>>>>
-> >>>>>>>>> [...]
-> >>>>>>>>>
-> >>>>>>>>>>> #regzbot introduced: 0a4bb2abc3e56d
-> >>>>>>>>>>> #regzbot title i2c: designware: ThinkPad touchpad broke
-> >>>>>>>>>
-> >>>>>>>>
-> >>>>>>>
-> >>>>>>
-> >>>>>
-> >>>>
-> >>>
-> >>
->
+--- a/drivers/gpu/drm/scheduler/sched_rq.c
++++ b/drivers/gpu/drm/scheduler/sched_rq.c
+@@ -2,6 +2,7 @@
+ /* Copyright 2015 Advanced Micro Devices, Inc. */
+ /* Copyright (c) 2025 Valve Corporation */
+
++#include <linux/moduleparam.h>
+ #include <linux/rbtree.h>
+
+ #include <drm/drm_print.h>
+@@ -9,6 +10,32 @@
+
+ #include "sched_internal.h"
+
++/*
++ * Diagnostic counters. Not for submission.
++ *
++ * dbg_pop_stayed  - pops where the entity had another job queued and so s=
+tayed
++ *                   in the tree. No save/restore of vruntime occurs.
++ * dbg_pop_left    - pops where the entity queue drained, so it left the t=
+ree
++ *                   and drm_sched_entity_save_vruntime() ran. Only this p=
+ath
++ *                   arms a later restore.
++ * dbg_add_restore - calls to drm_sched_rq_add_entity(), i.e. restores.
++ * dbg_add_race    - restores where the entity was still linked in the tre=
+e,
++ *                   meaning the vruntime being restored is still absolute=
+.
++ *
++ * Incremented under rq->lock, so exact per scheduler and only mildly loss=
+y
++ * when summed across rings. Writable so they can be reset between runs:
++ *   echo 0 > /sys/module/gpu_sched/parameters/dbg_pop_left
++ */
++static unsigned long dbg_pop_stayed;
++static unsigned long dbg_pop_left;
++static unsigned long dbg_add_restore;
++static unsigned long dbg_add_race;
++
++module_param(dbg_pop_stayed, ulong, 0644);
++module_param(dbg_pop_left, ulong, 0644);
++module_param(dbg_add_restore, ulong, 0644);
++module_param(dbg_add_race, ulong, 0644);
++
+ static __always_inline bool
+ drm_sched_entity_compare_before(struct rb_node *a, const struct rb_node *b=
+)
+ {
+@@ -266,14 +293,40 @@
+ =09sched =3D container_of(rq, typeof(*sched), rq);
+ =09spin_lock(&rq->lock);
+
++=09dbg_add_restore++;
++=09if (!RB_EMPTY_NODE(&entity->rb_tree_node)) {
++=09=09dbg_add_race++;
++=09=09pr_warn_ratelimited("drm_sched: vruntime race on ring %s (comm %s)\n=
+",
++=09=09=09=09    sched->name, current->comm);
++=09}
++
+ =09if (list_empty(&entity->list)) {
+ =09=09atomic_inc(sched->score);
+ =09=09list_add_tail(&entity->list, &rq->entities);
+ =09}
+
+-=09ts =3D drm_sched_rq_get_min_vruntime(rq);
+-=09ts =3D drm_sched_entity_restore_vruntime(entity, ts, rq->head_prio);
+-=09drm_sched_rq_update_tree_locked(entity, rq, ts);
++=09/*
++=09 * Only restore the vruntime if the entity actually left the run queue.
++=09 *
++=09 * drm_sched_entity_pop_job() dequeues the last job and only afterwards
++=09 * calls drm_sched_rq_pop_entity(), which is where the entity is remove=
+d
++=09 * from the tree and drm_sched_entity_save_vruntime() converts its
++=09 * vruntime to min_vruntime-relative form. A push landing in that windo=
+w
++=09 * sees an empty queue, takes the "first job" path to here, and would
++=09 * restore a vruntime which is still absolute -- adding min_vruntime to
++=09 * it a second time. If the entity is also the leftmost one,
++=09 * drm_sched_rq_get_min_vruntime() returns the entity's own vruntime an=
+d
++=09 * the value is doubled, placing it far to the right of the tree where =
+it
++=09 * will not be selected again until the run queue catches up.
++=09 *
++=09 * A still-linked entity never left, so its vruntime is already absolut=
+e
++=09 * and its tree position is valid. The concurrent pop will update both.
++=09 */
++=09if (RB_EMPTY_NODE(&entity->rb_tree_node)) {
++=09=09ts =3D drm_sched_rq_get_min_vruntime(rq);
++=09=09ts =3D drm_sched_entity_restore_vruntime(entity, ts, rq->head_prio);
++=09=09drm_sched_rq_update_tree_locked(entity, rq, ts);
++=09}
+
+ =09spin_unlock(&rq->lock);
+ =09spin_unlock(&entity->lock);
+@@ -330,11 +383,13 @@
+ =09if (next_job) {
+ =09=09ktime_t ts;
+
++=09=09dbg_pop_stayed++;
+ =09=09ts =3D drm_sched_entity_update_vruntime(entity);
+ =09=09drm_sched_rq_update_tree_locked(entity, rq, ts);
+ =09} else {
+ =09=09ktime_t min_vruntime;
+
++=09=09dbg_pop_left++;
+ =09=09drm_sched_rq_remove_tree_locked(entity, rq);
+ =09=09min_vruntime =3D drm_sched_rq_get_min_vruntime(rq);
+ =09=09drm_sched_entity_save_vruntime(entity, min_vruntime);
+
+
+
