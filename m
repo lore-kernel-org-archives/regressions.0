@@ -1,108 +1,148 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E06B403AE0;
-	Wed, 12 Aug 2026 22:21:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786573309; cv=none; b=AY2WZavSvM+BOcv2HvYdAmHhpmEe5/ijoKt+LmuNRq4K0zf7P510zfNtuOWrfWmiJz4MXCq/NB/CiNPHZ5eU62XP+WYEp8FIo5LGpWQ1jLDMbvadhhEWKSnKW3THIuMUBOacFsW+74hsWEHibWGtlZMknkB+Gd4vOmg9DQeE9IQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786573309; c=relaxed/simple;
-	bh=EsfG38HkJbkAV/VN4qU3q9SxTzbrIxMHdzU8kvW0EpE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ldvX9dva8XyoAgXuCB1ymI32LoOS47mTrR/xDHe527VxZbbTZo1Z9SJHnzMb6fujdMQNfmMghub1+lPX35NAGFpEUlND8P5pfMAVqZHDyqFLGZc55XyloDIA4nILmVrSPSSe8Sxy/nNrE8SHp7uPqOSUoJf5d69wTH7zp66I8Gw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WyzytDJL; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0DCA23BCF7
+	for <regressions@lists.linux.dev>; Thu, 13 Aug 2026 01:46:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.128.51
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1786585585; cv=pass; b=nTn+SbyjA9Ryl4+c2TJPQKRvlI0ryspjcmLd0JPiz1a3pN9K+OjDN/8RbeVag/jx4VnZxbCCbPB4WIkE4+rqlpJAi8hpDVcbDeb/U4KoZzJx9vhwuKV+JRlpvPI73s356Fd48TbbsRrYL6tv3ZaJiI9IJHVHuZ/ZewJ51JdmtPc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1786585585; c=relaxed/simple;
+	bh=8zsVKbd7rZ4kyHv3ec1MwsHX32ckqjo3g74aZna+Cbo=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=g2hW5OsiBlrWrMPQ1k3RhzC97UXHe/yMoQrHKCmoMhMhXonKHS/sXLBKzp8utDgJ+HdI4/sJpgLJcAh1t972OGOHs+Bc/adm/TS5pa6uPRvzlVaQTFayv3XIojiGFs3qlLNMCSIFsACw/UWaY8YRfCjS5X+5Zj0N7UCL1IDiXqY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K5PpDpa4; arc=pass smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WyzytDJL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 772CB1F000E9;
-	Wed, 12 Aug 2026 22:21:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786573307;
-	bh=lSjfsT9lz56s5Gpwb7v0lw3+r8UguBFDrjycJYrRh50=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=WyzytDJLW4uygTB8IkrNv+M6l8KIdEXdWj0ar5ta618faApIAlLlo6conCSs2Vnf8
-	 /RmPyIQchw5ZRaEgcfwzoN/asl/qrvGpDYC/EmT6+MHkCHruoug94FEa/9ERu3Tgjf
-	 UMARMLQSCJAPLr8J7MLgeiQLTOt2EDgshkBHbbERI6funv0ohrjMmthWR2NUqikhoo
-	 7m4S7acpeOBGRgcHuOKdlx03xQoh6bAiZbpXi/7YThGLbExImYG6uoIVY+Ym57rzmL
-	 zCxtonGW2KVyLbyH3TxflcIV4spiCqk96HrQTfYz0p1zPjZgH/WWjAriS6804MHqgx
-	 PwklUDbDxCZrg==
-Date: Wed, 12 Aug 2026 18:21:46 -0400
-From: Sasha Levin <sashal@kernel.org>
-To: Alex Deucher <alexdeucher@gmail.com>
-Cc: Sergio Callegari <sergio.callegari@gmail.com>,
-	Greg KH <gregkh@linuxfoundation.org>,
-	Thorsten Leemhuis <regressions@leemhuis.info>,
-	stable@vger.kernel.org,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Linux kernel regressions list <regressions@lists.linux.dev>,
-	"amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	George Zhang <george.zhang@amd.com>
-Subject: Re: [REGRESSION] Please revert 1191285ecb42 from 7.1.y
-Message-ID: <anzx-jMt6_6OTdTI@laps>
-References: <9c6acb62-4080-48e6-9ba2-d1c457c4ec88@gmail.com>
- <2026081106-pebbly-cahoots-37a7@gregkh>
- <23db5f95-c2d6-4712-856e-28f647e184f7@leemhuis.info>
- <1caea72e-b9c8-452b-a3ff-5690d948b4fc@gmail.com>
- <2026081151-reabsorb-calamari-7442@gregkh>
- <8a0fad2d-788a-403f-a880-2f97c6708275@gmail.com>
- <CADnq5_Pb=ox3nWfdpb3Qeo_eSQayuc7UqUOnm0x+WS+EQTVWjA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K5PpDpa4"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4994c49f588so4047125e9.0
+        for <regressions@lists.linux.dev>; Wed, 12 Aug 2026 18:46:23 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1786585582; cv=none;
+        d=google.com; s=arc-20260327;
+        b=bw1ARryyqqL1mLoisEuIAhdd7HvGCqnyAWjf5g81s1mMPUwvFzdmkssRroh0NGiBze
+         2Fo7s1KZnAy3/gkzHWEmi8DNdWb9wGQiZW+1Ey1ACnWsUSX6NrXs9YR60zK3DckrtQQm
+         VbpsUVUPwd7swl5P8uYKmNPsvgQJIIJmWAq16cilH5qCtEnpr/F9uLFN9Qnc5jSHjNU+
+         ids5I/ZtGSoCcCYLmNEVk6DJOhcS9jLbwQjYwUmcJrAlerJ3mI58jcff0qADFZwlhL1m
+         317xOUeh03Oh9PKmjW1MMXHBWVDOcXripHIyLnOOcIiYeoakeBjRzbTVMV5rMaInJk/G
+         Z3Aw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:from:mime-version:dkim-signature;
+        bh=8zsVKbd7rZ4kyHv3ec1MwsHX32ckqjo3g74aZna+Cbo=;
+        fh=afq15lTum68b0GXlJOu5j87vf8a6peJICilNiymUpr0=;
+        b=ovksZyfi1ILY9BUHkSxKvLG6X5//uP0Bo4SVBRTSlSJ795+DjrC/8NqsdirpX/Dgv6
+         pzJzADmMWp3jrjj3U6+ERt6Slhx8ZbGiCiipuEYpM5exTmxaJZ4f5xx3kKkQHVcGCyWe
+         4NXdLff/C6tHlhZ8gWvbqIFSOaCdJS1IY0A4g2KfgGhkqNDJgOoV9ZUMu97bWzQgW/je
+         EZkm4FIfGn2jfSxiTG1IojQYQx6BaLQtqNaW3g0uZVfN5WH8YSZyYaXj+xVoMR0YVDAR
+         p++zCSsohbnRvv4LdzT3++5MBo82vrdJZLfBRuaOlrXQYn//GuFS9j78dncsjnB17nQx
+         WvGw==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1786585582; x=1787190382; darn=lists.linux.dev;
+        h=content-type:cc:to:subject:message-id:date:from:mime-version:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=8zsVKbd7rZ4kyHv3ec1MwsHX32ckqjo3g74aZna+Cbo=;
+        b=K5PpDpa4DDlrvWMVUTFhEQaUI9WaIDnClFwvb/lO1zQv8mYjoWHjhoLZ5MNV/mN7lB
+         SXAVp16baMZgL7+h+eNplvdwRLMzzcqRI5qi0JBG2Uu56FLVXyuf01b72U4LH0zqZz1u
+         wuN9KuJ7lwslckzYl3uJYc23iLnkey47jhjlMt9t5ys4+Qw0yKlNk7ur4Mu6A3fk5Fwq
+         5Y9mHr7ehci0hM/ginqXqfaetoMi7iLWdB/pqOYDKlZYF423CEoPAv7EAf2q1Tu+ChHa
+         DRwraIX7IHeCTvhM+2GqrJ1r6RQQSBS0Y/NKNHaK/QR2OKSONgY6t3/Hbj3cliFMoEXu
+         kgJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786585582; x=1787190382;
+        h=content-type:cc:to:subject:message-id:date:from:mime-version
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=8zsVKbd7rZ4kyHv3ec1MwsHX32ckqjo3g74aZna+Cbo=;
+        b=gT5+JzMder6NxLQL25fPJqA46g7PO+Dh0F78fEFbJT9DsvoU8QM1IuDQMBuAIOOjJz
+         8KBFpuxnJRXtoYfJ/DCe8GAaWuSjZObrADSkGcvtIcsLdcerrXkUR2GR1Icpl6OLQk1r
+         Jee+QitNUa5bN09Y5uoxCm7xWHMtR2C+FCFI49nLr/LrUKqTAiyUT9VSp/Fz3g77JCtf
+         a3vPb/pPtQji3xK0viqiGRP2S5ozOTcVa1gKfV5j4F+et4VJo5R4CmlYJ17DYbzuHH0p
+         HoGJlT2FfLhEKTjWGX6iy8+kZskJKlY7luBg5VzpVe1lTgF0sxvo6D9MNtRJ4tlMwZRG
+         omQw==
+X-Gm-Message-State: AOJu0YxeBL/+WxW/nlqCOfxZHn/5BZutHcvumwGpzK28ZIacHn/N+It8
+	8zpOlGp0lo8qK9J7lp9OArjhtmLwcNCQOovxjI/hfCDd56YnWFPA12F+fYIYtGK4O1Gs5AwXuTA
+	3ZoynyGgJrqVRpxB+L3yYdLpPwAwCX7k=
+X-Gm-Gg: AR+sD11kBOYjYA6lHS5PvW7N7w9RD5vMsjM1RT0lgG4j+82UyzgAGfwgCLCeWXOkhEx
+	Lb8ZMSjgJmXa8Vfg0ipducrV8RDaCJwtH/MJLPfyxf8+g4/ktNGyTAn7qSEopIb4Wasf/FIIhlm
+	qRRihzgf3R+rjiQCk8JQW4G2neTt+APXKkwNNBtbvChfJl9Glukn6rypLRvztDmQdLRaEeWpbA/
+	xL7q4HV+FjjRToIFEwBweSpid1Gqsu3dYka6zu3judOmFj4bqnTVlz8+fXV6nhNSuhWhimP27D7
+	U7bokuEUkix2vyHtS7MJ+8Dt//3X+ET/eVkLc06YkXqS
+X-Received: by 2002:a05:600c:314f:b0:499:59fd:dbfc with SMTP id
+ 5b1f17b1804b1-499821fafebmr15881525e9.1.1786585581976; Wed, 12 Aug 2026
+ 18:46:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CADnq5_Pb=ox3nWfdpb3Qeo_eSQayuc7UqUOnm0x+WS+EQTVWjA@mail.gmail.com>
+From: =?UTF-8?B?5ZC05rab?= <rpwtsama@gmail.com>
+Date: Thu, 13 Aug 2026 09:46:09 +0800
+X-Gm-Features: AUfX_mwjykauUGRd7p0JKAKBT_PY18R1a8DeaIypAi_vxLHJDca3Oj2G0IKRXMo
+Message-ID: <CAF38RzLOUW1ZB1f+Q2f9mhnYs+t4R2+UQA1PCihz_FKEu-nSew@mail.gmail.com>
+Subject: [REGRESSION] Panther Lake 8086:b082 internal eDP black after xe
+ takeover since 7.1.6, still present in 7.1.8
+To: stable@vger.kernel.org
+Cc: regressions@lists.linux.dev, intel-xe@lists.freedesktop.org, 
+	intel-gfx@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Aug 11, 2026 at 01:25:14PM -0400, Alex Deucher wrote:
->On Tue, Aug 11, 2026 at 11:25 AM Sergio Callegari
-><sergio.callegari@gmail.com> wrote:
->>
->> On 11/08/2026 10:08, Greg KH wrote:
->> > We aim to be "bug compatible" with Linus's branch, otherwise the
->> > "pressure" to fix those bugs goes down.  But I defer to the maintainers
->> > of the code involved if it is being worked on, and they want it
->> > reverted, great, we can do that.  Otherwise we prefer to leave it as-is.
->>
->> I understand. Sorry for asking about things that might be obvious to
->> most people here. My expectation was that only a selected subset of the
->> patches on the Linus' tree were to enter in stable, so do we really need
->> to have stable "bug compatible" wrt this bug? The original behavior was
->> not free of issues, but they were rather minor (a reporting issue). Now
->> we have this very bad behavior where the display remains dark.
->>
->> To make the matter worse, on systems that have encrypted root the screen
->> remains dark also on that password prompt (observed with plymouth).
->>
->> In any case, I managed testing 7.2.0RC7 and it is fine again.
->>
->> Looks like the Linus' tree has more changes wrt backlight, and the
->> interesting ones are probably those in the cumulative fix
->> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=973fd9493ec21f12e760fbbedeb7b0b2317c02f4.
->>
->
->Thanks for testing.  It sounds like we should revert the change from
->stable.  There must be some dependency we are missing in stable.
+Hello,
 
-Hmm...
+I am reporting an Intel xe display regression on a Panther Lake
+laptop. The problem started with Linux 7.1.6 and is still reproducible
+with Linux 7.1.8.
 
-In stable kernels, convert_custom_brightness() still scales the user value by
-(max - min), but f1b5d8f9cc54 ("drm/amd/display: Fix backlight max_brightness
-to match exported range") widened the exported range to max. Past ~(max - min),
-scale_input_to_fw() exceeds AMDGPU_MAX_BL_LEVEL and
-convert_brightness_from_user() returns >0xFFFF, which wraps in
-dce_driver_set_backlight(). With the defaults the cliff lands on 64533, which
-is what Sergio sees.
+System:
 
-Upstream only hides it: mod_power_set_backlight_percent() clamps at 100%.
+Laptop: Lenovo ThinkPad T14p Gen 4 (2026)
+CPU: Intel Core Ultra 9 388H, Panther Lake
+GPU: Intel integrated graphics, PCI ID 8086
+Driver: xe
+Display: internal eDP panel
+Distribution: Arch Linux x86_64
+Desktop: KDE Plasma on Wayland
+Regression status:
 
-Does this make sense?
+Known good: 7.1.5-arch1-2
+First known bad: 7.1.6-arch1-1
+Latest tested bad: 7.1.8
+The issue is fully reproducible with both 7.1.6 and 7.1.8. Downgrading
+only the kernel to 7.1.5-arch1-2 makes the problem disappear.
 
--- 
-Thanks,
-Sasha
+Steps to reproduce:
+
+Disconnect all external displays.
+Cold boot the laptop.
+The Lenovo firmware logo and systemd-boot menu are displayed normally.
+Select the Arch Linux boot entry.
+When the xe driver takes over from the firmware framebuffer, the
+internal panel becomes completely black.
+Close and reopen the laptop lid.
+The internal panel starts working normally.
+The issue occurs on every boot. Connecting an external display changes
+the behavior and may allow the internal panel to initialize.
+
+The failure coincides with the following kernel messages:
+
+fbcon: xedrmfb (fb0) is primary device
+xe 0000:00:02.0: [drm] *ERROR* CPU pipe A FIFO underrun
+xe 0000:00:02.0: [drm] fb0: xedrmfb frame buffer device
+Tests performed:
+
+Adding xe.enable_psr=0 does not help.
+Disabling my custom xe SR-IOV service and booting without creating any
+VF does not help.
+Linux 7.1.5-arch1-2 works with the same firmware and userspace.
+Linux 7.1.6 and Linux 7.1.8 consistently reproduce the problem.
+I have not bisected the exact offending commit.
+Full debug dmesg and system information are available in the linked
+drm/xe issue:
+
+https://gitlab.freedesktop.org/drm/xe/kernel/-/work_items/8902
+
+#regzbot introduced: v7.1.5..v7.1.6
+
+Regards,
+rpwtsama
