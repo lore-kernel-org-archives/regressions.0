@@ -1,36 +1,51 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [46.38.247.119])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A43F41A4FB;
-	Thu, 13 Aug 2026 07:59:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5411243F8C9
+	for <regressions@lists.linux.dev>; Thu, 13 Aug 2026 09:49:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.38.247.119
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786607953; cv=none; b=Up6VTCVqyz+5yaPeSVVqnSiaOXnllfu5D1T16eQSwV/zWKXri32Ot3wC3BVwILfO9Y2xEfBeaw+jBk4a9T8s35C0eof0jiyZqn+7Vcc9+248rHLBZSzY0CuVQx8Qv9cjMPDe1q6avfdIQQIfDu6QNZ/JiogHilHX8fZNUknm4ho=
+	t=1786614567; cv=none; b=ke+cmXTULvrZwiGUG9F/EMfk+qQeB4Ow0Jnpb09xGmQs/qAOGfwCl6bxW5OY86NvWwb9i/By89Brn/76HHNee9yDX6E/HocbGuoJHGWf9ptlTeCsOPO/I/rn9MBjMnwwqT3rOHIij8Fwl0YGKGwsmkDnfdGSVb+ZtPdU9YQzTdc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786607953; c=relaxed/simple;
-	bh=YZbMD6LCy1o2IbzwlYwHdEg1mlhjFXVahfDCDmxzgM8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nQ9PGXmPfJ71+by9iS/7+N/8UG/Fc6/JN5KQGuZeN4aEekbfmrRLT9AUmsZ0UDojFjOfStmwLA0dgfAJ3xcrbY4jQ0Y7sPD6CXeWOC88foAvAXKC7cEkHYrqDmQkHWI4+w1fkrjXTsCtg88NpVUOMBSLCcUb8k+lfMBwSZNfMy8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=hdc/TYsG; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1786614567; c=relaxed/simple;
+	bh=RXveWGO+YNCYOZNqO3u4xIrt1ua1HulC2uMMGgNwz4A=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=hB2cRs02vTL4C7uXbYJ+3X8u7DKObdMKLYzMlnEvtnX2ov86hR/26ABPbIRCENmVOmvw5zbjUhBkJ+8i6AkfTThrkjycj7OQHmw9P4qv0Y/B1qVUYZugcjSNIOwMq7Bz8pSBBuvI+pin3Mh0NKZ96LPpXon+FigQ1+HTQ3HuJ/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=G0UkKS+u; arc=none smtp.client-ip=46.38.247.119
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="hdc/TYsG"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:From:Cc:To:Subject:
-	MIME-Version:Date:Message-ID:From:Reply-To;
-	bh=uyRKfejl5js6NDDDEUB7U7M5f2j8gaDH5+HlJp1OK1Q=; b=hdc/TYsGDH0NDLOjNwuULY7iR0
-	LYnTlgCPFWxGsKWLRynPKYKRe4p+CdLURJBUM3wQ9IpzLpryIN4RV/PUE0Lcvu0ncdtzuuxd9lXZW
-	mLz5G5CDJjRNolvT43BU7PMWMFkAbytoyRWz41PnAi8pJDWmRegq3KCoOIBcRmRHRpDuWOKVVvslx
-	h8zbWxwVMtsk4qs0YFrtP8/FdtRYV8m2hK4EfGKHo7wlnE9pDoxz4ANz39VHNv+oDt/um0zmrvPQa
-	4QYCxumAksNYP+C0XL6eSVrLmP2kPPoSXvrICw3DmOUbiQo/JNkH2J0pKyC/efPnr/kZ3ypLFpb8l
-	zdetznoA==;
-Received: from [81.79.79.1] (helo=[192.168.0.116])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1wuQKu-000koQ-2G; Thu, 13 Aug 2026 09:58:48 +0200
-Message-ID: <61a96635-e143-4d69-b0f7-0f312f5a3a3c@igalia.com>
-Date: Thu, 13 Aug 2026 08:58:47 +0100
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="G0UkKS+u"
+Received: from mors-relay-8404.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4hLLDC3B6Tz8Fpj
+	for <regressions@lists.linux.dev>; Thu, 13 Aug 2026 11:49:15 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1786614555;
+	bh=RXveWGO+YNCYOZNqO3u4xIrt1ua1HulC2uMMGgNwz4A=;
+	h=Date:Subject:From:To:References:In-Reply-To:From;
+	b=G0UkKS+uC9TS95uJ9ZjOZObt2ceFowJnaPr717dfmtJQQOVzLXbon7mWxdCeFvTKq
+	 aNiSpQ4qBNsIM6U/pCtnXZe6o4OXTffR2WO0WvtN3C2/L5H8T/D+Yd1XsBbq9Owlz8
+	 pNlNxh2hNLGEExV5/odjZpX8M97taBFVL/py2r7Lw/z6BSiGuGGpcSDGZdjciBTkZB
+	 O8CTGAgRVIWBLtwkVYS6DfouwMq14ATWOz77DjFFD748HqJu8MnnR0hSrSOsb1evE0
+	 XvUvS56QTPw3j2eUDflWk7bhzCDBfpUZKD+yuE4dhosPnFuE6QLO9YhqHtnnFkvQzG
+	 OwjrzEqNjpARA==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4hLLDC2Tvgz4yWQ
+	for <regressions@lists.linux.dev>; Thu, 13 Aug 2026 11:49:15 +0200 (CEST)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4hLLDC0ygTz8sb0
+	for <regressions@lists.linux.dev>; Thu, 13 Aug 2026 11:49:14 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 6C1AB5F933
+	for <regressions@lists.linux.dev>; Thu, 13 Aug 2026 11:49:14 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <20487014-4201-4613-8057-5caa7c098edf@leemhuis.info>
+Date: Thu, 13 Aug 2026 11:49:08 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -38,154 +53,48 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] drm/sched: FAIR policy causes serious performance
- degradation at max GPU load on 9070XT
-To: Luke.Wildhardt@proton.me
-Cc: Danilo Krummrich <dakr@kernel.org>, Philipp Stanner <phasta@mailbox.org>,
- phasta@kernel.org, "matthew.brost@intel.com" <matthew.brost@intel.com>,
- "ckoenig.leichtzumerken@gmail.com" <ckoenig.leichtzumerken@gmail.com>,
- "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <TfhgV1W0W5LI6RWUO6J35B3R8QIYH_FN3Eihzdo_9PH39hfn1AVByT-QBPHmWiAR-L0Kqi2sppM_EhFPKwZPGmb5pFgpF2MrzeFzkZDmpG8=@proton.me>
- <cef49cf329737e0af12ef5a90dd21f31e113d4c3.camel@mailbox.org>
- <DKL9VAWD2Y98.RBQPQUL7Y47F@kernel.org>
- <6e2a207e-4db6-4d47-b1f6-9cb13b8d6eeb@igalia.com>
- <enK0t0JrZ3lr9gmgPwE_YaVJDy7K355Bs0xy0YNoVwujLHCGWNRXCjDOhYfiHNGN3pPDSlEUIz3_UkXmFNAJNXxrJOIwvzAG-k8_p_D5FOQ=@proton.me>
- <4OmZej9WiJ6-rsJ_lFcrmwtClAwMdN4oHXWH0p8FkIrhAn4LKS4O3q36wrdZrvjZHBNS8PZsvaIvR-1aFZfF2tDiy1cdMzTYNylcbGDQN68=@proton.me>
- <a9ee4edb-e763-4fd7-a510-32191df0cf8f@igalia.com>
- <Wgbhe0iRVno6QTXUasXAw96sdk1GzzJ8DW_Yw8EyCtxvwV4-EfRTaUdaF9vYeMYsMyfLVVTmXBOB1Br_d-l8b87D_2CMFyYSJi34eaaGGW4=@proton.me>
- <ylme_dYqb7yeNvmFl3ZeH3v8d_46-oAWr6t95wEZTYGiLMdbNTzXBFoV1zueOeHcKXcFrMMsoF0s_57Hzj0wwEfxDRjPhmu-xquKmeXKehg=@proton.me>
-Content-Language: en-GB
-From: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
-In-Reply-To: <ylme_dYqb7yeNvmFl3ZeH3v8d_46-oAWr6t95wEZTYGiLMdbNTzXBFoV1zueOeHcKXcFrMMsoF0s_57Hzj0wwEfxDRjPhmu-xquKmeXKehg=@proton.me>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: <178661455462.859879.11613911186914176937@mxe9fb.netcup.net>
+X-NC-CID: bFgbZDm/NjyuWxE/XVGv0pW+DH44C4uV9oLKLsO0WN4KVR2ijTo=
 
 
-On 13/08/2026 07:42, Luke.Wildhardt@proton.me wrote:
-> Ok, after a lot of A/B testing, it appears that trying your "drm-intel/drm-sched-fair-fixed" branch, the stuttering is still there. It's definitely paced differently though, I will attach a video. It's "choppier" when it happens. I tested in a few different areas / times of day, in case you notice the scenery isn't the same; this is representative of what I experienced in other places. I will note, that I tried playing 4 times, 3/4 times, shortly after boot. 1/4 times I left my desktop to idle for about 30 minutes while I did something else, and I didn't encounter the issue at all in 10 minutes. Not sure how significant that is, or if it's just noise.
-> 
-> https://www.youtube.com/watch?v=GWyIVEuhooM
-> 
-> To make sure I wasn't insane, I went back to the patch Claude gave me, applied against a clean 7.2.0-rc7. At least again in a few sessions after boot, no issue. I'll post that exact code below.
 
-Yes, I had a brain fart yesterday and had only pulled the lock out on 
-the pop side. I have now pushed the updated branch, with both the add 
-and pop side made symmetric in lock taking aspect.
+On 3/9/24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-If you could pull and re-test once more that would be great.
+#regzbot report: gitlab.freedesktop.org/drm/amd/-/work_items/5595
+#regzbot introduced: 83a8dee2bdfb
+#regzbot title: drm: amdgpu: H.264 encoding regression causes ring vce0
+timeout on Polaris (vce_v3_0)
+#regzbot fix: drm/amdgpu: Implement insert_end for VCE 3
 
-Regards,
+#regzbot report: https://gitlab.freedesktop.org/drm/amd/-/work_items/5570
+#regzbot fix: be5c6ca1924acd
 
-Tvrtko
+#regzbot report:
+https://lore.kernel.org/lkml/20260629-btmtk-ryzen-remote-wakeup-v1-1-1d2f1cee6d22@rong.moe/
+#regzbot resolve: inconclusive: not totally sure, but I believe this is
+either fixed or is the general mediatek firmware problem
 
-> If you need any other info from me let me know.
-> 
-> 
-> --- a/drivers/gpu/drm/scheduler/sched_rq.c
-> +++ b/drivers/gpu/drm/scheduler/sched_rq.c
-> @@ -2,6 +2,7 @@
->   /* Copyright 2015 Advanced Micro Devices, Inc. */
->   /* Copyright (c) 2025 Valve Corporation */
-> 
-> +#include <linux/moduleparam.h>
->   #include <linux/rbtree.h>
-> 
->   #include <drm/drm_print.h>
-> @@ -9,6 +10,32 @@
-> 
->   #include "sched_internal.h"
-> 
-> +/*
-> + * Diagnostic counters. Not for submission.
-> + *
-> + * dbg_pop_stayed  - pops where the entity had another job queued and so stayed
-> + *                   in the tree. No save/restore of vruntime occurs.
-> + * dbg_pop_left    - pops where the entity queue drained, so it left the tree
-> + *                   and drm_sched_entity_save_vruntime() ran. Only this path
-> + *                   arms a later restore.
-> + * dbg_add_restore - calls to drm_sched_rq_add_entity(), i.e. restores.
-> + * dbg_add_race    - restores where the entity was still linked in the tree,
-> + *                   meaning the vruntime being restored is still absolute.
-> + *
-> + * Incremented under rq->lock, so exact per scheduler and only mildly lossy
-> + * when summed across rings. Writable so they can be reset between runs:
-> + *   echo 0 > /sys/module/gpu_sched/parameters/dbg_pop_left
-> + */
-> +static unsigned long dbg_pop_stayed;
-> +static unsigned long dbg_pop_left;
-> +static unsigned long dbg_add_restore;
-> +static unsigned long dbg_add_race;
-> +
-> +module_param(dbg_pop_stayed, ulong, 0644);
-> +module_param(dbg_pop_left, ulong, 0644);
-> +module_param(dbg_add_restore, ulong, 0644);
-> +module_param(dbg_add_race, ulong, 0644);
-> +
->   static __always_inline bool
->   drm_sched_entity_compare_before(struct rb_node *a, const struct rb_node *b)
->   {
-> @@ -266,14 +293,40 @@
->   	sched = container_of(rq, typeof(*sched), rq);
->   	spin_lock(&rq->lock);
-> 
-> +	dbg_add_restore++;
-> +	if (!RB_EMPTY_NODE(&entity->rb_tree_node)) {
-> +		dbg_add_race++;
-> +		pr_warn_ratelimited("drm_sched: vruntime race on ring %s (comm %s)\n",
-> +				    sched->name, current->comm);
-> +	}
-> +
->   	if (list_empty(&entity->list)) {
->   		atomic_inc(sched->score);
->   		list_add_tail(&entity->list, &rq->entities);
->   	}
-> 
-> -	ts = drm_sched_rq_get_min_vruntime(rq);
-> -	ts = drm_sched_entity_restore_vruntime(entity, ts, rq->head_prio);
-> -	drm_sched_rq_update_tree_locked(entity, rq, ts);
-> +	/*
-> +	 * Only restore the vruntime if the entity actually left the run queue.
-> +	 *
-> +	 * drm_sched_entity_pop_job() dequeues the last job and only afterwards
-> +	 * calls drm_sched_rq_pop_entity(), which is where the entity is removed
-> +	 * from the tree and drm_sched_entity_save_vruntime() converts its
-> +	 * vruntime to min_vruntime-relative form. A push landing in that window
-> +	 * sees an empty queue, takes the "first job" path to here, and would
-> +	 * restore a vruntime which is still absolute -- adding min_vruntime to
-> +	 * it a second time. If the entity is also the leftmost one,
-> +	 * drm_sched_rq_get_min_vruntime() returns the entity's own vruntime and
-> +	 * the value is doubled, placing it far to the right of the tree where it
-> +	 * will not be selected again until the run queue catches up.
-> +	 *
-> +	 * A still-linked entity never left, so its vruntime is already absolute
-> +	 * and its tree position is valid. The concurrent pop will update both.
-> +	 */
-> +	if (RB_EMPTY_NODE(&entity->rb_tree_node)) {
-> +		ts = drm_sched_rq_get_min_vruntime(rq);
-> +		ts = drm_sched_entity_restore_vruntime(entity, ts, rq->head_prio);
-> +		drm_sched_rq_update_tree_locked(entity, rq, ts);
-> +	}
-> 
->   	spin_unlock(&rq->lock);
->   	spin_unlock(&entity->lock);
-> @@ -330,11 +383,13 @@
->   	if (next_job) {
->   		ktime_t ts;
-> 
-> +		dbg_pop_stayed++;
->   		ts = drm_sched_entity_update_vruntime(entity);
->   		drm_sched_rq_update_tree_locked(entity, rq, ts);
->   	} else {
->   		ktime_t min_vruntime;
-> 
-> +		dbg_pop_left++;
->   		drm_sched_rq_remove_tree_locked(entity, rq);
->   		min_vruntime = drm_sched_rq_get_min_vruntime(rq);
->   		drm_sched_entity_save_vruntime(entity, min_vruntime);
-> 
-> 
-> 
+#regzbot report:
+https://lore.kernel.org/all/CAF38RzLOUW1ZB1f%2BQ2f9mhnYs%2Bt4R2%2BUQA1PCihz_FKEu-nSew@mail.gmail.com/
+#regzbot dup:
+https://lore.kernel.org/all/CAF38RzLJihCvga6UgkPPR+A1jY33bf1T083CfDy+pfBuzYcdjg@mail.gmail.com/
+
+#regzbot report:
+https://lore.kernel.org/all/CAF38RzLOUW1ZB1f%2BQ2f9mhnYs%2Bt4R2%2BUQA1PCihz_FKEu-nSew@mail.gmail.com/
+#regzbot dup: https://gitlab.freedesktop.org/drm/xe/kernel/-/work_items/8901
+
+
 
