@@ -1,174 +1,144 @@
-Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 375612D77E6
-	for <regressions@lists.linux.dev>; Fri, 14 Aug 2026 14:04:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B45E3C73D1
+	for <regressions@lists.linux.dev>; Fri, 14 Aug 2026 14:15:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786716246; cv=none; b=DNOmaZw0Lupplo2xJkymvGcoTYQv17KiXxH1pUVWy4mqw12JgRj4gLgcpNm5xXtBuHdsjwntYLPSXeI+KRFUwyi2lBVuHjb3wJacAJZaZ5rZiewDEv55FNCZZMpJd6T7iq/0wdsNleDSzJ3zRnVF1mblbS3G2iwO5h0YTCa2dsA=
+	t=1786716974; cv=none; b=UWnJ5CApBF+vJTrBqoPyp5h/swZfi2Bk94zJkiI+GawMQQGmd3xegNiiaIqAv2zBgM9iyzGuPVKi8vK2+SUV9dCXlK8auAFyC/e4dxunI0hsZtghlSYkh2jh5bYNA1vygVORvwY2PacyzDiTdjOIoT9tTixHyJ80NWeUBJFybLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786716246; c=relaxed/simple;
-	bh=KoHa5GbljRRG3jbxDYQ1Ubn0KE6wGG4QtLRjUCmaO3I=;
-	h=Date:From:To:Cc:Message-ID:Subject:MIME-Version:Content-Type; b=Ksl+VImtb5qMIKlW3kxHctHpHQCtyxOCGa5kC9lVaFZX4RSNzh5jCrFemZwpxqHdoy8Xklu3o6RopC6XvYfK/GEL50vADGsDxjMnTEbjb3feV0mq1fLVB1XAyalNTkl6ly3qzZnd+CbJ4cVNERfnqALJ4mH4mWTwvvCKv7KIF4Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de; spf=pass smtp.mailfrom=posteo.de; dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b=WiwFc1CX; arc=none smtp.client-ip=185.67.36.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.de
+	s=arc-20240116; t=1786716974; c=relaxed/simple;
+	bh=wNpmRG0bvwI0zH3SDqeNYVrQrLdnvlPl+nuh3Ab+P20=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lnIwsGuYHiP6N1L1AVkpo2e+wM+dRXKQuz6wdfdskgqVCt6gqSZl1Mo9TsE/Au2C+dWDQvWupMwJgB36WInqIYYhThKJg4n4LVXdEAkx/rtdHYxnTo62BN8LVI9XH6QxpvYx5BcRiSXLXu2G5xOcK+ICfoLRaL1iLMjp6F5f2U4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SCN65Q+d; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b="WiwFc1CX"
-Received: from submission (posteo.de [185.67.36.169]) 
-	by mout02.posteo.de (Postfix) with ESMTPS id 10427240103
-	for <regressions@lists.linux.dev>; Fri, 14 Aug 2026 16:04:02 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=posteo.de;
-	s=1984.8680eb; t=1786716242;
-	bh=KoHa5GbljRRG3jbxDYQ1Ubn0KE6wGG4QtLRjUCmaO3I=;
-	h=Date:From:To:Cc:Message-ID:Subject:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:From;
-	b=WiwFc1CXA23kStNwqTi6BMwx0J5rcgd35R4f1y0vSTVKXWChx9DDveQF2I78uSwq0
-	 ewkFIuRShevzYRwKvq57/bK0Sxg1QGquMTJTkw2dF/mZmDvXgJ/K6VV8RPo5ErX02f
-	 uzMhNleBeR7M6rLkI3ZcpNJtH3T0CEwvox13lPxPJ3EPe4hG410zfYPhndOG2jFVay
-	 O7wmFSMK0tsQ3K3TiXRKgmAZ3KZB1Blszymgg7S5Ch0/thuDwx53OplLFCnxCYlr0S
-	 g8o1PIhXVT6/JVfI0kaI0c2qaIBA78tIbqZPQvhE3N+AEcH70wK9ZeGJ4Eyq2xc1cy
-	 0/jQWbpcDPWEw==
-Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4hM3qj3lKkz9rxy;
-	Fri, 14 Aug 2026 16:04:01 +0200 (CEST)
-Date: Fri, 14 Aug 2026 14:04:01 +0000
-From: Jonas Hort <jonas.hort@posteo.de>
-To: regressions@lists.linux.dev
-Cc: linux-wireless@vger.kernel.org, lorenzo.bianconi83@gmail.com
-Message-ID: <066b30cc-a9e6-4aeb-964d-71551e8ea3ef@posteo.de>
-Subject: [REGRESSION] mt7925: MLO connectivity silently stalls with 6GHz
- link active
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SCN65Q+d"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2ccdf36f63dso112175ad.0
+        for <regressions@lists.linux.dev>; Fri, 14 Aug 2026 07:15:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1786716953; x=1787321753; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=rH19XpzJqW08+W7mG+VpaQ4KF0ayb7gJPWy2w+2WSfo=;
+        b=SCN65Q+dac/yqwk2Np51M4MxFXHWIy6yaYnx6EoPk6/PY5f5WbJiZFDMhfkg/oEBi4
+         TR0IHEOUBYf1EpdV3/iw2yOE0+WDJD6e4UwDjc21sl7oHBInln+SLGgL0xhvxOy477As
+         xbiYgIvlLT26i+U1p4xUXRytKUvDvq2ZdmD04Ty2w1ucy6U/YFE/D+KdVfwaonNusW2x
+         0zauoKXjRW0u5Rmaz85gF3Ghsub2cD5YUmAxnEpZgVqEGAeLnMp6yPvksU6Zq0dPiocc
+         uwffo3BgDq+HAsg36QfkU1ttyVvVTF0u+1E2RjfGAHg870tjdA43jR6IBnubzDPUZTqy
+         QYRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786716953; x=1787321753;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=rH19XpzJqW08+W7mG+VpaQ4KF0ayb7gJPWy2w+2WSfo=;
+        b=FLtEpouUjglYQIdTWGmP/KnwP/jHL/hnxbXftOkywsJLvB0EX83+zkJWZ1lagin76a
+         VAIjrof2wEQI9BXmyCGLF02T7q5FP8ATOUm55xjXCMe/wRyf8vxpzz9l4OmgsSUf7YJs
+         slpgaYSOjG28L9R8VUJtOyQfuU6Y1dUY63F1mofWVzBeGvNxGTNQqynzWUxLwIMg3FEs
+         orKI7/4lrHeckvgRYvrsZdtTf4Q67aO8oobpwGxz2dWsnGhxLsFTnPHzxTcmoxQtYbwv
+         5q+ihdnu1pN0ndEc9yi5O3lOCIs1w8v2TOqc3o5a/RpA/LX6ga9Beb1HdZSUJ2IctuoT
+         wn5Q==
+X-Forwarded-Encrypted: i=1; AHgh+RqF1TnHvIZ2AEu1Mn69qFzn6n8olrjTGOHLjtUrMSvFaWe4A66iaWtBxv2qyjfcqg8MabFfZzwOCue0uA==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwlGDh4mn92BMkqx5XPBeun2xz38vYFN7Opa7Ve8FBnUbsmzEU7
+	8BVcvki1osS5NdmM5KzQpE1sJmXkYmrNoTj6zXzbs86pheDJtlHa6yW+BxlJ5UMoOg==
+X-Gm-Gg: AR+sD12KDYWv2IfB+k0jZ3Pbnj3AkSiaN2AlMHSIhkDOJo28ZBinaE7MGHP+OcqVC0+
+	zbwzRSAVUHqCuyaIhTWwwp2IlPEh/Q+vg8on8T/yRn+HrC2KJZYQVeS3e+7R7g5QwTEjr3G/7I8
+	xt8SPiNFG/nESg2YXv9I5Ae4QEW2oRV2fmEnZIrIASR7EjL6tZijpkpRGE60/o0kCI++DNhZxPw
+	aszaffqkDUUClw3NJCWd05zDAHpzZ6qcsTw3qe9kJdWz07jS3YKODLESJSwpEmr2W+93CDPsgZC
+	Q2dlES5f9IbIQPtZqvrCDKPQ7oQsdIWszwrTNNqrRFPwjN+S3EQYU15W/4U7be12dhie/5Cesw3
+	7H7P5E0kcfVfsFt50/wrGYKsPOcT3O8WXRqWH31wLXZuzPxZbQIB3urA3GwQA0e0lhcnbMDFaJe
+	mVol+ni+fCwL0ErAP+3Zmm/z+cv3RUukhl76iRTHLKDtCMkjbSmiHZ3AsjuVwHuc9J4ZnsZhbkw
+	zs3w5Fhdz+TOywG+0sROncta4wEejwLsw==
+X-Received: by 2002:a17:903:15c8:b0:2ca:6bf:5bac with SMTP id d9443c01a7336-2d3af24fa75mr9130205ad.8.1786716952002;
+        Fri, 14 Aug 2026 07:15:52 -0700 (PDT)
+Received: from google.com (21.168.124.34.bc.googleusercontent.com. [34.124.168.21])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-8517d223f8csm551513b3a.35.2026.08.14.07.15.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Aug 2026 07:15:50 -0700 (PDT)
+Date: Fri, 14 Aug 2026 14:15:45 +0000
+From: Pranjal Shrivastava <praan@google.com>
+To: Dmitry Malkin <dma@nebius.com>
+Cc: Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+	Joerg Roedel <joro@8bytes.org>, Nicolin Chen <nicolinc@nvidia.com>,
+	Jason Gunthorpe <jgg@nvidia.com>,
+	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+	"stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [RFC PATCH] iommu/arm-smmu-v3: Allow nested attach for PCI
+ bridges without vDEVICE
+Message-ID: <an8jEbT9pAUYfsvR@google.com>
+References: <PA1P190MB25578C482C8A3B06A4DCC6FDDBDA2@PA1P190MB2557.EURP190.PROD.OUTLOOK.COM>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Correlation-ID: <066b30cc-a9e6-4aeb-964d-71551e8ea3ef@posteo.de>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PA1P190MB25578C482C8A3B06A4DCC6FDDBDA2@PA1P190MB2557.EURP190.PROD.OUTLOOK.COM>
 
-Filed as: https://bugzilla.kernel.org/show_bug.cgi?id=3D221884
+On Fri, Aug 14, 2026 at 10:07:09AM +0000, Dmitry Malkin wrote:
+
+Hi Dmitry,
+
+[...]
+
+> ---
+>  drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-iommufd.c | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+> 
+> diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-iommufd.c b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-iommufd.c
+> --- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-iommufd.c
+> +++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-iommufd.c
+> @@ -5,6 +5,8 @@
+>  
+>  #include <uapi/linux/iommufd.h>
+>  
+> +#include <linux/pci.h>
+> +
+>  #include "arm-smmu-v3.h"
+>  
+>  void *arm_smmu_hw_info(struct device *dev, u32 *length,
+> @@ -118,6 +120,17 @@ int arm_smmu_attach_prepare_vmaster(struct arm_smmu_attach_state *state,
+>  		if (cfg == STRTAB_STE_0_CFG_ABORT ||
+>  		    cfg == STRTAB_STE_0_CFG_BYPASS)
+>  			return 0;
+> +		/*
+> +		 * Group-wide domain attachment also visits host PCI bridges. Such a
+> +		 * bridge is not exposed to the VM and therefore has no virtual SID.
+> +		 */
+> +		if (dev_is_pci(state->master->dev) &&
+> +		    pci_is_bridge(to_pci_dev(state->master->dev))) {
+> +			dev_info_ratelimited(state->master->dev,
+> +					     "skipping vDEVICE requirement for translated nested domain: cfg=%u ret=%d\n",
+> +					     cfg, ret);
+> +			return 0;
+> +		}
+>  		return ret;
+>  	}
 
 
-Summary: WiFi 7 MLO (5GHz+6GHz) on MT7925 silently stops passing traffic
-after a few minutes, while the driver continues to report a fully
-healthy link. Root cause appears to be a stalled WFDMA0 TX hardware
-queue. Reproduced on both linux 7.1.8 (stable) and 7.2.0-rc7 (mainline
-pre-release), not fixed as of rc7. Disabling the 6GHz radio on the
-access point eliminates the freeze entirely in my testing.
+I agree that this is needed for old bridges. However, should this check
+actually live higher up in IOMMUFD? Instead of the SMMU driver deciding
+to bypass the error, what if iommufd itself intercepts the vDEVICE 
+mapping failure during the group iteration? If IOMMUFD sees that the 
+device lacking a vDEVICE is an IOMMU group alias/bridge, it could 
+explicitly tell the underlying driver to proceed with a NULL vmaster?
 
-This is a regression: reported by multiple users on the CachyOS forum
-as broken starting with the 7.1.x kernel line; earlier kernels
-(6.18.x longterm) are reported to work fine. I have not yet performed
-a commit-level bisection but can if guided on the best approach given
-the AP-side 6GHz dependency.
+Also, regarding RID aliasing: while it's true the host bridge doesn't 
+need a vDEVICE for its own host-consumed DMAs (like AER/PME), are we
+confident this won't break guest-injected events if the bridge aliases
+the downstream endpoint's traffic? For e.g. if the "real" endpoint's
+traffic is aliased to the bridge's RID and the bridge has no vmaster,
+won't we lose the ability to inject IO Page faults into the guest?
 
---- Detailed description ---
-
-Symptom:
-When connected via MLO (Multi-Link Operation, EHT/WiFi 7) with two
-active links - one on 5GHz and one on 6GHz - network traffic silently
-stops after a few minutes of normal use (web browsing, etc). The
-connection continues to show as healthy:
-
-- `iw link` / `iw station dump` report the connection as associated,
-=C2=A0 authenticated, good signal (-60 to -65 dBm), high negotiated
-=C2=A0 bitrate (800-1700 Mbit/s), 0 tx retries, 0 tx failed.
-- Nothing is logged to dmesg/journalctl at the time of the freeze.
-- Ping to the gateway shows 100% packet loss for several minutes,
-=C2=A0 until the connection eventually recovers on its own.
-
-I built a small watchdog script (ping-based failure detection + live
-kernel log monitoring) to catch the freeze automatically and sample
-mt76 debugfs state repeatedly across the event. This revealed the
-actual mechanism:
-
-`/sys/kernel/debug/ieee80211/phy0/mt76/xmit-queues` shows the WFDMA0
-hardware TX queue's `tail` pointer completely frozen while `head`
-keeps advancing - i.e. packets keep getting enqueued but the firmware
-stops draining the queue. RX stops in the same instant (rx byte/packet
-counters in `iw station dump` freeze completely). No tx retries or tx
-failures are ever reported by the driver, so it does not appear to
-notice the stall itself.
-
-Example from one incident (kernel 7.2.0-rc7):
-=C2=A0 t+1s:=C2=A0 WFDMA0: queued=3D130 head=3D390 tail=3D260=C2=A0=C2=A0 r=
-x bytes=3D184791894
-=C2=A0 t+9s:=C2=A0 WFDMA0: queued=3D148 head=3D408 tail=3D260=C2=A0=C2=A0 r=
-x bytes=3D184791894 (unchanged)
-
-`tail` never advances during the whole stall window while `head`
-keeps growing - the queue is being filled but never drained.
-
-Reproduced this exact signature four times total (twice on 7.1.8-1,
-twice on 7.2.0-rc7-1), always with MLO 5GHz+6GHz active, always
-within 3-5 minutes of normal use.
-
-6GHz correlation:
-My MLO links are 5GHz (5180 MHz) + 6GHz (varies, e.g. 6135 MHz).
-Fully disabling the 6GHz radio on the access point (FritzBox 5690
-Pro, FRITZ!OS 8.25 - not just client-side band restriction via
-NetworkManager, which does not reliably suppress the second MLO
-link) results in 30+ minutes of clean operation with no freeze.
-Re-enabling 6GHz reproduces the freeze again within minutes.
-
-Regression info:
-Multiple users on the CachyOS forum report this started with the
-7.1.x kernel line; the previous longterm kernel (6.18.x) is reported
-to work fine by another user with different affected hardware
-(different AP). I have not personally tested 6.18.x myself, and have
-not performed a commit-level bisection yet - happy to do so if
-pointed toward the most likely area of the driver, given the AP-side
-6GHz dependency makes a fully automated bisection awkward.
-
-Steps to reproduce:
-1. Connect to an AP advertising WiFi 7 MLO with 5GHz+6GHz link
-=C2=A0=C2=A0 options, so the client negotiates both links.
-2. Use the connection normally (web browsing is sufficient).
-3. Within roughly 3-5 minutes, new connections start hanging;
-=C2=A0=C2=A0 existing traffic stops.
-4. Check `iw link` - link still reports as connected/healthy.
-5. Check `/sys/kernel/debug/ieee80211/phy*/mt76/xmit-queues` -
-=C2=A0=C2=A0 WFDMA0 tail pointer frozen while head continues to advance.
-
-Environment:
-- Kernel: linux-cachyos 7.1.8-1 and linux-cachyos-rc 7.2.0-rc7-1
-=C2=A0 (CachyOS, near-vanilla Arch-based build)
-- cat /proc/version:
-=C2=A0 Linux version 7.2.0-rc7-1-cachyos-rc (linux-cachyos-rc@cachyos)
-=C2=A0 (clang version 22.1.8, LLD 22.1.8) #1 SMP PREEMPT_DYNAMIC
-=C2=A0 Mon, 10 Aug 2026 20:51:00 +0000
-- Distribution: CachyOS
-- Architecture: x86_64
-- Kernel tainted: no (/proc/sys/kernel/tainted =3D 0)
-- WiFi hardware: MediaTek MT7925 (mt7925e driver, mt76 core),
-=C2=A0 WM Firmware Build 20260605184805, ASIC revision 79250000
-- Access point: AVM FritzBox 5690 Pro, FRITZ!OS 8.25
-
-Related community discussion:
-https://discuss.cachyos.org/t/mt7925-wifi-7-mlo-breaks-connectivity-on-7-1-=
-x-mt76-regression/31972
-(I am the thread starter; several other users report matching
-symptoms with different hardware/APs)
-
-Possibly related (different symptom, same 6GHz/MT7925 area, worth
-checking for a common root cause):
-Bug 221627 - MT7925E - System locks up with flashing caps lock
-(comment 1 there: "caused by switching between AP's with the same
-6GHz wifi name")
-
-Attachments (will add to this ticket):
-- Full incident logs for all four reproductions (dmesg + journalctl
-=C2=A0 + mt76 debugfs time series across each freeze)
-- iw station dump / iw link output during freeze
-- Kernel .config
-
-Note: checked bug 220424 (mlo_sta_cmd/sta_cmd regression) before filing -
-different symptom (persistent near-zero throughput vs. our intermittent
-full stall with healthy link stats) and different root cause (broadcast
-wtbl hdr_trans_tlv handling). That fix landed in 6.16.6/6.17-rc5, well
-before the kernel versions tested here, so it is not the cause of this
-issue.
-
+Thanks,
+Praan
