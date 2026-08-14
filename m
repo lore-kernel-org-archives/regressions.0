@@ -1,146 +1,147 @@
-Received: from DB3PR0202CU003.outbound.protection.outlook.com (mail-northeuropeazon11020137.outbound.protection.outlook.com [52.101.84.137])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58866367F36;
-	Fri, 14 Aug 2026 18:56:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.84.137
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 026313E3D89
+	for <regressions@lists.linux.dev>; Fri, 14 Aug 2026 21:12:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.167.41
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786733772; cv=fail; b=jUYgxwnTILNC2N8h6NtO5/sAdwWMxKjgv4Qd2OVaWedxKo93GuSH8IkzJ6anQ7jx1tiTv8Bf0DJWIckoTLrWZxjPoHYW7TIRnDnTixeok9GgspkCiC8vMQJ3E0fybEBYwd47BVDhWRSEw6GyzTPwHeYHDehyxsybC3zQth/61xk=
+	t=1786741972; cv=pass; b=aG+XeAiKBdIFP4qA0O55ecsZbUSM8ZhGpWgq6/6qyXVLAgbViCdHcBOJJjoiyX0L1OHOyDnklrt9yezvQc6fWKrxZt3BBirhhmEHkS9dDUiSFI9KNDDFopH7OKYyhE2yjbAYpfBpbo23see5dd4kSpJj4a5jz06Z5XbOmlYeOaY=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786733772; c=relaxed/simple;
-	bh=6RRPcE1PkvyjE6PeNgchYHGtADU6vZWPq59Rej5LX+I=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=JFwvmog3RdcAoVfmpTcsmlAhbys1fGGUpHJSOykQelYcb2OscfesRkaTtpDnSlzdNiY8NkY9kNGCTq2iweV3dN4Ka1sE3o2xc7fnbrTemPmeFSToYN8ZJDbIvMl+jQsLjt4I5n9+Itg283Kq/gEZLNniRVifC2flH13+Ae4m0rY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nebius.com; spf=pass smtp.mailfrom=nebius.com; dkim=pass (2048-bit key) header.d=nebius.com header.i=@nebius.com header.b=oFT6W/6t; arc=fail smtp.client-ip=52.101.84.137
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nebius.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nebius.com
+	s=arc-20240116; t=1786741972; c=relaxed/simple;
+	bh=DRei2+deSPVy+InZVMN1mkoYxthiUeHYLiILPMCQGwE=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=Zw/g/KArNNqYJtSyrbRE/EpwFeYiqNpNQQ9VaQrdVv1fTPaXk88SBeBfljGNEQMs23c7HiOKrYb/w0DX/8jyC9XDs+kAxDrFz0WhUr7L+WkPXt7q9I1Ps3eal1WtZ9kX+b4jWMb/PGuyKXstczjAaSkDnVBOVQCN3oc7+OXjykc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GoQlMHtk; arc=pass smtp.client-ip=209.85.167.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nebius.com header.i=@nebius.com header.b="oFT6W/6t"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=nObW0K2sBjwdxQ7yhHaOIZMwUHY59ZE9hpsWFFhuvLrT7eGGcGPcM73mUSpKvkhrYGMsPcovEgHO2/wHiGs1bz9F+Mq9Q91u89zvlmmhx6aPOcEEhXo8dfZqRZwS0PH2MIaiRfO1T9jJjzyJbyJUG5KnHoU0Rw8bqN2P1b25PctfKK9IRDeHt1pH0Rte7rP7BEDZBXyGR2F6OoCv6Sz6gyXIKVnhox6agvBVheVGeFBu5VxGASbD23AySinrY8t4HO0rT4ZCTYSUBHi0Z96VZvkjhH552xq1dTQQV83Y1UZXHFiL0sm/TX/48dqk5yKPYmGAy0hWavf2JmBrfJxJxw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6RRPcE1PkvyjE6PeNgchYHGtADU6vZWPq59Rej5LX+I=;
- b=OUkhxSCPDcj0VYq/+uDkTgA44g4LInUFxI7MVR/H8NHdSXYmrp1e2Un2A+0tP96vg0JKHP8PGN0Ka4rK0hOB6sJ2qJXJq1wxJueM55OguVOiQSm7aP8Ho90otyjY2/ty1YvSYnQ0Gh1ZEmYT6+JWQHK5bLzvk0KKfjqPrjPzKKAM/N9zoSKBK/pC0yBHyY5sQMc56FT8MGRKMQ+RtkNcWgtUzTH4Fp5bUIXFdO1lbUDIgtHyeSWQXrX6Zxs8F5AvNeVbZs0qDlObpqnaicnc/3QkqSRYhN3MEsJ3YgU8AHQVxesixdXNj0EQEoHVbReOyKkjU1zVnc4jfp2CRVSC1A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nebius.com; dmarc=pass action=none header.from=nebius.com;
- dkim=pass header.d=nebius.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nebius.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6RRPcE1PkvyjE6PeNgchYHGtADU6vZWPq59Rej5LX+I=;
- b=oFT6W/6tFWhgV7kzCw1RcbKMpBh93uimEps/eg50IPWsWGYmurkhXQsc9QDEqQjjlsD4AyXET6cGKAIO+gtXCkuoSUxGiFqHlB8tqHTIolLQLX3QP8k9TB8O0EX2jd6W1QMn68WtQuQXfLSNs4kbNMHvP1p9QeCm89Hiw+sfNCVd6RA2UaSkfrel5BmIgWVlR8wbhnneeK01X/5tXZVrEFuyfstKBMj/IkCL82qKdrrA9quDaWYJhZALtFhWTNm7s7tgBcWDv2jG5WQiFsm3H6uE6B6mu4o5ExwuqjuFxxQB7Cjzeuv2jeQHHhxACFbG+2BJ7WW05IfSw0j3EjSEig==
-Received: from PA1P190MB2557.EURP190.PROD.OUTLOOK.COM (2603:10a6:102:4fb::18)
- by AS8P190MB1912.EURP190.PROD.OUTLOOK.COM (2603:10a6:20b:508::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.315.16; Fri, 14 Aug
- 2026 18:56:05 +0000
-Received: from PA1P190MB2557.EURP190.PROD.OUTLOOK.COM
- ([fe80::d0eb:eb62:7779:c6f0]) by PA1P190MB2557.EURP190.PROD.OUTLOOK.COM
- ([fe80::d0eb:eb62:7779:c6f0%5]) with mapi id 15.21.0315.014; Fri, 14 Aug 2026
- 18:56:05 +0000
-From: Dmitry Malkin <dma@nebius.com>
-To: Jason Gunthorpe <jgg@nvidia.com>
-CC: Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, Joerg
- Roedel <joro@8bytes.org>, Nicolin Chen <nicolinc@nvidia.com>,
-	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "regressions@lists.linux.dev"
-	<regressions@lists.linux.dev>, "stable@vger.kernel.org"
-	<stable@vger.kernel.org>, NB-Core Team <NB-CoreTeam@nebius.com>
-Subject: Re: [RFC PATCH] iommu/arm-smmu-v3: Allow nested attach for PCI
- bridges without vDEVICE
-Thread-Topic: [RFC PATCH] iommu/arm-smmu-v3: Allow nested attach for PCI
- bridges without vDEVICE
-Thread-Index: AQHdK9Pu+fg3Gt/XVU6V74nnaDIiLLad0o6AgAARZHE=
-Date: Fri, 14 Aug 2026 18:56:05 +0000
-Message-ID:
- <PA1P190MB25573D7CFE42EF7DD2A8CDE8DBDA2@PA1P190MB2557.EURP190.PROD.OUTLOOK.COM>
-References:
- <PA1P190MB25578C482C8A3B06A4DCC6FDDBDA2@PA1P190MB2557.EURP190.PROD.OUTLOOK.COM>
- <20260814174825.GC510472@nvidia.com>
-In-Reply-To: <20260814174825.GC510472@nvidia.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nebius.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PA1P190MB2557:EE_|AS8P190MB1912:EE_
-x-ms-office365-filtering-correlation-id: dd7479a1-1ef9-43ef-57f1-08defa35b1c6
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|366016|1800799024|23010399003|7416014|376014|10070799003|56012099006|18002099003|22082099003|38070700021|10067099003|11063799006|4143699003;
-x-microsoft-antispam-message-info:
- bIxXL5c+5TVAAYzaZ1gTDPVXzY1gkxnyZrMWYfB242OsjoB06rYZ1rys5s8zAQcU0mhGxmmTHUP507OHo5FnNU6oR3VTBvdb8uqpq4hgPQo/TDvubWYH7pNjekNwwB4Na2AFwCxn96+77ZRdAEQ4F4gTtLdkJ3eYw/Az8VkAE108hwwScDLIerYfsKbbB+zNgO+R9oCv5HqgFmy2s+jQrSsoWm/J8XQV8u/MM8igWk5vpIjAipraZhDXECgr5hBMT3gKz9/sSfkyXkcectTipfSJrxzojua7R/CtSkHsBbYtnijEkdu1nGTlcC6zD2Fwf+gsoA87K8NwCUB99RqkC7sBGBK64Z3qyx9/fyQpV6y1USbtbQPnItwgTFsBqvFMeOIoABNpbkHboXxWxSoXVTDg1A4P8HVJdVDMEk/YPkO7x3pdhGDohgV+/zh3arYPwSDDx3Ugs/p8Q1/52oEuergyM2X5Nc1s1SKZRG+733DQgzDlygX0FRhbRvI5MP7bWhCvyhCBu66/IF/7aXas34ZoORpT4Gr1M4om0YO+vsAjlEpjA/IYVig3Lio952Ic1KcnAGO+3s03Z5eVnmW/knKmaNGLj6Yh5ECGF/25QWY3zhhVzyYY7ZHUfGVqosg+cSEE6pwNZAJydhsq1g1zcqU2itszRfHFtptlOyRRwfEk1Y6FoURz2b42j14ibGTF6CXjPuRlcQkmRqOEqArx5A==
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA1P190MB2557.EURP190.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(23010399003)(7416014)(376014)(10070799003)(56012099006)(18002099003)(22082099003)(38070700021)(10067099003)(11063799006)(4143699003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-1?Q?NQm/R0t9AdFQ8DWA1TOJT50iEeeJES1RsNPHy7Mc8Ksv76vED3tD6dqgRF?=
- =?iso-8859-1?Q?WcjldspMzp881+/JeoiWyzoD318ne2hnrxgd5EgJMxZvE3KFaPcmptquVe?=
- =?iso-8859-1?Q?RE7+zcEyvRnNOrpBhcbOrQrSdyKovZd2pgT00PTKg3GMLEY0ZteOMKyGgN?=
- =?iso-8859-1?Q?CAug1Mfwq4SLuRwIuTj5PqRqdYj3DXImlTj4nQw/Neq9Y0m56G6H3X83z4?=
- =?iso-8859-1?Q?0KGuNKsrND43tITshCACiIqxnU2EhP19RgBszBcmkJLtwMrSd6Z0ceLGoo?=
- =?iso-8859-1?Q?rH0BXVIEVyrcgZnZfB01ydikpTsEYTuflE/ERpK+FOwEwKrcrIPxKoq6uL?=
- =?iso-8859-1?Q?GalTRYKXxFjlCFw8sAmr1w6AcFZSXpDxB6BlkeCj4t+XZyHUucTRuJiMkw?=
- =?iso-8859-1?Q?OC1qKBuXxNbUgNUU03gQsMC9RvSrFDf8NbMNU4LZnJhI1M6y54Ok09yQ0D?=
- =?iso-8859-1?Q?B3zaBZtPCcTLg5c63M53KIp+nk4jfCerprmgGdU/UeQh2DmI/BwKL7lBKC?=
- =?iso-8859-1?Q?BxEwwS6yfVSgf/M6SbAnMV1SY6ol/qUJzp4iqc/evR3+g27BDFXDxqWss2?=
- =?iso-8859-1?Q?sgLK4/oTsFlEARC6BlNgsuenjQa3lnGRa0BBnqT3iLxB6OTQjAUoxjnQks?=
- =?iso-8859-1?Q?OMZnL5e34cmRvxqT+bGLBgS93uY9FtjHxvJV2N3cgX5NH/FW+h69wgXiix?=
- =?iso-8859-1?Q?9/wP72FhwjWjo/kYc3w3kRaCPD/e2fSi3eMOXmP6GMiFsMcPVyNfexb959?=
- =?iso-8859-1?Q?d3hadTrwIafZj1HG6HBeD2uhhraYVQYGE24MlFl+kCFxFE4jYXjuvjvAoc?=
- =?iso-8859-1?Q?LJ8H5AvqI3beoTt0MedAD0udYPy/0yxK885DKYmAIvp4xlrv6AoUn+Uk1Y?=
- =?iso-8859-1?Q?x1Ra6Axuh26eJYAAdM2VIjgIOicBugktYsHXn5E6GdBzF6nZNzJnb2QUlG?=
- =?iso-8859-1?Q?cfGXSGpZ9WPg0fabJmuTDDQxChmVPD9cYznQEVF1Wf3CiOZSbC3xLIEr1S?=
- =?iso-8859-1?Q?NwuggKq6r7Wr+zxmb+wOM6MbMFC+rf33b6fMmr4E5RfPiJeHFzNqUL23JC?=
- =?iso-8859-1?Q?AVYbR+xAzYn6UnuKhBt+kjX7jVkVhCgTc+qbUs6Duf4SgPdxfKCxdnqTPV?=
- =?iso-8859-1?Q?jUqz8Iw5No5DOj+IJqRYdVeXeX8VI5smLFn6Z/Vl0pTYQxMGBWkvdg5Q6w?=
- =?iso-8859-1?Q?7kMKjMlfhg5htCopFt/laNSyvk+46orZQA/fg4hg6R15ZtExzKX++N6d6G?=
- =?iso-8859-1?Q?MhZVi83/qZE/PNl3YoEXSCc0JwTWWhrBumQ5am1dqByCbnhezpTaGrE/xB?=
- =?iso-8859-1?Q?EqQTIzisHCcJdpWV5fv80Kge0j/8n/v/5ScvLgURvCSynJbjyt/ivhlyng?=
- =?iso-8859-1?Q?wgkZmZdcRzXA3FrdGFTd/wNZbQ7iN8/Sx5N6EPbbt0Y7YZaIi3PBwll8dS?=
- =?iso-8859-1?Q?xa1Sx0N7q6e8/1Wx5Q7x0zwu32xluhyQUC3SC0iTGkVyorAZkZ4V6fHVCY?=
- =?iso-8859-1?Q?2W42QXVNIPEeZQEbCUus6KJIENM6BsM8A3qiOV/TJQK/iMLauQkecQKzx9?=
- =?iso-8859-1?Q?9KOqrnWl7iN7ms9OYosD1id+EHVKf4LJWsftVHXJpjXcob6HSvJ7HTbeN8?=
- =?iso-8859-1?Q?0nJd7YJd/usBPfer0QUbEuBJdIuzHPlDluCaxYJ6KQjNiRSYvyabEejfrI?=
- =?iso-8859-1?Q?xhqMVISlcloKpJB4Ih1o2tnfoDE8Q7ZCnqTM9uWSRr/vSqznczrUU8PhXK?=
- =?iso-8859-1?Q?nX7ySWRmUsb/biwf0ibpDkwsBt1EcLOw0f7N9sBWeo42T8CqdRm75IwHef?=
- =?iso-8859-1?Q?+K+LjkmJO8C3s4o3N1hHgKRN4IDfySwByVbrfgwtOGspOT0THBoU?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GoQlMHtk"
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-5aea0fff535so1502863e87.3
+        for <regressions@lists.linux.dev>; Fri, 14 Aug 2026 14:12:49 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1786741968; cv=none;
+        d=google.com; s=arc-20260327;
+        b=kbA51EJxucuY09yVG7/ke9tUcMv2TTA5wXrfpoTXkirHG6SOHqq6dACSJZfjPPu1C5
+         VCmu3vZ5yFIi6ozfnHS37aOfV5wpI7qKtozUxo3u6GclLHaH2BEuc1RUF3VX3yWHBOes
+         Ly6jSkHyNivqqL/G9vHJFJlQ1gRJch4vIgnuLclhu+q18OHjLObVRUEiUumoZEzrZZXJ
+         uPKABBAR9qN9c89cRuiGmYuXUjrreJWc/3W0md4wdiU4TZjBs8JsurVTjEdYt5MK9zmJ
+         uhrwv49+1vtjbvunn/jzKV7E0utpSDQrzlcHhqTIaLwBNHyKpv8d+KGlXebOqz2tFes7
+         HxBg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:from:mime-version:dkim-signature;
+        bh=suChiBpI2zM7Kh/sweI6ufJ0V5/AtIy5NrlliylEVCA=;
+        fh=viYctKh7PqkvwL46c21HadswgHaaI/YS2qiqCtqKAq0=;
+        b=mME30xaXsUCEPkj0mHo2J2EZVtEFZ8OHH5K4N1ic1vcSYiklDxO+ZdDlLVNEeHn/0a
+         rs+7m6GkCi5Ns+EBlc+N7NSIJOivB9gjMkN7zgpkcXW2yjm/Bg3Vu034hRhQ1lrjRrHz
+         5FBQQxWGqeHrwxQ0ipaYuqvJn+kqYl1vJwCRUepkhPQu8zvltNT9ob507CjEHjxDcrZq
+         iUDDzcxek7mXKUQWngW12c25oYfhVlAvZEYBZIaBideUeiZHCWPP1j6PyR3h8x5kBpMi
+         ZcX+G7cgNMbVO5rxpjttlnEksY1wFHuw6Exb5PFWxynvSdx6NsolOidI0pbor9VbvZIB
+         Qh1w==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1786741968; x=1787346768; darn=lists.linux.dev;
+        h=content-type:cc:to:subject:message-id:date:from:mime-version:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=suChiBpI2zM7Kh/sweI6ufJ0V5/AtIy5NrlliylEVCA=;
+        b=GoQlMHtkjX0v0xBOtbBm16rXky7YL0v/FOcOlGs+SDb8adOvweN44jgXjCUyb2f5If
+         DIXYcWVWHgdN2Zf3Rf5e2kth8yZ04jqs8sJUH1tshKvPJtKh7WevqExFT1ZU+FkMtin0
+         EWlNZqS+6Os0bQB9kOveTRUPetHhsyAIeW2fqD2MRoYgQzf9l3F6HYTw6GEkJqymIo21
+         JaXQgu/u3Cf1Zo1vWarke9Zly+8uUmNdZlEDIqXqJqijjOwsCPzAzLTc//WGVAK/0qUl
+         YwaAfSLDTSzAlerISj3XRsCt6P31LRDfZqZeA+t/hQoqSAO7fpPzqY2UTEaWoJsEZ0wi
+         i/gQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786741968; x=1787346768;
+        h=content-type:cc:to:subject:message-id:date:from:mime-version
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=suChiBpI2zM7Kh/sweI6ufJ0V5/AtIy5NrlliylEVCA=;
+        b=aLsz3fCa/XCFJpMaj8jzFbpp5IqezhnXkIEVzRNX0pdLEYd3VQBV/Si/67o5Kwe1cH
+         EE1AIjynAQk183bTH+iOpHPGVOLJ+A6ULuAvczXcclKiqXxHC/FdUIv0mVeocRKf+pK1
+         Xq12XpfEyTfiBh071RNV6O4AQtZaQCO/DBJUYH20wClY7OG408A9oj1A2uzu76MZ+anc
+         Yz78CUq8jHWyZK/lPSlUpDrhzjfBhBsdnu3GEd6H0wJwuse/663xk/4SO3wOxNswOM/+
+         2dQCaBP0L7/pNN6HbezdEO8j2uNXYRoTH8Yt33IVuau7I4P8FBtCUmZIWCsH9iS1brrk
+         G4Ww==
+X-Gm-Message-State: AOJu0YzFqqCGfeHZb5WTMwngRXanMHjWlwWjNNU4+cDJ7gQk2T2bTMXH
+	EVJdbD7Bnh6E9hTCt1kP0tmtA6lFo4JXT1xsHYOtgnRLtsouuKBV1DbdNQn4TpnE/Li5x2IN6ah
+	/y+bxuos2DEyKeSYJkFkoS2S8LCQWAXY=
+X-Gm-Gg: AR+sD12mw1OMMl3xpTnXz8lM/C14v6ZqQKNAQyGcGGYqMoa/re24F+yMZ5rcxwTcArt
+	JK/hbev9GBXTgAeG7jgzHNMtZPN3c7vx2lcM20X6i2zNNvtHXl8VwflNFsZCLshcv+lUi2dFPUI
+	rLzgZaO9w4pQ75G2x8+mlMHb6sA1wcDBmR7ewfM4JaoJGa6Mk6dUKDpX0Qdy9wp2FdUuVFvyrCV
+	IbNcnYkoqAUf+f1GQRXUh+xcDAo6qZYb+iYo13f+XKMDbvkkpZjmYTkgG/rgzGKSuH3D31fmm8O
+	LK3erVhu1Wrksu111TikTjn95Z2JJhKTM1H0LXahlOfm
+X-Received: by 2002:a05:6512:6681:20b0:5b3:f69:fef7 with SMTP id
+ 2adb3069b0e04-5b459154ac0mr885241e87.4.1786741967554; Fri, 14 Aug 2026
+ 14:12:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-OriginatorOrg: nebius.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PA1P190MB2557.EURP190.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: dd7479a1-1ef9-43ef-57f1-08defa35b1c6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Aug 2026 18:56:05.5542
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4eb23c52-f3a5-49bc-b555-0b061267a984
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: y/lUVrdHCu4RWwNITzmO1QSd7+MZaap2ZoMMIOReJNmKq9R4EL/wuxWymUC+AlDb
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8P190MB1912
+From: Martin King <martin3kx@gmail.com>
+Date: Fri, 14 Aug 2026 16:12:35 -0500
+X-Gm-Features: AUfX_mwPwIqgYkjCpI0inF8DAyhP-Non2hPQrAzUm6egGv1-qM_6abxz0-6x9l8
+Message-ID: <CAEB5A_91hob8ddOhW=PrO1=O7GrFmSxY3r1-_Ard6x8KHHuJGA@mail.gmail.com>
+Subject: [REGRESSION] sched/rt: NO_RT_PUSH_IPI causes multi-second PI-boost
+ starvation in pro-audio workloads (dd29c017aed6)
+To: Steven Rostedt <rostedt@goodmis.org>, Peter Zijlstra <peterz@infradead.org>
+Cc: regressions@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	stable@vger.kernel.org, linux-rt-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Jason,=0A=
-=0A=
-> If viommu should support multi-device groups, I'm not sure. I want to=0A=
-> know why you even have multi-device groups in the first place because=0A=
-> that is not normal at all.=0A=
-=0A=
-That is because of the 'pci=3Dconfig_acs' kernel command-line parameter. Th=
-is causes the kernel to create a single IOMMU group containing multiple PCI=
-e devices, including the bridge (PCIe Root Port).=0A=
-=0A=
-Dmitry=0A=
+Commit dd29c017aed6 ("sched/rt: Have RT_PUSH_IPI be default off for non
+PREEMPT_RT") causes reproducible multi-second audio dropouts on an ordinary
+non-PREEMPT_RT desktop running a DAW.
+
+Symptom
+-------
+Audio cuts to silence for 0.2-3.5s at irregular intervals (roughly one per
+2-3 minutes of use) while the machine is otherwise idle and responsive.
+
+Mechanism (as measured, not inferred)
+-------------------------------------
+REAPER runs one SCHED_RR prio 20 audio thread plus ~15 SCHED_OTHER "livefx"
+worker threads. During a stall:
+
+  - the RT audio thread is blocked in rt_mutex_schedule() on a PI mutex
+  - exactly ONE livefx worker holds that mutex, has been PI-boosted to RT,
+    and is enqueued but never scheduled
+  - its schedstat shows run_ns ~0 with wait_ns tracking the entire stall:
+
+        reaper/livefx tid=43910  run=0.0ms  wait=3406.6ms  slices=2
+        (during a 3403ms dropout)
+
+  - meanwhile ~17 sibling threads run normally with wait_ns = 0, and no
+    thread does meaningful work (largest run was 7.2ms across 3.4s)
+  - the machine stays responsive throughout; unrelated SCHED_OTHER work
+    proceeds at 84-94% of normal rate with 0-1ms runqueue wait
+  - all 16 cores keep taking timer interrupts at normal rates
+
+So a single PI-boosted RT task sits on a runqueue, unmigrated, while other
+cores idle. With push disabled nothing hands it to an idle CPU.
+
+Evidence
+--------------------------------
+  kernel  RT_PUSH_IPI  playing   dropouts >=25ms          xruns
+  7.1.8   off (default)  19 min   8  (191ms - 3471ms)   bursts
+23/265/434 per min
+  7.1.3   on             39 min   0                     0
+  7.1.8   on             42 min   0                     0
+
+The third row differs from the first ONLY in the sched feature: Identical
+kernel, toolchain, GPU driver, project and audio configuration. At the
+observed broken rate ~13 dropouts were expected in that window; zero were
+seen, at both 25ms and 10ms detection thresholds (10ms is ~2 missed audio
+cycles at quantum 256 / 48kHz).
+
+Workaround
+----------
+  echo RT_PUSH_IPI > /sys/kernel/debug/sched/features
+
+Applied at boot via a systemd unit.
+
+System
+------
+  AMD Ryzen 7 5800X (8c/16t), Arch Linux
+  kernel 7.1.8-arch1-3 (and 7.1.5, 7.1.6 - all affected; 7.1.3 is clean)
+  PipeWire 1.6.8 + pipewire-jack, Focusrite Scarlett 18i20, quantum 256 @ 48kHz
+  CONFIG_PREEMPT_RT not set
