@@ -1,208 +1,263 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.162])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB95631A56D
-	for <regressions@lists.linux.dev>; Sat, 15 Aug 2026 05:51:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.162
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 108D83A75BB
+	for <regressions@lists.linux.dev>; Sat, 15 Aug 2026 10:28:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786773113; cv=none; b=ReIFlWM+b4oN7yewcXLirUCtjIRZ04eklv3yhMhWcuoC5N4t8NaLUT8h04sIxWRHHsq7NVXqhbrZ5MrKKYWSUTOooBKnuhqiM4Wa8PSUSWGKJfS8527N7+nMfQux9oV/iPnhOeSt+yzW2OjyDQwtAuaHmNhWdylk2guCcvtDeAA=
+	t=1786789698; cv=none; b=KwMWO2oe/+FHip8NbNR+zfeq7MHGZbCFlGe8ByStvzbkuwRfrqZEYtzkrPlG41CW5BMgyyTIENwDQC9W6+U84buSxRk9YBM6A3fz78lmFOYNnMiEWM91vltECrXnz3NHMfaD7Z81cudCq0ZnLmCj8gIWD8Sya8Pb1NkmdQG3JGk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786773113; c=relaxed/simple;
-	bh=A9irWmcIhI6ALbZTSoKs9i10AfbHLtjNjLzA24zxlsQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ONX2qGcQSIMoPXMSa3e9GaKZGNPmVW/eG/b+kyiS7oFnCeSzC/UuAiUkKAaNDqWdyLPe3A0r/r9IFcAwL3OgrooWk5Ofxs3qPEAf9E8goodlkcOM1b5mt5BWtLOvqLGXZm5ACmdYUDWEZbGMCXX7BslPDoVrz+5sAxa/SlflypM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=TkCGrLGw; arc=none smtp.client-ip=188.68.63.162
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1786789698; c=relaxed/simple;
+	bh=eG9vOCi6dz2LS9h7tb35pxRgJtlauzumDhyiULGGUUo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ieAiYswofu3gJENlBc1PJgzmc59JfLNWFOVTvLeI6NwqRoS43mZBZ2DQJl/TSk7hHCjiE/XImG78h3Ogc+F3vTXb1AWrR2Yszvz1Xptc0+bF4YFXX/Zbvehh1LlHHsO8ZKGmVwhVBg+9bFoNCRDoAuRQRtI9vgfuLnLWXi72zYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=I6msTT8I; arc=none smtp.client-ip=209.85.208.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="TkCGrLGw"
-Received: from mors-relay-8201.netcup.net (localhost [127.0.0.1])
-	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4hMSs94Dhtz4F1F;
-	Sat, 15 Aug 2026 07:51:41 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1786773101;
-	bh=A9irWmcIhI6ALbZTSoKs9i10AfbHLtjNjLzA24zxlsQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=TkCGrLGwxJiJb8Z2t4HnYnwQX9nIr4TXtWdmVtH/Z0eKW+x0f8WvMJ7HdeqVlLKQA
-	 vEhUILSG8pLiup/MJv+qwoxM5VSJPo4rtBTpJbIwAhyA/t5GzrgZUVBFgMeiw+PmvX
-	 2CNElSRGWcqZ1T66iKvEKp82uWAmsVi36Pbm5qqfIFuS5rLAZvuyGx5vWuUIKDeeWg
-	 qX09sg4mfFCOlcj1gOjBhIYopZKiDq4tCoqjW1wDOq47pu06AElWoctvxeL9Lz6tRZ
-	 d4yfYErbY/7UHwi0gDxRIyff9+xWjhVmr4/3PRRKS7o8R4qUEjAwjRDJV03unExS25
-	 Yh9lkIfogJ+uA==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4hMSs93WmWz4F01;
-	Sat, 15 Aug 2026 07:51:41 +0200 (CEST)
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4hMSs84phvz8svk;
-	Sat, 15 Aug 2026 07:51:40 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id A1C9E5F98A;
-	Sat, 15 Aug 2026 07:51:35 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <d8e493ef-90ff-4364-ad4e-1709fae97005@leemhuis.info>
-Date: Sat, 15 Aug 2026 07:51:35 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I6msTT8I"
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-39c8e65e3f5so13615301fa.0
+        for <regressions@lists.linux.dev>; Sat, 15 Aug 2026 03:28:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1786789693; x=1787394493; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=PT2DE6cl5YPBMy2m9I9NSThkbJzai5L9OY2FPvGH160=;
+        b=I6msTT8IS5pwaZ/v7u5qoB86PKEaCXMq+mg9AEdODA0KxT8M3SuEfbwzTLyjB5lReB
+         qCvA4fipct+NJ9r+ns6+P37qI4gWJHi23uvLpAk+R/+yuvnnBqgVN2j03ctYy9Y/nS21
+         Y1N6LzhWaWknMbVDgM6+TQKMeg0HV9v0JmRybqaSIVoQoAr5NzaDJgTKIGf3FywW9xL1
+         zWcF9IGB4Y3AercouJYvAhHKLbWnBjPIBZ4vcCcc762UT5K3sMD9vxKgaJ4POheWy0FA
+         NZDqTUOvIGulRfxpsA1GAn1qV/SDU/GxcUGcYqznjvOSWW1jhrTRl9Cm53OBmwQgbRFJ
+         S42g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786789693; x=1787394493;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=PT2DE6cl5YPBMy2m9I9NSThkbJzai5L9OY2FPvGH160=;
+        b=L7qJuhXJ4MVwwjuxUxYXb6u3PH5B3pF+HAYaALorFV1e2Ct5ZEN/B9vIlGWhoeUbSo
+         8qXcEEBWHxw4Wlwg1y97CPyjJgM6VDcrkMZ/96EixiLw+l8HkCuT8O3L2uo3PmaVCe78
+         ORtsr+v2U1HLaEFZc9V2vQCqbJ+lCMw6SQ7BMMeFqwnmW5jlIowcqxVsanFQyN6zXTed
+         /0NfkTMWXIiL3F6PhCo9Bh1DvdR0DRMQFVJsdaobeRfIwTF9nE8zjuOcUUwd/udZ3Dc8
+         EFixQAfXTfQPjbgTvONlNphmw5F4/vXWSk+uu+I8Q/uLrAfkKBu/KD0uig70tTVlB3Kq
+         M+Pw==
+X-Forwarded-Encrypted: i=1; AHgh+RrVVIf1FA6Vqqm+guS5p47IK9ue8h6G1LBRL+SXh+tw6eRHZC6X/NNudscOZLbhg2jfnXGYNHt3v6+nIw==@lists.linux.dev
+X-Gm-Message-State: AOJu0YyFYOFpfTm7mjmDS1ilhoCRvIWJk9wvE/VwljyOSMJzQ3xvC76N
+	JzrYL62Ox/7JOPtcNeH0i+deB9S0FxAM472BNInFGPhl/d8TqllgXUtL
+X-Gm-Gg: AR+sD11nK4jKkyqAbNUiMHAkjrk/mo/JwXc4HKPmv4g7IsAa1h8UmQ+ilpJCmbPW/mm
+	xxzBXp/ynFaiN8JS4mZoxgiapx4qi+Z7WXhhUZkCXTuqh1HtZqsG7V6o9d+WKDNbNDbGJOPttzz
+	oQp4yM9Kwmgx27cxM+vCjH6Ts6UAvYOyjHvrL1zH9b/uFQMofmxZ/vM1nYhMTZ/7c/eds9nGuUM
+	MG/6LXyUzIjPIaikHydvzt8R78Td/NvGbNMot0vD6L6VdtlD/BF2qlzQ0tsrrdvCjS3fSWOksDD
+	WOONHvoH72QmDhUxYNRzli41F+WoZ92ufwRdE9i8o3OiQKC9kb/yDjXLjMz2NClTgsvjq2cSkpJ
+	hfT+80UHQUfYpG/RX4OG9RGxBMFu72FRSSdvyIMYoC1GrQEv1Sp2UH7mFmGxYenGJyU4wvhEhAY
+	qDysh1tbZSFLAHA4eJYd5jml+ABWqoVJIE6tk8klqUTPyeq4pYoYpJ851K2cUeptDsfB8o/GhoM
+	/9Pc4mFM9gGdvD8VAmjzHgrInJYAE/+5mskSI+05YuNR6vig7BzuC+92+U7
+X-Received: by 2002:a05:651c:43cc:10b0:3a1:5c6:b533 with SMTP id 38308e7fff4ca-3a13283bfcemr7273131fa.30.1786789692757;
+        Sat, 15 Aug 2026 03:28:12 -0700 (PDT)
+Received: from localhost ([188.234.148.119])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-3a1308d1cdcsm10996531fa.18.2026.08.15.03.28.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 15 Aug 2026 03:28:12 -0700 (PDT)
+From: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+To: Felix Fietkau <nbd@nbd.name>,
+	Lorenzo Bianconi <lorenzo@kernel.org>,
+	Ryder Lee <ryder.lee@mediatek.com>,
+	Shayne Chen <shayne.chen@mediatek.com>,
+	Sean Wang <sean.wang@mediatek.com>
+Cc: JB Tsai <jb.tsai@mediatek.com>,
+	linux-wireless@vger.kernel.org,
+	linux-mediatek@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev,
+	Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Subject: [PATCH wireless] wifi: mt76: mt7921: fix deadlock on 6 GHz association
+Date: Sat, 15 Aug 2026 15:28:06 +0500
+Message-ID: <20260815102806.32722-1-mikhail.v.gavrilov@gmail.com>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] mt7925: MLO connectivity silently stalls with 6GHz
- link active
-To: Jonas Hort <jonas.hort@posteo.de>, regressions@lists.linux.dev
-Cc: linux-wireless@vger.kernel.org, lorenzo.bianconi83@gmail.com,
- Devin Wittmayer <lucid_duck@justthetip.ca>
-References: <066b30cc-a9e6-4aeb-964d-71551e8ea3ef@posteo.de>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <066b30cc-a9e6-4aeb-964d-71551e8ea3ef@posteo.de>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-PPP-Message-ID: <178677309598.4118759.4557917680638760400@mxe9fb.netcup.net>
-X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: A1C9E5F98A
-X-NC-CID: vcpBS7klDK/RW6cfGfjwxixU2QpwtVL0KzU15eWjVMznh4QGUso=
 
-On 8/14/26 16:04, Jonas Hort wrote:
-> Filed as: https://bugzilla.kernel.org/show_bug.cgi?id=221884
-> 
-> Summary: WiFi 7 MLO (5GHz+6GHz) on MT7925 silently stops passing traffic
-> after a few minutes, while the driver continues to report a fully
-> healthy link. Root cause appears to be a stalled WFDMA0 TX hardware
-> queue. Reproduced on both linux 7.1.8 (stable) and 7.2.0-rc7 (mainline
-> pre-release), not fixed as of rc7. Disabling the 6GHz radio on the
-> access point eliminates the freeze entirely in my testing.
+mt7921_mcu_regd_update() acquires &dev->mt76.mutex, but two of its
+callers already hold it: mt76_sta_state() takes the mutex and calls into
+the driver with it held, on both the add and the remove path.
 
-Not my area of expertise, but there was one patch was reverted on
-Thursday that is somewhat related
-(https://git.kernel.org/torvalds/c/3aa1dcaa4f6f5ae08936491e08bd456f331f2d40
-), but that was more about shutdown/module unload aiui and likely
-something else.
+  mt76_sta_state                          <- takes &dev->mutex
+    mt7921_mac_sta_add
+      mt7921_regd_set_6ghz_power_type(vif, true)
+        mt7921_mcu_regd_update            <- takes &dev->mutex again
 
-But there were other reports that sounds somewhat related (but careful,
-I might send you on the wrong track here; CCing Devin, who wrote two of
-the following messages):
+  mt76_sta_state                          <- takes &dev->mutex
+    mt7921_mac_sta_remove
+      mt7921_regd_set_6ghz_power_type(vif, false)
+        mt7921_mcu_regd_update            <- takes &dev->mutex again
 
-https://lore.kernel.org/linux-wireless/20260629083543.153564-1-jb.tsai@mediatek.com/
-https://lore.kernel.org/linux-wireless/20260804185118.19705-1-lucid_duck@justthetip.ca/
-https://lore.kernel.org/all/20260812155811.10950-1-lucid_duck@justthetip.ca/
+Both acquisitions are of the same lock instance, so this is a hard
+self-deadlock rather than a missing nesting annotation:
 
-Ciao, Thorsten
-> This is a regression: reported by multiple users on the CachyOS forum
-> as broken starting with the 7.1.x kernel line; earlier kernels
-> (6.18.x longterm) are reported to work fine. I have not yet performed
-> a commit-level bisection but can if guided on the best approach given
-> the AP-side 6GHz dependency.
-> 
-> --- Detailed description ---
-> 
-> Symptom:
-> When connected via MLO (Multi-Link Operation, EHT/WiFi 7) with two
-> active links - one on 5GHz and one on 6GHz - network traffic silently
-> stops after a few minutes of normal use (web browsing, etc). The
-> connection continues to show as healthy:
-> 
-> - `iw link` / `iw station dump` report the connection as associated,
->   authenticated, good signal (-60 to -65 dBm), high negotiated
->   bitrate (800-1700 Mbit/s), 0 tx retries, 0 tx failed.
-> - Nothing is logged to dmesg/journalctl at the time of the freeze.
-> - Ping to the gateway shows 100% packet loss for several minutes,
->   until the connection eventually recovers on its own.
-> 
-> I built a small watchdog script (ping-based failure detection + live
-> kernel log monitoring) to catch the freeze automatically and sample
-> mt76 debugfs state repeatedly across the event. This revealed the
-> actual mechanism:
-> 
-> `/sys/kernel/debug/ieee80211/phy0/mt76/xmit-queues` shows the WFDMA0
-> hardware TX queue's `tail` pointer completely frozen while `head`
-> keeps advancing - i.e. packets keep getting enqueued but the firmware
-> stops draining the queue. RX stops in the same instant (rx byte/packet
-> counters in `iw station dump` freeze completely). No tx retries or tx
-> failures are ever reported by the driver, so it does not appear to
-> notice the stall itself.
-> 
-> Example from one incident (kernel 7.2.0-rc7):
->   t+1s:  WFDMA0: queued=130 head=390 tail=260   rx bytes=184791894
->   t+9s:  WFDMA0: queued=148 head=408 tail=260   rx bytes=184791894 (unchanged)
-> 
-> `tail` never advances during the whole stall window while `head`
-> keeps growing - the queue is being filled but never drained.
-> 
-> Reproduced this exact signature four times total (twice on 7.1.8-1,
-> twice on 7.2.0-rc7-1), always with MLO 5GHz+6GHz active, always
-> within 3-5 minutes of normal use.
-> 
-> 6GHz correlation:
-> My MLO links are 5GHz (5180 MHz) + 6GHz (varies, e.g. 6135 MHz).
-> Fully disabling the 6GHz radio on the access point (FritzBox 5690
-> Pro, FRITZ!OS 8.25 - not just client-side band restriction via
-> NetworkManager, which does not reliably suppress the second MLO
-> link) results in 30+ minutes of clean operation with no freeze.
-> Re-enabling 6GHz reproduces the freeze again within minutes.
-> 
-> Regression info:
-> Multiple users on the CachyOS forum report this started with the
-> 7.1.x kernel line; the previous longterm kernel (6.18.x) is reported
-> to work fine by another user with different affected hardware
-> (different AP). I have not personally tested 6.18.x myself, and have
-> not performed a commit-level bisection yet - happy to do so if
-> pointed toward the most likely area of the driver, given the AP-side
-> 6GHz dependency makes a fully automated bisection awkward.
-> 
-> Steps to reproduce:
-> 1. Connect to an AP advertising WiFi 7 MLO with 5GHz+6GHz link
->    options, so the client negotiates both links.
-> 2. Use the connection normally (web browsing is sufficient).
-> 3. Within roughly 3-5 minutes, new connections start hanging;
->    existing traffic stops.
-> 4. Check `iw link` - link still reports as connected/healthy.
-> 5. Check `/sys/kernel/debug/ieee80211/phy*/mt76/xmit-queues` -
->    WFDMA0 tail pointer frozen while head continues to advance.
-> 
-> Environment:
-> - Kernel: linux-cachyos 7.1.8-1 and linux-cachyos-rc 7.2.0-rc7-1
->   (CachyOS, near-vanilla Arch-based build)
-> - cat /proc/version:
->   Linux version 7.2.0-rc7-1-cachyos-rc (linux-cachyos-rc@cachyos)
->   (clang version 22.1.8, LLD 22.1.8) #1 SMP PREEMPT_DYNAMIC
->   Mon, 10 Aug 2026 20:51:00 +0000
-> - Distribution: CachyOS
-> - Architecture: x86_64
-> - Kernel tainted: no (/proc/sys/kernel/tainted = 0)
-> - WiFi hardware: MediaTek MT7925 (mt7925e driver, mt76 core),
->   WM Firmware Build 20260605184805, ASIC revision 79250000
-> - Access point: AVM FritzBox 5690 Pro, FRITZ!OS 8.25
-> 
-> Related community discussion:
-> https://discuss.cachyos.org/t/mt7925-wifi-7-mlo-breaks-connectivity-on-7-1-x-mt76-regression/31972
-> (I am the thread starter; several other users report matching
-> symptoms with different hardware/APs)
-> 
-> Possibly related (different symptom, same 6GHz/MT7925 area, worth
-> checking for a common root cause):
-> Bug 221627 - MT7925E - System locks up with flashing caps lock
-> (comment 1 there: "caused by switching between AP's with the same
-> 6GHz wifi name")
-> 
-> Attachments (will add to this ticket):
-> - Full incident logs for all four reproductions (dmesg + journalctl
->   + mt76 debugfs time series across each freeze)
-> - iw station dump / iw link output during freeze
-> - Kernel .config
-> 
-> Note: checked bug 220424 (mlo_sta_cmd/sta_cmd regression) before filing -
-> different symptom (persistent near-zero throughput vs. our intermittent
-> full stall with healthy link stats) and different root cause (broadcast
-> wtbl hdr_trans_tlv handling). That fix landed in 6.16.6/6.17-rc5, well
-> before the kernel versions tested here, so it is not the cause of this
-> issue.
-> 
-> 
+  WARNING: possible recursive locking detected
+  wpa_supplicant/5319 is trying to acquire lock:
+  ffff88879cd94050 (&dev->mutex#3){+.+.}-{4:4}, at: mt7921_mcu_regd_update+0xc0/0x7a0 [mt7921_common]
+  but task is already holding lock:
+  ffff88879cd94050 (&dev->mutex#3){+.+.}-{4:4}, at: mt76_sta_state+0x2d4/0xb30 [mt76]
+  Call Trace:
+   <TASK>
+   mt7921_mcu_regd_update+0xc0/0x7a0 [mt7921_common]
+   mt7921_regd_set_6ghz_power_type+0x25b/0x2e0 [mt7921_common]
+   mt7921_mac_sta_add+0x33f/0x480 [mt7921_common]
+   mt76_sta_state+0x335/0xb30 [mt76]
+   drv_sta_state+0x284/0x740 [mac80211]
+   sta_info_insert_finish+0x4dc/0x1070 [mac80211]
+   ieee80211_prep_connection+0xaf3/0x1740 [mac80211]
+   ieee80211_mgd_auth+0xcba/0x1a00 [mac80211]
+   cfg80211_mlme_auth+0x47b/0xab0 [cfg80211]
+   nl80211_authenticate+0xa34/0xdf0 [cfg80211]
+   </TASK>
+
+The kernel then says it outright:
+
+  INFO: task wpa_supplicant:5319 is blocked on a mutex likely owned by
+  task wpa_supplicant:5319.
+
+The damage is not confined to Wi-Fi. wpa_supplicant blocks while holding
+wiphy.mtx, NetworkManager then blocks on wiphy.mtx while holding rtnl,
+and everything needing rtnl queues up behind it: rtnl_dumpit, ethtool
+ioctls, cleanup_net. The machine is left with no working network stack
+and needs sysrq to reboot. Since NetworkManager retries the saved
+profile on every boot, an affected kernel stops reaching a usable state
+at all once a 6 GHz profile exists.
+
+Before commit e88098133ed4
+("wifi: mt76: mt7921: refactor regulatory notifier flow") the function
+was lock-free by contract and its callers supplied the lock: the sta_add
+and sta_remove paths already held it, and mt7921_regd_notifier() took it
+explicitly. That commit moved mt792x_mutex_acquire() inside the
+function, which is what mt7921_pci_resume() needed - it had been calling
+in with no lock at all - but it left the two mac80211 paths taking the
+mutex twice.
+
+That those paths run with the mutex held is not incidental: each ends
+with a hand-rolled mt76_connac_power_save_sched(), the half of
+mt792x_mutex_release() that the core's plain mutex_lock() does not
+provide. The lock-free contract was deliberate.
+
+Split the function: keep a lock-free __mt7921_mcu_regd_update() for
+callers that already hold the mutex, and a thin locking wrapper for
+those that do not. The regulatory notifier and the PCI resume path are
+unchanged.
+
+The deadlock is gated on the band. mt7921_regd_set_6ghz_power_type()
+only issues the update when
+
+	vif->bss_conf.chanreq.oper.chan->band == NL80211_BAND_6GHZ
+
+so it takes a 6 GHz association to reach it, which is likely why this
+survived seven -rc rounds unreported.
+
+Fixes: e88098133ed4 ("wifi: mt76: mt7921: refactor regulatory notifier flow")
+Signed-off-by: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+---
+
+#regzbot introduced: e88098133ed4
+
+Not addressed here: the "if (!dev->regd_change) goto err" gate combined
+with clearing regd_change on exit makes the sta_add/sta_remove call a
+no-op in the common case. That call site may want removing rather than
+relocking, but that is a behavioural decision for you.
+
+Tested on an MT7922 (mt7921e) on v7.2-rc7 with a lockdep and UBSAN
+build: association with a 6 GHz AP completes (channel 37, 6135 MHz,
+160 MHz), roaming between a 5 GHz and a 6 GHz BSS exercises both the
+sta_add and the sta_remove call site, "iw reg set NL" and back still
+reaches the regulatory notifier, and a deep suspend/resume cycle
+reconnects to the 6 GHz BSS. dmesg is clean. v7.1 is unaffected.
+
+ .../net/wireless/mediatek/mt76/mt7921/main.c  |  2 +-
+ .../net/wireless/mediatek/mt76/mt7921/regd.c  | 20 +++++++++++++++----
+ .../net/wireless/mediatek/mt76/mt7921/regd.h  |  2 ++
+ 3 files changed, 19 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7921/main.c b/drivers/net/wireless/mediatek/mt76/mt7921/main.c
+index 3480205d5fb9..68a059504e83 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7921/main.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7921/main.c
+@@ -802,7 +802,7 @@ mt7921_regd_set_6ghz_power_type(struct ieee80211_vif *vif, bool is_add)
+ 
+ out:
+ 	if (vif->bss_conf.chanreq.oper.chan->band == NL80211_BAND_6GHZ)
+-		mt7921_mcu_regd_update(dev, dev->mt76.alpha2, dev->country_ie_env);
++		__mt7921_mcu_regd_update(dev, dev->mt76.alpha2, dev->country_ie_env);
+ }
+ 
+ int mt7921_mac_sta_add(struct mt76_dev *mdev, struct ieee80211_vif *vif,
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7921/regd.c b/drivers/net/wireless/mediatek/mt76/mt7921/regd.c
+index c0e2b48a50bf..43193c436ddc 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7921/regd.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7921/regd.c
+@@ -71,17 +71,18 @@ mt7921_regd_channel_update(struct wiphy *wiphy, struct mt792x_dev *dev)
+ 	}
+ }
+ 
+-int mt7921_mcu_regd_update(struct mt792x_dev *dev, u8 *alpha2,
+-			   enum environment_cap country_ie_env)
++int __mt7921_mcu_regd_update(struct mt792x_dev *dev, u8 *alpha2,
++			     enum environment_cap country_ie_env)
+ {
+ 	struct mt76_dev *mdev = &dev->mt76;
+ 	struct ieee80211_hw *hw = mdev->hw;
+ 	struct wiphy *wiphy = hw->wiphy;
+ 	int ret = 0;
+ 
++	lockdep_assert_held(&mdev->mutex);
++
+ 	dev->regd_in_progress = true;
+ 
+-	mt792x_mutex_acquire(dev);
+ 	if (!dev->regd_change)
+ 		goto err;
+ 
+@@ -100,13 +101,24 @@ int mt7921_mcu_regd_update(struct mt792x_dev *dev, u8 *alpha2,
+ 		goto err;
+ 
+ err:
+-	mt792x_mutex_release(dev);
+ 	dev->regd_change = false;
+ 	dev->regd_in_progress = false;
+ 	wake_up(&dev->wait);
+ 
+ 	return ret;
+ }
++
++int mt7921_mcu_regd_update(struct mt792x_dev *dev, u8 *alpha2,
++			   enum environment_cap country_ie_env)
++{
++	int ret;
++
++	mt792x_mutex_acquire(dev);
++	ret = __mt7921_mcu_regd_update(dev, alpha2, country_ie_env);
++	mt792x_mutex_release(dev);
++
++	return ret;
++}
+ EXPORT_SYMBOL_GPL(mt7921_mcu_regd_update);
+ 
+ void mt7921_regd_notifier(struct wiphy *wiphy,
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7921/regd.h b/drivers/net/wireless/mediatek/mt76/mt7921/regd.h
+index 571f31629e9e..2ea12d3861fb 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7921/regd.h
++++ b/drivers/net/wireless/mediatek/mt76/mt7921/regd.h
+@@ -8,6 +8,8 @@ struct mt792x_dev;
+ struct wiphy;
+ struct regulatory_request;
+ 
++int __mt7921_mcu_regd_update(struct mt792x_dev *dev, u8 *alpha2,
++			     enum environment_cap country_ie_env);
+ int mt7921_mcu_regd_update(struct mt792x_dev *dev, u8 *alpha2,
+ 			   enum environment_cap country_ie_env);
+ void mt7921_regd_notifier(struct wiphy *wiphy,
+-- 
+2.55.0
 
