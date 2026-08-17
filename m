@@ -1,156 +1,205 @@
-Received: from CH5PR02CU005.outbound.protection.outlook.com (mail-northcentralusazon11012060.outbound.protection.outlook.com [40.107.200.60])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61687427FB2;
-	Mon, 17 Aug 2026 15:20:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.200.60
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786980058; cv=fail; b=NoAcCweuIV+6CHA7Kl2QPLm/fKKKqlz3stbu5kaToBldCARD+L4VkUsrgjPuz8iJBW6Qtz8h1u/R6NA9TqdMtU/pk9VK8kLZ3WrQfdMzGGTM59FgJry03LnzVTjgyZTODrfr/L484XczCXIr8nXkNBjg9r+TvhVwOu/hqoJvuXw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786980058; c=relaxed/simple;
-	bh=owZEUicXdhwE+cwZYmVMReVlVBveBlseqg3+OlAFVVQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=n3xO4BLM79NsUcXTB6yxL1WoNnFKCzmtHLooHNpf72RlZEphIopTTt/oxxwHeCPp72yx2JvPhD9DPuYusWJSPCd8VKrBE+eRByWytht/x1uuW6Z8fGCgfWy9vRiF1F0duFkqMsJvpgCWMoKgF0hm1CxGmeeVxv6xZ+UEaiC570I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=ahzKTBEh; arc=fail smtp.client-ip=40.107.200.60
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 306F43D9545
+	for <regressions@lists.linux.dev>; Mon, 17 Aug 2026 15:41:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1786981279; cv=none; b=Na03Ul5oMu8N4jFBVThz74k30kvlWRkGTAFghX/FiCTrH84SIUKtlIiYRKAeyCXGQINAgtocWjEUwHsMJxCRyMSd3SUCVuJWYuEsrVty7F10l/c3QjheW0KUtAndNgKk0NRBw/me+9/HkdOAuwEh1n4PNwjB2gZm1f/+covFqec=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1786981279; c=relaxed/simple;
+	bh=k+dY+mjQTyIfFH9G1nyagfSApaJYPRf5aPzLSO40tRo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=B9MpBDleXBbvFV5kORQUKR5PajTUiPLKkN9yI9QQA3RZ3KXJml+wgx8WZiRsXQhMvZyDWvnAwXParjMdzsAUct9+LmqdsctpnhGsWaD3tT7/WyQu8BN4Q7zIQZ47Sj/WHhsj0grRyei+4/OhOU1rIXzHKBhWBJpj9wkxJygi7+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=p6ejzDyS; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="ahzKTBEh"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=XifDWf2NwWufKP/07ABIfOCytn6j71fkG5ecZLQKgUgZUBKKKRbDiTgSrsQN9epi9DcmRGTpNvPOxxRdHEombFDONuPom73yIEOqve0BRr/S3pmdFAqC08M9nfn210GuWHd8/WqGAa3KPxBqlZmqWYj+yW2Hxagf/J8INPmEP3YXU1WOhcoPwiEHfalFHjzO9xJfMNlpK6blPtL36HUF9UBwSGrnMcvjEsBuAAK0SBbLOQPVyVxqUMBgtd2NrjYQUVvmFd5da4n3UMKUhmLqUkUt/5e5/dC3IMEZGzxL67UZvHugEXdeDsRFnYD3Thxx1fPWlON8i6TW4xf0nvgkwg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=RgA5k1xtZruABIfEx05fCcW+U8gJSqzdyVEppp8uinc=;
- b=on3+hnvzDen4f0MsNnXnhZ3u+IpK6VgKkzb0eJDK125YYTmP8KbI7LqB6v/YsxathgWgDaTR6lMPTBr1Q7jAOSEdjxgIsHbaYNb7L4lCg3I7gdMuyT7VvPuo1STLrta6sZl22G32ZIsLaNpELSH1ZsP4cgrw6e8Pteg+be7nbXBPusc3HX8HWTB28z6l2i14YaJL6rPtESQdP/G3dsM3j+42janvP5+85oHxHxfaiWthTXyMmyz+klxOGmDLYj4gYSknhYPggAh+R7Utk2jU9BKM7NYBG9hlpMYLQeukCJwRy31u4JXlPwAG9fASCu35OmIAeKvfq6C0kw6ZQz0MyQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RgA5k1xtZruABIfEx05fCcW+U8gJSqzdyVEppp8uinc=;
- b=ahzKTBEhRrunXMFcIkrbAot11NsvswyRfltsrf2tdoEIkchzGLc8yRok/xXTvoikqfCbx+8nSqopAC6GaZ1IXkqrc6DORKyLvN1dIrWClWQEOENWigHZW6nDyE+d/mV1xUUASRB6cAqfsAdNsl8PdndIpBbmYZ4bAdi41mwr7OZ+QzuRMBRm3fmq/mfS/d3iJSWaOPxCZZk9GxVqiBXhg0svDO8OuA57YvnRKRAfpLSyE2uRl/UORK5JUMZVlD7ZYy+z9SwyhxTxT+VinPjpa5VNmZkO+80VVpXt2P/TmzoDOmXSAR0f4yLRRqTwx3jAsbI4YFj2UekiJytYwFuZKA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from LV8PR12MB9620.namprd12.prod.outlook.com (2603:10b6:408:2a1::19)
- by MW6PR12MB8960.namprd12.prod.outlook.com (2603:10b6:303:23e::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.315.17; Mon, 17 Aug
- 2026 15:20:53 +0000
-Received: from LV8PR12MB9620.namprd12.prod.outlook.com
- ([fe80::299d:f5e0:3550:1528]) by LV8PR12MB9620.namprd12.prod.outlook.com
- ([fe80::299d:f5e0:3550:1528%4]) with mapi id 15.21.0315.016; Mon, 17 Aug 2026
- 15:20:53 +0000
-Date: Mon, 17 Aug 2026 12:20:51 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Dmitry Malkin <dma@nebius.com>
-Cc: Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-	Joerg Roedel <joro@8bytes.org>, Nicolin Chen <nicolinc@nvidia.com>,
-	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>,
-	NB-Core Team <NB-CoreTeam@nebius.com>
-Subject: Re: [RFC PATCH] iommu/arm-smmu-v3: Allow nested attach for PCI
- bridges without vDEVICE
-Message-ID: <20260817152051.GB1410416@nvidia.com>
-References: <PA1P190MB25578C482C8A3B06A4DCC6FDDBDA2@PA1P190MB2557.EURP190.PROD.OUTLOOK.COM>
- <20260814174825.GC510472@nvidia.com>
- <PA1P190MB25573D7CFE42EF7DD2A8CDE8DBDA2@PA1P190MB2557.EURP190.PROD.OUTLOOK.COM>
- <20260814221103.GE510472@nvidia.com>
- <PA1P190MB2557D53CB7FCB70EB8F79D09DBA72@PA1P190MB2557.EURP190.PROD.OUTLOOK.COM>
- <20260817114158.GA1175472@nvidia.com>
- <PA1P190MB255719949EC777E6D2DB2606DBA72@PA1P190MB2557.EURP190.PROD.OUTLOOK.COM>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PA1P190MB255719949EC777E6D2DB2606DBA72@PA1P190MB2557.EURP190.PROD.OUTLOOK.COM>
-X-ClientProxiedBy: BN0PR03CA0012.namprd03.prod.outlook.com
- (2603:10b6:408:e6::17) To LV8PR12MB9620.namprd12.prod.outlook.com
- (2603:10b6:408:2a1::19)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p6ejzDyS"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-c197eaaab00so666879466b.0
+        for <regressions@lists.linux.dev>; Mon, 17 Aug 2026 08:41:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1786981276; x=1787586076; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=VoBtZfhuywbVuLLdP5All4NoUQGWiUJ7pstL6sIhZxI=;
+        b=p6ejzDySJfhnNgxBdt+b3kiYWzdrjaS7w1L1iT8tDlaNFZZOwu8ZawoCWtoUnTDAye
+         4MWj18hEf/3QfVrphGQh1R8HlyhIRHyfuLWo6pMSSmDTvCWmZGtnRhcbz/MA5Vsryl5u
+         lkhK41o4ZS4RMe4qpq4F2wvOXZeQNvBd5e/EnRUqO6FV5+fFvFlFrsR43nWNyaK/5try
+         Q+NzQVoTI1P5fbDlJ46axW81AHbrV4bLkyonwpjMwGUGZ5D6V39Ca+C/l2Bi4iembUb7
+         YA7Tpo27US0EfBGdwXRa0q9ivpdL8iWfR4efnoTU/AD7g6xZb/64UkJb70SsdyTxjYLS
+         BXrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786981276; x=1787586076;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=VoBtZfhuywbVuLLdP5All4NoUQGWiUJ7pstL6sIhZxI=;
+        b=dY2kYOuNoqyJAgpo6DvthGTJ3N+ip02pqDnE08Lr/l+GgoYBM23FfysgxS+9Xec85a
+         mkJzjLOm4imaGL4cHyGzYQwecgLIWQ2M2gp5CkanRU0pwI5FnACcb2B4svtmWtmhLBFt
+         7QCRFPDECSLabt87aE+6TW0Y2p/a9YIT+i1dhFOwJdDuDaCrIoQZm/FE54CAW5LbscKY
+         fOQmpKsNLEo4jh/lc5BtpSPWhEYKS3llnHUV8OzQgjULbzg6MqDMxTHiAoz/guKBlh9O
+         knHyCnHkD9UoA0xdqR11lEqLVICE6EJDxlRE8lisClnlS1IRg7MWqmxu+VioY/uaumf7
+         tjig==
+X-Forwarded-Encrypted: i=1; AHgh+Ro2nHSu0nwdGhLHLj4gHkgA/oQ+PY4x7R18aLhGktt8B/cA8wwfQ4W6wxm/kNKLEYxhlIgJLybOUAk5mQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxPpOgWhHay1GgPxsFUwH1Ku07Lra+i1dUt4tbfjVswzjLM9o8D
+	gOnniGphY7MToeteJe9eT/vGeWJ9d1dziDjmYQsb5foP6RlcYYBipS3Y
+X-Gm-Gg: AR+sD129x/B2MTMKKAgCdQigPWS/5TcgWPvX1lU5EpKDPdnwZAcytIzgJ+5KyiMvaU1
+	gn89sxT7IkfaHuxUuWwrFW0ZTEzi+7pjtb+pO2kcq2uf3I4ibdEsLXPhELkvkfS+osjoMlwnV5H
+	TLF6GwB7zBtvtWxt6qBv7tajJExJrWUNKC1PxK9W53MFRuOnYtlUNs6p+sTdq+E2YKAC0iDGQ+P
+	R1otoZfbbe9pHhJs34uXKix//sLXPhyzSu47ZClrBPZ+GxWluOygNlo+weQK0kfR8l1iQ/ZWWG+
+	mTJnZ669LmqotG9y3xBT7gDxUnEFgbBgkNewUqGf7bxxBARTLl5r8r/A1x8BRo1QZSyq50tTNkI
+	o1BdvXDWKoO6XlUIFbr+iPYZxQDoHdT4724wmsPaA8prELh80OMCiBpFBXLFVqdMq8IjoLEcCcg
+	9RtVZpGR+dg97qK1VYeypJyJNK9AyKTgBvK5hcAfRHQ+wVbTmKfpJeiqQFjRVtZO8HjnyPbe1T
+X-Received: by 2002:a17:906:ee84:b0:c20:eeaa:ec85 with SMTP id a640c23a62f3a-c212a1857cfmr1355311566b.17.1786981275977;
+        Mon, 17 Aug 2026 08:41:15 -0700 (PDT)
+Received: from [192.168.120.193] ([178.235.128.140])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c2185bc9697sm44467766b.61.2026.08.17.08.41.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 17 Aug 2026 08:41:15 -0700 (PDT)
+Message-ID: <b63e93e4-2f4c-4cad-b726-e1b0565379d7@gmail.com>
+Date: Mon, 17 Aug 2026 17:41:11 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV8PR12MB9620:EE_|MW6PR12MB8960:EE_
-X-MS-Office365-Filtering-Correlation-Id: 547a1308-1c89-449b-0e20-08defc732064
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|23010399003|7416014|1800799024|366016|18002099003|22082099003|56012099006|6133799003|11063799006|4143699003|10067099003;
-X-Microsoft-Antispam-Message-Info:
-	DiEpuvCnfcz0ITheCeE2KVQVsQcAm5aEzJcjv7hGafz3joNy+1/FqDkZtQyUSp10vEnO7uNn5ypghrLjYfETtSj+mXnEVMMOPNtHUx7cF1VFPVmSB80YXXfTSt+pDHhx8i2zywcdBdPaiwUJy67EEo2pj3mKQ+V1iyTrwUZNvCHC63OsSJuVqp3dgf6Sz6RXcwFvJJzH75d5dtJH+nIlNvbV+Hfa9y2c7E+vEEvaPbTluxhW+Mhu1XP1dMUlpNHdv/+d7sBFgQPQ5+LpvtSbbCo7JM7cXj5e2jNBBBX/e60fv05LyKpBh6LFiTYFUbAJOuUgFdfTo6+Bk+U7m8izH+3dm0zFhLT2I6UjfUgzhYJkhcOZIHRrFi3ugiCffj+1N0oj+hRrhZd8aitPpjgpeKrq3deNI+BsZID5Y7fdJbk01Tr/RdBOc0DRrLi6zzYidnHjC1seHz87ah9Ppcl6h7wzjfv6zkHEhbQusQhId36zh9qa2lgyxKpC7zhUy0p9zB0ReU6ocrwIl/WXCXCjCngGv9n/GvkRvO1ivGdeTqzIOtXsEmVmsqCE7YD14eMF1DbWjRAmIeSoiRKElw+FJLNHH9JDq0/3heYnOeX3JAo5Aonf8aqCt+NEcdwen3hEnpEyb8eV7hsmaBClAfa4j7YUJTdqpOlhwvVVr5A2cKk=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV8PR12MB9620.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(23010399003)(7416014)(1800799024)(366016)(18002099003)(22082099003)(56012099006)(6133799003)(11063799006)(4143699003)(10067099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?Pbxj86eTt0q3uY2B24kGrvcsl0dwWngDhTEx96zPug3J9rIXjEEtc/qaeAcr?=
- =?us-ascii?Q?4K0PZ2KeyA4KimoOp/l7q2PlveiUW6k6WadvVEAQceburDUUoBlNHy1HEWR0?=
- =?us-ascii?Q?tm6QvBP8qIikaFU3YE+Jf61D9NJ35KkJrTrRoAmBTmiTKDKtI4mGE43gzJc5?=
- =?us-ascii?Q?6dTrYYzlyIGu7Wkmrvfobq0PN1ELEg1EXSS+nPMTs49R6a/r1K8bRYZH9WRF?=
- =?us-ascii?Q?RaDuLPN12k48SYp/wO4dEe1zsiAl7QTFY7MMgjzvjGcjlFlSTpmtv5gdS3t0?=
- =?us-ascii?Q?BJVlUzDWjoJtAIP8U9jrb77gUdIr+Dnb7BybGvy0OWZxUpTCdGlNuJpFefCc?=
- =?us-ascii?Q?ut1jzvzZNtp97GSTwW6MDFI6k4iUaPxM9Kf7pMxGIvIB0jeKKJKXwCrR4aHu?=
- =?us-ascii?Q?ovFqAp34/8EG8GWunwOTPSXWgGBI8goeN66l5MHZzoQ7R453t/q9ERDwV2Fu?=
- =?us-ascii?Q?o9+Oc95MaT8swJ2WalL9CAELoqB5pcOzQtgwPtuLU2ZFpRGuQeMnso3+sW15?=
- =?us-ascii?Q?bAySxVGq7WJsGT7EaQBgsck2JFTVc8DeiSodl/vI8yBYSKJjYKfeptomSAo2?=
- =?us-ascii?Q?2+FjNAs5dc9m1hQqWDvAN5pmNBdIFvXbmiI1gygAzm8RxPAe11649uq4EM+1?=
- =?us-ascii?Q?LIPi/HPMMU+71CCbucARPfoSGcbzKR9AlpLR8Zv5/MLFErYWZq5EpHE1b+oq?=
- =?us-ascii?Q?wym217FxxAGHr/cFHJYyCZTlMBrtNDW2KQ9BaeavvYclWIX8r4MK0DK4ei6M?=
- =?us-ascii?Q?yJvrow9aaeFrEt2gbfo7TdBUALzI6jAKMdPm885knVDj+MTPb1cDFg4bbdPR?=
- =?us-ascii?Q?LCGH7LIVIcy5Chrd6kJkjHAp98g5HR/CFdFDidbR0O1/V5wYIbPGbWWOmSkC?=
- =?us-ascii?Q?ho2K9xjrL6yRAUWmvYcR4OMXcmZ3pUykBklTB0JuWcG+qOGphaeTbtuX0tOF?=
- =?us-ascii?Q?anzHUHgYidlbdCkyNvMKC6I93bQ3GzsiCUeDJeQx8xU1AnRSWE6WF53iIeNK?=
- =?us-ascii?Q?eUdxTWP1w3qwt/09yfzNJphBWUxMbGHZEuT11p/iUk/jSIVqeXUCqrm9xFz9?=
- =?us-ascii?Q?tmXXDrsXF82ZSgj3Gan1PFA9derzec2UWRmvMVyIZBrYTWyY1xw7fbAM4ox3?=
- =?us-ascii?Q?K/3LyZgwFWxOBJH6wLXKLzTwXrfY0hb3HZkNKUJWravaGP/DeTeRyHAMyFP4?=
- =?us-ascii?Q?6z7yRPw8d/eHMzWh89prtJD0Lvc5jeAu+VoGkKgnFSmiuuQL9j4pO7i+kook?=
- =?us-ascii?Q?pvdvF6DWqj/MhecHWPaMJwrhwA82na5YzLhKyr7x2NeiJVPk6rsYQGHnvVYk?=
- =?us-ascii?Q?9Mm9rCCkSTOhUczQEqdWQ9UXySMLjIl5wPbz9hWJMUK22pEkxgsF29Eod7E3?=
- =?us-ascii?Q?05BxdVlWH6PKWJU9Ki5vRA1AchCMf0vdlU3zpjtoXB2YP81/yt140uCYV5ie?=
- =?us-ascii?Q?hjasW46QAh8tSu1nbqPPjoJiA7XiMNEOLlwd6P+8rBL8oWn8r7rMEctw9x2E?=
- =?us-ascii?Q?gmrUiooMkD7bM++2a1h5WJctd2xTk/KBNEwOMzbprA19bW64ckoCISIt8+dQ?=
- =?us-ascii?Q?bfrtR9ok1bA5id/aMVb9fdl+U1dEmqQLRCaMwhSIqG3L6a7V8iC4/u3EMJAt?=
- =?us-ascii?Q?n+rIUPusBb5uHABRPWRumBTj3wEDD1+H4YUzIiK/1NbioH2j5QtCMpGnCLaH?=
- =?us-ascii?Q?Lff5H99/rskokcGIHlxw/vTIF3HaoTChoS/YKTs2IwJyfrqvgGm3v4Fk6UcY?=
- =?us-ascii?Q?HUQWb/e1PA=3D=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 547a1308-1c89-449b-0e20-08defc732064
-X-MS-Exchange-CrossTenant-AuthSource: LV8PR12MB9620.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Aug 2026 15:20:53.0030
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: qZ5kjmnfnOB08k12Eir2a7QkS5V1soBYXGqk9pLlYctR4sOimE6yEJiSKMCq4cpb
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW6PR12MB8960
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] qcom PAS TZ API migration breaks GPU and modem on
+ TrustZone without PAS (sc7180 trogdor)
+To: Paul Hollinsky <phollinsky@holtechnik.com>, sumit.garg@oss.qualcomm.com,
+ andersson@kernel.org
+Cc: mathieu.poirier@linaro.org, robin.clark@oss.qualcomm.com,
+ lumag@kernel.org, abhinav.kumar@linux.dev, akhilpo@oss.qualcomm.com,
+ konradybcio@kernel.org, mukesh.ojha@oss.qualcomm.com,
+ cros-qcom-dts-watchers@chromium.org, linux-arm-msm@vger.kernel.org,
+ linux-remoteproc@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ regressions@lists.linux.dev
+References: <20260808034716.58888-1-phollinsky@holtechnik.com>
+Content-Language: en-US
+From: Konrad Dybcio <konradybcio@gmail.com>
+In-Reply-To: <20260808034716.58888-1-phollinsky@holtechnik.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Aug 17, 2026 at 02:26:46PM +0000, Dmitry Malkin wrote:
+On 8/8/26 5:47 AM, Paul Hollinsky wrote:
+> Hi,
 > 
-> > This kind of situation is very challenging to setup in the VM, and at
-> > this point you may as well include the switch to the VM too.
+> Two commits from the "firmware: qcom: Add OP-TEE PAS service support"
+> series break the GPU and the modem on SC7180 Chromebooks (trogdor):
 > 
-> Passing through the PCI switch would not help because the device without
-> a vDEVICE is the host Root Port. Neither the Root Port nor the switch
-> should be exposed to the VM.
+>   f3b1357673dd ("remoteproc: qcom_q6v5_mss: Switch to generic PAS TZ APIs")
+>   0be72be03ca7 ("drm/msm: Switch to generic PAS TZ APIs")
+> 
+> Both are in linux-next as of next-20260805 and neither is in a released
+> kernel yet, so there is still time to fix this before v7.3.
 
-Oh that's probably because of the unfixed grouping bugs in the
-kernel. The root port should not be part of the group with correctly
-set ACS flags for switch P2P.
+First of all, thank you for the amazingly thorough write-up. I've been on
+holiday so I couldn't look into it quicker.
 
-> A multi-device IOMMU group is an intentional effect of using
-> 'pci=config_acs', and I would prefer to restore support for this
-> configuration upstream.
+[...]
 
-It doesn't work. We tried to make it work, there are many problems
-unfortunately. Don't use multi-device groups in the hypervisor.
+> Suggested fix, drm/msm
+> ======================
+> 
+> Given the above, I think the right fix is to move the availability check
+> behind the DT discovery rather than restore the SCM check. Boards with no
+> zap-shader node then never consult PAS at all, and boards that do have one
+> keep the qcom_pas_is_available() gate the original patch was going for:
+> 
+> --- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+> +++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+> @@ -52,6 +52,12 @@
+>  		return -ENODEV;
+>  	}
+>  
+> +	/* We need PAS to be able to load the firmware */
+> +	if (!qcom_pas_is_available()) {
+> +		DRM_DEV_ERROR(dev, "PAS is not available\n");
+> +		return -EPROBE_DEFER;
+> +	}
+> +
+>  	ret = of_reserved_mem_region_to_resource(np, 0, &r);
+>  	if (ret) {
+>  		zap_available = false;
+> @@ -170,18 +176,11 @@
+>  int adreno_zap_shader_load(struct msm_gpu *gpu, u32 pasid)
+>  {
+>  	struct adreno_gpu *adreno_gpu = to_adreno_gpu(gpu);
+> -	struct platform_device *pdev = gpu->pdev;
+>  
+>  	/* Short cut if we determine the zap shader isn't available/needed */
+>  	if (!zap_available)
+>  		return -ENODEV;
+>  
+> -	/* We need PAS to be able to load the firmware */
+> -	if (!qcom_pas_is_available()) {
+> -		DRM_DEV_ERROR(&pdev->dev, "PAS is not available\n");
+> -		return -EPROBE_DEFER;
+> -	}
+> -
+>  	return zap_shader_load_mdt(gpu, adreno_gpu->info->zapfw, pasid);
+>  }
 
-This patch is pure hacky, there is no good justification for the
-kernel to ignore certain devices in the group inside an iommu driver.
+I believe this is the right fix
 
-Jason
+> I have this booting here: the GPU initialises and logs "Zap shader not
+> enabled - using SECVID_TRUST_CNTL instead", as it did before the
+> regression.
+> 
+> 
+> Suggested fix, remoteproc
+> =========================
+> 
+> Keep an SCM gate for need_mem_protection and add a separate PAS gate for
+> need_pas_mem_setup. This is what I did to get it working:
+> 
+> --- a/drivers/remoteproc/qcom_q6v5_mss.c
+> +++ b/drivers/remoteproc/qcom_q6v5_mss.c
+> @@ -2079,7 +2079,16 @@ static int q6v5_probe(struct platform_device *pdev)
+>  	if (!desc)
+>  		return -EINVAL;
+>  
+> -	if (desc->need_mem_protection && !qcom_pas_is_available())
+> +	/*
+> +	 * Memory protection is done through qcom_scm_assign_mem(), which needs
+> +	 * SCM but not PAS. Only the memory setup path issues PAS calls, so
+> +	 * requiring PAS for every need_mem_protection platform prevents the
+> +	 * modem from probing at all on TZ firmware that offers no PAS.
+> +	 */
+> +	if (desc->need_mem_protection && !qcom_scm_is_available())
+> +		return -EPROBE_DEFER;
+> +
+> +	if (desc->need_pas_mem_setup && !qcom_pas_is_available())
+>  		return -EPROBE_DEFER;
+
+And likewise this looks like the correct fix too, feel free to submit
+both as patches
+
+[...]
+
+> On the API contract
+> ===================
+> 
+> For what it is worth, the kernel-doc for qcom_pas_is_available()
+> (qcom_pas.c:256) reads:
+> 
+>   Note that it is mandatory for any PAS client to invoke this API.
+>   If it returns true then only any other PAS API can be invoked.
+> 
+> That is a guard to call before invoking a PAS API, not a statement that a
+> driver touching TZ at all should refuse to probe without PAS.
+> ipa_main.c:764 consults it only on the loader path that genuinely needs
+> PAS rather than as a blanket probe precondition, which is the shape both
+> fixes above are aiming for.
+
+This is a sloppiness that got through the transition patchset.. previously
+as you mentioned, qcom_scm_is_available() was a blanket "can we talk to TZ
+yet"?, and as the conversion happened, it was largely just find-and-replaced..
+
+Konrad
