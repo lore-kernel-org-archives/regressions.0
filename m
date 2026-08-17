@@ -1,79 +1,89 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [194.59.206.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D656CEEBB
-	for <regressions@lists.linux.dev>; Mon, 17 Aug 2026 12:55:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1924423EB1
+	for <regressions@lists.linux.dev>; Mon, 17 Aug 2026 13:05:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.59.206.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786971319; cv=none; b=WJnr/o5+maxd3ywedP4kMleyFobUshamRhDPj0Tyuw6nCq0LefIrnvSq+oLvKbit/w6NqHq2zmaQ0sFJHrtlY8IFnXewJrJDxozp/KBhLJnU38cNdVhYrHnn6Nq36eB7mSzBug5PRklM6G28mDHIAxivDs8FpJRQnZ0ptJbbGiE=
+	t=1786971958; cv=none; b=QMZ+XyiICFDYRNgYM+I1kByTE06Qy/358iBJbI8d7cbx0U7ITKurzuXn/yMWIPrR2Xc9L8cSTn0M/IuQ/5iShrJ3BxZuTyf9ycVqHhOtlzzZyoGzkCQltV4MMr6OUqxOfNGrpi0H3UQyQFzQXhLAhJOTCZrz/sbdNmc6Rj1mn7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786971319; c=relaxed/simple;
-	bh=rtxLFkS2w/V59WhKgWCoLv/lA23Z767AvZR5fYDo9eY=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=TFZIk+n5teWut2U1HKTl0SliJy9q1b3FzBiIFLSrXP+riaJ9LMzmy2w/ujXBNaQiMQJf9LymZH57lM4RNMGKaCReAFbzkvuOS2iUrZrNTgqJPfe9KyXiteRIxLkrFaIx8XtESelBOVqlP/hlYTe/J9zjMKGJFBVuRxSVHbu/DyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=G0AKyVVg; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1786971958; c=relaxed/simple;
+	bh=9Ot99h3gjPJm00MYV6Mi8UoIzhZo274ii7+Oailx8mU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VZ8ARMft0E7cF1L4vWHuLjdeey94IF6Av+3fQBVoNmqJA662SZTZWcbwHkBZuc6DaDOLCsu6wdVoUstdcaRM3UQ05ZJSn+/yu54WkCRSIiVQyixVlDZatH9aOWGAcvaRMjpflS5f1EwGlxmvYOzLcP9pmMAdvdLYHY4IcqlL5uU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=VUIGLWkB; arc=none smtp.client-ip=194.59.206.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="G0AKyVVg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1786971318; x=1818507318;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=rtxLFkS2w/V59WhKgWCoLv/lA23Z767AvZR5fYDo9eY=;
-  b=G0AKyVVgy4wzSgt8flwEF9119rJpxrZlpd6p0etpH8+MLwWwjF+SoGwq
-   tYebxLX6jAIgxA/hz6BYiSWxLqbINwRTzPjtUuq8gm2Sz8+JRWlGhuKqh
-   1q1JV7UQSsIDW0ImlClURTIcThzT5o+CMl6gC+0bHwUnOQmrTVcE3vNVW
-   iODcTrDGmZ+Je9pft+GMsBpPt1fABKjqCQnxkmj9XMvcUyIntB0pMrAsC
-   mLsCwwf9astLe36Uamx+TTPFOMGt1I1deX94ZqvUj9JgkgMdnJBeoliS9
-   MFRQFSkoVcNdtirHnDeyCUAbnNg8uktyc5CtpPzMI2kAU0gtUQtaWhuml
-   g==;
-X-CSE-ConnectionGUID: Y3Uoe42dTDOhZAVM/S28yg==
-X-CSE-MsgGUID: A70NyuyFSY6qMqaZq6e2Eg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11877"; a="91123222"
-X-IronPort-AV: E=Sophos;i="6.25,228,1779174000"; 
-   d="scan'208";a="91123222"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2026 05:55:18 -0700
-X-CSE-ConnectionGUID: jEkqh0kSSSKbfTK39PV8Vw==
-X-CSE-MsgGUID: hJg2Pr2lSzO4bJJmu3QWhg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,228,1779174000"; 
-   d="scan'208";a="266890224"
-Received: from abityuts-desk1.ger.corp.intel.com (HELO localhost) ([10.245.245.110])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2026 05:55:15 -0700
-From: Jani Nikula <jani.nikula@linux.intel.com>
-To: nomorsukses@gmail.com, regressions@lists.linux.dev
-Cc: intel-gfx@lists.freedesktop.org, Suraj Kandpal <suraj.kandpal@intel.com>
-Subject: Re: [REGRESSION] Dell Latitude 7390 Intel UHD Graphics 620 display
- becomes extremely dim after kernel 7.x upgrade
-In-Reply-To: <CABHf4aQC__rWLKUJ5XgkCEdzC0dr1TGH1WP=UxOu3JmmU9VjLw@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park,
- 6 krs Bertel Jungin Aukio 5, 02600 Espoo, Finland
-References: <CABHf4aQC__rWLKUJ5XgkCEdzC0dr1TGH1WP=UxOu3JmmU9VjLw@mail.gmail.com>
-Date: Mon, 17 Aug 2026 15:55:13 +0300
-Message-ID: <c37c2d2f7f77f488867e278e412a92cc0e7ad851@intel.com>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="VUIGLWkB"
+Received: from relay02-mors.netcup.net (localhost [127.0.0.1])
+	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4hNtPD1cTkz48Tc;
+	Mon, 17 Aug 2026 15:05:52 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1786971952;
+	bh=9Ot99h3gjPJm00MYV6Mi8UoIzhZo274ii7+Oailx8mU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=VUIGLWkBG8gJVupE865rz4e6XWfvuZcklI7mGFhbLRUJYU63vXraS4ccqLdxYmJIO
+	 ZzULEXJl0UxvBh/bnoiXTgDTnv5PJPY+dukiyB24jQrS7df7iRF5gqiu3IjLk2xqZ1
+	 jKw1dfKfgBZeyVgq1RA3oF6bbYA5e2tZIc4LAFtN3aJG3jLRB0CXhGjx9bXYOo/mxT
+	 mw+Mn1W6u5hYPbIkmu5gEDAjD4nLx2UEDULACbbzCvuR4/kNEjCQktuP8YKrDWkbRS
+	 SPLT63tRr3zHFvLBzRyXELK4VfKIls5SnE2X7JSYDjtgrIF5afvrIRYOL2uMmsyUp8
+	 ykI58OeUT8MYg==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4hNtPD0thgz7wjY;
+	Mon, 17 Aug 2026 15:05:52 +0200 (CEST)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4hNtPB4rvfz8sb0;
+	Mon, 17 Aug 2026 15:05:50 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id CECDA5FAC7;
+	Mon, 17 Aug 2026 15:05:45 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <61d9c006-aeca-47a6-8863-eed92f15ebea@leemhuis.info>
+Date: Mon, 17 Aug 2026 15:05:45 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] Dell Latitude 7390 Intel UHD Graphics 620 display
+ becomes extremely dim after kernel 7.x upgrade
+To: nomorsukses@gmail.com
+Cc: regressions@lists.linux.dev, Jani Nikula <jani.nikula@linux.intel.com>,
+ intel-gfx@lists.freedesktop.org, Suraj Kandpal <suraj.kandpal@intel.com>
+References: 
+ <CABHf4aQC__rWLKUJ5XgkCEdzC0dr1TGH1WP=UxOu3JmmU9VjLw@mail.gmail.com>
+ <c37c2d2f7f77f488867e278e412a92cc0e7ad851@intel.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <c37c2d2f7f77f488867e278e412a92cc0e7ad851@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: <178697194616.796474.7993964972841137865@mxe9fb.netcup.net>
+X-Rspamd-Server: rspamd-worker-8404
+X-Rspamd-Queue-Id: CECDA5FAC7
+X-NC-CID: AQZGOzuBJ+HwzmqEmWuxFn5ZCHAVXjubCJ30FJxjETpv2zPQ7mE=
 
-On Thu, 06 Aug 2026, "nomorsukses@gmail.com" <nomorsukses@gmail.com> wrote:
-> I would like to report a possible kernel regression affecting the
-> internal display brightness on my Dell Latitude 7390.
+On 8/17/26 14:55, Jani Nikula wrote:
+> On Thu, 06 Aug 2026, "nomorsukses@gmail.com" <nomorsukses@gmail.com> wrote:
+>> I would like to report a possible kernel regression affecting the
+>> internal display brightness on my Dell Latitude 7390.
+> 
+> Please file a bug as described at [1].
+> 
+> [1] https://drm.pages.freedesktop.org/intel-docs/how-to-file-i915-bugs.html
+Before doing so you might want to try 7.2 vanilla, as there was a
+backlight bug affecting that machine that was fixed long ago:
+https://gitlab.freedesktop.org/drm/i915/kernel/-/work_items/16015
 
-Please file a bug as described at [1].
+Maybe Ubuntu just never picked up the fix. So if 7.2 works, you need to
+report it to them.
 
-BR,
-Jani.
-
-[1] https://drm.pages.freedesktop.org/intel-docs/how-to-file-i915-bugs.html
-
-
-
--- 
-Jani Nikula, Intel
+Ciao, Thorsten
