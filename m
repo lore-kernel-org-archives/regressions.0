@@ -1,126 +1,133 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F17B3431E76
-	for <regressions@lists.linux.dev>; Mon, 17 Aug 2026 13:16:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.182
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786972590; cv=pass; b=kVpmRP2ssyJgdTJljoCmI5cCQho1um8cXE3UNvMU0TQv9lE1Rpp0FPDPtkq5bYRhxBaFmYa7znH2muG3Xeu304tv4MCpGube7pG6kxqKdUWWsYYEvRoiFntPt7/4xOkOB1IXQPcXAyX87XIKsQjbnD6r5AVEr2TIIGUNuw/YJCs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786972590; c=relaxed/simple;
-	bh=shZn/QdVM/HwuzkF8TqQ8kXOnlsdSL/uGpdvGQQTt0Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YrhPHq6ap0JgBNX/r/uetgkAoU1lDwmUs6Xrvkf+qpUd5GA0X2F+YHVQ/Xibe7lrobjoiuf+YYRjyvxH2De3IleUAjjbWiY54Eu7aSG27DVL7Xg8BysVMWEMV/UYD0RReQcEIoAgU5Rlpk0Vt5P1N49hf9OH0GhuMIG3f6zoFXo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Fu7c8Vq+; arc=pass smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA82B3F23D1
+	for <regressions@lists.linux.dev>; Mon, 17 Aug 2026 14:25:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.65
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1786976724; cv=none; b=XPcbvs0tYXTtwtaa6L/Rf55fQznj7+w57lq+CljeZVetih9oiwMQG5ZEyCIqXKOoNzRW89D6MHH+8JLqly0jZ/ySNPEWxO17GLJAf2QdNuEV0VkVLfU/+O4OZnRUKt/6qTrw3xVH4gJam1j8Gq+MCkKt9RX/VBqASrarwEHLx3o=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1786976724; c=relaxed/simple;
+	bh=5NYCdV7DxO0yfbG8hSq4BoGXgeh/C3dc4BvFmYUP9OM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tWN2QuM7WST0n34BlTh8O/WVdxUUMKNrKC0UAs1ZukMq9U3wh4dabFhOBCLWMbRcL+f/t8vCxC/PeHHxz2+F+XbgSdDs5Iftfb6wd3OPy3LgK/kT5pLkwEGf+13IpLeeFnc78CQIOXoXhpYIH4ORp+Du8O3jbl+kIP89lzh5rdU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de; spf=pass smtp.mailfrom=posteo.de; dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b=a+tsw9lR; arc=none smtp.client-ip=185.67.36.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fu7c8Vq+"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2ce7d2adef4so57129845ad.3
-        for <regressions@lists.linux.dev>; Mon, 17 Aug 2026 06:16:28 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1786972588; cv=none;
-        d=google.com; s=arc-20260327;
-        b=eN10Rwo24EX1oldWAtc88+gELxGjjHhaAQ50SdTaQEMB4r2oNsWIWTNWrSSZXfxYxw
-         AHhzkn2sGwPYBqi7GL45FO/3/u/awB8OHEccxdd4jZgBiF/6FpPiW6Sl7zrOzz1jumuB
-         XHZopVKytkI6S7KQVjPyZOZ/bMRXu4EgMeKPef8/OkXW/Bw3kWev6uf1ts3nLw6djEOL
-         PXOcxSKY5kfYktRyNDckoGz6ySqk6IiE/vTcpoWWCOSS2AMaUz3d40ZnuQOz6d/uefyw
-         V+Cw+xatWc56WkXQ0PNyib37DR2SCUxErAmFIPjrvDlwy2FOjNImoXCQc6ntLhNxnPXh
-         cHuw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=shZn/QdVM/HwuzkF8TqQ8kXOnlsdSL/uGpdvGQQTt0Q=;
-        fh=9QEP8/C5dEtTGRh0fBXfM5MkqkEdBdZ4joc9jdDQxkw=;
-        b=T9NJHQbs9U37FsIIXLlAFjQftaHMrBORrEhIf+FX8I03LDVy2WC7htBUvKhbJf7jtK
-         s6Z6uWo4AoJ+0H37BgdNbly2uPDjmQHvi8TaF+lq/ieAH8T/9aXulhSYCJd6PXMPPjkg
-         GExuOXyXhAKfmmwOUw/Tc9y9fWKz2BsTaE3KGnXrXttKfiDDMkfbrLxGAAuFHY8SSMVi
-         I33beQkwMVqGzArbo1Bk7kRxqBx2m33QP0zj9aZB8xRWmO4YaaQQVkHnN2qaXeuNXgDQ
-         fFjUQYYq+k/hrJBKreWD7lWnFF+hyuT+O5sklrFaYCOBcs5ZxulRdehu6+bYp2bjTPes
-         N5AA==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1786972588; x=1787577388; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=shZn/QdVM/HwuzkF8TqQ8kXOnlsdSL/uGpdvGQQTt0Q=;
-        b=Fu7c8Vq+7jkD9iocVEun0+93rfDAIxsdUycXVBwyQqofUMs7NTRM8VSw1Md7XQ1Qhq
-         GzegVDFGpNjBleRi1SgZklCl20RFenrlawi3asDD+RNTGwZpk2lT6XNnHxTw5WzlO003
-         Lq1RQxW2x+uhozSGADnq2M6+6f6BlXczOQ8rTyUErDJhU7IA9nC7t0YztlkflDgBMNrd
-         WABLPFaX+tbxJBdM5VXcY/qEH0HYlFAQDZqPAKv7aZcRc/6Vp1bbkClFhKt1V88XvFuB
-         4MI5ziZndkaONnNmQSP+j6AUXHYXCTC/HZpu8faayr2+eSUB9r3zulluXa07NtvOO+lA
-         ey8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786972588; x=1787577388;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=shZn/QdVM/HwuzkF8TqQ8kXOnlsdSL/uGpdvGQQTt0Q=;
-        b=d+D2q+Zo0x9rJQ0mmbq2s0yHAYnFNZgWAAlFU4WNck9okP/Y5aNz8OFQEXmTT2M47f
-         6ISZ9+ZUeYYbb5WwkNavk7ZbDN6eY/qsTtSIrYFrPVrrFDG0c0BnTJYu3p+VE3iF+XVl
-         52r4Cc1AnL45uxHx1iDvMcXsXt+S500PTFNKGivJsTza+ucyZB5h6L0PfEmkFNUXWr/M
-         RWkfCUAjwp+uS30c9KtGDb4SP+jkSkGYpkTttcaqX+egMGDZj+ogOmw/e4CbvUiXEip0
-         ajUzQ6RMRePbXaVhImqZFHC/HtXPV/6nyHSPTKT13fybZEFLcpfKsH1vPG7G6M7QMPGF
-         r2fQ==
-X-Forwarded-Encrypted: i=1; AHgh+RqZOOwObWE7d3fKJ9IgYJ3dcqF1wNZH73lolwi9O+B1NtM43mUl/D0W0G4hRaQiE/r9sF+7Y85XQHhqAg==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yw8K+SMfwVHnXgxu2R0SolR9WUAZJwzGqTBD1VyejnqSaOxMFA6
-	CEUj2y7wMJcd+7jYEEAPVxFscXvyjdPtBvUyqri9QOO3w/P4EXmEoxJuoK4etuGzVKxkSaMqt97
-	G9vv5YeaZR6OR7CwkFCf2Q6dPXJMhLdY=
-X-Gm-Gg: AR+sD13eDsfuQfOVb3EjpfHr6DAVdlTzu+x8ThlUyW3q63oUhW0tUgcFBUV+mm9FUlz
-	LK3bxPLM1D2xVFTnCJ0MyFGKSbQv7nGftUlPi2TOt/2ECiiy8oaniZcY6MXnAcBal5mCQxej3hb
-	OrHPyaWzWq7rLD9pNnyHg/aAxYIilx45b74nHcfjbBO+q7M9pbEHo0etYEYrb4RjNIFXYcpuWu1
-	ahOXjHxfYVFGyLL2Jk9wX6j3lc3OtTaYkb4JGXdj5mb7A/aeaH+pHHK+ikeHf2kXjMV6OGcc5Q0
-	VxL+ykWi+a7PN+qNEz7M7uEpTs//ZSt8CH2gLEnChCCEriVSWd8a59/TLgHgIfDKV5bcp2eYUjI
-	EdXTUYdpu3aXKYJl7Hh0f4qKSGqvNSi+SHneYvB6owxzPFHK0us53/M4kgT/yey6EHX+k55nXcu
-	pUEfBTEwfZuRrQW8/JIU09jt7jA1wqhbKCxrLO1jCJ1BtqNTXDko0=
-X-Received: by 2002:a17:903:2303:b0:2cf:84bb:1ebc with SMTP id
- d9443c01a7336-2d3b0c5db18mr277141995ad.15.1786972588243; Mon, 17 Aug 2026
- 06:16:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b="a+tsw9lR"
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout01.posteo.de (Postfix) with ESMTPS id D1BBF240029
+	for <regressions@lists.linux.dev>; Mon, 17 Aug 2026 16:25:14 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=posteo.de;
+	s=1984.8680eb; t=1786976714;
+	bh=SILDQTFVoY+AHwG+3Bgw2hvsn82dE9tOcH20jBz/6ro=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:Content-Type:
+	 Content-Transfer-Encoding:From;
+	b=a+tsw9lRrER2gTA9zq3zXBc2A8tWz6RINzlT2l2WJYQp4KPo9YY5Rrk3FdSpyi/Bl
+	 oEwppZGI6gFdmqSvrWhtnINB6HrUEJrw5SpnbX5sAMqLyAdgzjk6CWiTv/hNB08TDT
+	 na7FCVTEpz4LCKWVZw6jKdm+QLf8/GWQccToTpqQQQmYHyVyNkUlFxlPmElUpLxWzu
+	 2PX+Ai6z5RqecktfHpkDUTXooM1H6lX7Q6GgK5OWHlzyG9L/Hvm7McvGCyb9kwjVmx
+	 eW5pWcFo4zjlE0E0FPAnG6b0zonVgUGxzmGk8oYbl/CslWh40+GIUF0zKdTFgJBpKS
+	 3QDUmDTReH4/g==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4hNw8n1Txrz9rxB;
+	Mon, 17 Aug 2026 16:25:13 +0200 (CEST)
+Message-ID: <b83a5708-b5f4-48e9-85a5-37b3ab34af46@posteo.de>
+Date: Mon, 17 Aug 2026 14:25:14 +0000
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CABHf4aQC__rWLKUJ5XgkCEdzC0dr1TGH1WP=UxOu3JmmU9VjLw@mail.gmail.com>
- <c37c2d2f7f77f488867e278e412a92cc0e7ad851@intel.com> <61d9c006-aeca-47a6-8863-eed92f15ebea@leemhuis.info>
-In-Reply-To: <61d9c006-aeca-47a6-8863-eed92f15ebea@leemhuis.info>
-From: Luna Jernberg <droidbittin@gmail.com>
-Date: Mon, 17 Aug 2026 15:16:14 +0200
-X-Gm-Features: AcwNN1UaQ-p5PZB9_ytyorEEY2UmlN496Ynqr2adHZEtLQdMz8eLOIpt9bmw4LM
-Message-ID: <CADo9pHhnajqPJi+7o5MK=8_RXTrqUuGJ54cO1B14F-0m7FQ5WA@mail.gmail.com>
-Subject: Re: [REGRESSION] Dell Latitude 7390 Intel UHD Graphics 620 display
- becomes extremely dim after kernel 7.x upgrade
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: nomorsukses@gmail.com, regressions@lists.linux.dev, 
-	Jani Nikula <jani.nikula@linux.intel.com>, intel-gfx@lists.freedesktop.org, 
-	Suraj Kandpal <suraj.kandpal@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [REGRESSION] mt7925: MLO connectivity silently stalls with 6GHz
+ link active
+To: Devin Wittmayer <lucid_duck@justthetip.ca>,
+ Thorsten Leemhuis <regressions@leemhuis.info>, regressions@lists.linux.dev
+Cc: linux-wireless@vger.kernel.org, lorenzo.bianconi83@gmail.com
+References: <066b30cc-a9e6-4aeb-964d-71551e8ea3ef@posteo.de>
+ <d8e493ef-90ff-4364-ad4e-1709fae97005@leemhuis.info>
+ <20260816204805.46779-1-lucid_duck@justthetip.ca>
+Content-Language: en-US, de-DE
+From: Jonas Hort <jonas.hort@posteo.de>
+In-Reply-To: <20260816204805.46779-1-lucid_duck@justthetip.ca>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Not sure if this is the same bug that i found a couple of weeks ago in
-April, if so it should be fixed with 7.1
+First, thanks to everyone helping out with this - really appreciate
+the time you're all putting in.
 
-Den m=C3=A5n 17 aug. 2026 kl 15:14 skrev Thorsten Leemhuis
-<regressions@leemhuis.info>:
+One correction to how I described this earlier: the connection does
+NOT reliably self-heal on its own. I have manually intervened every
+single time to restore connectivity - either by disconnecting and
+reconnecting the WiFi connection, or by switching to my band-lock
+workaround (forcing 5GHz-only, which disables MLO). What I can say
+for certain: the system itself has never needed a reboot - it stays
+fully responsive throughout, only the WiFi link itself needs manual
+action to recover. Wanted to correct that record before it causes
+confusion.
+
+Update on the ROC tracing: three real freezes captured now with the
+kprobes active (all confirmed via the WFDMA0 tail-frozen signature).
+
+- Freeze #1 (15:37): no ROC activity in the trace. Fixed by
+   disconnecting/reconnecting the WiFi connection fairly quickly.
+- Freeze #2 (15:43): this time I deliberately waited longer before
+   intervening. The trace shows several ROC events (rocabort, mloroc,
+   rocwork) clustered together. Fixed by switching to the band-lock
+   workaround (5GHz-only).
+- Freeze #3 (16:15): no ROC activity again. Fixed by
+   disconnecting/reconnecting the WiFi connection.
+
+Uploaded all three logs to the bugzilla ticket if useful:
+https://bugzilla.kernel.org/show_bug.cgi?id=221884
+
+Still haven't gotten to confirming 6.18 as a clean baseline on my own
+hardware - that's next on my list.
+
+Am 16.08.26 um 22:48 schrieb Devin Wittmayer:
+> On 15/08/2026 07:51, Thorsten Leemhuis wrote:
+>> CCing Devin, who wrote two of the following messages
+> Those are the mt7921 regd deadlock. mt7925 does not have it, there is no
+> equivalent of the mt7921_mac_sta_add() call site that creates it.
 >
-> On 8/17/26 14:55, Jani Nikula wrote:
-> > On Thu, 06 Aug 2026, "nomorsukses@gmail.com" <nomorsukses@gmail.com> wr=
-ote:
-> >> I would like to report a possible kernel regression affecting the
-> >> internal display brightness on my Dell Latitude 7390.
-> >
-> > Please file a bug as described at [1].
-> >
-> > [1] https://drm.pages.freedesktop.org/intel-docs/how-to-file-i915-bugs.=
-html
-> Before doing so you might want to try 7.2 vanilla, as there was a
-> backlight bug affecting that machine that was fixed long ago:
-> https://gitlab.freedesktop.org/drm/i915/kernel/-/work_items/16015
+> Worth ruling in or out before you bisect. mt7925 sets
+> IEEE80211_MLD_CAP_OP_MAX_SIMUL_LINKS to 0 in mt7925/main.c. It is an N-1
+> field, mt7996 sets MT7996_MAX_RADIOS - 1, so 0 means one simultaneous link,
+> and mt7925/mcu.c then requests MT7925_ROC_REQ_MLSR_AG or _AA. MLSR is
+> multi-link single radio: your two links share one radio, and ROC is what
+> moves it between them.
 >
-> Maybe Ubuntu just never picked up the fix. So if 7.2 works, you need to
-> report it to them.
+> If 5 GHz is your deflink, your pair is named on that path in
+> mt7925_mac_set_links():
 >
-> Ciao, Thorsten
+> 	if (band == NL80211_BAND_2GHZ ||
+> 	    (band == NL80211_BAND_5GHZ && secondary_band == NL80211_BAND_6GHZ)) {
+> 		mt7925_abort_roc(...);
+> 		mt7925_set_mlo_roc(...);
+> 	}
+>
+> That one only runs at association. The path that can run mid-session is
+> mt7925_change_vif_links(), which calls mt7925_set_mlo_roc() for each added
+> link. Both reach mt7925_mcu_set_mlo_roc(), and all of this is the same in
+> 7.1 and 7.2-rc7.
+>
+> Under your existing watchdog:
+>
+> 	cd /sys/kernel/debug/tracing
+> 	echo 'r:mloroc mt7925_mcu_set_mlo_roc ret=$retval:s32' > kprobe_events
+> 	echo 'r:rocabort mt7925_mcu_abort_roc ret=$retval:s32' >> kprobe_events
+> 	echo 'p:rocwork mt7925_roc_work' >> kprobe_events
+> 	echo 1 > events/kprobes/enable
+>
+> Association will fire mloroc once, so anything later is a mid-session
+> switch. If the WFDMA0 tail freezes while one of those is in flight, it is a
+> link switch that did not finish. If they are silent across a stall, the
+> whole path is ruled out and that is worth as much.
+>
+> On the bisect itself: your 6.18 good point is second-hand, from different
+> hardware and a different AP. Worth confirming on your own box before
+> spending steps against it.
+>
+> Devin
