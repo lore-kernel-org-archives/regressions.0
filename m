@@ -1,205 +1,176 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 306F43D9545
-	for <regressions@lists.linux.dev>; Mon, 17 Aug 2026 15:41:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28EF6472542
+	for <regressions@lists.linux.dev>; Mon, 17 Aug 2026 21:34:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786981279; cv=none; b=Na03Ul5oMu8N4jFBVThz74k30kvlWRkGTAFghX/FiCTrH84SIUKtlIiYRKAeyCXGQINAgtocWjEUwHsMJxCRyMSd3SUCVuJWYuEsrVty7F10l/c3QjheW0KUtAndNgKk0NRBw/me+9/HkdOAuwEh1n4PNwjB2gZm1f/+covFqec=
+	t=1787002494; cv=none; b=JzyGxNr5/ZcCY7uFLrdxlgf8RCKCErDZ8ka1/oBFTIv/0tqrD9Z1Bd01KiIl9oyWoYoN/5iTGcJsUSQkjJ+E9a+9Auqu4Uv7n6N+1xH0Racc15RL3NonwfqbRirBU5gZRemLs6Bfbr8u2Ct3GuQrESRqA9ZcofYP/voAKtRapcA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786981279; c=relaxed/simple;
-	bh=k+dY+mjQTyIfFH9G1nyagfSApaJYPRf5aPzLSO40tRo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=B9MpBDleXBbvFV5kORQUKR5PajTUiPLKkN9yI9QQA3RZ3KXJml+wgx8WZiRsXQhMvZyDWvnAwXParjMdzsAUct9+LmqdsctpnhGsWaD3tT7/WyQu8BN4Q7zIQZ47Sj/WHhsj0grRyei+4/OhOU1rIXzHKBhWBJpj9wkxJygi7+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=p6ejzDyS; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1787002494; c=relaxed/simple;
+	bh=Fkc/mHlVmdk2BUWSxwjgppDSNdF7jDiIAjkapr9xC2I=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=C1pWzmsnTgZv+5uboY0EBdgyaTSESqZTLUm5EENT6z05EUWz+AejBdeOnZemCXjDEFfjYVRgQbu+rPXJ3SOoZdnb5bmxGWphkyOEUGGFUOPkqIhIXg0AJZj/ZfWvABDh7NmXvBYgq5puO/v3CfVeNrg/LXey+RexuVEplz3eMb0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de; spf=pass smtp.mailfrom=posteo.de; dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b=CTww5H9H; arc=none smtp.client-ip=185.67.36.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p6ejzDyS"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-c197eaaab00so666879466b.0
-        for <regressions@lists.linux.dev>; Mon, 17 Aug 2026 08:41:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1786981276; x=1787586076; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=VoBtZfhuywbVuLLdP5All4NoUQGWiUJ7pstL6sIhZxI=;
-        b=p6ejzDySJfhnNgxBdt+b3kiYWzdrjaS7w1L1iT8tDlaNFZZOwu8ZawoCWtoUnTDAye
-         4MWj18hEf/3QfVrphGQh1R8HlyhIRHyfuLWo6pMSSmDTvCWmZGtnRhcbz/MA5Vsryl5u
-         lkhK41o4ZS4RMe4qpq4F2wvOXZeQNvBd5e/EnRUqO6FV5+fFvFlFrsR43nWNyaK/5try
-         Q+NzQVoTI1P5fbDlJ46axW81AHbrV4bLkyonwpjMwGUGZ5D6V39Ca+C/l2Bi4iembUb7
-         YA7Tpo27US0EfBGdwXRa0q9ivpdL8iWfR4efnoTU/AD7g6xZb/64UkJb70SsdyTxjYLS
-         BXrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786981276; x=1787586076;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=VoBtZfhuywbVuLLdP5All4NoUQGWiUJ7pstL6sIhZxI=;
-        b=dY2kYOuNoqyJAgpo6DvthGTJ3N+ip02pqDnE08Lr/l+GgoYBM23FfysgxS+9Xec85a
-         mkJzjLOm4imaGL4cHyGzYQwecgLIWQ2M2gp5CkanRU0pwI5FnACcb2B4svtmWtmhLBFt
-         7QCRFPDECSLabt87aE+6TW0Y2p/a9YIT+i1dhFOwJdDuDaCrIoQZm/FE54CAW5LbscKY
-         fOQmpKsNLEo4jh/lc5BtpSPWhEYKS3llnHUV8OzQgjULbzg6MqDMxTHiAoz/guKBlh9O
-         knHyCnHkD9UoA0xdqR11lEqLVICE6EJDxlRE8lisClnlS1IRg7MWqmxu+VioY/uaumf7
-         tjig==
-X-Forwarded-Encrypted: i=1; AHgh+Ro2nHSu0nwdGhLHLj4gHkgA/oQ+PY4x7R18aLhGktt8B/cA8wwfQ4W6wxm/kNKLEYxhlIgJLybOUAk5mQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxPpOgWhHay1GgPxsFUwH1Ku07Lra+i1dUt4tbfjVswzjLM9o8D
-	gOnniGphY7MToeteJe9eT/vGeWJ9d1dziDjmYQsb5foP6RlcYYBipS3Y
-X-Gm-Gg: AR+sD129x/B2MTMKKAgCdQigPWS/5TcgWPvX1lU5EpKDPdnwZAcytIzgJ+5KyiMvaU1
-	gn89sxT7IkfaHuxUuWwrFW0ZTEzi+7pjtb+pO2kcq2uf3I4ibdEsLXPhELkvkfS+osjoMlwnV5H
-	TLF6GwB7zBtvtWxt6qBv7tajJExJrWUNKC1PxK9W53MFRuOnYtlUNs6p+sTdq+E2YKAC0iDGQ+P
-	R1otoZfbbe9pHhJs34uXKix//sLXPhyzSu47ZClrBPZ+GxWluOygNlo+weQK0kfR8l1iQ/ZWWG+
-	mTJnZ669LmqotG9y3xBT7gDxUnEFgbBgkNewUqGf7bxxBARTLl5r8r/A1x8BRo1QZSyq50tTNkI
-	o1BdvXDWKoO6XlUIFbr+iPYZxQDoHdT4724wmsPaA8prELh80OMCiBpFBXLFVqdMq8IjoLEcCcg
-	9RtVZpGR+dg97qK1VYeypJyJNK9AyKTgBvK5hcAfRHQ+wVbTmKfpJeiqQFjRVtZO8HjnyPbe1T
-X-Received: by 2002:a17:906:ee84:b0:c20:eeaa:ec85 with SMTP id a640c23a62f3a-c212a1857cfmr1355311566b.17.1786981275977;
-        Mon, 17 Aug 2026 08:41:15 -0700 (PDT)
-Received: from [192.168.120.193] ([178.235.128.140])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c2185bc9697sm44467766b.61.2026.08.17.08.41.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Aug 2026 08:41:15 -0700 (PDT)
-Message-ID: <b63e93e4-2f4c-4cad-b726-e1b0565379d7@gmail.com>
-Date: Mon, 17 Aug 2026 17:41:11 +0200
+	dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b="CTww5H9H"
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout01.posteo.de (Postfix) with ESMTPS id 791F1240027
+	for <regressions@lists.linux.dev>; Mon, 17 Aug 2026 23:34:46 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=posteo.de;
+	s=1984.8680eb; t=1787002486;
+	bh=btCwXgqpVLG7N/TKHtgeDcfBPYkUG3isqMzsDjAEx7A=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:Content-Type:
+	 Content-Transfer-Encoding:From;
+	b=CTww5H9HFnt4fYiXpATSDjfp0Z0Z2TRgpPeZe+CJORCkXH0N1N4cYnD/2iqwxtHOX
+	 Y0KD/OKS3r1cojcE6LzP0yKWwEB7YyugKWt0KgPpNeT0o3S1xhUgJQlD0bVKaPgXrm
+	 +NHwRdDxwg3DqS0KKLhaj15pd7EwPnvZz/Y+8IEcnjJ3C95QdFXUldoMCwRirxA4yU
+	 2RfYBZurxYQrg8msC9GRE2pwNnYyCnJf/LoNamBzxp2qwmmaf2JZQVS8pMFTOTtch2
+	 cNcyFIxTdgRkt3/1Wl11vy3ZEvCdZlcxbLMqOL4vCSe0D/CdIDr3k9PYKQb4CW04J2
+	 XURyfPvH6PLYw==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4hP5hP3MgHz9rxB;
+	Mon, 17 Aug 2026 23:34:45 +0200 (CEST)
+Message-ID: <a3d6db95-7db8-4fa4-808f-46ed43d183ff@posteo.de>
+Date: Mon, 17 Aug 2026 21:34:46 +0000
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] qcom PAS TZ API migration breaks GPU and modem on
- TrustZone without PAS (sc7180 trogdor)
-To: Paul Hollinsky <phollinsky@holtechnik.com>, sumit.garg@oss.qualcomm.com,
- andersson@kernel.org
-Cc: mathieu.poirier@linaro.org, robin.clark@oss.qualcomm.com,
- lumag@kernel.org, abhinav.kumar@linux.dev, akhilpo@oss.qualcomm.com,
- konradybcio@kernel.org, mukesh.ojha@oss.qualcomm.com,
- cros-qcom-dts-watchers@chromium.org, linux-arm-msm@vger.kernel.org,
- linux-remoteproc@vger.kernel.org, dri-devel@lists.freedesktop.org,
- freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- regressions@lists.linux.dev
-References: <20260808034716.58888-1-phollinsky@holtechnik.com>
-Content-Language: en-US
-From: Konrad Dybcio <konradybcio@gmail.com>
-In-Reply-To: <20260808034716.58888-1-phollinsky@holtechnik.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Subject: Re: [REGRESSION] mt7925: MLO connectivity silently stalls with 6GHz
+ link active
+From: Jonas Hort <jonas.hort@posteo.de>
+To: Devin Wittmayer <lucid_duck@justthetip.ca>,
+ Thorsten Leemhuis <regressions@leemhuis.info>, regressions@lists.linux.dev
+Cc: linux-wireless@vger.kernel.org, lorenzo.bianconi83@gmail.com
+References: <066b30cc-a9e6-4aeb-964d-71551e8ea3ef@posteo.de>
+ <d8e493ef-90ff-4364-ad4e-1709fae97005@leemhuis.info>
+ <20260816204805.46779-1-lucid_duck@justthetip.ca>
+ <b83a5708-b5f4-48e9-85a5-37b3ab34af46@posteo.de>
+Content-Language: en-US, de-DE
+In-Reply-To: <b83a5708-b5f4-48e9-85a5-37b3ab34af46@posteo.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 8/8/26 5:47 AM, Paul Hollinsky wrote:
-> Hi,
-> 
-> Two commits from the "firmware: qcom: Add OP-TEE PAS service support"
-> series break the GPU and the modem on SC7180 Chromebooks (trogdor):
-> 
->   f3b1357673dd ("remoteproc: qcom_q6v5_mss: Switch to generic PAS TZ APIs")
->   0be72be03ca7 ("drm/msm: Switch to generic PAS TZ APIs")
-> 
-> Both are in linux-next as of next-20260805 and neither is in a released
-> kernel yet, so there is still time to fix this before v7.3.
+Quick follow-up: managed to confirm 6.18 as a clean baseline on my
+own hardware now (not just secondhand from others in the forum
+thread) - running Linux 6.18.42-1-cachyos-lts with MLO active
+(5GHz+6GHz, same FritzBox 5690 Pro) for 3 hours straight, no freeze
+at all.
 
-First of all, thank you for the amazingly thorough write-up. I've been on
-holiday so I couldn't look into it quicker.
+$ uname -r
+6.18.42-1-cachyos-lts
 
-[...]
+$ cat /proc/version
+Linux version 6.18.42-1-cachyos-lts (linux-cachyos-lts@cachyos) (gcc
+(GCC) 16.1.1 20260728, GNU ld (GNU Binutils) 2.47) #1 SMP
+PREEMPT_DYNAMIC Mon, 03 Aug 2026 17:38:28 +0000
 
-> Suggested fix, drm/msm
-> ======================
-> 
-> Given the above, I think the right fix is to move the availability check
-> behind the DT discovery rather than restore the SCM check. Boards with no
-> zap-shader node then never consult PAS at all, and boards that do have one
-> keep the qcom_pas_is_available() gate the original patch was going for:
-> 
-> --- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-> +++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-> @@ -52,6 +52,12 @@
->  		return -ENODEV;
->  	}
->  
-> +	/* We need PAS to be able to load the firmware */
-> +	if (!qcom_pas_is_available()) {
-> +		DRM_DEV_ERROR(dev, "PAS is not available\n");
-> +		return -EPROBE_DEFER;
-> +	}
-> +
->  	ret = of_reserved_mem_region_to_resource(np, 0, &r);
->  	if (ret) {
->  		zap_available = false;
-> @@ -170,18 +176,11 @@
->  int adreno_zap_shader_load(struct msm_gpu *gpu, u32 pasid)
->  {
->  	struct adreno_gpu *adreno_gpu = to_adreno_gpu(gpu);
-> -	struct platform_device *pdev = gpu->pdev;
->  
->  	/* Short cut if we determine the zap shader isn't available/needed */
->  	if (!zap_available)
->  		return -ENODEV;
->  
-> -	/* We need PAS to be able to load the firmware */
-> -	if (!qcom_pas_is_available()) {
-> -		DRM_DEV_ERROR(&pdev->dev, "PAS is not available\n");
-> -		return -EPROBE_DEFER;
-> -	}
-> -
->  	return zap_shader_load_mdt(gpu, adreno_gpu->info->zapfw, pasid);
->  }
+$ uptime -p
+up 3 hours, 2 minutes
 
-I believe this is the right fix
+$ iw dev wlan0 link
+Connected to 96:fc:7d:1a:7f:f0 (on wlan0)
+     SSID: BKA Diensttelefon #52
+     Link 1 BSSID b6:fc:7d:1a:7f:f0
+         freq: 5200.0
+     Link 2 BSSID c6:fc:7d:1a:7f:f0
+         freq: 5975.0
+MLD 96:fc:7d:1a:7f:f0 stats:
+     RX: 448724534 bytes (2158217 packets)
+     TX: 257975286 bytes (1259211 packets)
+     signal: -64 dBm
+     tx bitrate: 1921.5 MBit/s 160MHz EHT-MCS 9 EHT-NSS 2 EHT-GI 0
 
-> I have this booting here: the GPU initialises and logs "Zap shader not
-> enabled - using SECVID_TRUST_CNTL instead", as it did before the
-> regression.
-> 
-> 
-> Suggested fix, remoteproc
-> =========================
-> 
-> Keep an SCM gate for need_mem_protection and add a separate PAS gate for
-> need_pas_mem_setup. This is what I did to get it working:
-> 
-> --- a/drivers/remoteproc/qcom_q6v5_mss.c
-> +++ b/drivers/remoteproc/qcom_q6v5_mss.c
-> @@ -2079,7 +2079,16 @@ static int q6v5_probe(struct platform_device *pdev)
->  	if (!desc)
->  		return -EINVAL;
->  
-> -	if (desc->need_mem_protection && !qcom_pas_is_available())
-> +	/*
-> +	 * Memory protection is done through qcom_scm_assign_mem(), which needs
-> +	 * SCM but not PAS. Only the memory setup path issues PAS calls, so
-> +	 * requiring PAS for every need_mem_protection platform prevents the
-> +	 * modem from probing at all on TZ firmware that offers no PAS.
-> +	 */
-> +	if (desc->need_mem_protection && !qcom_scm_is_available())
-> +		return -EPROBE_DEFER;
-> +
-> +	if (desc->need_pas_mem_setup && !qcom_pas_is_available())
->  		return -EPROBE_DEFER;
+Regards,
+Jonas
 
-And likewise this looks like the correct fix too, feel free to submit
-both as patches
-
-[...]
-
-> On the API contract
-> ===================
-> 
-> For what it is worth, the kernel-doc for qcom_pas_is_available()
-> (qcom_pas.c:256) reads:
-> 
->   Note that it is mandatory for any PAS client to invoke this API.
->   If it returns true then only any other PAS API can be invoked.
-> 
-> That is a guard to call before invoking a PAS API, not a statement that a
-> driver touching TZ at all should refuse to probe without PAS.
-> ipa_main.c:764 consults it only on the loader path that genuinely needs
-> PAS rather than as a blanket probe precondition, which is the shape both
-> fixes above are aiming for.
-
-This is a sloppiness that got through the transition patchset.. previously
-as you mentioned, qcom_scm_is_available() was a blanket "can we talk to TZ
-yet"?, and as the conversion happened, it was largely just find-and-replaced..
-
-Konrad
+Am 17.08.26 um 16:25 schrieb Jonas Hort:
+> First, thanks to everyone helping out with this - really appreciate
+> the time you're all putting in.
+>
+> One correction to how I described this earlier: the connection does
+> NOT reliably self-heal on its own. I have manually intervened every
+> single time to restore connectivity - either by disconnecting and
+> reconnecting the WiFi connection, or by switching to my band-lock
+> workaround (forcing 5GHz-only, which disables MLO). What I can say
+> for certain: the system itself has never needed a reboot - it stays
+> fully responsive throughout, only the WiFi link itself needs manual
+> action to recover. Wanted to correct that record before it causes
+> confusion.
+>
+> Update on the ROC tracing: three real freezes captured now with the
+> kprobes active (all confirmed via the WFDMA0 tail-frozen signature).
+>
+> - Freeze #1 (15:37): no ROC activity in the trace. Fixed by
+>   disconnecting/reconnecting the WiFi connection fairly quickly.
+> - Freeze #2 (15:43): this time I deliberately waited longer before
+>   intervening. The trace shows several ROC events (rocabort, mloroc,
+>   rocwork) clustered together. Fixed by switching to the band-lock
+>   workaround (5GHz-only).
+> - Freeze #3 (16:15): no ROC activity again. Fixed by
+>   disconnecting/reconnecting the WiFi connection.
+>
+> Uploaded all three logs to the bugzilla ticket if useful:
+> https://bugzilla.kernel.org/show_bug.cgi?id=221884
+>
+> Still haven't gotten to confirming 6.18 as a clean baseline on my own
+> hardware - that's next on my list.
+>
+> Am 16.08.26 um 22:48 schrieb Devin Wittmayer:
+>> On 15/08/2026 07:51, Thorsten Leemhuis wrote:
+>>> CCing Devin, who wrote two of the following messages
+>> Those are the mt7921 regd deadlock. mt7925 does not have it, there is no
+>> equivalent of the mt7921_mac_sta_add() call site that creates it.
+>>
+>> Worth ruling in or out before you bisect. mt7925 sets
+>> IEEE80211_MLD_CAP_OP_MAX_SIMUL_LINKS to 0 in mt7925/main.c. It is an N-1
+>> field, mt7996 sets MT7996_MAX_RADIOS - 1, so 0 means one simultaneous 
+>> link,
+>> and mt7925/mcu.c then requests MT7925_ROC_REQ_MLSR_AG or _AA. MLSR is
+>> multi-link single radio: your two links share one radio, and ROC is what
+>> moves it between them.
+>>
+>> If 5 GHz is your deflink, your pair is named on that path in
+>> mt7925_mac_set_links():
+>>
+>>     if (band == NL80211_BAND_2GHZ ||
+>>         (band == NL80211_BAND_5GHZ && secondary_band == 
+>> NL80211_BAND_6GHZ)) {
+>>         mt7925_abort_roc(...);
+>>         mt7925_set_mlo_roc(...);
+>>     }
+>>
+>> That one only runs at association. The path that can run mid-session is
+>> mt7925_change_vif_links(), which calls mt7925_set_mlo_roc() for each 
+>> added
+>> link. Both reach mt7925_mcu_set_mlo_roc(), and all of this is the 
+>> same in
+>> 7.1 and 7.2-rc7.
+>>
+>> Under your existing watchdog:
+>>
+>>     cd /sys/kernel/debug/tracing
+>>     echo 'r:mloroc mt7925_mcu_set_mlo_roc ret=$retval:s32' > 
+>> kprobe_events
+>>     echo 'r:rocabort mt7925_mcu_abort_roc ret=$retval:s32' >> 
+>> kprobe_events
+>>     echo 'p:rocwork mt7925_roc_work' >> kprobe_events
+>>     echo 1 > events/kprobes/enable
+>>
+>> Association will fire mloroc once, so anything later is a mid-session
+>> switch. If the WFDMA0 tail freezes while one of those is in flight, 
+>> it is a
+>> link switch that did not finish. If they are silent across a stall, the
+>> whole path is ruled out and that is worth as much.
+>>
+>> On the bisect itself: your 6.18 good point is second-hand, from 
+>> different
+>> hardware and a different AP. Worth confirming on your own box before
+>> spending steps against it.
+>>
+>> Devin
