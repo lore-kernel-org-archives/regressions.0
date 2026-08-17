@@ -1,133 +1,153 @@
-Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
+Received: from DUZPR83CU001.outbound.protection.outlook.com (mail-northeuropeazon11022098.outbound.protection.outlook.com [52.101.66.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA82B3F23D1
-	for <regressions@lists.linux.dev>; Mon, 17 Aug 2026 14:25:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.65
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786976724; cv=none; b=XPcbvs0tYXTtwtaa6L/Rf55fQznj7+w57lq+CljeZVetih9oiwMQG5ZEyCIqXKOoNzRW89D6MHH+8JLqly0jZ/ySNPEWxO17GLJAf2QdNuEV0VkVLfU/+O4OZnRUKt/6qTrw3xVH4gJam1j8Gq+MCkKt9RX/VBqASrarwEHLx3o=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786976724; c=relaxed/simple;
-	bh=5NYCdV7DxO0yfbG8hSq4BoGXgeh/C3dc4BvFmYUP9OM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tWN2QuM7WST0n34BlTh8O/WVdxUUMKNrKC0UAs1ZukMq9U3wh4dabFhOBCLWMbRcL+f/t8vCxC/PeHHxz2+F+XbgSdDs5Iftfb6wd3OPy3LgK/kT5pLkwEGf+13IpLeeFnc78CQIOXoXhpYIH4ORp+Du8O3jbl+kIP89lzh5rdU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de; spf=pass smtp.mailfrom=posteo.de; dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b=a+tsw9lR; arc=none smtp.client-ip=185.67.36.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D6D53F4847;
+	Mon, 17 Aug 2026 14:26:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.66.98
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1786976813; cv=fail; b=ssrIJRFT2jyHyo09xL6vKPP6LIGUX/Lj/8fkeql7SXZ4x+8AVHxx45Qt70YuZDgS1t4gM5lI8zibU1jEvw8C+fXAAoQYsVo8nuIAdz0ChnXdwRVrroyesrWwzTkYwu04okAqh4Y3rSM9Js776Ed26W0Wcx2Sbyrs+vUXtAjWIBs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1786976813; c=relaxed/simple;
+	bh=s5nt5+dz3fYgxJrQN1V9PPkioyCB5RsKUPc/mDhCeQw=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=UYmOaEVaQIwBOsr4VdeY7gnZZNtHuimIIUu4m0xElos1EN2AYCEoTWGIuQZko7UATFr4QF3dMMc7bwifJFRrrErHxLObihoEzx5UPwXSPPq/aRsyC67jHX0W+WzkTyZ2nOHvD5OdlbXa+Oac8ORsfmGrjR7kTM2b8PR0JYsjdgk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nebius.com; spf=pass smtp.mailfrom=nebius.com; dkim=pass (2048-bit key) header.d=nebius.com header.i=@nebius.com header.b=gr6iNne0; arc=fail smtp.client-ip=52.101.66.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nebius.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nebius.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b="a+tsw9lR"
-Received: from submission (posteo.de [185.67.36.169]) 
-	by mout01.posteo.de (Postfix) with ESMTPS id D1BBF240029
-	for <regressions@lists.linux.dev>; Mon, 17 Aug 2026 16:25:14 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=posteo.de;
-	s=1984.8680eb; t=1786976714;
-	bh=SILDQTFVoY+AHwG+3Bgw2hvsn82dE9tOcH20jBz/6ro=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:Content-Type:
-	 Content-Transfer-Encoding:From;
-	b=a+tsw9lRrER2gTA9zq3zXBc2A8tWz6RINzlT2l2WJYQp4KPo9YY5Rrk3FdSpyi/Bl
-	 oEwppZGI6gFdmqSvrWhtnINB6HrUEJrw5SpnbX5sAMqLyAdgzjk6CWiTv/hNB08TDT
-	 na7FCVTEpz4LCKWVZw6jKdm+QLf8/GWQccToTpqQQQmYHyVyNkUlFxlPmElUpLxWzu
-	 2PX+Ai6z5RqecktfHpkDUTXooM1H6lX7Q6GgK5OWHlzyG9L/Hvm7McvGCyb9kwjVmx
-	 eW5pWcFo4zjlE0E0FPAnG6b0zonVgUGxzmGk8oYbl/CslWh40+GIUF0zKdTFgJBpKS
-	 3QDUmDTReH4/g==
-Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4hNw8n1Txrz9rxB;
-	Mon, 17 Aug 2026 16:25:13 +0200 (CEST)
-Message-ID: <b83a5708-b5f4-48e9-85a5-37b3ab34af46@posteo.de>
-Date: Mon, 17 Aug 2026 14:25:14 +0000
+	dkim=pass (2048-bit key) header.d=nebius.com header.i=@nebius.com header.b="gr6iNne0"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=jOAiuzxwa1cIuvANgRiHhHKWyNY48PR2MrReYAKNbMGdd+Qkhqhv8w9J4Xd4oUp7pVGad86sP3R3SbvERhb4Nvz74qFgMNOM+8Fq5OFOxAamGMe+Df9XdKA2TrfyLNK662fbMtMvmruO/ANsOq0SbmpZCD0yJ/PA0+ZC4/OgnlSVnCZATc8mxQoCpaJ4hceedyA/nb0VTchhxc72SIMXkzS50OwjbxrN048zzQGplRuY0Tz+rk5rmt7qKDc9YYXYyf6RweeqFW5Dv3a2F23AiMOJ+T8zdnyEnPNhltuU72zma9PbvbMEK7q9pcfKLWSw5h9kpRl+VE1cxMn+m9QT6Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=s5nt5+dz3fYgxJrQN1V9PPkioyCB5RsKUPc/mDhCeQw=;
+ b=kI5l/yA61SwOO107OKDUac5SGHkbPkeQy7NtdO15TvQ7itFhWfwzOJB9z/5586cmHqv9o5yxB0UQKN3X0ZU/BPptoQdmjgYWRDdMG1zRNOHs92q8rrBza9Kfr/Z1Zko2v+YkcawPcXuLwaIsEdJyXALstBDgZG8QQwCf1bwBsbhjtq4dt17s1oo5ANtgRk/wAoTVtR1AYfgL3HSqXPupA8gt3Xb8HIP0hSEVbwB4mIDEo453ZP+6O91R1Jvpx7vlKDklT2Z0bgai8LNas5FUBe4ZuUNxdG2xkkB/RXgupKbnGwIv6FgocR53LBNAoC94XLrF9GUDExlKWDLIeTMLeA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nebius.com; dmarc=pass action=none header.from=nebius.com;
+ dkim=pass header.d=nebius.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nebius.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=s5nt5+dz3fYgxJrQN1V9PPkioyCB5RsKUPc/mDhCeQw=;
+ b=gr6iNne0po1Tnqfoa082aKo4ObWDPghymd2b/pr68SPWQKhNc+PMSj2u7I8TcozahK32NOxV/219+SE34QK53jyrJJPIKDoauGiemzyS9PATqoYUrGrpRFnkiQuxvjlY/f92m4R6MrjONvtu8jJSlXpr6ijF8Ko23SZMdcrKnj9/k70xcZm3lJkMb27L8QPOkSlokED5GQQBB10G6gxLRTu868hY3peveCTpNGI0semPTie+tC1MQVJmASvJ2rPxi6JZgk1RVgBpfSDNRCqC6GLUteRJ3CPBpIm9Pr69sI8mDieNjo00s2+yakXJAdDINnyrBky7B23U6HXvfmRISQ==
+Received: from PA1P190MB2557.EURP190.PROD.OUTLOOK.COM (2603:10a6:102:4fb::18)
+ by AM4P190MB2580.EURP190.PROD.OUTLOOK.COM (2603:10a6:20b:6d0::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.315.17; Mon, 17 Aug
+ 2026 14:26:46 +0000
+Received: from PA1P190MB2557.EURP190.PROD.OUTLOOK.COM
+ ([fe80::d0eb:eb62:7779:c6f0]) by PA1P190MB2557.EURP190.PROD.OUTLOOK.COM
+ ([fe80::d0eb:eb62:7779:c6f0%5]) with mapi id 15.21.0315.016; Mon, 17 Aug 2026
+ 14:26:46 +0000
+From: Dmitry Malkin <dma@nebius.com>
+To: Jason Gunthorpe <jgg@nvidia.com>
+CC: Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, Joerg
+ Roedel <joro@8bytes.org>, Nicolin Chen <nicolinc@nvidia.com>,
+	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "regressions@lists.linux.dev"
+	<regressions@lists.linux.dev>, "stable@vger.kernel.org"
+	<stable@vger.kernel.org>, NB-Core Team <NB-CoreTeam@nebius.com>
+Subject: Re: [RFC PATCH] iommu/arm-smmu-v3: Allow nested attach for PCI
+ bridges without vDEVICE
+Thread-Topic: [RFC PATCH] iommu/arm-smmu-v3: Allow nested attach for PCI
+ bridges without vDEVICE
+Thread-Index:
+ AQHdK9Pu+fg3Gt/XVU6V74nnaDIiLLad0o6AgAARZHGAADf9gIAD4JGAgAAmqgCAAC0lAQ==
+Date: Mon, 17 Aug 2026 14:26:46 +0000
+Message-ID:
+ <PA1P190MB255719949EC777E6D2DB2606DBA72@PA1P190MB2557.EURP190.PROD.OUTLOOK.COM>
+References:
+ <PA1P190MB25578C482C8A3B06A4DCC6FDDBDA2@PA1P190MB2557.EURP190.PROD.OUTLOOK.COM>
+ <20260814174825.GC510472@nvidia.com>
+ <PA1P190MB25573D7CFE42EF7DD2A8CDE8DBDA2@PA1P190MB2557.EURP190.PROD.OUTLOOK.COM>
+ <20260814221103.GE510472@nvidia.com>
+ <PA1P190MB2557D53CB7FCB70EB8F79D09DBA72@PA1P190MB2557.EURP190.PROD.OUTLOOK.COM>
+ <20260817114158.GA1175472@nvidia.com>
+In-Reply-To: <20260817114158.GA1175472@nvidia.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nebius.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PA1P190MB2557:EE_|AM4P190MB2580:EE_
+x-ms-office365-filtering-correlation-id: 659e357e-5497-4275-6bf2-08defc6b919b
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|1800799024|7416014|376014|23010399003|366016|10070799003|10067099003|56012099006|11063799006|4143699003|6133799003|22082099003|18002099003|38070700021;
+x-microsoft-antispam-message-info:
+ FJFcgp+1vY9ZC1L3loikKs6UBp8heVHqKcM4jl1hcULtxyM6Pusqu+WQfD9VpBdhnEdLJEVfGnJlNbjAwNO8reYnJpC7OtWI3EV5CE1ngSxEjYhctAWwCA5YgGwl/4PzjZGowuIUI+GXmgpJGDVR6vglfZnx3SrbPfxCQI2lxbXFrCsKO/goYAaSWeB2+KYwC47KILwbEC5ZRztYAMR9ASXEBGLZ2ZAfnIzwRBBYqX/0WeHKWWWNHBm+uhhV+byxBKLE4X2WWQ+u3Vmn2GMjon2/NaFfdp/JLYYCdudA/UE8kHr0yGRIrKBQsYp1Vu0GRWSO9mSBxraCKJKna6DrepJCIAL9mrhx+2LBY0w7XNEf6TErSgmCgq0Njv4JGImFnfuXgRQb7J7uKHzEbo6awah32KEwpmKPqNHDhxlo8zZ1ZX+XuQWmL0iKRXo7UdqRzCO7TWRHp6n9W1JsFo2vlyBmMWAf4FfY0JYns/QVWUbk+/edMSpryfjuHDy9sPraL/Mv4o7xYeAYvqtWFUmKZvgjxA5hxRY4anzMpZ49NU+vc9/sL5qmrU1ITgpUL5JzPDd3rQ3RpHbqsFOYodSXeuebns5rib3Ob6As+MwrHrVg4A3GikGDZZyFLZiSJxxo+OW7bQbwA0TofrxZDYiiJs+dttyw7bruu3xCM/6zIjO+JKJom6Pjgi4N0Ht5sCIIQYHTDt44XlYmkp3BngU0p6jMxVKltfFVt4/vbz9Xpn0=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA1P190MB2557.EURP190.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(23010399003)(366016)(10070799003)(10067099003)(56012099006)(11063799006)(4143699003)(6133799003)(22082099003)(18002099003)(38070700021);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-1?Q?1F/MVdAQEzhOClPBmdM7QwHIlnaWUMGJlsMJJJJewKhISftzW/h/6RdAze?=
+ =?iso-8859-1?Q?bvyyreI37Qdj9y0Fdz2xB9R0TQ8Xhkkm80fx/CBpbjC2MJMLYCk9E+/rKy?=
+ =?iso-8859-1?Q?13CZkDoymQDItxJhmLUsbZ6QGUGdR/6Izy07n+bs+FJ6tLonbmNI+GGfM7?=
+ =?iso-8859-1?Q?uq6QgMhIVlDSpYzIsW0CHzxkI2OuXT5vwymaIEeUZaAwUDJ0TtjZq/OASS?=
+ =?iso-8859-1?Q?bqxi3DJrisjyxVnmEGhd+O6gtwbpe8fHnA4lGUIdTSeNM31X5Dd01KscE0?=
+ =?iso-8859-1?Q?8zipAtYgUBOCvrRljH6Kr//0g5co52mU2c3B/UK2fi2zeoelozdhdrd2Ox?=
+ =?iso-8859-1?Q?/RY6rKO/ApBKNGYg1VQI83Osi60YMyzqO+vcVaW3CBifRzppKQxPeNps1h?=
+ =?iso-8859-1?Q?XVCch2G78PbsEWR0p+5II3zAt8yX8DBbMFgjYJH3Ixsrpwc2fGe1ubeNqY?=
+ =?iso-8859-1?Q?Y+1SneokSqS/kGic/Sca+GUQlZcUiaEBr5UAmeB76PNvCkm+9HVbK9c8Vq?=
+ =?iso-8859-1?Q?onfhch/xPD41aMP+8gKjvngwq01SICUI/3G53un9PxOmqpg3VtGdx5rDx0?=
+ =?iso-8859-1?Q?UcOAvwOlQNqi+ofDt/72OGItM8+SbjynwI0hzotqn7jNiTv1o6XCo3+U26?=
+ =?iso-8859-1?Q?vtKtjUpi/mdxYS5n7PhfWl8vKZVVTvg3zLDJLO27ycDvVEZSXolOoXy7nE?=
+ =?iso-8859-1?Q?wGjd4/i8WW1/QJX0ikj/ncSU3eHYPjB6Qtjt2nN0BPQG5Ikj/xZCglRwlO?=
+ =?iso-8859-1?Q?zdVaLljsP5SIw1VtXhvL1HGmkBiC30zsBGWrlrefOpVUfBXGBq/NhYOu9/?=
+ =?iso-8859-1?Q?OctHNJtU/DLQCS0PbXTlPNOVUOH/OdD3ZBh+AFBFZK6hYxN0ri5amVEADs?=
+ =?iso-8859-1?Q?ssrA0bAzI/LDOXfdrWfD1jMcQLILtZEniJ/Gl4EZ7s1F3y+eqiS4UhcuMl?=
+ =?iso-8859-1?Q?rnLD+oPCBX8K41PV/Q6W+aZBBhbo5X1dSEpIJ5dIo9a1XrU8H/2+XlnvRr?=
+ =?iso-8859-1?Q?u7KdJegxMd9/DZz4emAWRGXxbW0QuP1V7Z1PEh+CsRddW4Wmqkiiy1k9Ti?=
+ =?iso-8859-1?Q?wERphO7TJjMHmJORAvRRMAOUD1H0+UVDeipk9Dmzlmiw1F8NqIWyRDHzDV?=
+ =?iso-8859-1?Q?LahxuoVYrn+TJGoHJ17XfCIDma0A/u3JKnEO9DyiRJevGziAHijOW2yCUy?=
+ =?iso-8859-1?Q?C19l6YWtT52ulsr1v7oAUbcdlUuN308q6pRJeJyoreK62OPh+RDMDH4xdO?=
+ =?iso-8859-1?Q?MMuC0nkglv78et6paQTG+2Ypcj3Tp07pgG2e6re9Bm+Koa7QiczIJaxFTA?=
+ =?iso-8859-1?Q?sF/yCsHE1AnADf4hjZ9GekwnOUlCOXwOhio7BTquZeGQnmFOsIRFeMKxnp?=
+ =?iso-8859-1?Q?xGQeAo5NHPbGJDNHE3nhy+rX2+29eZZDHBe9onbgdeleMGVl0OELhexNAJ?=
+ =?iso-8859-1?Q?2N6d25Ubp5rWqQnT+4q2xtXApNRT5ddA5QPOTFGVlEJp81jLCuAt/eE0Ah?=
+ =?iso-8859-1?Q?YQ1GjXYMN4WSrYukCUkBD5C4hYyMoS8oYvA1y6RqrrYowL5fLaAT/vDWlr?=
+ =?iso-8859-1?Q?Ks888sZfcmN1F649QGfJefQq36R2hhIK9Bv/yEac15ejATOvtnOkH6w14z?=
+ =?iso-8859-1?Q?nHp+kRFn9HEu4SBYcRaROsbO1Og7I9DlC83mDs8L2iLdmUUFW6NInVc7Ng?=
+ =?iso-8859-1?Q?Mpui3jZLEDwu+vZaRUkvzluGyuMR31n8+OGRwYPD9mGREPa2ecdXlCsfCv?=
+ =?iso-8859-1?Q?G4dS5GV63p9WNg8JMg9Qb+lOyW4xVtGXtr13yPij1Co/s61BECWxDEjnnB?=
+ =?iso-8859-1?Q?JGRwTxmiYyvW5pPpg9b0q2v+BoUjT3KMWig+JhHdX3a738lrQDo5?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Subject: Re: [REGRESSION] mt7925: MLO connectivity silently stalls with 6GHz
- link active
-To: Devin Wittmayer <lucid_duck@justthetip.ca>,
- Thorsten Leemhuis <regressions@leemhuis.info>, regressions@lists.linux.dev
-Cc: linux-wireless@vger.kernel.org, lorenzo.bianconi83@gmail.com
-References: <066b30cc-a9e6-4aeb-964d-71551e8ea3ef@posteo.de>
- <d8e493ef-90ff-4364-ad4e-1709fae97005@leemhuis.info>
- <20260816204805.46779-1-lucid_duck@justthetip.ca>
-Content-Language: en-US, de-DE
-From: Jonas Hort <jonas.hort@posteo.de>
-In-Reply-To: <20260816204805.46779-1-lucid_duck@justthetip.ca>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: nebius.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PA1P190MB2557.EURP190.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: 659e357e-5497-4275-6bf2-08defc6b919b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Aug 2026 14:26:46.7211
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4eb23c52-f3a5-49bc-b555-0b061267a984
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: pTjhtX9PJS98Kvm0w7uHsqKrDbTPxM79EgvzezZ07B/Lb/7LDQ/mZ1XBhq8RmIee
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM4P190MB2580
 
-First, thanks to everyone helping out with this - really appreciate
-the time you're all putting in.
-
-One correction to how I described this earlier: the connection does
-NOT reliably self-heal on its own. I have manually intervened every
-single time to restore connectivity - either by disconnecting and
-reconnecting the WiFi connection, or by switching to my band-lock
-workaround (forcing 5GHz-only, which disables MLO). What I can say
-for certain: the system itself has never needed a reboot - it stays
-fully responsive throughout, only the WiFi link itself needs manual
-action to recover. Wanted to correct that record before it causes
-confusion.
-
-Update on the ROC tracing: three real freezes captured now with the
-kprobes active (all confirmed via the WFDMA0 tail-frozen signature).
-
-- Freeze #1 (15:37): no ROC activity in the trace. Fixed by
-   disconnecting/reconnecting the WiFi connection fairly quickly.
-- Freeze #2 (15:43): this time I deliberately waited longer before
-   intervening. The trace shows several ROC events (rocabort, mloroc,
-   rocwork) clustered together. Fixed by switching to the band-lock
-   workaround (5GHz-only).
-- Freeze #3 (16:15): no ROC activity again. Fixed by
-   disconnecting/reconnecting the WiFi connection.
-
-Uploaded all three logs to the bugzilla ticket if useful:
-https://bugzilla.kernel.org/show_bug.cgi?id=221884
-
-Still haven't gotten to confirming 6.18 as a clean baseline on my own
-hardware - that's next on my list.
-
-Am 16.08.26 um 22:48 schrieb Devin Wittmayer:
-> On 15/08/2026 07:51, Thorsten Leemhuis wrote:
->> CCing Devin, who wrote two of the following messages
-> Those are the mt7921 regd deadlock. mt7925 does not have it, there is no
-> equivalent of the mt7921_mac_sta_add() call site that creates it.
->
-> Worth ruling in or out before you bisect. mt7925 sets
-> IEEE80211_MLD_CAP_OP_MAX_SIMUL_LINKS to 0 in mt7925/main.c. It is an N-1
-> field, mt7996 sets MT7996_MAX_RADIOS - 1, so 0 means one simultaneous link,
-> and mt7925/mcu.c then requests MT7925_ROC_REQ_MLSR_AG or _AA. MLSR is
-> multi-link single radio: your two links share one radio, and ROC is what
-> moves it between them.
->
-> If 5 GHz is your deflink, your pair is named on that path in
-> mt7925_mac_set_links():
->
-> 	if (band == NL80211_BAND_2GHZ ||
-> 	    (band == NL80211_BAND_5GHZ && secondary_band == NL80211_BAND_6GHZ)) {
-> 		mt7925_abort_roc(...);
-> 		mt7925_set_mlo_roc(...);
-> 	}
->
-> That one only runs at association. The path that can run mid-session is
-> mt7925_change_vif_links(), which calls mt7925_set_mlo_roc() for each added
-> link. Both reach mt7925_mcu_set_mlo_roc(), and all of this is the same in
-> 7.1 and 7.2-rc7.
->
-> Under your existing watchdog:
->
-> 	cd /sys/kernel/debug/tracing
-> 	echo 'r:mloroc mt7925_mcu_set_mlo_roc ret=$retval:s32' > kprobe_events
-> 	echo 'r:rocabort mt7925_mcu_abort_roc ret=$retval:s32' >> kprobe_events
-> 	echo 'p:rocwork mt7925_roc_work' >> kprobe_events
-> 	echo 1 > events/kprobes/enable
->
-> Association will fire mloroc once, so anything later is a mid-session
-> switch. If the WFDMA0 tail freezes while one of those is in flight, it is a
-> link switch that did not finish. If they are silent across a stall, the
-> whole path is ruled out and that is worth as much.
->
-> On the bisect itself: your 6.18 good point is second-hand, from different
-> hardware and a different AP. Worth confirming on your own box before
-> spending steps against it.
->
-> Devin
+=0A=
+> This kind of situation is very challenging to setup in the VM, and at=0A=
+> this point you may as well include the switch to the VM too.=0A=
+=0A=
+Passing through the PCI switch would not help because the device without=0A=
+a vDEVICE is the host Root Port. Neither the Root Port nor the switch=0A=
+should be exposed to the VM.=0A=
+=0A=
+A multi-device IOMMU group is an intentional effect of using=0A=
+'pci=3Dconfig_acs', and I would prefer to restore support for this=0A=
+configuration upstream.=0A=
+=0A=
+Dmitry=
