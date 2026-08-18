@@ -1,51 +1,51 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [194.59.206.189])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [46.38.247.119])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81B773B71A9
-	for <regressions@lists.linux.dev>; Tue, 18 Aug 2026 08:32:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.59.206.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDE343B8BCC
+	for <regressions@lists.linux.dev>; Tue, 18 Aug 2026 08:33:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.38.247.119
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787041937; cv=none; b=YR0xt009kGC6jvKNYj/wiAj9cBG+qjCjiFQm5GvBbDwiGL3KeO1K4Gq1A/95AjhvxiRr4L3oer8O7iBz1JAsW6vDaq4dye1sW5NJYjL9puKEyWDsN1YVxqU60J5bONZQOv9elHOE7eVrncdxJzXcc5e6tg9z+FTlPNz71Bs7Cmg=
+	t=1787042025; cv=none; b=GhWieQqHxw6Le/oWz+A+ouSF3M10Z3YGeVDDmBnypX0zv/QkShAHAjvP0jwW8bycA7YkxP/NCieViMIlJUYApb6lIoj5a68FZTTcxscybOzJjxoWc+Ouw/ZZVosryCHJfNOCw7CwFgpm8rz6ebA2KOOwp8wUAhAmLnV0KeFSDYM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787041937; c=relaxed/simple;
-	bh=8gWzpZryodg//Tt6gkCoheUeq+Zzndr2R8oDIMpEIpk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JWfciPpJlDsRtALpy0a63iMukuOGxJbid7PsVpLlVINJ4plc+cdIhHXJNJfFSvEEif/c491q/KG+zS51rADIlIIGHzWy2LVcs14uJVYpsmrh6ji9ikL0wxyT7UppxBwI89VNe1odH2N7JJbt59BIWH0lOzwdpiXdXVelcFRs/uU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=XD6u/0i+; arc=none smtp.client-ip=194.59.206.189
+	s=arc-20240116; t=1787042025; c=relaxed/simple;
+	bh=7Cl29xGgKt86381R6gOG7SuMj815ksAEyD8wbcakfEk=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=OntFDfvRLsdWGdFSqMTcX/aQK3CC8Y2JIFcz095cGlqW0TKB6qNxhQJyj9XnJyuiTr/NkXoSMuTp89aqqvr8Zia5336b4GNuRykcQt2QUxTgsM1lO9h4AUGD1FCjaekdxSkswrneaL8YBcsdRsjma5M7Ypj3zD8nfyqSxYRAGTc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=UbLTDIjc; arc=none smtp.client-ip=46.38.247.119
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="XD6u/0i+"
-Received: from relay02-mors.netcup.net (localhost [127.0.0.1])
-	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4hPNGz3lDRz4CyS;
-	Tue, 18 Aug 2026 10:32:11 +0200 (CEST)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="UbLTDIjc"
+Received: from mors-relay-8404.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4hPNJD41BFz8Jr6
+	for <regressions@lists.linux.dev>; Tue, 18 Aug 2026 10:33:16 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1787041931;
-	bh=8gWzpZryodg//Tt6gkCoheUeq+Zzndr2R8oDIMpEIpk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=XD6u/0i+/Rau8gNSjM3A6B+2JW3/9sxWqJIRdRTpea1tmCFiZM5EhySKroNjFyINB
-	 IYAFlwip/zF0NhZSSLjLhLuhuy1hqw1JmKlYU/4VMqM/Zbl36KZTMe7hhw4qLaCQOh
-	 u3XjxS+eOwT94u0bXwvq1JJ3RM9poCD3n3pUYGui0kvw0kfgRpD9ssmgCAfKbWwJgN
-	 4cYvRCyvbXJ4PF+jqBJy0H3E+BszIcFytUy9nHefsim2JIouuAQU8tfm7TqgKwQuib
-	 N2+z1bIArTFPSVvkVTVT2zckXXZTy8WeAiWoMbacsQCPOUXTNTQaL/WpRjo+s6K0e6
-	 6owEJKz0bPxUA==
+	s=key2; t=1787041996;
+	bh=7Cl29xGgKt86381R6gOG7SuMj815ksAEyD8wbcakfEk=;
+	h=Date:Subject:From:To:References:In-Reply-To:From;
+	b=UbLTDIjcmbxsVynlOwc3WXCtW7uJuzhJUITrbafYVWCehW6dLDE3SHrOETMjgy0DC
+	 r+UBlL79dzJ53Duxh/T1/os5SspDNR+Z/pe+h14VKjAHQ7RfMoCcRK0vjTwjmIn0oh
+	 ynb94GUiUv1Z5grZDcxvGu51XyIXbdx4uYHF36Ce8wV+GEYWaTIGz0lF7hAtkKb/bg
+	 MmvN1KVC3ytdPYhhWRz+HeItxxQPCCbCfOaqgKF0UjJJ0FbCeOQ3OAbes61GX2jrGA
+	 CXrjWHwK4HL9EicyJT+frakZCoK79HK7GomhKLr5uDYPtSu54OEPnkzBXVuJKHHjCF
+	 dcnWA/UBoyIbA==
 Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4hPNGz31Qqz7xMN;
-	Tue, 18 Aug 2026 10:32:11 +0200 (CEST)
+	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4hPNJD3JtQz4xDX
+	for <regressions@lists.linux.dev>; Tue, 18 Aug 2026 10:33:16 +0200 (CEST)
 Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4hPNGy0mg7z8sb7;
-	Tue, 18 Aug 2026 10:32:10 +0200 (CEST)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4hPNJD1w4nz8sZg
+	for <regressions@lists.linux.dev>; Tue, 18 Aug 2026 10:33:16 +0200 (CEST)
 Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id D18A55FAAF;
-	Tue, 18 Aug 2026 10:32:04 +0200 (CEST)
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id D9F055F780
+	for <regressions@lists.linux.dev>; Tue, 18 Aug 2026 10:33:15 +0200 (CEST)
 Authentication-Results: mxe9fb;
         spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
 Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <2719a7f9-71cf-447b-b4fa-a53e598d3d5a@leemhuis.info>
-Date: Tue, 18 Aug 2026 10:32:03 +0200
+Message-ID: <176341ce-4399-4fde-86a7-efecc6aa69b5@leemhuis.info>
+Date: Tue, 18 Aug 2026 10:33:15 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -53,113 +53,40 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] usb: typec: mux: Fix typec_switch_match()
-To: Marek Vasut <marex@nabladev.com>, linux-usb@vger.kernel.org
-Cc: stable@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Heikki Krogerus <heikki.krogerus@linux.intel.com>,
- Jens Glathe <jens.glathe@oldschoolsolutions.biz>,
- Sebastian Reichel <sebastian.reichel@collabora.com>,
- kernel@dh-electronics.com, linux-kernel@vger.kernel.org,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <20260817182302.146546-1-marex@nabladev.com>
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
 From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
 Content-Language: de-DE, en-US
-In-Reply-To: <20260817182302.146546-1-marex@nabladev.com>
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <178704192528.3564116.6843811556363461498@mxe9fb.netcup.net>
-X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: D18A55FAAF
-X-NC-CID: /Bx6R4kcJ3GShYDC85Bp7vJBFzp1xv5TR5uNsXCFgLZpDNNxlmc=
+X-PPP-Message-ID: 
+ <178704199608.3567179.11058052562467420067@mxe9fb.netcup.net>
+X-NC-CID: gC7KIwtuj/P+bGaBeLI55I+t+n6hlAb65rcLv3McwpQ55QRw+HE=
 
-On 8/17/26 20:22, Marek Vasut wrote:
-> The fwnode_typec_switch_get() sporadically returns NULL instead of an
-> -EPROBE_DEFER for orientation-switch described in DT.
 
-Hi Marek! Just to make sure, have you seen the patch submission
-"usb: typec: mux: initialize orientation switch array"?
-https://lore.kernel.org/all/20260804083434.20885-1-i@4t.pw/
 
-It has a fixes tag for the commit you mention and reads: ""Commit
-a53b4f9c51a9 ("usb: typec: mux: avoid duplicated orientation switches")
-started using the orientation switch result array as state for duplicate
-detection, but left the array uninitialized.
+On 3/9/24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-The first match therefore scans indeterminate stack contents before any
-result has been stored. [...]""
+#regzbot report:
+https://lore.kernel.org/all/6262cbbd-d1f2-4c9d-a1c7-9c5d12636f4b@gmx.de/
+#regzbot introduced: 86aa1ea1f15c
+#regzbot title: ALSA: usb-audio: Logitech PRO X Wireless 046d:0aba
+playback volume rejected as sticky
 
-Not my area of expertise, but it sounds related, that's why I wanted to
-ensure you are aware of it. If it's something else: sorry!
+#regzbot report:
+https://lore.kernel.org/all/20260817182302.146546-1-marex@nabladev.com/
+#regzbot introduced: a53b4f9c51a9
+#regzbot title: usb: typec: mux: fwnode_typec_switch_get() sporadically
+returns NULL instead of an -EPROBE_DEFER
 
-Ciao, Thorsten
-
-> This makes it
-> impossible to discern whether the DT does describe an orientation-switch
-> which did not probe yet, or whether the DT does not describe the switch.
-> This happens with gpio-sbu-mux connected to an I2C GPIO expander.
-> 
-> The class_find_device() on typec_switch_match() may return NULL in case
-> the mux did not probe just yet early on boot. The sw_devs[] array can be
-> empty on boot as well. If these two conditions occur, then the conditional
-> if (to_typec_switch_dev(dev) == sw_devs[i]) evaluates to true and the match
-> function returns NULL, which propagates to fwnode_typec_switch_get() which
-> makes it look as if the orientation-switch was not described in DT.
-> 
-> This is incorrect, because the mux driver will probe a bit later on, but
-> at that point, the caller of fwnode_typec_switch_get() already got the
-> NULL return value. The NULL return value also does not trigger IS_ERR(),
-> therefore the caller driver interprets this as if the orientation-switch
-> is not described in DT, and does not return -EPROBE_DEFER to try again,
-> even if it should.
-> 
-> Fix this by checking the class_find_device() return value, and return
-> -EPROBE_DEFER if it is NULL right away. If the return value is not NULL,
-> perform the deduplication test, and if that test passes, consider the
-> return value to be already non-NULL.
-> 
-> Fixes: a53b4f9c51a9 ("usb: typec: mux: avoid duplicated orientation switches")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Marek Vasut <marex@nabladev.com>
-> ---
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> Cc: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
-> Cc: Sebastian Reichel <sebastian.reichel@collabora.com>
-> Cc: kernel@dh-electronics.com
-> Cc: linux-kernel@vger.kernel.org
-> Cc: linux-usb@vger.kernel.org
-> ---
-> NOTE: A similar change was reverted in
->       f576c75f95a5 ("Revert "usb: typec: mux: avoid duplicated mux switches"")
->       Maybe the orientation switch commit also needs a revert ?
->       Or the mux switch revert can be undone and fixed using this NULL check ?
-> ---
->  drivers/usb/typec/mux.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/usb/typec/mux.c b/drivers/usb/typec/mux.c
-> index 9b908c46bd7df..2bc7e8edb3cbd 100644
-> --- a/drivers/usb/typec/mux.c
-> +++ b/drivers/usb/typec/mux.c
-> @@ -56,17 +56,19 @@ static void *typec_switch_match(const struct fwnode_handle *fwnode,
->  	 * function "defers probe" for now.
->  	 */
->  	dev = class_find_device(&typec_mux_class, NULL, fwnode,
->  				switch_fwnode_match);
-> +	if (!dev)
-> +		return ERR_PTR(-EPROBE_DEFER);
->  
->  	/* Skip duplicates */
->  	for (i = 0; i < TYPEC_MUX_MAX_DEVS; i++)
->  		if (to_typec_switch_dev(dev) == sw_devs[i]) {
->  			put_device(dev);
->  			return NULL;
->  		}
->  
-> -	return dev ? to_typec_switch_dev(dev) : ERR_PTR(-EPROBE_DEFER);
-> +	return to_typec_switch_dev(dev);
->  }
->  
->  /**
->   * fwnode_typec_switch_get - Find USB Type-C orientation switch
-
+#regzbot report: https://lore.kernel.org/all/20260804083434.20885-1-i@4t.pw/
+#regzbot introduced: a53b4f9c51a9
+#regzbot title: usb: typec: mux: valid orientation switch may be
+incorrectly discarded as a duplicate
