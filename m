@@ -1,42 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59D22376A0B;
-	Tue, 18 Aug 2026 16:28:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68B8C330B32;
+	Tue, 18 Aug 2026 16:51:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787070532; cv=none; b=HGIAfTEACRNnuk2W8lS6RvbmXEX4bEcZdCBMHr1xwLUAUlGMmt4udR38N/zRBlcVOPWGdV+heRGOvdDbcJ7XDcjxh+nbvdfgRvedp0buPckeqIsx6FAZJ3BZtqNBW+IFaI8Xgun23/5MX0LLNtWaheSuOVlCkfd77MJXQSDeDn0=
+	t=1787071882; cv=none; b=gyEqZgNX3YqQHjKSr5QboyTs+AD4WljNtvidBixRjfUk7GcXzrm7qMkKyabgctgPpJrnmHLTtfQ8auQiEbJXWqcqvAgvFblrCuiC5fBL8H/FaC93sdSlkHTjuszOfChyzxbkfVk4rCYl9D3L9HEdSIdnBw/FJT3PNhr64bwvqZ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787070532; c=relaxed/simple;
-	bh=j3easfOWcCD+tQlcxQPkq/5gQUTUS4t6JnvjgDDW4mE=;
+	s=arc-20240116; t=1787071882; c=relaxed/simple;
+	bh=d4YQSdFtaBJ+huM+p9Gjiq0MyjwcPmwCWsqIte20cvY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PJ5CQLpz+PT7ISV0cQSUx0clCtsjeMo0q7atYBVQ1E1s0Ofv094WRMUX7m0i/m65hML0KKYw49XYK0cHdLrnnuIWHHKPRNU42Yvku6Z+FwNDUEBtkwi6XF8ZtDgV1IhroNv4AQenHm5LHysUwt5M09fwR2U9cW/6+cxaKmZCd8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lWV4QKGT; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=SdBW76IbRAw1prbPyOLHOkxYXfPNkKsjTpLgy0cytDME1OaHYcHXuG09CyDHDAdAOE6EsTQnPjsikWQi9uT/rl7pXM0JAfXISVnNmYtvtVU86e3sjXfSTVxJBJ2dJHwUHHORY+mZL04XKE1lpRwXjaMQWi3MVeWGKoxh8rAKCVM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SsnVy6uv; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lWV4QKGT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 141071F000E9;
-	Tue, 18 Aug 2026 16:28:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SsnVy6uv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01BF91F000E9;
+	Tue, 18 Aug 2026 16:51:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787070531;
-	bh=ypjP4WKCUE+7Og1zvWDncb3673tWlrD9mca/KmqJxo0=;
+	s=k20260515; t=1787071881;
+	bh=oxw/kaFYuUrBUpB5/Q2zLu+26H/MoNjv/y8zwuY+8yI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=lWV4QKGTXJBReDCwNUU70GlIARcn1hx/BQ43zAFyXNcwbn6JxiUF7PAK/jN72O/r+
-	 COd65QLoVfAYyBx3D3iFVkHTh9TyC4vWJPoMqoSY9Vbq8ekR6INMkF3L39FK5owIn6
-	 4X6t/hmb/LeB2ISldU/gmbAvL+PcUp37DhhUm8THj5e+j3JWXwNyEHXT6jXSKR0/VF
-	 GZ6+brSR1dLIU6HtpXpEtMlnC000EXz/SGa88NCwqVWdUdJhXzOMbkN6cP6+9oUpWh
-	 3j6Wn9sVCNTAsvpDF3s6gZ3v32eSj0m8pRVhK6ExFFGxmirH50BvwuNpLgnh+E38dg
-	 kWlT4QvvFjIBg==
-Date: Tue, 18 Aug 2026 17:28:46 +0100
-From: Mark Brown <broonie@kernel.org>
+	b=SsnVy6uv0+jtNijG4un/Rs/+gGCONknafAE5XVpunNG35p+ZOZCKLBoC1daAG/EsZ
+	 SrOdMj3OejAumf7dxUcF1OI7Igz/ucU4wYkoFEOHh4NeZcW4giKTgJoI7O9YlonwLB
+	 s0IEZcTEM2d6dNvXouGJzyzkcGzZOzmpsOyYFsIbWtd4HQ2b/1oe+5BSzbrdlDvz84
+	 LNMrooRX/gVgbIlnFF7D1GWVw8saxMsE5XzWkGtjngHp1ljKURLyGsac0i01MBNtq8
+	 LntAogvlhXz8R0r/4S0xUrm7aq6th6OSbX+/YL3Vao+H2QxvivhoQGeht7IuB/3xo7
+	 tEvdFO3OBzTTg==
+Date: Tue, 18 Aug 2026 09:51:16 -0700
+From: Nathan Chancellor <nathan@kernel.org>
 To: Nick Desaulniers <ndesaulniers@google.com>
 Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
-	Nathan Chancellor <nathan@kernel.org>, regressions@lists.linux.dev,
-	laura.nao@collabora.com, shreeya.patel@collabora.com,
+	regressions@lists.linux.dev, laura.nao@collabora.com,
+	shreeya.patel@collabora.com, broonie@kernel.org,
 	kernelci-results@groups.io, kernelci@lists.linux.dev,
 	Ard Biesheuvel <ardb@kernel.org>
 Subject: Re: [REGRESSION] mainline/master: (build) in
  arch/arm/kernel/entry-common.o (/tmp/kci/linux/scripts/Makefile...
-Message-ID: <b8f7b3d3-9ee4-4a51-b0b5-c99ff8aba4ed@sirena.org.uk>
+Message-ID: <20260818165116.GA1335107@ax162>
 References: <178701474442.5156.12765087253678603047@kernelci.org>
  <c9ba4aeb-a288-4597-b13a-9da55666f96a@leemhuis.info>
  <CAKwvOdkcCnhM-395QVriu3hnjmtX1H-3i_1tU5Jpb1Ybr2Q77g@mail.gmail.com>
@@ -46,60 +46,72 @@ List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="d+esWg6JOuYiafvY"
-Content-Disposition: inline
-In-Reply-To: <CAKwvOdkcCnhM-395QVriu3hnjmtX1H-3i_1tU5Jpb1Ybr2Q77g@mail.gmail.com>
-X-Cookie: Smile!  You're on Candid Camera.
-
-
---d+esWg6JOuYiafvY
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAKwvOdkcCnhM-395QVriu3hnjmtX1H-3i_1tU5Jpb1Ybr2Q77g@mail.gmail.com>
 
 On Tue, Aug 18, 2026 at 09:19:04AM -0700, Nick Desaulniers wrote:
-> On Mon, Aug 17, 2026 at 11:00=E2=80=AFPM Thorsten Leemhuis
-
+> + Ard
+> 
+> On Mon, Aug 17, 2026 at 11:00 PM Thorsten Leemhuis
+> <regressions@leemhuis.info> wrote:
 > > Nathan, Nick, do you still care about clang problems like this?
-
-> Yes, from the logs, it looks like ARCH=3Darm allmodconfig with clang-21
+> 
+> Yes, from the logs, it looks like ARCH=arm allmodconfig with clang-21
 > (perhaps, there's a funny warning about the compiler version in the
 > logs).
-
-It should be - that warning is just saying that tuxmake didn't directly
-invoke docker/podman itself, this happens with KernelCI because the
-builds are run in Kubernetes.
-
+> 
+> > And do
+> > you by chance know what's wrong here?
+> >
+> > """
+> > <instantiation>:2:11: error: out of range pc-relative fixup value
+> >  ldr r10, =__per_cpu_offset
+> >           ^
+> > <instantiation>:2:11: error: out of range pc-relative fixup value
+> >  ldr tsk, =__current
+> >           ^
+> > <instantiation>:2:11: error: out of range pc-relative fixup value
+> >  ldr tsk, =__current
+> >           ^
+> 
+> Smells like the same problem that was addressed by
+> commit 5fe41793bc78 ("ARM: 9176/1: avoid literal references in inline assembly")
+> 
 > What tree was being tested? 5fe41793bc78 landed in v5.18-rc1. Whatever
 > was being tested is probably missing that patch.
 
-The original mail has:
+As Mark notes, this is mainline. This error is visible with LLVM 23 as
+well. I bisected it to commit 79d27fd71854 ("arch: hookup fchroot()
+system call").
 
-| For complete logs and details about the environment used, see the issue
-| on the KernelCI dashboard:
+  # bad: [0f23d56f17fdfc7db69d51f64c8b91bbab947aa9] Merge tag 'linux_kselftest-next-7.3-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest
+  # good: [8d3ae59288f1e7d58d76558a6ee96d533bc5019f] Linux 7.2
+  git bisect start '0f23d56f17fdfc7db69d51f64c8b91bbab947aa9' 'v7.2'
+  # bad: [1c3e8cef79ea5f1415cff0d3c507e2e07b71ade8] Merge tag 'vfs-7.3-rc1.misc' of git://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs
+  git bisect bad 1c3e8cef79ea5f1415cff0d3c507e2e07b71ade8
+  # bad: [9ea8d6197d9f43a15ccb9c0dce601ec535d5da7e] Merge tag 'vfs-7.3-rc1.iomap' of git://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs
+  git bisect bad 9ea8d6197d9f43a15ccb9c0dce601ec535d5da7e
+  # good: [a7b880449ab1b2389b31ed9da703691dcac54655] binfmt_misc: carry pre-opened interpreters in struct binfmt_misc_interp
+  git bisect good a7b880449ab1b2389b31ed9da703691dcac54655
+  # good: [7c7fe554f40adac2a7f8d9b6d5886ca332edd496] docs: fix grammatical error in iomap docs
+  git bisect good 7c7fe554f40adac2a7f8d9b6d5886ca332edd496
+  # good: [d31a688a49a82a48e0434aee9d851e094270a6ee] Merge tags 'vfs-7.3-rc1.efs' and 'vfs-7.3-rc1.freevxfs' of git://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs
+  git bisect good d31a688a49a82a48e0434aee9d851e094270a6ee
+  # bad: [a45a6605cd04f2e55c1650a49bdb05106ac07ccc] Documentation: add failfs documentation
+  git bisect bad a45a6605cd04f2e55c1650a49bdb05106ac07ccc
+  # good: [20370a5f5d9b1549ab3bf10a898b4e024b8841fa] fs: add fchroot()
+  git bisect good 20370a5f5d9b1549ab3bf10a898b4e024b8841fa
+  # bad: [79d27fd718545db4731691e0a77e51d27dc1a41e] arch: hookup fchroot() system call
+  git bisect bad 79d27fd718545db4731691e0a77e51d27dc1a41e
+  # good: [b1221afa31cc2daf6b83d72e45827cffb4e86aff] fs: support FD_FAILFS_ROOT in fchroot()
+  git bisect good b1221afa31cc2daf6b83d72e45827cffb4e86aff
+  # first 'bad' commit: [79d27fd718545db4731691e0a77e51d27dc1a41e] arch: hookup fchroot() system call
 
-| - dashboard: https://d.kernelci.org/i/maestro:5d5ba40a9374919c6038ec3e50f=
-54dbe70a37c03
-| - giturl: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.=
-git
-| - commit HEAD:  ff68e5f557f69a08fdcfa4ce8b1b809d63bd4f45
+I do see that change in -next and there is no error there so was this a
+known issue that was fixed in another tree? I will keep looking.
 
-which is a recent merge in mainline.
-
---d+esWg6JOuYiafvY
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmqEiD0ACgkQJNaLcl1U
-h9D6oggAg6SG+AlszsTrVtRz3Vg5bLRmukc8B9h/B3dEevuKuPrJYxRrdSlPgOAH
-+pls+UQXN8yXE5rBLUp5mIoDcsGkLfaGRMhRUr+lT6OVVV+je9xxbH6SlRAT4F86
-apJD5JDXasQOoTW5KuqB1g/D8R/EZwaeH6+nB2DwIYijD8GKBN0ZSkRlXyhznxta
-d4heEk1YiV1wkEA4d6Y/qXLq2OBL7JkJbgIUurYIzB1J5YsE5YrqX2NmgLDXrIxN
-c882vaviP0YtvN0qtW1HpMBA9VeDZBFP7QLydENgExp8X1omS7RQWozS3DR5kGDq
-PgGNLIIfayl++mNxoDDhfGYvVZFk5A==
-=lLhO
------END PGP SIGNATURE-----
-
---d+esWg6JOuYiafvY--
+-- 
+Cheers,
+Nathan
