@@ -1,55 +1,51 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.102])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [194.59.206.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16B5820125F;
-	Tue, 18 Aug 2026 06:01:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.102
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81B773B71A9
+	for <regressions@lists.linux.dev>; Tue, 18 Aug 2026 08:32:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.59.206.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787032868; cv=none; b=i2khbfHgn/4YfEZgMAboGYJi+PQd3p5cWWReGzkUCf72scZextfVJR7rYwTvWRuOOORzXYVynH5RNFW0wBaf6b89ycC17HgvRhK+tRKk/IZ0/+cmy76FK1yz1IFV5FuZxDUNSVny52iR52YtY4fFPBKdyqMV9O18g1aBZi6AWJc=
+	t=1787041937; cv=none; b=YR0xt009kGC6jvKNYj/wiAj9cBG+qjCjiFQm5GvBbDwiGL3KeO1K4Gq1A/95AjhvxiRr4L3oer8O7iBz1JAsW6vDaq4dye1sW5NJYjL9puKEyWDsN1YVxqU60J5bONZQOv9elHOE7eVrncdxJzXcc5e6tg9z+FTlPNz71Bs7Cmg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787032868; c=relaxed/simple;
-	bh=R9Y3pBCagqDn/Krz09l2AqOd1Twkpi9BhXM57zBnFvw=;
+	s=arc-20240116; t=1787041937; c=relaxed/simple;
+	bh=8gWzpZryodg//Tt6gkCoheUeq+Zzndr2R8oDIMpEIpk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pjVsichR4ljnX5KU8tJcumr2atADahM+OGJ47PwJK4NjA4Sz9cLOamONLLOjXbMFTk7NThsLrDGb7nfQlhHBzT+rCDdkPGx3sMbNiiTOTmkhy8+Tmjifjx6UEh11LzYcWhltr03fFx4eIWtsJeHTc9o8oStW1sFW3pN53VKvgYU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=Gdqm+Ebr; arc=none smtp.client-ip=188.68.63.102
+	 In-Reply-To:Content-Type; b=JWfciPpJlDsRtALpy0a63iMukuOGxJbid7PsVpLlVINJ4plc+cdIhHXJNJfFSvEEif/c491q/KG+zS51rADIlIIGHzWy2LVcs14uJVYpsmrh6ji9ikL0wxyT7UppxBwI89VNe1odH2N7JJbt59BIWH0lOzwdpiXdXVelcFRs/uU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=XD6u/0i+; arc=none smtp.client-ip=194.59.206.189
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="Gdqm+Ebr"
-Received: from mors-relay-2502.netcup.net (localhost [127.0.0.1])
-	by mors-relay-2502.netcup.net (Postfix) with ESMTPS id 4hPJvg4hQYz6F9x;
-	Tue, 18 Aug 2026 08:00:15 +0200 (CEST)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="XD6u/0i+"
+Received: from relay02-mors.netcup.net (localhost [127.0.0.1])
+	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4hPNGz3lDRz4CyS;
+	Tue, 18 Aug 2026 10:32:11 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1787032815;
-	bh=R9Y3pBCagqDn/Krz09l2AqOd1Twkpi9BhXM57zBnFvw=;
+	s=key2; t=1787041931;
+	bh=8gWzpZryodg//Tt6gkCoheUeq+Zzndr2R8oDIMpEIpk=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Gdqm+Ebrolj/wgsD+SUprfXf89GLxVK5ArQ5Uz0gdzGAHSzsSbUVirhO2B7KiWa61
-	 6LXQdSpfJEWy5RBq7hbvtdExKkFjED8OMiO0hfvKBFBNw7wjjfnT7PVDrnMMF4Ixy5
-	 zvKALN9r+ioClCYxjd8upAkU4sHqjZn8HX2H/a3yzwJbzBEx/0uSA8MErnipTzdKXG
-	 cgweYIw32USOyllFmPNSnXPVRMEAoLD07umdTFMjadYEg3kI2g0V8nDaltvSx0l5nC
-	 uope1Z4WW3R4vCoIgQ3+xNLWzs5VJIoZclWP0vSfeTThBO42F0qKAP80EAsv0YMrxU
-	 sBMcfL0VmyeIg==
-Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-2502.netcup.net (Postfix) with ESMTPS id 4hPJvd4Vpqz4xts;
-	Tue, 18 Aug 2026 08:00:13 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
-X-Spam-Flag: NO
-X-Spam-Score: -2.897
-X-Spam-Level: 
+	b=XD6u/0i+/Rau8gNSjM3A6B+2JW3/9sxWqJIRdRTpea1tmCFiZM5EhySKroNjFyINB
+	 IYAFlwip/zF0NhZSSLjLhLuhuy1hqw1JmKlYU/4VMqM/Zbl36KZTMe7hhw4qLaCQOh
+	 u3XjxS+eOwT94u0bXwvq1JJ3RM9poCD3n3pUYGui0kvw0kfgRpD9ssmgCAfKbWwJgN
+	 4cYvRCyvbXJ4PF+jqBJy0H3E+BszIcFytUy9nHefsim2JIouuAQU8tfm7TqgKwQuib
+	 N2+z1bIArTFPSVvkVTVT2zckXXZTy8WeAiWoMbacsQCPOUXTNTQaL/WpRjo+s6K0e6
+	 6owEJKz0bPxUA==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4hPNGz31Qqz7xMN;
+	Tue, 18 Aug 2026 10:32:11 +0200 (CEST)
 Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4hPJvb2Mm6z8tcd;
-	Tue, 18 Aug 2026 08:00:11 +0200 (CEST)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4hPNGy0mg7z8sb7;
+	Tue, 18 Aug 2026 10:32:10 +0200 (CEST)
 Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 4A78B5FAAF;
-	Tue, 18 Aug 2026 08:00:06 +0200 (CEST)
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id D18A55FAAF;
+	Tue, 18 Aug 2026 10:32:04 +0200 (CEST)
 Authentication-Results: mxe9fb;
         spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
 Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <c9ba4aeb-a288-4597-b13a-9da55666f96a@leemhuis.info>
-Date: Tue, 18 Aug 2026 08:00:05 +0200
+Message-ID: <2719a7f9-71cf-447b-b4fa-a53e598d3d5a@leemhuis.info>
+Date: Tue, 18 Aug 2026 10:32:03 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -57,99 +53,113 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] mainline/master: (build) in
- arch/arm/kernel/entry-common.o (/tmp/kci/linux/scripts/Makefile...
-To: Nathan Chancellor <nathan@kernel.org>,
- Nick Desaulniers <ndesaulniers@google.com>
-Cc: regressions@lists.linux.dev, laura.nao@collabora.com,
- shreeya.patel@collabora.com, broonie@kernel.org, kernelci-results@groups.io,
- kernelci@lists.linux.dev
-References: <178701474442.5156.12765087253678603047@kernelci.org>
+Subject: Re: [PATCH] usb: typec: mux: Fix typec_switch_match()
+To: Marek Vasut <marex@nabladev.com>, linux-usb@vger.kernel.org
+Cc: stable@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+ Jens Glathe <jens.glathe@oldschoolsolutions.biz>,
+ Sebastian Reichel <sebastian.reichel@collabora.com>,
+ kernel@dh-electronics.com, linux-kernel@vger.kernel.org,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <20260817182302.146546-1-marex@nabladev.com>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
 Content-Language: de-DE, en-US
-In-Reply-To: <178701474442.5156.12765087253678603047@kernelci.org>
+In-Reply-To: <20260817182302.146546-1-marex@nabladev.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <178703280674.3289961.9845272905440892117@mxe9fb.netcup.net>
+X-PPP-Message-ID: <178704192528.3564116.6843811556363461498@mxe9fb.netcup.net>
 X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: 4A78B5FAAF
-X-NC-CID: 5dfDT5eBpiF2aL5jqJqGm2D5x/l11iP7YWWVUq/jiJEr+3GF7lE=
+X-Rspamd-Queue-Id: D18A55FAAF
+X-NC-CID: /Bx6R4kcJ3GShYDC85Bp7vJBFzp1xv5TR5uNsXCFgLZpDNNxlmc=
 
-On 8/18/26 02:59, KernelCI bot wrote:
-> New build issue found on mainline/master:
-> 
-> ---
->  in arch/arm/kernel/entry-common.o (/tmp/kci/linux/scripts/Makefile.build:435) [logspec:kbuild,kbuild.compiler]
-> ---
-> 
-> Log excerpt:
-> =====================================================
+On 8/17/26 20:22, Marek Vasut wrote:
+> The fwnode_typec_switch_get() sporadically returns NULL instead of an
+> -EPROBE_DEFER for orientation-switch described in DT.
 
-Missing for some reason. See below for one, grabbed it from
-https://d.kernelci.org/log-viewer?itemId=maestro%3A6a838f2962f33761c0d6680b&type=build&url=https%3A%2F%2Ffiles.kernelci.org%2Fkbuild-clang-21-arm-allmodconfig-6a838f2962f33761c0d6680b%2Fbuild.log.gz
+Hi Marek! Just to make sure, have you seen the patch submission
+"usb: typec: mux: initialize orientation switch array"?
+https://lore.kernel.org/all/20260804083434.20885-1-i@4t.pw/
 
-Nathan, Nick, do you still care about clang problems like this? And do
-you by chance know what's wrong here?
+It has a fixes tag for the commit you mention and reads: ""Commit
+a53b4f9c51a9 ("usb: typec: mux: avoid duplicated orientation switches")
+started using the orientation switch result array as state for duplicate
+detection, but left the array uninitialized.
 
-"""
-<instantiation>:2:11: error: out of range pc-relative fixup value
- ldr r10, =__per_cpu_offset
-          ^
-<instantiation>:2:11: error: out of range pc-relative fixup value
- ldr tsk, =__current
-          ^
-<instantiation>:2:11: error: out of range pc-relative fixup value
- ldr tsk, =__current
-          ^
-make[5]: *** [/tmp/kci/linux/scripts/Makefile.build:435:
-arch/arm/kernel/entry-common.o] Error 1
-make[5]: Target 'arch/arm/kernel/' not remade because of errors.
-make[4]: *** [/tmp/kci/linux/scripts/Makefile.build:549:
-arch/arm/kernel] Error 2
-make[4]: Target 'arch/arm/' not remade because of errors.
-make[3]: *** [/tmp/kci/linux/scripts/Makefile.build:549: arch/arm] Error 2
-make[3]: Target './' not remade because of errors.
-make[2]: *** [/tmp/kci/linux/Makefile:2187: .] Error 2
-make[2]: Target '__all' not remade because of errors.
-make[1]: *** [/tmp/kci/linux/Makefile:248: __sub-make] Error 2
-make[1]: Target '__all' not remade because of errors.
-make: *** [Makefile:248: __sub-make] Error 2
-make: Target '__all' not remade because of errors.
-"""
+The first match therefore scans indeterminate stack contents before any
+result has been stored. [...]""
+
+Not my area of expertise, but it sounds related, that's why I wanted to
+ensure you are aware of it. If it's something else: sorry!
+
 Ciao, Thorsten
 
-
-> =====================================================
+> This makes it
+> impossible to discern whether the DT does describe an orientation-switch
+> which did not probe yet, or whether the DT does not describe the switch.
+> This happens with gpio-sbu-mux connected to an I2C GPIO expander.
 > 
-> When fixing this issue, please attribute this report according to the
-> patch submission rules:
+> The class_find_device() on typec_switch_match() may return NULL in case
+> the mux did not probe just yet early on boot. The sw_devs[] array can be
+> empty on boot as well. If these two conditions occur, then the conditional
+> if (to_typec_switch_dev(dev) == sw_devs[i]) evaluates to true and the match
+> function returns NULL, which propagates to fwnode_typec_switch_get() which
+> makes it look as if the orientation-switch was not described in DT.
 > 
-> Reported-by: kernelci.org bot <bot@kernelci.org>
-> Link: https://lore.kernel.org/all/178701474442.5156.12765087253678603047@kernelci.org/
+> This is incorrect, because the mux driver will probe a bit later on, but
+> at that point, the caller of fwnode_typec_switch_get() already got the
+> NULL return value. The NULL return value also does not trigger IS_ERR(),
+> therefore the caller driver interprets this as if the orientation-switch
+> is not described in DT, and does not return -EPROBE_DEFER to try again,
+> even if it should.
 > 
-> For complete logs and details about the environment used, see the issue
-> on the KernelCI dashboard:
+> Fix this by checking the class_find_device() return value, and return
+> -EPROBE_DEFER if it is NULL right away. If the return value is not NULL,
+> perform the deduplication test, and if that test passes, consider the
+> return value to be already non-NULL.
 > 
-> - dashboard: https://d.kernelci.org/i/maestro:5d5ba40a9374919c6038ec3e50f54dbe70a37c03
-> - giturl: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-> - commit HEAD:  ff68e5f557f69a08fdcfa4ce8b1b809d63bd4f45
+> Fixes: a53b4f9c51a9 ("usb: typec: mux: avoid duplicated orientation switches")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Marek Vasut <marex@nabladev.com>
+> ---
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> Cc: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
+> Cc: Sebastian Reichel <sebastian.reichel@collabora.com>
+> Cc: kernel@dh-electronics.com
+> Cc: linux-kernel@vger.kernel.org
+> Cc: linux-usb@vger.kernel.org
+> ---
+> NOTE: A similar change was reverted in
+>       f576c75f95a5 ("Revert "usb: typec: mux: avoid duplicated mux switches"")
+>       Maybe the orientation switch commit also needs a revert ?
+>       Or the mux switch revert can be undone and fixed using this NULL check ?
+> ---
+>  drivers/usb/typec/mux.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 > 
-> # Builds where the incident occurred:
-> 
-> ## defconfig+allmodconfig+CONFIG_FRAME_WARN=2048 on (arm):
-> - compiler: clang-21
-> - config: None
-> - dashboard: https://d.kernelci.org/build/maestro:6a838f2962f33761c0d6680b
-> 
-> #regzbot introduced: 8d3ae59288f1e7d58d76558a6ee96d533bc5019f..ff68e5f557f69a08fdcfa4ce8b1b809d63bd4f45
-> #regzbot link: https://d.kernelci.org/i/maestro:5d5ba40a9374919c6038ec3e50f54dbe70a37c03
-> 
-> #kernelci issue maestro:5d5ba40a9374919c6038ec3e50f54dbe70a37c03
-> 
-> --
-> This is an experimental report format. Please send feedback in!
-> Talk to us at kernelci@lists.linux.dev
-> 
-> Made with love by the KernelCI team - https://kernelci.org
-> 
+> diff --git a/drivers/usb/typec/mux.c b/drivers/usb/typec/mux.c
+> index 9b908c46bd7df..2bc7e8edb3cbd 100644
+> --- a/drivers/usb/typec/mux.c
+> +++ b/drivers/usb/typec/mux.c
+> @@ -56,17 +56,19 @@ static void *typec_switch_match(const struct fwnode_handle *fwnode,
+>  	 * function "defers probe" for now.
+>  	 */
+>  	dev = class_find_device(&typec_mux_class, NULL, fwnode,
+>  				switch_fwnode_match);
+> +	if (!dev)
+> +		return ERR_PTR(-EPROBE_DEFER);
+>  
+>  	/* Skip duplicates */
+>  	for (i = 0; i < TYPEC_MUX_MAX_DEVS; i++)
+>  		if (to_typec_switch_dev(dev) == sw_devs[i]) {
+>  			put_device(dev);
+>  			return NULL;
+>  		}
+>  
+> -	return dev ? to_typec_switch_dev(dev) : ERR_PTR(-EPROBE_DEFER);
+> +	return to_typec_switch_dev(dev);
+>  }
+>  
+>  /**
+>   * fwnode_typec_switch_get - Find USB Type-C orientation switch
 
