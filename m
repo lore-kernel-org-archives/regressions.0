@@ -1,184 +1,267 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 427D23FFF8E
-	for <regressions@lists.linux.dev>; Wed, 19 Aug 2026 08:09:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787126947; cv=none; b=W6IGPZ/bDWkJz7dQfMbl5FkF5QMk1Kdw7IK2onqxfNfutWvJo+tlx454Jv9uJO3nx/PJM/d4J2e1AGDVfyLbdjJGImBvf39GV+s5EXtn2c/v8tW7bbvYPTmmFde325FLUWJye5H8pTEqMvfjmo5DrAKuSDtTb5p+Zsybp8nXHLc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787126947; c=relaxed/simple;
-	bh=Uxf5F+hTeSCEz7+bJUDYvxqE0Hr+uCGPOH8vepoMf0I=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=u1KtV0xAFqaAC1+klI9g8BWMB8UGAgTKp303u4dXfT2TwKuaCYru3BI/cLL9nIaNi5DmmrsUsVfqg/Erdh72fcMH0RwuzaPC+N/ii6emZ3Ciz0G+exaawjJClFDhPAaJuuai5dALAF2OwAut3eG0/Rs3HxVLllnJgLhS04+m9HA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aHDVchDC; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D45C40DFB6
+	for <regressions@lists.linux.dev>; Wed, 19 Aug 2026 09:02:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.219.41
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1787130127; cv=pass; b=jHDFrSTRFhoZxXeVB/C6EXr7TlDupPbXcPwl9gWFVR++hTDVnBm0yK55wE/CIrF6odpBog0Bmm90PRfgKoYyCbAHxrW0uFMElAphxnvUoqQJ3GIZSA2bIN9QDIK9Iz7miB2KucYpRfVNqFamM1/LadLOPyjyZZNS0h/Fe8DNuSg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1787130127; c=relaxed/simple;
+	bh=D0GwEBPZwDSpF3t7PXggJDLj9yEZl1vW2yUqVJoxFWo=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=K4npsKWu6jIS1rsO5snAoveQLK8v0TcaRfPxyTxOgKeNt0eB1WrUMeLz1tfU1mYVWEqEl8DXeuXPxxeW27BTTazFWfQh4P9QVRUUAq33VOif9Bu7smWJDqHhMlhUIByqhfGJk3JykdS1t3SszESuyLBxW1b4NWIPmYFLhixSAh4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SN1feYDi; arc=pass smtp.client-ip=209.85.219.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aHDVchDC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6801D1F00A3A;
-	Wed, 19 Aug 2026 08:09:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787126946;
-	bh=Rel36xmfiSgNiSalsIvb5qVmqE3OGUaO/+xyxkc8SbM=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject;
-	b=aHDVchDCdU8i4fqv0o4BdUaKk3gwOg7XXfCYZcwk8NIiYmyZGyVcru7rlTDpecbOp
-	 QpJaa6jsH140Z6X5Zs+bHJhZCwALGKYw7E+8YGjGYt9vmYaVF+DeLNGgJJbX3nhyp4
-	 vUICaRlsZeAWca+nfYHOGfaL38LA1T99ytopfwXTQ2yheAdOnNxV5xgp+w5fK1bK/a
-	 +tICay99X12aK0iKWf370HHukEqIdUJ/LaGg/wdLhzAaeIsovhsM/tBxPOIruLibMc
-	 0LU8pswZrxEcYaaojgVg1hMCZFEDqG+nbK83xlslmLkH6L+c9tuPYmiSMTXUkL5ZR2
-	 cEWT2aQVQZ/1w==
-Received: from ams-compute-02.internal (ams-compute-02.internal [10.64.2.62])
-	by mailfauth.ams.internal (Postfix) with ESMTP id ECF1E1980059;
-	Wed, 19 Aug 2026 04:09:03 -0400 (EDT)
-Received: from ams-imap-11 ([10.64.2.31])
-  by ams-compute-02.internal (MEProxy); Wed, 19 Aug 2026 04:09:03 -0400
-X-ME-Sender: <xms:nWSFahQp4MGyq3Q9WNUCD1Erexm59VQabvJ-2L452kQeCKeIvCWw0A>
-    <xme:nWSFallJWAPlleUbLPOr12p-LJs7Ch0cdYbEVtb7L3SMxcemYo4CDGZsPsRkeII1M
-    CHFVz401rUVpfkhdtoBukJZK7B5CQF2_ls1Iv7i7ZwJBoXjObJ_xKA>
-X-ME-Proxy-Cause: dmFkZTFYDFUAC2rkvrnGmrRoFhG0dxbmQYh99/jQv4Lmm7D4gBy294cGV3+4PezLTZwI4H
-    awP0ZBhGpL+W9l9vZCeFxchgM3sJF5/zuJhbMD8Y99RIfrY/4b7FiCBrbH6sP4KsQvDlOV
-    Hi70oL9rLSs58hQ90atyjG7Sgf8bG8ylyh/XlK/QDX9K0pB8XBMLAx3Hrmfrizohr0NF+Y
-    jh/6EWFQh32emZtcLqzUOCo/0aQK+VxYklI1Dsqlhz3AREXP5Ihp0z81Njx5PHtsOtQx9I
-    zwCR9POpxIzfGFCp4qAxKa6XDTSDaLMuCZo1eLkdTtgp54eAycT1ZVDMn5PxLwRbFLtaV9
-    FXMykNbPsbBuu9co8J2S597/e4XdqQzoJ1HkGnTnYM/p9SE9SDh+ewsL5fSKpTAkI6Fqb8
-    Kt+cnNE1oKpk3al0OvTafH2uoQjHHL/sDTcbziIL/OnJSk8+KTOOQXoeA6UOIK3FsVzSAc
-    f9egYZ7JZWd6HuU2mcxZ/iBVxuuq2rVaXVhiDY6dNAfiSMG3piKxDPFq4fLgxgAFvTk6Ab
-    QZg9hEtY+5UyCKI1KTVPM/6McUAlMe3Kthtj6WRz9ocbJrohWWccRXNmfzSNpmaodLk9Pe
-    LCOZFdgShIYAIaOiTC6z/ejpiTvaNv+nzDCne2dgVbsJ9Uspu3PU27eFdarQ
-X-ME-Proxy: <xmx:n2SFamvq6udO082kqIsrC2-PKNonInLeTrP-9h1R-hzJmBq-ZFgjKQ>
-    <xmx:n2SFao1aBkZuvbQfb-GTZwUqbAVQJ6tKIMURDFg6MbzUstiP5pxLMQ>
-    <xmx:n2SFarRMfQjvU6_KqYGfeCwTDh_NZwD8FIYmFFQANtp6OLRFS_ux4g>
-    <xmx:n2SFascirofo22s0ZbqCYdSo-lzXx8R1ue1c1Dn3RJRINHsant7YVA>
-    <xmx:n2SFasceUDwS5YU-DoDuJ0Itb0NI5IFaHERFdB2MN1BhyEu2rn9pjsr7>
-Feedback-ID: ice86485a:Fastmail
-Received: by mailuser.ams.internal (Postfix, from userid 501)
-	id 43734F80074; Wed, 19 Aug 2026 04:09:01 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SN1feYDi"
+Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-9061a795d76so10003676d6.3
+        for <regressions@lists.linux.dev>; Wed, 19 Aug 2026 02:02:02 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1787130121; cv=none;
+        d=google.com; s=arc-20260327;
+        b=hEMEZMW2tF1QkP3NTHwh0EmrJnJl/Bbr/Z8tB9+c5pg6TAdtI+Fjn5MB1A7CuIElmt
+         /R6CzqYLZwFcCGLMgfnRdVa5KZxU7aRUOOclQH17AaK9+b5M0gdRKJaAvfmvvMEUCtNE
+         jFKrV/yf/uPHGU3esrROOWLXfNhBuYhdu6eG7agp2Zwk/v6g3uat+VlCKkLLC7S7cvOI
+         CK/inZab0D9iTl/74osz1lB41sQnquEn/vaXboTdSFtJ254cqQnuqyzX/c6Z3cVLtrR5
+         XV22ayTEH557m6IWR+61/cxH7tngJNb2sjAQuMuGcVXAP8e3EX0qEFx6wIaSeBFh8lmM
+         L5xQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:from:mime-version:dkim-signature;
+        bh=lh94NleeH3lqZAsalMlCWnYENzl0FPI/Q7IkjuuaW10=;
+        fh=PqXzY4AEV/8pDpCEasnLRZrTomzIWKzhqxfPhHjYtwI=;
+        b=mN2nok7eBDXd0MR1+m+l2mNhB1KwBmj2yQV721j+Qngl+jlMXuObMYLFSKf+yrIoM7
+         UcDwxKls88pXFZmJ0xbmqFHwHNrvAYOBJxkxEd3T+HSQPANMZeGCiw3gq+h4EbJ0XiOR
+         eQYO4DzmsL1kypV0tG04iqor+Jv/owjVOZs084nsTaqL+8fovSs65tcKA6eo12ImWt8I
+         vFPlMVFjRLQE4aHjR8fqZEAcOmlDUbZHNtCI6nJ5xe7SHthLIqoprH6dXeISSrj28VtO
+         k556Vh3l1ykLgHe7+cYvZEbCldVUuk08uKzLXgFraNQ2p9SH0HnCdwd0Ko8C8cigg5XO
+         4yqg==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1787130121; x=1787734921; darn=lists.linux.dev;
+        h=content-type:cc:to:subject:message-id:date:from:mime-version:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=lh94NleeH3lqZAsalMlCWnYENzl0FPI/Q7IkjuuaW10=;
+        b=SN1feYDiUFMX2tB/ncnC8S+WBsBLYj1D+u69PwHjXQmezn1Tc60TXo7gLKiYO3hbWK
+         PFs6LAaJcScjUenlUL9VcfhLML+piJ+lRSTkYNenLjAYYRbJHf/K7kWngPTPsHUfHFxa
+         GAJd+f5bsR4/YfpFVLSGX1U5Qrl7w8Qim/5Jm1ZlP3MIRURktlAqVUXiBdi2w1EEGwXj
+         s8XpvaNTBCv0juEwY8+k/YTTVf5jQwr70gprNW2xXLWMg0feZ7i1ZZwNpmBopn6H+lQs
+         OnSoe7jMrxda2CWQJlfRX4e1yiFLJujRqpKuSrX8NSKZb01P5JzDtPDBQTH6kuBgyXfl
+         LiMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1787130121; x=1787734921;
+        h=content-type:cc:to:subject:message-id:date:from:mime-version
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=lh94NleeH3lqZAsalMlCWnYENzl0FPI/Q7IkjuuaW10=;
+        b=cUBIgL48Gtf/SO7rZfVuHGCzIrd3Fbjrqds6+u9UlVfQgdIKwjSNw+7DxvAALhmF+Y
+         lJKtey9bTAt3bB4T/73ppljE7tEVmtNRJk+xeHOOECFP1SFUj0yJEEQZFFOLuowPZLIn
+         cHlP5UH50U9LGCojU1B7CGEowv+ijWgUCxyoB1+iqWI6//an9enPsEqR51UjRiwZ5Rls
+         Edu7sxg1rYD2anibYCkNtFQb/QstqYDpwLIoghbxeV9iyEIln0EkRbbN2Vi+s0Q9F0rt
+         aGOb+uUEyiZ7zuRj+Ww7d5J4uursDbOg1encps+wVdf+Gp/di6fRsO/WX/zZsU94AP64
+         V/HQ==
+X-Forwarded-Encrypted: i=1; AHgh+RronlO+4F19GQYNUEhDo4kwf1Q0fmsGNbVRWdUAnZwRScq6xdg2i+ZgdYeNinU6YzIcJ8kWPfH6guWehA==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxMCDoAfOJyjShIh1KAZmQDhXCbjmf/7tbCLa8B7PiV+2Vy1pAL
+	ahYwqZfoJjkf/LLdORL0SAkoZ26L7UpVej6WZPWuVgorgvmPrU45Ggi+kPmbE5BXEw0rmJWgQF3
+	ctdmCjRFNKx1xLtCxj/XKeEGc03CKr5Y=
+X-Gm-Gg: AR+sD13HL3kM3nB06zo+1exk0kiJqHQ9ILYVEBVp/yN8RuUjv3pm/AF6Cy+AnWJEcAS
+	gdDDLKwLsZvzaBkZpPxqHVjrZTPZDioEQauq7W+Stnex2dAdM2qA3dTr30V/261srtGPxb7thW/
+	wCcimhDm0FMlBx003ZzYNERIl3xkN9UiPVrwrl/jz2pKe6y7iN6HXpe9ewaGmcdpAmrEbHaidsj
+	Gbo/K9MUATDMZrZkGDxwDqsOxwVz9IaCsQKVe90CZBhSAJm23W/vymXzDTBJ9nl2EmvD16iWp44
+	hbTi2MUPjPTI3dHGGa/5Z2E5sRp1pQQB6solSK057fYma22z5SlUABsti/+f749zIMAhIt83UVU
+	GRQ==
+X-Received: by 2002:a05:6214:29c8:b0:8f6:8d46:5f47 with SMTP id
+ 6a1803df08f44-90c5e94b0bamr26750206d6.5.1787130121135; Wed, 19 Aug 2026
+ 02:02:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Date: Wed, 19 Aug 2026 11:08:39 +0300
-From: "Ard Biesheuvel" <ardb@kernel.org>
-To: "Nathan Chancellor" <nathan@kernel.org>,
- "Nick Desaulniers" <ndesaulniers@google.com>
-Cc: "Thorsten Leemhuis" <regressions@leemhuis.info>,
- regressions@lists.linux.dev, laura.nao@collabora.com,
- shreeya.patel@collabora.com, "Mark Brown" <broonie@kernel.org>,
- kernelci-results@groups.io, kernelci@lists.linux.dev,
- "Arnd Bergmann" <arnd@arndb.de>
-Message-Id: <e5c6c56c-b0e2-4950-996a-4f9321a1a57a@app.fastmail.com>
-In-Reply-To: <20260818175209.GA1675024@ax162>
-References: <178701474442.5156.12765087253678603047@kernelci.org>
- <c9ba4aeb-a288-4597-b13a-9da55666f96a@leemhuis.info>
- <CAKwvOdkcCnhM-395QVriu3hnjmtX1H-3i_1tU5Jpb1Ybr2Q77g@mail.gmail.com>
- <20260818165116.GA1335107@ax162> <20260818175209.GA1675024@ax162>
-Subject: Re: [REGRESSION] mainline/master: (build) in arch/arm/kernel/entry-common.o
- (/tmp/kci/linux/scripts/Makefile...
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+From: Mihail Leoca <mycroftmih@gmail.com>
+Date: Wed, 19 Aug 2026 12:01:49 +0300
+X-Gm-Features: AcwNN1UZEt3ggu3Yr8zbH8iDaQVSJ6zFJMtNLV1WT8KYPzFredJLl_Hiy6zE3-I
+Message-ID: <CAN4jxfXBFy9YQARm8O5SgKEg4ME1=jXShZ-AQ5MXXscQqDtzWw@mail.gmail.com>
+Subject: [BUG] smb: client: data loss - writeback subrequest is dropped, not
+ retried, when the AEAD allocation fails
+To: linux-cifs@vger.kernel.org
+Cc: sfrench@samba.org, smfrench@gmail.com, pc@manguebit.org, 
+	ronniesahlberg@gmail.com, sprasad@microsoft.com, tom@talpey.com, 
+	bharathsm@microsoft.com, dhowells@redhat.com, ematsumiya@suse.de, 
+	netfs@lists.linux.dev, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+
+Hello,
+
+A large buffered write to an encrypted SMB3 mount can lose data. Every
+write() returns success but one or more wsize-sized ranges never reach
+the server. ENOMEM is reported once by whichever of fsync() or close()
+comes first. On the server a lost range inside the file reads back as
+zeroes; a lost range at the end leaves the file short.
+
+We noticed the corruption in June, after upgrading from 6.1 to 6.12.53.
+Everything measured below is from a reproducer.
 
 
-On Tue, 18 Aug 2026, at 20:52, Nathan Chancellor wrote:
-> On Tue, Aug 18, 2026 at 09:51:21AM -0700, Nathan Chancellor wrote:
->> On Tue, Aug 18, 2026 at 09:19:04AM -0700, Nick Desaulniers wrote:
->> > + Ard
->> >=20
->> > On Mon, Aug 17, 2026 at 11:00=E2=80=AFPM Thorsten Leemhuis
->> > <regressions@leemhuis.info> wrote:
->> > > Nathan, Nick, do you still care about clang problems like this?
->> >=20
->> > Yes, from the logs, it looks like ARCH=3Darm allmodconfig with clan=
-g-21
->> > (perhaps, there's a funny warning about the compiler version in the
->> > logs).
->> >=20
->> > > And do
->> > > you by chance know what's wrong here?
->> > >
->> > > """
->> > > <instantiation>:2:11: error: out of range pc-relative fixup value
->> > >  ldr r10, =3D__per_cpu_offset
->> > >           ^
->> > > <instantiation>:2:11: error: out of range pc-relative fixup value
->> > >  ldr tsk, =3D__current
->> > >           ^
->> > > <instantiation>:2:11: error: out of range pc-relative fixup value
->> > >  ldr tsk, =3D__current
->> > >           ^
->> >=20
->> > Smells like the same problem that was addressed by
->> > commit 5fe41793bc78 ("ARM: 9176/1: avoid literal references in inli=
-ne assembly")
->> >=20
->> > What tree was being tested? 5fe41793bc78 landed in v5.18-rc1. Whate=
-ver
->> > was being tested is probably missing that patch.
->>=20
->> As Mark notes, this is mainline. This error is visible with LLVM 23 as
->> well. I bisected it to commit 79d27fd71854 ("arch: hookup fchroot()
->> system call").
->>=20
->> I do see that change in -next and there is no error there so was this=
- a
->> known issue that was fixed in another tree? I will keep looking.
->
-> It looks like commit 25900bd99d4d ("ARM: limit OABI support to StrongA=
-RM
-> CPUs") in the soc tree avoids this error by disabling CONFIG_OABI_COMP=
-AT
-> for allmodconfig. If I disable that on top of allmodconfig with current
-> mainline, the error goes away.
->
-> I narrowed down a reproducer to
->
->   $ cat arch/arm/configs/repro.config
->   CONFIG_ARCH_MULTI_V6=3Dy
->   CONFIG_ARCH_REALVIEW=3Dy
->   CONFIG_COMPILE_TEST=3Dy
->   CONFIG_MACH_REALVIEW_PB1176=3Dy
->   CONFIG_OABI_COMPAT=3Dy
->
->   $ make -skj"$(nproc)" ARCH=3Darm LLVM=3D1 mrproper defconfig repro.c=
-onfig=20
-> arch/arm/kernel/entry-common.o
->   <instantiation>:2:11: error: out of range pc-relative fixup value
->    ldr r10, =3D__per_cpu_offset
->             ^
->   <instantiation>:2:11: error: out of range pc-relative fixup value
->    ldr tsk, =3D__current
->             ^
->   <instantiation>:2:11: error: out of range pc-relative fixup value
->    ldr tsk, =3D__current
->             ^
->
-> CONFIG_COMPILE_TEST is necessary because it turns off
-> CONFIG_ARM_HAS_GROUP_RELOCS, which seems relevant here.
->
+The bug
+=======
 
-We're falling back to the mov_l asm macro in this case.
+1. Every encrypted write makes one contiguous allocation for the crypto
+   request, in smb2_aead_req_alloc() (fs/smb/client/smb2ops.c):
 
-This is unfortunate, because the only reason to avoid these group
-relocations is making allyesconfig work, now that LLD has caught up.
+p = kzalloc(len, GFP_NOFS);
+if (!p)
+return ERR_PTR(-ENOMEM);
 
-I did not manage to reproduce this, but if this is something we care
-deeply about, we might tweak mov_l as below when COMPILE_TEST is set,
-so that the literal pool is always in range.
+   At wsize=4 MiB with 4 KiB pages num_sgs is 1027. The scatterlist
+   array dominates len, so the request is order-4.
+
+2. On failure -ENOMEM reaches smb2_async_writev()
+   (fs/smb/client/smb2pdu.c).
+
+3. -ENOMEM is not classified as retryable. On 7.x smb2_async_writev()
+   sets NETFS_SREQ_NEED_RETRY only for is_replayable_error()
+   (fs/smb/client/cifsglob.h), which is -EAGAIN and -ECONNABORTED. On
+   6.12.y netfs makes the same test in
+   netfs_write_subrequest_terminated() and retries only -EAGAIN.
+
+4. fs/netfs/write_collect.c marks the subrequest NETFS_SREQ_FAILED,
+   records the error on the mapping and does not resend the range.
 
 
---- a/arch/arm/include/asm/assembler.h
-+++ b/arch/arm/include/asm/assembler.h
-@@ -636,6 +636,12 @@
-        .macro          mov_l, dst:req, imm:req, cond
-        .if             __LINUX_ARM_ARCH__ < 7
-        ldr\cond        \dst, =3D\imm
-+#ifdef CONFIG_COMPILE_TEST
-+       /* The literal may go out of range in pathological cases */
-+       b               .L\@
-+       .ltorg
-+.L\@:
-+#endif
-        .else
-        movw\cond       \dst, #:lower16:\imm
-        movt\cond       \dst, #:upper16:\imm
+Affected
+========
+
+Reproduced on kernel version:
+- v6.12.53
+- v7.1.5
+- mainline bd5f485f3f02
+
+It needs:
+- 4 KiB pages
+- an encrypted mount
+- buffered I/O (cache=strict or cache=loose)
+- and the default wsize=4 MiB.
+
+The classification is old and has never covered -ENOMEM. What changed is
+how reachable the allocation failure is:
+
+- before v6.3 kmalloc(len, GFP_ATOMIC) no fallback
+- v6.3 onward kvzalloc() vmalloc fallback
+- 998a67b95468 kzalloc(len, GFP_NOFS) no fallback
+
+998a67b95468 ("smb: client: fix crypto buffers in non-linear memory")
+shipped in 6.6.112+, 6.12.53+, 6.17.3+ and 6.18+. These stable upgrades
+took the fallback away:
+- 6.6.111  -> 6.6.112
+- 6.12.52  -> 6.12.53
+
+
+Reproducer
+==========
+
+1) Samba share on /srv/share, exported with
+
+smb encrypt = required
+smb2 max write = 4194304
+strict allocate = yes
+
+   mounted on /mnt/cifs with
+
+-o vers=3.1.1,seal,cache=strict,wsize=4194304
+
+2) The writer, cc -O2 -o writer writer.c:
+
+#include <errno.h>
+#include <fcntl.h>
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
+
+int main(void)
+{
+static unsigned char buf[1 << 20];
+size_t n = 0, total = 192u << 20;
+ssize_t rc;
+int fd, r;
+
+memset(buf, 0xa5, sizeof buf);
+fd = open("/mnt/cifs/data.bin",
+ O_WRONLY | O_CREAT | O_TRUNC, 0600);
+if (fd < 0) {
+perror("open");
+return 1;
+}
+while (n < total) {
+rc = write(fd, buf, sizeof buf);
+if (rc <= 0) {
+printf("write=%zd errno=%d\n", rc, errno);
+break;
+}
+n += (size_t)rc;
+}
+printf("wrote=%zu\n", n);
+r = fsync(fd);
+printf("fsync=%d errno=%d\n", r, r ? errno : 0);
+r = close(fd);
+printf("close=%d errno=%d\n", r, r ? errno : 0);
+return 0;
+}
+
+3) Inject during the write:
+
+F=/sys/kernel/debug/fail_page_alloc
+echo 4  > $F/min-order
+echo N  > $F/ignore-gfp-wait
+echo -1 > $F/times
+trap 'echo 0 > $F/probability' EXIT INT TERM
+echo 50 > $F/probability
+./writer
+echo 0  > $F/probability
+
+4) Check the file on the server, not through the mount, which still
+   serves the original pages from cache. The file is 0xa5, so every
+   zero byte is lost data:
+
+cd /srv/share
+ls -l data.bin # short if the tail was dropped
+tr -dc '\0' <data.bin | wc -c # bytes lost as zeroes
+od -A d -t x1 data.bin | grep -B1 '00 00 00 00'
+
+
+Result
+======
+
+Three runs on mainline bd5f485f3f02. Every write() returned success
+and fsync() returned -1 ENOMEM:
+
+run 1 full length 80 MiB lost 20 chunks
+run 2 8 MiB short 92 MiB lost 23 chunks
+run 3 full length 96 MiB lost 24 chunks
+
+Every zero run starts and ends on a wsize boundary and the chunk count
+matches the injected failures in crypt_message exactly. Raising min-order
+to 5 misses this allocation entirely: 206 injections land in
+netfs_alloc_folioq_buffer instead and nothing is lost.
+
+Dropping the fsync() from the writer moves the ENOMEM to close(). v7.1.5
+behaved the same, losing 104, 88 and 92 MiB.
+
+The error is reported but the data is already gone. With the stream
+failed netfs_collect_write_results() advances collected_to over the
+untransferred range and ends the folios without redirtying them;
+fs/netfs/write_collect.c has no redirty call at all. An application that
+checks every return code still cannot rewrite the lost range. On the
+issue side the same -ENOMEM is treated as transient and redirtied
+(fs/netfs/write_issue.c).
+
+I would expect a transient -ENOMEM to be retried rather than treated as a
+permanent failure of the range, or failing that for folios not to be
+cleaned when nothing was transferred.
+
+Happy to test patches or add trace detail.
+
+Thanks,
+Mihail Leoca
