@@ -1,138 +1,104 @@
-Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.102])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0CAB372071
-	for <regressions@lists.linux.dev>; Wed, 19 Aug 2026 09:03:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E828E442364
+	for <regressions@lists.linux.dev>; Wed, 19 Aug 2026 10:03:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.102
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787130238; cv=none; b=QfiSNLr0owwS+XglM5dZLp27STIOKsYP+bM5vcNcr4tcqkL7dMb76YElaDlwD/WZSaCz0wGWdczmyER+aJ9sq+3uGvk1uqJ/hfVAsLun4D57K0x1+vybn7PCKs+hLIB71gHylag90gM2zOXXvC8L4hlluAGwvVEJ4MKIQInnqP8=
+	t=1787133835; cv=none; b=pbeQns5m7FYepKP75ZfYkauzslrmWI32rfdNqlGljZofysY6GKLco0A5KUB3W/+8PuFYe7NoBlLGZ6xp9PBhrtL68CprBKNXt+mjXfCkrsWrq6L+LMIiv8yr3DDXDzuqvrdjOk6w/4QSBR/+3BsVlk6iT+iPK6w/Q2aIn6ykAO8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787130238; c=relaxed/simple;
-	bh=V56WzWd2EHf/12E6ECIaHQNoiEpF3J1G/bBOD5bzeTU=;
-	h=Date:From:To:Cc:Message-ID:Subject:MIME-Version:Content-Type; b=RbkLE7n+df1L4Q5MrkoyP/NHGSEcqDySCqjljgmWU3vGg8U9fqXtyxlIRe2NsLmLPCLMuVt9TgCxvLQOerQDW588xRMWM/nCGAWyIqAExbueFF//Un+k0avgd2MTwjHWP0DVqETVEgVpUUDSCEJ5AJGEhR0/Xzk5iQnfW6xgedA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de; spf=pass smtp.mailfrom=posteo.de; dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b=f5cd3Qy4; arc=none smtp.client-ip=185.67.36.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.de
+	s=arc-20240116; t=1787133835; c=relaxed/simple;
+	bh=SUrGJRYs48VlIUdhRLE53IW1fW1ZUwIAPEdOwIPY/h8=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=B3Lr0t+4ADYcpK2qHLpla7KbpdxdvEow8DYz6V1ALsprUKcZlhHej6xjP1WQOkRREK0KpAbbFPp+GsjeD4uLpa2F3kkc2Dvm0c6Qg40PPSA4ubijcd0QPdMqqyo4WMdfE8MNjkUldeiTBVM7uQsoMRgam5Ef7pPDu/C0w6+FDiY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=jWi04Qjq; arc=none smtp.client-ip=188.68.63.102
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b="f5cd3Qy4"
-Received: from submission (posteo.de [185.67.36.169]) 
-	by mout02.posteo.de (Postfix) with ESMTPS id 6159B240104
-	for <regressions@lists.linux.dev>; Wed, 19 Aug 2026 11:03:53 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=posteo.de;
-	s=1984.8680eb; t=1787130233;
-	bh=V56WzWd2EHf/12E6ECIaHQNoiEpF3J1G/bBOD5bzeTU=;
-	h=Date:From:To:Cc:Message-ID:Subject:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:From;
-	b=f5cd3Qy4JAkD4Rn6z7kfMbIDVtFIT9rkcKeixVt1A7e85NV5/I4FnFmkS4+T9wm5d
-	 CMpqq+6/XRLtu90eAGRy6uZkgDQQ3/UTZku8c8wc3NYEMmCJsARCcsPzDOhkbEv/tD
-	 p/UHdhsqaXOFBdUwFeaC0H+5rRPcbam/0CC71ybTd8kteZcLhut6p2mgJRTugYXsoI
-	 Vtt7qzoH2X56ylM0dGDYfpfgcTndQIRZ81CSnY+mSCwHWAIj4sX2FXOfHT+iFrVyny
-	 AvU+oeMFcVY4/eQ3yesvXHBpZiePpisLeLxvTcoEcZNS5Uu8skn3esUZWkGRegSdyC
-	 zRsKw49zSy2tg==
-Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4hQ0x40ypQz9rxG;
-	Wed, 19 Aug 2026 11:03:52 +0200 (CEST)
-Date: Wed, 19 Aug 2026 09:03:53 +0000
-From: Jonas Hort <jonas.hort@posteo.de>
-To: Devin Wittmayer <lucid_duck@justthetip.ca>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
-	regressions@lists.linux.dev, linux-wireless@vger.kernel.org,
-	Felix Fietkau <nbd@nbd.name>, lorenzo.bianconi83@gmail.com
-Message-ID: <503eb10e-80cf-493e-95fd-04fc0f94ce01@posteo.de>
-Subject: Re: [REGRESSION] mt7925: MLO connectivity silently stalls with 6GHz
- link active
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="jWi04Qjq"
+Received: from mors-relay-2502.netcup.net (localhost [127.0.0.1])
+	by mors-relay-2502.netcup.net (Postfix) with ESMTPS id 4hQ2G72M3nz66nf
+	for <regressions@lists.linux.dev>; Wed, 19 Aug 2026 12:03:43 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1787133823;
+	bh=SUrGJRYs48VlIUdhRLE53IW1fW1ZUwIAPEdOwIPY/h8=;
+	h=Date:Subject:From:To:References:In-Reply-To:From;
+	b=jWi04QjqO5/VKTZDI6qSki1rlPDQou3Ai9EA3ufe8d4Apyxzx2I5Gz0AeqemUmLRp
+	 YlMGKzFmg8XITtkqbPRe500FLvZNX/uGTaa8KKrXnaiaVy0iWjCBBKNQh9uThXC6K8
+	 tazFwlJM82m5UIZfYeNlmo9KwDd4tNA1IIVIC065QNRquVWYuHdQX+xFj66cGCylmE
+	 PJwvJ3NWGp5d4FyT28acoupXsoHaZ5G3Bn8ByDCq+mKFT4zFvm3FJAKg3PSKZTFOIe
+	 PIDYAgZQFO44RMaedvng5hIh/bHM1XugIXvTAQLEbD6NuR1OAvDUWc+x2OabGQks7Q
+	 HetpO6FVK7QNg==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-2502.netcup.net (Postfix) with ESMTPS id 4hQ2Fc5CBBz4y3T
+	for <regressions@lists.linux.dev>; Wed, 19 Aug 2026 12:03:16 +0200 (CEST)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4hQ2Fc3Mzrz8sb7
+	for <regressions@lists.linux.dev>; Wed, 19 Aug 2026 12:03:16 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id D15DE5FACF
+	for <regressions@lists.linux.dev>; Wed, 19 Aug 2026 12:03:10 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <de784c5e-9b13-404d-8c01-25e82759fe04@leemhuis.info>
+Date: Wed, 19 Aug 2026 12:03:10 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Correlation-ID: <503eb10e-80cf-493e-95fd-04fc0f94ce01@posteo.de>
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: 
+ <178713379157.2570100.17893158971941635111@mxe9fb.netcup.net>
+X-Rspamd-Server: rspamd-worker-8404
+X-Rspamd-Queue-Id: D15DE5FACF
+X-NC-CID: /MAgcpDHXAp7+OiTnVcoW/LX295Ay8cJu/TN5Fu9iqObz4lf3tA=
 
-Thanks for the detailed breakdown.
 
-I'll build v7.0 vanilla and test it, as suggested. Fair warning
-though: I'm on vacation this week, so I'll pick this up next week.
-I've also never compiled a kernel before, so it'll likely take me a
-bit of trial and error the first time around - please bear with me
-if it takes a little longer than expected.
 
-Will report back once I have results.
+On 3/9/24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-Thanks again,
-Jonas
+#regzbot report:
+https://lore.kernel.org/all/178701474442.5156.12765087253678603047@kernelci.org/
+#regzbot introduced: 79d27fd71854
+#regzbot title: arch: buid error: out of range pc-relative fixup value
 
-19.08.2026 03:18:34 Devin Wittmayer <lucid_duck@justthetip.ca>:
+#regzbot report:
+https://lore.kernel.org/all/CAGQo=TJXef-QzbkFEpTcJ138j0k6WYnV4=tNY8Q7s3U7DUOY+Q@mail.gmail.com/
+#regzbot resolve: somewhat old and unfixed, and tricky; leave things to
+the maintainers
 
-> Thank you very much, that answers both things.
->=20
-> The ROC tracing is the more useful of the two even though it came back
-> negative. Two of the three freezes have no ROC activity in them at all, s=
-o a
-> link switch that never finished cannot be what starts this. The middle on=
-e
-> does have rocabort, mloroc and rocwork in it, but one out of three makes
-> that look like the exception rather than the pattern. So the area I sent =
-you
-> looking at is out, and that is worth knowing before you spend nights on
-> builds.
->=20
-> One other thing worth saying first. There is a five patch mt76 series on =
-the
-> list at the moment and two of the patches look like they were written for
-> exactly this bug. I do not think they were, and it is your own numbers th=
-at
-> show it. The failure 4/5 fixes stops mt76_txq_schedule_list from servicin=
-g
-> the queue, and the one 5/5 fixes stops mt76_txq_send_burst once the non-A=
-QL
-> count reaches its cap. Both of those keep frames from ever reaching the
-> hardware, so if either were your problem head would be sitting still
-> alongside tail. Yours does the opposite. Head climbs 390 to 408 while tai=
-l
-> stays at 260, so the frames are getting into the ring and nothing is
-> finishing them, which is the far end of the same path. 2/5 is a use after
-> free when an interface goes away, so it does not fit either. I would not
-> expect that series to change what you see.
->=20
-> On the bisect I would build v7.0 next. There are 32 mt7925 commits betwee=
-n
-> 7.0 and 7.1 and 19 of them are one run of work from Sean Wang, reworking =
-how
-> the driver tracks the per link mlink and WCID for an MLO station. That is
-> the kind of change that fits a bug only showing up with two links up. If
-> v7.0 comes back clean, that series is where I would look. If v7.0 is alre=
-ady
-> broken then it is off the hook and 6.19 becomes the next split. The mt76
-> core and mac80211 both moved in the same window, so mt7925 is where I wou=
-ld
-> look first rather than the only place worth looking.
->=20
-> Devin
->=20
-> Am 17.08.26 um 23:34 schrieb Jonas Hort:
->=20
->> Quick follow-up: managed to confirm 6.18 as a clean baseline on my
->> own hardware now (not just secondhand from others in the forum
->> thread) - running Linux 6.18.42-1-cachyos-lts with MLO active
->> (5GHz+6GHz, same FritzBox 5690 Pro) for 3 hours straight, no freeze
->> at all.
->=20
-> Am 17.08.26 um 16:25 schrieb Jonas Hort:
->=20
->> One correction to how I described this earlier: the connection does
->> NOT reliably self-heal on its own. I have manually intervened every
->> single time to restore connectivity [...]
->>=20
->> Update on the ROC tracing: three real freezes captured now with the
->> kprobes active (all confirmed via the WFDMA0 tail-frozen signature).
->>=20
->> - Freeze #1 (15:37): no ROC activity in the trace.
->> - Freeze #2 (15:43): [...] The trace shows several ROC events
->> =C2=A0 (rocabort, mloroc, rocwork) clustered together.
->> - Freeze #3 (16:15): no ROC activity again.
->>=20
->> Uploaded all three logs to the bugzilla ticket if useful:
->> https://bugzilla.kernel.org/show_bug.cgi?id=3D221884
+#regzbot report:
+https://lore.kernel.org/all/3023d7d7-c8ab-48e7-a0e4-e18cc4ea0b9a@nvidia.com/
+#regzbot introduced: d3539347022ad4
+#regzbot title: serial: 8250: booting broke
+#regzbot dup:
+https://lore.kernel.org/all/f3757a75-0ba1-4558-bf57-f19ab7e59a4c@nvidia.com/
+
+#regzbot report:
+https://lore.kernel.org/all/20260818085623.18467-1-panz.development@gmail.com/
+#regzbot introduced: 0919db9f3583
+#regzbot title: HID: asus: touchpad becomes unresponsive
+#regzbot fix: HID: asus: do not send keyboard init reports to touchpads
+#regzbot monitor:
+https://lore.kernel.org/all/20260818151431.939132-1-panz.development@gmail.com/
+
+
