@@ -1,112 +1,118 @@
-Received: from mta0.migadu.com (out-30.mta0.migadu.com [91.218.175.30])
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26157374E42
-	for <regressions@lists.linux.dev>; Wed, 19 Aug 2026 01:18:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.30
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4946D380FD3
+	for <regressions@lists.linux.dev>; Wed, 19 Aug 2026 03:59:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787102321; cv=none; b=MyBcWiNv78vdlgzblIK/YILPCW+L3l+8a+p4oW3zllpPCF0NNKIZeftEmmpeWCV0WLj9399sAI5lOYpAcnE+GcW62BnLCtzwUxbc3ZnDvuvxF4oj320Mo18su5DE3qH9WCMRYLTnx1uERp+GMgUSRouHDwKAS68ssFd9PJVwBoo=
+	t=1787111952; cv=none; b=u305j5tijsqt7CB4QucSACUh/nfO9fB9ETHQJHj7dAaT3wvu0eGkOnju8cjXglVsq0/qEhmC7SYvaEJMkiqhwQ4qPNB66/aUMuRHyaio0lsXaNFj+gAt/Pl1d4GdID9/I+pFSRsecfQXCYgXBmL4p+xcuUz8KVt4rpHBQEHTt6Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787102321; c=relaxed/simple;
-	bh=ZjugNn5Vq03eTTWqVLQlz6kQYnIMpwR3Qn5/6vVZObc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=eBJmJwZCx/Ru7fJMG6PvgbjYRElLbmxG6ydv7nhkbwQVbhlpD/+0xzSKw4bLvy3FzbzXtF8BzRWAUkU/sI1BC0+1XBinQ+L5gdsDGgWXMr3XVXWDguwe1xtuW3+3HmrSc4QkFoMTDtWAhHSgwTLMGijh0slaHOu1Uvy1AKLeoMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=justthetip.ca; spf=pass smtp.mailfrom=justthetip.ca; dkim=pass (2048-bit key) header.d=justthetip.ca header.i=@justthetip.ca header.b=XZ5x1p3a; arc=none smtp.client-ip=91.218.175.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=justthetip.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=justthetip.ca
+	s=arc-20240116; t=1787111952; c=relaxed/simple;
+	bh=brdbnjPfqX0wOgvgV5yJ1GIBeaEAMqiTMu8VZzN7RyI=;
+	h=Content-Type:MIME-Version:Subject:From:To:Cc:Date:Message-ID; b=pmqPhOwC5/GyWPSEVPWuAOj5HiWERtV6hSOrEvv1K14nA0dK+8o5hFQeXpvUyCPN3gPsjjRTSBiKKIm4IQoBnjJxSTNUNYhcgYSAK9kxAu36LZEIJTKx4hx7IXpiMAg4DftW/NwBZVRtP0yzjpSHUpU0fe3Y8fUbr5+Jdu37oBQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kernelci.org; spf=pass smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci.org header.i=@kernelci.org header.b=UlGxBpUC; arc=none smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kernelci.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernelci.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=justthetip.ca header.i=@justthetip.ca header.b="XZ5x1p3a"
-X-Envelope-To: regressions@lists.linux.dev
-DKIM-Signature: a=rsa-sha256; bh=ZjugNn5Vq03eTTWqVLQlz6kQYnIMpwR3Qn5/6vVZObc=;
- c=simple/simple; d=justthetip.ca;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1787102316; v=1; x=1787707116;
- b=XZ5x1p3a6mVYzy2UuX2oYCLZRKPJYNNnx+MonCJ9FLXSApIrE+cOk6gjIIFeiXGJ/QtxWClz
- 30dtyTU1UolLN9Jg3H7+Q+q1peGCkIYrj4Be3qTSY++ViazKT00epHa5ek0KDgUtOi93fP8z6r5
- buGBwCBsFcnkYaewlK/hmkfgkbcrzvqQWbBipsKTlKSTcVCo5oveJyjSvgL4D8QD0dBPGp77Is9
- LtdfXM8zuJUdHmqXT0c1MX0DdylwQNQav/NtOHuD5IHGBWk5w6LzQf40Zrn9DaiLuiirT0KdIlK
- hFTLF4W60xdmEvtLPSiXW/GWcoGB7gBpdSI43x4Nk4r+g==
-X-Envelope-To: regressions@lists.linux.dev
-Received: from fedora (2001:569:be59:c500:b340:3f2c:4486:21c1)
-	by smtp.migadu.com with ESMTPS id cd7e0096429ff81b;
-	Wed, 19 Aug 2026 01:18:26 +0000
-X-Migadu-Flow: FLOW_OUT
-From: Devin Wittmayer <lucid_duck@justthetip.ca>
-To: Jonas Hort <jonas.hort@posteo.de>,
-	Thorsten Leemhuis <regressions@leemhuis.info>,
-	regressions@lists.linux.dev
-Cc: linux-wireless@vger.kernel.org,
-	Felix Fietkau <nbd@nbd.name>,
-	lorenzo.bianconi83@gmail.com
-Subject: Re: [REGRESSION] mt7925: MLO connectivity silently stalls with 6GHz link active
-Date: Tue, 18 Aug 2026 18:18:24 -0700
-Message-ID: <20260819011824.40539-1-lucid_duck@justthetip.ca>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <a3d6db95-7db8-4fa4-808f-46ed43d183ff@posteo.de>
-References: <066b30cc-a9e6-4aeb-964d-71551e8ea3ef@posteo.de> <d8e493ef-90ff-4364-ad4e-1709fae97005@leemhuis.info> <20260816204805.46779-1-lucid_duck@justthetip.ca> <b83a5708-b5f4-48e9-85a5-37b3ab34af46@posteo.de> <a3d6db95-7db8-4fa4-808f-46ed43d183ff@posteo.de>
+	dkim=pass (2048-bit key) header.d=kernelci.org header.i=@kernelci.org header.b="UlGxBpUC"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-38e42560ebcso616450a91.1
+        for <regressions@lists.linux.dev>; Tue, 18 Aug 2026 20:59:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci.org; s=google; t=1787111949; x=1787716749; darn=lists.linux.dev;
+        h=message-id:date:reply-to:cc:to:from:subject
+         :content-transfer-encoding:mime-version:content-type:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=oqsDMGZJvW7d1z041r7/CnQyldcN2Y5BT/KChOSGhKE=;
+        b=UlGxBpUCrfQaE0lYYjG5DahMD+o2CBYrMf8LmRYIhHzQ94K7cQu2ddeS/slUtLOv35
+         7/33nYyCZGAcGawhLvky3fRbVmWjXGdRJY+dbfDmiEgMMUo8T0kOz6fG0Ql9Fo2hVWqS
+         a67pVBjnlPSqgRxEr4wJBLhttH5FMbLd/1vzUThAfWzziORdfTbzcZGN8WvwA0+sd6WK
+         qvfBFsik28dBiizlMIw2azZmzdruFqneOC8kCvv/dHdn/k04iLzZOm4YC6WOhzxFEam2
+         xOx/fFdUzaEVzDSEXV2R4e3TtoFO5ORMoK7CSLEyQfCtQe/pWl0g2K/v9U3utEpahFdM
+         aFPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1787111949; x=1787716749;
+        h=message-id:date:reply-to:cc:to:from:subject
+         :content-transfer-encoding:mime-version:content-type:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=oqsDMGZJvW7d1z041r7/CnQyldcN2Y5BT/KChOSGhKE=;
+        b=jb+qwfVXydlrvbYL2+DDPwzZem+nDwVUdjI7OuNh/dXBOgJ30/93LrFSOnbWeto+xP
+         D62UM8vb35y9ZkGvoMNElWxBmZgNImYMh/m3Ic8OQ7BwjWXBE3ADq6RST4vtrrmPVHJQ
+         2DQcJZ4hiwRvRqbWIAHseFB7ovmQe+29O+32ItrbpTUX2grXP6mw8F81ClEAVqO4+4qT
+         YKxLsSfa9JdbtqVa12RJfLdZsYVGkgHCFlVi7DX7chIwya6KjHBHXfPSC40CVj1QLSbJ
+         czNutiHOdTON0GF/iaR/LHetkH9ZOWwdkoYLUC5AUNjUUqKXYipuq7eG9+3JO0GkyxYN
+         tjAA==
+X-Gm-Message-State: AOJu0YwukkYEcMHOwHDyO5jahPyGFhMMCLcy+ZCMOaEtanD/CgwSktwX
+	BhP8XlUJaIW8HMVokGB1PCGNdfOToUDghwlf/WY/2VmZ19IzsvEr1MlueEG2VpRvjX0=
+X-Gm-Gg: AR+sD13u19jfnSNddSriPMazONSFrQySfQ1vVZnyITkPWktZdziO0jwL+qiVUyM6q9t
+	bJ3lSFizB+I34H33bY5k2UsTh/1ETMm3DKykORaCXU58OR1h3KNlLuAW8Vx4GAvMr+E2GBZq7z8
+	xBWrjweD3njuffYPjBClSZxf5+cXdvU6BfGKz7WmFdHYDc7N60px8eucd8aU2LTZUW0+k50uGXC
+	3dD754E7MzdERLTf2Nvdjc4aW76snBu2tTTFR+z2TRyaf77HD8gLcsHJAJpNj2x94WjN4W3vsTU
+	HE9P+swm2ShlMA0/FyHSssjOMOmQomQnmkd8HnVntcl9r4zs5S3chkICwHg+KdZWktrVx+PgLZv
+	xV6ihhUod/uGqFHRzUzgC0+TMI3SdPrtjF6PYLsuhRy6TWvuBdFOzoFc2YxkS/XCnx3RUh7pvWT
+	ITU8vGnzXb9nBUQ4CCWdoT7Kxk/HHDBWbLwol2lg8Bep3dD0ztS0w/
+X-Received: by 2002:a17:90b:3fc6:b0:36b:77b9:5c8c with SMTP id 98e67ed59e1d1-395814decabmr3186500a91.17.1787111949430;
+        Tue, 18 Aug 2026 20:59:09 -0700 (PDT)
+Received: from 7760ef875cbf ([20.38.40.137])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-327bef7a0easm2210673eec.12.2026.08.18.20.59.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Aug 2026 20:59:08 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+Subject: [REGRESSION] mainline/master: (build) in
+ arch/x86/include/generated/asm/cpufeaturemasks.h (/tmp/kci/linu...
+From: KernelCI bot <bot@kernelci.org>
+To: kernelci-results@groups.io
+Cc: regressions@lists.linux.dev, laura.nao@collabora.com,
+ shreeya.patel@collabora.com, broonie@kernel.org
+Reply-To: kernelci@lists.linux.dev
+Date: Wed, 19 Aug 2026 03:59:08 -0000
+Message-ID: <178711194407.380.4108589457572337694@kernelci.org>
 
-Thank you very much, that answers both things.
+New build issue found on mainline/master:
 
-The ROC tracing is the more useful of the two even though it came back
-negative. Two of the three freezes have no ROC activity in them at all, so a
-link switch that never finished cannot be what starts this. The middle one
-does have rocabort, mloroc and rocwork in it, but one out of three makes
-that look like the exception rather than the pattern. So the area I sent you
-looking at is out, and that is worth knowing before you spend nights on
-builds.
+---
+ in arch/x86/include/generated/asm/cpufeaturemasks.h (/tmp/kci/linux/arch/x86/Makefile:269) [logspec:kbuild,kbuild.other]
+---
 
-One other thing worth saying first. There is a five patch mt76 series on the
-list at the moment and two of the patches look like they were written for
-exactly this bug. I do not think they were, and it is your own numbers that
-show it. The failure 4/5 fixes stops mt76_txq_schedule_list from servicing
-the queue, and the one 5/5 fixes stops mt76_txq_send_burst once the non-AQL
-count reaches its cap. Both of those keep frames from ever reaching the
-hardware, so if either were your problem head would be sitting still
-alongside tail. Yours does the opposite. Head climbs 390 to 408 while tail
-stays at 260, so the frames are getting into the ring and nothing is
-finishing them, which is the far end of the same path. 2/5 is a use after
-free when an interface goes away, so it does not fit either. I would not
-expect that series to change what you see.
+Log excerpt:
+=====================================================
 
-On the bisect I would build v7.0 next. There are 32 mt7925 commits between
-7.0 and 7.1 and 19 of them are one run of work from Sean Wang, reworking how
-the driver tracks the per link mlink and WCID for an MLO station. That is
-the kind of change that fits a bug only showing up with two links up. If
-v7.0 comes back clean, that series is where I would look. If v7.0 is already
-broken then it is off the hook and 6.19 becomes the next split. The mt76
-core and mac80211 both moved in the same window, so mt7925 is where I would
-look first rather than the only place worth looking.
+=====================================================
 
-Devin
+When fixing this issue, please attribute this report according to the
+patch submission rules:
 
-Am 17.08.26 um 23:34 schrieb Jonas Hort:
+Reported-by: kernelci.org bot <bot@kernelci.org>
+Link: https://lore.kernel.org/all/178711194407.380.4108589457572337694@kernelci.org/
 
-> Quick follow-up: managed to confirm 6.18 as a clean baseline on my
-> own hardware now (not just secondhand from others in the forum
-> thread) - running Linux 6.18.42-1-cachyos-lts with MLO active
-> (5GHz+6GHz, same FritzBox 5690 Pro) for 3 hours straight, no freeze
-> at all.
+For complete logs and details about the environment used, see the issue
+on the KernelCI dashboard:
 
-Am 17.08.26 um 16:25 schrieb Jonas Hort:
+- dashboard: https://d.kernelci.org/i/maestro:e019eff33641f280144d13719cbbf59eb379327c
+- giturl: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+- commit HEAD:  5808ac188949d7b49ed9e51f1ffcd096cac57006
 
-> One correction to how I described this earlier: the connection does
-> NOT reliably self-heal on its own. I have manually intervened every
-> single time to restore connectivity [...]
->
-> Update on the ROC tracing: three real freezes captured now with the
-> kprobes active (all confirmed via the WFDMA0 tail-frozen signature).
->
-> - Freeze #1 (15:37): no ROC activity in the trace.
-> - Freeze #2 (15:43): [...] The trace shows several ROC events
->   (rocabort, mloroc, rocwork) clustered together.
-> - Freeze #3 (16:15): no ROC activity again.
->
-> Uploaded all three logs to the bugzilla ticket if useful:
-> https://bugzilla.kernel.org/show_bug.cgi?id=221884
+# Builds where the incident occurred:
+
+## x86_64_defconfig+allnoconfig on (x86_64):
+- compiler: clang-21
+- config: None
+- dashboard: https://d.kernelci.org/build/maestro:6a851ade62f33761c0e17986
+
+#regzbot introduced: b126f6f5940f614cc06bba61c77dec2d75e8ceaf..5808ac188949d7b49ed9e51f1ffcd096cac57006
+#regzbot link: https://d.kernelci.org/i/maestro:e019eff33641f280144d13719cbbf59eb379327c
+
+#kernelci issue maestro:e019eff33641f280144d13719cbbf59eb379327c
+
+--
+This is an experimental report format. Please send feedback in!
+Talk to us at kernelci@lists.linux.dev
+
+Made with love by the KernelCI team - https://kernelci.org
