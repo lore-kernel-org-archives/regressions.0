@@ -1,120 +1,119 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.162])
+Received: from twmbx01.aspeedtech.com (mail.aspeedtech.com [211.20.114.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6D6721CC59;
-	Thu, 20 Aug 2026 04:00:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.162
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62B1B3E16A5
+	for <regressions@lists.linux.dev>; Thu, 20 Aug 2026 09:10:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.20.114.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787198452; cv=none; b=otZzbtNvyj6tw3VXgYc7DQN9kaxnqJDyak8b2sgs28J0ADk8lqPzAvW8eLz1hb4u9pbLfEWylmlyyidMBgCA+OctTLhEETjjHK/lpkfNvLeCr8iUi5f3s1VU2AXEQlppxobi8lX8vpFO6+YzJbI3ysT11umMnQpr97ov2hZuC9U=
+	t=1787217061; cv=none; b=WaDl3fAKl93D3G5FV8W5vK0G5ilEtv3Gzlb7SpRF2Dd+ftnOAmMyjE0f1KD8wXuiuxvBCyg3kofDG0+35Wf14wLAuCflIruBu9ZrEAOHjefeTiyYJCaB6hrH+xeWCGykM2oeznkL/1JCIXHeuvtq0H3zJZJ+tkPOoMKhK/Dr07E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787198452; c=relaxed/simple;
-	bh=CliyQUCro3WWMX9aKG/knb2BvJolkyg7neVJ69vctWg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uABpP7mOEvtfYM3Cp2nZu32MdRNML1GGADdrmao2Jiq2XM3Dj5KGNQaROusrI+eczTEVHe7E1UYBTk9eBqJCjRMeQI/glzMseSlNlaGQKSwlK3/ptvGAfXf4dcm5q85gcNkrKPl0r6CT+/tuDGuc1HoZdUH2lcS3zXREQmXWFLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=YM87030T; arc=none smtp.client-ip=188.68.63.162
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="YM87030T"
-Received: from mors-relay-8201.netcup.net (localhost [127.0.0.1])
-	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4hQV6x4pFbz3yZD;
-	Thu, 20 Aug 2026 05:59:05 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1787198345;
-	bh=CliyQUCro3WWMX9aKG/knb2BvJolkyg7neVJ69vctWg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=YM87030Tj0xV2jPaqMrp32mukVHFS/5AuzJEUZzXxAviMbj7jyK9EhabN6Gwh/rWB
-	 UZ8iot9HRbQ3O0iFB4TupBPEu0QMtuCNfNkJ8sPUDDGQUlQD8BrAWP99cZj8AiaXV4
-	 +CnG60lRxPOmd6Li1w3rrQjUOHRkzg43m9j3ygUg/IjKUMTig+RR/6BN9bBL6mAipu
-	 SCk4P8ct11WLBhUqGBhLMJjidTTPCLXSV5q+sPN8eB+dWNu6o5lCfZPTMf6L72EUsn
-	 OrFkqDaM1LHNcYfeZJhxMKLb7E0g2JKjl+zSUrsqUBoO+Nc4Px0K1Hjo6sQtwszgFN
-	 /gZA7Gk3MRvng==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4hQV6x2LSKz3yYM;
-	Thu, 20 Aug 2026 05:59:05 +0200 (CEST)
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4hQV6w4KFGz8svG;
-	Thu, 20 Aug 2026 05:59:04 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id ABC785F8E8;
-	Thu, 20 Aug 2026 05:58:59 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <040a9b66-c299-4e57-8250-14480e298e60@leemhuis.info>
-Date: Thu, 20 Aug 2026 05:58:58 +0200
+	s=arc-20240116; t=1787217061; c=relaxed/simple;
+	bh=bsLUJo8tZ9kswRSt3+A2R0WwMb/iNELnEFrWhHSZpbo=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=ht0HVjfI/KW7iPfNhUsP/4MvDJwCwA9cVomOZ0k+XpvCsYzY2+MgKCNeKbo3cEGGqkvHge5XuqcRxxYW5l5L/eX5iZxgWX2/enjgjtvtaCnqXfMcvu8JkMi92pxAqPbtb70L8P+XjvBxnT36kMi2jpwBqJQLX4ZQCerYDVfGpy8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; arc=none smtp.client-ip=211.20.114.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
+Received: from TWMBX01.aspeed.com (192.168.0.62) by TWMBX01.aspeed.com
+ (192.168.0.62) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Thu, 20 Aug
+ 2026 17:10:48 +0800
+Received: from [127.0.1.1] (192.168.10.13) by TWMBX01.aspeed.com
+ (192.168.0.62) with Microsoft SMTP Server id 15.2.1748.10 via Frontend
+ Transport; Thu, 20 Aug 2026 17:10:48 +0800
+From: Ryan Chen <ryan_chen@aspeedtech.com>
+Date: Thu, 20 Aug 2026 17:10:48 +0800
+Subject: [PATCH] ARM: Restore get_cycles() return value
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] mainline/master: (build) in
- arch/arm/kernel/entry-common.o (/tmp/kci/linux/scripts/Makefile...
-To: Nathan Chancellor <nathan@kernel.org>, Ard Biesheuvel <ardb@kernel.org>
-Cc: Nick Desaulniers <ndesaulniers@google.com>, regressions@lists.linux.dev,
- laura.nao@collabora.com, shreeya.patel@collabora.com,
- Mark Brown <broonie@kernel.org>, kernelci-results@groups.io,
- kernelci@lists.linux.dev, Arnd Bergmann <arnd@arndb.de>
-References: <178701474442.5156.12765087253678603047@kernelci.org>
- <c9ba4aeb-a288-4597-b13a-9da55666f96a@leemhuis.info>
- <CAKwvOdkcCnhM-395QVriu3hnjmtX1H-3i_1tU5Jpb1Ybr2Q77g@mail.gmail.com>
- <20260818165116.GA1335107@ax162> <20260818175209.GA1675024@ax162>
- <e5c6c56c-b0e2-4950-996a-4f9321a1a57a@app.fastmail.com>
- <20260820000900.GA3034882@ax162>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <20260820000900.GA3034882@ax162>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <178719834013.1949881.2449875283920977510@mxe9fb.netcup.net>
-X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: ABC785F8E8
-X-NC-CID: uvFPIFAHKl7P9wkqPg6T1YNeAdbkhcFdT7pgHAKn5cx37pmUNYg=
+Message-ID: <20260820-b4-arm-get-cycles-v1-1-33d0ee0cf141@aspeedtech.com>
+X-B4-Tracking: v=1; b=H4sIAJfEhmoC/x3MSQqAMAxA0atI1gZqCU5XERc1Rg040Yoo4t0tL
+ t/i/weCeJUAdfKAl1ODbmtElibAk1tHQe2jwRqbm9Ia7AidX3CUA/nmWQJSQUSV65ldBrHbvQx
+ 6/c+mfd8PYAQ7eGMAAAA=
+X-Change-ID: 20260820-b4-arm-get-cycles-474449adcca1
+To: Thomas Gleixner <tglx@kernel.org>, Russell King <linux@armlinux.org.uk>
+CC: <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<regressions@lists.linux.dev>, Ryan Chen <ryan_chen@aspeedtech.com>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1787217048; l=2783;
+ i=ryan_chen@aspeedtech.com; s=20251126; h=from:subject:message-id;
+ bh=bsLUJo8tZ9kswRSt3+A2R0WwMb/iNELnEFrWhHSZpbo=;
+ b=ga5xC3OrG6ZPzsdK4lBV9ivlT3Yw4eE4YCT9KWENgRO9js7lUrHJx1SUuwb4f6O7v75v9tT1m
+ LzE7FpwFXfqDMDAQ7Iq0fiUlClNqNS+V52m4MbjnPtIn0tcrDVs/tC6
+X-Developer-Key: i=ryan_chen@aspeedtech.com; a=ed25519;
+ pk=Xe73xY6tcnkuRjjbVAB/oU30KdB3FvG4nuJuILj7ZVc=
 
-On 8/20/26 02:09, Nathan Chancellor wrote:
-> On Wed, Aug 19, 2026 at 11:08:39AM +0300, Ard Biesheuvel wrote:
->> We're falling back to the mov_l asm macro in this case.
->>
->> This is unfortunate, because the only reason to avoid these group
->> relocations is making allyesconfig work, now that LLD has caught up.
->>
->> I did not manage to reproduce this, but if this is something we care
->> deeply about, we might tweak mov_l as below when COMPILE_TEST is set,
->> so that the literal pool is always in range.
-> 
-> I am not sure that we do, at least currently, since Arnd's patch to turn
-> off OABI compat for everything but StrongARM has now landed in mainline,
-> getting rid of the originally reported error.
+read_current_timer() returned 0 on success, so the get_cycles() ternary
+yielded the cycle count on success and 0 on failure. delay_read_timer()
+returns true on success, but the ternary was left alone, so get_cycles()
+now yields 0 on success and an uninitialised variable on failure.
 
-Grea. Nathan, Ard, many thx for looking into this!
+Swap the arms of the ternary to restore the original meaning.
 
-> If this error comes back, we could look at a better fix.
+Fixes: dfc256dac54c ("calibrate: Rework delay timer calibration")
+Signed-off-by: Ryan Chen <ryan_chen@aspeedtech.com>
+---
+Found by bisecting a boot failure on an Aspeed AST2600 EVB (ARMv7):
 
-+1 -- not sure, but even that might only be worth it if more than just
-one CI runs into the problem in a particular test case.
+  3ed403bbc967 ("treewide: Remove CLOCK_TICK_RATE")       boots
+  030c9f813b8e (Merge tag 'timers-cleanups-2026-08-17')   hangs
 
-Ciao, Thorsten
->> --- a/arch/arm/include/asm/assembler.h
->> +++ b/arch/arm/include/asm/assembler.h
->> @@ -636,6 +636,12 @@
->>         .macro          mov_l, dst:req, imm:req, cond
->>         .if             __LINUX_ARM_ARCH__ < 7
->>         ldr\cond        \dst, =\imm
->> +#ifdef CONFIG_COMPILE_TEST
->> +       /* The literal may go out of range in pathological cases */
->> +       b               .L\@
->> +       .ltorg
->> +.L\@:
->> +#endif
->>         .else
->>         movw\cond       \dst, #:lower16:\imm
->>         movt\cond       \dst, #:upper16:\imm
-> 
+dfc256dac54c is the only commit between the two that touches ARM. With
+earlycon enabled the output stops at:
 
-#regzbot resolve: commit 25900bd99d4d avoids this error by disabling
-CONFIG_OABI_COMPAT for allmodconfig
+  Serial: 8250/16550 driver, 6 ports, IRQ sharing enabled
+  printk: legacy console [ttyS4] disabled
+
+where a working kernel continues with:
+
+  1e784000.serial: ttyS4 at MMIO 0x1e784000 (irq = 33, ...) is a 16550A
+  printk: legacy console [ttyS4] enabled
+  printk: legacy bootconsole [uart8250] disabled
+
+The earlycon is still registered where the output stops, so this is a hang
+rather than lost output. Without earlycon there is no output at all, since
+the real console only registers at ~0.19s on this platform.
+
+With this patch applied the AST2600 EVB boots to userspace again, and the
+8250 registration completes as it did before dfc256dac54c:
+
+  Serial: 8250/16550 driver, 6 ports, IRQ sharing enabled
+  printk: legacy console [ttyS4] disabled
+  1e784000.serial: ttyS4 at MMIO 0x1e784000 (irq = 33, ...) is a 16550A
+  printk: legacy console [ttyS4] enabled
+
+Note that every other architecture touched by dfc256dac54c dropped its
+asm/timex.h in favour of the asm-generic one. ARM kept its copy with the
+"Temporary workaround until timex.h is cleaned up" comment, which is where
+the inversion slipped in.
+---
+ arch/arm/include/asm/timex.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/include/asm/timex.h b/arch/arm/include/asm/timex.h
+index 94e40c19cfc5..4d31eab9dba2 100644
+--- a/arch/arm/include/asm/timex.h
++++ b/arch/arm/include/asm/timex.h
+@@ -13,7 +13,7 @@ typedef unsigned long cycles_t;
+ // Temporary workaround until timex.h is cleaned up
+ bool delay_read_timer(unsigned long *t);
+ 
+-#define get_cycles()	({ cycles_t c; delay_read_timer(&c) ? 0 : c; })
++#define get_cycles()	({ cycles_t c; delay_read_timer(&c) ? c : 0; })
+ #define random_get_entropy() (((unsigned long)get_cycles()) ?: random_get_entropy_fallback())
+ 
+ #endif
+
+---
+base-commit: bd5f485f3f026225b86573e559af0b7254ef4184
+change-id: 20260820-b4-arm-get-cycles-474449adcca1
+
+Best regards,
+-- 
+Ryan Chen <ryan_chen@aspeedtech.com>
+
