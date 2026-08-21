@@ -1,294 +1,204 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.102])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AFF443B6E0
-	for <regressions@lists.linux.dev>; Thu, 20 Aug 2026 11:48:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D99EB413794
+	for <regressions@lists.linux.dev>; Fri, 21 Aug 2026 06:36:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.102
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787226499; cv=none; b=cj4gU/uQLbu8KnmPzAGOPw8DpJCESHZ4xii0iaRXa8CJ7+S/FsKrx5phgvDqqJjAZm7cYCexUdEjejYqJymdLwe3+yAMaYW2xS/HfZvEnP6fTED32+xEu+PwRmDAa2IbdAxwHKmzszlCwQBIXkTnKiN+wouTgCJ+gaOkyaSAvL0=
+	t=1787294168; cv=none; b=Ow12IghHo+dMXxTpiahOYl1ZshmAvpMwpYNtLaIeBQ7HDFOvha+O0XpkPvmSCNpAK8roAOBcdnrQ+EPOZdiE5iD7UQDQsKZHjIzs6k0twwtjAb5YWZqPL6G5ZukKif+v3Pkbhyi/SshLjtDR177qv7uXXpkUzUBzBzYSv0jOKAQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787226499; c=relaxed/simple;
-	bh=mEeUMUtD98Xw/GmKeKfpsPPagIcFqKc11s37OIWjxHw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=A7pPTKF+iS4JzpWOgXvq6DJZhu80UtQ30TjWmHSJSyfeVcIxIskqlqO88GTb5s2H1//CzLLAy+WriB4Q3S0CWBfFzV68sw1WDMOv7Xyr0PVTTSDmrMEsggDdZVysQzZV/UAnm0300nWQ82JdC4QcBPNI+tgC89v4XRwjxoMKurY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zadarastorage.com; spf=pass smtp.mailfrom=zadarastorage.com; dkim=pass (2048-bit key) header.d=zadarastorage.com header.i=@zadarastorage.com header.b=Jycq5h6x; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zadarastorage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zadarastorage.com
+	s=arc-20240116; t=1787294168; c=relaxed/simple;
+	bh=fWzhvxr4a/sLeJPe/1v2NF5fNebBN1hiMDIf/zflUEI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YwmJdeFjCuQ+6kAoCX325alzm8Nvj3yIs9YGfQDfO0fEV/ErN2wVWKXtRzQ+noSCFxut6NXuUL6mAhiMLlUCyuUjPLARXvql5a/qoicBOqs4QWKxv57TjZ+vL+kpeN7WcxPz534/a2zQpjx8EbKwVNtOPGMk2mZF1TwECNiZ2o8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=Kv6D9hrV; arc=none smtp.client-ip=188.68.63.102
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zadarastorage.com header.i=@zadarastorage.com header.b="Jycq5h6x"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-495590dde14so24661755e9.0
-        for <regressions@lists.linux.dev>; Thu, 20 Aug 2026 04:48:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=zadarastorage.com; s=google; t=1787226496; x=1787831296; darn=lists.linux.dev;
-        h=content-language:thread-index:content-transfer-encoding
-         :content-type:mime-version:message-id:organization:date:subject:cc
-         :to:from:reply-to:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=sjZ6o2B4u5+ODMneCLOWQXXYoRKfP63ZeuV0QIVzkkY=;
-        b=Jycq5h6xjp17FxTHbTlLLNSN+N4n7HW+d13SRjOlbHha8haj3klm9Af/07fYYtoAjs
-         Tt2QNvJ29nESjMWfsQ29ovbCIxUuJ8vbju5aTSePiHA1fXV2hE0JpLljfVtrQcY/tRTq
-         kZmfZJFqEIaff9vDO+sMB5oBC+S9nXOYKjRi6jinKr8StyD2XjhF1nGJo1yndcvh1keN
-         kdhhJA1VtZhiiVUe6KMGB9CO+0DgGtJ1YXepa45ZVa4UyFwViESOkexdJgdrSJRVchxX
-         xLWten0EslA8kfMh5MRoUX99+TafSxFKRxCE1hcy1W3CKqg48aEIW5VWmlnC7CIRyFIu
-         2HvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787226496; x=1787831296;
-        h=content-language:thread-index:content-transfer-encoding
-         :content-type:mime-version:message-id:organization:date:subject:cc
-         :to:from:reply-to:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=sjZ6o2B4u5+ODMneCLOWQXXYoRKfP63ZeuV0QIVzkkY=;
-        b=Q3WN6fhiyX4uC+Graby3ONa/BxcZPwgoBGHYAN5VVSko5yK3dyLXJBpbIk3C5NTEyy
-         KJNEn+iMUQLZEMehGjdfaZnLT52wGSDBSvOKXeq3D2tde6WxL6ldJt1zZNm937/WT3wD
-         xGnllyf/XvepCz3L5FIMJh5shpEOHNaGszCIJ3KE2p/gyRqsHPyVPj38ycYa2BHzWo4f
-         NJDPr062t3RJJLxM1JehpZMgbuKPrDVSgtlXxIpOXpnAyYDfH6R/JScer22vccEqtHr1
-         pkFoo0AL8bC+b0d9+cMmx+zcJlxla3R4arbE8OB8fXu9I98b5dIBxJdgEiYuWa3YNuV2
-         Kdqg==
-X-Forwarded-Encrypted: i=1; AHgh+Rr4+SYVAtKtUx5726o7P8MgiWa9st2zSy3Zfm34EjK4X1Q6MDM7McIrEjncI3OLJ5UEo3n0p9rLCXlnZg==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yz+3Q+Wc63oh4r60PHAOe+HGkXl4JXnjsQKAaIdBgeoqgVxaW5w
-	jZpZnUfGVa5RwYMRNzb1AZHeytDW1IuNR24Cx/s3Rg+gZ2lfNcBhMIYis/Gd4mY4280=
-X-Gm-Gg: AR+sD13BX7cOD3NeYiHmQPKpK3JiNhD8RNJJLpBmjih5kMfx6yUeiO2U+wKXiR5yKSC
-	SLZeNLJxJ6mLelhz30SSZUbIP8rCXAl/T7CSnYtgvPgZc9W7V/VAK+qUVEla8DLTetC4IAjINlb
-	VVXGql4LrI/hA+rmC0spFgdBir+fuligkf/0EtOiTffDpsdNufDeJtDvyL7sj7+HesYb28N3CkJ
-	IcaUNSLJTu1VbhcJRDALu4LJTG3o8yT1cqcNDFYCEp6XcOAKUsc91RltPDBwWgP4bfTxh/N3V6Y
-	3TdJqcHesTXw//ZOzUJkw7/Gvy0BOPbtQijFbWHx4QeJeujkFocboZs/vcMfAj3UVLQmpidD34x
-	57rVxK4CvWGmV5/j6aXsgGeL8wmNSvR15Sb+8X/FrxfoWsdecBAeC9dsMKvu284Pp4qsZbNKBKT
-	wVvzC7c5j2XadJ8wM4qmUC1EAQPNfZO+K932U9iMAunUMBFtVl5s/2/G0Pu0/BHfLmE5g=
-X-Received: by 2002:a05:600c:c167:b0:495:4d00:2fda with SMTP id 5b1f17b1804b1-499aa143546mr227118585e9.2.1787226495784;
-        Thu, 20 Aug 2026 04:48:15 -0700 (PDT)
-Received: from levpc4 ([82.166.81.77])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-499aa0d6721sm181074585e9.11.2026.08.20.04.48.13
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 20 Aug 2026 04:48:14 -0700 (PDT)
-Reply-To: <lev.vainblat@zadara.com>
-From: <lev@zadarastorage.com>
-To: <linux-block@vger.kernel.org>
-Cc: "'Jens Axboe'" <axboe@kernel.dk>,
-	<linux-kernel@vger.kernel.org>,
-	<regressions@lists.linux.dev>,
-	"'Ming Lei'" <tom.leiming@gmail.com>,
-	"'Yu Kuai'" <yukuai@fygo.io>,
-	"'Keith Busch'" <kbusch@kernel.org>,
-	<linux-nvme@lists.infradead.org>
-Subject: [REGRESSION] blk-mq: hctx loses BLK_MQ_F_TAG_QUEUE_SHARED across blk_mq_update_nr_hw_queues()
-Date: Thu, 20 Aug 2026 14:48:10 +0300
-Organization: Zadara
-Message-ID: <00cb01dd3099$c82b66c0$58823440$@zadarastorage.com>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="Kv6D9hrV"
+Received: from mors-relay-2502.netcup.net (localhost [127.0.0.1])
+	by mors-relay-2502.netcup.net (Postfix) with ESMTPS id 4hR9Wz1T2Wz69S2;
+	Fri, 21 Aug 2026 08:34:39 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1787294079;
+	bh=fWzhvxr4a/sLeJPe/1v2NF5fNebBN1hiMDIf/zflUEI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Kv6D9hrVcE3tlzweEpaFeqbL12Wunuz7tbgpAiOGwkkpguPK3N6sioxGtcdEQWd40
+	 B4ofRsI6L/U8vXmHbyoqfY8Z81YThU+CDMslPhFs+UJn+xGYbz+Saiz0osxpGRoZZ9
+	 40XBfZ7FSehAGA5+8KASM/+9jW6cQGUy7muhgTV1eKA4alMPEJ9tRjyuNy8gMkPO6A
+	 OpikIkqiQcKNkMKllvqYnBLBkZYfvZ9kqMB0JeuHM2hDeCde6wfTz9QAUFzU3n67AG
+	 IOoJRe9RM1P4icGUKh/885jgANtqszshPnR8i1E0VI9w42eEWxAUhpNdITLsOzONjB
+	 ElOBd6VNT5OHQ==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-2502.netcup.net (Postfix) with ESMTPS id 4hR9VV6CK4z4yWc;
+	Fri, 21 Aug 2026 08:33:22 +0200 (CEST)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4hR9VT3rfvz8sch;
+	Fri, 21 Aug 2026 08:33:21 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 7B9D35F9C0;
+	Fri, 21 Aug 2026 08:33:20 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <943d1db3-f117-4e9c-94db-7221b47d9d29@leemhuis.info>
+Date: Fri, 21 Aug 2026 08:33:19 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain;
-	charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] qcom PAS TZ API migration breaks GPU and modem on
+ TrustZone without PAS (sc7180 trogdor)
+To: Konrad Dybcio <konradybcio@gmail.com>,
+ Paul Hollinsky <phollinsky@holtechnik.com>, sumit.garg@oss.qualcomm.com,
+ andersson@kernel.org
+Cc: mathieu.poirier@linaro.org, robin.clark@oss.qualcomm.com,
+ lumag@kernel.org, abhinav.kumar@linux.dev, akhilpo@oss.qualcomm.com,
+ konradybcio@kernel.org, mukesh.ojha@oss.qualcomm.com,
+ cros-qcom-dts-watchers@chromium.org, linux-arm-msm@vger.kernel.org,
+ linux-remoteproc@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ regressions@lists.linux.dev
+References: <20260808034716.58888-1-phollinsky@holtechnik.com>
+ <b63e93e4-2f4c-4cad-b726-e1b0565379d7@gmail.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <b63e93e4-2f4c-4cad-b726-e1b0565379d7@gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: Ad0v5ziZbJoftdS9SsWisTfxJtxmzQ==
-Content-Language: en-il
+X-PPP-Message-ID: <178729400123.2293361.5180616562923228567@mxe9fb.netcup.net>
+X-NC-CID: mdasp+gq17ABdqs7sDaa4dURyEqNXzgIFUK85nSdbZpvVCs/raw=
 
-Hi,
+On 8/17/26 17:41, Konrad Dybcio wrote:
+> On 8/8/26 5:47 AM, Paul Hollinsky wrote:
+>> Two commits from the "firmware: qcom: Add OP-TEE PAS service support"
+>> series break the GPU and the modem on SC7180 Chromebooks (trogdor):
+>>
+>>   f3b1357673dd ("remoteproc: qcom_q6v5_mss: Switch to generic PAS TZ APIs")
+>>   0be72be03ca7 ("drm/msm: Switch to generic PAS TZ APIs")
+>>
+>> Both are in linux-next as of next-20260805 and neither is in a released
+>> kernel yet, so there is still time to fix this before v7.3.
+> 
+> First of all, thank you for the amazingly thorough write-up. I've been on
+> holiday so I couldn't look into it quicker.
+> 
+> [...]
+> 
+>> Suggested fix, drm/msm
+>> ======================
+>>
+>> Given the above, I think the right fix is to move the availability check
+>> behind the DT discovery rather than restore the SCM check. Boards with no
+>> zap-shader node then never consult PAS at all, and boards that do have one
+>> keep the qcom_pas_is_available() gate the original patch was going for:
+>>
+>> --- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+>> +++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+>> @@ -52,6 +52,12 @@
+>>  		return -ENODEV;
+>>  	}
+>>  
+>> +	/* We need PAS to be able to load the firmware */
+>> +	if (!qcom_pas_is_available()) {
+>> +		DRM_DEV_ERROR(dev, "PAS is not available\n");
+>> +		return -EPROBE_DEFER;
+>> +	}
+>> +
+>>  	ret = of_reserved_mem_region_to_resource(np, 0, &r);
+>>  	if (ret) {
+>>  		zap_available = false;
+>> @@ -170,18 +176,11 @@
+>>  int adreno_zap_shader_load(struct msm_gpu *gpu, u32 pasid)
+>>  {
+>>  	struct adreno_gpu *adreno_gpu = to_adreno_gpu(gpu);
+>> -	struct platform_device *pdev = gpu->pdev;
+>>  
+>>  	/* Short cut if we determine the zap shader isn't available/needed */
+>>  	if (!zap_available)
+>>  		return -ENODEV;
+>>  
+>> -	/* We need PAS to be able to load the firmware */
+>> -	if (!qcom_pas_is_available()) {
+>> -		DRM_DEV_ERROR(&pdev->dev, "PAS is not available\n");
+>> -		return -EPROBE_DEFER;
+>> -	}
+>> -
+>>  	return zap_shader_load_mdt(gpu, adreno_gpu->info->zapfw, pasid);
+>>  }
+> 
+> I believe this is the right fix
 
-After blk_mq_update_nr_hw_queues(), every hctx on the tag set can end
-up with BLK_MQ_F_TAG_QUEUE_SHARED cleared while set->flags still has
-it (it alternates - see below).
+Just wondering: who will submit the proper fix to ideally fix this
+before the culprit hits mainline (as Linus afaik does not like it much
+if changes that are know to cause regressions in -next enter his tree)
+-- or at least before -rc1 is out?
 
-blk_mq_alloc_hctx() deliberately masks the bit off:
+The culprit afaics was authored by Sumit Garg, whose last msg on Lore is
+from 260731 -- which indicates a well deserved vacation or something
+like that, so waiting for Sumit to act might take too long.
 
-  hctx->flags = set->flags & ~BLK_MQ_F_TAG_QUEUE_SHARED;
-
-which is right at initial queue creation, because the queue is not yet
-on set->tag_list and blk_mq_add_queue_tag_set() applies the bit
-immediately afterwards. But __blk_mq_realloc_hw_ctxs() exits and
-re-inits every hctx even when nr_hw_queues is unchanged, and
-__blk_mq_update_nr_hw_queues() does that for every queue on the tag
-set without re-applying the bit. On that path the queue is already on
-set->tag_list, so nothing calls queue_set_hctx_shared().
-
-The strip alternates, which is likely why this has gone unnoticed.
-blk_mq_init_hctx() never assigns hctx->flags, blk_mq_exit_hctx()
-pushes the old hctx to the head of q->unused_hctx_list, and
-blk_mq_remove_hw_queues_cpuhp() runs only after every queue on the tag
-set has been realloc'd. So the just-exited hctx is refused by
-blk_mq_hctx_is_reusable() - still cpuhp hashed - while the hctx exited
-during the *previous* update has since been unhashed and is reused
-carrying its stale flags:
-
-  after 0 resets: alloc_policy=FIFO SHOULD_MERGE|TAG_QUEUE_SHARED|BLOCKING
-  after 1 reset:  alloc_policy=FIFO SHOULD_MERGE|BLOCKING
-  after 2 resets: alloc_policy=FIFO SHOULD_MERGE|TAG_QUEUE_SHARED|BLOCKING
-
-Within one update it is uniform: every hctx of every queue on the tag
-set goes the same way, with no partial mix.
-
-One namespace is enough for the tag set to be shared, since
-nvme_alloc_io_tag_set() puts ctrl->connect_q on the same tag set for
-fabrics, so the set is shared from the first connect.
-nvme_tcp_configure_io_queues() and nvme_rdma_configure_io_queues() reach
-blk_mq_update_nr_hw_queues() unconditionally on the !new path, so every
-reconnect and every controller reset does it. nvme_fc_recreate_io_queues()
-only calls it when the queue count actually changes across reconnect
-(prior_ioq_cnt != nr_io_queues); nvme-pci calls it unconditionally on
-reset.
-
-__blk_mq_update_nr_hw_queues() does return early when the queue count
-is unchanged and set->nr_maps == 1, which might look like it should
-cover a same-count reset - but tcp and rdma pass nr_maps = 2 (or
-HCTX_MAX_TYPES with poll queues), so that early return never triggers
-for them. It does apply to fc, which passes nr_maps = 1 and is
-filtered twice: once by its own prior_ioq_cnt check, once by this.
-
-This is directly observable with no I/O scheduler and no load at all:
-
-  # sized small for the stall reproducer below
-  nvme connect -t tcp -a $ADDR -s $PORT -n $NQN \
-       --nr-io-queues=1 --queue-size=16
-
-  grep -H . /sys/kernel/debug/block/nvme0n1/hctx0/flags
-  # alloc_policy=FIFO SHOULD_MERGE|TAG_QUEUE_SHARED|BLOCKING
-
-  echo 1 > /sys/class/nvme/nvme0/reset_controller
-  grep -H . /sys/kernel/debug/block/nvme0n1/hctx0/flags
-  # alloc_policy=FIFO SHOULD_MERGE|BLOCKING   <- TAG_QUEUE_SHARED gone
-  # set->flags still has it (retry the reset if not - see the
-  # alternation above)
-
-The general impact, independent of any I/O scheduler: hctx_may_queue()
-opens with
-
-  if (!hctx || !(hctx->flags & BLK_MQ_F_TAG_QUEUE_SHARED))
-    return true;
-
-so an affected hctx skips the fair-share depth division entirely and can
-draw more than its share of the shared pool, starving sibling namespaces
-of driver tags. This is not scheduler-specific: with no elevator,
-__blk_mq_get_tag() applies hctx_may_queue() to every unreserved allocation
-at request-allocation time, and with one attached,
-__blk_mq_alloc_driver_tag() applies it when dispatch takes the driver tag.
-Either way the stripped bit skips the check. Separately, blk_mq_tag_busy()
-and blk_mq_inc_active_requests() are also gated on the same bit and become
-no-ops, so tags->active_queues and hctx->nr_active read 0 regardless of
-load - the exact diagnostic an operator would reach for to see the
-contention above is blind. Both of these apply on every affected system,
-with or without a scheduler, and with or without a request ever getting
-stuck.
-
-This is separate from the in-flight work to drop shared-tag fairness
-throttling entirely - that would remove hctx_may_queue()'s fair share and
-the active_queues symptom by design, but the flag itself would still be
-mistracked, and the hang described below gates on the same bit through
-code the fairness removal does not touch.
-
-Presumably the fix is to re-apply the bit per queue after the realloc
-loop. Dropping the mask in blk_mq_alloc_hctx() instead would not fix
-this: the reuse path never goes through blk_mq_alloc_hctx() at all, so
-a reused hctx keeps whatever flags it had in its previous life either
-way, which is the actual bug (see the alternation above). I have not
-tested a fix - I have no mainline test rig - but I can test patches on
-6.6.y, and the reproducer below turns one around in about a minute.
-
-I have not established when this started, and I do not have the resources
-to bisect it. By inspection, 85672ca9ceea ("block: avoid to reuse `hctx`
-not removed from cpuhp callback list") looks like the point where it
-became reachable on the ordinary same-count reset path: before it the
-reuse test was numa_node only, so the just-exited hctx at the head of
-q->unused_hctx_list was reused and its flags carried over intact; after it
-that candidate is refused while still cpuhp hashed. I could not test a
-kernel without that commit, so please treat that as a hypothesis and not a
-bisect result. The asymmetry in blk_mq_alloc_hctx() is older than that
-commit either way, and the code path is unchanged in master as of
-d58772d8520c.
-
-I searched the linux-block archive for BLK_MQ_F_TAG_QUEUE_SHARED and
-found no existing report of this, but I may well have missed one -
-please point me at it if so.
-
-Worst case: with an I/O scheduler attached, this can hang a request
-forever, and it did in production.
-
-With the bit clear, blk_mq_mark_tag_wait() takes the non-shared branch,
-sets BLK_MQ_S_SCHED_RESTART and registers no waiter on the tag waitqueue,
-and the dispatch tail schedules no re-run because no_tag is gated on the
-same flag. The comment on that gate - "For non-shared tags, the RESTART
-check will suffice" - is precisely the invariant a wrongly-cleared bit
-breaks: the check does not suffice, because the tags really are shared.
-Recovery then rests solely on a request completing on this hctx - but the
-tags are shared, so they are freed by the sibling queues, whose
-completions restart only their own hctx. Two or more namespaces actually
-carrying I/O are needed for this part, because the tags have to be freed
-by a different queue's hctx - the flag loss above needs only the one.
-
-Reproducer. Continuing from the connection above, now with an I/O
-scheduler and load across all four namespaces on the controller.
-Reproduced on 6.6.146 and on stock Ubuntu 6.8.0-137-generic:
-
-  # with a scheduler, driver tags are acquired at dispatch time
-  for d in /sys/block/nvme0n*; do
-      echo mq-deadline > $d/queue/scheduler
-  done
-
-  # confirm the flag is gone on every namespace, not just n1
-  grep -H . /sys/kernel/debug/block/nvme0n*/hctx0/flags
-  # alloc_policy=FIFO SHOULD_MERGE|BLOCKING   <- TAG_QUEUE_SHARED gone
-
-  # moderate load now stalls the whole controller within a second
-  fio --name=hammer --ioengine=libaio --direct=1 --rw=randread --bs=4k \
-      --iodepth=64 --numjobs=8 \
-      --filename=/dev/nvme0n1 --filename=/dev/nvme0n2 \
-      --filename=/dev/nvme0n3 --filename=/dev/nvme0n4
-
-All I/O stops permanently. Every fio task:
-
-  io_schedule+0x46/0x70
-  blk_mq_get_tag+0x155/0x2f0
-  __blk_mq_alloc_requests+0xc4/0x290
-  blk_mq_submit_bio+0x190/0x6b0
-  submit_bio_noacct+0x162/0x5c0
-  blkdev_direct_IO.part.0+0x40/0x90
-
-Three of the four namespaces end up with parked requests - one alone
-accumulates four. From one of the namespaces holding a single parked
-request:
-
-  hctx0/dispatch: {.op=READ, .state=idle, .tag=-1, .internal_tag=10,
-                   .rq_flags=STARTED|SCHED_TAGS|USE_SCHED|IO_STAT}
-  hctx0/state:    SCHED_RESTART
-  hctx0/flags:    alloc_policy=FIFO SHOULD_MERGE|BLOCKING
-  hctx0/tags:     nr_tags=15 nr_reserved_tags=1 active_queues=0
-                  bitmap_tags: depth=14 busy=0 cleared=14 ws_active=0
-                  ws={ all 8 .wait=inactive }
-
-The empty namespace shows the identical tags line - same shared pool -
-with no dispatch entry. All 14 non-reserved driver tags are in the
-cleared word awaiting the deferred merge, none allocated, and no
-waiter is registered anywhere.
-
-While the shared pool is still busy with the sibling queues' inflight I/O,
-every run of such an hctx - including runs triggered by later submissions
-- fails to get a driver tag, re-parks what it pulled, and parks the new
-requests behind it. Once every fio thread is blocked on scheduler tags and
-the inflight I/O has drained via the sibling queues, nothing runs the hctx
-again: the hctx has SCHED_RESTART set with no waiter registered, and
-blk_mq_sched_restart() is only called by a completion on the same hctx.
-Those parked requests, and the requests queued behind them in the
-elevator, hold the *scheduler* tags the blocked tasks are waiting for. The
-fourth namespace stays empty only because every fio thread was already
-stuck by the time it was captured.
-
-Once stalled there is no reliable way out from userspace - every
-teardown path (elevator switch, reset_controller, nvme disconnect)
-freezes the queue and waits on the same stuck request. Anyone
-reproducing this should expect to reboot sometimes. Attaching no
-scheduler beforehand prevents it (driver tags are then taken at
-request-allocation time, where waiting works correctly) but won't
-rescue an already-stalled queue.
-
-We hit this in production as a 20 minute md/raid1 hang and hung_task
-panic on nvme-rdma - same signature: sole entry on hctx->dispatch, all
-126 driver tags free, and set->flags still carrying
-BLK_MQ_F_TAG_QUEUE_SHARED while every hctx of the reconnected
-controller had lost it; a second controller on the same host that
-never reconnected retains it on every hctx.
-
-Thanks,
-Lev
+Ciao, Thorsten
+>> I have this booting here: the GPU initialises and logs "Zap shader not
+>> enabled - using SECVID_TRUST_CNTL instead", as it did before the
+>> regression.
+>>
+>>
+>> Suggested fix, remoteproc
+>> =========================
+>>
+>> Keep an SCM gate for need_mem_protection and add a separate PAS gate for
+>> need_pas_mem_setup. This is what I did to get it working:
+>>
+>> --- a/drivers/remoteproc/qcom_q6v5_mss.c
+>> +++ b/drivers/remoteproc/qcom_q6v5_mss.c
+>> @@ -2079,7 +2079,16 @@ static int q6v5_probe(struct platform_device *pdev)
+>>  	if (!desc)
+>>  		return -EINVAL;
+>>  
+>> -	if (desc->need_mem_protection && !qcom_pas_is_available())
+>> +	/*
+>> +	 * Memory protection is done through qcom_scm_assign_mem(), which needs
+>> +	 * SCM but not PAS. Only the memory setup path issues PAS calls, so
+>> +	 * requiring PAS for every need_mem_protection platform prevents the
+>> +	 * modem from probing at all on TZ firmware that offers no PAS.
+>> +	 */
+>> +	if (desc->need_mem_protection && !qcom_scm_is_available())
+>> +		return -EPROBE_DEFER;
+>> +
+>> +	if (desc->need_pas_mem_setup && !qcom_pas_is_available())
+>>  		return -EPROBE_DEFER;
+> 
+> And likewise this looks like the correct fix too, feel free to submit
+> both as patches
+> 
+> [...]
+> 
+>> On the API contract
+>> ===================
+>>
+>> For what it is worth, the kernel-doc for qcom_pas_is_available()
+>> (qcom_pas.c:256) reads:
+>>
+>>   Note that it is mandatory for any PAS client to invoke this API.
+>>   If it returns true then only any other PAS API can be invoked.
+>>
+>> That is a guard to call before invoking a PAS API, not a statement that a
+>> driver touching TZ at all should refuse to probe without PAS.
+>> ipa_main.c:764 consults it only on the loader path that genuinely needs
+>> PAS rather than as a blanket probe precondition, which is the shape both
+>> fixes above are aiming for.
+> 
+> This is a sloppiness that got through the transition patchset.. previously
+> as you mentioned, qcom_scm_is_available() was a blanket "can we talk to TZ
+> yet"?, and as the conversion happened, it was largely just find-and-replaced..
+> 
+> Konrad
+> 
 
