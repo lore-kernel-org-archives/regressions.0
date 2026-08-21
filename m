@@ -1,104 +1,133 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.61.103])
+Received: from ofcsgdbm.dwd.de (ofcsgdbm.dwd.de [141.38.3.245])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46FD03AE6F5
-	for <regressions@lists.linux.dev>; Fri, 21 Aug 2026 08:48:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.61.103
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7193E38E8A0
+	for <regressions@lists.linux.dev>; Fri, 21 Aug 2026 11:48:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.38.3.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787302127; cv=none; b=Yll9w5EPioie9c7FIKtZ9rvfVNfiu4UJIdKA9oPMnSgrLUC41hR4J6qtn5gYsmO/0ZLXWYGEjOPLhtOGapSZmVB5X+SDPthLQ5RW8okJCxb4AWVaM+dZ7X+QyKyvZ2Qc9KyarB2YL1VMWH10l2SnM1ETwv9XXMjSXYwOwJVgBj0=
+	t=1787312922; cv=none; b=O1GfIppRf0duJ8pY+4mvbbcgJP03thGdutM6Vioa7Kt7PW9pPfUbj0UJXIEVTGCJ//3MRsZMJdZ67tU7ILIQ5kIe4bF83EmrsD4WsIlTk0FIf6qPElJeT2rSqYYuMjTwQSN5QWtzQH30xcL+6xhxPIrFqpcXyOKQBJ1A111WZAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787302127; c=relaxed/simple;
-	bh=5ybZ6jSqfyHidqXWXRWzPuYG8sB+wVG/yMIK7GQJvtQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=npNM7NehyrdTqw0J9TNQamYTN2A4r1dC/VGSHwmIMuvqwAMm9LZQgyC5K0vk79dF5ueeYkmQirpjpogdYXPNvn3eQgEJO4t+eNtkuQs+G8jzJA+h4rCQdJLTUmHtbitucoH3F+ZiBguTRmB53LOaZNmnXEDWUr3WNeMbsm326yw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=WdkfniAj; arc=none smtp.client-ip=188.68.61.103
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1787312922; c=relaxed/simple;
+	bh=SQj60MD6EU/5qzxwSNp4jGqJ3d+ZzQhSprb/uF+Q8mE=;
+	h=Date:From:To:cc:Subject:Message-ID:MIME-Version:Content-Type; b=iMi/1TE3AhVK1qKPF/V06mBv/E0mrFyc4oSPXlCUDW8/0/XR46Rxr7sPZi/V0CSuSxQrn1vL1xLmgVBbaN3tlwwDh2dij3jfhQ5tKGGY1+5ejxOCYIXHndB9aC7wwqIEtR0Db6B54j1VrwftldzDoSuLaGwHHPjp/Cd1rcnhvck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dwd.de; spf=pass smtp.mailfrom=dwd.de; dkim=pass (2048-bit key) header.d=dwd.de header.i=@dwd.de header.b=M5nHD8Of; arc=none smtp.client-ip=141.38.3.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dwd.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dwd.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="WdkfniAj"
-Received: from mors-relay-8403.netcup.net (localhost [127.0.0.1])
-	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4hRDGz16QBz84Sr;
-	Fri, 21 Aug 2026 10:38:35 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1787301515;
-	bh=5ybZ6jSqfyHidqXWXRWzPuYG8sB+wVG/yMIK7GQJvtQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=WdkfniAjkD0jJeNM/ej8CrQZXO8m+zW04+Jm+0k6J75NJuzkTkJTYS+6bsnz9CHdm
-	 vAJW5m/1ZmMFQq1bxXlmx4CKq9z4Yc5gqLEd54KNWdbSZhcaWixeVX9E1mLlvKS6og
-	 3QqqQJyl6m0Hn7g9OQq9sQdtIqIz/JVC7SyQ3gj8peC0k0R9+BdHGrBwRyWy56Ux/A
-	 ngoeLMUVrIQCbY0SX+DxKTMzHmuwYDECL/Uzu52VuuqXtacn0wcIAOYlT3EET06sxJ
-	 W1ByiDZWoilptZTtsX/ErHxnhYAFFpii7V+62B95dNlJJaWRfG4ohh4M4AJadlKkw+
-	 pm0yVGjf2kjSQ==
-Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4hRDFr5X8Tz84fN;
-	Fri, 21 Aug 2026 10:37:36 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
-X-Spam-Flag: NO
-X-Spam-Score: -2.901
-X-Spam-Level: 
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4hRDFm4nRcz8t3w;
-	Fri, 21 Aug 2026 10:37:32 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 8DA045FA31;
-	Fri, 21 Aug 2026 10:37:31 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <6638b89c-b0af-43d0-8d4b-96ed0e803962@leemhuis.info>
-Date: Fri, 21 Aug 2026 10:37:30 +0200
+	dkim=pass (2048-bit key) header.d=dwd.de header.i=@dwd.de header.b="M5nHD8Of"
+Received: from localhost (localhost [127.0.0.1])
+	by ofcsg2dn2.dwd.de (Postfix) with ESMTP id 4hRJKd4mXKz3vZD
+	for <regressions@lists.linux.dev>; Fri, 21 Aug 2026 11:41:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=dwd.de; h=
+	content-type:content-type:mime-version:message-id:subject
+	:subject:from:from:date:date:received:received:received:received
+	:received:received:received:received; s=dwd-csg20210107; t=
+	1787312469; x=1788522070; bh=SQj60MD6EU/5qzxwSNp4jGqJ3d+ZzQhSprb
+	/uF+Q8mE=; b=M5nHD8OfBoPBix6N3vKAWn8/aPyG6G+oIh8Gt9QKp/EioCnFBSG
+	O19MSkr8voHNH3VX7oQmn2H+r5v7MXEFkUwGDfN5f1Z5veHBFU3TXjzv/kTrZBkZ
+	59Yu0h0HoCyT3wRzQCdYQOi6bd+U6pkqtAH8CnfRuxSeBhi7z/42YTCtmZj4X6w+
+	TP0ubQpJEoUtfu343zIMptW8uptI1ruTWoDT54/6p3l3T1/s+sbzBotfJZ8MLCre
+	EZ1VeGop0I/+JbvA+OOlDpV6nCe7TijdVsv+bP7gumPGVJcNrMD/lQWofl7Lf5WU
+	wK0WGXP54vpOIC3z79pSDrq1qT1lYuwKSvg==
+X-Virus-Scanned: by amavisd-new at csg.dwd.de
+Received: from ofcsg2cteh1.dwd.de ([172.30.232.65])
+ by localhost (ofcsg2dn2.dwd.de [172.30.232.25]) (amavis, port 10024)
+ with ESMTP id T7mKxHRocmPK for <regressions@lists.linux.dev>;
+ Fri, 21 Aug 2026 11:41:09 +0000 (UTC)
+Received: from ofcsg2cteh1.dwd.de (unknown [127.0.0.1])
+	by DDEI (Postfix) with ESMTP id 53524C903B3A
+	for <root@ofcsg2dn2.dwd.de>; Fri, 21 Aug 2026 11:41:09 +0000 (UTC)
+Received: from ofcsg2cteh1.dwd.de (unknown [127.0.0.1])
+	by DDEI (Postfix) with ESMTP id 47DBAC903EA2
+	for <root@ofcsg2dn2.dwd.de>; Fri, 21 Aug 2026 11:41:09 +0000 (UTC)
+X-DDEI-TLS-USAGE: Unused
+Received: from ofcsgdbm.dwd.de (unknown [172.30.232.25])
+	by ofcsg2cteh1.dwd.de (Postfix) with ESMTP
+	for <root@ofcsg2dn2.dwd.de>; Fri, 21 Aug 2026 11:41:09 +0000 (UTC)
+Received: from ofcsgdbm.dwd.de by localhost (Postfix XFORWARD proxy);
+ Fri, 21 Aug 2026 11:41:09 -0000
+Received: from ofcsg2dvf1.dwd.de (unknown [172.30.232.10])
+	by ofcsg2dn2.dwd.de (Postfix) with ESMTPS id 4hRJKd1gsDz3vZD
+	for <regressions@lists.linux.dev>; Fri, 21 Aug 2026 11:41:09 +0000 (UTC)
+Received: from ofmailhub.dwd.de (ofldap.dwd.de [141.38.39.208])
+	by ofcsg2dvf1.dwd.de  with ESMTP id 67LBf9n7017373-67LBf9n8017373;
+	Fri, 21 Aug 2026 11:41:09 GMT
+Received: from praktifix.dwd.de (praktifix.dwd.de [141.38.44.46])
+	by ofmailhub.dwd.de (Postfix) with ESMTP id 17027453F0;
+	Fri, 21 Aug 2026 11:41:09 +0000 (UTC)
+Date: Fri, 21 Aug 2026 13:41:09 +0200 (CEST)
+From: Holger Kiehl <Holger.Kiehl@dwd.de>
+To: netdev@vger.kernel.org
+cc: regressions@lists.linux.dev, michael.chan@broadcom.com, 
+    pavan.chebbi@broadcom.com, ajit.khaparde@broadcom.com, 
+    somnath.kotur@broadcom.com
+Subject: REGRESSION: bnxt_en fails to initialize with errno -22 in
+ page_pool_create_percpu on 6.18.45
+Message-ID: <6175537d-934d-41b3-904a-faf3b784973@praktifix.dwd.de>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] qcom PAS TZ API migration breaks GPU and modem on
- TrustZone without PAS (sc7180 trogdor)
-To: Paul Hollinsky <phollinsky@holtechnik.com>,
- Konrad Dybcio <konradybcio@gmail.com>
-Cc: Sumit Garg <sumit.garg@oss.qualcomm.com>,
- Bjorn Andersson <andersson@kernel.org>,
- Mathieu Poirier <mathieu.poirier@linaro.org>,
- Rob Clark <robin.clark@oss.qualcomm.com>, Dmitry Baryshkov
- <lumag@kernel.org>, Abhinav Kumar <abhinav.kumar@linux.dev>,
- Akhil P Oommen <akhilpo@oss.qualcomm.com>,
- Konrad Dybcio <konradybcio@kernel.org>,
- Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>,
- cros-qcom-dts-watchers@chromium.org, linux-arm-msm@vger.kernel.org,
- linux-remoteproc@vger.kernel.org, dri-devel@lists.freedesktop.org,
- freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- regressions@lists.linux.dev
-References: <943d1db3-f117-4e9c-94db-7221b47d9d29@leemhuis.info>
- <20260821082730.89413-1-phollinsky@holtechnik.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <20260821082730.89413-1-phollinsky@holtechnik.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <178730145227.2547326.9353540420644801552@mxe9fb.netcup.net>
-X-NC-CID: fndcPxiVxwzlH0u76SHpIo/ezksonaczEIibpTdcNK+di70THPY=
+Content-Type: text/plain; charset=US-ASCII
+X-FEAS-Client-IP: 141.38.39.208
+X-FE-Last-Public-Client-IP: 141.38.39.208
+X-FE-Policy-ID: 2:2:1:SYSTEM
+X-TMASE-Version: DDEI-5.1-9.2.1011-30146.007
+X-TMASE-Result: 10--10.907000-10.000000
+X-TMASE-MatchedRID: wKsxJH6V8qhZ+tOQmIGhEp0UyaWO1QCnXpSxZKDDzFi6bTVuVfzSizt5
+	yG5DhcrCnS2WqF7uW7LNQtxthBjc0GFoHMr65PsOp/bXyF3gpaCUiGLkY8AZ4717sDx9NtCBFIB
+	UXk42eksLW3uKfnk+E38u0eTlN5i+qCSeJKqSmf4HNShWtYdI6fyCLOLHMRsgVc6oxg15iGYRLj
+	qoJJt/9UUdYURJDw6V6cJ/6QfST1xxg7svMtapLrAdecdWQCzFy4offpx2osgmwT3YhI4Newaid
+	F5t0NSxPLj1PGgTk/RL68RHQnAOXWZp4lxb8EVn
+X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
+X-TMASE-INERTIA: 0-0;;;;
 
-On 8/21/26 10:27, Paul Hollinsky wrote:
-> On 8/21/26 08:33, Thorsten Leemhuis wrote:
->> Just wondering: who will submit the proper fix to ideally fix this
->> before the culprit hits mainline
-> 
-> I have now. I sent them as two separate patches, because the two culprits
-> are in different places:
+Hello,
 
-Great, many many thx!
+with 6.18.45 my network cards fail to come up. When NetworkManager
+wants to bring up the interfaces the following is shown in the
+logs:
 
-Ciao, Thorsten
+   kernel: page_pool_create_percpu() gave up with errno -22
+   kernel: bnxt_en 0000:02:00.0 ens1f0np0: bnxt_alloc_mem err: ffffffea
+   NetworkManager[2377]: <warn>  [1787169889.4135] platform-linux: do-change-link[2]: failure 22 (Invalid argument)
+   kernel: page_pool_create_percpu() gave up with errno -22
+   kernel: bnxt_en 0000:02:00.1 ens1f1np1: bnxt_alloc_mem err: ffffffea
+   NetworkManager[2377]: <warn>  [1787169889.4504] platform-linux: do-change-link[3]: failure 22 (Invalid argument)
 
-P.S.:
+On a working 6.18.44 kernel ethtool -g shows:
+   ethtool -g ens1f0np0
+   Ring parameters for ens1f0np0:
+   Pre-set maximums:
+   RX:			2047
+   RX Mini:		n/a
+   RX Jumbo:		8191
+   TX:			2047
+   TX push buff len:	n/a
+   HDS thresh:		1023
+   Current hardware settings:
+   RX:			511
+   RX Mini:		n/a
+   RX Jumbo:		2044
+   TX:			511
+   RX Buf Len:		n/a
+   CQE Size:		n/a
+   TX Push:		off
+   RX Push:		off
+   TX push buff len:	n/a
+   TCP data split:	on
+   HDS thresh:		640
 
-> #regzbot monitor: https://lore.kernel.org/r/20260821081325.89088-1-phollinsky@holtechnik.com
-> #regzbot monitor: https://lore.kernel.org/r/20260821081540.89137-1-phollinsky@holtechnik.com
-Thx for that, but FWIW, there is no need for that when it comes to
-regzbot: the link tags in those patches would have taken care of that
-already automatically.
+Hardware / Driver Info:
+- NIC: Broadcom BCM57416 NetXtreme-E
+- Firmware-version: 238.1.138.6/pkg 38.11.38.06
+- Driver: bnxt_en (in-tree)
+
+If more information is needed I will be happy to provide it.
+
+Reverting back to 6.18.44 solves the issue.
+
+Regards,
+Holger
