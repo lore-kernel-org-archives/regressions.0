@@ -1,148 +1,174 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from rs1.nue.1e30.net (rs1.nue.1e30.net [152.53.122.0])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCEDD345ED3
-	for <regressions@lists.linux.dev>; Fri, 21 Aug 2026 18:59:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA400493649;
+	Fri, 21 Aug 2026 21:17:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=152.53.122.0
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787338770; cv=none; b=Wl6d+19ncPId04WPDm2BJOR5J5cSGqMMmir8gSeobX4pjuZjSyGXfbuFVfPh5vM3Vn/dCkDQARWn6yPSoO6J5Q1sTL1f6MDhkcdxD1WEe0pmNXZ0OGu9LsMq7g+bf5SZf1qzoO1km6iEp83+IXl8oAix8Jf7xtTBIejpe1BziXA=
+	t=1787347028; cv=none; b=DYq+pUvsVmHkKE0e3nSUKgs+T0Ix/Gn+ecyzGF3h82YHTsk7GvsI0rMwJGWjUY+REBlZTUb81QecSauNIrjNbL98tm308hcciTNLxMuZqR9izvc7GFSOXb8+M52R5Tyjf9nIcJWLHFBRR4XvL2rOHVkvGYUcv6dsD2RS+XMkgm4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787338770; c=relaxed/simple;
-	bh=XpeSPu/rf8CWW3HNN9vtE9Rqo+PX7tSWMEbFHxcZhUw=;
-	h=Content-Type:MIME-Version:Subject:From:To:Cc:Date:Message-ID; b=Aaw1sROvkSD/sBAbZaeHrXHxWk8pwhwylEKsfu57a+/2J0wH8oTkSe4v3H0cI02JtDXCXOOrPYCyhI7SAB2bj141Gq8qWUEu2ebXs+Y8GLhkoSmNuK77JZ8hmXGC0zV9BebYT3muIwRJnS9rvNTRUnSX2FvUuVHbScG/fdnDlbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kernelci.org; spf=pass smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci.org header.i=@kernelci.org header.b=SQEg/F+a; arc=none smtp.client-ip=209.85.216.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kernelci.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernelci.org
+	s=arc-20240116; t=1787347028; c=relaxed/simple;
+	bh=XWNkHM+bbLYU/g5fCfGmumuj8MJQwrnjw/ZgecO73dY=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:Content-Type; b=EZa0eP1xL2kJwn+A80I2V2Ywq7cCGgp4xXKNnBVP4lPlljD1DQry0PuA+YvrXycZuWN9IboJjEEZXDuA/Mh9/apdTbv2u2VWKO3i5RADUkijjkWSg3AoF5KU2PIgYcFROq6ZrVAJ6xEkW/tfZFeWNnub8kzk8SN5g739zDu4l3o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=juch.cc; spf=pass smtp.mailfrom=juch.cc; dkim=pass (2048-bit key) header.d=juch.cc header.i=@juch.cc header.b=O3tkYrzf; arc=none smtp.client-ip=152.53.122.0
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=juch.cc
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=juch.cc
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci.org header.i=@kernelci.org header.b="SQEg/F+a"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-384930ca5e2so1417424a91.3
-        for <regressions@lists.linux.dev>; Fri, 21 Aug 2026 11:59:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci.org; s=google; t=1787338768; x=1787943568; darn=lists.linux.dev;
-        h=message-id:date:reply-to:cc:to:from:subject
-         :content-transfer-encoding:mime-version:content-type:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=wL/wEqEgEjZ3aGqFYe6PgAbWjPcG8c8LS4/jl6CFY/w=;
-        b=SQEg/F+aChwYwcxWG9svC+q1LFgJWvFwlBgorCkcr87vVek0NdYwAbLkB/DLPArkMw
-         pamCKTIIUxDYQ4JIWC2gfMi0M2FDLWUzUo7CegQVl6hfLVwu8N5GKVGAnAgmtHNi6FJ4
-         Dta/wRu8OPpXH1ta5ed5xZL9N1GWQ7PMEQX+ETMAO/7ZQrRQQSQRu/xmNu0IMmaujKw8
-         4twwb88YzEnSahL6zEJ5XoxUu0mSoGZ0dMoF8rkRp9nlMW0YZ+nTsB5MofScxaM0cYLw
-         Y4eJC5d3kez3L7f+JtosGpypwJDUrknWWQA5oEsoyR+T1DdmKbYs9QE51mj1SalVvDM9
-         BfCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787338768; x=1787943568;
-        h=message-id:date:reply-to:cc:to:from:subject
-         :content-transfer-encoding:mime-version:content-type:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=wL/wEqEgEjZ3aGqFYe6PgAbWjPcG8c8LS4/jl6CFY/w=;
-        b=DPlDmPgPDpqgLGq7BOz7PAL5cjxqg+QuJG7CBkcc42ZFsZJk+q9MdBWoC7pg4dU93y
-         zrTbjRNNo5tYvV8+IEECnpbZiousQjiLz42LLJmPhC+84dV62rinCm2sjgCwVXImVMYS
-         VvlFhOCZ4ewcpyKeAliEsyv+dpsAyctHyVvRxfRpkV29IttjhMsG6K92Tlvpax/c5Mvh
-         /oTzuWZxjohrUadf4IshHg6uxar4GM5JJKKTDlHvXpc1o3nw5NyzBLDxJq0ZUBVenQYI
-         IN7Ih2PS8Xt5x9nKE25yNV8lkq7BcVkW4jaMDNXRxNJLZJ2/fjJG7SFLocDFqWT4w5EH
-         8o1A==
-X-Gm-Message-State: AFuF++m64i4Nr1YpKPBjLhS/LUP49XdOE3XrVnOinL9ROmQFfB/gtGHr
-	boHxFHSb9cqhmH3odx5AVa5see4FWjQOGh+Mwa1SC0vDdqhXYEIyD+6O4UgV85o88zU=
-X-Gm-Gg: AR+sD13CB8YhWkZ2fkd5WsW1Vm1t4VJ2i13AqNdheM9rIqDZhtVPduXCdNlB3349haf
-	7l/lxqNgZEYaMu/Z8VUtnw/KuDswPa3rKe8apH29rwmvxZONTGRYrjpTLWtPtayPII2nEjRO8fO
-	c2VO9Fx0qL/d2VwWRB+Fq3rMoKJHuyTFZ9rEDxtSphDZLQ3FsRHepVq3+PVOYFUz7pbeZorhHp2
-	a6In9S+h2L6NQc6SdEDlK6rAn/pkP/01ZNkbQZttBpkqp4rqDLEKbs8f2+ZPkuebFnz06ljb1a9
-	qmitRJfqfvT87V4081+dgU3462LmExvDkuTXZeBzBROdVQcG3ud47ieD5akHMxF2wLlVCLGC28D
-	pmQkkbAEGwxvPO3oq+ulwEehNYKqecpiIN2UKTgxDDzRe95IwJ9g/5oB/SeqKSxaWoM/BBwAHNl
-	P3tUVxax2f7bnGhiqMjstOoKLGr+NOeKitAcqdGUIGW+MiSwNGIEB7JYSQDw==
-X-Received: by 2002:a17:90a:c107:b0:37f:bfa2:1887 with SMTP id 98e67ed59e1d1-395deee4081mr1277053a91.8.1787338767988;
-        Fri, 21 Aug 2026 11:59:27 -0700 (PDT)
-Received: from b455de3d9de8 ([20.38.40.137])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-141860fe08csm304035c88.8.2026.08.21.11.59.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Aug 2026 11:59:27 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=juch.cc header.i=@juch.cc header.b="O3tkYrzf"
+Message-ID: <07b2d390-f7a0-47e2-bc2c-eb0853acf52e@juch.cc>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=juch.cc; s=rsa-2026-06;
+	t=1787346668;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=ecCvYpXHLQiB/7Dq9VJa1pCKcLvQFPyds/0pjc/X0Tk=;
+	b=O3tkYrzfpgvzE7GHG+1DnZrhmTjNrw87UqApzg8OcmWM6DQKlJHTi5dBU5302qbrcbobs5
+	QyyD49cxIv/Yf2x1019b8kNxdsLpvViJLUBV/ssB92noKZoHj8TbMLJIj8NLq8ilhzbpOL
+	+Hh9huDMwjryhDicsvhYX2QqUPLPLPczeYrJzk6QnLUrpepaoqoNplaqvcD6zolp5S5G0+
+	p6YXXFY6KPZAw1g+vR9nctbKMtq2De+9WE2dKYLcveOdYg8azXgymwrMrW1OqoNNetVeJT
+	J2xbWIBOtWan9df/Y5/w2jKVN2KB65Z/or5yzKcxBmfVxDtEcpyCA6p4LP9qvg==
+Date: Fri, 21 Aug 2026 23:11:07 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [REGRESSION] mainline/master: (build) in
- arch/x86/include/generated/asm/cpufeaturemasks.h (arch/x86/Make...
-From: KernelCI bot <bot@kernelci.org>
-To: kernelci-results@groups.io
-Cc: regressions@lists.linux.dev, laura.nao@collabora.com,
- shreeya.patel@collabora.com, broonie@kernel.org
-Reply-To: kernelci@lists.linux.dev
-Date: Fri, 21 Aug 2026 18:59:27 -0000
-Message-ID: <178733874460.1338.14907565015998697320@kernelci.org>
+Content-Language: en-US
+From: Andreas Juch <andreas@juch.cc>
+Subject: [REGRESSION] iommu/amd: "Fix premature break in init_iommu_one()"
+ causes early boot hang
+To: iommu@lists.linux.dev
+Cc: Joerg Roedel <joro@8bytes.org>,
+ Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+ Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+ Robert Richter <rrichter@amd.com>, linux-kernel@vger.kernel.org,
+ regressions@lists.linux.dev
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-New build issue found on mainline/master:
+Hello,
 
----
- in arch/x86/include/generated/asm/cpufeaturemasks.h (arch/x86/Makefile:269) [logspec:kbuild,kbuild.other]
----
+I noticed that one of my NixOS sytems failed to boot with kernel 
+6.18.40. The
+older 6.18.39 booted fine. A full git bisect of v6.18.39..v6.18.40 
+identified
+the following commit as the first bad commit:
 
-Log excerpt:
-=====================================================
-Kernel: arch/x86/boot/bzImage is ready  (#1)
-+ stage=2
-+ cd ..
-+ echo job:build_kernel=done
-++ date +%s
-+ echo jobets:build_kernel=1787335473
-+ echo -----log:build_modules-----
------log:build_modules-----
-+ echo job:build_modules=running
-++ date +%s
-+ echo jobsts:build_modules=1787335473
-+ cd /tmp/kci/linux
-+ set +eE -o pipefail
-+ trap - ERR
-+ grep CONFIG_MODULES=y .config
-CONFIG_MODULES=y
-+ '[' 0 -eq 0 ']'
-+ set -eE -o pipefail
-+ trap 'case $stage in
-+ stage=1
-++ nproc
-+ make -j16 modules
-++ tee /tmp/kci/artifacts/build_modules.log
-++ tee /tmp/kci/artifacts/build_modules_stderr.log
-mv: cannot stat 'arch/x86/include/generated/asm/.tmp_cpufeaturemasks.h': No such file or directory
+   dc266f6c4e2628576ab33042b6b2a12480220026
+   iommu/amd: Fix premature break in init_iommu_one()
 
-=====================================================
+The visible symptom is a black screen immediately after systemd-boot. The
+machine also remains unreachable over SSH and leaves no persistent 
+journal entry
+for the failed boot. A reset or power cycle is required.
 
-When fixing this issue, please attribute this report according to the
-patch submission rules:
+I reverted that single commit, built the kernel again and the machine 
+booted, so
+I'm quite sure that I found the right commit.
 
-Reported-by: kernelci.org bot <bot@kernelci.org>
-Link: https://lore.kernel.org/all/178733874460.1338.14907565015998697320@kernelci.org/
+System information:
 
-For complete logs and details about the environment used, see the issue
-on the KernelCI dashboard:
+ASRockRack B550D4-4L
+BIOS P1.10 (06/28/2021)
 
-- dashboard: https://d.kernelci.org/i/maestro:4f457c5cde619e65f938d53b68735abd5858719f
-- giturl: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-- commit HEAD:  531ed942bb0df04f6747983fecdedce76a22d07f
+I'm no expert at all, but my research found that the following 
+information might
+be relevant:
 
-# Builds where the incident occurred:
+   journalctl -W -b -k --no-pager | rg -i 'AMD-Vi|AMD IOMMU|IOMMU|IVRS|IVHD'
+   Aug 21 22:24:17 kernel: ACPI: IVRS 0x00000000BB062000 0000D0 (v02 
+AMD    AmdTable 00000001 AMD  00000001)
+   Aug 21 22:24:17 kernel: ACPI: Reserving IVRS table memory at [mem 
+0xbb062000-0xbb0620cf]
+   Aug 21 22:24:17 kernel: AMD-Vi: Using global IVHD EFR:0x0, EFR2:0x0
+   Aug 21 22:24:17 kernel: iommu: Default domain type: Translated
+   Aug 21 22:24:17 kernel: iommu: DMA domain TLB invalidation policy: 
+lazy mode
+   Aug 21 22:24:17 kernel: pci 0000:00:01.0: Adding to iommu group 0
+   Aug 21 22:24:17 kernel: pci 0000:00:01.2: Adding to iommu group 0
+   Aug 21 22:24:17 kernel: pci 0000:00:02.0: Adding to iommu group 1
+   Aug 21 22:24:17 kernel: pci 0000:00:03.0: Adding to iommu group 2
+   Aug 21 22:24:17 kernel: pci 0000:00:04.0: Adding to iommu group 3
+   Aug 21 22:24:17 kernel: pci 0000:00:05.0: Adding to iommu group 4
+   Aug 21 22:24:17 kernel: pci 0000:00:07.0: Adding to iommu group 5
+   Aug 21 22:24:17 kernel: pci 0000:00:07.1: Adding to iommu group 6
+   Aug 21 22:24:17 kernel: pci 0000:00:08.0: Adding to iommu group 7
+   Aug 21 22:24:17 kernel: pci 0000:00:08.1: Adding to iommu group 8
+   Aug 21 22:24:17 kernel: pci 0000:00:14.0: Adding to iommu group 9
+   Aug 21 22:24:17 kernel: pci 0000:00:14.3: Adding to iommu group 9
+   Aug 21 22:24:17 kernel: pci 0000:00:18.0: Adding to iommu group 10
+   Aug 21 22:24:17 kernel: pci 0000:00:18.1: Adding to iommu group 10
+   Aug 21 22:24:17 kernel: pci 0000:00:18.2: Adding to iommu group 10
+   Aug 21 22:24:17 kernel: pci 0000:00:18.3: Adding to iommu group 10
+   Aug 21 22:24:17 kernel: pci 0000:00:18.4: Adding to iommu group 10
+   Aug 21 22:24:17 kernel: pci 0000:00:18.5: Adding to iommu group 10
+   Aug 21 22:24:17 kernel: pci 0000:00:18.6: Adding to iommu group 10
+   Aug 21 22:24:17 kernel: pci 0000:00:18.7: Adding to iommu group 10
+   Aug 21 22:24:17 kernel: pci 0000:02:00.0: Adding to iommu group 0
+   Aug 21 22:24:17 kernel: pci 0000:02:00.1: Adding to iommu group 0
+   Aug 21 22:24:17 kernel: pci 0000:02:00.2: Adding to iommu group 0
+   Aug 21 22:24:17 kernel: pci 0000:20:00.0: Adding to iommu group 0
+   Aug 21 22:24:17 kernel: pci 0000:20:01.0: Adding to iommu group 0
+   Aug 21 22:24:17 kernel: pci 0000:20:02.0: Adding to iommu group 0
+   Aug 21 22:24:17 kernel: pci 0000:20:03.0: Adding to iommu group 0
+   Aug 21 22:24:17 kernel: pci 0000:20:04.0: Adding to iommu group 0
+   Aug 21 22:24:17 kernel: pci 0000:20:08.0: Adding to iommu group 0
+   Aug 21 22:24:17 kernel: pci 0000:20:09.0: Adding to iommu group 0
+   Aug 21 22:24:17 kernel: pci 0000:21:00.0: Adding to iommu group 0
+   Aug 21 22:24:17 kernel: pci 0000:22:00.0: Adding to iommu group 0
+   Aug 21 22:24:17 kernel: pci 0000:23:00.0: Adding to iommu group 0
+   Aug 21 22:24:17 kernel: pci 0000:24:00.0: Adding to iommu group 0
+   Aug 21 22:24:17 kernel: pci 0000:25:00.0: Adding to iommu group 0
+   Aug 21 22:24:17 kernel: pci 0000:29:00.0: Adding to iommu group 0
+   Aug 21 22:24:17 kernel: pci 0000:2a:00.0: Adding to iommu group 0
+   Aug 21 22:24:17 kernel: pci 0000:2b:00.0: Adding to iommu group 0
+   Aug 21 22:24:17 kernel: pci 0000:2c:00.0: Adding to iommu group 11
+   Aug 21 22:24:17 kernel: pci 0000:2d:00.0: Adding to iommu group 12
+   Aug 21 22:24:17 kernel: pci 0000:2d:00.1: Adding to iommu group 13
+   Aug 21 22:24:17 kernel: pci 0000:2d:00.3: Adding to iommu group 14
+   Aug 21 22:24:17 kernel: pci 0000:2d:00.4: Adding to iommu group 15
+   Aug 21 22:24:17 kernel: AMD-Vi: Extended features (0x58f77e022294881, 
+0x0): PreF GA GA_vAPIC
+   Aug 21 22:24:17 kernel: AMD-Vi: Interrupt remapping enabled
 
-## i386_defconfig+allnoconfig on (i386):
-- compiler: clang-21
-- config: https://files.kernelci.org/kbuild-clang-21-i386-allnoconfig-6a888db362f33761c0fe21dc/.config
-- dashboard: https://d.kernelci.org/build/maestro:6a888db362f33761c0fe21dc
+And the output of the decoded IVRS table, captured by `acpidump -n IVRS -b`:
 
-## i386_defconfig+kselftest on (i386):
-- compiler: gcc-14
-- config: https://files.kernelci.org/kbuild-gcc-14-i386-kselftest-6a888e4262f33761c0fe2442/.config
-- dashboard: https://d.kernelci.org/build/maestro:6a888e4262f33761c0fe2442
+   00000000  49 56 52 53 d0 00 00 00  02 e2 41 4d 44 20 20 00 
+|IVRS......AMD  .|
+   00000010  41 6d 64 54 61 62 6c 65  01 00 00 00 41 4d 44 20 
+|AmdTable....AMD |
+   00000020  01 00 00 00 41 30 20 00  00 00 00 00 00 00 00 00 |....A0 
+.........|
+   00000030  10 b0 48 00 02 00 40 00  00 00 50 fd 00 00 00 00 
+|..H...@...P.....|
+   00000040  00 00 00 00 2e 8f 04 80  03 08 00 00 04 fe ff 00 
+|................|
+   00000050  43 00 ff 00 00 a5 00 00  04 ff ff 00 00 00 00 00 
+|C...............|
+   00000060  48 00 00 00 00 a0 00 02  48 00 00 d7 0d a0 00 01 
+|H.......H.......|
+   00000070  48 00 00 00 0e 01 00 01  11 b0 58 00 02 00 40 00 
+|H.........X...@.|
+   00000080  00 00 50 fd 00 00 00 00  00 00 00 00 00 02 04 00 
+|..P.............|
+   00000090  5a 4a 29 22 ef 77 8f 05  00 00 00 00 00 00 00 00 
+|ZJ)".w..........|
+   000000a0  03 08 00 00 04 fe ff 00  43 00 ff 00 00 a5 00 00 
+|........C.......|
+   000000b0  04 ff ff 00 00 00 00 00  48 00 00 00 00 a0 00 02 
+|........H.......|
+   000000c0  48 00 00 d7 0d a0 00 01  48 00 00 00 0e 01 00 01 
+|H.......H.......|
+   000000d0
 
-#regzbot introduced: 818bebeb63dd6bf5f4e07e145f6cdbace520a34c..531ed942bb0df04f6747983fecdedce76a22d07f
-#regzbot link: https://d.kernelci.org/i/maestro:4f457c5cde619e65f938d53b68735abd5858719f
+The relevant part (after decoding with `iasl -d ivrs.dat`):
 
-#kernelci issue maestro:4f457c5cde619e65f938d53b68735abd5858719f
+   [090h 0144 008h]                   EFR Image : 058F77EF22294A5A
 
---
-This is an experimental report format. Please send feedback in!
-Talk to us at kernelci@lists.linux.dev
+I'll provide any required details and test patches!
 
-Made with love by the KernelCI team - https://kernelci.org
+Thanks for your work, it's very appreciated!
+
+Andreas
+
