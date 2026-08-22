@@ -1,263 +1,194 @@
-Received: from rs1.nue.1e30.net (rs1.nue.1e30.net [152.53.122.0])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1896C28CF4A;
-	Sat, 22 Aug 2026 13:33:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=152.53.122.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5585F34FF79
+	for <regressions@lists.linux.dev>; Sat, 22 Aug 2026 14:12:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787405585; cv=none; b=PyThxjbAk5D4kagl0ngno7ig0/aa4qmrdOUXvCAm0bW6rBGiDM9WKaAAXRNGPH8rknT+UR/n9l+LEgml6G6eQ++SJFCkfT9ubFzIagtXl6EI+21h9rr0yL2S55mQ2ySxjhQQ77s2rjdsfeR5niwSdwbVQD9jEiSeWbcxyNzjkmE=
+	t=1787407945; cv=none; b=BOIAutawgnUzm4UJgczqsj5sCL619S/POB1bvfq7uq3PB5M2c72lzfBSsyrJChCk66TLqZs+t+xiEN57BGRASaAdm0o/Zq213il1xIODIybKCI4skpvzc8u44Od1egoF3gjtIEY5SyU/OTB2YkHCAId9GNdLNgKvMHETTI7uq3o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787405585; c=relaxed/simple;
-	bh=2I4QipsJDSqYy6hSzoCvO93u6qMaFmKe/hCEROZoZPU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dxfZwR0sd8Bd5W5xaBh+D+S+HCs0VcVFP43IZwhTJBKjy+nG7lnTkiUaVO1NEtq9y4yU83ifaKnrrpsQE9E/vjYTBVdOhiCNKN7yglqcZp14bl61+EYEq07K4X3WLEXWQY5+ZNQeMOhhV5YGpg/F/ZeC8kOaMwMMmxLnLo59kRk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=juch.cc; spf=pass smtp.mailfrom=juch.cc; dkim=pass (2048-bit key) header.d=juch.cc header.i=@juch.cc header.b=YtkpveJ/; arc=none smtp.client-ip=152.53.122.0
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=juch.cc
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=juch.cc
+	s=arc-20240116; t=1787407945; c=relaxed/simple;
+	bh=xDOQfxPkBNbbsOuEBrPL5Ba9mbUc5B/HErZUMyRz/Dw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VInoYOmHNQgPd9gLFzi5jEyiTUq/sfqBvxGb910M9WicekhTax5AWZWZafAxF63ob7QSMt7Rw3a5TD+nkxzpk5l0vJCZYLvvCoWufiWCAZk8ilrtpQVfUtZcPa7KCq+xh6pioGqVG0XVXigJTraCelEymElbT3jyEvU2Hu24fiE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=edKCnQo3; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=juch.cc header.i=@juch.cc header.b="YtkpveJ/"
-Message-ID: <912b9d43-1205-4753-afe1-60cd149679b4@juch.cc>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=juch.cc; s=rsa-2026-06;
-	t=1787405579;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fRqQ4b2Is81teqWqhX3PpmIpgjHjTzenSGISUDUhMu4=;
-	b=YtkpveJ/WMB4rNvXBAK+gKYbW8E4X0cFhH/jajMMRvmWdmDn6KSJHm3BcJIXJK35rK+Ujo
-	4lO8rGFnhyDJtxgY5UI1LVRECgOxwTHSsAfpqmw6hTt48Zpl4ZG7F7UU/VwX60buF8TP26
-	N82I+VIvj1sMWydTdM14aSpAudtBkBC3aODZjdBvy1VplPVL/HkRzQnKrLijxd9QJBpPkn
-	xn7KF5Ep/QMe4CwnwvbfVKED7HsdiqdM70uBohVrbNXFoeWcKEtFMq4+NWJYsC40+nGVX0
-	k8ekIhu7gsUWeA7D6lk0Ll7AaMg9FZR5HpqBNsBoB/ktE0fb3r/YWdD3L8NQXA==
-Date: Sat, 22 Aug 2026 15:32:58 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="edKCnQo3"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-6983d3dae7aso5081002a12.0
+        for <regressions@lists.linux.dev>; Sat, 22 Aug 2026 07:12:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1787407940; x=1788012740; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=lzl656Kc/WnTsoNCqMH4D8QoNvmFwpgPRUVtnsAcOfI=;
+        b=edKCnQo3vCF0fyUoL9rn+JWjfWy/BPpbTuxNjqFvyvN+/vN5MqjlQ4TRSxAXGB7R89
+         CTGNfVY4/Um/rzdC+yAgozRCzu4f08HG3uw1NeVct2f0/rl31/9AzNh2+UEP7z810dHr
+         2pcvdkJ39m1JsVsXsIo2ssJfm0X1hYNExobmd3pqWICl5AR8suTpUDmvfE0UZ6mNilPb
+         EIbqVb56w8PhMbDfINT/hWembb6/8bbCFvyhwgq3Y0N71/YZ4Hk0Llx5V4oca9vVtaYW
+         SCXauJeY3SIK+zl/wNKiT4RcgtJxeWAuvoqPXFWT4pqjLzNdh9d9+DPKGVgMqnrQHUB+
+         z0Uw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1787407940; x=1788012740;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=lzl656Kc/WnTsoNCqMH4D8QoNvmFwpgPRUVtnsAcOfI=;
+        b=KM0Q72nQZ+d8IhYX0KWC61qLdrirwcMydZGegkCRh8KZKY+wd7IzqhkpTvLpErTtQ0
+         hJiO5N1YmpKo0IsxQ815N4cU5kjSbeXpI0/ZUe9PGom35Dmk6yRHUOwdZK2/8ZViAm1p
+         t/d9CKdN56lp5tslTKG/TOpvHJtyivYhq/elCNA+Ec4fCA44kphHj5wHhP5IkYqYIET1
+         EW5cN4T0hT41qpsYdd5R0cCILtGspQon6dQanx5SxNAXj27XPZfpWSAhGasVSEXtYb/Y
+         oWyUhi0hC7op1Q1cEYIPJ2AVnZ0fc8unoSXmEte0l3pk6A2JpupubJeQVE0jSk/6FT2f
+         LSbw==
+X-Forwarded-Encrypted: i=1; AHgh+RpaMq4XYTRgwV9iJCs7C0pWptzYMUYPjbVvpLhejpwKruALn23s6kjBiKPoUG9Dsj/WcvQfPfHHGgxRpQ==@lists.linux.dev
+X-Gm-Message-State: AFuF++k+2B9OGpZbyXjjGFezHzNhqL1PBcCCavLFwDZUAWPuBapPA8yl
+	gA7dEKZDUEnMKD+9ysWof6/WpmDfalNMMdwyx+IHHXn6/ta8p5q5gxv3
+X-Gm-Gg: AR+sD13uQpr54TUKggmwZPGAIGUh9q9Hbquf+bUVQzxihxV9SiJ4lq3MPL1aLD/yeCG
+	CxbDoRyLOnS3e41txtWXgaJqC0o+ZLd2VL0bcqYy8B0bNxQCN0f1gKnvyfMK0n/7A8rkVk6dHeg
+	0AKL9hyENziGkXsTmJWAY0SZ3uBhpQWyC6U4v8xH2Mw7r/dLaRSYFCKEfn15ud5DsPX8La0uF2z
+	43jiBeK9iKTVX/xiPg34tDjtY12qMXcuzXEbYzmD6MRF1B61oBteI4lB+wZFBTSwBK9BiL0L1nn
+	IGtrEkhytyJVIWkpMprk4KtOziVlGqRW7gRJ7faEh4eNS/lMDV7x0h0g6BQmWdtxbPqHiBEudRw
+	1AJhRg++CbSafoZQux2O3dS4g2aZl2WyPd7eWzIyUUIWg/ilzOAASIAXjLf1nEY7EaVkDQw3gcu
+	gPg/uiS630EEBChm5uLOZO9AwsLAB6iho5WppP2kFp3dmb66sBwS9+aglJeLBsZucLHaFIPK3Wr
+	aifEkBAFArtOrZNhfIHmLMYrx9n3GptPxixQ+/PUn//seS6LrypMNbHduBIuv9NqKo/j97KId91
+	e+epopfA758HA1chw3g=
+X-Received: by 2002:a17:907:a88b:b0:c1c:2218:f317 with SMTP id a640c23a62f3a-c244d45ad2amr1712327066b.2.1787407940275;
+        Sat, 22 Aug 2026 07:12:20 -0700 (PDT)
+Received: from bobo (d163-170.icpnet.pl. [109.173.163.170])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c2496734bfcsm340625266b.43.2026.08.22.07.12.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 22 Aug 2026 07:12:19 -0700 (PDT)
+From: Kamil Serwus <kserwus@gmail.com>
+To: linux-bluetooth@vger.kernel.org
+Cc: Alexej Sidorenko <alexej@sidorenko.cz>,
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+	Marcel Holtmann <marcel@holtmann.org>,
+	regressions@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Kamil Serwus <kserwus@gmail.com>
+Subject: [RFC PATCH 0/2] Bluetooth: detect broken extended scan instead of guessing by chip id
+Date: Sat, 22 Aug 2026 16:11:13 +0200
+Message-ID: <20260822141115.58815-1-kserwus@gmail.com>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Subject: Re: [REGRESSION] iommu/amd: "Fix premature break in init_iommu_one()"
- causes early boot hang
-To: Vasant Hegde <vasant.hegde@amd.com>, Joerg Roedel <joro@8bytes.org>
-Cc: iommu@lists.linux.dev,
- Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
- Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
- Robert Richter <rrichter@amd.com>, linux-kernel@vger.kernel.org,
- regressions@lists.linux.dev
-References: <07b2d390-f7a0-47e2-bc2c-eb0853acf52e@juch.cc>
- <aok4Ko0mpC4fdGPg@8bytes.org> <6a61edf7-157c-4069-a1c3-78d1138b061c@amd.com>
-Content-Language: en-US
-From: Andreas Juch <andreas@juch.cc>
-In-Reply-To: <6a61edf7-157c-4069-a1c3-78d1138b061c@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Hello Vasant,
+Hi,
 
-On 8/22/26 12:17, Vasant Hegde wrote:
-> Andreas,
->
-> On 8/22/2026 11:19 AM, Joerg Roedel wrote:
->> Adding Vasant.
->>
->> On Fri, Aug 21, 2026 at 11:11:07PM +0200, Andreas Juch wrote:
->>> Hello,
->>>
->>> I noticed that one of my NixOS sytems failed to boot with kernel 6.18.40.
->>> The
->>> older 6.18.39 booted fine. A full git bisect of v6.18.39..v6.18.40
->>> identified
->>> the following commit as the first bad commit:
->>>
->>>    dc266f6c4e2628576ab33042b6b2a12480220026
->>>    iommu/amd: Fix premature break in init_iommu_one()
->>>
->>> The visible symptom is a black screen immediately after systemd-boot. The
->>> machine also remains unreachable over SSH and leaves no persistent journal
->>> entry
->>> for the failed boot. A reset or power cycle is required.
-> Interesting. I never imagined above fix will break some system!
->
-> I assumed below dmesg is from good boot (without above patch) and did the
-> analysis (code walk with below IVRS data):
+commit 5ead2063611ae5 ("Bluetooth: btrtl: fix RTL8761B/BU broken LE
+extended scan"), which landed in v7.2, regresses a different RTL8761BU
+dongle than the one it was written for. This series reports that and
+proposes a way out that should not need a new patch per dongle.
 
-Yes, that's correct, it's from the .40 kernel without commit dc266f6c.
+The regression
+--------------
 
->    - EFR advertised by IVRS is different from actual EFR (read by IOMMU MMIO
-> register). Its worse because IVRS advertised few features like GT/PPR which is
-> not supported by IOMMU.
->    - Without this patch we would have skipped early_iommu_features_init() so
-> global EFR is zero and then init_iommu_one_late() set the EFR properly based on
-> actual IOMMU capability.
->
-> Only with this log, its hard to tell where exactly system failed. My guess is
-> driver enabled features which are not supported (like GT/PPR) or we setup 32bit
-> interrupt remapping table.
->
-> I believe above patch exposed an existing bug with some other commit.
->
->
-> Ideally we should properly fix late_iommu_features_init() and use actual EFRs.
-> But for now lets fix the regression. Can you please try below fix?
->
-> -Vasant
+Hardware here is USB 0bda:8771, firmware 0xdfc6d922, ROM lmp_subver
+0x8761 - an RTL8761BU, so CHIP_ID_8761B, so it gets the new quirk, which
+makes use_ext_scan() false and moves scanning from LE Set Extended Scan
+Enable (0x2042) to the legacy LE Set Scan Enable (0x200c).
 
-Thank you for investigating! I created a new branch from the v6.18.40 
-tag and
-applied your patch. The resulting kernel booted without any issues!
+This dongle is the opposite of the one the quirk was written for:
+extended scan works flawlessly, but the firmware stops answering the
+legacy scan-disable command about ten seconds into any scan:
 
-If you need any further information or testing (for a proper fix later 
-on), I'd
-be happy to test patches again!
+  Bluetooth: hci0: command 0x200c tx timeout
+  Bluetooth: hci0: Opcode 0x200c failed: -110
+  Bluetooth: hci0: Unable to disable scanning: -110
+  Bluetooth: hci0: disable scanning failed: -110
+  Bluetooth: hci0: Resetting usb device.
+  Bluetooth: hci0: start background scanning failed: -110
+  usb 3-1: reset full-speed USB device number 2 using xhci_hcd
 
-Thanks again!
+btusb resets the device, it re-enumerates (hci0 -> hci1 -> hci2 -> ...)
+and every connected BLE device is dropped. With a Bluetooth keyboard and
+trackball that leaves the machine with no input at all.
 
-Andreas
+v7.1.7 drives the same dongle, with byte-identical linux-firmware and
+identical CONFIG_BT_HCIBTUSB_*, for eleven hours and nine BLE HID
+connects without a single scan error.
 
->
-> ---<---
->
-> diff --git a/drivers/iommu/amd/init.c b/drivers/iommu/amd/init.c
-> index 69170146d442..7a5b78beb352 100644
-> --- a/drivers/iommu/amd/init.c
-> +++ b/drivers/iommu/amd/init.c
-> @@ -1930,19 +1930,20 @@ static int __init init_iommu_one(struct amd_iommu
-> *iommu, struct ivhd_header *h,
->   		else
->   			iommu->mmio_phys_end = MMIO_CNTR_CONF_OFFSET;
->
-> +		if (h->efr_attr & BIT(IOMMU_IVHD_ATTR_HATDIS_SHIFT)) {
-> +			pr_warn_once("Host Address Translation is not supported.\n");
-> +			amd_iommu_hatdis = true;
-> +		}
-> +
->   		/* XT and GAM require GA mode. */
->   		if ((h->efr_reg & (0x1 << IOMMU_EFR_GASUP_SHIFT)) == 0) {
->   			amd_iommu_guest_ir = AMD_IOMMU_GUEST_IR_LEGACY;
-> +			break;
->   		} else {
->   			if (h->efr_reg & BIT(IOMMU_EFR_XTSUP_SHIFT))
->   				amd_iommu_xt_mode = IRQ_REMAP_X2APIC_MODE;
->   		}
->
-> -		if (h->efr_attr & BIT(IOMMU_IVHD_ATTR_HATDIS_SHIFT)) {
-> -			pr_warn_once("Host Address Translation is not supported.\n");
-> -			amd_iommu_hatdis = true;
-> -		}
-> -
->   		early_iommu_features_init(iommu, h);
->
->   		break;
->
->
->
->>> I reverted that single commit, built the kernel again and the machine
->>> booted, so
->>> I'm quite sure that I found the right commit.
->>>
->>> System information:
->>>
->>> ASRockRack B550D4-4L
->>> BIOS P1.10 (06/28/2021)
->>>
->>> I'm no expert at all, but my research found that the following information
->>> might
->>> be relevant:
->>>
->>>    journalctl -W -b -k --no-pager | rg -i 'AMD-Vi|AMD IOMMU|IOMMU|IVRS|IVHD'
->>>    Aug 21 22:24:17 kernel: ACPI: IVRS 0x00000000BB062000 0000D0 (v02 AMD
->>> AmdTable 00000001 AMD  00000001)
->>>    Aug 21 22:24:17 kernel: ACPI: Reserving IVRS table memory at [mem
->>> 0xbb062000-0xbb0620cf]
->>>    Aug 21 22:24:17 kernel: AMD-Vi: Using global IVHD EFR:0x0, EFR2:0x0
->>>    Aug 21 22:24:17 kernel: iommu: Default domain type: Translated
->>>    Aug 21 22:24:17 kernel: iommu: DMA domain TLB invalidation policy: lazy
->>> mode
->>>    Aug 21 22:24:17 kernel: pci 0000:00:01.0: Adding to iommu group 0
->>>    Aug 21 22:24:17 kernel: pci 0000:00:01.2: Adding to iommu group 0
->>>    Aug 21 22:24:17 kernel: pci 0000:00:02.0: Adding to iommu group 1
->>>    Aug 21 22:24:17 kernel: pci 0000:00:03.0: Adding to iommu group 2
->>>    Aug 21 22:24:17 kernel: pci 0000:00:04.0: Adding to iommu group 3
->>>    Aug 21 22:24:17 kernel: pci 0000:00:05.0: Adding to iommu group 4
->>>    Aug 21 22:24:17 kernel: pci 0000:00:07.0: Adding to iommu group 5
->>>    Aug 21 22:24:17 kernel: pci 0000:00:07.1: Adding to iommu group 6
->>>    Aug 21 22:24:17 kernel: pci 0000:00:08.0: Adding to iommu group 7
->>>    Aug 21 22:24:17 kernel: pci 0000:00:08.1: Adding to iommu group 8
->>>    Aug 21 22:24:17 kernel: pci 0000:00:14.0: Adding to iommu group 9
->>>    Aug 21 22:24:17 kernel: pci 0000:00:14.3: Adding to iommu group 9
->>>    Aug 21 22:24:17 kernel: pci 0000:00:18.0: Adding to iommu group 10
->>>    Aug 21 22:24:17 kernel: pci 0000:00:18.1: Adding to iommu group 10
->>>    Aug 21 22:24:17 kernel: pci 0000:00:18.2: Adding to iommu group 10
->>>    Aug 21 22:24:17 kernel: pci 0000:00:18.3: Adding to iommu group 10
->>>    Aug 21 22:24:17 kernel: pci 0000:00:18.4: Adding to iommu group 10
->>>    Aug 21 22:24:17 kernel: pci 0000:00:18.5: Adding to iommu group 10
->>>    Aug 21 22:24:17 kernel: pci 0000:00:18.6: Adding to iommu group 10
->>>    Aug 21 22:24:17 kernel: pci 0000:00:18.7: Adding to iommu group 10
->>>    Aug 21 22:24:17 kernel: pci 0000:02:00.0: Adding to iommu group 0
->>>    Aug 21 22:24:17 kernel: pci 0000:02:00.1: Adding to iommu group 0
->>>    Aug 21 22:24:17 kernel: pci 0000:02:00.2: Adding to iommu group 0
->>>    Aug 21 22:24:17 kernel: pci 0000:20:00.0: Adding to iommu group 0
->>>    Aug 21 22:24:17 kernel: pci 0000:20:01.0: Adding to iommu group 0
->>>    Aug 21 22:24:17 kernel: pci 0000:20:02.0: Adding to iommu group 0
->>>    Aug 21 22:24:17 kernel: pci 0000:20:03.0: Adding to iommu group 0
->>>    Aug 21 22:24:17 kernel: pci 0000:20:04.0: Adding to iommu group 0
->>>    Aug 21 22:24:17 kernel: pci 0000:20:08.0: Adding to iommu group 0
->>>    Aug 21 22:24:17 kernel: pci 0000:20:09.0: Adding to iommu group 0
->>>    Aug 21 22:24:17 kernel: pci 0000:21:00.0: Adding to iommu group 0
->>>    Aug 21 22:24:17 kernel: pci 0000:22:00.0: Adding to iommu group 0
->>>    Aug 21 22:24:17 kernel: pci 0000:23:00.0: Adding to iommu group 0
->>>    Aug 21 22:24:17 kernel: pci 0000:24:00.0: Adding to iommu group 0
->>>    Aug 21 22:24:17 kernel: pci 0000:25:00.0: Adding to iommu group 0
->>>    Aug 21 22:24:17 kernel: pci 0000:29:00.0: Adding to iommu group 0
->>>    Aug 21 22:24:17 kernel: pci 0000:2a:00.0: Adding to iommu group 0
->>>    Aug 21 22:24:17 kernel: pci 0000:2b:00.0: Adding to iommu group 0
->>>    Aug 21 22:24:17 kernel: pci 0000:2c:00.0: Adding to iommu group 11
->>>    Aug 21 22:24:17 kernel: pci 0000:2d:00.0: Adding to iommu group 12
->>>    Aug 21 22:24:17 kernel: pci 0000:2d:00.1: Adding to iommu group 13
->>>    Aug 21 22:24:17 kernel: pci 0000:2d:00.3: Adding to iommu group 14
->>>    Aug 21 22:24:17 kernel: pci 0000:2d:00.4: Adding to iommu group 15
->>>    Aug 21 22:24:17 kernel: AMD-Vi: Extended features (0x58f77e022294881,
->>> 0x0): PreF GA GA_vAPIC
->>>    Aug 21 22:24:17 kernel: AMD-Vi: Interrupt remapping enabled
->>>
->>> And the output of the decoded IVRS table, captured by `acpidump -n IVRS -b`:
->>>
->>>    00000000  49 56 52 53 d0 00 00 00  02 e2 41 4d 44 20 20 00 |IVRS......AMD
->>> .|
->>>    00000010  41 6d 64 54 61 62 6c 65  01 00 00 00 41 4d 44 20
->>> |AmdTable....AMD |
->>>    00000020  01 00 00 00 41 30 20 00  00 00 00 00 00 00 00 00 |....A0
->>> .........|
->>>    00000030  10 b0 48 00 02 00 40 00  00 00 50 fd 00 00 00 00
->>> |..H...@...P.....|
->>>    00000040  00 00 00 00 2e 8f 04 80  03 08 00 00 04 fe ff 00
->>> |................|
->>>    00000050  43 00 ff 00 00 a5 00 00  04 ff ff 00 00 00 00 00
->>> |C...............|
->>>    00000060  48 00 00 00 00 a0 00 02  48 00 00 d7 0d a0 00 01
->>> |H.......H.......|
->>>    00000070  48 00 00 00 0e 01 00 01  11 b0 58 00 02 00 40 00
->>> |H.........X...@.|
->>>    00000080  00 00 50 fd 00 00 00 00  00 00 00 00 00 02 04 00
->>> |..P.............|
->>>    00000090  5a 4a 29 22 ef 77 8f 05  00 00 00 00 00 00 00 00
->>> |ZJ)".w..........|
->>>    000000a0  03 08 00 00 04 fe ff 00  43 00 ff 00 00 a5 00 00
->>> |........C.......|
->>>    000000b0  04 ff ff 00 00 00 00 00  48 00 00 00 00 a0 00 02
->>> |........H.......|
->>>    000000c0  48 00 00 d7 0d a0 00 01  48 00 00 00 0e 01 00 01
->>> |H.......H.......|
->>>    000000d0
->>>
->>> The relevant part (after decoding with `iasl -d ivrs.dat`):
->>>
->>>    [090h 0144 008h]                   EFR Image : 058F77EF22294A5A
->>>
->>> I'll provide any required details and test patches!
->>>
->>> Thanks for your work, it's very appreciated!
->>>
->>> Andreas
->>>
+Why not just narrow the quirk
+-----------------------------
+
+Nothing available at setup time separates the two dongles:
+
+  - same project_id (CHIP_ID_8761B)
+  - same ic_id_table entry, IC_INFO(RTL_ROM_LMP_8761A, 0xb, 0xa, HCI_USB)
+  - same firmware file, rtl_bt/rtl8761bu_fw.bin
+  - both advertise the extended scan commands in commands[37]
+
+They differ only by USB id, which btrtl_set_quirks() cannot see.
+driver_info cannot carry it either: 0bda:a728 has no entry of its own, so
+it falls to the generic Realtek entry in btusb's quirks_table -
+USB_VENDOR_AND_INTERFACE_INFO(0x0bda, 0xe0, 0x01, 0x01) - which precedes
+the per-device entries. usb_match_id() takes the first match and
+0bda:8771 also presents e0/01/01, so the specific entry for it at
+quirks_table:840 never applies.
+
+What this series does instead
+-----------------------------
+
+The quirk is documented as being for controllers which "erroneously
+claim to support extended scanning" - and one that claims support in
+commands[37] and then answers Command Disallowed is saying so itself.
+Patch 1 latches the quirk right where that command is issued; every
+later scan uses the legacy commands. Patch 2 then drops the static
+per-chip-id guess, which 0bda:a728 no longer needs. In this order the
+series is bisectable: patch 1 alone changes nothing for anyone whose
+quirk is already set at setup.
+
+An affected controller pays one rejected scan round per power cycle
+instead of a permanent stream of failures, and dongles nobody has owned
+yet are handled without waiting for a patch.
+
+The latch is sticky, as quirk_flags is never cleared, so it matters that
+false positives are unlikely: hci_passive_scan_sync() always disables
+scanning before starting it, so the controller is never asked to enable
+a scan that is already running - the obvious legitimate source of
+Command Disallowed.
+
+Testing
+-------
+
+Built and running on v7.2 on the 0bda:8771 dongle. Extended scan is used,
+the quirk is never set, no 0x200c and no controller resets, and a
+keyboard plus a trackball stay connected across repeated LE scans - the
+exact sequence that wedged the adapter within ten seconds before.
+
+What I cannot test is the other half: I do not have a 0bda:a728, so the
+err == -EBUSY path has never executed here. Alexej, does your dongle
+still work with this series, and do you see the "extended scan rejected,
+using legacy scan" warning once? Also, 0x2042 carries both the enable and
+the disable, so I cannot tell from your report which call site returned
+-EBUSY - knowing that would tell us whether a single rejected round is
+really all it costs you.
+
+Sending as RFC mainly because patch 1 sets the quirk at runtime, while
+the existing comment says it is set before hci_register_dev or in
+hdev->setup. I updated that comment, but if you would rather keep the
+quirk strictly setup-time I am happy to respin as a USB-id match in
+btusb.c instead - it just needs the quirks_table ordering sorted out
+first.
+
+#regzbot introduced: 5ead2063611ae56809b1b113ac44cef9547c81d7
+
+Kamil Serwus (2):
+  Bluetooth: hci_sync: latch broken ext scan on Command Disallowed
+  Bluetooth: btrtl: drop the blanket RTL8761B extended scan quirk
+
+ drivers/bluetooth/btrtl.c   | 13 -------------
+ include/net/bluetooth/hci.h |  4 ++--
+ net/bluetooth/hci_sync.c    | 15 +++++++++++++--
+ 3 files changed, 15 insertions(+), 17 deletions(-)
+
+
+base-commit: 8d3ae59288f1e7d58d76558a6ee96d533bc5019f
+-- 
+2.55.0
 
