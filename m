@@ -1,166 +1,178 @@
-Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-24421.protonmail.ch (mail-24421.protonmail.ch [109.224.244.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B0C51F8691
-	for <regressions@lists.linux.dev>; Sun, 23 Aug 2026 00:36:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.221.172
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787445384; cv=pass; b=ee4C7MtH0iHyAFYJpEidN+xvzloAJbQwoUBc5suc4droyDpIKugKlsNHlSAcmhqI4itd6EbXNX/u5IHXOCfpFfoesSgpjpRJ1scgizoRUaVG0GhY+SViPPfmhrz+AYB1MmPDJ8lLdedAVi5/jm7B1ORb2eZHk9hyLA5PLMhJ00w=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787445384; c=relaxed/simple;
-	bh=IpHcjZ3NayMqvBih3E3O9x4doOsXtbt93QADiafRZnc=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=q6f7c+z29yY1mjxJUwZPn9BtsCZmkMByqECbb+GQe3UC6a47VdveUe5pLGw1GqgCSQugUAQ2Enr0+pR7eUs6Qhb70fqD9Wt6fyx6NzZbUJDwjAwIIndpeP2UZI2Lbh68wqgCWDlIppdYHeD7ShORrdECkSz1nfkF37xl9duwrH8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dTzYijVJ; arc=pass smtp.client-ip=209.85.221.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD28E364043
+	for <regressions@lists.linux.dev>; Sun, 23 Aug 2026 02:14:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.21
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1787451282; cv=none; b=nt3xpIUKKvWXmgZ0jOkCsj/IXL8wO1u/svvr2aD8BWeYlasswkaJzD0GqtbAZkvn3bzRogtsgn4MbOYFy1nqimBCQanx7KW1niytgcXPxF+v99c4uOgMMSYqXV9CKfpdNB8cqBWJVr5556v95JFE7g8ywCsK5gwgI+bDNWreHW0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1787451282; c=relaxed/simple;
+	bh=DRkxTvZbI1EJfie9pxFcCEipG+No0t5u6lL906w7lu8=;
+	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=VrLPXSZnHJPrpCadlJ3fifhDer8D8uffA4s+KxqCnx11B5ioGjGbBFSfKoW3vl2zD9KLTzDzEKtp5xclUhvPNEmfbJtI1JOkxNYVq+sXWcLQudp6Yr/nqqga1NP99JfKgzLOuZ6SS2ZiH3loo8cbXE6Y8taO5q83RaD4+net2+E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=httpd.dev; spf=pass smtp.mailfrom=httpd.dev; dkim=pass (2048-bit key) header.d=httpd.dev header.i=@httpd.dev header.b=DvDdywB4; arc=none smtp.client-ip=109.224.244.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=httpd.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=httpd.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dTzYijVJ"
-Received: by mail-vk1-f172.google.com with SMTP id 71dfb90a1353d-5c5a818a3d6so1844980e0c.1
-        for <regressions@lists.linux.dev>; Sat, 22 Aug 2026 17:36:22 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1787445382; cv=none;
-        d=google.com; s=arc-20260327;
-        b=nnFGWzEgofKduqrg3k0zXGZU0naJKWAIco8CoxfR6vmVyCn3tHhH78BHGt+u9n50+Q
-         Oer5PKT5dwc9l6Sl/HzxPMV3r5FRd/u00M1vgHOwJISWBoSO6jU2VqPb6ctRgiSlKrQZ
-         vcxF7NVfzXsjLdzytzL/3r/i0VvNu0YeT9/TYXpj7ywIB8I5XgK3vNCCx10SB30xJqON
-         atwTvfoUYLxXwRKDi5bnFYSAsQIKgy5sufYelAPVtx4jNGGMYjt3Uwz2/Td21McA6EuT
-         6gdV50gjCC/rt0TDnXIj0J5TucteOWn20e4YCl30lwTvE98plASm1sUYYqt1mhvXIcBj
-         chhw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=to:subject:message-id:date:from:mime-version:dkim-signature;
-        bh=3Pdm/5HsS5zC32B4oG3X1nNqflyH/Na8m3BnnAtmnRA=;
-        fh=CPSF9JIVBT5vcBb2tw4CBsUrf86Q60jPt98yuHcIyo8=;
-        b=iaZlbma8PB0OeVNFDXlly/PYRr/SWhtHQYvV15/V72Yf3TJQaeND/8a+aDcsLIMcwz
-         H+imrSVmIJTIaLu2OsYUO7s/bYzOJWtXKDmmpC2TpcrqgO0rblL2kOnNSj39UjJtmhpq
-         NUCFzTOz21jXywUKbhS3IQjs7yk/k/fSMf7iG0T5VcX8kfGe/X7Duh891qaM6Yh16te0
-         fxRiJr1vrVEuwNVjxLzGNeg6vtupox4f35NiuUQ9t0UlN9FrTC7iPaDDV15QGaxlANKI
-         r0QXEyy+LTn70iIZsP6OeYDij3xNnFAU4JnzyWv3ufzqZpaWee9Tmu3BlhFzruKs8dQr
-         PPFw==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1787445382; x=1788050182; darn=lists.linux.dev;
-        h=content-type:to:subject:message-id:date:from:mime-version:from:to
-         :cc:subject:date:message-id:reply-to:content-type;
-        bh=3Pdm/5HsS5zC32B4oG3X1nNqflyH/Na8m3BnnAtmnRA=;
-        b=dTzYijVJEX+fvQBgSSZl9LvSHZerZlP8DU/PbuUNymd3bBdvqFiybB9pAnldhPQw0k
-         w2D8e0PzsjdX1TtVYdNoGq9geUKhHp/7Ig6MbHXpwQxU9CUolzZC9PBaTwYvxh2DqCcM
-         ERPakQA7KoVLfP9YbhPNH7/LUtBtdUopuVLHm1LkVfWG68X+qV3qtsQrSF5O0KcGzYR9
-         wXig2fW+DTptIQu0xL2UuROgCgMSJMJcM/T/F3JdhSg6N4xJ2+C/UBQV78qIJh/niGfx
-         t7q2YzsW9ccddgKs334QtOAKkLO/EpnyRfAobYGqBXtp8JUd3A6V3BhYuLbUwIxqVLRZ
-         gF+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787445382; x=1788050182;
-        h=content-type:to:subject:message-id:date:from:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=3Pdm/5HsS5zC32B4oG3X1nNqflyH/Na8m3BnnAtmnRA=;
-        b=tWgZVCbKpWo2Rw5J8HE8xuypwp0sDBHYV5J9glD/OGzpbTI7JuMjg3UKVb7o1HtJv4
-         tIVqN1yQAkHTpKpXH/GoqJLBh3PS1ByHwYNcPo5eg00g5wMrxscxLtRZ1Iunn2HfkLmS
-         1s4vEpdNiNtaDh9POp4Zj8/kmePVqnJu8zLzHkAbpE0wSxesh+qsdEdkImd/dScG5mfS
-         NyDvU6nswY1ONRTr4AfjHGRzNKiD644lqRVVxH6OlSqOVaXjXqleIBbCUWGs6eZdwyhE
-         /dQHHl3Q9CVG7D8wQJou8GL282fJP58Zxp6tsqoF3BvRX1E8EheQdjSdjdLF6lPWC/fv
-         3+hQ==
-X-Forwarded-Encrypted: i=1; AHgh+Rpu2XTSwr3Zi4oEoa4/HzfenCggi90EYX7YTlRjSYc4488X4SEqnhN1r9+Z9h3VoeEDQQaUJ3tWj2+MMA==@lists.linux.dev
-X-Gm-Message-State: AFuF++nvnQAQxkeLhtHAL5pqrkikvhLLx+8ub8YdgKhwQRosloP+r3yo
-	7M+4d8ze0cdpvMEmYf13lmxXveMd2w0pBRw5T4bxo3TFh9UtwulOqPK8DHJBx6hTzGuUtTwiUC9
-	EdmGjuUNKixxkk7CWPK9tGRqFSi2abt9J3ETj2ho=
-X-Gm-Gg: AR+sD115hbGlYGEkdQxkpFTVyDtu+uwxWR11bYOBumejr+dAMTSBgAiduXKHQDRNjpw
-	ectS5iYv1Dsc3vBK8GNslcmJZjN1Kak6LzI+f1mTwz56HwD4GofqA1jiU0szLah7xXwZuSNhOSj
-	doFF+XXvllOD+GqImyxsyKKkKjMxWivfczVup9IG80JHtHqzZuU8QVSds1Bjx882pYftV1Z2yEF
-	+0kvH3D60ElIOdsvMoEYePYKuusyCdTYixAn1VPia0L5cpPtb17l1rp1yNAyDcM8hmQWelrPjOX
-	9lRa/TzeStQExK+gkUYrgdvRZzV4pKornBlcaPeU3mY+
-X-Received: by 2002:a05:6122:489a:b0:5c3:2f5c:55b3 with SMTP id
- 71dfb90a1353d-5c5ff7a68a2mr8236180e0c.3.1787445381909; Sat, 22 Aug 2026
- 17:36:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=httpd.dev header.i=@httpd.dev header.b="DvDdywB4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=httpd.dev;
+	s=protonmail2; t=1787451271; x=1787710471;
+	bh=4J6bCxPshWp7f3qp56C2WcD7YMKy40HDmmnsQrLHimM=;
+	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
+	b=DvDdywB4rI3wC3O16hurybpVl9ACdYtsRKa6vbDts9EngNAE7yR8SfsuCgQycby+7
+	 UObVznkDmM+gf4zhbvilw5lRAh1KVnUHzwF02iH6MACFV7kTriL6G/bFHerS4/X4oC
+	 eRJyBc0ZaL7vAwrNprs2gXnYKr//jp6WkVHlxkQaCVLClGNAZ2HsFanCNcTFweo3ZB
+	 OY8LlpTrzlKAXwjKblVBRg0gqABoqA3T9kdVCpWp32bac0FE/rujrSJE/k0r0S6cwf
+	 JEQ4VLIo1R5qcBMSkKMoHKgQxOTPvOnNb2Vjq4QADzGlgxnmCOWuWN2Q0ZtOl2u1Kp
+	 la+guzjMT6fkA==
+Date: Sun, 23 Aug 2026 02:14:25 +0000
+To: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+From: Angel J <iamanaws@httpd.dev>
+Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>, "stable@vger.kernel.org" <stable@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-rpi-kernel@lists.infradead.org" <linux-rpi-kernel@lists.infradead.org>, "helgaas@kernel.org" <helgaas@kernel.org>, "robh@kernel.org" <robh@kernel.org>, "andrea.porta@suse.com" <andrea.porta@suse.com>, "florian.fainelli@broadcom.com" <florian.fainelli@broadcom.com>
+Subject: [REGRESSION] PCI: Dynamic OF node creation hangs on invalid bridge configuration
+Message-ID: <GXe6anuewkS4bLNwca3cYOmUxN9csc0TxLYGSBc1qNRmfrmvFlcmD62wEM23TxfzfuXAv4P3yvUv7pyraleARrL1Na-aN8w-t9uc1Igu8DA=@httpd.dev>
+Feedback-ID: 163474212:user:proton
+X-Pm-Message-ID: 31142567ec075a3e2598ab04adff317de0e77832
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: =?UTF-8?Q?VOLKAN_SAL=C4=B0H?= <volkan.salih.06@gmail.com>
-Date: Sun, 23 Aug 2026 03:36:10 +0300
-X-Gm-Features: AcwNN1W0_Bz7QYAT9V60rz2l4_bJDFUR0hstZX3hdx3Ab_UhZbX18RbGhS9ja7g
-Message-ID: <CA+wWBLPxFPQB1Dt0MAJSNZ43dhGDspSD9jH98TArTf_etjLmSw@mail.gmail.com>
-Subject: [REGRESSION] hp_bioscfg hangs boot on HP Laptop 15-bs1xx;
- blacklisting fixes it
-To: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; protocol="application/pgp-signature"; micalg=pgp-sha512; boundary="------0ef466dcdb1e40e51586a73753b73daa3d57415976dd54a41ab1ba279b082e9e"; charset=utf-8
+
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------0ef466dcdb1e40e51586a73753b73daa3d57415976dd54a41ab1ba279b082e9e
+Content-Type: multipart/mixed;boundary=---------------------5816d7253a565b3528da584c08321c23
+
+-----------------------5816d7253a565b3528da584c08321c23
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;charset=utf-8
 
 Hello,
 
-I am seeing a boot regression involving hp_bioscfg on an HP Laptop
-15-bs1xx.
+This regression was introduced in v6.17-rc1 and remains in the dynamic
+PCI OF node code. Linux 6.18 fails very early during boot on my Dell XPS
+8940 when CONFIG_PCI_DYNAMIC_OF_NODES=3Dy. The display goes black before
+any useful console or pstore output appears, and the machine remains
+hung.
 
-System:
-  Model: HP Laptop 15-bs1xx
-  SKU: 7WG51EA#AB8
-  Mainboard: HP 8444
-  BIOS: F.75 (04/26/2024)
-  GPU: Intel HD Graphics 5500 / Broadwell-U [8086:1616]
-  Distribution: Zorin OS 18.1 Pro (Ubuntu 24.04 based)
+Disabling CONFIG_PCI_DYNAMIC_OF_NODES makes the same kernel boot normally.
+Linux v6.19-rc5 also boots because the RP1 driver stopped selecting that
+option, not because the dynamic PCI OF node code changed.
 
-Kernel results:
-  6.17.0-40-generic:
-    boots normally
+Hardware:
 
-  7.0.0-30-generic:
-    hangs during boot
+  System: Dell XPS 8940, board 0K3CM7, BIOS 2.27.1 (2025-04-03)
+  CPU: Intel Core i7-11700 (Rocket Lake)
+  Triggering device: 0000:00:00.0, Intel 8086:4c43
+  Firmware boot: UEFI, ACPI-based x86_64
 
-  7.0.0-30-generic with acpi=off:
-    boots
+Test results:
 
-  7.0.0-30-generic with only hp_bioscfg blacklisted:
-    boots normally with ACPI enabled
+  Linux 6.12.103: good
+  Linux v6.17-rc1: bad
+  Linux 6.18.44, CONFIG_PCI_DYNAMIC_OF_NODES=3Dy: bad
+  Linux 6.18.44, CONFIG_PCI_DYNAMIC_OF_NODES=3Dn: good
+  Linux 6.18.44, CONFIG_PCI_DYNAMIC_OF_NODES=3Dy, skip invalid bridge: goo=
+d
+  Linux v6.19-rc4: bad
+  Linux v6.19-rc5: good
+  Linux 4621c338d33f: bad
+  Linux e55feea3a03a: good
 
-The working kernel command line workaround is:
+The first-parent boundary between the last two tests is:
 
-  module_blacklist=hp_bioscfg modprobe.blacklist=hp_bioscfg
+  e55feea3a03a ("Merge tag 'soc-fixes-6.19' ...")
 
-The boot reaches hp_bioscfg initialization immediately before the hang.
-The WMI GUID shown during probing is:
+That merge contains ce26f588c831 ("misc: rp1: drop overlay support"), whic=
+h
+removes:
 
-  5FB7F034-2C63-45E9-BE91-3D44E2C707E4
+  select PCI_DYNAMIC_OF_NODES
 
-The system also reports these firmware ACPI errors:
+from MISC_RP1. The generated configurations differed only by:
 
-  ACPI BIOS Error (bug): Could not resolve symbol
-  [\_SB.PCI0.LPCB.HEC.ECRD], AE_NOT_FOUND
+  -CONFIG_PCI_DYNAMIC_OF_NODES=3Dy
+  +# CONFIG_PCI_DYNAMIC_OF_NODES is not set
 
-  ACPI Error: Aborting method \_TZ.TZ00._TMP due to previous error
-  ACPI Error: Aborting method \_TZ.TZ01._TMP due to previous error
+CONFIG_MISC_RP1=3Dm in both. The known-bad 4621c338d33f and Linux 6.18.44
+both boot after disabling PCI_DYNAMIC_OF_NODES (and MISC_RP1, whose Kconfi=
+g
+select otherwise forces it on).
 
-I inspected the hp_bioscfg module from Ubuntu's 7.0.0-30 kernel:
+There is no RP1 device in this machine, and its driver does not probe.
+MISC_RP1 affects this x86 system only because its Kconfig select enables
+PCI_DYNAMIC_OF_NODES globally.
 
-  /lib/modules/7.0.0-30-generic/kernel/drivers/platform/x86/hp/hp-bioscfg/hp-bioscfg.ko.zst
+I narrowed the hang to dynamic OF node creation for 0000:00:00.0
+(8086:4c43), the Intel Rocket Lake-S integrated memory controller. On
+this machine it reports PCI class 0604 and header type 1, but it is bound
+to icl_uncore and is not a usable forwarding bridge:
 
-It contains the old error strings:
+  Bus: primary=3Dff, secondary=3Dff, subordinate=3Dff
+  I/O and memory bridge windows: invalid/all ones
+  kernel: bridge configuration invalid ([bus ff-ff]), reconfiguring
 
-  hp_bioscfg: ACPI-package does not have enough elements: %d < %d
-  Error expected type %d for elem %d, but got type %d instead
+A minimal dynamic node for this device boots. Adding only
+device_type=3D"pci" makes it hang. Full PCI dynamic OF node generation als=
+o
+boots when only 0000:00:00.0 is skipped.
 
-I noticed the recent patch series:
+I also tested a generic guard in of_pci_make_dev_node(). It reads
+PCI_PRIMARY_BUS and skips node creation if the primary bus does not match
+pdev->bus->number, the secondary bus is not greater than the primary bus,
+or the secondary bus is greater than the subordinate bus. Linux 6.18.44
+boots with CONFIG_PCI_DYNAMIC_OF_NODES=3Dy and logs:
 
-  "platform/x86: hp-bioscfg: fix ACPI package handling on HP EliteBook 840 G2"
+  pci 0000:00:00.0: skipping dynamic OF node for invalid bridge
 
-including:
+The regression was introduced by 49d63971f963 in v6.17-rc1. Commit
+ce26f588c831 made v6.19-rc5 boot by removing MISC_RP1's select of
+PCI_DYNAMIC_OF_NODES. That avoids the failing path in the tested
+configuration but does not change of_pci_make_dev_node().
 
-  e0ddfd77c0c3 - pass validated element count to package parsers
-  1d143d78299d - bound ordered-list parsing by package count
-  40e10e6cc8f7 - accept reduced ACPI packages from older HP BIOS
-  b0e2af3ec94e - warn on element type mismatch instead of failing
+I do not have a log from the failed boots. No output appeared with
+earlyprintk=3Defi,keep, keep_bootcon, ignore_loglevel, loglevel=3D8,
+initcall_debug, and EFI pstore enabled. Blacklisting both GPU drivers and
+disabling the Intel IOMMU did not make the bad kernel boot.
 
-The series was applied to the platform-drivers-x86 review-ilpo-next
-branch.
+Should of_pci_make_dev_node() reject devices with invalid bridge bus
+configuration, or should 8086:4c43 use a device-specific quirk? I can
+prepare and test a patch for either approach. For Linux 6.18 stable,
+would that fix be preferable to backporting ce26f588c831 and its
+dependencies?
 
-Could this HP 15-bs1xx boot hang be another manifestation of the same
-older-HP-BIOS ACPI package handling problem?
+#regzbot introduced: 49d63971f963
+#regzbot title: PCI_DYNAMIC_OF_NODES early boot hang on ACPI x86
 
-If so, would these fixes be suitable for backporting to the affected
-stable/vendor kernel series?
+Thanks,
+Angel J
 
-I can test patches or a patched hp_bioscfg module on this machine.
 
-Regards,
-mr.Volkan SALiH
+
+
+
+
+-----------------------5816d7253a565b3528da584c08321c23--
+
+--------0ef466dcdb1e40e51586a73753b73daa3d57415976dd54a41ab1ba279b082e9e
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: ProtonMail
+
+wrsEARYKAG0FgmqKV28JEBoBbwppzUxnRRQAAAAAABwAIHNhbHRAbm90YXRp
+b25zLm9wZW5wZ3Bqcy5vcmdLuaAoGKL92QTzbI2Uy7jw4k6tIc99AdBp6S6r
+YQoA3BYhBEAFf9htFyVnqZzmVhoBbwppzUxnAADIqQD/fnLk8GJzel74P3PZ
+NqUm7u5JPB8p1goB/ebqiGCVVakA/jt6U8pQNghHs/SsdfY/fVJqNl9WXIEV
+5zaRuPsjk5cK
+=Lb99
+-----END PGP SIGNATURE-----
+
+
+--------0ef466dcdb1e40e51586a73753b73daa3d57415976dd54a41ab1ba279b082e9e--
+
