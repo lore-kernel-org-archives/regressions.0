@@ -1,83 +1,83 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CC5F388E4B
-	for <regressions@lists.linux.dev>; Sun, 23 Aug 2026 15:41:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BE4C391849
+	for <regressions@lists.linux.dev>; Sun, 23 Aug 2026 16:10:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787499667; cv=none; b=LZ2JRNBg5UajnE94MU4m0910mrmed4uNG4k5HYJAiacqidbf5dUdtFh3+8r7ylh60wHBAmBhRWD3NeLNRWV7Fw9I49Y9SxmXouxVXJ+1gNP0k2FpVhx7OtHOBidJVr+OWNtaFiTCeDkkAeObDrRM+FZSK+UaxUyVZC6VALn4Duc=
+	t=1787501451; cv=none; b=mmCrL8ZOuFFxbQNpHuMmFqXCLRyMcjeCJ7rwMloAqSLuiPOs/NwgHa7lkSTUnR1Bdpeo+Er0BrXE4sRA7s3Z7c0UAf7IwVQDM+iWAlfLw89E3M1mkJh7VRuNu+NXnxMQJojbeBSOSw+7sfiVjHWUgPc4mNr1/+I5VQgncnw5dfQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787499667; c=relaxed/simple;
-	bh=9eWj5XAL93q32Q5MLRGJkVADfGX6bq+xqj5j/soOMlc=;
+	s=arc-20240116; t=1787501451; c=relaxed/simple;
+	bh=lbWmABHhb9TMAF2Ok/ofP++jFSdI06DXNKBawGkc4oQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Q/S8cl8m3hSlTg7CNkzGjsuUoO5jd8gaPH3U6cCtQJHaHxKnyDwZEK6P+jR3yJNBp2Byye9J9CwGUpYdFtg4Ik4xHczPkTbns0MLijW/Om5vACRFSrLCOMw/Vr08inzxdgQRfu+4EmF4yArfnxCB3FbMnsPMhT+WczL8tuemvL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g1yDyGUe; arc=none smtp.client-ip=209.85.218.44
+	 MIME-Version:Content-Type; b=dRAGGS3kYxOgMHcLORoo7M47gIox0937SpdHXNvp5SSKKMepZfAiLNzlECGJ2m1J6iUAsydcf9mM/YGO5Cblr+R8yVk18LlY9DUX1k0SYk9A7ex9Z37vxPwVZNi9YP9PxxKOFSENeFEFugDAsxan0sHFeLCOg+D8HQvjIxUeWD8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nSCaPsEJ; arc=none smtp.client-ip=209.85.218.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g1yDyGUe"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-c1600d040e4so398648166b.1
-        for <regressions@lists.linux.dev>; Sun, 23 Aug 2026 08:41:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nSCaPsEJ"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-c1c52d920b8so376725166b.2
+        for <regressions@lists.linux.dev>; Sun, 23 Aug 2026 09:10:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1787499664; x=1788104464; darn=lists.linux.dev;
+        d=gmail.com; s=20251104; t=1787501445; x=1788106245; darn=lists.linux.dev;
         h=content-transfer-encoding:content-type:mime-version:references
          :in-reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=oEct0orVM3nYfYZT6CEjrYWKIotoQoECzwgIHGor4Mc=;
-        b=g1yDyGUe+xDYRIQS3F/Yep2JPuG0G7j5vFpbuoOMjGAVtbLErekqvKdUuRyl2uSDOQ
-         0PF3ZAasXonPlF289IxeqoEgvK3uVVbGTnGsWu7jOGUWk23HT28m1tmGaISKI/RqRpzo
-         MFBZF4m0qfyh06tGo1KvckwhXjQRYx2nVkc9nFYaHnV/j0TC5/QOD/bkWdohjwmsqBe2
-         kaPVRA6iOE5ZAEyYLK1PNSMsaHZ6IK8JatsSzOcBYEq4BX7W5FCLcdXOqqy3EzAEDv8v
-         HaUt+HFiD/7cG/78cRerOz1K6jAnLnqwkTTfYlyux4+NbMLTOskavILPaNIZMRSKe+U5
-         1SAw==
+        bh=TyORu0icZu5goeOAIcax6J1V8GVbm7LatmMPeHFdvPo=;
+        b=nSCaPsEJ7xMLCuYrzrjs0YSJ9WsDKbFz/MeeYePdpb6vpewKS8wdxGcR0jzxWPWzRu
+         O6JuAaQdhvQIRrE07+wtVgnd7EzWO2YKq6O7D2QXACVsuxATZNmtXwna3ede9SWjFs+9
+         2lw7EKKg4htAsDyVykUPbKXQn1B6qL/x93KjsYlR+lLV6YkPE0oJejZEAZknv04n+MJd
+         R7g+kOu2stwGs0rsTnraVHPx/+La7Bw6z2XIjN7vQITzKEbSpP3SCPkwSyA3TWm6+YE4
+         YbeP9S6L3HfrAjBo5J4ecv4eFBmjWSCxBnNZq3M2UWM6qV8b4nybJYRF+ZvpgyUiL9t3
+         LLtg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787499664; x=1788104464;
+        d=1e100.net; s=20251104; t=1787501445; x=1788106245;
         h=content-transfer-encoding:content-type:mime-version:references
          :in-reply-to:message-id:subject:cc:to:from:date:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=oEct0orVM3nYfYZT6CEjrYWKIotoQoECzwgIHGor4Mc=;
-        b=Zm+WiQ44cG+8mA9oS5GPOIi6x1CMcjCzTkZ4ZN4PKgR1n9hnPgjzIhKEnzS4Is4/VQ
-         NhGKYhCuZ9b/71pErU+NAOu2wl5NuwF7R6ZHPCoSrJAA+NGH4AMauGfZWBFy0GPAcKZ8
-         BZYR6E/1gFID4saKeRPyyCIo5+qNiQ5llrRP98HsFILX00fReU3piReneBXEVjHNfNRn
-         GqocmfjsKij84UhjGDCCMPTh0CNU06IWTAbIvJyeA2HVfwTYvq+sHiEy96iI6DAg8S/k
-         XLkZqKRSca/mbqT0mFS+gN6a6vYLCvUW3kv01lLjauP2om5cQJRPtPcRBVwbxe3YN88J
-         dF0g==
-X-Forwarded-Encrypted: i=1; AHgh+Rqd7hyhDXr1MlkN1XjkF7cZBD14kRSgWW6SMLcwL0O8dFFpZY7ZQX8QjTVouEuRd3tpd7+G6N1w8UvmHQ==@lists.linux.dev
-X-Gm-Message-State: AFuF++kIWMRnr/wjYaAlUjM5DVnrfj+7iYhRLaK7zZ2XO76U692RgLDR
-	PCCSHJsiiAAEi1q2MWOchbAnzKYl5d0oYnPMB9P9U9crcW0+lmrUNr3b
-X-Gm-Gg: AR+sD11HpfgIJV7BE8COIc9VOzP3nrRCLLFcYwXKGazx+1wIkJW/czpQsVVTu2fUpmv
-	ZrdeJcjEL4lJ268YmnhCjDgH2RMX0Sr1YMRC7qzPYeBxgCr4JLv+3i4z8vd2KEN1Q8Fj4T/U9bo
-	qWrB9LoXhgO3FSrYmhOcQrK5OtwdsfDGjFdDwuVRsyKpyOsd6DYVkMwAAy8o+DLqJJ7PAY9V14R
-	2SblgPGht2z+RxZ6xYSUu/glUo56n/mgT40mKlgtdQUv5NL1f47z+qXv9+RK699G3voC7/pHUOg
-	HuSOwvSOFsSmxM8mzot0WLQx/fKFbTxeler+4j22994JzVp5s5RKQqras2NPkuZ5SAz6eVwZTm1
-	GUTr5Gimd6JgYU4sGCD6IWyLZKY94qFTb+zvcIp7sM0P3eLKJOSXhhFYAt7+ck9RJ6qn3lsruaY
-	g86nrxNrdah5GYztXpEAjfKSm/y1ESnq58+6L0hS+6bAcfrqBM0LMox/zGqkw3x6duJng=
-X-Received: by 2002:a17:907:9610:b0:c12:3cbf:9f6d with SMTP id a640c23a62f3a-c246d582330mr1894237766b.1.1787499664318;
-        Sun, 23 Aug 2026 08:41:04 -0700 (PDT)
+        bh=TyORu0icZu5goeOAIcax6J1V8GVbm7LatmMPeHFdvPo=;
+        b=HD9R+AHmDvZ0dKweWwl6316zOXsHgd6joeirphEszf/xYrRETdFr78FtD9JoYOUCLK
+         i6gsIBnX+fYY5CINWjBqtSZxkMSRgn280IW4pzWpQo//Lvaw40UKzHOTBpC8mL3vZ4GT
+         7TR3BDvILo8qupxFBViD8akf4AZX+agzrp76HWERyT6afSyXpxhB3+wrzOWvD1fCIZD0
+         R6R8kZzF3/79zFW2fUS4NrZGQvKOzYiBP0JeAzpf4uo2jDjh/ingpFwLlCQQyuUTtUvQ
+         6rdsvs9ayooHntNOWh3f59m2lLVX29dy/1IHr8/jtTzG8nYlgGvFnIw9AamGxvICfLYY
+         GR2A==
+X-Forwarded-Encrypted: i=1; AHgh+RpL0BOZbXB7m8XXTvN7MRIins5xHVOO4MfiiCrvCry2VL0+1Zy9LeQuBolnOJGgW9qLHJE6ZgdF3Vn9yQ==@lists.linux.dev
+X-Gm-Message-State: AFuF++kphhr8lmjZkEsJB+FDPPB1khqo3qyXX0jC0ArNUcRowV2CdPtG
+	z+8qHSIPpFQEHX+7uT4lxTy3tVt20Vd4Y5aDMs9KNGhz3/iz4p9GI/cm
+X-Gm-Gg: AR+sD10p4bUw8sjIq3dFGk+HG4Yo8nqRZAzZ8HH6yNmscIVO1N18cw5y73PpYX6ZV3x
+	r+WCTH2nNkjCCpaH/lKSAuh6ujGF+lZMecSD/nWnEaHKv3ig+eQrl8q9foVRhJszM3vyKlp6xZs
+	rmB+bGDkHDD0kO3PSK1Jzt9dkk2THIJlp0/JF0rVZgmUiaZ8et4ogja8wtm0xO0/GDEpNxwb7GR
+	kMerbWFTOMmeZhqY0zZ69ALRK7OuGzjhGEBz+M4keonAGYxsBSSenPOWe3nAuqjXEZOsRp9vYa1
+	QCOr2WVT3GFAdeH0LqTO6kaA9lfAXiiiYbFc1Zc+za02WFUonOjm8cVOOVQhToaXG62Drb0k1oX
+	S/JoZ9DzBu/zpiI1IFNSkcoxwsPgJUzbIcIslGewp3ACIGyk9LiNnn2DMgMZNJ0tdVv3UxzxNJR
+	5sSjCGrRX8lb0BeO7hYMuGf/9A/u6sQfFSi6pogikASWcVk4ZFFBiu/BuMO+qkmnS/Z8k=
+X-Received: by 2002:a17:906:ba97:b0:c12:9b98:209e with SMTP id a640c23a62f3a-c246a692891mr2208059466b.23.1787501444843;
+        Sun, 23 Aug 2026 09:10:44 -0700 (PDT)
 Received: from foxbook (bfk5.neoplus.adsl.tpnet.pl. [83.28.48.5])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c2495ee5295sm843708866b.0.2026.08.23.08.41.03
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c2496738e7esm921183566b.46.2026.08.23.09.10.43
         (version=TLS1_2 cipher=AES128-SHA bits=128/128);
-        Sun, 23 Aug 2026 08:41:03 -0700 (PDT)
-Date: Sun, 23 Aug 2026 17:40:59 +0200
+        Sun, 23 Aug 2026 09:10:44 -0700 (PDT)
+Date: Sun, 23 Aug 2026 18:10:41 +0200
 From: Michal Pecio <michal.pecio@gmail.com>
-To: Lovekesh Solanki <lovekeshsolanki00@gmail.com>
+To: Mathieu Fluhr <mathieu.fluhr@gmail.com>
 Cc: Thorsten Leemhuis <regressions@leemhuis.info>, Mathias Nyman
  <mathias.nyman@linux.intel.com>, linux-usb@vger.kernel.org,
  regressions@lists.linux.dev, stable@vger.kernel.org,
  linux-kernel@vger.kernel.org, Mario Limonciello
  <mario.limonciello@amd.com>, Forest <forestix@gaga.casa>, Slavik Dev
- <developer.slavik@gmail.com>, Mathieu Fluhr <mathieu.fluhr@gmail.com>
+ <developer.slavik@gmail.com>
 Subject: Re: [REGRESSION] 6.12.36+: usb: hub: post-resume delayed work
  triggers > uncorrected MCE / data fabric sync flood on Threadripper 7970X >
  (bisected to aec11e5f9c45)
-Message-ID: <20260823174059.46fec036.michal.pecio@gmail.com>
-In-Reply-To: <aosGtkE_diwVJJtB@eggarch>
+Message-ID: <20260823181041.4eb74365.michal.pecio@gmail.com>
+In-Reply-To: <CAPyJwA-eNSbVGV0uhy0-2w2_Gs0dWdOeJLRpBSLVO_a01-ZPxg@mail.gmail.com>
 References: <CAPyJwA_D9qw0T72f8zwM1yKjP+To=maVANbcdsWM7yRmbBxYvw@mail.gmail.com>
 	<CAPyJwA9R=p8_uxyYODb00g_nUq26SRsWHBGgAAJnR0YMTRRo4A@mail.gmail.com>
 	<CAPyJwA9P48LDcOr7u_iT1WPFBCHxh9w6cxFvyi5GS3syM6crbQ@mail.gmail.com>
 	<07435e6b-ee30-4c85-8c8b-0ce3a4ead1d9@leemhuis.info>
-	<aosGtkE_diwVJJtB@eggarch>
+	<CAPyJwA-eNSbVGV0uhy0-2w2_Gs0dWdOeJLRpBSLVO_a01-ZPxg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -87,48 +87,53 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Sun, 23 Aug 2026 20:47:55 +0530, Lovekesh Solanki wrote:
-> I don't think a revert is needed here, we're just trading one
-> regression for another.
-> Commit 8f5b7e2bec1c introduced the 200ms hold for all superspeed hubs,
-> but it's only useful for external ones. Root hubs are superspeed hubs
-> too so they go through the same code, but there's nothing useful for
-> the hold to do there:
-> A root hub has no upstream suspended hub whose wake propagation we
-> need to wait for and xhci already handles late USB3 link training
-> itself.
+On Sun, 23 Aug 2026 13:44:53 +0200, Mathieu Fluhr wrote:
+> Yes, looking at the reports, this looks definitely related.
+> What is happening when the emulator starts is that it also starts adbd
+> if not running on the Linux side, to communicate with the emulator
+> later on.
 > 
-> Also hubs have a 0 second autosuspend delay (596d789a211d), so this
-> hold is the only thing stretching the awake window.
+> [...]
+>
+> Ok, here you lost me a little: Looking to all the links provided, yes,
+> this looks very similar to what I am experiencing. But (and correct me
+> if I am wrong)
+> 1. reverting the "bad commit" is not really an option, since it was
+> originally authored for a specific purpose (other than annoying AMD
+> owners :)
+
+It does seem so, even if the specific issue report isn't known.
+
+It also isn't clear (at least to me) whether the intended behavior of
+the patch is causing this, or if the patch simply has some bug which
+causes unintended side effects that can and should be fixed.
+
+> 2. the patch that Mario proposed is very recent, and would address the
+> issue not on the USB but on the PCI level?
 > 
-> and anything opening or closing /dev/bus/usb nodes auto resumes and
-> auto suspends the whole host controller, adb's periodic enumeration
-> does that so on the reported affected systems every SS roothub cycle
-> grows from ~30 to ~235ms (from the dynamic debug traces in
-> https://lore.kernel.org/all/qc0nhk9c6l0a08bkfeplrm3qjssgrjkvkp@sonic.net/)
-> which makes suspend move from close() call into delayed work and
-> results in the ~1Hz stress loop described upthread.
-> 
-> I think skipping the hold for hubs without a parent device, i.e. keep
-> TB dock behaviour everywhere it matters, should fix this.
+> Thanks again for the swift answer here and all the informative links!
+> I must admit that I researched a lot debugging this issue, but I never
+> thought about looking to the USB side of the problem, focusing more on
+> the CPU side.
 
-It likely will, as it effectively reverts the problematic commit for
-those particular affected devices (root hubs).
+The issue is obviously a severe HW malfunction (you mentioned MCEs, the
+Ryzen CPUs simply totally locked up), triggered by poking certain xHCI
+controllers on the I/O die of these CPUs in some wrong way.
 
-But I'm not sure what you mean by "1Hz stress loop" and why is slowing
-down the suspend/resume cycles or moving suspend from close() call into
-a work supposed to create problems?
+The minimum known trigger is this loop from bugzilla comment 8:
 
-I would naively think that doing things *too fast* is more likely to
-trigger races and break the HW. The whole issue smells like a HW bug,
-or maybe one of those "undefined behaviors" that the xHCI spec warns
-about if SW dares to do something out of spec.
+	while sleep .1 ; do true </dev/bus/usb/010/001 ; done
 
-So why was the culprit patch even a problem for those root hubs?
-Can it not become a problem for external hubs, under other workloads?
+Opinions seem to vary on whether CPU load must be present or absent.
 
-Also, what if we connect a downstream SS hub to the root hub? Will this
-not cause the root hub to stay awake for 200ms again? Problem is back?
+The minimum known workaround is disabling xHCI PCI function suspend,
+see bugzilla comment 16. This knowledge has spread on distribution
+forums and many users stopped caring about this bug, but clearly new
+people are still running into it.
+
+It seems USB devices and even the root hub can be suspended safely, as
+long as the PCI function remains on full power. The influence of CPU
+C-states was previously unknown. May be specific to Threadripper.
 
 Regards,
 Michal
