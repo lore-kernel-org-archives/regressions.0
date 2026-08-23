@@ -1,124 +1,187 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45D9A31C56D
-	for <regressions@lists.linux.dev>; Sun, 23 Aug 2026 17:05:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 029E337702E
+	for <regressions@lists.linux.dev>; Sun, 23 Aug 2026 20:54:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787504732; cv=none; b=Bfctp+wVPX+PjV1xdMctSexy3guTK7fJjw1/rbFILMXsV2sfgRWvzBKH2lstEzA8AEqvyrhSYQb0hMzJrNbijU4X2WH3CP5Ggk18n+Kar82CTIeRi01q7/kfv62Nx4yemvoWR5QEBFCidSY5MYt3SAE/3OH1BUTE366uUwzKaL8=
+	t=1787518462; cv=none; b=XR1tp+BUsnQMnh2h5DEDFQ6etS8GuGF25++a9ODTXbGamdE2ceDahEmNMDjGB0lYa2rUNZ+AHrp1OX9WLktRdOK7G5pyZbpEplq2b423QyHVFVNKg2YEYGkyQh9TUIM1aLJVs6mlfxooNYGnx61/KP/1q+5AzgnKiVaqMoEmq74=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787504732; c=relaxed/simple;
-	bh=tZ3kOiXAkP3ZajzR9DGtBNJIg33EF2ByFAZEw7fsQVU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DT1iPqkJGVEw6Iz5sPD4ihyGeVqNas/yqzbS7C+x3B1VlvF8KcpRLk3yBilPu6JqfdkZSaiWIRH3tPa3yAHgzjBRpoOSXz2qTSTMoyOMTxh7aUU32MerFKguRFhF0+qWQWDRbNbEbNO7RmVBl2JTklDJiCaS71p1aUUfriylXfA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AER+liEB; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1787518462; c=relaxed/simple;
+	bh=93otZq6rAAbYQaN9i6pqq9XhgNIwlnrAPez4BtWjpb4=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=picJ2AoFPUBgDH736OboNJw7Sv/TV6WWOY1kQx2279/xVuHRysIohZx8m0wElsG0QWYgGbvnlbsbuq/xEg1AKk08JPK4eakh2Yd+UV71m/dPTAJVSaORGd2H81ED7idF5o68dwEeFs8ECUZ5KgAk1AhqbA06AtTuKKxBhIHH8Gw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de; spf=pass smtp.mailfrom=posteo.de; dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b=CaGzEFyL; arc=none smtp.client-ip=185.67.36.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AER+liEB"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2ce98cb8165so25181545ad.1
-        for <regressions@lists.linux.dev>; Sun, 23 Aug 2026 10:05:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1787504729; x=1788109529; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=pYrUZlO7IqIkRYhROYYB/AOAuFYaRX4X5UCYzj5mFMc=;
-        b=AER+liEBZ/tdJ3Ym+SXRZhF/69pTgRfycAf6lzXSwjcs/UAEMKnz1CH7VcwH6UHonU
-         hqJONtCfSok+/FYYELvAganckb0gKWumvMcgMyQIO04b9i19B03X6f2ADYLOUsKoYE5p
-         QzUW/c9/5tWJx6Po1pAtTOb3kwn41dZtWV6SxCF05v3SsPWevSKTOOh4j0ZSDqErwN31
-         1WggRwxK7gQA/OFQJemRPG3+cQkUcSiyT80MVPKbx+C9lAhVWkNVrX7D1gu+64C25G4q
-         y5v6rwybxzVp/byUtD85sI8ChEN4A5zUO+K5+SIp6F3SN2yNAoBTTdP6/XKbqClBV9Vj
-         hD6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787504729; x=1788109529;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=pYrUZlO7IqIkRYhROYYB/AOAuFYaRX4X5UCYzj5mFMc=;
-        b=KL/Uc+36hg8tF0Hxpg0DXrzUfLl1cQS+ZVyuyPyY6b9JGpvjqpTaCiRdT4j7PHQlhH
-         F2R0Zeio/kRsGcH4OgPHWG2oxWb+O8/BF7uWmblJ55JQsB7IycZrmADMH3J1lR8/SsPH
-         hYZUlHn9eyzXIHugx13OK5Y+Y9MDfrUYonPA9h+bkxSKwt8p3olZ3t3qPZTdbr4gKNuJ
-         z3eu2sQbnSAcXyV2m8USaSM6fBr15q+h9DCtqEJJ+qhZogV7YYRwNJCIDoYVTEUbwb2T
-         TYNsSf4r05556ePwVv1XUJlsrYYV9FYLwRgsKe2Hv2lnO3Lord/WyuiUON30E8ThaCl0
-         Wwog==
-X-Forwarded-Encrypted: i=1; AHgh+RpqUiQ6EtOKKkEeDsIojSCd50/An/hYrn64LGSFsjm1ctY4QPxF/UHe2gI3gq6yuq5k1sQvMdm+4fLluA==@lists.linux.dev
-X-Gm-Message-State: AFuF++ntxGKuyhYYOergnsuD44uvsqW4QtQ1oLTOVfWDrnR3DOqknjSV
-	dujR6PDLcaipfi6e7GldCdncheqkGOvy3YPqklNZyeF5ZoMqilbbcduVdJYat3mt
-X-Gm-Gg: AR+sD10lTSRTYfeHBBT7zSLQFTXCgp/KIJ+mJoKW8j+aHGDseMWeznwRUMjJYfwHtTH
-	cxL8M9Y8cu21QEhQLdQWkNuNG3WYqBdQIAWSY7tADTyoCJaCznOOQM+MBoGsfQ/QGOoMT3QFA3H
-	hYFVThMEQKtpPL91+WTjWEpF5K58fIEQk71JC6qnLq7voZ7N2JryGEVVTwb/xNDimuosYkT3r6j
-	Q3ziwaOI8EDg0nejVOE4yMT0cYg8WZe3Ok6EF6+qgkGhVuW3fZoACFqS6QY3EPw1XdBqyxb7Avj
-	XYvm8rxU1aWrLGYs8QHRROImHNq6ZJoKTOrFuIGAOUuzOPtikiDfVpc7iuXq5q6TpxYzAN/IVVx
-	d0FlAC4U7+t3BI96r+mXE7vtOzyZ00drQgXUu43d7ElRuW/Y8hmuLyUoNLAPAfc1CVWoMuwKwhr
-	9THgNaRxmfwsBwi4UiYtU9sru89h/Fb4DwDtP1j396uE1P+Ud7be6Rfvk0OGfOQTqLCMjiIFkxY
-	bHkpVhwFAkq3Y07uHzl0v58glfF
-X-Received: by 2002:a17:903:b45:b0:2ce:a6a4:451b with SMTP id d9443c01a7336-2d61a183641mr202719365ad.11.1787504729357;
-        Sun, 23 Aug 2026 10:05:29 -0700 (PDT)
-Received: from localhost ([2409:40c4:35d:a0d7:1d3:cd30:d9bc:b5a9])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-327f91d36f9sm26172029eec.16.2026.08.23.10.05.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Aug 2026 10:05:28 -0700 (PDT)
-Date: Sun, 23 Aug 2026 22:35:24 +0530
-From: Lovekesh Solanki <lovekeshsolanki00@gmail.com>
-To: Michal Pecio <michal.pecio@gmail.com>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>, 
-	Mathias Nyman <mathias.nyman@linux.intel.com>, linux-usb@vger.kernel.org, regressions@lists.linux.dev, 
-	stable@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Mario Limonciello <mario.limonciello@amd.com>, Forest <forestix@gaga.casa>, 
-	Slavik Dev <developer.slavik@gmail.com>, Mathieu Fluhr <mathieu.fluhr@gmail.com>
-Subject: Re: [REGRESSION] 6.12.36+: usb: hub: post-resume delayed work
- triggers > uncorrected MCE / data fabric sync flood on Threadripper 7970X >
- (bisected to aec11e5f9c45)
-Message-ID: <aoser8dLytrwqBC2@eggarch>
-References: <CAPyJwA_D9qw0T72f8zwM1yKjP+To=maVANbcdsWM7yRmbBxYvw@mail.gmail.com>
- <CAPyJwA9R=p8_uxyYODb00g_nUq26SRsWHBGgAAJnR0YMTRRo4A@mail.gmail.com>
- <CAPyJwA9P48LDcOr7u_iT1WPFBCHxh9w6cxFvyi5GS3syM6crbQ@mail.gmail.com>
- <07435e6b-ee30-4c85-8c8b-0ce3a4ead1d9@leemhuis.info>
- <aosGtkE_diwVJJtB@eggarch>
- <20260823174059.46fec036.michal.pecio@gmail.com>
+	dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b="CaGzEFyL"
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout01.posteo.de (Postfix) with ESMTPS id 17C97240027
+	for <regressions@lists.linux.dev>; Sun, 23 Aug 2026 22:54:17 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=posteo.de;
+	s=1984.8680eb; t=1787518457;
+	bh=rg0ATgfTep0oLRoMcT09QDRoNkBUbJEgpcpcR4SXS5s=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:Content-Type:
+	 Content-Transfer-Encoding:From;
+	b=CaGzEFyLT5mMFaYN9FrnBjs3KiKat9n2SZFFBsub4DAkxJX9aLCcUlIaKJ+fkFBCD
+	 R2H42hGavSwOmTKCcPqp31biBJrqwUJUNE6ETw4EGNYNdbFeG93L83r/hxB9W6VUmQ
+	 X888/Axv/xBOf5u7v2TY4KpZTFWKFBXuGNJeQcLrD8IVwoVUfZHz96pgiVxfWMtSm/
+	 2h/zzgqYMeD/SL0V2BRdFStrbW5ZLohTTRgtipmVjujCxMQcDS2GWuOVmEmO5ALjRY
+	 iKKRGZBMhRnhD2BmzfDMq0HY2rRFpp5CbQQkoe/WoTeVTDddZU5P9JjRbFmbBH9HzE
+	 putnIpnwWZbVg==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4hSmVv6dPXz9rxL;
+	Sun, 23 Aug 2026 22:54:15 +0200 (CEST)
+Message-ID: <c64f5fa6-4c61-45b6-a513-b971e59d7723@posteo.de>
+Date: Sun, 23 Aug 2026 20:54:16 +0000
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260823174059.46fec036.michal.pecio@gmail.com>
+Subject: Re: [REGRESSION] mt7925: MLO connectivity silently stalls with 6GHz
+ link active
+From: Jonas Hort <jonas.hort@posteo.de>
+To: Devin Wittmayer <lucid_duck@justthetip.ca>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
+ regressions@lists.linux.dev, linux-wireless@vger.kernel.org,
+ Felix Fietkau <nbd@nbd.name>, lorenzo.bianconi83@gmail.com
+References: <503eb10e-80cf-493e-95fd-04fc0f94ce01@posteo.de>
+ <e4bc5ce3-9a6f-4365-9d36-f6440ded0865@posteo.de>
+Content-Language: en-US, de-DE
+In-Reply-To: <e4bc5ce3-9a6f-4365-9d36-f6440ded0865@posteo.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Sun, Aug 23, 2026 at 05:40:59PM +0200, Michal Pecio wrote:
-> But I'm not sure what you mean by "1Hz stress loop" and why is slowing
-> down the suspend/resume cycles or moving suspend from close() call into
-> a work supposed to create problems?
-> 
-> I would naively think that doing things *too fast* is more likely to
-> trigger races and break the HW. The whole issue smells like a HW bug,
-USB2 roothubs still do 30 ms cycles and are harmless, only stretched SS
-ones kill the box. So if speed were the issue the faster ones would be
-dying first and pre regression kernels ran fine.
+Bisect is done. First bad commit:
 
-About 1Hz, adb scans the bus once a second,
-every open resumes the root hub and host controller out of D3 and close
-puts it back this existed before regression too but with 30 ms of
-close() and slept for rest of the second and now it keeps it
-in D0 well after close(), the suspend itself happening later from the
-delayed work, so this d3 - d0 - d3 trip of ~230ms repeats on
-each scan. That's the loop I meant.
+ff643b81bc38eaff6c0ab783a62e4ba9e10d2476
+wifi: mt76: mt7925: pass mlink and mconf to sta_mld_tlv()
+Sean Wang, 2026-03-06
+https://patch.msgid.link/20260306232238.2039675-4-sean.wang@kernel.org
 
-> Can it not become a problem for external hubs, under other workloads?
-Possibly yes, but nobody reported that so I'd rather scope where the
-harm is proven.
+Bisected on vanilla, path-restricted to
+drivers/net/wireless/mediatek/mt76/mt7925/, using v7.0 as good and
+v7.1 as bad. Each step was booted and tested with MLO active
+(5GHz+6GHz, FritzBox 5690 Pro), and every "bad" verdict was confirmed
+by the WFDMA0 signature (tail frozen while head keeps advancing),
+not just by the connection dropping.
 
-> Also, what if we connect a downstream SS hub to the root hub? Will this
-> not cause the root hub to stay awake for 200ms again? Problem is back?
-The root hub itself skips the hold since the check is on its own parent,
-but it will be kept awake anyway while the downstream hub or devices are
-in use which is normal activity based PM.
-If heavy polling behind a real hub ever causes trouble that's probably a
-xhci/platform level fix anyways since real hubs can't really just drop
-the hold.
+   ea757740dd87  pass WCID indices to bss_basic_tlv()      good (45 min 
+clean)
+   ff643b81bc38  pass mlink and mconf to sta_mld_tlv()     bad (freeze 
+after ~4 min)
+   dc019e3294c7  pass mlink to mcu_sta_update()            bad (freeze 
+after ~3 min)
+   9e4d518a4707  pass mlink to mac_link_sta_remove()       bad (freeze 
+after ~4 min)
+   cf9db836b1e0  pass mlink to set_link_key()              bad (freeze 
+after ~4 min)
 
-Regards,
-Lovekesh
+git bisect log and the incident logs for each step are available if
+useful - happy to attach them to the bugzilla ticket or send them
+here.
+
+Let me know if you want anything else tested.
+
+Thanks,
+Jonas
+
+Am 22.08.26 um 22:18 schrieb Jonas Hort:
+> Quick update: v7.0 vanilla has been running clean for over 2 hours now 
+> with MLO active (5GHz+6GHz, same FritzBox 5690 Pro), no freeze at all.
+>
+> Am 19.08.26 um 11:03 schrieb Jonas Hort:
+>> Thanks for the detailed breakdown.
+>>
+>> I'll build v7.0 vanilla and test it, as suggested. Fair warning
+>> though: I'm on vacation this week, so I'll pick this up next week.
+>> I've also never compiled a kernel before, so it'll likely take me a
+>> bit of trial and error the first time around - please bear with me
+>> if it takes a little longer than expected.
+>>
+>> Will report back once I have results.
+>>
+>> Thanks again,
+>> Jonas
+>>
+>> 19.08.2026 03:18:34 Devin Wittmayer <lucid_duck@justthetip.ca>:
+>>
+>>> Thank you very much, that answers both things.
+>>>
+>>> The ROC tracing is the more useful of the two even though it came back
+>>> negative. Two of the three freezes have no ROC activity in them at 
+>>> all, so a
+>>> link switch that never finished cannot be what starts this. The 
+>>> middle one
+>>> does have rocabort, mloroc and rocwork in it, but one out of three 
+>>> makes
+>>> that look like the exception rather than the pattern. So the area I 
+>>> sent you
+>>> looking at is out, and that is worth knowing before you spend nights on
+>>> builds.
+>>>
+>>> One other thing worth saying first. There is a five patch mt76 
+>>> series on the
+>>> list at the moment and two of the patches look like they were 
+>>> written for
+>>> exactly this bug. I do not think they were, and it is your own 
+>>> numbers that
+>>> show it. The failure 4/5 fixes stops mt76_txq_schedule_list from 
+>>> servicing
+>>> the queue, and the one 5/5 fixes stops mt76_txq_send_burst once the 
+>>> non-AQL
+>>> count reaches its cap. Both of those keep frames from ever reaching the
+>>> hardware, so if either were your problem head would be sitting still
+>>> alongside tail. Yours does the opposite. Head climbs 390 to 408 
+>>> while tail
+>>> stays at 260, so the frames are getting into the ring and nothing is
+>>> finishing them, which is the far end of the same path. 2/5 is a use 
+>>> after
+>>> free when an interface goes away, so it does not fit either. I would 
+>>> not
+>>> expect that series to change what you see.
+>>>
+>>> On the bisect I would build v7.0 next. There are 32 mt7925 commits 
+>>> between
+>>> 7.0 and 7.1 and 19 of them are one run of work from Sean Wang, 
+>>> reworking how
+>>> the driver tracks the per link mlink and WCID for an MLO station. 
+>>> That is
+>>> the kind of change that fits a bug only showing up with two links 
+>>> up. If
+>>> v7.0 comes back clean, that series is where I would look. If v7.0 is 
+>>> already
+>>> broken then it is off the hook and 6.19 becomes the next split. The 
+>>> mt76
+>>> core and mac80211 both moved in the same window, so mt7925 is where 
+>>> I would
+>>> look first rather than the only place worth looking.
+>>>
+>>> Devin
+>>>
+>>> Am 17.08.26 um 23:34 schrieb Jonas Hort:
+>>>
+>>>> Quick follow-up: managed to confirm 6.18 as a clean baseline on my
+>>>> own hardware now (not just secondhand from others in the forum
+>>>> thread) - running Linux 6.18.42-1-cachyos-lts with MLO active
+>>>> (5GHz+6GHz, same FritzBox 5690 Pro) for 3 hours straight, no freeze
+>>>> at all.
+>>> Am 17.08.26 um 16:25 schrieb Jonas Hort:
+>>>
+>>>> One correction to how I described this earlier: the connection does
+>>>> NOT reliably self-heal on its own. I have manually intervened every
+>>>> single time to restore connectivity [...]
+>>>>
+>>>> Update on the ROC tracing: three real freezes captured now with the
+>>>> kprobes active (all confirmed via the WFDMA0 tail-frozen signature).
+>>>>
+>>>> - Freeze #1 (15:37): no ROC activity in the trace.
+>>>> - Freeze #2 (15:43): [...] The trace shows several ROC events
+>>>>    (rocabort, mloroc, rocwork) clustered together.
+>>>> - Freeze #3 (16:15): no ROC activity again.
+>>>>
+>>>> Uploaded all three logs to the bugzilla ticket if useful:
+>>>> https://bugzilla.kernel.org/show_bug.cgi?id=221884
