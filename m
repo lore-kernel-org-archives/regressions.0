@@ -1,187 +1,156 @@
-Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
+Received: from ixit.cz (ixit.cz [84.42.129.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 029E337702E
-	for <regressions@lists.linux.dev>; Sun, 23 Aug 2026 20:54:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D9801A8F7B
+	for <regressions@lists.linux.dev>; Sun, 23 Aug 2026 23:36:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.42.129.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787518462; cv=none; b=XR1tp+BUsnQMnh2h5DEDFQ6etS8GuGF25++a9ODTXbGamdE2ceDahEmNMDjGB0lYa2rUNZ+AHrp1OX9WLktRdOK7G5pyZbpEplq2b423QyHVFVNKg2YEYGkyQh9TUIM1aLJVs6mlfxooNYGnx61/KP/1q+5AzgnKiVaqMoEmq74=
+	t=1787528203; cv=none; b=pQ1iLD8LxW37mgtrji+oY7Oye3CvUaXB5kU4zxqnK8yLOkd0258nfVuY5ILjBQ/acjqj74/Fce4xjX5Sie9nkm9xAe2mjUhNgqQ8SVJ/K3P/9L6SB4Ny/PPiKJn5EQdR7F0WEgrf1ssCL1eQrj8k1+abkann5QcEsHk7wdtFUpk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787518462; c=relaxed/simple;
-	bh=93otZq6rAAbYQaN9i6pqq9XhgNIwlnrAPez4BtWjpb4=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=picJ2AoFPUBgDH736OboNJw7Sv/TV6WWOY1kQx2279/xVuHRysIohZx8m0wElsG0QWYgGbvnlbsbuq/xEg1AKk08JPK4eakh2Yd+UV71m/dPTAJVSaORGd2H81ED7idF5o68dwEeFs8ECUZ5KgAk1AhqbA06AtTuKKxBhIHH8Gw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de; spf=pass smtp.mailfrom=posteo.de; dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b=CaGzEFyL; arc=none smtp.client-ip=185.67.36.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.de
+	s=arc-20240116; t=1787528203; c=relaxed/simple;
+	bh=R253mJD4zqokwXwJVUUklhyr4ePKBVwOOzbtlI2sVpA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bX2QpJatLzJ5ek+A7Whcr7+K5EstvXo2yQwaiING6rtCmHu+ymF173GCRKJBXepCByyqflIUoBJZ2znjKGMF3LZ3i2Sos7tCgJL6FxyORv+pYdpZ2jry5+4t+Y7aaB713tSvY6VV7Ait2jv7zCiVKVaUml67kjF3y2wnEUm+x3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ixit.cz; spf=pass smtp.mailfrom=ixit.cz; dkim=pass (1024-bit key) header.d=ixit.cz header.i=@ixit.cz header.b=VKEmwJsh; arc=none smtp.client-ip=84.42.129.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ixit.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ixit.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b="CaGzEFyL"
-Received: from submission (posteo.de [185.67.36.169]) 
-	by mout01.posteo.de (Postfix) with ESMTPS id 17C97240027
-	for <regressions@lists.linux.dev>; Sun, 23 Aug 2026 22:54:17 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=posteo.de;
-	s=1984.8680eb; t=1787518457;
-	bh=rg0ATgfTep0oLRoMcT09QDRoNkBUbJEgpcpcR4SXS5s=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:Content-Type:
-	 Content-Transfer-Encoding:From;
-	b=CaGzEFyLT5mMFaYN9FrnBjs3KiKat9n2SZFFBsub4DAkxJX9aLCcUlIaKJ+fkFBCD
-	 R2H42hGavSwOmTKCcPqp31biBJrqwUJUNE6ETw4EGNYNdbFeG93L83r/hxB9W6VUmQ
-	 X888/Axv/xBOf5u7v2TY4KpZTFWKFBXuGNJeQcLrD8IVwoVUfZHz96pgiVxfWMtSm/
-	 2h/zzgqYMeD/SL0V2BRdFStrbW5ZLohTTRgtipmVjujCxMQcDS2GWuOVmEmO5ALjRY
-	 iKKRGZBMhRnhD2BmzfDMq0HY2rRFpp5CbQQkoe/WoTeVTDddZU5P9JjRbFmbBH9HzE
-	 putnIpnwWZbVg==
-Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4hSmVv6dPXz9rxL;
-	Sun, 23 Aug 2026 22:54:15 +0200 (CEST)
-Message-ID: <c64f5fa6-4c61-45b6-a513-b971e59d7723@posteo.de>
-Date: Sun, 23 Aug 2026 20:54:16 +0000
+	dkim=pass (1024-bit key) header.d=ixit.cz header.i=@ixit.cz header.b="VKEmwJsh"
+Received: from [IPV6:2a02:830a:f787:8f00:d622:eaa3:3dd6:8f5e] (unknown [IPv6:2a02:830a:f787:8f00:d622:eaa3:3dd6:8f5e])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ixit.cz (Postfix) with ESMTPSA id E532C53403EF;
+	Mon, 24 Aug 2026 01:36:38 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ixit.cz; s=dkim;
+	t=1787528199;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=NeQnpmaONTDjoyNSyQ5OyGtgIW3A3vT2a8uT3fKrjVE=;
+	b=VKEmwJshjAqo7xSL0L5MDt/gPdXcObzvofqXk5LEqIS48eu79oxKPFijE/v+xtNQ+XPXBr
+	52xUPq5IEFPWlhBAz6V+gj5I2HWHw8QbJdcSYJE1ZI2oGB9yvQ0mgvULOmcNYc9sOSEuu7
+	PyjZQBtfXTkZvkjvYLhWbynS7w+wk0I=
+Message-ID: <959d32b7-592f-48ce-a7a2-c2cf4b0cb44a@ixit.cz>
+Date: Mon, 24 Aug 2026 01:36:38 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Subject: Re: [REGRESSION] mt7925: MLO connectivity silently stalls with 6GHz
- link active
-From: Jonas Hort <jonas.hort@posteo.de>
-To: Devin Wittmayer <lucid_duck@justthetip.ca>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
- regressions@lists.linux.dev, linux-wireless@vger.kernel.org,
- Felix Fietkau <nbd@nbd.name>, lorenzo.bianconi83@gmail.com
-References: <503eb10e-80cf-493e-95fd-04fc0f94ce01@posteo.de>
- <e4bc5ce3-9a6f-4365-9d36-f6440ded0865@posteo.de>
-Content-Language: en-US, de-DE
-In-Reply-To: <e4bc5ce3-9a6f-4365-9d36-f6440ded0865@posteo.de>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 0/3] soc: qcom: extend interface for big endian support
+To: Bjorn Andersson <andersson@kernel.org>,
+ Alexander Wilhelm <alexander.wilhelm@westermo.com>,
+ Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Konrad Dybcio <konradybcio@kernel.org>, linux-arm-msm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, regressions@lists.linux.dev
+References: <20251119104008.3505152-1-alexander.wilhelm@westermo.com>
+ <dfb72933-938f-43f2-87f3-2e3ab9697125@ixit.cz>
+ <mmd44dczfsfcjfhfikcjzaxongb6dwy4oqxtpv7t2jvyudzut4@hi3n3e7brse4>
+ <6e4d21f9-87cb-44ea-bb04-eb4f047f3ff5@leemhuis.info>
+ <aa6kLwNxoCIvquBT@FUE-ALEWI-WINX>
+Content-Language: en-US, cs-CZ
+From: David Heidelberg <david@ixit.cz>
+Autocrypt: addr=david@ixit.cz; keydata=
+ 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
+In-Reply-To: <aa6kLwNxoCIvquBT@FUE-ALEWI-WINX>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Bisect is done. First bad commit:
-
-ff643b81bc38eaff6c0ab783a62e4ba9e10d2476
-wifi: mt76: mt7925: pass mlink and mconf to sta_mld_tlv()
-Sean Wang, 2026-03-06
-https://patch.msgid.link/20260306232238.2039675-4-sean.wang@kernel.org
-
-Bisected on vanilla, path-restricted to
-drivers/net/wireless/mediatek/mt76/mt7925/, using v7.0 as good and
-v7.1 as bad. Each step was booted and tested with MLO active
-(5GHz+6GHz, FritzBox 5690 Pro), and every "bad" verdict was confirmed
-by the WFDMA0 signature (tail frozen while head keeps advancing),
-not just by the connection dropping.
-
-   ea757740dd87  pass WCID indices to bss_basic_tlv()      good (45 min 
-clean)
-   ff643b81bc38  pass mlink and mconf to sta_mld_tlv()     bad (freeze 
-after ~4 min)
-   dc019e3294c7  pass mlink to mcu_sta_update()            bad (freeze 
-after ~3 min)
-   9e4d518a4707  pass mlink to mac_link_sta_remove()       bad (freeze 
-after ~4 min)
-   cf9db836b1e0  pass mlink to set_link_key()              bad (freeze 
-after ~4 min)
-
-git bisect log and the incident logs for each step are available if
-useful - happy to attach them to the bugzilla ticket or send them
-here.
-
-Let me know if you want anything else tested.
-
-Thanks,
-Jonas
-
-Am 22.08.26 um 22:18 schrieb Jonas Hort:
-> Quick update: v7.0 vanilla has been running clean for over 2 hours now 
-> with MLO active (5GHz+6GHz, same FritzBox 5690 Pro), no freeze at all.
->
-> Am 19.08.26 um 11:03 schrieb Jonas Hort:
->> Thanks for the detailed breakdown.
->>
->> I'll build v7.0 vanilla and test it, as suggested. Fair warning
->> though: I'm on vacation this week, so I'll pick this up next week.
->> I've also never compiled a kernel before, so it'll likely take me a
->> bit of trial and error the first time around - please bear with me
->> if it takes a little longer than expected.
->>
->> Will report back once I have results.
->>
->> Thanks again,
->> Jonas
->>
->> 19.08.2026 03:18:34 Devin Wittmayer <lucid_duck@justthetip.ca>:
->>
->>> Thank you very much, that answers both things.
->>>
->>> The ROC tracing is the more useful of the two even though it came back
->>> negative. Two of the three freezes have no ROC activity in them at 
->>> all, so a
->>> link switch that never finished cannot be what starts this. The 
->>> middle one
->>> does have rocabort, mloroc and rocwork in it, but one out of three 
->>> makes
->>> that look like the exception rather than the pattern. So the area I 
->>> sent you
->>> looking at is out, and that is worth knowing before you spend nights on
->>> builds.
->>>
->>> One other thing worth saying first. There is a five patch mt76 
->>> series on the
->>> list at the moment and two of the patches look like they were 
->>> written for
->>> exactly this bug. I do not think they were, and it is your own 
->>> numbers that
->>> show it. The failure 4/5 fixes stops mt76_txq_schedule_list from 
->>> servicing
->>> the queue, and the one 5/5 fixes stops mt76_txq_send_burst once the 
->>> non-AQL
->>> count reaches its cap. Both of those keep frames from ever reaching the
->>> hardware, so if either were your problem head would be sitting still
->>> alongside tail. Yours does the opposite. Head climbs 390 to 408 
->>> while tail
->>> stays at 260, so the frames are getting into the ring and nothing is
->>> finishing them, which is the far end of the same path. 2/5 is a use 
->>> after
->>> free when an interface goes away, so it does not fit either. I would 
->>> not
->>> expect that series to change what you see.
->>>
->>> On the bisect I would build v7.0 next. There are 32 mt7925 commits 
->>> between
->>> 7.0 and 7.1 and 19 of them are one run of work from Sean Wang, 
->>> reworking how
->>> the driver tracks the per link mlink and WCID for an MLO station. 
->>> That is
->>> the kind of change that fits a bug only showing up with two links 
->>> up. If
->>> v7.0 comes back clean, that series is where I would look. If v7.0 is 
->>> already
->>> broken then it is off the hook and 6.19 becomes the next split. The 
->>> mt76
->>> core and mac80211 both moved in the same window, so mt7925 is where 
->>> I would
->>> look first rather than the only place worth looking.
->>>
->>> Devin
->>>
->>> Am 17.08.26 um 23:34 schrieb Jonas Hort:
->>>
->>>> Quick follow-up: managed to confirm 6.18 as a clean baseline on my
->>>> own hardware now (not just secondhand from others in the forum
->>>> thread) - running Linux 6.18.42-1-cachyos-lts with MLO active
->>>> (5GHz+6GHz, same FritzBox 5690 Pro) for 3 hours straight, no freeze
->>>> at all.
->>> Am 17.08.26 um 16:25 schrieb Jonas Hort:
->>>
->>>> One correction to how I described this earlier: the connection does
->>>> NOT reliably self-heal on its own. I have manually intervened every
->>>> single time to restore connectivity [...]
+On 09/03/2026 11:42, Alexander Wilhelm wrote:
+> On Mon, Mar 09, 2026 at 11:30:42AM +0100, Thorsten Leemhuis wrote:
+>> On 2/14/26 20:26, Bjorn Andersson wrote:
+>>> On Wed, Jan 21, 2026 at 09:22:07AM +0100, David Heidelberg wrote:
+>>>> On 19/11/2025 11:40, Alexander Wilhelm wrote:
+>>>>> Currently, the QMI interface only works on little endian systems due to how
+>>>>> it encodes and decodes data. Most QMI related data structures are defined
+>>>>> in CPU native order and do not use endian specific types.
+>>>>>
+>>>>> Add support for endian conversion of basic element types in the QMI
+>>>>> encoding and decoding logic. Fix the handling of QMI_DATA_LEN fields to
+>>>>> ensure correct interpretation on big endian systems. These changes are
+>>>>> required to allow QMI to operate correctly across architectures with
+>>>>> different endianness.
+>>>>> ---
 >>>>
->>>> Update on the ROC tracing: three real freezes captured now with the
->>>> kprobes active (all confirmed via the WFDMA0 tail-frozen signature).
+>>>> Hello,
 >>>>
->>>> - Freeze #1 (15:37): no ROC activity in the trace.
->>>> - Freeze #2 (15:43): [...] The trace shows several ROC events
->>>>    (rocabort, mloroc, rocwork) clustered together.
->>>> - Freeze #3 (16:15): no ROC activity again.
+>>>> I recently (next-20260119) started receiving errors on Pixel 3:
+>>>> [...]
+>>>> Since it's not well tested, I believe there could be problem with
+>>>> configuration, but after reverting this series, no errors pop up.
 >>>>
->>>> Uploaded all three logs to the bugzilla ticket if useful:
->>>> https://bugzilla.kernel.org/show_bug.cgi?id=221884
+>>>> I would believe maybe these errors was previously hidden, but just to be
+>>>> sure asking here.
+>>>
+>>> #regzbot ^introduced: fe099c387e06
+>>
+>> Looks like nothing much has happened since then – or was there some
+>> progress or even a solution I missed?
+> 
+> The current proposal is that the driver side should always use `u32` for
+> all `DATA_LEN` fields. Most drivers already follow this, and Bjorn has
+> proposed the patch for the one that was using a different type, and it has
+> already been applied.
+> 
+> Check:
+> [1/1] remoteproc: sysmon: Correct subsys_name_len type in QMI request
+>        commit: da994db94e60f9a9411108ddf4d1836147ad4c9c
+
+So I assume we can drop:
+
+  - soc: qcom: qmi: Fix "invalid data length" in encoder
+  - soc: qcom: qmi: Avoid splatting the "length" destination field
+
+we carry, right?
+
+Thanks
+David>
+> 
+> Best regards
+> Alexander Wilhelm
+
