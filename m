@@ -1,55 +1,51 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [194.59.206.189])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.61.103])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 721AC3164C5
-	for <regressions@lists.linux.dev>; Sun, 23 Aug 2026 09:06:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.59.206.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68B2D361DBF
+	for <regressions@lists.linux.dev>; Sun, 23 Aug 2026 09:39:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.61.103
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787475970; cv=none; b=owyaBNsjJKmuflHgK3ASh1cpGZonsiKoUUr5S2Gikot5fGw9j9Egaq01M6RA1tJOmFDLQOzsXzUlFlEWMKwYgHdD0ijiSv8Wull3MJBwOEvSnCSmpUWvCxwoKJ7+CvFJFFrS2Zumq74zpH7s2JRfUUU3F3MdgsYFH2Xn59LBYTk=
+	t=1787477998; cv=none; b=XuHTPCI14BStMU/5EwJWEx3dKvUGvbBEVYNU0Hfsr4AfdOsA2qO8sI374ef3HzXnxbE0/6acn8FFVgMqBZ+NtGquP/anVNq/4EuRbSEc09r3rzerui7yDNVVw93PhI6LuWeWO8EOt3XbES5bAtUUW5bmSLY5AT644FXU2rTJ0UA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787475970; c=relaxed/simple;
-	bh=BIOVbq/Kxgiv+mg1/biVyMp4Ww0S3dHHa/buypgw3eo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=Ifkf5CLyjgcmBJ+VRzHYut3Ywv75fHtFbardOvAngiA+rMBR5qvZc8nftsqSz1Mw/cwmQtPZtHP6fGTANmq5CbDAF/n7seR4NkqUo5etaPuJ00wpA8dNJEH3+fbFGM0vXpbeyqzidDUNF0iSuWH+HhXwxlGdFVmfSQLsbfTAaqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=GQooo3kG; arc=none smtp.client-ip=194.59.206.189
+	s=arc-20240116; t=1787477998; c=relaxed/simple;
+	bh=ftx9u6xLsxE3noaPLhxxbCkOHccXa7Ry5dy3qW+WJpU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UA7S1NY07XdD3v5LFbwdjC+7J7PM6GMDoCovsSzv6BJmtNxvYmWUIZ5wMjxUKexwxNuDQwB1UtIMZqb7nlVXFdiYkhXrxcSuTl9i0Mv4UCLF2krjwzvpqtgbC0cG5QkrqNjpJOBsmPiUytDS5QfPQ7WBRoe5WtOKZQTjyTAfFMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=hrmimnUk; arc=none smtp.client-ip=188.68.61.103
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="GQooo3kG"
-Received: from relay02-mors.netcup.net (localhost [127.0.0.1])
-	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4hSSnd4ypMz4GRs;
-	Sun, 23 Aug 2026 11:05:57 +0200 (CEST)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="hrmimnUk"
+Received: from mors-relay-8403.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4hSTXf4nVjz8JWk;
+	Sun, 23 Aug 2026 11:39:46 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1787475957;
-	bh=BIOVbq/Kxgiv+mg1/biVyMp4Ww0S3dHHa/buypgw3eo=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=GQooo3kGgDH1qR42CU8mpcusIHAD3IlDDI3DpopfSfx8hMyhdPNfcPH2GfeqBq494
-	 tp4cUTHI/9mOdMi2vC7CLg4RP1H6zypp5FRPXOl7QJVY8sPIgilaBBPvJO2SJ4DuaO
-	 003mRadLi9mBJetEZy6FFfHOErqYPUSwEDgzwxNtfUIl2sst8fTpUcUDUPTMzF2zBz
-	 NTWtOVZl2vIq99YCQOGsZRfRfRxMDn1FULdzCTSMi641qpsiFIjEx7QEiwbloPFCqh
-	 iHbJpt84xmnyfPKak1Bf8sazEAGMpjANdGZfoNaAqrxymJPzHuNj7DVA0ahPGX06yY
-	 m/v692006civA==
-Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
-	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4hSSnd4GYlz7xRX;
-	Sun, 23 Aug 2026 11:05:57 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
-X-Spam-Flag: NO
-X-Spam-Score: -2.901
-X-Spam-Level: 
+	s=key2; t=1787477986;
+	bh=ftx9u6xLsxE3noaPLhxxbCkOHccXa7Ry5dy3qW+WJpU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=hrmimnUkT6bfwgStjJK7YEv8bUiurUqDOcRa2pqDUmKJgao9ohcCG3/l2cHv0nRXy
+	 aCiPXjX+yyzdhMf/7cYl8sR7vK9TU9CdhZB8bX26rv6eLwjN5OJ3r0bpgoFYglw4WQ
+	 XEu8iJaYeYrOXJrBMHQ21CXmJovz5V3P+Fc7UI+zYyXmsEJe8mAwCZ0GKg2qauSEwy
+	 VCV0ilNTzSn7Pn+CvR4TuNKmVlgH1qQPyogHEfoPP3Gk+JQoNVDiH1ROSi10NW3mbB
+	 De/sLkn3KOqLlCcErRqeZbeJBgoM6OLQeCbBy/5soqo0TcTWXgD+KcfUJZSfvdh/Wl
+	 lPpK/iA0Pb2Gw==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4hSTXc2Wd2z8JWK;
+	Sun, 23 Aug 2026 11:39:44 +0200 (CEST)
 Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4hSSnc6fGZz8tZK;
-	Sun, 23 Aug 2026 11:05:56 +0200 (CEST)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4hSTXb1r5Vz8sb9;
+	Sun, 23 Aug 2026 11:39:43 +0200 (CEST)
 Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 116615FAEB;
-	Sun, 23 Aug 2026 11:05:56 +0200 (CEST)
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 8D9CE5FAE4;
+	Sun, 23 Aug 2026 11:39:42 +0200 (CEST)
 Authentication-Results: mxe9fb;
         spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
 Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <3e64d1dc-7d33-4156-bf14-1573cde3cd0e@leemhuis.info>
-Date: Sun, 23 Aug 2026 11:05:54 +0200
+Message-ID: <68dc7fba-ddda-4505-bdaf-4bb7af2df44e@leemhuis.info>
+Date: Sun, 23 Aug 2026 11:39:41 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -57,105 +53,148 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] hp_bioscfg hangs boot on HP Laptop 15-bs1xx;
- blacklisting fixes it
-To: =?UTF-8?Q?VOLKAN_SAL=C4=B0H?= <volkan.salih.06@gmail.com>,
- platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
- regressions@lists.linux.dev
-References: 
- <CA+wWBLPxFPQB1Dt0MAJSNZ43dhGDspSD9jH98TArTf_etjLmSw@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/2] Bluetooth: detect broken extended scan instead of
+ guessing by chip id
+To: Kamil Serwus <kserwus@gmail.com>, linux-bluetooth@vger.kernel.org
+Cc: Alexej Sidorenko <alexej@sidorenko.cz>,
+ Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+ Marcel Holtmann <marcel@holtmann.org>, regressions@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+References: <20260822141115.58815-1-kserwus@gmail.com>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
 Content-Language: de-DE, en-US
-In-Reply-To: 
- <CA+wWBLPxFPQB1Dt0MAJSNZ43dhGDspSD9jH98TArTf_etjLmSw@mail.gmail.com>
+In-Reply-To: <20260822141115.58815-1-kserwus@gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-PPP-Message-ID: <178747595632.2441704.2874934309583728851@mxe9fb.netcup.net>
-X-NC-CID: i8BYNCHcTtG8sNuFxh6eS56s8fFuiRt5pYddU75jzLp42x97qu0=
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: 
+ <178747798296.2482991.13838159982066758837@mxe9fb.netcup.net>
+X-NC-CID: vO/itB60kEuuOyfmVl320RxER75AOQXY34as42vAZ5MzP95ftss=
 
-Hi! Thx for your report.
+Hi! Thx for the report.
 
-On 8/23/26 02:36, VOLKAN SALİH wrote:
-> 
-> I am seeing a boot regression involving hp_bioscfg on an HP Laptop
-> 15-bs1xx.
-> 
-> System:
->   Model: HP Laptop 15-bs1xx
->   SKU: 7WG51EA#AB8
->   Mainboard: HP 8444
->   BIOS: F.75 (04/26/2024)
->   GPU: Intel HD Graphics 5500 / Broadwell-U [8086:1616]
->   Distribution: Zorin OS 18.1 Pro (Ubuntu 24.04 based)
-> 
-> Kernel results:
->   6.17.0-40-generic:
->     boots normally
-> 
->   7.0.0-30-generic:
->     hangs during boot
-> 
->   7.0.0-30-generic with acpi=off:
->     boots
-> 
->   7.0.0-30-generic with only hp_bioscfg blacklisted:
->     boots normally with ACPI enabled
+On 8/22/26 16:11, Kamil Serwus wrote:
+> commit 5ead2063611ae5 ("Bluetooth: btrtl: fix RTL8761B/BU broken LE
+> extended scan"), which landed in v7.2,
 
-The latter three are heavily patches vendor kernels. Please test if
-vanilla 7.2 is still affected and report back if it is; if not, you want
-to talk to your vendor about backporting fixes, as 7.0 is EOL and thus
-unsupported upstream.
+And a few days ago made it to 7.1.9 and 6.18.45. :-/
+
+> regresses a different RTL8761BU
+> dongle than the one it was written for. This series reports that and
+> proposes a way out that should not need a new patch per dongle.
+
+Not my area of expertise, so the bluetooth maintainers might disagree
+with me, but FWIW:
+
+Given the above and the fact that we are in the merge window right now
+I'd say the better approach would be to fix this fast by reverting the
+culprit in mainline (then stable can pick up the revert to fix the
+problem there) to buy time to work this out properly.
+
+Would you maybe be willing to submit a revert?
 
 Ciao, Thorsten
-> The working kernel command line workaround is:
+> The regression
+> --------------
 > 
->   module_blacklist=hp_bioscfg modprobe.blacklist=hp_bioscfg
+> Hardware here is USB 0bda:8771, firmware 0xdfc6d922, ROM lmp_subver
+> 0x8761 - an RTL8761BU, so CHIP_ID_8761B, so it gets the new quirk, which
+> makes use_ext_scan() false and moves scanning from LE Set Extended Scan
+> Enable (0x2042) to the legacy LE Set Scan Enable (0x200c).
 > 
-> The boot reaches hp_bioscfg initialization immediately before the hang.
-> The WMI GUID shown during probing is:
+> This dongle is the opposite of the one the quirk was written for:
+> extended scan works flawlessly, but the firmware stops answering the
+> legacy scan-disable command about ten seconds into any scan:
 > 
->   5FB7F034-2C63-45E9-BE91-3D44E2C707E4
+>   Bluetooth: hci0: command 0x200c tx timeout
+>   Bluetooth: hci0: Opcode 0x200c failed: -110
+>   Bluetooth: hci0: Unable to disable scanning: -110
+>   Bluetooth: hci0: disable scanning failed: -110
+>   Bluetooth: hci0: Resetting usb device.
+>   Bluetooth: hci0: start background scanning failed: -110
+>   usb 3-1: reset full-speed USB device number 2 using xhci_hcd
 > 
-> The system also reports these firmware ACPI errors:
+> btusb resets the device, it re-enumerates (hci0 -> hci1 -> hci2 -> ...)
+> and every connected BLE device is dropped. With a Bluetooth keyboard and
+> trackball that leaves the machine with no input at all.
 > 
->   ACPI BIOS Error (bug): Could not resolve symbol
->   [\_SB.PCI0.LPCB.HEC.ECRD], AE_NOT_FOUND
+> v7.1.7 drives the same dongle, with byte-identical linux-firmware and
+> identical CONFIG_BT_HCIBTUSB_*, for eleven hours and nine BLE HID
+> connects without a single scan error.
 > 
->   ACPI Error: Aborting method \_TZ.TZ00._TMP due to previous error
->   ACPI Error: Aborting method \_TZ.TZ01._TMP due to previous error
+> Why not just narrow the quirk
+> -----------------------------
 > 
-> I inspected the hp_bioscfg module from Ubuntu's 7.0.0-30 kernel:
+> Nothing available at setup time separates the two dongles:
 > 
->   /lib/modules/7.0.0-30-generic/kernel/drivers/platform/x86/hp/hp-bioscfg/hp-bioscfg.ko.zst
+>   - same project_id (CHIP_ID_8761B)
+>   - same ic_id_table entry, IC_INFO(RTL_ROM_LMP_8761A, 0xb, 0xa, HCI_USB)
+>   - same firmware file, rtl_bt/rtl8761bu_fw.bin
+>   - both advertise the extended scan commands in commands[37]
 > 
-> It contains the old error strings:
+> They differ only by USB id, which btrtl_set_quirks() cannot see.
+> driver_info cannot carry it either: 0bda:a728 has no entry of its own, so
+> it falls to the generic Realtek entry in btusb's quirks_table -
+> USB_VENDOR_AND_INTERFACE_INFO(0x0bda, 0xe0, 0x01, 0x01) - which precedes
+> the per-device entries. usb_match_id() takes the first match and
+> 0bda:8771 also presents e0/01/01, so the specific entry for it at
+> quirks_table:840 never applies.
 > 
->   hp_bioscfg: ACPI-package does not have enough elements: %d < %d
->   Error expected type %d for elem %d, but got type %d instead
+> What this series does instead
+> -----------------------------
 > 
-> I noticed the recent patch series:
+> The quirk is documented as being for controllers which "erroneously
+> claim to support extended scanning" - and one that claims support in
+> commands[37] and then answers Command Disallowed is saying so itself.
+> Patch 1 latches the quirk right where that command is issued; every
+> later scan uses the legacy commands. Patch 2 then drops the static
+> per-chip-id guess, which 0bda:a728 no longer needs. In this order the
+> series is bisectable: patch 1 alone changes nothing for anyone whose
+> quirk is already set at setup.
 > 
->   "platform/x86: hp-bioscfg: fix ACPI package handling on HP EliteBook 840 G2"
+> An affected controller pays one rejected scan round per power cycle
+> instead of a permanent stream of failures, and dongles nobody has owned
+> yet are handled without waiting for a patch.
 > 
-> including:
+> The latch is sticky, as quirk_flags is never cleared, so it matters that
+> false positives are unlikely: hci_passive_scan_sync() always disables
+> scanning before starting it, so the controller is never asked to enable
+> a scan that is already running - the obvious legitimate source of
+> Command Disallowed.
 > 
->   e0ddfd77c0c3 - pass validated element count to package parsers
->   1d143d78299d - bound ordered-list parsing by package count
->   40e10e6cc8f7 - accept reduced ACPI packages from older HP BIOS
->   b0e2af3ec94e - warn on element type mismatch instead of failing
+> Testing
+> -------
 > 
-> The series was applied to the platform-drivers-x86 review-ilpo-next
-> branch.
+> Built and running on v7.2 on the 0bda:8771 dongle. Extended scan is used,
+> the quirk is never set, no 0x200c and no controller resets, and a
+> keyboard plus a trackball stay connected across repeated LE scans - the
+> exact sequence that wedged the adapter within ten seconds before.
 > 
-> Could this HP 15-bs1xx boot hang be another manifestation of the same
-> older-HP-BIOS ACPI package handling problem?
+> What I cannot test is the other half: I do not have a 0bda:a728, so the
+> err == -EBUSY path has never executed here. Alexej, does your dongle
+> still work with this series, and do you see the "extended scan rejected,
+> using legacy scan" warning once? Also, 0x2042 carries both the enable and
+> the disable, so I cannot tell from your report which call site returned
+> -EBUSY - knowing that would tell us whether a single rejected round is
+> really all it costs you.
 > 
-> If so, would these fixes be suitable for backporting to the affected
-> stable/vendor kernel series?
+> Sending as RFC mainly because patch 1 sets the quirk at runtime, while
+> the existing comment says it is set before hci_register_dev or in
+> hdev->setup. I updated that comment, but if you would rather keep the
+> quirk strictly setup-time I am happy to respin as a USB-id match in
+> btusb.c instead - it just needs the quirks_table ordering sorted out
+> first.
 > 
-> I can test patches or a patched hp_bioscfg module on this machine.
+> #regzbot introduced: 5ead2063611ae56809b1b113ac44cef9547c81d7
 > 
-> Regards,
-> mr.Volkan SALiH
+> Kamil Serwus (2):
+>   Bluetooth: hci_sync: latch broken ext scan on Command Disallowed
+>   Bluetooth: btrtl: drop the blanket RTL8761B extended scan quirk
 > 
+>  drivers/bluetooth/btrtl.c   | 13 -------------
+>  include/net/bluetooth/hci.h |  4 ++--
+>  net/bluetooth/hci_sync.c    | 15 +++++++++++++--
+>  3 files changed, 15 insertions(+), 17 deletions(-)
+> 
+> 
+> base-commit: 8d3ae59288f1e7d58d76558a6ee96d533bc5019f
 
