@@ -1,132 +1,166 @@
-Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9BF7218EBA
-	for <regressions@lists.linux.dev>; Sat, 22 Aug 2026 20:19:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.65
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787429947; cv=none; b=WSDOaeSfPl7XsA+97qgfGBz34KB7yoe19Wh+vdRJFGBaelHPqZbsZBTYh3AUlsi9QLT/AVIRLyCvKJs8piosRIw9bhMmz/J0rH2xOqBslV/u2PuQUgw5t5S4v9FS+0o67TnOLjHuv1/xK2DhAt1oMpbBx2MAeZixQErDV2Ujyh4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787429947; c=relaxed/simple;
-	bh=zFwnyY1tZmN01OUrHRWftRgdvztPP6ZHKh1+wBAQgk4=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=T4XN6iPKuc5FoN4Scvf3KcKA2cTl/r8zLne5ofDxahZlJqt9nUwMWD0kMFw8np7l6gztvjoSNbwr2IaVGo0a1ElRlE1ETTXsWpx2+fbtpF2DPqQ7jsqrRYREY75BXXZ8kXBQdWqpilhxk2nXSlidTBw254IQwi8dCjWMYTvY7ts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de; spf=pass smtp.mailfrom=posteo.de; dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b=CebJHQm9; arc=none smtp.client-ip=185.67.36.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B0C51F8691
+	for <regressions@lists.linux.dev>; Sun, 23 Aug 2026 00:36:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.221.172
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1787445384; cv=pass; b=ee4C7MtH0iHyAFYJpEidN+xvzloAJbQwoUBc5suc4droyDpIKugKlsNHlSAcmhqI4itd6EbXNX/u5IHXOCfpFfoesSgpjpRJ1scgizoRUaVG0GhY+SViPPfmhrz+AYB1MmPDJ8lLdedAVi5/jm7B1ORb2eZHk9hyLA5PLMhJ00w=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1787445384; c=relaxed/simple;
+	bh=IpHcjZ3NayMqvBih3E3O9x4doOsXtbt93QADiafRZnc=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=q6f7c+z29yY1mjxJUwZPn9BtsCZmkMByqECbb+GQe3UC6a47VdveUe5pLGw1GqgCSQugUAQ2Enr0+pR7eUs6Qhb70fqD9Wt6fyx6NzZbUJDwjAwIIndpeP2UZI2Lbh68wqgCWDlIppdYHeD7ShORrdECkSz1nfkF37xl9duwrH8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dTzYijVJ; arc=pass smtp.client-ip=209.85.221.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b="CebJHQm9"
-Received: from submission (posteo.de [185.67.36.169]) 
-	by mout01.posteo.de (Postfix) with ESMTPS id 0C61E240028
-	for <regressions@lists.linux.dev>; Sat, 22 Aug 2026 22:18:58 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=posteo.de;
-	s=1984.8680eb; t=1787429938;
-	bh=LqNKr0iSvKM4yPm4fqu/h4Hh6DQs1Ucl5vow3O4GAd8=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:Content-Type:
-	 Content-Transfer-Encoding:From;
-	b=CebJHQm9Ysfux7EVJQIVmrQT6FuCdCLYreX/7ysIT6vPQR3+dNiiICGUJ3yLiZi16
-	 Bnec1itW46AiS0Xe7e0Vy5l63r/XQMUTKCnQb4ISP/2TWz2zSVqUiAHVUJHL7NUoec
-	 v5hc3NasvM/LSP1MipJHJyszXPaRRxaCFbxvG+C6jD1S6yL7jN3Bf8WLzXqVNK31T5
-	 Yxj3K/PiJ1DeZqEKdT4bxPvJJdVCSKjOMnC7363tcuzflCiQV1tPY5aJYIPSmNHBXh
-	 Vrq0quRIfSHTHzl2954u5fklqev5kCpdheYucaNvXZOYl00slCewilAdkCP6Cc1fzR
-	 XxYobeTaz6Ugw==
-Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4hS7mc3rkpz9rxL;
-	Sat, 22 Aug 2026 22:18:56 +0200 (CEST)
-Message-ID: <e4bc5ce3-9a6f-4365-9d36-f6440ded0865@posteo.de>
-Date: Sat, 22 Aug 2026 20:18:57 +0000
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dTzYijVJ"
+Received: by mail-vk1-f172.google.com with SMTP id 71dfb90a1353d-5c5a818a3d6so1844980e0c.1
+        for <regressions@lists.linux.dev>; Sat, 22 Aug 2026 17:36:22 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1787445382; cv=none;
+        d=google.com; s=arc-20260327;
+        b=nnFGWzEgofKduqrg3k0zXGZU0naJKWAIco8CoxfR6vmVyCn3tHhH78BHGt+u9n50+Q
+         Oer5PKT5dwc9l6Sl/HzxPMV3r5FRd/u00M1vgHOwJISWBoSO6jU2VqPb6ctRgiSlKrQZ
+         vcxF7NVfzXsjLdzytzL/3r/i0VvNu0YeT9/TYXpj7ywIB8I5XgK3vNCCx10SB30xJqON
+         atwTvfoUYLxXwRKDi5bnFYSAsQIKgy5sufYelAPVtx4jNGGMYjt3Uwz2/Td21McA6EuT
+         6gdV50gjCC/rt0TDnXIj0J5TucteOWn20e4YCl30lwTvE98plASm1sUYYqt1mhvXIcBj
+         chhw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=to:subject:message-id:date:from:mime-version:dkim-signature;
+        bh=3Pdm/5HsS5zC32B4oG3X1nNqflyH/Na8m3BnnAtmnRA=;
+        fh=CPSF9JIVBT5vcBb2tw4CBsUrf86Q60jPt98yuHcIyo8=;
+        b=iaZlbma8PB0OeVNFDXlly/PYRr/SWhtHQYvV15/V72Yf3TJQaeND/8a+aDcsLIMcwz
+         H+imrSVmIJTIaLu2OsYUO7s/bYzOJWtXKDmmpC2TpcrqgO0rblL2kOnNSj39UjJtmhpq
+         NUCFzTOz21jXywUKbhS3IQjs7yk/k/fSMf7iG0T5VcX8kfGe/X7Duh891qaM6Yh16te0
+         fxRiJr1vrVEuwNVjxLzGNeg6vtupox4f35NiuUQ9t0UlN9FrTC7iPaDDV15QGaxlANKI
+         r0QXEyy+LTn70iIZsP6OeYDij3xNnFAU4JnzyWv3ufzqZpaWee9Tmu3BlhFzruKs8dQr
+         PPFw==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1787445382; x=1788050182; darn=lists.linux.dev;
+        h=content-type:to:subject:message-id:date:from:mime-version:from:to
+         :cc:subject:date:message-id:reply-to:content-type;
+        bh=3Pdm/5HsS5zC32B4oG3X1nNqflyH/Na8m3BnnAtmnRA=;
+        b=dTzYijVJEX+fvQBgSSZl9LvSHZerZlP8DU/PbuUNymd3bBdvqFiybB9pAnldhPQw0k
+         w2D8e0PzsjdX1TtVYdNoGq9geUKhHp/7Ig6MbHXpwQxU9CUolzZC9PBaTwYvxh2DqCcM
+         ERPakQA7KoVLfP9YbhPNH7/LUtBtdUopuVLHm1LkVfWG68X+qV3qtsQrSF5O0KcGzYR9
+         wXig2fW+DTptIQu0xL2UuROgCgMSJMJcM/T/F3JdhSg6N4xJ2+C/UBQV78qIJh/niGfx
+         t7q2YzsW9ccddgKs334QtOAKkLO/EpnyRfAobYGqBXtp8JUd3A6V3BhYuLbUwIxqVLRZ
+         gF+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1787445382; x=1788050182;
+        h=content-type:to:subject:message-id:date:from:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=3Pdm/5HsS5zC32B4oG3X1nNqflyH/Na8m3BnnAtmnRA=;
+        b=tWgZVCbKpWo2Rw5J8HE8xuypwp0sDBHYV5J9glD/OGzpbTI7JuMjg3UKVb7o1HtJv4
+         tIVqN1yQAkHTpKpXH/GoqJLBh3PS1ByHwYNcPo5eg00g5wMrxscxLtRZ1Iunn2HfkLmS
+         1s4vEpdNiNtaDh9POp4Zj8/kmePVqnJu8zLzHkAbpE0wSxesh+qsdEdkImd/dScG5mfS
+         NyDvU6nswY1ONRTr4AfjHGRzNKiD644lqRVVxH6OlSqOVaXjXqleIBbCUWGs6eZdwyhE
+         /dQHHl3Q9CVG7D8wQJou8GL282fJP58Zxp6tsqoF3BvRX1E8EheQdjSdjdLF6lPWC/fv
+         3+hQ==
+X-Forwarded-Encrypted: i=1; AHgh+Rpu2XTSwr3Zi4oEoa4/HzfenCggi90EYX7YTlRjSYc4488X4SEqnhN1r9+Z9h3VoeEDQQaUJ3tWj2+MMA==@lists.linux.dev
+X-Gm-Message-State: AFuF++nvnQAQxkeLhtHAL5pqrkikvhLLx+8ub8YdgKhwQRosloP+r3yo
+	7M+4d8ze0cdpvMEmYf13lmxXveMd2w0pBRw5T4bxo3TFh9UtwulOqPK8DHJBx6hTzGuUtTwiUC9
+	EdmGjuUNKixxkk7CWPK9tGRqFSi2abt9J3ETj2ho=
+X-Gm-Gg: AR+sD115hbGlYGEkdQxkpFTVyDtu+uwxWR11bYOBumejr+dAMTSBgAiduXKHQDRNjpw
+	ectS5iYv1Dsc3vBK8GNslcmJZjN1Kak6LzI+f1mTwz56HwD4GofqA1jiU0szLah7xXwZuSNhOSj
+	doFF+XXvllOD+GqImyxsyKKkKjMxWivfczVup9IG80JHtHqzZuU8QVSds1Bjx882pYftV1Z2yEF
+	+0kvH3D60ElIOdsvMoEYePYKuusyCdTYixAn1VPia0L5cpPtb17l1rp1yNAyDcM8hmQWelrPjOX
+	9lRa/TzeStQExK+gkUYrgdvRZzV4pKornBlcaPeU3mY+
+X-Received: by 2002:a05:6122:489a:b0:5c3:2f5c:55b3 with SMTP id
+ 71dfb90a1353d-5c5ff7a68a2mr8236180e0c.3.1787445381909; Sat, 22 Aug 2026
+ 17:36:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Subject: Re: [REGRESSION] mt7925: MLO connectivity silently stalls with 6GHz
- link active
-From: Jonas Hort <jonas.hort@posteo.de>
-To: Devin Wittmayer <lucid_duck@justthetip.ca>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
- regressions@lists.linux.dev, linux-wireless@vger.kernel.org,
- Felix Fietkau <nbd@nbd.name>, lorenzo.bianconi83@gmail.com
-References: <503eb10e-80cf-493e-95fd-04fc0f94ce01@posteo.de>
-Content-Language: en-US, de-DE
-In-Reply-To: <503eb10e-80cf-493e-95fd-04fc0f94ce01@posteo.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+From: =?UTF-8?Q?VOLKAN_SAL=C4=B0H?= <volkan.salih.06@gmail.com>
+Date: Sun, 23 Aug 2026 03:36:10 +0300
+X-Gm-Features: AcwNN1W0_Bz7QYAT9V60rz2l4_bJDFUR0hstZX3hdx3Ab_UhZbX18RbGhS9ja7g
+Message-ID: <CA+wWBLPxFPQB1Dt0MAJSNZ43dhGDspSD9jH98TArTf_etjLmSw@mail.gmail.com>
+Subject: [REGRESSION] hp_bioscfg hangs boot on HP Laptop 15-bs1xx;
+ blacklisting fixes it
+To: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-Quick update: v7.0 vanilla has been running clean for over 2 hours now 
-with MLO active (5GHz+6GHz, same FritzBox 5690 Pro), no freeze at all.
+Hello,
 
-Am 19.08.26 um 11:03 schrieb Jonas Hort:
-> Thanks for the detailed breakdown.
->
-> I'll build v7.0 vanilla and test it, as suggested. Fair warning
-> though: I'm on vacation this week, so I'll pick this up next week.
-> I've also never compiled a kernel before, so it'll likely take me a
-> bit of trial and error the first time around - please bear with me
-> if it takes a little longer than expected.
->
-> Will report back once I have results.
->
-> Thanks again,
-> Jonas
->
-> 19.08.2026 03:18:34 Devin Wittmayer <lucid_duck@justthetip.ca>:
->
->> Thank you very much, that answers both things.
->>
->> The ROC tracing is the more useful of the two even though it came back
->> negative. Two of the three freezes have no ROC activity in them at all, so a
->> link switch that never finished cannot be what starts this. The middle one
->> does have rocabort, mloroc and rocwork in it, but one out of three makes
->> that look like the exception rather than the pattern. So the area I sent you
->> looking at is out, and that is worth knowing before you spend nights on
->> builds.
->>
->> One other thing worth saying first. There is a five patch mt76 series on the
->> list at the moment and two of the patches look like they were written for
->> exactly this bug. I do not think they were, and it is your own numbers that
->> show it. The failure 4/5 fixes stops mt76_txq_schedule_list from servicing
->> the queue, and the one 5/5 fixes stops mt76_txq_send_burst once the non-AQL
->> count reaches its cap. Both of those keep frames from ever reaching the
->> hardware, so if either were your problem head would be sitting still
->> alongside tail. Yours does the opposite. Head climbs 390 to 408 while tail
->> stays at 260, so the frames are getting into the ring and nothing is
->> finishing them, which is the far end of the same path. 2/5 is a use after
->> free when an interface goes away, so it does not fit either. I would not
->> expect that series to change what you see.
->>
->> On the bisect I would build v7.0 next. There are 32 mt7925 commits between
->> 7.0 and 7.1 and 19 of them are one run of work from Sean Wang, reworking how
->> the driver tracks the per link mlink and WCID for an MLO station. That is
->> the kind of change that fits a bug only showing up with two links up. If
->> v7.0 comes back clean, that series is where I would look. If v7.0 is already
->> broken then it is off the hook and 6.19 becomes the next split. The mt76
->> core and mac80211 both moved in the same window, so mt7925 is where I would
->> look first rather than the only place worth looking.
->>
->> Devin
->>
->> Am 17.08.26 um 23:34 schrieb Jonas Hort:
->>
->>> Quick follow-up: managed to confirm 6.18 as a clean baseline on my
->>> own hardware now (not just secondhand from others in the forum
->>> thread) - running Linux 6.18.42-1-cachyos-lts with MLO active
->>> (5GHz+6GHz, same FritzBox 5690 Pro) for 3 hours straight, no freeze
->>> at all.
->> Am 17.08.26 um 16:25 schrieb Jonas Hort:
->>
->>> One correction to how I described this earlier: the connection does
->>> NOT reliably self-heal on its own. I have manually intervened every
->>> single time to restore connectivity [...]
->>>
->>> Update on the ROC tracing: three real freezes captured now with the
->>> kprobes active (all confirmed via the WFDMA0 tail-frozen signature).
->>>
->>> - Freeze #1 (15:37): no ROC activity in the trace.
->>> - Freeze #2 (15:43): [...] The trace shows several ROC events
->>>    (rocabort, mloroc, rocwork) clustered together.
->>> - Freeze #3 (16:15): no ROC activity again.
->>>
->>> Uploaded all three logs to the bugzilla ticket if useful:
->>> https://bugzilla.kernel.org/show_bug.cgi?id=221884
+I am seeing a boot regression involving hp_bioscfg on an HP Laptop
+15-bs1xx.
+
+System:
+  Model: HP Laptop 15-bs1xx
+  SKU: 7WG51EA#AB8
+  Mainboard: HP 8444
+  BIOS: F.75 (04/26/2024)
+  GPU: Intel HD Graphics 5500 / Broadwell-U [8086:1616]
+  Distribution: Zorin OS 18.1 Pro (Ubuntu 24.04 based)
+
+Kernel results:
+  6.17.0-40-generic:
+    boots normally
+
+  7.0.0-30-generic:
+    hangs during boot
+
+  7.0.0-30-generic with acpi=off:
+    boots
+
+  7.0.0-30-generic with only hp_bioscfg blacklisted:
+    boots normally with ACPI enabled
+
+The working kernel command line workaround is:
+
+  module_blacklist=hp_bioscfg modprobe.blacklist=hp_bioscfg
+
+The boot reaches hp_bioscfg initialization immediately before the hang.
+The WMI GUID shown during probing is:
+
+  5FB7F034-2C63-45E9-BE91-3D44E2C707E4
+
+The system also reports these firmware ACPI errors:
+
+  ACPI BIOS Error (bug): Could not resolve symbol
+  [\_SB.PCI0.LPCB.HEC.ECRD], AE_NOT_FOUND
+
+  ACPI Error: Aborting method \_TZ.TZ00._TMP due to previous error
+  ACPI Error: Aborting method \_TZ.TZ01._TMP due to previous error
+
+I inspected the hp_bioscfg module from Ubuntu's 7.0.0-30 kernel:
+
+  /lib/modules/7.0.0-30-generic/kernel/drivers/platform/x86/hp/hp-bioscfg/hp-bioscfg.ko.zst
+
+It contains the old error strings:
+
+  hp_bioscfg: ACPI-package does not have enough elements: %d < %d
+  Error expected type %d for elem %d, but got type %d instead
+
+I noticed the recent patch series:
+
+  "platform/x86: hp-bioscfg: fix ACPI package handling on HP EliteBook 840 G2"
+
+including:
+
+  e0ddfd77c0c3 - pass validated element count to package parsers
+  1d143d78299d - bound ordered-list parsing by package count
+  40e10e6cc8f7 - accept reduced ACPI packages from older HP BIOS
+  b0e2af3ec94e - warn on element type mismatch instead of failing
+
+The series was applied to the platform-drivers-x86 review-ilpo-next
+branch.
+
+Could this HP 15-bs1xx boot hang be another manifestation of the same
+older-HP-BIOS ACPI package handling problem?
+
+If so, would these fixes be suitable for backporting to the affected
+stable/vendor kernel series?
+
+I can test patches or a patched hp_bioscfg module on this machine.
+
+Regards,
+mr.Volkan SALiH
