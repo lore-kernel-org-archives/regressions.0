@@ -1,197 +1,249 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 256C323D2A1
-	for <regressions@lists.linux.dev>; Mon, 24 Aug 2026 07:35:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E6083A874F
+	for <regressions@lists.linux.dev>; Mon, 24 Aug 2026 08:19:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787556919; cv=none; b=XXzCYeg4u4695DEGftS3EfU/QHlU4JjD1wfnOB3026BlX8bkEYOW8wKNq1aS+PxM2xGz5hYfkD7Y4ggLHEnLg0MnNeVfBE/Qj0zgzBi9v+6WVojaBXYxJtFQhq3l/XWzKS/M21eAk7geMzylG8LgKjL8sttbHUr29zW5+aNmDHs=
+	t=1787559545; cv=none; b=JW0aS3bZ/UiwGUhT0f7G+2+bRMX3KISXSTHElNruYV5lq+5N5JR5SqU5SgeJmt82PpyKS3U0Ga6qeKDhfch3X4TzgcJp6DSLU4+dZc81rXufzoMZIgi8rH2WfKJ3h6EM0KEKmUrYGfpmrKzpxYkzSiTTVjOYzIJE4AbBDJVck7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787556919; c=relaxed/simple;
-	bh=D0M0B6nWtD8IxZsd7dAIl0bGsI7U6ZXJrZAq5GFmBFM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hpcEQykg8e9dY9m4VTugKoxGVThMHnwVvR+aHh5Lmx/HXaGkUn7djWskz/jwK7k3U9hVy+8up/gkclVXl5AXyIYHBfftnAVcvuDNkIf788QGRBWBSqxQ8UK5PaIJP6gQ2GkWtiWLvctX4yRYpSFKr6ZnciO64X44JhauNQCDrJI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=cKs2Ds6W; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=LdIW45LC; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1787559545; c=relaxed/simple;
+	bh=hz+NH0v7AwWKkdCJYg4+FKk8pFAsNZqPrMMyzTiYRes=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VV9deyzloKtU+VqeaaL+JYfMAUHnFghpegtM3l42u5GQXA9j5N1UarQKp8GzJ4RCnqYYq707wMFZoCwYevgRkCHzlv99N+CpOaFsmZnOWuVvZdWmXqOtmMX8ljyrH4rYG+WosQPei3JwIeOisE5IiQspGqgkKvaERH1KW8g2QtU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de; spf=pass smtp.mailfrom=posteo.de; dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b=Ve9RRsfM; arc=none smtp.client-ip=185.67.36.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cKs2Ds6W";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="LdIW45LC"
-Date: Mon, 24 Aug 2026 09:35:15 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1787556916;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SjtlSqjePQMRj4TeKuxAz2/6GIxKPHosReR3jogYEN8=;
-	b=cKs2Ds6WpfFedivT9Ks+wifTn+qv/fjGMwcEHeCJcy7mIiX7PWcFz9ISkFSh3/jsx9IR5/
-	hqoplsl0zRUT8DYgnnnL9X3Rk95EASpbKhdCr59f8CLWLFN3cbe3yPnX76QC6mBV9BvQsm
-	J7IkDVmLJVYklgBk80UYU3x+8O/u0wePXCPFMfSi3ErZj6c8CtK519g/EpMMou/2+Ncpd/
-	YlPnKNM5wvKRHarWAaYi8LlUdT5E9ok57OLuYJ3G7fYhhLJvD+Dv18oTao5nTqe/csfT7v
-	zjM4WoOf4jjcGGMnIdaZKGrCYpvkMjmnG8bKM+3cvLnGtpiR0tly4Fby/Uu0kg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1787556916;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SjtlSqjePQMRj4TeKuxAz2/6GIxKPHosReR3jogYEN8=;
-	b=LdIW45LC5D+mazBSSRz0Kv6wwOPl3nZ0f9KlU/KSOjqOM1orkgmMUSA8aSycxK/5vMu7zY
-	9L2kPoyQgshnWpDg==
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Fabian Franz <fabian@isomorphic-ai.com>, 
-	Richard Weinberger <richard@nod.at>, Anton Ivanov <anton.ivanov@cambridgegreys.com>, 
-	Johannes Berg <johannes@sipsolutions.net>, "Borislav Petkov (AMD)" <bp@alien8.de>, 
-	Nikolay Borisov <nik.borisov@suse.com>, "Xin Li (Intel)" <xin@zytor.com>, Ingo Molnar <mingo@kernel.org>, 
-	Claude Fable 5 <noreply@anthropic.com>, linux-um@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	Linux kernel regressions list <regressions@lists.linux.dev>
-Subject: Re: [PATCH REGRESSION] um: Fix cpu_feature_enabled() build breakage
-Message-ID: <20260824092300-3e9a9d58-b273-421b-a4bf-5609ccb9ab49@linutronix.de>
-References: <20260823201521.2576344-1-fabian@isomorphic-ai.com>
- <a02b160a-874f-491c-987b-4d7eb0d35a9f@leemhuis.info>
+	dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b="Ve9RRsfM"
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout02.posteo.de (Postfix) with ESMTPS id 9CD63240104
+	for <regressions@lists.linux.dev>; Mon, 24 Aug 2026 10:18:59 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=posteo.de;
+	s=1984.8680eb; t=1787559539;
+	bh=GRxYvEqjyMtNEHGGOwwpL7FG4/jjm1W32/akLYtRNnE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:Content-Type:
+	 Content-Transfer-Encoding:From;
+	b=Ve9RRsfMyI+t5Ee/IwwrAgf8RX5bNtTjBAABKbgZRhASpgXU10DR91PdsIF6RaCT5
+	 f+R2lrZwhlBuHBmWrYr49S410WqZrDg7HQc8bpOs/5hKRNGjEYo6X+bbUC+t2hjoik
+	 Z1XZz8s163pqtx0KW74Wq37p9/h8BlM1DNm1aZoOqKKdLqXW/WERoO0e/iALUIBC4B
+	 5dEQ2cUU/4QnAknfj8vkxU7uqc0301EKHiGow8jYlcf6mNZKvjOjIwgYX2ks9UIAnS
+	 eDtPPAumvOKbBltsTPWdBkyxVTZmevdeqC971cdFuscle2LCkqoeTqrPD2/EdlAbbX
+	 18rWaQTSSg+XQ==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4hT3hy2Bm8z6v0P;
+	Mon, 24 Aug 2026 10:18:58 +0200 (CEST)
+Message-ID: <c9f984c4-e3c4-4e41-a502-99db97ce724b@posteo.de>
+Date: Mon, 24 Aug 2026 08:18:59 +0000
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Subject: Re: [REGRESSION] mt7925: MLO connectivity silently stalls with 6GHz
+ link active
+To: Thorsten Leemhuis <regressions@leemhuis.info>,
+ Sean Wang <sean.wang@mediatek.com>
+Cc: regressions@lists.linux.dev, linux-wireless@vger.kernel.org,
+ Devin Wittmayer <lucid_duck@justthetip.ca>, Felix Fietkau <nbd@nbd.name>,
+ lorenzo.bianconi83@gmail.com, linux-mediatek@lists.infradead.org
+References: <503eb10e-80cf-493e-95fd-04fc0f94ce01@posteo.de>
+ <e4bc5ce3-9a6f-4365-9d36-f6440ded0865@posteo.de>
+ <c64f5fa6-4c61-45b6-a513-b971e59d7723@posteo.de>
+ <476e7721-580e-4a6b-86e5-5ed782a2c7ec@leemhuis.info>
+Content-Language: en-US, de-DE
+From: Jonas Hort <jonas.hort@posteo.de>
+In-Reply-To: <476e7721-580e-4a6b-86e5-5ed782a2c7ec@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <a02b160a-874f-491c-987b-4d7eb0d35a9f@leemhuis.info>
 
-On Mon, Aug 24, 2026 at 08:54:19AM +0200, Thorsten Leemhuis wrote:
-> On 8/23/26 22:14, Fabian Franz wrote:
-> > Since commit 3ed403bbc967 ("treewide: Remove CLOCK_TICK_RATE") deleted
-> > the (otherwise empty) arch/um/include/asm/timex.h, UML builds resolve
-> > <asm/timex.h> to arch/x86/include/asm/timex.h via the HEADER_ARCH
-> > include path.  That pulls <asm/tsc.h>, whose get_cycles() uses
-> > cpu_feature_enabled(), into virtually every translation unit, starting
-> > with asm-offsets.c.  This newly expands parts of UML's copy of
-> > <asm/cpufeature.h> that no longer compile, and "make ARCH=um" now dies
-> > in prepare0:
-> > 
-> >   arch/um/include/asm/cpufeature.h:52:39: error: implicit declaration
-> >     of function 'DISABLED_MASK_BIT_SET'
-> >   arch/um/include/asm/cpufeature.h:115:17: error: implicit declaration
-> >     of function '_static_cpu_has'; did you mean '__static_cpu_has'?
-> 
-> To ensure everyone is aware of it: Thomas Weißschuh (now CCed) a few
-> days ago already submitted a fix for a problem that to my untrained eyes
-> looks like the same problem (do not hesitate to correct me!):
+Thanks Devin, and thanks for pulling Sean in.
 
-Thanks for this pointer.
+git biscet log:
+# bad: [8cd9520d35a6c38db6567e97dd93b1f11f185dc6] Linux 7.1
+# good: [028ef9c96e96197026887c0f092424679298aae8] Linux 7.0
+git bisect start 'v7.1' 'v7.0' '--' 
+'drivers/net/wireless/mediatek/mt76/mt7925/'
+# good: [ea757740dd87c0b00c4844dd3282dff4d83fa3c7] wifi: mt76: mt7925: 
+pass WCID indices to bss_basic_tlv()
+git bisect good ea757740dd87c0b00c4844dd3282dff4d83fa3c7
+# bad: [cf9db836b1e069a3d6a80c72b9bdc12df78b0dd1] wifi: mt76: mt7925: 
+pass mlink to set_link_key()
+git bisect bad cf9db836b1e069a3d6a80c72b9bdc12df78b0dd1
+# bad: [9e4d518a4707175e1154876b760d4f2b39967e9d] wifi: mt76: mt7925: 
+pass mlink to mac_link_sta_remove()
+git bisect bad 9e4d518a4707175e1154876b760d4f2b39967e9d
+# bad: [dc019e3294c7e3c6e997bb11732d46ce0d9211e9] wifi: mt76: mt7925: 
+pass mlink to mcu_sta_update()
+git bisect bad dc019e3294c7e3c6e997bb11732d46ce0d9211e9
+# bad: [ff643b81bc38eaff6c0ab783a62e4ba9e10d2476] wifi: mt76: mt7925: 
+pass mlink and mconf to sta_mld_tlv()
+git bisect bad ff643b81bc38eaff6c0ab783a62e4ba9e10d2476
+# first 'bad' commit: [ff643b81bc38eaff6c0ab783a62e4ba9e10d2476] wifi: 
+mt76: mt7925: pass mlink and mconf to sta_mld_tlv()
 
-> https://lore.kernel.org/all/20260819-uml-timex-fix-v1-1-f690b514fc9f@linutronix.de/
+On the warning: no hits. I grepped all incident logs for MLD_TLV_LINK
+and for anything mentioning primary/mconf, and also checked the
+current boot directly. The only mt7925 lines present are the usual
+init ones:
 
-Indeed, both our fixes seem to be for the same breakage.
+   mt7925e 0000:09:00.0: ASIC revision: 79250000
+   mt7925e 0000:09:00.0: HW/SW Version: 0x8a108a10, Build Time: 
+20260605184651a
+   mt7925e 0000:09:00.0: WM Firmware Version: ____000000, Build Time: 
+20260605184805
 
-Personally I prefer my patch, as it reverts the specific change which
-introduced the breakage into the tree. Franz' change does not look incorrect
-but is a larger change and should go through a regular release cycle.
+Each incident log captures journalctl -k for the 5 minutes leading up
+to the freeze plus the last 400 dmesg lines, so if it had fired around
+the stall it should have been in there. Still on the ff643b81bc38
+kernel here, so happy to re-check with a different search term if I
+grepped for the wrong thing.
 
+Setup is still up and I can build and test whatever is useful.
+
+Thanks,
+Jonas
+Am 24.08.26 um 06:52 schrieb Thorsten Leemhuis:
+> On 8/23/26 22:54, Jonas Hort wrote:
+>> Bisect is done. First bad commit:
+>>
+>> ff643b81bc38eaff6c0ab783a62e4ba9e10d2476
+>> wifi: mt76: mt7925: pass mlink and mconf to sta_mld_tlv()
+>> Sean Wang, 2026-03-06
+>> https://patch.msgid.link/20260306232238.2039675-4-sean.wang@kernel.org
+> Then let's add Sean to the list of recipients. :-D
+>
+> Sean, FWIW, this thread starts here:
+>
+> https://lore.kernel.org/all/066b30cc-a9e6-4aeb-964d-71551e8ea3ef@posteo.de/t/#u
+>
+> To quote the summary: "WiFi 7 MLO (5GHz+6GHz) on MT7925 silently stops
+> passing traffic after a few minutes, while the driver continues to
+> report a fully healthy link. Root cause appears to be a stalled WFDMA0
+> TX hardware queue."
+>
 > Ciao, Thorsten
-> > Two independent breakages meet here:
-> > 
-> >  1. cpu_feature_enabled() and this_cpu_has() still test
-> >     DISABLED_MASK_BIT_SET()/REQUIRED_MASK_BIT_SET().  Those used to
-> >     come from <asm/disabled-features.h>/<asm/required-features.h> via
-> >     <asm/cpufeatures.h>, but since commit 8f97566c8a81
-> >     ("x86/cpufeatures: Remove {disabled,required}-features.h") they
-> >     live in the generated <asm/cpufeaturemasks.h>, which only the
-> >     arch/x86 archprepare rule generates.  ARCH=um never generates nor
-> >     includes it, so the references have been dangling since then.
-> > 
-> >  2. The _static_cpu_has() macro expands to itself.  Commit
-> >     3eaa50e1e255 ("x86/cpu: Hide and rename static_cpu_has()") renamed
-> >     the inline function _static_cpu_has() -> __static_cpu_has() and
-> >     the macro static_cpu_has() -> _static_cpu_has(), but in the UML
-> >     header the macro's out-of-line branch kept calling
-> >     _static_cpu_has(), which now names the macro itself and is left
-> >     unexpanded by the preprocessor.
-> > 
-> > Fix the macro to call __static_cpu_has(), as the x86 header does, and
-> > drop the mask based short-circuits from cpu_feature_enabled() and
-> > this_cpu_has().  UML has no compile-time feature masking to express:
-> > capabilities are copied from the host's CPUID at boot, see commit
-> > d8fb32f4790f ("um: Add support for host CPU flags and alignment"),
-> > and generating cpufeaturemasks.h from a UML .config would wrongly
-> > mark features disabled simply because the gating CONFIG_X86_* symbols
-> > do not exist for ARCH=um.
-> > 
-> > Fixes: 3eaa50e1e255 ("x86/cpu: Hide and rename static_cpu_has()")
-> > Fixes: 8f97566c8a81 ("x86/cpufeatures: Remove {disabled,required}-features.h")
-> > Signed-off-by: Fabian Franz <fabian@isomorphic-ai.com>
-> > Assisted-By: Claude Fable 5 <noreply@anthropic.com>
-> > ---
-> >  arch/um/include/asm/cpufeature.h | 8 +++-----
-> >  1 file changed, 3 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/arch/um/include/asm/cpufeature.h b/arch/um/include/asm/cpufeature.h
-> > index f7770083c0a4..20b2c7ead62e 100644
-> > --- a/arch/um/include/asm/cpufeature.h
-> > +++ b/arch/um/include/asm/cpufeature.h
-> > @@ -37,8 +37,7 @@ extern const char * const x86_bug_flags[NBUGINTS*32];
-> >  	 test_cpu_cap(c, bit)
-> >  
-> >  #define this_cpu_has(bit)						\
-> > -	(__builtin_constant_p(bit) && REQUIRED_MASK_BIT_SET(bit) ? 1 :	\
-> > -	 x86_this_cpu_test_bit(bit, cpu_info.x86_capability))
-> > +	 x86_this_cpu_test_bit(bit, cpu_info.x86_capability)
-> >  
-> >  /*
-> >   * This macro is for detection of features which need kernel
-> > @@ -48,8 +47,7 @@ extern const char * const x86_bug_flags[NBUGINTS*32];
-> >   * supporting a possible guest feature where host support for it
-> >   * is not relevant.
-> >   */
-> > -#define cpu_feature_enabled(bit)	\
-> > -	(__builtin_constant_p(bit) && DISABLED_MASK_BIT_SET(bit) ? 0 : _static_cpu_has(bit))
-> > +#define cpu_feature_enabled(bit)	_static_cpu_has(bit)
-> >  
-> >  #define boot_cpu_has(bit)	cpu_has(&boot_cpu_data, bit)
-> >  
-> > @@ -112,7 +110,7 @@ static __always_inline bool __static_cpu_has(u16 bit)
-> >  (								\
-> >  	__builtin_constant_p(boot_cpu_has(bit)) ?		\
-> >  		boot_cpu_has(bit) :				\
-> > -		_static_cpu_has(bit)				\
-> > +		__static_cpu_has(bit)				\
-> >  )
-> >  
-> >  #define cpu_has_bug(c, bit)		cpu_has(c, (bit))
-> >
-> > -- 
-> > 2.43.0
-> > 
-> > Every ARCH=um build has failed since the 7.3 merge window.
-> > 
-> > #regzbot introduced: 3ed403bbc967
-> > 
-> > Steps to reproduce on master:
-> > 
-> > make ARCH=um O=/tmp/um-build defconfig
-> > make ARCH=um O=/tmp/um-build -j$(nproc)
-> > 
-> > fails with:
-> > 
-> > /home/ubuntu/projects/linux/arch/x86/include/asm/tsc.h: In function ‘get_cycles’:
-> > /home/ubuntu/projects/linux/arch/um/include/asm/cpufeature.h:52:39: error: implicit declaration of function ‘DISABLED_MASK_BIT_SET’ [-Werror=implicit-function-declaration]
-> >    52 |         (__builtin_constant_p(bit) && DISABLED_MASK_BIT_SET(bit) ? 0 : _static_cpu_has(bit))
-> >       |                                       ^~~~~~~~~~~~~~~~~~~~~
-> > /home/ubuntu/projects/linux/arch/x86/include/asm/tsc.h:79:14: note: in expansion of macro ‘cpu_feature_enabled’
-> >    79 |         if (!cpu_feature_enabled(X86_FEATURE_TSC))
-> >       |              ^~~~~~~~~~~~~~~~~~~
-> > /home/ubuntu/projects/linux/arch/um/include/asm/cpufeature.h:115:17: error: implicit declaration of function ‘_static_cpu_has’; did you mean ‘__static_cpu_has’? [-Werror=implicit-function-declaration]
-> >   115 |                 _static_cpu_has(bit)                            \
-> >       |                 ^~~~~~~~~~~~~~~
-> > /home/ubuntu/projects/linux/arch/um/include/asm/cpufeature.h:52:72: note: in expansion of macro ‘_static_cpu_has’
-> >    52 | builtin_constant_p(bit) && DISABLED_MASK_BIT_SET(bit) ? 0 : _static_cpu_has(bit))
-> >       |                                                             ^~~~~~~~~~~~~~~
-> > 
-> > If this is known please disregard. I am also not 100% sure if this is the right fix or if it's better to bring back the macros to um.
-> > 
-> > In any case it would be good for um to build again on the master branch out of the box.
-
+>> Bisected on vanilla, path-restricted to
+>> drivers/net/wireless/mediatek/mt76/mt7925/, using v7.0 as good and
+>> v7.1 as bad. Each step was booted and tested with MLO active
+>> (5GHz+6GHz, FritzBox 5690 Pro), and every "bad" verdict was confirmed
+>> by the WFDMA0 signature (tail frozen while head keeps advancing),
+>> not just by the connection dropping.
+>>
+>>    ea757740dd87  pass WCID indices to bss_basic_tlv()      good (45 min
+>> clean)
+>>    ff643b81bc38  pass mlink and mconf to sta_mld_tlv()     bad (freeze
+>> after ~4 min)
+>>    dc019e3294c7  pass mlink to mcu_sta_update()            bad (freeze
+>> after ~3 min)
+>>    9e4d518a4707  pass mlink to mac_link_sta_remove()       bad (freeze
+>> after ~4 min)
+>>    cf9db836b1e0  pass mlink to set_link_key()              bad (freeze
+>> after ~4 min)
+>>
+>> git bisect log and the incident logs for each step are available if
+>> useful - happy to attach them to the bugzilla ticket or send them
+>> here.
+>>
+>> Let me know if you want anything else tested.
+>>
+>> Thanks,
+>> Jonas
+>>
+>> Am 22.08.26 um 22:18 schrieb Jonas Hort:
+>>> Quick update: v7.0 vanilla has been running clean for over 2 hours now
+>>> with MLO active (5GHz+6GHz, same FritzBox 5690 Pro), no freeze at all.
+>>>
+>>> Am 19.08.26 um 11:03 schrieb Jonas Hort:
+>>>> Thanks for the detailed breakdown.
+>>>>
+>>>> I'll build v7.0 vanilla and test it, as suggested. Fair warning
+>>>> though: I'm on vacation this week, so I'll pick this up next week.
+>>>> I've also never compiled a kernel before, so it'll likely take me a
+>>>> bit of trial and error the first time around - please bear with me
+>>>> if it takes a little longer than expected.
+>>>>
+>>>> Will report back once I have results.
+>>>>
+>>>> Thanks again,
+>>>> Jonas
+>>>>
+>>>> 19.08.2026 03:18:34 Devin Wittmayer <lucid_duck@justthetip.ca>:
+>>>>
+>>>>> Thank you very much, that answers both things.
+>>>>>
+>>>>> The ROC tracing is the more useful of the two even though it came back
+>>>>> negative. Two of the three freezes have no ROC activity in them at
+>>>>> all, so a
+>>>>> link switch that never finished cannot be what starts this. The
+>>>>> middle one
+>>>>> does have rocabort, mloroc and rocwork in it, but one out of three
+>>>>> makes
+>>>>> that look like the exception rather than the pattern. So the area I
+>>>>> sent you
+>>>>> looking at is out, and that is worth knowing before you spend nights on
+>>>>> builds.
+>>>>>
+>>>>> One other thing worth saying first. There is a five patch mt76
+>>>>> series on the
+>>>>> list at the moment and two of the patches look like they were
+>>>>> written for
+>>>>> exactly this bug. I do not think they were, and it is your own
+>>>>> numbers that
+>>>>> show it. The failure 4/5 fixes stops mt76_txq_schedule_list from
+>>>>> servicing
+>>>>> the queue, and the one 5/5 fixes stops mt76_txq_send_burst once the
+>>>>> non-AQL
+>>>>> count reaches its cap. Both of those keep frames from ever reaching the
+>>>>> hardware, so if either were your problem head would be sitting still
+>>>>> alongside tail. Yours does the opposite. Head climbs 390 to 408
+>>>>> while tail
+>>>>> stays at 260, so the frames are getting into the ring and nothing is
+>>>>> finishing them, which is the far end of the same path. 2/5 is a use
+>>>>> after
+>>>>> free when an interface goes away, so it does not fit either. I would
+>>>>> not
+>>>>> expect that series to change what you see.
+>>>>>
+>>>>> On the bisect I would build v7.0 next. There are 32 mt7925 commits
+>>>>> between
+>>>>> 7.0 and 7.1 and 19 of them are one run of work from Sean Wang,
+>>>>> reworking how
+>>>>> the driver tracks the per link mlink and WCID for an MLO station.
+>>>>> That is
+>>>>> the kind of change that fits a bug only showing up with two links
+>>>>> up. If
+>>>>> v7.0 comes back clean, that series is where I would look. If v7.0 is
+>>>>> already
+>>>>> broken then it is off the hook and 6.19 becomes the next split. The
+>>>>> mt76
+>>>>> core and mac80211 both moved in the same window, so mt7925 is where
+>>>>> I would
+>>>>> look first rather than the only place worth looking.
+>>>>>
+>>>>> Devin
+>>>>>
+>>>>> Am 17.08.26 um 23:34 schrieb Jonas Hort:
+>>>>>
+>>>>>> Quick follow-up: managed to confirm 6.18 as a clean baseline on my
+>>>>>> own hardware now (not just secondhand from others in the forum
+>>>>>> thread) - running Linux 6.18.42-1-cachyos-lts with MLO active
+>>>>>> (5GHz+6GHz, same FritzBox 5690 Pro) for 3 hours straight, no freeze
+>>>>>> at all.
+>>>>> Am 17.08.26 um 16:25 schrieb Jonas Hort:
+>>>>>
+>>>>>> One correction to how I described this earlier: the connection does
+>>>>>> NOT reliably self-heal on its own. I have manually intervened every
+>>>>>> single time to restore connectivity [...]
+>>>>>>
+>>>>>> Update on the ROC tracing: three real freezes captured now with the
+>>>>>> kprobes active (all confirmed via the WFDMA0 tail-frozen signature).
+>>>>>>
+>>>>>> - Freeze #1 (15:37): no ROC activity in the trace.
+>>>>>> - Freeze #2 (15:43): [...] The trace shows several ROC events
+>>>>>>     (rocabort, mloroc, rocwork) clustered together.
+>>>>>> - Freeze #3 (16:15): no ROC activity again.
+>>>>>>
+>>>>>> Uploaded all three logs to the bugzilla ticket if useful:
+>>>>>> https://bugzilla.kernel.org/show_bug.cgi?id=221884
