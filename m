@@ -1,55 +1,87 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.170])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81A2B3A8398
-	for <regressions@lists.linux.dev>; Mon, 24 Aug 2026 06:11:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0FD319D07A
+	for <regressions@lists.linux.dev>; Mon, 24 Aug 2026 06:12:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787551877; cv=none; b=N5Zyif8XxpUh7P51q2SoGKABDN1p4pDEHsotXmurKedLU+3M7vhZUaV34yZ5AED4Xz3VvdJ91qDib5+b3VuiRoG0LbRGdqt9tQ55ekwM5g7r8Gk5zwuwle4rL2X+li3gvIZDWJ3QRvmla2Uj1ybHKykijakvp1A3+rZXjNhKnW0=
+	t=1787551951; cv=none; b=o9f2U3FVo1PKR+omzsptCbzx4AjMB90shvH0PSaWnpFMSX3st1xhF+NwtwxSD3wI4foh8LUC191l2rZPLIKVF+4rI4L/SPU3dpckEfoRPbGtSPVu8fFDTO9X+AxA40up1e8enqdOTVBUmGzZCuw1PHGo2q1Ewc2tOex6cLHXcgI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787551877; c=relaxed/simple;
-	bh=6nptbZGT1h/hLm2yraiYpWcwAGvLh2GTqfmrU8Xm6q8=;
+	s=arc-20240116; t=1787551951; c=relaxed/simple;
+	bh=UEFTefeAsv2qh5vvlMQhjsN6dfN8Sm6dSGVONX8CTCI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qo2viFMGHrtcpo40MBw/BOx5rtxgvvq2f+/iZDdHRJGNF+AIWRtmdTrpUfYE7QrcSRMXgmng7wlejqInxLBW6xTEB+vPC2CFzgrMRDhHnUJiGTH5QSZ95En3i5ElmX/ZL/R8CoNdzkI9EMjg577JR2WpmX9rCLvjXKF/QrP3jXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=L0kHe1Cc; arc=none smtp.client-ip=188.68.63.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	 In-Reply-To:Content-Type; b=TUkjx5OHggNw+m1VOhc8ApnWO9GxL7P/snpHp+REiKttBNjBa8SySLCF9skGPNrETwRsWZ2Buru8X/rWFiA8ttfAmFu+5iOyzD2hxQyo0zE5Ul/UquR/zAnyPc//zLAUGoiaAwTX7VdHDoKjoxCxX/s7o/oQXeoYFBPTDLzLPp4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=bDJ9mCE8; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=DKSnKDeA; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="L0kHe1Cc"
-Received: from mors-relay8203.netcup.net (localhost [127.0.0.1])
-	by mors-relay8203.netcup.net (Postfix) with ESMTPS id 4hT0h61TmBz8hnZ;
-	Mon, 24 Aug 2026 06:03:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1787551382;
-	bh=6nptbZGT1h/hLm2yraiYpWcwAGvLh2GTqfmrU8Xm6q8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=L0kHe1CcVfVwhv+fJCO949efCMHCNDJrrCbWI4vdfTQaLx/w2U29j1bIlbK65Zobq
-	 DpbM9u0jspsKgXvqSQrUcxyNbY5ocH2R7SEZJ87UeML6eoLjyA0HsRLVQzO6HYOabF
-	 dZJnZDdVJtbqafjHYcTwQ1Bif1tRDprrxMBFLQtFFdmzXk8IU0h+LFRRzMDbXbliUP
-	 nCraJAaj5vmSufvx9yEY4MA39n6OIdtryEMu0BtodgUK/H07R/l9qQB4E3AAwdwZGn
-	 dFoHdmhwO/OUGbJGKJShMAb2Ug/mNZ5a1C8wCbjOOyvOMielrpmawtdZDpj3vDjc5i
-	 +aUcKYzEfd/jw==
-Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay8203.netcup.net (Postfix) with ESMTPS id 4hT0h60mGMz8hmB;
-	Mon, 24 Aug 2026 06:03:02 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
-X-Spam-Flag: NO
-X-Spam-Score: -2.898
-X-Spam-Level: 
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4hT0h44FSVz8tZn;
-	Mon, 24 Aug 2026 08:03:00 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id E0DA45F9AF;
-	Mon, 24 Aug 2026 08:02:59 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <77f94165-3d5f-41de-8969-c7318284fd6a@leemhuis.info>
-Date: Mon, 24 Aug 2026 08:02:58 +0200
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="bDJ9mCE8";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="DKSnKDeA"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 67O67epa1662629
+	for <regressions@lists.linux.dev>; Mon, 24 Aug 2026 06:12:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	UEFTefeAsv2qh5vvlMQhjsN6dfN8Sm6dSGVONX8CTCI=; b=bDJ9mCE8GtJiY+1O
+	1eSD2GI5q2it/1mGV1cvqkCCrnGpxYvbF8Cem+kOFSzos3lOrWWfs7n6X1elvu6G
+	nk9A+ZyD48tHJ8OINfvmSkCZ3AKB3ZmuLzEigWNtGUyJQ7Dkhu1Wp3JSfkmoJMTw
+	GyD0TGZlcATAGtvaJOro0dST3ENOC+58Sr8y9OR/swLbKvq/FV/gt2TQ6YMJWA5O
+	aSFEJsHtyhXQ4DEDVdbvXYws13TJm/Iy761cvzYkxKCu1fmJ8WqaGx9bIjTmcKT3
+	s5hygI7ZdANdDFsbn1MfTbDcFB3/GHuVxkNsVQNA9yvmrFaJYG37IcNMiKLXjTj6
+	dM/Y/A==
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4g8gdsg0ev-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <regressions@lists.linux.dev>; Mon, 24 Aug 2026 06:12:28 +0000 (GMT)
+Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-51ca37ce4c3so5615831cf.3
+        for <regressions@lists.linux.dev>; Sun, 23 Aug 2026 23:12:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1787551948; x=1788156748; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=UEFTefeAsv2qh5vvlMQhjsN6dfN8Sm6dSGVONX8CTCI=;
+        b=DKSnKDeAOi9dcqvnLlkjwEPBu/ag3crVveV5Mb+Jwb4B5GXi3Dvsl02baInAqZ/FxY
+         X4dQoicyycPWIwpJ5rF5CPUKiKWe9MnbTM8uly920lT/AdSWAVTpHSz7pjFjgZskj9Js
+         rleHKDa1huES4G/utkpDaP9mdW3Fh85agDIUHXfm+qFyOnzs/5fzbFepRHDaSplEInbH
+         YP/bZqmGEwricxOh/xGWc1diPJ7bbvptRwCkp7+EX+YBrswlrdwUY6aNjTxD1GtAgWzN
+         o+sBj4COYeGk+49mdNVXRKTFf3AiywHkyJIz2iI75sOzcfDicd+gnMM/BpyojOqeFdUE
+         tnng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1787551948; x=1788156748;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=UEFTefeAsv2qh5vvlMQhjsN6dfN8Sm6dSGVONX8CTCI=;
+        b=m+o9n8kQUCTnjmiWjUONj27wHvc5KoQoilKzkaFYQ2oE0tKoY0lDPhzyGslz0wVu1/
+         UooixNcQhtVz48Rp9khz0gkPNUTtYZoOhxrd3r4jebXuN2y7meh0nREnbtIpd91XB7Hn
+         4kxwgoqKBVoK8caunYBlfhBfEIpF42QIYSDcqMxJq+uHItstVTre2EoTw6UkpNQJPPgt
+         kjD1xAqD7U4tTFE3vP9868ClbtUIMztu5zHrjBFMxXKf30l7P4seJpJK0OxzDcEi5Rqx
+         Gi2B5mXiYqGO+Pck3GT3vOT0XI9hOS+60xJNGgBzVWoX0ayjBgMSpFCCtBv8DVnOcuQx
+         xiug==
+X-Forwarded-Encrypted: i=1; AHgh+Ro1B2k55ptcg0yvtoWguRdNpkoJIFlSfZBcztcLTANqRlnE/xmYepA3UTU1qEZlg4lzhro/j9YN0e1Vbw==@lists.linux.dev
+X-Gm-Message-State: AFuF++k728bp0gfn8wmFbiPOQWLGDVR9h5UVu+Tpe08cSxLW9++f+iF3
+	wrzeyU+d9Z0+IEqarVB6fZAKkfqS3Yl3spyfCmbw84BFLMdK9B4QZOjdQx794folz5xb5lhOOBn
+	UIztE2yz36yo8CE1Tcl+fj1Rm7Xp0Gn5xNLxfnTy4r+DdIuQnhRMTSCDv3tKouaqWHg==
+X-Gm-Gg: AR+sD10XrMMaS5Cj8oIL14+qkyEh3lUBsHbHN/hzKBOqZHjKx7bixTeW0XHeO2M53uL
+	q6WM7fYJLFfTM5pfNgdOp5jHLAyR0OABHtT2K/Sq166BzX4jEnxPJ+3pv4r3YtS5m6FLkDQLrQ6
+	i9spumQNydP9dYDQsNbrnZ0LjcdnxYu4/IWDfqxER+HgqHqB18HfPvOXlPCnwiPpUUDJdjX9oqr
+	G4AA+89O/i6JD1SGti7nxZlkE5p26ZgEfsTdE6iUPJocjS8k20MxtsxEEzoLk6EXvZH/JH++mi9
+	+N0unPSN2w0YbG9NB7m45cbtVdDs0rxkvbRlQMIINzQYJNsVz2RJRKiO71Q715UsRpUm/qKh1KK
+	TU+4rnbAjm1OAgwTENCefAmbE
+X-Received: by 2002:a05:622a:15c2:b0:51c:2101:f0 with SMTP id d75a77b69052e-52df56d00ebmr175961201cf.2.1787551947893;
+        Sun, 23 Aug 2026 23:12:27 -0700 (PDT)
+X-Received: by 2002:a05:622a:15c2:b0:51c:2101:f0 with SMTP id d75a77b69052e-52df56d00ebmr175960721cf.2.1787551947423;
+        Sun, 23 Aug 2026 23:12:27 -0700 (PDT)
+Received: from [192.168.120.193] ([178.235.128.140])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c24968ba7b6sm1031837966b.62.2026.08.23.23.12.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 23 Aug 2026 23:12:26 -0700 (PDT)
+Message-ID: <7a21f01c-288a-418c-8c7a-a57fb40e2124@oss.qualcomm.com>
+Date: Mon, 24 Aug 2026 08:12:22 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -57,118 +89,65 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Bluetooth: btusb: limit RTL8761B BROKEN_EXT_SCAN quirk to
- 0bda:a728
-To: Junjie Cao <junjie.cao@intel.com>, Marcel Holtmann <marcel@holtmann.org>,
- Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Cc: linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
- Alexej Sidorenko <alexej@sidorenko.cz>, regressions@lists.linux.dev,
- Sasha Levin <sashal@kernel.org>, stable@vger.kernel.org,
- Kamil Serwus <kserwus@gmail.com>
-References: <20260824053227.317496-1-junjie.cao@intel.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <20260824053227.317496-1-junjie.cao@intel.com>
+Subject: Re: [PATCH] drm/msm/adreno: Only check for PAS when a zap shader is
+ present
+To: Paul Hollinsky <phollinsky@holtechnik.com>,
+        Rob Clark <robin.clark@oss.qualcomm.com>,
+        Dmitry Baryshkov <lumag@kernel.org>
+Cc: Konrad Dybcio <konradybcio@kernel.org>,
+        Konrad Dybcio <konradybcio@gmail.com>,
+        Akhil P Oommen <akhilpo@oss.qualcomm.com>,
+        Abhinav Kumar <abhinav.kumar@linux.dev>, Sean Paul <sean@poorly.run>,
+        Jessica Zhang <jesszhan0024@gmail.com>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Sumit Garg <sumit.garg@oss.qualcomm.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>,
+        cros-qcom-dts-watchers@chromium.org, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, regressions@lists.linux.dev
+References: <20260821081325.89088-1-phollinsky@holtechnik.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20260821081325.89088-1-phollinsky@holtechnik.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <178755138034.1921642.3871019175141522623@mxe9fb.netcup.net>
-X-NC-CID: WDjihXVqlhKqBGmZvaes4uDUh9VM1OPgNoijMGzU+tUmObZ7sRQ=
+X-Proofpoint-GUID: uELYapFiGkVPrAHFOzOddF3gzPj8vuEl
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwODI0MDA1MiBTYWx0ZWRfX2A1EzW8fPIiz
+ gaZXwxV8o+qOtUP2M+u7EDvzCTPtAykzRv7f1WQPhELe3adz3+r39oU63rn1DPj+tGV4/ZzpFX9
+ rabV7pxEDdUZPZgpcb+znwtDUjv7JIhWm9iJh9EbpW6kgVSqR85khkj6CYEb9WYd5QnTjmvsgGV
+ CbNeD/Q/k9UhaJPg82r8N/Wmi1DT6eglLFeoYNTtEe1sauSRylBhkwXpXEZc0X11zng1nwXkqgp
+ CVmoLGzlNKbW3MBV/xqCp5Ri5KwMIqumYqAQVqT8O3oID8poJrTtLPn4kbUivqte03v4y5R7p+H
+ EfusgeEsIacPb7oZxPQCoOI8T5G2Vkx167m5uZgQdP7ZmnQoWp+kqkf5x22leSW8w/mAEXmjaGT
+ 6OscLV4+hawTusu2IeJCJesLXG3d02qD0CZo03lE47G8709n3sNG21amy2yxrsNK47gitMvlIic
+ zaWV21MXsHSaB8rZynw==
+X-Authority-Analysis: v=2.4 cv=Fqo1OWrq c=1 sm=1 tr=0 ts=6a8be0cc cx=c_pps
+ a=JbAStetqSzwMeJznSMzCyw==:117 a=PRfkaYvzSr8QmIIGAkY2Sg==:17
+ a=IkcTkHD0fZMA:10 a=Sv0fKeRqtYgA:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=yx91gb_oNiZeI1HMLzn7:22
+ a=EUspDBNiAAAA:8 a=Bzkix8dev8cQr7rmkK0A:9 a=QEXdDO2ut3YA:10
+ a=uxP6HrT_eTzRwkO_Te1X:22
+X-Proofpoint-ORIG-GUID: uELYapFiGkVPrAHFOzOddF3gzPj8vuEl
+X-Proofpoint-Spam-Info: AW1haW4tMjYwODI0MDA1MiBTYWx0ZWRfXxu9ECF7X1+GJ
+ REwuv0vQiIcJY37SrTKfhj8NuHcFAnSeXDKjsa7p545lW4pVGjXf05eUoD4I7FPiZnn31WrXqZJ
+ EutVTwcpKQUP/8iZq9clkBjSgUFnYAo=
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-08-24_02,2026-08-21_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 malwarescore=0 adultscore=0 lowpriorityscore=0 suspectscore=0
+ impostorscore=0 phishscore=0 spamscore=0 clxscore=1011 priorityscore=1501
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2608240052
 
-On 8/24/26 07:32, Junjie Cao wrote:
-> Commit 5ead2063611a ("Bluetooth: btrtl: fix RTL8761B/BU broken LE
-> extended scan") set HCI_QUIRK_BROKEN_EXT_SCAN for every CHIP_ID_8761B
-> device to cure repeated 0x2042 failures on an 0bda:a728 dongle. The
-> brokenness is per-dongle, not per-chip: on a TP-Link UB500 (2357:0604,
-> RTL8761BU, fw 0xdfc6d922) extended scan works, and the legacy scan
-> path the quirk forces is what is broken -- LE Set Scan Enable (0x200c)
-> times out with -110 about 30 s after firmware load, btusb resets the
-> device, and the adapter re-enumerates in an endless loop (382 firmware
-> reloads in one boot). 7.1.8, which predates the stable backport, runs
-> clean on this unit; 7.1.9 loops.
-> 
-> Move the quirk from btrtl's chip-wide switch to a btusb device-table
-> flag on the USB id the original fix was verified against. Other 8761B
-> dongles return to their earlier long-standing behaviour.
-> > Link: https://bugzilla.redhat.com/show_bug.cgi?id=2521504
-> Fixes: 5ead2063611a ("Bluetooth: btrtl: fix RTL8761B/BU broken LE extended scan")
+On 8/21/26 10:13 AM, Paul Hollinsky wrote:
+> Commit 0be72be03ca7 ("drm/msm: Switch to generic PAS TZ APIs") replaced
+> the qcom_scm_is_available() check in adreno_zap_shader_load() with
+> qcom_pas_is_available(). These are not equivalent: the former reports
+> whether the SCM transport is up, the latter whether the TrustZone
+> firmware implements the peripheral authentication service.
 
-Thx. Just to make sure everyone is aware of it: Kamil (now CCed)
-reported problems due to the commit yesterday and provided patches, too:
-https://lore.kernel.org/all/20260822141115.58815-1-kserwus@gmail.com/
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
-I suggested that a quick revert might be the best approach for now,
-which Kamil submitted:
-https://lore.kernel.org/all/20260823102959.100368-1-kserwus@gmail.com/
-
-No comment yet from the BT folks yet.
-
-Ciao, Thorsten
-
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Junjie Cao <junjie.cao@intel.com>
-> ---
-> #regzbot introduced: 5ead2063611a
-> #regzbot link: https://bugzilla.redhat.com/show_bug.cgi?id=2521504
-> 
->  drivers/bluetooth/btrtl.c | 13 -------------
->  drivers/bluetooth/btusb.c |  8 ++++++++
->  2 files changed, 8 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/bluetooth/btrtl.c b/drivers/bluetooth/btrtl.c
-> index 7f54d2d2d13a..03fa9409e3ee 100644
-> --- a/drivers/bluetooth/btrtl.c
-> +++ b/drivers/bluetooth/btrtl.c
-> @@ -1343,19 +1343,6 @@ void btrtl_set_quirks(struct hci_dev *hdev, struct btrtl_device_info *btrtl_dev)
->  	if (!btrtl_dev->ic_info)
->  		return;
->  
-> -	switch (btrtl_dev->project_id) {
-> -	case CHIP_ID_8761B:
-> -		/* RTL8761B/BU reports HCI version 5.1 but does not support
-> -		 * the LE Extended Scan commands (Opcode 0x2042), causing
-> -		 * repeated -EBUSY failures when BlueZ attempts extended
-> -		 * scanning while a connection is active.
-> -		 */
-> -		hci_set_quirk(hdev, HCI_QUIRK_BROKEN_EXT_SCAN);
-> -		break;
-> -	default:
-> -		break;
-> -	}
-> -
->  	switch (btrtl_dev->ic_info->lmp_subver) {
->  	case RTL_ROM_LMP_8703B:
->  		/* 8723CS reports two pages for local ext features,
-> diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
-> index 2bae85b0016c..84614e60d142 100644
-> --- a/drivers/bluetooth/btusb.c
-> +++ b/drivers/bluetooth/btusb.c
-> @@ -67,6 +67,7 @@ static struct usb_driver btusb_driver;
->  #define BTUSB_INTEL_NO_WBS_SUPPORT	BIT(26)
->  #define BTUSB_ACTIONS_SEMI		BIT(27)
->  #define BTUSB_BARROT			BIT(28)
-> +#define BTUSB_BROKEN_EXT_SCAN		BIT(29)
->  
->  static const struct usb_device_id btusb_table[] = {
->  	/* Generic Bluetooth USB device */
-> @@ -619,6 +620,10 @@ static const struct usb_device_id quirks_table[] = {
->  	{ USB_DEVICE(0x0489, 0xe130), .driver_info = BTUSB_REALTEK |
->  						     BTUSB_WIDEBAND_SPEECH },
->  
-> +	/* Realtek 8761BU Bluetooth devices */
-> +	{ USB_DEVICE(0x0bda, 0xa728), .driver_info = BTUSB_REALTEK |
-> +						     BTUSB_BROKEN_EXT_SCAN },
-> +
->  	/* Realtek Bluetooth devices */
->  	{ USB_VENDOR_AND_INTERFACE_INFO(0x0bda, 0xe0, 0x01, 0x01),
->  	  .driver_info = BTUSB_REALTEK },
-> @@ -4403,6 +4408,9 @@ static int btusb_probe(struct usb_interface *intf,
->  	if (id->driver_info & BTUSB_INVALID_LE_STATES)
->  		hci_set_quirk(hdev, HCI_QUIRK_BROKEN_LE_STATES);
->  
-> +	if (id->driver_info & BTUSB_BROKEN_EXT_SCAN)
-> +		hci_set_quirk(hdev, HCI_QUIRK_BROKEN_EXT_SCAN);
-> +
->  	if (id->driver_info & BTUSB_DIGIANSWER) {
->  		data->cmdreq_type = USB_TYPE_VENDOR;
->  		hci_set_quirk(hdev, HCI_QUIRK_RESET_ON_CLOSE);
-
+Konrad
