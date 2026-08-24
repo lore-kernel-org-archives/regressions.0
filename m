@@ -1,87 +1,51 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1820035B63F
-	for <regressions@lists.linux.dev>; Mon, 24 Aug 2026 06:15:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 754AA18DF80
+	for <regressions@lists.linux.dev>; Mon, 24 Aug 2026 07:02:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787552153; cv=none; b=swWDXRAJXJe241fRqPu6of2wuiYHMvct9bP7LioTpeN+aVPsKHFtf6EoValEp2IhFiERTujvZnI2eOL9GcmvfWb5bXSkwyZ/DfO62OwsDPfTRIzErgEW5BqQbfj0Ari1XsHvp+X0bicEGWmmABZiPPQsm+3TpHZG+YQUhuswI3Q=
+	t=1787554934; cv=none; b=ZUrPuQoSQhLs8ZanFBeiUwF0S1nO7AYN0XZ7CoQqpm0Xtzcg3Xqcl4UVWfaEMsEC6B33QLCBQCkROY/XzyUgKW6DpFcRjY0eP4gQbXWMLcSUFcyC9OFBRzs4/tqUO2Yrf1XtYEAGgDez0IWVXrkgYu7M63DWxc9t0AwxCqKbyLE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787552153; c=relaxed/simple;
-	bh=tRQCXgKtyVduFGdDijZW87qrNHFarcqJUlMobl3NQIU=;
+	s=arc-20240116; t=1787554934; c=relaxed/simple;
+	bh=9PtxZmdpWJy7tmoPYE5shP6ULjdkq/NSzuHVri4L86I=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Pt0pjf0fodJnYDJeXx0G0sIAWedfKN208gcbPnObCavaYqfM4Bu5WFkgSZDn591lNL/Vbc98/kMnGrSo9/SIN1cqm5iVx4W7HC7/fxtjm5/cyTgGw7o+dpPWIUgK/2rEusYX56ZjawwuEXxOZZyQUOLHxzqqsRjXpTsMFtg2PQk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=d6ta27ZT; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=ewLWMMUW; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	 In-Reply-To:Content-Type; b=cRq5aGv+/09JawJiP8wBGmEWAalskiCCajmfpe/9IEOCUvjs5wXWm2J2lbrq92MNOMAnNGJJO1LLiai5GOWT13uuC9Nuayes0iI8kiKvq7uFk4dY5D5bGAPUHXeus5uRgbYaykukGk5YHnnzmItopQlCdxenMdfXAGenPNMrNXI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=AiXSmh3f; arc=none smtp.client-ip=188.68.63.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="d6ta27ZT";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="ewLWMMUW"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 67O5RBES1937653
-	for <regressions@lists.linux.dev>; Mon, 24 Aug 2026 06:15:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	Y30mWngwb6kQRZHbIUppMdqrLbx0K2yCmsdwDBbotd8=; b=d6ta27ZTlsxf/jdo
-	/nsLxC9EiTAsiCuUNO8Wwk2CozrjNqx970szHEdoDQfO4/NVQNcat4QC+MzLe1W5
-	J3NgWQ0PaGstxdUTng9cCGVWaZ/DQDaOQdlNEXNFRbDhPKOG+91tQBzGVaMeVgD6
-	Wat8V5oeqtZlMy8LwqsHE4agJ0OGfYdtkwA3Ue8UasXr90CVgAhhVyUDHQFnVT7K
-	St2Fd6CQzmalljIiO8U+U0kYZXBLRn99wFleb3lfD6aOFyNgzMFqkxaZdB8hRS+W
-	0ZKvmWCUDa8EVK7ylQ4f2R+TMsYmwfSNoSS3UdQwIYRLA2rnMym6ni78+Ul7CvPP
-	+e3eaA==
-Received: from mail-ua1-f70.google.com (mail-ua1-f70.google.com [209.85.222.70])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4g741qwmap-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <regressions@lists.linux.dev>; Mon, 24 Aug 2026 06:15:51 +0000 (GMT)
-Received: by mail-ua1-f70.google.com with SMTP id a1e0cc1a2514c-97c7429029bso24352241.3
-        for <regressions@lists.linux.dev>; Sun, 23 Aug 2026 23:15:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1787552150; x=1788156950; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=Y30mWngwb6kQRZHbIUppMdqrLbx0K2yCmsdwDBbotd8=;
-        b=ewLWMMUWxaBJPCnlpqXpOHaRtyVu+DxYRPF6iPwIQbtHK5q6H4KqlF/VOoajnCs4im
-         C7MYZfHVMioJALbIaKuG77FMaKpGmuMgv/NvqxrJk8TfDPWpj3WSha2AidMPCxA28TWG
-         5C29cbrujZctiimhzZuBT+Z4bmzMoD7A4CSFwL0upV6wqS4rjUeUNUa2/kWqgg7qDTfx
-         yUA08Ttdf+POEcswquZCT/1NqV0ogOYc5Vu44mtNA5CSo1DUfN2YahjqQhmJbstd252J
-         q07BzPgkDerPH1m8weV+EGWPcilzkmuaU0c2CU7l8xP79pzkguer8KLEfc4UHhL96Mif
-         a/dA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787552150; x=1788156950;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=Y30mWngwb6kQRZHbIUppMdqrLbx0K2yCmsdwDBbotd8=;
-        b=P3onUq0wPLdimgiXK0y5oRIGaW7TtvX+bUaSipL0jd0QpvIL5BzMWd6aoV1xtW9x9M
-         i2I6LVgEQKIAEQ+mYI8uod3vhJRoR8zD6gO4K3fAn/NxLi/35PZsrU942YsmJSMcvarI
-         dPaz+38100MgJLZeqMqbf8fkEv66/czjhwjRtYxWuGl+/cSxZNVMZcXrDudzHANInTDy
-         SThqFGrvuI2d/aeo1qvq+K4SseP108I8Ys8PT66xlOu3IUfYAO4av9ymrcPx3yqQ816a
-         xe09cmgUJt6NHD7bBn+GX4lWsMmLgIMo/n18zJrCByig56yt6pfjwpm1yMf6w2+t76ss
-         WLdA==
-X-Forwarded-Encrypted: i=1; AHgh+Rq0nEIxqN/r98ujeu0nWoRFMKc0IfSjwv5JThFitDLaM0tJv0GKvIYUw9HH5p2P9Avi6mJwvkj8aA1s1w==@lists.linux.dev
-X-Gm-Message-State: AFuF++mK4NmWitahLiTPgBYl80bWg4yGMdFHgGNtE9bY+N+M96Mnob80
-	OfOQUwZ/BfTBBIT471pseLPaqZvrjlZ1JQS+ei2g/NXb6AyoMF7Rn/yL0w8eUKwmEiSgHXjbTbW
-	7iZsRlD07HTrYrRMhF7RJrUx3AKfSZZ7eGeZUrMfB02f0/GLtsqiCkaMIwO+gEyBfTQ==
-X-Gm-Gg: AR+sD11LJpQ95QzSbs2JtF9Uw9U8CpHAuK6d9RZdEAd3slidrCmwO1uuQUOPpAX1GKR
-	ernASdDduJ4ohZuSdgePp35BDRK8zeRHMKyc5ow2TCqpxQjtC4jnnEs+TIjZrRQiPz4ywOIc7X0
-	zzC51zp7+vdkmibSWkbk9HzjmeUh2ZuS7CgWDPl0NImtFs5koEWaApnsOAcOxCIDIXYUwbWZhcu
-	u/SnVlM4NjMvruG6o97RBMACeHH/ueM/A7n8Q/av95e0YtAoyHFBixGs5WQB2r/oQBaFkT02URm
-	KmKlG/AxCCrAS8TPIr8xqPVA21bvDj7cff2PUS4zelZu0TzINOnQneJA3IdGEUJ0LXdeAD2aKDE
-	3tX71BCcuPDD5TjK/VmDM/ZaU
-X-Received: by 2002:a67:fc4b:0:b0:77b:6331:7472 with SMTP id ada2fe7eead31-77b63317868mr2098746137.2.1787552150353;
-        Sun, 23 Aug 2026 23:15:50 -0700 (PDT)
-X-Received: by 2002:a67:fc4b:0:b0:77b:6331:7472 with SMTP id ada2fe7eead31-77b63317868mr2098734137.2.1787552149949;
-        Sun, 23 Aug 2026 23:15:49 -0700 (PDT)
-Received: from [192.168.120.193] ([178.235.128.140])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6a59e199ad5sm6808499a12.18.2026.08.23.23.15.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 23 Aug 2026 23:15:49 -0700 (PDT)
-Message-ID: <06cec69d-2188-4bc0-a4ea-98d99de8a37f@oss.qualcomm.com>
-Date: Mon, 24 Aug 2026 08:15:47 +0200
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="AiXSmh3f"
+Received: from mors-relay-2501.netcup.net (localhost [127.0.0.1])
+	by mors-relay-2501.netcup.net (Postfix) with ESMTPS id 4hT1rY2S87z6Jw6;
+	Mon, 24 Aug 2026 08:55:25 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1787554525;
+	bh=9PtxZmdpWJy7tmoPYE5shP6ULjdkq/NSzuHVri4L86I=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=AiXSmh3fb0UlnPjg1E9FMErnELjf4zmTzqgR1hvnPDc+eli99c9U0CGA9jLvdUGIY
+	 TPVpGS7CGfl2uoXszS+UbbkEFjiFpxUd/4OTIdLJM4cLhxkEx78VfuRjP/f0VdoIPW
+	 3QfprA+9xv77bPmfveqU8Wjju/ImpgFrak/hPXlFdpCXHfrp/1HUmb8KRtDeHFOKdZ
+	 GsUcpGgdfmtCHPAXff/GoFUj2YNIT1hI5U1Dxb1B5oHUZ9jiYAu8FkAjQv542lpAy/
+	 +06ZVmeK/GGi/OvsSIT7vsJNTFkkVK7GcxzK7Mrqut9HERJT9QIYYY/oEJdUakkFGR
+	 XPMhOShHnwb9A==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-2501.netcup.net (Postfix) with ESMTPS id 4hT1qR14zbz503d;
+	Mon, 24 Aug 2026 08:54:27 +0200 (CEST)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4hT1qP0SBnz8sb9;
+	Mon, 24 Aug 2026 08:54:25 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 0342C5FA57;
+	Mon, 24 Aug 2026 08:54:19 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <a02b160a-874f-491c-987b-4d7eb0d35a9f@leemhuis.info>
+Date: Mon, 24 Aug 2026 08:54:19 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -89,84 +53,153 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] remoteproc: qcom_q6v5_mss: Don't require PAS for memory
- protection
-To: Paul Hollinsky <phollinsky@holtechnik.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Sumit Garg <sumit.garg@oss.qualcomm.com>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Konrad Dybcio
- <konradybcio@gmail.com>,
-        Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>,
-        cros-qcom-dts-watchers@chromium.org, linux-arm-msm@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        regressions@lists.linux.dev
-References: <20260821081540.89137-1-phollinsky@holtechnik.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20260821081540.89137-1-phollinsky@holtechnik.com>
+Subject: Re: [PATCH REGRESSION] um: Fix cpu_feature_enabled() build breakage
+To: Fabian Franz <fabian@isomorphic-ai.com>,
+ Richard Weinberger <richard@nod.at>,
+ Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+ Johannes Berg <johannes@sipsolutions.net>,
+ "Borislav Petkov (AMD)" <bp@alien8.de>,
+ Nikolay Borisov <nik.borisov@suse.com>, "Xin Li (Intel)" <xin@zytor.com>,
+ Ingo Molnar <mingo@kernel.org>
+Cc: Claude Fable 5 <noreply@anthropic.com>,
+ =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
+ linux-um@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <20260823201521.2576344-1-fabian@isomorphic-ai.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <20260823201521.2576344-1-fabian@isomorphic-ai.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwODI0MDA1MiBTYWx0ZWRfX6KlR6HsNWypi
- +aZPKGqbgmbZZHfHuQFP2w2v63ZgjsqazWypkMUaFgJBX5Djlyl/gveqbD7j6Dr31vEIBM4GX6E
- 7xT+YfOwHZ9ZcrGGKPlEZyM3WPBX7Aw7kI8hz7hhrhGX9vaQLp0II1DxqHuf1eVxwkx/EgP97y3
- sksv1hosSnJMDs2yvVnjrRcK/kBFAUqomz5ttOCUNSqVTVXjD4s1UiTn7WTHfPiFTSyXxmt5HYL
- RQVl/wt97iK8JcAJKLBuWWHTHvMWIwy7WW9viJUuxoj+2DdwOXa0j0ZfsriF+68NsPFjz/0ZHK7
- TM7NdvKbdL5yX79XP2L+XhJiB9sqCdrRQ8xPZIv5/zraRmbbb6F47lVRDdII5axhsQj0k4ZFT/K
- OleTnCt6IxsTrj2SZ0CWGwvW2aP6lOpszszxyD7Fc/Q1jl0whAsY0NHaX/zu+rOI5QIlx4uwmcQ
- Rk56AxOq6yfFj7V8EIw==
-X-Authority-Analysis: v=2.4 cv=GvNyPE1C c=1 sm=1 tr=0 ts=6a8be197 cx=c_pps
- a=R6oCqFB+Yf/t2GF8e0/dFg==:117 a=PRfkaYvzSr8QmIIGAkY2Sg==:17
- a=IkcTkHD0fZMA:10 a=Sv0fKeRqtYgA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=rJkE3RaqiGZ5pbrm-msn:22
- a=VwQbUJbxAAAA:8 a=8dbcrQVTAAAA:8 a=EUspDBNiAAAA:8 a=O9LFjDSsXfd6YXdYHBYA:9
- a=QEXdDO2ut3YA:10 a=TD8TdBvy0hsOASGTdmB-:22 a=2958AbVqUNA9gn3SDOjC:22
-X-Proofpoint-ORIG-GUID: 6xVbSnFZ-A2etBOEp5Klt6_loVJEpM3J
-X-Proofpoint-Spam-Info: AW1haW4tMjYwODI0MDA1MiBTYWx0ZWRfXze3RaI774MXW
- XQoR62H+6Oh6SCnwkfznszKirW47oCLwEjMjJEDbauy1ioJeM3QKnUORuu+Rzr3weW2tr2pJAON
- Tew6MvNR3KhLmDTKSMns7XjnC2Az4qY=
-X-Proofpoint-GUID: 6xVbSnFZ-A2etBOEp5Klt6_loVJEpM3J
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-08-24_02,2026-08-21_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 spamscore=0 clxscore=1015 priorityscore=1501 suspectscore=0
- adultscore=0 impostorscore=0 bulkscore=0 phishscore=0 lowpriorityscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2608240052
+Content-Transfer-Encoding: 8bit
+X-PPP-Message-ID: <178755446061.2020125.1851178788437493684@mxe9fb.netcup.net>
+X-Rspamd-Server: rspamd-worker-8404
+X-Rspamd-Queue-Id: 0342C5FA57
+X-NC-CID: 2sHLPueSSbbRMPKfljmTIpQyD99CSG7veHNIoIAIVas3qQu2B9k=
 
-On 8/21/26 10:15 AM, Paul Hollinsky wrote:
-> Commit f3b1357673dd ("remoteproc: qcom_q6v5_mss: Switch to generic PAS
-> TZ APIs") changed the probe-time gate for need_mem_protection platforms
-> from qcom_scm_is_available() to qcom_pas_is_available(). Memory
-> protection in this driver is implemented with qcom_scm_assign_mem(),
-> which is a TZ service distinct from PAS. The only PAS call in the driver
-> is qcom_pas_mem_setup(), and it is already guarded by need_pas_mem_setup.
+On 8/23/26 22:14, Fabian Franz wrote:
+> Since commit 3ed403bbc967 ("treewide: Remove CLOCK_TICK_RATE") deleted
+> the (otherwise empty) arch/um/include/asm/timex.h, UML builds resolve
+> <asm/timex.h> to arch/x86/include/asm/timex.h via the HEADER_ARCH
+> include path.  That pulls <asm/tsc.h>, whose get_cycles() uses
+> cpu_feature_enabled(), into virtually every translation unit, starting
+> with asm-offsets.c.  This newly expands parts of UML's copy of
+> <asm/cpufeature.h> that no longer compile, and "make ARCH=um" now dies
+> in prepare0:
 > 
-> No descriptor sets both flags: sc7180, sc7280, sdm660, sdm845, msm8996
-> and msm8998 set need_mem_protection only, while msm8937, msm8940 and
-> msm8953 set need_pas_mem_setup only. On TrustZone firmware that does not
-> implement PAS - for example SC7180 Chromebooks, where call-availability
-> queries report every QCOM_SCM_SVC_PIL command as unavailable - the modem
-> consequently never probes:
+>   arch/um/include/asm/cpufeature.h:52:39: error: implicit declaration
+>     of function 'DISABLED_MASK_BIT_SET'
+>   arch/um/include/asm/cpufeature.h:115:17: error: implicit declaration
+>     of function '_static_cpu_has'; did you mean '__static_cpu_has'?
+
+To ensure everyone is aware of it: Thomas Weißschuh (now CCed) a few
+days ago already submitted a fix for a problem that to my untrained eyes
+looks like the same problem (do not hesitate to correct me!):
+
+https://lore.kernel.org/all/20260819-uml-timex-fix-v1-1-f690b514fc9f@linutronix.de/
+
+Ciao, Thorsten
+> Two independent breakages meet here:
 > 
->   platform 4080000.remoteproc: deferred probe pending: (reason unknown)
+>  1. cpu_feature_enabled() and this_cpu_has() still test
+>     DISABLED_MASK_BIT_SET()/REQUIRED_MASK_BIT_SET().  Those used to
+>     come from <asm/disabled-features.h>/<asm/required-features.h> via
+>     <asm/cpufeatures.h>, but since commit 8f97566c8a81
+>     ("x86/cpufeatures: Remove {disabled,required}-features.h") they
+>     live in the generated <asm/cpufeaturemasks.h>, which only the
+>     arch/x86 archprepare rule generates.  ARCH=um never generates nor
+>     includes it, so the references have been dangling since then.
 > 
-> On those machines the modem is also what loads the WLAN firmware, so
-> ath10k never receives QMI and wifi does not come up either.
+>  2. The _static_cpu_has() macro expands to itself.  Commit
+>     3eaa50e1e255 ("x86/cpu: Hide and rename static_cpu_has()") renamed
+>     the inline function _static_cpu_has() -> __static_cpu_has() and
+>     the macro static_cpu_has() -> _static_cpu_has(), but in the UML
+>     header the macro's out-of-line branch kept calling
+>     _static_cpu_has(), which now names the macro itself and is left
+>     unexpanded by the preprocessor.
 > 
-> Gate memory protection on SCM availability as it was before, and require
-> PAS only where a PAS call is actually issued. Keeping the SCM check
-> matters: qcom_scm_assign_mem() passes __scm->mempool to
-> qcom_tzmem_alloc() without testing __scm, so dropping the gate entirely
-> would allow a NULL dereference when qcom_scm has not yet probed.
+> Fix the macro to call __static_cpu_has(), as the x86 header does, and
+> drop the mask based short-circuits from cpu_feature_enabled() and
+> this_cpu_has().  UML has no compile-time feature masking to express:
+> capabilities are copied from the host's CPUID at boot, see commit
+> d8fb32f4790f ("um: Add support for host CPU flags and alignment"),
+> and generating cpufeaturemasks.h from a UML .config would wrongly
+> mark features disabled simply because the gating CONFIG_X86_* symbols
+> do not exist for ARCH=um.
 > 
-> Fixes: f3b1357673dd ("remoteproc: qcom_q6v5_mss: Switch to generic PAS TZ APIs")
-> Link: https://lore.kernel.org/r/20260808034716.58888-1-phollinsky@holtechnik.com
-> Signed-off-by: Paul Hollinsky <phollinsky@holtechnik.com>
+> Fixes: 3eaa50e1e255 ("x86/cpu: Hide and rename static_cpu_has()")
+> Fixes: 8f97566c8a81 ("x86/cpufeatures: Remove {disabled,required}-features.h")
+> Signed-off-by: Fabian Franz <fabian@isomorphic-ai.com>
+> Assisted-By: Claude Fable 5 <noreply@anthropic.com>
 > ---
+>  arch/um/include/asm/cpufeature.h | 8 +++-----
+>  1 file changed, 3 insertions(+), 5 deletions(-)
+> 
+> diff --git a/arch/um/include/asm/cpufeature.h b/arch/um/include/asm/cpufeature.h
+> index f7770083c0a4..20b2c7ead62e 100644
+> --- a/arch/um/include/asm/cpufeature.h
+> +++ b/arch/um/include/asm/cpufeature.h
+> @@ -37,8 +37,7 @@ extern const char * const x86_bug_flags[NBUGINTS*32];
+>  	 test_cpu_cap(c, bit)
+>  
+>  #define this_cpu_has(bit)						\
+> -	(__builtin_constant_p(bit) && REQUIRED_MASK_BIT_SET(bit) ? 1 :	\
+> -	 x86_this_cpu_test_bit(bit, cpu_info.x86_capability))
+> +	 x86_this_cpu_test_bit(bit, cpu_info.x86_capability)
+>  
+>  /*
+>   * This macro is for detection of features which need kernel
+> @@ -48,8 +47,7 @@ extern const char * const x86_bug_flags[NBUGINTS*32];
+>   * supporting a possible guest feature where host support for it
+>   * is not relevant.
+>   */
+> -#define cpu_feature_enabled(bit)	\
+> -	(__builtin_constant_p(bit) && DISABLED_MASK_BIT_SET(bit) ? 0 : _static_cpu_has(bit))
+> +#define cpu_feature_enabled(bit)	_static_cpu_has(bit)
+>  
+>  #define boot_cpu_has(bit)	cpu_has(&boot_cpu_data, bit)
+>  
+> @@ -112,7 +110,7 @@ static __always_inline bool __static_cpu_has(u16 bit)
+>  (								\
+>  	__builtin_constant_p(boot_cpu_has(bit)) ?		\
+>  		boot_cpu_has(bit) :				\
+> -		_static_cpu_has(bit)				\
+> +		__static_cpu_has(bit)				\
+>  )
+>  
+>  #define cpu_has_bug(c, bit)		cpu_has(c, (bit))
+>
+> -- 
+> 2.43.0
+> 
+> Every ARCH=um build has failed since the 7.3 merge window.
+> 
+> #regzbot introduced: 3ed403bbc967
+> 
+> Steps to reproduce on master:
+> 
+> make ARCH=um O=/tmp/um-build defconfig
+> make ARCH=um O=/tmp/um-build -j$(nproc)
+> 
+> fails with:
+> 
+> /home/ubuntu/projects/linux/arch/x86/include/asm/tsc.h: In function ‘get_cycles’:
+> /home/ubuntu/projects/linux/arch/um/include/asm/cpufeature.h:52:39: error: implicit declaration of function ‘DISABLED_MASK_BIT_SET’ [-Werror=implicit-function-declaration]
+>    52 |         (__builtin_constant_p(bit) && DISABLED_MASK_BIT_SET(bit) ? 0 : _static_cpu_has(bit))
+>       |                                       ^~~~~~~~~~~~~~~~~~~~~
+> /home/ubuntu/projects/linux/arch/x86/include/asm/tsc.h:79:14: note: in expansion of macro ‘cpu_feature_enabled’
+>    79 |         if (!cpu_feature_enabled(X86_FEATURE_TSC))
+>       |              ^~~~~~~~~~~~~~~~~~~
+> /home/ubuntu/projects/linux/arch/um/include/asm/cpufeature.h:115:17: error: implicit declaration of function ‘_static_cpu_has’; did you mean ‘__static_cpu_has’? [-Werror=implicit-function-declaration]
+>   115 |                 _static_cpu_has(bit)                            \
+>       |                 ^~~~~~~~~~~~~~~
+> /home/ubuntu/projects/linux/arch/um/include/asm/cpufeature.h:52:72: note: in expansion of macro ‘_static_cpu_has’
+>    52 | builtin_constant_p(bit) && DISABLED_MASK_BIT_SET(bit) ? 0 : _static_cpu_has(bit))
+>       |                                                             ^~~~~~~~~~~~~~~
+> 
+> If this is known please disregard. I am also not 100% sure if this is the right fix or if it's better to bring back the macros to um.
+> 
+> In any case it would be good for um to build again on the master branch out of the box.
+> 
+> Thanks,
+> Fabian
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-
-Konrad
