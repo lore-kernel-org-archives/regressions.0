@@ -1,326 +1,187 @@
-Received: from rs1.nue.1e30.net (rs1.nue.1e30.net [152.53.122.0])
+Received: from CH5PR02CU005.outbound.protection.outlook.com (mail-northcentralusazon11012010.outbound.protection.outlook.com [40.107.200.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F16B6382299;
-	Mon, 24 Aug 2026 21:00:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=152.53.122.0
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787605263; cv=none; b=QQm5MUx3Vy+mfB+cO4kGwwd1Rzo7BXcaBeTIUspQetNC42ry9ay5CdPcvQqOj7cDTmkz62ZDtBDlsptmBkJZjLjnCAvq3mmNCWPGZuzWenzJnfs2vJZ4zWAgodsCrs5NnRU28+TByAvXexavr7xV/gZNVHdaGtKqYFtplO/ol6s=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787605263; c=relaxed/simple;
-	bh=uFpBlKSm0qbtsSTFmNw486Km5v/ZAesu7I1l0CEBENQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=r6uFJ0Upis7aHrLUnVvnhxpAxEcMSWOHKS1p0IwZubZFjUp0xH/6nwEtbMB0+0auPhMQbA9pEZDdLE0/3E3WSEGsectWIvwRvJ8RE17wclG1a0fClkpiYM+fJIfZAwDxi1I9+MYVoWECp5EOuVcNpCkcZpGcPTa2fol5KFzj3wg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=juch.cc; spf=pass smtp.mailfrom=juch.cc; dkim=pass (2048-bit key) header.d=juch.cc header.i=@juch.cc header.b=dwfUg4vW; arc=none smtp.client-ip=152.53.122.0
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=juch.cc
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=juch.cc
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A54323939DB
+	for <regressions@lists.linux.dev>; Mon, 24 Aug 2026 22:09:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.200.10
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1787609351; cv=fail; b=QmlzrSbd39RxfVq0xig+FpVpPSU1WBVrCKY6PgkVONknKPWTf72ci6f4aWeS8wq6QoZBeKQ2Ybxi1gXkDuxE2XRwuMKbHcg4AeRfHXC2DYWm5YJf2UONBVEKnq/RaH4482T84oHAVKP1imGb15xbrGmHSgvyArI3zQTQuvLKE+A=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1787609351; c=relaxed/simple;
+	bh=5bDiHefJFdv9/inVOaOIEDBG8mtCbAIxy9tp36OtuXw=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=rVgL30K9e6HjNLZG40mYrQvroFm3QVgsla4C9wMEnnc7ofOkb6xCT3Oc3wlLVnCuq9a9k1AOy143B0CgIz9CQZhMxsMmsJjXX0ksWMfcvINdMj8rDTahPkMpJonetJNDAW2SrVzoMaUzXth23i7AmarUjOboihpgPnOib5k13Vc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=LnLvJ+Rz; arc=fail smtp.client-ip=40.107.200.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=juch.cc header.i=@juch.cc header.b="dwfUg4vW"
-Message-ID: <f805ff79-f108-4b5d-a9a1-3c447ee564b4@juch.cc>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=juch.cc; s=rsa-2026-06;
-	t=1787605250;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=myJpwBCzhnFsY3H4itePgNGjUGKg7mmppy7sopdAVdg=;
-	b=dwfUg4vW7rVzKHhN4DyoZN5ibaC84EbguBXsP7L1YqGgB70o7fm9jeM31/7MxkxT/0dXCy
-	Bs20svBTmZY34fU282NXe0wp7EZqeP+addYvZyk5TEm/AgAm84RneAe+OfhkV5WpW1eCs1
-	70dErMOubGoIIBHGb0HRtukBOXKEhTfZuGEbloMqQAAqMc4XcRygAsanM0IGdc9qRLRKda
-	z5CleKG9QZrTcWderzWbLqkI3TrieATn+OnY1SS2lRm/zK4dtWczR5gKrn+75DNN49Qiy7
-	MBXECUUIZ5H+GgRRZxyNDf9O2CQWecL/jsR7BUjAeoXvPJ/I+oQ8Hc8v81Gl6w==
-Date: Mon, 24 Aug 2026 23:00:49 +0200
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="LnLvJ+Rz"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=qWqfxYb8pNeo6kGtj8v/sSilyzO0y9i6MoauI7z1USGv+F06FmivaDz62S+42NxLrNYuz+v3MGvTyDuJ6zbYtytY0m0Ge6CtMioL6xEqZ/5No6FSxbVttRkKM2SzS4UQEKgn5YQulDtNYG9ZBkCr230r/KE5N+kr3kiFaYwnk+pM05fjCXYttkX2kAHeWC7K6gaieKadFkHEQkyFEfMuNopk4OuHlyVHuxPU9GMdyF00UX0SottWRzTfGA2daZLIeJqhUo1VyY7rQievkrhLy+eqpfLA/QRalldmiEC2s47H9bcHiPpkPppOGJkAr6HExhYlsXze/pcCc3mmLXpD6A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=rOdCemElLYfh7xSujWIxLa+Zty3Z9yfPMBXVdwg9NZQ=;
+ b=ByS9BAiAGgEfZuMm4pbKsBbOI8FzCPPp+AkIVEQXgs81PV1oFSiU8w1xODFOCd/mb2VYV/y9hgcz4+XBbEAKNml7id06L+aKApeWmoRd0hZO1veyw4mh6OlvvWn3dIiQFOgOuqto2MLX7EIfpZ7FK3OqSaLEXBOd9QGJejPZBH9/N2Fj4Yi6mp1lB0Y5e9WC7gAPpSmCUUZXdermptrc+H3IaEElOXx0blXXm7/I+ZIcpK78Hi+D1vl+itUlvz/EyhtJL4cEp2qgWRX6lHPA/QWVDyQOAP9j46BwHAk6Yv2TtbUNRRIG+F/rz+a0S4+ietggr96osZR10EQ8kkuIdg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rOdCemElLYfh7xSujWIxLa+Zty3Z9yfPMBXVdwg9NZQ=;
+ b=LnLvJ+Rz9U14QxE53YwOukYbWeg0MY+yd46fT2gl7jVjB94KMDUVIbgDOIyrGQKDgj4t3svrv5mroXZHxFJStGQrCj3Y7gKxnMjoV8TK9OuKhnuFchsDAbSRxWpOY04aswwb5bOF6cOXdYTa/hQ/o2jTju2WcXH2F34WumBn+sI=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH8PR12MB6914.namprd12.prod.outlook.com (2603:10b6:510:1cb::21)
+ by EAYPR12MB999156.namprd12.prod.outlook.com (2603:10b6:303:2c2::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.339.12; Mon, 24 Aug
+ 2026 22:09:06 +0000
+Received: from PH8PR12MB6914.namprd12.prod.outlook.com
+ ([fe80::2893:177a:72b0:6000]) by PH8PR12MB6914.namprd12.prod.outlook.com
+ ([fe80::2893:177a:72b0:6000%7]) with mapi id 15.21.0315.012; Mon, 24 Aug 2026
+ 22:09:05 +0000
+Message-ID: <226b2f34-fa25-4ca6-8afb-0b3dc942715c@amd.com>
+Date: Mon, 24 Aug 2026 17:09:02 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] 6.12.36+: usb: hub: post-resume delayed work
+ triggers > uncorrected MCE / data fabric sync flood on Threadripper 7970X >
+ (bisected to aec11e5f9c45)
+To: Mathieu Fluhr <mathieu.fluhr@gmail.com>,
+ Lovekesh Solanki <lovekeshsolanki00@gmail.com>
+Cc: Michal Pecio <michal.pecio@gmail.com>,
+ Thorsten Leemhuis <regressions@leemhuis.info>,
+ Mathias Nyman <mathias.nyman@linux.intel.com>, linux-usb@vger.kernel.org,
+ regressions@lists.linux.dev, stable@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Forest <forestix@gaga.casa>,
+ Slavik Dev <developer.slavik@gmail.com>
+References: <CAPyJwA_D9qw0T72f8zwM1yKjP+To=maVANbcdsWM7yRmbBxYvw@mail.gmail.com>
+ <CAPyJwA9R=p8_uxyYODb00g_nUq26SRsWHBGgAAJnR0YMTRRo4A@mail.gmail.com>
+ <CAPyJwA9P48LDcOr7u_iT1WPFBCHxh9w6cxFvyi5GS3syM6crbQ@mail.gmail.com>
+ <07435e6b-ee30-4c85-8c8b-0ce3a4ead1d9@leemhuis.info>
+ <aosGtkE_diwVJJtB@eggarch> <20260823174059.46fec036.michal.pecio@gmail.com>
+ <aoser8dLytrwqBC2@eggarch>
+ <CAPyJwA8m_Xd2oyV1i9k+-6f7A-j0FiC97yXL=Ci8ZAErs5W4vA@mail.gmail.com>
+Content-Language: en-US
+From: Mario Limonciello <mario.limonciello@amd.com>
+In-Reply-To: <CAPyJwA8m_Xd2oyV1i9k+-6f7A-j0FiC97yXL=Ci8ZAErs5W4vA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BN1PR10CA0027.namprd10.prod.outlook.com
+ (2603:10b6:408:e0::32) To PH8PR12MB6914.namprd12.prod.outlook.com
+ (2603:10b6:510:1cb::21)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Subject: Re: [REGRESSION] iommu/amd: "Fix premature break in init_iommu_one()"
- causes early boot hang
-To: Vasant Hegde <vasant.hegde@amd.com>, Joerg Roedel <joro@8bytes.org>
-Cc: iommu@lists.linux.dev,
- Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
- Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
- Robert Richter <rrichter@amd.com>, linux-kernel@vger.kernel.org,
- regressions@lists.linux.dev
-References: <07b2d390-f7a0-47e2-bc2c-eb0853acf52e@juch.cc>
- <aok4Ko0mpC4fdGPg@8bytes.org> <6a61edf7-157c-4069-a1c3-78d1138b061c@amd.com>
- <912b9d43-1205-4753-afe1-60cd149679b4@juch.cc>
- <905c7511-d7bb-4ca6-918f-71846e436062@amd.com>
-Content-Language: en-US
-From: Andreas Juch <andreas@juch.cc>
-In-Reply-To: <905c7511-d7bb-4ca6-918f-71846e436062@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-
-Hi Vasant,
-
-
-On 8/24/26 07:52, Vasant Hegde wrote:
-> Hl Andreas,
->
->
-> On 8/22/2026 7:02 PM, Andreas Juch wrote:
->> [Some people who received this message don't often get email from
->> andreas@juch.cc. Learn why this is important at https://aka.ms/
->> LearnAboutSenderIdentification ]
->>
->> Hello Vasant,
->>
->> On 8/22/26 12:17, Vasant Hegde wrote:
->>> Andreas,
->>>
->>> On 8/22/2026 11:19 AM, Joerg Roedel wrote:
->>>> Adding Vasant.
->>>>
->>>> On Fri, Aug 21, 2026 at 11:11:07PM +0200, Andreas Juch wrote:
->>>>> Hello,
->>>>>
->>>>> I noticed that one of my NixOS sytems failed to boot with kernel 6.18.40.
->>>>> The
->>>>> older 6.18.39 booted fine. A full git bisect of v6.18.39..v6.18.40
->>>>> identified
->>>>> the following commit as the first bad commit:
->>>>>
->>>>>     dc266f6c4e2628576ab33042b6b2a12480220026
->>>>>     iommu/amd: Fix premature break in init_iommu_one()
->>>>>
->>>>> The visible symptom is a black screen immediately after systemd-boot. The
->>>>> machine also remains unreachable over SSH and leaves no persistent journal
->>>>> entry
->>>>> for the failed boot. A reset or power cycle is required.
->>> Interesting. I never imagined above fix will break some system!
->>>
->>> I assumed below dmesg is from good boot (without above patch) and did the
->>> analysis (code walk with below IVRS data):
->> Yes, that's correct, it's from the .40 kernel without commit dc266f6c.
->>
->>>     - EFR advertised by IVRS is different from actual EFR (read by IOMMU MMIO
->>> register). Its worse because IVRS advertised few features like GT/PPR which is
->>> not supported by IOMMU.
->>>     - Without this patch we would have skipped early_iommu_features_init() so
->>> global EFR is zero and then init_iommu_one_late() set the EFR properly based on
->>> actual IOMMU capability.
->>>
->>> Only with this log, its hard to tell where exactly system failed. My guess is
->>> driver enabled features which are not supported (like GT/PPR) or we setup 32bit
->>> interrupt remapping table.
->>>
->>> I believe above patch exposed an existing bug with some other commit.
->>>
->>>
->>> Ideally we should properly fix late_iommu_features_init() and use actual EFRs.
->>> But for now lets fix the regression. Can you please try below fix?
->>>
->>> -Vasant
->> Thank you for investigating! I created a new branch from the v6.18.40
->> tag and
->> applied your patch. The resulting kernel booted without any issues!
->
-> Thanks a lot. This is like another band-aid fix, but I think it's good enough
-> for a stable backport. In my view, we should prioritize the IOMMU
-> MMIO-advertised EFR over the one reported via IVRS. However, that would require
-> much more extensive changes and isn't a good candidate for stable.
->
->
->> If you need any further information or testing (for a proper fix later
->> on), I'd
->> be happy to test patches again!
-> Can you help me to test below patch (just apply this patch and remove previously
-> provided fix patch). I want to make sure that prioritizing MMIO EFR doesn't
-> break things.
-I compiled the kernel with just your patch on top of the 6.18.40 tag and it
-didn't boot. Please let me know how I can provide better diagnostics. I 
-tried to
-get serial output over IPMI SoL, but never got anything useful back.
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR12MB6914:EE_|EAYPR12MB999156:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8b9742d4-4368-4bf1-fce7-08df022c501c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|376014|1800799024|23010399003|366016|6133799003|56012099006|10067099003|5023799004|11063799006|4143699003|22082099003|18002099003;
+X-Microsoft-Antispam-Message-Info:
+	doGaNEs5w0xApqV3O36bJNrvycCmHbm/p54szyxX9VU0qz2c3mHgNQAG5xqeFWC0G53mlziGi+tjtySFpsLE6vKmY2VWUZlWvAXQTUdCJt7Wi/ZiaaSvmcFyiIOFYw8nO4DdEExvYol1CuXSSg4angB9G1ub8blPwBUS/1+mJ6oxcKv8dZ9ACqwC5k8jq8UsktdfiRuNX2cKJHwCUlW3evChax5Rmx0s4Va0QlZ7jMD5xT4fe3KfRszVmk6v4QfGXAoHtAnCDvypW+QB9dZS9lRgHtPmare0f8uB6zZUT4Xes2cpmARKANldinm7thA/6bMVka88Z80Kj7D/Z6uHWZ2v4NgFOY/KZ/MsOe/wYCxqF2Vp3sBU5PYtYj3E2WsiW2XinWXqL28SiHsQBTipaPhooI8o4YkKF+vPYmcxTuwmlcVFnV9XSdmARbsyYymYvodWoEXVl/POt+CK9a8B0bP2AJI0UwgnN7y1/So2NSl8nyZ3myzHgmckZBCsKfMYnHOUWjFNWvmKqdK9rbFCkefRdJXe74WAEiqviC6Bs9Y7ecWj0mVqzPMoPXMTKX/5bdi3zZbhLbmsvMShaM6zikDqD3/PTLk4WtbxyiNdRWHHSconScF8ymkQkd7o0fLqj714EoqXxe4T3YmGt4pvOYPA9v6Moh8zIrUXGsxfop8=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR12MB6914.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(23010399003)(366016)(6133799003)(56012099006)(10067099003)(5023799004)(11063799006)(4143699003)(22082099003)(18002099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?VkNVSGlkZWRHMG0xcC9JbjFFQ2RoR3lJc0ZuMDRob09NZnpXaVVOT3ByalRK?=
+ =?utf-8?B?SVMwazY3VUp5RUdJMm9UeW4rUlMwMmZ6Mm1JclJncE5aRUhKMmJuMXZseFpm?=
+ =?utf-8?B?Q2hudWYrandHeU8zY05IZXpTeThmcWJENUFXRUNhSmpUUk9JaGE4V0hLd3JC?=
+ =?utf-8?B?czJxSmJ1QmZscm00RVRxeGlrc3hYRlNVVWluN1ovSWg3ZXp2REErQit5TzYy?=
+ =?utf-8?B?UHRvTFVQSTF2MzJXMmNBOVRBQi9RT2xXWEpTTjRscWZEVk40UkdhV2kwY3c2?=
+ =?utf-8?B?dHlrQjJFMmQ3N0tQNExFR1JMbEJNZTlKYTJ4T1BORXdKUksrT0F4T2ZRelJh?=
+ =?utf-8?B?Mkpmd2lRV3ZHY3lDRmY2QW5aWXhzN3R1a3JzYTlPanEvNi9uUUNOeHdXY1RB?=
+ =?utf-8?B?aDd6SDJ4RG9EY1FoYzMvWVpYZGNmRU5ra1kzMGduWHRMUndKVDdFaEZBTHJG?=
+ =?utf-8?B?ZmFkWVJPN1dVVFNuVHBsS1lUNTZvZTRQUEh3dk51dGVJTnNUY3RmRXlqZG9n?=
+ =?utf-8?B?b2lsYnZxVnN0VGVXQXBkQ201MG5ySWQ4NUpwbThTbUFJVG84b2VXR3RuV0x6?=
+ =?utf-8?B?eWlSSmFhYVkvYkRMeHpxSUgwYk4wR0ZrS2NZOFpHNERhUzdMYUgzcWNwMmFw?=
+ =?utf-8?B?VTJUTUtQR0liaHpQSEgzSlF1b3ZvUDhCWEtlSE11a1Y1K2NJcHIrNmQ3MFQ4?=
+ =?utf-8?B?cnB4WHViUW00SEsySXh2UVhTM29OeVZ1SWpkTjNqaUdURkNOWEJXVGRseDM2?=
+ =?utf-8?B?STdSUGVaSDlNd3VBc0tNUU5YbXovajI2UThydk9GbVlDUkkrQm42RW5NOTNa?=
+ =?utf-8?B?R3pxeUJWemVibEN2c0lldlVsd2dYbHdqcjdpajJPYUlWTWhzTGVTV0RpOGgw?=
+ =?utf-8?B?ZU1NS2V2d2VKdGVaZ3cyU1ZOcDdValhmak5IQWR5SW02RlJoY1UyaCtmTW1w?=
+ =?utf-8?B?M0JUSW1xb1ZBMDlJUWl4aTJPV2M0dkRwbDZhY21UZE50T0VIMkhtZlNKVG9X?=
+ =?utf-8?B?RHI2RVNQd1l3dlRmQ3BZOStvTGdQbUtMaW8vejVXWTFyeERJaFlhWTRqaEQ1?=
+ =?utf-8?B?bG9seDMwZ2h4Rkk4VU5aUUNlM1dvcCtaZWZmREkrWkdDc1loTnk5dzlqMUti?=
+ =?utf-8?B?N0xsOWFyMit1S3F3VENVNGhQU0pHemZtME95QTloamJ5dDMveC9UeXBoK0tt?=
+ =?utf-8?B?VmFQY0MrZVpub0c5ZG42MUVtZ29zbWRYeG1ESzZjS2hHVzNlVlJjK1o5MGdj?=
+ =?utf-8?B?aENaaDIvVm1HYzRuR1QzNDlhWHhmNTgybTZZTzJPU2lSVlduRjc0aEpCdEUy?=
+ =?utf-8?B?STZRUlVCQm92elZnZ1RzaUxkRmJOTlRkM3Q0SkVUM0dSWkxiVk8zeDg5dHhm?=
+ =?utf-8?B?R1g2NW5KWUM5dERzblYrYnVTZjlQc0FFUW1LRmRWcUZENzZxcWYwcnFmQ2M4?=
+ =?utf-8?B?b3hiM3RhV3hjdEVacDVyUmFpQ0V1UjlCcThoNUhiTjgwRkxHemtqa09IWVNX?=
+ =?utf-8?B?MmR3dU5YMVcwa2JhcStRQWhDSjFJdFYwcGpmejJiUW9HYXZuVXJ1OCtrZVlX?=
+ =?utf-8?B?WGs2eE1JREt5NWFyOTh1S3g0OXQzd25OeHEvWkxpNlZXSUg0a010QStNbUp4?=
+ =?utf-8?B?alByTXhsMmZvZmY2dldjWnFpcG1GSE9Kd2R3MTMwRFNmbVp1VXNUbjEwODJa?=
+ =?utf-8?B?cStNTTY5Sko3NmJJbmk2YmQ0ME1pelFPVDdRb0tORGNydHpVTzlRVndDRFVw?=
+ =?utf-8?B?cmtkUndnVE4wNXRZQzFCZXl5eDlvcmt2NVlEWWNzNFQ5aUhnL3FPVDhxTGtz?=
+ =?utf-8?B?bERxeG9SRUgvOXA5aG5EZmFFOUZWWW9CSUh1VkRiSk5xWUZmNE9HSE5BeWZE?=
+ =?utf-8?B?bGRLamdFdmVISkxZbEdzcUJKQVl0aFRsckFqelAxK3lya1dTSlZjMjBDWkY4?=
+ =?utf-8?B?V21Hazh1SEpkQ2paNjErQytrT3krZHJ2MlN2K0wxdi85Q1MwZlpaWWh6dXlz?=
+ =?utf-8?B?WW5DbFR4VDVxK2xLWUJPWXV2L1pMZk9LZVlZTXlxbXkvR2dzRExJRmJiVFFp?=
+ =?utf-8?B?OTBaUVpuZ1RJNVRlcWxCenc0SnNlazRoNzJpd3FQd2pCcW5UZXYvV1lSRDZm?=
+ =?utf-8?B?UWd4dXk0ZlpmN1dxTnBEY2JFeG9pT2tybHovUkt5dmw1R2hsRFhlM09jT0dY?=
+ =?utf-8?B?U3BERlF3Wk84SVZ0cjIxb3VDenhzbTdhamdpYVh3bnpkdmljelh0VFRuUkZJ?=
+ =?utf-8?B?RXZQdlN3VDZaamxrWDlpcmZlOFYxK3ZTZVkwV3V5dEdvaGhwOCthMXQwQ1FM?=
+ =?utf-8?B?SkdIb0xTMUREL1Q4WDF5RzhaNzNycjQrb1JxUUVuMGhhK2tjVyttQT09?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8b9742d4-4368-4bf1-fce7-08df022c501c
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR12MB6914.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Aug 2026 22:09:05.8118
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: xsB/DfCKxzxWVcNWdkfJYMSOsk0mF+GnGzb4Xk7uoBDN1ix9d3pkSj0v6xzQYqv6wr+9IodYRfNCbdK23TJCQw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: EAYPR12MB999156
 
 
-Andreas
 
-> -Vasant
->
-> ---<---
-> commit aa5f50f1ee66ebf7a219906a4df6aa2b7cae9717
-> Author: Vasant Hegde <vasant.hegde@amd.com>
-> Date:   Mon Aug 24 11:12:27 2026 +0530
->
->      iommu/amd: Prioritize IOMMU MMIO advertised EFR over IVRS
->
->      Signed-off-by: Vasant Hegde <vasant.hegde@amd.com>
->
-> diff --git a/drivers/iommu/amd/init.c b/drivers/iommu/amd/init.c
-> index 69170146d442..0172db87b1df 100644
-> --- a/drivers/iommu/amd/init.c
-> +++ b/drivers/iommu/amd/init.c
-> @@ -2153,9 +2153,11 @@ static void __init late_iommu_features_init(struct
-> amd_iommu *iommu)
->   	if (features != amd_iommu_efr ||
->   	    features2 != amd_iommu_efr2) {
->   		pr_warn(FW_WARN
-> -			"EFR mismatch. Use IVHD EFR (%#llx : %#llx), EFR2 (%#llx : %#llx).\n",
-> +			"EFR mismatch. Use MMIO EFR (%#llx : %#llx), EFR2 (%#llx : %#llx).\n",
->   			features, amd_iommu_efr,
->   			features2, amd_iommu_efr2);
-> +		amd_iommu_efr = features;
-> +		amd_iommu_efr2 = features2;
->   	}
->   }
->
->
->
->
->
->
->> Thanks again!
->>
->> Andreas
->>
->>> ---<---
->>>
->>> diff --git a/drivers/iommu/amd/init.c b/drivers/iommu/amd/init.c
->>> index 69170146d442..7a5b78beb352 100644
->>> --- a/drivers/iommu/amd/init.c
->>> +++ b/drivers/iommu/amd/init.c
->>> @@ -1930,19 +1930,20 @@ static int __init init_iommu_one(struct amd_iommu
->>> *iommu, struct ivhd_header *h,
->>>                else
->>>                        iommu->mmio_phys_end = MMIO_CNTR_CONF_OFFSET;
->>>
->>> +             if (h->efr_attr & BIT(IOMMU_IVHD_ATTR_HATDIS_SHIFT)) {
->>> +                     pr_warn_once("Host Address Translation is not supported.
->>> \n");
->>> +                     amd_iommu_hatdis = true;
->>> +             }
->>> +
->>>                /* XT and GAM require GA mode. */
->>>                if ((h->efr_reg & (0x1 << IOMMU_EFR_GASUP_SHIFT)) == 0) {
->>>                        amd_iommu_guest_ir = AMD_IOMMU_GUEST_IR_LEGACY;
->>> +                     break;
->>>                } else {
->>>                        if (h->efr_reg & BIT(IOMMU_EFR_XTSUP_SHIFT))
->>>                                amd_iommu_xt_mode = IRQ_REMAP_X2APIC_MODE;
->>>                }
->>>
->>> -             if (h->efr_attr & BIT(IOMMU_IVHD_ATTR_HATDIS_SHIFT)) {
->>> -                     pr_warn_once("Host Address Translation is not supported.
->>> \n");
->>> -                     amd_iommu_hatdis = true;
->>> -             }
->>> -
->>>                early_iommu_features_init(iommu, h);
->>>
->>>                break;
->>>
->>>
->>>
->>>>> I reverted that single commit, built the kernel again and the machine
->>>>> booted, so
->>>>> I'm quite sure that I found the right commit.
->>>>>
->>>>> System information:
->>>>>
->>>>> ASRockRack B550D4-4L
->>>>> BIOS P1.10 (06/28/2021)
->>>>>
->>>>> I'm no expert at all, but my research found that the following information
->>>>> might
->>>>> be relevant:
->>>>>
->>>>>     journalctl -W -b -k --no-pager | rg -i 'AMD-Vi|AMD IOMMU|IOMMU|IVRS|IVHD'
->>>>>     Aug 21 22:24:17 kernel: ACPI: IVRS 0x00000000BB062000 0000D0 (v02 AMD
->>>>> AmdTable 00000001 AMD  00000001)
->>>>>     Aug 21 22:24:17 kernel: ACPI: Reserving IVRS table memory at [mem
->>>>> 0xbb062000-0xbb0620cf]
->>>>>     Aug 21 22:24:17 kernel: AMD-Vi: Using global IVHD EFR:0x0, EFR2:0x0
->>>>>     Aug 21 22:24:17 kernel: iommu: Default domain type: Translated
->>>>>     Aug 21 22:24:17 kernel: iommu: DMA domain TLB invalidation policy: lazy
->>>>> mode
->>>>>     Aug 21 22:24:17 kernel: pci 0000:00:01.0: Adding to iommu group 0
->>>>>     Aug 21 22:24:17 kernel: pci 0000:00:01.2: Adding to iommu group 0
->>>>>     Aug 21 22:24:17 kernel: pci 0000:00:02.0: Adding to iommu group 1
->>>>>     Aug 21 22:24:17 kernel: pci 0000:00:03.0: Adding to iommu group 2
->>>>>     Aug 21 22:24:17 kernel: pci 0000:00:04.0: Adding to iommu group 3
->>>>>     Aug 21 22:24:17 kernel: pci 0000:00:05.0: Adding to iommu group 4
->>>>>     Aug 21 22:24:17 kernel: pci 0000:00:07.0: Adding to iommu group 5
->>>>>     Aug 21 22:24:17 kernel: pci 0000:00:07.1: Adding to iommu group 6
->>>>>     Aug 21 22:24:17 kernel: pci 0000:00:08.0: Adding to iommu group 7
->>>>>     Aug 21 22:24:17 kernel: pci 0000:00:08.1: Adding to iommu group 8
->>>>>     Aug 21 22:24:17 kernel: pci 0000:00:14.0: Adding to iommu group 9
->>>>>     Aug 21 22:24:17 kernel: pci 0000:00:14.3: Adding to iommu group 9
->>>>>     Aug 21 22:24:17 kernel: pci 0000:00:18.0: Adding to iommu group 10
->>>>>     Aug 21 22:24:17 kernel: pci 0000:00:18.1: Adding to iommu group 10
->>>>>     Aug 21 22:24:17 kernel: pci 0000:00:18.2: Adding to iommu group 10
->>>>>     Aug 21 22:24:17 kernel: pci 0000:00:18.3: Adding to iommu group 10
->>>>>     Aug 21 22:24:17 kernel: pci 0000:00:18.4: Adding to iommu group 10
->>>>>     Aug 21 22:24:17 kernel: pci 0000:00:18.5: Adding to iommu group 10
->>>>>     Aug 21 22:24:17 kernel: pci 0000:00:18.6: Adding to iommu group 10
->>>>>     Aug 21 22:24:17 kernel: pci 0000:00:18.7: Adding to iommu group 10
->>>>>     Aug 21 22:24:17 kernel: pci 0000:02:00.0: Adding to iommu group 0
->>>>>     Aug 21 22:24:17 kernel: pci 0000:02:00.1: Adding to iommu group 0
->>>>>     Aug 21 22:24:17 kernel: pci 0000:02:00.2: Adding to iommu group 0
->>>>>     Aug 21 22:24:17 kernel: pci 0000:20:00.0: Adding to iommu group 0
->>>>>     Aug 21 22:24:17 kernel: pci 0000:20:01.0: Adding to iommu group 0
->>>>>     Aug 21 22:24:17 kernel: pci 0000:20:02.0: Adding to iommu group 0
->>>>>     Aug 21 22:24:17 kernel: pci 0000:20:03.0: Adding to iommu group 0
->>>>>     Aug 21 22:24:17 kernel: pci 0000:20:04.0: Adding to iommu group 0
->>>>>     Aug 21 22:24:17 kernel: pci 0000:20:08.0: Adding to iommu group 0
->>>>>     Aug 21 22:24:17 kernel: pci 0000:20:09.0: Adding to iommu group 0
->>>>>     Aug 21 22:24:17 kernel: pci 0000:21:00.0: Adding to iommu group 0
->>>>>     Aug 21 22:24:17 kernel: pci 0000:22:00.0: Adding to iommu group 0
->>>>>     Aug 21 22:24:17 kernel: pci 0000:23:00.0: Adding to iommu group 0
->>>>>     Aug 21 22:24:17 kernel: pci 0000:24:00.0: Adding to iommu group 0
->>>>>     Aug 21 22:24:17 kernel: pci 0000:25:00.0: Adding to iommu group 0
->>>>>     Aug 21 22:24:17 kernel: pci 0000:29:00.0: Adding to iommu group 0
->>>>>     Aug 21 22:24:17 kernel: pci 0000:2a:00.0: Adding to iommu group 0
->>>>>     Aug 21 22:24:17 kernel: pci 0000:2b:00.0: Adding to iommu group 0
->>>>>     Aug 21 22:24:17 kernel: pci 0000:2c:00.0: Adding to iommu group 11
->>>>>     Aug 21 22:24:17 kernel: pci 0000:2d:00.0: Adding to iommu group 12
->>>>>     Aug 21 22:24:17 kernel: pci 0000:2d:00.1: Adding to iommu group 13
->>>>>     Aug 21 22:24:17 kernel: pci 0000:2d:00.3: Adding to iommu group 14
->>>>>     Aug 21 22:24:17 kernel: pci 0000:2d:00.4: Adding to iommu group 15
->>>>>     Aug 21 22:24:17 kernel: AMD-Vi: Extended features (0x58f77e022294881,
->>>>> 0x0): PreF GA GA_vAPIC
->>>>>     Aug 21 22:24:17 kernel: AMD-Vi: Interrupt remapping enabled
->>>>>
->>>>> And the output of the decoded IVRS table, captured by `acpidump -n IVRS -b`:
->>>>>
->>>>>     00000000  49 56 52 53 d0 00 00 00  02 e2 41 4d 44 20 20 00 |IVRS......AMD
->>>>> .|
->>>>>     00000010  41 6d 64 54 61 62 6c 65  01 00 00 00 41 4d 44 20
->>>>> |AmdTable....AMD |
->>>>>     00000020  01 00 00 00 41 30 20 00  00 00 00 00 00 00 00 00 |....A0
->>>>> .........|
->>>>>     00000030  10 b0 48 00 02 00 40 00  00 00 50 fd 00 00 00 00
->>>>> |..H...@...P.....|
->>>>>     00000040  00 00 00 00 2e 8f 04 80  03 08 00 00 04 fe ff 00
->>>>> |................|
->>>>>     00000050  43 00 ff 00 00 a5 00 00  04 ff ff 00 00 00 00 00
->>>>> |C...............|
->>>>>     00000060  48 00 00 00 00 a0 00 02  48 00 00 d7 0d a0 00 01
->>>>> |H.......H.......|
->>>>>     00000070  48 00 00 00 0e 01 00 01  11 b0 58 00 02 00 40 00
->>>>> |H.........X...@.|
->>>>>     00000080  00 00 50 fd 00 00 00 00  00 00 00 00 00 02 04 00
->>>>> |..P.............|
->>>>>     00000090  5a 4a 29 22 ef 77 8f 05  00 00 00 00 00 00 00 00
->>>>> |ZJ)".w..........|
->>>>>     000000a0  03 08 00 00 04 fe ff 00  43 00 ff 00 00 a5 00 00
->>>>> |........C.......|
->>>>>     000000b0  04 ff ff 00 00 00 00 00  48 00 00 00 00 a0 00 02
->>>>> |........H.......|
->>>>>     000000c0  48 00 00 d7 0d a0 00 01  48 00 00 00 0e 01 00 01
->>>>> |H.......H.......|
->>>>>     000000d0
->>>>>
->>>>> The relevant part (after decoding with `iasl -d ivrs.dat`):
->>>>>
->>>>>     [090h 0144 008h]                   EFR Image : 058F77EF22294A5A
->>>>>
->>>>> I'll provide any required details and test patches!
->>>>>
->>>>> Thanks for your work, it's very appreciated!
->>>>>
->>>>> Andreas
->>>>>
+On 8/24/26 14:37, Mathieu Fluhr wrote:
+>> The issue is obviously a severe HW malfunction (you mentioned MCEs, the
+>> Ryzen CPUs simply totally locked up), triggered by poking certain xHCI
+>> controllers on the I/O die of these CPUs in some wrong way.
+> 
+> Yes. As mentioned, I first thought that the emulator itself triggered that by
+> doing something that the CPU did not like.To be honest, I barely play with old
+> Android versions anymore, but seeing that I could reproduce it even with
+> Android 13 or 14 made me suspicious.
+> 
+> I _guess_ Google implemented a workaround inside adb for version Android
+> 15 since using this version, it remains stable for more than 2 hours.
+> 
+> But, in the end, the situation is that from a simple user account having access
+> to some usb plugged in devices (I usually add my user account to the plugdev
+> group and use some known udev rules to access my Android tests devices),
+> you have a way to crash the complete system.
+> 
+>> Opinions seem to vary on whether CPU load must be present or absent.
+> 
+> On my side (and I am here only speaking about my TR. I don't know about
+> other Ryzen CPUs), I can't reproduce it under load, and one condition to
+> reproduce it is my CPU going in C2 state.
+> -> I did a 2:30 hour test using several youtube videos playing at the same
+> time on my desktop, also stressing the emulator with some 3D Mark runs
+> (as mentioned, I first suspected the nvidia driver to be faulty). As long as my
+> computer was busy everything went fine. But then I let it stand still for a few
+> minutes, and it just crashed.
+> 
+> If you need me to do some further tests or experiments, let me know. I will
+> be more than happy to play the guinea pig here.
+> 
+The behavior that is described here sounds like a platform firmware bug 
+to me.  Are you on the latest BIOS available from your OEM?
+
+Can you please confirm:
+
+1. Your CPU model number/codename
+2. Your OEM (from /sys/class/dmi/id)
+3. OEM BIOS version (from /sys/class/dmi/id)
+4. AGESA version (see commit bc91133e260c8113c1119073c03b93c12aa41738 if 
+the OEM didn't tear it out.  Otherwise look in BIOS menus)?
 
