@@ -1,252 +1,160 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.166])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11A2D3A450C
-	for <regressions@lists.linux.dev>; Mon, 24 Aug 2026 10:22:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.49
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787566970; cv=pass; b=QIWPnUdIMXa9Z0aBQZBQE8PNUFwFYnrCS//5W9VQV15LMiK8A4Um9WVaTDKr0iIay+rtspjfKFt4r7RUcFdN7I7z9hPcsmbI8rpvQJxGu0OismqNa5Ec6+DxZgxnL/aIkiKawPLzNCe6CZKa7XYe0PCbuWfDdyXHdNfnaarXWnE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787566970; c=relaxed/simple;
-	bh=aOpkQ+8+Z+0tSHTjR67YONoD+vAE++lX8zuwi7ZlRIQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Uy4coXLPNJ5t4Qr0JaD6h+n22fWScgvYojT8OH584alfyXJaPzF5LhpN/J3iZtKvnobbKh+nngCwC4hPSn6IRIvHErP3H3c/X6GIxFepoafA3XT4YVZYeLJNl8JMdAXSOrUWee5uAk4cZtJ4aPTXSBMyNCUMdWyHllrNWbfvFUs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=isomorphic-ai.com; spf=pass smtp.mailfrom=isomorphic-ai.com; dkim=pass (2048-bit key) header.d=isomorphic-ai.com header.i=@isomorphic-ai.com header.b=C6ns0Rn9; arc=pass smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=isomorphic-ai.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=isomorphic-ai.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA6FD3F39E2;
+	Mon, 24 Aug 2026 11:24:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.166
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1787570696; cv=none; b=iH4lMS+uNkWj02Pb4HVIuv9H29hYK4u1mSo6APWrjFZx58KNYF18bJisJvfa/LeE3vT7q74/pn40f2LA742arzREfS+7vpvhL+VWfY0NPlwJ9+SOE6o0H5C0x1AwAdPgENY/1FA1A/CAQCkbstM9/snOD18UH8x3dTrV4Xb8D7s=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1787570696; c=relaxed/simple;
+	bh=vPtS+SirOAHTJmrsjx/3NIEP7gHXB4AGBLiZryizuDA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bPKFBzMFPzIs4oeJYZIgraiEVDz2vmYaUa2eCtpyZPCQbYsX0NcfUvENIXb4C1wcMiNbpVLdLhApmSEarAbS98c/N4TR1/DKMnau/n6esl+gFGH4x4toT2du3yYqLA0Xg8Ibt9iQZ1GGigDtQblxarUDzBz/PxE+gLI4WnmJveg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=YGWVP3QR; arc=none smtp.client-ip=188.68.63.166
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=isomorphic-ai.com header.i=@isomorphic-ai.com header.b="C6ns0Rn9"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-c197eaaab00so544133966b.0
-        for <regressions@lists.linux.dev>; Mon, 24 Aug 2026 03:22:47 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1787566966; cv=none;
-        d=google.com; s=arc-20260327;
-        b=iFePg8ExcRXzX6G0j1dKqVv9ojzjCQ72+MZKWQKCOIk6fb5jURKZuFZQuFoAshzHt5
-         IOhHxOApJcTqQ+r1AV9MaQSJI1SnOZyvzqWYghU2dw35NQoiahbUrcSslQ8sYNjYjv6j
-         4Mw2Pk19v3N+5/jsMMQpas56OeKzqTtPg75/U5JbIYKgkjcv8QMO44H1XzD1/2Is53kH
-         DTRz1LOP8BR1hNDueJ75AN3W89lnSudVEzOQoGNudLtvSZ6RVKXnml2cqocx/HU04/Kb
-         iwK+8FwsdMcU0XoU8Fa/zW8lQJlFAc+HRWOwxREiwOAVB7C9mPNbPQC49zKoEvwYWrG+
-         9RpQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=dLNIue6LBcWvdxKP8M6jQZTbwZKO04v0RDZAqcIK23g=;
-        fh=/GBF22sFCo+Mb56r+P9CgshALFWKZ14FwQOATU5iHf8=;
-        b=f4Uzzd2nabgMUl535On+kwaDMB/m3GnqNLGc28xJ1bPNGIrEp3Opv5NRa+sz4GvtBp
-         dN/IiW3Dk50x34UHD3Dsyo+9QUjUbFZ/MgpJj/vXtcwnu69wit9Fs4wmKiIFDsOOF8Tm
-         paA/jEr/raTDi1JHPPjpyNLvu52QMESDroXkAFCTROIaBP2piG2kGzr9XbDFjmZHI5Z1
-         XYeAtDonlWjP7m1theokCiMxV3aJv5lFVFhsA9f24hSVBaCYyZCw6MAfEI2ntMLrZSxi
-         QVrW+u2tX1C3Ov5ScpxXH2jMH0Pcb9vKsJpxqlK7KmJcqprXGkhiinC+nVqA5dxhAW3Y
-         otiQ==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=isomorphic-ai.com; s=google; t=1787566966; x=1788171766; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=dLNIue6LBcWvdxKP8M6jQZTbwZKO04v0RDZAqcIK23g=;
-        b=C6ns0Rn9XeAKJpKyj9il+lwVY4BVoZglgymQ5uG64EJAV4+mNnd5WdQz2vEcFphVpq
-         fb4c/mQeq7fBztBR9lgfMY0NWwamv/RMxUiu2Ga329DWfX3JRIaf22mE4XxErJtLXCXB
-         h8093jN1pXbw6COIs1iagKSK2DVAII90pbtzGX8tgvereLJkFPhrDt9jrwDSQ48SyZ8e
-         9G/a050Sg9rZXvAJFqDOf2W+B3EEhdvRha0VS8JId+bdxwtWPy5VF14/5EjZddG6eWTe
-         5ToCCBqpc+jgznkNF1WUrBv5vy/bf7lS1LNF1BEsR8zAG869wfWDqziVpJwTBkCFcqbE
-         JbGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787566966; x=1788171766;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=dLNIue6LBcWvdxKP8M6jQZTbwZKO04v0RDZAqcIK23g=;
-        b=a9ArKAfWsumELEn9nSPo48a+RpfU4ZuZWiTN8mrmY9Ce6nS6Oh8bTFlxZmIK81G0tZ
-         xeqrse92kRBdRYcn83iDX0CtRRYqSxQNtoDr84AmadumDap/PPbuBFrB4Gk5APf2tSLW
-         u/e5qycw4M/8zEdxEUrh/jPri1+PmzpNhB/hCRETN2OQO8JZ6VJA5prjnDMwgUbNMsDq
-         4eD3qLGOVeQ5ODTJdy2gfGf5f2k/AM4z6aEJNiQIRyvSsAjuKcfIW8LsTtoFyNBFic3o
-         F/qTKDlnogwVcInQIVPj16R13AGEox9LHSGecuiPkbyV/1Bl32VexGyyNRyvh5EQ0f7J
-         fNUA==
-X-Forwarded-Encrypted: i=1; AHgh+RpfsbX9g8rrI+O2fsa3S5mryyXXnzoFMYs8vPgJOUQhLINj4T4+B18AacVoNiduDQxw5JcQyT4WPP70sA==@lists.linux.dev
-X-Gm-Message-State: AFuF++mm1qQuPumQjAX04Y7fa4ipsDKVPQeCI/rFCnuWR61t+ELY5HjA
-	xTnDwvjjAVbLAmp5/1KqoE5Po+PVFMj+8WY+up3BFGBdN0pi3CjVJNgyfvBY+BrvEPSGQ67YXxU
-	0qefWyxaSAcpu9CgyLlAJgkopNrjkX5n+c7w+kmqOvg==
-X-Gm-Gg: AR+sD12mmAD3DGsxUQSI9jfgms9FqjTpUshpr9/iPGsvGObVcoT8Y97mUpLNQFeDmlG
-	K8uaHi925Is4Syd2rHxJNmhe8WseF6UMoNgrueCG5Oid3yeTXske0bLblkZXcjoGtafxqTQsfZo
-	f/3BudY/B4y9KB+ZAYFq84kbZ/bpAJI0L2TlJ9O1f1udcXzAnnJhhbZ75JSKpyErKRKD8Mo5iUD
-	qxOUD5tLKnublIDkJ9Z7+iWq9oHiYWTF4lII2YYtgRQQzA6VcDcsg3LEzA+GPqa3JEfgC+Kn+bg
-	F94gd8DMzJkJT6MtLYhD5ikh4AYP3JYdiBt9Q2O+IU/y5rd2PSp0DEo7FqArQ7XBNnfavF22GHr
-	wCfvTn9kyLuJEmMiiKGZQqOuFY+8vJMECHpUMPstRJWrVSR4xEuCvusEJZ34TbEMPnJnzs7oOlA
-	UAtP2u1YIXbFknV7lnI4wh2yio+/ecg8tt2Zykl5aEjN4=
-X-Received: by 2002:a17:906:fe03:b0:c16:242a:472f with SMTP id
- a640c23a62f3a-c246b4af7e1mr3239881966b.23.1787566965457; Mon, 24 Aug 2026
- 03:22:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="YGWVP3QR"
+Received: from mors-relay-8202.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8202.netcup.net (Postfix) with ESMTPS id 4hT7pt4v4Gz3xNs;
+	Mon, 24 Aug 2026 13:24:22 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1787570662;
+	bh=vPtS+SirOAHTJmrsjx/3NIEP7gHXB4AGBLiZryizuDA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=YGWVP3QRpKIIumc0YRbPmG2aNe3oNJlq4OjBuy7oMO/rv2GgBF0E8ZxFs+E9nVC/X
+	 zNmeFk69Ano+KeZ7a44Zahr4dftrASF+STom0cmeuotwMDm4PqBai+wHh4M2vgULaW
+	 ld7qZ8ULRf6Mvgor8OKF+LJSZWOcsqKlF3m0bpdiw5lSzzQ1TZFjAsrWO0G7pDgMsW
+	 Y0yMglz/nCvL3rIc6AonR0PjqVshGK/gsj7AFJj56Dh3wsStldR5nMmY23EG54GezK
+	 pa6QFdGFlUjtfFkmM4XbSluISmUQEpIlJ2swDE7as+XVVIgZlwjkSdm/n3y+sZ9XeI
+	 edh1Ut9b7ONkw==
+Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8202.netcup.net (Postfix) with ESMTPS id 4hT7nk6Jkdz3yDJ;
+	Mon, 24 Aug 2026 13:23:22 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
+X-Spam-Flag: NO
+X-Spam-Score: -2.897
+X-Spam-Level: 
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4hT7ng6mfYz8tZp;
+	Mon, 24 Aug 2026 13:23:19 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 4CF605FA57;
+	Mon, 24 Aug 2026 13:23:19 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <057e0b88-4fa9-461c-8fa7-67fb598109da@leemhuis.info>
+Date: Mon, 24 Aug 2026 13:23:15 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260823201521.2576344-1-fabian@isomorphic-ai.com>
- <a02b160a-874f-491c-987b-4d7eb0d35a9f@leemhuis.info> <20260824092300-3e9a9d58-b273-421b-a4bf-5609ccb9ab49@linutronix.de>
-In-Reply-To: <20260824092300-3e9a9d58-b273-421b-a4bf-5609ccb9ab49@linutronix.de>
-From: Fabian Franz <fabian@isomorphic-ai.com>
-Date: Mon, 24 Aug 2026 11:22:33 +0100
-X-Gm-Features: AcwNN1UVFKjEcez8IB5zIpYrL6ue944P2BsTb4hcS9g6xutOt-_NDFHFLV7W5QI
-Message-ID: <CAKbYdNEK0TUy+W5g_yGuP-JCC9CQwmeO0q95rYhcebZYB9vLUw@mail.gmail.com>
-Subject: Re: [PATCH REGRESSION] um: Fix cpu_feature_enabled() build breakage
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>, Richard Weinberger <richard@nod.at>, 
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>, Johannes Berg <johannes@sipsolutions.net>, 
-	"Borislav Petkov (AMD)" <bp@alien8.de>, Nikolay Borisov <nik.borisov@suse.com>, "Xin Li (Intel)" <xin@zytor.com>, 
-	Ingo Molnar <mingo@kernel.org>, Claude Fable 5 <noreply@anthropic.com>, linux-um@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, 
-	Linux kernel regressions list <regressions@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] mainline/master: (build) in
+ arch/x86/include/generated/asm/cpufeaturemasks.h (arch/x86/Make...
+To: kernelci@lists.linux.dev, kernelci-results@groups.io
+Cc: regressions@lists.linux.dev, laura.nao@collabora.com, broonie@kernel.org
+References: <178733874460.1338.14907565015998697320@kernelci.org>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <178733874460.1338.14907565015998697320@kernelci.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: <178757059962.2592322.2663405393479305221@mxe9fb.netcup.net>
+X-NC-CID: rbQ9hEEG5CWc6IirX0Qef+ghcCrGMC5CSJn/V4/foUq8tHn2oPA=
 
->
-> Thanks for this pointer.
->
-> > https://lore.kernel.org/all/20260819-uml-timex-fix-v1-1-f690b514fc9f@li=
-nutronix.de/
->
-> Indeed, both our fixes seem to be for the same breakage.
->
-> Personally I prefer my patch, as it reverts the specific change which
-> introduced the breakage into the tree. Franz' change does not look incorr=
-ect
-> but is a larger change and should go through a regular release cycle.
+On 8/21/26 20:59, KernelCI bot wrote:
+> New build issue found on mainline/master:
+> 
+> ---
+>  in arch/x86/include/generated/asm/cpufeaturemasks.h (arch/x86/Makefile:269) [logspec:kbuild,kbuild.other]
+> ---
+> 
+> Log excerpt:
 
-I also prefer your patch. It is much simpler and doesn't require
-changing the cpu flags at all.
+Hmmm, nobody else reported this -- and I failed when I briefly tried to
+to reproduce this. Wondering if something with the test setup is going
+sideways here.
 
-However, getting the minimal patch for um in ASAP would also be good,
-as a broken master is not nice for development.
+Furthermore, these two seem to be related or the same error:
 
-Thanks,
-Fabian
+https://d.kernelci.org/issue/maestro%3Ae019eff33641f280144d13719cbbf59eb379327c
+https://d.kernelci.org/issue/maestro%3A4f457c5cde619e65f938d53b68735abd5858719f
 
->
-> > Ciao, Thorsten
-> > > Two independent breakages meet here:
-> > >
-> > >  1. cpu_feature_enabled() and this_cpu_has() still test
-> > >     DISABLED_MASK_BIT_SET()/REQUIRED_MASK_BIT_SET().  Those used to
-> > >     come from <asm/disabled-features.h>/<asm/required-features.h> via
-> > >     <asm/cpufeatures.h>, but since commit 8f97566c8a81
-> > >     ("x86/cpufeatures: Remove {disabled,required}-features.h") they
-> > >     live in the generated <asm/cpufeaturemasks.h>, which only the
-> > >     arch/x86 archprepare rule generates.  ARCH=3Dum never generates n=
-or
-> > >     includes it, so the references have been dangling since then.
-> > >
-> > >  2. The _static_cpu_has() macro expands to itself.  Commit
-> > >     3eaa50e1e255 ("x86/cpu: Hide and rename static_cpu_has()") rename=
-d
-> > >     the inline function _static_cpu_has() -> __static_cpu_has() and
-> > >     the macro static_cpu_has() -> _static_cpu_has(), but in the UML
-> > >     header the macro's out-of-line branch kept calling
-> > >     _static_cpu_has(), which now names the macro itself and is left
-> > >     unexpanded by the preprocessor.
-> > >
-> > > Fix the macro to call __static_cpu_has(), as the x86 header does, and
-> > > drop the mask based short-circuits from cpu_feature_enabled() and
-> > > this_cpu_has().  UML has no compile-time feature masking to express:
-> > > capabilities are copied from the host's CPUID at boot, see commit
-> > > d8fb32f4790f ("um: Add support for host CPU flags and alignment"),
-> > > and generating cpufeaturemasks.h from a UML .config would wrongly
-> > > mark features disabled simply because the gating CONFIG_X86_* symbols
-> > > do not exist for ARCH=3Dum.
-> > >
-> > > Fixes: 3eaa50e1e255 ("x86/cpu: Hide and rename static_cpu_has()")
-> > > Fixes: 8f97566c8a81 ("x86/cpufeatures: Remove {disabled,required}-fea=
-tures.h")
-> > > Signed-off-by: Fabian Franz <fabian@isomorphic-ai.com>
-> > > Assisted-By: Claude Fable 5 <noreply@anthropic.com>
-> > > ---
-> > >  arch/um/include/asm/cpufeature.h | 8 +++-----
-> > >  1 file changed, 3 insertions(+), 5 deletions(-)
-> > >
-> > > diff --git a/arch/um/include/asm/cpufeature.h b/arch/um/include/asm/c=
-pufeature.h
-> > > index f7770083c0a4..20b2c7ead62e 100644
-> > > --- a/arch/um/include/asm/cpufeature.h
-> > > +++ b/arch/um/include/asm/cpufeature.h
-> > > @@ -37,8 +37,7 @@ extern const char * const x86_bug_flags[NBUGINTS*32=
-];
-> > >      test_cpu_cap(c, bit)
-> > >
-> > >  #define this_cpu_has(bit)                                          \
-> > > -   (__builtin_constant_p(bit) && REQUIRED_MASK_BIT_SET(bit) ? 1 :  \
-> > > -    x86_this_cpu_test_bit(bit, cpu_info.x86_capability))
-> > > +    x86_this_cpu_test_bit(bit, cpu_info.x86_capability)
-> > >
-> > >  /*
-> > >   * This macro is for detection of features which need kernel
-> > > @@ -48,8 +47,7 @@ extern const char * const x86_bug_flags[NBUGINTS*32=
-];
-> > >   * supporting a possible guest feature where host support for it
-> > >   * is not relevant.
-> > >   */
-> > > -#define cpu_feature_enabled(bit)   \
-> > > -   (__builtin_constant_p(bit) && DISABLED_MASK_BIT_SET(bit) ? 0 : _s=
-tatic_cpu_has(bit))
-> > > +#define cpu_feature_enabled(bit)   _static_cpu_has(bit)
-> > >
-> > >  #define boot_cpu_has(bit)  cpu_has(&boot_cpu_data, bit)
-> > >
-> > > @@ -112,7 +110,7 @@ static __always_inline bool __static_cpu_has(u16 =
-bit)
-> > >  (                                                          \
-> > >     __builtin_constant_p(boot_cpu_has(bit)) ?               \
-> > >             boot_cpu_has(bit) :                             \
-> > > -           _static_cpu_has(bit)                            \
-> > > +           __static_cpu_has(bit)                           \
-> > >  )
-> > >
-> > >  #define cpu_has_bug(c, bit)                cpu_has(c, (bit))
-> > >
-> > > --
-> > > 2.43.0
-> > >
-> > > Every ARCH=3Dum build has failed since the 7.3 merge window.
-> > >
-> > > #regzbot introduced: 3ed403bbc967
-> > >
-> > > Steps to reproduce on master:
-> > >
-> > > make ARCH=3Dum O=3D/tmp/um-build defconfig
-> > > make ARCH=3Dum O=3D/tmp/um-build -j$(nproc)
-> > >
-> > > fails with:
-> > >
-> > > /home/ubuntu/projects/linux/arch/x86/include/asm/tsc.h: In function =
-=E2=80=98get_cycles=E2=80=99:
-> > > /home/ubuntu/projects/linux/arch/um/include/asm/cpufeature.h:52:39: e=
-rror: implicit declaration of function =E2=80=98DISABLED_MASK_BIT_SET=E2=80=
-=99 [-Werror=3Dimplicit-function-declaration]
-> > >    52 |         (__builtin_constant_p(bit) && DISABLED_MASK_BIT_SET(b=
-it) ? 0 : _static_cpu_has(bit))
-> > >       |                                       ^~~~~~~~~~~~~~~~~~~~~
-> > > /home/ubuntu/projects/linux/arch/x86/include/asm/tsc.h:79:14: note: i=
-n expansion of macro =E2=80=98cpu_feature_enabled=E2=80=99
-> > >    79 |         if (!cpu_feature_enabled(X86_FEATURE_TSC))
-> > >       |              ^~~~~~~~~~~~~~~~~~~
-> > > /home/ubuntu/projects/linux/arch/um/include/asm/cpufeature.h:115:17: =
-error: implicit declaration of function =E2=80=98_static_cpu_has=E2=80=99; =
-did you mean =E2=80=98__static_cpu_has=E2=80=99? [-Werror=3Dimplicit-functi=
-on-declaration]
-> > >   115 |                 _static_cpu_has(bit)                         =
-   \
-> > >       |                 ^~~~~~~~~~~~~~~
-> > > /home/ubuntu/projects/linux/arch/um/include/asm/cpufeature.h:52:72: n=
-ote: in expansion of macro =E2=80=98_static_cpu_has=E2=80=99
-> > >    52 | builtin_constant_p(bit) && DISABLED_MASK_BIT_SET(bit) ? 0 : _=
-static_cpu_has(bit))
-> > >       |                                                             ^=
-~~~~~~~~~~~~~~
-> > >
-> > > If this is known please disregard. I am also not 100% sure if this is=
- the right fix or if it's better to bring back the macros to um.
-> > >
-> > > In any case it would be good for um to build again on the master bran=
-ch out of the box.
->
+Anybody any idea what's wrong here?
+
+Ciao, THorsten
+
+> =====================================================
+> Kernel: arch/x86/boot/bzImage is ready  (#1)
+> + stage=2
+> + cd ..
+> + echo job:build_kernel=done
+> ++ date +%s
+> + echo jobets:build_kernel=1787335473
+> + echo -----log:build_modules-----
+> -----log:build_modules-----
+> + echo job:build_modules=running
+> ++ date +%s
+> + echo jobsts:build_modules=1787335473
+> + cd /tmp/kci/linux
+> + set +eE -o pipefail
+> + trap - ERR
+> + grep CONFIG_MODULES=y .config
+> CONFIG_MODULES=y
+> + '[' 0 -eq 0 ']'
+> + set -eE -o pipefail
+> + trap 'case $stage in
+> + stage=1
+> ++ nproc
+> + make -j16 modules
+> ++ tee /tmp/kci/artifacts/build_modules.log
+> ++ tee /tmp/kci/artifacts/build_modules_stderr.log
+> mv: cannot stat 'arch/x86/include/generated/asm/.tmp_cpufeaturemasks.h': No such file or directory
+> 
+> =====================================================
+> 
+> When fixing this issue, please attribute this report according to the
+> patch submission rules:
+> 
+> Reported-by: kernelci.org bot <bot@kernelci.org>
+> Link: https://lore.kernel.org/all/178733874460.1338.14907565015998697320@kernelci.org/
+> 
+> For complete logs and details about the environment used, see the issue
+> on the KernelCI dashboard:
+> 
+> - dashboard: https://d.kernelci.org/i/maestro:4f457c5cde619e65f938d53b68735abd5858719f
+> - giturl: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+> - commit HEAD:  531ed942bb0df04f6747983fecdedce76a22d07f
+> 
+> # Builds where the incident occurred:
+> 
+> ## i386_defconfig+allnoconfig on (i386):
+> - compiler: clang-21
+> - config: https://files.kernelci.org/kbuild-clang-21-i386-allnoconfig-6a888db362f33761c0fe21dc/.config
+> - dashboard: https://d.kernelci.org/build/maestro:6a888db362f33761c0fe21dc
+> 
+> ## i386_defconfig+kselftest on (i386):
+> - compiler: gcc-14
+> - config: https://files.kernelci.org/kbuild-gcc-14-i386-kselftest-6a888e4262f33761c0fe2442/.config
+> - dashboard: https://d.kernelci.org/build/maestro:6a888e4262f33761c0fe2442
+> 
+> #regzbot introduced: 818bebeb63dd6bf5f4e07e145f6cdbace520a34c..531ed942bb0df04f6747983fecdedce76a22d07f
+> #regzbot link: https://d.kernelci.org/i/maestro:4f457c5cde619e65f938d53b68735abd5858719f
+> 
+> #kernelci issue maestro:4f457c5cde619e65f938d53b68735abd5858719f
+> 
+> --
+> This is an experimental report format. Please send feedback in!
+> Talk to us at kernelci@lists.linux.dev
+> 
+> Made with love by the KernelCI team - https://kernelci.org
+> 
+
