@@ -1,181 +1,326 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from rs1.nue.1e30.net (rs1.nue.1e30.net [152.53.122.0])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EF3C38888E
-	for <regressions@lists.linux.dev>; Mon, 24 Aug 2026 19:38:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.177
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787600291; cv=pass; b=L88/bTnbSEBgbLRX8XgPw/UCtj6Wrs859q+wQ41wbVvkxvbX1Y6v+G/R+QlRWHxYGxvW8zIHOAASvPBztsHlnjx8/W1+dlhea+rfl5tqJoXVrh7V4o4pQc2fXJjUITmApKDP7/SK4Fcdf6efhITSD5CV0ukJfen2mCfX1Hzmhxo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787600291; c=relaxed/simple;
-	bh=zHeHpucERJjVL5+r2NcJqPbPArlHtoL5ieMLJnSAk1Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uKL2kFSth4nguRCq98KJ3fasx009alOC/W1mz6LWTKvsrbj4JRC1QM1QyOLmR/UdWUBdCFS6Kz3rFWr2EfvHAHmrvGRxFHU92PJip6SvQzlpXWBk0YVUh6yUiywzmqbUnSCEZ4Bqo17aBXvIfXyY9jjIjL6c9m6FEjcAAVaRYsk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lfMe9emR; arc=pass smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F16B6382299;
+	Mon, 24 Aug 2026 21:00:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=152.53.122.0
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1787605263; cv=none; b=QQm5MUx3Vy+mfB+cO4kGwwd1Rzo7BXcaBeTIUspQetNC42ry9ay5CdPcvQqOj7cDTmkz62ZDtBDlsptmBkJZjLjnCAvq3mmNCWPGZuzWenzJnfs2vJZ4zWAgodsCrs5NnRU28+TByAvXexavr7xV/gZNVHdaGtKqYFtplO/ol6s=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1787605263; c=relaxed/simple;
+	bh=uFpBlKSm0qbtsSTFmNw486Km5v/ZAesu7I1l0CEBENQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=r6uFJ0Upis7aHrLUnVvnhxpAxEcMSWOHKS1p0IwZubZFjUp0xH/6nwEtbMB0+0auPhMQbA9pEZDdLE0/3E3WSEGsectWIvwRvJ8RE17wclG1a0fClkpiYM+fJIfZAwDxi1I9+MYVoWECp5EOuVcNpCkcZpGcPTa2fol5KFzj3wg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=juch.cc; spf=pass smtp.mailfrom=juch.cc; dkim=pass (2048-bit key) header.d=juch.cc header.i=@juch.cc header.b=dwfUg4vW; arc=none smtp.client-ip=152.53.122.0
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=juch.cc
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=juch.cc
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lfMe9emR"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-39f1ac13687so26112531fa.0
-        for <regressions@lists.linux.dev>; Mon, 24 Aug 2026 12:38:09 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1787600287; cv=none;
-        d=google.com; s=arc-20260327;
-        b=YBFu9vgyJ9sjd7PEmNKEItsCZGqs3JDVObOJQlBuXvZPZkKu2CnkIlENGHo2vLIj+t
-         cKejCVXmpUuUe1QyWV7qqqb5utsBesseLG/VTTW0mN8d+3Vu025kFNwje70kRBrdqRR8
-         D6X2ViV0894t+yh3b0a6GbaYwz/JQ47peTVEKhtkU0YH8y2ULP+Z7uGHOXIaT88ChVwC
-         zyH5EV3k1nT6o5jBXzIRiHMnKsQ4vNLZ7tueDogitINZ3s/g4GR1M+T0MgQEbZdkcXxg
-         VHWg6K71bKhcqtRm8kg4eE2t3u1FZA/U64J8bovY01ELPt+9gHf2LDfFDiUgjP74k1E+
-         zv+Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=zHeHpucERJjVL5+r2NcJqPbPArlHtoL5ieMLJnSAk1Y=;
-        fh=ef16a6hzGqYaIWJTz9hvsNNAIk8ZHGGeDlYA//hVZBw=;
-        b=pET9rbczNyxrrhtF2X8DYsV9wypLVEZ7fvF7Kg6t31otc+Im9d/OxvEoNrtU9JPWhl
-         oTmgJRYHI+lx0lTNhXVvAqo1369NbMIqmwf9fmpxr1As0NEiULWPCoD7raVB3btytsfn
-         kMq9g6lbX1P+N2Fhn1RpvG6GQAyMwcC38ndMSe+BaqeKoNZlOg471Wl163ECEN6R6N2Q
-         h8ubViM5LIV8y3op2QRhYTuDYY8DH7GAjasIqVJWEoqkiAXEWWSzy4G6HsFsmJpKW3hL
-         KctPZWGyU9Z/K7T7w/CJRl7yjcSpOPZx5FGp3Bvx2yfff1Sj76BbCtrlFdO+1bR1O4zg
-         ZJXw==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1787600287; x=1788205087; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=zHeHpucERJjVL5+r2NcJqPbPArlHtoL5ieMLJnSAk1Y=;
-        b=lfMe9emREwQ8D4Rewk2Gf1Kr/AuCeXJcjRtYmy/Ppgn0EYfA5rp8x+wzNw8eUTtEhM
-         3/yli1XG/3jGDRSsGmQLT0gvpjkoU7Y4JNauvJrg2guGuPobVvlnf+1OLn7qho2v/5Xs
-         rY/l4gzQiywmqGLpmQV9gJ3sE8G3NujpBd6JehCNYWO2dQMW9KgEo9DYv0lflOKaCjDy
-         PrZoEVXxL4U//kH6ROFytoY91++KpFQiVTwDB+jV5+IyrjeYKbC38dPPiTYtmPNfd/sv
-         SXFw2QYIOeKh8Vji0R2mkqS/lDfSDrJxDqIu4mWZ6iSwICHNYN66ubn+EXZ/Bh4qqDWB
-         0f2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787600287; x=1788205087;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=zHeHpucERJjVL5+r2NcJqPbPArlHtoL5ieMLJnSAk1Y=;
-        b=nEDi1J21Ha7BTwBpYXp3v+RXeWajvPlpTDS35U+aoacwNSiqhfNv+RfL95E9vS/OvI
-         y7Ev3ouZ9hiSWLwjQKNHNOggd7erB80/rsw7/ui0AJUCwFV/HCpKcrvt6RfLR7F/NGOQ
-         t083X20EJkBhnKQlKjyYx0YE39HYbI3vMkahWBrOffRCB3A5N71zYal4xDXeDIrcrjqH
-         SToWZRFG1BUfQ9853bxgmwIe2sDfloDqC6GkeBACRN9w31xDHT3KOzm4l3OKA6NrlnJn
-         k8FPziYhEOmZTpUcvkz+wFgJEQ3rUY4XxIpIwUbzFqxLzT3p7BA2u80+0ne44N2onI+G
-         bMYA==
-X-Forwarded-Encrypted: i=1; AHgh+RowOr6mGzVmLJVrRsAPkOJsSOW4f78x2LVeQpFSZOSQ2pEOIT7ewdt71QGeGkIuUPACAAdhRsmt//uT6w==@lists.linux.dev
-X-Gm-Message-State: AFuF++l8UX4hFXhV8SGcj3yH3DgUlz6LwQVmLJibmwtavF1IsxYnPdJ2
-	eT1C/kUuZxRJSwi/GY+ZEUVzkQXXyWR+5XVWd/1HDT7RfUVaEiZOc9pgrkS5ij1mXK6qgtReycD
-	JUXVy0Heo4cB+9M5oM6wN0/z4CwH4fLg=
-X-Gm-Gg: AR+sD13uE8H4yvS7hX0v+RRdCqzgac8O/Esc279QlJGW660AN50K8yR7H7Hr/VEfEbZ
-	bgGdsELXt+8h1YJkxYAik4PVygaW2xKE4XXkh875RGABn5FBFNZay4i9ltQ9rJK+3PnFJwxOTDX
-	lkLdISThXNlUKmLT+1B1b+MRpp3DxR2h7Cp/P1+uYIjS1nRW+Q2DjnPTBQgh2zbRabG9U85bW/I
-	N2swgQTKYtwPhMWW+4Z6XbwLnRWVRnCuq1Z4UUrcknAbqehbqGdzGuI8RhEbmP2S/MY/lPLGY+Q
-	l9BKFwpGg0bMtp66p+pRp+D1/CvyT9wuJ6WirJh7nZuC7LLlQG2cfr0PbXYFd3DG+21STFEJ/Jt
-	u
-X-Received: by 2002:a2e:a983:0:b0:38e:a12c:418c with SMTP id
- 38308e7fff4ca-3a1ef5775bdmr1370571fa.11.1787600287017; Mon, 24 Aug 2026
- 12:38:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=juch.cc header.i=@juch.cc header.b="dwfUg4vW"
+Message-ID: <f805ff79-f108-4b5d-a9a1-3c447ee564b4@juch.cc>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=juch.cc; s=rsa-2026-06;
+	t=1787605250;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=myJpwBCzhnFsY3H4itePgNGjUGKg7mmppy7sopdAVdg=;
+	b=dwfUg4vW7rVzKHhN4DyoZN5ibaC84EbguBXsP7L1YqGgB70o7fm9jeM31/7MxkxT/0dXCy
+	Bs20svBTmZY34fU282NXe0wp7EZqeP+addYvZyk5TEm/AgAm84RneAe+OfhkV5WpW1eCs1
+	70dErMOubGoIIBHGb0HRtukBOXKEhTfZuGEbloMqQAAqMc4XcRygAsanM0IGdc9qRLRKda
+	z5CleKG9QZrTcWderzWbLqkI3TrieATn+OnY1SS2lRm/zK4dtWczR5gKrn+75DNN49Qiy7
+	MBXECUUIZ5H+GgRRZxyNDf9O2CQWecL/jsR7BUjAeoXvPJ/I+oQ8Hc8v81Gl6w==
+Date: Mon, 24 Aug 2026 23:00:49 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAPyJwA_D9qw0T72f8zwM1yKjP+To=maVANbcdsWM7yRmbBxYvw@mail.gmail.com>
- <CAPyJwA9R=p8_uxyYODb00g_nUq26SRsWHBGgAAJnR0YMTRRo4A@mail.gmail.com>
- <CAPyJwA9P48LDcOr7u_iT1WPFBCHxh9w6cxFvyi5GS3syM6crbQ@mail.gmail.com>
- <07435e6b-ee30-4c85-8c8b-0ce3a4ead1d9@leemhuis.info> <aosGtkE_diwVJJtB@eggarch>
- <20260823174059.46fec036.michal.pecio@gmail.com> <aoser8dLytrwqBC2@eggarch>
-In-Reply-To: <aoser8dLytrwqBC2@eggarch>
-From: Mathieu Fluhr <mathieu.fluhr@gmail.com>
-Date: Mon, 24 Aug 2026 21:37:55 +0200
-X-Gm-Features: AcwNN1WiVe33vc8h6QVQzrHv4uzYMmh-8zMzWXxnjMlLCWrcww5TjCW4pcQuiCo
-Message-ID: <CAPyJwA8m_Xd2oyV1i9k+-6f7A-j0FiC97yXL=Ci8ZAErs5W4vA@mail.gmail.com>
-Subject: Re: [REGRESSION] 6.12.36+: usb: hub: post-resume delayed work
- triggers > uncorrected MCE / data fabric sync flood on Threadripper 7970X >
- (bisected to aec11e5f9c45)
-To: Lovekesh Solanki <lovekeshsolanki00@gmail.com>
-Cc: Michal Pecio <michal.pecio@gmail.com>, Thorsten Leemhuis <regressions@leemhuis.info>, 
-	Mathias Nyman <mathias.nyman@linux.intel.com>, linux-usb@vger.kernel.org, 
-	regressions@lists.linux.dev, stable@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Mario Limonciello <mario.limonciello@amd.com>, 
-	Forest <forestix@gaga.casa>, Slavik Dev <developer.slavik@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [REGRESSION] iommu/amd: "Fix premature break in init_iommu_one()"
+ causes early boot hang
+To: Vasant Hegde <vasant.hegde@amd.com>, Joerg Roedel <joro@8bytes.org>
+Cc: iommu@lists.linux.dev,
+ Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+ Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+ Robert Richter <rrichter@amd.com>, linux-kernel@vger.kernel.org,
+ regressions@lists.linux.dev
+References: <07b2d390-f7a0-47e2-bc2c-eb0853acf52e@juch.cc>
+ <aok4Ko0mpC4fdGPg@8bytes.org> <6a61edf7-157c-4069-a1c3-78d1138b061c@amd.com>
+ <912b9d43-1205-4753-afe1-60cd149679b4@juch.cc>
+ <905c7511-d7bb-4ca6-918f-71846e436062@amd.com>
+Content-Language: en-US
+From: Andreas Juch <andreas@juch.cc>
+In-Reply-To: <905c7511-d7bb-4ca6-918f-71846e436062@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-> The issue is obviously a severe HW malfunction (you mentioned MCEs, the
-> Ryzen CPUs simply totally locked up), triggered by poking certain xHCI
-> controllers on the I/O die of these CPUs in some wrong way.
+Hi Vasant,
 
-Yes. As mentioned, I first thought that the emulator itself triggered that =
-by
-doing something that the CPU did not like.To be honest, I barely play with =
-old
-Android versions anymore, but seeing that I could reproduce it even with
-Android 13 or 14 made me suspicious.
 
-I _guess_ Google implemented a workaround inside adb for version Android
-15 since using this version, it remains stable for more than 2 hours.
-
-But, in the end, the situation is that from a simple user account having ac=
-cess
-to some usb plugged in devices (I usually add my user account to the plugde=
-v
-group and use some known udev rules to access my Android tests devices),
-you have a way to crash the complete system.
-
-> Opinions seem to vary on whether CPU load must be present or absent.
-
-On my side (and I am here only speaking about my TR. I don't know about
-other Ryzen CPUs), I can't reproduce it under load, and one condition to
-reproduce it is my CPU going in C2 state.
--> I did a 2:30 hour test using several youtube videos playing at the same
-time on my desktop, also stressing the emulator with some 3D Mark runs
-(as mentioned, I first suspected the nvidia driver to be faulty). As long a=
-s my
-computer was busy everything went fine. But then I let it stand still for a=
- few
-minutes, and it just crashed.
-
-If you need me to do some further tests or experiments, let me know. I will
-be more than happy to play the guinea pig here.
-
-On Sun, Aug 23, 2026 at 7:05=E2=80=AFPM Lovekesh Solanki
-<lovekeshsolanki00@gmail.com> wrote:
+On 8/24/26 07:52, Vasant Hegde wrote:
+> Hl Andreas,
 >
-> On Sun, Aug 23, 2026 at 05:40:59PM +0200, Michal Pecio wrote:
-> > But I'm not sure what you mean by "1Hz stress loop" and why is slowing
-> > down the suspend/resume cycles or moving suspend from close() call into
-> > a work supposed to create problems?
-> >
-> > I would naively think that doing things *too fast* is more likely to
-> > trigger races and break the HW. The whole issue smells like a HW bug,
-> USB2 roothubs still do 30 ms cycles and are harmless, only stretched SS
-> ones kill the box. So if speed were the issue the faster ones would be
-> dying first and pre regression kernels ran fine.
 >
-> About 1Hz, adb scans the bus once a second,
-> every open resumes the root hub and host controller out of D3 and close
-> puts it back this existed before regression too but with 30 ms of
-> close() and slept for rest of the second and now it keeps it
-> in D0 well after close(), the suspend itself happening later from the
-> delayed work, so this d3 - d0 - d3 trip of ~230ms repeats on
-> each scan. That's the loop I meant.
+> On 8/22/2026 7:02 PM, Andreas Juch wrote:
+>> [Some people who received this message don't often get email from
+>> andreas@juch.cc. Learn why this is important at https://aka.ms/
+>> LearnAboutSenderIdentification ]
+>>
+>> Hello Vasant,
+>>
+>> On 8/22/26 12:17, Vasant Hegde wrote:
+>>> Andreas,
+>>>
+>>> On 8/22/2026 11:19 AM, Joerg Roedel wrote:
+>>>> Adding Vasant.
+>>>>
+>>>> On Fri, Aug 21, 2026 at 11:11:07PM +0200, Andreas Juch wrote:
+>>>>> Hello,
+>>>>>
+>>>>> I noticed that one of my NixOS sytems failed to boot with kernel 6.18.40.
+>>>>> The
+>>>>> older 6.18.39 booted fine. A full git bisect of v6.18.39..v6.18.40
+>>>>> identified
+>>>>> the following commit as the first bad commit:
+>>>>>
+>>>>>     dc266f6c4e2628576ab33042b6b2a12480220026
+>>>>>     iommu/amd: Fix premature break in init_iommu_one()
+>>>>>
+>>>>> The visible symptom is a black screen immediately after systemd-boot. The
+>>>>> machine also remains unreachable over SSH and leaves no persistent journal
+>>>>> entry
+>>>>> for the failed boot. A reset or power cycle is required.
+>>> Interesting. I never imagined above fix will break some system!
+>>>
+>>> I assumed below dmesg is from good boot (without above patch) and did the
+>>> analysis (code walk with below IVRS data):
+>> Yes, that's correct, it's from the .40 kernel without commit dc266f6c.
+>>
+>>>     - EFR advertised by IVRS is different from actual EFR (read by IOMMU MMIO
+>>> register). Its worse because IVRS advertised few features like GT/PPR which is
+>>> not supported by IOMMU.
+>>>     - Without this patch we would have skipped early_iommu_features_init() so
+>>> global EFR is zero and then init_iommu_one_late() set the EFR properly based on
+>>> actual IOMMU capability.
+>>>
+>>> Only with this log, its hard to tell where exactly system failed. My guess is
+>>> driver enabled features which are not supported (like GT/PPR) or we setup 32bit
+>>> interrupt remapping table.
+>>>
+>>> I believe above patch exposed an existing bug with some other commit.
+>>>
+>>>
+>>> Ideally we should properly fix late_iommu_features_init() and use actual EFRs.
+>>> But for now lets fix the regression. Can you please try below fix?
+>>>
+>>> -Vasant
+>> Thank you for investigating! I created a new branch from the v6.18.40
+>> tag and
+>> applied your patch. The resulting kernel booted without any issues!
 >
-> > Can it not become a problem for external hubs, under other workloads?
-> Possibly yes, but nobody reported that so I'd rather scope where the
-> harm is proven.
+> Thanks a lot. This is like another band-aid fix, but I think it's good enough
+> for a stable backport. In my view, we should prioritize the IOMMU
+> MMIO-advertised EFR over the one reported via IVRS. However, that would require
+> much more extensive changes and isn't a good candidate for stable.
 >
-> > Also, what if we connect a downstream SS hub to the root hub? Will this
-> > not cause the root hub to stay awake for 200ms again? Problem is back?
-> The root hub itself skips the hold since the check is on its own parent,
-> but it will be kept awake anyway while the downstream hub or devices are
-> in use which is normal activity based PM.
-> If heavy polling behind a real hub ever causes trouble that's probably a
-> xhci/platform level fix anyways since real hubs can't really just drop
-> the hold.
 >
-> Regards,
-> Lovekesh
+>> If you need any further information or testing (for a proper fix later
+>> on), I'd
+>> be happy to test patches again!
+> Can you help me to test below patch (just apply this patch and remove previously
+> provided fix patch). I want to make sure that prioritizing MMIO EFR doesn't
+> break things.
+I compiled the kernel with just your patch on top of the 6.18.40 tag and it
+didn't boot. Please let me know how I can provide better diagnostics. I 
+tried to
+get serial output over IPMI SoL, but never got anything useful back.
+
+
+Andreas
+
+> -Vasant
+>
+> ---<---
+> commit aa5f50f1ee66ebf7a219906a4df6aa2b7cae9717
+> Author: Vasant Hegde <vasant.hegde@amd.com>
+> Date:   Mon Aug 24 11:12:27 2026 +0530
+>
+>      iommu/amd: Prioritize IOMMU MMIO advertised EFR over IVRS
+>
+>      Signed-off-by: Vasant Hegde <vasant.hegde@amd.com>
+>
+> diff --git a/drivers/iommu/amd/init.c b/drivers/iommu/amd/init.c
+> index 69170146d442..0172db87b1df 100644
+> --- a/drivers/iommu/amd/init.c
+> +++ b/drivers/iommu/amd/init.c
+> @@ -2153,9 +2153,11 @@ static void __init late_iommu_features_init(struct
+> amd_iommu *iommu)
+>   	if (features != amd_iommu_efr ||
+>   	    features2 != amd_iommu_efr2) {
+>   		pr_warn(FW_WARN
+> -			"EFR mismatch. Use IVHD EFR (%#llx : %#llx), EFR2 (%#llx : %#llx).\n",
+> +			"EFR mismatch. Use MMIO EFR (%#llx : %#llx), EFR2 (%#llx : %#llx).\n",
+>   			features, amd_iommu_efr,
+>   			features2, amd_iommu_efr2);
+> +		amd_iommu_efr = features;
+> +		amd_iommu_efr2 = features2;
+>   	}
+>   }
+>
+>
+>
+>
+>
+>
+>> Thanks again!
+>>
+>> Andreas
+>>
+>>> ---<---
+>>>
+>>> diff --git a/drivers/iommu/amd/init.c b/drivers/iommu/amd/init.c
+>>> index 69170146d442..7a5b78beb352 100644
+>>> --- a/drivers/iommu/amd/init.c
+>>> +++ b/drivers/iommu/amd/init.c
+>>> @@ -1930,19 +1930,20 @@ static int __init init_iommu_one(struct amd_iommu
+>>> *iommu, struct ivhd_header *h,
+>>>                else
+>>>                        iommu->mmio_phys_end = MMIO_CNTR_CONF_OFFSET;
+>>>
+>>> +             if (h->efr_attr & BIT(IOMMU_IVHD_ATTR_HATDIS_SHIFT)) {
+>>> +                     pr_warn_once("Host Address Translation is not supported.
+>>> \n");
+>>> +                     amd_iommu_hatdis = true;
+>>> +             }
+>>> +
+>>>                /* XT and GAM require GA mode. */
+>>>                if ((h->efr_reg & (0x1 << IOMMU_EFR_GASUP_SHIFT)) == 0) {
+>>>                        amd_iommu_guest_ir = AMD_IOMMU_GUEST_IR_LEGACY;
+>>> +                     break;
+>>>                } else {
+>>>                        if (h->efr_reg & BIT(IOMMU_EFR_XTSUP_SHIFT))
+>>>                                amd_iommu_xt_mode = IRQ_REMAP_X2APIC_MODE;
+>>>                }
+>>>
+>>> -             if (h->efr_attr & BIT(IOMMU_IVHD_ATTR_HATDIS_SHIFT)) {
+>>> -                     pr_warn_once("Host Address Translation is not supported.
+>>> \n");
+>>> -                     amd_iommu_hatdis = true;
+>>> -             }
+>>> -
+>>>                early_iommu_features_init(iommu, h);
+>>>
+>>>                break;
+>>>
+>>>
+>>>
+>>>>> I reverted that single commit, built the kernel again and the machine
+>>>>> booted, so
+>>>>> I'm quite sure that I found the right commit.
+>>>>>
+>>>>> System information:
+>>>>>
+>>>>> ASRockRack B550D4-4L
+>>>>> BIOS P1.10 (06/28/2021)
+>>>>>
+>>>>> I'm no expert at all, but my research found that the following information
+>>>>> might
+>>>>> be relevant:
+>>>>>
+>>>>>     journalctl -W -b -k --no-pager | rg -i 'AMD-Vi|AMD IOMMU|IOMMU|IVRS|IVHD'
+>>>>>     Aug 21 22:24:17 kernel: ACPI: IVRS 0x00000000BB062000 0000D0 (v02 AMD
+>>>>> AmdTable 00000001 AMD  00000001)
+>>>>>     Aug 21 22:24:17 kernel: ACPI: Reserving IVRS table memory at [mem
+>>>>> 0xbb062000-0xbb0620cf]
+>>>>>     Aug 21 22:24:17 kernel: AMD-Vi: Using global IVHD EFR:0x0, EFR2:0x0
+>>>>>     Aug 21 22:24:17 kernel: iommu: Default domain type: Translated
+>>>>>     Aug 21 22:24:17 kernel: iommu: DMA domain TLB invalidation policy: lazy
+>>>>> mode
+>>>>>     Aug 21 22:24:17 kernel: pci 0000:00:01.0: Adding to iommu group 0
+>>>>>     Aug 21 22:24:17 kernel: pci 0000:00:01.2: Adding to iommu group 0
+>>>>>     Aug 21 22:24:17 kernel: pci 0000:00:02.0: Adding to iommu group 1
+>>>>>     Aug 21 22:24:17 kernel: pci 0000:00:03.0: Adding to iommu group 2
+>>>>>     Aug 21 22:24:17 kernel: pci 0000:00:04.0: Adding to iommu group 3
+>>>>>     Aug 21 22:24:17 kernel: pci 0000:00:05.0: Adding to iommu group 4
+>>>>>     Aug 21 22:24:17 kernel: pci 0000:00:07.0: Adding to iommu group 5
+>>>>>     Aug 21 22:24:17 kernel: pci 0000:00:07.1: Adding to iommu group 6
+>>>>>     Aug 21 22:24:17 kernel: pci 0000:00:08.0: Adding to iommu group 7
+>>>>>     Aug 21 22:24:17 kernel: pci 0000:00:08.1: Adding to iommu group 8
+>>>>>     Aug 21 22:24:17 kernel: pci 0000:00:14.0: Adding to iommu group 9
+>>>>>     Aug 21 22:24:17 kernel: pci 0000:00:14.3: Adding to iommu group 9
+>>>>>     Aug 21 22:24:17 kernel: pci 0000:00:18.0: Adding to iommu group 10
+>>>>>     Aug 21 22:24:17 kernel: pci 0000:00:18.1: Adding to iommu group 10
+>>>>>     Aug 21 22:24:17 kernel: pci 0000:00:18.2: Adding to iommu group 10
+>>>>>     Aug 21 22:24:17 kernel: pci 0000:00:18.3: Adding to iommu group 10
+>>>>>     Aug 21 22:24:17 kernel: pci 0000:00:18.4: Adding to iommu group 10
+>>>>>     Aug 21 22:24:17 kernel: pci 0000:00:18.5: Adding to iommu group 10
+>>>>>     Aug 21 22:24:17 kernel: pci 0000:00:18.6: Adding to iommu group 10
+>>>>>     Aug 21 22:24:17 kernel: pci 0000:00:18.7: Adding to iommu group 10
+>>>>>     Aug 21 22:24:17 kernel: pci 0000:02:00.0: Adding to iommu group 0
+>>>>>     Aug 21 22:24:17 kernel: pci 0000:02:00.1: Adding to iommu group 0
+>>>>>     Aug 21 22:24:17 kernel: pci 0000:02:00.2: Adding to iommu group 0
+>>>>>     Aug 21 22:24:17 kernel: pci 0000:20:00.0: Adding to iommu group 0
+>>>>>     Aug 21 22:24:17 kernel: pci 0000:20:01.0: Adding to iommu group 0
+>>>>>     Aug 21 22:24:17 kernel: pci 0000:20:02.0: Adding to iommu group 0
+>>>>>     Aug 21 22:24:17 kernel: pci 0000:20:03.0: Adding to iommu group 0
+>>>>>     Aug 21 22:24:17 kernel: pci 0000:20:04.0: Adding to iommu group 0
+>>>>>     Aug 21 22:24:17 kernel: pci 0000:20:08.0: Adding to iommu group 0
+>>>>>     Aug 21 22:24:17 kernel: pci 0000:20:09.0: Adding to iommu group 0
+>>>>>     Aug 21 22:24:17 kernel: pci 0000:21:00.0: Adding to iommu group 0
+>>>>>     Aug 21 22:24:17 kernel: pci 0000:22:00.0: Adding to iommu group 0
+>>>>>     Aug 21 22:24:17 kernel: pci 0000:23:00.0: Adding to iommu group 0
+>>>>>     Aug 21 22:24:17 kernel: pci 0000:24:00.0: Adding to iommu group 0
+>>>>>     Aug 21 22:24:17 kernel: pci 0000:25:00.0: Adding to iommu group 0
+>>>>>     Aug 21 22:24:17 kernel: pci 0000:29:00.0: Adding to iommu group 0
+>>>>>     Aug 21 22:24:17 kernel: pci 0000:2a:00.0: Adding to iommu group 0
+>>>>>     Aug 21 22:24:17 kernel: pci 0000:2b:00.0: Adding to iommu group 0
+>>>>>     Aug 21 22:24:17 kernel: pci 0000:2c:00.0: Adding to iommu group 11
+>>>>>     Aug 21 22:24:17 kernel: pci 0000:2d:00.0: Adding to iommu group 12
+>>>>>     Aug 21 22:24:17 kernel: pci 0000:2d:00.1: Adding to iommu group 13
+>>>>>     Aug 21 22:24:17 kernel: pci 0000:2d:00.3: Adding to iommu group 14
+>>>>>     Aug 21 22:24:17 kernel: pci 0000:2d:00.4: Adding to iommu group 15
+>>>>>     Aug 21 22:24:17 kernel: AMD-Vi: Extended features (0x58f77e022294881,
+>>>>> 0x0): PreF GA GA_vAPIC
+>>>>>     Aug 21 22:24:17 kernel: AMD-Vi: Interrupt remapping enabled
+>>>>>
+>>>>> And the output of the decoded IVRS table, captured by `acpidump -n IVRS -b`:
+>>>>>
+>>>>>     00000000  49 56 52 53 d0 00 00 00  02 e2 41 4d 44 20 20 00 |IVRS......AMD
+>>>>> .|
+>>>>>     00000010  41 6d 64 54 61 62 6c 65  01 00 00 00 41 4d 44 20
+>>>>> |AmdTable....AMD |
+>>>>>     00000020  01 00 00 00 41 30 20 00  00 00 00 00 00 00 00 00 |....A0
+>>>>> .........|
+>>>>>     00000030  10 b0 48 00 02 00 40 00  00 00 50 fd 00 00 00 00
+>>>>> |..H...@...P.....|
+>>>>>     00000040  00 00 00 00 2e 8f 04 80  03 08 00 00 04 fe ff 00
+>>>>> |................|
+>>>>>     00000050  43 00 ff 00 00 a5 00 00  04 ff ff 00 00 00 00 00
+>>>>> |C...............|
+>>>>>     00000060  48 00 00 00 00 a0 00 02  48 00 00 d7 0d a0 00 01
+>>>>> |H.......H.......|
+>>>>>     00000070  48 00 00 00 0e 01 00 01  11 b0 58 00 02 00 40 00
+>>>>> |H.........X...@.|
+>>>>>     00000080  00 00 50 fd 00 00 00 00  00 00 00 00 00 02 04 00
+>>>>> |..P.............|
+>>>>>     00000090  5a 4a 29 22 ef 77 8f 05  00 00 00 00 00 00 00 00
+>>>>> |ZJ)".w..........|
+>>>>>     000000a0  03 08 00 00 04 fe ff 00  43 00 ff 00 00 a5 00 00
+>>>>> |........C.......|
+>>>>>     000000b0  04 ff ff 00 00 00 00 00  48 00 00 00 00 a0 00 02
+>>>>> |........H.......|
+>>>>>     000000c0  48 00 00 d7 0d a0 00 01  48 00 00 00 0e 01 00 01
+>>>>> |H.......H.......|
+>>>>>     000000d0
+>>>>>
+>>>>> The relevant part (after decoding with `iasl -d ivrs.dat`):
+>>>>>
+>>>>>     [090h 0144 008h]                   EFR Image : 058F77EF22294A5A
+>>>>>
+>>>>> I'll provide any required details and test patches!
+>>>>>
+>>>>> Thanks for your work, it's very appreciated!
+>>>>>
+>>>>> Andreas
+>>>>>
+
