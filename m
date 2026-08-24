@@ -1,402 +1,174 @@
-Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazon11011035.outbound.protection.outlook.com [52.101.52.35])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B4503DDDDA;
-	Mon, 24 Aug 2026 05:52:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.52.35
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787550746; cv=fail; b=ipOa1csWa32nTBK35Z6Af2BWXC6/m9eRN5RQp8rj/tbhGJho1do7Vp+hpN69iAQ24X75sDtlSEEK6C+2jeORVNrR2biBkghakG+f8YrtTo9DQlP9dKChxIGGdtyu1aFzLsYeZCKRSt9si3E5iVnMoa/AUrKaF5lEphgDvGbHDCQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787550746; c=relaxed/simple;
-	bh=GEM4zJBBUTM07rVlpSEngavzNbcqVjPf+ULJrTIhGD8=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=fCM8QZeyTa8Qr9WP9vrLakdy1Pkgfl+YKSfQfWfk95sjqcd0zEZW9UucivFYtGq3X60SJewom8m4FDgHTUV7lLGl87Ql27vWApV0SAcPEqZ9mw9x/3YH/7dpRJh3tGSALZa69IyeEQXCx6U03aPwj7Kw+Iiuge1tzvDXBc3PqSc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=OnTN/65R; arc=fail smtp.client-ip=52.101.52.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81A2B3A8398
+	for <regressions@lists.linux.dev>; Mon, 24 Aug 2026 06:11:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.170
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1787551877; cv=none; b=N5Zyif8XxpUh7P51q2SoGKABDN1p4pDEHsotXmurKedLU+3M7vhZUaV34yZ5AED4Xz3VvdJ91qDib5+b3VuiRoG0LbRGdqt9tQ55ekwM5g7r8Gk5zwuwle4rL2X+li3gvIZDWJ3QRvmla2Uj1ybHKykijakvp1A3+rZXjNhKnW0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1787551877; c=relaxed/simple;
+	bh=6nptbZGT1h/hLm2yraiYpWcwAGvLh2GTqfmrU8Xm6q8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qo2viFMGHrtcpo40MBw/BOx5rtxgvvq2f+/iZDdHRJGNF+AIWRtmdTrpUfYE7QrcSRMXgmng7wlejqInxLBW6xTEB+vPC2CFzgrMRDhHnUJiGTH5QSZ95En3i5ElmX/ZL/R8CoNdzkI9EMjg577JR2WpmX9rCLvjXKF/QrP3jXY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=L0kHe1Cc; arc=none smtp.client-ip=188.68.63.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="OnTN/65R"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=MO4hOmi1PHBVWwhuj+c28NxDMEJwPngMcfUlgZjhYcyWAecFV4aaFmRcr2cZVZuOZOcaNHapllBysAtfSZ3MAl3yzs5S7W1pgf+U5aT/TssDwbqWoOIsKN4JK2ZhHywtGqabWKsOqPKOzxcVMH//oQ+WJfrRuqDbJwa2b2lYoJ5ijYsLBdYpDFGKJqC/ORwe67KSKSv5qUjhTP5UxhZnfv9yB4LfHD3SwRNXDb0G9o1p30ijHQtrC/tgG7P8CwoFdIzUSXeZ8FlTnNAKfQx409NWXWn8n9xAq8IFc/vxNySCDlRDaN+02u3XSBQbJCftNbIdn2JE0vh0IxL6MoP4og==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=5btXgu68RpLLumWSXaY0XzYZb4hFoK6YxINYeNA30m4=;
- b=G8N/2TQ54p+oT9d/aHvdJ0qZilmEH/6qyl6VayDwPEsxLI9JJlLbDry1xfoSjaPZIvqiCtBVvvA3KUSOTD5waKhtZHVCSNxal0BcheXaxFW6JTWQzBshfrp1ps/iN92ueLCDJBqH97vex5bPimP18UONyd6P4HCeimlCpned/hWQch27xMKLWoZNI9H+kIaveWkASsIMwAJWhpI0cDGfTf/h/xxTsRszO1TsmAZXhpzI1TeVug0Rk+v30JYMbX/Ifii9fw0KkJcsDopLQjE/ij1bcKvAOFTeVBMP1hmyc82j+6sfLgFAmW7NKSGFWcY+St0Q7aOmnGHsUDTYy2mNaw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5btXgu68RpLLumWSXaY0XzYZb4hFoK6YxINYeNA30m4=;
- b=OnTN/65Rud6YNymKfIYH1Hp5hfCnTWGbY5+4oZnQ+d+SsigzHwgVpQyuMgmlBpR7PQNJPz3lU15CaUdWcLCz44cuFlkekyu165u/HGvnkU0iL6QhvpBydDaC+994j9cm5TObUVtia2OyBxvc/EckhBjNs6+OASspvho7sFSCrcg=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from BL4PR12MB9505.namprd12.prod.outlook.com (2603:10b6:208:591::16)
- by SA1PR12MB8968.namprd12.prod.outlook.com (2603:10b6:806:388::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.339.12; Mon, 24 Aug
- 2026 05:52:19 +0000
-Received: from BL4PR12MB9505.namprd12.prod.outlook.com
- ([fe80::73aa:eb8c:a86b:5a83]) by BL4PR12MB9505.namprd12.prod.outlook.com
- ([fe80::73aa:eb8c:a86b:5a83%5]) with mapi id 15.21.0339.012; Mon, 24 Aug 2026
- 05:52:19 +0000
-Message-ID: <905c7511-d7bb-4ca6-918f-71846e436062@amd.com>
-Date: Mon, 24 Aug 2026 11:22:12 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] iommu/amd: "Fix premature break in init_iommu_one()"
- causes early boot hang
-To: Andreas Juch <andreas@juch.cc>, Joerg Roedel <joro@8bytes.org>
-Cc: iommu@lists.linux.dev,
- Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
- Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
- Robert Richter <rrichter@amd.com>, linux-kernel@vger.kernel.org,
- regressions@lists.linux.dev
-References: <07b2d390-f7a0-47e2-bc2c-eb0853acf52e@juch.cc>
- <aok4Ko0mpC4fdGPg@8bytes.org> <6a61edf7-157c-4069-a1c3-78d1138b061c@amd.com>
- <912b9d43-1205-4753-afe1-60cd149679b4@juch.cc>
-Content-Language: en-US
-From: Vasant Hegde <vasant.hegde@amd.com>
-In-Reply-To: <912b9d43-1205-4753-afe1-60cd149679b4@juch.cc>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: PN4P287CA0077.INDP287.PROD.OUTLOOK.COM
- (2603:1096:c01:26b::13) To BL4PR12MB9505.namprd12.prod.outlook.com
- (2603:10b6:208:591::16)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="L0kHe1Cc"
+Received: from mors-relay8203.netcup.net (localhost [127.0.0.1])
+	by mors-relay8203.netcup.net (Postfix) with ESMTPS id 4hT0h61TmBz8hnZ;
+	Mon, 24 Aug 2026 06:03:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1787551382;
+	bh=6nptbZGT1h/hLm2yraiYpWcwAGvLh2GTqfmrU8Xm6q8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=L0kHe1CcVfVwhv+fJCO949efCMHCNDJrrCbWI4vdfTQaLx/w2U29j1bIlbK65Zobq
+	 DpbM9u0jspsKgXvqSQrUcxyNbY5ocH2R7SEZJ87UeML6eoLjyA0HsRLVQzO6HYOabF
+	 dZJnZDdVJtbqafjHYcTwQ1Bif1tRDprrxMBFLQtFFdmzXk8IU0h+LFRRzMDbXbliUP
+	 nCraJAaj5vmSufvx9yEY4MA39n6OIdtryEMu0BtodgUK/H07R/l9qQB4E3AAwdwZGn
+	 dFoHdmhwO/OUGbJGKJShMAb2Ug/mNZ5a1C8wCbjOOyvOMielrpmawtdZDpj3vDjc5i
+	 +aUcKYzEfd/jw==
+Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay8203.netcup.net (Postfix) with ESMTPS id 4hT0h60mGMz8hmB;
+	Mon, 24 Aug 2026 06:03:02 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
+X-Spam-Flag: NO
+X-Spam-Score: -2.898
+X-Spam-Level: 
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4hT0h44FSVz8tZn;
+	Mon, 24 Aug 2026 08:03:00 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id E0DA45F9AF;
+	Mon, 24 Aug 2026 08:02:59 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <77f94165-3d5f-41de-8969-c7318284fd6a@leemhuis.info>
+Date: Mon, 24 Aug 2026 08:02:58 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL4PR12MB9505:EE_|SA1PR12MB8968:EE_
-X-MS-Office365-Filtering-Correlation-Id: f0e629dc-7943-4372-6f2e-08df01a3dbd7
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|23010399003|366016|1800799024|6133799003|10067099003|4143699003|5023799004|11063799006|56012099006|18002099003|22082099003|3023799007;
-X-Microsoft-Antispam-Message-Info:
-	9N95fT46fwvPNJD+V1m1tqk89VeQbmRtDWP7976TxdS+qV0kVyIMIFYNcR96hX2RUNvoZ2HrJioom0q+dIY4+08Xt4XHxfreu4Uss9oulc8Tgw8b4tfX1u0vuAbeWAevWDsWTcNf1rvbI5HYuE0qNDnW0ey7tj6z5U65wBiXiii7ZMFSP9O6QyuuI3trGjbnhDqxAbMeYcFUMTp5BcPefJlCLXnvtLYxXpgrqn545k+JdGWc50C+bM9ngL7z60TqtEmfxj5g1XlQCZU6AKpl840osrM8fpc9RuJe22nmHbz1P+Bht6p6gTFHQE3mWWy4hu6PK1FPIqC/wLeHWdt18vpBrkxWqkClGC948+V1PsnoXlgojJpHks2dpc7x3kLAm0zZm12JzDGK57ZeGVEfuh/erHWTXeXARAJwYbnCRytbI6uZMdXllS4Qu5XHIJyMoYFqlyXvZuZ0C16O78uZF6h0U3SmocJgmSDL2iGFdDtUtvPBSFT4k6yguDGjIS95zU4elg5ZdN5naDOxtDWIAEsLM1hTPeB9QjQgHim5/NU7Cq9fmvDINSUMTAAsIcjl59gJL2QzvnGO53vwLjR6RFpEqgQ6btVVpgluRY3JBd4=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL4PR12MB9505.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(23010399003)(366016)(1800799024)(6133799003)(10067099003)(4143699003)(5023799004)(11063799006)(56012099006)(18002099003)(22082099003)(3023799007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?Rk9oYkRSQTM4OEs5c0FId0RzS2dOYzRsU21ta0FmNjFzNS9icEJKWHM5L2FU?=
- =?utf-8?B?STBCMi9DOE96amdFZ0V4NW41RUtpaUVSSW14eWFYQzdoeDV5Unh5anZ2ZU5n?=
- =?utf-8?B?QVgyMXEvUlR1UTB2Um5LWFRxdjVFTXYzWEhFTDIxUURMdE9tQTNwNnZpVjhJ?=
- =?utf-8?B?eURNTkV6eGg0U2d1aER5OEd1WVNJMjB2S2tRV3lkcHMrS1V3R0ludGs5ZnBx?=
- =?utf-8?B?QWJPbkVwc0Rmd1lUZVV5Z1NpcjFjVUlJbmZsUHZhVFhLdmxNam9HU2l6bEZp?=
- =?utf-8?B?eHZUN3Z5ZlFTTm1qNUJjWFBEVjhyREFOVm9FUXZMNitFNVZ6eEpXN2dKbU9M?=
- =?utf-8?B?NHVWd3lBMmZUNkV1Q3UySXQ2QTBrZnhSeE84QkhUQTgxazkvM3JIQTQzUzhk?=
- =?utf-8?B?Y1p1dEJETHovSkFIQ0hMOTUzK0tMaFpzb3dQSlJyMWJQWmVNc2ZaUEhvMDhZ?=
- =?utf-8?B?TXhUWm5IcWtzY0pMNEcrMHBTb1lZQXhnemVXQWRsSHJuTDQ4WjFQa2FwN1Qr?=
- =?utf-8?B?aUNsR0s5VHpHSmluc3hHazFtQ3NzMitOZEdJcHAxZjFEekxER1pVYTUvTmtp?=
- =?utf-8?B?UXgxMFBJcTFHK29LdGF1cDZzNlZ3OW8wZlNQRGpWaG41cHNPM2pNSjRRY1lT?=
- =?utf-8?B?YTAzRjFKT1oxeE5zS214ZWVUdXZBNnd1NmVZMkVCN1pHYUlwVFJxMXZSUUFB?=
- =?utf-8?B?b2RRakZSRG1oNS9HVXN3dEZqL2xhMmlaeVdmQlJpOG4yL3RadnBlbzNxNUVk?=
- =?utf-8?B?T3FzSFE1MUdaanhmWkM5dHBvT0oyc0czM2Vxb3BSQnUrSGRIMGpUQ3JKWEFI?=
- =?utf-8?B?UHZaZ1NWV2MvUEd6Z2ZSZlZaOWhsNERBejVzWktFays1aXc4MVhiaGdNVjRq?=
- =?utf-8?B?TVVGYWh3SHVJQkphVGU5VmlteVEyajRnMVpHcyt4dE5xMUdVL0lmcGpsUlpq?=
- =?utf-8?B?TkgwOUxnQUFnU3dXdHRBVFBCNWxLRlVZQkszTjNEWW9ucEhIK0lKcnh1NXUv?=
- =?utf-8?B?QmUxc0VPUDB4OCt2RTFoWk14K1NQWlo0cGQ5WjJhTkhLM014a1pQZHFpVndi?=
- =?utf-8?B?YkpiYlYwSm9uOUErRG5BOE1BaUpPVjlEV2dKekRMNEVaeHV1L3JoVUhleEQ0?=
- =?utf-8?B?QzJXQzJwUmh1NGlCeHNadVgvL1Q4elcwdFQvWHB6MUJXOVJ3bFZnY3l4VWF1?=
- =?utf-8?B?bEwxcUh1eUM4NU52cmlyRjB5cEYrdWtmUmVwa2FRaHhvc2w0eWpuS2lWNFVP?=
- =?utf-8?B?Ymo5UGJiNDMyRWx3U09nYjNrTEJjdy9WaFFveDdPc0RjQTM5OW5UZlMwdGlR?=
- =?utf-8?B?VlFwTnNwS0Y3bUc3cUhmdkp0Nzd0Nld0cjN1NjhKM3E2ZktMQ3Q5Z2Z0cjhP?=
- =?utf-8?B?NlYxWFNsR1Zua2lqZkt3MStwNEIvQ2JQNjFzL1MrcWpPQmp4N0dOUk1kcDlw?=
- =?utf-8?B?cnRuTzI5RXJRVmJTV05lSmpmVGJSMXpuRm4wcGhQc3lSQVpvaVNGMXMxVXJn?=
- =?utf-8?B?Vi9mT2V3NzFnbXA3bFNsN3FxRlA5TWNXMlBQMmJnQlMybWFVeUNQY3dpcS9x?=
- =?utf-8?B?N1lsZU15UDgwWUJvaGJRdVVycFpLSjVseGxZMkEvTVB0VFQ2Tzk3Nmk4d2x0?=
- =?utf-8?B?Rjl4MndiekV2KzNZM3Z6VXZ5MG1xTi85Zk5Hd3NEMmJ1bmFQbW82Zkg5VEJt?=
- =?utf-8?B?RURWeVNXMkpJRzhWSVFkbEVoSk5HeWZBWDVpYnZSeUtuWXB0bFJ3Vk9CNUVz?=
- =?utf-8?B?Z09QQklIT0s5WE41Q3JCNjliSU5FUHBmcFA0MUxVSFpoNWpQbnBTZHhQaGNJ?=
- =?utf-8?B?dDNZZ3NhTzZhcU1FM2JYMTUwMkRZY0JheTZLTWJSV1lJWHNLR0RaelVXQU1q?=
- =?utf-8?B?MkN4MjNNRnlEUmdERzJqcFNFbW5oRHVGL0g4dkxRamR3SzlIazNLdDVqU2pR?=
- =?utf-8?B?V1pPbXlxeHl2Y2M2VHFUSHU0MDVRbFRjVVJ3Y1UvT3ZDVkgzSXU1VXdjVlhS?=
- =?utf-8?B?NzdIclk2bEp0MEtiNXJrR3V3NkovL0NiQkJFMVVzYXk1L2k0UGR0ZzVQU1FW?=
- =?utf-8?B?dzJsckhOaXo5MVdnbTRrM01vT0toRFdzSXRlR0RiTmJrR1owQ0lOdGZGdFJ6?=
- =?utf-8?B?THNCUWY2dk50dDVaTEUwekI2Ym5LcVhqN3ptVkZGRzI3NHFjemt3Vk9ER1Jp?=
- =?utf-8?B?TGRSU2d5OFZkaTU4NVNqQzFjaW9CdUJPbE12dVZPY1FjMDFOQjF5aHVhV1cv?=
- =?utf-8?B?dXpZVngzNHIwODljY25nQk9EYzBaQUNtZzZRVk1LaG1ZeVI5YkprdWJOV3VG?=
- =?utf-8?B?MG0yY1FuN2FaVVk2S2RwSXNPUTZ1bEVoMGdwSzZRcFQxZG1YcHZEZz09?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f0e629dc-7943-4372-6f2e-08df01a3dbd7
-X-MS-Exchange-CrossTenant-AuthSource: BL4PR12MB9505.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Aug 2026 05:52:19.2544
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: gTjXT6t6mjGBwLaWhBzkMT1B9Fk4PRudLNPzHB6ozKrPpsPS82tlF6b8wPeHSarQTeWw3VEfNG9hwjUrNdRR/Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB8968
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] Bluetooth: btusb: limit RTL8761B BROKEN_EXT_SCAN quirk to
+ 0bda:a728
+To: Junjie Cao <junjie.cao@intel.com>, Marcel Holtmann <marcel@holtmann.org>,
+ Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+Cc: linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Alexej Sidorenko <alexej@sidorenko.cz>, regressions@lists.linux.dev,
+ Sasha Levin <sashal@kernel.org>, stable@vger.kernel.org,
+ Kamil Serwus <kserwus@gmail.com>
+References: <20260824053227.317496-1-junjie.cao@intel.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <20260824053227.317496-1-junjie.cao@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: <178755138034.1921642.3871019175141522623@mxe9fb.netcup.net>
+X-NC-CID: WDjihXVqlhKqBGmZvaes4uDUh9VM1OPgNoijMGzU+tUmObZ7sRQ=
 
-Hl Andreas,
-
-
-On 8/22/2026 7:02 PM, Andreas Juch wrote:
-> [Some people who received this message don't often get email from
-> andreas@juch.cc. Learn why this is important at https://aka.ms/
-> LearnAboutSenderIdentification ]
+On 8/24/26 07:32, Junjie Cao wrote:
+> Commit 5ead2063611a ("Bluetooth: btrtl: fix RTL8761B/BU broken LE
+> extended scan") set HCI_QUIRK_BROKEN_EXT_SCAN for every CHIP_ID_8761B
+> device to cure repeated 0x2042 failures on an 0bda:a728 dongle. The
+> brokenness is per-dongle, not per-chip: on a TP-Link UB500 (2357:0604,
+> RTL8761BU, fw 0xdfc6d922) extended scan works, and the legacy scan
+> path the quirk forces is what is broken -- LE Set Scan Enable (0x200c)
+> times out with -110 about 30 s after firmware load, btusb resets the
+> device, and the adapter re-enumerates in an endless loop (382 firmware
+> reloads in one boot). 7.1.8, which predates the stable backport, runs
+> clean on this unit; 7.1.9 loops.
 > 
-> Hello Vasant,
+> Move the quirk from btrtl's chip-wide switch to a btusb device-table
+> flag on the USB id the original fix was verified against. Other 8761B
+> dongles return to their earlier long-standing behaviour.
+> > Link: https://bugzilla.redhat.com/show_bug.cgi?id=2521504
+> Fixes: 5ead2063611a ("Bluetooth: btrtl: fix RTL8761B/BU broken LE extended scan")
+
+Thx. Just to make sure everyone is aware of it: Kamil (now CCed)
+reported problems due to the commit yesterday and provided patches, too:
+https://lore.kernel.org/all/20260822141115.58815-1-kserwus@gmail.com/
+
+I suggested that a quick revert might be the best approach for now,
+which Kamil submitted:
+https://lore.kernel.org/all/20260823102959.100368-1-kserwus@gmail.com/
+
+No comment yet from the BT folks yet.
+
+Ciao, Thorsten
+
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Junjie Cao <junjie.cao@intel.com>
+> ---
+> #regzbot introduced: 5ead2063611a
+> #regzbot link: https://bugzilla.redhat.com/show_bug.cgi?id=2521504
 > 
-> On 8/22/26 12:17, Vasant Hegde wrote:
->> Andreas,
->>
->> On 8/22/2026 11:19 AM, Joerg Roedel wrote:
->>> Adding Vasant.
->>>
->>> On Fri, Aug 21, 2026 at 11:11:07PM +0200, Andreas Juch wrote:
->>>> Hello,
->>>>
->>>> I noticed that one of my NixOS sytems failed to boot with kernel 6.18.40.
->>>> The
->>>> older 6.18.39 booted fine. A full git bisect of v6.18.39..v6.18.40
->>>> identified
->>>> the following commit as the first bad commit:
->>>>
->>>>    dc266f6c4e2628576ab33042b6b2a12480220026
->>>>    iommu/amd: Fix premature break in init_iommu_one()
->>>>
->>>> The visible symptom is a black screen immediately after systemd-boot. The
->>>> machine also remains unreachable over SSH and leaves no persistent journal
->>>> entry
->>>> for the failed boot. A reset or power cycle is required.
->> Interesting. I never imagined above fix will break some system!
->>
->> I assumed below dmesg is from good boot (without above patch) and did the
->> analysis (code walk with below IVRS data):
+>  drivers/bluetooth/btrtl.c | 13 -------------
+>  drivers/bluetooth/btusb.c |  8 ++++++++
+>  2 files changed, 8 insertions(+), 13 deletions(-)
 > 
-> Yes, that's correct, it's from the .40 kernel without commit dc266f6c.
-> 
->>    - EFR advertised by IVRS is different from actual EFR (read by IOMMU MMIO
->> register). Its worse because IVRS advertised few features like GT/PPR which is
->> not supported by IOMMU.
->>    - Without this patch we would have skipped early_iommu_features_init() so
->> global EFR is zero and then init_iommu_one_late() set the EFR properly based on
->> actual IOMMU capability.
->>
->> Only with this log, its hard to tell where exactly system failed. My guess is
->> driver enabled features which are not supported (like GT/PPR) or we setup 32bit
->> interrupt remapping table.
->>
->> I believe above patch exposed an existing bug with some other commit.
->>
->>
->> Ideally we should properly fix late_iommu_features_init() and use actual EFRs.
->> But for now lets fix the regression. Can you please try below fix?
->>
->> -Vasant
-> 
-> Thank you for investigating! I created a new branch from the v6.18.40
-> tag and
-> applied your patch. The resulting kernel booted without any issues!
-
-
-Thanks a lot. This is like another band-aid fix, but I think it's good enough
-for a stable backport. In my view, we should prioritize the IOMMU
-MMIO-advertised EFR over the one reported via IVRS. However, that would require
-much more extensive changes and isn't a good candidate for stable.
-
-
-> 
-> If you need any further information or testing (for a proper fix later
-> on), I'd
-> be happy to test patches again!
-
-Can you help me to test below patch (just apply this patch and remove previously
-provided fix patch). I want to make sure that prioritizing MMIO EFR doesn't
-break things.
-
--Vasant
-
----<---
-commit aa5f50f1ee66ebf7a219906a4df6aa2b7cae9717
-Author: Vasant Hegde <vasant.hegde@amd.com>
-Date:   Mon Aug 24 11:12:27 2026 +0530
-
-    iommu/amd: Prioritize IOMMU MMIO advertised EFR over IVRS
-
-    Signed-off-by: Vasant Hegde <vasant.hegde@amd.com>
-
-diff --git a/drivers/iommu/amd/init.c b/drivers/iommu/amd/init.c
-index 69170146d442..0172db87b1df 100644
---- a/drivers/iommu/amd/init.c
-+++ b/drivers/iommu/amd/init.c
-@@ -2153,9 +2153,11 @@ static void __init late_iommu_features_init(struct
-amd_iommu *iommu)
- 	if (features != amd_iommu_efr ||
- 	    features2 != amd_iommu_efr2) {
- 		pr_warn(FW_WARN
--			"EFR mismatch. Use IVHD EFR (%#llx : %#llx), EFR2 (%#llx : %#llx).\n",
-+			"EFR mismatch. Use MMIO EFR (%#llx : %#llx), EFR2 (%#llx : %#llx).\n",
- 			features, amd_iommu_efr,
- 			features2, amd_iommu_efr2);
-+		amd_iommu_efr = features;
-+		amd_iommu_efr2 = features2;
- 	}
- }
-
-
-
-
-
-
-> 
-> Thanks again!
-> 
-> Andreas
-> 
->>
->> ---<---
->>
->> diff --git a/drivers/iommu/amd/init.c b/drivers/iommu/amd/init.c
->> index 69170146d442..7a5b78beb352 100644
->> --- a/drivers/iommu/amd/init.c
->> +++ b/drivers/iommu/amd/init.c
->> @@ -1930,19 +1930,20 @@ static int __init init_iommu_one(struct amd_iommu
->> *iommu, struct ivhd_header *h,
->>               else
->>                       iommu->mmio_phys_end = MMIO_CNTR_CONF_OFFSET;
->>
->> +             if (h->efr_attr & BIT(IOMMU_IVHD_ATTR_HATDIS_SHIFT)) {
->> +                     pr_warn_once("Host Address Translation is not supported.
->> \n");
->> +                     amd_iommu_hatdis = true;
->> +             }
->> +
->>               /* XT and GAM require GA mode. */
->>               if ((h->efr_reg & (0x1 << IOMMU_EFR_GASUP_SHIFT)) == 0) {
->>                       amd_iommu_guest_ir = AMD_IOMMU_GUEST_IR_LEGACY;
->> +                     break;
->>               } else {
->>                       if (h->efr_reg & BIT(IOMMU_EFR_XTSUP_SHIFT))
->>                               amd_iommu_xt_mode = IRQ_REMAP_X2APIC_MODE;
->>               }
->>
->> -             if (h->efr_attr & BIT(IOMMU_IVHD_ATTR_HATDIS_SHIFT)) {
->> -                     pr_warn_once("Host Address Translation is not supported.
->> \n");
->> -                     amd_iommu_hatdis = true;
->> -             }
->> -
->>               early_iommu_features_init(iommu, h);
->>
->>               break;
->>
->>
->>
->>>> I reverted that single commit, built the kernel again and the machine
->>>> booted, so
->>>> I'm quite sure that I found the right commit.
->>>>
->>>> System information:
->>>>
->>>> ASRockRack B550D4-4L
->>>> BIOS P1.10 (06/28/2021)
->>>>
->>>> I'm no expert at all, but my research found that the following information
->>>> might
->>>> be relevant:
->>>>
->>>>    journalctl -W -b -k --no-pager | rg -i 'AMD-Vi|AMD IOMMU|IOMMU|IVRS|IVHD'
->>>>    Aug 21 22:24:17 kernel: ACPI: IVRS 0x00000000BB062000 0000D0 (v02 AMD
->>>> AmdTable 00000001 AMD  00000001)
->>>>    Aug 21 22:24:17 kernel: ACPI: Reserving IVRS table memory at [mem
->>>> 0xbb062000-0xbb0620cf]
->>>>    Aug 21 22:24:17 kernel: AMD-Vi: Using global IVHD EFR:0x0, EFR2:0x0
->>>>    Aug 21 22:24:17 kernel: iommu: Default domain type: Translated
->>>>    Aug 21 22:24:17 kernel: iommu: DMA domain TLB invalidation policy: lazy
->>>> mode
->>>>    Aug 21 22:24:17 kernel: pci 0000:00:01.0: Adding to iommu group 0
->>>>    Aug 21 22:24:17 kernel: pci 0000:00:01.2: Adding to iommu group 0
->>>>    Aug 21 22:24:17 kernel: pci 0000:00:02.0: Adding to iommu group 1
->>>>    Aug 21 22:24:17 kernel: pci 0000:00:03.0: Adding to iommu group 2
->>>>    Aug 21 22:24:17 kernel: pci 0000:00:04.0: Adding to iommu group 3
->>>>    Aug 21 22:24:17 kernel: pci 0000:00:05.0: Adding to iommu group 4
->>>>    Aug 21 22:24:17 kernel: pci 0000:00:07.0: Adding to iommu group 5
->>>>    Aug 21 22:24:17 kernel: pci 0000:00:07.1: Adding to iommu group 6
->>>>    Aug 21 22:24:17 kernel: pci 0000:00:08.0: Adding to iommu group 7
->>>>    Aug 21 22:24:17 kernel: pci 0000:00:08.1: Adding to iommu group 8
->>>>    Aug 21 22:24:17 kernel: pci 0000:00:14.0: Adding to iommu group 9
->>>>    Aug 21 22:24:17 kernel: pci 0000:00:14.3: Adding to iommu group 9
->>>>    Aug 21 22:24:17 kernel: pci 0000:00:18.0: Adding to iommu group 10
->>>>    Aug 21 22:24:17 kernel: pci 0000:00:18.1: Adding to iommu group 10
->>>>    Aug 21 22:24:17 kernel: pci 0000:00:18.2: Adding to iommu group 10
->>>>    Aug 21 22:24:17 kernel: pci 0000:00:18.3: Adding to iommu group 10
->>>>    Aug 21 22:24:17 kernel: pci 0000:00:18.4: Adding to iommu group 10
->>>>    Aug 21 22:24:17 kernel: pci 0000:00:18.5: Adding to iommu group 10
->>>>    Aug 21 22:24:17 kernel: pci 0000:00:18.6: Adding to iommu group 10
->>>>    Aug 21 22:24:17 kernel: pci 0000:00:18.7: Adding to iommu group 10
->>>>    Aug 21 22:24:17 kernel: pci 0000:02:00.0: Adding to iommu group 0
->>>>    Aug 21 22:24:17 kernel: pci 0000:02:00.1: Adding to iommu group 0
->>>>    Aug 21 22:24:17 kernel: pci 0000:02:00.2: Adding to iommu group 0
->>>>    Aug 21 22:24:17 kernel: pci 0000:20:00.0: Adding to iommu group 0
->>>>    Aug 21 22:24:17 kernel: pci 0000:20:01.0: Adding to iommu group 0
->>>>    Aug 21 22:24:17 kernel: pci 0000:20:02.0: Adding to iommu group 0
->>>>    Aug 21 22:24:17 kernel: pci 0000:20:03.0: Adding to iommu group 0
->>>>    Aug 21 22:24:17 kernel: pci 0000:20:04.0: Adding to iommu group 0
->>>>    Aug 21 22:24:17 kernel: pci 0000:20:08.0: Adding to iommu group 0
->>>>    Aug 21 22:24:17 kernel: pci 0000:20:09.0: Adding to iommu group 0
->>>>    Aug 21 22:24:17 kernel: pci 0000:21:00.0: Adding to iommu group 0
->>>>    Aug 21 22:24:17 kernel: pci 0000:22:00.0: Adding to iommu group 0
->>>>    Aug 21 22:24:17 kernel: pci 0000:23:00.0: Adding to iommu group 0
->>>>    Aug 21 22:24:17 kernel: pci 0000:24:00.0: Adding to iommu group 0
->>>>    Aug 21 22:24:17 kernel: pci 0000:25:00.0: Adding to iommu group 0
->>>>    Aug 21 22:24:17 kernel: pci 0000:29:00.0: Adding to iommu group 0
->>>>    Aug 21 22:24:17 kernel: pci 0000:2a:00.0: Adding to iommu group 0
->>>>    Aug 21 22:24:17 kernel: pci 0000:2b:00.0: Adding to iommu group 0
->>>>    Aug 21 22:24:17 kernel: pci 0000:2c:00.0: Adding to iommu group 11
->>>>    Aug 21 22:24:17 kernel: pci 0000:2d:00.0: Adding to iommu group 12
->>>>    Aug 21 22:24:17 kernel: pci 0000:2d:00.1: Adding to iommu group 13
->>>>    Aug 21 22:24:17 kernel: pci 0000:2d:00.3: Adding to iommu group 14
->>>>    Aug 21 22:24:17 kernel: pci 0000:2d:00.4: Adding to iommu group 15
->>>>    Aug 21 22:24:17 kernel: AMD-Vi: Extended features (0x58f77e022294881,
->>>> 0x0): PreF GA GA_vAPIC
->>>>    Aug 21 22:24:17 kernel: AMD-Vi: Interrupt remapping enabled
->>>>
->>>> And the output of the decoded IVRS table, captured by `acpidump -n IVRS -b`:
->>>>
->>>>    00000000  49 56 52 53 d0 00 00 00  02 e2 41 4d 44 20 20 00 |IVRS......AMD
->>>> .|
->>>>    00000010  41 6d 64 54 61 62 6c 65  01 00 00 00 41 4d 44 20
->>>> |AmdTable....AMD |
->>>>    00000020  01 00 00 00 41 30 20 00  00 00 00 00 00 00 00 00 |....A0
->>>> .........|
->>>>    00000030  10 b0 48 00 02 00 40 00  00 00 50 fd 00 00 00 00
->>>> |..H...@...P.....|
->>>>    00000040  00 00 00 00 2e 8f 04 80  03 08 00 00 04 fe ff 00
->>>> |................|
->>>>    00000050  43 00 ff 00 00 a5 00 00  04 ff ff 00 00 00 00 00
->>>> |C...............|
->>>>    00000060  48 00 00 00 00 a0 00 02  48 00 00 d7 0d a0 00 01
->>>> |H.......H.......|
->>>>    00000070  48 00 00 00 0e 01 00 01  11 b0 58 00 02 00 40 00
->>>> |H.........X...@.|
->>>>    00000080  00 00 50 fd 00 00 00 00  00 00 00 00 00 02 04 00
->>>> |..P.............|
->>>>    00000090  5a 4a 29 22 ef 77 8f 05  00 00 00 00 00 00 00 00
->>>> |ZJ)".w..........|
->>>>    000000a0  03 08 00 00 04 fe ff 00  43 00 ff 00 00 a5 00 00
->>>> |........C.......|
->>>>    000000b0  04 ff ff 00 00 00 00 00  48 00 00 00 00 a0 00 02
->>>> |........H.......|
->>>>    000000c0  48 00 00 d7 0d a0 00 01  48 00 00 00 0e 01 00 01
->>>> |H.......H.......|
->>>>    000000d0
->>>>
->>>> The relevant part (after decoding with `iasl -d ivrs.dat`):
->>>>
->>>>    [090h 0144 008h]                   EFR Image : 058F77EF22294A5A
->>>>
->>>> I'll provide any required details and test patches!
->>>>
->>>> Thanks for your work, it's very appreciated!
->>>>
->>>> Andreas
->>>>
-> 
+> diff --git a/drivers/bluetooth/btrtl.c b/drivers/bluetooth/btrtl.c
+> index 7f54d2d2d13a..03fa9409e3ee 100644
+> --- a/drivers/bluetooth/btrtl.c
+> +++ b/drivers/bluetooth/btrtl.c
+> @@ -1343,19 +1343,6 @@ void btrtl_set_quirks(struct hci_dev *hdev, struct btrtl_device_info *btrtl_dev)
+>  	if (!btrtl_dev->ic_info)
+>  		return;
+>  
+> -	switch (btrtl_dev->project_id) {
+> -	case CHIP_ID_8761B:
+> -		/* RTL8761B/BU reports HCI version 5.1 but does not support
+> -		 * the LE Extended Scan commands (Opcode 0x2042), causing
+> -		 * repeated -EBUSY failures when BlueZ attempts extended
+> -		 * scanning while a connection is active.
+> -		 */
+> -		hci_set_quirk(hdev, HCI_QUIRK_BROKEN_EXT_SCAN);
+> -		break;
+> -	default:
+> -		break;
+> -	}
+> -
+>  	switch (btrtl_dev->ic_info->lmp_subver) {
+>  	case RTL_ROM_LMP_8703B:
+>  		/* 8723CS reports two pages for local ext features,
+> diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
+> index 2bae85b0016c..84614e60d142 100644
+> --- a/drivers/bluetooth/btusb.c
+> +++ b/drivers/bluetooth/btusb.c
+> @@ -67,6 +67,7 @@ static struct usb_driver btusb_driver;
+>  #define BTUSB_INTEL_NO_WBS_SUPPORT	BIT(26)
+>  #define BTUSB_ACTIONS_SEMI		BIT(27)
+>  #define BTUSB_BARROT			BIT(28)
+> +#define BTUSB_BROKEN_EXT_SCAN		BIT(29)
+>  
+>  static const struct usb_device_id btusb_table[] = {
+>  	/* Generic Bluetooth USB device */
+> @@ -619,6 +620,10 @@ static const struct usb_device_id quirks_table[] = {
+>  	{ USB_DEVICE(0x0489, 0xe130), .driver_info = BTUSB_REALTEK |
+>  						     BTUSB_WIDEBAND_SPEECH },
+>  
+> +	/* Realtek 8761BU Bluetooth devices */
+> +	{ USB_DEVICE(0x0bda, 0xa728), .driver_info = BTUSB_REALTEK |
+> +						     BTUSB_BROKEN_EXT_SCAN },
+> +
+>  	/* Realtek Bluetooth devices */
+>  	{ USB_VENDOR_AND_INTERFACE_INFO(0x0bda, 0xe0, 0x01, 0x01),
+>  	  .driver_info = BTUSB_REALTEK },
+> @@ -4403,6 +4408,9 @@ static int btusb_probe(struct usb_interface *intf,
+>  	if (id->driver_info & BTUSB_INVALID_LE_STATES)
+>  		hci_set_quirk(hdev, HCI_QUIRK_BROKEN_LE_STATES);
+>  
+> +	if (id->driver_info & BTUSB_BROKEN_EXT_SCAN)
+> +		hci_set_quirk(hdev, HCI_QUIRK_BROKEN_EXT_SCAN);
+> +
+>  	if (id->driver_info & BTUSB_DIGIANSWER) {
+>  		data->cmdreq_type = USB_TYPE_VENDOR;
+>  		hci_set_quirk(hdev, HCI_QUIRK_RESET_ON_CLOSE);
 
