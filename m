@@ -1,155 +1,122 @@
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBAE248986A
-	for <regressions@lists.linux.dev>; Tue, 25 Aug 2026 18:27:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A40A3F4DFE
+	for <regressions@lists.linux.dev>; Tue, 25 Aug 2026 21:28:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787682442; cv=none; b=B3aeXXckIjMJWYDR9sUs+fr/NKre73h2J+1ivO6Sw2dYqCZCgBrErPY1701BYZj97wB5jqYhN2xfzgshDVH9lLL+BTwRhEGt6uP1+6V2tusKgXqdyx1H2zOtCvOQ+ciiMGLfv+WUb0ajcAVArSF6BT8+cORCxbsjyDGA3kA9gSc=
+	t=1787693301; cv=none; b=M8Zzhtt4dfDK4KiiGcoVP4gMf//hiKo2tmCwd2hvI5fPuU5B1wXofDx1bgJ0g+dEoSire7Qg/UZ/sUEp4KkkFEyTwEqw8GFklpSZedSt8sHJcGMY2CL9Rj20GpMLWPEdx7HyzaMb5YCwHhNS0sBw6GyequLIq6Qm6xz2vgpZu20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787682442; c=relaxed/simple;
-	bh=jyNY2JkAvWQwrHbS+NgO1le733UPx2Ae4Z9gCQskd7w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ox8pGbS13ZKF8cd1igay7rgzfOxX6f2XqeQE68snU01K9ucalvpt933IdPZdV9w7gvnV/R+IANf1BTDXA6Tt4kkRTwpcS3cfgKcpA49epupopeSEsllLUI/hOXnzYk+/XrnbGeLKh/b0fDCUe5AdKg6MJQqCXYkbqywPhnmMQKM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Hl4n6aGR; arc=none smtp.client-ip=209.85.208.182
+	s=arc-20240116; t=1787693301; c=relaxed/simple;
+	bh=mh9a2Z7pFjZriVLIoAOGfQ3SYOOIiAwUd+FR41EgS4o=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=BbtYl3YNBnEBQBIndqDD5RlB2n4FB2Pf/+mC37W/cZm0l+aV/pZTmFQunXR3jeu+Tluh3+6WibdWcACs1tlpYyKTkftBAiDrAQx5y+XBOjBsNti1fphWB7UHrXDvS5fGSzSeyoPWKtFoXw8PVwTOS++OZtUC/4wTljDGY2oHjEE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Pbezh+IZ; arc=none smtp.client-ip=209.85.218.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hl4n6aGR"
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-39c74722e27so2131121fa.0
-        for <regressions@lists.linux.dev>; Tue, 25 Aug 2026 11:27:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pbezh+IZ"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-c2022323c37so24918766b.0
+        for <regressions@lists.linux.dev>; Tue, 25 Aug 2026 14:28:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1787682437; x=1788287237; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=cLhl7vMzATDfLTJ4Lrym/q2o4NDrnz3WBA6CQS/z/Wg=;
-        b=Hl4n6aGR1vCNy5MJVmQulxlZm7sc30+O5tca88GwZSuOdbsxDjSpzQCCiWRglcFhQm
-         TLelDb0WksHxekBwjKcO4yCHDgv3jPE1c37OZISVqthG22d+DgSJ4V5XFlTQpKgtaEp1
-         KbJEH1vHmWG+wcnRlmvtcCl7a50lYarByEV6dierkGKrPnCX22YnEVxHL63/9+Z58sn9
-         qTpRTZy3vqxFCGSBV6Vn9B4fY4m3Cd3tLl9gLlO85OhQLvEdOnkzk7GAOb9AbBtF2Qzj
-         5GQ8K1+JLY/tW/7O2j4O2Vo3PkH/DbM5GzKMn1D5LrnjDRchC4pS1UU5MgjC3h38HqLx
-         1UlA==
+        d=gmail.com; s=20251104; t=1787693298; x=1788298098; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=B7kSIlJJ84PkNx03WFsQm+QKg/9aYj9/q0trDx0cIE8=;
+        b=Pbezh+IZUj53/h2Um8TMKBYBilpKefiJugsApW/CvKBwPB29aEjhZNYfmklLywjC57
+         QyU6z1LP7+nEZN/3sH86kPR5CG/xQxARe/QV8VGIfP4V89BNCOFo4hPIPYQdpB4HOfdU
+         lXRaEdnCutcS0F4qGLtjku/APfIeEDC9om3RdOeV1eXl4IZ6QfbTCF4NdJo95Y1q60/6
+         n3uujMPqZAX5szIL5CkJpghLonJmq1Wc9vT3ncIW8bMD3TYa7TxsCGynq/0INHvGHBRZ
+         tjgneF4tM9g7pZb9MPCQD0Mz4Ff1Q9SYrDL2BVnvqJUW6kKfj/GpJunAZ4eMJ/evSE3G
+         Dw/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787682437; x=1788287237;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=cLhl7vMzATDfLTJ4Lrym/q2o4NDrnz3WBA6CQS/z/Wg=;
-        b=JQpSdculLNTycWgQT4huC7coHWXCqv5efPK8qyvi/OyXKqyduEAg01bLx2lnxy6V4N
-         KEPAoG9XwYjtUntSAgQ0K6RNc39K+qtRdC2NE3Z3qO6rlSIWyJj/e6OZj73lPq8TxbMB
-         xk0i5N+JaH2PawbsZaiEDRbAGn3suEBb9CguaOFf9kM6NfjP1hqm87AKdAL5+FhbWnv/
-         Cj+QWmIjrjD/G1/nSzWev+Yh6qGeOcgJUU/KTOt6/ggxrZTkdeqSWUMfcm7eEqws2hVG
-         W76/JC+mKLSt+XpyWP0r8ML77bSdkWL4b8aBXF8gUiGtnYmVS8mNyMxab4pRUTF6JxHl
-         o/Tg==
-X-Forwarded-Encrypted: i=1; AHgh+Rp+BsQdyM7JI8fxTSkOQXaesZ/2jH+gT74NwyrN2s3BqH9cB7gjWkh94b1w8XvzIcY15W6iZSGcMQTabg==@lists.linux.dev
-X-Gm-Message-State: AFuF++lrHX1Nn8mKBA2jkZlY/nB7c2ygKE3t6CLK/8+ojs1dp74Fc2mZ
-	37BU/PCxo3K7xJy4uO/NfAPEFQ+6Yh8XslL6lRL3NB4G/lu9tCyk6lsD
-X-Gm-Gg: AR+sD12cnFFQQgUQL2cXF2Uwb1UrOeAuo+RMUPnCRm3N/mbCJQg3s6skYeb2sakr8vh
-	4WZUU6sNgNRfEs24t/oxM1Nxx4Wq1vRETtxOS6K5tX9u5DlQrK/T/T4Dv9eW09X4cITQJMXbqlg
-	akVZZSqoLFyI1t6pbMCLWeeZJ85TqFRW3CLksL/jKI74j4UgkSttp8Hc0Z5QcV9AoQZEL9JXdKj
-	KbvPz28PNtG1uW8ioYZq59QUaYiJvaosldJrILZrph3e19ohdtTHf5mos0W7QFaDOis9Rsjd+Qx
-	kbWtCczPHs0kiRjGzA6O0w2+3lNBVyK4EjD30Cv7Czv6njbVI7aO2TiXN3Xr9Z0KgLEFvmuwBAp
-	WtvpKFzS693Rcz1fswRH1MZAnlRnyfM2yamF/gdhvJHGYCqZX4sGfCv4EV1Y9ivv/F5GVjJBm4a
-	PJJABy/72yCQcNr3pcAH38tjSuqZVECxJQ/WeJvp59KBR/LKkK2vj8hEop5FpxlTmDQTZV4e8bG
-	/o=
-X-Received: by 2002:a05:651c:54a:b0:3a1:4530:fb2 with SMTP id 38308e7fff4ca-3a1edab181bmr15138391fa.5.1787682436763;
-        Tue, 25 Aug 2026 11:27:16 -0700 (PDT)
-Received: from localhost (soda.int.kasm.eu. [2001:678:a5c:1202:7b92:9ac1:b9ef:5287])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-3a1fd13a484sm393461fa.38.2026.08.25.11.27.16
+        d=1e100.net; s=20251104; t=1787693298; x=1788298098;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=B7kSIlJJ84PkNx03WFsQm+QKg/9aYj9/q0trDx0cIE8=;
+        b=OcVT+fLov+xZZ9Khd4LmpoZVEsPp5CXdke5YufcOQ1UCcp5Pn7C0bmciwKsXNIpjNy
+         MVeXz9qu/TOlSmTy0ZkourAeQFR/qCH3dog+TIZ+tIRlnHX+phX4eL/2shRbMfNlpsQY
+         rC8Qc1eMA/JCgjrAepe6PrBjl+CT47eQDSD9Ley9SQRC6xPzuQiiy2VQnkb0HlympMEv
+         Z3f/FRObBt+ZMJfF5562e+8e1Yy0BZwz096Jyd9hgSyNFng+SpNBLdMqH51V7HvejmCc
+         wRuzmgqWOf9g+dEfOc1nsIvQN8OgMxjDqhZI7amgZeGdpQqL/CL7PDv0B2NI7YZr1eSZ
+         rOMg==
+X-Gm-Message-State: AFuF++kyo8iUT8ajLQClzLC/4T2Whqv4wALOo2ehemn98wrknJdoMStz
+	IWCdCx1aPJLP/DBJkQCOoQYqmtPj1jL1Q+IPzEqnrPxKKuq3f74CL5GjV2sQ9WO29MsdF/YO
+X-Gm-Gg: AR+sD13RCu+wzwQvcOSZWZ1dBRFJh2+p9GGJGy7/PGhaa9+ffPMKBohv0kZsCMLTq7K
+	YR9CwhiZVvZDJZMmIF932uV4axX4ipNM+2bGTYbYovf7/EIO7g54/+ht7kl3gnvU48objOdU2p7
+	q0MRIbaPwzalEGGB3rQuHv/ntASPXqcftFeRN3c9n8YE2U8t0b0/mswCEXd13MGQhVw5s38WaF0
+	n7QVovig83nSHiCUeXT49Md1K8toHLODUiZKaBf2JT3HaqaufXCFy4U0hGhPLWgVRAaH3PzrT4Z
+	0fZ8VigH62yA1lKBlCuNJIzMU4NdOH8Q/s5K2/C74Ob9gb+q5P513I/ZBEtbvLH/ARn9zFPWzcb
+	0yXRFAXKbl5ID1/nhltJULqbM06A4GMsL//OAFfgroMn4FelSATvAvJxHASlbDJbX2MlY4n3RqT
+	ysowOzjBmB5zpMzDZ1RXuZ8GrRFR258+IxofV2OEicVMQjLWKg+R06AA0uDoadEH23IX7dWLlf4
+	sohEwpewfSeIFy1RpLNA+CYl4p69KIc9pG5dfW5imCjLpUVBAOL0zlJgtJ3
+X-Received: by 2002:a17:907:e1d3:20b0:c25:d03:6794 with SMTP id a640c23a62f3a-c250d036dcdmr100923466b.16.1787693298421;
+        Tue, 25 Aug 2026 14:28:18 -0700 (PDT)
+Received: from localhost ([188.234.148.119])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c250a9ef4d2sm101774366b.59.2026.08.25.14.28.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Aug 2026 11:27:16 -0700 (PDT)
-Date: Tue, 25 Aug 2026 20:27:15 +0200
-From: Klara Modin <klarasmodin@gmail.com>
-To: Devin Wittmayer <lucid_duck@justthetip.ca>
-Cc: Felix Fietkau <nbd@nbd.name>, Lorenzo Bianconi <lorenzo@kernel.org>, 
-	Charlie-cy Wu <Charlie-cy.Wu@mediatek.com>, JB Tsai <jb.tsai@mediatek.com>, 
-	Sean Wang <sean.wang@mediatek.com>, Ryder Lee <ryder.lee@mediatek.com>, 
-	Shayne Chen <shayne.chen@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, linux-wireless@vger.kernel.org, 
-	linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: [PATCH wireless] wifi: mt76: mt792x: fix NULL dereference in
- ACPI SAR init during probe
-Message-ID: <ao3dyqWJ3nf3rMMW@soda.int.kasm.eu>
-References: <20260825181712.28548-1-lucid_duck@justthetip.ca>
+        Tue, 25 Aug 2026 14:28:17 -0700 (PDT)
+From: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+To: spasswolf@web.de,
+	alexander.deucher@amd.com
+Cc: regressions@lists.linux.dev,
+	leandro.ribeiro@collabora.com,
+	mwen@igalia.com,
+	alex.hung@amd.com,
+	mario.limonciello@amd.com,
+	jesse.zhang@amd.com,
+	Amber.Lin@amd.com,
+	amd-gfx@lists.freedesktop.org,
+	linux-next@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: warnings from validate_blend_mode_for_alpha_formats() in next-20260715
+Date: Wed, 26 Aug 2026 02:28:15 +0500
+Message-ID: <20260825212815.48959-1-mikhail.v.gavrilov@gmail.com>
+X-Mailer: git-send-email 2.55.0
+In-Reply-To: <20260716152933.6744-1-spasswolf@web.de>
+References: <20260716152933.6744-1-spasswolf@web.de>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260825181712.28548-1-lucid_duck@justthetip.ca>
+Content-Transfer-Encoding: 8bit
 
-On 2026-08-25 11:17:12 -0700, Devin Wittmayer wrote:
-> Some laptops carry a MediaTek power table in their firmware, and the
-> driver reads it to set a transmit limit for each frequency range. It
-> only fills in the ranges themselves when it registers the device.
-> 
-> The startup step that does this existed already, but it never programmed
-> anything. These two commits made it run a regulatory update instead,
-> which sets the limits on the way through, long before registration. So on
-> a machine that has the table the driver reads through an empty pointer
-> and the interface never appears:
-> 
->   BUG: kernel NULL pointer dereference, address: 0000000000000004
->   RIP: 0010:mt792x_init_acpi_sar_power
->   Call Trace:
->    mt7921_set_tx_sar_pwr
->    mt7921_mcu_regd_update
->    mt7921_regd_update
->    mt7921_run_firmware
->    mt7921e_mcu_init
->    mt7921_init_work
-> 
-> Skip it when the ranges are missing. They are applied again once the
-> device is up, which is where they came from before.
-> 
-> Reported-by: Klara Modin <klarasmodin@gmail.com>
-> Closes: https://lore.kernel.org/linux-wireless/aoyxqHYvSuaBeubf@soda.int.kasm.eu/
-> Fixes: 9b80bd9cab40 ("wifi: mt76: mt7921: add regulatory wiphy self manager support")
-> Fixes: e9f3f1cc133f ("wifi: mt76: mt7925: add regulatory wiphy self manager support")
-> Signed-off-by: Devin Wittmayer <lucid_duck@justthetip.ca>
-> ---
-> 
-> Reproduced on both chips before sending, an MT7922 and an MT7925, and the
-> fix clears both. Neither machine here ships a vendor power table, so I
-> supplied one through an ACPI override in the initrd. It also wants recent
-> firmware. The June builds do not turn on self-managed regulatory and
-> nothing happens; the builds now in linux-firmware do, and then it dies
-> exactly as reported with no interface at all. Patched, both come up and
-> scan normally, and the injected limits still show through in the power
-> table afterwards, so the skip does not lose them.
-> 
-> With that table still in place and the fix absent, backing out the mt7921
-> commit on its own also boots clean, so the table is not what causes this.
-> 
+Hi,
 
-Thanks for the quick fix!
+this is not a linux-next-only issue any more: 860e748bddcc came in with the
+drm-next pull of the 7.3 merge window, so it now warns on plain mainline. Here
+it fires 16 times on every boot - 8 per GPU, on the 4 primary and 4 cursor
+planes of each of the two cards in this machine:
 
-Regards,
-Tested-by: Klara Modin <klarasmodin@gmail.com>
+  [PLANE:44:plane-0] pixel format with alpha exposed but blend mode not setup
+  WARNING: drivers/gpu/drm/drm_mode_config.c:872 at drm_mode_config_validate+0xa16/0x13b0
 
->  drivers/net/wireless/mediatek/mt76/mt792x_acpi_sar.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/wireless/mediatek/mt76/mt792x_acpi_sar.c b/drivers/net/wireless/mediatek/mt76/mt792x_acpi_sar.c
-> index 946dd7956e4a..b468051fbe68 100644
-> --- a/drivers/net/wireless/mediatek/mt76/mt792x_acpi_sar.c
-> +++ b/drivers/net/wireless/mediatek/mt76/mt792x_acpi_sar.c
-> @@ -323,7 +323,8 @@ int mt792x_init_acpi_sar_power(struct mt792x_phy *phy, bool set_default)
->  	const struct cfg80211_sar_capa *capa = phy->mt76->hw->wiphy->sar_capa;
->  	int i;
->  
-> -	if (!phy->acpisar || !((struct mt792x_acpi_sar *)phy->acpisar)->dyn)
-> +	if (!capa || !phy->acpisar ||
-> +	    !((struct mt792x_acpi_sar *)phy->acpisar)->dyn)
->  		return 0;
->  
->  	/* When ACPI SAR enabled in HW, we should apply rules for .frp
-> -- 
-> 2.55.0
-> 
+I ran into it on 7.2.0-2709dd5ae32f, bisected it to 860e748bddcc and confirmed
+by reverting that commit, before I found this thread. Hardware:
+0000:03:00.0 Navi 31 (DCN 3.2) and 0000:0f:00.0 Raphael iGPU (DCN 3.1.5).
+
+Nobody has put this on regzbot yet, so:
+
+#regzbot introduced: 860e748bddcc
+#regzbot title: drm: WARNING at drm_mode_config_validate() for planes exposing alpha without a blend mode property
+#regzbot monitor: https://lore.kernel.org/all/20260813143605.106104-1-mwen@igalia.com/
+
+Status as far as I can see it: Melissa Wen's v3 series (monitored above) fixes
+amdgpu for both DCN and DCE, has Reviewed-by from Alex Hung and Tested-by from
+Daniel Wheeler, and I tested it here too - the warnings are gone on both GPUs.
+It is in neither linux-next nor amd-staging-drm-next so far. 271e90eb5f9f
+("drm: use drm_warn() in validate_blend_mode_for_alpha_formats()") turns the
+splat into a plain warning and went to drm-next on 2026-08-20 as part of
+drm-misc-next-fixes-2026-08-20, but has not reached mainline either. Other
+drivers are being fixed in separate threads (imx dcss, rockchip, vkms).
+
+Since this was introduced during the 7.3 merge window, the fixes should land
+in 7.3 rather than wait for the next one.
+
+-- 
+Thanks,
+Mikhail
