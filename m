@@ -1,159 +1,162 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C4783515D2
-	for <regressions@lists.linux.dev>; Tue, 25 Aug 2026 17:06:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+Received: from zandbergen.org (zandbergen.org [136.144.204.219])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68C0B48A8D9
+	for <regressions@lists.linux.dev>; Tue, 25 Aug 2026 17:24:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.144.204.219
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787677571; cv=none; b=md756L4ZYdFR512cZsa58JVMnniJPhGARrN/mqZdOz5r6yboTTMlDLNuSE74GciVfhBs15SSGD0Oc19MD8lpQzSEr3bmnZ5MEOyjQRodAgBBiXES2lDl78PHYhFTYkPKYiu2UlidkP0qIMFdc9W0NY8vuUR+66U/dqiFVPjzDa0=
+	t=1787678648; cv=none; b=cY8BHOM7gJhTKsIlzx31qNctQgG/RcGkbflZxJmubFzkgyIlYuhLOL2KaTTyRLLBp56xhHC977ZLoqowObSuZs6P+n5wxYbBfqWC/EqbqRkmernk/+IENSawhuC7ZNrGwU2ym1tOvvhG6qvzOMaDXW/Q7lLW9bu35kNX6DCG/KQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787677571; c=relaxed/simple;
-	bh=Hnau623AN6tw9BwGa3FjSA+P7N8Ig8R0aZB5p+5ZRGo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rGBozLKnhElvMEx1CHh7dcJ00R1c5wVenoO3FzWq+ccgfjgrvtMmcCRXjRZTnL39kC2O/pEF1aEqIB0tDHNKO7lk2hwR+4EjqvQEo0abMcCHEpTRvNDQNywS0om0q0XV7QwA9kkMUCRv16cgGMW2OqnUcL2KxuCzP0P988ayOcE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=n1N+ndL0; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1787678648; c=relaxed/simple;
+	bh=SFfqZnYADrNPifhYRuFdSz2Wwck0SLU8Q2Eim/YqOxc=;
+	h=From:Date:Message-ID:MIME-Version:Content-Type:To:Cc:Subject; b=CHNX32GqWwgt3uIYF9S4svisHDiYVFQsW9fgw3arnRfGYnXKjLjB+2DuWXuQZpPmNWp9EbuCjt11gvAHYj0K3S2Ugjf+cpCLPIarQxVqqLteR79KNYhh/V0oEYb7GVcmBWDpuWun3onjFC58fkhypoMZ0Yr00ytcNbnA6Y2N3Rw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zandbergen.org; spf=none smtp.mailfrom=arp.pim.zandbergen.org; dkim=pass (1024-bit key) header.d=zandbergen.org header.i=@zandbergen.org header.b=QyciN+67; arc=none smtp.client-ip=136.144.204.219
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zandbergen.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=arp.pim.zandbergen.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n1N+ndL0"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-c15ca7a7ca9so584175266b.0
-        for <regressions@lists.linux.dev>; Tue, 25 Aug 2026 10:06:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1787677568; x=1788282368; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=KudbG89fOLrydIxnFaLSqgwE/pyi6a+0V2HarZsOPgY=;
-        b=n1N+ndL0a0iEXp7HjRmwgkghgOj+7FEuyNN3wkt0B/NvaZ4ELBa6nqo8xAGikHDFBY
-         jWVcprSSqrd1QmzD+63qzVI2eotlN/4riGfPzKybAyBXiaESZx/HE0S71+owzBnUOE+V
-         c764KJZLlbUS4I/awNgj5RAT2+vqw5AaxtB2nr3wgh7hIZd9vIu2Qijj8pHEq1FH5Tri
-         sEAHIfw6wF1ckwpcj9BF4xtyH7fGhle7dfkTNR2m/FEIdluByIr6RTz8J0vTUqrR+GDy
-         lp7Up8uEFGqbiCcEEqqoM7R/qCheRJ3XNfwdJutI525yOq2Mu+Tv8IsvwZrr7GLXyEMi
-         8L6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787677568; x=1788282368;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=KudbG89fOLrydIxnFaLSqgwE/pyi6a+0V2HarZsOPgY=;
-        b=s+3mBiooYSxtV9I3rrfCesinbYs7h2X0ah/9rxuwxgb895dtOzpup9W5DS4aoLXUxo
-         XUl0GCDBSOK3M6VlGb6YlYegrntIFZ5WqIgSYKKV7AVisRfFVG7RAMDKV0rzVgtJD/Ku
-         HOObn4igdHxjo3nC7h9J0TuQ85QV5za/FgBejHbebRZw9hvrQmYj+F4a0PICxmdGuK9e
-         riBl1fEiB0mvnOXVw97DQ8uQ6zowazpYjrtQUqk9leaxLNFyrJ2o2oqhpu8DBKr6i1gd
-         q74+wt8weueAiPPdjIxqYxXXMdninUSrskVowu4YOJwDIpNIx7106QK1RhWxquy3PsOk
-         TzpQ==
-X-Forwarded-Encrypted: i=1; AHgh+RpvbMDMJLEUErdvVv9xQbCGcL1Y2QgDP0zutK5mHZH/glM3r3c4dXqjUHF3NJTe830Qy+XJkbDRMUrnbg==@lists.linux.dev
-X-Gm-Message-State: AFuF++lpC32CTyVeQLGhfswAM54sGai4PSfRPOYdTIv2w1VaMQ0rco3L
-	wLk/tBXmqrhN7yZk1doLnUSrOh+F6wQJvexkGtXtQFuLGrDAPKC4P0U1
-X-Gm-Gg: AR+sD13Uz6SBUzbZxSkURQuvbirTtm/5LnSsUutfHDCnZHIvL2WNyxAfwm1OIqh6PBs
-	X9Z/6lpGFpiWMfzx4QxPTH6vC6rilvPm48n5R/QwRkzm5frr427PImEsOdsT7tFyhkNPh3KG3h5
-	ux+bpJNOwXABoRZToEJ6Vg6lzC6YBuCl2GA6DFtsUUCKQGeZ4M2408+acc4XCI9evnEcfKwTuyu
-	PqBHEiaP646+vuOskdIFmOVNRUg8rbETloieIc6o4sUG9U0TMilxMJ752urETwHaiLhCWadhMCG
-	bDm6WqJCHajJS+oyjgV0TCmNpgDQ1w1cOHNzL6XMSnpRIw7mDgYoGr257Zn/9qY6a1+JHDkSCQa
-	8y7IKdd7KQ5KcIuZEUfZVXjiYWUH6Vaa88jBlGw6WaB/iaOawJLBIIMyDf5kPxjFCKN9c5v9Wlt
-	amjXuBxdAHdph7AY8ypA2H8OO9IzbVHmb3+ZAnkTJ5fTm/LsXM4nEZ21DgsCdRaNj7XFEzH3Oqm
-	hNsGNNjRrWC3SPCO5YyHhIeX7K6PRd5aY9sATak8pQdVs62u38Yw64vkS2mMrK9rYL83FDQiE75
-	4+DqOQ==
-X-Received: by 2002:a17:906:6a0b:b0:c15:f0b8:eb91 with SMTP id a640c23a62f3a-c250bb45e31mr11385066b.7.1787677568261;
-        Tue, 25 Aug 2026 10:06:08 -0700 (PDT)
-Received: from ip-10-19-79-40.tail983ac.ts.net (ec2-35-159-55-138.eu-central-1.compute.amazonaws.com. [35.159.55.138])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c250a73038asm39689766b.26.2026.08.25.10.06.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Aug 2026 10:06:07 -0700 (PDT)
-From: Nikita Taranov <nickita.taranov@gmail.com>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Darren Hart <dvhart@infradead.org>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	=?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>,
-	linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: Re: futex: private hash can stay on the shared atomic refcount indefinitely after auto-scaling
-Date: Tue, 25 Aug 2026 17:06:03 +0000
-Message-ID: <20260825170605.2462933-1-nickita.taranov@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260824160337.0IvfKx8A@linutronix.de>
-References: <20260823150046.204417-1-nickita.taranov@gmail.com> <20260824160337.0IvfKx8A@linutronix.de>
+	dkim=pass (1024-bit key) header.d=zandbergen.org header.i=@zandbergen.org header.b="QyciN+67"
+Received: from arp.pim.zandbergen.org (2a02-a46e-c56e-99-92e2-baff-fe27-d44.fixed6.kpn.net [IPv6:2a02:a46e:c56e:99:92e2:baff:fe27:d44])
+	by zandbergen.org (Postfix) with ESMTPSA id DF92210BF44;
+	Tue, 25 Aug 2026 19:14:34 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 zandbergen.org DF92210BF44
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zandbergen.org;
+	s=default; t=1787678076;
+	bh=0w3HYVGtQ7Rgmw7MqAAVccCzk+VtMbKRGnazLqau5Q8=;
+	h=From:Date:To:Cc:Subject:From;
+	b=QyciN+67DGYU8MzepWx4/MXq0ViS1wG/tigSWAor8HKoDQVX+Ws+xfFOZsXXelK6S
+	 uN7ssreJNh+Kk6KSZtIimmbSxRTUFUzyKNZhgKgf/T4z6WJNCXENH/BGzC/ZDi4Fvv
+	 XGGPTN9MrctRrbCy4mfrwCS7zmue/jrqYKFAys7Q=
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 1.4.6 at zandbergen.org
+Received: by arp.pim.zandbergen.org (Postfix, from userid 1000)
+	id C8C03242099C; Tue, 25 Aug 2026 19:14:34 +0200 (CEST)
+From: Pim Zandbergen <pim@zandbergen.org>
+Date: Tue, 25 Aug 2026 19:14:28 +0200
+Message-ID: <20260825T171428.247977.raid5-discard-reshape@zandbergen.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+To: linux-raid@vger.kernel.org
+Cc: song@kernel.org, yukuai@fygo.io, magiclinan@didiglobal.com,
+    xiao@kernel.org, regressions@lists.linux.dev
+Subject: [REGRESSION] md/raid5: discard submitted during reshape is never
+ completed, submitter hangs in D state forever
 
-On 2026-08-24 18:03:37 [+0200], Sebastian Andrzej Siewior wrote:
-> It is not as bad as you describe. Could you try v7.2 which has commit
-> a734d9fca84e1 ("futex: Optimize futex hash bucket access patterns")
-> which might help to settle the counter.
+Hi,
 
-I built v7.2 from the release tarball and booted it on the same machine.
-It does not change the behaviour:
+Since commit 90573092673c ("md/raid5: validate discard support at
+request time", v7.2-rc1), a discard bio submitted to a raid5/raid6
+array while a reshape is running is dropped without ever being
+completed. The submitting task hangs in uninterruptible sleep
+indefinitely, and only a reboot clears it. On my machine this turned
+the weekly systemd fstrim.timer run into a day-long filesystem-wide
+stall that ended in a hard reset.
 
-  # v7.2, 96 threads x 5 s, numactl --membind=0,1,2 taskset -c 0-95
-  threads=96 slots(start=0 set=0   end=512) 5.01s   12.0 Mops/s
-  threads=96 slots(start=0 set=0   end=512) 5.01s    8.1 Mops/s
-  threads=96 slots(start=0 set=0   end=512) 5.01s    9.8 Mops/s
-  threads=96 slots(start=0 set=512 end=512) 5.00s 1128.7 Mops/s
-  threads=96 slots(start=0 set=512 end=512) 5.00s 1128.1 Mops/s
-  threads=96 slots(start=0 set=512 end=512) 5.00s 1128.2 Mops/s
+Mechanism
+---------
 
-Unpinned, as you ran it, is the same: 8.7 / 11.5 / 11.4 auto-scaled vs
-1128.2 / 1127.3 / 1127.6 pre-sized.
+Before 90573092673c, an array whose members do not support discard
+(or without devices_handle_discard_safely set) advertised
+max_hw_discard_sectors = 0, so FITRIM and blkdev discards never
+reached raid5 at all. Since that commit the array always advertises
+UINT_MAX and member support is validated at request time in
+raid5_discard_limits(), which correctly completes unsupported bios
+with BLK_STS_NOTSUPP and bio_endio().
 
-I rebooted the same box back to 7.0 and re-ran the identical commands, so
-the two are directly comparable: 9.8 / 10.2 / 9.4 auto-scaled against
-1023.2 / 1022.8 / 1022.7 pre-sized.
+However, make_discard_request() still contains the reshape guard
+that predates request-time validation (620125f2bf8f, "MD: raid5
+trim support", v3.7):
 
-> You might have hit the sweet spot with your CPU. I have here a 144 CPU
-> box and
+	if (mddev->reshape_position != MaxSector)
+		/* Skip discard while reshape is happening */
+		return;
 
-Yes, this Intel host is the only one where the repro worked for me:
+(drivers/md/raid5.c:5726 in v7.2, still present in current master.)
 
-  ratio = pre-sized / auto-scaled; 4 s runs, threads pinned to cores,
-  pre-sized to 512 slots; kernel 6.17
+This returns without calling bio_endio(). The caller treats the bio
+as handled:
 
-  threads   Xeon 6975P-C     EPYC 9R45      Graviton4
-            96c/192t SNC=3   96c/192t       96c/192t
-      2       1.0x             1.0x           1.0x
-      4       1.0x             1.0x           1.0x
-      8       1.1x             1.1x           1.1x
-     16       1.1x             1.1x           1.1x
-     32       1.1x             1.1x           1.1x
-     48       1.1x             1.1x           1.1x
-     64       1.1x             1.1x           1.1x
-     96      81.8x             1.1x           1.1x
+	if (unlikely(bio_op(bi) == REQ_OP_DISCARD)) {
+		make_discard_request(mddev, bi);
+		md_write_end(mddev);
+		return true;
+	}
 
-For reference, the same test with different thread count and placement:
+so nothing ever completes the bio. blkdev_issue_discard() waits in
+submit_bio_wait() forever and the submitter is stuck in D state.
+Nothing re-queues the bio when the reshape finishes, so reshape
+completion does not recover it.
 
-  placement of 96 threads              auto-scaled   pre-sized   ratio
-  96 cores, socket 0, mem interleaved       14.3       1048.2     73.3x
-  96 threads on 32 cores, one node         334.8        349.2      1.0x
-  96 threads on  8 cores, one node          85.6         87.2      1.0x
+Note that the reshape check runs before raid5_discard_limits(), so
+this hits any raid5/6 array under reshape, including arrays whose
+members have no discard support at all and which would otherwise be
+correctly rejected with BLK_STS_NOTSUPP. That is exactly my case:
+before v7.2 the same fstrim run was a silently skipped no-op for
+years; the kernel upgrade made it reachable, and the first time it
+fired during a reshape it wedged the machine.
 
-One more thing that may be useful: whether the pivot completes is a race.
-Ten runs at each thread count, 3 s each, on v7.2 on this box
-(stalled = under 100 Mops/s):
+Real-world impact observed
+--------------------------
 
-  T=24   stalled  0/10    259.3 249.3 261.3 250.0 251.6 ...
-  T=32   stalled  0/10    334.6 332.0 335.3 326.5 335.3 ...
-  T=40   stalled  0/10    415.3 300.5 415.7 389.1 416.3 ...
-  T=48   stalled  1/10    251.2 423.8 482.1   6.5 410.8 ...
-  T=56   stalled  8/10    526.9   6.2   7.0   7.0 540.0 ...
-  T=64   stalled 10/10      9.4   8.6   8.0   8.5   9.3 ...
-  T=72   stalled  9/10     11.7  10.7  12.2 331.0  10.1 ...
-  T=96   stalled 10/10     11.8   9.4  12.1  12.9  13.4 ...
+Timeline on the affected machine (arm64, v7.2, raid6 of 10 SATA
+HDDs, at the time mid-grow from 8 to 10 members, XFS on LVM on top):
 
-> Not sure what we could do here. One idea might be to block further
-> futex syscalls so they don't acquire a new reference on the existing
-> hash and allow a transition to the new hash more quickly.
+- Fri 19:59: mdadm grow/reshape starts.
+- Mon 00:40: weekly fstrim.timer fires. fstrim reaches the XFS
+  filesystems on the array and hangs in D state on the first
+  discard. It stays there for at least the next 21 hours (verified
+  via ps; last check was about 21h in).
+- While stuck, the FITRIM ioctl holds XFS allocation group / busy
+  extent state, so writeback workers and eventually every writer on
+  those filesystems pile up behind it. A DVR service wedged
+  completely; the machine (also serving as router) later became
+  unresponsive and had to be hard-reset.
+- md's sync throttling sees the array as idle the whole time (the
+  parked bio never generates member I/O), so the stall is invisible
+  in /proc/mdstat and cannot be influenced with sync_speed_min/max.
 
-I am happy to test a patch on this machine if that is useful; it reproduces
-in about five seconds and the difference is 100x, so it should be an easy
-signal to read.
+Sample stack of one victim writer (blocked on the inode lock behind
+the writeback chain that is itself stuck behind fstrim):
 
-Thanks for looking at this.
+  [<0>] xfs_ilock+0x15c/0x1c0 [xfs]
+  [<0>] xfs_vn_update_time+0x1e8/0x268 [xfs]
+  [<0>] file_update_time_flags+0x7c/0x140
+  [<0>] kiocb_modified+0x3c/0x58
+  [<0>] xfs_file_write_checks+0x1ac/0x388 [xfs]
+  [<0>] xfs_file_buffered_write+0x13c/0x390 [xfs]
+  [<0>] xfs_file_write_iter+0x170/0x308 [xfs]
+  [<0>] do_iter_readv_writev+0x110/0x250
+  [<0>] vfs_writev+0x12c/0x2c0
+  [<0>] do_writev+0x78/0x160
+  [<0>] __arm64_sys_writev
 
-Regards.
+I did not capture the fstrim task's own kernel stack before the
+machine had to be hard-reset, so the mechanism above is from code
+inspection of the discard path rather than a captured stack. I have
+a scripted loop-device reproducer (loop-backed raid6, start a grow,
+mount XFS, run fstrim; expected result is fstrim permanently in D)
+which I have not run yet because the affected machine is a
+production box. I am happy to run it in a VM on request, and to
+test patches.
+
+The kernel is the v7.2 stable tag plus two local patches for arm64
+platform/PCIe bringup that touch nothing in block/ or drivers/md/.
+
+Suggested direction
+-------------------
+
+Discards are advisory, so completing the bio instead of dropping it
+seems sufficient: bio_endio() with BLK_STS_OK (treat discard as a
+no-op during reshape) or BLK_STS_NOTSUPP, mirroring what
+raid5_discard_limits() already does three lines below. Waiting for
+the reshape to pass, as regular writes do, would also fix the hang
+but keeps FITRIM blockable for hours or days on a slow reshape. I
+will leave the choice to you.
+
+#regzbot introduced: 90573092673c
+
+Thanks,
+Pim Zandbergen
