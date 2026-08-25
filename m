@@ -1,162 +1,123 @@
-Received: from zandbergen.org (zandbergen.org [136.144.204.219])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68C0B48A8D9
-	for <regressions@lists.linux.dev>; Tue, 25 Aug 2026 17:24:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.144.204.219
+Received: from mta0.migadu.com (out-129.mta0.migadu.com [91.218.175.129])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC36B331ED6
+	for <regressions@lists.linux.dev>; Tue, 25 Aug 2026 18:17:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.129
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787678648; cv=none; b=cY8BHOM7gJhTKsIlzx31qNctQgG/RcGkbflZxJmubFzkgyIlYuhLOL2KaTTyRLLBp56xhHC977ZLoqowObSuZs6P+n5wxYbBfqWC/EqbqRkmernk/+IENSawhuC7ZNrGwU2ym1tOvvhG6qvzOMaDXW/Q7lLW9bu35kNX6DCG/KQ=
+	t=1787681841; cv=none; b=TzCby6lV7wAZowSlGLttOHHt4AQ+ICl1Pk1seukI1olbVmB5ltAPWOT5wmyuAHoDjpWjNGb/Pxj9JuOt6ga3B9e9v0MyBA+9aQ2JJnO1APlXgW0/O9wpDreYOOqRn+b2xmcMp9MeV2zxTigAfCbeGq0nVUKl+kvT1cBkQkAa8oQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787678648; c=relaxed/simple;
-	bh=SFfqZnYADrNPifhYRuFdSz2Wwck0SLU8Q2Eim/YqOxc=;
-	h=From:Date:Message-ID:MIME-Version:Content-Type:To:Cc:Subject; b=CHNX32GqWwgt3uIYF9S4svisHDiYVFQsW9fgw3arnRfGYnXKjLjB+2DuWXuQZpPmNWp9EbuCjt11gvAHYj0K3S2Ugjf+cpCLPIarQxVqqLteR79KNYhh/V0oEYb7GVcmBWDpuWun3onjFC58fkhypoMZ0Yr00ytcNbnA6Y2N3Rw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zandbergen.org; spf=none smtp.mailfrom=arp.pim.zandbergen.org; dkim=pass (1024-bit key) header.d=zandbergen.org header.i=@zandbergen.org header.b=QyciN+67; arc=none smtp.client-ip=136.144.204.219
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zandbergen.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=arp.pim.zandbergen.org
+	s=arc-20240116; t=1787681841; c=relaxed/simple;
+	bh=pKWQSQwhloU3UCIEHsjSAI70zbgmQD2DReSgXVQRLss=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cpHhBpBqmnhmRxE/sNvf3u1b2qT9eR0shi8Cj7kjSvENvsapKpugpMMacL/pQjQyhqV2pE0a6dAjimtDGrXUcqi/ZHHU7orFx+pvcwsuVC+XzFMOu7Jzdp5ucUoqoAbh9ABWEFqt2BuRbSpF89NdAa0n11p2Ovcue/r3qeQF/Jw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=justthetip.ca; spf=pass smtp.mailfrom=justthetip.ca; dkim=pass (2048-bit key) header.d=justthetip.ca header.i=@justthetip.ca header.b=EJ/mOqoZ; arc=none smtp.client-ip=91.218.175.129
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=justthetip.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=justthetip.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zandbergen.org header.i=@zandbergen.org header.b="QyciN+67"
-Received: from arp.pim.zandbergen.org (2a02-a46e-c56e-99-92e2-baff-fe27-d44.fixed6.kpn.net [IPv6:2a02:a46e:c56e:99:92e2:baff:fe27:d44])
-	by zandbergen.org (Postfix) with ESMTPSA id DF92210BF44;
-	Tue, 25 Aug 2026 19:14:34 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 zandbergen.org DF92210BF44
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zandbergen.org;
-	s=default; t=1787678076;
-	bh=0w3HYVGtQ7Rgmw7MqAAVccCzk+VtMbKRGnazLqau5Q8=;
-	h=From:Date:To:Cc:Subject:From;
-	b=QyciN+67DGYU8MzepWx4/MXq0ViS1wG/tigSWAor8HKoDQVX+Ws+xfFOZsXXelK6S
-	 uN7ssreJNh+Kk6KSZtIimmbSxRTUFUzyKNZhgKgf/T4z6WJNCXENH/BGzC/ZDi4Fvv
-	 XGGPTN9MrctRrbCy4mfrwCS7zmue/jrqYKFAys7Q=
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 1.4.6 at zandbergen.org
-Received: by arp.pim.zandbergen.org (Postfix, from userid 1000)
-	id C8C03242099C; Tue, 25 Aug 2026 19:14:34 +0200 (CEST)
-From: Pim Zandbergen <pim@zandbergen.org>
-Date: Tue, 25 Aug 2026 19:14:28 +0200
-Message-ID: <20260825T171428.247977.raid5-discard-reshape@zandbergen.org>
+	dkim=pass (2048-bit key) header.d=justthetip.ca header.i=@justthetip.ca header.b="EJ/mOqoZ"
+X-Envelope-To: regressions@lists.linux.dev
+DKIM-Signature: a=rsa-sha256; bh=pKWQSQwhloU3UCIEHsjSAI70zbgmQD2DReSgXVQRLss=;
+ c=simple/simple; d=justthetip.ca;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1787681836; v=1; x=1788286636;
+ b=EJ/mOqoZ+3MOkD16zga+8Vp/045+ISk8lKiwywgT2lvax744TV/6PjPdxT70FPnL61gPofM2
+ iboyQMF+4T36bLBFEfCpvKxR6MH2hD39JfikYHbih/8yH8s+6yjNrW6PzCkTGzOiHINVPe3oxga
+ 6rFBXSxPZrBdVeYWeGWZxzePEn0gPDi0mQ+Oiq+nRAAmL9eRXKy+PLpgAeYHcEWPGCUOQCq2Lje
+ GdhXSjnp0f/Dnn4u/MHljGWlIe5paNbIVH90OLFNHw00qGO1Tf1EGx1vgXnMOmxXuaZfz20dQfv
+ mhCDAtjzr23pFgoF+ge2vERKlH+XAbuEd0BEoXNfI0duA==
+X-Envelope-To: regressions@lists.linux.dev
+Received: from fedora (2001:569:be59:c500:b340:3f2c:4486:21c1)
+	by smtp.migadu.com with ESMTPS id c14991048ca0b0d5;
+	Tue, 25 Aug 2026 18:17:16 +0000
+X-Mizu-Trace-ID: c14991048ca0b0d5
+X-Migadu-Flow: FLOW_OUT
+From: Devin Wittmayer <lucid_duck@justthetip.ca>
+To: Felix Fietkau <nbd@nbd.name>,
+	Lorenzo Bianconi <lorenzo@kernel.org>
+Cc: Klara Modin <klarasmodin@gmail.com>,
+	Charlie-cy Wu <Charlie-cy.Wu@mediatek.com>,
+	JB Tsai <jb.tsai@mediatek.com>,
+	Sean Wang <sean.wang@mediatek.com>,
+	Ryder Lee <ryder.lee@mediatek.com>,
+	Shayne Chen <shayne.chen@mediatek.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	linux-wireless@vger.kernel.org,
+	linux-mediatek@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: [PATCH wireless] wifi: mt76: mt792x: fix NULL dereference in ACPI SAR init during probe
+Date: Tue, 25 Aug 2026 11:17:12 -0700
+Message-ID: <20260825181712.28548-1-lucid_duck@justthetip.ca>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-To: linux-raid@vger.kernel.org
-Cc: song@kernel.org, yukuai@fygo.io, magiclinan@didiglobal.com,
-    xiao@kernel.org, regressions@lists.linux.dev
-Subject: [REGRESSION] md/raid5: discard submitted during reshape is never
- completed, submitter hangs in D state forever
+Content-Transfer-Encoding: 8bit
 
-Hi,
+Some laptops carry a MediaTek power table in their firmware, and the
+driver reads it to set a transmit limit for each frequency range. It
+only fills in the ranges themselves when it registers the device.
 
-Since commit 90573092673c ("md/raid5: validate discard support at
-request time", v7.2-rc1), a discard bio submitted to a raid5/raid6
-array while a reshape is running is dropped without ever being
-completed. The submitting task hangs in uninterruptible sleep
-indefinitely, and only a reboot clears it. On my machine this turned
-the weekly systemd fstrim.timer run into a day-long filesystem-wide
-stall that ended in a hard reset.
+The startup step that does this existed already, but it never programmed
+anything. These two commits made it run a regulatory update instead,
+which sets the limits on the way through, long before registration. So on
+a machine that has the table the driver reads through an empty pointer
+and the interface never appears:
 
-Mechanism
----------
+  BUG: kernel NULL pointer dereference, address: 0000000000000004
+  RIP: 0010:mt792x_init_acpi_sar_power
+  Call Trace:
+   mt7921_set_tx_sar_pwr
+   mt7921_mcu_regd_update
+   mt7921_regd_update
+   mt7921_run_firmware
+   mt7921e_mcu_init
+   mt7921_init_work
 
-Before 90573092673c, an array whose members do not support discard
-(or without devices_handle_discard_safely set) advertised
-max_hw_discard_sectors = 0, so FITRIM and blkdev discards never
-reached raid5 at all. Since that commit the array always advertises
-UINT_MAX and member support is validated at request time in
-raid5_discard_limits(), which correctly completes unsupported bios
-with BLK_STS_NOTSUPP and bio_endio().
+Skip it when the ranges are missing. They are applied again once the
+device is up, which is where they came from before.
 
-However, make_discard_request() still contains the reshape guard
-that predates request-time validation (620125f2bf8f, "MD: raid5
-trim support", v3.7):
+Reported-by: Klara Modin <klarasmodin@gmail.com>
+Closes: https://lore.kernel.org/linux-wireless/aoyxqHYvSuaBeubf@soda.int.kasm.eu/
+Fixes: 9b80bd9cab40 ("wifi: mt76: mt7921: add regulatory wiphy self manager support")
+Fixes: e9f3f1cc133f ("wifi: mt76: mt7925: add regulatory wiphy self manager support")
+Signed-off-by: Devin Wittmayer <lucid_duck@justthetip.ca>
+---
 
-	if (mddev->reshape_position != MaxSector)
-		/* Skip discard while reshape is happening */
-		return;
+Reproduced on both chips before sending, an MT7922 and an MT7925, and the
+fix clears both. Neither machine here ships a vendor power table, so I
+supplied one through an ACPI override in the initrd. It also wants recent
+firmware. The June builds do not turn on self-managed regulatory and
+nothing happens; the builds now in linux-firmware do, and then it dies
+exactly as reported with no interface at all. Patched, both come up and
+scan normally, and the injected limits still show through in the power
+table afterwards, so the skip does not lose them.
 
-(drivers/md/raid5.c:5726 in v7.2, still present in current master.)
+With that table still in place and the fix absent, backing out the mt7921
+commit on its own also boots clean, so the table is not what causes this.
 
-This returns without calling bio_endio(). The caller treats the bio
-as handled:
+ drivers/net/wireless/mediatek/mt76/mt792x_acpi_sar.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-	if (unlikely(bio_op(bi) == REQ_OP_DISCARD)) {
-		make_discard_request(mddev, bi);
-		md_write_end(mddev);
-		return true;
-	}
+diff --git a/drivers/net/wireless/mediatek/mt76/mt792x_acpi_sar.c b/drivers/net/wireless/mediatek/mt76/mt792x_acpi_sar.c
+index 946dd7956e4a..b468051fbe68 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt792x_acpi_sar.c
++++ b/drivers/net/wireless/mediatek/mt76/mt792x_acpi_sar.c
+@@ -323,7 +323,8 @@ int mt792x_init_acpi_sar_power(struct mt792x_phy *phy, bool set_default)
+ 	const struct cfg80211_sar_capa *capa = phy->mt76->hw->wiphy->sar_capa;
+ 	int i;
+ 
+-	if (!phy->acpisar || !((struct mt792x_acpi_sar *)phy->acpisar)->dyn)
++	if (!capa || !phy->acpisar ||
++	    !((struct mt792x_acpi_sar *)phy->acpisar)->dyn)
+ 		return 0;
+ 
+ 	/* When ACPI SAR enabled in HW, we should apply rules for .frp
+-- 
+2.55.0
 
-so nothing ever completes the bio. blkdev_issue_discard() waits in
-submit_bio_wait() forever and the submitter is stuck in D state.
-Nothing re-queues the bio when the reshape finishes, so reshape
-completion does not recover it.
-
-Note that the reshape check runs before raid5_discard_limits(), so
-this hits any raid5/6 array under reshape, including arrays whose
-members have no discard support at all and which would otherwise be
-correctly rejected with BLK_STS_NOTSUPP. That is exactly my case:
-before v7.2 the same fstrim run was a silently skipped no-op for
-years; the kernel upgrade made it reachable, and the first time it
-fired during a reshape it wedged the machine.
-
-Real-world impact observed
---------------------------
-
-Timeline on the affected machine (arm64, v7.2, raid6 of 10 SATA
-HDDs, at the time mid-grow from 8 to 10 members, XFS on LVM on top):
-
-- Fri 19:59: mdadm grow/reshape starts.
-- Mon 00:40: weekly fstrim.timer fires. fstrim reaches the XFS
-  filesystems on the array and hangs in D state on the first
-  discard. It stays there for at least the next 21 hours (verified
-  via ps; last check was about 21h in).
-- While stuck, the FITRIM ioctl holds XFS allocation group / busy
-  extent state, so writeback workers and eventually every writer on
-  those filesystems pile up behind it. A DVR service wedged
-  completely; the machine (also serving as router) later became
-  unresponsive and had to be hard-reset.
-- md's sync throttling sees the array as idle the whole time (the
-  parked bio never generates member I/O), so the stall is invisible
-  in /proc/mdstat and cannot be influenced with sync_speed_min/max.
-
-Sample stack of one victim writer (blocked on the inode lock behind
-the writeback chain that is itself stuck behind fstrim):
-
-  [<0>] xfs_ilock+0x15c/0x1c0 [xfs]
-  [<0>] xfs_vn_update_time+0x1e8/0x268 [xfs]
-  [<0>] file_update_time_flags+0x7c/0x140
-  [<0>] kiocb_modified+0x3c/0x58
-  [<0>] xfs_file_write_checks+0x1ac/0x388 [xfs]
-  [<0>] xfs_file_buffered_write+0x13c/0x390 [xfs]
-  [<0>] xfs_file_write_iter+0x170/0x308 [xfs]
-  [<0>] do_iter_readv_writev+0x110/0x250
-  [<0>] vfs_writev+0x12c/0x2c0
-  [<0>] do_writev+0x78/0x160
-  [<0>] __arm64_sys_writev
-
-I did not capture the fstrim task's own kernel stack before the
-machine had to be hard-reset, so the mechanism above is from code
-inspection of the discard path rather than a captured stack. I have
-a scripted loop-device reproducer (loop-backed raid6, start a grow,
-mount XFS, run fstrim; expected result is fstrim permanently in D)
-which I have not run yet because the affected machine is a
-production box. I am happy to run it in a VM on request, and to
-test patches.
-
-The kernel is the v7.2 stable tag plus two local patches for arm64
-platform/PCIe bringup that touch nothing in block/ or drivers/md/.
-
-Suggested direction
--------------------
-
-Discards are advisory, so completing the bio instead of dropping it
-seems sufficient: bio_endio() with BLK_STS_OK (treat discard as a
-no-op during reshape) or BLK_STS_NOTSUPP, mirroring what
-raid5_discard_limits() already does three lines below. Waiting for
-the reshape to pass, as regular writes do, would also fix the hang
-but keeps FITRIM blockable for hours or days on a slow reshape. I
-will leave the choice to you.
-
-#regzbot introduced: 90573092673c
-
-Thanks,
-Pim Zandbergen
