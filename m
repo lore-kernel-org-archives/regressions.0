@@ -1,50 +1,51 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.102])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F32A3B71B6
-	for <regressions@lists.linux.dev>; Wed, 26 Aug 2026 13:40:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52250442B33;
+	Wed, 26 Aug 2026 14:12:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.102
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787751621; cv=none; b=OoXUnCQe3zFsO9ImgAHJd8WWdtVwDRp35+v0lcyr0YfW5WfC0TgWAUJM/8PULrDogQ5nadMcqIl2dUmo4z5W2pCr+mYgyexoyM6Mq0B755SKZ6phC8ppzZZJRty8gw66eelKfHIfPxRVJhwQivDFP0WBWQQr2OQmctXfShvOyvw=
+	t=1787753532; cv=none; b=OVVGgTYCU4Zs/xZyGh7zbOlJndb0hHC5A+kzkuPEfsEPnYTEqcvGxupJEsgb2jbtcUAStNwzm5LqUvNy0dftSSXBC4oCylTjAoCJIMCEPf6pQKDNSmFYQeNeTl4QxTfk+OPseoij3aezTTnZiePrKeWthJSlrYJytOkHZBzoUcA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787751621; c=relaxed/simple;
-	bh=Fyp0nxIFNbe7zfR3Ow2mQCN57LdW8YlyAjLbvJz+CCE=;
+	s=arc-20240116; t=1787753532; c=relaxed/simple;
+	bh=LR3sXZyv9BZpKnMkFqGg2COPCZoeIEfg8/rVtySW0wE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oObyiRmrNzpn74Bv44rJkIKyv46kA66eDT8jJWk4mpvioDgMpjEu7G+CyexLQ5zdiLBZK1wbwH3HCZR6pkfDaYIcB3tZGkGB2KwntFBibn4n/y9yPyMM7uBGLDQrH8FuBdAoFgI5v9zTpj6X/PjUJIQgEjtRlCFHaRiSakIJcaU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VQmjg79/; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	 In-Reply-To:Content-Type; b=DnPWbF0/B9wtzfbcNY2d0MPNOHeF8lfvHeaJK3+wFc8bYDblcQsnGJYs3nzbP74b2kSH1V3mOJT7g1lhY1YIKiaHi2rkgMANn8j/VD56CzdyZPh3TXh/hM7MHSEQYqroWdx0qz0payrk/97vWpyjDHb8IavhXmvhOpsu0sFjGKo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=lUN82dPn; arc=none smtp.client-ip=188.68.63.102
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VQmjg79/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1787751620; x=1819287620;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Fyp0nxIFNbe7zfR3Ow2mQCN57LdW8YlyAjLbvJz+CCE=;
-  b=VQmjg79//QHEnYeMi2wCnPHBQLLHhN549G9uMgSFEHQoAfYS3P9pSkym
-   b8/MVszLPe2Cw3zwrZ5hjxRjlRzqBlAouVeBYC4vt6WHhDdVAdKiK8SX2
-   eH4oyH81oXXp9HzCbytNCMeEyoREuLfvmnAPx/bYSv0B26TK5ckfrYG7/
-   MRlarVis05f9nZkt2pXsdAhx1laqhpSqvNPmVRk3/Gnk8L4Zm82Y10dDc
-   d8rl+fHgOBbToVCqS/J/3v2F/7DttZsDS45IntOJ4sSknRbl7M3/flZdV
-   weWf3N9ahLQu5En3S/2s29wc769ZQnLzdSBh+/BNsiUhLnEyqTQwKIg9M
-   g==;
-X-CSE-ConnectionGUID: pTRdCqCoTpuD21pkf/VkPw==
-X-CSE-MsgGUID: OGYKF1h4TOylTMypWa2erQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11886"; a="88152218"
-X-IronPort-AV: E=Sophos;i="6.25,244,1779174000"; 
-   d="scan'208";a="88152218"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2026 06:40:20 -0700
-X-CSE-ConnectionGUID: wmZm78pzQvK22Badz8sj1g==
-X-CSE-MsgGUID: jd1MBS+bQSy9zvancwsbTg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,244,1779174000"; 
-   d="scan'208";a="264980330"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO [10.245.245.238]) ([10.245.245.238])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2026 06:40:16 -0700
-Message-ID: <d5a395f7-06ad-401a-b026-e975f620f017@linux.intel.com>
-Date: Wed, 26 Aug 2026 16:40:14 +0300
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="lUN82dPn"
+Received: from mors-relay-2502.netcup.net (localhost [127.0.0.1])
+	by mors-relay-2502.netcup.net (Postfix) with ESMTPS id 4hVRRG4WWdz6Crs;
+	Wed, 26 Aug 2026 16:11:54 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1787753514;
+	bh=LR3sXZyv9BZpKnMkFqGg2COPCZoeIEfg8/rVtySW0wE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=lUN82dPnB7XbbKExuk2IfwWOlfjroBdGo5tWmDybP9VKEpFd3dTDU+4qtsnyQR9V1
+	 YRnKi0DZqM4KHr3BoFYpUnZNpECmbzEKg4Z7l6Fg/wEF4TFPSi+izmzbb3LYkS0Kvn
+	 M+yjLrEshbs9oaD3qb7xxpOSBUTM00nYqnJOgjTyoHSGpRK91xLLBOaru9bIJyljPP
+	 /muBx+gvJRUkk7sH6b7XD2T3gmQkZi5AQXLuRsQJ0wX6ajn034AnrC2r3w5bAB5YI9
+	 fopo1FDc0WTrPoFKKl1eIbh9JGVz562H8C3LP+iq27X0i3bYn/At9SqjEldPPDf2cv
+	 iRXoGX17wFVhg==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-2502.netcup.net (Postfix) with ESMTPS id 4hVRRG3mq0z4yTM;
+	Wed, 26 Aug 2026 16:11:54 +0200 (CEST)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4hVRRD6yhQz8sch;
+	Wed, 26 Aug 2026 16:11:52 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id B2ADA5F992;
+	Wed, 26 Aug 2026 16:11:47 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <04454db7-0779-4a7f-bab2-72fea3480dcf@leemhuis.info>
+Date: Wed, 26 Aug 2026 16:11:46 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -52,72 +53,55 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] 6.12.36+: usb: hub: post-resume delayed work
- triggers > uncorrected MCE / data fabric sync flood on Threadripper 7970X >
- (bisected to aec11e5f9c45)
-To: Lovekesh Solanki <lovekeshsolanki00@gmail.com>,
- Mathieu Fluhr <mathieu.fluhr@gmail.com>
-Cc: Michal Pecio <michal.pecio@gmail.com>,
- Thorsten Leemhuis <regressions@leemhuis.info>, linux-usb@vger.kernel.org,
- regressions@lists.linux.dev, stable@vger.kernel.org,
- linux-kernel@vger.kernel.org, Mario Limonciello <mario.limonciello@amd.com>,
- Forest <forestix@gaga.casa>, Slavik Dev <developer.slavik@gmail.com>
-References: <CAPyJwA_D9qw0T72f8zwM1yKjP+To=maVANbcdsWM7yRmbBxYvw@mail.gmail.com>
- <CAPyJwA9R=p8_uxyYODb00g_nUq26SRsWHBGgAAJnR0YMTRRo4A@mail.gmail.com>
- <CAPyJwA9P48LDcOr7u_iT1WPFBCHxh9w6cxFvyi5GS3syM6crbQ@mail.gmail.com>
- <07435e6b-ee30-4c85-8c8b-0ce3a4ead1d9@leemhuis.info>
- <aosGtkE_diwVJJtB@eggarch> <20260823174059.46fec036.michal.pecio@gmail.com>
- <aoser8dLytrwqBC2@eggarch>
- <CAPyJwA8m_Xd2oyV1i9k+-6f7A-j0FiC97yXL=Ci8ZAErs5W4vA@mail.gmail.com>
- <ao1ovvdPAy6n_F7I@eggarch>
- <CAPyJwA-QALkCQn8J1+=U-nuE_7WSEPhVcUEKb+MMYMaA_1AVjQ@mail.gmail.com>
- <ao7aLXk9q_v_jEyX@eggarch>
-Content-Language: en-US
-From: Mathias Nyman <mathias.nyman@linux.intel.com>
-In-Reply-To: <ao7aLXk9q_v_jEyX@eggarch>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Subject: Re: [REGRESSION] mainline/master: PCI link creation fails on Apalis
+ iMX6
+To: Francesco Dolcini <francesco@dolcini.it>,
+ Leonardo Costa <leoreis.costa@gmail.com>
+Cc: hongxing.zhu@nxp.com, l.stach@pengutronix.de, lpieralisi@kernel.org,
+ kwilczynski@kernel.org, mani@kernel.org, robh@kernel.org,
+ bhelgaas@google.com, Frank.Li@nxp.com, s.hauer@pengutronix.de,
+ kernel@pengutronix.de, festevam@gmail.com, regressions@lists.linux.dev,
+ linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ imx@lists.linux.dev, linux-kernel@vger.kernel.org, leonardo.costa@toradex.com
+References: <bl7i3obu2clzsgeoct2a4mtfhv6typcjdqmgneropf3hpgwve6@n2m5uhlduw57>
+ <20260810211209.GB4821@francesco-nb>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <20260810211209.GB4821@francesco-nb>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: <178775350852.4133069.1765088279857940281@mxe9fb.netcup.net>
+X-Rspamd-Server: rspamd-worker-8404
+X-Rspamd-Queue-Id: B2ADA5F992
+X-NC-CID: G3r5K1/Ois168fF789GTTufWvzg9G612mk5/qbx22u4FQm275A0=
 
-On 8/26/26 15:35, Lovekesh Solanki wrote:
-> On Tue, Aug 25, 2026 at 11:43:22PM +0200, Mathieu Fluhr wrote:
->> The patch you sent makes the issue go away. I am now running the exact same
->> scenario for 2 hours, without any crash.
-> That's good, thanks for confirming.
+On 8/10/26 23:12, Francesco Dolcini wrote:
+> On Mon, Aug 10, 2026 at 02:54:45PM -0300, Leonardo Costa wrote:
+>> We are seeing a regression on Apalis iMX6 where connected PCI device
+>> links fail to come up at initialization, as shown below. The issue is
+>> not on the devices' physical connection, as they worked properly on v7.1
+>> and are working on other stable kernel versions.
 > 
->> However, I am not sure if this can qualify for a proper fix, since I
->> do not have any
->> external hub connected to my motherboard: All my USB devices are directly
->> plugged into root hubs (and at the moment, there is only a keyboard and a
->> mouse).
-> Yeah that's the point it only skips the 200ms hold for root hubs. The
-> external hubs still get their fair hold since a parent exists for them.
-> So external hubs are completely unaffected by this patch.
+> just to make this more clear.
 > 
-> On 'proper fix', I think it is, even if we keep this bug seperate for a
-> moment, it makes sense to not give root hubs hold they don't need.
+> 610fa91d9863 ("PCI: imx6: Assert PERST# before enabling regulators")
+> introduced a regression that prevented the boot. because of that we were
+> not able to run any of our test in our CI/CD
 > 
-> I'd love to hear more thoughts on the patch.
-> 
+> commit 7678e81498e2 ("PCI: imx6: Fix i.MX6Q/DL boot hang caused by improper PHY power sequencing")
+> fixes the boot issue, but now PCIe is not longer working
+Just wondering: what the status of this regression? I feel a bit lost here.
 
-Roothub needs some time to settle as well, but 200ms might be excessive.
+It looks like people were really keen on getting this resolved for 7.2
+-- even multiple revert were considered, but not performed in the end
+(not judging here, just mentioning it). Three days after the quoted mail
+(and thus even before 7.2 was out) Richard Zhu posted a fix afaics:
 
-xHC can triggers wake (PME) when a connected USB3 device starts signalling wake,
-but port registers changes are not always visible to driver before link training
-between roothub and device is successful.
+https://lore.kernel.org/all/20260813095003.356062-1-hongxing.zhu@oss.nxp.com/
 
-My educated guess is that 120ms should always be enough for the roothub.
-This is also the lecagy msleep() still apparently left in xhci resume
-to detect port changes in xhci runtime resume if there are USB3 devices.
-That msleep was supposed to be removed now that we got the hub changes.
+But that still sits on the list and did not even receive a tested-by. Is
+it not that urgent anymore for some reason I cannot see? Are developers
+waiting for test-results from affected people? Or did this fall through
+the cracks?
 
-This 120ms can probably be further tuned for roothub in some cases,
-especially if resume is due to userspace action instead of xHC wake signal (PME).
-
-Mathieu, would it be possible to test different values for
-USB_SS_PORT_U0_WAKE_TIME in hub.c? Especially 120ms is interesting.
-
-See when system no longer crashes
-
-Thanks
-Mathias
-
+Ciao, Thorsten
