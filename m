@@ -1,173 +1,90 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7B9715E8B
-	for <regressions@lists.linux.dev>; Wed, 26 Aug 2026 07:41:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E85813C0A07;
+	Wed, 26 Aug 2026 10:21:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787730085; cv=none; b=qncWCccwnvlHtnWfey4p1S85ltCkvDW3Ky3xNFSAi8/0JfWiYgDgpk5RggMXFot2KoK8cFTipxRbTz5Q+6B1aF3JIEgUjsUMgOvmnUF8Ugs/ts+5nS0zD4JTYG9ISk2wdaUEan5c7k8Fp3nP5RYBi2w8aQl/1mshKeX/2Fp0CNM=
+	t=1787739691; cv=none; b=PcJgfXbPwDnVD+swVEguDdzz+eDRzv+MPA2VYWm/Er1vqMuDSmt5iHSFoZr77+DAEWNRwnutCc1oGWPSd1r3hVB9m4+8No9Jrn2nq6VaoZmYT24a8x7ByCu1ZnWz5hs+yh/Ob6iP8X9UXGFDSY+3vKaCkPjxZI1VYtkLnDbIs0s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787730085; c=relaxed/simple;
-	bh=lUg+v3pVExMvPWlNVA6ydnUMAXs3XmsQJXaVLsrsWgI=;
+	s=arc-20240116; t=1787739691; c=relaxed/simple;
+	bh=POX/YMveAu+KX2uCmi5Uo4cKPHVRBpn6C4m5QNJ715I=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FGjS2Lk9XOwUMA4OMdVx90Ey1SIm4E/lIbJJlNokuwOqzq3UiqBkffy1Xd+szXE0b9Rp9TL0AFEg02DkIw1oGw24JHhiSeT+oU73TPQyReEhA9Cj6x7OevEg8gxUgT2IcuioXPfqla9jozIk/f8Mi7rhu6QFXB2RfhVvoNJDZLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id EE6CE1F80F;
-	Wed, 26 Aug 2026 07:41:21 +0000 (UTC)
-Authentication-Results: smtp-out2.suse.de;
-	none
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 48D1513533;
-	Wed, 26 Aug 2026 07:41:20 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id k8EhC6CYjmoqAwAAD6G6ig
-	(envelope-from <pvorel@suse.cz>); Wed, 26 Aug 2026 07:41:20 +0000
-Date: Wed, 26 Aug 2026 09:41:14 +0200
-From: Petr Vorel <pvorel@suse.cz>
-To: Namjae Jeon <linkinjeon@kernel.org>
-Cc: Cyril Hrubis <chrubis@suse.cz>, Jan Polensky <japo@linux.ibm.com>,
-	ltp@lists.linux.it, linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev,
-	Andrea Cervesato <andrea.cervesato@suse.com>,
-	Sungjong Seo <sj1557.seo@samsung.com>,
-	Yuezhang Mo <yuezhang.mo@sony.com>, Christoph Hellwig <hch@lst.de>,
-	"Darrick J . Wong" <djwong@kernel.org>
-Subject: Re: [LTP] [PATCH v1 1/1] swap: Add exfat to filesystems requiring
- tst_fill_file
-Message-ID: <20260826074114.GA32334@pevik>
-Reply-To: Petr Vorel <pvorel@suse.cz>
-References: <ajQFErzQW4qfU_Cp@li-276bd24c-2dcc-11b2-a85c-945b6f05615c.ibm.com>
- <6a463902.41a38e5f.27f5bd.337a@mx.google.com>
- <akzN_iISxNTztbEw@li-276bd24c-2dcc-11b2-a85c-945b6f05615c.ibm.com>
- <20260825112755.GA62429@pevik>
- <ao2TtyQpCGP5TLpx@yuki.lan>
- <20260825132604.GA70046@pevik>
- <ao2cpyGYcL-rZLgc@yuki.lan>
- <CAKYAXd_3Za8Jzan9VV4WrK1ATB2WXTazLVuGJ5ViQ8RGp0xbLw@mail.gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=dnCfC6HNpL7TYYIdDxdrXpubrWcGu7467VXkfRnqGEsh40IQmAsr6xUBXeytLFrrqDXN2c8VNIBjWYszMp4wkzyrDVkqH7O4dmrf/B0gWHZsVy14Hj47cPSGGUjq2JKRwAmgRsH4I1IKO3fy5HxDuePC/VNhgoUNOGIyWGL4H84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=he+L3ERj; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="he+L3ERj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18E101F000E9;
+	Wed, 26 Aug 2026 10:21:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxfoundation.org;
+	s=korg; t=1787739689;
+	bh=V4ZoqREWKBTRVg5Xn9QozpDz1SHMaORIEQ1sJJ24y7A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=he+L3ERjvLJF+HhBWPGlFU631R+nhAUjQrBb4XbYA7uSGfYyCb0C46Z9EDpfBwNVN
+	 vs7GHzPDRIpU3HeU+l3PXa3L7P6RcmSw/5AZYYRqbt9nGHr+25xRSg3DDjLwdxqSgf
+	 FGS2pLhzlJXzzR44xoUfxT9ode8TL62gzzvvqXaE=
+Date: Wed, 26 Aug 2026 11:22:38 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Cc: spasswolf@web.de, alexander.deucher@amd.com,
+	regressions@lists.linux.dev, leandro.ribeiro@collabora.com,
+	mwen@igalia.com, alex.hung@amd.com, mario.limonciello@amd.com,
+	jesse.zhang@amd.com, Amber.Lin@amd.com,
+	amd-gfx@lists.freedesktop.org, linux-next@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: warnings from validate_blend_mode_for_alpha_formats() in
+ next-20260715
+Message-ID: <2026082651-spinning-cornbread-33ba@gregkh>
+References: <20260716152933.6744-1-spasswolf@web.de>
+ <20260825212815.48959-1-mikhail.v.gavrilov@gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAKYAXd_3Za8Jzan9VV4WrK1ATB2WXTazLVuGJ5ViQ8RGp0xbLw@mail.gmail.com>
-X-Rspamd-Pre-Result: action=no action;
-	module=replies;
-	Message is reply to one we originated
-X-Spamd-Result: default: False [-4.00 / 50.00];
-	REPLY(-4.00)[]
-X-Rspamd-Queue-Id: EE6CE1F80F
-X-Rspamd-Pre-Result: action=no action;
-	module=replies;
-	Message is reply to one we originated
-X-Spam-Flag: NO
-X-Spam-Score: -4.00
-X-Spam-Level: 
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
+In-Reply-To: <20260825212815.48959-1-mikhail.v.gavrilov@gmail.com>
 
-Hi Namjae,
+On Wed, Aug 26, 2026 at 02:28:15AM +0500, Mikhail Gavrilov wrote:
+> Hi,
+> 
+> this is not a linux-next-only issue any more: 860e748bddcc came in with the
+> drm-next pull of the 7.3 merge window, so it now warns on plain mainline. Here
+> it fires 16 times on every boot - 8 per GPU, on the 4 primary and 4 cursor
+> planes of each of the two cards in this machine:
+> 
+>   [PLANE:44:plane-0] pixel format with alpha exposed but blend mode not setup
+>   WARNING: drivers/gpu/drm/drm_mode_config.c:872 at drm_mode_config_validate+0xa16/0x13b0
+> 
+> I ran into it on 7.2.0-2709dd5ae32f, bisected it to 860e748bddcc and confirmed
+> by reverting that commit, before I found this thread. Hardware:
+> 0000:03:00.0 Navi 31 (DCN 3.2) and 0000:0f:00.0 Raphael iGPU (DCN 3.1.5).
+> 
+> Nobody has put this on regzbot yet, so:
+> 
+> #regzbot introduced: 860e748bddcc
+> #regzbot title: drm: WARNING at drm_mode_config_validate() for planes exposing alpha without a blend mode property
+> #regzbot monitor: https://lore.kernel.org/all/20260813143605.106104-1-mwen@igalia.com/
+> 
+> Status as far as I can see it: Melissa Wen's v3 series (monitored above) fixes
+> amdgpu for both DCN and DCE, has Reviewed-by from Alex Hung and Tested-by from
+> Daniel Wheeler, and I tested it here too - the warnings are gone on both GPUs.
+> It is in neither linux-next nor amd-staging-drm-next so far. 271e90eb5f9f
+> ("drm: use drm_warn() in validate_blend_mode_for_alpha_formats()") turns the
+> splat into a plain warning and went to drm-next on 2026-08-20 as part of
+> drm-misc-next-fixes-2026-08-20, but has not reached mainline either. Other
+> drivers are being fixed in separate threads (imx dcss, rockchip, vkms).
+> 
+> Since this was introduced during the 7.3 merge window, the fixes should land
+> in 7.3 rather than wait for the next one.
 
-> On Tue, Aug 25, 2026 at 10:46 PM Cyril Hrubis <chrubis@suse.cz> wrote:
+I can confirm this regression.  It's hitting me here too on Linus's
+latest tree.  It's not good to boot and have a bunch of warnings already
+happening, resulting in a "tainted" kernel before I have the chance to
+break anything manually myself...
 
-> > Hi!
-> Hi Cyril, Petr,
-> > > > That does not make much sense, if swap_activate was added to kernel,
-> > > > pre-filling the fallocated file shouldn't be needed anymore.
+thanks,
 
-> > > Good catch, you're right. I'm also confused, before v7.2 swap worked on exfat,
-> > > now even with 82a81a7352bc ("exfat: add iomap buffered I/O support") [2]
-> > > and your fix 03a43677ca91 ("exfat: add swap_activate support") [3] is not
-> > > working. Obviously the fix was not good enough.
-
-> > There were two bugs I suppose, one is that fallocate() support for exfat broke
-> > the swapon on fallocated file. The second bug was introduced later when
-> > exfat was rewritten to use iomap. The iomap case was fixed in the patch
-> > above, however it looks like the original bug caused by fallocate()
-> > implementation for exfat is still there.
-> Can you check if an attached patch improves this issue?
-> Thanks.
-
-LGTM.
-
-Tested-by: Petr Vorel <pvorel@suse.cz>
-
-Tested on rapido-linux with:
-CONFIG_EXFAT_FS=y
-CONFIG_EXFAT_DEFAULT_IOCHARSET="utf8"
-
-Hopefully Jan will test it as well, built as module.
-
-Kind regards,
-Petr
-
-> From 5679a624816454c8e7683842eb0ab3f1adf0dcca Mon Sep 17 00:00:00 2001
-> From: Namjae Jeon <linkinjeon@kernel.org>
-> Date: Wed, 26 Aug 2026 09:14:14 +0900
-> Subject: [PATCH] exfat: map allocated extents for swap activation
-
-> exFAT reports allocated ranges beyond valid_size as IOMAP_HOLE when
-> IOMAP_REPORT is set. iomap_swapfile_activate() also uses IOMAP_REPORT
-> while collecting physical extents for a swap file, so it treats the
-> preallocated tail as unallocated and rejects the file with -EINVAL.
-
-> Use swap-specific iomap operations that suppress IOMAP_REPORT before
-> mapping the file. This reports physically allocated ranges as
-> IOMAP_UNWRITTEN during swap activation without changing the
-> byte-accurate SEEK_HOLE and SEEK_DATA behavior of the regular iomap
-> operations.
-
-> Fixes: 03a43677ca91 ("exfat: add swap_activate support")
-> Signed-off-by: Namjae Jeon <linkinjeon@kernel.org>
-> ---
->  fs/exfat/iomap.c | 19 ++++++++++++++++++-
->  1 file changed, 18 insertions(+), 1 deletion(-)
-
-> diff --git a/fs/exfat/iomap.c b/fs/exfat/iomap.c
-> index 0c805bf6676a..bf8baf78a9b8 100644
-> --- a/fs/exfat/iomap.c
-> +++ b/fs/exfat/iomap.c
-> @@ -155,6 +155,22 @@ const struct iomap_ops exfat_iomap_ops = {
->  	.iomap_begin = exfat_iomap_begin,
->  };
-
-> +static int exfat_swap_iomap_begin(struct inode *inode, loff_t offset,
-> +		loff_t length, unsigned int flags, struct iomap *iomap,
-> +		struct iomap *srcmap)
-> +{
-> +	/*
-> +	 * Swap activation needs the physical mappings of preallocated
-> +	 * ranges. Do not report the VDL tail as a hole.
-> +	 */
-> +	return __exfat_iomap_begin(inode, offset, length,
-> +			flags & ~IOMAP_REPORT, iomap, false);
-> +}
-> +
-> +static const struct iomap_ops exfat_swap_iomap_ops = {
-> +	.iomap_begin = exfat_swap_iomap_begin,
-> +};
-> +
->  /*
->   * exfat_write_iomap_end - Update the state after write
->   *
-> @@ -274,5 +290,6 @@ const struct iomap_read_ops exfat_iomap_bio_read_ops = {
->  int exfat_iomap_swap_activate(struct swap_info_struct *sis,
->  			       struct file *file, sector_t *span)
->  {
-> -	return iomap_swapfile_activate(sis, file, span, &exfat_iomap_ops);
-> +	return iomap_swapfile_activate(sis, file, span,
-> +				       &exfat_swap_iomap_ops);
->  }
+greg k-h
