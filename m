@@ -1,124 +1,173 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30CE8345729
-	for <regressions@lists.linux.dev>; Wed, 26 Aug 2026 07:00:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7B9715E8B
+	for <regressions@lists.linux.dev>; Wed, 26 Aug 2026 07:41:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787727602; cv=none; b=IxnCuTioSdASwvW+aCuPd2NEMEMsocbch2jU4ZCO+DX1CzHR5agkamRY/HwFIuQ2ZKFOaAXioD41coNrAw9Ck4dhWZW/bQhYMdxhCS5xswJVciIP5/qa3PEQbDn/WY9tUFRzJ8VQukRf+mShO4N3FyMqHjArLg7obdDEOFxmvRg=
+	t=1787730085; cv=none; b=qncWCccwnvlHtnWfey4p1S85ltCkvDW3Ky3xNFSAi8/0JfWiYgDgpk5RggMXFot2KoK8cFTipxRbTz5Q+6B1aF3JIEgUjsUMgOvmnUF8Ugs/ts+5nS0zD4JTYG9ISk2wdaUEan5c7k8Fp3nP5RYBi2w8aQl/1mshKeX/2Fp0CNM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787727602; c=relaxed/simple;
-	bh=LP+CjnPTNKJTOh9M44NP04G+M4Hbff+bxYnyBcwSMCY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Fg7mWtKQso93FXQ1MwupmlSUIm6m0IRnw3qKH2B9xYnuL13LtGPHi9IBRg6HYyRSrXWOeNxuYkaFIUdKwcr71ERtbDFE8K30SBTwHpRGaKV/BoqmkNA6euGCq3w/RD08ygjKmvgR6YVtF+KRJKduUe47RO+p0Dc5DpVraBIkbVc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OhF3lAU0; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OhF3lAU0"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-6a173ad7cf4so968000a12.3
-        for <regressions@lists.linux.dev>; Wed, 26 Aug 2026 00:00:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1787727599; x=1788332399; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=WauUjNIZUT9UpQVIgggxGeGxRKN9frgsdAp/zagOntA=;
-        b=OhF3lAU0y2iSyiKXHU2ERJ1lhyqwWNy6K2CKRbbMWSnWp4M8SBPmpHe2WDCteV5tlQ
-         8G2xFQ8byh89DqLeexPvVnIr4p6sLyxFAbKClVs7ip5bEQ19nJZxtAbdUPaT5akiL2gW
-         uaoG87IJakNNIMkZMbTD2G29tIoBKRnstbuEmaq2hjF7bpPntxk7xDGnGd3HqkCn68vU
-         N8ZpzZenkXcZE2QIMpvfUv+lYat4MlPxxa6kaDoB6sjDrGQBfW7+KevTSs0BLpUX8v32
-         D3HAM/Ba0V1DG3E9neE/ILGgKL9U2ectWpjCTtK826HtRc0Vrz05/pNNZoXDs690Spi8
-         mQJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787727599; x=1788332399;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=WauUjNIZUT9UpQVIgggxGeGxRKN9frgsdAp/zagOntA=;
-        b=cvBYO/CJPUnBXwK8fAwlYRP5lCX8LMiCivcOsBl1T67XhrJpI+L+IbSbDGzl8cezoV
-         7XUOBsgN3Rgb44qsyzwUic/7xeHNpHhATn2X0Vi4dHjCPt6SKVt9gIO/pd1vqggt7rrb
-         Yt136RBA3EMfFaLyxA4UqXpQAm4cAiZ26P9z1Y7N3jZeWl6fLJuNlgarofwqUnOVtT5Q
-         ytOPghj46XTvHfKS75+aOhWmXV0okZUF+O32frRDyMqzS2yxjl5lGmG1j//SClH70iI/
-         QhXDX99cwGzDh/EQrkEvzSxP3K2UiFZqtCqasXJfOFMOpj2+4Fg8m4z8Foyc71K9yRWF
-         RaEQ==
-X-Forwarded-Encrypted: i=1; AHgh+RqcvxtKs7wmn4kovolK9Ch8uKUkfUf+X2uVx39ulb4/xd7+w6pDIhgljt1lWfCJSbwljjBFpUXTsgv2sQ==@lists.linux.dev
-X-Gm-Message-State: AFuF++kNw9mP/ghKf1sRr5wRG5m3XtF81EbDQVkYt2fk3atvSdmU9BOk
-	nL4mBxxgAZWp6bICQj2bVMDLKWpXSCTNt6LxfUL2dHUweGi9t5fEO2+Y
-X-Gm-Gg: AR+sD13az67k9kDLPQWKAldkQiuCcz2JpK/u89KDHo2vDTU92MN0ugfTNVnWwCb9oN2
-	df519MhTSODxjJ0+k6B8JZL7p9llmKIb2AuwD19m5vAfsVD3GzpY5Jql5bAVs15xKgUp12nQuhc
-	brCX20z+lfd21egVz6KwMvi75/JoD52ZhCuvHFSlI+bKgZx/mITCCuQ3zHca+jfw/uKgKdwV3xg
-	k8ZXXj+u4vv4X0+2Iy575C+hLj2lYgzVAgJMi4JPKi1iQ4VWmgtwGgePTegeAOkXf3xfRLiLozH
-	TT9U6Qhp5EUTDIzzQ9/V/1gOeKitgQ1bLP3b6EwD90O4JGLRTF2reilV6RdCh28WjDhSjt+Fccd
-	1HEk+EoJrkXzSKMNu2PdpmR4RcRIRJfIv4sgxmvXLGTnzbeqYitjW1PUDaiKKDImtjLz7gdgqe/
-	E8g/1Ec2oJ8BukC/8b8/OHLHZGdrGAZoCr4fep+VD461PZSffce1Wt+Vckc8XeAIaekTAU
-X-Received: by 2002:a05:6402:1f01:b0:6a1:b0b:bc2 with SMTP id 4fb4d7f45d1cf-6a5df65b8c9mr6399127a12.10.1787727599087;
-        Tue, 25 Aug 2026 23:59:59 -0700 (PDT)
-Received: from foxbook (bfk5.neoplus.adsl.tpnet.pl. [83.28.48.5])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6a5de8d0b71sm2826662a12.9.2026.08.25.23.59.56
-        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
-        Tue, 25 Aug 2026 23:59:57 -0700 (PDT)
-Date: Wed, 26 Aug 2026 08:59:53 +0200
-From: Michal Pecio <michal.pecio@gmail.com>
-To: Mario Limonciello <mario.limonciello@amd.com>
-Cc: Mathieu Fluhr <mathieu.fluhr@gmail.com>, Lovekesh Solanki
- <lovekeshsolanki00@gmail.com>, Thorsten Leemhuis
- <regressions@leemhuis.info>, Mathias Nyman <mathias.nyman@linux.intel.com>,
- linux-usb@vger.kernel.org, regressions@lists.linux.dev,
- stable@vger.kernel.org, linux-kernel@vger.kernel.org, Forest
- <forestix@gaga.casa>, Slavik Dev <developer.slavik@gmail.com>
-Subject: Re: [REGRESSION] 6.12.36+: usb: hub: post-resume delayed work
- triggers > uncorrected MCE / data fabric sync flood on Threadripper 7970X >
- (bisected to aec11e5f9c45)
-Message-ID: <20260826085953.7f8e3949.michal.pecio@gmail.com>
-In-Reply-To: <f6f2f984-f31b-42c9-b120-6c179803dd2b@amd.com>
-References: <CAPyJwA_D9qw0T72f8zwM1yKjP+To=maVANbcdsWM7yRmbBxYvw@mail.gmail.com>
-	<CAPyJwA9R=p8_uxyYODb00g_nUq26SRsWHBGgAAJnR0YMTRRo4A@mail.gmail.com>
-	<CAPyJwA9P48LDcOr7u_iT1WPFBCHxh9w6cxFvyi5GS3syM6crbQ@mail.gmail.com>
-	<07435e6b-ee30-4c85-8c8b-0ce3a4ead1d9@leemhuis.info>
-	<aosGtkE_diwVJJtB@eggarch>
-	<20260823174059.46fec036.michal.pecio@gmail.com>
-	<aoser8dLytrwqBC2@eggarch>
-	<CAPyJwA8m_Xd2oyV1i9k+-6f7A-j0FiC97yXL=Ci8ZAErs5W4vA@mail.gmail.com>
-	<226b2f34-fa25-4ca6-8afb-0b3dc942715c@amd.com>
-	<CAPyJwA9GvqeaBYhN56L1S9YW-rwWgFejrcNcE=54DQC3Eaqxww@mail.gmail.com>
-	<f6f2f984-f31b-42c9-b120-6c179803dd2b@amd.com>
+	s=arc-20240116; t=1787730085; c=relaxed/simple;
+	bh=lUg+v3pVExMvPWlNVA6ydnUMAXs3XmsQJXaVLsrsWgI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FGjS2Lk9XOwUMA4OMdVx90Ey1SIm4E/lIbJJlNokuwOqzq3UiqBkffy1Xd+szXE0b9Rp9TL0AFEg02DkIw1oGw24JHhiSeT+oU73TPQyReEhA9Cj6x7OevEg8gxUgT2IcuioXPfqla9jozIk/f8Mi7rhu6QFXB2RfhVvoNJDZLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id EE6CE1F80F;
+	Wed, 26 Aug 2026 07:41:21 +0000 (UTC)
+Authentication-Results: smtp-out2.suse.de;
+	none
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 48D1513533;
+	Wed, 26 Aug 2026 07:41:20 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id k8EhC6CYjmoqAwAAD6G6ig
+	(envelope-from <pvorel@suse.cz>); Wed, 26 Aug 2026 07:41:20 +0000
+Date: Wed, 26 Aug 2026 09:41:14 +0200
+From: Petr Vorel <pvorel@suse.cz>
+To: Namjae Jeon <linkinjeon@kernel.org>
+Cc: Cyril Hrubis <chrubis@suse.cz>, Jan Polensky <japo@linux.ibm.com>,
+	ltp@lists.linux.it, linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev,
+	Andrea Cervesato <andrea.cervesato@suse.com>,
+	Sungjong Seo <sj1557.seo@samsung.com>,
+	Yuezhang Mo <yuezhang.mo@sony.com>, Christoph Hellwig <hch@lst.de>,
+	"Darrick J . Wong" <djwong@kernel.org>
+Subject: Re: [LTP] [PATCH v1 1/1] swap: Add exfat to filesystems requiring
+ tst_fill_file
+Message-ID: <20260826074114.GA32334@pevik>
+Reply-To: Petr Vorel <pvorel@suse.cz>
+References: <ajQFErzQW4qfU_Cp@li-276bd24c-2dcc-11b2-a85c-945b6f05615c.ibm.com>
+ <6a463902.41a38e5f.27f5bd.337a@mx.google.com>
+ <akzN_iISxNTztbEw@li-276bd24c-2dcc-11b2-a85c-945b6f05615c.ibm.com>
+ <20260825112755.GA62429@pevik>
+ <ao2TtyQpCGP5TLpx@yuki.lan>
+ <20260825132604.GA70046@pevik>
+ <ao2cpyGYcL-rZLgc@yuki.lan>
+ <CAKYAXd_3Za8Jzan9VV4WrK1ATB2WXTazLVuGJ5ViQ8RGp0xbLw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAKYAXd_3Za8Jzan9VV4WrK1ATB2WXTazLVuGJ5ViQ8RGp0xbLw@mail.gmail.com>
+X-Rspamd-Pre-Result: action=no action;
+	module=replies;
+	Message is reply to one we originated
+X-Spamd-Result: default: False [-4.00 / 50.00];
+	REPLY(-4.00)[]
+X-Rspamd-Queue-Id: EE6CE1F80F
+X-Rspamd-Pre-Result: action=no action;
+	module=replies;
+	Message is reply to one we originated
+X-Spam-Flag: NO
+X-Spam-Score: -4.00
+X-Spam-Level: 
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
 
-On Tue, 25 Aug 2026 22:14:32 -0500, Mario Limonciello wrote:
-> This isn't a BIOS regression, it's been around since the beginning on 
-> this threadripper model but it was harder to trigger.
-> The Linux kernel changes in the bisect exposed a platform issue.
-> 
-> The workaround you can do for now is to disable runtime PM on the
-> XHCI controller to avoid triggering it.  But it's a platform issue.
-> 
-> For a proper fix you need to reach out to ASUS to get an AGESA
-> upgrade. You can ask them to reach out to AMD if they need
-> assistance/guidance on the versions that contain the fix for this.
-> You can share this thread with them for reference.
+Hi Namjae,
 
-This sounds like it's a known FW bug, so I suppose the exact failure
-mechanism is known too. Is it triggered just by putting that PCI
-function into D3 at a "wrong" time, or is there any USB/xHCI layer
-involvement, particularly anything out of spec by software?
+> On Tue, Aug 25, 2026 at 10:46 PM Cyril Hrubis <chrubis@suse.cz> wrote:
 
-I ask because we know one case where dodgy SW actions cause some AMD
-xHCI to malfunction, but the problem is contained in the USB layer and
-the affected xHC doesn't bring down the whole SoC.
+> > Hi!
+> Hi Cyril, Petr,
+> > > > That does not make much sense, if swap_activate was added to kernel,
+> > > > pre-filling the fallocated file shouldn't be needed anymore.
 
-Any thoughts about the patch which reduces suspend delay for root hubs
-specifically? It restores the original timing of PCI resume/suspend
-cycles, at least as long as there are no external hubs connected, and
-has just been reported to mitigate this problem.
+> > > Good catch, you're right. I'm also confused, before v7.2 swap worked on exfat,
+> > > now even with 82a81a7352bc ("exfat: add iomap buffered I/O support") [2]
+> > > and your fix 03a43677ca91 ("exfat: add swap_activate support") [3] is not
+> > > working. Obviously the fix was not good enough.
 
-Regards,
-Michal
+> > There were two bugs I suppose, one is that fallocate() support for exfat broke
+> > the swapon on fallocated file. The second bug was introduced later when
+> > exfat was rewritten to use iomap. The iomap case was fixed in the patch
+> > above, however it looks like the original bug caused by fallocate()
+> > implementation for exfat is still there.
+> Can you check if an attached patch improves this issue?
+> Thanks.
+
+LGTM.
+
+Tested-by: Petr Vorel <pvorel@suse.cz>
+
+Tested on rapido-linux with:
+CONFIG_EXFAT_FS=y
+CONFIG_EXFAT_DEFAULT_IOCHARSET="utf8"
+
+Hopefully Jan will test it as well, built as module.
+
+Kind regards,
+Petr
+
+> From 5679a624816454c8e7683842eb0ab3f1adf0dcca Mon Sep 17 00:00:00 2001
+> From: Namjae Jeon <linkinjeon@kernel.org>
+> Date: Wed, 26 Aug 2026 09:14:14 +0900
+> Subject: [PATCH] exfat: map allocated extents for swap activation
+
+> exFAT reports allocated ranges beyond valid_size as IOMAP_HOLE when
+> IOMAP_REPORT is set. iomap_swapfile_activate() also uses IOMAP_REPORT
+> while collecting physical extents for a swap file, so it treats the
+> preallocated tail as unallocated and rejects the file with -EINVAL.
+
+> Use swap-specific iomap operations that suppress IOMAP_REPORT before
+> mapping the file. This reports physically allocated ranges as
+> IOMAP_UNWRITTEN during swap activation without changing the
+> byte-accurate SEEK_HOLE and SEEK_DATA behavior of the regular iomap
+> operations.
+
+> Fixes: 03a43677ca91 ("exfat: add swap_activate support")
+> Signed-off-by: Namjae Jeon <linkinjeon@kernel.org>
+> ---
+>  fs/exfat/iomap.c | 19 ++++++++++++++++++-
+>  1 file changed, 18 insertions(+), 1 deletion(-)
+
+> diff --git a/fs/exfat/iomap.c b/fs/exfat/iomap.c
+> index 0c805bf6676a..bf8baf78a9b8 100644
+> --- a/fs/exfat/iomap.c
+> +++ b/fs/exfat/iomap.c
+> @@ -155,6 +155,22 @@ const struct iomap_ops exfat_iomap_ops = {
+>  	.iomap_begin = exfat_iomap_begin,
+>  };
+
+> +static int exfat_swap_iomap_begin(struct inode *inode, loff_t offset,
+> +		loff_t length, unsigned int flags, struct iomap *iomap,
+> +		struct iomap *srcmap)
+> +{
+> +	/*
+> +	 * Swap activation needs the physical mappings of preallocated
+> +	 * ranges. Do not report the VDL tail as a hole.
+> +	 */
+> +	return __exfat_iomap_begin(inode, offset, length,
+> +			flags & ~IOMAP_REPORT, iomap, false);
+> +}
+> +
+> +static const struct iomap_ops exfat_swap_iomap_ops = {
+> +	.iomap_begin = exfat_swap_iomap_begin,
+> +};
+> +
+>  /*
+>   * exfat_write_iomap_end - Update the state after write
+>   *
+> @@ -274,5 +290,6 @@ const struct iomap_read_ops exfat_iomap_bio_read_ops = {
+>  int exfat_iomap_swap_activate(struct swap_info_struct *sis,
+>  			       struct file *file, sector_t *span)
+>  {
+> -	return iomap_swapfile_activate(sis, file, span, &exfat_iomap_ops);
+> +	return iomap_swapfile_activate(sis, file, span,
+> +				       &exfat_swap_iomap_ops);
+>  }
