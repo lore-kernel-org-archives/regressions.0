@@ -1,168 +1,139 @@
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9473543F4B4
-	for <regressions@lists.linux.dev>; Tue, 25 Aug 2026 21:43:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.167.53
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787694218; cv=pass; b=FpnF+hQrHFisfNIQfHRtvoYHln9Y0jWnB6A8FdQ9UY3OwZpens1MfB7fEs0Pnj/GeWzXoY4T5Cku49CpSLiJDEe1vlaJfhWT62cHa5HElAzXo1Ed2gXVvn/A7PL0RNzgfhpUc5ssDs1SYhPom3uMvSI7z8/th9dlBvFjECNDf/g=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787694218; c=relaxed/simple;
-	bh=gTQdpnJPXFvK+dH5XFeLn0W2hRaHVNhffzbwns+IEi4=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 322B03B1B3
+	for <regressions@lists.linux.dev>; Wed, 26 Aug 2026 00:23:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1787703836; cv=none; b=tfKw5skSO8IAPQ+D/yHIVj60tV0I8QOCcCFSYn4rsLwwF0qQ2wajAfXkP+u9tmmH+LAaIursJVgtrh9b4NvbI7GkX0jc/OSYuzRo1ib5my0dEwl5ISeNe1pHz4ZNR5VX33wDucGdpNtOEOQmCmQqwSfWGk/29IKTPE5Vd5CgrR4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1787703836; c=relaxed/simple;
+	bh=8wu0zwO/+fvrj3+ENKIuk2JDtYFbwkNND81ZqA6vKj8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SrpzeHjgwEdFbPa7N7zEd4PJSiVrYwxgQM89YSQhbF5xZWrCN7U5UBpNlW0TtIdh1J+XEc1Xl29+UAsDWC+DlnEyGv0oMbG15uk9jX4SrmwxcpSwHdqyfowobqa2QM+ipUKYW8QrQm0kOdHQo5ciM1yw6g3K75UQN3RrFmY+AH4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eyEcmKgY; arc=pass smtp.client-ip=209.85.167.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=XC8XnkeNm5/QQTIaQM0zSzGqQ1VrGospg7Dnftowj+YBudHSAiZ6+u0IEKCWpCmEirn0ZuikoOSGtTVcAJy9F/f6nnMW1qbSnTmE8rJaglnf8lAVHtgi2X8B2Voy5YnHgVxP6ji0U6EqJQrhTDMO9LjNVjyF81ANkheomDFZqB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WNi8rtEH; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eyEcmKgY"
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-5b0231a3e86so266279e87.0
-        for <regressions@lists.linux.dev>; Tue, 25 Aug 2026 14:43:36 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1787694214; cv=none;
-        d=google.com; s=arc-20260327;
-        b=T5k0Q1KMXGthjRCCc0JTiu1SgqNPZT/gdQhVLYWTTfyAtTZA9fql2ME4oZ76fA4+Iq
-         Kcgsb5j4br+yQ73czFPxEp5b6sfMoYMG3Njo9SyP6TZuvxJxIWqYIBDJ4xW7+FS71QHS
-         R3KmfYgptCEO0lXsjoZ+NSiMP9BxaG4icRPQHv/BbkVKb3Biq16+72tI5iUyrwWN2T8f
-         Z1hiRahHy8S3NPRyikjIAPWpWyAEtzuv/znBMOzjzcxkPxQWb5Knv4b/RD90LEbjfRI4
-         96hK3Zbbx1KoFb365AWqCs8zwUHhbfvM/jhL4XUg82w3nFDWxxQAr6vDhdmb145YLZbO
-         wDSg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=gTQdpnJPXFvK+dH5XFeLn0W2hRaHVNhffzbwns+IEi4=;
-        fh=UgHAQyiOYANTgSnfgEnefVNFacrY3oa3DYbvSiERHWA=;
-        b=l7sDXKjytEgVhBewqApNdQM6G6XZvFdOxGTRd2huGl/sGhH08v8+Gw9JpNmHcqD9m1
-         VCJ5EiPpgTFuTA60rDedU7Y4CEK0dtbzElgJ0la+9O3MM5y8g/z4ouHFFF45GGbzpV3g
-         MCO5fevl66yiFb3tB8P6xNp5BUd/zdrWee/8kGO/2FFhtkGBToNop8dgWXHDQN34PH7m
-         bQ3Ed33FM1yHDtHE0R5ICLMnextBeFsublVVVUqn4sUtvcdiy6P5EIHaYdwv4VufJRx0
-         P/+q19AAJqRKmJkaLuR54T8Dk+9EVpFnldPSBsR++ZcZKAtf0IA0O2fGoRsqYO16ZWPt
-         HjHQ==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1787694214; x=1788299014; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=gTQdpnJPXFvK+dH5XFeLn0W2hRaHVNhffzbwns+IEi4=;
-        b=eyEcmKgYcwsjhtboY3JVRwY/Qcu7TdoDwbU1rj2NaGWXOy3eJmBIl/FOKywZRRF/tk
-         mqFlx7JVAO/edVB6CRbUjofjM848BMvkQOEz0a96gxNZnqrjXzB+hthcYLKQ4RaktYVV
-         z2a+bjpRM8xLbjZcGHJb00JL+uPOs3tS0X24cqZK4esbJ4KWYL1S5dZqFdCZAa2XH0IN
-         v3MkKe2WUQtMx6i/P5KD5LNTtzAuicHZcnGYQlQr1qvGjSNBfoTnh9f9lAhpq4PS1Gfb
-         cIwp0kpxer7SOb29bczCBiuXUrjlSP3YA+TR2EuBD6QmMScI064FK1CpaI1Wpcd+5k+f
-         pHyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787694214; x=1788299014;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=gTQdpnJPXFvK+dH5XFeLn0W2hRaHVNhffzbwns+IEi4=;
-        b=tIglmOw+WfBVHQfA1nVSWXSFwaZFl9yTyysOGyaUgNMxnms3kzLAjn2/l30RW6IUhm
-         h+OAiwehUJdVqJAv/Zs63yJgLEmfJcMnVU2q4lWHdqZ1ICxOukBcE7mE2PN6UgBQoal3
-         OmLH4Cfa3qauYBtzT2eUrdgUWxAyKYyM42VvLX1mrniTPCjMJu5t/c/KqsbXH3hCNmtL
-         pIa8yJLZdFPKGKz3Bzz/ZVLBnM5neNFUEiaM4SxARb1zQlTQr7V3LDXB9PCGe450LNEY
-         igEWBhyDjJ8M9sZqKY6mS14oCkmUwXEIc6m/8fGB4nBj0WrLjL8h8K9vtjaQBD4QWux1
-         5mHw==
-X-Forwarded-Encrypted: i=1; AHgh+Rp9B1c2FnL/WdGGlZmL/dYL2mHojFqrVsRhrryeQQmhM6DtXxBwqnPKBc6G6d/zeR2z6d5JX0BsMj3rMg==@lists.linux.dev
-X-Gm-Message-State: AFuF++k7iVtBgkbOh7QEdSXYISML7jd24hh0ZK7ydJPbG/u6l6FLE43G
-	rtHG2yxNvkJ6g1f8E83F/YyyVMSYIfSm+8PJIX03pW5nHDRfUKqNek5Me7wu/MLTyTgukCtBLVv
-	pCRZcroMA590HFoMkVmUc7OAtAs2ZtDc=
-X-Gm-Gg: AR+sD101bxe9S4jMEALBCAk2Rr1bJHzMTX5JWfVVR/CxRpTRBU3oK0Hu+3to9XRaMDr
-	BHF0fy7cfvoCQtDhik8bToYBi46delGXXrH+nVujN0BOlO23d+CoWzM8b427xvFIZkPKL4eEQTX
-	qYJOl1Bo2vlD7x9rFw9ao9sgERuCDC8WMc69meA8WtTdp9Vg9cpOq2m4q61YoKCFyDJReK1ftZf
-	pGjMRHeCyFLa0KeffcCoyq08Ksj3mzpwkvClsf8wUvu1UwciWJcpLvnpQ1DqYWy5mzN9+LkCTP+
-	YWAQSxgSmCZoamxbCMhZ5XVgcBaiT0/Gz/QcksCEhYwhZoKTIaDatHyqMfp2GH3+sd1m3xhG6ir
-	WFqaXw3U2pA0=
-X-Received: by 2002:a05:651c:31db:b0:3a1:1181:b2e with SMTP id
- 38308e7fff4ca-3a1fd67c986mr3121441fa.12.1787694214237; Tue, 25 Aug 2026
- 14:43:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WNi8rtEH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDC7F1F00A3D
+	for <regressions@lists.linux.dev>; Wed, 26 Aug 2026 00:23:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1787703835;
+	bh=uUTmiHFEOceLcx9itCYMJtIGYFbMp7iKyog+97ymqj0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=WNi8rtEHOpv6c5q+N+tg2xIhLjQjOyGzIMxMZMW0sc3bpo2s/dU7+NuyxOwoVYRal
+	 4M4tuq2xyGOxYQpTsA0pzm3TpkiWOrQw+F83ajnPAOroSHnMP0SJAm7oU6R+WV3O+4
+	 TI6alN6C57pYasJ0YZOXCEQID6Su0BrCcHzGxy/F+IglO0Rekmfyeonm4GPTUdTPSv
+	 ABRrEGgkXjVrrfZPTyVINvP2A5vl51GyM5+Ck9yluLF305lcxm47KIUMakUJC1wd4y
+	 i9exey4lrUemz/+SoNulVpozyHRjdu/OOOeQGwGZCjF+SwSMWRuPPpLtl7ctr2uVNn
+	 dhVdyDtDLx8hA==
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-6a082b3671fso525505a12.3
+        for <regressions@lists.linux.dev>; Tue, 25 Aug 2026 17:23:54 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AHgh+RoDLaJBf2rbdLxn3jfiCJv9KKCDn8xmxTPSl4pnQhMrGGjex5unMpsa/cD9QqK84PEioaLJRr+wLxmvsg==@lists.linux.dev
+X-Gm-Message-State: AFuF++ksDo0DrI8//+TNwDS3bxfZuvVQMI5EQ9Im5rNbFkUgifLmDzHV
+	NctVym4DWKxI5FGC1hg9HL4Mg3hXWn97dH/La98TQVFgTDmg6B/9NdHpM1lQdXNeipaGuv2RltQ
+	I4oCkyKkpY6Y5GKpYEvUmv6fXqZq+HbY=
+X-Received: by 2002:a05:6402:a0d9:b0:6a1:2863:ad75 with SMTP id
+ 4fb4d7f45d1cf-6a5df64d838mr2965272a12.13.1787703833588; Tue, 25 Aug 2026
+ 17:23:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAPyJwA_D9qw0T72f8zwM1yKjP+To=maVANbcdsWM7yRmbBxYvw@mail.gmail.com>
- <CAPyJwA9R=p8_uxyYODb00g_nUq26SRsWHBGgAAJnR0YMTRRo4A@mail.gmail.com>
- <CAPyJwA9P48LDcOr7u_iT1WPFBCHxh9w6cxFvyi5GS3syM6crbQ@mail.gmail.com>
- <07435e6b-ee30-4c85-8c8b-0ce3a4ead1d9@leemhuis.info> <aosGtkE_diwVJJtB@eggarch>
- <20260823174059.46fec036.michal.pecio@gmail.com> <aoser8dLytrwqBC2@eggarch>
- <CAPyJwA8m_Xd2oyV1i9k+-6f7A-j0FiC97yXL=Ci8ZAErs5W4vA@mail.gmail.com> <ao1ovvdPAy6n_F7I@eggarch>
-In-Reply-To: <ao1ovvdPAy6n_F7I@eggarch>
-From: Mathieu Fluhr <mathieu.fluhr@gmail.com>
-Date: Tue, 25 Aug 2026 23:43:22 +0200
-X-Gm-Features: AcwNN1XMZ3b0XN7GsnQg8cfRR84V6LJh9PVf6rA8xjQi1iFnVttUPqbLHwxSCcY
-Message-ID: <CAPyJwA-QALkCQn8J1+=U-nuE_7WSEPhVcUEKb+MMYMaA_1AVjQ@mail.gmail.com>
-Subject: Re: [REGRESSION] 6.12.36+: usb: hub: post-resume delayed work
- triggers > uncorrected MCE / data fabric sync flood on Threadripper 7970X >
- (bisected to aec11e5f9c45)
-To: Lovekesh Solanki <lovekeshsolanki00@gmail.com>
-Cc: Michal Pecio <michal.pecio@gmail.com>, Thorsten Leemhuis <regressions@leemhuis.info>, 
-	Mathias Nyman <mathias.nyman@linux.intel.com>, linux-usb@vger.kernel.org, 
-	regressions@lists.linux.dev, stable@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Mario Limonciello <mario.limonciello@amd.com>, 
-	Forest <forestix@gaga.casa>, Slavik Dev <developer.slavik@gmail.com>
+References: <ajQFErzQW4qfU_Cp@li-276bd24c-2dcc-11b2-a85c-945b6f05615c.ibm.com>
+ <6a463902.41a38e5f.27f5bd.337a@mx.google.com> <akzN_iISxNTztbEw@li-276bd24c-2dcc-11b2-a85c-945b6f05615c.ibm.com>
+ <20260825112755.GA62429@pevik> <ao2TtyQpCGP5TLpx@yuki.lan>
+ <20260825132604.GA70046@pevik> <ao2cpyGYcL-rZLgc@yuki.lan>
+In-Reply-To: <ao2cpyGYcL-rZLgc@yuki.lan>
+From: Namjae Jeon <linkinjeon@kernel.org>
+Date: Wed, 26 Aug 2026 09:23:39 +0900
+X-Gmail-Original-Message-ID: <CAKYAXd_3Za8Jzan9VV4WrK1ATB2WXTazLVuGJ5ViQ8RGp0xbLw@mail.gmail.com>
+X-Gm-Features: AcwNN1UeAvkSqSZ2B8OwXMcLplrAMtwLAx7uHZMrWWrrghcYdk3dsO2C_j9V2AY
+Message-ID: <CAKYAXd_3Za8Jzan9VV4WrK1ATB2WXTazLVuGJ5ViQ8RGp0xbLw@mail.gmail.com>
+Subject: Re: [LTP] [PATCH v1 1/1] swap: Add exfat to filesystems requiring tst_fill_file
+To: Cyril Hrubis <chrubis@suse.cz>
+Cc: Petr Vorel <pvorel@suse.cz>, Jan Polensky <japo@linux.ibm.com>, ltp@lists.linux.it, 
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev, 
+	Andrea Cervesato <andrea.cervesato@suse.com>, Sungjong Seo <sj1557.seo@samsung.com>, 
+	Yuezhang Mo <yuezhang.mo@sony.com>, Christoph Hellwig <hch@lst.de>, 
+	"Darrick J . Wong" <djwong@kernel.org>
+Content-Type: multipart/mixed; boundary="000000000000f737100659e83b24"
+
+--000000000000f737100659e83b24
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
->> If you need me to do some further tests or experiments, let me know. I w=
-ill
->> be more than happy to play the guinea pig here.
-> Was this result after applying the small patch I sent above?
-
-The patch you sent makes the issue go away. I am now running the exact same
-scenario for 2 hours, without any crash.
-
-However, I am not sure if this can qualify for a proper fix, since I
-do not have any
-external hub connected to my motherboard: All my USB devices are directly
-plugged into root hubs (and at the moment, there is only a keyboard and a
-mouse).
-
-On Tue, Aug 25, 2026 at 12:06=E2=80=AFPM Lovekesh Solanki
-<lovekeshsolanki00@gmail.com> wrote:
+On Tue, Aug 25, 2026 at 10:46=E2=80=AFPM Cyril Hrubis <chrubis@suse.cz> wro=
+te:
 >
-> On Mon, Aug 24, 2026 at 09:37:55PM +0200, Mathieu Fluhr wrote:
-> > Yes. As mentioned, I first thought that the emulator itself triggered t=
-hat by
-> > doing something that the CPU did not like.To be honest, I barely play w=
-ith old
-> > Android versions anymore, but seeing that I could reproduce it even wit=
-h
-> > Android 13 or 14 made me suspicious.
+> Hi!
+Hi Cyril, Petr,
+> > > That does not make much sense, if swap_activate was added to kernel,
+> > > pre-filling the fallocated file shouldn't be needed anymore.
 > >
-> > I _guess_ Google implemented a workaround inside adb for version Androi=
-d
-> > 15 since using this version, it remains stable for more than 2 hours.
-> >
-> > But, in the end, the situation is that from a simple user account havin=
-g access
-> > to some usb plugged in devices (I usually add my user account to the pl=
-ugdev
-> > group and use some known udev rules to access my Android tests devices)=
-,
-> > you have a way to crash the complete system.
-> >
-> > > Opinions seem to vary on whether CPU load must be present or absent.
-> >
-> > On my side (and I am here only speaking about my TR. I don't know about
-> > other Ryzen CPUs), I can't reproduce it under load, and one condition t=
-o
-> > reproduce it is my CPU going in C2 state.
-> > -> I did a 2:30 hour test using several youtube videos playing at the s=
-ame
-> > time on my desktop, also stressing the emulator with some 3D Mark runs
-> > (as mentioned, I first suspected the nvidia driver to be faulty). As lo=
-ng as my
-> > computer was busy everything went fine. But then I let it stand still f=
-or a few
-> > minutes, and it just crashed.
-> >
-> > If you need me to do some further tests or experiments, let me know. I =
-will
-> > be more than happy to play the guinea pig here.
-> Was this result after applying the small patch I sent above?
+> > Good catch, you're right. I'm also confused, before v7.2 swap worked on=
+ exfat,
+> > now even with 82a81a7352bc ("exfat: add iomap buffered I/O support") [2=
+]
+> > and your fix 03a43677ca91 ("exfat: add swap_activate support") [3] is n=
+ot
+> > working. Obviously the fix was not good enough.
 >
-> Regards,
-> Lovekesh
+> There were two bugs I suppose, one is that fallocate() support for exfat =
+broke
+> the swapon on fallocated file. The second bug was introduced later when
+> exfat was rewritten to use iomap. The iomap case was fixed in the patch
+> above, however it looks like the original bug caused by fallocate()
+> implementation for exfat is still there.
+Can you check if an attached patch improves this issue?
+Thanks.
+
+--000000000000f737100659e83b24
+Content-Type: text/x-patch; charset="US-ASCII"; 
+	name="0001-exfat-map-allocated-extents-for-swap-activation.patch"
+Content-Disposition: attachment; 
+	filename="0001-exfat-map-allocated-extents-for-swap-activation.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_mt9cmb1u0>
+X-Attachment-Id: f_mt9cmb1u0
+
+RnJvbSA1Njc5YTYyNDgxNjQ1NGM4ZTc2ODM4NDJlYjBhYjNmMWFkZjBkY2NhIE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBOYW1qYWUgSmVvbiA8bGlua2luamVvbkBrZXJuZWwub3JnPgpE
+YXRlOiBXZWQsIDI2IEF1ZyAyMDI2IDA5OjE0OjE0ICswOTAwClN1YmplY3Q6IFtQQVRDSF0gZXhm
+YXQ6IG1hcCBhbGxvY2F0ZWQgZXh0ZW50cyBmb3Igc3dhcCBhY3RpdmF0aW9uCgpleEZBVCByZXBv
+cnRzIGFsbG9jYXRlZCByYW5nZXMgYmV5b25kIHZhbGlkX3NpemUgYXMgSU9NQVBfSE9MRSB3aGVu
+CklPTUFQX1JFUE9SVCBpcyBzZXQuIGlvbWFwX3N3YXBmaWxlX2FjdGl2YXRlKCkgYWxzbyB1c2Vz
+IElPTUFQX1JFUE9SVAp3aGlsZSBjb2xsZWN0aW5nIHBoeXNpY2FsIGV4dGVudHMgZm9yIGEgc3dh
+cCBmaWxlLCBzbyBpdCB0cmVhdHMgdGhlCnByZWFsbG9jYXRlZCB0YWlsIGFzIHVuYWxsb2NhdGVk
+IGFuZCByZWplY3RzIHRoZSBmaWxlIHdpdGggLUVJTlZBTC4KClVzZSBzd2FwLXNwZWNpZmljIGlv
+bWFwIG9wZXJhdGlvbnMgdGhhdCBzdXBwcmVzcyBJT01BUF9SRVBPUlQgYmVmb3JlCm1hcHBpbmcg
+dGhlIGZpbGUuIFRoaXMgcmVwb3J0cyBwaHlzaWNhbGx5IGFsbG9jYXRlZCByYW5nZXMgYXMKSU9N
+QVBfVU5XUklUVEVOIGR1cmluZyBzd2FwIGFjdGl2YXRpb24gd2l0aG91dCBjaGFuZ2luZyB0aGUK
+Ynl0ZS1hY2N1cmF0ZSBTRUVLX0hPTEUgYW5kIFNFRUtfREFUQSBiZWhhdmlvciBvZiB0aGUgcmVn
+dWxhciBpb21hcApvcGVyYXRpb25zLgoKRml4ZXM6IDAzYTQzNjc3Y2E5MSAoImV4ZmF0OiBhZGQg
+c3dhcF9hY3RpdmF0ZSBzdXBwb3J0IikKU2lnbmVkLW9mZi1ieTogTmFtamFlIEplb24gPGxpbmtp
+bmplb25Aa2VybmVsLm9yZz4KLS0tCiBmcy9leGZhdC9pb21hcC5jIHwgMTkgKysrKysrKysrKysr
+KysrKysrLQogMSBmaWxlIGNoYW5nZWQsIDE4IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkK
+CmRpZmYgLS1naXQgYS9mcy9leGZhdC9pb21hcC5jIGIvZnMvZXhmYXQvaW9tYXAuYwppbmRleCAw
+YzgwNWJmNjY3NmEuLmJmOGJhZjc4YTliOCAxMDA2NDQKLS0tIGEvZnMvZXhmYXQvaW9tYXAuYwor
+KysgYi9mcy9leGZhdC9pb21hcC5jCkBAIC0xNTUsNiArMTU1LDIyIEBAIGNvbnN0IHN0cnVjdCBp
+b21hcF9vcHMgZXhmYXRfaW9tYXBfb3BzID0gewogCS5pb21hcF9iZWdpbiA9IGV4ZmF0X2lvbWFw
+X2JlZ2luLAogfTsKIAorc3RhdGljIGludCBleGZhdF9zd2FwX2lvbWFwX2JlZ2luKHN0cnVjdCBp
+bm9kZSAqaW5vZGUsIGxvZmZfdCBvZmZzZXQsCisJCWxvZmZfdCBsZW5ndGgsIHVuc2lnbmVkIGlu
+dCBmbGFncywgc3RydWN0IGlvbWFwICppb21hcCwKKwkJc3RydWN0IGlvbWFwICpzcmNtYXApCit7
+CisJLyoKKwkgKiBTd2FwIGFjdGl2YXRpb24gbmVlZHMgdGhlIHBoeXNpY2FsIG1hcHBpbmdzIG9m
+IHByZWFsbG9jYXRlZAorCSAqIHJhbmdlcy4gRG8gbm90IHJlcG9ydCB0aGUgVkRMIHRhaWwgYXMg
+YSBob2xlLgorCSAqLworCXJldHVybiBfX2V4ZmF0X2lvbWFwX2JlZ2luKGlub2RlLCBvZmZzZXQs
+IGxlbmd0aCwKKwkJCWZsYWdzICYgfklPTUFQX1JFUE9SVCwgaW9tYXAsIGZhbHNlKTsKK30KKwor
+c3RhdGljIGNvbnN0IHN0cnVjdCBpb21hcF9vcHMgZXhmYXRfc3dhcF9pb21hcF9vcHMgPSB7CisJ
+LmlvbWFwX2JlZ2luID0gZXhmYXRfc3dhcF9pb21hcF9iZWdpbiwKK307CisKIC8qCiAgKiBleGZh
+dF93cml0ZV9pb21hcF9lbmQgLSBVcGRhdGUgdGhlIHN0YXRlIGFmdGVyIHdyaXRlCiAgKgpAQCAt
+Mjc0LDUgKzI5MCw2IEBAIGNvbnN0IHN0cnVjdCBpb21hcF9yZWFkX29wcyBleGZhdF9pb21hcF9i
+aW9fcmVhZF9vcHMgPSB7CiBpbnQgZXhmYXRfaW9tYXBfc3dhcF9hY3RpdmF0ZShzdHJ1Y3Qgc3dh
+cF9pbmZvX3N0cnVjdCAqc2lzLAogCQkJICAgICAgIHN0cnVjdCBmaWxlICpmaWxlLCBzZWN0b3Jf
+dCAqc3BhbikKIHsKLQlyZXR1cm4gaW9tYXBfc3dhcGZpbGVfYWN0aXZhdGUoc2lzLCBmaWxlLCBz
+cGFuLCAmZXhmYXRfaW9tYXBfb3BzKTsKKwlyZXR1cm4gaW9tYXBfc3dhcGZpbGVfYWN0aXZhdGUo
+c2lzLCBmaWxlLCBzcGFuLAorCQkJCSAgICAgICAmZXhmYXRfc3dhcF9pb21hcF9vcHMpOwogfQot
+LSAKMi4zNC4xCgo=
+--000000000000f737100659e83b24--
