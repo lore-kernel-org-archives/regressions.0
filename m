@@ -1,52 +1,46 @@
-Received: from mout-b-105.mailbox.org (mout-b-105.mailbox.org [195.10.208.50])
+Received: from proxmox-new.maurer-it.com (proxmox-new.maurer-it.com [94.136.29.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9F63367B94
-	for <regressions@lists.linux.dev>; Thu, 27 Aug 2026 15:50:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.10.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75D27441600
+	for <regressions@lists.linux.dev>; Thu, 27 Aug 2026 18:06:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=94.136.29.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787845863; cv=none; b=jhT+UqwPdiSQLeO5fHYCl+VYUBPjvCnQG4LWBO/Xr1jDEBijIP10sR7JDdbFFVrG4bO/52WRxO47o9+yobymnHgn3mS6pwRFCOwAwyEn8/7OupHST2NDe5XXOGqosfb6PvjZJWk/8N/aeEumOT9U0He4IpmdCofigsNRyCiLuv4=
+	t=1787854023; cv=none; b=WFZLyTjwxiA5gD2q/Lp6LqhB9q63otoLqZ0uU3WU5riGYXE/A78MXRCDZ4dsd2zqO4YXP2bM+Xb16SPh99sC9MD+jeRQTLU8vRfMLX1od7+ez0+rZTQsEqXZn++5MA6+XJ+W1G6j0EkwATItINeW/nl9pn6SHY3tzYVA94Aes5Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787845863; c=relaxed/simple;
-	bh=hJFzBlJooUj9tMP3pBp8imx/OWxNH+mZjIyHiIkw7DI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rxd2yCRdSQE4U9h6uCdb4nkwk8/q5FTSAgravYFUB1gp+nZlwxpKrL56rJK/kSMhyO3SxXv4Al9ZB4oTnX6OMXca63Pze3sL/xL9/Pea+wpKlSzl2DLUJKDwjmCT39hFOZI2+WCVNXXusIe/2hR03ZPb39wprhoesi8vuWZPAz8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mandelbit.com; spf=pass smtp.mailfrom=mandelbit.com; dkim=pass (2048-bit key) header.d=mandelbit.com header.i=@mandelbit.com header.b=q6LIjY6o; arc=none smtp.client-ip=195.10.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mandelbit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mandelbit.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mandelbit.com header.i=@mandelbit.com header.b="q6LIjY6o"
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:b231:465::2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-b-105.mailbox.org (Postfix) with ESMTPS id 4hW5Q715KNz9rvZ;
-	Thu, 27 Aug 2026 17:43:11 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mandelbit.com;
-	s=MBO0001; t=1787845391;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=+WUyt0i+GSy2Gq4Mu2qBP0O11Puo1gl4vVXEYTcZH7E=;
-	b=q6LIjY6ou2T1gmaRHTci14DgO7omruedHRTLJyx2DpsJe5EipztVpTzRbbDoqlZr9nmTVF
-	3Y3nQWBhIGITdaifNHrvzv/INCP8rW11sPpT9Tg1Ob8xAOE5n9ehpVCNdKwzvJLt4Rixe9
-	yrMBOhgSjUz/gPXmD58ISfgi70M4p7/fSZ4n5p7t9vlrOe2xZ4SKpjQpgYjDvXpAp456Uf
-	GRvhNABCgPiazVHStvFjggVi+7ogCFmzWOQd/i3cR0t5ZsNYXI7rHhXG/rOhrdMPluNW64
-	RnRvjbsTgPwlTsJ6WN89D4w7CcRhmGYXP0t95dP80/PO7gPRywG6vu8Ycsk1Sw==
-Authentication-Results: outgoing_mbo_mout;
-	dkim=none;
-	spf=pass (outgoing_mbo_mout: domain of ralf@mandelbit.com designates 2001:67c:2050:b231:465::2 as permitted sender) smtp.mailfrom=ralf@mandelbit.com
-From: Ralf Lici <ralf@mandelbit.com>
-To: stable@vger.kernel.org
-Cc: regressions@lists.linux.dev,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Ran Wang <ran.wang_1@nxp.com>,
-	Duoming Zhou <duoming@zju.edu.cn>,
-	linux-usb@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	Ben Hutchings <ben@decadent.org.uk>
-Subject: [REGRESSION] 6.1.y/6.6.y: fsl-usb fails to build
-Date: Thu, 27 Aug 2026 17:43:00 +0200
-Message-ID: <20260827154302.706689-1-ralf@mandelbit.com>
+	s=arc-20240116; t=1787854023; c=relaxed/simple;
+	bh=vUxjF7NDXTGO4J/lLRHHBDemilqLVtHwctCaWe2exKY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=T5PkK0INEOsPsHWVk0o8fFh6KOyCi/VSLNo/b1l7cFtS6HpViyKnoO0ZL8avfF93PiON2u6fx1jr7tGTMMLXH1jbMdiUYr//1GxiHKbDI60uvZVk9oho+M4oicHZmQIplKU9sS3Eb7uUo1ONxp29Hov5rG+STApDqsv8KZCHlB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=proxmox.com; spf=pass smtp.mailfrom=proxmox.com; arc=none smtp.client-ip=94.136.29.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=proxmox.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proxmox.com
+Received: from proxmox-new.maurer-it.com (localhost.localdomain [127.0.0.1])
+	by proxmox-new.maurer-it.com (Proxmox) with ESMTP id 972E7A323C;
+	Thu, 27 Aug 2026 19:57:54 +0200 (CEST)
+From: Thomas Lamprecht <t.lamprecht@proxmox.com>
+To: Kashyap Desai <kashyap.desai@broadcom.com>,
+	Sumit Saxena <sumit.saxena@broadcom.com>,
+	Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
+	Chandrakanth patil <chandrakanth.patil@broadcom.com>,
+	megaraidlinux.pdl@broadcom.com,
+	"Martin K . Petersen" <martin.petersen@oracle.com>
+Cc: "James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
+	linux-scsi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Jens Axboe <axboe@kernel.dk>,
+	Keith Busch <kbusch@kernel.org>,
+	Ranjan Kumar <ranjan.kumar@broadcom.com>,
+	Thorsten Leemhuis <regressions@leemhuis.info>,
+	regressions@lists.linux.dev,
+	Lukasz Magiera <me@magik.net>,
+	Mira Limbeck <m.limbeck@proxmox.com>,
+	Daniel Fernau <mail@danielfernau.com>,
+	Mats Topstad <Mats.topstad@intility.no>,
+	stable@vger.kernel.org
+Subject: [PATCH] scsi: megaraid_sas: Limit NVMe request size to the PRP chain frame
+Date: Thu, 27 Aug 2026 19:24:24 +0200
+Message-ID: <20260827175743.734593-1-t.lamprecht@proxmox.com>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -54,55 +48,94 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 4hW5Q715KNz9rvZ
+X-Bm-Milter-Handled: 55990f41-d878-4baa-be0a-ee34c49e34d2
+X-Bm-Transport-Timestamp: 1787853463961
 
-Hi,
+megasas_make_prp_nvme() builds a command's PRP list in cmd->sg_frame, a
+DMA pool buffer of instance->max_chain_frame_sz bytes, spending one entry
+per NVMe page of the transfer plus one per page of the buffer for the
+chain pointer. The loop runs until the transfer is described and never
+checks the buffer bound.
 
-While working on some backport patches for an out-of-tree module and
-looking for the exact versions containing the disable_delayed_work_sync
-symbol, I stumbled upon occurrences of that function on longterm v6.1
-and v6.6 in drivers/usb/phy/phy-fsl-usb.c despite not being declared or
-defined anywhere. In fact, disable_delayed_work_sync was introduced by
-upstream commit 86898fa6b8cd ("workqueue: Implement disable/enable for
-(delayed) work items") and is only available since v6.10. Neither 6.1.y
-nor 6.6.y defines it.
+max_hw_sectors comes straight from the MDTS the firmware reports for the
+drive. On drives with a large MDTS the only thing keeping the list inside
+the buffer was the block layer default of 1280 KiB, which needs 320
+entries, which fit into a 4 KiB frame as that holds 512. But since commit
+9b8b84879d4a ("block: Increase BLK_DEF_MAX_SECTORS_CAP") that default is
+4 MiB, and such a transfer needs 1025 entries, so the list runs a full
+page past the end of the frame:
 
-Consequently, kernels built with CONFIG_FSL_USB2_OTG fail with:
+  sd 1:0:1:0: [sdb] tag#630 page boundary ptr_sgl: 0x00000000ba62d13f
+  BUG: unable to handle page fault for address: ff663bcb81e7c000
+  #PF: supervisor write access in kernel mode
+  #PF: error_code(0x0002) - not-present page
+  RIP: 0010:megasas_build_and_issue_cmd_fusion+0xeaa/0x1870 [megaraid_sas]
 
-drivers/usb/phy/phy-fsl-usb.c:990:2: error: call to undeclared function 'disable_delayed_work_sync'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-  990 |         disable_delayed_work_sync(&fsl_otg_dev->otg_event);
-      |         ^
-drivers/usb/phy/phy-fsl-usb.c:990:2: note: did you mean 'cancel_delayed_work_sync'?
-include/linux/workqueue.h:470:13: note: 'cancel_delayed_work_sync' declared here
-  470 | extern bool cancel_delayed_work_sync(struct delayed_work *dwork);
-      |             ^
+If the page after the frame happens to be mapped, the overrun does not
+fault but silently corrupts the neighbouring pool entry, which is another
+in-flight command's PRP list.
 
-I reproduced the failure on PowerPC using corenet64_smp_defconfig with
-CONFIG_FSL_USB2_OTG=m, building drivers/usb/phy/phy-fsl-usb.o with
-Clang.
+Cap max_hw_sectors at what the chain frame can describe, less one page
+for transfers that do not start on a page boundary and so need one entry
+more. This is the megaraid_sas counterpart of commit 04631f55afc5 ("scsi:
+mpt3sas: Limit NVMe request size to 2 MiB"), but derives the limit from
+max_chain_frame_sz rather than hardcoding it.
 
-AFAICT, in 6.1.y, the regression was introduced in v6.1.160 by commit
-4476c73bbbb0 ("usb: phy: fsl-usb: Fix use-after-free in delayed work
-during device removal") and remains present in v6.1.185.
+Cc: stable@vger.kernel.org
+Fixes: 9b8b84879d4a ("block: Increase BLK_DEF_MAX_SECTORS_CAP")
+Reported-by: Lukasz Magiera <me@magik.net>
+Closes: https://lore.kernel.org/all/GPhsSM0vkgyIrs0DIZ62qeUZX7X4RxwQXVKiuvMx-lHQVSPDxpztUyQOGS0xikqvJ-Z94hMV-dW_5KN_0CX2hsfV7kTf_t0MTf6vdAAaSEc=@magik.net/
+Reported-by: Mira Limbeck <m.limbeck@proxmox.com>
+Closes: https://lore.kernel.org/all/d171cc76-bf25-48ce-b482-d344669dfc24@proxmox.com/
+Suggested-by: Martin K. Petersen <martin.petersen@oracle.com>
+Link: https://lore.kernel.org/all/yq17bmzd5jr.fsf@ca-mkp.ca.oracle.com/
+Signed-off-by: Thomas Lamprecht <t.lamprecht@proxmox.com>
+---
 
-In 6.6.y, it was introduced in v6.6.120 by commit 319f7a85b3c4 ("usb:
-phy: fsl-usb: Fix use-after-free in delayed work during device removal")
-and remains present in v6.6.154.
+Based on current master, but mostly tested on our downstream 7.0-based
+kernel.
 
-Note that the same problem was pointed out by Ben Hutchings during the
-5.10.y review:
-https://lore.kernel.org/all/d147f0eb71f9cefbfb7605e95d98564d7f0ed346.camel@decadent.org.uk/
+The derived cap was checked against a replay of the pointer arithmetic in
+megasas_make_prp_nvme(), for chain frames of 1024
+(MEGASAS_CHAIN_FRAME_SZ_MIN) to 15872 bytes and NVMe page sizes of 4 and
+8 KiB, at every 512 byte start offset, with both fully coalesced and
+one-entry-per-page scatterlists.
 
-The corresponding patches were dropped from 5.10.y and 5.15.y, but
-appear to have been retained in 6.1.y and 6.6.y.
+ drivers/scsi/megaraid/megaraid_sas_base.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-Simply replacing disable_delayed_work_sync with cancel_delayed_work_sync
-at its current location may not be sufficient: it looks like the delayed
-work can also be scheduled from fsl_otg_set_host and from the IRQ
-handler but I'm not familiar with this part of the kernel.
+diff --git a/drivers/scsi/megaraid/megaraid_sas_base.c b/drivers/scsi/megaraid/megaraid_sas_base.c
+index ecd365d78ae3c14f4682d61063b6f216974daa7d..d83abded2039ba9ffae23d0c78a79e155b32424f 100644
+--- a/drivers/scsi/megaraid/megaraid_sas_base.c
++++ b/drivers/scsi/megaraid/megaraid_sas_base.c
+@@ -1973,12 +1973,23 @@ megasas_set_nvme_device_properties(struct scsi_device *sdev,
+ {
+ 	struct megasas_instance *instance;
+ 	u32 mr_nvme_pg_size;
++	u64 max_prp_io;
+ 
+ 	instance = (struct megasas_instance *)sdev->host->hostdata;
+ 	mr_nvme_pg_size = max_t(u32, instance->nvme_page_size,
+ 				MR_DEFAULT_NVME_PAGE_SIZE);
+ 
+-	lim->max_hw_sectors = max_io_size / 512;
++	/*
++	 * megasas_make_prp_nvme() builds the PRP list in cmd->sg_frame without
++	 * bounding it against that buffer, and spends one entry per page of
++	 * it on the chain pointer. Cap the transfer at what the buffer holds,
++	 * less one page for lists that start off a page boundary.
++	 */
++	max_prp_io = (u64)((instance->max_chain_frame_sz / sizeof(u64)) -
++			   (instance->max_chain_frame_sz / mr_nvme_pg_size) - 1) *
++		     mr_nvme_pg_size;
++
++	lim->max_hw_sectors = min_t(u64, max_io_size, max_prp_io) >> SECTOR_SHIFT;
+ 	lim->virt_boundary_mask = mr_nvme_pg_size - 1;
+ }
+ 
 
-Cheers!
-
+base-commit: 18fbf5151d2c0bfe433c7428eef03cabf5fdb2fa
 -- 
-Ralf Lici
-Mandelbit Srl
+2.47.3
+
+
