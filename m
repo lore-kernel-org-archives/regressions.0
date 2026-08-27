@@ -1,141 +1,114 @@
-Received: from proxmox-new.maurer-it.com (proxmox-new.maurer-it.com [94.136.29.106])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75D27441600
-	for <regressions@lists.linux.dev>; Thu, 27 Aug 2026 18:06:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=94.136.29.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D21C379C5C
+	for <regressions@lists.linux.dev>; Thu, 27 Aug 2026 19:34:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787854023; cv=none; b=WFZLyTjwxiA5gD2q/Lp6LqhB9q63otoLqZ0uU3WU5riGYXE/A78MXRCDZ4dsd2zqO4YXP2bM+Xb16SPh99sC9MD+jeRQTLU8vRfMLX1od7+ez0+rZTQsEqXZn++5MA6+XJ+W1G6j0EkwATItINeW/nl9pn6SHY3tzYVA94Aes5Q=
+	t=1787859283; cv=none; b=WAK0rhSiGaFcbi+Fp3Kg/4x6qoLfcN97jpUHejImU07fUX3g5Kn6TpI2D1rPiitbS8rlOq/qHVD5jc71moQQUvUUzOydQOgqWBsW8GUZN0IpcflP+X6p+93J7j9mKwDTP326EAYQXOWIB48c1QxTskGYjjYCKL2LuqBTEXaZL2k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787854023; c=relaxed/simple;
-	bh=vUxjF7NDXTGO4J/lLRHHBDemilqLVtHwctCaWe2exKY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=T5PkK0INEOsPsHWVk0o8fFh6KOyCi/VSLNo/b1l7cFtS6HpViyKnoO0ZL8avfF93PiON2u6fx1jr7tGTMMLXH1jbMdiUYr//1GxiHKbDI60uvZVk9oho+M4oicHZmQIplKU9sS3Eb7uUo1ONxp29Hov5rG+STApDqsv8KZCHlB8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=proxmox.com; spf=pass smtp.mailfrom=proxmox.com; arc=none smtp.client-ip=94.136.29.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=proxmox.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proxmox.com
-Received: from proxmox-new.maurer-it.com (localhost.localdomain [127.0.0.1])
-	by proxmox-new.maurer-it.com (Proxmox) with ESMTP id 972E7A323C;
-	Thu, 27 Aug 2026 19:57:54 +0200 (CEST)
-From: Thomas Lamprecht <t.lamprecht@proxmox.com>
-To: Kashyap Desai <kashyap.desai@broadcom.com>,
-	Sumit Saxena <sumit.saxena@broadcom.com>,
-	Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
-	Chandrakanth patil <chandrakanth.patil@broadcom.com>,
-	megaraidlinux.pdl@broadcom.com,
-	"Martin K . Petersen" <martin.petersen@oracle.com>
-Cc: "James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
-	linux-scsi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Jens Axboe <axboe@kernel.dk>,
-	Keith Busch <kbusch@kernel.org>,
-	Ranjan Kumar <ranjan.kumar@broadcom.com>,
-	Thorsten Leemhuis <regressions@leemhuis.info>,
-	regressions@lists.linux.dev,
-	Lukasz Magiera <me@magik.net>,
-	Mira Limbeck <m.limbeck@proxmox.com>,
-	Daniel Fernau <mail@danielfernau.com>,
-	Mats Topstad <Mats.topstad@intility.no>,
-	stable@vger.kernel.org
-Subject: [PATCH] scsi: megaraid_sas: Limit NVMe request size to the PRP chain frame
-Date: Thu, 27 Aug 2026 19:24:24 +0200
-Message-ID: <20260827175743.734593-1-t.lamprecht@proxmox.com>
-X-Mailer: git-send-email 2.47.3
+	s=arc-20240116; t=1787859283; c=relaxed/simple;
+	bh=5pDmZX89itqKoKJ9A3hSOA9iC6V/f0PzaEuakE3HF34=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZViLdyzR2h0P6vn+G00Ka3VT9pc73mfMGZxKPmEZtp3sN1MHSa/GZeAJmjcBVKS+sxcwiajSHajSEEEtwR/jeIFFKcHKEbyk59rkh5mGnm0vCmXOxejqVghTZTV9j28gTntVsb69tzOnUvV+TQs08bczifwcSyZHZxXdcfpLsBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aTRs+Evx; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aTRs+Evx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1787859282; x=1819395282;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=5pDmZX89itqKoKJ9A3hSOA9iC6V/f0PzaEuakE3HF34=;
+  b=aTRs+Evxx+GWKQVIK6FSbtiLbk7EFqBvzChvaKT3IeIy17afM2uPgDuu
+   aU0cZg+Ch1e1JcIo5INc5fLd127s+JESQKylL38EsD+9/BV3+mN0Y3a1d
+   uJl49uOmq8/95bu8hSTfQf4BEKDg6XdYaic+/feLaOIrA9YUgCYyBuFe5
+   05VoC8099RsjQp7rwN6yAYwJqFvAwo9lAn1cOi7eMJZxMTFziaMeTNwUB
+   6JfMaiaj4L/OcHpdal3Cp5mxWbwer6gDb3jyPMiFEbsq/vCTe6635ZBG7
+   1cVAn+PRzkHAcq8QNasW3S7g3k+zYvf2fLKBrutSgwq+0ZhEdbPwZeoTB
+   A==;
+X-CSE-ConnectionGUID: 6FOUGiNKRPaLhukKBD68zg==
+X-CSE-MsgGUID: 4iXNtKE3QSGLElh1EWTSAw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11888"; a="75909789"
+X-IronPort-AV: E=Sophos;i="6.25,247,1779174000"; 
+   d="scan'208";a="75909789"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2026 12:34:39 -0700
+X-CSE-ConnectionGUID: 5BP2QpfsQZG8Dn/MRn243Q==
+X-CSE-MsgGUID: TfbbbNvwT7qLxPE0sE3hNg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,247,1779174000"; 
+   d="scan'208";a="272181922"
+Received: from mkosciow-mobl1.ger.corp.intel.com (HELO [10.245.244.166]) ([10.245.244.166])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2026 12:34:37 -0700
+Message-ID: <6ef9d29e-e0f1-4807-b7aa-ee0b54861fa8@linux.intel.com>
+Date: Thu, 27 Aug 2026 22:34:28 +0300
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Bm-Milter-Handled: 55990f41-d878-4baa-be0a-ee34c49e34d2
-X-Bm-Transport-Timestamp: 1787853463961
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] 6.12.36+: usb: hub: post-resume delayed work
+ triggers > uncorrected MCE / data fabric sync flood on Threadripper 7970X >
+ (bisected to aec11e5f9c45)
+To: Lovekesh Solanki <lovekeshsolanki00@gmail.com>
+Cc: Mathieu Fluhr <mathieu.fluhr@gmail.com>,
+ Michal Pecio <michal.pecio@gmail.com>,
+ Thorsten Leemhuis <regressions@leemhuis.info>, linux-usb@vger.kernel.org,
+ regressions@lists.linux.dev, stable@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Mario Limonciello <mario.limonciello@amd.com>,
+ Forest <forestix@gaga.casa>, Slavik Dev <developer.slavik@gmail.com>
+References: <CAPyJwA9P48LDcOr7u_iT1WPFBCHxh9w6cxFvyi5GS3syM6crbQ@mail.gmail.com>
+ <07435e6b-ee30-4c85-8c8b-0ce3a4ead1d9@leemhuis.info>
+ <aosGtkE_diwVJJtB@eggarch> <20260823174059.46fec036.michal.pecio@gmail.com>
+ <aoser8dLytrwqBC2@eggarch>
+ <CAPyJwA8m_Xd2oyV1i9k+-6f7A-j0FiC97yXL=Ci8ZAErs5W4vA@mail.gmail.com>
+ <ao1ovvdPAy6n_F7I@eggarch>
+ <CAPyJwA-QALkCQn8J1+=U-nuE_7WSEPhVcUEKb+MMYMaA_1AVjQ@mail.gmail.com>
+ <ao7aLXk9q_v_jEyX@eggarch>
+ <d5a395f7-06ad-401a-b026-e975f620f017@linux.intel.com>
+ <ao8bM2SrASNh2u84@eggarch>
+Content-Language: en-US
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
+In-Reply-To: <ao8bM2SrASNh2u84@eggarch>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-megasas_make_prp_nvme() builds a command's PRP list in cmd->sg_frame, a
-DMA pool buffer of instance->max_chain_frame_sz bytes, spending one entry
-per NVMe page of the transfer plus one per page of the buffer for the
-chain pointer. The loop runs until the transfer is described and never
-checks the buffer bound.
+On 8/26/26 21:11, Lovekesh Solanki wrote:
+> On Wed, Aug 26, 2026 at 04:40:14PM +0300, Mathias Nyman wrote:
+>> Roothub needs some time to settle as well, but 200ms might be excessive.
+>>
+>> xHC can triggers wake (PME) when a connected USB3 device starts signalling wake,
+>> but port registers changes are not always visible to driver before link training
+>> between roothub and device is successful.
+>>
+>> My educated guess is that 120ms should always be enough for the roothub.
+>> This is also the lecagy msleep() still apparently left in xhci resume
+>> to detect port changes in xhci runtime resume if there are USB3 devices.
+>> That msleep was supposed to be removed now that we got the hub changes.
+>>
+>> This 120ms can probably be further tuned for roothub in some cases,
+>> especially if resume is due to userspace action instead of xHC wake signal (PME).
+> So the patch I sent above unintentionally brought the total hold from hub
+> and xhci side down to 120ms, which worked.
+> 
+> And the correct fix would be to bring USB_SS_PORT_U0_WAKE_TIME down to
+> 120ms and clean up the msleep from xhci_resume?
 
-max_hw_sectors comes straight from the MDTS the firmware reports for the
-drive. On drives with a large MDTS the only thing keeping the list inside
-the buffer was the block layer default of 1280 KiB, which needs 320
-entries, which fit into a 4 KiB frame as that holds 512. But since commit
-9b8b84879d4a ("block: Increase BLK_DEF_MAX_SECTORS_CAP") that default is
-4 MiB, and such a transfer needs 1025 entries, so the list runs a full
-page past the end of the frame:
+120ms for the USB3 roothub, I'd keep the 200ms for external hubs
 
-  sd 1:0:1:0: [sdb] tag#630 page boundary ptr_sgl: 0x00000000ba62d13f
-  BUG: unable to handle page fault for address: ff663bcb81e7c000
-  #PF: supervisor write access in kernel mode
-  #PF: error_code(0x0002) - not-present page
-  RIP: 0010:megasas_build_and_issue_cmd_fusion+0xeaa/0x1870 [megaraid_sas]
+> 
+> I can prepare a patch that addresses both if you'd like.
 
-If the page after the frame happens to be mapped, the overrun does not
-fault but silently corrupts the neighbouring pool entry, which is another
-in-flight command's PRP list.
+Sounds good, but better to split the hub and xhci changes into separate patches.
 
-Cap max_hw_sectors at what the chain frame can describe, less one page
-for transfers that do not start on a page boundary and so need one entry
-more. This is the megaraid_sas counterpart of commit 04631f55afc5 ("scsi:
-mpt3sas: Limit NVMe request size to 2 MiB"), but derives the limit from
-max_chain_frame_sz rather than hardcoding it.
+The hub.c tuning might end up in stable as it mitigates the issue seen on
+unfixed AMD based platform.
 
-Cc: stable@vger.kernel.org
-Fixes: 9b8b84879d4a ("block: Increase BLK_DEF_MAX_SECTORS_CAP")
-Reported-by: Lukasz Magiera <me@magik.net>
-Closes: https://lore.kernel.org/all/GPhsSM0vkgyIrs0DIZ62qeUZX7X4RxwQXVKiuvMx-lHQVSPDxpztUyQOGS0xikqvJ-Z94hMV-dW_5KN_0CX2hsfV7kTf_t0MTf6vdAAaSEc=@magik.net/
-Reported-by: Mira Limbeck <m.limbeck@proxmox.com>
-Closes: https://lore.kernel.org/all/d171cc76-bf25-48ce-b482-d344669dfc24@proxmox.com/
-Suggested-by: Martin K. Petersen <martin.petersen@oracle.com>
-Link: https://lore.kernel.org/all/yq17bmzd5jr.fsf@ca-mkp.ca.oracle.com/
-Signed-off-by: Thomas Lamprecht <t.lamprecht@proxmox.com>
----
-
-Based on current master, but mostly tested on our downstream 7.0-based
-kernel.
-
-The derived cap was checked against a replay of the pointer arithmetic in
-megasas_make_prp_nvme(), for chain frames of 1024
-(MEGASAS_CHAIN_FRAME_SZ_MIN) to 15872 bytes and NVMe page sizes of 4 and
-8 KiB, at every 512 byte start offset, with both fully coalesced and
-one-entry-per-page scatterlists.
-
- drivers/scsi/megaraid/megaraid_sas_base.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/scsi/megaraid/megaraid_sas_base.c b/drivers/scsi/megaraid/megaraid_sas_base.c
-index ecd365d78ae3c14f4682d61063b6f216974daa7d..d83abded2039ba9ffae23d0c78a79e155b32424f 100644
---- a/drivers/scsi/megaraid/megaraid_sas_base.c
-+++ b/drivers/scsi/megaraid/megaraid_sas_base.c
-@@ -1973,12 +1973,23 @@ megasas_set_nvme_device_properties(struct scsi_device *sdev,
- {
- 	struct megasas_instance *instance;
- 	u32 mr_nvme_pg_size;
-+	u64 max_prp_io;
- 
- 	instance = (struct megasas_instance *)sdev->host->hostdata;
- 	mr_nvme_pg_size = max_t(u32, instance->nvme_page_size,
- 				MR_DEFAULT_NVME_PAGE_SIZE);
- 
--	lim->max_hw_sectors = max_io_size / 512;
-+	/*
-+	 * megasas_make_prp_nvme() builds the PRP list in cmd->sg_frame without
-+	 * bounding it against that buffer, and spends one entry per page of
-+	 * it on the chain pointer. Cap the transfer at what the buffer holds,
-+	 * less one page for lists that start off a page boundary.
-+	 */
-+	max_prp_io = (u64)((instance->max_chain_frame_sz / sizeof(u64)) -
-+			   (instance->max_chain_frame_sz / mr_nvme_pg_size) - 1) *
-+		     mr_nvme_pg_size;
-+
-+	lim->max_hw_sectors = min_t(u64, max_io_size, max_prp_io) >> SECTOR_SHIFT;
- 	lim->virt_boundary_mask = mr_nvme_pg_size - 1;
- }
- 
-
-base-commit: 18fbf5151d2c0bfe433c7428eef03cabf5fdb2fa
--- 
-2.47.3
-
+Thanks
+Mathias
 
