@@ -1,114 +1,147 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mta1.migadu.com (out-202.mta1.migadu.com [95.215.58.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D21C379C5C
-	for <regressions@lists.linux.dev>; Thu, 27 Aug 2026 19:34:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 079C92620DE
+	for <regressions@lists.linux.dev>; Fri, 28 Aug 2026 01:17:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787859283; cv=none; b=WAK0rhSiGaFcbi+Fp3Kg/4x6qoLfcN97jpUHejImU07fUX3g5Kn6TpI2D1rPiitbS8rlOq/qHVD5jc71moQQUvUUzOydQOgqWBsW8GUZN0IpcflP+X6p+93J7j9mKwDTP326EAYQXOWIB48c1QxTskGYjjYCKL2LuqBTEXaZL2k=
+	t=1787879874; cv=none; b=E2QHb85l1FDWmTIahXocty+lVu9BpN1uPJEbjJDMb0ccD3M6932ClxaWBfp3M6RBriJPiA/o8A6EN9/83jVmVq8Mp2j08Rk5A37ESUb/4LyOIvl3A692+kGRp2eLpLLOnzzHc/TWzQRYZJqsbffPSyRZ0uVs3+ogo6xqISnTmvg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787859283; c=relaxed/simple;
-	bh=5pDmZX89itqKoKJ9A3hSOA9iC6V/f0PzaEuakE3HF34=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZViLdyzR2h0P6vn+G00Ka3VT9pc73mfMGZxKPmEZtp3sN1MHSa/GZeAJmjcBVKS+sxcwiajSHajSEEEtwR/jeIFFKcHKEbyk59rkh5mGnm0vCmXOxejqVghTZTV9j28gTntVsb69tzOnUvV+TQs08bczifwcSyZHZxXdcfpLsBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aTRs+Evx; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1787879874; c=relaxed/simple;
+	bh=vkWAAncEPqSCfjPN3H3wr6ysqgrRP13JfyJKI8czm9Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ia5lDRunDAzb1gF7lBtVDqX8WKb97duJrmmphgQpS5YsubtlVoB6uESRBT7iD5GCC+HNyIMQDLjvhDXuLH7HzqtT+uUXIlctS9HL5xKcOXYp+qYQr0lX2BzAIV5r2dI+MpNOTaWBpZZHgCi2r44wkCfk6wn3XLyE5u9KS6XCtlg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=justthetip.ca; spf=pass smtp.mailfrom=justthetip.ca; dkim=pass (2048-bit key) header.d=justthetip.ca header.i=@justthetip.ca header.b=Gbwa1ZrK; arc=none smtp.client-ip=95.215.58.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=justthetip.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=justthetip.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aTRs+Evx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1787859282; x=1819395282;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=5pDmZX89itqKoKJ9A3hSOA9iC6V/f0PzaEuakE3HF34=;
-  b=aTRs+Evxx+GWKQVIK6FSbtiLbk7EFqBvzChvaKT3IeIy17afM2uPgDuu
-   aU0cZg+Ch1e1JcIo5INc5fLd127s+JESQKylL38EsD+9/BV3+mN0Y3a1d
-   uJl49uOmq8/95bu8hSTfQf4BEKDg6XdYaic+/feLaOIrA9YUgCYyBuFe5
-   05VoC8099RsjQp7rwN6yAYwJqFvAwo9lAn1cOi7eMJZxMTFziaMeTNwUB
-   6JfMaiaj4L/OcHpdal3Cp5mxWbwer6gDb3jyPMiFEbsq/vCTe6635ZBG7
-   1cVAn+PRzkHAcq8QNasW3S7g3k+zYvf2fLKBrutSgwq+0ZhEdbPwZeoTB
-   A==;
-X-CSE-ConnectionGUID: 6FOUGiNKRPaLhukKBD68zg==
-X-CSE-MsgGUID: 4iXNtKE3QSGLElh1EWTSAw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11888"; a="75909789"
-X-IronPort-AV: E=Sophos;i="6.25,247,1779174000"; 
-   d="scan'208";a="75909789"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2026 12:34:39 -0700
-X-CSE-ConnectionGUID: 5BP2QpfsQZG8Dn/MRn243Q==
-X-CSE-MsgGUID: TfbbbNvwT7qLxPE0sE3hNg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,247,1779174000"; 
-   d="scan'208";a="272181922"
-Received: from mkosciow-mobl1.ger.corp.intel.com (HELO [10.245.244.166]) ([10.245.244.166])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2026 12:34:37 -0700
-Message-ID: <6ef9d29e-e0f1-4807-b7aa-ee0b54861fa8@linux.intel.com>
-Date: Thu, 27 Aug 2026 22:34:28 +0300
+	dkim=pass (2048-bit key) header.d=justthetip.ca header.i=@justthetip.ca header.b="Gbwa1ZrK"
+X-Envelope-To: regressions@lists.linux.dev
+DKIM-Signature: a=rsa-sha256; bh=vkWAAncEPqSCfjPN3H3wr6ysqgrRP13JfyJKI8czm9Q=;
+ c=simple/simple; d=justthetip.ca;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1787879869; v=1; x=1788484669;
+ b=Gbwa1ZrK/5lf9wiUzqwmI8B1wZ7sxn9QhT0ftXgMPwEAn1wDORhUBfT2ipvYRD1RHZGyBVGX
+ yzVZiZz6HeF6+R+wexCKec6NSkwqC6mSmsaeGltKrg+eBvQcwrUBnJgG17zCVZ54/lE7FzItD0A
+ UyUUa76OOn265DN2yvSRuZCp+XCtdy4fOga9HYOIcOIC4B9o2iP+10RPQ51RqISfLtp8ZYE5CcV
+ f7CUiHPA1bTLOzSJS0fK+NJ+u0ViYdq2xoF1jJdLYAZ09lh6JiXioSMBoTiJL19NcXBX4kZgZAg
+ kiiDHFkmUt1FcpnPcvIiI08Szib+Zj62IyEAqXyIt6Nmg==
+X-Envelope-To: regressions@lists.linux.dev
+Received: by smtp.migadu.com with ESMTPS id 4063e950ceabd68a;
+	Fri, 28 Aug 2026 01:17:39 +0000
+X-Mizu-Trace-ID: 4063e950ceabd68a
+X-Migadu-Flow: FLOW_OUT
+From: Devin Wittmayer <lucid_duck@justthetip.ca>
+To: Klara Modin <klarasmodin@gmail.com>
+Cc: linux-wireless@vger.kernel.org,
+	linux-mediatek@lists.infradead.org,
+	nbd@nbd.name,
+	lorenzo@kernel.org,
+	regressions@lists.linux.dev
+Subject: Re: [PATCH wireless] wifi: mt76: mt792x: fix NULL dereference in ACPI SAR init during probe
+Date: Thu, 27 Aug 2026 18:17:37 -0700
+Message-ID: <20260828011737.22809-1-lucid_duck@justthetip.ca>
+X-Mailer: git-send-email 2.55.0
+In-Reply-To: <ao3dyqWJ3nf3rMMW@soda.int.kasm.eu>
+References: <20260825181712.28548-1-lucid_duck@justthetip.ca> <ao3dyqWJ3nf3rMMW@soda.int.kasm.eu>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] 6.12.36+: usb: hub: post-resume delayed work
- triggers > uncorrected MCE / data fabric sync flood on Threadripper 7970X >
- (bisected to aec11e5f9c45)
-To: Lovekesh Solanki <lovekeshsolanki00@gmail.com>
-Cc: Mathieu Fluhr <mathieu.fluhr@gmail.com>,
- Michal Pecio <michal.pecio@gmail.com>,
- Thorsten Leemhuis <regressions@leemhuis.info>, linux-usb@vger.kernel.org,
- regressions@lists.linux.dev, stable@vger.kernel.org,
- linux-kernel@vger.kernel.org, Mario Limonciello <mario.limonciello@amd.com>,
- Forest <forestix@gaga.casa>, Slavik Dev <developer.slavik@gmail.com>
-References: <CAPyJwA9P48LDcOr7u_iT1WPFBCHxh9w6cxFvyi5GS3syM6crbQ@mail.gmail.com>
- <07435e6b-ee30-4c85-8c8b-0ce3a4ead1d9@leemhuis.info>
- <aosGtkE_diwVJJtB@eggarch> <20260823174059.46fec036.michal.pecio@gmail.com>
- <aoser8dLytrwqBC2@eggarch>
- <CAPyJwA8m_Xd2oyV1i9k+-6f7A-j0FiC97yXL=Ci8ZAErs5W4vA@mail.gmail.com>
- <ao1ovvdPAy6n_F7I@eggarch>
- <CAPyJwA-QALkCQn8J1+=U-nuE_7WSEPhVcUEKb+MMYMaA_1AVjQ@mail.gmail.com>
- <ao7aLXk9q_v_jEyX@eggarch>
- <d5a395f7-06ad-401a-b026-e975f620f017@linux.intel.com>
- <ao8bM2SrASNh2u84@eggarch>
-Content-Language: en-US
-From: Mathias Nyman <mathias.nyman@linux.intel.com>
-In-Reply-To: <ao8bM2SrASNh2u84@eggarch>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 8/26/26 21:11, Lovekesh Solanki wrote:
-> On Wed, Aug 26, 2026 at 04:40:14PM +0300, Mathias Nyman wrote:
->> Roothub needs some time to settle as well, but 200ms might be excessive.
->>
->> xHC can triggers wake (PME) when a connected USB3 device starts signalling wake,
->> but port registers changes are not always visible to driver before link training
->> between roothub and device is successful.
->>
->> My educated guess is that 120ms should always be enough for the roothub.
->> This is also the lecagy msleep() still apparently left in xhci resume
->> to detect port changes in xhci runtime resume if there are USB3 devices.
->> That msleep was supposed to be removed now that we got the hub changes.
->>
->> This 120ms can probably be further tuned for roothub in some cases,
->> especially if resume is due to userspace action instead of xHC wake signal (PME).
-> So the patch I sent above unintentionally brought the total hold from hub
-> and xhci side down to 120ms, which worked.
-> 
-> And the correct fix would be to bring USB_SS_PORT_U0_WAKE_TIME down to
-> 120ms and clean up the msleep from xhci_resume?
+Thank you for the Tested-by, and for bisecting it in the first place. The
+report arrived with the commit named and a revert confirmed, which is most of
+the work already done.
 
-120ms for the USB3 roothub, I'd keep the 200ms for external hubs
+Something odd, since we are on the same laptop. Mine is a Framework 13 that
+shipped with an MT7922, and it has no MediaTek power tables at all. I checked
+every ACPI table on the machine rather than only the main one, and there is
+nothing there for any vendor. So your oops cannot fire here on the same model
+with the same card, which is why I had to inject tables to reproduce it.
 
-> 
-> I can prepare a patch that addresses both if you'd like.
+Which means the difference is somewhere in the firmware, and I can only see my
+side of it. Mine is an Intel 11th generation board on BIOS 3.17, dated October
+2022. What are you on? Whether these tables came with a later release or only
+ever appeared on certain boards decides whether anyone else is about to walk
+into this.
 
-Sounds good, but better to split the hub and xhci changes into separate patches.
+While you are in there, does your geo table carry 0xff in the unused slots?
+Someone turned up on the list yesterday with an ASUS padded that way, which
+the driver takes as roughly -1 dBm and clamps every rate down to it. Whether
+that is one vendor's habit or common changes what the right fix looks like.
 
-The hub.c tuning might end up in stable as it mitigates the issue seen on
-unfixed AMD based platform.
+Devin
 
-Thanks
-Mathias
-
+On 2026-08-25 11:27:15 +0000, Klara Modin wrote:
+> On 2026-08-25 11:17:12 -0700, Devin Wittmayer wrote:
+> > Some laptops carry a MediaTek power table in their firmware, and the
+> > driver reads it to set a transmit limit for each frequency range. It
+> > only fills in the ranges themselves when it registers the device.
+> >
+> > The startup step that does this existed already, but it never programmed
+> > anything. These two commits made it run a regulatory update instead,
+> > which sets the limits on the way through, long before registration. So on
+> > a machine that has the table the driver reads through an empty pointer
+> > and the interface never appears:
+> >
+> >   BUG: kernel NULL pointer dereference, address: 0000000000000004
+> >   RIP: 0010:mt792x_init_acpi_sar_power
+> >   Call Trace:
+> >    mt7921_set_tx_sar_pwr
+> >    mt7921_mcu_regd_update
+> >    mt7921_regd_update
+> >    mt7921_run_firmware
+> >    mt7921e_mcu_init
+> >    mt7921_init_work
+> >
+> > Skip it when the ranges are missing. They are applied again once the
+> > device is up, which is where they came from before.
+> >
+> > Reported-by: Klara Modin <klarasmodin@gmail.com>
+> > Closes: https://lore.kernel.org/linux-wireless/aoyxqHYvSuaBeubf@soda.int.kasm.eu/
+> > Fixes: 9b80bd9cab40 ("wifi: mt76: mt7921: add regulatory wiphy self manager support")
+> > Fixes: e9f3f1cc133f ("wifi: mt76: mt7925: add regulatory wiphy self manager support")
+> > Signed-off-by: Devin Wittmayer <lucid_duck@justthetip.ca>
+> > ---
+> >
+> > Reproduced on both chips before sending, an MT7922 and an MT7925, and the
+> > fix clears both. Neither machine here ships a vendor power table, so I
+> > supplied one through an ACPI override in the initrd. It also wants recent
+> > firmware. The June builds do not turn on self-managed regulatory and
+> > nothing happens; the builds now in linux-firmware do, and then it dies
+> > exactly as reported with no interface at all. Patched, both come up and
+> > scan normally, and the injected limits still show through in the power
+> > table afterwards, so the skip does not lose them.
+> >
+> > With that table still in place and the fix absent, backing out the mt7921
+> > commit on its own also boots clean, so the table is not what causes this.
+> >
+>
+> Thanks for the quick fix!
+>
+> Regards,
+> Tested-by: Klara Modin <klarasmodin@gmail.com>
+>
+> >  drivers/net/wireless/mediatek/mt76/mt792x_acpi_sar.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/net/wireless/mediatek/mt76/mt792x_acpi_sar.c b/drivers/net/wireless/mediatek/mt76/mt792x_acpi_sar.c
+> > index 946dd7956e4a..b468051fbe68 100644
+> > --- a/drivers/net/wireless/mediatek/mt76/mt792x_acpi_sar.c
+> > +++ b/drivers/net/wireless/mediatek/mt76/mt792x_acpi_sar.c
+> > @@ -323,7 +323,8 @@ int mt792x_init_acpi_sar_power(struct mt792x_phy *phy, bool set_default)
+> >  	const struct cfg80211_sar_capa *capa = phy->mt76->hw->wiphy->sar_capa;
+> >  	int i;
+> >
+> > -	if (!phy->acpisar || !((struct mt792x_acpi_sar *)phy->acpisar)->dyn)
+> > +	if (!capa || !phy->acpisar ||
+> > +	    !((struct mt792x_acpi_sar *)phy->acpisar)->dyn)
+> >  		return 0;
+> >
+> >  	/* When ACPI SAR enabled in HW, we should apply rules for .frp
+> > --
+> > 2.55.0
+> >
