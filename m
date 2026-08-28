@@ -1,145 +1,95 @@
-Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
+Received: from mta0.migadu.com (out-221.mta0.migadu.com [91.218.175.221])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98651377558
-	for <regressions@lists.linux.dev>; Fri, 28 Aug 2026 16:42:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB927369D6E
+	for <regressions@lists.linux.dev>; Fri, 28 Aug 2026 17:18:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.221
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787935338; cv=none; b=HSDlO9WG9WpHzy/Ckc43ceAKoaSGaG9bdKVJA0mJ0YhkXcMRjKJmuOY4ieVRZcQC41nonjuPukUSHz50cvLLG08xZm4fPCBf577J6hVD7OqwUEH/KsufucJk7V9WlyGUJI1J0JTQ2wJ43hVPj76t6d0Z51MKgt0h20pH4ISbdhE=
+	t=1787937536; cv=none; b=ZOfcPk4kOWTmyDsfEQK3Hnlji6fjlwPjPtTpQ/UDRz8nKiWI6Xr/ADoI1IfNe3XZ9XiBeu2L2QgHmIH1M5p7lpdpKT/c5f6GD/4X85DmZQzmrfA39rLlTDkqNaKzgJuP15fdUbFu6Nn2r0QMlop8PJ4U38hQaTsGxT29um16kQk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787935338; c=relaxed/simple;
-	bh=iWJRGJo8GOhSzF7hKjM4hSEZnaMvnsnJxm8SvJPRXuM=;
+	s=arc-20240116; t=1787937536; c=relaxed/simple;
+	bh=JSBFu5mtYAAxSf1z/Sc5HZpi1iqCxqQNp9ErZEemACM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=rQZDHRn7heLY+fcJYcb4wzIIrJcdVMzVjNYVcWb8NuwrhxvF403bj1UJsLekOFaxU99FSXCpZT9hvheYfhMsxPajHpch5NaSUCcFkEsYzsXXienvAKz38MBEGwoQ5an62VbSX11cKfMVV+gX3KYl9Q8XoiEKFcDMvR9A60imsW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ebzPrflr; arc=none smtp.client-ip=209.85.210.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 MIME-Version; b=u1VDHBdATdYBmL9loZtpT/wx8xvEvAHRAF6oinQ2NV5yfimd09oUAY8P2OQip6z0RAdrfqvfkkNRNdNkbh0EBw2NcZVTnLc/r38Z3wkFS+TVrUREO7ydDoKKXLm7xUKwNoitd6ULQJS5X5nzHLzVYy+aHtFREO0rEqcUFw4vv3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=justthetip.ca; spf=pass smtp.mailfrom=justthetip.ca; dkim=pass (2048-bit key) header.d=justthetip.ca header.i=@justthetip.ca header.b=KKmmhBM6; arc=none smtp.client-ip=91.218.175.221
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=justthetip.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=justthetip.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ebzPrflr"
-Received: by mail-ot1-f53.google.com with SMTP id 46e09a7af769-7eb34c17b96so1109765a34.2
-        for <regressions@lists.linux.dev>; Fri, 28 Aug 2026 09:42:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1787935335; x=1788540135; darn=lists.linux.dev;
-        h=mime-version:content-transfer-encoding:content-type:references
-         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=qltHbqH6zAk9rxLPd6W/XN3mLDgy50kN6vVpjpgbgd0=;
-        b=ebzPrflreWhwKdjmE0dl6tDqZ/2IhTTtcVCpzt2Ls8vPUfjwyUXKmYU50BIKKP1aX+
-         fp8vRI+GtV2FtOs8qFTV2h9crYLTYXlfSqm07zAthbzJJxV7VqNXwK/r7Z1vJRek51s5
-         LihWnDzyTv/9O/u/cih3BXmdQ2gf6zA57DFTR0l7X/CN25jzhfwywokCZ6kUZy4yrKFd
-         +yw6FZfKyz6FhLliP9+bq2ywz3F6MOUw3yXE2BBQhEkGMOLfGSzQU7Pv4vLbNDI22dG2
-         06SavfORYg4JxyRVD1KKtVVBE34XazKM7BQtL/IUF61vJ3JS7oV2ayxZa06cRq9xk1cp
-         K69Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787935335; x=1788540135;
-        h=mime-version:content-transfer-encoding:content-type:references
-         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=qltHbqH6zAk9rxLPd6W/XN3mLDgy50kN6vVpjpgbgd0=;
-        b=HbNjzv5JR61xmxgtBNaMiqUYD96v02IdgbzRpTIwow8eiPqB1JMG1AgcdxBVs2htHS
-         kOEbSQ+3fu6zWXklPCrjudEskZmP/X0XX+EXxnvO0+z4QOXq8h2rwYse7okDEUTjM1nA
-         E9/DmPSzsa2FrWSL/oCFYrNlHU8a2hqrKwuAHkmNEzWuVDsPvj5i7y6V72fw2YPTZyqt
-         vOFWYrbtGJ7E1LKNB1IO+Ida4iXG8YX5Zb4qXLpb6g1jsuv6yDpTcR5vRpc2u704yvLE
-         AU2Uye3ptw6Q/LzE/3pH+AmfnNeFWDcKKS+aTUqRYIT+j2uI3zRJs1WiHJrX02mOh0yG
-         KtJw==
-X-Gm-Message-State: AFuF++ncQ8X9tK2QYjuQHKnbpXtmJzzg3In2Hj2uUDluoaW/Jp/IbsKQ
-	1Yrtadw9cpcyetDwIsiHsUpqPHgTegfhzLG0c4paDc43CNVX5b1wmKiF
-X-Gm-Gg: AR+sD11LaRDCEz1kvy9e5OI/iM9llnCoAM95MxvjGKpHPSf3aYnJh36ouOM6b2reWk0
-	Rn6/uzkfp3XhlBiuk1P+uwHVsSPoufQ9Sc/kVIZMyVbWjtHmf6bk9sW/lTJVOHSbmuMtbBlLX8L
-	WOOlRGawPnM+v1lTKTw8tut8Ds6ODgZw5qxdoMpsjBwTwGARWUPwHjFOAJqMDd+8tbSWUdmdjtJ
-	dXr5Bu9gFuxOc0QcU3uRPEyzo5PLC0DFJHjZoJjlc+lSYqPOrCPz1hE1vQP3j6lI+3hy20xBKjF
-	hcB6ISfWwb35yicLXsfLu7FNOS+CqFtVbq6wrBtliabAtQO+VZSi8mdKeUhkdlTLX/idC0bhs/F
-	IrGi900qRs//0TRw0hBfKcZpB9K2PoZT1lSDbD5XRefW2EtTFl77nRU0g92UoYMMgTg0r4I/C8x
-	tfyUpFnS7MAVbvQQmmQ+DTcOVlkeHGUQnicJJ8rmCGZgMV1EzGIAEbnEjrR1tUYo8/pveGmZGdq
-	0gs6oqaaWKk9pbOs4ns7SirUYuQYK7A1bgNntIScd79JdPEMIc0xKcaDJNfnX+zSkAB
-X-Received: by 2002:a05:6830:4491:b0:7f4:eb7e:c8f7 with SMTP id 46e09a7af769-7f4f2365bb9mr8713253a34.5.1787935335216;
-        Fri, 28 Aug 2026 09:42:15 -0700 (PDT)
-Received: from [127.0.1.1] (ppp-124-121-113-94.revip2.asianet.co.th. [124.121.113.94])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7f4fa99d87fsm1567760a34.20.2026.08.28.09.42.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Aug 2026 09:42:14 -0700 (PDT)
-From: Mikael Etienne <mikael1022bzh@gmail.com>
-To: Mario.Limonciello@amd.com, vasant.hegde@amd.com, iommu@lists.linux.dev,
- linux-ide@vger.kernel.org, linux-block@vger.kernel.org
-Cc:
- regressions@lists.linux.dev, joro@8bytes.org, suravee.suthikulpanit@amd.com
-Subject: Re: [REGRESSION] Silent SATA read corruption with dma-iommu on AMD
- 600-series AHCI (6.19 good, 7.0+ bad)
-Date: Fri, 28 Aug 2026 23:42:09 +0700
-Message-ID: <178793532947.1861819.4688629821762072134@gmail.com>
-In-Reply-To: <d49add14-c8de-4b6b-9049-4a07e5692ee9@amd.com>
-References:
- <CAHEgv3TiJUvS=Hustyem0ts8jkbFVAdzBazmPhCbv2sNnTsZkg@mail.gmail.com>
- <c5c2b503-e273-4aa5-ad9f-f7afee02ab9e@amd.com>
- <178791494900.1152725.12728124457005560389@gmail.com>
- <fb875f14-3b47-4d43-ae3a-0d0b17e1c64a@amd.com>
- <178793069172.1699234.13635367891277204598@gmail.com>
- <d49add14-c8de-4b6b-9049-4a07e5692ee9@amd.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+	dkim=pass (2048-bit key) header.d=justthetip.ca header.i=@justthetip.ca header.b="KKmmhBM6"
+X-Envelope-To: regressions@lists.linux.dev
+DKIM-Signature: a=rsa-sha256; bh=JSBFu5mtYAAxSf1z/Sc5HZpi1iqCxqQNp9ErZEemACM=;
+ c=simple/simple; d=justthetip.ca;
+ h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
+ t=1787937531; v=1; x=1788542331;
+ b=KKmmhBM68x9yX1z07xOBrJk7YoG6eEoRl07hBiBVXSeVTOslr21mNeBO77Bb3mX2w8hPjKFU
+ l+/BSQVLmz7cjNYc18NAh8frF8MJ9NdQV5aFtF73nBJLMO9fWB/yMFhekKafa58Ly+eYv0ZGUN2
+ E89bI+wbgj2SRuJQl3w8VIK3fF/eRkw2iHtvAL2s5wfIjbwB2zmzYabW8RR/t3OST6k1Jb5bjLe
+ cX/MrtsVfAlZNzDm3avsJuE0zYhtir/1gflBr5iF5t/mWQ5/AqdnI7xkGafptVMvSwUpmBJSBK2
+ r/w12R1CgzvYRQO8aDWMQijZl+DsjCkDccGydAOW5wA+w==
+X-Envelope-To: regressions@lists.linux.dev
+Received: by smtp.migadu.com with ESMTPS id 3182c772a689ec26;
+	Fri, 28 Aug 2026 17:18:41 +0000
+X-Mizu-Trace-ID: 3182c772a689ec26
+X-Migadu-Flow: FLOW_OUT
+From: Devin Wittmayer <lucid_duck@justthetip.ca>
+To: Klara Modin <klarasmodin@gmail.com>
+Cc: linux-wireless@vger.kernel.org,
+	linux-mediatek@lists.infradead.org,
+	nbd@nbd.name,
+	lorenzo@kernel.org,
+	regressions@lists.linux.dev
+Subject: Re: [PATCH wireless] wifi: mt76: mt792x: fix NULL dereference in ACPI SAR init during probe
+Date: Fri, 28 Aug 2026 10:18:38 -0700
+Message-ID: <20260828171838.22038-1-lucid_duck@justthetip.ca>
+X-Mailer: git-send-email 2.55.0
+In-Reply-To: <apGWXuPOSqZJ_ShO@parmesan.int.kasm.eu>
+References: <20260825181712.28548-1-lucid_duck@justthetip.ca> <ao3dyqWJ3nf3rMMW@soda.int.kasm.eu> <20260828011737.22809-1-lucid_duck@justthetip.ca> <apGWXuPOSqZJ_ShO@parmesan.int.kasm.eu>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On 8/28/26 10:37, Limonciello, Mario wrote:
-> By chance did this issue coincide with you switching from something
-> different to the Ryzen 7 8700G?  For example switching from Raphael or
-> Granite Ridge parts to that Phoenix part.
+On 2026-08-28 15:27:10 +0000, Klara Modin wrote:
+> Wouldn't the Intel 11th generation have come with the Intel AX201 or
+> AX210 originally?
 
-No -- same CPU throughout, no hardware change at all.
+It would, and thanks for the correction. This board's firmware carries
+Intel's wireless power methods and none of MediaTek's four. I put an
+MT7927 in it recently and the MediaTek ones did not appear, so they do
+not come with the card.
 
-My persistent journal goes back to 2026-02-27 and every boot in it reports the
-same part:
+> I don't think so (if this is the MTGS table above?), but I don't really
+> know how to parse the table contents.
 
-  smpboot: CPU0: AMD Ryzen 7 8700G w/ Radeon 780M Graphics
-  family 25, model 117, stepping 2
+That is the right table, and nothing in it is padded. Yours is fine.
 
-That covers 2026-03-17, 03-27, 05-04, 06-03, 08-23 and today. Same board, same
-CPU, same SATA controller. The 8 TB drive that first showed the problem has been
-in the machine since 2026-03-11, on the same port, and it absorbed two full
-multi-TB backup reads on 2026-04-01 and 2026-05-01 with zero storage errors
-under 6.18.16 / 6.19.x.
+> so the transmit power limits actually look like they are too high for
+> some bands, especially 5735-5835, but maybe it will limit to the AP
+> transmit power and be fine? However, according to `iw list` the channels
+> in 5735-5835 do not have the "no IR" flag, so in AP mode the card could
+> potentially transmit ~8 times the allowed power (I would rather not test
+> this)?
 
-So on this machine the only thing that changed between "three months clean" and
-"corruption" is the kernel: 6.19.14 until 2026-05-10, then 7.0.4. First
-corruption 2026-06-02.
+Every line reads the same because the driver writes the same number into
+all of them:
 
-I realise that sits awkwardly next to your internal issue not following a kernel
-version. Two readings I can think of, without picking one:
+	/* not used by fw */
+	rule->power_rule.max_antenna_gain = DBI_TO_MBI(6);
+	rule->power_rule.max_eirp = DBM_TO_MBM(22);
 
-  - the hardware/firmware behaviour is constant, and something in 7.0 changed
-    how quickly or how often the 32-bit IOVA space gets exhausted here, so the
-    latent problem simply became reachable; or
-  - they are genuinely two different problems that happen to share a
-    workaround.
+It is a placeholder rather than anything the card sent up, which is why
+the same twenty-two turns up under every country code and not only
+yours. So it is not evidence of what the radio will do in that band, in
+either direction. The card has a power table of its own, separate from
+this one, and debugfs shows it as txpower_sku.
 
-I have no way to tell those apart from here, and I am not going to guess.
+> The 5710-5735 range is also not covered, which results in 5 GHz channel
+> 144 being disabled (visible in `iw list`).
 
-> We do have a reproducer in our lab environment that will rapidly
-> allocate and trip this issue which is how we could analyze it and root
-> cause it.
+That hole is in what the card replied with. The driver copies the ranges
+across untouched, so 144 goes with it.
 
-Good -- then I will not spend the evening trying to build a fast one, and I will
-drop the bisection idea unless you tell me it would still add something. If at
-some point you want my slow reproducer run against a specific kernel or debug
-patch, I am happy to do that; it is only my time that is expensive, not the
-machine's.
-
-> I don't yet have any confirmation we can patch this at runtime.  If I do
-> come up with a way to do that which works will let you know.
-
-Thank you, that is appreciated. For reference, iommu=pt has been completely
-clean here: 40 consecutive 256 GiB verification passes, 10 TiB re-read over 17 h,
-btrfs corruption counters at zero. I am running with it permanently for now and I
-am not in any hurry.
-
-If it helps your case, I am happy to be a data point on the SATA/AHCI side of
-this, since the ASM1166 report and mine are both ASMedia silicon advertising
-CAP.S64A.
-
-Thanks,
-Mikael Etienne
+Devin
