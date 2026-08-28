@@ -1,95 +1,106 @@
-Received: from mta0.migadu.com (out-221.mta0.migadu.com [91.218.175.221])
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB927369D6E
-	for <regressions@lists.linux.dev>; Fri, 28 Aug 2026 17:18:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.221
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787937536; cv=none; b=ZOfcPk4kOWTmyDsfEQK3Hnlji6fjlwPjPtTpQ/UDRz8nKiWI6Xr/ADoI1IfNe3XZ9XiBeu2L2QgHmIH1M5p7lpdpKT/c5f6GD/4X85DmZQzmrfA39rLlTDkqNaKzgJuP15fdUbFu6Nn2r0QMlop8PJ4U38hQaTsGxT29um16kQk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787937536; c=relaxed/simple;
-	bh=JSBFu5mtYAAxSf1z/Sc5HZpi1iqCxqQNp9ErZEemACM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=u1VDHBdATdYBmL9loZtpT/wx8xvEvAHRAF6oinQ2NV5yfimd09oUAY8P2OQip6z0RAdrfqvfkkNRNdNkbh0EBw2NcZVTnLc/r38Z3wkFS+TVrUREO7ydDoKKXLm7xUKwNoitd6ULQJS5X5nzHLzVYy+aHtFREO0rEqcUFw4vv3k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=justthetip.ca; spf=pass smtp.mailfrom=justthetip.ca; dkim=pass (2048-bit key) header.d=justthetip.ca header.i=@justthetip.ca header.b=KKmmhBM6; arc=none smtp.client-ip=91.218.175.221
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=justthetip.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=justthetip.ca
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ADA93914E9
+	for <regressions@lists.linux.dev>; Fri, 28 Aug 2026 18:19:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.48
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1787941142; cv=pass; b=kKkdC7tGbbYavAFo2Oue6XVn7By+R+/pf7rkPUoi6M1OFATz5xEfwPgLYkMvcZFy8yzdkEVp3SR4RXVG1vVbzaCEfLYS6BAvYV+u+fBo9SiJopM/xuujbcN4l3zs3o0DJl//ayU13oiIpt7xESVFcwaqa6fT8P41PT3+CEQhO5o=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1787941142; c=relaxed/simple;
+	bh=pU4LloQCWvu6t6M/Xne7xPMuYqsv0Zx3JiyPEP1RHBo=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=Zl3/4g41g/bpxs0hBtHfg5r7Dooxd1f9/FE/kGx2zblbMQ/iAu7FeIWKa8lZRj2hLV2tc2qlEhVESXfnvcOQCPJrdGFoyNWHBa3dqvjXfoQtbihzu+MszyIyfXgvi/ddT+9w8/sBffEm2akGTkCMWYLkykPzJ5qZnFLlz9h1arw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W5jaTF1v; arc=pass smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=justthetip.ca header.i=@justthetip.ca header.b="KKmmhBM6"
-X-Envelope-To: regressions@lists.linux.dev
-DKIM-Signature: a=rsa-sha256; bh=JSBFu5mtYAAxSf1z/Sc5HZpi1iqCxqQNp9ErZEemACM=;
- c=simple/simple; d=justthetip.ca;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1787937531; v=1; x=1788542331;
- b=KKmmhBM68x9yX1z07xOBrJk7YoG6eEoRl07hBiBVXSeVTOslr21mNeBO77Bb3mX2w8hPjKFU
- l+/BSQVLmz7cjNYc18NAh8frF8MJ9NdQV5aFtF73nBJLMO9fWB/yMFhekKafa58Ly+eYv0ZGUN2
- E89bI+wbgj2SRuJQl3w8VIK3fF/eRkw2iHtvAL2s5wfIjbwB2zmzYabW8RR/t3OST6k1Jb5bjLe
- cX/MrtsVfAlZNzDm3avsJuE0zYhtir/1gflBr5iF5t/mWQ5/AqdnI7xkGafptVMvSwUpmBJSBK2
- r/w12R1CgzvYRQO8aDWMQijZl+DsjCkDccGydAOW5wA+w==
-X-Envelope-To: regressions@lists.linux.dev
-Received: by smtp.migadu.com with ESMTPS id 3182c772a689ec26;
-	Fri, 28 Aug 2026 17:18:41 +0000
-X-Mizu-Trace-ID: 3182c772a689ec26
-X-Migadu-Flow: FLOW_OUT
-From: Devin Wittmayer <lucid_duck@justthetip.ca>
-To: Klara Modin <klarasmodin@gmail.com>
-Cc: linux-wireless@vger.kernel.org,
-	linux-mediatek@lists.infradead.org,
-	nbd@nbd.name,
-	lorenzo@kernel.org,
-	regressions@lists.linux.dev
-Subject: Re: [PATCH wireless] wifi: mt76: mt792x: fix NULL dereference in ACPI SAR init during probe
-Date: Fri, 28 Aug 2026 10:18:38 -0700
-Message-ID: <20260828171838.22038-1-lucid_duck@justthetip.ca>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <apGWXuPOSqZJ_ShO@parmesan.int.kasm.eu>
-References: <20260825181712.28548-1-lucid_duck@justthetip.ca> <ao3dyqWJ3nf3rMMW@soda.int.kasm.eu> <20260828011737.22809-1-lucid_duck@justthetip.ca> <apGWXuPOSqZJ_ShO@parmesan.int.kasm.eu>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W5jaTF1v"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-6a051904222so1550152a12.2
+        for <regressions@lists.linux.dev>; Fri, 28 Aug 2026 11:19:00 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1787941139; cv=none;
+        d=google.com; s=arc-20260327;
+        b=pJcefy/+Ob1gtDOxTh76owg6hXtppISOOX4jrjaDBetTJU/dwcUw4GvYtfCUhRehC+
+         YuGC0LkAzneoDDmojiHfUT39Jq4h1mzkP8bl2dVuQ6WqQCITTWrLRcGpYNueh4zazBj5
+         xLtdJFcVNyusmlvOLnJv5XSf5zYRb0VoxCkUF+ovcQpZ0hl+lRc9x1tX3SGO/nrSZTwX
+         uRlnlyDJXkXznz8CxnQo7XlDYJk6Uu2G0Nd2+89PPuJg8FEWdbbeCG4RZND06HprVK0B
+         i+Neda6go7jhrWhQsvcs/bmjawJ8W+5kRM+UFzGXqRazgC2paKiHtbiHRLfknE86J7P+
+         FTFg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=to:subject:message-id:date:from:mime-version:dkim-signature;
+        bh=pU4LloQCWvu6t6M/Xne7xPMuYqsv0Zx3JiyPEP1RHBo=;
+        fh=Hi51YWuPkGPl+o+QQFCkEuCgNPef+ggQN7GkeY6Y8Uo=;
+        b=Wsedl4GyDENJVbu1PP9F0bP4aBZ2K91HSJJygYh4RGnoOpc6vUYNcEutucPRaarbvQ
+         +3/vjiN7jBJWlJXngkYdVlxuAnNnGElFQ1S2VdIcNQvjKhR7UtPLQyO4H+XUTRiSG7n4
+         BVsTVz7HvGvUevm+1AGmmilTbmUInH4c4rPrlGNdy5N4pFpUchJLMVE/Ut5bIXgkp9Bl
+         YWVs7al1BVR3j9Uy/f3wEXnwx/LHVHkqasJekw6WahiG+H0ictFzrDtOC/9JpzYRPYTL
+         1b8a9wwOutuQ8+GWYMe8PPD0TwgGiZmlWBqelPO5zivkL4lcv4OpyHBrsB7nKNrsdGA5
+         fJyA==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1787941139; x=1788545939; darn=lists.linux.dev;
+        h=content-type:to:subject:message-id:date:from:mime-version:from:to
+         :cc:subject:date:message-id:reply-to:content-type;
+        bh=pU4LloQCWvu6t6M/Xne7xPMuYqsv0Zx3JiyPEP1RHBo=;
+        b=W5jaTF1vER91BGCIt3nluQxNvMVsIoc7yquf/T3IRDC4VVxEZSBiG0g4UaTKR/iKct
+         BslUivhtl+t28vpiWKF8Lk2uYF/xAiBqBkeOjPOGT47FRWRoBKnDd7ZwIl6fOIaRaD0o
+         kKbJjePtXuRSmyoFXoBk+fJ7FiQSyukDyh9je6wgHpbniG9FsZ37P9QHHV9/yt/y5lb3
+         d5QIUV3KiFy7X8d52X+LcCZh04OF721MwcXMRcDaJitl5qeutGZxkb7OeqeCCw0ImjwH
+         8gsJn4fX3f82CjBnReb2U55qA1vCEbTugr4Qd7eSm6eA9eNfJ2q/1fj6EjsKGyxjKxK5
+         TpuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1787941139; x=1788545939;
+        h=content-type:to:subject:message-id:date:from:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=pU4LloQCWvu6t6M/Xne7xPMuYqsv0Zx3JiyPEP1RHBo=;
+        b=WG2zyikMJSJjjuVQiFO4zuY3XrK4IQU6eJPfAjF6kiEnvhFTQ6UdCmXcgjZhUGQiis
+         zUVVVMogTdJXc4KUONnOMGV8P4HSH+L87+YXbksJOLlLCPUgU7G3hGNk0sZYHSKeLesC
+         HiAnz2P1fqQ3KAAYJ1sf/qfz69UKweKQ3ODBYML/eyiPDoChgR3naJjegiznIVrvuEeK
+         SBIJa0wnXnIAi2ayUtxkX8Rr2Cu1/Tx38wSKrmJlILWLTMIFBrIQre8296KG7uAH8BL3
+         fF8zUs62G9BqZ6Vg1DZbaLKKvVX3+wV/nTVwv3yJmFDTRVz5z7pOeB/dOf1DQtnYivLw
+         shCw==
+X-Gm-Message-State: AFuF++kpTk8HcJNJCqtrLK+qbBNVDdCtNxTMv5TAsgXTAcb2SW6th1fG
+	d3Pv4a0TZ7+bDb+dyXCE0+zTqZJvDqwlzLHrHgXzs/BeKrfOVNfJ1yL2kOwEIinIx67HfhLxu+P
+	bnSN49bqf0yKP8gt5B317/tm3pMicnmnPpFuosBA=
+X-Gm-Gg: AR+sD10h4qke6Z2WtBj55u5CA6Gx0Fvb9WERByNFyRALj0s8fynS8xWSQdPLUBTohPs
+	hrzcvgbVVBndgHmyoLqLxjwT9kNjNalHWPUsls9hxss8izA/LiyiY4zUcFs4M88L/vDMveh+zEk
+	FO8bLqa98g/7NW5dYZPMDT7G55QwUOin+Uv5r6HW+SGNOEwoFG9OSdZa50Tk+XZyGPS9pjf+iDL
+	+VYrMJUJQaz07eNYkmqcR88nVBrVUM+enDT1rjQ19XgciMvdHkQFC/CrZXnheeMBJdRRPmrXII+
+	xrWeXmDU+2HFha4+p7UK2ud1ZU8tUKH0Bhn/7HJCaRJDm4jxSj2ShMA=
+X-Received: by 2002:a05:6402:a0c7:b0:6a1:c4f:3153 with SMTP id
+ 4fb4d7f45d1cf-6a60d2ec4ffmr6520007a12.2.1787941138591; Fri, 28 Aug 2026
+ 11:18:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: David Stefan <stefan.davidalexander11@gmail.com>
+Date: Fri, 28 Aug 2026 21:18:44 +0300
+X-Gm-Features: AcwNN1WJw4eyxGx0v86Bpqk4ndu_8q3QZjKS-nqasEhPXsxWu5l-4fgahpNzIIw
+Message-ID: <CAABU8jnNMoyLBCmaxs+iC8WgZiUH4=yFSiHepNpqPiBQfA56Zg@mail.gmail.com>
+Subject: [REGRESSION]
+To: regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-On 2026-08-28 15:27:10 +0000, Klara Modin wrote:
-> Wouldn't the Intel 11th generation have come with the Intel AX201 or
-> AX210 originally?
+On Fedora 44 Everything (netinstaller) with kernel
+7.1.10-200.fc44.x86_64 running on an Intel Core Ultra X7 358H with
+32GB LPDDR5 system RAM, a kernel panic can be experienced during
+certain gaming workloads. Haven't been able to create a very detailed
+reproduction method, but roughly, it occurs after about 30 minutes,
+specifically in Cyberpunk 2077. At this time, the iGPU (Arc B390) is
+at 100% utilization (checked with nvtop utility), the game freezes
+with the audio looping for a second before the kernel panic screen
+appearing for a short moment, then the system reboots. This issue
+seems to occurs sooner at higher resolution settings (4k, as opposed
+to 1080p in the original occurrence), however, the kernel panic screen
+can no longer be specifically identified, otherwise the crash behaves
+the same (freeze, looping audio, reboot)
 
-It would, and thanks for the correction. This board's firmware carries
-Intel's wireless power methods and none of MediaTek's four. I put an
-MT7927 in it recently and the MediaTek ones did not appear, so they do
-not come with the card.
+I have not been able to reproduce this on the previous kernel, being
+7.1.9-200.fc44.x86_64, after individual 3 tests.
 
-> I don't think so (if this is the MTGS table above?), but I don't really
-> know how to parse the table contents.
-
-That is the right table, and nothing in it is padded. Yours is fine.
-
-> so the transmit power limits actually look like they are too high for
-> some bands, especially 5735-5835, but maybe it will limit to the AP
-> transmit power and be fine? However, according to `iw list` the channels
-> in 5735-5835 do not have the "no IR" flag, so in AP mode the card could
-> potentially transmit ~8 times the allowed power (I would rather not test
-> this)?
-
-Every line reads the same because the driver writes the same number into
-all of them:
-
-	/* not used by fw */
-	rule->power_rule.max_antenna_gain = DBI_TO_MBI(6);
-	rule->power_rule.max_eirp = DBM_TO_MBM(22);
-
-It is a placeholder rather than anything the card sent up, which is why
-the same twenty-two turns up under every country code and not only
-yours. So it is not evidence of what the radio will do in that band, in
-either direction. The card has a power table of its own, separate from
-this one, and debugfs shows it as txpower_sku.
-
-> The 5710-5735 range is also not covered, which results in 5 GHz channel
-> 144 being disabled (visible in `iw list`).
-
-That hole is in what the card replied with. The driver copies the ranges
-across untouched, so 144 goes with it.
-
-Devin
+I have attempted to use kdump-utils, but so far, it does not seem to
+have been triggered to dump the vmcore.
