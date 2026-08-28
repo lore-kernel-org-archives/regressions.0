@@ -1,110 +1,143 @@
-Received: from mail-06.mail-europe.com (mail-06.mail-europe.com [85.9.210.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8144640F734
-	for <regressions@lists.linux.dev>; Fri, 28 Aug 2026 10:42:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.9.210.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D5123D5227
+	for <regressions@lists.linux.dev>; Fri, 28 Aug 2026 11:02:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787913763; cv=none; b=OFeFevxIGuf3mWVrbbrNVBmFFliFkYjKYGiDAIqYp5xZ/4QQNndKtbTd7rgJ7nJGF4UYDMy0KIpvXVVd+dLvs8Kw8wyN5rLJGyJd9eroOO/WbMYkOdhn48JB5psT/6KJ6y1NF1D7EmcQveizUqxUMtCnpGCmu3c9UuuxvwqglQ8=
+	t=1787914959; cv=none; b=CH5/GzzfP+w3FobDELDtYk0+n+7bCnqZdbJ8fO8xpvGeVsMC3IRfdQui/bhJ40B5X1y3NV5mVlpQzPnO/NUAgKmY4YzMF579Ne/HyDItm6PkD4uCLVNSpgNlzxfplo/fvPPgEc+O/MNTOD4PEdfrcsIsT9YLoA6CO9/DmqolTCg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787913763; c=relaxed/simple;
-	bh=TMHhiKGJhiixMSSefGOX3mKwji8XqB0Qoz5YBH/RdOk=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tUNXVT3LWNT813dDMowWbljtG5BsbadLVyd5EYrnXjD/Z8eC5byFE85MVDlDJyqDoQXERA2qAdR1WZRl6xjt6hFhHVQsaMkZ1NCg/zM1BcCqCOFquUZ9bqCJgrClh830Qgxd/v2LclgPzKMHggeyglUll6P7VBXy8frDabdh9YA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ghoul.dev; spf=pass smtp.mailfrom=ghoul.dev; dkim=pass (2048-bit key) header.d=ghoul.dev header.i=@ghoul.dev header.b=C0nv9J6+; arc=none smtp.client-ip=85.9.210.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ghoul.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghoul.dev
+	s=arc-20240116; t=1787914959; c=relaxed/simple;
+	bh=PZOxbkSyo2Wd9KRPQTNlBN8b6sV2MpnNkaeoZtqPgYM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=BDhw3nNrkSK3baEAJpK/xTzDmFLDrI9PE7ZVJg0kH3I/A8DXesFRJcSi0oQm0qvVdWA3LI+zzWKX4+f+WqTNGmduUPCyMGNDCJ2Zv8fGzWNx3k/VgfYRLLM/nFDMK85gwtlUYQ8/juh11BLVNhWrlTdNST8o63Junn8ZNwZP80U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C9P5e8UF; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ghoul.dev header.i=@ghoul.dev header.b="C0nv9J6+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ghoul.dev;
-	s=protonmail2; t=1787913748; x=1788172948;
-	bh=4hx4DF9Ze1/WdDlpBQe0Jt7BHNmSlbucflyx8vSRHPA=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=C0nv9J6+xnL88keL6RFHxMcwwxw1Rm++AAcHLvRxTaRujUGgRDse+g2iNvzu7epjh
-	 93rRptz4dK+kVaTC3+nKp8PMmj0tzOLEpBobGju2HUd5fA2NMWLqObHBeyQMCtx2bi
-	 iqVoV80VEfmBJ5esHd1CaQDtZ5z85sRRtulHuSsNolTpwKONkd87NJWRoz7cLXNw8V
-	 mpK4IWAsbTpq+eiRBTZyTHQkzpDmG9daxCiNsdtEE/7Yg3h93UJvTxTRGzT5dt924s
-	 eWRU/LjF5kXjHD9ROTGd968se3iJGFwkzEq5Agp5YaL+0JTl64yHp01VFUEU2qtZqU
-	 1jjYaiIzu1JYw==
-Date: Fri, 28 Aug 2026 10:42:21 +0000
-To: Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>
-From: Ahmed Yaseen <yaseen@ghoul.dev>
-Cc: Denis Benato <denis.benato@linux.dev>, Antheas Kapenekakis <lkml@antheas.dev>, =?utf-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Alan Stern <stern@rowland.harvard.edu>, Kerim Kabirov <the.privat33r+linux@pm.me>, GameBurrow <gameburrow@pm.me>, regressions@lists.linux.dev, linux-usb@vger.kernel.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, Ahmed Yaseen <yaseen@ghoul.dev>, stable@vger.kernel.org
-Subject: [PATCH v2] HID: usbhid: skip interrupt IN polling for devices with no input reports
-Message-ID: <20260828104159.62399-2-yaseen@ghoul.dev>
-In-Reply-To: <20260828104159.62399-1-yaseen@ghoul.dev>
-References: <20260828104159.62399-1-yaseen@ghoul.dev>
-Feedback-ID: 177610485:user:proton
-X-Pm-Message-ID: 601481af4ca6df679a1c95ab7ef3110b170d05fa
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C9P5e8UF"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-39647184c73so1924340a91.1
+        for <regressions@lists.linux.dev>; Fri, 28 Aug 2026 04:02:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1787914957; x=1788519757; darn=lists.linux.dev;
+        h=mime-version:content-transfer-encoding:content-type:references
+         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=JfxjOcdt/cjC9WpCoszCuxVA1vXbX2Ek4UTj+Uf54lQ=;
+        b=C9P5e8UFMs6371walKt05SqyEG/5bxxJXdGIQFY659hlDpyEBph3xVx0XK8ftYDJOv
+         l30SbNThdFgG6sBzZb6WghbbfDK08o8/1uYiD92NhdFwk4aJv1DrfO6Ofh0lj71tN1YS
+         S+w3dRp3dUhFilH0W/st7OTDYC1iA4ZTsnFk4WsQwBkiOavXschbxrKkqzeA4OrFk7FJ
+         TxK1YM42q5HTyX+dmr7eDvk3QEijtPrbQf3a31k1tJLrvlE9t59KLw7wA6Tz6z9vGL0W
+         dFDjxoXs7W1IvgOiiAhI/BV/rr7s381rehq6lDRmKvrmJAGY9SvgzWScL91Fx+0infHL
+         Uamg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1787914957; x=1788519757;
+        h=mime-version:content-transfer-encoding:content-type:references
+         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=JfxjOcdt/cjC9WpCoszCuxVA1vXbX2Ek4UTj+Uf54lQ=;
+        b=dn6BD2Y0g/umd6Ae30MKJc4KWvDLfksnWhvg9qysRVcawNGuerlT4abu+7TLjPAREG
+         1ez/RIEUAXLSyeLBmkHCiZ3ZCnjoMm02YfhlrGkx66OC9ESwvrzrrkyF2TKgOYrBpZMb
+         j5+8F18bKmydzxkh147+/rXn6JLthjH3JY+EH2MBI+QmLjsYzRAXX6OtUglfQqFNDQa+
+         ExlUDdiSv4K2lpvI8A+feF6nDhe6ZrCFiR86KPXgkY38UXEPSogdZBf/niGpJTHcjtou
+         H/5F6+dJeGmFg6rsRCfCuIR25nJDvLNYKuqFFvWMxG8cuOYUih24FmIMzSpG8gNGgXjr
+         gLsA==
+X-Gm-Message-State: AFuF++lahfYbsPJ0siu1OXsK/7JuVzOEKBo9AjuL/+F7HJnWvnqH03FZ
+	olDyW33bqPEcZMmmnPAgfk5aPeSL0HWlRxx+pDMCzcxj73ipErKvCxMu
+X-Gm-Gg: AR+sD10h3qsAM4LyRP2uGwt/U3u1cwu+N1GGXWDX1MiV7uRfv50Y8aEZiMRchtqvNsM
+	kBYlvJrHEh2wumtTO8dNCX8mVxXcFYMLkPZmj4KWUS9ZaLJlofeU1jHfZdv1JmYU7rcV7eBAD5V
+	Fnq5hlmq+p4fhcLnPTu8urgWVfMksqZPfT1Xd1ZLf2OUzPqdyoJAUhRA5okNKmQqZURxa6Z0WHN
+	xFbUAFJ+8/yAx0AQxRotB3SjEYGF9hmePmVXTuEY6mrwTaI6vVrc+p7NPOMayArcdXOtOeSt6UE
+	E8Y/vNOCCotbzOQZSS2noRB/DbN27Jsdp3oqX4Twd0EL2g8SPrgLtqjP95WMPVvvVn5VszbqyRt
+	kaCUhnyZjdqI8Sienns4X0KbNkTraW1fFfF2cD+WUh3RaojSkrQjIpC3olPGvIWaysvgyo+lSSd
+	BbS4fSzOvLm5HkjXknOFzJgMHrATy+LnFli8tr0Px9tYfyv3tkrHO6SofAOPHdA28IYSd0w3eAj
+	7z7VNtI6/peunF8kLL1kSksCVOu8ioqg11OEVchF74cxA5iu41Marj9/t4WEnwc+SU=
+X-Received: by 2002:a17:90b:3945:b0:38e:4f31:8412 with SMTP id 98e67ed59e1d1-3969bc02508mr20315417a91.11.1787914957056;
+        Fri, 28 Aug 2026 04:02:37 -0700 (PDT)
+Received: from [127.0.1.1] (ppp-124-121-113-94.revip2.asianet.co.th. [124.121.113.94])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-142e0dc898dsm5088597c88.9.2026.08.28.04.02.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Aug 2026 04:02:35 -0700 (PDT)
+From: Mikael Etienne <mikael1022bzh@gmail.com>
+To: vasant.hegde@amd.com, iommu@lists.linux.dev, linux-ide@vger.kernel.org,
+ linux-block@vger.kernel.org
+Cc: regressions@lists.linux.dev, joro@8bytes.org,
+ suravee.suthikulpanit@amd.com, Mario.Limonciello@amd.com
+Subject: Re: [REGRESSION] Silent SATA read corruption with dma-iommu on AMD
+ 600-series AHCI (6.19 good, 7.0+ bad)
+Date: Fri, 28 Aug 2026 18:02:29 +0700
+Message-ID: <178791494900.1152725.12728124457005560389@gmail.com>
+In-Reply-To: <c5c2b503-e273-4aa5-ad9f-f7afee02ab9e@amd.com>
+References:
+ <CAHEgv3TiJUvS=Hustyem0ts8jkbFVAdzBazmPhCbv2sNnTsZkg@mail.gmail.com>
+ <c5c2b503-e273-4aa5-ad9f-f7afee02ab9e@amd.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
 
-usbhid starts polling a device's interrupt IN endpoint on open
-(usbhid_open() -> hid_start_in()). If the report descriptor declares no
-input reports there is nothing to read there, so the poll is useless,
-and on some composite devices it is also harmful.
+On 8/28/2026 11:13 AM, Vasant Hegde wrote:
+> Can you please apply Commit 1e75a8255f11c81fb and retest. Also boot with
+> `amd_iommu=pgtbl_v2`?
+>
+> @Mario, Can you look into this issue? Is this similar to the one you were
+> debugging internally?
 
-The ASUS ROG N-Key keyboards expose a second, input-less interface used
-only for RGB control via feature reports. Opening its hidraw node (any
-hidraw reader does, including SDL/Steam Input or a plain cat) starts the
-pointless IN poll and keypress reports on the keyboard interface get
-dropped for as long as the node stays open: a lost key-down drops a
-letter, a lost key-up leaves the key stuck. usbmon shows the dropped
-reports never reach the URB layer.
+Hi Vasant,
 
-The useless poll itself is long-standing; commit 4ac74ea68f64 ("HID:
-asus: early return for ROG devices") is what exposes it on these
-devices by keeping the input-less interface alive instead of ejecting
-it, so its hidraw node can be opened and the poll started.
+Thanks for the quick response.
 
-Skip the poll in usbhid_open() when the device has no input reports.
-Feature reports and hidraw output keep working over the control and OUT
-endpoints, so the interface is otherwise unaffected.
+I checked before testing, and I believe that commit is already in my kernel.
+CVE-2026-68329 lists it as fixed in 7.1.6 with 02f8cefa2ad95ea3754f0cfd6fbae7f866202ccb
+(and in 7.2-rc5 with 1e75a8255f11c81fb07e81e5029cfd75804350a0, the one you
+pointed at). I am running Fedora's 7.1.10-200.fc44, whose changelog says
+"Linux v7.1.10", so the 7.1.y backport should be present.
 
-Fixes: 4ac74ea68f64 ("HID: asus: early return for ROG devices")
-Link: https://discuss.cachyos.org/t/keyboard-input-issues-on-asus-rog-strix=
--16-2025-with-cachyos-during-gaming/30823
-Link: https://github.com/ublue-os/bazzite/issues/4590
-Cc: stable@vger.kernel.org
-Tested-by: Kerim Kabirov <the.privat33r+linux@pm.me>
-Tested-by: GameBurrow <gameburrow@pm.me>
-Signed-off-by: Ahmed Yaseen <yaseen@ghoul.dev>
-Reviewed-by: Denis Benato <denis.benato@linux.dev>
----
- drivers/hid/usbhid/hid-core.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+And I have reproduced the corruption on kernels that already contain it. On
+7.1.9 my journal has 119 corruption lines for a single boot on 2026-08-23, and
+the 20-million-error run described in my first mail was on 7.1.10.
 
-diff --git a/drivers/hid/usbhid/hid-core.c b/drivers/hid/usbhid/hid-core.c
-index 96b0181cf819..d7cf2b56e117 100644
---- a/drivers/hid/usbhid/hid-core.c
-+++ b/drivers/hid/usbhid/hid-core.c
-@@ -688,7 +688,14 @@ static int usbhid_open(struct hid_device *hid)
-=20
- =09set_bit(HID_OPENED, &usbhid->iofl);
-=20
--=09if (hid->quirks & HID_QUIRK_ALWAYS_POLL) {
-+=09/*
-+=09 * ALWAYS_POLL devices are already polled from usbhid_start(), and a
-+=09 * device with no input reports has nothing to send on the interrupt
-+=09 * IN endpoint. In some cases polling is harmful: on the ASUS ROG
-+=09 * N-Key keyboards it makes the sibling interface drop keypresses.
-+=09 */
-+=09if ((hid->quirks & HID_QUIRK_ALWAYS_POLL) ||
-+=09    list_empty(&hid->report_enum[HID_INPUT_REPORT].report_list)) {
- =09=09res =3D 0;
- =09=09goto Done;
- =09}
+There is a second, independent reason to think it may not be my bug: that CVE
+says the race was introduced in 3.0. My persistent journal goes back to
+2026-02-27 and shows zero storage errors under 6.18.16 and 6.19.x, including two
+full multi-TB backup reads of the same drive on 2026-04-01 and 2026-05-01. If I
+were hitting the 2011 race, I would expect it to show there too. What I see
+looks like something that appeared between 6.19 and 7.0.
 
-base-commit: 8d3ae59288f1e7d58d76558a6ee96d533bc5019f
---=20
-2.55.0
+I may of course be wrong about the Fedora build. If you want me to verify the
+exact source, tell me what to check and I will.
 
+On amd_iommu=pgtbl_v2: I can run it, and I will report numbers rather than
+impressions -- bytes re-read, wall time and the exact workload. Two constraints,
+so you know what to expect:
 
+  - It is a production machine, and testing means removing the iommu=pt
+    workaround. I also assume a misdirected DMA can land in RAM belonging to
+    unrelated processes, not just in the read buffer, so I will stop all
+    services for the test rather than run it live.
+
+  - My only quantified data point in translated mode is a single failure after
+    768 GiB / 3h25m of verification reads. To honestly call a setting clean I
+    would want on the order of 15 TB re-read, which is roughly a day. I will
+    not report "this fixes it" on a short clean run.
+
+A 7 TB integrity verification is currently running on this machine and I would
+rather let it finish before rebooting. Given the above, would you still like the
+pgtbl_v2 run, or is there a cheaper test that would tell you more? I am equally
+happy to try libaio instead of io_uring, iommu.strict=1, or amd_iommu=off, in
+whatever order is most useful to you.
+
+Mario -- if the issue you were debugging internally has a comparable signature,
+I would be glad to compare. I have the raw btrfs csum lines showing eleven
+consecutive 4 KiB blocks returned in exact reverse order around a pivot, plus
+full dmesg, kernel config, lspci -nnvv and IOMMU domain dumps for both the
+failing and the working configuration. I can also collect whatever specific
+diagnostics you want, including with a debug patch if you provide one.
+
+Thanks,
+Mikael Etienne
