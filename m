@@ -1,258 +1,205 @@
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from SN4PR2101CU001.outbound.protection.outlook.com (mail-southcentralusazon11012062.outbound.protection.outlook.com [40.93.195.62])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71C5934D91F
-	for <regressions@lists.linux.dev>; Fri, 28 Aug 2026 15:27:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787930838; cv=none; b=Bjd9VTaJoG+mXLMBPFSk8neEw/cGjLDIWGuSjvQQNYYW8ev0nqc1z7sPdYl8fAVLv+C9dkfOuCnhFEjuvjaAMSNOcV50VXTlEw0BCNnGcf9Vc82DJr4n+bcm1joU4tuBMEvP0zIHMjiE5GSHTd1m6A7+Gq41bzPloq8UIf0prZY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787930838; c=relaxed/simple;
-	bh=0Y1hFhWBWlkAgjhxum5WRygs5JLT9aGxGrfQFZvTjK8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NwaCIFcbxA6X+36CwY1nyq/0DL7+V5Q4Omo40FiV2FzcwWc/vpJm3sRk697X5DcXgboGofDaW1b7dayyhkn356QvsVsipxa7tY4pUYYtFn3KWtTNzqBIf1eCzZgz1vMDtst4q7M9P3KgIlaZbKUc1N2ZBXQ0ci9hTnsIyTwWitI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dgt97rc9; arc=none smtp.client-ip=209.85.167.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 329C535E1B1;
+	Fri, 28 Aug 2026 15:38:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.195.62
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1787931484; cv=fail; b=jC7dLXV2RXeCtEoiscgLlvhOlZUSez3ViuT2asLEV4MG2TP55av/AHLcBYTwF3tOLC5HwRD0PVVycqLKSmjHZR08VRm67rhe+2Y2Ls7C/1khTkS9a2KUOJ5cZXIXBp7ll37BSFuim6Ce7bzS7hUESwB1JBVMu0y2DT/iJw5AYVY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1787931484; c=relaxed/simple;
+	bh=Nv5aMr+pVGrfVLppKW3B6CBobhA0JMCX3bBjc8ggY3Q=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=jmJCEHx3IXIFMttMEOV6Xh1lz/bF6ld7KmUTwKMnktADXxGSO/Ww1tG3o09oKFyFhRzW4VyO+WAAAW6tzhNj15TXzqpAuEiqMyB3fl9gYJF9/sE3K8DoAZP/xAisMzRKQxWI8wy5y9mESbnsfoL3AW2Ccxx9wxHXLNyGnLXAmdQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=KtBoO4WC; arc=fail smtp.client-ip=40.93.195.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dgt97rc9"
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-5b4ab40d839so1018239e87.3
-        for <regressions@lists.linux.dev>; Fri, 28 Aug 2026 08:27:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1787930833; x=1788535633; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=UIbTgQLKlI2fS2y4pLFsdcXAtLTrLaglnOlC7jWM3PA=;
-        b=dgt97rc9SF3AiA7JI7o9CRS4TFymbymu8HIgZ2JaV0Pjs6+I5KmwxTdUX4D8GIX+dv
-         hIDvw+kQxgqbwSph6Q2sIJT5cpy+NCP5XtLza/dw2pQc/xQjhb5hpbVpI2QgxIkcB3nA
-         KYNhmrGKqLzbEBcWwgtECWBV9AIp0CPu6kk8LbkMgfkq8ouIb2Y651yJ9dP7tmCNDBfs
-         nxnx1d+lewE0APQT1gvvNtarvC2EbCxo7yqVFDRTV7I9ZCPzsbfWlsMD5xVe76k7v7O+
-         5ByEHTGZs+inNqnSiZp2izyaK+n8VFNCV+gBxGFm4pvjGlTNC3TOxFpmExIDQdR7xxbI
-         041A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787930833; x=1788535633;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=UIbTgQLKlI2fS2y4pLFsdcXAtLTrLaglnOlC7jWM3PA=;
-        b=JwXaEYvohcNaudkesZxBkoY+LhCDA49EUaHlSJOjO2MEpaUv34TDPGMqnYtMn6QP9c
-         YeEgZ9mE5HbJgnt2tNiK2WpOQh7GwKW+Ejm0/5SwXgZAyHxwT8LnXDqFYuXPKymLVzwV
-         lXjAfKjwyv83KrZyQbaKW8xghUxALc3dBQ+PujN1hFmMvk42aJn8R+7oSVNsRRQg6kF0
-         JUneI6XEmaZNe3C80MOcfvrjY4hz6nh7wZABzvcNv163Aeu5UHGCd09kgoFFSxeKq2B1
-         ui2Pfz60/moLpvnO2091sR3QpIZAORvxHG0eoJ9c0ccOWo5WgZmo0Is+nAkVYVFUTV+E
-         WGoQ==
-X-Forwarded-Encrypted: i=1; AHgh+RqTHsRkitH/OI1JaQ8YS/RelMx/tSssDy5bin5GUzWKSoX2TkihuCuLAhYFgLsii+LYOtQJx4tqwpM0KA==@lists.linux.dev
-X-Gm-Message-State: AFuF++lZqPXUovM7I2sGMDuxx24uXfcPn4gbssTegW6HHOgsCWP+WiHU
-	jeq1yM/gEP3gSrcV6R4ahtbaD1qiOc8b70vUY8jYGfNEQGTDlvHV+3971jUGnA==
-X-Gm-Gg: AR+sD11XiEJap+kZUijmqdJsuoQAyC1tcnlyj7+u79ecc9bpISZTwHHR7+Ha2SkYcza
-	cJPIYFkZfadvlfw1UCAF4G03huhw9rtuivW1JoOCICdZf7LRatx7SLgKdD0RDbBAFqiIFGwUKir
-	OWBja/Xhv9oTDKBgIuTV4EolWxE/xSfV8ZIXHW7ENffKeiDuM8DHwTXEri816Vu42hmfZzJIfsZ
-	ad8ckdB6DwxEvmGimOerYDKYzLbNHRHLBzthWmRw9RNh5Tv1o1b+dQDN26AZ9dnbfGbl7ke753i
-	rClZkN42Hz6EK5YIyVuzTUJYNOBSQKLou/3NshhaYUOkhNnfYCMR8gVz3WutTx8/ifazmYeEqBQ
-	Y7O2lGnZj9TiYIBmE58kfQQreshu5khWkDuPHIdRyRZJ06MmLPXt8cJxrN9sQn2QMStoZpjSJPn
-	zFjEgDU+PUM2pezC/+/2euqxkfGiMRIglEnRWbjDfgKpmXkl7fdF4g7/ltqzM9jsaAytGspPDBw
-	aXm/nDw
-X-Received: by 2002:a05:6512:3b24:b0:5b5:e2e2:5f2e with SMTP id 2adb3069b0e04-5b5e6905d67mr2591264e87.18.1787930832156;
-        Fri, 28 Aug 2026 08:27:12 -0700 (PDT)
-Received: from localhost (parmesan.int.kasm.eu. [2001:678:a5c:1204:126f:f00a:513f:807b])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5b5e8a11f08sm455754e87.71.2026.08.28.08.27.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Aug 2026 08:27:11 -0700 (PDT)
-Date: Fri, 28 Aug 2026 17:27:10 +0200
-From: Klara Modin <klarasmodin@gmail.com>
-To: Devin Wittmayer <lucid_duck@justthetip.ca>
-Cc: linux-wireless@vger.kernel.org, linux-mediatek@lists.infradead.org, 
-	nbd@nbd.name, lorenzo@kernel.org, regressions@lists.linux.dev
-Subject: Re: [PATCH wireless] wifi: mt76: mt792x: fix NULL dereference in
- ACPI SAR init during probe
-Message-ID: <apGWXuPOSqZJ_ShO@parmesan.int.kasm.eu>
-References: <20260825181712.28548-1-lucid_duck@justthetip.ca>
- <ao3dyqWJ3nf3rMMW@soda.int.kasm.eu>
- <20260828011737.22809-1-lucid_duck@justthetip.ca>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="KtBoO4WC"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=YuaRh0KlkEndH88gvYlRKJsnQCuQvkiBHCllp8gg7wU8LMMRi8cLWDA+/l6ZsDPvlm0nyYQmqxjuoVaJam0XZQ7/hDnZUmGvD+ySnwmCoya7BFRiJ784jG2eStJMFykfr6ZYnsOxzZXWxHbyzR9ivRSz/2DnlUitiOaSLemEYQgfvmicRgl7IHpnLD43NwCOatJ8TMaUBn1sYm28AASit+CRByRMN+LLTsqz2dU4o+qxvGT0nLDaFbvD/pUxBoZTBKiW3d1V6wn/zzxGYbF0gflFBv3rT2Z0mW/SrzWBV2Y3DdoNIO2fLJStEmugrvxXsH8Es222oDy2WchP6hpdzw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=2nPGBwP4xyUc989/xZOZTIlhLjHH9M3T3cQIU0EhhsI=;
+ b=sDMzr3/8ZxDYNPlofyHu9X3fjrxOXDPXuvz1upv/0YMRcr2MNKHlFjEXmG1L9yg39lj6Uo22iHAopHZVLko9Ek6UfJK5PZAvfl2baiKbfjDEgMbGbaj9XDZE7WzgrQq4DpksvaPG8S+lPzKr+yRhdHPdtJQWcsykySEHInKznC66YZlqKoYaHAsB8Xvdft9QFRd5+LnDjN/bvS/2DpSPfAc5DK9IGVDAzg+A+eaa4XzWcdnAn9gbc/q841BVAlD4Uj0ipmgILwdPk0YeFrb17bCTUecvLvbyJx9+8jqC9x7sOEz54jRClY0Gvbp5E+VbSuGxb9XyaVi1cNUrhPT1dQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2nPGBwP4xyUc989/xZOZTIlhLjHH9M3T3cQIU0EhhsI=;
+ b=KtBoO4WCTXLwC5jKxh3L7uQyZB1HdARPuGEkYd+RAKq9SoXTQTlpnZThSn7rU7KoJK0Pxsb80oSaLckyiYKaMflN3EmF+WgB7L3h85vRyL5LljfelZ2rMI45Do4z9WLDq42d4po+NjpPyj3dRMVFbq7gnzfvkPWh3IYZVjgVj+w=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH8PR12MB6914.namprd12.prod.outlook.com (2603:10b6:510:1cb::21)
+ by MW6PR12MB7072.namprd12.prod.outlook.com (2603:10b6:303:238::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.360.11; Fri, 28 Aug
+ 2026 15:37:54 +0000
+Received: from PH8PR12MB6914.namprd12.prod.outlook.com
+ ([fe80::2893:177a:72b0:6000]) by PH8PR12MB6914.namprd12.prod.outlook.com
+ ([fe80::2893:177a:72b0:6000%7]) with mapi id 15.21.0315.012; Fri, 28 Aug 2026
+ 15:37:54 +0000
+Message-ID: <d49add14-c8de-4b6b-9049-4a07e5692ee9@amd.com>
+Date: Fri, 28 Aug 2026 10:37:51 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] Silent SATA read corruption with dma-iommu on AMD
+ 600-series AHCI (6.19 good, 7.0+ bad)
+Content-Language: en-US
+To: Mikael Etienne <mikael1022bzh@gmail.com>, vasant.hegde@amd.com,
+ iommu@lists.linux.dev, linux-ide@vger.kernel.org, linux-block@vger.kernel.org
+Cc: regressions@lists.linux.dev, joro@8bytes.org,
+ suravee.suthikulpanit@amd.com
+References: <CAHEgv3TiJUvS=Hustyem0ts8jkbFVAdzBazmPhCbv2sNnTsZkg@mail.gmail.com>
+ <c5c2b503-e273-4aa5-ad9f-f7afee02ab9e@amd.com>
+ <178791494900.1152725.12728124457005560389@gmail.com>
+ <fb875f14-3b47-4d43-ae3a-0d0b17e1c64a@amd.com>
+ <178793069172.1699234.13635367891277204598@gmail.com>
+From: Mario Limonciello <mario.limonciello@amd.com>
+In-Reply-To: <178793069172.1699234.13635367891277204598@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SA9PR10CA0017.namprd10.prod.outlook.com
+ (2603:10b6:806:a7::22) To PH8PR12MB6914.namprd12.prod.outlook.com
+ (2603:10b6:510:1cb::21)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260828011737.22809-1-lucid_duck@justthetip.ca>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR12MB6914:EE_|MW6PR12MB7072:EE_
+X-MS-Office365-Filtering-Correlation-Id: f4191a83-cab4-44aa-b334-08df051a5363
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|376014|1800799024|23010399003|6133799003|10067099003|56012099006|11063799006|4143699003|22082099003|18002099003;
+X-Microsoft-Antispam-Message-Info:
+	gmXqv9fg94/6DUtqKpDkMPR3bFkvmWHkhiBVfIUzIngE6jjYy3RwTw6vaMOfIMYRjiyctqv/AzwqO1VzjaLMZ3f9AJiG1oUYPQd01U18ngOPRJNLx0uMpyp7wkedn3EhzE6AQTXP8TWZNdOyHzu1JvK+jjsWiyQNa40dFa4kIA8c26yt9HWhocnqrFw5M76FS7696lT6MEeDCGAXcPzZY1br4mqTYrC1pv4a+ugf2lumQW3vOt8SYsG3r/borKL7lMvyoV3ddNLNfAzK7KfcLE0CUL2L/yf8UpYraHIP8Cb8Hx6f/Nn0/5B9FIMTDTVi7FcD8gJ2HlttS5eFYjuChaGKmx5kwp2IZGWtq7xOfiFpvEJ4DhfldikJCqq1MXE1aIlGG4VpLO921PdyKFW4cAlNZZhNssmFUZ9z8ehEB/oERyeOrZoGwDWrNdoXRwJBTS3XV8zs1sQtfUzsY7Fvo1zwf1fooljEwpaC8nssrAwKS/JLGAQbgeL0M7fyFAHQ8cu+YmmQtT0E3KiYqCn5wB52ZCeIVF5+yTUy4v4beqtv1tiDKK9A36nyddln9WR208oGP2WWA+6ISss28YbTX/DphBx/pvfLOdU0wbOB9V8PqeMDuWGzlvoAOybKzrMmd5NY4VMLeRqlp+GPLuuHTfal73aqc7jAUQ/jUg0MAWg=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR12MB6914.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(23010399003)(6133799003)(10067099003)(56012099006)(11063799006)(4143699003)(22082099003)(18002099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?K0dNSjM2dTFEcWhZTE05N3RIeUVkTGpVYTBuTlhQRERxRC9oRU1xdWoyMzQ3?=
+ =?utf-8?B?NS9kcFhPaitUZE1GY0UwNVg3cDI1NG56U24yUkdTSExMUFFQRW4zT3VLa2xO?=
+ =?utf-8?B?LzY1UEdhRXNhQ2FuOVpyN1F3c3doUWxhRDVLNnYycFZFdVk5Vmw2endBeWpr?=
+ =?utf-8?B?TmRlT1FXelhvS2tQMFNFbmp1QVRnRXRjakJ4dXBJUkJXVnY3eHh5a0xRWitD?=
+ =?utf-8?B?QnAwOWV4Q3JDTit6S0NuRnM4VDdPYTNzSEROWXFXSlkvZmVqTDNPQ1hiVGtK?=
+ =?utf-8?B?NHJxK21rY1BiRUtGZ0U5bUNKYm1TOFVmUWZPak1hVmtSeTc3QU91NzRFb3Ew?=
+ =?utf-8?B?amlkenZuWmhkT2pKQk05Ky82Z2hCVmV4NW53aFZkdEQrMnlUdmRJRnBvOFgx?=
+ =?utf-8?B?N052ZzJkWXZnaXRTWGFLb0dTWEdLNlZBT1FpWHZkT0pJcThvUTlxVE5DYTZx?=
+ =?utf-8?B?SDE5K2V5ZnJURmpOQkI5cWR5U2dlbFBQSFkveTdadUc3VmxVeitPbjBmN0hu?=
+ =?utf-8?B?RVNuUnJRUUdIVTJobitSamRHNWhTWWVZNVZCeVlMTG9VdFBVVWI5a0Nab1lF?=
+ =?utf-8?B?UGd1dGgrV0RZMnRsK1I4anRMS3I2WXNkK0hZMnRvbE5QMlVqa29JbUFTQlIw?=
+ =?utf-8?B?TkVHcE43L2UyUGhBcFJYb1E1YitoSVk4MmR6aytTdEtHUVNiZStVNjJFQWZG?=
+ =?utf-8?B?cU5uV0h0aHNIVGNDd21TTDBmNXF1UVNNMzdOMXJYMHBWcm5TVWxyUjBwb0Rx?=
+ =?utf-8?B?UXBwYlRQSzNvTVR4UWpCdWxhTzhNb0VuVklDTkZLUGRjMWpsc3NTckc1NTJt?=
+ =?utf-8?B?UlZoS1BqTVpIWXYzSHNmdkZ6ZnYvdkxEd1dqNmRrNitMV2lkbUlSUEFDOFRw?=
+ =?utf-8?B?aG1VQU43ekVNN2oyYnhsWkNxbEduRWw1WTdWOEJkbk5YNmIxeS9kRFFtQ0tT?=
+ =?utf-8?B?SFF3Qy9xU0phbzBIdFBGeGFnQ1VHSEN5NHhuUEgvYlNGNzFPQm55TVpienha?=
+ =?utf-8?B?UXZTWHd1WUpTVkRCVGJkd3VBSWtYcVNmSHRPbERQaFhsUmwyNWZ1MmY1bUdp?=
+ =?utf-8?B?OFltZ28velI2aWRnU0tBL25JRWZLWUlYYnVZK3pIVkp3b3JjZmZoSEYzNDNO?=
+ =?utf-8?B?NnNveVpOTVBTZ09LU0Z6QWdLNFNLTW5QblZOanBUbXdlenk2cXRwRWdUMHBF?=
+ =?utf-8?B?SnplemxDbWZEOW1mQ3RDY25wZmdEUEZ1ZG1QeGczbk9MRHdvcTc0VCttRFlJ?=
+ =?utf-8?B?eTFsWlJZKzU4OWptVnVOYTdkeXcxU2NmVGxCVDJ6cFkvcGpLS0tTTFhPaVJV?=
+ =?utf-8?B?VjB6VDh1RWMvUXJIdkxtZWFqdVgzTjJ5Q0swajFKd0F1QnZLL2dLT1NQNyts?=
+ =?utf-8?B?bVUzc2IxOWNzUmlVVU5YUlhNNy9iV092a0x6d3lzTW1JNndBTlNtUXVIdXo0?=
+ =?utf-8?B?cHhsa0RLV0pIeEFZTFREQmhpaE1nN0daWVRMWXJROU1jb01teUdoUzFHRVlr?=
+ =?utf-8?B?SXpaL2txclFKeHJGYkczMGlOQWY4OHZZSnZuY0ZTdHRXdE1UZGpQWDZFM3Bj?=
+ =?utf-8?B?WEI2azBhN3lINUpNU1RSaTdQbmpHMmlZSC9yWDFRZDFld3dZZThZSU1BYVlw?=
+ =?utf-8?B?T0xVRnZiMUpzVDI2TjRCbkhJSXJQdXV1aEZFVkFYVkUwY0lzTEhmeUdaQ2c0?=
+ =?utf-8?B?WC9rUGFuU0J4Vms0NUlPdC9VeHRyM2FLc0lWN3RjRDBjN29JcFA1NVJwZWRq?=
+ =?utf-8?B?NHVkQ3hLcHFKZ0hZbVdVdytON1U4UDg0MTdLSFpuQ1Z3cGtlb1NlOTlXUTVs?=
+ =?utf-8?B?U3I5WVlLOXlZMW5YWk4yMlFMejAwWktJU2tkRnFnd3pobVp6K0JMcmd0Wm1D?=
+ =?utf-8?B?SGJmZTJiVGNvd3hiUW0vclNjbnpKYUsrd1ZyWFdkUG5mcW9TQXR5VVEyS2lS?=
+ =?utf-8?B?OUJnMVpLVDVhd3FIdzhhWFFOb2J2NmlZc3lLemtJajJXOXRuR0tIUFBBY00r?=
+ =?utf-8?B?SmhmQ08xRWhMdVQ1S0M1a1F0blVJNDFOby9ubXh2UXpsSHdsN0xlOWRZRHI5?=
+ =?utf-8?B?d2ViemMxcU5tS3NHd1JqeGROcTVyS09HdGtidkwyZG1mWW45NWlubE1MUzc3?=
+ =?utf-8?B?U2dYamZjVEJyL1N3UmJOVkhKOEVHWWxBdjhYMlRoeXR1NHpKczdKeHdUU3FE?=
+ =?utf-8?B?WklIRGdjSXZKcXhEdGQ0QldKUXY4WVBGOXBZYURaTlFGMnVScWp3R29hUFhS?=
+ =?utf-8?B?VkFjdEFQSTNYOTVrWUxFNWc2M2xyUlFyZktjdkUydnZHSlVMRVVoT21CNXhV?=
+ =?utf-8?B?akFDUk5VNE9FOE5ET2xITTRBVnhSVnQ4ZnhjSnpPaGRPa1V6bDUwdz09?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f4191a83-cab4-44aa-b334-08df051a5363
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR12MB6914.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Aug 2026 15:37:53.8214
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 9Ff/HMqPmb5s3TSktmUfXxnm6MR3dfRVFRX7P5eZH4MciuFtmKyy1Vgu9UkZnxcjFU3NuFQPyRQBzJoj7KaN+A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW6PR12MB7072
 
-On 2026-08-27 18:17:37 -0700, Devin Wittmayer wrote:
-> Thank you for the Tested-by, and for bisecting it in the first place. The
-> report arrived with the commit named and a revert confirmed, which is most of
-> the work already done.
+
+
+On 8/28/26 10:24, Mikael Etienne wrote:
+> On 8/28/2026 6:22 PM, Limonciello, Mario wrote:
+>> BUT the issue internally does show the issue is specificially once the
+>> 32-bit IOVA space is exhausted.
+>>
+>> Unfortunately; the solution is currently a BIOS change in how the type
+>> bytes of the IOVA is handled.
 > 
-> Something odd, since we are on the same laptop. Mine is a Framework 13 that
-> shipped with an MT7922, and it has no MediaTek power tables at all. I checked
-> every ACPI table on the machine rather than only the main one, and there is
-> nothing there for any vendor. So your oops cannot fire here on the same model
-> with the same card, which is why I had to inject tables to reproduce it.
+> Hi Mario,
+> 
+> Thanks -- the 32-bit IOVA exhaustion detail is the first thing that explains
+> the timing I see. My failure takes 3h25m of sustained reads to appear, and a
+> reboot clears it completely with the same kernel and the same on-disk data.
+> "Low IOVA space works, high IOVA space does not, and a reboot starts from an
+> empty low space again" fits that exactly.
+> 
+> The ASM1166 write-up you linked is also a very close match: a controller that
+> advertises CAP.S64A but cannot actually reach above 4 GB. My SATA controller is
+> the AMD 600-series chipset one (1022:43f6), which is Promontory/ASMedia silicon,
+> and it likewise advertises 64bit in its AHCI flags.
+> 
+> Firmware, since you mention a BIOS fix: I am already on the latest available for
+> this board.
+> 
+>    Gigabyte X870I AORUS PRO ICE
+>    BIOS FB1c, 2026-07-21, AMI, platform firmware revision 5.41
+>    AGESA!V9 ComboAm5PI 1.3.0.1c
+>    CPU microcode 0x0a70520a
+> 
+> So whatever BIOS-side change you have internally is either not in AGESA
+> 1.3.0.1c, or not sufficient on this board.
 
-From my short look, the driver seems to look for MTCTL, MTDS, MTGS, and
-MTFG? I don't have a MTFG, but the others look like this decoded with
-iasl:
+It's not in any AGESA release yet.  This is very fresh information I am 
+sharing that we have root caused the issue and have a proposed 
+modification.  It will take a while to make it through the process 
+machinery.
+> 
+> On the bisection: before committing to two weeks, I would like to try making the
+> reproducer fast. If the trigger really is 32-bit IOVA exhaustion, then booting
+> with iommu.forcedac=1 alone should hand out high IOVAs immediately and fail in
+> minutes rather than after 3h25m. If that works, a v6.19..v7.0 bisection becomes
+> an evening rather than a fortnight, and you would also have a reproducer that is
+> practical to run in a lab.
 
- Method (MTDS, 0, Serialized)
- {
-     Name (_SPT, Package (0x1F)
-     {
-         0x4D, 0x54, 0x44, 0x53, One, Zero, 0x02,
-         One, 0x22, 0x14, 0x24, 0x22, 0x21, 0x19, 0x1A,
-         0x1A, 0x1A, 0x19, 0x1A, 0x02, 0x22, 0x14, 0x24,
-         0x22, 0x21, 0x19, 0x1A, 0x1A, 0x1A, 0x19, 0x1A
-     })
-     Return (_SPT) /* \_SB_.PCI0.GPP6.WLAN.MTDS._SPT */
- }
- Method (MTGS, 0, Serialized)
- {
-     Name (_GPT, Package (0x1C)
-     {
-         0x4D, 0x54, 0x47, 0x53, One, Zero, 0x03, One,
-         0x24, 0x24, 0x24, 0x24, 0x1A, 0x1A, 0x02, 0x24,
-         0x24, 0x24, 0x24, 0x1A, 0x1A, 0x03, 0x24, 0x24,
-         0x24, 0x24, 0x1A, 0x1A
-     })
-     Return (_GPT) /* \_SB_.PCI0.GPP6.WLAN.MTGS._GPT */
- }
- Method (MTCL, 0, Serialized)
- {
-     Name (_TCL, Package (0x13)
-     {
-         0x4D, 0x54, 0x43, 0x4C, 0x02, One, 0x50, 0x88,
-         One, 0x18, Zero, Zero, One, Zero, Zero, Zero,
-         0x08, Zero, Zero
-     })
-     Return (_TCL) /* \_SB_.PCI0.GPP6.WLAN.MTCL._TCL */
- }
+We do have a reproducer in our lab environment that will rapidly 
+allocate and trip this issue which is how we could analyze it and root 
+cause it.
 
 > 
-> Which means the difference is somewhere in the firmware, and I can only see my
-> side of it. Mine is an Intel 11th generation board on BIOS 3.17, dated October
-> 2022. What are you on? Whether these tables came with a later release or only
-> ever appeared on certain boards decides whether anyone else is about to walk
-> into this.
-
-Wouldn't the Intel 11th generation have come with the Intel AX201 or
-AX210 originally? Mine is the Ryzen 5 7640U and is updated to the 3.20
-BIOS dated June 23 2026.
-
+> I will try that tonight, with all services stopped, then the
+> amd_iommu=pgtbl_v2 iommu.forcedac=1 combination Vasant asked for. I will report
+> bytes re-read, wall time and workload rather than a verdict.
 > 
-> While you are in there, does your geo table carry 0xff in the unused slots?
-> Someone turned up on the list yesterday with an ASUS padded that way, which
-> the driver takes as roughly -1 dBm and clamps every rate down to it. Whether
-> that is one vendor's habit or common changes what the right fix looks like.
-
-I don't think so (if this is the MTGS table above?), but I don't really
-know how to parse the table contents.
-
-If I run `iw reg get` (with the patch applied) it returns:
-
- country SE: DFS-ETSI
- 	(2400 - 2483 @ 40), (N/A, 20), (N/A)
- 	(5150 - 5250 @ 80), (N/A, 23), (N/A), NO-OUTDOOR, AUTO-BW
- 	(5250 - 5350 @ 80), (N/A, 20), (0 ms), NO-OUTDOOR, DFS, AUTO-BW
- 	(5470 - 5725 @ 160), (N/A, 26), (0 ms), DFS
- 	(5725 - 5875 @ 80), (N/A, 13), (N/A)
- 	(5945 - 6425 @ 320), (N/A, 23), (N/A), NO-OUTDOOR
- 	(57000 - 66000 @ 2160), (N/A, 40), (N/A)
- 
- phy#0 (self-managed)
- country SE: DFS-ETSI
- 	(2402 - 2482 @ 40), (6, 22), (N/A), AUTO-BW, NO-320MHZ, NO-EHT
- 	(5170 - 5250 @ 80), (6, 22), (N/A), AUTO-BW, NO-320MHZ, NO-EHT
- 	(5250 - 5330 @ 80), (6, 22), (0 ms), DFS, AUTO-BW, NO-320MHZ, NO-EHT, PASSIVE-SCAN
- 	(5490 - 5710 @ 160), (6, 22), (0 ms), DFS, AUTO-BW, NO-320MHZ, NO-EHT, PASSIVE-SCAN
- 	(5735 - 5835 @ 80), (6, 22), (N/A), AUTO-BW, NO-320MHZ, NO-EHT
- 	(5945 - 6425 @ 160), (6, 22), (N/A), AUTO-BW, NO-320MHZ, NO-EHT, PASSIVE-SCAN
-
-so the transmit power limits actually look like they are too high for
-some bands, especially 5735-5835, but maybe it will limit to the AP
-transmit power and be fine? However, according to `iw list` the channels
-in 5735-5835 do not have the "no IR" flag, so in AP mode the card could
-potentially transmit ~8 times the allowed power (I would rather not test
-this)?
-
-The 5710-5735 range is also not covered, which results in 5 GHz channel
-144 being disabled (visible in `iw list`).
-
+> If you already know that forcedac alone will not behave that way, please tell me
+> and I will not waste the evening on it.
 > 
-> Devin
+> And to be straight about the rest: this is a production home server, so a
+> two-week bisection is a real cost for me. The reproducer is three lines of fio.
+> If you can run it on comparable hardware in your lab, that would very likely be
+> faster than me doing it here -- and I am happy to run any specific kernel or
+> debug patch you want in the meantime.
 
-Regards,
-Klara Modin
+I don't yet have any confirmation we can patch this at runtime.  If I do 
+come up with a way to do that which works will let you know.
 
-> 
-> On 2026-08-25 11:27:15 +0000, Klara Modin wrote:
-> > On 2026-08-25 11:17:12 -0700, Devin Wittmayer wrote:
-> > > Some laptops carry a MediaTek power table in their firmware, and the
-> > > driver reads it to set a transmit limit for each frequency range. It
-> > > only fills in the ranges themselves when it registers the device.
-> > >
-> > > The startup step that does this existed already, but it never programmed
-> > > anything. These two commits made it run a regulatory update instead,
-> > > which sets the limits on the way through, long before registration. So on
-> > > a machine that has the table the driver reads through an empty pointer
-> > > and the interface never appears:
-> > >
-> > >   BUG: kernel NULL pointer dereference, address: 0000000000000004
-> > >   RIP: 0010:mt792x_init_acpi_sar_power
-> > >   Call Trace:
-> > >    mt7921_set_tx_sar_pwr
-> > >    mt7921_mcu_regd_update
-> > >    mt7921_regd_update
-> > >    mt7921_run_firmware
-> > >    mt7921e_mcu_init
-> > >    mt7921_init_work
-> > >
-> > > Skip it when the ranges are missing. They are applied again once the
-> > > device is up, which is where they came from before.
-> > >
-> > > Reported-by: Klara Modin <klarasmodin@gmail.com>
-> > > Closes: https://lore.kernel.org/linux-wireless/aoyxqHYvSuaBeubf@soda.int.kasm.eu/
-> > > Fixes: 9b80bd9cab40 ("wifi: mt76: mt7921: add regulatory wiphy self manager support")
-> > > Fixes: e9f3f1cc133f ("wifi: mt76: mt7925: add regulatory wiphy self manager support")
-> > > Signed-off-by: Devin Wittmayer <lucid_duck@justthetip.ca>
-> > > ---
-> > >
-> > > Reproduced on both chips before sending, an MT7922 and an MT7925, and the
-> > > fix clears both. Neither machine here ships a vendor power table, so I
-> > > supplied one through an ACPI override in the initrd. It also wants recent
-> > > firmware. The June builds do not turn on self-managed regulatory and
-> > > nothing happens; the builds now in linux-firmware do, and then it dies
-> > > exactly as reported with no interface at all. Patched, both come up and
-> > > scan normally, and the injected limits still show through in the power
-> > > table afterwards, so the skip does not lose them.
-> > >
-> > > With that table still in place and the fix absent, backing out the mt7921
-> > > commit on its own also boots clean, so the table is not what causes this.
-> > >
-> >
-> > Thanks for the quick fix!
-> >
-> > Regards,
-> > Tested-by: Klara Modin <klarasmodin@gmail.com>
-> >
-> > >  drivers/net/wireless/mediatek/mt76/mt792x_acpi_sar.c | 3 ++-
-> > >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/net/wireless/mediatek/mt76/mt792x_acpi_sar.c b/drivers/net/wireless/mediatek/mt76/mt792x_acpi_sar.c
-> > > index 946dd7956e4a..b468051fbe68 100644
-> > > --- a/drivers/net/wireless/mediatek/mt76/mt792x_acpi_sar.c
-> > > +++ b/drivers/net/wireless/mediatek/mt76/mt792x_acpi_sar.c
-> > > @@ -323,7 +323,8 @@ int mt792x_init_acpi_sar_power(struct mt792x_phy *phy, bool set_default)
-> > >  	const struct cfg80211_sar_capa *capa = phy->mt76->hw->wiphy->sar_capa;
-> > >  	int i;
-> > >
-> > > -	if (!phy->acpisar || !((struct mt792x_acpi_sar *)phy->acpisar)->dyn)
-> > > +	if (!capa || !phy->acpisar ||
-> > > +	    !((struct mt792x_acpi_sar *)phy->acpisar)->dyn)
-> > >  		return 0;
-> > >
-> > >  	/* When ACPI SAR enabled in HW, we should apply rules for .frp
-> > > --
-> > > 2.55.0
-> > >
+By chance did this issue coincide with you switching from something 
+different to the Ryzen 7 8700G?  For example switching from Raphael or 
+Granite Ridge parts to that Phoenix part.
