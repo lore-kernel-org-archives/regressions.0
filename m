@@ -1,121 +1,167 @@
-Received: from mout-b-210.mailbox.org (mout-b-210.mailbox.org [195.10.208.40])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.61.103])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8865F3CD8BB
-	for <regressions@lists.linux.dev>; Fri, 28 Aug 2026 07:13:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.10.208.40
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B42AF53E0B
+	for <regressions@lists.linux.dev>; Fri, 28 Aug 2026 07:24:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.61.103
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787901210; cv=none; b=B30fkowWL9w5BxjGuUxa/eVKVxkEGZyRsgrBRu9X22sUrm20BSp4kuKWY7/CC41PVt9zg3/1NL9OwUlBBzaeitnrsEUb2ChIJdP6HuI5fFD2b1ak9yutFdQSfw6yqICYINLYBle+vxAL3KdBwc5nIp9R92KMhmfte/Adwh+qmz0=
+	t=1787901870; cv=none; b=FXdWEuULCOivxIFmEJC8Nr9i3Xb8XZkf561HAzbbo2F3wcCP0g7yBLhfpl4dy0yasklI7fMz46DH2cxdIo4rCHZLCEzz4xOL0ujQ29IA6VGp0zoxPYdGfAqzTCVitYvby7tIjMCJFhCNSseMQo6EvP33b3AwRATuQvsMilZPNkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787901210; c=relaxed/simple;
-	bh=/WXT+A3f/7st08lkY31K63EsDoMSEE/0GIw+DABOKkY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=K96fViX5SlBzb0hgmQhYEKIcfebxfNY9ByCfX2j/01T0eSCGHxnGRyrPXIqM4MOVibEGCgNk3cUSpF9PgmkXLyipf9+xI2oKd7ErlFEWxI5vmMxXVrTGv0ST94nVRXfd7Uymv67BQGX7rwHfIzIHxSbFZriuENgGZrXVIvso8cw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mandelbit.com; spf=pass smtp.mailfrom=mandelbit.com; dkim=pass (2048-bit key) header.d=mandelbit.com header.i=@mandelbit.com header.b=p49vXzGd; arc=none smtp.client-ip=195.10.208.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mandelbit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mandelbit.com
+	s=arc-20240116; t=1787901870; c=relaxed/simple;
+	bh=rO5R5UP/jGk6AEyOiwT2ew82BVHtvIxLoA7WyXEijhs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=siBYDuoNKaiMTdrcrWnyxhv7PFmCt3dptc/rkJkF/pmsoKCjDkv+yHF+OplDW7ETsxuYHE+mihmQAgUO4TG7Ebtt20wkRR3odxv6Qt3Uya8tj3NPAEpbUI9s8bdeomNI8AnyXWK1SMzfZiQEIRCO/NN7Ucb9ZjoMtNNjyRNIIQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=QrTx6HTT; arc=none smtp.client-ip=188.68.61.103
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mandelbit.com header.i=@mandelbit.com header.b="p49vXzGd"
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [10.196.197.2])
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="QrTx6HTT"
+Received: from mors-relay-8403.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4hWVHs16M9z8J9s;
+	Fri, 28 Aug 2026 09:24:09 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1787901849;
+	bh=rO5R5UP/jGk6AEyOiwT2ew82BVHtvIxLoA7WyXEijhs=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=QrTx6HTTyzq1NsOjR2EKB5ciQTcpJpH6WMHjAnLB2xokLzb+8vTs1UugSW+czKtMj
+	 CCiweuAqPinhNwwl02R/QvVjStoAws3FOow8FKlC5CV7BEuccFNIMB0c9PgXSTba3I
+	 aynixboGifdUu0Qv4aFn8sJHEIPV9ll83yLS+RhCJDoWPYHZqdRpYCOWeazAQFvK05
+	 gt7T+LauTcMBmxkRJruKUb+Q8sIj2EURoyP9oyAyFXoho2mvKPLdthYfN0Nrb1EoOw
+	 EihZcCVphIMY6tkMLsbdKPCYdT0O8NLQN+qFq72xeI9rG//yMUo7goa77H62laflHI
+	 tRd7wvDX5O/JA==
+Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4hWVG83r25z86qP;
+	Fri, 28 Aug 2026 09:22:40 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
+X-Spam-Flag: NO
+X-Spam-Score: -2.898
+X-Spam-Level: 
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mout-b-210.mailbox.org (Postfix) with ESMTPS id 4hWTtd0F2MzFqjg;
-	Fri, 28 Aug 2026 09:05:45 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mandelbit.com;
-	s=MBO0001; t=1787900745;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oyhWX7eOAfeEW9vgW0WBxjvrBvoN2XFCwMEYhnpzZJA=;
-	b=p49vXzGdVKpNp9GptBkhbT1mcK/ABByD8PKX7EeU47qxaSz/J5jWqhjKsdrBc64OYjWnwy
-	kCksJw+uYaLbaf7lgDJJXpnzeiJJLpqXx06mLG5RoJISV0gryJW7Ri2alwD4TL+pRLjdfE
-	w8qsRJypSpLPAD/A3DFtTnIjBfrhVS05zZY/NHXbdSkr9/+/cQGo/i9BNABMo8t+VeVR5b
-	eoJ7ry3cO+cvQG5XOAP2TOcT60stRtU+HWkTcFZWUzgod+H8qGct6sI6590wyAX/hh+w6K
-	CAkNIlQ6wzdqNL9q2RxZB4paNBFTc4IpwNzg+jYcjqCUhutXUdUrNpLwq/Qmnw==
-From: Ralf Lici <ralf@mandelbit.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org,
-	regressions@lists.linux.dev,
-	Ran Wang <ran.wang_1@nxp.com>,
-	Duoming Zhou <duoming@zju.edu.cn>,
-	linux-usb@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	Ben Hutchings <ben@decadent.org.uk>
-Subject: Re: [REGRESSION] 6.1.y/6.6.y: fsl-usb fails to build
-Date: Fri, 28 Aug 2026 09:05:34 +0200
-Message-ID: <20260828070535.38490-1-ralf@mandelbit.com>
-In-Reply-To: <2026082858-footing-calorie-a196@gregkh>
-References: <2026082858-footing-calorie-a196@gregkh>
+	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4hWVG63ns2z8tdm;
+	Fri, 28 Aug 2026 09:22:38 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 2158B5FAE4;
+	Fri, 28 Aug 2026 09:22:37 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <9d5fa2bf-d9e4-4c6a-a9ca-8abf14ad894e@leemhuis.info>
+Date: Fri, 28 Aug 2026 09:22:36 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 0/3] drm/atomic-state-helper: fixes for blend-mode-prop
+ warning
+To: Melissa Wen <mwen@igalia.com>, Alex Deucher <alexdeucher@gmail.com>
+Cc: airlied@gmail.com, alexander.deucher@amd.com, christian.koenig@amd.com,
+ daniels@collabora.com, harry.wentland@amd.com,
+ leandro.ribeiro@collabora.com, maarten.lankhorst@linux.intel.com,
+ mripard@kernel.org, pekka.paalanen@collabora.com, simona@ffwll.ch,
+ siqueira@igalia.com, sunpeng.li@amd.com, tzimmermann@suse.de,
+ Alex Hung <alex.hung@amd.com>, Daniel Wheeler <Daniel.Wheeler@amd.com>,
+ kernel-dev@igalia.com, Lyude Paul <lyude@redhat.com>,
+ =?UTF-8?B?VmlrdG9yIErDpGdlcnNrw7xwcGVy?= <viktor_jaegerskuepper@freenet.de>,
+ =?UTF-8?Q?Timur_Krist=C3=B3f?= <timur.kristof@gmail.com>,
+ Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,
+ Xaver Hugl <xaver.hugl@gmail.com>, amd-gfx@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org, Greg KH <gregkh@linuxfoundation.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <20260826104143.39077-1-mwen@igalia.com>
+ <CADnq5_MEBLriK_M_atX6FKR5618fiB5DmAWOvxE_e+6nd5FdDg@mail.gmail.com>
+ <83bef197-dfbc-44a5-b9d8-6e0c44488793@igalia.com>
+ <6dda204d-2c12-4442-9893-6449b5ce51c9@igalia.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+X-Enigmail-Draft-Status: N11222
+Autocrypt: addr=linux@leemhuis.info; keydata=
+ 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 MEK4
+In-Reply-To: <6dda204d-2c12-4442-9893-6449b5ce51c9@igalia.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-PPP-Message-ID: <178790175820.3352449.9764472671033574481@mxe9fb.netcup.net>
+X-NC-CID: jHqi2LbOopvtK2C+qR73nICtA2K7XQPyOOyqNOiC4CMAQiSTFCo=
 
-On Fri, 28 Aug 2026 07:44:44 +0200, Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
-> On Thu, Aug 27, 2026 at 05:43:00PM +0200, Ralf Lici wrote:
-> > Hi,
-> > 
-> > While working on some backport patches for an out-of-tree module and
-> > looking for the exact versions containing the disable_delayed_work_sync
-> > symbol, I stumbled upon occurrences of that function on longterm v6.1
-> > and v6.6 in drivers/usb/phy/phy-fsl-usb.c despite not being declared or
-> > defined anywhere. In fact, disable_delayed_work_sync was introduced by
-> > upstream commit 86898fa6b8cd ("workqueue: Implement disable/enable for
-> > (delayed) work items") and is only available since v6.10. Neither 6.1.y
-> > nor 6.6.y defines it.
-> > 
-> > Consequently, kernels built with CONFIG_FSL_USB2_OTG fail with:
-> > 
-> > drivers/usb/phy/phy-fsl-usb.c:990:2: error: call to undeclared function 'disable_delayed_work_sync'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-> >   990 |         disable_delayed_work_sync(&fsl_otg_dev->otg_event);
-> >       |         ^
-> > drivers/usb/phy/phy-fsl-usb.c:990:2: note: did you mean 'cancel_delayed_work_sync'?
-> > include/linux/workqueue.h:470:13: note: 'cancel_delayed_work_sync' declared here
-> >   470 | extern bool cancel_delayed_work_sync(struct delayed_work *dwork);
-> >       |             ^
-> > 
-> > I reproduced the failure on PowerPC using corenet64_smp_defconfig with
-> > CONFIG_FSL_USB2_OTG=m, building drivers/usb/phy/phy-fsl-usb.o with
-> > Clang.
-> > 
-> > AFAICT, in 6.1.y, the regression was introduced in v6.1.160 by commit
-> > 4476c73bbbb0 ("usb: phy: fsl-usb: Fix use-after-free in delayed work
-> > during device removal") and remains present in v6.1.185.
-> > 
-> > In 6.6.y, it was introduced in v6.6.120 by commit 319f7a85b3c4 ("usb:
-> > phy: fsl-usb: Fix use-after-free in delayed work during device removal")
-> > and remains present in v6.6.154.
-> > 
-> > Note that the same problem was pointed out by Ben Hutchings during the
-> > 5.10.y review:
-> > https://lore.kernel.org/all/d147f0eb71f9cefbfb7605e95d98564d7f0ed346.camel@decadent.org.uk/
-> > 
-> > The corresponding patches were dropped from 5.10.y and 5.15.y, but
-> > appear to have been retained in 6.1.y and 6.6.y.
-> > 
-> > Simply replacing disable_delayed_work_sync with cancel_delayed_work_sync
-> > at its current location may not be sufficient: it looks like the delayed
-> > work can also be scheduled from fsl_otg_set_host and from the IRQ
-> > handler but I'm not familiar with this part of the kernel.
->
-> Can you just send patches to revert the offending commits?  Or we can
-> just ignore it as it's been this way for a while and no one has noticed
-> which implies to me that no one builds these modules for these arches on
-> these very old kernel trees :)
->
+On 8/27/26 19:14, Melissa Wen wrote:
+> On 27/08/2026 18:37, Melissa Wen wrote:
+>> On 27/08/2026 15:34, Alex Deucher wrote:
+>>> On Wed, Aug 26, 2026 at 7:20 AM Melissa Wen <mwen@igalia.com> wrote:
+>>>> PREMULTI was the default DRM blend mode until 9813e158d13d
+>>>> ("drm/drm_blend: allow blend mode property without PREMULTI")
+>>>> introduced
+>>>> the possibility of exposing the blend mode property without PREMULTI
+>>>> being supported. However, __drm_atomic_helper_plane_state_init() still
+>>>> resets pixel_blend_mode to PREMULTI (hardcoded), ignoring the supported
+>>>> mode in this property. In the same series, 860e748bddcc ("drm: ensure
+>>>> blend mode supported if pixel format with alpha exposed") starts
+>>>> warning
+>>>> drivers that supports alpha formats in a given planes but doesn't
+>>>> support blend mode property, which includes AMD primary and cursor
+>>>> planes.
+> [...]
+>>> I presume you are planning to apply this directly to drm-misc for 7.3?
+>>
+>> Right, I'll apply to drm-misc-fixes, just doing it now.
+> 
+> Or not now. I have to wait for -rc1.
+> I'll keep it on my radar.
+Hmmm, that sounds like these fixes will miss -rc1. But wouldn't it be
+good to get them included there, as they afaik (please correct me if I'm
+wrong, is easy to mix something up from the outside!) the warnings that
+Greg described as ""It's not good to boot and have a bunch of warnings
+already happening, resulting in a "tainted" kernel before I have the
+chance to break anything manually myself...""[1], as more people then
+will likely encounter this (and then waste time on bisecting an issue
+known for weeks for which a fix exists).
 
-Right, the lack of reports after roughly ten months suggests that nobody
-is building these modules for the affected configurations. Still, I
-would rather not knowingly leave those configurations unbuildable, so
-I'll send revert patches shortly.
+Ciao, Thorsten
 
-Thanks,
-
--- 
-Ralf Lici
-Mandelbit Srl
+[1]
+https://lore.kernel.org/all/2026082651-spinning-cornbread-33ba@gregkh/
