@@ -1,74 +1,137 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mx.itxnorge.no (itx-kvm-14.itxnorge.no [91.189.121.228])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9641837F32D;
-	Mon, 31 Aug 2026 16:48:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35024257845
+	for <regressions@lists.linux.dev>; Mon, 31 Aug 2026 17:27:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.189.121.228
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788194939; cv=none; b=hncf/mLFDAVyC/yQ/hsJfCP5uioKo2kHyNlUTgqE8Gb/lDnFKPcpn66jsZb1n+Ja6qwGtIwSpCl+eCpIYY2gq99GnSgrJ923okoOzJU4tjaJpCT2TiETYr8siWkQ652TzRFNqC9p7PvHU+dy4oU4fPHDT3lSj3dj5V94V2id+sU=
+	t=1788197281; cv=none; b=ooEfabpkbZP3LFhDThRMyaosEl7NjqUb7Q+2jR3sk5v/T45FDttH4BmkNLDzfeSTOHFMoCiu9oX8QNUZdWKIpfhkKJmVnc/0t90kA0D9qtz80ejSUp6OvSJDLHTpQpM8zRx5uLM7gCuOimlU/3CBzc8R2EAsX4sIg8SSD08ad8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788194939; c=relaxed/simple;
-	bh=+mbccWJe/LNwe6qvSFMqcyMQrPDeMoVrOFT+Cwn13Bg=;
+	s=arc-20240116; t=1788197281; c=relaxed/simple;
+	bh=kJ/1S4MN5n7+K+xTF2iKj4EfERSCdDgvdRmDcOUB7S4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dzK1EN5j+VSpRHTBNzMvKcmU/k4HukYL4fAq0igHEKdzVESvLa5Knr7Zdc7P0GzFeoTFC+hkTmi/D5KEfZiNTgEjQ/kWkNR+i895q+qN7TFwsAPID8C+ZEQR1Gs9n3X3juBrUCrEpWCZ8SwPaSdTt8/JD6ga3ZNFvK//RDsVR0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IFju6E9t; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=q3ut+84gmwKEZM/aS4z5t2TXLvtNGJrjon5QPxWZzJyexfuNGc34xa2fF/im8QsAW+IMnrverdfBRNt2NQF4BCZHqldgesPvGSAin5Fhr565FFpYRGUe2v32Ue4wnKjITlfNzxOrte1tADxd1V29Fw8q5/Ozg0TICayRMksqN6c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=itx.no; spf=pass smtp.mailfrom=itx.no; dkim=pass (1024-bit key) header.d=itx.no header.i=@itx.no header.b=W3yyVjUQ; arc=none smtp.client-ip=91.189.121.228
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=itx.no
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=itx.no
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IFju6E9t"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3002C1F00A3D;
-	Mon, 31 Aug 2026 16:48:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788194938;
-	bh=e33bE7hzJ3NMDwG88fk/40Dn2cUN5pTKclvyVN70rN8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=IFju6E9tesUOeqz+rW2sOr0gzqOqgFNzsUM7BBUlJcnoBfta9h7m3dOJzzBcdp377
-	 EAD9Zx3mSUEFitgOPLKiYO3zTOR8O+xkQbXFwx9LXVqz4GLMjhb3lZn0+FD8jMc9A3
-	 yIhZofhFWP1wl3SeMOWv9pfpt+zVxPZRVSUPL8Q1dfsSdOl3rAOkPVaCsWYDFsNAwu
-	 8kfzX1awNcv2x94X1YMnsRnXr3Ekk4FEm8Pc54MnuROFIRF08M4qeosQVgQm9mw0GB
-	 0kGOgE0y2rNHPK11VjyDWkia9M8puHjK8HqZCBj6pw6EXZcOAC6TAId/asXTJP3dWy
-	 DgdpmjwentDqA==
-From: Bjorn Andersson <andersson@kernel.org>
-To: Mathieu Poirier <mathieu.poirier@linaro.org>,
-	Paul Hollinsky <phollinsky@holtechnik.com>
-Cc: Sumit Garg <sumit.garg@oss.qualcomm.com>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Konrad Dybcio <konradybcio@gmail.com>,
-	Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>,
-	cros-qcom-dts-watchers@chromium.org,
-	linux-arm-msm@vger.kernel.org,
-	linux-remoteproc@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=itx.no header.i=@itx.no header.b="W3yyVjUQ"
+From: Stian Halseth <stian@itx.no>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=itx.no; s=mx.itx.no;
+	t=1788197271;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=A35Ouro+X6StzgWpM1L9TM6AUuUV0Hekn7+ox6+lvgQ=;
+	b=W3yyVjUQlAx5lfmbjCW3sTjnsCRiLWtctj81Cl6F88gvozhZ5yi/AXP/4Wj6baP4HtZvu+
+	TZ9XKuKdIBo4QSOMg6u8uDV3HhIOsCtWNkKGOaiV2ollbec5oU73QtNqIJAsv4EDEw+Bsa
+	OG2O8tHoOuwkTjmAks+nzpCv2v14Cd0=
+To: David Laight <david.laight.linux@gmail.com>,
+	Tony Rodriguez <unixpro1970@gmail.com>
+Cc: Stian Halseth <stian@itx.no>,
+	davem@davemloft.net,
+	sparclinux@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: Re: [PATCH] remoteproc: qcom_q6v5_mss: Don't require PAS for memory protection
-Date: Mon, 31 Aug 2026 11:48:48 -0500
-Message-ID: <178819492785.1319417.2319914259657057100.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260821081540.89137-1-phollinsky@holtechnik.com>
-References: <20260821081540.89137-1-phollinsky@holtechnik.com>
+	andreas@gaisler.com,
+	thuth@redhat.com,
+	regressions@lists.linux.dev,
+	glaubitz@physik.fu-berlin.de
+Subject: Re: [PATCH 0/1] sparc64: unify thread stack sizing and add explicit 32KB stack
+Date: Mon, 31 Aug 2026 19:27:38 +0200
+Message-ID: <20260831172739.3082423-1-stian@itx.no>
+In-Reply-To: <20260520144104.618c75ca@pumpkin>
+References: <20260520144104.618c75ca@pumpkin>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
+On Wed, 20 May 2026 14:41:04 +0100, David Laight wrote:
+> Without the stack offsets from the dump, look at the stack frame sizes
+> for the functions in that traceback.
+> I suspect there are too many that get near the compile-time threshold.
 
-On Fri, 21 Aug 2026 01:15:40 -0700, Paul Hollinsky wrote:
-> Commit f3b1357673dd ("remoteproc: qcom_q6v5_mss: Switch to generic PAS
-> TZ APIs") changed the probe-time gate for need_mem_protection platforms
-> from qcom_scm_is_available() to qcom_pas_is_available(). Memory
-> protection in this driver is implemented with qcom_scm_assign_mem(),
-> which is a TZ service distinct from PAS. The only PAS call in the driver
-> is qcom_pas_mem_setup(), and it is already guarded by need_pas_mem_setup.
-> 
-> [...]
+I measured this on an UltraSPARC T4-1 (sun4v, onboard NEC OHCI/EHCI,
+internal hub chain) running 7.2.0 with CONFIG_STACK_TRACER, booted
+with "stacktrace" so the tracer was armed before the hcd drivers
+probed.
 
-Applied, thanks!
+It is the opposite: no frame comes near the warning threshold - the
+largest in any capture is 408 bytes - but ~85% of frames are 176-224
+bytes, i.e. at or just above the SPARC V9 ABI minimum (128-byte
+window save area + 48-byte argument save area, paid by every non-leaf
+call). The stack goes to frame count, not frame size.
 
-[1/1] remoteproc: qcom_q6v5_mss: Don't require PAS for memory protection
-      commit: b853857293584dd1f52183f70a2bdeca692a1e71
+The high-water mark of an ordinary successful boot was 12616 of 16384
+bytes, and the maximum path is exactly the contested one - hub_probe,
+with a printk and then a timer interrupt on top:
 
-Best regards,
--- 
-Bjorn Andersson <andersson@kernel.org>
+  0)    12600     208   arch_ftrace_ops_list_func+0x130/0x1c0
+  1)    12392     176   hypervisor_xcall_deliver+0x4/0x320
+  2)    12216     208   xcall_deliver+0x128/0x140
+  3)    12008     176   arch_send_call_function_single_ipi+0x3c/0x60
+        [...]
+  7)    11304     176   sched_balance_trigger+0x39c/0x4e0
+  8)    11128     224   sched_tick+0xf0/0x2c0
+        [...]
+ 13)    10168     176   timer_interrupt+0x78/0xc0
+ 14)     9992     384   tl0_irq14+0x14/0x20
+ 15)     9608     144   console_flush_one_record+0x2c4/0x4a0
+        [...]
+ 21)     8424     176   _dev_info+0x38/0x48
+ 22)     8248     208   hub_probe+0xe8/0x92c
+        [23-49: usb_probe_interface -> device_add ->
+         usb_set_configuration -> usb_new_device ->
+         register_root_hub -> usb_add_hcd -> ohci_pci_probe,
+         all frames 176-336 bytes]
+ 50)     2968     176   pci_device_probe+0x7c/0x120
+        [51-64: driver core / initcall, 176-240 bytes each]
+ 65)      400     400   0x0
+                        (66 entries total; full trace on request)
+
+Re-running enumeration alone (zero stack_max_size, unbind/rebind the
+hcd PCI functions) reached 12168 bytes over 60 frames, same shape.
+
+So the margin is compositional: the USB probe path alone is ~9.6K, a
+printk with console flush adds ~1K, and one timer interrupt whose
+tick does load balancing and IPI delivery adds ~2.6K. Note the timer
+interrupt runs on the task stack, not the hardirq stack. The 3.7K
+that remains is ~20 more minimum frames; a deeper USB topology or a
+storage stack under the console plausibly closes that gap on the
+machines that panic.
+
+It also explains why Tony's backtrace looked shallow: sparc still
+keeps thread_info at the bottom of the kernel stack, so marginal
+overflow corrupts it first and CONFIG_SCHED_STACK_END_CHECK fires
+later from inside __schedule, after the deep path has unwound. The
+posted trace shows the detection point, not the overflow path.
+
+Caveat: the tracer samples at function entry and adds its own ~208
+byte frame, so the real worst case is somewhat higher than measured;
+this box did not panic. The data says 16K is structurally tight on
+sparc64 - ordinary boot uses 77% of it on a minimal USB topology -
+not that it always overflows.
+
+So I think the direction of the patch is right, but the diff should
+be minimal: thread_info_64.h is only compiled on sparc64, so the
+CONFIG_SPARC64 / PAGE_SHIFT == 13 / fallback chain is mostly dead
+code. All that is needed is
+
+	#define THREAD_SIZE (4 * PAGE_SIZE)
+	#define THREAD_SHIFT (PAGE_SHIFT + 2)
+	#define THREAD_SIZE_ORDER 2
+
+at the cost of kernel stacks becoming order-2 allocations (no
+VMAP_STACK on sparc64).
+
+Since this has been sitting since May, I've respun it with the
+reduced diff and the measurements in the changelog, keeping Tony as
+author - v2 follows. Tested on the T4-1: the boot high-water mark is
+12616 bytes on both kernels (the worst path is deterministic), i.e.
+77% of a 16K stack vs 38% of 32K.
+
+Stian
