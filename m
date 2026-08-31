@@ -1,55 +1,51 @@
 Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.102])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1D3A2941A
-	for <regressions@lists.linux.dev>; Mon, 31 Aug 2026 07:05:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C0CF357CF3
+	for <regressions@lists.linux.dev>; Mon, 31 Aug 2026 07:15:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.102
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788159907; cv=none; b=qZQu2AvNtQh+eCYJ1fIiIsALO0S8gRWfX+wpW3mr/H8zAIRCsWrZvoVBVr2YOYtelnPgXDrdxIdz+TBRkLBKfVtU5oFBbbZyuzqugSbSsZ9RbaBDDxHuENSVmgTjsU+4h5rR+a5m8FbgGdNY4+Zn6wEixsUtDnsP7+Ba2PUZUi8=
+	t=1788160549; cv=none; b=bL1C61PxQltZH/9KnzgdY4rnAOcU9AgVYybrt0xURCDtM8s4H9D0wTNYeoNbHYjq73IAz/eEzBsmyRyKOtEA+Va6WKWy3UaeRk4BBJI/Y+1CFTemuf8BjvD1JwLtpbPIoqdHm7MnmaC/xfLeyrG4k/JTvnVhvsVPPKSdiIQLVF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788159907; c=relaxed/simple;
-	bh=OsT9wSR3yxny15+BmcuiJ+mNDi5s7WDwal1ui55WUS0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MTvWW6+yv0zbz8UGe65HUS+8r6NjCxWhomHq1Ur4HEofuimUXPlbg2xe0cHxOjy9ZukIdGLOvSDJf43dxvhZA2XyY4kSkeJe8wRhgKZS9gIuYAnch/8fCXKFD5XRVGY7SvnlrMWlC9r4NrU8ig3pmq75vHAPv/OY2+6SzUDYtq8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=ZM0jHShE; arc=none smtp.client-ip=188.68.63.102
+	s=arc-20240116; t=1788160549; c=relaxed/simple;
+	bh=vjbCqHxjtFTIaSp2884poNh+3zVvB+M81WL4OZjqgOo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=fQFBx0JJQN52azDXaE5/IwTAenEVNPe+8W30g9BJ0kGSVdeG1qqpLW7xdaFT+a20tRXXc1EjoYQ/Z8FlEMaEHqi3ri4qMwtu00+NPRluDDLt08nuLDqVJHErm0+T8RmUtW75ieUw5KeOkKK/eT5djKDvgO0k5kCAZFAKGufs7wY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=N5ZcQkd3; arc=none smtp.client-ip=188.68.63.102
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="ZM0jHShE"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="N5ZcQkd3"
 Received: from mors-relay-2502.netcup.net (localhost [127.0.0.1])
-	by mors-relay-2502.netcup.net (Postfix) with ESMTPS id 4hYKWy6W3wz6F5q;
-	Mon, 31 Aug 2026 08:55:58 +0200 (CEST)
+	by mors-relay-2502.netcup.net (Postfix) with ESMTPS id 4hYKy90q47z62M3;
+	Mon, 31 Aug 2026 09:15:13 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1788159358;
-	bh=OsT9wSR3yxny15+BmcuiJ+mNDi5s7WDwal1ui55WUS0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ZM0jHShE24T+GzkuKdbh4evQfvvlbFUM8Mq8egMD1k+CD32gj0clgIJZm/FmKJNc5
-	 xMBaW+SUBdj3utN4GqSMAhKegD2I9kmFuoz6WHz4OMRSqYryMnao736gFp7+sKNedn
-	 c16AUcUFNLp0I9+QRCU0755p/t0FSafp//n4B4sWLkzjiygfeorWLYEs4DxpRCw8Yl
-	 ywc19pbbhO8sc7JU6caOD8UN4d4Q+8vO2SHHCGCuqkR54R3vhLoAB0sK5sOeZBLdJA
-	 Xj7un0L5GLRaMc49jByFe1fqckdHB/7nVbgqokqkjgRAfCWB1iPhYwz1Stpt/2e/jS
-	 GDypiwKomT/vg==
-Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-2502.netcup.net (Postfix) with ESMTPS id 4hYKWy5nq8z50kj;
-	Mon, 31 Aug 2026 08:55:58 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
-X-Spam-Flag: NO
-X-Spam-Score: -2.901
-X-Spam-Level: 
+	s=key2; t=1788160513;
+	bh=vjbCqHxjtFTIaSp2884poNh+3zVvB+M81WL4OZjqgOo=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=N5ZcQkd3qBo+3na89CFG2s/lDwxwYlE9pyQVJjkk++QKvfeXX4KOnB/hwVtbGcqfP
+	 GrCZmzHCWq8SgKxbVKSER1R/RQ46KSoMehuMtTUh4HKdWL/E4fPm1eqvniAPYBpyuj
+	 NzpZZ70HR2NXCZq9TzyDmD3nKIXFj1K2TxudpqqAOwYyy0ZNYs4nz7fNgEstsxNMex
+	 mD2cFfmJOSCua/aVlr+/+Rv906fPJf0VgK5LJsgaWaCFSNlL6k2FNJUH/m8nA+SSwP
+	 WY4BKCq1WPnwZZ5OpmImJDqJGkkpQ7/thqsug9k+mt+Ihv3eX4Izk0ErjmUeLVDxjy
+	 iuTKI1Rw0+puw==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-2502.netcup.net (Postfix) with ESMTPS id 4hYKy907LRz4xSl;
+	Mon, 31 Aug 2026 09:15:13 +0200 (CEST)
 Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4hYKWv3V24z8tbl;
-	Mon, 31 Aug 2026 08:55:55 +0200 (CEST)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4hYKy84yqZz8sch;
+	Mon, 31 Aug 2026 09:15:12 +0200 (CEST)
 Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id C6B325FAC8;
-	Mon, 31 Aug 2026 08:55:54 +0200 (CEST)
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 08FE15FA9D;
+	Mon, 31 Aug 2026 09:15:11 +0200 (CEST)
 Authentication-Results: mxe9fb;
         spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
 Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <64a7ce30-b346-4e94-974f-f30893d66829@leemhuis.info>
-Date: Mon, 31 Aug 2026 08:55:53 +0200
+Message-ID: <6e0da6ff-63ba-4043-9d48-5ae01ed657d0@leemhuis.info>
+Date: Mon, 31 Aug 2026 09:15:11 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -57,42 +53,46 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] usb: xhci: fix maximum event ring segments calculation
-To: Pierre-David Belanger <pierredavidbelanger@gmail.com>,
- Shixiong Ou <oushixiong1025@163.com>
-Cc: Shixiong Ou <oushixiong@kylinos.cn>,
- Mathias Nyman <mathias.nyman@intel.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Niklas Neronin <niklas.neronin@linux.intel.com>, linux-usb@vger.kernel.org,
- linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-References: <20260828105926.930033-1-oushixiong1025@163.com>
- <20260830031233.1810986-2-pierredavidbelanger@gmail.com>
+Subject: Re: [REGRESSION]
+To: David Stefan <stefan.davidalexander11@gmail.com>,
+ regressions@lists.linux.dev
+References: 
+ <CAABU8jnNMoyLBCmaxs+iC8WgZiUH4=yFSiHepNpqPiBQfA56Zg@mail.gmail.com>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
 Content-Language: de-DE, en-US
-In-Reply-To: <20260830031233.1810986-2-pierredavidbelanger@gmail.com>
+In-Reply-To: 
+ <CAABU8jnNMoyLBCmaxs+iC8WgZiUH4=yFSiHepNpqPiBQfA56Zg@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-PPP-Message-ID: 
- <178815935522.2907656.14889156823355571379@mxe9fb.netcup.net>
-X-NC-CID: eiXoVUb+xadsh/1ByZXAYrQjTaBHEI2FtxuHLrDBusnQ1zxHnPA=
+ <178816051223.2958585.10614757349499117349@mxe9fb.netcup.net>
+X-NC-CID: 7kyvMng786NmGqC0EQtajbYiIbMrnpCVUd37KPnvBkOYS2chzbk=
 
-On 8/30/26 05:12, Pierre-David Belanger wrote:
-
-> The failure on 08dbfad3f504:
+On 8/28/26 20:18, David Stefan wrote:
+> On Fedora 44 Everything (netinstaller) with kernel
+> 7.1.10-200.fc44.x86_64 running on an Intel Core Ultra X7 358H with
+> 32GB LPDDR5 system RAM, a kernel panic can be experienced during
+> certain gaming workloads. Haven't been able to create a very detailed
+> reproduction method, but roughly, it occurs after about 30 minutes,
+> specifically in Cyberpunk 2077. At this time, the iGPU (Arc B390) is
+> at 100% utilization (checked with nvtop utility), the game freezes
+> with the audio looping for a second before the kernel panic screen
+> appearing for a short moment, then the system reboots. This issue
+> seems to occurs sooner at higher resolution settings (4k, as opposed
+> to 1080p in the original occurrence), however, the kernel panic screen
+> can no longer be specifically identified, otherwise the crash behaves
+> the same (freeze, looping audio, reboot)
 > 
->   xhci_hcd 0000:00:04.0: xHCI Host Controller
->   xhci_hcd 0000:00:04.0: new USB bus registered, assigned bus number 1
->   xhci_hcd 0000:00:04.0: Failed to allocate interrupter erst
->   xhci_hcd 0000:00:04.0: can't setup: -12
->   xhci_hcd 0000:00:04.0: USB bus 1 deregistered
->   xhci_hcd 0000:00:04.0: init 0000:00:04.0 fail, -12
->   xhci_hcd 0000:00:04.0: probe with driver xhci_hcd failed with error -12
-FWIW, not my area of expertise, but to me it looks like there were two
-similar fixes submitted earlier to address this and "usb: xhci: Fix
-HCS_ERST_MAX conversion" (
-https://lore.kernel.org/all/20260828105926.930033-1-oushixiong1025@163.com/
-) seems to be heading towards mainline already according to Mathias.
-Sadly this missed -rc1, wonder why it wasn't submitted for it to prevent
-more people from running into this, but whatever, that's ship has sailed.
+> I have not been able to reproduce this on the previous kernel, being
+> 7.1.9-200.fc44.x86_64, after individual 3 tests.
+> 
+> I have attempted to use kdump-utils, but so far, it does not seem to
+> have been triggered to dump the vmcore.
+
+Thx for the report. Please try if 7.3-rc1 fixes the issue (7.1. is
+nearly EOL anway). If not, please check for exiting reports at
+https://gitlab.freedesktop.org/drm/xe ; if there are none, please report
+the issue there and drop a link to the report here afterwards.
 
 Ciao, Thorsten
+
