@@ -1,137 +1,168 @@
-Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC53E55D872
-	for <regressions@lists.linux.dev>; Mon, 31 Aug 2026 13:47:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.219.44
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788184052; cv=pass; b=RcK3mUhBIgfy02b8SdfQzzFHetV2Oy/6mrEOo8h7gD6hUcig61PhyiOq7MqaL4kzfLNg9AKC1qIRhl+uYvyxrXn2rkQRYr+TIKqtt8YrFFZhjH/mcJa61td7ZDpyNpfB2oGQG+lYpG3R2oDQoEUh7pxpfdGSO78IciAhPrCfbFo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788184052; c=relaxed/simple;
-	bh=cFSV9KhWwH8UTBQ/C/MspQ/RwmMPKmn69329QrcNpjg=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=lCE1+wClJbw55ACUCFzvi0xAAm6mOlMP3CT1f6fDTWaNl3ubiSdAG8T+BDVP8rH5Bm7JyknrNuzkO3EAnCY5eYtV2vFF8ZTVbRnWVEs6QEPcuQ7E+fuUFMYSdNsS6FBxz4cZ9M3Vw/q1iVwB+QgVp8IS5dOakm/tq9T+Muyxv/c=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OMoXf/jU; arc=pass smtp.client-ip=209.85.219.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C007C44B69C
+	for <regressions@lists.linux.dev>; Mon, 31 Aug 2026 14:28:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1788186488; cv=none; b=DvKt0KMlR3XSx2xgIKc8anU7QAx4yehMkkI2Z5Y//V2Hh5FQsPnMT/OuNBINa9Stp32Fet3T1CWanO77qpU48XAnmk07AEsL4hU3I7k83fzVvHVPlGfoJ3cU5h9+8Lgq54pDpGUqWYfBjBF8ftwuowGVHHp9b205+7pTm9fmzQk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1788186488; c=relaxed/simple;
+	bh=EB1KU6l5i2IVDC8LyE/MJj7aNXYNq6nRqS8oxp5G/w0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lYbDSNNqhd2tNwT9kSxSmEG++DONV2PeNP6mkkwYuROBTE1g0fpASZDDF5sHZVFp81tYtZGWc6eM0w/V4GAEPnbIUgbGhI9vN85uwQIERgjEk9wwGFqZOem6YVnnYxdxxv+IuCW282Tr1i9qKIRzwc7fUeFvxTOC2YsDJCeZPao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GSE9sLmo; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OMoXf/jU"
-Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-902e4af2d9dso41825226d6.0
-        for <regressions@lists.linux.dev>; Mon, 31 Aug 2026 06:47:29 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1788184048; cv=none;
-        d=google.com; s=arc-20260327;
-        b=XuQfOedsmbEv+N5wGohaZG63isLbUsSFlhJJv49faO8KQqtTpDckpAXhHIYeYNyTWt
-         zb+FFXYLkztr2RpPb7zra9Ilww38yJtiyS7dyAc8a4ZBh0glo9jVZC2vEE8najYuCrjR
-         h+KfrZwlmFpi8tNxYJgRhzX+4VsURmBe60xgJqKDYh/mzSTqAE28hHhcv+fUMZ7mrOSt
-         GnDKX4pXe8GvONdZ+x7xraHba/6SFWygIEGDfXEuhiyFN18IR6zY+hbtPO29ytIBoC6k
-         UuebSDqZa4wG+zyFYpKZyqIlWEiupujCN5UyqyQTFKjT2okgQiMMtZdfQXPoxDDJYnAR
-         +bPw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=cc:to:subject:message-id:date:from:mime-version:dkim-signature;
-        bh=cFSV9KhWwH8UTBQ/C/MspQ/RwmMPKmn69329QrcNpjg=;
-        fh=MDXE10nGoCDgvUSXMaMflaO6KszhysLuc71Ky5lF0Q0=;
-        b=eKZa53hO316qG6N+bs9Rayjdo5JH/iVo1ihqJBfR5E8G4+3GAZ/4qNrkgg4zXYRTG+
-         kGRHr9CvdS/x+ZtQYjqNi2Wn4XTJG0GvAdj3LxZGJ8FWtouCAwFJxu7G93A49QWM61PW
-         OXnWcdF/Nt3AwEqAXTx4zUmI4JC3H7H7vj0pIV37zQOMFr5B+j0WrRwboTjO/F8pvT/U
-         EV+3FpFQUI+Qoupd6DP6McAhSFQk8TNc3MvejSePGZ5dCs34d1IFXS9NgRGTC8uLoZo3
-         63IlXs8BMQGwe8fvXL7sS5GSiUgq6LWgEQ/DdyazbUKYGFALF6ILNb+bl25zuHWRBNIJ
-         0U+g==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1788184048; x=1788788848; darn=lists.linux.dev;
-        h=content-type:cc:to:subject:message-id:date:from:mime-version:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=cFSV9KhWwH8UTBQ/C/MspQ/RwmMPKmn69329QrcNpjg=;
-        b=OMoXf/jUnK8j/QmQSbnTNo71d5yzktgG6RFy1vw2qs+DHCAJn6Fx+nbKC8TxKku0wj
-         ecTnAKnJi6/SaShtTVT4BVK851tCVsGstGYrbCQB76xkRqhSBsDgahR9hDDbtP0ZskiU
-         tjfbXGcozaT+ML5dNgAEUZEIXBiU5LiRHH2Og40OybImCGWlAWUc3SDyWNNiEzXKixYO
-         4jd7IUvWbhuZ40UP748ivfp9VEca0EeweLLclZpt/bhqUbw76JrwTBtwipucx/DS42zu
-         t7ajtrbO+2jOPjLDK5aaUkWtynlAfixw2coeJJeMWajEq3emCuf8/egxoVgjrFHTmP5Z
-         MESA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788184048; x=1788788848;
-        h=content-type:cc:to:subject:message-id:date:from:mime-version
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=cFSV9KhWwH8UTBQ/C/MspQ/RwmMPKmn69329QrcNpjg=;
-        b=NLbd/gVMq8Py78+sHxJmiVkFWv0U64eh4gV2aku5ligtkWLOvA6KvUtQ6RjCCtAwWS
-         XjiKU4oyM29WhuBjNGwh2foG1DQvKWRn5wfgUOEJkVGfXt4Gd9Irw/WSmPtLlHnBzLBz
-         JIfNaaUMdMZGRs11PU+1Ezvq+XcOWJq1hBVAgT0FUbLIeoHFujb0mNNGXUHJ541AvAz3
-         GFVclaoTTPum/Pqf4Z80YZG302n3G0MDB8241hmesRu7PQeUaIMDh5K5ncAJdHXAmSR9
-         C0gZRyelWFHmL+0eznHxWs0wEgdM4XrG4F1JQrkf1eTyw9NEFSZFDovLUv6IVfDvhM57
-         uorw==
-X-Gm-Message-State: AFuF++ncY0DqyhlXVphmBdiVwannLiPPJ0tg+RvyuZmSZUnCYomM4owC
-	GmAkYF7rrw4+uEfQmN6QoGihYyJE1FegNJyU5qI+RinsOHbhwmokxrRaGvZX7Vp31VW90DJe3VV
-	6ZIdfbM0Mph/udtYE6G8Ys8Aq3gohLg==
-X-Gm-Gg: AR+sD12YvJNyl8IRTiNKnTZADuli1z94tdXojQb2NNR6BBAtnbnJjDiNLGI8WaVY6kf
-	YjwtR+hvilCGRJKSPpPkbNA9CCO4m4ru3YU8deQlS5TrUDd8zSzUFEm6vpxxg0fIqQOVzX2Laej
-	lp8kCXJl89+VX7RXs8weRO8zSrBCB0q+ZnZnJOKC/Y29/1bTPEUO+dkrnb6q07Pa1AzZNqDFfgA
-	lYfECNLyf3G+qTkRLRqxep8NQeid7BSr6wAwfJQRj0EIA60dGMQ04FSsu1gJkaihbg+YwvZ4Mh+
-	FocUZO9YTdKQMVN8mdN+ft2r5pogBQp3QDRaW17a0zl3
-X-Received: by 2002:ad4:5c46:0:b0:8fe:57d4:69cd with SMTP id
- 6a1803df08f44-90e87197c3amr94853606d6.14.1788184047385; Mon, 31 Aug 2026
- 06:47:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GSE9sLmo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1788186485; x=1819722485;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=EB1KU6l5i2IVDC8LyE/MJj7aNXYNq6nRqS8oxp5G/w0=;
+  b=GSE9sLmoLNpE4v7mla1PwmFa8If+hjnnMypQjuqSjIHlmi1Q6sIJrUtP
+   WMOQAaZ3P27IvR6IPn6nrg8uxKvdEZqhQ0+D0AIeUPE+03Ynfmy18+j+C
+   rM2Erw6xj4Z+IGefpQD+pnEmUF23YRdSz7lTZ1E8CdQOdf+zJvJ8y85Pp
+   npV/PMnm0iy+BFqHvfl5AkIwsBPlzpV+MVazMM+W2ogo5BpuRyM6FQj7f
+   eq/hFPjN5YhYgzI4lh3aV4EeQE+IyVyTHynAQo1jPnoAhykIdlhUDYk4+
+   Bg+HyciRHpjeVuIkT9gRfU/r+gM15RLImrKWdd8qLsCEK+rZydPGqQfAO
+   Q==;
+X-CSE-ConnectionGUID: mmyrKSBkQRu90Srkn+p9/g==
+X-CSE-MsgGUID: VOHJ4HFpQeq7/Nr4hKfohw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11891"; a="88606714"
+X-IronPort-AV: E=Sophos;i="6.25,254,1779174000"; 
+   d="scan'208";a="88606714"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2026 07:28:05 -0700
+X-CSE-ConnectionGUID: HGGdtgPBRla17EMvpXyf3Q==
+X-CSE-MsgGUID: lNipXpnTSvCfHITjxUdGsg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,254,1779174000"; 
+   d="scan'208";a="293645917"
+Received: from slindbla-desk.ger.corp.intel.com (HELO [10.245.244.148]) ([10.245.244.148])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2026 07:28:02 -0700
+Message-ID: <f29a475e-a523-461a-8e63-b0698b3174c6@linux.intel.com>
+Date: Mon, 31 Aug 2026 17:28:00 +0300
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Robson Candido dos Santos Alves <robsonalves.us@gmail.com>
-Date: Mon, 31 Aug 2026 10:46:50 -0300
-X-Gm-Features: AcwNN1XiVRIDsV5MvmN1_ctjQnb_kUYK7ID-dXE41cp2gLJaxtcLOJ1RhzUegpg
-Message-ID: <CANkdJ2VvJQSBzyOq=LgSW1=Z8-YiN_r9Py2iJ0UJDo55+dbfuA@mail.gmail.com>
-Subject: [REGRESSION] amdgpu: "pixel format with alpha exposed but blend mode
- not setup" warnings introduced in v7.3-rc1
-To: amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
-Cc: regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] usb: xhci: fix maximum event ring segments calculation
+To: Thorsten Leemhuis <regressions@leemhuis.info>,
+ Pierre-David Belanger <pierredavidbelanger@gmail.com>,
+ Shixiong Ou <oushixiong1025@163.com>
+Cc: Shixiong Ou <oushixiong@kylinos.cn>,
+ Mathias Nyman <mathias.nyman@intel.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Niklas Neronin <niklas.neronin@linux.intel.com>, linux-usb@vger.kernel.org,
+ linux-kernel@vger.kernel.org, regressions@lists.linux.dev
+References: <20260828105926.930033-1-oushixiong1025@163.com>
+ <20260830031233.1810986-2-pierredavidbelanger@gmail.com>
+ <64a7ce30-b346-4e94-974f-f30893d66829@leemhuis.info>
+ <81ddd491-1ec3-4a0c-90b3-6a286ff1a908@linux.intel.com>
+ <1c855bb3-2bac-4f25-b97f-3a7436a6291b@leemhuis.info>
+ <89d99e3a-0f67-4116-a262-98be59f76f5d@leemhuis.info>
+Content-Language: en-US
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
+In-Reply-To: <89d99e3a-0f67-4116-a262-98be59f76f5d@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-#regzbot introduced: v7.2.2..v7.3-rc1
-#regzbot title: amdgpu: "pixel format with alpha exposed but blend
-mode not setup" warnings on Renoir/Barcelo
+On 8/31/26 14:36, Thorsten Leemhuis wrote:
+> 
+> 
+> On 8/31/26 13:28, Thorsten Leemhuis wrote:
+>> On 8/31/26 11:21, Mathias Nyman wrote:
+>>> On 8/31/26 09:55, Thorsten Leemhuis wrote:
+>>>> On 8/30/26 05:12, Pierre-David Belanger wrote:
+>>>>> The failure on 08dbfad3f504:
+>>>>>
+>>>>>     xhci_hcd 0000:00:04.0: xHCI Host Controller
+>>>>>     xhci_hcd 0000:00:04.0: new USB bus registered, assigned bus number 1
+>>>>>     xhci_hcd 0000:00:04.0: Failed to allocate interrupter erst
+>>>>>     xhci_hcd 0000:00:04.0: can't setup: -12
+>>>>>     xhci_hcd 0000:00:04.0: USB bus 1 deregistered
+>>>>>     xhci_hcd 0000:00:04.0: init 0000:00:04.0 fail, -12
+>>>>>     xhci_hcd 0000:00:04.0: probe with driver xhci_hcd failed with
+>>>>> error -12
+>>>> Sadly this missed -rc1, wonder why it wasn't submitted for it to prevent
+>>>> more people from running into this, but whatever, that's ship has sailed.
+>>>
+>>> Looks like at least QEMU and Mediatek users were hit by this issue.
+>>
+>> Ahh, good to known. And thx for sending one of the fixes to Greg
+>> meanwhile (saw that by chance).
+>>> Note that this is a v7.3-rc1 regression which was found during merge
+>>> window for v7.3-rc1.
+>>> v7.3-rc1 came out a few hours ago.
+>>> I can't resolve it much earlier than this.
+>> Out of curiosity: why?
+>>
+>> Just ignore the question if it was something like "real life got in the
+>> way" or "it fell through the cracks" -- that's how it is sometimes, no
+>> worries. But in other cases I'd be glad if you could take a few minutes
+>> if you have them to satisfy my curiosity, as in preparation for a
+>> maintainer summit proposal I sent[1] I'm just trying to understand
+>> better why regression fixes sometimes take quite a while from submission
+>> to landing in mainline
 
-Hi,
+No real life or personal issues got in the way.
+Assumed severity after first case didn't call for action mid merge window.
 
-After updating from kernel v7.2.2 to v7.3-rc1, several DRM plane
-warnings regarding unset blend modes for pixel formats with alpha
-channels started appearing in dmesg during initialization.
+> 
+> For the record (sorry, this should have bin in above mail!), as it might
+> sound hostile without context, as obviously there would not have been
+> enough time to fix this if the issue would only have become known during
+> the end of the merge window. But that is not the case here afaics
+> (please correct me if I'm wrong!), as the first patch to fix this was
+> afaics submitted on 2026-08-20:
 
-Good Version:
-- Kernel: 7.2.2-070202-generic
-- Display Core: v3.2.384
-- Result: Driver initializes cleanly without plane/blend mode warnings.
+Sure, I'll describe how it went
 
-Bad Version:
-- Kernel: 7.3.0-070300rc1-generic
-- Display Core: v3.2.392
-- Result: Driver emits the following warnings in dmesg:
+2026-08-16 Sunday,
 
-[drm] [PLANE:44:plane-0] pixel format with alpha exposed but blend
-mode not setup. Please fix.
-[drm] [PLANE:51:plane-1] pixel format with alpha exposed but blend
-mode not setup. Please fix.
-[drm] [PLANE:58:plane-2] pixel format with alpha exposed but blend
-mode not setup. Please fix.
-[drm] [PLANE:65:plane-3] pixel format with alpha exposed but blend
-mode not setup. Please fix.
-[drm] [PLANE:99:plane-7] pixel format with alpha exposed but blend
-mode not setup. Please fix.
-[drm] [PLANE:104:plane-8] pixel format with alpha exposed but blend
-mode not setup. Please fix.
-[drm] [PLANE:109:plane-9] pixel format with alpha exposed but blend
-mode not setup. Please fix.
-[drm] [PLANE:114:plane-10] pixel format with alpha exposed but blend
-mode not setup. Please fix.
+   v7.2 is tagged, merge window opens
+   I've sent all my patches, assume Greg has his pull request ready for Linus.
 
-Hardware / Environment:
-- Hardware: AMD Renoir / Barcelo APU (DCN 2.1)
-- CPU Scaling Driver: amd-pstate-epp
-- Kernel cmdline: BOOT_IMAGE=/boot/vmlinuz-...
-root=UUID=87f96fe9-4a93-4725-95bb-dd53087bb7a8 ro quiet splash
-crashkernel=2G-4G:320M,4G-32G:512M,32G-64G:1024M,64G-128G:2048M,128G-:4096M
+2026-08-20 Thursday,
+  
+   I see the issue and patch the first time.
+   It points to an issue in next, is valid but commit message doesn't call for
+   urgency in any way.
+   Doesn't specify which hardware is concerned.
+   So far one report only. I haven't seen the issue myself so assume it's some obscure
+   hardware (pre-production, or virtual/firmware).
+   Queue for after rc1.
+   No reason to panic or bother Greg or Linus mid merge window at this stage.
 
-Let me know if further logs or tests are needed.
+2026-08-27 Thursday, a week later, rc1 will be tagged on Sunday
 
-Best regards,
-Robson
+   I get a second report for the same issue, this one shows it concerns Mediatek MT8173.
+   Issue gets my attention, rc1 will be tagged on Sunday so I don't even consider stirring
+   up anything anymore.
+
+   https://lore.kernel.org/linux-usb/20260827053748.3755-1-getfeus@gmail.com
+
+
+2026-08-28 Friday
+
+   One more case, showing this  affects QEMU users as well.
+   But no point in sending anything before rc1 anymore, rc1 will be tagged on Sunday
+     
+2026-08-30 Sunday
+   
+   another QEMU user reports an issue
+   Linus tags 7.3-rc1
+
+2026-08-31 Monday
+
+   Rebase on rc1, compile, quick testrun, submit fix to Greg.
+
+Thanks
+Mathias
+
