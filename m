@@ -1,148 +1,175 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF18E4A386A
-	for <regressions@lists.linux.dev>; Tue,  1 Sep 2026 20:39:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.50
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788295155; cv=pass; b=DbgVG6/xBxyZ/x79oDRdH1SwKBXSQ1lxL9e3qcAsb/LtdzT/fYmJ15O/gSDNxlgk+pH+JWhCFTY8yVkq0bAZY8uJ1JxIXa5uGHo7QkGVOB5qhlt83nXQKovK0vLlEATGahQFpKDsrcEXhJa2HDRKrXEPUR93OhUt9lNGN9w6PVs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788295155; c=relaxed/simple;
-	bh=zMXQqnAx/G3j/QNYM2LWpXw58ytOME0jkznw3ohEhIA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BeKi/5LriI+mGo127u6TnBFwzXigyDy1nG9nF4+6QskyPQl019mvQ3C+NUDMF3sEtbiQTIW0e26evSvJx9u4yvmwrlOyz3qZywJu/Wf6o5EgcRaJxgPE/EShf55AZysioDC6hc3924chEfNqXYj/Hbxz0FQZYU9VsKCzRkvWtAU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V1ojasBM; arc=pass smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B68033AD8B
+	for <regressions@lists.linux.dev>; Tue,  1 Sep 2026 23:06:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1788303969; cv=none; b=MnpanxHQT/ljbyYZXtnr+g3C1bNTNe4t9HjEMWMisj+vxuckDrREbVOvTXfs3UOQ8IEerg5QCD+p1ylb3jV6aP4AbDUnfu6bXx7ew0J6g3sz23Uy7cbhjo7I0WB1FzHKmQjHYOg+IgZ3pDgZ7xv23OEFz07clzpREYwsrZNF3Fc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1788303969; c=relaxed/simple;
+	bh=tkQ0kD+VMer15vDl/K38aWxjoMQ6gTQ90qZPji1LAis=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=e0V/nhMIRPIlwOZkV6w1oTpYUzFm47HFXaP+xLQYLJiBr3VLpyKhwAUhseefGFzs5XaReEZ1zbCr/DLIz5kMXJVF0q97DTY0fOfgFvEAQfvVbYtaFmf5pd0wI+tzBACRmysgKOAWXtSFmV+rvztBypgYi8mw/VFzemlb/cYsP1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=is55a8hk; arc=none smtp.client-ip=209.85.128.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V1ojasBM"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-6a6108734d5so434111a12.3
-        for <regressions@lists.linux.dev>; Tue, 01 Sep 2026 13:39:13 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1788295152; cv=none;
-        d=google.com; s=arc-20260327;
-        b=mpu/AezEOFnVfcSWyqi3fjhWTBlQnBoP5ZKvqYPFL6/ExcZeDr6LI+YVzWYo09zSuq
-         9cLmL/HR7Cp9NAOSTZoyLnOOc+C4vEeRe0sGHiVtiStbqXdy0vzzhWsHo/j2uaBudR/g
-         vVJqKEoiaPspOHA4yL/G2SxWg/3y1bulxaK2FF6PsbZ7RnkNb6+174fRdLykrildMGHg
-         xiqGkevviIn6sU6fmGRwQcb+kj5k5aHLmccwx1QpkG8TQGPAdfIMwgGwTE0RxSxqUzQr
-         WWaZ7yQkemEea0nzUU2GBw65ZlsfBC7VQDI/uN2+Ad0uW70Qp+ESOhR18OG/V1Ge6H1+
-         CQFw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=iMSVbAMMClabJnl3yUfS4i27AaasElWu73GA2BM0Mik=;
-        fh=MbV4URFUAG5I9NwqCkwjojh6h+rA6VMvVPUxM0te6e0=;
-        b=Uyl/i7HbXAUcAK9uUbyyPyTE0PSsANSuj9mArrmTzceaugDT4KBADNziabpFEXldKm
-         ec/ZCW5btsYOuVFFKWKWsZSmJbcNrhLFqHCn9V5TwZtI23UPwarjufVcN+V3mgIQV9Eu
-         2KZrA/Hjexy88DZ2+XPqJwE0mkYWSItEg4alGyIh/PRdtB1Gc2vNr9n+J5HSwmfovkjK
-         gb0/P6APH/v0mCp+WnfiE8sdHsUYjSSzK7ODSMRjH5gjgNLY8/OgGP6WHfsNCvJwCUVM
-         ctKbyEQpWSkpWxOZIsIiAP1qvrXa7kGQvRedmAEmTn4ptAt180Hxy/FEEaIK7fbJ1gvk
-         9s2A==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="is55a8hk"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4995b0343c1so3419675e9.3
+        for <regressions@lists.linux.dev>; Tue, 01 Sep 2026 16:06:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1788295152; x=1788899952; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=iMSVbAMMClabJnl3yUfS4i27AaasElWu73GA2BM0Mik=;
-        b=V1ojasBMMT/QnGdZaWzmmAqYUS+6BtvZ59HkAZgNvVm5koyezOESVwp5hfDYFjiThm
-         JPuYagwTRTxiAakiW9v10IeTBeK/EZMaETtAFWu9qMbltHVQludxd9xPE64LA7LMwBbu
-         /f9d8b0tXU4Wh2fZs67nkMT08xBjEXz3Wkw+giA6X1L8sOy008GlgHCeg87UdWxZYcNo
-         mH9ybl46NUkaAE4oWsGzw8VZGD2G+vFRDIqrDtaw3Zu5tR3LHb47Iak22WgU/ui9YHNv
-         ItT1NMEuqA5bl6qWxgu89kBmQmUjJvcnPFfgqkkJlVVi3wf1DOgBm2FtziTghO/umLPU
-         yB6g==
+        d=gmail.com; s=20251104; t=1788303966; x=1788908766; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=wt9MSV90ZufNw6jL5AtF4xHXrqZeARSuYavbAJb7c8w=;
+        b=is55a8hkWMOzVMQTPEZpFORsph1/6nzxrSBTfbssjrZbG1TCTcKMplBTy6MxxH2QYa
+         G/YDDH+Q2wfVroR3QgFvDr9/IEL0q/ltSIa4eBp9XoosfzVaxYxZDN3u7uI64DPWNdj5
+         MaUhvpkyXwBdSlAaYZrN3qawH+Lv3/+zWfcGKxcpJFbuhVTubSqSmK9JeLV44UZkfsio
+         fbww9v1+2Dc7eGuTDrFqAH922XiE3E+b4umenQrYOifM1+PG2feqb0t9VONPtC8asaZY
+         L7YV9OU5XOx38H8qZXXEcyXsXOjRtR/FqIuKLIXZv9/hMDWtGyqFsWehSDrPY0f6pSgy
+         ThTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788295152; x=1788899952;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=iMSVbAMMClabJnl3yUfS4i27AaasElWu73GA2BM0Mik=;
-        b=G6M5/B4npqXpvPLhPZYpt+T+7+rqJ3VfFrbXusf9iHOCZo8ITe2Ve4DCH/GVIAztGz
-         LduSiqLPnkdJOd98MXkzrZ6opQ5Wu2rcf27j1X7jWGWpynvntMaEbY90xQn4P4TQG1rd
-         KWQ/ylRIaAPeuEBi4Qr5xbhH0em6o+gKyRA96Gb2Lov6/R39jzWzcJf0r/QJsvfd0v8z
-         RcY7vWh8uq+kAXjlMU2nRko+IlvJ6bKa/gl8BabBoriXVLUPFsrBTBTIvOq2uyZQei7X
-         KY2PHDy2PmJXIg+jvS5u5VU6vCelz41+ZVje5K5G4x7JcqeDCGDqiG4UafYvWAMw47/4
-         3h4A==
-X-Forwarded-Encrypted: i=1; AKwUvBwsbqxybapU/n3ftmXkVnSy14GyhTKNzWIzNyeaFic8aEFRUkHb44nr871ajmpIWB+NAdEqBq94m4isVQ==@lists.linux.dev
-X-Gm-Message-State: AFuF++kS4oKcRR6GGbX5WvkjUGfpvKzkS1bULvQiqQSRGY/rhuWKOA9c
-	EnyayznMbVBoxIl00VIQzHkQxSi7qXCca/VEmF414lStt1RSmAg8km5SGvtQ813dogH5TAV/eqi
-	GS6aU66X4gnkLOkaB3AUMbERFYKbG5u+HJA==
-X-Gm-Gg: AYBFou1VB40VfzItMfFkaS9DML9UVPAHBm6qCbUURGineKW/5+oAiAAjYnoDWQsrvl3
-	9Gxvw5J4wjBY513Ps9weZxfTNH4eSSNonVHOvTaPTzOmh9cthH3TUl8A3vp+9majwt6CmUIs3KC
-	s3mSBmwaNbHquO9vHGTRWsGkS8s7ptR9SQJ/g15KOq7wFYfCFQvlLxo2Y3P0mJpg7RMPNanSaS7
-	IiczwTTvULDTBD22+zwxoaS8tVpHcTvMyUz6DZBYDQ60q6DKSY0zwVCNLuNvimeI8fpD0VoZCs2
-	V8M9yFsgh/DsRdYai5h9rm2fpX7LB0FfGdK2IGiXs6oIiniZQa4r7sSlav1FUzYUqbWUdIx9+Gi
-	62Nm7Ou+Rf0VnThmUY/jUkQQ7V8pnYWYyfX9aOt4NIaFi5MFl63QOsFkjn+C9HM+ZvzZsENLwNu
-	jxl4cbx38dpcs7kLNPFOE4kplxnxmVUk0jq3LV9IsooJPBg5OBQ0mSw9lcZqMLlUo/cQ==
-X-Received: by 2002:a05:6402:4585:b0:6a6:776f:5859 with SMTP id
- 4fb4d7f45d1cf-6a682ac2b12mr255347a12.17.1788295151738; Tue, 01 Sep 2026
- 13:39:11 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1788303966; x=1788908766;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=wt9MSV90ZufNw6jL5AtF4xHXrqZeARSuYavbAJb7c8w=;
+        b=lqhNjnC8RYoVlFC+LyHYepWOhkTea5GBnOOSxGQstL8auYEO7hSrrcSjpPPGGYuQqm
+         fpPURdAX2V+PnBge7JI04XXFOnvOC721ioZtlDHrLDYMoSVBbuEWzhJspuavP+PIZO5F
+         L4P6N3FkH+EtIbAAVKPQVVs7u4NEI7FnKcGGO2Cs8JMBLjiRkurxzeViTUQPHEk8EnkQ
+         t+EWu5S5ugHnEkOxr8muOq3uFO9EMbPIkJPe4fH22R3Yp0tzo9afbDe3c/Emuod3Cnow
+         Q+TDK/HiABGvLRq0mMeQLAx/VljY4t/UQUeIXafZgaNiHqRNbBSwHVULZPtEwz2Agk2v
+         tQvQ==
+X-Forwarded-Encrypted: i=1; AHgh+RqUEk151gpCo/W4j2r2Fk/0mio5PyVTT/kU7rNvTaQTBnIC7xsSGq6U9fse4jnEHhRDUrlZEs7c8fEJrA==@lists.linux.dev
+X-Gm-Message-State: AFuF++mh6CJqGuQmhmS674kF/2BymknSObMG/xXzunTRwz2hfyartgkH
+	zMPDWD1UcjvsrB9lZoDWI19OOepVRKptpLiZFisGZoBHwFQCYsQVV/Wy
+X-Gm-Gg: AR+sD12C3Cm5/dXAP1hwdIWNYpF3zycf0eBhUQjvBrxgWlekHTQlpFm9ZRrXpBmev5B
+	yWp6AE5meujz9wlA+y8r6OVzUodQlnlUW3I8a51ol6UreWL47WnP3lKnZ4eUgP2NvaK0iKc7pRY
+	vq2sXngQsMySLk/sMy+l5iuWygfK49gVMHzCCj+/JJOaHv09trrKv8TGtOkyxzqjQvc53aKzgMc
+	OalFxkl3zlarPDWH76x9YXwnRki4iMxziI0n/CU1suaKoy8tWyFn4hM11SJW0A+V2NCynBkzhLP
+	vibliPzVLdYWd5DFWOOU1oB+ZNhoVZlwMqwuKimP3894zr2ckHa6t2MkOUpKxP3yY3xt854ia5V
+	EoecMS3oCfAkmv/SQfqpz5AWjQj7qOB8mnaOyE+6zyHyn52+yactJRYCaorR8ZZPwvpkFoQHl3b
+	l2gAoJIkItZVczsw14eR0hiGyXL6C6awFvIedeTi3lTQOJ9MKyJsCaKbJTDr9k4OeewmWZUL4HS
+	05brZDKVkESywNpW0VBzS6RFI0Lo0qc/Rjk9CaNYjwyd2VJiHDiOF0xYfJNjMfVengkmErfk+ue
+	/MgB1A==
+X-Received: by 2002:a05:600c:190d:b0:49a:2c4b:403f with SMTP id 5b1f17b1804b1-49ce584b94bmr12387935e9.13.1788303965569;
+        Tue, 01 Sep 2026 16:06:05 -0700 (PDT)
+Received: from ip-10-19-79-40.tail983ac.ts.net (ec2-35-159-55-138.eu-central-1.compute.amazonaws.com. [35.159.55.138])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48448ed3706sm2066364f8f.18.2026.09.01.16.06.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Sep 2026 16:06:04 -0700 (PDT)
+From: Nikita Taranov <nickita.taranov@gmail.com>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Darren Hart <dvhart@infradead.org>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	=?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>,
+	linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: Re: futex: private hash can stay on the shared atomic refcount indefinitely after auto-scaling
+Date: Tue,  1 Sep 2026 23:05:59 +0000
+Message-ID: <20260901230559.1978876-1-nickita.taranov@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20260825170605.2462933-1-nickita.taranov@gmail.com>
+References: <20260823150046.204417-1-nickita.taranov@gmail.com> <20260824160337.0IvfKx8A@linutronix.de> <20260825170605.2462933-1-nickita.taranov@gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260730204722.1101805-1-rosenp@gmail.com> <20260901194524.908240-1-ghidoliemanuele@gmail.com>
-In-Reply-To: <20260901194524.908240-1-ghidoliemanuele@gmail.com>
-From: Rosen Penev <rosenp@gmail.com>
-Date: Tue, 1 Sep 2026 13:39:00 -0700
-X-Gm-Features: AcwNN1WlvzKl5Ma1R8rX-hNwpVEErP-nMy6eoOGTbH_FUp8tWYaCb1AqEhDSbAA
-Message-ID: <CAKxU2N9rW7PpNqUX0w8AR1Doc=LrRPJNct0rYJCTOm3Vskd7Qg@mail.gmail.com>
-Subject: Re: [PATCH] crypto: caam: simplify probe resource and IRQ handling
-To: Emanuele Ghidoli <ghidoliemanuele@gmail.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>, =?UTF-8?Q?Horia_Geant=C4=83?= <horia.geanta@nxp.com>, 
-	Pankaj Gupta <pankaj.gupta@nxp.com>, Gaurav Jain <gaurav.jain@nxp.com>, 
-	"David S. Miller" <davem@davemloft.net>, linux-crypto@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev, 
-	Emanuele Ghidoli <emanuele.ghidoli@toradex.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Sep 1, 2026 at 12:45=E2=80=AFPM Emanuele Ghidoli
-<ghidoliemanuele@gmail.com> wrote:
->
-> On Thu, Jul 30, 2026 at 01:47:22PM -0700, Rosen Penev wrote:
-> > Replace the open-coded platform_get_resource() plus devm_ioremap()
-> > sequence with devm_platform_ioremap_resource(), which fetches the
-> > resource, requests the region and maps it in one call.
-> >
-> > Each fsl,sec-*-job-ring node has a distinct 0x10000 reg region and
-> > interrupts property, so the region reservation added by
-> > devm_ioremap_resource() is exclusive and does not introduce overlap
-> > failures.
->
-> This patch, now commit 9a955c0a7d11 in v7.3-rc1, breaks CAAM on most i.MX
-> SoCs (i.MX6, i.MX7, i.MX8). All job rings fail to probe and the machine
-> loses its hardware RNG:
-Sent fix.
->
->   caam_jr 30902000.jr: error -EBUSY: can't request region for resource [m=
-em 0x30902000-0x30902fff]
->   caam_jr 30902000.jr: probe with driver caam_jr failed with error -16
->   caam_jr 30903000.jr: error -EBUSY: can't request region for resource [m=
-em 0x30903000-0x30903fff]
->   caam_jr 30903000.jr: probe with driver caam_jr failed with error -16
->
-> The job rings do not overlap each other, but they all sit inside the reg
-> window of their parent fsl,sec-v4.0 node, which caam_probe() already
-> reserves exclusively via devm_of_iomap() before it populates the children=
-.
-> So each job ring now collides with its own parent.
->
-> Seen on these boards (CI/CD):
->  - apalis-imx6
->  - apalis-imx8
->  - colibri-imx6
->  - colibri-imx7
->  - colibri-imx8
->  - verdin-imx8mm
->  - verdin-imx8mp
->
-> Reverting 9a955c0a7d11 on colibri-imx7 makes the errors disappear.
->
-> #regzbot introduced: 9a955c0a7d11
->
-> Thanks,
-> Emanuele
+Following up with three things: a better reproducer, results from two more
+vendors, and a prototype of the approach you suggested.
+
+## A new repro
+
+The code could be found at https://gist.github.com/nickitat/a7a46b61d6769ceec493881f82e7b344 .
+
+This one is an ordinary producer/consumer: threads park in plain FUTEX_WAIT
+like the idle workers of a thread pool, others issue plain FUTEX_WAKE on the
+same futexes, so waiters are woken, loop and re-park. Only plain FUTEX_WAIT and
+FUTEX_WAKE. The kernel's own auto-scaling during thread creation is the only
+thing that ever asks for a pivot.
+
+The control is one prctl(PR_FUTEX_HASH, PR_FUTEX_HASH_SET_SLOTS, n) before any
+thread exists, which marks the hash custom and disables auto-scaling, so no
+pivot is ever requested and the stall cannot occur. Basically, the same story
+as in the first repro.
+
+v7.2, Xeon 6975P-C 96c/192t SNC=3, 8 runs of 4 s per point, clock pinned:
+
+  threads   auto   pre-sized   stalled
+       16   25.8        42.3      0/8
+       32   34.8        41.1      0/8
+       48   28.7        31.8      0/8
+       64   29.9        34.2      0/8
+       96    3.7        46.3      8/8
+      128    3.6        53.6      8/8
+      192    4.0        38.7      8/8
+
+Throughput is far lower than the numbers in my earlier mails because the work
+is real; the comparison is the point. The control (pre-sized) is almost flat
+across the whole range, so the work does not get harder with thread count
+-- only the arm that requests a pivot collapses, and only above a threshold.
+
+## It is not only this Intel box
+
+> You might have hit the sweet spot with your CPU. I have here a 144 CPU
+> box and
+
+I wrote previously that this Intel host was the only one where the repro worked,
+based on a 96-thread sweep with the old reproducer. At 192 threads, with the
+reproducer above, Graviton4 does reach the same state -- less often,
+but permanently when it does.
+
+192 threads, 15 s runs, per-second traces:
+
+                        latched permanently   transient   never
+  Xeon 6975P-C                  8 / 8              -        0
+  Graviton4 Neoverse-V2         1 / 15           2 / 15    12 / 15
+  AMD EPYC 9R45                 0 / 14          14 / 14      -
+
+Graviton4 will stall at a higher rate if the wakers are created gradually
+rather than all at once -- the `ramp_ms` parameter spreads their creation
+over that many milliseconds in total, which is what a thread pool growing
+while already under load does. I saw 5/16 stalls on one run.
+AMD still never latched in ~200 runs.
+
+So the state is reachable on more than one vendor's hardware and usually permanent
+once entered. What differs is how often a process falls in.
+Arguably, this flakiness is worse than a deterministic stall for a real production.
+
+## Prototype of your suggestion
+
+> Not sure what we could do here. One idea might be to block further
+> futex syscalls so they don't acquire a new reference on the existing
+> hash and allow a transition to the new hash more quickly.
+
+The only analogy available to me due to lack of any knowledge is rw-locks. I asked
+Claude to adapt the percpu-rwsem code to futex, and after a few iterations we
+produced a hopefully viable patch. I suppose it implements plus-minus your suggestion.
+
+The results (same box and all the rest of the environment):
+
+  - the reproducer: 0/8 stalled at every thread count, against 8/8 on stock at
+    96 and above; 192 threads run at 54 Mops/s instead of 4.
+  - futex kselftests: 14 passed, 0 failed, with the mechanism enabled and
+    disabled; futex_numa and futex_numa_mpol pass.
+  - requeue-PI selftests looped under a continuous pivot storm, to exercise the
+    drop_fph handoff against the phase: all rounds passed.
+  - stress-ng: 64 futex stressors, and a 40-way futex/clone/mmap mix, 0 failures.
+  - PROVE_LOCKING and KASAN builds: clean.
+  - measured overhead ~0.6% on a pthread_mutex/pthread_cond benchmark with pinned clock.
+
+Makes sense to note that the patch was applied to v7.2 and all testing was done on that build.
+
+The code could be found at https://gist.github.com/nickitat/0b1cc68deff5fe2b27209b150da6fb00 .
+If you find it useful, I can prepare a proper patch for the kernel tree.
+
+Regards.
