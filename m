@@ -1,127 +1,264 @@
-Received: from mx.itxnorge.no (itx-kvm-14.itxnorge.no [91.189.121.228])
+Received: from mail-4320.protonmail.ch (mail-4320.protonmail.ch [185.70.43.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C222389115
-	for <regressions@lists.linux.dev>; Mon, 31 Aug 2026 21:05:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.189.121.228
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F9EC1B4F0A
+	for <regressions@lists.linux.dev>; Tue,  1 Sep 2026 00:59:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788210338; cv=none; b=SuMPSSWfuSNdg9MR/q5WVXmVbBHqPV1Np1s6EurhWkrqJ/mxiGggcum3WzTERZCmsRx0zBKAZNULXjEQJ2l906kbdPJTjodbAhUPl+VN+JjK69Gl97gVIUWaqLXpS6ZqPWgjX912OS8tX3YItgZ3UppXNmEvZa0DCbhLNhSASUs=
+	t=1788224375; cv=none; b=jblcR6nwFGeH/ANBKdLg81Ge0YhhKEoc2k9rpsWnkiOr6qzE/C6MoMY0D/yqxChNNTD6ffWP75FCBFkfiBXxbd9eBKuEeGF5MfKKOjzg6f5pPcJFT6hvYNT1vMav2PyFdZ1RDE2Jb4oAdWSJdtQb3mkQTwpUpkFeaANcAv1akfY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788210338; c=relaxed/simple;
-	bh=mVc1vdZun68WiZU+Wb15+WFO3PRMVzXqhAgtj8o/A2s=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=nGoGLUueGgBRnmJ/TACh0v15V68DgO5EgqZVh3Y2s2gnD9sIP6PU0mLkOjkjZpvj2o69DxrVLBm/if791qjRQsaec0oH+jMtXQ6EWs8lh41P/JUXyy3Bz3aZ29rUnBe/MAZ3+nwSEqU7UW8wX5CiijmPmeJ7vHfGw8I3JBE9p2Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=itx.no; spf=pass smtp.mailfrom=itx.no; dkim=pass (1024-bit key) header.d=itx.no header.i=@itx.no header.b=KpCsKEMW; arc=none smtp.client-ip=91.189.121.228
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=itx.no
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=itx.no
+	s=arc-20240116; t=1788224375; c=relaxed/simple;
+	bh=+3rpXvdizBAasQQCZSs50TByA2/x7dRZogapzcQCMRw=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=C1J8HmVoEce3Ml3rAq7R9IMeS5U/k//8V96ran3ZszlnUwsxuqm/Axo1IK741NMr1cc6lwvpW2JCfrsdKLnjIpbRXCkFY1GB13F2BUQawxD8Ml2xXxP8Jmb6p4YfspblgXXOcu5LC1mdDkOqbsTrhwbTN1ufy29EpjKJZAvCj6Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=httpd.dev; spf=pass smtp.mailfrom=httpd.dev; dkim=pass (2048-bit key) header.d=httpd.dev header.i=@httpd.dev header.b=eyZ4rKrU; arc=none smtp.client-ip=185.70.43.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=httpd.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=httpd.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=itx.no header.i=@itx.no header.b="KpCsKEMW"
-Message-ID: <18d7ea80efbb5dd3d81acbae926da4e027ebfed9.camel@itx.no>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=itx.no; s=mx.itx.no;
-	t=1788210333;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bUi1GFbDfxHMrgMJ75S0sKhIIA+8X13umM6ht8uiEAo=;
-	b=KpCsKEMWHQaESCyKo8WeezcHXpxaPCT3jqFBqT+BHCCxUVfkYXALOKo2a+3tpogzzvsKCP
-	W9oUxLXB0C5+pBg87BLMmPTljPYbVYBRYIvjK/Sy3t4hsQdBXR4VrXwW0q9HLW+3YxukIs
-	u5Nl5sbSxXD4oOKQK7ugTOkH5lJOTPY=
-Subject: Re: [PATCH v2] sparc64: increase kernel thread stack size to 32K
-From: Stian Halseth <stian@itx.no>
-To: Tony Rodriguez <unixpro1970@gmail.com>, andreas@gaisler.com, 
-	davem@davemloft.net, sparclinux@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, david.laight.linux@gmail.com, 
- glaubitz@physik.fu-berlin.de, thuth@redhat.com,
- regressions@lists.linux.dev,  nroach44@nroach44.id.au
-Date: Mon, 31 Aug 2026 23:05:33 +0200
-In-Reply-To: <b46209d5-e518-4289-9b3a-5854a2512278@gmail.com>
-References: <20260519075809.8993-1-unixpro1970@gmail.com>
-	 <20260831172928.3082853-1-stian@itx.no>
-	 <afaa8ced-0717-4d62-8ea6-4ecdbf489694@gmail.com>
-	 <680606d594645568c21afcc552558882c4f59a96.camel@itx.no>
-	 <b46209d5-e518-4289-9b3a-5854a2512278@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=httpd.dev header.i=@httpd.dev header.b="eyZ4rKrU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=httpd.dev;
+	s=protonmail2; t=1788224369; x=1788483569;
+	bh=dsiMiEDU1iyqNugGv5MENp6q2JX/4otwgNxyz/lzYSA=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=eyZ4rKrUt95gUpqH2GtBgTuAWyqVXqdFv6BWKJVHnaaw6BIc8ukN/w1d1m14h6uZb
+	 qRS1Ke6znhKhp66XqY/aZrkg1DyrpD/KHYNEwHozBhwky6FNjNkne5rkitYKNgfZZ4
+	 mnC1TGoJdO+gRCi93bp4ZYbkRHmFEkv4Ivcfqmm0XbJZjv/h+XYcTIlJYMAIBdg6Pq
+	 Y/902OM5RIUUg/VrrtggZph4h/Wes50V6/DeV5QuRYV4AhlUSacZC9a8jlROgXKn5c
+	 SOSqbHBnolmCUnfC6IewVLdYdkJRL9PcRE6A8L1MZCVmTLSSh8TSOkInuYcVJtV/Kv
+	 FSmCuPhbYMutw==
+Date: Tue, 01 Sep 2026 00:59:25 +0000
+To: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+From: Angel J <iamanaws@httpd.dev>
+Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>, "stable@vger.kernel.org" <stable@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-rpi-kernel@lists.infradead.org" <linux-rpi-kernel@lists.infradead.org>, "helgaas@kernel.org" <helgaas@kernel.org>, "robh@kernel.org" <robh@kernel.org>, "andrea.porta@suse.com" <andrea.porta@suse.com>, "florian.fainelli@broadcom.com" <florian.fainelli@broadcom.com>
+Subject: Re: [REGRESSION] PCI: Dynamic OF node creation hangs on invalid bridge configuration
+Message-ID: <-KoxZtWNyNmnEu6-RkoMW2kenooTum0AiXwENwNBtoxqyI9wDXo1UJik1Wn9Igj_VRQ9bcYlva6FUZYq17UdPChUz_-mtDyrHSFO7t_broI=@httpd.dev>
+In-Reply-To: <GXe6anuewkS4bLNwca3cYOmUxN9csc0TxLYGSBc1qNRmfrmvFlcmD62wEM23TxfzfuXAv4P3yvUv7pyraleARrL1Na-aN8w-t9uc1Igu8DA=@httpd.dev>
+References: <GXe6anuewkS4bLNwca3cYOmUxN9csc0TxLYGSBc1qNRmfrmvFlcmD62wEM23TxfzfuXAv4P3yvUv7pyraleARrL1Na-aN8w-t9uc1Igu8DA=@httpd.dev>
+Feedback-ID: 163474212:user:proton
+X-Pm-Message-ID: 1031240fee8ce565906bd8ac4c0dbb2408b2550f
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: multipart/signed; protocol="application/pgp-signature"; micalg=pgp-sha512; boundary="------92b2098d95252a39ada38c9e88383d14dd60f1ac3fa7fee7e6a674a7c834e248"; charset=utf-8
 
-Hi Tony,
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------92b2098d95252a39ada38c9e88383d14dd60f1ac3fa7fee7e6a674a7c834e248
+Content-Type: multipart/mixed;boundary=---------------------9fc1428e6ff9ebac9729a5244b051e32
 
-On Mon, 2026-08-31 at 13:18 -0700, Tony Rodriguez wrote:
-> Hi Stian,
->=20
-> Just please continue to give me a=20
-> mention in any patches related to this work, since I spent a=20
-> considerable amount of time debugging, researching, and validating
-> the fixes.
-Sure. For now, no real changes have been made to your patches, so as
-far as I'm concerned, this is entirely your work.=C2=A0
-Will try help with the last mile, alongside some other patches I've
-submitted.
-And yes, the debugging, researching and validation is the hard part.=C2=A0
-Writing a fix is often _relatively_ easy, when you have all the facts.
->=20
-> When I last tested on 7.0 and 7.1, both of my patches worked:
->=20
-> A)=C2=A0 =C2=A0 sparc64: increase kernel thread stack size to 32K
->=20
-> B)=C2=A0 =C2=A0 sparc64: Fix comparator problem with timer interrupts
->=20
-> I was able to debug and validate these issues on S7=E2=80=912 and T7=E2=
-=80=911
-> hardware.=20
-Yes, and that's a very important data point. My analyzis is based on
-the change itself, _and_ your validation/testing.=20
-> I=E2=80=99m not sure if others have reported similar problems on T4 or T5
-> systems.
-Not that I'm aware of, and I haven't seen it on my T4-1.
->=20
-> If you have a quicker or better methodology for reviewing stack
-> usage=E2=80=94or=20
-> any general suggestions=E2=80=94I=E2=80=99m definitely open to seeing the=
-m, along
-> with=20
-> your config and exact procedure. And if you need help validating
-> against=20
-> S7=E2=80=912 and T7=E2=80=911 hardware, I can try to allocate some time t=
-o assist.
-I think that would be very helpful. Let's try to settle the 32K-vs-64K
-question with more data.=20
+-----------------------9fc1428e6ff9ebac9729a5244b051e32
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;charset=utf-8
 
-The kernel has stack measurement built in.
+Hello,
 
-The in-kernel method:
-  CONFIG_STACK_TRACER=3Dy
-  CONFIG_DEBUG_STACK_USAGE=3Dy
-  CONFIG_SCHED_STACK_END_CHECK=3Dy
+A friendly ping on this regression. It still affects Linux 6.18, and
+the tested invalid-bridge guard allows the machine to boot with
+CONFIG_PCI_DYNAMIC_OF_NODES=3Dy.
 
-Boot with "stacktrace" on the kernel command line (arms the tracer
-before built-in drivers probe). Then:
+Is any additional information or testing needed from me?
 
-  cat /sys/kernel/tracing/stack_max_size   # worst case seen, bytes
-  cat /sys/kernel/tracing/stack_trace      # that path, frame by frame
+Thanks,
+Angel
 
-Reset with "echo 0 > stack_max_size" before a workload to isolate it.
 
-For the 32K-vs-64K question, the most valuable data you could gather
-is a stack_trace snapshot on the S7-2/T7-1 under your real workload
-with mlx5 active, on a 32K kernel.=C2=A0
 
-On our T4-1 the worst case is 12616 bytes, but doesn't have mlx5.=C2=A0If
-your machines stay well under 32K, we have comfortable margin. But if
-something approaches the limit, the trace will name the exact frames,
-and we can judge whether the right answer is 64K or a targeted fix in
-that driver.
->=20
+On Saturday, August 22nd, 2026 at 19:14, Angel J <iamanaws@httpd.dev> wrot=
+e:
 
-Thanks!
+> Hello,
+> =
 
---=20
-Best regards
-Stian Halseth
+
+> This regression was introduced in v6.17-rc1 and remains in the dynamic
+> PCI OF node code. Linux 6.18 fails very early during boot on my Dell XPS
+> 8940 when CONFIG_PCI_DYNAMIC_OF_NODES=3Dy. The display goes black before
+> any useful console or pstore output appears, and the machine remains
+> hung.
+> =
+
+
+> Disabling CONFIG_PCI_DYNAMIC_OF_NODES makes the same kernel boot normall=
+y.
+> Linux v6.19-rc5 also boots because the RP1 driver stopped selecting that
+> option, not because the dynamic PCI OF node code changed.
+> =
+
+
+> Hardware:
+> =
+
+
+>   System: Dell XPS 8940, board 0K3CM7, BIOS 2.27.1 (2025-04-03)
+>   CPU: Intel Core i7-11700 (Rocket Lake)
+>   Triggering device: 0000:00:00.0, Intel 8086:4c43
+>   Firmware boot: UEFI, ACPI-based x86_64
+> =
+
+
+> Test results:
+> =
+
+
+>   Linux 6.12.103: good
+>   Linux v6.17-rc1: bad
+>   Linux 6.18.44, CONFIG_PCI_DYNAMIC_OF_NODES=3Dy: bad
+>   Linux 6.18.44, CONFIG_PCI_DYNAMIC_OF_NODES=3Dn: good
+>   Linux 6.18.44, CONFIG_PCI_DYNAMIC_OF_NODES=3Dy, skip invalid bridge: g=
+ood
+>   Linux v6.19-rc4: bad
+>   Linux v6.19-rc5: good
+>   Linux 4621c338d33f: bad
+>   Linux e55feea3a03a: good
+> =
+
+
+> The first-parent boundary between the last two tests is:
+> =
+
+
+>   e55feea3a03a ("Merge tag 'soc-fixes-6.19' ...")
+> =
+
+
+> That merge contains ce26f588c831 ("misc: rp1: drop overlay support"), wh=
+ich
+> removes:
+> =
+
+
+>   select PCI_DYNAMIC_OF_NODES
+> =
+
+
+> from MISC_RP1. The generated configurations differed only by:
+> =
+
+
+>   -CONFIG_PCI_DYNAMIC_OF_NODES=3Dy
+>   +# CONFIG_PCI_DYNAMIC_OF_NODES is not set
+> =
+
+
+> CONFIG_MISC_RP1=3Dm in both. The known-bad 4621c338d33f and Linux 6.18.4=
+4
+> both boot after disabling PCI_DYNAMIC_OF_NODES (and MISC_RP1, whose Kcon=
+fig
+> select otherwise forces it on).
+> =
+
+
+> There is no RP1 device in this machine, and its driver does not probe.
+> MISC_RP1 affects this x86 system only because its Kconfig select enables
+> PCI_DYNAMIC_OF_NODES globally.
+> =
+
+
+> I narrowed the hang to dynamic OF node creation for 0000:00:00.0
+> (8086:4c43), the Intel Rocket Lake-S integrated memory controller. On
+> this machine it reports PCI class 0604 and header type 1, but it is boun=
+d
+> to icl_uncore and is not a usable forwarding bridge:
+> =
+
+
+>   Bus: primary=3Dff, secondary=3Dff, subordinate=3Dff
+>   I/O and memory bridge windows: invalid/all ones
+>   kernel: bridge configuration invalid ([bus ff-ff]), reconfiguring
+> =
+
+
+> A minimal dynamic node for this device boots. Adding only
+> device_type=3D"pci" makes it hang. Full PCI dynamic OF node generation a=
+lso
+> boots when only 0000:00:00.0 is skipped.
+> =
+
+
+> I also tested a generic guard in of_pci_make_dev_node(). It reads
+> PCI_PRIMARY_BUS and skips node creation if the primary bus does not matc=
+h
+> pdev->bus->number, the secondary bus is not greater than the primary bus=
+,
+> or the secondary bus is greater than the subordinate bus. Linux 6.18.44
+> boots with CONFIG_PCI_DYNAMIC_OF_NODES=3Dy and logs:
+> =
+
+
+>   pci 0000:00:00.0: skipping dynamic OF node for invalid bridge
+> =
+
+
+> The regression was introduced by 49d63971f963 in v6.17-rc1. Commit
+> ce26f588c831 made v6.19-rc5 boot by removing MISC_RP1's select of
+> PCI_DYNAMIC_OF_NODES. That avoids the failing path in the tested
+> configuration but does not change of_pci_make_dev_node().
+> =
+
+
+> I do not have a log from the failed boots. No output appeared with
+> earlyprintk=3Defi,keep, keep_bootcon, ignore_loglevel, loglevel=3D8,
+> initcall_debug, and EFI pstore enabled. Blacklisting both GPU drivers an=
+d
+> disabling the Intel IOMMU did not make the bad kernel boot.
+> =
+
+
+> Should of_pci_make_dev_node() reject devices with invalid bridge bus
+> configuration, or should 8086:4c43 use a device-specific quirk? I can
+> prepare and test a patch for either approach. For Linux 6.18 stable,
+> would that fix be preferable to backporting ce26f588c831 and its
+> dependencies?
+> =
+
+
+> #regzbot introduced: 49d63971f963
+> #regzbot title: PCI_DYNAMIC_OF_NODES early boot hang on ACPI x86
+> =
+
+
+> Thanks,
+> Angel J
+> =
+
+
+> =
+
+
+> =
+
+
+> =
+
+
+> =
+
+
+> =
+
+
+-----------------------9fc1428e6ff9ebac9729a5244b051e32--
+
+--------92b2098d95252a39ada38c9e88383d14dd60f1ac3fa7fee7e6a674a7c834e248
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: ProtonMail
+
+wrsEARYKAG0FgmqWI18JEBoBbwppzUxnRRQAAAAAABwAIHNhbHRAbm90YXRp
+b25zLm9wZW5wZ3Bqcy5vcmfl/6uNekZTiSEcr0zFYMmZB7pZXzWkFaFAVYQ1
+zRRp2xYhBEAFf9htFyVnqZzmVhoBbwppzUxnAAAzOwD9FRMnq+YbDgEDUc3n
+pVpEge+RLMOPpjo9taK9Dno8I+gA/0J3r7cKUxlGLsTjReprBRnyMa4sDEjT
+KBCLgZOvyacC
+=k1eP
+-----END PGP SIGNATURE-----
+
+
+--------92b2098d95252a39ada38c9e88383d14dd60f1ac3fa7fee7e6a674a7c834e248--
 
