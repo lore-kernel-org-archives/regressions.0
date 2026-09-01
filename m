@@ -1,113 +1,127 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx.itxnorge.no (itx-kvm-14.itxnorge.no [91.189.121.228])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 935C342B74B
-	for <regressions@lists.linux.dev>; Tue,  1 Sep 2026 15:50:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A177379C21
+	for <regressions@lists.linux.dev>; Tue,  1 Sep 2026 17:40:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.189.121.228
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788277812; cv=none; b=bAxEM+God1YXove7rWo3gS7n8Ot6OMFe2p6LJVnPhJjqOaxHXXcTEP+2CsjiB1CgCARqZUYcapltw4mSf+xAaC/6be1h3MQvp/dDq3wZqyPjF/jdHQ7rzwP5CQxYhSG82qSb2KUnltO4aCK5pApqgNRHx33ssMYmuTJfNx8pQYc=
+	t=1788284414; cv=none; b=iwRlg+oOht/Fdf4y9ik4NmVfWQwquYHhZVmVPWpyp7VvZ6TT+igAAyi+SJME+tnBVqNJ+OhhpFKTfjFafXCCwth11WZ/Zdo3Hv1P9CJURFsE5cqcJ50squCZhy4Gs308sL9Ei6x7OmW1QAw6NroZY0qGXdehL89ks5qa6veh1h4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788277812; c=relaxed/simple;
-	bh=ajyzEffsSBkOYLQIR3aRKBK1NS8kHj7P6PrDglE8xvk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JENCwie9SYD4TB8SvUVLFLQxWYSs2+MX0SDxdYRPLoE/PsnAm/pAxNujzaeoIyxRTwLifXF23/r2dZYekeBvRzGku4WA+luHf16qEFPEXMp5q7wit6v0X1Uem1WoHTE8X1gDjFHddkwqruCeKv1vw8mSC+1l/x47EYatfVmd3Uw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ENJdjzdj; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1788284414; c=relaxed/simple;
+	bh=1Ht3yjlTvtc8/eirxqfsyimikew5ju7FlokWRWgmhsk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Ysags4WSN0kJlNH7dk2GJlrZcyW3ZWrJJRJsLZvsNvRQBIApJJ/1fxz5tXPnfB72Wu0mhozRLupw45tUksAlEyIEDtnXM6dXMN7vKkUQgmjZY+cdlkdNO3Z8Dtw/tlmRu8ZX2yRky9Zwf4u5wxCTCc+3XYNjBefSgykrsaEEByI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=itx.no; spf=pass smtp.mailfrom=itx.no; dkim=pass (1024-bit key) header.d=itx.no header.i=@itx.no header.b=Ozn3ovuC; arc=none smtp.client-ip=91.189.121.228
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=itx.no
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=itx.no
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ENJdjzdj"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-8487214ad2bso1503971b3a.1
-        for <regressions@lists.linux.dev>; Tue, 01 Sep 2026 08:50:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1788277811; x=1788882611; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=gzaoCwMvhgrc258eCGx9+hCu2m0m8ZaOD9+JsPMrJD4=;
-        b=ENJdjzdjEztXzkIDeeIK33zDSL6ks9bqBqtyL30Z3INt9CgAXK5wp2+0vHLxXZZtuB
-         1c/jkGSDNqcjWCfsKn7VnfkocYnmsuu4TtgItWGl6Px1dClwt3Ewe9yAELYVYOi+tIv0
-         BbCbAmI2FW1TNtrKzBMIpUrl2zZkeogOA/Uc8bCWV9b7vNt5tHLQyonQaKldpTYC9M+9
-         HfaBRYsWGTgq0IxVVV6CsnCHxK2stm5oqRkM0HuieO4kho5Yaqh+WvK70Zp8cbVJhfBd
-         kko0PLKEA6sgUriTQUhxrewlfAjeUQJjV+Igfnjg2/BiGhSCbbFwqPUw20Vgb8+2aMh/
-         NVhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788277811; x=1788882611;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=gzaoCwMvhgrc258eCGx9+hCu2m0m8ZaOD9+JsPMrJD4=;
-        b=fEBXCYxtYoWibbopMRZAPstcwnLhBlyLqtt8uZUypyGanF4W1zLpunjNckNi+X8sGA
-         atz6Y+mFNQGfT+KqlzvINJQ1T5FUs8Mdz4LLCm4KrW0TxzqfZKiPdoS81b6GonzxKhGa
-         Kf0cO1phtOMRXjA9WA14XOZrM+gKyH/+fnBhTdkVXbvGA2rC8+SDl1DRs57+O/SPcNaE
-         acy4S3LTfSXomfXTmFo2HPx7S7Claix7crlwsmiFScZBRY+ZQ8fShU1Q1dItRy69hTIS
-         LlizOEWAMF/cZaNA9XobxTZnyFOaSd1CZXqZJouiNQ9qnzxriihn5UFJ2BNIiOnDSboe
-         yq8A==
-X-Forwarded-Encrypted: i=1; AHgh+Rpj9OgNXuaPu8/Olkq/U04+QJ+wGSA0egsw1/RBw8itDX27LFOv5qjv8XrJgqZ0RxIkrtFS2mG0Crpf/Q==@lists.linux.dev
-X-Gm-Message-State: AFuF++mq74OMFPesaB2Ih/rz4p7kz02KEeW1NWXYL7lenHW47Jffw2iL
-	TyeB1bBf+NrrFP8G8bbzAmCtSsBG8MjXzlh8nHJKEJzNdaiZOV9b45wt
-X-Gm-Gg: AR+sD10AWZqsWURTf+7GKEtRZtLxu32VCf7ay5VjV9OwZA/3zbJoNimNPiJtD7/j7Oq
-	TvUEhQDPofD9HUsiSZDzasVA6/XdA2zqrtg/gNFOZtSiOUeioor22ViOpVFQQjasYUYOMnE6RUx
-	uj1CTOLmhb3ekfbUh4EkFuE7GEq6K5SQDDNGgU6bFa3VU0Y/3bg26L2riFhY77YTUrxz1kVun1r
-	XH9XIIkIV4y7LSLc1J26T4/3AdIdMztbaaCgibqd0XiKJsSXZ04vTInO5USFJ0N+ncwcn+qsQSP
-	KZ5nFf1yxMOkwe5YFRs6QJ+b5U/GAf8oPjFInbkEOT0mxivzq2eh/LP3YvmgG/vfltXU9qkP01a
-	bPqrw5iAyRLcQcWDN1nteQ+jNbiJE6oZ4Ge/JN8qviUbGLv8n5PD46zP7YpDsF/gO6sYICDNF3a
-	Yy93UOOPZ2iDk33AsGqGAA7vEwt99U9KAnhVXI7KFFyX8dkJ0/dZIkfKzHVUtUzv3qyud0/2opQ
-	y0Wc+Jf1PQZwiHQk9mPiyOFlMTeXg==
-X-Received: by 2002:a05:6a00:f0c:b0:852:5f99:1866 with SMTP id d2e1a72fcca58-8562514cfb6mr56762417b3a.0.1788277810606;
-        Tue, 01 Sep 2026 08:50:10 -0700 (PDT)
-Received: from localhost ([2409:40c4:10ef:9c41:92dd:ad43:5cf5:f6a])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-85dc0e01472sm105067b3a.55.2026.09.01.08.50.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Sep 2026 08:50:09 -0700 (PDT)
-Date: Tue, 1 Sep 2026 21:20:01 +0530
-From: Lovekesh Solanki <lovekeshsolanki00@gmail.com>
-To: Mathias Nyman <mathias.nyman@linux.intel.com>
-Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Michal Pecio <michal.pecio@gmail.com>, Mathieu Fluhr <mathieu.fluhr@gmail.com>, 
-	Mario Limonciello <mario.limonciello@amd.com>, Thorsten Leemhuis <regressions@leemhuis.info>, 
-	regressions@lists.linux.dev, stable@vger.kernel.org
-Subject: Re: [PATCH 2/2] xhci: drop 120ms U3 LFPS wake retry wait from
- runtime resume
-Message-ID: <apbrp8EaJoIfEg5X@eggarch>
-References: <20260831190349.29590-1-lovekeshsolanki00@gmail.com>
- <20260831190349.29590-2-lovekeshsolanki00@gmail.com>
- <a6a8526f-4b6f-46f7-9d02-05bfe3efcd48@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=itx.no header.i=@itx.no header.b="Ozn3ovuC"
+From: Stian Halseth <stian@itx.no>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=itx.no; s=mx.itx.no;
+	t=1788284403;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JGZpv4j6PAsaPOPSHpSq9llUSCcuSZCHp5WMqPEkyMo=;
+	b=Ozn3ovuCUz0rUwWg1Ny38mEK48LMSUhhBKh/nky5dkQGzm/pw7Nh9HcywL5fCq7cb4sjWP
+	fEVXnJ1LTTFCJ3uLlGP6CyA9SNIOufpcsXZYVr6N7gSZ6nHrOmB/ZKHMxHrINL0ynBTuU+
+	tnQbajr+8S5/yCwJo+VaO7AsiNaHcZs=
+To: axboe@kernel.dk
+Cc: Stian Halseth <stian@itx.no>,
+	linux-block@vger.kernel.org,
+	sparclinux@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	andreas@gaisler.com,
+	davem@davemloft.net,
+	glaubitz@physik.fu-berlin.de,
+	regressions@lists.linux.dev
+Subject: [PATCH 0/2] sunvdc: fix silent data loss under LDC congestion
+Date: Tue,  1 Sep 2026 19:39:44 +0200
+Message-ID: <20260901173947.3292110-1-stian@itx.no>
+In-Reply-To: <24f8b266-f17c-4909-b43d-8ab05721c5d8@kernel.dk>
+References: <24f8b266-f17c-4909-b43d-8ab05721c5d8@kernel.dk>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a6a8526f-4b6f-46f7-9d02-05bfe3efcd48@linux.intel.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Sep 01, 2026 at 03:53:47PM +0300, Mathias Nyman wrote:
-> I looked into this again and remember now why we didn't remove the msleep(120)
-> earlier.
-> 
-> If we want the hub driver to keep us awake to detect delayed port activity,
-> then we need to wake the (root) hub driver in xhci resume.
-> 
-> That means always calling usb_hcd_resume_root_hub() in runtime resume cases where
-> resume is caused by usb device remote wake. (xHCI PME# in PCI case), even if there
-> isn't any port activity yet.
-Got it, thanks for the explanation.
+Since commit a11f6ca9aef9 ("sunvdc: Do not spin in an infinite loop
+when vio_ldc_send() returns EAGAIN"), Linux guests in LDOMs see
+occasional spurious write failures that manifest as filesystem
+corruption. The failure signature is:
 
-> We don't currently check if runtime resume is caused by xHC PME# wake in the xhci-pci
-> driver. Not sure if there's a driver api for it.
-> Instead we in resume sleep for 120ms if there exists connected and suspended USB3
-> devices without port activity, and then check again.
-> 
-> This msleep(120) is unnecessary if runtime resume was caused by userspace instead
-> of usb device initiated wake (seen as PME for PCI hosts)
-So the better implementation will cross into the PCI side, are there any
-plans to implement that? Or any interest in it at all that you know of?
+    sunvdc: vdc_tx_trigger() failure, err=-11
+    I/O error, dev vdiskc, sector ... op 0x1:(WRITE) ...
+    vdiskc: writeback error on inode ...
 
-> Probably best to just take Patch 1/1 and look at this xhci resume part separately.
-Do I need to resend the 1/2 Patch independently now that this one is
-dropped? Or it'll be taken as is..? I'm still figuring the process out.
+The buffered writeback data is silently dropped. A revert was
+rejected [1]; Jens proposed requeuing instead [2], but that patch,
+tested in October 2025, appeared to leak memory and the effort
+stalled [3].
 
-Thanks,
-Lovekesh
+The leak is real and diagnosed: __send_request() maps the request's
+pages into the LDC channel's fixed-size map table (ldc_map_sg())
+before ringing the doorbell, and the trigger-failure path never
+unmaps them. A descriptor whose doorbell was never sent never
+completes, and since dr->prod is not advanced, vdc_requeue_inflight()
+never visits it either. With the requeue approach every retry remaps
+the same descriptor, orphaning the previous mapping; the 8192-entry
+per-channel table drains (contiguous allocation makes large requests
+fail first as it fragments) and the disk eventually dies with
+-ENOMEM. Mainline leaks the same way, once per spurious EIO.
+
+Patch 1 fixes the leak (also a standalone mainline fix). Patch 2 is
+Jens' requeue patch, unchanged, on top.
+
+Why the bounded busy-loop cannot be "tuned" instead: the LDC tx
+queue holds 128 doorbell messages while the dring holds 512
+in-flight descriptors. Any writeback burst of >128 requests
+(ordinary for XFS multi-stream writeback) overflows the message
+queue whenever the vds service thread in the primary domain is busy
+for a few milliseconds - e.g. one txg sync on the backing pool.
+This is normal flow control, not an error condition; OpenBoot's own
+disk driver retries it indefinitely.
+
+Testing on an UltraSPARC T4 LDOM (Debian sid guest, 8 vcpu, disk on
+a zvol served by a Solaris 11.4 primary), workload = 8-way parallel
+kernel-tree copies plus periodic 512-file sync bursts on XFS:
+
+ - Unpatched (7.2.2 + nothing): three failure events in 3.6 hours,
+   each losing writeback data, on an otherwise near-idle host.
+ - Patched (7.2.2 + this series), identical workload: the same
+   trigger fired (vdc_tx_trigger message logged) and was absorbed by
+   the requeue - no I/O error, no data loss, no checksum mismatch in
+   the verified copies.
+
+Independently, the tester who found the October 2025 memory leak has
+re-run his original harness (parallel tree copies, SPARC T4-2, 6.18
+plus this series): 20 hours, ~130M IOPS across six cores, 861
+requests requeued after EAGAIN timeouts, no memory leak observed [3].
+In the original run of that harness, those events surfaced as EIO
+and the leaked mappings eventually took the LDom down.
+
+A note on semantics: with this series a permanently unresponsive
+backend parks I/O indefinitely (as pre-a11f6ca9aef9 kernels and
+Solaris guests do) instead of failing after ~10ms. The per-vdisk
+"timeout" property (ldm set-vdisk timeout=N) remains the bounding
+knob for deployments that prefer failure over waiting.
+
+[1] https://lore.kernel.org/all/20251006100226.4246-2-glaubitz@physik.fu-berlin.de/
+[2] https://lore.kernel.org/all/418310b3-2b77-4534-b2fd-27dcc11e333c@kernel.dk/
+[3] https://github.com/sparclinux/issues/issues/2
+
+Stian Halseth (1):
+  sunvdc: unmap LDC cookies when the descriptor send fails
+
+Jens Axboe (1):
+  sunvdc: fix -EIO issue due to lack of retries
+
+ drivers/block/sunvdc.c | 26 ++++++++++++++++++++++++--
+ 1 file changed, 25 insertions(+), 1 deletion(-)
+
+--
+2.53.0
