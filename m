@@ -1,51 +1,51 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.61.107])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.162])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 085124562B3
-	for <regressions@lists.linux.dev>; Tue,  1 Sep 2026 07:20:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.61.107
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCE904189DE
+	for <regressions@lists.linux.dev>; Tue,  1 Sep 2026 07:25:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.162
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788247229; cv=none; b=fbWDzleiHF3mvk8aO29UwzBp8wjZ21vyIpVWidaGkvqVZjZ4vn/r2T+qv8vy6GK4HZEqgvPuljSXmDngwnzhZ4ySiIxZDrhCbAa8MqTlfIWSOOALKLBwShFgDZ0+BaZrELO19lRNNEagxo3xsxgYZA0q+/kpCAz+3bzw9KQvc08=
+	t=1788247509; cv=none; b=Ntp8wm4LrICBA14Ts2lH3AqGSrOcX+UoUBTD7eGkgfYirX67yGsyehyct/I+FKZ/IDDnUzYSYfhw+GTtwZnRTCL8VJtE+rq3dP+40DMODtjH2SroieunHb24RHdEZNSRMPTCiZ5dnnAQKhQ+AY9QIBn12EEr4+bDONG+iGSsw60=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788247229; c=relaxed/simple;
-	bh=bFqnooYeLxItmVyTi+VjmkJK7/U5SX2f8k+G+sYOw7U=;
+	s=arc-20240116; t=1788247509; c=relaxed/simple;
+	bh=giw57R9vlBUvdZcHVtCqaZU3VT7zse1sdsnLh6IZMKI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TWV+h84XVxboyKoVDRoIdnzOaUKawXIqBjT0xSHWktaHN2AfBBafMMCfUPVD5BWCOh2cz15XwLRulNCotYG3EdpGJLev1LXEzdCjddKT+CLClR++b54qa7iJw7ZS5k7kPvDAlzjoh9sxolsVftm3sk6jefhdMRgwg8um+gu72oQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=RdZn1JNZ; arc=none smtp.client-ip=188.68.61.107
+	 In-Reply-To:Content-Type; b=WKf87h6Ur2OHZJGICfPmzB/3nCW/MAVqZayvys01MEQ8qQ3vOaPryijDyMTSsGk9/aH13KggYC1M4PL7CVT2QchSHX89tMX5olm6F0Piq3pUqOGtIBi+gAugkjuJr0i4UCMUgQM4OjvFlN2ynTGRpPQeMUjCNKEwagfTxTHrwew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=RfRQzq0k; arc=none smtp.client-ip=188.68.63.162
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="RdZn1JNZ"
-Received: from mors-relay-8405.netcup.net (localhost [127.0.0.1])
-	by mors-relay-8405.netcup.net (Postfix) with ESMTPS id 4hYxrB0cxPz77cg;
-	Tue,  1 Sep 2026 09:12:10 +0200 (CEST)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="RfRQzq0k"
+Received: from mors-relay-8201.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4hYxx61pq6z4L0S;
+	Tue,  1 Sep 2026 09:16:26 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1788246730;
-	bh=bFqnooYeLxItmVyTi+VjmkJK7/U5SX2f8k+G+sYOw7U=;
+	s=key2; t=1788246986;
+	bh=giw57R9vlBUvdZcHVtCqaZU3VT7zse1sdsnLh6IZMKI=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=RdZn1JNZaS/plDUYICVDzv3eI6ewKGdfTEcLrx4AJKjn2uWfZAHJNBE/1/4gg62oJ
-	 F45xazGyzosHxlkXexwndyXCYGykFlX3CU92/woOh3V8Q2eTuKtF0iwdmr5IhqNI/y
-	 o4ZjtfK6rZM24vpeOPgyw5SfbMo5W04LPTZo5w4YpOhKsLNPNbxBpEbCygPJJ5rwPf
-	 5kUzkpEO/FSuKPGVv7IRw4RSosP+JcHBiQ1t6X3e9xx+rRxO9I/iEhtdpqL08URz2u
-	 nCZloZjajUBtWNxm4E6ZjdnV4AY1c6f8g4cs9+29n0qSymNtdjz1sigskv8y8hrwAY
-	 XztBpJDzdPnXA==
+	b=RfRQzq0k+tK14PKK0cWEq+Evv1fArAtVU3IBC7L7K0w/J2URAACguBsycYQKbtO4o
+	 t20tc/HpcQBIs09PpoBkVePn1w7IL7/LCXgUUwVeMRu9tWD8c4AFoQkvTg1CQYhQWy
+	 Fspr6+qyTavrPb16TktyE3y9HPFcS6YF8I5NR+SQ76OuK+h2MaS6Fs8ciDrS7CBxVp
+	 7KiFSwq03vzcbQIcHHoR4VLsO9Y8W56r8ckNWSA2NUYaxtpkrVNKGzE4zczj+3na5p
+	 rJteLfOvaj4jduz/nN7ebF2hGyzhlHkcUeAhN0jZZuLDtpMAN1bZRtpER38MyGPnSS
+	 hFZKEYqxGOzjw==
 Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-8405.netcup.net (Postfix) with ESMTPS id 4hYxr96zgQz774g;
-	Tue,  1 Sep 2026 09:12:09 +0200 (CEST)
+	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4hYxx61781z4KyJ;
+	Tue,  1 Sep 2026 09:16:26 +0200 (CEST)
 Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4hYxr73GXXz8sbC;
-	Tue,  1 Sep 2026 09:12:07 +0200 (CEST)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4hYxx51SMxz8svJ;
+	Tue,  1 Sep 2026 09:16:25 +0200 (CEST)
 Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id EE4C05F98C;
-	Tue,  1 Sep 2026 09:12:05 +0200 (CEST)
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 379E95F98C;
+	Tue,  1 Sep 2026 09:16:19 +0200 (CEST)
 Authentication-Results: mxe9fb;
         spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
 Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <722d96c4-8938-4da4-9eb4-2af50b9d8b26@leemhuis.info>
-Date: Tue, 1 Sep 2026 09:12:04 +0200
+Message-ID: <83f89e11-b265-4d12-97c0-f158e0b5b82d@leemhuis.info>
+Date: Tue, 1 Sep 2026 09:16:18 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -53,99 +53,53 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 0/3] drm/atomic-state-helper: fixes for blend-mode-prop
- warning
-To: =?UTF-8?B?VmlrdG9yIErDpGdlcnNrw7xwcGVy?=
- <viktor_jaegerskuepper@freenet.de>, Melissa Wen <mwen@igalia.com>,
- Alex Deucher <alexdeucher@gmail.com>
-Cc: airlied@gmail.com, alexander.deucher@amd.com, christian.koenig@amd.com,
- daniels@collabora.com, harry.wentland@amd.com,
- leandro.ribeiro@collabora.com, maarten.lankhorst@linux.intel.com,
- mripard@kernel.org, pekka.paalanen@collabora.com, simona@ffwll.ch,
- siqueira@igalia.com, sunpeng.li@amd.com, tzimmermann@suse.de,
- Alex Hung <alex.hung@amd.com>, Daniel Wheeler <Daniel.Wheeler@amd.com>,
- kernel-dev@igalia.com, Lyude Paul <lyude@redhat.com>,
- =?UTF-8?Q?Timur_Krist=C3=B3f?= <timur.kristof@gmail.com>,
- Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,
- Xaver Hugl <xaver.hugl@gmail.com>, amd-gfx@lists.freedesktop.org,
- dri-devel@lists.freedesktop.org, Greg KH <gregkh@linuxfoundation.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <20260826104143.39077-1-mwen@igalia.com>
- <CADnq5_MEBLriK_M_atX6FKR5618fiB5DmAWOvxE_e+6nd5FdDg@mail.gmail.com>
- <83bef197-dfbc-44a5-b9d8-6e0c44488793@igalia.com>
- <6dda204d-2c12-4442-9893-6449b5ce51c9@igalia.com>
- <9d5fa2bf-d9e4-4c6a-a9ca-8abf14ad894e@leemhuis.info>
- <572f78a8-1b09-4275-bca7-0ae8703776d0@freenet.de>
+Subject: Re: [REGRESSION] amdgpu: "pixel format with alpha exposed but blend
+ mode not setup" warnings introduced in v7.3-rc1
+To: Robson Candido dos Santos Alves <robsonalves.us@gmail.com>,
+ amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Cc: regressions@lists.linux.dev
+References: 
+ <CANkdJ2VvJQSBzyOq=LgSW1=Z8-YiN_r9Py2iJ0UJDo55+dbfuA@mail.gmail.com>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
 Content-Language: de-DE, en-US
-In-Reply-To: <572f78a8-1b09-4275-bca7-0ae8703776d0@freenet.de>
+In-Reply-To: 
+ <CANkdJ2VvJQSBzyOq=LgSW1=Z8-YiN_r9Py2iJ0UJDo55+dbfuA@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 X-PPP-Message-ID: 
- <178824672705.2729861.15661692697990796102@mxe9fb.netcup.net>
-X-NC-CID: Se4neMb5CJgzgYpC9HT4NO0celnOKaVNt5I5gbo1kA9qJUznsgM=
+ <178824697950.2731295.11196110282821243794@mxe9fb.netcup.net>
+X-Rspamd-Server: rspamd-worker-8404
+X-Rspamd-Queue-Id: 379E95F98C
+X-NC-CID: MAf1tU9bgCNGZE5oosB4AquQ/DfiCaYaM4iKe1TZEy+AgA+ArtA=
 
-On 8/28/26 14:19, Viktor Jägersküpper wrote:
-> On 8/28/26 09:22, Thorsten Leemhuis wrote:
->> On 8/27/26 19:14, Melissa Wen wrote:
->>> On 27/08/2026 18:37, Melissa Wen wrote:
->>>> On 27/08/2026 15:34, Alex Deucher wrote:
->>>>> On Wed, Aug 26, 2026 at 7:20 AM Melissa Wen <mwen@igalia.com> wrote:
->>>>>> PREMULTI was the default DRM blend mode until 9813e158d13d
->>>>>> ("drm/drm_blend: allow blend mode property without PREMULTI")
->>>>>> introduced
->>>>>> the possibility of exposing the blend mode property without PREMULTI
->>>>>> being supported. However, __drm_atomic_helper_plane_state_init() still
->>>>>> resets pixel_blend_mode to PREMULTI (hardcoded), ignoring the supported
->>>>>> mode in this property. In the same series, 860e748bddcc ("drm: ensure
->>>>>> blend mode supported if pixel format with alpha exposed") starts
->>>>>> warning
->>>>>> drivers that supports alpha formats in a given planes but doesn't
->>>>>> support blend mode property, which includes AMD primary and cursor
->>>>>> planes.
->>> [...]
->>>>> I presume you are planning to apply this directly to drm-misc for 7.3?
->>>>
->>>> Right, I'll apply to drm-misc-fixes, just doing it now.
->>>
->>> Or not now. I have to wait for -rc1.
->>> I'll keep it on my radar.
->> Hmmm, that sounds like these fixes will miss -rc1. But wouldn't it be
->> good to get them included there, as they afaik (please correct me if I'm
->> wrong, is easy to mix something up from the outside!) the warnings that
->> Greg described as ""It's not good to boot and have a bunch of warnings
->> already happening, resulting in a "tainted" kernel before I have the
->> chance to break anything manually myself...""[1], as more people then
->> will likely encounter this (and then waste time on bisecting an issue
->> known for weeks for which a fix exists).
->>
->> [1]
->> https://lore.kernel.org/all/2026082651-spinning-cornbread-33ba@gregkh/
+On 8/31/26 15:46, Robson Candido dos Santos Alves wrote:
 > 
-> If I understand correctly, the *actual* fix (for all affected drivers)
-> will make it into 7.3-rc1, see this answer to my question:
-> https://lore.kernel.org/dri-devel/20260826-brave-nyala-of-elevation-d23aea@houat/
->
-> This fix is queued in drm-next:
-> https://gitlab.freedesktop.org/drm/kernel/-/commit/271e90eb5f9ff34951647e5ed33c1775eebcca50
+> After updating from kernel v7.2.2 to v7.3-rc1, several DRM plane
+> warnings regarding unset blend modes for pixel formats with alpha
+> channels started appearing in dmesg during initialization.
+> 
+> Good Version:
+> - Kernel: 7.2.2-070202-generic
+> - Display Core: v3.2.384
+> - Result: Driver initializes cleanly without plane/blend mode warnings.
+> 
+> Bad Version:
+> - Kernel: 7.3.0-070300rc1-generic
+> - Display Core: v3.2.392
+> - Result: Driver emits the following warnings in dmesg:
+> 
+> [drm] [PLANE:44:plane-0] pixel format with alpha exposed but blend
+> mode not setup. Please fix.
+Thx for the report. Not my area of expertise, but I guess that is caused
+by 9813e158d13d ("drm/drm_blend: allow blend mode property without
+PREMULTI") and will be fixed by the patch set "drm/atomic-state-helper:
+fixes for blend-mode-prop warning":
+https://lore.kernel.org/all/20260826104143.39077-1-mwen@igalia.com/
 
-Ahh, yeah, many thx, I had see this downgrade to drm_warn() (which made
-it to -rc1, yeah \o/), but had not made the right connections. :-/
-
-FWIW, even with that done there is now one amdgpu regression report
-about this already post-rc1:
-https://lore.kernel.org/all/CANkdJ2VvJQSBzyOq=LgSW1=Z8-YiN_r9Py2iJ0UJDo55+dbfuA@mail.gmail.com/
-
-"""
-[...] After updating from kernel v7.2.2 to v7.3-rc1, several DRM plane
-warnings regarding unset blend modes for pixel formats with alpha
-channels started appearing in dmesg during initialization.
-
-[drm] [PLANE:44:plane-0] pixel format with alpha exposed but blend
-mode not setup. Please fix. [...]
-"""
-
-Will reply there now. Wondering if we need to do something about that if
-more reports like that show up, but let's wait if that's the case.
+That patches are afaics scheduled for inclusion in 7.4 -- but afaik the
+the warning is safe to ignore.
 
 Ciao, Thorsten
+
+#regzbot introduced: 9813e158d13d
+
