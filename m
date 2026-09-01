@@ -1,216 +1,148 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BD4B4483B4
-	for <regressions@lists.linux.dev>; Tue,  1 Sep 2026 19:51:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788292302; cv=none; b=Eql48+RhS+fpwalGHcDvMFJ7H6YY3AxmIWwROTRBe+8Ol0tDdR4Y5/Vv4SKokUn645SNa+s/iHH7+4ie2ZN+BLm25jHrgo8vRKQ7yMNf6l3ldlZtwrWUyx2jjbbOuNFMWwGBsJIak+0xBN8fuStXpdYWn73a6aciLkuw8CP4c6c=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788292302; c=relaxed/simple;
-	bh=jngS6x+tIf4czuIBq+LweYf0mEUL/modiUynUQ9e7Nw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gTjdbKcZoFDLWXCcawnxy21H0KRC/ZExiFtCWFyGiVfaBQLGCO6JCRCp4kZoY8dhR6AqKs3dyy1j4LU1TqSGRym7h4/nC3DeNPaLwu+18lpT/D2rUId4YAK1JBvWTO+BtwcfGH/QQp2uX4CUDgBLvArLPXHTQSVcG6/V7hHLp28=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VybvxUI7; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF18E4A386A
+	for <regressions@lists.linux.dev>; Tue,  1 Sep 2026 20:39:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.50
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1788295155; cv=pass; b=DbgVG6/xBxyZ/x79oDRdH1SwKBXSQ1lxL9e3qcAsb/LtdzT/fYmJ15O/gSDNxlgk+pH+JWhCFTY8yVkq0bAZY8uJ1JxIXa5uGHo7QkGVOB5qhlt83nXQKovK0vLlEATGahQFpKDsrcEXhJa2HDRKrXEPUR93OhUt9lNGN9w6PVs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1788295155; c=relaxed/simple;
+	bh=zMXQqnAx/G3j/QNYM2LWpXw58ytOME0jkznw3ohEhIA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BeKi/5LriI+mGo127u6TnBFwzXigyDy1nG9nF4+6QskyPQl019mvQ3C+NUDMF3sEtbiQTIW0e26evSvJx9u4yvmwrlOyz3qZywJu/Wf6o5EgcRaJxgPE/EShf55AZysioDC6hc3924chEfNqXYj/Hbxz0FQZYU9VsKCzRkvWtAU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V1ojasBM; arc=pass smtp.client-ip=209.85.208.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VybvxUI7"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4953e04ef16so1655515e9.2
-        for <regressions@lists.linux.dev>; Tue, 01 Sep 2026 12:51:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V1ojasBM"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-6a6108734d5so434111a12.3
+        for <regressions@lists.linux.dev>; Tue, 01 Sep 2026 13:39:13 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1788295152; cv=none;
+        d=google.com; s=arc-20260327;
+        b=mpu/AezEOFnVfcSWyqi3fjhWTBlQnBoP5ZKvqYPFL6/ExcZeDr6LI+YVzWYo09zSuq
+         9cLmL/HR7Cp9NAOSTZoyLnOOc+C4vEeRe0sGHiVtiStbqXdy0vzzhWsHo/j2uaBudR/g
+         vVJqKEoiaPspOHA4yL/G2SxWg/3y1bulxaK2FF6PsbZ7RnkNb6+174fRdLykrildMGHg
+         xiqGkevviIn6sU6fmGRwQcb+kj5k5aHLmccwx1QpkG8TQGPAdfIMwgGwTE0RxSxqUzQr
+         WWaZ7yQkemEea0nzUU2GBw65ZlsfBC7VQDI/uN2+Ad0uW70Qp+ESOhR18OG/V1Ge6H1+
+         CQFw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=iMSVbAMMClabJnl3yUfS4i27AaasElWu73GA2BM0Mik=;
+        fh=MbV4URFUAG5I9NwqCkwjojh6h+rA6VMvVPUxM0te6e0=;
+        b=Uyl/i7HbXAUcAK9uUbyyPyTE0PSsANSuj9mArrmTzceaugDT4KBADNziabpFEXldKm
+         ec/ZCW5btsYOuVFFKWKWsZSmJbcNrhLFqHCn9V5TwZtI23UPwarjufVcN+V3mgIQV9Eu
+         2KZrA/Hjexy88DZ2+XPqJwE0mkYWSItEg4alGyIh/PRdtB1Gc2vNr9n+J5HSwmfovkjK
+         gb0/P6APH/v0mCp+WnfiE8sdHsUYjSSzK7ODSMRjH5gjgNLY8/OgGP6WHfsNCvJwCUVM
+         ctKbyEQpWSkpWxOZIsIiAP1qvrXa7kGQvRedmAEmTn4ptAt180Hxy/FEEaIK7fbJ1gvk
+         9s2A==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1788292297; x=1788897097; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=6xYO5+e2rLJr7nQr6IUR30t9mLQPc96NvTA35d5T/wc=;
-        b=VybvxUI7/Hnvb9PFViwkxc8mAn2FL+3F22k/ga+17vz4IWVX93LHSI1WJ5EeRqhRDQ
-         QE26uch8JBpo37gCFMAIprw5L+6bNFO98qS3HzgwZU2rTvLEcsX9A2GFFfkann7+McYE
-         oN+K1vTYnqMllffSb+TiwtkMl7Ii77eR3zo4/qszoyg6ZTfFf6vT6YkBS0MeEfUsYQXH
-         Z+vBRwt+TvM901N0UV3wbR5DUpYB0JMA9s+T8MI35QeYVW+723NOcoiGw/2AnCcfbUa8
-         lHxsia2LJTr3mkBfyvm3NDg/6YSCq06lymp4jqh3e1lGrua1CwGGagVKQ1JEwluBxJvl
-         zwJA==
+        d=gmail.com; s=20251104; t=1788295152; x=1788899952; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=iMSVbAMMClabJnl3yUfS4i27AaasElWu73GA2BM0Mik=;
+        b=V1ojasBMMT/QnGdZaWzmmAqYUS+6BtvZ59HkAZgNvVm5koyezOESVwp5hfDYFjiThm
+         JPuYagwTRTxiAakiW9v10IeTBeK/EZMaETtAFWu9qMbltHVQludxd9xPE64LA7LMwBbu
+         /f9d8b0tXU4Wh2fZs67nkMT08xBjEXz3Wkw+giA6X1L8sOy008GlgHCeg87UdWxZYcNo
+         mH9ybl46NUkaAE4oWsGzw8VZGD2G+vFRDIqrDtaw3Zu5tR3LHb47Iak22WgU/ui9YHNv
+         ItT1NMEuqA5bl6qWxgu89kBmQmUjJvcnPFfgqkkJlVVi3wf1DOgBm2FtziTghO/umLPU
+         yB6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788292297; x=1788897097;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=6xYO5+e2rLJr7nQr6IUR30t9mLQPc96NvTA35d5T/wc=;
-        b=U8z/e3ulpyWncD36tFiCfLtQTG02hDhzJPuhSqFSCuVKgaQH87WRJuAfHXCEHzKF0x
-         /zg5Br06+MdKN95ymuRr7RJ0EBacTqYPv/CujS3LTSgTIG7dt36Q6nX1EwixaNpHvO0M
-         bawPqf8VCKqxRRr95nJ2P7xWtFK1MlMg9DC5uaHAGfJF2FciCQr/MP9PRo46DYVmVIHf
-         +aevWq90OcuaBWG8kYLM8TcfjpOMvHilBX1nypCdnKJGuhNSbs0OrbAzbjzOSRlCbRY+
-         I8tcM71sqMamjV0Zp65ZEVHJrelGJo0U+CDWd8VnkaiNR2oSzKknV3nkT3pXiRAPQeHP
-         paKw==
-X-Forwarded-Encrypted: i=1; AHgh+Rpk2CKqhlX5F/xCJik+wF+aNuUQk7CjLoabEk77pvdOjgsBWXxsPrzDPvryzi4kiRh9L9K7UF0n/QoLxQ==@lists.linux.dev
-X-Gm-Message-State: AFuF++nb82OSwBb0V/rsjKKS/PbCntWjDVtDLu7wSXvJNw8GsEzhO47c
-	0RnWbVO2vOsUPUg3FQh2LbtyWmFJUSHgBSut94uMUFIrumN3MZyDSRI=
-X-Gm-Gg: AR+sD12w0P3C8xqqON8/1txYZzUCroOXuNGsXtSL6mUyxEx0Ong0+SHL/6TDaA8nRG0
-	3khdi6w/1g1ZOqzLCeTpwKPG/rlFfXOWj5c89fKfKWSIcoZJUBYJPBe0Zo8DoPQCt5FNhJ8QBo5
-	HKeCmgMx9IH1GyfX/YKbHpEnLRNzzXM6eA0++IY7MDdXO0l1dptNMiwc+olWfwYBA/8o6eyL5dM
-	iYfQsgXuxGWjMbUwtGRI5dmzaCnO4EuaUD2jZWBgX/5bfSRF3hMtqHF9+hVy8CBa+4/IMwcd/rl
-	/GdGuLYN3DxFP9OJjNNBUV9AyJOSZSqDwdoEG74srY7zYwzU8EqBb7rcukyeqb+22YnS0Yp/DYb
-	3RoavtkC/+atJNhVxrApKDq8igRQAqrcAMc1dOkMQr0q+D0hvp9fSAfAxkaBoGEZJpCO5cespRv
-	H2UaBELNw52MRWlEKA6gnZICFP9HsAHzYy9etcvm9juYy2KbtaZp9dbJKnGA097gpmiavUbzDbQ
-	xJAQGahvt2xZx+6ZN5oNi9Z8tbQLCms4pYzQL3Co9O1p+u2y+CCeXlqQQvGYUqZhDLm4uVhDw==
-X-Received: by 2002:a05:600c:a086:b0:495:48d7:f178 with SMTP id 5b1f17b1804b1-49ce5815dddmr66415e9.11.1788292297027;
-        Tue, 01 Sep 2026 12:51:37 -0700 (PDT)
-Received: from chateau ([148.69.202.63])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49ce4761dd1sm5567285e9.0.2026.09.01.12.51.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Sep 2026 12:51:36 -0700 (PDT)
-From: Sergey Zagursky <gvozdoder@gmail.com>
-To: Miguel Vadillo <miguel.vadillo@intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Mehdi Djait <mehdi.djait@linux.intel.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev,
-	Sergey Zagursky <gvozdoder@gmail.com>,
-	stable@vger.kernel.org
-Subject: [PATCH] media: ipu-bridge: do not use the CVS device lookup for IVSC
-Date: Tue,  1 Sep 2026 20:50:36 +0100
-Message-ID: <20260901195036.7648-1-gvozdoder@gmail.com>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <20260901194526.6369-1-gvozdoder@gmail.com>
-References: <20260901194526.6369-1-gvozdoder@gmail.com>
+        d=1e100.net; s=20251104; t=1788295152; x=1788899952;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=iMSVbAMMClabJnl3yUfS4i27AaasElWu73GA2BM0Mik=;
+        b=G6M5/B4npqXpvPLhPZYpt+T+7+rqJ3VfFrbXusf9iHOCZo8ITe2Ve4DCH/GVIAztGz
+         LduSiqLPnkdJOd98MXkzrZ6opQ5Wu2rcf27j1X7jWGWpynvntMaEbY90xQn4P4TQG1rd
+         KWQ/ylRIaAPeuEBi4Qr5xbhH0em6o+gKyRA96Gb2Lov6/R39jzWzcJf0r/QJsvfd0v8z
+         RcY7vWh8uq+kAXjlMU2nRko+IlvJ6bKa/gl8BabBoriXVLUPFsrBTBTIvOq2uyZQei7X
+         KY2PHDy2PmJXIg+jvS5u5VU6vCelz41+ZVje5K5G4x7JcqeDCGDqiG4UafYvWAMw47/4
+         3h4A==
+X-Forwarded-Encrypted: i=1; AKwUvBwsbqxybapU/n3ftmXkVnSy14GyhTKNzWIzNyeaFic8aEFRUkHb44nr871ajmpIWB+NAdEqBq94m4isVQ==@lists.linux.dev
+X-Gm-Message-State: AFuF++kS4oKcRR6GGbX5WvkjUGfpvKzkS1bULvQiqQSRGY/rhuWKOA9c
+	EnyayznMbVBoxIl00VIQzHkQxSi7qXCca/VEmF414lStt1RSmAg8km5SGvtQ813dogH5TAV/eqi
+	GS6aU66X4gnkLOkaB3AUMbERFYKbG5u+HJA==
+X-Gm-Gg: AYBFou1VB40VfzItMfFkaS9DML9UVPAHBm6qCbUURGineKW/5+oAiAAjYnoDWQsrvl3
+	9Gxvw5J4wjBY513Ps9weZxfTNH4eSSNonVHOvTaPTzOmh9cthH3TUl8A3vp+9majwt6CmUIs3KC
+	s3mSBmwaNbHquO9vHGTRWsGkS8s7ptR9SQJ/g15KOq7wFYfCFQvlLxo2Y3P0mJpg7RMPNanSaS7
+	IiczwTTvULDTBD22+zwxoaS8tVpHcTvMyUz6DZBYDQ60q6DKSY0zwVCNLuNvimeI8fpD0VoZCs2
+	V8M9yFsgh/DsRdYai5h9rm2fpX7LB0FfGdK2IGiXs6oIiniZQa4r7sSlav1FUzYUqbWUdIx9+Gi
+	62Nm7Ou+Rf0VnThmUY/jUkQQ7V8pnYWYyfX9aOt4NIaFi5MFl63QOsFkjn+C9HM+ZvzZsENLwNu
+	jxl4cbx38dpcs7kLNPFOE4kplxnxmVUk0jq3LV9IsooJPBg5OBQ0mSw9lcZqMLlUo/cQ==
+X-Received: by 2002:a05:6402:4585:b0:6a6:776f:5859 with SMTP id
+ 4fb4d7f45d1cf-6a682ac2b12mr255347a12.17.1788295151738; Tue, 01 Sep 2026
+ 13:39:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20260730204722.1101805-1-rosenp@gmail.com> <20260901194524.908240-1-ghidoliemanuele@gmail.com>
+In-Reply-To: <20260901194524.908240-1-ghidoliemanuele@gmail.com>
+From: Rosen Penev <rosenp@gmail.com>
+Date: Tue, 1 Sep 2026 13:39:00 -0700
+X-Gm-Features: AcwNN1WlvzKl5Ma1R8rX-hNwpVEErP-nMy6eoOGTbH_FUp8tWYaCb1AqEhDSbAA
+Message-ID: <CAKxU2N9rW7PpNqUX0w8AR1Doc=LrRPJNct0rYJCTOm3Vskd7Qg@mail.gmail.com>
+Subject: Re: [PATCH] crypto: caam: simplify probe resource and IRQ handling
+To: Emanuele Ghidoli <ghidoliemanuele@gmail.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>, =?UTF-8?Q?Horia_Geant=C4=83?= <horia.geanta@nxp.com>, 
+	Pankaj Gupta <pankaj.gupta@nxp.com>, Gaurav Jain <gaurav.jain@nxp.com>, 
+	"David S. Miller" <davem@davemloft.net>, linux-crypto@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev, 
+	Emanuele Ghidoli <emanuele.ghidoli@toradex.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Since commit c6b1b34b5090 ("media: pci: intel: Add CVS support for IPU
-bridge driver") the internal camera no longer works on laptops where the
-sensor sits behind an IVSC, for example a Dell XPS 16 9640 (IPU6,
-INTC10CF, ov02c10):
-
-  intel-ipu6 0000:00:05.0: Found supported sensor OVTI02C1:00
-  intel-ipu6 0000:00:05.0: Connected 1 cameras
-  ivsc_csi intel_vsc-92335fcf-3203-4472-af93-7b4453ac29da: mei-csi probed
-      without device fwnode!
-
-No sensor subdevice is registered, the media graph has no sensor entity
-and userspace finds no camera at all.
-
-ipu_bridge_get_ivsc_csi_dev() first looks for the platform device named
-"intel_vsc" and returns its mei-csi child. That device is created by
-mei_vsc, which on this machine only appears once the LJCA USB bridge and
-its SPI controller have probed, about a second after the IPU6 probe that
-runs the bridge:
-
-  07:59:29.297  platform INTC10CF:00 created (ACPI scan)
-  07:59:41      intel-ipu6 probe -> ipu_bridge_init()
-  07:59:42.391  platform intel_vsc created (mei_vsc)
-
-The commit above added two fallbacks for CVS which match on the ACPI
-companion alone. They are reached for every entry of ivsc_acpi_ids[],
-IVSC IDs included. The IVSC ACPI device has two physical nodes:
-
-  INTC10CF:00/physical_node  -> platform/INTC10CF:00  (no driver bound)
-  INTC10CF:00/physical_node1 -> platform/intel_vsc    (mei_vsc)
-
-so bus_find_device_by_acpi_dev(&platform_bus_type, adev) returns the bare
-platform device. ipu_bridge_instantiate_ivsc() then attaches the IVSC
-software node to that device instead of to the mei-csi client, the bridge
-reports success, and the probe is never retried. mei_csi later probes
-without a fwnode, the CSI-2 link is never described, and the sensor ACPI
-device, which has an honoured _DEP on the IVSC device, is never
-enumerated.
-
-Before those fallbacks existed the lookup returned NULL here, the bridge
-failed with -ENODEV and the probe was retried once the IVSC device had
-shown up.
-
-Restrict the two fallbacks to the CVS IDs. CVS binds a driver to the ACPI
-device itself, so matching on the companion is unambiguous there.
-
-Fixes: c6b1b34b5090 ("media: pci: intel: Add CVS support for IPU bridge driver")
-Link: https://lore.kernel.org/linux-media/20260901194526.6369-1-gvozdoder@gmail.com/
-Cc: stable@vger.kernel.org
-Assisted-by: Claude Code:claude-opus-5
-Signed-off-by: Sergey Zagursky <gvozdoder@gmail.com>
----
-Tested on the affected machine (Dell XPS 16 9640, IPU6 + IVSC + ov02c10) on
-top of 7.2.2, where drivers/media/pci/intel/ipu-bridge.c is byte-identical
-to v7.2. Without the patch libcamera finds no camera at all; with it:
-
-  $ cam -l
-  1: Internal front camera (\_SB_.PC00.LNK1)
-
-  $ cam -c1 --capture=5
-  202.794954 (30.05 fps) cam0-stream0 seq: 000003 bytesused: 8386560
-  202.828224 (30.06 fps) cam0-stream0 seq: 000004 bytesused: 8386560
-
-The media graph gains the entities that were missing:
-
-  - entity 349: Intel IVSC CSI (2 pads, 2 links, 0 routes)
-  - entity 368: ov02c10 21-0036 (1 pad, 1 link, 0 routes)
-
-and the restored retry is visible in dmesg:
-
-  pci 0000:00:05.0: deferred probe pending: intel-ipu6: IPU6 bridge init failed
-  intel-ipu6 0000:00:05.0: Found supported sensor OVTI02C1:00
-  intel-ipu6 0000:00:05.0: Connected 1 cameras
-
-"mei-csi probed without device fwnode!" is gone, ov02c10 binds to
-i2c-OVTI02C1:00, and eight v4l-subdev nodes appear.
-
-This patch is against v7.3-rc1. The version tested on 7.2.2 is the same
-change without the INTC10FA entry, which 7.2.x does not have. Building
-drivers/media/pci/intel/ipu-bridge.c with W=1 produces no new warnings.
-
-Not covered: I have no CVS hardware, so the CVS path is only reasoned
-about, not tested, and I have not booted v7.3-rc1 itself.
-
-This patch was produced with the help of an AI coding assistant; see the
-Assisted-by tag above and Documentation/process/generated-content.rst. The
-bug report this replies to describes what the tool did.
-
- drivers/media/pci/intel/ipu-bridge.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
-
-diff --git a/drivers/media/pci/intel/ipu-bridge.c b/drivers/media/pci/intel/ipu-bridge.c
-index 1bb3a3e98d6b..2c3b9efb0b2f 100644
---- a/drivers/media/pci/intel/ipu-bridge.c
-+++ b/drivers/media/pci/intel/ipu-bridge.c
-@@ -232,6 +232,15 @@ static const struct acpi_device_id ivsc_acpi_ids[] = {
- 	{ "INTC10FA" }, /* NVL */
- };
- 
-+/* The subset of ivsc_acpi_ids[] which are CVS, rather than IVSC, devices. */
-+static const struct acpi_device_id cvs_acpi_ids[] = {
-+	{ "INTC10DE" }, /* LNL */
-+	{ "INTC10E0" }, /* ARL */
-+	{ "INTC10E1" }, /* PTL */
-+	{ "INTC10FA" }, /* NVL */
-+	{ }
-+};
-+
- static struct acpi_device *ipu_bridge_get_ivsc_acpi_dev(struct acpi_device *adev)
- {
- 	unsigned int i;
-@@ -283,6 +292,17 @@ static struct device *ipu_bridge_get_ivsc_csi_dev(struct acpi_device *adev)
- 		return csi_dev;
- 	}
- 
-+	/*
-+	 * The lookups below match on the ACPI companion alone. That is fine for
-+	 * CVS, which binds a driver to that very device, but not for IVSC: there
-+	 * the ACPI device also has a driverless platform device, which would be
-+	 * returned instead of the mei-csi client. Return NULL for IVSC so that
-+	 * the caller fails and the probe is retried once the IVSC device shows
-+	 * up.
-+	 */
-+	if (acpi_match_device_ids(adev, cvs_acpi_ids))
-+		return NULL;
-+
- 	/* Try to locate CVS device on the I2C bus */
- 	csi_dev = bus_find_device_by_acpi_dev(&i2c_bus_type, adev);
- 	if (csi_dev)
--- 
-2.55.0
-
+On Tue, Sep 1, 2026 at 12:45=E2=80=AFPM Emanuele Ghidoli
+<ghidoliemanuele@gmail.com> wrote:
+>
+> On Thu, Jul 30, 2026 at 01:47:22PM -0700, Rosen Penev wrote:
+> > Replace the open-coded platform_get_resource() plus devm_ioremap()
+> > sequence with devm_platform_ioremap_resource(), which fetches the
+> > resource, requests the region and maps it in one call.
+> >
+> > Each fsl,sec-*-job-ring node has a distinct 0x10000 reg region and
+> > interrupts property, so the region reservation added by
+> > devm_ioremap_resource() is exclusive and does not introduce overlap
+> > failures.
+>
+> This patch, now commit 9a955c0a7d11 in v7.3-rc1, breaks CAAM on most i.MX
+> SoCs (i.MX6, i.MX7, i.MX8). All job rings fail to probe and the machine
+> loses its hardware RNG:
+Sent fix.
+>
+>   caam_jr 30902000.jr: error -EBUSY: can't request region for resource [m=
+em 0x30902000-0x30902fff]
+>   caam_jr 30902000.jr: probe with driver caam_jr failed with error -16
+>   caam_jr 30903000.jr: error -EBUSY: can't request region for resource [m=
+em 0x30903000-0x30903fff]
+>   caam_jr 30903000.jr: probe with driver caam_jr failed with error -16
+>
+> The job rings do not overlap each other, but they all sit inside the reg
+> window of their parent fsl,sec-v4.0 node, which caam_probe() already
+> reserves exclusively via devm_of_iomap() before it populates the children=
+.
+> So each job ring now collides with its own parent.
+>
+> Seen on these boards (CI/CD):
+>  - apalis-imx6
+>  - apalis-imx8
+>  - colibri-imx6
+>  - colibri-imx7
+>  - colibri-imx8
+>  - verdin-imx8mm
+>  - verdin-imx8mp
+>
+> Reverting 9a955c0a7d11 on colibri-imx7 makes the errors disappear.
+>
+> #regzbot introduced: 9a955c0a7d11
+>
+> Thanks,
+> Emanuele
