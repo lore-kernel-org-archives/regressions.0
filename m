@@ -1,175 +1,173 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B68033AD8B
-	for <regressions@lists.linux.dev>; Tue,  1 Sep 2026 23:06:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7367345ED7
+	for <regressions@lists.linux.dev>; Wed,  2 Sep 2026 03:30:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788303969; cv=none; b=MnpanxHQT/ljbyYZXtnr+g3C1bNTNe4t9HjEMWMisj+vxuckDrREbVOvTXfs3UOQ8IEerg5QCD+p1ylb3jV6aP4AbDUnfu6bXx7ew0J6g3sz23Uy7cbhjo7I0WB1FzHKmQjHYOg+IgZ3pDgZ7xv23OEFz07clzpREYwsrZNF3Fc=
+	t=1788319847; cv=none; b=LYTcJ/rt/gBjapV6A0HV1DoYWLBNepvomqfeiJgcNVGGXoo0STwqWlP6l8EhpX5ScPOdprgPcQbXi2K3DTOO8Uon71yVhmrkVu00l0lbn3YYZT708QKrN1d6Zdb2H+quckv2FQScjUOiPmybzWrRwt3Re32ox44dpR5EAxYLnc8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788303969; c=relaxed/simple;
-	bh=tkQ0kD+VMer15vDl/K38aWxjoMQ6gTQ90qZPji1LAis=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=e0V/nhMIRPIlwOZkV6w1oTpYUzFm47HFXaP+xLQYLJiBr3VLpyKhwAUhseefGFzs5XaReEZ1zbCr/DLIz5kMXJVF0q97DTY0fOfgFvEAQfvVbYtaFmf5pd0wI+tzBACRmysgKOAWXtSFmV+rvztBypgYi8mw/VFzemlb/cYsP1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=is55a8hk; arc=none smtp.client-ip=209.85.128.52
+	s=arc-20240116; t=1788319847; c=relaxed/simple;
+	bh=JDiIo6AmLoeHaCku9tkhf0FJ/rQnb5by0XJWkhTOruw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=arXgN/GIRKzXsmWqEH4BD//E3fyx3q+F1A0jgnz9ay/CsdhK9SA/jImdUrXrzrpdJ0B0X80YcGl5fLq2X+ahTIMUYt26ptd5dP1LtoY7M6QcQOxHEoSgHpC+dUgJjDlIEVuY+nV8hH8AskXvmWTti0k6ADjhD/bavqeHlNHUEpw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k9eTCw6S; arc=none smtp.client-ip=209.85.214.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="is55a8hk"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4995b0343c1so3419675e9.3
-        for <regressions@lists.linux.dev>; Tue, 01 Sep 2026 16:06:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k9eTCw6S"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2d9201076b3so6474935ad.0
+        for <regressions@lists.linux.dev>; Tue, 01 Sep 2026 20:30:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1788303966; x=1788908766; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=wt9MSV90ZufNw6jL5AtF4xHXrqZeARSuYavbAJb7c8w=;
-        b=is55a8hkWMOzVMQTPEZpFORsph1/6nzxrSBTfbssjrZbG1TCTcKMplBTy6MxxH2QYa
-         G/YDDH+Q2wfVroR3QgFvDr9/IEL0q/ltSIa4eBp9XoosfzVaxYxZDN3u7uI64DPWNdj5
-         MaUhvpkyXwBdSlAaYZrN3qawH+Lv3/+zWfcGKxcpJFbuhVTubSqSmK9JeLV44UZkfsio
-         fbww9v1+2Dc7eGuTDrFqAH922XiE3E+b4umenQrYOifM1+PG2feqb0t9VONPtC8asaZY
-         L7YV9OU5XOx38H8qZXXEcyXsXOjRtR/FqIuKLIXZv9/hMDWtGyqFsWehSDrPY0f6pSgy
-         ThTQ==
+        d=gmail.com; s=20251104; t=1788319845; x=1788924645; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=GODtbRlK4Wp21PCNPXyrIzdJnHuDBWO22e7/FknLe3w=;
+        b=k9eTCw6SCxuzFcmDQm2Z1HB6TvGv0FfyC7NHS5us5c8MBUS4FfC9lhx+9bxwvYdvml
+         CF72WUhe2g5pwIHuqozIZdwmQ8GydN5xXT8XeX3vF3NuW08KVr7GlH6q1H+fMDaXS0l9
+         P4Tyu/7Dk7e6BsgoYPGaqvwd1xLFBwVXOJbuTd6F+O8tfS6oBvomzzSURIpWrsPb9zQn
+         SJGmYwWqgATHkyY9V6XAijcsoFInqCZygYwlo73Nwv8t7mMKpm86Dxk/rcScP2bxYu9f
+         Q8DcVMA/UUwbvw2cXJd5gYxOyTafe+WV+KOJrgaq8hd/gH9Rs1G/a8itJ1YwCgTVeHMJ
+         EUCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788303966; x=1788908766;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=wt9MSV90ZufNw6jL5AtF4xHXrqZeARSuYavbAJb7c8w=;
-        b=lqhNjnC8RYoVlFC+LyHYepWOhkTea5GBnOOSxGQstL8auYEO7hSrrcSjpPPGGYuQqm
-         fpPURdAX2V+PnBge7JI04XXFOnvOC721ioZtlDHrLDYMoSVBbuEWzhJspuavP+PIZO5F
-         L4P6N3FkH+EtIbAAVKPQVVs7u4NEI7FnKcGGO2Cs8JMBLjiRkurxzeViTUQPHEk8EnkQ
-         t+EWu5S5ugHnEkOxr8muOq3uFO9EMbPIkJPe4fH22R3Yp0tzo9afbDe3c/Emuod3Cnow
-         Q+TDK/HiABGvLRq0mMeQLAx/VljY4t/UQUeIXafZgaNiHqRNbBSwHVULZPtEwz2Agk2v
-         tQvQ==
-X-Forwarded-Encrypted: i=1; AHgh+RqUEk151gpCo/W4j2r2Fk/0mio5PyVTT/kU7rNvTaQTBnIC7xsSGq6U9fse4jnEHhRDUrlZEs7c8fEJrA==@lists.linux.dev
-X-Gm-Message-State: AFuF++mh6CJqGuQmhmS674kF/2BymknSObMG/xXzunTRwz2hfyartgkH
-	zMPDWD1UcjvsrB9lZoDWI19OOepVRKptpLiZFisGZoBHwFQCYsQVV/Wy
-X-Gm-Gg: AR+sD12C3Cm5/dXAP1hwdIWNYpF3zycf0eBhUQjvBrxgWlekHTQlpFm9ZRrXpBmev5B
-	yWp6AE5meujz9wlA+y8r6OVzUodQlnlUW3I8a51ol6UreWL47WnP3lKnZ4eUgP2NvaK0iKc7pRY
-	vq2sXngQsMySLk/sMy+l5iuWygfK49gVMHzCCj+/JJOaHv09trrKv8TGtOkyxzqjQvc53aKzgMc
-	OalFxkl3zlarPDWH76x9YXwnRki4iMxziI0n/CU1suaKoy8tWyFn4hM11SJW0A+V2NCynBkzhLP
-	vibliPzVLdYWd5DFWOOU1oB+ZNhoVZlwMqwuKimP3894zr2ckHa6t2MkOUpKxP3yY3xt854ia5V
-	EoecMS3oCfAkmv/SQfqpz5AWjQj7qOB8mnaOyE+6zyHyn52+yactJRYCaorR8ZZPwvpkFoQHl3b
-	l2gAoJIkItZVczsw14eR0hiGyXL6C6awFvIedeTi3lTQOJ9MKyJsCaKbJTDr9k4OeewmWZUL4HS
-	05brZDKVkESywNpW0VBzS6RFI0Lo0qc/Rjk9CaNYjwyd2VJiHDiOF0xYfJNjMfVengkmErfk+ue
-	/MgB1A==
-X-Received: by 2002:a05:600c:190d:b0:49a:2c4b:403f with SMTP id 5b1f17b1804b1-49ce584b94bmr12387935e9.13.1788303965569;
-        Tue, 01 Sep 2026 16:06:05 -0700 (PDT)
-Received: from ip-10-19-79-40.tail983ac.ts.net (ec2-35-159-55-138.eu-central-1.compute.amazonaws.com. [35.159.55.138])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48448ed3706sm2066364f8f.18.2026.09.01.16.06.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Sep 2026 16:06:04 -0700 (PDT)
-From: Nikita Taranov <nickita.taranov@gmail.com>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Darren Hart <dvhart@infradead.org>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	=?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>,
-	linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: Re: futex: private hash can stay on the shared atomic refcount indefinitely after auto-scaling
-Date: Tue,  1 Sep 2026 23:05:59 +0000
-Message-ID: <20260901230559.1978876-1-nickita.taranov@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260825170605.2462933-1-nickita.taranov@gmail.com>
-References: <20260823150046.204417-1-nickita.taranov@gmail.com> <20260824160337.0IvfKx8A@linutronix.de> <20260825170605.2462933-1-nickita.taranov@gmail.com>
+        d=1e100.net; s=20251104; t=1788319845; x=1788924645;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=GODtbRlK4Wp21PCNPXyrIzdJnHuDBWO22e7/FknLe3w=;
+        b=i3x/F7IETvY+WFh/pqh0NaUV5+fk6/IMGiHnq6PZbLHI+jqRUHR1k0gA/x+1WQgQxi
+         t9lCIBVvoYZ/cX3Ekw2w2Ra1UAu8z8BJjzbqu6OKdSgRTQkEzdwatK5g6NsQpqlotVGz
+         9IAneVCM1dC+o5KkxThIRdFvsXdg9hN9+6JftqFA1J2wWmrFs5k8K10nz+iit7SuSjFX
+         fy1kJTDd88hUU2rBnNw8qVG7WDhhDh1gJ5Ne5tFTNtb4aEI+nFlSJOH9xLVajUf9p1Ol
+         PGKZG3YJbSzufOfLvMrWBxSGtAG9zpGOUX0cuUtS5FPbpR+9esrDPxNB6rYY76xZoZR0
+         EXNw==
+X-Forwarded-Encrypted: i=1; AKwUvByterRstpMmbVTLf+YztPnQdSVk+2Qrhv+ojVhpD0DvECaPJfZIeJecE6y4UwhJr2rNZ7G01GdndynjWw==@lists.linux.dev
+X-Gm-Message-State: AFuF++nHD0xOMesTiBwOyjLSaK7cBVcQTwmDqIb6qxAkLySGQrBlbPw5
+	9iUD4YM4J6kPApgJAU0CxjhosgF3W+2gYM2HExgBkEDixjgRJYXVSomz
+X-Gm-Gg: AR+sD10oab+yy9G1pe+G8Cx7krgW4cJz8I3lgAz8lTH7wDIuUeFL5Sic8RxOUslZEIo
+	m9gAAtVE3WVeiZ3uG30SEvLAL7CME1n8sEAeEDneHSFy7nXIeAn2W4ykSaFwDmZH8z5aFFZbLrg
+	rtdO7qXNsXv4+d7jTG1UJjQudkQjTBz+6d3Q0ng32zSrqTuNsf/ja4He3XqDuXBmSeumL00ar2R
+	J2Vn+q13utb56Y1n1Een7UrC5zBvEwQKjjujpgYSlNMk/cY5L6c4lrsnaRl9QvebodjflPRL3Nv
+	IUFqvLbu4FN/sLJ+sVHJV/udT1oWyVzC2fm4nR5nDkgklIMfDQdvyb7ifysOTTE03/muGBwXwpg
+	fvadTLyMnJJJ13Qpn66US4vEu8sYCmjqa5bfqeIdYaIyOF5wkH2vGFByKJM9f13cvyHt7xmCEPr
+	73ImKlpgB+kUEC52iFS07HjuvSPQSAxtPVZB0xFpYZgO36YdcVWq+qqPVJwcuF3EmUsd/unhG/T
+	KHocu6tCKPAsEhG7JAVNgEd/OTG5kKCaaY=
+X-Received: by 2002:a17:902:ce8e:b0:2d9:4871:393d with SMTP id d9443c01a7336-2daec79d31amr22255655ad.21.1788319845120;
+        Tue, 01 Sep 2026 20:30:45 -0700 (PDT)
+Received: from [192.168.21.192] ([24.18.106.4])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-32f07b79cf9sm2402381eec.18.2026.09.01.20.30.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Sep 2026 20:30:44 -0700 (PDT)
+Message-ID: <5b920b1d-a32b-494e-b97c-8672a8371dd3@gmail.com>
+Date: Tue, 1 Sep 2026 20:30:41 -0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Betterbird (Linux)
+Subject: Re: [PATCH v2] sparc64: increase kernel thread stack size to 32K
+To: Stian Halseth <stian@itx.no>, andreas@gaisler.com, davem@davemloft.net,
+ sparclinux@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, david.laight.linux@gmail.com,
+ glaubitz@physik.fu-berlin.de, thuth@redhat.com, regressions@lists.linux.dev,
+ nroach44@nroach44.id.au
+References: <20260519075809.8993-1-unixpro1970@gmail.com>
+ <20260831172928.3082853-1-stian@itx.no>
+ <afaa8ced-0717-4d62-8ea6-4ecdbf489694@gmail.com>
+ <680606d594645568c21afcc552558882c4f59a96.camel@itx.no>
+ <b46209d5-e518-4289-9b3a-5854a2512278@gmail.com>
+ <18d7ea80efbb5dd3d81acbae926da4e027ebfed9.camel@itx.no>
+Content-Language: en-US
+From: Tony Rodriguez <unixpro1970@gmail.com>
+In-Reply-To: <18d7ea80efbb5dd3d81acbae926da4e027ebfed9.camel@itx.no>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Following up with three things: a better reproducer, results from two more
-vendors, and a prototype of the approach you suggested.
+Thanks again for the details, but I already had those CONFIG and 
+stacktrace options defined based on previous debugging sessions.
 
-## A new repro
+32K should be fine based on the output (see the link below), and I have 
+not noticed any crashes with a 32K stack).  These results are against 
+kernel v7.1.0-rc3 using my original patches on the S7-2.
 
-The code could be found at https://gist.github.com/nickitat/a7a46b61d6769ceec493881f82e7b344 .
+https://github.com/unixpro1970/Sparc64-Kernel-Debugging-Dumps/blob/main/kernel-v7.1.0-rc3-depth-stack-trace-sparc64-s7-2.txt
 
-This one is an ordinary producer/consumer: threads park in plain FUTEX_WAIT
-like the idle workers of a thread pool, others issue plain FUTEX_WAKE on the
-same futexes, so waiters are woken, loop and re-park. Only plain FUTEX_WAIT and
-FUTEX_WAKE. The kernel's own auto-scaling during thread creation is the only
-thing that ever asks for a pivot.
 
-The control is one prctl(PR_FUTEX_HASH, PR_FUTEX_HASH_SET_SLOTS, n) before any
-thread exists, which marks the hash custom and disables auto-scaling, so no
-pivot is ever requested and the stall cannot occur. Basically, the same story
-as in the first repro.
+Should I try your revised 32k stack and timer patches on the S7-2 and 
+T7-1?  If so, which kernel version did you validate against 7.2 or 7.3?
 
-v7.2, Xeon 6975P-C 96c/192t SNC=3, 8 runs of 4 s per point, clock pinned:
 
-  threads   auto   pre-sized   stalled
-       16   25.8        42.3      0/8
-       32   34.8        41.1      0/8
-       48   28.7        31.8      0/8
-       64   29.9        34.2      0/8
-       96    3.7        46.3      8/8
-      128    3.6        53.6      8/8
-      192    4.0        38.7      8/8
+Regards,
 
-Throughput is far lower than the numbers in my earlier mails because the work
-is real; the comparison is the point. The control (pre-sized) is almost flat
-across the whole range, so the work does not get harder with thread count
--- only the arm that requests a pivot collapses, and only above a threshold.
+Tony
 
-## It is not only this Intel box
-
-> You might have hit the sweet spot with your CPU. I have here a 144 CPU
-> box and
-
-I wrote previously that this Intel host was the only one where the repro worked,
-based on a 96-thread sweep with the old reproducer. At 192 threads, with the
-reproducer above, Graviton4 does reach the same state -- less often,
-but permanently when it does.
-
-192 threads, 15 s runs, per-second traces:
-
-                        latched permanently   transient   never
-  Xeon 6975P-C                  8 / 8              -        0
-  Graviton4 Neoverse-V2         1 / 15           2 / 15    12 / 15
-  AMD EPYC 9R45                 0 / 14          14 / 14      -
-
-Graviton4 will stall at a higher rate if the wakers are created gradually
-rather than all at once -- the `ramp_ms` parameter spreads their creation
-over that many milliseconds in total, which is what a thread pool growing
-while already under load does. I saw 5/16 stalls on one run.
-AMD still never latched in ~200 runs.
-
-So the state is reachable on more than one vendor's hardware and usually permanent
-once entered. What differs is how often a process falls in.
-Arguably, this flakiness is worse than a deterministic stall for a real production.
-
-## Prototype of your suggestion
-
-> Not sure what we could do here. One idea might be to block further
-> futex syscalls so they don't acquire a new reference on the existing
-> hash and allow a transition to the new hash more quickly.
-
-The only analogy available to me due to lack of any knowledge is rw-locks. I asked
-Claude to adapt the percpu-rwsem code to futex, and after a few iterations we
-produced a hopefully viable patch. I suppose it implements plus-minus your suggestion.
-
-The results (same box and all the rest of the environment):
-
-  - the reproducer: 0/8 stalled at every thread count, against 8/8 on stock at
-    96 and above; 192 threads run at 54 Mops/s instead of 4.
-  - futex kselftests: 14 passed, 0 failed, with the mechanism enabled and
-    disabled; futex_numa and futex_numa_mpol pass.
-  - requeue-PI selftests looped under a continuous pivot storm, to exercise the
-    drop_fph handoff against the phase: all rounds passed.
-  - stress-ng: 64 futex stressors, and a 40-way futex/clone/mmap mix, 0 failures.
-  - PROVE_LOCKING and KASAN builds: clean.
-  - measured overhead ~0.6% on a pthread_mutex/pthread_cond benchmark with pinned clock.
-
-Makes sense to note that the patch was applied to v7.2 and all testing was done on that build.
-
-The code could be found at https://gist.github.com/nickitat/0b1cc68deff5fe2b27209b150da6fb00 .
-If you find it useful, I can prepare a proper patch for the kernel tree.
-
-Regards.
+On 8/31/26 2:05 PM, Stian Halseth wrote:
+> Hi Tony,
+>
+> On Mon, 2026-08-31 at 13:18 -0700, Tony Rodriguez wrote:
+>> Hi Stian,
+>>
+>> Just please continue to give me a
+>> mention in any patches related to this work, since I spent a
+>> considerable amount of time debugging, researching, and validating
+>> the fixes.
+> Sure. For now, no real changes have been made to your patches, so as
+> far as I'm concerned, this is entirely your work.
+> Will try help with the last mile, alongside some other patches I've
+> submitted.
+> And yes, the debugging, researching and validation is the hard part.
+> Writing a fix is often _relatively_ easy, when you have all the facts.
+>> When I last tested on 7.0 and 7.1, both of my patches worked:
+>>
+>> A)    sparc64: increase kernel thread stack size to 32K
+>>
+>> B)    sparc64: Fix comparator problem with timer interrupts
+>>
+>> I was able to debug and validate these issues on S7‑2 and T7‑1
+>> hardware.
+> Yes, and that's a very important data point. My analyzis is based on
+> the change itself, _and_ your validation/testing.
+>> I’m not sure if others have reported similar problems on T4 or T5
+>> systems.
+> Not that I'm aware of, and I haven't seen it on my T4-1.
+>> If you have a quicker or better methodology for reviewing stack
+>> usage—or
+>> any general suggestions—I’m definitely open to seeing them, along
+>> with
+>> your config and exact procedure. And if you need help validating
+>> against
+>> S7‑2 and T7‑1 hardware, I can try to allocate some time to assist.
+> I think that would be very helpful. Let's try to settle the 32K-vs-64K
+> question with more data.
+>
+> The kernel has stack measurement built in.
+>
+> The in-kernel method:
+>    CONFIG_STACK_TRACER=y
+>    CONFIG_DEBUG_STACK_USAGE=y
+>    CONFIG_SCHED_STACK_END_CHECK=y
+>
+> Boot with "stacktrace" on the kernel command line (arms the tracer
+> before built-in drivers probe). Then:
+>
+>    cat /sys/kernel/tracing/stack_max_size   # worst case seen, bytes
+>    cat /sys/kernel/tracing/stack_trace      # that path, frame by frame
+>
+> Reset with "echo 0 > stack_max_size" before a workload to isolate it.
+>
+> For the 32K-vs-64K question, the most valuable data you could gather
+> is a stack_trace snapshot on the S7-2/T7-1 under your real workload
+> with mlx5 active, on a 32K kernel.
+>
+> On our T4-1 the worst case is 12616 bytes, but doesn't have mlx5. If
+> your machines stay well under 32K, we have comfortable margin. But if
+> something approaches the limit, the trace will name the exact frames,
+> and we can judge whether the right answer is 64K or a targeted fix in
+> that driver.
+> Thanks!
+>
