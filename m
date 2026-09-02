@@ -1,127 +1,156 @@
-Received: from mail-pg1-f200.google.com (mail-pg1-f200.google.com [209.85.215.200])
+Received: from mail-pj2-f12.google.com (mail-pj2-f12.google.com [74.125.227.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C742A4AD4C0
-	for <regressions@lists.linux.dev>; Wed,  2 Sep 2026 17:06:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.200
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788368769; cv=none; b=ENxqvIMeRlqDGCTD0WaDZ/frkEeMadRZrxdOOSuSMhnKlDzE4T2n4qx+qCzbXjV1jEMvHjnsDIuUekIkjsgVAl03f+R8kdHDdZ2j78NikmpFZdtTkeC0Tl4C9Cg6FbpnXbS6ox4VFC/qR23xbESzubPhlwCopgKdzgjVjo+UrgQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788368769; c=relaxed/simple;
-	bh=1qyWm9FBS4lwMn+l0z/+FmSGpRC7Wsn68Pil4y+CNuo=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=b6R/QBTO3uzJEQAiZubvJtSU0gU3BiF/mkg6jR6k/bTCOKKG/2sp4b6G9LIifgtxTpsKaBIEpP8vG6xwpyYuf8ld6VOioAxAdGSnvcM5WDGQM3tMjRZm2VK7MVRa2pzq5lt0JRoKnYa+ngXNnoPo9Mgkrk2Tnhh225tMqF8wLEQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PJFhr9Xp; arc=none smtp.client-ip=209.85.215.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BE023876C3
+	for <regressions@lists.linux.dev>; Wed,  2 Sep 2026 18:04:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.227.140
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1788372282; cv=pass; b=rvOvTqlhPcbKhUxLVVRhomcMGOUKkRci7FEmd6yfLYNCq0jFyXOtTcwO3C3kD2Ur4178V/JvamSOvTN5NrqCfDqgYyhqefdZU7PC79YYddOH9o5Qep6hghw8owBc3GjB05DOxsl55fQnrHuQ9CG3poZYLnqcEiNKWYqa65uOYdU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1788372282; c=relaxed/simple;
+	bh=AFJSrrQW4gF3ANdPDPC4j1IYpWV3iNda9Tgx0JK95J4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SNJRU5PLgExuYJWe7NxJx/wGc5mMmbd/RorO//fSk8uRnORxGri9LqLxMs5tqo+WwzGYSBmE87y9gTIqK3tHpG+ojzMEr6sgIi25DXiJNiDpoWL/y4VWz3lAW0XXHgXDlhI8ME/1Ni0loJLKpvBrjaBVWXFI9sLLc8wR6daax7Q=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=p3e3fNkk; arc=pass smtp.client-ip=74.125.227.140
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PJFhr9Xp"
-Received: by mail-pg1-f200.google.com with SMTP id 41be03b00d2f7-cc42a07d04aso959004a12.1
-        for <regressions@lists.linux.dev>; Wed, 02 Sep 2026 10:06:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="p3e3fNkk"
+Received: by mail-pj2-f12.google.com with SMTP id d9443c01a7336-2d6ff390a6aso79045ad.0
+        for <regressions@lists.linux.dev>; Wed, 02 Sep 2026 11:04:40 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1788372280; cv=none;
+        d=google.com; s=arc-20260327;
+        b=DcBgfNkY9KFRvqbXPJvl+UNQ7mKg8XTepkMJMSEbyrsg+I87tiE3t4ll3G4IxSruzx
+         XqgFWKN8M3A+0ZyTu+arXQA8ivwgj+ecAEUfV5heeON8YJs7VgxDABhCFXMeca1iioKn
+         Z1BdZhtM6H3jEYxDXOWiiHpo+O7HToe0Igk2k6loCkgmUKoygyoOscYLCF85KwZPzOCr
+         dwr75zgFmv3BN61HSh7VpipVxI+SuyCgqNnY+fJ4dLE0bRCJdGnr5AwJVl/RvisITbg1
+         9PmXYhmQ6v7Hed8WctN9/uvrri5UX/ywWdPuLR/1cTXMftnLxLgKtM79TtbRNcAjmb0I
+         JhwQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=tW+6wZzNoXEx9aEPCU1H6du91aF9vK1xV2VXmS0iwpM=;
+        fh=2ciGioVsejSpE4eEHOMEFI7j/UtPysad429JzqMkIB4=;
+        b=iKbIUHJzCU+aWAAD71QPeARd8MQS7j6zTLlvG7usM89fQC4A2aK3i6AXek+vokCqHO
+         hjzA3Z4nWOSLvPe8Xa3TfRmw6D3yQ5cu3YzkEiQw7Q6B4MKklfh/VszNqkwjduWvWkCH
+         XpexuUmLwSLuiW98zsZq/ZhxOIQcoP4GOFrolHBG9ny5KXGkyNw1PB4xa8Yf9598VoTA
+         PO07OSMopWoHbZlGcYJdxotn4zBNMWL+GBd2l75kM9LjZ4OrS9kGGArA+egXSS0kgIJi
+         ur9CyUcpeO5gHsY2VMX5kLTMfoGiDNP0ONCirXKg6jS3K8ge//Jd9hoHJH75FrZlaUhA
+         ohMg==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1788368767; x=1788973567; darn=lists.linux.dev;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=2OU53ojU8l8wGUtd3KV+CqsYwkI7GFM3tHWbQYKqcr0=;
-        b=PJFhr9XpaYxdHlUdqp7lcdvIeGqzVAZ3LEXoHo8zW8wkf8+44uAa+jwp/IRs5X9+pK
-         doaMszpFWPpC6idzRBL21sy69s8upe7sLOjkM2n72YOsIP/5VtPqAYgQBvwZK3aq8gkp
-         Yu0DIXE6EfO8sfTY5HkikAuzZFmQjZ2CFkDi0Vrg24SbMUTUSNDjMo+ATvTEuWI+LQLF
-         ZXAXDOnBdjf2p7BMEcaOxMOg9MictCdBiPR9c8vlgVGsDdAVFRUMRyn5E9gKkgy1Z1gd
-         LG5uRaUsHxLeGlbC2CxzK4HnignLeR/Ng7dcm4InSAKiVLllgDpr7S5P2cnvnVOm3FB2
-         Mjyg==
+        d=google.com; s=20251104; t=1788372280; x=1788977080; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=tW+6wZzNoXEx9aEPCU1H6du91aF9vK1xV2VXmS0iwpM=;
+        b=p3e3fNkkpIwHJqB2O28KN+4PJIdcgk6uWH/uhTYAJ+taesGo8w1VLR5E5bhlWcFIYw
+         2Kr6HlIPLoze47SWqZx5YVJi5x7yGG1ulT1BesuKVQaFjeJUyG+//6ltpsmCAhPcLRdX
+         nZjh82NkeM5p/OFrtApHDY5VY5oKMTuZa6Dahoi7vGdqb7CSOY+Ga0XuHEnKXEGylmwL
+         GGJzKd6i5hsZfTQ0jglwOJSigrl/DRsrh8nOqrHJ/vGIB85yIiUKHVq5BhElXLrUCWvC
+         mKTogt4ExQl1/Ize0f8/Ep1iXNiEbwuLKg5/UNie/79nfNyIChMijIuQqvUogGD3cCkw
+         G7tw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788368767; x=1788973567;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=2OU53ojU8l8wGUtd3KV+CqsYwkI7GFM3tHWbQYKqcr0=;
-        b=LLGnH4mt84tfqQu40bZ77xE8VTKwRYPZggq/QeN6vcOxfX4+99oqkkxLQ6/8a0qI98
-         DeRsPdgQf5sZ2udNVsbAtry8mc+/yEXX+DhuWVHgW+P36LuJC8ZfsYeJkmd9XmhHzW5V
-         NWJbAYWst5VlTxSpUiSmfFZth4p1ON6V1192a/KDiqZeLvSLgPsRkzRfLV5b96SInanc
-         8lZiR2cXgkvWxrzclJ4KAiMTzPdeehs8uTsXVgwsgu7MvYSLUfZj9m7csIATgMFUaKHb
-         +aZKXnl8BgfUxgh3TjR9kqaj/OpD9PJWG5dNuwT03QGBSU+DiXtSzic6lHBBYzHVJFNM
-         K61w==
-X-Forwarded-Encrypted: i=1; AKwUvByfGX8Po78h1s1MiLFkyrsv+E75Xw03k565i4Owlx4+pisC/5XulJnT7VXFCiZMsQxIahCHNk7oYpmm+A==@lists.linux.dev
-X-Gm-Message-State: AFuF++nMqTCiuRzZVxY4mrmvERu5maW8ZJOqi4UxXW3I84Nu0qSkEsdJ
-	S8GaqZQHifXvhS6QUNTy4NAmyzBd7kvkn2IMuCCE6yvcxUYJFKtATxPo6nlyN8novsRLpSynUq/
-	3xiXrvA==
-X-Received: from pjbie23.prod.google.com ([2002:a17:90b:4017:b0:398:d6ef:84d])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:c106:b0:380:f85c:94b4
- with SMTP id 98e67ed59e1d1-39aedf1a98dmr10201213a91.7.1788368766542; Wed, 02
- Sep 2026 10:06:06 -0700 (PDT)
-Date: Wed, 2 Sep 2026 10:06:05 -0700
-In-Reply-To: <CALAyJWrn7OQyQMd5OPoifn_3qe6iWNf1+xSSg_six-+po9kpvQ@mail.gmail.com>
+        d=1e100.net; s=20251104; t=1788372280; x=1788977080;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=tW+6wZzNoXEx9aEPCU1H6du91aF9vK1xV2VXmS0iwpM=;
+        b=ZKVHjCGVxkGgn4PbjZKNBwrPL5XP0/+mgtL4j+A+85WXhe96n4VBKDvb0yzVu9q5j7
+         86AnQ8ArhX9Osld+PEnO+gG0mCuUitQQIol3MIL61o9liUKJv/TMXAfOltB1t2ABuvkr
+         vFm7BZQoEXmeLV5su5c2b9iwcV+z2XnPdT/x3HHa9zauPPMWAVq8JvIcDtYk8GpvKF0u
+         gznn1w3TB5U+2LEjBF3JDxzejCYqhD0w4sAkVUXQS1YLVoHlyClBNdNxjjcBErIex4ZS
+         os6mY+rp+ttktPTReVSRIKlZn0MS8HmLHUEaDkH+RWVU+TlkvXk4L+M9GXjaQC9+pUDZ
+         /79g==
+X-Forwarded-Encrypted: i=1; AKwUvBz7y7r8t/zjNgKBKwiuxfV68EBGB8GakgfMUOQNyNhBEpDt0WNL58KrVD4/QMQELzkokgWsrjA7y/+9aA==@lists.linux.dev
+X-Gm-Message-State: AFuF++nyQ+edocDHchb3aNBRNxOBryY1wPUa1keilSHH/TrnRS8Z69yR
+	khP2m5BuyZT7nDobhOCoPBQGmEUZWzAaAyTmyH8UAIFTsITvQM7QOhYoKyj88q+rZoHQ5bbsHnd
+	CLlT3HE7QYRosucC7xtQbfGoE/DvtimBOTM4tLIjQ
+X-Gm-Gg: AYBFou1Q1S5LLHrtabpDLtw1qXYn3aIFnSbrcz/TrMym34hStcibPWkaXhYJm8WY3/t
+	KA33bgySzyYHqseqlfB4yPjrN4B1lgOE9sH5rBfzr84WKzvvs26z29ipfztJQJD3XPE0wb6NBse
+	AIfuA82bsHW7KKd+MWpAoXCuOweieTm+vAaKBjaJfXsMOzdOuV3x8za7zJBpRhEOFPL8rVgx8tX
+	1IiHwkcoEgdyOmxU7ga2S/8ycthcZ9E2r9a1tglUrPJi1peiU5qGPXHCNmQZrlmTqYPNhIPo7Sj
+	fPCWbmHD4Pjqgw7k/5kH7O6jnapYTUbN1y8K22mpEs4Li/ElFMHruJD4DYhWE11t79DffoohUE4
+	3pI0nxY6GrIo312YICmHYYzc83gQ0qCA=
+X-Received: by 2002:a17:902:d58f:b0:2ce:b436:272a with SMTP id
+ d9443c01a7336-2dafc04d92amr701505ad.3.1788372279277; Wed, 02 Sep 2026
+ 11:04:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-References: <CALAyJWrn7OQyQMd5OPoifn_3qe6iWNf1+xSSg_six-+po9kpvQ@mail.gmail.com>
-Message-ID: <aphXfTJicnEde3R4@google.com>
-Subject: Re: [REGRESSION] [6.12.y] crypto: ccp - Move SEV/SNP Platform
- initialization to KVM breaks SEV-ES VM launch
-From: Sean Christopherson <seanjc@google.com>
-To: Andrew Wilson <wizlonex@gmail.com>
-Cc: ashish.kalra@amd.com, aik@amd.com, herbert@gondor.apana.org.au, 
-	stable@vger.kernel.org, regressions@lists.linux.dev, thomas.lendacky@amd.com, 
-	john.allen@amd.com, davem@davemloft.net, linux-crypto@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 1145026@bugs.debian.org
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+References: <f5e8166a-88be-46c5-8939-1e5227ffe4c2@app.fastmail.com>
+In-Reply-To: <f5e8166a-88be-46c5-8939-1e5227ffe4c2@app.fastmail.com>
+From: Jann Horn <jannh@google.com>
+Date: Wed, 2 Sep 2026 20:04:02 +0200
+X-Gm-Features: AcwNN1UioYI-6aY2FlebIGmb7OnaSV6x_bEiOULXJCzjw3r7BAMamy4lB3uuGTY
+Message-ID: <CAG48ez3AYt=dYMYLEEhkrzO740wNsD1_3zZbKqo7MXThqEA+Zg@mail.gmail.com>
+Subject: Re: deadlock from exec_update_lock and reading procfs
+To: Benjamin Peterson <benjamin@locrian.net>, regressions@lists.linux.dev
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	Arjan van de Ven <arjan@linux.intel.com>, "Eric W. Biederman" <ebiederm@xmission.com>, Jake Edge <jake@lwn.net>, 
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Sep 02, 2026, Andrew Wilson wrote:
-> #regzbot introduced: 3f8f0133a5fc9b32d0c308530320c3f2430ba5ab
-> 
-> Hi all,
-> 
-> I am writing to report a regression affecting AMD SEV-ES VM launches
-> on the 6.12 stable branch (first noticed in 6.12.97+ / 6.12.101).
-> 
-> I completed a git bisect between working and failing kernels, which pointed to:
-> 
-> Commit: bb1c84647025 ("crypto: ccp - Move SEV/SNP Platform
-> initialization to KVM")
-> Upstream commit: 3f8f0133a5fc9b32d0c308530320c3f2430ba5ab
-> 
-> ### Bisect & Verification Details:
-> * Last Known Working: 8a599f4f74d4
-> * First Broken Commit: bb1c84647025
-> * Tested on 6.12.101: Cleanly reverting bb1c84647025 immediately
-> resolves the issue and allows SEV-ES guests to boot normally.
+On Tue, Sep 1, 2026 at 4:50=E2=80=AFPM Benjamin Peterson <benjamin@locrian.=
+net> wrote:
+> After receiving a kernel with 6650527444da ("proc: protect ptrace_may_acc=
+ess() with exec_update_lock (part 1)"), we encountered a new deadlock in a =
+FUSE server. The FUSE server reads /proc/PID/stat in the file flush callbac=
+k, where PID is the pid of flushing process. This can deadlock in exec_upda=
+te_lock acquisition when the flushing process is closing O_CLOEXEC files.
 
-Can you try v6.12.104 or later?  I'm pretty sure this is fixed by commit
-6b748c39d18e ("KVM: SVM: Add support to initialize SEV/SNP functionality in KVM"),
-i.e. is the same thing as:
-https://lore.kernel.org/all/20260814100652.225499-1-jinpu.wang@ionos.com
+Ugh, sorry about that.
 
-Note, SNP is still buggered on 6.12.y if CONFIG_KVM_AMD=y, I'll try and send a
-backport for that soonish.
-https://lore.kernel.org/all/521b22fa-ef09-4449-909f-0120edfc4b24@oracle.com
+#regzbot ^introduced:  6650527444da
 
-> ### Failure Description:
-> With commit bb1c84647025 applied, `sev_platform_init(&args)` is
-> removed from `sev_pci_init()`, assuming KVM handles on-demand
-> initialization.
-> 
-> On bare metal, the PSP firmware appears to remain uninitialized (does
-> not reach SEV_STATE_INIT at probe time). When QEMU initializes KVM and
-> queries host SEV-ES capabilities, the ioctl fails with -EPERM:
-> 
->   qemu-system-x86_64: -accel kvm: sev_common_kvm_init: guest policy
-> requires SEV-ES, but host SEV-ES support unavailable
->   qemu-system-x86_64: -accel kvm: failed to initialize kvm: Operation
-> not permitted
-> 
-> ### Hardware & Environment:
-> * Tested on: AMD EPYC (Rome / Milan) Supermicro platforms
-> * Kernel: Linux 6.12.101
-> * Hypervisor: QEMU / KVM
-> 
-> I have access to Naples, Rome, and Milan test hardware and am happy to
-> test any patches, provide dmesg traces, or assist with debugging.  I
-> am not a tech-expert of any kind, but I have time to do some testing
-> if it helps.  THANK YOU for the great work.
-> 
-> Original Debian bug reference:
-> https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1145026
+> Specifically, a process running execve is blocked with this stack:
+>
+> __schedule+0x505/0xc00
+> schedule+0x27/0xc0
+> request_wait_answer+0x158/0x2a0
+> __fuse_simple_request+0xd7/0x290
+> fuse_flush+0x1a4/0x1e0
+> filp_flush+0x30/0x60
+> filp_close+0x13/0x30
+> do_close_on_exec+0x114/0x160
+> begin_new_exec+0x553/0xb50
+> load_elf_binary+0x2da/0x1770
+> ? load_misc_binary+0x275/0x390 [binfmt_misc]
+> bprm_execve+0x241/0x5f0
+> do_execveat_common.isra.0+0x182/0x1c0
+> __x64_sys_execve+0x36/0x40
+> do_syscall_64+0x87/0x180
+>
+> while the FUSE server is blocked here:
+>
+> __schedule+0x505/0xc00
+> schedule+0x27/0xc0
+> schedule_preempt_disabled+0x15/0x30
+> rwsem_down_read_slowpath+0x25c/0x480
+> down_read_killable+0x48/0xc0
+> do_task_stat+0x7f/0xec0
+> proc_single_show+0x51/0xc0
+> seq_read_iter+0x11f/0x460
+> seq_read+0x12d/0x160
+> vfs_read+0xe8/0x360
+> ksys_read+0x6d/0xf0
+> do_syscall_64+0x87/0x180
+>
+>
+> This problems seems to have been acknowledged as a theoretical possibilit=
+y in the original patch review thread [1]. Now that it's a practical proble=
+m, is it feasible to move do_close_on_exec outside the scope of exec_update=
+_lock?
+
+I will take a look at this soon.
+
+> Best regards, Benjamin
+>
+> [1] https://lore.kernel.org/all/CAG48ez2pmuoTCZh_AVKDDLeQEYmm=3DgLMgThnqF=
+hRMFfZvABpdw@mail.gmail.com/
