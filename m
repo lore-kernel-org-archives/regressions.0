@@ -1,99 +1,132 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [194.59.206.189])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5B174AA00E
-	for <regressions@lists.linux.dev>; Wed,  2 Sep 2026 16:04:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.59.206.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD7884AA1CA
+	for <regressions@lists.linux.dev>; Wed,  2 Sep 2026 16:13:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788365064; cv=none; b=EuJ9k6iwHKDc3LDTtrSfi7cMe3Qp0OMzS5gU9/Fa7tFAd4zb5ZrFBPEIODK0Sl6bJS9HgxchUNwgEtpROITYFcG5uiunJKxpvZyTtAQ5cZNBcvGyMLcbGX6qNqDLJCFoRNRJIaDS932lSJrRA94UxtmUgLNv+RvL4kON2RvnCcQ=
+	t=1788365639; cv=none; b=TVCfmDA3RsbnMPZZ107Tmyon1OVbcXM+lXxtHF8rvv98SEfjDQ+IXOxc9ewg/BcqGnEbbY8aJ7oVJhVFnAu8EWes5+8ofpN8kMnprnpo4YLBlRg4K6v7d2sA6SeRTiKjcpDVev8pre4GSrE3epaWbdGGOgc3BlEX4SKNN1uE18k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788365064; c=relaxed/simple;
-	bh=NZGV9ZfqV7fsd6CkWDVE/HT/RVTKRBiYOFCSJyx/NX8=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=mE3qK//BQzE2aKUx//f9WDUC9zVCQ6ahJs7ESGweaw6TAnBT/sbcgjeoXZJY0K+Zv3+OifzelnFy+TQiJRuUF67/aIaOMVpIVNhGusLUvd/sjEHrDAf2j04H8Hx/p0u3+31Sdg+kPP2EGGRnx/9bJiwD85JeIHirf4V/P8Z13T8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=GvoSEpgZ; arc=none smtp.client-ip=194.59.206.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1788365639; c=relaxed/simple;
+	bh=gOExmsjx/Dcw2wBkDJUC85QTuE+P4KTcC0JuSpPzL5Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eKcvfqgityBqbS9fFf8qqoQN68RWeZ6Ghqb8Bxx51DZVUk3jTiavcx9qF8XJPGsCoBOqdibIUFZvZTuL827ta0vnRPOvpZYsoqIQ66Dj9z9C/V4IAazuXHxcrlLmQxGMfAMLdIT4Kff6WsleKGkSvAMrAuztjs0yfKqUm/9eWG4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HSZMOK/v; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="GvoSEpgZ"
-Received: from relay02-mors.netcup.net (localhost [127.0.0.1])
-	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4hZnRQ5mCLz4LFn
-	for <regressions@lists.linux.dev>; Wed,  2 Sep 2026 17:57:06 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1788364626;
-	bh=NZGV9ZfqV7fsd6CkWDVE/HT/RVTKRBiYOFCSJyx/NX8=;
-	h=Date:Subject:From:To:References:In-Reply-To:From;
-	b=GvoSEpgZNpdt54cjsJOhXcg4F4NVlf6q3Hb/KE1DD0O4lfrBvzU8QCkMMtGx6DxAu
-	 0AvPum/EAdh1E3mTpHAyEL9+5mkH8TCFrpZ1tSZ6hKT4TDugUeSX2Ammra0H35Drra
-	 1tkyxhUMBvx3Ib0Q0vpqW7OV1Qd9wViOmKzxlV+3mkHyyg6TBwZc6j2qwwwFKn6Tx4
-	 v6c3EFJjVwKCTlLdWbRjo71xjjDQWK1ohMc6a4q/V31sLhKoEZn0wr8YnpGR+Def0E
-	 mEZO2qax7ROjiqltQRCClZMxnRhHPUIPug7isXEwc8bBe04VQPgUXA96XM2d+7zy0K
-	 z4OTdnZaAEUWQ==
-Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
-	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4hZnRQ54h2z81W4
-	for <regressions@lists.linux.dev>; Wed,  2 Sep 2026 17:57:06 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
-X-Spam-Flag: NO
-X-Spam-Score: -2.898
-X-Spam-Level: 
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4hZnRQ0Wjdz8sfv
-	for <regressions@lists.linux.dev>; Wed,  2 Sep 2026 17:57:05 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 7ADA55FADD
-	for <regressions@lists.linux.dev>; Wed,  2 Sep 2026 17:57:05 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <aa4592f3-4922-4de0-aa94-ed8694336500@leemhuis.info>
-Date: Wed, 2 Sep 2026 17:57:05 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HSZMOK/v"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-c25b661d37dso193964566b.0
+        for <regressions@lists.linux.dev>; Wed, 02 Sep 2026 09:13:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1788365635; x=1788970435; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=oMuR3JomgDMugPyGGiXTImTTtVXWnO9TCZlsIbkVMNU=;
+        b=HSZMOK/v7k2zj2bMshRmZNDDwkQFMLo5ys8Faj01Q0KTYhvSulnVJwHfNE0Emv1PKF
+         h1MA1aoKRlqrU0X0M1zwwKroCub0h11H//VcfPzPxEd9o5MqmanzmmFXRRSdH+s/lfZQ
+         PaXwiEWdRBHbhRwQBHxKMq+MB66pf4X2ZDkIkVGswifeG1JaVGSo46pMj9/V6wOOPjXK
+         RjhodX8BlH+5MekHzWJGYy6Eiyl90aWnMq1ceZYRjLzKCT3QUS8ic0QIwMwni3Geit3B
+         q3UiXTHPksHVKR1WkK7i3YEEHkB0KBBA/p1RTk4N1n2/YirOD8531p5EskZmld5QVUkf
+         AR+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788365635; x=1788970435;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=oMuR3JomgDMugPyGGiXTImTTtVXWnO9TCZlsIbkVMNU=;
+        b=BkegQi5Y928GzH19Uf64ZO62MoIfwQeq83bH7E0aW7aOQOZJ7+u9MdBebJrbdwCnGQ
+         RjWp7K+XIUgudv5JxotqXKlb5ItAcZOZgbgvK8G0zAFt1+IkHM64zGDWBowBJtwO4XFo
+         d8wO7ccB0Txgh9voyD8Z7Xz3NyT1Zfhx8iMPlZcSfQbti6HlkUaX8PfG8gtQxfQpZW0B
+         YpTEb9+qvy7xPmKsyvIlSPdr7ZhnVKC1odJhzMjsz/JnT8yUcIvpaJnRu1eYk7cHWRUr
+         fYu6QM4OG81I0j9xVVEUDgzMJxvym0H6xCaaD6IJ68z2bn21S726g+fqN9ecx97ubOmX
+         0AkQ==
+X-Forwarded-Encrypted: i=1; AKwUvBy7jq+ucK7wh9RFbzuZltcOgqOcq6JURsbqS4PLq78c0STjBvCVdnkKtlvXZuIYawKv3EN5cyWIPKotVQ==@lists.linux.dev
+X-Gm-Message-State: AFuF++nyom2EiuVfJB9AFg2Zgwf7SbBVQg+VVrrLUxwUoxg3NJ1BQlEg
+	65AISKrvguucscKFjurN7I8zobGZuvdjetZTCnSOa0r9HfbZeeqo7ZpQ
+X-Gm-Gg: AYBFou2whXIwkSxMU+hwGm8RYF0PbhdlyDefUX1OOSMb72R9lCAfksVNE32ukhowUia
+	o8ttCsGbnV9cg5RK5eipxJTkzziDCQDICOxlf55jTG9XMgNQrQ28zCVjmrYWfnzf6S4qfFtzt90
+	scfM3C7FbSO9qBV8o+U2emDb1Jb62UJr4t/g0NBrAIvUcB8GEgfO2MqzGYxophj2JeGcw8TKvKb
+	DjUEukVcwEtaf2oX3dDNsvXTEGATRrLXOxtz/tLqYtDwt/liWN8pLmpDZFfY8aGnWd91wG7QvRD
+	+zi/IYWWQQ1jSxwT7X1zh/NOH/uoLjNdYIyl9GQqohv2SFpmHh0qCAH5oEDeTcTnQM9CwKZaPvo
+	Uj42qcUmUCMPr0EM/l9eZKbGWXixdt2EmMUQgTT67NpHWBHSWi4ei/8O/nk53nKfKagiyivvs5R
+	j2msyhxuVVhV+XhG65cXzJOvzhvfk1bsWKlL8+it9eKhH4pwOtPJXz1g4=
+X-Received: by 2002:a17:907:3ea1:b0:c20:33db:41d3 with SMTP id a640c23a62f3a-c25d5476414mr370581766b.11.1788365634473;
+        Wed, 02 Sep 2026 09:13:54 -0700 (PDT)
+Received: from localhost ([2a03:2880:32ff:48::])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c25d039d2c2sm167062066b.32.2026.09.02.09.13.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Sep 2026 09:13:53 -0700 (PDT)
+From: Vlad Poenaru <vlad.wing@gmail.com>
+To: Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nsc@kernel.org>
+Cc: linux-kbuild@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev,
+	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+Subject: [PATCH] kbuild: don't delete in-flight filechk temporaries in asm-headers
+Date: Wed,  2 Sep 2026 09:13:47 -0700
+Message-ID: <20260902161347.4163577-1-vlad.wing@gmail.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <178836462567.758853.16307784672739952150@mxe9fb.netcup.net>
-X-NC-CID: JXKeupIj1vYboTKryNDTLjIsZUfeiXcpxSJNvGh60rC82eFpsMA=
+Content-Transfer-Encoding: 8bit
 
+Commit 2d69b891e646 ("kbuild: Support generated asm-headers in
+subdirectories") switched the stale-wrapper sweep in
+scripts/Makefile.asm-headers from $(wildcard $(obj)/*.h) to a find(1)
+invocation, so that generated headers in subdirectories are considered.
 
+The two do not match the same set of files. Make's $(wildcard) uses glob
+semantics, where a leading '.' has to be matched explicitly, whereas
+find's -name uses fnmatch() without FNM_PERIOD, so '*.h' matches
+dotfiles as well. filechk writes its output to $(dir $@).tmp_$(notdir $@)
+before renaming it into place, so such a scratch file, if it happens to
+exist in $(obj) when the sub-make is parsed, is now picked up in
+old-headers. It appears in neither generic-y, generated-y nor syscall-y,
+is therefore classified as unwanted, and cmd_remove deletes it.
 
-On 3/9/24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
+On x86 this races with archprepare, which lists both asm-generic and
+arch/x86/include/generated/asm/cpufeaturemasks.h as prerequisites. Under
+-j they run concurrently against the same directory, and the build fails
+intermittently:
 
-#regzbot report: https://gitlab.freedesktop.org/drm/amd/-/work_items/5723
-#regzbot introduced: 3c108046e1d6
-#regzbot title: drm: amd: internal display brightness reduced on Linux
-7.2 with Ryzen 7 5700U on Lenovo IdeaPad 5 14ALC05
-#regzbot monitor:
-https://lore.kernel.org/all/20260901140155.19129-1-aarav.240604@gmail.com/
+  mv: cannot stat 'arch/x86/include/generated/asm/.tmp_cpufeaturemasks.h': No such file or directory
+  make[1]: *** [arch/x86/Makefile:269: arch/x86/include/generated/asm/cpufeaturemasks.h] Error 1
 
-#regzbot report:
-#regzbot introduced: 1448c2d2ca5c
-#regzbot title: platform/x86: x86-android-tablets: lookups with Arizona
-and Crystal Cove GPIO
-#regzbot fix: platform/x86: x86-android-tablets: fix
-gpio_secondary_fwnode_init() not working
+The same commit also converted the generic wrapper rule to filechk, so
+those wrappers now create .tmp_*.h in $(obj) too and can race among
+themselves.
 
-#regzbot report: https://gitlab.freedesktop.org/drm/amd/-/work_items/5735
-#regzbot introduced: 8277a12d0d60
-#regzbot title: dma-pool: display (amdgpu) stays dark
-#regzbot dup:
-https://lore.kernel.org/all/CANB4YXS=Nf-co3t8eMHtqrW4sn=1BDcP6o=EoTrgZm0WYMYTyw@mail.gmail.com/
+Restore the previous behaviour by excluding dotfiles from the sweep.
+Subdirectories, which is what the find(1) conversion was for, keep being
+descended into. While at it, quote the -name argument: it is currently
+expanded by the shell against the build directory before find sees it.
+
+Fixes: 2d69b891e646 ("kbuild: Support generated asm-headers in subdirectories")
+Signed-off-by: Vlad Poenaru <vlad.wing@gmail.com>
+---
+#regzbot introduced: 2d69b891e646
+
+ scripts/Makefile.asm-headers | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/scripts/Makefile.asm-headers b/scripts/Makefile.asm-headers
+index b38931314ad7c..f1c3d287c14b0 100644
+--- a/scripts/Makefile.asm-headers
++++ b/scripts/Makefile.asm-headers
+@@ -48,7 +48,7 @@ syscall-y   := $(addprefix $(obj)/, $(syscall-y))
+ generated-y := $(addprefix $(obj)/, $(generated-y))
+ 
+ # Remove stale wrappers when the corresponding files are removed from generic-y
+-old-headers := $(shell test -d $(obj) && find $(obj) -name *.h)
++old-headers := $(shell test -d $(obj) && find $(obj) -name '*.h' ! -name '.*')
+ unwanted    := $(filter-out $(generic-y) $(generated-y) $(syscall-y),$(old-headers))
+ 
+ filechk_wrap = echo "\#include <asm-generic/$*.h>"
+-- 
+2.53.0-Meta
 
