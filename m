@@ -1,173 +1,213 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7367345ED7
-	for <regressions@lists.linux.dev>; Wed,  2 Sep 2026 03:30:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 742693A1690
+	for <regressions@lists.linux.dev>; Wed,  2 Sep 2026 06:57:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788319847; cv=none; b=LYTcJ/rt/gBjapV6A0HV1DoYWLBNepvomqfeiJgcNVGGXoo0STwqWlP6l8EhpX5ScPOdprgPcQbXi2K3DTOO8Uon71yVhmrkVu00l0lbn3YYZT708QKrN1d6Zdb2H+quckv2FQScjUOiPmybzWrRwt3Re32ox44dpR5EAxYLnc8=
+	t=1788332283; cv=none; b=jv9mLNY0tXdoI34dEit2gBIwgf1HXDlg1L+Gift8La5oAOz9LDotAFJRiUQjtc+9QI04zR+33xiWEy6P8/MlOM/oFs+SF2e5ub6yWzzgzQy/K05zwdxtJ9dOWyUoVTHEmaKcnn222D98BK6dekT/5sX/ZKARM8q0hdAj4xXKWG4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788319847; c=relaxed/simple;
-	bh=JDiIo6AmLoeHaCku9tkhf0FJ/rQnb5by0XJWkhTOruw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=arXgN/GIRKzXsmWqEH4BD//E3fyx3q+F1A0jgnz9ay/CsdhK9SA/jImdUrXrzrpdJ0B0X80YcGl5fLq2X+ahTIMUYt26ptd5dP1LtoY7M6QcQOxHEoSgHpC+dUgJjDlIEVuY+nV8hH8AskXvmWTti0k6ADjhD/bavqeHlNHUEpw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k9eTCw6S; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1788332283; c=relaxed/simple;
+	bh=e4aeHQLForUGeICWn8YcbeYmVyJDYBsfKrglCLZcX5E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nLNheoVKK5Zm2kXUFgDnYbEOjqmowx8OvyABp7BVL8YqRy5XdwIMiWqukwoACtZF6kDmhihB6ffG7g7dGJ/i7j9G5HLleoest6EPl5uvMGWmcgH7PSYGmbe8RsY+n0fa+02LPZdWFb7Ff4K7fb0GZWkcazoTjCsyiJ9XFINg3jA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=grPw6lze; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k9eTCw6S"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2d9201076b3so6474935ad.0
-        for <regressions@lists.linux.dev>; Tue, 01 Sep 2026 20:30:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1788319845; x=1788924645; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=GODtbRlK4Wp21PCNPXyrIzdJnHuDBWO22e7/FknLe3w=;
-        b=k9eTCw6SCxuzFcmDQm2Z1HB6TvGv0FfyC7NHS5us5c8MBUS4FfC9lhx+9bxwvYdvml
-         CF72WUhe2g5pwIHuqozIZdwmQ8GydN5xXT8XeX3vF3NuW08KVr7GlH6q1H+fMDaXS0l9
-         P4Tyu/7Dk7e6BsgoYPGaqvwd1xLFBwVXOJbuTd6F+O8tfS6oBvomzzSURIpWrsPb9zQn
-         SJGmYwWqgATHkyY9V6XAijcsoFInqCZygYwlo73Nwv8t7mMKpm86Dxk/rcScP2bxYu9f
-         Q8DcVMA/UUwbvw2cXJd5gYxOyTafe+WV+KOJrgaq8hd/gH9Rs1G/a8itJ1YwCgTVeHMJ
-         EUCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788319845; x=1788924645;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=GODtbRlK4Wp21PCNPXyrIzdJnHuDBWO22e7/FknLe3w=;
-        b=i3x/F7IETvY+WFh/pqh0NaUV5+fk6/IMGiHnq6PZbLHI+jqRUHR1k0gA/x+1WQgQxi
-         t9lCIBVvoYZ/cX3Ekw2w2Ra1UAu8z8BJjzbqu6OKdSgRTQkEzdwatK5g6NsQpqlotVGz
-         9IAneVCM1dC+o5KkxThIRdFvsXdg9hN9+6JftqFA1J2wWmrFs5k8K10nz+iit7SuSjFX
-         fy1kJTDd88hUU2rBnNw8qVG7WDhhDh1gJ5Ne5tFTNtb4aEI+nFlSJOH9xLVajUf9p1Ol
-         PGKZG3YJbSzufOfLvMrWBxSGtAG9zpGOUX0cuUtS5FPbpR+9esrDPxNB6rYY76xZoZR0
-         EXNw==
-X-Forwarded-Encrypted: i=1; AKwUvByterRstpMmbVTLf+YztPnQdSVk+2Qrhv+ojVhpD0DvECaPJfZIeJecE6y4UwhJr2rNZ7G01GdndynjWw==@lists.linux.dev
-X-Gm-Message-State: AFuF++nHD0xOMesTiBwOyjLSaK7cBVcQTwmDqIb6qxAkLySGQrBlbPw5
-	9iUD4YM4J6kPApgJAU0CxjhosgF3W+2gYM2HExgBkEDixjgRJYXVSomz
-X-Gm-Gg: AR+sD10oab+yy9G1pe+G8Cx7krgW4cJz8I3lgAz8lTH7wDIuUeFL5Sic8RxOUslZEIo
-	m9gAAtVE3WVeiZ3uG30SEvLAL7CME1n8sEAeEDneHSFy7nXIeAn2W4ykSaFwDmZH8z5aFFZbLrg
-	rtdO7qXNsXv4+d7jTG1UJjQudkQjTBz+6d3Q0ng32zSrqTuNsf/ja4He3XqDuXBmSeumL00ar2R
-	J2Vn+q13utb56Y1n1Een7UrC5zBvEwQKjjujpgYSlNMk/cY5L6c4lrsnaRl9QvebodjflPRL3Nv
-	IUFqvLbu4FN/sLJ+sVHJV/udT1oWyVzC2fm4nR5nDkgklIMfDQdvyb7ifysOTTE03/muGBwXwpg
-	fvadTLyMnJJJ13Qpn66US4vEu8sYCmjqa5bfqeIdYaIyOF5wkH2vGFByKJM9f13cvyHt7xmCEPr
-	73ImKlpgB+kUEC52iFS07HjuvSPQSAxtPVZB0xFpYZgO36YdcVWq+qqPVJwcuF3EmUsd/unhG/T
-	KHocu6tCKPAsEhG7JAVNgEd/OTG5kKCaaY=
-X-Received: by 2002:a17:902:ce8e:b0:2d9:4871:393d with SMTP id d9443c01a7336-2daec79d31amr22255655ad.21.1788319845120;
-        Tue, 01 Sep 2026 20:30:45 -0700 (PDT)
-Received: from [192.168.21.192] ([24.18.106.4])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-32f07b79cf9sm2402381eec.18.2026.09.01.20.30.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Sep 2026 20:30:44 -0700 (PDT)
-Message-ID: <5b920b1d-a32b-494e-b97c-8672a8371dd3@gmail.com>
-Date: Tue, 1 Sep 2026 20:30:41 -0700
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="grPw6lze"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1788332279; x=1819868279;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=e4aeHQLForUGeICWn8YcbeYmVyJDYBsfKrglCLZcX5E=;
+  b=grPw6lzeKDivuoZBWKAoNBhUkFoDIRvNwi5+u6ZOaRw79O3FHq8qht6Y
+   RVmM892GkLfZec/Ybhmth1ZWlHgOS7ZcuWDYLjAas9hliPSTUxjG18XHP
+   71mR5tIioZyx2bvo1QXY3DB63zAbagwRxhYRl40cNK3AFvhsj2n5qwH3E
+   gIzw/jUVyh+j51WqnvzrjMQjK/sAgoYDhhtgq1/zsCntNL/Ny9gPWKAik
+   rTa1EzPrKboPO476w7Uu4kDueXIBysCNwGVJX+eOZR43cKjF/0x3Cdbfz
+   /02IxUvNDBN0QhWD6pSOfzepG0l5UZbzzxG2motkRkE7DuCojpdJ8vHO7
+   w==;
+X-CSE-ConnectionGUID: RXBBMnyfR7WJN6NiuHC1yQ==
+X-CSE-MsgGUID: VamP6EjpTiC0NwyeDFWFgg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11893"; a="106149939"
+X-IronPort-AV: E=Sophos;i="6.25,257,1779174000"; 
+   d="scan'208";a="106149939"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2026 23:57:57 -0700
+X-CSE-ConnectionGUID: sv/VzFgBRW6bL6cH2M8gRQ==
+X-CSE-MsgGUID: XTbmVp9BR+KPVQmabhCLyA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,257,1779174000"; 
+   d="scan'208";a="274585986"
+Received: from pgcooper-mobl3.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.245.129])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2026 23:57:54 -0700
+Received: from kekkonen.localdomain (localhost [IPv6:::1])
+	by kekkonen.fi.intel.com (Postfix) with SMTP id AF53E1218BD;
+	Wed, 02 Sep 2026 09:57:50 +0300 (EEST)
+Date: Wed, 2 Sep 2026 09:57:50 +0300
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Sergey Zagursky <gvozdoder@gmail.com>
+Cc: Miguel Vadillo <miguel.vadillo@intel.com>,
+	Mehdi Djait <mehdi.djait@linux.intel.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev, stable@vger.kernel.org
+Subject: Re: [PATCH] media: ipu-bridge: do not use the CVS device lookup for
+ IVSC
+Message-ID: <apfI7m2oD-k5GOYN@kekkonen.localdomain>
+References: <20260901194526.6369-1-gvozdoder@gmail.com>
+ <20260901195036.7648-1-gvozdoder@gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Betterbird (Linux)
-Subject: Re: [PATCH v2] sparc64: increase kernel thread stack size to 32K
-To: Stian Halseth <stian@itx.no>, andreas@gaisler.com, davem@davemloft.net,
- sparclinux@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, david.laight.linux@gmail.com,
- glaubitz@physik.fu-berlin.de, thuth@redhat.com, regressions@lists.linux.dev,
- nroach44@nroach44.id.au
-References: <20260519075809.8993-1-unixpro1970@gmail.com>
- <20260831172928.3082853-1-stian@itx.no>
- <afaa8ced-0717-4d62-8ea6-4ecdbf489694@gmail.com>
- <680606d594645568c21afcc552558882c4f59a96.camel@itx.no>
- <b46209d5-e518-4289-9b3a-5854a2512278@gmail.com>
- <18d7ea80efbb5dd3d81acbae926da4e027ebfed9.camel@itx.no>
-Content-Language: en-US
-From: Tony Rodriguez <unixpro1970@gmail.com>
-In-Reply-To: <18d7ea80efbb5dd3d81acbae926da4e027ebfed9.camel@itx.no>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260901195036.7648-1-gvozdoder@gmail.com>
 
-Thanks again for the details, but I already had those CONFIG and 
-stacktrace options defined based on previous debugging sessions.
+Hi Sergey,
 
-32K should be fine based on the output (see the link below), and I have 
-not noticed any crashes with a 32K stack).  These results are against 
-kernel v7.1.0-rc3 using my original patches on the S7-2.
+On Tue, Sep 01, 2026 at 08:50:36PM +0100, Sergey Zagursky wrote:
+> Since commit c6b1b34b5090 ("media: pci: intel: Add CVS support for IPU
+> bridge driver") the internal camera no longer works on laptops where the
+> sensor sits behind an IVSC, for example a Dell XPS 16 9640 (IPU6,
+> INTC10CF, ov02c10):
+> 
+>   intel-ipu6 0000:00:05.0: Found supported sensor OVTI02C1:00
+>   intel-ipu6 0000:00:05.0: Connected 1 cameras
+>   ivsc_csi intel_vsc-92335fcf-3203-4472-af93-7b4453ac29da: mei-csi probed
+>       without device fwnode!
+> 
+> No sensor subdevice is registered, the media graph has no sensor entity
+> and userspace finds no camera at all.
+> 
+> ipu_bridge_get_ivsc_csi_dev() first looks for the platform device named
+> "intel_vsc" and returns its mei-csi child. That device is created by
+> mei_vsc, which on this machine only appears once the LJCA USB bridge and
+> its SPI controller have probed, about a second after the IPU6 probe that
+> runs the bridge:
+> 
+>   07:59:29.297  platform INTC10CF:00 created (ACPI scan)
+>   07:59:41      intel-ipu6 probe -> ipu_bridge_init()
+>   07:59:42.391  platform intel_vsc created (mei_vsc)
+> 
+> The commit above added two fallbacks for CVS which match on the ACPI
+> companion alone. They are reached for every entry of ivsc_acpi_ids[],
+> IVSC IDs included. The IVSC ACPI device has two physical nodes:
+> 
+>   INTC10CF:00/physical_node  -> platform/INTC10CF:00  (no driver bound)
+>   INTC10CF:00/physical_node1 -> platform/intel_vsc    (mei_vsc)
+> 
+> so bus_find_device_by_acpi_dev(&platform_bus_type, adev) returns the bare
+> platform device. ipu_bridge_instantiate_ivsc() then attaches the IVSC
+> software node to that device instead of to the mei-csi client, the bridge
+> reports success, and the probe is never retried. mei_csi later probes
+> without a fwnode, the CSI-2 link is never described, and the sensor ACPI
+> device, which has an honoured _DEP on the IVSC device, is never
+> enumerated.
+> 
+> Before those fallbacks existed the lookup returned NULL here, the bridge
+> failed with -ENODEV and the probe was retried once the IVSC device had
+> shown up.
+> 
+> Restrict the two fallbacks to the CVS IDs. CVS binds a driver to the ACPI
+> device itself, so matching on the companion is unambiguous there.
+> 
+> Fixes: c6b1b34b5090 ("media: pci: intel: Add CVS support for IPU bridge driver")
+> Link: https://lore.kernel.org/linux-media/20260901194526.6369-1-gvozdoder@gmail.com/
+> Cc: stable@vger.kernel.org
+> Assisted-by: Claude Code:claude-opus-5
+> Signed-off-by: Sergey Zagursky <gvozdoder@gmail.com>
+> ---
+> Tested on the affected machine (Dell XPS 16 9640, IPU6 + IVSC + ov02c10) on
+> top of 7.2.2, where drivers/media/pci/intel/ipu-bridge.c is byte-identical
+> to v7.2. Without the patch libcamera finds no camera at all; with it:
+> 
+>   $ cam -l
+>   1: Internal front camera (\_SB_.PC00.LNK1)
+> 
+>   $ cam -c1 --capture=5
+>   202.794954 (30.05 fps) cam0-stream0 seq: 000003 bytesused: 8386560
+>   202.828224 (30.06 fps) cam0-stream0 seq: 000004 bytesused: 8386560
+> 
+> The media graph gains the entities that were missing:
+> 
+>   - entity 349: Intel IVSC CSI (2 pads, 2 links, 0 routes)
+>   - entity 368: ov02c10 21-0036 (1 pad, 1 link, 0 routes)
+> 
+> and the restored retry is visible in dmesg:
+> 
+>   pci 0000:00:05.0: deferred probe pending: intel-ipu6: IPU6 bridge init failed
+>   intel-ipu6 0000:00:05.0: Found supported sensor OVTI02C1:00
+>   intel-ipu6 0000:00:05.0: Connected 1 cameras
+> 
+> "mei-csi probed without device fwnode!" is gone, ov02c10 binds to
+> i2c-OVTI02C1:00, and eight v4l-subdev nodes appear.
+> 
+> This patch is against v7.3-rc1. The version tested on 7.2.2 is the same
+> change without the INTC10FA entry, which 7.2.x does not have. Building
+> drivers/media/pci/intel/ipu-bridge.c with W=1 produces no new warnings.
+> 
+> Not covered: I have no CVS hardware, so the CVS path is only reasoned
+> about, not tested, and I have not booted v7.3-rc1 itself.
+> 
+> This patch was produced with the help of an AI coding assistant; see the
+> Assisted-by tag above and Documentation/process/generated-content.rst. The
+> bug report this replies to describes what the tool did.
+> 
+>  drivers/media/pci/intel/ipu-bridge.c | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+> 
+> diff --git a/drivers/media/pci/intel/ipu-bridge.c b/drivers/media/pci/intel/ipu-bridge.c
+> index 1bb3a3e98d6b..2c3b9efb0b2f 100644
+> --- a/drivers/media/pci/intel/ipu-bridge.c
+> +++ b/drivers/media/pci/intel/ipu-bridge.c
+> @@ -232,6 +232,15 @@ static const struct acpi_device_id ivsc_acpi_ids[] = {
+>  	{ "INTC10FA" }, /* NVL */
+>  };
+>  
+> +/* The subset of ivsc_acpi_ids[] which are CVS, rather than IVSC, devices. */
+> +static const struct acpi_device_id cvs_acpi_ids[] = {
+> +	{ "INTC10DE" }, /* LNL */
+> +	{ "INTC10E0" }, /* ARL */
+> +	{ "INTC10E1" }, /* PTL */
+> +	{ "INTC10FA" }, /* NVL */
+> +	{ }
+> +};
+> +
+>  static struct acpi_device *ipu_bridge_get_ivsc_acpi_dev(struct acpi_device *adev)
+>  {
+>  	unsigned int i;
+> @@ -283,6 +292,17 @@ static struct device *ipu_bridge_get_ivsc_csi_dev(struct acpi_device *adev)
+>  		return csi_dev;
+>  	}
+>  
+> +	/*
+> +	 * The lookups below match on the ACPI companion alone. That is fine for
+> +	 * CVS, which binds a driver to that very device, but not for IVSC: there
+> +	 * the ACPI device also has a driverless platform device, which would be
+> +	 * returned instead of the mei-csi client. Return NULL for IVSC so that
+> +	 * the caller fails and the probe is retried once the IVSC device shows
+> +	 * up.
+> +	 */
+> +	if (acpi_match_device_ids(adev, cvs_acpi_ids))
+> +		return NULL;
 
-https://github.com/unixpro1970/Sparc64-Kernel-Debugging-Dumps/blob/main/kernel-v7.1.0-rc3-depth-stack-trace-sparc64-s7-2.txt
+I can confirm there's indeed an issue here. But considering the list
+contains the CVS device HIDs, doesn't it mean you're returning NULL here
+for CVS, i.e. not for IVSC?
 
+> +
+>  	/* Try to locate CVS device on the I2C bus */
+>  	csi_dev = bus_find_device_by_acpi_dev(&i2c_bus_type, adev);
+>  	if (csi_dev)
 
-Should I try your revised 32k stack and timer patches on the S7-2 and 
-T7-1?  If so, which kernel version did you validate against 7.2 or 7.3?
-
-
+-- 
 Regards,
 
-Tony
-
-On 8/31/26 2:05 PM, Stian Halseth wrote:
-> Hi Tony,
->
-> On Mon, 2026-08-31 at 13:18 -0700, Tony Rodriguez wrote:
->> Hi Stian,
->>
->> Just please continue to give me a
->> mention in any patches related to this work, since I spent a
->> considerable amount of time debugging, researching, and validating
->> the fixes.
-> Sure. For now, no real changes have been made to your patches, so as
-> far as I'm concerned, this is entirely your work.
-> Will try help with the last mile, alongside some other patches I've
-> submitted.
-> And yes, the debugging, researching and validation is the hard part.
-> Writing a fix is often _relatively_ easy, when you have all the facts.
->> When I last tested on 7.0 and 7.1, both of my patches worked:
->>
->> A)    sparc64: increase kernel thread stack size to 32K
->>
->> B)    sparc64: Fix comparator problem with timer interrupts
->>
->> I was able to debug and validate these issues on S7‑2 and T7‑1
->> hardware.
-> Yes, and that's a very important data point. My analyzis is based on
-> the change itself, _and_ your validation/testing.
->> I’m not sure if others have reported similar problems on T4 or T5
->> systems.
-> Not that I'm aware of, and I haven't seen it on my T4-1.
->> If you have a quicker or better methodology for reviewing stack
->> usage—or
->> any general suggestions—I’m definitely open to seeing them, along
->> with
->> your config and exact procedure. And if you need help validating
->> against
->> S7‑2 and T7‑1 hardware, I can try to allocate some time to assist.
-> I think that would be very helpful. Let's try to settle the 32K-vs-64K
-> question with more data.
->
-> The kernel has stack measurement built in.
->
-> The in-kernel method:
->    CONFIG_STACK_TRACER=y
->    CONFIG_DEBUG_STACK_USAGE=y
->    CONFIG_SCHED_STACK_END_CHECK=y
->
-> Boot with "stacktrace" on the kernel command line (arms the tracer
-> before built-in drivers probe). Then:
->
->    cat /sys/kernel/tracing/stack_max_size   # worst case seen, bytes
->    cat /sys/kernel/tracing/stack_trace      # that path, frame by frame
->
-> Reset with "echo 0 > stack_max_size" before a workload to isolate it.
->
-> For the 32K-vs-64K question, the most valuable data you could gather
-> is a stack_trace snapshot on the S7-2/T7-1 under your real workload
-> with mlx5 active, on a 32K kernel.
->
-> On our T4-1 the worst case is 12616 bytes, but doesn't have mlx5. If
-> your machines stay well under 32K, we have comfortable margin. But if
-> something approaches the limit, the trace will name the exact frames,
-> and we can judge whether the right answer is 64K or a targeted fix in
-> that driver.
-> Thanks!
->
+Sakari Ailus
