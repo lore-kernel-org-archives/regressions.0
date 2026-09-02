@@ -1,304 +1,165 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 102DC369D7C
-	for <regressions@lists.linux.dev>; Wed,  2 Sep 2026 07:56:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DE1336C9D9
+	for <regressions@lists.linux.dev>; Wed,  2 Sep 2026 11:01:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788335769; cv=none; b=C0DP1tJ4ognbYub76UD0l9NaHlV6LuVD70hW3Ia4wyx1Z3s0zM69d1k8+OHAsreMjbCcQ1ev+3eQD9xhUbDpNvjCpapzmkmI7BSBAbYddu/Gsk/X+8c93Y/H5yR0yBiXNTV1etOW7Lmw6FVNOxJ2ydF1mOoZ5O9DfjZPg3vNIMo=
+	t=1788346917; cv=none; b=NosOmb/eMwc5Vboe41qW6M12HqE/Qc8dEXFTuoS9ot4t24wRJlovHFrWrFCVYSTP/QcCr6KWbGoJ+ieOfqtKRzf417b8FKFZjefilQrYr2eRNLI2MGobtjc/IcmVwyPQlPMpw5tvrUBv6M5REQ2qxlZ5r0Cb9vOKduHIun4YDl0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788335769; c=relaxed/simple;
-	bh=SQFwUewzSOx53ZmqI378nkQLZMzqWDuiG2AEkShbijs=;
+	s=arc-20240116; t=1788346917; c=relaxed/simple;
+	bh=P4tTzOwe9RdY9+G+XtbZm/9HF/zg96Akx4Mdzhc6MuI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Oq3lkYr1I4yPF4MTI9OHDfzDWPedbjO+vuZ41Ak+w2MGiJ9okqscDdosZMC4tM4C62QHN47qtpc7JxMpTs0EEull8n3fi3hPfEwdJw/xwHMQ3rAvQhBUDGAHncwVF9VAF6XiEXtNOsG2di6CN2qB2LgLWX3KPpp+qA+1+P2qzos=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=tDxlA1Ns; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=jv2C1krr; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=g9gAd1nXw0YvpYK/s5RWMocLaccHJcBTaWCkv52KXumtIFmcakBcIIem7FPMQjgXbwsHeP8ogCa2v6J1S73YRnn3IAhxRgFA2z2ETxFnANlbgJY7Sq97Li9j/iUMxfzUFdvE3xhmygdTxgw5kfgmNtqtrJ/qUiFLMQwTsfujguk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=tOfMnUB9; arc=none smtp.client-ip=209.85.167.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="tDxlA1Ns";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jv2C1krr"
-Date: Wed, 2 Sep 2026 09:56:04 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1788335766;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=87QVxY/Uc4nIbt3eNljsG8iZqjJ1C6yGs/I4LnmzEfc=;
-	b=tDxlA1Ns3lPHlpvz6Bn1KfbMRr3Hsw42ZXyp0Km/BgZicJKBI7B0X+PfWrWyT9km8wEZ4Z
-	f7oVYNEbJuwrWpEPVxuFKlai3srCZIq75+1H7lDqk4z+lBLatxNkRWxByyv9nbxJCau5T+
-	iVAOlaHyYJBQfw041oBoPXviq00UqE8pi5CyINposw1/GuiudO1+06YUHAtVZUGGeijIpZ
-	Qyf9VkBK79q0IEHIsL9qQNFXsW3xyEbHNpI2XhV2jTpnHK2wHk5Q2WMa9O3pcpE/H0cUrG
-	C9t1uYpC5t3trKSL/M5vn3eeyMDahp8bNE6Oux0PDKilxJ/TfLDxNRULw/+7kQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1788335766;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=87QVxY/Uc4nIbt3eNljsG8iZqjJ1C6yGs/I4LnmzEfc=;
-	b=jv2C1krrTXsVytfFWte+6vAfx3sdFLkkSsSfAH7lHg6b0DGkwHHJX+JfiWvM3P7kJU4Qv9
-	nm74F+lSHE4Z1uBg==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Nikita Taranov <nickita.taranov@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Darren Hart <dvhart@infradead.org>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	=?utf-8?B?QW5kcsOp?= Almeida <andrealmeid@igalia.com>,
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: futex: private hash can stay on the shared atomic refcount
- indefinitely after auto-scaling
-Message-ID: <20260902075604.A_-jz823@linutronix.de>
-References: <20260823150046.204417-1-nickita.taranov@gmail.com>
- <20260824160337.0IvfKx8A@linutronix.de>
- <20260825170605.2462933-1-nickita.taranov@gmail.com>
- <20260901230559.1978876-1-nickita.taranov@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tOfMnUB9"
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-5b0231a3e86so770822e87.0
+        for <regressions@lists.linux.dev>; Wed, 02 Sep 2026 04:01:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1788346913; x=1788951713; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:sender:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=MsJAUkYPcrI81+ZTJ2fux+QPTEZOfMVHD7vmgI0FX+Y=;
+        b=tOfMnUB9R6PYrZO3U02FVhZCFjRiuSCncFTkUW1lVNqHWi+s9/+JPYB4IXx0qxpl/r
+         NPSGydvZs+A93HnJ8QAB+Wh3l666e3pm0c0XHawFenqcSGYmrY6uDiYYjNfTDRt0g6te
+         3ys1CUyqHUuc4ZVksfNHnGtgmTR2XASNnxl/rfV9q9QJ62s1jB0I0AwVzlohCX/5FpEz
+         ugGx9omrZ+pAOwUsh6PLhVVTDFWVsN5fz7z/xIBuMqZs/PSV4nYEmHQTg9v4hM89ZJP3
+         fCNYKUcBSZLDu96bE5lsImcHd5O1g7u0TGMcdH9QwPK8uh2MN00vZUqYqTT5k4gjN4sx
+         r/JQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788346913; x=1788951713;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:sender:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=MsJAUkYPcrI81+ZTJ2fux+QPTEZOfMVHD7vmgI0FX+Y=;
+        b=NkhG8ETb/exQbiVLuxCy/il9AFmq2Hr/d5QCuZQiez4DcqUiXwF/7wiDz4JleRbYGa
+         ap25zsajQytC9WXqvA0aOW9rWzJuOktsEK68dfbplw0QRyfa+up1y4AlwNQZy+FmlAaJ
+         YHSNxUBVc/afS9u1yok7Ay7ZoFM+JnIkjcOYPLYqzIvWAMQOE+W8nG5wSbxALrWssrep
+         QiKLSfR2mhUv3R8WQ4UEE4dFPFjT3el4aF8b4UrZcBLQjQFR7x1W1SQkHIevnFK0AJ4Q
+         tViJloMUgJqbolhbnIqx+MB8rWE+0Co6t0XbkmGxCYHsdNpeaj0I2bN6eKCU2eAqzVKg
+         DHpQ==
+X-Forwarded-Encrypted: i=1; AKwUvBxs9p2mVoQ3zsEdJsv29U8J2J2Luqloqjnt16+qldElNMFn4rt4u6e/yBjM6zv+OuH8OjKdKy1oT/Sw6Q==@lists.linux.dev
+X-Gm-Message-State: AFuF++n3eqFrY6ikd4j/5fIUemT/0myRlUVHKInyGiDTXZ0F11MuE+IY
+	/nYj8VHPJUAQ0xIpONUg65KNtkw4gYt7f2tWs/0X4IqIWG30ZVLq1hkg
+X-Gm-Gg: AYBFou1uhRGMQr3jNDxgQEKsRk9tljJiiRK3zpMfAWcKzQndhOww1oLNgEu8sM4Mr45
+	TP2Hqc6Gp2lNfrTZUoiFQwudtEcz1tQpXg3gyZp2oKjUzn84Z7MMx36s3UTCcQ6w8vhiKJYYNqo
+	1NdJs2Ov4tQwg5OQ9kTVRCvEdrTFlq8qUB9gDLBbfqnOtojsEXFwZQWvqxwXV/dV4NNQ9WqLUeC
+	R/aJRmylPZiNLb4Oveujw4zJFaqV9Y0RQZG159mTEnPaykTyuami419WTc4fbcAH/ZL5H+wMWsC
+	J2byMdg5YdCfW3tPeqTKb0e16RCTLyfF3ZA2ssZEYYjYy2rR+J5AyHEJzq7EuOutN5VUhKquuYz
+	6sKsJ9CLHT2TwMQQlsUdpQBdHE1Hm4LM2G1rnNEmCj+6ytK0Wbmh6I6xIokpTUMFq3I2sv/2mFd
+	8mi1zBXsVe8Mu9FpChhv8TiyjzBElUcUMfcQ==
+X-Received: by 2002:a05:6512:1319:b0:5b4:fdc3:d3f1 with SMTP id 2adb3069b0e04-5b6086949edmr1155610e87.18.1788346913292;
+        Wed, 02 Sep 2026 04:01:53 -0700 (PDT)
+Received: from elende (elende.valinor.li. [2a01:4f9:6a:1c47::2])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5b606ba1481sm508702e87.61.2026.09.02.04.01.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Sep 2026 04:01:51 -0700 (PDT)
+Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
+Date: Wed, 2 Sep 2026 13:01:51 +0200
+From: Salvatore Bonaccorso <carnil@debian.org>
+To: Michal Koutn?? <mkoutny@suse.com>, 1144314@bugs.debian.org
+Cc: Noah Elias Feldt <N.Feldt@mittwald.de>, Tejun Heo <tj@kernel.org>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Dan Schatzberg <dschatzberg@meta.com>,
+	Peter Zijlstra <peterz@infradead.org>, cgroups@vger.kernel.org,
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
+	stable@vger.kernel.org
+Subject: Re: Bug#1144314: refcount_t: addition on 0; use-after-free,
+ regression from 260fbcb92bbe ("cgroup: Move dying_tasks cleanup from
+ cgroup_task_release() to cgroup_task_free()")
+Message-ID: <apgCH7zgmygyWl7g@lorien.valinor.li>
+References: <FR6P281MB6118B1A758F3278BC9BA795AF0DB2@FR6P281MB6118.DEUP281.PROD.OUTLOOK.COM>
+ <178682274912.1759826.11422695267451330087@eldamar.lan>
+ <FR6P281MB6118B1A758F3278BC9BA795AF0DB2@FR6P281MB6118.DEUP281.PROD.OUTLOOK.COM>
+ <aoh7Kbt_WbUcfUxh@localhost.localdomain>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20260901230559.1978876-1-nickita.taranov@gmail.com>
+In-Reply-To: <aoh7Kbt_WbUcfUxh@localhost.localdomain>
 
-On 2026-09-01 23:05:59 [+0000], Nikita Taranov wrote:
-> Following up with three things: a better reproducer, results from two more
-> vendors, and a prototype of the approach you suggested.
->=20
-> ## A new repro
->=20
-> The code could be found at https://gist.github.com/nickitat/a7a46b61d6769=
-ceec493881f82e7b344 .
->=20
-> This one is an ordinary producer/consumer: threads park in plain FUTEX_WA=
-IT
-> like the idle workers of a thread pool, others issue plain FUTEX_WAKE on =
-the
-> same futexes, so waiters are woken, loop and re-park. Only plain FUTEX_WA=
-IT and
-> FUTEX_WAKE. The kernel's own auto-scaling during thread creation is the o=
-nly
-> thing that ever asks for a pivot.
->=20
-> The control is one prctl(PR_FUTEX_HASH, PR_FUTEX_HASH_SET_SLOTS, n) befor=
-e any
-> thread exists, which marks the hash custom and disables auto-scaling, so =
-no
-> pivot is ever requested and the stall cannot occur. Basically, the same s=
-tory
-> as in the first repro.
+Hi Michal,
 
-Depends. That PR_FUTEX_HASH_SET_SLOTS will block the requesting thread
-until the change is active. The auto-scaling does not block the
-requesting thread (the one creating the thread).
-If you have already 20 threads which are busy on FUTEX_WAIT/WAKE, the
-PR_FUTEX_HASH_SET_SLOTS request can also take some time if the active
-counter never drops to zero (because multiple threads always own a
-reference).
+On Fri, Aug 21, 2026 at 06:59:26PM +0200, Michal Koutn?? wrote:
+> Hi Salvatore,
+> 
+> thanks for the nice report and sorry for not so prompt response.
+> 
+> On Sat, Aug 15, 2026 at 09:41:14PM +0200, Salvatore Bonaccorso <carnil@debian.org> wrote:
+> > With an additional reproducer provided by Noah, I could bisect the
+> > change down to 
+> 
+> Good job.
+> 
+> > 
+> > 	commit 260fbcb92bbeacfcd050410fdc2d24ab15044400
+> > 	Author: Tejun Heo <tj@kernel.org>
+> > 	Date:   Tue Oct 28 20:19:16 2025 -1000
+> > 
+> > 	    cgroup: Move dying_tasks cleanup from cgroup_task_release() to cgroup_task_free()
+> > 
+> > 	    Currently, cgroup_task_exit() adds thread group leaders with live member
+> > 	    threads to their css_set's dying_tasks list (so cgroup.procs iteration can
+> > 	    still see the leader), and cgroup_task_release() later removes them with
+> > 	    list_del_init(&task->cg_list).
+> > 
+> > 	    An upcoming patch will defer the dying_tasks list addition, moving it from
+> > 	    cgroup_task_exit() (called from do_exit()) to a new function called from
+> > 	    finish_task_switch(). However, release_task() (which calls
+> > 	    cgroup_task_release()) can run either before or after finish_task_switch(),
+> > 	    creating a race where cgroup_task_release() might try to remove the task from
+> > 	    dying_tasks before or while it's being added.
+> > 
+> > 	    Move the list_del_init() from cgroup_task_release() to cgroup_task_free() to
+> > 	    fix this race. cgroup_task_free() runs from __put_task_struct(), which is
+> > 	    always after both paths, making the cleanup safe.
+> > 
+> > 	    Cc: Dan Schatzberg <dschatzberg@meta.com>
+> > 	    Cc: Peter Zijlstra <peterz@infradead.org>
+> > 	    Signed-off-by: Tejun Heo <tj@kernel.org>
+> > 
+> > But there was the suspect that the matching commit might be
+> > d245698d727a ("cgroup: Defer task cgroup unlink until after the task
+> > is done switching out").
+> 
+> I see that after 260fbcb92bbea ("cgroup: Move dying_tasks cleanup from
+> cgroup_task_release() to cgroup_task_free()") it may be possible that
+> tasks on the dying_tasks list may drop their ->usage to zero (since the
+> actual unlinking only happens in __put_task_struct).
+> Most often those would be skipped due to PF_EXITING except for the case
+> of thread group leaders (which the reproducer stresses) whose refcount
+> apparently can drop to zero after task->signal->live > 0 made them
+> iterable :-/
+> 
+> A band-aid fix could be to use tryget_task_struct() in
+> css_task_iter_next() (I got that hint from a LLM) and "skip" zeroed
+> tasks. I see that commit fbe3fb103596b ("sched_ext: Replace
+> tryget_task_struct() with get_task_struct()"), assumes the iterator
+> always succeeds in obtaining the task reference (which was the
+> justification of tryget removal). I expect that sched_ext should still
+> be fine if dying_tasks with zero references are skipped. (What are they?
+> Tasks which literally no one should be interested in and they're only
+> waiting for __put_task_struct_rcu_cb() to be called [*]).
+> 
+> (I'm calling that band-aid because it'd resurrect usage of
+> tryget_task_struct() and it keeps the dying_tasks list a weird place to
+> be. If anyone has a better idea?)
+> 
+> The commit d245698d727a ("cgroup: Defer task cgroup unlink until after
+> the task is done switching out") seems a reasonable separation of the
+> stages to me.
 
-> v7.2, Xeon 6975P-C 96c/192t SNC=3D3, 8 runs of 4 s per point, clock pinne=
-d:
->=20
->   threads   auto   pre-sized   stalled
->        16   25.8        42.3      0/8
->        32   34.8        41.1      0/8
->        48   28.7        31.8      0/8
->        64   29.9        34.2      0/8
->        96    3.7        46.3      8/8
->       128    3.6        53.6      8/8
->       192    4.0        38.7      8/8
->=20
-> Throughput is far lower than the numbers in my earlier mails because the =
-work
-> is real; the comparison is the point. The control (pre-sized) is almost f=
-lat
-> across the whole range, so the work does not get harder with thread count
-> -- only the arm that requests a pivot collapses, and only above a thresho=
-ld.
+Thanks a lot for looking into this problem. Is there something Noah or
+I could test? 
 
-How bad is this in general? Do you have a workload where you fire a
-process, create 128 threads and then seconds later kill the whole thing?
-I would imagine that in general it is long living process and once the
-"final" privat hash gets installed, it remains=E2=80=A6
-
-> ## It is not only this Intel box
->=20
-> > You might have hit the sweet spot with your CPU. I have here a 144 CPU
-> > box and
->=20
-> I wrote previously that this Intel host was the only one where the repro =
-worked,
-> based on a 96-thread sweep with the old reproducer. At 192 threads, with =
-the
-> reproducer above, Graviton4 does reach the same state -- less often,
-> but permanently when it does.
->=20
-> 192 threads, 15 s runs, per-second traces:
->=20
->                         latched permanently   transient   never
->   Xeon 6975P-C                  8 / 8              -        0
->   Graviton4 Neoverse-V2         1 / 15           2 / 15    12 / 15
->   AMD EPYC 9R45                 0 / 14          14 / 14      -
->=20
-> Graviton4 will stall at a higher rate if the wakers are created gradually
-> rather than all at once -- the `ramp_ms` parameter spreads their creation
-> over that many milliseconds in total, which is what a thread pool growing
-> while already under load does. I saw 5/16 stalls on one run.
-> AMD still never latched in ~200 runs.
->=20
-> So the state is reachable on more than one vendor's hardware and usually =
-permanent
-> once entered. What differs is how often a process falls in.
-> Arguably, this flakiness is worse than a deterministic stall for a real p=
-roduction.
->=20
-> ## Prototype of your suggestion
->=20
-> > Not sure what we could do here. One idea might be to block further
-> > futex syscalls so they don't acquire a new reference on the existing
-> > hash and allow a transition to the new hash more quickly.
->=20
-> The only analogy available to me due to lack of any knowledge is rw-locks=
-=2E I asked
-> Claude to adapt the percpu-rwsem code to futex, and after a few iteration=
-s we
-> produced a hopefully viable patch. I suppose it implements plus-minus you=
-r suggestion.
->=20
-> The results (same box and all the rest of the environment):
->=20
->   - the reproducer: 0/8 stalled at every thread count, against 8/8 on sto=
-ck at
->     96 and above; 192 threads run at 54 Mops/s instead of 4.
->   - futex kselftests: 14 passed, 0 failed, with the mechanism enabled and
->     disabled; futex_numa and futex_numa_mpol pass.
->   - requeue-PI selftests looped under a continuous pivot storm, to exerci=
-se the
->     drop_fph handoff against the phase: all rounds passed.
->   - stress-ng: 64 futex stressors, and a 40-way futex/clone/mmap mix, 0 f=
-ailures.
->   - PROVE_LOCKING and KASAN builds: clean.
->   - measured overhead ~0.6% on a pthread_mutex/pthread_cond benchmark wit=
-h pinned clock.
->=20
-> Makes sense to note that the patch was applied to v7.2 and all testing wa=
-s done on that build.
->=20
-> The code could be found at https://gist.github.com/nickitat/0b1cc68deff5f=
-e2b27209b150da6fb00 .
-> If you find it useful, I can prepare a proper patch for the kernel tree.
-
-So you create a new state and try to not deadlock. I'm too sure about
-the PI bits.
-But what about
-
-diff --git a/kernel/futex/core.c b/kernel/futex/core.c
-index 51ba5e1257c04..b370b4cf168eb 100644
---- a/kernel/futex/core.c
-+++ b/kernel/futex/core.c
-@@ -1975,6 +1975,39 @@ static int futex_hash_allocate(unsigned int hash_slo=
-ts, unsigned int flags)
- 	return 0;
- }
-=20
-+void futex_hash_wait_new(void)
-+{
-+	struct wait_bit_queue_entry __wbq_entry;
-+	struct mm_struct *mm =3D current->mm;
-+	struct wait_queue_head *__wq_head;
-+
-+	if (!mm->futex.phash.hash_new)
-+		return;
-+
-+	__wq_head =3D __var_waitqueue(mm);
-+	init_wait_var_entry(&__wbq_entry, mm, 0);
-+	__wbq_entry.wq_entry.func =3D woken_wake_bit_function;
-+	add_wait_queue(__wq_head, &__wbq_entry.wq_entry);
-+
-+	/*
-+	 * add_wait_queue()		futex_ref_put()
-+	 * MB (this)			MB (implied)
-+	 * futex_pivot_pending()	wake_up_var()
-+	 *                                waitqueue_active()
-+	 *
-+	 * Notably, it must not be possible to see
-+	 * !futex_pivot_pending() && !waitqueue_active().
-+	 */
-+	smp_mb();
-+
-+	while (!futex_pivot_pending(mm) &&
-+	       wait_woken(&__wbq_entry.wq_entry, TASK_UNINTERRUPTIBLE,
-+			  MAX_SCHEDULE_TIMEOUT))
-+		/* empty */;
-+
-+	remove_wait_queue(__wq_head, &__wbq_entry.wq_entry);
-+}
-+
- int futex_hash_allocate_default(void)
- {
- 	unsigned int threads, buckets, current_buckets =3D 0;
-diff --git a/kernel/futex/futex.h b/kernel/futex/futex.h
-index f00f0863ed441..d538e8e15c336 100644
---- a/kernel/futex/futex.h
-+++ b/kernel/futex/futex.h
-@@ -246,10 +246,11 @@ struct futex_bucket_ref {
- #ifdef CONFIG_FUTEX_PRIVATE_HASH
- extern struct futex_private_hash *futex_private_hash(struct mm_struct *mm);
- extern void futex_private_hash_put(struct futex_private_hash *fph);
--
-+extern void futex_hash_wait_new(void);
- #else /* !CONFIG_FUTEX_PRIVATE_HASH */
- static inline struct futex_private_hash *futex_private_hash(struct mm_stru=
-ct *mm) { return NULL; }
- static inline void futex_private_hash_put(struct futex_private_hash *fph) =
-{ }
-+static inline void futex_hash_wait_new(void) { }
- #endif
-=20
- extern struct futex_bucket_ref futex_hash(union futex_key *key);
-diff --git a/kernel/futex/waitwake.c b/kernel/futex/waitwake.c
-index d4483d15d30a5..7ad8a060371c6 100644
---- a/kernel/futex/waitwake.c
-+++ b/kernel/futex/waitwake.c
-@@ -195,6 +195,8 @@ int futex_wake(u32 __user *uaddr, unsigned int flags, v=
-oid __user *pop, int nr_w
- 	if ((flags & FLAGS_STRICT) && !nr_wake)
- 		return 0;
-=20
-+	futex_hash_wait_new();
-+
- 	CLASS(hbr, hbr)(&key);
- 	auto hb =3D hbr.hb;
-=20
-@@ -283,6 +285,7 @@ int futex_wake_op(u32 __user *uaddr1, unsigned int flag=
-s, u32 __user *uaddr2,
- 	int ret, op_ret;
- 	DEFINE_WAKE_Q(wake_q);
-=20
-+	futex_hash_wait_new();
- retry:
- 	ret =3D get_futex_key(uaddr1, flags, &key1, FUTEX_READ);
- 	if (unlikely(ret !=3D 0))
-@@ -744,6 +747,8 @@ int futex_wait(u32 __user *uaddr, unsigned int flags, u=
-32 val, ktime_t *abs_time
- 	struct restart_block *restart;
- 	int ret;
-=20
-+	futex_hash_wait_new();
-+
- 	to =3D futex_setup_timer(abs_time, &timeout, flags,
- 			       current->timer_slack_ns);
-=20
-
-It depends on v7.3-rc1 and should keep new waiters blocked until the new
-hash is installed. I also added wake path assuming they will continue to
-matter what. It might make sense to do this on the wake side only.
-Does this do anything?
-
-> Regards.
-
-Sebastian
+Regards,
+Salvatore
