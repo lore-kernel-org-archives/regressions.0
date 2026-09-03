@@ -1,165 +1,581 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [185.244.194.184])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3399B438488
-	for <regressions@lists.linux.dev>; Thu,  3 Sep 2026 11:30:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.244.194.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83F2C459AED
+	for <regressions@lists.linux.dev>; Thu,  3 Sep 2026 11:46:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788435012; cv=none; b=FIEypDCq3uzdvidLl/o1JE2RUuR1nTXkl8n+3qq5/X5C+7IJ/Pr3HG0Gs9lHCoHqtP+Ampl8cHwgHfI7r1S1y4EjJbfk10XiVccgHf8LnWFq39ACFZ9y4nKzi0aGF0u7mGdW88UQUOlaheQaSaLMxwQWbiJMbJUKIVCeOwL7qio=
+	t=1788435986; cv=none; b=fHoDVGeSIbvIUB+n2cpFfBXTilmf5eGsICDs1xWzoVmFQzNuUVEO4BVQfpgNcUp/7hGZpcULIjufGVJ8/25HRTRmzdeq3QJF+RjCC9KC5Pt6Mv/F96sLJsve6tOMG3/RHHyVryO4h+5GTMvGDG7vRzhNpwz8hQMfudxTf9wOV5M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788435012; c=relaxed/simple;
-	bh=7ZGfw3J4a5JEuBsfhXEXtex3jd2srNbwsVSYvVwVvc8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=a2g2zlkcxPoeyp2yVuWtQf9/oPq8v/wd/i8mhu4Bv0YWf/Q81dhMd+KtuC4ubobivn8x3BooRrFnouh5e5vr2re6v1TisfX0/WDjcLjSQYBIn5YA7HxQu4yeDUBArEHv5nHSSyJJcFJmmOuml83ThLtGJXVktKligraXeZLKYFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=KSSZSWlE; arc=none smtp.client-ip=185.244.194.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1788435986; c=relaxed/simple;
+	bh=HGwDZJ0UpCNZq9zecGFT7xT/qdWDd1L5AnroPIJV4MQ=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=GqR496bTZIjvTKqIM5emBcpNCodMjZcUvqLYsJzdd4W8KFeliEBZlhZxAnMxHDyBAjifL6KA8XIJL5EK8YnJIVVE95hD6/qxCe+IjLbIaqWWzK2ANb13mjKvK3zalmxPrWaW4jdlniG8vkk9jsuPPpcc4FqM55iUcA1vwiSCB1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JIv4yTkY; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="KSSZSWlE"
-Received: from relay01-mors.netcup.net (localhost [127.0.0.1])
-	by relay01-mors.netcup.net (Postfix) with ESMTPS id 4hbHQf2T2Tz90Sp;
-	Thu,  3 Sep 2026 13:28:10 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1788434890;
-	bh=7ZGfw3J4a5JEuBsfhXEXtex3jd2srNbwsVSYvVwVvc8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=KSSZSWlEZION115+zIffE6KQv4G04pDl4s2ulqPuZ7AaW+xqwrDuelML/lL5qZOni
-	 GzejeEqysl+0mKtsKIcFzD3QfzTjMoUlabvCW8HIz491fDRedAICNYbDmvqNZhnwvR
-	 dwy4FmtokeNqUL/fFkPDM6RTt8/3/DKcwqJrBAhsnK2Gp4mij09355AgrESOoplkB+
-	 Kbg9c3NLddWUkDp0GK2ABBFexnmYMwfHYzpmHiBYVOVNpXuOUoJNI2DEfQhFOltF0f
-	 E4cvXSGdESDei0fbtPrMrct5T3VkqC/KOL7j4mnpsZP6K5SMxeuwOgKO+akJBtnNMK
-	 45RaNoEMmnZpg==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by relay01-mors.netcup.net (Postfix) with ESMTPS id 4hbHQf1mS4z80c4;
-	Thu,  3 Sep 2026 13:28:10 +0200 (CEST)
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4hbHQc6cPzz8sZg;
-	Thu,  3 Sep 2026 13:28:08 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 3F9D25F9C6;
-	Thu,  3 Sep 2026 13:28:00 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <6db9c47f-a1f8-49dd-9e80-f9014d75f9e8@leemhuis.info>
-Date: Thu, 3 Sep 2026 13:27:59 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JIv4yTkY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1788435976; x=1819971976;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=HGwDZJ0UpCNZq9zecGFT7xT/qdWDd1L5AnroPIJV4MQ=;
+  b=JIv4yTkYi6JR01KQQomU5AslupCs3TjSy5sPkeaB0CcfILTBmkx5EM2e
+   Qmr7ckBPhlS7SDwoe1HLOXgZzhIvO2CyFzMbAfFH2cN+DL8s/7EzvzOQc
+   wEgkxbZnjc+zP26a4P9rFFMDRGLCiXiVFOxN25lqh2ofSApGsZuHW8FUM
+   /+Jth0k44lxqv/rQ/taj+5Og51uxEtC4tbCoaoSOTUPzVSfYse8idMbgx
+   e6sANPeYyAWo5fHq+ZA1kwtm/1E8JhH2wCoKmD3dfFtaym1FPVGWuvrQv
+   RRMcBltR+37TB0jbeykfuqrl+SNFxakC4dhOKuqVrU3nsiP+1r9RSMcfR
+   A==;
+X-CSE-ConnectionGUID: iL9vojKqS4OJMcVzxqIoYQ==
+X-CSE-MsgGUID: xkZUc2e4QO+v4bFtvOisFg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11894"; a="88680831"
+X-IronPort-AV: E=Sophos;i="6.25,260,1779174000"; 
+   d="scan'208";a="88680831"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2026 04:46:13 -0700
+X-CSE-ConnectionGUID: w40q0hNGTUeEGIF1XAkbDA==
+X-CSE-MsgGUID: TTDwYYTCSqCtpjPaHlKyfg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,260,1779174000"; 
+   d="scan'208";a="273452547"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.119])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2026 04:46:11 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 3 Sep 2026 14:46:06 +0300 (EEST)
+To: Nikolas Joshua Britton <nbritton@exabit.io>
+cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, 
+    regressions@lists.linux.dev, amd-gfx@lists.freedesktop.org
+Subject: Re: PCI: bridge window undersized when child bridge windows are
+ larger than their alignment (regression since 3958bf16e2fe, v7.0)
+In-Reply-To: <20260903063124.9316-1-nbritton@exabit.io>
+Message-ID: <9b63ab96-338a-82aa-3bf7-e56b545a3b47@linux.intel.com>
+References: <20260903063124.9316-1-nbritton@exabit.io>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] sched/rt: NO_RT_PUSH_IPI causes multi-second
- PI-boost starvation in pro-audio workloads (dd29c017aed6)
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Martin King <martin3kx@gmail.com>,
- regressions@lists.linux.dev, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org, linux-rt-users@vger.kernel.org
-References: 
- <CAEB5A_91hob8ddOhW=PrO1=O7GrFmSxY3r1-_Ard6x8KHHuJGA@mail.gmail.com>
- <20260814183652.611e7ecf@gandalf.local.home>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <20260814183652.611e7ecf@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: 
- <178843488063.2937962.11799557197795415206@mxe9fb.netcup.net>
-X-NC-CID: k37XkMfNV148T8AaHZlocYgfG0Ej4NCBFhcSJKQwQzEPo4rKEWU=
+Content-Type: text/plain; charset=US-ASCII
 
-On 8/15/26 00:36, Steven Rostedt wrote:
-> On Fri, 14 Aug 2026 16:12:35 -0500
-> Martin King <martin3kx@gmail.com> wrote:
-> 
->> Commit dd29c017aed6 ("sched/rt: Have RT_PUSH_IPI be default off for non
->> PREEMPT_RT") causes reproducible multi-second audio dropouts on an ordinary
->> non-PREEMPT_RT desktop running a DAW.
-> 
-> Thanks for the report.
+On Thu, 3 Sep 2026, Nikolas Joshua Britton wrote:
 
-This made it to my list of tracked regression -- but it looks like there
-was no progress for a while. Is that the case? Steven, did that maybe
-fall through the cracks due to the travel you mentioned? Or was this
-resolved meanwhile and I just missed it?
+> Hi,
+> 
+> On a Mac Pro 7,1 with two Radeon Pro Vega II Duo cards, enabling 32 GB
+> Resizable BARs leaves exactly half the GPU dies with no BAR at all. The
+> shared root-port prefetchable window is sized as the plain sum of its two
+> child bridge windows, but each child secretly requires a 32 GB-aligned
+> start, so the window that gets allocated is ~32 GB smaller than the span
+> that is actually needed. The second child of each pair loses,
+> deterministically.
+> 
+> There is 1 TiB of free space in the host bridge's _CRS window, so this is
+> not address-space exhaustion.
+> 
+> This is a regression. On the same machine, with the same script
+> (resize-amdgpu-bars, https://github.com/exabit-io/resize-amdgpu-bars,
+> which performs the sequence under "Reproduction" below at boot) and the
+> same sequence of operations, Ubuntu's 6.8.0-138 (upstream 6.8.12),
+> 6.11.0-29, 6.14.0-37 and 6.17.0-42 kernels all size the shared window at
+> 96 GiB (48 GiB per child) and all four dies get their 32 GiB BAR on the
+> first attempt, every time (each kernel tested from a full power-off).
+> 7.0.0-30 is based on upstream 7.0.12 and fails identically from a cold
+> boot and from a warm reboot. I have traced it to commit 3958bf16e2fe
+> ("PCI: Stop over-estimating bridge window size"), first shipped in v7.0;
+> analysis and a proposed one-line fix are below. Ubuntu's setup-bus.c is
+> byte-identical to v7.0.12, which already includes 8cb081667377 ("PCI:
+> Fix alignment calculation for resource size larger than align") and
+> dc4b4d04e1ca ("PCI: Prevent shrinking bridge window from its required
+> size"), so those do not cover this case; current master has no further
+> change to this logic.
+> 
+> 
+> System
+> ------
+> 
+>   Machine:  Apple Inc. MacPro7,1, BIOS 2103.160.2.0.0
+>   Fails:    7.0.0-30-generic (Ubuntu 24.04 HWE, 7.0.0-30.30~24.04.1,
+>             upstream 7.0.12)
+>             self-built upstream v7.0.12, unpatched, Ubuntu config trimmed
+>             with localmodconfig (control; fails identically)
+>   Works:    6.8.0-138-generic  (Ubuntu 24.04 GA, upstream 6.8.12)
+>             6.11.0-29-generic  (Ubuntu 24.04, linux-generic-6.11)
+>             6.14.0-37-generic  (Ubuntu 24.04, linux-generic-6.14)
+>             6.17.0-42-generic  (Ubuntu 24.04, linux-generic-6.17)
+>             (all four: identical 96 GiB window layout, 4/4 dies, one
+>             4-node XGMI hive, no traces; verified 2026-09-02)
+>             self-built v7.0.12 + the patch below (same config as the
+>             control): 4/4 dies, 128 GiB root-port window, cold boot and
+>             warm reboot, no traces
+>   Cmdline:  ro log_buf_len=16M pci=realloc mitigations=off
+>             (the 6.x and the self-built 7.0.12 boots also carried
+>             intremap=no_x2apic_optout; it has no bearing on this)
+>   GPUs:     4x Vega20 [1002:66a3], two dies per Vega II Duo card
+>   BAR0 ReBAR capability: 256MB 512MB 1GB 2GB 4GB 8GB 16GB 32GB
+>   BAR2 (doorbell): 2MB, fixed in practice
+> 
+> 
+> Topology
+> --------
+> 
+> Each Duo card presents two dies behind ONE root port, each die on its own
+> sub-bridge chain:
+> 
+>   +-[0000:06]-+-00.0-[07-0e]--00.0-[08-0e]--+-08.0-[09-0b]--00.0-[0a-0b]--00.0-[0b]--00.0  Vega20
+>              |                              \-10.0-[0c-0e]--00.0-[0d-0e]--00.0-[0e]--00.0  Vega20
+>   +-[0000:16]-+-00.0-[17-1e]--00.0-[18-1e]--+-08.0-[19-1b]--00.0-[1a-1b]--00.0-[1b]--00.0  Vega20
+>                                             \-10.0-[1c-1e]--00.0-[1d-1e]--00.0-[1e]--00.0  Vega20
+> 
+> So 08:08.0 and 08:10.0 are siblings sharing the prefetchable window of
+> 07:00.0 / 06:00.0. Each subtree contains one Vega20 with BAR0 = 32 GB
+> (alignment 32 GB) plus BAR2 = 2 MB, i.e. each child bridge window is
+> 32 GB + 2 MB = 0x800200000.
+> 
+> Both cards fail identically. Card 2 (16:00.0 / 18:08.0 / 18:10.0) is
+> omitted below for brevity; its trace is byte-for-byte analogous.
+> 
+> 
+> The arithmetic
+> --------------
+> 
+>   host bridge _CRS window   0x90000000000-0x9ffffffffff   1 TiB free
+>   06:00.0 / 07:00.0 window  0x90000000000-0x910003fffff   0x1000400000
+>                                                           (64 GiB + 4 MiB)
+> 
+>   08:08.0 window assigned   0x90000000000-0x908001fffff   0x800200000
+>   next free address                       0x90800200000
+>   08:10.0 needs 32 GiB alignment, so its next legal start is
+>                                           0x91000000000
+>   08:10.0 would then end at               0x91800200000
+>   but the parent window ends at           0x91000400000  <-- ~32 GiB short
+> 
+>   span actually required    0x90000000000-0x91800200000   0x1800200000
+>                                                           (96 GiB + 2 MiB)
+>   span allocated                                          0x1000400000
+>                                                           (64 GiB + 4 MiB)
+>   shortfall                                               0x7ffe00000
+>                                                           (32 GiB - 2 MiB)
+> 
+> The telling detail: 0x90800200000 + 0x800200000 = 0x91000400000, which is
+> *exactly* the parent window's exclusive end. In other words, had the child
+> bridge windows only needed ~1 MiB alignment, the two of them would have
+> fit perfectly, to the byte. The sizing pass produced a window that is
+> correct if and only if the children can be packed back-to-back, which
+> they cannot, because the assignment pass then enforces the real 32 GiB
+> alignment inherited from the BAR inside each child.
+> 
+> 
+> Good kernel, for comparison
+> ---------------------------
+> 
+> Same hardware, same steps, 6.17.0-42 (6.8, 6.11 and 6.14 are identical).
+> The parent is sized for the worst-case packing, and both children fit:
+> 
+>   0000:06:00.0: 90000000000-917ffffffff [size=96G]      <- shared parent
+>   0000:08:08.0: 90000000000-90bffffffff [size=48G]
+>   0000:08:10.0: 90c00000000-917ffffffff [size=48G]
+>   0000:0b:00.0: Region 0: Memory at 90000000000 (64-bit, prefetchable) [size=32G]
+>   0000:0e:00.0: Region 0: Memory at 91000000000 (64-bit, prefetchable) [size=32G]
+> 
+> i.e. 96 GiB = 3 x 32 GiB: each child gets (32 GiB + 2 MiB) rounded up to
+> the next 32 GiB boundary plus slack, so the second child's aligned start
+> is always inside the parent. That is the 3A + eps span from the arithmetic
+> below, and 7.0 allocates 2A + 2 eps instead.
+> 
+> 
+> dmesg (7.0)
+> -----------
+> 
+> Sizing and assignment of the shared window, then the two children:
+> 
+>   pci 0000:06:00.0: bridge window [mem 0x90000000000-0x910003fffff 64bit pref]: assigned
+>   pci 0000:07:00.0: bridge window [mem 0x90000000000-0x910003fffff 64bit pref]: assigned
+>   pci 0000:08:08.0: bridge window [mem 0x90000000000-0x908001fffff 64bit pref]: assigned
+>   pci 0000:08:10.0: bridge window [mem size 0x800200000 64bit pref]: can't assign; no space
+>   pci 0000:08:10.0: bridge window [mem size 0x800200000 64bit pref]: failed to assign
+> 
+> The failure then cascades down the losing chain, and the endpoint is left
+> with neither BAR0 nor BAR2:
+> 
+>   pci 0000:0c:00.0: bridge window [mem size 0x800200000 64bit pref]: can't assign; no space
+>   pci 0000:0d:00.0: bridge window [mem size 0x800200000 64bit pref]: can't assign; no space
+>   pci 0000:0e:00.0: BAR 0 [mem size 0x800000000 64bit pref]: can't assign; no space
+>   pci 0000:0e:00.0: BAR 0 [mem size 0x800000000 64bit pref]: failed to assign
+>   pci 0000:0e:00.0: BAR 2 [mem size 0x00200000 64bit pref]: can't assign; no space
+>   pci 0000:0e:00.0: BAR 2 [mem size 0x00200000 64bit pref]: failed to assign
+>   pci 0000:0e:00.0: BAR 5 [mem 0x74600000-0x7467ffff]: assigned
+> 
+> Note BAR5 (the 512 KB register aperture, non-prefetchable) still gets
+> assigned. That matters for the downstream impact described below: the
+> device is half-alive rather than obviously dead.
+> 
+> Resulting state, from lspci -vv. The entire losing chain has no
+> prefetchable window whatsoever:
+> 
+>   0000:08:08.0: 90000000000-908001fffff [size=32770M]    <- winner
+>   0000:09:00.0: 90000000000-908001fffff [size=32770M]
+>   0000:0a:00.0: 90000000000-908001fffff [size=32770M]
+>   0000:08:10.0: [disabled]                               <- loser
+>   0000:0c:00.0: [disabled]
+>   0000:0d:00.0: [disabled]
+>   0000:06:00.0: 90000000000-910003fffff [size=65540M]    <- shared parent
+> 
+> And /sys/bus/pci/devices/0000:0e:00.0/resource:
+> 
+>   0x0000000000000000 0x0000000000000000 0x0000000000000000   BAR0 unassigned
+>   0x0000000000000000 0x0000000000000000 0x0000000000000000
+>   0x0000000000000000 0x0000000000000000 0x0000000000000000   BAR2 unassigned
+>   0x0000000000000000 0x0000000000000000 0x0000000000000000
+>   0x0000000000006000 0x00000000000060ff 0x0000000000040101
+>   0x0000000074600000 0x000000007467ffff 0x0000000000040200   BAR5 assigned
+> 
+> 
+> Observation
+> -----------
+> 
+> Observed, and I think not in dispute:
+> 
+>   - the sizing pass produced a parent window exactly equal to the sum of
+>     the two child window sizes (0x800200000 * 2 = 0x1000400000);
+>   - the assignment pass refused to place the second child at
+>     0x90800200000, which is 2 MiB-aligned and would have fit exactly;
+>   - therefore assignment enforced an alignment that sizing did not budget
+>     for.
+> 
+> Where in the code: pbus_size_mem() sums the child bridge windows
+> without regard to the alignment the assignment pass will enforce on
+> them. The analysis, a small model that reproduces every number above,
+> and a one-line fix that has been A/B tested on this machine are in
+> "Root cause" and "Proposed fix" below, before the list of gaps.
+> 
+> The shortfall is structural rather than specific to 32 GB. For N=2
+> siblings each needing (A + eps) at alignment A, the required span is
+> 2A + (A + eps) = 3A + eps, while the sum is 2A + 2eps. I have confirmed
+> this at the other end of the range: after one failed 32 GiB attempt,
+> writing the ReBAR index back to 256 MiB and re-enumerating fails in
+> exactly the same way, because the firmware's original 770 MiB windows
+> (~3A + eps for A = 256 MiB) are gone and the kernel re-sizes the parent
+> to 2A + 2 eps:
+> 
+>   pci 0000:06:00.0: bridge window [mem 0x90000000000-0x900203fffff 64bit pref]: assigned
+>                                               (512 MiB + 4 MiB)
+>   pci 0000:08:08.0: bridge window [mem 0x90000000000-0x900101fffff 64bit pref]: assigned
+>   pci 0000:08:10.0: bridge window [mem size 0x10200000 64bit pref]: can't assign; no space
+>   pci 0000:0e:00.0: BAR 0 [mem size 0x10000000 64bit pref]: can't assign; no space
+>   pci 0000:0e:00.0: BAR 2 [mem size 0x00200000 64bit pref]: can't assign; no space
+> 
+> So on 7.0 there is no in-place recovery once the kernel has re-sized the
+> window: the only layouts that ever work are the ones the firmware left
+> behind. 16 GB and 8 GB remain untested but I would not expect them to
+> differ.
+> 
+> 
+> Downstream impact: this is not a soft failure
+> ---------------------------------------------
+> 
+> The BAR-less die is not merely unusable. Because BAR5 is still assigned,
+> amdgpu probes it, its register reads return garbage, and
+> RCC_IOV_FUNC_IDENTIFIER comes back with bit 0 set. The driver concludes
+> the device is an SR-IOV *virtual function*:
+> 
+>   amdgpu 0000:0b:00.0: register mmio base: 0x74400000     <- healthy die
+>   amdgpu 0000:0e:00.0: register mmio base: 0x74600000
+>   amdgpu 0000:0e:00.0: MCBP is enabled                    <- only set when
+>                                                              amdgpu_sriov_vf()
+> 
+> It then calls amdgpu_virt_request_full_gpu() ->
+> xgpu_ai_request_full_gpu_access() and waits forever for a hypervisor
+> mailbox that does not exist:
+> 
+>   amdgpu 0000:0e:00.0: trn=2 ACK should not assert! wait again !
+>   (repeating roughly 2490 times per 5 seconds, indefinitely)
+> 
+>   xgpu_ai_mailbox_trans_msg+0x1a9/0x1f0 [amdgpu]
+>   xgpu_ai_send_access_requests+0x21/0xe0 [amdgpu]
+>   xgpu_ai_request_full_gpu_access+0x1a/0x30 [amdgpu]
+>   amdgpu_virt_request_full_gpu+0x2a/0x70 [amdgpu]
+>   amdgpu_device_ip_early_init.constprop.0+0x173/0x780 [amdgpu]
+>   amdgpu_device_init+0x83d/0x1180 [amdgpu]
+>   amdgpu_driver_load_kms+0x1a/0xd0 [amdgpu]
+>   amdgpu_pci_probe+0x1df/0x590 [amdgpu]
+> 
+> modprobe wedges in uninterruptible D state holding the device mutex,
+> blocks the AER IRQ thread, and never returns:
+> 
+>   INFO: task irq/34-aerdrv:1554 blocked for more than 122 seconds.
+>   INFO: task irq/34-aerdrv:1554 is blocked on a mutex likely owned by
+>         task modprobe:1583.
+> 
+> SIGKILL does not touch it; systemd's TimeoutStartSec fires and the unit
+> goes to "failed" while the task stays in the cgroup. The machine needs a
+> reboot. The remaining two dies are never probed at all.
+> 
+> So the practical outcome of the sizing bug with a plain "modprobe amdgpu"
+> is: 1 of 4 GPUs usable (the healthy die of the first card; its BAR-less
+> sibling wedges the probe and the second card is never reached), no XGMI
+> hive (kfd reports a single-node hive), and an unkillable task on every
+> boot. Keeping the BAR-less dies away from the driver with
+> driver_override, which resize-amdgpu-bars now does, gets 2 of 4 dies and
+> a 2-node hive; that is the "2/4 dies" figure under "Proposed fix" below.
+> Whether amdgpu should be more defensive about probing a device with
+> an unassigned BAR0 is a separate question for amd-gfx, and I've cc'd them,
+> but the PCI-side undersizing is the trigger.
+> 
+> 
+> Reproduction
+> ------------
+> 
+> With the four dies at their default 256 MB BAR0 (this is what
+> resize-amdgpu-bars does at boot, done by hand):
+> 
+>   1. Set BAR0 to 32 GB on all four dies (ReBAR control register at
+>      capability offset 0x200, control at 0x208, size index in bits 8-13,
+>      index 15 = 2^35):
+> 
+>        setpci -s 0000:0b:00.0 0x208.l=00000f40
+>        (likewise for 0e:00.0, 1b:00.0, 1e:00.0)
+> 
+>   2. Force full re-enumeration so the kernel re-sizes every bridge window
+>      from scratch:
+> 
+>        echo 1 > /sys/bus/pci/devices/0000:06:00.0/remove
+>        echo 1 > /sys/bus/pci/devices/0000:16:00.0/remove
+>        echo 1 > /sys/bus/pci/rescan
+> 
+>   3. dmesg shows the "can't assign; no space" trace above; 0e:00.0 and
+>      1e:00.0 have BAR0 and BAR2 unassigned, 0b:00.0 and 1b:00.0 are fine.
+> 
+> Fully deterministic across many attempts: the first-enumerated die of
+> each card always wins.
+> 
+> 
+> Root cause
+> ----------
+> 
+> Since 3958bf16e2fe, pbus_size_mem() sizes a bridge window as
+> 
+>     size += max(r_size, align);        /* per child */
+>     size0 = ALIGN(size, win_align);    /* win_align = 1 MB */
+> 
+> with calculate_head_align() making only the window *start* satisfy the
+> largest child alignment. The tight fit is gap-free only if, in the
+> descending-alignment assignment order, every child's size is a multiple
+> of the alignments of the children placed after it. That holds for BARs
+> (size == alignment) but not for bridge windows: their size is the sum of
+> what is below them, while their alignment (IORESOURCE_STARTALIGN) is that
+> of the largest BAR below them.
+> 
+> Here each sub-bridge window holds BAR0 (32 GiB) + BAR2 (2 MiB doorbell),
+> so it is sized 32 GiB + 2 MiB with 32 GiB alignment. The root port sums
+> two of them: 64 GiB + 4 MiB. Assignment then places the first child at
+> offset 0 (ends at 32 GiB + 2 MiB) and must put the second at the next
+> 32 GiB boundary, i.e. 64 GiB .. 96 GiB + 2 MiB. Needed 96 GiB + 2 MiB,
+> sized 64 GiB + 4 MiB -> "can't assign; no space" for the second die.
+> 
+>     pci 0000:06:00.0: bridge window [mem 0x90000000000-0x910003fffff 64bit pref]: assigned
+>     pci 0000:08:08.0: bridge window [mem 0x90000000000-0x908001fffff 64bit pref]: assigned
+>     pci 0000:0b:00.0: BAR 0 [mem 0x90000000000-0x907ffffffff 64bit pref]: assigned
+>     pci 0000:0b:00.0: BAR 2 [mem 0x90800000000-0x908001fffff 64bit pref]: assigned
+>     pci 0000:0e:00.0: BAR 0 [mem size 0x800000000 64bit pref]: can't assign; no space
+>     pci 0000:0e:00.0: BAR 2 [mem size 0x00200000 64bit pref]: can't assign; no space
+> 
+> The same arithmetic at the default 256 MiB BAR0 gives 512 MiB + 4 MiB
+> sized vs 768 MiB + 2 MiB needed, which is why even reverting the BAR
+> size does not recover (the firmware's original windows were larger).
+> 
+> Up to v6.17, calculate_memsize() rounded each bridge window up to its own
+> min_align (ALIGN(size, min_align); the old calculate_mem_align() gave
+> 16 GiB here), so each sub-bridge window was 48 GiB and the root port
+> 96 GiB, and siblings packed by accident. A small model of both versions
+> of pbus_size_mem() reproduces every number seen on this machine
+> (48G/96G on 6.8-6.17; 32770M/65540M and 258M/516M on 7.0).
+> 
+> This is the tail-side sibling of the head-side under-estimation Guenter
+> Roeck raised on 2026-03-05 for the same series (4M@4M + 3M@1M + 1M@1M
+> needing 9 MiB in an 8 MiB window), which 8cb081667377 addressed for the
+> head alignment bookkeeping only.
+> 
+> Proposed fix
+> ------------
+> 
+> Pad a child up to its alignment when its size is not a multiple of it:
+> 
+>     -			size += max(r_size, align);
+>     +			size += ALIGN(r_size, align);
+> 
+> This is a no-op for BARs, so the v7.0 tight fit for leaf resources is
+> kept; for bridge windows it restores the pre-v7.0 parent sizing. It
+> over-estimates by up to one alignment unit (128 GiB here rather than the
+> exact 96 GiB + 2 MiB); an exact version would have to walk the children
+> in assignment order and simulate the offsets. The diff follows below the
+> "---" line at the end of this mail; the full patch with changelog and
+> Signed-off-by is ready and I will send it as a separate [PATCH] if that
+> is preferred.
+> 
+> Tested on the same machine, same script, same sequence (2026-09-02):
+> 
+>   v7.0.12 unpatched (control): identical to 7.0.0-30. Root-port window
+>     0x90000000000-0x900203fffff (512 MiB + 4 MiB at the 256 MiB baseline
+>     the kernel falls back to), "can't assign; no space" on 0e:00.0 and
+>     1e:00.0, 2/4 dies, 2-node XGMI hive.
+>   v7.0.12 + patch: 4/4 dies with 32 GiB BAR0, 4-node XGMI hive, from a
+>     cold boot and again from a warm reboot. Window layout for card 1:
+> 
+>       pci 0000:06:00.0: bridge window [mem 0x90000000000-0x91fffffffff 64bit pref]: assigned   (128 GiB)
+>       pci 0000:07:00.0: bridge window [mem 0x90000000000-0x91fffffffff 64bit pref]: assigned
+>       pci 0000:08:08.0: bridge window [mem 0x90000000000-0x90fffffffff 64bit pref]: assigned   (64 GiB)
+>       pci 0000:09:00.0: bridge window [mem 0x90000000000-0x90fffffffff 64bit pref]: assigned
+>       pci 0000:0a:00.0: bridge window [mem 0x90000000000-0x908001fffff 64bit pref]: assigned   (32 GiB + 2 MiB)
+>       pci 0000:0b:00.0: BAR 0 [mem 0x90000000000-0x907ffffffff 64bit pref]: assigned
+>       pci 0000:0b:00.0: BAR 2 [mem 0x90800000000-0x908001fffff 64bit pref]: assigned
+>       pci 0000:08:10.0: bridge window [mem 0x91000000000-0x91fffffffff 64bit pref]: assigned
+>       pci 0000:0e:00.0: BAR 0 [mem 0x91000000000-0x917ffffffff 64bit pref]: assigned
+>       pci 0000:0e:00.0: BAR 2 [mem 0x91800000000-0x918001fffff 64bit pref]: assigned
+> 
+>     The padding is applied once, where 09:00.0 sums its 32 GiB + 2 MiB
+>     child (alignment 32 GiB) to 64 GiB; the levels above are plain sums
+>     of already-aligned children. Net cost 128 GiB per card instead of
+>     the exact 96 GiB + 2 MiB, out of 1 TiB available.
+> 
+> 
+> Why the repro does not use the sysfs resource0_resize interface
+> ----------------------------------------------------------------
+> 
+> The repro above pokes the ReBAR control register with setpci and then
+> forces a rescan instead of using the sanctioned interface
+> (echo 15 > .../resource0_resize). That is deliberate: the sanctioned
+> interface cannot grow a die that sits behind the card's own PCIe switch,
+> on any kernel, and that is the reason resize-amdgpu-bars exists at all.
+> It was the first thing I tried, and I re-measured it on 7.0.12 for this
+> report so the failure is on record with the kernel's own lines.
+> 
+>     Measured (7.0.12 vanilla, unit masked, amdgpu blacklisted, so all
+>     four dies sat at the firmware 256 MB and nothing was bound; the
+>     sibling die's BARs stay assigned whether or not a driver is bound):
+> 
+>       # echo 15 > /sys/bus/pci/devices/0000:0b:00.0/resource0_resize
+>       write error: No space left on device            (-ENOSPC)
+> 
+>       pci 0000:0b:00.0: BAR 0 [mem 0x9ffe0000000-0x9ffefffffff 64bit pref]: releasing
+>       pcieport 0000:0a:00.0: bridge window [mem 0x9ffe0000000-0x9fff01fffff 64bit pref]: releasing
+>       pcieport 0000:09:00.0: bridge window [mem 0x9ffe0000000-0x9fff01fffff 64bit pref]: releasing
+>       pcieport 0000:08:08.0: bridge window [mem 0x9ffe0000000-0x9fff01fffff 64bit pref]: releasing
+>       pcieport 0000:07:00.0: bridge window [mem 0x9ffc0000000-0x9fff01fffff 64bit pref]: was not released (still contains assigned resources)
+>       pcieport 0000:06:00.0: bridge window [mem 0x9ffc0000000-0x9fff01fffff 64bit pref]: was not released (still contains assigned resources)
+>       pcieport 0000:08:08.0: bridge window [mem size 0x800200000 64bit pref]: can't assign; no space
+>       pci 0000:0b:00.0: BAR 0 [mem size 0x800000000 64bit pref]: can't assign; no space
+>       pci 0000:0b:00.0: BAR 0 [mem 0x9ffe0000000-0x9ffefffffff 64bit pref]: old value restored
+> 
+>     Parent window (06:00.0 and 07:00.0, shared by both dies) before and
+>     after: 0x9ffc0000000-0x9fff01fffff, 770 MB, unchanged. Writing 8 back
+>     returned 0 and every window came back byte-identical. The whole thing
+>     took under half a second and nothing hung.
+> 
+>     So the sysfs path fails the same way for the user (-ENOSPC, "old
+>     value restored", BAR stays 256 MB) but for a reason one level below
+>     the sizing bug: the shared window on the two bridges above the switch
+>     is never released while the sibling die's BARs are assigned in it, so
+>     the three bridge windows on the way down have to grow to 32 GB + 2 MB
+>     inside a 770 MB parent, and cannot. The in-place path never gets to
+>     re-size the shared window at all; it is limited to what fits in the
+>     firmware layout. That is independent of this bug (it would fail the
+>     same way on a fixed kernel and on 6.17), and it is why my tool grows a
+>     dual-die module by removing the whole module and rescanning from the
+>     root port instead. The sysfs write is not a workaround here and does
+>     not exercise the sizing path this patch fixes; the setpci + rescan
+>     repro and amdgpu's own resize at probe (below) are the two routes that
+>     reach it, and both fail with "can't assign; no space" on unpatched 7.0.
+> 
+> 
+> What I have not tested
+> ----------------------
+> 
+> I want to be straight about the gaps:
+> 
+>   - I have not tested 16 GB or 8 GB BARs (see the structural argument
+>     above; 256 MB and 32 GB are the two data points).
+> 
+>   - amdgpu's own resize at probe time (amdgpu_device_resize_fb_bar ->
+>     pci_resize_resource) hits the same wall on 7.0. From an earlier boot
+>     where amdgpu was allowed to autoload with the dies still at 256 MB:
+> 
+>       amdgpu 0000:1b:00.0: BAR 2 [mem 0xbfff0000000-0xbfff01fffff 64bit pref]: old value restored
+>       amdgpu 0000:1b:00.0: BAR 0 [mem 0xbffe0000000-0xbffefffffff 64bit pref]: old value restored
+>       amdgpu 0000:1b:00.0: Not enough PCI address space for a large BAR.
+>       amdgpu 0000:1b:00.0: [drm] Detected VRAM RAM=32752M, BAR=256M
+> 
+>     That path fails closed (ReBAR index reverted, driver continues at
+>     256 MB), so it does not trigger the hang described above, but it
+>     does not get a large BAR either.
+> 
+>   - I have not bisected by booting: the commit was identified by reading
+>     setup-bus.c across the versions and confirmed by the A/B test of
+>     v7.0.12 with and without the one-line patch (see "Proposed fix"). If
+>     a real bisection would still help I can run it.
+> 
+> Happy to test patches, gather more traces, or run with any debug options
+> that would help. The machine is otherwise idle and I can reboot it freely.
+> 
+> 
+> Available on request (not attached; the largest is 1.1 MB):
+>   - full dmesg from the failing boot
+>   - lspci -vvnn and lspci -tvnn
+>   - the trimmed allocation trace for card 1
+>   - lspci -vv from the 6.17 boot (working layout)
+>   - the sizing model (pci-window-sim.py, 130 lines)
+>   - full dmesg from the v7.0.12 control boot and the v7.0.12 + patch boot
+>   - lspci -vvnn from the v7.0.12 + patch boot
+> 
+> 
+> #regzbot introduced: 3958bf16e2fe
+> 
+> ---
+>  drivers/pci/setup-bus.c | 12 +++++++++++-
+>  1 file changed, 11 insertions(+), 1 deletion(-)
+> 
+> --- a/drivers/pci/setup-bus.c
+> +++ b/drivers/pci/setup-bus.c
+> @@ -1329,7 +1329,17 @@ static void pbus_size_mem(struct pci_bus *bus, struct resource *b_res,
+>  				continue;
+>  
+>  			r_size = resource_size(r);
+> -			size += max(r_size, align);
+> +			/*
+> +			 * Resources are assigned in descending alignment
+> +			 * order, so a tight-fit sum is only gap-free if each
+> +			 * size is a multiple of the alignments that follow.
+> +			 * BARs always are (size == align); bridge windows
+> +			 * are not (arbitrary size, IORESOURCE_STARTALIGN to
+> +			 * their largest BAR), and two 32G+2M windows aligned
+> +			 * to 32G need 96G+2M of span, not 64G+4M. Pad such
+> +			 * resources up to their alignment.
+> +			 */
+> +			size += ALIGN(r_size, align);
 
-Ciao, Thorsten
+This is not required for case where there's just a single composite 
+resource so it will add again the space wastage back I've tried hard to 
+remove. And because of that wasted space, it will regress on some 
+systems/scenarios so it's, while simple looking "solution", a non-starter.
 
->> Symptom
->> -------
->> Audio cuts to silence for 0.2-3.5s at irregular intervals (roughly one per
->> 2-3 minutes of use) while the machine is otherwise idle and responsive.
->>
->> Mechanism (as measured, not inferred)
->> -------------------------------------
->> REAPER runs one SCHED_RR prio 20 audio thread plus ~15 SCHED_OTHER "livefx"
->> worker threads. During a stall:
->>
->>   - the RT audio thread is blocked in rt_mutex_schedule() on a PI mutex
->>   - exactly ONE livefx worker holds that mutex, has been PI-boosted to RT,
->>     and is enqueued but never scheduled
->>   - its schedstat shows run_ns ~0 with wait_ns tracking the entire stall:
->>
->>         reaper/livefx tid=43910  run=0.0ms  wait=3406.6ms  slices=2
->>         (during a 3403ms dropout)
->>
->>   - meanwhile ~17 sibling threads run normally with wait_ns = 0, and no
->>     thread does meaningful work (largest run was 7.2ms across 3.4s)
->>   - the machine stays responsive throughout; unrelated SCHED_OTHER work
->>     proceeds at 84-94% of normal rate with 0-1ms runqueue wait
->>   - all 16 cores keep taking timer interrupts at normal rates
->>
->> So a single PI-boosted RT task sits on a runqueue, unmigrated, while other
->> cores idle. With push disabled nothing hands it to an idle CPU.
->>
->> Evidence
->> --------------------------------
->>   kernel  RT_PUSH_IPI  playing   dropouts >=25ms          xruns
->>   7.1.8   off (default)  19 min   8  (191ms - 3471ms)   bursts
->> 23/265/434 per min
->>   7.1.3   on             39 min   0                     0
->>   7.1.8   on             42 min   0                     0
->>
->> The third row differs from the first ONLY in the sched feature: Identical
->> kernel, toolchain, GPU driver, project and audio configuration. At the
->> observed broken rate ~13 dropouts were expected in that window; zero were
->> seen, at both 25ms and 10ms detection thresholds (10ms is ~2 missed audio
->> cycles at quantum 256 / 48kHz).
->>
->> Workaround
->> ----------
->>   echo RT_PUSH_IPI > /sys/kernel/debug/sched/features
->>
->> Applied at boot via a systemd unit.
->>
->> System
->> ------
->>   AMD Ryzen 7 5800X (8c/16t), Arch Linux
->>   kernel 7.1.8-arch1-3 (and 7.1.5, 7.1.6 - all affected; 7.1.3 is clean)
->>   PipeWire 1.6.8 + pipewire-jack, Focusrite Scarlett 18i20, quantum 256 @ 48kHz
->>   CONFIG_PREEMPT_RT not set
-> 
-> Unfortunately, I'm going to be traveling next week and I may not be able to
-> look into this until I get back. I don't see anything that the normal (non
-> PUSH) logic would fail in this case. Thus I'm thinking it simply has a bug
-> that has been hiding because we've been using the PUSH logic.
-> 
-> I may be asking for some traces here when I get back to find out the exact
-> cause. Use the workaround for now.
-> 
-> The RT_PUSH_IPI was added because of a "thundering herd" of IPIs when all
-> but one CPU dropped its priority and the one still running had more than
-> one RT task on it. That would cause all the other CPUs to send an IPI to
-> that CPU to do a pull, but only would would get it. The RT_PUSH_IPI was
-> created to pass around a single IPI to do the push for all CPUs wanting a
-> new RT task to run.
-> 
-> The above use case doesn't look like it is having that. Thus, I'm thinking
-> something else broke.
-> 
-> -- Steve
-> 
+I didn't want to read the long explanation which contained just snippets 
+but this likely is the same case Bjorn reported to me privately that 
+relates to two (or more) composite resources (resources whose size do 
+not align with the final align).
+
+I've been busy with dealing another set of resource problems caused by 
+9036bd0efcb6 but I was going to write the fix to this problem soon as 
+well.
+
+The final head alignment is not calculated until later in pbus_size_mem() 
+and may be different for case with optional resources. The correction to 
+the window should be based on those real alignments, not on the resource's 
+own alignment, and only applied to the final size if there's more than one 
+composite resources in the first place.
+
+-- 
+ i.
 
