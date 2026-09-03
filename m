@@ -1,51 +1,51 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.162])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [185.244.194.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A3EE4503E8
-	for <regressions@lists.linux.dev>; Thu,  3 Sep 2026 11:22:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.162
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3399B438488
+	for <regressions@lists.linux.dev>; Thu,  3 Sep 2026 11:30:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.244.194.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788434573; cv=none; b=mTYC3fYPdAhijR7jkxZvn8xKlqA9O5CYWK0rk4OyQ06xcATGJZxfhQOY8/kJh8mDKtQ2yUPXWZA1FU7bWbvEZV+jMDCSnNeYQ7o90xs9f4uJbfERQbSyZnH6Ea8Ag9OyRl31mNt2xccZ8zGF/1tKuuN2Baq908Yf/dSd/DnCV1g=
+	t=1788435012; cv=none; b=FIEypDCq3uzdvidLl/o1JE2RUuR1nTXkl8n+3qq5/X5C+7IJ/Pr3HG0Gs9lHCoHqtP+Ampl8cHwgHfI7r1S1y4EjJbfk10XiVccgHf8LnWFq39ACFZ9y4nKzi0aGF0u7mGdW88UQUOlaheQaSaLMxwQWbiJMbJUKIVCeOwL7qio=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788434573; c=relaxed/simple;
-	bh=s2s73udoeAG1FqA+NnDDQaYcr8kCzvCv0Y93hGQPH3I=;
+	s=arc-20240116; t=1788435012; c=relaxed/simple;
+	bh=7ZGfw3J4a5JEuBsfhXEXtex3jd2srNbwsVSYvVwVvc8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FddFohiuP1rER2s/iEzbAQXrFQBJ5Ix1kJKLAqgKuTCBWbkye4SZ88nO6/b0SHR6Ni/4ydrYELMKIQH/Yvl7nxHrLRGnNWHCS4nlGSDqCoQi/sryISIQo/3YYL3WfBVRHbyC7EKW8vFPNMlLPjzCz6wT/h9i/gLl+mcag8XMNeg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=AEZepDfZ; arc=none smtp.client-ip=188.68.63.162
+	 In-Reply-To:Content-Type; b=a2g2zlkcxPoeyp2yVuWtQf9/oPq8v/wd/i8mhu4Bv0YWf/Q81dhMd+KtuC4ubobivn8x3BooRrFnouh5e5vr2re6v1TisfX0/WDjcLjSQYBIn5YA7HxQu4yeDUBArEHv5nHSSyJJcFJmmOuml83ThLtGJXVktKligraXeZLKYFU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=KSSZSWlE; arc=none smtp.client-ip=185.244.194.184
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="AEZepDfZ"
-Received: from mors-relay-8201.netcup.net (localhost [127.0.0.1])
-	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4hbHJM35T6z4Lgs;
-	Thu,  3 Sep 2026 13:22:43 +0200 (CEST)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="KSSZSWlE"
+Received: from relay01-mors.netcup.net (localhost [127.0.0.1])
+	by relay01-mors.netcup.net (Postfix) with ESMTPS id 4hbHQf2T2Tz90Sp;
+	Thu,  3 Sep 2026 13:28:10 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1788434563;
-	bh=s2s73udoeAG1FqA+NnDDQaYcr8kCzvCv0Y93hGQPH3I=;
+	s=key2; t=1788434890;
+	bh=7ZGfw3J4a5JEuBsfhXEXtex3jd2srNbwsVSYvVwVvc8=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=AEZepDfZpbXHgj9+qc4/SU3B7TTgllNDoBFzRJjugPyhR7ygotizCGgmaVOI0Q0RR
-	 kNe136XRxrGkhOCPYbv3tW4oZJ2Sjn3IYkXYKVB5+uCExo8DNiFmvU3jO6+pnl2nS3
-	 xrGqNKtCOOHHm5NGHkBSPONRukD3dmWuI6A7Vm9q5JrhBaeU3U/PF33Td9BoXpj67Y
-	 DA3UGa3SMJRkLelwLzcTN1DdP6o/dY/i6WmF0NiVue7BT8stpF5M67P8QS4ZijUuOZ
-	 Jb4fVVORVZn2QTjmV2eGpQgsZSeBaqGceefiik/vIfaJ2bT8V6VDkeAC6NA2rjoye4
-	 tx5U+ix0cBM9Q==
+	b=KSSZSWlEZION115+zIffE6KQv4G04pDl4s2ulqPuZ7AaW+xqwrDuelML/lL5qZOni
+	 GzejeEqysl+0mKtsKIcFzD3QfzTjMoUlabvCW8HIz491fDRedAICNYbDmvqNZhnwvR
+	 dwy4FmtokeNqUL/fFkPDM6RTt8/3/DKcwqJrBAhsnK2Gp4mij09355AgrESOoplkB+
+	 Kbg9c3NLddWUkDp0GK2ABBFexnmYMwfHYzpmHiBYVOVNpXuOUoJNI2DEfQhFOltF0f
+	 E4cvXSGdESDei0fbtPrMrct5T3VkqC/KOL7j4mnpsZP6K5SMxeuwOgKO+akJBtnNMK
+	 45RaNoEMmnZpg==
 Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4hbHJM2PfJz4LcW;
-	Thu,  3 Sep 2026 13:22:43 +0200 (CEST)
+	by relay01-mors.netcup.net (Postfix) with ESMTPS id 4hbHQf1mS4z80c4;
+	Thu,  3 Sep 2026 13:28:10 +0200 (CEST)
 Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4hbHJK6jymz8sZP;
-	Thu,  3 Sep 2026 13:22:41 +0200 (CEST)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4hbHQc6cPzz8sZg;
+	Thu,  3 Sep 2026 13:28:08 +0200 (CEST)
 Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 115705F9C6;
-	Thu,  3 Sep 2026 13:22:37 +0200 (CEST)
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 3F9D25F9C6;
+	Thu,  3 Sep 2026 13:28:00 +0200 (CEST)
 Authentication-Results: mxe9fb;
         spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
 Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <985770a7-e488-456a-a9fa-aa71f1cbafd5@leemhuis.info>
-Date: Thu, 3 Sep 2026 13:22:35 +0200
+Message-ID: <6db9c47f-a1f8-49dd-9e80-f9014d75f9e8@leemhuis.info>
+Date: Thu, 3 Sep 2026 13:27:59 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -53,102 +53,113 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] Power9 pseries boot hang in v7.2-rc6, narrowed to
- PowerPC GENERIC_ENTRY conversion window
-To: Venkat Rao Bagalkote <venkat88@linux.ibm.com>,
- Mukesh Kumar Chaurasiya <mkchauras@gmail.com>
-Cc: Shrikanth Hegde <sshegde@linux.ibm.com>,
- LKML <linux-kernel@vger.kernel.org>,
- linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
- Madhavan Srinivasan <maddy@linux.ibm.com>,
- "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <96dae110-f79b-4e54-8a9b-514369019b5d@linux.ibm.com>
- <e27eeaf4-c2c9-4ef7-9e1c-0a5fb45755d0@linux.ibm.com>
- <6d1b5f38-f4e4-46ca-88b4-7c18dd6c6280@linux.ibm.com>
- <anq72IebDSu-wWbb@li-1a3e774c-28e4-11b2-a85c-acc9f2883e29.ibm.com>
- <ansZjSJMWMV8DDF-@li-1a3e774c-28e4-11b2-a85c-acc9f2883e29.ibm.com>
- <2f7e6c34-7258-4b20-a38e-cedebccb835f@linux.ibm.com>
+Subject: Re: [REGRESSION] sched/rt: NO_RT_PUSH_IPI causes multi-second
+ PI-boost starvation in pro-audio workloads (dd29c017aed6)
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Martin King <martin3kx@gmail.com>,
+ regressions@lists.linux.dev, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org, linux-rt-users@vger.kernel.org
+References: 
+ <CAEB5A_91hob8ddOhW=PrO1=O7GrFmSxY3r1-_Ard6x8KHHuJGA@mail.gmail.com>
+ <20260814183652.611e7ecf@gandalf.local.home>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
 Content-Language: de-DE, en-US
-X-Enigmail-Draft-Status: N11222
-Autocrypt: addr=linux@leemhuis.info; keydata=
- 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 MEK4
-In-Reply-To: <2f7e6c34-7258-4b20-a38e-cedebccb835f@linux.ibm.com>
+In-Reply-To: <20260814183652.611e7ecf@gandalf.local.home>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <178843455745.2934421.2400865465999497924@mxe9fb.netcup.net>
-X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: 115705F9C6
-X-NC-CID: Vgtopi+KpcmPtuNCznG2/zksBmHE1g104SsqyVcNx+JsQK8gVvQ=
+X-PPP-Message-ID: 
+ <178843488063.2937962.11799557197795415206@mxe9fb.netcup.net>
+X-NC-CID: k37XkMfNV148T8AaHZlocYgfG0Ej4NCBFhcSJKQwQzEPo4rKEWU=
 
-On 8/12/26 07:16, Venkat Rao Bagalkote wrote:
-> On 11/08/26 6:16 pm, Mukesh Kumar Chaurasiya wrote:
->> On Tue, Aug 11, 2026 at 11:37:45AM +0530, Mukesh Kumar Chaurasiya wrote:
->>> On Mon, Aug 10, 2026 at 05:19:27PM +0530, Venkat Rao Bagalkote wrote:
->>>> On 04/08/26 8:23 pm, Shrikanth Hegde wrote:
->>>>> On 8/4/26 2:04 PM, Venkat Rao Bagalkote wrote:
->>>>>>
->>>>>> I'm seeing a boot regression on a Power9 pseries LPAR. The system
->>>>>> hangs very early during boot after:
->>>>>>
->>>>>> Quiescing Open Firmware ...
->>>>>> Booting Linux via __start() ...
->>>>>>
->>>>> That is strange. not sure where to look at without any logs.
->>>>> Is it a specific config that fails or this specific LPAR that fails?
->>>>>
->>> Is this a specific lpar or all power9 pseries are exhibiting same
->>> behaviour?
-> Its specific to a lpar.
->>
->> Can you try the below fix?
-> [...]
->
-> I tired this fix, but issue still persists.
-This regression made it to my list of tracked regression -- and it looks
-like this stalled. Is that the case? Or was this resolved meanwhile?
+On 8/15/26 00:36, Steven Rostedt wrote:
+> On Fri, 14 Aug 2026 16:12:35 -0500
+> Martin King <martin3kx@gmail.com> wrote:
+> 
+>> Commit dd29c017aed6 ("sched/rt: Have RT_PUSH_IPI be default off for non
+>> PREEMPT_RT") causes reproducible multi-second audio dropouts on an ordinary
+>> non-PREEMPT_RT desktop running a DAW.
+> 
+> Thanks for the report.
+
+This made it to my list of tracked regression -- but it looks like there
+was no progress for a while. Is that the case? Steven, did that maybe
+fall through the cracks due to the travel you mentioned? Or was this
+resolved meanwhile and I just missed it?
 
 Ciao, Thorsten
+
+>> Symptom
+>> -------
+>> Audio cuts to silence for 0.2-3.5s at irregular intervals (roughly one per
+>> 2-3 minutes of use) while the machine is otherwise idle and responsive.
+>>
+>> Mechanism (as measured, not inferred)
+>> -------------------------------------
+>> REAPER runs one SCHED_RR prio 20 audio thread plus ~15 SCHED_OTHER "livefx"
+>> worker threads. During a stall:
+>>
+>>   - the RT audio thread is blocked in rt_mutex_schedule() on a PI mutex
+>>   - exactly ONE livefx worker holds that mutex, has been PI-boosted to RT,
+>>     and is enqueued but never scheduled
+>>   - its schedstat shows run_ns ~0 with wait_ns tracking the entire stall:
+>>
+>>         reaper/livefx tid=43910  run=0.0ms  wait=3406.6ms  slices=2
+>>         (during a 3403ms dropout)
+>>
+>>   - meanwhile ~17 sibling threads run normally with wait_ns = 0, and no
+>>     thread does meaningful work (largest run was 7.2ms across 3.4s)
+>>   - the machine stays responsive throughout; unrelated SCHED_OTHER work
+>>     proceeds at 84-94% of normal rate with 0-1ms runqueue wait
+>>   - all 16 cores keep taking timer interrupts at normal rates
+>>
+>> So a single PI-boosted RT task sits on a runqueue, unmigrated, while other
+>> cores idle. With push disabled nothing hands it to an idle CPU.
+>>
+>> Evidence
+>> --------------------------------
+>>   kernel  RT_PUSH_IPI  playing   dropouts >=25ms          xruns
+>>   7.1.8   off (default)  19 min   8  (191ms - 3471ms)   bursts
+>> 23/265/434 per min
+>>   7.1.3   on             39 min   0                     0
+>>   7.1.8   on             42 min   0                     0
+>>
+>> The third row differs from the first ONLY in the sched feature: Identical
+>> kernel, toolchain, GPU driver, project and audio configuration. At the
+>> observed broken rate ~13 dropouts were expected in that window; zero were
+>> seen, at both 25ms and 10ms detection thresholds (10ms is ~2 missed audio
+>> cycles at quantum 256 / 48kHz).
+>>
+>> Workaround
+>> ----------
+>>   echo RT_PUSH_IPI > /sys/kernel/debug/sched/features
+>>
+>> Applied at boot via a systemd unit.
+>>
+>> System
+>> ------
+>>   AMD Ryzen 7 5800X (8c/16t), Arch Linux
+>>   kernel 7.1.8-arch1-3 (and 7.1.5, 7.1.6 - all affected; 7.1.3 is clean)
+>>   PipeWire 1.6.8 + pipewire-jack, Focusrite Scarlett 18i20, quantum 256 @ 48kHz
+>>   CONFIG_PREEMPT_RT not set
+> 
+> Unfortunately, I'm going to be traveling next week and I may not be able to
+> look into this until I get back. I don't see anything that the normal (non
+> PUSH) logic would fail in this case. Thus I'm thinking it simply has a bug
+> that has been hiding because we've been using the PUSH logic.
+> 
+> I may be asking for some traces here when I get back to find out the exact
+> cause. Use the workaround for now.
+> 
+> The RT_PUSH_IPI was added because of a "thundering herd" of IPIs when all
+> but one CPU dropped its priority and the one still running had more than
+> one RT task on it. That would cause all the other CPUs to send an IPI to
+> that CPU to do a pull, but only would would get it. The RT_PUSH_IPI was
+> created to pass around a single IPI to do the push for all CPUs wanting a
+> new RT task to run.
+> 
+> The above use case doesn't look like it is having that. Thus, I'm thinking
+> something else broke.
+> 
+> -- Steve
+> 
+
