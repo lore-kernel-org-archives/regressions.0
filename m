@@ -1,59 +1,39 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mail-24424.protonmail.ch (mail-24424.protonmail.ch [109.224.244.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B789C38A736
-	for <regressions@lists.linux.dev>; Thu,  3 Sep 2026 16:03:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D9F451122E
+	for <regressions@lists.linux.dev>; Thu,  3 Sep 2026 20:13:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.224.244.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788451402; cv=none; b=IU/ywHzE46y2S/G4pUgOBah440uqJuy4dmwERtU1LKJeuMzFK2n6Y/eaQagYFljXK4fcrVNXHvPtI+0Fxs4pYkdsqA+7WMpNG6PxGXkFlBtQVk5Je8VwT3mBsbmg56ItI6gWTGktf/9lFYN2D51olkvy5TfZGG9Tv59ctzpp1Jg=
+	t=1788466396; cv=none; b=u7sPJiDuUKVHLz6p0oNetdDXDzsJzb6Ghe8DzsP2qTtkfgapiPzAqKXSqQzrQn0cmSyViiRa1x9FZk6hh0P/OgUN0zzWs7BRACMFPgnC3rLPfalosxRK3ybT46AZV4dCJI46DZsxduI89DzL0y2JlEVSttPMFd8AqxcrMyEqfMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788451402; c=relaxed/simple;
-	bh=qMT1NX+zIHgJmJlgodutkDLJfbNg/gbC5a0twUCi6TA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hKxUFfCHCm4KJhBQeKWFuJ/i/RGcNLGW8zS6P/GCoZETRtLfpWjh5lyiNi1q8ZWJv3H0nNWq6c/DCDx64I2Zzz+X2NSM+eiGf3Y+nwsG9bpM/ES6MOGwZgBuuXU0IkKyz319px0Vdcx9jMrhqTqhd9UFeBx/FSMMTgH0h7p0Qo4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=OOEvCkAm; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ikuJDRHT; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1788466396; c=relaxed/simple;
+	bh=LXHjJr+IdbhrkkyqJFRv5MyLW8lrOrhx7fkq0H/K5hc=;
+	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=Diw9S28Hxzv+XCUh89mGIGjgR7kHuM1bqcNfX0KS3VZnc1NkbCejFeSWsOLufkdZbu+N+kDXobeeI5hAmH9YwnUrDlUNgojuwQvxMLq0qMuEQ0YOV3OswWnaceBpwS0QpaLlOS4wjoYGjCjlulryGWJF/pxbho3/pmYyHWqkDck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=XbporsVL; arc=none smtp.client-ip=109.224.244.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OOEvCkAm";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ikuJDRHT"
-Date: Thu, 3 Sep 2026 18:03:17 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1788451398;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LjgTxkB5zSVJzJcaPywHI0T0gYLDigFmAh14plXp34M=;
-	b=OOEvCkAmwFpas5OUKiujIY3hbBzn4shpq83enDwyRsZr55zouKLf9Cnv9ugfNVua/su6pc
-	zg99uLiLi1xy0BV9WLaAxhB5UfogQWmlZ0CgEmxLmwhfCsb0kJd6hkdcV17nv88L72SjJS
-	PMxVBq5yDvs0zs4R0FXRMamxINJDib/AUkS1U0k+/RvldhE2oQlI8J2haTf+GRAx37QKKI
-	mHOXVouoLgxor52J6iAvAcM1ZD3Oz2wZKi2di8EYP7F6hwKhujc/jVVm1OtiV7XA0YvRtD
-	9qbmYJ4O5dvitGqrXbIpNycx7nZxtQS7c4tdzVMnxH3C13jRS6nVsIcBPCtocg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1788451398;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LjgTxkB5zSVJzJcaPywHI0T0gYLDigFmAh14plXp34M=;
-	b=ikuJDRHTsO3XeJJYqCQfqsThXrmxlh2Dz2nbRv2Wunm7MQb5gwMfCAZX+fpzVFslICRqMS
-	9G7UN4A/Tim8eRDw==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Nikita Taranov <nickita.taranov@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Darren Hart <dvhart@infradead.org>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	=?utf-8?B?QW5kcsOp?= Almeida <andrealmeid@igalia.com>,
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: futex: private hash can stay on the shared atomic refcount
- indefinitely after auto-scaling
-Message-ID: <20260903160317.-6L7VXXK@linutronix.de>
-References: <20260823150046.204417-1-nickita.taranov@gmail.com>
- <20260824160337.0IvfKx8A@linutronix.de>
- <20260825170605.2462933-1-nickita.taranov@gmail.com>
- <20260901230559.1978876-1-nickita.taranov@gmail.com>
- <20260902075604.A_-jz823@linutronix.de>
- <20260902213143.3426531-1-nickita.taranov@gmail.com>
+	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="XbporsVL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+	s=protonmail3; t=1788466381; x=1788725581;
+	bh=DX0hZiadBDtqHKQzOVVnh8pL7Hr0j8UUMfOlW+lf5nI=;
+	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
+	b=XbporsVLFH8Dk7hx6XxO/XjiAUo1nEmR1sizrryQZRvKpccspeGyRl6Vf20DAEIlx
+	 TJ2W/ATRCHz4AfixzsUyVw783PNC/OdJ0cWNCY8cpc3zDQ/9sYVsIq1uwYMxWeMq6L
+	 eVl/wwdLTAsXlOOcuUS8eqmQ7ojvW7b4FycFnwPcQDcCpwiYlEqR0Bl2aDCJKxYl0Z
+	 Po0Fss/sbmqxAnilZoaWBuj5db2dZBMR0Is7jfRZbjI19vB60q00CCO3jYn/ZnSljJ
+	 ud+pMGSelD1TwKvZ63syp/oLW4aN2mjix4h6oTbZDpGk+ncqPitFmqGmBO3cFyWr2j
+	 ZGhKJaL1/DNLw==
+Date: Thu, 03 Sep 2026 20:12:56 +0000
+To: "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>
+From: jhon cadena <jhon_jairo_cadena@protonmail.com>
+Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>, "linux-pcmcia@lists.infradead.org" <linux-pcmcia@lists.infradead.org>
+Subject: [REGRESSION] pata_pcmcia: ~80 second delay after physically removing PC Card CF device
+Message-ID: <1zX3C-O2LeyhM2Zkz1FCkoqLUvxXWI_b5CfSB7DfI37xPsH9vIz1YlzPLWxAWUJi4rYcww6jDfuyKWZRBRQrzfUb0aLwkSHQxm9z_OHyMLU=@protonmail.com>
+Feedback-ID: 9628936:user:proton
+X-Pm-Message-ID: d9590fee390a352da29b1a65e999e0f2b5780017
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -61,39 +41,165 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260902213143.3426531-1-nickita.taranov@gmail.com>
+Content-Transfer-Encoding: quoted-printable
 
-On 2026-09-02 21:31:42 [+0000], Nikita Taranov wrote:
-> The problem was originally observed on a synthetic benchmark that pretty much
-> did what the first repro does. On that benchmark, it was really bad as you saw.
-> I've never seen it on a real workload, so cannot comment on that.
+Hello,
 
-Okay. In that case I need to figure if we want to care about a
-regression on micro benchmark.
+I am reporting a possible regression in the PCMCIA/PATA/libata handling of =
+a CompactFlash card used through a PC Card adapter.
 
->                           stock v7.3-rc1        + your patch
->   Xeon 6975P-C 96c/192t   8/8 at 96,128,192     0/8 everywhere
->   Graviton4 Neoverse-V2   see below             0/8 everywhere
->   AMD EPYC 9R45           0/8 (never stalls)    0/8
+The same type of PC Card storage worked normally on Debian 9 on my previous=
+ Toughbook. After moving to Debian 11 with a newer kernel, physically remov=
+ing the card causes an approximately 79-second delay while the kernel conti=
+nues trying to access the device before finally disabling it.
 
-So this means my quick hacked fixed your problem?
+The problem is reproducible.
 
-> I'm guessing your patch was an early stage draft, but just in case let me flag
-> one problem I saw: on the Intel box the futex selftests regress:
-> 
->   stock v7.3-rc1     14 passed, 0 failed
->   + your patch       12 passed, 2 failed
-> 
->   futex_requeue      requeue_multiple:
->                        expected 10 == futex_cmp_requeue(f1, 0, &f2, 3, 7, 0), got 0
->                        expected  7 == futex_wake(&f2, INT_MAX, 0), got 0
->   futex_requeue_pi   2 of 24 fail: broadcast_owner, owner
->                        "Test terminated by timeout"
+Hardware:
 
-Yeah, I might have got something wrong. It was just an idea but might
-look into this if we need this fixed. Thanks for the feedback.
+-   Laptop: Panasonic Toughbook CF-31
+   =20
+-   CardBus controller: Ricoh Co Ltd CardBus bridge [1180:e476], rev 02
+   =20
+-   Storage: PQI Industrial CF Card
+   =20
+-   CF card capacity reported by the kernel: 245760 sectors (~120 MiB)
+   =20
+-   Interface: PC Card/CardBus -> PCMCIA -> PATA -> libata -> SCSI
+   =20
 
-> Regards.
+Current software:
 
-Sebastian
+-   Debian 11
+   =20
+-   Kernel: 5.10.0-46-amd64
+   =20
+-   Architecture: amd64
+   =20
+-   Desktop: MATE
+   =20
+
+The device is detected as:
+
+ata20: PATA max PIO0 cmd 0x9100 ctl 0x910e irq 19
+ata20.00: ATA-4: PQI Industrial CF Card, ra6h.a01, max UDMA/33
+ata20.00: 245760 sectors, multi 0: LBA
+
+It then appears as /dev/sdb.
+
+Reproduction:
+
+1.  Insert the CF card into the PC Card slot.
+   =20
+2.  Mount the filesystem normally.
+   =20
+3.  Use Caja's "Eject" operation to unmount the filesystem.
+   =20
+4.  Physically remove the PC Card.
+   =20
+5.  The kernel then spends approximately 79 seconds trying to revalidate th=
+e ATA device before finally disabling it.
+   =20
+
+The relevant messages are:
+
+pcmcia_socket pcmcia_socket0: pccard: card ejected from slot 0
+sd 6:0:0:0: [sdb] Stopping disk
+
+Approximately 32 seconds later:
+
+ata20: drained 65536 bytes to clear DRQ
+
+Then:
+
+ata20.00: qc timeout (cmd 0xec)
+ata20.00: qc timeout (cmd 0xec)
+ata20.00: qc timeout (cmd 0xec)
+ata20.00: revalidation failed (errno=3D-5)
+ata20.00: disabled
+
+followed by:
+
+sd 6:0:0:0: [sdb] Start/Stop Unit failed
+... Not Ready ...
+hard reset required
+
+The total time from physical removal to the device being disabled is approx=
+imately 79 seconds.
+
+There is an important workaround which also provides a useful comparison:
+
+If I first unmount the filesystem using Caja and then run:
+
+sudo pccardctl eject 0
+
+before physically removing the card, the problem does not occur. The card c=
+an then be physically removed and another card inserted immediately, withou=
+t the approximately 79-second delay.
+
+This makes me suspect that the physical PCMCIA removal path is not synchron=
+izing correctly with the ATA/libata device removal/revalidation path, altho=
+ugh I do not know which component is responsible.
+
+Another important observation is that I previously used Debian 9 on a diffe=
+rent Panasonic Toughbook and did not experience this delay with PC Card sto=
+rage. I do not have the old installation available at the moment, so I cann=
+ot currently provide the exact kernel version that worked.
+
+I have also checked:
+
+cat /sys/module/libata/parameters/ata_probe_timeout
+
+which returns:
+
+0
+
+The current kernel command line is:
+
+BOOT_IMAGE=3D/boot/vmlinuz-5.10.0-46-amd64 root=3DUUID=3Df252ab9c-ab0e-4769=
+-b123-4bac307fc566 ro quiet
+
+I would appreciate any advice on whether this is a known issue or regressio=
+n in pata_pcmcia/libata/PCMCIA handling, and what additional information or=
+ testing would be useful.
+
+I can reproduce the problem and run additional tests if needed.
+
+Thank you.
+
+
+
+dmesg output:
+
+[58935.824119] =C2=A0sdb: sdb1[58940.922179] pcmcia_socket pcmcia_socket0: =
+pccard: card ejected from slot 0
+[58940.923642] sd 6:0:0:0: [sdb] Stopping disk
+[58971.634659] ata22: drained 65536 bytes to clear DRQ
+[58976.801978] ata22.00: qc timeout (cmd 0xec)
+[58976.801986] ata22.00: failed to IDENTIFY (I/O error, err_mask=3D0x5)
+[58976.801989] ata22.00: revalidation failed (errno=3D-5)
+[58987.041967] ata22.00: qc timeout (cmd 0xec)
+[58987.041974] ata22.00: failed to IDENTIFY (I/O error, err_mask=3D0x5)
+[58987.041977] ata22.00: revalidation failed (errno=3D-5)
+[59018.530087] ata22.00: qc timeout (cmd 0xec)
+[59018.530094] ata22.00: failed to IDENTIFY (I/O error, err_mask=3D0x5)
+[59018.530096] ata22.00: revalidation failed (errno=3D-5)
+[59018.530102] ata22.00: disabled
+[59018.694228] sd 6:0:0:0: [sdb] Start/Stop Unit failed: Result: hostbyte=
+=3DDID_OK driverbyte=3DDRIVER_SENSE
+[59018.694239] sd 6:0:0:0: [sdb] Sense Key : Not Ready [current]
+[59018.694246] sd 6:0:0:0: [sdb] Add. Sense: Logical unit not ready, hard r=
+eset required
+
+
+J.C. Electric--lifetime warranty--
+Jhon Cadena
+Cel. 098700-9321
+Whatsapp: 0995012430
+Av. V=C3=ADctor Cartagena S6-78 y Argentina
+Cayambe-Ecuador
+
+Si al finalizar el d=C3=ADa, a=C3=BAn tienes energ=C3=ADa...significa que n=
+o hiciste todo lo que pudiste haber hecho....
+
+Enviado desde un correo electr=C3=B3nico seguro de Proton Mail.
