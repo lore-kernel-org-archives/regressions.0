@@ -1,27 +1,55 @@
-Received: from sphereful.davidgow.net (sphereful.davidgow.net [203.29.242.92])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.162])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAF42395DA9
-	for <regressions@lists.linux.dev>; Fri,  4 Sep 2026 07:30:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.242.92
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14D3D37F325
+	for <regressions@lists.linux.dev>; Fri,  4 Sep 2026 08:47:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.162
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788507056; cv=none; b=g+U6Rid5DsSrvFjN9GWejb0JCNr0pvxujIbxawVYsIUulWCanzZArWUBcTJolTUexQLsOPxOvNmu0y7a9G0r7J380Evhs6AHVF4XbyAG4JDzFwyn1ldULIjdmYvdXfG+8fiEMHS7kjW3o/AD3DEsPOGV8wq8mdyU9qJyH+iBP0Q=
+	t=1788511626; cv=none; b=RxaW7EMFQLYuQm5rj0X5xeSYWx4xrjSYj+vVt1mIIsDPsIFMqHisqHaQMnBiNJp38Cfwnbx5iftTRCvLYs4VQYe/EijcJBkXf4cIzlr4EAz0YFMpibHbEU/KcuT0WYWs8M+uO95irxkhvnbu8Br2Ah0sUNDDPpP8ivBk3oNikio=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788507056; c=relaxed/simple;
-	bh=63RTdAchA4e5/HG54Wog5dnkc1w5rE+eIUmtjEyIBvI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=upjNoHKC72lJ0/GXoh7dpvSfe+ea33lBM2yYHCdaTx4WLcUmrEz6NpmT7Du5TJHfVaNMdoFT8BpUpwOcn2lzxZ4r25K9ourSW30BekHpoXyZDC7++6V+xqqBjGa0YzgZC8pvIywsYbmHR4ZuNdjrNdudDd/KqDF81MHb+iE8dy8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=davidgow.net; spf=pass smtp.mailfrom=davidgow.net; arc=none smtp.client-ip=203.29.242.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=davidgow.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=davidgow.net
-Received: by sphereful.davidgow.net (Postfix, from userid 119)
-	id 263B6200140; Fri,  4 Sep 2026 15:30:43 +0800 (AWST)
+	s=arc-20240116; t=1788511626; c=relaxed/simple;
+	bh=nuhOMeUmJJ40/zsnTPmKPh3B8kcXMd0V5QoBzVHuhwI=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:References:
+	 In-Reply-To:Content-Type; b=Kiot4gPevUIY7+wTLPeGAUNUfjyGBUqHp8anWoNOFPyQJDFwn8H5QhxT3tBfT9Def0A5aKlBOGNT6xWdIMufszn8xxxDIrHSBiCDyz5N2RZKeoVsS1H83IVxuxjBRk7yWSKH/2nLgUXV3hisMt6rrjqfmE8POySVsSUQzXrc9w0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=SU727cik; arc=none smtp.client-ip=188.68.63.162
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="SU727cik"
+Received: from mors-relay-8201.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4hbqpB60RVz4HGk
+	for <regressions@lists.linux.dev>; Fri,  4 Sep 2026 10:46:58 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1788511618;
+	bh=nuhOMeUmJJ40/zsnTPmKPh3B8kcXMd0V5QoBzVHuhwI=;
+	h=Date:From:Subject:To:References:In-Reply-To:From;
+	b=SU727cikJQkzfVYA0iGiFo6EUmsw3LpJ4tCEanq3f4qQrxrVxMZtdtfUiRrvJEJx6
+	 9689H2T14JqOo5euYrgwnj2/yPym4iyqIo0RPnqn8tzTmO3F/wZo28Gwcd8ZzeuYUv
+	 wcVJilv5YyFsyfYG59tG51/nA50QEtHw3S32Cy3sud4sxOJ4nP4A2gBIKmgIgLets4
+	 9wvPiuI5kBfcDHWZ20PVZkp6M98I9AQYXYz/PNFNyTXG3RbRbcn41vKv3jogDo29Ly
+	 1p7YGJ/izr5mTvMC/ipdAX4JmhhOxN+5J4lPDA5jQI31xM37ivcs/r4IGWLsPK41c4
+	 tT2eT11aT+tyg==
+Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4hbqpB5HFnz4B3x
+	for <regressions@lists.linux.dev>; Fri,  4 Sep 2026 10:46:58 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
+X-Spam-Flag: NO
+X-Spam-Score: -2.901
 X-Spam-Level: 
-Received: from [IPV6:2001:8003:8802:7000::41b] (unknown [IPv6:2001:8003:8802:7000::41b])
-	by sphereful.davidgow.net (Postfix) with ESMTPSA id 6205E2000F9;
-	Fri,  4 Sep 2026 15:30:40 +0800 (AWST)
-Message-ID: <bcf1ee9b-97e5-43f9-81eb-67ac6a0a98dc@davidgow.net>
-Date: Fri, 4 Sep 2026 15:30:37 +0800
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4hbqpB1ypQz8tf7
+	for <regressions@lists.linux.dev>; Fri,  4 Sep 2026 10:46:58 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 625855F995
+	for <regressions@lists.linux.dev>; Fri,  4 Sep 2026 10:46:49 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <606f934c-db94-4317-a6d7-f895951d4747@leemhuis.info>
+Date: Fri, 4 Sep 2026 10:46:48 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -29,108 +57,50 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH wireless] wifi: mt76: mt792x: fix NULL dereference in ACPI
- SAR init during probe
-To: Devin Wittmayer <lucid_duck@justthetip.ca>, Felix Fietkau <nbd@nbd.name>,
- Lorenzo Bianconi <lorenzo@kernel.org>
-Cc: Klara Modin <klarasmodin@gmail.com>,
- Charlie-cy Wu <Charlie-cy.Wu@mediatek.com>, JB Tsai <jb.tsai@mediatek.com>,
- Sean Wang <sean.wang@mediatek.com>, Ryder Lee <ryder.lee@mediatek.com>,
- Shayne Chen <shayne.chen@mediatek.com>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- linux-wireless@vger.kernel.org, linux-mediatek@lists.infradead.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- regressions@lists.linux.dev
-References: <20260825181712.28548-1-lucid_duck@justthetip.ca>
-Content-Language: en-US
-From: David Gow <david@davidgow.net>
-In-Reply-To: <20260825181712.28548-1-lucid_duck@justthetip.ca>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-
-Le 26/08/2026 à 02:17, Devin Wittmayer a écrit :
-> Some laptops carry a MediaTek power table in their firmware, and the
-> driver reads it to set a transmit limit for each frequency range. It
-> only fills in the ranges themselves when it registers the device.
-> 
-> The startup step that does this existed already, but it never programmed
-> anything. These two commits made it run a regulatory update instead,
-> which sets the limits on the way through, long before registration. So on
-> a machine that has the table the driver reads through an empty pointer
-> and the interface never appears:
-> 
->    BUG: kernel NULL pointer dereference, address: 0000000000000004
->    RIP: 0010:mt792x_init_acpi_sar_power
->    Call Trace:
->     mt7921_set_tx_sar_pwr
->     mt7921_mcu_regd_update
->     mt7921_regd_update
->     mt7921_run_firmware
->     mt7921e_mcu_init
->     mt7921_init_work
-> 
-> Skip it when the ranges are missing. They are applied again once the
-> device is up, which is where they came from before.
-> 
-> Reported-by: Klara Modin <klarasmodin@gmail.com>
-> Closes: https://lore.kernel.org/linux-wireless/aoyxqHYvSuaBeubf@soda.int.kasm.eu/
-> Fixes: 9b80bd9cab40 ("wifi: mt76: mt7921: add regulatory wiphy self manager support")
-> Fixes: e9f3f1cc133f ("wifi: mt76: mt7925: add regulatory wiphy self manager support")
-> Signed-off-by: Devin Wittmayer <lucid_duck@justthetip.ca>
-> ---
-
-I can also confirm that this fixes the same NULL pointer dereference in 
-7.3-rc1 here, also on a Framework 13 (Ryzen 7040):
-
-BUG: kernel NULL pointer dereference, address: 0000000000000004
-#PF: supervisor read access in kernel mode
-#PF: error_code(0x0000) - not-present page
-PGD 0 P4D 0
-Oops: Oops: 0000 [#1] SMP NOPTI
-CPU: 10 UID: 0 PID: 149 Comm: kworker/10:1 Tainted: G            E 
-7.3.0-rc1-sulix+ #15 PREEMPT(full)  b7f05cce278af6607ac2dcae2fd785935bbe0dc6
-Hardware name: Framework Laptop 13 (AMD Ryzen 7040Series)/FRANMDCP07, 
-BIOS 03.05 03/29/2024
-Workqueue: events mt7921_init_work [mt7921_common]
-RIP: 0010:mt792x_init_acpi_sar_power+0x40/0x1ed [mt792x_lib]
-(...)
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: 
+ <178851160966.2330377.10610420993211254155@mxe9fb.netcup.net>
+X-NC-CID: ODuPujDqch89k9E1Soy1hmsCXRTINwTKit/WSN8NuyTEem129DY=
 
 
-Tested-by: David Gow <david@davidgow.net>
 
-Thanks,
--- David
+On 3/9/24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
+
+#regzbot report:
+https://lore.kernel.org/lkml/20260705-pci-rebar-root-bus-v1-1-55df70cbdd88@honeycomb.io/
+#regzbot monitor:
+https://lore.kernel.org/lkml/20260731-pci-rebar-root-bus-v3-1-6732e233fc99@honeycomb.io/
 
 
-> 
-> Reproduced on both chips before sending, an MT7922 and an MT7925, and the
-> fix clears both. Neither machine here ships a vendor power table, so I
-> supplied one through an ACPI override in the initrd. It also wants recent
-> firmware. The June builds do not turn on self-managed regulatory and
-> nothing happens; the builds now in linux-firmware do, and then it dies
-> exactly as reported with no interface at all. Patched, both come up and
-> scan normally, and the injected limits still show through in the power
-> table afterwards, so the skip does not lose them.
-> 
-> With that table still in place and the fix absent, backing out the mt7921
-> commit on its own also boots clean, so the table is not what causes this.
-> 
->   drivers/net/wireless/mediatek/mt76/mt792x_acpi_sar.c | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/wireless/mediatek/mt76/mt792x_acpi_sar.c b/drivers/net/wireless/mediatek/mt76/mt792x_acpi_sar.c
-> index 946dd7956e4a..b468051fbe68 100644
-> --- a/drivers/net/wireless/mediatek/mt76/mt792x_acpi_sar.c
-> +++ b/drivers/net/wireless/mediatek/mt76/mt792x_acpi_sar.c
-> @@ -323,7 +323,8 @@ int mt792x_init_acpi_sar_power(struct mt792x_phy *phy, bool set_default)
->   	const struct cfg80211_sar_capa *capa = phy->mt76->hw->wiphy->sar_capa;
->   	int i;
->   
-> -	if (!phy->acpisar || !((struct mt792x_acpi_sar *)phy->acpisar)->dyn)
-> +	if (!capa || !phy->acpisar ||
-> +	    !((struct mt792x_acpi_sar *)phy->acpisar)->dyn)
->   		return 0;
->   
->   	/* When ACPI SAR enabled in HW, we should apply rules for .frp
+#regzbot report:
+https://lore.kernel.org/lkml/20260820095714.1865096-1-wenst@chromium.org/
+#regzbot dup:
+https://lore.kernel.org/all/20260902143351.7b6d5e0a@gandalf.local.home/
+
+#regzbot report:
+https://lore.kernel.org/linux-iommu/07b2d390-f7a0-47e2-bc2c-eb0853acf52e@juch.cc/
+#regzbot introduced: 283d245468a2
+#regzbot title: iommu/amd: booting broke
+#regzbot fix: iommu/amd: Fix premature break in init_iommu_one() again
+#regzbot monitor:
+https://lore.kernel.org/all/20260824062907.4926-1-vasant.hegde@amd.com/
+
+#regzbot report:
+https://lore.kernel.org/all/018a9738-1d4a-43a0-9352-a56d1e541364@gmail.com/
+#regzbot introduced: 108cc873398932
+#regzbot title: btrfs: variety of problems due to change in
+/proc/self/mountinfo
+
 
