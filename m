@@ -1,89 +1,225 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEE553911B5;
-	Fri,  4 Sep 2026 18:19:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEC48514756
+	for <regressions@lists.linux.dev>; Fri,  4 Sep 2026 19:40:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788545983; cv=none; b=TpqsvXfvWssaCiZUaOXX87Q96hbqcGy0u+n5BnEt2c1TfG/7ytLPiYkeqYP5p/AErfAY22SHQ5da8NLCcwBS7C1uJrQDhW3hxYZ7MDo1WmIAL/elTyBJ2sQb4u7RN1Na/d+4kaowMP59gY3lIXd0atgtMVibgSGAVOYic8oCIhU=
+	t=1788550823; cv=none; b=gcO+veJ/6HpUVOrGBwMwzJ8X9iTPiu395F+iCfp8a2Ptu6oocod96eOnB3sJIKVGU/XUb+/n+OiOAIUMIHZKvTwjs9d6i6xMaeoJ53qucRjjX6tVZg07HQwnRLbdfMUGWIEujveaLygvr6X8ubAnxMyKMywjea9lwnb18adcBDU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788545983; c=relaxed/simple;
-	bh=K67UAh45lnHiRxuKGWLeFyuTLdyFRfNm+f8uGnyvfx0=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=fxXgkAK/m3J5VmrzuTCFlKhJls5z7W7E7rYRkAsThdOTthCqUaRZmEVksKr0LxyrhflC5a8KGgsks5VUdyBLNvQRfQ3Fe85JAq2V/In2ac61Fzh6zbc+Mp5brTBvtNVouSC0JYubP8SHP8ATOYT4IcJPnH0F/ytwloiTBrXV0ec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a6ZJq9kI; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788550823; c=relaxed/simple;
+	bh=6tWlioxPRPMOSFA6A973ysW06kOVqzWQ94oQSV4PUG8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HXzOnEQElzPEySjdByxOVhQDUHvoXHwRNe6O1EDRa0Pjc/ONFt0Tf9MuZarMYO4qP5JxdO8RC4/SW8iTVbrmD8jUnDAXbV8fOExFslmNbzXC4RGUFkhI59FtJvMEW0VwvmiMYhIfXnr3enRf/PBmElMmYsV7zTRFW3BJyk6Jjgs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de; spf=pass smtp.mailfrom=posteo.de; dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b=WnrIwQHG; arc=none smtp.client-ip=185.67.36.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a6ZJq9kI"
-Received: by smtp.kernel.org (Postfix) with UTF8SMTPSA id E370B1F00A3D;
-	Fri,  4 Sep 2026 18:19:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788545982;
-	bh=62jm9Q77S2sVZx0JPQ7aMm4YDbqkZyG9GTqZdJ8kxUg=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date;
-	b=a6ZJq9kIsIVCK6/Fjg8Td1RT85Fn0E0YjzWuzBazyUtqo1zVcL3MVaXQ2q6c/Izs7
-	 8N1MB9R/SUGbQG+sCokn3qiLjKV0KKHn5sHpIsyGEhNwhI2MUOV8jyZqX5UsSpmnWJ
-	 f5Dm+oBcKUBPSaoT4nvVnVTzZRu0du/Q2RqF1XXGCJcYfpgSgM4KLsfrMnHsEc/Yve
-	 d9egC3AmYhENDVAb9bujt9sVQ+Fve42gt+IQb4gCRU7kIs25Dhv0z53iuHGJ2JxobY
-	 RCgfnaKTuWG7DuJ0ZHc1MosIbgZ6yVOD+c8Uc5l++OJXRr3JaPgrPDoKJYqgo33foQ
-	 cKW/BmeJHDxbg==
-From: Nicolas Schier <nsc@kernel.org>
-To: Nathan Chancellor <nathan@kernel.org>, 
- Vlad Poenaru <vlad.wing@gmail.com>
-Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
- regressions@lists.linux.dev, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-In-Reply-To: <20260902161347.4163577-1-vlad.wing@gmail.com>
-References: <20260902161347.4163577-1-vlad.wing@gmail.com>
-Subject: Re: [PATCH] kbuild: don't delete in-flight filechk temporaries in
- asm-headers
-Message-Id: <178854595964.42024.7648905452681649287.b4-ty@b4>
-Date: Fri, 04 Sep 2026 20:19:19 +0200
+	dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b="WnrIwQHG"
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout02.posteo.de (Postfix) with ESMTPS id 4259B240101
+	for <regressions@lists.linux.dev>; Fri,  4 Sep 2026 21:40:04 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=posteo.de;
+	s=1984.8680eb; t=1788550804;
+	bh=6tWlioxPRPMOSFA6A973ysW06kOVqzWQ94oQSV4PUG8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:Content-Type:
+	 From;
+	b=WnrIwQHG2hQEY1C2dni6YKBDnDucXlzt9Bhq9xC0x97HjRVYvwN/dg97FFr3WUhxv
+	 2EFBEEyC/WiUGI5rKU+XLPdLbT5Ry+FeSRB3vd33T2OqR2fmEL3un3vWFHENUpWIwu
+	 u/jrBaOBKV9kyLY2zInn5TjCoanVESo1zG+6erT+5BkFJGorGWT/fUrF7/GLKvfBio
+	 iW8adnLepULHZ4qXjjEKCXfUqeLZDQ0wl2ODD5cCgooNyuRQSVPLy6ApaDF4Ta2mMR
+	 9QPHlXkFpvQyQtjSvlksTM0RgogAIxm3w+qEXlRO5vx9uD15L6V2q0lrAOnZ9C622V
+	 k7gFUpRWElhJw==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4hc6Hj1FdGz6v5j
+	for <regressions@lists.linux.dev>; Fri,  4 Sep 2026 21:40:01 +0200 (CEST)
+Received: from [192.168.50.8] (port=57752)
+	by server.zuhause.xx with esmtpsa  (TLS1.3) tls TLS_AES_128_GCM_SHA256
+	(Exim 4.99.5)
+	(envelope-from <familiekuehn@posteo.de>)
+	id 1x2ZlX-0000000EtlF-3zmy;
+	Fri, 04 Sep 2026 21:39:59 +0200
+Message-ID: <3ff7d669-b5e9-47c7-a967-3c0da4d1f1d8@posteo.de>
+Date: Fri, 04 Sep 2026 19:40:01 +0000
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.17-dev-1f2f7
-X-Developer-Signature: v=1; a=openpgp-sha256; l=755; i=nsc@kernel.org;
- s=20250924; h=from:subject:message-id;
- bh=K67UAh45lnHiRxuKGWLeFyuTLdyFRfNm+f8uGnyvfx0=;
- b=owEBbQKS/ZANAwAKAQdSCnAWJhJpAcsmYgBqmwu2Djz4T/jH8vD193mYB/Tka2Kq+5JaLPktO
- zBde6kfFz+JAjMEAAEKAB0WIQSHQTenhzckp4G+wsYHUgpwFiYSaQUCapsLtgAKCRAHUgpwFiYS
- aY6CD/wKnFfvFi0SWkA9oRvBxG8GLVFkblgSXPSouPD2RzreZ690ag/EyY5gZqRe7wnhhXkh30t
- vuBPwg0ayCSA0xi56CE0LVl5YImVI9pOekJ46VbmUrpsrcaWA+muZR6smqExcu3g7RodscG0Kyc
- 6e92I80ayBLk/jcQ6u9kg5QFQEKwnfJYUMZhFW+gg0iiC0jxR83LCEKPIjT5z3NrmjOcgZ/fQZ1
- oJ6OPaupSBFlN+Db72U7Jo+lRNquJdh/iDPbO4phbNy34+REx8qByXhCMmI3huA7tkFTTITzxII
- XJ+rNcXTrxuZZREZnB5jf+/wMuYjgBpSvmQSpwFv8X5tcT9sxwF/xkvaIGfn+fO11TxQOqWoNdB
- Cm2cuLvFRRZWxEztUhnkJbvTGjji4tMwDF41O8II/M+gbTGJZ+Fy3OgIiO2l11NK21HEqTuQsg9
- +S6wLXk2W/8ya810whR7JsNOd2KGXvskr1jgac34BguFAeCvk7l4ucxqQnWRZpS/o41gN8E8LQF
- ZjTRO5mzzNn7cp4A0ePlIg8v7QjtqGge5J2sZaiL/eJmzy8xdGeB9i5ISXXWQWz0ZZxuVg3w5Up
- 1EvJjZbzRVYgZXkvAaINN4GUu6i/0z1q2YJb50OkV+cHs2tQeOzRJ1GkuYj7cDcTHpi/nItsm9s
- 0fhvUnB+eT8hf8w==
-X-Developer-Key: i=nsc@kernel.org; a=openpgp;
- fpr=18ED52DBE34F860EE9FBC82B7D97093255A0CE7F
+Subject: Re: [RX470 - polaris10] Wrong window titlebar gradient after kernel
+ update 7.1 to 7.2
+To: Thorsten Leemhuis <regressions@leemhuis.info>,
+ amd-gfx@lists.freedesktop.org
+Cc: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <4c48b807-cd79-433d-b5ee-76bfe72a993e@posteo.de>
+ <ae44a77f-0272-4d87-ae62-efa612939735@leemhuis.info>
+From: =?UTF-8?Q?Stefan_K=C3=BChn?= <familiekuehn@posteo.de>
+In-Reply-To: <ae44a77f-0272-4d87-ae62-efa612939735@leemhuis.info>
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-512; boundary="------------ms020504080408020504080102"
+X-Content-SHA256: v=2; a=sha3-256; c=relaxed/relaxed; t=1788550800;
+	h=From:To:uts:nonce; i=gV5anUQZ8Po5eg==
+	b=deT3ypYy30TgUVcWaT6Ou7kCBtTFpZ90K913W62fxbk=
 
-On Wed, 02 Sep 2026 09:13:47 -0700, Vlad Poenaru wrote:
-> kbuild: don't delete in-flight filechk temporaries in asm-headers
+This is a cryptographically signed message in MIME format.
 
-Applied to kbuild/linux.git (kbuild-fixes-unstable), thanks!
+--------------ms020504080408020504080102
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
 
-[1/1] kbuild: don't delete in-flight filechk temporaries in asm-headers
-      https://git.kernel.org/kbuild/c/94f7bba7
+SGVsbG8sDQoNCnRoYW5rcyBmb3IgeW91ciByZXBseS4NCg0KSSBjcmVhdGVkIGFuIGlzc3Vl
+IGluIHRoZSBnaXRsYWIuDQoNCmh0dHBzOi8vZ2l0bGFiLmZyZWVkZXNrdG9wLm9yZy9kcm0v
+YW1kLy0vd29ya19pdGVtcy81NzU1DQoNCg0KR3JlZXRpbmdzDQpTdGVmYW4gS8O8aG4NCg0K
+DQpBbSAwMi4wOS4yNiB1bSAxNjo1OSBzY2hyaWViIFRob3JzdGVuIExlZW1odWlzOg0KPiBP
+biA4LzMxLzI2IDIyOjEyLCBTdGVmYW4gS8O8aG4gd3JvdGU6DQo+PiByZWNlbnRseSBJIHVw
+ZGF0ZWQgZnJvbSBhIHNlbGYgY29tcGlsZWQgTGludXggNy4xKC44KSB0byA3LjIoLjApIGFu
+ZA0KPj4gc3BvdHRlZCBhIHBvc3NpYmxlIHJlZ3Jlc3Npb24gaW4gdGhlIGFtZGdwdSBkcml2
+ZXIuDQo+IA0KPiBUaHggZm9yIHRoZSByZXBvcnQuIFRoZXJlIGlzIHN0aWxsIGEgY2hhbmNl
+IHRoYXQgc29tZW9uZSBtaWdodCBoZWxwIHlvdXINCj4gaGVyZSwgYnV0IHVubGVzcyB0aGF0
+IGhhcHBlbnMgc29vbiBJIHN1Z2dlc3QgeW91IHN1Ym1pdCB0aGlzIHRvIHRoZQ0KPiBjZW50
+cmFsIHBsYWNlIGZvciBhbWRncHUgYnVnIHJlcG9ydCwgd2hpY2ggaXMNCj4gaHR0cHM6Ly9n
+aXRsYWIuZnJlZWRlc2t0b3Aub3JnL2RybS9hbWQvLS93b3JrX2l0ZW1zLyAtLSBpZGVhbGx5
+IGFmdGVyDQo+IGNoZWNraW5nIGZvciBleGlzdGluZyByZXBvcnRzIHRoZXJlLiBBZnRlcndh
+cmRzIHBsZWFzZSBkcm9wIGEgbGluayB0bw0KPiB0aGUgcmVwb3J0IGhlcmUgaW4gYSByZXBs
+eS4NCj4gDQo+IENpYW8sIFRob3JzdGVuDQo+IA0KPj4gW0hBUkRXQVJFL1NPRlRXQVJFIElO
+Rk9dDQo+Pg0KPj4gT3BlcmF0aW5nIFN5c3RlbTogS0RFIG5lb24NCj4+IEtERSBQbGFzbWEg
+VmVyc2lvbjogNi43LjQNCj4+IEtERSBGcmFtZXdvcmtzIFZlcnNpb246IDYuMjkuMA0KPj4g
+UXQgVmVyc2lvbjogNi4xMS4xDQo+PiBLZXJuZWwgVmVyc2lvbjogNy4yLjAtdmEyNjM1ICg2
+NC1iaXQpDQo+PiBHcmFwaGljcyBQbGF0Zm9ybTogV2F5bGFuZA0KPj4gT3BlbkdMIHZlcnNp
+b246IDQuNg0KPj4gR0xTTCB2ZXJzaW9uOiA0LjYwDQo+PiBNZXNhIHZlcnNpb246IDI1LjIu
+OA0KPj4gWCBzZXJ2ZXIgdmVyc2lvbjogMS4yNC4xDQo+Pg0KPj4gUHJvY2Vzc29yczogNCDD
+lyBJbnRlbMKuIENvcmXihKIgaTUtNDU5MCBDUFUgQCAzLjMwR0h6DQo+PiBNZW1vcnk6IDE1
+LjYgR2lCIG9mIHVzYWJsZSBSQU0NCj4+IEdyYXBoaWNzIFByb2Nlc3NvcjogQU1EIFJhZGVv
+biBSWCA0NzAgR3JhcGhpY3MNCj4+IE1hbnVmYWN0dXJlcjogQVNVUw0KPj4gUHJvZHVjdCBO
+YW1lOiBBbGwgU2VyaWVzDQo+Pg0KPj4gMDE6MDAuMCBWR0EgY29tcGF0aWJsZSBjb250cm9s
+bGVyIFswMzAwXTogQWR2YW5jZWQgTWljcm8gRGV2aWNlcywgSW5jLg0KPj4gW0FNRC9BVEld
+IEVsbGVzbWVyZSBbUmFkZW9uIFJYIDQ3MC80ODAvNTcwLzU3MFgvNTgwLzU4MFgvNTkwXQ0K
+Pj4gWzEwMDI6NjdkZl0gKHJldiBjZikNCj4+DQo+Pg0KPj4gW1dIQVQgSEFTIEhBUFBFTkVE
+XQ0KPj4NCj4+IE9uIG15IEtERSBkZXNrdG9wIEkgY2FuIHNlZSB0aGUgd2luZG93IHRpdGxl
+YmFyIGdyYWRpZW50IGlzIG5vdyB3cm9uZy4NCj4+IFRoZSB0aGVtZSBpcyAiYnJlZXplIGJy
+aWdodCIgYW5kIGluc3RlYWQgb2YgYSBzbW9vdGggd2hpdGUgdG8gbGlnaHQgZ3JheQ0KPj4g
+dHJhbnNpdGlvbiB0aGVyZSBpcyBhIGhhcmQgY3V0LiBJdCBsb29rcyBsaWtlIGJyaWdodCB0
+b25lcyBhcmUgY2xpcHBlZA0KPj4gdG9vIGVhcmx5IHRvIHdoaXRlLiBBbmQgaW4gdGhlIG9w
+cG9zaXRlICh3aGVuIEkgY2hlY2sgd2l0aCBhIGdyYWRpZW50DQo+PiBncmFwaGl4IGluIEdJ
+TVApIGRhcmsgdG9uZXMgYXJlIHRvbyBlYXJseSBjdXQgdG8gYmxhY2suIEl0IHJlbWluZHMg
+bWUgb2YNCj4+IGxpbWl0ZWQgY29sb3Igc3BhY2Ugd2hlcmUgeW91IGRvIG5vdCBoYXZlIHRo
+ZSBmdWxsIDAtMjU1IHJhbmdlIGZvcg0KPj4gYnJpZ2h0bmVzcy4NCj4+DQo+PiBBIHNjcmVl
+bnNob3QgZnJvbSB0aGUgdGl0bGViYXIgdmlld2VkIG9uIGFub3RoZXIgbWFjaGluZSBsb29r
+cyBmaW5lLg0KPj4NCj4+DQo+PiBbV0hBVCBJIEhBVkUgRE9ORV0NCj4+DQo+PiBJIGNvbGxl
+Y3RlZCBzb21lIGZpbGVzIHdpdGggZGVidWcgb3V0cHV0IGZyb20gdGhlIGtlcm5lbCdzIGRl
+YnVnZnMsIGl0cw0KPj4gZG1lc2cgYW5kIGZyb20gbW9kZXRlc3QuIEZvciB2ZXJzaW9uIDcu
+MSBhbmQgNy4yLCB0aGUgbGF0dGVyIHdhcw0KPj4gY29tcGlsZWQgd2l0aCAibWFrZSBvbGRj
+b25maWciLg0KPj4NCj4+IFRoZSBkaXNwbGF5IGlzIGNvbm5lY3RlZCB3aXRoIEhETUkgKEhE
+TUktQS0yKS4gRFZJIGlzIHVuYWZmZWN0ZWQuDQo+Pg0KPj4NCj4+IFtGT1VORCBXT1JLQVJP
+VU5EXQ0KPj4NCj4+IFVzaW5nIERWSSBjYWJsZSBPUiBjaGFuZ2luZyAia3dpbm91dHB1dGNv
+bmZpZy5qc29uIi4gVGhlIHByb3BlcnR5DQo+PiAicmdiUmFuZ2UiIGZyb20gIkF1dG9tYXRp
+YyIgdG8gIkxpbWl0ZWQiLiBPbiBMaW51eCA3LjIgdGhlIGdyYWRpZW50IGlzDQo+PiBmaW5l
+IGFnYWluLiBPbiBMaW51eCA3LjEgYm90aCBvcHRpb25zIGFyZSBva2F5LiBXaGljaCBJIGZp
+bmQgc3RyYW5nZT8NCj4+IFNob3VsZCAiTGltaXRlZCIgb24gNy4xIG5vdCBiZSAiYnJva2Vu
+IG9uIHB1cnBvc2UiPw0KPj4NCj4+DQo+PiBbQUkgT1BJTklPTl0NCj4+DQo+PiBGb3IgY29t
+cGxldGVuZXNzOiBJIGNhbiBtYWRlIHRoZSBPcGVuQUkgY2hhdCBhdmFpbGFibGUuIEl0IHBv
+aW50cyB0byB0aGUNCj4+ICJIRE1JIHN0YXRlIiBhbmQgd2FudHMgbWUgdG8gY2hlY2sgImJy
+b2FkY2FzdF9yZ2IgLT4gb3V0cHV0X2NvbG9yX3NwYWNlDQo+PiAtPiBxc19iaXQgLT4gUTBf
+UTEiLg0KPj4NCj4+DQo+PiBQbGVhc2UgbGV0IG1lIGtub3cgaWYgSSBjYW4gYmUgb2YgYW55
+IGZ1cnRoZXIgaGVscC4NCj4+DQo+Pg0KPj4gUmVnYXJkcw0KPj4gU3RlZmFuIEvDvGhuDQo+
+IA0KDQo=
 
-Please look out for regression or issue reports or other follow up
-comments, as they may result in the patch/series getting dropped,
-reverted or modified (e.g. trailers).
+--------------ms020504080408020504080102
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: Kryptografische S/MIME-Signatur
 
-Patches applied to the kbuild-fixes-unstable branch are accepted pending
-wider testing in linux-next and any post-commit review; they will
-generally be moved to the kbuild-fixes branch within about a week if
-no issues are found.
-
-Best regards,
--- 
-Nicolas
-
-
+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
+ITAfBgNVBAoMGEFzc2VjbyBEYXRhIFN5c3RlbXMgUy5BLjEcMBoGA1UEAwwTQ2VydHVtIFNN
+SU1FIFJTQSBDQTAeFw0yNjAxMjUxMzI2MTFaFw0yNzAxMjUxMzI2MTBaMEgxHzAdBgNVBAMM
+FmZhbWlsaWVrdWVobkBwb3N0ZW8uZGUxJTAjBgkqhkiG9w0BCQEWFmZhbWlsaWVrdWVobkBw
+b3N0ZW8uZGUwggIiMA0GCSqGSIb3DQEBAQUAA4ICDwAwggIKAoICAQDLAvo2eTeyVuaOXild
+FtBmCYoxgEICwDXmlpQa3HRAWaunpoqDRGq9rbfKBBdHsxtS4jpvVq8kEI2huxQlck8gyPqB
+mXAxvJ8BDmuEwo9W6UsRxheTueFU05csoFqs0baf0UccYFTClzrqkvkDS9KaDt/ucXiZryAA
+A2VHUX1lw/xyK5ORcxJes5mooGWmuFqyLE+c9b8Y/O9n/nxucP2nmdhJyVI4cs1IScnebXvv
+ZmprQtdPPWzSTGTLz3YxexFVG6LiHmfqmCryMpAZVxh6XwniiVIJl8iJKdpPVQaCFMiLOkdS
+zxwhxnII53WoIBF4P1LGXnUcLnkJnw48bH0Z3Oa4v5KQIji6YnUXvU6tbKzHq5KzQ3qIuel0
+DOUj2dDYrD/CR0kYvDmIyBwndQg6BWjzz1LzWKNqLQkgA3F3Ix0n2UHsgEN8IWN6u+9vqKIG
+8MP6CGjZksPkDnslaQE/4UMltgJ3NXvmj59pR0VrzARxqRfUIVsxmVKNgR41zZAp1AbAXsoE
+FaHwY/esIoHFCqeI6JHQtJzPbDSU3jc389oBy5y4rjhi7whlA5V+R1vB49eNjRrWo1tblLxS
+eNhnVpM4Wc1CVqAv8GG/A2X+WbIkNuFsP1SXNMtz7r8LNNiIjugjHPu1UiOF9uqFR2QQv1Ye
+DJBIcHjvQCCtzFGx1QIDAQABo4IBuzCCAbcwDAYDVR0TAQH/BAIwADBBBgNVHR8EOjA4MDag
+NKAyhjBodHRwOi8vY3NtaW1lcnNhY2EuY3JsLmNlcnR1bS5wbC9jc21pbWVyc2FjYS5jcmww
+gYMGCCsGAQUFBwEBBHcwdTAuBggrBgEFBQcwAYYiaHR0cDovL2NzbWltZXJzYWNhLm9jc3At
+Y2VydHVtLmNvbTBDBggrBgEFBQcwAoY3aHR0cDovL2NzbWltZXJzYWNhLnJlcG9zaXRvcnku
+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
+AAAAAA==
+--------------ms020504080408020504080102--
