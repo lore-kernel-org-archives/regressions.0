@@ -1,225 +1,200 @@
-Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEC48514756
-	for <regressions@lists.linux.dev>; Fri,  4 Sep 2026 19:40:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.66
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788550823; cv=none; b=gcO+veJ/6HpUVOrGBwMwzJ8X9iTPiu395F+iCfp8a2Ptu6oocod96eOnB3sJIKVGU/XUb+/n+OiOAIUMIHZKvTwjs9d6i6xMaeoJ53qucRjjX6tVZg07HQwnRLbdfMUGWIEujveaLygvr6X8ubAnxMyKMywjea9lwnb18adcBDU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788550823; c=relaxed/simple;
-	bh=6tWlioxPRPMOSFA6A973ysW06kOVqzWQ94oQSV4PUG8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HXzOnEQElzPEySjdByxOVhQDUHvoXHwRNe6O1EDRa0Pjc/ONFt0Tf9MuZarMYO4qP5JxdO8RC4/SW8iTVbrmD8jUnDAXbV8fOExFslmNbzXC4RGUFkhI59FtJvMEW0VwvmiMYhIfXnr3enRf/PBmElMmYsV7zTRFW3BJyk6Jjgs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de; spf=pass smtp.mailfrom=posteo.de; dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b=WnrIwQHG; arc=none smtp.client-ip=185.67.36.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79C662D5408
+	for <regressions@lists.linux.dev>; Sat,  5 Sep 2026 01:48:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.219.46
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1788572926; cv=pass; b=dFguzLopmcBW80SGGFqm4ssMjTjcxWuBfJIXfGmcmhUzzPQbEpti83b3zwzKS5eWRH+f0cIQJrJTDf5HNVIuB3+kNUGqSsa3xvV041/Jw7t/otcMW5SItyPLgS9trydwUuSK6vIwsy4MQC2P2TvXoGz+2PbyNCH5AnYo5XDKVMw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1788572926; c=relaxed/simple;
+	bh=Pv5mzELtc6viyvRZ87Y9PHyCZ6JISF/nLwR33q98VVY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=renkYhW48FJ1aF3Ze1aNLPl++CCDwObp+BNrVp0aX8sA1c0g7G8qYQsL4zZL0rKsiaUGqy3qUVABGiWLBir6+PE89ul2yjDmObinriyi0F2w0ODAGv3HVMj041EGN9bIW4Q56glyXwv9WRc6CYq0lHirEfLEjx6NKcqSQD4PDbY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C3Wghra7; arc=pass smtp.client-ip=209.85.219.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b="WnrIwQHG"
-Received: from submission (posteo.de [185.67.36.169]) 
-	by mout02.posteo.de (Postfix) with ESMTPS id 4259B240101
-	for <regressions@lists.linux.dev>; Fri,  4 Sep 2026 21:40:04 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=posteo.de;
-	s=1984.8680eb; t=1788550804;
-	bh=6tWlioxPRPMOSFA6A973ysW06kOVqzWQ94oQSV4PUG8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:Content-Type:
-	 From;
-	b=WnrIwQHG2hQEY1C2dni6YKBDnDucXlzt9Bhq9xC0x97HjRVYvwN/dg97FFr3WUhxv
-	 2EFBEEyC/WiUGI5rKU+XLPdLbT5Ry+FeSRB3vd33T2OqR2fmEL3un3vWFHENUpWIwu
-	 u/jrBaOBKV9kyLY2zInn5TjCoanVESo1zG+6erT+5BkFJGorGWT/fUrF7/GLKvfBio
-	 iW8adnLepULHZ4qXjjEKCXfUqeLZDQ0wl2ODD5cCgooNyuRQSVPLy6ApaDF4Ta2mMR
-	 9QPHlXkFpvQyQtjSvlksTM0RgogAIxm3w+qEXlRO5vx9uD15L6V2q0lrAOnZ9C622V
-	 k7gFUpRWElhJw==
-Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4hc6Hj1FdGz6v5j
-	for <regressions@lists.linux.dev>; Fri,  4 Sep 2026 21:40:01 +0200 (CEST)
-Received: from [192.168.50.8] (port=57752)
-	by server.zuhause.xx with esmtpsa  (TLS1.3) tls TLS_AES_128_GCM_SHA256
-	(Exim 4.99.5)
-	(envelope-from <familiekuehn@posteo.de>)
-	id 1x2ZlX-0000000EtlF-3zmy;
-	Fri, 04 Sep 2026 21:39:59 +0200
-Message-ID: <3ff7d669-b5e9-47c7-a967-3c0da4d1f1d8@posteo.de>
-Date: Fri, 04 Sep 2026 19:40:01 +0000
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C3Wghra7"
+Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-90e7fd978beso28592626d6.1
+        for <regressions@lists.linux.dev>; Fri, 04 Sep 2026 18:48:44 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1788572923; cv=none;
+        d=google.com; s=arc-20260327;
+        b=O0X0V77Ahst+TprVZd56aWhk+bZ7btKKzhPU38uz+dNIJOZo/swPakKjSMj16FrgfB
+         CVgJ+m2qTbMLQbwZDs+AfJ3FPQnKBDJLwLZpuAzpKWhIhNFCPeADP8mLbrjpMzWpqGtJ
+         hlOLIiSLawg/FgqwgHB1P9EaWvqw5Wa2wmFMLsc5UhmHn4CQmDo2NRBDJrGcT115sEYO
+         aRGcOcMIMgwX8yr/yFXZxdZw5B+QIeaNqvKofAnSnV5H20Ph3oOPQm1dFlBjnJdxWHFh
+         42BnGt+hdUiO/uZ7IGkeBJ0DgPVzJ/2YJpcxBiMoWHUtMx5VS6R7ojvRvF8mRm/M3zXs
+         a0GQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=Pv5mzELtc6viyvRZ87Y9PHyCZ6JISF/nLwR33q98VVY=;
+        fh=9aRjlORusyY4Y5a+fK8DtSzoQuFGVpnNgC4ssWMqzv4=;
+        b=Yo84nYsmml4cIbO89rvD0SF3aIvQY5SW94mBLameooAW2oZS8mgrBveWd17Rfin4pm
+         fgLJXjGVwSX8BvGnQcJuff7gsRxMwIgnLIOuuSwWe8WWKXZehrlWYlguWMg11VOpfsD5
+         9cKneTqPmTUT6iEjRWBJ9o7aXwW1Vp1ejdjx68P2hlqJZKcK/Ryxgnnup8QzIa5JuIG1
+         h4hvPxOQ/IZt2ZEQynjC6E8d1F3DtMtO2noKoS9YS1ftO6Yo+UMtLWX7kdq0cvQqolQ+
+         bGQlwnXt1iPKi553D3baiZsCLYOTsgSDAzy9B9qDdtP3DHUIJbgK5IKM1T0fIGRTbPwM
+         wa4g==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1788572923; x=1789177723; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=Pv5mzELtc6viyvRZ87Y9PHyCZ6JISF/nLwR33q98VVY=;
+        b=C3Wghra79fWU8+EG4ipvUlc+9vaHCuysFKxkTQhe117AphNcgT1SMxSCDO2yeCRXWE
+         7pjydCnCktmPc2bypa8Tw06tsSQl/Tr+TNgemnOFa5AxQ1x1lmNO3PdByVzLIMAzNfIn
+         53gd1zQGLtnSrq+LHonrDyLK4SX2N4gR8t5Cs8xOgmkFe7oZGRsoKoGyxkEap9ouDK8T
+         RSZd0O+f6T62B924hIVp9DAKcunuXmDyS/KT/HaZvPh5HGAPV559tirsciPkGwdZp5Rv
+         P8Sxz/w+yZPpRUlSuWVVqrVbBkLkRE6qH2bxh4X7a9p7Me6oLUNCwxam1V18rPpXHpxF
+         8gtQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788572923; x=1789177723;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=Pv5mzELtc6viyvRZ87Y9PHyCZ6JISF/nLwR33q98VVY=;
+        b=TmNqb/dxT57sEMLdJmV3LVg8gJq7O/gpfRRcua0GsyD5iNNCSeabXzr6d0sXb+PVIk
+         M6DwgmwbvO3OQlK3OGDhiSlitVwS6Sn0xpqTcsbGRr8HzAEtbWpeaTa/S/ACSvg05cN/
+         p2XOmjmubwvgYWQhqaYyY8V6nWxDKExvvW7/IODXmzntSInWf1ph7t086pfpD0kQOUK4
+         Cg3KodtHnx/dXQN19cBqibXcbb0urTWn6ajNDjfCgMJ1DAYldgmf6Sxz/25VhZzwOFrt
+         wura0k0wuyG1l8OS8LyaRakl+Vc66eT7Kkq5Wn0fE3FZOhX8qJyMmxQDPDR5JivQ/nA6
+         QM9g==
+X-Forwarded-Encrypted: i=1; AKwUvBzKBDiEysdJz09G5bfSo0LpM3XipsOpsPNWLH9dyAHXQ6cRL7CqsrrmvvM5fyg+4Q8OPqjEo1g2q1QTKQ==@lists.linux.dev
+X-Gm-Message-State: AFuF++lNeqhEn+o0kUrXuMCDh/Zsnnpgukvb/vE/++VUpXUjdbPpPMHi
+	sZtOH+Ss9zAwFCVrkwGP9jOzv23I/Ml7aPaOeYvv6ESBQDIgjmcK1AgXSupcM5dqwFfLnAsqn9a
+	6DDl75VddohwcmrNkKzl22hAmFIR4goY=
+X-Gm-Gg: AYBFou2yoIHaaKja92ZG7PhmA+l2C6uBVo8zyv8ejwAhU7XzHUbQQvoX/DJ2aaH3nnz
+	lw6FDuhn3AqEeqCxmG80AXhIzNh+uTShaTo/wTrxkE+oXx7xm7uYin//qIi1Fah9QL6m7pvwQ7a
+	6av1uVY/CVun5uH+Fioi6IjRLTGHYUtEmyODrjAAwVKGakSPXDfBW4kK7989W4zU+yrvfkecAFP
+	uM8SOdKqVbV4cuExMucEZ9jM4rPs6PYbMlJi6L8l+uNh1Qa2eFxcq/ygcFAioY9AlnIXfsygvYj
+	/DaD3LWYGtuiYgULxKMhGaiGUt8EQ33Cy0UWud27QxRQPJD/0FQzJhZ+lDTIkAoVy/w7mXXZFao
+	=
+X-Received: by 2002:a05:620a:3943:b0:937:1097:feb8 with SMTP id
+ af79cd13be357-93980426539mr980114985a.24.1788572923149; Fri, 04 Sep 2026
+ 18:48:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Subject: Re: [RX470 - polaris10] Wrong window titlebar gradient after kernel
- update 7.1 to 7.2
-To: Thorsten Leemhuis <regressions@leemhuis.info>,
- amd-gfx@lists.freedesktop.org
-Cc: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <4c48b807-cd79-433d-b5ee-76bfe72a993e@posteo.de>
- <ae44a77f-0272-4d87-ae62-efa612939735@leemhuis.info>
-From: =?UTF-8?Q?Stefan_K=C3=BChn?= <familiekuehn@posteo.de>
-In-Reply-To: <ae44a77f-0272-4d87-ae62-efa612939735@leemhuis.info>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-512; boundary="------------ms020504080408020504080102"
-X-Content-SHA256: v=2; a=sha3-256; c=relaxed/relaxed; t=1788550800;
-	h=From:To:uts:nonce; i=gV5anUQZ8Po5eg==
-	b=deT3ypYy30TgUVcWaT6Ou7kCBtTFpZ90K913W62fxbk=
+References: <CA+_z3hRjPnQOrEp7uXsNsu6wzqQp9O6FT18i=XcSC7k74Xd2QA@mail.gmail.com>
+ <CA+_z3hRTD-QAgv3jZhOZUUPA0sNZ8946jfYwYsZ=RnQJ0LG7cw@mail.gmail.com>
+ <20260404152438.582f0451.michal.pecio@gmail.com> <CA+_z3hTMfggtv+u_A_SRyb2FRzVjm=Nav5NRCTuhmEthb8x0jw@mail.gmail.com>
+ <20260509180603.6f67c9d8.michal.pecio@gmail.com> <CA+_z3hT_n09fAszT+DkoTHLzracB7fQZwkiiTxGGBJxhFcD8hg@mail.gmail.com>
+ <20260512120334.4eef3d0b.michal.pecio@gmail.com> <fc2d9862-6c46-4161-8fd5-68b9e6c2e8bb@linux.intel.com>
+ <CA+_z3hRdXfZm2ziCmsXEDEY-i8XJjxnw2oe6mkTf+O+B0fx91A@mail.gmail.com>
+ <20260529001057.1e0403c4.michal.pecio@gmail.com> <CA+_z3hQF-EGKr11Yaa5vwMLt9TUB1mL9ESUAQU5Rnd=UZDXrBQ@mail.gmail.com>
+ <20260529122210.6d2c5543.michal.pecio@gmail.com> <CA+_z3hSMRvW6qhZ4wB54hQyY89z+Mm0C48MGA40aqG7_+spX2g@mail.gmail.com>
+ <20260530005742.25893efa.michal.pecio@gmail.com> <CA+_z3hS4sdnZAhAvO+dDTR9hZVwGudDrsw93Do6dZkva8vK=5A@mail.gmail.com>
+ <20260613112648.2ea61301.michal.pecio@gmail.com> <19b188be-5f81-4f87-b29a-e4ac1e55221e@leemhuis.info>
+ <CA+_z3hQ2pZT3Yp+psTRF52Hm9rw7oHW+SdxThxD8KmoU24tkjw@mail.gmail.com>
+In-Reply-To: <CA+_z3hQ2pZT3Yp+psTRF52Hm9rw7oHW+SdxThxD8KmoU24tkjw@mail.gmail.com>
+From: Martin Alderson <martinalderson@gmail.com>
+Date: Sat, 5 Sep 2026 02:48:32 +0100
+X-Gm-Features: AcwNN1X2YvxxakeI2M9gY1_WVstkRlX6waqU8JBaM0mLh57-pyD-5MIBvF2lQ5Q
+Message-ID: <CA+_z3hQn0L7ks9x4PF9O4Y0jvkPOLGk0r9Hx=W7oS2edh0_qNw@mail.gmail.com>
+Subject: Re: xhci_hcd: AMD Raphael/Granite Ridge USB 2.0 xHCI [1022:15b8] dies
+ on resume from suspend
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Michal Pecio <michal.pecio@gmail.com>, Mathias Nyman <mathias.nyman@linux.intel.com>, 
+	linux-usb@vger.kernel.org, 
+	Linux kernel regressions list <regressions@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This is a cryptographically signed message in MIME format.
+Hi all, just checking for any updates? Happy to test patches.
 
---------------ms020504080408020504080102
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
 
-SGVsbG8sDQoNCnRoYW5rcyBmb3IgeW91ciByZXBseS4NCg0KSSBjcmVhdGVkIGFuIGlzc3Vl
-IGluIHRoZSBnaXRsYWIuDQoNCmh0dHBzOi8vZ2l0bGFiLmZyZWVkZXNrdG9wLm9yZy9kcm0v
-YW1kLy0vd29ya19pdGVtcy81NzU1DQoNCg0KR3JlZXRpbmdzDQpTdGVmYW4gS8O8aG4NCg0K
-DQpBbSAwMi4wOS4yNiB1bSAxNjo1OSBzY2hyaWViIFRob3JzdGVuIExlZW1odWlzOg0KPiBP
-biA4LzMxLzI2IDIyOjEyLCBTdGVmYW4gS8O8aG4gd3JvdGU6DQo+PiByZWNlbnRseSBJIHVw
-ZGF0ZWQgZnJvbSBhIHNlbGYgY29tcGlsZWQgTGludXggNy4xKC44KSB0byA3LjIoLjApIGFu
-ZA0KPj4gc3BvdHRlZCBhIHBvc3NpYmxlIHJlZ3Jlc3Npb24gaW4gdGhlIGFtZGdwdSBkcml2
-ZXIuDQo+IA0KPiBUaHggZm9yIHRoZSByZXBvcnQuIFRoZXJlIGlzIHN0aWxsIGEgY2hhbmNl
-IHRoYXQgc29tZW9uZSBtaWdodCBoZWxwIHlvdXINCj4gaGVyZSwgYnV0IHVubGVzcyB0aGF0
-IGhhcHBlbnMgc29vbiBJIHN1Z2dlc3QgeW91IHN1Ym1pdCB0aGlzIHRvIHRoZQ0KPiBjZW50
-cmFsIHBsYWNlIGZvciBhbWRncHUgYnVnIHJlcG9ydCwgd2hpY2ggaXMNCj4gaHR0cHM6Ly9n
-aXRsYWIuZnJlZWRlc2t0b3Aub3JnL2RybS9hbWQvLS93b3JrX2l0ZW1zLyAtLSBpZGVhbGx5
-IGFmdGVyDQo+IGNoZWNraW5nIGZvciBleGlzdGluZyByZXBvcnRzIHRoZXJlLiBBZnRlcndh
-cmRzIHBsZWFzZSBkcm9wIGEgbGluayB0bw0KPiB0aGUgcmVwb3J0IGhlcmUgaW4gYSByZXBs
-eS4NCj4gDQo+IENpYW8sIFRob3JzdGVuDQo+IA0KPj4gW0hBUkRXQVJFL1NPRlRXQVJFIElO
-Rk9dDQo+Pg0KPj4gT3BlcmF0aW5nIFN5c3RlbTogS0RFIG5lb24NCj4+IEtERSBQbGFzbWEg
-VmVyc2lvbjogNi43LjQNCj4+IEtERSBGcmFtZXdvcmtzIFZlcnNpb246IDYuMjkuMA0KPj4g
-UXQgVmVyc2lvbjogNi4xMS4xDQo+PiBLZXJuZWwgVmVyc2lvbjogNy4yLjAtdmEyNjM1ICg2
-NC1iaXQpDQo+PiBHcmFwaGljcyBQbGF0Zm9ybTogV2F5bGFuZA0KPj4gT3BlbkdMIHZlcnNp
-b246IDQuNg0KPj4gR0xTTCB2ZXJzaW9uOiA0LjYwDQo+PiBNZXNhIHZlcnNpb246IDI1LjIu
-OA0KPj4gWCBzZXJ2ZXIgdmVyc2lvbjogMS4yNC4xDQo+Pg0KPj4gUHJvY2Vzc29yczogNCDD
-lyBJbnRlbMKuIENvcmXihKIgaTUtNDU5MCBDUFUgQCAzLjMwR0h6DQo+PiBNZW1vcnk6IDE1
-LjYgR2lCIG9mIHVzYWJsZSBSQU0NCj4+IEdyYXBoaWNzIFByb2Nlc3NvcjogQU1EIFJhZGVv
-biBSWCA0NzAgR3JhcGhpY3MNCj4+IE1hbnVmYWN0dXJlcjogQVNVUw0KPj4gUHJvZHVjdCBO
-YW1lOiBBbGwgU2VyaWVzDQo+Pg0KPj4gMDE6MDAuMCBWR0EgY29tcGF0aWJsZSBjb250cm9s
-bGVyIFswMzAwXTogQWR2YW5jZWQgTWljcm8gRGV2aWNlcywgSW5jLg0KPj4gW0FNRC9BVEld
-IEVsbGVzbWVyZSBbUmFkZW9uIFJYIDQ3MC80ODAvNTcwLzU3MFgvNTgwLzU4MFgvNTkwXQ0K
-Pj4gWzEwMDI6NjdkZl0gKHJldiBjZikNCj4+DQo+Pg0KPj4gW1dIQVQgSEFTIEhBUFBFTkVE
-XQ0KPj4NCj4+IE9uIG15IEtERSBkZXNrdG9wIEkgY2FuIHNlZSB0aGUgd2luZG93IHRpdGxl
-YmFyIGdyYWRpZW50IGlzIG5vdyB3cm9uZy4NCj4+IFRoZSB0aGVtZSBpcyAiYnJlZXplIGJy
-aWdodCIgYW5kIGluc3RlYWQgb2YgYSBzbW9vdGggd2hpdGUgdG8gbGlnaHQgZ3JheQ0KPj4g
-dHJhbnNpdGlvbiB0aGVyZSBpcyBhIGhhcmQgY3V0LiBJdCBsb29rcyBsaWtlIGJyaWdodCB0
-b25lcyBhcmUgY2xpcHBlZA0KPj4gdG9vIGVhcmx5IHRvIHdoaXRlLiBBbmQgaW4gdGhlIG9w
-cG9zaXRlICh3aGVuIEkgY2hlY2sgd2l0aCBhIGdyYWRpZW50DQo+PiBncmFwaGl4IGluIEdJ
-TVApIGRhcmsgdG9uZXMgYXJlIHRvbyBlYXJseSBjdXQgdG8gYmxhY2suIEl0IHJlbWluZHMg
-bWUgb2YNCj4+IGxpbWl0ZWQgY29sb3Igc3BhY2Ugd2hlcmUgeW91IGRvIG5vdCBoYXZlIHRo
-ZSBmdWxsIDAtMjU1IHJhbmdlIGZvcg0KPj4gYnJpZ2h0bmVzcy4NCj4+DQo+PiBBIHNjcmVl
-bnNob3QgZnJvbSB0aGUgdGl0bGViYXIgdmlld2VkIG9uIGFub3RoZXIgbWFjaGluZSBsb29r
-cyBmaW5lLg0KPj4NCj4+DQo+PiBbV0hBVCBJIEhBVkUgRE9ORV0NCj4+DQo+PiBJIGNvbGxl
-Y3RlZCBzb21lIGZpbGVzIHdpdGggZGVidWcgb3V0cHV0IGZyb20gdGhlIGtlcm5lbCdzIGRl
-YnVnZnMsIGl0cw0KPj4gZG1lc2cgYW5kIGZyb20gbW9kZXRlc3QuIEZvciB2ZXJzaW9uIDcu
-MSBhbmQgNy4yLCB0aGUgbGF0dGVyIHdhcw0KPj4gY29tcGlsZWQgd2l0aCAibWFrZSBvbGRj
-b25maWciLg0KPj4NCj4+IFRoZSBkaXNwbGF5IGlzIGNvbm5lY3RlZCB3aXRoIEhETUkgKEhE
-TUktQS0yKS4gRFZJIGlzIHVuYWZmZWN0ZWQuDQo+Pg0KPj4NCj4+IFtGT1VORCBXT1JLQVJP
-VU5EXQ0KPj4NCj4+IFVzaW5nIERWSSBjYWJsZSBPUiBjaGFuZ2luZyAia3dpbm91dHB1dGNv
-bmZpZy5qc29uIi4gVGhlIHByb3BlcnR5DQo+PiAicmdiUmFuZ2UiIGZyb20gIkF1dG9tYXRp
-YyIgdG8gIkxpbWl0ZWQiLiBPbiBMaW51eCA3LjIgdGhlIGdyYWRpZW50IGlzDQo+PiBmaW5l
-IGFnYWluLiBPbiBMaW51eCA3LjEgYm90aCBvcHRpb25zIGFyZSBva2F5LiBXaGljaCBJIGZp
-bmQgc3RyYW5nZT8NCj4+IFNob3VsZCAiTGltaXRlZCIgb24gNy4xIG5vdCBiZSAiYnJva2Vu
-IG9uIHB1cnBvc2UiPw0KPj4NCj4+DQo+PiBbQUkgT1BJTklPTl0NCj4+DQo+PiBGb3IgY29t
-cGxldGVuZXNzOiBJIGNhbiBtYWRlIHRoZSBPcGVuQUkgY2hhdCBhdmFpbGFibGUuIEl0IHBv
-aW50cyB0byB0aGUNCj4+ICJIRE1JIHN0YXRlIiBhbmQgd2FudHMgbWUgdG8gY2hlY2sgImJy
-b2FkY2FzdF9yZ2IgLT4gb3V0cHV0X2NvbG9yX3NwYWNlDQo+PiAtPiBxc19iaXQgLT4gUTBf
-UTEiLg0KPj4NCj4+DQo+PiBQbGVhc2UgbGV0IG1lIGtub3cgaWYgSSBjYW4gYmUgb2YgYW55
-IGZ1cnRoZXIgaGVscC4NCj4+DQo+Pg0KPj4gUmVnYXJkcw0KPj4gU3RlZmFuIEvDvGhuDQo+
-IA0KDQo=
-
---------------ms020504080408020504080102
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: Kryptografische S/MIME-Signatur
-
-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
-ITAfBgNVBAoMGEFzc2VjbyBEYXRhIFN5c3RlbXMgUy5BLjEcMBoGA1UEAwwTQ2VydHVtIFNN
-SU1FIFJTQSBDQTAeFw0yNjAxMjUxMzI2MTFaFw0yNzAxMjUxMzI2MTBaMEgxHzAdBgNVBAMM
-FmZhbWlsaWVrdWVobkBwb3N0ZW8uZGUxJTAjBgkqhkiG9w0BCQEWFmZhbWlsaWVrdWVobkBw
-b3N0ZW8uZGUwggIiMA0GCSqGSIb3DQEBAQUAA4ICDwAwggIKAoICAQDLAvo2eTeyVuaOXild
-FtBmCYoxgEICwDXmlpQa3HRAWaunpoqDRGq9rbfKBBdHsxtS4jpvVq8kEI2huxQlck8gyPqB
-mXAxvJ8BDmuEwo9W6UsRxheTueFU05csoFqs0baf0UccYFTClzrqkvkDS9KaDt/ucXiZryAA
-A2VHUX1lw/xyK5ORcxJes5mooGWmuFqyLE+c9b8Y/O9n/nxucP2nmdhJyVI4cs1IScnebXvv
-ZmprQtdPPWzSTGTLz3YxexFVG6LiHmfqmCryMpAZVxh6XwniiVIJl8iJKdpPVQaCFMiLOkdS
-zxwhxnII53WoIBF4P1LGXnUcLnkJnw48bH0Z3Oa4v5KQIji6YnUXvU6tbKzHq5KzQ3qIuel0
-DOUj2dDYrD/CR0kYvDmIyBwndQg6BWjzz1LzWKNqLQkgA3F3Ix0n2UHsgEN8IWN6u+9vqKIG
-8MP6CGjZksPkDnslaQE/4UMltgJ3NXvmj59pR0VrzARxqRfUIVsxmVKNgR41zZAp1AbAXsoE
-FaHwY/esIoHFCqeI6JHQtJzPbDSU3jc389oBy5y4rjhi7whlA5V+R1vB49eNjRrWo1tblLxS
-eNhnVpM4Wc1CVqAv8GG/A2X+WbIkNuFsP1SXNMtz7r8LNNiIjugjHPu1UiOF9uqFR2QQv1Ye
-DJBIcHjvQCCtzFGx1QIDAQABo4IBuzCCAbcwDAYDVR0TAQH/BAIwADBBBgNVHR8EOjA4MDag
-NKAyhjBodHRwOi8vY3NtaW1lcnNhY2EuY3JsLmNlcnR1bS5wbC9jc21pbWVyc2FjYS5jcmww
-gYMGCCsGAQUFBwEBBHcwdTAuBggrBgEFBQcwAYYiaHR0cDovL2NzbWltZXJzYWNhLm9jc3At
-Y2VydHVtLmNvbTBDBggrBgEFBQcwAoY3aHR0cDovL2NzbWltZXJzYWNhLnJlcG9zaXRvcnku
-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
-AAAAAA==
---------------ms020504080408020504080102--
+On Mon, Jul 6, 2026 at 12:59=E2=80=AFPM Martin Alderson
+<martinalderson@gmail.com> wrote:
+>
+> Hi, no update that I've seen.
+>
+> I suspect this wasn't a regression tbh. FWIW the patched logitech driver =
+has fixed it entirely, but it would be best to fix this for other ones too =
+- I did some analysis with an LLM and it thinks there are a good 10+ HID dr=
+ivers alone that are potentially affected by this bug.
+>
+> I'm more than happy to test patches if required.
+>
+> Thanks!
+> Martin
+>
+> On Mon, Jul 6, 2026 at 12:48=E2=80=AFPM Thorsten Leemhuis <regressions@le=
+emhuis.info> wrote:
+>>
+>> On 6/13/26 11:26, Michal Pecio wrote:
+>> > On Sat, 6 Jun 2026 14:12:22 +0100, Martin Alderson wrote:
+>> >> So the ordering that kills the controller is:
+>> >>
+>> >> 1. dj work issues a control SET_REPORT on ep0; the URB lands on the r=
+ing
+>> >> 2. usb_suspend_both() =E2=86=92 usb_suspend_device() drives the port =
+to U3
+>> >> 3. only afterwards does usb_suspend_both() set udev->can_submit =3D 0
+>> >> and call usb_hcd_flush_endpoint() (drivers/usb/core/driver.c) =E2=80=
+=94 and
+>> >> that flush unlinks the still-pending ep0 URB
+>> >> 4. xhci issues Stop Endpoint to an endpoint on a U3 port =E2=86=92 5s=
+ timeout =E2=86=92 HC died
+>> >>
+>> >> That matches the trace exactly: the "Cancel URB ... ep 0x0" appears
+>> >> after "Set port 7-1 link state ... U3", and the debugfs command ring
+>> >> shows the single stuck Stop Endpoint TRB (slot 1, ep 1).
+>> >
+>> > Makes sense. And good point about usb_hcd_flush_endpoint() - if this
+>> > gets stuck then usb_suspend_both() can't complete, which explains why
+>> > the HC still isn't suspended either.
+>>
+>> Was this regression ever resolved? Looks a bit like this fell through
+>> the cracks, but I might have missed something.
+>>
+>> Or is that no regression at all? From the initial mail in the thread is
+>> sounded like one, but it was never bisected afaics.
+>>
+>> Ciao, Thorsten
+>>
+>> >> I had Claude patch the driver and this seems to fix it:
+>> >>
+>> >> --- /tmp/hid-logitech-dj.orig.c 2026-06-06 14:08:26.580516662 +0100
+>> >> +++ hid-logitech-dj.c 2026-06-06 13:42:15.702948099 +0100
+>> >
+>> > Improving HID drivers is one thing (which should be discussed with HID
+>> > maintainers - see Documentation/process/submitting-patches.rst), but
+>> > other drivers may behave similarly and it would be nice if this didn't
+>> > crash xHCI controllers.
+>> >
+>> > While URBs on a suspended device are weird, it turns out that xHCI
+>> > spec (4.15.1) doesn't prohibit that, it only says that endpoints shoul=
+d
+>> > be stopped. Which they are - problem happens when we try to stop again=
+.
+>> > I'd expect such a command to simply complete with Context State Error,
+>> > which it does in my tests on different HW, but yours gets stuck.
+>> >
+>> > I'm not sure what specifically triggers this failure - is it stopping
+>> > a stopped endpoint always in general, or only after using the SP flag,
+>> > or on a device behind a suspended root port, or something else.
+>> >
+>> > Would you mind testing some patches? I'm thikning about reordering
+>> > things in usb_suspend_both() so that URBs are flushed before suspendin=
+g
+>> > the port, or investigating what exactly breaks your chip and adding
+>> > some workarounds. We don't need to stop a stopped endpoint, we could
+>> > proceed immediately to Set TR Dequeue, but it's uncertain if your HW
+>> > would accept that.
+>> >
+>> > BTW, you initially stated that this happens on the first suspend after
+>> > new boot, but are you sure that it can't happen later? This would make
+>> > it possible to test patches by suspending repeatedly until failure.
+>> >
+>> > Regards,
+>> > Michal
+>> >
+>>
