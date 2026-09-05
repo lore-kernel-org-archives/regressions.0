@@ -1,200 +1,341 @@
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.102])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79C662D5408
-	for <regressions@lists.linux.dev>; Sat,  5 Sep 2026 01:48:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.219.46
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788572926; cv=pass; b=dFguzLopmcBW80SGGFqm4ssMjTjcxWuBfJIXfGmcmhUzzPQbEpti83b3zwzKS5eWRH+f0cIQJrJTDf5HNVIuB3+kNUGqSsa3xvV041/Jw7t/otcMW5SItyPLgS9trydwUuSK6vIwsy4MQC2P2TvXoGz+2PbyNCH5AnYo5XDKVMw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788572926; c=relaxed/simple;
-	bh=Pv5mzELtc6viyvRZ87Y9PHyCZ6JISF/nLwR33q98VVY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=renkYhW48FJ1aF3Ze1aNLPl++CCDwObp+BNrVp0aX8sA1c0g7G8qYQsL4zZL0rKsiaUGqy3qUVABGiWLBir6+PE89ul2yjDmObinriyi0F2w0ODAGv3HVMj041EGN9bIW4Q56glyXwv9WRc6CYq0lHirEfLEjx6NKcqSQD4PDbY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C3Wghra7; arc=pass smtp.client-ip=209.85.219.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DE6136308E
+	for <regressions@lists.linux.dev>; Sat,  5 Sep 2026 12:48:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.102
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1788612504; cv=none; b=MUWd2Z85HWBtcAeK4GLZOynqzpJfjeXcYkah3tSABC5iz23IStwwtN8+drEUZD1Udlkpi40Wrq/OpMRrTUQpY4mpQI8t21IVnWErMOYjBS5xVriUDGikwZCFkbTY25/QchptTMOp9omYlWm3qcI4DKfb4Mg1y/MePlE0xCWWr2Q=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1788612504; c=relaxed/simple;
+	bh=OU5x8yokvCFRppPufZHfMlHFFLJzDvjmknScUM1G23k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=H9QjtQRWlvsE3uOVUkvbB86ZyxpOYAHWorPApvWCdx4Zf2YVFWmoxFVRGScWUAAmVfvXII+7xWdNg0+EUuZ76YM6zlBGQ3TJ6T0ruwJ7LqEtZWKure1KDxlBrTV62NDEZTQgli4v+E8SXn7zrFvKMorM7m+Dr+y8NiZY/vjsorA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=M4hkv8VP; arc=none smtp.client-ip=188.68.63.102
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C3Wghra7"
-Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-90e7fd978beso28592626d6.1
-        for <regressions@lists.linux.dev>; Fri, 04 Sep 2026 18:48:44 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1788572923; cv=none;
-        d=google.com; s=arc-20260327;
-        b=O0X0V77Ahst+TprVZd56aWhk+bZ7btKKzhPU38uz+dNIJOZo/swPakKjSMj16FrgfB
-         CVgJ+m2qTbMLQbwZDs+AfJ3FPQnKBDJLwLZpuAzpKWhIhNFCPeADP8mLbrjpMzWpqGtJ
-         hlOLIiSLawg/FgqwgHB1P9EaWvqw5Wa2wmFMLsc5UhmHn4CQmDo2NRBDJrGcT115sEYO
-         aRGcOcMIMgwX8yr/yFXZxdZw5B+QIeaNqvKofAnSnV5H20Ph3oOPQm1dFlBjnJdxWHFh
-         42BnGt+hdUiO/uZ7IGkeBJ0DgPVzJ/2YJpcxBiMoWHUtMx5VS6R7ojvRvF8mRm/M3zXs
-         a0GQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=Pv5mzELtc6viyvRZ87Y9PHyCZ6JISF/nLwR33q98VVY=;
-        fh=9aRjlORusyY4Y5a+fK8DtSzoQuFGVpnNgC4ssWMqzv4=;
-        b=Yo84nYsmml4cIbO89rvD0SF3aIvQY5SW94mBLameooAW2oZS8mgrBveWd17Rfin4pm
-         fgLJXjGVwSX8BvGnQcJuff7gsRxMwIgnLIOuuSwWe8WWKXZehrlWYlguWMg11VOpfsD5
-         9cKneTqPmTUT6iEjRWBJ9o7aXwW1Vp1ejdjx68P2hlqJZKcK/Ryxgnnup8QzIa5JuIG1
-         h4hvPxOQ/IZt2ZEQynjC6E8d1F3DtMtO2noKoS9YS1ftO6Yo+UMtLWX7kdq0cvQqolQ+
-         bGQlwnXt1iPKi553D3baiZsCLYOTsgSDAzy9B9qDdtP3DHUIJbgK5IKM1T0fIGRTbPwM
-         wa4g==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1788572923; x=1789177723; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=Pv5mzELtc6viyvRZ87Y9PHyCZ6JISF/nLwR33q98VVY=;
-        b=C3Wghra79fWU8+EG4ipvUlc+9vaHCuysFKxkTQhe117AphNcgT1SMxSCDO2yeCRXWE
-         7pjydCnCktmPc2bypa8Tw06tsSQl/Tr+TNgemnOFa5AxQ1x1lmNO3PdByVzLIMAzNfIn
-         53gd1zQGLtnSrq+LHonrDyLK4SX2N4gR8t5Cs8xOgmkFe7oZGRsoKoGyxkEap9ouDK8T
-         RSZd0O+f6T62B924hIVp9DAKcunuXmDyS/KT/HaZvPh5HGAPV559tirsciPkGwdZp5Rv
-         P8Sxz/w+yZPpRUlSuWVVqrVbBkLkRE6qH2bxh4X7a9p7Me6oLUNCwxam1V18rPpXHpxF
-         8gtQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788572923; x=1789177723;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=Pv5mzELtc6viyvRZ87Y9PHyCZ6JISF/nLwR33q98VVY=;
-        b=TmNqb/dxT57sEMLdJmV3LVg8gJq7O/gpfRRcua0GsyD5iNNCSeabXzr6d0sXb+PVIk
-         M6DwgmwbvO3OQlK3OGDhiSlitVwS6Sn0xpqTcsbGRr8HzAEtbWpeaTa/S/ACSvg05cN/
-         p2XOmjmubwvgYWQhqaYyY8V6nWxDKExvvW7/IODXmzntSInWf1ph7t086pfpD0kQOUK4
-         Cg3KodtHnx/dXQN19cBqibXcbb0urTWn6ajNDjfCgMJ1DAYldgmf6Sxz/25VhZzwOFrt
-         wura0k0wuyG1l8OS8LyaRakl+Vc66eT7Kkq5Wn0fE3FZOhX8qJyMmxQDPDR5JivQ/nA6
-         QM9g==
-X-Forwarded-Encrypted: i=1; AKwUvBzKBDiEysdJz09G5bfSo0LpM3XipsOpsPNWLH9dyAHXQ6cRL7CqsrrmvvM5fyg+4Q8OPqjEo1g2q1QTKQ==@lists.linux.dev
-X-Gm-Message-State: AFuF++lNeqhEn+o0kUrXuMCDh/Zsnnpgukvb/vE/++VUpXUjdbPpPMHi
-	sZtOH+Ss9zAwFCVrkwGP9jOzv23I/Ml7aPaOeYvv6ESBQDIgjmcK1AgXSupcM5dqwFfLnAsqn9a
-	6DDl75VddohwcmrNkKzl22hAmFIR4goY=
-X-Gm-Gg: AYBFou2yoIHaaKja92ZG7PhmA+l2C6uBVo8zyv8ejwAhU7XzHUbQQvoX/DJ2aaH3nnz
-	lw6FDuhn3AqEeqCxmG80AXhIzNh+uTShaTo/wTrxkE+oXx7xm7uYin//qIi1Fah9QL6m7pvwQ7a
-	6av1uVY/CVun5uH+Fioi6IjRLTGHYUtEmyODrjAAwVKGakSPXDfBW4kK7989W4zU+yrvfkecAFP
-	uM8SOdKqVbV4cuExMucEZ9jM4rPs6PYbMlJi6L8l+uNh1Qa2eFxcq/ygcFAioY9AlnIXfsygvYj
-	/DaD3LWYGtuiYgULxKMhGaiGUt8EQ33Cy0UWud27QxRQPJD/0FQzJhZ+lDTIkAoVy/w7mXXZFao
-	=
-X-Received: by 2002:a05:620a:3943:b0:937:1097:feb8 with SMTP id
- af79cd13be357-93980426539mr980114985a.24.1788572923149; Fri, 04 Sep 2026
- 18:48:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="M4hkv8VP"
+Received: from mors-relay-2502.netcup.net (localhost [127.0.0.1])
+	by mors-relay-2502.netcup.net (Postfix) with ESMTPS id 4hcY645Hc0z5yfq;
+	Sat,  5 Sep 2026 14:48:12 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1788612492;
+	bh=OU5x8yokvCFRppPufZHfMlHFFLJzDvjmknScUM1G23k=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=M4hkv8VPs8yl+uw2+ks3FT+TlHhtCMlX2km2XEGxl750mS5C8Se8hoDILOnlfdJeo
+	 c+K38BEtbXUH8SMTdrzRnk2udnD04SGcUK6zGdRhxGufISY6de1Zwpr6UBUlhryyas
+	 COP1UIJgx4AeH1Bu2SCWMY3mj89jJ6gzmG5Qo6F0Hpgs1xOHg/7ERMtj3jj+znEREV
+	 1VcobalxQTaQTF2pduH1eiCdjeztMsTTxVGM3JiWO6hVTy5MVc63fWOb6M9UxLnLjW
+	 qO6auAN23qoG9i7IR5GaptvtO/V5VGVNJC1IgmzJnfABLI7mRSq++fo0Zq6IoIi6wr
+	 8Nl+lIilPSe6Q==
+Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-2502.netcup.net (Postfix) with ESMTPS id 4hcY643jjKz4yD3;
+	Sat,  5 Sep 2026 14:48:12 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
+X-Spam-Flag: NO
+X-Spam-Score: -2.898
+X-Spam-Level: 
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4hcY626TP0z8tZK;
+	Sat,  5 Sep 2026 14:48:10 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 382085FC66;
+	Sat,  5 Sep 2026 14:48:10 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <4b6d96df-297f-4a48-af51-049d2e65302b@leemhuis.info>
+Date: Sat, 5 Sep 2026 14:48:09 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CA+_z3hRjPnQOrEp7uXsNsu6wzqQp9O6FT18i=XcSC7k74Xd2QA@mail.gmail.com>
- <CA+_z3hRTD-QAgv3jZhOZUUPA0sNZ8946jfYwYsZ=RnQJ0LG7cw@mail.gmail.com>
- <20260404152438.582f0451.michal.pecio@gmail.com> <CA+_z3hTMfggtv+u_A_SRyb2FRzVjm=Nav5NRCTuhmEthb8x0jw@mail.gmail.com>
- <20260509180603.6f67c9d8.michal.pecio@gmail.com> <CA+_z3hT_n09fAszT+DkoTHLzracB7fQZwkiiTxGGBJxhFcD8hg@mail.gmail.com>
- <20260512120334.4eef3d0b.michal.pecio@gmail.com> <fc2d9862-6c46-4161-8fd5-68b9e6c2e8bb@linux.intel.com>
- <CA+_z3hRdXfZm2ziCmsXEDEY-i8XJjxnw2oe6mkTf+O+B0fx91A@mail.gmail.com>
- <20260529001057.1e0403c4.michal.pecio@gmail.com> <CA+_z3hQF-EGKr11Yaa5vwMLt9TUB1mL9ESUAQU5Rnd=UZDXrBQ@mail.gmail.com>
- <20260529122210.6d2c5543.michal.pecio@gmail.com> <CA+_z3hSMRvW6qhZ4wB54hQyY89z+Mm0C48MGA40aqG7_+spX2g@mail.gmail.com>
- <20260530005742.25893efa.michal.pecio@gmail.com> <CA+_z3hS4sdnZAhAvO+dDTR9hZVwGudDrsw93Do6dZkva8vK=5A@mail.gmail.com>
- <20260613112648.2ea61301.michal.pecio@gmail.com> <19b188be-5f81-4f87-b29a-e4ac1e55221e@leemhuis.info>
- <CA+_z3hQ2pZT3Yp+psTRF52Hm9rw7oHW+SdxThxD8KmoU24tkjw@mail.gmail.com>
-In-Reply-To: <CA+_z3hQ2pZT3Yp+psTRF52Hm9rw7oHW+SdxThxD8KmoU24tkjw@mail.gmail.com>
-From: Martin Alderson <martinalderson@gmail.com>
-Date: Sat, 5 Sep 2026 02:48:32 +0100
-X-Gm-Features: AcwNN1X2YvxxakeI2M9gY1_WVstkRlX6waqU8JBaM0mLh57-pyD-5MIBvF2lQ5Q
-Message-ID: <CA+_z3hQn0L7ks9x4PF9O4Y0jvkPOLGk0r9Hx=W7oS2edh0_qNw@mail.gmail.com>
-Subject: Re: xhci_hcd: AMD Raphael/Granite Ridge USB 2.0 xHCI [1022:15b8] dies
- on resume from suspend
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Michal Pecio <michal.pecio@gmail.com>, Mathias Nyman <mathias.nyman@linux.intel.com>, 
-	linux-usb@vger.kernel.org, 
-	Linux kernel regressions list <regressions@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION 7.3-rc1][gfx1150] GPU crash after recoverable gfx
+ fault: MES reset fails and KFD queues die
+To: Harris Landgarten <harrisl@deeplearntech.com>,
+ amd-gfx@lists.freedesktop.org
+Cc: alexander deucher <alexander.deucher@amd.com>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <1703738761.32618.1788387749218.JavaMail.zimbra@lhjonline.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <1703738761.32618.1788387749218.JavaMail.zimbra@lhjonline.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: 
+ <178861249055.3026816.13140888215807878483@mxe9fb.netcup.net>
+X-NC-CID: DmbWt5qjeLlihKAGTX6qk3bknU1OH3WVuvNhMhe2szUn3j0aq2s=
 
-Hi all, just checking for any updates? Happy to test patches.
+On 9/3/26 00:22, Harris Landgarten wrote:
+> I am seeing what appears to be a GPU reset/recovery regression on Linux 7.3-rc1 on gfx1150.
 
+Thx for the report. There is still a chance that someone might help your
+here, but unless that happens soon I suggest you submit this to the
+central place for amdgpu bug report, which is
+https://gitlab.freedesktop.org/drm/amd/-/work_items/ -- ideally after
+checking for existing reports there. Afterwards please drop a link to
+the report here in a reply.
 
-On Mon, Jul 6, 2026 at 12:59=E2=80=AFPM Martin Alderson
-<martinalderson@gmail.com> wrote:
->
-> Hi, no update that I've seen.
->
-> I suspect this wasn't a regression tbh. FWIW the patched logitech driver =
-has fixed it entirely, but it would be best to fix this for other ones too =
-- I did some analysis with an LLM and it thinks there are a good 10+ HID dr=
-ivers alone that are potentially affected by this bug.
->
-> I'm more than happy to test patches if required.
->
-> Thanks!
-> Martin
->
-> On Mon, Jul 6, 2026 at 12:48=E2=80=AFPM Thorsten Leemhuis <regressions@le=
-emhuis.info> wrote:
->>
->> On 6/13/26 11:26, Michal Pecio wrote:
->> > On Sat, 6 Jun 2026 14:12:22 +0100, Martin Alderson wrote:
->> >> So the ordering that kills the controller is:
->> >>
->> >> 1. dj work issues a control SET_REPORT on ep0; the URB lands on the r=
-ing
->> >> 2. usb_suspend_both() =E2=86=92 usb_suspend_device() drives the port =
-to U3
->> >> 3. only afterwards does usb_suspend_both() set udev->can_submit =3D 0
->> >> and call usb_hcd_flush_endpoint() (drivers/usb/core/driver.c) =E2=80=
-=94 and
->> >> that flush unlinks the still-pending ep0 URB
->> >> 4. xhci issues Stop Endpoint to an endpoint on a U3 port =E2=86=92 5s=
- timeout =E2=86=92 HC died
->> >>
->> >> That matches the trace exactly: the "Cancel URB ... ep 0x0" appears
->> >> after "Set port 7-1 link state ... U3", and the debugfs command ring
->> >> shows the single stuck Stop Endpoint TRB (slot 1, ep 1).
->> >
->> > Makes sense. And good point about usb_hcd_flush_endpoint() - if this
->> > gets stuck then usb_suspend_both() can't complete, which explains why
->> > the HC still isn't suspended either.
->>
->> Was this regression ever resolved? Looks a bit like this fell through
->> the cracks, but I might have missed something.
->>
->> Or is that no regression at all? From the initial mail in the thread is
->> sounded like one, but it was never bisected afaics.
->>
->> Ciao, Thorsten
->>
->> >> I had Claude patch the driver and this seems to fix it:
->> >>
->> >> --- /tmp/hid-logitech-dj.orig.c 2026-06-06 14:08:26.580516662 +0100
->> >> +++ hid-logitech-dj.c 2026-06-06 13:42:15.702948099 +0100
->> >
->> > Improving HID drivers is one thing (which should be discussed with HID
->> > maintainers - see Documentation/process/submitting-patches.rst), but
->> > other drivers may behave similarly and it would be nice if this didn't
->> > crash xHCI controllers.
->> >
->> > While URBs on a suspended device are weird, it turns out that xHCI
->> > spec (4.15.1) doesn't prohibit that, it only says that endpoints shoul=
-d
->> > be stopped. Which they are - problem happens when we try to stop again=
-.
->> > I'd expect such a command to simply complete with Context State Error,
->> > which it does in my tests on different HW, but yours gets stuck.
->> >
->> > I'm not sure what specifically triggers this failure - is it stopping
->> > a stopped endpoint always in general, or only after using the SP flag,
->> > or on a device behind a suspended root port, or something else.
->> >
->> > Would you mind testing some patches? I'm thikning about reordering
->> > things in usb_suspend_both() so that URBs are flushed before suspendin=
-g
->> > the port, or investigating what exactly breaks your chip and adding
->> > some workarounds. We don't need to stop a stopped endpoint, we could
->> > proceed immediately to Set TR Dequeue, but it's uncertain if your HW
->> > would accept that.
->> >
->> > BTW, you initially stated that this happens on the first suspend after
->> > new boot, but are you sure that it can't happen later? This would make
->> > it possible to test patches by suspending repeatedly until failure.
->> >
->> > Regards,
->> > Michal
->> >
->>
+Ciao, Thorsten
+
+> Hardware:
+> 
+> * Beelink SER9
+> * AMD Ryzen AI 9 HX 370
+> * Radeon 890M / gfx1150
+> * 64 GB RAM
+> * GNOME Wayland
+> 
+> The fault is triggered intermittently while running Opera with Lumosity in expanded view. The trigger is not deterministic, so I have not attempted a bisect.
+> 
+> The important point is that the same type of initial gfxhub/SQC permission fault also occurs on Linux 7.2.3, but the recovery behavior is very different.
+> 
+> On 7.2.3, the fault is contained. Opera loses its GPU context, the gfx ring reset succeeds, Opera restarts its GPU process, and the rest of the system continues running.
+> 
+> Relevant 7.2.3 log:
+> 
+> ```text
+> amdgpu 0000:c5:00.0: [gfxhub] page fault (src_id:0 ring:24 vmid:7 pasid:74)
+> amdgpu 0000:c5:00.0:  Process opera pid 11770 thread opera:cs0 pid 11785
+> amdgpu 0000:c5:00.0:   in page starting at address 0x0000ffff3f800000 from client 10
+> amdgpu 0000:c5:00.0: GCVM_L2_PROTECTION_FAULT_STATUS:0x00701430
+> amdgpu 0000:c5:00.0:          Faulty UTCL2 client ID: SQC (data) (0xa)
+> amdgpu 0000:c5:00.0:          MORE_FAULTS: 0x0
+> amdgpu 0000:c5:00.0:          WALKER_ERROR: 0x0
+> amdgpu 0000:c5:00.0:          PERMISSION_FAULTS: 0x3
+> amdgpu 0000:c5:00.0:          MAPPING_ERROR: 0x0
+> amdgpu 0000:c5:00.0:          RW: 0x0
+> amdgpu 0000:c5:00.0: ring gfx_0.0.0 timeout, signaled seq=10957, emitted seq=10959
+> amdgpu 0000:c5:00.0:  Process opera pid 11770 thread opera:cs0 pid 11785
+> amdgpu 0000:c5:00.0: Starting gfx_0.0.0 ring reset
+> opera.desktop[11770]: SharedContextState context lost via EXT_robustness. Reset status = GL_INNOCENT_CONTEXT_RESET_KHR
+> opera.desktop[11770]: Restarting GPU process due to unrecoverable error. Context was lost.
+> amdgpu 0000:c5:00.0: Ring gfx_0.0.0 reset succeeded
+> amdgpu 0000:c5:00.0: [drm] device wedged, but no recovery needed
+> ```
+> 
+> On 7.3-rc1, a similar Opera-triggered gfxhub/SQC permission fault eventually escalates into failure of the GPU recovery path. A second gfx ring times out in gnome-shell, MES fails to respond to RESET, the ring reset fails, the driver escalates to a full GPU reset, KFD queues cannot be removed, and an active ROCm Python process is terminated with a GPU Hang.
+> 
+> Relevant 7.3-rc1 log:
+> 
+> ```text
+> amdgpu 0000:c5:00.0: [gfxhub] page fault (src_id:0 ring:24 vmid:4 pasid:191)
+> amdgpu 0000:c5:00.0:  Process opera pid 3311317 thread opera:cs0 pid 3311323
+> amdgpu 0000:c5:00.0:   in page starting at address 0x000000003b800000 from client 10
+> amdgpu 0000:c5:00.0: GCVM_L2_PROTECTION_FAULT_STATUS:0x00401430
+> amdgpu 0000:c5:00.0:          Faulty UTCL2 client ID: SQC (data) (0xa)
+> amdgpu 0000:c5:00.0:          MORE_FAULTS: 0x0
+> amdgpu 0000:c5:00.0:          WALKER_ERROR: 0x0
+> amdgpu 0000:c5:00.0:          PERMISSION_FAULTS: 0x3
+> amdgpu 0000:c5:00.0:          MAPPING_ERROR: 0x0
+> amdgpu 0000:c5:00.0:          RW: 0x0
+> 
+> amdgpu 0000:c5:00.0: ring gfx_0.1.0 timeout, signaled seq=610533, emitted seq=610534
+> amdgpu 0000:c5:00.0:  Process gnome-shell pid 4563 thread gnome-shel:cs0 pid 4582
+> amdgpu 0000:c5:00.0: Starting gfx_0.1.0 ring reset
+> amdgpu 0000:c5:00.0: MES failed to respond to msg=RESET
+> amdgpu 0000:c5:00.0: failed to reset legacy queue
+> amdgpu 0000:c5:00.0: Ring gfx_0.1.0 reset failed
+> amdgpu 0000:c5:00.0: GPU reset begin!. Source:  1
+> amdgpu 0000:c5:00.0: Failed to evict queue 2
+> amdgpu: Failed to suspend process pid 36553
+> amdgpu 0000:c5:00.0: remove_all_kfd_queues_mes: Failed to remove queue 1 for dev 55238
+> HW Exception by GPU node-1 (...) reason :GPU Hang
+> ```
+> 
+> Earlier in the same 7.3-rc1 boot there was also an Opera gfx ring timeout that initially recovered successfully:
+> 
+> ```text
+> amdgpu 0000:c5:00.0: ring gfx_0.0.0 timeout, signaled seq=1413296, emitted seq=1413298
+> amdgpu 0000:c5:00.0:  Process opera pid 518561 thread opera:cs0 pid 518596
+> amdgpu 0000:c5:00.0: Starting gfx_0.0.0 ring reset
+> amdgpu 0000:c5:00.0: Ring gfx_0.0.0 reset succeeded
+> amdgpu 0000:c5:00.0: [drm] device wedged, but no recovery needed
+> ```
+> 
+> So the browser workload can trigger a gfx fault on both kernels. The regression I am reporting is the failure of gfx1150 recovery on 7.3-rc1: a fault which is recoverable on 7.2.3 can instead progress to MES RESET failure, failed ring reset, full GPU reset, and loss of active KFD/ROCm queues.
+> 
+> I have also seen similar GPU crashes on older kernels in the past, but those appeared to have been fixed. Linux 7.2.3 currently demonstrates the expected recovery behavior on this machine.
+> 
+> I can provide the complete journal logs from a failing 7.3-rc1 run if useful.
+> 
+> Kernel versions tested:
+> 
+> * Linux 7.3-rc1: GPU recovery failure reproduced with full system crash.
+> * Linux 7.2.3: same class of Opera-triggered gfxhub/SQC fault observed, but gfx ring reset succeeds and the system continues running.
+> 
+> The system is currently booted into 7.2.3, so a current `uname -a` will show the working comparison kernel rather than the kernel on which the crash occurred.
+> uname -a
+> 
+>  lspci -nnk
+> 00:00.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Strix/Strix Halo Root Complex [1022:1507]
+> 	DeviceName: Device 3
+> 	Subsystem: Advanced Micro Devices, Inc. [AMD] Strix/Strix Halo Root Complex [1022:1507]
+> 00:00.2 IOMMU [0806]: Advanced Micro Devices, Inc. [AMD] Strix/Strix Halo IOMMU [1022:1508]
+> 	Subsystem: Advanced Micro Devices, Inc. [AMD] Strix/Strix Halo IOMMU [1022:1508]
+> 00:01.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Strix/Strix Halo Dummy Host Bridge [1022:1509]
+> 00:01.1 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD] Strix/Strix Halo PCIe USB4 Bridge [1022:150a]
+> 	Subsystem: Advanced Micro Devices, Inc. [AMD] Strix/Strix Halo PCIe USB4 Bridge [1022:150a]
+> 	Kernel driver in use: pcieport
+> 	Kernel modules: shpchp
+> 00:01.2 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD] Strix/Strix Halo PCIe USB4 Bridge [1022:150a]
+> 	Subsystem: Advanced Micro Devices, Inc. [AMD] Strix/Strix Halo PCIe USB4 Bridge [1022:150a]
+> 	Kernel driver in use: pcieport
+> 	Kernel modules: shpchp
+> 00:02.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Strix/Strix Halo Dummy Host Bridge [1022:1509]
+> 00:02.1 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD] Strix/Strix Halo GPP Bridge [1022:150b]
+> 	Subsystem: Advanced Micro Devices, Inc. [AMD] Device [1022:1453]
+> 	Kernel driver in use: pcieport
+> 	Kernel modules: shpchp
+> 00:02.3 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD] Strix/Strix Halo GPP Bridge [1022:150b]
+> 	Subsystem: Advanced Micro Devices, Inc. [AMD] Device [1022:1453]
+> 	Kernel driver in use: pcieport
+> 	Kernel modules: shpchp
+> 00:02.4 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD] Strix/Strix Halo GPP Bridge [1022:150b]
+> 	Subsystem: Advanced Micro Devices, Inc. [AMD] Device [1022:1453]
+> 	Kernel driver in use: pcieport
+> 	Kernel modules: shpchp
+> 00:03.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Strix/Strix Halo Dummy Host Bridge [1022:1509]
+> 00:03.2 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD] Strix/Strix Halo GPP Bridge [1022:150b]
+> 	Subsystem: Advanced Micro Devices, Inc. [AMD] Device [1022:1453]
+> 	Kernel driver in use: pcieport
+> 	Kernel modules: shpchp
+> 00:08.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Strix/Strix Halo Dummy Host Bridge [1022:1509]
+> 00:08.1 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD] Strix/Strix Halo Internal GPP Bridge to Bus [C:A] [1022:150c]
+> 	Subsystem: Advanced Micro Devices, Inc. [AMD] Strix/Strix Halo Internal GPP Bridge to Bus [C:A] [1022:150c]
+> 	Kernel driver in use: pcieport
+> 	Kernel modules: shpchp
+> 00:08.2 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD] Strix/Strix Halo Internal GPP Bridge to Bus [C:A] [1022:150c]
+> 	Subsystem: Advanced Micro Devices, Inc. [AMD] Strix/Strix Halo Internal GPP Bridge to Bus [C:A] [1022:150c]
+> 	Kernel driver in use: pcieport
+> 	Kernel modules: shpchp
+> 00:08.3 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD] Strix/Strix Halo Internal GPP Bridge to Bus [C:A] [1022:150c]
+> pcilib: Error reading /sys/bus/pci/devices/0000:00:08.3/label: Operation not permitted
+> 	Subsystem: Advanced Micro Devices, Inc. [AMD] Strix/Strix Halo Internal GPP Bridge to Bus [C:A] [1022:150c]
+> 	Kernel driver in use: pcieport
+> 	Kernel modules: shpchp
+> 00:14.0 SMBus [0c05]: Advanced Micro Devices, Inc. [AMD] FCH SMBus Controller [1022:790b] (rev 71)
+> 	Subsystem: Advanced Micro Devices, Inc. [AMD] FCH SMBus Controller [1022:790b]
+> 	Kernel driver in use: piix4_smbus
+> 	Kernel modules: i2c_piix4, sp5100_tco
+> 00:14.3 ISA bridge [0601]: Advanced Micro Devices, Inc. [AMD] FCH LPC Bridge [1022:790e] (rev 51)
+> 	Subsystem: Advanced Micro Devices, Inc. [AMD] FCH LPC Bridge [1022:790e]
+> 00:18.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Strix Data Fabric; Function 0 [1022:16f8]
+> 00:18.1 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Strix Data Fabric; Function 1 [1022:16f9]
+> 00:18.2 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Strix Data Fabric; Function 2 [1022:16fa]
+> 00:18.3 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Strix Data Fabric; Function 3 [1022:16fb]
+> 	Kernel driver in use: k10temp
+> 	Kernel modules: k10temp
+> 00:18.4 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Strix Data Fabric; Function 4 [1022:16fc]
+> 00:18.5 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Strix Data Fabric; Function 5 [1022:16fd]
+> 00:18.6 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Strix Data Fabric; Function 6 [1022:16fe]
+> 00:18.7 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Strix Data Fabric; Function 7 [1022:16ff]
+> c1:00.0 Non-Volatile memory controller [0108]: Micron Technology Inc 2550 NVMe SSD (DRAM-less) [1344:5416] (rev 01)
+> 	Subsystem: Micron Technology Inc Device [1344:1100]
+> 	Kernel driver in use: nvme
+> 	Kernel modules: nvme
+> c2:00.0 Network controller [0280]: Intel Corporation Wi-Fi 6 AX200 [8086:2723] (rev 1a)
+> 	Subsystem: Intel Corporation Wi-Fi 6 AX200NGW [8086:0084]
+> 	Kernel driver in use: iwlwifi
+> 	Kernel modules: iwlwifi
+> c3:00.0 Ethernet controller [0200]: Realtek Semiconductor Co., Ltd. RTL8125 2.5GbE Controller [10ec:8125] (rev 05)
+> 	Subsystem: Realtek Semiconductor Co., Ltd. Device [10ec:0123]
+> 	Kernel driver in use: r8169
+> 	Kernel modules: r8169
+> c4:00.0 Non-Volatile memory controller [0108]: Micron Technology Inc 2550 NVMe SSD (DRAM-less) [1344:5416] (rev 01)
+> 	Subsystem: Micron Technology Inc Device [1344:1100]
+> 	Kernel driver in use: nvme
+> 	Kernel modules: nvme
+> c5:00.0 Display controller [0380]: Advanced Micro Devices, Inc. [AMD/ATI] Strix [Radeon 880M / 890M] [1002:150e] (rev c1)
+> 	Subsystem: Advanced Micro Devices, Inc. [AMD/ATI] Device [1002:0124]
+> 	Kernel driver in use: amdgpu
+> 	Kernel modules: amdgpu
+> c5:00.1 Audio device [0403]: Advanced Micro Devices, Inc. [AMD/ATI] Radeon High Definition Audio Controller [Rembrandt/Strix] [1002:1640]
+> 	Subsystem: Advanced Micro Devices, Inc. [AMD/ATI] Radeon High Definition Audio Controller [Rembrandt/Strix] [1002:1640]
+> 	Kernel driver in use: snd_hda_intel
+> 	Kernel modules: snd_hda_intel
+> c5:00.2 Encryption controller [1080]: Advanced Micro Devices, Inc. [AMD] Strix/Krackan/Strix Halo CCP/ASP [1022:17e0]
+> 	Subsystem: Advanced Micro Devices, Inc. [AMD] Strix/Krackan/Strix Halo CCP/ASP [1022:17e0]
+> 	Kernel driver in use: ccp
+> 	Kernel modules: ccp
+> c5:00.4 USB controller [0c03]: Advanced Micro Devices, Inc. [AMD] Device [1022:151e]
+> 	Subsystem: Advanced Micro Devices, Inc. [AMD] Device [1022:15b9]
+> 	Kernel driver in use: xhci_hcd
+> 	Kernel modules: xhci_pci
+> c5:00.5 Multimedia controller [0480]: Advanced Micro Devices, Inc. [AMD] Audio Coprocessor [1022:15e2] (rev 70)
+> 	Subsystem: Advanced Micro Devices, Inc. [AMD] Audio Coprocessor [1022:15e2]
+> 	Kernel modules: snd_pci_acp3x, snd_rn_pci_acp3x
+> c5:00.6 Audio device [0403]: Advanced Micro Devices, Inc. [AMD] Family 17h/19h/1ah HD Audio Controller [1022:15e3]
+> 	Subsystem: Advanced Micro Devices, Inc. [AMD] Device [1022:d997]
+> 	Kernel driver in use: snd_hda_intel
+> 	Kernel modules: snd_hda_intel
+> c6:00.0 Non-Essential Instrumentation [1300]: Advanced Micro Devices, Inc. [AMD] Strix/Strix Halo PCIe Dummy Function [1022:150d]
+> 	Subsystem: Advanced Micro Devices, Inc. [AMD] Strix/Strix Halo PCIe Dummy Function [1022:150d]
+> c6:00.1 Signal processing controller [1180]: Advanced Micro Devices, Inc. [AMD] Strix/Krackan/Strix Halo Neural Processing Unit [1022:17f0] (rev 10)
+> 	Subsystem: Advanced Micro Devices, Inc. [AMD] Strix/Krackan/Strix Halo Neural Processing Unit [1022:17f0]
+> c7:00.0 USB controller [0c03]: Advanced Micro Devices, Inc. [AMD] Device [1022:151f]
+> 	Subsystem: Advanced Micro Devices, Inc. [AMD] Device [1022:15b9]
+> 	Kernel driver in use: xhci_hcd
+> 	Kernel modules: xhci_pci
+> c7:00.3 USB controller [0c03]: Advanced Micro Devices, Inc. [AMD] Device [1022:151a]
+> 	Subsystem: Advanced Micro Devices, Inc. [AMD] Device [1022:151a]
+> 	Kernel driver in use: xhci_hcd
+> 	Kernel modules: xhci_pci
+> c7:00.4 USB controller [0c03]: Advanced Micro Devices, Inc. [AMD] Device [1022:151b]
+> 	Subsystem: Advanced Micro Devices, Inc. [AMD] Device [1022:151b]
+> 	Kernel driver in use: xhci_hcd
+> 	Kernel modules: xhci_pci
+> c7:00.5 USB controller [0c03]: Advanced Micro Devices, Inc. [AMD] USB4 Router 0 [1022:151c]
+> 	Subsystem: Advanced Micro Devices, Inc. [AMD] USB4 Router 0 [1022:151c]
+> 	Kernel driver in use: thunderbolt
+> 	Kernel modules: thunderbolt
+> c7:00.6 USB controller [0c03]: Advanced Micro Devices, Inc. [AMD] USB4 Router 1 [1022:151d]
+> 	Subsystem: Advanced Micro Devices, Inc. [AMD] USB4 Router 1 [1022:151d]
+> 	Kernel driver in use: thunderbolt
+> 	Kernel modules: thunderbolt
+> 
+> doas cat /sys/kernel/debug/dri/0/amdgpu_firmware_info 
+> VCE feature version: 0, firmware version: 0x00000000
+> UVD feature version: 0, firmware version: 0x00000000
+> MC feature version: 0, firmware version: 0x00000000
+> ME feature version: 35, firmware version: 0x00000021
+> PFP feature version: 35, firmware version: 0x00000035
+> CE feature version: 0, firmware version: 0x00000000
+> RLC feature version: 1, firmware version: 0x1151054a
+> RLC SRLC feature version: 0, firmware version: 0x00000000
+> RLC SRLG feature version: 0, firmware version: 0x00000000
+> RLC SRLS feature version: 0, firmware version: 0x00000000
+> RLCP feature version: 1, firmware version: 0x11510341
+> RLCV feature version: 0, firmware version: 0x00000000
+> MEC feature version: 35, firmware version: 0x00000024
+> IMU feature version: 0, firmware version: 0x0b331d00
+> SOS feature version: 0, firmware version: 0x00000000
+> ASD feature version: 553648405, firmware version: 0x21000115
+> TA XGMI feature version: 0x00000000, firmware version: 0x00000000
+> TA RAS feature version: 0x00000000, firmware version: 0x00000000
+> TA HDCP feature version: 0x00000000, firmware version: 0x17000052
+> TA DTM feature version: 0x00000000, firmware version: 0x1200001e
+> TA RAP feature version: 0x00000000, firmware version: 0x00000000
+> TA SECUREDISPLAY feature version: 0x00000000, firmware version: 0x00000000
+> SMC feature version: 0, program: 9, firmware version: 0x095d0e00 (93.14.0)
+> SDMA0 feature version: 60, firmware version: 0x0000000f
+> VCN feature version: 0, firmware version: 0x09118022
+> DMCU feature version: 0, firmware version: 0x00000000
+> DMCUB feature version: 0, firmware version: 0x09005100
+> TOC feature version: 0, firmware version: 0x0000000b
+> MES_KIQ feature version: 6, firmware version: 0x00000075
+> MES feature version: 1, firmware version: 0x00000091
+> VPE feature version: 60, firmware version: 0x0000003d
+> VBIOS version: 113-STRIXEMU-001
+> 
+> 
+> 
+> 
+
