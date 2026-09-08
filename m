@@ -1,51 +1,51 @@
 Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.166])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E95E34CC265
-	for <regressions@lists.linux.dev>; Tue,  8 Sep 2026 13:22:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DD61559C9D
+	for <regressions@lists.linux.dev>; Tue,  8 Sep 2026 15:15:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.166
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788873784; cv=none; b=FnNqLpKU3XxF33km5BnbvIAY0TnHk9Dd2L1OPqxxXQXRF4BcGFhdodd7JBayTWFjaloIvBFA56zy+Mxy8FqNLGoeA2FoHB3feYlt8Fvle6OSsTx9qnRRDov1JNst/1n/k6AcUNhoCkdbHXXQMgMS+bLRglQkipaRE+myWBG6s4w=
+	t=1788880516; cv=none; b=YSVdzSi36MhOi/Ss86aFaxSaaULUKe2m1jmH5ibqL1gAwPgtdI2Nt5XEBqx0WTXPiFkvdMBAlDc7Z+uFPVgXCcI+HDihdAMPU3W8RUTlCPZTb3bNz2jisW7gwEKPRfzpmKu70LAkuUldTiwzZ0lQKCEizNtu2BHndHL7CO7RLBQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788873784; c=relaxed/simple;
-	bh=lPYb7zf0g8a4l1yeUuEq8bVPLhwSBKDIm8Jl8wXL4S4=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=ZLAp2JDNGnH3G/HWXV6odq4RBLm4wfZ+ZvNbTPM2fMoxj7ERydCoQ3Xt+R6dYhGrbhXiPnKSzVk1KAjkUqgUeJmG2czyXCGOGUCv+RjexchhhrwNPImu1nz3F27Un/rhIrW+0v7lhTjUGsTpNm4CTiFRmpl8aIP+3sD/TADwHqA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=jAkR9oQp; arc=none smtp.client-ip=188.68.63.166
+	s=arc-20240116; t=1788880516; c=relaxed/simple;
+	bh=npBVPIx/WRGawCVtXNGKZVl2Ht00Z+1uN1WEVDLUYEM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
+	 In-Reply-To:Content-Type; b=Zj6ZrPXH6VswPhqYudEdf9WcJIqg1txQxegn2BX5RnvHL/rVxC/Z/kIt0GrWF+/CTaNxiL6srg80Ixn4RQ1aHKXSnCTC5wlP9nkc4pJ5spPHWJYOjiCB0rLTlOdwhbJqMNSEzFvjuvjV4N+pIYLaq42K2EIvJLLT06xOzbJqX+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=bzDV0iRa; arc=none smtp.client-ip=188.68.63.166
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="jAkR9oQp"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="bzDV0iRa"
 Received: from mors-relay-8202.netcup.net (localhost [127.0.0.1])
-	by mors-relay-8202.netcup.net (Postfix) with ESMTPS id 4hfPkY3f05z4H9t
-	for <regressions@lists.linux.dev>; Tue,  8 Sep 2026 15:22:45 +0200 (CEST)
+	by mors-relay-8202.netcup.net (Postfix) with ESMTPS id 4hfSD270bqz48f7;
+	Tue,  8 Sep 2026 17:14:58 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1788873765;
-	bh=lPYb7zf0g8a4l1yeUuEq8bVPLhwSBKDIm8Jl8wXL4S4=;
-	h=Date:Subject:From:To:References:In-Reply-To:From;
-	b=jAkR9oQp/FmDm8UqLFX8DVTpGJGdFuYXR3pgyYqBKkyl+L+Yi55z3slSpsEX6aFLE
-	 pZRyP7Ol+an9J+OmCm5t5yixDMs1a/DtspkyrAHye+wfoR7tMhaSXZtU4qCOAvf9LE
-	 wMW6kU6VthYqOmsrZlJsJT9nQ9Sz8CaD1rtWpl/aDDrAoocSvqBiZYKgIbNpdL//Su
-	 Tb/+sWPMSSL71HyepfzmGfnCSK47OcbKT/tAra3sQ8Ehf9YvTPnMS8Yc5uCC/8yOz/
-	 uoBukSaB/+EXqyH+BySR8vDb2DJk2cpyszkBDPajv5Re12tjrO6OyfmkTyyep5OXBG
-	 ig2o+roGwx/Rw==
+	s=key2; t=1788880499;
+	bh=npBVPIx/WRGawCVtXNGKZVl2Ht00Z+1uN1WEVDLUYEM=;
+	h=Date:Subject:To:References:From:Cc:In-Reply-To:From;
+	b=bzDV0iRasfIGoJ4eLj1TCVT70hJaEAOMRX7MIRrV5legW5CJh40FsucJFRm0xinxd
+	 VSRAH2lnZTCW26I73YqQH0CzEhv+UKgfhE3rNts3CcTlfL6fLhwLarUaXQjI2TvO64
+	 tHz6Z+I4GbUQbkfjVjwf82ds839gkPvHpHG51VbJlS+aMOX104cO14AS1n9+xE8FbD
+	 QrItJsNcCCsnr+xemks/qx8yPJsQ1p5UXz/mZ56jGa1OWzbYJh9u4bUYkRhBM0g3qe
+	 Z/Bc9BKJ2feWuNglm1ngFw7E42dPdaGaPgU1OLaaySRHe6l/zH9smHiomdWlZFBTL3
+	 P4n3lkhjff7dA==
 Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-8202.netcup.net (Postfix) with ESMTPS id 4hfPkY2xfLz4GjH
-	for <regressions@lists.linux.dev>; Tue,  8 Sep 2026 15:22:45 +0200 (CEST)
+	by mors-relay-8202.netcup.net (Postfix) with ESMTPS id 4hfSD26JNLz48V3;
+	Tue,  8 Sep 2026 17:14:58 +0200 (CEST)
 Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4hfPkY17Sjz8tKy
-	for <regressions@lists.linux.dev>; Tue,  8 Sep 2026 15:22:44 +0200 (CEST)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4hfSD13Gv4z8svL;
+	Tue,  8 Sep 2026 17:14:57 +0200 (CEST)
 Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 59EFE5FA44
-	for <regressions@lists.linux.dev>; Tue,  8 Sep 2026 15:22:38 +0200 (CEST)
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 983795F9C3;
+	Tue,  8 Sep 2026 17:14:56 +0200 (CEST)
 Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=linux@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
 Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <18127a7f-0426-451b-b3dc-20092de73246@leemhuis.info>
-Date: Tue, 8 Sep 2026 15:22:37 +0200
+Message-ID: <1b3d0eb2-9e9a-4d4e-b8c0-ff966033ef03@leemhuis.info>
+Date: Tue, 8 Sep 2026 17:14:55 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -53,40 +53,102 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Subject: Re: rust: Build error in DRM bindings
+To: Thomas Zimmermann <tzimmermann@suse.de>,
+ dri-devel <dri-devel@lists.freedesktop.org>,
+ "open list:RUST:Keyword:b(?i:rust)b" <rust-for-linux@vger.kernel.org>
+References: <4da62a4b-c4ef-492a-9a27-b56bd4784acf@suse.de>
+From: Thorsten Leemhuis <linux@leemhuis.info>
 Content-Language: de-DE, en-US
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Autocrypt: addr=linux@leemhuis.info; keydata=
+ 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 MEK4
+Cc: Mukul Joshi <mukul.joshi@amd.com>,
+ Alex Deucher <alexander.deucher@amd.com>, amd-gfx@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org, =?UTF-8?Q?Christian_K=C3=B6nig?=
+ <christian.koenig@amd.com>, Felix Kuehling <Felix.Kuehling@amd.com>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ Linux Next Mailing List <linux-next@vger.kernel.org>,
+ Mark Brown <broonie@kernel.org>
+In-Reply-To: <4da62a4b-c4ef-492a-9a27-b56bd4784acf@suse.de>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-PPP-Message-ID: 
- <178887375856.2422937.17955705719856539705@mxe9fb.netcup.net>
-X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: 59EFE5FA44
-X-NC-CID: kC0dGppJZQhQ8LksOH7uRriOCH4+DBlyeHSh3YREqNREBoOuv00=
+ <178888049708.3336765.16009071836980567864@mxe9fb.netcup.net>
+X-NC-CID: +8MkgHCp8RC5tsRYXFuTLb6WzoXvHmnlhMHKCi6gQfsCOicsRNQ=
 
+On 9/8/26 09:11, Thomas Zimmermann wrote:
 
+> when building the Rust-DRM bindings with v7.3-rc2, I get
+> 
+>>>>
+> 
+>   RUSTC L rust/kernel.o
+> error[E0063]: missing field `handle_free` in initializer of
+> `drm_gem_object_funcs`
+>    --> /home/tzimmermann/Projekte/linux/rust/kernel/drm/gem/shmem.rs:130:52
+>     |
+> 130 |     const VTABLE: bindings::drm_gem_object_funcs =
+> bindings::drm_gem_object_funcs {
+>     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ missing `handle_free`
+> 
+> error[E0063]: missing field `handle_free` in initializer of
+> `drm_gem_object_funcs`
+>    --> /home/tzimmermann/Projekte/linux/rust/kernel/drm/gem/mod.rs:265:58
+>     |
+> 265 |     const OBJECT_FUNCS: bindings::drm_gem_object_funcs =
+> bindings::drm_gem_object_funcs {
+>     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ missing `handle_free`
+> 
+> error: aborting due to 2 previous errors
+> 
+> For more information about this error, try `rustc --explain E0063`.
+And I already wondered if I'm the only one that is running into this, as
+I reported this a few days ago already. Pseudo-patch to work around this
+can be found here:
+https://lore.kernel.org/all/apyTR-f8W6Jt7uP5@soda.int.kasm.eu/
 
-On 3/9/24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
+But for bisectibility I think it would be best if that fix could be
+folded into the culprit.
 
-#regzbot report: https://lore.kernel.org/all/apgeBNSiP01YfNcs@google.com/
-#regzbot introduced: 5a8b2cc36e796d
-#regzbot title: interconnect: qcom: x1e80100: Lenovo IdeaCenter Mini X
-stopped booting
-
-#regzbot report: https://gitlab.freedesktop.org/drm/amd/-/work_items/5760
-#regzbot introduced: 7e5760f084d06ca57e46e4dbf7ef08f03f857be8
-#regzbot title: drm: amdgpu: saturation control stopped working on TV
-connected via HDMI
-
-#regzbot report: https://gitlab.freedesktop.org/drm/amd/-/work_items/5777
-#regzbot introduced: 7e5760f084d06ca57e46e4dbf7ef08f03f857be8
-#regzbot title: drm: amdgpu: External HDMI display briefly goes black
-during video playback on Linux 7.2.x
+Ciao, Thorsten
