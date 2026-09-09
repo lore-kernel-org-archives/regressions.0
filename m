@@ -1,313 +1,212 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CB0E49CF29
-	for <regressions@lists.linux.dev>; Wed,  9 Sep 2026 10:18:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40F8853FD59
+	for <regressions@lists.linux.dev>; Wed,  9 Sep 2026 11:23:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788949094; cv=none; b=Y1qv3vNZbQ04EO5reKhS56MRfj5qxkoejYKaW2nZGk4YlsuxcTugchrlE/QXyII8k0XenhoYQNug84e/qvxq6c71g9we1t7tMCho76eULIzqmTHI3ngSBqyAfQNlUTuUHGJLbfWkTGrAqorAcCRAl2QQKxqHLzoecGZP7ALxaQo=
+	t=1788953035; cv=none; b=kkrX6SW9IS4TDwm1ni+SBRUlaoLBk2Ywb5O9clxwgUG0vQMNpEAZA41ejP2gxlCv9bmjtssQPXr9oaHRueIqwcc9XjzLON5forEImAt4hJo9Kig39iUAV9YuJVR8qrfbpU+tJW1lEppZPZQv2LlnJNsryj1MXSkMqJzpFXL38BY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788949094; c=relaxed/simple;
-	bh=ESfukMun3UZJlSPYk/dz2ksbll6RS7m053nZO66LCuU=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=PRRm47sC+mztgPV41jALAOWohwHaY+nsxj/9iyxBI5luzJdXaCHpn9zgW79fl/G5REVbkfm/vo0KAgUUHWNx4Hl305hCkkPRUUnQ6pSirHj0k1b66l0emBi1GEn0KgBTRlkUW3u7I39PLtvj6JUwgck3dFiuL66sjlTGaJF8sBE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AH5HvRQF; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1788953035; c=relaxed/simple;
+	bh=i5oc8G+FPJUXrDJ9GzNQWBwY5F3Q8cqZHnD+c8ruQgw=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rSWkotYn8IDUX2D/Rl+iggJjp26VGJqUKmP+md5KzuyijfyriXrX5KxjOCsO4AMyU12zq48shQb1z4WvJDtFk57X8RdMPbST6S2XptvHmG8UnZJQ8tS6wAN0A+Jrp2Zn4fzhPMBPOlntCPC4r6f/HfCpuz26zn3dTj8yYM8KvTc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=aePvz5cR; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AH5HvRQF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1788949085; x=1820485085;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=ESfukMun3UZJlSPYk/dz2ksbll6RS7m053nZO66LCuU=;
-  b=AH5HvRQFCgHSGeNQDiVaodK5CYRWGi1z8q1Ie1HFMVHDQO2/TlRv9fao
-   cN0Z3BgQ8CnR7OxL9MssBgvTFRQX8yCRYbEAdq2MC528a71jrxELM2Cv7
-   KDjJ0Gnc4IAHWz4EvG/bd+yHY+nDoM51+rpkPpnHjGL/Ds7zo+NAJ7Rr4
-   3rB6fWkOkGs0HN+5CR1548mWhvQe/EcVSYQMjBZczV6QM5mOn1A+PaiK3
-   kPp3sFc75YdYinyaX8m7b83ubDZCgKIwIo6JYdUpyB3sKCd6YtH1MAEJw
-   Gdz3UVEO1iEM2U4KcNXV0KF+PcW3rvi0qM2fp7JDqguIVjYJZqI9EPilz
-   w==;
-X-CSE-ConnectionGUID: KTCgcUJfRC+xWwtBMLKbbg==
-X-CSE-MsgGUID: JM6Hs+zdSMGl4bhYYHWZ2w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11900"; a="88516262"
-X-IronPort-AV: E=Sophos;i="6.25,270,1779174000"; 
-   d="scan'208";a="88516262"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2026 03:17:59 -0700
-X-CSE-ConnectionGUID: Vtoo3Y8BTO2pb7m85djLbQ==
-X-CSE-MsgGUID: /UHi7KrhQ4W4PxO2CYV5sA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,270,1779174000"; 
-   d="scan'208";a="294783282"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.78])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2026 03:17:55 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 9 Sep 2026 13:17:51 +0300 (EEST)
-To: Liz Fong-Jones <lizf@honeycomb.io>
-cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, regressions@lists.linux.dev, 
-    amd-gfx@lists.freedesktop.org, Jon Nettleton <jon@solid-run.com>, 
-    Jon Nettleton <jon.nettleton@gmail.com>, 
-    Jacob Martin <jacob.martin@canonical.com>, 
-    Thorsten Leemhuis <regressions@leemhuis.info>, stable@vger.kernel.org
-Subject: Re: [PATCH v5] PCI: Fix BAR resize for devices on a root bus
-In-Reply-To: <20260908-pci-rebar-root-bus-v5-1-a210f405ea81@honeycomb.io>
-Message-ID: <29c5916f-da42-58f0-d4c7-815bbaed711b@linux.intel.com>
-References: <20260908-pci-rebar-root-bus-v5-1-a210f405ea81@honeycomb.io>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="aePvz5cR"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-498028b3d5eso54525225e9.1
+        for <regressions@lists.linux.dev>; Wed, 09 Sep 2026 04:23:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1788953031; x=1789557831; darn=lists.linux.dev;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :content-type:mime-version:references:message-id:subject:cc:to:date
+         :from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=ec2Fsn3mNWnCkR7kAoCbAQzF9VNKLUvPjpImLB8zqX8=;
+        b=aePvz5cRswe8ZmZqwZAQTpeZgGcuP5PMcK9XkMOgh2Hm6p1NW0mwfYzK4tJRm9R6z0
+         r2ZSKszG8z2DwgqmfXfl57aFbXPvuKBaLm+g3uFbcpKFZ1lLR53WYVv+oaKoO5YfwSoc
+         qeoNmWzv8bMhYmdpyXRM75eHk6Te6IAWh2pzNVAvgp5tRfOSmRNpMOiYzXra0bJJYDye
+         LsbUyzMbaIvSlfz7Y2PPvx8nb5r5bq0/j4Efhpt//Hv5Ws7W3HbRx+MUQ39yAO/etMMU
+         n6Ia/+5WqKxnh0hNxoydwS30FhEOSzdNtHep/d0+WoUQnkzGSnl4vlwrpQODMICy/uHu
+         kiaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788953031; x=1789557831;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :content-type:mime-version:references:message-id:subject:cc:to:date
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=ec2Fsn3mNWnCkR7kAoCbAQzF9VNKLUvPjpImLB8zqX8=;
+        b=i1iOQUOxctwB58DsFNF3XcReYuAKqZ2Y5hjkwOIKGMNbHoBJEBT+DM7ifvu0N6MpMm
+         udZggCgIcCkwOTHp0sP/oUY1ImiHu43WZ+jk+hvblOPsNUadLp3imB6v34AsfpRdeRWZ
+         BcvN+3j28Vacew2JaKc/ypK4MrA/73xHYmmMlt/7yCJ9ZJzfuiiNlMQoyPPurkYAjwtY
+         NlN1wSIG4pSBFe7TEz2Gzvfx8X0VyhSyGsPXYX8/8jawLoWozfXK8AtVK28IV8ebPUEr
+         jrj8Qr6tn35+J1WS2/HqpM6Wt2JG3SgDDLgubMpvsx3KbHH22Yi82DHi89VOaoZNm9ys
+         UeoA==
+X-Forwarded-Encrypted: i=1; AKwUvBwkOUEMxFftr5G9P3Hfo5sOmhEZgo/Ajxx1V/XvglK5IEcm4hvZcrD1raL7801IAJUjg7wvgPt7eVHROw==@lists.linux.dev
+X-Gm-Message-State: AFuF++mLboBMgDTh/nloMGoo8xMZ/aIeaquUUjK54JOJLMoWKNmj8xBF
+	k22vJ5XrYpkS1xr6FRqqgjF4HNbqoQspzZfeMHPUX8ZNSrfPDL6LztMOem5Km08OPa8=
+X-Gm-Gg: AYBFou1EqjPjT4e/te5Amuuw/B4dj4GakQ7PUxJcNpdeW2J1n9rxpK6GDYbcnBBPAYl
+	VYcJRGARNHfn9l86cp/ADin2zrycCdeTM+nVmLS/FfeRbpStXSUZSNHxT7PWejLwCudGn35jqu6
+	82LsvZdClwSLWzb6Tp4FLA2T+a8Ordwwp2NYhfXrSv+nsY0jul8NJKnSkKYP+ySQS85uMBJZZgO
+	woKq9g+rLCKpJ/aqsgP4JM37jJYs602Fe+uyC3rMa9+6eNX059tD6Mv7ljxCSjAOnpCTUly75yu
+	x7Gvn6H0jxG02j36J0z+F28yM1eN1dI7LnvYXI2KwqNog8iY5dCQVyUHyYDanyyROddGM+iLPEU
+	4PKkf4cYdq8K11+YGil/DkP3NuWSGvQBhAW3ai5ymGE96WoXMuMw7RIUjdhAAunxCeFwCwWkZH1
+	tuODf5x/SmgcwQpr8JC+eH9Xnz7FakA8VJr3Wsf71fVXelNFYIFpfJwiUo7s3uCh1GMRcz7go6e
+	/h6wsY=
+X-Received: by 2002:a05:600c:474c:b0:493:c47f:3c55 with SMTP id 5b1f17b1804b1-49cf8227619mr315909275e9.5.1788953031373;
+        Wed, 09 Sep 2026 04:23:51 -0700 (PDT)
+Received: from localhost ([82.145.119.95])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49d08144037sm381473505e9.7.2026.09.09.04.23.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Sep 2026 04:23:50 -0700 (PDT)
+From: Andrea della Porta <andrea.porta@suse.com>
+X-Google-Original-From: Andrea della Porta <aporta@suse.de>
+Date: Wed, 9 Sep 2026 13:27:30 +0200
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, Angel J <iamanaws@httpd.dev>,
+	Lizhi Hou <lizhi.hou@amd.com>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+	"stable@vger.kernel.org" <stable@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-rpi-kernel@lists.infradead.org" <linux-rpi-kernel@lists.infradead.org>,
+	"robh@kernel.org" <robh@kernel.org>,
+	Andrea della Porta <andrea.porta@suse.com>,
+	"florian.fainelli@broadcom.com" <florian.fainelli@broadcom.com>
+Subject: Re: [REGRESSION] PCI: Dynamic OF node creation hangs on invalid
+ bridge configuration
+Message-ID: <aqFCouobgTYOBbEe@apocalypse>
+References: <GXe6anuewkS4bLNwca3cYOmUxN9csc0TxLYGSBc1qNRmfrmvFlcmD62wEM23TxfzfuXAv4P3yvUv7pyraleARrL1Na-aN8w-t9uc1Igu8DA=@httpd.dev>
+ <20260903231744.GA2281658@bhelgaas>
+ <20260904105743.1c396a8b@bootlin.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-1291541364-1788949012=:1156"
-Content-ID: <ac91299a-1cf4-4b45-b9dc-b5931e0d84f3@linux.intel.com>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260904105743.1c396a8b@bootlin.com>
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hi,
 
---8323328-1291541364-1788949012=:1156
-Content-Type: text/plain; CHARSET=ISO-8859-2
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <d4054e8f-f2bf-aa5d-601e-5f28a115bd4e@linux.intel.com>
+On 10:57 Fri 04 Sep     , Herve Codina wrote:
+> Hi Angel, Bjorn,
+> 
+> On Thu, 3 Sep 2026 18:17:44 -0500
+> Bjorn Helgaas <helgaas@kernel.org> wrote:
+> 
+> > [+to Herve, Lizhi for PCI dynamic OF node stuff]
+> > 
+> > On Sun, Aug 23, 2026 at 02:14:25AM +0000, Angel J wrote:
+> > > Hello,
+> > > 
+> > > This regression was introduced in v6.17-rc1 and remains in the dynamic
+> > > PCI OF node code. Linux 6.18 fails very early during boot on my Dell XPS
+> > > 8940 when CONFIG_PCI_DYNAMIC_OF_NODES=y. The display goes black before
+> > > any useful console or pstore output appears, and the machine remains
+> > > hung.  
+> > 
+> > Oof, sorry, that's a terrible failure to debug.  Thanks for your
+> > persistence in chasing it.
+> > 
+> > I don't think 49d63971f963 ("misc: rp1: RaspberryPi RP1 misc driver")
+> > is a likely culprit by itself because there's just nothing there that
+> > looks like it would relate to a Dell XPS 8940.
+> > 
+> > > Disabling CONFIG_PCI_DYNAMIC_OF_NODES makes the same kernel boot normally.
+> > > Linux v6.19-rc5 also boots because the RP1 driver stopped selecting that
+> > > option, not because the dynamic PCI OF node code changed.
+> > > 
+> > > Hardware:
+> > > 
+> > >   System: Dell XPS 8940, board 0K3CM7, BIOS 2.27.1 (2025-04-03)
+> > >   CPU: Intel Core i7-11700 (Rocket Lake)
+> > >   Triggering device: 0000:00:00.0, Intel 8086:4c43
+> > >   Firmware boot: UEFI, ACPI-based x86_64
+> > > 
+> > > Test results:
+> > > 
+> > >   Linux 6.12.103: good
+> > >   Linux v6.17-rc1: bad
+> > >   Linux 6.18.44, CONFIG_PCI_DYNAMIC_OF_NODES=y: bad
+> > >   Linux 6.18.44, CONFIG_PCI_DYNAMIC_OF_NODES=n: good
+> > >   Linux 6.18.44, CONFIG_PCI_DYNAMIC_OF_NODES=y, skip invalid bridge: good
+> > >   Linux v6.19-rc4: bad
+> > >   Linux v6.19-rc5: good
+> > >   Linux 4621c338d33f: bad
+> > >   Linux e55feea3a03a: good
+> > > 
+> > > The first-parent boundary between the last two tests is:
+> > > 
+> > >   e55feea3a03a ("Merge tag 'soc-fixes-6.19' ...")
+> > > 
+> > > That merge contains ce26f588c831 ("misc: rp1: drop overlay support"), which
+> > > removes:
+> > > 
+> > >   select PCI_DYNAMIC_OF_NODES
+> > > 
+> > > from MISC_RP1. The generated configurations differed only by:
+> > > 
+> > >   -CONFIG_PCI_DYNAMIC_OF_NODES=y
+> > >   +# CONFIG_PCI_DYNAMIC_OF_NODES is not set
+> > > 
+> > > CONFIG_MISC_RP1=m in both. The known-bad 4621c338d33f and Linux 6.18.44
+> > > both boot after disabling PCI_DYNAMIC_OF_NODES (and MISC_RP1, whose Kconfig
+> > > select otherwise forces it on).
+> > > 
+> > > There is no RP1 device in this machine, and its driver does not probe.
+> > > MISC_RP1 affects this x86 system only because its Kconfig select enables
+> > > PCI_DYNAMIC_OF_NODES globally.
+> > > 
+> > > I narrowed the hang to dynamic OF node creation for 0000:00:00.0
+> > > (8086:4c43), the Intel Rocket Lake-S integrated memory controller. On
+> > > this machine it reports PCI class 0604 and header type 1, but it is bound
+> > > to icl_uncore and is not a usable forwarding bridge:
+> > > 
+> > >   Bus: primary=ff, secondary=ff, subordinate=ff
+> > >   I/O and memory bridge windows: invalid/all ones
+> > >   kernel: bridge configuration invalid ([bus ff-ff]), reconfiguring
+> 
+> Is this PCI logs reported with PCI_DYNAMIC_OF_NODES=y or PCI_DYNAMIC_OF_NODES=n
+> or always whatever the PCI_DYNAMIC_OF_NODES Kconfig value ?
+> 
+> A PCI class 0604 is a PCI-to-PCI bridge.
+> 
+> Something in kernel code prevent the scan of this PCI-to-PCI bridge even if the
+> kernel tries to reconfigure it. Indeed, the device is "Intel Rocket Lake-S
+> integrated memory controller" and not a PCI-to-PCI bridge
 
-On Tue, 8 Sep 2026, Liz Fong-Jones wrote:
+Indeed, a Host-bridge should have 0600 class and Header 0 (or 80, if it's multi
+function as it seems). Angel, could you please provide the following output:
 
-> pci_do_resource_release_and_resize() releases the device BARs that
-> share a bridge window with the BAR being resized, but when the device
-> sits directly on a root bus (pdev->bus->self =3D=3D NULL) it then skips
-> resource assignment entirely and returns success, leaving the BARs it
-> just released unassigned (IORESOURCE_UNSET).
->=20
-> Skipping pbus_reassign_bridge_resources() is correct in that case --
-> there is no bridge window to adjust -- but the device BARs still have
-> to be reassigned. Before the BAR release was consolidated into the PCI
-> core, this case worked for amdgpu because the driver released the BARs
-> itself and then called pci_assign_unassigned_bus_resources()
-> unconditionally after the resize, which assigns unassigned device BARs
-> also on a root bus. Commit db92e3fef53e ("drm/amdgpu: Remove driver
-> side BAR release before resize") removed that call, so nothing assigns
-> the released BARs anymore.
->=20
-> This breaks amdgpu completely on the SolidRun HoneyComb LX2K (NXP
-> LX2160A, arm64, ACPI), where the GPU endpoint is enumerated directly
-> on the root bus of its segment (there is no root port device, so
-> pdev->bus->self is NULL):
->=20
->   amdgpu 0004:01:00.0: BAR 0 [mem 0xa400000000-0xa40fffffff 64bit pref]: =
-releasing
->   amdgpu 0004:01:00.0: BAR 2 [mem 0xa410000000-0xa4101fffff 64bit pref]: =
-releasing
->   amdgpu 0004:01:00.0: sw_init of IP block <gmc_v8_0> failed -19
->   amdgpu 0004:01:00.0: amdgpu_device_ip_init failed
->   amdgpu 0004:01:00.0: Fatal error during GPU init
->=20
-> No error is logged because the resize path reports success; amdgpu
-> then finds BAR0 IORESOURCE_UNSET and bails out with -ENODEV.
->=20
-> When there is no upstream bridge, call pci_bus_assign_resources() on
-> the root bus to place the BARs released above, using the same
-> alignment-sorted algorithm as normal enumeration instead of a manual
-> per-BAR loop. This also walks the rest of the hierarchy under the
-> root bus, as pci_assign_unassigned_bus_resources() used to for amdgpu
-> before commit db92e3fef53e ("drm/amdgpu: Remove driver side BAR
-> release before resize") removed that call -- the core-side fix that
-> commit asked for ("such a problem should be fixed inside
-> pci_resize_resource() instead").
->=20
-> pci_bus_assign_resources() returns void, so failure is detected by
-> checking whether the released BARs are still assigned afterward; if
-> not, roll back as in the bridged case. This is stricter than the
-> bridged path -- it fails on any unplaced resource, not just required
-> ones -- since a root bus typically has one shared window, and failing
-> loudly seemed better than leaving something silently unassigned.
->=20
-> The root bus path also had a locking bug that any fix here necessarily
-> touches: the old "goto out" jumped to up_read(&pci_bus_sem) without a
-> matching down_read() (as does the "goto restore" taken when
-> pci_dev_res_add_to_list() fails in the release loop). Take pci_bus_sem
-> before the BAR release loop so every path through the function holds
-> it exactly once.
->=20
-> Use pci_upstream_bridge() rather than testing pdev->bus->self
-> directly. The two are usually equivalent, but pci_upstream_bridge()
-> is the canonical test -- pci_is_root_bus(), which it's built on,
-> warns that bus->self =3D=3D NULL doesn't necessarily mean a root bus
-> (SR-IOV virtual buses from virtfn_add_bus() are the same).
->=20
-> Fixes: 337b1b566db0 ("PCI: Fix restoring BARs on BAR resize rollback path=
-")
-> Cc: stable@vger.kernel.org
-> Link: https://bugs.launchpad.net/ubuntu/+source/linux-hwe-7.0/+bug/215959=
-6
-> Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
-> Suggested-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
-> Assisted-by: Claude:claude-fable-5 checkpatch
-> Assisted-by: Claude:claude-sonnet-5
-> Signed-off-by: Liz Fong-Jones <lizf@honeycomb.io>
-> ---
-> #regzbot introduced: 337b1b566db0
->=20
-> Observed at runtime on Ubuntu's linux-hwe-7.0 (7.0.0-14, broken) vs
-> linux-hwe-6.17 (working), but nothing here is distro-specific: Ubuntu
-> carries this code unmodified, and the affected function is identical
-> to current mainline. By source inspection the regression window is
-> v6.18 (old code paths) to v6.19 (consolidation). Workaround for
-> affected users: amdgpu.rebar=3D0.
->=20
-> On the topology question raised in review: this is physical hardware,
-> not a virtualized guest, running the UEFI/ACPI firmware variant of
-> this board (SolidRun also ships a U-Boot/devicetree variant of the
-> same hardware). Deferring to Jon Nettleton (CC'd, SolidRun) on the
-> exact root complex wiring; see the hardware manual's block diagram:
-> https://dev.solid-run.com/nxp/lx2160a/com-som/lx2160a-com-hardware-user-m=
-anual#block-diagram
-> ---
-> Changes in v5:
-> - Per Ilpo J=E4rvinen's review of v4: use pci_bus_assign_resources()
->   instead of a manual per-BAR pci_assign_resource() loop in the
->   root-bus branch. Same outcome for the bug being fixed, but reuses
->   the core's alignment-sorted placement algorithm
+lspci -nn
+setpci -s 00:00.0 HEADER_TYPE
 
-Great, it worked (I was somewhat afraid there might have been some=20
-landmine for the case where there's no bridge).
+from a running (i.e. with CONFIG_PCI_DYNAMIC_OF_NODES=n) system? Just to make
+sure we're talking about the correct device and that the hw is 'lying' to us...
 
-And yes, it's very important in general case to assign the resource in=20
-correct order because the assignment algorithm is greedy.
+Many thanks,
+Andrea
 
-Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
-
---=20
- i.
-
->   and matches the
->   design intent stated in db92e3fef53e's commit message, rather than
->   reimplementing assignment ad hoc.
-> - Drop Reviewed-by from Krzysztof Wilczy=F1ski: this revision changes
->   what the root-bus branch actually does (not just a predicate, as
->   in v3's pci_upstream_bridge() change), so his v2 review doesn't
->   carry over. Add Suggested-by for Ilpo instead.
-> - Add Suggested-by for Bjorn Helgaas too: overdue credit for the
->   pci_upstream_bridge() suggestion from v3 review, which only ever
->   made it into the cover letter's changelog, not the actual commit
->   trailers.
-> - Link to v4: https://patch.msgid.link/20260908-pci-rebar-root-bus-v4-1-2=
-780e9c22e08@honeycomb.io
->=20
-> Changes in v4:
-> - No functional changes. Resending per Thorsten Leemhuis (regressions
->   tracking) -- this looked to have fallen through the cracks after
->   v3. Confirmed still broken today on v7.3-rc2 (mainline) and v7.2.4
->   (stable): pci_do_resource_release_and_resize() still has the
->   original "if (!bus->self) goto out;" with no reassignment on that
->   path.
-> - Rebase onto current mainline.
-> - Link to v3: https://patch.msgid.link/20260731-pci-rebar-root-bus-v3-1-6=
-732e233fc99@honeycomb.io
->=20
-> Changes in v3:
-> - Add Reviewed-by from Krzysztof Wilczy=F1ski, received on v2.
-> - Use pci_upstream_bridge() instead of testing pdev->bus->self
->   directly, per Bjorn Helgaas's review: bus->self =3D=3D NULL doesn't
->   necessarily mean a root bus (SR-IOV virtfn_add_bus() buses are the
->   same), and this function is reachable for VF BAR resizes elsewhere
->   in this file. Doesn't affect the bug being fixed here (not a VF)
->   but is more correct in general. Reviewed-by kept from v2 -- this is
->   a narrow, mechanical change to a path this device doesn't exercise,
->   not a substantive rework of what was reviewed.
-> - Rebase onto current mainline.
-> - Add Jacob Martin to Cc: he independently triaged and accepted the
->   corresponding Ubuntu report (LP: #2159596) on the Canonical kernel
->   team, so he has direct interest in this landing.
-> - Move Ilpo J=E4rvinen to To: for final review, per Bjorn.
-> - Link to v2: https://patch.msgid.link/20260712-pci-rebar-root-bus-v2-1-a=
-1b9107a82dc@honeycomb.io
->=20
-> Changes in v2:
-> - Add Assisted-by tags (missing from v1; required per
->   Documentation/process/coding-assistants.rst)
-> - Add Link: to the corresponding Ubuntu bug report
-> - Drop the "# v6.19+" annotation on Cc: stable; unnecessary noise
->   given the Fixes: tag already lets the stable team derive applicable
->   versions (per stable-kernel-rules.rst)
-> - Link to v1: https://patch.msgid.link/20260705-pci-rebar-root-bus-v1-1-5=
-5df70cbdd88@honeycomb.io
->=20
-> To: Bjorn Helgaas <bhelgaas@google.com>
-> To: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
-> Cc: linux-pci@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: regressions@lists.linux.dev
-> Cc: amd-gfx@lists.freedesktop.org
-> Cc: Jon Nettleton <jon@solid-run.com>
-> Cc: Jon Nettleton <jon.nettleton@gmail.com>
-> Cc: Jacob Martin <jacob.martin@canonical.com>
-> Cc: Thorsten Leemhuis <regressions@leemhuis.info>
-> ---
->  drivers/pci/setup-bus.c | 23 +++++++++++++++++------
->  1 file changed, 17 insertions(+), 6 deletions(-)
->=20
-> diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-> index e8c94aa1d3c12..ed16ef7c26fa7 100644
-> --- a/drivers/pci/setup-bus.c
-> +++ b/drivers/pci/setup-bus.c
-> @@ -2380,6 +2380,7 @@ int pci_do_resource_release_and_resize(struct pci_d=
-ev *pdev, int resno, int size
->  =09struct resource *res =3D pci_resource_n(pdev, resno);
->  =09struct pci_dev_resource *dev_res;
->  =09struct pci_bus *bus =3D pdev->bus;
-> +=09struct pci_dev *bridge =3D pci_upstream_bridge(pdev);
->  =09struct resource *b_win, *r;
->  =09LIST_HEAD(saved);
->  =09unsigned int i;
-> @@ -2397,6 +2398,8 @@ int pci_do_resource_release_and_resize(struct pci_d=
-ev *pdev, int resno, int size
->  =09if (ret)
->  =09=09return ret;
-> =20
-> +=09down_read(&pci_bus_sem);
-> +
->  =09pci_dev_for_each_resource(pdev, r, i) {
->  =09=09if (i >=3D PCI_BRIDGE_RESOURCES)
->  =09=09=09break;
-> @@ -2415,13 +2418,21 @@ int pci_do_resource_release_and_resize(struct pci=
-_dev *pdev, int resno, int size
-> =20
->  =09pci_resize_resource_set_size(pdev, resno, size);
-> =20
-> -=09if (!bus->self)
-> -=09=09goto out;
-> +=09if (bridge) {
-> +=09=09ret =3D pbus_reassign_bridge_resources(bus, res, &saved);
-> +=09=09if (ret)
-> +=09=09=09goto restore;
-> +=09} else {
-> +=09=09/* No bridge window to adjust; let the core reassign the bus. */
-> +=09=09pci_bus_assign_resources(bus);
-> =20
-> -=09down_read(&pci_bus_sem);
-> -=09ret =3D pbus_reassign_bridge_resources(bus, res, &saved);
-> -=09if (ret)
-> -=09=09goto restore;
-> +=09=09list_for_each_entry(dev_res, &saved, list) {
-> +=09=09=09if (!resource_assigned(dev_res->res)) {
-> +=09=09=09=09ret =3D -ENOSPC;
-> +=09=09=09=09goto restore;
-> +=09=09=09}
-> +=09=09}
-> +=09}
-> =20
->  out:
->  =09up_read(&pci_bus_sem);
->=20
-> ---
-> base-commit: 893e11787f78e43b534e252249ac3fff4d1333f8
-> change-id: 20260704-pci-rebar-root-bus-f3123fe10fc7
->=20
+> 
+> The of_pci_make_dev_node() is called by the PCI core [1] to create OF node for
+> bridges.
+> 
+> of_pci_make_dev_node() will set (device_type = "pci" in the created node).
+> 
+> But if the device it is not a bridge, this is obviously wrong (even if I don't
+> understand why it hangs the system).
+> 
+> Maybe the test done at [1] should be improved to detect those wrong bridges.
+> and skip the of_pci_make_dev_node() call when a wrong bridge is detected.
+> 
+> [1] https://elixir.bootlin.com/linux/v7.2/source/drivers/pci/bus.c#L355
+> 
+> 
 > Best regards,
-> -- =20
-> Liz Fong-Jones <lizf@honeycomb.io>
->=20
---8323328-1291541364-1788949012=:1156--
+> Hervé
