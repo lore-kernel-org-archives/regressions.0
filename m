@@ -1,212 +1,155 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender-op-o11.zoho.com.au (sender-op-o11.zoho.com.au [103.138.129.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40F8853FD59
-	for <regressions@lists.linux.dev>; Wed,  9 Sep 2026 11:23:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788953035; cv=none; b=kkrX6SW9IS4TDwm1ni+SBRUlaoLBk2Ywb5O9clxwgUG0vQMNpEAZA41ejP2gxlCv9bmjtssQPXr9oaHRueIqwcc9XjzLON5forEImAt4hJo9Kig39iUAV9YuJVR8qrfbpU+tJW1lEppZPZQv2LlnJNsryj1MXSkMqJzpFXL38BY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788953035; c=relaxed/simple;
-	bh=i5oc8G+FPJUXrDJ9GzNQWBwY5F3Q8cqZHnD+c8ruQgw=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rSWkotYn8IDUX2D/Rl+iggJjp26VGJqUKmP+md5KzuyijfyriXrX5KxjOCsO4AMyU12zq48shQb1z4WvJDtFk57X8RdMPbST6S2XptvHmG8UnZJQ8tS6wAN0A+Jrp2Zn4fzhPMBPOlntCPC4r6f/HfCpuz26zn3dTj8yYM8KvTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=aePvz5cR; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B49C2560AAF
+	for <regressions@lists.linux.dev>; Wed,  9 Sep 2026 14:41:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=103.138.129.1
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1788964913; cv=pass; b=K/dVn7slGuiUwQzhAx4wiTxKxMWuIomMrZFC/xNDJlLUa4+rTRKzDBFlBtwT011BzMVbv8wykV9igldMrnyYv/58PFUY+1Y2fT77C+bCphlp+Vs4Im13efyirNZmLaS30tNKcGAnE4iL5GBNSoMv9+FAybg0m7Qy3//W7tz8yaI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1788964913; c=relaxed/simple;
+	bh=xX3MS2hFLnLzrbqpKEGCXF6NiBKGvB8xeKt3qODVK0I=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dJSRPgbzxCEizDu8Wo7CIoToe6DgGuFMbqMEvj1bRE2HBbb7tejxmC1xfz0ZYtwENHWIQQhDtwKP0FFtvbljF7OJqv8ONwubQ53kyceVYFDykBQDEIUdhv/obh+f538uPPtwGRhvfc+sTZCg+PuxydivBfOa+yxTbpvQ9XCMj9k=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=scstudios.tech; spf=pass smtp.mailfrom=scstudios.tech; dkim=pass (1024-bit key) header.d=scstudios.tech header.i=@scstudios.tech header.b=NPUaq6KP; arc=pass smtp.client-ip=103.138.129.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=scstudios.tech
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=scstudios.tech
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="aePvz5cR"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-498028b3d5eso54525225e9.1
-        for <regressions@lists.linux.dev>; Wed, 09 Sep 2026 04:23:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1788953031; x=1789557831; darn=lists.linux.dev;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :content-type:mime-version:references:message-id:subject:cc:to:date
-         :from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=ec2Fsn3mNWnCkR7kAoCbAQzF9VNKLUvPjpImLB8zqX8=;
-        b=aePvz5cRswe8ZmZqwZAQTpeZgGcuP5PMcK9XkMOgh2Hm6p1NW0mwfYzK4tJRm9R6z0
-         r2ZSKszG8z2DwgqmfXfl57aFbXPvuKBaLm+g3uFbcpKFZ1lLR53WYVv+oaKoO5YfwSoc
-         qeoNmWzv8bMhYmdpyXRM75eHk6Te6IAWh2pzNVAvgp5tRfOSmRNpMOiYzXra0bJJYDye
-         LsbUyzMbaIvSlfz7Y2PPvx8nb5r5bq0/j4Efhpt//Hv5Ws7W3HbRx+MUQ39yAO/etMMU
-         n6Ia/+5WqKxnh0hNxoydwS30FhEOSzdNtHep/d0+WoUQnkzGSnl4vlwrpQODMICy/uHu
-         kiaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788953031; x=1789557831;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :content-type:mime-version:references:message-id:subject:cc:to:date
-         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=ec2Fsn3mNWnCkR7kAoCbAQzF9VNKLUvPjpImLB8zqX8=;
-        b=i1iOQUOxctwB58DsFNF3XcReYuAKqZ2Y5hjkwOIKGMNbHoBJEBT+DM7ifvu0N6MpMm
-         udZggCgIcCkwOTHp0sP/oUY1ImiHu43WZ+jk+hvblOPsNUadLp3imB6v34AsfpRdeRWZ
-         BcvN+3j28Vacew2JaKc/ypK4MrA/73xHYmmMlt/7yCJ9ZJzfuiiNlMQoyPPurkYAjwtY
-         NlN1wSIG4pSBFe7TEz2Gzvfx8X0VyhSyGsPXYX8/8jawLoWozfXK8AtVK28IV8ebPUEr
-         jrj8Qr6tn35+J1WS2/HqpM6Wt2JG3SgDDLgubMpvsx3KbHH22Yi82DHi89VOaoZNm9ys
-         UeoA==
-X-Forwarded-Encrypted: i=1; AKwUvBwkOUEMxFftr5G9P3Hfo5sOmhEZgo/Ajxx1V/XvglK5IEcm4hvZcrD1raL7801IAJUjg7wvgPt7eVHROw==@lists.linux.dev
-X-Gm-Message-State: AFuF++mLboBMgDTh/nloMGoo8xMZ/aIeaquUUjK54JOJLMoWKNmj8xBF
-	k22vJ5XrYpkS1xr6FRqqgjF4HNbqoQspzZfeMHPUX8ZNSrfPDL6LztMOem5Km08OPa8=
-X-Gm-Gg: AYBFou1EqjPjT4e/te5Amuuw/B4dj4GakQ7PUxJcNpdeW2J1n9rxpK6GDYbcnBBPAYl
-	VYcJRGARNHfn9l86cp/ADin2zrycCdeTM+nVmLS/FfeRbpStXSUZSNHxT7PWejLwCudGn35jqu6
-	82LsvZdClwSLWzb6Tp4FLA2T+a8Ordwwp2NYhfXrSv+nsY0jul8NJKnSkKYP+ySQS85uMBJZZgO
-	woKq9g+rLCKpJ/aqsgP4JM37jJYs602Fe+uyC3rMa9+6eNX059tD6Mv7ljxCSjAOnpCTUly75yu
-	x7Gvn6H0jxG02j36J0z+F28yM1eN1dI7LnvYXI2KwqNog8iY5dCQVyUHyYDanyyROddGM+iLPEU
-	4PKkf4cYdq8K11+YGil/DkP3NuWSGvQBhAW3ai5ymGE96WoXMuMw7RIUjdhAAunxCeFwCwWkZH1
-	tuODf5x/SmgcwQpr8JC+eH9Xnz7FakA8VJr3Wsf71fVXelNFYIFpfJwiUo7s3uCh1GMRcz7go6e
-	/h6wsY=
-X-Received: by 2002:a05:600c:474c:b0:493:c47f:3c55 with SMTP id 5b1f17b1804b1-49cf8227619mr315909275e9.5.1788953031373;
-        Wed, 09 Sep 2026 04:23:51 -0700 (PDT)
-Received: from localhost ([82.145.119.95])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49d08144037sm381473505e9.7.2026.09.09.04.23.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Sep 2026 04:23:50 -0700 (PDT)
-From: Andrea della Porta <andrea.porta@suse.com>
-X-Google-Original-From: Andrea della Porta <aporta@suse.de>
-Date: Wed, 9 Sep 2026 13:27:30 +0200
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, Angel J <iamanaws@httpd.dev>,
-	Lizhi Hou <lizhi.hou@amd.com>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-rpi-kernel@lists.infradead.org" <linux-rpi-kernel@lists.infradead.org>,
-	"robh@kernel.org" <robh@kernel.org>,
-	Andrea della Porta <andrea.porta@suse.com>,
-	"florian.fainelli@broadcom.com" <florian.fainelli@broadcom.com>
-Subject: Re: [REGRESSION] PCI: Dynamic OF node creation hangs on invalid
- bridge configuration
-Message-ID: <aqFCouobgTYOBbEe@apocalypse>
-References: <GXe6anuewkS4bLNwca3cYOmUxN9csc0TxLYGSBc1qNRmfrmvFlcmD62wEM23TxfzfuXAv4P3yvUv7pyraleARrL1Na-aN8w-t9uc1Igu8DA=@httpd.dev>
- <20260903231744.GA2281658@bhelgaas>
- <20260904105743.1c396a8b@bootlin.com>
+	dkim=pass (1024-bit key) header.d=scstudios.tech header.i=@scstudios.tech header.b="NPUaq6KP"
+ARC-Seal: i=1; a=rsa-sha256; t=1788964899; cv=none; 
+	d=zohomail.com.au; s=zohoarc; 
+	b=HTNWwnBL9lOEczlqwZpZ/LGNV3/Hvg1rSRGFVjRg4XACYO1SM5eoJjmw4i4jPSxXpBY7riFaYcqxf96IkjDhdRKw3F5UXw86OUaM3MyJDq+Q8jbc2WikY7siRla4wGtnsFrVueE6btjSL2qFNvFxXJKRnQEN2yG67WBtfz9AseM=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com.au; s=zohoarc; 
+	t=1788964899; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=zD28XhKg0xRAFAYdyTHDmq6D+C7Hst1WBfaQKtFpJ/8=; 
+	b=ioTQBDwFzTdCY4xbtnZtLZ7jjbVIfBm7kmwi/56zcREBoHxgLp5ikpBgocNPGTiNPY7VNFmzin5uROuxdeDTvmM5TrwbTPUq6dBMF+HdEe+mrbgGlsROWO8c52uuUoW8hlwVPYfjUWTtMF3q2Z+o3TeOlLT5HYuwQGJUu9da8cE=
+ARC-Authentication-Results: i=1; mx.zohomail.com.au;
+	dkim=pass  header.i=scstudios.tech;
+	spf=pass  smtp.mailfrom=ruben@scstudios.tech;
+	dmarc=pass header.from=<ruben@scstudios.tech>
+DKIM-Signature: a=rsa-sha256; b=NPUaq6KPuaNFML49GMBxM/sRUtCvmGIPyrLZo7sGmqxcwYOczYXe4l3ItSm55g9YiMDd/y18rpWQGs75oCpcBEdU6+MTq8wvAZP3ScpTuRmly3LcLZNaINMRQmY8qqj7HpfZ7VHCjzjUOhtvoBUojZEFogH1DdMAy3oop3dATYY=; c=relaxed/relaxed; s=zmail; d=scstudios.tech; v=1; bh=zD28XhKg0xRAFAYdyTHDmq6D+C7Hst1WBfaQKtFpJ/8=; h=Content-Description:Content-ID:Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:List-Subscribe:List-Post:List-Owner:List-Id:List-Archive:List-Help:List-Unsubscribe:MIME-Version:Message-ID:Resent-Sender:Resent-Cc:Resent-Date:Resent-To:Reply-To:Resent-Message-ID:Resent-From:Sender:Subject:To:Feedback-ID:Date:From:Message-Id:Reply-To:Subject:To:Cc;
+Received: by mx.zoho.com.au with SMTPS id 1788964897675430.9683353963428;
+	Thu, 10 Sep 2026 00:41:37 +1000 (AEST)
+From: Ruben Sutton <ruben@scstudios.tech>
+To: Jonathan Corbet <corbet@lwn.net>,
+	linux-doc@vger.kernel.org
+Cc: Shuah Khan <skhan@linuxfoundation.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Thorsten Leemhuis <linux@leemhuis.info>,
+	workflows@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev,
+	Ruben Sutton <ruben@scstudios.tech>
+Subject: [PATCH] docs: process: use gender-neutral pronouns
+Date: Thu, 10 Sep 2026 00:41:00 +1000
+Message-ID: <20260909144100.78177-1-ruben@scstudios.tech>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260904105743.1c396a8b@bootlin.com>
+X-ZohoMailClient: External
 
-Hi,
+Several process documents use gendered pronouns when referring
+generically to developers and maintainers. Use singular they instead,
+making the language inclusive without changing its meaning.
 
-On 10:57 Fri 04 Sep     , Herve Codina wrote:
-> Hi Angel, Bjorn,
-> 
-> On Thu, 3 Sep 2026 18:17:44 -0500
-> Bjorn Helgaas <helgaas@kernel.org> wrote:
-> 
-> > [+to Herve, Lizhi for PCI dynamic OF node stuff]
-> > 
-> > On Sun, Aug 23, 2026 at 02:14:25AM +0000, Angel J wrote:
-> > > Hello,
-> > > 
-> > > This regression was introduced in v6.17-rc1 and remains in the dynamic
-> > > PCI OF node code. Linux 6.18 fails very early during boot on my Dell XPS
-> > > 8940 when CONFIG_PCI_DYNAMIC_OF_NODES=y. The display goes black before
-> > > any useful console or pstore output appears, and the machine remains
-> > > hung.  
-> > 
-> > Oof, sorry, that's a terrible failure to debug.  Thanks for your
-> > persistence in chasing it.
-> > 
-> > I don't think 49d63971f963 ("misc: rp1: RaspberryPi RP1 misc driver")
-> > is a likely culprit by itself because there's just nothing there that
-> > looks like it would relate to a Dell XPS 8940.
-> > 
-> > > Disabling CONFIG_PCI_DYNAMIC_OF_NODES makes the same kernel boot normally.
-> > > Linux v6.19-rc5 also boots because the RP1 driver stopped selecting that
-> > > option, not because the dynamic PCI OF node code changed.
-> > > 
-> > > Hardware:
-> > > 
-> > >   System: Dell XPS 8940, board 0K3CM7, BIOS 2.27.1 (2025-04-03)
-> > >   CPU: Intel Core i7-11700 (Rocket Lake)
-> > >   Triggering device: 0000:00:00.0, Intel 8086:4c43
-> > >   Firmware boot: UEFI, ACPI-based x86_64
-> > > 
-> > > Test results:
-> > > 
-> > >   Linux 6.12.103: good
-> > >   Linux v6.17-rc1: bad
-> > >   Linux 6.18.44, CONFIG_PCI_DYNAMIC_OF_NODES=y: bad
-> > >   Linux 6.18.44, CONFIG_PCI_DYNAMIC_OF_NODES=n: good
-> > >   Linux 6.18.44, CONFIG_PCI_DYNAMIC_OF_NODES=y, skip invalid bridge: good
-> > >   Linux v6.19-rc4: bad
-> > >   Linux v6.19-rc5: good
-> > >   Linux 4621c338d33f: bad
-> > >   Linux e55feea3a03a: good
-> > > 
-> > > The first-parent boundary between the last two tests is:
-> > > 
-> > >   e55feea3a03a ("Merge tag 'soc-fixes-6.19' ...")
-> > > 
-> > > That merge contains ce26f588c831 ("misc: rp1: drop overlay support"), which
-> > > removes:
-> > > 
-> > >   select PCI_DYNAMIC_OF_NODES
-> > > 
-> > > from MISC_RP1. The generated configurations differed only by:
-> > > 
-> > >   -CONFIG_PCI_DYNAMIC_OF_NODES=y
-> > >   +# CONFIG_PCI_DYNAMIC_OF_NODES is not set
-> > > 
-> > > CONFIG_MISC_RP1=m in both. The known-bad 4621c338d33f and Linux 6.18.44
-> > > both boot after disabling PCI_DYNAMIC_OF_NODES (and MISC_RP1, whose Kconfig
-> > > select otherwise forces it on).
-> > > 
-> > > There is no RP1 device in this machine, and its driver does not probe.
-> > > MISC_RP1 affects this x86 system only because its Kconfig select enables
-> > > PCI_DYNAMIC_OF_NODES globally.
-> > > 
-> > > I narrowed the hang to dynamic OF node creation for 0000:00:00.0
-> > > (8086:4c43), the Intel Rocket Lake-S integrated memory controller. On
-> > > this machine it reports PCI class 0604 and header type 1, but it is bound
-> > > to icl_uncore and is not a usable forwarding bridge:
-> > > 
-> > >   Bus: primary=ff, secondary=ff, subordinate=ff
-> > >   I/O and memory bridge windows: invalid/all ones
-> > >   kernel: bridge configuration invalid ([bus ff-ff]), reconfiguring
-> 
-> Is this PCI logs reported with PCI_DYNAMIC_OF_NODES=y or PCI_DYNAMIC_OF_NODES=n
-> or always whatever the PCI_DYNAMIC_OF_NODES Kconfig value ?
-> 
-> A PCI class 0604 is a PCI-to-PCI bridge.
-> 
-> Something in kernel code prevent the scan of this PCI-to-PCI bridge even if the
-> kernel tries to reconfigure it. Indeed, the device is "Intel Rocket Lake-S
-> integrated memory controller" and not a PCI-to-PCI bridge
+Leave pronouns referring to named people and text in attributed
+quotations unchanged.
 
-Indeed, a Host-bridge should have 0600 class and Header 0 (or 80, if it's multi
-function as it seems). Angel, could you please provide the following output:
+Assisted-by: LLM
+Signed-off-by: Ruben Sutton <ruben@scstudios.tech>
+---
+ Documentation/process/2.Process.rst            | 2 +-
+ Documentation/process/5.Posting.rst            | 2 +-
+ Documentation/process/6.Followthrough.rst      | 2 +-
+ Documentation/process/handling-regressions.rst | 2 +-
+ Documentation/process/howto.rst                | 2 +-
+ Documentation/process/submitting-patches.rst   | 2 +-
+ 6 files changed, 6 insertions(+), 6 deletions(-)
 
-lspci -nn
-setpci -s 00:00.0 HEADER_TYPE
+diff --git a/Documentation/process/2.Process.rst b/Documentation/process/2.Process.rst
+index 77f3f80e7c..75b5c236d8 100644
+--- a/Documentation/process/2.Process.rst
++++ b/Documentation/process/2.Process.rst
+@@ -227,7 +227,7 @@ tree, usually (but certainly not always) using the git source management
+ tool.  Tools like git (and related tools like quilt or mercurial) allow
+ maintainers to track a list of patches, including authorship information
+ and other metadata.  At any given time, the maintainer can identify which
+-patches in his or her repository are not found in the mainline.
++patches in their repository are not found in the mainline.
+ 
+ When the merge window opens, top-level maintainers will ask Linus to "pull"
+ the patches they have selected for merging from their repositories.  If
+diff --git a/Documentation/process/5.Posting.rst b/Documentation/process/5.Posting.rst
+index 07d7dbed13..6e61204403 100644
+--- a/Documentation/process/5.Posting.rst
++++ b/Documentation/process/5.Posting.rst
+@@ -233,7 +233,7 @@ the patch. Each of these uses this format::
+ 
+ The tags in common use are:
+ 
+- - Signed-off-by: this is a developer's certification that he or she has
++ - Signed-off-by: this is a developer's certification that they have
+    the right to submit the patch for inclusion into the kernel.  It is an
+    agreement to the Developer's Certificate of Origin, the full text of
+    which can be found in :ref:`Documentation/process/submitting-patches.rst <submittingpatches>`
+diff --git a/Documentation/process/6.Followthrough.rst b/Documentation/process/6.Followthrough.rst
+index 66fa400c6d..ebb0e4cc95 100644
+--- a/Documentation/process/6.Followthrough.rst
++++ b/Documentation/process/6.Followthrough.rst
+@@ -114,7 +114,7 @@ What happens next
+ If a patch is considered to be a good thing to add to the kernel, and once
+ most of the review issues have been resolved, the next step is usually
+ entry into a subsystem maintainer's tree.  How that works varies from one
+-subsystem to the next; each maintainer has his or her own way of doing
++subsystem to the next; each maintainer has their own way of doing
+ things.  In particular, there may be more than one tree - one, perhaps,
+ dedicated to patches planned for the next merge window, and another for
+ longer-term work.
+diff --git a/Documentation/process/handling-regressions.rst b/Documentation/process/handling-regressions.rst
+index c71b5d403f..6958a2a8b0 100644
+--- a/Documentation/process/handling-regressions.rst
++++ b/Documentation/process/handling-regressions.rst
+@@ -283,7 +283,7 @@ sure your patch description makes this aspect obvious. Once the change is
+ merged, tell the Linux kernel's regression tracker and the regressions mailing
+ list about the risk, so everyone has the change on the radar in case reports
+ trickle in. Depending on the risk, you also might want to ask the subsystem
+-maintainer to mention the issue in his mainline pull request.
++maintainer to mention the issue in their mainline pull request.
+ 
+ What else is there to known about regressions?
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+diff --git a/Documentation/process/howto.rst b/Documentation/process/howto.rst
+index 9438e03d6f..8c60138d03 100644
+--- a/Documentation/process/howto.rst
++++ b/Documentation/process/howto.rst
+@@ -305,7 +305,7 @@ The maintainers of the various kernel subsystems --- and also many
+ kernel subsystem developers --- expose their current state of
+ development in source repositories.  That way, others can see what is
+ happening in the different areas of the kernel.  In areas where
+-development is rapid, a developer may be asked to base his submissions
++development is rapid, a developer may be asked to base their submissions
+ onto such a subsystem kernel tree so that conflicts between the
+ submission and other already ongoing work are avoided.
+ 
+diff --git a/Documentation/process/submitting-patches.rst b/Documentation/process/submitting-patches.rst
+index 7ae79452e1..4c28a239e8 100644
+--- a/Documentation/process/submitting-patches.rst
++++ b/Documentation/process/submitting-patches.rst
+@@ -456,7 +456,7 @@ When to use Acked-by:, Cc:, and Co-developed-by:
+ ------------------------------------------------
+ 
+ The Signed-off-by: tag indicates that the signer was involved in the
+-development of the patch, or that he/she was in the patch's delivery path.
++development of the patch, or that they were in the patch's delivery path.
+ 
+ If a person was not directly involved in the preparation or handling of a
+ patch but wishes to signify and record their approval of it then they can
 
-from a running (i.e. with CONFIG_PCI_DYNAMIC_OF_NODES=n) system? Just to make
-sure we're talking about the correct device and that the hw is 'lying' to us...
+base-commit: 893e11787f78e43b534e252249ac3fff4d1333f8
+-- 
+2.54.0 (Apple Git-157)
 
-Many thanks,
-Andrea
-
-> 
-> The of_pci_make_dev_node() is called by the PCI core [1] to create OF node for
-> bridges.
-> 
-> of_pci_make_dev_node() will set (device_type = "pci" in the created node).
-> 
-> But if the device it is not a bridge, this is obviously wrong (even if I don't
-> understand why it hangs the system).
-> 
-> Maybe the test done at [1] should be improved to detect those wrong bridges.
-> and skip the of_pci_make_dev_node() call when a wrong bridge is detected.
-> 
-> [1] https://elixir.bootlin.com/linux/v7.2/source/drivers/pci/bus.c#L355
-> 
-> 
-> Best regards,
-> Hervé
