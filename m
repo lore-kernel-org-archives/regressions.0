@@ -1,99 +1,110 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 735222D7DEF
-	for <regressions@lists.linux.dev>; Thu, 10 Sep 2026 09:50:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA9EF409283
+	for <regressions@lists.linux.dev>; Thu, 10 Sep 2026 10:07:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789033806; cv=none; b=KXsWehgtRIjT3k+ixIWkDSEZZlxLS97g66lJO82EEqdPEhNvJeMa5Vq48umCxIqm+Am1VerzpaMvXjOM4bRQStxkoHUcg8COB05rmvEUIdrpP4mAfqLCGiQEEgpZnLiBdceKzVio/+IExYqdSC2zCTfj7QQ0Ah4m+MuQeEKGGPM=
+	t=1789034837; cv=none; b=RZ3DNvFhREZDSnAYT//jGTiTVk5WGVM+fQItvOrHRbZpAEFVWCOI36+6B/bEKBDQSGiCR0hc82tuhNGmc4mkseoqkweWunGng88ESEN3w7+AqDFx2+fMgy6Rr5ake1YvCOqvjJ3Nj6iThGTJaZPTI78ZBYMhivdLodg6nUmX6+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789033806; c=relaxed/simple;
-	bh=Lm1iDn1MpImB0Z6Zn3rV0unyaPyNmR3nCxRWSJRkZT0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A4BcfxbcMVq3NstFfn11X5bkVBzzRLgumYopGomhNzzmpXidozQuyTN2dQfsv+sR/LTJNOgoORWjxAcxnxccYMaw5d6Yz/vimPT/g+nngrs6iC3QXlmiBbmuc7X8BitNJ+VdFa5l6QIfjgt0/+q15rK/k0/mVb5jhBTQ2M+CxZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=cGCQsyJb; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1789034837; c=relaxed/simple;
+	bh=U2oe3hVTq0qbVZ71h5xzm622BIjXk6fAitQw3V+ttao=;
+	h=Message-ID:Date:MIME-Version:Subject:Cc:References:From:To:
+	 In-Reply-To:Content-Type; b=KpFkiMTfWW26fPfc3NKHu3VX2Yd9On2++bxD8YNHRpu3tdR6zZBMV9AQ+pOi/i3G01T/mGydLo2Y5rdkaBRWoJhg1yD9QpX7uT5degSLgCn/Alxmrl/enCx6EpfyLFmooTZrjPWEqgNHlFWp6EITwN5tInj7CQXBSW6KdByNgGM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=LdLW4Xoo; arc=none smtp.client-ip=188.68.63.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="cGCQsyJb"
-Received: from killaraus.ideasonboard.com (2001-14ba-70f3-e800--a06.rev.dnainternet.fi [IPv6:2001:14ba:70f3:e800::a06])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 02F9F447;
-	Thu, 10 Sep 2026 11:48:22 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1789033703;
-	bh=Lm1iDn1MpImB0Z6Zn3rV0unyaPyNmR3nCxRWSJRkZT0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cGCQsyJbAP2bXayNbuaQcVxLQP8U/QrZy6zehkn9bzrvreS3Cv+Ni6FePcNLGXwu7
-	 FNzq5zJGumyL4EcU6J/PZVB0CJbi/L0IIHcZRwiu3DUmOw6e/p1PeM6+oM+MissSVk
-	 uX2bwj1E6uvOeR00xun8/VE7mqEeOqq7K4srKUOk=
-Date: Thu, 10 Sep 2026 12:49:58 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Thorsten Leemhuis <linux@leemhuis.info>
-Cc: Kees Cook <kees@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-	Ruben Sutton <ruben@scstudios.tech>, linux-doc@vger.kernel.org,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Randy Dunlap <rdunlap@infradead.org>, workflows@vger.kernel.org,
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: [PATCH] docs: process: use gender-neutral pronouns
-Message-ID: <20260910094958.GI1892234@killaraus.ideasonboard.com>
-References: <20260909144100.78177-1-ruben@scstudios.tech>
- <87pkymlao3.fsf@trenco.lwn.net>
- <202609091143.0B34CB0E1@keescook>
- <6e4cb304-fc9c-4cd8-bd6d-2d0dd635f3cf@leemhuis.info>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="LdLW4Xoo"
+Received: from mors-relay-2501.netcup.net (localhost [127.0.0.1])
+	by mors-relay-2501.netcup.net (Postfix) with ESMTPS id 4hgYHm0tlFz6HRc;
+	Thu, 10 Sep 2026 12:07:00 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1789034820;
+	bh=U2oe3hVTq0qbVZ71h5xzm622BIjXk6fAitQw3V+ttao=;
+	h=Date:Subject:Cc:References:From:To:In-Reply-To:From;
+	b=LdLW4XooslJFoz/sa2h3IYoP4pGQohYUSDxl/jMt6+2szwvjxT4NeclZCfLTzvscX
+	 VMpNxBEy3qDOciph7eCh+vl0tKQlvvk7EG0Rk+1JXDj+bH1UrSD5NamcL/+DZ/Q6uZ
+	 mA0XgzLApmOJSCWfyGbrrXfK6CRoLMt5dvA/88n1UfWKLNf3R3d7d5HPtKUPeB2iZ0
+	 5V9ScH7Fw0gS7dilfeHNkTTh9eYjj/hHZokIeOzg8TXNCOtd4IOqbcRhdsiPPmEqu/
+	 EBYdBqj3BxXz7XLH/LGtp5X/ApLdZQL6gblnJt9gpqVAqbbbMuJojKWQgafat0oG1l
+	 ASysU9RInMQfw==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-2501.netcup.net (Postfix) with ESMTPS id 4hgYHm08xtz4xNG;
+	Thu, 10 Sep 2026 12:07:00 +0200 (CEST)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4hgYHl04ZYz8sch;
+	Thu, 10 Sep 2026 12:06:58 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 1B9E3604A5;
+	Thu, 10 Sep 2026 12:06:58 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <27c82eb4-4f8e-41b5-b983-dff7a0a27951@leemhuis.info>
+Date: Thu, 10 Sep 2026 12:06:56 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <6e4cb304-fc9c-4cd8-bd6d-2d0dd635f3cf@leemhuis.info>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] media: ipu-bridge: IVSC camera no longer probes
+ since v7.2 (CVS fallback returns the IVSC platform device)
+Cc: Martin Jeanne <martin@badakan.com>,
+ "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ Miguel Vadillo <miguel.vadillo@intel.com>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>,
+ Mehdi Djait <mehdi.djait@linux.intel.com>, Lixu Zhang
+ <lixu.zhang@intel.com>, Sergey Zagursky <gvozdoder@gmail.com>
+References: <2f8b67fc-ec2a-46f6-9ee0-06279e612bde@badakan.com>
+ <e8fd955b-fadc-497a-899b-a13502f0d7f0@leemhuis.info>
+ <7646b50e-391e-49cb-a82c-3f82be7c2273@badakan.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+To: Mauro Carvalho Chehab <mchehab@kernel.org>
+In-Reply-To: <7646b50e-391e-49cb-a82c-3f82be7c2273@badakan.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: <178903481857.1400903.6097560789328086809@mxe9fb.netcup.net>
+X-NC-CID: X6oLH8qUumbIGo/YLfz4cnLw5wnH2eFZ/hZujGJ8ruT1YiTgd2k=
 
-On Thu, Sep 10, 2026 at 08:59:04AM +0200, Thorsten Leemhuis wrote:
-> On 9/9/26 20:47, Kees Cook wrote:
-> > On Wed, Sep 09, 2026 at 09:14:04AM -0600, Jonathan Corbet wrote:
-> >> Ruben Sutton writes:
-> >>
-> >>> Several process documents use gendered pronouns when referring
-> >>> generically to developers and maintainers. Use singular they instead,
-> >>> making the language inclusive without changing its meaning.
-> >>>
-> >>> Leave pronouns referring to named people and text in attributed
-> >>> quotations unchanged.
-> >>
-> >> Ouch.
-> >>
-> >> I have no objection in principle to this change, but if we try to clean
-> >> up the whole kernel in this way we're going to have a *lot* of churn
-> >> and, undoubtedly, some unpleasant discussions at some point.
-> >>
-> >> I'm tempted to raise this question at the maintainers summit to see if I
-> >> can get some sort of project-wide policy laid out.
-> > 
-> > FWIW, I'd agree "indefinite they" (or "singular they") is the right
-> > language here: "his or her" is both annoying to read (too many words)
-> > and non-inclusive. Using "their" solves both.
-> I do, too.
+On 9/10/26 11:42, Martin Jeanne wrote:
+> On 9/10/26 10:56 AM, Thorsten Leemhuis wrote:
+>> Thanks for the report. Have you seen or maybe even tried applying
+>> "media: ipu-bridge: do not use the CVS device lookup for IVSC", which
+>> fixes a problem with the commit you mentioned and sounds somewhat
+>> related to my (but I only looked briefly):
+>> https://lore.kernel.org/all/20260902211524.5572-1-gvozdoder@gmail.com/
 > 
-> But all this makes me wonder: In case we decide to go down that route,
-> how do we prevent gendered pronouns from accidentally sneaking back in,
-> for example, through subsystems that change their docs directly? Do we
-> maybe have something already somewhere that watches changes to
-> Documentation/ where we could plug in a test script that yells if it
-> detects this in next? And yes, obviously someone would then also need to
-> write such a script.
+> No, I had missed it, thanks. Sergey's analysis matches mine and his
+> machine has the same IVSC (INTC10CF) and sensor (ov02c10), so my report
+> is a duplicate of his.
 
-This appears to me as similar to the words we decided to ban in commit
-a5f526ecb075 ("CodingStyle: Inclusive Terminology"). As far as I'm
-aware, there's no tooling to enforce this, we instead rely on reviewers
-(and authors in the first place of course) knowing the rules. The
-inclusive terminology discussion that occurred back then made the news,
-helping us to raise awareness of the rules. For gender-neutral pronouns
-we may need to communicate a bit more proactively towards at least
-subsystem maintainers.
+Good to know, thx!
 
--- 
-Regards,
+#regzbot dup:
+https://lore.kernel.org/lkml/20260901194526.6369-1-gvozdoder@gmail.com/
 
-Laurent Pinchart
+> If a Tested-by on a second machine helps, I can try v3 on my XPS 14 9440.
+Not sure, might help a tiny bit: the commit is in -next already, but not
+yet in a -fixes branch from what I see, so it might still be possible to
+add this to the change.
+
+Which leads to the bigger question:
+
+Mauro, what's the status of ce92674d8d8b29 ("media: ipu-bridge: do not
+use the CVS device lookup for IVSC")? Given that we have two reports
+about this, it afaics would be good to get this mainlined this week for
+-rc3.
+
+FWIW, there might be two more reports about this, not sure yet:
+https://bugzilla.kernel.org/show_bug.cgi?id=221988
+https://bugzilla.kernel.org/show_bug.cgi?id=221983
+
+Ciao, Thorsten
