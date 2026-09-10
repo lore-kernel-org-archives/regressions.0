@@ -1,183 +1,102 @@
-Received: from kylie.crudebyte.com (kylie.crudebyte.com [5.189.157.229])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from o1.ptr9745.em.honeycomb.io (o1.ptr9745.em.honeycomb.io [149.72.141.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 971C7493D4E;
-	Thu, 10 Sep 2026 14:07:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.189.157.229
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38121501F25
+	for <regressions@lists.linux.dev>; Thu, 10 Sep 2026 16:23:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=149.72.141.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789049243; cv=none; b=IKp+n7ZdgKijk3WzNFv0piCXglTMDzWQ2cBtSEIWU09geIlJrrpwcenLRtXfLTwcdoHM7eWWivpJXF4NkOf9knTq2G8OJg7C/TikTk/XfqlJKwckKA6L8B3+HBUnczpJAQoSpX4KQKwwQ46iHfECLKTqDiR+e3vhQmWpyNNbA98=
+	t=1789057426; cv=none; b=T5kUw6e28DNciXYamH0coPlCeQN4c25WiogAB+bxNNOJgPuZsTzdX7PdRsQ9OF0bjuuRuxgbkYQPLZRxBQ2mAeNMXYTmoqUqQpZsvj61mjV/jPM5fpBJUeNKdcW4zN9Ood59GBjHr6KQToXll1dcA0hCtj0P6ia/F/yBC3Zz2dw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789049243; c=relaxed/simple;
-	bh=7AHrBlllx7CTtEZHixjBstoCtU2GH+xx1JqNfNfIt2A=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jg58i9ZmNhg1lgPzk/Bu6+wXuiZ2/b27COari8Xs8cTi/RVC936YR0MAh9wlyOkXzB8Zzc2e+D59Kop46WUplVhP9I7ah9SUyajTCCdW2TvNG+Jn1amZX2xBTU5HsWF2bavWkYVwvHQDl3zE9jeNZbgv1jXH+18YFESHgFdot4o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=crudebyte.com; spf=pass smtp.mailfrom=crudebyte.com; dkim=pass (4096-bit key) header.d=crudebyte.com header.i=@crudebyte.com header.b=utaqg+UL; arc=none smtp.client-ip=5.189.157.229
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=crudebyte.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crudebyte.com
+	s=arc-20240116; t=1789057426; c=relaxed/simple;
+	bh=YSghPuclO7gQiXTLDzfE4bkBtKUF1sJO1s/E7HVHRx8=;
+	h=From:Subject:Date:Message-ID:In-Reply-To:References:MIME-Version:
+	 To:Cc:Content-Type; b=isGBj2PIHRMaZk/V0wFtDQqp90nvaPxMCjVUSIaPUz3g5Shh9sxG1TeyWUHYT47OrfUJ0GHR0t4e7qoLU5k30OsM2yaUEt1dkOMG8bBAGaQ5O3XOAfOcWrywzcTDp9E+nG5gei1giek937Jcz04O4D5ec+bisHERZ6p5Mamr3sQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=honeycomb.io; spf=pass smtp.mailfrom=em.honeycomb.io; dkim=pass (2048-bit key) header.d=honeycomb.io header.i=@honeycomb.io header.b=joFBqsob; arc=none smtp.client-ip=149.72.141.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=honeycomb.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=em.honeycomb.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=crudebyte.com header.i=@crudebyte.com header.b="utaqg+UL"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=crudebyte.com; s=kylie; h=Content-Type:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Content-ID:Content-Description;
-	bh=yVckXBT7ZkvtaRt/2Meu8jC/A0/uqyEsunIirUSTZHc=; b=utaqg+ULBFDjUrgWDK56ADnEFi
-	+fOPt3KUC1VWCk6SdJfjBhwvLYciV8l1jyIgZ7ZBF2+c4PkfcjisGoSracBN9ObFtlNM7XT7VnMEo
-	PgdwSGQuA42piRBu1PCfiXYmLHZQF9ZlJ2gCgwxYiFNYj5ftmq1BYb0fDr9Wk2JrYC7rlNC9d70g3
-	cjzV+gs7/FXMB/PKscEegj/hE7jxOumIGrTQyaiuy8MOcJX60OVVFrREcMQOEeZ+JEVT2HEbBgPJm
-	rQwuJRj99TjTkQR+wNcGllN7bYuFmqPJ6ir9MUTvYdm2VnATNnwauAO0ZzorFq76+VCy6l5+OqcRc
-	9vuL4tRcze/kFcz4nPsUcJE7cO7IxFvfVccAHO+FOpvpUO7F3rB4I78mCEfyClCve+xvjtYLyHug0
-	IwpcWKMPvGszWrNM4irJNbSuXzraKM1HlMORWW0bF1KT8s17NpT7alA3475ZK6wG0txI9EhWapjUi
-	cRmz5FlAtMZGIgjcocC5TQpGkOYPeBOCP32KdIAdrQcrQnFSniP7oay2Nf4iugq/EtZPinvZioIhl
-	jKo02CMnWxQxQQVxVFTUXoUsOhdSD/g36o4ZR/ti4uwMRiKgaCWJGYDW24qnNL7yTr4aUVxpIOAL1
-	cmhWFRhQyRdSv0bW6WO/Kn/fW88IdWpZUMIziNft8=;
-From: Christian Schoenebeck <linux_oss@crudebyte.com>
-To: ericvh@kernel.org, lucho@ionkov.net, asmadeus@codewreck.org,
- dhowells@redhat.com, pc@manguebit.org, Michael Mulqueen <mike@method-b.uk>
-Cc: v9fs@lists.linux.dev, netfs@lists.linux.dev,
- linux-fsdevel@vger.kernel.org, regressions@lists.linux.dev
-Subject:
- Re: PROBLEM: [REGRESSION 7.1-rc4 -> 7.1-rc5] 9p: silent NUL corruption of
- file data on cache modes with CACHE_WRITEBACK
-Date: Thu, 10 Sep 2026 16:06:51 +0200
-Message-ID: <10911959.nUPlyArG6x@weasel>
-In-Reply-To: <fbb9e395-1e07-4212-8f70-23f3cd498074@method-b.uk>
-References: <fbb9e395-1e07-4212-8f70-23f3cd498074@method-b.uk>
+	dkim=pass (2048-bit key) header.d=honeycomb.io header.i=@honeycomb.io header.b="joFBqsob"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=honeycomb.io;
+	h=from:subject:date:in-reply-to:references:mime-version:to:cc:
+	content-type:content-transfer-encoding:cc:content-type:date:from:subject:to;
+	s=s1; t=1789057422;
+	bh=Ojl/NWsC9MSjDYgGDCuYdo4PQAJl7yOv7aALgpvhTkU=;
+	b=joFBqsobjVeknQApV/Zp/YWNRPYKeJyITrtaVmOPPnBHMK/r5iHxCrtThnTLRkznWUkO
+	LHi4Dh30pu/ehGKRnsAIhefhCSBPdhFTNJURg/1xsxK6h44HGBbFT1sENIpOi2DyPqHDCQ
+	34coOuYITQ7fttFI4AnxkNyGSf9MiUtBr1GW+TiOMQWxbX/DWDB3LVIInFTcYLYznZkjnz
+	vunFoDjYdxouE8EdK8br4vmKP/X6nYTMZ41AJbLztnfxB8j9c/yrVflyYwPZZPPvtsbs4n
+	IrYGkQMhbGjKGBrkcYUzzQkgyb6pj3qF03hnMkTG2IDXxvZu0KJ+0D9P/HAu5Q0Q==
+Received: by recvd-69664d99dd-bcjr2 with SMTP id recvd-69664d99dd-bcjr2-1-6AA2D98E-78
+	2026-09-10 16:23:42.801218343 +0000 UTC m=+836507.408174706
+Received: from daisy.dens.ffj.family (unknown)
+	by geopod-ismtpd-6 (SG)
+	with ESMTP
+	id uocpkYPWStS876SvS2QkZQ
+	Thu, 10 Sep 2026 16:23:42.691 +0000 (UTC)
+From: Liz Fong-Jones <lizf@honeycomb.io>
+Subject: Re: [PATCH v5] PCI: Fix BAR resize for devices on a root bus
+Date: Thu, 10 Sep 2026 16:23:42 +0000 (UTC)
+Message-ID: <20260910162342.9854-1-lizf@honeycomb.io>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <29c5916f-da42-58f0-d4c7-815bbaed711b@linux.intel.com>
+References: <20260908-pci-rebar-root-bus-v5-1-a210f405ea81@honeycomb.io> <29c5916f-da42-58f0-d4c7-815bbaed711b@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="utf-8"
+X-SG-EID: 
+ =?us-ascii?Q?u001=2ECuH7N2XAoeMR1zrzr=2F6NZrhli2vbKPOHff5fJuZuba6ZIE8QPyIf9mn4Y?=
+ =?us-ascii?Q?ezqeFFjUkh=2FeROy4LtnO7KN9jZmednNviVbiXOC?=
+ =?us-ascii?Q?oREWn0PvvJP53Uz8gPPC5zPjaNtjMPM+hLjOqwU?=
+ =?us-ascii?Q?QawE=2F3B72uKOWIppfuG513fXq618S6PDhcLtvPE?=
+ =?us-ascii?Q?kJzwX52Ke8pwYM6EhV9cYiH0MCD7IpxaleMubVG?=
+ =?us-ascii?Q?Zto=2FP3pYCYWNMOtaYksHbdZ2R71xB12c2yT0Hwp?= =?us-ascii?Q?vG7V?=
+To: Ilpo =?iso-8859-1?q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Liz Fong-Jones <lizf@honeycomb.io>, Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+	regressions@lists.linux.dev, amd-gfx@lists.freedesktop.org, Jon Nettleton
+	<jon@solid-run.com>, Jon Nettleton <jon.nettleton@gmail.com>, Jacob Martin
+	<jacob.martin@canonical.com>, Thorsten Leemhuis <regressions@leemhuis.info>,
+	stable@vger.kernel.org
+X-Entity-ID: u001.GRlkmHQ+Ka/CKxmoC/CxTw==
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 
-On Thursday, 10 September 2026 12:56:24 CEST Michael Mulqueen wrote:
-> Hi,
-> 
-> This is my first kernel bug report, so let's hope I've done it right!
-> 
-> [1.] One line summary of the problem:
-> 
-> A 9p mount returns NULs in place of file contents the server holds, and can
-> write those NULs back over the server's copy. Nothing reports an error - the
-> read succeeds and the file is the correct length. Affects CACHE_WRITEBACK
-> modes - mmap, loose and fscache - but not none or readahead.
-> 
-> [2.] Full description of the problem/report:
-> 
-> I enclose a reproducer script that shows the two presentations of this bug:
-> 
->   - Read side: a range whose folio has been evicted reads back as NULs
->     while the server's copy is intact. The whole file comes back as NULs.
->     A fresh open() on the same mount reads them too, so it is not
->     confined to one descriptor.
-> 
->   - Write side: A partial write into such a range destroys data the server
->     did hold.
-> 
-> I came across this bug on a cache=loose mount in ordinary use, I was seeing
-> this sporadically and I think git was usually the trigger. I switched to
-> cache=mmap, which made it rarer but did not stop it.
-> 
-> After the client's own writeback extends a file, zero_point appears to go
-> stale and the zero-fill branch in fs/netfs/buffered_write.c fires for
-> regions the server does have. The sites were that branch, fs/9p/vfs_inode.c
-> (use_zero_point = true to netfs_inode_init), and fs/netfs/misc.c.
-[...]
-> I then built and tested the likeliest commit and its parent:
-> 
->   - 2c8f4742bb76 ("netfs: Fix potential for tearing in ->remote_i_size and
->     ->zero_point") - clean.
-> 
->   - 4543a4d73794 ("netfs: Fix zeropoint update where i_size >
->     remote_i_size") - CORRUPT.
+On Ilpo Järvinen wrote:
+> Great, it worked (I was somewhat afraid there might have been some
+> landmine for the case where there's no bridge).
+>
+> And yes, it's very important in general case to assign the resource in
+> correct order because the assignment algorithm is greedy.
 
-So that was:
+Thanks, Ilpo, for both reviews.
 
-commit 4543a4d737944134a1394afe797622546fbcc98a
-Author: David Howells <dhowells@redhat.com>
-Date:   Tue May 12 13:33:43 2026 +0100
+Yes, it works fine even without the bridge. This is what it looks
+like when triggering the resize through sysfs, and through amdgpu's
+probe-on-insmod, on the actual root-bus hardware (HoneyComb LX2K,
+LX2160A, dGPU directly on the root bus, no upstream bridge).
 
-    netfs: Fix zeropoint update where i_size > remote_i_size
-    
-    Fix the update of the zero point[*] by netfs_release_folio() when there is
-    uncommitted data in the pagecache beyond the folio being released but the
-    on-server EOF is in this folio (ie. i_size > remote_i_size).  The update
-    needs to limit zero_point to remote_i_size, not i_size as i_size is a local
-    phenomenon reflecting updates made locally to the pagecache, not stuff
-    written to the server.  remote_i_size tracks the server's i_size.
+Manual trigger via sysfs (shrink then grow back, forcing the release
++ reassign path both directions):
 
-[...]
+  pci 0004:01:00.0: BAR 0 [mem 0xa400000000-0xa4ffffffff 64bit pref]: releasing
+  pci 0004:01:00.0: BAR 2 [mem 0xa500000000-0xa5001fffff 64bit pref]: releasing
+  pci 0004:01:00.0: BAR 0 [mem 0xa400000000-0xa40fffffff 64bit pref]: assigned
+  pci 0004:01:00.0: BAR 2 [mem 0xa410000000-0xa4101fffff 64bit pref]: assigned
+  ...
+  pci 0004:01:00.0: BAR 0 [mem 0xa400000000-0xa40fffffff 64bit pref]: releasing
+  pci 0004:01:00.0: BAR 2 [mem 0xa410000000-0xa4101fffff 64bit pref]: releasing
+  pci 0004:01:00.0: BAR 0 [mem 0xa400000000-0xa4ffffffff 64bit pref]: assigned
+  pci 0004:01:00.0: BAR 2 [mem 0xa500000000-0xa5001fffff 64bit pref]: assigned
 
-diff --git a/fs/netfs/misc.c b/fs/netfs/misc.c
-index bad661ff2bec..723571ca1b88 100644
---- a/fs/netfs/misc.c
-+++ b/fs/netfs/misc.c
-@@ -307,10 +307,10 @@ bool netfs_release_folio(struct folio *folio, gfp_t gfp)
-                return false;
- 
-        netfs_read_sizes(inode, &i_size, &remote_i_size, &zero_point);
--       end = umin(folio_next_pos(folio), i_size);
-+       end = folio_next_pos(folio);
-        if (end > zero_point) {
-                spin_lock(&inode->i_lock);
--               end = umin(folio_next_pos(folio), inode->i_size);
-+               end = umin(end, ctx->_remote_i_size);
-                if (end > ctx->_zero_point)
-                        netfs_write_zero_point(inode, end);
-                spin_unlock(&inode->i_lock);
+And the real-world path, amdgpu's own probe with the amdgpu.rebar=0
+workaround removed:
 
-That would explain it, as _remote_i_size is only updated on explicit stat()
-(Tgetattr 9p request); with cache modes "loose" and "fscache" not even then.
+  amdgpu 0004:01:00.0: VRAM: 4096M 0x000000F400000000 - 0x000000F4FFFFFFFF (4096M used)
+  amdgpu 0004:01:00.0: [drm] Detected VRAM RAM=4096M, BAR=4096M
+  amdgpu 0004:01:00.0:  4096M of VRAM memory ready
 
-That's actually David's domain, but maybe something like the following might
-fix it?
-
-diff --git a/fs/netfs/write_collect.c b/fs/netfs/write_collect.c
-index 210eb8f3958d..9585274b118a 100644
---- a/fs/netfs/write_collect.c
-+++ b/fs/netfs/write_collect.c
-@@ -73,6 +73,8 @@ int netfs_folio_written_back(struct folio *folio)
-                spin_lock(&ictx->inode.i_lock);
-                if (fend > ictx->_zero_point)
-                        netfs_write_zero_point(inode, fend);
-+               if (fend > ictx->_remote_i_size)
-+                       netfs_write_remote_i_size(inode, fend);
-                spin_unlock(&ictx->inode.i_lock);
- 
-                folio_detach_private(folio);
-@@ -90,6 +92,15 @@ int netfs_folio_written_back(struct folio *folio)
-                        goto end_wb;
-                }
- 
-+               {
-+                       unsigned long long wend = umin(folio_next_pos(folio),
-+                                                      i_size_read(inode));
-+                       spin_lock(&ictx->inode.i_lock);
-+                       if (wend > ictx->_remote_i_size)
-+                               netfs_write_remote_i_size(inode, wend);
-+                       spin_unlock(&ictx->inode.i_lock);
-+               }
-+
-                /* Need to detach the group pointer if the page didn't get
-                 * redirtied.  If it has been redirtied, then it must be within
-                 * the same group.
-
-I.e. updating _remote_i_size on client's self-inflicted size extension after
-write completed?
-
-> I searched the v9fs and netfs public-inbox archives and did not find this
-> reported - apologies if I have missed a thread.
-> 
-> The nearest existing thread is Pierre Barre's "[BUG] 9p: data corruption
-> with cache=mmap under concurrent stat/write" (24 Dec 2025). I believe that
-> is a different bug: it needs stat racing against writes and manifests as a
-> wrong i_size. What I have here is single-threaded, deterministic, and
-> destroys data rather than mis-sizing the file. It is also absent on v6.18,
-> the release that report was made against.
-
-Even though unrelated, that's not fixed yet either, is it?
-
-/Christian
-
-
+No "Fatal error during GPU init" (the original regression's failure
+signature), full IP block init, driver comes up clean.
