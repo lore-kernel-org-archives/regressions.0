@@ -1,102 +1,179 @@
-Received: from o1.ptr9745.em.honeycomb.io (o1.ptr9745.em.honeycomb.io [149.72.141.136])
+Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38121501F25
-	for <regressions@lists.linux.dev>; Thu, 10 Sep 2026 16:23:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=149.72.141.136
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789057426; cv=none; b=T5kUw6e28DNciXYamH0coPlCeQN4c25WiogAB+bxNNOJgPuZsTzdX7PdRsQ9OF0bjuuRuxgbkYQPLZRxBQ2mAeNMXYTmoqUqQpZsvj61mjV/jPM5fpBJUeNKdcW4zN9Ood59GBjHr6KQToXll1dcA0hCtj0P6ia/F/yBC3Zz2dw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789057426; c=relaxed/simple;
-	bh=YSghPuclO7gQiXTLDzfE4bkBtKUF1sJO1s/E7HVHRx8=;
-	h=From:Subject:Date:Message-ID:In-Reply-To:References:MIME-Version:
-	 To:Cc:Content-Type; b=isGBj2PIHRMaZk/V0wFtDQqp90nvaPxMCjVUSIaPUz3g5Shh9sxG1TeyWUHYT47OrfUJ0GHR0t4e7qoLU5k30OsM2yaUEt1dkOMG8bBAGaQ5O3XOAfOcWrywzcTDp9E+nG5gei1giek937Jcz04O4D5ec+bisHERZ6p5Mamr3sQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=honeycomb.io; spf=pass smtp.mailfrom=em.honeycomb.io; dkim=pass (2048-bit key) header.d=honeycomb.io header.i=@honeycomb.io header.b=joFBqsob; arc=none smtp.client-ip=149.72.141.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=honeycomb.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=em.honeycomb.io
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEED85A0ABB
+	for <regressions@lists.linux.dev>; Thu, 10 Sep 2026 19:38:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.215.174
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1789069101; cv=pass; b=MC37d/Y7ROtv1+BoEl+WItV5CKrcHDr2zqb6MWB+ew8upBub5lOZ9geut6GSnRabRWh02/6P2M8TEK616yXw5A1NYZtR/o+AHuTZcfRJtOpjjqScZBhKWwR7a1/asYn65EEwhYduA0QNp+HVke9QsHYnGQmgPE9BMspoEBC/JY4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1789069101; c=relaxed/simple;
+	bh=QwfUjTsPcCrR+WsR07JjwB4oBCESRwvkyTXKa6tz6Ds=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=BIKfaQAUV1UdjqV+9nVyf7ttFBV+2GzDhKDdX8p1eVglytZGsNAdOOekqxeXDfenhhqj2wWKMr+4coGJ7qIDD7ExCdvzJdjvxZZYAU1T3RRZ9D+ogvYYyHzjMnspHoCnpLH2enUy03Mzt+T2xXmMTFRcO1oGPylFmQrRyABsOPM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MvqdncCE; arc=pass smtp.client-ip=209.85.215.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=honeycomb.io header.i=@honeycomb.io header.b="joFBqsob"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=honeycomb.io;
-	h=from:subject:date:in-reply-to:references:mime-version:to:cc:
-	content-type:content-transfer-encoding:cc:content-type:date:from:subject:to;
-	s=s1; t=1789057422;
-	bh=Ojl/NWsC9MSjDYgGDCuYdo4PQAJl7yOv7aALgpvhTkU=;
-	b=joFBqsobjVeknQApV/Zp/YWNRPYKeJyITrtaVmOPPnBHMK/r5iHxCrtThnTLRkznWUkO
-	LHi4Dh30pu/ehGKRnsAIhefhCSBPdhFTNJURg/1xsxK6h44HGBbFT1sENIpOi2DyPqHDCQ
-	34coOuYITQ7fttFI4AnxkNyGSf9MiUtBr1GW+TiOMQWxbX/DWDB3LVIInFTcYLYznZkjnz
-	vunFoDjYdxouE8EdK8br4vmKP/X6nYTMZ41AJbLztnfxB8j9c/yrVflyYwPZZPPvtsbs4n
-	IrYGkQMhbGjKGBrkcYUzzQkgyb6pj3qF03hnMkTG2IDXxvZu0KJ+0D9P/HAu5Q0Q==
-Received: by recvd-69664d99dd-bcjr2 with SMTP id recvd-69664d99dd-bcjr2-1-6AA2D98E-78
-	2026-09-10 16:23:42.801218343 +0000 UTC m=+836507.408174706
-Received: from daisy.dens.ffj.family (unknown)
-	by geopod-ismtpd-6 (SG)
-	with ESMTP
-	id uocpkYPWStS876SvS2QkZQ
-	Thu, 10 Sep 2026 16:23:42.691 +0000 (UTC)
-From: Liz Fong-Jones <lizf@honeycomb.io>
-Subject: Re: [PATCH v5] PCI: Fix BAR resize for devices on a root bus
-Date: Thu, 10 Sep 2026 16:23:42 +0000 (UTC)
-Message-ID: <20260910162342.9854-1-lizf@honeycomb.io>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <29c5916f-da42-58f0-d4c7-815bbaed711b@linux.intel.com>
-References: <20260908-pci-rebar-root-bus-v5-1-a210f405ea81@honeycomb.io> <29c5916f-da42-58f0-d4c7-815bbaed711b@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MvqdncCE"
+Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-c96c92c0980so174122a12.3
+        for <regressions@lists.linux.dev>; Thu, 10 Sep 2026 12:38:18 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1789069097; cv=none;
+        d=google.com; s=arc-20260327;
+        b=VRi6wPJdpgZwRZMbNu03Kbem4a6DcEBzdtZ6VcP7JACrEq/UX8DVDrgc3SQJkLbRiz
+         X03ZWP/tXBH/dF3qFNPEn2OmVyge63L922Ci03uEVeFnEVTVF2Pg9lDAemHe8HmZY337
+         Fda5dcYrnPCXNP+G2Gt3iNDM3WMLjOdKdhMjWKVWKHLnWGfFzzkb3mK0wU2OHbkIvoGi
+         pda9EQNPTuHb/UdTgsDeWMLpv7QOs3ni8pLklhEgkXi+lVRJlZPy9dkGzcVgSe3Ezz63
+         UjswO+bcvfpJUt6ps3p6KYBtY1gVdBNy3z49o4LrbhzNfrNE/4/K4sa+fTkBOMdt84eb
+         ROMg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:dkim-signature;
+        bh=vZImdanCLbw+Wm7Sn8/G+c9FIIp9Rw6Fv9R7mMtLeo8=;
+        fh=DBTjoQqzTX4AG4UDOPzmXTD0oGzjgBpPyRCmvhISxjY=;
+        b=B8i6xAxZ7Nzl0T8OoVizLCqutlID4gD+BfX+S8T0EqOWkvlCqOgkXdPcVCUJU3VrRC
+         aX2rXQ7TveG61nYiMCkuDZpxzXinhEDZPLcyDIB114bWkhOKSMJf8KYPBKrpKT+LR/is
+         vGAWVwNztHTbekctx0KUpZF9wTSNE3bKNEDVUNXrpG6UsFPM0kjXG8C83SvmA2b3ofNA
+         gl46ejuTcLDClAd7yG2TLH9pfLsVoqCGsoUJsh0rFxCcMEvlbIKtBsmlX3gaBVrPC20P
+         7Gh85EhO/MM9hW45820EsYAE7ilMyhe9phQh9glKOGfgUYKrkK/U7QkHU39xIhgOiSbI
+         xNHw==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1789069097; x=1789673897; darn=lists.linux.dev;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:mime-version:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=vZImdanCLbw+Wm7Sn8/G+c9FIIp9Rw6Fv9R7mMtLeo8=;
+        b=MvqdncCEJ/i2f1XF6l1v+BorU+374ixLMlJsstyNrqif7iS+FZWoWC0Vk2LMPU0oaG
+         ErL1BhuUckMthA4yFzmnrvDgJ7ojXnGkIrFXunbsuBpIsUlAG79HFBTRioAY5BB5lAR3
+         fRO4/NaemgpWGeKoePNIiGkBnBvx9y9aVShhZjWJqkFKBfK6plvQYvC1QnvvwY51rlE8
+         aVhRzFxTOdpZQ8PNto/aEo+dVR/x9yfezpEflMRBCB0Xdm0kaTSxdgfVbgJKbBINXFoa
+         a2hSdoZlc4kCo0qFrJOQfsf7gt+QWHFESoksUnoZ06lM+uu8KKgAyQ/JASzuu3cWjHWk
+         17+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1789069097; x=1789673897;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=vZImdanCLbw+Wm7Sn8/G+c9FIIp9Rw6Fv9R7mMtLeo8=;
+        b=kLlxJezquNcMRpCVHdR7PA3JCeJ2fWTTuuC7EVF8N43t4vRLMk8gA3Mf45oUa6WLcM
+         VLu5bfEC/2j6Y8TmNXCEkowjrsjTaQEj1l6DCvOYmDoRKAH1I2k56sBaqmRjIE23zYpf
+         xiQbwJlhsu8XwWVospmJcmLbhxbxZcBehc1IVqsqM1F5FrU6OhcsfJCbPUQEyhH77WGU
+         cWrwekEjm95twvrCAd7KB0lIJ4ykIwzMxUpkTATpCBF39MmNSqJeOpQWcCAFOMqMWhxe
+         GhrH7xOSUGLy+imAgKLDsfQZwOpX141JxCeb1ZreL9axsoBJ2kw+ozni44erWibrlgkx
+         0bhg==
+X-Forwarded-Encrypted: i=1; AKwUvBzFT0db6+hM1aUTIEbI7C0vnfkAkooANAONL1Q67OJcK/ChBinaCTVhPu1YcGE6eL1aaQM+aaEDe+HE+A==@lists.linux.dev
+X-Gm-Message-State: AFuF++ktURdq9i5dErbv1KIZV7djuVlLg3RKV+SVkMcXUiXN8ySR5gRh
+	vttqL4WLhr9AI/HOsKvZ0mQ9l4olW8O7nP/kYjec6bnaXJrZNhBo5eNbJS7qs39e1pSi2bU6iz6
+	sS95RXwZnT0IBrgtQDtFYg0T2W1guiXc=
+X-Gm-Gg: AYBFou3ugvuhEpILW1Q0aWIr4liXT6oC70B548a2ggMIMiaSY8k8JUluxpZeOOr9SO3
+	VXFM5axozvdY3t/ALE3+3S8ixo5jOr7n4pPP2c4pJOf03FuXHwW27kb6wgVluaWS4pOiLO6W4dY
+	S4fU+gy+QM8L/9QKT9alAQ8BjFKawFA1y/0qcdHrWtq/o6oh0npD0UMDf18N+ulMS5DePQKryqs
+	MK903VCAkHXLSHoN0WSbZrw1scxacUnKHexPSpWmlSBknGU1eW5srqVTrDBoU1Fqs86tMT+hA9n
+	nwS8ss8GHKibn3hyrTAX8Gs59FF8en/aSqATNITojrMFi82qjoTPeJs2WYUA2dH/kDHnlV0NbnL
+	nrlHQ8HBD1qCGVILIILouUSpg9eVqdFDxQkdPq33TJsywEFXLe6G5/c9ItpwgljFY8RmiBIoy
+X-Received: by 2002:a05:6a21:d8a:b0:3c2:dcdd:a85a with SMTP id
+ adf61e73a8af0-3daed5d1834mr758790637.13.1789069096914; Thu, 10 Sep 2026
+ 12:38:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-SG-EID: 
- =?us-ascii?Q?u001=2ECuH7N2XAoeMR1zrzr=2F6NZrhli2vbKPOHff5fJuZuba6ZIE8QPyIf9mn4Y?=
- =?us-ascii?Q?ezqeFFjUkh=2FeROy4LtnO7KN9jZmednNviVbiXOC?=
- =?us-ascii?Q?oREWn0PvvJP53Uz8gPPC5zPjaNtjMPM+hLjOqwU?=
- =?us-ascii?Q?QawE=2F3B72uKOWIppfuG513fXq618S6PDhcLtvPE?=
- =?us-ascii?Q?kJzwX52Ke8pwYM6EhV9cYiH0MCD7IpxaleMubVG?=
- =?us-ascii?Q?Zto=2FP3pYCYWNMOtaYksHbdZ2R71xB12c2yT0Hwp?= =?us-ascii?Q?vG7V?=
-To: Ilpo =?iso-8859-1?q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Liz Fong-Jones <lizf@honeycomb.io>, Bjorn Helgaas <bhelgaas@google.com>,
-	linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-	regressions@lists.linux.dev, amd-gfx@lists.freedesktop.org, Jon Nettleton
-	<jon@solid-run.com>, Jon Nettleton <jon.nettleton@gmail.com>, Jacob Martin
-	<jacob.martin@canonical.com>, Thorsten Leemhuis <regressions@leemhuis.info>,
-	stable@vger.kernel.org
-X-Entity-ID: u001.GRlkmHQ+Ka/CKxmoC/CxTw==
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+From: David Lomas <david.s.lomas@gmail.com>
+Date: Thu, 10 Sep 2026 20:37:40 +0100
+X-Gm-Features: AcwNN1Xc0oKMxqTRsEswAamAg5ei2rtw2jhkZBD1Uxekf_h-Wb-VKxk2IgOYJQg
+Message-ID: <CALjEBWRoqHa=833_dpDxaWpj-tAiAhLuLZBfRQkOkSGgGF5gQA@mail.gmail.com>
+Subject: [REGRESSION] 7.2: restore from hibernation hangs while btusb boots
+ Intel AX210 (8087:0032); 7.1 and 6.18 fine
+To: linux-bluetooth@vger.kernel.org
+Cc: Luiz Augusto von Dentz <luiz.dentz@gmail.com>, johan.hedberg@gmail.com, 
+	regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Ilpo Järvinen wrote:
-> Great, it worked (I was somewhat afraid there might have been some
-> landmine for the case where there's no bridge).
->
-> And yes, it's very important in general case to assign the resource in
-> correct order because the assignment algorithm is greedy.
+Hi,
 
-Thanks, Ilpo, for both reviews.
+My first message here, hope this meets expectations=E2=80=94I had a bit of
+help from you know who...
 
-Yes, it works fine even without the bridge. This is what it looks
-like when triggering the resize through sysfs, and through amdgpu's
-probe-on-insmod, on the actual root-bus hardware (HoneyComb LX2K,
-LX2160A, dGPU directly on the root bus, no upstream bridge).
+Since 7.2 my laptop hangs hard while resuming from hibernation, and
+the hang goes away if btusb is not bound to the Bluetooth controller.
 
-Manual trigger via sysfs (shrink then grow back, forcing the release
-+ reassign path both directions):
+#regzbot introduced: v7.1..v7.2
+#regzbot title: restore from hibernation hangs while btusb boots Intel
+AX210 (8087:0032)
 
-  pci 0004:01:00.0: BAR 0 [mem 0xa400000000-0xa4ffffffff 64bit pref]: releasing
-  pci 0004:01:00.0: BAR 2 [mem 0xa500000000-0xa5001fffff 64bit pref]: releasing
-  pci 0004:01:00.0: BAR 0 [mem 0xa400000000-0xa40fffffff 64bit pref]: assigned
-  pci 0004:01:00.0: BAR 2 [mem 0xa410000000-0xa4101fffff 64bit pref]: assigned
-  ...
-  pci 0004:01:00.0: BAR 0 [mem 0xa400000000-0xa40fffffff 64bit pref]: releasing
-  pci 0004:01:00.0: BAR 2 [mem 0xa410000000-0xa4101fffff 64bit pref]: releasing
-  pci 0004:01:00.0: BAR 0 [mem 0xa400000000-0xa4ffffffff 64bit pref]: assigned
-  pci 0004:01:00.0: BAR 2 [mem 0xa500000000-0xa5001fffff 64bit pref]: assigned
+Hardware
+  Dell XPS 13 9360 (BIOS 2.21.0, 2022-06-02), Kaby Lake, xHCI
+8086:9d2f (Sunrise Point-LP).
+  Wi-Fi/BT card is an Intel AX210
+  Bluetooth controller is USB 8087:0032 on bus 1 port 3, driven by
+btusb + btintel, firmware intel/ibt-0041-0041.sfi ("Firmware Version:
+202-5.26", linux-firmware 20260810).
 
-And the real-world path, amdgpu's own probe with the amdgpu.rebar=0
-workaround removed:
+System
+  systemd 261.2
+  No BlueZ is installed: the controller is only ever set up by the
+kernel's own HCI_AUTO_OFF path.
+  Root on LUKS + btrfs, swapfile with resume_offset,
+HibernateMode=3Dplatform, mkinitcpio busybox initramfs with the resume
+hook (systemd-hibernate-resume is present in the initramfs).
 
-  amdgpu 0004:01:00.0: VRAM: 4096M 0x000000F400000000 - 0x000000F4FFFFFFFF (4096M used)
-  amdgpu 0004:01:00.0: [drm] Detected VRAM RAM=4096M, BAR=4096M
-  amdgpu 0004:01:00.0:  4096M of VRAM memory ready
+Kernels (Arch Linux packages, unpatched apart from Arch's config)
+  bad:  7.2.2.arch1-1, 7.2.4.arch1-2
+  good: 7.1.4 to 7.1.10 (weeks of daily use), linux-lts 6.18.49 (12/12
+cycles under the reproduction below)
 
-No "Fatal error during GPU init" (the original regression's failure
-signature), full IP block init, driver comes up clean.
+Reproduction
+  systemctl suspend-then-hibernate with HibernateDelaySec=3D2min, lid
+open. After the timer wakes the machine from S3 it hibernates; power
+on, unlock LUKS, the boot kernel loads the image and hands over. On
+7.2.x the restored kernel then stops within a couple of seconds,
+within the first three hibernate/restore cycles of a cold boot (it
+happened on the first cycle twice, the second four times, the third
+once, out of seven tests). Screen is black, backlight off, no
+response. Nothing is written to the journal. With efi_pstore +
+hung_task_panic=3D1 + softlockup_panic=3D1 + hardlockup_panic=3D1 armed and
+a three-minute wait, no detector fires and nothing ends up in pstore.
+
+  With no_console_suspend, a good cycle shows these lines on the console:
+
+    [ 2043.009649] atkbd serio0: Failed to deactivate keyboard on isa0060/s=
+erio0
+    [ 2044.588080] Bluetooth: hci0: No support for _PRR ACPI method
+    [ 2050.400042] Bluetooth: hci0: HCI reset during shutdown failed
+
+  and eventually the desktop appears. On a bad cycle, I see these 2 lines:
+
+    [ 2750.173700] atkbd serio0: Failed to deactivate keyboard on isa0060/s=
+erio0
+    [ 2750.959900] Bluetooth: hci0: No support for _PRR ACPI method
+
+  and then a solid lockup.
+
+Other info
+  - /sys/power/disk =3D test_resume (write the image, read it back and
+restore in-kernel, no power-off), each preceded by an S3 cycle: 8/8
+successful on 7.2.4.
+  - Fresh boot, `modprobe -r btusb` before the first cycle: 4/4 clean
+restore. `modprobe btusb` again in the same boot: hang on the 2nd
+cycle.
+  - A systemd unit that unbinds the two btusb interfaces before
+sleep.target and rebinds them after the thaw: 4/4 clean, Bluetooth
+otherwise usable. This is my workaround for now.
+  - Thermal-zone state (7.2 moved thermal zone resume earlier) was
+tested and does not appear to be involved.
+  - At every S3 wake on this machine btintel re-downloads the firmware
+(~1.4 s); in suspend-then-hibernate the hibernate starts while that
+download is still in progress.
+  - Plain `systemctl hibernate` (no S3 first) has not hung in the few
+tries I gave it.
+
+Happy to provide full dmesg of a good cycle, try patches, or collect
+anything else that helps.
+
+Thanks,
+
+David Lomas
