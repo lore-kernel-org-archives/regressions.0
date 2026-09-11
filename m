@@ -1,188 +1,194 @@
-Received: from mail-vs2-f43.google.com (mail-vs2-f43.google.com [74.125.227.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-05.mail-europe.com (mail-05.mail-europe.com [85.9.206.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 028453F107E
-	for <regressions@lists.linux.dev>; Fri, 11 Sep 2026 18:50:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.227.43
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789152632; cv=pass; b=e8i8pIG8vauIUxNJ9MPlYFcehUxy+9hwU2W0UoNnrJWDpK/wpqpPDjXQpNJwe0RDV/EhtXlolRPgBbZORTIz6D3MNWnz5r+wKfovW8Dl7qOVllI4YG/1QiWTxH6lPSKtaNdJne1evu+vYh6tgufdBk1k8fHJQlTFWSc8VFIU4PM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789152632; c=relaxed/simple;
-	bh=3KvOhxNm0CE5YxCoN9gJrLaYGWlZurxjm2gpi9Iw+PA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FUD4/8FbNkJeOcluBW+zOK74yNyq/BGS6jDfL9pCrvxxiYNVexo4uOe4s76Or1Wez6NyWR99T8p27LI1cVZkJ04q+yHEfuyjNA3JCHxQm4I7JBhKvqD3TftKyXqHu1FhHPZ/C7LNg2ooCEubc4sbEA991EbgvB9vEAjwLdC4aTY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dg0HiYA8; arc=pass smtp.client-ip=74.125.227.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A9453DD52B
+	for <regressions@lists.linux.dev>; Fri, 11 Sep 2026 23:01:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.9.206.169
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1789167718; cv=none; b=f03n1zolHGW1gc/zQgpQShKeDiL2iLb6QmlFRH/Vs5n8OtR2dnxP496YaaH9Zjd2NYd/wYwy3kgrfKOix6bgaU09zhUs5hVgCP50vxrR1tA30odIUMtUAJan36bOyIxwtO/7rMGDo2G134CquIYd0MZqDjcklpAN1LEwc7UnM1E=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1789167718; c=relaxed/simple;
+	bh=GDWpdlWBvWQt3dhuKeKibH1Tjl0SGYwcHArgbQuxBAs=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=aPAORIyBXLhRggPrfpe8Q8qLaVgXeJtG9ERxYxTXGQNdOE/HcHo1vIhoWqZp1ouXtoJ3+KAaKOWjmDhpHrOWUUwlxyG/wGQZC+lRMSZNLpGmXRnpzRq3Ua+G5LLZF8a5CgSXtIfWgkkzHq7NwvZZ0e3B8IQPOdYU47xW2nl2UrU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=httpd.dev; spf=pass smtp.mailfrom=httpd.dev; dkim=pass (2048-bit key) header.d=httpd.dev header.i=@httpd.dev header.b=r/1NWGdP; arc=none smtp.client-ip=85.9.206.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=httpd.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=httpd.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dg0HiYA8"
-Received: by mail-vs2-f43.google.com with SMTP id ada2fe7eead31-78a6c77d255so105026137.2
-        for <regressions@lists.linux.dev>; Fri, 11 Sep 2026 11:50:30 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1789152630; cv=none;
-        d=google.com; s=arc-20260327;
-        b=mh+XqMuwPiS5IFYZx67NMA0ZCPtZs7wJojvBxQB3pBYdS47fXzmHegINMyGk82Cz9i
-         cuC7WEmX4t2LEQKYdwihjO+FrdG4+vCLixBgkWOsr6cfcL2QrZPx8C9u1Bd3G/GCCJUE
-         YmM7t/qPqQJB1vVIFqgcSmv5rbjSJsDbM223MV/YxZKWAHy8COIiq8NKC3ZdcXF3GT/l
-         7XJSljtpX6iOz1llsX5wX6ZJQ8txKTwb7ywzM28MnqnuEidWV5EqkkVAdi7GuXueSYWR
-         OwOlhaC76zly5NAVl4LkNGLZCzvCQIgXT38F3AEHljT0zOXFXxQX5sbs6EifT+101US4
-         8YLQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=k7Ebif+V/8GnwYOzbevbeoMta8WL2O5tmRjG7YpGVGM=;
-        fh=Q4x5jT3x0fEos1yCt1oiTlHcFDiWCHGg5ORl3wmnrSY=;
-        b=PxvxNTp2Lk1XbCXeVzVoaKl5JxLgP7uOGeCpF3/qvdVTg19ncuSH7gSx2e3KglVqR6
-         l9dJb4ZgDOVDjpFf5qRPQjkNhRp5sVA2CmNlXB6usmMeR0eoB0mR/AR76HxpVI1iv4PJ
-         ib3lDeCLJaqX2FPj/LjFcl0FAc+qk6JZpFJnunAK1AIyLsWFKO4FEFUuwwhVQuuKANpV
-         dKk+gmI7AaGU9rSMFXDfNCBzKPwOZiY7A8Bmt35kQZwE1vTvkUxYp4L0EFrs/bh5RKUZ
-         oZ28KIxMudqZnhypt2lzzbTkpFkLJD2BL7WI6xRIpAU+dEty4XJyIKxMhOYp6WMapzyS
-         7fhw==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1789152630; x=1789757430; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=k7Ebif+V/8GnwYOzbevbeoMta8WL2O5tmRjG7YpGVGM=;
-        b=dg0HiYA8Tv6Bauwrty6+onzJkNnlcHPVH8YPb3SN50SlPNJJHPS7HLAJIl2lj9515U
-         FUKGg+a7nNeJ0Qcsn/46QKuxVssOyyC1nwkKsJLdisjiv0yd4sB0WRnNr3iIoAVFlLEu
-         mcD87MfzGMPVzpw3/hNBFq+Ca8tQLPHvPgnIj0375AvzBFJKdyvRjvhjhzA5bg5jFYnt
-         UXMX5++BHQUHdkqsQvc/pHAPk5oGpX6IlcFSPeM8DPnb3gwlnExb9oJKl4IIeKIIi+x8
-         JKmTJ8YRYFwvh56ZG9clvoGou2R5N3OHfdoE3scxbE1yeFnPfVKt3DQNWvnra+8jjMJ6
-         Bn4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1789152630; x=1789757430;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=k7Ebif+V/8GnwYOzbevbeoMta8WL2O5tmRjG7YpGVGM=;
-        b=MkPUIulD/EQ5LzPO5HvjvT7BhAxGBDwlEBCu0w8jXUiyuXo4vqVvEaqHg9yeMiTczR
-         doK2VNcLp8nrKZwpx4kAoF3jd99jngypgk5YEAZ8xW+QVp7+2xjq+NGZWU56e9LPz2cV
-         r5BUgxxm8/coA55o1Iqt5xj9nn2+hZujv2Aqz2JhOmAkRY7SM56lwSeqPR7bvQYXROUP
-         wssXxWhXP1dKWeIjL9SxtHLRcd3rYYWpUWRpejTiGTX7ANLmA31ut3jYzwI6wMMQOOkp
-         ZE49a6g7qowSI246sj89D4IqevEz4Qw5lSbKhu6+lqLLOT8SHw/TugcnqYbRWMfG6QD8
-         mCzA==
-X-Forwarded-Encrypted: i=1; AKwUvBwE3Cluazb0/N/LPkoFmCIlGvyz8YM38LUxL/2frD0mpoEJdakguVoj0GPIoo7R4jfdSYYt2QGeDRVTYg==@lists.linux.dev
-X-Gm-Message-State: AFuF++kN002BWDbPfVSTmiRYaszz8t5rGYNm3Yf22fYnwQ1hlDqbAweE
-	tID3aEYUMm7CCYPXhE8rvfzBuyHVTdaHTLR/CbAIHa5pchnXrCQbxQ2uI6cw33dgdUD4WWRdIUY
-	fi3a48KcCcN8NkiTdo1jpMdVN/dSAXFw=
-X-Gm-Gg: AYBFou22HFG0PzOkyWXndzCbBwEv9GVc0J1BUc/0IosygqFasnQqAq5kk0vhQRbWju2
-	xEohz/Fc5lWnvtj7gMIuagTGabPVFWAm5Ij5UtMpAlmcmH8nEH32O5UfwKFS+0r+h6mJTDoovCV
-	+fjQ34n39O//4IPJe08KlmtcHktisjmSmU+oclp+VyTXRHh9OYZsdEIxMphp0T3frmBgVDb1htW
-	vlcLNbdGO2MSM2TuHUjHlXclkrtPFY8xS+b+CQDqXlJ+j77uD9ac76kwV/SzWDJlQalh2x4z2+I
-	ld9MjusjJkYRRd2NSeEhqI052u6Al6DeToc8DIv8S6rSovUgjl2FPUz9zOIliKSrZ3WE4JyXigT
-	j/o4dSEGR9DaThkekfk333ydSVJU2ljNz8SF66BBLMy6aXg==
-X-Received: by 2002:a05:6102:330d:b0:783:f3bf:f9aa with SMTP id
- ada2fe7eead31-792ac9e510amr2037393137.8.1789152629798; Fri, 11 Sep 2026
- 11:50:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=httpd.dev header.i=@httpd.dev header.b="r/1NWGdP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=httpd.dev;
+	s=protonmail3; t=1789167701; x=1789426901;
+	bh=svNifJx/ssGLp8arNI7ZY0FJrahK16lXJGPKGD+vP4w=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=r/1NWGdPchEZbBl26e4NC9V6mD2SZDu0PFIJ9f+Aah6f0Mgt5PMT+8uMniIdkI5Td
+	 +hEOdsLGiP1pODfTr4CMXGObRDzb/zMcc9cNSQaYf6afWhHsV/R6/tooGJ6/HARNTP
+	 l+KQMlqUAaCz2Yc/b3YtHfacM34jMgvUcCCM3R1z+u5zr9QXcm2+vR+aJ8kRDQunAJ
+	 DEZdu+rdPTceCxW10Qi/wx7cKo4V0vrPvC8Qu+XqbOVxQQWxKb2pgWsPjEU605GqfW
+	 Jw6if3Z+G8Z2XWk0AnF7nG+ok/JcTzAtSBaSBoJt0uXHZvXImVTPbztF5tV0W3+bYy
+	 3rHknZxRCgbkA==
+Date: Fri, 11 Sep 2026 23:01:38 +0000
+To: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+From: Angel J <iamanaws@httpd.dev>
+Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>, "stable@vger.kernel.org" <stable@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-rpi-kernel@lists.infradead.org" <linux-rpi-kernel@lists.infradead.org>, "helgaas@kernel.org" <helgaas@kernel.org>, "robh@kernel.org" <robh@kernel.org>, "andrea.porta@suse.com" <andrea.porta@suse.com>, "florian.fainelli@broadcom.com" <florian.fainelli@broadcom.com>
+Subject: Re: [REGRESSION] PCI: Dynamic OF node creation hangs on invalid bridge configuration
+Message-ID: <cFJoUZ6c5g5YbFCrwUnx6RlitHRl-0cS2fadDSFJNf9SgLreKutrmZj1r56hFh8ZUAbzvuCqBG4w9ZYAE8xAWP9HnLwbjMOBzac-iMnMMZc=@httpd.dev>
+In-Reply-To: <GXe6anuewkS4bLNwca3cYOmUxN9csc0TxLYGSBc1qNRmfrmvFlcmD62wEM23TxfzfuXAv4P3yvUv7pyraleARrL1Na-aN8w-t9uc1Igu8DA=@httpd.dev>
+References: <GXe6anuewkS4bLNwca3cYOmUxN9csc0TxLYGSBc1qNRmfrmvFlcmD62wEM23TxfzfuXAv4P3yvUv7pyraleARrL1Na-aN8w-t9uc1Igu8DA=@httpd.dev>
+Feedback-ID: 163474212:user:proton
+X-Pm-Message-ID: a0b45507d5eac067fa00aa047aa0fedcad9d25b7
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAKLYgeL7nrA4nXcewdv9Fqg_s=3GS=vmoypnEiZBKQ7rySZFuQ@mail.gmail.com>
- <20260909002506.GF9053@twin.jikos.cz> <6a5c2d41-b10b-44cb-969e-b4a56d002ceb@gmx.com>
- <4c5117f7-1ddd-4596-8917-da47379506fd@leemhuis.info> <20260911182125.GE54722@twin.jikos.cz>
-In-Reply-To: <20260911182125.GE54722@twin.jikos.cz>
-From: Alex Romosan <aromosan@gmail.com>
-Date: Fri, 11 Sep 2026 20:50:18 +0200
-X-Gm-Features: AcwNN1UW1FBEQBXsPkjPpE7JnH1VnJKY_2TIGIr7JWZ82tYw8hH3-PTdsGDmOLw
-Message-ID: <CAKLYgeLAXC5qbNAWnS3KNCijuRT9mF_hz4e1fUexx+D-J5Bs4g@mail.gmail.com>
-Subject: Re: commit 108cc873398932af589c295f78c348513b8d70d9 breaks
- update-grub on btrfs root filesystem
-To: dsterba@suse.cz
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>, Qu Wenruo <quwenruo.btrfs@gmx.com>, 
-	linux-kernel@vger.kernel.org, linux-btrfs <linux-btrfs@vger.kernel.org>, 
-	Linux kernel regressions list <regressions@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; protocol="application/pgp-signature"; micalg=pgp-sha512; boundary="------584d05c12d919d8b9959a7be2db6ff9738f85cff09fbdb5a0c245caa7bd7149b"; charset=utf-8
+
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------584d05c12d919d8b9959a7be2db6ff9738f85cff09fbdb5a0c245caa7bd7149b
+Content-Type: multipart/mixed;boundary=---------------------5847a96ded5969a4c792075b9c3489f2
+
+-----------------------5847a96ded5969a4c792075b9c3489f2
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;charset=utf-8
 
-i agree it's a regression. one question (and i am not very familiar
-with the underlying principles), how do the other filesystems deal
-with this? shouldn't the registering of devices be abstracted out
-since i would assume every fs does it or is this something btrfs
-specific?
+Hi Andrea, Herv=C3=A9, Bjorn, Thorsten,
 
-On Fri, Sep 11, 2026 at 8:21=E2=80=AFPM David Sterba <dsterba@suse.cz> wrot=
-e:
+Thanks for the guidance, it was very useful. I went back through the tests
+and got some more insight into the hang.
+
+Andrea wrote:
+> Angel, could you please provide the following output:
 >
-> On Thu, Sep 10, 2026 at 12:39:25PM +0200, Thorsten Leemhuis wrote:
-> > On 9/9/26 03:13, Qu Wenruo wrote:
-> > > =E5=9C=A8 2026/9/9 09:55, David Sterba =E5=86=99=E9=81=93:
-> > >> On Tue, Sep 08, 2026 at 11:59:43PM +0200, Alex Romosan wrote:
-> > >>>
-> > >>> [...] Since version 7.3-rc1 i haven't been able to to a grub-update=
-,
-> > >>> instead i get this error:
-> > >>>
-> > >>> /usr/sbin/grub-probe: error: cannot find a device for / (is /dev
-> > >>> mounted?).
-> > >>>
-> > >>> 7.2 is fine. a git-bisect identified commit
-> > >>> 108cc873398932af589c295f78c348513b8d70d9 as being the culprit.
-> > >>> reverting this commit from 7.3-rc2 allowed me to run grub-update
-> > >>> again.
-> > >>>
-> > >>> this is not the first time i reported grub-update being broken on
-> > >>> btrfs. i reported exactly the same problem on jan 8, 2024
-> > >>> (https://lkml.iu.edu/hypermail/linux/kernel/2401.1/00596.html). may=
-be
-> > >>> the discussion that followed would help come up with a fix that wil=
-l
-> > >>> make everybody happy.
-> > >>
-> > >> I remember debugging that one, https://bugzilla.kernel.org/
-> > >> show_bug.cgi?id=3D218353
-> > >> Reverting 108cc8733989 ("btrfs: fix a lockdep caused by path resolut=
-ion
-> > >> during device scan") would bring back the lockdep warning and there =
-is a
-> > >> locking problem.
-> > >>
-> > >> The commit says it's fixing 2e8b6bc0ab41 ("btrfs: avoid unnecessary
-> > >> device path update for the same device"), the difference is in lines
-> > >>
-> > >> (https://bugzilla.suse.com/show_bug.cgi?id=3D1230641)
-> > >>
-> > >> -       } else if (!device->name || strcmp(device->name->str, path))=
- {
-> > >> +    } else if (!device->name || !is_same_device(device, path)) {
-> > >>
-> > >> Which gets changed to (by 108cc8733989):
-> > >>
-> > >> -       } else if (!device->name || !is_same_device(device, path)) {
-> > >> +       } else if (!device->name || device->devt !=3D path_devt) {
-> > >>
-> > >> Each change is reaction to a bug, I don't see a clear fix which will
-> > >> make it work in all cases.
-> > >
-> > > And I want to add that, the previous path based comparison is also
-> > > problematic for namespaces/weird block device names.
-> > >
-> > > Although not common, it's definitely possible to map weird block file
-> > > name into a namespace.
-> > >
-> > > Thus the path based comparison is not reliable in the first place, no=
- to
-> > > mention the later lockdep problems.
-> >
-> > Well, but our #1 is "no regressions". And the recent change while fixin=
-g
-> > bugs clearly causes one, as Alex's report is afaics at least the third
-> > about it; the two earlier ones can be found here:
-> >
-> > https://lore.kernel.org/linux-btrfs/dfbe1e27-dab8-4d55-8cf3-0b28eeac5df=
-4@gmail.com/
-> > https://lore.kernel.org/linux-btrfs/018a9738-1d4a-43a0-9352-a56d1e54136=
-4@gmail.com/
-> > Plus a repost of the latter here:
-> > https://lore.kernel.org/linux-btrfs/dfbe1e27-dab8-4d55-8cf3-0b28eeac5df=
-4@gmail.com/
+> lspci -nn
+> setpci -s 00:00.0 HEADER_TYPE
 >
-> I'm going to treat this as a regression. And for the record Qu and me
-> are in disagreement on that. My target is to make the systems boot again
-> first, the fix may leave some problematic case (like mentioned, devices
-> in namespaces), but that is probably a lesser problem.
+> from a running (i.e. with CONFIG_PCI_DYNAMIC_OF_NODES=3Dn) system?
+
+On Linux 6.12.109, with CONFIG_PCI_DYNAMIC_OF_NODES disabled, the relevant
+output is:
+
+  $ lspci -nn
+  00:00.0 PCI bridge [0604]: Intel Corporation Device [8086:4c43] (rev 01)
+
+  $ setpci -s 00:00.0 HEADER_TYPE
+  01
+
+  $ setpci -s 00:00.0 PRIMARY_BUS SECONDARY_BUS SUBORDINATE_BUS
+  ff
+  ff
+  ff
+
+The device is bound to icl_uncore. I get the same values on the patched
+kernel with CONFIG_PCI_DYNAMIC_OF_NODES=3Dy.
+
+Herv=C3=A9 wrote:
+> Is this PCI logs reported with PCI_DYNAMIC_OF_NODES=3Dy or PCI_DYNAMIC_O=
+F_NODES=3Dn
+> or always whatever the PCI_DYNAMIC_OF_NODES Kconfig value ?
+
+The messages appear on successful boots with either setting:
+
+  pci 0000:00:00.0: [8086:4c43] type 01 class 0x060400 conventional PCI br=
+idge
+  pci 0000:00:00.0: bridge configuration invalid ([bus ff-ff]), reconfigur=
+ing
+
+I confirmed this on 6.12.107 with the option disabled and 6.12.108 with it
+enabled. They also appear on the patched 6.18.44 kernel.
+
+Bjorn wrote:
+> I don't think 49d63971f963 ("misc: rp1: RaspberryPi RP1 misc driver")
+> is a likely culprit by itself because there's just nothing there that
+> looks like it would relate to a Dell XPS 8940.
+
+That change exposed the problem by enabling PCI_DYNAMIC_OF_NODES in my
+configuration. I bisected again with the option enabled throughout and
+found an earlier boundary:
+
+  3dc8adeeefa0  PCI: of_property: Constify parameter in of_pci_get_addr_fl=
+ags()
+  1f340724419e  PCI: of: Create device tree PCI host bridge node
+
+The first is the direct parent of the second. I boot-tested both without
+any guard, changing only the source commit; their generated kernel
+configurations are identical.
+
+All of these tests have CONFIG_PCI_DYNAMIC_OF_NODES=3Dy:
+
+  Source         Change             Result
+  3dc8adeeefa0    None               Boots
+  1f340724419e    None               Hangs
+  1f340724419e    Subordinate guard  Boots
+  6.18.44        None               Hangs
+  6.18.44        Subordinate guard  Boots
+
+Herv=C3=A9 wrote:
+> Maybe the test done at [1] should be improved to detect those wrong brid=
+ges.
+> and skip the of_pci_make_dev_node() call when a wrong bridge is detected=
+.
+
+I added logging to the first bad commit to check the bridge scan. It shows
+that 00:00.0 has no subordinate bus after either pass, despite satisfying
+pci_is_bridge():
+
+  pci 0000:00:00.0: PCI OF debug: scan pass 0, buses ff/ff/ff
+  pci 0000:00:00.0: PCI OF debug: scan pass 0 done, subordinate bus absent
+  pci 0000:00:00.0: PCI OF debug: scan pass 1, buses ff/ff/ff
+  pci 0000:00:00.0: PCI OF debug: scan pass 1 done, subordinate bus absent
+
+of_pci_prop_bus_range() dereferences pdev->subordinate without checking it=
+.
+of_pci_prop_intr_map() also uses that pointer. Before 1f340724419e,
+of_pci_make_dev_node() returns because the parent OF node is missing on
+this ACPI system. That commit creates the parent node, allowing property
+generation to reach the unchecked access.
+
+My earlier report overstated the device_type=3D"pci" result. The minimal-n=
+ode
+test that hung added device_type, bus-range and interrupt-map together;
+I haven't confirmed a hang with device_type alone.
+
+I tested this guard in of_pci_make_dev_node(), before node creation:
+
+  if (pci_is_bridge(pdev) && !pdev->subordinate)
+          return;
+
+Both the first bad commit and 6.18.44 boot with it. The 6.18.44 test uses
+only the guard, without diagnostic logging. The host OF node and the nodes
+for bridges 00:01.0 and 00:1c.0 are still created; 00:00.0 is skipped.
+
+This points to the NULL subordinate pointer as the cause of the hang,
+although I still don't have a crash trace from an unguarded boot. I'll
+send the patch as a reply to this email. Is of_pci_make_dev_node() the
+right place for this check?
+
+#regzbot introduced: 1f340724419eda8ab07a20edcaf5ec8f70134231
+
+Thanks,
+Angel J
+
+-----------------------5847a96ded5969a4c792075b9c3489f2--
+
+--------584d05c12d919d8b9959a7be2db6ff9738f85cff09fbdb5a0c245caa7bd7149b
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: ProtonMail
+
+wrsEARYKAG0FgmqkiEMJEBoBbwppzUxnRRQAAAAAABwAIHNhbHRAbm90YXRp
+b25zLm9wZW5wZ3Bqcy5vcmegSr5JAKTKbLgmkCFNkhGukr6dbSbs2YiqV+yU
+jqBBgBYhBEAFf9htFyVnqZzmVhoBbwppzUxnAACUBAEA+Vrv4qecaflgoNqE
+krZ5Pt2A+D2ZHLPlXo7tpk7HjFQA/Am4TUPLoTW5RVSeYbATvytA/Gnbz89i
+DW2hzZv5IxwL
+=it4L
+-----END PGP SIGNATURE-----
+
+
+--------584d05c12d919d8b9959a7be2db6ff9738f85cff09fbdb5a0c245caa7bd7149b--
+
