@@ -1,134 +1,196 @@
-Received: from mail-oo1-f48.google.com (mail-oo1-f48.google.com [209.85.161.48])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DDDE4A6884
-	for <regressions@lists.linux.dev>; Fri, 11 Sep 2026 16:59:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 615D14A5C40
+	for <regressions@lists.linux.dev>; Fri, 11 Sep 2026 18:21:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789145965; cv=none; b=PQgeMy82tRWyBs26tzelH8Y9cN6GhZJFhI+YdFu7TI4pEDEQjIYpbbOOuK00ozBxdp6lz+O7v0zw4mP4gtLn1BPc8tIKGUDj+LGK8OAMRIX51Q2e9dUaF+ZENjFxGMlrKczGhX1gnTVtRIunVWQMVSHbEVSLMlqILB1k966+F98=
+	t=1789150899; cv=none; b=O2wdTIt7yWw6BPfqc58ldwVUik0GZ4YJjEmxhXlTYq2smlRuW37uqq+BdVoTsey5jzGOi7NmR/xQ1ETw63zxcxUym2Aozhv5cg0Z4wXCpuf1gpy5Ayypun4i3ZMhjncEc3TpXMqaGk7jb6ujlV3RQXzcE1jG6P/RdXv9cVbNzao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789145965; c=relaxed/simple;
-	bh=MpSAouggJUp4vgORobePFMjjqwuonE7VilPHv1CLSaQ=;
-	h=Content-Type:MIME-Version:Subject:From:To:Cc:Date:Message-ID; b=skPpUoQDcctezoi2TgH4jenDfCNqElkT95ebosmt3/6I8Ccz0eClcgCL1oYJiSY/Oad921h4y3U8TifP+oDYnrpE/hgFx3PZzHTFin5Z+bz9TXSLML5PkyjPbJFUAp+9TAU2jTFJNJas1E1N9+5sE7IukFvBmEelCdwYRn5pPiU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kernelci.org; spf=pass smtp.mailfrom=kernelci.org; dkim=pass (2048-bit key) header.d=kernelci.org header.i=@kernelci.org header.b=aTflqBc/; arc=none smtp.client-ip=209.85.161.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kernelci.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernelci.org
+	s=arc-20240116; t=1789150899; c=relaxed/simple;
+	bh=NUJW4vORTeWX4wf/BJdOZ6LKrbDPHstP98fAdSj66bY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=t080KzgV3p3GmDhfxu7bVqhcCr3EB3XKYQ5IosyId1oS3TyGuVQ5XibyVomDLCcNJ1qp7xlQkN+bNC/tyeGh9ctSNr87vkkAs57om1JUxZiNZseav0Fj00iDsmrNpULXw1q6W2hJvbPilKMmtQHhsdqxeh8BpqMz8LFaWk+3u+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=ab8EM7SZ; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=K4sja29U; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Lk7cO3cF; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=/rVCXvNo; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci.org header.i=@kernelci.org header.b="aTflqBc/"
-Received: by mail-oo1-f48.google.com with SMTP id 006d021491bc7-6b12942ed04so1151223eaf.1
-        for <regressions@lists.linux.dev>; Fri, 11 Sep 2026 09:59:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci.org; s=google; t=1789145949; x=1789750749; darn=lists.linux.dev;
-        h=message-id:date:reply-to:cc:to:from:subject
-         :content-transfer-encoding:mime-version:content-type:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=cnRkQZYF1qes1XmcPRPz5oF/ZwMbgnh7Exnh7T9glGw=;
-        b=aTflqBc/hgkrNHlqdXokbZq1gON9G1ocN3AjkPn0Bq4KVFPDk0umPQ2uBBZgk9tEqW
-         dYNCoAvzsqJABTa/38SXPeqcwDTqlBfpBJ7OHp2G1XJeyCQcv1Xc3QgwhftljBzpfs2w
-         1oCBXFvmS0C6f0X7AV4uf35m+m/YiCcRz26pNfjqgOK7F8JqKj9C8OjYdXD3kVWO9Pjn
-         62AXCqI9pQlZkFCx2yjt8LWnsPTq9hNZvtmQWPH2VH/0phtWUgPy4IoBimUazxH+tefP
-         51qkb4ymDOmuOfPdULwygL2pkoaOQAKRhJdA9VAem4GPpX+GGyEoOSS5CakOMPDLLaYK
-         Qq3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1789145949; x=1789750749;
-        h=message-id:date:reply-to:cc:to:from:subject
-         :content-transfer-encoding:mime-version:content-type:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=cnRkQZYF1qes1XmcPRPz5oF/ZwMbgnh7Exnh7T9glGw=;
-        b=doKGwyE2DHxH9WakBKXqxxcGTsJg/zJEd3h+3VKVNLLHTOjdykOj2Tv9DRXgfRXAVv
-         xvr8gYFvkEjbYRKbxN8D5n16AWqSct+o4iwbNnO196s6mlfDmW3PH6XyuDFaIjTCX8SU
-         vhuS7fKAOaXCDgyVOlhyOkrS2aYdCISOXa5NrwRV+VoVkCSMROZnOrtf6r4AqLlWShe4
-         FE73pk1DayEzn916Hso+m2hu/fycnw+DLBoUEAbgmFJN847BEGwX7BH+lsmo3MyZwToG
-         M8TynrUlutCA9bI0/sPqBV3whCOU4RZ2ft77guq79NUe92vGLNq7CUHRYu7KKITeyqo9
-         dKmg==
-X-Gm-Message-State: AFuF++mre/9r2bpLGSE87w9mP1KlZ9kfm9yXiBzIyNm1MxGa5UvanSMd
-	oE0dureB2QWdMtAdSzpOVO2lU6+Q6UDxwd+8K50BpDytEGs2ldb3qZflXflFsJtlnQA=
-X-Gm-Gg: AYBFou2LZVGD6vqZxVjwtvNm0IRPyBOz9UFjRTKxFczbbj7bXWDQmUy7uP4ryOD4EYP
-	BqIMcUcYQ+z15rWi9GkBQ2/pZzXrvX5COlpzzuWaQjzAA8bK5cYalM8JL0UHP/7Nh90sVs7aGEl
-	XXxZMglil3jpzp7TC3zPs9QcJ3vk5glN9mQhKuCWVeval1JFokHm2srx3hgNm6ke/58RMBQ2B4W
-	Ypwor4UPr3MXireaehIxBH23ApZWIAMwQLhY80iZXpweeH/U0TQe4aInuZVOn9V5p7KqoPxk4Dl
-	rov4R+Y9a3dDUikKT/tfqXk7ogqhipERRO9O0Kx3nXJg5PgYwQfScL5MxAK7EuitaUne06EVeCI
-	JYTf/j8sOSr9309I+OzRGH3iRwIAXhRI3lPFz81bUwfYIFBVduEIBtdNmeotvwWTInPgqu6SAnw
-	Y3YUK/ilcnSHjX7L6y7HR/7+1f+FMFESABCkO101d7HYFgvemf57T9KJwFTQXFR68=
-X-Received: by 2002:a05:6820:1ca7:b0:6be:19a6:fe63 with SMTP id 006d021491bc7-6c0b9d58514mr3746853eaf.25.1789145948673;
-        Fri, 11 Sep 2026 09:59:08 -0700 (PDT)
-Received: from 41049dfc76e5 ([20.38.40.137])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-6c0996dc5a6sm3216896eaf.6.2026.09.11.09.59.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Sep 2026 09:59:08 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="ab8EM7SZ";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="K4sja29U";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Lk7cO3cF";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="/rVCXvNo"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 4E0D721CC2;
+	Fri, 11 Sep 2026 18:21:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1789150891;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oIe6DcAAeaYwD2iu1Pj1K/v+fGGKq2kbixn7Q9oIQFU=;
+	b=ab8EM7SZRkLIO5GfIfAunkdoB/0Uv5maD5hlVzMof0xvV1JdS1PHZVl7BOqc2CRxwe1b2+
+	p+U49nJHrOjMubjLAd64hu1CSMBTbKGKg97vo0c+sq20dvGEhlTgGfiujPM7qviwMHTl8/
+	/fN6mVs9lYbF/XP7RHkwepsge6w6EZU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1789150891;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oIe6DcAAeaYwD2iu1Pj1K/v+fGGKq2kbixn7Q9oIQFU=;
+	b=K4sja29UXa5MY4MxeLGyam/Qnf7u+O8QgSIMaB/lCg/8tcjRLMR7ioTEodm++vYcKZVSwu
+	6SSuRfXev4zOWKBg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1789150887;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oIe6DcAAeaYwD2iu1Pj1K/v+fGGKq2kbixn7Q9oIQFU=;
+	b=Lk7cO3cFnw+24OcsB88SxhL8kDlEkQvPTEq3PaGb4gWsDijnXyhnmugb3Vpfu/I/L+UTKi
+	M9AeCjqsSOWAKq/WKSID0BHJiP5XwF7BxPjfqgRZxHiufovc/D8gwoYC18lvRJwGvkXRIT
+	E4Otbg7erEFJgixy2rX9EyFPzRegJFM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1789150887;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oIe6DcAAeaYwD2iu1Pj1K/v+fGGKq2kbixn7Q9oIQFU=;
+	b=/rVCXvNodRCs6WQxHlXnhjX2UqZEgl/fQAcUNiJ7bMEHadzDMBGIIlvo+MOZXZTTLBAaal
+	iOxcXYuSN01SXeDg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E122713715;
+	Fri, 11 Sep 2026 18:21:26 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 2kDENqZGpGrraAAAD6G6ig
+	(envelope-from <dsterba@suse.cz>); Fri, 11 Sep 2026 18:21:26 +0000
+Date: Fri, 11 Sep 2026 20:21:25 +0200
+From: David Sterba <dsterba@suse.cz>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Qu Wenruo <quwenruo.btrfs@gmx.com>, dsterba@suse.cz,
+	linux-kernel@vger.kernel.org,
+	linux-btrfs <linux-btrfs@vger.kernel.org>,
+	Alex Romosan <aromosan@gmail.com>,
+	Linux kernel regressions list <regressions@lists.linux.dev>
+Subject: Re: commit 108cc873398932af589c295f78c348513b8d70d9 breaks
+ update-grub on btrfs root filesystem
+Message-ID: <20260911182125.GE54722@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+References: <CAKLYgeL7nrA4nXcewdv9Fqg_s=3GS=vmoypnEiZBKQ7rySZFuQ@mail.gmail.com>
+ <20260909002506.GF9053@twin.jikos.cz>
+ <6a5c2d41-b10b-44cb-969e-b4a56d002ceb@gmx.com>
+ <4c5117f7-1ddd-4596-8917-da47379506fd@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Subject: 
- =?utf-8?b?W1JFR1JFU1NJT05dIG5leHQvbWFzdGVyOiAoYnVpbGQp4oCYcGFyc2VfZWRpZF9j?=
- =?utf-8?b?ZWHigJkgZGVmaW5lZCBidXQgbm90IHVzZWQgWy1XZXJyb3I9dW51c2VkLWZ1bmN0?=
- =?utf-8?b?aW9uXSBpbiAuLi4=?=
-From: KernelCI bot <bot@kernelci.org>
-To: kernelci-results@groups.io
-Cc: regressions@lists.linux.dev, linux-next@vger.kernel.org
-Reply-To: kernelci@lists.linux.dev
-Date: Fri, 11 Sep 2026 16:59:07 -0000
-Message-ID: <178914594745.4423.13336797159691042320@kernelci.org>
+In-Reply-To: <4c5117f7-1ddd-4596-8917-da47379506fd@leemhuis.info>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+X-Spam-Level: 
+X-Spam-Score: -4.00
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-4.00 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	HAS_REPLYTO(0.30)[dsterba@suse.cz];
+	NEURAL_HAM_SHORT(-0.20)[-0.999];
+	MIME_GOOD(-0.10)[text/plain];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	TO_DN_SOME(0.00)[];
+	ARC_NA(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com,gmx.com];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[gmx.com,suse.cz,vger.kernel.org,gmail.com,lists.linux.dev];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:url,suse.cz:replyto,imap1.dmz-prg2.suse.org:helo,twin.jikos.cz:mid];
+	REPLYTO_ADDR_EQ_FROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[]
 
-New build issue found on next/master:
+On Thu, Sep 10, 2026 at 12:39:25PM +0200, Thorsten Leemhuis wrote:
+> On 9/9/26 03:13, Qu Wenruo wrote:
+> > 在 2026/9/9 09:55, David Sterba 写道:
+> >> On Tue, Sep 08, 2026 at 11:59:43PM +0200, Alex Romosan wrote:
+> >>>
+> >>> [...] Since version 7.3-rc1 i haven't been able to to a grub-update, 
+> >>> instead i get this error:
+> >>>
+> >>> /usr/sbin/grub-probe: error: cannot find a device for / (is /dev
+> >>> mounted?).
+> >>>
+> >>> 7.2 is fine. a git-bisect identified commit
+> >>> 108cc873398932af589c295f78c348513b8d70d9 as being the culprit.
+> >>> reverting this commit from 7.3-rc2 allowed me to run grub-update
+> >>> again.
+> >>>
+> >>> this is not the first time i reported grub-update being broken on
+> >>> btrfs. i reported exactly the same problem on jan 8, 2024
+> >>> (https://lkml.iu.edu/hypermail/linux/kernel/2401.1/00596.html). maybe
+> >>> the discussion that followed would help come up with a fix that will
+> >>> make everybody happy.
+> >>
+> >> I remember debugging that one, https://bugzilla.kernel.org/
+> >> show_bug.cgi?id=218353
+> >> Reverting 108cc8733989 ("btrfs: fix a lockdep caused by path resolution
+> >> during device scan") would bring back the lockdep warning and there is a
+> >> locking problem.
+> >>
+> >> The commit says it's fixing 2e8b6bc0ab41 ("btrfs: avoid unnecessary
+> >> device path update for the same device"), the difference is in lines
+> >>
+> >> (https://bugzilla.suse.com/show_bug.cgi?id=1230641)
+> >>
+> >> -       } else if (!device->name || strcmp(device->name->str, path)) {
+> >> +    } else if (!device->name || !is_same_device(device, path)) {
+> >>
+> >> Which gets changed to (by 108cc8733989):
+> >>
+> >> -       } else if (!device->name || !is_same_device(device, path)) {
+> >> +       } else if (!device->name || device->devt != path_devt) {
+> >>
+> >> Each change is reaction to a bug, I don't see a clear fix which will
+> >> make it work in all cases.
+> > 
+> > And I want to add that, the previous path based comparison is also
+> > problematic for namespaces/weird block device names.
+> > 
+> > Although not common, it's definitely possible to map weird block file
+> > name into a namespace.
+> > 
+> > Thus the path based comparison is not reliable in the first place, no to
+> > mention the later lockdep problems.
+> 
+> Well, but our #1 is "no regressions". And the recent change while fixing
+> bugs clearly causes one, as Alex's report is afaics at least the third
+> about it; the two earlier ones can be found here:
+> 
+> https://lore.kernel.org/linux-btrfs/dfbe1e27-dab8-4d55-8cf3-0b28eeac5df4@gmail.com/
+> https://lore.kernel.org/linux-btrfs/018a9738-1d4a-43a0-9352-a56d1e541364@gmail.com/
+> Plus a repost of the latter here:
+> https://lore.kernel.org/linux-btrfs/dfbe1e27-dab8-4d55-8cf3-0b28eeac5df4@gmail.com/
 
----
-‘parse_edid_cea’ defined but not used [-Werror=unused-function] in drivers/gpu/drm/amd/amdgpu/../display/amdgpu_dm/amdgpu_dm_connector.o (drivers/gpu/drm/amd/amdgpu/../display/amdgpu_dm/amdgpu_dm_connector.c) [logspec:kbuild,kbuild.compiler.error]
----
-
-Log excerpt:
-=====================================================
-/tmp/kci/linux/drivers/gpu/drm/amd/amdgpu/../display/amdgpu_dm/amdgpu_dm_connector.c:3690:23: error: ‘parse_edid_cea’ defined but not used [-Werror=unused-function]
- 3690 | STATIC_IFN_KUNIT bool parse_edid_cea(struct amdgpu_dm_connector *aconnector,
-      |                       ^~~~~~~~~~~~~~
-cc1: all warnings being treated as errors
-
-=====================================================
-
-When fixing this issue, please attribute this report according to the
-patch submission rules:
-
-Reported-by: kernelci.org bot <bot@kernelci.org>
-Link: https://lore.kernel.org/all/178914594745.4423.13336797159691042320@kernelci.org/
-
-For complete logs and details about the environment used, see the issue
-on the KernelCI dashboard:
-
-- dashboard: https://d.kernelci.org/i/maestro:062b6b4e2382aba3e97943acd24e9dea1debfc26
-- giturl: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-- commit HEAD:  68142f986ff04b2b70b31db00f719bf690f64a9a
-- tags: next-20260911
-
-# Builds where the incident occurred:
-
-## x86_64_defconfig+kcidebug+kcidebug-x86_64+x86-board on (x86_64):
-- compiler: gcc-14
-- config: None
-- dashboard: https://d.kernelci.org/build/maestro:6aa4280120239ade90233200
-
-## x86_64_defconfig+lab-setup+x86-board+kselftest on (x86_64):
-- compiler: gcc-14
-- config: None
-- dashboard: https://d.kernelci.org/build/maestro:6aa427ec20239ade902331e9
-
-## x86_64_defconfig+lab-setup+x86-board+kselftest on (x86_64):
-- compiler: gcc-15
-- config: None
-- dashboard: https://d.kernelci.org/build/maestro:6aa427f020239ade902331ed
-
-#regzbot introduced: f2bfbc3554ca6919484030729424b9dee2942d24..68142f986ff04b2b70b31db00f719bf690f64a9a
-#regzbot link: https://d.kernelci.org/i/maestro:062b6b4e2382aba3e97943acd24e9dea1debfc26
-
-#kernelci issue maestro:062b6b4e2382aba3e97943acd24e9dea1debfc26
-
---
-This is an experimental report format. Please send feedback in!
-Talk to us at kernelci@lists.linux.dev
-
-Made with love by the KernelCI team - https://kernelci.org
+I'm going to treat this as a regression. And for the record Qu and me
+are in disagreement on that. My target is to make the systems boot again
+first, the fix may leave some problematic case (like mentioned, devices
+in namespaces), but that is probably a lesser problem.
