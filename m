@@ -1,51 +1,55 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.170])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.162])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6244A29DB64;
-	Sat, 12 Sep 2026 10:26:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AEAB3603D5
+	for <regressions@lists.linux.dev>; Sat, 12 Sep 2026 16:59:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.162
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789208803; cv=none; b=KqPj//bpPHnFWablGTDsZwSKW1Oegq8miHwe4LL4wBop30ktCKfJlNj6ozy/ps+JcYynA2V58mvl9yN1D5PSyX+QlUiqLokx3jZ+A4y9fm1UAZmOw8LtGw1Z818XAYZPLiVxlvCbxzTAH791sKhFyqjgfkqfJg0JDwPO/BX4k9I=
+	t=1789232380; cv=none; b=IQFqiAP2a14U/ZoOs/s5E9kxdt08Wpyd+jcVmEJAu13p8KbyvojCpjXRTfq7lLpXWZNBHd0pH0GQs/EaKZ5Zb0HGJJi39tbeIl04LijDOLB6wnmpsfmEQqiwpo7Gm6rG7CdbptgSTpmC4Zg25aePTOLI2RucAvxeYSM3QzJFTu8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789208803; c=relaxed/simple;
-	bh=d8G+8siRWTaw4oHGN2aZES9/78IL9mdii44AKdP4+Wg=;
+	s=arc-20240116; t=1789232380; c=relaxed/simple;
+	bh=AJHG3esMZwH0RWtfkWBAiWnT1QRFt4zqcoKdiO4EQiY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=u55uphtgvI0njH1RDR4lzjORAMTcm4ojVJ5TSvG2MFiSirxxJ+hbSEAAQ4v0EwSJfIOqXmM4/HlU3pSiLyKXy+lyeh2HJBQJlAs1GD5esg032sX1QKmgo29/ihT5lGyhICZztZ/ckJhpEIBgeIgbDB4WRfq7GZI3ZOpkVxR+dac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=b2pu7MFB; arc=none smtp.client-ip=188.68.63.170
+	 In-Reply-To:Content-Type; b=P4Tp8LLi+ExbavPwrHTgYua+sCjMWE46bf0rmGqEgNtyeFhyaYTWME93aRjQVaEeWM1k2Dr/ZX5ikZGS1nQoWvc02CopT/aalPFSWJYD1GmlThXQbPTFk+QIIOeH3JHGzImTv/+lYOt/9RFUCL8Zz2DWEuANn/zs7wsxbdQg/uI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=N2ASiww4; arc=none smtp.client-ip=188.68.63.162
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="b2pu7MFB"
-Received: from mors-relay8203.netcup.net (localhost [127.0.0.1])
-	by mors-relay8203.netcup.net (Postfix) with ESMTPS id 4hhnSn4JHhz8n8s;
-	Sat, 12 Sep 2026 10:19:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="N2ASiww4"
+Received: from mors-relay-8201.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4hhy936L5yz4B8Q;
+	Sat, 12 Sep 2026 18:51:03 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1789208345;
-	bh=d8G+8siRWTaw4oHGN2aZES9/78IL9mdii44AKdP4+Wg=;
+	s=key2; t=1789231863;
+	bh=AJHG3esMZwH0RWtfkWBAiWnT1QRFt4zqcoKdiO4EQiY=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=b2pu7MFBUCSmFMMlstTSLsHaZJR7cZFi8yaD+kfHDt6MFCfqtGkeh6o2L27lwONBK
-	 gPqmAnUeb9OD2bWYXl1ClGSTvqoJOGctd0ARbTF3X91lkqqN6/fRr+LN8oUH7iv0c6
-	 3U37E1zd6PuhYZCjX9NWmmoAwYzb7RZ4188nucYBY05z6cpH1WLLyB5zbKUBPeLCdm
-	 HSpQoC+aHLYaXCfiXpLdWaGy9wCjoUI67k3n4CWQDCsHPQz4QnXeoIASATgVnLShJ7
-	 L2QldoJkGbNvMWZVyQnJxEmQ0PlmyOA+6iVTs1ODxatLnS+qhm/uvG7LKQ2Z+CTHiy
-	 dY4cr8Kw9fwwQ==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay8203.netcup.net (Postfix) with ESMTPS id 4hhnSn3ZXzz8n8H;
-	Sat, 12 Sep 2026 10:19:05 +0000 (UTC)
+	b=N2ASiww4t0k71Hz0kAf6pPdrj2LIC/71Ij/IUvqztJFVBHPgqgccamY2sO+2SVfr4
+	 9rdmI2kohnNmsUq6tSCtel4bzireoSUQIajd12vkWfxTovLSy/oz6+sGppP2/kQFkt
+	 9sjALgS0hb9KssGF7dVXMVk/uvrc+DAWSvtvX8xYDdhkyhTFKlrOO58uUAzE/cC6XY
+	 PcoHTtiZxLyvr3hG2x4BqQzlMESppcY+P4N5BS7p13AKyXhykUegAB/zeJJXDb5UOk
+	 5+l2LiPpQJf/kwiKcOVzmY2qAhz7Qdp33SyJyibK7jYZRmfwsbAcfxcyqDCVbhmHb5
+	 R7OQladY9viDw==
+Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4hhy8L459qz4GGw;
+	Sat, 12 Sep 2026 18:50:26 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
+X-Spam-Flag: NO
+X-Spam-Score: -2.898
+X-Spam-Level: 
 Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4hhnSl03dTz8sbH;
-	Sat, 12 Sep 2026 12:19:02 +0200 (CEST)
+	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4hhy8K1psLz8sbW;
+	Sat, 12 Sep 2026 18:50:24 +0200 (CEST)
 Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id A50C25F8E7;
-	Sat, 12 Sep 2026 12:18:57 +0200 (CEST)
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 1990B5F995;
+	Sat, 12 Sep 2026 18:50:24 +0200 (CEST)
 Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=linux@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
 Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <5babfab4-ebf7-42b8-88f2-ac2f5b6b2d7f@leemhuis.info>
-Date: Sat, 12 Sep 2026 12:18:56 +0200
+Message-ID: <6e450fa2-8b40-48b6-b0b0-a1c4b72a383d@leemhuis.info>
+Date: Sat, 12 Sep 2026 18:50:23 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -53,19 +57,16 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 7.2 0000/1815] 7.2.6-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@nabladev.com, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, rwarsow@gmx.de,
- conor@kernel.org, hargar@microsoft.com, broonie@kernel.org,
- achill@achill.org, sr@sladewatkins.com,
+Subject: Re: [PATCH] ACPI: scan: Honor _DEP for Intel CVS devices
+To: Miguel Vadillo <miguel.vadillo@intel.com>, linux-acpi@vger.kernel.org
+Cc: rafael@kernel.org, lenb@kernel.org, linux-kernel@vger.kernel.org,
+ linux-media@vger.kernel.org, sakari.ailus@linux.intel.com,
+ mehdi.djait@linux.intel.com, wei.a.xu@intel.com, atul.raut@intel.com,
  Linux kernel regressions list <regressions@lists.linux.dev>
-References: <20260912065648.999753832@linuxfoundation.org>
-From: Thorsten Leemhuis <linux@leemhuis.info>
+References: <20260601194040.18223-1-miguel.vadillo@intel.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
 Content-Language: de-DE, en-US
+X-Enigmail-Draft-Status: N11222
 Autocrypt: addr=linux@leemhuis.info; keydata=
  xsFNBFJ4AQ0BEADCz16x4kl/YGBegAsYXJMjFRi3QOr2YMmcNuu1fdsi3XnM+xMRaukWby47
  JcsZYLDKRHTQ/Lalw9L1HI3NRwK+9ayjg31wFdekgsuPbu4x5RGDIfyNpd378Upa8SUmvHik
@@ -109,46 +110,75 @@ Autocrypt: addr=linux@leemhuis.info; keydata=
  8zG721N4hWyyLALtGUKIVWZvBVKQIGQRPtNC7s9NVeLIMqoH7qeDfkf10XL9tvSSDY6KVl1n
  K0gzPCKcBaJ2pA1xd4pQTjf4jAHHM4diztaXqnh4OFsu3HOTAJh1ZtLvYVj5y9GFCq2azqTD
  pPI3FGMkRipwxdKGAO7tJVzM7u+/+83RyUjgAbkkkD1doWIl+iGZ4s/Jxejw1yRH0R5/uTaB MEK4
-In-Reply-To: <20260912065648.999753832@linuxfoundation.org>
+In-Reply-To: <20260601194040.18223-1-miguel.vadillo@intel.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 X-PPP-Message-ID: 
- <178920833844.1659599.12775412309326834949@mxe9fb.netcup.net>
-X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: A50C25F8E7
-X-NC-CID: l8TEAt+miKn7LL83ewAZEBNk1qllbLtJwEfXIQDBCHaKhRxfKUU=
+ <178923182456.3752792.13793600117481511174@mxe9fb.netcup.net>
+X-NC-CID: eUDhzI0c5q2/AO8HjvMbjiiF2l6J7hgVrw4CQClAx3XQVxIiRas=
 
-On 9/12/26 08:29, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 7.2.6 release.
-> There are 1815 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> [...]
+On 6/1/26 21:40, Miguel Vadillo wrote:
+> CVS (Computer Vision Sensing) is an ACPI-enumerated device that sits
+> inline in the CSI-2 path between the camera sensor and Intel IPU.
+> On platforms where CVS is present, the camera sensor's ACPI node
+> declares a _DEP dependency on the CVS device.
+> 
+> The CVS driver must be fully initialized before camera sensor drivers
+> probe, because CVS controls the CSI-2 link ownership handshake (via
+> GPIO REQ/RESP), the MIPI/CSI-2 lane configuration, and the camera
+> power domain. Without CVS ready, the sensor driver can bind but the
+> CSI-2 stream will not function correctly.
+> 
+> The CVS driver calls acpi_dev_clear_dependencies() at the end of its
+> probe() to unblock waiting consumers once it is ready.
+> 
+> Move the CVS HIDs from acpi_ignore_dep_ids[] to acpi_honor_dep_ids[]
+> so that camera sensor enumeration is deferred until the CVS driver has
+> finished probing, matching the behavior already in place for IVSC.
 
-My builds failed while compiling perf:
+TWIMC, there is a bug report where one or two people claim that this
+change caused a regression; the report is quite verbose (guess LLM
+assisted) and hard to grasp for me as outsider; requests for
+clarifications from my side were not really fruitful. Not sure what to
+make of this, but I thought I'd let you know; for details see:
 
->> ui/browsers/hists.c: In function ‘evsel__hists_browse’:
->> ui/browsers/hists.c:3191:41: error: ‘hotkey_act’ undeclared (first use in this function)
->>  3191 |                                 memset(&hotkey_act, 0, sizeof(hotkey_act));
->>       |                                         ^~~~~~~~~~
->> ui/browsers/hists.c:3191:41: note: each undeclared identifier is reported only once for each function it appears in
-Reverting "perf ui hists: In report UI ensure thread is set with
-reference counting" fixes this. Haven't tried, but maybe including
-bd86119c3ee6ed ("perf ui hists: Fix dso_filter reference leak and exit
-zoom cleanup") will fix this, too.
-
-That got me a little further, but then I ran into this:
-
->> tools/perf/util/python.c: In function ‘pyrf_evsel__open’:
->> tools/perf/util/python.c:1104:9: error: implicit declaration of function ‘CHECK_INITIALIZED’ [-Wimplicit-function-declaration]
->>  1104 |         CHECK_INITIALIZED(evsel, "evsel");
->>       |         ^~~~~~~~~~~~~~~~~
->> tools/perf/util/python.c: In function ‘pyrf_evsel__set_tracking’:
->> tools/perf/util/python.c:1295:9: error: implicit declaration of function ‘CHECK_INITIALIZED_INT’ [-Wimplicit-function-declaration]
->>  1295 |         CHECK_INITIALIZED_INT(pevsel->evsel, "evsel");
->>       |         ^~~~~~~~~~~~~~~~~~~~~
-
-Only looked briefly, but didn't spot a simple way to work around that
-through a simple revert or two (but it's quite likely I missed something).
+https://bugzilla.kernel.org/show_bug.cgi?id=221988
 
 Ciao, Thorsten
+> Signed-off-by: Miguel Vadillo <miguel.vadillo@intel.com>
+> ---
+> Note: this patch has a functional dependency on the CVS driver and its
+> IPU bridge support, which are queued in media-next for v7.2. Without
+> those drivers, no code will call acpi_dev_clear_dependencies() for the
+> CVS HIDs and camera sensors will remain deferred indefinitely.
+> 
+> The CVS driver series (v5) can be found at:
+>   https://lore.kernel.org/linux-media/20260527170531.383871-1-miguel.vadillo@intel.com/
+> 
+>  drivers/acpi/scan.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
+> index 530547cda8b2..1463eb3a4f6e 100644
+> --- a/drivers/acpi/scan.c
+> +++ b/drivers/acpi/scan.c
+> @@ -848,8 +848,6 @@ static bool acpi_info_matches_ids(struct acpi_device_info *info,
+>  static const char * const acpi_ignore_dep_ids[] = {
+>  	"PNP0D80", /* Windows-compatible System Power Management Controller */
+>  	"INT33BD", /* Intel Baytrail Mailbox Device */
+> -	"INTC10DE", /* Intel CVS LNL */
+> -	"INTC10E0", /* Intel CVS ARL */
+>  	"LATT2021", /* Lattice FW Update Client Driver */
+>  	NULL
+>  };
+> @@ -861,6 +859,9 @@ static const char * const acpi_honor_dep_ids[] = {
+>  	"INTC1095", /* IVSC (ADL) driver must be loaded to allow i2c access to camera sensors */
+>  	"INTC100A", /* IVSC (RPL) driver must be loaded to allow i2c access to camera sensors */
+>  	"INTC10CF", /* IVSC (MTL) driver must be loaded to allow i2c access to camera sensors */
+> +	"INTC10DE", /* CVS (LNL) driver must be loaded to allow camera streaming */
+> +	"INTC10E0", /* CVS (ARL) driver must be loaded to allow camera streaming */
+> +	"INTC10E1", /* CVS (PTL) driver must be loaded to allow camera streaming */
+>  	"RSCV0001", /* RISC-V PLIC */
+>  	"RSCV0002", /* RISC-V APLIC */
+>  	"RSCV0005", /* RISC-V SBI MPXY MBOX */
+
