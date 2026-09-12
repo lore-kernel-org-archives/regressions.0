@@ -1,426 +1,154 @@
-Received: from mail-m16.yeah.net (mail-m16.yeah.net [220.197.32.18])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76E9643F0BF
-	for <regressions@lists.linux.dev>; Sat, 12 Sep 2026 08:45:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6244A29DB64;
+	Sat, 12 Sep 2026 10:26:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789202750; cv=none; b=urwUob5Mb6ga3bVgn7aMnHzRCItGZbvsSbAqc4IrvINQCIUqIjsRm4U44x+1mU7MDoE8kpCbDrlZZMyb0qGF0aY8yuyl6B/n3QVnESlAkXiH0rW6h0FJe3VlHLSInnl68xkQCdopjH15B4TvAk2GxCEXIuV4eSEAVlzZIBhoxhM=
+	t=1789208803; cv=none; b=KqPj//bpPHnFWablGTDsZwSKW1Oegq8miHwe4LL4wBop30ktCKfJlNj6ozy/ps+JcYynA2V58mvl9yN1D5PSyX+QlUiqLokx3jZ+A4y9fm1UAZmOw8LtGw1Z818XAYZPLiVxlvCbxzTAH791sKhFyqjgfkqfJg0JDwPO/BX4k9I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789202750; c=relaxed/simple;
-	bh=C//WHmIKNIOsz+BzZ0CbA2rnrddzkweBy7yrd2pND/8=;
-	h=Date:From:To:CC:Subject:Message-ID:MIME-Version:Content-Type; b=kGM6N29nMSyVuTziKV2O3r7EeN9O8l/RlA9hR70fKjztwj2UKsAjG6GYa1O/7xU2+0h2Pgg0cDBkh82wzbY+VVxXesBpVgn+gto8Lvhic3iMj/qAL6J1IfmatzPYHvuz/SP5FsHKGdAuLM3oeKxdHxRKh+I4AwYFeW17APMmW3s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=knOT1gbf; arc=none smtp.client-ip=220.197.32.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
+	s=arc-20240116; t=1789208803; c=relaxed/simple;
+	bh=d8G+8siRWTaw4oHGN2aZES9/78IL9mdii44AKdP4+Wg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=u55uphtgvI0njH1RDR4lzjORAMTcm4ojVJ5TSvG2MFiSirxxJ+hbSEAAQ4v0EwSJfIOqXmM4/HlU3pSiLyKXy+lyeh2HJBQJlAs1GD5esg032sX1QKmgo29/ihT5lGyhICZztZ/ckJhpEIBgeIgbDB4WRfq7GZI3ZOpkVxR+dac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=b2pu7MFB; arc=none smtp.client-ip=188.68.63.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="knOT1gbf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
-	s=s110527; h=Date:From:To:Subject:Message-ID:MIME-Version:
-	Content-Type; bh=EoOP8VxZVKVDxf1TYiUEHlgqMdieGBSKm5YIuDpSqCo=;
-	b=knOT1gbfZM11LXIeVV0/6zj+CvJQMa6qGRd9S+E6jK0Q8C+aDKTiBV9soCniWl
-	6GGAevlNj7vpO5q7rrizGtmL2OJhSAs2UIPlugz4fMobANZRC/qB7yyL7qomDwNU
-	juQrT3ldZNFG/Ukyp63gXfD+eRWRaeyK+VgNNfecgPnjw=
-Received: from ehlo.thunderbird.net (unknown [])
-	by gzsmtp3 (Coremail) with UTF8SMTPA id M88vCgC3JxL5EKVqDZRnCA--.26558S2;
-	Sat, 12 Sep 2026 16:44:43 +0800 (CST)
-Date: Sat, 12 Sep 2026 16:44:41 +0800
-From: Starry2233 <qu20121118@yeah.net>
-To: linux-kernel@vger.kernel.org, x86@kernel.org
-CC: bp@alien8.de, tglx@linutronix.de, mingo@redhat.com,
- dave.hansen@linux.intel.com, linux-acpi@vger.kernel.org,
- alsa-devel@alsa-project.org, tiwai@suse.com, perex@perex.cz,
- platform-driver-x86@vger.kernel.org, regressions@lists.linux.dev
-Subject: =?US-ASCII?Q?=5BBug=5D_Spontaneous_emergency_reset_=28=22softwar?=
- =?US-ASCII?Q?e_wrote_0xE_to_0xCF9=22=29_on_AMD_Ryzen_9_8945H?=
- =?US-ASCII?Q?X_=28Lenovo_Legion_R9000P_2025=29_with_7=2E3=2E0-rc?=
- =?US-ASCII?Q?2_--_twice_in_one_day=2C_no_Oops/panic_logged?=
-User-Agent: Thunderbird for Android
-Message-ID: <AE089773-00AF-44F9-A679-9E22133D0C2D@yeah.net>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="b2pu7MFB"
+Received: from mors-relay8203.netcup.net (localhost [127.0.0.1])
+	by mors-relay8203.netcup.net (Postfix) with ESMTPS id 4hhnSn4JHhz8n8s;
+	Sat, 12 Sep 2026 10:19:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1789208345;
+	bh=d8G+8siRWTaw4oHGN2aZES9/78IL9mdii44AKdP4+Wg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=b2pu7MFBUCSmFMMlstTSLsHaZJR7cZFi8yaD+kfHDt6MFCfqtGkeh6o2L27lwONBK
+	 gPqmAnUeb9OD2bWYXl1ClGSTvqoJOGctd0ARbTF3X91lkqqN6/fRr+LN8oUH7iv0c6
+	 3U37E1zd6PuhYZCjX9NWmmoAwYzb7RZ4188nucYBY05z6cpH1WLLyB5zbKUBPeLCdm
+	 HSpQoC+aHLYaXCfiXpLdWaGy9wCjoUI67k3n4CWQDCsHPQz4QnXeoIASATgVnLShJ7
+	 L2QldoJkGbNvMWZVyQnJxEmQ0PlmyOA+6iVTs1ODxatLnS+qhm/uvG7LKQ2Z+CTHiy
+	 dY4cr8Kw9fwwQ==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay8203.netcup.net (Postfix) with ESMTPS id 4hhnSn3ZXzz8n8H;
+	Sat, 12 Sep 2026 10:19:05 +0000 (UTC)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4hhnSl03dTz8sbH;
+	Sat, 12 Sep 2026 12:19:02 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id A50C25F8E7;
+	Sat, 12 Sep 2026 12:18:57 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=linux@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <5babfab4-ebf7-42b8-88f2-ac2f5b6b2d7f@leemhuis.info>
+Date: Sat, 12 Sep 2026 12:18:56 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-CM-TRANSID:M88vCgC3JxL5EKVqDZRnCA--.26558S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW3AFW8tF4ftFy8Cw45Kw4xtFb_yoW3JFW8pF
-	WfKwnIkr4kJFy8Zr48Aw1UuF10vws3tay5CrZ8Kr40yF15CF1IyF1I9a40vFyUArWxW34Y
-	qF1Utr17uan0gaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zRUUUUUUUUU=
-X-CM-SenderInfo: ttxsiiisrrimo61htxgoqh3/1tbiNBtG6WqlEPvNWAAA3x
-
-
-
-
-Hi,
-
-
-
-
-I'm running the Ubuntu mainline 7=2E3=2E0-rc2 build on a Lenovo Legion R90=
-00P
-
-2025 and since switching to the 7=2E3 rc's the machine will, every so ofte=
-n,
-
-just hard reset itself out of nowhere=2E No timeout, nothing written to th=
-e
-
-log right before -- the box is mid-work and then it's gone, rebooted like
-
-someone pressed reset=2E
-
-
-
-
-The AMD FCH reset-reason decoder says both resets were an emergency softwa=
-re
-
-reset (0xE written to the 0xCF9 reset control register), not a clean reboo=
-t
-
-and not a power loss=2E On 7=2E3=2E0-rc1 the exact same symptom showed up =
-as a
-
-sudden power-off instead; on rc2 it comes back as a warm emergency reset=
-=2E
-
-Either way, no Oops, no panic, no MCE, no hung-task/lockup message anywher=
-e
-
-- the journal is alive until the very last line and then the machine reset=
-s=2E
-
-
-
-
-I'm kind of stuck on an RC kernel by necessity: the AW88399 subwoofer amp =
-in
-
-this particular model only got driver support in 7=2E3-rc1, which is why I
-
-can't just fall back to the 6=2E12 stable kernel=2E So I'd rather report t=
-his
-
-properly than silently ride it out=2E Apologies in advance if this should =
-go
-
-to bugzilla instead -- point me at the right place and I'll move it=2E
-
-
-
-
-Hardware / software
-
--------------------
-
-
-
-
-- Lenovo Legion R9000P 2025 (DMI product LNVNB161216, baseboard "Legion
-
-  R9000P ADR10", BIOS RLCN29WW, 2025-08-14)
-
-- AMD Ryzen 9 8945HX (Hawk Point-HX, 16C/32T)
-
-- NVIDIA GeForce RTX 5060 Max-Q (GB206M, 10de:2d59, rev a1),
-
-  nvidia-open 595=2E99=2E02 via DKMS, KDE Plasma 6 / Wayland
-
-- Audio: AMD ACP (1022:15e2), AMD HD-Audio (1022:15e3), Realtek ALC287,
-
-  AW88399 subwoofer amp on I2C (SSID 17aa:3928)
-
-- WLAN: Realtek RTL8922AE 802=2E11be (rtw89_8922ae)
-
-- USB: 3x AMD Raphael xHCI (1022:15b6 / 15b7 / 15b8); a Google Pixel phone
-
-  (18d1:4ee7) is usually plugged into usb3-port1
-
-- Kernel: Linux 7=2E3=2E0-070300rc2-generic #202609070545 SMP PREEMPT_DYNA=
-MIC,
-
-  built Thu Sep 10 12:34:01 UTC 2026 (Ubuntu mainline, gcc-15)
-
-- cmdline: BOOT_IMAGE=3D/boot/vmlinuz-7=2E3=2E0-070300rc2-generic
-
-  root=3DUUID=3D83395a8d-ed16-43ad-8b2b-6989f78045eb ro quiet
-
-- Debian 13 (trixie)
-
-
-
-
-What the logs look like
-
------------------------
-
-
-
-
-(All timestamps below are local time, UTC+08:00=2E)
-
-
-
-
-1) FCH reset-reason decode, read at the start of the boots right after eac=
-h
-
-   crash=2E Both abnormal events decode identically:
-
-
-
-
-   x86/amd: Previous system reset reason [0x00300800]: software wrote 0xE
-
-            to reset control register 0xCF9
-
-   x86/amd: Previous system reset reason [0x00300800]: ACPI power state
-
-            transition occurred
-
-
-
-
-   Every normal reboot of the same box on the same kernel decodes as:
-
-
-
-
-   x86/amd: Previous system reset reason [0x00080800]: software wrote 0x6
-
-            to reset control register 0xCF9
-
-
-
-
-   So the two crashes are exactly the emergency reset path
-
-   (emergency_restart() -> machine_emergency_restart(), which writes 0x0E)=
-=2E
-
-
-
-
-2) There is no kernel log at all preceding either reset=2E The journal kee=
-ps
-
-   getting messages (wireplumber, systemd, chrome) right up to the last
-
-   second, then nothing=2E No panic, no oops, no hung task, no lockup, no =
-MCE=2E
-
-   pstore / efi_pstore has nothing from today either, which makes sense fo=
-r
-
-   a reset that isn't a panic=2E
-
-
-
-
-3) What was happening at the time:
-
-   - Crash #1 (session ended ~14:31, 2026-09-12): a screen recorder called
-
-     "Cap" was running with ALSA/JACK via PipeWire; last log lines are its
-
-     playback stats ("effective_fps=3D60=2E1")=2E
-
-   - Crash #2 (session ended ~15:11): a few minutes earlier the Pixel phon=
-e
-
-     on usb3-port1 went through a bad enumeration storm:
-
-       15:08:53 usb 3-1: device descriptor read/64, error -71
-
-       15:09:00 usb 3-1: Cannot enable=2E Maybe the USB cable is bad?
-
-       15:09:00 usb 3-1: unable to enumerate USB device
-
-     (it finally enumerated at 15:09:12 as device #11), then about two
-
-     minutes later the reset=2E Chrome was mid-playback at the same time
-
-     (its last line is "Frame latency is negative: -0=2E045 ms")=2E
-
-
-
-
-4) Sysctl timeline, because it rules out the obvious: I set
-
-   kernel=2Epanic=3D10 / panic_on_oops=3D1 on this box at ~14:52, which is=
- after
-
-   crash #1 (so that one ran with kernel=2Epanic=3D0 and cannot be a
-
-   panic-timer emergency_restart) and before crash #2 (which, even with
-
-   panic=3D10 active, produced no panic message while the journal was heal=
-thy
-
-   up to the last moment)=2E
-
-
-
-
-5) Why I'm reporting this without a call stack: every reboot-path symbol
-
-   rejects kprobe/ftrace on this kernel=2E register_kprobe() returns -22 f=
-or
-
-   all of:
-
-
-
-
-     emergency_restart
-
-     machine_emergency_restart
-
-     native_machine_emergency_restart
-
-     machine_restart
-
-     kernel_restart
-
-
-
-
-   (a probe on panic() registers fine, so the reset path is squarely on th=
-e
-
-   kprobe blacklist)=2E My fallback plan is a small module that detour-pat=
-ches
-
-   emergency_restart()'s entry to log the caller, but if there's a proper,
-
-   supported way to get the caller I'd rather use that=2E
-
-
-
-
-What I suspect
-
---------------
-
-
-
-
-- Both crashes happened with the GPU and the audio pipeline busy at once
-
-  (screen recording over JACK/ALSA with compositing in one case, Chrome
-
-  playback in the other), and the audio side is exactly the code that is
-
-  new for this model in 7=2E3-rc1 (ALC287 + AW88399)=2E The fact that the
-
-  behaviour flipped from power-off (rc1) to warm emergency reset (rc2)
-
-  between two RC releases is a good signal that something changed in that
-
-  window, audio or reset-handling related=2E
-
-- Not fully sure about this, but it feels like the resets happen when I'm
-
-  playing a video that has audio (rather than silent content or plain
-
-  static load)=2E Both events so far fit that pattern (Cap screen recordin=
-g
-
-  and Chrome playback both had audio going), but take it with a grain of
-
-  salt - I can't claim it's a reliable trigger=2E
-
-- nvidia-open 595=2E99=2E02 prints two boot-time assertions on this SBIOS:
-
-
-
-
-    NVRM: GPU0 nvAssertOkFailedNoLog: Assertion failed: Invalid data
-
-    passed [NV_ERR_INVALID_DATA] (0x00000025) returned from
-
-    PlatformRequestHandler failed to get target temp from SBIOS @
-
-    platform_request_handler_ctrl=2Ec:2174
-
-    =2E=2E=2E failed to get platform power mode from SBIOS @ =2E=2E=2E:211=
-7
-
-
-
-
-  Looks benign (Lenovo doesn't implement PlatformRequest), just adding it
-
-  for completeness=2E
-
-- Not a thermal event: temps are normal and the reset-reason decode points
-
-  to a deliberate software emergency reset, not an EC/platform trip=2E
-
-
-
-
-Questions
-
----------
-
-
-
-
-1=2E Given that the journal was still writing normally right up to the res=
-et,
-
-   is a "panic with a wedged console" scenario actually plausible, or shou=
-ld
-
-   I assume a direct emergency_restart() caller that simply never logs?
-
-2=2E Anything known between 7=2E3-rc1 and -rc2 that touches ACP / SoundWir=
-e /
-
-   snd-hda-codec-realtek / AW88399, or the reboot/emergency-reset path,
-
-   that could plausibly end in an unlogged emergency reset? The power-off =
-->
-
-   warm-reset behaviour change between the two RCs feels like a regression
-
-   window I can bisect=2E
-
-3=2E Where is the best place to track this - LKML, bugzilla=2Ekernel=2Eorg=
-, or
-
-   the ALSA or x86 lists? Who should I Cc?
-
-
-
-
-Happy to help however I can: full journalctl -k dumps from the affected
-
-boots, a serial console if I can set one up, testing patches, or running
-
-a bisect between rc1 and rc2=2E And if someone can confirm a clean way to
-
-catch the emergency_restart() caller despite the kprobe blacklist, that
-
-would nail this in one shot=2E
-
-
-
-
-Thanks for reading this far,
-
-Starry
-
-
-
-P=2ES=2E If anyone replies anywhere, please make sure to Cc me so I actual=
-ly
-
-see the answer - I'm reading the lists through a forwards-only account=2E
-
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 7.2 0000/1815] 7.2.6-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@nabladev.com, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, rwarsow@gmx.de,
+ conor@kernel.org, hargar@microsoft.com, broonie@kernel.org,
+ achill@achill.org, sr@sladewatkins.com,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <20260912065648.999753832@linuxfoundation.org>
+From: Thorsten Leemhuis <linux@leemhuis.info>
+Content-Language: de-DE, en-US
+Autocrypt: addr=linux@leemhuis.info; keydata=
+ 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 MEK4
+In-Reply-To: <20260912065648.999753832@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-PPP-Message-ID: 
+ <178920833844.1659599.12775412309326834949@mxe9fb.netcup.net>
+X-Rspamd-Server: rspamd-worker-8404
+X-Rspamd-Queue-Id: A50C25F8E7
+X-NC-CID: l8TEAt+miKn7LL83ewAZEBNk1qllbLtJwEfXIQDBCHaKhRxfKUU=
+
+On 9/12/26 08:29, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 7.2.6 release.
+> There are 1815 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> [...]
+
+My builds failed while compiling perf:
+
+>> ui/browsers/hists.c: In function ‘evsel__hists_browse’:
+>> ui/browsers/hists.c:3191:41: error: ‘hotkey_act’ undeclared (first use in this function)
+>>  3191 |                                 memset(&hotkey_act, 0, sizeof(hotkey_act));
+>>       |                                         ^~~~~~~~~~
+>> ui/browsers/hists.c:3191:41: note: each undeclared identifier is reported only once for each function it appears in
+Reverting "perf ui hists: In report UI ensure thread is set with
+reference counting" fixes this. Haven't tried, but maybe including
+bd86119c3ee6ed ("perf ui hists: Fix dso_filter reference leak and exit
+zoom cleanup") will fix this, too.
+
+That got me a little further, but then I ran into this:
+
+>> tools/perf/util/python.c: In function ‘pyrf_evsel__open’:
+>> tools/perf/util/python.c:1104:9: error: implicit declaration of function ‘CHECK_INITIALIZED’ [-Wimplicit-function-declaration]
+>>  1104 |         CHECK_INITIALIZED(evsel, "evsel");
+>>       |         ^~~~~~~~~~~~~~~~~
+>> tools/perf/util/python.c: In function ‘pyrf_evsel__set_tracking’:
+>> tools/perf/util/python.c:1295:9: error: implicit declaration of function ‘CHECK_INITIALIZED_INT’ [-Wimplicit-function-declaration]
+>>  1295 |         CHECK_INITIALIZED_INT(pevsel->evsel, "evsel");
+>>       |         ^~~~~~~~~~~~~~~~~~~~~
+
+Only looked briefly, but didn't spot a simple way to work around that
+through a simple revert or two (but it's quite likely I missed something).
+
+Ciao, Thorsten
