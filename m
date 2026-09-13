@@ -1,81 +1,168 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.170])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D99DD3839BD
-	for <regressions@lists.linux.dev>; Sun, 13 Sep 2026 12:32:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4AD53EC6AA;
+	Sun, 13 Sep 2026 12:54:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789302737; cv=none; b=D4um2XAXr4ICRw5vJ7aw9B5WQXid0KezYAyi3T9CyfS/P6SpTboZrHQq9MseDhiUjHfMK7Mvrm273hlGcTPL9hLVwP4AR5j2WVkjAb2CSR1SHH1TPXpSWG3rdDVlCkK06PwU3TpndkGZJTUwre9LwH33scC3LNXX93XDb01YURE=
+	t=1789304047; cv=none; b=RGqmuVceyGa4KemTXBt17mtn5IoOll1DIbK2wgzmc18OMTYmDRaONaPvXlRYbUjuHnK3EEr66jEwTYqlZ2ZkEhiAhI4/rKkTFofEWnBxl7G9bOqkahILgTN2rdd6rC3g0haSTr1xPixZi3/tiabZRXCsKOQPgLCDIYRdqj3RNps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789302737; c=relaxed/simple;
-	bh=877YAeRSL7z5qyOylwXSNW214D0eYdMkoBXqf8geiz4=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=LmZt4Ch2rxNjMPBTyOF/qspBcYcve/JHd71K2K86GBYoV7/7hba3O+jvccCVje2aC9yfPrOJXBRtc87M47EWWnkBp0hSEJUnwZZUrmAxhuAjyUsJeEUzN1VQ7GPSmIptlW0YG3HTEeKVpsK+0X4R5tLSoSbLWfjevsXmEZxew2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=PJkdtRqS; arc=none smtp.client-ip=188.68.63.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1789304047; c=relaxed/simple;
+	bh=ay4qyJCaQmXveBRyHeoqGyCcwueesl6T2BFAs3f+Z7w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eJ5tGSurmDNrreupcQhoRZTZBsv1BN+rxefXShz6qfAdzEVs8jXLBnV7y7kh6Y/RG8bnOQOHWpFwsD0sZXz6Ss0IuAoaUzWLCTp1N2cJFd+7u6rGdvuwGV5OpzIOQTqJmDtYPNsFkY0p0ybFHEVNBqTbbIKCQov6wj7e51CzbqI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Tnb4/6Zi; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="PJkdtRqS"
-Received: from mors-relay8203.netcup.net (localhost [127.0.0.1])
-	by mors-relay8203.netcup.net (Postfix) with ESMTPS id 4hjSMp2P7sz8f7w
-	for <regressions@lists.linux.dev>; Sun, 13 Sep 2026 12:32:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1789302726;
-	bh=877YAeRSL7z5qyOylwXSNW214D0eYdMkoBXqf8geiz4=;
-	h=Date:Subject:From:To:References:In-Reply-To:From;
-	b=PJkdtRqS9X08dOV7B3NKn1fypdOJaKSsuINn7S/KV6IIIK1dEmHxD74KYAFzB/g5I
-	 UlwWVaIhReXfd0oGeB+M17FqcG9pj+rFBUr2d3klmHhjUpGqigygW8zYTbbqbkfqLD
-	 ScS9IGhXwpN89SIhjZGnd9DnhEYPTKQAfbu3mL5XYJdHU57IhbOqcw8vDXxtF6U9g/
-	 jQqF4qhnoeblTXtK7rgYJwiUeDMJuqBXFoclP92nj31ezBGx2AupExv0g6SU85ySZM
-	 nGADkQeMKK6l0rIrmv7fSfTGkJWpSX9+Y64cRdWpbAaWXsVrXaMgLvpLHRHszAhsUz
-	 YkV08ltMpLetQ==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay8203.netcup.net (Postfix) with ESMTPS id 4hjSMp1hpsz8f6R
-	for <regressions@lists.linux.dev>; Sun, 13 Sep 2026 12:32:06 +0000 (UTC)
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4hjSMn72rxz8tHB
-	for <regressions@lists.linux.dev>; Sun, 13 Sep 2026 14:32:05 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 4FA095F995
-	for <regressions@lists.linux.dev>; Sun, 13 Sep 2026 14:32:05 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <79f0496f-c468-4da2-a976-eada439408be@leemhuis.info>
-Date: Sun, 13 Sep 2026 14:32:04 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Tnb4/6Zi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1789304041; x=1820840041;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ay4qyJCaQmXveBRyHeoqGyCcwueesl6T2BFAs3f+Z7w=;
+  b=Tnb4/6ZiKzvnrluYQKjpneE4mrZCXdZv5Cv8flpasfecXWh2glmO9ep4
+   85il0VTmbXINnW9kjp31GTehwb06A87b2IFRsY2peOIbtuLYTxG4gLFZ2
+   ikUl17LchDfJ1vLb+kgEGvQC4FSmBDOuLA7Te2/ighG/BmQ+TvEUycWeB
+   eYpQHDTOab+46vem6GFfHZwAJMrRGu/7hSQyToo18uSZetUuuydTfAFJu
+   EKk2YbHtkM25fCOJC/Iao0Bj2EznQQbn52VrKMeKz3/Q2nyw/y+ZPkJRE
+   DAVguX2tb6RXUgR92FCGp9JNHsVtoxMA2DTzG7ESqRApWiV3zuMD7T+c3
+   A==;
+X-CSE-ConnectionGUID: iqLLlX0bSwqhHUE0++Oe2g==
+X-CSE-MsgGUID: zJZUvdOKRNC/VcEytTMOHg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11903"; a="101041852"
+X-IronPort-AV: E=Sophos;i="6.27,100,1787036400"; 
+   d="scan'208";a="101041852"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2026 05:53:58 -0700
+X-CSE-ConnectionGUID: Pj3reVYjSiKANcJMJtEzoA==
+X-CSE-MsgGUID: 5YYtgwtCT2yF1d3eeh8Gqw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,100,1787036400"; 
+   d="scan'208";a="277638693"
+Received: from junjie-desk-dev.bj.intel.com ([10.238.152.71])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2026 05:53:54 -0700
+From: Junjie Cao <junjie.cao@intel.com>
+To: Miguel Vadillo <miguel.vadillo@intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Manuel Knitza <manuel.knitza@googlemail.com>,
+	Thorsten Leemhuis <regressions@leemhuis.info>,
+	Antti Laakso <antti.laakso@linux.intel.com>,
+	Mehdi Djait <mehdi.djait@linux.intel.com>,
+	linux-media@vger.kernel.org,
+	linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev,
+	stable@vger.kernel.org
+Subject: [PATCH] media: i2c: cvs: Do not hide the option in the ancillary menu
+Date: Sun, 13 Sep 2026 20:53:45 +0800
+Message-ID: <20260913125345.588586-1-junjie.cao@intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: 
- <178930272549.2071666.15130392012594674410@mxe9fb.netcup.net>
-X-NC-CID: tFtOsyVgviX7WYiD4unkwDR40JFN2xAwzXGLCgi4OHSadS3ywQM=
+Content-Transfer-Encoding: 8bit
 
+A camera behind a CVS device needs intel_cvs bound: since commit
+c28527ce5d06 ("ACPI: scan: Honor _DEP for Intel CVS devices") the
+sensor is not enumerated until the driver's probe clears the _DEP, and
+since commit c6b1b34b5090 ("media: pci: intel: Add CVS support for IPU
+bridge driver") the IPU notifier waits for the "Intel CVS" sub-device.
+The option is sourced from the "Miscellaneous helper chips" menu, which
+MEDIA_HIDE_ANCILLARY_SUBDRV hides on any config with
+MEDIA_SUBDRV_AUTOSELECT=y and neither EXPERT nor COMPILE_TEST, and
+nothing selects or implies it, so olddefconfig on such a config does
+not write the symbol out at all.
 
+Arch Linux's config.x86_64 for 7.2.4 is one: I2C, ACPI, VIDEO_DEV=m,
+IPU_BRIDGE=m, INTEL_VSC=m, VIDEO_INTEL_IPU6=m, VIDEO_INTEL_IPU7=m and
+no VIDEO_INTEL_CVS line. On such a kernel a Panther Lake laptop has
+either no CVS driver, so the sensor is never enumerated, or the
+out-of-tree intel_cvs from intel/vision-drivers, which registers no
+sub-device; the second Link shows the IPU notifier pending on
+INTC10E1-0/port@1/endpoint@0 on such a kernel. Both reports had a
+working camera on 7.1.
 
-On 3/9/24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
+Source the Kconfig from drivers/media/pci/intel/ next to INTEL_VSC and
+imply it from the IPU6 and IPU7 drivers, which are the IPUs the driver
+looks for, so that a config that has them picks up intel_cvs=m on the
+next olddefconfig.
 
-#regzbot report:
-https://lore.kernel.org/all/20260908105717.496232-1-junjie.cao@intel.com/
-#regzbot introduced: 8e2b43d2c10b
-#regzbot title: edia: i2c: cvs: machine has no sound
-#regzbot fix: media: i2c: cvs: Get the wake IRQ without claiming the GPIO
+Fixes: 8e2b43d2c10b ("media: i2c: cvs: Add driver of Intel Computer Vision Sensing Controller(CVS)")
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/linux-media/20260912185836.309071-1-manuel.knitza@googlemail.com/
+Link: https://github.com/omacom/omarchy/issues/10948
+Signed-off-by: Junjie Cao <junjie.cao@intel.com>
+---
+Tested by running olddefconfig with Arch's config.x86_64 (7.2.4.arch1)
+on current mainline: before, no VIDEO_INTEL_CVS line; after,
+CONFIG_VIDEO_INTEL_CVS=m. With EXPERT=y alone the option only becomes
+"is not set". Not booted on CVS hardware.
+
+For stable: a 7.2.y distro config with IPU6/IPU7 gains intel_cvs=m on
+its next olddefconfig; that is the intent. Sourcing from pci/intel/
+puts the option under MEDIA_PCI_SUPPORT like IPU_BRIDGE and INTEL_VSC,
+which a CVS system needs anyway.
+
+ drivers/media/i2c/Kconfig            | 1 -
+ drivers/media/pci/intel/Kconfig      | 1 +
+ drivers/media/pci/intel/ipu6/Kconfig | 1 +
+ drivers/staging/media/ipu7/Kconfig   | 1 +
+ 4 files changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
+index 5c52007f9cbeb..8573f27b907d9 100644
+--- a/drivers/media/i2c/Kconfig
++++ b/drivers/media/i2c/Kconfig
+@@ -1680,7 +1680,6 @@ endmenu
+ menu "Miscellaneous helper chips"
+ 	visible if !MEDIA_HIDE_ANCILLARY_SUBDRV
+ 
+-source "drivers/media/i2c/cvs/Kconfig"
+ 
+ config VIDEO_I2C
+ 	tristate "I2C transport video support"
+diff --git a/drivers/media/pci/intel/Kconfig b/drivers/media/pci/intel/Kconfig
+index 3f14ca110d06c..dd8c990a0c294 100644
+--- a/drivers/media/pci/intel/Kconfig
++++ b/drivers/media/pci/intel/Kconfig
+@@ -3,6 +3,7 @@
+ source "drivers/media/pci/intel/ipu3/Kconfig"
+ source "drivers/media/pci/intel/ipu6/Kconfig"
+ source "drivers/media/pci/intel/ivsc/Kconfig"
++source "drivers/media/i2c/cvs/Kconfig"
+ 
+ config IPU_BRIDGE
+ 	tristate "Intel IPU Bridge"
+diff --git a/drivers/media/pci/intel/ipu6/Kconfig b/drivers/media/pci/intel/ipu6/Kconfig
+index 1129e2beb4bec..54bd264f7ccd4 100644
+--- a/drivers/media/pci/intel/ipu6/Kconfig
++++ b/drivers/media/pci/intel/ipu6/Kconfig
+@@ -10,6 +10,7 @@ config VIDEO_INTEL_IPU6
+ 	select MEDIA_CONTROLLER
+ 	select VIDEOBUF2_DMA_SG
+ 	select V4L2_FWNODE
++	imply VIDEO_INTEL_CVS
+ 	help
+ 	  This is the 6th Gen Intel Image Processing Unit, found in Intel SoCs
+ 	  and used for capturing images and video from camera sensors.
+diff --git a/drivers/staging/media/ipu7/Kconfig b/drivers/staging/media/ipu7/Kconfig
+index 7d831ba7501d4..c23a7844e15e2 100644
+--- a/drivers/staging/media/ipu7/Kconfig
++++ b/drivers/staging/media/ipu7/Kconfig
+@@ -11,6 +11,7 @@ config VIDEO_INTEL_IPU7
+ 	select MEDIA_CONTROLLER
+ 	select VIDEOBUF2_DMA_SG
+ 	select V4L2_FWNODE
++	imply VIDEO_INTEL_CVS
+ 	help
+ 	  This is the 7th Gen Intel Image Processing Unit, found in Intel SoCs
+ 	  and used for capturing images and video from camera sensors.
+-- 
+2.43.0
+
