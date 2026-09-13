@@ -1,101 +1,81 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78029372B50
-	for <regressions@lists.linux.dev>; Sun, 13 Sep 2026 10:39:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D99DD3839BD
+	for <regressions@lists.linux.dev>; Sun, 13 Sep 2026 12:32:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789295997; cv=none; b=N2tx8nWIofshA3X9kGtmvV3GV7XSiDCsFNEqfvQjZZOYyiBGaJQuH4GUBhUrS7tdmayGTqjvFsh8EBFnySyD9IfKfIn+4xCom4T9hBa6PWFfqXg8oR5iOp91M3/fybhomUwfGLhnQRUgkjTf59Hj5VUEClJ2hOJYlP8q7OtBmaY=
+	t=1789302737; cv=none; b=D4um2XAXr4ICRw5vJ7aw9B5WQXid0KezYAyi3T9CyfS/P6SpTboZrHQq9MseDhiUjHfMK7Mvrm273hlGcTPL9hLVwP4AR5j2WVkjAb2CSR1SHH1TPXpSWG3rdDVlCkK06PwU3TpndkGZJTUwre9LwH33scC3LNXX93XDb01YURE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789295997; c=relaxed/simple;
-	bh=tHR8MbHYnydo88nNqFpbUFuYlV+Az69Ygft7I7d7Z7E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OxArjXKGhzeH4UitV7Twn/ADvXaSP4uWyTlwMFnbNUtaVQUe6L1OgWSjNx1J3TidA3LKXcCB99XjPoRX4o0SSGcW4Fcs7mVK1YxZq+1535KoyTwkrf42EmwQ0R+PTRb8DvPuYRmfWUCyfFctAsIxBky5xVtBk1ARF/CjYvcdDH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I0qelsg8; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789302737; c=relaxed/simple;
+	bh=877YAeRSL7z5qyOylwXSNW214D0eYdMkoBXqf8geiz4=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=LmZt4Ch2rxNjMPBTyOF/qspBcYcve/JHd71K2K86GBYoV7/7hba3O+jvccCVje2aC9yfPrOJXBRtc87M47EWWnkBp0hSEJUnwZZUrmAxhuAjyUsJeEUzN1VQ7GPSmIptlW0YG3HTEeKVpsK+0X4R5tLSoSbLWfjevsXmEZxew2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=PJkdtRqS; arc=none smtp.client-ip=188.68.63.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I0qelsg8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 177FF1F0089F
-	for <regressions@lists.linux.dev>; Sun, 13 Sep 2026 10:39:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789295995;
-	bh=tHR8MbHYnydo88nNqFpbUFuYlV+Az69Ygft7I7d7Z7E=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=I0qelsg8o0zKdJP0HVkXin8YAkigNM1TbFg9+/NjYO8GwClKgiohyrd7hAlvS5AiM
-	 E4Xk/AR0zoKz+5Kz1GgEKM4DninWm+4ZulXSMR08NwMvPyeQJ6jS+XiZIBqE/xJvR/
-	 SKAqVfdQtce0EPPoJx6eUUQMfi5HlzaClvAA4K5Pb/yo8TCqpu7wfHXnXgXR2k77eP
-	 pMHleAdMTtrpUz+f476mSReB2rZsU8CwpjdPJgunR8M6XwPpA9QsbzyqE373VYWbQg
-	 HGF1biDaEasMmF3rMaSy4nCcsSIDgwYJpahqsSXifmXJEAclGW9WPITMbzTzBId5p2
-	 xuNAyr/h0wAQg==
-Received: by mail-lf2-f12.google.com with SMTP id 2adb3069b0e04-5b5e4f16f13so1183849e87.2
-        for <regressions@lists.linux.dev>; Sun, 13 Sep 2026 03:39:54 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AKwUvBwRyQp3u0Gm1qHf9inEwodCrLr8Wu3na8v7KYVn4M+b1I7O+bTEfT255pkiDAqg9AzL+5xWRMUkpfv1FQ==@lists.linux.dev
-X-Gm-Message-State: AFuF++mCMWz9h0Abx6tyhAd+mT+GqE9yKignvr6ZcZQkYmXIo2vEW0f4
-	92DOZhtuDWuX9vDkNe3b5cdQdxEbgYP1huF/ynG1Yfmdkkf2rjW5wWnJ6FNZhS5uLTWnHdfXIfA
-	ubM6T4gKObtjQcxytFIhOodAhBXDko4g=
-X-Received: by 2002:a05:6512:33d6:b0:5b0:113d:8ae5 with SMTP id
- 2adb3069b0e04-5b8a02fa142mr4883555e87.10.1789295993364; Sun, 13 Sep 2026
- 03:39:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="PJkdtRqS"
+Received: from mors-relay8203.netcup.net (localhost [127.0.0.1])
+	by mors-relay8203.netcup.net (Postfix) with ESMTPS id 4hjSMp2P7sz8f7w
+	for <regressions@lists.linux.dev>; Sun, 13 Sep 2026 12:32:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1789302726;
+	bh=877YAeRSL7z5qyOylwXSNW214D0eYdMkoBXqf8geiz4=;
+	h=Date:Subject:From:To:References:In-Reply-To:From;
+	b=PJkdtRqS9X08dOV7B3NKn1fypdOJaKSsuINn7S/KV6IIIK1dEmHxD74KYAFzB/g5I
+	 UlwWVaIhReXfd0oGeB+M17FqcG9pj+rFBUr2d3klmHhjUpGqigygW8zYTbbqbkfqLD
+	 ScS9IGhXwpN89SIhjZGnd9DnhEYPTKQAfbu3mL5XYJdHU57IhbOqcw8vDXxtF6U9g/
+	 jQqF4qhnoeblTXtK7rgYJwiUeDMJuqBXFoclP92nj31ezBGx2AupExv0g6SU85ySZM
+	 nGADkQeMKK6l0rIrmv7fSfTGkJWpSX9+Y64cRdWpbAaWXsVrXaMgLvpLHRHszAhsUz
+	 YkV08ltMpLetQ==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay8203.netcup.net (Postfix) with ESMTPS id 4hjSMp1hpsz8f6R
+	for <regressions@lists.linux.dev>; Sun, 13 Sep 2026 12:32:06 +0000 (UTC)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4hjSMn72rxz8tHB
+	for <regressions@lists.linux.dev>; Sun, 13 Sep 2026 14:32:05 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 4FA095F995
+	for <regressions@lists.linux.dev>; Sun, 13 Sep 2026 14:32:05 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <79f0496f-c468-4da2-a976-eada439408be@leemhuis.info>
+Date: Sun, 13 Sep 2026 14:32:04 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20260601194040.18223-1-miguel.vadillo@intel.com>
- <6e450fa2-8b40-48b6-b0b0-a1c4b72a383d@leemhuis.info> <d7f4a573-1a2e-4274-8c8f-41d398592356@leemhuis.info>
-In-Reply-To: <d7f4a573-1a2e-4274-8c8f-41d398592356@leemhuis.info>
-From: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>
-Date: Sun, 13 Sep 2026 12:38:37 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0gUJpgy5aaFfFqz273kE6kXkvZdHOAMGaOfVYK1pGFYsQ@mail.gmail.com>
-X-Gm-Features: AcwNN1U9mqIuU8DGcOAOBLtt3RB7sQ1rI2BqP9L0P-jjkEGcBXPxDq9INxt-0Io
-Message-ID: <CAJZ5v0gUJpgy5aaFfFqz273kE6kXkvZdHOAMGaOfVYK1pGFYsQ@mail.gmail.com>
-Subject: Re: [PATCH] ACPI: scan: Honor _DEP for Intel CVS devices
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Miguel Vadillo <miguel.vadillo@intel.com>, linux-acpi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
-	sakari.ailus@linux.intel.com, mehdi.djait@linux.intel.com, wei.a.xu@intel.com, 
-	atul.raut@intel.com, 
-	Linux kernel regressions list <regressions@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: 
+ <178930272549.2071666.15130392012594674410@mxe9fb.netcup.net>
+X-NC-CID: tFtOsyVgviX7WYiD4unkwDR40JFN2xAwzXGLCgi4OHSadS3ywQM=
 
-On Sun, Sep 13, 2026 at 10:30=E2=80=AFAM Thorsten Leemhuis
-<regressions@leemhuis.info> wrote:
->
-> On 9/12/26 18:50, Thorsten Leemhuis wrote:
-> > On 6/1/26 21:40, Miguel Vadillo wrote:
-> >> CVS (Computer Vision Sensing) is an ACPI-enumerated device that sits
-> >> inline in the CSI-2 path between the camera sensor and Intel IPU.
-> >> On platforms where CVS is present, the camera sensor's ACPI node
-> >> declares a _DEP dependency on the CVS device.
-> >>
-> >> The CVS driver must be fully initialized before camera sensor drivers
-> >> probe, because CVS controls the CSI-2 link ownership handshake (via
-> >> GPIO REQ/RESP), the MIPI/CSI-2 lane configuration, and the camera
-> >> power domain. Without CVS ready, the sensor driver can bind but the
-> >> CSI-2 stream will not function correctly.
-> >>
-> >> The CVS driver calls acpi_dev_clear_dependencies() at the end of its
-> >> probe() to unblock waiting consumers once it is ready.
-> >>
-> >> Move the CVS HIDs from acpi_ignore_dep_ids[] to acpi_honor_dep_ids[]
-> >> so that camera sensor enumeration is deferred until the CVS driver has
-> >> finished probing, matching the behavior already in place for IVSC.
-> >
-> > TWIMC, there is a bug report where one or two people claim that this
-> > change caused a regression; the report is quite verbose (guess LLM
-> > assisted) and hard to grasp for me as outsider; requests for
-> > clarifications from my side were not really fruitful. Not sure what to
-> > make of this, but I thought I'd let you know; for details see:
-> >
-> > https://bugzilla.kernel.org/show_bug.cgi?id=3D221988
->
-> For completeness, a report that is more straight forward to read (at
-> least for me) was now posted here:
-> https://lore.kernel.org/all/20260912185836.309071-1-manuel.knitza@googlem=
-ail.com/
 
-This doesn't seem to be about the same commit though as it mentions
-ipu-bridge.c which is not touched by the patch in question here.
 
-Thanks!
+On 3/9/24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
+
+#regzbot report:
+https://lore.kernel.org/all/20260908105717.496232-1-junjie.cao@intel.com/
+#regzbot introduced: 8e2b43d2c10b
+#regzbot title: edia: i2c: cvs: machine has no sound
+#regzbot fix: media: i2c: cvs: Get the wake IRQ without claiming the GPIO
