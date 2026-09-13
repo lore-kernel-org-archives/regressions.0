@@ -1,102 +1,113 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [46.38.247.119])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4C9339B4AE
-	for <regressions@lists.linux.dev>; Sun, 13 Sep 2026 09:04:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.38.247.119
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4415367F59
+	for <regressions@lists.linux.dev>; Sun, 13 Sep 2026 09:38:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789290257; cv=none; b=PMPVpKQho9T6afPzjWyExEVbuZqXMF+S56QMjHD1omEIM/5sO0b21xoJc/UFaTHQpR+5nTCBaiQ8YRx2wkEwYQvYgk12kmBx36cZJc5886lpvhPeFJ1Bhp5I0I4KaJJrpm2X0C5ex5NSQdU1n4P1fSv0jEfuQL0JjilfGqH66PM=
+	t=1789292283; cv=none; b=edxg/T+afjWj4pyHP5XJAZGhFdSJzqXYfVrYkG5i5MjTEOp+52kDGc2lm19qFJo/1OdTykjWV8+Z7E2XvSl8Ifjkoc+clS0gz3EsUmWsJv8QnJJSN9vxS6KryT59meLzUk3uxa4tuDyP+6YUwuasBoxEpr8G5R1iFivIiByEfJs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789290257; c=relaxed/simple;
-	bh=FqRABiScQWTUVxOxsOnT35qcLBrYzvgdptPhwHgTIIM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KsyT++4LWMzSiHWXS6lcFXD71lNumBw+arq/A+S+BaKbqoo6Kw8HZdSLqaCyEti+g9rvIYlHVxPIxAw/AXb/s1t9ncphrtfwfvgyeRowWwlraJ3q9leeWHdc5BaUz+3r6NgrcEXUyi/5mDtevMrBzZ0G7tcmO8trTyyOua/It+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=NfDXsNLY; arc=none smtp.client-ip=46.38.247.119
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1789292283; c=relaxed/simple;
+	bh=T/rAhOjt18aMA9s+5xkJ7Cs5xaj1ajpWSTdsJF0gngI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=tyVWszSI3QnIa1oyxqi1LKZJjaq2SzpQa35q5OTSUUS92BQITM15xs8Hnnqj1BNXTlkU/tZrsN/ebd/oSgweQUfHm30tZ8c2QGQcUFh866X9k4oS+btmfCMvs2ak/YcXilznCCgf9ehxuAMbQ6bh123Opwy9mFNnBWySZ5JnhBU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ceO1/Lar; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="NfDXsNLY"
-Received: from mors-relay-8404.netcup.net (localhost [127.0.0.1])
-	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4hjMlq2FQTz8LkW;
-	Sun, 13 Sep 2026 11:04:07 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1789290247;
-	bh=FqRABiScQWTUVxOxsOnT35qcLBrYzvgdptPhwHgTIIM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=NfDXsNLYDv6qLkPrEgyeVTdyerUILbYpsDpfWE5+PsIrPdxtm+3aLA1UCvJOazLNG
-	 BD/LrEWI3wAA3eV3Ph3i1uHcsF27Q+UwAp/N6ghx+BbZNMjvaoDJQELP80LEBy2CgA
-	 iAPsoDVa5tyeRpR1vIgBdw4C1Xxa4Ph82PEvsHev6QcTMbdh6vX004jjTkoF5F80Yc
-	 cyadQ03vP7FSrb7ulUUSY0ffwfke47+szcYNy9WJbIQ5T7kjAAQzSrvj3fQdutdHkE
-	 x7odM0CR6up4uAQl0qXF637gk/WmMfgnmIQuIoh6U3fQ2wTURXokAs6xVAU9tMooef
-	 fyeCLY4qIVLag==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-8404.netcup.net (Postfix) with ESMTPS id 4hjMlq1XDwz5012;
-	Sun, 13 Sep 2026 11:04:07 +0200 (CEST)
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4hjMlp5Cjyz8tHq;
-	Sun, 13 Sep 2026 11:04:06 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id DA63C5FAA6;
-	Sun, 13 Sep 2026 11:03:57 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <2741f995-dca0-4645-848c-34752d62574f@leemhuis.info>
-Date: Sun, 13 Sep 2026 11:03:57 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ceO1/Lar"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1789292280; x=1820828280;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=T/rAhOjt18aMA9s+5xkJ7Cs5xaj1ajpWSTdsJF0gngI=;
+  b=ceO1/LardPGKKjjKs0o4YhfS2uaqYziEfGQpx+koay1ORRRyGGfjg+7H
+   6Rpka/XsxON7pTq+cDINgw0gE/OxplaWp3hB+1NmXad7msy8xAoQSidRr
+   IwRXOwmHyzwnnCIeko3EW2KUzgDyGpq8vYehGubQlpdQtuPTcGQGbavm3
+   p+J9limqn2v03DUJ8PZahEjASQPe+8yIwNQVzBgB8xx7qMfOn3n8lfxPB
+   /a2p3fTij8Q/LM4sFm+4ej+ZuLdOeY4pxiV8oODlc5xhAdynCpu2AJmAM
+   0XtWe+7L7TNmBrrdDEYLx3iBxTF4CTqifvQN2kuOWbFXePlNz5bkJC7vf
+   Q==;
+X-CSE-ConnectionGUID: g3IcOXVCTyyd+s34xxdAvQ==
+X-CSE-MsgGUID: Y0rT21h6SKmuvx+941ERug==
+X-IronPort-AV: E=McAfee;i="6800,10657,11903"; a="89698044"
+X-IronPort-AV: E=Sophos;i="6.27,100,1787036400"; 
+   d="scan'208";a="89698044"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2026 02:37:59 -0700
+X-CSE-ConnectionGUID: XaxBlnTcTS+C6XdqrGC24w==
+X-CSE-MsgGUID: qrlloJM3TcKm0cpRZD8kLA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,100,1787036400"; 
+   d="scan'208";a="310636177"
+Received: from junjie-desk-dev.bj.intel.com ([10.238.152.71])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2026 02:37:56 -0700
+From: Junjie Cao <junjie.cao@intel.com>
+To: Manuel Knitza <manuel.knitza@googlemail.com>
+Cc: Sergey Zagursky <gvozdoder@gmail.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Miguel Vadillo <miguel.vadillo@intel.com>,
+	Mehdi Djait <mehdi.djait@linux.intel.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Thorsten Leemhuis <regressions@leemhuis.info>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	linux-media@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: Re: [PATCH v3] media: ipu-bridge: do not use the CVS device lookup for IVSC
+Date: Sun, 13 Sep 2026 17:37:49 +0800
+Message-ID: <20260913093749.584191-1-junjie.cao@intel.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20260912185836.309071-1-manuel.knitza@googlemail.com>
+References: <20260912185836.309071-1-manuel.knitza@googlemail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] ath12k suspend/resume breakage on 7.3-rc2
-To: Takashi Iwai <tiwai@suse.de>, Chris Lew <christopher.lew@oss.qualcomm.com>
-Cc: Deepak Kumar Singh <deepak.singh@oss.qualcomm.com>,
- Pranav Mahesh Phansalkar <pranav.phansalkar@oss.qualcomm.com>,
- netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
- linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-References: <87a4plsg4w.wl-tiwai@suse.de> <878q55sfxo.wl-tiwai@suse.de>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <878q55sfxo.wl-tiwai@suse.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <178929023825.1374849.273701538115019544@mxe9fb.netcup.net>
-X-NC-CID: nzkLd+oddwYESOweEoSZjOL4kVB7Z+cQ0KIRx63bqlfq7OVK+p8=
+Content-Transfer-Encoding: 8bit
 
-On 9/13/26 10:39, Takashi Iwai wrote:
-> On Sun, 13 Sep 2026 10:35:27 +0200,
-> Takashi Iwai wrote:
->>
->> on 7.3-rc2, the suspend/resume of ath12k WiFi on Lenovo Thinkpad T14s
->> Gen6 AMD model is broken.  Upon suspend, the network isn't recovered,
->> and the desktop got eventually frozen.
->>
->> The git bisect pointed to the commit
->> 544d85de4dc22c01badfd8cefa59829ce35c4858
->>     net: qrtr: Send HELLO message on endpoint register
->>
->> and reverting this fixed the problem.
->>
->> Below is the (stripped) dmesg output after the resume showing the
->> problem.
->>
->> As far as I understand, the problem seems to be the change of the code
->> flow: ath12k uses mhi_power_down_keep_dev() during suspend, so the
->> qcom_mhi_qrtr_remove() and *_probe() won't be called.  This makes the
->> driver endlessly waiting for the HELLO handshake upon resume with the
->> commit above.
-> 
-> ... and below is a quick fix I tested.  It seems working so far.
-Not my area of expertise, as you know, but have you see this fix for the
-culprit? Or is your problem a different one?
+On Sat, 12 Sep 2026 20:58:32 +0200, Manuel Knitza wrote:
+> On this machine the driver on that i2c device is Intel's out-of-tree
+> intel_cvs (from intel/vision-drivers), and it provides only ownership
+> arbitration and firmware update - no CSI-2 subdevice.
+[...]
+> There is no in-tree CVS driver to take that role.
 
-net: qrtr: resend HELLO on MHI resume
-https://lore.kernel.org/all/20260909055846.16539-1-daniel@quora.org/
+There is, since v7.2: drivers/media/i2c/cvs/, CONFIG_VIDEO_INTEL_CVS,
+8e2b43d2c10b ("media: i2c: cvs: Add driver of Intel Computer Vision
+Sensing Controller(CVS)"). It matches INTC10DE/E0/E1/FA, registers an
+"Intel CVS" MEDIA_ENT_F_VID_IF_BRIDGE subdev with sink and source
+pads, parses the port 0/1 endpoints ipu-bridge puts on the CVS node
+and binds the sensor through an async notifier (v4l2.c,
+cvs_csi_parse_firmware()), then calls acpi_dev_clear_dependencies()
+at the end of probe (core.c). That is the device c6b1b34b5090 and
+c28527ce5d06 are written against.
 
-Ciao, Thorsten
+Its module is also called intel_cvs. A vision-drivers DKMS build
+installs under updates/, which depmod searches before kernel/, so a
+CONFIG_VIDEO_INTEL_CVS=m kernel still binds the vendor module.
+modinfo -F filename intel_cvs shows which one you have; with the DKMS
+package removed the graph ends at a device that registers the
+endpoint. Not tested on a DA16260 here.
 
+> Gating on a bound driver would also cover the ACPI half of the same
+> conversion, c28527ce5d06, where a dependency on an unclaimed supplier
+> blocks enumeration outright - kernel bugzilla 221988.
+
+With the in-tree driver built, both gates pass. Kernels that carry
+the 7.2 bridge without CONFIG_VIDEO_INTEL_CVS are the bugzilla 221988
+case; Fedora has it enabled since 7.1.13-200. Whether the CVS entries
+in acpi_honor_dep_ids[] and ivsc_acpi_ids[] should sit under
+IS_ENABLED(CONFIG_VIDEO_INTEL_CVS) instead is Sakari's and Rafael's
+call.
+
+One more check on the DA16260 while intel_cvs is bound: the in-tree
+driver requests its wake GPIO, and on the XPS 14 DA14260 that line is
+the CS35L57 amplifiers' speaker-ID input, so all four amps fail probe
+with -EBUSY and the machine has no sound (three Fedora reports,
+https://bugzilla.redhat.com/show_bug.cgi?id=2529031). If
+dmesg | grep spk-id shows the same on the XPS 16, the fix is
+
+  https://lore.kernel.org/r/20260908105717.496232-1-junjie.cao@intel.com
