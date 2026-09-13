@@ -1,65 +1,65 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 581C737FF6D
-	for <regressions@lists.linux.dev>; Sun, 13 Sep 2026 12:59:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA7FB2E92BA
+	for <regressions@lists.linux.dev>; Sun, 13 Sep 2026 13:30:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789304396; cv=none; b=FoKOtR0xvGB8bO4kel/yyQkrCJdfp0YYAhL0ioceV+osOv2w7CFqENybYK/pH0m+1WawrPmeeQK6R0LgmZYMuPvjt8Hdx60mjoVYRBcbQKWaJpZJg3IisQhpR1QpRlPUAFEAG29z5SJD0pHw6HFKYNJ5+oNyWJgHcGzGfB9BN54=
+	t=1789306231; cv=none; b=MBR5gfhenJhtCqhS7XQz1CO7+lRC7AB0HnJ51JWPH0XeNISwsfKOkcMOEXyOUBgVpWymIyKyPbHi/kDQAkiHImZ5GMkCIl4U+PVBENjlOv13SqUwKA7CVaq83e3qXJ7/V1Z9LiuB91R1NdmbDqG2alLu6wwW2iYDCh5QmcmjULg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789304396; c=relaxed/simple;
-	bh=qnpM4ruKnqlJnYFFFBMw2wRcmLZYoPHRf16saVkviT4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZQr3Xqz2mf15lCpBUd5T0KliWbJsRD48ByC4Br9SQSslv0aDEsSSvE8bVotE7vQ5WE2TYZxbK40vJ1vbrBPzT4ggW0pwKgX2uEuR5IBYJRd5CixDWV/+cYP5l+pisj0IdeA0SUdV4hcfRbNkszAJ8HBt8s8n/0Y3QZvLqcRevhc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZgBhs7wa; arc=none smtp.client-ip=192.198.163.14
+	s=arc-20240116; t=1789306231; c=relaxed/simple;
+	bh=v67ykjHquTpdhGJFC1Yg0Bc8WcnPj76gEMicvECakh0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SwhPvcmDN84jWzJTwJj+bH3i2+DrO0MlPrdNwSwLvX2Ey4J9xuF0eTgtdhaxfluiASxAy1lY2OrWJeVH7WFrtQsHBttN7SWa/beDMwtUX8b58tqAZVimA3eKcXuuLlDw4dDsTNulUxHYv+UfuKDcW4Az1oF3PfvcivJpTLXoKuQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ENyAmWH+; arc=none smtp.client-ip=198.175.65.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZgBhs7wa"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ENyAmWH+"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1789304395; x=1820840395;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=qnpM4ruKnqlJnYFFFBMw2wRcmLZYoPHRf16saVkviT4=;
-  b=ZgBhs7wakh77ouHcG2G18ZGizJRi8s/KFtyhYjm6F3eU2Jx+U8cFR49Q
-   Vqbi06q+gP7hstXdky9VuzMrAM5G35KcJNW7t6wqAdVP9NB5QdULdXAXK
-   aEqq8Q7hckybM6gBf6EwMrC86xbEkhv97mNnc8I4SS4jF712Cc18sXP1p
-   sFFDnnGPswMbe742Gj3d2Tl18mMkn9xGGniQGoMN4htirmhRa6eT8N+MU
-   e1FX9eGuTDU6DxeLRpy3eQy0Sbe1l+fzNm4ts/JMsP68dYSNyabpIxAZ5
-   RNYVJJd/A9Ak7dia/sZfk2f0mm9XT1htmc+UH86fTZHNFB6t/IkVxvzIo
-   w==;
-X-CSE-ConnectionGUID: 7+m3h8OTSl+0HiPl29pTOw==
-X-CSE-MsgGUID: MgXTaoEjSjSrIeVmra2ZTw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11903"; a="89702074"
+  t=1789306228; x=1820842228;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=v67ykjHquTpdhGJFC1Yg0Bc8WcnPj76gEMicvECakh0=;
+  b=ENyAmWH+mLESN3laKi0Saz59rkefb4qqMAL/9m7uJa19yAxhrHjJGxBf
+   En6N2x9Qi0WCtKFrQSnhUpJznnsKsB+5Wb1tj3/Bx0ku6m/LKbZ1cy6oU
+   3XIQANe9J0j9WNrTSR2AI/rmaWrRIKj0H2EnJUDeXlLLYJRYG2LQ7voHU
+   IRLNp7yWXZgL/twlVfi2LHcjAZJr85Tzh04JFBSVgs8VoQJYUvTgNvY9m
+   GxaHD+WFLymZYkIn82q8OCDStC8NQxhr6KyckXJu2xK20Yg95lRekmPrF
+   59ZdjsNR8kND6F2Upa0javjGPHfjuFpLt4EcWibJecUNCmgf/rd9YMPXn
+   g==;
+X-CSE-ConnectionGUID: toAIaytfSgib2jfpU4oSTA==
+X-CSE-MsgGUID: u1rnBM+GQNS92DN3OruKWA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11903"; a="100018302"
 X-IronPort-AV: E=Sophos;i="6.27,100,1787036400"; 
-   d="scan'208";a="89702074"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2026 05:59:55 -0700
-X-CSE-ConnectionGUID: Gf3NMJ4rRBu4CiyrbrEZCg==
-X-CSE-MsgGUID: 16rsok3mSOmqdjQJkvBE0g==
+   d="scan'208";a="100018302"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2026 06:30:28 -0700
+X-CSE-ConnectionGUID: oL0M0WpWRMy+KGLosSg7Fw==
+X-CSE-MsgGUID: JJdBRzNoRk624Y71PLnYvA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,100,1787036400"; 
-   d="scan'208";a="272369460"
+   d="scan'208";a="295882722"
 Received: from junjie-desk-dev.bj.intel.com ([10.238.152.71])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2026 05:59:52 -0700
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2026 06:30:25 -0700
 From: Junjie Cao <junjie.cao@intel.com>
-To: Manuel Knitza <manuel.knitza@googlemail.com>
-Cc: Sergey Zagursky <gvozdoder@gmail.com>,
+To: Miguel Vadillo <miguel.vadillo@intel.com>,
 	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Miguel Vadillo <miguel.vadillo@intel.com>,
-	Mehdi Djait <mehdi.djait@linux.intel.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Kate Hsuan <hpa@redhat.com>,
 	Thorsten Leemhuis <regressions@leemhuis.info>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Spencer Bull <spencer@omarchy.org>,
+	"jan p . springer" <regnirpsj@gmail.com>,
+	Antti Laakso <antti.laakso@linux.intel.com>,
+	Mehdi Djait <mehdi.djait@linux.intel.com>,
 	linux-media@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: Re: [PATCH v3] media: ipu-bridge: do not use the CVS device lookup for IVSC
-Date: Sun, 13 Sep 2026 20:59:44 +0800
-Message-ID: <20260913125944.588731-1-junjie.cao@intel.com>
+	linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev,
+	stable@vger.kernel.org
+Subject: [PATCH v2] media: i2c: cvs: Get the wake IRQ without claiming the GPIO
+Date: Sun, 13 Sep 2026 21:30:17 +0800
+Message-ID: <20260913133017.624919-1-junjie.cao@intel.com>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260913093749.584191-1-junjie.cao@intel.com>
-References: <20260913093749.584191-1-junjie.cao@intel.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -68,33 +68,87 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On Sun, 13 Sep 2026 17:37:49 +0800, Junjie Cao wrote:
-> Its module is also called intel_cvs. A vision-drivers DKMS build
-> installs under updates/, which depmod searches before kernel/, so a
-> CONFIG_VIDEO_INTEL_CVS=m kernel still binds the vendor module.
+The wake line is only used as an IRQ source, yet the driver requests
+it with devm_gpiod_get(). On the Dell XPS 14 DA14260 (Panther Lake)
+that request lands on the pin the four CS35L57 amplifiers read their
+speaker ID from. Each amplifier's _CRS carries
 
-Arch's kernel is not such a kernel. config.x86_64 of linux
-7.2.4.arch1 has I2C, ACPI, VIDEO_DEV=m, IPU_BRIDGE=m,
-INTEL_VSC=m, VIDEO_INTEL_IPU6=m and VIDEO_INTEL_IPU7=m, and no
-VIDEO_INTEL_CVS line at all: the option sits in the
-"Miscellaneous helper chips" menu, which
-MEDIA_HIDE_ANCILLARY_SUBDRV hides on the default
-MEDIA_SUBDRV_AUTOSELECT=y without EXPERT, and nothing selects
-or implies it. olddefconfig with that config on current
-mainline writes no symbol; with EXPERT=y it shows up as
-"is not set".
+  GpioIo (Shared, PullNone, 0, 0, IoRestrictionInputOnly,
+          "\_SB.GPI1", 0, ResourceConsumer,,) {20}
 
-So on a stock Arch kernel, and per
-https://github.com/omacom/omarchy/issues/10948 on linux-ptl,
-the DKMS module is the only intel_cvs there is, and without it
-nothing clears the sensor's _DEP on INTC10E1. Either way the
-camera is gone on 7.2. Patch: "media: i2c: cvs: Do not hide
-the option in the ancillary menu", sent separately; with it
-that config gets intel_cvs=m on the next olddefconfig.
+and INTC10E1 builds its _CRS at runtime from pad numbers kept in NVS:
+a GpioInt (Edge, ActiveLow, Shared) first, then an Exclusive
+output-only GpioIo for reset and two lines on the USB GPIO expander.
+The driver maps index 0 to "wake". While it holds the line, cs35l56
+fails and does not retry:
 
-For the DA16260: apply the patch, or set EXPERT=y so the
-option is visible, then build 7.2.x with
-CONFIG_VIDEO_INTEL_CVS=m, uninstall the vision-drivers DKMS
-module for that kernel, boot. Without one of the two
-olddefconfig drops the =m again. The spk-id check from my
-previous mail applies once the in-tree driver binds.
+  cs35l56 sdw:0:2:01fa:3557:01:2: error -EBUSY: Failed to get spk-id-gpios
+
+All four fail and no card is registered. Fedora 7.1.13 is the first
+Fedora kernel with the driver enabled; 7.1.12 on the same board
+creates the card, and 7.2.4 creates it again with intel_cvs
+blacklisted. Where ipu-bridge does not expose the CSI endpoints, CSI
+init returns -EPROBE_DEFER and every retry claims the line again for
+the length of the handshake, which is how 7.1 fails as well.
+
+Take the IRQ from the GpioInt entry with acpi_dev_gpio_irq_get_by(),
+as the I2C core does for client->irq; this also applies the trigger
+type from _CRS. The vendor driver in intel/vision-drivers does the
+same. The driver binds as a platform device too, hence the explicit
+lookup. A DKMS build of the patched driver on a DA14260 running
+7.2.4 binds with all four amplifiers probing and the camera working
+(third link).
+
+Fixes: 8e2b43d2c10b ("media: i2c: cvs: Add driver of Intel Computer Vision Sensing Controller(CVS)")
+Cc: stable@vger.kernel.org
+Reported-by: jan p. springer <regnirpsj@gmail.com>
+Closes: https://bugzilla.redhat.com/show_bug.cgi?id=2529031
+Link: https://github.com/thesofproject/sof/issues/11152
+Link: https://github.com/omacom/omarchy-pkgs/pull/419
+Signed-off-by: Junjie Cao <junjie.cao@intel.com>
+---
+v2: decode the INTC10E1 _CRS from the reporter's acpidump; add the
+    blacklist confirmation and the tested DKMS build; Reported-by and
+    Closes. Code unchanged.
+v1: https://lore.kernel.org/r/20260908105717.496232-1-junjie.cao@intel.com
+
+ drivers/media/i2c/cvs/core.c | 16 ++++++----------
+ 1 file changed, 6 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/media/i2c/cvs/core.c b/drivers/media/i2c/cvs/core.c
+index d4a3b9c3bab1e..8d857bbd8ab51 100644
+--- a/drivers/media/i2c/cvs/core.c
++++ b/drivers/media/i2c/cvs/core.c
+@@ -725,8 +725,6 @@ static int cvs_core_probe(struct device *dev, struct i2c_client *i2c)
+ 	}
+ 
+ 	if (ctx->res == ICVS_FULLCAP) {
+-		struct gpio_desc *wake;
+-
+ 		ctx->rst = devm_gpiod_get(dev, "rst", GPIOD_OUT_HIGH);
+ 		if (IS_ERR(ctx->rst)) {
+ 			ret = dev_err_probe(dev, PTR_ERR(ctx->rst),
+@@ -734,14 +732,12 @@ static int cvs_core_probe(struct device *dev, struct i2c_client *i2c)
+ 			goto err_put_ipu;
+ 		}
+ 
+-		wake = devm_gpiod_get(dev, "wake", GPIOD_IN);
+-		if (IS_ERR(wake)) {
+-			ret = dev_err_probe(dev, PTR_ERR(wake),
+-					    "failed to get wake GPIO\n");
+-			goto err_put_ipu;
+-		}
+-
+-		ctx->irq = gpiod_to_irq(wake);
++		/*
++		 * Do not request the line: another device's _CRS may list
++		 * the same pin, and its driver would then fail with -EBUSY.
++		 */
++		ctx->irq = acpi_dev_gpio_irq_get_by(ACPI_COMPANION(dev),
++						    "wake", 0);
+ 		if (ctx->irq < 0) {
+ 			ret = dev_err_probe(dev, ctx->irq,
+ 					    "failed to get wake IRQ\n");
+-- 
+2.43.0
+
