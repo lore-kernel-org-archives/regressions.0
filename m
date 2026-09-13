@@ -1,209 +1,97 @@
-Received: from mail-wm2-f12.google.com (mail-wm2-f12.google.com [74.125.225.140])
+Received: from mail-ej2-f12.google.com (mail-ej2-f12.google.com [74.125.228.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0708C36998A
-	for <regressions@lists.linux.dev>; Sun, 13 Sep 2026 16:17:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.225.140
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789316279; cv=pass; b=n+YVrCHE+WTgKxL1xZTMrgovoXlZiTL4cRYY8OWM4lIl+DCZw3VIOVHl1ZnJ1twR+mnTC79/Y0bCXfqtYexWuFtAdv9nFdfSqhMNT4XecFjZfoKFhanzfgpSSTeX/7A/oKDKqTkrONUlsu8Ey7+Z8weRpF5nzL10+ytJDisIEco=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789316279; c=relaxed/simple;
-	bh=qrjaa3A/zSN3z/kTwF5pNuuhb8WEmUsn7IuE9lN2/WE=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10E7D369D74
+	for <regressions@lists.linux.dev>; Sun, 13 Sep 2026 17:41:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.228.140
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1789321272; cv=none; b=iA12nlvwj2yYoDOypx3pD4Ui240O+t12P8z5MUImZgroilixDcbghRuzVwRUOyMnNbmBL620UvPpZd65pPqe3dOQIfnr5GogFYOkBeOcjDT5d1syr61h1tCUFqxfiaLiRsJVVAdaDaYRXjDWstp5JYrLyrjRk/Bk4uCW4PW2+yg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1789321272; c=relaxed/simple;
+	bh=ww2B+WA7TV01+U+VaY667gb9B0QSkWPf0yPtPcX2028=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DnK2rV6vZxvis5jsjb2oJCh0kVs4fwmc/M3Wwk/0//xmUr5m/+hJu0uILZjmVEQeo4DXuCIDbBBXiQ6DHYkQfhqUvi+CnnGT2yvYFFmCq4/dUuqjhF2ZUOUIOPvooT5o5CKLMokjB4pUbauSLlddH8Fdp2q4CW7WHMzGRtF6lEw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=biKHytqZ; arc=pass smtp.client-ip=74.125.225.140
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=BfkXjkBN17IAtufY/L9Jl6KRyFGMj8UCDibePxaEuNz58eCVMeFSHNycGjNZIkL8IdHc34gzG8dVitfsuzO2Mf/8/iOfyae2+GBeg5WwcOz6xtumHCjaYM3okfOTN+H5mc/i0Qhn8tEIFWF8Km7eTH5X8SoFpkH9eGIEkZ7zVBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=FXMxXabC; arc=none smtp.client-ip=74.125.228.140
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="biKHytqZ"
-Received: by mail-wm2-f12.google.com with SMTP id 5b1f17b1804b1-49b5e50eb70so26655e9.1
-        for <regressions@lists.linux.dev>; Sun, 13 Sep 2026 09:17:55 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1789316273; cv=none;
-        d=google.com; s=arc-20260327;
-        b=o3zLZHTobpaSNrh4XKfKm6bsCrXKdfHHIH9BC4OXQSDfWo6FS449jDBDTpKVN34z0w
-         R9c94RqHJZFuuW+0zJRk088u1VgTwdeh24Fl15aKW9yAchhLCN598qKU9em9Xvhb9xzU
-         DvIZrIQWGSf0M11SR2eV3Xp5JSy1ii1JlZt7A4Pw5QA0u5VV92HJ750BX+x7F/a0RpBh
-         QXVkinON+au1+Hrx/IE2fJPA32cpo2pq2qFfksWz/3BB5X6HjkZvKQX3acvMDfcQkcRE
-         9cEewXHIhNpIDR7PLSkVfrjekBIBGtXplPVdG673bxKnKLMY4gm53pVPCBLGHX8JAWGP
-         LQ4g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=yt+Ej+RFTyAlxOsRS7i/kggIDyE3eMtCY51oxHgQhKU=;
-        fh=fw+LZW/ltlEc/PoWsXjsV37BaSh4aFjwoId9TrowY4M=;
-        b=b/wSKZHW3GqaK9AnkcVE41U2JoA43A/AgYNjhF6KE+45vfjOAgD+fF4bJKV6rsdv0C
-         Vm6K8M8BRuWvuHcmcbI8VMWzV3NI17T6c54UkGcH0iK5+c11jzRb5jB55P4GDjhHL3RC
-         YI8inAAA6Kuxta74VL+aZkTbhdrxLadFhJ7vNm4WRnHMd0Pi2yJbDfug3RVXwv1qt1FR
-         774GkjPNZc8DY34RxpiO2jKpPRl7Wm8hCstCoBW9pl0iapVmO1WDKTT+TGDCgPrA0eMR
-         NjrdY140KIHYorxP7uqDPsH+ySl8xs4tTz2UXvOihH4UjwoO7cHU5y4ITM0E9p3TS7F3
-         7Czg==;
-        darn=lists.linux.dev
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="FXMxXabC"
+Received: by mail-ej2-f12.google.com with SMTP id a640c23a62f3a-c264788fd58so184310766b.1
+        for <regressions@lists.linux.dev>; Sun, 13 Sep 2026 10:41:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789316273; x=1789921073; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=yt+Ej+RFTyAlxOsRS7i/kggIDyE3eMtCY51oxHgQhKU=;
-        b=biKHytqZjB+esaY1+mT9jeC63olO28Z/cOzdhc/4rAkrXqMnhryRPlPYqiWRQNMBjQ
-         MynGTP+pcY0r/CqJ+Gt4sxhfp/4unG9vF4bwYjwDzzLvshttcAT7NmQMaFA3Jq92YIr2
-         Gg7wOD8hh1t0E6WRBWnRCYh8FS0WcQqy2an0rbYRjh+Dx/VRJZ/oLsy40FGul9ACUBq6
-         +3DQX/E4kSXlbIdN+zibDUpVfxsCbfj8KVnmQPC566bWDvw9xkQQ5kHl+GpioFe2Bwqn
-         XasR/dcmB71rvUo+kC8dHupavmJlhKWG/xJx4VPnVZDN160PcyDHSpyDPc9juanVqJbO
-         4pFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1789316273; x=1789921073;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+        d=linux-foundation.org; s=google; t=1789321268; x=1789926068; darn=lists.linux.dev;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=yt+Ej+RFTyAlxOsRS7i/kggIDyE3eMtCY51oxHgQhKU=;
-        b=UnCc8C975Wn7AElhYGax/utdAxaePku8ILBMy3iZlk7gTMBtPnxhqU4Tvt5H4lvciY
-         RLKtM4p3abvKutHIMsatsM5v8qLHrLPdCMkma8fQVVtfx/wwdiRzSU1ubegA70cbroXX
-         ne3mZVNjm/GPF0vO3y8SNpAKjfXbX9d6jU7LT/JXGuvzQIQ3t524Ko+t5YcW9BhImwqa
-         1b1SX6ZR7kl79kA6sY72PYeg9EEq1ygJJu/bN638IwPPWVNVMl0oKmmz5K/oBA4TpdyE
-         tzZ4kQmjSH+CM2su3eBhwwdbjQb5GCp3cdjfxWCIXdVUdzSfzULqYz9bPqbjsmE+UnN4
-         Dvww==
-X-Forwarded-Encrypted: i=1; AKwUvBw55Qdkj+Tae/2U2nL9rhq8tOk3hvWG61jTEzaDG2jGrONoqii9UL9Zny102Zpgr7meNSa/pvLiZVYAFA==@lists.linux.dev
-X-Gm-Message-State: AFuF++nd5urbmX2N2oRXsPa4K2X4VowpprVQvkWOJHSrxrsa2jyxYOTe
-	Cr7XgZpfuiWnRDBmf+bseFsL8NbT5WD/kc1NUYyqA1Co4QQzRAUfTl4J23ZqxE1C4VU2cIlpA3T
-	9FHHDpNA68QCyLfi6W/S2NvL3cFaQs1r52FubsvLe
-X-Gm-Gg: AYBFou3mfw9n31xWI9bnC89iHW2G6mAeWDQLDgI6KmoCzO2Snys/TD6eTuLWu1tMCBs
-	JONOgZa1CV3InDyz+ll3dIJEuWgY8VzDrr75nlW9UL3Dg+PgBFFYfYYhboBamkhtMK9Cgb++OS1
-	52OKTB8ZoSuzv6U9jNZ+soMx8eRqGnPFyfw15P4BMRT8X5jEz8wbLvdEP9P9hEsAHoCojtXAdfe
-	EKR+vjMfz5i+0Rd6XqpVhITt7ZAnfRq1hvE+V0OzVqwwWTR3cEOerFoQ6Dlr1iFk+f0PUfv1sfH
-	Jeen+1naZ8k1ev3SW1fvm4SCY0xTe54z1UGUF74Cps6LMar1woVcOKYz44ZGbiUM5WN7+ARHUIZ
-	XtrxqOGHVig==
-X-Received: by 2002:a05:600c:3593:b0:49a:d4d9:e417 with SMTP id
- 5b1f17b1804b1-49e754445b3mr671735e9.6.1789316272535; Sun, 13 Sep 2026
- 09:17:52 -0700 (PDT)
+        bh=9H2Y871zvJ9dINBDYYDJG2gsh1yKXtKEQWd9l/ilLgM=;
+        b=FXMxXabCBjb2nP0q6tubiF8M046Qta0blA/O+W+qISk8wu3CsxqTvkOFpMx4ffyxBo
+         MSXtM2xcwXrOrJ+Un9jT0zUeBerhld8rQUEpKec7YF9Bi0MjUDOk8rW+7pCGMrxQ869E
+         691DP26uIfe0VJHeayphi9qHiTmtYJ44lAOsU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1789321268; x=1789926068;
+        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
+         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=9H2Y871zvJ9dINBDYYDJG2gsh1yKXtKEQWd9l/ilLgM=;
+        b=iNFkQ8Ilj8pwskwq9bNsILZSJo8j1ZzAG7d3xhVEOb1xNjnru3FuGZrMMfDG4gLZDN
+         EXeoZyC2XY5UoJhUj6igU2fpT0B0FljprQa50BZvE2SOxKhD36eRjF19iHhGf15byzV3
+         wq7bnLgBxYpJrvTDALwQGyVToQirW2v9I7PTFGZcF5FAhxJBYUkKEuCyvBBBsNTTIkzb
+         EdyC5c3SB980jT9s/YBd4ce+LlmKFUoxjxr1cJKotV5kh8c+z/ZbjXT8bB6TFAmcv1K4
+         eeayin+Um2ijB3/MKGSOsgWtV22quTA08h8iiQ/Ydo+7smvND9PSO5QmvuYt5UtXyPwN
+         JG/Q==
+X-Gm-Message-State: AFuF++m4onyq0AfoPqMHSK5m9xoZGSWxe8jSQXOClabxQMxNAujXo1u4
+	FL1bPxYru8mnnYBSH981METSW6fXxtF+fD0VJCDmsQ1QZ7CGRsokn4XggAX8Njhf1TpJkS+O5JZ
+	0jEZR4Bo=
+X-Gm-Gg: AYBFou1+o5uEvBeynXSbBz11l6dzk1lBM6ADPJuIQ2Ks437keahns3WPI4orTXbcx88
+	Lg+c2JbtvPxMkoByH2l1kHjQovN1eSeTCVl22QrujfnIKNPG+XI8KjGOQgbP2GDn0gJIoZoh64c
+	qEPNymS9npWpBsOAuwEzqz/UF+waIV+u4vxjXlz+d65ail2idsAV79oSgb7wR9yl7S+BYNpOnM+
+	OLJyY0EPfu63itPnfU7WH1jHzx2HpEYzxKX9ppiulThr9xCIaLuihApTAf7Uldn2fc6k1FzkUW5
+	787XM2PksXcUXxr5vJWsyvdrZoDUw84HT2uRRZVDkkzFTdjPtc9iXdssZqgyXiqOFl3ttsKlsi0
+	3eqrqkGDx+iZt5FHW3MEVRsFLsqTe7jIpsiyuCqOKBvt7Tmf28g4YEhGioBzd0qEIZ5Bh87Ftsb
+	2+CKPsgquBnacSYSPIHLEED4vam2XrA2MjmtKTazQfidY8c/JhUhBGUZC97F8kGmVjWMatXu38w
+	KQSSOcyDOwE4ayieM77oAcphTxbhhBEpScaw8GzDgnPaTp9Eg==
+X-Received: by 2002:a17:907:72d0:b0:c29:48a1:be1e with SMTP id a640c23a62f3a-c2985877b8fmr415411766b.25.1789321267992;
+        Sun, 13 Sep 2026 10:41:07 -0700 (PDT)
+Received: from mail-ej2-f12.google.com (mail-ej2-f12.google.com. [74.125.228.140])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c2966063a2asm315346266b.27.2026.09.13.10.41.07
+        for <regressions@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 13 Sep 2026 10:41:07 -0700 (PDT)
+Received: by mail-ej2-f12.google.com with SMTP id a640c23a62f3a-c254fa4c24cso176149566b.2
+        for <regressions@lists.linux.dev>; Sun, 13 Sep 2026 10:41:07 -0700 (PDT)
+X-Received: by 2002:a17:907:3f8e:b0:c25:9102:ee with SMTP id
+ a640c23a62f3a-c29856feba1mr427254966b.3.1789321267492; Sun, 13 Sep 2026
+ 10:41:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CANGjgdn=H50AaA-+O_GA-hkE9UwLANmkjx1zRsKUzxF5za8VfQ@mail.gmail.com>
- <aqa7KgIJYGgf7INk@slm.duckdns.org> <CANGjgd=f9n7zEZS=xi71y_dY6Uk75_qgP9qVDkYBusNz9sp2sg@mail.gmail.com>
-In-Reply-To: <CANGjgd=f9n7zEZS=xi71y_dY6Uk75_qgP9qVDkYBusNz9sp2sg@mail.gmail.com>
-From: "T.J. Mercier" <tjmercier@google.com>
-Date: Sun, 13 Sep 2026 09:17:40 -0700
-X-Gm-Features: AcwNN1UGrvqbq3HFY7pcrIOl_jX8tfzTKZIUJ5QTX30rH2G51YS_Yo5JvuNEb8Q
-Message-ID: <CABdmKX2Oer9wrxWdR8s48Czro8H51HY+S_mfnUj-RvhjCM1RgA@mail.gmail.com>
-Subject: Re: [REGRESSION] kernfs: empty cgroup rmdir latency after
- delete-notification changes
-To: Chengfeng Lin <lin2530632123@gmail.com>
-Cc: Tejun Heo <tj@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jan Kara <jack@suse.cz>, 
-	driver-core@lists.linux.dev, cgroups@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	regressions@lists.linux.dev
+References: <46403cf8-9a81-4596-87eb-dde58ae4c5db@leemhuis.info>
+In-Reply-To: <46403cf8-9a81-4596-87eb-dde58ae4c5db@leemhuis.info>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Sun, 13 Sep 2026 10:40:50 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wi70keQUG4ZDdXiG-HAeFQSzVBejEAUOgQy7rqdQ9EtUw@mail.gmail.com>
+X-Gm-Features: AcwNN1XLn2ExfvHCXGShVUJeV_gCvDuPfG1koc4Na-S68MppeIKQ_fCxKbGSmlY
+Message-ID: <CAHk-=wi70keQUG4ZDdXiG-HAeFQSzVBejEAUOgQy7rqdQ9EtUw@mail.gmail.com>
+Subject: Re: Quick regression status pre 7.3-rc3
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Linux kernel regressions list <regressions@lists.linux.dev>, LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Sun, Sep 13, 2026 at 8:47=E2=80=AFAM Chengfeng Lin <lin2530632123@gmail.=
-com> wrote:
+On Sun, 13 Sept 2026 at 07:32, Thorsten Leemhuis
+<regressions@leemhuis.info> wrote:
 >
-> Hi Tejun,
->
-> Thanks. I found this during research into kernel performance regressions,
-> using a microbenchmark of cgroup creation and removal. This was not
-> prompted by a production issue.
->
-> I reported it to document the added removal cost and ask whether some
-> of it could be reduced while preserving the fixes. I agree that the
-> roughly 3 us increase per removal does not, by itself, demonstrate a
-> significant impact on real workloads.
->
-> Thanks,
-> Chengfeng
->
-> Tejun Heo <tj@kernel.org> =E4=BA=8E2026=E5=B9=B49=E6=9C=8813=E6=97=A5=E5=
-=91=A8=E6=97=A5 23:03=E5=86=99=E9=81=93=EF=BC=9A
-> >
-> > Hello,
-> >
-> > On Sun, Sep 13, 2026 at 10:43:04PM +0800, Chengfeng Lin wrote:
-> > > I found an increase in empty cgroup removal latency across 507d8ce13f=
-5b
-> > > ("kernfs: Don't set_nlink for directories being removed") and eea5d2b=
-b34ba
-> > > ("kernfs: Send IN_DELETE_SELF and IN_IGNORED"). With sched_ext disabl=
-ed,
-> > > rmdir() went from about 6.5 us to 9.6 us, an increase of 46-47%.
-> > > The result held in two independent runs.
-> >
-> > I don't want to make cgroup removal unnecessarily expensive but at the =
-same
-> > time it's not an operation that I consider to be a hot path, so as long=
- as
-> > the operaiton can finish in a reasonable amount of time and single digi=
-t us
-> > definitely is, performance of rmdir usually isn't something which is hi=
-gh in
-> > priority. Can you please detail why this matters for you?
-> >
-> > Thanks.
-> >
-> > --
-> > tejun
+> Hi Linus! Here is a quick report about a few unresolved regressions from
+> the current or the previous cycle that I found worth mentioning for one
+> reason or another; fixes are available for all of them:
 
-Hi Chengfeng and Tejun,
+I applied three patches for these issues and merged them. That
+hopefully takes care of at least the IPU bridge and the mt76 issues.
 
-We use this kernfs IN_DELETE_SELF feature on Android where multiple
-cgroups are created and removed frequently on a per-application basis,
-but we hadn't noticed a significant delay due to the inotify
-functionality during cgroup removal. It's probably masked by much
-larger delays (milliseconds) we regularly see due to unreleated issues
-with cgroup locks like priority inversion with cgroup_mutex, and
-contention for cgroup_threadgroup_rwsem.
+The rest appear to at least be in linux-next, and I left those alone.
 
-As far as what we can do, I think avoiding inode lookups for kernfs
-nodes that never had an inode created should improve the situation. It
-doesn't eliminate the locking overhead, which I don't think can easily
-be eliminated. The code below doesn't deal with inode eviction either,
-but at least files which are never accessed won't introduce the inode
-lookup overhead.
+Please do double-check that what I did matches what you expected...
 
-diff --git a/fs/kernfs/dir.c b/fs/kernfs/dir.c
-index 4f9ade82b08a..3ec9f79b1aa2 100644
---- a/fs/kernfs/dir.c
-+++ b/fs/kernfs/dir.c
-@@ -1523,6 +1523,9 @@ static void kernfs_clear_inode_nlink(struct
-kernfs_node *kn)
-        struct kernfs_root *root =3D kernfs_root(kn);
-        struct kernfs_super_info *info;
-
-+       if (!(kn->flags & KERNFS_INODE_INITED))
-+               return;
-+
-        lockdep_assert_held_read(&root->kernfs_supers_rwsem);
-
-        list_for_each_entry(info, &root->supers, node) {
-diff --git a/fs/kernfs/inode.c b/fs/kernfs/inode.c
-index 38b28aa7cd02..f8b4a8b8ade4 100644
---- a/fs/kernfs/inode.c
-+++ b/fs/kernfs/inode.c
-@@ -208,6 +208,10 @@ static void kernfs_init_inode(struct kernfs_node
-*kn, struct inode *inode)
-        set_default_inode_attr(inode, kn->mode);
-        kernfs_refresh_inode(kn, inode);
-
-+       down_write(&kernfs_root(kn)->kernfs_iattr_rwsem);
-+       kn->flags |=3D KERNFS_INODE_INITED;
-+       up_write(&kernfs_root(kn)->kernfs_iattr_rwsem);
-+
-        /* initialize inode according to type */
-        switch (kernfs_type(kn)) {
-        case KERNFS_DIR:
-diff --git a/include/linux/kernfs.h b/include/linux/kernfs.h
-index e21b2f7f4159..87f074ce19d3 100644
---- a/include/linux/kernfs.h
-+++ b/include/linux/kernfs.h
-@@ -113,6 +113,7 @@ enum kernfs_node_flag {
-        KERNFS_EMPTY_DIR        =3D 0x1000,
-        KERNFS_HAS_RELEASE      =3D 0x2000,
-        KERNFS_REMOVING         =3D 0x4000,
-+       KERNFS_INODE_INITED     =3D 0x8000,
- };
-
--T.J.
+             Linus
