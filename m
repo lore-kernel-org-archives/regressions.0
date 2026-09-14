@@ -1,63 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mail-4397.protonmail.ch (mail-4397.protonmail.ch [185.70.43.97])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5B5E49CF5C;
-	Mon, 14 Sep 2026 18:08:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 214B839280A
+	for <regressions@lists.linux.dev>; Mon, 14 Sep 2026 22:05:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.97
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789409317; cv=none; b=cJar2Fj9S+Awq9mBPHDetmLEpqfmUA9wzCDaRf9JkqZpKH9bYtVvyHN/p6YduTrF+l22EhDT+sU0yqjoS5cILkQKl+/BAe6tKdcJsNP42v5svQp5MnTK8tDdueBqbNowxHyTE8iBBf4ZK3dhCridvfOh/sYFqhjOJ3zTOUTiLZ8=
+	t=1789423556; cv=none; b=J3on59+hWV93FOKWAYjouF9u+W+DD+h+Uex1cAC7yhJSPK746godpARiQA0JwmblkSZHgTBWsPIE8PXio/x63IZ0FctAAF9ipSKE65nFfqzz6yOP/7T5pcz+UHOxpZMXaknPkWc47agWMcILFE3AYhUUWmSWbibgeSSE3eKyhMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789409317; c=relaxed/simple;
-	bh=BqwgUCk+TeQUOmg4iNRmUuYbbU3Cvxu4gaM5z3vc36w=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=RNi6Uopjj1uuyyWkZ3ugov8yR9LVDRmzLuMevnP3kWT3WIShklTGXl3k3jQ7+uUEA0gfYILoNQyGSS9f3ZYDiJYS6vnDMU3L2r+VdDC/L2k33McVA0NX87E33LOM5P2P6Gt/+/jmKXTdNpXGyvgSSBQDDxRovjp+qPpkzWx0rDU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OgYrhlOa; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789423556; c=relaxed/simple;
+	bh=YHFgBNwlBuPlwY9TiBTmQDMECMDowJ+LRsmJZnVM6rU=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=SX5PT4V1HFHUEroCCT9ZAajep2kEv9eoM4OtdAZZGlP8PtZQ8pgPze2/DhIQN2fhyJ/gieGu9bR9hqyCL6uYhBd8z3cYGxHtBFRp9veg5lvFM56SSYIOQGP8j+F3iOR5YxZjFNez9ax/4bGKKjsTotXnEZ/nF7FA6QJvZGu1bqY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=httpd.dev; spf=pass smtp.mailfrom=httpd.dev; dkim=pass (2048-bit key) header.d=httpd.dev header.i=@httpd.dev header.b=pdNahPvt; arc=none smtp.client-ip=185.70.43.97
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=httpd.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=httpd.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OgYrhlOa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE14A1F00893;
-	Mon, 14 Sep 2026 18:08:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789409302;
-	bh=D7QxJbEd4NS0a1jbwSzHb2FlLrmd8sQhM1tiq4t06cE=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc;
-	b=OgYrhlOaIJC6v+7sJ2tsF0OXPJ2fN3tfRXwPHEmIydriNhAbY9jsujggGqBLdkIIL
-	 kUan1bkotQ9ajMFmI7Fmti+rEZUceACylG/tb55/OT9Xg2eOpBaCpcm5NE3QALfhy2
-	 MeA1eIECVizsyl9ZgtnDpjHpw4VgVKjOrCYBCG4Dfeq8ZZGxxSnIy0vHaQ3ATsju0f
-	 QUVP1kEuu8TjAt/ZXaBsoG1O10/zTLLYl9VzU6aoPoaNnzoyXoBKllXituZy4Dk8lu
-	 D78Uk8n3ivwmLI63Vgu4BXWwN1IqNSzSrdaIdT1r6fjOcES8s7pCIuDg863K64QhUF
-	 zenVbFKWxcYPQ==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 199783924FD1;
-	Mon, 14 Sep 2026 18:07:19 +0000 (UTC)
-Subject: Re: [GIT PULL] 9p regression fix for 7.3-rc4
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <aqe_sF0kM6mGn_KY@codewreck.org>
-References: <aqe_sF0kM6mGn_KY@codewreck.org>
-X-PR-Tracked-List-Id: <v9fs.lists.linux.dev>
-X-PR-Tracked-Message-Id: <aqe_sF0kM6mGn_KY@codewreck.org>
-X-PR-Tracked-Remote: https://github.com/martinetd/linux tags/9p-for-7.3-rc4
-X-PR-Tracked-Commit-Id: c60ae98c5aa64021751b38ab1313b19d620bf640
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 59826bc5a42a5e85dc21d4cdf3892f22dcda65f8
-Message-Id: <178940923760.1155813.17521856555663175364.pr-tracker-bot@kernel.org>
-Date: Mon, 14 Sep 2026 18:07:17 +0000
-To: Dominique Martinet <asmadeus@codewreck.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Michael Mulqueen <mike@method-b.uk>, ericvh@kernel.org, lucho@ionkov.net, dhowells@redhat.com, pc@manguebit.org, linux_oss@crudebyte.com, v9fs@lists.linux.dev, linux-fsdevel@vger.kernel.org, regressions@lists.linux.dev, linux-kernel@vger.kernel.org
+	dkim=pass (2048-bit key) header.d=httpd.dev header.i=@httpd.dev header.b="pdNahPvt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=httpd.dev;
+	s=protonmail3; t=1789423545; x=1789682745;
+	bh=Rdh6BpsS2ZBxSHoCL6MTLR/CvIG3h3H+FjSL8fIoDu0=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=pdNahPvt2BB1arBQ5v4qpXo5bg0zP5s7HIn1+olJ5jwfSiSWVs5GqlWAMyBRC6W/+
+	 Td5w7dSFUHAPGdGckpsobUvkUMd4YKYd8QimIqNnEnxJ5UnvPCCbILOi2zskv7bi7w
+	 iQIOg9PdLQ+gJePd/ksOQct9pnGdxsXUkVRtuxtQF1bNVDLehfYhFwqX+o9j8q5DNH
+	 9IsQs1c2iW320N8nrXGJ0uS2DlC3We8v0hvP6ZMPCI7PHruH6wvPEiVflf1x5WKEGz
+	 jC98VmtX2VTSb4gE0k/0O0sS4EnL3/0XsZmG6Id4EebUCwLSwhPa3qH0U9XWIqsejy
+	 9IQJ1Accj3XAw==
+Date: Mon, 14 Sep 2026 22:05:42 +0000
+To: Andrea della Porta <andrea.porta@suse.com>
+From: Angel J <iamanaws@httpd.dev>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "regressions@lists.linux.dev" <regressions@lists.linux.dev>, "stable@vger.kernel.org" <stable@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-rpi-kernel@lists.infradead.org" <linux-rpi-kernel@lists.infradead.org>, "helgaas@kernel.org" <helgaas@kernel.org>, "robh@kernel.org" <robh@kernel.org>, "florian.fainelli@broadcom.com" <florian.fainelli@broadcom.com>
+Subject: Re: [REGRESSION] PCI: Dynamic OF node creation hangs on invalid bridge configuration
+Message-ID: <B6jXhRRiVu4TfgjwfVOLgxbh1xIciImKFVMmjkMRoDt5SO7WpM2M3gBqsjtnh3VhYobWdcNfqFrmlCdhqZBqUakSNkTeVNZYJnXLTx55kRI=@httpd.dev>
+In-Reply-To: <aqfgUUkZYZg6ZABF@apocalypse>
+References: <GXe6anuewkS4bLNwca3cYOmUxN9csc0TxLYGSBc1qNRmfrmvFlcmD62wEM23TxfzfuXAv4P3yvUv7pyraleARrL1Na-aN8w-t9uc1Igu8DA=@httpd.dev> <cFJoUZ6c5g5YbFCrwUnx6RlitHRl-0cS2fadDSFJNf9SgLreKutrmZj1r56hFh8ZUAbzvuCqBG4w9ZYAE8xAWP9HnLwbjMOBzac-iMnMMZc=@httpd.dev> <aqfgUUkZYZg6ZABF@apocalypse>
+Feedback-ID: 163474212:user:proton
+X-Pm-Message-ID: 6d3df382b75293d9f22cbe8d8632a381269862fa
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Content-Type: multipart/signed; protocol="application/pgp-signature"; micalg=pgp-sha512; boundary="------5cd21dd00fc3eadb7c45d7f6769116ebf5fbf2df01333f68e813fd9b368d6e9d"; charset=utf-8
 
-The pull request you sent on Mon, 14 Sep 2026 18:34:40 +0900:
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------5cd21dd00fc3eadb7c45d7f6769116ebf5fbf2df01333f68e813fd9b368d6e9d
+Content-Type: multipart/mixed;boundary=---------------------857f455b86085cc7d31d35501c9f818e
 
-> https://github.com/martinetd/linux tags/9p-for-7.3-rc4
+-----------------------857f455b86085cc7d31d35501c9f818e
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;charset=utf-8
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/59826bc5a42a5e85dc21d4cdf3892f22dcda65f8
+Hi Andrea,
 
-Thank you!
+> Could you please test adding a quirk as PCI_FIXUP_HEADER
+> in which you downgrade the class from 0604 to 0600 and see it works even=
+ without
+> your proposed check in of_pci_make_dev_node()?
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+I tested this on Linux 6.18.44 with CONFIG_PCI_DYNAMIC_OF_NODES=3Dy.
+Changing only the class to 0600 still doesn't boot with both OF fixes
+removed.
+
+pci_is_bridge() checks the header type. I confirmed the class quirk runs
+by restoring the v2 property checks, which lets it boot and log:
+
+  class=3D060000 header=3D01 is_bridge=3D1
+
+I then tried changing both the class to 0600 and the header type to 00.
+That boots without either OF fix and logs:
+
+  class=3D060000 header=3D00 is_bridge=3D0
+
+These changes affect the kernel's cached values. The raw registers still
+report class 0604 and header 01. With the header override, 00:00.0 no
+longer gets an OF node; the other bridges still do.
+
+The v2 patch also boots without any device quirk. It keeps the node for
+00:00.0 and skips only bus-range and interrupt-map when there is no
+subordinate bus.
+
+Changing the header type as well made it boot here. I'll send the quirk
+for 8086:4c43 with both changes. I'll also keep the check in
+of_pci_make_dev_node() and add an error message before returning when a
+bridge has no subordinate bus, as you suggested.
+
+Thanks,
+Angel J
+
+-----------------------857f455b86085cc7d31d35501c9f818e--
+
+--------5cd21dd00fc3eadb7c45d7f6769116ebf5fbf2df01333f68e813fd9b368d6e9d
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: ProtonMail
+
+wrsEARYKAG0Fgmqob6kJEBoBbwppzUxnRRQAAAAAABwAIHNhbHRAbm90YXRp
+b25zLm9wZW5wZ3Bqcy5vcmfLDBAjI4XUj8aqiPkUFeLTm6ZqIS0El3XJNZ97
+RP41eRYhBEAFf9htFyVnqZzmVhoBbwppzUxnAABCLgEAqa3AkxdlMpgQTkAa
+7MYv78X3W51xL2LSBaxL/BlExe0A/1HLZKvHUd+0sOEyXuzhzJNKlelqtmSA
+a2fltJbpD6QP
+=PK0d
+-----END PGP SIGNATURE-----
+
+
+--------5cd21dd00fc3eadb7c45d7f6769116ebf5fbf2df01333f68e813fd9b368d6e9d--
+
