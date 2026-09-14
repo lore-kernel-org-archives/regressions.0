@@ -1,113 +1,87 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mail-43166.protonmail.ch (mail-43166.protonmail.ch [185.70.43.166])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F07A3F58E9
-	for <regressions@lists.linux.dev>; Sun, 13 Sep 2026 20:21:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EBAF2D8DC4
+	for <regressions@lists.linux.dev>; Mon, 14 Sep 2026 03:06:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.166
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789330908; cv=none; b=jUGpnc1K69UNGxynCo4yNjH68n0ObRdSSUVaHrLxrMgZMs8Hy/IhIszIsGRgFQ8S7pt90HjyI2lOBYxEcRT3RWCIIFZj1QaYRHt6kZaXMOAiyj48+Uw68a8/kWmfTvOiafnxddsVxl2BSYyE38zrYryNExmZ5UjYQDLLvveBlSs=
+	t=1789355183; cv=none; b=Bz48jyK8EgvIm8g2l7QItcCZG3Bx1BxUXyY02HUwfcgLXwa8nXkNuOaP8aeHdG73ScC6LWWwzqPZMbL5VYsWB4Hjqjtazpdq5c95VJwEiu3ZLl+8rPyGI57+q8WV2tCuGLwPRmHYCMlfjGa8COMTv6OMYmSPS2K1qOXo4q89y7o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789330908; c=relaxed/simple;
-	bh=Syp5jBipzovEBojlCn+siYKCwLE5/zN8iVHiuAEzAkU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TwigJqAj/5hEYGzEOrf/ghNdm0Zvv8oOO4dAveufhdfDSWxhNrRr3LgputR4j0JbNYTj15/Dr+X71cLBdZSsQvkIDV2EaipnHPO5ueZwFb56Fu9oRHVT50+LU0JMGx3oxJw1XsYqIImg6cTidNs66ZnB7Ir+E+EMZuzRJ4gy1VU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=E+Kfi1Zr; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1789355183; c=relaxed/simple;
+	bh=rU2mxPk6LPZWtjh30o07aLWgSyr6XmHoVJEsBWQ7/nU=;
+	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=bNxTS8OVU5WGuUdPcqdA/H9EI3jFQSk40iFHsYYj6I/3Sb6IP1eiGvi0h4BLTQMZFnhzR4TFyrstIA9s6Yq2B5MWYFW4VCrCBKPzJwTgMJASfn8HUurPCAHFL2XzfZw4+IuvMCOv8cNv22thQOSrySy00Vy+K6+8WhSUypnk3mE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=CgQjvaxW; arc=none smtp.client-ip=185.70.43.166
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="E+Kfi1Zr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1789330907; x=1820866907;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Syp5jBipzovEBojlCn+siYKCwLE5/zN8iVHiuAEzAkU=;
-  b=E+Kfi1ZrbfFL1S/+QILLohnFmD443/OSUxKsvpLsNailN3P8Nr06Yaup
-   stLwvFoWMg1ZalFImojsstm5LTGYXb3EapZ21pRzy39N49dNM5rjKyIqK
-   HY6ZxskIqAxSys8Zlk/0Y+XLm8z/leppm7YhOJqfOJRGwDsNU98hPldnS
-   AvKCk2I2+kI13riLThFoNRuog/Qzjfw9Zp6xkzXrGL13ywdevpehfsHcp
-   djkrobqbEZ7ZKETA2R6UXLFJ35BFdi1asgMraJbCf/cZKGBK67JMRrTz2
-   o0ESIDvzqlkCELqeiElfh4b4iOF8Th3jC+JAXi2yqTQrFBemonyrsSdb0
-   A==;
-X-CSE-ConnectionGUID: DlAWbkvkQT+emRfeBngEJA==
-X-CSE-MsgGUID: 0QPTuYOKTpugLQOstz9ckw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11904"; a="100027023"
-X-IronPort-AV: E=Sophos;i="6.27,100,1787036400"; 
-   d="scan'208";a="100027023"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2026 13:21:47 -0700
-X-CSE-ConnectionGUID: AUYoZfzYT0eHXG0Ulfozsg==
-X-CSE-MsgGUID: DqLzj6ytSw+5VVMsox8Igw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,100,1787036400"; 
-   d="scan'208";a="272432754"
-Received: from fpallare-mobl4.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.245.20])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2026 13:21:44 -0700
-Received: from kekkonen.localdomain (localhost [IPv6:::1])
-	by kekkonen.fi.intel.com (Postfix) with SMTP id 902AD11F8E1;
-	Sun, 13 Sep 2026 23:21:48 +0300 (EEST)
-Date: Sun, 13 Sep 2026 23:21:48 +0300
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Miguel Vadillo <miguel.vadillo@intel.com>, linux-acpi@vger.kernel.org,
-	rafael@kernel.org, lenb@kernel.org, linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org, mehdi.djait@linux.intel.com,
-	wei.a.xu@intel.com, atul.raut@intel.com,
-	Linux kernel regressions list <regressions@lists.linux.dev>
-Subject: Re: [PATCH] ACPI: scan: Honor _DEP for Intel CVS devices
-Message-ID: <aqcF3JmvMKDJSQaE@kekkonen.localdomain>
-References: <20260601194040.18223-1-miguel.vadillo@intel.com>
- <6e450fa2-8b40-48b6-b0b0-a1c4b72a383d@leemhuis.info>
- <d7f4a573-1a2e-4274-8c8f-41d398592356@leemhuis.info>
+	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="CgQjvaxW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+	s=protonmail3; t=1789355178; x=1789614378;
+	bh=rU2mxPk6LPZWtjh30o07aLWgSyr6XmHoVJEsBWQ7/nU=;
+	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
+	b=CgQjvaxW2Lh1GmYZWyWczDBjvMlXSEYdp2oflfW9MIrX8bmMsHOsnX9iXhI/5GDEB
+	 Gw/rx4jMpvGGaA/SczjGpVlm1Idb7Wj04ixANzqlOqIfW+iVBhLQOtuXNmN/ZhQV9Y
+	 HVXD2UEEdUuBHuhcK4yw/boRhQTV/dpCItYpy2woUd4rXKR9XiR85uqzqFeroeykY+
+	 NH/xFTEqSdQBvHRpH1mVAcZ7nrcYBJJNZYyC31teyF7VdcfOvyFkQ9lYLNM5m9KTi6
+	 rWZ65SWDsij2kWF5CgTUKGBJkFR687qtoD0WcT9PiY3jqmu7GnQl6+T+ktplA/LiB9
+	 GOxFtN5fy/lYA==
+Date: Mon, 14 Sep 2026 03:06:15 +0000
+To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+From: jackpilot <jackpilot27@protonmail.com>
+Cc: "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+Subject: [REGRESSION] NVIDIA dGPU never enters D3cold since Linux 7.3 merge window
+Message-ID: <uz7NywYQwAzrOgqWjIeyjuTn3PalBrqAsBKcD81tQNJCCFw2j5yG6zQ9cH_PiHiUBOxOoms_MPh6g9FmBmsD80RVXLf8zSQZ4QXP24Z9dv4=@protonmail.com>
+Feedback-ID: 150257845:user:proton
+X-Pm-Message-ID: ceb641eae7eaacc506f24b0bfcc8a09ca5f22dbf
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d7f4a573-1a2e-4274-8c8f-41d398592356@leemhuis.info>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi Thorsten,
 
-On Sun, Sep 13, 2026 at 10:27:15AM +0200, Thorsten Leemhuis wrote:
-> On 9/12/26 18:50, Thorsten Leemhuis wrote:
-> > On 6/1/26 21:40, Miguel Vadillo wrote:
-> >> CVS (Computer Vision Sensing) is an ACPI-enumerated device that sits
-> >> inline in the CSI-2 path between the camera sensor and Intel IPU.
-> >> On platforms where CVS is present, the camera sensor's ACPI node
-> >> declares a _DEP dependency on the CVS device.
-> >>
-> >> The CVS driver must be fully initialized before camera sensor drivers
-> >> probe, because CVS controls the CSI-2 link ownership handshake (via
-> >> GPIO REQ/RESP), the MIPI/CSI-2 lane configuration, and the camera
-> >> power domain. Without CVS ready, the sensor driver can bind but the
-> >> CSI-2 stream will not function correctly.
-> >>
-> >> The CVS driver calls acpi_dev_clear_dependencies() at the end of its
-> >> probe() to unblock waiting consumers once it is ready.
-> >>
-> >> Move the CVS HIDs from acpi_ignore_dep_ids[] to acpi_honor_dep_ids[]
-> >> so that camera sensor enumeration is deferred until the CVS driver has
-> >> finished probing, matching the behavior already in place for IVSC.
-> > 
-> > TWIMC, there is a bug report where one or two people claim that this
-> > change caused a regression; the report is quite verbose (guess LLM
-> > assisted) and hard to grasp for me as outsider; requests for
-> > clarifications from my side were not really fruitful. Not sure what to
-> > make of this, but I thought I'd let you know; for details see:
-> > 
-> > https://bugzilla.kernel.org/show_bug.cgi?id=221988
-> 
-> For completeness, a report that is more straight forward to read (at
-> least for me) was now posted here:
-> https://lore.kernel.org/all/20260912185836.309071-1-manuel.knitza@googlemail.com/
 
-Thanks for the link, I've replied to the bug report.
+Since upgrading past 7.2.4, my NVIDIA dGPU no longer entersD3cold/runtime s=
+uspend and stays permanently active. Confirmed
+regression, not present on 7.2.4, present on both 7.3-rc1 and
+7.3-rc2.
 
--- 
-Kind regards,
+Hardware: ASUS ROG Zephyrus G16 (GU605MI), Intel Core Ultra 9
+185H (Meteor Lake), NVIDIA RTX 4070 Max-Q / AD106M, nvidia-open
+615.71.09 driver (unchanged across all tested kernels).
 
-Sakari Ailus
+Last known good: 7.2.4
+First known bad: =C2=A07.3-rc1
+
+Evidence (/proc/driver/nvidia/gpus/0000:01:00.0/power):
+=C2=A0 7.2.4: =C2=A0 =C2=A0Runtime D3 status: Enabled (fine-grained)
+=C2=A0 7.3-rc1: =C2=A0Runtime D3 status: Not supported
+=C2=A0 7.3-rc2: =C2=A0Runtime D3 status: Not supported
+
+Same output from /sys/bus/pci/devices/0000:01:00.0/power/
+runtime_status, power/control, power_state confirms the device
+sits at active/auto/D0 permanently on the broken kernels, and
+suspended/auto/D3cold on the working one. No processes hold
+/dev/nvidia* open in the broken state, ruling out a userspace
+handle as the cause.
+
+I haven't been able to bisect further since the regression is
+already present at rc1, meaning the change is somewhere in the
+7.3 merge window. While investigating I came across an in-progress
+ACPI series that touches related territory (PCI devices getting
+stuck referencing power resources during early enumeration):
+https://lore.kernel.org/linux-acpi/2295263.irdbgypaU6@rafael.j.wysocki/
+but I want to be clear I haven't confirmed this is the same
+mechanism, I checked dmesg for the specific _DEP/INT3472
+trigger it describes and found no matches, so it may well be
+unrelated. Mentioning it only in case it's a useful lead.
+
+Note: tested on CachyOS's cachyos-rc kernel build (patches:
+https://github.com/CachyOS/linux-cachyos), not vanilla. Happy
+to test a vanilla build or apply patches if that would help
+narrow this down.
+
