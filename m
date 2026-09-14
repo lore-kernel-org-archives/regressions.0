@@ -1,159 +1,225 @@
-Received: from mail-wm2-f12.google.com (mail-wm2-f12.google.com [74.125.225.140])
+Received: from mail-ej2-f12.google.com (mail-ej2-f12.google.com [74.125.228.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C505474273
-	for <regressions@lists.linux.dev>; Mon, 14 Sep 2026 11:44:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.140
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AE05445AC8
+	for <regressions@lists.linux.dev>; Mon, 14 Sep 2026 11:50:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.228.140
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789386256; cv=none; b=poRZtSiIlcb8Tk9+911ozVLR/6VAgvQoxD68WJ6GSrQBtKiNiquFqEgQhXCokkf/jygxn6AT5s2wcDsPAyR2r9dxKe8hxDAVA1UQfGho0SDgWr76VFt2ePdeHWgq7pxwuxRpxrXmE+Q0k0SNmmlQahkMyDx2c/AoGObcxX9fvuM=
+	t=1789386618; cv=none; b=t9cZNL0p1XRSTkkWE6SLoCly/tYVrC3hF1uincMiHEiDwXyhWGa4D2miSPn6F0KNH5fHpjb838gjOSCAMDoFqZXS/kKxHIc08me17Lq+FQmJ9PRrDN4Sk2JZ066FW0vC9pBkzAliJGXeldTiExGT/+bxpU8Ow6Io59Ty9IXxtdU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789386256; c=relaxed/simple;
-	bh=I5wYf2UfCqjJlZGBk/LVQAYOjkJTlGjJj+LnTjVAnuQ=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=OrjCXs5PZzjIA5NZNYhQVT/wPT6/MKc3t+5s9cu82FGTPW2P/qOC4SQ7fClICCmzaZN087VuAIQ2HHIJn+yNg7am/cJ4yw+d0obzlbxapLG15faUrk9sW3oxgVttOHvENS+Z9e5e0CEsqUAcsxSEXBUH4EQRnwCHHpD+XqdDJnQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NkDUXWgh; arc=none smtp.client-ip=74.125.225.140
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1789386618; c=relaxed/simple;
+	bh=Q8ksi+xZgxIagv9+QQVvkuR0wfKZoHt0nu/3YJrwAf8=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BBrp3oxZ1MJYkqea0iV5UA+A7LJ8M7sUcboi7S2iSmfR1tIlN2+aRSqpxP9bA9PZP2kqIBlGHsM0iB3C5N9V+PppIapPZ6ElstyiBx5MKpfZ+b/w73CM1ENDmRV+mKxmHVMJ+loN5rkhtP9BB7yylSIwHvuwMhiHisSqMndwonI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=LIFbV8t5; arc=none smtp.client-ip=74.125.228.140
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NkDUXWgh"
-Received: by mail-wm2-f12.google.com with SMTP id 5b1f17b1804b1-49ccfd61ecaso18318235e9.3
-        for <regressions@lists.linux.dev>; Mon, 14 Sep 2026 04:44:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="LIFbV8t5"
+Received: by mail-ej2-f12.google.com with SMTP id a640c23a62f3a-c254fa663bfso359612766b.1
+        for <regressions@lists.linux.dev>; Mon, 14 Sep 2026 04:50:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1789386253; x=1789991053; darn=lists.linux.dev;
-        h=content-transfer-encoding:content-type:subject:from:cc:to
-         :content-language:user-agent:mime-version:date:message-id:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=uZ16H6DakkGQVJDeU0DMETrrlOVhylLgGOXMPJp5UxU=;
-        b=NkDUXWghCldITga1hsAFDT7u0IJP1ZM/ZG5L/ODVEVEbGsD1xK7lRHmx40HokuTx1Q
-         u+g7RZ0l9pNz32G+s8K3AsaW936oJP8PbOSZb20tOfww4ZqtXMRB8B7p4XweU7SuahsA
-         vnvoiXzy3jUmdbnJWcQcjlAmZnT65l91QgWf9b3GU0LeTbpSMOIwTKk2VQtXM+mhwiCx
-         J8lofjTXRk3s4DrvHg2M5D5AfGGWLHAMWg8HyhLASi6Mn/pvU4nVNS3kyqGXP/zrWekn
-         wAGEOms/kyDJYEVJblZzP3j+dTWq+n9gad80rS5G8lCkW589fT0Eudxp8+MdgR2uPIOv
-         U+kQ==
+        d=suse.com; s=google; t=1789386614; x=1789991414; darn=lists.linux.dev;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :content-type:mime-version:references:message-id:subject:cc:to:date
+         :from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=b3d/NyVwn33xRXNwAVXKr9GMiiFtUoOWjxTC/8TNYXw=;
+        b=LIFbV8t5m0FwRsRUPvNsvym9877/IV8mL10lBK/UUIKAMtan9OVeWXNo0LVaB+Foqt
+         qsrib1RWkUMz02MjITC0wiXWlwLssnWba4rDsqzIzBfaqjuUuHv3U7j0xJ290KJEj4mC
+         gtKb8kftPAMXM/WpLwFo/bSOPH/bll+O5F9PJuibPhLy+0xKv+ZLFVf8C8NcTv+GrOf3
+         InkYNepTBDrqfiCIhkIZSFfwPWJNOQzmmub6pNtLhAXZGwziUwAlQy5VSdsf4RmJk5vD
+         aQgK9V2ImLfdg8yx2ogrFN21fTNNh1qwV6L8MfN19UQgcKm1WxOxkEG3KRE4tdo8RZmR
+         PsRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1789386253; x=1789991053;
-        h=content-transfer-encoding:content-type:subject:from:cc:to
-         :content-language:user-agent:mime-version:date:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=uZ16H6DakkGQVJDeU0DMETrrlOVhylLgGOXMPJp5UxU=;
-        b=V36f7YlD+l//N5+Uu9Hhr7Y5Mzn4P8zuIUK7VxzQMBN0BoOS9BnU79CiAbYh33K7HI
-         Cf85znuanYTapz525/dv7zU16PkyKa1fNtu0vJZNApCgVJ4CSWLUPTj/Q2PI+mMq6J5k
-         N8oGtL83oCb+f95k5I6/uTScrU2WXyP2N6C7WXeJO6WLH/8p2sX+JF19LQk4x9wvSBBb
-         8bidshH2DReCCF7wycZHquU6F3ybcN1Kwb4P8iDOBz+sGm0WhjAdP9WLtxzIjUCzxVBW
-         ujB1eGZD480xYJ9cfwwQAj07GZzih6SZPy/ZHWg9fgQ6p2VhBF9uHhN4uEyL+GFo3JxY
-         4SfQ==
-X-Forwarded-Encrypted: i=1; AKwUvBzhYNPwHCLmPNAPnggnjM9LPQA/PhDOh2skDATnDw3RcHyK6WW5uYK8hTfFNlZ3ulKec4jeFvHW47qDBg==@lists.linux.dev
-X-Gm-Message-State: AFuF++ltC5j4Egys2j659Oe9aJPQunFzMOSCxPjt51siZpbhQn/+h1sR
-	iDZ59JrkCiGSL8fBR3nwBk6koU9adTUJUu5fbVWldPx94DHKEtZ3It97
-X-Gm-Gg: AYBFou32Q+MQ0yqQnttMg9gFcEZNn3r4rx1Tzb6iD1ECa5YrLbHenJoFv/fiLdr0cRN
-	Nf2elWanYmvJSSB9ydo2FI9JNUmpyN7Z0+knnhejEtUaT+jeQ5HUZP8MzN2awcXCzwTSDKZb+fh
-	4upxeTd2oBon06JDDLC2M0TCXiSAbV0oZL4KV9o9vgVdk6/PjANCNgN0E67f9yFDjMS9GTxRWSm
-	TOaROYnQ6K5eusldPG1E5i//gPFTTzVlg6W7+egTFW+xur+E/x0SYOIvEGOGG0kbY10sHFervit
-	FctOezi7SpR7DQALvDj4QFz8Cy7fOAoS+Qd+MFh0JzBE2d9PLCaHjfrqbNPZ6PxdkIkCEBzlynl
-	n/7l6olwQRV56vD/B257Y/kuGA+hVTNrqfluU2iFfM8fMMei3tRe4+DAS2QSDFj5L7iAqAe/0bE
-	sXqKys+t9IEtKwTwnEfGai+gaAAcLwokE8uEREVTiPhEflRf751mcITbHUKCEgdW0/uUJPuzSVI
-	DRkUbfogjdfk5Z9cy8qTDCWroGZz0izAqeit8SQngp0lZghi/XPPk/yUA3w18NTtEEgV+1Gy2WN
-	v3FYgxvumTXSDfFmrWdyZ8uk+8F2
-X-Received: by 2002:a05:600c:34d3:b0:49e:7224:f1f8 with SMTP id 5b1f17b1804b1-49e7a666bf7mr18618225e9.13.1789386252295;
-        Mon, 14 Sep 2026 04:44:12 -0700 (PDT)
-Received: from ?IPV6:2003:fc:df06:7400:6598:1d43:be65:c503? (p200300fcdf06740065981d43be65c503.dip0.t-ipconnect.de. [2003:fc:df06:7400:6598:1d43:be65:c503])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49e71e300f3sm216791875e9.7.2026.09.14.04.44.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 14 Sep 2026 04:44:11 -0700 (PDT)
-Message-ID: <9ac1c05b-e9f2-49e9-af63-9cd0e42115fc@gmail.com>
-Date: Mon, 14 Sep 2026 13:44:10 +0200
+        d=1e100.net; s=20251104; t=1789386614; x=1789991414;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :content-type:mime-version:references:message-id:subject:cc:to:date
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=b3d/NyVwn33xRXNwAVXKr9GMiiFtUoOWjxTC/8TNYXw=;
+        b=hWRmR6Fdmcy7CZpNbltJE1p0qh4jxaxCPCtx/zD8jGIwnPrOsHL8K4SZ9GZjVTFx8S
+         qAGRtYav8Ewkabv6X8C9yOsnMM5/UXnAsZFY+rXM4hqGbesjy/5OlmpGN1P6mdTxnVek
+         zhQoTGKjeC0PZtgefK7VjtweFPJK7af+CCvgkUVESMQEjnCcOv3OadIG16HdWgydH0zd
+         owwBTnCjJBob6/Jkp3jcuM926ZaifUW8qRvBXdEJAG2zJi6NmM4NXklogf5HhwEZzi8w
+         tUDf9Y++9TiYKYw2kXxPR6cCoQbvCxoxqpVAliL6bDqwqt/olpRisnCVzs9NeqwmUKVE
+         EW5A==
+X-Forwarded-Encrypted: i=1; AKwUvBw+p56WeiWLe5bdno8uyf6aV3lnE+FdV2E2esef3GBCiTXieheGBROtZ3MAm61EJg8JgPSw1PWJp8dvkw==@lists.linux.dev
+X-Gm-Message-State: AFuF++nJqCAH/pLdMpH9AnDGhdXEcCkuiHrnDxdBxXo+NMluL8jwtIty
+	qHoLEfUTeEUDqQjNyI7ZKHaclnmTTtlPpkanUqccgK5J9WCrTMHxjZkk24WkplxcxiI=
+X-Gm-Gg: AYBFou17rDlOLldqzu7MTIvfjE0bE2r3LCiHqBT56ld68Dew3BUzF9ELjpFa++7m0uv
+	yuSG2rYbrXLPanU9xpi/rhl74MGUR0x6gI44P3xiJVATsrG0ftGIIJnUhNPg08IxVe3SIo6W2L1
+	R4tsl7xknfbSiz9/kVkzlC5ot4cSBdGzERhZWUUQdoeG7bVBMRZr1z29AmxubnlJdVLaclTMMnx
+	ceqWK+rKiIz7Sy0645AIjXvNoZR3rY68V3I82ZCj+HJKFagJpu6zxdOJ47EKwjeRCqrLiO4uL2X
+	3ZtDQaeuilv2ZLCeSfHxvL+zgZoVaEjM6kZ2OYmJV+ARWffyXoEmyjnbZ/P35crwbxb4KmQhEvO
+	s4dbjE4I6z0IVhKz72Rc3gdXX+x1EEnsALZVLnMwTvs7aWxNwk5ce5Lxack0KouvY0Ky0yhu/Pc
+	7yIjB+Jb38zqrNgW832TTCFU9WoZBQNsSbtl4XhBeOIwPXR9vjhSqwW1nbXr700FqEmk4=
+X-Received: by 2002:a17:907:3e07:b0:c25:8c05:902f with SMTP id a640c23a62f3a-c29b86b7559mr277818766b.13.1789386614302;
+        Mon, 14 Sep 2026 04:50:14 -0700 (PDT)
+Received: from localhost ([82.145.119.8])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c2965c4dfc7sm415116366b.4.2026.09.14.04.50.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Sep 2026 04:50:13 -0700 (PDT)
+From: Andrea della Porta <andrea.porta@suse.com>
+X-Google-Original-From: Andrea della Porta <aporta@suse.de>
+Date: Mon, 14 Sep 2026 13:53:53 +0200
+To: Angel J <iamanaws@httpd.dev>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+	"stable@vger.kernel.org" <stable@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-rpi-kernel@lists.infradead.org" <linux-rpi-kernel@lists.infradead.org>,
+	"helgaas@kernel.org" <helgaas@kernel.org>,
+	"robh@kernel.org" <robh@kernel.org>,
+	"andrea.porta@suse.com" <andrea.porta@suse.com>,
+	"florian.fainelli@broadcom.com" <florian.fainelli@broadcom.com>
+Subject: Re: [REGRESSION] PCI: Dynamic OF node creation hangs on invalid
+ bridge configuration
+Message-ID: <aqfgUUkZYZg6ZABF@apocalypse>
+References: <GXe6anuewkS4bLNwca3cYOmUxN9csc0TxLYGSBc1qNRmfrmvFlcmD62wEM23TxfzfuXAv4P3yvUv7pyraleARrL1Na-aN8w-t9uc1Igu8DA=@httpd.dev>
+ <cFJoUZ6c5g5YbFCrwUnx6RlitHRl-0cS2fadDSFJNf9SgLreKutrmZj1r56hFh8ZUAbzvuCqBG4w9ZYAE8xAWP9HnLwbjMOBzac-iMnMMZc=@httpd.dev>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Betterbird (Linux)
-Content-Language: en-GB, de-DE
-To: stable@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Sasha Levin <sashal@kernel.org>, Christoph Zwerschke <cito@online.de>,
- Max Chou <max.chou@realtek.com>,
- Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
- Marcel Holtmann <marcel@holtmann.org>, linux-bluetooth@vger.kernel.org,
- regressions@lists.linux.dev
-From: "ra.prism" <ra.prism@gmail.com>
-Subject: [REGRESSION] btusb: ASUS USB-BT540/BT600 IDs backported without,
- RTL8761CUV support, adapter re-enumerates endlessly (6.18.50, 6.12.109,,
- 6.1.188, 5.15.221, 5.10.270)
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <cFJoUZ6c5g5YbFCrwUnx6RlitHRl-0cS2fadDSFJNf9SgLreKutrmZj1r56hFh8ZUAbzvuCqBG4w9ZYAE8xAWP9HnLwbjMOBzac-iMnMMZc=@httpd.dev>
 
-Hi,
+Hi Angel,
 
-two btusb device-ID commits were backported to stable branches that lack
-the btrtl support they depend on:
+On 23:01 Fri 11 Sep     , Angel J wrote:
+> Hi Andrea, Herv�, Bjorn, Thorsten,
+> 
+> Thanks for the guidance, it was very useful. I went back through the tests
+> and got some more insight into the hang.
+> 
+> Andrea wrote:
+> > Angel, could you please provide the following output:
+> >
+> > lspci -nn
+> > setpci -s 00:00.0 HEADER_TYPE
+> >
+> > from a running (i.e. with CONFIG_PCI_DYNAMIC_OF_NODES=n) system?
+> 
+> On Linux 6.12.109, with CONFIG_PCI_DYNAMIC_OF_NODES disabled, the relevant
+> output is:
+> 
+>   $ lspci -nn
+>   00:00.0 PCI bridge [0604]: Intel Corporation Device [8086:4c43] (rev 01)
+> 
+>   $ setpci -s 00:00.0 HEADER_TYPE
+>   01
+> 
+>   $ setpci -s 00:00.0 PRIMARY_BUS SECONDARY_BUS SUBORDINATE_BUS
+>   ff
+>   ff
+>   ff
 
-   980084de4d9b ("Bluetooth: btusb: Add ASUS USB-BT540 for Realtek 8761CU")
-   6f0624b4427e ("Bluetooth: btusb: Add ASUS USB-BT600 for Realtek 8761CU")
+So it seems that a device which is reported as a PCI bridge does not manage any
+bus underneath.
 
-Both set BTUSB_REALTEK for 0b05:1bef / 0b05:1d70, so the adapters now go
-through btrtl setup. btrtl only learned about this chip in v6.19-rc1:
+> 
+> The device is bound to icl_uncore. I get the same values on the patched
+> kernel with CONFIG_PCI_DYNAMIC_OF_NODES=y.
+> 
+> Herv� wrote:
+> > Is this PCI logs reported with PCI_DYNAMIC_OF_NODES=y or PCI_DYNAMIC_OF_NODES=n
+> > or always whatever the PCI_DYNAMIC_OF_NODES Kconfig value ?
+> 
+> The messages appear on successful boots with either setting:
+> 
+>   pci 0000:00:00.0: [8086:4c43] type 01 class 0x060400 conventional PCI bridge
+>   pci 0000:00:00.0: bridge configuration invalid ([bus ff-ff]), reconfiguring
+> 
+> I confirmed this on 6.12.107 with the option disabled and 6.12.108 with it
+> enabled. They also appear on the patched 6.18.44 kernel.
+> 
+> Bjorn wrote:
+> > I don't think 49d63971f963 ("misc: rp1: RaspberryPi RP1 misc driver")
+> > is a likely culprit by itself because there's just nothing there that
+> > looks like it would relate to a Dell XPS 8940.
+> 
+> That change exposed the problem by enabling PCI_DYNAMIC_OF_NODES in my
+> configuration. I bisected again with the option enabled throughout and
+> found an earlier boundary:
+> 
+>   3dc8adeeefa0  PCI: of_property: Constify parameter in of_pci_get_addr_flags()
+>   1f340724419e  PCI: of: Create device tree PCI host bridge node
+> 
+> The first is the direct parent of the second. I boot-tested both without
+> any guard, changing only the source commit; their generated kernel
+> configurations are identical.
+> 
+> All of these tests have CONFIG_PCI_DYNAMIC_OF_NODES=y:
+> 
+>   Source         Change             Result
+>   3dc8adeeefa0    None               Boots
+>   1f340724419e    None               Hangs
+>   1f340724419e    Subordinate guard  Boots
+>   6.18.44        None               Hangs
+>   6.18.44        Subordinate guard  Boots
+> 
+> Herv� wrote:
+> > Maybe the test done at [1] should be improved to detect those wrong bridges.
+> > and skip the of_pci_make_dev_node() call when a wrong bridge is detected.
+> 
+> I added logging to the first bad commit to check the bridge scan. It shows
+> that 00:00.0 has no subordinate bus after either pass, despite satisfying
+> pci_is_bridge():
+> 
+>   pci 0000:00:00.0: PCI OF debug: scan pass 0, buses ff/ff/ff
+>   pci 0000:00:00.0: PCI OF debug: scan pass 0 done, subordinate bus absent
+>   pci 0000:00:00.0: PCI OF debug: scan pass 1, buses ff/ff/ff
+>   pci 0000:00:00.0: PCI OF debug: scan pass 1 done, subordinate bus absent
 
-   4a23ce935f74 ("Bluetooth: btrtl: Add the support for RTL8761CUV")
+This is confirmed by the BIOS/fw not filling the bus range and by the kernel
+failing to reallocate the bus since the range registers are probably read-only.
+Apparently this is not a bridge, it should be at most a host controller.
 
-Without it, setup fails and the adapter resets in a loop. Before the
-backport the adapter bound via the generic Bluetooth class and did not
-loop.
+> 
+> of_pci_prop_bus_range() dereferences pdev->subordinate without checking it.
+> of_pci_prop_intr_map() also uses that pointer. Before 1f340724419e,
+> of_pci_make_dev_node() returns because the parent OF node is missing on
+> this ACPI system. That commit creates the parent node, allowing property
+> generation to reach the unchecked access.
+> 
+> My earlier report overstated the device_type="pci" result. The minimal-node
+> test that hung added device_type, bus-range and interrupt-map together;
+> I haven't confirmed a hang with device_type alone.
+> 
+> I tested this guard in of_pci_make_dev_node(), before node creation:
+> 
+>   if (pci_is_bridge(pdev) && !pdev->subordinate)
+>           return;
 
-Affected, checked against the stable trees (btusb.c has 0x0b05/0x1bef,
-btrtl.c has no rtl8761cu entry):
+Not sure, maybe can it be considered a hw bug? If this is the case, we can maybe
+add a quirk for this device. Could you please test adding a quirk as PCI_FIXUP_HEADER
+in which you downgrade the class from 0604 to 0600 and see it works even without
+your proposed check in of_pci_make_dev_node()?
 
-   released  6.18.50 (aa7b93fe98ba, bce588b4ca08), still in 6.18.51
-             6.12.109 (f05baf6e0680, 32412aff8d11)
-             6.1.188, 5.15.221, 5.10.270
-   queued    queue-6.6
+If this works, maybe we can just turn the body of your conditional into just an error
+log plus fast exit, because a bridge must have valid subordinate.
 
-Not affected: 7.1.y (has 4a23ce935f74 but not the IDs) and 7.2.y (has
-both).
+Many thanks,
+Andrea
 
-Observed with an ASUS USB-BT540 (0b05:1bef, hci_rev 000e, lmp_subver
-8761) on 6.18.50: 203 re-enumerations in 37 minutes, one every ~10.8 s,
-independent of the USB port:
+> Both the first bad commit and 6.18.44 boot with it. The 6.18.44 test uses
+> only the guard, without diagnostic logging. The host OF node and the nodes
+> for bridges 00:01.0 and 00:1c.0 are still created; 00:00.0 is skipped.
+> 
+> This points to the NULL subordinate pointer as the cause of the hang,
+> although I still don't have a crash trace from an unguarded boot. I'll
+> send the patch as a reply to this email. Is of_pci_make_dev_node() the
+> right place for this check?
+> 
+> #regzbot introduced: 1f340724419eda8ab07a20edcaf5ec8f70134231
+> 
+> Thanks,
+> Angel J
 
-   [    8.008281] Bluetooth: hci0: RTL: examining hci_ver=0d 
-hci_rev=000e lmp_ver=0d lmp_subver=8761
-   [    8.008294] usb 5-2: USB disconnect, device number 3
-   [   18.476022] Bluetooth: hci0: RTL: RTL: Read reg16 failed (-110)
-   [   18.852034] usb 5-2: New USB device found, idVendor=0b05, 
-idProduct=1bef, bcdDevice= 2.00
-   [   18.875711] Bluetooth: hci0: RTL: examining hci_ver=0d 
-hci_rev=000e lmp_ver=0d lmp_subver=8761
-   [   18.886986] usb 5-2: USB disconnect, device number 4
-   [   29.228274] Bluetooth: hci0: RTL: RTL: Read reg16 failed (-110)
 
-Same machine and adapter on 7.2.5, which has both commits, works:
-
-   [    7.816015] Bluetooth: hci0: RTL: examining hci_ver=0d 
-hci_rev=000e lmp_ver=0d lmp_subver=8761
-   [    7.820005] Bluetooth: hci0: RTL: rom_version status=0 version=1
-   [    7.825030] Bluetooth: hci0: RTL: loading rtl_bt/rtl8761cu_fw.bin
-   [    7.826003] Bluetooth: hci0: RTL: loading rtl_bt/rtl8761cu_config.bin
-   [    7.840001] Bluetooth: hci0: RTL: fw version 0x7bf15762
-
-6.18.48 (without the IDs) did not loop. The kernels were distribution
-builds (CachyOS linux-cachyos-lts 6.18.50, linux-cachyos 7.2.5). I
-checked the relevant btusb/btrtl lines against the vanilla stable trees
-listed above. I only have the BT540 and only tested 6.18.y; the BT600 and
-the other branches are untested but in the same situation.
-
-Could you please:
-
-   - drop both patches from queue-6.6, and
-   - revert them in 6.18.y, 6.12.y, 6.1.y, 5.15.y and 5.10.y, or backport
-     4a23ce935f74 (btrtl.c, +15/-1) where it applies. I have not checked
-     whether it applies cleanly to any of these trees.
-
-Thanks,
-Ralf Ahlbrink
-
-#regzbot introduced: v6.18.49..v6.18.50
-
-#regzbot title: btusb: ASUS USB-BT540/BT600 IDs in stable without 
-RTL8761CUV btrtl support cause endless re-enumeration
 
