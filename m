@@ -1,225 +1,592 @@
-Received: from mail-ej2-f12.google.com (mail-ej2-f12.google.com [74.125.228.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.166])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AE05445AC8
-	for <regressions@lists.linux.dev>; Mon, 14 Sep 2026 11:50:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.228.140
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9033F48095A
+	for <regressions@lists.linux.dev>; Mon, 14 Sep 2026 14:30:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.166
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789386618; cv=none; b=t9cZNL0p1XRSTkkWE6SLoCly/tYVrC3hF1uincMiHEiDwXyhWGa4D2miSPn6F0KNH5fHpjb838gjOSCAMDoFqZXS/kKxHIc08me17Lq+FQmJ9PRrDN4Sk2JZ066FW0vC9pBkzAliJGXeldTiExGT/+bxpU8Ow6Io59Ty9IXxtdU=
+	t=1789396262; cv=none; b=OZeZgWrDRs3ud2TRkSL+i2vBboevxwxhm1B5dBAoM2ZQkONafm2wtHCFoTW9JG0nVBjCIvRPxLrP8lJBBWajrWpqet0dS/SRRv4ntBk596hSFDN1Fk/GS40yxQJUkq/c2ibHpuZq1yqRQ81ym8Snkg76UqXf2CR7G7Ijr4U1UHU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789386618; c=relaxed/simple;
-	bh=Q8ksi+xZgxIagv9+QQVvkuR0wfKZoHt0nu/3YJrwAf8=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BBrp3oxZ1MJYkqea0iV5UA+A7LJ8M7sUcboi7S2iSmfR1tIlN2+aRSqpxP9bA9PZP2kqIBlGHsM0iB3C5N9V+PppIapPZ6ElstyiBx5MKpfZ+b/w73CM1ENDmRV+mKxmHVMJ+loN5rkhtP9BB7yylSIwHvuwMhiHisSqMndwonI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=LIFbV8t5; arc=none smtp.client-ip=74.125.228.140
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1789396262; c=relaxed/simple;
+	bh=FcziOCCsytCcib3oM9S/q9gH2GMgiWKKT0G6/MmLl5Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sU005lw9e6Ac2PCV2BinY5OaHzYVpSqicTbbeew7IvEjXEnRafzZp0WlSowt+MQhZ6ChTZuerwsc3X6mP0U0KeXLQU86pbygjqp0h5UtHW8vcJ7mqCuaBDdaE8Fkqfdc4Dv8UocFbHKst8Wq7VqU85ZWhGqRk5y1szLBncmUuIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=jJU2mYMN; arc=none smtp.client-ip=188.68.63.166
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="LIFbV8t5"
-Received: by mail-ej2-f12.google.com with SMTP id a640c23a62f3a-c254fa663bfso359612766b.1
-        for <regressions@lists.linux.dev>; Mon, 14 Sep 2026 04:50:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1789386614; x=1789991414; darn=lists.linux.dev;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :content-type:mime-version:references:message-id:subject:cc:to:date
-         :from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=b3d/NyVwn33xRXNwAVXKr9GMiiFtUoOWjxTC/8TNYXw=;
-        b=LIFbV8t5m0FwRsRUPvNsvym9877/IV8mL10lBK/UUIKAMtan9OVeWXNo0LVaB+Foqt
-         qsrib1RWkUMz02MjITC0wiXWlwLssnWba4rDsqzIzBfaqjuUuHv3U7j0xJ290KJEj4mC
-         gtKb8kftPAMXM/WpLwFo/bSOPH/bll+O5F9PJuibPhLy+0xKv+ZLFVf8C8NcTv+GrOf3
-         InkYNepTBDrqfiCIhkIZSFfwPWJNOQzmmub6pNtLhAXZGwziUwAlQy5VSdsf4RmJk5vD
-         aQgK9V2ImLfdg8yx2ogrFN21fTNNh1qwV6L8MfN19UQgcKm1WxOxkEG3KRE4tdo8RZmR
-         PsRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1789386614; x=1789991414;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :content-type:mime-version:references:message-id:subject:cc:to:date
-         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=b3d/NyVwn33xRXNwAVXKr9GMiiFtUoOWjxTC/8TNYXw=;
-        b=hWRmR6Fdmcy7CZpNbltJE1p0qh4jxaxCPCtx/zD8jGIwnPrOsHL8K4SZ9GZjVTFx8S
-         qAGRtYav8Ewkabv6X8C9yOsnMM5/UXnAsZFY+rXM4hqGbesjy/5OlmpGN1P6mdTxnVek
-         zhQoTGKjeC0PZtgefK7VjtweFPJK7af+CCvgkUVESMQEjnCcOv3OadIG16HdWgydH0zd
-         owwBTnCjJBob6/Jkp3jcuM926ZaifUW8qRvBXdEJAG2zJi6NmM4NXklogf5HhwEZzi8w
-         tUDf9Y++9TiYKYw2kXxPR6cCoQbvCxoxqpVAliL6bDqwqt/olpRisnCVzs9NeqwmUKVE
-         EW5A==
-X-Forwarded-Encrypted: i=1; AKwUvBw+p56WeiWLe5bdno8uyf6aV3lnE+FdV2E2esef3GBCiTXieheGBROtZ3MAm61EJg8JgPSw1PWJp8dvkw==@lists.linux.dev
-X-Gm-Message-State: AFuF++nJqCAH/pLdMpH9AnDGhdXEcCkuiHrnDxdBxXo+NMluL8jwtIty
-	qHoLEfUTeEUDqQjNyI7ZKHaclnmTTtlPpkanUqccgK5J9WCrTMHxjZkk24WkplxcxiI=
-X-Gm-Gg: AYBFou17rDlOLldqzu7MTIvfjE0bE2r3LCiHqBT56ld68Dew3BUzF9ELjpFa++7m0uv
-	yuSG2rYbrXLPanU9xpi/rhl74MGUR0x6gI44P3xiJVATsrG0ftGIIJnUhNPg08IxVe3SIo6W2L1
-	R4tsl7xknfbSiz9/kVkzlC5ot4cSBdGzERhZWUUQdoeG7bVBMRZr1z29AmxubnlJdVLaclTMMnx
-	ceqWK+rKiIz7Sy0645AIjXvNoZR3rY68V3I82ZCj+HJKFagJpu6zxdOJ47EKwjeRCqrLiO4uL2X
-	3ZtDQaeuilv2ZLCeSfHxvL+zgZoVaEjM6kZ2OYmJV+ARWffyXoEmyjnbZ/P35crwbxb4KmQhEvO
-	s4dbjE4I6z0IVhKz72Rc3gdXX+x1EEnsALZVLnMwTvs7aWxNwk5ce5Lxack0KouvY0Ky0yhu/Pc
-	7yIjB+Jb38zqrNgW832TTCFU9WoZBQNsSbtl4XhBeOIwPXR9vjhSqwW1nbXr700FqEmk4=
-X-Received: by 2002:a17:907:3e07:b0:c25:8c05:902f with SMTP id a640c23a62f3a-c29b86b7559mr277818766b.13.1789386614302;
-        Mon, 14 Sep 2026 04:50:14 -0700 (PDT)
-Received: from localhost ([82.145.119.8])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c2965c4dfc7sm415116366b.4.2026.09.14.04.50.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Sep 2026 04:50:13 -0700 (PDT)
-From: Andrea della Porta <andrea.porta@suse.com>
-X-Google-Original-From: Andrea della Porta <aporta@suse.de>
-Date: Mon, 14 Sep 2026 13:53:53 +0200
-To: Angel J <iamanaws@httpd.dev>
-Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-rpi-kernel@lists.infradead.org" <linux-rpi-kernel@lists.infradead.org>,
-	"helgaas@kernel.org" <helgaas@kernel.org>,
-	"robh@kernel.org" <robh@kernel.org>,
-	"andrea.porta@suse.com" <andrea.porta@suse.com>,
-	"florian.fainelli@broadcom.com" <florian.fainelli@broadcom.com>
-Subject: Re: [REGRESSION] PCI: Dynamic OF node creation hangs on invalid
- bridge configuration
-Message-ID: <aqfgUUkZYZg6ZABF@apocalypse>
-References: <GXe6anuewkS4bLNwca3cYOmUxN9csc0TxLYGSBc1qNRmfrmvFlcmD62wEM23TxfzfuXAv4P3yvUv7pyraleARrL1Na-aN8w-t9uc1Igu8DA=@httpd.dev>
- <cFJoUZ6c5g5YbFCrwUnx6RlitHRl-0cS2fadDSFJNf9SgLreKutrmZj1r56hFh8ZUAbzvuCqBG4w9ZYAE8xAWP9HnLwbjMOBzac-iMnMMZc=@httpd.dev>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="jJU2mYMN"
+Received: from mors-relay-8202.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8202.netcup.net (Postfix) with ESMTPS id 4hk6yL4M2pz44sD;
+	Mon, 14 Sep 2026 16:30:50 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1789396250;
+	bh=FcziOCCsytCcib3oM9S/q9gH2GMgiWKKT0G6/MmLl5Q=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=jJU2mYMNysSTPazrYTE4tRT0dgNoXJAcR16SD9ePKtLCnfzPoCEQxSTOTpVy/plhA
+	 av+IrFliwOtrvcLea07dCdYuxlG52CrPtgDszFM2SZlHlixiaRaDY8dlTSD1jSn+D1
+	 35S8IDBK2S2agzM3iv3xkLvp7c4rovkZLtRtnCnwPl05YKusuYPuzKAaYeu2NoOsCn
+	 BVGIYDPmRRkXvzDu3gO4Hnvo/Hwo3SlwYOepQA6xxioNHzMUkj6Xm6MmlfHIE7iVjd
+	 +mlQwOnzEGkQj+f5LIZ4IlLAyDF+1NKaT7ik47kBI247ozyjgvfPY6HIZniR1ZQxLX
+	 Iui0uWd11epTA==
+Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8202.netcup.net (Postfix) with ESMTPS id 4hk6yL3bxrz42Wm;
+	Mon, 14 Sep 2026 16:30:50 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
+X-Spam-Flag: NO
+X-Spam-Score: -2.898
+X-Spam-Level: 
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4hk6yG3tP6z8tdf;
+	Mon, 14 Sep 2026 16:30:46 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id EDD525FAA9;
+	Mon, 14 Sep 2026 16:30:37 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <012b3ebc-62f0-402e-afa9-02712e67e72a@leemhuis.info>
+Date: Mon, 14 Sep 2026 16:30:36 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] PCI BAR allocation/D3cold failure: NVIDIA MX250
+ inaccessible since Kernel 6.x on Acer Swift 3 (SF314-56G)
+To: lxuser <dittrich.m@gmx.net>
+Cc: bhelgaas@google.com, linux-pci@vger.kernel.org,
+ regressions@lists.linux.dev, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>, Bjorn Helgaas <helgaas@kernel.org>
+References: <20260501165542.GA491695@bhelgaas>
+ <561131dd-0e42-437a-9724-a036238a9bb4@gmx.net>
+ <5f716613-d996-46db-96ec-6c0251219922@gmx.net>
+ <449c834d-d115-4242-aa5a-43daa085f178@leemhuis.info>
+ <81ac70ae-c51e-4960-8dd3-bed47ceafafb@gmx.net>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <81ac70ae-c51e-4960-8dd3-bed47ceafafb@gmx.net>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <cFJoUZ6c5g5YbFCrwUnx6RlitHRl-0cS2fadDSFJNf9SgLreKutrmZj1r56hFh8ZUAbzvuCqBG4w9ZYAE8xAWP9HnLwbjMOBzac-iMnMMZc=@httpd.dev>
+X-PPP-Message-ID: <178939623830.3044871.3318525723028977191@mxe9fb.netcup.net>
+X-NC-CID: 4lZ9Jka4kHAB8Z3Kf0cGKN/GcN12YEJtihW5pU3kM/iil8zoXZ4=
 
-Hi Angel,
+On 9/7/26 13:11, lxuser wrote:
+> Dear Kernel Team,
+> 
+> I tested everything again with the result, that the regression is still
+> in the current kernel. This time I found the bug report from THUNDEROBOT
+> ZERO (https://bugzilla.kernel.org/show_bug.cgi?id=221087).
+> 
+> I tested the same patch from THUNDEROBOT ZERO  but changed the model to
+> my laptop:
+> +            DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
+> +            DMI_MATCH(DMI_PRODUCT_NAME, "Swift SF314-56G"),
+> (from dmidecode -s system-product-name and dmidecode -s system-manufacturer)
+> 
+> As an result everything works perfect. Please find the kernel patch
+> attached (acer-swift3-quirk-final.patch).
 
-On 23:01 Fri 11 Sep     , Angel J wrote:
-> Hi Andrea, Herv�, Bjorn, Thorsten,
-> 
-> Thanks for the guidance, it was very useful. I went back through the tests
-> and got some more insight into the hang.
-> 
-> Andrea wrote:
-> > Angel, could you please provide the following output:
-> >
-> > lspci -nn
-> > setpci -s 00:00.0 HEADER_TYPE
-> >
-> > from a running (i.e. with CONFIG_PCI_DYNAMIC_OF_NODES=n) system?
-> 
-> On Linux 6.12.109, with CONFIG_PCI_DYNAMIC_OF_NODES disabled, the relevant
-> output is:
-> 
->   $ lspci -nn
->   00:00.0 PCI bridge [0604]: Intel Corporation Device [8086:4c43] (rev 01)
-> 
->   $ setpci -s 00:00.0 HEADER_TYPE
->   01
-> 
->   $ setpci -s 00:00.0 PRIMARY_BUS SECONDARY_BUS SUBORDINATE_BUS
->   ff
->   ff
->   ff
+Please submit this properly in a new thread, referencing this one via a
+Link: tag, as it likely needs to go through the ACPI code, just like
+cd7ef20ba8c6e9 ("ACPI: PM: Add unused power resource quirk for
+THUNDEROBOT ZERO") (aka
+https://lore.kernel.org/all/d0785a7c-7e4c-434b-af31-4ec6f690ed89@126.com/
+) did -- so with similar To and CC values (and not as html!).
 
-So it seems that a device which is reported as a PCI bridge does not manage any
-bus underneath.
+And this looks odd, as this is both you, isn't it?
 
-> 
-> The device is bound to icl_uncore. I get the same values on the patched
-> kernel with CONFIG_PCI_DYNAMIC_OF_NODES=y.
-> 
-> Herv� wrote:
-> > Is this PCI logs reported with PCI_DYNAMIC_OF_NODES=y or PCI_DYNAMIC_OF_NODES=n
-> > or always whatever the PCI_DYNAMIC_OF_NODES Kconfig value ?
-> 
-> The messages appear on successful boots with either setting:
-> 
->   pci 0000:00:00.0: [8086:4c43] type 01 class 0x060400 conventional PCI bridge
->   pci 0000:00:00.0: bridge configuration invalid ([bus ff-ff]), reconfiguring
-> 
-> I confirmed this on 6.12.107 with the option disabled and 6.12.108 with it
-> enabled. They also appear on the patched 6.18.44 kernel.
-> 
-> Bjorn wrote:
-> > I don't think 49d63971f963 ("misc: rp1: RaspberryPi RP1 misc driver")
-> > is a likely culprit by itself because there's just nothing there that
-> > looks like it would relate to a Dell XPS 8940.
-> 
-> That change exposed the problem by enabling PCI_DYNAMIC_OF_NODES in my
-> configuration. I bisected again with the option enabled throughout and
-> found an earlier boundary:
-> 
->   3dc8adeeefa0  PCI: of_property: Constify parameter in of_pci_get_addr_flags()
->   1f340724419e  PCI: of: Create device tree PCI host bridge node
-> 
-> The first is the direct parent of the second. I boot-tested both without
-> any guard, changing only the source commit; their generated kernel
-> configurations are identical.
-> 
-> All of these tests have CONFIG_PCI_DYNAMIC_OF_NODES=y:
-> 
->   Source         Change             Result
->   3dc8adeeefa0    None               Boots
->   1f340724419e    None               Hangs
->   1f340724419e    Subordinate guard  Boots
->   6.18.44        None               Hangs
->   6.18.44        Subordinate guard  Boots
-> 
-> Herv� wrote:
-> > Maybe the test done at [1] should be improved to detect those wrong bridges.
-> > and skip the of_pci_make_dev_node() call when a wrong bridge is detected.
-> 
-> I added logging to the first bad commit to check the bridge scan. It shows
-> that 00:00.0 has no subordinate bus after either pass, despite satisfying
-> pci_is_bridge():
-> 
->   pci 0000:00:00.0: PCI OF debug: scan pass 0, buses ff/ff/ff
->   pci 0000:00:00.0: PCI OF debug: scan pass 0 done, subordinate bus absent
->   pci 0000:00:00.0: PCI OF debug: scan pass 1, buses ff/ff/ff
->   pci 0000:00:00.0: PCI OF debug: scan pass 1 done, subordinate bus absent
+  Signed-off-by: dittrich.m@gmx.net
+  Signed-off-by: lxuser <lxuser@local>
 
-This is confirmed by the BIOS/fw not filling the bus range and by the kernel
-failing to reallocate the bus since the range registers are probably read-only.
-Apparently this is not a bridge, it should be at most a host controller.
+> Tested with Kernel 7.2.3-1-cachyos.
 
-> 
-> of_pci_prop_bus_range() dereferences pdev->subordinate without checking it.
-> of_pci_prop_intr_map() also uses that pointer. Before 1f340724419e,
-> of_pci_make_dev_node() returns because the parent OF node is missing on
-> this ACPI system. That commit creates the parent node, allowing property
-> generation to reach the unchecked access.
-> 
-> My earlier report overstated the device_type="pci" result. The minimal-node
-> test that hung added device_type, bus-range and interrupt-map together;
-> I haven't confirmed a hang with device_type alone.
-> 
-> I tested this guard in of_pci_make_dev_node(), before node creation:
-> 
->   if (pci_is_bridge(pdev) && !pdev->subordinate)
->           return;
+Even if its "just" a quick, test with vanilla next time please.
 
-Not sure, maybe can it be considered a hw bug? If this is the case, we can maybe
-add a quirk for this device. Could you please test adding a quirk as PCI_FIXUP_HEADER
-in which you downgrade the class from 0604 to 0600 and see it works even without
-your proposed check in of_pci_make_dev_node()?
+Ciao, Thorsten
 
-If this works, maybe we can just turn the body of your conditional into just an error
-log plus fast exit, because a bridge must have valid subordinate.
-
-Many thanks,
-Andrea
-
-> Both the first bad commit and 6.18.44 boot with it. The 6.18.44 test uses
-> only the guard, without diagnostic logging. The host OF node and the nodes
-> for bridges 00:01.0 and 00:1c.0 are still created; 00:00.0 is skipped.
-> 
-> This points to the NULL subordinate pointer as the cause of the hang,
-> although I still don't have a crash trace from an unguarded boot. I'll
-> send the patch as a reply to this email. Is of_pci_make_dev_node() the
-> right place for this check?
-> 
-> #regzbot introduced: 1f340724419eda8ab07a20edcaf5ec8f70134231
-> 
-> Thanks,
-> Angel J
+> For further information I added
+> the log from sudo dmesg | grep -i "nvidia\|acpi.*power\|D3cold\|64-bit\|
+> BAR" from the original kernel and the patched kernel.
 
 
+
+> Am 16.05.26 um 16:29 schrieb Thorsten Leemhuis:
+>> On 5/16/26 12:16, Matthias Dittrich wrote:
+>>> I completed the bisect test between kernel 5.15 und 5.16 and found the
+>>> commit and now have reproducible revert-test results. I used the
+>>> bisect.sh (attached ) for automation. Testing criteria was status rev ff
+>>> (bad) or rev a1 (good).  As it was the first indicator for me on Ubuntu.
+>>> I also used olddefconfig as I know this config worked before.
+>>>
+>>> The identified commit (see final-bisect-log.txt) is:
+>>> # first bad commit: [a1224f34d72a103829d6953935d6c6621f135b83] ACPI: PM:
+>>> Check states of power resources during initialization
+>> Thx for the bisection. Not my area of expertise, so the following might
+>> send everyone in the wrong direction, nevertheless FWIW:
+>>
+>> That commit caused trouble on two other machines and DMI quirks were
+>> added to make them work again; see 9b04d99788cf47 ("ACPI: PM: Do not
+>> turn of unused power resources on the Toshiba Click Mini") [v6.4-rc1]
+>> and cd7ef20ba8c6e9 ("ACPI: PM: Add unused power resource quirk for
+>> THUNDEROBOT ZERO") [v7.0-rc1] for details. Wonder if the problem on your
+>> machine is similar.
+>>
+>> Ciao, Thorsten
+>>
+>>> Additionally testing (see Abschlusstest.txt):
+>>>
+>>>   * Verification with Parent commit test: git checkout
+>>>     a1224f34d72a103829d6953935d6c6621f135b83~1
+>>>       o lspci reports `rev a1` and  `nvidia-smi` works correctly
+>>>   * Revert test on 5.16 with git revert --no-commit
+>>>     a1224f34d72a103829d6953935d6c6621f135b83
+>>>       o     lspci reports `rev a1` and  `nvidia-smi` works correctly
+>>>   * Revert test on 6.1 with git revert --no-commit
+>>>     a1224f34d72a103829d6953935d6c6621f135b83
+>>>       o lspci reports `rev a1` and  `nvidia-smi` works correctly
+>>>
+>>> With kernels like 6.2 and newer "git revert" result in an error and
+>>> stops (transleted to english):
+>>>
+>>> git revert --no-commit a1224f34d72a103829d6953935d6c6621f135b83 Auto-
+>>> merging drivers/acpi/power.c CONFLICT (content): Merge conflict in
+>>> drivers/acpi/power.c error: could not revert a1224f34d72a... (ACPI: PM:
+>>> Check states of power resources during initialization) Hint: After
+>>> resolving the conflicts, mark the corrected paths with: Hint: 'git add
+>>> <paths>' or 'git rm <paths>'
+>>>
+>>> All tests have been done with Ubuntu 22.04. 
+>>>
+>>> Let me know if I can test anything further.
+>>>
+>>>
+>>> Test summary Ubuntu:
+>>>
+>>> Test Case
+>>>
+>>> 	
+>>>
+>>> Kernel / Commit
+>>>
+>>> 	
+>>>
+>>> Modification
+>>>
+>>> 	
+>>>
+>>> PCI State
+>>>
+>>> 	
+>>>
+>>> |Nvidia-smi/
+>>> NVIDIA Driver|
+>>>
+>>> 	
+>>>
+>>> Result
+>>>
+>>> Baseline good
+>>> Ubuntu 22.04
+>>>
+>>> 	
+>>>
+>>> Linux 5.15
+>>>
+>>> 	
+>>>
+>>> none
+>>>
+>>> 	
+>>>
+>>> |rev a1|
+>>>
+>>> 	
+>>>
+>>> works
+>>>
+>>> 	
+>>>
+>>> GOOD
+>>>
+>>> Baseline bad
+>>>
+>>> 	
+>>>
+>>> Linux 5.16
+>>>
+>>> 	
+>>>
+>>> none
+>>>
+>>> 	
+>>>
+>>> |rev ff|
+>>>
+>>> 	
+>>>
+>>> fails
+>>>
+>>> 	
+>>>
+>>> BAD
+>>>
+>>> Bisect parent
+>>>
+>>> 	
+>>>
+>>> |a1224f34...~1|
+>>>
+>>> 	
+>>>
+>>> none
+>>>
+>>> 	
+>>>
+>>> |rev a1|
+>>>
+>>> 	
+>>>
+>>> works
+>>>
+>>> 	
+>>>
+>>> GOOD
+>>>
+>>> First bad commit
+>>>
+>>> 	
+>>>
+>>> |a1224f34...|
+>>>
+>>> 	
+>>>
+>>> none
+>>>
+>>> 	
+>>>
+>>> |rev ff|
+>>>
+>>> 	
+>>>
+>>> fails
+>>>
+>>> 	
+>>>
+>>> BAD
+>>>
+>>> Revert verification
+>>>
+>>> 	
+>>>
+>>> |a1224f34...|
+>>>
+>>> 	
+>>>
+>>> reverted
+>>>
+>>> 	
+>>>
+>>> |rev a1|
+>>>
+>>> 	
+>>>
+>>> works
+>>>
+>>> 	
+>>>
+>>> GOOD
+>>>
+>>> Forward revert test
+>>>
+>>> 	
+>>>
+>>> Linux 6.1
+>>>
+>>> 	
+>>>
+>>> reverted
+>>>
+>>> 	
+>>>
+>>> |rev a1|
+>>>
+>>> 	
+>>>
+>>> works
+>>>
+>>> 	
+>>>
+>>> GOOD
+>>>
+>>> Ubuntu 22.04 (standard)
+>>>
+>>> 	
+>>>
+>>> Linux 6.8
+>>>
+>>> 	
+>>>
+>>> none
+>>>
+>>> 	
+>>>
+>>> |rev ff|
+>>>
+>>> 	
+>>>
+>>> fails
+>>>
+>>> 	
+>>>
+>>> BAD
+>>>
+>>> Modern revert attempt
+>>>
+>>> 	
+>>>
+>>> Linux 6.2
+>>>
+>>> 	
+>>>
+>>> revert attempted
+>>>
+>>> 	
+>>>
+>>> conflict in |drivers/acpi/power.c|
+>>>
+>>> 	
+>>>
+>>> n/a
+>>>
+>>> 	
+>>>
+>>> not testable
+>>>
+>>> *Linux 5.15 is the standard in Ubuntu 20.04 but also available as
+>>> downgrade in Ubuntu 22.04
+>>>
+>>> Test summary CachyOS:
+>>>
+>>> Test Case
+>>>
+>>> 	
+>>>
+>>> Kernel / Commit
+>>>
+>>> 	
+>>>
+>>> Modification
+>>>
+>>> 	
+>>>
+>>> PCI State
+>>>
+>>> 	
+>>>
+>>> |Nvidia-smi/
+>>> NVIDIA Driver|
+>>>
+>>> 	
+>>>
+>>> Result
+>>>
+>>> Standard
+>>>
+>>> 	
+>>>
+>>> Linux 7.0.2
+>>>
+>>> 	
+>>>
+>>> none
+>>>
+>>> 	
+>>>
+>>> |rev a1|
+>>>
+>>> 	
+>>>
+>>> fails
+>>>
+>>> 	
+>>>
+>>> BAD
+>>>
+>>> LTS
+>>>
+>>> 	
+>>>
+>>> Linux 6.18
+>>>
+>>> 	
+>>>
+>>> none
+>>>
+>>> 	
+>>>
+>>> |rev a1|
+>>>
+>>> 	
+>>>
+>>> fails
+>>>
+>>> 	
+>>>
+>>> BAD
+>>>
+>>> Start parameter
+>>>
+>>> 	
+>>>
+>>> |Linux ||7.0.2|
+>>>
+>>> 	
+>>>
+>>> start parameter
+>>>
+>>> 	
+>>>
+>>> |-|
+>>>
+>>> 	
+>>>
+>>> fails
+>>>
+>>> 	
+>>>
+>>> BAD
+>>>
+>>> git
+>>>
+>>> 	
+>>>
+>>> |Linux ||5.15|
+>>>
+>>> 	
+>>>
+>>> none
+>>>
+>>> 	
+>>>
+>>>
+>>> 	
+>>>
+>>>
+>>> 	
+>>>
+>>> not testable system freeze
+>>>
+>>> git
+>>>
+>>> 	
+>>>
+>>> |Linux ||7.0.2|
+>>>
+>>> 	
+>>>
+>>> revert attempted
+>>>
+>>> 	
+>>>
+>>>
+>>> 	
+>>>
+>>>
+>>> 	
+>>>
+>>> not testable
+>>>
+>>>
+>>> Kind regards,
+>>> Matthias
+>>>
+>>> Am 11.05.2026 um 11:34 schrieb Matthias Dittrich:
+>>>> Dear Bjorn,
+>>>>
+>>>> Thank you for the quick response. For transparency, I used the AI tool
+>>>> Gemini during the bug-fixing and testing process. I am not an IT
+>>>> specialist and therefore cannot fully verify all of the AI’s
+>>>> conclusions in my last mail.
+>>>>
+>>>> All kernels were tested manually by installing the OS and kernel. The
+>>>> recommended boot parameters were also tested manually. The logs sent
+>>>> previously and in this mail are raw terminal outputs generated from
+>>>> the commands listed in the "Skript" file.
+>>>>
+>>>>
+>>>> The dmesg and |lspci|output from the newest CachyOS kernel is
+>>>> attached. Additionally, the following commands were also run for the
+>>>> Ubuntu 5.15 kernel for comparison:
+>>>>
+>>>> dmesg
+>>>> sudo lspci -vv > lspci-vv-ubuntu2205-K515-good.txt
+>>>> sudo lspci -vvv > lspci-vvv-ubuntu2205-K515-good.txt
+>>>> sudo lspci -vvxxxx > lspci-vvxxxx-ubuntu2205-K515-good.txt
+>>>> sudo lspci -s 02:00.0 -vvxxxx > lspci_gpu_$(uname -r).txt
+>>>> sudo lspci -t > lspci_tree_$(uname -r).txt
+>>>>
+>>>>
+>>>> Gemini recommended performing a git bisect with optimized parameters
+>>>> to reduce compilation time.
+>>>>
+>>>>   * Before starting the bisect tests, I tested different kernel
+>>>>     revisions. The "git" kernel 5.15 (with localmodconfig) appears to
+>>>>     work just like the newer Ubuntu 5.15 kernel, as the graphics card
+>>>>     status is shown as |(rev a1)|. The earliest kernel revision where
+>>>>     the status changes to |(rev ff)|starts with kernel 5.16 (tested
+>>>>     with localmodconfig). However, the NVIDIA driver itself could not
+>>>>     be tested.
+>>>>   * The bisect between 5.15 and 5.16 result in|
+>>>>      [342a67f0884293639bd17ea44df754ead799e669]|| NFS: Label the
+>>>>     dentry with a verifier in nfs_link(), nfs_symlink()|, which seems
+>>>>     incorrect, as the verification using |git checkout
+>>>>     342a67f0884293639bd17ea44df754ead799e669~1|also failed.
+>>>>   * An automated bisect was attempted without localmodconfig, but
+>>>>     there were technical issues and I have not yet been able to
+>>>>     complete the testing.
+>>>>
+>>>> I also noticed that the |lspci|results differ between CachyOS and Ubuntu:
+>>>>
+>>>> 02:00.0 3D controller: NVIDIA Corporation GP108M [GeForce MX250] (rev a1)
+>>>>
+>>>>   * |(rev a1)|— Ubuntu 22.04 Kernel 5.15 (works), CachyOS Kernel 6.1
+>>>>     LTS and Kernel 7, but NVIDIA MX150 does not work
+>>>>   * |(rev ff)|— Ubuntu 22.04 Kernel 5.16 and newer (localmodconfig)
+>>>>     and Kernel 6.8 and NVIDIA MX150 does not work
+>>>>
+>>>> Kind regards,
+>>>> Matthias
+>>>>
+>>>>
+>>>>
+>>>> Am 01.05.2026 um 18:55 schrieb Bjorn Helgaas:
+>>>>> [+cc Ilpo]
+>>>>>
+>>>>> On Fri, May 01, 2026 at 10:13:41AM +0200, Matthias Dittrich wrote:
+>>>>>> Dear Kernel Developers,
+>>>>>>
+>>>>>> I found a regression and did my best to identify the issue and find a
+>>>>>> workaround, but I am not a developer. I also published the regression in the
+>>>>>> NVIDIA Linux Developer Forum, but it appears to be a kernel regression and
+>>>>>> not a driver issue, as the latest drivers work on older kernels (e.g., 5.15)
+>>>>>> but fail on anything 6.x+. I did not perform a git bisect as compiling on
+>>>>>> this i5-8265U - because of its low performance I can only compile one kernel
+>>>>>> over night.
+>>>>>>
+>>>>>> **Description:**
+>>>>>> The NVIDIA MX250 GPU on Acer Swift 3 (SF314-56G / BIOS 1.14) is inaccessible
+>>>>>> on any Linux distribution using Kernel 6.x or 7.x. The device fails to
+>>>>>> initialize during the driver probe routine.
+>>>>> Thanks for the report.  With the newest kernel available to you, can
+>>>>> you please capture the complete dmesg and output of "sudo lspci -vv"?
+>>>>> Don't filter out things that don't seem relevant; we can easily do
+>>>>> that.
+>>>>>
+>>>>> Bjorn
 
