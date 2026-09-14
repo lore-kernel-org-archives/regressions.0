@@ -1,157 +1,173 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [194.59.206.189])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5158B3BA239
-	for <regressions@lists.linux.dev>; Mon, 14 Sep 2026 06:22:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 108313F65EF
+	for <regressions@lists.linux.dev>; Mon, 14 Sep 2026 09:07:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.59.206.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789366937; cv=none; b=bBgxRssk1IToyQXp92FYA0kR/aQ/Q4qgAaKjHZpI49gk9mQ+Mncxycf9ProZUbfMn4fXVpfSdK6qzYHexeCTR/kB/sEMYZxBh2zQHyCZr2q04MmM0Euca4iUJ/BpEdKexMsK/2P6JW1tTnLld9aTfCokISGPEYTjQR3QeYKuurg=
+	t=1789376850; cv=none; b=nuJ3pGpUkJNbzIvQRspQ8XUTNB+SvJ+Vh/2qArWEBXFc7eJFDbCJHK9wMBmoqxLA5b7xcrxp//QC7mFqxcR14gE+JFPkQcwHbIz1yAsb1Dxp9NvY14/+w8xjUhYxM78rqAzY0o4RDKy5UJH9587g+jzrm12drgkVVbZYAuM99cs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789366937; c=relaxed/simple;
-	bh=pXII4JGlqjaRQl+sSKIwkXgER4sHxEtbUGWxUtd/yU4=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Z7j9tiQk3Khs0Hs6UtpydvbxsUNA1v0VtXvEwQzLWWr/7r6nwwh9H/AEl/daEFU8rgWm50GiJrZ2bevdwvEOaNvdxg3SwoOGTjYcqixnB8lVHiCIDd51kovPWBt0jXBl1A07q+syOdnrfR9hH7WdWTEL2e7Y8QX490iUUom5U5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=o45KzPNI; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=xo7U/N2V; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=MQTEma4u; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=hVta1DEZ; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1789376850; c=relaxed/simple;
+	bh=engjEc2gudsArVMmNEJz5z41HqqXgHRqILp5st5A2Ko=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ocyRZ1VK+ASyIC8JebhrC3PFVXsIT43x+hdR/DZs2KlBu+JOONnJvdpr+Pushhg6zVs7hNnQJ4BC8mRQJ+/6BwNg1Z3PTjPbTcKWDda1bCi4MxDuliVfcjK0AFhUXTtNpGGQkmtigZuAg0exvuy7bUZw2p9T7LKSKk5toEfV/t8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=G8gXagL0; arc=none smtp.client-ip=194.59.206.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="o45KzPNI";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="xo7U/N2V";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="MQTEma4u";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="hVta1DEZ"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="G8gXagL0"
+Received: from relay02-mors.netcup.net (localhost [127.0.0.1])
+	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4hjzlL5BWpz4BQm;
+	Mon, 14 Sep 2026 11:05:50 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1789376750;
+	bh=engjEc2gudsArVMmNEJz5z41HqqXgHRqILp5st5A2Ko=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=G8gXagL0Jnv4nNdUyybM7/GNJS2GAfoBc5w5jTI2Y83sT6R3ACO80LG6cpaw5x0D7
+	 VyyjDMkwjWEpMJaqf515RWBHU4OqoDgGbuRmYyqIqszv39YbpjnPly32Mygzctj4IO
+	 Ro3Zo5mtF5+fOV4PYiJiTikrfbz/JOQ7bZl5jLLDIo//8LopqAcVw4Pxo5u6UbhlQn
+	 SDgQkXg/U3fMGCubwV96HJIOk40/QCtTXXfajM9Qtw+o7N2G9W7HbY4+rfq9/dWSUr
+	 kZXTsvo2tulhjjeHYVZUS8cZKygBuAdlH16mA4Xt3pN888GbtFjxkOP3E7z9bgzloZ
+	 MwOrRrkuM/s2g==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4hjzjv1NBRz7yxL;
+	Mon, 14 Sep 2026 11:04:35 +0200 (CEST)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 141DC1F7CC;
-	Mon, 14 Sep 2026 06:22:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1789366930; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BtalXNOyJJgm2Apl7LzQtj+X8azbLpNMHHmOet77qrk=;
-	b=o45KzPNI7mB5TQa7etadrNVtYUqnwO9xUha3PGego+QDOTI+XXLcWOEvnCJbADU/zftYEm
-	p0+v0ubbM4Jxb/13qGhEioXPXvKFVHny4wglPxnnA/gcM8klf2vCTy/UtuhAkDbG8601RB
-	0y485+cFlLOccRhZAV1FuKtQsdgddKo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1789366930;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BtalXNOyJJgm2Apl7LzQtj+X8azbLpNMHHmOet77qrk=;
-	b=xo7U/N2VU3Dg9tDJ9axyUuMJJF9gr8mqxh1HBTzmN47Au/0AAYbepOLcg5I1uGlGImcCyp
-	d0SPPoY2P5uxWXAw==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1789366926; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BtalXNOyJJgm2Apl7LzQtj+X8azbLpNMHHmOet77qrk=;
-	b=MQTEma4uDMXg5RUJmfHLfo+9qAYkCu7zeM4h/Jup/Rug2qJW6ozAcDp+ZN08hcFsSxjDGe
-	r38yheertbdY1I/wJexC24IQPzVFQwF1M1iXJEFz1oLawJg7wbODw6glJK/d6hFVZuF+aA
-	NrTSM9mWV6zyg2aMYPvV5UzbM/xzoM0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1789366926;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BtalXNOyJJgm2Apl7LzQtj+X8azbLpNMHHmOet77qrk=;
-	b=hVta1DEZ5DtkP/j+ntDriha9uN707rY0bpW2WoQr8c8NBoIiLjmR4VxSXWmZ84G7Q+fwSK
-	6at574Z4+JMv5rCw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id AE32813515;
-	Mon, 14 Sep 2026 06:22:05 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id ezUcKY2Sp2qCBwAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Mon, 14 Sep 2026 06:22:05 +0000
-Date: Mon, 14 Sep 2026 08:22:05 +0200
-Message-ID: <87mrtkpd2q.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Takashi Iwai <tiwai@suse.de>,
-	Chris Lew <christopher.lew@oss.qualcomm.com>,
-	Deepak Kumar Singh <deepak.singh@oss.qualcomm.com>,
-	Pranav Mahesh Phansalkar <pranav.phansalkar@oss.qualcomm.com>,
-	netdev@vger.kernel.org,
-	linux-wireless@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: Re: [REGRESSION] ath12k suspend/resume breakage on 7.3-rc2
-In-Reply-To: <2741f995-dca0-4645-848c-34752d62574f@leemhuis.info>
-References: <87a4plsg4w.wl-tiwai@suse.de>
-	<878q55sfxo.wl-tiwai@suse.de>
-	<2741f995-dca0-4645-848c-34752d62574f@leemhuis.info>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/30.2 Mule/6.0
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4hjzjt0ywRz8sbC;
+	Mon, 14 Sep 2026 11:04:33 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 58F815F9D8;
+	Mon, 14 Sep 2026 11:04:27 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <260eee02-29d3-478f-9a39-d67adfefe862@leemhuis.info>
+Date: Mon, 14 Sep 2026 11:04:25 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Spam-Score: -3.30
-X-Spam-Level: 
-X-Spamd-Result: default: False [-3.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.993];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:mid]
-X-Spam-Flag: NO
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] net: qrtr: resend HELLO on MHI resume
+To: Daniel J Blueman <daniel@quora.org>,
+ Manivannan Sadhasivam <mani@kernel.org>
+Cc: "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+ Chris Lew <christopher.lew@oss.qualcomm.com>,
+ Pranav Mahesh Phansalkar <pranav.phansalkar@oss.qualcomm.com>,
+ Deepak Kumar Singh <deepak.singh@oss.qualcomm.com>,
+ linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ Takashi Iwai <tiwai@suse.de>
+References: <20260909055846.16539-1-daniel@quora.org>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <20260909055846.16539-1-daniel@quora.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: 
+ <178937666798.1427810.11433211726485551189@mxe9fb.netcup.net>
+X-Rspamd-Server: rspamd-worker-8404
+X-Rspamd-Queue-Id: 58F815F9D8
+X-NC-CID: T+F9yzsBemWHL7da7K3H05tvnUG+n+nUAdOdPPCfRe+q7OZ3MhQ=
 
-On Sun, 13 Sep 2026 11:03:57 +0200,
-Thorsten Leemhuis wrote:
+On 9/9/26 07:58, Daniel J Blueman wrote:
+> Since the MHI HELLO exchange was relocated, it is sent only at device
+> registration. During a suspend-resume cycle, the firmware in WiFi
+> cards such as WCN7850 indefinitely waits for another HELLO,
+> triggering:
 > 
-> On 9/13/26 10:39, Takashi Iwai wrote:
-> > On Sun, 13 Sep 2026 10:35:27 +0200,
-> > Takashi Iwai wrote:
-> >>
-> >> on 7.3-rc2, the suspend/resume of ath12k WiFi on Lenovo Thinkpad T14s
-> >> Gen6 AMD model is broken.  Upon suspend, the network isn't recovered,
-> >> and the desktop got eventually frozen.
-> >>
-> >> The git bisect pointed to the commit
-> >> 544d85de4dc22c01badfd8cefa59829ce35c4858
-> >>     net: qrtr: Send HELLO message on endpoint register
-> >>
-> >> and reverting this fixed the problem.
-> >>
-> >> Below is the (stripped) dmesg output after the resume showing the
-> >> problem.
-> >>
-> >> As far as I understand, the problem seems to be the change of the code
-> >> flow: ath12k uses mhi_power_down_keep_dev() during suspend, so the
-> >> qcom_mhi_qrtr_remove() and *_probe() won't be called.  This makes the
-> >> driver endlessly waiting for the HELLO handshake upon resume with the
-> >> commit above.
-> > 
-> > ... and below is a quick fix I tested.  It seems working so far.
-> Not my area of expertise, as you know, but have you see this fix for the
-> culprit? Or is your problem a different one?
+>   ath12k_wifi7_pci 0004:01:00.0: timeout while waiting for restart complete
+>   ath12k_wifi7_pci 0004:01:00.0: failed to resume core: -110
 > 
-> net: qrtr: resend HELLO on MHI resume
-> https://lore.kernel.org/all/20260909055846.16539-1-daniel@quora.org/
+> Fix this by triggering the handshake from resume_early in the MHI
+> transport.
+> 
+> Validated on Qualcomm X1E-801800 on Lenovo Slim 7x across 10
+> suspend-resume cycles.
 
-Yes, this patch works, too!  So scratch mine.
+For the record: Takashi ran into this regression as well and provided a
+different fix, but withdrew it after I pointed out this fix, which
+worked for Takashi. For details see:
+https://lore.kernel.org/all/87mrtkpd2q.wl-tiwai@suse.de/
 
+Ciao, Thorsten
+> Fixes: 544d85de4dc2 ("net: qrtr: Send HELLO message on endpoint register")
+> Signed-off-by: Daniel J Blueman <daniel@quora.org>
+> ---
+>  net/qrtr/af_qrtr.c | 13 +++++++++++++
+>  net/qrtr/mhi.c     | 10 +++++++++-
+>  net/qrtr/qrtr.h    |  2 ++
+>  3 files changed, 24 insertions(+), 1 deletion(-)
+> 
+> diff --git a/net/qrtr/af_qrtr.c b/net/qrtr/af_qrtr.c
+> index 78347c937af7..2ffcfc2fdb4a 100644
+> --- a/net/qrtr/af_qrtr.c
+> +++ b/net/qrtr/af_qrtr.c
+> @@ -623,6 +623,19 @@ static void qrtr_hello_work(struct work_struct *work)
+>  	qrtr_port_put(ctrl);
+>  }
+>  
+> +/* Trigger the HELLO handshake after the remote has been reset, eg on resume */
+> +void qrtr_endpoint_hello(struct qrtr_endpoint *ep)
+> +{
+> +	struct qrtr_node *node = ep->node;
+> +
+> +	mutex_lock(&node->ep_lock);
+> +	node->hello_sent = false;
+> +	mutex_unlock(&node->ep_lock);
+> +
+> +	schedule_delayed_work(&node->say_hello, 0);
+> +}
+> +EXPORT_SYMBOL_GPL(qrtr_endpoint_hello);
+> +
+>  /**
+>   * qrtr_endpoint_register() - register a new endpoint
+>   * @ep: endpoint to register
+> diff --git a/net/qrtr/mhi.c b/net/qrtr/mhi.c
+> index 3990da1a65dc..50326ffa3401 100644
+> --- a/net/qrtr/mhi.c
+> +++ b/net/qrtr/mhi.c
+> @@ -183,6 +183,7 @@ static int __maybe_unused qcom_mhi_qrtr_pm_suspend_late(struct device *dev)
+>  static int __maybe_unused qcom_mhi_qrtr_pm_resume_early(struct device *dev)
+>  {
+>  	struct mhi_device *mhi_dev = container_of(dev, struct mhi_device, dev);
+> +	struct qrtr_mhi_dev *qdev = dev_get_drvdata(dev);
+>  	enum mhi_state state;
+>  	int rc;
+>  
+> @@ -201,7 +201,13 @@ static int __maybe_unused qcom_mhi_qrtr_pm_resume_early(struct device *dev)
+>  		return rc;
+>  	}
+>  
+> -	return qcom_mhi_qrtr_queue_dl_buffers(mhi_dev);
+> +	rc = qcom_mhi_qrtr_queue_dl_buffers(mhi_dev);
+> +	if (rc)
+> +		return rc;
+> +
+> +	qrtr_endpoint_hello(&qdev->ep);
+> +
+> +	return 0;
+>  }
+>  
+>  static const struct dev_pm_ops qcom_mhi_qrtr_pm_ops = {
+> diff --git a/net/qrtr/qrtr.h b/net/qrtr/qrtr.h
+> index 3f2d28696062..de2de69a6199 100644
+> --- a/net/qrtr/qrtr.h
+> +++ b/net/qrtr/qrtr.h
+> @@ -27,6 +27,8 @@ int qrtr_endpoint_register(struct qrtr_endpoint *ep, unsigned int nid);
+>  
+>  void qrtr_endpoint_unregister(struct qrtr_endpoint *ep);
+>  
+> +void qrtr_endpoint_hello(struct qrtr_endpoint *ep);
+> +
+>  int qrtr_endpoint_post(struct qrtr_endpoint *ep, const void *data, size_t len);
+>  
+>  int qrtr_ns_init(void);
 
-thanks,
-
-Takashi
