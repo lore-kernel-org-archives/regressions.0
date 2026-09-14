@@ -1,46 +1,47 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from submarine.notk.org (submarine.notk.org [62.210.214.84])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33CE441DDEA;
-	Mon, 14 Sep 2026 09:19:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D966A425CC6;
+	Mon, 14 Sep 2026 09:35:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.210.214.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789377550; cv=none; b=M+kyhbu4I9KCDIH0GhHtDlgfULd670iwIIcZhXK0re7vB+FzWUAmWMPyQPY9otR3Vl3Vq+6sQI+lm4E5RPXLxS7K20LxIfWtaAeZlDgNfUK/MztJcu7RrtOgOwSuVuepaRx0inOaMCmVVlbBL3yZpne/TSefHG6hq7OfoOjoX3g=
+	t=1789378512; cv=none; b=OP4+SLkfbYCmOjvM6m/pnmYOvFN2nKzjkrTW7eOJrLc0pS6Eqpp6WBq4YBbx5IERGVmNbnDwzN/DBP4zFMJGtMCmxAKHI0XJh2bxTsMNncj272uslGfLizBqvZckVIyX4H+2PKaq9bSKF9mFshYAfuND9Tj4rcfC6t8pjSob8C8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789377550; c=relaxed/simple;
-	bh=zgHNssUAU7P6eNdP3GzHYgOH+o0aGipgW2wMtrhfn4k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ebaoc+5XXJMnBhRtw6dCp/grRQHvOEIuZFJ5EedyoSN2oJgFdZL8tBeUC+WvUuu9fjxCB3EMrCKf07gc+v8AqI+yPSYEmKqQmAMbXVyt6/3CUkDgmFASYPF6QnoJps0kfbHn/7X4m+hPvQTuDBAIQY8rZk0IXXrzO2h3KsHWSHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=vbY2Uou8; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789378512; c=relaxed/simple;
+	bh=kZfEzUE9D0r+jPRhZX1xxJv2TfU8XecSNnAfY+u4lLU=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=iOPRiXuykgqhsE8duzw0EpixFUdE6hpuYkqwtzJeCmInEEoHVIqTi+om5hZqJoX5n+KMWh4+QDTIKC5cz17+PFziR/zBhLyQ+pr00zCMnSSoJ5DBEJZjZhjX9KSU3xojXBvYITf0mu6ImrhHwLyarYrbint6hR7ppaZdpR1SREI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org; spf=pass smtp.mailfrom=codewreck.org; dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b=mC6R6vj1; arc=none smtp.client-ip=62.210.214.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codewreck.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="vbY2Uou8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01A771F000FF;
-	Mon, 14 Sep 2026 09:19:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxfoundation.org;
-	s=korg; t=1789377546;
-	bh=yX8V2mP8O1NdNarEn3J4AGxExpZl1EtOkA4r2T5UKqs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=vbY2Uou8n6fuwvRotBVqzMQvokDZhXQIutK6quBbvDFUWmUCgu/WmAuyzBOdBLVga
-	 aArnxdmJWym2uICWFr63OqbVL/Bn4AVtOL6UJhUY4U4cpZLPaYVeWvbLzaNimMtzM+
-	 3lY1Hq9a1YmPLs0R6dX8hh7htlcq02F9seLh5ODA=
-Date: Mon, 14 Sep 2026 11:18:57 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Benjamin Boortz <bennib@mailbox.org>
-Cc: Thorsten Leemhuis <linux@leemhuis.info>, stable@vger.kernel.org,
-	patches@lists.linux.dev, linux-kernel@vger.kernel.org,
-	torvalds@linux-foundation.org, akpm@linux-foundation.org,
-	linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-	lkft-triage@lists.linaro.org, pavel@nabladev.com,
-	jonathanh@nvidia.com, f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com, rwarsow@gmx.de, conor@kernel.org,
-	hargar@microsoft.com, broonie@kernel.org, achill@achill.org,
-	sr@sladewatkins.com,
-	Linux kernel regressions list <regressions@lists.linux.dev>
-Subject: Re: [PATCH 7.2 0000/1815] 7.2.6-rc1 review
-Message-ID: <2026091443-silenced-maximum-c398@gregkh>
-References: <20260912065648.999753832@linuxfoundation.org>
- <5babfab4-ebf7-42b8-88f2-ac2f5b6b2d7f@leemhuis.info>
- <aqabqJHW_tHhQn3v@bb-82jq>
+	dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b="mC6R6vj1"
+Received: from gaia.codewreck.org (localhost [127.0.0.1])
+	by submarine.notk.org (Postfix) with ESMTPS id D32F914C2D6;
+	Mon, 14 Sep 2026 11:34:56 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org;
+	s=2; t=1789378500;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+	bh=FQj/UbNv+AUtLk8gb9YNWkGybW6AtBdWo1xqClNzlgc=;
+	b=mC6R6vj1D7TLKo/Elv/ZqQw+iJHQ9uJJYlOd+e8w24XXlW9foPv8FSVDH30aDw+zqSg3MA
+	sFxZjHzOHq/kBEi3ajgZgURHs+E3XOL+DIFt9bfT9D6YXfq0T7TYuoeDV3BxmgU9GU6paZ
+	In+iVkb0L22FAmxcDXNtLicbAwVxYsCdFFE3iDc+n8PIJcU3RsA69KMyEGTSC5h7mqduWE
+	+jLMw22Usc5IieCUH9OCrl1qUitTFMFuYVKJtHtUKc3mhSMzaAqa+2HsM5TSVlcHUqAxrZ
+	2Gm9vvt54Yk+M32KeIQ+eoPylPzcTx2LYTHb2RuDnSFLp6zsvZnlQS0pam5JIg==
+Received: from localhost (gaia.codewreck.org [local])
+	by gaia.codewreck.org (OpenSMTPD) with ESMTPA id 2a36b916;
+	Mon, 14 Sep 2026 09:34:55 +0000 (UTC)
+Date: Mon, 14 Sep 2026 18:34:40 +0900
+From: Dominique Martinet <asmadeus@codewreck.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Michael Mulqueen <mike@method-b.uk>, ericvh@kernel.org,
+	lucho@ionkov.net, dhowells@redhat.com, pc@manguebit.org,
+	linux_oss@crudebyte.com, v9fs@lists.linux.dev,
+	linux-fsdevel@vger.kernel.org, regressions@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [GIT PULL] 9p regression fix for 7.3-rc4
+Message-ID: <aqe_sF0kM6mGn_KY@codewreck.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -49,72 +50,32 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aqabqJHW_tHhQn3v@bb-82jq>
 
-On Sun, Sep 13, 2026 at 02:54:39PM +0200, Benjamin Boortz wrote:
-> On Sat, Sep 12, 2026 at 12:18:56PM +0200, Thorsten Leemhuis wrote:
-> 
-> > On 9/12/26 08:29, Greg Kroah-Hartman wrote:
-> > > This is the start of the stable review cycle for the 7.2.6 release.
-> > > There are 1815 patches in this series, all will be posted as a response
-> > > to this one.  If anyone has any issues with these being applied, please
-> > > let me know.
-> > > [...]
-> > 
-> > My builds failed while compiling perf:
-> > 
-> > > > ui/browsers/hists.c: In function ‘evsel__hists_browse’:
-> > > > ui/browsers/hists.c:3191:41: error: ‘hotkey_act’ undeclared (first use in this function)
-> > > >  3191 |                                 memset(&hotkey_act, 0, sizeof(hotkey_act));
-> > > >       |                                         ^~~~~~~~~~
-> > > > ui/browsers/hists.c:3191:41: note: each undeclared identifier is reported only once for each function it appears in
-> > Reverting "perf ui hists: In report UI ensure thread is set with
-> > reference counting" fixes this. Haven't tried, but maybe including
-> > bd86119c3ee6ed ("perf ui hists: Fix dso_filter reference leak and exit
-> > zoom cleanup") will fix this, too.
-> > 
-> > That got me a little further, but then I ran into this:
-> > 
-> > > > tools/perf/util/python.c: In function ‘pyrf_evsel__open’:
-> > > > tools/perf/util/python.c:1104:9: error: implicit declaration of function ‘CHECK_INITIALIZED’ [-Wimplicit-function-declaration]
-> > > >  1104 |         CHECK_INITIALIZED(evsel, "evsel");
-> > > >       |         ^~~~~~~~~~~~~~~~~
-> > > > tools/perf/util/python.c: In function ‘pyrf_evsel__set_tracking’:
-> > > > tools/perf/util/python.c:1295:9: error: implicit declaration of function ‘CHECK_INITIALIZED_INT’ [-Wimplicit-function-declaration]
-> > > >  1295 |         CHECK_INITIALIZED_INT(pevsel->evsel, "evsel");
-> > > >       |         ^~~~~~~~~~~~~~~~~~~~~
-> > 
-> > Only looked briefly, but didn't spot a simple way to work around that
-> > through a simple revert or two (but it's quite likely I missed something).
-> > 
-> > Ciao, Thorsten
-> > 
-> 
-> 
-> build-tested and reproduced the 2 issues on x86_64 with:
-> 
->   make -j$(nproc) -C ./tools/perf O=/tmp/perf-build
-> 
-> observed errors:
-> 
-> 1) tools/perf/ui/browsers/hists.c:3191:41: error: 'hotkey_act' undeclared
-> 
-> 2ec3b9858725 — "perf hists browser: Increase MAX_OPTIONS to prevent stack buffer overflow"
->   prerequisite: bd86119c3ee6 expects MAX_OPTIONS=32; stable-rc still has 16
->   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=2ec3b985872594031cc1000b830344de5c26633d
-> bd86119c3ee6 — declares hotkey_act, fixes dso_filter reference leak
->   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=bd86119c3ee6ed7b8fc9be8298fe49f1a5355a46
-> 
-> 
-> 2) tools/perf/util/python.c:1104:9: error: implicit declaration of function 'CHECK_INITIALIZED'
-> 
-> 01fa2d416ace — defines CHECK_INITIALIZED
->   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=01fa2d416aceab51f97ec2769e8da9971a605eeb
-> 
-> 
-> With the 3 patches applied, perf build successful.
+The following changes since commit df2908090cda368b01ff43709f51890076c56157:
 
-Thanks for that, it fixes it for me too, I'll go queue these up now.
+  Linux 7.3-rc2 (2026-09-06 15:07:20 -0700)
 
-greg k-h
+are available in the Git repository at:
+
+  https://github.com/martinetd/linux tags/9p-for-7.3-rc4
+
+for you to fetch changes up to c60ae98c5aa64021751b38ab1313b19d620bf640:
+
+  9p: Fix v9fs_issue_write() to update i_size and remote_i_size (2026-09-12 07:49:22 +0000)
+
+----------------------------------------------------------------
+This is a single fix for a 9p/netfs regression that got in 7.1
+(and was backported to 7.0)
+
+We need to rework how cached attributes, and in particular i_size, are
+handled in 9p more thoroughly but that will take more time and this
+appears to be enough for the most obvious problems
+
+----------------------------------------------------------------
+David Howells (1):
+      9p: Fix v9fs_issue_write() to update i_size and remote_i_size
+
+ fs/9p/vfs_addr.c | 28 +++++++++++++++++++++++++++-
+ 1 file changed, 27 insertions(+), 1 deletion(-)
+-- 
+Dominique Martinet | Asmadeus
