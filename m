@@ -1,173 +1,120 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [194.59.206.189])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 108313F65EF
-	for <regressions@lists.linux.dev>; Mon, 14 Sep 2026 09:07:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.59.206.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33CE441DDEA;
+	Mon, 14 Sep 2026 09:19:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789376850; cv=none; b=nuJ3pGpUkJNbzIvQRspQ8XUTNB+SvJ+Vh/2qArWEBXFc7eJFDbCJHK9wMBmoqxLA5b7xcrxp//QC7mFqxcR14gE+JFPkQcwHbIz1yAsb1Dxp9NvY14/+w8xjUhYxM78rqAzY0o4RDKy5UJH9587g+jzrm12drgkVVbZYAuM99cs=
+	t=1789377550; cv=none; b=M+kyhbu4I9KCDIH0GhHtDlgfULd670iwIIcZhXK0re7vB+FzWUAmWMPyQPY9otR3Vl3Vq+6sQI+lm4E5RPXLxS7K20LxIfWtaAeZlDgNfUK/MztJcu7RrtOgOwSuVuepaRx0inOaMCmVVlbBL3yZpne/TSefHG6hq7OfoOjoX3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789376850; c=relaxed/simple;
-	bh=engjEc2gudsArVMmNEJz5z41HqqXgHRqILp5st5A2Ko=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ocyRZ1VK+ASyIC8JebhrC3PFVXsIT43x+hdR/DZs2KlBu+JOONnJvdpr+Pushhg6zVs7hNnQJ4BC8mRQJ+/6BwNg1Z3PTjPbTcKWDda1bCi4MxDuliVfcjK0AFhUXTtNpGGQkmtigZuAg0exvuy7bUZw2p9T7LKSKk5toEfV/t8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=G8gXagL0; arc=none smtp.client-ip=194.59.206.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1789377550; c=relaxed/simple;
+	bh=zgHNssUAU7P6eNdP3GzHYgOH+o0aGipgW2wMtrhfn4k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ebaoc+5XXJMnBhRtw6dCp/grRQHvOEIuZFJ5EedyoSN2oJgFdZL8tBeUC+WvUuu9fjxCB3EMrCKf07gc+v8AqI+yPSYEmKqQmAMbXVyt6/3CUkDgmFASYPF6QnoJps0kfbHn/7X4m+hPvQTuDBAIQY8rZk0IXXrzO2h3KsHWSHM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=vbY2Uou8; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="G8gXagL0"
-Received: from relay02-mors.netcup.net (localhost [127.0.0.1])
-	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4hjzlL5BWpz4BQm;
-	Mon, 14 Sep 2026 11:05:50 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1789376750;
-	bh=engjEc2gudsArVMmNEJz5z41HqqXgHRqILp5st5A2Ko=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=G8gXagL0Jnv4nNdUyybM7/GNJS2GAfoBc5w5jTI2Y83sT6R3ACO80LG6cpaw5x0D7
-	 VyyjDMkwjWEpMJaqf515RWBHU4OqoDgGbuRmYyqIqszv39YbpjnPly32Mygzctj4IO
-	 Ro3Zo5mtF5+fOV4PYiJiTikrfbz/JOQ7bZl5jLLDIo//8LopqAcVw4Pxo5u6UbhlQn
-	 SDgQkXg/U3fMGCubwV96HJIOk40/QCtTXXfajM9Qtw+o7N2G9W7HbY4+rfq9/dWSUr
-	 kZXTsvo2tulhjjeHYVZUS8cZKygBuAdlH16mA4Xt3pN888GbtFjxkOP3E7z9bgzloZ
-	 MwOrRrkuM/s2g==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4hjzjv1NBRz7yxL;
-	Mon, 14 Sep 2026 11:04:35 +0200 (CEST)
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4hjzjt0ywRz8sbC;
-	Mon, 14 Sep 2026 11:04:33 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 58F815F9D8;
-	Mon, 14 Sep 2026 11:04:27 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <260eee02-29d3-478f-9a39-d67adfefe862@leemhuis.info>
-Date: Mon, 14 Sep 2026 11:04:25 +0200
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="vbY2Uou8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01A771F000FF;
+	Mon, 14 Sep 2026 09:19:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxfoundation.org;
+	s=korg; t=1789377546;
+	bh=yX8V2mP8O1NdNarEn3J4AGxExpZl1EtOkA4r2T5UKqs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=vbY2Uou8n6fuwvRotBVqzMQvokDZhXQIutK6quBbvDFUWmUCgu/WmAuyzBOdBLVga
+	 aArnxdmJWym2uICWFr63OqbVL/Bn4AVtOL6UJhUY4U4cpZLPaYVeWvbLzaNimMtzM+
+	 3lY1Hq9a1YmPLs0R6dX8hh7htlcq02F9seLh5ODA=
+Date: Mon, 14 Sep 2026 11:18:57 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Benjamin Boortz <bennib@mailbox.org>
+Cc: Thorsten Leemhuis <linux@leemhuis.info>, stable@vger.kernel.org,
+	patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+	torvalds@linux-foundation.org, akpm@linux-foundation.org,
+	linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+	lkft-triage@lists.linaro.org, pavel@nabladev.com,
+	jonathanh@nvidia.com, f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com, rwarsow@gmx.de, conor@kernel.org,
+	hargar@microsoft.com, broonie@kernel.org, achill@achill.org,
+	sr@sladewatkins.com,
+	Linux kernel regressions list <regressions@lists.linux.dev>
+Subject: Re: [PATCH 7.2 0000/1815] 7.2.6-rc1 review
+Message-ID: <2026091443-silenced-maximum-c398@gregkh>
+References: <20260912065648.999753832@linuxfoundation.org>
+ <5babfab4-ebf7-42b8-88f2-ac2f5b6b2d7f@leemhuis.info>
+ <aqabqJHW_tHhQn3v@bb-82jq>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] net: qrtr: resend HELLO on MHI resume
-To: Daniel J Blueman <daniel@quora.org>,
- Manivannan Sadhasivam <mani@kernel.org>
-Cc: "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- Chris Lew <christopher.lew@oss.qualcomm.com>,
- Pranav Mahesh Phansalkar <pranav.phansalkar@oss.qualcomm.com>,
- Deepak Kumar Singh <deepak.singh@oss.qualcomm.com>,
- linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
- Linux kernel regressions list <regressions@lists.linux.dev>,
- Takashi Iwai <tiwai@suse.de>
-References: <20260909055846.16539-1-daniel@quora.org>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <20260909055846.16539-1-daniel@quora.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: 
- <178937666798.1427810.11433211726485551189@mxe9fb.netcup.net>
-X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: 58F815F9D8
-X-NC-CID: T+F9yzsBemWHL7da7K3H05tvnUG+n+nUAdOdPPCfRe+q7OZ3MhQ=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aqabqJHW_tHhQn3v@bb-82jq>
 
-On 9/9/26 07:58, Daniel J Blueman wrote:
-> Since the MHI HELLO exchange was relocated, it is sent only at device
-> registration. During a suspend-resume cycle, the firmware in WiFi
-> cards such as WCN7850 indefinitely waits for another HELLO,
-> triggering:
+On Sun, Sep 13, 2026 at 02:54:39PM +0200, Benjamin Boortz wrote:
+> On Sat, Sep 12, 2026 at 12:18:56PM +0200, Thorsten Leemhuis wrote:
 > 
->   ath12k_wifi7_pci 0004:01:00.0: timeout while waiting for restart complete
->   ath12k_wifi7_pci 0004:01:00.0: failed to resume core: -110
+> > On 9/12/26 08:29, Greg Kroah-Hartman wrote:
+> > > This is the start of the stable review cycle for the 7.2.6 release.
+> > > There are 1815 patches in this series, all will be posted as a response
+> > > to this one.  If anyone has any issues with these being applied, please
+> > > let me know.
+> > > [...]
+> > 
+> > My builds failed while compiling perf:
+> > 
+> > > > ui/browsers/hists.c: In function ‘evsel__hists_browse’:
+> > > > ui/browsers/hists.c:3191:41: error: ‘hotkey_act’ undeclared (first use in this function)
+> > > >  3191 |                                 memset(&hotkey_act, 0, sizeof(hotkey_act));
+> > > >       |                                         ^~~~~~~~~~
+> > > > ui/browsers/hists.c:3191:41: note: each undeclared identifier is reported only once for each function it appears in
+> > Reverting "perf ui hists: In report UI ensure thread is set with
+> > reference counting" fixes this. Haven't tried, but maybe including
+> > bd86119c3ee6ed ("perf ui hists: Fix dso_filter reference leak and exit
+> > zoom cleanup") will fix this, too.
+> > 
+> > That got me a little further, but then I ran into this:
+> > 
+> > > > tools/perf/util/python.c: In function ‘pyrf_evsel__open’:
+> > > > tools/perf/util/python.c:1104:9: error: implicit declaration of function ‘CHECK_INITIALIZED’ [-Wimplicit-function-declaration]
+> > > >  1104 |         CHECK_INITIALIZED(evsel, "evsel");
+> > > >       |         ^~~~~~~~~~~~~~~~~
+> > > > tools/perf/util/python.c: In function ‘pyrf_evsel__set_tracking’:
+> > > > tools/perf/util/python.c:1295:9: error: implicit declaration of function ‘CHECK_INITIALIZED_INT’ [-Wimplicit-function-declaration]
+> > > >  1295 |         CHECK_INITIALIZED_INT(pevsel->evsel, "evsel");
+> > > >       |         ^~~~~~~~~~~~~~~~~~~~~
+> > 
+> > Only looked briefly, but didn't spot a simple way to work around that
+> > through a simple revert or two (but it's quite likely I missed something).
+> > 
+> > Ciao, Thorsten
+> > 
 > 
-> Fix this by triggering the handshake from resume_early in the MHI
-> transport.
 > 
-> Validated on Qualcomm X1E-801800 on Lenovo Slim 7x across 10
-> suspend-resume cycles.
+> build-tested and reproduced the 2 issues on x86_64 with:
+> 
+>   make -j$(nproc) -C ./tools/perf O=/tmp/perf-build
+> 
+> observed errors:
+> 
+> 1) tools/perf/ui/browsers/hists.c:3191:41: error: 'hotkey_act' undeclared
+> 
+> 2ec3b9858725 — "perf hists browser: Increase MAX_OPTIONS to prevent stack buffer overflow"
+>   prerequisite: bd86119c3ee6 expects MAX_OPTIONS=32; stable-rc still has 16
+>   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=2ec3b985872594031cc1000b830344de5c26633d
+> bd86119c3ee6 — declares hotkey_act, fixes dso_filter reference leak
+>   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=bd86119c3ee6ed7b8fc9be8298fe49f1a5355a46
+> 
+> 
+> 2) tools/perf/util/python.c:1104:9: error: implicit declaration of function 'CHECK_INITIALIZED'
+> 
+> 01fa2d416ace — defines CHECK_INITIALIZED
+>   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=01fa2d416aceab51f97ec2769e8da9971a605eeb
+> 
+> 
+> With the 3 patches applied, perf build successful.
 
-For the record: Takashi ran into this regression as well and provided a
-different fix, but withdrew it after I pointed out this fix, which
-worked for Takashi. For details see:
-https://lore.kernel.org/all/87mrtkpd2q.wl-tiwai@suse.de/
+Thanks for that, it fixes it for me too, I'll go queue these up now.
 
-Ciao, Thorsten
-> Fixes: 544d85de4dc2 ("net: qrtr: Send HELLO message on endpoint register")
-> Signed-off-by: Daniel J Blueman <daniel@quora.org>
-> ---
->  net/qrtr/af_qrtr.c | 13 +++++++++++++
->  net/qrtr/mhi.c     | 10 +++++++++-
->  net/qrtr/qrtr.h    |  2 ++
->  3 files changed, 24 insertions(+), 1 deletion(-)
-> 
-> diff --git a/net/qrtr/af_qrtr.c b/net/qrtr/af_qrtr.c
-> index 78347c937af7..2ffcfc2fdb4a 100644
-> --- a/net/qrtr/af_qrtr.c
-> +++ b/net/qrtr/af_qrtr.c
-> @@ -623,6 +623,19 @@ static void qrtr_hello_work(struct work_struct *work)
->  	qrtr_port_put(ctrl);
->  }
->  
-> +/* Trigger the HELLO handshake after the remote has been reset, eg on resume */
-> +void qrtr_endpoint_hello(struct qrtr_endpoint *ep)
-> +{
-> +	struct qrtr_node *node = ep->node;
-> +
-> +	mutex_lock(&node->ep_lock);
-> +	node->hello_sent = false;
-> +	mutex_unlock(&node->ep_lock);
-> +
-> +	schedule_delayed_work(&node->say_hello, 0);
-> +}
-> +EXPORT_SYMBOL_GPL(qrtr_endpoint_hello);
-> +
->  /**
->   * qrtr_endpoint_register() - register a new endpoint
->   * @ep: endpoint to register
-> diff --git a/net/qrtr/mhi.c b/net/qrtr/mhi.c
-> index 3990da1a65dc..50326ffa3401 100644
-> --- a/net/qrtr/mhi.c
-> +++ b/net/qrtr/mhi.c
-> @@ -183,6 +183,7 @@ static int __maybe_unused qcom_mhi_qrtr_pm_suspend_late(struct device *dev)
->  static int __maybe_unused qcom_mhi_qrtr_pm_resume_early(struct device *dev)
->  {
->  	struct mhi_device *mhi_dev = container_of(dev, struct mhi_device, dev);
-> +	struct qrtr_mhi_dev *qdev = dev_get_drvdata(dev);
->  	enum mhi_state state;
->  	int rc;
->  
-> @@ -201,7 +201,13 @@ static int __maybe_unused qcom_mhi_qrtr_pm_resume_early(struct device *dev)
->  		return rc;
->  	}
->  
-> -	return qcom_mhi_qrtr_queue_dl_buffers(mhi_dev);
-> +	rc = qcom_mhi_qrtr_queue_dl_buffers(mhi_dev);
-> +	if (rc)
-> +		return rc;
-> +
-> +	qrtr_endpoint_hello(&qdev->ep);
-> +
-> +	return 0;
->  }
->  
->  static const struct dev_pm_ops qcom_mhi_qrtr_pm_ops = {
-> diff --git a/net/qrtr/qrtr.h b/net/qrtr/qrtr.h
-> index 3f2d28696062..de2de69a6199 100644
-> --- a/net/qrtr/qrtr.h
-> +++ b/net/qrtr/qrtr.h
-> @@ -27,6 +27,8 @@ int qrtr_endpoint_register(struct qrtr_endpoint *ep, unsigned int nid);
->  
->  void qrtr_endpoint_unregister(struct qrtr_endpoint *ep);
->  
-> +void qrtr_endpoint_hello(struct qrtr_endpoint *ep);
-> +
->  int qrtr_endpoint_post(struct qrtr_endpoint *ep, const void *data, size_t len);
->  
->  int qrtr_ns_init(void);
-
+greg k-h
