@@ -1,99 +1,123 @@
-Received: from mta0.migadu.com (out-32.mta0.migadu.com [91.218.175.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-4397.protonmail.ch (mail-4397.protonmail.ch [185.70.43.97])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 579DC35294E
-	for <regressions@lists.linux.dev>; Mon, 14 Sep 2026 23:16:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 972EA396585
+	for <regressions@lists.linux.dev>; Mon, 14 Sep 2026 23:28:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.97
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789427803; cv=none; b=gUREo+Fxm/8RNy6kjXWvrg2/654aINDwwq8M9jUnh+VIYgjVdOVjWxFfqhyqtdAmXddECCKV7CYDJlhOLxtBIP8fVhAk1/zfJvwZD8qjv2cpHxebrD2K3m46WjU1B0lg/2VGX9I5TdqrTIt9aofskeRe5Hd5ge0w6bBQZ0LAjP8=
+	t=1789428536; cv=none; b=QIJh4JtVXcRyIF2DmKeHfoSdwDPd9GY3qQKRIv59N+bInWTeNaSeA1f6WFG3JlqZqKQeh5BxWY3GSs3GWaN7AIVX6WnMxVNg+GO2OOTgPBdQz72JS672geCYjCEOVWqCKfqdU5PpECaiQQlV7K2QwYdDAS9eJ+4CJONUvnnbSHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789427803; c=relaxed/simple;
-	bh=6zWxkkeiTyWE5LKeVfdhoG160eDFFWVwrPpDwosVNsg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=D7E2b9gvXXOlV1N3QSoqTf4OZLmV93MKowA/IYInQTMTFQGLuRcpdWnEHhTBfAhsTQegN2PB9d72w/kAWvtLZxfqlfYefxSnh8lJJkiOqavMetHBOVfWlYaBMyF7RzA946anHFwrPYIk/ugaaFWfl96yjfmKwyMZX33ptkEFHq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=justthetip.ca; spf=pass smtp.mailfrom=justthetip.ca; dkim=pass (2048-bit key) header.d=justthetip.ca header.i=@justthetip.ca header.b=CTN8WiOg; arc=none smtp.client-ip=91.218.175.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=justthetip.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=justthetip.ca
+	s=arc-20240116; t=1789428536; c=relaxed/simple;
+	bh=so6+kpWSPAr+SaQAzS8bXa6DUJTn4TrJn7YN0EqL8rI=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=dnH+rTMV8ALfsr8ExVZedfSRwgavlB1ppsvzcPgBOWxQ6f+V2icliH4sBROjzOwWNqiNr6DlNHg2p44NxEpwnMAmUaAzyntDWvFfclk4XQ4Gsi4TSRucgKMJ3jGQaNLJhy8pjFLJp40uqZCZxd0gAKHyIPsluYkrU5mCM1xDddE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=httpd.dev; spf=pass smtp.mailfrom=httpd.dev; dkim=pass (2048-bit key) header.d=httpd.dev header.i=@httpd.dev header.b=m262tNUn; arc=none smtp.client-ip=185.70.43.97
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=httpd.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=httpd.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=justthetip.ca header.i=@justthetip.ca header.b="CTN8WiOg"
-X-Envelope-To: regressions@lists.linux.dev
-DKIM-Signature: a=rsa-sha256; bh=6zWxkkeiTyWE5LKeVfdhoG160eDFFWVwrPpDwosVNsg=;
- c=simple/simple; d=justthetip.ca;
- h=from:to:subject:date:message-id:mime-version:content-type; s=key1;
- t=1789427792; v=1; x=1790032592;
- b=CTN8WiOgCgcBOqgnN4CcU3dUEdhIrCHG69eyBylJY3dopCJ14vtbC3gvs15LK5dIFLBssFSv
- oaMh34+xqmSi+Se3HTEwEnAUmgwolt+UV0e3UQ2s7cp0agA9qpEl0cXPi50M+mDeiRathmIfC3p
- R4gh8HPeL6jGDLv5VfIEkzZtkHDBwHsjrzqTmT7EE3WTaaLGW7hfkSjGIOu+/ldKi40pvC2eh1+
- hZSa33IElwwuE8mS1px74fwfBFLbFr9AaPKcm8vgkHS4UDK61lok2XjvpID2qJRhyulnZ/slKnP
- XGOm9GZLh7RrCqqVu2s12MzMIRMCKTUvO4VNNz2cJZxTA==
-X-Envelope-To: regressions@lists.linux.dev
-Received: by smtp.migadu.com with ESMTPS id 93e28aba6f8c875a;
-	Mon, 14 Sep 2026 23:16:21 +0000
-X-Mizu-Trace-ID: 93e28aba6f8c875a
-X-Migadu-Flow: FLOW_OUT
-From: Devin Wittmayer <lucid_duck@justthetip.ca>
-To: Thorsten Leemhuis <regressions@leemhuis.info>,
-	Felix Fietkau <nbd@nbd.name>,
-	Lorenzo Bianconi <lorenzo@kernel.org>
-Cc: Klara Modin <klarasmodin@gmail.com>,
-	Charlie-cy Wu <Charlie-cy.Wu@mediatek.com>,
-	JB Tsai <jb.tsai@mediatek.com>,
-	Sean Wang <sean.wang@mediatek.com>,
-	Ryder Lee <ryder.lee@mediatek.com>,
-	Shayne Chen <shayne.chen@mediatek.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	linux-wireless@vger.kernel.org,
-	linux-mediatek@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: Re: [PATCH wireless] wifi: mt76: mt792x: fix NULL dereference in ACPI SAR init during probe
-Date: Mon, 14 Sep 2026 16:16:18 -0700
-Message-ID: <20260914231618.17749-1-lucid_duck@justthetip.ca>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <2fd03569-f1c4-4c02-97ed-c74f4cd7f809@leemhuis.info>
-References: <20260825181712.28548-1-lucid_duck@justthetip.ca> <2fd03569-f1c4-4c02-97ed-c74f4cd7f809@leemhuis.info>
+	dkim=pass (2048-bit key) header.d=httpd.dev header.i=@httpd.dev header.b="m262tNUn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=httpd.dev;
+	s=protonmail3; t=1789428529; x=1789687729;
+	bh=yxoj++wFvVAwzImdOHquYq/PvmSP6Nwb1m+Fxi9E1PA=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=m262tNUn0qggQ6BzAr6L7CTMNd/qcn7PFIcSzWLEgQf6UWVQ5Rwi8wcNhMUddA0GJ
+	 o21obADMQC6PjFbfGNy/Qt1MxIz+0r0lUCjX5jC+NA2f+ddY9vkdxqPNatH4e07E9T
+	 UMDRj73N6reiM7ZmItw/MudS9bYjLfug+QW/i2oCRD4KGN5WUUkKs6I8Xg87j07s9F
+	 P3VkZgItjLu9PdklKh035FJBOMK94QTqbEtPmUfCGnEP+jgTEFDZxT1Q2AcJ0HNdWN
+	 hF4LeDW+lXOxWIWiEPJ46bhiT1DMdUOSLb1oMno7/fx7O/j1VX64JA3vkO8dKxZL/Y
+	 Y6zybbh5jNVrA==
+Date: Mon, 14 Sep 2026 23:28:45 +0000
+To: Andrea della Porta <andrea.porta@suse.com>
+From: Angel J <iamanaws@httpd.dev>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "regressions@lists.linux.dev" <regressions@lists.linux.dev>, "stable@vger.kernel.org" <stable@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-rpi-kernel@lists.infradead.org" <linux-rpi-kernel@lists.infradead.org>, "helgaas@kernel.org" <helgaas@kernel.org>, "robh@kernel.org" <robh@kernel.org>, "florian.fainelli@broadcom.com" <florian.fainelli@broadcom.com>
+Subject: Re: [REGRESSION] PCI: Dynamic OF node creation hangs on invalid bridge configuration
+Message-ID: <VaPKN3QbW3sGj8wePAvI_xD3twp_MQE4-4xeSbvgoQPVUnKDWKz0EWT_JiLehpmc6WOsCAoFOPs412Xhtthes_ZtvrgsKB4QB6QPz-XvRb4=@httpd.dev>
+In-Reply-To: <B6jXhRRiVu4TfgjwfVOLgxbh1xIciImKFVMmjkMRoDt5SO7WpM2M3gBqsjtnh3VhYobWdcNfqFrmlCdhqZBqUakSNkTeVNZYJnXLTx55kRI=@httpd.dev>
+References: <GXe6anuewkS4bLNwca3cYOmUxN9csc0TxLYGSBc1qNRmfrmvFlcmD62wEM23TxfzfuXAv4P3yvUv7pyraleARrL1Na-aN8w-t9uc1Igu8DA=@httpd.dev> <cFJoUZ6c5g5YbFCrwUnx6RlitHRl-0cS2fadDSFJNf9SgLreKutrmZj1r56hFh8ZUAbzvuCqBG4w9ZYAE8xAWP9HnLwbjMOBzac-iMnMMZc=@httpd.dev> <aqfgUUkZYZg6ZABF@apocalypse> <B6jXhRRiVu4TfgjwfVOLgxbh1xIciImKFVMmjkMRoDt5SO7WpM2M3gBqsjtnh3VhYobWdcNfqFrmlCdhqZBqUakSNkTeVNZYJnXLTx55kRI=@httpd.dev>
+Feedback-ID: 163474212:user:proton
+X-Pm-Message-ID: d2ba4b13e36e34d8135a55ca2599efddc5d2a885
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; protocol="application/pgp-signature"; micalg=pgp-sha512; boundary="------19abcaf36a79a582b2fcee0af394648d3ca185f375b08afc4f8b0c2cc5776182"; charset=utf-8
 
-Thorsten,
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------19abcaf36a79a582b2fcee0af394648d3ca185f375b08afc4f8b0c2cc5776182
+Content-Type: multipart/mixed;boundary=---------------------7de5e8224e3f8cd20eea8e5ae1dd0491
 
-Thanks for pointing Linus at it, that's pretty cool.
+-----------------------7de5e8224e3f8cd20eea8e5ae1dd0491
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;charset=utf-8
 
-There's nothing to set straight as far as I could find so no additional
-patches to send. I went through it pretty thoroughly against mainline
-this afternoon.
+Ok, here it is...
 
-No stable backport needed. Both commits it fixes first appear in
-v7.3-rc1, so the regression never reached a release.
+I tested this quirk on Linux 6.18.44 with CONFIG_PCI_DYNAMIC_OF_NODES=3Dy,
+and it boots without either OF fix. The diff below omits the test logging.
 
-Felix's tree carries no competing fix and has not touched that file
-since October from what I could find.
+PCI_FIXUP_HEADER runs after the resources have been parsed using the
+original header type, and changing hdr_type also affects configuration
+restore. I don't know enough about this part of PCI to judge whether
+that's safe, so I'll wait for your advice before submitting it as a patch.
 
-The two patches still queued for that file, Junjie's 0xff one and my
-table-layout one, both apply cleanly on top, so nothing got stranded.
+Thanks,
+Angel J
 
-Thanks again,
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index de9bbccda..57df88a38 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -291,6 +291,22 @@ static int __init pci_apply_final_quirks(void)
+ }
+ fs_initcall_sync(pci_apply_final_quirks);
+ =
 
-Devin
 
-On 14/09/2026 06:35, Thorsten Leemhuis wrote:
-> For the record: Linus pulled this directly from the list into mainline
-> yesterday after I pointed to this patch in a small regression report. I
-> did that, as I had seen multiple people reporting a regression who
-> confirmed that this patch fixed things for them.
->
-> Bypassing subsystems like this has obvious downsides and risks; hence,
-> if that got something on the wrong track, please speak up -- or ideally
-> send patches to set things straight again in mainline.
->
-> https://git.kernel.org/torvalds/c/7825de3f75d184612d77655669a04ea0da252c17
-> / 7825de3f75d184 ("wifi: mt76: mt792x: fix NULL dereference in ACPI SAR
-> init during probe") [v7.3-rc3]
++/*
++ * On the Dell XPS 8940, 8086:4c43 reports a PCI-to-PCI bridge but has no
++ * downstream bus. Use host-bridge class and a normal header so that
++ * pci_is_bridge() does not send it through bridge scanning.
++ */
++static void quirk_intel_4c43_host_bridge(struct pci_dev *dev)
++{
++	if ((dev->class >> 8) !=3D PCI_CLASS_BRIDGE_PCI ||
++	    dev->hdr_type !=3D PCI_HEADER_TYPE_BRIDGE)
++		return;
++
++	dev->class =3D (PCI_CLASS_BRIDGE_HOST << 8) | (dev->class & 0xff);
++	dev->hdr_type =3D PCI_HEADER_TYPE_NORMAL;
++}
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x4c43, quirk_intel_4c43_ho=
+st_bridge);
++
+ /*
+  * Decoding should be disabled for a PCI device during BAR sizing to avoi=
+d
+  * conflict. But doing so may cause problems on host bridge and perhaps o=
+ther
+
+-----------------------7de5e8224e3f8cd20eea8e5ae1dd0491--
+
+--------19abcaf36a79a582b2fcee0af394648d3ca185f375b08afc4f8b0c2cc5776182
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: ProtonMail
+
+wrsEARYKAG0Fgmqogx0JEBoBbwppzUxnRRQAAAAAABwAIHNhbHRAbm90YXRp
+b25zLm9wZW5wZ3Bqcy5vcmes3p/1OSpN6LMhObrgEYZy+8qMUO+52BFBVbvV
+KvCQQRYhBEAFf9htFyVnqZzmVhoBbwppzUxnAACY0wD/SFb48faYSk4S81Rn
+a+nMZZ6WbytcUHJBks8/2VhxtfcA/jdk2n5GJvzeuyWgZAPW5fl9UDEyWQuO
+Mti2YQDwnA4D
+=zn2q
+-----END PGP SIGNATURE-----
+
+
+--------19abcaf36a79a582b2fcee0af394648d3ca185f375b08afc4f8b0c2cc5776182--
+
