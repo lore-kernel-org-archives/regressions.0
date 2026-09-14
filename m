@@ -1,155 +1,117 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-wm2-f12.google.com (mail-wm2-f12.google.com [74.125.225.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA9D5425862
-	for <regressions@lists.linux.dev>; Mon, 14 Sep 2026 09:40:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9FCC426405
+	for <regressions@lists.linux.dev>; Mon, 14 Sep 2026 10:00:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.140
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789378813; cv=none; b=P2xeR9rUG/2H0l9atMqATpnjJo297QUk5uw6St3KAwbIcOTm5u65r8TUY/OYmJV8eGJylG12pyT1JEerLL7zBiqJpf+/oATjJMYXc3fd1iUayhErAf2nBl7pO8q7ehorgX04CdWA4DHbS1/AysSsrX7Ykv2X5sgsbXxCxFee4Sk=
+	t=1789380005; cv=none; b=TIlzrxdSQTVkiRC6S7NxWajGV0F3O8Ubr5/dyaPI+GY2SxKNE/sALuT1KXXUi5Zrnf0vv+DLmMbjLSGJBC6L4NwmtzkAu0JHzlqrPOPyyvAvW4yqfq3eB8/u2UnF5BhShSmn66FbS++HEAmN9qsNXkeYNk856l0kL8Bg4weGiHA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789378813; c=relaxed/simple;
-	bh=H0p8adMv84wDCEuj/TtGwUv0y7JJBPKGHYfwhh4I7vk=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fLf+6wcJQAeEyaCUBYJx2EnExrZv//mVgGOGP68KJ4Vqxv5tGm+ewJNq2ow4ewb5cjGlwyJTc8n59N08C2MgdBB4Kcc5kCfLSjzJyR5zTNmL9+GmfW/U4Vs5yELNM05LxTtc0kwaz8HlCMZgAM6q1itCb+sURwTODG/BiuQCv20=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=hhWLSwtE; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=eq0fPh0e; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=hpsG6e1T; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=CGPvTSpA; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1789380005; c=relaxed/simple;
+	bh=nY+8DjuSFuBpxoEHzHL2AZ4ftLmPBNY9AbWt/IizrHE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=uT/ufs4UPrvgGdgRG8yzdOEa5mzKwhFaEegtddGGb8uLDY6sBwvDqgmaqpJC/KrMvK6RUZRy3DfluYyknD1V6HorHgoEbhAmlCh9A4zTdx4svHDx3sF8ON5OiG64+25mADIQomd2ui7Z0jbiNu6rCQjfng3WsD71N+feAEWkV78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=VNPyM5Uy; arc=none smtp.client-ip=74.125.225.140
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="hhWLSwtE";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="eq0fPh0e";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="hpsG6e1T";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="CGPvTSpA"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 7DB2921DB5;
-	Mon, 14 Sep 2026 09:40:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1789378804; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JNTFN7XjTiAPgVhVB7Jb9llocJp4gJ9YzeAYL5KFIhE=;
-	b=hhWLSwtE0F0Jw47TmVh0hV4ONKMVKoyLD8y4mJaCvcvuU8xaIYnGUvFva6HxrYvb78ZVEp
-	QFK88dn/hUKzbZHKl223AIic6hO2oYy5W4rG5NAGjHwjrMRg1wIUwBzMU1ARcasFx8VQ0x
-	Hf3gmTW+jEhWUqSwVoQTbVUJrbYCCKk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1789378804;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JNTFN7XjTiAPgVhVB7Jb9llocJp4gJ9YzeAYL5KFIhE=;
-	b=eq0fPh0eE3GS6U6tLjiAKQ8ElyxkYhsQJl4BXMVVCpS3zypZc124Q05udanmCG4gIyS3pr
-	sGEsVn6DVyfXItDg==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1789378800; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JNTFN7XjTiAPgVhVB7Jb9llocJp4gJ9YzeAYL5KFIhE=;
-	b=hpsG6e1T+lwLl1DyOP9abNZbtQGBHfgTJy9HzbIjNhEMvtjjQnYMT4QfgmXnnmYR+g7K6L
-	NnT6ETBoQSXFGaA/8/NwvVmdoY3iMIe/QAnsV0CRmg/QnnX2EYL5VNrCDl+XlSMNrlRsJl
-	bt8qqu2HLlh7Yim9PS8obgGB2vQLZ7I=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1789378800;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JNTFN7XjTiAPgVhVB7Jb9llocJp4gJ9YzeAYL5KFIhE=;
-	b=CGPvTSpA+ORFJXpEN180mc5Ppjd9Ea45tFVxFrhKVlVqbCDXcjER1JEn20ZbkyEfQ5Zqg4
-	T1fZBs9mXGq7bBDQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 048A21368C;
-	Mon, 14 Sep 2026 09:39:59 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 2kxiO+/Ap2opZQAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Mon, 14 Sep 2026 09:39:59 +0000
-Date: Mon, 14 Sep 2026 11:39:59 +0200
-Message-ID: <877bkop3ww.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Daniel J Blueman <daniel@quora.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Chris Lew <christopher.lew@oss.qualcomm.com>,
-	Pranav Mahesh Phansalkar <pranav.phansalkar@oss.qualcomm.com>,
-	Deepak Kumar Singh <deepak.singh@oss.qualcomm.com>,
-	linux-arm-msm@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="VNPyM5Uy"
+Received: by mail-wm2-f12.google.com with SMTP id 5b1f17b1804b1-49cc9f581c4so5808675e9.0
+        for <regressions@lists.linux.dev>; Mon, 14 Sep 2026 03:00:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20251104; t=1789380001; x=1789984801; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=m7QNpdgjusqgoiOYsJVTbvzfzST6HhgyXQdP08BJSIM=;
+        b=VNPyM5UyMIrJKM8OHvNxa0PQgvJixKVkE28UA9FoVa7XBA7nnQd9HP4HSZupUqwvRB
+         xIbhkwTBrcc6gsXQj1mn2LygeZ1DIH9MhStWbadXdjWvbto9h9jcZ2qgkxGtPGD1oX3a
+         evb+EFkiwJYgp10PIaOo7Bv8ULJ+DQIgWQzQxkN5iG2cLzbh0yje/m98m8TBK7/uVbFh
+         5esxm051oh4zcZPFYIcLEFFNDCRjGtH08bnr1WL32I3D4C5w2dF9d9fSwwa+wtuGdBIi
+         TnPmgurkN6+ocwmIag0v+xsNzUPri1Fcy9Ssq+Kb9bKvCoDQZcnjtBlz8MTinyr/w40Z
+         RMuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1789380001; x=1789984801;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=m7QNpdgjusqgoiOYsJVTbvzfzST6HhgyXQdP08BJSIM=;
+        b=Ng8rJ9or1BHDErbrBQvHRN+GMc9YwJhvDbAVaq3hQzE6lsuhQrzoiK4SAyNcldG83y
+         psQ9MfVJS5g8a9lEpFdblXbmoWWniyV1bbbNwFRO3aAQ+sXn+7D41NIJhn+aEW9cuPX1
+         XA3RueLDsef2WdCQNlEjlqG8QhDNxkAR1RkoOFFWo/1Pi5Oo6994SMwtR+Y3d5IIbVBE
+         rLz2pHM0w1sYbf4jV8QDSa/OkH6oJMs/8v6kZoZfe+4zehZTMMIwiLGsJL5SHl8N5JhU
+         nEh0W09jUc59wPX0I021+irENBxADxWbay9U6nvT57R+cLoQDZGSWJR6jMyxWaFVyChq
+         4m7w==
+X-Forwarded-Encrypted: i=1; AKwUvBwNLJ3ZSoweA4+eIozH43/ouVgF/FVscxe9RZRxVc9oNCNyvN8pnbDmSDtAp2kctGtnPKueODCvvY0fwA==@lists.linux.dev
+X-Gm-Message-State: AFuF++lr9JgoYt5sg9vwRvuZtTeyBj73SY050aFxGo7MAohjwyWdIcM6
+	CIKthQoQK3zYJSmEvjBMkHQsAIuqqAWQKr+6szb/ryNLPGS1qJTGkXiw
+X-Gm-Gg: AYBFou12JtRTVUsnf4LhGWGT96jM7dRle0qUd8jPjL6YDclp/zGA/PIYtyjccVv762j
+	+BVK1k+iq+3lOnp7IX9gkvVKqRKcQFCI/7yi5fIuTZZjxSfPMi9eP9W/CZYVWs41VplKEaq3m2S
+	E/SmAk9r1uefECarcyoyx/54IFJwuBvOeR5qiDoxk7pst3Bs9QTaZGEaAZFJQBSDRwx3ZpeSe9m
+	bsVgvnpmcGwxtVfP2esRgyHkuPa2iTrApFCrLRPCiYoZTWayJE1MCARwacxeyuRbf4Ypd1u5oQg
+	01s2eXzDb1T7DQ8HvmqJmDRkGibYvQLY17mInwLG32xAhcm0QqqmibCJ7/1tr+M8lgQYAJfOoi3
+	Pzrr/3t9KQ8BnaVolVkCrQccVRl+GzdHIYGp1gPHub7ck/k5E5/xIWUD5YiEwA81PnoNW3T+Jp3
+	UzgYG31p3iHJ/BJ/3nFyp8YXHowe0nSfgh17MtvEL+pwDihIzCp8GURuSMmX65gnhvmAOautfVB
+	kh262DX4ZNjz9wvELLke9ECIn6P9s4IpTXO3QU8uWonqnQcebehUu50nzK+/iV6rRfPLYY9A5Q=
+X-Received: by 2002:a05:600c:8b2f:b0:49e:65f2:db64 with SMTP id 5b1f17b1804b1-49e7a657446mr17851315e9.5.1789379999209;
+        Mon, 14 Sep 2026 02:59:59 -0700 (PDT)
+Received: from omarchy.lan (p200300dec74de0474f67e4b61f2de2c6.dip0.t-ipconnect.de. [2003:de:c74d:e047:4f67:e4b6:1f2d:e2c6])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49d26be3e0asm439935465e9.1.2026.09.14.02.59.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Sep 2026 02:59:58 -0700 (PDT)
+From: Manuel Knitza <manuel.knitza@googlemail.com>
+To: junjie.cao@intel.com,
+	miguel.vadillo@intel.com,
+	sakari.ailus@linux.intel.com,
+	mchehab@kernel.org
+Cc: gregkh@linuxfoundation.org,
+	regressions@leemhuis.info,
+	antti.laakso@linux.intel.com,
+	mehdi.djait@linux.intel.com,
+	linux-media@vger.kernel.org,
+	linux-staging@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
-	Linux kernel regressions list <regressions@lists.linux.dev>,
-	Takashi Iwai <tiwai@suse.de>
-Subject: Re: [PATCH] net: qrtr: resend HELLO on MHI resume
-In-Reply-To: <260eee02-29d3-478f-9a39-d67adfefe862@leemhuis.info>
-References: <20260909055846.16539-1-daniel@quora.org>
-	<260eee02-29d3-478f-9a39-d67adfefe862@leemhuis.info>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/30.2 Mule/6.0
+	regressions@lists.linux.dev,
+	stable@vger.kernel.org,
+	Manuel Knitza <manuel.knitza@googlemail.com>
+Subject: Re: [PATCH] media: i2c: cvs: Do not hide the option in the ancillary menu
+Date: Mon, 14 Sep 2026 11:59:57 +0200
+Message-ID: <20260914095957.217739-1-manuel.knitza@googlemail.com>
+X-Mailer: git-send-email 2.55.0
+In-Reply-To: <20260913125345.588586-1-junjie.cao@intel.com>
+References: <20260913125345.588586-1-junjie.cao@intel.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Spam-Score: -3.30
-X-Spam-Level: 
-X-Spamd-Result: default: False [-3.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.993];
-	MIME_GOOD(-0.10)[text/plain];
-	URIBL_BLOCKED(0.00)[suse.de:mid,suse.de:email,imap1.dmz-prg2.suse.org:helo];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[15];
-	MIME_TRACE(0.00)[0:+];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:mid,suse.de:email]
-X-Spam-Flag: NO
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Mon, 14 Sep 2026 11:04:25 +0200,
-Thorsten Leemhuis wrote:
-> 
-> On 9/9/26 07:58, Daniel J Blueman wrote:
-> > Since the MHI HELLO exchange was relocated, it is sent only at device
-> > registration. During a suspend-resume cycle, the firmware in WiFi
-> > cards such as WCN7850 indefinitely waits for another HELLO,
-> > triggering:
-> > 
-> >   ath12k_wifi7_pci 0004:01:00.0: timeout while waiting for restart complete
-> >   ath12k_wifi7_pci 0004:01:00.0: failed to resume core: -110
-> > 
-> > Fix this by triggering the handshake from resume_early in the MHI
-> > transport.
-> > 
-> > Validated on Qualcomm X1E-801800 on Lenovo Slim 7x across 10
-> > suspend-resume cycles.
-> 
-> For the record: Takashi ran into this regression as well and provided a
-> different fix, but withdrew it after I pointed out this fix, which
-> worked for Takashi. For details see:
-> https://lore.kernel.org/all/87mrtkpd2q.wl-tiwai@suse.de/
+Tested-by: Manuel Knitza <manuel.knitza@googlemail.com>
 
-Yep, feel free to take my tested-by tag, too:
+Confirmed on linux-ptl, as you asked. Config-only test, same scope as
+yours - not booted with a kernel built this way.
 
-Tested-by: Takashi Iwai <tiwai@suse.de>
+Starting config: linux-ptl 7.2.3-arch1-1, the Panther Lake kernel Omarchy
+ships, taken from /lib/modules/.../build/.config. It has
+CONFIG_MEDIA_HIDE_ANCILLARY_SUBDRV=y, no CONFIG_EXPERT, and no
+VIDEO_INTEL_CVS line at all.
 
+Run on a vanilla v7.2.4 tree. linux-ptl does not touch the files involved:
+drivers/media/{i2c,pci/intel,pci/intel/ipu6}/Kconfig,
+drivers/staging/media/ipu7/Kconfig and drivers/media/i2c/cvs/Kconfig are
+byte-identical to vanilla, as is every other Kconfig under drivers/media.
 
-thanks,
+  before: make olddefconfig -> no VIDEO_INTEL_CVS line
+  after:  make olddefconfig -> CONFIG_VIDEO_INTEL_CVS=m
 
-Takashi
+Diffing the two generated configs shows exactly one changed line, the
+added CONFIG_VIDEO_INTEL_CVS=m. Nothing else moves.
+
+Worth noting for the stable case you mention: this is a distro kernel that
+already carries IPU_BRIDGE=m and VIDEO_INTEL_IPU7=m, so it is precisely
+the configuration whose bridge routes to a driver it cannot currently
+build.
+
+Assisted-by: Claude Code:claude-opus-5
