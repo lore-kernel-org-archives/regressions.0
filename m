@@ -1,112 +1,95 @@
-Received: from mail-106117.protonmail.ch (mail-106117.protonmail.ch [79.135.106.117])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [194.59.206.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD2C53CAA52
-	for <regressions@lists.linux.dev>; Tue, 15 Sep 2026 12:25:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.117
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9515A4A8A35
+	for <regressions@lists.linux.dev>; Tue, 15 Sep 2026 12:28:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.59.206.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789475111; cv=none; b=ea7DAJW3ZQxBQAiMSLOtpbH6Atnx2cmNMCySzlBe/H6/Y6H4khDfvmnrAssAvNxEr6c3povVJaIEMFrD3tN3LR3XcoEhGC9yTYXEH7CPZmlkra8XHGpzuR5j6X99WvwA/XZ4D5EGhYJQsjol/mRK6SwRqKYn8PA5ix/GmzGnmW8=
+	t=1789475289; cv=none; b=AfLavpB9iUzz/nXsXEgF8oksEL4i3klfL933KKp32PXJ7x+NgtobEJ0vJUIl/JXcSSWYtA5OAP2y57+v0uEWi7HnBgtsx3yqCkcP8FWgYZoBTUwXyyyrbk7MwjNwQksA8vg4UC+EWnr5UNRP9qJiqmyaqIdTIn1Dq/Wppo4B0GI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789475111; c=relaxed/simple;
-	bh=dQwY+fJdZSq7f2R1G4MVjrIF2+KddO9Z6wzUzNnLF84=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gQujYL34zk4fckt78lPB8VcZeGWsuttT8ccdq9W2dkq65YpkDhnGJMLvL4E562lJOwhmawuNfug2puvpI7Sy+0ky+5fqVbi8t7pr+42/FZOaHEms5TgXGk6LPlwGFFmXR3bDN0c0GmRp1HiVRYJaSuxwIaAfj4/tbGJyAhoP2jc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=danielfernau.com; spf=pass smtp.mailfrom=danielfernau.com; dkim=pass (2048-bit key) header.d=danielfernau.com header.i=@danielfernau.com header.b=FG9g4kVf; arc=none smtp.client-ip=79.135.106.117
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=danielfernau.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=danielfernau.com
+	s=arc-20240116; t=1789475289; c=relaxed/simple;
+	bh=K+zRp5MEpzRwAl0LSpFk1cAMMJoTi5Xlaz0Y+xDYkTA=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=H+OVgsj/bzALYmp30HSbi7lH//deBAgcgdVUzeXfqhFEuKEllNqonDN48KOKkp8SKwj46eIki1ChCm1wsn+ps/T9RbJbcMRSjpQfandDdj4/seMfdX2D3muVszY793EiOBVJkeFnsWndRuStu+1BCKax9V4HtjFoyicxo0xRQ1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=C7lyc/3i; arc=none smtp.client-ip=194.59.206.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=danielfernau.com header.i=@danielfernau.com header.b="FG9g4kVf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=danielfernau.com;
-	s=protonmail; t=1789475106; x=1789734306;
-	bh=92rny1zNwUdZet6IQ9calXezSfCPdzK7V6o7gfAiUqM=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=FG9g4kVfcjG/b9RtK29o2Gfd/KqWicum2xw1xYQLhEt6Q6SP+AmcgJDXWI67nuHXw
-	 MXN9CJ2gJ0IrBgLlBJE9r/eGgozkJwlRPoh72W/5e/JwwxMQk3A/Kr7/WzzBJx5P4Z
-	 qSHzsBKg6kJD8+Ud4CnTYHrWsU+UxovMwQI7ecNC9DrXNZLaoiIHRCHRzsM/Xq0ELC
-	 vTm4cwK1fzp/f1b0alqv+8XFq6gUkcwDc3MnufJDTgXZV4MKbSFHSpx11Q9MG0kyWG
-	 gwy/7siRdIcSMsM6G8AhFM1287BF6DPH8ygbMbUBUziU0ljTxA33zf/ZFNoJ+zbL1A
-	 pxrsegApParMQ==
-Date: Tue, 15 Sep 2026 12:24:58 +0000
-To: "Martin K. Petersen (Oracle)" <mkp@kernel.org>
-From: Daniel Fernau <mail@danielfernau.com>
-Cc: Kashyap Desai <kashyap.desai@broadcom.com>, Sumit Saxena <sumit.saxena@broadcom.com>, Shivasharan S <shivasharan.srikanteshwara@broadcom.com>, Chandrakanth patil <chandrakanth.patil@broadcom.com>, megaraidlinux.pdl@broadcom.com, Thomas Lamprecht <t.lamprecht@proxmox.com>, "James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>, linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, Damien Le Moal <dlemoal@kernel.org>, Jens Axboe <axboe@kernel.dk>, Keith Busch <kbusch@kernel.org>, Ranjan Kumar <ranjan.kumar@broadcom.com>, Thorsten Leemhuis <regressions@leemhuis.info>, regressions@lists.linux.dev, Lukasz Magiera <me@magik.net>, Mira Limbeck <m.limbeck@proxmox.com>, Mats Topstad <Mats.topstad@intility.no>, stable@vger.kernel.org
-Subject: Re: [PATCH] scsi: megaraid_sas: Limit NVMe request size to the PRP chain frame
-Message-ID: <k5_uJWSlVpSwhVugTUyBfaq9oFVqFfpeuk_765JDKLtq_vKNO8mXI6TznKe4bX9WisARpHFxQYZ6i7W8YBT02KYaHL5d3LKSfyfCkNAh1jc=@danielfernau.com>
-In-Reply-To: <178840472610.670675.12272571379596581093.b4-ty@b4>
-References: <20260827175743.734593-1-t.lamprecht@proxmox.com> <178840472610.670675.12272571379596581093.b4-ty@b4>
-Feedback-ID: 131378921:user:proton
-X-Pm-Message-ID: cedc9534f7bd132ab88023fdca5b51ac4853a55e
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="C7lyc/3i"
+Received: from relay02-mors.netcup.net (localhost [127.0.0.1])
+	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4hkhBD3PNSz4B9g
+	for <regressions@lists.linux.dev>; Tue, 15 Sep 2026 14:28:04 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1789475284;
+	bh=K+zRp5MEpzRwAl0LSpFk1cAMMJoTi5Xlaz0Y+xDYkTA=;
+	h=Date:Subject:From:To:References:In-Reply-To:From;
+	b=C7lyc/3ivGaCXiFTbv0Ok6OeTzTo0n/AEHJAVT2/j6N99xGyrS5P2dzcBRR4hZHIV
+	 SQRxn2zXJ5oX+5zSDDm124grp/InTV888L8TpBefTIHSsRHcqnJ74GbvS1x13EUQ7z
+	 PrUUcFKLC3MmC7/P3IgGBgqPYl0K8AmPU0EbCXFReSYfXinNJ97TvDlND0uR8aZNJK
+	 DEBkcSRvcZtOcPUPuiI/rUqsyR/QJMgP5fY1KAKz6055tkVKJpP23EFHi133GQL7Rd
+	 fXkEJ8wdeoMz4EUU+Ts6OwootXdOTVxw6CJDOdFdQbkvVYPvlHV0ZLZL8wDl2W9bOq
+	 JXAmFNdnuhAsg==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4hkhBD2jsgz7xLy
+	for <regressions@lists.linux.dev>; Tue, 15 Sep 2026 14:28:04 +0200 (CEST)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4hkhBD16dnz8tJW
+	for <regressions@lists.linux.dev>; Tue, 15 Sep 2026 14:28:04 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 92C225F9C8
+	for <regressions@lists.linux.dev>; Tue, 15 Sep 2026 14:27:59 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <d7c8af92-c73f-43c8-b01a-431fde37667f@leemhuis.info>
+Date: Tue, 15 Sep 2026 14:27:59 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-
-Follow-up from our earlier note on pinning 6.8.12-4-pve.
-
-We have now been running the HPE MR416i-o Gen11 cluster on Proxmox
-kernel 7.0.14-15-pve without the previous megasas_make_prp_nvme
-overflow.
-
-Hardware / firmware
-- HPE MR416i-o Gen11 (Broadcom PCI 0x1000:0x10e2)
-- HPE FW package 52.32.3-6333 / controller FW 5.320.03-4207
-- megaraid_sas 07.734.00.00-rc1
-- KIOXIA NVMe behind the controller
-
-7.0.14-15-pve includes
-"scsi: megaraid_sas: Limit NVMe request size to the PRP chain frame"
-(pve-kernel 46a6f4f). That is the driver-side max_hw_sectors cap
-Martin suggested and the megaraid equivalent of Damien's
-04631f55afc5 ("scsi: mpt3sas: Limit NVMe request size to 2 MiB"),
-not Lukasz's original bounds check in megasas_make_prp_nvme().
-
-On this hardware the cap is enough. We no longer need the
-max_sectors_kb udev workaround, and we do not see the page-boundary
-ptr_sgl fault (RAX=3D0x200 / 512th PRP slot) under production load.
-
-Thanks,
-Daniel
-=20
+User-Agent: Mozilla Thunderbird
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: <178947527977.1805206.8484119801354397855@mxe9fb.netcup.net>
+X-Rspamd-Server: rspamd-worker-8404
+X-Rspamd-Queue-Id: 92C225F9C8
+X-NC-CID: +IA5stAmtHjLeAtBgSi+xBrFTyauhz854ghrVgvPSSlY7tMLpvk=
 
 
 
-On Thursday, September 3rd, 2026 at 5:10 AM, Martin K. Petersen (Oracle) <m=
-kp@kernel.org> wrote:
+On 3/9/24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
 
-> On Thu, 27 Aug 2026 19:24:24 +0200, Thomas Lamprecht wrote:
->=20
-> > megasas_make_prp_nvme() builds a command's PRP list in cmd->sg_frame, a
-> > DMA pool buffer of instance->max_chain_frame_sz bytes, spending one ent=
-ry
-> > per NVMe page of the transfer plus one per page of the buffer for the
-> > chain pointer. The loop runs until the transfer is described and never
-> > checks the buffer bound.
-> >
-> > max_hw_sectors comes straight from the MDTS the firmware reports for th=
-e
-> > drive. On drives with a large MDTS the only thing keeping the list insi=
-de
-> > the buffer was the block layer default of 1280 KiB, which needs 320
-> > entries, which fit into a 4 KiB frame as that holds 512. But since comm=
-it
-> > 9b8b84879d4a ("block: Increase BLK_DEF_MAX_SECTORS_CAP") that default i=
-s
-> > 4 MiB, and such a transfer needs 1025 entries, so the list runs a full
-> > page past the end of the frame:
-> >
-> > [...]
->=20
-> Applied to 7.3/scsi-fixes, thanks!
->=20
-> [1/1] scsi: megaraid_sas: Limit NVMe request size to the PRP chain frame
->       https://git.kernel.org/mkp/scsi/c/af8c27375733
->=20
-> --
-> Martin K. Petersen
-> 
+#regzbot report:
+https://lore.kernel.org/linux-btrfs/c97652a5-ac6b-4de6-aa23-3cdebc01d00b@gmail.com/
+#regzbot introduced: 3eaf5f082c4c
+#regzbot title: btrfs: Inline data is compressed unconditinally
+#regzbot monitor:
+https://lore.kernel.org/all/721d8fd2c73095d06cbdbfa714a6dfac9c488953.1789407346.git.fdmanana@suse.com/
+
+#regzbot report:
+https://lore.kernel.org/lkml/20260731122233.18345-1-info@humanlearning.ch/
+#regzbot resolve: inconclusive: reporter MIA, I thus assume this was
+resolved
+
+#regzbot report:
+https://lore.kernel.org/stable/9ac1c05b-e9f2-49e9-af63-9cd0e42115fc@gmail.com/
+#regzbot fix: Bluetooth: btrtl: Add the support for RTL8761CUV
+
+#regzbot report: https://gitlab.freedesktop.org/drm/amd/-/issues/5735
+#regzbot fix: x86/mm: Don't force unencrypted DMA for IOMMU-backed devices
