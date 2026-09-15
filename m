@@ -1,95 +1,130 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [194.59.206.189])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9515A4A8A35
-	for <regressions@lists.linux.dev>; Tue, 15 Sep 2026 12:28:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.59.206.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52A993B7757;
+	Tue, 15 Sep 2026 12:39:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789475289; cv=none; b=AfLavpB9iUzz/nXsXEgF8oksEL4i3klfL933KKp32PXJ7x+NgtobEJ0vJUIl/JXcSSWYtA5OAP2y57+v0uEWi7HnBgtsx3yqCkcP8FWgYZoBTUwXyyyrbk7MwjNwQksA8vg4UC+EWnr5UNRP9qJiqmyaqIdTIn1Dq/Wppo4B0GI=
+	t=1789476000; cv=none; b=H2MITnlA3uDw/98OSOKg1e4Liy87afozLLwxmL/XZSHMpNahAzo/z1Iq/Q3C+Ef84nUwREf6ILeYN9kISDsauSYGkf5k9CZP4ysE+zKmTebC72hZx++/YaE+TzQiMGi7//flmD6Gdj7kRf7U3jJ011JmLL4L1MFD7XzJOjTYLwE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789475289; c=relaxed/simple;
-	bh=K+zRp5MEpzRwAl0LSpFk1cAMMJoTi5Xlaz0Y+xDYkTA=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=H+OVgsj/bzALYmp30HSbi7lH//deBAgcgdVUzeXfqhFEuKEllNqonDN48KOKkp8SKwj46eIki1ChCm1wsn+ps/T9RbJbcMRSjpQfandDdj4/seMfdX2D3muVszY793EiOBVJkeFnsWndRuStu+1BCKax9V4HtjFoyicxo0xRQ1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=C7lyc/3i; arc=none smtp.client-ip=194.59.206.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1789476000; c=relaxed/simple;
+	bh=6xo7YgWEi2KBLR3Lf7s3tkoITi10S8/cK3L7oyHpsWM=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bwjw5UBan1UsMUkXEJ0gF6V4/RuWCLczdYsIxbEfYJz04191MDEGb/Y1CnPoOtZi0+xjatmXghIRzrc8oKBZpuBuPiUigMDpit96RBOPRmTpxu33Wt5cWk+Q/brFw/sdfzpMEgb+MThumaHW6mr7pBv4rzR93YkhdeWjU21s+a8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DYpdTtkI; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="C7lyc/3i"
-Received: from relay02-mors.netcup.net (localhost [127.0.0.1])
-	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4hkhBD3PNSz4B9g
-	for <regressions@lists.linux.dev>; Tue, 15 Sep 2026 14:28:04 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1789475284;
-	bh=K+zRp5MEpzRwAl0LSpFk1cAMMJoTi5Xlaz0Y+xDYkTA=;
-	h=Date:Subject:From:To:References:In-Reply-To:From;
-	b=C7lyc/3ivGaCXiFTbv0Ok6OeTzTo0n/AEHJAVT2/j6N99xGyrS5P2dzcBRR4hZHIV
-	 SQRxn2zXJ5oX+5zSDDm124grp/InTV888L8TpBefTIHSsRHcqnJ74GbvS1x13EUQ7z
-	 PrUUcFKLC3MmC7/P3IgGBgqPYl0K8AmPU0EbCXFReSYfXinNJ97TvDlND0uR8aZNJK
-	 DEBkcSRvcZtOcPUPuiI/rUqsyR/QJMgP5fY1KAKz6055tkVKJpP23EFHi133GQL7Rd
-	 fXkEJ8wdeoMz4EUU+Ts6OwootXdOTVxw6CJDOdFdQbkvVYPvlHV0ZLZL8wDl2W9bOq
-	 JXAmFNdnuhAsg==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4hkhBD2jsgz7xLy
-	for <regressions@lists.linux.dev>; Tue, 15 Sep 2026 14:28:04 +0200 (CEST)
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4hkhBD16dnz8tJW
-	for <regressions@lists.linux.dev>; Tue, 15 Sep 2026 14:28:04 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 92C225F9C8
-	for <regressions@lists.linux.dev>; Tue, 15 Sep 2026 14:27:59 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <d7c8af92-c73f-43c8-b01a-431fde37667f@leemhuis.info>
-Date: Tue, 15 Sep 2026 14:27:59 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DYpdTtkI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E60A51F00893;
+	Tue, 15 Sep 2026 12:39:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1789475998;
+	bh=R8PNvrtawzXe5CSJXiS0tWjjyZcYLcdqMXVzqN9aktE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=DYpdTtkIyT89BtoYbA26HmTbG1wRH0HZPUbi3mxtljq0uQdcNW7jp5xSnjObKI8qC
+	 0J284u8A1rRGkKKzLs8o31HBanlwlOQX9soSlH0/YCjI8dOxBWjAZ95Nyw+rOE7Um9
+	 /B0LFwBvtKjSKma93zgkQX5yWW0ehTfs4KJTWUQ8wPzLkmt3f05A0WeueSXoftI8f0
+	 vugBSsjDVaPc5Sr5LD7aYjKbKL61jDCbwE67SwXzDEY9GUwxEWbscInua0lvc5GdGE
+	 xBJo9s6iCtRcaHiuzTausKEXW+y91wCo1su5wuKSNcY8a08Xce7rn+B/augKrAo0I5
+	 hAEjNWr230+yg==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.98.2)
+	(envelope-from <maz@kernel.org>)
+	id 1x6SS5-000000098Ca-0O2A;
+	Tue, 15 Sep 2026 12:39:57 +0000
+Date: Tue, 15 Sep 2026 13:39:56 +0100
+Message-ID: <86wlsm663n.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Abel Vesa <abel.vesa@oss.qualcomm.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Raviteja Laggyshetty <raviteja.laggyshetty@oss.qualcomm.com>,
+	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+	Abel Vesa <abelvesa@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Mostafa Saleh <smostafa@google.com>,
+	Linux kernel regressions list <regressions@lists.linux.dev>
+Subject: Re: [PATCH] interconnect: qcom: icc-rpmh: Add opt-out parameter for QoS settings
+In-Reply-To: <e84587e5-904a-4cd1-bbc1-408a674ec1d2@leemhuis.info>
+References: <20260907171729.1735641-1-maz@kernel.org>
+	<v2gxqazjoxe74q5364jucy4pjds6gx4gfdchgulekl5mwk2azk@we4ibolioibm>
+	<87ld9c4vc2.wl-maz@kernel.org>
+	<6iixty74opjqkegpdmtytffgrllcjvrmhlsv53xtackdqzvwge@6fh5onz27p6c>
+	<867bkw3zic.wl-maz@kernel.org>
+	<e84587e5-904a-4cd1-bbc1-408a674ec1d2@leemhuis.info>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Thread for updating minor properties of tracked regressions
- [consider ignoring it!]
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Linux kernel regressions list <regressions@lists.linux.dev>
-References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <178947527977.1805206.8484119801354397855@mxe9fb.netcup.net>
-X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: 92C225F9C8
-X-NC-CID: +IA5stAmtHjLeAtBgSi+xBrFTyauhz854ghrVgvPSSlY7tMLpvk=
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: regressions@leemhuis.info, abel.vesa@oss.qualcomm.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, raviteja.laggyshetty@oss.qualcomm.com, konrad.dybcio@oss.qualcomm.com, abelvesa@kernel.org, andersson@kernel.org, smostafa@google.com, regressions@lists.linux.dev
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
+On Tue, 15 Sep 2026 13:12:30 +0100,
+Thorsten Leemhuis <regressions@leemhuis.info> wrote:
+> 
+> On 9/8/26 10:42, Marc Zyngier wrote:
+> > On Tue, 08 Sep 2026 08:34:18 +0100,
+> > Abel Vesa <abel.vesa@oss.qualcomm.com> wrote:
+> >> On 26-09-07 22:15:09, Marc Zyngier wrote:
+> >>> On Mon, 07 Sep 2026 21:21:44 +0100,
+> >>> Abel Vesa <abel.vesa@oss.qualcomm.com> wrote:
+> >>>> On 26-09-07 18:17:29, Marc Zyngier wrote:
+> >>>>> Recent addition of QoS configuration to the X1 variants resulted in
+> >>>>> systems that spontaneously reset at boot time or under load.
+> >>>>>
+> >>>>> Given that this is both very unpleasant and hard to debug, give the
+> >>>>> affected user the option to survive such event with a module parameter.
+> >>>>>
+> >>>>> Passing "icc_rpmh.enable_qos=0" to the kernel command-line will skip the
+> >>>>> offending QoS setup.
+> >>>>
+> >>>> Lets not start doing this, please.
+> >>>>
+> >>>> Can we figure out which platform deosn't work and then maybe we can 
+> >>>> add a quirk in DT per platform?
+> >>>
+> >>> We have at least 3 machines that are dysfunctional since [1] was
+> >>> merged (mini-x, sp12 and devkit). Probably some more, but I'm not
+> >>> going to be the one doing a survey.
+> >>>
+> >>> What really should happen is [1] to be reversed until QC figures out a
+> >>> set of parameters that actually works, instead of making this platform
+> >>> even more unreliable than it already is.
+> >>
+> >> I'd rather have the patch reverted than adding a module parameter which
+> >> users might not know about and distros will probably never addopt.
+> >>>
+> >>> Just like [2] should have been reverted.
+> >>>
+> >>> Until then, we'll have to paper over this stuff.
+> >>
+> >> But a module parameter complicates things rather than just papering over.
+> >>
+> >> I suggest we get both reverted if they break existing platforms.
+> > 
+> > We're in violent agreement.
+> Did anyone submit those reverts? Doesn't look like it from what I see.
+> Do we maybe need to poke the subsystem maintainers?
 
+Done: https://lore.kernel.org/r/20260915123703.3228329-1-maz@kernel.org
 
-On 3/9/24 11:18, Thorsten Leemhuis wrote:
-> Hi! This is the start of a thread I'll use for updating minor properties
-> of regressions tracked by regzbot. Consider telling your mailer to
-> ignore this thread, the replies are unlikely to be of relevance for you,
-> but done here to ensure a public paper trail.
+> Side note for the record (noticed it just by chance): afaics one fix for
+> [2] was submitted meanwhile:
+> 
+> https://lore.kernel.org/all/20260914-x1-el2-unfuck-v1-1-00d8bc35a635@oldschoolsolutions.biz/
 
-#regzbot report:
-https://lore.kernel.org/linux-btrfs/c97652a5-ac6b-4de6-aa23-3cdebc01d00b@gmail.com/
-#regzbot introduced: 3eaf5f082c4c
-#regzbot title: btrfs: Inline data is compressed unconditinally
-#regzbot monitor:
-https://lore.kernel.org/all/721d8fd2c73095d06cbdbfa714a6dfac9c488953.1789407346.git.fdmanana@suse.com/
+Ah, nice one. Hopefully this gets eventually merged.
 
-#regzbot report:
-https://lore.kernel.org/lkml/20260731122233.18345-1-info@humanlearning.ch/
-#regzbot resolve: inconclusive: reporter MIA, I thus assume this was
-resolved
+	M.
 
-#regzbot report:
-https://lore.kernel.org/stable/9ac1c05b-e9f2-49e9-af63-9cd0e42115fc@gmail.com/
-#regzbot fix: Bluetooth: btrtl: Add the support for RTL8761CUV
-
-#regzbot report: https://gitlab.freedesktop.org/drm/amd/-/issues/5735
-#regzbot fix: x86/mm: Don't force unencrypted DMA for IOMMU-backed devices
+-- 
+Without deviation from the norm, progress is not possible.
