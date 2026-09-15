@@ -1,51 +1,51 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.98])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [194.59.206.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD49C3BCD15
-	for <regressions@lists.linux.dev>; Tue, 15 Sep 2026 11:44:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6ACD3C060B
+	for <regressions@lists.linux.dev>; Tue, 15 Sep 2026 12:12:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.59.206.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789472648; cv=none; b=FuMQWZ0w9iX7RhH5cmFmLg6v6Q5dqbBPSw79C3QQDDTWxLatzu6xf1uLi2zyIPIRgKn6FI13sfXyHnEIAQmgCzdBrpaZ7fc9kSTbCARN7I2z2tq/YDcKPRtahDsE2wP51sZoJSa1OXigVPS29x9Ckuygi97SoJ1AalJ39zPusM0=
+	t=1789474378; cv=none; b=XrCHEXug40PcmZV/k97cnpNQEx5OxWS+fgte/DY3LrDolSWWZRexCoJRMtnzkKWWW4t/kHfAsmeFrVUQyoJmxLnKgXvopDVI1VuYeQSdn/M2snaU782dw0QsVEXjlTsIjVvRvYUEzQYdPSbmuYSwFkTm3jj3h0ufeSwbRbCnWXs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789472648; c=relaxed/simple;
-	bh=RWNB4M3mtfE/OBaoNeevmZcNdaSwpa9yXiW/qjVzEFA=;
+	s=arc-20240116; t=1789474378; c=relaxed/simple;
+	bh=gw8YgWsYGT7lofU04wNq0RsE/wO4Kqm6A07sl/aqbHI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VZbqp/4z/3SmwpXQrE09421yvG8fH6BbROGjKg1AFKIbocvY1heJBQeM4fz6ZX23dJsaWzu7sSrlNPVoNtF+EIkYrp3m/bYTDYMExWmDQQEt73B4lR6lnZp5gmhPUMg3k95j2I+yMGwbvGdIUToQavp0lcZ6ujHpq6g4JwaE85M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=aSwirprV; arc=none smtp.client-ip=188.68.63.98
+	 In-Reply-To:Content-Type; b=LMRmBFG+0xepoX6wcPeBVNFACniaUp0onKXxJtQtsPhM/JPuzOPu8ULjdv3a6YMjIvIgZbvJoAzKr8/5Y32i5yN+bfKSlyxQB8SfvkDoZosC5n88SF5snklwLu5BM+/8h01eYvJo3RDjGX2C8/b3xGf3oHXzpMuFeG75MBrE/L4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=X5pW1zjC; arc=none smtp.client-ip=194.59.206.189
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="aSwirprV"
-Received: from mors-relay-2501.netcup.net (localhost [127.0.0.1])
-	by mors-relay-2501.netcup.net (Postfix) with ESMTPS id 4hkg9b4Kd9z5x9Y;
-	Tue, 15 Sep 2026 13:42:27 +0200 (CEST)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="X5pW1zjC"
+Received: from relay02-mors.netcup.net (localhost [127.0.0.1])
+	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4hkgrN6ls0z4RKN;
+	Tue, 15 Sep 2026 14:12:36 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1789472547;
-	bh=RWNB4M3mtfE/OBaoNeevmZcNdaSwpa9yXiW/qjVzEFA=;
+	s=key2; t=1789474357;
+	bh=gw8YgWsYGT7lofU04wNq0RsE/wO4Kqm6A07sl/aqbHI=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=aSwirprVK3ltpuaeTwYXl93fVeFC1Nc+yQetUFyjjNcLWmGtT/5Y5r+ye/UQVSSgM
-	 075NTjwlseQ+FeLJ0X1apFH6i7XbzRdssAoPKwIXyFhocQCL37MEYAYNOLpA4ene3M
-	 xJ3VrmDx6/LeFrhYGy5GwZzNFtkUmvyING6tLGyAf9VxD+SShfiZa21aZn3hWnVN69
-	 mWJwjjOQN/ew6dD3ZG1Aq7Qai4Xlr1ZU05+2+KgMO6Ly1wPH0LtEe+dRd3inI2vVVK
-	 hPHAqqNoVR4yhPL+n9QEa2UQUDYp0KdLJTyS+9az6KqMyZwwN/Re91fvo5P+0EtZA2
-	 Zs0/m0gULf0mw==
+	b=X5pW1zjCo4C1yvF5uU2SDe5awS4ZJsVVyMc9nYCe0hYcop1sIpbtXLwJz+DBL7W5w
+	 Vim6RriwEvJ/1DwQoAkV/8nzymlF85q2Ue9l8XkC1I9BL3Ae8OzaXVnwLIz0O/sqqK
+	 If/4eUtiMRQ4N0KX7C73CYkGuwSLE8C3SWJBCjoej7fRR78wK+jNPUDcS4tXZ1QHCK
+	 L7Xt1VLK7afM5bSo888qEPgovD7/SkOsfNQqi3dR2au9q3oSNhmRlXcZFymqzeniQF
+	 oLd3CnSRtNBW/V0SbQlXwKfDS1IBrp58+UGSq7bz7BI+WvcrdwAX57gu19MfSlZ++N
+	 2Mp4zKOoEmnPw==
 Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-2501.netcup.net (Postfix) with ESMTPS id 4hkg9b3byDz4yj9;
-	Tue, 15 Sep 2026 13:42:27 +0200 (CEST)
+	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4hkgrN62smz7xkH;
+	Tue, 15 Sep 2026 14:12:36 +0200 (CEST)
 Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4hkg9Z3xY6z8sbH;
-	Tue, 15 Sep 2026 13:42:26 +0200 (CEST)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4hkgrM2dx2z8tJf;
+	Tue, 15 Sep 2026 14:12:35 +0200 (CEST)
 Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 8FDA95F9F3;
-	Tue, 15 Sep 2026 13:42:21 +0200 (CEST)
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 7F3425F9C8;
+	Tue, 15 Sep 2026 14:12:30 +0200 (CEST)
 Authentication-Results: mxe9fb;
         spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
 Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <1ca948c6-522a-4aee-88fc-b7febe2a6369@leemhuis.info>
-Date: Tue, 15 Sep 2026 13:42:20 +0200
+Message-ID: <e84587e5-904a-4cd1-bbc1-408a674ec1d2@leemhuis.info>
+Date: Tue, 15 Sep 2026 14:12:30 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -53,104 +53,77 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] remoteproc: qcom_q6v5_mss: Don't require PAS for memory
- protection
-To: Bjorn Andersson <andersson@kernel.org>
-Cc: Sumit Garg <sumit.garg@oss.qualcomm.com>,
- Mathieu Poirier <mathieu.poirier@linaro.org>,
- Paul Hollinsky <phollinsky@holtechnik.com>,
- Konrad Dybcio <konradybcio@kernel.org>, Konrad Dybcio
- <konradybcio@gmail.com>, Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>,
- cros-qcom-dts-watchers@chromium.org, linux-arm-msm@vger.kernel.org,
- linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
- regressions@lists.linux.dev
-References: <20260821081540.89137-1-phollinsky@holtechnik.com>
+Subject: Re: [PATCH] interconnect: qcom: icc-rpmh: Add opt-out parameter for
+ QoS settings
+To: Marc Zyngier <maz@kernel.org>, Abel Vesa <abel.vesa@oss.qualcomm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Raviteja Laggyshetty <raviteja.laggyshetty@oss.qualcomm.com>,
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+ Abel Vesa <abelvesa@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Mostafa Saleh <smostafa@google.com>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <20260907171729.1735641-1-maz@kernel.org>
+ <v2gxqazjoxe74q5364jucy4pjds6gx4gfdchgulekl5mwk2azk@we4ibolioibm>
+ <87ld9c4vc2.wl-maz@kernel.org>
+ <6iixty74opjqkegpdmtytffgrllcjvrmhlsv53xtackdqzvwge@6fh5onz27p6c>
+ <867bkw3zic.wl-maz@kernel.org>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
 Content-Language: de-DE, en-US
-In-Reply-To: <20260821081540.89137-1-phollinsky@holtechnik.com>
+In-Reply-To: <867bkw3zic.wl-maz@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <178947254210.1455081.5673122499047825926@mxe9fb.netcup.net>
+X-PPP-Message-ID: <178947435100.1590392.4866281565346045528@mxe9fb.netcup.net>
 X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: 8FDA95F9F3
-X-NC-CID: qqLS45NP+SSf4O9OUGQeHr3DnUpW8sXo7Nk5Q4XiFKQgpKqs45w=
+X-Rspamd-Queue-Id: 7F3425F9C8
+X-NC-CID: X8yQY5b46QOGgkRC7KMh3x3Dn9ay1/I95uA+3TcajQiagkk/Udk=
 
-On 8/21/26 10:15, Paul Hollinsky wrote:
-> Commit f3b1357673dd ("remoteproc: qcom_q6v5_mss: Switch to generic PAS
-> TZ APIs") changed the probe-time gate for need_mem_protection platforms
-> from qcom_scm_is_available() to qcom_pas_is_available(). Memory
-> protection in this driver is implemented with qcom_scm_assign_mem(),
-> which is a TZ service distinct from PAS. The only PAS call in the driver
-> is qcom_pas_mem_setup(), and it is already guarded by need_pas_mem_setup.
+On 9/8/26 10:42, Marc Zyngier wrote:
+> On Tue, 08 Sep 2026 08:34:18 +0100,
+> Abel Vesa <abel.vesa@oss.qualcomm.com> wrote:
+>> On 26-09-07 22:15:09, Marc Zyngier wrote:
+>>> On Mon, 07 Sep 2026 21:21:44 +0100,
+>>> Abel Vesa <abel.vesa@oss.qualcomm.com> wrote:
+>>>> On 26-09-07 18:17:29, Marc Zyngier wrote:
+>>>>> Recent addition of QoS configuration to the X1 variants resulted in
+>>>>> systems that spontaneously reset at boot time or under load.
+>>>>>
+>>>>> Given that this is both very unpleasant and hard to debug, give the
+>>>>> affected user the option to survive such event with a module parameter.
+>>>>>
+>>>>> Passing "icc_rpmh.enable_qos=0" to the kernel command-line will skip the
+>>>>> offending QoS setup.
+>>>>
+>>>> Lets not start doing this, please.
+>>>>
+>>>> Can we figure out which platform deosn't work and then maybe we can 
+>>>> add a quirk in DT per platform?
+>>>
+>>> We have at least 3 machines that are dysfunctional since [1] was
+>>> merged (mini-x, sp12 and devkit). Probably some more, but I'm not
+>>> going to be the one doing a survey.
+>>>
+>>> What really should happen is [1] to be reversed until QC figures out a
+>>> set of parameters that actually works, instead of making this platform
+>>> even more unreliable than it already is.
+>>
+>> I'd rather have the patch reverted than adding a module parameter which
+>> users might not know about and distros will probably never addopt.
+>>>
+>>> Just like [2] should have been reverted.
+>>>
+>>> Until then, we'll have to paper over this stuff.
+>>
+>> But a module parameter complicates things rather than just papering over.
+>>
+>> I suggest we get both reverted if they break existing platforms.
+> 
+> We're in violent agreement.
+Did anyone submit those reverts? Doesn't look like it from what I see.
+Do we maybe need to poke the subsystem maintainers?
 
-Bjorn, will you send this fix for a 7.3 regression to Linus any time
-soon? It's in -next for two weeks now as b853857293584d ("remoteproc:
-qcom_q6v5_mss: Don't require PAS for memory protection") afaics, but
-from the branch name it sounds like it might be queued for merging in
-the next merge window.
+Side note for the record (noticed it just by chance): afaics one fix for
+[2] was submitted meanwhile:
+
+https://lore.kernel.org/all/20260914-x1-el2-unfuck-v1-1-00d8bc35a635@oldschoolsolutions.biz/
 
 Ciao, Thorsten
-> No descriptor sets both flags: sc7180, sc7280, sdm660, sdm845, msm8996
-> and msm8998 set need_mem_protection only, while msm8937, msm8940 and
-> msm8953 set need_pas_mem_setup only. On TrustZone firmware that does not
-> implement PAS - for example SC7180 Chromebooks, where call-availability
-> queries report every QCOM_SCM_SVC_PIL command as unavailable - the modem
-> consequently never probes:
-> 
->   platform 4080000.remoteproc: deferred probe pending: (reason unknown)
-> 
-> On those machines the modem is also what loads the WLAN firmware, so
-> ath10k never receives QMI and wifi does not come up either.
-> 
-> Gate memory protection on SCM availability as it was before, and require
-> PAS only where a PAS call is actually issued. Keeping the SCM check
-> matters: qcom_scm_assign_mem() passes __scm->mempool to
-> qcom_tzmem_alloc() without testing __scm, so dropping the gate entirely
-> would allow a NULL dereference when qcom_scm has not yet probed.
-> 
-> Fixes: f3b1357673dd ("remoteproc: qcom_q6v5_mss: Switch to generic PAS TZ APIs")
-> Link: https://lore.kernel.org/r/20260808034716.58888-1-phollinsky@holtechnik.com
-> Signed-off-by: Paul Hollinsky <phollinsky@holtechnik.com>
-> ---
-> Reported and analysed in:
-> https://lore.kernel.org/linux-arm-msm/20260808034716.58888-1-phollinsky@holtechnik.com/
-> Konrad agreed with this shape in
-> https://lore.kernel.org/linux-arm-msm/b63e93e4-2f4c-4cad-b726-e1b0565379d7@gmail.com/
-> 
-> f3b1357673dd is not in mainline yet, so this is based on
-> remoteproc/rproc-next; it would be good to get it in before that branch
-> is sent on.
-> 
-> Tested on a Lenovo IdeaPad Duet 3 (sc7180-trogdor-wormdingler) on
-> next-20260805, which carries the same code: with this applied the modem
-> probes, mba/mpss load, and ath10k_snoc gets its QMI handshake so wifi
-> comes up.
-> 
->  drivers/remoteproc/qcom_q6v5_mss.c | 11 ++++++++++-
->  1 file changed, 10 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/remoteproc/qcom_q6v5_mss.c b/drivers/remoteproc/qcom_q6v5_mss.c
-> index bef198b9ee63..2f71ed2feff6 100644
-> --- a/drivers/remoteproc/qcom_q6v5_mss.c
-> +++ b/drivers/remoteproc/qcom_q6v5_mss.c
-> @@ -2079,7 +2079,16 @@ static int q6v5_probe(struct platform_device *pdev)
->  	if (!desc)
->  		return -EINVAL;
->  
-> -	if (desc->need_mem_protection && !qcom_pas_is_available())
-> +	/*
-> +	 * Memory protection is done through qcom_scm_assign_mem(), which needs
-> +	 * SCM but not PAS. Only the memory setup path issues PAS calls, so
-> +	 * requiring PAS for every need_mem_protection platform prevents the
-> +	 * modem from probing at all on TZ firmware that offers no PAS.
-> +	 */
-> +	if (desc->need_mem_protection && !qcom_scm_is_available())
-> +		return -EPROBE_DEFER;
-> +
-> +	if (desc->need_pas_mem_setup && !qcom_pas_is_available())
->  		return -EPROBE_DEFER;
->  
->  	mba_image = desc->hexagon_mba_image;
-> 
-> base-commit: bb840ea69347aff7bde5a208e7b5b180669a7656
-
