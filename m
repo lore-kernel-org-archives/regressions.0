@@ -1,129 +1,112 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [194.59.206.189])
+Received: from mail-106117.protonmail.ch (mail-106117.protonmail.ch [79.135.106.117])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6ACD3C060B
-	for <regressions@lists.linux.dev>; Tue, 15 Sep 2026 12:12:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.59.206.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD2C53CAA52
+	for <regressions@lists.linux.dev>; Tue, 15 Sep 2026 12:25:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.117
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789474378; cv=none; b=XrCHEXug40PcmZV/k97cnpNQEx5OxWS+fgte/DY3LrDolSWWZRexCoJRMtnzkKWWW4t/kHfAsmeFrVUQyoJmxLnKgXvopDVI1VuYeQSdn/M2snaU782dw0QsVEXjlTsIjVvRvYUEzQYdPSbmuYSwFkTm3jj3h0ufeSwbRbCnWXs=
+	t=1789475111; cv=none; b=ea7DAJW3ZQxBQAiMSLOtpbH6Atnx2cmNMCySzlBe/H6/Y6H4khDfvmnrAssAvNxEr6c3povVJaIEMFrD3tN3LR3XcoEhGC9yTYXEH7CPZmlkra8XHGpzuR5j6X99WvwA/XZ4D5EGhYJQsjol/mRK6SwRqKYn8PA5ix/GmzGnmW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789474378; c=relaxed/simple;
-	bh=gw8YgWsYGT7lofU04wNq0RsE/wO4Kqm6A07sl/aqbHI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LMRmBFG+0xepoX6wcPeBVNFACniaUp0onKXxJtQtsPhM/JPuzOPu8ULjdv3a6YMjIvIgZbvJoAzKr8/5Y32i5yN+bfKSlyxQB8SfvkDoZosC5n88SF5snklwLu5BM+/8h01eYvJo3RDjGX2C8/b3xGf3oHXzpMuFeG75MBrE/L4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=X5pW1zjC; arc=none smtp.client-ip=194.59.206.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1789475111; c=relaxed/simple;
+	bh=dQwY+fJdZSq7f2R1G4MVjrIF2+KddO9Z6wzUzNnLF84=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=gQujYL34zk4fckt78lPB8VcZeGWsuttT8ccdq9W2dkq65YpkDhnGJMLvL4E562lJOwhmawuNfug2puvpI7Sy+0ky+5fqVbi8t7pr+42/FZOaHEms5TgXGk6LPlwGFFmXR3bDN0c0GmRp1HiVRYJaSuxwIaAfj4/tbGJyAhoP2jc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=danielfernau.com; spf=pass smtp.mailfrom=danielfernau.com; dkim=pass (2048-bit key) header.d=danielfernau.com header.i=@danielfernau.com header.b=FG9g4kVf; arc=none smtp.client-ip=79.135.106.117
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=danielfernau.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=danielfernau.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="X5pW1zjC"
-Received: from relay02-mors.netcup.net (localhost [127.0.0.1])
-	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4hkgrN6ls0z4RKN;
-	Tue, 15 Sep 2026 14:12:36 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1789474357;
-	bh=gw8YgWsYGT7lofU04wNq0RsE/wO4Kqm6A07sl/aqbHI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=X5pW1zjCo4C1yvF5uU2SDe5awS4ZJsVVyMc9nYCe0hYcop1sIpbtXLwJz+DBL7W5w
-	 Vim6RriwEvJ/1DwQoAkV/8nzymlF85q2Ue9l8XkC1I9BL3Ae8OzaXVnwLIz0O/sqqK
-	 If/4eUtiMRQ4N0KX7C73CYkGuwSLE8C3SWJBCjoej7fRR78wK+jNPUDcS4tXZ1QHCK
-	 L7Xt1VLK7afM5bSo888qEPgovD7/SkOsfNQqi3dR2au9q3oSNhmRlXcZFymqzeniQF
-	 oLd3CnSRtNBW/V0SbQlXwKfDS1IBrp58+UGSq7bz7BI+WvcrdwAX57gu19MfSlZ++N
-	 2Mp4zKOoEmnPw==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by relay02-mors.netcup.net (Postfix) with ESMTPS id 4hkgrN62smz7xkH;
-	Tue, 15 Sep 2026 14:12:36 +0200 (CEST)
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4hkgrM2dx2z8tJf;
-	Tue, 15 Sep 2026 14:12:35 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 7F3425F9C8;
-	Tue, 15 Sep 2026 14:12:30 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <e84587e5-904a-4cd1-bbc1-408a674ec1d2@leemhuis.info>
-Date: Tue, 15 Sep 2026 14:12:30 +0200
+	dkim=pass (2048-bit key) header.d=danielfernau.com header.i=@danielfernau.com header.b="FG9g4kVf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=danielfernau.com;
+	s=protonmail; t=1789475106; x=1789734306;
+	bh=92rny1zNwUdZet6IQ9calXezSfCPdzK7V6o7gfAiUqM=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=FG9g4kVfcjG/b9RtK29o2Gfd/KqWicum2xw1xYQLhEt6Q6SP+AmcgJDXWI67nuHXw
+	 MXN9CJ2gJ0IrBgLlBJE9r/eGgozkJwlRPoh72W/5e/JwwxMQk3A/Kr7/WzzBJx5P4Z
+	 qSHzsBKg6kJD8+Ud4CnTYHrWsU+UxovMwQI7ecNC9DrXNZLaoiIHRCHRzsM/Xq0ELC
+	 vTm4cwK1fzp/f1b0alqv+8XFq6gUkcwDc3MnufJDTgXZV4MKbSFHSpx11Q9MG0kyWG
+	 gwy/7siRdIcSMsM6G8AhFM1287BF6DPH8ygbMbUBUziU0ljTxA33zf/ZFNoJ+zbL1A
+	 pxrsegApParMQ==
+Date: Tue, 15 Sep 2026 12:24:58 +0000
+To: "Martin K. Petersen (Oracle)" <mkp@kernel.org>
+From: Daniel Fernau <mail@danielfernau.com>
+Cc: Kashyap Desai <kashyap.desai@broadcom.com>, Sumit Saxena <sumit.saxena@broadcom.com>, Shivasharan S <shivasharan.srikanteshwara@broadcom.com>, Chandrakanth patil <chandrakanth.patil@broadcom.com>, megaraidlinux.pdl@broadcom.com, Thomas Lamprecht <t.lamprecht@proxmox.com>, "James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>, linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, Damien Le Moal <dlemoal@kernel.org>, Jens Axboe <axboe@kernel.dk>, Keith Busch <kbusch@kernel.org>, Ranjan Kumar <ranjan.kumar@broadcom.com>, Thorsten Leemhuis <regressions@leemhuis.info>, regressions@lists.linux.dev, Lukasz Magiera <me@magik.net>, Mira Limbeck <m.limbeck@proxmox.com>, Mats Topstad <Mats.topstad@intility.no>, stable@vger.kernel.org
+Subject: Re: [PATCH] scsi: megaraid_sas: Limit NVMe request size to the PRP chain frame
+Message-ID: <k5_uJWSlVpSwhVugTUyBfaq9oFVqFfpeuk_765JDKLtq_vKNO8mXI6TznKe4bX9WisARpHFxQYZ6i7W8YBT02KYaHL5d3LKSfyfCkNAh1jc=@danielfernau.com>
+In-Reply-To: <178840472610.670675.12272571379596581093.b4-ty@b4>
+References: <20260827175743.734593-1-t.lamprecht@proxmox.com> <178840472610.670675.12272571379596581093.b4-ty@b4>
+Feedback-ID: 131378921:user:proton
+X-Pm-Message-ID: cedc9534f7bd132ab88023fdca5b51ac4853a55e
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] interconnect: qcom: icc-rpmh: Add opt-out parameter for
- QoS settings
-To: Marc Zyngier <maz@kernel.org>, Abel Vesa <abel.vesa@oss.qualcomm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- Raviteja Laggyshetty <raviteja.laggyshetty@oss.qualcomm.com>,
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
- Abel Vesa <abelvesa@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Mostafa Saleh <smostafa@google.com>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <20260907171729.1735641-1-maz@kernel.org>
- <v2gxqazjoxe74q5364jucy4pjds6gx4gfdchgulekl5mwk2azk@we4ibolioibm>
- <87ld9c4vc2.wl-maz@kernel.org>
- <6iixty74opjqkegpdmtytffgrllcjvrmhlsv53xtackdqzvwge@6fh5onz27p6c>
- <867bkw3zic.wl-maz@kernel.org>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <867bkw3zic.wl-maz@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <178947435100.1590392.4866281565346045528@mxe9fb.netcup.net>
-X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: 7F3425F9C8
-X-NC-CID: X8yQY5b46QOGgkRC7KMh3x3Dn9ay1/I95uA+3TcajQiagkk/Udk=
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 9/8/26 10:42, Marc Zyngier wrote:
-> On Tue, 08 Sep 2026 08:34:18 +0100,
-> Abel Vesa <abel.vesa@oss.qualcomm.com> wrote:
->> On 26-09-07 22:15:09, Marc Zyngier wrote:
->>> On Mon, 07 Sep 2026 21:21:44 +0100,
->>> Abel Vesa <abel.vesa@oss.qualcomm.com> wrote:
->>>> On 26-09-07 18:17:29, Marc Zyngier wrote:
->>>>> Recent addition of QoS configuration to the X1 variants resulted in
->>>>> systems that spontaneously reset at boot time or under load.
->>>>>
->>>>> Given that this is both very unpleasant and hard to debug, give the
->>>>> affected user the option to survive such event with a module parameter.
->>>>>
->>>>> Passing "icc_rpmh.enable_qos=0" to the kernel command-line will skip the
->>>>> offending QoS setup.
->>>>
->>>> Lets not start doing this, please.
->>>>
->>>> Can we figure out which platform deosn't work and then maybe we can 
->>>> add a quirk in DT per platform?
->>>
->>> We have at least 3 machines that are dysfunctional since [1] was
->>> merged (mini-x, sp12 and devkit). Probably some more, but I'm not
->>> going to be the one doing a survey.
->>>
->>> What really should happen is [1] to be reversed until QC figures out a
->>> set of parameters that actually works, instead of making this platform
->>> even more unreliable than it already is.
->>
->> I'd rather have the patch reverted than adding a module parameter which
->> users might not know about and distros will probably never addopt.
->>>
->>> Just like [2] should have been reverted.
->>>
->>> Until then, we'll have to paper over this stuff.
->>
->> But a module parameter complicates things rather than just papering over.
->>
->> I suggest we get both reverted if they break existing platforms.
+Follow-up from our earlier note on pinning 6.8.12-4-pve.
+
+We have now been running the HPE MR416i-o Gen11 cluster on Proxmox
+kernel 7.0.14-15-pve without the previous megasas_make_prp_nvme
+overflow.
+
+Hardware / firmware
+- HPE MR416i-o Gen11 (Broadcom PCI 0x1000:0x10e2)
+- HPE FW package 52.32.3-6333 / controller FW 5.320.03-4207
+- megaraid_sas 07.734.00.00-rc1
+- KIOXIA NVMe behind the controller
+
+7.0.14-15-pve includes
+"scsi: megaraid_sas: Limit NVMe request size to the PRP chain frame"
+(pve-kernel 46a6f4f). That is the driver-side max_hw_sectors cap
+Martin suggested and the megaraid equivalent of Damien's
+04631f55afc5 ("scsi: mpt3sas: Limit NVMe request size to 2 MiB"),
+not Lukasz's original bounds check in megasas_make_prp_nvme().
+
+On this hardware the cap is enough. We no longer need the
+max_sectors_kb udev workaround, and we do not see the page-boundary
+ptr_sgl fault (RAX=3D0x200 / 512th PRP slot) under production load.
+
+Thanks,
+Daniel
+=20
+
+
+
+On Thursday, September 3rd, 2026 at 5:10 AM, Martin K. Petersen (Oracle) <m=
+kp@kernel.org> wrote:
+
+> On Thu, 27 Aug 2026 19:24:24 +0200, Thomas Lamprecht wrote:
+>=20
+> > megasas_make_prp_nvme() builds a command's PRP list in cmd->sg_frame, a
+> > DMA pool buffer of instance->max_chain_frame_sz bytes, spending one ent=
+ry
+> > per NVMe page of the transfer plus one per page of the buffer for the
+> > chain pointer. The loop runs until the transfer is described and never
+> > checks the buffer bound.
+> >
+> > max_hw_sectors comes straight from the MDTS the firmware reports for th=
+e
+> > drive. On drives with a large MDTS the only thing keeping the list insi=
+de
+> > the buffer was the block layer default of 1280 KiB, which needs 320
+> > entries, which fit into a 4 KiB frame as that holds 512. But since comm=
+it
+> > 9b8b84879d4a ("block: Increase BLK_DEF_MAX_SECTORS_CAP") that default i=
+s
+> > 4 MiB, and such a transfer needs 1025 entries, so the list runs a full
+> > page past the end of the frame:
+> >
+> > [...]
+>=20
+> Applied to 7.3/scsi-fixes, thanks!
+>=20
+> [1/1] scsi: megaraid_sas: Limit NVMe request size to the PRP chain frame
+>       https://git.kernel.org/mkp/scsi/c/af8c27375733
+>=20
+> --
+> Martin K. Petersen
 > 
-> We're in violent agreement.
-Did anyone submit those reverts? Doesn't look like it from what I see.
-Do we maybe need to poke the subsystem maintainers?
-
-Side note for the record (noticed it just by chance): afaics one fix for
-[2] was submitted meanwhile:
-
-https://lore.kernel.org/all/20260914-x1-el2-unfuck-v1-1-00d8bc35a635@oldschoolsolutions.biz/
-
-Ciao, Thorsten
