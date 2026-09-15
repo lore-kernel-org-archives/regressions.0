@@ -1,151 +1,136 @@
-Received: from mail-wr2-f12.google.com (mail-wr2-f12.google.com [74.125.225.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 058FF47F777
-	for <regressions@lists.linux.dev>; Tue, 15 Sep 2026 10:26:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 033FE33DEF7;
+	Tue, 15 Sep 2026 10:45:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789468005; cv=none; b=UjU7KBO9US5A07T5j+Khky7vzqFIVZcO3wTqTv7DPyoPhCkUjkAxHyuJMl7dYTK3MioJhPTc0rHaKCJFwqzW8C3B8zxKri7X+lanYYfp/r5mA4e3wsmu+7BV4LilUWdJM5GIRskRrpdIHh+0/d0aENQ4jx2EnuKMjCUTZRmiUHs=
+	t=1789469131; cv=none; b=LdLpmCj4ksrtO7r4HQCyoqR8MUk77y+I/hXo/DD9lF2wJNgoqVGvFvoQYx9ksgPvRxYJQ8Q7PE3g2v1t0q5QzWiv8wVsUyA7hd9Dcd+baUuxsHQ73TVrjRtNnJNol11a9raAdMsdqurr1UwdJ/MTk+NZYcY9wU5mwSq43CadgSk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789468005; c=relaxed/simple;
-	bh=zaYufR9QlUv7eYaLQ+at5yvHX5e6ve5UNDk2t2c25Zo=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YPX4gN2jQQSNJMC9Rozp94vkv+fMfcLxRH3X4ahwvXIQdyCV92rDl91V1jutNMRY0IYXNIh8O3CZ0SstuizSMMIm4TBnoHpebwoQbAG4qhFUXPg+Oe0AXCpZYsGlcph5B2IRjgiyy7zaDLYwRgj/hgN4xKygn9RbE8rpqHtuaZk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=amVNPvxk; arc=none smtp.client-ip=74.125.225.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1789469131; c=relaxed/simple;
+	bh=yK5BnZdSoaqS2VDQ2ZesIxc1V5gRPxqBUrI7bX2jabE=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=Kzy0kqW6EDQPwAe+cGQ7JcT7LvOWVo/Tpd3AhzXcmNfqgLS0nn4YvxcfYL/w1XIXr4U8CN+H1DIMHAEyVKJ6UiovkJLyFfir/Ye5WG8Mh++kcaQTb9NdHVh2vfD9uX9GFrXH5fT/Oga7wGEoofm1jGyGnEGiZ1JAIZ9rHfXTyPw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OXREdqwB; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="amVNPvxk"
-Received: by mail-wr2-f12.google.com with SMTP id ffacd0b85a97d-4834977ae75so1708581f8f.3
-        for <regressions@lists.linux.dev>; Tue, 15 Sep 2026 03:26:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1789468001; x=1790072801; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:date:from:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=f86HyW2q5YFv3zSNeYSruMbybkqwMyCIyR1SdKDqPuk=;
-        b=amVNPvxk7zRZLxlH/uX0tsGYsS9b4598UJXtte1F25U/c2s1lnlM1qc/XWm12UMr4Q
-         OXP4JZZE6S+JdOhMHojKLthiLggURDUbJv4d835EdUQFTZVm49Icl6CLngrGnCiGRM21
-         sPyi6I5El6iwD7RU6qrtpDp2VBS1ECmpdFVQ15O48CacaqOUNJgM1xzBAcqnVVEK/gu4
-         j9k7jP4dAIHtM3F7qYrMjTmev8NOj6AJxNOVR/XpSyyKeRv+Y4utMPy79LZUIL//1GJT
-         B4OE/y9/qq1i0kyp0FYvfVEMrL0RtKcs8q+OJI/I9B0ryyIvgm1FeMSL6PHMXyTaUVfi
-         zbIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789468001; x=1790072801;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:date:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=f86HyW2q5YFv3zSNeYSruMbybkqwMyCIyR1SdKDqPuk=;
-        b=JvYZqq+6C2iZ8M8tjnZJR4/HAkqyrMVST8nE987SOWNs3GDt55ERY0Lat39dHBhn5A
-         FUjYW2sVcocRAy5m83CKIMg8Zo6BkjNIGjyjt0IIJ0Wo0TelyG22AreuxxbieCr+eLkP
-         6hoRcVlz5u1LRcwKhWZVwx0uaOoO/vDTxzIo0lOJjnF6oXkKSFOajFPSUxSTqcGs+g2D
-         LHh4qgof4HGjXb1n2ZsbZwIkC0rKqDsCbimjMUBzu1TZy5yuGZD4JYY1uJdBqTjGnNYf
-         xFJAMERC/uFFLLQXNbacvZr6vBTklZZAttwNqK0yOgOMAuQ6FRAVdvjSmGeBdD+WFOFV
-         4wLg==
-X-Forwarded-Encrypted: i=1; AKwUvBxQbb/XS824pK3JfWY/jWCloGVHwsqVHbVznDKtl5rLLwkoYiHG1t0ENdsTuH9K72kOFqCr40aUEI7w5g==@lists.linux.dev
-X-Gm-Message-State: AFuF++mRv4/AZTbMNSYI9yTvTXaUUtotVlFUEIikzpShGaTQCHQrb+z2
-	gTxXZPBAwPvK9YwdO42ffBc6md7J0TkFMZU0zk72xn8aAaMowJlXS2qSNfX9F5S6mAk=
-X-Gm-Gg: AYBFou0gTHh7LSHnSEYoACKxSOnJHlWdRORo6tkgKgYFZOBhdAwSKyO8ktv5uRi75k/
-	vKXNzSL/Ti/i0V2LPeNG4yETN1VYb+7GbwI/noOdAnlRAw376+TuSuj4KA1NWUx0k911bBC9k2T
-	3CKgHR3GonVwbpajB95uPocLPJ3mFcDbqnJjHIOy2xE1NMHLUXIdCcSzWfCIB9U9vh2Npd2S6bp
-	vNzcfUcNgdBySam1jd98QYTMwZffzDQfmKuDji7gCkcqkO14PnjQ+UVXVuTaDoD9CQLztW82feQ
-	EyXf93RiMxa0JNnJSRLCFMu2ZCqJUI1TM4ojsoFYalryec1NeIxHQuZMcISleLi2N2k28BiREw1
-	yqzOjQU0wXeT+kN7Sc1qi1rw5Xpk1d2kWrv9yD5/g5Pz4QllSKvwMLrcaHPbou4iKjbFuT3VTw6
-	5gB3gFjS3+/CJUWnvmzGkQwTjgi+VZUwg1zJsahB3KZIecFkrLX2SwBE6Q4tRZ3P84xKs=
-X-Received: by 2002:a05:6000:41c3:b0:484:3310:710c with SMTP id ffacd0b85a97d-48702b30ad7mr16669938f8f.24.1789468001189;
-        Tue, 15 Sep 2026 03:26:41 -0700 (PDT)
-Received: from localhost ([82.145.119.8])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-486eb34e4b5sm33243901f8f.22.2026.09.15.03.26.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Sep 2026 03:26:40 -0700 (PDT)
-From: Andrea della Porta <andrea.porta@suse.com>
-X-Google-Original-From: Andrea della Porta <aporta@suse.de>
-Date: Tue, 15 Sep 2026 12:30:17 +0200
-To: Angel J <iamanaws@httpd.dev>
-Cc: Andrea della Porta <andrea.porta@suse.com>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-rpi-kernel@lists.infradead.org" <linux-rpi-kernel@lists.infradead.org>,
-	"helgaas@kernel.org" <helgaas@kernel.org>,
-	"robh@kernel.org" <robh@kernel.org>,
-	"florian.fainelli@broadcom.com" <florian.fainelli@broadcom.com>
-Subject: Re: [REGRESSION] PCI: Dynamic OF node creation hangs on invalid
- bridge configuration
-Message-ID: <aqkeOfsmjJlfTGmn@apocalypse>
-References: <GXe6anuewkS4bLNwca3cYOmUxN9csc0TxLYGSBc1qNRmfrmvFlcmD62wEM23TxfzfuXAv4P3yvUv7pyraleARrL1Na-aN8w-t9uc1Igu8DA=@httpd.dev>
- <cFJoUZ6c5g5YbFCrwUnx6RlitHRl-0cS2fadDSFJNf9SgLreKutrmZj1r56hFh8ZUAbzvuCqBG4w9ZYAE8xAWP9HnLwbjMOBzac-iMnMMZc=@httpd.dev>
- <aqfgUUkZYZg6ZABF@apocalypse>
- <B6jXhRRiVu4TfgjwfVOLgxbh1xIciImKFVMmjkMRoDt5SO7WpM2M3gBqsjtnh3VhYobWdcNfqFrmlCdhqZBqUakSNkTeVNZYJnXLTx55kRI=@httpd.dev>
- <VaPKN3QbW3sGj8wePAvI_xD3twp_MQE4-4xeSbvgoQPVUnKDWKz0EWT_JiLehpmc6WOsCAoFOPs412Xhtthes_ZtvrgsKB4QB6QPz-XvRb4=@httpd.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OXREdqwB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9871E1F000FF;
+	Tue, 15 Sep 2026 10:45:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1789469129;
+	bh=6i7AgDVaLZYXq9O8A47exoIsezEzfj3SO5fE9LPyFa8=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To;
+	b=OXREdqwBf/qCC+oJS89T24cziDZQLK4Fa8h/cP0Xs1xAulZkq4Ja51yNGCITocD+4
+	 Z9doidBmSOFUnMaS/Om4d2zRzJoQ0PLU//QYNycjUA+4gvhya4DSoJB+7XpqjPD7+M
+	 BPDgYyZTfYTU9UUrE4zZU5upomsgLXVEtgqs0Vfevt2g5m9/vY+ByOYMykPZhLT6Ty
+	 6ItcFmcmzpze+o5cuWZCncTyjwVuw6cjuhFIIIWM3z7tnLdCIJ6Bb0pNcp9oHxdFCa
+	 97O9dkMpWyq3/tbO15yZjXetE3WeuzliK2WruF7sT+U2poCHYIOb6DzF8HbNuj/FDV
+	 wZjNWVm3cmwAA==
+Message-ID: <42876863-2b0f-4353-a719-16b66b82b914@kernel.org>
+Date: Tue, 15 Sep 2026 12:45:24 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <VaPKN3QbW3sGj8wePAvI_xD3twp_MQE4-4xeSbvgoQPVUnKDWKz0EWT_JiLehpmc6WOsCAoFOPs412Xhtthes_ZtvrgsKB4QB6QPz-XvRb4=@httpd.dev>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] net: qrtr: resend HELLO on MHI resume
+Content-Language: en-US
+From: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
+To: Thorsten Leemhuis <regressions@leemhuis.info>,
+ Daniel J Blueman <daniel@quora.org>, Manivannan Sadhasivam <mani@kernel.org>
+Cc: "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+ Chris Lew <christopher.lew@oss.qualcomm.com>,
+ Pranav Mahesh Phansalkar <pranav.phansalkar@oss.qualcomm.com>,
+ Deepak Kumar Singh <deepak.singh@oss.qualcomm.com>,
+ linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ Takashi Iwai <tiwai@suse.de>
+References: <20260909055846.16539-1-daniel@quora.org>
+ <260eee02-29d3-478f-9a39-d67adfefe862@leemhuis.info>
+ <ab1491bb-cca5-4145-ac7d-31c966abf7b4@suse.com>
+Autocrypt: addr=vbabka@kernel.org; keydata=
+ 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
+In-Reply-To: <ab1491bb-cca5-4145-ac7d-31c966abf7b4@suse.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Angel,
-
-On 23:28 Mon 14 Sep     , Angel J wrote:
-> Ok, here it is...
+On 9/15/26 12:11, Vlastimil Babka wrote:
+> On 9/14/26 11:04, Thorsten Leemhuis wrote:
+>> On 9/9/26 07:58, Daniel J Blueman wrote:
+>>> Since the MHI HELLO exchange was relocated, it is sent only at device
+>>> registration. During a suspend-resume cycle, the firmware in WiFi
+>>> cards such as WCN7850 indefinitely waits for another HELLO,
+>>> triggering:
+>>> 
+>>>   ath12k_wifi7_pci 0004:01:00.0: timeout while waiting for restart complete
+>>>   ath12k_wifi7_pci 0004:01:00.0: failed to resume core: -110
+>>> 
+>>> Fix this by triggering the handshake from resume_early in the MHI
+>>> transport.
+>>> 
+>>> Validated on Qualcomm X1E-801800 on Lenovo Slim 7x across 10
+>>> suspend-resume cycles.
+>> 
+>> For the record: Takashi ran into this regression as well and provided a
+>> different fix, but withdrew it after I pointed out this fix, which
+>> worked for Takashi. For details see:
+>> https://lore.kernel.org/all/87mrtkpd2q.wl-tiwai@suse.de/
 > 
-> I tested this quirk on Linux 6.18.44 with CONFIG_PCI_DYNAMIC_OF_NODES=y,
-> and it boots without either OF fix. The diff below omits the test logging.
+> Thanks to Thorsten pointing me there I skipped the bisect and applied this
+> patch instead and it works.
 > 
-> PCI_FIXUP_HEADER runs after the resources have been parsed using the
-> original header type, and changing hdr_type also affects configuration
-> restore. I don't know enough about this part of PCI to judge whether
-> that's safe, so I'll wait for your advice before submitting it as a patch.
-
-Thanks you for your submission!
-
-LGTM. Maybe you can play, if you don't already, with pci=realloc,assign-busses
-kernel cmdline options and writing in remove/rescan under /sys/bus/pci/*
-(watch out: this could kill your system). But better to ask for opinions
-from PCI experts.
-
-Thanks,
-Andrea
-
+> My laptop is T14s AMD Gen3 with ath11k_pci. Since rc2 the wifi would stop
+> working on suspend/resume, making the resume freeze for a while (I initially
+> thought it was frozen completely and was shutting off the laptop).
 > 
-> Thanks,
-> Angel J
-> 
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index de9bbccda..57df88a38 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -291,6 +291,22 @@ static int __init pci_apply_final_quirks(void)
->  }
->  fs_initcall_sync(pci_apply_final_quirks);
->  
-> 
-> +/*
-> + * On the Dell XPS 8940, 8086:4c43 reports a PCI-to-PCI bridge but has no
-> + * downstream bus. Use host-bridge class and a normal header so that
-> + * pci_is_bridge() does not send it through bridge scanning.
-> + */
-> +static void quirk_intel_4c43_host_bridge(struct pci_dev *dev)
-> +{
-> +	if ((dev->class >> 8) != PCI_CLASS_BRIDGE_PCI ||
-> +	    dev->hdr_type != PCI_HEADER_TYPE_BRIDGE)
-> +		return;
-> +
-> +	dev->class = (PCI_CLASS_BRIDGE_HOST << 8) | (dev->class & 0xff);
-> +	dev->hdr_type = PCI_HEADER_TYPE_NORMAL;
-> +}
-> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x4c43, quirk_intel_4c43_host_bridge);
-> +
->  /*
->   * Decoding should be disabled for a PCI device during BAR sizing to avoid
->   * conflict. But doing so may cause problems on host bridge and perhaps other
+> Interestingly the card doesn't recover after reboot, but only after a full
+> power off/on cycle. But if the HELLO handshake is sent after a boot,
+> shouldn't it recover? Maybe the hardware gets too confused to recover.
+> Dunno. Hm maybe I can try if 7.2 kernel (and/or 7.3 with this patch)
+> recovers it without poweroff/on after a 7.3 without this patch
+> suspend/resume wedges it.
 
-
+Neither 7.2 nor 7.3 + patch was able to recover the card on reboot, so while
+that's not great, at least 7.3+patch isn't worse in this aspect.
 
