@@ -1,70 +1,69 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6480C3769E8;
-	Wed, 16 Sep 2026 01:52:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26CDF3AC0ED;
+	Wed, 16 Sep 2026 02:01:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789523553; cv=none; b=IgelERf5Jaagtf2ad3VjogoLwLjrCdCoC+x+q8PEGjJfAlVXPa5QlEFWthy6+dMSwuyV13QNh8pmjDes/n7zMdThSju00LKPvpMct0IwTzXW+23whULrDJr0AYm3zYBJXE5+iGcIWDRceZBjuvbF+nMAiiStgN1apZKi1mnBnFg=
+	t=1789524102; cv=none; b=kVYfdvsKmCQSyod0EEMqT9Kdwk2zVNjVLXMpXIoHrdeYQiV8N91TnevinY3MhCTR0P78H/WSiJnzXfy5/Yc3Ijgj1JKGbY5Jxt3mcVsSdWPwgFh1wzulDK0ZiTCKhHw8g46dW5epRu6mgaW+facgJyfkeWB7neR8ZGY4o1qfDVc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789523553; c=relaxed/simple;
-	bh=3bCDk9sTfNVbpPCE/XoEkPyCPGaah2mAPqcTMpZ8Dvs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BPXb4MfZHfX79JGI9xkAw4VXuI7twXgvkhFmks8LfCmHJWdbqhRHXVnAV2PbK21q8PPp34XS8Y/WeV5IsEiqc6TQkfSiTN461s2RPAgG7NZL/nA8g2VsnjRpqZdEgzSiqcht/xnE4cNQJooSPV/EBkMHhI6ClUtCBTXA2hSkpnk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ioEyMJF5; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789524102; c=relaxed/simple;
+	bh=CXJfK6etui4TiBXgYCdN8ScM8cI596TwjEn8ECns7tc=;
+	h=To:Cc:Subject:From:In-Reply-To:Message-ID:References:Date:
+	 MIME-Version:Content-Type; b=OosRD00JIdFa8oyBQW3uXhDOfudnuh5Okiv6k5CPtvvVxQGIdMVkYnHVJAAc3HzSX0ePmhI3CR95ROf0MncfhYQROkxL/gt0xfHy2EClEt9I57I7gCQXVZawZ0iROfOq82nL3H4LLh4zsnGsRImUmo+jBxt+kp2eNY+gxSH6+Wg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jic5obL8; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ioEyMJF5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53A9F1F000FF;
-	Wed, 16 Sep 2026 01:52:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jic5obL8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A74601F000FF;
+	Wed, 16 Sep 2026 02:01:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789523541;
-	bh=vdrdBjWTvsZNXTVui2WucyGiZG4Bik57Fez2TRhq+QU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=ioEyMJF5TUkmetU7i5qKwsxS1jqo6CJz3tOGQbzRsK6nVtZSUPshE0IrZFf1Hx9NQ
-	 jbJp4sNV1ONj27RR1DqBeNS6ZBJ9oo3EeUtEU1BQpPVHu/Vo+q7cVm0i4i22sdqjyU
-	 coDKC+YCraxvO6dENvLUjgfwVzc/Kvq5Em7qAkj09R+TbquSBhikE1b7NAfvhvqzBi
-	 iyVGo8pkpK2QDYhZi/SbwIySnLEDt+u3JL4Qu3zlGyilktF8mDNRZnIYk5WgUIMpF9
-	 r3n+4aAMIWDe/xNky/sN4McGyNgUrB4WXLcFeUgAozpza5W9Y0YNx3VDBMS7S3mMxH
-	 aTeSUQK1yPqoA==
-From: Sasha Levin <sashal@kernel.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Sasha Levin <sashal@kernel.org>,
-	Benjamin Block <bblock@linux.ibm.com>,
-	stable@vger.kernel.org,
-	Bart Van Assche <bvanassche@acm.org>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Linux kernel regressions list <regressions@lists.linux.dev>,
-	Thorsten Leemhuis <regressions@leemhuis.info>
-Subject: Re: [regression] 'scsi: core: Register sysfs attributes earlier' in 5.15.221 broke booting
-Date: Tue, 15 Sep 2026 21:52:06 -0400
-Message-ID: <daily-reply-20260915-0001-re-scsi-sysfs-5-15-revert@kernel.org>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <4a76bd61-13a2-4010-81b7-bcea325b9c63@leemhuis.info>
-References: <4a76bd61-13a2-4010-81b7-bcea325b9c63@leemhuis.info>
+	s=k20260515; t=1789524083;
+	bh=fDfNPHZO3x8dpGAaCN/R8DkmbDFw6clCnx9JRbiMMOM=;
+	h=To:Cc:Subject:From:In-Reply-To:References:Date;
+	b=jic5obL8NaXsPEipUexGY+VTT7No6k3tMecjDcdACQaTIH7yLl5VR+4dKrZhJVKmh
+	 6PZrqerE2Ts6o/mAE1vGUYr5jw1NsvGmZtvERK/MajVoc+ATsAZHWWaMne3CB//NOR
+	 N37lkomojUaaTdApykKmAp0G8BQOOCIQGcM2MuOP0yEBq/05l1YojDFOkijeBwmP0R
+	 ehnqs/CSmFW0apKGOE+UkleXBuDLLRmBjlH93Ca/q1Hi+V0b61+fszNn91m6BpN4Kw
+	 AYcIHix68KXeb5Zgj6YiEDBvnN5U4HpLX6PKP2ByFptmqJGELhnJXixtFffqzFocRB
+	 BsqziDaR3A0bw==
+To: Daniel Fernau <mail@danielfernau.com>
+Cc: Kashyap Desai <kashyap.desai@broadcom.com>,  Sumit Saxena
+ <sumit.saxena@broadcom.com>,  Shivasharan S
+ <shivasharan.srikanteshwara@broadcom.com>,  Chandrakanth patil
+ <chandrakanth.patil@broadcom.com>,  megaraidlinux.pdl@broadcom.com,
+  Thomas Lamprecht <t.lamprecht@proxmox.com>,  "James E . J . Bottomley"
+ <James.Bottomley@HansenPartnership.com>,  linux-scsi@vger.kernel.org,
+  linux-kernel@vger.kernel.org,  Damien Le Moal <dlemoal@kernel.org>,  Jens
+ Axboe <axboe@kernel.dk>,  Keith Busch <kbusch@kernel.org>,  Ranjan Kumar
+ <ranjan.kumar@broadcom.com>,  Thorsten Leemhuis
+ <regressions@leemhuis.info>,  regressions@lists.linux.dev,  Lukasz Magiera
+ <me@magik.net>,  Mira Limbeck <m.limbeck@proxmox.com>,  Mats Topstad
+ <Mats.topstad@intility.no>,  stable@vger.kernel.org
+Subject: Re: [PATCH] scsi: megaraid_sas: Limit NVMe request size to the PRP
+ chain frame
+From: "Martin K. Petersen (Oracle)" <mkp@kernel.org>
+In-Reply-To: <k5_uJWSlVpSwhVugTUyBfaq9oFVqFfpeuk_765JDKLtq_vKNO8mXI6TznKe4bX9WisARpHFxQYZ6i7W8YBT02KYaHL5d3LKSfyfCkNAh1jc=@danielfernau.com>
+Message-ID: <yq1tsnqvtsu.fsf@mail.kernel.org>
+References: <20260827175743.734593-1-t.lamprecht@proxmox.com>
+	<178840472610.670675.12272571379596581093.b4-ty@b4>
+	<k5_uJWSlVpSwhVugTUyBfaq9oFVqFfpeuk_765JDKLtq_vKNO8mXI6TznKe4bX9WisARpHFxQYZ6i7W8YBT02KYaHL5d3LKSfyfCkNAh1jc=@danielfernau.com>
+Date: Tue, 15 Sep 2026 22:01:22 -0400
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-> This 5.15.y change according to
-> https://bugzilla.kernel.org/show_bug.cgi?id=222016#c5 broke booting on
-> sata devices for two people; the second reporter indentified it to be
-> the culprit:
 
-I have reverted it on 5.15, together with the rest of the chain it came in
-with, so the tree is back to its pre 5.15.221 state for the SCSI core sysfs
-registration and smartpqi. 6.1 and newer are unaffected, they carry the
-upstream follow-up in their base release.
+Daniel,
 
-One consequence worth stating here: this also takes 225548863f0a ("scsi:
-smartpqi: Fix AIO retry marker cleared by SCSI core between dispatches.") back
-out of 5.15, since that fix is what pulled the chain in. It does not apply on
-its own on that tree, so 5.15 needs a purpose built backport before it can
-return.
+> On this hardware the cap is enough. We no longer need the
+> max_sectors_kb udev workaround, and we do not see the page-boundary
+> ptr_sgl fault (RAX=0x200 / 512th PRP slot) under production load.
+
+Great, thanks for testing!
 
 -- 
-Thanks,
-Sasha
+Martin K. Petersen
