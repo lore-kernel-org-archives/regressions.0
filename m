@@ -1,212 +1,102 @@
-Received: from mail-wr2-f32.google.com (mail-wr2-f32.google.com [74.125.225.96])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.61.103])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AE1C359A90
-	for <regressions@lists.linux.dev>; Wed, 16 Sep 2026 06:22:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.96
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CB0C3BBFC2
+	for <regressions@lists.linux.dev>; Wed, 16 Sep 2026 06:30:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.61.103
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789539750; cv=none; b=eKpO3hPOUrm0hjynIGHN/hW0FeUTfXayxWxdq3YZAWEUJXHv1ZAmab0zhtNnBHGwL+UlARTDNxP4bxr9A6OI285IHU6nuTHhALcGfva3bM1PeGTSuJMyDdpvhRXp8CYEv+Tltm68/gGK16MeKTsqAENFWutet6Ujz6+gCaG0ZlM=
+	t=1789540245; cv=none; b=VTsvm3o6CcCDWQFWMQtJ/GyD3cXuw2kSHXni1iWTzbjPOMlfVydkkz9QbT2qBkSrQB9xaxfT6GzPIzKFADeqXPf3PMsxhvZCtOZ8C0+5uYeksywkbK/pQg/xlMZS8hm/P99Yc+EGGQPyiPlNuwwIIu3l5rndjRi57X2O1NElyAU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789539750; c=relaxed/simple;
-	bh=IPAgThF9jC7bFh1055v5ZtbJ+nlwCQZ8xCiNPM47tqo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HHLARHwX6QQ//veVO80deTU5HZ+63e7W7DsX1va9gOEoqDi5btjlH08SVmBQDeu8opXhLdFA+brA80mv0sUTqGwiQSfrNRqmxL7P4lCq1/ocbTPEu0vS8I0ugsrK27L8xhFow6IDFYiv+wLbbB9LyHQLlhcM64u8QtYTFfyv7wE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=rSfOxZLV; arc=none smtp.client-ip=74.125.225.96
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1789540245; c=relaxed/simple;
+	bh=4adzdkyS6XeXKbl6zU2c2shBLF3+Kon9+nbNlKt/DA4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QXQylMfagL1DecIIscnfgI8SGuxYUSYMHplkELj8/yMA62dLuyJ8XlbOZ5080LXRqUBnViEgagyfqz9dzjgue9xWJHZrFZdPbJ+Fbi7E+ay5ij2pxJbhxOtl2KjIWRcBMOsC0sV1ly0pzDwHcJIpuVpzCP5U8XbUahVtMrDs7oU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=OSMi+vxm; arc=none smtp.client-ip=188.68.61.103
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rSfOxZLV"
-Received: by mail-wr2-f32.google.com with SMTP id ffacd0b85a97d-482f6350f91so247895f8f.1
-        for <regressions@lists.linux.dev>; Tue, 15 Sep 2026 23:22:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1789539747; x=1790144547; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=0WHX+dp2Boxju7SrcSzARyHP/hpDCqm9COAQ0KdyjLM=;
-        b=rSfOxZLVHmBYruE81AeCNJlOZK+Hxz9qSVLtyFuL2RcoLSSYGlKAXyAlF3h5HZvfOM
-         Bg0QMgSoV0P9gy1t7ahu8oy8m88kU7amNb1R1vvCCoX31BqyQWXS2kyUf7RHbfrwYf+V
-         8oQbpNzXV0xMeUFcDgHUXJi7xxaOGb8zpL7rSa1SJ6+HnEoYaHHvrp3g96K2Vo9OfgUn
-         V00ZBD6OGd92+I2LVtr1iqedxtUzdU/iQRWlsLACY1tBuj64UlQz0PCcveSHfYrhwo09
-         8R0uu4geJRixE87IU5ehzihg69GID2+eh9M09qd0tZX6wOUYR3fLxkuvevAdZbfffBnU
-         7dtQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789539747; x=1790144547;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=0WHX+dp2Boxju7SrcSzARyHP/hpDCqm9COAQ0KdyjLM=;
-        b=h7U/RKasPPfD+pcKI3zm27eRx3cVE8o7TSEV2XhhOq3HoxRZDt6+6Po6QeUlgIIeOU
-         KzruPzF/gL4pOdUD+e5pRxtIofLb+cUeziMVjDAACzYAMYSKK94g8sRjrkqx1t2a1mOf
-         FSiS/5Z1HWoJ6AsH5nIHf/J1RZd8DMx3G//OQUpAAMRg5T97YifoLQOB0TjsOg8OmUtR
-         6etS8sC6bPz4n9dmnNlx3z1e3FU9XflKt1/ZZhouEygsxh3v3fp+vcoUfKklPNYZ3oKv
-         puT4ahxhV2IVXkIDT+mr0RdU04hQd7PXP+FiYQwJdsB0hPxciiEkv0ejzSHKLH8mgi/o
-         L9vg==
-X-Forwarded-Encrypted: i=1; AKwUvBynxZJKsMkz0eqeJD2WX7dLQn/FX6J4cVCWpU7g+NMBe/iykp5rDfLSxPih7GAm3DUcySsIAOcb1pqylw==@lists.linux.dev
-X-Gm-Message-State: AFuF++lrmaSyJ7VVkjC8HkbfOScb7ZbWa6awM37V+C8kRITEqBRSva52
-	LVrL6WfpkhsXnpCMGnkybZ8g4oxaU6QypZDnBD9JrU2Zx8SK9Gstbp7c
-X-Gm-Gg: AYBFou1Jm6xogPlCTJjIz8gI6oGi2UpNIsbF6/HW+1Z/e2ekWj/rd2HD03GjhDN3wAh
-	Eu7YUnB5NjkubI7IrwiKMwz0h5+4YnV54ueN+w+ANrow5gLDnG9gOkTs4PFFXVVisepk4Jq5uio
-	ufe8hhc4Ad7w2c4VHU69MXaaHRwC0guyhQFTcKP/UZeFZXDFXNNt6+r7lQh4mu5O0/QQ1YBZ5je
-	/8/Tw4k4q28JcSSmW5IhMFAaIfSbgBS53YXa8wO5jNqWRrzjjEKu0A6l0FGqYBZfcbho1GoFqjg
-	U6g1hGkx6DApgYx9GWjcbJfWYr2EM8ChDPL5QpGSgmx2f6q+JESoX0BIIm1Ne7tRLAxgIpJKufw
-	Lcyrlruj1vGPjbJw1oEd6OeZ8HoXFgaBc7Gl0HSumfS/l6wDL5Yy6eYOzfSe6J9HFb4lWWCJOIi
-	1fTZRbd5eAivlszywuLJgCG+j7s+9EHKfHGs2CQe7okGqx2reHrsu0AydU+PKLM9rs1C6QIUQXg
-	9JLGNCadA/0ccvgg0Jd9RtE+WSgr8bNeqB/X38+aRmHq9U96Ymsd5ot6tqESzPnUqOmxyM=
-X-Received: by 2002:a5d:64ef:0:b0:487:765:46bf with SMTP id ffacd0b85a97d-4870cf2080amr1418487f8f.19.1789539747371;
-        Tue, 15 Sep 2026 23:22:27 -0700 (PDT)
-Received: from localhost ([188.234.148.119])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4870bf1fe7esm4336679f8f.6.2026.09.15.23.22.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Sep 2026 23:22:25 -0700 (PDT)
-From: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-To: Dave Hansen <dave.hansen@linux.intel.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	x86@kernel.org
-Cc: "H . Peter Anvin" <hpa@zytor.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	Lorenzo Stoakes <ljs@kernel.org>,
-	Toshi Kani <toshi.kani@hpe.com>,
-	linux-mm@kvack.org,
-	regressions@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Subject: [PATCH] x86/mm: avoid a reclaiming allocation in pud_free_pmd_page()
-Date: Wed, 16 Sep 2026 11:22:22 +0500
-Message-ID: <20260916062222.27347-1-mikhail.v.gavrilov@gmail.com>
-X-Mailer: git-send-email 2.55.0
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="OSMi+vxm"
+Received: from mors-relay-8403.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4hl8BD24jrz893l;
+	Wed, 16 Sep 2026 08:29:40 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1789540180;
+	bh=4adzdkyS6XeXKbl6zU2c2shBLF3+Kon9+nbNlKt/DA4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=OSMi+vxmFMu49L/6pT++enzazONrFbpjM+f9UVmgA5jKltZe2l+IyM6gPMuVy2q0W
+	 hfOFcwqc7UFds6O8glOw4rSjF1ILHTTOFLSYGFJ1SEiwvE3N/owj6eELo1NtlIZYfF
+	 oAuwY9fr1H79UcleD2FSXeG07xPzLgoB2P0NrycXNdt00tzp1zmNHdtVhq3IAMBkKl
+	 2oSE8FK+CBFolHu+OTudtqDMzt9Nzmol1UbBDpCjfZBQeG68koojteFQF6MFUUYjpw
+	 AwTRo2dv/jVMQ1Bos9H1yxIMUm2ncNItgbRh0SjKlXNWTRyJoDzz/X5SjJ+Dxk7Vzm
+	 VQJJdceZl6s3A==
+Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4hl87b0qvvz894q;
+	Wed, 16 Sep 2026 08:27:23 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
+X-Spam-Flag: NO
+X-Spam-Score: -2.899
+X-Spam-Level: 
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4hl87Z17F3z8tbb;
+	Wed, 16 Sep 2026 08:27:22 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 58DCA5FAD7;
+	Wed, 16 Sep 2026 08:27:13 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <1dba4e50-2468-4cc6-b002-907ca1438b2d@leemhuis.info>
+Date: Wed, 16 Sep 2026 08:27:11 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] Sound broken on Cirrus Logic CS8409 / iMac19,1
+ between 7.1.13 and 7.2.4
+To: Zachary Hunt <1zachhunt@gmail.com>, alsa-devel@alsa-project.org
+Cc: linux-sound@vger.kernel.org, regressions@lists.linux.dev,
+ Takashi Iwai <tiwai@suse.com>, Jaroslav Kysela <perex@perex.cz>
+References: 
+ <CAOD3=bOhpz2P2+UUNeTsdxXiPtdhFQ+jZg-1WQmFAPYchSvhEg@mail.gmail.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: 
+ <CAOD3=bOhpz2P2+UUNeTsdxXiPtdhFQ+jZg-1WQmFAPYchSvhEg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: <178954003376.626450.11625335250586460561@mxe9fb.netcup.net>
+X-NC-CID: etn+woiEZmqizqAkoOXMdS1A8HaEHRyKKSmFE9L16HTyYLmrc4o=
 
-On a box with a discrete GPU, lockdep reports a possible deadlock as soon
-as kswapd shrinks the TTM page pool:
+Hi! Thx for the report!
 
-  WARNING: possible circular locking dependency detected
-  7.3.0-rc3-f6e7b42bf05b+ #183 Tainted: G     U
-  ------------------------------------------------------
-  kswapd0/269 is trying to acquire lock:
-  ((init_mm).mmap_lock){++++}-{4:4}, at: change_page_attr_set_clr+0x29a/0x4a0
-  but task is already holding lock:
-  (pool_shrink_rwsem){.+.+}-{4:4}, at: ttm_pool_shrink+0xb2/0x330 [ttm]
-  Chain exists of:
-    (init_mm).mmap_lock --> fs_reclaim --> pool_shrink_rwsem
+On 9/12/26 20:42, Zachary Hunt wrote:
+> 
+> Audio output via internal speakers works on kernel 7.1.13 but stops
+> working after updating to kernel 7.2.4.
+> 
+> Hardware & Environment:
+> - Machine: Apple Inc. iMac19,1 (Board: Mac-AA95B1DDAB278B95)
+> - Audio Codec: Cirrus Logic CS8409 (snd_hda_intel)
+> - OS: Fedora Linux 44 (KDE Plasma Desktop Edition)
+> - Sound Server: PipeWire
+> 
+> Symptom:
+> On kernel 7.2.4, built-in speakers produce no audio. The card is
+> recognized by ALSA and PipeWire is running, but sound playback fails.
+> The system functions as expected on kernel 7.1.13.
+> 
+> Attached is the full alsa-info.sh output for kernel 7.2.4. Please let
+> me know if additional logs or bisection testing are needed to help
+> track this down.
+Nobody replied yet, so it seems nobody has an idea what's wrong here.
+Unless somebody comes around with one, I guess you'll have to do a git
+bisection to find what caused this. Remember to check mainline first to
+see if it maybe was already fixed.
 
-The cycle is built from three edges:
-
-  1) pool_shrink_rwsem -> (init_mm).mmap_lock
-
-     The TTM shrinker restores the caching attribute of every page it
-     frees, while holding pool_shrink_rwsem:
-
-       ttm_pool_shrink()
-       -> ttm_pool_dispose_list()
-       -> ttm_pool_free_page()
-       -> set_pages_wb()
-       -> change_page_attr_set_clr()   [ init_mm mmap read lock ]
-
-  2) fs_reclaim -> pool_shrink_rwsem
-
-     The same shrinker, called from reclaim.
-
-  3) (init_mm).mmap_lock -> fs_reclaim
-
-     ioremap() installing a huge PUD mapping over an existing PMD table:
-
-       ioremap_page_range()
-       -> vmap_range_noflush()
-       -> vmap_try_huge_pud()          [ init_mm mmap read lock ]
-       -> pud_free_pmd_page()
-       -> __get_free_page(GFP_KERNEL)  [ enters reclaim ]
-
-Edge 3 is the one that should not exist.  Now that reclaim can acquire the
-init_mm mmap lock, that lock must not be held over an allocation which can
-enter reclaim.  This rule is stated by commit d5d8b8662e6e
-("x86/mm/pat: Acquire init_mm read lock on attribute changes to avoid UAF")
-and honoured inside CPA itself, where split_large_page() drops the lock
-around pagetable_alloc().  The vmap path took the same lock earlier, in
-commit 26444eb71465
-("mm/vmalloc: acquire init_mm lock on huge vmap to avoid ptdump UAF"),
-and pud_free_pmd_page() still allocates its scratch page with GFP_KERNEL
-underneath it.  Neither commit deadlocks on its own; together they close
-the cycle.
-
-Use GFP_NOWAIT for that page.  pud_free_pmd_page() already returns 0 when
-the allocation fails, and its only caller, vmap_try_huge_pud(), then maps
-at PMD granularity through the existing page table - exactly what it does
-when its own mmap trylock fails.  So the failure path is not new, and a
-failed allocation costs nothing but a smaller mapping.
-
-This breaks the cycle at its source: no code holds the init_mm mmap lock
-across a reclaiming allocation any more, so no shrinker-held lock can be
-ordered against it.  The same cycle was reported from the i915 shrinker
-with &vm->mutex in place of pool_shrink_rwsem.
-
-Link: https://lore.kernel.org/all/80993b70-352f-4069-84c7-39a04c061e98@intel.com/
-Fixes: d5d8b8662e6e ("x86/mm/pat: Acquire init_mm read lock on attribute changes to avoid UAF")
-Cc: stable@vger.kernel.org
-Signed-off-by: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
----
-
-#regzbot introduced: d5d8b8662e6e
-
-Reproduced and verified on a Ryzen 9 7950X with a Radeon RX 7900 XTX
-(Navi 31, 0000:03:00.0), lockdep and KASAN enabled.
-
-On a kernel with a TTM driver bound the report above reproduces on
-demand, no memory pressure needed:
-
-  # cat /sys/kernel/debug/ttm/page_pool         # wc/uc rows non-zero
-  # cat /sys/kernel/debug/ttm/page_pool_shrink
-
-The second read runs the TTM shrinker with fs_reclaim held, so the
-same cycle is reported from the reading task instead of kswapd.
-
-Before (7.3-rc3-f6e7b42bf05b, #183): report within 105 s of boot,
-2048 pool pages scanned.
-
-After (same base plus this patch, #185): 1536 write-combined pages
-scanned - the order-9 row of the pool went from 3 to 0 and total
-node0 from 27650 to 26114 - no report, and /proc/lockdep_stats still
-showed debug_locks: 1 afterwards.
-
- arch/x86/mm/pgtable.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/mm/pgtable.c b/arch/x86/mm/pgtable.c
-index cb03f5a2b243..c79587962526 100644
---- a/arch/x86/mm/pgtable.c
-+++ b/arch/x86/mm/pgtable.c
-@@ -713,7 +713,7 @@ int pmd_clear_huge(pmd_t *pmd)
-  * Context: The PUD range has been unmapped and TLB purged.
-  * Return: 1 if clearing the entry succeeded. 0 otherwise.
-  *
-- * NOTE: Callers must allow a single page allocation.
-+ * NOTE: Callers must allow a single non-blocking page allocation.
-  */
- int pud_free_pmd_page(pud_t *pud, unsigned long addr)
- {
-@@ -722,7 +722,13 @@ int pud_free_pmd_page(pud_t *pud, unsigned long addr)
- 	int i;
- 
- 	pmd = pud_pgtable(*pud);
--	pmd_sv = (pmd_t *)__get_free_page(GFP_KERNEL);
-+	/*
-+	 * The only caller, vmap_try_huge_pud(), holds the init_mm mmap read
-+	 * lock, which reclaim can take via set_memory_*().  Do not enter
-+	 * reclaim from here.  Failing is fine: the caller then keeps the
-+	 * existing PMD table instead of installing a huge PUD mapping.
-+	 */
-+	pmd_sv = (pmd_t *)__get_free_page(GFP_NOWAIT);
- 	if (!pmd_sv)
- 		return 0;
- 
--- 
-2.55.0
-
+Ciao, Thorsten
