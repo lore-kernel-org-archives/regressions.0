@@ -1,102 +1,103 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.61.103])
+Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CB0C3BBFC2
-	for <regressions@lists.linux.dev>; Wed, 16 Sep 2026 06:30:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.61.103
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6808455173
+	for <regressions@lists.linux.dev>; Wed, 16 Sep 2026 07:37:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789540245; cv=none; b=VTsvm3o6CcCDWQFWMQtJ/GyD3cXuw2kSHXni1iWTzbjPOMlfVydkkz9QbT2qBkSrQB9xaxfT6GzPIzKFADeqXPf3PMsxhvZCtOZ8C0+5uYeksywkbK/pQg/xlMZS8hm/P99Yc+EGGQPyiPlNuwwIIu3l5rndjRi57X2O1NElyAU=
+	t=1789544273; cv=none; b=O064CbNCcfqbs78adS6dHZFzWTSIkP77IrJdlX3d42jc+3PsovDZ/tPz1MWt70BUYqBv6uWs5w5uCCsHOpT8M0JQzyfxfjWQlnWrwUWmyyX0nozcSy3SJqMpfmXf0BMPVz75G88BHnu1kpxs+6dcIRxDDhgBI7C6PguE3KCFVXE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789540245; c=relaxed/simple;
-	bh=4adzdkyS6XeXKbl6zU2c2shBLF3+Kon9+nbNlKt/DA4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QXQylMfagL1DecIIscnfgI8SGuxYUSYMHplkELj8/yMA62dLuyJ8XlbOZ5080LXRqUBnViEgagyfqz9dzjgue9xWJHZrFZdPbJ+Fbi7E+ay5ij2pxJbhxOtl2KjIWRcBMOsC0sV1ly0pzDwHcJIpuVpzCP5U8XbUahVtMrDs7oU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=OSMi+vxm; arc=none smtp.client-ip=188.68.61.103
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1789544273; c=relaxed/simple;
+	bh=GDtzL67scSq2UWnFotGDkOZ3m1EtjuZAhaUshRza66s=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=WMJai4Saf4gJOkW3uS4s4kMwuuPR7VEwUcZSpwITCN+WsLZJ7akfs2knKK7aCL/mr1FWnDVrMN53VfRKa5O5/DZgak48XCykZns3sLwexZ4pRZij5Qsv3jMUIXYuFq79dvcE9e0fLf8UlVHFtBMWAbEpD/rhs8QLKIn8+FWO9W8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=siM4TMnc; arc=none smtp.client-ip=80.241.56.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="OSMi+vxm"
-Received: from mors-relay-8403.netcup.net (localhost [127.0.0.1])
-	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4hl8BD24jrz893l;
-	Wed, 16 Sep 2026 08:29:40 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1789540180;
-	bh=4adzdkyS6XeXKbl6zU2c2shBLF3+Kon9+nbNlKt/DA4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=OSMi+vxmFMu49L/6pT++enzazONrFbpjM+f9UVmgA5jKltZe2l+IyM6gPMuVy2q0W
-	 hfOFcwqc7UFds6O8glOw4rSjF1ILHTTOFLSYGFJ1SEiwvE3N/owj6eELo1NtlIZYfF
-	 oAuwY9fr1H79UcleD2FSXeG07xPzLgoB2P0NrycXNdt00tzp1zmNHdtVhq3IAMBkKl
-	 2oSE8FK+CBFolHu+OTudtqDMzt9Nzmol1UbBDpCjfZBQeG68koojteFQF6MFUUYjpw
-	 AwTRo2dv/jVMQ1Bos9H1yxIMUm2ncNItgbRh0SjKlXNWTRyJoDzz/X5SjJ+Dxk7Vzm
-	 VQJJdceZl6s3A==
-Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4hl87b0qvvz894q;
-	Wed, 16 Sep 2026 08:27:23 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
-X-Spam-Flag: NO
-X-Spam-Score: -2.899
-X-Spam-Level: 
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="siM4TMnc"
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:b231:465::1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4hl87Z17F3z8tbb;
-	Wed, 16 Sep 2026 08:27:22 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 58DCA5FAD7;
-	Wed, 16 Sep 2026 08:27:13 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <1dba4e50-2468-4cc6-b002-907ca1438b2d@leemhuis.info>
-Date: Wed, 16 Sep 2026 08:27:11 +0200
+	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4hl9hh5XVyz8ty1;
+	Wed, 16 Sep 2026 09:37:40 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1789544260; h=from:from:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GDtzL67scSq2UWnFotGDkOZ3m1EtjuZAhaUshRza66s=;
+	b=siM4TMnch2rn4U1j6hPM6Y+Jrosea3tVMCzDOpwciv+u9hM/WtCLYH/76ONpw67XdtlStN
+	R8kouwYNsLsggAhrLqD4C0+4IVH+Fh2wfBb6qjM17f+S/a+Nyo1B28TuvNAbt0X1hUoTSh
+	BAAAxddN/HeS4UuSn3vdf8CpMUka9TSEAzC85DX28ZqI3MFJ5pHCGE5mXXU2uWU0mdnR7/
+	mVGIVF+9UO3fCdgsSoTxdYBIwRsy6cOv9NTjnA3k70WBpgJnXXqrY8qNqpMAg6/erHcxlm
+	qOiZgZaUG6GVqbXwV689je8/JWmbrGG1LJlbsVHr1FQVns0/UHYJdpr3QXMhSA==
+Message-ID: <763ba7b5895ac8f850662eaad84a2d5b523a8902.camel@mailbox.org>
+Subject: Re: [REGRESSION] drm/sched: FAIR policy causes serious performance
+ degradation at max GPU load on 9070XT
+From: Philipp Stanner <phasta@mailbox.org>
+Reply-To: phasta@kernel.org
+To: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>, phasta@kernel.org, 
+	Luke.Wildhardt@proton.me
+Cc: Danilo Krummrich <dakr@kernel.org>, "matthew.brost@intel.com"
+	 <matthew.brost@intel.com>, "ckoenig.leichtzumerken@gmail.com"
+	 <ckoenig.leichtzumerken@gmail.com>, "dri-devel@lists.freedesktop.org"
+	 <dri-devel@lists.freedesktop.org>, "regressions@lists.linux.dev"
+	 <regressions@lists.linux.dev>, "amd-gfx@lists.freedesktop.org"
+	 <amd-gfx@lists.freedesktop.org>, "linux-kernel@vger.kernel.org"
+	 <linux-kernel@vger.kernel.org>
+Date: Wed, 16 Sep 2026 09:37:34 +0200
+In-Reply-To: <ab60bdb4-351f-4911-9246-2719d078cb96@igalia.com>
+References:
+		 	<TfhgV1W0W5LI6RWUO6J35B3R8QIYH_FN3Eihzdo_9PH39hfn1AVByT-QBPHmWiAR-L0Kqi2sppM_EhFPKwZPGmb5pFgpF2MrzeFzkZDmpG8=@proton.me>
+			 <cef49cf329737e0af12ef5a90dd21f31e113d4c3.camel@mailbox.org>
+			 <DKL9VAWD2Y98.RBQPQUL7Y47F@kernel.org>
+			 <6e2a207e-4db6-4d47-b1f6-9cb13b8d6eeb@igalia.com>
+			 <enK0t0JrZ3lr9gmgPwE_YaVJDy7K355Bs0xy0YNoVwujLHCGWNRXCjDOhYfiHNGN3pPDSlEUIz3_UkXmFNAJNXxrJOIwvzAG-k8_p_D5FOQ=@proton.me>
+			 <4OmZej9WiJ6-rsJ_lFcrmwtClAwMdN4oHXWH0p8FkIrhAn4LKS4O3q36wrdZrvjZHBNS8PZsvaIvR-1aFZfF2tDiy1cdMzTYNylcbGDQN68=@proton.me>
+			 <a9ee4edb-e763-4fd7-a510-32191df0cf8f@igalia.com>
+			 <932892b196f7bbba7f5e9bff22f9b484854aaccc.camel@mailbox.org>
+			 <ab60bdb4-351f-4911-9246-2719d078cb96@igalia.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] Sound broken on Cirrus Logic CS8409 / iMac19,1
- between 7.1.13 and 7.2.4
-To: Zachary Hunt <1zachhunt@gmail.com>, alsa-devel@alsa-project.org
-Cc: linux-sound@vger.kernel.org, regressions@lists.linux.dev,
- Takashi Iwai <tiwai@suse.com>, Jaroslav Kysela <perex@perex.cz>
-References: 
- <CAOD3=bOhpz2P2+UUNeTsdxXiPtdhFQ+jZg-1WQmFAPYchSvhEg@mail.gmail.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: 
- <CAOD3=bOhpz2P2+UUNeTsdxXiPtdhFQ+jZg-1WQmFAPYchSvhEg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <178954003376.626450.11625335250586460561@mxe9fb.netcup.net>
-X-NC-CID: etn+woiEZmqizqAkoOXMdS1A8HaEHRyKKSmFE9L16HTyYLmrc4o=
+X-MBO-RS-META: t7tj41edfc77zcym3yib1pm5n7ffxnii
+X-MBO-RS-ID: 134a4ce73af47e1eb91
 
-Hi! Thx for the report!
+On Wed, 2026-08-12 at 13:29 +0100, Tvrtko Ursulin wrote:
+> Not sure if you are calling me out here or not, since apart from a=20
+> direct mention, the lore link above is also a reply to my email, so for=
+=20
+> the record, I did give my ack for those patches. Plus I spent time=20
+> testing them. So if you were in fact calling me out, I don't see how=20
+> that is warranted. And on the wider topic I also never shied away from=
+=20
+> the non-glamorous work.
 
-On 9/12/26 20:42, Zachary Hunt wrote:
-> 
-> Audio output via internal speakers works on kernel 7.1.13 but stops
-> working after updating to kernel 7.2.4.
-> 
-> Hardware & Environment:
-> - Machine: Apple Inc. iMac19,1 (Board: Mac-AA95B1DDAB278B95)
-> - Audio Codec: Cirrus Logic CS8409 (snd_hda_intel)
-> - OS: Fedora Linux 44 (KDE Plasma Desktop Edition)
-> - Sound Server: PipeWire
-> 
-> Symptom:
-> On kernel 7.2.4, built-in speakers produce no audio. The card is
-> recognized by ALSA and PipeWire is running, but sound playback fails.
-> The system functions as expected on kernel 7.1.13.
-> 
-> Attached is the full alsa-info.sh output for kernel 7.2.4. Please let
-> me know if additional logs or bisection testing are needed to help
-> track this down.
-Nobody replied yet, so it seems nobody has an idea what's wrong here.
-Unless somebody comes around with one, I guess you'll have to do a git
-bisection to find what caused this. Remember to check mainline first to
-see if it maybe was already fixed.
+I was addressing what I perceive to be the general problems within DRM
+=E2=80=93 I still believe the general points are valid, but want to stress =
+that
+it's a collective problem in which we all play a role, though no one is
+the protagonist. I mentioned the media outlet (which quoted your name)
+as part of the problem because there are external cheerleaders for
+performance (whose unconditional priority is *the* reason for the
+design mistakes in drm_sched) and features.
 
-Ciao, Thorsten
+Nevertheless, I apologize for the rough tone and want to emphasize that
+you're indeed the most engaged contributor and have improved many
+things. The unit tests alone are worth their weight in silver.
+
+The wider, problematic patterns in DRM might be worth addressing with
+the appropriate tenderness in a suitable format; I will try to collect
+my thoughts on that.
+
+
+Regards,
+Philipp
