@@ -1,42 +1,83 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj2-f13.google.com (mail-pj2-f13.google.com [74.125.227.141])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8392F2C0F8C;
-	Wed, 16 Sep 2026 14:50:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42F2D3C2B95
+	for <regressions@lists.linux.dev>; Wed, 16 Sep 2026 17:47:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.227.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789570248; cv=none; b=fPKgJjWnW7fDZIRBFrH9RX0OYnc1RXeOi6gcPa7AV93Bm1LPFMiB2q/M6wvDfVWOr84f3WjI0Tfl5D8m2Zq7HQPXtJxiFhvCRKG9+pvMIpT3L92wShmIuHMK2gh3N0iOM7IDihl+6gmVPsrZ5dSv7QDHku48+xWH+srabBGyAYQ=
+	t=1789580857; cv=none; b=THCpI/U1udycEGLMzG819Fh+dWIlfxMhS3OsN4etHdmIXFmZdLkNwdUCd0dpSxvWHHvWNmfFjltSAvwsoYAGlWUKKpnOKOomRewe973+8X2YrHltyi5Qsecy40sdbLiTdLuaCk3iAVGtuCeNs11wMrBxJA3+mAUlQ+U2AfnGzHE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789570248; c=relaxed/simple;
-	bh=RhVLTWzVaJaLgfP7/phIIe+ekkV4rdTVEVwEjVESCC4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=P+G5T9UQ3Y8mJtXc17ulgqFABx1XtRQj6yXL47ETdUIjAbFJ/gx1lxtAC9xGxDFHgwJgFTnbcIf8H5UrFLM38rT1Wxpae55wjKVJmNTMESSg1hHXfHPWgv8Dic9z6nXd8tyFisbT4CVKvJVNp1x1FeIKq0VBTOALwV6Nynwc0jo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j1Jr2asw; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789580857; c=relaxed/simple;
+	bh=G/PY36hb3mMFej1b0Th4YsjbgNjq9OtQrJFaa5sQyUo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fLDhkFiV1iFvAnEgj0EGX6h2LqR2WXQ2mfoRW7pltwS69hQM5ZP2E74FOeG81lapSBIupJFSQdTjbhE1bpgJwIEIdBACdMaLSmxntB7eCJM+KrYyOJwYsqwcwhZyM8ZFs5gcJmMTrmuDAWjEB4dD73XoXB5syQmwJ7a2GqZLM8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hFKZ5bw7; arc=none smtp.client-ip=74.125.227.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j1Jr2asw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2AC21F000FF;
-	Wed, 16 Sep 2026 14:50:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789570247;
-	bh=9n9CTHcuaXijNoFZR6DZmPgiz11kru6+rNJJzvGm2JI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To;
-	b=j1Jr2aswkdTNWl5sS0SE0HNk/mgydrHOcEq9xTtwwmAXXzqKwaZTRXHUrYQKHsZFC
-	 kOXVjd9yGc5jFlTpqRmBHCDwtaUEm16fp2vgWSDGOkFsyDHnf902ox63Ux44efukZa
-	 9vFQ5OHtX4eS6OxvnuBrjc7J8CJgt8Y6RSPWI9Y2qVBLXziCoJGbowm8Zad4whnO81
-	 sHJwD2BVnzwwNFOlZeMjKoPDl2Klztbn+HZg5LvA1ILP0bG3bxcFYhkTSY4/WPIlYY
-	 4OodtnTuVnCicd0cL2oYHcJRggjwqkXKwhyqJQl/02B2RCo2BatJR/IxdP09YRIL0s
-	 uFhFO1pcB01Ow==
-Date: Wed, 16 Sep 2026 09:50:45 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Angel J <iamanaws@httpd.dev>
-Cc: linux-pci@vger.kernel.org, bhelgaas@google.com, robh@kernel.org,
-	herve.codina@bootlin.com, lizhi.hou@amd.com, andrea.porta@suse.com,
-	florian.fainelli@broadcom.com, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
-	stable@vger.kernel.org, linux-rpi-kernel@lists.infradead.org
-Subject: Re: [PATCH v2] PCI: of_property: Omit bus properties without a
- subordinate bus
-Message-ID: <20260916145045.GA922158@bhelgaas>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hFKZ5bw7"
+Received: by mail-pj2-f13.google.com with SMTP id 98e67ed59e1d1-396ccafb751so1094751a91.2
+        for <regressions@lists.linux.dev>; Wed, 16 Sep 2026 10:47:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1789580833; x=1790185633; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=5fRuhsyZpo67PM/nz3BCI8bcnib/ogSlc/1jN1DlRcc=;
+        b=hFKZ5bw7XCyYw73dS54VZuyPg9V7Yy58dfC0lSh5NnUUH/hif7lc9upnn7zeNDoThs
+         fkld/1tDICTZu6o2xIhxdy+EJDauBysg7r7UGtrMZDZwQRYMgsWgSEMyG0BX94H7brf5
+         9B7IVk4+9/5urWFleTDZzxfsA4i7bFxw7l/jowZmnwMAQkzxfrzznInA2M8PK+ecnMtG
+         SHaEtx7oJ1p+ayAdUx/R8T2JB25/tHk/u+CUD5HuOffE2QGNNG4zk84i0HRIuIze0Q4b
+         a4/UX+oDWjAS3THyuNUn2XQtGTaFtmoTR8lQAWHqQihDFyh8fq1YKJkD+zALoLJaHC8f
+         fRVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1789580833; x=1790185633;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=5fRuhsyZpo67PM/nz3BCI8bcnib/ogSlc/1jN1DlRcc=;
+        b=khuvnXbSc+8OruoHhkJxOJYyDRil1R80/zhTUTN7c9yIOHBYicbp2NAGyT5NvROndJ
+         gq0n8z4ZtUU8OicETnQtp9QE6bmIlGwL9sNDyn40SjM2nV5soE7O4IyZ0ATX79Na0Gu8
+         85NpBVAS+xOH7kzlnEgBxzrEfYkAgDft48rGg/4cpfWptfwDeTGuxxuozaSCWsPFgx8b
+         Nz9ZP9yXGtfxmczD3jVOPshMfsd3wde6JS8EFiQqW3cH0kBrt0CgDwEXpE92jJR32o+l
+         RTB2n/mCP/AsX2eR5FrvuxOiP21qvusCVCjk/tdeAghoHGlKmhg/EqFN1qIlgpN00Di/
+         4eHw==
+X-Forwarded-Encrypted: i=1; AKwUvBw4bK5Ya5k3n1mGICAAfzffmF9Q0EGcZ0l7bbHc2zmZPiionTeYhWXlZDIlPxEsHHhu8XUbz15b/qQITg==@lists.linux.dev
+X-Gm-Message-State: AFuF++kTxVGRySUHNbc/+QznEgVcKgBcD415OiiOTgJqIEDMZE96Qvtr
+	sv7A0b5WSRHLkq6ax9yHr2UbqTlstxwhIFjhNXxaG9mLNG6OwzyoPVBs
+X-Gm-Gg: AYBFou29GHZZO2spzUCmphpa9t0XMeX/DSovdThosdnTu2dvTaMYJH+49l5FLPDYWeo
+	3xdrobhWJXIc66pSb03Wg67/YUY2CeGCCCkiyUOh9gk9mX822nGeVgBREh/0/D+BCBUVkf43W11
+	Ws/ekyQoiTiOdSCTHOjRaTT4XV0I14DiDv338MhdQM3M+j/xbIdTus5zJ2k7JAHP6G2siu3unlt
+	6YJY7yakM8/JNdYqv0ay3SakeXIU7w55y55s7tRPIekdnjub5icAIKGPZa/Gfh0pFlDyEXnLmrJ
+	AAAWV27XdIueeaaj9fpFr076x7BihEte4AY1hxgQL9jOQiyUJA6DExR0tjgqz+U7U7toL3SJkYB
+	ESAFdpePuNIPrQIfoW6LxROiiEMGJ3kMED0Fh2F0uhXRAcADOqy9UEf9/+MLQAWtoYaQ55HcHWK
+	yn+sGbSkrjICGDf4IiErPCX00qf6HA+nMOGTmwuZ2BRa3Hl2rWrMIw+IJOgSbydfO1MHz2WY9Dh
+	LkvMVd//DI9OUTzUZSIDvIcskpuZMPYraC/Hg==
+X-Received: by 2002:a17:90b:5624:b0:39e:b7:cbef with SMTP id 98e67ed59e1d1-39e1e5612d3mr10626719a91.25.1789580833109;
+        Wed, 16 Sep 2026 10:47:13 -0700 (PDT)
+Received: from eggarch ([2409:40c4:18:7581:88e6:16cb:6cd3:1ba1])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-39e1c7e2200sm1772020a91.4.2026.09.16.10.47.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Sep 2026 10:47:12 -0700 (PDT)
+Date: Wed, 16 Sep 2026 23:17:05 +0530
+From: Lovekesh Solanki <lovekeshsolanki00@gmail.com>
+To: Mathias Nyman <mathias.nyman@linux.intel.com>
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Michal Pecio <michal.pecio@gmail.com>, Mathieu Fluhr <mathieu.fluhr@gmail.com>, 
+	Mario Limonciello <mario.limonciello@amd.com>, Thorsten Leemhuis <regressions@leemhuis.info>, 
+	regressions@lists.linux.dev, stable@vger.kernel.org
+Subject: Re: [PATCH 2/2] xhci: drop 120ms U3 LFPS wake retry wait from
+ runtime resume
+Message-ID: <aqrK5PwpJodCmbdM@eggarch>
+References: <20260831190349.29590-1-lovekeshsolanki00@gmail.com>
+ <20260831190349.29590-2-lovekeshsolanki00@gmail.com>
+ <a6a8526f-4b6f-46f7-9d02-05bfe3efcd48@linux.intel.com>
+ <apbrp8EaJoIfEg5X@eggarch>
+ <1be8e57f-9abe-4b34-bc09-e7934a2fa1bc@linux.intel.com>
+ <apg16LtZ-ru9MIBQ@eggarch>
+ <082467bf-d045-45d7-b097-97a5790e79d6@linux.intel.com>
+ <apq4FFSD2QKG-jUu@eggarch>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -45,82 +86,43 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260912043106.10715-1-iamanaws@httpd.dev>
+In-Reply-To: <apq4FFSD2QKG-jUu@eggarch>
 
-On Fri, Sep 11, 2026 at 09:31:06PM -0700, Angel J wrote:
-> A device can satisfy pci_is_bridge() without having a subordinate bus.
-> The dynamic OF helpers for bus-range and interrupt-map dereference
-> pdev->subordinate without checking it.
+On Fri, Sep 04, 2026 at 06:43:43PM +0530, Lovekesh Solanki wrote:
+> On Thu, Sep 03, 2026 at 10:42:48AM +0300, Mathias Nyman wrote:
+> > On 9/2/26 21:21, Lovekesh Solanki wrote:
+> > > On Wed, Sep 02, 2026 at 03:10:41PM +0300, Mathias Nyman wrote:
+> > > > It's possible PCI side or pm core already provides some easy way for xhci driver to check this.
+> > > > This specific issue is currently not on my todo list, yet.
+> > > Alright, would you like to me to work on this? I could look into
+> > > that side and possibly come up with an approach.
+> > 
+> > Yes, please, that would be great.
+> I took a look at the PCI / PM side, and it seems to me there isn't any
+> reliable approach for xhci driver to use right now.
 > 
-> On a Dell XPS 8940, device 0000:00:00.0 [8086:4c43] has no subordinate
-> bus, and enabling CONFIG_PCI_DYNAMIC_OF_NODES causes an early boot hang.
+> The pci_check_pme_status() both checks and clears the pme status bit 
+> and the pci core devours it inside pci_pme_wakeup(), and 
+> pm_request_resume is async so xhci's runtime_resume may run much later
+> after the bit is already gone. We can't simply export pci_check_pme_status()
+> that wouldn't give any useful info.
 > 
-> Generate bus-range and interrupt-map only when a subordinate bus exists.
-> Keep the node and its remaining properties for bridges without one.
+> One solution I can think of would be adding a pme_wake_detected bitfield
+> on pci_dev struct, we set it in pci_pme_wakeup() when PME is confirmed
+> and we clear it in pci_pm_runtime_resume() after the driver has
+> returned.
+> Then, we could directly read via pdev->pme_wake_detected in its own
+> resume.
 > 
-> Boot-tested on Linux 6.18.44 with CONFIG_PCI_DYNAMIC_OF_NODES=y. The
-> system boots and the node for 00:00.0 retains device_type, reg and
-> compatible. The other bridges retain their nodes and bus ranges.
+> What are your thoughts on this?
 
-I think this is the right approach, with something like this included
-in the commit log:
+Hey Mathias,
 
-  A bridge (a device with a Type 1 header) may not have a secondary
-  bus allocated (pdev->subordinate), e.g., if there are no available
-  bus numbers or the bridge secondary/subordinate bus numbers are not
-  writable.
+Just wondering if you have looked into the proposal above.
+I suggested adding a new field to pci_dev struct for knowing whether a
+resume came from PCI PME side.
 
-I don't think it's necessary to connect this with [8086:4c43] because
-I think this situation is very common, and I don't want to leave the
-impression that it's related to a Dell system or to that specific
-device.  It's just a bug to assume that pci_is_bridge() implies
-pdev->subordinate is valid.
+Would it be better to send it as an RFC too?
 
-> Fixes: 407d1a51921e ("PCI: Create device tree node for bridge")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Angel J <iamanaws@httpd.dev>
-> ---
-> Changes in v2:
-> - Keep the dynamic OF node and skip only bus-range and interrupt-map
->   when no subordinate bus exists, following review of v1.
-> - Tested on Linux 6.18.44 with the v1 guard removed.
-> 
->  drivers/pci/of_property.c | 14 ++++++++------
->  1 file changed, 8 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/pci/of_property.c b/drivers/pci/of_property.c
-> index 75a358f73..acd2e0f70 100644
-> --- a/drivers/pci/of_property.c
-> +++ b/drivers/pci/of_property.c
-> @@ -361,13 +361,15 @@ int of_pci_add_properties(struct pci_dev *pdev, struct of_changeset *ocs,
->  		if (ret)
->  			return ret;
->  
-> -		ret = of_pci_prop_bus_range(pdev, ocs, np);
-> -		if (ret)
-> -			return ret;
-> +		if (pdev->subordinate) {
-> +			ret = of_pci_prop_bus_range(pdev, ocs, np);
-> +			if (ret)
-> +				return ret;
->  
-> -		ret = of_pci_prop_intr_map(pdev, ocs, np);
-> -		if (ret)
-> -			return ret;
-> +			ret = of_pci_prop_intr_map(pdev, ocs, np);
-> +			if (ret)
-> +				return ret;
-
-I think this is the best solution, but I do think it would be a little
-cleaner to check for pdev->subordinate inside of_pci_prop_bus_range()
-and of_pci_prop_intr_map() instead of assuming things here about the
-internals of those functions.  We could just make them return
-immediately without doing anything.
-
-> +		}
->  	} else {
->  		ret = of_pci_prop_intr_ctrl(pdev, ocs, np);
->  		if (ret)
-> -- 
-> 2.54.0
-> 
+Thanks,
+Lovekesh
