@@ -1,147 +1,105 @@
-Received: from pdx-out-009.esa.us-west-2.outbound.mail-perimeter.amazon.com (pdx-out-009.esa.us-west-2.outbound.mail-perimeter.amazon.com [35.155.198.111])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C548B3E3163
-	for <regressions@lists.linux.dev>; Tue, 15 Sep 2026 23:58:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.155.198.111
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C43838F253;
+	Wed, 16 Sep 2026 01:21:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789516720; cv=none; b=mNN+A7CLIUrtSo7wNNxOjXuyuXUfn9Vl7IuleBXhgGw0EpV8AYQ1RVqJikUDQ/ge1ttX+m/5eIH6HBfrukflSKRKam2aWNT54BNjlzwCKJl5YXt6JFCJvZU7fUanGtWpQp5JKuSakZMEX/tPflTpkD1RhMLwm6d/cU9izjLuspk=
+	t=1789521678; cv=none; b=oA92814kY7IjYGnBWlWsb+9IrZSGVkVvP+Rhzj6vXJYkLpr26vXiHAvwa9lYOeVNXNHPYessqRa+cUyOzI7hCaNkFNaqdFkBntlNyM3ZqFZI2aOkRea/r9Ul9COost3p5SjFfB8chN7DpHftidyanfeR8x4ruNJ0x9KWa6KLIRc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789516720; c=relaxed/simple;
-	bh=DCvst1yYbdhpjU7c/fmVI2EYWBw5faQnvtGB/RGBgQU=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=gB0Ww59dO4fi6D6Bb+ojcpk+rcdvrAgT37/lMmf9m2/EbnVqrofq5ACiw/UyUo2iBNE9X4LoFv9lrKosokZuzyLxAbOqTQOxzPDq50PLv1oEd/nyLz/rVMg2JTPFOZfkHuiAqlJ8HgHZGd8OHOoLbkfPr5DWZmo+4I7wXONrmGw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b=mBVtjrbh; arc=none smtp.client-ip=35.155.198.111
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
+	s=arc-20240116; t=1789521678; c=relaxed/simple;
+	bh=0Wbe+nQ3iMRYcPF5b2fQhTZ72kvmf1L1FbpmuIH6ClQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=Odf7YF/MYNnV/QH7YVAwxJMGwpnwG1JiwXoPMTAQRCoZ7kvxyu9Ctyx8CdxjUv9Tc4bzPr9xd8yErIfVqu64WS2X7yxi9k4Irgmt46z9B2gu6WoPnCH2j0iz0xUxZJ6GU5dzXlXiOse6Wb2hL1Erkuhp9TtSHnO4UpFAulMyWwA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RkXicEF3; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b="mBVtjrbh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
-  t=1789516718; x=1821052718;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=odap5gdV04/t27HraMBx8bD0KEBu67w6nTFvWHfmhCA=;
-  b=mBVtjrbhR5PioGNRrlJNElT9YQZXMBU/q+mPv3PUIopssizOpEDB9mIC
-   P/uZCWf/mmo1aSwMbUjk2YoV1odDKo3LCkBQaXygm6xj/0+nKrsJm+Nic
-   edca3W7GZpFrmEUG8Ws3xsYvUNNK/twxt2Ob8UF07aE6dYv1zxlWrBRMb
-   d2oS0wO3KHMBXiOo5f2A2cY33gVee3y7D6YHyogveoCr7pM8Ik5yFP+aB
-   uASQsRK5Ug8cF4p2LofPU0cc929vy/0HXPKr9gNihNyVCAY78QPu/501e
-   +2DZYT+Q5yJOOSNlUeOEpDjKktIwYw6dceJuYdPRzePvVqOPnMJrEoNNL
-   Q==;
-X-CSE-ConnectionGUID: BXyKZk6ESEyWgZe6FrLc7g==
-X-CSE-MsgGUID: GHdLMXppRBODiNyDAC1VGA==
-X-IronPort-AV: E=Sophos;i="6.27,103,1787011200"; 
-   d="scan'208";a="28676298"
-Received: from ip-10-5-6-203.us-west-2.compute.internal (HELO smtpout.naws.us-west-2.prod.farcaster.email.amazon.dev) ([10.5.6.203])
-  by internal-pdx-out-009.esa.us-west-2.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2026 23:58:38 +0000
-Received: from EX19MTAUWC002.ant.amazon.com [205.251.233.111:29530]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.43.236:2525] with esmtp (Farcaster)
- id 7fd5a7e0-7d17-4795-9a70-a21049c45c2c; Tue, 15 Sep 2026 23:58:38 +0000 (UTC)
-X-Farcaster-Flow-ID: 7fd5a7e0-7d17-4795-9a70-a21049c45c2c
-Received: from EX19D001UWA001.ant.amazon.com (10.13.138.214) by
- EX19MTAUWC002.ant.amazon.com (10.250.64.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.46;
- Tue, 15 Sep 2026 23:58:38 +0000
-Received: from dev-dsk-surajjs-2c-afd24e6d.us-west-2.amazon.com
- (10.189.247.117) by EX19D001UWA001.ant.amazon.com (10.13.138.214) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.46; Tue, 15 Sep 2026
- 23:58:37 +0000
-From: Suraj Jitindar Singh <surajjs@amazon.com>
-To: <stable@vger.kernel.org>
-CC: <gregkh@linuxfoundation.org>, <chenyichong@uniontech.com>,
-	<andrii@kernel.org>, <bpf@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<regressions@lists.linux.dev>
-Subject: [REGRESSION] 5.15.221 & 6.1.188: bpftool: redefinition of 'free_btf_vmlinux'
-Date: Tue, 15 Sep 2026 23:58:34 +0000
-Message-ID: <20260915235834.20559-1-surajjs@amazon.com>
-X-Mailer: git-send-email 2.47.3
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RkXicEF3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A3831F000FF;
+	Wed, 16 Sep 2026 01:21:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1789521677;
+	bh=ffJRaL2ky6pBQl8PtqB+J2dsYGt8mUxbX9DKk1QC71U=;
+	h=Date:From:To:Cc:Subject:In-Reply-To;
+	b=RkXicEF3L9BA4bhrsFGpqr7wgrUxNKkf67F+tRYiUGJ3df8JFH8orZ8NiNZj33jWo
+	 7aNa+nVsGYoD7Itv0pdaAngqwtrILN/DxiwevL5b9VuYj4gLrMwDtGE7fWWR800TA2
+	 A8GY9x18OvbCXjGWCdmu7/1h/KdoxMUQmPOE4mWZAMPaVPdld7I2EAdyQOyWGb6e/Z
+	 YvpXzxZBw8R2SI4ZjeSAQCX1IMRR9MQz/clX8oUGJPVdigCTCHCaX1yU2FQG2AEzIs
+	 49/1YMgHuW2ev+JZBUHaU+Um+2RyEkE4qJzBy81JgsfOrrJ5jseFgTAVPIvfyp12FY
+	 b82RZ92Uo74gQ==
+Date: Tue, 15 Sep 2026 20:21:15 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Angel J <iamanaws@httpd.dev>
+Cc: Andrea della Porta <andrea.porta@suse.com>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+	"stable@vger.kernel.org" <stable@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-rpi-kernel@lists.infradead.org" <linux-rpi-kernel@lists.infradead.org>,
+	"robh@kernel.org" <robh@kernel.org>,
+	"florian.fainelli@broadcom.com" <florian.fainelli@broadcom.com>
+Subject: Re: [REGRESSION] PCI: Dynamic OF node creation hangs on invalid
+ bridge configuration
+Message-ID: <20260916012115.GA888380@bhelgaas>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D037UWC004.ant.amazon.com (10.13.139.254) To
- EX19D001UWA001.ant.amazon.com (10.13.138.214)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <VaPKN3QbW3sGj8wePAvI_xD3twp_MQE4-4xeSbvgoQPVUnKDWKz0EWT_JiLehpmc6WOsCAoFOPs412Xhtthes_ZtvrgsKB4QB6QPz-XvRb4=@httpd.dev>
 
-Hi Greg, all,
+On Mon, Sep 14, 2026 at 11:28:45PM +0000, Angel J wrote:
+> Ok, here it is...
+> 
+> I tested this quirk on Linux 6.18.44 with CONFIG_PCI_DYNAMIC_OF_NODES=y,
+> and it boots without either OF fix. The diff below omits the test logging.
+> 
+> PCI_FIXUP_HEADER runs after the resources have been parsed using the
+> original header type, and changing hdr_type also affects configuration
+> restore. I don't know enough about this part of PCI to judge whether
+> that's safe, so I'll wait for your advice before submitting it as a patch.
+> 
+> Thanks,
+> Angel J
+> 
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index de9bbccda..57df88a38 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -291,6 +291,22 @@ static int __init pci_apply_final_quirks(void)
+>  }
+>  fs_initcall_sync(pci_apply_final_quirks);
+>  
+> 
+> +/*
+> + * On the Dell XPS 8940, 8086:4c43 reports a PCI-to-PCI bridge but has no
+> + * downstream bus. Use host-bridge class and a normal header so that
+> + * pci_is_bridge() does not send it through bridge scanning.
+> + */
+> +static void quirk_intel_4c43_host_bridge(struct pci_dev *dev)
+> +{
+> +	if ((dev->class >> 8) != PCI_CLASS_BRIDGE_PCI ||
+> +	    dev->hdr_type != PCI_HEADER_TYPE_BRIDGE)
+> +		return;
+> +
+> +	dev->class = (PCI_CLASS_BRIDGE_HOST << 8) | (dev->class & 0xff);
+> +	dev->hdr_type = PCI_HEADER_TYPE_NORMAL;
+> +}
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x4c43, quirk_intel_4c43_host_bridge);
 
-Building bpftool from the v6.1.188 and v5.15.221 stable tags fails with a
-duplicate function definition:
+I think your of_property patch is better because it removes some
+assumptions made in the of_pci_make_dev_node() path about what things
+in the pci_dev are valid.  It's quite legal for a device to have a
+Type 1 header (so pci_is_bridge() is true), but have no pci_bus below
+it, e.g., a bridge on bus 0 with Secondary Bus Number also being 0.
 
-  tools/bpf/bpftool/map.c: error: redefinition of 'free_btf_vmlinux'
-  note: previous definition of 'free_btf_vmlinux' was here
+I don't know what happened in this particular case, whether the
+Secondary Bus Number and Subordinate Bus Numbers are hard-wired to
+0xff or what (per spec, both should be read/write).  Maybe the system
+"lspci -vv" and/or complete dmesg log would have a clue.
 
-This is a stable-only regression caused by a bad backport (the fix is
-correct in mainline). It affects only the current head of each series:
-
-  Tree     Broken      Last good
-  5.15.y   v5.15.221   v5.15.220
-  6.1.y    v6.1.188    v6.1.187
-
-6.6.y, 6.12.y, 6.18.y and 7.2.y are NOT affected -- those trees already
-carried free_btf_vmlinux() in its current (btf_vmlinux = NULL) form
-before this cycle, so the backport deduplicated cleanly there.
-
-Root cause
-----------
-In 6.1.y the backport of
-
-  660a19e46942 ("tools/bpf/bpftool: Reset vmlinux BTF after map commands")
-  [mainline 66d7e39e49b0]
-
-*adds* a free_btf_vmlinux() definition. But 6.1.y still carried the older
-definition that mainline had already removed, so the result is two
-identical-signature static definitions in map.c and the build breaks.
-
-The same happens in 5.15.221, where two commits applied in the same
-release collide:
-
-  a9e2496111aa ("tools/bpf/bpftool: Reset vmlinux BTF after map commands")
-  44f58f0c5202 ("bpftool: Use libbpf_get_error() to check error")
-
-the latter keeping the old guarded form (if (!libbpf_get_error(...)))
-while the former adds the new form.
-
-Reproducer (no kernel build / .config needed)
----------------------------------------------
-  git checkout v6.1.188   # or v5.15.221
-  gcc -fsyntax-only tools/bpf/bpftool/map.c \
-      -Itools/bpf/bpftool -Itools/include -Itools/include/uapi \
-      -Itools/lib -Itools/bpf/bpftool/../../include
-
-  => map.c: error: redefinition of 'free_btf_vmlinux'
-
-Suggested fix
--------------
-Drop the stale pre-existing definition and keep the one introduced by the
-backport (which also resets btf_vmlinux = NULL, matching mainline
-66d7e39e49b0). For 6.1.y:
-
-  --- a/tools/bpf/bpftool/map.c
-  +++ b/tools/bpf/bpftool/map.c
-  @@ -817,11 +817,6 @@ static void free_map_kv_btf(struct btf *btf)
-   		btf__free(btf);
-   }
-
-  -static void free_btf_vmlinux(void)
-  -{
-  -	btf__free(btf_vmlinux);
-  -}
-  -
-   static int
-   map_dump(int fd, struct bpf_map_info *info, json_writer_t *wtr,
-
-For 5.15.y the same fix applies -- remove the older
-libbpf_get_error()-guarded free_btf_vmlinux() definition, keeping the
-one that resets btf_vmlinux = NULL.
-
-Happy to send this as a formal patch per-tree if you prefer.
-
-#regzbot introduced: 660a19e46942
-
-Thanks,
-Suraj
+But I do think it's better if we don't assume that every pci_dev with
+a Type 1 header has a pci_bus allocated.
