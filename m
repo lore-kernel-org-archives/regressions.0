@@ -1,103 +1,136 @@
-Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6808455173
-	for <regressions@lists.linux.dev>; Wed, 16 Sep 2026 07:37:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8413B4A9D71
+	for <regressions@lists.linux.dev>; Wed, 16 Sep 2026 09:36:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789544273; cv=none; b=O064CbNCcfqbs78adS6dHZFzWTSIkP77IrJdlX3d42jc+3PsovDZ/tPz1MWt70BUYqBv6uWs5w5uCCsHOpT8M0JQzyfxfjWQlnWrwUWmyyX0nozcSy3SJqMpfmXf0BMPVz75G88BHnu1kpxs+6dcIRxDDhgBI7C6PguE3KCFVXE=
+	t=1789551390; cv=none; b=bdL3j54y8lJJf+9aVo8+yCq//lgNGbWpIfYh84wnSDuo/o1gbmOd6W3J+M5NxulP0qawAJj1CnoMO2XQSExNzsnhBE61iGrrdIng+c4XPXiy04muR6HF6jeEdWNX0T75lWtvIb+/gfrOykbB0220RQBhQtseS/Cv9ZVFhqS3irg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789544273; c=relaxed/simple;
-	bh=GDtzL67scSq2UWnFotGDkOZ3m1EtjuZAhaUshRza66s=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=WMJai4Saf4gJOkW3uS4s4kMwuuPR7VEwUcZSpwITCN+WsLZJ7akfs2knKK7aCL/mr1FWnDVrMN53VfRKa5O5/DZgak48XCykZns3sLwexZ4pRZij5Qsv3jMUIXYuFq79dvcE9e0fLf8UlVHFtBMWAbEpD/rhs8QLKIn8+FWO9W8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=siM4TMnc; arc=none smtp.client-ip=80.241.56.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+	s=arc-20240116; t=1789551390; c=relaxed/simple;
+	bh=Tv8q4KRhHYd6df+3R2bPg1gJXfFzLEsuAAmD8hbaHmc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fDtca81RUPAR79FJIBEtCS6/MsJwe8yb3YmfCUtqjjADG699IH8rBbZFSHS4XPLXYjYyiaXcuzy+fMh4SQc3hoe0byu5tgqY3CxtdVyHbOVC3JUbsRnGZdKHBfu5yHl2aAt8guIGSSASm2lEvJkE4b6iYCx5GdO6aorCoWQEYCk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=FrwusAfm; arc=none smtp.client-ip=188.68.63.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="siM4TMnc"
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:b231:465::1])
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="FrwusAfm"
+Received: from mors-relay8204.netcup.net (localhost [127.0.0.1])
+	by mors-relay8204.netcup.net (Postfix) with ESMTPS id 4hlDKX1HLYz8k2q;
+	Wed, 16 Sep 2026 09:36:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1789551376;
+	bh=Tv8q4KRhHYd6df+3R2bPg1gJXfFzLEsuAAmD8hbaHmc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=FrwusAfmP8YMMj2RRVKzKx+h6Vnq/gUqUyIL0fiEsTBtUtA8ux+7RXO7FUh2Fy7tU
+	 xuqFroAZtyTtHK5sbkPfhGC+YvK0yheoK2kD4R3EuXGVVKKHgzlZ0hvPWYTctk2rL7
+	 8a4v0wkVlyM0xHvIT1HTRkxPZ91l06OSep+OwFMcVcjKd4t+WEDnLVX1SnprlOuePB
+	 m9yB4U6f1y9kdx80cbBBCkeWX7qbuzfJw27J4IBt1dBZ7lBH81avFzdx0g9RrHo9AS
+	 vuNL+T10TiR67NOyMP6HowEhbB9z8NSt++6/nfrhSW6/0qYfeA0OeRFJtsG+lAEoLc
+	 5fcOuqX0ELSNQ==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay8204.netcup.net (Postfix) with ESMTPS id 4hlDKV4WRXz8jp0;
+	Wed, 16 Sep 2026 09:36:14 +0000 (UTC)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4hl9hh5XVyz8ty1;
-	Wed, 16 Sep 2026 09:37:40 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1789544260; h=from:from:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GDtzL67scSq2UWnFotGDkOZ3m1EtjuZAhaUshRza66s=;
-	b=siM4TMnch2rn4U1j6hPM6Y+Jrosea3tVMCzDOpwciv+u9hM/WtCLYH/76ONpw67XdtlStN
-	R8kouwYNsLsggAhrLqD4C0+4IVH+Fh2wfBb6qjM17f+S/a+Nyo1B28TuvNAbt0X1hUoTSh
-	BAAAxddN/HeS4UuSn3vdf8CpMUka9TSEAzC85DX28ZqI3MFJ5pHCGE5mXXU2uWU0mdnR7/
-	mVGIVF+9UO3fCdgsSoTxdYBIwRsy6cOv9NTjnA3k70WBpgJnXXqrY8qNqpMAg6/erHcxlm
-	qOiZgZaUG6GVqbXwV689je8/JWmbrGG1LJlbsVHr1FQVns0/UHYJdpr3QXMhSA==
-Message-ID: <763ba7b5895ac8f850662eaad84a2d5b523a8902.camel@mailbox.org>
-Subject: Re: [REGRESSION] drm/sched: FAIR policy causes serious performance
- degradation at max GPU load on 9070XT
-From: Philipp Stanner <phasta@mailbox.org>
-Reply-To: phasta@kernel.org
-To: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>, phasta@kernel.org, 
-	Luke.Wildhardt@proton.me
-Cc: Danilo Krummrich <dakr@kernel.org>, "matthew.brost@intel.com"
-	 <matthew.brost@intel.com>, "ckoenig.leichtzumerken@gmail.com"
-	 <ckoenig.leichtzumerken@gmail.com>, "dri-devel@lists.freedesktop.org"
-	 <dri-devel@lists.freedesktop.org>, "regressions@lists.linux.dev"
-	 <regressions@lists.linux.dev>, "amd-gfx@lists.freedesktop.org"
-	 <amd-gfx@lists.freedesktop.org>, "linux-kernel@vger.kernel.org"
-	 <linux-kernel@vger.kernel.org>
-Date: Wed, 16 Sep 2026 09:37:34 +0200
-In-Reply-To: <ab60bdb4-351f-4911-9246-2719d078cb96@igalia.com>
-References:
-		 	<TfhgV1W0W5LI6RWUO6J35B3R8QIYH_FN3Eihzdo_9PH39hfn1AVByT-QBPHmWiAR-L0Kqi2sppM_EhFPKwZPGmb5pFgpF2MrzeFzkZDmpG8=@proton.me>
-			 <cef49cf329737e0af12ef5a90dd21f31e113d4c3.camel@mailbox.org>
-			 <DKL9VAWD2Y98.RBQPQUL7Y47F@kernel.org>
-			 <6e2a207e-4db6-4d47-b1f6-9cb13b8d6eeb@igalia.com>
-			 <enK0t0JrZ3lr9gmgPwE_YaVJDy7K355Bs0xy0YNoVwujLHCGWNRXCjDOhYfiHNGN3pPDSlEUIz3_UkXmFNAJNXxrJOIwvzAG-k8_p_D5FOQ=@proton.me>
-			 <4OmZej9WiJ6-rsJ_lFcrmwtClAwMdN4oHXWH0p8FkIrhAn4LKS4O3q36wrdZrvjZHBNS8PZsvaIvR-1aFZfF2tDiy1cdMzTYNylcbGDQN68=@proton.me>
-			 <a9ee4edb-e763-4fd7-a510-32191df0cf8f@igalia.com>
-			 <932892b196f7bbba7f5e9bff22f9b484854aaccc.camel@mailbox.org>
-			 <ab60bdb4-351f-4911-9246-2719d078cb96@igalia.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4hlDKS1lcwz8sbH;
+	Wed, 16 Sep 2026 11:36:11 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 25E5E5F9C8;
+	Wed, 16 Sep 2026 11:36:06 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <6e1aa91c-3749-4d8f-ae77-a7180d7ff84d@leemhuis.info>
+Date: Wed, 16 Sep 2026 11:36:04 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MBO-RS-META: t7tj41edfc77zcym3yib1pm5n7ffxnii
-X-MBO-RS-ID: 134a4ce73af47e1eb91
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] net: qrtr: resend HELLO on MHI resume
+To: Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
+ Vlastimil Babka <vbabka@suse.com>, Manivannan Sadhasivam <mani@kernel.org>,
+ Daniel J Blueman <daniel@quora.org>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ Takashi Iwai <tiwai@suse.de>
+Cc: "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+ Chris Lew <christopher.lew@oss.qualcomm.com>,
+ Pranav Mahesh Phansalkar <pranav.phansalkar@oss.qualcomm.com>,
+ Deepak Kumar Singh <deepak.singh@oss.qualcomm.com>,
+ linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-wireless <linux-wireless@vger.kernel.org>,
+ "ath11k@lists.infradead.org" <ath11k@lists.infradead.org>,
+ "ath12k@lists.infradead.org" <ath12k@lists.infradead.org>,
+ netdev <netdev@vger.kernel.org>
+References: <20260909055846.16539-1-daniel@quora.org>
+ <hcr4woicsnz3pbhzlguuwjlego7yli3znhjmsx4cdz66xa74zd@wjtle2yslc4b>
+ <c99d9feb-0a19-4f8d-915b-c2ece401e3fa@suse.com>
+ <6257c447-788d-4362-851e-0d552bcf7c56@oss.qualcomm.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <6257c447-788d-4362-851e-0d552bcf7c56@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: <178955136698.941304.16981546198776007441@mxe9fb.netcup.net>
+X-Rspamd-Server: rspamd-worker-8404
+X-Rspamd-Queue-Id: 25E5E5F9C8
+X-NC-CID: CUZg8elczhzvougDh6PJ0vtRzakfTbjPRF8VlS48Dsn0b8J++jc=
 
-On Wed, 2026-08-12 at 13:29 +0100, Tvrtko Ursulin wrote:
-> Not sure if you are calling me out here or not, since apart from a=20
-> direct mention, the lore link above is also a reply to my email, so for=
-=20
-> the record, I did give my ack for those patches. Plus I spent time=20
-> testing them. So if you were in fact calling me out, I don't see how=20
-> that is warranted. And on the wider topic I also never shied away from=
-=20
-> the non-glamorous work.
+On 9/16/26 05:09, Jeff Johnson wrote:
+> On 9/15/2026 3:48 AM, Vlastimil Babka wrote:
+>> On 9/11/26 12:44, Manivannan Sadhasivam wrote:
+>>> On Wed, Sep 09, 2026 at 01:58:44PM +0800, Daniel J Blueman wrote:
+>>>> Since the MHI HELLO exchange was relocated, it is sent only at device
+>>>> registration. During a suspend-resume cycle, the firmware in WiFi
+>>>> cards such as WCN7850 indefinitely waits for another HELLO,
+>>>> triggering:
+>>>> [...]
+>>>> Fixes: 544d85de4dc2 ("net: qrtr: Send HELLO message on endpoint register")
+>>>> Signed-off-by: Daniel J Blueman <daniel@quora.org>
+>>>> [...]
+>>>> diff --git a/net/qrtr/af_qrtr.c b/net/qrtr/af_qrtr.c
+>>>> index 78347c937af7..2ffcfc2fdb4a 100644
+>>>> --- a/net/qrtr/af_qrtr.c
+>>>> +++ b/net/qrtr/af_qrtr.c
+>>>> @@ -623,6 +623,19 @@ static void qrtr_hello_work(struct work_struct *work)
+>>>>  	qrtr_port_put(ctrl);
+>>>>  }
+>>>>  
+>>>> +/* Trigger the HELLO handshake after the remote has been reset, eg on resume */
+>>>
+>>> Use proper kernel-doc please.
+>
+>> Please prioritize merging this sooner than later (it's a regression from
+>> 7.3-rc2 that would hit people if it made it to 7.3 final) even if it means
+>> fixing up non-critical aspects later, or by maintainer upon merging.
+> 
+> Concur. I recently fast-forwarded my ath tree and picked up the buggy commit,
+> so everyone using my tree is now affected.
 
-I was addressing what I perceive to be the general problems within DRM
-=E2=80=93 I still believe the general points are valid, but want to stress =
-that
-it's a collective problem in which we all play a role, though no one is
-the protagonist. I mentioned the media outlet (which quoted your name)
-as part of the problem because there are external cheerleaders for
-performance (whose unconditional priority is *the* reason for the
-design mistakes in drm_sched) and features.
+I wonder if we need somebody (Daniel?) to repost this patch to at least
+have a chance to get it into the next -rc, as I didn't find the fix in
+netdev's patchwork when I just looked -- maybe I missed something, but I
+guess that's because the patch wasn't CCed to netdev.
 
-Nevertheless, I apologize for the rough tone and want to emphasize that
-you're indeed the most engaged contributor and have improved many
-things. The unit tests alone are worth their weight in silver.
+Ciao, Thorsten
 
-The wider, problematic patterns in DRM might be worth addressing with
-the appropriate tenderness in a suitable format; I will try to collect
-my thoughts on that.
+> And just want to point out that many of the function comments in this file do
+> not use kernel-doc format, so I would not consider that a blocker. But it also
+> would be trivial for the maintainer to add.
+> 
+> I've tested this on my HP ZBook 14 where I've replaced the OEM Wi-Fi adapter
+> with WCN7850...
+> 
+> Tested-by: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
+> 
+> /jeff
+> 
 
-
-Regards,
-Philipp
