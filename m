@@ -1,130 +1,86 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D0F44DAF8C;
-	Thu, 17 Sep 2026 11:48:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1E7B4A9D6F;
+	Thu, 17 Sep 2026 21:58:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789645725; cv=none; b=WrNl0DFJtT09pt1L6WPHjyTIPwK+ALWgyZz4jDbGh0heUm1bGs1ELq1ymqqD6xBj0Edz8E9qcG2oTgz6IVEuKdTIBD+/wrVUD1K/0xKadiLa7BvM5Z687i4I/x5n41H4MyAICyt313TvrmvKHc15lxnJnBf2GceuOIogn8OO3+g=
+	t=1789682285; cv=none; b=DnMZllclaZzw9Ha3QRogUOHJqDO/mBXOEGjhdUTKNL0kXkez+4xEstgxjtW44TSWNawyVTreQmh+xrtDpji/qwqEiLSYyJCvA2U7L54gSN/H8uGtyA/s2RKHi6Cm86n1rCPgCcpqjPx4OskpIYF0RZKZKGjS0SHv5Bgc9ww7kuU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789645725; c=relaxed/simple;
-	bh=oIPgUxwSIorXzoJrCau0WJycmLIK5xU1/WW6WAWA7og=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ogr5OeXU6eYhYuZX+OAxdR3e7j0dWsixULLZwOMGLQs9uII5H0cH0iFHD/rXRyBdHWykEcUUKmgBMdxzaEtXEwgwrHt7kbzZ77rEuXww6lisVcPB8+jEMYPnYTGC5za9VVVXoLVjjgXX10zRL5RagXImebM2klErQM349EokWi8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=g1WwyFp5; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1789682285; c=relaxed/simple;
+	bh=K01OWSwrQhLZ1I4m5H6/VZez8MW387RtFv6BpX2DCqw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=sFcIxFHANUSahWJbr/SjATTvdf8WQqbgzaWtdxjGslJzO2xkb/A0domwMQJpZBjrJCd0qHKyjzziwqN22lGQRzf2sh9T25xZi5x3+kD+i3VnxZUFo7oY0k5y90EFJfoQA8MVdJ07ybqGeoSpQekJyw0wza3gili/1yU7+vv2T7w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CMs0O2Bc; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="g1WwyFp5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1789645723; x=1821181723;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=oIPgUxwSIorXzoJrCau0WJycmLIK5xU1/WW6WAWA7og=;
-  b=g1WwyFp5gq74Su8TRDKTFizE142YTsdWZ4i8GSz5Cl2+BqoghhDdn/Md
-   tFi9qHqTLfWNNNK1YU+Q0btocy5VpYRtuoYiempcAcN2B8eZ9KSZRNfMD
-   dNpbVjeM+2HeLjuMfa7Na0x2Py0ocBxZEEAf5l77bp/w83IjN2yKk9p6R
-   omrVdCngxVFGXZJtaEL6ybrZgjhhgAUKCY0a0ElFPvIs2oEoNyTRGsovr
-   SaHuH+0dxUlTe0X5yeQy8jqON1Xgt1Kcgeo+jicuWDYvuLBCeRpo+Tt8s
-   6N4H4yyz/R0iswhgc4mQXeixI9nQYKIBgghf6IuLwQcHWLCujN03bngqY
-   g==;
-X-CSE-ConnectionGUID: S5H0croDS5CFbmAV3p+MHg==
-X-CSE-MsgGUID: WFgHhY2CTJux6oZ0/LrwCA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11905"; a="90076028"
-X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
-   d="scan'208";a="90076028"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2026 04:48:42 -0700
-X-CSE-ConnectionGUID: hhKhDru7R2arnMNkk5CEVw==
-X-CSE-MsgGUID: 3k1AwqgbTDes8po5vElcRA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
-   d="scan'208";a="270441041"
-Received: from alekseim-mobl.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.245.32])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2026 04:48:39 -0700
-Received: from kekkonen.localdomain (localhost [IPv6:::1])
-	by kekkonen.fi.intel.com (Postfix) with ESMTP id 2791911FB34;
-	Thu, 17 Sep 2026 14:48:36 +0300 (EEST)
-Date: Thu, 17 Sep 2026 14:48:36 +0300
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: Junjie Cao <junjie.cao@intel.com>
-Cc: Miguel Vadillo <miguel.vadillo@intel.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Manuel Knitza <manuel.knitza@googlemail.com>,
-	Thorsten Leemhuis <regressions@leemhuis.info>,
-	Antti Laakso <antti.laakso@linux.intel.com>,
-	Mehdi Djait <mehdi.djait@linux.intel.com>,
-	linux-media@vger.kernel.org, linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
-	stable@vger.kernel.org
-Subject: Re: [PATCH] media: i2c: cvs: Do not hide the option in the ancillary
- menu
-Message-ID: <aqvTlNnMw4FRqom_@kekkonen.localdomain>
-References: <20260913125345.588586-1-junjie.cao@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CMs0O2Bc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7769B1F000FF;
+	Thu, 17 Sep 2026 21:58:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1789682283;
+	bh=OP3JYLBXOqOHgXrUVwmby9CoOJ787szehasQI38rGyQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To;
+	b=CMs0O2Bc4ICSa1T8bJvuWgzlf1kyPiBEEAF8YyNkZlKYj7AxxFwuNZMf3kUkq6Spa
+	 2qeDwdnLti+1xiaJ9UVSm+RmoHRrX3uzf2/IH2yZFTVvppENKWnC0ZpTieYrfRdFxR
+	 CSNdnYwPeuvBZBm3nKeHhvWK+Q4iUClTWxeQ0Oawmp32DyR1beYSUW/qKkJZ7GvprH
+	 GqeZzJlKBlIJ1lXFBksRX5HROuSwupFZSnbecaWuaYZeecNNWl9Nc+lEaSKRZjTJ3k
+	 JUckV5Lra7ixgKiCSl9YKGOc8KE0Jk+DOq5/1uERCzIaTyfo5f752rKdDTL+lqMFs1
+	 k4YU98t7DQ4FA==
+Date: Thu, 17 Sep 2026 16:58:02 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>,
+	leoreis.costa@gmail.com, fra.schnyder@gmail.com,
+	francesco@dolcini.it, frank.li@nxp.com, l.stach@pengutronix.de,
+	lpieralisi@kernel.org, kwilczynski@kernel.org, mani@kernel.org,
+	robh@kernel.org, bhelgaas@google.com, s.hauer@pengutronix.de,
+	kernel@pengutronix.de, festevam@gmail.com, hongxing.zhu@oss.nxp.com,
+	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	imx@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Richard Zhu <hongxing.zhu@nxp.com>, stable@vger.kernel.org,
+	Linux kernel regressions list <regressions@lists.linux.dev>
+Subject: Re: [PATCH v2] PCI: imx6: Move clock enable after core reset
+ assertion
+Message-ID: <20260917215802.GA1056201@bhelgaas>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260913125345.588586-1-junjie.cao@intel.com>
+In-Reply-To: <7ed9e4de-2e57-4c15-875c-16512f00163f@leemhuis.info>
 
-Hi Junjie,
-
-Thanks for the patch.
-
-On Sun, Sep 13, 2026 at 08:53:45PM +0800, Junjie Cao wrote:
-> A camera behind a CVS device needs intel_cvs bound: since commit
-> c28527ce5d06 ("ACPI: scan: Honor _DEP for Intel CVS devices") the
-> sensor is not enumerated until the driver's probe clears the _DEP, and
-> since commit c6b1b34b5090 ("media: pci: intel: Add CVS support for IPU
-> bridge driver") the IPU notifier waits for the "Intel CVS" sub-device.
-> The option is sourced from the "Miscellaneous helper chips" menu, which
-> MEDIA_HIDE_ANCILLARY_SUBDRV hides on any config with
-> MEDIA_SUBDRV_AUTOSELECT=y and neither EXPERT nor COMPILE_TEST, and
-> nothing selects or implies it, so olddefconfig on such a config does
-> not write the symbol out at all.
+On Thu, Sep 17, 2026 at 01:08:03PM +0200, Thorsten Leemhuis wrote:
+> On 9/2/26 16:15, Manivannan Sadhasivam wrote:
+> > On Thu, 13 Aug 2026 17:50:03 +0800, hongxing.zhu@oss.nxp.com wrote:
+> >> Commit 610fa91d9863 ("PCI: imx6: Assert PERST# before enabling regulators")
+> >> inadvertently moved clock enablement before core reset assertion, breaking
+> >> PCI device initialization on i.MX6Q Apalis platforms with
+> >> ASM1061/ASM1062 SATA controllers connected.
+> >>
+> >> NOTE: It is not 100% clear if the issue is specific to the ASM1061/ASM1062
+> >> device or on the specific power-up sequence (reset vs cold-power-on).
+> >>
+> >> [...]
+> > 
+> > Applied, thanks!
+> > 
+> > [1/1] PCI: imx6: Move clock enable after core reset assertion
+> >       commit: 16929741a622eb345057e41c7b335d9b297890e1
+> Thx Mani.
 > 
-> Arch Linux's config.x86_64 for 7.2.4 is one: I2C, ACPI, VIDEO_DEV=m,
-> IPU_BRIDGE=m, INTEL_VSC=m, VIDEO_INTEL_IPU6=m, VIDEO_INTEL_IPU7=m and
-> no VIDEO_INTEL_CVS line. On such a kernel a Panther Lake laptop has
-> either no CVS driver, so the sensor is never enumerated, or the
-> out-of-tree intel_cvs from intel/vision-drivers, which registers no
-> sub-device; the second Link shows the IPU notifier pending on
-> INTC10E1-0/port@1/endpoint@0 on such a kernel. Both reports had a
-> working camera on 7.1.
+> Mani, Bjorn, what's the status of this patch? Is it heading to mainline
+> any time soon? This (unless I got confused, which is possible!) afaics
+> fixes a 7.2 regression that annoyed quite a few people -- which is why
+> it was even briefly considered to revert about a Dozent changes shortly
+> before the 7.2 final:
+> https://lore.kernel.org/all/20260811214900.GA763236@bhelgaas/
 > 
-> Source the Kconfig from drivers/media/pci/intel/ next to INTEL_VSC and
-> imply it from the IPU6 and IPU7 drivers, which are the IPUs the driver
-> looks for, so that a config that has them picks up intel_cvs=m on the
-> next olddefconfig.
-> 
-> Fixes: 8e2b43d2c10b ("media: i2c: cvs: Add driver of Intel Computer Vision Sensing Controller(CVS)")
-> Cc: stable@vger.kernel.org
-> Link: https://lore.kernel.org/linux-media/20260912185836.309071-1-manuel.knitza@googlemail.com/
-> Link: https://github.com/omacom/omarchy/issues/10948
-> Signed-off-by: Junjie Cao <junjie.cao@intel.com>
+> Didn't come to this, but it afaics would be good to finally resolve
+> this. Or am I missing/confused something?
 
-I agree there's a problem here with Kconfig but I don't think this is a
-proper fix for it: CVS is clearly an I²C device and unrelated to IPU6 as
-such. (Well, you could claim this about IVSC, too, but we don't have MEI
-directory under media tree.)
+It's in pci/next, but probably should be in for-linus.
 
-I any case I think the MEDIA_HIDE_ANCILLARY_SUBDRV option should go; it
-hides configuration options that should be selected for most distribution
-kernels while "autoselecting" the necessary drivers appears to be helpful
-while actually just selecting those that are mounted on actual devices,
-e.g. PCI cards.
-
-I'll post a patch for this.
-
--- 
-Kind regards,
-
-Sakari Ailus
+I moved it to pci/for-linus for v7.3, thanks for the heads-up.
