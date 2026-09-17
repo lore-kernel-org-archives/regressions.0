@@ -1,107 +1,130 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.61.107])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CC254A689C;
-	Thu, 17 Sep 2026 11:15:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.61.107
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D0F44DAF8C;
+	Thu, 17 Sep 2026 11:48:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789643739; cv=none; b=OI8j17tb4KEbbOKAh2Givgq3LjdK7g9rB7GRmfwzApZxgfei+dENytzmqQYDMoz9zCssuxrdBGjqmrAKV1J8YL1jfXEWhlKexTtX5wydzjnDog+r8I7HMnMHup8p9o0oH5FlTiTbvw6W9xBFYK0CNlVgnBTRC3RRjNCFZtzaeqs=
+	t=1789645725; cv=none; b=WrNl0DFJtT09pt1L6WPHjyTIPwK+ALWgyZz4jDbGh0heUm1bGs1ELq1ymqqD6xBj0Edz8E9qcG2oTgz6IVEuKdTIBD+/wrVUD1K/0xKadiLa7BvM5Z687i4I/x5n41H4MyAICyt313TvrmvKHc15lxnJnBf2GceuOIogn8OO3+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789643739; c=relaxed/simple;
-	bh=s6JLaKIpJHfSw6tJIYCGWUMDmPnQK3gLe1l887AEFbc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HHoPOcNQg+9L/883FLlRP9h/tRR7dGSfMF50IsRfuKpxiGUpxEFylCUmhDZiL5z+XjpnFo6BqLjteu+9rVxLmZUqLVWnTED3Si00QmO0XaV4wHaIr89aTjJdRFq50dvEO2PIJPIvl3fchfBXnhYp7JMRc7V9ZyaFWsGUaYZ6OIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=GwEHIHeI; arc=none smtp.client-ip=188.68.61.107
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1789645725; c=relaxed/simple;
+	bh=oIPgUxwSIorXzoJrCau0WJycmLIK5xU1/WW6WAWA7og=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ogr5OeXU6eYhYuZX+OAxdR3e7j0dWsixULLZwOMGLQs9uII5H0cH0iFHD/rXRyBdHWykEcUUKmgBMdxzaEtXEwgwrHt7kbzZ77rEuXww6lisVcPB8+jEMYPnYTGC5za9VVVXoLVjjgXX10zRL5RagXImebM2klErQM349EokWi8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=g1WwyFp5; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="GwEHIHeI"
-Received: from mors-relay-8405.netcup.net (localhost [127.0.0.1])
-	by mors-relay-8405.netcup.net (Postfix) with ESMTPS id 4hltK458JLz78Lb;
-	Thu, 17 Sep 2026 13:08:08 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1789643288;
-	bh=s6JLaKIpJHfSw6tJIYCGWUMDmPnQK3gLe1l887AEFbc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=GwEHIHeINfVJYeWge68Jh6ImmWDsr9UN4ZWKb83TYYSp5KUlAlwiIwfYGUGrb7zQs
-	 4DfVUo0bMi/IkBTdUOkXYTedcwSrUv5aNLbflagY0NYLjagoeLkQ/M54PK5Ie8Rg/1
-	 PBYyAyVPwgSAmWmIhtjAQA3io19iLtOHNDwArwu4PBixjLNNP6CsASUfY/Akozx+M5
-	 GxV1ic1Ncsm409yGEZPPDOrETPwMFeLiRUZTl7v+vEZXM3oAlMdXNLBjjdgVmjVevd
-	 XRWntb2WMv0q1xnC5YvH49m64iTkyM1ApKN1sr2uIgbD/XUuzj63P2j6dsyO6guU++
-	 +PtiWy0SC0EBg==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-8405.netcup.net (Postfix) with ESMTPS id 4hltK44Q0Bz77bD;
-	Thu, 17 Sep 2026 13:08:08 +0200 (CEST)
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4hltK14fFFz8sbH;
-	Thu, 17 Sep 2026 13:08:05 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 42AB85F936;
-	Thu, 17 Sep 2026 13:08:04 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <7ed9e4de-2e57-4c15-875c-16512f00163f@leemhuis.info>
-Date: Thu, 17 Sep 2026 13:08:03 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="g1WwyFp5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1789645723; x=1821181723;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=oIPgUxwSIorXzoJrCau0WJycmLIK5xU1/WW6WAWA7og=;
+  b=g1WwyFp5gq74Su8TRDKTFizE142YTsdWZ4i8GSz5Cl2+BqoghhDdn/Md
+   tFi9qHqTLfWNNNK1YU+Q0btocy5VpYRtuoYiempcAcN2B8eZ9KSZRNfMD
+   dNpbVjeM+2HeLjuMfa7Na0x2Py0ocBxZEEAf5l77bp/w83IjN2yKk9p6R
+   omrVdCngxVFGXZJtaEL6ybrZgjhhgAUKCY0a0ElFPvIs2oEoNyTRGsovr
+   SaHuH+0dxUlTe0X5yeQy8jqON1Xgt1Kcgeo+jicuWDYvuLBCeRpo+Tt8s
+   6N4H4yyz/R0iswhgc4mQXeixI9nQYKIBgghf6IuLwQcHWLCujN03bngqY
+   g==;
+X-CSE-ConnectionGUID: S5H0croDS5CFbmAV3p+MHg==
+X-CSE-MsgGUID: WFgHhY2CTJux6oZ0/LrwCA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11905"; a="90076028"
+X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
+   d="scan'208";a="90076028"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2026 04:48:42 -0700
+X-CSE-ConnectionGUID: hhKhDru7R2arnMNkk5CEVw==
+X-CSE-MsgGUID: 3k1AwqgbTDes8po5vElcRA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
+   d="scan'208";a="270441041"
+Received: from alekseim-mobl.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.245.32])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2026 04:48:39 -0700
+Received: from kekkonen.localdomain (localhost [IPv6:::1])
+	by kekkonen.fi.intel.com (Postfix) with ESMTP id 2791911FB34;
+	Thu, 17 Sep 2026 14:48:36 +0300 (EEST)
+Date: Thu, 17 Sep 2026 14:48:36 +0300
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Junjie Cao <junjie.cao@intel.com>
+Cc: Miguel Vadillo <miguel.vadillo@intel.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Manuel Knitza <manuel.knitza@googlemail.com>,
+	Thorsten Leemhuis <regressions@leemhuis.info>,
+	Antti Laakso <antti.laakso@linux.intel.com>,
+	Mehdi Djait <mehdi.djait@linux.intel.com>,
+	linux-media@vger.kernel.org, linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
+	stable@vger.kernel.org
+Subject: Re: [PATCH] media: i2c: cvs: Do not hide the option in the ancillary
+ menu
+Message-ID: <aqvTlNnMw4FRqom_@kekkonen.localdomain>
+References: <20260913125345.588586-1-junjie.cao@intel.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] PCI: imx6: Move clock enable after core reset
- assertion
-To: Manivannan Sadhasivam <manivannan.sadhasivam@oss.qualcomm.com>,
- leoreis.costa@gmail.com, fra.schnyder@gmail.com, francesco@dolcini.it,
- frank.li@nxp.com, l.stach@pengutronix.de, lpieralisi@kernel.org,
- kwilczynski@kernel.org, mani@kernel.org, robh@kernel.org,
- bhelgaas@google.com, s.hauer@pengutronix.de, kernel@pengutronix.de,
- festevam@gmail.com, hongxing.zhu@oss.nxp.com
-Cc: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- imx@lists.linux.dev, linux-kernel@vger.kernel.org,
- Richard Zhu <hongxing.zhu@nxp.com>, stable@vger.kernel.org,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <20260813095003.356062-1-hongxing.zhu@oss.nxp.com>
- <178835852653.83808.12038237867062064510.b4-ty@b4>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <178835852653.83808.12038237867062064510.b4-ty@b4>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <178964328505.1084770.8025952656757850710@mxe9fb.netcup.net>
-X-NC-CID: pLA65dobhYpQq9Ud69Psw9ByXz+UBnTvrXYVrT91lPvHENB8w9I=
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260913125345.588586-1-junjie.cao@intel.com>
 
-On 9/2/26 16:15, Manivannan Sadhasivam wrote:
+Hi Junjie,
+
+Thanks for the patch.
+
+On Sun, Sep 13, 2026 at 08:53:45PM +0800, Junjie Cao wrote:
+> A camera behind a CVS device needs intel_cvs bound: since commit
+> c28527ce5d06 ("ACPI: scan: Honor _DEP for Intel CVS devices") the
+> sensor is not enumerated until the driver's probe clears the _DEP, and
+> since commit c6b1b34b5090 ("media: pci: intel: Add CVS support for IPU
+> bridge driver") the IPU notifier waits for the "Intel CVS" sub-device.
+> The option is sourced from the "Miscellaneous helper chips" menu, which
+> MEDIA_HIDE_ANCILLARY_SUBDRV hides on any config with
+> MEDIA_SUBDRV_AUTOSELECT=y and neither EXPERT nor COMPILE_TEST, and
+> nothing selects or implies it, so olddefconfig on such a config does
+> not write the symbol out at all.
 > 
-> On Thu, 13 Aug 2026 17:50:03 +0800, hongxing.zhu@oss.nxp.com wrote:
->> Commit 610fa91d9863 ("PCI: imx6: Assert PERST# before enabling regulators")
->> inadvertently moved clock enablement before core reset assertion, breaking
->> PCI device initialization on i.MX6Q Apalis platforms with
->> ASM1061/ASM1062 SATA controllers connected.
->>
->> NOTE: It is not 100% clear if the issue is specific to the ASM1061/ASM1062
->> device or on the specific power-up sequence (reset vs cold-power-on).
->>
->> [...]
+> Arch Linux's config.x86_64 for 7.2.4 is one: I2C, ACPI, VIDEO_DEV=m,
+> IPU_BRIDGE=m, INTEL_VSC=m, VIDEO_INTEL_IPU6=m, VIDEO_INTEL_IPU7=m and
+> no VIDEO_INTEL_CVS line. On such a kernel a Panther Lake laptop has
+> either no CVS driver, so the sensor is never enumerated, or the
+> out-of-tree intel_cvs from intel/vision-drivers, which registers no
+> sub-device; the second Link shows the IPU notifier pending on
+> INTC10E1-0/port@1/endpoint@0 on such a kernel. Both reports had a
+> working camera on 7.1.
 > 
-> Applied, thanks!
+> Source the Kconfig from drivers/media/pci/intel/ next to INTEL_VSC and
+> imply it from the IPU6 and IPU7 drivers, which are the IPUs the driver
+> looks for, so that a config that has them picks up intel_cvs=m on the
+> next olddefconfig.
 > 
-> [1/1] PCI: imx6: Move clock enable after core reset assertion
->       commit: 16929741a622eb345057e41c7b335d9b297890e1
-Thx Mani.
+> Fixes: 8e2b43d2c10b ("media: i2c: cvs: Add driver of Intel Computer Vision Sensing Controller(CVS)")
+> Cc: stable@vger.kernel.org
+> Link: https://lore.kernel.org/linux-media/20260912185836.309071-1-manuel.knitza@googlemail.com/
+> Link: https://github.com/omacom/omarchy/issues/10948
+> Signed-off-by: Junjie Cao <junjie.cao@intel.com>
 
-Mani, Bjorn, what's the status of this patch? Is it heading to mainline
-any time soon? This (unless I got confused, which is possible!) afaics
-fixes a 7.2 regression that annoyed quite a few people -- which is why
-it was even briefly considered to revert about a Dozent changes shortly
-before the 7.2 final:
-https://lore.kernel.org/all/20260811214900.GA763236@bhelgaas/
+I agree there's a problem here with Kconfig but I don't think this is a
+proper fix for it: CVS is clearly an I²C device and unrelated to IPU6 as
+such. (Well, you could claim this about IVSC, too, but we don't have MEI
+directory under media tree.)
 
-Didn't come to this, but it afaics would be good to finally resolve
-this. Or am I missing/confused something?
+I any case I think the MEDIA_HIDE_ANCILLARY_SUBDRV option should go; it
+hides configuration options that should be selected for most distribution
+kernels while "autoselecting" the necessary drivers appears to be helpful
+while actually just selecting those that are mounted on actual devices,
+e.g. PCI cards.
 
-Ciao, Thorsten
+I'll post a patch for this.
+
+-- 
+Kind regards,
+
+Sakari Ailus
