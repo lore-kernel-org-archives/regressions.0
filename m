@@ -1,66 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 149A041D202;
-	Wed, 16 Sep 2026 19:29:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DC4C3B3891
+	for <regressions@lists.linux.dev>; Thu, 17 Sep 2026 08:16:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789586965; cv=none; b=EsEiBUiWy511+vvXsdKiTN4sfCa58DLYv99dIrukKGcq1mCHUYpgFx+faHqnak2W8xEnrx83mXv0tt8ANBxNLxydUPosL8mbeV15QXLa/RRDXiRwVfYzraHu3Gbmy200htCkNdPQI5U4m8AoiaeKi0Cmty6ixkAivfiMfFdSk2Q=
+	t=1789632969; cv=none; b=LhG6gaF3vaUk58xoXcvzga3itBtRO9fTyRxBuOx4en9N608phEeh0jgpbGApbBSSR29eWDkDJiY3FBS5eSkmGSh2aiHKX6sb7C0Lf82z+e5d4S9R43lwjgdOgt6AucIHuJ10hyO73i4t+8HPglHK+0v9OqjcwaptAjb36PhE/b8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789586965; c=relaxed/simple;
-	bh=yG0Cm/V/grf86TMwpbOVWg7S7XA47jIj27JirMa5NDg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cerwpiwNfX75DR5YBtBpdb26DHXTLeaSY/VnRjIogpmrSp5KJCfDrhis2CHyVeTLZfkHvgWLdXwItHuYxO6ZMPckuPXqKlqAozoLZMlXLt22yDfaaHiCaHklLIEHf3bwKMsQJB2OE9NVT03vrKvAMCBSwxnC6snkgWdfweYAqiw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KePp5etf; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789632969; c=relaxed/simple;
+	bh=4FaijACPNaf1LStXB+Jd5nhI2EVInJ6GpbGlED15Eeg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=P28YtSV0hEaYfWdK3SCeKzOgCEOUZlDuyGnRgfT1CeMSCc9ZA8ByRTXunloKyOdV4kh5thFjc3zL3lKpJQ71bxKtq9EKlVlZwf6PkQ48+T1HWZEbgG5qyVx7W4BJ0+qaJ8Ta6hRGLMptbmbUtMOWJmp0PceZxhE+TbMC3wKygZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TRXwdnP+; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KePp5etf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B6341F008BF;
-	Wed, 16 Sep 2026 19:29:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789586941;
-	bh=EKcLKBF7udcuQS69C7kksKs0wpPnH5+LGaowzafr4wY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=KePp5etfp5D7M52iJpqHN4zxFC/itUwyFhuf+JRClOouPpoQ/mySD9hWqkLS2DMDZ
-	 UMnlsBTyqBFKjS0csoZvzXcxTlBVnVj9EsbnZC2bFR5fk9ZEytfsk7+S3E3f1cftTa
-	 cr17DDyGHaiGg/SPmEWGM/4AFnkh/EsfFcYx49DnNVsIi3UtsOlfRcJgfjrhHfzmYs
-	 QqO39xXYBvjt6kufGdpnF1gUUXUw75pITPiB2ibUT2OK56vtX/tlaaOI1cOa7SybfZ
-	 wl57QPE8Jg/sxmIZiIPvI9HP6is2mYnKpTxkrIef2A3aVbcxTwXPGxGv+1+W0ZBK8f
-	 pwgY2aepINOUw==
-From: Sasha Levin <sashal@kernel.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Sasha Levin <sashal@kernel.org>,
-	Andrea della Porta <andrea.porta@suse.com>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-rpi-kernel@lists.infradead.org" <linux-rpi-kernel@lists.infradead.org>,
-	"robh@kernel.org" <robh@kernel.org>,
-	"florian.fainelli@broadcom.com" <florian.fainelli@broadcom.com>,
-	Angel J <iamanaws@httpd.dev>
-Subject: Re: [REGRESSION] PCI: Dynamic OF node creation hangs on invalid bridge configuration
-Date: Wed, 16 Sep 2026 15:28:19 -0400
-Message-ID: <daily-reply-20260916-0029-re-pci-dynamic-of-node@kernel.org>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <Tav3crct3HpgoRPBGOe-bfkBEORVT1RkvRbP8B7IXhRvEbUTAi-G6RiSnynkgV2rJ1dOIbCxm-mHUcm1e0MyQG52qswzpxURe4KFJoddhGg=@httpd.dev>
-References: <Tav3crct3HpgoRPBGOe-bfkBEORVT1RkvRbP8B7IXhRvEbUTAi-G6RiSnynkgV2rJ1dOIbCxm-mHUcm1e0MyQG52qswzpxURe4KFJoddhGg=@httpd.dev>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TRXwdnP+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1789632968; x=1821168968;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=4FaijACPNaf1LStXB+Jd5nhI2EVInJ6GpbGlED15Eeg=;
+  b=TRXwdnP+kebCs3TR1Vl1uutllCNDqI8qyIeWO3Ke3pg/hVUbDKma4jTz
+   RS+vd4FoS1l1S3G6prbbuzsrPhRcO0mZuM6NbP3HPxluFxzNHAs8YZVjR
+   +y/nweduI3hrXBaQTbNCH1Mxc6pIYxZGagN0G7kv5C7FUpPGoro0oMO/r
+   XxZltARSc+Gg5kgeJAMpP+gVqL2I8ChYiKpgrJmyiZcZXpNMGLzwMXYX1
+   IepARJQdODELmi1ryrnnIKT39Vjjn9RizcpKJzGFIllV24Oz0lBLdwDQQ
+   zm8Q/3av2jHT1mUPK0PJ/GlkeZOR9chdZGkYGFKL5kBMiq+K8fo8sMXsV
+   w==;
+X-CSE-ConnectionGUID: JueFNyIySAGXHO0GNnufsg==
+X-CSE-MsgGUID: EmbcTMrETsex6DGW/0YPww==
+X-IronPort-AV: E=McAfee;i="6800,10657,11905"; a="88965979"
+X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
+   d="scan'208";a="88965979"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2026 01:16:07 -0700
+X-CSE-ConnectionGUID: RVnitAmrTU6O27nPqhhEJg==
+X-CSE-MsgGUID: 7rjVyvR6TCe04ofVW0WnKQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
+   d="scan'208";a="297139970"
+Received: from abityuts-desk1.ger.corp.intel.com (HELO [10.245.245.47]) ([10.245.245.47])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2026 01:16:05 -0700
+Message-ID: <b80ab121-2409-4ea3-9649-3aea4d1e7507@linux.intel.com>
+Date: Thu, 17 Sep 2026 11:16:03 +0300
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] xhci: drop 120ms U3 LFPS wake retry wait from runtime
+ resume
+To: Lovekesh Solanki <lovekeshsolanki00@gmail.com>
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Michal Pecio <michal.pecio@gmail.com>,
+ Mathieu Fluhr <mathieu.fluhr@gmail.com>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ Thorsten Leemhuis <regressions@leemhuis.info>, regressions@lists.linux.dev,
+ stable@vger.kernel.org
+References: <20260831190349.29590-1-lovekeshsolanki00@gmail.com>
+ <20260831190349.29590-2-lovekeshsolanki00@gmail.com>
+ <a6a8526f-4b6f-46f7-9d02-05bfe3efcd48@linux.intel.com>
+ <apbrp8EaJoIfEg5X@eggarch>
+ <1be8e57f-9abe-4b34-bc09-e7934a2fa1bc@linux.intel.com>
+ <apg16LtZ-ru9MIBQ@eggarch>
+ <082467bf-d045-45d7-b097-97a5790e79d6@linux.intel.com>
+ <apq4FFSD2QKG-jUu@eggarch> <aqrK5PwpJodCmbdM@eggarch>
+Content-Language: en-US
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
+In-Reply-To: <aqrK5PwpJodCmbdM@eggarch>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-> The v2 patch is already in the thread. Is there anything you'd like me
-> to change?
+On 9/16/26 20:47, Lovekesh Solanki wrote:
+> On Fri, Sep 04, 2026 at 06:43:43PM +0530, Lovekesh Solanki wrote:
+>> On Thu, Sep 03, 2026 at 10:42:48AM +0300, Mathias Nyman wrote:
+>>> On 9/2/26 21:21, Lovekesh Solanki wrote:
+>>>> On Wed, Sep 02, 2026 at 03:10:41PM +0300, Mathias Nyman wrote:
+>>>>> It's possible PCI side or pm core already provides some easy way for xhci driver to check this.
+>>>>> This specific issue is currently not on my todo list, yet.
+>>>> Alright, would you like to me to work on this? I could look into
+>>>> that side and possibly come up with an approach.
+>>>
+>>> Yes, please, that would be great.
+>> I took a look at the PCI / PM side, and it seems to me there isn't any
+>> reliable approach for xhci driver to use right now.
+>>
+>> The pci_check_pme_status() both checks and clears the pme status bit
+>> and the pci core devours it inside pci_pme_wakeup(), and
+>> pm_request_resume is async so xhci's runtime_resume may run much later
+>> after the bit is already gone. We can't simply export pci_check_pme_status()
+>> that wouldn't give any useful info.
+>>
+>> One solution I can think of would be adding a pme_wake_detected bitfield
+>> on pci_dev struct, we set it in pci_pme_wakeup() when PME is confirmed
+>> and we clear it in pci_pm_runtime_resume() after the driver has
+>> returned.
+>> Then, we could directly read via pdev->pme_wake_detected in its own
+>> resume.
+>>
+>> What are your thoughts on this?
+> 
+> Hey Mathias,
+> 
+> Just wondering if you have looked into the proposal above.
+> I suggested adding a new field to pci_dev struct for knowing whether a
+> resume came from PCI PME side.
+> 
+> Would it be better to send it as an RFC too?
 
-From the stable side, 6.18 is the only active tree that exposes this hang,
-and I would rather carry the real fix than a stable only patch for it. Once
-your v2 is merged, please tag it Cc: stable and it will reach 6.18 through
-the normal queue.
+I don't think there is a need for a new PCI bus specific implementation.
+pm core then probably handles this already in a generic way.
 
--- 
-Thanks,
-Sasha
+PCI core probably calls pm core on a PME, which then starts the wakeup,
+pm core very likely keeps track of which device triggered the wakeup
+
+The wakeup_source structure under power in the device structure (dev->power.wakeup)
+looks promising.
+Maybe we can find what we need from there. Hope its fields aren't cleared at the
+time xhci resume is called.
+
+Thanks
+Mathias
+
