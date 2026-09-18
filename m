@@ -1,157 +1,207 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from o1.ptr9745.em.honeycomb.io (o1.ptr9745.em.honeycomb.io [149.72.141.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2399547051;
-	Thu, 17 Sep 2026 23:33:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C38AE3644DE
+	for <regressions@lists.linux.dev>; Fri, 18 Sep 2026 03:56:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=149.72.141.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789688039; cv=none; b=ULW1RA/zAVNNiVNoiKTkeqQuzRV74IjCGiLfvg4wm1zlvn3JIJ6189HiSMja+4Qv95Cp3wJbMBdEfqIpTm87OhNmNw4FYMN1+xzpYPQKcLNbjMo9W3u2oVAElURn7Dqmc53nTd0TBV9drGz/AaLUsfDRXeKryO/5j6ssI3A4XBE=
+	t=1789703797; cv=none; b=JUvMfjWrsb3y2LImxr3y0Y5jPO5bAEuvRetbF3JbkZ+aphGthBeeTRH1LeHrYFjccMapx4WG4g6r4jCoJH2boP1p8XVislPFoh33Er2VfO1+1PBXzOO6Dk4FpJbfReyiKHY+XTfL4IYTvtp2YWG3ibgOiS3igFLS4ZV841rQ+zs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789688039; c=relaxed/simple;
-	bh=bFSeoq1VnhSsG42lkzkAaTURyMhFWjFEK8DGwudPxt0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=j+GHamOPIEcbIWIxWRS7rzutb/rs/b4IQNT38vkcJbDkWe1NenQ5Y4tN/6wGBbbHlSqj8six3Q/vv7/WjdwD+hoDVIx9Z/Hiapm0i7myHsMKOgq8USdBtrBuW0gCn6iPJM2mJQKM9wIb4beqQ9myCvwMovmPpglONgiT0xX66mY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lQ8dWvoV; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789703797; c=relaxed/simple;
+	bh=FKO8LhQW1CX8/c5mIrCI5Vk14ANaYMcYDCy36i5ZkLA=;
+	h=From:Subject:Date:Message-ID:MIME-Version:To:Cc:Content-Type; b=gfJFvGLhCGUxwDuOyYc6KECqRIRB5Q0Qzmv3GHjGpjA4s+cMRHF4uVO4gT7TpsSVJKOjhy7TbpDOa+l55FeA+MxOgz6uNh3eVWnSviXKEG+DmCywVwmViNV0EL8T0sErjEvv3zfuBjBJD0qpm+o0pLoJqVRJ9MzkPmzvEt9bmHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=honeycomb.io; spf=pass smtp.mailfrom=em.honeycomb.io; dkim=pass (2048-bit key) header.d=honeycomb.io header.i=@honeycomb.io header.b=r5UHZPWC; arc=none smtp.client-ip=149.72.141.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=honeycomb.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=em.honeycomb.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lQ8dWvoV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F8131F000FF;
-	Thu, 17 Sep 2026 23:33:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789688037;
-	bh=o6NjHuKSvx6W9m1xdLJtdEGbC26vx0xPDV45IDAYDA8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To;
-	b=lQ8dWvoVPA0tRMMJFvia8Fq2Xw1DkzZn0nLpAm04KsK7EPoZMr2iuJrtAgHfLXL+m
-	 wvQP1/YiLhaVCVaPJpzzZ3s2UucU0tBHQg7PjP2UqDGwzW+XsgSMt1VR4ohEPxPOID
-	 Z4HIkDyx8dHHxCzDSCO0uoFNYGf2wlfOqWIvRWdVgeiXyARQ8VQX+BJTElUbiP/r/s
-	 g86cdxDyq+03r+hWf0bXrRgGxRAMKPeheA0wbzL0DtSYLPyj1ZXcSGYHGiXHcIjttg
-	 XDTM1g+Qxyls9PPMVPl/rwStqzoCCUDWfHK6UiXMlNNdL6rJATu45IUIVKTW68INAW
-	 T7betGVWWoOaA==
-Date: Thu, 17 Sep 2026 18:33:55 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Andreas Wild <andiwild@gmail.com>
-Cc: linux-pci@vger.kernel.org, bhelgaas@google.com, macro@orcam.me.uk,
-	linux-kernel@vger.kernel.org,
-	M M <restafvalendergelijke@outlook.com>,
-	Thorsten Leemhuis <regressions@leemhuis.info>,
-	regressions@lists.linux.dev
-Subject: Re: [PATCH v3] PCI: Skip Target Speed quirk on clamped ports with no
- link
-Message-ID: <20260917233355.GA1115024@bhelgaas>
+	dkim=pass (2048-bit key) header.d=honeycomb.io header.i=@honeycomb.io header.b="r5UHZPWC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=honeycomb.io;
+	h=from:subject:date:mime-version:to:cc:content-type:
+	content-transfer-encoding:cc:content-type:date:from:subject:to;
+	s=s1; t=1789703793;
+	bh=ByQ3HjxGq3mISarOfpCbkfBfl3mweeLSYVmVj0cAQbw=;
+	b=r5UHZPWC0JWyS61uy4juyR7vcqkgXJMedolCFwx1GIrWUKTaFWKdlj3EjJw/97/2iVpn
+	r9OHmKHhyTK/p6r4pt4L8+76/dLjJpBfO5aDT1ITYhc87eDHWtnuAojcGbrN4JSK70aZqg
+	pPSNpVCz4LYRt+n7th8+e+2zcl7tHbkVoCQ9O2TAmbQFFeESCjyM+DhQ8I3BWUrlWYh4bY
+	CWJW28HV2R9akuMpP6R/geFFTUiSc6K7UwgTYqNXuJkEIUIjxRMwvwXwbzhc23kOTEcuaq
+	JPEuBZIum/TF/trBMkROgQfYG75q87Yot5t4pWSYbNOiuqjejMX1jJEps5RTdxtA==
+Received: by recvd-7d7dd758d8-fn74v with SMTP id recvd-7d7dd758d8-fn74v-1-6AACB671-3C
+	2026-09-18 03:56:33.7941501 +0000 UTC m=+1485602.227445126
+Received: from daisy.dens.ffj.family (unknown)
+	by geopod-ismtpd-19 (SG)
+	with ESMTP
+	id Jvjjs0mySB-kvyIuCIscTA
+	Fri, 18 Sep 2026 03:56:33.721 +0000 (UTC)
+From: Liz Fong-Jones <lizf@honeycomb.io>
+Subject: [PATCH v6] PCI: Fix BAR resize for devices on a root bus
+Date: Fri, 18 Sep 2026 03:56:33 +0000 (UTC)
+Message-ID: <20260918035633.566823-1-lizf@honeycomb.io>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260801201244.4421-1-andiwild@gmail.com>
+X-SG-EID: 
+ =?us-ascii?Q?u001=2ECuH7N2XAoeMR1zrzr=2F6NZrhli2vbKPOHff5fJuZuba6ZIE8QPyIf9mn4Y?=
+ =?us-ascii?Q?ezqeFFjUkh=2FeROy4LtnO7KN9jZmeTg5nVuRRDKF?=
+ =?us-ascii?Q?THtSYYaKDWLtyCa2ILtxfj5ijKKKbNpm1Uu=2FWbm?=
+ =?us-ascii?Q?rgic8xPn0fHnVNEpIDrwzROnAWIQTJH8wKVf0n5?=
+ =?us-ascii?Q?ns38ZKo4EdeYKYcLonDzHmVz2a7W6vjF4JUhGbL?=
+ =?us-ascii?Q?RJe2NAsOYYF0VFPXCXPagZmY+gamT3lxNZ5WUcH?= =?us-ascii?Q?GQMO?=
+To: lizf@honeycomb.io, Bjorn Helgaas <bhelgaas@google.com>,
+	Ilpo =?iso-8859-1?q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev, amd-gfx@lists.freedesktop.org, Jon Nettleton
+	<jon@solid-run.com>, Jon Nettleton <jon.nettleton@gmail.com>, Jacob Martin
+	<jacob.martin@canonical.com>, Thorsten Leemhuis <regressions@leemhuis.info>,
+	stable@vger.kernel.org
+X-Entity-ID: u001.GRlkmHQ+Ka/CKxmoC/CxTw==
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 
-[+cc M M, Thorsten]
+pci_do_resource_release_and_resize() releases the device BARs that
+share a bridge window with the BAR being resized, but when the device
+sits directly on a root bus (pdev->bus->self == NULL) it then skips
+resource assignment entirely and returns success, leaving the BARs it
+just released unassigned (IORESOURCE_UNSET).
 
-On Sat, Aug 01, 2026 at 10:11:48PM +0200, Andreas Wild wrote:
-> From: "Maciej W. Rozycki" <macro@orcam.me.uk>
-> 
-> Since commit 72780f796468 ("PCI: Always lift 2.5GT/s restriction in PCIe
-> failed link retraining") the Target Speed quirk lifts a firmware-imposed
-> 2.5GT/s restriction on any downstream port, without checking whether the
-> link is up.  Where nothing is plugged in, the retraining that follows can
-> never complete, so each attempt costs PCIE_LINK_RETRAIN_TIMEOUT_MS.  The
-> quirk makes two of them -- the initial one and the restore on the error
-> path -- adding a fixed 2 s to every boot.
-> 
-> On an MSI PRO Z690-A WIFI DDR4 (Intel 600 Series PCH) with one empty x1
-> slot, running v7.2-rc5:
-> 
->  0.541 pci 0000:00:1c.0: removing 2.5GT/s downstream link speed restriction
->  1.541 pci 0000:00:1c.0: retraining failed
->  2.541 pci 0000:00:1c.2: [8086:7aba] type 01 class 0x060400
-> 
-> Where the Link Speed has already been clamped at 2.5GT/s and no link has
-> been established there is nothing worth doing, which is what the kerneldoc
-> for the quirk already describes: the restriction is to be lifted where
-> firmware arranged it "and the port reports its link already being up".
-> Bail out early in that case, before either the ASM2824 workaround or the
-> removal of the restriction is considered.
-> 
-> Ports whose link is up are unaffected, and so is the ASM2824 workaround,
-> which is reached with the Target Link Speed not clamped.
-> 
-> With this applied the quirk returns without touching the port: both
-> messages are gone, enumeration proceeds from 0000:00:1c.0 to 0000:00:1c.2
-> in 1 ms rather than 2 s, and the systemd "kernel" boot phase goes from
-> 3.011 s to 1.036 s.
-> 
-> Fixes: 72780f796468 ("PCI: Always lift 2.5GT/s restriction in PCIe failed link retraining")
-> Cc: stable@vger.kernel.org
-> Reported-by: Andreas Wild <andiwild@gmail.com>
-> Closes: https://lore.kernel.org/lkml/20260801092152.5643-1-andiwild@gmail.com/
-> Tested-by: Andreas Wild <andiwild@gmail.com>
-> Signed-off-by: Maciej W. Rozycki <macro@orcam.me.uk>
-> Signed-off-by: Andreas Wild <andiwild@gmail.com>
+Skipping pbus_reassign_bridge_resources() is correct in that case --
+there is no bridge window to adjust -- but the device BARs still have
+to be reassigned. Before the BAR release was consolidated into the PCI
+core, this case worked for amdgpu because the driver released the BARs
+itself and then called pci_assign_unassigned_bus_resources()
+unconditionally after the resize, which assigns unassigned device BARs
+also on a root bus. Commit db92e3fef53e ("drm/amdgpu: Remove driver
+side BAR release before resize") removed that call, so nothing assigns
+the released BARs anymore.
 
-I provisionally applied this on pci/misc.  It seems to address at
-least part of a v7.2 regression, so it probably should go on
-pci/for-linus for v7.3.
+This breaks amdgpu completely on the SolidRun HoneyComb LX2K (NXP
+LX2160A, arm64, ACPI), where the GPU endpoint is enumerated directly
+on the root bus of its segment (there is no root port device, so
+pdev->bus->self is NULL):
 
-But I'd like to have it in -next for a bit before asking Linus to pull
-it.
+  amdgpu 0004:01:00.0: BAR 0 [mem 0xa400000000-0xa40fffffff 64bit pref]: releasing
+  amdgpu 0004:01:00.0: BAR 2 [mem 0xa410000000-0xa4101fffff 64bit pref]: releasing
+  amdgpu 0004:01:00.0: sw_init of IP block <gmc_v8_0> failed -19
+  amdgpu 0004:01:00.0: amdgpu_device_ip_init failed
+  amdgpu 0004:01:00.0: Fatal error during GPU init
 
-I added:
+No error is logged because the resize path reports success; amdgpu
+then finds BAR0 IORESOURCE_UNSET and bails out with -ENODEV.
 
-  Closes: https://bugzilla.kernel.org/show_bug.cgi?id=221801
+When there is no upstream bridge, call pci_bus_assign_resources() on
+the root bus to place the BARs released above, using the same
+alignment-sorted algorithm as normal enumeration instead of a manual
+per-BAR loop. This also walks the rest of the hierarchy under the
+root bus, as pci_assign_unassigned_bus_resources() used to for amdgpu
+before commit db92e3fef53e ("drm/amdgpu: Remove driver side BAR
+release before resize") removed that call -- the core-side fix that
+commit asked for ("such a problem should be fixed inside
+pci_resize_resource() instead").
 
-based on Edward's testing at
-https://bugzilla.kernel.org/show_bug.cgi?id=221801#c13.  Edward, I
-bcc'd you because I haven't seen a public email response, but if you
-want your Tested-by to appear in the git commit, just respond to this
-email thread.
+pci_bus_assign_resources() returns void, so failure is detected by
+checking whether the released BARs are still assigned afterward; if
+not, roll back as in the bridged case. This is stricter than the
+bridged path -- it fails on any unplaced resource, not just required
+ones -- since a root bus typically has one shared window, and failing
+loudly seemed better than leaving something silently unassigned.
 
-But IIUC Aoxtj still sees issues with 72780f796468 ("PCI: Always lift
-2.5GT/s restriction in PCIe failed link retraining") even with this
-patch
-(https://lore.kernel.org/all/331e97c7-e422-420d-9f3e-5d9f734464b3@axtjblog.cc)
+The root bus path also had a locking bug that any fix here necessarily
+touches: the old "goto out" jumped to up_read(&pci_bus_sem) without a
+matching down_read() (as does the "goto restore" taken when
+pci_dev_res_add_to_list() fails in the release loop). Take pci_bus_sem
+before the BAR release loop so every path through the function holds
+it exactly once.
 
-And M M / Mich (BCC'd) also reports an issue that (IIUC) is not fixed by
-this patch (https://bugzilla.kernel.org/show_bug.cgi?id=221919#c3)
+Use pci_upstream_bridge() rather than testing pdev->bus->self
+directly. The two are usually equivalent, but pci_upstream_bridge()
+is the canonical test -- pci_is_root_bus(), which it's built on,
+warns that bus->self == NULL doesn't necessarily mean a root bus
+(SR-IOV virtual buses from virtfn_add_bus() are the same).
 
-So evidently there are still issues but maybe this patch fixes part of
-them?
+Fixes: 337b1b566db0 ("PCI: Fix restoring BARs on BAR resize rollback path")
+Cc: stable@vger.kernel.org
+Link: https://bugs.launchpad.net/ubuntu/+source/linux-hwe-7.0/+bug/2159596
+Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
+Suggested-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Assisted-by: Claude:claude-fable-5 checkpatch
+Assisted-by: Claude:claude-sonnet-5
+Signed-off-by: Liz Fong-Jones <lizf@honeycomb.io>
+---
 
-> ---
-> v3:
->  - Replaced with Maciej's much simpler approach: bail out of the quirk
->    entirely when the Target Link Speed is already clamped at 2.5GT/s and no
->    link has been established, rather than programming the speed and skipping
->    only the retraining.  One function, no new API, no bwctrl changes.
->  - Note this leaves the Target Link Speed clamped on such a port, where v2
->    left it at the Port's maximum.  A device hot-plugged there later trains at
->    2.5GT/s: pcie_wait_for_link_delay() only calls the quirk when
->    pcie_wait_for_link_status() fails, so a link that comes up cleanly at
->    2.5GT/s never re-runs it.  Flagging in case that matters; the clamp is
->    firmware's, so honouring it on an unoccupied Port seems defensible.
->  - v2: https://lore.kernel.org/lkml/20260801105441.6506-1-andiwild@gmail.com/
->  - v1: https://lore.kernel.org/lkml/20260801092152.5643-1-andiwild@gmail.com/
->  drivers/pci/quirks.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index b09f27f..9e407c4 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -108,7 +108,11 @@ int pcie_failed_link_retrain(struct pci_dev *dev)
->  
->  	pcie_capability_read_word(dev, PCI_EXP_LNKSTA, &lnksta);
->  	pcie_capability_read_word(dev, PCI_EXP_LNKCTL2, &oldlnkctl2);
-> -	if (!(lnksta & PCI_EXP_LNKSTA_DLLLA) && pcie_lbms_seen(dev, lnksta)) {
-> +	if (lnksta & PCI_EXP_LNKSTA_DLLLA) {
-> +		;
-> +	} else if (PCIE_LNKCTL2_TLS2SPEED(oldlnkctl2) == PCIE_SPEED_2_5GT) {
-> +		return ret;
-> +	} else if (pcie_lbms_seen(dev, lnksta)) {
->  		pci_info(dev, "broken device, retraining non-functional downstream link at 2.5GT/s\n");
->  		ret = pcie_set_target_speed(dev, PCIE_SPEED_2_5GT, false);
->  		if (ret)
-> -- 
-> 2.55.0
-> 
+Confirmed against v7.3-rc3: drivers/pci/setup-bus.c is unpatched
+there, pci_do_resource_release_and_resize() still returns without
+reassigning the released BARs when bus->self is NULL.
+
+Tested on the real root-bus hardware this fixes (SolidRun HoneyComb
+LX2K): both a manual resize via the resource0_resize sysfs attribute
+(shrink to 256M then back to 4G, forcing the release+reassign path
+both directions) and amdgpu's own natural probe-time resize (with the
+amdgpu.rebar=0 workaround removed) succeed cleanly -- VRAM and BAR
+size match, no "Fatal error during GPU init", full IP block init.
+
+Changes in v6:
+- Repost, confirmed still affects v7.3-rc3
+- Added real-hardware test confirmation (both a manual sysfs-triggered
+  resize and amdgpu's own natural probe-time resize)
+- Picked up Reviewed-by from Ilpo
+- Link to v5: https://patch.msgid.link/20260908-pci-rebar-root-bus-v5-1-a210f405ea81@honeycomb.io
+
+ drivers/pci/setup-bus.c | 23 +++++++++++++++++------
+ 1 file changed, 17 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+index e8c94aa1d3c12..ed16ef7c26fa7 100644
+--- a/drivers/pci/setup-bus.c
++++ b/drivers/pci/setup-bus.c
+@@ -2380,6 +2380,7 @@ int pci_do_resource_release_and_resize(struct pci_dev *pdev, int resno, int size
+ 	struct resource *res = pci_resource_n(pdev, resno);
+ 	struct pci_dev_resource *dev_res;
+ 	struct pci_bus *bus = pdev->bus;
++	struct pci_dev *bridge = pci_upstream_bridge(pdev);
+ 	struct resource *b_win, *r;
+ 	LIST_HEAD(saved);
+ 	unsigned int i;
+@@ -2397,6 +2398,8 @@ int pci_do_resource_release_and_resize(struct pci_dev *pdev, int resno, int size
+ 	if (ret)
+ 		return ret;
+ 
++	down_read(&pci_bus_sem);
++
+ 	pci_dev_for_each_resource(pdev, r, i) {
+ 		if (i >= PCI_BRIDGE_RESOURCES)
+ 			break;
+@@ -2415,13 +2418,21 @@ int pci_do_resource_release_and_resize(struct pci_dev *pdev, int resno, int size
+ 
+ 	pci_resize_resource_set_size(pdev, resno, size);
+ 
+-	if (!bus->self)
+-		goto out;
++	if (bridge) {
++		ret = pbus_reassign_bridge_resources(bus, res, &saved);
++		if (ret)
++			goto restore;
++	} else {
++		/* No bridge window to adjust; let the core reassign the bus. */
++		pci_bus_assign_resources(bus);
+ 
+-	down_read(&pci_bus_sem);
+-	ret = pbus_reassign_bridge_resources(bus, res, &saved);
+-	if (ret)
+-		goto restore;
++		list_for_each_entry(dev_res, &saved, list) {
++			if (!resource_assigned(dev_res->res)) {
++				ret = -ENOSPC;
++				goto restore;
++			}
++		}
++	}
+ 
+ out:
+ 	up_read(&pci_bus_sem);
+-- 
+2.53.0
+
