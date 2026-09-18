@@ -1,55 +1,55 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.61.103])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.162])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3718B34A791
-	for <regressions@lists.linux.dev>; Fri, 18 Sep 2026 05:40:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.61.103
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF3324848B6
+	for <regressions@lists.linux.dev>; Fri, 18 Sep 2026 06:20:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.162
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789710052; cv=none; b=bHH+Itb17PW8g8tSZXWPu0uQy/nwINaD0PgzATioOgbkJP9EKp7guR2rEIrW/lUMjVnBpvKt4J5rHKAgoDgG+PS9iSbfxo8mFeyyMxk/teo871x4oWhPJs4A6n5HhvlqKfUkUReP5bKbtTrbmT1BUkgj39GqXkocl+CQGiLdGBQ=
+	t=1789712458; cv=none; b=B7QIFAuok0r4DffvEVJblcBJe45nRpDD6+ulyUk9HgsmhaEYvBqkaRPQ8EOBf63De0R60QGdNqNrSveBKaDaywNdWktykV/QGmV311XaRWaDzk53Ply/WofeF+16OlayRRlKQuBiZZHy0XhC8/WOXAmpXX9bjESE285M/BAd0eE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789710052; c=relaxed/simple;
-	bh=2oCic7brQwDjiuLicskbX68+8F87e81/EfieKTtr6JA=;
+	s=arc-20240116; t=1789712458; c=relaxed/simple;
+	bh=lD7NqqKM7Dgj4jRMfiv+WMvMH2wkE10YCf13FtRvoFg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HDOJGUJrwogQ5gmNQZK3le383NCxK93GYA8W690FAMfNT6OJKGdHV3wHjFTPkI28A0Owl/7VnOeg0eXa957fGCdC3/2CBRyoLB7fBpuX71hC68uCGcRTf6GaKCgAGDcp5YD7k4Cmqzz4cgvQ7gp0W7MaLXjVu+WIYkHO+FNzm3o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=QoZ9KifO; arc=none smtp.client-ip=188.68.61.103
+	 In-Reply-To:Content-Type; b=K6ynKhH99pv31dMPPUOAMj9J0aVz7R6oKT/QXopdIqfpDmYGkbRFschB9KqCmP4t4seH1DxOCMwHDExdPPvE+02HPvv4X5Uk0UTymNSERpcw65uBVElxNJTUB4imCIJlOZT/1IXr4KyfR7PgezugwszHWubcPymsHMczpX+EOrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=DivEk2k/; arc=none smtp.client-ip=188.68.63.162
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="QoZ9KifO"
-Received: from mors-relay-8403.netcup.net (localhost [127.0.0.1])
-	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4hmLz42ZB1z85D7;
-	Fri, 18 Sep 2026 07:39:12 +0200 (CEST)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="DivEk2k/"
+Received: from mors-relay-8201.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4hmMv41BMxz43LL;
+	Fri, 18 Sep 2026 08:20:48 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1789709952;
-	bh=2oCic7brQwDjiuLicskbX68+8F87e81/EfieKTtr6JA=;
+	s=key2; t=1789712448;
+	bh=lD7NqqKM7Dgj4jRMfiv+WMvMH2wkE10YCf13FtRvoFg=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=QoZ9KifOGx8q3p0C+RT139x+z/y0GVIKf5apDm4ZpUkuK0jU5vejS33h9Uyzaq3BD
-	 ki+Ds+H3d+jJS6RIg10lASH0ZnFeoO2+6gOD2C+Ylo5RXUFVIvha+HxnA2AUl5r/Ee
-	 XNqazIFukWe4MPftwBLzNDceook6jWSqPEjaFx8wwnBC6bWpFUD8x+Yi9rrz5Bf/Av
-	 nCFyvhsmDwTXGKMb69BXfQeMr4Q7vsXKRrds02s4jYyCaIZghKmZdRERx9gu5rjVEB
-	 rS09sZGL1TLWihto0I3DxWmn86BmGHcTOjbu3RE+eIxJh55URj5witmsJACuavbs81
-	 0NaVJLv7qt00g==
+	b=DivEk2k/bI3KdBETZhD7Dzh60wMJSNm6vZ9aH6iXyFP/zJhQd5FD0XfBbUGAwksM1
+	 wtRWM75feWifIb+JyYg65PsUu7mZjAyr9nisTJZ7M63mhMtFZduwOsmb6gjZ970BFS
+	 7mO/Dbe9gAo7fpb+IvVp3G1lF+oiHykixUClGkeId3hAMRLmMbcZRQfHsNUhj7RwYc
+	 jxUPlOQOeRn+mTcLANpbq7jxDqUDLglHTDBARAeD4nLMeiowwc0WrD3IG1mY085vjT
+	 /h83FXmq1YZ8iNsTGGB9IPmQZwG+aNEmElh345OCB2Jl/mQ0Yv3klhh5P3hPZlr3+I
+	 04y4I00YJ0fOA==
 Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-8403.netcup.net (Postfix) with ESMTPS id 4hmLz41qbDz85KL;
-	Fri, 18 Sep 2026 07:39:12 +0200 (CEST)
+	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4hmMv40TLMz43BZ;
+	Fri, 18 Sep 2026 08:20:48 +0200 (CEST)
 X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
 X-Spam-Flag: NO
-X-Spam-Score: -2.898
+X-Spam-Score: -2.901
 X-Spam-Level: 
 Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4hmLz30gJJz8tbx;
-	Fri, 18 Sep 2026 07:39:11 +0200 (CEST)
+	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4hmMv31cb9z8tbR;
+	Fri, 18 Sep 2026 08:20:47 +0200 (CEST)
 Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 2691A5FAD0;
-	Fri, 18 Sep 2026 07:39:10 +0200 (CEST)
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 644165F995;
+	Fri, 18 Sep 2026 08:20:46 +0200 (CEST)
 Authentication-Results: mxe9fb;
         spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
 Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <b4ed1637-ac6a-4af5-ab47-e07309af200b@leemhuis.info>
-Date: Fri, 18 Sep 2026 07:39:09 +0200
+Message-ID: <42ec4a58-2cc6-4c6c-9d00-705bbe77f400@leemhuis.info>
+Date: Fri, 18 Sep 2026 08:20:45 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -57,66 +57,73 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] PCI: Skip Target Speed quirk on clamped ports with no
- link
-To: Bjorn Helgaas <helgaas@kernel.org>, Andreas Wild <andiwild@gmail.com>
-Cc: linux-pci@vger.kernel.org, bhelgaas@google.com, macro@orcam.me.uk,
- linux-kernel@vger.kernel.org, M M <restafvalendergelijke@outlook.com>,
- regressions@lists.linux.dev, restafvalendergelijke@outlook.com
-References: <20260917233355.GA1115024@bhelgaas>
+Subject: Re: [REGRESSION] NVIDIA dGPU never enters D3cold since Linux 7.3
+ merge window
+To: jackpilot <jackpilot27@protonmail.com>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Cc: "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+ "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+ "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+References: 
+ <uz7NywYQwAzrOgqWjIeyjuTn3PalBrqAsBKcD81tQNJCCFw2j5yG6zQ9cH_PiHiUBOxOoms_MPh6g9FmBmsD80RVXLf8zSQZ4QXP24Z9dv4=@protonmail.com>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
 Content-Language: de-DE, en-US
-In-Reply-To: <20260917233355.GA1115024@bhelgaas>
+In-Reply-To: 
+ <uz7NywYQwAzrOgqWjIeyjuTn3PalBrqAsBKcD81tQNJCCFw2j5yG6zQ9cH_PiHiUBOxOoms_MPh6g9FmBmsD80RVXLf8zSQZ4QXP24Z9dv4=@protonmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <178970995084.148782.7225326446830493101@mxe9fb.netcup.net>
-X-NC-CID: PLBxsupKr9TEn6xctqYG3iq+VDfVEoMCZf5Vwra4pqISi6IDXdg=
+Content-Transfer-Encoding: 8bit
+X-PPP-Message-ID: <178971244669.243502.16932713889909070992@mxe9fb.netcup.net>
+X-NC-CID: UYec9lk8x3O7c3nC0qK2yGSTDqHpVLGqXH3X0YyfM7VJkpeV9e8=
 
-On 9/18/26 01:33, Bjorn Helgaas wrote:
-> On Sat, Aug 01, 2026 at 10:11:48PM +0200, Andreas Wild wrote:
->> From: "Maciej W. Rozycki" <macro@orcam.me.uk>
->> Since commit 72780f796468 ("PCI: Always lift 2.5GT/s restriction in PCIe
->> failed link retraining") the Target Speed quirk lifts a firmware-imposed
->> 2.5GT/s restriction on any downstream port, without checking whether the
->> link is up.  Where nothing is plugged in, the retraining that follows can
->> never complete, so each attempt costs PCIE_LINK_RETRAIN_TIMEOUT_MS.  The
->> quirk makes two of them -- the initial one and the restore on the error
->> path -- adding a fixed 2 s to every boot.
->>
->> On an MSI PRO Z690-A WIFI DDR4 (Intel 600 Series PCH) with one empty x1
->> slot, running v7.2-rc5:
->> [...]
->> Fixes: 72780f796468 ("PCI: Always lift 2.5GT/s restriction in PCIe failed link retraining")
->> Cc: stable@vger.kernel.org
->> Reported-by: Andreas Wild <andiwild@gmail.com>
->> Closes: https://lore.kernel.org/lkml/20260801092152.5643-1-andiwild@gmail.com/
->> Tested-by: Andreas Wild <andiwild@gmail.com>
->> Signed-off-by: Maciej W. Rozycki <macro@orcam.me.uk>
->> Signed-off-by: Andreas Wild <andiwild@gmail.com>
+On 9/14/26 05:06, jackpilot wrote:
 > 
-> I provisionally applied this on pci/misc.  It seems to address at
-> least part of a v7.2 regression, so it probably should go on
-> pci/for-linus for v7.3.
 > 
-> But I'd like to have it in -next for a bit before asking Linus to pull
-> it. [...]
+> Since upgrading past 7.2.4, my NVIDIA dGPU no longer entersD3cold/runtime suspend and stays permanently active. Confirmed
+> regression, not present on 7.2.4, present on both 7.3-rc1 and
+> 7.3-rc2.
+> 
+> Hardware: ASUS ROG Zephyrus G16 (GU605MI), Intel Core Ultra 9
+> 185H (Meteor Lake), NVIDIA RTX 4070 Max-Q / AD106M, nvidia-open
+> 615.71.09 driver (unchanged across all tested kernels).
 
-Great, thx -- and yes, -next sounds totally fine for me, as this fixes a
-delay, not a hard breakage.
-> But IIUC Aoxtj still sees issues with 72780f796468 ("PCI: Always lift
-> 2.5GT/s restriction in PCIe failed link retraining") even with this
-> patch
-> (https://lore.kernel.org/all/331e97c7-e422-420d-9f3e-5d9f734464b3@axtjblog.cc)
-> 
-> And M M / Mich (BCC'd) also reports an issue that (IIUC) is not fixed by
-> this patch (https://bugzilla.kernel.org/show_bug.cgi?id=221919#c3)
-> 
-> So evidently there are still issues but maybe this patch fixes part of
-> them?
-Yeah, Maciej ten days expressed that we to look into this. Anyway, I
-suggest someone that is affected by that problem starts a new thread
-(please CC all those that are affected by it and the regression list)
-with summarizing the current state + this patch, as this thread got a
-bit confusing... (please drop a link to that thread here afterwards)
+Thx for the report. Please reproduce without out-of-tree drivers. If the
+kernel then shows the problem as well, you likely need to do a git
+bisection with a vanilla setup to identify which change caused this:
+https://docs.kernel.org/admin-guide/bug-bisect.html
+https://docs.kernel.org/admin-guide/verify-bugs-and-bisect-regressions.html
 
 Ciao, Thorsten
+
+> Last known good: 7.2.4
+> First known bad:  7.3-rc1
+> 
+> Evidence (/proc/driver/nvidia/gpus/0000:01:00.0/power):
+>   7.2.4:    Runtime D3 status: Enabled (fine-grained)
+>   7.3-rc1:  Runtime D3 status: Not supported
+>   7.3-rc2:  Runtime D3 status: Not supported
+> 
+> Same output from /sys/bus/pci/devices/0000:01:00.0/power/
+> runtime_status, power/control, power_state confirms the device
+> sits at active/auto/D0 permanently on the broken kernels, and
+> suspended/auto/D3cold on the working one. No processes hold
+> /dev/nvidia* open in the broken state, ruling out a userspace
+> handle as the cause.
+> 
+> I haven't been able to bisect further since the regression is
+> already present at rc1, meaning the change is somewhere in the
+> 7.3 merge window. While investigating I came across an in-progress
+> ACPI series that touches related territory (PCI devices getting
+> stuck referencing power resources during early enumeration):
+> https://lore.kernel.org/linux-acpi/2295263.irdbgypaU6@rafael.j.wysocki/
+> but I want to be clear I haven't confirmed this is the same
+> mechanism, I checked dmesg for the specific _DEP/INT3472
+> trigger it describes and found no matches, so it may well be
+> unrelated. Mentioning it only in case it's a useful lead.
+> 
+> Note: tested on CachyOS's cachyos-rc kernel build (patches:
+> https://github.com/CachyOS/linux-cachyos), not vanilla. Happy
+> to test a vanilla build or apply patches if that would help
+> narrow this down.
+> 
+> 
+
