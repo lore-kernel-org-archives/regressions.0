@@ -1,77 +1,85 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A83AA39733E;
-	Fri, 18 Sep 2026 07:02:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 838E72CCC5
+	for <regressions@lists.linux.dev>; Fri, 18 Sep 2026 07:20:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789714950; cv=none; b=KX52zBGs9Vsmq3HTkDHZVuiGrkNNfYYgADJDUZqiGdbDBApJgPRKaXcYKvqv6UIM0RkkldLfXd8jhSFyqb7pN89w6QRQzMoUC8yKVLz7J5U2RpCz2MHJwvoCLFSLYbXHTVBmhWdzTEhSDfq7swPEekB9BDfiNE7A6rEWF5FH8r4=
+	t=1789716030; cv=none; b=h/UbX23+d9WSqxDDj4/6pZH3lzKS2hYWg4NsHp8hK68OfmG7GIscKKi1ICJrc59Q6IucKZlp5xmmOLRVWyOC0WhwQcupssj8ROcXTrV6Q0ZPTI2pWAdcLLhxVvUJj+aHTiPRjHpXv8vY5CcLdTMiFwNUJaZJX8OoYgtiA9fLsWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789714950; c=relaxed/simple;
-	bh=Ab57gbCozA0XCg2TAtvkerpNt0WPhCOtEoULJllt0vQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=heqhLwoMKhxA3C/iXZZIU53XArYTBGlA5zroF3ebV5Gm/Oza2rqL1N9T/Ddzwe/PPY5uTrZk5ZjSKFpNtgnOIOiL7X8Q89LHMLt5cR/mwH/eV2iO7Q3MRqLA7bSdTYWNouhVJ/IZhahsP7uMMCT9Zcotyr+UBV2ttwjuzX7QFPs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HO3I+MCs; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1789716030; c=relaxed/simple;
+	bh=W2eB+4wVGXd6TPJ/v5kW5ZRMC8T7s7aJqHj/G4PX0uc=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=EeB4TJC1ndPrdBl1yFX+5fj8y7xWjlxLPvPYf3roOp08kzkLfAGXH+uZDvQEkQJkcXUx87twpLZNkeo6I0l9q1ZwfT8+sSoYQNvhP+UnoXCE4dhMF47k8jL8Md/YBMifPslOke4Udeu2ZIEvwZJXfF0PSjWDt4t6kEc7qfKz8tI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=kWmgx9Jy; arc=none smtp.client-ip=188.68.63.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HO3I+MCs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1789714946; x=1821250946;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=Ab57gbCozA0XCg2TAtvkerpNt0WPhCOtEoULJllt0vQ=;
-  b=HO3I+MCsD9yCe3xADYPc0H+QlSbaAwKC3NaS6EWQ8mjt042C/2F0gpm6
-   pejZUngKgwpFd6iT7KJMsmZBYhC24gax544MSFPo/4PDexLXQrI5qF/0c
-   307TwWNecgtAdvGxEbb7xBQNgHZeRVqmC6eDFVQ5GfKY1tW4E/4qSLqcO
-   WIzYBUHplKHNJbVPIjKVa8co/teYMvLJ0De7xpK1cnK/bDpwtTVhaC/Am
-   ardZ4r/liPxF1jQyTQz4d0qUrCjek39jbeCupNcXmV9tK2HhrcP9DteJj
-   K8+5r5sT5cnSE2BKZsqs+wwgyB0rUvJ3KBZgW0dJINV7LhhE4HTXhlr11
-   w==;
-X-CSE-ConnectionGUID: PCecbUBaTlCnf5+98oAaGg==
-X-CSE-MsgGUID: m4JJGBuyS/CBlfGGlspPAw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11905"; a="89336566"
-X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
-   d="scan'208";a="89336566"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2026 00:02:23 -0700
-X-CSE-ConnectionGUID: bJAezRZrSSiXc334p5QXXw==
-X-CSE-MsgGUID: iOs0djwWSw64jUA+bjHBcA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
-   d="scan'208";a="271582529"
-Received: from junjie-desk-dev.bj.intel.com ([10.238.152.71])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Sep 2026 00:02:19 -0700
-From: Junjie Cao <junjie.cao@intel.com>
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Miguel Vadillo <miguel.vadillo@intel.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Manuel Knitza <manuel.knitza@googlemail.com>,
-	Thorsten Leemhuis <regressions@leemhuis.info>,
-	Antti Laakso <antti.laakso@linux.intel.com>,
-	Mehdi Djait <mehdi.djait@linux.intel.com>,
-	linux-media@vger.kernel.org,
-	linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev,
-	stable@vger.kernel.org
-Subject: Re: [PATCH] media: i2c: cvs: Do not hide the option in the ancillary menu
-Date: Fri, 18 Sep 2026 15:01:49 +0800
-Message-ID: <20260918070149.688376-1-junjie.cao@intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <aqvTlNnMw4FRqom_@kekkonen.localdomain>
-References: <aqvTlNnMw4FRqom_@kekkonen.localdomain>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="kWmgx9Jy"
+Received: from mors-relay-2501.netcup.net (localhost [127.0.0.1])
+	by mors-relay-2501.netcup.net (Postfix) with ESMTPS id 4hmPCn029Dz6HvP
+	for <regressions@lists.linux.dev>; Fri, 18 Sep 2026 09:20:21 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1789716021;
+	bh=W2eB+4wVGXd6TPJ/v5kW5ZRMC8T7s7aJqHj/G4PX0uc=;
+	h=Date:Subject:From:To:References:In-Reply-To:From;
+	b=kWmgx9JyWgyUJlQZxDmuM2+E0AHcQBhO413gK6R9RtDQv/heYMAjiLFvHo1bGnrEZ
+	 hLJ/sbqdxwIjKjHjgt12/Z+qJoBqRi18pyNAT5BP9jSBXGgpw79SCSDojvlCv6BhxX
+	 WIkvjNgZEg5Xsn6WqDNNGnItRLzLQr29vblPbtIKrkXVKGZ9RwqzZvtdAWBwns74KX
+	 4hRGX1iL0izZLKoTJe/Q+qlKXeV+ZLWhuWXGpusIIpfI2Ox61DirZl637W0REg+C+W
+	 oaPccjzk3JAhjHsrw5xXQcweGceABL1mWJyYt4kGJfoyj9F1HFgMWla7fyjFb4Rz0I
+	 fctKaYw0hpt7g==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-2501.netcup.net (Postfix) with ESMTPS id 4hmPCT33mpz4yTF
+	for <regressions@lists.linux.dev>; Fri, 18 Sep 2026 09:20:05 +0200 (CEST)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4hmPCT1GSsz8tGh
+	for <regressions@lists.linux.dev>; Fri, 18 Sep 2026 09:20:05 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id A09445FA48
+	for <regressions@lists.linux.dev>; Fri, 18 Sep 2026 09:20:04 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <ec496b03-643c-4fee-b81d-8595193a6eee@leemhuis.info>
+Date: Fri, 18 Sep 2026 09:20:04 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: Thread for updating minor properties of tracked regressions
+ [consider ignoring it!]
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+References: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: <fb0c84ab-5407-4a17-bbe7-832d8c4a51da@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: <178971600485.343037.12108291595644806955@mxe9fb.netcup.net>
+X-NC-CID: N2+xHyypMsbDolPzWYchSwXELDohD+eoRcRYo2PluS8mDrPwe0g=
 
-On Thu, Sep 17, 2026 at 02:48:36PM +0300, Sakari Ailus wrote:
-> I'll post a patch for this.
 
-Sounds good, I'll drop this one. Thanks.
+
+On 3/9/24 11:18, Thorsten Leemhuis wrote:
+> Hi! This is the start of a thread I'll use for updating minor properties
+> of regressions tracked by regzbot. Consider telling your mailer to
+> ignore this thread, the replies are unlikely to be of relevance for you,
+> but done here to ensure a public paper trail.
+
+#regzbot report:
+https://lore.kernel.org/linux-usb/a3437a3c-cf2a-4034-ae1f-0fb4bad0197b@web.de/
+#regzbot dup
+https://lore.kernel.org/lkml/20260825214237.4179813-1-juan.martinez@amd.com/
+
+#regzbot report:
+https://lore.kernel.org/lkml/20260825214237.4179813-1-juan.martinez@amd.com/
+#regzbot fix: Revert "thunderbolt: Add quirk to reset host interface on
+DMA path teardown for AMD USB4 routers"
+
