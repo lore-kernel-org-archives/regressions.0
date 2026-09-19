@@ -1,163 +1,103 @@
-Received: from mail-wm2-f13.google.com (mail-wm2-f13.google.com [74.125.225.141])
+Received: from mail-pz2-f12.google.com (mail-pz2-f12.google.com [74.125.228.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19ECB3264FD
-	for <regressions@lists.linux.dev>; Sat, 19 Sep 2026 20:08:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.141
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789848507; cv=none; b=W66d7Qcas+tJ4YXwI2Z1rQtVAXN8vCr7CLs5WVoIODnb3oj/tIpoChfCj7YfFtQJqLqJQCcaTlgQmkFHzrdOs/j7PLzXAnqZgeBOiHyYlPTbGxaY6LXBVk31gZNBnXAlD7LWheOnpgceOxA4b1zOI6X3R5xI13HeS0K47ZJiNn8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789848507; c=relaxed/simple;
-	bh=fxNmcfC0DUxhlW8yN2jFhiaC+jhCzmca06tNl7zU15M=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nlDLh9Vly3p1l3G0nd10iitW9H1+i4Juqbvh7uUgMm0PzQUYpv/6mRyzkCPHpUhJWkiRzmLNEy8CE3JPpl+EEd66ARf9HfVgNENa+4xqsTlqfmxzIOnpbzFrryOytsl7R8o/5Z5n5AmmJ+mfwpTjeJa3qs14JlT8gTP9PccuLPc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=pESf94Db; arc=none smtp.client-ip=74.125.225.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8A642DC76A
+	for <regressions@lists.linux.dev>; Sat, 19 Sep 2026 20:53:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.228.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1789851215; cv=pass; b=CkmTUeuwt6oZQitg1sQExUq/1fTt0Z6kprBb+UQf1YgNG4dB0UIf4+D4RRtUrWJza3Pg5nd68DWNyZBxgaq4AFX6J/REe6+dslFUxMOp5/xdSTK0icB6PekXDCXxsKYvgZRG0OnpGlH74v1Vo9y9AwzbQSQ4koSBC/6EdPkIgY0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1789851215; c=relaxed/simple;
+	bh=1yDDpGk7UlB1XRm2igJPt/Nd5az01ELMWZVQ62sfJZk=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=noDlHb04GQmKbXAmYsZqlLHzzHCTmrHo90YwzkGXO6afvTrfd/G+wyfHRy8JnfyvvQtzYJ3mNIVvr07OYFiQaADUqqUpSadBog95Q7wD2Lbe3/eki1qkFgHno8nO+9geA2mIay+e6Rx64Ak9NCj6PRUVk7lWSURr2s4Ovz+fWcU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h3E+ZU4n; arc=pass smtp.client-ip=74.125.228.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pESf94Db"
-Received: by mail-wm2-f13.google.com with SMTP id 5b1f17b1804b1-49e620fa473so10535955e9.1
-        for <regressions@lists.linux.dev>; Sat, 19 Sep 2026 13:08:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h3E+ZU4n"
+Received: by mail-pz2-f12.google.com with SMTP id d2e1a72fcca58-85469e211a0so2127128b3a.1
+        for <regressions@lists.linux.dev>; Sat, 19 Sep 2026 13:53:34 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1789851214; cv=none;
+        d=google.com; s=arc-20260327;
+        b=ShOu3v4wFokcQB9zgJv+8LSEnH0SuDreL+6mPvZGrr9Ho+h4frMLW2sVlCrBALIcIV
+         t6+3bfAQY5MUc1NR+uxNYdnM3hxP1lIjbYTjqCDiv4qXhJZEgLVawxywPkHoyWKHIBBa
+         8M8Dr4heQl1yzxAcYhm4MkZ3ymIcUzWUIjSZl/IHeJ5cGpe1gqkonGzP+WAYAhA4o5la
+         OT/sLkr2ElIAqTwKrmY4MJ63/McEFbxLMlhB804XZo+S4Qtg8ODBSGaN1jLHgbRIfR15
+         aOaSQHsOSBaoVR0Rsn0YayIabh4b5p0lCbRbjFg8XSAcUZq+G5aQuihpHsOfmBgxeZsM
+         OOsw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:from:mime-version:dkim-signature;
+        bh=1yDDpGk7UlB1XRm2igJPt/Nd5az01ELMWZVQ62sfJZk=;
+        fh=UljlgNS0cMFjZRn6Ja04rO2z7hYBDuwT+PEqkxxlfCM=;
+        b=VEXb27Lo27M2cKgPz3T7FD7PHdNdVwX+6RKy58H0JpJsJfG4UVTX7ErBZB3paMUsD6
+         zKFLDzrtZdOtDXJPJzZq26VgknUmymYkVgbEZOQPaYEiZxdqyyqQppNY4+ZL3pILC2ga
+         f11PFMMI4f8jHqJWP6PR1Lxfp5f86KFrsyG4JvrsCkpIdgbBj71g0IGcan+zV/hyQHPb
+         3yVoLirFHd7V++Jt8ZPNtafJtQdJvyS4Cpm+Hfy47L/IRKcqZGJtJbbO51OUB02OzYdN
+         JM+zNWfyy/CnYoxCIywT8Dzj27V42nZJwTtVl7SzakIpK6R40Vpta7izJV+2mZWc1S+G
+         sydA==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1789848504; x=1790453304; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=4zH2coYvkCFk4ebyaBOaXh6iikHxkJzRaCpn2ESsA3w=;
-        b=pESf94DbAgc2cU4wGHfYiHUts3THu9ntWO42EV0KIOC6KuqbwnTOYgwE1lpVrjelbr
-         DUDG18spWaEBBp74+gb4y0HZLVMjINSpuAHOUT7ZSGuyGPQ6vqHXZVH3amg8HQks44zc
-         D65XnUZ0HtkZR7E7MaiONw4Cf/oc0upG58ms/eFweyfXYGTK9CYZHhrhslc8QxQKnB/m
-         Io6dx4SboJtm2hCNnsT8iuD3AcRJAHvqQYhuzDz1DiqDeEqU8mXJnLtlosxVQvDr0WI9
-         GLkjmo54yZzCGJRjhQJRhHGUYAhQhzMe4CDWhDNfv8xmgiJ1Iwhlh2gBtycfuSNdsHkA
-         nF3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789848504; x=1790453304;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+        d=gmail.com; s=20251104; t=1789851214; x=1790456014; darn=lists.linux.dev;
+        h=content-type:cc:to:subject:message-id:date:from:mime-version:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=4zH2coYvkCFk4ebyaBOaXh6iikHxkJzRaCpn2ESsA3w=;
-        b=CKcC6UJ0+kB6D7bDIqaB1UJmqFyAAleMQJwW1PhL2SpTA634v3z0NURxIl6ygnJzfl
-         YtLpCqcCf+SEWnckNG+16JhSVKLsYnB7DyQCUo8r1Sq/UYxGzxriGCOtQ8Rk8GzKpMlS
-         CWpXfbEEyXK/8VOg7QG6ore2D+01T4l52nveAxNFSYE9ZqK0tyN3Eo5aqZ7C0TiC8JeM
-         UM1L5YVg9oNvYPBdpoTfZwMYYOJ6PRQ+4qT5yY3oKjo9IWypp6AkYDgbMVC9FCdHyaHq
-         g6TgVIcj319meBlvWvvDlR9JNxbM2L8mTjXEIMDVO4rF4rkA/6wtrMuYDr2Sx8Ne8O3c
-         ZyAg==
-X-Forwarded-Encrypted: i=1; AKwUvByS6YohymTWsCu6U5Xjor0uvHKiUXJ31Qk77fwsHo3ofupyvY6RWaifodzcQQ/StoytTjj7ig4UlXkO6g==@lists.linux.dev
-X-Gm-Message-State: AFuF++lXskIlxIPOJ6u/ZJQargpRxaF8gIDfHQgrELOsG2Fi0R4HAJ33
-	36ElhKmNQy69yGnA1cmp8xvLt/vgVt6CqEPord6xX2vCrSBmJyae0WEr
-X-Gm-Gg: AYBFou2XX0dt8cbWWFwqnGbEx28jfoSsO2AkCO/ZlgmHAvRRMcooIjRIx8cowXmR3mv
-	8pW7E4h0aEPkexYpm4LO6jAs0iMM0lhA61jBU9p95vOcAd+DTC3MrKN61khM5UI91w38bc3XFfO
-	2EEUdp8mKsQZ4rErOmzqyEIiP8mTNgXCTXlGFXEowPd99+bp9lWJfP2kRTW49EYa0jAvRgX5oCq
-	PS7T1ZlILi3KGS2P7/UGle5tBlFmTL+rj8bcdRGMzh0jcUITpajC+ruVXSyExN44ZsH3OYICrXT
-	PbpJukdGXvF0e7WDs2H2Bw/EC2Ay77Tj3fiypC4mCqidl+RjJI9MxoDp0w9a659rtDuG+oYeFls
-	P1la5YbtGLGyjP9m1WKRXC5uSozp6VoN8jVaS4PUpT/oh85zjmT+TaGibyxPekaCMX79j+nVbF+
-	CG7GLAvn3ZYejq6cDof7tApzaVlxLWzAFjk4oPRk635iMNBo+Ss5tOBh4jhJ+LPKW57rIf9svpn
-	IT4GlsHTIJ6/FUNzE3r0qVjrQK9l/7tLiyURbXO30vAzgeI80XlOZCh3Bx6WORMmk9Oci8=
-X-Received: by 2002:a05:600c:1989:b0:49c:e42b:a4ac with SMTP id 5b1f17b1804b1-49fc5714d14mr89393375e9.11.1789848504060;
-        Sat, 19 Sep 2026 13:08:24 -0700 (PDT)
-Received: from localhost ([188.234.148.119])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49fc56aab7csm115777395e9.1.2026.09.19.13.08.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 19 Sep 2026 13:08:23 -0700 (PDT)
-From: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-To: Harry Wentland <harry.wentland@amd.com>,
-	Leo Li <sunpeng.li@amd.com>,
-	Rodrigo Siqueira <siqueira@igalia.com>,
-	Alex Deucher <alexander.deucher@amd.com>
-Cc: Fangzhi Zuo <Jerry.Zuo@amd.com>,
-	Aurabindo Pillai <aurabindo.pillai@amd.com>,
-	George Zhang <george.zhang@amd.com>,
-	amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: Re: [REGRESSION 7.3] drm/amd/display: single-frame scanout corruption on DCN32 at 120 Hz since a637a140ab86
-Date: Sun, 20 Sep 2026 01:08:20 +0500
-Message-ID: <20260919200820.799243-1-mikhail.v.gavrilov@gmail.com>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <20260902073222.206801-1-mikhail.v.gavrilov@gmail.com>
-References: <20260902073222.206801-1-mikhail.v.gavrilov@gmail.com>
+        bh=1yDDpGk7UlB1XRm2igJPt/Nd5az01ELMWZVQ62sfJZk=;
+        b=h3E+ZU4nWHW2DAoa4DGD7sG/d05W9dgbbE8y7iJYKBo3M2mVjcVdwB7uJpwR/WYcI1
+         CjUCydWnXMSnds4DUzhEW4QA0IkHb2RelMbEjUCvf6n41rQCeAtHtRACqxKTmK9fRM8m
+         FhnXRT+ZSoFgelkmWUYX1EL8QcmFvOHbDB7fH0BlbOLbv4Ii9kQoHspGUDuOswsF9oX8
+         jDzx1IIXe2oxVAn+UammUwCulVxy8w0HR8UY7d7eLtiQM5UyuyJ2mTrAillXjMCMpq8W
+         K6nuAmW5p2oUeyR9Qs9toOyap86FIHHl2lb+6yWom+BZwE9d73+fjq0yk22UTWdE7JCT
+         iehg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1789851214; x=1790456014;
+        h=content-type:cc:to:subject:message-id:date:from:mime-version
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=1yDDpGk7UlB1XRm2igJPt/Nd5az01ELMWZVQ62sfJZk=;
+        b=w+NaWAPpD3dR2f7hJmS9DUlEwKpT/T50d6fzX/D4bSux5nZCJ06rm2dDZOY+KvYcb9
+         sQSTlTMhCe2m7cOn4YtCyRAix28HPsl2U7hS9THN7gYNhSDUO/zwHuVACLLJwMBsvYjY
+         C6qr8uAxRXLD0MISaONFKO4hs6ePdg2Vz4ut58Cfwdkf06UmU6XiH/5IgUesoe9YPZl0
+         2NGIwgRbitSawX/s2O1vRA2KNkGIxRjFqlVl4074Je7j8YPP8kSNl+bioFHDIkntip61
+         9r1U8Q+HbzfPQVh1KBOJoZ9IAdeeca3CjdYz6SloBG5DvHQ3FFVaVj9BhD5mMUCW9Pqc
+         zCHA==
+X-Forwarded-Encrypted: i=1; AKwUvBz9lSQ0GLrNYwt8tRNn+jXcWjJZRuLVMH7lS6sQQmneFCy1tYkcQwfxDsRVU0vdXlGt2xHAn1y1Kyaz9Q==@lists.linux.dev
+X-Gm-Message-State: AFuF++lF+4KnJvwX82XcEFkYbltpWvhRFjnxkJpiNgda0wOYgD3y6BXr
+	d9KQlpa8eIf1bORAxQwz5McV2/rkflkedLUxRqootl8ZC6GYoIR2O98WeBXvZCuAJL+ystJOV9K
+	EXC2ffpG8v3uWk3Yg/WW5vxM47gtCLiA=
+X-Gm-Gg: AYBFou3B/Xpw9XWmqFqycKFDVCEEgBXBRRVZmmeXccJQD4obrh1iZz/CSU9G+6XLg8n
+	dJdU43aeAL5fr8ZVTmgs0EDrg1HAjCdfDLd1FCJQS1b9Eqr2QVpNNJfkZmkVqTWoIhwNijklWpu
+	cgD/Uw5YucwSwo9jz74+0ghriFErSfirMu7Iy8jfXvJFutMVJobcTGWYweEb2iv/QA8ina1rGI4
+	iSyZMZhEMQEqxAps+Gt6vJnCxGYlQ847xTJ+Aq4NuuqabIuFJQkvRLGA49EqbDnymBSKcSc7Lp5
+	zS4m1ygbqAWPlNfBkZVufjkGvOoDpDQov+zXhvdp2qAVBWwNNbD8ygxexJCzsUeAz//srsGeTN2
+	Dfh+xXbeUdxVlPhRdAbqbaJBx4vdeJy0sN71uJ7l5yXkdOTwIqwI7hRA9oFV4AP0GYrTas1xS
+X-Received: by 2002:a05:6a21:6b01:b0:3da:b089:dba4 with SMTP id
+ adf61e73a8af0-3dd8c3fc826mr11732141637.2.1789851214024; Sat, 19 Sep 2026
+ 13:53:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: David Lomas <david.s.lomas@gmail.com>
+Date: Sat, 19 Sep 2026 21:52:57 +0100
+X-Gm-Features: AcwNN1VByzJrKqU7LMzWxWek7XyZ9CB60Q9hWtTQdOYL4Vi6JhYXo8yhZonG_r8
+Message-ID: <CALjEBWT9wyBYtWPgtg8Xd_FxRU_XnatzQMcwMB9_P2Fdj83+cQ@mail.gmail.com>
+Subject: Re: [PATCH 6.18 0167/1250] PM: hibernate: call preallocate_image()
+ after freeze prepare
+To: h.haechoc+kernel@gmail.com
+Cc: linux-pm@vger.kernel.org, rafael.j.wysocki@intel.com, 
+	matthew.leach@collabora.com, gregkh@linuxfoundation.org, 
+	stable@vger.kernel.org, regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-Following up on my own correction: the attribution to a637a140ab86 is back,
-and this time on a comparison that does not have the flaw the first one had.
+Same commit, same symptom: my report with the blocked-task backtrace
+is at https://lore.kernel.org/all/CALjEBWQo0-Sdimo+aRNKUQvgDGw=jBFCcfwCXaqVdtoPrHLAQA@mail.gmail.com/
+(XPS 13 9360, 8 GB, zswap). The hibernating task sits in
+throttle_direct_reclaim() waiting for kswapd, which
+freeze_kernel_threads() froze just before
+hibernate_preallocate_memory() ran.
 
-In my previous mail I withdrew the 90x figure because the rate turned out to
-depend on the machine's recent load and my two runs had not controlled for
-it.  I have now measured the commit against its immediate parent, in matched
-conditions, and the difference is there without that confound.
+#regzbot introduced: 783c8109844503bd1c35dab41b6d5fd074a9f131
 
-  parent  1d8327353de6 ("drm/amd/display: Fix VABC Init and OLED Support")
-  commit  a637a140ab86 ("drm/amd/display: Allocate DCN32/1 dmub memory to GTT")
-
-Same machine, same display, same 3840x2160@120 mode, same .config, ordinary
-desktop use, no game in either run, about eleven hours each:
-
-                          parent            commit
-  observation             11.0 h            11.6 h
-  eligible frames       3,019,571         3,632,444
-  events                        7               293
-  per 1000 eligible        0.0023            0.0807
-  95% interval      0.0006-0.0040     0.0714-0.0899
-
-That is 35x, with the intervals more than a decade apart.
-
-"Events" counts only frames where all three CRC registers moved, which is
-what the artefact does.  The single-frame content flicker that moves only
-the luma CRC serves as a built-in control, and it did not move with the
-kernel: 0.0020 per 1000 on the parent against 0.0008 on the commit.
-
-
-The load confound does not reach this
--------------------------------------
-
-Both runs began immediately after a reboot, which resets the state, and
-neither had any load yet in its first hour:
-
-  parent : 0 events in 434,204 eligible frames
-  commit : 52 events in 349,718 eligible frames  (0.149 per 1000)
-
-So the difference is present before anything could have excited it.
-
-The shape differs too, not only the rate.  On the parent the worst
-five-minute bucket in eleven hours contained 2 events, and no bucket
-reached 3.  On the commit the worst contained 30, and 28 of 138 buckets
-reached 3 or more: the excited state comes and goes by itself there, and
-on the parent it never appeared at all.
-
-For completeness: the commit run does contain three windows where almost no
-frame was eligible - roughly 14:30-15:25, 21:10-21:25 and 23:45-23:55 -
-which is what fullscreen content looks like in this data, and the parent run
-has no such window.  The first-hour figures above are free of that, and the
-rate is normalised per eligible frame throughout, but I would rather point
-it out than have it found.
-
-
-What this does and does not settle
-----------------------------------
-
-It restores a637a140ab86 as the point where this starts on DCN3.2.  What I
-said in the correction about the state machine still holds and is
-independent of it: heavy GPU load excites the artefact, a long spell at
-60 Hz or a reboot calms it, and DTN snapshots in the excited state are
-byte-identical to quiet-state ones.  Those were measured on kernels that
-already contain the commit; the parent simply never leaves the quiet state.
-
-I still have no mechanism.  The commit moves every DMUB FB window out of
-VRAM into GTT, and I cannot see how that produces one corrupted scanout
-frame while leaving every register in the DTN dump unchanged.
-
-The GitLab issue has been updated with the same numbers:
-
-  https://gitlab.freedesktop.org/drm/amd/-/work_items/5714
-
-#regzbot introduced: a637a140ab86
-
-Thanks,
-Mikhail Gavrilov
+David
