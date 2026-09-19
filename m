@@ -1,132 +1,135 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.162])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED6A019B5A3;
-	Fri, 18 Sep 2026 22:23:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 573E431B828
+	for <regressions@lists.linux.dev>; Sat, 19 Sep 2026 06:20:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.162
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789770189; cv=none; b=ccILrvbLF9jDgkwh16PnWRBsDIaQ92OV3A7haY+bNRfp65neSKJXtv8I9n5XpuGKMd/SrcO1afO+p8VZAAEeEWRVxGv14TSWtPkxbabYpFg0daBkvza+jU0MW6cNMWeZ6VNsNWBUAsVxtLXfvM9731Fq9jhYvxHNB6j6LWtrBN8=
+	t=1789798860; cv=none; b=MDbk90+bi7jWNT6Gb9N2njOqrGY7S1Pg0Ss2gW9FVCx6idTKxY0OMQsKAdhnISaBktRSvpu2UTuSsbXIHnGPnmWoKib3XPTdhExrVAbG+jzpB8U+L29M0K6ZW/CdXfAQZ+04LBTIaihc3DwPXxdN1knZe9Nl5PPl2KQbQghGoLA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789770189; c=relaxed/simple;
-	bh=nucvwISXMCDKMHV4jkfXUTO7Xx/vX5jFdJJQOxsGeFM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=JYUFIoEM49fQGKHlVrbvOUEXJpc6hV75g+yaNMuxA3Jq4KSwEgBu0u8wJ/FRjGdI+q6rY6dlx82UM1bymyz/yZdSNe/M7IpSDmWQdVX1jZyHeMCKTJvBOL7Rzy/+Ejhmrg6M+/r6gZaEQ/MinjN3OENrhJ2BhYwa1fdnHDYt82s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OPbZz5ah; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789798860; c=relaxed/simple;
+	bh=Bmt68BZpzEYhOybCAvUjeIl8rB2amjyuAtIJ+oUeZJs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=Coc5BzbeI54gcEca9XB+nynm97Y39BlGhHTDxemT/HMYKWOEQ0QmMlAG1XAUKtm14xzAPUCO4deoPR5FB9sxS4c0vMy8yk16oYQKyiNjFMzIMzHFTUxDyHL7B7RireihBYtnUHxSdh3pvYSUiPV7UlR7LfsCp9lv8DTiIO5VsZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=hqri1s63; arc=none smtp.client-ip=188.68.63.162
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OPbZz5ah"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53B611F000FF;
-	Fri, 18 Sep 2026 22:23:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789770187;
-	bh=aadCeXW0ciM6vLWCVdfuHHJvH4AslTQpNsGe5hz/Ry8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To;
-	b=OPbZz5ahJ9sLLgQIf3lt69hzVr8HxIVnxzlqzjY2Hh0MMVxgKiBqp3vEk6IxtayRw
-	 Zxld/ydvwMA06F6xDGgfftaTE2mJZ3IbVG843iflMfUHO4k7bfA5hoEG3OaKxwsMGT
-	 7Dt6plr9ZCHB/xI8GxvHppVsMlVcL5z4iTHMKd09h+KftaHvR15nd+K8sOQg2rxboH
-	 jAli1JZhQwsnL4iKNeWn6SRtnsubRZ9E0Y9SjFC65iaqc7nKrLwgWRFcaraz2EYkKP
-	 +e6X2ZatVAFEI2fn+BeukdDAzce0WX2ewUQMLICcu+xsy534pvf38+Mw6EWijg+6je
-	 5oCjPFj42A/UQ==
-Date: Fri, 18 Sep 2026 17:23:05 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Josh Perry <josh@6bit.com>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>, bhelgaas@google.com,
-	Mario Limonciello <mario.limonciello@amd.com>, hkallweit1@gmail.com,
-	nic_swsd@realtek.com, rafael@kernel.org, linux-pci@vger.kernel.org,
-	netdev@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: [REGRESSION 6.16] r8169 =?utf-8?Q?RTL8?=
- =?utf-8?Q?168h=2F8111h_fails_to_probe_=E2=80=94_=22Unable_to_change_power?=
- =?utf-8?Q?_state_from_D3cold_to_D0=22_=E2=80=94?= bisected to 4d4c10f763d7
-Message-ID: <20260918222305.GA1200870@bhelgaas>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="hqri1s63"
+Received: from mors-relay-8201.netcup.net (localhost [127.0.0.1])
+	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4hmzrL4qYxz46LF;
+	Sat, 19 Sep 2026 08:20:34 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
+	s=key2; t=1789798834;
+	bh=Bmt68BZpzEYhOybCAvUjeIl8rB2amjyuAtIJ+oUeZJs=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=hqri1s63beSm0gNcD3pst5HiGp/PbW95KUO0u17epjBdwj/Weaa7GCMQ7CIFOg5Jg
+	 NwMr5CtGFmd2Q0TZKNBVJjn6NLZhdDWCb9YZEAy7Ki5L6A0hoKw0rendgRhNxXCs21
+	 GzSh7xU4Y/4GqkU25Eags42XoHYoA1mbOMG7X9Mn7roM2ZEp6MSmUMkE9pu3actTl4
+	 oqTr1WQBgax7zM5gN7CMlqTJr+ihWKFgje6FE1qRa9IAABvrimu7VjXfUcBITnJfry
+	 1NiXxkf3WxZYhhJtBGvevLQATKOYpa7EJx5IEUaJgNycs4EQtIMSqL3DsNYv6/t+9q
+	 6wJQdRmzZ5j1w==
+Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
+	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4hmzqH3WmBz46v6;
+	Sat, 19 Sep 2026 08:19:39 +0200 (CEST)
+Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4hmzqH1LcPz8sZh;
+	Sat, 19 Sep 2026 08:19:39 +0200 (CEST)
+Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 8F25E5F936;
+	Sat, 19 Sep 2026 08:19:34 +0200 (CEST)
+Authentication-Results: mxe9fb;
+        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
+Received-SPF: pass (mxe9fb: connection is authenticated)
+Message-ID: <ba7d91b6-61b4-48b9-8f33-b616e5c02d48@leemhuis.info>
+Date: Sat, 19 Sep 2026 08:19:33 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1ad46724-18a6-4cc1-9c40-f34fbf0f0b7c@amd.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] ASUS Zenbook A14 fails to boot (Internal error:
+ synchronous external abort)
+To: Aoto Tokizawa <aoto.tokizawa@gmail.com>, regressions@lists.linux.dev
+References: 
+ <CANxGDDEp4FrTo5cqhwMOqqm7ukh-G9z_77eVWiTgbTzNNYMRWA@mail.gmail.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: de-DE, en-US
+In-Reply-To: 
+ <CANxGDDEp4FrTo5cqhwMOqqm7ukh-G9z_77eVWiTgbTzNNYMRWA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-PPP-Message-ID: <178979877479.110377.3494495949889457527@mxe9fb.netcup.net>
+X-Rspamd-Server: rspamd-worker-8404
+X-Rspamd-Queue-Id: 8F25E5F936
+X-NC-CID: 9JsQdtS/oYwtad6q+j0m/ZNgr0Yk756UwT06uEgxvBXKZ0rBGpo=
 
-On Sun, Jun 21, 2026 at 12:24:42PM -0700, Mario Limonciello wrote:
-> On 6/17/26 01:32, Thorsten Leemhuis wrote:
-> > On 6/12/26 03:07, Josh Perry wrote:
-> > > #regzbot introduced: 4d4c10f763d7
-> > > 
-> > > Since v6.16 one of two onboard RTL8168h/8111h NICs on this board fails
-> > > to probe on boot; the device drops to D3cold and the driver can't bring
-> > > it back:
-> > 
-> > FWIW, that commit is 4d4c10f763d780 ("PCI: Explicitly put devices into
-> > D0 when initializing") [v6.16-rc1] from Mario, who is already CCed, but
-> > looks like might be on holiday or something due to inactivity on the
-> > lists in the recent days. So it might take a few days before this moves on.
-> > 
-> > Josh, this is not my area of expertise, but there are two things I guess
-> > might be helpful:
-> > 
-> > * retry with 7.1
-> > * upload "dmesg" and "sudo lspci -vvv" output from working and broken
-> > kernels somewhere (like bugzilla.kernel.org).
+Hi! Thx for the report.
+
+On 9/18/26 22:53, Aoto Tokizawa wrote:
 > 
-> Yes; please retry with mainline.  We already had multiple regressions from
-> that commit fixed, so if you bisected down to this commit then it's
-> plausible that there is already a fix.
+> Recently Linux 7.3.rc3 fails to boot really early on. Linux 7.2.6
+> boots just fine
 
-Thanks a lot for your bisection and detailed report, Josh.  Can you
-verify whether this is still a problem?
+Just wondering: did earlier 7.3-rc versions work? Sounds a bit like it,
+but I doubt that's what you meant.
 
-The only commit that claims to fix 4d4c10f763d7 ("PCI: Explicitly put
-devices into D0 when initializing") is 907a7a2e5bf4 ("PCI/PM: Set up
-runtime PM even for devices without PCI PM"), and you already verified
-that it did not fix the problem (both appeared in v6.16).
+> (with identical sysroot). The following was
+> transcribed by an LLM from an image I took with a camera
+> (unfortunately no text made it to systemd-journald).
 
-c855c9921da7 ("PCI/ASPM: Don't reconfigure ASPM entering low-power
-state"), which appeared in v7.2-rc1, mentions a similar symptom
-("Unable to change power state from D3hot to D0, device inaccessible") 
-so it's possible that it would fix the issue.
+Maybe you are lucky and someone has an idea what might cause this, but I
+doubt that will happen. In that case it would be great if you could
+perform a git bisection to find out what's wrong:
 
-> > >    r8169 0000:02:00.0 eth0: RTL8168h/8111h, 00:2b:67:48:40:01, XID 541,
-> > > IRQ 137
-> > >    r8169 0000:04:00.0: Unable to change power state from D3cold to D0,
-> > > device inaccessible
-> > >    r8169 0000:04:00.0: Mem-Wr-Inval unavailable
-> > >    r8169 0000:04:00.0: error -EIO: PCI read failed
-> > >    r8169 0000:04:00.0: probe with driver r8169 failed with error -5
-> > > 
-> > > The board has two identical RTL8168h NICs (both XID 541): 0000:02:00.0
-> > > and 0000:04:00.0. Only 04:00.0 fails — its sibling 02:00.0, on a
-> > > different root port, probes and works normally on the very same kernel
-> > > and boot. The failing NIC then does not appear (no enp4s0), taking the
-> > > machine's WAN offline. This strongly suggests the problem is port/
-> > > topology-specific rather than device- or driver-specific: the upstream
-> > > port behind 04:00.0 is placed in D3cold and the endpoint cannot be
-> > > resumed to D0.
-> > > 
-> > > Hardware: RTL8168h/8111h, XID 541, PCI 04:00.0 (onboard 1GbE).
-> > > Platform: Lenovo ThinkCentre M90n-1 (11AHS0B200), BIOS M2AKT49A
-> > > (2026-03-25, latest available). Firmware is current, so this is not a
-> > > platform-firmware issue.
-> > > 
-> > > Bisection: v6.15 good, v6.16 bad (verified by booting both). I then
-> > > reverted 4d4c10f763d7 ("PCI: Explicitly put devices into D0 when
-> > > initializing") together with its follow-up 907a7a2e5bf4 ("PCI/PM: Set up
-> > > runtime PM even for devices without PCI PM") on top of 6.16.7: the NIC
-> > > probes and links at 1Gbps/Full normally, with no workaround:
-> > > 
-> > >    r8169 0000:04:00.0 eth1: RTL8168h/8111h, 00:2b:67:48:40:02, XID 541,
-> > > IRQ 138
-> > >    r8169 0000:04:00.0 enp4s0: Link is Up - 1Gbps/Full - flow control rx/tx
-> > > 
-> > > Workaround: booting an unmodified v6.16+ kernel with pcie_port_pm=off
-> > > also restores the NIC, which is consistent with the upstream port being
-> > > placed in D3cold and the device failing to resume to D0 after the
-> > > explicit-D0 init change.
-> > > 
-> > > The follow-up 907a7a2e5bf4 does not fix this resume case: v6.18.33 is
-> > > still affected (retested today on current firmware).
-> > > 
-> > > Happy to test patches or provide full dmesg / lspci.
-> > > 
-> > 
+https://docs.kernel.org/admin-guide/bug-bisect.html
+https://docs.kernel.org/admin-guide/verify-bugs-and-bisect-regressions.html
+
+But one more thing:
+
+> [    0.177281] Internal error: synchronous external abort:
+> 0000000096001610 [#1] SMP
+> [    0.177446] Modules linked in:
+> [    0.177460] CPU: 7 UID: 0 PID: 57 Comm: kworker/u34:0 Tainted: G
+> M    W          7.3.0-rc3-1-aarch64-rc-ARCH #1 PREEMPT(full)
+> [    0.177495] Tainted: [M]=MACHINE_CHECK, [W]=WARN
+
+These taints could mean that this is a follow-up error; or is 7.2.y
+tainted like this, too?
+
+Ciao, Thorsten
+
+> [    0.177510] Hardware name: ASUSTeK COMPUTER INC. ASUS Zenbook A14
+> UX3407QA_UX3407QA/UX3407QA, BIOS UX3407QA.311 08/22/2025
+> [    0.177542] Workqueue: events_unbound deferred_probe_work_func
+> [    0.177564] pstate: 214000c5 (nzCv daIF +PAN -UAO -TCO +DIT -SSBS BTYPE=--)
+> [    0.177586] pc : regmap_mmio_read32le+0xc/0x24
+> [    0.177602] lr : regmap_mmio_read+0x40/0x68
+> [    0.177616] sp : ffff800083783920
+> [    0.177626] x29: ffff800083783920 x28: ffff800083018348 x27: ffff8000b1e8b700
+> [    0.177649] x26: ffff800081e8b588 x25: 0000000000000006 x24: 0000000000000000
+> [    0.177672] x23: ffff000804cc3800 x22: ffff8000837839d4 x21: 000000000000d008
+> [    0.177695] x20: ffff8000837839d4 x19: ffff000805731380 x18: 000000000000000a
+> [    0.177717] x17: ffff000804dde980 x16: ffff0000837836f8 x15: 0000000000000000
+> [    0.177741] x14: 0000000000000002 x13: 0000000000000001 x12: 0000000000000000
+> [    0.177763] x11: 00000000003662c5 x10: 0000000000070a78 x9 : 0000000000000004
+> [    0.177786] x8 : ffff800083783900 x7 : ffff8000837839f0 x6 : 000000000000d008
+> [    0.177808] x5 : ffff8000837839d4 x4 : ffff000804cc3800 x3 : ffff8000b0faac28
+> [    0.177831] x2 : ffff8000b0fab368 x1 : 000000000000d008 x0 : ffff8000b437d008
+> [    0.177854] Call trace:
+> [    0.177863]  regmap_mmio_read32le+0xc/0x24 (P)
 > 
+> Text was cut-off, but in another image I got more of a call trace:
+> 
+> [    0.177554]  regmap_mmio_read32le+0xc/0x24 (P)
+> [    0.177570]  _regmap_bus_reg_read+0x68/0xac
+> [    0.177584]   regmap_read+0x64/0x210
+> 
+> Let me know what I can do.
+> 
+
