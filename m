@@ -1,124 +1,163 @@
-Received: from mail-pj2-f16.google.com (mail-pj2-f16.google.com [74.125.227.144])
+Received: from mail-wm2-f13.google.com (mail-wm2-f13.google.com [74.125.225.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FC5D32AAA8
-	for <regressions@lists.linux.dev>; Sat, 19 Sep 2026 18:11:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.227.144
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19ECB3264FD
+	for <regressions@lists.linux.dev>; Sat, 19 Sep 2026 20:08:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789841512; cv=none; b=t3sV55P54jJkLfA6/3LeD42T9hfve+2OD5WYb/kVEJgHlFsAwj3QrPb4dOD3SajSWrzy5kheXhMTn2seQWQpLkl2wh/RO6nPhNzY2Op2HwLHvnl1vhGxAAlYk0Y/kznR12rPFs5vq5NSYEiUWpJM05aIhsu1QvaDwr1H8EAuCqQ=
+	t=1789848507; cv=none; b=W66d7Qcas+tJ4YXwI2Z1rQtVAXN8vCr7CLs5WVoIODnb3oj/tIpoChfCj7YfFtQJqLqJQCcaTlgQmkFHzrdOs/j7PLzXAnqZgeBOiHyYlPTbGxaY6LXBVk31gZNBnXAlD7LWheOnpgceOxA4b1zOI6X3R5xI13HeS0K47ZJiNn8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789841512; c=relaxed/simple;
-	bh=0PG/SWLYExPZcuxoY1bWfDz5SxtM34z1QYtrvGHDGEU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=W45E7/QJkldVFIFLZOWy7c1VOXwceQdFCQj7BiVQKiWehwniP25k6o6K1/7EY0Pg06rvf5MB2drg3zEv0OqpXaz3CxVM6zzEqnKUJkSXwJvWURrMsMVh0Qbkt5t+MUXPrPxp2m17Hy3vZ+uW0jMUreAiUlcxrMsKAPCjdC6A5Bs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G723bX2B; arc=none smtp.client-ip=74.125.227.144
+	s=arc-20240116; t=1789848507; c=relaxed/simple;
+	bh=fxNmcfC0DUxhlW8yN2jFhiaC+jhCzmca06tNl7zU15M=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=nlDLh9Vly3p1l3G0nd10iitW9H1+i4Juqbvh7uUgMm0PzQUYpv/6mRyzkCPHpUhJWkiRzmLNEy8CE3JPpl+EEd66ARf9HfVgNENa+4xqsTlqfmxzIOnpbzFrryOytsl7R8o/5Z5n5AmmJ+mfwpTjeJa3qs14JlT8gTP9PccuLPc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=pESf94Db; arc=none smtp.client-ip=74.125.225.141
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G723bX2B"
-Received: by mail-pj2-f16.google.com with SMTP id 98e67ed59e1d1-396ccd78e6eso678774a91.0
-        for <regressions@lists.linux.dev>; Sat, 19 Sep 2026 11:11:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pESf94Db"
+Received: by mail-wm2-f13.google.com with SMTP id 5b1f17b1804b1-49e620fa473so10535955e9.1
+        for <regressions@lists.linux.dev>; Sat, 19 Sep 2026 13:08:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1789841508; x=1790446308; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=iSdi3wdBQsgY36I5hr86R3evxPH8QemSHvp8ROcgqiw=;
-        b=G723bX2B5gKh8Niwo0CBtz3n8dqwvAIrZZI8VyH99hgcAj382V9GdOQ1o46CUZ0O/n
-         tTJSek4UB2HJH9cZYKtuisVfYnxPmSq4mgHT1twyO5xiyn8UsipDshC578RtFoL63Lh4
-         AtaROYduzkM74XMTw08hGnTbwpGouZ2egV9CJh/mWy7rG0ff0wD2WotMaZ1fnsVLBNB/
-         W043hCKgud4gkfQVtoWP6ZwC7SScYVvHPwk5+JTlSfhWHRw+pVnVyNelh7NMrdm3baRv
-         /lPOv8kIy3UmaJ2ZT3Mc1XxdkTMkSLEVZY4K7y0G2DCibH907j38rPWQUB5fQXWVY4VB
-         nnfw==
+        d=gmail.com; s=20251104; t=1789848504; x=1790453304; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=4zH2coYvkCFk4ebyaBOaXh6iikHxkJzRaCpn2ESsA3w=;
+        b=pESf94DbAgc2cU4wGHfYiHUts3THu9ntWO42EV0KIOC6KuqbwnTOYgwE1lpVrjelbr
+         DUDG18spWaEBBp74+gb4y0HZLVMjINSpuAHOUT7ZSGuyGPQ6vqHXZVH3amg8HQks44zc
+         D65XnUZ0HtkZR7E7MaiONw4Cf/oc0upG58ms/eFweyfXYGTK9CYZHhrhslc8QxQKnB/m
+         Io6dx4SboJtm2hCNnsT8iuD3AcRJAHvqQYhuzDz1DiqDeEqU8mXJnLtlosxVQvDr0WI9
+         GLkjmo54yZzCGJRjhQJRhHGUYAhQhzMe4CDWhDNfv8xmgiJ1Iwhlh2gBtycfuSNdsHkA
+         nF3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789841508; x=1790446308;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=iSdi3wdBQsgY36I5hr86R3evxPH8QemSHvp8ROcgqiw=;
-        b=pcjWrhfSVA14YPSGSZYRUkQbOc5uxhNCr56dUy2WydIrBDQCSw2VJXof+f32iNeYrs
-         cMkwHKMF1fOfboe2xkZbis2D8xd6tn18b4UK+ssVNIfYL6r9P8WjIsyTJdntLxLpfHnU
-         DZHm11VSUt8T9z0bGVub1jyRjnXVoaUENLMPczCdKdgW/wr21qVs2h3/H/plT8xxo3vn
-         Iv8HaMx+AwWd4A9Ms31EsfuhBuyETBo6OHJw8Z9mxncoiaIC3/txBmulbC+fafmC0lh5
-         nQe3Rq7i4sSQZVp6YCkO5QUbhXJpkoL3OWAJj2tQKzKKumyLBRzz5z6v5OHefDOM2GFh
-         MR1w==
-X-Forwarded-Encrypted: i=1; AKwUvBy7XkaYz+pceasEQOAZwTPUIcD8H3taNll8LSnwg+z+3x7r54M8HywcqOgnkq7q7gXIR9hmGnGTrvEATw==@lists.linux.dev
-X-Gm-Message-State: AFuF++noTRH8fngSYLkzVb/d93W9Uk18kRJ6fWbZtSQ1EUOP2Of8FGnU
-	TfwtzY8C84p4IuwVS2iy4DxSxEfGn4fbYIaRGXdI2xtMTu3z5yo5I2TQ
-X-Gm-Gg: AYBFou2VrhYypJb5hGlbrqOBZ8imNxpnWYQBNrWzauFfgq2r+WiZpp9+8QWzjWaJEot
-	PF9MXr/E/0NX6F18ziIsK3kD/X5pFTLsOarAiO9EH0aNFL7XKSf7RMKCcBLjbsbGa8HrIUvOsGo
-	LHgvkOh+WHXeNOyyXVTtmexLlpx3ByVpHEh+rw43R1uGttpKb/xd2I82lC2z1x/byR2jaMFnIE1
-	Lukbevm7IlfVRfFwkdexFOl8AXTbGuW9uyCj6pNYi65XbJn/Ge+MiO6R0FXTPTobxEfUyPSzyLm
-	xOwzvNum8lJzWCdiisM63vx5a55BLGI3wnEfrPnoRmILAtt9IHou3hEgV/OIhECBFIa7E7gd9di
-	uVx8fzNyK88vEIEtckljYMzuxLDv5G0blwb5KYT/hhixnnaQJrGkKkDHyP+a9p1za2E8tLANqk3
-	kpeC90tG8bq+DeE/pBl/RCBcsC1wtRMe2oXJ6BDdPX34Ur1oUYtkV4J84jnfEULonior/HQj5sa
-	aCtpcX4nm+dTdIuSVeKDb4WAVlB3eCxtK5Q+ws=
-X-Received: by 2002:a17:90b:4a11:b0:39e:6c68:fd93 with SMTP id 98e67ed59e1d1-39e6c68fef4mr3104167a91.40.1789841507612;
-        Sat, 19 Sep 2026 11:11:47 -0700 (PDT)
-Received: from eggarch ([2409:40c4:1019:17ac:cb7e:823e:6cc7:69fc])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-39e6c37c8e7sm5468055a91.9.2026.09.19.11.11.41
+        d=1e100.net; s=20260707; t=1789848504; x=1790453304;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=4zH2coYvkCFk4ebyaBOaXh6iikHxkJzRaCpn2ESsA3w=;
+        b=CKcC6UJ0+kB6D7bDIqaB1UJmqFyAAleMQJwW1PhL2SpTA634v3z0NURxIl6ygnJzfl
+         YtLpCqcCf+SEWnckNG+16JhSVKLsYnB7DyQCUo8r1Sq/UYxGzxriGCOtQ8Rk8GzKpMlS
+         CWpXfbEEyXK/8VOg7QG6ore2D+01T4l52nveAxNFSYE9ZqK0tyN3Eo5aqZ7C0TiC8JeM
+         UM1L5YVg9oNvYPBdpoTfZwMYYOJ6PRQ+4qT5yY3oKjo9IWypp6AkYDgbMVC9FCdHyaHq
+         g6TgVIcj319meBlvWvvDlR9JNxbM2L8mTjXEIMDVO4rF4rkA/6wtrMuYDr2Sx8Ne8O3c
+         ZyAg==
+X-Forwarded-Encrypted: i=1; AKwUvByS6YohymTWsCu6U5Xjor0uvHKiUXJ31Qk77fwsHo3ofupyvY6RWaifodzcQQ/StoytTjj7ig4UlXkO6g==@lists.linux.dev
+X-Gm-Message-State: AFuF++lXskIlxIPOJ6u/ZJQargpRxaF8gIDfHQgrELOsG2Fi0R4HAJ33
+	36ElhKmNQy69yGnA1cmp8xvLt/vgVt6CqEPord6xX2vCrSBmJyae0WEr
+X-Gm-Gg: AYBFou2XX0dt8cbWWFwqnGbEx28jfoSsO2AkCO/ZlgmHAvRRMcooIjRIx8cowXmR3mv
+	8pW7E4h0aEPkexYpm4LO6jAs0iMM0lhA61jBU9p95vOcAd+DTC3MrKN61khM5UI91w38bc3XFfO
+	2EEUdp8mKsQZ4rErOmzqyEIiP8mTNgXCTXlGFXEowPd99+bp9lWJfP2kRTW49EYa0jAvRgX5oCq
+	PS7T1ZlILi3KGS2P7/UGle5tBlFmTL+rj8bcdRGMzh0jcUITpajC+ruVXSyExN44ZsH3OYICrXT
+	PbpJukdGXvF0e7WDs2H2Bw/EC2Ay77Tj3fiypC4mCqidl+RjJI9MxoDp0w9a659rtDuG+oYeFls
+	P1la5YbtGLGyjP9m1WKRXC5uSozp6VoN8jVaS4PUpT/oh85zjmT+TaGibyxPekaCMX79j+nVbF+
+	CG7GLAvn3ZYejq6cDof7tApzaVlxLWzAFjk4oPRk635iMNBo+Ss5tOBh4jhJ+LPKW57rIf9svpn
+	IT4GlsHTIJ6/FUNzE3r0qVjrQK9l/7tLiyURbXO30vAzgeI80XlOZCh3Bx6WORMmk9Oci8=
+X-Received: by 2002:a05:600c:1989:b0:49c:e42b:a4ac with SMTP id 5b1f17b1804b1-49fc5714d14mr89393375e9.11.1789848504060;
+        Sat, 19 Sep 2026 13:08:24 -0700 (PDT)
+Received: from localhost ([188.234.148.119])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49fc56aab7csm115777395e9.1.2026.09.19.13.08.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 19 Sep 2026 11:11:47 -0700 (PDT)
-Date: Sat, 19 Sep 2026 23:41:38 +0530
-From: Lovekesh Solanki <lovekeshsolanki00@gmail.com>
-To: Mathias Nyman <mathias.nyman@linux.intel.com>
-Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Michal Pecio <michal.pecio@gmail.com>, Mathieu Fluhr <mathieu.fluhr@gmail.com>, 
-	Mario Limonciello <mario.limonciello@amd.com>, Thorsten Leemhuis <regressions@leemhuis.info>, 
-	regressions@lists.linux.dev, stable@vger.kernel.org
-Subject: Re: [PATCH 2/2] xhci: drop 120ms U3 LFPS wake retry wait from
- runtime resume
-Message-ID: <aq5QXMlNQcBNsMfA@eggarch>
-References: <20260831190349.29590-1-lovekeshsolanki00@gmail.com>
- <20260831190349.29590-2-lovekeshsolanki00@gmail.com>
- <a6a8526f-4b6f-46f7-9d02-05bfe3efcd48@linux.intel.com>
- <apbrp8EaJoIfEg5X@eggarch>
- <1be8e57f-9abe-4b34-bc09-e7934a2fa1bc@linux.intel.com>
- <apg16LtZ-ru9MIBQ@eggarch>
- <082467bf-d045-45d7-b097-97a5790e79d6@linux.intel.com>
- <apq4FFSD2QKG-jUu@eggarch>
- <aqrK5PwpJodCmbdM@eggarch>
- <b80ab121-2409-4ea3-9649-3aea4d1e7507@linux.intel.com>
+        Sat, 19 Sep 2026 13:08:23 -0700 (PDT)
+From: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+To: Harry Wentland <harry.wentland@amd.com>,
+	Leo Li <sunpeng.li@amd.com>,
+	Rodrigo Siqueira <siqueira@igalia.com>,
+	Alex Deucher <alexander.deucher@amd.com>
+Cc: Fangzhi Zuo <Jerry.Zuo@amd.com>,
+	Aurabindo Pillai <aurabindo.pillai@amd.com>,
+	George Zhang <george.zhang@amd.com>,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: Re: [REGRESSION 7.3] drm/amd/display: single-frame scanout corruption on DCN32 at 120 Hz since a637a140ab86
+Date: Sun, 20 Sep 2026 01:08:20 +0500
+Message-ID: <20260919200820.799243-1-mikhail.v.gavrilov@gmail.com>
+X-Mailer: git-send-email 2.55.0
+In-Reply-To: <20260902073222.206801-1-mikhail.v.gavrilov@gmail.com>
+References: <20260902073222.206801-1-mikhail.v.gavrilov@gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b80ab121-2409-4ea3-9649-3aea4d1e7507@linux.intel.com>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Sep 17, 2026 at 11:16:03AM +0300, Mathias Nyman wrote:
-> I don't think there is a need for a new PCI bus specific implementation.
-> pm core then probably handles this already in a generic way.
-> 
-> PCI core probably calls pm core on a PME, which then starts the wakeup,
-> pm core very likely keeps track of which device triggered the wakeup
-> 
-> The wakeup_source structure under power in the device structure (dev->power.wakeup)
-> looks promising.
-> Maybe we can find what we need from there. Hope its fields aren't cleared at the
-> time xhci resume is called.
-I looked into that wakeup_source struct and its path, unfortunately it
-does not seem to carry this information.
+Following up on my own correction: the attribution to a637a140ab86 is back,
+and this time on a comparison that does not have the flaw the first one had.
 
-There's no fields that record the cause of the wakeup event. and all PCI
-wake paths fold into pci_wakeup_event(), the active flag in
-wakeup_source only gets set for 100ms of pm_wakeup_event(&dev->dev, 100) in
-pci_wakeup_event(). then pm_request_resume() runs but its async so it
-may run after active field is cleared.
+In my previous mail I withdrew the 90x figure because the rate turned out to
+depend on the machine's recent load and my two runs had not controlled for
+it.  I have now measured the commit against its immediate parent, in matched
+conditions, and the difference is there without that confound.
 
-So even though PCI core does call PM core, PM core is not tracking the
-cause.
+  parent  1d8327353de6 ("drm/amd/display: Fix VABC Init and OLED Support")
+  commit  a637a140ab86 ("drm/amd/display: Allocate DCN32/1 dmub memory to GTT")
 
-I suppose my above proposal could be changed to a pm core flag that
-may be a better option? Something like a dev->power.wake_resume,
-bus could set it in pci_wakeup_event(), then we add a new resume callback 
-something like pm_runtime_resumed_by_wakeup() and PM core could clear it
-at the end of runtime PM transition.
-But either way only the bus is able to detect PME.
+Same machine, same display, same 3840x2160@120 mode, same .config, ordinary
+desktop use, no game in either run, about eleven hours each:
 
-Regards, 
-Lovekesh
+                          parent            commit
+  observation             11.0 h            11.6 h
+  eligible frames       3,019,571         3,632,444
+  events                        7               293
+  per 1000 eligible        0.0023            0.0807
+  95% interval      0.0006-0.0040     0.0714-0.0899
+
+That is 35x, with the intervals more than a decade apart.
+
+"Events" counts only frames where all three CRC registers moved, which is
+what the artefact does.  The single-frame content flicker that moves only
+the luma CRC serves as a built-in control, and it did not move with the
+kernel: 0.0020 per 1000 on the parent against 0.0008 on the commit.
+
+
+The load confound does not reach this
+-------------------------------------
+
+Both runs began immediately after a reboot, which resets the state, and
+neither had any load yet in its first hour:
+
+  parent : 0 events in 434,204 eligible frames
+  commit : 52 events in 349,718 eligible frames  (0.149 per 1000)
+
+So the difference is present before anything could have excited it.
+
+The shape differs too, not only the rate.  On the parent the worst
+five-minute bucket in eleven hours contained 2 events, and no bucket
+reached 3.  On the commit the worst contained 30, and 28 of 138 buckets
+reached 3 or more: the excited state comes and goes by itself there, and
+on the parent it never appeared at all.
+
+For completeness: the commit run does contain three windows where almost no
+frame was eligible - roughly 14:30-15:25, 21:10-21:25 and 23:45-23:55 -
+which is what fullscreen content looks like in this data, and the parent run
+has no such window.  The first-hour figures above are free of that, and the
+rate is normalised per eligible frame throughout, but I would rather point
+it out than have it found.
+
+
+What this does and does not settle
+----------------------------------
+
+It restores a637a140ab86 as the point where this starts on DCN3.2.  What I
+said in the correction about the state machine still holds and is
+independent of it: heavy GPU load excites the artefact, a long spell at
+60 Hz or a reboot calms it, and DTN snapshots in the excited state are
+byte-identical to quiet-state ones.  Those were measured on kernels that
+already contain the commit; the parent simply never leaves the quiet state.
+
+I still have no mechanism.  The commit moves every DMUB FB window out of
+VRAM into GTT, and I cannot see how that produces one corrupted scanout
+frame while leaving every register in the DTN dump unchanged.
+
+The GitLab issue has been updated with the same numbers:
+
+  https://gitlab.freedesktop.org/drm/amd/-/work_items/5714
+
+#regzbot introduced: a637a140ab86
+
+Thanks,
+Mikhail Gavrilov
