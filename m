@@ -1,207 +1,160 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj2-f13.google.com (mail-pj2-f13.google.com [74.125.227.141])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9B5C37E2EE
-	for <regressions@lists.linux.dev>; Sat, 19 Sep 2026 07:10:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.174
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789801857; cv=none; b=Frdj9VEfIjdaXUT/jOA42JgWqjtvtZWUHaCn6lBgxDuJy3h5z2gFP6bADErlzvsBeyhxRABox3ndHPATGOZ0wisflqaGp4BbF8tszFe+l4qDHvez7/Y9ngXj0a1meFDil5o+rEYoJvfZYUG5E1K2d5s/hn5fPqo9ZhUDaixBLPY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789801857; c=relaxed/simple;
-	bh=bZdbqV7EtOiC5fBo2XUeutjFyA9EgGuLRhfN0TCWfs4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NLe3Aupnd2AdBN10WCcMK39FdSCwuUePlaIvlbHtxstYSHACCLPzr9kz2eH8j8XChvxTPndYUMVRO49PJZD3UPoXM2Ga4cMSXR7neOg3DUa7qqtenR61LEQpEBHsT6UD3r9rp6u1Q6gAuuXBzf0exmA8zsFPy4M55Y8JXYoGXSk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=Nmjufq/G; arc=none smtp.client-ip=188.68.63.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C5963033EC
+	for <regressions@lists.linux.dev>; Sat, 19 Sep 2026 13:48:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.227.141
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1789825684; cv=pass; b=TZo+9JWgtnWeqjJrAGe1ITVv3vpcYFEJOtKzBt/J4eTEjI1PDAbil1JGT5A+fnJNCzjcn4iw97ELQEVxfsLsOUCdOEFQByF+AVeoRFB1E0b15xbGLy2YTciO7zaH3O2845VMjzKBD/lu54AKzIZpIpG9rULDTT55J9mzjhHCv3U=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1789825684; c=relaxed/simple;
+	bh=uxDzFlXIhCWkpp4nn7OscT4I75j1F3IPZnT3erfb0Lk=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=kiAPWsrD46N7vNmTMrXmUD3TDgIQDnak3CVCua9VCrhJlodyVIIqcR7T3e4ZvZD181mwykHrunYu7oTpilBFV1D/jihKiUtdbH8cD1gRpQt/3k8kC5Aah6tzagSBd0fllyXjxCpxam3aSesJDJG/26Mqxmb5m/aMjwP0ocvp/eE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GVPh3R1o; arc=pass smtp.client-ip=74.125.227.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="Nmjufq/G"
-Received: from mors-relay8204.netcup.net (localhost [127.0.0.1])
-	by mors-relay8204.netcup.net (Postfix) with ESMTPS id 4hn0y72CxFz8hFl;
-	Sat, 19 Sep 2026 07:10:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1789801839;
-	bh=bZdbqV7EtOiC5fBo2XUeutjFyA9EgGuLRhfN0TCWfs4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Nmjufq/GaqAPGpGezGdHR+uEGdt1jrrz94XsO+41+ZCHnuaoTiRj/w+bPTcKOgxiu
-	 16KWHh3H20E5/jexdzNNKo0Q6XfjqQhAjjPzmnMICFmXU7+iVFpV2n7j3UI5KMfJtT
-	 7STERaNlTkTfaoGu1Fwq519s1ZeYVYDNw6/wbf5Dr5vymXsakIx0zwYKetIUAlXHHQ
-	 16kVlAiEPBL7GlfMGKzqJ+fgp5hP/Gv5K6kbtJ1VyQ2m7Pb/UVqYwLmO2K+tI0yimQ
-	 /rW0BlSXt8547CqFGqvTEDxWdPEylBVhVyTf/uwOvmhZG36iNEStg9ukOL+SE0xoD2
-	 mPOnu7ewzX1sQ==
-Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay8204.netcup.net (Postfix) with ESMTPS id 4hn0xw4jZ5z8hgx;
-	Sat, 19 Sep 2026 07:10:28 +0000 (UTC)
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4hn0xv4bxfz8svb;
-	Sat, 19 Sep 2026 09:10:27 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 2517D5FC18;
-	Sat, 19 Sep 2026 09:10:20 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <598cd300-dbec-44fc-a670-f575310e6a43@leemhuis.info>
-Date: Sat, 19 Sep 2026 09:10:18 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GVPh3R1o"
+Received: by mail-pj2-f13.google.com with SMTP id 98e67ed59e1d1-39dbdfaef3cso1512542a91.1
+        for <regressions@lists.linux.dev>; Sat, 19 Sep 2026 06:48:02 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1789825682; cv=none;
+        d=google.com; s=arc-20260327;
+        b=pFz/wUbki0uxdK4XI6HL0IQIDp4dabAJdQS8UL9qPiekUgcqaszVgYTX3jFimcTPBp
+         d3IX6UxtH64k6Do+GF/1wZ1ct9CJ5oD/6KDIGTrPl/1Dj5GG1VUWB1Ggw93Z8/WN2Coi
+         RStyWg3VmltWNiEoK5CzEvppwqXeSDv5OIePa0MUYed/vPQ4bHaS3AJooE70Jiqv7F8l
+         hJwaEZCG15qCFxrx1PQY2DvQQbFEaYlNyo2HYO8yUqH5SVnv/UIEvWRrDToA6bqBmO1U
+         ZDlquI2IjmwTGpOqoZDcKpN/AM4Dl0SsSM39Giix39eQXnyc92pGPSdn0TpiVLFkBg+p
+         VjmQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:from:mime-version:dkim-signature;
+        bh=sIIVnS4jjgLWZUNl3bwsvpIjYgvoUL8a8FSJ4KXXWw4=;
+        fh=uhvrDdFg3cQn1OMaP8S83+WpCGUe6gdvVW2zeyVHhpg=;
+        b=jS2ySKh0qFnG/viapl2YtIHqr4BugzVHi3GCgmNvXC4PlYb4nF1otjJFxXifUwP+Ej
+         cH5ir6ky0e/s3rWbJOg/0R/cwzBWcijau43/ZY8YkSeNj4qoSDpB9KocLKPND2uJTPRp
+         EyitQwI6yYvJ3tDbagsI8iD14fHu+5/p8QfeJga7UcAVzSQsiSSiqgXPXIgc7px2YHQ6
+         yIXvWlGdWEAgoP50fErSVZ8Vcj6/ctreQhRLrK9DSjTsfA56M/eDPPRvvkTuSxfhJZPL
+         6QNps0Lzd1EjFvQWxhLrbWW1lWqHxc90Dli+gaRdJ+xRftNj9xek/pcJupQY+vHP7i3H
+         DFjQ==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1789825682; x=1790430482; darn=lists.linux.dev;
+        h=content-type:cc:to:subject:message-id:date:from:mime-version:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=sIIVnS4jjgLWZUNl3bwsvpIjYgvoUL8a8FSJ4KXXWw4=;
+        b=GVPh3R1oUNyc/n3QEsCOlp8mL3zqU3AvbJpVqUlGWXQEtVnPuJ7U+fbvhEMRgBT7Is
+         DEJfbtTg+KNrB+AGg0EuMX7UbVVgBWSV5Mgi3H3BiLnErZNrYSUh8xEX75zewpy80FZH
+         4R3FWhZasAJewrc/Soi37jgszpaa9OaDFhddYSqYQ76lu/bhcVnamPy3inHSwIPb6krj
+         XkUrD+p1JN7dPbBtZm6yEjfm2qAhQMl1zPIx1XjCilPGXdHfiCxSLzuMKqzgl7hnOu9R
+         ULPIrEVfN0ZdkwPQo7AQc26jYY7ltQonqEShfq/WfIRURT3++0Z0RKYVtthGih9uVZTW
+         uMzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1789825682; x=1790430482;
+        h=content-type:cc:to:subject:message-id:date:from:mime-version
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=sIIVnS4jjgLWZUNl3bwsvpIjYgvoUL8a8FSJ4KXXWw4=;
+        b=CMtUft+m6jMuGU6RBt1vkpLFVTIHhPfdCyerzeZJwg7fZ7sdMSj9uftiK+8vMZcTbK
+         2jw072TUsACNEq8smLlNFH9Qd5pA3CpaM/x4kGXCviB4w2/MD3tD40mja7sAl9Jub4OT
+         CvJDo3a9hSYUDw1PjXHDwvzZne/o5mXGQICDyXSKdpxcxb3MHVLt01ntG0kW9CNizhan
+         pRtujBZks8Ze1Z83bzJujbXeEfmHvBeBmxsNj4WAl6/MZIofAFLrAlaptO1XqwLpRlN/
+         96ClO3rS980hLBbcoTVQ+4pfAMKhe0BgCP1ElwIWmbx2SsQNaQwnQEjlRzeAEycgPUEC
+         stZw==
+X-Forwarded-Encrypted: i=1; AKwUvBwYFRDzVX71MXO09j66CSACXViU15TbhQ4UJ10vPCYqLexWAluYRkAPahEgihmxsfQRPwrByJEnTRk6Ig==@lists.linux.dev
+X-Gm-Message-State: AFuF++lQxBP9B7lrqiCRqLGMgDJz+TOPSfB2zW3nDyfHJHOss/9tVsxt
+	SOLzMG1eLLNrO5VjUAdJFwsCt+MhjlqTqQKDESCUeDBxbQPTPZVQ3AdMXEpOYv9vLyg9cEWPooe
+	nYWdHC+KCXsnCBEojrqa+t8VxsPMRVuA=
+X-Gm-Gg: AYBFou3ZnSt5ZOKy441tvbOm5jUkArCNK9eZTcz1F0U6LNPgINj+jWGecxiwrqulZ0q
+	jXMf9UrhDxXhcJ6DUA8fktVx6e+MhMcIbD/E/zKWCmtmKv7hnuU38OkOQz5FTLPQcV1HcPesB8e
+	Zq1S69WQSFTKr8gWlUE1Bd/f72hOTphpHK+Uu86v24Ag1LkFNhLTDW97dqzsixMhT0ZvHM4Kt3A
+	F6bS1PiN1eRyl9ReSF01cbdEMbHJ/R80OOqMrOooYjEVuMWfQdKpvigkLn7gDXYhhRPUZSZ4c0f
+	k5TLVmOJgW/78Z7cdF9N7zQbjkScOwavJxI6z2DQmCJaodCRWsD+dWL0rF3q2CuV9aOMUnjcnBD
+	WqmLgmFruCYyyg80JFEC1asZzSPXakXeD19e83I8ii55HxfDuVomtmNEArWfOWa8D52+xWM4Pep
+	MChWPibmM=
+X-Received: by 2002:a17:90b:1dc9:b0:39e:6c69:7775 with SMTP id
+ 98e67ed59e1d1-39e6c697929mr4698625a91.30.1789825682239; Sat, 19 Sep 2026
+ 06:48:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: =?UTF-8?Q?Re=3A_=5BPATCH_1/1=5D_media=3A_Don=27t_hide_I=C2=B2C_or_S?=
- =?UTF-8?Q?PI_drivers_by_default?=
-To: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org
-Cc: Miguel Vadillo <miguel.vadillo@intel.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>,
- Manuel Knitza <manuel.knitza@googlemail.com>,
- Antti Laakso <antti.laakso@linux.intel.com>,
- Mehdi Djait <mehdi.djait@linux.intel.com>, Junjie Cao
- <junjie.cao@intel.com>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <20260918081755.65082-1-sakari.ailus@linux.intel.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: <20260918081755.65082-1-sakari.ailus@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-PPP-Message-ID: <178980182087.197482.7136352681316898912@mxe9fb.netcup.net>
-X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: 2517D5FC18
-X-NC-CID: kHE8tIrfWqBYs1xI4ACwJAG1kk729kwNHSaOoRnEio/yhNdas5c=
+From: David Lomas <david.s.lomas@gmail.com>
+Date: Sat, 19 Sep 2026 14:47:25 +0100
+X-Gm-Features: AcwNN1WfyXVWtbUsXrdmQZGWXpS1W_8PSzgAYorOUUpF0oVLqT3c8afoCgKVMbs
+Message-ID: <CALjEBWQo0-Sdimo+aRNKUQvgDGw=jBFCcfwCXaqVdtoPrHLAQA@mail.gmail.com>
+Subject: Re: [PATCH 6.18 0167/1250] PM: hibernate: call preallocate_image()
+ after freeze prepare
+To: gregkh@linuxfoundation.org, sashal@kernel.org
+Cc: stable@vger.kernel.org, rafael.j.wysocki@intel.com, 
+	matthew.leach@collabora.com, superm1@kernel.org, linux-pm@vger.kernel.org, 
+	regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-On 9/18/26 10:17, Sakari Ailus wrote:
-> MEDIA_HIDE_ANCILLARY_SUBDRV Kconfig option was intended for working with
-> sub-device and other helper driver autoselection in cases where the
-> required drivers are known, e.g. for PCI cards where all the related
-> components are mounted. This option, however, applied to e.g. all camera
-> sensor and lens VCM drivers that are generally present in systems without
-> being mounted on such a card. This leads to easily omitting required
-> drivers.
-> 
-> Drop the MEDIA_HIDE_ANCILLARY_SUBDRV for I²C and SPI devices.
+Please note, I'm chasing a bug on this laptop using claude, and not
+familiar at all with kernel development, so take what it's written
+below with a pinch of whatever you prefer. But it seems pretty
+convinced it has found the root cause of periodic freezes during
+hibernation (whether from sleep on a timer, or direct via 'systemctl
+hibernate').
 
-Hmmm, just wondering: Junjie's abandoned approach[1] had Fixes: and
-stable tags to ensure it was backported, which sounded wise, as people
-ran into problems that might or might not be considered regressions;
-shouldn't this one ideally have those, too?
+Re: <20260917151556.616977299@linuxfoundation.org>
+Upstream commit 783c8109844503bd1c35dab41b6d5fd074a9f131 deadlocks
+hibernation entry on my machine (7.2.4, Dell XPS 13 9360, 8 GB, zswap
+on) whenever the system has been in use for some hours: the hibernate
+call never returns and the laptop sits warm with no image written,
+seven times in ten days. Direct `systemctl hibernate` and
+suspend-then-hibernate are the same. Never on 7.1.x or 6.18.49, and
+never on a fresh boot.
 
-[1]
-https://lore.kernel.org/all/20260913125345.588586-1-junjie.cao@intel.com/
+Captured with SysRq (w) after ~8 minutes hung. The hibernating task is
+in the direct-reclaim throttle waiting for kswapd, which was frozen 27
+ms earlier by freeze_kernel_threads(), which this commit moved ahead
+of hibernate_preallocate_memory():
 
-Also wondering if the "olddefconfig" case on Arch was tested to ensure
-we prevent more people running into problems that Junjie's fix linked to
-(there was another one here:
-https://bugzilla.kernel.org/show_bug.cgi?id=221983 ). But well, maybe
-those were corner cases not worth thinking about to much -- or should we?
+  [ 8404.650787] Freezing remaining freezable tasks completed (elapsed
+0.001 seconds)
+  [ 8404.677608] PM: hibernation: Preallocating image memory
+  (nothing further; SysRq at 8871)
 
-Ciao, Thorsten
-> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> ---
->  drivers/media/i2c/Kconfig | 11 +----------
->  drivers/media/spi/Kconfig |  4 ----
->  2 files changed, 1 insertion(+), 14 deletions(-)
-> 
-> diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
-> index 4d9946479160..9b28e91b8a67 100644
-> --- a/drivers/media/i2c/Kconfig
-> +++ b/drivers/media/i2c/Kconfig
-> @@ -1010,14 +1010,12 @@ endmenu
->  # V4L2 I2C drivers that aren't related with Camera support
->  #
->  
-> -comment "audio, video and radio I2C drivers auto-selected by 'Autoselect ancillary drivers'"
-> -	depends on MEDIA_HIDE_ANCILLARY_SUBDRV
-> +comment "audio, video and radio I2C drivers"
->  #
->  # Encoder / Decoder module configuration
->  #
->  
->  menu "Audio decoders, processors and mixers"
-> -	visible if !MEDIA_HIDE_ANCILLARY_SUBDRV
->  
->  config VIDEO_CS3308
->  	tristate "Cirrus Logic CS3308 audio ADC"
-> @@ -1180,7 +1178,6 @@ config VIDEO_WM8775
->  endmenu
->  
->  menu "RDS decoders"
-> -	visible if !MEDIA_HIDE_ANCILLARY_SUBDRV
->  
->  config VIDEO_SAA6588
->  	tristate "SAA6588 Radio Chip RDS decoder support"
-> @@ -1197,7 +1194,6 @@ config VIDEO_SAA6588
->  endmenu
->  
->  menu "Video decoders"
-> -	visible if !MEDIA_HIDE_ANCILLARY_SUBDRV
->  
->  config VIDEO_ADV7180
->  	tristate "Analog Devices ADV7180 decoder"
-> @@ -1557,7 +1553,6 @@ source "drivers/media/i2c/cx25840/Kconfig"
->  endmenu
->  
->  menu "Video encoders"
-> -	visible if !MEDIA_HIDE_ANCILLARY_SUBDRV
->  
->  config VIDEO_ADV7170
->  	tristate "Analog Devices ADV7170 video encoder"
-> @@ -1656,7 +1651,6 @@ config VIDEO_THS8200
->  endmenu
->  
->  menu "Video improvement chips"
-> -	visible if !MEDIA_HIDE_ANCILLARY_SUBDRV
->  
->  config VIDEO_UPD64031A
->  	tristate "NEC Electronics uPD64031A Ghost Reduction"
-> @@ -1685,7 +1679,6 @@ config VIDEO_UPD64083
->  endmenu
->  
->  menu "Audio/Video compression chips"
-> -	visible if !MEDIA_HIDE_ANCILLARY_SUBDRV
->  
->  config VIDEO_SAA6752HS
->  	tristate "Philips SAA6752HS MPEG-2 Audio/Video Encoder"
-> @@ -1701,7 +1694,6 @@ config VIDEO_SAA6752HS
->  endmenu
->  
->  menu "SDR tuner chips"
-> -	visible if !MEDIA_HIDE_ANCILLARY_SUBDRV
->  
->  config SDR_MAX2175
->  	tristate "Maxim 2175 RF to Bits tuner"
-> @@ -1718,7 +1710,6 @@ config SDR_MAX2175
->  endmenu
->  
->  menu "Miscellaneous helper chips"
-> -	visible if !MEDIA_HIDE_ANCILLARY_SUBDRV
->  
->  source "drivers/media/i2c/cvs/Kconfig"
->  
-> diff --git a/drivers/media/spi/Kconfig b/drivers/media/spi/Kconfig
-> index 4656afae5bb4..da3e225d420d 100644
-> --- a/drivers/media/spi/Kconfig
-> +++ b/drivers/media/spi/Kconfig
-> @@ -1,15 +1,11 @@
->  # SPDX-License-Identifier: GPL-2.0-only
->  if VIDEO_DEV && SPI
->  
-> -comment "SPI I2C drivers auto-selected by 'Autoselect ancillary drivers'"
-> -	depends on MEDIA_HIDE_ANCILLARY_SUBDRV && SPI
-> -
->  menu "Media SPI Adapters"
->  
->  config CXD2880_SPI_DRV
->  	tristate "Sony CXD2880 SPI support"
->  	depends on DVB_CORE && SPI
-> -	default m if !MEDIA_SUBDRV_AUTOSELECT
->  	help
->  	  Choose if you would like to have SPI interface support for Sony CXD2880.
->  
-> 
-> base-commit: aedd77ea8168f00687c1248cdf115071e869cf93
+  task:systemd-sleep   state:D pid:36677
+   __schedule
+   schedule
+   throttle_direct_reclaim+0x358/0x3e0
+   try_to_free_pages+0xbf/0x220
+   __alloc_pages_slowpath.constprop.0+0x531/0x1510
+   __alloc_frozen_pages_noprof+0x334/0x370
+   alloc_pages_mpol+0xb2/0x160
+   alloc_pages_noprof+0x49/0x90
+   preallocate_image_memory+0x35/0x9b
+   hibernate_preallocate_memory+0x25b/0x390
+   hibernation_snapshot+0xc1/0x4e0
+   hibernate.cold+0x117/0x4b5
+   state_store+0xf2/0x100
 
+  Node 0 Normal free:32044kB boost:119232kB min:172224kB low:185472kB
+  high:198720kB ... inactive_anon:1601740kB zspages:362688kB
+  377713 pages in swap cache
+
+All four CPUs idle (SysRq l). Free memory is below the pfmemalloc
+reserve (two thirds of which is watermark boost), so the GFP_KERNEL
+allocations in preallocate_image_memory() go through
+throttle_direct_reclaim(), which does wait_event_killable() on
+pgdat->pfmemalloc_wait until kswapd raises free pages above the
+reserve. kswapd is frozen, so nothing ever wakes it. The wait is
+killable, so the hung-task detector does not report it either. With
+hung_task_panic, softlockup_panic and hardlockup_panic all set,
+nothing fired in eight minutes.
+
+This is the concern Rafael raised on v3 (frozen kswapd); the reply
+covered the I/O path but not the pfmemalloc throttle. Reverting the
+order, or bypassing the throttle for the hibernation task (PF_KTHREAD
+style), would avoid it. Setting vm.watermark_boost_factor=0 shrinks
+the window but does not close it.
+
+Full SysRq dump (l/m/w, via efi-pstore) available on request.
+
+#regzbot introduced: 783c8109844503bd1c35dab41b6d5fd074a9f131
+
+David Lomas
