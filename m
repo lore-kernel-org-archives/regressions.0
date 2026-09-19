@@ -1,51 +1,51 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.162])
+Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 573E431B828
-	for <regressions@lists.linux.dev>; Sat, 19 Sep 2026 06:20:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.162
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9B5C37E2EE
+	for <regressions@lists.linux.dev>; Sat, 19 Sep 2026 07:10:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789798860; cv=none; b=MDbk90+bi7jWNT6Gb9N2njOqrGY7S1Pg0Ss2gW9FVCx6idTKxY0OMQsKAdhnISaBktRSvpu2UTuSsbXIHnGPnmWoKib3XPTdhExrVAbG+jzpB8U+L29M0K6ZW/CdXfAQZ+04LBTIaihc3DwPXxdN1knZe9Nl5PPl2KQbQghGoLA=
+	t=1789801857; cv=none; b=Frdj9VEfIjdaXUT/jOA42JgWqjtvtZWUHaCn6lBgxDuJy3h5z2gFP6bADErlzvsBeyhxRABox3ndHPATGOZ0wisflqaGp4BbF8tszFe+l4qDHvez7/Y9ngXj0a1meFDil5o+rEYoJvfZYUG5E1K2d5s/hn5fPqo9ZhUDaixBLPY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789798860; c=relaxed/simple;
-	bh=Bmt68BZpzEYhOybCAvUjeIl8rB2amjyuAtIJ+oUeZJs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=Coc5BzbeI54gcEca9XB+nynm97Y39BlGhHTDxemT/HMYKWOEQ0QmMlAG1XAUKtm14xzAPUCO4deoPR5FB9sxS4c0vMy8yk16oYQKyiNjFMzIMzHFTUxDyHL7B7RireihBYtnUHxSdh3pvYSUiPV7UlR7LfsCp9lv8DTiIO5VsZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=hqri1s63; arc=none smtp.client-ip=188.68.63.162
+	s=arc-20240116; t=1789801857; c=relaxed/simple;
+	bh=bZdbqV7EtOiC5fBo2XUeutjFyA9EgGuLRhfN0TCWfs4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NLe3Aupnd2AdBN10WCcMK39FdSCwuUePlaIvlbHtxstYSHACCLPzr9kz2eH8j8XChvxTPndYUMVRO49PJZD3UPoXM2Ga4cMSXR7neOg3DUa7qqtenR61LEQpEBHsT6UD3r9rp6u1Q6gAuuXBzf0exmA8zsFPy4M55Y8JXYoGXSk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=Nmjufq/G; arc=none smtp.client-ip=188.68.63.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="hqri1s63"
-Received: from mors-relay-8201.netcup.net (localhost [127.0.0.1])
-	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4hmzrL4qYxz46LF;
-	Sat, 19 Sep 2026 08:20:34 +0200 (CEST)
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="Nmjufq/G"
+Received: from mors-relay8204.netcup.net (localhost [127.0.0.1])
+	by mors-relay8204.netcup.net (Postfix) with ESMTPS id 4hn0y72CxFz8hFl;
+	Sat, 19 Sep 2026 07:10:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1789798834;
-	bh=Bmt68BZpzEYhOybCAvUjeIl8rB2amjyuAtIJ+oUeZJs=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=hqri1s63beSm0gNcD3pst5HiGp/PbW95KUO0u17epjBdwj/Weaa7GCMQ7CIFOg5Jg
-	 NwMr5CtGFmd2Q0TZKNBVJjn6NLZhdDWCb9YZEAy7Ki5L6A0hoKw0rendgRhNxXCs21
-	 GzSh7xU4Y/4GqkU25Eags42XoHYoA1mbOMG7X9Mn7roM2ZEp6MSmUMkE9pu3actTl4
-	 oqTr1WQBgax7zM5gN7CMlqTJr+ihWKFgje6FE1qRa9IAABvrimu7VjXfUcBITnJfry
-	 1NiXxkf3WxZYhhJtBGvevLQATKOYpa7EJx5IEUaJgNycs4EQtIMSqL3DsNYv6/t+9q
-	 6wJQdRmzZ5j1w==
+	s=key2; t=1789801839;
+	bh=bZdbqV7EtOiC5fBo2XUeutjFyA9EgGuLRhfN0TCWfs4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Nmjufq/GaqAPGpGezGdHR+uEGdt1jrrz94XsO+41+ZCHnuaoTiRj/w+bPTcKOgxiu
+	 16KWHh3H20E5/jexdzNNKo0Q6XfjqQhAjjPzmnMICFmXU7+iVFpV2n7j3UI5KMfJtT
+	 7STERaNlTkTfaoGu1Fwq519s1ZeYVYDNw6/wbf5Dr5vymXsakIx0zwYKetIUAlXHHQ
+	 16kVlAiEPBL7GlfMGKzqJ+fgp5hP/Gv5K6kbtJ1VyQ2m7Pb/UVqYwLmO2K+tI0yimQ
+	 /rW0BlSXt8547CqFGqvTEDxWdPEylBVhVyTf/uwOvmhZG36iNEStg9ukOL+SE0xoD2
+	 mPOnu7ewzX1sQ==
 Received: from policy02-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4hmzqH3WmBz46v6;
-	Sat, 19 Sep 2026 08:19:39 +0200 (CEST)
+	by mors-relay8204.netcup.net (Postfix) with ESMTPS id 4hn0xw4jZ5z8hgx;
+	Sat, 19 Sep 2026 07:10:28 +0000 (UTC)
 Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4hmzqH1LcPz8sZh;
-	Sat, 19 Sep 2026 08:19:39 +0200 (CEST)
+	by policy02-mors.netcup.net (Postfix) with ESMTPS id 4hn0xv4bxfz8svb;
+	Sat, 19 Sep 2026 09:10:27 +0200 (CEST)
 Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 8F25E5F936;
-	Sat, 19 Sep 2026 08:19:34 +0200 (CEST)
+	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 2517D5FC18;
+	Sat, 19 Sep 2026 09:10:20 +0200 (CEST)
 Authentication-Results: mxe9fb;
         spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
 Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <ba7d91b6-61b4-48b9-8f33-b616e5c02d48@leemhuis.info>
-Date: Sat, 19 Sep 2026 08:19:33 +0200
+Message-ID: <598cd300-dbec-44fc-a670-f575310e6a43@leemhuis.info>
+Date: Sat, 19 Sep 2026 09:10:18 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -53,83 +53,155 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] ASUS Zenbook A14 fails to boot (Internal error:
- synchronous external abort)
-To: Aoto Tokizawa <aoto.tokizawa@gmail.com>, regressions@lists.linux.dev
-References: 
- <CANxGDDEp4FrTo5cqhwMOqqm7ukh-G9z_77eVWiTgbTzNNYMRWA@mail.gmail.com>
+Subject: =?UTF-8?Q?Re=3A_=5BPATCH_1/1=5D_media=3A_Don=27t_hide_I=C2=B2C_or_S?=
+ =?UTF-8?Q?PI_drivers_by_default?=
+To: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org
+Cc: Miguel Vadillo <miguel.vadillo@intel.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Manuel Knitza <manuel.knitza@googlemail.com>,
+ Antti Laakso <antti.laakso@linux.intel.com>,
+ Mehdi Djait <mehdi.djait@linux.intel.com>, Junjie Cao
+ <junjie.cao@intel.com>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <20260918081755.65082-1-sakari.ailus@linux.intel.com>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
 Content-Language: de-DE, en-US
-In-Reply-To: 
- <CANxGDDEp4FrTo5cqhwMOqqm7ukh-G9z_77eVWiTgbTzNNYMRWA@mail.gmail.com>
+In-Reply-To: <20260918081755.65082-1-sakari.ailus@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <178979877479.110377.3494495949889457527@mxe9fb.netcup.net>
+Content-Transfer-Encoding: 8bit
+X-PPP-Message-ID: <178980182087.197482.7136352681316898912@mxe9fb.netcup.net>
 X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: 8F25E5F936
-X-NC-CID: 9JsQdtS/oYwtad6q+j0m/ZNgr0Yk756UwT06uEgxvBXKZ0rBGpo=
+X-Rspamd-Queue-Id: 2517D5FC18
+X-NC-CID: kHE8tIrfWqBYs1xI4ACwJAG1kk729kwNHSaOoRnEio/yhNdas5c=
 
-Hi! Thx for the report.
-
-On 9/18/26 22:53, Aoto Tokizawa wrote:
+On 9/18/26 10:17, Sakari Ailus wrote:
+> MEDIA_HIDE_ANCILLARY_SUBDRV Kconfig option was intended for working with
+> sub-device and other helper driver autoselection in cases where the
+> required drivers are known, e.g. for PCI cards where all the related
+> components are mounted. This option, however, applied to e.g. all camera
+> sensor and lens VCM drivers that are generally present in systems without
+> being mounted on such a card. This leads to easily omitting required
+> drivers.
 > 
-> Recently Linux 7.3.rc3 fails to boot really early on. Linux 7.2.6
-> boots just fine
+> Drop the MEDIA_HIDE_ANCILLARY_SUBDRV for I²C and SPI devices.
 
-Just wondering: did earlier 7.3-rc versions work? Sounds a bit like it,
-but I doubt that's what you meant.
+Hmmm, just wondering: Junjie's abandoned approach[1] had Fixes: and
+stable tags to ensure it was backported, which sounded wise, as people
+ran into problems that might or might not be considered regressions;
+shouldn't this one ideally have those, too?
 
-> (with identical sysroot). The following was
-> transcribed by an LLM from an image I took with a camera
-> (unfortunately no text made it to systemd-journald).
+[1]
+https://lore.kernel.org/all/20260913125345.588586-1-junjie.cao@intel.com/
 
-Maybe you are lucky and someone has an idea what might cause this, but I
-doubt that will happen. In that case it would be great if you could
-perform a git bisection to find out what's wrong:
-
-https://docs.kernel.org/admin-guide/bug-bisect.html
-https://docs.kernel.org/admin-guide/verify-bugs-and-bisect-regressions.html
-
-But one more thing:
-
-> [    0.177281] Internal error: synchronous external abort:
-> 0000000096001610 [#1] SMP
-> [    0.177446] Modules linked in:
-> [    0.177460] CPU: 7 UID: 0 PID: 57 Comm: kworker/u34:0 Tainted: G
-> M    W          7.3.0-rc3-1-aarch64-rc-ARCH #1 PREEMPT(full)
-> [    0.177495] Tainted: [M]=MACHINE_CHECK, [W]=WARN
-
-These taints could mean that this is a follow-up error; or is 7.2.y
-tainted like this, too?
+Also wondering if the "olddefconfig" case on Arch was tested to ensure
+we prevent more people running into problems that Junjie's fix linked to
+(there was another one here:
+https://bugzilla.kernel.org/show_bug.cgi?id=221983 ). But well, maybe
+those were corner cases not worth thinking about to much -- or should we?
 
 Ciao, Thorsten
-
-> [    0.177510] Hardware name: ASUSTeK COMPUTER INC. ASUS Zenbook A14
-> UX3407QA_UX3407QA/UX3407QA, BIOS UX3407QA.311 08/22/2025
-> [    0.177542] Workqueue: events_unbound deferred_probe_work_func
-> [    0.177564] pstate: 214000c5 (nzCv daIF +PAN -UAO -TCO +DIT -SSBS BTYPE=--)
-> [    0.177586] pc : regmap_mmio_read32le+0xc/0x24
-> [    0.177602] lr : regmap_mmio_read+0x40/0x68
-> [    0.177616] sp : ffff800083783920
-> [    0.177626] x29: ffff800083783920 x28: ffff800083018348 x27: ffff8000b1e8b700
-> [    0.177649] x26: ffff800081e8b588 x25: 0000000000000006 x24: 0000000000000000
-> [    0.177672] x23: ffff000804cc3800 x22: ffff8000837839d4 x21: 000000000000d008
-> [    0.177695] x20: ffff8000837839d4 x19: ffff000805731380 x18: 000000000000000a
-> [    0.177717] x17: ffff000804dde980 x16: ffff0000837836f8 x15: 0000000000000000
-> [    0.177741] x14: 0000000000000002 x13: 0000000000000001 x12: 0000000000000000
-> [    0.177763] x11: 00000000003662c5 x10: 0000000000070a78 x9 : 0000000000000004
-> [    0.177786] x8 : ffff800083783900 x7 : ffff8000837839f0 x6 : 000000000000d008
-> [    0.177808] x5 : ffff8000837839d4 x4 : ffff000804cc3800 x3 : ffff8000b0faac28
-> [    0.177831] x2 : ffff8000b0fab368 x1 : 000000000000d008 x0 : ffff8000b437d008
-> [    0.177854] Call trace:
-> [    0.177863]  regmap_mmio_read32le+0xc/0x24 (P)
+> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> ---
+>  drivers/media/i2c/Kconfig | 11 +----------
+>  drivers/media/spi/Kconfig |  4 ----
+>  2 files changed, 1 insertion(+), 14 deletions(-)
 > 
-> Text was cut-off, but in another image I got more of a call trace:
+> diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
+> index 4d9946479160..9b28e91b8a67 100644
+> --- a/drivers/media/i2c/Kconfig
+> +++ b/drivers/media/i2c/Kconfig
+> @@ -1010,14 +1010,12 @@ endmenu
+>  # V4L2 I2C drivers that aren't related with Camera support
+>  #
+>  
+> -comment "audio, video and radio I2C drivers auto-selected by 'Autoselect ancillary drivers'"
+> -	depends on MEDIA_HIDE_ANCILLARY_SUBDRV
+> +comment "audio, video and radio I2C drivers"
+>  #
+>  # Encoder / Decoder module configuration
+>  #
+>  
+>  menu "Audio decoders, processors and mixers"
+> -	visible if !MEDIA_HIDE_ANCILLARY_SUBDRV
+>  
+>  config VIDEO_CS3308
+>  	tristate "Cirrus Logic CS3308 audio ADC"
+> @@ -1180,7 +1178,6 @@ config VIDEO_WM8775
+>  endmenu
+>  
+>  menu "RDS decoders"
+> -	visible if !MEDIA_HIDE_ANCILLARY_SUBDRV
+>  
+>  config VIDEO_SAA6588
+>  	tristate "SAA6588 Radio Chip RDS decoder support"
+> @@ -1197,7 +1194,6 @@ config VIDEO_SAA6588
+>  endmenu
+>  
+>  menu "Video decoders"
+> -	visible if !MEDIA_HIDE_ANCILLARY_SUBDRV
+>  
+>  config VIDEO_ADV7180
+>  	tristate "Analog Devices ADV7180 decoder"
+> @@ -1557,7 +1553,6 @@ source "drivers/media/i2c/cx25840/Kconfig"
+>  endmenu
+>  
+>  menu "Video encoders"
+> -	visible if !MEDIA_HIDE_ANCILLARY_SUBDRV
+>  
+>  config VIDEO_ADV7170
+>  	tristate "Analog Devices ADV7170 video encoder"
+> @@ -1656,7 +1651,6 @@ config VIDEO_THS8200
+>  endmenu
+>  
+>  menu "Video improvement chips"
+> -	visible if !MEDIA_HIDE_ANCILLARY_SUBDRV
+>  
+>  config VIDEO_UPD64031A
+>  	tristate "NEC Electronics uPD64031A Ghost Reduction"
+> @@ -1685,7 +1679,6 @@ config VIDEO_UPD64083
+>  endmenu
+>  
+>  menu "Audio/Video compression chips"
+> -	visible if !MEDIA_HIDE_ANCILLARY_SUBDRV
+>  
+>  config VIDEO_SAA6752HS
+>  	tristate "Philips SAA6752HS MPEG-2 Audio/Video Encoder"
+> @@ -1701,7 +1694,6 @@ config VIDEO_SAA6752HS
+>  endmenu
+>  
+>  menu "SDR tuner chips"
+> -	visible if !MEDIA_HIDE_ANCILLARY_SUBDRV
+>  
+>  config SDR_MAX2175
+>  	tristate "Maxim 2175 RF to Bits tuner"
+> @@ -1718,7 +1710,6 @@ config SDR_MAX2175
+>  endmenu
+>  
+>  menu "Miscellaneous helper chips"
+> -	visible if !MEDIA_HIDE_ANCILLARY_SUBDRV
+>  
+>  source "drivers/media/i2c/cvs/Kconfig"
+>  
+> diff --git a/drivers/media/spi/Kconfig b/drivers/media/spi/Kconfig
+> index 4656afae5bb4..da3e225d420d 100644
+> --- a/drivers/media/spi/Kconfig
+> +++ b/drivers/media/spi/Kconfig
+> @@ -1,15 +1,11 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+>  if VIDEO_DEV && SPI
+>  
+> -comment "SPI I2C drivers auto-selected by 'Autoselect ancillary drivers'"
+> -	depends on MEDIA_HIDE_ANCILLARY_SUBDRV && SPI
+> -
+>  menu "Media SPI Adapters"
+>  
+>  config CXD2880_SPI_DRV
+>  	tristate "Sony CXD2880 SPI support"
+>  	depends on DVB_CORE && SPI
+> -	default m if !MEDIA_SUBDRV_AUTOSELECT
+>  	help
+>  	  Choose if you would like to have SPI interface support for Sony CXD2880.
+>  
 > 
-> [    0.177554]  regmap_mmio_read32le+0xc/0x24 (P)
-> [    0.177570]  _regmap_bus_reg_read+0x68/0xac
-> [    0.177584]   regmap_read+0x64/0x210
-> 
-> Let me know what I can do.
-> 
+> base-commit: aedd77ea8168f00687c1248cdf115071e869cf93
 
