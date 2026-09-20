@@ -1,211 +1,224 @@
-Received: from mail-wm2-f12.google.com (mail-wm2-f12.google.com [74.125.225.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.17.24])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB40B35C681
-	for <regressions@lists.linux.dev>; Sun, 20 Sep 2026 09:49:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.140
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6808233A014
+	for <regressions@lists.linux.dev>; Sun, 20 Sep 2026 13:55:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789897755; cv=none; b=tfe5UhyYFsxqCqTor7HxHvJL207U7oI+P1aRaK+YZJwV6I2kT0ByQsgPmmaCWj3wgurCJReNJJcHnC0d4TtIGetR2nUeraAZa7MCASFDwdmoTQYI2/XrInja8gfTu2s7TLE9JX7wSvsv8sa/NdYpfpr1/maW2NfnpBsCXCSDTJY=
+	t=1789912510; cv=none; b=TK6fYDZiw6eZKrIh2dKvqHX17Cu2IjEVgNMgfXdAZT2Yg35lxiACX0O26DSVPClKqj3Jv5NLN2weYdl6jL6R4GM32gXYWVPZRKZIyMQwNzjuzt6M4yagvC3h/oappzSDRrnhQqcWLVn3kqkwDWiJq73kLF1dFtldOuioBfkPQE4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789897755; c=relaxed/simple;
-	bh=XCvgXtVDOQexlet7FH5jCB/Ll+55kV+TEw7kNGuSQ9o=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ozQSsNssvHopXDH3MRccMt6FCpIZ8g9yRWFxkNkHd3ksNTjgzM0A1H95SE3yp2Uo/OAKRVOQ9H+fQaQ7UqFoRDVm2AO4U93ZlQG3WmYKpfA01IkwLQimkiR7/PThzS2SeyTbX4kfhVIqLyazd/boUGQAlAR4UWu97JzLFf91UpY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Za8vpXxo; arc=none smtp.client-ip=74.125.225.140
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1789912510; c=relaxed/simple;
+	bh=3BGKPjEXlHJ/7EQvEX2Y+2jm8uh1xcJQttD0VeU5MmE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WCmDZFbwtMTu63yN20dZ/Owrwm6xW3nxLdjIdbKQr40+CHESN5F9lG/7APvdsSHX/rYcl++TJet6m6PvMt9kXGpX5wrxtr5kG1jgsz+AAZBWDxYv6zpdPmdbAzTG2s0mYbiG1EcTuxmVpdoNVQj/m8LjdUA584387ik97JVNHGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=online.de; spf=pass smtp.mailfrom=online.de; dkim=pass (2048-bit key) header.d=online.de header.i=cito@online.de header.b=EXAoiUGB; arc=none smtp.client-ip=212.227.17.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=online.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=online.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Za8vpXxo"
-Received: by mail-wm2-f12.google.com with SMTP id 5b1f17b1804b1-49cd38e0e5dso27353665e9.2
-        for <regressions@lists.linux.dev>; Sun, 20 Sep 2026 02:49:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1789897748; x=1790502548; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=NjR0+aR4fqFhCdqun3B7g8hh4Gd9On2hwqPnG7OLZVk=;
-        b=Za8vpXxoP879Hw9ujpQV3+rEz3Mj0tw3xbEwlDU//+KtQlTOagcxAR3PPND42oojsm
-         NRNnVoEkZfC1WWNyJqTrcakgZqeg9bvhhSX8g4dbyUhyRkRDqGxKir7CgZE+H3DWH+mf
-         Zdq/A2C1+WZ9oOEBv2XHTx4DY328fxYBiDYso4ssf6sxF/FNmIFPDvufZegwLdSXJJD0
-         i7Rk4OK/dDw3lYF6ffX5B41tE0dsRzRvr3nNcn+o8Ck8IG5g0NJtiWmQJG75OoYqSnRL
-         x3Y6GqlvJ3sTS9W9u2TplHD5ZmEjf1vzYSf/pnwLM4E0HBdOdCS99FOEmhFS6fsVDMuh
-         wOyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789897748; x=1790502548;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=NjR0+aR4fqFhCdqun3B7g8hh4Gd9On2hwqPnG7OLZVk=;
-        b=F+fSUL+M+gNxut3msvFgVRMB9UBZCVdbdzbkYIzx3ArvmGSwIMhHzVmRtaupUf21RR
-         wTK7gcsXjYB/qcBn7SDYDXO6XZkNP8v657LIzL3913WTsiCdZvjGhdjOhlw9tOpZMO82
-         S5CMgcQULsSycob2Rag7o6pxk5LBm5LW9HkMCT62szShm/B8vmY754sid3kYlIL1iT/P
-         c24sO3UhO7EZH339cSpnP1Swaq6pKZvNkFjQyYjvO9AEo7mnl8DQFO3umcSnr9peSl/J
-         ehxQvD/A4vYIFaW3/cjTOne19M5/P0veD0fyYiDCjNlVnpNQqfLmE4FBPjkPkOMRbLK5
-         bQeg==
-X-Forwarded-Encrypted: i=1; AKwUvBzyA5jXOc6oeX05RG48wvZy37600BwEb9HTPvXigWLOmkfYZ0v1WVzka5K1Y2zTLohmk0iKuC3+NOCnIA==@lists.linux.dev
-X-Gm-Message-State: AFuF++lz995qPxFXQyfROUwAwbxfn3t+QMX9ZMdkpeMmV7aas6Y4mZie
-	S5+p/wGnNL8LtSAj2zxKRw6a4eSvbIUL8vIqBtSptGaQ2uLOPoT9a/85
-X-Gm-Gg: AYBFou0jpRfem6Jdu6AU/3s0OVdYk4YNEKbJ3u2besIINjE+jpVdSBGido803h55C6O
-	6Lr5U23S4wNfALSAQh4W2DPaUzohBUXKr2x4NCb4/W0O4t9jB+LSVdNAx4BFTxAnDdHVpAUPoEs
-	DBBP+Gw9S3KO8YoOMIAEznJSoG/Wu0Oph+VwzkrCyKqHSAU5z9VyCDBBv3biEWJvmI5LMxOgiKs
-	uW6mQCKTHHwwuVrZMEHmlSlofrBQnI3ohfB4Htol2xaGa+nsdu+BybbUoZpNXu7kRPk96VbmaB9
-	eVA+cGM4xZ/gGCCaCKWqXtWGQ+GWXUMit67UM32v/jdX+mpXbTOzgeIxzr4GAnOrr+gb4uyXsNx
-	Aff32D2F3R9vB0rGzw0rOZA/o9K06/QDUsa9nAb87RzzFf4MhWCkfS/gOvem0ajVCP/TRQPPW1J
-	GlX8PHjMh2Y/NkGP+FUCsQ8VPzEx84aPmmqnxKwJbyxOwpZmrL/j/Lh6r/nlkttuKK1QgjR4EuW
-	1P12Sn6neeszSjJa+mz+J1RjJ3v7eHBRJNYiAE=
-X-Received: by 2002:a05:600c:1391:b0:49d:272d:74b4 with SMTP id 5b1f17b1804b1-49fc566e5ebmr100511745e9.2.1789897748192;
-        Sun, 20 Sep 2026 02:49:08 -0700 (PDT)
-Received: from cachyos-x8664 (213-225-2-90.nat.highway.a1.net. [213.225.2.90])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48724564565sm13133797f8f.19.2026.09.20.02.49.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 20 Sep 2026 02:49:07 -0700 (PDT)
-From: Roman Stingler <roman.stingler@gmail.com>
-To: Jiri Kosina <jikos@kernel.org>,
-	Benjamin Tissoires <bentiss@kernel.org>
-Cc: Roman Stingler <roman.stingler@gmail.com>,
-	Erik Hakansson <erikhakan@gmail.com>,
-	Filipe Lains <lains@riseup.net>,
-	Bastien Nocera <hadess@hadess.net>,
-	linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: [REGRESSION 7.3-rc1] HID: logitech-hidpp: hi-res scroll mode forcibly re-enabled on every reconnect for Bolt devices, overriding userspace
-Date: Sun, 20 Sep 2026 11:44:39 +0200
-Message-ID: <20260920094508.39682-1-roman.stingler@gmail.com>
-X-Mailer: git-send-email 2.55.0
+	dkim=pass (2048-bit key) header.d=online.de header.i=cito@online.de header.b="EXAoiUGB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=online.de;
+	s=s42582890; t=1789912500; x=1790517300; i=cito@online.de;
+	bh=AqcM6OH+H51Vyn6T0c3uTYZxt3s2a8bLr9yFqcooSIQ=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=EXAoiUGBoI8GnVcOc3B4B/Bx0VJIRgoDa8S+rj8u9002GuEUeQZO7YFixGvRJUm4
+	 UBi5iEbkgXMZFhGlf2RgKO0Q5g2Kp5DObGcMUv2iI2z20vXLF8uWR4oUk1Xu2ySIT
+	 7B3ZeZr9yBeV8KlEW8yirGxwhvL7ba8SXba4BQNpnNcdMLRJDzkoU68+cVHXpQyWG
+	 VBzPti4MNNp68PiMdc7g1bT0DuQ/m6/eTgwM2fL/Qb8iSbkaQJ4nKnZDKqueAkoVH
+	 4USaFi+3LL1zfn6AQBkYW4aAPU87lAJiPk6kZInqZVl5TWlcEb0lZd062hyaQTpX0
+	 lFZQMPhsGTNTR2eluw==
+X-UI-Sender-Class: 6003b46c-3fee-4677-9b8b-2b628d989298
+Received: from client.hidden.invalid by mrelayeu.kundenserver.de (mreue108
+ [212.227.15.183]) with ESMTPSA (Nemesis) id 1MzQXu-1wutrL43iy-011wXF; Sun, 20
+ Sep 2026 15:49:12 +0200
+Message-ID: <0fd8c1c9-7f56-4bcb-a727-e4386d8ef094@online.de>
+Date: Sun, 20 Sep 2026 15:49:11 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] btusb: ASUS USB-BT540/BT600 IDs backported without,
+ RTL8761CUV support, adapter re-enumerates endlessly (6.18.50, 6.12.109,,
+ 6.1.188, 5.15.221, 5.10.270)
+To: "ra.prism" <ra.prism@gmail.com>, stable@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Sasha Levin <sashal@kernel.org>, Max Chou <max.chou@realtek.com>,
+ Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+ Marcel Holtmann <marcel@holtmann.org>, linux-bluetooth@vger.kernel.org,
+ regressions@lists.linux.dev
+References: <9ac1c05b-e9f2-49e9-af63-9cd0e42115fc@gmail.com>
+Content-Language: en-US
+From: Christoph Zwerschke <cito@online.de>
+In-Reply-To: <9ac1c05b-e9f2-49e9-af63-9cd0e42115fc@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:R4csNoRzKW9O02+9m23soDiC297hXinYTrzF6Hr+dk6LHcjBHuk
+ 16MIukKmvtXrMSzcypbpCkivxPrPeikAINpBXKJhjemq9n5KqQm7d2NzDDVgi57eQQxFQec
+ fsUMVaybmqUU23PymazWoXfilIqQoHseAcKNaU/6aATlwcHKkXxnIOSR5tfrE3FneViz6rs
+ BqkkSOJFTz8QZQJmX2D3A==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:2+YaVqYJ8Dk=;SrqdPhQJKifNkmOV+FVtbq7ooyB
+ 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
+ YkaNnfPaNgl3UW
 
-Hi,
+Hi Ralf, hi all,
 
-Since Bolt receiver support was added in 7.3-rc1, the user-selected
-"Scroll Wheel Resolution" (HID++ feature 0x2121 HiRes Wheel) setting on my
-MX Master 4 is reset by the kernel every time the device reconnects, most
-visibly across every suspend/resume cycle. I disable hi-res scrolling in
-Solaar, suspend the laptop, and on resume the mouse is back in hi-res mode
-and I have to toggle it manually again.
+I submitted the two commits. Your analysis is correct - please revert
+them from every tree below 6.19.
 
-This worked correctly on 7.2 and is broken on 7.3-rc1 through 7.3-rc3.
+The commit message was also wrong where it called the adapters
+"non-functional" without the entry. They bind via the generic
+Bluetooth class and run their ROM firmware. I had tested that on a
+machine that was also running ASUS' out-of-tree rtk_btusb, and
+credited the working adapter to my patch.
 
-#regzbot introduced: 022eb347ff3a48281e7e69c3addcb11bf24afa53
+Measured 2026-09-20 on 6.18.50 with the two IDs removed from a local
+btusb build: BT540 (0b05:1bef) and BT600 (0b05:1d70) both come up
+with real BD addresses, no USB disconnects, and carry ASHA and A2DP.
 
+My recommendation is the revert rather than fixing it by backporting the=
+=20
+RTL8761CU support that btrtl gained in 6.19 (4a23ce935f74). I tried the=20
+backport against 6.18.50 and measured it, but it is hardware enablement=20
+rather than a regression fix, and it doesn't seem to gain anything=20
+substantial: against the ROM firmware these adapters already run, I=20
+could measure no difference in audio quality. The revert is smaller,=20
+needs no stable-policy argument, and simply restores the behavior these=20
+adapters had for years.
 
-Hardware
-========
+Sorry for the breakage, and thanks for the report.
 
-  Logi Bolt Receiver              046d:c548
-  Logitech MX Master 4 (WPID B042), HID++ 4.5, paired to the Bolt receiver
-  HIRES WHEEL {2121} V1, multiplier 15
-
-  Host: HP OmniBook Ultra Laptop 14-fd0xxx,
-        AMD Ryzen AI 9 HX 375 (family 0x1a model 0x24)
-  Distro kernel: 7.3.0-rc3-1-cachyos-rc
-  Solaar 1.1.20
-
-
-Reproduction
-============
-
-  1. Pair an MX Master 4 (or other 0x2121-capable mouse) to a Bolt receiver.
-  2. In Solaar, set "Scroll Wheel Resolution" to off
-     (solaar config 2 hires-smooth-resolution false).
-  3. Suspend and resume (s2idle here, but any reconnect does it -- turning
-     the mouse off and on again is enough).
-  4. The setting is back on.
-
-Solaar shows the divergence between what the user asked for and what the
-device is actually in:
-
-     18: HIRES WHEEL            {2121} V1
-         Multiplier: 15
-         Has invert: Normal wheel motion
-         Has ratchet switch: Normal wheel mode
-         High resolution mode
-         HID notification
-         Scroll Wheel Direction (saved): False
-         Scroll Wheel Direction        : False
-         Scroll Wheel Resolution (saved): False
-         Scroll Wheel Resolution        : True
-         Scroll Wheel Diversion (saved): False
-         Scroll Wheel Diversion        : False
-
-"(saved)" is what I configured; the live value has been overwritten.
-
-
-Analysis
-========
-
-I have not bisected this, but I believe the cause is clear from inspection.
-
-Before 022eb347ff3a4 ("HID: logitech: add Bolt receiver support for Logitech
-HID++ devices"), USB_DEVICE_ID_LOGITECH_BOLT_RECEIVER was not present in
-logi_dj_receivers[] -- it appeared only in hid-quirks.c and hid-multitouch.c.
-So a Bolt-connected mouse never became a HID_GROUP_LOGITECH_DJ_DEVICE child,
-hid-logitech-hidpp never bound to it, and the kernel never touched HID++
-feature 0x2121. The device was driven by hid-generic and userspace was the
-only writer of the wheel mode, so the setting stuck.
-
-With Bolt support in place the mouse is now a hid-logitech-hidpp device:
-
-  logitech-djreceiver 0003:046D:C548.0007: device of type Bolt (0x10) connected on slot 2
-  input: Logitech Wireless Mouse PID:b042 Mouse as /devices/.../0003:046D:C548.0007/0003:046D:B042.0009/input/input22
-  logitech-hidpp-device 0003:046D:B042.0009: input,hidraw7: USB HID v1.11 Mouse [Logitech Wireless Mouse PID:b042] on usb-0000:c5:00.4-1.3.2.4/input2:2
-  logitech-hidpp-device 0003:046D:B042.0009: HID++ 4.5 device connected.
-
-and every reconnect now runs hidpp_connect_event(), which unconditionally
-does:
-
-	if (hidpp->capabilities & HIDPP_CAPABILITY_HI_RES_SCROLL)
-		hi_res_scroll_enable(hidpp);
-
-and hi_res_scroll_enable() in turn does:
-
-	ret = hidpp_hrw_set_wheel_mode(hidpp, false, true, false);
-	                            /* invert ^     ^ high_resolution */
-
-with high_resolution hard-coded to true. There is no record of a user
-preference and nothing consults the device's current mode, so any userspace
-choice is discarded at connect time.
-
-Note this is not a suspend/resume bug as such -- hidpp_driver has no .resume
-or .reset_resume callback. The reconnect is driven purely by the receiver
-re-announcing the device after USB resume, which queues hidpp_connect_event
-via hidpp_report_is_connect_event().
-
-The same call hard-codes invert = false, so "Scroll Wheel Direction" is reset
-by the same path for anyone who inverts their wheel.
-
-I realise hid-logitech-hidpp has always enabled hi-res scrolling at connect
-for devices it drives, and that Unifying users have lived with this for
-years. What changed in 7.3 is the set of devices this applies to: Bolt
-devices were previously outside the driver's reach and are now inside it, so
-for those users this is a user-visible behavioural regression.
-
-Commit f0866517be934 ("HID: logitech-hidpp: sync wheel multiplier on wheel
-mode changes") in 7.2 already added hidpp20_hires_wheel_raw_event() to notice
-an external SetWheelMode and re-sync the cached multiplier. The driver
-therefore sees userspace changing the mode; it just does not remember the
-choice across a reconnect. Persisting the last observed mode and restoring
-that in hi_res_scroll_enable(), rather than unconditionally forcing hi-res,
-would fix this. I am happy to test any patch.
+Christoph
 
 
-Possibly related
-================
+On 14.09.26 13:44, ra.prism wrote:
+> Hi,
+>=20
+> two btusb device-ID commits were backported to stable branches that lack
+> the btrtl support they depend on:
+>=20
+>  =C2=A0 980084de4d9b ("Bluetooth: btusb: Add ASUS USB-BT540 for Realtek =
+8761CU")
+>  =C2=A0 6f0624b4427e ("Bluetooth: btusb: Add ASUS USB-BT600 for Realtek =
+8761CU")
+>=20
+> Both set BTUSB_REALTEK for 0b05:1bef / 0b05:1d70, so the adapters now go
+> through btrtl setup. btrtl only learned about this chip in v6.19-rc1:
+>=20
+>  =C2=A0 4a23ce935f74 ("Bluetooth: btrtl: Add the support for RTL8761CUV"=
+)
+>=20
+> Without it, setup fails and the adapter resets in a loop. Before the
+> backport the adapter bound via the generic Bluetooth class and did not
+> loop.
+>=20
+> Affected, checked against the stable trees (btusb.c has 0x0b05/0x1bef,
+> btrtl.c has no rtl8761cu entry):
+>=20
+>  =C2=A0 released=C2=A0 6.18.50 (aa7b93fe98ba, bce588b4ca08), still in 6.=
+18.51
+>  =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 6.12.109 (f05baf6e0680, 32412=
+aff8d11)
+>  =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 6.1.188, 5.15.221, 5.10.270
+>  =C2=A0 queued=C2=A0 =C2=A0 queue-6.6
+>=20
+> Not affected: 7.1.y (has 4a23ce935f74 but not the IDs) and 7.2.y (has
+> both).
+>=20
+> Observed with an ASUS USB-BT540 (0b05:1bef, hci_rev 000e, lmp_subver
+> 8761) on 6.18.50: 203 re-enumerations in 37 minutes, one every ~10.8 s,
+> independent of the USB port:
+>=20
+>  =C2=A0 [=C2=A0 =C2=A0 8.008281] Bluetooth: hci0: RTL: examining hci_ver=
+=3D0d=20
+> hci_rev=3D000e lmp_ver=3D0d lmp_subver=3D8761
+>  =C2=A0 [=C2=A0 =C2=A0 8.008294] usb 5-2: USB disconnect, device number =
+3
+>  =C2=A0 [=C2=A0 =C2=A018.476022] Bluetooth: hci0: RTL: RTL: Read reg16 f=
+ailed (-110)
+>  =C2=A0 [=C2=A0 =C2=A018.852034] usb 5-2: New USB device found, idVendor=
+=3D0b05,=20
+> idProduct=3D1bef, bcdDevice=3D 2.00
+>  =C2=A0 [=C2=A0 =C2=A018.875711] Bluetooth: hci0: RTL: examining hci_ver=
+=3D0d=20
+> hci_rev=3D000e lmp_ver=3D0d lmp_subver=3D8761
+>  =C2=A0 [=C2=A0 =C2=A018.886986] usb 5-2: USB disconnect, device number =
+4
+>  =C2=A0 [=C2=A0 =C2=A029.228274] Bluetooth: hci0: RTL: RTL: Read reg16 f=
+ailed (-110)
+>=20
+> Same machine and adapter on 7.2.5, which has both commits, works:
+>=20
+>  =C2=A0 [=C2=A0 =C2=A0 7.816015] Bluetooth: hci0: RTL: examining hci_ver=
+=3D0d=20
+> hci_rev=3D000e lmp_ver=3D0d lmp_subver=3D8761
+>  =C2=A0 [=C2=A0 =C2=A0 7.820005] Bluetooth: hci0: RTL: rom_version statu=
+s=3D0 version=3D1
+>  =C2=A0 [=C2=A0 =C2=A0 7.825030] Bluetooth: hci0: RTL: loading rtl_bt/rt=
+l8761cu_fw.bin
+>  =C2=A0 [=C2=A0 =C2=A0 7.826003] Bluetooth: hci0: RTL: loading rtl_bt/rt=
+l8761cu_config.bin
+>  =C2=A0 [=C2=A0 =C2=A0 7.840001] Bluetooth: hci0: RTL: fw version 0x7bf1=
+5762
+>=20
+> 6.18.48 (without the IDs) did not loop. The kernels were distribution
+> builds (CachyOS linux-cachyos-lts 6.18.50, linux-cachyos 7.2.5). I
+> checked the relevant btusb/btrtl lines against the vanilla stable trees
+> listed above. I only have the BT540 and only tested 6.18.y; the BT600 an=
+d
+> the other branches are untested but in the same situation.
+>=20
+> Could you please:
+>=20
+>  =C2=A0 - drop both patches from queue-6.6, and
+>  =C2=A0 - revert them in 6.18.y, 6.12.y, 6.1.y, 5.15.y and 5.10.y, or ba=
+ckport
+>  =C2=A0 =C2=A0 4a23ce935f74 (btrtl.c, +15/-1) where it applies. I have n=
+ot checked
+>  =C2=A0 =C2=A0 whether it applies cleanly to any of these trees.
+>=20
+> Thanks,
+> Ralf Ahlbrink
+>=20
+> #regzbot introduced: v6.18.49..v6.18.50
+>=20
+> #regzbot title: btusb: ASUS USB-BT540/BT600 IDs in stable without=20
+> RTL8761CUV btrtl support cause endless re-enumeration
 
-On this same Bolt topology the wheel also scrolls far too far per detent,
-apparently because hid-logitech-dj does not forward the hi-res wheel reports
-to hid-logitech-hidpp, so the multiplier-15 steps reach userspace unscaled.
-There is an out-of-tree DKMS workaround for exactly this WPID:
 
-  https://github.com/Magnetar-OS/logitech-bolt-hidpp-dkms
-
-I am reporting only the mode-reset problem here, but the two look like
-neighbouring consequences of the same commit and may be worth considering
-together.
-
-Thanks,
-Roman
