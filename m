@@ -1,203 +1,260 @@
-Received: from mail-pj2-f17.google.com (mail-pj2-f17.google.com [74.125.227.145])
+Received: from mail-wm2-f13.google.com (mail-wm2-f13.google.com [74.125.225.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C4813CA4A9
-	for <regressions@lists.linux.dev>; Sun, 20 Sep 2026 18:31:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.227.145
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 412342F7EFE
+	for <regressions@lists.linux.dev>; Sun, 20 Sep 2026 20:53:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789929072; cv=none; b=k85zKUu7KzTPu2nvW2/UK+ZBMqPDXXqyZBVN7sFSLSkPvTGBmJuYCAYmJtUXQ8WwmQ1m6+nE8xgboddB//08JhTrUUjGxSaYYSrRUPD5CZ1AdknaRfgRkwfHPYSl45crPZV6cvWqpenso6yYMN2WForPsaaraaJlgmh4fppz6+U=
+	t=1789937587; cv=none; b=W0HdNFuxBcD2XDwpU3iTJMkmisPz0uJBMUezrd2DVsR+NSrQnBtRep3dNhFYNz7vIXmZ5Fp9fJZwTFTFxSPi+sdeN6FtnvM0pqXfo6RyovpecCQnVopzQ3HrMyXmpN6G+FpJegqO3cQnuRK3WE8uS+h/mfz9AolhcQ/SkQ9dctM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789929072; c=relaxed/simple;
-	bh=HZQaFK2Zua2AWNp7kCv0PnK6xeLcfpKRjtXC5jqIVv0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=soKW/ZOlo2bNvt/olb3w+bq59PXerrdTMy6vFsIZPmcSQDHpGHmscJedDUgH3x4JapcsNWpixXLTG0r6Ic8dZ3W4lcY2GDvA8VTkKFczAiTKFdBOmGmUDWGLmaVvK5oWsafJEr46ruuZ412ZihSHutrwyWEJE50nFu2wnc0w+rE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OpI6o7ZG; arc=none smtp.client-ip=74.125.227.145
+	s=arc-20240116; t=1789937587; c=relaxed/simple;
+	bh=/3QoRAqFj62JENv7kB97NSOUDVLhI2ghJtYPN2Ifqkw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=auB+x82Gajgl1D18G0rn7Yfu1rMz/8ryHhU7er+7r0p/Krdrn4+XrAKicjRFAKBbAw6yYHnSRFA3DlqWMD/dbBTdgjUx6S2vO3lqmi69N9nAS+wO/queTbFHpqahKrOAUqPVoGC37aXxBCoEX6lwvp7yfYkgTsxh2RNvxo5N7uI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HRdjcODo; arc=none smtp.client-ip=74.125.225.141
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OpI6o7ZG"
-Received: by mail-pj2-f17.google.com with SMTP id d9443c01a7336-2db1ca06a25so15107345ad.2
-        for <regressions@lists.linux.dev>; Sun, 20 Sep 2026 11:31:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HRdjcODo"
+Received: by mail-wm2-f13.google.com with SMTP id 5b1f17b1804b1-49e620fa473so13375815e9.1
+        for <regressions@lists.linux.dev>; Sun, 20 Sep 2026 13:53:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1789929071; x=1790533871; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=Tk72gKrfIRDNOeRHSLcFym2Jrz9jdSnywQNEhtH2BqI=;
-        b=OpI6o7ZG1Q754UhB5Uc57FBatMENry502x+oLZST1Q8So84fTcVooHrUhfnZ+T7eJB
-         qeE65onvfp7FWo4Z6QCZLmZYUnc9ucFA/zdUyoPX2IS//4FqwJfwIL+3fjfIVs+Ep9J8
-         tCVjsHmgRy5x2doA6bITrIkk8pzfbeuC+eRa7Qdb7hraxSBbLLAdvZ87nFk/9ZK+z5jw
-         F6FbMlvQYhvAao9jBMNx6PL2/t0UlGVHEzvp76ODk1GXG2F4Msr4LLelhiMOnCHtVr3W
-         Q+Xpc/su3n5A6F4JXHpInUjO7NRXM/i0ta4xyrXYS1egbFaBvKhIz0ZwavCu1gypdhjV
-         GE9Q==
+        d=gmail.com; s=20251104; t=1789937583; x=1790542383; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=EsJjBw/Oa5Zb6NlNapTRqTqtkEMm7b5t0BbF/9DxwDk=;
+        b=HRdjcODoNHzaGJf/+VIgcmMHdUS7BXtL4YsRl2apuSkk5ob+FXZKmzw2a7JuIdtDwd
+         HIi9r//s6eCABPGvSShJjGnr33Gt0o2uYfZKTjstM03W4/XDBWf2WmO6H+oYpbVh4ppK
+         Wzst0HP6FqZn+k8zz1en7MRnKnwJEqCQrNPXG4pgWnJZRBmo6GxNvtVCBevGd30RnC62
+         e6FWJQqFnOve8bKZrKV9DoGskHDK6svKEwGsDV+FJGE3jZzfDDFAOTH1knejtxNFozKd
+         CUiO2LkPc6/fPYpb3lmIbX3h/uutzfFizMxcA4QXopevZuHm6ZvuY/88gNyV5g4jKM1t
+         cf+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789929071; x=1790533871;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=Tk72gKrfIRDNOeRHSLcFym2Jrz9jdSnywQNEhtH2BqI=;
-        b=GlwUQigZ7UTBXhGRJ7l2UJiey+njTGjURiOjGAr1fsieV6vA8Ogz040evPVh0OUTMY
-         pjray5vnUqD6Zg5GAA5XEouIABTZRLMrR96w2yEn+rQ2us0l1ZOBQPCLG765UQsxkn0B
-         9P15ifTh9z6bmZbhNsXoGAuqOoSaicvk4T3NVM6avV002n1cvFM0xnxtIVvSKDtFPDZC
-         nFicNIvW9+Jy1V9Bd2xgsZunfY0qU10M5USaAUmhhPFGDUm/Qxp7cp1Q2N2b0OJv+JUx
-         Vo/WQqr6876ywZYEHfk9Ju0EfKN6xOyLBxOONAIHN4TXLAVy6ZFETBpPQtMNZ/dbD4D6
-         u34w==
-X-Forwarded-Encrypted: i=1; AKwUvBxzeDHAbaZd/JXUmKjwY7YzsYJrjAk9Nop/juQP7obutiwHknyf2bLfmdiawt6kzlwSic0WmRtMjSxgtQ==@lists.linux.dev
-X-Gm-Message-State: AFuF++neH1Hxblt1BIePxlOFvcdjsz1W9ldmb0Z5Uhr9fVEwgE/4eJV0
-	K2qVZVtkbY7a1PhL1W8gIY6FWk/fHaoFbrvBoAaLUdYDjTxELaloQj2+
-X-Gm-Gg: AYBFou14zL241AOQBwj9XaRXMnypZ3UNXiX5EjmuNetd1JSd58LwRa4ajrTAFA9a/Iw
-	blA/YWzH3xD8Xv3JDAvjOVPSVfOGcJS9tnSMyOo9LP0lXy4Reg7vNKnEANRzUlz2tJ4hVEcFN3P
-	rJov3Kwnz/VyLwnS+yJbv0wfR4b9Y9jKthp7umtdafl8oeH5PHGSND2SUTn6UTbP1SVpkz8AJFg
-	mVw60qXFb1yMLmSqe9SL+nsKYimaPATmEbUSt1390S5gz2nkvbEK7wQRRcC3mTAhyMrbQtFDRB7
-	GHSuLnhQQRkq+Jn6Q7sOQtWx2zgxIzsMJbwtVdbRh7HLZGZJ80C87H+BLUobwIb+8m4xaWnjG4S
-	6YMZR9uF0uUUTF5v7b6UeOkzg0fRP+vLj9E1/a0UPRP5dFgDgRjFkbcWK9Bb1iyNIr+DZKoNohJ
-	KxAHSMjvuFgn0VFS/ohJPXbFfGA1InkGmPTAKJAevmtKgGdVYQKjhuB/yqUqS2G0Qdf1S2DaQMD
-	4SnHq8IBIaXxHKwTg7ko1C3sCTt2+dM1vg=
-X-Received: by 2002:a17:902:ce03:b0:2dd:ad74:ac25 with SMTP id d9443c01a7336-2ddb1b989d4mr130378985ad.23.1789929070521;
-        Sun, 20 Sep 2026 11:31:10 -0700 (PDT)
-Received: from eggarch ([2409:40c4:136:c0b:7911:68d7:f26b:cf67])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-33c331ad266sm12840860eec.23.2026.09.20.11.31.06
+        d=1e100.net; s=20260707; t=1789937583; x=1790542383;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=EsJjBw/Oa5Zb6NlNapTRqTqtkEMm7b5t0BbF/9DxwDk=;
+        b=gFIvRr/RfQoYhO+2YPaPOXuefq6pTsPbQBUUppSZyft25ss/vkVmhXrJ+CBVnEkuN6
+         uW3hZ6KrLPmqHu8BRYwe5FGfL7vJmUvgXjAakc09Esvatl3m21VEPGVnjfJY9HAeRiSm
+         g0Qds6jjuVZ41X5CGf4YZpxcaPUID0YJGXeAw8lDNR0v7ONLP5xK6LpI66xFTBe15+3s
+         wXHyHvxZMFoosxrG9MG9cdUlwOoV1/z+InxHgSM0fc1pjdiFbzg4qCwqarVpAcrQ0pt3
+         ad7R2r8p0e3zcI1q9vANx+9BXTGzL0Vf6gDFFtTCXHKs1eFviZ4ACk/K17Fa80Q/Ouz7
+         /DNQ==
+X-Forwarded-Encrypted: i=1; AKwUvByTUFtyuuZDNGospaQielTHSJHaRZ/biGOpQh77ojtrJ9ThcGLmoCtd5gKsuUetF6zvv8IkLyCVrebyWA==@lists.linux.dev
+X-Gm-Message-State: AFuF++lyxa7OnmDHBhmhSiRG2cyDcZgyMaBzTT1znq5VA3s2FruBA/xh
+	0rDRKaiOnJ1Gh+1rDtF7R8BdtxSXgkUrsGQdQ/GeqiqWxsAun1UBLziN
+X-Gm-Gg: AYBFou3AHPpvMNTCeXklIimT7kex96t4c/GxIW/jo32tzPvxStukPeZRZ9/JOCohK5D
+	5KDwJU4lA64CXuvramFTN6q9SLLgddeVYGiP0iqXnlA1bfJnOXkr0hRl13oOkProNI9zqUt+o7I
+	htzxw+zDYyRkww/hYsev3zqUPJBmEKrBn5AvyIaabNgUcEgS0qhjGdNjzNkQ0CBkZkOhDr5QrsD
+	X+/mLkwq8PkM9pVitPfaEqkdoBVn+Xs/4ghECCIJTVHxYNSU+wQAV/wI4MqWEb1dr2E927epbbz
+	VHbawYbLa4YHDsDEu3fPoYclaIvR+yMyktufjnzYvf/j8A2C7bDBMXyO90z1ziRZEH4IM3gmep9
+	1w+yBh0sg62z2a+hvEStDgqeW7IM0su0//MFFCO+Ux9PAsRIKx8xoS8imkHtd2zBsSsnkEI+bf6
+	yHZNxK4/M3HyiYxboymBvSrxlB8InNtEo37py+7lpcmJTl2pdvRYhOnSFGgt5CN9CoPzm/4tsWR
+	gU9W8X/hKZvW/Gj7qPoQacpDzGRX03jA//96I6ATXIe
+X-Received: by 2002:a05:600c:4ecb:b0:49c:fc6c:be03 with SMTP id 5b1f17b1804b1-49fc5754e06mr120485355e9.26.1789937583225;
+        Sun, 20 Sep 2026 13:53:03 -0700 (PDT)
+Received: from cachyos-x8664 (213-225-11-125.nat.highway.a1.net. [213.225.11.125])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49fd1f0a061sm86765405e9.12.2026.09.20.13.53.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 20 Sep 2026 11:31:09 -0700 (PDT)
-Date: Mon, 21 Sep 2026 00:01:03 +0530
-From: Lovekesh Solanki <lovekeshsolanki00@gmail.com>
-To: Roman Stingler <roman.stingler@gmail.com>
-Cc: Jiri Kosina <jikos@kernel.org>, 
-	Benjamin Tissoires <bentiss@kernel.org>, Erik Hakansson <erikhakan@gmail.com>, 
-	Filipe Lains <lains@riseup.net>, Bastien Nocera <hadess@hadess.net>, linux-input@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: [REGRESSION 7.3-rc1] HID: logitech-hidpp: hi-res scroll mode
- forcibly re-enabled on every reconnect for Bolt devices, overriding
- userspace
-Message-ID: <arAe2iRkYh9p98Rf@eggarch>
-References: <20260920094508.39682-1-roman.stingler@gmail.com>
+        Sun, 20 Sep 2026 13:53:02 -0700 (PDT)
+From: Roman Stingler <roman.stingler@gmail.com>
+To: Lovekesh Solanki <lovekeshsolanki00@gmail.com>
+Cc: Roman Stingler <roman.stingler@gmail.com>,
+	Jiri Kosina <jikos@kernel.org>,
+	Benjamin Tissoires <bentiss@kernel.org>,
+	Erik Hakansson <erikhakan@gmail.com>,
+	Filipe Lains <lains@riseup.net>,
+	Bastien Nocera <hadess@hadess.net>,
+	linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: Re: [REGRESSION 7.3-rc1] HID: logitech-hidpp: hi-res scroll mode forcibly re-enabled on every reconnect for Bolt devices, overriding userspace
+Date: Sun, 20 Sep 2026 22:50:53 +0200
+Message-ID: <20260920205058.11958-1-roman.stingler@gmail.com>
+X-Mailer: git-send-email 2.55.0
+In-Reply-To: <arAe2iRkYh9p98Rf@eggarch>
+References: <20260920094508.39682-1-roman.stingler@gmail.com> <arAe2iRkYh9p98Rf@eggarch>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260920094508.39682-1-roman.stingler@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-Hi thanks for the report,
+On Mon, Sep 21, 2026 at 12:01:03AM +0530, Lovekesh Solanki wrote:
+> We could store this info in hidpp_device struct and use in hi_res_scroll_enable().
+> I'm pasting a patch below, could you give it a go?
 
-On Sun, Sep 20, 2026 at 11:44:39AM +0200, Roman Stingler wrote:
-> I have not bisected this, but I believe the cause is clear from inspection.
-> 
-> Before 022eb347ff3a4 ("HID: logitech: add Bolt receiver support for Logitech
-> HID++ devices"), USB_DEVICE_ID_LOGITECH_BOLT_RECEIVER was not present in
-> logi_dj_receivers[] -- it appeared only in hid-quirks.c and hid-multitouch.c.
-> So a Bolt-connected mouse never became a HID_GROUP_LOGITECH_DJ_DEVICE child,
-> hid-logitech-hidpp never bound to it, and the kernel never touched HID++
-> feature 0x2121. The device was driven by hid-generic and userspace was the
-> only writer of the wheel mode, so the setting stuck.
-> 
-> With Bolt support in place the mouse is now a hid-logitech-hidpp device:
-> 
->   logitech-djreceiver 0003:046D:C548.0007: device of type Bolt (0x10) connected on slot 2
->   input: Logitech Wireless Mouse PID:b042 Mouse as /devices/.../0003:046D:C548.0007/0003:046D:B042.0009/input/input22
->   logitech-hidpp-device 0003:046D:B042.0009: input,hidraw7: USB HID v1.11 Mouse [Logitech Wireless Mouse PID:b042] on usb-0000:c5:00.4-1.3.2.4/input2:2
->   logitech-hidpp-device 0003:046D:B042.0009: HID++ 4.5 device connected.
-> 
-> and every reconnect now runs hidpp_connect_event(), which unconditionally
-> does:
-> 
-> 	if (hidpp->capabilities & HIDPP_CAPABILITY_HI_RES_SCROLL)
-> 		hi_res_scroll_enable(hidpp);
-> 
-> and hi_res_scroll_enable() in turn does:
-> 
-> 	ret = hidpp_hrw_set_wheel_mode(hidpp, false, true, false);
-> 	                            /* invert ^     ^ high_resolution */
-> 
-> with high_resolution hard-coded to true. There is no record of a user
-> preference and nothing consults the device's current mode, so any userspace
-> choice is discarded at connect time.
-I think this does look like the issue.
+Thanks. Your patch does fix the case I reported:
 
-We could store this info in hidpp_device struct and use in hi_res_scroll_enable().
-I'm pasting a patch below, could you give it a go?
+  Tested-by: Roman Stingler <roman.stingler@gmail.com>
 
-> 
-> Possibly related
-> ================
-> 
-> On this same Bolt topology the wheel also scrolls far too far per detent,
-> apparently because hid-logitech-dj does not forward the hi-res wheel reports
-> to hid-logitech-hidpp, so the multiplier-15 steps reach userspace unscaled.
-> There is an out-of-tree DKMS workaround for exactly this WPID:
-> 
->   https://github.com/Magnetar-OS/logitech-bolt-hidpp-dkms
-> 
-> I am reporting only the mode-reset problem here, but the two look like
-> neighbouring consequences of the same commit and may be worth considering
-> together.
-They do, but I think this should be treated as a seperate bug. The author of
-those patches hasn't sent them upstream.. hopefully they do.
+MX Master 4 (WPID B042) on a Bolt receiver, 7.3.0-rc3, patched driver
+installed via DKMS so it is the module actually loaded at boot. Set the wheel
+to low resolution, suspend (s2idle), resume: still low resolution. Before the
+patch that always came back hi-res. It also fixes more than suspend -- on the
+unpatched kernel even "solaar config <serial> hires-smooth-resolution false"
+read back True within a second, because Solaar's own HID++ ping provokes a
+connect event.
 
-Thanks,
-Lovekesh
+(The patch as posted also adds #include "linux/stddef.h" above the pr_fmt
+definition, which looks like an editor artifact. I dropped it; the rest I
+applied verbatim.)
 
----------patch here---------
+But while testing I found something that I think makes this the wrong layer
+to fix it at.
+
+
+The wheel mode is persistent state in the device
+================================================
+
+I unloaded hid-logitech-hidpp completely, with an install override so udev
+could not bring it back, set the wheel to low resolution from userspace,
+switched the mouse off at the power switch for ten seconds, and switched it
+back on. It came back in low resolution mode.
+
+So 0x2121 wheel mode is not volatile on this hardware. The mouse holds it by
+itself, with no driver and no daemon in the picture. That is precisely why
+this worked on 7.2: nothing in the kernel ever wrote the setting, so a user
+could configure the mouse once and keep that configuration across reboots --
+even with the configuration tool uninstalled afterwards.
+
+What 7.3 changed is that the kernel now overwrites that persistent device
+state on every probe.
+
+
+Remembering the mode in hidpp_device cannot close the gap
+=========================================================
+
+struct hidpp_device is allocated at probe and freed at unbind, so
+hires_wheel_mode_seen is false again on every probe. I hit that three ways
+with your patch installed:
+
+- cold boot
+- unplugging and replugging the Bolt receiver
+- a plain module reload
+
+In each case the driver forces hi-res before userspace has said anything, and
+the persistent setting is gone. Gating on connected_once instead -- which I
+had considered suggesting -- has the same flaw, since "first connect" also
+resets per probe. The problem is not which connect the driver writes on. It
+is that it writes at all.
+
+Userspace does not reliably repair it either. Solaar skips its apply here:
+for devices exposing WIRELESS_DEVICE_STATUS it goes through a ConfigChange
+cookie check, the cookie still matches what it stored (the driver's
+SetWheelMode does not bump it), so it concludes nothing needs applying. I
+will report that to Solaar separately. But it should not have to be
+load-bearing -- the device already holds the setting.
+
+
+Proposal: read the mode instead of writing it
+=============================================
+
+0x2121 exposes getWheelMode (function 1) next to setWheelMode; the driver
+currently uses only getWheelCapability and setWheelMode. If
+hi_res_scroll_enable() reads the current mode and scales the wheel multiplier
+to match, the driver gets what it needs for REL_WHEEL_HI_RES without touching
+state it does not own -- and there is no mode to remember across probes.
 
 diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-hidpp.c
-index 1504de32b1c8..6e3d717827ea 100644
+index 1504de32b1c8..ffc7cef49b59 100644
 --- a/drivers/hid/hid-logitech-hidpp.c
 +++ b/drivers/hid/hid-logitech-hidpp.c
-@@ -8,6 +8,7 @@
-  */
+@@ -2044,6 +2044,7 @@ static int hidpp_hrs_set_highres_scrolling_mode(struct hidpp_device *hidpp,
+ #define HIDPP_PAGE_HIRES_WHEEL		0x2121
  
+ #define CMD_HIRES_WHEEL_GET_WHEEL_CAPABILITY	0x00
++#define CMD_HIRES_WHEEL_GET_WHEEL_MODE		0x10
+ #define CMD_HIRES_WHEEL_SET_WHEEL_MODE		0x20
  
-+#include "linux/stddef.h"
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+ static int hidpp_hrw_get_wheel_capability(struct hidpp_device *hidpp,
+@@ -2072,12 +2073,10 @@ static int hidpp_hrw_get_wheel_capability(struct hidpp_device *hidpp,
+ 	return ret;
+ }
  
- #include <linux/device.h>
-@@ -213,6 +214,8 @@ struct hidpp_device {
+-static int hidpp_hrw_set_wheel_mode(struct hidpp_device *hidpp, bool invert,
+-	bool high_resolution, bool use_hidpp)
++static int hidpp_hrw_get_wheel_mode(struct hidpp_device *hidpp, u8 *mode)
+ {
+ 	u8 feature_index;
+ 	int ret;
+-	u8 params[1];
+ 	struct hidpp_report response;
  
- 	int hires_wheel_multiplier;
- 	u8 hires_wheel_feature_index;
-+	u8 hires_wheel_mode;
-+	bool hires_wheel_mode_seen;
+ 	ret = hidpp_root_get_feature(hidpp, HIDPP_PAGE_HIRES_WHEEL,
+@@ -2085,13 +2084,14 @@ static int hidpp_hrw_set_wheel_mode(struct hidpp_device *hidpp, bool invert,
+ 	if (ret)
+ 		return ret;
  
- 	bool connected_once;
- };
-@@ -3910,9 +3913,24 @@ static int hi_res_scroll_enable(struct hidpp_device *hidpp)
+-	params[0] = (invert          ? BIT(2) : 0) |
+-		    (high_resolution ? BIT(1) : 0) |
+-		    (use_hidpp       ? BIT(0) : 0);
++	ret = hidpp_send_fap_command_sync(hidpp, feature_index,
++					  CMD_HIRES_WHEEL_GET_WHEEL_MODE,
++					  NULL, 0, &response);
++	if (ret)
++		return ret;
+ 
+-	return hidpp_send_fap_command_sync(hidpp, feature_index,
+-					   CMD_HIRES_WHEEL_SET_WHEEL_MODE,
+-					   params, sizeof(params), &response);
++	*mode = response.fap.params[0];
++	return 0;
+ }
+ 
+ /* -------------------------------------------------------------------------- */
+@@ -3910,8 +3910,16 @@ static int hi_res_scroll_enable(struct hidpp_device *hidpp)
  	u8 multiplier = 1;
  
  	if (hidpp->capabilities & HIDPP_CAPABILITY_HIDPP20_HI_RES_WHEEL) {
 -		ret = hidpp_hrw_set_wheel_mode(hidpp, false, true, false);
 -		if (ret == 0)
--			ret = hidpp_hrw_get_wheel_capability(hidpp, &multiplier);
-+		bool invert = false;
-+		bool high_resolution = true;
++		u8 mode;
 +
-+		if(hidpp->hires_wheel_mode_seen){
-+			invert = hidpp->hires_wheel_mode & BIT(2);
-+			high_resolution = hidpp->hires_wheel_mode & BIT(1);
-+		}
-+
-+		ret = hidpp_hrw_set_wheel_mode(hidpp, invert, high_resolution, false);
-+		if (ret == 0) {
-+			if(high_resolution){
-+				ret = hidpp_hrw_get_wheel_capability(hidpp, &multiplier);
-+			}
-+			else {
-+				multiplier = 1;
-+			}
-+		}
-+
++		/*
++		 * The wheel mode is persistent state in the device, so read it
++		 * rather than overwriting it, and scale to match. A device
++		 * left in hi-res still gets the multiplier it needs; one the
++		 * user configured for low resolution is left alone.
++		 */
++		ret = hidpp_hrw_get_wheel_mode(hidpp, &mode);
++		if (ret == 0 && (mode & BIT(1)))
+ 			ret = hidpp_hrw_get_wheel_capability(hidpp, &multiplier);
  	} else if (hidpp->capabilities & HIDPP_CAPABILITY_HIDPP20_HI_RES_SCROLL) {
  		ret = hidpp_hrs_set_highres_scrolling_mode(hidpp, true,
- 							   &multiplier);
-@@ -3992,6 +4010,8 @@ static int hidpp20_hires_wheel_raw_event(struct hidpp_device *hidpp,
- 	if ((data[3] & 0xf0) == CMD_HIRES_WHEEL_SET_WHEEL_MODE) {
- 		u8 mode = data[4];
- 		bool hires = (mode & 0x02) != 0;
-+		hidpp->hires_wheel_mode = mode;
-+		hidpp->hires_wheel_mode_seen = true;
- 		int new_multiplier = (hires && hidpp->hires_wheel_multiplier > 0)
- 			? hidpp->hires_wheel_multiplier : 1;
- 		hidpp->vertical_wheel_counter.wheel_multiplier = new_multiplier;
+
+Tested on top of 7.3-rc3, installed via DKMS so it is the module loaded at
+boot. Results against the same device:
+
+                            stock   your patch   this
+  suspend/resume                no        yes       yes
+  solaar write sticks           no        yes       yes
+  module reload                 no        no        yes
+  cold boot                     no        no        yes
+
+The hi-res direction still works: with the mouse left in hi-res, a full
+module reload leaves it in hi-res and the driver fetches the multiplier
+through the same getWheelCapability call as before. I checked the mode is
+honoured; I did not instrument events-per-detent, though that path is
+unchanged from the current code.
+
+The deliberate behaviour change is that a device sitting at its factory
+default in low resolution will no longer be switched into hi-res by the
+kernel. If that is unacceptable, an opt-out, or writing hi-res only on the
+very first enumeration of a device the driver has never seen, would both keep
+today's default while leaving a configured device alone. I did not want to
+guess which of those you would prefer, so the diff above is the simple form.
+
+For the immediate regression I still think your patch should go in -- it is a
+clear improvement and it fixes the reported case. I just think the setting
+ultimately belongs to the device and the user, not to the driver.
+
+Happy to respin the above as a proper patch with a commit message if it looks
+like the right direction, and happy to test anything else.
+
+Thanks,
+Roman
