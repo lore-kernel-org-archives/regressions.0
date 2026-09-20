@@ -1,62 +1,62 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD7D926F2A0
-	for <regressions@lists.linux.dev>; Sun, 20 Sep 2026 02:02:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 913521A0B15
+	for <regressions@lists.linux.dev>; Sun, 20 Sep 2026 02:03:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789869760; cv=none; b=V8wv/IzNTc2XY56buP8MRt0WywW0MIcikdrXjVeclmA+KTOyL/U93reLxcUpFf4Do5tH84nuq5vQkvZxEbaCoD3j6ZKn4ELwHEu/SybSJmbSuUzV3CmW2sx1MJU/OeYfTwprocKiBMdHLd3GampzbbXv4ACiR4XX+EKgQyrDx1g=
+	t=1789869837; cv=none; b=Yw0Wume+oqC7t4WmBDMtVGh+M3VNevhbQky2KN7AbgN/y7VkPFPYssusSQal8ukqRfxX1ACApJWmj1KuUo6eEJWC0bqadNWX6l98KiV3nLmHyPgUjDn/dFbUAm4EdDzgQOoOK4MGUGxEoaGes36RRUdpTMC0WK8eM0tkbMH7qBg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789869760; c=relaxed/simple;
-	bh=K1MtACSQtXprS7sAMZfuF/mgu8+OafBDwPZ8SzYQAbs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IgB9rIH6Y4psio5DHYfn4o5ReZK2Ajdcj+QOURDoROBwAyBmj1hbWDs21z2Eu8NrI9snbzfDml04gjayC0zLm/KevxB35GsqsDAX6fuAfdQ8iK2Ipew4Qw6NRj1ai4F5fZaAhW6QaM6xKJbABpThudnFNDKwRhEv36cfQ0xiGqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q1vR1Ge/; arc=none smtp.client-ip=192.198.163.12
+	s=arc-20240116; t=1789869837; c=relaxed/simple;
+	bh=b4N+XawsZW/9NJUYjuLvRt6+7kazXDkmH5hfSMdqLXk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=kGTwSl4oGQf7LTAAGMSKyNLsGNKXHwvsBFhd/vaGa9OBlq7QNjTpS9sFccragR4UIhytJHcdsyajBbybetccd2wlqbgvpCsZwE8tq6TXA9ctQhf3ztyTOZIIcxz47QU3ioe6lbVQra0HtmFq9NmNAc6bCHvAs3dx4Y4BS9Albis=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ifb7IUsK; arc=none smtp.client-ip=192.198.163.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q1vR1Ge/"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ifb7IUsK"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1789869758; x=1821405758;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=K1MtACSQtXprS7sAMZfuF/mgu8+OafBDwPZ8SzYQAbs=;
-  b=Q1vR1Ge/Ozpkz1AVF4P2PBHi+OpiM8gdTxnUvSbxiWcORXkAejazosXb
-   m8TnEov8TIddFiwwoRYjJhsl9A3F0xBoh3pXgV3hZaf/RITCO3mDq5xCM
-   cVAQYW2psFBb7KsFjcsUWho2JUdp87MXZnRzdVV0XTcHdJHb5YdVDcXPA
-   zekcsamlaQfkT1fPi7ikJXrVDapEQjo6LrkeI/6Ny5InhOFLWjqW3cQZe
-   lnwmnzM6fv8GI76e3q+c8RGY8IO5E53zl7kC3C3cFdTos9tEGlYYt9mMQ
-   JDElC4e48T14m6wYPD1CB6RnlWue7Vjn4n1dkD9fN5KSTCAwn7egGjBxD
+  t=1789869836; x=1821405836;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=b4N+XawsZW/9NJUYjuLvRt6+7kazXDkmH5hfSMdqLXk=;
+  b=ifb7IUsK44fHIQxIGVqPLJD7ACPxpid20SPYL73XpCxDua0KydwzrwMo
+   wlOUVioH96ibxrWaQIVR7BlcOty7J70eQEj3LqghuMI0TzoWZ6Rvjxdqe
+   znqGo8XDG+fsUwVLGfGJvkmuVVxJqHJIRMG8tFjOp1EZJkd1WS7A6UMSO
+   4ZbmCQ1UpwoJtat7oZ4IWgVuYVETfaF8RuliFwt+amvhzKIzeC3XK6clH
+   d7AIHNWav0lNT5B3d27aNiGJrC26+67K/+Pm4SjBPbDd+pwVTP3hRUVDb
+   +vuvod+YGxsl/HN+7VCv+2P6pevzTALfryDQYjrQKE73Y8WrwMCy54g6U
    A==;
-X-CSE-ConnectionGUID: TWSQpSvdQwWVnfVvmFPJ6w==
-X-CSE-MsgGUID: DkO9KCg0TUa5tksA0UN0Tg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11910"; a="94207551"
+X-CSE-ConnectionGUID: eRJwTUAeRUyW/Us3OnTMjg==
+X-CSE-MsgGUID: Ue0IednzQI6mI8GCLB0fcg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11910"; a="90509616"
 X-IronPort-AV: E=Sophos;i="6.27,111,1787036400"; 
-   d="scan'208";a="94207551"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Sep 2026 19:02:37 -0700
-X-CSE-ConnectionGUID: hWL6eNUoSoWDx6Wx9MqIvA==
-X-CSE-MsgGUID: etYkF2Y3THWTnOr5fpensA==
+   d="scan'208";a="90509616"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Sep 2026 19:03:56 -0700
+X-CSE-ConnectionGUID: vOcWsVdZRtqZ0ep9Crlp1g==
+X-CSE-MsgGUID: dC1ImFLwRw2FVhs9YtcaBg==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,111,1787036400"; 
-   d="scan'208";a="271262872"
 Received: from junjie-desk-dev.bj.intel.com ([10.238.152.71])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Sep 2026 19:02:34 -0700
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Sep 2026 19:03:53 -0700
 From: Junjie Cao <junjie.cao@intel.com>
-To: Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-	Marcel Holtmann <marcel@holtmann.org>
-Cc: Andy Tsvetinskiy <andrew.tsvetinskiy@gmail.com>,
-	Kamil Serwus <kserwus@gmail.com>,
-	Alexej Sidorenko <alexej@sidorenko.cz>,
-	Thorsten Leemhuis <regressions@leemhuis.info>,
-	linux-bluetooth@vger.kernel.org,
-	regressions@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: [PATCH] Bluetooth: btusb: drop BROKEN_EXT_SCAN quirk for 0bda:a728
-Date: Sun, 20 Sep 2026 10:02:27 +0800
-Message-ID: <20260920020227.709800-1-junjie.cao@intel.com>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Miguel Vadillo <miguel.vadillo@intel.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Manuel Knitza <manuel.knitza@googlemail.com>,
+	Antti Laakso <antti.laakso@linux.intel.com>,
+	Mehdi Djait <mehdi.djait@linux.intel.com>,
+	linux-media@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: Re: [PATCH 1/1] =?UTF-8?q?media:=20Don't=20hide=20I=C2=B2C=20or=20SPI?= =?UTF-8?q?=20drivers=20by=20default?=
+Date: Sun, 20 Sep 2026 10:03:47 +0800
+Message-ID: <20260920020347.709849-1-junjie.cao@intel.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <598cd300-dbec-44fc-a670-f575310e6a43@leemhuis.info>
+References: <598cd300-dbec-44fc-a670-f575310e6a43@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -65,80 +65,16 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Commit 5ead2063611a ("Bluetooth: btrtl: fix RTL8761B/BU broken LE
-extended scan") set HCI_QUIRK_BROKEN_EXT_SCAN on every RTL8761B, and
-commit ca0583c24661 ("Bluetooth: btusb: limit RTL8761B BROKEN_EXT_SCAN
-quirk to 0bda:a728") kept it on 0bda:a728 on the assumption that the
-USB id separates dongles with broken extended scan from those with a
-broken legacy scan path. It does not. An 0bda:a728 unit (RTL8761BUV,
-fw 0xdfc6d922) on 6.18.51 fails the same way the UB500 and 0bda:8771
-did: LE Set Scan Enable (0x200c) times out with -110 and btusb resets
-the device. With the flag removed from the table entry, scanning works
-on that unit.
+On Sat, Sep 19, 2026 at 09:10:18AM +0200, Thorsten Leemhuis wrote:
+> Also wondering if the "olddefconfig" case on Arch was tested to ensure
+> we prevent more people running into problems that Junjie's fix linked to
 
-Two dongles with the same USB id need opposite settings, so the device
-table cannot key the quirk either. The costs are not symmetric. Without
-the quirk, the unit it was written for gets -EBUSY on LE Set Extended
-Scan Enable (0x2042) while a connection is up. With it, 0x200c times
-out and btusb resets the device on three reported units, two of them in
-a re-enumeration loop.
+Ran it: this patch on its base-commit, Arch's
+config.x86_64 (7.2.4.arch1):
 
-Remove the flag and the table entry. 0bda:a728 matches the generic
-Realtek entry again and runs without the quirk, as before v7.2.
+  olddefconfig, before: no VIDEO_INTEL_CVS line
+  olddefconfig, after:  # CONFIG_VIDEO_INTEL_CVS is not set
 
-Reported-by: Andy Tsvetinskiy <andrew.tsvetinskiy@gmail.com>
-Closes: https://lore.kernel.org/all/CAE4bxw+ofDFVx0aTHqCrzns9oP1CRQDm_wzeyHPeMBYOhSpcuA@mail.gmail.com/
-Fixes: 5ead2063611a ("Bluetooth: btrtl: fix RTL8761B/BU broken LE extended scan")
-Fixes: ca0583c24661 ("Bluetooth: btusb: limit RTL8761B BROKEN_EXT_SCAN quirk to 0bda:a728")
-Cc: stable@vger.kernel.org
-Signed-off-by: Junjie Cao <junjie.cao@intel.com>
----
-Based on bluetooth-next. bluetooth.git and stable still have btusb.c,
-where the first hunk has different context (no BTUSB_QUALCOMM line);
-a btusb.c version is available if wanted for 7.3.
-
-Build-tested only (allmodconfig, W=1). Andy tested dropping the flag
-with the a728 entry kept; this also drops the entry, so the device
-falls to the generic 0bda entry. Andy, could you test this version?
-
- drivers/bluetooth/btusb_main.c | 8 --------
- 1 file changed, 8 deletions(-)
-
-diff --git a/drivers/bluetooth/btusb_main.c b/drivers/bluetooth/btusb_main.c
-index be47ac894b6cc..f410f130aaad3 100644
---- a/drivers/bluetooth/btusb_main.c
-+++ b/drivers/bluetooth/btusb_main.c
-@@ -70,7 +70,6 @@ static struct usb_driver btusb_driver;
- #define BTUSB_INTEL_NO_WBS_SUPPORT	BIT(26)
- #define BTUSB_ACTIONS_SEMI		BIT(27)
- #define BTUSB_BARROT			BIT(28)
--#define BTUSB_BROKEN_EXT_SCAN		BIT(29)
- #define BTUSB_QUALCOMM			BIT(30)
- 
- static const struct usb_device_id btusb_table[] = {
-@@ -648,10 +647,6 @@ static const struct usb_device_id quirks_table[] = {
- 	{ USB_DEVICE(0x0489, 0xe130), .driver_info = BTUSB_REALTEK |
- 						     BTUSB_WIDEBAND_SPEECH },
- 
--	/* Realtek 8761BU Bluetooth devices */
--	{ USB_DEVICE(0x0bda, 0xa728), .driver_info = BTUSB_REALTEK |
--						     BTUSB_BROKEN_EXT_SCAN },
--
- 	/* Realtek Bluetooth devices */
- 	{ USB_VENDOR_AND_INTERFACE_INFO(0x0bda, 0xe0, 0x01, 0x01),
- 	  .driver_info = BTUSB_REALTEK },
-@@ -4749,9 +4744,6 @@ static int btusb_probe(struct usb_interface *intf,
- 	if (id->driver_info & BTUSB_INVALID_LE_STATES)
- 		hci_set_quirk(hdev, HCI_QUIRK_BROKEN_LE_STATES);
- 
--	if (id->driver_info & BTUSB_BROKEN_EXT_SCAN)
--		hci_set_quirk(hdev, HCI_QUIRK_BROKEN_EXT_SCAN);
--
- 	if (id->driver_info & BTUSB_DIGIANSWER) {
- 		data->cmdreq_type = USB_TYPE_VENDOR;
- 		hci_set_quirk(hdev, HCI_QUIRK_RESET_ON_CLOSE);
-
-base-commit: 019debf20bfd648b40ba10377ee0168db5eb241e
--- 
-2.43.0
-
+The option has no default, so olddefconfig leaves it
+off. With the patch, oldconfig prompts for it as (NEW)
+and listnewconfig lists it.
