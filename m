@@ -1,123 +1,70 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAA8646C82A;
-	Sun, 20 Sep 2026 17:05:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76E20472520;
+	Sun, 20 Sep 2026 17:51:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789923948; cv=none; b=DysQSbVz798YqlN+AYW1s9gq/Qd5iwCi1gjlxwpCyHenwVww59UmN0vgxtvCiQg7wzL2S+Kod8BN6UxR2YT0w/GqXVXNGVaUk5z1jc8v61+WdDvIjYfJhwikehiM/ZAqEDfIBQXlNe7VgWGaBDvbPVb4z/+w0c9CE3u5Jhrmlnw=
+	t=1789926665; cv=none; b=ueaLRGt0n9p2+zstOLB7AL40WMfdsUkDoz4bWtEwguwt+GncWaFKEi0iJrJ+hl5ePUe+nge3hY7+NI4avjSmMl8Dl5sv/hvpuDXgMpnJ9UY0DsUUX2tHSIz9273CNA4pMhKzz6TsTrf932gBDP0NOZ6DzwZXS32hbztz8iBPvZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789923948; c=relaxed/simple;
-	bh=Px6qNtjxAUOxlis1EKxQF7UzsshyhnSY33KPJTEaBlU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=B9AmP6pRhVo2iWlWkvUREbC85C3atQVr1/42dnk29nwX7MPsG3ZWm25RSLDYsEvRvTx3/o5dK/zHxV0C7DpemChwy5d/hoTovYOf4v9qf/3RaoWjz0J5aO/O5RK+DyQq2dDCz3xD2bwqcGLSZ26Y1X/AKmYjCM6RNg0lqqZjsQM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ODsXaE8B; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789926665; c=relaxed/simple;
+	bh=3QvSPWIbvJRfBI2KJAUuR0allRS2f1zcnaKS9heRVCI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=i1QvcVFK9q3RPzWvozjYHrwee9bOSnPIn5i5AnjW5GgiKkFSK3aUypN12lpDERtrdTm5X/mkmECoAFb72nHrurySEqJo1hr5ooYUn6fPz2pZoYq/DqOtAR6P/KdmEwGET1uOD1+gSaU3riV7tXuwamKZrYmOryZHRJDCPUJIW1w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZbFynyQz; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ODsXaE8B"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A87181F000FF;
-	Sun, 20 Sep 2026 17:05:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZbFynyQz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EB601F00893;
+	Sun, 20 Sep 2026 17:51:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789923947;
-	bh=nqzKVEoidCP6b282EQb7sYAmyyy5aQUCyjpcO9zBIwk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=ODsXaE8BO4b74Pe3mnbB+gvDF7olH46CflpkR+DQssbRdGdXCb5Y5yP86jDcswJSS
-	 EiR+WQD/iQ2S/sboQHBpmQfFysk7Xj8ewtIKOXls9jNa2GKUPeDjNERRyQUjU2Jf66
-	 Wd+OUPhPTpu0bWzp+M1KT1IpThn7pLEOvk7UGuoL0QoGcWKiZZ0bKSv4nQfwLpBNXd
-	 V82mwL10l03f9HR61x1itBmoIZdgxzFX+uJfSTjakpG9SJFCiJdTOTNRHveoHA1aT9
-	 6W3AqY/8nmk7jWJuUkLt57HXFcfo8RnY1MX+STYd3Z7WxGzraPa5zPbv7grKELzryj
-	 KPdk0EgJ5104Q==
-Message-ID: <de1b64ff-ee8c-4b76-aae8-ca29628b2db1@kernel.org>
-Date: Sun, 20 Sep 2026 12:05:45 -0500
+	s=k20260515; t=1789926664;
+	bh=JkiK1l40zgx8qead8nkgW71sHetsJh5WyduFCv696Uo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=ZbFynyQz8Y7/IWtRsTpRjO3/Bd5/MSvrhnTtGcNz6flEzP+pP1nGMywTMqfPQ0HDZ
+	 PWjbbgAvE65XEcTYAc/2xHvGpJAA5Ex/6f9YDa7/eCDQJwjAWB+ebKi9W6PHHtIQ+z
+	 q815twKUOboO3h3b0mFOEZsu4DWhwyfCsyHDhVGnz4gFpVIV1ukpiAOYeyhY5AdFU8
+	 t71zgudjHX2jyr0mieG1dHrXzNeAtV2GVsZEFqpd5DMA9CvMNRkvQD7uGnrp4aM38w
+	 QXNSoJ2S30W0cbzV/U1SVMYNTAbnlFwy+wDHgg1q8M1H386GV+gnfdivsFcrd2/655
+	 1ojs6OfQZNxgw==
+From: Sasha Levin <sashal@kernel.org>
+To: gregkh@linuxfoundation.org
+Cc: Sasha Levin <sashal@kernel.org>,
+	stable@vger.kernel.org,
+	rafael.j.wysocki@intel.com,
+	matthew.leach@collabora.com,
+	superm1@kernel.org,
+	linux-pm@vger.kernel.org,
+	regressions@lists.linux.dev,
+	David Lomas <david.s.lomas@gmail.com>
+Subject: Re: [PATCH 6.18 0167/1250] PM: hibernate: call preallocate_image() after freeze prepare
+Date: Sun, 20 Sep 2026 13:50:43 -0400
+Message-ID: <2026-09-20-daily-reply-0011-re-hibernate-preallocate-deadlock@kernel.org>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <CALjEBWQo0-Sdimo+aRNKUQvgDGw=jBFCcfwCXaqVdtoPrHLAQA@mail.gmail.com>
+References: <CALjEBWQo0-Sdimo+aRNKUQvgDGw=jBFCcfwCXaqVdtoPrHLAQA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] pinctrl-amd: Don't clear S4 wake bits at probe
- causes power off to reboot AMD Ryzen laptop
-To: Olzhas <marat.olzhasss@gmail.com>,
- "mario.limonciello@amd.com" <mario.limonciello@amd.com>, linusw@kernel.org
-Cc: linux-gpio@vger.kernel.org, regressions@lists.linux.dev,
- stable@vger.kernel.org, linux-kernel@vger.kernel.org, sashal@kernel.org
-References: <CANzgjV0YWUX6=ZGTbn4KEKqQmVhsZTsDPeRf0Nfq=YFT1eoPzA@mail.gmail.com>
-Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <CANzgjV0YWUX6=ZGTbn4KEKqQmVhsZTsDPeRf0Nfq=YFT1eoPzA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+>   task:systemd-sleep   state:D pid:36677
+>    throttle_direct_reclaim+0x358/0x3e0
+>    try_to_free_pages+0xbf/0x220
+>    preallocate_image_memory+0x35/0x9b
+>    hibernate_preallocate_memory+0x25b/0x390
+>    hibernation_snapshot+0xc1/0x4e0
 
+Rafael, Matthew: there is no fix or revert in mainline, and 7.2 has the
+commit in its base release, so 7.2.y users keep the hang whatever the
+stable queues do. Should the ordering go back, or should the hibernation
+task bypass the pfmemalloc throttle?
 
-On 9/20/26 12:00 PM, Olzhas wrote:
-> Hi Mario,
-> 
-> I am experiencing a regression on my laptop where attempting to power
-> off the machine results in an immediate reboot instead of a shutdown.
-> 
-> The last known good kernel is v7.1.7, while v7.1.8 is the first known
-> bad release.
-> 
-> I bisected the regression across 9 kernel builds and identified the
-> following commit as the first bad commit:
-> 
-> a7c855969b1a ("pinctrl-amd: Don't clear S4 wake bits at probe")
-> 
-> With this commit present, running:
-> 
->      systemctl poweroff
-> 
-> causes the laptop to power off and then immediately power back on.
-> 
-> I reverted this specific commit on top of v7.3.0-rc3 and the issue is
-> completely resolved. The laptop now powers off correctly and remains
-> off.
-> 
-> Hardware:
-> - Laptop: Chuwi CoreBook Plus 16
-> - DMI board vendor: Default string
-> - DMI board name: Default string
-> - DMI BIOS version: AB8139_S_2C_V00.01_007
-> - DMI BIOS date: 2025-08-05
-> - CPU reported by the system: AMD Ryzen 5 7430U with Radeon Graphics
-> - The CPU/hardware appears to correspond to Ryzen 5 5500U / Lucienne
->    silicon, although I am not certain whether this is relevant.
-> 
-> Software:
-> - Distribution: Arch Linux
-> - Last known good: v7.1.7
-> - First known bad: v7.1.8
-> - Current test kernel: v7.3.0-rc3 with a7c855969b1a reverted
-> 
-> I have verified the fix by booting the reverted kernel and testing
-> poweroff successfully.
-> 
-> Since the DMI board strings are generic ("Default string"), I would be
-> happy to provide an ACPI dump, dmesg output, kernel configuration,
-> bisect log, or perform additional testing if needed.
-> 
-> I suspect this may be related to an S4 wake source left enabled by the
-> firmware, but I have not identified the exact wake source yet.
-> 
-> Best regards,
-> Olzhas Marat
-> 
-> #regzbot introduced: a7c855969b1a
-> 
+The commit has no Fixes: and no Cc: stable, so nothing is lost by
+holding it out of 6.18.y until that is settled.
 
-This is most likely a BIOS bug, but we need to dig into the details to 
-understand more and decide what to do.  It could also be a driver bug, 
-most likely in a WLAN driver.
-
-Can you please open a kernel bugzilla with the following information:
-
-1) /sys/kernel/debug/gpio without the commit
-2) /sys/kernel/debug/gpio with the commit
-3) acpidump (just once)
-4) amd-s2idle report (this will capture and associate some information 
-that will make this easier to triage)
-
-Please CC me into the bug report.
-
-Thanks
+-- 
+Thanks,
+Sasha
