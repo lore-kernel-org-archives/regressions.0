@@ -1,183 +1,211 @@
-Received: from GVXPR05CU001.outbound.protection.outlook.com (mail-swedencentralazolkn19013079.outbound.protection.outlook.com [52.103.35.79])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm2-f12.google.com (mail-wm2-f12.google.com [74.125.225.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 175AF3E6392
-	for <regressions@lists.linux.dev>; Sun, 20 Sep 2026 08:15:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.35.79
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789892109; cv=fail; b=qw8CkhsMl7iLSFADbM+8dlTXmWLqwIkQslQv7Uu/GHvh0AmXjVyTl9Ytb6ZY/eRYOqS62EHtDILlnL+sr6TKh7anpCbgJWJIA5L7XNyRRWgJBO/c0zvtXDmQz6j5//7+gDQhlwm2VYArRX5ycbHUprDrl8opqht8FH2xOYhyLa8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789892109; c=relaxed/simple;
-	bh=f4wSsXU0OUklylT6AD3Si6EngMPtZeMD239ywPidqkE=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=PJcRe1v7gbbx8OIsgHrh8fz+X0QxKd4dQqtFqxXhrq0oQzSSoGCvuuzu1C0t45kGYBn7sDtyC57ed+5/qaTf68SBGjZIEgmzaWQ2eLYAAHLmzPkH9l/leh35ULwGwmqA3PGB33ArkP8ycx0+/wyDnX+T6OHCriQTzB8mNZkIEF8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hotmail.com; spf=pass smtp.mailfrom=hotmail.com; dkim=pass (2048-bit key) header.d=hotmail.com header.i=@hotmail.com header.b=fl0T3BTS; arc=fail smtp.client-ip=52.103.35.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hotmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB40B35C681
+	for <regressions@lists.linux.dev>; Sun, 20 Sep 2026 09:49:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.140
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1789897755; cv=none; b=tfe5UhyYFsxqCqTor7HxHvJL207U7oI+P1aRaK+YZJwV6I2kT0ByQsgPmmaCWj3wgurCJReNJJcHnC0d4TtIGetR2nUeraAZa7MCASFDwdmoTQYI2/XrInja8gfTu2s7TLE9JX7wSvsv8sa/NdYpfpr1/maW2NfnpBsCXCSDTJY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1789897755; c=relaxed/simple;
+	bh=XCvgXtVDOQexlet7FH5jCB/Ll+55kV+TEw7kNGuSQ9o=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ozQSsNssvHopXDH3MRccMt6FCpIZ8g9yRWFxkNkHd3ksNTjgzM0A1H95SE3yp2Uo/OAKRVOQ9H+fQaQ7UqFoRDVm2AO4U93ZlQG3WmYKpfA01IkwLQimkiR7/PThzS2SeyTbX4kfhVIqLyazd/boUGQAlAR4UWu97JzLFf91UpY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Za8vpXxo; arc=none smtp.client-ip=74.125.225.140
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hotmail.com header.i=@hotmail.com header.b="fl0T3BTS"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=uxwOgKHTddZ0/edEWpTrknO58DZV5D7eDJ0bW06s5xWWFm8eEBA5H8mMqKa6+2hPsvVKkgpeIWev+21CDzQMP5VrSpuqT2AbtJhBoOFUlFaGDssA+bKmXZko640g+HhCmEok+1RQEukj0MC2OANbF8xrNl255W9ac5/VMoNvD+DEvLzFUwitc5QetKpqL+oLoEavdE24lDccBjQvI4sg2ETFg660OT3riUgFzVxZTaWn7KYG14IeXPp/Ar3NZvuRQc46YD9PHtiti3kJ8ez8qWJ4m2XkO/1DFSu5u0E7NXHd9dnvXHpLKreJyMX0mjfQiyyLFsLBrugZ8U6gCEJjXw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=wzk30utEkSc7XcwgJ8NnBDjlkvn55QEuugFxws6lc9k=;
- b=p57E6W3CdU1YF1iIva51JfIxAJ7Ew3LhrUcNa7hqHXeRZxHlO3arE8B4uB/YGdUmCJRk1IeEvkAZUGfV1nDd5BoWvOLXm8ZxXRhWW5uByFzFk/oeSO7FFh5mTisRduY5Jc7iqXyCxZtzqEUF09R8qdVIL0gg34od0BtqD0Codd1q675FUx5E7ugNtRngZ3T7Vpq+Jc0ssKOGeD784uvrFDkxpjfA/NJOsp++kddYj2UnwhbEbtDbnNgQcR07thSBMg1mQ+w0lAHjcmddH5hnZbfv1u3Sd/SGkn1q39JmMpz3wW7059pPYvwEi7w0VXM322u3qti0zsxueCfFVT8EWA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hotmail.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wzk30utEkSc7XcwgJ8NnBDjlkvn55QEuugFxws6lc9k=;
- b=fl0T3BTS7fbMADnkKZHIXwDTd5swtCghGFsE+j3R2ocyQ4mhAM6WV6xG8BStGavO5Lymq5r5wz+trmU+d06xWECq420pfwvT7gpV7Spa3du5HpMuTo2NCf9a3jTQihWJno6LPjFc9srYYpspDqVdqtI/kshrhYukoFj/ByAb6nVshMnJFv5YhgqWQUtbW4wj6c2KfcqVtEmF1KVmJx1gs5cdq/RsPKD43/jRMuM79lNs8j8essMPYkRo7TaNBC+IeWt+ip6QXULP4D9mvyHfCHO3suEi/KuhcZQO5w7ERaFJwNbbLppO8oooJX68d2be5ivFPHpLWF6Q/JUEbaEtSg==
-Received: from AS2PR10MB7429.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:596::19)
- by DB8PR10MB3691.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:13b::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.428.16; Sun, 20 Sep
- 2026 08:15:05 +0000
-Received: from AS2PR10MB7429.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::3bad:f430:c3bd:468f]) by AS2PR10MB7429.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::3bad:f430:c3bd:468f%4]) with mapi id 15.21.0406.007; Sun, 20 Sep 2026
- 08:15:05 +0000
-From: blaat windows <blaaaat@hotmail.com>
-To: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: Re: [PATCH v3] PCI: Skip Target Speed quirk on clamped ports with no
- link
-Thread-Topic: [PATCH v3] PCI: Skip Target Speed quirk on clamped ports with no
- link
-Thread-Index: AQHdSNgFTVesDNcghEyLTlxUKUUGPQ==
-Date: Sun, 20 Sep 2026 08:15:05 +0000
-Message-ID:
- <AS2PR10MB7429335B6C8F4C7FA3F88638B5852@AS2PR10MB7429.EURPRD10.PROD.OUTLOOK.COM>
-Accept-Language: nl-NL, en-US
-Content-Language: nl-NL
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: AS2PR10MB7429:EE_|DB8PR10MB3691:EE_
-x-ms-office365-filtering-correlation-id: 6faf03d1-0c97-43e4-74a0-08df16ef46e4
-x-microsoft-antispam:
- BCL:0;ARA:14566002|19110799012|8060799015|8062599012|31061999003|5040399003|51005399006|24021099003|15080799012|15030799006|40105399003|2607281247196008|3430499035|102099032|4295299021|440099028|3412199025;
-x-microsoft-antispam-message-info:
- =?iso-8859-1?Q?atzmu/ewddl7vMDesr+MSvHdjgfreenha35n/quCTeqzoftWQyRA4dwx4s?=
- =?iso-8859-1?Q?MwkBC/AUKzJplC+LCsgTX1KDmZ7RV1umeIdJQ1EOTfa8dmwqAiBbC6DnGz?=
- =?iso-8859-1?Q?csotBl4AyQUVOi7OYQgzwpwA4tVptI8wVIS8woOfOh4Xg6Bq710AiS592Q?=
- =?iso-8859-1?Q?0xzQQ/0OOeuvcX476LB95zTwI+7Qgs0rMBReMi0bDCZWh5jg8ZCCxWYTXV?=
- =?iso-8859-1?Q?j1bAf56xNWG7h6CNcEnodiKaGwLKr6B+3S8MCk8yXg7ZRp9eSR1UcXak76?=
- =?iso-8859-1?Q?GeHiMoL3gzdxoRamBDpH93Hg6O39bJGohd4sCj6hEaE6y0FkM6aps+wyNO?=
- =?iso-8859-1?Q?21PGZPsn22DYGzY7/CU2ZgqFDo5AnRkvipurN6qEedpXauaNYiDvNdufl/?=
- =?iso-8859-1?Q?41tQ950yNI0H6nBtS3dQwm5GJId7mW7h9sT1A1lMKcz8/hP1cfgUdU3YX4?=
- =?iso-8859-1?Q?9ZbnvsM2hMUsVn6RT1Q+dngtv2d6+7LVuYbelLUfDXE/Cm66wGu7chx7Sa?=
- =?iso-8859-1?Q?rIDXDVa+5K/Ga84NyhzW9o0nnjupXAM/Il5bsS9qT0NLaqkM722WdFBUcH?=
- =?iso-8859-1?Q?y9MUl3GfSPX/khq8/0hDIW26U6YoEaoSFfovEh7ezX1o/073djB4lJO60D?=
- =?iso-8859-1?Q?KgA4UOpJrKVCYi83HM+BlqThB0FhEUETRItmqcrkAXH+WbAUlctNOJgezS?=
- =?iso-8859-1?Q?+dq8z40uwmET6q5NuvDDOLTx+jrTRJsU0hwtPdKhX3BP/lEgwPp39vzkrv?=
- =?iso-8859-1?Q?40Znhu0E/pfBw3mZOvcvSpZNQvm+6hru2GoN3U9MSY9u04qiq35ZL+36zm?=
- =?iso-8859-1?Q?PxqaS6IGcGb5IYk/yFfu0ToKMJuSS59TURZ/kUj7C7hUwjF/8V86kUcM4Z?=
- =?iso-8859-1?Q?zkJME8r2b2Iik/7vT4dUqA8Nbw41e9a8Y1mmamT9PiTttLF15HinplVptb?=
- =?iso-8859-1?Q?LEfkmPXIjqvVQ9QL4APR+VZ4AGVmVhMdrQsr4a91+skp2XpsGp7D6PUU3o?=
- =?iso-8859-1?Q?kEphgDcatupl7w2hE=3D?=
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-1?Q?BEXd6bJ/fzZowSdsKtoo+ZNmPltP77Vjok9vu/o8rIfvcCuq1E2aH2MPzV?=
- =?iso-8859-1?Q?EMikYgET7s0yqhJlhSPzHwALXpuo7Nw6PyZOQRjTDUXrtcYQKoo4UWFYVi?=
- =?iso-8859-1?Q?8A6pcDn4iwZZrYRwjOXsV4hs9moOEq90I7GVhmkGR932eMuNnUL4UaLz/9?=
- =?iso-8859-1?Q?bpWQBQ4xsyAnIPiVZiwCMD+PkYZOWe5Zue+m55tTjrlQ/NNuJdbUKk4iKN?=
- =?iso-8859-1?Q?OyXP2xejWksvzi5TCIQKNwyizkf5Ree0tA/R1NYoG+PaUDZFRSjaIMffc5?=
- =?iso-8859-1?Q?fMPmupkAi6ylCQLRM5bF0g9D8iNvxfx9OrWDAYckoQzWJvw/u2U23tjTmG?=
- =?iso-8859-1?Q?0DGH0oNP9ZUFS7UXeLkd3WTyPhJUcV9Rwmg3XXkS0Fo8VsHu/8NJwXrt6G?=
- =?iso-8859-1?Q?vhodgaAIIPwIWxDopJqpXSdbNIc4Tr3T6GU/KerkVmxRH5ixZE3aTEufi4?=
- =?iso-8859-1?Q?s8/B9TtP/TwLjYh8FvZ67GP84rrCHdzRfjc9qfmfiuGnu2iPc1RLAzlI2t?=
- =?iso-8859-1?Q?yMw41mF1e4WtsTOkY0jDjMj+hJfSvnhnevztn5FVw5h89XKlRJhuHN8+N5?=
- =?iso-8859-1?Q?PjoPkWcCyorDB8Ow1164NHkOfVzbH3y01dokeCIHHv656vt2FLQeTc5aij?=
- =?iso-8859-1?Q?bSqLc3uNUohLXhhkwe2htvyR+pVZhFgTYGZDmpSMTIZydnIho/mldCvUX2?=
- =?iso-8859-1?Q?cwVtatgVOhPVZ1FEhkrwdT0AwEroMyHoMBnVrKomT+JKF6XFsBOViFr2vE?=
- =?iso-8859-1?Q?rntuKFBp5e9hh4Jbu1YpWq4A35fhsjJvkXYlx3sJsy5UmJzgSFg2x6S4Q+?=
- =?iso-8859-1?Q?Ab8T04n9bHz2+B7ehNg59i3S0WEL7rImIkiAuQRcopssL7ERLuSteSYpEB?=
- =?iso-8859-1?Q?RQqkX9HhygFR04WxiI12aY5vs0+abIaTf5XVyAPO2NsHSzh+t0jnDCmwVu?=
- =?iso-8859-1?Q?SZzIHjz4AzlYx8LqFXPHaqippyjOqtP6X/EQYBdr4vSCYIaEn7BHlXjW3F?=
- =?iso-8859-1?Q?98D8p2AXxsRD5zrmTlmG5+ORDDPYmuluZKS/onwjuSAyUDQ09hogolKNhO?=
- =?iso-8859-1?Q?FXo0IcMh6W83wsvHJBFqutdQQtvAUNiv5NVngBpY+fNlz+6pkK3qYITn1A?=
- =?iso-8859-1?Q?s93Uja+UZDQe8gIvWzNkwQIqYcY5rPJu+WfisjDKVP9/rLXRU3CnDPNV1T?=
- =?iso-8859-1?Q?yc04e9hTJEZgmQdac3EXCwPVVSConnRvsCS+10dnVF++aQheMjVzOfQqJ0?=
- =?iso-8859-1?Q?L5La1k+1zEZLw6JvUYcO7qRbLJodoCiC0i7qDO1yPNjXDlRzr7v5i9Grvr?=
- =?iso-8859-1?Q?zk66jHouRsUSFVR15SsVb7Iq2QR6SuQUHcum296Wal/o+KAaN8MlYIyBFf?=
- =?iso-8859-1?Q?fveNFhRpACqoWDlu1TkM4oQb8jguW019sGSaF0us6mgumxJfoPZJo=3D?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Za8vpXxo"
+Received: by mail-wm2-f12.google.com with SMTP id 5b1f17b1804b1-49cd38e0e5dso27353665e9.2
+        for <regressions@lists.linux.dev>; Sun, 20 Sep 2026 02:49:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1789897748; x=1790502548; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=NjR0+aR4fqFhCdqun3B7g8hh4Gd9On2hwqPnG7OLZVk=;
+        b=Za8vpXxoP879Hw9ujpQV3+rEz3Mj0tw3xbEwlDU//+KtQlTOagcxAR3PPND42oojsm
+         NRNnVoEkZfC1WWNyJqTrcakgZqeg9bvhhSX8g4dbyUhyRkRDqGxKir7CgZE+H3DWH+mf
+         Zdq/A2C1+WZ9oOEBv2XHTx4DY328fxYBiDYso4ssf6sxF/FNmIFPDvufZegwLdSXJJD0
+         i7Rk4OK/dDw3lYF6ffX5B41tE0dsRzRvr3nNcn+o8Ck8IG5g0NJtiWmQJG75OoYqSnRL
+         x3Y6GqlvJ3sTS9W9u2TplHD5ZmEjf1vzYSf/pnwLM4E0HBdOdCS99FOEmhFS6fsVDMuh
+         wOyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1789897748; x=1790502548;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=NjR0+aR4fqFhCdqun3B7g8hh4Gd9On2hwqPnG7OLZVk=;
+        b=F+fSUL+M+gNxut3msvFgVRMB9UBZCVdbdzbkYIzx3ArvmGSwIMhHzVmRtaupUf21RR
+         wTK7gcsXjYB/qcBn7SDYDXO6XZkNP8v657LIzL3913WTsiCdZvjGhdjOhlw9tOpZMO82
+         S5CMgcQULsSycob2Rag7o6pxk5LBm5LW9HkMCT62szShm/B8vmY754sid3kYlIL1iT/P
+         c24sO3UhO7EZH339cSpnP1Swaq6pKZvNkFjQyYjvO9AEo7mnl8DQFO3umcSnr9peSl/J
+         ehxQvD/A4vYIFaW3/cjTOne19M5/P0veD0fyYiDCjNlVnpNQqfLmE4FBPjkPkOMRbLK5
+         bQeg==
+X-Forwarded-Encrypted: i=1; AKwUvBzyA5jXOc6oeX05RG48wvZy37600BwEb9HTPvXigWLOmkfYZ0v1WVzka5K1Y2zTLohmk0iKuC3+NOCnIA==@lists.linux.dev
+X-Gm-Message-State: AFuF++lz995qPxFXQyfROUwAwbxfn3t+QMX9ZMdkpeMmV7aas6Y4mZie
+	S5+p/wGnNL8LtSAj2zxKRw6a4eSvbIUL8vIqBtSptGaQ2uLOPoT9a/85
+X-Gm-Gg: AYBFou0jpRfem6Jdu6AU/3s0OVdYk4YNEKbJ3u2besIINjE+jpVdSBGido803h55C6O
+	6Lr5U23S4wNfALSAQh4W2DPaUzohBUXKr2x4NCb4/W0O4t9jB+LSVdNAx4BFTxAnDdHVpAUPoEs
+	DBBP+Gw9S3KO8YoOMIAEznJSoG/Wu0Oph+VwzkrCyKqHSAU5z9VyCDBBv3biEWJvmI5LMxOgiKs
+	uW6mQCKTHHwwuVrZMEHmlSlofrBQnI3ohfB4Htol2xaGa+nsdu+BybbUoZpNXu7kRPk96VbmaB9
+	eVA+cGM4xZ/gGCCaCKWqXtWGQ+GWXUMit67UM32v/jdX+mpXbTOzgeIxzr4GAnOrr+gb4uyXsNx
+	Aff32D2F3R9vB0rGzw0rOZA/o9K06/QDUsa9nAb87RzzFf4MhWCkfS/gOvem0ajVCP/TRQPPW1J
+	GlX8PHjMh2Y/NkGP+FUCsQ8VPzEx84aPmmqnxKwJbyxOwpZmrL/j/Lh6r/nlkttuKK1QgjR4EuW
+	1P12Sn6neeszSjJa+mz+J1RjJ3v7eHBRJNYiAE=
+X-Received: by 2002:a05:600c:1391:b0:49d:272d:74b4 with SMTP id 5b1f17b1804b1-49fc566e5ebmr100511745e9.2.1789897748192;
+        Sun, 20 Sep 2026 02:49:08 -0700 (PDT)
+Received: from cachyos-x8664 (213-225-2-90.nat.highway.a1.net. [213.225.2.90])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48724564565sm13133797f8f.19.2026.09.20.02.49.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 20 Sep 2026 02:49:07 -0700 (PDT)
+From: Roman Stingler <roman.stingler@gmail.com>
+To: Jiri Kosina <jikos@kernel.org>,
+	Benjamin Tissoires <bentiss@kernel.org>
+Cc: Roman Stingler <roman.stingler@gmail.com>,
+	Erik Hakansson <erikhakan@gmail.com>,
+	Filipe Lains <lains@riseup.net>,
+	Bastien Nocera <hadess@hadess.net>,
+	linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: [REGRESSION 7.3-rc1] HID: logitech-hidpp: hi-res scroll mode forcibly re-enabled on every reconnect for Bolt devices, overriding userspace
+Date: Sun, 20 Sep 2026 11:44:39 +0200
+Message-ID: <20260920094508.39682-1-roman.stingler@gmail.com>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-OriginatorOrg: sct-15-20-9412-4-msonline-outlook-d3deb.templateTenant
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: AS2PR10MB7429.EURPRD10.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6faf03d1-0c97-43e4-74a0-08df16ef46e4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Sep 2026 08:15:05.1695
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR10MB3691
+Content-Transfer-Encoding: 8bit
 
-Another reproducible case of the active-link failure described in this thre=
-ad.=0A=
-=0A=
-Hardware:=0A=
-Intel 4th-gen/9-series platform=0A=
-Intel 82571EB quad-port NIC=0A=
-Microsemi/PMC/IDT PES12N3A PCIe switch=0A=
-Root port 00:1c.4, LnkCap 5GT/s x4=0A=
-Working negotiated link: 2.5GT/s x4=0A=
-=0A=
-Kernel results:=0A=
-7.2-rc1 fail=0A=
-7.1-rc7 succes=0A=
-=0A=
-On failing kernels, the PES12N3A hierarchy does not enumerate and all four =
-downstream 82571EB ports disappear.=0A=
-=0A=
-I traced this to pcie_failed_link_retrain() and specifically the new generi=
-c clamp-removal code introduced by 72780f7964684939d7d2f69c348876213b184484=
- ("PCI: Always lift 2.5GT/s restriction in PCIe failed link retraining").=
-=0A=
-=0A=
-I tested 7.3.0-rc3+ with only this block commented out:=0A=
-=0A=
-    pcie_capability_read_word(dev, PCI_EXP_LNKCTL2, &lnkctl2);=0A=
-    if ((lnkctl2 & PCI_EXP_LNKCTL2_TLS) =3D=3D PCI_EXP_LNKCTL2_TLS_2_5GT) {=
-=0A=
-            pci_info(dev, "removing 2.5GT/s downstream link speed restricti=
-on\n");=0A=
-            ret =3D pcie_set_target_speed(dev, speed_cap, false);=0A=
-            if (ret)=0A=
-                    goto err;=0A=
-    }=0A=
-=0A=
-With that block disabled, 7.3.0-rc3+ boots normally, having all four NIC po=
-rts enumerate:=0A=
-=0A=
-07:00.0 82571EB=0A=
-07:00.1 82571EB=0A=
-08:00.0 82571EB=0A=
-08:00.1 82571EB=0A=
-=0A=
-The important result is that the initial 2.5GT/s recovery is fine. Leaving =
-the link at 2.5GT/s works. It is the subsequent:=0A=
-=0A=
-    pcie_set_target_speed(dev, speed_cap, false);=0A=
-=0A=
-which breaks this PES12N3A/82571EB link.=0A=
-=0A=
-So this appears to be the same active-link failure mode, but with a PES12N3=
-A switch rather than a direct 82571EB connection.=0A=
-=0A=
-This was tested against vanilla 7.3.0-rc3+ with only the above local change=
-.=0A=
-=0A=
-I can provide full dmesg/lspci output and test a proposed fix if useful.=
+Hi,
+
+Since Bolt receiver support was added in 7.3-rc1, the user-selected
+"Scroll Wheel Resolution" (HID++ feature 0x2121 HiRes Wheel) setting on my
+MX Master 4 is reset by the kernel every time the device reconnects, most
+visibly across every suspend/resume cycle. I disable hi-res scrolling in
+Solaar, suspend the laptop, and on resume the mouse is back in hi-res mode
+and I have to toggle it manually again.
+
+This worked correctly on 7.2 and is broken on 7.3-rc1 through 7.3-rc3.
+
+#regzbot introduced: 022eb347ff3a48281e7e69c3addcb11bf24afa53
+
+
+Hardware
+========
+
+  Logi Bolt Receiver              046d:c548
+  Logitech MX Master 4 (WPID B042), HID++ 4.5, paired to the Bolt receiver
+  HIRES WHEEL {2121} V1, multiplier 15
+
+  Host: HP OmniBook Ultra Laptop 14-fd0xxx,
+        AMD Ryzen AI 9 HX 375 (family 0x1a model 0x24)
+  Distro kernel: 7.3.0-rc3-1-cachyos-rc
+  Solaar 1.1.20
+
+
+Reproduction
+============
+
+  1. Pair an MX Master 4 (or other 0x2121-capable mouse) to a Bolt receiver.
+  2. In Solaar, set "Scroll Wheel Resolution" to off
+     (solaar config 2 hires-smooth-resolution false).
+  3. Suspend and resume (s2idle here, but any reconnect does it -- turning
+     the mouse off and on again is enough).
+  4. The setting is back on.
+
+Solaar shows the divergence between what the user asked for and what the
+device is actually in:
+
+     18: HIRES WHEEL            {2121} V1
+         Multiplier: 15
+         Has invert: Normal wheel motion
+         Has ratchet switch: Normal wheel mode
+         High resolution mode
+         HID notification
+         Scroll Wheel Direction (saved): False
+         Scroll Wheel Direction        : False
+         Scroll Wheel Resolution (saved): False
+         Scroll Wheel Resolution        : True
+         Scroll Wheel Diversion (saved): False
+         Scroll Wheel Diversion        : False
+
+"(saved)" is what I configured; the live value has been overwritten.
+
+
+Analysis
+========
+
+I have not bisected this, but I believe the cause is clear from inspection.
+
+Before 022eb347ff3a4 ("HID: logitech: add Bolt receiver support for Logitech
+HID++ devices"), USB_DEVICE_ID_LOGITECH_BOLT_RECEIVER was not present in
+logi_dj_receivers[] -- it appeared only in hid-quirks.c and hid-multitouch.c.
+So a Bolt-connected mouse never became a HID_GROUP_LOGITECH_DJ_DEVICE child,
+hid-logitech-hidpp never bound to it, and the kernel never touched HID++
+feature 0x2121. The device was driven by hid-generic and userspace was the
+only writer of the wheel mode, so the setting stuck.
+
+With Bolt support in place the mouse is now a hid-logitech-hidpp device:
+
+  logitech-djreceiver 0003:046D:C548.0007: device of type Bolt (0x10) connected on slot 2
+  input: Logitech Wireless Mouse PID:b042 Mouse as /devices/.../0003:046D:C548.0007/0003:046D:B042.0009/input/input22
+  logitech-hidpp-device 0003:046D:B042.0009: input,hidraw7: USB HID v1.11 Mouse [Logitech Wireless Mouse PID:b042] on usb-0000:c5:00.4-1.3.2.4/input2:2
+  logitech-hidpp-device 0003:046D:B042.0009: HID++ 4.5 device connected.
+
+and every reconnect now runs hidpp_connect_event(), which unconditionally
+does:
+
+	if (hidpp->capabilities & HIDPP_CAPABILITY_HI_RES_SCROLL)
+		hi_res_scroll_enable(hidpp);
+
+and hi_res_scroll_enable() in turn does:
+
+	ret = hidpp_hrw_set_wheel_mode(hidpp, false, true, false);
+	                            /* invert ^     ^ high_resolution */
+
+with high_resolution hard-coded to true. There is no record of a user
+preference and nothing consults the device's current mode, so any userspace
+choice is discarded at connect time.
+
+Note this is not a suspend/resume bug as such -- hidpp_driver has no .resume
+or .reset_resume callback. The reconnect is driven purely by the receiver
+re-announcing the device after USB resume, which queues hidpp_connect_event
+via hidpp_report_is_connect_event().
+
+The same call hard-codes invert = false, so "Scroll Wheel Direction" is reset
+by the same path for anyone who inverts their wheel.
+
+I realise hid-logitech-hidpp has always enabled hi-res scrolling at connect
+for devices it drives, and that Unifying users have lived with this for
+years. What changed in 7.3 is the set of devices this applies to: Bolt
+devices were previously outside the driver's reach and are now inside it, so
+for those users this is a user-visible behavioural regression.
+
+Commit f0866517be934 ("HID: logitech-hidpp: sync wheel multiplier on wheel
+mode changes") in 7.2 already added hidpp20_hires_wheel_raw_event() to notice
+an external SetWheelMode and re-sync the cached multiplier. The driver
+therefore sees userspace changing the mode; it just does not remember the
+choice across a reconnect. Persisting the last observed mode and restoring
+that in hi_res_scroll_enable(), rather than unconditionally forcing hi-res,
+would fix this. I am happy to test any patch.
+
+
+Possibly related
+================
+
+On this same Bolt topology the wheel also scrolls far too far per detent,
+apparently because hid-logitech-dj does not forward the hi-res wheel reports
+to hid-logitech-hidpp, so the multiplier-15 steps reach userspace unscaled.
+There is an out-of-tree DKMS workaround for exactly this WPID:
+
+  https://github.com/Magnetar-OS/logitech-bolt-hidpp-dkms
+
+I am reporting only the mode-reset problem here, but the two look like
+neighbouring consequences of the same commit and may be worth considering
+together.
+
+Thanks,
+Roman
