@@ -1,126 +1,167 @@
-Received: from intranet.stegbauer.info (intranet.stegbauer.info [80.153.120.106])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 888BB4AA577
-	for <regressions@lists.linux.dev>; Mon, 21 Sep 2026 14:52:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.153.120.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 152713F5BE3
+	for <regressions@lists.linux.dev>; Mon, 21 Sep 2026 15:28:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1790002332; cv=none; b=u6cyddsJZ6Ko98uGkeqpERORkcJ2Fp8UeIjMfoAYQpJR97LY4cDeTKkb9eTKVHlmj1TQ/bGgb2FnCptupE55yQBnGdhpvQ5+lWy/EzrBVgbECRWNd2VyXgReYxDfEAXhvUUGcg5it3Az1HUepX7kQoCn7+SoplYog1Po/zJ6wY0=
+	t=1790004510; cv=none; b=OUvVvxZ+DyymtgYkzOx2Oz/6dxmQte/3PHVo67F/aYiQt19eVZagm1Jd1Yqo36Nrb9iUCr7FyEH3cLGJ3HxwkR61HOs/lbh/gaPZko9TboB+j6EXZSYZGjJ2YLdP2JANmuTZrMq3w2ZdNZdwXqMHUUnhRkFnj9TzQH3a4N8Mtwg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1790002332; c=relaxed/simple;
-	bh=lLkv+jMmZGe/gBXa297FIVQvjgB+rkxSEhGSCTfQps4=;
-	h=Date:From:To:Cc:Message-ID:Subject:MIME-Version:Content-Type; b=UIWQmtogC551Y3tCt4OnPdqYD4Fa3aDu8y+u4/MnOCxehB0rSmNZnRw33uAJUwDMW/iJzHDkqeyToTXr9BgiYjlf6fSOT4f4wbR4Kx5VOiPp03IRxVASVFLE8LXz4M9PjerJKPfy8FCfEKiGO3OcjgLs3X+Nm+n6R9Koe1PFNn0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stegbauer.info; spf=pass smtp.mailfrom=stegbauer.info; dkim=pass (2048-bit key) header.d=stegbauer.info header.i=@stegbauer.info header.b=hBotiaSB; arc=none smtp.client-ip=80.153.120.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stegbauer.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stegbauer.info
+	s=arc-20240116; t=1790004510; c=relaxed/simple;
+	bh=4ns94LogX5OA2pP65C8E1PBfvQ7/rCEkhv9gb+l2PE4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Li6+hcbX1RvmD1WVE4ufGmrSL9QUl+0Dv2xoOPD/v02pJu1/onq/88bVUaHz9YfFAu96mRaUE8QOXVjGRIK36iRX7mdFILmvinknq6crxnsNOj51/kTxqdsRimex+2A9PNSJQPRPKTVZ3mkUi2Ec8aJEVXtBNRlrmP8203fqy1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fu0cIiDQ; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stegbauer.info header.i=@stegbauer.info header.b="hBotiaSB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=stegbauer.info;
-	s=201607; t=1790001905;
-	bh=lLkv+jMmZGe/gBXa297FIVQvjgB+rkxSEhGSCTfQps4=;
-	h=Date:From:To:Cc:Subject:From;
-	b=hBotiaSBi7drfKQI3DTUYstB6jSgdzVQ711Vue5KS/EEokp3sCDqEk4PzhaEk7S+y
-	 VXPuzGQX2WE4HydOl4UvnS3qnJtmInwBBeu6EIS0+vbFNPjvX8OGhbHbXJtLrXXZh5
-	 MP9Dujra+rFmonz3pqaiXXyuiNsvmJagazFJfg4hyLf6K+TAdDQRHggVMOwc1Nf2iF
-	 JKixoBOqNRiLd82u7diFJynAJUbUNb1fmiMlzcvkfnsInvkIxRUXRpreLEmCibt583
-	 VmS0ohCniGrqPlkK4oQW2yrmknoEWr6MoUNMaJ9y1VsWCdp0kzgeVZUvum7UwO7asq
-	 e35sU4djGr2yQ==
-Received: from zimbra-soscomp.soscomp.de (zimbra-soscomp.soscomp.de [192.168.23.3])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature ECDSA (secp384r1) server-digest SHA384)
-	(No client certificate requested)
-	by intranet.stegbauer.info (Postfix) with ESMTPS id 2BF179F793;
-	Mon, 21 Sep 2026 16:45:05 +0200 (CEST)
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by zimbra-soscomp.soscomp.de (Postfix) with ESMTP id 09E983468B1;
-	Mon, 21 Sep 2026 16:45:05 +0200 (CEST)
-Received: from zimbra-soscomp.soscomp.de ([127.0.0.1])
- by localhost (zimbra-soscomp.soscomp.de [127.0.0.1]) (amavis, port 10032)
- with ESMTP id 09zaqutbCEJo; Mon, 21 Sep 2026 16:45:04 +0200 (CEST)
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by zimbra-soscomp.soscomp.de (Postfix) with ESMTP id 026483468C5;
-	Mon, 21 Sep 2026 16:45:04 +0200 (CEST)
-X-Virus-Scanned: amavis at zimbra-soscomp.soscomp.de
-Received: from zimbra-soscomp.soscomp.de ([127.0.0.1])
- by localhost (zimbra-soscomp.soscomp.de [127.0.0.1]) (amavis, port 10026)
- with ESMTP id E8K-a0RdNPFA; Mon, 21 Sep 2026 16:45:03 +0200 (CEST)
-Received: from zimbra-soscomp.soscomp.de (zimbra-soscomp.soscomp.de [192.168.23.3])
-	by zimbra-soscomp.soscomp.de (Postfix) with ESMTP id 9800F3468B1;
-	Mon, 21 Sep 2026 16:45:03 +0200 (CEST)
-Date: Mon, 21 Sep 2026 16:45:03 +0200 (CEST)
-From: Thomas Stegbauer <thomas.stegbauer@stegbauer.info>
-To: Andreas Wild <andiwild@gmail.com>
-Cc: macro@orcam.me.uk, helgaas@kernel.org, linux@leemhuis.info, 
-	linux-pci@vger.kernel.org, regressions@lists.linux.dev
-Message-ID: <752770208.319.1790001903323.JavaMail.zimbra@stegbauer.info>
-Subject: Re: [PATCH v3] PCI: Skip Target Speed quirk on clamped ports with
- no link
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fu0cIiDQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F01161F00899
+	for <regressions@lists.linux.dev>; Mon, 21 Sep 2026 15:28:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1790004509;
+	bh=4ns94LogX5OA2pP65C8E1PBfvQ7/rCEkhv9gb+l2PE4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=fu0cIiDQD/YqTDk1JAy5zclqVsYW+2AjMfmGi0g4fmMhZsovzfkIUp/mfOa2PgMNR
+	 g2oQwxBh8UFDVkFNNcONs2kKLkg2LAAqBaB2Ed+QwBSkoZrrMLhNZ51aBUv4MtUU4i
+	 nsRb3doYkD2eNFLNHYZDB9vLdiNx+xkBhF1mV+7WdXGJgtewIZqdNIuOBf6ruZxUQD
+	 vMb4ug3Sk2CTOFq1IRL19IJVZNWt8/HbNgCwLLg3clsBKEO2orufxth9zXFq57nqN1
+	 UmUz26i+2SFaqoWVVxftYbTKufFW/BN08nnTiCPQJCQ85JibDVVdzDDqr8z56j04HN
+	 KJqm7XTlQJtjA==
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-3a5a0703ae7so82091fa.0
+        for <regressions@lists.linux.dev>; Mon, 21 Sep 2026 08:28:28 -0700 (PDT)
+X-Gm-Message-State: AFuF++kwZIv58vgWwJjwISEjxew40kbBk/GSxJU3WQCcrWBa6RCPobu9
+	fRzOr3rDqe+z9kWRWB8roZXUZBg0/RtJ+GHBkFGZ9M5BCJn6zHlCv001RwyJCeL4ukVl/NnYVyb
+	cTlyHblkQC0DS62PciB8mac1Y5KeYDQk=
+X-Received: by 2002:a05:651c:a208:20b0:3a5:f142:af6e with SMTP id
+ 38308e7fff4ca-3a5f142b0a9mr21380951fa.21.1790004507202; Mon, 21 Sep 2026
+ 08:28:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Mailer: Zimbra 10.1.20_GA_4200001 (ZimbraWebClient - GC153 (Linux)/10.1.20_GA_4200001)
-Thread-Index: u4aSUst814tCowhW4rO/jDxdk3UN8A==
-Thread-Topic: Skip Target Speed quirk on clamped ports with no link
+References: <905771062.272724286.1789919301858.JavaMail.zimbra@trinity-net.com>
+In-Reply-To: <905771062.272724286.1789919301858.JavaMail.zimbra@trinity-net.com>
+From: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>
+Date: Mon, 21 Sep 2026 17:26:55 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0gg7kBtEhagR9SYKaPNstPC6aSyP7W4xBjP1r-kzbcH1A@mail.gmail.com>
+X-Gm-Features: AcwNN1UxyJztudU9HEP_x1NXmMgrHZXRAKUGqrNcukJ4vaLpZv_8ujS2owei2hI
+Message-ID: <CAJZ5v0gg7kBtEhagR9SYKaPNstPC6aSyP7W4xBjP1r-kzbcH1A@mail.gmail.com>
+Subject: Re: [REGRESSION] ACPI processor/cpuidle change in 6.18.52 breaks
+ bare-metal Xen dom0 boot
+To: Support TRINITY <support@trinity-net.com>
+Cc: regressions <regressions@lists.linux.dev>, linux-acpi <linux-acpi@vger.kernel.org>, 
+	linux-pm <linux-pm@vger.kernel.org>, xen-devel <xen-devel@lists.xenproject.org>, 
+	linux-kernel <linux-kernel@vger.kernel.org>, Huisong Li <lihuisong@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-In-Reply-To: <20260801201244.4421-1-andiwild@gmail.com>
-References: <20260801201244.4421-1-andiwild@gmail.com>
+On Sun, Sep 20, 2026 at 5:48=E2=80=AFPM Support TRINITY <support@trinity-ne=
+t.com> wrote:
+>
+> Hello,
+>
+> I am reporting a bare-metal Xen dom0 boot regression seen with Linux 6.18=
+.52.
+>
+> On affected systems, Linux 6.18.51 boots successfully as Xen dom0 on bare=
+ metal, while Linux 6.18.52 consistently black-screens before dom0 userspac=
+e/networking comes up.
+>
+> #regzbot introduced: v6.18.51..v6.18.52
+> #regzbot title: ACPI processor/cpuidle lifecycle change breaks bare-metal=
+ Xen dom0 boot
+> #regzbot link: https://gitlab.alpinelinux.org/alpine/aports/-/work_items/=
+18447
+>
+> Tested results:
+>
+> Linux 6.18.51-r0, Xen dom0, bare metal: boots
+> Linux 6.18.52-r0, Xen dom0, bare metal: black screen before userspace/net=
+work
 
-Hi,
+I'm wondering what's special about Xen dom0 bare metal.
 
-another data point for the regression from 72780f796468 ("PCI: Always
-lift 2.5GT/s restriction in PCIe failed link retraining"), for the case
-with a device present, which v3 does not appear to cover.
+Does adding processor=3Dnocst to the kernel command line help, by any chanc=
+e?
 
-Hardware: Raspberry Pi 5 (BCM2712, pcie-brcmstb), ASMedia ASM1182e
-[1b21:1182] Gen2 packet switch on a dual M.2 carrier, one NVMe SSD
-behind each downstream port.
+> Linux 6.18.52-r0, Xen domU: boots
+> Linux 6.18.52-r0 with Xenbus notifier change reverted: still fails
+> Linux 6.18.52-r0 with only ACPI processor/cpuidle changes reverted: boots
+> Linux 6.18.52-r0 with refined ACPI idle lifecycle patch: boots
+>
+> Affected hardware tested:
+>
+> Intel Core i7-4785T thin mini-ITX, 16 GB DDR3
+> Intel N305 thin mini-ITX, 16 GB DDR5
+> Supermicro / Intel Xeon E5-1650, 32 GB DDR3
+>
+> The successful boot used the regular Xen command line:
+>
+> multiboot2 /boot/xen.gz cpufreq=3Dxen:performance
+> module2 /boot/vmlinuz-lts modules=3Dloop,squashfs,sd-mod,usb-storage,xfs =
+quiet
+> module2 /boot/initramfs-lts
+>
+> No IOMMU workaround, serial console parameter, debug parameter, storage w=
+orkaround, or Xen command-line change was required.
+>
+> The regression was narrowed to ACPI processor/cpuidle changes between 6.1=
+8.51 and 6.18.52, specifically the idle-driver registration lifecycle.
+>
+> The working 6.18.51-style behavior registers the ACPI idle driver from ac=
+pi_processor_power_init() and unregisters it from acpi_processor_power_exit=
+().
+>
+> The failing 6.18.52 behavior registers the ACPI idle driver globally from=
+ acpi_processor_driver_init() before driver_register().
+>
+> A first ACPI-only revert confirmed the regression source. A refined candi=
+date patch was then prepared to preserve the working ACPI idle lifecycle wh=
+ile keeping unrelated 6.18.52 safety fixes, including:
+>
+> _LPI bounds checks
+> cpufreq notifier cleanup on acpi_processor_driver_init() failure
+>
+> The refined candidate patch modifies only:
+>
+> drivers/acpi/processor_driver.c
+> drivers/acpi/processor_idle.c
+> include/acpi/processor.h
+>
+> It does not modify Xen, Xenbus, IOMMU, APIC, PCI/ASPM, intel_idle, syscor=
+e, USB, storage, XFS, networking, printk, or the cpuidle core API.
+>
+> The earlier cpuidle_disabled() workaround is not included.
+>
+> The refined patch has been rebuilt and boot-tested successfully as Xen do=
+m0 on bare metal on TRINITY-EDGE.
+>
+> This issue is currently visible to Alpine users because the Alpine v3.24 =
+stable repository contains:
+>
+> alpine-release 3.24.2-r0
+> linux-lts 6.18.52-r0
+>
+> Systems tracking Alpine 3.24 stable / latest-stable may therefore receive=
+ Linux 6.18.52 as the default LTS kernel.
+>
+> Attachments:
+>
+> revert-acpi-idle-registration-lifecycle.patch
+> APKBUILD
+>
+> The original Alpine report is here:
+>
+> https://gitlab.alpinelinux.org/alpine/aports/-/work_items/18447
+>
+> Please let me know if this should be submitted as a formal patch with Sig=
+ned-off-by, or if there is a better upstream fix/dependency that should be =
+backported instead.
 
-Downstream port 7 (0001:02:07.0) does not train at 5GT/s on this board.
-Without the backport (v6.12.75) the quirk clamps it and the link comes
-up at Gen1, in use for over a year:
+The patch is essentially a revert of commit 13ebeef6a1b9 ("ACPI:
+processor: idle: Optimize ACPI idle driver registration") which I'd
+rather not do without knowing what exactly is going on.
 
-  pci 0001:02:07.0: broken device, retraining non-functional downstream link at 2.5GT/s
-  LnkSta:  Speed 2.5GT/s, Width x1, DLActive+
-  LnkCtl2: Target Link Speed: 2.5GT/s
-
-With the backport (v6.18.50, also v6.18.39; Raspberry Pi downstream
-kernels, pcie-brcmstb identical between both 6.18 versions) the device
-is lost:
-
-  [0.518303] pci 0001:02:07.0: broken device, retraining non-functional downstream link at 2.5GT/s
-  [0.538795] pci 0001:02:07.0: removing 2.5GT/s downstream link speed restriction
-  [1.537936] pci 0001:02:07.0: retraining failed
-  LnkSta:  Speed 5GT/s, Width x1, DLActive-, BWMgmt+
-  LnkCtl2: Target Link Speed: 5GT/s
-
-Same hardware, firmware and DT; only the kernel differs. Swapping the
-SSDs moves the failure with the port, not with the drive.
-
-To be fair, the Gen1 link is marginal: AER on the port shows RxErr
-right after clearing, and BadTLP/BadDLLP under load. The replays are
-absorbed, though: 8 GiB O_DIRECT read at 222 MB/s, no data errors.
-
-So: the port is not clamped on entry, hence v3's new early return does
-not trigger; the first block clamps and the link trains at 2.5GT/s; the
-second block then lifts the clamp because LnkCap is 5GT/s; the 5GT/s
-retrain fails as the initial training did, and the error path restores
-the old 5GT/s target, leaving the link down (and adding ~2 s to boot).
-
-Before 72780f796468 the lift was limited to the ASM2824 with the link
-up, which is why this worked. Would it make sense to fall back to the
-2.5GT/s clamp when lifting fails, rather than to the original target
-speed, at least when the clamp had produced a working link?
-
-Happy to test patches (v6.18.y based on the Raspberry Pi tree is
-easiest for me). Downstream report with full logs:
-https://github.com/raspberrypi/linux/issues/7635
-
-Thanks,
-Thomas S.
-
-p.s. hopefully the mail get properly added, as I hade to add the in-reply and reference to the txt-body of the mail.
+At this point it looks like a missing check somewhere or similar, so
+it would be good to find out where exactly it crashes.
