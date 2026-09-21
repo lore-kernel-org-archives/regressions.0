@@ -1,97 +1,126 @@
-Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com [209.85.214.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from intranet.stegbauer.info (intranet.stegbauer.info [80.153.120.106])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1DE04ABBB2
-	for <regressions@lists.linux.dev>; Mon, 21 Sep 2026 14:11:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 888BB4AA577
+	for <regressions@lists.linux.dev>; Mon, 21 Sep 2026 14:52:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.153.120.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789999877; cv=none; b=ne2+uBzAdGve8JoH7OeJJlFb8ycEQn9FsrMrJCP/2MGmfqmKDFTklcYZOclg4H+o/XAgKXYRtc5PY3fq65dtFm5LVqi9nYQgjCM23Ho7ab3uh4wJXfmu9DaLKSiJd8QfjakhVYo3hqweicfQVdThIEzFXNH3Ija2DrM96GL4bc4=
+	t=1790002332; cv=none; b=u6cyddsJZ6Ko98uGkeqpERORkcJ2Fp8UeIjMfoAYQpJR97LY4cDeTKkb9eTKVHlmj1TQ/bGgb2FnCptupE55yQBnGdhpvQ5+lWy/EzrBVgbECRWNd2VyXgReYxDfEAXhvUUGcg5it3Az1HUepX7kQoCn7+SoplYog1Po/zJ6wY0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789999877; c=relaxed/simple;
-	bh=B4QJF82dna8D9ggBsF8oeK2V+6NAw7hoRbDRKemE+iA=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=sEesdybx2hqPDkt98sm64RgSRbDJPGNSngWsuI5F6es3fdjO/VjSvUOE3FK/mwzQUcjMzsIv+YEbUKEwKd+rHoiqpsbOVXcU13zowBf07juQhziRBcSmLwagqyvZWQwkhf/eo5jFJIEmVYJH86Wc6pQbxl5LTcNYa4XGpKPFDDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TLHmiBM0; arc=none smtp.client-ip=209.85.214.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1790002332; c=relaxed/simple;
+	bh=lLkv+jMmZGe/gBXa297FIVQvjgB+rkxSEhGSCTfQps4=;
+	h=Date:From:To:Cc:Message-ID:Subject:MIME-Version:Content-Type; b=UIWQmtogC551Y3tCt4OnPdqYD4Fa3aDu8y+u4/MnOCxehB0rSmNZnRw33uAJUwDMW/iJzHDkqeyToTXr9BgiYjlf6fSOT4f4wbR4Kx5VOiPp03IRxVASVFLE8LXz4M9PjerJKPfy8FCfEKiGO3OcjgLs3X+Nm+n6R9Koe1PFNn0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stegbauer.info; spf=pass smtp.mailfrom=stegbauer.info; dkim=pass (2048-bit key) header.d=stegbauer.info header.i=@stegbauer.info header.b=hBotiaSB; arc=none smtp.client-ip=80.153.120.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stegbauer.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stegbauer.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TLHmiBM0"
-Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-2dd53f2b27cso38397155ad.0
-        for <regressions@lists.linux.dev>; Mon, 21 Sep 2026 07:11:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789999875; x=1790604675; darn=lists.linux.dev;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=KuS+RsQ1XJKIcaJnDQOiwRD0nOJzYFvdBOhw7tWIQmU=;
-        b=TLHmiBM00DnoRv3iJEJ2H36DAtqPDq3MdiePcK1r2asGQ9HDygw7tzWWojw3sheVQe
-         X7+srNZdFOir3H+urG75Uo2WQeXlOChVdpKhR1023Nj5UTXco5t1rLIKg8aD9wxJTAbm
-         xWTmm80/3clXLrmpSIM08eCFnhjRXNbMyAT9E3+2QEq6KgJMft4fEeJ62m/5cWA2p33t
-         Nx5LBH8M2DZEijq+8oz/vdZE79ulgXIQ4/yOhUnriE+kIZgOjEam+wLplzfr31TsLdpE
-         wP9Yg0pjk5u9RINsMQXTO2QgJv/x4x5m2sXLFKcCPV+Z7Dkq4XmnCEqwWZE47ltvkxnO
-         +0qQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789999875; x=1790604675;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=KuS+RsQ1XJKIcaJnDQOiwRD0nOJzYFvdBOhw7tWIQmU=;
-        b=kVQcVJGHE8AYUDkGw4JiDDCtCBOfBzWxAGsljSiO0r61UOO/SLbX6ydSTdPEBGU5Pp
-         n/pJC3MYuoLBZmrUzqPGmcnG/RZy8MGMTu3i9NPQ3OWuMff0z710vj6TxHNttQaPvxuF
-         wrvTJUIVnPBeMQ6L6QQs1vxhDdndSl5xluGaFpPorZmftEl9i3DR/4HdVIMU7EsQiDSM
-         A2cSSJtjWoW3OZ0F90x9/jF+2nIxTQx9fBqrqm7KJ22Ig+7xvsUnqNx0Ua8sMW/IKeTp
-         E6y8XkiRcJHW0fwC9zNX+8SGBGzdB4GHaOQJOdcmOYa1cmCnmmflt7pV4S2RBSlIlzha
-         +cNw==
-X-Forwarded-Encrypted: i=1; AKwUvBzc+ASslayq9b31B3rMXFv4AP/JGFXkntTrkls/xC4PNFsKjA1T8zlazI7Ksa2bQLrbWRn8D/YtkHnQ8g==@lists.linux.dev
-X-Gm-Message-State: AFuF++m7eT0egsD150xdPL5bURjFS/RNL3CEP2osvbv+TqbrzYKNToop
-	NdWwp6goJWgyNUvVQcirPNotsnMqw5nGEBf1G5Xc2J+YzRl4BdpVmMcXKO1pgT8oHNYJcCkfsJE
-	X8w4oIw==
-X-Received: from plbd17.prod.google.com ([2002:a17:902:f151:b0:2dd:4fe2:d786])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:2349:b0:2dd:c100:4b73
- with SMTP id d9443c01a7336-2ddc1005ee4mr92390435ad.42.1789999874739; Mon, 21
- Sep 2026 07:11:14 -0700 (PDT)
-Date: Mon, 21 Sep 2026 07:11:14 -0700
-In-Reply-To: <7efe2260-5c11-4e8c-812e-dd1e215ac3e4@redhat.com>
+	dkim=pass (2048-bit key) header.d=stegbauer.info header.i=@stegbauer.info header.b="hBotiaSB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=stegbauer.info;
+	s=201607; t=1790001905;
+	bh=lLkv+jMmZGe/gBXa297FIVQvjgB+rkxSEhGSCTfQps4=;
+	h=Date:From:To:Cc:Subject:From;
+	b=hBotiaSBi7drfKQI3DTUYstB6jSgdzVQ711Vue5KS/EEokp3sCDqEk4PzhaEk7S+y
+	 VXPuzGQX2WE4HydOl4UvnS3qnJtmInwBBeu6EIS0+vbFNPjvX8OGhbHbXJtLrXXZh5
+	 MP9Dujra+rFmonz3pqaiXXyuiNsvmJagazFJfg4hyLf6K+TAdDQRHggVMOwc1Nf2iF
+	 JKixoBOqNRiLd82u7diFJynAJUbUNb1fmiMlzcvkfnsInvkIxRUXRpreLEmCibt583
+	 VmS0ohCniGrqPlkK4oQW2yrmknoEWr6MoUNMaJ9y1VsWCdp0kzgeVZUvum7UwO7asq
+	 e35sU4djGr2yQ==
+Received: from zimbra-soscomp.soscomp.de (zimbra-soscomp.soscomp.de [192.168.23.3])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature ECDSA (secp384r1) server-digest SHA384)
+	(No client certificate requested)
+	by intranet.stegbauer.info (Postfix) with ESMTPS id 2BF179F793;
+	Mon, 21 Sep 2026 16:45:05 +0200 (CEST)
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by zimbra-soscomp.soscomp.de (Postfix) with ESMTP id 09E983468B1;
+	Mon, 21 Sep 2026 16:45:05 +0200 (CEST)
+Received: from zimbra-soscomp.soscomp.de ([127.0.0.1])
+ by localhost (zimbra-soscomp.soscomp.de [127.0.0.1]) (amavis, port 10032)
+ with ESMTP id 09zaqutbCEJo; Mon, 21 Sep 2026 16:45:04 +0200 (CEST)
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by zimbra-soscomp.soscomp.de (Postfix) with ESMTP id 026483468C5;
+	Mon, 21 Sep 2026 16:45:04 +0200 (CEST)
+X-Virus-Scanned: amavis at zimbra-soscomp.soscomp.de
+Received: from zimbra-soscomp.soscomp.de ([127.0.0.1])
+ by localhost (zimbra-soscomp.soscomp.de [127.0.0.1]) (amavis, port 10026)
+ with ESMTP id E8K-a0RdNPFA; Mon, 21 Sep 2026 16:45:03 +0200 (CEST)
+Received: from zimbra-soscomp.soscomp.de (zimbra-soscomp.soscomp.de [192.168.23.3])
+	by zimbra-soscomp.soscomp.de (Postfix) with ESMTP id 9800F3468B1;
+	Mon, 21 Sep 2026 16:45:03 +0200 (CEST)
+Date: Mon, 21 Sep 2026 16:45:03 +0200 (CEST)
+From: Thomas Stegbauer <thomas.stegbauer@stegbauer.info>
+To: Andreas Wild <andiwild@gmail.com>
+Cc: macro@orcam.me.uk, helgaas@kernel.org, linux@leemhuis.info, 
+	linux-pci@vger.kernel.org, regressions@lists.linux.dev
+Message-ID: <752770208.319.1790001903323.JavaMail.zimbra@stegbauer.info>
+Subject: Re: [PATCH v3] PCI: Skip Target Speed quirk on clamped ports with
+ no link
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-References: <20260914181223.289061-1-seanjc@google.com> <c645070e-9829-4f98-bafc-b5d44ff2db45@leemhuis.info>
- <7efe2260-5c11-4e8c-812e-dd1e215ac3e4@redhat.com>
-Message-ID: <arE7AjkOyuadAFBY@google.com>
-Subject: Re: [PATCH 0/5] KVM: Serialize vCPU creation and revert vcpu_ids tracking
-From: Sean Christopherson <seanjc@google.com>
-To: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>, kvm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	Jean-Christophe Guillain <jean-christophe@guillain.net>, "=?utf-8?B?UGF3ZcWC?= S" <spawel523@gmail.com>, 
-	Linux kernel regressions list <regressions@lists.linux.dev>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Mailer: Zimbra 10.1.20_GA_4200001 (ZimbraWebClient - GC153 (Linux)/10.1.20_GA_4200001)
+Thread-Index: u4aSUst814tCowhW4rO/jDxdk3UN8A==
+Thread-Topic: Skip Target Speed quirk on clamped ports with no link
 
-On Mon, Sep 21, 2026, Paolo Bonzini wrote:
-> On 9/21/26 15:57, Thorsten Leemhuis wrote:
-> > On 9/14/26 20:12, Sean Christopherson wrote:
-> > > Serialize vCPU creation by holding kvm->lock for the entirety of
-> > > kvm_vm_ioctl_create_vcpu(), and then revert the now-redundant tracking adding
-> > > by commit 97d65b544f48 ("KVM: Check for duplicate vcpu_id as early as
-> > > possible").  I botched the math when justifying the vcpu_ids tracking; it's not
-> > > an extra 256 bytes, it's an extra 2048 bytes.  Roughly doubling the size of
-> > > "struct kvm" tripped x86's KVM_SANITY_CHECK_VM_STRUCT_SIZE, and obviously isn't
-> > > something we want to do in general.
-> > 
-> > Hi Sean! Thx for handling this and sorry for pestering you, but I have
-> > to ask, as this fixes a regression that was already reported two times
-> > and introduced this cycle:
-> > 
-> > What's the plan to merge this? Is this aimed for the current or the next
-> > merge window? Ciao, Thorsten
-> 
-> For this one, but after fixing the PPC and s390 cases.
+In-Reply-To: <20260801201244.4421-1-andiwild@gmail.com>
+References: <20260801201244.4421-1-andiwild@gmail.com>
 
-Ya.
+Hi,
 
-> Sean, if you're busy I can send the v2 myself.
+another data point for the regression from 72780f796468 ("PCI: Always
+lift 2.5GT/s restriction in PCIe failed link retraining"), for the case
+with a device present, which v3 does not appear to cover.
 
-I'll get it out today.  I was traveling last week and got behind one a "few" things.
+Hardware: Raspberry Pi 5 (BCM2712, pcie-brcmstb), ASMedia ASM1182e
+[1b21:1182] Gen2 packet switch on a dual M.2 carrier, one NVMe SSD
+behind each downstream port.
+
+Downstream port 7 (0001:02:07.0) does not train at 5GT/s on this board.
+Without the backport (v6.12.75) the quirk clamps it and the link comes
+up at Gen1, in use for over a year:
+
+  pci 0001:02:07.0: broken device, retraining non-functional downstream link at 2.5GT/s
+  LnkSta:  Speed 2.5GT/s, Width x1, DLActive+
+  LnkCtl2: Target Link Speed: 2.5GT/s
+
+With the backport (v6.18.50, also v6.18.39; Raspberry Pi downstream
+kernels, pcie-brcmstb identical between both 6.18 versions) the device
+is lost:
+
+  [0.518303] pci 0001:02:07.0: broken device, retraining non-functional downstream link at 2.5GT/s
+  [0.538795] pci 0001:02:07.0: removing 2.5GT/s downstream link speed restriction
+  [1.537936] pci 0001:02:07.0: retraining failed
+  LnkSta:  Speed 5GT/s, Width x1, DLActive-, BWMgmt+
+  LnkCtl2: Target Link Speed: 5GT/s
+
+Same hardware, firmware and DT; only the kernel differs. Swapping the
+SSDs moves the failure with the port, not with the drive.
+
+To be fair, the Gen1 link is marginal: AER on the port shows RxErr
+right after clearing, and BadTLP/BadDLLP under load. The replays are
+absorbed, though: 8 GiB O_DIRECT read at 222 MB/s, no data errors.
+
+So: the port is not clamped on entry, hence v3's new early return does
+not trigger; the first block clamps and the link trains at 2.5GT/s; the
+second block then lifts the clamp because LnkCap is 5GT/s; the 5GT/s
+retrain fails as the initial training did, and the error path restores
+the old 5GT/s target, leaving the link down (and adding ~2 s to boot).
+
+Before 72780f796468 the lift was limited to the ASM2824 with the link
+up, which is why this worked. Would it make sense to fall back to the
+2.5GT/s clamp when lifting fails, rather than to the original target
+speed, at least when the clamp had produced a working link?
+
+Happy to test patches (v6.18.y based on the Raspberry Pi tree is
+easiest for me). Downstream report with full logs:
+https://github.com/raspberrypi/linux/issues/7635
+
+Thanks,
+Thomas S.
+
+p.s. hopefully the mail get properly added, as I hade to add the in-reply and reference to the txt-body of the mail.
