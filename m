@@ -1,190 +1,155 @@
-Received: from relay.yourmailgateway.de (relay.yourmailgateway.de [188.68.63.162])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lr2-f12.google.com (mail-lr2-f12.google.com [74.125.230.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCF333EAC98
-	for <regressions@lists.linux.dev>; Mon, 21 Sep 2026 10:01:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.68.63.162
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789984892; cv=none; b=tLm7ltO/8PbLqIyF4Eu0+cMQDhCAPLnBQrvF1oM3XNGg4+3PGwXh2oIlpXSDZFmg6cb8v5CrgTSRvA83KyOIrnCAb7zILw+OyklEtAdNQN/hg+juGU8NKz+XdIZazVheSU3XQ4VvEPzdXySFJu6enI4k5uBKMxyLM3QvRirANtI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789984892; c=relaxed/simple;
-	bh=8EDrVz3B5Ui9t+59/tsVLp1aP1KLxbEoqN01RrOD6w8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=XMq8IQ8U64QovbxYwKaSsqBEE5kEPc/dWwK1GRaRBNzNnWWmXg14CW+iwH4Qsva275cPFZyU76sxhpiKdXc7EgzgTEZ21iKLh66TMzVR7ZQt3n8p4N5JfOS2FI6TtW52n1LmPmht75LXJ6DdM2ad6xiQEiYv0tLqbWpv50cti9o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=N+muyZXc; arc=none smtp.client-ip=188.68.63.162
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5B52381B10
+	for <regressions@lists.linux.dev>; Mon, 21 Sep 2026 10:08:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.230.76
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1789985293; cv=pass; b=R8PEePI/GUpDPFQL2M+rUTBiS7bNDcWh+/igKvRpcKCWC5D/qJkXEjgMprM7Cn0WogFIx86ENrsWmepNNRKEGCm2ZXbJdeKpyRqFgEMzvm4cBEVRNUEcYvl9mpESClHaHZCmGz25J09ROvl1mOZ1ytAnoNgSMsZr9ftRtydGqGU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1789985293; c=relaxed/simple;
+	bh=VIvwkAam9zTpoSK3o3ogyb7G3ggXPl8fp+Nj5qRGxdI=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=l5G7IEX2FGUH/6SqeqynLCVldXfPTXx9ubcT/8YLGqcUjYZBQunDwjcFKw8X0w4tDffekMbYzys5fz3BkbjsC2KPMzO2on0JzOLhpyTx6UhAfJNLUy5FpIeLTr58wSij2Lxq8aTS+9UwtEUa6o8vf3egXeutwvmAfGbddi0lPr8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wetterwald.eu; spf=pass smtp.mailfrom=wetterwald.eu; dkim=pass (2048-bit key) header.d=wetterwald.eu header.i=@wetterwald.eu header.b=sMtbriWx; arc=pass smtp.client-ip=74.125.230.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wetterwald.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wetterwald.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="N+muyZXc"
-Received: from mors-relay-8201.netcup.net (localhost [127.0.0.1])
-	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4hpJdV2sb7z4NRn;
-	Mon, 21 Sep 2026 12:00:46 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=leemhuis.info;
-	s=key2; t=1789984846;
-	bh=8EDrVz3B5Ui9t+59/tsVLp1aP1KLxbEoqN01RrOD6w8=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=N+muyZXc8ymigm1X4WJYdQfg2FAM32UXD62GkYAoXAwUrk7y9wSeo8wrc/kijMJRV
-	 y5tWKY3o2n02jG8BFKiSIVU0+QItf44A8F/uAvgSzG094QdLpHkIhB2vYGkX46B20i
-	 VN8otbW9QVGTprs7yAikun99LjJZdMuY8JvNPtYmNbSMCRCvzKBQOTZyd8gdjxZZ5l
-	 DyvixvqPU0uzZ2XY48NNI84277giq0riOIyvt5KdUAjXgXxXqYHUF2UnaCKvpjyJhB
-	 wokbeEO1V5wZCwoLz8JbmY9fO/UzY31upQSqXV2mNt9yhCmfs119MpbQUfndGp34Ma
-	 0jJsS2X3dDAMA==
-Received: from policy01-mors.netcup.net (unknown [46.38.225.35])
-	by mors-relay-8201.netcup.net (Postfix) with ESMTPS id 4hpJdV27C2z4NRh;
-	Mon, 21 Sep 2026 12:00:46 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at policy01-mors.netcup.net
-X-Spam-Flag: NO
-X-Spam-Score: -2.898
-X-Spam-Level: 
-Received: from mxe9fb.netcup.net (unknown [10.243.12.53])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by policy01-mors.netcup.net (Postfix) with ESMTPS id 4hpJdS65cXz8td8;
-	Mon, 21 Sep 2026 12:00:44 +0200 (CEST)
-Received: from [IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f] (unknown [IPv6:2a02:8108:8984:1d00:a0cf:1912:4be:477f])
-	by mxe9fb.netcup.net (Postfix) with ESMTPSA id 5AA1A5FA21;
-	Mon, 21 Sep 2026 12:00:39 +0200 (CEST)
-Authentication-Results: mxe9fb;
-        spf=pass (sender IP is 2a02:8108:8984:1d00:a0cf:1912:4be:477f) smtp.mailfrom=regressions@leemhuis.info smtp.helo=[IPV6:2a02:8108:8984:1d00:a0cf:1912:4be:477f]
-Received-SPF: pass (mxe9fb: connection is authenticated)
-Message-ID: <8aaad113-1952-4655-978d-0cdd8b048064@leemhuis.info>
-Date: Mon, 21 Sep 2026 12:00:37 +0200
+	dkim=pass (2048-bit key) header.d=wetterwald.eu header.i=@wetterwald.eu header.b="sMtbriWx"
+Received: by mail-lr2-f12.google.com with SMTP id 38308e7fff4ca-3a59fa3112cso24060111fa.3
+        for <regressions@lists.linux.dev>; Mon, 21 Sep 2026 03:08:10 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1789985288; cv=none;
+        d=google.com; s=arc-20260327;
+        b=gG3bJk7BEEK+XOcaZRpYu+RLZeS9MRYrtWohknQXEv2SwVBj/e0lMFbEZLrmzv2K8+
+         xnLefqub+3oWB94XJoHgJrS5dxL3a3GxwVietjhMZovrpTdPjqik3ZLT5laKF5TtjEyP
+         Tt5ACeJLB40bqVu5LsWKXy8j9ho4XtvJDX2srvnJ9sXWHsAUKpTKfoObOxp+YjKzysIm
+         gHIYzEFsxK1E0GaK6z+3wQF3eU43XBMPCM5Sm0YK25DsW1RFiYFHweYgSw9PHa+D6avL
+         KwkQxX8ENpF6mvYM7kTDNRPtybs02Dg4tOHQbdDWoP333i+PMvcbFWiYVRGByjRORE1o
+         1/jw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:from:mime-version:dkim-signature;
+        bh=ckZuYoeTTPMvdxoAoxaz030ABxaViXfjKjKNmd00MIU=;
+        fh=O1Vyf2CaPkSaD5dJSK5N2Qnk9HTL4KWlsE8tPgMUuKc=;
+        b=Qz/kEe4kbarhBfwdJcEf2LVkfZo4Svv0MtsgWKtS+dx48Bu6ZlZ7/l4FCloauwlsw/
+         QTwStj2FJqmh5DrcIix3vkRMnL7cOIeSiCVcC5SkJ21Wa/3jv1iMa4f2ofgCnzMF5491
+         BfWmeMXhUIa/zO/3FfLbJAhiZCRsN93B7rUyIXttyz62hWRjyZD97nhwMXBW3b0ZwShy
+         ufSYEgm++NCFbiR4d9M48CKzJS6kK/OOWADCXnDWMCx85RzofjVCMXpi/l6efQe0hfHU
+         j/xBf3//C7sncqnqqUgKiE9EvyF+UKBq9IP9BVwBZtIu21PLAe1H9F/YcOTisibiueGR
+         i+Kw==;
+        darn=lists.linux.dev
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=wetterwald.eu; s=wetter; t=1789985288; x=1790590088; darn=lists.linux.dev;
+        h=content-type:cc:to:subject:message-id:date:from:mime-version:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=ckZuYoeTTPMvdxoAoxaz030ABxaViXfjKjKNmd00MIU=;
+        b=sMtbriWxI/cVKNAxgA/I6nbKymmzljj9qhHHvfTpY9r1CQFMF9KmkHJDsUbqaXWnIL
+         AgdzJv4pOYLrduA9Qp1/9fabk9T5APqbOq9F2k+DzPNO4g8ppvgFRjJhTWOUytYR2WWX
+         8M4lvVrv9n7wkWHWTLoBBbAXE4T9RiYbomS+AUOCLeeMPlDTn4zOv011o+J9LJE7cMJK
+         FABUpe/idO5vRjVB0OdVQLXST0ZCvVpFvgFBzsUblhPH/X6ZBYeL7adMcfd6+/lzwi3A
+         mzOep7w4P2IG3PZ8rEPAejsQJrTie3RyGYvBvm3VJcx7nRYH5Pz6ABbl3RT/LyL7Wpxm
+         8Uyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1789985288; x=1790590088;
+        h=content-type:cc:to:subject:message-id:date:from:mime-version
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=ckZuYoeTTPMvdxoAoxaz030ABxaViXfjKjKNmd00MIU=;
+        b=hD3g9q5Jy4w7FI0tfMHE5SkLCr0N0u1wnJjdb9E7BgF9VCfS42PuigkfAbbNjqfE1M
+         /AM9pZWmW8duuJ5P4sWVWNP4BHXVrE/QnVlGjFwtp17x4WNebsNDOdruqV2e9mbF+n/P
+         jFwjHFZuc2T+yHh2baw3ME7BbHwNzMjd3kYOtKgbo+oyMuiZBUlD0UWAUXzB963QTbzN
+         qk2QN/tFz0J+Dkan1zsIu7vI3K/7j5+CtFJeoDPiimJAa1gSHWIFDyr2gdPjB/72Yzbk
+         tF+F2YCt5ssBNWYMP05+IhDq45DbC1ZwGTrvcf1fU3yV77a9YfcP5QKMc8XinVUzwz6m
+         uyww==
+X-Forwarded-Encrypted: i=1; AKwUvBzit6TPpQcs3bsroncHS4UqJEgnyh4ucfmDXg0pAEvXOKlMM+d5W0xX/q8BBZCB2lcS5V5jj0SWZNAk2Q==@lists.linux.dev
+X-Gm-Message-State: AFuF++me5gWYaF7SVfvGw1wRJa4SqI+Y28LySBcf7DlHrT4KAg13yU6Q
+	GC+XNYuZp+8HrqfMiO5pEop5uPRfZS0j2Xat5gNHWzujosRkj77C+SOq9tKaW03EwOmdFzYUMbN
+	IImGZdXQ61DrSf7Qr5Ri0vk79+YcIiUOeKU7Dj1bksw==
+X-Gm-Gg: AYBFou29DI8IP977pWr0KRM0vUr1j+jXyHQDSvJmZLyHhRzBuAKTofFlaW8n8o2xLJi
+	P0PrU9t/MJFg0yGw58R+tS5hmY1f7ksryZv/lSuT7/zQ8t6OQWgItFPNXmoyPnih4WKGiiCtJ/p
+	2muZ26vXb8cZIEiCF46b3F2/5PN9bOq7KCdPP393LIgtMNhhjEo5+5VsYQKjYn3rZHnUjh7q7Hr
+	tLXnvnREz7R/N+G/3bo68lyhGYWqWLt8qisUdcUWz2LGmU9Ds73J/uLtI0PiH+CAHiPCEJxyzdf
+	mCYyWv9FhVD7blc/QeL25DcfyQTSFmHtkOq7Xr2YVj2qjzq9RVfw76qNfXnQ+HXgmrDoGkn61NW
+	q+PBE+LetQDk=
+X-Received: by 2002:a05:651c:1443:b0:3a1:f671:b2ee with SMTP id
+ 38308e7fff4ca-3a5fbe5b98emr24185481fa.8.1789985288242; Mon, 21 Sep 2026
+ 03:08:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] ACPI processor/cpuidle change in 6.18.52 breaks
- bare-metal Xen dom0 boot
-To: Support TRINITY <support@trinity-net.com>,
- regressions <regressions@lists.linux.dev>,
- linux-acpi <linux-acpi@vger.kernel.org>, linux-pm
- <linux-pm@vger.kernel.org>, stable <stable@vger.kernel.org>,
- xen-devel <xen-devel@lists.xenproject.org>,
- linux-kernel <linux-kernel@vger.kernel.org>
-References: 
- <905771062.272724286.1789919301858.JavaMail.zimbra@trinity-net.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: de-DE, en-US
-In-Reply-To: 
- <905771062.272724286.1789919301858.JavaMail.zimbra@trinity-net.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-PPP-Message-ID: <178998483973.134331.13310613659725459518@mxe9fb.netcup.net>
-X-Rspamd-Server: rspamd-worker-8404
-X-Rspamd-Queue-Id: 5AA1A5FA21
-X-NC-CID: jHAYD1xjKcSrG8HKUMDccnDoibkQCgWtGfye6GROeeyolTZ1i1c=
+From: Martin Wetterwald <martin@wetterwald.eu>
+Date: Mon, 21 Sep 2026 12:07:56 +0200
+X-Gm-Features: AcwNN1W58pSJb1Gm5FiYd6G15BwFUBJt5i6mO7kwx-kG9sYBZhWnHxQTgaZWe90
+Message-ID: <CAFERDQ0FpdVvA5VJxOyRAE_pgxnPVmFx1tkZio5R272j6Bs4tg@mail.gmail.com>
+Subject: [REGRESSION] bcm2835-audio fails to register on vchiq-bus in
+ monolithic kernels since 6.19 (VCHIQ destaging?)
+To: florian.fainelli@broadcom.com, gregkh@linuxfoundation.org, 
+	jai.luthra@ideasonboard.com
+Cc: uajain@igalia.com, Stefan Wahren <wahrenst@gmx.net>, linux-staging@lists.linux.dev, 
+	linux-rpi-kernel@lists.infradead.org, regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-On 9/20/26 17:48, Support TRINITY wrote:
->
-> I am reporting a bare-metal *Xen* dom0 boot regression seen with *Linux
-> 6.18.52.*
+Hi,
 
-Thx for the report. There is one somewhat important detail that was
-missing (hope I didn't miss it):
+After moving from 6.18.52 to 6.19 (still present in 7.2.6), the bcm2835
+Headphones sound card no longer appears on my Raspberry Pi 3 Model B Rev 1.2
+(arm64). 6.18.52 works with the exact same userspace.
 
-Is latest 7.3-rc also affected? And if it is: does that partial revert
-help there, too?
+dmesg shows:
 
-Ciao, Thorsten
-> On affected systems, Linux 6.18.51 boots successfully as Xen dom0 on
-> bare metal, while Linux 6.18.52 *consistently black-screens before dom0
-> userspace/networking comes up.*
-> 
-> #regzbot introduced: v6.18.51..v6.18.52
-> #regzbot title: ACPI processor/cpuidle lifecycle change breaks bare-
-> metal Xen dom0 boot
-> #regzbot link: https://gitlab.alpinelinux.org/alpine/aports/-/
-> work_items/18447 <https://gitlab.alpinelinux.org/alpine/aports/-/
-> work_items/18447>
-> 
-> Tested results:
-> 
->   * Linux 6.18.51-r0, Xen dom0, bare metal: boots
->   * Linux 6.18.52-r0, Xen dom0, bare metal: black screen before
->     userspace/network
->   * Linux 6.18.52-r0, Xen domU: boots
->   * Linux 6.18.52-r0 with Xenbus notifier change reverted: still fails
->   * Linux 6.18.52-r0 with only ACPI processor/cpuidle changes reverted:
->     boots
->   * Linux 6.18.52-r0 with refined ACPI idle lifecycle patch: boots
-> 
-> Affected hardware tested:
-> 
->   * Intel Core i7-4785T thin mini-ITX, 16 GB DDR3
->   * Intel N305 thin mini-ITX, 16 GB DDR5
->   * Supermicro / Intel Xeon E5-1650, 32 GB DDR3
-> 
-> The successful boot used the regular Xen command line:
-> 
-> multiboot2 /boot/xen.gz cpufreq=xen:performance
-> module2 /boot/vmlinuz-lts modules=loop,squashfs,sd-mod,usb-storage,xfs quiet
-> module2 /boot/initramfs-lts
-> 
-> No IOMMU workaround, serial console parameter, debug parameter, storage
-> workaround, or Xen command-line change was required.
-> 
-> The regression was narrowed to *ACPI processor/cpuidle* changes between
-> 6.18.51 and 6.18.52, specifically the idle-driver registration lifecycle.
-> 
-> The working 6.18.51-style behavior registers the ACPI idle driver from
-> *acpi_processor_power_init()* and unregisters it from
-> *acpi_processor_power_exit().*
-> 
-> The failing 6.18.52 behavior registers the ACPI idle driver globally
-> from *acpi_processor_driver_init()* before *driver_register().*
-> 
-> A first ACPI-only revert confirmed the regression source. A refined
-> candidate patch was then prepared to preserve the working ACPI idle
-> lifecycle while keeping unrelated 6.18.52 safety fixes, including:
-> 
->   * _LPI bounds checks
->   * cpufreq notifier cleanup on *acpi_processor_driver_init()* failure
-> 
-> The refined candidate patch modifies only:
-> 
->   * *drivers/acpi/processor_driver.c*
->   * *drivers/acpi/processor_idle.c*
->   * *include/acpi/processor.h*
-> 
-> It does not modify Xen, Xenbus, IOMMU, APIC, PCI/ASPM, intel_idle,
-> syscore, USB, storage, XFS, networking, printk, or the cpuidle core API.
-> 
-> The earlier cpuidle_disabled() workaround is not included.
-> 
-> The refined patch has been rebuilt and boot-tested successfully as Xen
-> dom0 on bare metal on TRINITY-EDGE.
-> 
-> This issue is currently visible to *Alpine* users because the *Alpine
-> v3.24 *stable repository contains:
-> 
-> alpine-release 3.24.2-r0
-> *linux-lts 6.18.52-r0*
-> 
-> Systems tracking Alpine 3.24 stable / latest-stable may therefore
-> receive Linux 6.18.52 as the default LTS kernel.
-> 
-> Attachments:
-> 
->   * revert-acpi-idle-registration-lifecycle.patch
->   * APKBUILD
-> 
-> The original Alpine report is here:
-> 
-> https://gitlab.alpinelinux.org/alpine/aports/-/work_items/18447
-> <https://gitlab.alpinelinux.org/alpine/aports/-/work_items/18447>
-> 
-> Please let me know if this should be submitted as a formal patch with
-> Signed-off-by, or if there is a better upstream fix/dependency that
-> should be backported instead.
-> 
-> Regards,
-> 
-> *Tony BONNIN*
-> 
+  Driver 'bcm2835-audio' was unable to register with bus_type 'vchiq-bus'
+  because the bus was not initialized.
 
+and /proc/asound/cards reports "--- no soundcards ---".
 
-#regzbot introduced: 6cffb59ee50ea4
+My kernel is monolithic (no module support), with:
+
+  CONFIG_BCM2835_VCHIQ=y
+  CONFIG_SND_BCM2835=y
+  CONFIG_BCM2835_VCHIQ_MMAL is not set
+  CONFIG_VCHIQ_CDEV is not set
+
+Analysis: both drivers are built in and use module_init(), i.e. the same
+initcall level (6), so they run in link order.
+vchiq_driver_init() registers vchiq_bus_type, and bcm2835_alsa_driver_init()
+registers a driver on that bus, so VCHIQ must run first. In 6.18 it does, but
+in 6.19 the order is reversed.
+System.map (same initcall level, lower address runs first):
+
+  6.18: vchiq_driver_init            ffff800080646704
+        bcm2835_alsa_driver_init     ffff800080646708
+
+  6.19: bcm2835_alsa_driver_init     ffff800080646698
+        vchiq_driver_init            ffff80008064669c
+
+In 6.18 both drivers lived under drivers/staging/vc04_services/. In 6.19 the
+VCHIQ interface lives in drivers/platform/raspberrypi/, while bcm2835-audio
+stayed in drivers/staging/. drivers/Makefile links staging/ before platform/
+(line 154/155 in v6.19), which matches the flipped order.
+
+After boot the bus does exist (/sys/bus/vchiq-bus is present); it is only
+registered after the audio driver has already failed. Without module support
+there is no way to retry.
+
+My suspect is this commit:
+
+  aa125180c673881f88b528600b57865dc158b3a7
+  ("platform/raspberrypi: Destage VCHIQ interface")
+
+I could not bisect to a single commit, but what I know for sure is: v6.18.52
+works, v6.19 and v7.2.6 fail, and the initcall ordering above explains the
+failure.
+
+#regzbot introduced: v6.18..v6.19
+
+Possible fixes I can think of, none tested yet: register the bus earlier (e.g.
+postcore_initcall or subsys_initcall for the bus registration in the VCHIQ
+interface), or defer the bcm2835-audio registration to a later initcall level.
+
+I'm happy to test patches and I can do it on 1B rev 2, 1B+, 2B, 3B and 4B if
+necessary.
+
+Thanks!
+Martin
